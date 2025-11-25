@@ -193,8 +193,6 @@ export function SmartContainer({
     fontSize: 12,
     cursor: "pointer",
     transition: "transform 120ms ease, box-shadow 120ms ease",
-    display: "grid",
-    placeItems: "center",
   };
 
   const actionsWrapperStyle: CSSProperties = {
@@ -259,30 +257,6 @@ export function SmartContainer({
     gap: 8,
     flex: 1,
     overflow: "auto",
-  };
-
-  const iconBoxStyle: CSSProperties = {
-    borderRadius: 12,
-    background: "rgba(255,255,255,0.05)",
-    border: "1px solid rgba(255,255,255,0.08)",
-    minHeight: 72,
-    padding: 8,
-    display: "flex",
-    alignItems: "center",
-    justifyContent: "center",
-    textAlign: "center",
-    fontSize: 12,
-    color: "#dbeafe",
-  };
-
-  const listRowStyle: CSSProperties = {
-    display: "flex",
-    alignItems: "center",
-    gap: 10,
-    padding: "6px 8px",
-    borderRadius: 10,
-    background: "rgba(255,255,255,0.05)",
-    border: "1px solid rgba(255,255,255,0.08)",
   };
 
   return (

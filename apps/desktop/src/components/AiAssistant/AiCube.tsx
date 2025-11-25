@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useRef, useState } from "react";
+import { CSSProperties, useEffect, useMemo, useRef, useState } from "react";
 import Draggable, { DraggableData, DraggableEvent } from "react-draggable";
 import { useSettings } from "../../context/SettingsContext";
 
@@ -94,7 +94,7 @@ export function AiCube({ isPanelOpen, onTogglePanel, onAnchorChange }: AiCubePro
     return luminance > 186 ? "#0b1220" : "#f8fafc";
   }, [cubeColor, cubeTextColor]);
 
-  const cubeStyle = useMemo(
+  const cubeStyle = useMemo<CSSProperties>(
     () => ({
       pointerEvents: "auto",
       width: cubeSize,
