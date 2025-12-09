@@ -22,8 +22,6 @@ export interface SettingsPanelProps {
  */
 export function SettingsPanel({ isOpen, anchorPosition }: SettingsPanelProps) {
   const {
-    canvasOpacity,
-    isBlurEnabled,
     cubeColor,
     cubeTextColor,
     cubeOpacity,
@@ -31,8 +29,6 @@ export function SettingsPanel({ isOpen, anchorPosition }: SettingsPanelProps) {
     cubeFontSize,
     gridOpacity,
     gridBlur,
-    setBlurEnabled,
-    setCanvasOpacity,
     setCubeColor,
     setCubeTextColor,
     setCubeOpacity,
@@ -50,49 +46,10 @@ export function SettingsPanel({ isOpen, anchorPosition }: SettingsPanelProps) {
     return { left: clampedX, top: clampedY };
   }, [anchorPosition.x, anchorPosition.y]);
 
-  const handleOpacityChange = (value: number) => {
-    setCanvasOpacity(value);
-    console.log(`Settings Changed: canvasOpacity = ${value}`);
-  };
-
   if (!isOpen) return null;
 
   return (
     <div className="settings-panel" style={panelStyle} role="dialog" aria-label="AI Assistant Settings">
-      <div className="settings-row">
-        <strong className="settings-label">Canvas Settings</strong>
-      </div>
-      <div className="settings-row">
-        <span className="settings-label">Background Opacity</span>
-        <div className="settings-slider">
-          <input
-            type="range"
-            min={0}
-            max={1}
-            step={0.05}
-            value={canvasOpacity}
-            onChange={(event) => handleOpacityChange(Number(event.target.value))}
-            aria-label="Background Opacity"
-          />
-        </div>
-      </div>
-
-      <div className="settings-row">
-        <span className="settings-label">Enable Blur / Glass Effect</span>
-        <label className="toggle">
-          <input
-            type="checkbox"
-            checked={isBlurEnabled}
-            onChange={(event) => {
-              setBlurEnabled(event.target.checked);
-              console.log(`Settings Changed: isBlurEnabled = ${event.target.checked}`);
-            }}
-            aria-label="Toggle blur or glass effect"
-          />
-          <span>{isBlurEnabled ? "On" : "Off"}</span>
-        </label>
-      </div>
-
       <div className="settings-row" style={{ marginTop: 6 }}>
         <strong className="settings-label">AI Icon Settings</strong>
       </div>
