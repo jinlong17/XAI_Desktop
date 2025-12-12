@@ -10,6 +10,7 @@
     "frontendDist": "../dist"
   },
   "app": {
+    "macOSPrivateApi": true,
     "windows": [
       {
         "title": "AI Smart Desktop",
@@ -24,7 +25,9 @@
         "alwaysOnTop": false,
         "visible": true,
         "shadow": false,
-        "skipTaskbar": true
+        "skipTaskbar": true,
+        "hiddenTitle": true,
+        "titleBarStyle": "Overlay"
       }
     ],
     "security": {

@@ -1,0 +1,82 @@
+/* Custom Resize Handle Styles - Override react-resizable defaults */
+
+.resize-handle {
+  display: block !important;
+  pointer-events: auto !important;
+}
+
+.react-resizable {
+  position: relative;
+}
+
+.react-resizable-handle {
+  display: block;
+  position: absolute;
+  width: 20px;
+  height: 20px;
+  background-color: #ffffff;
+  border: 3px solid #666666;
+  border-radius: 50%;
+  box-shadow: 0 2px 12px rgba(0,0,0,0.5);
+  z-index: 10000;
+  pointer-events: auto !important;
+}
+
+.react-resizable-handle:hover {
+  background-color: #4CAF50;
+  transform: scale(1.3);
+}
+
+/* Position handles */
+.react-resizable-handle-se {
+  bottom: -10px;
+  right: -10px;
+  cursor: nwse-resize;
+}
+
+.react-resizable-handle-sw {
+  bottom: -10px;
+  left: -10px;
+  cursor: nesw-resize;
+}
+
+.react-resizable-handle-ne {
+  top: -10px;
+  right: -10px;
+  cursor: nesw-resize;
+}
+
+.react-resizable-handle-nw {
+  top: -10px;
+  left: -10px;
+  cursor: nwse-resize;
+}
+
+.react-resizable-handle-n {
+  top: -10px;
+  left: 50%;
+  transform: translateX(-50%);
+  cursor: ns-resize;
+}
+
+.react-resizable-handle-s {
+  bottom: -10px;
+  left: 50%;
+  transform: translateX(-50%);
+  cursor: ns-resize;
+}
+
+.react-resizable-handle-e {
+  top: 50%;
+  right: -10px;
+  transform: translateY(-50%);
+  cursor: ew-resize;
+}
+
+.react-resizable-handle-w {
+  top: 50%;
+  left: -10px;
+  transform: translateY(-50%);
+  cursor: ew-resize;
+}
+

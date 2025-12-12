@@ -8,25 +8,25 @@ import {
   useState,
 } from "react";
 import Draggable, { DraggableData, DraggableEvent } from "react-draggable";
-import { Resizable, ResizeCallbackData, ResizeHandle } from "react-resizable";
 import { useDroppable } from "@dnd-kit/core";
 import { DesktopItem, GridBox } from "./types";
 import GridItem from "./GridItem";
+import { useCustomResize, RESIZE_HANDLE_STYLES, ResizeDirection } from "./hooks/useCustomResize";
 
-const RESIZE_HANDLES: ResizeHandle[] = ["s", "e", "se", "w", "n", "nw", "ne", "sw"];
+const RESIZE_DIRECTIONS: ResizeDirection[] = ["s", "e", "se", "w", "n", "nw", "ne", "sw"];
 const MIN_SIZE = 150;
 const TITLE_BAR_HEIGHT = 40;
 const HEADER_COLOR = "#111827";
 
 const handleStyles: Record<ResizeHandle, CSSProperties> = {
-  s: { bottom: -6, left: "50%", transform: "translateX(-50%)", cursor: "ns-resize" },
-  n: { top: -6, left: "50%", transform: "translateX(-50%)", cursor: "ns-resize" },
-  e: { right: -6, top: "50%", transform: "translateY(-50%)", cursor: "ew-resize" },
-  w: { left: -6, top: "50%", transform: "translateY(-50%)", cursor: "ew-resize" },
-  se: { bottom: -6, right: -6, cursor: "nwse-resize" },
-  sw: { bottom: -6, left: -6, cursor: "nesw-resize" },
-  ne: { top: -6, right: -6, cursor: "nesw-resize" },
-  nw: { top: -6, left: -6, cursor: "nwse-resize" },
+  s: { bottom: -10, left: "50%", transform: "translateX(-50%)", cursor: "ns-resize" },
+  n: { top: -10, left: "50%", transform: "translateX(-50%)", cursor: "ns-resize" },
+  e: { right: -10, top: "50%", transform: "translateY(-50%)", cursor: "ew-resize" },
+  w: { left: -10, top: "50%", transform: "translateY(-50%)", cursor: "ew-resize" },
+  se: { bottom: -10, right: -10, cursor: "nwse-resize" },
+  sw: { bottom: -10, left: -10, cursor: "nesw-resize" },
+  ne: { top: -10, right: -10, cursor: "nesw-resize" },
+  nw: { top: -10, left: -10, cursor: "nwse-resize" },
 };
 
 export interface SmartContainerProps {
@@ -122,11 +122,18 @@ export function SmartContainer({
     onUpdate(data.id, { rect: { ...data.rect, x: dataEvent.x, y: dataEvent.y } });
   };
 
-  const handleResize = (_event: unknown, { size }: ResizeCallbackData) => {
-    const width = Math.max(MIN_SIZE, size.width);
-    const height = Math.max(MIN_SIZE, size.height);
-    onUpdate(data.id, { rect: { ...data.rect, width, height } });
-  };
+  // Custom resize handler
+  const { handleMouseDown: handleResizeStart } = useCustomResize({
+    onResize: (width, height, x, y) => {
+      const newRect = { ...data.rect, width, height };
+      if (x !== undefined) newRect.x = x;
+      if (y !== undefined) newRect.y = y;
+      onUpdate(data.id, { rect: newRect });
+    },
+    minWidth: MIN_SIZE,
+    minHeight: MIN_SIZE,
+    disabled: data.isLocked,
+  });
 
   const containerStyle = useMemo<CSSProperties>(() => {
     const expandedHeight =
@@ -185,14 +192,14 @@ export function SmartContainer({
     width: 28,
     height: 28,
     borderRadius: 8,
-    border: "1px solid rgba(17,24,39,0.14)",
-    background: "rgba(17,24,39,0.06)",
+    border: "1px solid rgba(17,24,39,0.25)",
+    background: "rgba(255,255,255,0.85)",
     color: HEADER_COLOR,
     display: "grid",
     placeItems: "center",
     fontSize: 12,
     cursor: "pointer",
-    transition: "transform 120ms ease, box-shadow 120ms ease",
+    transition: "transform 120ms ease, box-shadow 120ms ease, background 120ms ease",
   };
 
   const actionsWrapperStyle: CSSProperties = {
@@ -270,7 +277,7 @@ export function SmartContainer({
         onFocus?.(data.id);
       }}
       handle=".grid-title-bar"
-      cancel=".smart-container__input"
+      cancel=".smart-container__input, .resize-handle, .react-resizable-handle"
       disabled={data.isLocked}
     >
       <div
@@ -281,36 +288,51 @@ export function SmartContainer({
         onMouseEnter={() => setIsHovering(true)}
         onMouseLeave={() => setIsHovering(false)}
       >
-        <Resizable
-          width={data.rect.width}
-          height={data.rect.height}
-          onResize={handleResize}
-          onResizeStop={handleResize}
-          resizeHandles={data.isLocked ? [] : RESIZE_HANDLES}
-          handle={(axis) => (
-            <span
-              key={axis}
+        <div
+          ref={setNodeRef}
+          style={{
+            ...containerStyle,
+            borderColor: isOver ? "#38bdf8" : containerStyle.border?.toString(),
+            boxShadow: isOver
+              ? "0 0 0 2px rgba(56,189,248,0.5), 0 16px 40px rgba(0,0,0,0.35)"
+              : containerStyle.boxShadow,
+            position: "relative",
+          }}
+        >
+          {/* Custom Resize Handles */}
+          {!data.isLocked && RESIZE_DIRECTIONS.map((direction) => (
+            <div
+              key={direction}
+              className="resize-handle"
               style={{
                 position: "absolute",
-                width: 12,
-                height: 12,
-                borderRadius: 10,
-                background: "rgba(255,255,255,0.28)",
-                ...handleStyles[axis],
+                width: 20,
+                height: 20,
+                borderRadius: "50%",
+                background: "#ffffff",
+                border: "3px solid rgba(17,24,39,0.8)",
+                boxShadow: "0 2px 8px rgba(0,0,0,0.3)",
+                pointerEvents: "auto",
+                zIndex: 10000,
+                transition: "background 120ms ease, transform 120ms ease, box-shadow 120ms ease",
+                ...RESIZE_HANDLE_STYLES[direction],
+              }}
+              onMouseDown={(e) => handleResizeStart(direction, e, data.rect.width, data.rect.height, data.rect.x, data.rect.y)}
+              onMouseEnter={(e) => {
+                (e.currentTarget as HTMLElement).style.transform = `${RESIZE_HANDLE_STYLES[direction].transform || ''} scale(1.3)`;
+                (e.currentTarget as HTMLElement).style.background = "#10b981";
+              }}
+              onMouseLeave={(e) => {
+                (e.currentTarget as HTMLElement).style.transform = RESIZE_HANDLE_STYLES[direction].transform as string || '';
+                (e.currentTarget as HTMLElement).style.background = "#ffffff";
               }}
             />
-          )}
-          minConstraints={[MIN_SIZE, MIN_SIZE]}
-          draggableOpts={{ disabled: data.isLocked }}
-        >
+          ))}
+
           <div
-            ref={setNodeRef}
             style={{
               ...containerStyle,
               borderColor: isOver ? "#38bdf8" : containerStyle.border?.toString(),
-              boxShadow: isOver
-                ? "0 0 0 2px rgba(56,189,248,0.5), 0 16px 40px rgba(0,0,0,0.35)"
-                : containerStyle.boxShadow,
             }}
           >
             <div className="smart-container__header grid-title-bar group" style={headerStyle}>
@@ -347,7 +369,7 @@ export function SmartContainer({
                   {data.title || "新建画布"}
                 </span>
               )}
-              <div className="group-hover:opacity-100 group-hover:opacity-100 transition-opacity" style={{ ...actionsWrapperStyle, opacity: 0 }}>
+              <div className="transition-opacity" style={{ ...actionsWrapperStyle, opacity: 1 }}>
                 <button
                   type="button"
                   style={viewToggleStyle}
@@ -457,7 +479,7 @@ export function SmartContainer({
               </div>
             )}
           </div>
-        </Resizable>
+        </div>
       </div>
     </Draggable>
   );

@@ -26,7 +26,7 @@ body,
 .app-shell {
   position: fixed;
   inset: 0;
-  pointer-events: none;
+  /* Remove pointer-events: none - controlled by Tauri API */
   overflow: hidden;
   isolation: isolate;
 }
@@ -34,7 +34,7 @@ body,
 .interactive-layer {
   position: absolute;
   inset: 0;
-  pointer-events: none;
+  /* Remove pointer-events: none - controlled by Tauri API */
 }
 
 .assistant-layer {

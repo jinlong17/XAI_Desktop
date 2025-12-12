@@ -24,17 +24,28 @@ pub fn run() {
 
             #[cfg(target_os = "macos")]
             {
-                // Keep window on desktop layer across spaces without creating a new Space.
+                // Configure window to be BELOW all other windows (desktop layer)
                 unsafe {
                     let ns_window = window.ns_window().expect("ns_window") as id;
-                    let behavior = NSWindowCollectionBehavior::NSWindowCollectionBehaviorCanJoinAllSpaces
-                        | NSWindowCollectionBehavior::NSWindowCollectionBehaviorStationary
-                        | NSWindowCollectionBehavior::NSWindowCollectionBehaviorIgnoresCycle;
+                    
+                    // Only use CanJoinAllSpaces - remove Stationary
+                    // Stationary may prevent proper layering
+                    let behavior = NSWindowCollectionBehavior::NSWindowCollectionBehaviorCanJoinAllSpaces;
                     ns_window.setCollectionBehavior_(behavior);
-                    // kCGNormalWindowLevel = 0 keeps it at normal level (above wallpaper, not a new Space)
-                    ns_window.setLevel_(0);
+                    
+                    // Use the absolute LOWEST window level
+                    // CGShieldingWindowLevel() - 1 ensures we're below everything
+                    const K_CG_DESKTOP_WINDOW_LEVEL: i64 = i32::MIN as i64;
+                    ns_window.setLevel_(K_CG_DESKTOP_WINDOW_LEVEL);
+                    
+                    // Ensure transparency
                     ns_window.setBackgroundColor_(NSColor::clearColor(nil));
                     ns_window.setOpaque_(NO);
+                    
+                    println!("✅ macOS window configured (LOWEST level):");
+                    println!("   - Window level: {} (i32::MIN - absolute lowest)", K_CG_DESKTOP_WINDOW_LEVEL);
+                    println!("   - Behavior: CanJoinAllSpaces only");
+                    println!("   - Should be below ALL windows");
                 }
             }
 

@@ -74,17 +74,12 @@ export function GridSystemProvider({ children }: { children: ReactNode }) {
     (x: number, y: number) => {
       const id = toId();
       const base = defaultGrid(id, x, y);
-      const newItems = generateMockItems(5);
-      const nextItems = { ...items };
-      newItems.forEach((item) => {
-        nextItems[item.id] = item;
-      });
 
-      const nextGrid: GridBox = { ...base, itemIds: newItems.map((i) => i.id) };
-      setItems(nextItems);
+      // Create empty grid - no mock data
+      const nextGrid: GridBox = { ...base, itemIds: [] };
       setGrids((prev) => [...prev, nextGrid]);
     },
-    [items],
+    [],
   );
 
   const updateGrid = useCallback(
