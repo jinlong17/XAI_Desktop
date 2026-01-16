@@ -27,7 +27,8 @@
         "shadow": false,
         "skipTaskbar": true,
         "hiddenTitle": true,
-        "titleBarStyle": "Overlay"
+        "titleBarStyle": "Overlay",
+        "dragDropEnabled": false
       }
     ],
     "security": {
