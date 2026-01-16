@@ -1,7 +1,6 @@
 import { useMemo } from "react";
 import { AnchorPosition } from "../AiAssistant/AiCube";
 import { useSettings } from "../../context/SettingsContext";
-import { useGridSystem } from "@repo/plugin-organizer";
 
 const MOCK_DATA = [
   { label: "Opacity", range: "0.15 — 0.85", note: "Keep the desktop visible" },
@@ -12,6 +11,7 @@ const MOCK_DATA = [
 export interface SettingsPanelProps {
   isOpen: boolean;
   anchorPosition: AnchorPosition;
+  onCreateGrid?: (x: number, y: number) => void;
 }
 
 /**
@@ -20,7 +20,7 @@ export interface SettingsPanelProps {
  * Shows canvas controls next to the AI cube. This popover stays thin on purpose
  * so new plugin settings can slot in without restructuring the host.
  */
-export function SettingsPanel({ isOpen, anchorPosition }: SettingsPanelProps) {
+export function SettingsPanel({ isOpen, anchorPosition, onCreateGrid }: SettingsPanelProps) {
   const {
     cubeColor,
     cubeTextColor,
@@ -37,7 +37,9 @@ export function SettingsPanel({ isOpen, anchorPosition }: SettingsPanelProps) {
     setGridOpacity,
     setGridBlur,
   } = useSettings();
-  const { createGrid } = useGridSystem();
+  const handleCreateGrid = (x: number, y: number) => {
+    onCreateGrid?.(x, y);
+  };
 
   const panelStyle = useMemo(() => {
     const yOffset = 80;
@@ -57,8 +59,7 @@ export function SettingsPanel({ isOpen, anchorPosition }: SettingsPanelProps) {
         <button
           type="button"
           onClick={() => {
-            createGrid(64, 120);
-            console.log("Create Grid: new GridBox spawned via AI settings");
+            handleCreateGrid(64, 120);
           }}
           style={{
             pointerEvents: "auto",
@@ -82,7 +83,6 @@ export function SettingsPanel({ isOpen, anchorPosition }: SettingsPanelProps) {
           onChange={(event) => {
             const next = event.target.value;
             setCubeColor(next);
-            console.log(`Settings Changed: cubeColor = ${next}`);
           }}
           aria-label="AI Cube Theme Color"
           style={{ width: 48, height: 32, borderRadius: 8, border: "1px solid rgba(255,255,255,0.2)" }}
@@ -97,7 +97,6 @@ export function SettingsPanel({ isOpen, anchorPosition }: SettingsPanelProps) {
           onChange={(event) => {
             const next = event.target.value;
             setCubeTextColor(next);
-            console.log(`Settings Changed: cubeTextColor = ${next}`);
           }}
           aria-label="AI Cube Text Color"
           style={{ width: 48, height: 32, borderRadius: 8, border: "1px solid rgba(255,255,255,0.2)" }}
@@ -116,7 +115,6 @@ export function SettingsPanel({ isOpen, anchorPosition }: SettingsPanelProps) {
             onChange={(event) => {
               const next = Number(event.target.value);
               setCubeOpacity(next);
-              console.log(`Settings Changed: cubeOpacity = ${next}`);
             }}
             aria-label="AI Cube Opacity"
           />
@@ -135,7 +133,6 @@ export function SettingsPanel({ isOpen, anchorPosition }: SettingsPanelProps) {
             onChange={(event) => {
               const next = Number(event.target.value);
               setCubeSize(next);
-              console.log(`Settings Changed: cubeSize = ${next}`);
             }}
             aria-label="AI Cube Size"
           />
@@ -154,7 +151,6 @@ export function SettingsPanel({ isOpen, anchorPosition }: SettingsPanelProps) {
             onChange={(event) => {
               const next = Number(event.target.value);
               setCubeFontSize(next);
-              console.log(`Settings Changed: cubeFontSize = ${next}`);
             }}
             aria-label="AI Cube Text Size"
           />
@@ -176,7 +172,6 @@ export function SettingsPanel({ isOpen, anchorPosition }: SettingsPanelProps) {
             onChange={(event) => {
               const next = Number(event.target.value);
               setGridOpacity(next);
-              console.log(`Settings Changed: gridOpacity = ${next}`);
             }}
             aria-label="Grid Box Background Opacity"
           />
@@ -190,7 +185,6 @@ export function SettingsPanel({ isOpen, anchorPosition }: SettingsPanelProps) {
             checked={gridBlur}
             onChange={(event) => {
               setGridBlur(event.target.checked);
-              console.log(`Settings Changed: gridBlur = ${event.target.checked}`);
             }}
             aria-label="Toggle grid blur"
           />

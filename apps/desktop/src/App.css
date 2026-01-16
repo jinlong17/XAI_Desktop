@@ -26,7 +26,9 @@ body,
 .app-shell {
   position: fixed;
   inset: 0;
-  /* Remove pointer-events: none - controlled by Tauri API */
+  /* Click-through is now handled by dynamic setIgnoreCursorEvents via Rust */
+  /* All elements need to be interactable for proper hit-testing */
+  pointer-events: auto;
   overflow: hidden;
   isolation: isolate;
 }
@@ -34,7 +36,8 @@ body,
 .interactive-layer {
   position: absolute;
   inset: 0;
-  /* Remove pointer-events: none - controlled by Tauri API */
+  /* All elements interactable - Rust controls actual click-through */
+  pointer-events: auto;
 }
 
 .assistant-layer {

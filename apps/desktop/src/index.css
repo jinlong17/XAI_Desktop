@@ -6,4 +6,6 @@ body,
   width: 100%;
   height: 100%;
   background-color: transparent !important;
+  /* Click-through is now handled dynamically by Rust global mouse tracking */
+  /* All elements need pointer-events: auto for proper hit-testing */
 }
