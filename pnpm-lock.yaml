@@ -188,6 +188,9 @@ importers:
       '@dnd-kit/utilities':
         specifier: ^3.2.1
         version: 3.2.2(react@19.2.0)
+      '@tauri-apps/api':
+        specifier: ^2
+        version: 2.9.0
       react:
         specifier: ^19.2.0
         version: 19.2.0

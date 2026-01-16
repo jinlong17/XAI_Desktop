@@ -9,10 +9,12 @@ import {
   useState,
 } from "react";
 import { DesktopItem, GridBox, PersistedLayout } from "./types";
-import { defaultGrid, generateMockItems } from "./mockData";
+import { defaultGrid } from "./mockData";
 
 const STORAGE_KEY = "xai-desktop-layout";
 const TITLE_BAR_HEIGHT = 40;
+
+const DEBUG_CLEAR_ON_STARTUP = false;
 
 interface GridSystemContextValue {
   grids: GridBox[];
@@ -23,6 +25,9 @@ interface GridSystemContextValue {
   deleteGrid: (id: string) => void;
   moveItem: (itemId: string, fromId: string, toId: string) => void;
   toggleLock: (id: string) => void;
+  addItem: (item: DesktopItem) => void;
+  addItemToGrid: (gridId: string, itemId: string) => void;
+  findGridAtPosition: (x: number, y: number) => GridBox | null;
 }
 
 const GridSystemContext = createContext<GridSystemContextValue | undefined>(undefined);
@@ -51,11 +56,20 @@ function saveLayout(payload: PersistedLayout) {
 export function GridSystemProvider({ children }: { children: ReactNode }) {
   const [grids, setGrids] = useState<GridBox[]>([]);
   const [items, setItems] = useState<Record<string, DesktopItem>>({});
+  const [hydrated, setHydrated] = useState(false);
   const heightCache = useRef<Record<string, number>>({});
   const saveTimer = useRef<number | null>(null);
 
   // Hydrate
   useEffect(() => {
+    if (DEBUG_CLEAR_ON_STARTUP) {
+      localStorage.removeItem(STORAGE_KEY);
+      setGrids([]);
+      setItems({});
+      setHydrated(true);
+      return;
+    }
+
     const data = loadLayout();
     if (data) {
       const mappedItems: Record<string, DesktopItem> = {};
@@ -68,6 +82,7 @@ export function GridSystemProvider({ children }: { children: ReactNode }) {
       setGrids([]);
       setItems({});
     }
+    setHydrated(true);
   }, []);
 
   const createGrid = useCallback(
@@ -140,8 +155,39 @@ export function GridSystemProvider({ children }: { children: ReactNode }) {
     );
   }, []);
 
+  const addItem = useCallback((item: DesktopItem) => {
+    setItems((prev) => ({ ...prev, [item.id]: item }));
+  }, []);
+
+  const addItemToGrid = useCallback((gridId: string, itemId: string) => {
+    setGrids((prev) =>
+      prev.map((grid) =>
+        grid.id === gridId && !grid.itemIds.includes(itemId)
+          ? { ...grid, itemIds: [...grid.itemIds, itemId] }
+          : grid
+      ),
+    );
+  }, []);
+
+  const findGridAtPosition = useCallback(
+    (x: number, y: number): GridBox | null => {
+      // Find the grid that contains the given position
+      return grids.find((grid) => {
+        const { rect } = grid;
+        return (
+          x >= rect.x &&
+          x <= rect.x + rect.width &&
+          y >= rect.y &&
+          y <= rect.y + rect.height
+        );
+      }) || null;
+    },
+    [grids],
+  );
+
   // Debounced persistence
   useEffect(() => {
+    if (!hydrated) return;
     if (saveTimer.current) {
       window.clearTimeout(saveTimer.current);
     }
@@ -154,7 +200,7 @@ export function GridSystemProvider({ children }: { children: ReactNode }) {
         window.clearTimeout(saveTimer.current);
       }
     };
-  }, [grids, items]);
+  }, [grids, items, hydrated]);
 
   const value = useMemo<GridSystemContextValue>(
     () => ({
@@ -166,8 +212,11 @@ export function GridSystemProvider({ children }: { children: ReactNode }) {
       deleteGrid,
       moveItem,
       toggleLock,
+      addItem,
+      addItemToGrid,
+      findGridAtPosition,
     }),
-    [createGrid, deleteGrid, grids, items, moveItem, toggleFold, toggleLock, updateGrid],
+    [createGrid, deleteGrid, grids, items, moveItem, toggleFold, toggleLock, updateGrid, addItem, addItemToGrid, findGridAtPosition],
   );
 
   return <GridSystemContext.Provider value={value}>{children}</GridSystemContext.Provider>;

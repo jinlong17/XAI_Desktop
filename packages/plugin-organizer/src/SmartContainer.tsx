@@ -18,17 +18,6 @@ const MIN_SIZE = 150;
 const TITLE_BAR_HEIGHT = 40;
 const HEADER_COLOR = "#111827";
 
-const handleStyles: Record<ResizeHandle, CSSProperties> = {
-  s: { bottom: -10, left: "50%", transform: "translateX(-50%)", cursor: "ns-resize" },
-  n: { top: -10, left: "50%", transform: "translateX(-50%)", cursor: "ns-resize" },
-  e: { right: -10, top: "50%", transform: "translateY(-50%)", cursor: "ew-resize" },
-  w: { left: -10, top: "50%", transform: "translateY(-50%)", cursor: "ew-resize" },
-  se: { bottom: -10, right: -10, cursor: "nwse-resize" },
-  sw: { bottom: -10, left: -10, cursor: "nesw-resize" },
-  ne: { top: -10, right: -10, cursor: "nesw-resize" },
-  nw: { top: -10, left: -10, cursor: "nwse-resize" },
-};
-
 export interface SmartContainerProps {
   data: GridBox;
   items: DesktopItem[];
