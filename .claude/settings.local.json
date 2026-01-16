@@ -1,0 +1,17 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(pnpm build:*)",
+      "Bash(pnpm install:*)",
+      "Bash(pnpm tauri build:*)",
+      "Bash(cat:*)",
+      "Bash(pkill:*)",
+      "Bash(lsof:*)",
+      "Bash(xargs kill -9)",
+      "Bash(pnpm build:desktop:*)",
+      "Bash(cargo build:*)",
+      "Bash(find:*)",
+      "Bash(cargo tauri dev:*)"
+    ]
+  }
+}
