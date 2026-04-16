@@ -1,0 +1,69 @@
+---
+description: Workflow V2 Handoff display and cross-tool continuity rules
+globs:
+  - "features/*/docs/dev_log.md"
+  - ".agents/templates/*.md"
+alwaysApply: true
+---
+
+# Workflow V2 — Cursor Handoff Rules
+
+## V2.1 Two workflow systems
+
+This project has transitioned from a V1 5-role pipeline to a V2
+task-semantic pipeline. The V2 system uses:
+
+- `features/<feature>/docs/dev_log.md` as the state machine
+- `docs/reviews/<feature>/<YYYYMMDD>-discovery-review.md` for discovery
+- Subagents: feature-plan, feature-review, feature-build, feature-verify,
+  ship, bug-diagnose, bug-fix, bug-verify, feature-dev-loop, bugfix-loop
+
+The V1 system (`handoff/` directory, analyze → implement → test →
+summarize → ship) is **deprecated and removed**. Do not create `handoff/`
+files or reference V1 agent names.
+
+## V2.2 Handoff display — hard constraint
+
+When executing any Workflow V2 subagent (either spawned or inline),
+the **final response MUST be ONLY the `## Handoff` block** defined in
+the subagent's template.
+
+Cursor has no parent/child agent boundary — when you run a subagent's
+instructions, you ARE the subagent. This makes it especially important
+to follow the Output Contract:
+
+- Do NOT add free-form prose, explanation, or commentary before or after
+  the Handoff block
+- Do NOT end with a question like "要继续吗？" or "是否启动下一步？"
+- Do NOT strip the `## Handoff` heading or `### Next Step` section
+- If you need to communicate extra context, put it inside the **Summary**
+  field of the Handoff block
+
+## V2.3 Context prefix (allowed)
+
+If you have observations that don't fit in the Summary field, you may
+place them **ABOVE** the Handoff block under a `## Context` heading.
+The Handoff block itself must remain intact and unmodified below.
+
+## V2.4 Relationship with V1
+
+The V1 5-role system (analyze, implement, test, summarize, ship) has been
+fully replaced. All V1 `.cursor/commands/` and `.cursor/rules/handoff.mdc`
+(original version) are removed. This file is the V2 replacement.
+
+## V2.5 Why this rule exists
+
+Each subagent template contains an Output Contract that tells the model
+"your final response must be only the Handoff block." But Cursor executes
+subagents inline, so there's no system boundary to enforce this — the model
+can easily slip into conversational mode after completing the structured work.
+
+This rule file provides a second enforcement layer at the Cursor Rules level,
+ensuring the Handoff block is always the final output regardless of how
+the subagent was invoked.
+
+**Cross-platform sync:** This rule corresponds to:
+- `CLAUDE.md` §Workflow V2 Subagent Output Display (Claude Code)
+- `AGENTS.md` §1 (Codex)
+
+Changes here must be synced to those files.
