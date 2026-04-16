@@ -25,7 +25,7 @@ return () => {
 
 ### 步骤 1: 重新启动
 ```bash
-cd /Users/jinlong/Desktop/jinlong_project/XAI_Desktop/apps/desktop
+cd /Users/lijinlong/Desktop/AI_Desktop/XAI_Desktop/apps/desktop
 pnpm tauri dev
 ```
 

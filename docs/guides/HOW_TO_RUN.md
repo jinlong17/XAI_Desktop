@@ -32,7 +32,7 @@ cargo tauri --version
 
 ```bash
 # 1. 进入项目根目录
-cd /Users/jinlong/Desktop/jinlong_project/XAI_Desktop
+cd /Users/lijinlong/Desktop/AI_Desktop/XAI_Desktop
 
 # 2. 安装依赖（首次运行或 package.json 变更后）
 pnpm install
@@ -53,7 +53,7 @@ pnpm tauri dev
 
 ```bash
 # 1. 进入桌面应用目录
-cd /Users/jinlong/Desktop/jinlong_project/XAI_Desktop/apps/desktop
+cd /Users/lijinlong/Desktop/AI_Desktop/XAI_Desktop/apps/desktop
 
 # 2. 构建生产版本
 pnpm tauri build
@@ -65,70 +65,38 @@ pnpm tauri build
 
 ---
 
-## 🧪 测试效率助手套件功能
+## 🧪 当前主线功能测试
 
-启动应用后，按以下步骤测试新功能：
+启动应用后，按以下步骤验证当前实现：
 
-### 1️⃣ 测试便利贴创建
+### 1️⃣ Grid 创建与基础交互
 ```
-1. 右键点击左上角的 AI Cube (浮动图标)
-2. 点击菜单中的 "📝 Add Note"
-3. 应该在鼠标位置出现一个黄色便利贴
-```
-
-### 2️⃣ 测试便利贴编辑
-```
-1. 点击便利贴内部 → 进入编辑模式
-2. 输入文本: "测试任务：完成项目报告"
-3. 点击便利贴外部 → 自动保存
-4. 右键点击便利贴:
-   - 🎨 切换颜色 (黄→粉→蓝→绿)
-   - 📁 折叠/展开
-   - 🗑️ 删除
+1. 在桌面区域创建一个 Grid（通过设置面板或拖入文件触发）
+2. 拖动 Grid 到不同位置
+3. 调整 Grid 大小
+4. ✅ 预期: 位置和尺寸变化生效
 ```
 
-### 3️⃣ 测试拖拽转任务（核心功能）
+### 2️⃣ 文件拖入（主流程）
 ```
-1. 确保便利贴有内容
-2. 拖拽便利贴到右下角的四象限矩阵
-3. 悬停在任意象限上（背景会高亮）
-4. 松开鼠标
-5. ✅ 预期结果:
-   - 便利贴从桌面消失
-   - 任务出现在目标象限中
-   - 任务内容与便利贴一致
-   - 可以点击 Checkbox 标记完成
+1. 从 Finder 拖一个或多个文件到主窗口
+2. 若落点无 Grid，系统应创建新 Grid
+3. 若落点在已有 Grid 区域，文件应加入该 Grid
+4. ✅ 预期: 文件条目出现在目标 Grid 中
 ```
 
-### 4️⃣ 测试四象限任务管理
+### 3️⃣ 多窗口行为（当前架构）
 ```
-1. 右下角显示四象限矩阵:
-   - 左上: 紧急且重要 (红色)
-   - 右上: 重要不紧急 (蓝色)
-   - 左下: 紧急不重要 (黄色)
-   - 右下: 不紧急不重要 (绿色)
-2. 点击任务的 Checkbox → 任务显示删除线
-3. 点击任务右侧的 × → 删除任务
+1. 创建多个 Grid
+2. 观察它们以独立窗口方式存在
+3. ✅ 预期: 状态提示显示 active grid windows 数量
 ```
 
-### 5️⃣ 测试番茄时钟
+### 4️⃣ 阻塞问题复核（窗口层级）
 ```
-1. 右上角显示番茄时钟组件
-2. 点击 "开始" → 倒计时从 25:00 开始
-3. 观察进度条实时更新
-4. 点击 "暂停" → 停止倒计时
-5. 点击 "重置" → 恢复到 25:00
-```
-
-### 6️⃣ 测试持久化
-```
-1. 创建 2-3 个便利贴，输入不同内容
-2. 拖拽 1 个便利贴到四象限
-3. 标记 1 个任务为完成
-4. 开始番茄时钟
-5. 关闭应用（Cmd+Q）
-6. 重新启动应用
-7. ✅ 预期结果: 所有状态都保持不变
+1. 尝试点击 Grid 外的桌面图标
+2. 观察点击穿透行为是否符合预期
+3. ✅ 说明: 该项为当前 blocker，结果请记录到技术状态文档
 ```
 
 ---
@@ -191,11 +159,11 @@ pnpm tauri dev
 
 ---
 
-### 问题 4: 便利贴或四象限不显示
+### 问题 4: Grid 或文件拖入行为异常
 
 **可能原因**:
-- EfficiencyStoreProvider 未正确包装
-- DndContext 配置错误
+- 拖放监听未成功挂载
+- 窗口层级行为与当前实验配置不一致
 
 **检查方法**:
 ```bash
@@ -204,8 +172,8 @@ pnpm tauri dev
 查看 Console 是否有报错
 
 # 常见错误:
-# - "useEfficiencyStore must be used within EfficiencyStoreProvider"
-# - 解决: 检查 App.tsx 是否包含 EfficiencyStoreProvider
+# - HTML5 drag/drop 事件未触发
+# - create-grid-request 事件未监听
 ```
 
 ---
@@ -241,17 +209,12 @@ XAI_Desktop/
 │           │   └── lib.rs    # Rust 代码
 │           └── tauri.conf.json  # Tauri 配置
 ├── packages/
-│   └── plugin-organizer/     # 效率助手插件
+│   └── plugin-organizer/     # Grid 与组织能力插件
 │       └── src/
-│           ├── efficiency/   # 🆕 效率助手套件
-│           │   ├── types.ts
-│           │   ├── useEfficiencyStore.tsx
-│           │   └── components/
-│           │       ├── StickyNoteCard.tsx
-│           │       ├── StickyNotesLayer.tsx
-│           │       ├── TaskCard.tsx
-│           │       ├── EisenhowerMatrix.tsx
-│           │       └── PomodoroTimer.tsx
+│           ├── SmartContainer.tsx
+│           ├── useGridSystem.tsx
+│           └── hooks/
+│               └── useFileDrop.ts
 │           └── ...
 └── pnpm-workspace.yaml       # Monorepo 配置
 ```
@@ -305,9 +268,9 @@ pnpm tauri build --release
 
 ### 3. 代码分割
 ```typescript
-// 懒加载组件
-const EisenhowerMatrix = lazy(() => 
-  import('./efficiency/components/EisenhowerMatrix')
+// 示例：按需加载较重的窗口管理模块
+const MultiWindowManager = lazy(() =>
+  import('../hooks/useMultiWindowGrids')
 );
 ```
 
@@ -342,13 +305,13 @@ cd apps/desktop && pnpm tauri info
 1. ✅ **启动应用**: `cd apps/desktop && pnpm tauri dev`
 2. ✅ **测试功能**: 按照上面的测试步骤逐项验证
 3. ✅ **反馈问题**: 如有问题，参考故障排除部分
-4. ✅ **配置通知**: 完善番茄钟通知功能（参考 EFFICIENCY_SUITE_IMPLEMENTATION.md）
+4. ✅ **记录 blocker**: 将窗口层级与点击穿透测试结果更新到 `docs/development/TECHNICAL_STATUS.md`
 
 ---
 
-**文档版本**: v1.0  
-**更新时间**: 2024-12-10  
-**适用版本**: XAI Desktop v2.2+
+**文档版本**: v1.1  
+**更新时间**: 2026-03-02  
+**适用版本**: XAI Desktop current desktop branch
 
 ---
 

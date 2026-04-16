@@ -11,7 +11,26 @@
       "Bash(pnpm build:desktop:*)",
       "Bash(cargo build:*)",
       "Bash(find:*)",
-      "Bash(cargo tauri dev:*)"
+      "Bash(cargo tauri dev:*)",
+      "Bash(wc -l /Users/lijinlong/Desktop/AI_Desktop/XAI_Desktop/apps/desktop/src/**/*.tsx /Users/lijinlong/Desktop/AI_Desktop/XAI_Desktop/packages/plugin-organizer/src/**/*.tsx)",
+      "Bash(chmod +x /Users/lijinlong/Desktop/AI_Desktop/XAI_Desktop/scripts/setup_subagents_v2.sh)",
+      "Bash(./scripts/setup_subagents_v2.sh --dry-run)",
+      "Bash(./scripts/setup_subagents_v2.sh --replace-claude --force)",
+      "Bash(sed -n '/^---$/,/^---$/p' /Users/lijinlong/Desktop/AI_Desktop/XAI_Desktop/.claude/agents/feature-dev-loop.md)",
+      "Bash(sed -n '/^---$/,/^---$/p' /Users/lijinlong/Desktop/AI_Desktop/XAI_Desktop/.claude/agents/bugfix-loop.md)",
+      "Bash(grep -l \"^tools:\" /Users/lijinlong/Desktop/AI_Desktop/XAI_Desktop/.claude/agents/*.md)",
+      "Bash(xargs -I{} basename {})",
+      "Bash(rm -f /Users/lijinlong/Desktop/AI_Desktop/XAI_Desktop/.claude/agents/feature-dev-loop.md /Users/lijinlong/Desktop/AI_Desktop/XAI_Desktop/.claude/agents/bugfix-loop.md)",
+      "Bash(bash /Users/lijinlong/Desktop/AI_Desktop/XAI_Desktop/scripts/setup_subagents_v2.sh --replace-claude --force)",
+      "Bash(bash -x /Users/lijinlong/Desktop/AI_Desktop/XAI_Desktop/scripts/setup_subagents_v2.sh --replace-claude --force --targets claude)",
+      "Bash(bash /Users/lijinlong/Desktop/AI_Desktop/XAI_Desktop/scripts/setup_subagents_v2.sh --replace-claude --force --targets claude)",
+      "Bash(echo \"EXIT: $?\")",
+      "Bash(grep -c \"Output Contract\" /Users/lijinlong/Desktop/AI_Desktop/XAI_Desktop/.claude/agents/*.md)",
+      "Bash(grep -v \":0$\")",
+      "Bash(grep -c \"Output Contract\" /Users/lijinlong/Desktop/AI_Desktop/XAI_Desktop/.codex/agents/*.toml)",
+      "Bash(grep -c \"Output Contract\" /Users/lijinlong/Desktop/AI_Desktop/XAI_Desktop/.cursor/agents/*.md)",
+      "Bash(git add:*)",
+      "Bash(git commit -m ':*)"
     ]
   }
 }

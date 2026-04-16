@@ -161,7 +161,7 @@ const setLanguage = useCallback((value: 'zh' | 'en') => {
 ### 步骤 1: 清理并重新编译
 
 ```bash
-cd /Users/jinlong/Desktop/jinlong_project/XAI_Desktop/apps/desktop
+cd /Users/lijinlong/Desktop/AI_Desktop/XAI_Desktop/apps/desktop
 pnpm tauri clean
 pnpm tauri dev
 ```

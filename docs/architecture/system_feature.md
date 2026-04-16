@@ -20,7 +20,7 @@
 
 ## Build & Operations
 - macOS build script: `scripts/build-mac.sh` (pnpm install → pnpm tauri build, artifacts copied to `~/Desktop/XAI_Builds` with timestamped names).
-- Docs: `docs/BUILD_GUIDE.md` (prereqs, run, Gatekeeper); `docs/ARCHITECTURE_AND_DEV_GUIDE.md` (architecture + dev notes); `docs/codebse_tree.md`/`system_feature.md` for quick orientation.
+- Docs: `docs/guides/BUILD_GUIDE.md` (prereqs, run, Gatekeeper); `docs/architecture/ARCHITECTURE_AND_DEV_GUIDE.md` (architecture + dev notes); `docs/reference/codebase_tree.md` and `docs/architecture/system_feature.md` for quick orientation.
 - Cargo/Tauri: `tauri` with `macos-private-api`; window transparency/behavior handled in `src-tauri/src/lib.rs` + `tauri.conf.json`.
 
 ## Usage & Extension

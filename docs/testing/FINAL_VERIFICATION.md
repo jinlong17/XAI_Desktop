@@ -28,7 +28,7 @@
 ### 步骤 0: 清理并重新编译
 
 ```bash
-cd /Users/jinlong/Desktop/jinlong_project/XAI_Desktop/apps/desktop/src-tauri
+cd /Users/lijinlong/Desktop/AI_Desktop/XAI_Desktop/apps/desktop/src-tauri
 cargo clean
 cd ../..
 cd apps/desktop

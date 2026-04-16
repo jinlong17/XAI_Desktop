@@ -1,5 +1,9 @@
 # 效率助手套件实现总结
 
+> Document Status: OUTDATED (historical record)
+> Scope: 2024-12 implementation attempt
+> Note: This file is kept for history tracking. The current codebase does not contain `packages/plugin-organizer/src/efficiency/` as described below.
+
 ## ✅ 实现完成 (2024-12-10)
 
 所有 5 个任务已成功完成，代码已集成到应用中。

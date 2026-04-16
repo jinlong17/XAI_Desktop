@@ -10,7 +10,7 @@
 ### 1.1 清理 Rust 编译缓存
 
 ```bash
-cd /Users/jinlong/Desktop/jinlong_project/XAI_Desktop/apps/desktop/src-tauri
+cd /Users/lijinlong/Desktop/AI_Desktop/XAI_Desktop/apps/desktop/src-tauri
 cargo clean
 cd ../..
 ```
@@ -42,7 +42,7 @@ cd ../..
 ### 1.3 清理 node_modules（可选）
 
 ```bash
-cd /Users/jinlong/Desktop/jinlong_project/XAI_Desktop
+cd /Users/lijinlong/Desktop/AI_Desktop/XAI_Desktop
 rm -rf node_modules apps/desktop/node_modules packages/plugin-organizer/node_modules
 pnpm install
 ```
@@ -54,7 +54,7 @@ pnpm install
 ## 🚀 步骤 2: 重新编译和启动
 
 ```bash
-cd /Users/jinlong/Desktop/jinlong_project/XAI_Desktop/apps/desktop
+cd /Users/lijinlong/Desktop/AI_Desktop/XAI_Desktop/apps/desktop
 pnpm tauri dev
 ```
 

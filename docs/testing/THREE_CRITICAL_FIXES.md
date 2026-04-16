@@ -71,7 +71,7 @@ ns_window.setLevel_(K_CG_DESKTOP_WINDOW_LEVEL);
 
 ### 步骤 1: 重新编译
 ```bash
-cd /Users/jinlong/Desktop/jinlong_project/XAI_Desktop/apps/desktop
+cd /Users/lijinlong/Desktop/AI_Desktop/XAI_Desktop/apps/desktop
 pnpm tauri dev
 ```
 

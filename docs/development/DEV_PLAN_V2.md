@@ -1,5 +1,8 @@
 # DEV_PLAN_V2.md (Closed-Loop Edition)
 
+> Document Role: Historical planning and solution exploration.
+> Canonical current status: `docs/development/PROGRESS_SNAPSHOT.md`.
+
 > **版本目标**: v0.7 - Desktop Widget Experience
 > **核心任务**: 解决窗口层级问题，实现真正的桌面挂件体验
 > **开发模式**: Strict TDD (Implement -> Test -> Verify -> Fix)

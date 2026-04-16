@@ -1,5 +1,9 @@
 # 🚀 快速启动指南
 
+> 状态说明（2026-03-02）:
+> - 本文档用于快速启动和基础验证。
+> - 项目当前真实进度与阻塞请以 `docs/development/PROGRESS_SNAPSHOT.md` 为准。
+
 ## ✅ 问题已修复
 
 ### 修复内容：
@@ -37,13 +41,13 @@ tauri = { version = "2", features = ["macos-private-api"] }  ← 启用 feature
 
 ### 方式 1: 使用脚本（推荐）
 ```bash
-cd /Users/jinlong/Desktop/jinlong_project/XAI_Desktop
+cd /Users/lijinlong/Desktop/AI_Desktop/XAI_Desktop
 ./scripts/restart.sh
 ```
 
 ### 方式 2: 手动命令
 ```bash
-cd /Users/jinlong/Desktop/jinlong_project/XAI_Desktop/apps/desktop
+cd /Users/lijinlong/Desktop/AI_Desktop/XAI_Desktop/apps/desktop
 pnpm tauri dev
 ```
 
@@ -146,7 +150,7 @@ ns_window.setLevel_((-2147483647 + 10) as i64);
 // kCGFloatingWindowLevel   = 3            ← 浮动窗口
 ```
 
-**结果**: 所有普通窗口（Chrome, VS Code 等）都在我们上方。
+**说明**: 窗口层级是当前核心问题之一，不同实验分支结果可能不同。请结合 `docs/development/PROGRESS_SNAPSHOT.md` 与 `docs/development/TECHNICAL_STATUS.md` 判断当前结论。
 
 ---
 
