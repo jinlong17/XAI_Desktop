@@ -1,0 +1,20 @@
+{
+  "name": "organizer",
+  "version": "1.0.0",
+  "displayName": "智能桌面整理",
+  "description": "Grid-based desktop file and app organization",
+  "author": "Jinlong",
+  "enabled": true,
+  "contentTypes": ["file-grid", "app-grid", "folder-grid"],
+  "windows": {
+    "overlay": true,
+    "control": true,
+    "grid": true
+  },
+  "events": {
+    "emit": ["organizer:grid-update", "organizer:grid-close", "organizer:file-drop"],
+    "listen": ["organizer:grid-window-ready", "organizer:create-grid-request"]
+  },
+  "dependencies": ["@repo/core", "@repo/ui"],
+  "tauriCommands": ["create_grid_window", "update_grid_window", "close_grid_window"]
+}

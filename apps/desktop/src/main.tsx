@@ -1,14 +1,15 @@
 import React from "react";
 import ReactDOM from "react-dom/client";
 import App from "./App";
-import GridWindowApp from "./components/GridWindow/GridWindowApp";
-import ControlWindowApp from "./components/ControlWindow/ControlWindowApp";
+import { GridWindow } from "./windows/GridWindow";
+import { ControlWindow } from "./windows/ControlWindow";
 import "./index.css";
 
 /**
  * Simple hash router for multi-window architecture.
  * Main window loads "/" route
  * Grid windows load "/#/grid?id=xxx" route
+ * Control window loads "/#/control" route
  */
 function Router() {
   const hash = window.location.hash;
@@ -19,12 +20,12 @@ function Router() {
     const gridId = params.get("id");
 
     if (gridId) {
-      return <GridWindowApp gridId={gridId} />;
+      return <GridWindow gridId={gridId} />;
     }
   }
 
   if (hash.startsWith("#/control")) {
-    return <ControlWindowApp />;
+    return <ControlWindow />;
   }
 
   // Default: main app

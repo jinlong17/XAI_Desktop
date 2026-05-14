@@ -1,7 +1,7 @@
 import { useEffect, useRef, useCallback } from "react";
 import { listen } from "@tauri-apps/api/event";
 import { emit } from "@tauri-apps/api/event";
-import { GridBox, DesktopItem } from "@repo/plugin-organizer";
+import { GridBox, DesktopItem } from "../types";
 import {
   createGridWindow,
   updateGridWindow,

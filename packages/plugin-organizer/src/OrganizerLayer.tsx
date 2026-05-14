@@ -1,12 +1,8 @@
 import { memo, useCallback, useState, useEffect } from "react";
-import {
-  DesktopItem,
-  useGridSystem,
-  useFileDrop,
-  getFileInfoFromPath,
-  getFileIcon,
-} from "@repo/plugin-organizer";
-import { useMultiWindowGrids } from "../hooks/useMultiWindowGrids";
+import { DesktopItem } from "./types";
+import { useGridSystem } from "./useGridSystem";
+import { useFileDrop, getFileInfoFromPath, getFileIcon } from "./hooks/useFileDrop";
+import { useMultiWindowGrids } from "./hooks/useMultiWindowGrids";
 import { listen } from "@tauri-apps/api/event";
 
 function OrganizerContent() {
@@ -73,8 +69,6 @@ function OrganizerContent() {
       if (!targetGrid) {
         console.log("📂 No grid at position, creating new one");
         createGrid(position.x, position.y);
-        // Note: The grid window will be created by useMultiWindowGrids
-        // Files will need to be dropped again on the new grid window
         return;
       }
 
@@ -116,10 +110,7 @@ function OrganizerContent() {
       style={{
         position: "absolute",
         inset: 0,
-        // Main window is now primarily for coordination
-        // Actual grid rendering happens in separate windows
         pointerEvents: "none",
-        // Visual feedback when dragging files
         outline: isDraggingFile ? "3px dashed rgba(56, 189, 248, 0.6)" : "none",
         outlineOffset: "-3px",
         transition: "outline 150ms ease",
@@ -170,8 +161,8 @@ function OrganizerContent() {
 }
 
 /**
- * OrganizerLayer renders multiple SmartContainers on the host interactive layer.
- * It stays isolated so other plugins (Sticky Notes, Four Quadrants) remain unaffected.
+ * OrganizerLayer renders the organizer plugin's overlay on the main window.
+ * Manages grid window lifecycle, file drops, and cross-window communication.
  */
 export const OrganizerLayer = memo(function OrganizerLayer() {
   return <OrganizerContent />;

@@ -1,9 +1,9 @@
 import { useEffect, useMemo, useState } from "react";
 import { emit } from "@tauri-apps/api/event";
 import { getCurrentWindow } from "@tauri-apps/api/window";
-import AiCube, { AnchorPosition } from "../AiAssistant/AiCube";
-import SettingsPanel from "../Settings/SettingsPanel";
-import { SettingsProvider } from "../../context/SettingsContext";
+import AiCube, { AnchorPosition } from "../components/AiAssistant/AiCube";
+import SettingsPanel from "../components/Settings/SettingsPanel";
+import { SettingsProvider } from "../context/SettingsContext";
 
 function ControlWindowContent() {
   const [isPanelOpen, setIsPanelOpen] = useState(false);
@@ -21,13 +21,7 @@ function ControlWindowContent() {
   );
 
   return (
-    <div
-      style={{
-        width: "100%",
-        height: "100%",
-        background: "transparent",
-      }}
-    >
+    <div style={{ width: "100%", height: "100%", background: "transparent" }}>
       <AiCube
         isPanelOpen={isPanelOpen}
         onTogglePanel={() => setIsPanelOpen((prev) => !prev)}
@@ -42,7 +36,10 @@ function ControlWindowContent() {
   );
 }
 
-export function ControlWindowApp() {
+/**
+ * ControlWindow is the root component for the AI Cube control window.
+ */
+export function ControlWindow() {
   return (
     <SettingsProvider>
       <ControlWindowContent />
@@ -50,4 +47,4 @@ export function ControlWindowApp() {
   );
 }
 
-export default ControlWindowApp;
+export default ControlWindow;
