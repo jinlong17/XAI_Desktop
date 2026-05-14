@@ -17,10 +17,8 @@ function OrganizerContent() {
     findGridAtPosition,
   } = useGridSystem();
   const [isDraggingFile, setIsDraggingFile] = useState(false);
-  // Check if we're running in Tauri environment
-  // Always true for now since we're building for Tauri
-  // The __TAURI__ check was failing due to timing issues
-  const isTauri = true; // Force enable for Tauri app
+  // Detect Tauri environment
+  const isTauri = typeof window !== "undefined" && "__TAURI__" in window;
 
   // Handle file drop for a specific grid (from grid windows)
   const handleGridFileDrop = useCallback(

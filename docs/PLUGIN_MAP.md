@@ -12,14 +12,14 @@
 
 | Package | 目录 | 状态 | 说明 | 最后更新 |
 |---------|------|------|------|---------|
-| @repo/core | packages/core/ | In-Dev | 基础设施 + 类型 + 事件 + Registry | 2026-05-13 |
+| @repo/core | packages/core/ | Stable | 基础设施 + 类型 + 事件 + Registry | 2026-05-14 |
 | @repo/ui | packages/ui/ | In-Dev | 共享 UI 组件库 (3 stub 组件) | 2026-05-13 |
 
 ## Plugins
 
 | Plugin | 目录 | 状态 | PRD 章节 | 对外依赖 | 最后更新 |
 |--------|------|------|---------|---------|---------|
-| organizer | packages/plugin-organizer/ | Stable | §5.1 | @repo/core, @repo/ui | 2026-05-13 |
+| organizer | packages/plugin-organizer/ | Stable | §5.1 | @repo/core, @repo/ui | 2026-05-14 |
 | todo | packages/plugin-todo/ | Planned | §5.2 | @repo/core | — |
 | pomodoro | packages/plugin-pomodoro/ | Planned | §5.3 | @repo/core | — |
 | habits | packages/plugin-habits/ | Planned | §5.4 | @repo/core | — |
