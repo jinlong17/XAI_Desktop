@@ -1,0 +1,48 @@
+{
+  "name": "@repo/core",
+  "version": "0.0.0",
+  "private": true,
+  "description": "Core infrastructure for XAI_Desktop — types, events, store, registry. Zero business logic.",
+  "exports": {
+    ".": {
+      "types": "./src/index.ts",
+      "import": "./src/index.ts"
+    },
+    "./types": {
+      "types": "./src/types/index.ts",
+      "import": "./src/types/index.ts"
+    },
+    "./events": {
+      "types": "./src/events/index.ts",
+      "import": "./src/events/index.ts"
+    },
+    "./hooks": {
+      "types": "./src/hooks/index.ts",
+      "import": "./src/hooks/index.ts"
+    },
+    "./registry": {
+      "types": "./src/registry/index.ts",
+      "import": "./src/registry/index.ts"
+    },
+    "./store": {
+      "types": "./src/store/index.ts",
+      "import": "./src/store/index.ts"
+    }
+  },
+  "scripts": {
+    "check-types": "tsc --noEmit",
+    "test": "vitest run"
+  },
+  "dependencies": {
+    "@tauri-apps/api": "^2",
+    "react": "^19.2.0",
+    "react-dom": "^19.2.0"
+  },
+  "devDependencies": {
+    "@repo/typescript-config": "workspace:*",
+    "@types/react": "19.2.2",
+    "@types/react-dom": "19.2.2",
+    "typescript": "5.9.2",
+    "vitest": "^3.2.1"
+  }
+}
