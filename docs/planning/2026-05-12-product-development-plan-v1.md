@@ -25,24 +25,35 @@
 
 | 模块 | 状态 | 关键文件 |
 |---|---|---|
-| 透明全屏 overlay 主窗口 | ✅ 可用 | `apps/desktop/src/App.tsx`、`src-tauri/src/lib.rs` |
-| Smart Container（格子）创建/拖动/Resize/文件拖入 | ✅ 可用 | `packages/plugin-organizer/src/SmartContainer.tsx`（477 行） |
-| 多窗口架构：主窗口 + Control 窗口（AI Cube）+ 每个 Grid 一个原生窗口 | ✅ 已搭起来 | `useMultiWindowGrids.ts`、`useGridWindow.ts`、`GridWindowApp.tsx` |
-| 跨窗口事件通信 | ✅ 已搭起来 | Tauri `emit/listen` |
-| 布局持久化 | ✅ 可用 | `useGridSystem.tsx` + localStorage，1 秒 debounce |
-| AI Cube（拖动 + Mock 菜单） | ✅ UI 完成 | `AiCube.tsx` |
-| 8 方向自定义 Resize | ✅ 可用 | `useCustomResize.tsx` |
-| Subagent Workflow V2（plan/review/build/verify/ship） | ✅ 可用 | `.agents/templates/`、`scripts/setup_subagents_v2.sh` |
+> **2026-05-12 重大修正**：本节初版把多个模块标为"✅ 可用"，这是**错误的**——混淆了"代码结构存在"和"功能真的跑通"。经用户实机确认 + agent 深挖代码，真实状态见下表（已重写）。
+
+| 模块 | 初版误标 | 真实状态(实测) | 证据 |
+|---|---|---|---|
+| 透明 overlay 主窗口 | ✅ 可用 | ⚠️ 结构在，渲染层 OK | — |
+| 桌面点击穿透 | （含在上面）| 🔴 **完全失效**——根本点不动桌面图标 | `useGlobalMouse.ts:101-105` 有 `// TEMPORARY` 硬编码关闭 |
+| Smart Container 渲染 | ✅ 可用 | ✅ 渲染层确实可用，但 `SmartContainer.tsx:313` 还挂着红色调试边框 | 实测 Grid 窗口能出现且显示内容 |
+| 文件拖入 | ✅ 可用 | 🔴 **完全没反应**——拖文件进 Grid 什么都不发生 | HTML5 拖放在透明窗口不可靠 + 拿不到真实路径 |
+| 多窗口架构 | ✅ 已搭起来 | 🔴 **多个 Grid 窗口互相干扰** | 跨窗口事件未按 gridId scope |
+| 跨窗口事件通信 | ✅ 已搭起来 | ⚠️ 协议定义了，缺错误恢复 / scope | — |
+| 布局持久化 | ✅ 可用 | ⚠️ 主窗口状态持久化 OK，Grid 窗口自身位置/大小不持久 | localStorage |
+| AI Cube / Control 窗 | ✅ UI 完成 | 🔴 **不稳定** | 实测确认 |
+| 多 Space / 全屏行为 | （未提）| 🔴 **行为奇怪** | 实测确认 |
+| 8 方向 Resize | ✅ 可用 | ⚠️ 能拖，但不持久 | — |
+| Subagent Workflow V2 | ✅ 可用 | ✅ **真的可用**（这条没问题） | `.agents/templates/` |
+
+**一句话总结**：**渲染层(React/组件)是好的，所有触及 macOS 原生窗口行为的部分都是坏的。**
 
 ### 1.2 已有但还不真用的东西
 
-- **文件元数据** — 拖入的文件目前只解析了 `name / type / extension`，没有走 Tauri `fs` 真实读盘（缩略图、修改时间、大小、图标都还没读）。
+- **文件元数据** — 拖入的文件目前只解析了 `name / type / extension`，没有走 Tauri `fs` 真实读盘（且现在拖入本身就没反应）。
 - **AI Cube 菜单项**（Quick Capture / Deep Focus / Edge Dock / Plugin Hub）都是占位。
 - **Plugin 注册**目前是硬编码 import，还不是动态发现机制。
 
-### 1.3 已识别的技术阻塞
+### 1.3 已识别的技术阻塞（核心）
 
-`docs/development/TECHNICAL_STATUS.md` 记得清楚：**透明 overlay 想同时"接收拖放"又"点击穿透到桌面图标"是矛盾的**。当前选择的方向是 **多窗口架构**——主窗口几乎纯展示，每个 Grid 都是一个独立的原生 Tauri 窗口，空白区域天然让出给桌面。这条路要在真机上验过 macOS Spaces / Mission Control / 全屏切换的行为才能算稳。
+`docs/development/TECHNICAL_STATUS.md` 记得清楚：**透明 overlay 想同时"接收拖放"又"点击穿透到桌面图标"是矛盾的**。曾选择的方向是多窗口架构，但**这个 pivot 只完成了结构、没完成功能**——3-4 个 commit 的半成品叠在一个未解决的根本问题上。
+
+这意味着 **Phase 0 不是"加固"，而是"地基重建"**：需要先做技术 spike 验证窗口分层悖论到底有没有干净解（go/no-go gate），再重写 Rust 窗口管理层。详见 PRD §10.4。
 
 ### 1.4 完全没动的模块
 
