@@ -3,7 +3,7 @@
 > 本文档定义 XAI_Desktop 的架构约束与编码红线。
 > 所有开发（人类和 AI）必须遵守此文档中的规则。
 >
-> 最后更新: 2026-05-13
+> 最后更新: 2026-05-14
 
 ---
 
@@ -49,6 +49,10 @@ packages/ui/          → 共享 UI (无业务逻辑的纯 UI 组件)
 6. 每个 Plugin 的 `manifest.json` 是注册的唯一入口
 7. 禁止使用 `console.log` 做生产日志 → 开发环境可用
 8. 依赖方向严格单向: `Host → Plugin → Core/UI`，禁止反向
+9. `index.ts` 是每个 Plugin 的唯一出口 → 外部只能从 `packages/plugin-*/src/index.ts` 导入
+10. Plugin 内部目录结构自由组织 → `components/` `hooks/` `store/` `types/` 按需存在
+11. UI 组件归属: 通用组件 → `packages/ui/`；业务组件 → plugin 内部
+12. 禁止运行时动态插件加载 → 桌面应用编译时确定插件集，静态 import 注册
 
 ## 5. 多窗口架构
 
@@ -80,9 +84,18 @@ packages/ui/          → 共享 UI (无业务逻辑的纯 UI 组件)
 ## 6. 跨窗口通信规则
 
 - 所有事件通过 `@repo/core/events` 发送，payload 必须可序列化
-- 事件命名: `<plugin>:<action>` (如 `organizer:grid-update`, `clipboard:item-copied`)
-- 禁止使用 `window.postMessage`
-- 禁止直接操作其他窗口的 DOM
+- 事件命名: `<plugin>:<action>`，禁止使用 `window.postMessage`，禁止直接操作其他窗口的 DOM
+
+### 6.1 事件前缀约定
+
+| 前缀 | 归属 | 示例 |
+|------|------|------|
+| `app:` | 全局/Host | `app:interactive-mode-changed` |
+| `organizer:` | plugin-organizer | `organizer:grid-update` |
+| `todo:` | plugin-todo | `todo:item-completed` |
+| `clipboard:` | plugin-clipboard | `clipboard:item-copied` |
+| `widgets:` | plugin-widgets | `widgets:clock-tick` |
+| `ai:` | plugin-ai-cube | `ai:query-response` |
 
 ## 7. 状态持久化
 
@@ -97,3 +110,42 @@ packages/ui/          → 共享 UI (无业务逻辑的纯 UI 组件)
 - `GridItem` 为 draggable，容器为 droppable
 - `moveItem` 函数处理跨容器拖拽，更新 `itemIds`
 - 全局 DnD Provider 在 Host 层提供
+
+## 9. Rust 后端模块结构
+
+```
+apps/desktop/src-tauri/src/
+├── main.rs                # Tauri entry point
+├── lib.rs                 # Builder 配置 — 注册 command 模块 + setup (<100 行)
+├── commands/
+│   ├── mod.rs             # 模块声明
+│   └── window.rs          # create/update/close_grid_window
+└── platform/
+    ├── mod.rs
+    └── macos/
+        ├── mod.rs
+        └── window_ext.rs  # NSWindow/CGWindowLevel/ignoresMouseEvents
+```
+
+- `lib.rs` 只做 builder 配置和模块注册，禁止放业务逻辑
+- 按领域拆分 commands (window, fs, system)
+- macOS 平台代码集中在 `platform/macos/`，用 `#[cfg(target_os = "macos")]` 隔离
+
+## 10. 新建 Plugin 标准路径
+
+```
+1. 创建 packages/plugin-xxx/ (含 package.json, tsconfig.json, manifest.json)
+2. 实现 src/index.ts + 业务组件/hooks
+3. 创建 docs/ 四件套 (design.md, api.md, test.md, dev_log.md)
+4. 在 apps/desktop/src/main.tsx 添加 import 注册
+5. 更新 docs/PLUGIN_MAP.md 状态列
+```
+
+## 11. 明确排除项 (不做什么)
+
+以下明确不在项目范围内：
+
+- **不做运行时动态插件加载** — 编译时确定插件集
+- **不做 apps/web/ 和 apps/docs/ 清理** — 保留为 scaffold
+- **不做数据库迁移** — 当前用 localStorage，SQLite 是未来目标
+- **不做 CI/CD** — 暂无 GitHub Actions

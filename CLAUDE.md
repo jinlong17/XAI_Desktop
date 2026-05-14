@@ -144,18 +144,34 @@ Start the bug-diagnose agent.
 ### Commits
 Format: `type(scope): summary` + body with Why / What / Scope / Risk / Docs / Tests.
 
-### Code Boundaries
+### Code Boundaries (MUST follow)
 - Business logic → `packages/plugin-*/`, never in `apps/desktop/src/`
 - Plugin-to-plugin interaction → `@repo/core/events`, not direct imports
 - Canonical data types → `packages/core/src/types/` (global), `packages/plugin-*/src/types.ts` (local)
 - Host depends on Plugin/Core only; Plugin depends on Core only; never reverse
+- `index.ts` is a Plugin's only public surface — never import from `plugin-*/src/internal/`
+- UI: generic components → `packages/ui/`; business components → inside the owning plugin
 - Rust commands in `src-tauri/src/commands/`; macOS platform code in `src-tauri/src/platform/macos/`
+- Full rules → `docs/SYSTEM_ARCHITECTURE.md` §4 编码红线 (12 条)
+
+### Before Working on Any Plugin
+- **Check `docs/PLUGIN_MAP.md` first** — only Stable/Production plugins can be depended on
+- Plugins in Planned/In-Dev/Migrating status must be mocked if used as a dependency
 
 ### Testing
 - Desktop: `pnpm dev` in `apps/desktop/` for manual verification
 - Unit tests: `pnpm --filter @repo/core test` (Vitest)
 - Rust tests: `cargo test` in `apps/desktop/src-tauri/`
 - Check multi-window behavior on real macOS hardware
+
+### Adding a New Plugin
+```
+1. packages/plugin-xxx/ (package.json + tsconfig.json + manifest.json)
+2. src/index.ts + components + hooks
+3. docs/ 四件套 (design.md, api.md, test.md, dev_log.md)
+4. apps/desktop/src/main.tsx — add import registration
+5. docs/PLUGIN_MAP.md — add row with status
+```
 
 ## Agent Configuration
 
