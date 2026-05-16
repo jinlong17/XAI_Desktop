@@ -120,45 +120,72 @@
 
 ## 2. 安全 / 隐私实现
 
-### 2.1 密钥与加密
+### 2.1 密钥与加密(v0.2 与 `sub-prds/sync/PRD.md` v0.2-DRAFT 对齐)
 
-#### 2.1.1 密钥层级
+> 完整协议见 `sub-prds/sync/PRD.md` §3 / §5.2 / §7.1。本节只保留全局红线。
+
+#### 2.1.1 密钥层级(v0.2)
 
 ```
-用户主密码 (Master Password,用户输入,永不写入磁盘)
-   ↓ Argon2id(t=3, m=64MB, p=4)
-派生密钥 KEK (Key Encryption Key, 32 bytes)
-   ↓ 加密
-数据密钥 DEK (Data Encryption Key, 随机 32 bytes,首次创建账号时生成)
-   ↓ 用 DEK 加密所有敏感字段
-clipboard_items.content_blob / notes / todos.description / 同步 blob
+用户主密码 master_password (永不出本机)
+Secret Key   secret_key   (客户端首次注册生成 128-bit,用户必须保存;永不发服务端)
+        │       │
+        │       └──── 作为 Argon2id secret 参数(抗离线字典攻击,1Password 风格)
+        ▼
+KEK 32B  = Argon2id(master_password, salt=kek_salt, secret=secret_key, t=3,m=64MiB,p=4)
+        │
+        │  ┌─ 加密 encrypted_dek (含 AAD = account_id||"dek_wrap"||key_id||kek_kdf_version)
+        │  │
+        │  ├─ 派生 SQLite db_key = HKDF(KEK, "xai.sqlite.v1")  → SQLCipher
+        │  │
+        ▼  ▼
+DEK 32B  ←── 服务端拉 encrypted_dek + keyring,本地解密
+        │     (DEK 常驻 Rust 侧 KeyVault,JS 只拿 opaque key_handle)
+        │
+        │  AES-256-GCM(deterministic nonce = device_id||counter,AAD = entity 语境)
+        ▼
+encrypted_blob
+
+auth_password = Argon2id(HKDF(master_password, email||"xai.auth.v1"), t=1,m=16MiB,p=1)
+              → 发给 Supabase Auth(与 KEK 完全独立的派生路径)
+
+24 词 BIP-39 助记词 = DEK 的完整无损备份(256-bit)
 ```
 
-- **KEK 永不出本机**(macOS Keychain `kSecAttrAccessibleWhenUnlockedThisDeviceOnly`)
-- **DEK 加密后存本地 SQLite + 同步到云**(云端拿不到 KEK 就解不开)
-- 主密码忘了 = 数据无法恢复(零知识承诺;用户首启时强制提示风险并提供导出助记词作为唯一恢复路径)
+**v0.2 关键不变式**:
+- **master_password 永不离开本机**;Supabase 收到的是 `auth_password`(独立派生,不可反推 master_password)
+- **Secret Key 永不离开本机**;Server 只存 `secret_key_check = HMAC(secret_key, "xai.sk.check.v1")`
+- **KEK 永不出 macOS Keychain**(`kSecAttrAccessibleWhenUnlockedThisDeviceOnly`,ACL 限定 bundle id)
+- **DEK 常驻 Rust 侧 KeyVault**(JS / plugin 永远只见 opaque `key_handle`,不持有 raw key)
+- **encrypted_dek 服务端为权威**;本地 Keychain 不缓存 encrypted_dek(每次登录从 server 拉)
+- **本地 SQLite 由 SQLCipher 加密**(db_key 由 KEK 派生,实时计算,不写盘)
+- 主密码 + 助记词同时丢 = 数据无法恢复(零知识承诺的代价;首启 3 屏强提示 + 双回填验证)
 
-#### 2.1.2 加密算法
+#### 2.1.2 加密算法(v0.2)
 
-- 对称加密:**AES-256-GCM**(content + auth tag);nonce 每条记录独立随机 12 bytes
-- 哈希:**SHA-256**(剪贴板去重 / 文件指纹)
-- 密码哈希:**Argon2id**(参数固定写死,版本号字段预留升级路径)
-- 传输:**TLS 1.3**(Supabase 默认开启);客户端校验证书指纹
+- 对称加密:**AES-256-GCM** with **AAD 必须绑定 entity 语境**(详见 sync PRD FR-SY-67);nonce 用 **deterministic** `device_id (4B) ‖ counter (8B)`(原 v0.1 "随机 12B" 被废弃,避免生日界 + 增强 nonce-misuse 防护)
+- 文件指纹:**HMAC-SHA256(DEK, file)**(原 v0.1 SHA-256 明文废弃,防跨账号关联)
+- 哈希:**SHA-256** + **HMAC-SHA256**(派生 dek_check / secret_key_check 等)
+- 密钥派生:**Argon2id**(KEK 强参数 + auth_password 弱参数)+ **HKDF-SHA256**(子密钥 / db_key / domain separation)
+- 助记词:**BIP-39 24 词**(256-bit + 8-bit checksum,**原 12 词废弃**,无法编码 256-bit DEK)
+- 本地 SQLite 加密:**SQLCipher**(AES-256-GCM 模式)
+- 导出文件:**[age](https://age-encryption.org/)** 加密(原明文 JSON 废弃)
+- 传输:**TLS 1.3**;客户端校验证书指纹
 
-不允许任何 MD5 / SHA-1 / DES / 3DES / ECB 模式 / 自己实现加密原语。
+不允许任何 MD5 / SHA-1 / DES / 3DES / ECB 模式 / 自己实现加密原语;不允许 JS 侧持有 raw key。
 
-#### 2.1.3 哪些字段加密
+#### 2.1.3 哪些字段加密(v0.2 修订:本地全加密)
 
 | 字段 | 本地加密 | 云上传 | 备注 |
 |---|---|---|---|
-| `clipboard_items.content_blob` | ✅ AES-256 | ❌ 不上传 | 隐私优先 |
-| `clipboard_items.preview` | ❌ 明文(前 200 字符) | ❌ 不上传 | 面板预览用 |
-| `todos.title` / `.description` | ❌ 明文 | ✅ E2E 加密 blob | 本地无威胁,云需保护 |
-| `notes.content_md` | ❌ 明文 | ✅ E2E 加密 blob | 同上 |
-| `accounts.refresh_token` | ✅ Keychain | — | Keychain 本身加密 |
-| `pomodoro_sessions` | ❌ 明文 | ❌ 不上传 | 隐私优先 |
-| `pets.behavior_json` | ❌ 明文 | ✅ E2E 加密 blob | 同上 |
-| 日志文件 | ❌ 明文(已 redact) | ❌ 不上传 | redact 防泄漏 |
+| 所有本地 SQLite 表(包括 todos / notes / habits / clipboard / pomodoro 等) | ✅ **SQLCipher 整库加密**(v0.2 修订) | (按 sub-prds/sync §4 同步矩阵) | v0.1 "本地明文" 被 C-09 / FR-SY-74 废弃 |
+| `clipboard_items.*` | ✅ SQLCipher | ❌ 不上传 | 隐私优先 |
+| `todos.*` / `notes.*` / `habits.*` / `grids.*` 等 | ✅ SQLCipher | ✅ E2E 加密 blob(含 AAD) | sync PRD §4 矩阵 |
+| `accounts.refresh_token` | ✅ Keychain(WhenUnlockedThisDeviceOnly) | — | Keychain 本身加密 |
+| `pomodoro_sessions` | ✅ SQLCipher | ❌ 不上传 | 隐私优先 |
+| 文件指纹(grid_items.payload_json 内) | ✅ SQLCipher | ✅ HMAC-SHA256(DEK, file) | v0.2:HMAC 替代明文 SHA-256 |
+| 日志文件 | ❌ 明文(已 redact,无 user content) | ❌ 不上传 | redact 防泄漏 |
+| 导出 .json.age | ✅ age 加密 | — | FR-SY-70 |
 
 ### 2.2 macOS 沙箱 entitlements 清单(MAS 版)
 
@@ -196,13 +223,29 @@ DMG 完整版不启用沙箱,但仍走 hardened runtime + notarization。
 
 引导文案:每次都解释"为什么需要"+ 关闭后哪些功能不可用 + 用户可以拒绝(降级路径)。
 
-### 2.4 E2E 加密同步协议(简版)
+### 2.4 E2E 加密同步协议(v0.2 简版,完整规格见 `sub-prds/sync/PRD.md` §3 / §5 / §7)
 
-1. **首次注册**:客户端生成 DEK(32 bytes 随机)→ 用 KEK 加密 → 上传 `encrypted_dek` 到服务端
-2. **新设备登录**:邮箱+密码 → 派生 KEK → 拉 `encrypted_dek` → 本地解密得到 DEK
-3. **数据同步**:每条记录(todo/note/habit/grid 等)用 DEK 加密为 blob → 服务端只存 blob + metadata(id, updated_at)
-4. **冲突**:last-write-wins(v1),v2 评估 CRDT
-5. **服务端零知识**:Supabase 后端**无能力**解密任何用户数据 blob
+1. **首次注册**:客户端生成 DEK + Secret Key + 24 词助记词 → 派生 KEK(含 Secret Key 作 secret 参数)→ AES-GCM 加密 DEK 含 AAD → 上传 `encrypted_dek`(envelope:`{v|kdf|key_id|nonce|aad_len|aad|ct|tag}`)+ `secret_key_check` + `dek_check` + `recovery_proof_hash` 到服务端;`auth_password`(独立派生)发 Supabase Auth
+2. **新设备登录**:邮箱 + master_password + Secret Key → 客户端派生 KEK → 拉 keyring + encrypted_dek → 校验 dek_check → 本地解密得到 DEK(常驻 Rust KeyVault)
+3. **数据同步**:每条记录用 DEK 加密为 blob(envelope 含 AAD = `account_id ‖ entity_type ‖ entity_id ‖ revision ‖ key_id ‖ ...`)→ 服务端存 `encrypted_blobs` 表 + `revision` + `commit_seq` + `mutation_id` + metadata
+4. **冲突**:**commit_seq 权威排序 + conditional write(base_revision)**;loser 进 `encrypted_blobs_conflict_shadow` 保留 30 天可恢复(v0.1 LWW + tombstone-优先方案被废弃);v2 评估 CRDT(notes 长文本)
+5. **服务端零知识**:Supabase 后端无能力解密任何用户内容 blob;`auth_password` 不可反推 `master_password`;Secret Key 不离开客户端
+6. **回滚 / 调包防护**:每实体单调 revision 写入 AAD;客户端拒收 `revision <= max_seen`;集成测试覆盖恶意 server 拷贝 blob 场景
+7. **恢复防护**:PATCH `/auth/me` 必须附 recovery proof(`HMAC(HKDF(DEK, "xai.recovery.proof.v1"), challenge ‖ ...)`),server Argon2id 校验
+8. **设备撤销**:撤销 device + revoke refresh_token + **强制 Re-key**(生成 DEK_v2 + 双读 + 原子 swap)
+9. **Realtime**:Supabase Realtime **Private Channels + Authorization**;channel 名含 auth.uid(),RLS 校验
+
+### 2.4.1 v0.2 协议级关键字段(详见 sub-prds/sync §6 / §7)
+
+| 字段 | 位置 | 作用 |
+|---|---|---|
+| `revision BIGINT` | encrypted_blobs + AAD | 每实体单调,防 rollback(FR-SY-68) |
+| `key_id INTEGER` | envelope + accounts.current_dek_key_id + account_keyring | DEK 版本,Re-key 期间双读(C-07) |
+| `commit_seq BIGINT` | encrypted_blobs(全局 BIGSERIAL) | 权威排序与 cursor(H-02/H-04) |
+| `mutation_id UUIDv7` | PUSH request + mutation_dedup | Idempotency(FR-SY-72) |
+| `aad bytes` | envelope | AEAD 绑定 entity 语境(FR-SY-67) |
+| `secret_key_check BYTEA` | accounts | 客户端验 secret_key 正确性 |
+| `recovery_proof_hash BYTEA` | accounts | 阻断恶意 PATCH `/auth/me`(FR-SY-69) |
 
 ### 2.5 隐私默认值
 
