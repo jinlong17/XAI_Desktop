@@ -7,15 +7,17 @@
 | 归属 Phase | Phase 4.5(4-6 周,主 PRD §10.6 路线图) |
 | 文档作者 | Claude(subagent) |
 | 创建日期 | 2026-05-14 |
-| 状态 | DRAFT v0.2(2026-05-16 同步 PRD v0.2 的契约重写) |
+| 状态 | DRAFT v0.3(2026-05-16 同步 PRD v0.3 的契约二次重写 + 排期拆 Phase 4.5a/4.5b)|
 
 ---
 
 ## 1. Phase 4.5 目标
 
-主 PRD §10.6 路线图给 Web 的时间窗:**4-6 周**,夹在 Phase 4(AI 注入)与 Phase 5(账号 + 同步完善 + 公测)之间。
+> v0.3 codex Minor 调整:4-6 周排期已不可信(v0.2 + v0.3 新增 Sync blob driver、本地 FTS、设备会话、三方 diff、CSP nonce edge、真机矩阵、entity_blobs + entity_sort_keys 加密索引、sync_events seq、Quick Capture envelope、CSP `/__csp_report` 自建端点、X-Device-Id middleware 等)。**拆为 Phase 4.5a 核心 Web(4 周)+ Phase 4.5b 离线/PWA/合规硬化(4 周)= 共 8 周**,worst case 10 周。
 
-> 累计窗口:36 → 42 周(2026-12-08 进入 → 2027-01-19 出门,主 PRD v1.0 GA 目标 2027-05)。
+主 PRD §10.6 路线图给 Web 的时间窗原为 4-6 周,v0.3 修订为 **8-10 周**;夹在 Phase 4(AI 注入)与 Phase 5(账号 + 同步完善 + 公测)之间。
+
+> 累计窗口:36 → 44/46 周(2026-12-08 进入 → 2027-02-02/2027-02-16 出门,主 PRD v1.0 GA 目标 2027-05;若 Phase 4.5b 与 Phase 5 部分并行则可拉回 2027-01)。
 
 **Phase 4.5 收尾标准**:
 1. `app.xai-desktop.app` 在 staging 跑通完整流程(注册 / 登录 / 三模块编辑 / 同步 / 离线)
@@ -45,11 +47,16 @@
 
 ---
 
-## 3. 任务分解(按周拆,4-6 周)
+## 3. 任务分解(按周拆,Phase 4.5a 4 周 + Phase 4.5b 4 周;worst case +2 周)
 
-> 排期假设独开全职;6 周是 worst case(含 buffer)。每周收尾产出可演示物 + 真机/真浏览器走查。
+> v0.3 codex Minor:排期独开全职;原 4-6 周不可信;改为两阶段。每周收尾产出可演示物 + 真机/真浏览器走查。
+>
+> **Phase 4.5a 核心 Web(Week 1~4)**:可登录 / Sync blob driver / 三模块跑通 / Realtime metadata / 主密码解锁;staging 可演示但不公开。
+> **Phase 4.5b 离线/PWA/合规硬化(Week 5~8)**:离线编辑队列 + dead-letter + 三方 diff + PWA + CSP enforce + 真机矩阵 + 客户端导出 + 账号删除 + 多设备 + 部署管线;`staging.app.xai-desktop.app` 公开可访问 + 内部灰度。
+>
+> 原 Week 1~6 标签下文保留,但归类到 Phase 4.5a/b。
 
-### Week 1 — 骨架 + 认证(W1)
+### Phase 4.5a / Week 1 — 骨架 + 认证
 
 **目标**:`apps/web` 可启动,登录后落到空白 SPA。
 
@@ -71,16 +78,17 @@
 
 **Week 1 风险**:(a) OAuth 回调在 localhost 坑(redirect URI 必须 https 或 localhost 例外 + Supabase Dashboard allowlist);(b) `devices`/`sessions` 表 + RPC 需要 Sync 子 PRD 同步确认 schema(本档 PRD §5.1.3 给的是初稿);(c) Argon2id WASM 在低端 iPhone 上的延迟。
 
-### Week 2 — Sync blob driver + 第一个模块(Todo)
+### Phase 4.5a / Week 2 — Sync blob driver + entity_blobs + 第一个模块(Todo)
 
 **目标**:Todo 模块可用,数据走 Sync push/pull encrypted blob 通道。
 
 | 任务 | 输出 |
 |---|---|
-| `packages/core-data/src/driver-sync-blob/` 实现(**不是 driver-rest**)| 实现 Repository 接口;内部调 `/sync/pull`、`/sync/push`、RPC;仅传 encrypted_blob |
+| `packages/core-data/src/driver-sync-blob/` 实现(**不是 driver-rest**)| 实现 Repository 接口;内部调 `/sync/pull`、`/sync/push`、RPC;仅传 encrypted_blob;**所有请求带 `X-Device-Id`**(FR-WEB-17e) |
 | 端点契约对齐 `sub-prds/sync/PRD.md`(若未提交则与同步层 agent 联合定 v0)| `apps/web/src/contracts/sync.ts` |
-| 本地 `entity_index` Object Store(明文 sort/filter key + FTS) | IndexedDB schema |
-| 本地全文搜索(`flexsearch` / `lunr` 基准 → 选定)| Web Worker 跑;FR-WEB-22c |
+| **IndexedDB 三层存储**:`entity_blobs`(encrypted 原件)+ `entity_index`(非敏感 metadata)+ `entity_sort_keys`(DEK 派生 index key 加密 sort key) | §8.2 schema |
+| `sync_state.cursor` + `sync_state.sentinel` 本地 cursor / 回收检测 | IndexedDB |
+| 本地全文搜索(`flexsearch` 基准选定)**Worker 内存 only**;主密码 lock / 5min idle wipe;持久部分只存 entity_id → blob 反向指针 | Web Worker;FR-WEB-22c |
 | mutation 幂等性:`mutation_id`(uuid v7)+ `idempotency_key`(sha256) | FR-WEB-24 |
 | `base_version` + 服务端 409 处理 | FR-WEB-43 三方 diff 数据基础 |
 | 加密前入队的 mutation pipeline(DEK 在内存才允许加密字段写)| FR-WEB-41/46 |
@@ -92,16 +100,16 @@
 
 **Week 2 演示物**:Web Todo CRUD 全走 Sync push/pull 通道,网络面板验证只有 `/sync/*` 请求(无 `/rest/v1/todos`);刷新页不丢数据;本地搜索可用。
 
-### Week 3 — 实时同步 + 项目管理 / Labels / Calendar / Habits
+### Phase 4.5a / Week 3 — 实时同步(seq WAL)+ 项目管理 / Labels / Calendar / Habits
 
 **目标**:第二批模块上 + Realtime 通道打通。
 
 | 任务 | 输出 |
 |---|---|
-| Realtime 订阅封装(`packages/core-events/src/web-bus.ts`)| BroadcastChannel + Supabase `sync:<account_id>` 双桥;**metadata-only**(不订 postgres_changes) |
-| 收到 metadata → 入 pull queue(去抖 300ms)→ 调 `/sync/pull` → 本地解密 → 失效 TanStack Query | FR-WEB-31~35 |
-| 重连指数退避 + jitter + cursor gap 检测 + visibilitychange catch-up + WS 失败降级 polling | FR-WEB-33~34b |
-| 多标签 leader 选举(Web Lock API + BroadcastChannel)| FR-WEB-37 |
+| Realtime 订阅封装(`packages/core-events/src/web-bus.ts`)| BroadcastChannel + Supabase `sync:<account_id>` 双桥;**metadata-only + seq**(payload `{entity_type, entity_id, seq, server_updated_at, originator_device_id}`) |
+| 收到 metadata → 入 pull queue(去抖 300ms)→ 调 `/sync/pull` body `{since_seq, entity_types, limit:200}` → 本地解密 → 失效 TanStack Query | FR-WEB-31~35 |
+| 重连指数退避 + jitter + **seq gap 检测**(`seq !== last_seen_seq+1` 触发补齐)+ visibilitychange catch-up + WS 失败降级 polling | FR-WEB-33~34b |
+| 多标签 leader 选举(`feature-detect` `BroadcastChannel` + `Web Lock API`,缺失时降级 `localStorage` storage 事件;**iOS PWA standalone vs Safari tab partition 不通的兜底必须验证**)| FR-WEB-37 / FR-WEB-79b |
 | `device_revoked` Realtime 事件 → 被撤销设备立即 signOut + 清 IndexedDB | FR-WEB-17 |
 | 桌面 ↔ Web 5s 双向同步实测(真机 + Chrome)| FR-WEB-36 |
 | `plugin-project` 注册 + 看板视图 web build | 复用 |
@@ -113,54 +121,84 @@
 
 **Week 3 演示物**:三栏 console UI 在浏览器中跑通 4 个模块;两台设备同账号实测同步。
 
-### Week 4 — 离线 + Service Worker + 主密码 / E2E
+### Phase 4.5a / Week 4 — 主密码 / E2E 解锁 + Phase 4.5a 收尾
 
-**目标**:断网体验过关;敏感字段端到端可见。
+**目标**:主密码解锁链路 + entity_sort_keys 加密索引 + Phase 4.5a 收尾(staging 可演示但未公开)。
+
+| 任务 | 输出 |
+|---|---|
+| 主密码 challenge 弹窗(登录后单独询问)| FR-WEB-20/88 |
+| Argon2id WASM(`hash-wasm`,memoryCost 64MB / iter 3)接入 + 真机基准(低端 iPhone P95 < 1.5s)| KEK 派生 |
+| `encrypted_dek` 本地 IndexedDB 镜像 + 服务端拉 | FR-WEB-46 |
+| **`entity_sort_keys` 加密敏感 sort key**(DEK 派生 index key,AES-GCM,每条独立 nonce);解锁后批量解密 + 写入 | §8.2 / FR-WEB-22b |
+| Worker 内 FTS 索引重建(分批解密 `entity_blobs` + flexsearch index);进度条 + 5min idle wipe | FR-WEB-22c |
+| 主密码输入 Uint8Array 处理 + zeroize best effort + JS limit 声明 | FR-WEB-88 |
+| E2E 字段渲染分支:有 DEK 显明文(从 entity_blobs 即时解密),无 DEK 显"已加密"(只用 entity_index 元数据)| FR-WEB-117 |
+| KEK / DEK 内存生命周期管理(5min idle 自动清零 + 提示用户 + Worker FTS index 清)| FR-WEB-89/46b |
+| Phase 4.5a 收尾验证:登录 / 三模块跑通 / Realtime metadata 5s / 解锁后可读写加密 | 内部演示 |
+
+**Week 4 演示物**:登录 → 三模块跑通 → 主密码弹窗 → 解锁后看到所有 Todo / 看板内容;5min idle 后自动 lock,加密字段切回占位;Worker FTS index 重建可见进度。
+
+> **Phase 4.5a 完成度准入(进 Phase 4.5b 前)**:Week 1~4 全部任务可演示;Sync 子 PRD 必须给出 v0 `sync_events seq` 实现 + devices/app_sessions 表 + X-Device-Id middleware,否则 4.5b 不启动。
+
+### Phase 4.5b / Week 5 — 离线编辑 + Service Worker + 冲突 diff
+
+**目标**:断网体验过关;敏感字段端到端可用;dead-letter + 三方 diff 走通。
 
 | 任务 | 输出 |
 |---|---|
 | Service Worker 注册 + Workbox 配置(precache revision 绑 git SHA;HTML no-store + immutable assets) | FR-WEB-44 / §9.4.1 |
 | SW 紧急 kill switch(`/sw-kill.js` + `/?reset=1`)| FR-WEB-45 |
-| IndexedDB **加密前入队** mutation 实现(`pending_mutations`;DEK 不在内存禁止加密字段写)| FR-WEB-41/46 |
-| `dead_letter_mutations` Object Store + 失败 ≥ 3 次入队 + UI 视图 | FR-WEB-24c/43c |
+| **IndexedDB 加密前入队 mutation 实现**(`pending_mutations` 只存 encrypted_blob;DEK 不在内存禁止任何业务实体写入,**v0.3 删非加密快路径**)| FR-WEB-41/46 |
+| `dead_letter_mutations` Object Store + 失败 ≥ 3 次入队 + UI "未同步更改"页 + 手动重试/丢弃/导出 | FR-WEB-24c/43c |
 | 离线检测(`navigator.onLine` + 主动 ping + WS DISCONNECTED 任一为 true)+ sidebar 状态指示 + 全局 banner | FR-WEB-39/40 |
-| **三方 diff 冲突 UI**:base / local / remote 三栏 + 选保留方 + audit log 写入 | FR-WEB-43 |
-| 主密码 challenge 弹窗(登录后单独询问)| FR-WEB-20/88 |
-| Argon2id WASM(`hash-wasm`,memoryCost 64MB / iter 3)接入 + 真机基准(低端 iPhone P95 < 1.5s)| KEK 派生 |
-| `encrypted_dek` 本地 IndexedDB 镜像 + 服务端拉 | FR-WEB-46 |
-| E2E 字段渲染分支:有 DEK 显明文,无 DEK 显"已加密"(本地索引 fallback 渲染)| FR-WEB-117 |
-| KEK / DEK 内存生命周期管理(5min idle 自动清零 + 提示用户)| FR-WEB-89/46b |
+| **三方 diff 冲突 UI**:base / local / remote 三栏(从 `entity_blobs` + `pending_mutations.base_encrypted_snapshot` + server 409 返回的 `remote_encrypted_blob` 各自解密)+ 选保留方 + audit log 写入 | FR-WEB-43 |
+| 离线 mutation 限额 500 + dead-letter 算入限额 + 顶部 banner | FR-WEB-42 |
 
-**Week 4 演示物**:关 Wi-Fi 改 5 条 Todo + 1 条 note(DEK 在内存)→ 联网 30s 内全部 push;DEK 不在内存时尝试改加密字段 → 提示输主密码;制造冲突(两端同时改)→ 三方 diff 弹出可选保留方。
+**Week 5 演示物**:关 Wi-Fi 改 5 条 Todo + 1 条 note(DEK 在内存)→ 联网 30s 内全部 push;DEK 不在内存时尝试改业务实体 → 拒绝并提示输主密码;制造冲突(两端同时改)→ 三方 diff 弹出可选保留方。
 
-### Week 5 — 安全 / 部署管线 / PWA / i18n / 移动 / 兼容性
+> **注**:原 v0.2 dev-plan 把 Week 5 的内容大杂烩塞了安全 + 部署 + PWA + 多设备 + 导出 + 真机,v0.3 拆为 Week 6(多设备/安全栈/导出)+ Week 7(PWA/i18n/部署/兼容性)。原 "Week 5 演示物 = staging 公开访问 + A+" 改为 Week 7 演示物。
 
-**目标**:从"能用"到"能上线"。
+### Phase 4.5b / Week 6 — 多设备 + 安全栈 + 客户端导出
+
+**目标**:多设备登出真实可用;CSP 灰度到 enforce;客户端导出与账号删除跑通。
 
 | 任务 | 输出 |
 |---|---|
-| CSP / HSTS / Referrer-Policy / X-Frame-Options / Permissions-Policy / Report-To 在 Vercel/CF edge 配 headers | FR-WEB-80~87b |
-| CSP 先发 **Report-Only**(staging 1 周收 Sentry violation)→ enforce | §5.12.2 / FR-WEB-82b |
+| 多设备页(`devices` 视图 + `device_revoke` RPC + Realtime 联动)| FR-WEB-17/17b/17c |
+| **X-Device-Id middleware**:服务端中间件(Sync 子 PRD 提供;Web 端 e2e 验证被撤销设备业务 API 403)| FR-WEB-17e |
+| 跨标签会话同步 BroadcastChannel + Web Lock leader 选举 + partition 兜底 | FR-WEB-15/37/79b |
+| **数据导出走客户端打包**(Blob URL + JSZip in Worker;DevTools 验证服务端零接触明文)| FR-WEB-118/119 |
+| 账号删除 + 30 天恢复窗口(`deletion_scheduled_at` / `deletion_requested_at`)+ Realtime `account_deleted` 广播 | FR-WEB-120/121 |
+| Cookie / consent banner(必要 / Sentry / 分析三档分离)+ GDPR 子处理者清单页 | FR-WEB-122/122b/123/123c |
+| CSP `/__csp_report` 自建端点(Vercel/CF edge function + Supabase `csp_violations` 表) | FR-WEB-82 |
+| CSP 先发 **Report-Only**(staging 1 周收 violation 到 csp_violations 表)→ 修代码 → enforce | §5.12.2 / FR-WEB-82b |
 | Vercel/CF edge middleware 注入随机 nonce 给 `style-src 'nonce-...'` | §5.12.3 |
+| HSTS / Referrer-Policy / X-Frame-Options / Permissions-Policy / Report-To headers | FR-WEB-80~87b |
 | `securityheaders.com` 扫到 A+ | 验证 |
-| 多设备页(`devices` 表数据 + 撤销 RPC + Realtime 联动)| FR-WEB-17/17b/17c |
-| 跨标签会话同步 BroadcastChannel + Web Lock leader 选举 | FR-WEB-15/37 |
-| **数据导出走客户端打包**(Blob URL + JSZip in Worker;服务端不接触明文)| FR-WEB-118/119 |
-| 账号删除 + 30 天恢复窗口 + Realtime `account_deleted` 广播 | FR-WEB-120/121 |
-| Cookie / consent banner + GDPR 子处理者清单页 | FR-WEB-122/122b/123/123c |
-| PWA manifest + apple-touch-icon + iOS A2HS + 安装提示策略(3 次操作 + 无桌面 App)| FR-WEB-55~58 / §5.7.1 |
-| i18n 三语切换(zh-CN/zh-TW/en)| FR-WEB-98~102 |
+
+**Week 6 演示物**:登录 A → 登录 B → A 撤销 B → B 在线即时收 Realtime 登出;B 离线后再上线调 `/sync/*` 服务端 403 `device_revoked` → 自动清 IndexedDB + 重登;客户端导出在 DevTools network 面板验证无明文 zip。
+
+### Phase 4.5b / Week 7 — PWA + i18n + 部署管线 + 兼容性
+
+**目标**:`staging.app.xai-desktop.app` 公开可访问;Lighthouse + Web Vitals 达标;真机矩阵跑通。
+
+| 任务 | 输出 |
+|---|---|
+| PWA manifest + apple-touch-icon + iOS A2HS + 安装提示策略(3 次操作 + 无桌面 App + 14 天冷却)| FR-WEB-55~58 / §5.7.1 |
+| i18n 三语切换(zh-CN/zh-TW/en);登录后 account-global,登录前 localStorage 兜底 | FR-WEB-98~102 |
 | 部署管线:GitHub Actions → Vercel preview / staging / prod 三档 | §9 |
-| Sentry sourcemap CI:`sentry-cli releases new $SHA` → `sourcemaps upload --validate` → `finalize` → `deploys new`;生产 sourcemap 不公开 | FR-WEB-95 |
-| Playwright CI 四浏览器矩阵(chromium/webkit/firefox/Edge)| CI 配置 |
-| **真机走查清单**:macOS Safari / iPhone Safari / Android Chrome / Firefox ETP / Edge 企业策略 | §5.11.2 |
+| Sentry sourcemap CI 固定顺序:`releases new → set-commits → sourcemaps inject → upload --validate → finalize → 删除 .map → deploy → deploys new` | FR-WEB-95 |
+| Sentry redact 单测断言:entity_id 不在 payload(只见短 hash)、query string 已清、扩展事件不上报 | FR-WEB-94 |
+| Playwright CI 四浏览器矩阵(chromium/webkit/firefox/Edge)+ Web Vitals RUM(LCP/INP/CLS/TTFB)按 route_group 分桶 | FR-WEB-70 / CI 配置 |
 | Lighthouse CI 门(landing Perf ≥ 90 / `/app/todos` ≥ 80)+ bundle 体积监控(`size-limit`)| FR-WEB-68/69 |
-| Web Vitals RUM(LCP/INP/CLS/TTFB)按 route_group 分桶 | FR-WEB-70 |
-| 移动浏览器 viewport 验证:无 `maximum-scale=1`,可双指缩放;visualViewport 监听键盘 | FR-WEB-111/49b |
+| 移动浏览器 viewport 验证:无 `maximum-scale=1`,可双指缩放;visualViewport 监听键盘;输入字号 ≥ 16px | FR-WEB-111/49b |
+| Safari `persisted()` + sentinel 兜底真机走查(7 天未访问回收恢复链路)| FR-WEB-78b |
+| **真机走查清单**:macOS Safari / iPhone Safari / Android Chrome / Firefox ETP / Edge 企业策略 | §5.11.2 |
 
-**Week 5 演示物**:`staging.app.xai-desktop.app` 公开访问;扫 A+;Lighthouse 通过门。
+**Week 7 演示物**:`staging.app.xai-desktop.app` 公开访问;扫 A+;Lighthouse 通过门;真机走查清单全 ✅。
 
-### Week 6 — buffer / 真机走查 / 文档 / 私测放量
+### Phase 4.5b / Week 8 — buffer / 真机走查 / 文档 / 私测放量
 
 **目标**:Phase 5 公测前的最后打磨。
 
@@ -175,9 +213,9 @@
 | 已知 bug 列表 + 优先级 | dev_log.md |
 | dev_log.md 状态置 READY_FOR_VERIFY | 交接 |
 
-**Week 6 演示物**:可以发邀请给 Phase 5 公测群。
+**Week 8 演示物**:可以发邀请给 Phase 5 公测群。
 
-> Week 6 是 buffer;若 Week 1~5 顺,Week 6 可提早收尾(留时间给 Phase 5)。
+> Week 8 是 buffer;若 Week 1~7 顺,Week 8 可提早收尾(留时间给 Phase 5);若不顺,可加到 Week 9~10 worst case。
 
 ---
 
@@ -196,8 +234,8 @@
 | Auth | `/auth/v1/authorize?provider=apple/google` + PKCE | GET | OAuth 跳转(PKCE flow,带 `code_challenge`)|
 | Auth | `/auth/v1/verify` (`type=signup` / `recovery` / `magiclink`) | POST | OTP / 邮箱验证 |
 | Auth | `/auth/v1/logout` | POST | 注销(scope='local') |
-| Sync | `/sync/pull` | POST | `{cursor, max_batch, entity_types}` → `{items[], next_cursor, has_more}`;**仅返 encrypted_blob** |
-| Sync | `/sync/push` | POST | `{mutations[]}` → 逐条 ok / conflict / rejected;含 `idempotency_key` 24h 去重 |
+| Sync | `/sync/pull` | POST | `{since_seq, entity_types?, limit≤500}` → `{items[], next_seq, has_more}`;**仅返 encrypted_blob + metadata + seq**;服务端**始终分页** |
+| Sync | `/sync/push` | POST | `{mutations[]}` → 逐条 ok / conflict / rejected / device_revoked;含 `idempotency_key` 24h 去重;`blob_aad` 必含 entity_id||version,server verify |
 | RPC | `/rest/v1/rpc/device_register` | POST | `{device_id, platform, device_name, user_agent}` |
 | RPC | `/rest/v1/rpc/device_heartbeat` | POST | `{device_id}` |
 | RPC | `/rest/v1/rpc/device_revoke` | POST | `{device_id}` → Realtime 广播 |
@@ -212,9 +250,19 @@
 
 **已删除**:`/rest/v1/<business_table>` 直连(todos/lists/boards 等),因服务端零知识无明文业务字段;统一改 `/sync/push` + `/sync/pull` 的 encrypted_blob 通道。**保留**的 PostgREST 表只有 `accounts`、`account_settings`(account-global 明文部分)、`devices`、`sessions`、`audit_logs`。
 
-**鉴权**:所有 `/sync/*` 和 `/rest/v1/*` 走 `Authorization: Bearer <access_token>` + `apikey: <anon_key>`。
+**鉴权**:所有 `/sync/*` 和 `/rest/v1/*`(除 `device_register`)走:
+```
+Authorization: Bearer <access_token>
+apikey:        <anon_key>
+X-Device-Id:   <device_uuid>     -- v0.3 必传;服务端 middleware 校验 devices.revoked_at IS NULL
+X-Sync-Version: 2026-05
+```
 
-**版本协商**:所有请求 `X-Sync-Version: 2026-05`(初版);后端 `Sunset` header / 426 Upgrade Required 触发升级提示。
+服务端 middleware 错误码:`401 unknown_device` / `403 device_revoked { revoked_at }` / `426 upgrade_required`。
+
+**版本协商**:`X-Sync-Version: 2026-05`(初版);后端 `Sunset` header / 426 Upgrade Required 触发升级提示。
+
+**服务端 schema 增量(Sync 子 PRD 实施)**:`encrypted_blobs`(整 row 加密)+ `sync_events(account_id, seq BIGINT)`(per-account WAL)+ `devices` + `app_sessions`(无 refresh_token_hash)+ `audit_logs` + `csp_violations`(自建 CSP report 落地)。**没有** 业务表 `todos` / `lists` / `boards`,**也没有** `account_settings`(走 encrypted_blob 的一种 entity_type)。
 
 ### 4.2 WebView slot vs ConsoleView slot 的差异
 
@@ -222,8 +270,8 @@
 
 | 维度 | ConsoleView | WebView |
 |---|---|---|
-| 数据 driver | SQLite | **Sync blob**(实现 Repository,底层走 Sync push/pull encrypted blob;本档 §4.1)|
-| 事件总线 | Tauri event | BroadcastChannel + Supabase Realtime(`sync:<account_id>` metadata-only)|
+| 数据 driver | SQLite | **Sync blob**(实现 Repository,底层走 Sync push/pull encrypted blob + X-Device-Id 强制校验;本档 §4.1)|
+| 事件总线 | Tauri event | BroadcastChannel + Supabase Realtime(`sync:<account_id>` metadata-only + per-account `seq` WAL)|
 | 文件能力 | core-fs(NSWorkspace 等)| core-fs web stub(只支持下载 / blob URL,不支持本机路径)|
 | 通知能力 | macOS UserNotifications | Web Notification API(P1)/ 内嵌 toast(P0)|
 | 快捷键 | tauri-plugin-global-shortcut | KeyboardEvent + 浏览器保留键避让(`/` 触发搜索,不绑 Cmd+K)|
@@ -240,15 +288,17 @@
 ```ts
 'web:realtime-connected': { account_id: string };
 'web:realtime-disconnected': { reason: string };
-// metadata-only;不含 record
+// metadata-only;不含 record;v0.3 加 seq
 'web:realtime-event': {
   entity_type: string;
   entity_id: string;
+  seq: number;                              // per-account WAL 序号(v0.3 新增)
   server_updated_at: string;
   originator_device_id: string;
   version: number;
 };
-'web:realtime-device-revoked': { device_id: string; reason: string };
+'web:realtime-device-revoked': { device_id: string; revoked_at: string; reason: string };
+'web:device-id-rejected': { reason: 'unknown_device' | 'device_revoked'; revoked_at?: string };
 'web:realtime-account-deleted': { scheduled_at: string };
 'web:offline-mode-changed': { online: boolean; downgradeToPolling: boolean };
 'web:pending-mutation-flushed': { count: number };
@@ -274,15 +324,19 @@
 | `packages/core-events/src/web-bus.ts` | ≥ 80% | 同上;含 cursor gap / leader 选举 |
 | Plugin 复用:无新增覆盖率(plugin 已在桌面端覆盖)| — | 但需 web build 模式下 smoke 跑通 + manifest 静态剔除验证 |
 
-**重点测试用例**:
-- Sync blob driver:加密前入队、mutation_id / idempotency_key 去重、base_version 409 处理、dead-letter 进入与重试
-- Realtime metadata → pull trigger / cursor gap / visibilitychange catch-up / WS 降级 polling
-- 离线编辑:DEK 在内存正常加密;DEK 不在内存拒绝加密字段写
-- KEK 派生(Argon2id WASM)+ DEK 解密 + 内存清零(5min idle)
-- 跨标签 BroadcastChannel 登出广播 + leader 选举
-- PKCE flow:state/code_verifier 校验 + open-redirect 兜底 + Apple private relay 接受
-- Sentry beforeSend redact:断言 entity body 不在 payload;token 不在错误堆栈
-- CSP violation 报告流程
+**重点测试用例**(v0.3 扩展):
+- Sync blob driver:加密前入队、mutation_id / idempotency_key 去重、base_version 409 处理、dead-letter 进入与重试、`blob_aad` 校验
+- Realtime metadata → pull trigger / **seq gap 检测** / visibilitychange catch-up / WS 降级 polling
+- **X-Device-Id middleware**:被撤销设备业务 API 全 403;`device_revoked` 客户端拦截即时登出
+- **本地 at-rest 加密**:`entity_blobs` ciphertext 写入与读取;`entity_sort_keys` DEK 派生 index key 加解密;Worker FTS index lock 时 wipe;关页重启后 IndexedDB 中无明文 sort key
+- 离线编辑:DEK 在内存正常加密;DEK 不在内存拒绝任何业务实体写(v0.3 删非加密快路径)
+- **Token at-rest 加密**:wrap_key non-extractable;关浏览器重开 unwrap 成功;切账号 wrap_key 替换
+- KEK 派生(Argon2id WASM)+ DEK 解密 + 内存清零(5min idle)+ Uint8Array.fill(0) zeroize
+- 跨标签 BroadcastChannel 登出广播 + leader 选举 + **PWA standalone vs Safari tab partition 降级路径**
+- PKCE flow:state/code_verifier 校验 + open-redirect 兜底(v1 `next` 白名单无 `/share`)+ Apple private relay 接受
+- Sentry beforeSend redact:断言 **entity_id 不在 payload(只见短 hash)**、query string 已清、扩展事件不上报
+- CSP 自建 `/__csp_report` 端点 scrub + `csp_violations` 表落地;Sentry opt-in 转发分支
+- **Safari IDB sentinel 兜底**:删 sentinel → 触发全量重拉
 
 ### 5.2 集成(Vitest + msw)
 
@@ -361,6 +415,13 @@ mock fetch + IndexedDB(`fake-indexeddb`)跑:
 | RW-17 | **(v0.2)**share envelope 协议延迟 | Share 链接 v1 不实现,P1 触发条件清晰 | Sync 子 PRD share envelope 章节 |
 | RW-18 | **(v0.2)**devices/sessions 迁移依赖 | Phase 4.5 启动前 Sync 子 PRD 必须确认 §5.1.3 schema | Sync 子 PRD 状态 |
 | RW-19 | **(v0.2)**本地 FTS 性能差(大账号)| Web Worker 跑 + 增量索引 + 分批解密;低端机基准测 | Web Vitals INP > 200ms |
+| RW-20 | **(v0.3)**本地明文索引/FTS 持久化破坏 E2E at-rest | `entity_blobs` 存原件加密;`entity_sort_keys` DEK 派生加密;FTS Worker 内存 only;lock/idle wipe | 真机检查 IDB 无明文 |
+| RW-21 | **(v0.3)**X-Device-Id middleware 未实现 → 撤销不真实 | Phase 4.5a 准入门:Sync 子 PRD middleware 必须就绪;e2e 测试被撤销设备 403 全覆盖 | Sync 子 PRD 状态 + e2e fail |
+| RW-22 | **(v0.3)**Sync cursor gap 检测靠 seq,Sync 子 PRD 未建 sync_events 表 | Phase 4.5a 准入门;本档 §5.2.1.b 给初稿 | Sync 子 PRD 状态 |
+| RW-23 | **(v0.3)**SPA 同源 XSS 直读 token(承担风险)| §5.1.1.a 显式威胁模型表;§5.12 完整安全栈;隐私页用户告知 | CSP violation / npm audit fail |
+| RW-24 | **(v0.3)**SW `Clear-Site-Data: storage` 误清丢 pending mutations | 默认 cache only;P0/P1 才清 storage 走 runbook;UI 状态页公示 | 用户反馈 |
+| RW-25 | **(v0.3)**iOS PWA standalone vs Safari tab partition leader 选举失败 | feature-detect BroadcastChannel + Web Lock,缺失降级独立 WS + localStorage 事件;真机走查 | 真机 fail |
+| RW-26 | **(v0.3)**排期低估 4-6 周 | 拆 4.5a + 4.5b 共 8 周(worst case 10 周);准入门隔离 | Week 4 演示物未达 |
 
 ---
 
@@ -368,18 +429,23 @@ mock fetch + IndexedDB(`fake-indexeddb`)跑:
 
 ### 7.1 必达项(blocker)
 
-- [ ] M5 验收清单(PRD §10.1)全 ✅(v0.2 已扩到含 PKCE / 自定义 storage / 客户端导出 / 三方 diff 等)
-- [ ] 桌面 ↔ Web 真机 + 浏览器并排同步 5s 内可见(Sync push/pull + Realtime metadata 链路)
-- [ ] 离线编辑 20 条上线 30s 内全部 push(含 dead-letter 兜底)
+- [ ] M5 验收清单(PRD §10.1)全 ✅(v0.3 扩到含 X-Device-Id middleware / entity_blobs at-rest / FTS Worker wipe / sync_events seq gap / SW Clear-Site-Data 谨慎用 / Sentry redact entity_id 用短 hash)
+- [ ] 桌面 ↔ Web 真机 + 浏览器并排同步 5s 内可见(Sync push/pull + Realtime metadata + seq 链路)
+- [ ] 离线编辑 20 条上线 30s 内全部 push(含 dead-letter 兜底);DEK 不在内存时业务实体写全拒
+- [ ] **被撤销设备业务 API 全 403** 验证(在线 Realtime 立即登出;离线再上线服务端拦截)
+- [ ] **IndexedDB 真机检查无明文**:`entity_blobs` ciphertext / `entity_sort_keys` ciphertext / FTS index 不持久 / lock 后 entity_index 仍只有非敏感 metadata
+- [ ] **关浏览器重开仍登录** + 切账号 wrap_key 替换正常
 - [ ] Chrome / Edge / Safari / Firefox Playwright 全 green + 真机 iPhone Safari + macOS Safari 走查
 - [ ] Lighthouse landing Perf ≥ 90 / `/app/todos` ≥ 80 / A11y ≥ 90
 - [ ] securityheaders.com A+ 评级
-- [ ] CSP enforce 后 1 周 zero violation(Report-Only 模式 1 周 + enforce 1 周)
-- [ ] Sentry redact 测试通过 + source map 可解(CI 标准化命令)+ release tag 正确
-- [ ] 数据导出(客户端打包验证服务端零接触明文)+ 账号删除(30 天恢复 + Realtime 广播)流程跑通
+- [ ] CSP enforce 后 1 周 zero violation(Report-Only 模式 1 周 + enforce 1 周);**`/__csp_report` 自建端点 + `csp_violations` 表落地**
+- [ ] Sentry redact 测试通过(**断言无完整 entity_id,只见 entity_type + 短 hash**)+ source map 可解(CI 顺序 build→inject→upload→delete→deploy)+ release tag 正确
+- [ ] 数据导出(客户端打包验证服务端零接触明文)+ 账号删除(`deletion_scheduled_at` 30 天 + Realtime 广播)流程跑通
 - [ ] 多设备列表 + 撤销 RPC + 被撤销设备 Realtime 立即登出(无需用户主动刷新)
-- [ ] 30 分钟挂线 reconnect cursor gap 检测正确,无丢漏
+- [ ] 30 分钟挂线 reconnect **seq gap** 检测正确,无丢漏
 - [ ] WS 被代理禁后降级 polling 工作正常
+- [ ] iOS PWA standalone vs Safari tab partition 不通时 leader 选举降级有效
+- [ ] Safari `persisted()` + sentinel:删 sentinel 触发全量重拉,真机 7 天后访问可恢复
 
 ### 7.2 期望项(非 blocker,但记入 Phase 5 债)
 
@@ -402,5 +468,6 @@ mock fetch + IndexedDB(`fake-indexeddb`)跑:
 |---|---|---|
 | 2026-05-14 | v0.1 (DRAFT) | 首版,按 4-6 周拆分到 Week 1~6;接口契约 + 测试矩阵 + 验收门 |
 | 2026-05-16 | v0.2 (DRAFT) | 同步 PRD v0.2 的契约重写:(1) Week 1 加 PKCE flow + 自定义 storage + devices/sessions 表 + 4 个 RPC;(2) Week 2 改 driver-sync-blob(非 driver-rest)+ 本地 entity_index + FTS;(3) Week 3 改 Realtime metadata-only + cursor gap + WS 降级 polling + leader 选举 + host 注入桩;(4) Week 4 加密前入队 + dead-letter + 三方 diff;(5) Week 5 CSP Report-Only → enforce + Sentry sourcemap CI 命令 + 多设备 RPC + 真机矩阵 + Web Vitals INP;(6) §4.1 端点清单删 PostgREST 业务表 CRUD,改 /sync/* + RPC;(7) §4.3 EventMap 改 metadata-only event + 新增 conflict / dead-letter / idle-expired 事件;(8) §6 风险登记加 RW-13~19 |
+| 2026-05-16 | v0.3 (DRAFT) | 同步 PRD v0.3 的二次重写 + 排期拆分:(1) §1 拆 Phase 4.5a(4 周核心)+ Phase 4.5b(4 周离线/合规)共 8 周(worst 10 周);(2) Week 2 改 IndexedDB 三层(entity_blobs + entity_index 非敏感 metadata + entity_sort_keys DEK 派生加密);FTS Worker 内存 only;(3) Week 3 Realtime payload 带 seq + gap 检测 + iOS partition 兜底;(4) Week 4 重组为"主密码解锁 + sort_keys 加密 + FTS 重建 + Phase 4.5a 准入门";(5) Week 5 改"离线编辑 + dead-letter + 三方 diff";Week 6 新增"多设备 + X-Device-Id middleware + 客户端导出 + CSP enforce";Week 7 改"PWA + i18n + 部署 + 真机";Week 8 buffer;(6) §4.1 鉴权头加 X-Device-Id;sync_events seq + 删 account_settings 明文表;blob_aad 校验;(7) §4.3 EventMap 加 seq 字段 + `web:device-id-rejected` 事件;(8) §5 测试用例加 at-rest 加密 + sentinel 兜底 + entity_id 短 hash 断言;(9) §6 风险加 RW-20~26 |
 
 — END —

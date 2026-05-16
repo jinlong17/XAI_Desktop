@@ -7,7 +7,7 @@
 | 归属 Phase | Phase 4.5(4-6 周) |
 | 文档作者 | Claude(subagent) |
 | 创建日期 | 2026-05-14 |
-| 状态 | DRAFT v0.2(2026-05-16 按 review 重写 5 处 Critical + 12 处 Major) |
+| 状态 | DRAFT v0.3(2026-05-16 按第二轮 codex 复审再修 7 处 Critical + 11 处 Major) |
 
 ---
 
@@ -17,17 +17,21 @@
 
 **心智模型一句话(v0.2 修正)**:网页版 = 控制台子 PRD 的 React 组件树 + 浏览器壳 + **Sync push/pull encrypted blob driver**(不是直连业务表的 PostgREST CRUD)+ 浏览器特有的运行约束(认证 / 缓存 / 实时同步 / 离线 / 部署)。
 
-### 0.1 基础契约(v0.2 拍板,后续 FR 全部据此展开)
+### 0.1 基础契约(v0.3 拍板,后续 FR 全部据此展开)
 
 | 契约 | 决策 | 来源 |
 |---|---|---|
-| **Auth 存储模型** | **A — 纯 SPA + Supabase 自定义 storage**(token 落 IndexedDB 加密分区,不是 HttpOnly cookie);CSP/XSS 防御 + 短 TTL access token + refresh 失败强制重登 | 用户 2026-05-16 拍板 |
-| **数据访问协议** | Web 端的 `core-data` REST driver **不直连 PostgREST 业务表**;实现 `Repository<T>` 接口但底层网络协议是 Sync 子 PRD 定义的 `/sync/pull`、`/sync/push`、RPC,仅传 `{entity_type, entity_id, version, encrypted_blob}` | review Critical #2 |
-| **Realtime 合约** | 订阅 `sync:<account_id>` channel,**payload 只含 metadata**(`{entity_type, entity_id, server_updated_at, originator_device_id}`),收到后触发增量 pull,不直接合并 record | review Critical / Major (Sync PRD §4.1/§6.1) |
-| **离线 E2E 队列** | DEK 在内存 → mutation 入队前必须先加密;DEK 不在内存 → 禁止加密字段离线写入,只允许未保存草稿留在 React 内存,不落 IndexedDB | review Critical #3 |
-| **GDPR 导出方案** | 浏览器端持 DEK 拉全量 encrypted blobs → 本地解密 → 本地生成 zip → 浏览器直接下载;服务端永不接触明文,最多发短期 job token | review Critical #4 |
-| **多设备登出** | 不依赖 Supabase `auth.sessions`(浏览器端不可直接撤销 refresh token);自建 `devices` / `sessions` 表 + RPC(`device_register` / `device_heartbeat` / `device_revoke` / `revoke_others`),登出走 Realtime 广播 | review Critical #6 |
-| **公开分享链接** | **v1 不实现**;P1 等 Sync 子 PRD 先出 share envelope 协议(per-entity share key + URL fragment 携带解密材料 + server 存 encrypted share blob),再回到本档展开 UI | 用户 2026-05-16 拍板 + review Critical #7 |
+| **Auth token 存储模型** | **A — 纯 SPA + Supabase 自定义 storage**(token + token-wrap key 都落 IndexedDB);AES-GCM 包装**只防磁盘取证 / 跨用户登入,不防同源 XSS**;关浏览器再开通过 IndexedDB 自包含 unwrap 恢复;若要防 XSS 必须切 BFF/HttpOnly cookie 或 WebAuthn user-presence 解锁,v1 不做 | 用户 2026-05-16 拍板 + v0.3 codex C1 |
+| **真实 session revoke 边界** | 自建 `devices` / `app_sessions` **不撤销 Supabase Auth refresh token**(浏览器端不可达);改为业务 API 层强制校验:所有 `/sync/*`、RPC 必须带 `X-Device-Id` header,服务端中间件校验 `devices.revoked_at IS NULL`;远程撤销后被撤销设备拿 Supabase token 仍能换 access token,但所有业务调用全 403 | v0.3 codex C2/C3 |
+| **数据访问协议** | Web 端的 `core-data/driver-sync-blob` **不直连 PostgREST 业务表**;实现 `Repository<T>` 接口但底层网络协议是 Sync 子 PRD 定义的 `/sync/pull`、`/sync/push`、RPC,仅传 `{entity_type, entity_id, version, encrypted_blob, nonce, aad}` | v0.2 review Critical #2 |
+| **Sync cursor 数据模型** | Sync 子 PRD 必须建 `sync_events(account_id, seq BIGINT, entity_type, entity_id, server_updated_at)` per-account WAL 序列;Realtime payload 带 `seq`(取代 v0.2 写的"cursor 单调"模糊表述);`/sync/pull` 用 `since_seq`;gap 检测靠 `prev_seq + 1 !== this_seq` | v0.3 codex C7 |
+| **Realtime 合约** | 订阅 `sync:<account_id>` channel,**payload 只含 metadata**(`{entity_type, entity_id, seq, server_updated_at, originator_device_id}`),收到后触发增量 pull,不直接合并 record | v0.2 review + v0.3 C7 |
+| **离线 E2E 队列** | DEK 在内存 → mutation 入队前必须先加密;DEK 不在内存 → 禁止加密字段离线写入,只允许未保存草稿留在 React 内存,不落 IndexedDB | v0.2 review Critical #3 |
+| **本地 at-rest 加密** | IndexedDB 中所有"由用户内容派生的物件"(blob 原件 / 索引 / FTS / sort key)必须加密或锁定时 wipe;新增 `entity_blobs` 存 encrypted_blob 原件,所有明文视图从它派生;`entity_index` 持久部分仅存非敏感 metadata(entity_id / type / version / server_updated_at),敏感 sort key(due_at / completed_at / parent_id)走 DEK 派生索引 key 加密;**FTS 明文索引仅在 DEK 解锁期间内存/Worker 中存在,5min idle 或主密码 lock 时立即 wipe** | v0.3 codex C4/C5 |
+| **服务端明文边界(零知识硬规则)** | 业务实体**全字段进 encrypted_blob**,服务端不看 todo.title / due_at / completed_at / label;只保留账号元数据(email、plan)、自有 devices/app_sessions/audit_logs 明文;`account_settings` 也走 encrypted_blob(快捷键、Pomodoro 配置、默认 list 都是行为画像)。若 Phase 5+ 需推送提醒等场景,另开"明文 metadata 字段白名单"章节由 Sync PRD 评审 | v0.3 codex C7 + M-B |
+| **GDPR 导出方案** | 浏览器端持 DEK 拉全量 encrypted blobs → 本地解密 → 本地生成 zip → 浏览器直接下载;服务端永不接触明文,最多发短期 job token | v0.2 review Critical #4 |
+| **多设备登出** | 不撤销 Supabase Auth;自建 `devices` + `app_sessions` 表 + RPC(`device_register` / `device_heartbeat` / `device_revoke` / `revoke_others`);登出走 Realtime 广播 + 业务 API X-Device-Id 校验 | v0.2 review + v0.3 C2/C3 |
+| **公开分享链接** | **v1 不实现**;P1 等 Sync 子 PRD 先出 share envelope 协议(per-entity share key + URL fragment 携带解密材料 + server 存 encrypted share blob),再回到本档展开 UI | 用户 2026-05-16 拍板 + v0.2 review Critical #7 |
 
 本档与其他子 PRD 的边界:
 
@@ -134,7 +138,7 @@
 |---|---|---|
 | **三栏布局 / sidebar / 模块视图** | 控制台子 PRD 定义 | 100% 复用 |
 | **键盘流(Cmd+K 搜索 / J/K 上下 / Cmd+1..9 切模块)** | 控制台子 PRD 定义 | 复用,但 `Cmd+W` / `Cmd+Q` 走浏览器原生 |
-| **主题(深色/浅色/跟随系统)** | 控制台子 PRD 定义 | 复用 + 持久化走 localStorage(非 SQLite) |
+| **主题(深色/浅色/跟随系统)** | 控制台子 PRD 定义(v0.3 待协同改 device-local) | 复用 + **device-local 持久化走 IndexedDB `user_prefs`**(承接 §5.6.1,不走 localStorage)|
 | **数据访问** | `core-data` SQLite driver | `core-data` **Sync blob driver**(实现 Repository 接口,底层走 Sync push/pull encrypted blob,**非** PostgREST 业务表 CRUD)(本档 §5.2) |
 | **跨窗口事件总线** | Tauri event | `BroadcastChannel`(同源跨标签)+ Supabase Realtime(`sync:<account_id>` metadata-only)(本档 §5.3) |
 | **认证持久化** | macOS Keychain | Supabase JS SDK **自定义 storage**(IndexedDB 加密分区 + 短 TTL access token),纯 SPA 不依赖 HttpOnly cookie(本档 §0.1 + §5.1) |
@@ -193,13 +197,31 @@
 
 #### 5.1.1 Token 存储模型(纯 SPA)
 
+> v0.3 codex C1 修正:上一版"内存派生密钥加密 token"在语义上不自洽(关浏览器后 key 丢失 = token 不可解;若 key 也持久则与同源 XSS 无差异)。本节明确威胁模型 + 实现方案。
+
+##### 5.1.1.a 威胁模型(显式声明)
+
+| 威胁 | 防御? | 解释 |
+|---|---|---|
+| 同源 XSS 读取 token | ❌ 不防 | 任何 SPA 自管 token 方案都顶不住同源 XSS;依赖 §5.12 CSP + SRI + sanitize + supply chain 兜底;**这是承担风险,不是消除风险** |
+| 跨标签 / 跨用户 OS 账号窃取 IndexedDB 文件 | ✅ 防 | OS 文件系统取证、Chrome profile 拷贝、备份还原到他人设备;token blob 加密落盘,wrap key 也在 IndexedDB 但**用 Web Crypto 非 extractable CryptoKey 包装**,JS 无法导出明文 key |
+| 浏览器 dev tools / 扩展 inspector 读 IndexedDB | ⚠️ 部分防 | 看到 ciphertext 但 wrap key 是 non-extractable,直接读 IndexedDB 得不到明文 token;但 JS 可调 `crypto.subtle.unwrapKey + decrypt`,所以 dev tools 控制台执行 JS 仍可解(等价于 XSS) |
+| 物理设备被盗(无 OS 密码)| ✅ 防 | Chrome / Safari 持久 IndexedDB 在用户 OS 账号下,他人拿设备打不开;若 OS 账号无密码,与 cookie / localStorage 同样裸 |
+
+**结论**:本方案是"磁盘取证 / 跨用户隔离防护",**明确不防同源 XSS**。若需防 XSS,只能切 BFF/HttpOnly cookie 或加 WebAuthn user-presence unlock(v1 不做,Phase 5+ 评估)。
+
+##### 5.1.1.b 实现方案
+
 | 项 | 决策 |
 |---|---|
-| Access token | Supabase JS SDK 自定义 storage adapter → IndexedDB(`xai-cache` 库 `auth_tokens` Object Store);**短 TTL(1h)**;过期前 5min 静默 refresh |
-| Refresh token | 同 IndexedDB Object Store;refresh 失败 → 强制清并跳登录;**滚动刷新**(每次成功换新 refresh token,旧的失效)|
-| Token 加密 at-rest | IndexedDB 内的 token 用 `crypto.subtle.encrypt`(AES-GCM)+ 浏览器派生密钥(`crypto.getRandomValues` + 装填到非 extractable CryptoKey,存内存 `IDBObjectStore` 的 metadata);**不写明文 token**|
+| Access token | Supabase JS SDK 自定义 storage adapter → IndexedDB `auth_tokens` Object Store;**短 TTL 1h**;过期前 5min 静默 refresh |
+| Refresh token | 同 store;refresh 失败 → 强制清并跳登录;**滚动刷新**(每次成功换新 refresh token,旧的失效)|
+| Token wrap key | Web Crypto `crypto.subtle.generateKey({ name: 'AES-GCM', length: 256 }, false, ['wrapKey','unwrapKey'])`,`extractable: false`;**首次注册时生成 + 直接 `IDBObjectStore.put()`** 到 `auth_keys.wrap_key`(CryptoKey 对象可直接序列化进 IndexedDB,浏览器底层管理,JS 取出仍是 non-extractable handle);loginA → loginB 切账号场景同 store 不同 record |
+| Token at-rest 包装 | 每次写 token:`subtle.wrapKey(format='raw', key=tokenAsKey, wrapper=wrap_key, alg=AES-GCM, iv=randomNonce)` → 存 `{ciphertext, nonce}`;读出时反向 `unwrapKey + decrypt`,token 直接进 SDK,不经 string |
+| 关浏览器再开 | wrap_key 持久在 IndexedDB,unwrap 重建恢复 session;符合 FR-WEB-14 |
+| 切账号清 | 用户主动注销/账号切换 → 删 `auth_tokens` 全表 + 重新 `generateKey` 替换 wrap_key |
 | XSS 防御红线 | CSP `script-src 'self'` + 无 `'unsafe-inline'` + 无 CDN(SRI 兜底)+ `dangerouslySetInnerHTML` 禁用 + react-markdown + rehype-sanitize 白名单(见 §5.12) |
-| 取舍声明 | 与 HttpOnly cookie 相比,XSS 直接可读 token 的风险更高;承担代价的前提是 §5.12 安全栈完整 + Sentry redact 严格 + npm 供应链审计(`pnpm audit` + Dependabot)|
+| 承担代价声明(写入隐私页) | "Web 端 token 存储于本地 IndexedDB 加密分区,采取磁盘取证防护,但不能阻止运行在同源页面内的恶意脚本读取 token;请用最新浏览器,不要安装来源不明的扩展" |
 
 #### 5.1.2 FR 表
 
@@ -213,20 +235,23 @@
 | FR-WEB-13 | 找回密码 | P0 | `/auth/forgot` 调 `supabase.auth.resetPasswordForEmail(email, { redirectTo: '<absolute>/auth/reset' })`;邮件 link 落 `/auth/reset?token_hash=...&type=recovery`;调 `verifyOtp` → 强制设新密码(同 FR-WEB-08 强度) |
 | FR-WEB-14 | 会话持久化(自定义 storage) | P0 | Supabase JS SDK 构造时传 `auth.storage` adapter(`getItem`/`setItem`/`removeItem` over IndexedDB);access token TTL 1h,refresh 滚动;关浏览器再开,SDK init 时从 storage 拉 session → 后台 refresh → 成功则保持登录;refresh 失败 → 清 storage + 跳 `/auth/login` |
 | FR-WEB-15 | 跨标签会话同步 | P0 | 标签 A 登出 → `BroadcastChannel('auth')` 广播 `LOGOUT` → 其他标签 10s 内清 IndexedDB + 跳 `/auth/login`;Supabase SDK `onAuthStateChange` 监听本地变化作为兜底 |
-| FR-WEB-16 | 注销(本设备) | P0 | 设置 → 注销:(a) 调 `supabase.auth.signOut({ scope: 'local' })`;(b) 调自建 `device_revoke(current_device_id)` RPC;(c) 清 IndexedDB `auth_tokens` + `query_cache` + `pending_mutations` + `encrypted_dek`;(d) BroadcastChannel 通知其他标签;(e) 跳 `/auth/login` |
-| FR-WEB-17 | 多设备列表 + 单设备撤销 | P0 | 设置 → "已登录设备"读取自建 `sessions` 视图(由 `device_register` / `device_heartbeat` 维护,含 `device_id`、`device_name`、`platform`、`last_seen_at`、`created_at`)。撤销走 `device_revoke(device_id)` RPC:服务端置 `revoked_at` + 通过 Realtime `sync:<account_id>` 广播 `device_revoked` 事件;被撤销的设备收到事件后立即 signOut + 清 IndexedDB |
+| FR-WEB-16 | 注销(本设备) | P0 | 设置 → 注销:(a) 调 `supabase.auth.signOut({ scope: 'local' })`;(b) 调自建 `device_revoke({ device_id })` RPC;(c) 清 IndexedDB `auth_tokens` + `auth_keys.wrap_key` + `query_cache` + `entity_blobs` + `entity_index` + `pending_mutations` + `encrypted_dek`;(d) BroadcastChannel 通知其他标签;(e) 跳 `/auth/login` |
+| FR-WEB-17 | 多设备列表 + 单设备撤销(业务层 revoke,**非** Supabase Auth revoke) | P0 | 设置 → "已登录设备"读取自建 `devices` 视图(`device_id`、`device_name`、`platform`、`last_seen_at`、`created_at`、`revoked_at`)。撤销走 `device_revoke({device_id})` RPC:服务端置 `devices.revoked_at = now()` + 通过 Realtime `sync:<account_id>` 广播 `device_revoked`;被撤销设备**在线时**收到事件立即 signOut + 清 IndexedDB;被撤销设备**离线时**:Supabase Auth refresh token 浏览器不可远程撤销,但下次该设备调任何 `/sync/*` 或 RPC,服务端 middleware 校验 `X-Device-Id` 对应 `devices.revoked_at IS NOT NULL` → 403 + 错误码 `device_revoked` → 客户端拦截即时登出 |
 | FR-WEB-17b | 撤销除当前外全部 | P0 | 设置 → "撤销其他设备" 调 `revoke_others_rpc()`;实现同 FR-WEB-17 批量化 |
-| FR-WEB-17c | 设备 heartbeat | P0 | Web 端登录后每 5min 调 `device_heartbeat(device_id)` 更新 `last_seen_at`(节流;visibilitychange=visible 时立即触发一次);非活跃 30 天的设备自动标记为 `stale`,但**不自动撤销**(由用户手动或主动登出) |
-| FR-WEB-17d | Device fingerprint | P0 | `device_id` = `crypto.randomUUID()`(首次注册生成),持久化到 IndexedDB `device.id`(注销不清,登出再登保持同 device_id);`device_name` = 解析 UA(`Chrome 124 on macOS`)用户可改 |
+| FR-WEB-17c | 设备 heartbeat | P0 | Web 端登录后每 5min 调 `device_heartbeat({device_id})` 更新 `last_seen_at`(节流;`visibilitychange=visible` 时立即触发一次);非活跃 30 天的设备自动标记为 `stale`,但**不自动撤销**(由用户手动) |
+| FR-WEB-17d | Device fingerprint | P0 | `device_id` = `crypto.randomUUID()` v7(首次注册生成),持久化到 IndexedDB `device.id`(注销不清,登出再登保持同 device_id);`device_name` = 解析 UA(`Chrome 124 on macOS`)用户可改 |
+| FR-WEB-17e | **X-Device-Id 强制校验** | P0 | 所有 `/sync/*`、`/rest/v1/rpc/*`(除 `device_register`)、`/sync/pull`、`/sync/push`、客户端导出、账号删除 RPC 都必须带 `X-Device-Id` header;服务端 middleware/RLS:`device_id` 不在 `devices` 表 → 401;`devices.revoked_at IS NOT NULL` → 403 `device_revoked`;客户端收到 `device_revoked` → 立即清 IndexedDB + 强制重登 |
 | FR-WEB-18 | 双因素认证(TOTP) | P1 | 与主 PRD FR-AC-05 一致;Web 端提供启用流程 + QR 展示 + 登录时第二步输入;走 Supabase `auth.mfa.enroll` / `verify` API |
 | FR-WEB-19 | 桌面 App 用户首访 Web 引导 | P0 | **不依赖 localStorage hint**(可被清);判定改为登录后调 `device_list_rpc()` 看是否有 `platform: 'macos'` 的活跃设备;有 → 首次访问 Web 弹一次性引导卡(用 IndexedDB `user_prefs.web_intro_seen` 记录);卡片文案 "你已在 macOS 上使用 XAI;Web 端是只读+轻量编辑场景" |
 | FR-WEB-20 | 主密码 challenge(E2E) | P0 | 登录后**单独**询问主密码用以解出 DEK(主密码 ≠ 账号密码;见 §5.12);若拒输 → 受 E2E 保护的字段显示为"已加密,输入主密码可查看";KEK 仅驻内存(`useRef` 持有非 extractable CryptoKey,组件卸载即释放) |
-| FR-WEB-20b | OAuth `next` 参数白名单 | P0 | 任何 `next` / `redirectTo` 参数必须是**同源相对路径**(`/^\/(app|share|legal)\//`);命中 open-redirect 检测的丢弃用默认 `/app/todos`;`redirectTo` 在 Supabase Dashboard 配 allowlist(`https://app.xai-desktop.app/auth/callback`、`http://localhost:5173/auth/callback`) |
+| FR-WEB-20b | OAuth `next` 参数白名单 | P0 | 任何 `next` / `redirectTo` 参数必须是**同源相对路径**(v1 正则 `/^\/(app|legal)\//`,**v1 不允许 `/share/`**——v1 直接 404;P1 share envelope 上线时再加回);命中 open-redirect 检测的丢弃用默认 `/app/todos`;`redirectTo` 在 Supabase Dashboard 配 allowlist(`https://app.xai-desktop.app/auth/callback`、`http://localhost:5173/auth/callback`) |
 | FR-WEB-20c | OAuth state/nonce 校验 | P0 | `state` 存 sessionStorage(关标签清);callback 拿不到 state 或对不上 → 显错并不交换 code;PKCE 的 `code_verifier` 同样存 sessionStorage |
 
-#### 5.1.3 自建 devices/sessions 表(后端 schema 增量)
+#### 5.1.3 自建 devices / app_sessions 表(后端 schema 增量)
 
-> 主 PRD §8 未含本表,需 Sync 子 PRD 同步增加。Web 端只是消费方。
+> 主 PRD §8 未含本表,需 Sync 子 PRD 同步增加(本档 §8.1 改写"继承主 schema + Sync 增量")。Web 端只是消费方。
+>
+> v0.3 codex C3 修正:删除原 `sessions.refresh_token_hash`(浏览器端 refresh token 不应也无法被 RPC hash,Supabase GoTrue 也不会用本表验证撤销);改为 `app_sessions` 仅记录 **app-level lease**(app 自有的设备会话租约,与 Supabase Auth session 完全分离)。
 
 ```sql
 -- devices:每个安装实例
@@ -238,25 +263,36 @@ CREATE TABLE devices (
   user_agent TEXT,                     -- Web only
   created_at TIMESTAMPTZ NOT NULL DEFAULT now(),
   last_seen_at TIMESTAMPTZ NOT NULL DEFAULT now(),
-  revoked_at TIMESTAMPTZ                -- 非 null 即已撤销
+  revoked_at TIMESTAMPTZ                -- 非 null 即已撤销(业务层撤销,非 Supabase Auth 撤销)
 );
 
--- sessions:每次 refresh token 颁发
-CREATE TABLE sessions (
+-- app_sessions:每次登录在 app 自有维度的 session lease;不存 Supabase refresh token
+CREATE TABLE app_sessions (
   id UUID PRIMARY KEY,
   device_id UUID NOT NULL REFERENCES devices(id) ON DELETE CASCADE,
   account_id UUID NOT NULL,
-  refresh_token_hash TEXT NOT NULL,    -- bcrypt/argon2 hash,不存明文
-  expires_at TIMESTAMPTZ NOT NULL,
-  revoked_at TIMESTAMPTZ
+  issued_at TIMESTAMPTZ NOT NULL DEFAULT now(),
+  last_seen_at TIMESTAMPTZ NOT NULL DEFAULT now(),
+  revoked_at TIMESTAMPTZ,
+  user_agent TEXT,
+  ip_first_seen INET,                  -- 仅审计;privacy 页声明保留 90 天
+  ip_last_seen INET
 );
 
 CREATE INDEX ON devices (account_id, revoked_at);
-CREATE INDEX ON sessions (device_id, expires_at);
+CREATE INDEX ON app_sessions (device_id, revoked_at);
+
+-- 中间件:所有 /sync/*、RPC 强制校验(伪代码)
+-- IF X-Device-Id NOT IN devices.id WHERE devices.account_id = auth.uid()
+--   THEN 401 'unknown_device'
+-- IF devices.revoked_at IS NOT NULL
+--   THEN 403 'device_revoked' + payload { revoked_at }
 ```
 
 RPC 接口:`device_register({ device_id, platform, device_name, user_agent })`、`device_heartbeat({ device_id })`、`device_revoke({ device_id })`、`revoke_others_rpc()`、`device_list_rpc()`。
-所有 RPC 走 Supabase RLS(`account_id = auth.uid()`)。
+所有 RPC 走 Supabase RLS(`account_id = auth.uid()`)+ 上述 middleware。
+
+> **声明边界**:`device_revoke` 不撤销 Supabase Auth refresh token(浏览器端不可达,Supabase GoTrue admin API 才有 `auth.admin.signOut(user_id, scope='others')` 能力,但那是按 user 撤销全部 session,无法只撤销一个设备);本档采用"业务层 X-Device-Id 校验"实现真正的"按设备撤销"语义。若 Phase 5+ 需要彻底撤销 Supabase token,只有切 BFF 一条路。
 
 ### 5.2 数据访问层(Sync blob driver)
 
@@ -268,12 +304,55 @@ RPC 接口:`device_register({ device_id, platform, device_name, user_agent })`�
 
 | 端点 | 方向 | payload | 说明 |
 |---|---|---|---|
-| `POST /sync/pull` | client → server | `{ cursor, max_batch, entity_types[] }` | 增量拉:从 cursor 开始的 metadata + encrypted_blob;返回 `{ items[], next_cursor, has_more }` |
-| `POST /sync/push` | client → server | `{ mutations[] }`,每条 `{ mutation_id, entity_type, entity_id, op, base_version, encrypted_blob, idempotency_key }` | 批量推 mutation;返回逐条 `{ mutation_id, status, server_version?, conflict_snapshot? }` |
-| `POST /rest/v1/rpc/<fn>` | client → server | 非 E2E RPC(账号管理、设备、导出 job) | 不传 encrypted blob;走 Supabase Auth 鉴权 |
+| `POST /sync/pull` | client → server | `{ since_seq, entity_types?[], limit }` | 增量拉:`sync_events.seq > since_seq` 的 metadata + encrypted_blob;按 `entity_type` 可选过滤;`limit` 默认 200,最大 500;返回 `{ items[], next_seq, has_more }`;**服务端始终分页,不允许全量** |
+| `POST /sync/push` | client → server | `{ device_id, mutations[] }`,每条 `{ mutation_id, idempotency_key, entity_type, entity_id, op, base_version, encrypted_blob, blob_nonce, blob_aad }` | 批量推 mutation;返回逐条 `{ mutation_id, status, server_version?, server_seq?, remote_encrypted_blob? }` |
+| `POST /rest/v1/rpc/<fn>` | client → server | 非 E2E RPC(账号管理、设备、导出 job)| 不传 encrypted blob;走 Supabase Auth + X-Device-Id 鉴权 |
 | `wss .../realtime/v1/websocket` | bi | metadata-only(见 §5.3) | 不传 blob |
 
-**没有** `GET /rest/v1/todos` 之类的端点;服务端 PostgREST 仅暴露:`devices`、`sessions`(自有)、`encrypted_blobs`、`accounts`、`account_settings`(非加密的 device-local 之外的)、`audit_logs`。
+**鉴权头(所有上述端点)**:
+```
+Authorization: Bearer <supabase_access_token>
+apikey:        <supabase_anon_key>
+X-Device-Id:   <device_uuid>            -- 强制;见 FR-WEB-17e
+X-Sync-Version: 2026-05
+```
+
+**没有** `GET /rest/v1/todos` 之类的端点;服务端 PostgREST 仅暴露:`accounts`(email/plan/age_consent_at 等明文元数据)、`devices`、`app_sessions`(自有)、`encrypted_blobs`(下文)、`sync_events`(WAL,只读)、`audit_logs`(自有);**`account_settings` 也走 encrypted_blob,无明文表暴露**。
+
+#### 5.2.1.b 服务端 schema 增量(由 Sync 子 PRD 归口建表)
+
+```sql
+-- encrypted_blobs:所有业务实体的"行"
+CREATE TABLE encrypted_blobs (
+  account_id UUID NOT NULL REFERENCES accounts(id) ON DELETE CASCADE,
+  entity_type TEXT NOT NULL,
+  entity_id UUID NOT NULL,
+  version BIGINT NOT NULL,                -- per-entity 单调
+  encrypted_blob BYTEA NOT NULL,
+  blob_nonce BYTEA NOT NULL,
+  blob_aad BYTEA NOT NULL,                -- 含 entity_id + version,防 replay
+  server_updated_at TIMESTAMPTZ NOT NULL DEFAULT now(),
+  originator_device_id UUID NOT NULL,
+  deleted BOOLEAN NOT NULL DEFAULT false, -- 软删,blob 为空
+  PRIMARY KEY (account_id, entity_type, entity_id)
+);
+
+-- sync_events:per-account WAL,Realtime 与 pull 都基于这张表
+CREATE TABLE sync_events (
+  account_id UUID NOT NULL,
+  seq BIGINT NOT NULL,                    -- per-account 单调,DEFAULT nextval(per_account_seq)
+  entity_type TEXT NOT NULL,
+  entity_id UUID NOT NULL,
+  server_updated_at TIMESTAMPTZ NOT NULL,
+  originator_device_id UUID NOT NULL,
+  version BIGINT NOT NULL,
+  PRIMARY KEY (account_id, seq)
+);
+
+CREATE INDEX ON sync_events (account_id, seq) WHERE seq IS NOT NULL;
+```
+
+> per-account `seq` 通过 PG sequence per account 或 advisory lock + max(seq)+1 实现(Sync 子 PRD 决定);**Realtime payload 必带 `seq`**,客户端用之做 cursor gap 检测。
 
 #### 5.2.2 FR 表
 
@@ -281,53 +360,66 @@ RPC 接口:`device_register({ device_id, platform, device_name, user_agent })`�
 |---|---|---|---|
 | FR-WEB-21 | `core-data` Sync blob driver | P0 | 与 SQLite driver 实现同一 `Repository<T>` 接口;Web build 启用 Sync driver,桌面 build 启用 SQLite;切换零业务代码改动;契约测试两 driver 跑同一 spec 必须一致 |
 | FR-WEB-22 | Sync 端点契约 | P0 | driver 内部只调用 §5.2.1 三类端点;`Repository.findMany(filter)` 在本地索引上 evaluate filter,**不发到服务端**;`Repository.save(entity)` 在客户端加密 → 入 push 队列 |
-| FR-WEB-22b | 本地索引 | P0 | IndexedDB `entity_index` Object Store 存解密后的 sort/filter 关键字段(`id`, `entity_type`, `parent_id`, `due_at`, `completed_at`, `label_ids[]`, `text_for_fts`);DEK 解密 blob 时同步刷新索引;支持 IndexedDB cursor 范围扫 + 内存 filter |
-| FR-WEB-22c | 本地全文搜索 | P0 | `text_for_fts` 用 `lunr` 或 `flexsearch` 建索引(纯 JS,Web Worker 跑);DEK 不在内存 → 搜索结果仅含 entity_id + "需主密码查看"占位 |
-| FR-WEB-23 | 请求缓存 | P0 | TanStack Query v5 的 queryFn 调 driver;`staleTime` 由 Realtime metadata 事件触发失效,**不靠固定时间**;`cacheTime` 5min |
+| FR-WEB-22b | 本地索引(at-rest 安全)| P0 | IndexedDB **三层存储**:(a) `entity_blobs` 存 encrypted_blob 原件(at-rest 加密;v0.3 新增,见 §8.2);(b) `entity_index` 持久部分**只存非敏感 metadata**(`entity_id`、`entity_type`、`version`、`server_updated_at`、`deleted`),用于离线 list 占位与 ETag;(c) 敏感 sort key(`due_at`、`completed_at`、`parent_id`、`label_ids` 等)在 IndexedDB 中**用 DEK 派生的 index key 加密**(AES-GCM,每条独立 nonce),解密后驻内存的 in-memory index 供排序/过滤;锁定/idle 时清内存 index |
+| FR-WEB-22c | 本地全文搜索(内存 only) | P0 | FTS 明文文本(`text_for_fts`)**仅在 DEK 解锁期间存在于 Web Worker 内存的 flexsearch / lunr index**;主密码 lock / 5min idle / 关页 → 内存 index 立即 wipe;持久部分只存"reverse-pointer"(`entity_id → blob`),lock 后搜索结果只能返回 `entity_id` + "已加密,输入主密码可查看"占位;解锁后用 Worker 重建 index(分批解密 entity_blobs,显进度) |
+| FR-WEB-22d | 服务端分页(强制) | P0 | `/sync/pull` 总是用 `since_seq + limit`(default 200);driver **不假设全量已本地**;按模块 lazy hydrate(进 `/app/todos` 才拉 todo 相关 entity_type);大账号首次登录走"渐进 hydrate"+ 顶部进度条,优先模块可立即可用 |
+| FR-WEB-23 | 请求缓存 | P0 | TanStack Query v5 的 queryFn 调 driver;`staleTime` 由 Realtime metadata 事件触发失效,**不靠固定时间**;`cacheTime` 5min;**TanStack Query cache 不持久化** plaintext data → 关页/lock 失效 |
 | FR-WEB-24 | mutation 幂等性 | P0 | 每条 mutation 客户端生成 `mutation_id`(uuid v7,含时间戳)+ `idempotency_key = hash(entity_id + base_version + op_payload)`;服务端在 24h 窗口内对 idempotency_key 去重(返回首次结果);离线队列回放、网络重试都不会产生重复写 |
 | FR-WEB-24b | 失败重试 + 退避 | P0 | 网络错误 / 5xx / 429 指数退避 3 次(1s/4s/16s + ±25% jitter);429 严格遵守 `Retry-After` header;4xx 不重试直接抛 |
 | FR-WEB-24c | Dead letter queue | P0 | 同一 mutation 重试 3 次仍 fail → 移到 `dead_letter_mutations` Object Store + 顶部 banner "X 条更改未能同步" + 链到 detail 视图;用户可手动重试或丢弃;dead-letter 队列也算入 §5.4 离线限额 |
 | FR-WEB-25 | 错误展示 | P0 | 4xx → toast + 表单字段红色;5xx → 顶部全局 banner;401 → 跳登录;403 → "权限不足";409 (conflict) → 触发 §5.4 冲突 UI;429 → toast + "X 秒后自动重试" |
 | FR-WEB-26 | 乐观更新 | P1 | Todo 完成 / 卡片拖拽 等高频写,driver 先更新本地 `entity_index` + UI,push 失败回滚;失败时回滚 + toast |
 | FR-WEB-27 | mutation 合并(同 tick) | P1 | 同一 tick 内 100ms 去抖,对同一 entity 的多次 `update` 合并为最后一次(前提:op 都是 update,且 base_version 相同);最终 push 用最后的 mutation_id |
-| FR-WEB-28 | 大列表分页(本地) | P0 | Todo / card 列表本地 `entity_index` cursor 分页,default 50 条/视口,虚拟滚动(`@tanstack/react-virtual`);**不需要服务端分页**(blob 全量已在本地)|
+| FR-WEB-28 | 大列表分页(本地 + 服务端) | P0 | 服务端 `/sync/pull` 始终 `since_seq + limit ≤ 500` 分页(承接 FR-WEB-22d);本地 `entity_index` cursor 分页,default 50 条/视口,虚拟滚动(`@tanstack/react-virtual`);未 hydrate 完的模块显示骨架屏 + 进度 |
 | FR-WEB-29 | 请求取消 | P0 | 切换路由或 query key 变化时 abort 上一次 fetch(`AbortController`);`/sync/pull` 进行中可被打断,push 不可打断(已发出的 mutation 等服务端响应) |
 | FR-WEB-30 | API 版本协商 | P0 | 每个请求带 `X-Sync-Version: 2026-05` header;服务端 `Sunset` header → 顶部 banner "数据格式即将升级,请刷新";`X-Sync-Version` 不匹配 → 服务端返 426 Upgrade Required,前端强制刷新 |
 
 #### 5.2.3 mutation 信封示例
 
+```http
+POST /sync/push HTTP/1.1
+Authorization: Bearer <supabase_access_token>
+apikey: <supabase_anon_key>
+X-Device-Id: 01970b8c-...               # 强制;服务端校验 devices.revoked_at IS NULL
+X-Sync-Version: 2026-05
+Content-Type: application/json
+```
+
 ```json
-// POST /sync/push body
 {
-  "device_id": "uuid",
   "mutations": [
     {
-      "mutation_id": "01970b8e-...",       // uuid v7
-      "idempotency_key": "sha256:...",
+      "mutation_id": "01970b8e-...",         // uuid v7
+      "idempotency_key": "sha256:...",       // hash(entity_id + base_version + op_payload)
       "entity_type": "todo",
       "entity_id": "uuid",
-      "op": "update",                       // create | update | delete
-      "base_version": 42,                   // 用 If-Match 语义,服务端用来判 409
-      "encrypted_blob": "base64...",        // AES-GCM(DEK, plaintext_json)
+      "op": "update",                         // create | update | delete
+      "base_version": 42,                     // If-Match 语义,服务端判 409
+      "encrypted_blob": "base64...",          // AES-GCM(DEK, plaintext_json)
       "blob_nonce": "base64",
-      "blob_aad": "entity_id:version"
+      "blob_aad": "base64(entity_id || version)" // 防 replay,server 必须 verify
     }
   ]
 }
+```
 
+```json
 // 服务端响应
 {
   "results": [
     {
       "mutation_id": "01970b8e-...",
-      "status": "ok",                       // ok | conflict | rejected
-      "server_version": 43
+      "status": "ok",                         // ok | conflict | rejected | device_revoked
+      "server_version": 43,
+      "server_seq": 12345                     // 写入 sync_events 的 seq;客户端记为 last_seen_seq
     },
     {
       "mutation_id": "01970b8f-...",
-      "status": "conflict",                 // base_version 不匹配
+      "status": "conflict",                   // base_version 不匹配
       "server_version": 45,
-      "remote_encrypted_blob": "base64..."  // 让客户端展示 diff
+      "remote_encrypted_blob": "base64...",   // 让客户端展示三方 diff
+      "remote_blob_nonce": "base64",
+      "remote_blob_aad": "base64"
     }
   ]
 }
@@ -339,14 +431,16 @@ RPC 接口:`device_register({ device_id, platform, device_name, user_agent })`�
 
 #### 5.3.1 Channel 与事件
 
+> v0.3 codex C7:payload 必带 `seq`(per-account WAL 序号),`/sync/pull` 用 `since_seq` 而非时间戳 cursor;`server_updated_at` 只用于 UI 显示和审计。
+
 | Channel | 事件 | payload |
 |---|---|---|
-| `sync:<account_id>` | `entity_changed` | `{ entity_type, entity_id, server_updated_at, originator_device_id, version }` |
-| `sync:<account_id>` | `device_revoked` | `{ device_id, reason }` |
+| `sync:<account_id>` | `entity_changed` | `{ entity_type, entity_id, seq, server_updated_at, originator_device_id, version }` |
+| `sync:<account_id>` | `device_revoked` | `{ device_id, revoked_at, reason }` |
 | `sync:<account_id>` | `account_deleted` | `{ scheduled_at }` |
 | `presence:<account_id>` | `online_devices` | `[{ device_id, platform, last_seen_at }]`(P1)|
 
-收到 `entity_changed` → 把 `(entity_type, entity_id)` 入 pull queue(去抖 300ms 合批)→ 调 `/sync/pull?cursor=<since>` → 本地解密 + 更新 entity_index + 失效 TanStack Query → UI 自动刷新。
+收到 `entity_changed` → 把 `(entity_type, entity_id, seq)` 入 pull queue(去抖 300ms 合批)→ 调 `/sync/pull` body `{ since_seq: last_seen_seq, entity_types: [...], limit: 200 }` → 本地解密 + 写入 `entity_blobs` + 刷新 `entity_index` 持久 metadata + 解锁态下刷新内存 sort/FTS 索引 → 失效 TanStack Query → UI 自动刷新。
 
 #### 5.3.2 FR 表
 
@@ -355,11 +449,11 @@ RPC 接口:`device_register({ device_id, platform, device_name, user_agent })`�
 | FR-WEB-31 | Channel 订阅 | P0 | 登录后订阅 `sync:<account_id>`;无需按模块切换(metadata 体积小,全账号订阅即可);channel 状态机:`UNINITIALIZED → CONNECTING → SUBSCRIBED → DISCONNECTED → CONNECTING`,UI 反映 |
 | FR-WEB-32 | Metadata → pull trigger | P0 | 收到 `entity_changed` **绝不直接 merge record**;若 `originator_device_id === own_device_id` 直接丢弃(自己的写已在本地);否则入 pull queue 去抖 300ms 合批 |
 | FR-WEB-33 | 断线检测 + 重连(指数退避 + jitter) | P0 | 心跳 30s,3 次失败 → 标记 DISCONNECTED;重连退避序列 `[1s, 2s, 5s, 10s, 30s, 60s]` + ±25% jitter;reconnect 成功 → 触发一次 catch-up pull(`cursor = last_received_cursor`)|
-| FR-WEB-33b | `visibilitychange` 恢复 | P0 | 标签 hidden ≥ 60s 后 visible → 主动 ping + catch-up pull;DISCONNECTED 状态下 visible 立即触发重连尝试 |
-| FR-WEB-33c | Cursor gap 检测 | P0 | 服务端在 `entity_changed` 中带 `cursor` 单调递增;客户端检测 gap(`prev_cursor + 1 !== this_cursor`)→ 触发全量 catch-up pull;30 分钟挂线后 reconnect 必须验证无丢事件 |
+| FR-WEB-33b | `visibilitychange` 恢复 | P0 | 标签 hidden ≥ 60s 后 visible → 主动 ping + catch-up pull(`since_seq = last_seen_seq`);DISCONNECTED 状态下 visible 立即触发重连尝试 |
+| FR-WEB-33c | seq gap 检测 | P0 | `entity_changed.seq` per-account 单调;客户端记 `last_seen_seq`;新事件 `seq !== last_seen_seq + 1` → 触发 `/sync/pull?since_seq=last_seen_seq` 补齐再追上;30 分钟挂线后 reconnect 必须验证无丢事件 |
 | FR-WEB-34 | 心跳 | P0 | Supabase 内置 30s 心跳;3 次失败标记断线;心跳失败原因(timeout / 4xx)上报 Sentry breadcrumb |
 | FR-WEB-34b | WS 被代理禁用降级 | P0 | 检测 WS connect 连续 3 次失败(企业代理常见禁 WS)→ 降级 polling(`POST /sync/pull` 每 15s)+ banner "实时同步降级为轮询,数据可见性 ~15s";恢复 WS 后回到推送模式 |
-| FR-WEB-35 | Realtime → core-events | P0 | metadata 事件转 `web:realtime-event`(payload 只有 metadata,不含 record);UI 通过 `useEventListener` 反应,**不要依赖 record 字段** |
+| FR-WEB-35 | Realtime → core-events | P0 | metadata 事件转 `web:realtime-event`(payload `{ entity_type, entity_id, seq, originator_device_id }`,不含 record);UI 通过 `useEventListener` 反应,**不要依赖 record 字段** |
 | FR-WEB-36 | 桌面 ↔ Web 双向可见 | P0 | 在线、低延迟网络下 P95 ≤ 5s(metadata 1s 内到达 + pull + 解密 + 渲染);WS 降级 polling 下 ≤ 20s;验收:两侧并排打开同一 Todo,改一侧 ≤ 5s 另一侧变 |
 | FR-WEB-37 | 多标签共享 channel | P1 | 用 `BroadcastChannel` + `Web Lock API` 选举 leader 标签持 WS;follower 通过 BC 收 metadata;leader 关闭/失焦 → 重新选举;quota 节省 N-1 个连接 |
 | FR-WEB-37b | 挂线 30 分钟恢复测试 | P0 | E2E 测试:登录 → 切到 background 30 分钟 → 期间桌面端改 10 条 → Web 标签 visible → 30s 内全部追平,无丢漏(用 cursor gap 检查) |
@@ -370,13 +464,17 @@ RPC 接口:`device_register({ device_id, platform, device_name, user_agent })`�
 
 #### 5.4.1 离线写入策略
 
+> v0.3 codex M-B:删除"非加密字段(完成状态、due_at 等元数据)写入"路径——零知识硬规则下,业务实体全字段进 blob,没有"非加密字段"。所有写都需要 DEK。
+
 | 场景 | DEK 在内存? | 行为 |
 |---|---|---|
-| 加密字段(Todo 标题、便签、卡片描述等)写入 | ✅ 在 | 立即加密 → 入 `pending_mutations` 队列(只存 encrypted_blob)|
-| 加密字段写入 | ❌ 不在 | **禁止落 IndexedDB**;UI 标记"主密码已锁,加密编辑不可用";已开始的编辑保留在 React state(关页即失);若 5min idle 主密码超时清 → 编辑 buffer 清空 + 提示 |
-| 非加密字段(完成状态、due_at 等元数据)写入 | 任意 | 立即入 `pending_mutations` 队列(blob 仅含元数据) |
-| pending 队列回放 | ✅ 在 | 联网恢复 → 按时间序 push;服务端去重(idempotency_key) |
-| pending 队列回放 | ❌ 不在 | 仅回放非加密字段的 mutation;加密字段 mutation 等 DEK 恢复后再 push |
+| 任何业务实体写入(创建/更新/删除)| ✅ 在 | 整条记录序列化 + AES-GCM 加密(DEK)→ 入 `pending_mutations` 队列(只存 encrypted_blob + nonce + aad) |
+| 任何业务实体写入 | ❌ 不在 | **禁止落 IndexedDB**;UI 标记"主密码已锁,本地编辑不可用";已开始的编辑保留在 React state(关页即失);若 5min idle 主密码超时清 → 编辑 buffer 清空 + 提示 |
+| 完成 Todo / 切换 checkbox 等"仅改一个字段" | ✅ 在 | 仍走整条 blob 加密(零知识下服务端看不到字段差);本档不暴露"仅更新一个字段"的明文端点 |
+| pending 队列回放 | ✅ 在 | 联网恢复 → 按 `created_at` 顺序 push;服务端按 `idempotency_key` 24h 去重;`base_version` 不匹配走三方 diff |
+| pending 队列回放 | ❌ 不在 | **全部 mutation 阻塞**;不解锁不回放,避免错乱;顶部 banner 提示输主密码 |
+
+> **明文 metadata 字段白名单**:v1 范围内**无白名单**(全部进 blob)。若 Phase 5+ 需要"按 due_at 推送提醒"等场景,**必须在 Sync 子 PRD 单独章节列出威胁模型 + 白名单字段 + 用户告知**;本档不预设入口。
 
 #### 5.4.2 FR 表
 
@@ -392,7 +490,7 @@ RPC 接口:`device_register({ device_id, platform, device_name, user_agent })`�
 | FR-WEB-43b | 冲突 toast 一次性 | P0 | 同一 entity 冲突只弹一次 toast;后续合并到顶部 banner "X 条冲突待处理"+ link 到冲突 inbox |
 | FR-WEB-43c | Dead-letter 队列 | P0 | mutation 重试 3 次仍失败(非 409;5xx/网络)→ 移到 `dead_letter_mutations`;UI 有专门的"未同步更改"页可手动重试/丢弃/导出 |
 | FR-WEB-44 | Service Worker | P0 | 注册 `/sw.js`(workbox 生成);HTML 走 **network-first + no-store**(避免 stale shell);静态资源 cache-first + immutable;precache revision 绑 git SHA(见 §9.4);更新时弹"新版本可用,刷新生效"**仅在空闲态**(无 in-flight mutation) |
-| FR-WEB-45 | SW 紧急 escape hatch | P0 | (a) 设置 → 隐私 → "清除浏览器缓存" 调 `caches.delete()` + `indexedDB.deleteDatabase()` + `navigator.serviceWorker.getRegistrations().unregister()`;(b) 紧急回滚通道:服务端可发布 `/sw-kill.js`(空实现 + `unregister()`),用户访问 `app.xai-desktop.app/?sw-kill=1` 强制注销旧 SW;(c) Vercel/CF 可发 `Clear-Site-Data: storage` header 强清(见 §9.4)|
+| FR-WEB-45 | SW 紧急 escape hatch | P0 | (a) 设置 → 隐私 → "清除浏览器缓存"用户主动触发:`caches.delete()` + `indexedDB.deleteDatabase()` + `navigator.serviceWorker.getRegistrations().unregister()`;前置确认弹"会丢失未同步的本地修改"+ 列 pending 数量;(b) 紧急回滚通道:服务端可发布 `/sw-kill.js`(空实现 + `unregister()`),用户访问 `app.xai-desktop.app/?sw-kill=1` 强制注销旧 SW;(c) **`Clear-Site-Data` 谨慎使用:默认只清 `cache`(不动 IndexedDB 的 pending_mutations);仅在 P0/P1 安全事故才发 `Clear-Site-Data: cache, cookies, storage` 强清,且事故等级 + 操作流程写入 `docs/runbooks/clear-site-data.md`;UI 状态页同步公示"已强清,可能丢失本地未同步修改"** |
 | FR-WEB-46 | 离线 E2E 字段策略 | P0 | (a) DEK 在内存 → 离线写正常加密入队;(b) DEK 不在内存 → 加密字段写入弹"请先输入主密码",用户输 → KEK 派生 → DEK 解密 → 继续写;(c) 拒输 → 编辑保留在 React state,关闭页面即失;(d) **任何情况下 IndexedDB 永不存明文加密字段** |
 | FR-WEB-46b | DEK 内存超时 | P0 | DEK 在内存 5min idle 后自动清零(`fill(0)` + null);清零前若有 pending 加密字段 React state → 提示用户保存或丢弃;DEK 清后所有加密字段切回"已加密" |
 
@@ -419,21 +517,26 @@ RPC 接口:`device_register({ device_id, platform, device_name, user_agent })`�
 
 #### 5.6.1 设置同步映射(device-local vs account-global)
 
+> v0.3 codex M-B + Minor:所有 account-global 设置同走 encrypted_blob(快捷键映射、Pomodoro 配置、默认 list 等都是行为画像);不存在"明文 account_settings 表"。Console 子 PRD 必须配合调整其 `console.theme` 字段从"同步"改为"device-local",否则 source of truth 不一致。
+
 | 设置项 | 类型 | 存储 | 跨设备同步? |
 |---|---|---|---|
-| 主题模式(dark/light/system) | device-local | IndexedDB `user_prefs` | ❌ |
-| accent 色 | account-global | Sync blob(`account_settings`) | ✅ |
-| reduce motion | device-local(尊重系统) | 无(读 `prefers-reduced-motion`) | — |
-| 语言 locale | account-global | Sync blob | ✅ |
+| 主题模式(dark/light/system) | **device-local**(v0.3 修订)| IndexedDB `user_prefs` | ❌ ;Console PRD 须同步改 |
+| accent 色 | account-global | `encrypted_blobs` (entity_type='account_settings') | ✅ |
+| reduce motion | device-local(尊重系统) | 无(读 `prefers-reduced-motion`)| — |
+| 语言 locale | account-global(登录后) | `encrypted_blobs`;未登录 landing/auth 临时 `localStorage` 兜底 | ✅(登录后)|
 | sidebar 折叠态 | device-local | IndexedDB `user_prefs` | ❌ |
 | 最后访问模块 | device-local | IndexedDB `user_prefs` | ❌ |
-| 快捷键映射 | account-global | Sync blob | ✅ |
-| 通知偏好 | device-local | IndexedDB(浏览器权限本就 per-device) | ❌ |
-| Sentry opt-in | device-local | IndexedDB | ❌ |
-| 默认 list / 默认看板 | account-global | Sync blob | ✅ |
-| Pomodoro 时长配置 | account-global | Sync blob | ✅ |
+| 快捷键映射 | account-global | `encrypted_blobs` | ✅ |
+| 通知偏好 | device-local | IndexedDB(浏览器权限本就 per-device)| ❌ |
+| Sentry / 分析 opt-in | device-local | IndexedDB `consent` | ❌ |
+| 默认 list / 默认看板 | account-global | `encrypted_blobs` | ✅ |
+| Pomodoro 时长配置 | account-global | `encrypted_blobs` | ✅ |
+| 已读引导卡(web_intro_seen 等)| device-local | IndexedDB `user_prefs` | ❌ |
 
-> Console 子 PRD `settings` 表只承载 account-global;device-local 走 Web 自己的 IndexedDB(桌面端走 SQLite 本地表)。本表 Web 与桌面双向对齐。
+> Web 与桌面双向对齐:Console 子 PRD `settings` entity 走 encrypted_blob(主 PRD §5.13 隐含,Sync 子 PRD 实现);device-local 项 Web 走 IndexedDB,桌面走 SQLite 本地表。
+>
+> **行动项(§12 待办)**:Console 子 PRD 须把 `console.theme` 同步项改成 device-local;若 Console PRD 不改,以本档为准并在 Console PRD 标 deprecated。
 
 #### 5.6.2 存储用途表
 
@@ -452,7 +555,7 @@ RPC 接口:`device_register({ device_id, platform, device_name, user_agent })`�
 |---|---|---|---|
 | FR-WEB-51 | 存储用途隔离 | P0 | 代码 review 红线:任何 plugin 写入 localStorage/IndexedDB 必须走 `@repo/core-data/web` 或 `@repo/core/host/web` 封装;直接 import `localStorage` 在 ESLint 报错 |
 | FR-WEB-52 | 配额监控 + LRU 清理 | P0 | 启动 + 每 5min `navigator.storage.estimate()`;使用率 > 80% → 触发 LRU 删 7 天未访问的 query_cache + entity_index 条目;` > 95%` → 拒绝新写并提示 |
-| FR-WEB-52b | 主动 persistence | P0 | 登录后调 `navigator.storage.persist()`(Chrome 自动允许;Firefox 用户 prompt;Safari 不支持 → 默默忽略);失败不致命 |
+| FR-WEB-52b | 主动 persistence | P0 | 登录后调 `navigator.storage.persisted()` 查询是否已持久(返 bool);若 false 调 `persist()` 请求(Chrome 自动允许;Firefox 用户 prompt;Safari 不支持 → 默默忽略);失败不致命。**注**:`persisted()` 仅说明"是否已持久化",不检测"7 天将被回收";另外在 IndexedDB 写一个 `sync_state.sentinel`(随机字符串),启动时校验存在,缺失即视为被浏览器回收 → 触发全量重拉(承接 §5.11.3 FR-WEB-78b) |
 | FR-WEB-53 | 存储被清恢复 | P0 | 用户在浏览器设置清了站点数据 → 下次访问检测到无 IndexedDB → 走"如同新登录"流程(重新 `device_register`,新 device_id)+ 全量 `/sync/pull`;不应崩溃 |
 | FR-WEB-54 | KEK / DEK 不落盘 | P0 | KEK / DEK 仅以非 extractable `CryptoKey` 形式存内存(React Context + `useRef`);不进 localStorage / IndexedDB / cookie;ESLint 规则禁止 `JSON.stringify` 含 CryptoKey 的对象 |
 
@@ -580,10 +683,10 @@ iOS 路径:**绝不弹 banner**,只在 `/app/settings/about` 页提供"安装到
 | FR-WEB-76 | 浏览器探测 | P0 | 入口 JS 早期探测 UA + feature detect(IndexedDB、Web Crypto、BroadcastChannel、CSS Grid),不支持的渲染静态降级页 |
 | FR-WEB-77 | polyfill 策略 | P0 | Vite `target: 'es2020'`,不引 IE polyfill;BroadcastChannel / IndexedDB / fetch / Web Crypto 不做 polyfill;低于最低版本直接拒 |
 | FR-WEB-78 | Safari 特有验证 | P0 | 100vh 抖动用 `dvh` + visualViewport;`@supports` 兜底;`-webkit-fill-available` 不再使用(已 deprecated) |
-| FR-WEB-78b | Safari IndexedDB eviction | P0 | 7 天未访问被 ITP 回收 → 检测 `navigator.storage.persisted()`;允许时主动 `persist()` 请求(用户可见 prompt);被回收后重建,从服务端全量重拉 |
+| FR-WEB-78b | Safari IndexedDB eviction | P0 | 7 天未访问被 ITP 回收 → (a) 启动时调 `persisted()` 查询 + `persist()` 请求兜底;(b) 写 `sync_state.sentinel` 随机字符串,启动校验存在;sentinel 缺失即视为被回收 → 重建 IndexedDB + 从服务端全量重拉(`since_seq=0`);(c) Safari/iOS 真机 7 天后访问的恢复链路必须在 §5.11.2 真机走查清单内验证 |
 | FR-WEB-78c | Safari Private Browsing | P0 | Private 模式 IndexedDB write 抛 quota error → 检测后切到"会话模式":memory-only cache + 警告"私密模式下离线/PWA 不可用" |
 | FR-WEB-79 | Firefox 容器/ETP | P0 | 容器标签下 cookie 隔离;ETP "严格"不阻塞 Supabase WS(同源,不算第三方);手工验证 |
-| FR-WEB-79b | PWA Storage partition | P1 | Chromium Storage Partition(企业策略可能开启)下 BroadcastChannel 在 standalone 与 tab 间不通,降级 `localStorage` 事件兜底 |
+| FR-WEB-79b | PWA Storage partition | P0(从 P1 升)| Chromium Storage Partition(企业策略可能开启)+ iOS PWA standalone 与 Safari tab 之间 BroadcastChannel / Web Lock 不通;leader 选举(FR-WEB-37)**不能假设 BroadcastChannel 可用**,先 `feature-detect` `BroadcastChannel` + `navigator.locks`,缺失时降级独立 WS 连接(每个 partition 一份)+ `localStorage` `storage` 事件做尽力跨 partition 通信;真机走查必跑 |
 
 ### 5.12 安全
 
@@ -602,7 +705,8 @@ font-src 'self' data:;
 connect-src 'self'
   https://<project>.supabase.co
   wss://<project>.supabase.co
-  https://*.ingest.sentry.io;
+  https://*.ingest.sentry.io        /* 仅 Sentry opt-in 用户加载;否则 connect-src 不含 */
+  https://app.xai-desktop.app;       /* 自建 /__csp_report */
 worker-src 'self' blob:;
 manifest-src 'self';
 object-src 'none';
@@ -612,13 +716,15 @@ base-uri 'self';
 form-action 'self';
 upgrade-insecure-requests;
 report-to csp-endpoint;
-report-uri https://<sentry-dsn>/security/?sentry_key=...;
+report-uri https://app.xai-desktop.app/__csp_report;   /* 自建同源端点 */
 ```
 
 `Report-To` header:
 ```
-Report-To: {"group":"csp-endpoint","max_age":10886400,"endpoints":[{"url":"https://<sentry-dsn>/security/?sentry_key=..."}]}
+Report-To: {"group":"csp-endpoint","max_age":10886400,"endpoints":[{"url":"https://app.xai-desktop.app/__csp_report"}]}
 ```
+
+> v0.3 codex M-C 修正:CSP report **不直发 Sentry**(Sentry 是 opt-in 错误上报,EU 用户未同意前不能收;同时 CSP report 包含 URL/path/referrer 可能泄漏 path 隐私)。改为发到 `app.xai-desktop.app/__csp_report` 同源 Vercel/CF edge function:(1) 严格 scrub(去除 query string、entity_id、user agent 中除浏览器名外的指纹);(2) scrub 后转写入项目独立的 log store(本 v1 用 Supabase `csp_violations` 表);(3) Sentry opt-in 用户额外转一份到 Sentry(必要"安全遥测",privacy 页声明)。
 
 #### 5.12.2 上线流程
 
@@ -648,8 +754,8 @@ Report-To: {"group":"csp-endpoint","max_age":10886400,"endpoints":[{"url":"https
 | FR-WEB-86 | Clickjacking | P0 | `X-Frame-Options: DENY` + CSP `frame-ancestors 'none'` |
 | FR-WEB-87 | Referrer policy | P0 | `Referrer-Policy: strict-origin-when-cross-origin` |
 | FR-WEB-87b | Permissions-Policy | P0 | `Permissions-Policy: camera=(), microphone=(), geolocation=(), payment=(), usb=(), magnetometer=(), gyroscope=(), accelerometer=()`(显式拒所有不用的) |
-| FR-WEB-88 | E2E 主密码处理 | P0 | 主密码仅 `useState` 在内存 → Argon2id WASM(`hash-wasm`,memoryCost 64MB / iterations 3 / parallelism 1)派生 KEK(`CryptoKey` 非 extractable)→ 解密 IndexedDB 的 `encrypted_dek` → DEK(`CryptoKey` 非 extractable)驻内存;主密码字符串在 KEK 派生后立即 `fill('\0')` + null;页面 unload / 5min idle → 清 KEK + DEK |
-| FR-WEB-89 | 内存敏感数据生命周期 | P0 | KEK/DEK 仅在 React Context 中,组件卸载即释放;`crypto.subtle` 操作完成立即让 buffer 被 GC;ESLint 自定义规则禁止 `JSON.stringify(secret)` 或 `console.log(crypto)` |
+| FR-WEB-88 | E2E 主密码处理 | P0 | (v0.3 codex M-D 修正"JS string fill 不可保证 zeroize"误导):主密码输入立即从 React `<input>` 拷贝为 `Uint8Array(TextEncoder.encode(password))`,React state 字符串引用置 null + UI input 清空;`Uint8Array` 喂给 Argon2id WASM(`hash-wasm`,memoryCost 64MB / iterations 3 / parallelism 1)派生 KEK(`CryptoKey` 非 extractable)→ 解密 IndexedDB 的 `encrypted_dek` → DEK(`CryptoKey` 非 extractable)驻内存;`Uint8Array.fill(0)` zeroize 自有 buffer(best effort,JS 字符串不可强 zeroize 已知);页面 unload / 5min idle → 清 KEK + DEK + 通知 Worker `flexsearch.index.clear()` |
+| FR-WEB-89 | 内存敏感数据生命周期 | P0 | KEK/DEK 仅在 React Context 中(非 extractable CryptoKey handle,本身不可读出明文),组件卸载即释放;`crypto.subtle` 操作完成立即让 buffer 被 GC;ESLint 自定义规则禁止 `JSON.stringify(secret)` 或 `console.log(crypto)`;**承认 limit**:文档明确"best-effort zeroization;JS runtime / V8 不保证字符串内容立即清除,这是 SPA E2E 的固有 limit" |
 | FR-WEB-90 | Subresource Integrity | P0(升级) | 任何 CDN 引入(若引)必须带 `integrity=sha384-...`;**v0.2 强制升 P0**:既然 Auth token 落 Web Storage,任何被注入的 CDN 脚本都可读 token,SRI 是底线 |
 | FR-WEB-91 | npm 供应链 | P0 | CI `pnpm audit --prod` + Dependabot + Socket.dev(可选);关键依赖(supabase-js / @sentry/browser / hash-wasm)锁版本 + 每月 review;新依赖 PR 必须人工 review;每月扫一次 `npm-audit-html` 产 report 留档 |
 | FR-WEB-91b | Sandbox iframe | P0 | 任何渲染用户富文本/HTML 预览的场景(P1 之后才会出现)必须 `<iframe sandbox>`(无 `allow-scripts`);v1 暂无 |
@@ -660,8 +766,8 @@ Report-To: {"group":"csp-endpoint","max_age":10886400,"endpoints":[{"url":"https
 |---|---|---|---|
 | FR-WEB-92 | React Error Boundary | P0 | App 顶层 + 每个 lazy route 边界;捕获 → 显示 fallback UI + 上报 Sentry + "重新加载"按钮 |
 | FR-WEB-93 | Sentry web SDK | P0 | `@sentry/browser` + `@sentry/react`;DSN 与桌面同,通过 `environment: 'web-prod'`/`'web-staging'`/`'web-dev'` 区分 |
-| FR-WEB-94 | Sentry 隐私过滤 | P0 | `beforeSend` 钩子去除 query / mutation 中的 entity body(只留 entity type + id);永不上报 Todo 标题 / 卡片内容 / 用户消息;`sendDefaultPii: false` |
-| FR-WEB-95 | Source map 上传 | P0 | CI build 流程:(1) 设置 `SENTRY_AUTH_TOKEN` / `SENTRY_ORG` / `SENTRY_PROJECT` env(GitHub Actions Secrets);(2) `pnpm build`(Vite `build.sourcemap: 'hidden'` — 生成 sourcemap 但 bundle 不引用);(3) `sentry-cli releases new $GIT_SHA`;(4) `sentry-cli releases set-commits $GIT_SHA --auto`;(5) `sentry-cli sourcemaps upload --release=$GIT_SHA --url-prefix='~/assets' --validate dist/assets`;(6) `sentry-cli releases finalize $GIT_SHA`;(7) 部署后 `sentry-cli releases deploys $GIT_SHA new --env $ENV`;(8) **删除** `dist/**/*.map`,生产服务器不挂 sourcemap;staging/prod 环境分用 `--env staging` / `--env prod`;Vite `build.sourcemap = 'hidden'`,Sentry web SDK 配 `Sentry.init({ release: import.meta.env.VITE_GIT_SHA })` |
+| FR-WEB-94 | Sentry 隐私过滤 | P0 | `beforeSend` + `beforeBreadcrumb` 钩子:(a) 删除 query/mutation/URL 中的 `entity_id`(改为短 hash `entity_type:sha256(entity_id)[0..8]` 仅做错误关联),**完整 entity_id 不上报**(v0.3 codex M-C 与 Sync PRD 隐私段对齐);(b) 删除 query string(`?token`、`?next` 等);(c) 删除请求 body(任何 encrypted_blob / mutation payload);(d) `sendDefaultPii: false`;(e) 浏览器扩展 attributing 不上报;写测试用例断言所有这些 |
+| FR-WEB-95 | Source map 上传(固定 CI 步骤序)| P0 | v0.3 codex M-C 校正 CLI 顺序:(1) GitHub Actions Secrets:`SENTRY_AUTH_TOKEN` / `SENTRY_ORG` / `SENTRY_PROJECT`;(2) `pnpm build`(Vite `build.sourcemap: 'hidden'` — 生成 .map 但 bundle 不引用 sourceMappingURL);(3) `sentry-cli releases new $GIT_SHA`;(4) `sentry-cli releases set-commits $GIT_SHA --auto`;(5) **`sentry-cli sourcemaps inject dist`**(注入 Debug ID 到 JS 与 .map,新版 CLI 推荐);(6) `sentry-cli sourcemaps upload --release=$GIT_SHA --validate dist`(`--url-prefix` 由 inject 自动处理);(7) `sentry-cli releases finalize $GIT_SHA`;(8) **删除 `dist/**/*.map`**(必须在 upload 之后);(9) deploy `dist` 到 Vercel/CF;(10) `sentry-cli releases deploys $GIT_SHA new --env $ENV`;Vite `build.sourcemap = 'hidden'`,Sentry web SDK 配 `Sentry.init({ release: import.meta.env.VITE_GIT_SHA })`;**生产服务器从不挂 .map**(浏览器永远拿不到) |
 | FR-WEB-96 | Sentry opt-in | P0 | 与桌面一致(主 PRD §6.2 / TR §1.3.2);首启弹 "是否启用匿名错误上报",拒绝则 SDK 不 init |
 | FR-WEB-97 | 网络错误聚合 | P0 | 5xx / 超时通过 Sentry breadcrumb 聚合,避免单错误上报洪泛 |
 
@@ -671,7 +777,7 @@ Report-To: {"group":"csp-endpoint","max_age":10886400,"endpoints":[{"url":"https
 |---|---|---|---|
 | FR-WEB-98 | 语言识别 | P0 | 优先级:用户设置 > URL prefix(`/zh-CN/...` P1)> `Accept-Language` > 默认 zh-CN |
 | FR-WEB-99 | 语言资源 | P0 | 复用 `packages/ui/i18n/<lang>.json`(zh-CN / zh-TW / en);按 chunk 懒加载 |
-| FR-WEB-100 | 切换语言 | P0 | 设置 → 语言 即时切换,持久化到 localStorage;`<html lang>` 同步更新 |
+| FR-WEB-100 | 切换语言 | P0 | 设置 → 语言 即时切换:**登录后**写 account-global `encrypted_blobs`(承接 §5.6.1);**未登录** landing/auth 页临时 `localStorage` 兜底,登录后首次同步从 account-global 覆盖 local;`<html lang>` 同步更新 |
 | FR-WEB-101 | URL 语言 prefix | P1 | `/zh-CN/app/todos` 模式(SEO 友好),v1 P0 不强制 |
 | FR-WEB-102 | 日期 / 数字 | P0 | 走 `Intl.DateTimeFormat` / `Intl.NumberFormat`,locale 来自当前语言 |
 
@@ -681,28 +787,43 @@ Report-To: {"group":"csp-endpoint","max_age":10886400,"endpoints":[{"url":"https
 
 #### 5.15.1 Quick Capture RPC 契约
 
+> v0.3 codex M-D 修正:服务端只接 encrypted payload,示例改 envelope。明文字段(`type`、`title`、`url`、`selected_text`、`target`)只在客户端 TypeScript 类型中存在,扩展先加密再 POST。
+
 ```
 POST /rest/v1/rpc/capture.create
 Authorization: Bearer <extension-oauth-token>
+X-Device-Id:   <extension-device-uuid>
 X-Sync-Version: 2026-05
+Content-Type: application/json
 
-Body:
+Body(传输线上):
 {
-  "type": "todo",                   // todo | bookmark | note(P2 第二批)
-  "title": "string",
-  "url": "https://...",             // 可选,捕获页面 URL
-  "selected_text": "string",        // 可选,选中文本
-  "target": "inbox"                 // 默认 inbox;不接受用户自由指定 list,避免扩展滥用
+  "entity_type": "todo",                  // 仅 envelope 元数据
+  "key_id": "string",                     // 标识用哪份 key 加密(见下)
+  "encrypted_payload": "base64...",       // AES-GCM 加密的 {type,title,url,selected_text,target}
+  "nonce": "base64",
+  "aad": "base64"                          // 含 entity_type + key_id
 }
 
 Response:
-{ "entity_id": "uuid", "created_at": "ISO8601" }
+{ "entity_id": "uuid", "server_seq": 123, "created_at": "ISO8601" }
+```
+
+```ts
+// 扩展端 TypeScript 类型(明文,只在 client memory 中)
+type QuickCaptureInput = {
+  type: 'todo';                            // todo | bookmark | note(P2 第二批)
+  title: string;
+  url?: string;                            // 捕获页面 URL
+  selected_text?: string;                  // 选中文本
+  target: 'inbox';                         // 默认 inbox,扩展不接受用户自由指定 list
+};
 ```
 
 - **scope 限制**:扩展 OAuth token 只持有 `quick_capture:write`,不能调其他 RPC;不能读现有数据;不能调 `/sync/pull`
-- **服务端只接 encrypted payload**:扩展先调 `/auth/v1/oauth/key-bundle` 获 share-style 写入信封(只含本次 mutation 的一次性公钥),扩展用之加密 payload,服务端写入后由用户主端 pull 时再解密入本地;**或** v1.5 阶段简化为"扩展直接拿临时 DEK"(用户授权时一次性下发,5min 过期)。Sync 子 PRD 决定哪种,本档暂留口
+- **加密 payload 方案**:扩展授权时由主端在 `/sync/extension/keys` RPC 下发一份"扩展专用 key bundle"(短期临时 DEK,7 天滚动 + 用户授权刷新);扩展用此 key 加密 payload,服务端写入 `encrypted_blobs`;用户主端 pull 时正常解密(同一 DEK 体系)。**最终协议由 Sync 子 PRD 定稿**,本档列契约
 - 速率限制:每用户每分钟 ≤ 30 次 capture
-- 审计:每次 capture 写 `audit_logs`(`extension_id`、`ip`、`ua`、`created_at`)
+- 审计:每次 capture 写 `audit_logs`(`extension_id`、`device_id`、`ip 截断`、`ua hash`、`created_at`)
 
 #### 5.15.2 FR 表
 
@@ -766,9 +887,9 @@ Response:
 | FR-WEB-118 | 数据导出(客户端打包) | P0 | 设置 → 隐私 → "导出我的数据";按 §5.18.1 流程在浏览器内本地解密 + 打包 + 触发下载;**服务端不接触明文,不存导出 zip**;DEK 不在内存时引导先输入主密码;导出过程中可中断;大账号(> 100MB)分卷 zip 或提示"将下载多个文件" |
 | FR-WEB-119 | 导出格式 | P0 | zip 含 `todos.json` / `labels.json` / `boards.json` / `habits.json` / `pomodoro.json` / `settings.json`(仅 device-local & account-global 的明文设置)/ `devices.json`(自有设备列表)/ `README.md`(字段说明、时间格式 ISO 8601、字段映射到主 PRD §8 schema 的版本号) |
 | FR-WEB-119b | 导出审计 | P0 | 每次导出在 `audit_logs` 写一条(`account_id`、`exported_at`、`ip`、`ua`、`approximate_size`),用于异常检测;**不记录导出内容** |
-| FR-WEB-120 | 账号删除 | P0 | 设置 → 账号 → "删除账号" → 二次确认输入密码 + 输入 "DELETE"  → 后端置 `accounts.deleted_at = now()` + RPC 触发所有设备 Realtime `account_deleted` 事件 → Web 端立刻登出;**30 天后硬删生产数据**;主 PRD FR-AC-04 |
-| FR-WEB-120b | 备份保留窗口公开 | P0 | 隐私页明确写:"账号删除后,生产数据 30 天内可恢复;数据库备份额外保留 90 天(2026-12 当前 Supabase backup retention);备份在 30 天后无法被人工取出,仅用于灾难恢复" |
-| FR-WEB-121 | 撤销删除 | P0 | 30 天内重新登录可看到"账号待删除(剩余 X 天),点击恢复"卡;调 `account_undelete()` RPC 清 `deleted_at` |
+| FR-WEB-120 | 账号删除 | P0 | 设置 → 账号 → "删除账号" → 二次确认输入密码 + 输入 "DELETE"  → 后端置 `accounts.deletion_requested_at = now()` + `accounts.deletion_scheduled_at = now() + interval '30 days'` + RPC 触发所有设备 Realtime `account_deleted` → Web 端立刻登出;**`deletion_scheduled_at` 到期后硬删生产数据**;主 PRD FR-AC-04 |
+| FR-WEB-120b | 备份保留窗口公开 | P0 | 隐私页明确写:"账号删除请求后,生产数据保留 30 天(`deletion_scheduled_at` 到期硬删);数据库备份额外保留 90 天(2026-12 当前 Supabase backup retention,待 §12 待办 #6 核实);备份在 30 天后无法被人工取出,仅用于灾难恢复" |
+| FR-WEB-121 | 撤销删除 | P0 | `deletion_scheduled_at` 到期前重新登录可看到"账号待删除(剩余 X 天),点击恢复"卡;调 `account_undelete()` RPC 清 `deletion_requested_at` + `deletion_scheduled_at` |
 | FR-WEB-122 | Cookie / 同意横幅 | P0 | (a) 必要 cookie / 存储(Auth、device_id、user_prefs)**始终允许**,banner 仅声明;(b) Sentry 错误上报、PWA 安装计数 **可选**,默认 off;(c) banner 在 EU/UK/CH IP 强显,其他地区在 footer 提供 link;(d) 选择存 IndexedDB `consent`,可随时撤回 |
 | FR-WEB-122b | DSR 处理 SLA | P0 | 数据导出 / 删除 / 更正请求(DSR):用户自助(导出 + 删除)立即可执行;邮件请求 `privacy@xai-desktop.app` 自动回复 + 30 天内人工答复;Web 端通用入口在 `/legal/privacy` 下方 |
 | FR-WEB-122c | 营销 / 分析 consent 分离 | P0 | 当前 v1 **不接营销分析**;若 Phase 5+ 接 Plausible / GA,必须独立 consent toggle + 默认 off + 可撤回 |
@@ -844,20 +965,24 @@ Response:
               │   /project/labels/   │
               │   calendar/account)  │
               ├──────────────────────┤
-              │  core-data (REST drv)│
-              │  core-events (BC+RT) │
-              │  core-i18n / ui      │
-              └────┬──────────┬──────┘
-        HTTPS REST│          │WSS Realtime
+              │  core-data            │
+              │  (driver-sync-blob)   │
+              │  core-events (BC+RT)  │
+              │  core-i18n / ui       │
+              └────┬──────────┬───────┘
+       HTTPS /sync│          │WSS Realtime
                   ▼          ▼
-         ┌──────────────────────────────┐
-         │   Supabase 项目(单一后端)    │
-         │  - Auth(邮箱/Apple/Google)  │
-         │  - PostgREST API             │
-         │  - Realtime(sync:<acct> meta) │
-         │  - Storage(头像/导出 zip)   │
-         │  - Postgres(主 PRD §8 schema)│
-         └──────────────────────────────┘
+         ┌──────────────────────────────────┐
+         │   Supabase 项目(单一后端)        │
+         │  - Auth(邮箱/Apple/Google PKCE) │
+         │  - PostgREST(accounts/devices/  │
+         │    app_sessions/sync_events/    │
+         │    encrypted_blobs/audit_logs)  │
+         │  - Realtime(sync:<acct> meta)   │
+         │  - Storage(avatars only;        │
+         │    exports are client-side)     │
+         │  - Postgres(主 §8 + Sync 增量)  │
+         └──────────────────────────────────┘
                        ▲
                        │ 同账号同后端
                        ▼
@@ -891,7 +1016,7 @@ apps/web/                     ★ 新增(Phase 4.5)
 packages/core-data/
 └── src/
     ├── driver-sqlite/        # 桌面 driver(已存在)
-    ├── driver-rest/          ★ 新增(REST + Realtime)
+    ├── driver-sync-blob/     ★ 新增(/sync/push + /sync/pull + Realtime metadata)
     └── driver-testing/
 
 packages/core-events/
@@ -913,28 +1038,45 @@ packages/core-events/
 
 ### 8.1 后端 schema
 
-继承主 PRD §8;Web 直连同一 Postgres,**不增表**。
+> v0.3 codex C6 修正:上一版"不增表"与 §5.1.3 新建 devices/sessions、§5.2.1.b 新建 encrypted_blobs / sync_events 矛盾。改写如下。
+
+继承主 PRD §8 的账号 / 子任务等基础表,但 Web 端依赖的同步与设备模型**需要 Sync 子 PRD 归口新增以下表**(本档列契约,实施在 Sync 子 PRD):
+
+| 表 | 用途 | 由谁建 |
+|---|---|---|
+| `devices` | app 自有设备注册(§5.1.3) | Sync 子 PRD |
+| `app_sessions` | app-level session lease(§5.1.3;**不含** refresh token hash) | Sync 子 PRD |
+| `encrypted_blobs` | 所有业务实体(包含 account_settings 等)整 row 加密(§5.2.1.b) | Sync 子 PRD |
+| `sync_events` | per-account WAL,Realtime 与 pull 都基于(§5.2.1.b) | Sync 子 PRD |
+| `audit_logs` | 导出/删除/扩展 capture 等敏感操作的审计 | Sync 子 PRD |
+
+主 PRD §8 中原有的业务表(`todos`、`lists`、`labels`、`boards` 等)**仅作为客户端的逻辑模型存在,服务端不实体化为表**;它们通过 `encrypted_blobs.entity_type` 区分,服务端零知识。`accounts` 表保留明文(email / plan / age_consent_at / deletion_scheduled_at / deletion_requested_at)。
 
 ### 8.2 IndexedDB Object Store 设计(`xai-cache` 数据库)
 
-> v0.2 重写:新增 `auth_tokens`、`entity_index`、`dead_letter_mutations`、`device`、`consent`、`pwa_install`、`audit_local`;pending_mutations 不再存明文 payload 改存 encrypted_blob;user_prefs 仅 device-local。
+> v0.3 codex C4/C5 重写:删 `query_cache.data plaintext`、删 `entity_index.fts/sortKeys plaintext`;新增 `entity_blobs`(at-rest encrypted 原件)+ `entity_index` 持久部分仅非敏感 metadata + `entity_sort_keys` 加密敏感 sort key;FTS 内存 only,不持久。
 
-| Object Store | key | value | 备注 |
-|---|---|---|---|
-| `auth_tokens` | `account_id` | `{ accessTokenCiphertext, refreshTokenCiphertext, iv, expiresAt }` | Supabase 自定义 storage adapter;AES-GCM 加密(内存派生密钥)|
-| `device` | `'self'` | `{ device_id, created_at }` | 注销不清,登出再登保持同 device_id |
-| `query_cache` | `[entity, hash(params)]` | `{ data, queryHash, dataUpdatedAt }` | TanStack Query persistor;data 已是解密后的 plaintext |
-| `entity_index` | `[entity_type, entity_id]` | `{ id, type, sortKeys{}, fts, version, decryptedAt }` | 本地索引(明文 sort/filter 关键字段 + FTS);DEK 解密后建立;断开主密码即 wipe |
-| `pending_mutations` | autoIncrement id | `{ mutation_id, idempotency_key, entity_type, entity_id, op, base_version, encrypted_blob, base_encrypted_snapshot, created_at, retry_count }` | 离线加密 mutation 队列;**永不存明文** |
-| `dead_letter_mutations` | autoIncrement id | 同上 + `{ last_error, gave_up_at }` | 重试 3 次失败 |
-| `encrypted_dek` | `account_id` | `{ encryptedDek, salt, kdfParams, createdAt }` | 与服务端镜像;加速登录后解密 |
-| `user_prefs` | `account_id` | `{ theme, sidebarCollapsed, lastModule, notificationPrefs, sentryOptIn }` | **仅 device-local 设置**(§5.6.1) |
-| `consent` | `'gdpr'` | `{ sentry: bool, analytics: bool, decided_at }` | GDPR 同意 |
-| `pwa_install` | `'state'` | `{ event_count, last_prompt_at, dismissed_at }` | 安装提示策略(§5.7.1) |
-| `audit_local` | autoIncrement id | `{ event, at, meta }` | 本地行为日志(用于客户端反作弊)|
-| `meta` | string key | any | schema version 等 |
+| Object Store | key | value | 加密 at-rest? | 备注 |
+|---|---|---|---|---|
+| `auth_tokens` | `account_id` | `{ ciphertext, nonce, expiresAt }` | ✅ AES-GCM(wrap_key) | Supabase 自定义 storage;wrap_key 由 `auth_keys` 持有 |
+| `auth_keys` | `'wrap_key'` | non-extractable `CryptoKey` | — | Web Crypto 非 extractable handle;直接 `put` 进 IDB 由浏览器管理;JS 不可导出明文 |
+| `device` | `'self'` | `{ device_id, created_at }` | — | 注销不清,登出再登保持同 device_id |
+| `entity_blobs` | `[entity_type, entity_id]` | `{ entity_type, entity_id, version, encrypted_blob, blob_nonce, blob_aad, server_updated_at, deleted }` | ✅(blob 本身已用 DEK 加密)| **v0.3 新增**;所有业务实体原件;离线浏览/冲突 diff/重建索引都靠它 |
+| `entity_index` | `[entity_type, entity_id]` | `{ entity_id, entity_type, version, server_updated_at, deleted, has_decrypted }` | — | 持久仅非敏感 metadata;not encrypted 因为内容本就不敏感 |
+| `entity_sort_keys` | `[entity_type, entity_id]` | `{ sort_keys_ciphertext, nonce }` | ✅ AES-GCM(派生 index key from DEK) | **v0.3 新增**;敏感 sort key(due_at / completed_at / parent_id / label_ids)用 DEK 派生 index key 加密 |
+| `pending_mutations` | autoIncrement id | `{ mutation_id, idempotency_key, entity_type, entity_id, op, base_version, encrypted_blob, blob_nonce, blob_aad, base_encrypted_snapshot, created_at, retry_count }` | ✅(blob 已加密) | 离线加密 mutation 队列;**永不存明文** |
+| `dead_letter_mutations` | autoIncrement id | 同上 + `{ last_error, gave_up_at }` | ✅ | 重试 3 次失败 |
+| `encrypted_dek` | `account_id` | `{ encryptedDek, salt, kdfParams, createdAt }` | ✅(已被 KEK 加密) | 与服务端镜像;加速登录后解密 |
+| `user_prefs` | `account_id` | `{ theme, sidebarCollapsed, lastModule, notificationPrefs, web_intro_seen }` | — | **仅 device-local 设置**(§5.6.1)|
+| `consent` | `'gdpr'` | `{ sentry: bool, analytics: bool, decided_at }` | — | GDPR 同意 |
+| `pwa_install` | `'state'` | `{ event_count, last_prompt_at, dismissed_at }` | — | 安装提示策略(§5.7.1) |
+| `sync_state` | `'cursor'` | `{ last_seen_seq, last_pulled_at }` | — | per-account WAL cursor |
+| `audit_local` | autoIncrement id | `{ event, at, meta }` | — | 本地行为日志(无 entity_id / 用户内容) |
+| `meta` | string key | any | — | schema version 等 |
 
-每条记录加 `version` 字段;`xai-cache` 数据库本身有 `version` 升级时迁移(`onupgradeneeded` 迁移函数);不兼容时丢弃并重新拉(走 §5.6.3 FR-WEB-53)。
+**FTS 明文索引(非 IndexedDB)**:Web Worker 内 `flexsearch.Index` 实例,DEK 解锁期间在内存建索引;主密码 lock / 5min idle / 关页 → Worker `index.clear() + terminate()`;**绝不持久**到 IndexedDB。
+
+**at-rest 总原则**:任何"由用户内容派生的 IndexedDB 物件"必须加密或锁定时 wipe。每条记录加 `version` 字段;`xai-cache` 数据库本身有 `version` 升级时迁移(`onupgradeneeded` 迁移函数);不兼容时丢弃并重新拉(走 §5.6.3 FR-WEB-53)。
 
 ---
 
@@ -1086,16 +1228,22 @@ GitHub Actions:
 ## 12. 待办
 
 - [ ] Console 子 PRD 提交后,本档 §4 复用表 + §4.2 host interface 二次对齐
+- [ ] **(v0.3 强升)Console 子 PRD `console.theme` 字段从同步项改为 device-local**(§5.6.1);若 Console PRD 不改,以本档为准并在 Console PRD 标 deprecated
 - [ ] Sync 子 PRD 提交后,本档 §5.2 / §5.3 / §5.4 的端点 / payload / 冲突描述精确对齐(本档 v0.2 给的 envelope 是初稿)
-- [ ] **新增**:Sync 子 PRD 必须包含 share envelope 协议(per-entity share key + URL fragment + encrypted share blob);Web 子 PRD P1 引用
-- [ ] **新增**:Sync 子 PRD 必须新增 `devices` / `sessions` 表 + 4 个 RPC(`device_register` / `device_heartbeat` / `device_revoke` / `revoke_others`);本档 §5.1.3 给的 schema 是初稿
-- [ ] **新增**:Quick Capture 的"加密 payload 写入"协议(extension 拿一次性公钥 vs 临时 DEK 二选一)— Sync 子 PRD 决定
+- [ ] **(v0.3 新增)Sync 子 PRD 必须建 `sync_events(account_id, seq BIGINT)` per-account WAL 表;Realtime payload 必带 `seq`**;本档 §5.2.1.b 给的是初稿
+- [ ] **(v0.3 新增)Sync 子 PRD 把 `account_settings` 改成 `encrypted_blobs` 的一种 `entity_type='account_settings'`**(零知识硬规则,不留明文 settings 表)
+- [ ] Sync 子 PRD 必须包含 share envelope 协议(per-entity share key + URL fragment + encrypted share blob);Web 子 PRD P1 引用
+- [ ] **(v0.3 修订)Sync 子 PRD 新增 `devices` + `app_sessions` 表(不含 refresh_token_hash)+ 5 个 RPC**(`device_register` / `device_heartbeat` / `device_revoke` / `revoke_others_rpc` / `device_list_rpc`);**所有业务 API middleware 必须强制校验 `X-Device-Id`**;本档 §5.1.3 给的 schema 是初稿
+- [ ] **(v0.3 新增)Sync 子 PRD Quick Capture 协议定稿**:扩展专用临时 DEK 下发 RPC `/sync/extension/keys`(7 天滚动 + 用户授权刷新)+ envelope 写入
+- [ ] **(v0.3 新增)Sync 子 PRD 与本档对齐 mutation envelope 的 `blob_aad` 字段语义**(必须含 entity_id || version 防 replay,server 必须 verify)
+- [ ] **(v0.3 新增)CSP `/__csp_report` 自建端点的 Vercel/CF edge function 实现**(scrub 规则 + `csp_violations` 表)
 - [ ] 主密码 challenge 的具体 UX 文案与控制台一致(等 plugin-account 设计稿)
 - [ ] Sentry DSN 与桌面共用 vs 拆 — Phase 4.5 启动时与运维一起决策
 - [ ] 中国大陆访问性 PoC(Vercel / CF Pages 两家各跑 1 周拿数据)— Phase 4.5 第 1 周
-- [ ] **新增**:确认 Supabase backup retention 实际窗口(本档 §5.18.3 写 90 天为占位,需查 Supabase 当前条款)
-- [ ] **新增**:本地 FTS 库选型(`flexsearch` vs `lunr` vs `minisearch`)— Phase 4.5 Week 2 做基准
-- [ ] **新增**:Argon2id WASM 参数标定(memoryCost / iterations)真机 P95 < 1.5s(低端 iPhone SE)
+- [ ] 确认 Supabase backup retention 实际窗口(本档 §5.18.3 写 90 天为占位,需查 Supabase 当前条款)
+- [ ] 本地 FTS 库选型(`flexsearch` vs `lunr` vs `minisearch`)— Phase 4.5 Week 2 做基准 + Worker 内 FTS index 重建 P95 基准
+- [ ] Argon2id WASM 参数标定(memoryCost / iterations)真机 P95 < 1.5s(低端 iPhone SE)
+- [ ] **(v0.3 新增)low-end Safari/iOS 全量 hydrate 大账号(模拟 50k entities)的可用性测**:lazy hydrate 优先模块何时可用,IndexedDB 加密 sort key 写入吞吐
 
 ---
 
@@ -1104,6 +1252,7 @@ GitHub Actions:
 | 日期 | 版本 | 变更 |
 |---|---|---|
 | 2026-05-14 | v0.1 (DRAFT) | 首版,主 PRD §5.15 的 FR-WEB-01~07 扩到 FR-WEB-08~126(共 119 条新增),按 §5.1~5.18 18 节组织 |
-| 2026-05-16 | v0.2 (DRAFT) | 按外部审查意见重写 5 处 Critical + 12 处 Major(详见 §0.1 基础契约表):(1) Auth 从 HttpOnly cookie 改 SPA + 自定义 storage + PKCE flow(用户拍板);(2) REST driver 重写为 Sync push/pull encrypted blob,删除直连 PostgREST 业务表;(3) Realtime 改 metadata-only payload + pull trigger;(4) 离线 E2E 队列必须加密前入队,删除"plaintext + flag 联网再加密";(5) GDPR 导出改浏览器端打包,服务端零知识;(6) 多设备登出自建 devices/sessions 表 + 4 个 RPC;(7) Share 链接降到 P1 等 envelope 协议(用户拍板);(8) CSP 补完整 + Report-Only 灰度;(9) Sentry sourcemap CI 详细化;(10) viewport 删 maximum-scale=1 修 WCAG 冲突;(11) 浏览器矩阵分 CI + 真机两层;(12) FID 改 INP,按 route_group 分预算;(13) PWA 安装提示策略;(14) Quick Capture 改 capture.create + scope 限制 + extension ID allowlist;(15) §4.2 新增 Console host interface 注入桩契约;(16) §5.6.1 新增 device-local vs account-global 设置映射;(17) §8.2 IndexedDB Object Store 全面重设;(18) §9.4 SW + DB migration 版本契约;(19) FR 数从 126 增至约 145(新增 FR-WEB-17b/c/d、20b/c、22b/c、24b/c、33b/c、34b、43b/c、46b、49b、50b、52b、60b、70b、78b/c、79b、82b、87b、91b、103b、104b、119b、120b、122b/c、123b/c)|
+| 2026-05-16 | v0.2 (DRAFT) | 按外部审查意见重写 5 处 Critical + 12 处 Major(详见 §0.1 基础契约表):(1) Auth 从 HttpOnly cookie 改 SPA + 自定义 storage + PKCE flow(用户拍板);(2) REST driver 重写为 Sync push/pull encrypted blob,删除直连 PostgREST 业务表;(3) Realtime 改 metadata-only payload + pull trigger;(4) 离线 E2E 队列必须加密前入队,删除"plaintext + flag 联网再加密";(5) GDPR 导出改浏览器端打包,服务端零知识;(6) 多设备登出自建 devices/sessions 表 + 4 个 RPC;(7) Share 链接降到 P1 等 envelope 协议(用户拍板);(8) CSP 补完整 + Report-Only 灰度;(9) Sentry sourcemap CI 详细化;(10) viewport 删 maximum-scale=1 修 WCAG 冲突;(11) 浏览器矩阵分 CI + 真机两层;(12) FID 改 INP,按 route_group 分预算;(13) PWA 安装提示策略;(14) Quick Capture 改 capture.create + scope 限制 + extension ID allowlist;(15) §4.2 新增 Console host interface 注入桩契约;(16) §5.6.1 新增 device-local vs account-global 设置映射;(17) §8.2 IndexedDB Object Store 全面重设;(18) §9.4 SW + DB migration 版本契约;(19) FR 数从 126 增至约 145 |
+| 2026-05-16 | v0.3 (DRAFT) | 按第二轮 codex 复审修 7 Critical + 11 Major + 5 Minor + 复查点:(C1) §5.1.1 Token at-rest 加密改自洽方案 + 显式威胁模型表("磁盘取证防护,不防同源 XSS";wrap_key non-extractable CryptoKey 持久 IndexedDB,关浏览器 unwrap 恢复);(C2) §5.1.2 / §5.1.3 新增 FR-WEB-17e:**所有业务 API 强制校验 `X-Device-Id` header**;远程撤销后离线设备拿 Supabase token 也能换 access token,但所有 `/sync/*` + RPC 服务端返 403 `device_revoked`;(C3) 删除 `sessions.refresh_token_hash`,改 `app_sessions`(app-level lease,不存 refresh token);明确边界"不撤销 Supabase Auth refresh token";(C4) IndexedDB 删 `query_cache.data plaintext` + 删 `entity_index.fts/sortKeys plaintext`;新增 `entity_sort_keys`(DEK 派生 index key 加密);FTS 改 Worker 内存 only,lock/idle wipe;(C5) 新增 `entity_blobs` Object Store(at-rest encrypted 原件);所有明文视图从它派生;(C6) §8.1 改写"继承主 schema + Sync 增量新表"(devices/app_sessions/encrypted_blobs/sync_events/audit_logs);(C7) Sync cursor 数据模型:Sync 子 PRD 必须建 `sync_events(account_id, seq BIGINT)` per-account WAL;Realtime payload 带 `seq`;`/sync/pull` 用 `since_seq`;(M-A) 服务端 `/sync/pull` 强制分页 `since_seq+limit≤500`,按模块 lazy hydrate;(M-B) `account_settings` 改 encrypted_blob;**离线非加密字段直写路径删除**(零知识硬规则);(M-C) Sentry redact 删 entity_id 改短 hash;CSP report 改自建 `/__csp_report` 同源端点;sourcemap CI 顺序:build→inject→upload→delete→deploy;(M-D) 架构图改 driver-sync-blob / Storage(avatars only) / Realtime(meta);Quick Capture 示例改 envelope;SW `Clear-Site-Data` 默认仅 cache(P0/P1 事故才清 storage);主密码 zeroize 改 `Uint8Array.fill(0)` best-effort + JS limit 声明;`accounts.deleted_at` → `deletion_scheduled_at` + `deletion_requested_at`;(Minor) §4 表主题改 IndexedDB;i18n 登录后 account-global;`next` 白名单删 `/share/`;`persisted()` 用法 + sentinel 兜底;FR-WEB-79b PWA Storage partition 升 P0 |
 
 — END —
