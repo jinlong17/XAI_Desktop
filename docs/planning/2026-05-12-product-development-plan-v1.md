@@ -145,9 +145,31 @@ Main(透明 overlay)+ Control(AI Cube 快捷托盘)+ Grid Windows(每格子独�
 
 ### 4.4 双轨发布 + 跨平台
 
-- **v1 双轨**:官网 DMG(完整版)+ Mac App Store(沙箱版,功能子集)。要求 Phase 0 就做到 `macOSPrivateApi: false`、`core-fs` abstraction、Cargo features 分 `full`/`sandbox`。详见 PRD §9。
-- **网页版**:v1 范围内(Phase 4.5),控制台的浏览器版。
-- **Windows / Linux / 移动端**:Phase 5+;Rust 侧把窗口/剪贴板/fs/通知抽象成 trait 预留接口。
+- **v1 双轨**:官网 DMG(完整版)+ Mac App Store(沙箱版,功能子集)。要求 Phase 0 就做到 `macOSPrivateApi: false`、`core-fs` abstraction、Cargo features 分 `full`/`sandbox`。详见 PRD §9 + ADR-0002。
+- **网页版**:v1 范围内(Phase 4.5),控制台的浏览器版。详见 ADR-0003 三个面架构。
+- **Windows / Linux / 移动端**:Phase 5+;Rust 侧把窗口/剪贴板/fs/通知抽象成 trait 预留接口,详见 TECHNICAL_REQUIREMENTS §4。
+
+### 4.5 技术规范文档导航
+
+本开发方案是**战略概览**,具体技术实现要求分布在以下文档:
+
+| 关心什么 | 看哪里 |
+|---|---|
+| 架构红线 / 不变规则(14 条编码红线 + 多窗口 + 跨窗口通信) | `docs/SYSTEM_ARCHITECTURE.md` |
+| **测试要求**(覆盖率、分层、真机验收清单) | `docs/TECHNICAL_REQUIREMENTS.md` §1.1 |
+| **性能预算**(冷启动/唤起/CPU/内存/同步延迟) | `docs/TECHNICAL_REQUIREMENTS.md` §1.2 |
+| **可观测性**(日志/Sentry/错误链/诊断信息导出) | `docs/TECHNICAL_REQUIREMENTS.md` §1.3 |
+| **安全/隐私实现**(AES-GCM/Argon2id/Keychain/E2E 协议/沙箱 entitlements) | `docs/TECHNICAL_REQUIREMENTS.md` §2 |
+| **构建发布管线**(双 target/公证/MAS 提交/自动更新/Web 部署/CI) | `docs/TECHNICAL_REQUIREMENTS.md` §3.1 |
+| **外部依赖与服务**(Supabase/Anthropic/Sentry/Open-Meteo/npm/cargo,含成本估算) | `docs/TECHNICAL_REQUIREMENTS.md` §3.2 |
+| **编码规范扩充**(命名/日志/异常/i18n) | `docs/TECHNICAL_REQUIREMENTS.md` §3.3 |
+| **跨平台抽象 trait 设计**(WindowOps/ClipboardOps/FileSystemOps/NotificationOps/ShortcutOps) | `docs/TECHNICAL_REQUIREMENTS.md` §4 |
+| 关键 API 与文件路径 | `docs/CORE_INFRA.md` |
+| 各 plugin 当前状态(In-Dev / Stable / Planned) | `docs/PLUGIN_MAP.md` |
+| 关键架构决策的设计依据 | `docs/adr/0001 静态插件注册` / `0002 双轨发布` / `0003 三个面架构` / `0004 Label 多态` |
+| 产品规格(FR / Schema / 路线图) | `docs/planning/2026-05-12-PRD-v1.md` |
+| Workflow V2 流程 | `docs/workflow/SUBAGENT_WORKFLOW_V2.md` |
+| Commit 格式 | `docs/conventions/COMMIT_CONVENTION.md` |
 
 ---
 
