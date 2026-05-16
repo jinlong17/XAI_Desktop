@@ -234,19 +234,19 @@ DMG 完整版不启用沙箱,但仍走 hardened runtime + notarization。
 
 引导文案:每次都解释"为什么需要"+ 关闭后哪些功能不可用 + 用户可以拒绝(降级路径)。
 
-### 2.4 E2E 加密同步协议(v0.5 简版,完整规格见 `sub-prds/sync/PRD.md` v0.5-DRAFT)
+### 2.4 E2E 加密同步协议(v0.6 简版,完整规格见 `sub-prds/sync/PRD.md` v0.6-DRAFT)
 
-1. **首次注册**:client 生成 DEK + Secret Key + 24 词助记词 + device_priv (本地 CSPRNG) → 派生 KEK(含 Secret Key)→ device_pub 上传 → wrap_v1 = HPKE_seal(device_pub, DEK_v1) 写 device_dek_wraps → server 分配 encryption_device_id → Supabase Auth 创建 user (account_id = auth.users.id,**client 不自定 account_id**)
-2. **新设备登录**:client 本地 CSPRNG 生成新 device_keypair → 注册 status='pending_dek_wrap' → **必须经过用户可验证设备配对**(6 词 fingerprint / QR 扫码,Signal Safety Number 风格)→ donor 确认匹配后才 grant_dek_wrap → status='active' → 拿到 wrap → HPKE_open 解出 DEK
-3. **数据同步**:client 本地计算 base+1 = proposed_revision → 即时 CBOR AAD 加密 → **一次 push**(/sync/push 走 Edge Function);server 端 UNIQUE(account_id, key_id, encryption_device_id, counter) 硬约束 + 校验 envelope.enc_dev_id 与 JWT.device_id 一致;**encrypted_blobs 客户端只读**
-4. **冲突**:commit_seq 全局账户级 + conditional write;loser 完整 AAD context 入 conflict_shadow 30 天
-5. **设备撤销**:DELETE device_dek_wraps + revoked_at → Re-key 生成 DEK_v_n+1 + **新 24 词 + 新 recovery_signing_pub**(UI 阻断式回填确认);旧 device 即使重登也无新 wrap
-6. **PATCH /auth/me**:Ed25519 签名 message 绑定 `SHA256(CBOR_canonical(完整 new_payload))`(唯一 schema,字段级 hash 已废弃)
-7. **服务端零知识**:Supabase 后端永远不见 KEK / DEK / master_password / secret_key / device_priv / recovery_seed 明文;**account_commit_seq 只防粗暴回滚不防 equivocation,v2 评估 Merkle root**
-6. **回滚 / 调包防护**:每实体单调 revision 写入 AAD;客户端拒收 `revision <= max_seen`;集成测试覆盖恶意 server 拷贝 blob 场景
-7. **恢复防护**:PATCH `/auth/me` 必须附 recovery proof(`HMAC(HKDF(DEK, "xai.recovery.proof.v1"), challenge ‖ ...)`),server Argon2id 校验
-8. **设备撤销**:撤销 device + revoke refresh_token + **强制 Re-key**(生成 DEK_v2 + 双读 + 原子 swap)
-9. **Realtime**:Supabase Realtime **Private Channels + Authorization**;channel 名含 auth.uid(),RLS 校验
+> ⚠ 本节为不变量摘要,**Sync PRD v0.6-DRAFT 是唯一权威协议 source of truth**。本节如与 Sync PRD 冲突,以 Sync PRD 为准。
+
+1. **首次注册**:client 生成 DEK + Secret Key + 24 词助记词 + device_priv (本地 CSPRNG) → 派生 KEK(含 Secret Key) → wrap_v1 = HPKE_seal(device_pub, DEK_v1, info+aad=CBOR) 写 device_dek_wraps → Supabase Auth 创建 user (account_id = auth.users.id) → server 分配 encryption_device_id
+2. **新设备登录**:client 本地 CSPRNG 生成新 device_keypair → status='pending_dek_wrap' → **用户可验证设备配对**(QR 含完整 target_device_pub,donor 用 QR 内 pub 而非 server pub 做 HPKE;donor Ed25519 签 transcript;server 比对 QR pub hash 与 server row pub hash → 不一致 E3031)→ grant_dek_wrap 成功 → status='active'
+3. **nonce 唯一性**:三端统一 server nonce lease(nonce_lease 表 + RPC fn_grant_nonce_lease)+ used_nonces 不可删 ledger(所有写路径 first-insert)+ encrypted_blobs UNIQUE 索引,三道防线
+4. **数据同步**:client 本地 base+1 = proposed_revision → CBOR 即时 AAD 加密 → **一次 POST /sync/push**;server UNIQUE 拦截 nonce 复用 + 校验 JWT device 匹配 envelope.enc_dev_id;encrypted_blobs **客户端只读**
+5. **冲突**:commit_seq 全局账户级 + conditional write;loser 完整 AAD context 入 conflict_shadow 30 天
+6. **设备撤销**:DELETE device_dek_wraps + revoked_at + accounts.key_quarantine_at NOT NULL(旧 key 立即拒新写,只允许本机离线只读/导出)→ Re-key 阻断式新 24 词 + 新 recovery_signing_pub(UI 强制回填)→ swap + 清 quarantine
+7. **PATCH /auth/me**:Ed25519 签名 message 绑定 `payload_canonical_hash = SHA256(CBOR_canonical(完整 new_payload))`;唯一 schema(字段级 hash + HMAC proof 已彻底废弃)
+8. **服务端零知识**:Supabase 后端永远不见 KEK / DEK / master_password / secret_key / device_priv / recovery_seed 明文;**account_commit_seq 只防粗暴回滚不防 equivocation,v2 评估 Merkle root**
+9. **Realtime**:Private Channels (config:{private:true});channel `sync:<auth.uid()>`;realtime.messages RLS 含 JWT device active 校验
 
 ### 2.4.1 协议级关键字段(v0.3,详见 sub-prds/sync §6 / §7)
 

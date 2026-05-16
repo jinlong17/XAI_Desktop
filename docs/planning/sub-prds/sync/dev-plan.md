@@ -12,11 +12,22 @@
 
 ---
 
-> ⚠ **v0.5 重要**:此文档的 §1~§3 部分历史段落仍含 v0.2/v0.3 残留(里程碑/工日/Argon2 recovery proof/旧 envelope/旧 task 编号)。**实施时以 §1 当前 v0.5 表述 + Sync PRD v0.5-DRAFT 为唯一施工依据**。所有 Critical / High 修复对应位置见 `REVIEW-2026-05-15.md` v0.5 round 执行记录。
+> ⚠ **v0.6 重要 — 实施必读**:本文档 §1 / §3 / §4 / §5 已全面对齐 v0.6;以下旧片段被显式废弃,**任何实施时遇到旧表述必须按 Sync PRD v0.6-DRAFT 为准**:
+>
+> - `device_joined` Realtime broadcast 自动 grant(v0.4 设计)→ **彻底废弃**;v0.6 必须用户可验证 QR/SAS 配对,Realtime 仅发 `device_pending` 通知 UI(详 PRD §3.4.1)
+> - `crypto_derive_device_keypair(kek_handle)` → **废弃**;改 `crypto_generate_device_keypair()` 本地 CSPRNG(详 v0.4 C-A)
+> - `sealed_box` 命名 → **废弃**;改 HPKE Base mode (RFC 9180, X25519+HKDF-SHA256+AES-GCM),`info` 做域分离,`aad` 绑定 wrap metadata(详 v0.5/v0.6 H-3/H-5)
+> - `Argon2id recovery proof / HMAC proof` → **废弃**;改 Ed25519 签名绑定 `payload_canonical_hash`(详 v0.3 C-A + v0.4 C-E)
+> - `pullSince(entityType, ...)` → **废弃**;改账户级全局 cursor `pullSince(commit_seq: string)`,PullRecord 含 entityType(详 v0.4 H-7)
+> - Keychain-only nonce anchor → **降级为可选补强**;主防线改三端统一 server nonce lease + used_nonces ledger(详 v0.5 C-C + v0.6 C-A)
+> - `encrypted_dek` 字段 → **彻底废弃**;改 `device_dek_wraps` 表 per-device wrap(详 v0.3 C-D + v0.4 C-A)
+> - 旧 Phase 0 工日 5-7 / 10-14 / 14-18 → 当前 **v0.6 重估 18-24 工日**(详 §1.1)
+>
+> 完整修复矩阵见 `REVIEW-2026-05-15.md` v0.2~v0.6 round 执行记录。
 
-## 1. 三 Phase 目标(v0.5 协议硬化第四轮)
+## 1. 三 Phase 目标(v0.6 协议硬化第五轮)
 
-### 1.1 Phase 0 子阶段 0.3(骨架) — **v0.5 重估 18-24 工日**(C-A 用户配对 + C-C nonce lease + per-device wrap UI 工时)
+### 1.1 Phase 0 子阶段 0.3(骨架) — **v0.6 重估 18-24 工日**(含 QR/SAS 用户配对 + nonce lease + used_nonces ledger + per-device wrap UI)
 
 > 主 PRD §10.4 子阶段 0.3 的 Supabase 后端骨架 + Sync MVP。**目标:走通端到端单表同步**,验证 v0.2 协议假设。
 
@@ -36,7 +47,7 @@
 
 **Exit criterion**:两台 Mac 用同一账号 + 同一 secret_key,在 todos 上互相能看见对方 5 秒内创建的新条目(手动触发 pull),且服务端 dump 不能解出任何 todo 内容。
 
-### 1.2 **Phase 4.8 协议硬化里程碑(v0.5 ~ 3-4 周)**
+### 1.2 **Phase 4.8 协议硬化里程碑(v0.6 ~ 3-4 周;TLA+ / property tests 必须**先于**实现)**
 
 > **在 Phase 5 全 entity 接入之前必须完成**,否则 Phase 5 改不动协议层。详见 PRD v0.2 §10.x。
 
@@ -52,7 +63,7 @@
 
 **Exit criterion**:PRD §10.x 协议硬化里程碑准入门 10 条全过。
 
-### 1.3 Phase 5(完善) — **v0.5 重估 ~6-7 周**
+### 1.3 Phase 5(完善) — **v0.6 重估 ~6-7 周**
 
 > 主 PRD §10.6 Phase 5。目标:补齐 P0 全集 + 公测前的稳定性 / 安全演练。
 
@@ -93,7 +104,7 @@
 
 ## 3. 任务分解
 
-### 3.1 Phase 0 子阶段 0.3 — Sync MVP(v0.2 重估 ~10-14 工作日)
+### 3.1 Phase 0 子阶段 0.3 — Sync MVP(v0.6 重估 18-24 工作日)
 
 > 与 `core-data` SQLite 迁移、`core-fs` 抽象、菜单栏、Supabase 后端骨架同期。v0.2 加入 AAD / key_id / revision / mutation_id / Secret Key / SQLCipher / KeyVault opaque handle 等协议级要素,工日翻倍。
 
@@ -118,7 +129,7 @@
 - T-11: **SQLCipher 接入**(FR-SY-74):rusqlite + sqlcipher feature;`db_key = HKDF(KEK, "xai.sqlite.v1")`;启动时 `PRAGMA key`,关闭时清
 
 **Day 6-9 · 同步引擎骨架 v0.2**
-- T-12: `src/sync/engine.ts` 内核:`pushBatch(entityType, records)` 含 mutation_id / base_revision / commit_seq / AAD / `pullSince(entityType, commit_seq_cursor)` / `applyServerRecords(records)` 含 revision 校验
+- T-12: `src/sync/engine.ts` 内核:`pushBatch(entityType, records)` 含 mutation_id / base_revision / proposed_revision / commit_seq / CBOR AAD / `pullSince(commit_seq_cursor: string)`(**v0.6 H-7 账户级全局,不分 entity_type**)/ `applyServerRecords(records)` 按 PullRecord.entityType 路由 / revision rollback 区分(FR-SY-68)
 - T-13: Recovery proof Edge Function(`supabase/functions/auth-me-patch/index.ts`):challenge 生成 / proof 校验 / Argon2id 比对(FR-SY-69)
 - T-14: PUSH Edge Function(`supabase/functions/sync-push/index.ts`):conditional write + idempotency(mutation_dedup)+ 冲突 shadow 写入 + 207 partial response
 - T-15: 接入 `core-data` 的 todos 表;在 INSERT/UPDATE/DELETE 时同事务写 entity 表 + sync_outbox(M-12);Phase 0 暂不开 outbox flush(直接 push 走 engine)
@@ -132,7 +143,7 @@
 
 **风险预留**:如 KeyVault / SQLCipher / Recovery proof 任一遇阻 +2-3 天,总预算上限 14 工作日;超出走 PRD §10.1 范围裁剪。
 
-### 3.1.5 Phase 4.8 — 协议硬化里程碑(v0.2 新,~2 周)
+### 3.1.5 Phase 4.8 — 协议硬化里程碑(v0.6,~3-4 周;TLA+ / property tests 必须先于实现)
 
 > 在 Phase 5 全 entity 接入之前**强制完成**。详见 PRD §10.x 准入门。
 
@@ -151,7 +162,7 @@
 - T-B6: 24 词 BIP-39 跨实现兼容测试(`@scure/bip39` ↔ Rust `bip39`)
 - T-B7: 准入门 checklist 全过 → 提交里程碑 checkpoint
 
-### 3.2 Phase 5 — Sync 完善(v0.2 重估 ~4-5 周)
+### 3.2 Phase 5 — Sync 完善(v0.6 重估 ~6-7 周)
 
 **Week 1 · Realtime + 全 entity 接入**
 - T-21: Supabase Realtime channel `sync:<account_id>` 订阅(`@supabase/supabase-js` Realtime client)
@@ -328,7 +339,7 @@ export type DeviceDekWrap = {
   accountId: string;
   deviceId: string;
   keyId: number;
-  wrap: string;                               // base64 X25519 sealed_box envelope
+  wrap: string;                               // v0.6 H-3:HPKE Base mode (RFC 9180) envelope base64
   grantedByDeviceId: string;
 };
 
@@ -357,7 +368,7 @@ export interface SyncEngine {
   onRealtime(msg: RealtimeBlobChanged): void;
   getStatus(): SyncStatusSnapshot;
   // v0.3 新增
-  verifyAccountCommitSeqMonotone(serverSeq: number): Promise<void>;        // H-A
+  verifyAccountCommitSeqMonotone(serverSeq: string): Promise<void>;        // v0.6 M-9:H-A BIGINT string
   triggerRekey(reason: 'user_action' | 'device_revoked' | 'counter_exhausted'): Promise<void>;  // FR-SY-13
   grantDekWrapForNewDevice(targetDeviceId: string, targetDevicePub: Uint8Array): Promise<void>; // C-D
 }
@@ -417,7 +428,7 @@ async fn crypto_generate_device_keypair(
 #[tauri::command]
 async fn crypto_unwrap_dek_for_device(
     device_priv_handle: KeyHandleId,
-    wrap_envelope: Vec<u8>,             // X25519 sealed_box from device_dek_wraps[*].wrap
+    wrap_envelope: Vec<u8>,             // v0.6 H-3:HPKE Base mode (RFC 9180) from device_dek_wraps[*].wrap
     account_id: String,
     target_device_id: String,
     key_id: u32,
@@ -559,10 +570,18 @@ channel
 //
 // 集成测试:user_B 订阅 sync:<user_A_id> → 必须返回 0 消息
 
-// device_joined 事件(C-D donor 监听)
-channel.on('broadcast', { event: 'device_joined' }, (payload) => {
-  // payload.new = { new_device_id, new_device_pub }
-  syncEngine.grantDekWrapForNewDevice(payload.new_device_id, payload.new_device_pub);
+// v0.6 C-A/C-B:device_pending 事件 — 仅通知 UI,绝不自动 grant
+// 用户必须在 donor 上扫 QR / 手输 6 词 SAS 验证 → 用 QR 内 pub(非 server pub)做 HPKE
+// 详 PRD §3.4.1 v0.6 用户可验证设备配对流程
+channel.on('broadcast', { event: 'device_pending' }, (payload) => {
+  // payload = { new_device_id }
+  ui.showPendingDeviceNotification(payload.new_device_id);
+  // 用户在 UI 上点开 → 扫 QR / 手输 SAS → 调 syncEngine.completeDevicePairing(qrPayload)
+  // syncEngine 内部:
+  //   1. 解 CBOR QR → 取 target_device_pub
+  //   2. SHA256(qr.target_device_pub) vs SHA256(server_row.device_pub) 比对(防 server 篡改)
+  //   3. 不一致 → E3031 拒绝 + 严重告警;一致 → HPKE_seal 用 qr.target_device_pub
+  //   4. Ed25519 签 transcript → POST /sync/devices/grant_dek_wrap
 });
 ```
 
@@ -581,7 +600,8 @@ channel.on('broadcast', { event: 'device_joined' }, (payload) => {
 | `sync/engine` | ≥ 80% | mutation 入队 + DAG 合并、push batch (proposed_revision=base+1)、pull 应用 (revision rollback 拒收)、conditional write 冲突路径 (FR-SY-71 shadow)、squash 规则 (H-N) |
 | `crypto/aad_cbor` | 100% | 3 条测试向量 Rust+Python+JS 一致 (C-G);恶意输入不 panic |
 | `crypto/ed25519_recovery` | 100% | sign/verify round-trip;message hash 不一致拒收 (C-A) |
-| `crypto/per_device_wrap` | 100% | X25519 sealed_box round-trip;撤销 device 删 wrap → 解密失败 (C-D) |
+| `crypto/per_device_wrap` | 100% | HPKE Base mode round-trip(RFC 9180);撤销 device 删 wrap → 解密失败 (C-D);donor 用 QR 内 pub 而非 server pub 加密(C-B) |
+| `crypto/used_nonces_ledger` | 100% | 同 nonce 跨表(blob/staging/shadow)二次提交 → PK 违反拒收 (v0.6 C-A) |
 | `crypto/nonce_counter` | 100% | checkpoint 预写;backup 回滚检测 (C-C R-10.18) |
 | `sync/outbox` | ≥ 80% | 顺序回放、合并、死信、退避 |
 
@@ -710,6 +730,7 @@ Phase 5 完成 → Phase 6 公测 / 上架前,Sync 必须全部满足:
 | 2026-05-15 | **v0.2-DRAFT(协议硬化联动)** | 与 PRD v0.2 联动。主要变更:<br>① **新增 Phase 4.8 协议硬化里程碑(~2 周)**;Phase 5 之前必须完成 AAD / revision / recovery proof / Re-key keyring / TLA+ 模型 / RLS fuzz / Tauri capability allowlist<br>② Phase 0 子阶段 0.3 工日从 5-7 重估为 **10-14**,任务清单从 T-01~T-14 扩到 T-01~T-20<br>③ Phase 5 工日从 3-4 周重估为 **4-5 周**<br>④ **Tauri command 重写**(§4.2):JS 只拿 opaque KeyHandleId,Rust 侧 KeyVault 持有 raw key + 自动组 AAD;capability allowlist 限 plugin-account / core-data<br>⑤ **R-18 supply chain 强化**:cargo vet + sigstore + dependency-review + reproducible build<br>⑥ 恢复演练从 3 次扩到 **4 次**,含设备撤销 → 强制 Re-key 演练(R-10.11);恢复剧本修正(M-06)<br>⑦ 测试策略加 property-based / TLA+ / RLS fuzz / `kill -9` 注入<br>⑧ 验收门 §7 加入"REVIEW-2026-05-15.md Critical + High 全数关闭" |
 | 2026-05-16 | **v0.3-DRAFT(协议硬化第二轮联动)** | 与 PRD v0.3 联动。主要变更:<br>① **TypeScript §4.1 重写**:version→revision/proposedRevision/baseRevision、serverUpdatedAt→commitSeq、deletedAt→softDeleted/hardDeleted;加 PushResultItem 5 status、PullResponse.currentAccountCommitSeq(H-A)、DeviceDekWrap、RecoveryChallenge/RecoveryProofPayload;pullSince 改全局 cursor(H-J)<br>② **Tauri command §4.2 扩展**:加 crypto_derive_device_keypair / crypto_unwrap_dek_for_device / crypto_wrap_dek_for_devices(C-D)、crypto_recovery_keypair_from_dek / crypto_recovery_sign_payload(C-A);auth_password 派生加 secret_key 入参(H-L);AAD 改 CBOR(C-G)<br>③ **Realtime §4.3 加 `config:{private:true}`**(H-I);加 device_joined broadcast(C-D)<br>④ **测试策略 §5.3 重写**:移除所有 LWW / server clock 表述,加 v0.3 8 个新场景<br>⑤ **风险表 §6 加 R-19~R-21**(per-device wrap 复杂度 / Ed25519 X25519 误用 / CBOR encoding 跨实现一致);单测覆盖加 4 个新模块<br>⑥ **GA 数字对齐**:恢复演练 3→4,真机验收 7→13<br>⑦ Phase 0 工日 10-14→**14-18**;Phase 4.8 2 周→**3 周**;Phase 5 4-5 周→**5-6 周** |
 | 2026-05-16 | **v0.4-DRAFT(协议硬化第三轮联动,修复 v0.3 致命缺陷)** | 与 PRD v0.4 联动。主要变更:<br>① **C-A 致命修复**:Tauri `crypto_derive_device_keypair`(由 KEK 派生)废弃,改 `crypto_generate_device_keypair`(本地 CSPRNG + Keychain),旧设备不能算出新设备 device_priv<br>② **C-C 新命令** `crypto_check_nonce_anchor`:每次加密前校验 SQLCipher.next_counter vs Keychain.high_water,Time Machine 回滚拒绝<br>③ **H-9** `crypto_encrypt_for` 移除 `encryption_device_id` 入参,Rust KeyVault 从可信 device state 读<br>④ **C-E** `crypto_recovery_sign_payload` 改接收完整 payload canonical CBOR,签名绑定 `SHA256(payload_canonical)` 而非字段级 hash<br>⑤ **H-8 TypeScript**:`commitSeq` / `nextCommitSeq` / `currentAccountCommitSeq` 改 `string`(JSON number 精度不够 BIGINT)<br>⑥ **H-7**:`pullSince(cursor: string)` 全局账户级,删 entity_type 参数;`PullRecord` 必须含 `entityType`;`applyServerRecords(records)` 不再分 entity_type 调用<br>⑦ Phase 0 工日 14-18 → **16-22**;Phase 4.8 改"先 TLA+/property tests 再实现",最低模型必含 6 场景:设备撤销 + 新设备加入并发、rekey swap 前后 crash、offline squash revision、重复 mutation replay、staging delta replay、server rollback/equivocation<br>⑧ RLS fuzz 扩展为 same-account pending/revoked/stolen-token 组合 |
+| 2026-05-16 | **v0.6-DRAFT(协议硬化第五轮联动)** | 与 PRD v0.6 联动。主要变更:<br>① **C-C 真正 §1~§3 v0.6-only**:头部加实施必读警示废弃所有旧片段(device_joined 自动 grant / crypto_derive_device_keypair / sealed_box / Argon2 recovery / pullSince(entityType) / Keychain-only nonce / encrypted_dek);Realtime 示例改 device_pending UI 通知不自动 grant<br>② **TypeScript** sealed_box → HPKE Base mode (RFC 9180);verifyAccountCommitSeqMonotone number → string;wrap envelope 注释 HPKE<br>③ Tauri command 注释 sealed_box → HPKE<br>④ §3.1 / §3.1.5 / §3.2 标题 v0.2 → v0.6<br>⑤ T-12 pullSince 改全局 cursor<br>⑥ 测试覆盖加 used_nonces_ledger / HPKE(QR pub binding) |
 | 2026-05-16 | **v0.5-DRAFT(协议硬化第四轮联动)** | 与 PRD v0.5 联动。主要变更:<br>① **C-A 致命修复**:donor 自动 grant 被恶意服务端伪造攻击 → §3.4.1 重写为用户可验证设备配对(6 词 fingerprint + QR);Edge Function /sync/devices/grant_dek_wrap 要求 user_confirmed=true + confirmation_proof;UI 加"待确认设备" 流程<br>② **C-B**:encrypted_blobs schema 拆 encryption_device_id + counter 字段 + UNIQUE 索引;server 解析 envelope 头校验 JWT.device_id 对应<br>③ **C-C**:三端统一 server nonce lease 替代仅 Keychain 锚点;新表 nonce_lease + RPC fn_grant_nonce_lease;Web 端无 Keychain 也安全<br>④ **C-D**:Re-key 阻断式生成新 24 词 + 新 recovery_signing_pub;UI 强制回填 6 词;未确认禁止 swap<br>⑤ **C-E** §7.1.2.3 message schema 删字段级 hash,唯一 schema = payload_canonical_hash<br>⑥ **C-F** lazy encrypt 明确 one-shot push,删除两阶段 reservation 暗示<br>⑦ **High 12** 集中:H-1 pending→active 唯一事务;H-3 entity_state 加 last_blob_hash + last_commit_seq + last_key_id;H-4 PullResponse 加 currentAccountCommitSeq;H-5 Realtime 触发 pull 改全局 cursor;H-6 conflict_shadow / staging SELECT 加 active device;H-7 注册 account_id = auth.users.id;H-8 DDL 顺序 + commit_seq SECURITY DEFINER SQL;H-11 TypeScript BIGINT 统一 string<br>⑧ **Phase 0 工日** 16-22 → **18-24**;**Phase 5 工日** 5-6 周 → **6-7 周**;Phase 4.8 加新场景:donor grant 伪造攻击 / nonce reuse 提交 / Web 备份回滚 / Re-key 助记词阻断 |
 
 — END —
