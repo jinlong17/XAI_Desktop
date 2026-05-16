@@ -163,13 +163,15 @@ auth_password = Argon2id(HKDF(master_password, email||"xai.auth.v1"), t=1,m=16Mi
 
 #### 2.1.2 加密算法(v0.2)
 
-- 对称加密:**AES-256-GCM** with **AAD 必须绑定 entity 语境**(详见 sync PRD FR-SY-67);nonce 用 **deterministic** `device_id (4B) ‖ counter (8B)`(原 v0.1 "随机 12B" 被废弃,避免生日界 + 增强 nonce-misuse 防护)
-- 文件指纹:**HMAC-SHA256(DEK, file)**(原 v0.1 SHA-256 明文废弃,防跨账号关联)
+- 对称加密:**AES-256-GCM** with **AAD = deterministic CBOR**(详见 sync PRD FR-SY-67 / §7.1.2,RFC 8949 §4.2);nonce = `encryption_device_id (8B,server 分配,unique per device) ‖ counter (4B,per device per key_id)`,counter 在 SQLCipher 预写 checkpoint 防 backup 回滚;到 2^32 强制 Re-key
+- 文件指纹:**HMAC-SHA256(DEK, file)**(防跨账号关联)
 - 哈希:**SHA-256** + **HMAC-SHA256**(派生 dek_check / secret_key_check 等)
-- 密钥派生:**Argon2id**(KEK 强参数 + auth_password 弱参数)+ **HKDF-SHA256**(子密钥 / db_key / domain separation)
-- 助记词:**BIP-39 24 词**(256-bit + 8-bit checksum,**原 12 词废弃**,无法编码 256-bit DEK)
-- 本地 SQLite 加密:**SQLCipher**(AES-256-GCM 模式)
-- 导出文件:**[age](https://age-encryption.org/)** 加密(原明文 JSON 废弃)
+- 签名:**Ed25519**(recovery proof,sync PRD FR-SY-69 / §3.5)
+- 密钥交换:**X25519 sealed_box / HPKE**(per-device DEK wrap,sync PRD FR-SY-76 / C-D)
+- 密钥派生:**Argon2id**(KEK 强参数 + auth_password 弱参数,**dual-factor:auth_password 必含 secret_key**)+ **HKDF-SHA256**(子密钥 / db_key / device_seed / recovery_seed)
+- 助记词:**BIP-39 24 词**(256-bit + 8-bit checksum)
+- 本地 SQLite 加密:**SQLCipher 4**(AES-256-CBC + HMAC-SHA512,默认模式;**不是 AES-GCM**)
+- 导出文件:**[age](https://age-encryption.org/)** 加密,key 由 master_password ‖ secret_key 派生
 - 传输:**TLS 1.3**;客户端校验证书指纹
 
 不允许任何 MD5 / SHA-1 / DES / 3DES / ECB 模式 / 自己实现加密原语;不允许 JS 侧持有 raw key。
@@ -178,14 +180,15 @@ auth_password = Argon2id(HKDF(master_password, email||"xai.auth.v1"), t=1,m=16Mi
 
 | 字段 | 本地加密 | 云上传 | 备注 |
 |---|---|---|---|
-| 所有本地 SQLite 表(包括 todos / notes / habits / clipboard / pomodoro 等) | ✅ **SQLCipher 整库加密**(v0.2 修订) | (按 sub-prds/sync §4 同步矩阵) | v0.1 "本地明文" 被 C-09 / FR-SY-74 废弃 |
-| `clipboard_items.*` | ✅ SQLCipher | ❌ 不上传 | 隐私优先 |
-| `todos.*` / `notes.*` / `habits.*` / `grids.*` 等 | ✅ SQLCipher | ✅ E2E 加密 blob(含 AAD) | sync PRD §4 矩阵 |
-| `accounts.refresh_token` | ✅ Keychain(WhenUnlockedThisDeviceOnly) | — | Keychain 本身加密 |
-| `pomodoro_sessions` | ✅ SQLCipher | ❌ 不上传 | 隐私优先 |
-| 文件指纹(grid_items.payload_json 内) | ✅ SQLCipher | ✅ HMAC-SHA256(DEK, file) | v0.2:HMAC 替代明文 SHA-256 |
+| 所有本地 SQLite 表(桌面端) | ✅ **SQLCipher 4 整库加密**(AES-256-CBC + HMAC-SHA512) | (按 sub-prds/sync §4 同步矩阵) | sync PRD FR-SY-74 |
+| 所有本地 IndexedDB 表(Web 端,v0.3 新) | ✅ **WebCrypto 字段级 AES-GCM**;db_key = HKDF(KEK_from_PBKDF2_in_WebWorker, "xai.indexeddb.v1");key 不出 ServiceWorker;**会话级缓存,关闭浏览器即清** | 同上 | 详 sync PRD §3.7.1(待补)及 Web 子 PRD;**重要**:Web 端因 IndexedDB 无原生整库加密,采用字段级 + 短生命周期 key 缓解。威胁模型 T3'(已登录浏览器被盗)残余风险高于桌面 |
+| `clipboard_items.*` | ✅ SQLCipher / WebCrypto | ❌ 不上传 | 隐私优先 |
+| `todos.*` / `notes.*` / `habits.*` / `grids.*` 等 | ✅ SQLCipher / WebCrypto | ✅ E2E 加密 blob(CBOR AAD) | |
+| `accounts.refresh_token` | ✅ Keychain (桌面) / ✅ **HttpOnly + Secure cookie**(Web,不进 JS) | — | Web 端 refresh_token 由 server 设置 HttpOnly cookie,JS 不可读 |
+| `pomodoro_sessions` | ✅ SQLCipher / WebCrypto | ❌ 不上传 | 隐私优先 |
+| 文件指纹(grid_items.payload_json 内) | ✅ | ✅ HMAC-SHA256(DEK, file) | HMAC 替代明文 SHA-256 |
 | 日志文件 | ❌ 明文(已 redact,无 user content) | ❌ 不上传 | redact 防泄漏 |
-| 导出 .json.age | ✅ age 加密 | — | FR-SY-70 |
+| 导出 .json.age | ✅ age 加密 (key = master_password ‖ secret_key 派生) | — | FR-SY-70 / M-8 |
 
 ### 2.2 macOS 沙箱 entitlements 清单(MAS 版)
 
@@ -235,17 +238,21 @@ DMG 完整版不启用沙箱,但仍走 hardened runtime + notarization。
 8. **设备撤销**:撤销 device + revoke refresh_token + **强制 Re-key**(生成 DEK_v2 + 双读 + 原子 swap)
 9. **Realtime**:Supabase Realtime **Private Channels + Authorization**;channel 名含 auth.uid(),RLS 校验
 
-### 2.4.1 v0.2 协议级关键字段(详见 sub-prds/sync §6 / §7)
+### 2.4.1 协议级关键字段(v0.3,详见 sub-prds/sync §6 / §7)
 
 | 字段 | 位置 | 作用 |
 |---|---|---|
-| `revision BIGINT` | encrypted_blobs + AAD | 每实体单调,防 rollback(FR-SY-68) |
-| `key_id INTEGER` | envelope + accounts.current_dek_key_id + account_keyring | DEK 版本,Re-key 期间双读(C-07) |
-| `commit_seq BIGINT` | encrypted_blobs(全局 BIGSERIAL) | 权威排序与 cursor(H-02/H-04) |
-| `mutation_id UUIDv7` | PUSH request + mutation_dedup | Idempotency(FR-SY-72) |
-| `aad bytes` | envelope | AEAD 绑定 entity 语境(FR-SY-67) |
-| `secret_key_check BYTEA` | accounts | 客户端验 secret_key 正确性 |
-| `recovery_proof_hash BYTEA` | accounts | 阻断恶意 PATCH `/auth/me`(FR-SY-69) |
+| `revision BIGINT` | encrypted_blobs + CBOR AAD | 每实体单调,client 提交 proposed_revision = base + 1, server 不重写;防 rollback(FR-SY-68 / C-E) |
+| `key_id INTEGER` | envelope + accounts.current_dek_key_id + account_keyring | DEK 版本,Re-key 双读;keyring.can_retire 控制何时可 GC(C-F) |
+| `commit_seq BIGINT` | encrypted_blobs(全局 BIGSERIAL,账户级单 cursor 不分 entity_type) | 权威排序与 cursor(H-02/H-04/H-J) |
+| `mutation_id UUIDv7` | PUSH request + mutation_dedup(90d GC) | Idempotency(FR-SY-72) |
+| `CBOR AAD` | 即时计算,不存 envelope 内 | AEAD 绑定 entity 语境;canonical encoding(FR-SY-67 / C-G / RFC 8949 §4.2) |
+| `encryption_device_id BIGINT` | sync_devices + envelope + nonce 高 8B | server 分配 unique per device,作 GCM nonce 高位(C-C) |
+| `secret_key_check BYTEA` | accounts | 客户端验 secret_key;auth_password 也含 secret_key(H-L) |
+| `recovery_signing_pub BYTEA` | accounts | Ed25519 32B 公钥;PATCH /auth/me 验签;client 直接 UPDATE 被 RLS 禁(FR-SY-69 / C-A / C-B) |
+| `device_pub BYTEA` | sync_devices | X25519 32B 公钥;per-device DEK wrap(FR-SY-76 / C-D) |
+| `device_dek_wraps` (新表) | server | (account_id, device_id, key_id) → X25519_sealed_box(device_pub, DEK_v_key_id);撤销 device 删行真正排除旧设备(C-D) |
+| `current_account_commit_seq` | accounts | 全账户级单调监测,client 持久化 last_seen,检测 server 全量回滚(FR-SY-77 / H-A) |
 
 ### 2.5 隐私默认值
 

@@ -2,13 +2,13 @@
 
 | 字段 | 值 |
 |---|---|
-| 对应 PRD | `docs/planning/sub-prds/sync/PRD.md` v0.2-DRAFT |
+| 对应 PRD | `docs/planning/sub-prds/sync/PRD.md` v0.3-DRAFT |
 | 父开发计划 | `docs/planning/2026-05-12-product-development-plan-v1.md` |
 | 归属 plugin | `packages/plugin-account/`(主)+ `packages/core-data/`(REST driver) |
-| 跨越 Phase | Phase 0 子阶段 0.3(骨架,**v0.2 重估 10-14 工日**)+ **Phase 4.8 协议硬化里程碑(v0.2 新,~2 周)** + Phase 5(完善,~4-5 周) |
-| 最后更新 | 2026-05-15 |
-| 状态 | v0.2-DRAFT(协议硬化联动修订) |
-| 关联审查 | `docs/planning/sub-prds/sync/REVIEW-2026-05-15.md` Critical + High 已落实 |
+| 跨越 Phase | Phase 0 子阶段 0.3(骨架,**v0.3 重估 14-18 工日**)+ **Phase 4.8 协议硬化里程碑(~3 周)** + Phase 5(完善,~5-6 周) |
+| 最后更新 | 2026-05-16 |
+| 状态 | v0.3-DRAFT(协议硬化第二轮联动修订) |
+| 关联审查 | `docs/planning/sub-prds/sync/REVIEW-2026-05-15.md` v0.2 + v0.3 round 全部 Critical/High 已落实 |
 
 ---
 
@@ -179,9 +179,10 @@
 - T-50: 全量 JSON 导出 + Markdown 子集导出(FR-SY-50, FR-SY-51)
 - T-51: 账号删除流程 + 30 天硬删 cron(Supabase scheduled function)
 - T-52: fuzz 测试(`cargo-fuzz`)envelope decode + decrypt
-- T-53: 恢复演练 1:服务端 staging 全删 → 助记词恢复
-- T-54: 恢复演练 2:本地 SQLite 全删 → 登录 → 全量 pull
-- T-55: 演练 3:Re-key 中断 → 重启 → 一致性
+- T-53: 恢复演练 1:服务端 staging 全删 → 助记词 + 本地 SQLite 完整 device 协作恢复(M-6)
+- T-54: 恢复演练 2:本地 SQLite 全删 → 登录 + donor device 协作 grant DEK wrap → 全量 pull
+- T-55: 演练 3:Re-key 中断 → kill -9 在 staging 30%/70%/swap 前/swap 后 4 点 → 一致性
+- T-55b: 演练 4:撤销 device A → device A 即使再登录也无法解新 blob(C-D R-10.11)
 - T-56: 弱网压测(toxiproxy:500ms 延迟 / 10% 丢包 / 偶尔断网)
 - T-57: 凭据轮换 SOP 演练(写 `docs/runbook/credential-rotation.md`)
 - T-58: 24h 压测 10 账号 × 持续 mutation
@@ -191,25 +192,24 @@
 
 ## 4. 协议接口契约
 
-### 4.1 TypeScript 类型(`packages/plugin-account/src/types.ts`)
+### 4.1 TypeScript 类型(v0.3 重写,`packages/plugin-account/src/types.ts`)
+
+> v0.3 关键变化:`version → revision/proposedRevision/baseRevision`、`serverUpdatedAt → commitSeq`、`deletedAt → softDeleted/hardDeleted`、新增 `mutationId/keyId/causalDeps`、新增 device wrap 类型 / Ed25519 recovery 类型 / CBOR AAD 类型;`nextCursor` 是 BIGINT `commitSeq` 而非 timestamp。
 
 ```typescript
-// 加密 envelope
+// ── 协议版本 ─────────────────────────────────────
+export const SYNC_PROTOCOL_VERSION = 1;       // L-4 分离协议版本与文档版本
+
+// ── 加密 envelope(v0.3,C-G:AAD 不存 envelope,即时计算)─────
 export type CipherEnvelope = {
   v: 1;
   kdfVersion: 1;
-  nonce: Uint8Array;       // 12B
+  keyId: number;                              // C-07
+  encryptionDeviceId: bigint;                 // C-C (8B,server 分配)
+  counter: number;                            // C-C (4B,per device per key)
   ciphertext: Uint8Array;
-  tag: Uint8Array;          // 16B
-};
-
-// 同步 mutation
-export type SyncMutation = {
-  entityType: SyncEntityType;
-  entityId: string;
-  op: 'upsert' | 'delete';
-  payload: Record<string, unknown> | null;  // null for delete
-  localUpdatedAt: number;
+  tag: Uint8Array;                            // 16B
+  // AAD 不存 envelope,由 client 即时 CBOR-encode (§7.1.2)
 };
 
 export type SyncEntityType =
@@ -221,70 +221,156 @@ export type SyncEntityType =
   | 'notes' | 'progress_trackers'
   | 'pets' | 'plugins';
 
-// PUSH request
+// ── 同步 mutation(v0.3 outbox 入参)──────────────
+export type SyncMutation = {
+  entityType: SyncEntityType;
+  entityId: string;
+  op: 'upsert' | 'soft_delete' | 'hard_delete';
+  payload: Record<string, unknown> | null;
+  baseRevision: number | null;                // C-E:读取时看到的 revision,首次 create 为 null
+  mutationId: string;                         // UUIDv7,FR-SY-72 idempotency
+  causalDeps?: Array<{ entityId: string; maxSeenRevision: number }>;  // P-01
+  clientUpdatedAt: number;                    // 仅展示
+};
+
+// ── PUSH request ─────────────────────────────────
+export type PushRecord = {
+  entityId: string;
+  mutationId: string;
+  baseRevision: number | null;
+  proposedRevision: number;                   // v0.3 C-E:client 提交 = base + 1
+  blob: string;                               // base64 envelope
+  softDelete: boolean;
+  hardDelete: boolean;
+  causalDeps?: Array<{ entityId: string; maxSeenRevision: number }>;
+  clientUpdatedAt: number;
+};
+
 export type PushRequest = {
   entityType: SyncEntityType;
-  records: Array<{
-    entityId: string;
-    version: number;
-    clientUpdatedAt: number;
-    blob: string;          // base64 envelope
-    deletedAt: string | null;
-  }>;
+  records: PushRecord[];
 };
+
+// ── PUSH response(v0.3:207 partial,逐条 status,H-F)──
+export type PushResultOk = {
+  status: 'ok';
+  entityId: string;
+  appliedRevision: number;
+  commitSeq: number;
+};
+export type PushResultConflict = {
+  status: 'conflict';
+  entityId: string;
+  serverRevision: number;
+  serverBlob: string;
+  winnerCommitSeq: number;
+  yourLoserBlobSavedToShadowId: number;
+};
+export type PushResultCausalDepUnsatisfied = {
+  status: 'causal_dep_unsatisfied';
+  entityId: string;
+  missingDep: { entityId: string; neededRevision: number; serverRevision: number };
+};
+export type PushResultDuplicate = {
+  status: 'duplicate_mutation_id';
+  entityId: string;
+  previousRevision: number;
+  previousCommitSeq: number;
+};
+export type PushResultRevisionMismatch = {
+  status: 'revision_mismatch';
+  entityId: string;
+  reason: string;
+};
+export type PushResultItem =
+  | PushResultOk | PushResultConflict | PushResultCausalDepUnsatisfied
+  | PushResultDuplicate | PushResultRevisionMismatch;
 
 export type PushResponse = {
   accepted: number;
-  serverNow: string;       // ISO
-  results: Array<{
-    entityId: string;
-    serverUpdatedAt: string;
-  }>;
+  rejected: number;
+  results: PushResultItem[];
+  serverNow: string;
 };
 
-// PULL response
-export type PullResponse = {
-  records: Array<{
-    entityId: string;
-    version: number;
-    blob: string;
-    serverUpdatedAt: string;
-    deletedAt: string | null;
-    originatorDeviceId: string;
-  }>;
-  nextCursor: string;
-  hasMore: boolean;
-};
-
-// Realtime msg
-export type RealtimeBlobChanged = {
-  entityType: SyncEntityType;
+// ── PULL response(v0.3:commit_seq cursor,全局账户级,H-J)──
+export type PullRecord = {
   entityId: string;
-  serverUpdatedAt: string;
+  revision: number;
+  keyId: number;
+  blob: string;
+  commitSeq: number;
+  softDeleted: boolean;
+  hardDeleted: boolean;
   originatorDeviceId: string;
 };
 
-// 同步引擎核心接口
+export type PullResponse = {
+  records: PullRecord[];
+  nextCommitSeq: number;                      // BIGINT 字符串 / number
+  currentAccountCommitSeq: number;            // v0.3 H-A:全账户单调监测
+  hasMore: boolean;
+};
+
+// ── Realtime msg(v0.3 含 commit_seq)──────────────
+export type RealtimeBlobChanged = {
+  entityType: SyncEntityType;
+  entityId: string;
+  commitSeq: number;
+  originatorDeviceId: string;
+};
+
+// ── Per-device DEK wrap (v0.3 新,C-D)──────────
+export type DeviceDekWrap = {
+  accountId: string;
+  deviceId: string;
+  keyId: number;
+  wrap: string;                               // base64 X25519 sealed_box envelope
+  grantedByDeviceId: string;
+};
+
+// ── Recovery proof (v0.3,C-A)────────────────────
+export type RecoveryChallenge = {
+  challengeId: string;
+  challenge: Uint8Array;                      // 32B
+  ttlSeconds: number;
+  boundToAccountId: string;
+};
+export type RecoveryProofPayload = {
+  challengeId: string;
+  // CBOR canonical message + Ed25519 signature
+  message: Uint8Array;
+  signature: Uint8Array;                      // 64B
+  newPayload: Record<string, unknown>;
+};
+
+// ── 同步引擎核心接口(v0.3 重签名)─────────────────
 export interface SyncEngine {
-  pushBatch(entityType: SyncEntityType, records: SyncMutation[]): Promise<PushResponse>;
-  pullSince(entityType: SyncEntityType, cursor: string | null, limit?: number): Promise<PullResponse>;
-  applyServerRecords(entityType: SyncEntityType, records: PullResponse['records']): Promise<void>;
-  enqueueMutation(m: SyncMutation): Promise<void>;       // 写 outbox
+  pushBatch(entityType: SyncEntityType, records: PushRecord[]): Promise<PushResponse>;
+  pullSince(cursor: number, limit?: number): Promise<PullResponse>;        // v0.3 全局 cursor,H-J
+  applyServerRecords(entityType: SyncEntityType, records: PullRecord[]): Promise<void>;
+  enqueueMutation(m: SyncMutation): Promise<void>;
   flushOutbox(): Promise<{ flushed: number; deadLetter: number }>;
   onRealtime(msg: RealtimeBlobChanged): void;
   getStatus(): SyncStatusSnapshot;
+  // v0.3 新增
+  verifyAccountCommitSeqMonotone(serverSeq: number): Promise<void>;        // H-A
+  triggerRekey(reason: 'user_action' | 'device_revoked' | 'counter_exhausted'): Promise<void>;  // FR-SY-13
+  grantDekWrapForNewDevice(targetDeviceId: string, targetDevicePub: Uint8Array): Promise<void>; // C-D
 }
 
 export type SyncStatusSnapshot = {
-  state: 'idle' | 'syncing' | 'success' | 'error' | 'offline-only';
+  state: 'idle' | 'syncing' | 'success' | 'error' | 'offline-only' | 'rekey-in-progress';
   lastSyncedAt: number | null;
   outboxPending: number;
   outboxDeadLetter: number;
   lastError: { code: string; message: string } | null;
+  currentKeyId: number;
+  lastSeenAccountCommitSeq: number;
 };
 ```
 
-### 4.2 Tauri commands(Rust 侧 v0.2 重写,C-06 / FR-SY-75)
+### 4.2 Tauri commands(Rust 侧 v0.3 重写,C-06 / C-A / C-D / C-G / FR-SY-75 / FR-SY-76)
 
 > **重要变更**:JS 永远不接触 raw KEK / DEK,只拿 `KeyHandleId`(u32)。Rust 侧 KeyVault 统一管理密钥生命周期 + 自动组 AAD。Tauri `capabilities/main.json` 限制 `crypto_*` 命令调用方为 `plugin-account` + `core-data` 两个 plugin。
 
@@ -304,37 +390,75 @@ async fn crypto_derive_kek(
     kek_kdf_version: u8,
 ) -> Result<KeyHandleId, String>;
 // 内部:Argon2id(master_password, salt=kek_salt, secret=secret_key, t=3, m=64MiB, p=4)
-//       插入 KeyVault → 返回 handle;master_password / secret_key 立即 zeroize
 
 #[tauri::command]
 async fn crypto_derive_auth_password(
     master_password: String,
+    secret_key: Vec<u8>,    // v0.3 H-L:auth_password 必含 secret_key
     email: String,
 ) -> Result<String, String>;
-// 内部:HKDF + Argon2id(t=1, m=16MiB, p=1) → base64 → 发 Supabase Auth
+// 内部:HKDF(master_password ‖ secret_key, salt=email||"xai.auth.v1") + Argon2id(t=1,m=16MiB,p=1)
 
+// v0.3 C-D 新:从 KEK 派生 device_keypair
 #[tauri::command]
-async fn crypto_unwrap_dek(
+async fn crypto_derive_device_keypair(
     kek_handle: KeyHandleId,
-    encrypted_dek_envelope: Vec<u8>,
+) -> Result<(KeyHandleId /*device_priv handle*/, Vec<u8> /*device_pub 32B*/), String>;
+// 内部:device_seed = HKDF-Expand(KEK, "xai.devicekey.v1"); X25519_from_seed
+
+// v0.3 C-D 改:DEK 不再由 KEK 解,改由 device_priv 解 device_dek_wraps row
+#[tauri::command]
+async fn crypto_unwrap_dek_for_device(
+    device_priv_handle: KeyHandleId,
+    wrap_envelope: Vec<u8>,             // X25519 sealed_box from device_dek_wraps[*].wrap
+    account_id: String,
+    target_device_id: String,
+    key_id: u32,
+    granted_by_device_id: String,
+) -> Result<KeyHandleId /*dek_handle*/, String>;
+// 内部:X25519_decrypt + 验 CBOR AAD = wrap AAD schema (§7.1.2.2)
+
+// v0.3 C-D 新:为新 device 生成 wrap (donor 操作)
+#[tauri::command]
+async fn crypto_wrap_dek_for_devices(
+    dek_handle: KeyHandleId,
+    targets: Vec<(String /*device_id*/, Vec<u8> /*device_pub*/)>,
     account_id: String,
     key_id: u32,
-    kek_kdf_version: u8,
-) -> Result<KeyHandleId, String>;
-// 内部:AES-GCM-decrypt(envelope, key=KEK_from_vault, AAD=account_id||"dek_wrap"||...)
-//       插入 KeyVault → 返回 dek_handle
+    granted_by_device_id: String,
+) -> Result<Vec<Vec<u8> /*wrap envelopes*/>, String>;
 
-// ── 业务侧加解密(JS 永远不传 key)──────────
+// v0.3 C-A 新:Ed25519 recovery 签名
+#[tauri::command]
+async fn crypto_recovery_keypair_from_dek(
+    dek_handle: KeyHandleId,
+) -> Result<(KeyHandleId /*recovery_priv*/, Vec<u8> /*recovery_pub 32B*/), String>;
+// 内部:recovery_seed = HKDF-Expand(DEK, "xai.recovery.sig.v1"); Ed25519_from_seed
+
+#[tauri::command]
+async fn crypto_recovery_sign_payload(
+    recovery_priv_handle: KeyHandleId,
+    challenge_id: String,
+    account_id: String,
+    new_payload_hashes: serde_json::Value,    // 含 new_kek_salt_hash, new_secret_key_check_hash, ...
+    ts_ms: u64,
+) -> Result<(Vec<u8> /*cbor message*/, Vec<u8> /*signature 64B*/), String>;
+// 内部:CBOR canonical encode message (§7.1.2.3) → Ed25519_sign
+
+// ── 业务侧加解密(JS 永远不传 key,v0.3 AAD 用 CBOR)─────
 #[tauri::command]
 async fn crypto_encrypt_for(
     dek_handle: KeyHandleId,
     entity_type: String,
     entity_id: String,
-    revision: u64,
+    proposed_revision: u64,    // v0.3 C-E:client 提交 = base+1
     key_id: u32,
+    deleted_flag: u8,
     schema_version: u32,
+    encryption_device_id: u64, // v0.3 C-C
     plaintext: Vec<u8>,
-) -> Result<Vec<u8>, String>;   // 返回完整 envelope (含 AAD)
+) -> Result<Vec<u8>, String>;
+// 内部:AAD = CBOR_canonical map (§7.1.2.1);nonce = encryption_device_id || counter (KeyVault 内部维护)
 
 #[tauri::command]
 async fn crypto_decrypt(
@@ -342,19 +466,13 @@ async fn crypto_decrypt(
     envelope: Vec<u8>,
     entity_type: String,
     entity_id: String,
-    revision: u64,             // 客户端期望的 revision,用于 AAD 校验
-    expected_key_id: u32,
+    expected_revision: u64,     // AAD 校验值
+    deleted_flag: u8,
+    schema_version: u32,
 ) -> Result<Vec<u8>, String>;
+// 内部:从 envelope 取 encryption_device_id + counter 重建 nonce;按调用方提供的 AAD schema 重建
 
-// ── recovery proof / 24 词助记词 ─────────────
-#[tauri::command]
-async fn crypto_recovery_proof_sign(
-    dek_handle: KeyHandleId,
-    challenge: Vec<u8>,
-    account_id: String,
-    new_payload_hash: Vec<u8>,
-) -> Result<Vec<u8>, String>;
-
+// ── BIP-39 24 词助记词 ─────────────
 #[tauri::command]
 async fn crypto_bip39_encode_24w(dek_handle: KeyHandleId) -> Result<String, String>;
 #[tauri::command]
@@ -388,11 +506,15 @@ async fn network_reachability_listen() -> Result<(), String>;
 }
 ```
 
-### 4.3 Realtime channel 契约
+### 4.3 Realtime channel 契约(v0.3 H-I:必 private:true)
 
 ```typescript
-// 客户端订阅
-supabase.channel(`sync:${accountId}`)
+// 客户端订阅 — 必须 config.private = true,启用 Supabase Realtime Authorization
+const channel = supabase.channel(`sync:${accountId}`, {
+  config: { private: true },   // H-I 强制,无此参数走 public 模式 = 任意 authenticated 用户可订阅
+});
+
+channel
   .on('postgres_changes', {
     event: '*',
     schema: 'public',
@@ -402,11 +524,24 @@ supabase.channel(`sync:${accountId}`)
     syncEngine.onRealtime({
       entityType: payload.new.entity_type,
       entityId: payload.new.entity_id,
-      serverUpdatedAt: payload.new.server_updated_at,
+      commitSeq: payload.new.commit_seq,                  // v0.3 替代 server_updated_at
       originatorDeviceId: payload.new.originator_device_id,
     });
   })
   .subscribe();
+
+// 同时配置 realtime.messages RLS policy(supabase/realtime/policies.sql):
+// CREATE POLICY private_sync_channel ON realtime.messages
+//   USING (extension = 'postgres_changes'
+//          AND realtime.topic() = 'sync:' || auth.uid());
+//
+// 集成测试:user_B 订阅 sync:<user_A_id> → 必须返回 0 消息
+
+// device_joined 事件(C-D donor 监听)
+channel.on('broadcast', { event: 'device_joined' }, (payload) => {
+  // payload.new = { new_device_id, new_device_pub }
+  syncEngine.grantDekWrapForNewDevice(payload.new_device_id, payload.new_device_pub);
+});
 ```
 
 ---
@@ -421,7 +556,11 @@ supabase.channel(`sync:${accountId}`)
 | `crypto/aes-gcm` | 100% | nonce 唯一性、tag 校验失败、空 / 大 payload 边界 |
 | `crypto/envelope` | 100% | 编码 / 解码 / 损坏输入(invalid v / truncated)不 panic |
 | `crypto/mnemonic` | 100% | BIP-39 标准向量;打字回填校验逻辑 |
-| `sync/engine` | ≥ 80% | mutation 入队、push batch、pull 应用、LWW 决断 |
+| `sync/engine` | ≥ 80% | mutation 入队 + DAG 合并、push batch (proposed_revision=base+1)、pull 应用 (revision rollback 拒收)、conditional write 冲突路径 (FR-SY-71 shadow)、squash 规则 (H-N) |
+| `crypto/aad_cbor` | 100% | 3 条测试向量 Rust+Python+JS 一致 (C-G);恶意输入不 panic |
+| `crypto/ed25519_recovery` | 100% | sign/verify round-trip;message hash 不一致拒收 (C-A) |
+| `crypto/per_device_wrap` | 100% | X25519 sealed_box round-trip;撤销 device 删 wrap → 解密失败 (C-D) |
+| `crypto/nonce_counter` | 100% | checkpoint 预写;backup 回滚检测 (C-C R-10.18) |
 | `sync/outbox` | ≥ 80% | 顺序回放、合并、死信、退避 |
 
 ### 5.2 模糊测试(fuzz)— Phase 5 引入
@@ -430,19 +569,27 @@ supabase.channel(`sync:${accountId}`)
 - `cargo-fuzz` 目标:`decrypt`(任意 envelope + 任意 key → 不 panic)
 - 连续运行 24h 无 crash 才能进 Phase 5 验收(PRD §10.2)
 
-### 5.3 集成测试(Phase 5 重头)
+### 5.3 集成测试(Phase 5 重头,v0.3 重写 — 移除所有 LWW / server clock 表述)
 
 `packages/plugin-account/tests/integration/`:
 - 两个 in-memory SQLite + mock Supabase REST server(用 `msw` 或自建 fake)
 - 场景矩阵:
   1. 同设备多窗口写入(只本地事件,不走 server)
   2. 双设备分别写入不同 entity → 各自 push → 各自 pull → 最终一致
-  3. 双设备同时写同一 entity → LWW,server 时钟为准
-  4. 双设备同时删 + 双设备同时写 → tombstone vs update(FR-SY-24)
-  5. 离线写 200 条 → 上线 outbox flush → 与对端一致
-  6. 离线 + 写 + 服务端被对端先写过 → 上线 outbox flush 被对端覆盖,toast 显示
-  7. 弱网:推一条卡 10s → 重试 → 成功
+  3. **双设备同时写同一 entity → 后到者 base_revision 错 → server 返 409 + loser 入 conflict shadow**(v0.3 H-G / FR-SY-71;原"LWW server 时钟为准"废弃)
+  4. **双设备同时删 + 双设备同时写 → 按 commit_seq 决胜,delete 也是 mutation 无特殊优先级**(v0.3 H-03;原 tombstone-优先废弃)
+  5. 离线写 200 条 → outbox squash 同 entity 多次写 → 上线 flush → 与对端一致(H-N)
+  6. 离线 + 写 + 服务端被对端先写过 → 上线 flush → conflict 走 shadow → toast 提示用户恢复 loser
+  7. 弱网:推一条卡 10s → 重试 → 成功(mutation_id 幂等,server 第二次返回 duplicate_mutation_id)
   8. quota 触限 → 降级到只读
+  9. **v0.3 新:server 调包 blob A→B 位置 → AAD 不一致 → client 解密失败 + audit log + 告警**(C-G FR-SY-67)
+  10. **v0.3 新:server UPDATE 旧 revision → client 拒收 (FR-SY-68) + E3015 告警** (C-E)
+  11. **v0.3 新:撤销 device A → device A 即使再 login(secret_key 仍正确)→ 取不到新 DEK_v_n+1 wrap → 不能解新 blob**(C-D R-10.11)
+  12. **v0.3 新:无 recovery proof signature 直接 PATCH /auth/me → 拒绝 + E3014**(C-A C-B)
+  13. **v0.3 新:client 直接 UPDATE accounts 敏感列(绕过 Edge Function)→ RLS 拒绝**(C-B)
+  14. **v0.3 新:SQLite backup 回滚后 next_counter > checkpoint_high_water → 加密拒绝 + 触发 Re-key**(C-C R-10.18)
+  15. **v0.3 新:Re-key 期间在线写入 → snapshot_commit_seq 之前用 DEK_v_n → 之后用 DEK_v_n+1 → swap 时一致**(FR-SY-13 H-E)
+  16. **v0.3 新:新 device 注册 → donor device 5 分钟未响应 → 进 pending_user_action → 助记词恢复路径** (C-D / §3.4.1)
 
 ### 5.4 E2E(Phase 5 末)
 
@@ -473,14 +620,17 @@ supabase.channel(`sync:${accountId}`)
 
 | ID | 风险 | 等级 | 缓解 | 监控 |
 |---|---|---|---|---|
-| R-10.1 | GCM nonce 复用 | 🔴 高 | OsRng + 单测断言;1M 样本 unique;PR review checklist | unit + fuzz |
+| R-10.1 | GCM nonce 复用 | 🔴 高 | **v0.3**:deterministic nonce = encryption_device_id (server 分配 unique per device,8B) ‖ counter (per device per key,4B + SQLCipher 预写 checkpoint 防 backup 回滚) (C-C);counter 达 2^32 强制 Re-key;单测断言 1M unique | unit + fuzz + backup 回滚演练 |
 | R-10.2 | 主密码丢 = 数据丢 | 🔴 高 | 助记词 + UI 强提示 + 不承诺找回 | 用户教育 |
-| R-10.3 | LWW 时钟偏移丢数据 | 🟡 中 | server 时钟权威;30 天软删;outbox 死信 | sync_audit_log |
+| R-10.3 | 分布式写入冲突丢数据 | 🟡 中 | **v0.3**:commit_seq 权威 + conditional write + conflict shadow 30 天 + DAG 拓扑合并 | sync_audit_log |
 | R-10.4 | RLS 漏洞 | 🟡 中 | 自动测试 + 月度 audit;零知识 fallback | RLS audit |
 | R-10.5 | encrypted_dek 损坏 | 🔴 高 | server backup + 本地 Keychain cache 副本 | server backup |
 | R-10.6 | Re-key 中断 | 🔴 高 | 两阶段提交 + 中断恢复演练 | 演练记录 |
 | R-12 | Supabase 凭据(service_role / JWT)泄漏 | 🟡 中 | 季度轮换 SOP + CI secret 隔离 + GitHub secret scanning | 轮换记录 |
-| R-13 | LWW 算法实现错误导致数据丢失 | 🔴 高 | 单测 LWW 矩阵全覆盖;集成测试场景 1-4;Phase 5 fuzz 一周 | 演练 |
+| R-13 | conditional write 算法实现错误导致数据丢失 | 🔴 高 | **v0.3**:单测 base_revision/proposed_revision 矩阵 + 集成场景 3/4/15 + Phase 5 fuzz 一周 | 演练 |
+| R-19 | per-device wrap 实现复杂度引入 bug | 🟡 中 | TLA+ 模型必含设备撤销与新 device 加入场景;Phase 4.8 准入门;真机 4 演练剧本 | TLA+ + 演练 |
+| R-20 | Ed25519 / X25519 误用(常见:错误 seed 长度/编码) | 🟡 中 | 用 `ed25519-dalek` + `x25519-dalek` rust-crypto 系列;3 条测试向量;wycheproof 测试集 | 单测 + 向量 |
+| R-21 | CBOR canonical encoding 跨实现不一致 | 🟡 中 | Rust + Python + JS 三实现交叉验证;3 条向量入 CI;`ciborium` + `cbor2` + `cbor-x` | CI |
 | R-14 | Supabase RLS 漏配 | 🔴 高 | 每张表 RLS 强制 enable + CI 检查;`SET ROLE authenticated` 自动测试;Phase 0 就上 | CI |
 | R-15 | Supabase Free tier 突然限流 / 改价 | 🟡 中 | data 层抽象 + 协议设计可移植;若需要可迁自建 PG + 自己 Realtime(WebSocket server) | 月度账单 |
 | R-16 | Realtime 在企业代理 / VPN 下失败 | 🟡 中 | fallback 到主动 polling 模式(15s 间隔);UI 显示"Realtime 不可用,正在轮询同步" | Sentry 错误率 |
@@ -498,9 +648,9 @@ Phase 5 完成 → Phase 6 公测 / 上架前,Sync 必须全部满足:
 3. **安全演练通过**:
    - fuzz 24h 无 crash
    - RLS 自动测试 100% 通过
-   - 3 个恢复演练全通(§5.5)
+   - **4 个恢复演练全通**(§5.5,v0.3 含设备撤销 → 强制 Re-key 演练)
    - 凭据轮换 SOP 演练一次
-4. **真机验收**:PRD §10.2 7 条全过
+4. **真机验收**:PRD §10.2 13 条全过(v0.3 含零知识 PoC / SQLite dump PoC / 加密导出 PoC / 设备撤销 re-key 演练 / 调包 / rollback / CBOR 一致 / 协议硬化里程碑准入门)
 5. **可观测**:Sentry 已接 E3xxx 错误码,验证一条上报路径
 6. **文档完备**:
    - `packages/plugin-account/docs/design.md` / `api.md` / `test.md` / `dev_log.md` 四件套就位
@@ -536,5 +686,6 @@ Phase 5 完成 → Phase 6 公测 / 上架前,Sync 必须全部满足:
 |---|---|---|
 | 2026-05-14 | v0.1-DRAFT | 首版:双 Phase 拆解、任务清单 ~50 条、协议契约、测试策略、R-10 子分解 + 新增 R-12~R-18 |
 | 2026-05-15 | **v0.2-DRAFT(协议硬化联动)** | 与 PRD v0.2 联动。主要变更:<br>① **新增 Phase 4.8 协议硬化里程碑(~2 周)**;Phase 5 之前必须完成 AAD / revision / recovery proof / Re-key keyring / TLA+ 模型 / RLS fuzz / Tauri capability allowlist<br>② Phase 0 子阶段 0.3 工日从 5-7 重估为 **10-14**,任务清单从 T-01~T-14 扩到 T-01~T-20<br>③ Phase 5 工日从 3-4 周重估为 **4-5 周**<br>④ **Tauri command 重写**(§4.2):JS 只拿 opaque KeyHandleId,Rust 侧 KeyVault 持有 raw key + 自动组 AAD;capability allowlist 限 plugin-account / core-data<br>⑤ **R-18 supply chain 强化**:cargo vet + sigstore + dependency-review + reproducible build<br>⑥ 恢复演练从 3 次扩到 **4 次**,含设备撤销 → 强制 Re-key 演练(R-10.11);恢复剧本修正(M-06)<br>⑦ 测试策略加 property-based / TLA+ / RLS fuzz / `kill -9` 注入<br>⑧ 验收门 §7 加入"REVIEW-2026-05-15.md Critical + High 全数关闭" |
+| 2026-05-16 | **v0.3-DRAFT(协议硬化第二轮联动)** | 与 PRD v0.3 联动。主要变更:<br>① **TypeScript §4.1 重写**:version→revision/proposedRevision/baseRevision、serverUpdatedAt→commitSeq、deletedAt→softDeleted/hardDeleted;加 PushResultItem 5 status、PullResponse.currentAccountCommitSeq(H-A)、DeviceDekWrap、RecoveryChallenge/RecoveryProofPayload;pullSince 改全局 cursor(H-J)<br>② **Tauri command §4.2 扩展**:加 crypto_derive_device_keypair / crypto_unwrap_dek_for_device / crypto_wrap_dek_for_devices(C-D)、crypto_recovery_keypair_from_dek / crypto_recovery_sign_payload(C-A);auth_password 派生加 secret_key 入参(H-L);AAD 改 CBOR(C-G)<br>③ **Realtime §4.3 加 `config:{private:true}`**(H-I);加 device_joined broadcast(C-D)<br>④ **测试策略 §5.3 重写**:移除所有 LWW / server clock 表述,加 v0.3 8 个新场景<br>⑤ **风险表 §6 加 R-19~R-21**(per-device wrap 复杂度 / Ed25519 X25519 误用 / CBOR encoding 跨实现一致);单测覆盖加 4 个新模块<br>⑥ **GA 数字对齐**:恢复演练 3→4,真机验收 7→13<br>⑦ Phase 0 工日 10-14→**14-18**;Phase 4.8 2 周→**3 周**;Phase 5 4-5 周→**5-6 周** |
 
 — END —
