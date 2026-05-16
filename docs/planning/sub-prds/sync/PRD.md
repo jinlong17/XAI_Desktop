@@ -10,8 +10,8 @@
 | 文档作者 | Claude(subagent) |
 | 创建日期 | 2026-05-14 |
 | 最后更新 | 2026-05-16 |
-| 状态 | v0.4-DRAFT(协议硬化第三轮) |
-| 关联审查 | `docs/planning/sub-prds/sync/REVIEW-2026-05-15.md` v0.2 + v0.3 + v0.4 round 全部 Critical/High 已落实 |
+| 状态 | v0.5-DRAFT(协议硬化第四轮) |
+| 关联审查 | `docs/planning/sub-prds/sync/REVIEW-2026-05-15.md` v0.2~v0.5 round 全部 Critical/High 已落实 |
 
 ---
 
@@ -66,7 +66,7 @@ v0.4 修订:T11 更新为 per-device wrap 真实边界 + 残余风险"已撤销�
 | 攻击者 | 能力 | 后果上限(对我们想保护的资产) | 防护层 |
 |---|---|---|---|
 | **T1. 服务端被攻破 / 拖库(被动)** | 拿到 Supabase Postgres dump + service_role key,但只读 | 最多拿到 encrypted blob + metadata(updated_at / device_id / entity_type)。拿不到任何明文用户数据。**注意**:可对弱口令账号离线 Argon2id 字典攻击 → 由 Secret Key(FR-SY-73)抬高成本至不可行,详见 §3.2 | FR-SY-56~58 零知识承诺 + RLS;FR-SY-73 Secret Key |
-| **T1.1. 恶意服务端 / 拿到 service_role 写权限(主动)** | 可 INSERT / UPDATE / DELETE encrypted_blobs / accounts | **可调包密文**(无 AAD 时)/ **可静默回滚密文**(无 revision 时)/ **可替换 encrypted_dek 让用户数据不可读**(无 recovery proof 时)。v0.2 通过 FR-SY-67(AAD)/ FR-SY-68(revision)/ FR-SY-69(recovery proof)阻断 | FR-SY-67/68/69 |
+| **T1.1. 恶意服务端 / 拿到 service_role 写权限(主动)** | 可 INSERT / UPDATE / DELETE encrypted_blobs / accounts / sync_devices | **可调包密文**(无 AAD 时)/ **可静默回滚密文**(无 revision 时)/ **可替换 encrypted_dek 让用户数据不可读**(无 recovery proof 时)/ **v0.5 新:可伪造 fake pending device(自定义 attacker_pub)诱导真实 donor 自动 grant wrap → 攻击者拿到 DEK 明文**(由 C-A v0.5 用户可验证设备配对阻断,见 §3.4.1)。v0.2~v0.5 通过 FR-SY-67(AAD)/ FR-SY-68(revision)/ FR-SY-69(recovery proof)/ FR-SY-76(donor 必须用户确认 device_pub fingerprint)阻断 | FR-SY-67/68/69/76 |
 | **T2. 中间人(MITM)** | 拿到 HTTPS 流量、可篡改 | TLS 1.3 + cert pinning 阻断;退化场景下仍是 encrypted blob,攻击者看不到明文 | TLS 1.3 + cert pin |
 | **T3. 本机被盗(未解锁)** | 物理拿到用户 Mac、设备锁屏 | macOS Keychain `WhenUnlockedThisDeviceOnly` 保护 refresh_token + KEK 缓存;SQLite 文件由 SQLCipher 加密(FR-SY-74),db_key 由 KEK 派生 → 锁屏状态下取不到 | FR-AC-08 + FR-SY-74 |
 | **T3.5. 拿到 disk image(未启用 FileVault 或冷盘备份泄漏)** | 拿到 SQLite 文件 + Keychain 文件副本(非 live 系统) | 若 FR-SY-74 SQLCipher 已实装,db_key 由 master_password 派生,攻击者必须暴力破解 master_password;Keychain 文件即使拿到也需登录密码解锁 | FR-SY-74 + onboarding 强提示 FileVault |
@@ -216,7 +216,7 @@ v0.4 修订:T11 更新为 per-device wrap 真实边界 + 残余风险"已撤销�
    │ 1. 用户输入 email + master_password
    │
    │ 2. 客户端生成:
-   │    - account_id      = uuidv7()
+   │    - ⚠ v0.5 H-7:account_id 由 Supabase Auth 返回(= auth.users.id),client 不自定
    │    - device_id       = uuidv7()
    │    - kek_salt        = csprng(16)
    │    - secret_key      = csprng(16)                    ← 128-bit,用户必须保存
@@ -247,23 +247,23 @@ v0.4 修订:T11 更新为 per-device wrap 真实边界 + 残余风险"已撤销�
    │
    │ 9. POST /auth/signup
    │   ──────────────────────────────────────────────────→
-   │   { account_id, email, auth_password,
+   │   { email, auth_password,                              ← server 内部走 Supabase Auth 创建 user
    │     kek_salt, kek_kdf_version=1,
-   │     current_key_id=1, current_account_commit_seq=0,
+   │     current_key_id=1,
    │     dek_check, secret_key_check, recovery_signing_pub,
-   │     device: { device_id, device_pub, wrap_v1,
-   │               name="Mac-XXXX"(随机), os, app_version,
-   │               requested_encryption_device_id=null    ← 让 server 分配 (C-C)
+   │     device: { client_device_id, device_pub, wrap_v1,
+   │               name="Mac-XXXX"(随机), os_major, app_version
    │             },
    │     mnemonic_acknowledged_at_client=false }
-   │                                                  Server:
-   │                                                  - INSERT accounts (除 encrypted_dek 字段)
+   │                                                  Server (Edge Function):
+   │                                                  - Supabase Auth 创建 user → 拿 user_id (= auth.uid())
+   │                                                  - INSERT accounts (id = user_id, **不接受 client account_id**, H-7)
    │                                                  - 分配 encryption_device_id (BIGSERIAL,8B)
    │                                                  - INSERT sync_devices (含 device_pub + encryption_device_id)
-   │                                                  - INSERT device_dek_wraps (account_id, device_id, key_id=1, wrap=wrap_v1)
+   │                                                  - INSERT device_dek_wraps
    │                                                  - INSERT account_keyring (key_id=1, status='active', can_retire=false)
    │   ←──────────────────────────────────────────────────
-   │   { access_token, refresh_token, encryption_device_id }
+   │   { account_id, access_token, refresh_token, encryption_device_id }
    │
    │ 10. UI 强制流程(顺序):
    │     a. 展示 24 词助记词;用户必须打字回填某 6 个词 ✅
@@ -341,37 +341,63 @@ v0.4 修订:T11 更新为 per-device wrap 真实边界 + 残余风险"已撤销�
    │ 13. 触发首次全量 pull(since_commit_seq=0)
 ```
 
-#### 3.4.1 已有设备为新 device 生成 wrap(per-device wrap 关键步骤)
+#### 3.4.1 已有设备为新 device 生成 wrap(v0.5 C-A 重写:用户可验证设备配对)
 
-新 device 登录后,需要已有 active device(称为 "donor device")主动为新 device 生成 wrap。流程:
+> ⚠ **v0.5 关键修复 C-A**:原 v0.4 设计"Realtime broadcast device_joined → donor 自动 HPKE_seal(new_device_pub, DEK)"被废弃。**问题**:恶意服务端 / 拿到 service_role 的攻击者可 INSERT 一台 fake pending device(device_pub = 攻击者公钥),然后 broadcast device_joined;真实 donor 自动加密 DEK 给攻击者公钥并上传 wrap → 攻击者用私钥解出 DEK。零知识承诺直接塌。
+>
+> **修复**:donor grant 必须经过**用户可验证的端到端设备配对**(类似 Signal Safety Number / WhatsApp Verify Security Code)。Realtime 仅通知 donor UI 有 pending device,不触发自动 grant;donor 必须手动确认新 device 显示的 fingerprint 匹配。
 
 ```
-[Donor Device A](已登录,在线)                          [Server]
-   │  收到 Realtime "device_joined" 事件
-   │  { new_device_id, new_device_pub }
-   │
-   │  1. 本地解 KEK + 取 DEK_current(从 device_dek_wraps[A.device_id, current_key_id])
-   │  2. wrap_for_new = X25519_encrypt(new_device_pub, DEK_current)
-   │  3. 对账户所有 active key_id(包括 retired-but-still-referenced)重复 step 2
-   │  4. POST /sync/devices/grant_dek_wrap
-   │     { target_device_id, wraps: [{key_id, wrap}, ...] }
+[新 Device B 登录后]                                     [Server]
+   │  1. POST /sync/devices/register
+   │     → server 分配 encryption_device_id,status='pending_dek_wrap'
+   │  2. B 端 UI 显示 device_pub 派生的 fingerprint(两种形式都给):
+   │     - QR 码(包含 device_id + device_pub raw bytes)
+   │     - 6 词验证码 = BIP39_wordlist[SHA256(account_id ‖ device_id ‖ device_pub)[:0,8,16,24,32,40]]
+   │  3. B 进入"等待配对"屏,显示"请在已有设备上确认这台设备"
+
+[Donor Device A] ←── Realtime "device_pending" event (含 new_device_id only) ───
+   │  4. A 端 UI 弹"待确认的新设备"通知;不自动 grant
+   │  5. 用户点开通知 → A 弹出对话框:
+   │     "新设备请求加入。请在新设备上看到的 6 词验证码:
+   │        [_____] [_____] [_____] [_____] [_____] [_____]
+   │      或扫描新设备上的 QR 码"
+   │  6. 用户在 A 上手输 6 词 或 摄像头扫 B 的 QR:
+   │     A 计算 expected_fingerprint = BIP39_wordlist[SHA256(account_id ‖ new_device_id ‖ new_device_pub_from_server)[:...]]
+   │     若与用户输入不一致 → 拒绝 grant + 显示"指纹不匹配,可能是攻击者伪造,请联系支持"
+   │     若一致 → user_confirmed = true
+   │  7. (user_confirmed=true 后)A 本地从 KeyVault 取 DEK_current
+   │  8. wrap_for_new = HPKE_seal(new_device_pub, DEK_current,
+   │                              info=CBOR_canonical(wrap_aad_schema))   ← H-3 HPKE Base mode
+   │  9. 对账户所有 non-retired key_id 重复 step 8
+   │  10. POST /sync/devices/grant_dek_wrap
+   │      { target_device_id, wraps: [{key_id, wrap}, ...],
+   │        user_confirmed: true,                                  ← v0.5 必须 true
+   │        confirmation_proof: SHA256(account_id ‖ new_device_id  ← 用户输入的指纹 hash
+   │                                    ‖ new_device_pub ‖ donor_device_id) }
    │   ──────────────────────────────────────────────→
-   │                                              Server:
-   │                                              - 校验:donor 是 active device
-   │                                              - INSERT device_dek_wraps 多行
-   │                                              - sync_devices.<target>.status = active
-   │                                              - 通过 Realtime 通知新 device:wrap ready
+   │                                              Server (Edge Function):
+   │                                              - 校验 donor active (H-1)
+   │                                              - 校验 target.status = 'pending_dek_wrap'
+   │                                              - SELECT FOR UPDATE target row(H-10)
+   │                                              - **必须 user_confirmed=true,否则 E3026**
+   │                                              - confirmation_proof 计算结果与 server 端
+   │                                                独立算的 SHA256 hash 比对(防 client bug)
+   │                                              - 事务内:INSERT device_dek_wraps + 
+   │                                                UPDATE sync_devices SET status='active'(H-1 唯一路径)
+   │                                              - Realtime 通知 B:wrap ready
 ```
 
 **UX 注意**:
-- 若用户只有一台 device + 想登新 device → 必须保证原 device 在线(typical scenario:用户在两台 Mac 切换)。若原 device 不可用(丢失/坏机),走助记词恢复路径(§3.6,失去历史 key 下的数据,见 C-F)。
-- 时间敏感:Realtime "device_joined" 事件 5 分钟内 donor 未响应 → 新 device 进入 "pending_user_action" 状态,UI 引导用户启动 donor 或走助记词恢复。
-- **设备撤销**:如果 donor device A 之前被撤销但 user 不知道 → A 不应能 grant wrap → server 校验 donor active 状态。
+- 单设备用户想登第二台:必须保留第一台 + 走配对流程。若第一台不可用,走助记词恢复(§3.6)。
+- "device_pending" 通知不会自动激活新设备;用户不点确认或指纹不匹配 → 新设备永远不能解 DEK。
+- 5 分钟未配对 → server cron 自动把 pending device 标 expired,清理后允许新一次注册重试。
+- **设备撤销**:撤销的 donor 不能再 grant(H-1 + RLS + RPC 三层校验)。
 
-**关键变化(vs v0.2)**:
-- 登录路径不再返回 encrypted_dek;dual-factor 在 step 3 由 server bcrypt 自然校验(H-L)。
-- 新 device 需 donor device 协作或助记词恢复;不能"凭空"从 server 取出 DEK。
-- 旧 device 撤销 ⇒ 删 device_dek_wraps 行 + Re-key + 不在新 wrap 中包含撤销 device(C-D)。
+**关键变化(vs v0.4)**:
+- v0.4 自动 grant 被 codex 第四轮审查指出可被 service_role 攻击伪造,v0.5 强制用户验证。
+- 用户体验上多 1 步(确认/扫码),但这是端到端加密产品的必要代价(参考 1Password / Bitwarden / Signal 同样的设备添加确认)。
+- 旧 device 撤销 ⇒ 删 device_dek_wraps 行 + Re-key,旧设备即使重登也无法解新 DEK。
 
 ### 3.5 主密码 / Secret Key 重置(不可恢复路径,FR-AC-03 v0.2 限制)
 
@@ -566,26 +592,26 @@ v0.4 修订:T11 更新为 per-device wrap 真实边界 + 残余风险"已撤销�
 
 | ID | 优先级 | 需求 | 验收标准 | Threat |
 |---|---|---|---|---|
-| FR-SY-07 | P0 | **加密原语 v0.4**:AES-256-GCM + deterministic nonce + **Keychain 不可回滚锚点** | nonce = `encryption_device_id (8B,server 分配,UNIQUE per device 跨账户)‖ counter (4B,per device per key_id)`;**双重 checkpoint(v0.4 C-C)**:counter 同时写 SQLCipher 内 `nonce_counter.next_counter` 与 macOS Keychain `xai.nonce_high_water.<account_id>.<key_id>`(WhenUnlockedThisDeviceOnly,ACL=bundle id);每次加密前 Rust KeyVault 校验 `SQLCipher.next_counter >= Keychain.high_water`,若 `SQLCipher.next_counter < Keychain.high_water`(= SQLCipher 文件被 Time Machine / 旧备份回滚)→ **拒绝加密 + E3021 nonce_rollback_detected + 强制 Re-key**;到 0xFFFFFF00 强制 Re-key;Keychain 项不会进 iCloud Keychain(ThisDeviceOnly),即使 SQLite 备份被恢复也不能回滚锚点;**v2 议题**:迁 AES-GCM-SIV(RFC 8452)消除 nonce-misuse,或 server 端 nonce lease;详 R-10.18 | T1/T2/T13(C-C) |
+| FR-SY-07 | P0 | **加密原语 v0.5**:AES-256-GCM + deterministic nonce + **三端 nonce lease 统一锚点** | nonce = `encryption_device_id (8B server 分配) ‖ counter (4B per device per key_id)`;**v0.5 C-C 改三端统一为 server-side nonce lease**(Keychain 锚点降级为 macOS 端可选补强):client 每次启动 / lease 用尽时 `POST /sync/nonce_lease { key_id, count: N }` → server 在 `nonce_lease` 表 INSERT 一个 `(encryption_device_id, lease_start, lease_end)` 单调递增 lease;client 必须在 lease 范围内用 counter,超出 → `POST` 申请下一段 lease(server 保证 lease 单调,旧 lease 用过的 counter 不会重发);Web 端 / macOS 端走同套机制 → 跨平台一致 nonce 唯一性;**C-B server UNIQUE(account_id, key_id, encryption_device_id, counter) 是最后一道防线**;到 0xFFFFFF00 强制 Re-key;v2 议题:AES-GCM-SIV(R-10.9)消除 nonce-misuse 假设 | T1/T2/T13(C-C v0.5) |
 | FR-SY-08 | P0 | **加密 envelope 格式 v0.3** | `{ v: u8, kdf_v: u8, key_id: u32 LE, encryption_device_id: u64 LE, counter: u32 LE, ciphertext: var, tag: 16B }`;**nonce 不在 envelope 内单独存,由 (encryption_device_id, counter) 拼接计算**,客户端解密时重建;AAD **不存 envelope 内**,由 client 按 §7.1 FR-SY-67 deterministic CBOR 规则即时计算;v=1, kdf_v=1, key_id ≥ 1 | T1(C-C/C-G) |
 | FR-SY-09 | P0 | 解密失败 = 不影响其他 record | 单条 GCM tag 失败:标记该 entity 为 corrupted、记入 sync_audit_log、surface "可疑活动" 告警(可能是 T1.1 调包)、继续处理其他 record;不抛全局 panic | T1.1 |
 | FR-SY-10 | P0 | **内存中 KEK / DEK 显式 zeroize v0.2** | 使用 `zeroize` crate;**用完立即 zeroize**(不依赖 Drop);DEK 仅在 Rust 侧 KeyVault 持有,不允许进 `serde::Serialize` / 不允许跨 JS boundary | T3'/T6/L-06 |
 | FR-SY-11 | P0 | 加密层版本字段 | account row `kek_kdf_version` + blob `v` + `key_id` 三重独立;v2 升级时双写过渡 | 演进 |
 | FR-SY-12 | P0 | 加密 / 解密 benchmark 预算 | 加密单条 1KB record < 0.5ms(P95)/ 解密 < 0.3ms;100 record batch encrypt < 50ms;Web (WASM) 单独基线表 | 性能 |
-| FR-SY-13 | P0 | **Re-key 流程 v0.3(per-device wrap 联动,C-D / C-F)** | 触发:用户主动 / 撤销设备 / counter 达 2^32。三阶段:**(a)** keyring INSERT 新 key_id, status='staging';**(b)** donor device 生成 DEK_v_n+1 → 用所有 **未撤销** active device 的 device_pub 各自 X25519_encrypt → INSERT device_dek_wraps 多行;**(c)** 按 batch 用 DEK_v_n+1 重加密所有 blob 到 `staging_blobs` 表(每条带新 revision + 新 commit_seq + 新 mutation_id,H-E),全部成功后 server 原子 swap `accounts.current_dek_key_id` + 旧 key_id status='retired';**(d)** server cron 校验"旧 key_id 下无 blob / shadow / staging" → 置 `can_retire=true` 才允许 GC retired key 对应 device_dek_wraps 行;Re-key 期间客户端按 envelope.key_id 双读;**Re-key 中并发写入**:client 按 snapshot commit_seq 之前的写 DEK_v_n,之后的写 DEK_v_n+1;`kill -9` 4 点恢复测试 | 应急 / T11(C-D + C-F) |
+| FR-SY-13 | P0 | **Re-key 流程 v0.5(C-D 阻断式新助记词)** | 触发:用户主动 / 撤销设备 / counter 达 2^32。**v0.5 关键新约束(C-D)**:Re-key 不仅生成 DEK_v_n+1,还**必须**同时生成**新 24 词助记词**(BIP39_encode(DEK_v_n+1))+ 新 `recovery_signing_keypair_v_n+1`(从 DEK_v_n+1 派生);UI **阻断式**展示新 24 词 + 强制用户回填某 6 词验证(同首次注册);未确认则 swap 不允许(E3028 rekey_mnemonic_unconfirmed)。完整流程:(a) keyring INSERT 新 key_id, status='staging';(b) donor 生成 DEK_v_n+1 → 用所有未撤销 active device 的 device_pub HPKE_seal → INSERT device_dek_wraps 多行;(c) **UI 阻断**:展示新助记词 + 用户回填 + Ed25519 recovery proof 把新 recovery_signing_pub_v_n+1 PATCH 进 accounts;(d) 按 batch 重加密所有 blob 到 staging_blobs(H-5:保留原 revision);(e) server 原子 swap `accounts.current_dek_key_id` + 旧 key_id status='retired';(f) server cron `can_retire=true` 才 GC 旧 device_dek_wraps;**Re-key 中并发写入**:client 按 snapshot_commit_seq 之前的写 DEK_v_n,之后的写 DEK_v_n+1;UX 强提示用户更新备份("旧 24 词只能恢复 Re-key 前数据;新 24 词请妥善存档") | T11(C-D v0.5) |
 | FR-SY-14 | P0 | 加密原语 fuzz 测试 | 至少 24h fuzz(`cargo-fuzz`);envelope parse / decrypt / AAD 解析在恶意输入下不 panic | T1 |
 | **FR-SY-67** | P0 | **AEAD AAD = Deterministic CBOR(v0.3 重写,C-G)** | 每次加密 AAD 用 RFC 8949 §4.2 deterministic CBOR encoding,integer-keyed map,固定 schema;blob 加密 schema 见 §7.1.2.1(9 字段含 account_id / entity_type / entity_id / proposed_revision / key_id / deleted_flag / schema_version / encryption_device_id);wrap / recovery message AAD schema 见 §7.1.2.2/3;**AAD 不存 envelope 内**,client encrypt/decrypt 都按规则即时计算;原 v0.2 `||` 拼接方案废弃;Rust 用 `ciborium` + canonical writer;集成测试:server 拷 blob A 到 blob B 位置 → 客户端解密失败;测试向量 3 条进 Phase 4.8 准入门 | T1.1(C-G) |
 | **FR-SY-68** | P0 | **单调 revision + 精细 rollback 区分(v0.4 H-6 修订)** | 每实体维护单调 `revision BIGINT`,客户端本地表 `entity_state(entity_id, max_seen_revision, last_blob_hash, last_commit_seq)`;pull 时按 `(entity_id, revision, commit_seq, blob_hash)` 区分:① revision == max_seen AND blob_hash == last_blob_hash → **幂等重复**(忽略);② revision == max_seen AND key_id 改变 AND server commit_seq > local last → **合法 re-encrypt**(Re-key 中);③ revision < max_seen OR (revision == max_seen AND blob_hash != last_blob_hash AND commit_seq < last) → **真 rollback**,拒收 + E3015 告警;原 v0.3 "revision <= max_seen 一律拒收" 会误杀幂等和合法 re-encrypt | T1.1(H-6) |
-| **FR-SY-69** | P0 | **Recovery proof Ed25519(v0.3 重写,C-A)** | 注册时存 `recovery_signing_pub` (32B Ed25519 public key) 在 `accounts` 表;client 端 `recovery_seed = HKDF-Expand(DEK, "xai.recovery.sig.v1")` 还原 keypair;PATCH `/auth/me` 任何敏感字段必须由 Edge Function 处理:`POST /auth/recovery_challenge` → 拿 challenge → client 用 Ed25519 签 `CBOR_canonical({challenge_id, account_id, new_*_hash, ts})` → PATCH 带 message + signature → server `Ed25519_verify(recovery_signing_pub, message, signature)` 通过才执行 service_role UPDATE;原 v0.2 Argon2id+HMAC 双校验方案因服务端无 raw secret 不可验证,被废弃 | T1.1(C-A) |
+| **FR-SY-69** | P0 | **Recovery proof Ed25519(v0.5 强化:每次 Re-key 必更新 recovery_signing_pub)** | 注册时存 `recovery_signing_pub` (32B Ed25519 public key);client 端 `recovery_seed = HKDF-Expand(DEK_current, "xai.recovery.sig.v1")` 还原 keypair;PATCH `/auth/me` 任何敏感字段必须 Edge Function 处理:`POST /auth/recovery_challenge` → 拿 challenge → client 用 Ed25519 签 `CBOR_canonical({1:msg_v, 2:challenge_id, 3:account_id, 4:payload_canonical_hash, 5:ts})`(v0.4 C-E 完整 payload binding,**唯一 schema**,v0.3 字段级 hash schema 废弃);PATCH 带 message + signature → server verify;**v0.5 C-D 联动**:每次 Re-key(FR-SY-13)必须用旧 recovery_signing_priv 签名提交新 recovery_signing_pub_v_n+1,否则 Re-key 不允许 swap | T1.1(C-A v0.5) |
 | **FR-SY-70** | P0 | **导出文件默认加密(v0.3 修订 M-8:含 secret_key)** | `xai-export-<date>.json.age` 用 [age](https://age-encryption.org/) 加密;**key 由 master_password + secret_key 共同派生**:`HKDF(master_password ‖ secret_key, salt="xai.export.v1", info=date) → 32B`(v0.2 只用 master_password 抗字典弱于主数据,M-8 修正);UI 默认加密导出,选明文导出需二次确认 + 红色警告;Markdown 子集同样加密;或可让用户选"生成随机 file key + 单独保存" 模式 | T13(C-10) |
 | **FR-SY-71** | P0 | **冲突 shadow + 完整 AAD metadata(v0.4 C-H 强化)** | server 对每条被 `conditional write` 覆盖的 loser blob 写 `encrypted_blobs_conflict_shadow`,**含完整 AAD context**(key_id / encryption_device_id / counter / revision / deleted_flag / schema_version / blob_size / mutation_id / loser_commit_seq);Console 设置页"同步详情" 展示 + 支持"恢复 loser":client 用 shadow row 重建 CBOR AAD → 解密 loser blob → 让用户决定保留哪份 → 写入新 revision 走 PUSH;30 天 GC;FR-SY-26 配套 | T9(C-H/H-G) |
 | **FR-SY-72** | P0 | **Mutation idempotency(v0.2 新,H-07)** | 每 mutation 带 `mutation_id UUIDv7`(client 生成,持久化在 outbox);server `encrypted_blobs` + `mutation_dedup` 表按 `(account_id, mutation_id)` UNIQUE;重复 mutation_id 返回上次 result(true idempotency),不产生新 revision | 网络抖动 / 重试 |
 | **FR-SY-73** | P0 | **Secret Key 抗字典攻击(v0.2 新,H-14)** | 客户端首次注册生成 128-bit secret_key;Argon2id KEK 派生时作 `secret=` 参数(RFC 9106 §3.1);server 只存 `secret_key_check = HMAC(secret_key, "xai.sk.check.v1")`;UI 强提示打印 / PDF 备份 Emergency Kit;登录新设备必须输入(扫码 / 手输);丢 secret_key 走助记词恢复 | T1(C-01 配套) |
 | **FR-SY-74** | P0 | **本地 SQLite SQLCipher 加密(v0.3 H-K 修正)** | `db_key = HKDF(KEK, "xai.sqlite.v1") → 32B`;SQLCipher 4 默认 **AES-256-CBC + HMAC-SHA512**(不是 AES-256-GCM,原 v0.2 写法错误);用 `PRAGMA key = "x'<32 byte hex>'"`(raw key 模式)避免 PBKDF2 二次派生(因为我们的 db_key 已经是 HKDF 派生的高熵 key);`PRAGMA cipher_compatibility = 4`;db_key 不写盘;Phase 5 验收:disk image dump → SQLite 文件 → 无 master_password 不可读 | T3/T3.5/T13 |
 | **FR-SY-75** | P0 | **DEK + device_priv 常驻 Rust KeyVault(v0.3 扩展,C-06 / C-D)** | DEK 永不出 Rust 进程内 KeyVault;**device_priv 也常驻**(unwrap DEK 时用);JS 只拿 opaque `key_handle: u32`;Tauri command:`crypto_encrypt_for(entity_type, entity_id, proposed_revision, plaintext) -> envelope`(server 端自动查 KeyVault + 组 CBOR AAD,详 §7.1)/ `crypto_unwrap_dek_for_device(wrap_envelope) -> dek_handle` / `crypto_wrap_dek_for_devices(dek_handle, device_pubs[]) -> wraps[]` / `crypto_recovery_sign(challenge, new_payload_hash) -> signature`;Tauri capability allowlist:`crypto_*` 命令只允许 plugin-account / core-data 调 | T6/T10(C-06) |
-| **FR-SY-76** | P0 | **Per-device DEK wrap(v0.4 C-A 重写)** | 每 active device 注册时 client **本地 CSPRNG 独立生成** X25519 device_keypair(device_priv = csprng(32),不从 KEK 派生);device_priv 仅存 macOS Keychain (`xai.devicekey.<account_id>.<device_id>`, WhenUnlockedThisDeviceOnly, ACL=bundle id);device_pub 上传 `sync_devices.device_pub`;`device_dek_wraps` 表存 `(account_id, device_id, key_id) → HPKE_seal(device_pub, DEK_v_key_id, info=CBOR AAD)`(H-3 改 HPKE Base mode RFC 9180);新设备登录必须通过 donor device 协作 grant wrap(`POST /sync/devices/grant_dek_wrap`)或助记词恢复 + 注册新 device_keypair;撤销设备 → DELETE device_dek_wraps + sync_devices.revoked_at + Re-key;**关键安全前提**:旧设备 device_priv 已被 Keychain 隔离 + 撤销 device 删 wrap → 即使旧设备保留 KEK 也无任何 wrap row 可解,新 DEK_v_n+1 完全不可达 | T11(C-A/C-D) |
+| **FR-SY-76** | P0 | **Per-device DEK wrap + 用户可验证设备配对(v0.5 C-A 强化)** | 每 active device 注册时 client **本地 CSPRNG 独立生成** X25519 device_keypair(device_priv = csprng(32));device_priv 仅存 macOS Keychain (`xai.devicekey.<account_id>.<device_id>`, WhenUnlockedThisDeviceOnly, ACL=bundle id);device_pub 上传 `sync_devices.device_pub`;`device_dek_wraps` 表存 `(account_id, device_id, key_id) → HPKE_seal(device_pub, DEK_v_key_id, info=CBOR_canonical(wrap_aad_schema))`(HPKE Base mode RFC 9180,X25519+HKDF-SHA256+AES-GCM);**v0.5 C-A**:donor grant 必须经过**用户可验证的端到端配对**(6 词 fingerprint 或 QR 码),`grant_dek_wrap` RPC 必须收到 `user_confirmed=true + confirmation_proof`,server 端独立计算 fingerprint 并比对;Realtime 仅发"device_pending" 通知 UI,**不触发自动 grant**;详 §3.4.1;新错误码 E3026 user_confirmation_required | T11/T1.1(C-A v0.5) |
 | **FR-SY-77** | P0 | **账户级 commit_seq 单调监测(v0.3 新,H-A 轻量替代 Merkle root)** | accounts.current_account_commit_seq BIGINT;每次任何 mutation commit 都自增;client 本地 sync_state.last_seen_account_commit_seq 持久化;每次 PULL/login 拿到 server 返回 current_account_commit_seq → 校验 `>= last_seen`,若 `<` 则表示**server 试图全账户回滚**,surface 严重告警 + 暂停同步 + 联系用户;不是密码学级 Merkle,但能检测整体回滚;v2 议题:升级为 Merkle root / hash chain | T1.1 |
-| **FR-SY-78** | P0 | **离线 squash + lazy encrypt at flush(v0.4 C-G 重写)** | **outbox 不存预加密 ciphertext**,改存 plaintext payload + 元数据;SQLCipher 已加密整库,plaintext 在本地仍受保护;同 entity 多次编辑:outbox squash 取最新 plaintext + 最新 mutation_id,`base_revision` = 离线前看到的 server revision(不变);**flush 时才加密**:① server `/sync/push` 验证 base_revision == current_revision,② 分配 proposed_revision = base + 1,③ 返回 client(或 client 用本地 base + 1)→ ④ client 用 proposed_revision 即时加密(AAD 绑定正确 revision)→ ⑤ 上传 envelope;原 v0.3 "预加密后改 proposed_revision" 会让 AAD 不一致 → tag fail 静默丢失,被废弃 | 离线 / C-G |
+| **FR-SY-78** | P0 | **离线 squash + lazy encrypt at flush(v0.5 C-F 明确 one-shot push)** | outbox 不存预加密 ciphertext,改存 plaintext payload + 元数据;同 entity 多次编辑取最新 plaintext + 最新 mutation_id;**flush 时 client 单步**:① 从本地 `entity_state` 读 `base_revision = max_seen_revision`;② 计算 `proposed_revision = base_revision + 1`;③ 用 proposed_revision 构造 CBOR AAD;④ 即时加密(nonce 从 nonce_counter 取,counter 必须在 active lease 内 — C-C);⑤ **一次 POST /sync/push** 带完整 envelope + base_revision + proposed_revision;⑥ server 验证 `base_revision == server.current_revision`,通过则 INSERT(`applied_revision = proposed_revision`),失败 → 409 conflict shadow;**禁止两阶段 reservation**(原 v0.4 "server 先返 proposed_revision 再加密" 暗示被废弃 — 与 PUSH 请求形态矛盾且增加竞态) | 离线 / C-F v0.5 |
 
 ### 5.3 增量同步协议(FR-SY-15~21 v0.2 修订)
 
@@ -617,7 +643,7 @@ v0.4 修订:T11 更新为 per-device wrap 真实边界 + 残余风险"已撤销�
 |---|---|---|---|
 | FR-SY-27 | P0 | **Realtime Private Channels + Authorization(v0.3 H-I 强制)** | Supabase Realtime **必须**用 `supabase.channel(name, { config: { private: true } })` 启用 Private Channels + Authorization(`config.private: true` 不是可选);每个 account_id 一个 channel `sync:<account_id>`;`realtime.messages` RLS policy:`USING (extension = 'postgres_changes' AND realtime.topic() = 'sync:' \|\| auth.uid())`;集成测试:user_B 订阅 `sync:<user_A_id>` channel → expect 0 message |
 | FR-SY-28 | P0 | Realtime 消息载荷 | 服务端发的 message 仅含:`{ entity_type, entity_id, commit_seq, originator_device_id }`。**不含 encrypted_blob**(避免误以为 Realtime 通道泄漏数据;blob 仍走 REST pull) |
-| FR-SY-29 | P0 | Realtime 触发 pull | 客户端收到 Realtime msg → 若 `originator_device_id == self` 则忽略;否则 schedule `pull(entity_type, since=local_commit_seq_cursor)` |
+| FR-SY-29 | P0 | **Realtime 触发 pull(v0.5 H-5 改账户级)** | 客户端收到 Realtime msg → 若 `originator_device_id == self` 则忽略;否则 schedule `pull(since_commit_seq = local_account_commit_seq_cursor)`(不带 entity_type,与 v0.4 H-J/H-7 全局 cursor 一致;原"按 entity_type"调用残留废弃) |
 | FR-SY-30 | P0 | Realtime 推送延迟预算 | P95 < 5s(改动落 server → 另一台设备 UI 刷新);P99 < 15s;Realtime 乱序到达由 commit_seq 排序自然处理(P-04) |
 | FR-SY-31 | P0 | **Realtime 重连退避(升 P0)** | WebSocket 断开后指数退避(1s, 2s, 4s, ..., 上限 60s);恢复后自动 catch-up pull;JWT 过期时主动断连重连(L-04) |
 
@@ -710,11 +736,43 @@ v0.4 修订:T11 更新为 per-device wrap 真实边界 + 残余风险"已撤销�
 
 ## 6. 数据模型(服务端 Schema)
 
-### 6.1 Postgres 表(Supabase v0.2)
+### 6.1 Postgres 表(v0.5)
+
+> **v0.5 H-8 重要**:migration 执行顺序必须为 `accounts → sync_devices → account_keyring → device_dek_wraps → encrypted_blobs → encrypted_blobs_conflict_shadow → staging_blobs → nonce_lease → mutation_dedup → device_sync_progress`。`device_dek_wraps` FK 到 `sync_devices` 必须在 `sync_devices` 建表后才能 ALTER 加。下方按部署顺序列出。
+>
+> **v0.5 H-9 commit_seq 可部署 SQL**:
 
 > v0.2 修订摘要:`encrypted_blobs` 加 `revision / key_id / commit_seq / mutation_id` 字段;`accounts` 加 `secret_key_check / dek_check / recovery_proof_hash / current_dek_key_id / encrypted_display_name`;新增 `account_keyring` / `encrypted_blobs_conflict_shadow` / `mutation_dedup` / `device_sync_progress` / `staging_blobs` 表;`entity_type` 改 ENUM。
 
 ```sql
+-- ─── H-9 commit_seq global sequence + 分配 RPC ──────
+CREATE SEQUENCE account_commit_seq_global;                   -- 简化:全租户共享 sequence
+
+CREATE OR REPLACE FUNCTION fn_alloc_commit_seq(p_account_id UUID)
+RETURNS BIGINT
+LANGUAGE plpgsql
+SECURITY DEFINER
+SET search_path = public
+AS $$
+DECLARE
+  v_new_seq BIGINT;
+BEGIN
+  -- 防止单帐户 commit_seq 倒退:在 accounts 行上加 advisory lock
+  PERFORM pg_advisory_xact_lock(hashtext(p_account_id::text));
+  v_new_seq := nextval('account_commit_seq_global');
+  UPDATE accounts
+    SET current_account_commit_seq = v_new_seq
+    WHERE id = p_account_id
+      AND current_account_commit_seq < v_new_seq;
+  IF NOT FOUND THEN
+    RAISE EXCEPTION 'account % not found or commit_seq regression', p_account_id;
+  END IF;
+  RETURN v_new_seq;
+END;
+$$;
+REVOKE ALL ON FUNCTION fn_alloc_commit_seq(UUID) FROM PUBLIC;
+-- 只在 /sync/push Edge Function 内以 service_role 调用,REPEATABLE READ 事务里
+
 -- ─── ENUM ──────────────────────────────────────────
 CREATE TYPE sync_entity_type AS ENUM (
   'settings','grids','grid_items','auto_classify_rules',
@@ -780,23 +838,31 @@ CREATE INDEX idx_dek_wraps_device
 -- ─── 加密 blob 单表(v0.2 大改:加 revision / key_id / commit_seq / mutation_id)──
 CREATE TABLE encrypted_blobs (
   account_id        UUID NOT NULL REFERENCES accounts(id) ON DELETE CASCADE,
-  entity_type       sync_entity_type NOT NULL,               -- v0.2 ENUM
+  entity_type       sync_entity_type NOT NULL,
   entity_id         TEXT NOT NULL,                           -- 客户端生成 uuidv7
-  revision          BIGINT NOT NULL,                         -- v0.2 单调,server 决定(FR-SY-68)
-  key_id            INTEGER NOT NULL,                        -- v0.2 引用 account_keyring(C-07)
-  blob              BYTEA NOT NULL,                          -- 加密 envelope(含 AAD,FR-SY-67)
-  commit_seq        BIGINT NOT NULL,                         -- v0.4 H-4:由全局 sequence account_commit_seq_global 分配
-                                                             -- 通过 SECURITY DEFINER RPC fn_alloc_commit_seq(account_id) 在 REPEATABLE READ 事务内
-                                                             -- 取 nextval('account_commit_seq_global') 并写 encrypted_blobs + accounts.current_account_commit_seq
+  revision          BIGINT NOT NULL,                         -- 单调(FR-SY-68)
+  key_id            INTEGER NOT NULL,                        -- 引用 account_keyring(C-07)
+  -- v0.5 C-B:nonce 字段拆出 envelope,作 server columns 加 UNIQUE 约束
+  encryption_device_id BIGINT NOT NULL,                      -- nonce 高 8B,从 envelope 解析
+  counter           BIGINT NOT NULL,                         -- nonce 低 4B,从 envelope 解析
+  blob              BYTEA NOT NULL,                          -- AES-GCM envelope 完整字节(含 v|kdf|key_id|enc_dev_id|counter|ct|tag)
+  commit_seq        BIGINT NOT NULL,                         -- H-4:由 fn_alloc_commit_seq SECURITY DEFINER RPC 分配
   client_updated_at BIGINT NOT NULL,                         -- ms,仅展示用
   server_updated_at TIMESTAMPTZ NOT NULL DEFAULT now(),      -- 仅审计用
   deleted_at        TIMESTAMPTZ,                             -- tombstone(soft)
-  hard_deleted      BOOLEAN NOT NULL DEFAULT false,          -- v0.2 用户显式硬删(FR-SY-24)
+  hard_deleted      BOOLEAN NOT NULL DEFAULT false,          -- 用户显式硬删(FR-SY-24)
   originator_device_id UUID NOT NULL,
-  mutation_id       UUID NOT NULL,                           -- v0.2 idempotency(FR-SY-72)
+  mutation_id       UUID NOT NULL,                           -- idempotency(FR-SY-72)
   blob_size         INTEGER NOT NULL,                        -- 用于 quota
   PRIMARY KEY (account_id, entity_type, entity_id)
 );
+
+-- v0.5 C-B:nonce 全局唯一性服务端硬约束
+-- 任何 client bug / 恶意插件 / 备份回滚 试图提交同 nonce 两次 → server 直接拒收
+CREATE UNIQUE INDEX uniq_encrypted_blobs_nonce
+  ON encrypted_blobs (account_id, key_id, encryption_device_id, counter)
+  WHERE hard_deleted = false;
+-- 注:hard_deleted=true 的 row 实际已物理清,不参与 UNIQUE
 
 CREATE UNIQUE INDEX idx_blobs_mutation_id
   ON encrypted_blobs (account_id, mutation_id);              -- v0.2 idempotency 唯一索引
@@ -901,7 +967,27 @@ CREATE TABLE sync_devices (
   revoked_at             TIMESTAMPTZ                        -- 撤销 → device_dek_wraps 全删 + 触发 Re-key
 );
 
-CREATE SEQUENCE encryption_device_id_seq START WITH 1;     -- v0.3 全局 unique per device (C-C)
+CREATE SEQUENCE encryption_device_id_seq START WITH 1;     -- 全局 unique per device
+
+-- v0.5 C-C:server 端 nonce lease 表(三端统一 nonce 唯一性)
+CREATE TABLE nonce_lease (
+  id                   BIGSERIAL PRIMARY KEY,
+  account_id           UUID NOT NULL REFERENCES accounts(id) ON DELETE CASCADE,
+  encryption_device_id BIGINT NOT NULL REFERENCES sync_devices(encryption_device_id) ON DELETE CASCADE,
+  key_id               INTEGER NOT NULL,
+  lease_start          BIGINT NOT NULL,                       -- counter 范围(含)
+  lease_end            BIGINT NOT NULL,                       -- counter 范围(含)
+  granted_at           TIMESTAMPTZ NOT NULL DEFAULT now(),
+  -- server 保证同 (account_id, encryption_device_id, key_id) 内 lease_start 严格单调递增
+  -- 新 lease 的 lease_start 必须 > 同 device + key 下所有已 grant lease 的 lease_end
+  CHECK (lease_end >= lease_start)
+);
+CREATE INDEX idx_nonce_lease_lookup
+  ON nonce_lease (account_id, encryption_device_id, key_id, lease_end);
+-- 申请 lease 走 SECURITY DEFINER RPC fn_grant_nonce_lease(account_id, key_id, count):
+--   SELECT FOR UPDATE 锁定该 (account_id, encryption_device_id, key_id) 最大 lease_end
+--   INSERT new lease (lease_start = max_lease_end+1, lease_end = lease_start+count-1)
+--   返回 (lease_start, lease_end)
 
 -- ─── 审计 ──────────────────────────────────────────
 CREATE TABLE sync_audit_log (
@@ -999,12 +1085,25 @@ CREATE POLICY blobs_self_active_read ON encrypted_blobs
 -- ─────────────────────────────────────────────
 -- conflict shadow / staging blobs:H-D 改只读
 -- ─────────────────────────────────────────────
-CREATE POLICY conflict_shadow_self_read ON encrypted_blobs_conflict_shadow
-  FOR SELECT USING (account_id = auth.uid());
+-- v0.5 H-6:conflict_shadow / staging SELECT 加 active device 校验,与 encrypted_blobs 同等
+CREATE POLICY conflict_shadow_self_active_read ON encrypted_blobs_conflict_shadow
+  FOR SELECT USING (
+    account_id = auth.uid()
+    AND (auth.jwt() ->> 'device_id')::uuid IN (
+      SELECT device_id FROM sync_devices
+      WHERE account_id = auth.uid() AND status = 'active' AND revoked_at IS NULL
+    )
+  );
 
-CREATE POLICY staging_blobs_self_read ON staging_blobs
-  FOR SELECT USING (account_id = auth.uid());
--- v0.3 H-D:删除原 FOR ALL policy,写由 Edge Function /sync/rekey/upload_staging 控制
+CREATE POLICY staging_blobs_self_active_read ON staging_blobs
+  FOR SELECT USING (
+    account_id = auth.uid()
+    AND (auth.jwt() ->> 'device_id')::uuid IN (
+      SELECT device_id FROM sync_devices
+      WHERE account_id = auth.uid() AND status = 'active' AND revoked_at IS NULL
+    )
+  );
+-- 写由 Edge Function /sync/rekey/upload_staging 控制
 
 -- ─────────────────────────────────────────────
 -- mutation_dedup / device_sync_progress
@@ -1091,23 +1190,23 @@ CREATE TABLE sync_state (
   last_seen_account_commit_seq INTEGER NOT NULL DEFAULT 0           -- v0.3 H-A 全账户回滚监测
 );
 
--- v0.4 C-C:nonce counter 双重 checkpoint(SQLCipher + Keychain 锚点)
+-- v0.5 C-C:nonce lease(三端统一,server 端唯一权威);本地 sync_state 仅记下一个要用的 counter
 CREATE TABLE nonce_counter (
-  key_id                 INTEGER PRIMARY KEY,
-  next_counter           INTEGER NOT NULL,                              -- 下一个要用的 counter
-  sqlcipher_high_water   INTEGER NOT NULL,                              -- SQLCipher 内 checkpoint(每 1000 次 +1000)
-  CHECK (next_counter <= sqlcipher_high_water)
+  key_id              INTEGER PRIMARY KEY,
+  next_counter        BIGINT NOT NULL,                          -- 下一个要用的 counter(必须在 active lease 范围内)
+  active_lease_end    BIGINT NOT NULL                           -- 当前 lease 上限;next_counter > active_lease_end → 申请新 lease
 );
--- ⚠ v0.4 C-C 额外:macOS Keychain ThisDeviceOnly 存 keychain_high_water_<account_id>_<key_id>
---   每次加密前 KeyVault 必校验 SQLCipher.next_counter >= Keychain.high_water
---   若 SQLCipher.next_counter < Keychain.high_water(= SQLite 被备份回滚)→ 拒绝 + 触发 Re-key
---   Keychain 项不进 iCloud Keychain,本机锚点不会随 Time Machine 一起被回滚
+-- macOS Keychain 可选补强:`xai.nonce_high_water.<account_id>.<key_id>` 双写防 SQLite 备份回滚
+-- Web 端无 Keychain → 完全依赖 server lease + UNIQUE 约束(C-B)
 
--- 实体级 revision 跟踪(v0.2,FR-SY-68 rollback 防护)
+-- v0.5 H-3:entity_state schema 加 last_blob_hash + last_commit_seq,FR-SY-68 区分幂等 / re-encrypt / rollback
 CREATE TABLE entity_state (
-  entity_type        TEXT NOT NULL,
-  entity_id          TEXT NOT NULL,
-  max_seen_revision  INTEGER NOT NULL,
+  entity_type         TEXT NOT NULL,
+  entity_id           TEXT NOT NULL,
+  max_seen_revision   INTEGER NOT NULL,
+  last_blob_hash      BLOB NOT NULL,                         -- SHA-256 of last seen envelope bytes
+  last_commit_seq     INTEGER NOT NULL,                      -- 配合 H-6 rollback 精细区分
+  last_key_id         INTEGER NOT NULL,                      -- 配合区分合法 re-encrypt(key_id 变,revision 不变)
   PRIMARY KEY (entity_type, entity_id)
 );
 
@@ -1190,7 +1289,9 @@ CBOR map(integer keys,按 key 升序):
 
 (注:wrap 用 X25519 sealed_box,本身有 HPKE AEAD 包装;AAD 进 HPKE 的 `info` 参数。)
 
-##### 7.1.2.3 recovery message 签名 AAD(Ed25519 sign over CBOR)
+##### 7.1.2.3 recovery message 签名 AAD(v0.5 C-E:唯一 schema,完整 payload binding)
+
+> ⚠ **v0.5 重要**:原 v0.3 字段级 hash schema(new_kek_salt_hash / new_secret_key_check_hash / new_device_pub_hash / new_encrypted_dek_for_device_hash)**已废弃**。codex 第三轮指出字段级 hash 让 server 可篡改未列入 hash 的字段(如 auth_password)绕过签名。v0.4 起改为绑定整个 new_payload 的 canonical hash。本表为唯一权威 schema。
 
 Ed25519 签的不是 raw bytes,而是 CBOR canonical encode 的 message map:
 
@@ -1199,11 +1300,8 @@ Ed25519 签的不是 raw bytes,而是 CBOR canonical encode 的 message map:
 | 1 | msg_v | uint | 固定 1 |
 | 2 | challenge_id | bstr (16B) | server 返回的 challenge UUID |
 | 3 | account_id | bstr (16B) | |
-| 4 | new_kek_salt_hash | bstr (32B) | SHA-256 of new kek_salt |
-| 5 | new_secret_key_check_hash | bstr (32B) | SHA-256 of new secret_key_check |
-| 6 | new_device_pub_hash | bstr (32B) | (若 PATCH 含 new device) |
-| 7 | new_encrypted_dek_for_device_hash | bstr (32B) | (若 PATCH 含 new device) |
-| 8 | ts | uint | client unix ms |
+| 4 | payload_canonical_hash | bstr (32B) | **SHA256(CBOR_canonical(完整 new_payload))**;Edge Function 收到 PATCH 后用同样 CBOR canonical encode + SHA256 重算,与本字段比对;任何 new_payload 字段被替换/增删都会让 hash 不一致 → 签名校验失败 |
+| 5 | ts | uint | client unix ms |
 
 #### 7.1.3 Canonical encoding 规则(必读)
 
@@ -1369,11 +1467,12 @@ Accept-Version: sync.protocol=1
     }
   ],
   "next_commit_seq": "1234567",
+  "current_account_commit_seq": "1234600",                    // v0.5 H-4:H-A 全账户单调监测必返字段
   "has_more": false
 }
 ```
 
-**客户端处理**:对每条 record 校验 `revision > entity_state.max_seen_revision`(FR-SY-68),否则拒收并 surface "可疑活动" 告警(T1.1)。
+**客户端处理**:① 对每条 record 按 H-6 区分 (entity_id, revision, commit_seq, blob_hash):幂等忽略 / 合法 re-encrypt 更新 entity_state.last_key_id / 真 rollback 拒收 + E3015 告警(FR-SY-68);② 校验 `current_account_commit_seq >= sync_state.last_seen_account_commit_seq`,否则 E3024 全账户回滚告警(FR-SY-77)。
 
 ### 7.5 Realtime 消息(v0.2 修订:commit_seq + Private Channels)
 
@@ -1399,7 +1498,7 @@ Accept-Version: sync.protocol=1
 | E3003 | sync pull failed |
 | E3004 | encryption envelope corrupt(GCM tag failed) |
 | E3005 | KEK derivation failed |
-| E3006 | DEK decryption failed (= 密码错或 encrypted_dek 损坏) |
+| E3006 | DEK unwrap failed (= 密码错 / secret_key 错 / device_dek_wraps row 损坏) |
 | E3007 | mnemonic verify failed |
 | E3008 | rate limited (429) |
 | E3009 | quota exceeded |
@@ -1419,6 +1518,11 @@ Accept-Version: sync.protocol=1
 | E3023 | **device wrap missing (v0.4)** — `device_dek_wraps[device_id, key_id]` 不存在,需 donor 协作或助记词恢复 |
 | E3024 | **account_commit_seq rollback (v0.4 FR-SY-77)** — server 返回的 current_account_commit_seq < local last_seen → 严重告警,暂停同步 |
 | E3025 | **CBOR non-canonical (v0.4 C-G)** — AAD CBOR encoding 不符合 RFC 8949 §4.2 deterministic 规则 |
+| E3026 | **user_confirmation_required (v0.5 C-A)** — donor grant_dek_wrap 缺 user_confirmed=true / confirmation_proof 不匹配 → 拒收 |
+| E3027 | **nonce_reuse_detected (v0.5 C-B)** — encrypted_blobs UNIQUE(account_id, key_id, encryption_device_id, counter) 违反 → 拒收 + 严重告警(可能 client bug 或恶意提交) |
+| E3028 | **rekey_mnemonic_unconfirmed (v0.5 C-D)** — Re-key 未完成阻断式新助记词 + 新 recovery_signing_pub UI 回填确认 → 拒绝 swap |
+| E3029 | **nonce_lease_exhausted (v0.5 C-C)** — Web 端 nonce lease 用尽,需重新申请 |
+| E3030 | **nonce_lease_not_owned (v0.5 C-C)** — counter 不在已分配的 lease 范围内 → 拒收 |
 | E3099 | unknown sync error |
 
 ### 7.7 版本协商(v0.3 修订,L-4:协议版本与文档版本分开)
@@ -1545,6 +1649,10 @@ Accept-Version: sync.protocol=1
 | R-10.19 | **v0.3 device key 由 KEK 派生根本性缺陷(v0.4 C-A 修复)** | 🔴 高 | v0.4:device_priv 由本地 CSPRNG 独立生成,仅存 Keychain;旧设备无法算出新设备 device_priv;新设备必须 donor 协作或助记词恢复 | TLA+ 模型必含 device 撤销 / 新设备加入场景 |
 | R-10.20 | **conflict shadow AAD rebuild 失败导致 loser 不可恢复(v0.4 C-H 修复)** | 🟡 中 | shadow 存完整 AAD context(key_id/encryption_device_id/counter/revision/deleted_flag/schema_version/blob_size/mutation_id);loser 恢复时重建 AAD;Phase 5 演练:30 天后恢复 loser 必须可解 | 单测 + 演练 |
 | R-10.21 | **outbox plaintext 在 SQLCipher 被回滚 + Keychain 锁定时的残余风险(v0.4 C-G)** | 🟢 低 | SQLCipher 整库加密 + Keychain WhenUnlocked,设备锁屏拿不到;Time Machine 回滚 SQLite 后 outbox 内 plaintext 即使被读也无 KEK 解;Re-key 拒绝加密保证不会用错 revision 上传 | 文档说明 |
+| R-10.22 | **v0.4 donor 自动 grant 被恶意服务端伪造攻击**(已 v0.5 C-A 修) | 🔴 高 | v0.5:donor grant 必须用户可验证(6 词 fingerprint / QR);Realtime 仅通知 UI 不触发自动 grant;Edge Function 强制校验 user_confirmed=true + confirmation_proof | Phase 4.8 TLA+ 含伪造设备攻击场景 |
+| R-10.23 | **nonce 服务端约束缺失**(已 v0.5 C-B 修) | 🔴 高 | v0.5:encrypted_blobs 拆 encryption_device_id + counter 字段,UNIQUE(account_id, key_id, encryption_device_id, counter);server 校验 envelope.enc_dev_id 与 JWT.device_id 对应一致 | 集成测试:同 nonce 二次提交 → 拒收 E3027 |
+| R-10.24 | **Web 端 nonce 备份回滚**(已 v0.5 C-C 修) | 🟡 中 | v0.5:三端统一 server nonce lease;Web 端无 Keychain → 完全靠 lease + UNIQUE;macOS 端 lease + Keychain 双重 | Phase 5 演练:Web profile 还原 → 加密拒绝 |
+| R-10.25 | **Re-key 让旧助记词失效**(已 v0.5 C-D 修) | 🟡 中 | v0.5:Re-key 阻断式生成新 24 词 + 新 recovery_signing_pub,UI 强制回填确认;未确认禁止 swap;onboarding/console 强提示更新备份 | Phase 5 演练:Re-key 后用旧助记词恢复 → 失败,用新助记词 → 成功 |
 
 ---
 
@@ -1566,7 +1674,7 @@ Accept-Version: sync.protocol=1
 
 ### 12.3 v2 长线议题
 - [ ] **C-08 / R-10.9**:迁 AES-GCM-SIV(RFC 8452)消除 Invisible Salamanders 风险
-- [ ] **C-01 v2**:迁 OPAQUE PAKE(RFC 9807)实现真正零知识口令认证
+- [ ] **C-01 v2**:迁 OPAQUE PAKE(IETF CFRG draft,截至 2026-05 未成为 RFC,L-1 修正)实现真正零知识口令认证
 - [ ] **C-03 v2**:账户级 Merkle root / hash chain,防御"恶意服务端伪造合法 revision 但篡改 commit 时间序"
 - [ ] iOS 客户端的 KEK 派生参数差异(若未来做 iOS,Argon2id 在低端机器可能太重)
 - [ ] Realtime 在网页版的 fallback:若 WebSocket 被企业代理拦截 → 退化为 long polling(SSE)
@@ -1579,6 +1687,7 @@ Accept-Version: sync.protocol=1
 | 日期 | 版本 | 变更 |
 |---|---|---|
 | 2026-05-14 | v0.1-DRAFT | 首版:目标 / 威胁模型 / 密钥层级 / 同步范围矩阵 / 41 条新 FR / 服务端 schema / 协议规格 / R-10 子分解 |
+| 2026-05-16 | **v0.5-DRAFT(协议硬化第四轮,修复 v0.4 新发现 Critical)** | 基于第四轮 codex 审查 6 Critical + 12 High 全部落实。**致命修复**:① **C-A donor 自动 grant → 用户可验证设备配对**:v0.4 Realtime broadcast 触发 donor 自动 HPKE_seal 给 server 提供的 new_device_pub,恶意 service_role 可 INSERT fake pending device + 攻击者公钥让真实 donor 把 DEK 包给攻击者;v0.5 改 §3.4.1 为用户可验证 6 词 fingerprint / QR 配对(Signal Safety Number 风格),Edge Function /sync/devices/grant_dek_wrap 强制 user_confirmed=true + confirmation_proof,Realtime 仅通知 UI 不触发自动 grant;② **C-B nonce 服务端硬约束**:envelope 内 encryption_device_id / counter 拆为 server columns,UNIQUE(account_id, key_id, encryption_device_id, counter);server 校验 envelope.enc_dev_id 与 JWT.device_id 对应一致;违反 → E3027 nonce_reuse_detected;③ **C-C 三端统一 server nonce lease**:Keychain ThisDeviceOnly 锚点只覆盖 macOS;Web IndexedDB 可被浏览器 profile 恢复旧快照;v0.5 改三端统一 server-side nonce lease,新表 nonce_lease + RPC fn_grant_nonce_lease;macOS 可选 Keychain 锚点补强;④ **C-D Re-key 阻断式新助记词 + 更新 recovery_signing_pub**:v0.4 Re-key 让旧 24 词助记词只能恢复 DEK_v1,recovery_seed 也基于 DEK_current 失效;v0.5 强制 Re-key 流程生成新 24 词 + 新 recovery_signing_keypair_v_n+1,UI 阻断式回填 6 词验证,未确认禁止 swap → E3028;⑤ **C-E Recovery message 唯一 schema**:删 §7.1.2.3 字段级 new_*_hash schema(让 server 可篡改未列字段),唯一 schema 改为 {1:msg_v, 2:challenge_id, 3:account_id, 4:payload_canonical_hash, 5:ts};⑥ **C-F lazy encrypt 明示 one-shot push**:删除"server 先返 proposed_revision 再加密" 两阶段暗示,改 client 本地 base+1 → 即时加密 → 一次 push;server 验 base_revision == current。**High 12 条**:H-1 pending→active 唯一事务路径;H-2 HPKE 替代 sealed_box;H-3 entity_state schema 加 last_blob_hash + last_commit_seq + last_key_id;H-4 PullResponse 加 currentAccountCommitSeq;H-5 Realtime 触发 pull 改全局 cursor;H-6 conflict_shadow + staging SELECT 加 active device;H-7 注册 account_id = auth.users.id;H-8 DDL 部署顺序明示;H-9 commit_seq SECURITY DEFINER RPC fn_alloc_commit_seq 可部署 SQL;H-11 TypeScript BIGINT 统一 string;H-12 TECH §2.4 旧 rollback / sealed_box 清理。**Medium/Low**:OPAQUE 引用统一 draft;同步范围矩阵 accounts 字段对齐;父 PRD §5.9 指针 v0.5。**R-10 新增** R-10.22~R-10.25。**新错误码** E3026-E3030。**Phase 0 工日** 16-22 → **18-24**;**Phase 5** 5-6 周 → **6-7 周**。**Open(v2)**:OPAQUE PAKE;helmet seed(与 per-device wrap 权衡);AES-GCM-SIV;Merkle root 替代 account_commit_seq 单调监测(不防 equivocation 显式声明) |
 | 2026-05-16 | **v0.4-DRAFT(协议硬化第三轮,修复 v0.3 致命缺陷)** | 基于第三轮 codex 审查 Critical + High 全部落实。**致命修复**:① **C-A device key 由 KEK 派生 → 本地 CSPRNG**:v0.3 用 `HKDF-Expand(KEK, "xai.devicekey.v1")` 让旧设备能算新设备 device_priv,per-device wrap 整套安全前提塌;v0.4 改 `device_priv = csprng(32)` 仅存 Keychain;② **C-B RLS device_dek_wraps SELECT 限自身 active device**;encrypted_blobs SELECT 加 status='active' 校验;pending device 不能读 wrap/blobs;③ **C-C nonce 双重锚点**:Keychain ThisDeviceOnly high_water + SQLCipher next_counter 双写;Time Machine 回滚 SQLite 后 Keychain 未变 → 加密拒绝 + E3021;④ **C-D encrypted_blobs 客户端只读**:删除 RLS write policy,所有写入走 /sync/push Edge Function service_role;⑤ **C-E Recovery 签名绑定完整 payload**:message 含 `SHA256(CBOR_canonical(new_payload))` 而非字段级 hash,防 server 篡改未列入 hash 字段;⑥ **C-F 助记词恢复修正**:auth_password' 必含 secret_key(与注册一致);encryption_device_id 由 server 分配 client 不传;⑦ **C-G outbox lazy encrypt**:outbox 改存 plaintext + 元数据(SQLCipher 已加密本表),flush 时即时加密用正确 proposed_revision,避免 squash 让 AAD 与 revision 不一致 → tag fail;⑧ **C-H conflict shadow 完整 AAD metadata**:加 key_id/encryption_device_id/counter/revision/deleted_flag/schema_version/blob_size/mutation_id/loser_commit_seq,30 天后 loser 可重建 AAD 解密。**High 11 条**:H-2 §3.2 auth_password 表必含 secret_key;H-3 X25519 wrap 改 HPKE Base mode (RFC 9180);H-4 commit_seq BIGSERIAL + SECURITY DEFINER RPC fn_alloc_commit_seq;H-5 Re-key staging 不改 entity revision 只换 key + rekey_session_order;H-6 revision rollback 改 `(entity_id, revision, commit_seq, blob_hash)` 区分幂等 vs re-encrypt vs 真 rollback;H-7 PULL 改账户级全局 cursor (PullRecord 含 entity_type);H-8 BIGINT 改 string (JSON number 精度不够);H-9 crypto_encrypt_for 不接 encryption_device_id (Rust 从 device state 读);H-10 device_dek_wraps FK to sync_devices + grant RPC SELECT FOR UPDATE;H-11 REST 协议示例清 v0.2 残留 (server 分配 revision / batch atomic)。**Medium/Low**:CBOR 测试向量改真实向量;OPAQUE 引用统一 draft;Realtime topic 加 device claim;错误码补 E3021-E3025;同步范围矩阵 accounts 字段对齐;父 PRD §5.9 标题升 v0.3/v0.4。**R-10 子风险扩展**:R-10.18 强化为高 + Keychain 锚点;R-10.19 device key 派生缺陷(已修);R-10.20 shadow AAD rebuild;R-10.21 outbox plaintext 残余风险。**协议正确性**:Phase 4.8 TLA+ 模型升级为前置阻断,最低必含 6 场景。**Open(v2)**:OPAQUE PAKE;helmet seed;AES-GCM-SIV;Merkle root(account_commit_seq 不是密码学完整性,只防粗暴回滚)|
 | 2026-05-16 | **v0.3-DRAFT(协议硬化第二轮)** | 基于第二轮 codex 审查(REVIEW-2026-05-15.md v0.3 round)Critical + High 全部落实。**核心改动**:<br>**密钥协议**:① Recovery proof 改 Ed25519 签名(C-A,原 Argon2id+HMAC 双校验协议矛盾废弃);② Per-device DEK wrap(C-D):DEK 不再用 KEK 直接包装,改用每 active device 的 X25519 device_pub 包装存 `device_dek_wraps` 表;撤销 device 删该行 + Re-key,真正排除旧设备;③ auth_password 派生加 secret_key(H-L)实现真正 dual-factor 登录;④ GCM nonce = encryption_device_id (8B server 分配) ‖ counter (4B + checkpoint 预写)(C-C);⑤ proposed_revision = base + 1 由 client 提交 server 不重写(C-E)<br>**AAD canonical**:⑥ AAD 改 deterministic CBOR (RFC 8949 §4.2,C-G);3 条测试向量进 Phase 4.8 准入门;AAD 不再存 envelope 内<br>**Schema**:⑦ 新表 `device_dek_wraps`(C-D)+ `nonce_counter` (C-C);accounts 移除 `encrypted_dek` + `recovery_proof_hash`,加 `recovery_signing_pub` (32B Ed25519) + `current_account_commit_seq` (H-A);sync_devices 加 `device_pub` + `encryption_device_id` + `status`;account_keyring 加 `can_retire` (C-F);staging_blobs 加 revision/commit_seq/source_mutation_id 等 (H-E)<br>**RLS**:⑧ accounts client UPDATE 撤销(C-B);所有 RLS WITH CHECK 加 originator_device_id = JWT.device_id(H-C);SELECT 也校验 device 未撤销(H-B);staging_blobs 改只读(H-D);device_dek_wraps 写由 Edge Function service_role<br>**协议**:⑨ PUSH 改 per-record + 207 partial response(H-F);batch atomic 废弃;⑩ PULL cursor 改账户级全局 commit_seq(H-J);⑪ Realtime 必须 `config:{private:true}` (H-I);⑫ mutation_dedup GC 7d → 90d (H-H);⑬ FR-SY-71 conflict shadow 升 P0 (H-G);⑭ 离线 squash 规则 FR-SY-78 (H-N)<br>**本地**:⑮ SQLCipher 改 AES-256-CBC + HMAC-SHA512 (SQLCipher 4 默认,H-K);⑯ Web IndexedDB 字段级 AES-GCM via WebCrypto<br>**其他**:⑰ 同步默认显式确认 (M-5);⑱ age 导出 key 含 secret_key (M-8);⑲ Sentry device_id 改 hash (M-2);⑳ sync.v1 → sync.protocol=1 (L-4);㉑ R-10 子风险扩到 R-10.18;㉒ FR 计数对齐到 ~81 条<br>**协议正确性**:Phase 4.8 TLA+ 模型升级为阻断准入项,必含设备撤销 / 新 device 加入 / Re-key 并发 / 离线重放 / 全量恢复 / 重复 mutation 6 场景<br>**Open**:OPAQUE 引用改 draft (L-1);Helmet seed (helmet-style root) v2 议题 (C-F 限制说明);AES-GCM-SIV v2 (R-10.9) |
 | 2026-05-15 | **v0.2-DRAFT(协议硬化第一轮)** | 基于第一轮审查 `REVIEW-2026-05-15.md` Critical + High 全面落实。主要变更:<br>**密钥**:① master_password 与 auth_password 完全分离(C-01);② 24 词 BIP-39 编码 256-bit DEK(C-05);③ 客户端 Secret Key 抗字典攻击(FR-SY-73 / H-14);④ Recovery proof 阻断恶意 PATCH(C-04 / FR-SY-69)<br>**加密原语**:① AAD 必须绑定 entity 语境(C-02 / FR-SY-67);② Deterministic nonce(H-01);③ Envelope 加 `key_id`(C-07);④ Re-key 两阶段 + keyring(FR-SY-13 升 P0);⑤ DEK 常驻 Rust KeyVault,JS 只拿 opaque handle(C-06 / FR-SY-75)<br>**协议**:① Conditional write + base_revision(H-05);② Mutation_id 全局 idempotency(H-07 / FR-SY-72);③ commit_seq BIGSERIAL 替代 timestamp 作权威排序与 cursor(H-02/H-04);④ delete 不再有特殊优先级,按 commit_seq 决胜(H-03);⑤ Outbox 按依赖 DAG 合并(H-06);⑥ 冲突 shadow 30 天保留(FR-SY-71);⑦ Realtime Private Channels + Authorization 强制(H-09)<br>**本地存储**:① SQLCipher 加密本地 SQLite(C-09 / FR-SY-74);② 导出文件默认 age 加密(C-10 / FR-SY-70);③ outbox 与 entity 写入同事务原子性(M-12)<br>**多设备**:① 设备撤销强制 Re-key(H-11 / FR-AC-14 升 P0);② RLS 加 device 校验(H-08);③ JWT embed device_id claim<br>**Schema**:① 新增 `account_keyring` / `mutation_dedup` / `encrypted_blobs_conflict_shadow` / `staging_blobs` / `device_sync_progress` 5 张表;② accounts 加 `secret_key_check / dek_check / recovery_proof_hash / current_dek_key_id`;③ encrypted_blobs 加 `revision / key_id / commit_seq / mutation_id`;④ `entity_type` 改 ENUM(M-09)<br>**威胁模型**:新增 T1.1 / T3.5 / T10~T13;补"防 vs 不防"边界(L-01);R-10 子风险扩展到 R-10.13<br>**验收**:新增 §10.x 协议硬化里程碑准入门;Phase 5 验收加零知识 PoC / SQLite dump PoC / 导出文件加密验证<br>**Open**:Invisible Salamanders(R-10.9)v1 不防护,v2 评估 AES-GCM-SIV;OPAQUE 为 C-01 的 v2 升级路径 |

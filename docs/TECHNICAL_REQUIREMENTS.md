@@ -171,11 +171,11 @@ encrypted_blob
 
 #### 2.1.2 加密算法(v0.2)
 
-- 对称加密:**AES-256-GCM** with **AAD = deterministic CBOR**(详见 sync PRD FR-SY-67 / §7.1.2,RFC 8949 §4.2);nonce = `encryption_device_id (8B,server 分配,unique per device) ‖ counter (4B,per device per key_id)`,counter 在 SQLCipher 预写 checkpoint 防 backup 回滚;到 2^32 强制 Re-key
+- 对称加密:**AES-256-GCM** with **AAD = deterministic CBOR**(详见 sync PRD FR-SY-67 / §7.1.2,RFC 8949 §4.2);nonce = `encryption_device_id (8B,server 分配,unique per device) ‖ counter (4B,per device per key_id)`;**三端统一 server nonce lease**(sync PRD §6.1 nonce_lease 表 + C-C v0.5)保证 counter 不回滚;server 端 `UNIQUE(account_id, key_id, encryption_device_id, counter)` 硬约束作最后防线(C-B);到 2^32 强制 Re-key
 - 文件指纹:**HMAC-SHA256(DEK, file)**(防跨账号关联)
 - 哈希:**SHA-256** + **HMAC-SHA256**(派生 dek_check / secret_key_check 等)
 - 签名:**Ed25519**(recovery proof,sync PRD FR-SY-69 / §3.5)
-- 密钥交换:**X25519 sealed_box / HPKE**(per-device DEK wrap,sync PRD FR-SY-76 / C-D)
+- 密钥交换:**X25519 + HPKE Base mode (RFC 9180)**(per-device DEK wrap,info 绑定 wrap AAD schema;sealed_box 表述已废弃,FR-SY-76)
 - 密钥派生:**Argon2id**(KEK 强参数 + auth_password 弱参数,**dual-factor:auth_password 必含 secret_key**)+ **HKDF-SHA256**(子密钥 / db_key / device_seed / recovery_seed)
 - 助记词:**BIP-39 24 词**(256-bit + 8-bit checksum)
 - 本地 SQLite 加密:**SQLCipher 4**(AES-256-CBC + HMAC-SHA512,默认模式;**不是 AES-GCM**)
@@ -234,15 +234,15 @@ DMG 完整版不启用沙箱,但仍走 hardened runtime + notarization。
 
 引导文案:每次都解释"为什么需要"+ 关闭后哪些功能不可用 + 用户可以拒绝(降级路径)。
 
-### 2.4 E2E 加密同步协议(v0.4 简版,完整规格见 `sub-prds/sync/PRD.md` v0.4-DRAFT)
+### 2.4 E2E 加密同步协议(v0.5 简版,完整规格见 `sub-prds/sync/PRD.md` v0.5-DRAFT)
 
-1. **首次注册**:客户端生成 DEK + Secret Key + 24 词助记词 + **device_priv CSPRNG** → 派生 KEK 含 Secret Key → device_pub 上传 `sync_devices.device_pub` → `wrap_v1 = HPKE_seal(device_pub, DEK_v1)` 写 `device_dek_wraps` → 上传 `secret_key_check` + `dek_check` + `recovery_signing_pub` (Ed25519 32B) → server 分配 encryption_device_id → 走 Supabase Auth (auth_password = Argon2id(HKDF(master ‖ secret_key, ...)))
-2. **新设备登录**:邮箱 + master_password + secret_key → auth_password 双因子 → POST /auth/login → device 注册新 device_keypair (本地 CSPRNG,与现有设备无关) → 必须 donor device 协作 grant wrap **或** 助记词恢复 → 拿到 wrap → X25519_decrypt 得 DEK
-3. **数据同步**:client 提交 `proposed_revision = base + 1`,server 验证不重写;**encrypted_blobs 客户端只读**,所有写入走 /sync/push Edge Function(service_role);CBOR deterministic AAD 即时计算不存 envelope
-4. **冲突**:commit_seq 全局账户级权威排序 + conditional write;**loser 完整 AAD context 入 conflict_shadow** 30 天可恢复
-5. **设备撤销**:DELETE device_dek_wraps + revoked_at + 触发 Re-key 生成 DEK_v_n+1 → 用未撤销 active device pub 重新分发 → 旧设备即使再登录也无新 DEK_v_n+1 wrap → 无法解新 blob
-6. **PATCH /auth/me**:必须 Ed25519 签名,签名 message 含 `SHA256(CBOR_canonical(完整 new_payload))`,防字段篡改
-7. **服务端零知识**:Supabase 后端永远不见 KEK / DEK / master_password / secret_key / device_priv / recovery_seed 明文
+1. **首次注册**:client 生成 DEK + Secret Key + 24 词助记词 + device_priv (本地 CSPRNG) → 派生 KEK(含 Secret Key)→ device_pub 上传 → wrap_v1 = HPKE_seal(device_pub, DEK_v1) 写 device_dek_wraps → server 分配 encryption_device_id → Supabase Auth 创建 user (account_id = auth.users.id,**client 不自定 account_id**)
+2. **新设备登录**:client 本地 CSPRNG 生成新 device_keypair → 注册 status='pending_dek_wrap' → **必须经过用户可验证设备配对**(6 词 fingerprint / QR 扫码,Signal Safety Number 风格)→ donor 确认匹配后才 grant_dek_wrap → status='active' → 拿到 wrap → HPKE_open 解出 DEK
+3. **数据同步**:client 本地计算 base+1 = proposed_revision → 即时 CBOR AAD 加密 → **一次 push**(/sync/push 走 Edge Function);server 端 UNIQUE(account_id, key_id, encryption_device_id, counter) 硬约束 + 校验 envelope.enc_dev_id 与 JWT.device_id 一致;**encrypted_blobs 客户端只读**
+4. **冲突**:commit_seq 全局账户级 + conditional write;loser 完整 AAD context 入 conflict_shadow 30 天
+5. **设备撤销**:DELETE device_dek_wraps + revoked_at → Re-key 生成 DEK_v_n+1 + **新 24 词 + 新 recovery_signing_pub**(UI 阻断式回填确认);旧 device 即使重登也无新 wrap
+6. **PATCH /auth/me**:Ed25519 签名 message 绑定 `SHA256(CBOR_canonical(完整 new_payload))`(唯一 schema,字段级 hash 已废弃)
+7. **服务端零知识**:Supabase 后端永远不见 KEK / DEK / master_password / secret_key / device_priv / recovery_seed 明文;**account_commit_seq 只防粗暴回滚不防 equivocation,v2 评估 Merkle root**
 6. **回滚 / 调包防护**:每实体单调 revision 写入 AAD;客户端拒收 `revision <= max_seen`;集成测试覆盖恶意 server 拷贝 blob 场景
 7. **恢复防护**:PATCH `/auth/me` 必须附 recovery proof(`HMAC(HKDF(DEK, "xai.recovery.proof.v1"), challenge ‖ ...)`),server Argon2id 校验
 8. **设备撤销**:撤销 device + revoke refresh_token + **强制 Re-key**(生成 DEK_v2 + 双读 + 原子 swap)
