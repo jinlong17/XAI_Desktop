@@ -120,46 +120,54 @@
 
 ## 2. 安全 / 隐私实现
 
-### 2.1 密钥与加密(v0.2 与 `sub-prds/sync/PRD.md` v0.2-DRAFT 对齐)
+### 2.1 密钥与加密(v0.4 与 `sub-prds/sync/PRD.md` v0.4-DRAFT 对齐)
 
-> 完整协议见 `sub-prds/sync/PRD.md` §3 / §5.2 / §7.1。本节只保留全局红线。
+> **本节只保留全局不变量**;完整协议(per-device wrap / Ed25519 recovery / CBOR AAD / 6 个 Critical 修复 / 11 个 High)是 `sub-prds/sync/PRD.md` v0.4-DRAFT 的内容,**Sync PRD 是协议唯一 source of truth**;本节如与 Sync PRD 冲突,以 Sync PRD 为准。
 
-#### 2.1.1 密钥层级(v0.2)
+#### 2.1.1 密钥层级(v0.4)
 
 ```
-用户主密码 master_password (永不出本机)
-Secret Key   secret_key   (客户端首次注册生成 128-bit,用户必须保存;永不发服务端)
-        │       │
-        │       └──── 作为 Argon2id secret 参数(抗离线字典攻击,1Password 风格)
-        ▼
-KEK 32B  = Argon2id(master_password, salt=kek_salt, secret=secret_key, t=3,m=64MiB,p=4)
+master_password (永不出本机) + secret_key 128-bit (客户端生成,Emergency Kit 备份)
         │
-        │  ┌─ 加密 encrypted_dek (含 AAD = account_id||"dek_wrap"||key_id||kek_kdf_version)
-        │  │
-        │  ├─ 派生 SQLite db_key = HKDF(KEK, "xai.sqlite.v1")  → SQLCipher
-        │  │
-        ▼  ▼
-DEK 32B  ←── 服务端拉 encrypted_dek + keyring,本地解密
-        │     (DEK 常驻 Rust 侧 KeyVault,JS 只拿 opaque key_handle)
+        ├── KEK = Argon2id(master_password, salt=kek_salt, secret=secret_key, t=3,m=64MiB,p=4)
+        │     ├── SQLite db_key = HKDF(KEK, "xai.sqlite.v1") → SQLCipher 4 整库加密
+        │     └── KEK 仅缓存 macOS Keychain (WhenUnlockedThisDeviceOnly, ACL=bundle id)
         │
-        │  AES-256-GCM(deterministic nonce = device_id||counter,AAD = entity 语境)
+        ├── device_priv = csprng(32) (本地 CSPRNG,X25519 priv)    ← v0.4 C-A:不从 KEK 派生
+        │     存 macOS Keychain "xai.devicekey.<account_id>.<device_id>"
+        │     device_pub = X25519_pub(device_priv) 上传 sync_devices.device_pub
+        │
+        ├── auth_password = Argon2id(HKDF(master_password ‖ secret_key, ...), t=1,m=16MiB,p=1)
+        │                 → 发 Supabase Auth (真"双因子登录":secret_key 错则 login 失败)
+        │
+        └── recovery_seed = HKDF-Expand(DEK_current, "xai.recovery.sig.v1")
+              (recovery_priv, recovery_pub) = Ed25519_from_seed(recovery_seed)
+              server 只存 recovery_signing_pub (32B);PATCH /auth/me 需 Ed25519 签名
+
+DEK_v_n 32B  ←── X25519_decrypt(device_priv, device_dek_wraps[device_id, key_id=n].wrap)
+        │       (DEK 不再用 KEK 直接包装;每 active device 持自己 wrap 行)
+        │
+        │  AES-256-GCM:
+        │   nonce = encryption_device_id (8B server 分配 UNIQUE per device) ‖ counter (4B)
+        │   ⚠ counter checkpoint 双重锚点:SQLCipher next_counter + Keychain ThisDeviceOnly high_water
+        │   AAD = deterministic CBOR map (RFC 8949 §4.2),含 proposed_revision/key_id/encryption_device_id/...
         ▼
 encrypted_blob
 
-auth_password = Argon2id(HKDF(master_password, email||"xai.auth.v1"), t=1,m=16MiB,p=1)
-              → 发给 Supabase Auth(与 KEK 完全独立的派生路径)
-
-24 词 BIP-39 助记词 = DEK 的完整无损备份(256-bit)
+24 词 BIP-39 助记词 = DEK_current 备份(256-bit;只恢复当前 key,retired key 限制见 Sync PRD §3.6)
 ```
 
-**v0.2 关键不变式**:
-- **master_password 永不离开本机**;Supabase 收到的是 `auth_password`(独立派生,不可反推 master_password)
-- **Secret Key 永不离开本机**;Server 只存 `secret_key_check = HMAC(secret_key, "xai.sk.check.v1")`
-- **KEK 永不出 macOS Keychain**(`kSecAttrAccessibleWhenUnlockedThisDeviceOnly`,ACL 限定 bundle id)
-- **DEK 常驻 Rust 侧 KeyVault**(JS / plugin 永远只见 opaque `key_handle`,不持有 raw key)
-- **encrypted_dek 服务端为权威**;本地 Keychain 不缓存 encrypted_dek(每次登录从 server 拉)
-- **本地 SQLite 由 SQLCipher 加密**(db_key 由 KEK 派生,实时计算,不写盘)
-- 主密码 + 助记词同时丢 = 数据无法恢复(零知识承诺的代价;首启 3 屏强提示 + 双回填验证)
+**v0.4 关键不变式**:
+- **master_password + secret_key 永不离开本机**;auth_password 派生**必须**包含 secret_key(否则不是双因子)
+- **KEK 永不出 macOS Keychain**;ACL=bundle id;用完 zeroize
+- **device_priv 由本地 CSPRNG 独立生成**(v0.4 C-A 核心修复),**绝不从 KEK 派生**;仅存 Keychain;旧设备无法算出新设备 device_priv
+- **DEK 常驻 Rust 侧 KeyVault**(JS / plugin 永远只见 opaque `key_handle`)
+- **DEK 不用 KEK 直接包装**;每 active device 持自己的 wrap(HPKE Base mode);撤销 device 删 wrap 行真正排除旧设备
+- **encrypted_blobs 客户端只读**(v0.4 C-D);所有写入走 /sync/push Edge Function service_role
+- **accounts 敏感字段 client UPDATE 被 RLS 禁**;变更需 Edge Function + Ed25519 recovery proof + 完整 payload binding
+- **nonce 双重锚点**(v0.4 C-C):SQLCipher + Keychain ThisDeviceOnly;Time Machine 回滚 SQLite 后 Keychain 锚点未变 → 拒绝加密
+- **本地 SQLite 由 SQLCipher 4 加密**(AES-256-CBC + HMAC-SHA512,默认模式)
+- 主密码 + 24 词助记词同时丢 = 数据无法恢复
 
 #### 2.1.2 加密算法(v0.2)
 
@@ -226,13 +234,15 @@ DMG 完整版不启用沙箱,但仍走 hardened runtime + notarization。
 
 引导文案:每次都解释"为什么需要"+ 关闭后哪些功能不可用 + 用户可以拒绝(降级路径)。
 
-### 2.4 E2E 加密同步协议(v0.2 简版,完整规格见 `sub-prds/sync/PRD.md` §3 / §5 / §7)
+### 2.4 E2E 加密同步协议(v0.4 简版,完整规格见 `sub-prds/sync/PRD.md` v0.4-DRAFT)
 
-1. **首次注册**:客户端生成 DEK + Secret Key + 24 词助记词 → 派生 KEK(含 Secret Key 作 secret 参数)→ AES-GCM 加密 DEK 含 AAD → 上传 `encrypted_dek`(envelope:`{v|kdf|key_id|nonce|aad_len|aad|ct|tag}`)+ `secret_key_check` + `dek_check` + `recovery_proof_hash` 到服务端;`auth_password`(独立派生)发 Supabase Auth
-2. **新设备登录**:邮箱 + master_password + Secret Key → 客户端派生 KEK → 拉 keyring + encrypted_dek → 校验 dek_check → 本地解密得到 DEK(常驻 Rust KeyVault)
-3. **数据同步**:每条记录用 DEK 加密为 blob(envelope 含 AAD = `account_id ‖ entity_type ‖ entity_id ‖ revision ‖ key_id ‖ ...`)→ 服务端存 `encrypted_blobs` 表 + `revision` + `commit_seq` + `mutation_id` + metadata
-4. **冲突**:**commit_seq 权威排序 + conditional write(base_revision)**;loser 进 `encrypted_blobs_conflict_shadow` 保留 30 天可恢复(v0.1 LWW + tombstone-优先方案被废弃);v2 评估 CRDT(notes 长文本)
-5. **服务端零知识**:Supabase 后端无能力解密任何用户内容 blob;`auth_password` 不可反推 `master_password`;Secret Key 不离开客户端
+1. **首次注册**:客户端生成 DEK + Secret Key + 24 词助记词 + **device_priv CSPRNG** → 派生 KEK 含 Secret Key → device_pub 上传 `sync_devices.device_pub` → `wrap_v1 = HPKE_seal(device_pub, DEK_v1)` 写 `device_dek_wraps` → 上传 `secret_key_check` + `dek_check` + `recovery_signing_pub` (Ed25519 32B) → server 分配 encryption_device_id → 走 Supabase Auth (auth_password = Argon2id(HKDF(master ‖ secret_key, ...)))
+2. **新设备登录**:邮箱 + master_password + secret_key → auth_password 双因子 → POST /auth/login → device 注册新 device_keypair (本地 CSPRNG,与现有设备无关) → 必须 donor device 协作 grant wrap **或** 助记词恢复 → 拿到 wrap → X25519_decrypt 得 DEK
+3. **数据同步**:client 提交 `proposed_revision = base + 1`,server 验证不重写;**encrypted_blobs 客户端只读**,所有写入走 /sync/push Edge Function(service_role);CBOR deterministic AAD 即时计算不存 envelope
+4. **冲突**:commit_seq 全局账户级权威排序 + conditional write;**loser 完整 AAD context 入 conflict_shadow** 30 天可恢复
+5. **设备撤销**:DELETE device_dek_wraps + revoked_at + 触发 Re-key 生成 DEK_v_n+1 → 用未撤销 active device pub 重新分发 → 旧设备即使再登录也无新 DEK_v_n+1 wrap → 无法解新 blob
+6. **PATCH /auth/me**:必须 Ed25519 签名,签名 message 含 `SHA256(CBOR_canonical(完整 new_payload))`,防字段篡改
+7. **服务端零知识**:Supabase 后端永远不见 KEK / DEK / master_password / secret_key / device_priv / recovery_seed 明文
 6. **回滚 / 调包防护**:每实体单调 revision 写入 AAD;客户端拒收 `revision <= max_seen`;集成测试覆盖恶意 server 拷贝 blob 场景
 7. **恢复防护**:PATCH `/auth/me` 必须附 recovery proof(`HMAC(HKDF(DEK, "xai.recovery.proof.v1"), challenge ‖ ...)`),server Argon2id 校验
 8. **设备撤销**:撤销 device + revoke refresh_token + **强制 Re-key**(生成 DEK_v2 + 双读 + 原子 swap)

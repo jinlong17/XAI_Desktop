@@ -2,13 +2,13 @@
 
 | 字段 | 值 |
 |---|---|
-| 对应 PRD | `docs/planning/sub-prds/sync/PRD.md` v0.3-DRAFT |
+| 对应 PRD | `docs/planning/sub-prds/sync/PRD.md` v0.4-DRAFT |
 | 父开发计划 | `docs/planning/2026-05-12-product-development-plan-v1.md` |
 | 归属 plugin | `packages/plugin-account/`(主)+ `packages/core-data/`(REST driver) |
-| 跨越 Phase | Phase 0 子阶段 0.3(骨架,**v0.3 重估 14-18 工日**)+ **Phase 4.8 协议硬化里程碑(~3 周)** + Phase 5(完善,~5-6 周) |
+| 跨越 Phase | Phase 0 子阶段 0.3(骨架,**v0.4 重估 16-22 工日**)+ **Phase 4.8 协议硬化里程碑(~3 周,TLA+ / property tests 前置)** + Phase 5(完善,~5-6 周) |
 | 最后更新 | 2026-05-16 |
-| 状态 | v0.3-DRAFT(协议硬化第二轮联动修订) |
-| 关联审查 | `docs/planning/sub-prds/sync/REVIEW-2026-05-15.md` v0.2 + v0.3 round 全部 Critical/High 已落实 |
+| 状态 | v0.4-DRAFT(协议硬化第三轮联动修订) |
+| 关联审查 | `docs/planning/sub-prds/sync/REVIEW-2026-05-15.md` v0.2 + v0.3 + v0.4 round 全部 Critical/High 已落实 |
 
 ---
 
@@ -200,13 +200,13 @@
 // ── 协议版本 ─────────────────────────────────────
 export const SYNC_PROTOCOL_VERSION = 1;       // L-4 分离协议版本与文档版本
 
-// ── 加密 envelope(v0.3,C-G:AAD 不存 envelope,即时计算)─────
+// ── 加密 envelope(v0.4 H-8:BIGINT 用 bigint/string,不用 number)─────
 export type CipherEnvelope = {
   v: 1;
   kdfVersion: 1;
-  keyId: number;                              // C-07
-  encryptionDeviceId: bigint;                 // C-C (8B,server 分配)
-  counter: number;                            // C-C (4B,per device per key)
+  keyId: number;
+  encryptionDeviceId: bigint;                 // 8B,server 分配
+  counter: number;                            // 4B,per device per key
   ciphertext: Uint8Array;
   tag: Uint8Array;                            // 16B
   // AAD 不存 envelope,由 client 即时 CBOR-encode (§7.1.2)
@@ -256,7 +256,7 @@ export type PushResultOk = {
   status: 'ok';
   entityId: string;
   appliedRevision: number;
-  commitSeq: number;
+  commitSeq: string;                          // v0.4 H-8:BIGINT 用 string 表达,JSON number 精度不够
 };
 export type PushResultConflict = {
   status: 'conflict';
@@ -295,11 +295,12 @@ export type PushResponse = {
 
 // ── PULL response(v0.3:commit_seq cursor,全局账户级,H-J)──
 export type PullRecord = {
+  entityType: SyncEntityType;                 // v0.4 H-7:账户级全局 cursor → 必须含 entity_type
   entityId: string;
   revision: number;
   keyId: number;
   blob: string;
-  commitSeq: number;
+  commitSeq: string;                          // v0.4 H-8
   softDeleted: boolean;
   hardDeleted: boolean;
   originatorDeviceId: string;
@@ -307,16 +308,16 @@ export type PullRecord = {
 
 export type PullResponse = {
   records: PullRecord[];
-  nextCommitSeq: number;                      // BIGINT 字符串 / number
-  currentAccountCommitSeq: number;            // v0.3 H-A:全账户单调监测
+  nextCommitSeq: string;                      // v0.4 H-8:BIGINT → string
+  currentAccountCommitSeq: string;            // v0.4 H-8 + H-A
   hasMore: boolean;
 };
 
-// ── Realtime msg(v0.3 含 commit_seq)──────────────
+// ── Realtime msg(v0.4 H-8 commit_seq string)──────────────
 export type RealtimeBlobChanged = {
   entityType: SyncEntityType;
   entityId: string;
-  commitSeq: number;
+  commitSeq: string;
   originatorDeviceId: string;
 };
 
@@ -347,8 +348,8 @@ export type RecoveryProofPayload = {
 // ── 同步引擎核心接口(v0.3 重签名)─────────────────
 export interface SyncEngine {
   pushBatch(entityType: SyncEntityType, records: PushRecord[]): Promise<PushResponse>;
-  pullSince(cursor: number, limit?: number): Promise<PullResponse>;        // v0.3 全局 cursor,H-J
-  applyServerRecords(entityType: SyncEntityType, records: PullRecord[]): Promise<void>;
+  pullSince(cursor: string, limit?: number): Promise<PullResponse>;        // v0.4 H-7/H-8:全局 cursor (string)
+  applyServerRecords(records: PullRecord[]): Promise<void>;                 // v0.4 H-7:PullRecord 自含 entityType
   enqueueMutation(m: SyncMutation): Promise<void>;
   flushOutbox(): Promise<{ flushed: number; deadLetter: number }>;
   onRealtime(msg: RealtimeBlobChanged): void;
@@ -399,12 +400,16 @@ async fn crypto_derive_auth_password(
 ) -> Result<String, String>;
 // 内部:HKDF(master_password ‖ secret_key, salt=email||"xai.auth.v1") + Argon2id(t=1,m=16MiB,p=1)
 
-// v0.3 C-D 新:从 KEK 派生 device_keypair
+// v0.4 C-A 修订:device key 由本地 CSPRNG 独立生成,不从 KEK 派生
 #[tauri::command]
-async fn crypto_derive_device_keypair(
-    kek_handle: KeyHandleId,
+async fn crypto_generate_device_keypair(
+    account_id: String,
+    device_id: String,
 ) -> Result<(KeyHandleId /*device_priv handle*/, Vec<u8> /*device_pub 32B*/), String>;
-// 内部:device_seed = HKDF-Expand(KEK, "xai.devicekey.v1"); X25519_from_seed
+// 内部:device_priv = csprng(32); device_pub = X25519_compute_pub(device_priv);
+//       keychain_set("xai.devicekey.{account_id}.{device_id}", device_priv,
+//                    accessibility=WhenUnlockedThisDeviceOnly, acl=bundle_id);
+//       device_priv 立即 zeroize 内存(只留 Keychain + KeyVault handle)
 
 // v0.3 C-D 改:DEK 不再由 KEK 解,改由 device_priv 解 device_dek_wraps row
 #[tauri::command]
@@ -440,10 +445,14 @@ async fn crypto_recovery_sign_payload(
     recovery_priv_handle: KeyHandleId,
     challenge_id: String,
     account_id: String,
-    new_payload_hashes: serde_json::Value,    // 含 new_kek_salt_hash, new_secret_key_check_hash, ...
+    // v0.4 C-E 修订:message 绑定完整 payload canonical hash,不再字段级 hash 白名单
+    new_payload_canonical_cbor: Vec<u8>,      // 整个 new_payload 的 CBOR canonical encoding
     ts_ms: u64,
 ) -> Result<(Vec<u8> /*cbor message*/, Vec<u8> /*signature 64B*/), String>;
-// 内部:CBOR canonical encode message (§7.1.2.3) → Ed25519_sign
+// 内部:payload_canonical_hash = SHA256(new_payload_canonical_cbor);
+//       message = CBOR_canonical({1: 1, 2: challenge_id, 3: account_id,
+//                                  4: payload_canonical_hash, 5: ts_ms});
+//       Ed25519_sign(recovery_priv, message)
 
 // ── 业务侧加解密(JS 永远不传 key,v0.3 AAD 用 CBOR)─────
 #[tauri::command]
@@ -455,10 +464,21 @@ async fn crypto_encrypt_for(
     key_id: u32,
     deleted_flag: u8,
     schema_version: u32,
-    encryption_device_id: u64, // v0.3 C-C
+    // ⚠ v0.4 H-9:encryption_device_id 不再由 JS 传,Rust KeyVault 从可信本地 device state 读
     plaintext: Vec<u8>,
 ) -> Result<Vec<u8>, String>;
-// 内部:AAD = CBOR_canonical map (§7.1.2.1);nonce = encryption_device_id || counter (KeyVault 内部维护)
+// 内部:从 device state 读自己的 encryption_device_id;
+//       校验 SQLCipher.next_counter >= Keychain.high_water(C-C 锚点);
+//       AAD = CBOR_canonical map (§7.1.2.1);nonce = enc_dev_id || counter
+
+// v0.4 C-C 新:nonce 锚点校验(可独立调,Phase 4.8 演练 / 启动检查)
+#[tauri::command]
+async fn crypto_check_nonce_anchor(
+    account_id: String,
+    key_id: u32,
+) -> Result<bool /*ok*/, String>;
+// 内部:对比 SQLCipher.nonce_counter[key_id].next_counter vs Keychain.high_water_<account_id>_<key_id>
+//       若 SQLCipher < Keychain → 备份回滚检测到 → 返回 E3021,client 触发 Re-key
 
 #[tauri::command]
 async fn crypto_decrypt(
@@ -687,5 +707,6 @@ Phase 5 完成 → Phase 6 公测 / 上架前,Sync 必须全部满足:
 | 2026-05-14 | v0.1-DRAFT | 首版:双 Phase 拆解、任务清单 ~50 条、协议契约、测试策略、R-10 子分解 + 新增 R-12~R-18 |
 | 2026-05-15 | **v0.2-DRAFT(协议硬化联动)** | 与 PRD v0.2 联动。主要变更:<br>① **新增 Phase 4.8 协议硬化里程碑(~2 周)**;Phase 5 之前必须完成 AAD / revision / recovery proof / Re-key keyring / TLA+ 模型 / RLS fuzz / Tauri capability allowlist<br>② Phase 0 子阶段 0.3 工日从 5-7 重估为 **10-14**,任务清单从 T-01~T-14 扩到 T-01~T-20<br>③ Phase 5 工日从 3-4 周重估为 **4-5 周**<br>④ **Tauri command 重写**(§4.2):JS 只拿 opaque KeyHandleId,Rust 侧 KeyVault 持有 raw key + 自动组 AAD;capability allowlist 限 plugin-account / core-data<br>⑤ **R-18 supply chain 强化**:cargo vet + sigstore + dependency-review + reproducible build<br>⑥ 恢复演练从 3 次扩到 **4 次**,含设备撤销 → 强制 Re-key 演练(R-10.11);恢复剧本修正(M-06)<br>⑦ 测试策略加 property-based / TLA+ / RLS fuzz / `kill -9` 注入<br>⑧ 验收门 §7 加入"REVIEW-2026-05-15.md Critical + High 全数关闭" |
 | 2026-05-16 | **v0.3-DRAFT(协议硬化第二轮联动)** | 与 PRD v0.3 联动。主要变更:<br>① **TypeScript §4.1 重写**:version→revision/proposedRevision/baseRevision、serverUpdatedAt→commitSeq、deletedAt→softDeleted/hardDeleted;加 PushResultItem 5 status、PullResponse.currentAccountCommitSeq(H-A)、DeviceDekWrap、RecoveryChallenge/RecoveryProofPayload;pullSince 改全局 cursor(H-J)<br>② **Tauri command §4.2 扩展**:加 crypto_derive_device_keypair / crypto_unwrap_dek_for_device / crypto_wrap_dek_for_devices(C-D)、crypto_recovery_keypair_from_dek / crypto_recovery_sign_payload(C-A);auth_password 派生加 secret_key 入参(H-L);AAD 改 CBOR(C-G)<br>③ **Realtime §4.3 加 `config:{private:true}`**(H-I);加 device_joined broadcast(C-D)<br>④ **测试策略 §5.3 重写**:移除所有 LWW / server clock 表述,加 v0.3 8 个新场景<br>⑤ **风险表 §6 加 R-19~R-21**(per-device wrap 复杂度 / Ed25519 X25519 误用 / CBOR encoding 跨实现一致);单测覆盖加 4 个新模块<br>⑥ **GA 数字对齐**:恢复演练 3→4,真机验收 7→13<br>⑦ Phase 0 工日 10-14→**14-18**;Phase 4.8 2 周→**3 周**;Phase 5 4-5 周→**5-6 周** |
+| 2026-05-16 | **v0.4-DRAFT(协议硬化第三轮联动,修复 v0.3 致命缺陷)** | 与 PRD v0.4 联动。主要变更:<br>① **C-A 致命修复**:Tauri `crypto_derive_device_keypair`(由 KEK 派生)废弃,改 `crypto_generate_device_keypair`(本地 CSPRNG + Keychain),旧设备不能算出新设备 device_priv<br>② **C-C 新命令** `crypto_check_nonce_anchor`:每次加密前校验 SQLCipher.next_counter vs Keychain.high_water,Time Machine 回滚拒绝<br>③ **H-9** `crypto_encrypt_for` 移除 `encryption_device_id` 入参,Rust KeyVault 从可信 device state 读<br>④ **C-E** `crypto_recovery_sign_payload` 改接收完整 payload canonical CBOR,签名绑定 `SHA256(payload_canonical)` 而非字段级 hash<br>⑤ **H-8 TypeScript**:`commitSeq` / `nextCommitSeq` / `currentAccountCommitSeq` 改 `string`(JSON number 精度不够 BIGINT)<br>⑥ **H-7**:`pullSince(cursor: string)` 全局账户级,删 entity_type 参数;`PullRecord` 必须含 `entityType`;`applyServerRecords(records)` 不再分 entity_type 调用<br>⑦ Phase 0 工日 14-18 → **16-22**;Phase 4.8 改"先 TLA+/property tests 再实现",最低模型必含 6 场景:设备撤销 + 新设备加入并发、rekey swap 前后 crash、offline squash revision、重复 mutation replay、staging delta replay、server rollback/equivocation<br>⑧ RLS fuzz 扩展为 same-account pending/revoked/stolen-token 组合 |
 
 — END —
