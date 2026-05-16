@@ -3,14 +3,15 @@
 | 字段 | 值 |
 |---|---|
 | 父 PRD | `docs/planning/2026-05-12-PRD-v1.md`(主 PRD §5.13 / §10.6)|
-| 子 PRD | `docs/planning/sub-prds/console/PRD.md` |
+| 子 PRD | `docs/planning/sub-prds/console/PRD.md`(v0.2-DRAFT,2026-05-16) |
 | 归属 Phase | Phase 2.5(M2 → M3 之间) |
 | 时间窗 | 4-6 周(主 PRD §10.6 给的 Phase 2.5 总预算 = 4-6 周,与 plugin-project 并行 / 共用三栏外壳;本文档按 5 周排) |
 | 进入条件 | Phase 2 验收通过(productivity / labels / clipboard 全部 Stable)+ M2 真机验收过 |
-| 出口条件 | Console PRD §9 M2.5 P0 验收全过 + dev_log 状态 = READY_FOR_VERIFY |
+| 出口条件 | Console PRD §9.1 ~ §9.5 四层验收(Shell + Module + Project + 灰显占位 + Cross-Window)全过 + dev_log 状态 = READY_FOR_VERIFY |
 | 文档作者 | Claude(subagent) |
 | 创建日期 | 2026-05-14 |
-| 状态 | DRAFT |
+| 最后更新 | 2026-05-16 |
+| 状态 | v0.2-DRAFT(与 Console PRD v0.2 对齐) |
 
 ---
 
@@ -22,20 +23,26 @@
 - 项目管理(plugin-project):3-4 周(另文档),与 Console 并行第 2-4 周
 - 收尾整合:第 5 周末两者一起 M2.5 验收
 
-Phase 2.5 的 Console 目标:
+Phase 2.5 的 Console 目标(对齐 PRD v0.2 §0.2 优先级体系):
 
-1. **plugin-console 包从 Planned → Stable**:三栏外壳 + sidebar 渲染 + 模块切换 + 设置壳 + 全局搜索 + 通知中心
-2. **所有 Phase 2 已 Stable 的业务 plugin 接通 ConsoleView slot**:productivity / labels / progress / settings
-3. **与 plugin-project 联调** ConsoleView slot(看板/表格)
-4. **桌面日历 / 习惯增强模块灰显**(Phase 3 才接入,sidebar 显示但点击灰显或显示"即将上线")
-5. **Console ↔ overlay 数据实时一致**:走 core-events,M2.5 末必须真机验收通过
-6. **架构债清结**:core-data 双 driver 接口落地(SQLite 已就位,REST 占位 trait 加上)
+1. **plugin-console 包从 Planned → Stable(P0-Shell)**:三栏外壳 + sidebar 渲染 + 模块切换 + 设置容器壳 + Cmd+K 搜索壳 + 通知中心壳 + SearchProvider/SettingsSection/NotificationTab/labelEntityResolver 四个 slot 协议落地
+2. **所有 Phase 2 已 Stable 的业务 plugin 接通 ConsoleView slot(P0-View)**:productivity(任务 / 四象限 / 番茄 / 习惯)/ labels / progress
+3. **与 plugin-project 联调(P0-Project)** ConsoleView slot(看板 / 表格)
+4. **桌面日历 / 习惯热力图模块灰显(P0-Shell 占位侧)**:sidebar 显示但灰显;tooltip "Phase 3 上线";点击不切 activeModule;stub plugin-calendar 不报错
+5. **Console ↔ overlay 数据实时一致(P0-Shell)**:走 core-events + entity_change_log + ack + reconcile(对齐 PRD §5.10),M2.5 末必须真机验收通过 §9.5 X-01 ~ X-06
+6. **PLUGIN_SDK 更新(W1 D1 硬阻塞)**:按 PRD §7.2.1 完整 ConsoleViewProps / HostCapabilities / SlotApi / FocusApi / SelectionApi / TelemetryApi 落地
+7. **架构债清结**:core-data 双 driver 接口落地(SQLite 已就位,REST 占位 trait 加上)+ entity_change_log 表 schema(与 sync 子 PRD 协调)
 
-非 Phase 2.5 目标(留 Phase 3+):
+非 Phase 2.5 目标(留 Phase 3+,对齐 PRD v0.2 P1-Phase3):
 
 - 桌面日历 ConsoleView 完整(Phase 3 由 plugin-calendar 提供)
 - 习惯增强(年度热力图)(Phase 3)
-- Phase 4 AI 输出 tab
+- 5 步 Onboarding tour(Phase 3)
+- 长按 Cmd cheat sheet(P0 已改为 `?` 键弹浮层)
+- 设置搜索 / 设置回滚(Phase 3)
+- Label 层级(Phase 3)
+- 命令面板 Cmd+Shift+K 系统全局形态(Phase 3 评估)
+- Phase 4 AI 输出 tab(plugin-ai 动态注册)
 - 网页版宿主壳(Phase 4.5)
 
 ---
@@ -103,45 +110,45 @@ Phase 2.5 的 Console 目标:
 
 ### 第 1 周 · 骨架 + 接口契约(D1-D5)
 
-**目标**:plugin-console 包骨架 + 三栏布局 + sidebar 渲染 + 模块切换 framework 跑通(用 stub ConsoleView 验证)。
+**目标**:plugin-console 包骨架 + 三栏布局 + sidebar 渲染 + 模块切换 framework 跑通(用 stub ConsoleView 验证)+ **PLUGIN_SDK 按 PRD §7.2.1 完整契约更新(硬阻塞,W1 D1 完成)**。
 
 | 日 | 任务 | 交付 |
 |---|---|---|
-| D1 | 创建 `packages/plugin-console/`(目录 + package.json + tsconfig + manifest.json + docs 四件套);PluginSDK §6 标准结构;Console window Rust 命令(`open_console_window` / `close_console_window`)增补到 `commands/window.rs` | plugin-console scaffold + Rust commands 落地 |
-| D2 | `<ConsoleHost />` 主组件:三栏布局 CSS + 拖动分隔条(react-resizable-panels 或自实现)+ 折叠逻辑 | ConsoleHost 渲染纯壳,用 mock list/detail |
-| D3 | Sidebar 组件:从 `pluginRegistry.getConsoleSidebarEntries()` 渲染;模块切换 state(本地 Zustand store)+ Cmd+1-9 快捷键 | Sidebar 切换 stub ConsoleView |
-| D4 | nav-state 持久化:写 `settings.console.*` key;读写 hook(`useConsoleNavState`);窗口 frame 持久化 | 重启 Console 状态恢复 |
-| D5(周末)| 真机:macOS Sonoma + Sequoia 双系统测 Console 窗口生命周期 + 多 Space + 多屏 + Cmd+W/M/Q | 第 1 周末 demo |
+| **D1(硬阻塞)** | **PLUGIN_SDK §3.1 / §3.3 按 PRD §7.2.1 更新**:加 `ConsoleViewProps` / `ConsoleHostCapabilities` / `ConsoleSlotApi` / `FocusApi` / `SelectionApi` / `TelemetryApi` + `SearchProvider` + `SettingsSection` + `NotificationTab` + `LabelEntityResolver` 协议接口。manifest schema 加 `windows.console` + `ui.consoleSidebar` 校验。**所有后续 plugin 实装 ConsoleView 都必须按此契约**。同步创建 `packages/plugin-console/` scaffold + Rust window commands | PLUGIN_SDK PR + scaffold |
+| D2 | `<ConsoleHost />` 主组件:三栏布局 CSS + 拖动分隔条 + 键盘 `Cmd+Option+←/→/0` 等价 + 标题栏 NSToolbar accessory(Rust 侧 native command 注入 search icon / bell / avatar) | ConsoleHost 渲染纯壳;键盘 + 鼠标双路径 |
+| D3 | Sidebar 组件:从 `pluginRegistry.getConsoleSidebarEntries()` 渲染;**支持 disabled / 灰显占位**;模块切换 state(本地 Zustand)+ `Cmd+1-9` 跳前 9 个非灰显模块 + 路由 v0.1 旧 state 自动降级 | Sidebar 切换 stub ConsoleView + 灰显逻辑 |
+| D4 | nav-state 持久化:写 `settings.console.*` key + sync_scope 列(对齐 sync 子 PRD);窗口 frame 持久化;首关非阻塞 toast | 重启 Console 状态恢复 |
+| D5(周末)| 真机:macOS Sonoma + Sequoia 双系统测 §5.8.2 S-01 ~ S-04(基础多 Space + 多屏) + Cmd+W/M/Q | 第 1 周末 demo + S-01 ~ S-04 通过 |
 
-**第 1 周末验收**:Console 窗口能开 / 关 / 隐藏 / 最小化 / 全屏;sidebar 显示所有声明了 `ui.consoleSidebar` 的 plugin(目前为 stub);Cmd+1-9 切换 stub view;关闭再开恢复状态。
+**第 1 周末验收**:Console 窗口能开 / 关(隐藏)/ 最小化 / 全屏;**PLUGIN_SDK 完整契约已合并主分支**;sidebar 显示所有声明了 `ui.consoleSidebar` 的 plugin(目前为 stub,calendar 是灰显占位);Cmd+1-9 切换 stub view;关闭再开恢复状态;PRD §5.8.2 S-01 ~ S-04 通过。
 
 ### 第 2 周 · 业务模块接入(D6-D10)
 
-**目标**:plugin-productivity 提供 ConsoleView,Console 内的任务/番茄/习惯/四象限模块跑通。
+**目标**:plugin-productivity 提供 ConsoleView,Console 内的任务/番茄/习惯/四象限模块跑通。**习惯热力图改 Phase 3 不做**。
 
 | 日 | 任务 | 交付 |
 |---|---|---|
-| D6 | `plugin-productivity` 实现 ConsoleView(任务模块):中栏列表(virtualized) + 右栏详情表单 | 任务 CRUD 在 Console 内可用 |
-| D7 | 任务模块完善:子任务 / Markdown 描述 / 提醒 / RRULE picker;list 全键盘可达(j/k, Space, Enter, N, D, P, L, M) | FR-CON-40~48 全过 |
+| D6 | `plugin-productivity` 实现 ConsoleView(任务模块):中栏列表(virtualized) + 右栏详情表单;描述区**纯文本 + 链接,不支持图片粘贴**;简化重复 picker(5 选项) | 任务 CRUD 在 Console 内可用;无附件无图片粘贴(对齐 PRD §5.4.1 收敛) |
+| D7 | 任务模块完善:子任务(拖 + Cmd+Option+↑/↓ 键盘等价) / Markdown 描述 / 提醒 / 简化重复 picker;list 全键盘可达(j/k, Space, Enter, N, D, P, L, M)+ 多选限定(`Delete` / Cmd+Shift+L 批 Label / Cmd+Shift+M 批移清单) | FR-CON-40~48 全过(v0.2 收敛后)|
 | D8 | 番茄模块 ConsoleView:当前会话面板 + 历史柱状图;启动番茄绑定任务(`Cmd+Shift+P`) | FR-CON-59~62 |
-| D9 | 习惯模块 ConsoleView:列表 7 圆点 + streak + 详情月历(热力图视图占位 P0+,完整 P1) | FR-CON-63~67(热力图先做基础)|
-| D10(周末)| 四象限 ConsoleView + Empty/Error states;真机验收任务/番茄/习惯/四象限四模块 | 第 2 周末 demo + dev_log |
+| D9 | 习惯模块 ConsoleView:列表 7 圆点 + streak + 详情**只有"日历" tab**(热力图删除,Phase 3 才补);Space 打卡 + A 归档 | FR-CON-63~67 基础部分;FR-CON-65 留空 |
+| D10(周末)| 四象限 ConsoleView(拖 + 键盘 1/2/3/4 + Cmd+Option+方向键)+ Empty/Error states;真机验收任务/番茄/习惯/四象限四模块 + §5.8.2 S-05 ~ S-07(外接屏拔出 / Stage Manager / 睡眠唤醒)| 第 2 周末 demo + dev_log |
 
-**第 2 周末验收**:任务 + 番茄 + 习惯 + 四象限四个模块在 Console 内完整可用;Console 改 → overlay Grid 实时刷新(走 productivity:* 事件);全键盘可走通"新建 Todo → 加 Label → 设截止日 → 启动番茄"。
+**第 2 周末验收**:任务 + 番茄 + 习惯 + 四象限四个模块在 Console 内完整可用;Console 改 → overlay Grid 实时刷新(走 productivity:* 事件 + revision + ack);全键盘可走通"新建 Todo → 加 Label → 设截止日 → 启动番茄";PRD §5.8.2 S-05 ~ S-07 通过。
 
-### 第 3 周 · 标签 / 进度条 / 设置 / 通知中心(D11-D15)
+### 第 3 周 · 标签 / 进度条 / 设置 / 通知中心 / Cmd+K(D11-D15)
 
-**目标**:标签管理、时间进度条、设置壳、通知中心、Cmd+K 全局搜索接入。
+**目标**:标签管理(含 resolver 协议)、时间进度条、设置容器壳(各业务 plugin 提供子页)、通知中心(2 tab + AI tab 动态)、Cmd+K 全局搜索(P0 provider 集)。
 
 | 日 | 任务 | 交付 |
 |---|---|---|
-| D11 | `plugin-labels` 提供 ConsoleView:Label 列表 + 详情(分实体类型聚合) | FR-CON-76~80 |
+| D11 | `plugin-labels` 提供 ConsoleView:Label 列表 + 详情(走 `labelEntityResolver` 协议聚合);plugin-productivity / plugin-project 实装各自的 resolver;缺席 plugin 显示降级占位 | FR-CON-76~80 + Major-9 |
 | D12 | `plugin-widgets` 的进度条子模块提供 ConsoleView:列表 + 详情 + 一键预置 | FR-CON-81~83 |
-| D13 | 设置壳(plugin-console 提供容器,各 plugin 通过 `SettingsSection` slot 提供子页):账号 / 外观 / 快捷键 / 数据 / 隐私 / 插件 / 同步 / 关于 8 子页 | FR-CON-84~95(快捷键搜索 P1 延后)|
-| D14 | 通知中心:铃铛 + 抽屉 + 同步 tab + 任务到期 tab + AI tab(灰显);事件聚合逻辑 | FR-CON-116~123 |
-| D15(周末)| Cmd+K 全局搜索:模态 UI + 各 plugin 提供 search adapter + 结果分组 + 命令面板 `>` + 历史 | FR-CON-96~105 第 3 周末 demo |
+| D13 | **设置容器壳**(plugin-console 自己提供 appearance / shortcuts / about 三个 SettingsSection);**各业务 plugin 各自提供 account / data / privacy / plugins(只读列表)/ sync 子页**(对接 plugin-account / sync 子 PRD);**Console 不实装这些子页内部内容** | FR-CON-84~95 收敛版 |
+| D14 | 通知中心:NotificationTab slot + 铃铛 + 抽屉;**默认 2 tab**(同步状态 / 任务到期);AI tab 通过 `plugin-ai` 是否注册动态决定显示(Phase 4 才有,M2.5 期间不显示)| FR-CON-116~123 |
+| D15(周末)| Cmd+K 全局搜索:模态 UI + **应用内作用域**(不抢全局);SearchProvider 协议 + P0 provider 集(Todo / Label / Project / Settings / Module jump);200ms 超时 abort + 部分结果呈现;命令面板 `>` 模式 | FR-CON-96~105 + Critical-8 |
 
-**第 3 周末验收**:8 个设置子页全部可见;通知中心同步状态显示正确;Cmd+K 搜索 Todo / 项目卡片 / 习惯 / 标签 / 剪贴板 / 设置项均能命中并跳转;搜索 P95 ≤ 300ms(数据量 1 万)。
+**第 3 周末验收**:Console PRD §5.4.9 收敛后的设置容器 + 容器内业务子页正常渲染(具体内部细节归对应业务 PRD);通知中心 2 tab 正确,AI tab 不出现;Cmd+K P0 provider 集搜索 Todo / Project card / Label / Settings / Module jump 均命中并跳转;中量数据(10K Todo + 1K Project card)P95 ≤ 300ms;隐私模式下剪贴板 provider 不出现。
 
 ### 第 4 周 · 项目模块联调 + 主题 / 密度 / i18n / 无障碍(D16-D20)
 
@@ -150,26 +157,26 @@ Phase 2.5 的 Console 目标:
 | 日 | 任务 | 交付 |
 |---|---|---|
 | D16 | plugin-project 的 ConsoleView 联调:看板视图 / 表格视图 / 卡片详情;sidebar 二级 "最近 3 个看板" | FR-CON-68~75 |
-| D17 | 跨模块拖动:项目卡片 → Todo(转化 + 关联);Todo → 项目卡片(关联) | FR-CON-74 + FR-CON-137 |
-| D18 | 主题 / 密度 / 字体 / Accent 切换:CSS variable 链路打通;`<html data-theme data-accent data-density>` 注入;0 闪烁 | FR-CON-129~133 |
-| D19 | i18n:三语言文案 token 化(简中 100% / 繁中+英文 80%);日期数字格式跟随区域 | FR-CON-151~154 |
-| D20(周末)| 无障碍:VoiceOver 走查 + 高对比度 + 减少动画 + 焦点环;a11y 单测 | FR-CON-155~158 |
+| D17 | 跨模块互转(对齐 PRD §5.4.6 FR-CON-74 修正版):**来源是看板/表格内的卡片,不是 sidebar**;键盘 `Cmd+Option+T`(卡片 → Todo)/ `Cmd+Option+B`(Todo → 看板)| FR-CON-74 + FR-CON-137 + Major-2 |
+| D18 | 主题 / 密度 / 字体 / Accent 切换:CSS variable 链路打通;`<html data-theme data-accent data-density>` 注入;0 闪烁;**`NSAppearance` 监听由 core-window host adapter 注入,plugin-console 不直接读 Tauri API** | FR-CON-129~133 |
+| D19 | i18n:三语言文案 token 化(**简中 100% / 繁中 + 英文 ≥ 80% 缺失键自动回退简中**;Phase 3 才补到 100%);日期数字格式跟随区域 | FR-CON-151~154 + Major-8 |
+| D20(周末)| 无障碍:**按 PRD §5.12.2 各组件类型走查**(tree / listbox / grid / calendar 占位 / dialog / toolbar / drawer / 虚拟列表);高对比度 + 减少动画 + 焦点环;a11y 单测 | FR-CON-155~158 + Major-6 |
 
-**第 4 周末验收**:plugin-project 4 个视图 + 卡片 ↔ Todo 互通;主题 / 密度 / 字体即时生效 0 闪烁;VoiceOver 走通 sidebar → list → detail 焦点;高对比度 / 减少动画生效。
+**第 4 周末验收**:plugin-project 2 个视图(Kanban / Table,总览 Phase 3)+ 卡片 ↔ Todo 互通(键盘 + 拖);主题 / 密度 / 字体即时生效 0 闪烁;VoiceOver 走通 sidebar → list → detail 焦点 + Kanban 看板键盘移动卡片;高对比度 / 减少动画生效;PRD §5.8.2 S-08 ~ S-09(Console 全屏)通过。
 
-### 第 5 周 · Onboarding / Empty/Error / 性能调优 / M2.5 验收(D21-D25)
+### 第 5 周 · Empty/Error / 模块矩阵 / 跨窗口脚本 / 性能 / M2.5 验收(D21-D25)
 
-**目标**:Onboarding tour、Empty/Error states、性能调优、M2.5 真机验收清单全过。
+**目标**:Empty/Error states、§5.11 模块状态矩阵 + §5.11.4 模块缺席矩阵、跨窗口一致性脚本 §9.5、菜单栏 §9.1.12、性能调优、M2.5 四层验收清单全过。**5 步 Onboarding tour 移到 Phase 3**。
 
 | 日 | 任务 | 交付 |
 |---|---|---|
-| D21 | Onboarding tour(5 步浮层);每个模块的 empty state 插画 + CTA;模块首次进入小型 inline 引导 | FR-CON-141~144 |
-| D22 | Error states:数据库锁 / 同步失败 / 离线 / 插件加载失败 / 严重崩溃 ErrorBoundary | FR-CON-145~150 |
-| D23 | 性能调优:list 虚拟化(react-virtuoso)/ 模块切换淡入淡出(120ms)/ 主题切换 0 ms / Cmd+K 搜索 debounce + 并行 + 截断 | 性能指标全过 §6.1 |
-| D24 | 真机验收 P0 全清单(PRD §9 M2.5)一次性走完;漏项补 | 真机验收报告 |
+| D21 | **空状态 + `?` cheat sheet 浮层**(P0;5 步 tour 不做);每个模块 empty state 插画 + CTA;`docs/manual-tests/console-cross-window-consistency.md` 起稿 | FR-CON-141 简化版 + 空状态 + cheat sheet 入口 |
+| D22 | Error states:7 状态矩阵(loading / empty / partial / failed / permission / accountExpired / conflict)+ 模块缺席矩阵(未安装 / 未启用 / 加载失败 / 灰显占位 / ConsoleView 崩溃)+ 设置保存失败 banner + 迁移失败启动拦截 | FR-CON-145~150 + Major-5 + 增补 A2 |
+| D23 | 性能调优:list 虚拟化(react-virtuoso)/ 模块切换淡入淡出(120ms)/ 主题切换 0ms / Cmd+K 200ms 截断 / entity_change_log + ack + 30s reconcile;**M2 + Intel + Release 模式双设备实测** | 性能指标全过 PRD §6.1 三档(M1/M2/Intel) |
+| D24 | **macOS 菜单栏完整实装**(File/Edit/View/Window/Help)+ 跨窗口一致性脚本 X-01 ~ X-06 完整走一遍 + S-10 ~ S-11(Console / overlay 单边关闭场景) + 真机验收 PRD §9.1 ~ §9.4 一次性走完;漏项补 | 真机验收报告 + 跨窗口脚本 |
 | D25(周末)| M2.5 真机验收复盘 + dev_log 写完 + ship 准备 | dev_log 状态 = READY_FOR_VERIFY |
 
-**第 5 周末验收**:Console PRD §9 M2.5 P0 验收清单 100% 通过;dev_log 状态 = READY_FOR_VERIFY;feature-verify agent 跑过 → ship。
+**第 5 周末验收**:Console PRD §9.1 Shell + §9.2 Module + §9.3 Project + §9.4 灰显占位 + §9.5 跨窗口脚本 5 层全部通过;dev_log 状态 = READY_FOR_VERIFY;feature-verify agent 跑过 → ship。
 
 ### 时间预算 buffer
 
@@ -228,12 +235,23 @@ Phase 2.5 的 Console 目标:
 
 (实现挂在 `src-tauri/src/commands/window.rs`;经 `platform::WindowOps` trait 调用。)
 
-### 4.5 PLUGIN_SDK 待补 API(Phase 2.5 第 1 周补到 SDK)
+### 4.5 PLUGIN_SDK 待补 API(W1 D1 硬阻塞,对齐 PRD §7.2)
 
-- `pluginRegistry.getConsoleSidebarEntries()`:已声明,需实现
-- `pluginRegistry.getSettingsSections()`:同上(给设置壳)
-- search adapter 协议:每个 plugin 可注册一个 `searchProvider(query: string) → Promise<SearchResult[]>`;Console 在 Cmd+K 时并行调用,200ms 截断未返回的 provider
-- `host.openModule(module: string)`:plugin 内可调用 host API 跳转其他模块(例如番茄历史明细跳任务模块)
+W1 D1 必须把 PRD §7.2.1 完整契约写进 PLUGIN_SDK §3,并对外打 BREAKING release。包括:
+
+- `pluginRegistry.getConsoleSidebarEntries()`(支持 disabled / 灰显占位 flag)
+- `pluginRegistry.getSettingsSections()`(给设置壳)
+- `pluginRegistry.getSearchProviders()`(Cmd+K)
+- `pluginRegistry.getLabelEntityResolvers()`(Label 详情聚合)
+- `pluginRegistry.getNotificationTabs()`(通知中心)
+- `host.openModule(module: string, route?: object)` / `host.openSearch(opts?)` / `host.showDialog(...)` / `host.showToast(...)` / `host.notify(...)`
+- `ConsoleViewProps` / `ConsoleHostCapabilities` / `ConsoleSlotApi` / `FocusApi` / `SelectionApi` / `TelemetryApi` 接口
+- `SearchProvider` / `SearchHit` / `SearchOptions` 接口(含 timeout + signal)
+- `SettingsSection` / `SettingsSectionProps` 接口
+- `NotificationTab` 接口(含 enabledWhen 动态注册)
+- `LabelEntityResolver` 接口(含降级语义)
+
+manifest schema 加 `windows.console=true` 强制 plugin 必须导出 ConsoleView 的 CI 校验。
 
 ---
 
@@ -312,20 +330,23 @@ Phase 2.5 的 Console 目标:
 
 Phase 2.5 出口 = Phase 3 入口。Console 必须达到以下标准才能签收:
 
-### 7.1 功能门(P0)
+### 7.1 功能门(对齐 PRD §9 v0.2 四层验收)
 
-- [ ] PRD §9 M2.5 P0 验收清单 100% 通过(双系统真机)
-- [ ] 9 个 sidebar 模块全部可见 + 切换;其中 7 个完整可用(任务/番茄/习惯/四象限/项目/标签/进度条),桌面日历灰显(Phase 3 补),AI tab 灰显
-- [ ] Console ↔ overlay 实时同步 P95 ≤ 200ms,7 天长跑无漂移
-- [ ] 全键盘可走通 PRD §5.6 列出的所有 P0 流程
+- [ ] **§9.1 Shell 必过**:窗口生命周期 / IA / 三栏 / 设置容器 / Cmd+K / 通知中心 / 多 Space / 主题 / a11y / Empty/Error / 性能 / ConsoleView 契约 / 菜单栏 共 12 组全过
+- [ ] **§9.2 Module 必过**:任务 / 四象限 / 番茄 / 习惯(无热力图)/ 标签 / 进度条 6 个模块 ConsoleView 全过
+- [ ] **§9.3 Project 必过**:Kanban + Table + 卡片 ↔ Todo 互转(键盘 + 拖)+ 归档
+- [ ] **§9.4 灰显占位必过**:桌面日历 sidebar 灰显;AI tab 不出现
+- [ ] **§9.5 跨窗口一致性脚本 X-01 ~ X-06 必过**
+- [ ] Console ↔ overlay 实时同步 P95 ≤ 400ms(中量),7 天长跑无漂移
+- [ ] 全键盘可走通 PRD §5.6.4 拖拽对偶清单的所有 P0 流程
 
 ### 7.2 工程门
 
 - [ ] plugin-console 单测覆盖率 ≥ 60%;Rust window commands 覆盖率 ≥ 70%
-- [ ] 所有新增事件已在 EventMap 中定义,manifest schema 校验通过
+- [ ] 所有新增事件已在 EventMap 中定义,manifest schema 校验通过(含 `windows.console` + `ui.consoleSidebar` + ConsoleView 必导出)
 - [ ] CI lint 通过(无 `@tauri-apps/api` 在 plugin 包内的 import;无 console.log;无 .ts 文件 import `.css` 之外的内部路径)
-- [ ] E2E 6 个核心流程全过
-- [ ] 性能基线(冷启动 / 模块切换 / 搜索 / 滚动)达 PRD §6.1 全部 P95
+- [ ] E2E 6 个核心流程全过(对应 §5.4 测试策略)
+- [ ] 性能基线在 M2 + Intel + Release 模式下分别达 PRD §6.1 全部 P95
 
 ### 7.3 文档门
 
@@ -346,5 +367,6 @@ Phase 2.5 出口 = Phase 3 入口。Console 必须达到以下标准才能签收
 | 日期 | 版本 | 变更 | 作者 |
 |---|---|---|---|
 | 2026-05-14 | v0.1-draft | 首版,基于 Console PRD v0.1 拆 5 周计划;接口契约 + 测试策略 + 风险登记 + 验收门 | Claude(subagent) |
+| 2026-05-16 | v0.2-draft | 对齐 Console PRD v0.2:W1 D1 加 PLUGIN_SDK 完整契约硬阻塞;W2 删除习惯热力图;W3 设置子页范围收敛 + Cmd+K 改应用内 + provider 协议;W4 跨模块互转改卡片源 + i18n 简中100%/繁中+英文≥80%;W5 删除 5 步 tour 改 `?` cheat sheet + 加模块缺席矩阵 + 跨窗口脚本 + 菜单栏 + S-08~S-11 真机场景;§4.5 PLUGIN_SDK API 列表对齐 PRD §7.2.1;§7 验收门改四层(Shell/Module/Project/灰显/跨窗口) | Claude(subagent) |
 
-— END of Console dev-plan v0.1-draft —
+— END of Console dev-plan v0.2-draft —
