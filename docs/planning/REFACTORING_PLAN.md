@@ -2,6 +2,31 @@
 
 # 微内核 + 插件双轨 + 文档驱动开发 (Doc-Driven Development)
 
+> ## ⚠️ 2026-05-14 对齐状态说明
+>
+> 本文档创建于 2026-05-13(基于 PRD v1.0 的现有代码重构方案)。
+> **后续 PRD 迭代到 v1.6,部分内容已被以下文档取代或扩展**:
+>
+> | 本文档章节 | 现在的 source of truth |
+> |---|---|
+> | §3 全局文档体系 | `docs/SYSTEM_ARCHITECTURE.md`(已成,对齐 v1.6) |
+> | §3.3 PLUGIN_MAP 规范 + 9 个 plugin | `docs/PLUGIN_MAP.md`(已成,扩到 10 个 plugin + apps/web) |
+> | §3.4 CORE_INFRA 规范 | `docs/CORE_INFRA.md`(已成) |
+> | §4 前端重构方案(包结构、manifest、接口契约) | `docs/PLUGIN_SDK.md`(已成,统一接口契约表) |
+> | §6 插件注册机制 + §7 事件协议 | `docs/PLUGIN_SDK.md` §3 + §4 |
+> | §8 状态管理(Zustand + 事件同步) | `docs/TECHNICAL_REQUIREMENTS.md` + ADR-0003 |
+> | §9 Wave 1-3 执行计划 | **现并入 Phase 0 子阶段 0.2 / 0.3**(详见 PRD §10.4) |
+>
+> **几处需要更新的具体内容**(已在本文档内 patch,但读时注意):
+> - `macOSPrivateApi` **改为 false**(双轨发布要求,详见 ADR-0002)
+> - Plugin 清单从 9 个扩到 **16 个 + apps/web 网页版 target**(对齐 PRD v1.6)
+> - "不做数据库迁移" **已解除**(Phase 0 子阶段 0.3 就要做 SQLite 迁移)
+> - 加入 Plugin 平台抽象 trait(详见 TECHNICAL_REQUIREMENTS §4)
+> - 加入双轨 Cargo features(`full` / `sandbox`,详见 ADR-0002)
+>
+> **本文档当前定位**:Phase 0 子阶段 0.2(原生层重建)+ 0.3(基础设施)的**详细执行手册**。
+> 战略级决策 / 全集 PRD / 接口契约 全部走上面的对应文档。
+
 > **决策锚点:**
 > - Host (apps/desktop/) 极简化 — 只做窗口壳 + 路由 + 全局 Provider，零业务逻辑
 > - 新建 packages/plugin-* 逐步拆分所有业务功能，每个 plugin 独立包
@@ -9,7 +34,7 @@
 > - 前端插件通过 PluginRegistry 统一注册，Host 动态加载
 > - 三波次推进（文档+边界 → 前端拆分 → Rust 后端 + 基础设施）
 >
-> **创建日期:** 2026-05-13 | **维护者:** Jinlong
+> **创建日期:** 2026-05-13 | **最后对齐:** 2026-05-14 | **维护者:** Jinlong
 >
 > **参考:** Any2Knowledge_Agent_System/docs/REFACTORING_PLAN.md v2.3
 > （微内核 + FSD + Doc-Driven Development 模式的成熟实践）
@@ -146,15 +171,18 @@ packages/plugin-organizer/src/
 │  └── 布局组件 (Overlay, FloatingPanel)                                    │
 ├──────────────────────────────────────────────────────────────────────────┤
 │  packages/plugin-* (插件层 — 所有业务逻辑的归宿) ★                          │
-│  ├── plugin-organizer/     智能桌面整理 (Grid + 文件拖放)                   │
-│  ├── plugin-todo/          待办清单 (PRD §5.2)                             │
-│  ├── plugin-pomodoro/      番茄钟 (PRD §5.3)                              │
-│  ├── plugin-habits/        习惯打卡 (PRD §5.4)                             │
+│  ├── plugin-organizer/     智能桌面整理 (PRD §5.1)                          │
+│  ├── plugin-productivity/  Todo + 番茄 + 习惯(PRD §5.2/§5.3/§5.4 三合一)    │
 │  ├── plugin-clipboard/     剪贴板 (PRD §5.5)                              │
-│  ├── plugin-widgets/       桌面 Widgets (PRD §5.6)                        │
-│  ├── plugin-meditation/    冥想/专注模式 (PRD §5.7)                        │
-│  ├── plugin-ai-cube/       AI Cube (PRD §5.8)                             │
-│  └── plugin-settings/      设置面板                                        │
+│  ├── plugin-widgets/       桌面 Widgets:时钟+天气+便签+进度条+冥想+桌宠     │
+│  │                         (PRD §5.6 + §5.7 + §5.16)                      │
+│  ├── plugin-labels/        全局 Label 系统(PRD §5.11,新增)                 │
+│  ├── plugin-calendar/      桌面日历(PRD §5.12,新增)                       │
+│  ├── plugin-console/       整体控制台三栏外壳(PRD §5.13,新增)              │
+│  ├── plugin-project/       项目管理 Trello 式看板(PRD §5.14,新增)         │
+│  ├── plugin-account/       账号 + 云同步(PRD §5.9)                        │
+│  └── plugin-ai/            AI Cube + 桌宠 AI 能力(PRD §5.8,Phase 4)       │
+│  apps/web/                 网页版控制台 target(PRD §5.15,Phase 4.5,新增) │
 │  每个 Plugin 内部:                                                         │
 │  ├── /src           组件 + hooks + 状态                                    │
 │  ├── /tests         独立测试                                               │
@@ -233,13 +261,15 @@ packages/plugin-organizer/src/
 ## 2. 技术栈版本锁定
 | 技术 | 版本 | 备注 |
 |------|------|------|
-| Tauri | 2.x | macOS private API 启用 |
+| Tauri | 2.x | **`macOSPrivateApi: false`**(2026-05-14 修正,双轨发布要求,详见 ADR-0002) |
 | React | 19.x | 函数式组件 + Hooks |
 | TypeScript | 5.x | strict mode |
 | Vite | 7.x | 前端构建 |
 | Rust | 1.80+ | Tauri 后端 |
 | pnpm | 9.x | 包管理 |
 | Turborepo | 2.6+ | Monorepo 编排 |
+| SQLite(`tauri-plugin-sql`) | 最新 | 2026-05-14 新增:取代 localStorage,Phase 0 子阶段 0.3 迁移 |
+| Supabase JS SDK | 最新 | 2026-05-14 新增:后端 Auth + Realtime,网页版数据源 |
 
 ## 3. 三层边界规则
 - Host (apps/desktop/src/): 窗口壳 + 路由 + 全局 Provider。禁止放业务逻辑
@@ -285,18 +315,25 @@ packages/plugin-organizer/src/
 | @repo/core | packages/core | Planned | 基础设施 + 类型 + Registry | 2026-05-13 |
 | @repo/ui | packages/ui | In-Dev | 共享 UI 组件库 | 2026-05-13 |
 
-### Plugins
-| Plugin | 目录 | 状态 | PRD 章节 | 对外依赖 | 最后更新 |
-|--------|------|------|---------|---------|---------|
-| organizer | packages/plugin-organizer | Stable | §5.1 | @repo/core, @repo/ui | 2026-05-13 |
-| todo | packages/plugin-todo | Planned | §5.2 | @repo/core | — |
-| pomodoro | packages/plugin-pomodoro | Planned | §5.3 | @repo/core | — |
-| habits | packages/plugin-habits | Planned | §5.4 | @repo/core | — |
-| clipboard | packages/plugin-clipboard | Planned | §5.5 | @repo/core | — |
-| widgets | packages/plugin-widgets | Planned | §5.6 | @repo/core | — |
-| meditation | packages/plugin-meditation | Planned | §5.7 | @repo/core | — |
-| ai-cube | packages/plugin-ai-cube | Planned | §5.8 | @repo/core | — |
-| settings | packages/plugin-settings | Planned | — | @repo/core, @repo/ui | — |
+### Plugins(2026-05-14 对齐 PRD v1.6 — 10 个 plugin + apps/web)
+> 完整最新表见 `docs/PLUGIN_MAP.md`。本节为简表。
+
+| Plugin | 目录 | 状态 | PRD 章节 | 对外依赖 |
+|--------|------|------|---------|---------|
+| organizer | packages/plugin-organizer | **In-Dev**(渲染层 OK,原生交互层 Phase 0 重建) | §5.1 | @repo/core |
+| productivity | packages/plugin-productivity | Planned | §5.2 + §5.3 + §5.4 | @repo/core |
+| clipboard | packages/plugin-clipboard | Planned | §5.5 | @repo/core |
+| widgets | packages/plugin-widgets | Planned | §5.6 + §5.7 + §5.16 | @repo/core |
+| labels | packages/plugin-labels | Planned | §5.11 | @repo/core |
+| calendar | packages/plugin-calendar | Planned | §5.12 | @repo/core, productivity |
+| console | packages/plugin-console | Planned | §5.13 | @repo/core, ui, 所有业务 plugin |
+| project | packages/plugin-project | Planned | §5.14 | @repo/core, labels |
+| account | packages/plugin-account | Planned | §5.9 | @repo/core |
+| ai | packages/plugin-ai | Planned | §5.8 + §5.16 AI 能力 | @repo/core, widgets |
+
+| Target | 目录 | 状态 | PRD 章节 |
+|--------|------|------|---------|
+| apps/web | apps/web/ | Planned | §5.15(Phase 4.5)|
 
 ### 状态定义
 | 状态 | 含义 | 外部可调用? |
@@ -1456,15 +1493,16 @@ export const useOrganizerStore = create<OrganizerState>()(
 - 兼容层 re-export 保证渐进式迁移，任何步骤失败可回退到上一步
 - Wave 2 是风险最高的阶段，建议每批次结束后 commit + 测试，不要跨批次合并
 
-### 10.3 不做什么
+### 10.3 不做什么(2026-05-14 修正)
 
 以下明确排除在本次重构范围之外：
 
 - **不做运行时动态插件加载** — 桌面应用编译时确定插件集，不需要运行时 discover
-- **不做新功能** — Todo/Pomodoro/Clipboard 等在重构后的新 Plugin 中从零开发，不在此方案内
-- **不做 apps/web/ 和 apps/docs/ 清理** — 保留为 scaffold，不影响桌面应用
-- **不做数据库迁移** — 当前用 localStorage，SQLite 是未来目标 (PRD §8)，不在此次
-- **不做 CI/CD** — 暂无 GitHub Actions，后续单独规划
+- **不做新功能** — 业务模块在重构后的新 Plugin 中从零开发，不在此方案内
+- **不做 apps/docs/ 清理** — 保留为 scaffold，不影响桌面应用
+- ~~**不做数据库迁移** — 当前用 localStorage~~ → ⚠️ **2026-05-14 解除**:Phase 0 子阶段 0.3 必做 SQLite 迁移(决策 A 完整账号+云同步要求)
+- ~~**不做 CI/CD**~~ → ⚠️ **2026-05-14 修正**:CI 在 Phase 0 就要上(TECHNICAL_REQUIREMENTS §3.1.6)
+- ~~**不做 apps/web/ 清理**~~ → ⚠️ **2026-05-14 修正**:apps/web 由 scaffold 升级为 v1 网页版 target(PRD §5.15,Phase 4.5)
 
 ---
 

@@ -156,6 +156,7 @@ Main(透明 overlay)+ Control(AI Cube 快捷托盘)+ Grid Windows(每格子独�
 | 关心什么 | 看哪里 |
 |---|---|
 | 架构红线 / 不变规则(14 条编码红线 + 多窗口 + 跨窗口通信) | `docs/SYSTEM_ARCHITECTURE.md` |
+| **Plugin 接口契约表 ★**(manifest / EventMap / PluginRegistry API / 新增 Plugin SOP) | **`docs/PLUGIN_SDK.md`** |
 | **测试要求**(覆盖率、分层、真机验收清单) | `docs/TECHNICAL_REQUIREMENTS.md` §1.1 |
 | **性能预算**(冷启动/唤起/CPU/内存/同步延迟) | `docs/TECHNICAL_REQUIREMENTS.md` §1.2 |
 | **可观测性**(日志/Sentry/错误链/诊断信息导出) | `docs/TECHNICAL_REQUIREMENTS.md` §1.3 |
@@ -167,6 +168,7 @@ Main(透明 overlay)+ Control(AI Cube 快捷托盘)+ Grid Windows(每格子独�
 | 关键 API 与文件路径 | `docs/CORE_INFRA.md` |
 | 各 plugin 当前状态(In-Dev / Stable / Planned) | `docs/PLUGIN_MAP.md` |
 | 关键架构决策的设计依据 | `docs/adr/0001 静态插件注册` / `0002 双轨发布` / `0003 三个面架构` / `0004 Label 多态` |
+| Phase 0 子阶段 0.2/0.3 详细执行步骤 | `docs/planning/REFACTORING_PLAN.md` |
 | 产品规格(FR / Schema / 路线图) | `docs/planning/2026-05-12-PRD-v1.md` |
 | Workflow V2 流程 | `docs/workflow/SUBAGENT_WORKFLOW_V2.md` |
 | Commit 格式 | `docs/conventions/COMMIT_CONVENTION.md` |

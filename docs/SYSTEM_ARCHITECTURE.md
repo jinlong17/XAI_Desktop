@@ -216,10 +216,12 @@ apps/desktop/src-tauri/src/
 | 关心什么 | 看哪里 |
 |---|---|
 | 架构红线 / 不变规则 | 本文档 |
+| **Plugin 接口契约表(manifest / EventMap / PluginRegistry API / SDK)** | **`PLUGIN_SDK.md`** ★ |
 | 测试 / 性能 / 安全 / 构建 / 依赖 / 抽象 traits 具体实施标准 | `TECHNICAL_REQUIREMENTS.md` |
 | 关键 API 与文件路径 | `CORE_INFRA.md` |
 | 各 plugin 当前状态 | `PLUGIN_MAP.md` |
 | 关键架构决策的依据 | `adr/NNNN-*.md`(0001 静态插件注册 / 0002 双轨发布 / 0003 三个面 / 0004 Label 多态) |
+| Phase 0 子阶段 0.2/0.3 执行手册 | `planning/REFACTORING_PLAN.md`(详细重构步骤) |
 | 产品规格(FR / Schema / 路线图) | `planning/2026-05-12-PRD-v1.md` |
 | 战略概览 + 决策快照 | `planning/2026-05-12-product-development-plan-v1.md` |
 | Workflow V2 流程 | `workflow/SUBAGENT_WORKFLOW_V2.md` |
