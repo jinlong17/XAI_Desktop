@@ -234,19 +234,191 @@ export interface PluginComponents {
   ControlWidget?: React.ComponentType;
   /** Grid 窗口内的内容渲染器,根据 contentType 选 */
   GridContent?: React.ComponentType<{ gridId: string; contentType: string }>;
-  /** 控制台三栏窗口中的模块视图(Phase 2.5) */
-  ConsoleView?: React.ComponentType;
+  /**
+   * 控制台三栏窗口中的模块视图(Phase 2.5)。
+   * **必须**接 `ConsoleViewProps<TRoute>`,不再是裸 ComponentType。
+   * 完整契约见 `docs/planning/sub-prds/console/PRD.md §7.2.1`。
+   * 声明 `windows.console=true` 的 plugin 必须导出 ConsoleView,manifest CI 强校验。
+   */
+  ConsoleView?: React.ComponentType<ConsoleViewProps<unknown>>;
   /** 网页版中的模块视图(Phase 4.5,与 ConsoleView 同源,数据 driver 不同) */
-  WebView?: React.ComponentType;
+  WebView?: React.ComponentType<ConsoleViewProps<unknown>>;
   /** 独立窗口内容(剪贴板面板 / 冥想全屏 / 设置...) */
   DedicatedWindow?: React.ComponentType;
-  /** 设置面板模块 */
-  SettingsSection?: React.ComponentType;
+  /** 设置面板模块(单个 section)。多 section 由 plugin 返回数组,见 §3.1.3。 */
+  SettingsSection?: React.ComponentType<SettingsSectionProps>;
 }
 
 export interface PluginRegistration {
   manifest: PluginManifest;
   components: PluginComponents;
+
+  /** Cmd+K 搜索 provider — 可选;不提供则 plugin 的实体不可被搜索 */
+  searchProvider?: SearchProvider;
+
+  /** Label 详情聚合 — 可选;若 plugin 的实体可被打 Label,**必须**提供 */
+  labelEntityResolver?: LabelEntityResolver;
+
+  /** 通知中心 tab — 可选;plugin-ai 等 plugin 用此动态注册 */
+  notificationTab?: NotificationTab;
+}
+```
+
+### 3.1.1 ConsoleViewProps(Phase 2.5 完整契约)
+
+**source of truth**:`docs/planning/sub-prds/console/PRD.md §7.2.1`。
+本节按 PRD §7.2.1 同步;若两处不一致以 PRD 为准。
+
+```typescript
+export interface ConsoleViewProps<TRoute = object> {
+  /** Host 注入的能力面;ConsoleView 与外壳间唯一通道 */
+  host: ConsoleHostCapabilities;
+  /** 当前模块的子路由(从 console.nav_state.modulePath 投影) */
+  route: TRoute;
+  /** 写回子路由 */
+  setRoute(updater: Partial<TRoute> | ((prev: TRoute) => TRoute), opts?: { replace?: boolean }): void;
+  /** 三栏 slot:ConsoleView 选哪栏填什么 */
+  slots: ConsoleSlotApi;
+  /** 焦点 API */
+  focusApi: FocusApi;
+  /** 多选 API */
+  selectionApi: SelectionApi;
+  /** 错误边界 */
+  errorBoundary: { reportError(err: Error, ctx?: object): void };
+  /** Loading 边界 */
+  loadingBoundary: { setLoading(loading: boolean): void };
+  /** Telemetry */
+  telemetry: TelemetryApi;
+}
+
+export interface ConsoleHostCapabilities {
+  openModule<TR>(module: string, route?: TR): void;
+  openSearch(opts?: { query?: string; providerFilter?: string[] }): void;
+  showDialog(props: { title: string; body: React.ReactNode; actions: DialogAction[] }): Promise<DialogResult>;
+  showToast(props: { kind: "info" | "success" | "warning" | "error"; message: string; ttlMs?: number; action?: { label: string; onClick: () => void } }): void;
+  notify(props: { tabId: string; payload: unknown }): void;
+  appearance: Readonly<{ theme: Theme; density: Density; accent: string; fontSize: "S" | "M" | "L" }>;
+  t(key: string, params?: Record<string, unknown>): string;
+  locale: Readonly<{ lang: "zh-CN" | "zh-TW" | "en-US"; dateFormat: string }>;
+  data: CoreDataDriver;
+  events: CoreEvents;
+  account: Readonly<{ id: string; displayName: string; syncState: "idle" | "syncing" | "failed" }>;
+}
+
+export interface ConsoleSlotApi {
+  setMid(component: React.ReactNode): void;
+  setDetail(component: React.ReactNode | null): void;
+  setListToolbar(component: React.ReactNode | null): void;
+  setDetailToolbar(component: React.ReactNode | null): void;
+  setFullCanvas(component: React.ReactNode | null): void;
+}
+
+export interface FocusApi {
+  reportFocus(pane: "list" | "detail"): void;
+  focusPane(pane: "list" | "detail"): void;
+  onPaneBlur(cb: () => void): () => void;
+}
+
+export interface SelectionApi {
+  setSelection(selection: { entityIds: string[]; entityType: string }): void;
+  /**
+   * v1 仅 "delete"(批删除);"addLabel" / "moveList" / "complete" 等批改字段动作
+   * 已降 P2-Later(对齐父 PRD §5.2 line 189 "Todo 不做批量操作"),
+   * 移交未来 plugin-bulk-ops。联合类型预留 string 不写死,避免 BREAKING。
+   */
+  onBatchAction(handler: (action: "delete" | string, payload: unknown) => Promise<void>): () => void;
+}
+
+export interface TelemetryApi {
+  mark(name: string): void;
+  measure(name: string, startMark: string, endMark: string): void;
+  reportError(err: Error, ctx?: object): void;
+  recordMetric(name: string, value: number, tags?: Record<string, string>): void;
+}
+```
+
+### 3.1.2 SearchProvider(Cmd+K)
+
+```typescript
+export interface SearchProvider {
+  providerId: string;            // "todo" | "label" | "project_card" | "settings" | ...
+  displayName: string;
+  group: number;
+  enabled: boolean;
+  search(query: string, opts: SearchOptions): Promise<SearchHit[]>;
+}
+
+export interface SearchOptions {
+  limit: number;                 // 默认 5
+  timeoutMs: number;             // 默认 200ms;超时 plugin-console 自动 abort
+  signal: AbortSignal;
+}
+
+export interface SearchHit {
+  providerId: string;
+  entityId: string;
+  title: string;
+  subtitle?: string;
+  matchScore: number;            // 0..1;v1 不用,跨 provider 排序留 v1.x
+  navigate: { module: string; route: object };
+}
+```
+
+### 3.1.3 SettingsSection
+
+```typescript
+export interface SettingsSection {
+  sectionId: string;             // "appearance" | "account" | "sync" | ...
+  order: number;
+  group: "user" | "system" | "data" | "advanced";
+  displayName: string;
+  icon: string;
+  Component: React.ComponentType<SettingsSectionProps>;
+  searchKeywords?: string[];     // 给设置搜索(P1)用
+}
+
+export interface SettingsSectionProps {
+  host: ConsoleHostCapabilities;
+  onDirty: (dirty: boolean) => void;
+  onClose: () => void;
+}
+```
+
+### 3.1.4 NotificationTab(通知中心,动态注册)
+
+```typescript
+export interface NotificationTab {
+  tabId: string;
+  displayName: string;
+  order: number;
+  enabledWhen: () => boolean;    // plugin-ai 未启用时返回 false,tab 不渲染
+  unreadCount: () => number;
+  Component: React.ComponentType<NotificationTabProps>;
+}
+
+export interface NotificationTabProps {
+  host: ConsoleHostCapabilities;
+  onMarkAllRead: () => void;
+  onClearUiState: () => void;    // 仅清 UI 已读标记,不动底层审计日志
+}
+```
+
+### 3.1.5 LabelEntityResolver(Label 详情聚合)
+
+```typescript
+export interface LabelEntityResolver {
+  entityType: string;            // "todo" | "habit" | "board_card" | ...
+  displayName: string;
+  resolve(labelId: string, opts: { limit: number; offset: number }): Promise<LabelEntityHit[]>;
+  count(labelId: string): Promise<number>;
+}
+
+export interface LabelEntityHit {
+  entityType: string;
+  entityId: string;
+  displayTitle: string;
+  displaySubtitle?: string;
+  navigate: { module: string; route: object };
 }
 ```
 

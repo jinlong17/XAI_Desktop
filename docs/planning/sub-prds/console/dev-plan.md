@@ -3,15 +3,15 @@
 | 字段 | 值 |
 |---|---|
 | 父 PRD | `docs/planning/2026-05-12-PRD-v1.md`(主 PRD §5.13 / §10.6)|
-| 子 PRD | `docs/planning/sub-prds/console/PRD.md`(v0.2-DRAFT,2026-05-16) |
+| 子 PRD | `docs/planning/sub-prds/console/PRD.md`(v0.2-rev1-DRAFT,2026-05-16) |
 | 归属 Phase | Phase 2.5(M2 → M3 之间) |
 | 时间窗 | 4-6 周(主 PRD §10.6 给的 Phase 2.5 总预算 = 4-6 周,与 plugin-project 并行 / 共用三栏外壳;本文档按 5 周排) |
 | 进入条件 | Phase 2 验收通过(productivity / labels / clipboard 全部 Stable)+ M2 真机验收过 |
 | 出口条件 | Console PRD §9.1 ~ §9.5 四层验收(Shell + Module + Project + 灰显占位 + Cross-Window)全过 + dev_log 状态 = READY_FOR_VERIFY |
 | 文档作者 | Claude(subagent) |
 | 创建日期 | 2026-05-14 |
-| 最后更新 | 2026-05-16 |
-| 状态 | v0.2-DRAFT(与 Console PRD v0.2 对齐) |
+| 最后更新 | 2026-05-16(rev1) |
+| 状态 | v0.2-rev1-DRAFT(对齐 Console PRD v0.2-rev1) |
 
 ---
 
@@ -30,7 +30,7 @@ Phase 2.5 的 Console 目标(对齐 PRD v0.2 §0.2 优先级体系):
 3. **与 plugin-project 联调(P0-Project)** ConsoleView slot(看板 / 表格)
 4. **桌面日历 / 习惯热力图模块灰显(P0-Shell 占位侧)**:sidebar 显示但灰显;tooltip "Phase 3 上线";点击不切 activeModule;stub plugin-calendar 不报错
 5. **Console ↔ overlay 数据实时一致(P0-Shell)**:走 core-events + entity_change_log + ack + reconcile(对齐 PRD §5.10),M2.5 末必须真机验收通过 §9.5 X-01 ~ X-06
-6. **PLUGIN_SDK 更新(W1 D1 硬阻塞)**:按 PRD §7.2.1 完整 ConsoleViewProps / HostCapabilities / SlotApi / FocusApi / SelectionApi / TelemetryApi 落地
+6. **PLUGIN_SDK 更新(W1 D1 硬阻塞)**:按 PRD §7.2.1 完整 ConsoleViewProps / ConsoleHostCapabilities / ConsoleSlotApi / FocusApi / SelectionApi / TelemetryApi 落地
 7. **架构债清结**:core-data 双 driver 接口落地(SQLite 已就位,REST 占位 trait 加上)+ entity_change_log 表 schema(与 sync 子 PRD 协调)
 
 非 Phase 2.5 目标(留 Phase 3+,对齐 PRD v0.2 P1-Phase3):
@@ -129,7 +129,7 @@ Phase 2.5 的 Console 目标(对齐 PRD v0.2 §0.2 优先级体系):
 | 日 | 任务 | 交付 |
 |---|---|---|
 | D6 | `plugin-productivity` 实现 ConsoleView(任务模块):中栏列表(virtualized) + 右栏详情表单;描述区**纯文本 + 链接,不支持图片粘贴**;简化重复 picker(5 选项) | 任务 CRUD 在 Console 内可用;无附件无图片粘贴(对齐 PRD §5.4.1 收敛) |
-| D7 | 任务模块完善:子任务(拖 + Cmd+Option+↑/↓ 键盘等价) / Markdown 描述 / 提醒 / 简化重复 picker;list 全键盘可达(j/k, Space, Enter, N, D, P, L, M)+ 多选限定(`Delete` / Cmd+Shift+L 批 Label / Cmd+Shift+M 批移清单) | FR-CON-40~48 全过(v0.2 收敛后)|
+| D7 | 任务模块完善:子任务(拖 + Cmd+Option+↑/↓ 键盘等价) / Markdown 描述 / 提醒 / 简化重复 picker;list 全键盘可达(j/k, Space, Enter, N, D, P, L, M)+ **多选严格收敛:仅 Delete/Backspace 批删除**(批 Label / 批移清单已降 P2-Later,对齐父 PRD §5.2 line 189) | FR-CON-40~48 全过(v0.2 收敛后)|
 | D8 | 番茄模块 ConsoleView:当前会话面板 + 历史柱状图;启动番茄绑定任务(`Cmd+Shift+P`) | FR-CON-59~62 |
 | D9 | 习惯模块 ConsoleView:列表 7 圆点 + streak + 详情**只有"日历" tab**(热力图删除,Phase 3 才补);Space 打卡 + A 归档 | FR-CON-63~67 基础部分;FR-CON-65 留空 |
 | D10(周末)| 四象限 ConsoleView(拖 + 键盘 1/2/3/4 + Cmd+Option+方向键)+ Empty/Error states;真机验收任务/番茄/习惯/四象限四模块 + §5.8.2 S-05 ~ S-07(外接屏拔出 / Stage Manager / 睡眠唤醒)| 第 2 周末 demo + dev_log |
@@ -368,5 +368,6 @@ Phase 2.5 出口 = Phase 3 入口。Console 必须达到以下标准才能签收
 |---|---|---|---|
 | 2026-05-14 | v0.1-draft | 首版,基于 Console PRD v0.1 拆 5 周计划;接口契约 + 测试策略 + 风险登记 + 验收门 | Claude(subagent) |
 | 2026-05-16 | v0.2-draft | 对齐 Console PRD v0.2:W1 D1 加 PLUGIN_SDK 完整契约硬阻塞;W2 删除习惯热力图;W3 设置子页范围收敛 + Cmd+K 改应用内 + provider 协议;W4 跨模块互转改卡片源 + i18n 简中100%/繁中+英文≥80%;W5 删除 5 步 tour 改 `?` cheat sheet + 加模块缺席矩阵 + 跨窗口脚本 + 菜单栏 + S-08~S-11 真机场景;§4.5 PLUGIN_SDK API 列表对齐 PRD §7.2.1;§7 验收门改四层(Shell/Module/Project/灰显/跨窗口) | Claude(subagent) |
+| 2026-05-16(rev1)| v0.2-rev1-draft | 对齐 PRD v0.2-rev1:§1 PLUGIN_SDK 接口名改全名;W2 D7 多选严格收敛仅批删除,撤回批 Label / 批移清单 | Claude(subagent) |
 
 — END of Console dev-plan v0.2-draft —

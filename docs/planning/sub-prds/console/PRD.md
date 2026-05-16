@@ -8,9 +8,9 @@
 | 归属 Phase | Phase 2.5(M2 → M3 之间,4-6 周)|
 | 文档作者 | Claude(subagent) |
 | 创建日期 | 2026-05-14 |
-| 最后更新 | 2026-05-16 |
-| 状态 | v0.2-DRAFT(范围收敛 + 契约硬化第一轮) |
-| 关联审查 | 2026-05-15 收到 Console 子 PRD 审查报告(8 Critical / 12 Major / 5 Minor / 5 增补);v0.2 已全部回应,详见 §13 |
+| 最后更新 | 2026-05-16(rev1) |
+| 状态 | v0.2-rev1-DRAFT(回应 Codex 第二轮审查 5 项) |
+| 关联审查 | (1) 2026-05-15 Console 子 PRD 审查报告(8 Critical / 12 Major / 5 Minor / 5 增补)v0.2 全部回应;(2) 2026-05-16 Codex 审查 5 项细节(Hero scenario / density toggle / 接口名 / SDK 同步 / 多选范围)v0.2-rev1 全部回应;详见 §13 |
 
 ---
 
@@ -119,14 +119,23 @@ Console 是**标准 macOS 窗口**(`window type = console`,见 SYSTEM_ARCHITECTU
 
 ### 2.2 Console 高频场景(Hero Scenarios)
 
-**场景 C-1 · 周日规划(P3)**
-> 周日晚 21:00,小李按 `Cmd+Shift+Space` 唤起 Console。Sidebar 切到"桌面日历",月视图右侧切到 Agenda。看到下周一空着,把"提交季度报告"从"收件箱"列表拖到周一上午。键盘 `4` 切到四象限,把 3 条今天没做完的 Todo 重新分配象限。`5` 切到习惯,看上月 streak 选了一个 73%。整个过程没碰鼠标。
+> v0.2 修正(回应 Codex 审查 #1):v0.1 C-1 场景用了桌面日历月视图 + 拖改期,但 M2.5 桌面日历是灰显占位(§5.4.2),场景与可交付范围冲突。v0.2 把 C-1 改为 M2.5 可用的"任务模块 + 四象限 + 习惯"流;桌面日历版本拆为独立的"Phase 3 场景 C-1'",标记 P1-Phase3。
 
-**场景 C-2 · 跨模块筛选(P1)**
-> Cmd+K 唤起全局搜索,输入"产品 PRD",看到结果分四组:Todo 3 条 / 项目卡片 2 张 / 剪贴板 4 条 / 文件 1 个。用 j/k 选第二组的第一张卡,Enter 在右栏打开。三栏布局保持稳定,sidebar 还在"全局搜索",中栏是结果。
+#### 2.2.1 M2.5 可用场景
 
-**场景 C-3 · 项目卡片改 Todo(P3)**
-> 项目模块下,有一张"调研竞品定价"卡片。右键"转为 Todo",自动建一条 Todo 并保持卡片链接(`linked_todo_id`)。卡片右上角出现 Todo 图标徽标。切到任务模块的"今日"清单,新建的 Todo 在列表顶部,详情栏右下显示"来自项目:Brand Refresh"。
+**场景 C-1 · 周日规划(P3,M2.5 可走通)**
+> 周日晚 21:00,小李按 `Cmd+Shift+Space` 唤起 Console,默认进任务模块 / 收件箱。`Cmd+1` 切到任务模块"今日"清单,`j/k` 浏览本周拖延项,逐条按 `D` 调整截止日。`Cmd+4` 切到四象限,把 3 条没做完的 Todo 重新分配象限(键盘 `1/2/3/4` 或 Cmd+Option+方向键)。`Cmd+5` 切到习惯,看上月达成率选了一个 73%,Space 给今日的"晨跑"打卡。整个过程没碰鼠标。
+
+**场景 C-2 · 跨模块筛选(P1,M2.5 可走通)**
+> Cmd+K 唤起全局搜索,输入"产品 PRD",看到 P0 provider 集结果分四组:Todo 3 条 / 项目卡片 2 张 / Label "产品 PRD" 1 个 / 模块跳转 1 项。用 j/k 选第二组的第一张卡,Enter 在右栏打开。三栏布局保持稳定,Cmd+K 模态关闭后回到项目模块的卡片详情。
+
+**场景 C-3 · 项目卡片改 Todo(P3,M2.5 可走通)**
+> 项目模块下,有一张"调研竞品定价"卡片。**键盘**:卡片 focused 时按 `Cmd+Option+T`,自动建一条 Todo 并保持卡片链接(`linked_todo_id`)。卡片右上角出现 Todo 图标徽标。Console 自动切到任务模块的"今日"清单,新建的 Todo 在列表顶部,详情栏右下显示"来自项目:Brand Refresh"。**鼠标**等价:卡片详情右上 ⋯ 菜单 → "转为 Todo"。
+
+#### 2.2.2 Phase 3 场景(参考,M2.5 不验)
+
+**场景 C-1' · 周日规划带桌面日历(P3,Phase 3 上线)**
+> Phase 3 plugin-calendar 上线后,周日晚的规划流程升级:`Cmd+1` 切到"桌面日历",月视图右侧切到 Agenda。看到下周一空着,Todo 列表里的"提交季度报告"按 `D` 调期到周一上午(键盘)或直接从一天拖到另一天(鼠标);其余流程同 C-1。M2.5 不验本场景。
 
 ### 2.3 非目标用户与非目标场景
 
@@ -290,9 +299,7 @@ v0.1 视觉稿同时画了 48px 自定义标题栏 + FR-CON-14 又要求原生 t
 | 标准(Standard,默认) | 40px | 8px | 14px | 日常使用 |
 | 宽松(Comfortable) | 52px | 12px | 15px | 14" 以下小屏 / 视觉舒适优先 |
 
-**v0.2 同步语义**:`settings.console.density` 是**设备本地偏好,不跨设备同步**。理由:不同屏幕大小对密度的偏好不同(27" 外接屏可能选紧凑,14" MacBook 可能选宽松)。这条与 §5.9 FR-CON-93、§8 数据模型表中的 `console.density` 一致。
-
-(若用户希望跨设备同步密度,可在 设置 > 同步 中开 "高级 > 跨设备同步密度偏好" toggle,Phase 3 评估。)
+**v0.2 同步语义**:`settings.console.density` 是**设备本地偏好,不跨设备同步**。理由:不同屏幕大小对密度的偏好不同(27" 外接屏可能选紧凑,14" MacBook 可能选宽松)。这条与 §5.9 FR-CON-132、§8.1 数据模型表中的 `console.density` 一致;v1 内不提供"跨设备同步密度"的 opt-in toggle,避免与 device-local 语义二义。
 
 ### 4.4 主题
 
@@ -382,7 +389,7 @@ CSS 变量驱动,主题切换 0 闪烁(`<html data-theme="dark" data-accent="blu
 | FR-CON-33 | Detail 折叠 | P0-Shell | List 行右键菜单 "隐藏详情" 或快捷键 `Cmd+Shift+]` 折叠 detail;再按或选中新项展开。**键盘等价**:List 行 focused 时按 `Shift+F10` 或 `Cmd+Option+M` 打开 context menu(macOS 标准),在 menu 中按方向键选 "隐藏详情" 回车 |
 | FR-CON-34 | Detail 在窄屏自动变抽屉 | P0-Shell | 窗口宽 < 1080px 时,detail 不在右侧固定显示,而是从右边滑入覆盖(60% 宽);Esc / 点击外侧 / `Cmd+W`(在 detail 焦点时)收起 |
 | FR-CON-35 | List 滚动性能 | P0-Shell | 任意 list 滚动保持 60fps(虚拟列表实现,任务清单 / 习惯日志 / 项目卡片均需虚拟化);1 万条记录初次渲染 < 200ms;具体设备基线见 §6.1 |
-| FR-CON-36 | List 多选(查看 / 删除 / 标 Label)| P0-View(限定子集) | 多选作为**键盘流的辅助形态**:Shift+Click 区间 + Cmd+Click 单选 + Cmd+A 全选 + Shift+↑/↓ 扩展焦点。选中后批操作工具栏仅含父 PRD 允许的能力:**删除选中** + **加 Label 到选中** + **移动到清单**。**不含完成全部 / 改优先级 / 改截止日批改**(父 PRD §5.2 line 189 明确"Todo 不做批量操作"——"完成"作为状态操作受限,但"删除/打标签/移动清单"属于 list 管理,不算业务级批改,经父 PRD 边界微调记入 §13 与父 PRD 的对齐) |
+| FR-CON-36 | List 多选(查看 / 批删除)| P0-View(严格收敛) | 多选作为**键盘流的辅助形态**:Shift+Click 区间 + Cmd+Click 单选 + Cmd+A 全选 + Shift+↑/↓ 扩展焦点。选中后批操作工具栏**仅含"删除选中"一项**(走 list 行 → 选中 → Delete / Backspace 路径)。**不含批改字段任何形式**(批 Label / 批移清单 / 批改优先级 / 批改截止日 / 批量完成 全部降 P2-Later) — 父 PRD §5.2 line 189 明确"Todo 不做批量操作";"批量完成"以及"批改任意字段"都属业务级批改,Console v1 不做。**批 Label / 批移清单的需求若证实高频,移交未来 plugin-bulk-ops(v1.x 评估)** |
 | FR-CON-37 | List → Detail 选中同步 | P0-Shell | 点 list 行,detail 立即切到该项;键盘 j/k 移动焦点也会跟随(若 detail 处于展开)|
 | FR-CON-38 | 跨栏 focus 切换 | P0-Shell | `Tab` 在 sidebar / list / detail 之间循环;`Shift+Tab` 反向;每栏内部用方向键 |
 
@@ -708,8 +715,9 @@ const settled = await Promise.allSettled(
 |  | `L` | 加 Label | P0-View |
 |  | `M` | 移动到清单 | P0-View |
 |  | `Cmd+Shift+P` | 启动番茄绑定 | P0-View |
-| FR-CON-108a 任务多选 | `Cmd+Shift+L` | 批加 Label(对多选) | P0-View |
-|  | `Cmd+Shift+M` | 批移动到清单 | P0-View |
+| FR-CON-108a 任务多选 | `Delete` / `Backspace` | **批删除选中**(唯一 P0 批操作)| P0-View |
+|  | ~~`Cmd+Shift+L`~~ | ~~批加 Label~~ — **P2-Later 移交 plugin-bulk-ops** | P2-Later |
+|  | ~~`Cmd+Shift+M`~~ | ~~批移动清单~~ — **P2-Later 移交 plugin-bulk-ops** | P2-Later |
 | FR-CON-109 日历 (Phase 3) | `T` | 跳今天 | P1-Phase3 |
 |  | `←/→` | 上/下一段 | P1-Phase3 |
 |  | `1/2/3/4` | 月/周/日/Agenda | P1-Phase3 |
@@ -1174,8 +1182,14 @@ export interface SelectionApi {
   /** 把当前 list 多选状态报给外壳;外壳渲染批操作 toolbar */
   setSelection(selection: { entityIds: string[]; entityType: string }): void;
 
-  /** 外壳触发的批操作动作回调(由 ConsoleView 实现) */
-  onBatchAction(handler: (action: "delete" | "addLabel" | "moveList", payload: unknown) => Promise<void>): () => void;
+  /**
+   * 外壳触发的批操作动作回调(由 ConsoleView 实现)。
+   * v1 仅 "delete"(批删除);"addLabel" / "moveList" / "complete" 等批改字段动作
+   * 已降 P2-Later,移交未来 plugin-bulk-ops。
+   * 接口预留 `string` 联合不写死,避免 v1.x 加新批操作时改 SDK BREAKING;
+   * 但 Console 外壳渲染 toolbar 时仅显示 "delete" 按钮。
+   */
+  onBatchAction(handler: (action: "delete" | string, payload: unknown) => Promise<void>): () => void;
 }
 
 export interface TelemetryApi {
@@ -1409,7 +1423,7 @@ Console 无独立业务表(对齐主 PRD §5.13.4),只在 `settings` 表中存�
 - [ ] 内存中量数据 ≤ 350MB
 
 #### 9.1.11 ConsoleView 契约(对应 §7.2)
-- [ ] PLUGIN_SDK §3.1 已按 §7.2.1 更新,有完整 ConsoleViewProps / HostCapabilities / SlotApi / FocusApi / SelectionApi / Telemetry 接口
+- [ ] PLUGIN_SDK §3.1 已按 §7.2.1 更新,有完整 ConsoleViewProps / ConsoleHostCapabilities / ConsoleSlotApi / FocusApi / SelectionApi / TelemetryApi 接口
 - [ ] CI manifest schema 校验:声明 `windows.console=true` 的 plugin 必须导出 ConsoleView
 - [ ] plugin-console **不 import `@tauri-apps/api`**(CI lint)
 
@@ -1518,7 +1532,8 @@ Console 必须在 M2.5 Shell + Module + Project + Cross-Window 验收全过的�
 | 日期 | 版本 | 变更 | 作者 |
 |---|---|---|---|
 | 2026-05-14 | v0.1-draft | 首版,基于主 PRD §5.13 展开;FR-CON-13~158 共 146 条;5.1~5.12 + §7 架构 + §8 settings + §9 验收 + §10 风险 + §11 待办 | Claude(subagent) |
-| 2026-05-16 | v0.2-draft | 回应 Console 子 PRD 审查报告(2026-05-15)8 Critical / 12 Major / 5 Minor / 5 增补全部回应;关键变更:① 桌面日历 / 习惯热力图整组降级 Phase 3,M2.5 仅占位;② P0 拆为 P0-Shell / P0-View / P0-Project / P1-Phase3 / P2-Later 五标签;③ Todo 附件 / 批量操作 / 复杂 RRULE UI 越界范围回收;④ 引入 ConsoleViewProps / HostCapabilities / SlotApi / FocusApi / SelectionApi 完整契约;⑤ Cmd+K 改应用内 + SearchProvider 协议;⑥ 标题栏锁定方案 A(原生 + NSToolbar);⑦ 所有拖拽 P0 增补键盘对偶清单;⑧ 验收清单重写为 Shell + Module + Project + Cross-Window 四层;⑨ 增补 macOS 菜单栏 / 跨窗口一致性脚本 / 模块缺席矩阵 / 数据规模分层 / Console+overlay 多 Space 场景矩阵;⑩ density 同步语义在 §4.3 / §5.9 / §8 三处统一为 device-local | Claude(subagent) |
+| 2026-05-16(rev1)| v0.2-rev1-draft | 回应 Codex 第二轮审查 5 项:(1) §2.2 Hero scenario C-1 改为 M2.5 可用流(任务 + 四象限 + 习惯),原日历版本拆为 Phase 3 场景 C-1';(2) §4.3 删除"Phase 3 评估跨设备同步密度 toggle",严格 device-local 不二义;(3) §7.2.1 / §9.1.11 / §13 / dev-plan §1 / REVIEW 全文统一接口名为全名(ConsoleHostCapabilities / ConsoleSlotApi / TelemetryApi),撤回短名;(4) `docs/PLUGIN_SDK.md` §3.1 由裸 `ConsoleView?: React.ComponentType` 同步到完整契约(ConsoleViewProps + ConsoleHostCapabilities + ConsoleSlotApi + FocusApi + SelectionApi + TelemetryApi + SearchProvider + SettingsSection + NotificationTab + LabelEntityResolver);(5) §5.3 FR-CON-36 / §5.6.3 FR-CON-108a / §7.2.1 SelectionApi / dev-plan W2 D7 多选**严格收敛为仅批删除**,批 Label / 批移清单全部 P2-Later 移交 plugin-bulk-ops,撤回 v0.2 "边界微调"自辩 | Claude(subagent) |
+| 2026-05-16 | v0.2-draft | 回应 Console 子 PRD 审查报告(2026-05-15)8 Critical / 12 Major / 5 Minor / 5 增补全部回应;关键变更:① 桌面日历 / 习惯热力图整组降级 Phase 3,M2.5 仅占位;② P0 拆为 P0-Shell / P0-View / P0-Project / P1-Phase3 / P2-Later 五标签;③ Todo 附件 / 批量操作 / 复杂 RRULE UI 越界范围回收;④ 引入 ConsoleViewProps / ConsoleHostCapabilities / ConsoleSlotApi / FocusApi / SelectionApi / TelemetryApi 完整契约;⑤ Cmd+K 改应用内 + SearchProvider 协议;⑥ 标题栏锁定方案 A(原生 + NSToolbar);⑦ 所有拖拽 P0 增补键盘对偶清单;⑧ 验收清单重写为 Shell + Module + Project + Cross-Window 四层;⑨ 增补 macOS 菜单栏 / 跨窗口一致性脚本 / 模块缺席矩阵 / 数据规模分层 / Console+overlay 多 Space 场景矩阵;⑩ density 同步语义在 §4.3 / §5.9 / §8 三处统一为 device-local | Claude(subagent) |
 
 ## 13. v0.2 修订摘要 — 对照审查条目
 
@@ -1528,7 +1543,7 @@ Console 必须在 M2.5 Shell + Module + Project + Cross-Window 验收全过的�
 |---|---|---|
 | FR-CON-49~54 月/周/日 P0 冲突 dev-plan | 🔴 Critical-1 | §0.1 / §5.4.2 整组降级 P1-Phase3,M2.5 仅 §5.4.2 P0-Shell 占位 |
 | 146 FR P0 过多失去"必做"含义 | 🔴 Critical-2 | §0.2 优先级体系拆为 P0-Shell / P0-View / P0-Project / P1-Phase3 / P2-Later |
-| Todo 图片粘贴 / 批量 / 复杂 RRULE 越界 | 🔴 Critical-3 | §0.1 / §5.4.1 删除 + 移交;FR-CON-44 改纯文本;FR-CON-36 多选保留但批改字段限定 |
+| Todo 图片粘贴 / 批量 / 复杂 RRULE 越界 | 🔴 Critical-3 | §0.1 / §5.4.1 删除 + 移交;FR-CON-44 改纯文本;FR-CON-36 多选**严格收敛为仅批删除**(v0.2-rev1 回应 Codex 审查 #5);批 Label / 批移清单 / 批改字段 全部 P2-Later 移交 plugin-bulk-ops |
 | ConsoleView slot 契约缺失 | 🔴 Critical-4 | §7.2 完整 props 契约;PLUGIN_SDK 在 Phase 2.5 W1 D1 按此更新 |
 | 多个 P0 拖拽 / 右键违反全键盘可达 | 🔴 Critical-5 | §5.3 / §5.4 各拖拽 FR 内嵌键盘等价路径;§5.6.4 拖拽对偶清单;§9.1.3 验收 |
 | Cmd+K 写成全局快捷键与 macOS HIG 冲突 | 🔴 Critical-6 | §5.5.1 作用域分层:Cmd+Shift+Space 全局 / Cmd+K 应用内 |
@@ -1564,7 +1579,7 @@ Console 必须在 M2.5 Shell + Module + Project + Cross-Window 验收全过的�
 | 父 PRD §5.13 边界 | v0.1 越界 | v0.2 修订 |
 |---|---|---|
 | "控制台**不是新功能集合**,只做统一窗口化外壳"(主 PRD line 511)| Todo 图片粘贴 / 批量操作 / 复杂 RRULE / 账号 / 数据库 vacuum / 插件管理 / 完整日历 / 项目深度交互全被写入 Console P0 | §0.1 范围红线显式回收;§5.4.1 / §5.4.2 / §5.4.9 / §5.7 收敛;Console 只定义"如何承载"不定义"承载什么具体能力" |
-| "Todo 不做附件、批量操作"(主 PRD §5.2 line 189)| FR-CON-44 图片粘贴;FR-CON-36 多选批操作含改优先级 / 改截止日 | §5.4.1 删除图片粘贴;§5.3 FR-CON-36 多选限定"删除 / 加 Label / 移动清单"三项,删除批改优先级 / 截止日;**§13 备注:此处经父 PRD 边界微调,因为"加 Label / 移动清单"是 list 管理而非业务批改;若产品 Owner 倾向更严格,可进一步降到只"删除 + 加 Label"** |
+| "Todo 不做附件、批量操作"(主 PRD §5.2 line 189)| FR-CON-44 图片粘贴;FR-CON-36 多选批操作含改优先级 / 改截止日 / 批 Label / 批移清单 | §5.4.1 删除图片粘贴;§5.3 FR-CON-36 多选**严格收敛为仅"批删除"**;批 Label / 批移清单 / 批改优先级 / 批改截止日 / 批量完成 **全部降 P2-Later 移交未来 plugin-bulk-ops**(v0.2-rev1 回应 Codex 审查 #5,撤回 v0.2 的"边界微调"自辩) |
 | "整体控制台只做布局和导航"(主 PRD line 511)| 设置 9 个子页内容详细规格 | §5.4.9 改为"容器 + slot",子页规格移交对应业务子 PRD |
 | 主 PRD §5.13 未提"桌面日历必须 P0" | v0.1 FR-CON-49~54 标 P0 与 dev-plan §1 line 30 "Phase 3 才接入"冲突 | §5.4.2 整组 P1-Phase3 + 灰显占位 |
 
