@@ -7,7 +7,7 @@
 | 归属 Phase | Phase 4.5(4-6 周) |
 | 文档作者 | Claude(subagent) |
 | 创建日期 | 2026-05-14 |
-| 状态 | DRAFT |
+| 状态 | DRAFT v0.2(2026-05-16 按 review 重写 5 处 Critical + 12 处 Major) |
 
 ---
 
@@ -15,18 +15,30 @@
 
 本文档 **只覆盖浏览器特有的内容**。控制台 UI(三栏布局 / 各模块视图 / 键盘流 / 主题 / 设置 / 全局搜索 / sidebar 导航)全部继承自 `sub-prds/console/PRD.md`,本档不重复。
 
-**心智模型一句话**:网页版 = 控制台子 PRD 的 React 组件树 + 浏览器壳 + REST data driver + 浏览器特有的运行约束(认证 / 缓存 / 实时同步 / 离线 / 部署)。
+**心智模型一句话(v0.2 修正)**:网页版 = 控制台子 PRD 的 React 组件树 + 浏览器壳 + **Sync push/pull encrypted blob driver**(不是直连业务表的 PostgREST CRUD)+ 浏览器特有的运行约束(认证 / 缓存 / 实时同步 / 离线 / 部署)。
+
+### 0.1 基础契约(v0.2 拍板,后续 FR 全部据此展开)
+
+| 契约 | 决策 | 来源 |
+|---|---|---|
+| **Auth 存储模型** | **A — 纯 SPA + Supabase 自定义 storage**(token 落 IndexedDB 加密分区,不是 HttpOnly cookie);CSP/XSS 防御 + 短 TTL access token + refresh 失败强制重登 | 用户 2026-05-16 拍板 |
+| **数据访问协议** | Web 端的 `core-data` REST driver **不直连 PostgREST 业务表**;实现 `Repository<T>` 接口但底层网络协议是 Sync 子 PRD 定义的 `/sync/pull`、`/sync/push`、RPC,仅传 `{entity_type, entity_id, version, encrypted_blob}` | review Critical #2 |
+| **Realtime 合约** | 订阅 `sync:<account_id>` channel,**payload 只含 metadata**(`{entity_type, entity_id, server_updated_at, originator_device_id}`),收到后触发增量 pull,不直接合并 record | review Critical / Major (Sync PRD §4.1/§6.1) |
+| **离线 E2E 队列** | DEK 在内存 → mutation 入队前必须先加密;DEK 不在内存 → 禁止加密字段离线写入,只允许未保存草稿留在 React 内存,不落 IndexedDB | review Critical #3 |
+| **GDPR 导出方案** | 浏览器端持 DEK 拉全量 encrypted blobs → 本地解密 → 本地生成 zip → 浏览器直接下载;服务端永不接触明文,最多发短期 job token | review Critical #4 |
+| **多设备登出** | 不依赖 Supabase `auth.sessions`(浏览器端不可直接撤销 refresh token);自建 `devices` / `sessions` 表 + RPC(`device_register` / `device_heartbeat` / `device_revoke` / `revoke_others`),登出走 Realtime 广播 | review Critical #6 |
+| **公开分享链接** | **v1 不实现**;P1 等 Sync 子 PRD 先出 share envelope 协议(per-entity share key + URL fragment 携带解密材料 + server 存 encrypted share blob),再回到本档展开 UI | 用户 2026-05-16 拍板 + review Critical #7 |
 
 本档与其他子 PRD 的边界:
 
 | 内容 | 谁负责 |
 |---|---|
 | 三栏布局 / sidebar 导航 / 模块视图 / 键盘流 / 主题 | `sub-prds/console/PRD.md` |
-| 端到端加密协议本身 / DEK 派生 / 服务端零知识保证 | 主 PRD §5.9 + `TECHNICAL_REQUIREMENTS.md §2` |
-| REST 端点契约 / 同步语义 / 冲突解决 | `sub-prds/sync/PRD.md`(并行起草中) |
-| 浏览器端的认证 UI / 数据 driver / 离线 / 部署 / 响应式 / 兼容性 | 本档 |
+| 端到端加密协议本身 / DEK 派生 / 服务端零知识保证 / share envelope 协议 | 主 PRD §5.9 + `TECHNICAL_REQUIREMENTS.md §2` + `sub-prds/sync/PRD.md` |
+| Sync push/pull 端点契约 / Realtime metadata 事件流 / 冲突解决 / mutation 幂等性 | `sub-prds/sync/PRD.md`(本档为 Web 端消费视图) |
+| 浏览器端的认证 UI / 数据 driver / 离线 / 部署 / 响应式 / 兼容性 / Console host 注入桩 | 本档 |
 
-> 控制台子 PRD 尚未提交时,本档对其行为的引用以主 PRD §5.13 + ADR-0003 为准,后续以控制台子 PRD 为最终源。
+> 控制台子 PRD 尚未提交时,本档对其行为的引用以主 PRD §5.13 + ADR-0003 为准,后续以控制台子 PRD 为最终源。Sync 子 PRD 尚未提交时,本档 §5.2/§5.3/§5.4 的端点契约和 payload 形状以本档 §0.1 + 与同步层 agent 的口头对齐为准。
 
 ---
 
@@ -98,7 +110,7 @@
 | `/app/labels` | Label 管理 | 必须登录 |
 | `/app/search?q=...` | 全局搜索结果 | 必须登录 |
 | `/app/settings/*` | 设置(账号 / 外观 / 隐私 / 同步 / 已连接设备) | 必须登录 |
-| `/share/:token` | 共享链接(P1,见 §5.18) | 公开(token 鉴权) |
+| `/share/:token` | 共享链接(**v1 不实现**,P1,等 Sync 子 PRD 出 share envelope;见 §5.18.2) | — |
 | `/404` / `/500` | 错误页 | 公开 |
 
 ### 3.2 域名规划
@@ -123,9 +135,9 @@
 | **三栏布局 / sidebar / 模块视图** | 控制台子 PRD 定义 | 100% 复用 |
 | **键盘流(Cmd+K 搜索 / J/K 上下 / Cmd+1..9 切模块)** | 控制台子 PRD 定义 | 复用,但 `Cmd+W` / `Cmd+Q` 走浏览器原生 |
 | **主题(深色/浅色/跟随系统)** | 控制台子 PRD 定义 | 复用 + 持久化走 localStorage(非 SQLite) |
-| **数据访问** | `core-data` SQLite driver | `core-data` REST driver(本档 §5.2) |
-| **跨窗口事件总线** | Tauri event | `BroadcastChannel`(同源跨标签)+ Supabase Realtime(跨设备)(本档 §5.3) |
-| **认证持久化** | macOS Keychain | `httpOnly` Secure SameSite=Lax cookie + Supabase SDK 内置(本档 §5.1) |
+| **数据访问** | `core-data` SQLite driver | `core-data` **Sync blob driver**(实现 Repository 接口,底层走 Sync push/pull encrypted blob,**非** PostgREST 业务表 CRUD)(本档 §5.2) |
+| **跨窗口事件总线** | Tauri event | `BroadcastChannel`(同源跨标签)+ Supabase Realtime(`sync:<account_id>` metadata-only)(本档 §5.3) |
+| **认证持久化** | macOS Keychain | Supabase JS SDK **自定义 storage**(IndexedDB 加密分区 + 短 TTL access token),纯 SPA 不依赖 HttpOnly cookie(本档 §0.1 + §5.1) |
 | **离线** | 永远本地优先 | IndexedDB 缓存 + Service Worker(本档 §5.4) |
 | **响应式** | 仅桌面分辨率 | 桌面/平板/手机三档(本档 §5.5) |
 | **路由** | 模块内路由 + 窗口生命周期 | 浏览器 History API + 深链接(本档 §5.8) |
@@ -138,16 +150,36 @@
 
 ### 4.1 Web 端新增(控制台没有的)
 
-- 浏览器端账号 + OAuth 回调路由
-- REST data driver + 缓存层
-- 实时同步(Supabase Realtime)
-- 离线模式 + 编辑队列
+- 浏览器端账号 + OAuth(PKCE flow)回调路由
+- Sync blob driver(实现 Repository,封装 Sync push/pull + 本地索引/搜索)
+- 实时同步(Supabase Realtime metadata-only → pull trigger)
+- 离线模式 + 加密 mutation 队列(DEK-encrypted at-rest)
 - 响应式断点 + 移动端只读
-- PWA(P1)
+- PWA(P1)+ 安装提示策略(见 §5.7)
 - SEO + landing page
-- 域名 / CDN / 部署管线
-- 跨标签会话同步 / 多设备登出
-- GDPR 数据导出 / 账号删除的浏览器端 UI
+- 域名 / CDN / 部署管线 + SW 版本契约(见 §9.4)
+- 跨标签会话同步 / 多设备登出(自建 devices 表 + RPC)
+- GDPR 数据导出(浏览器端打包,零知识)/ 账号删除的浏览器端 UI
+
+### 4.2 Console Host 注入桩契约(Web 实现)
+
+> Console 子 PRD 用 `<ConsoleHost />` 抽象桌面/Web 差异。本表是 Web 端必须实现的注入桩接口;桌面端有对应 Tauri 实现。任何 plugin 通过 `useHost()` 访问下列能力,**严禁直接 import 平台 API**。
+
+| Host 能力 | Web 实现 | 桌面实现(参考) |
+|---|---|---|
+| 文件下载 | Blob URL + `<a download>` 触发;大文件用 `showSaveFilePicker`(Chromium) 或 fallback | `tauri-plugin-dialog` save + write |
+| 通知 | 内嵌 toast(P0)+ Web Notification API(P1,需 permission)| macOS UserNotifications |
+| 全局快捷键 | `KeyboardEvent` + 避让浏览器保留键(见 §5.5.3) | tauri-plugin-global-shortcut |
+| 拖入(DnD) | HTML5 DnD,**仅文本/URL**(不读真实路径) | Tauri onDragDropEvent(有路径) |
+| 窗口能力 | 浏览器原生(history、tab close、visibilitychange) | core-window(`open`/`close`/`focus`/`level`) |
+| 全局搜索 adapter | 本地索引(IndexedDB FTS)+ Sync metadata 触发刷新 | SQLite FTS5 |
+| 设置读写 | `useAccountSettings()` → `account-global`(同步)走 Sync blob;`device-local`(不同步)走 IndexedDB(§5.6.1 映射表) | 同上,本地走 SQLite |
+| 错误边界 | React `<ErrorBoundary>` + Sentry web | React `<ErrorBoundary>` + Sentry native |
+| 文件系统 | `core-fs` web stub:无真实路径,只支持 Blob 输入/输出 | core-fs(NSWorkspace、security-scoped bookmarks)|
+| 剪贴板写出 | `navigator.clipboard.writeText`(需 user gesture)| NSPasteboard |
+| 剪贴板监听 | **不支持**(浏览器无被动监听 API);plugin manifest 标记 `requires.clipboard-monitor = true` 在 Web build 被静态剔除 | NSPasteboard polling / NSEvent |
+
+> Web Host 注入桩接口位 `packages/core/src/host/web/`,Console 子 PRD `host.ts` 定义 trait;本档约束 Web 实现。任何 plugin 在 Web build 中调用 host 不支持的能力(剪贴板监听、Tauri 私有 API),manifest 静态剔除应在 build 阶段失败(承接 §7.3)。
 
 ---
 
@@ -157,62 +189,212 @@
 
 ### 5.1 浏览器端 Auth
 
-| ID | 需求 | 优先级 | 验收标准 |
-|---|---|---|---|
-| FR-WEB-08 | 邮箱+密码注册 | P0 | 表单含 email、password(≥8 位,含字母+数字)、二次确认;提交走 `supabase.auth.signUp`;失败显示后端 `error.code` 的人类可读文案(已 i18n) |
-| FR-WEB-09 | 邮箱验证 | P0 | 注册后弹"已发送验证邮件"卡;`/auth/verify` 落地页解析 token、调 `supabase.auth.verifyOtp`,成功后跳 `/app/todos` |
-| FR-WEB-10 | 邮箱+密码登录 | P0 | 失败计数 ≥ 5 次/15 分钟触发 Supabase 默认风控(无需自实现);成功后写会话 cookie 并跳目标页 |
-| FR-WEB-11 | Sign in with Apple | P0 | 走 Supabase OAuth provider;回调走 `/auth/callback?provider=apple`;首次登录需补邮箱 |
-| FR-WEB-12 | Google OAuth | P0 | 同上,provider=google |
-| FR-WEB-13 | 找回密码 | P0 | `/auth/forgot` 发重置邮件;邮件 link 落 `/auth/reset?token=...`;新密码强度同 FR-WEB-08 |
-| FR-WEB-14 | 会话持久化 | P0 | Supabase JS SDK 默认 `persistSession: true`,access token + refresh token 走 Secure SameSite=Lax cookie;关浏览器再开仍登录 |
-| FR-WEB-15 | 跨标签会话同步 | P0 | 标签 A 登出 → 标签 B 10s 内自动跳 `/auth/login`;实现走 `BroadcastChannel('auth')` + Supabase SDK 的 `onAuthStateChange` |
-| FR-WEB-16 | 注销 | P0 | 设置 → 注销 / sidebar 头像菜单 → 注销;同时清 cookie + IndexedDB 用户数据 + 通过 BroadcastChannel 通知其他标签 |
-| FR-WEB-17 | 多设备登出 | P0 | 设置 → "已登录设备"列表(从 `auth.sessions` 拉),可单独撤销或"撤销除当前外全部" |
-| FR-WEB-18 | 双因素认证(TOTP) | P1 | 与主 PRD FR-AC-05 一致,Web 端提供启用流程 + QR 展示 + 登录时第二步输入 |
-| FR-WEB-19 | 桌面 App 用户首访 Web 引导 | P0 | 检测 `localStorage['xai:already-has-desktop']` 或登录后服务端字段;若桌面已激活,首次访问 Web 弹一次性引导卡:"你已在 macOS 上使用 XAI;Web 端是只读+轻量编辑场景" |
-| FR-WEB-20 | 主密码 challenge(E2E) | P0 | 登录后**单独**询问主密码用以解出 DEK(主密码 ≠ 账号密码;见 §5.12);若拒输 → 受 E2E 保护的字段显示为"已加密,输入主密码可查看";KEK 仅驻内存 |
+> v0.2 重写:删除"HttpOnly cookie"误导(纯 SPA 无法由 JS 设置);改为 Supabase JS SDK 自定义 storage adapter + CSP/XSS 强化的纯 SPA 模型(本档 §0.1 拍板)。OAuth 走 PKCE flow。多设备登出不依赖 `auth.sessions`,改自建 devices 表 + RPC。
 
-### 5.2 数据访问层(REST driver)
+#### 5.1.1 Token 存储模型(纯 SPA)
+
+| 项 | 决策 |
+|---|---|
+| Access token | Supabase JS SDK 自定义 storage adapter → IndexedDB(`xai-cache` 库 `auth_tokens` Object Store);**短 TTL(1h)**;过期前 5min 静默 refresh |
+| Refresh token | 同 IndexedDB Object Store;refresh 失败 → 强制清并跳登录;**滚动刷新**(每次成功换新 refresh token,旧的失效)|
+| Token 加密 at-rest | IndexedDB 内的 token 用 `crypto.subtle.encrypt`(AES-GCM)+ 浏览器派生密钥(`crypto.getRandomValues` + 装填到非 extractable CryptoKey,存内存 `IDBObjectStore` 的 metadata);**不写明文 token**|
+| XSS 防御红线 | CSP `script-src 'self'` + 无 `'unsafe-inline'` + 无 CDN(SRI 兜底)+ `dangerouslySetInnerHTML` 禁用 + react-markdown + rehype-sanitize 白名单(见 §5.12) |
+| 取舍声明 | 与 HttpOnly cookie 相比,XSS 直接可读 token 的风险更高;承担代价的前提是 §5.12 安全栈完整 + Sentry redact 严格 + npm 供应链审计(`pnpm audit` + Dependabot)|
+
+#### 5.1.2 FR 表
 
 | ID | 需求 | 优先级 | 验收标准 |
 |---|---|---|---|
-| FR-WEB-21 | `core-data` REST driver | P0 | 与 SQLite driver 实现同一 `Repository<T>` 接口;Web build 启用 REST,桌面 build 启用 SQLite;切换零业务代码改动 |
-| FR-WEB-22 | 端点映射 | P0 | 每个表对应一组 REST 端点(详见 `sub-prds/sync/PRD.md`);默认 `GET/POST/PATCH/DELETE /rest/v1/<table>`(Supabase PostgREST 风格);自定义业务调用走 RPC `/rest/v1/rpc/<fn>` |
-| FR-WEB-23 | 请求缓存(stale-while-revalidate) | P0 | 用 TanStack Query(React Query)v5;list 端点默认 staleTime 30s、cacheTime 5min;mutation 后自动失效相关 query |
-| FR-WEB-24 | 失败重试 | P0 | 网络错误(`fetch` reject 或 5xx)指数退避 3 次(0.5s/1.5s/4.5s);4xx 不重试直接显错 |
-| FR-WEB-25 | 错误展示 | P0 | 4xx → toast + 具体表单字段红色;5xx → 顶部全局 banner "服务暂不可用,稍后重试";401 → 跳登录;403 → "权限不足";429 → toast 提示限频 |
-| FR-WEB-26 | 乐观更新 | P1 | Todo 完成 / 卡片拖拽 等高频写,在 mutation 中先更新本地缓存,服务端确认后回滚或保留;失败时回滚 + toast |
-| FR-WEB-27 | 批量写合并 | P1 | 同一 tick 内多次 mutation 同一 entity 合并为一次 PATCH(去抖 100ms) |
-| FR-WEB-28 | 大列表分页 | P0 | Todo / clipboard(若开启) / card 等列表 default 50 条/页,滚动到底自动拉下一页;尾部加载状态行 |
-| FR-WEB-29 | 请求取消 | P0 | 切换路由或 query key 变化时 abort 上一次请求(`AbortController`) |
-| FR-WEB-30 | API 版本协商 | P0 | 每个请求带 `Accept-Version: 2026-05` header;服务端若返回 `Sunset` header 显示升级提示 |
+| FR-WEB-08 | 邮箱+密码注册 | P0 | 表单含 email、password(≥12 位,含大小写+数字+符号,zxcvbn ≥ 3)、二次确认;提交走 `supabase.auth.signUp`;失败显示后端 `error.code` 的人类可读文案(已 i18n) |
+| FR-WEB-09 | 邮箱验证 | P0 | 注册后弹"已发送验证邮件"卡;`/auth/verify?token_hash=...&type=email` 落地页调 `supabase.auth.verifyOtp({ token_hash, type: 'email' })`,成功后跳 `next` 参数(白名单)或 `/app/todos` |
+| FR-WEB-10 | 邮箱+密码登录 | P0 | 失败计数 ≥ 5 次/15 分钟触发 Supabase 默认风控;成功后**调 `device_register` RPC** 注册当前 device fingerprint → 写入自定义 storage → 跳 `next`(白名单) |
+| FR-WEB-11 | Sign in with Apple(PKCE) | P0 | (1) 生成 `code_verifier`(`crypto.getRandomValues` 43-128 chars)+ `state`(64 chars 随机),`sessionStorage` 暂存;(2) 调 `supabase.auth.signInWithOAuth({ provider: 'apple', options: { redirectTo, queryParams: { prompt: 'login' } } })` 触发跳转;(3) `/auth/callback?provider=apple&code=...&state=...` 校验 `state` 一致 → 调 `supabase.auth.exchangeCodeForSession(code)`;(4) Apple **private relay** 邮箱兜底:`@privaterelay.appleid.com` 直接接受,不强制补真实邮箱;(5) 缺邮箱(Apple 隐藏)→ 跳"请补邮箱"页可选填,跳过则用 relay 邮 |
+| FR-WEB-12 | Google OAuth(PKCE) | P0 | 同 FR-WEB-11 流程,provider=google;`scope=openid email profile`;**禁用 Google One Tap**(避免 third-party cookie 依赖) |
+| FR-WEB-13 | 找回密码 | P0 | `/auth/forgot` 调 `supabase.auth.resetPasswordForEmail(email, { redirectTo: '<absolute>/auth/reset' })`;邮件 link 落 `/auth/reset?token_hash=...&type=recovery`;调 `verifyOtp` → 强制设新密码(同 FR-WEB-08 强度) |
+| FR-WEB-14 | 会话持久化(自定义 storage) | P0 | Supabase JS SDK 构造时传 `auth.storage` adapter(`getItem`/`setItem`/`removeItem` over IndexedDB);access token TTL 1h,refresh 滚动;关浏览器再开,SDK init 时从 storage 拉 session → 后台 refresh → 成功则保持登录;refresh 失败 → 清 storage + 跳 `/auth/login` |
+| FR-WEB-15 | 跨标签会话同步 | P0 | 标签 A 登出 → `BroadcastChannel('auth')` 广播 `LOGOUT` → 其他标签 10s 内清 IndexedDB + 跳 `/auth/login`;Supabase SDK `onAuthStateChange` 监听本地变化作为兜底 |
+| FR-WEB-16 | 注销(本设备) | P0 | 设置 → 注销:(a) 调 `supabase.auth.signOut({ scope: 'local' })`;(b) 调自建 `device_revoke(current_device_id)` RPC;(c) 清 IndexedDB `auth_tokens` + `query_cache` + `pending_mutations` + `encrypted_dek`;(d) BroadcastChannel 通知其他标签;(e) 跳 `/auth/login` |
+| FR-WEB-17 | 多设备列表 + 单设备撤销 | P0 | 设置 → "已登录设备"读取自建 `sessions` 视图(由 `device_register` / `device_heartbeat` 维护,含 `device_id`、`device_name`、`platform`、`last_seen_at`、`created_at`)。撤销走 `device_revoke(device_id)` RPC:服务端置 `revoked_at` + 通过 Realtime `sync:<account_id>` 广播 `device_revoked` 事件;被撤销的设备收到事件后立即 signOut + 清 IndexedDB |
+| FR-WEB-17b | 撤销除当前外全部 | P0 | 设置 → "撤销其他设备" 调 `revoke_others_rpc()`;实现同 FR-WEB-17 批量化 |
+| FR-WEB-17c | 设备 heartbeat | P0 | Web 端登录后每 5min 调 `device_heartbeat(device_id)` 更新 `last_seen_at`(节流;visibilitychange=visible 时立即触发一次);非活跃 30 天的设备自动标记为 `stale`,但**不自动撤销**(由用户手动或主动登出) |
+| FR-WEB-17d | Device fingerprint | P0 | `device_id` = `crypto.randomUUID()`(首次注册生成),持久化到 IndexedDB `device.id`(注销不清,登出再登保持同 device_id);`device_name` = 解析 UA(`Chrome 124 on macOS`)用户可改 |
+| FR-WEB-18 | 双因素认证(TOTP) | P1 | 与主 PRD FR-AC-05 一致;Web 端提供启用流程 + QR 展示 + 登录时第二步输入;走 Supabase `auth.mfa.enroll` / `verify` API |
+| FR-WEB-19 | 桌面 App 用户首访 Web 引导 | P0 | **不依赖 localStorage hint**(可被清);判定改为登录后调 `device_list_rpc()` 看是否有 `platform: 'macos'` 的活跃设备;有 → 首次访问 Web 弹一次性引导卡(用 IndexedDB `user_prefs.web_intro_seen` 记录);卡片文案 "你已在 macOS 上使用 XAI;Web 端是只读+轻量编辑场景" |
+| FR-WEB-20 | 主密码 challenge(E2E) | P0 | 登录后**单独**询问主密码用以解出 DEK(主密码 ≠ 账号密码;见 §5.12);若拒输 → 受 E2E 保护的字段显示为"已加密,输入主密码可查看";KEK 仅驻内存(`useRef` 持有非 extractable CryptoKey,组件卸载即释放) |
+| FR-WEB-20b | OAuth `next` 参数白名单 | P0 | 任何 `next` / `redirectTo` 参数必须是**同源相对路径**(`/^\/(app|share|legal)\//`);命中 open-redirect 检测的丢弃用默认 `/app/todos`;`redirectTo` 在 Supabase Dashboard 配 allowlist(`https://app.xai-desktop.app/auth/callback`、`http://localhost:5173/auth/callback`) |
+| FR-WEB-20c | OAuth state/nonce 校验 | P0 | `state` 存 sessionStorage(关标签清);callback 拿不到 state 或对不上 → 显错并不交换 code;PKCE 的 `code_verifier` 同样存 sessionStorage |
 
-### 5.3 实时同步(Supabase Realtime)
+#### 5.1.3 自建 devices/sessions 表(后端 schema 增量)
+
+> 主 PRD §8 未含本表,需 Sync 子 PRD 同步增加。Web 端只是消费方。
+
+```sql
+-- devices:每个安装实例
+CREATE TABLE devices (
+  id UUID PRIMARY KEY,
+  account_id UUID NOT NULL REFERENCES accounts(id) ON DELETE CASCADE,
+  platform TEXT NOT NULL CHECK (platform IN ('macos','web','windows','ios','android')),
+  device_name TEXT NOT NULL,           -- 用户可编辑显示名
+  user_agent TEXT,                     -- Web only
+  created_at TIMESTAMPTZ NOT NULL DEFAULT now(),
+  last_seen_at TIMESTAMPTZ NOT NULL DEFAULT now(),
+  revoked_at TIMESTAMPTZ                -- 非 null 即已撤销
+);
+
+-- sessions:每次 refresh token 颁发
+CREATE TABLE sessions (
+  id UUID PRIMARY KEY,
+  device_id UUID NOT NULL REFERENCES devices(id) ON DELETE CASCADE,
+  account_id UUID NOT NULL,
+  refresh_token_hash TEXT NOT NULL,    -- bcrypt/argon2 hash,不存明文
+  expires_at TIMESTAMPTZ NOT NULL,
+  revoked_at TIMESTAMPTZ
+);
+
+CREATE INDEX ON devices (account_id, revoked_at);
+CREATE INDEX ON sessions (device_id, expires_at);
+```
+
+RPC 接口:`device_register({ device_id, platform, device_name, user_agent })`、`device_heartbeat({ device_id })`、`device_revoke({ device_id })`、`revoke_others_rpc()`、`device_list_rpc()`。
+所有 RPC 走 Supabase RLS(`account_id = auth.uid()`)。
+
+### 5.2 数据访问层(Sync blob driver)
+
+> v0.2 重写:**取消直连 PostgREST 业务表**(`GET /rest/v1/todos` 等),改为调用 Sync 子 PRD 定义的 `/sync/pull`、`/sync/push`、RPC,仅在线路上传 `{entity_type, entity_id, version, encrypted_blob}`。过滤/排序/搜索/聚合**全在客户端本地索引完成**,因为服务端零知识无法看明文字段(review Critical #2)。
+>
+> Web 端的 `core-data` driver 实现 `Repository<T>` 接口,**桌面 SQLite driver 与之共用同一 Repository 契约**(ADR-0003),业务 plugin 零感知。
+
+#### 5.2.1 网络协议层
+
+| 端点 | 方向 | payload | 说明 |
+|---|---|---|---|
+| `POST /sync/pull` | client → server | `{ cursor, max_batch, entity_types[] }` | 增量拉:从 cursor 开始的 metadata + encrypted_blob;返回 `{ items[], next_cursor, has_more }` |
+| `POST /sync/push` | client → server | `{ mutations[] }`,每条 `{ mutation_id, entity_type, entity_id, op, base_version, encrypted_blob, idempotency_key }` | 批量推 mutation;返回逐条 `{ mutation_id, status, server_version?, conflict_snapshot? }` |
+| `POST /rest/v1/rpc/<fn>` | client → server | 非 E2E RPC(账号管理、设备、导出 job) | 不传 encrypted blob;走 Supabase Auth 鉴权 |
+| `wss .../realtime/v1/websocket` | bi | metadata-only(见 §5.3) | 不传 blob |
+
+**没有** `GET /rest/v1/todos` 之类的端点;服务端 PostgREST 仅暴露:`devices`、`sessions`(自有)、`encrypted_blobs`、`accounts`、`account_settings`(非加密的 device-local 之外的)、`audit_logs`。
+
+#### 5.2.2 FR 表
 
 | ID | 需求 | 优先级 | 验收标准 |
 |---|---|---|---|
-| FR-WEB-31 | WebSocket 订阅 | P0 | 用 `supabase.channel()` 订阅当前模块涉及表的 `postgres_changes`;事件流转成本地缓存失效 + 选择性合并 |
-| FR-WEB-32 | 订阅范围按模块 | P0 | 进入 `/app/todos` 订阅 `todos`/`lists`/`label_assignments`;离开取消订阅;避免全表广播 |
-| FR-WEB-33 | 断线重连 | P0 | Supabase 客户端内置;断线时全局 banner 显示"已离线,本地编辑会在恢复时同步";恢复后做一次差量拉(`updated_at > last_synced_at`) |
-| FR-WEB-34 | 心跳检测 | P0 | 默认 30s 心跳;30s 内 3 次失败标记断线 |
-| FR-WEB-35 | Realtime 事件 → core-events | P0 | Supabase 变更事件转 `web:realtime-*` 内部事件(见 `SYSTEM_ARCHITECTURE.md §6.1`),UI 通过 `useEventListener` 反应 |
-| FR-WEB-36 | 桌面 ↔ Web 双向 5s 内可见 | P0 | Web 改 → 桌面 5s 内见;桌面改 → Web 5s 内见。验收:两侧并排打开同一 Todo,改一侧另一侧实时变更 |
-| FR-WEB-37 | 同一账号多 Web 标签共享 Realtime 通道 | P1 | 用 `BroadcastChannel` 让多个标签共享一个 WS 连接(节省 quota);主标签关时自动 promote |
+| FR-WEB-21 | `core-data` Sync blob driver | P0 | 与 SQLite driver 实现同一 `Repository<T>` 接口;Web build 启用 Sync driver,桌面 build 启用 SQLite;切换零业务代码改动;契约测试两 driver 跑同一 spec 必须一致 |
+| FR-WEB-22 | Sync 端点契约 | P0 | driver 内部只调用 §5.2.1 三类端点;`Repository.findMany(filter)` 在本地索引上 evaluate filter,**不发到服务端**;`Repository.save(entity)` 在客户端加密 → 入 push 队列 |
+| FR-WEB-22b | 本地索引 | P0 | IndexedDB `entity_index` Object Store 存解密后的 sort/filter 关键字段(`id`, `entity_type`, `parent_id`, `due_at`, `completed_at`, `label_ids[]`, `text_for_fts`);DEK 解密 blob 时同步刷新索引;支持 IndexedDB cursor 范围扫 + 内存 filter |
+| FR-WEB-22c | 本地全文搜索 | P0 | `text_for_fts` 用 `lunr` 或 `flexsearch` 建索引(纯 JS,Web Worker 跑);DEK 不在内存 → 搜索结果仅含 entity_id + "需主密码查看"占位 |
+| FR-WEB-23 | 请求缓存 | P0 | TanStack Query v5 的 queryFn 调 driver;`staleTime` 由 Realtime metadata 事件触发失效,**不靠固定时间**;`cacheTime` 5min |
+| FR-WEB-24 | mutation 幂等性 | P0 | 每条 mutation 客户端生成 `mutation_id`(uuid v7,含时间戳)+ `idempotency_key = hash(entity_id + base_version + op_payload)`;服务端在 24h 窗口内对 idempotency_key 去重(返回首次结果);离线队列回放、网络重试都不会产生重复写 |
+| FR-WEB-24b | 失败重试 + 退避 | P0 | 网络错误 / 5xx / 429 指数退避 3 次(1s/4s/16s + ±25% jitter);429 严格遵守 `Retry-After` header;4xx 不重试直接抛 |
+| FR-WEB-24c | Dead letter queue | P0 | 同一 mutation 重试 3 次仍 fail → 移到 `dead_letter_mutations` Object Store + 顶部 banner "X 条更改未能同步" + 链到 detail 视图;用户可手动重试或丢弃;dead-letter 队列也算入 §5.4 离线限额 |
+| FR-WEB-25 | 错误展示 | P0 | 4xx → toast + 表单字段红色;5xx → 顶部全局 banner;401 → 跳登录;403 → "权限不足";409 (conflict) → 触发 §5.4 冲突 UI;429 → toast + "X 秒后自动重试" |
+| FR-WEB-26 | 乐观更新 | P1 | Todo 完成 / 卡片拖拽 等高频写,driver 先更新本地 `entity_index` + UI,push 失败回滚;失败时回滚 + toast |
+| FR-WEB-27 | mutation 合并(同 tick) | P1 | 同一 tick 内 100ms 去抖,对同一 entity 的多次 `update` 合并为最后一次(前提:op 都是 update,且 base_version 相同);最终 push 用最后的 mutation_id |
+| FR-WEB-28 | 大列表分页(本地) | P0 | Todo / card 列表本地 `entity_index` cursor 分页,default 50 条/视口,虚拟滚动(`@tanstack/react-virtual`);**不需要服务端分页**(blob 全量已在本地)|
+| FR-WEB-29 | 请求取消 | P0 | 切换路由或 query key 变化时 abort 上一次 fetch(`AbortController`);`/sync/pull` 进行中可被打断,push 不可打断(已发出的 mutation 等服务端响应) |
+| FR-WEB-30 | API 版本协商 | P0 | 每个请求带 `X-Sync-Version: 2026-05` header;服务端 `Sunset` header → 顶部 banner "数据格式即将升级,请刷新";`X-Sync-Version` 不匹配 → 服务端返 426 Upgrade Required,前端强制刷新 |
+
+#### 5.2.3 mutation 信封示例
+
+```json
+// POST /sync/push body
+{
+  "device_id": "uuid",
+  "mutations": [
+    {
+      "mutation_id": "01970b8e-...",       // uuid v7
+      "idempotency_key": "sha256:...",
+      "entity_type": "todo",
+      "entity_id": "uuid",
+      "op": "update",                       // create | update | delete
+      "base_version": 42,                   // 用 If-Match 语义,服务端用来判 409
+      "encrypted_blob": "base64...",        // AES-GCM(DEK, plaintext_json)
+      "blob_nonce": "base64",
+      "blob_aad": "entity_id:version"
+    }
+  ]
+}
+
+// 服务端响应
+{
+  "results": [
+    {
+      "mutation_id": "01970b8e-...",
+      "status": "ok",                       // ok | conflict | rejected
+      "server_version": 43
+    },
+    {
+      "mutation_id": "01970b8f-...",
+      "status": "conflict",                 // base_version 不匹配
+      "server_version": 45,
+      "remote_encrypted_blob": "base64..."  // 让客户端展示 diff
+    }
+  ]
+}
+```
+
+### 5.3 实时同步(Supabase Realtime — metadata-only)
+
+> v0.2 重写:**不订阅 `postgres_changes` 业务表**(服务端没有明文,record 也没意义)。改为订阅每账号一个广播 channel `sync:<account_id>`,payload **只含 metadata**;Web 客户端收到 → 触发增量 pull;**不直接合并 record**(review Major)。
+
+#### 5.3.1 Channel 与事件
+
+| Channel | 事件 | payload |
+|---|---|---|
+| `sync:<account_id>` | `entity_changed` | `{ entity_type, entity_id, server_updated_at, originator_device_id, version }` |
+| `sync:<account_id>` | `device_revoked` | `{ device_id, reason }` |
+| `sync:<account_id>` | `account_deleted` | `{ scheduled_at }` |
+| `presence:<account_id>` | `online_devices` | `[{ device_id, platform, last_seen_at }]`(P1)|
+
+收到 `entity_changed` → 把 `(entity_type, entity_id)` 入 pull queue(去抖 300ms 合批)→ 调 `/sync/pull?cursor=<since>` → 本地解密 + 更新 entity_index + 失效 TanStack Query → UI 自动刷新。
+
+#### 5.3.2 FR 表
+
+| ID | 需求 | 优先级 | 验收标准 |
+|---|---|---|---|
+| FR-WEB-31 | Channel 订阅 | P0 | 登录后订阅 `sync:<account_id>`;无需按模块切换(metadata 体积小,全账号订阅即可);channel 状态机:`UNINITIALIZED → CONNECTING → SUBSCRIBED → DISCONNECTED → CONNECTING`,UI 反映 |
+| FR-WEB-32 | Metadata → pull trigger | P0 | 收到 `entity_changed` **绝不直接 merge record**;若 `originator_device_id === own_device_id` 直接丢弃(自己的写已在本地);否则入 pull queue 去抖 300ms 合批 |
+| FR-WEB-33 | 断线检测 + 重连(指数退避 + jitter) | P0 | 心跳 30s,3 次失败 → 标记 DISCONNECTED;重连退避序列 `[1s, 2s, 5s, 10s, 30s, 60s]` + ±25% jitter;reconnect 成功 → 触发一次 catch-up pull(`cursor = last_received_cursor`)|
+| FR-WEB-33b | `visibilitychange` 恢复 | P0 | 标签 hidden ≥ 60s 后 visible → 主动 ping + catch-up pull;DISCONNECTED 状态下 visible 立即触发重连尝试 |
+| FR-WEB-33c | Cursor gap 检测 | P0 | 服务端在 `entity_changed` 中带 `cursor` 单调递增;客户端检测 gap(`prev_cursor + 1 !== this_cursor`)→ 触发全量 catch-up pull;30 分钟挂线后 reconnect 必须验证无丢事件 |
+| FR-WEB-34 | 心跳 | P0 | Supabase 内置 30s 心跳;3 次失败标记断线;心跳失败原因(timeout / 4xx)上报 Sentry breadcrumb |
+| FR-WEB-34b | WS 被代理禁用降级 | P0 | 检测 WS connect 连续 3 次失败(企业代理常见禁 WS)→ 降级 polling(`POST /sync/pull` 每 15s)+ banner "实时同步降级为轮询,数据可见性 ~15s";恢复 WS 后回到推送模式 |
+| FR-WEB-35 | Realtime → core-events | P0 | metadata 事件转 `web:realtime-event`(payload 只有 metadata,不含 record);UI 通过 `useEventListener` 反应,**不要依赖 record 字段** |
+| FR-WEB-36 | 桌面 ↔ Web 双向可见 | P0 | 在线、低延迟网络下 P95 ≤ 5s(metadata 1s 内到达 + pull + 解密 + 渲染);WS 降级 polling 下 ≤ 20s;验收:两侧并排打开同一 Todo,改一侧 ≤ 5s 另一侧变 |
+| FR-WEB-37 | 多标签共享 channel | P1 | 用 `BroadcastChannel` + `Web Lock API` 选举 leader 标签持 WS;follower 通过 BC 收 metadata;leader 关闭/失焦 → 重新选举;quota 节省 N-1 个连接 |
+| FR-WEB-37b | 挂线 30 分钟恢复测试 | P0 | E2E 测试:登录 → 切到 background 30 分钟 → 期间桌面端改 10 条 → Web 标签 visible → 30s 内全部追平,无丢漏(用 cursor gap 检查) |
 
 ### 5.4 离线模式
 
+> v0.2 重写:删除"明文落 IndexedDB 等联网再加密"(review Critical #3,IndexedDB 是持久存储,XSS、浏览器备份、设备取证都可触达明文)。改为**入队前必须加密**;DEK 不在内存则禁止加密字段离线写。
+
+#### 5.4.1 离线写入策略
+
+| 场景 | DEK 在内存? | 行为 |
+|---|---|---|
+| 加密字段(Todo 标题、便签、卡片描述等)写入 | ✅ 在 | 立即加密 → 入 `pending_mutations` 队列(只存 encrypted_blob)|
+| 加密字段写入 | ❌ 不在 | **禁止落 IndexedDB**;UI 标记"主密码已锁,加密编辑不可用";已开始的编辑保留在 React state(关页即失);若 5min idle 主密码超时清 → 编辑 buffer 清空 + 提示 |
+| 非加密字段(完成状态、due_at 等元数据)写入 | 任意 | 立即入 `pending_mutations` 队列(blob 仅含元数据) |
+| pending 队列回放 | ✅ 在 | 联网恢复 → 按时间序 push;服务端去重(idempotency_key) |
+| pending 队列回放 | ❌ 不在 | 仅回放非加密字段的 mutation;加密字段 mutation 等 DEK 恢复后再 push |
+
+#### 5.4.2 FR 表
+
 | ID | 需求 | 优先级 | 验收标准 |
 |---|---|---|---|
-| FR-WEB-38 | IndexedDB 缓存 | P0 | TanStack Query persistor 用 IndexedDB(`idb-keyval`);Object Store 设计见 §8 |
-| FR-WEB-39 | 离线检测 | P0 | `navigator.onLine` + 主动 ping `/healthz`;状态走全局 store,sidebar 底部显示离线标 |
-| FR-WEB-40 | 只读离线浏览 | P0 | 离线时上次访问过的模块/数据可正常浏览;未缓存的端点显示"离线无法加载" |
-| FR-WEB-41 | 离线编辑队列 | P0 | 离线时 mutation 入 IndexedDB 队列(`pending_mutations` Object Store);恢复连接后按时间顺序回放;每条 mutation 带 client-generated UUID + base version |
-| FR-WEB-42 | 离线编辑队列限额 | P0 | 队列最大 500 条;超过时不再接受新写并提示"离线编辑过多,请上线" |
-| FR-WEB-43 | 冲突展示 | P0 | 同步层走 last-write-wins(主 PRD FR-SY-03),Web 端在 mutation 被服务端覆盖时弹一次性 toast "你离线时的修改已被服务端版本覆盖" + "查看冲突" 链到 detail diff |
-| FR-WEB-44 | Service Worker | P0 | 注册 `/sw.js` 缓存 app shell(HTML/CSS/JS/字体);策略:HTML 走 network-first(确保更新),静态资源走 cache-first;更新时弹"新版本可用,刷新生效" |
-| FR-WEB-45 | Service Worker 注销路径 | P0 | 设置 → 隐私 → "清除浏览器缓存" 调 `caches.delete()` + `indexedDB.deleteDatabase()` + 注销 SW;用于排障 |
-| FR-WEB-46 | 离线时 E2E 加密字段 | P0 | KEK 仅驻内存,刷新页面后丢失;离线时若需加密字段写入,提示"请先在线输入主密码"或写入 pending 队列时只存 plaintext + flag,联网后由前端用 KEK 加密上传 |
+| FR-WEB-38 | IndexedDB 持久层 | P0 | TanStack Query persistor + entity_index 都在 IndexedDB(`xai-cache` 库);Object Store 设计见 §8.2 |
+| FR-WEB-39 | 离线检测 | P0 | `navigator.onLine` + 主动 ping `/healthz`(15s 间隔)+ WS DISCONNECTED 任一为 true 即 offline 模式;状态走全局 store,sidebar 底部显示离线标 |
+| FR-WEB-40 | 只读离线浏览 | P0 | 离线时本地 entity_index 中已存的数据可正常浏览、过滤、搜索;DEK 在内存则解密展示,不在则显示"已加密";未缓存的实体显示"离线不可加载" |
+| FR-WEB-41 | 离线编辑队列(加密前入队) | P0 | mutation 在 driver 层加密后入 `pending_mutations`(每条:`{ mutation_id, idempotency_key, entity_type, entity_id, op, base_version, encrypted_blob, base_encrypted_snapshot, created_at, retry_count }`);**永远不落明文**;DEK 不在内存时,加密字段 mutation 直接拒绝 + 提示输主密码 |
+| FR-WEB-41b | 队列回放顺序 | P0 | 联网恢复 → 按 created_at 升序 push;同一 entity 的连续 update 走 §5.2.2 FR-WEB-27 合并;`base_version` 保证因果序 |
+| FR-WEB-42 | 离线编辑队列限额 | P0 | 总队列(含 dead-letter)最大 500 条;超过 → 拒绝新写 + 顶部 banner "离线编辑过多(500/500),请上线同步";仅本地草稿(React state)不受限 |
+| FR-WEB-43 | 冲突 UI(diff 可展示) | P0 | 服务端 409 返回 `remote_encrypted_blob` → 客户端解密 remote + 本地的 `base_encrypted_snapshot`(队列里存的原始基线)+ 本地的 `encrypted_blob`(我方修改),三方 diff 展示;用户选 (a) 保留远端覆盖本地 (b) 用本地覆盖远端(再次 push 不带 base_version,服务端记 audit log) (c) 手动合并(P1)|
+| FR-WEB-43b | 冲突 toast 一次性 | P0 | 同一 entity 冲突只弹一次 toast;后续合并到顶部 banner "X 条冲突待处理"+ link 到冲突 inbox |
+| FR-WEB-43c | Dead-letter 队列 | P0 | mutation 重试 3 次仍失败(非 409;5xx/网络)→ 移到 `dead_letter_mutations`;UI 有专门的"未同步更改"页可手动重试/丢弃/导出 |
+| FR-WEB-44 | Service Worker | P0 | 注册 `/sw.js`(workbox 生成);HTML 走 **network-first + no-store**(避免 stale shell);静态资源 cache-first + immutable;precache revision 绑 git SHA(见 §9.4);更新时弹"新版本可用,刷新生效"**仅在空闲态**(无 in-flight mutation) |
+| FR-WEB-45 | SW 紧急 escape hatch | P0 | (a) 设置 → 隐私 → "清除浏览器缓存" 调 `caches.delete()` + `indexedDB.deleteDatabase()` + `navigator.serviceWorker.getRegistrations().unregister()`;(b) 紧急回滚通道:服务端可发布 `/sw-kill.js`(空实现 + `unregister()`),用户访问 `app.xai-desktop.app/?sw-kill=1` 强制注销旧 SW;(c) Vercel/CF 可发 `Clear-Site-Data: storage` header 强清(见 §9.4)|
+| FR-WEB-46 | 离线 E2E 字段策略 | P0 | (a) DEK 在内存 → 离线写正常加密入队;(b) DEK 不在内存 → 加密字段写入弹"请先输入主密码",用户输 → KEK 派生 → DEK 解密 → 继续写;(c) 拒输 → 编辑保留在 React state,关闭页面即失;(d) **任何情况下 IndexedDB 永不存明文加密字段** |
+| FR-WEB-46b | DEK 内存超时 | P0 | DEK 在内存 5min idle 后自动清零(`fill(0)` + null);清零前若有 pending 加密字段 React state → 提示用户保存或丢弃;DEK 清后所有加密字段切回"已加密" |
 
 ### 5.5 响应式断点
 
@@ -226,38 +408,81 @@
 |---|---|---|---|
 | FR-WEB-47 | 三档断点 | P0 | 真机/模拟器测 1440px/1024px/768px/375px 四档,布局符合上表 |
 | FR-WEB-48 | 触摸交互 | P0 | 移动端单击 = 桌面端 hover+click 合并;长按 800ms = context menu;无 hover 状态 |
-| FR-WEB-49 | 安全区 | P0 | iOS Safari 底部 home indicator 走 `env(safe-area-inset-*)`;sidebar 占满高度时避让 |
-| FR-WEB-50 | 浏览器保留快捷键不抢 | P0 | Cmd+W / Cmd+T / Cmd+R / Cmd+L 等让给浏览器;Cmd+K 全局搜索改为 `Mod+K`(浏览器 Cmd+K 多数为地址栏聚焦,但 SPA 习惯 OK,在文档中说明可冲突) |
+| FR-WEB-49 | 安全区 | P0 | iOS Safari 底部 home indicator 走 `env(safe-area-inset-*)`;`viewport-fit=cover`;sidebar 占满高度时避让 |
+| FR-WEB-49b | 键盘挤压避免布局抖动 | P0 | 用 `visualViewport.height` 计算可见区高度,**不**用 `100vh`;表单输入框聚焦时主动 `scrollIntoView({ block: 'nearest' })`;Android Chrome 软键盘弹起期间 fixed 元素跟随 visualViewport |
+| FR-WEB-50 | 浏览器保留快捷键不抢 | P0 | Cmd+W / Cmd+T / Cmd+R / Cmd+L / Cmd+K(Chrome 地址栏聚焦)等让给浏览器;全局搜索默认 `/` 键(类 GitHub/Linear),用户可在设置改;**不绑定 Cmd+K**(浏览器冲突);Arc/Firefox 已知差异写入开发者文档 |
+| FR-WEB-50b | 快捷键可配置 | P1 | 设置 → 快捷键自定义;冲突检测;reset to default |
 
 ### 5.6 浏览器存储边界
 
-每种存储**只能用于**下表用途,避免混乱:
+> v0.2 修:删除 cookie 路径(纯 SPA 不用 cookie 装 token);加 device-local vs account-global 设置映射表(review Minor §5.6 / Console PRD 同步差异)。
+
+#### 5.6.1 设置同步映射(device-local vs account-global)
+
+| 设置项 | 类型 | 存储 | 跨设备同步? |
+|---|---|---|---|
+| 主题模式(dark/light/system) | device-local | IndexedDB `user_prefs` | ❌ |
+| accent 色 | account-global | Sync blob(`account_settings`) | ✅ |
+| reduce motion | device-local(尊重系统) | 无(读 `prefers-reduced-motion`) | — |
+| 语言 locale | account-global | Sync blob | ✅ |
+| sidebar 折叠态 | device-local | IndexedDB `user_prefs` | ❌ |
+| 最后访问模块 | device-local | IndexedDB `user_prefs` | ❌ |
+| 快捷键映射 | account-global | Sync blob | ✅ |
+| 通知偏好 | device-local | IndexedDB(浏览器权限本就 per-device) | ❌ |
+| Sentry opt-in | device-local | IndexedDB | ❌ |
+| 默认 list / 默认看板 | account-global | Sync blob | ✅ |
+| Pomodoro 时长配置 | account-global | Sync blob | ✅ |
+
+> Console 子 PRD `settings` 表只承载 account-global;device-local 走 Web 自己的 IndexedDB(桌面端走 SQLite 本地表)。本表 Web 与桌面双向对齐。
+
+#### 5.6.2 存储用途表
 
 | 存储 | 用途 | 加密 | 大小预算 | 清理时机 |
 |---|---|---|---|---|
-| `localStorage` | UI 偏好(主题、sidebar 折叠态、最后访问模块、i18n locale 选择) | 无 | ≤ 50KB | 注销不清 |
-| `sessionStorage` | 单标签临时态(未保存表单草稿) | 无 | ≤ 100KB | 关标签自动清 |
-| Cookie | Supabase 会话 token(SDK 自动管理) | httpOnly + Secure + SameSite=Lax | ≤ 4KB | 注销清 |
-| **IndexedDB**(库:`xai-cache`) | TanStack Query 缓存、离线编辑队列、KEK-加密的 DEK 副本 | DEK 加密(对内容)+ 浏览器同源隔离 | ≤ 50MB(预算)/ 250MB(硬上限) | 注销清 / 设置可手动清 |
-| Cache Storage | Service Worker 缓存的 app shell + 静态资源 | 无 | ≤ 30MB | SW 更新替换 / 注销不清 |
+| `localStorage` | 仅"非敏感、不需跨标签同步"的 UI hint(如 cookie banner 已关闭)|  无 | ≤ 10KB | 注销不清 |
+| `sessionStorage` | OAuth `state` / `code_verifier`、未保存表单草稿、未确认的加密字段 buffer | 无 | ≤ 100KB | 关标签自动清 |
+| **IndexedDB**(库:`xai-cache`) | `auth_tokens`(自定义 storage)/ `entity_index`(本地索引)/ `pending_mutations`(加密 mutation 队列)/ `dead_letter_mutations` / `encrypted_dek` / `user_prefs`(device-local 设置)/ `device`(device_id) | DEK 加密(blob 内容)+ AES-GCM(token 内容)+ 浏览器同源隔离 | ≤ 50MB(预算)/ 250MB(硬上限) | 注销清(除 `device.id`)/ 设置可手动清 |
+| Cache Storage | SW 缓存的 app shell + 静态资源(precache revision 绑 git SHA) | 无 | ≤ 30MB | SW 更新替换 / 设置 → "清除浏览器缓存"清 |
+
+> **不使用 cookie 装 token**(承接 §5.1.1);唯一会出现的 cookie 是 Supabase 内部为 OAuth 流转需要的极短期 cookie(由 SDK 管理),业务代码不读写。
+
+#### 5.6.3 FR 表
 
 | ID | 需求 | 优先级 | 验收标准 |
 |---|---|---|---|
-| FR-WEB-51 | 存储用途隔离 | P0 | 代码 review 红线:任何 plugin 写入 localStorage/IndexedDB 必须走 `core-data` 封装(`@repo/core-data/web`) |
-| FR-WEB-52 | 配额监控 | P0 | 启动时 `navigator.storage.estimate()`,使用率 > 80% 触发清理(LRU 删 7 天未访问的 query 缓存) |
-| FR-WEB-53 | 存储被清恢复 | P0 | 用户在浏览器设置清了站点数据 → 下次访问检测到无 IndexedDB → 走"如同新登录"流程 + 拉全量;不应崩溃 |
-| FR-WEB-54 | KEK 不落盘 | P0 | KEK 只存在内存 `useState`(或 React Context);不进 localStorage / IndexedDB / cookie |
+| FR-WEB-51 | 存储用途隔离 | P0 | 代码 review 红线:任何 plugin 写入 localStorage/IndexedDB 必须走 `@repo/core-data/web` 或 `@repo/core/host/web` 封装;直接 import `localStorage` 在 ESLint 报错 |
+| FR-WEB-52 | 配额监控 + LRU 清理 | P0 | 启动 + 每 5min `navigator.storage.estimate()`;使用率 > 80% → 触发 LRU 删 7 天未访问的 query_cache + entity_index 条目;` > 95%` → 拒绝新写并提示 |
+| FR-WEB-52b | 主动 persistence | P0 | 登录后调 `navigator.storage.persist()`(Chrome 自动允许;Firefox 用户 prompt;Safari 不支持 → 默默忽略);失败不致命 |
+| FR-WEB-53 | 存储被清恢复 | P0 | 用户在浏览器设置清了站点数据 → 下次访问检测到无 IndexedDB → 走"如同新登录"流程(重新 `device_register`,新 device_id)+ 全量 `/sync/pull`;不应崩溃 |
+| FR-WEB-54 | KEK / DEK 不落盘 | P0 | KEK / DEK 仅以非 extractable `CryptoKey` 形式存内存(React Context + `useRef`);不进 localStorage / IndexedDB / cookie;ESLint 规则禁止 `JSON.stringify` 含 CryptoKey 的对象 |
 
-### 5.7 PWA(P1)
+### 5.7 PWA(P1)+ 安装提示策略
+
+> v0.2 新增 §5.7.1 安装提示策略(review 增补建议):不在首访就弹安装,避免骚扰新用户。
+
+#### 5.7.1 安装提示触发策略
+
+| 条件 | 必须 | 说明 |
+|---|---|---|
+| 用户完成 ≥ 3 次有效操作(创建 Todo、完成 Todo、切模块至少 2 次等) | ✅ | 计数器存 IndexedDB |
+| 浏览器支持 `beforeinstallprompt` 事件(Chromium 系) | ✅ | 不支持的不弹 |
+| 当前设备**没有**已注册的桌面 App(查 `device_list_rpc()` 无 `platform: 'macos'` 设备) | ✅ | 有桌面 App 不弹(走 §5.10 banner 引导下载) |
+| 非 iOS(iOS 不支持 `beforeinstallprompt`)| ✅ | iOS 走另一路径 |
+| 用户上次拒绝距今 > 14 天 | ✅ | 拒绝标记存 IndexedDB |
+
+iOS 路径:**绝不弹 banner**,只在 `/app/settings/about` 页提供"安装到主屏幕"引导卡(图示 Share → A2HS)。
+
+#### 5.7.2 FR 表
 
 | ID | 需求 | 优先级 | 验收标准 |
 |---|---|---|---|
-| FR-WEB-55 | Web App Manifest | P1 | `/manifest.webmanifest` 含 name / short_name / icons (192/512) / start_url=/app / display=standalone / theme_color / background_color |
-| FR-WEB-56 | Service Worker 离线 | P0(承接 FR-WEB-44) | 已在 §5.4 |
-| FR-WEB-57 | 桌面安装 | P1 | Chrome / Edge 弹"安装"按钮;安装后桌面图标点开走 standalone 模式;sidebar 与浏览器版一致 |
-| FR-WEB-58 | iOS Add to Home Screen | P1 | iOS Safari 的 "添加到主屏幕" 后启动无浏览器 chrome;设置 `apple-touch-icon` + `apple-mobile-web-app-capable` |
-| FR-WEB-59 | Web Push 通知 | P2 | Phase 5+ 评估;v1 不做(VAPID + 服务端推送基础设施量大) |
-| FR-WEB-60 | PWA 更新提示 | P1 | SW `waiting` 状态时弹 banner "新版本可用 / 刷新" |
+| FR-WEB-55 | Web App Manifest | P1 | `/manifest.webmanifest` 含 name / short_name / icons (192/512/maskable) / start_url=/app / display=standalone / theme_color / background_color / id |
+| FR-WEB-56 | Service Worker 离线 | P0 | 承接 §5.4 FR-WEB-44 |
+| FR-WEB-57 | 桌面安装提示 | P1 | 按 §5.7.1 策略触发;`beforeinstallprompt.prompt()` 仅在 user gesture 内调;拒绝/接受写入 IndexedDB `pwa_install` |
+| FR-WEB-58 | iOS Add to Home Screen | P1 | iOS Safari A2HS 后启动 standalone(`navigator.standalone === true`);`apple-touch-icon` 180px;`apple-mobile-web-app-capable` 和 `apple-mobile-web-app-status-bar-style` |
+| FR-WEB-59 | Web Push 通知 | P2 | Phase 5+ 评估;v1 不做(VAPID + 服务端推送基础设施量大,且与零知识同步需配合) |
+| FR-WEB-60 | PWA 更新提示 | P1 | SW `waiting` 状态在**空闲态**(无 in-flight mutation + 无 modal 打开)弹 banner "新版本可用 / 刷新";用户点击 → `skipWaiting` + `reload` |
+| FR-WEB-60b | standalone 与 tab 行为一致 | P0 | standalone 模式与 tab 模式渲染相同;唯一差异是隐藏浏览器 chrome;不做 standalone 独占功能,避免 RW-11 风险 |
 
 ### 5.8 路由 + 深链接
 
@@ -267,30 +492,52 @@
 | FR-WEB-62 | 深链接 | P0 | `/app/todos/work/abc123` 直接打开 Todo 详情,刷新不丢状态;detail 面板可从 URL 还原 |
 | FR-WEB-63 | 浏览器前进/后退 | P0 | 切换 list / detail 进 history;按浏览器后退按预期返回上一态(不是退出 SPA) |
 | FR-WEB-64 | 锚点 | P0 | `/app/settings#privacy` 滚动到隐私区块 |
-| FR-WEB-65 | 共享链接(P1) | P1 | `/share/<token>` 公开访问只读视图(单个 Todo / 看板);后端发 token 时记录 `creator_id / entity_type / entity_id / expires_at`;读取走匿名 RPC,无需登录 |
+| FR-WEB-65 | 共享链接 | P1(v1 不实现) | **v1 不开 `/share/*` 路由,直接 404**;P1 等 Sync 子 PRD 提交 share envelope 协议(per-entity share key + URL fragment 携带解密材料 + server 存 encrypted share blob + 匿名只读 RPC 仅返回 encrypted blob);本档 P1 时再展开 UI / 路由 / SEO `noindex` per-share meta |
 | FR-WEB-66 | 未匹配路由 | P0 | 任何不存在路径 → `/404`;`/app/*` 下未匹配 → "模块不存在" + 跳默认模块 |
 | FR-WEB-67 | 路由级权限 | P0 | `/app/*` 未登录跳 `/auth/login?next=<原路径>`;登录后回跳 |
 
 ### 5.9 性能(Web Vitals 目标值)
 
-> 主 PRD §6.1 是 macOS App 的性能预算,本节是 Web 端的对应预算。
+> v0.2 修:**FID 已被 INP 取代**(2024-03 起 Web Vitals 正式替换);TTI 是 lab 指标,不上 RUM;按 route_group 分预算(review Major)。
 
-| 指标 | 目标(75th percentile) | 监测 | 越线动作 |
+#### 5.9.1 RUM(线上 75th percentile)
+
+| 指标 | landing(`/`)目标 | `/app/*` 目标 | 监测 |
 |---|---|---|---|
-| LCP(Largest Contentful Paint) | < 2.5s | Web Vitals → Sentry transaction | 阻塞合并 |
-| FID(First Input Delay) | < 100ms | 同上 | 检查主线程阻塞 / 拆 chunk |
-| CLS(Cumulative Layout Shift) | < 0.1 | 同上 | 修固定尺寸占位 |
-| FCP(First Contentful Paint) | < 1.5s | 同上 | 减初始 JS 体积 |
-| TTI(Time To Interactive) | < 3.0s | Lighthouse CI | 同上 |
-| 初始 JS bundle | < 250KB gzip | Vite build report + CI assert | 拆 lazy / 移除依赖 |
-| 路由切换响应 | < 200ms(P95) | Performance API | 优化懒加载边界 |
-| API 请求(GET list) | < 500ms(P95) | TanStack Query → Sentry | 检后端 / 加缓存 |
+| LCP | < 1.8s | < 2.5s | `web-vitals` → Sentry transaction;按 `route_group` tag |
+| INP(Interaction to Next Paint) | < 200ms | < 200ms | 同上;**取代 FID** |
+| CLS | < 0.1 | < 0.1 | 同上 |
+| TTFB | < 800ms | < 1.5s | 同上 |
+| FCP | < 1.5s | < 2.0s | 同上 |
+
+#### 5.9.2 Lab(CI 预算,不上 RUM)
+
+| 指标 | 目标 | 监测 | 越线动作 |
+|---|---|---|---|
+| Lighthouse Performance | ≥ 90(landing) / ≥ 80(`/app/todos` 50 条 fixture) | Lighthouse CI | 阻塞合并 |
+| TTI(Lab) | < 3.5s | Lighthouse CI | 检查主线程阻塞 |
+| 初始 JS bundle(landing) | < 100KB gzip | Vite build + CI assert | 拆 chunk / 移除依赖 |
+| 初始 JS bundle(`/app/*` shell) | < 250KB gzip | 同上 | 同上 |
+| 路由 chunk(每模块) | < 80KB gzip | 同上 | 拆 lazy 边界 |
+| 路由切换响应 | < 200ms(P95) | Performance API | prefetch + 优化懒加载 |
+| Sync push/pull P95 | < 800ms | driver instrumentation → Sentry | 检后端 |
+
+#### 5.9.3 优化手段
+
+- Vite `build.rollupOptions.output.manualChunks`:把 supabase-js / TanStack Query / lucide-react / react-router 等大依赖独立 chunk(便于长期缓存);plugin 各自一个 chunk
+- 路由 `prefetch`:hover sidebar 入口时预拉对应路由 chunk(`<link rel="modulepreload">`)
+- Sentry release:每次 build 生成 `release = $GIT_SHA`,Web Vitals event 带 release tag,便于回归定位
+- 字体策略:`font-display: swap` + 预加载 woff2 + system font fallback
+- 图标:lucide-react tree-shake;首屏 hero 图用 `<img loading="eager">` + 后续 `loading="lazy"`
+
+#### 5.9.4 FR 表
 
 | ID | 需求 | 优先级 | 验收标准 |
 |---|---|---|---|
-| FR-WEB-68 | Lighthouse CI 门 | P0 | CI 跑 Lighthouse,Performance ≥ 80、Accessibility ≥ 90、Best Practices ≥ 90、SEO ≥ 90 阻塞合并 |
-| FR-WEB-69 | bundle 体积监控 | P0 | `vite build --report` 输出 + CI 对比基线,主路径 chunk 大小退化 ≥ 20% 阻塞 |
-| FR-WEB-70 | Web Vitals 采集 | P0 | `web-vitals` 包 + Sentry transaction;采样 10% |
+| FR-WEB-68 | Lighthouse CI 门 | P0 | CI 跑 Lighthouse,landing Perf ≥ 90、`/app/todos`(50 条 fixture)Perf ≥ 80;A11y ≥ 90 / Best Practices ≥ 90 / SEO ≥ 90 阻塞合并 |
+| FR-WEB-69 | bundle 体积监控 | P0 | `vite build --report` 输出 + `size-limit` CI assert;主路径 chunk 大小退化 ≥ 20% 阻塞 |
+| FR-WEB-70 | Web Vitals 采集(RUM) | P0 | `web-vitals` 包采集 LCP/INP/CLS/TTFB/FCP → Sentry transaction;按 `route_group` tag(`landing` / `auth` / `app/todos` / `app/projects` 等);采样 10%(landing 100%) |
+| FR-WEB-70b | 路由切换性能监控 | P0 | React Router 路由变化 Performance Mark + Sentry transaction;P95 > 200ms 触发 Sentry alert |
 
 ### 5.10 SEO + landing page
 
@@ -298,43 +545,114 @@
 |---|---|---|---|
 | FR-WEB-71 | landing page 独立路由 | P0 | `/` 是真正的 landing(非 app shell);Phase 4.5 用 SPA 渲染,Phase 5+ 评估迁 SSG |
 | FR-WEB-72 | 基本 meta | P0 | 每路由有 `<title>` + `<meta description>` + Open Graph + Twitter card |
-| FR-WEB-73 | sitemap + robots | P0 | `/sitemap.xml` 列公开页;`/robots.txt` 允许 `/`、`/auth/*`,禁止 `/app/*`、`/share/*` |
+| FR-WEB-73 | sitemap + robots | P0 | `/sitemap.xml` 列公开页;`/robots.txt` 允许 `/`、`/auth/*`、`/legal/*`,禁止 `/app/*`;`/share/*` 走 share envelope 时由后端按 per-share 设 `noindex` meta(P1,见 §5.18 share 重写),v1 因不实现 share 链接,robots 也不涉及 |
 | FR-WEB-74 | 结构化数据 | P1 | landing page 加 `Application` schema.org JSON-LD |
 | FR-WEB-75 | favicon + icons | P0 | 完整 favicon 套(16/32/48 ICO + 192/512 PNG + apple-touch-icon 180) |
 
 ### 5.11 兼容性
 
-| 浏览器 | 最低版本 | 验收 |
-|---|---|---|
-| Chrome | 最新两个 stable | Playwright CI 必跑 |
-| Edge | 最新两个 stable | Playwright CI 必跑 |
-| Safari | macOS 17+(Sequoia)/ iOS 17+ | Playwright CI 必跑(WebKit) |
-| Firefox | 最新两个 stable | Playwright CI 必跑 |
-| 不支持 | IE / Opera Mini / UC | 进入时显示"浏览器不受支持"提示页 |
+> v0.2 重写:Playwright WebKit 不能替代真实 iOS Safari(IndexedDB quota/eviction、Private Browsing、PWA standalone、Storage partition 行为不同),验收矩阵分 CI 自动 + 真机手工两层(review Major)。
+
+#### 5.11.1 验收矩阵
+
+| 浏览器 / 设备 | 最低版本 | CI 自动(Playwright) | 真机/真浏览器手工(每周末) | 重点验收 |
+|---|---|---|---|---|
+| Chrome desktop(macOS/Win/Linux) | 最新两个 stable | ✅ | ✅ | PWA 安装、SW 更新、BroadcastChannel |
+| Edge desktop | 最新两个 stable | ✅ | ✅(企业策略机) | 企业 group policy 禁第三方 cookie / WS |
+| Firefox desktop | 最新两个 stable | ✅ | ✅ | ETP 严格模式、Container 标签 cookie 隔离、IndexedDB persistence prompt |
+| macOS Safari | 17+(Sonoma+) | ✅(WebKit) | ✅(真机) | OAuth callback、ITP、IndexedDB 7-day eviction、SW 更新延迟 |
+| iOS Safari | 17+(iOS 17+) | ⚠️ WebKit 不替代 | ✅(真 iPhone) | safe-area、软键盘 visualViewport、PWA standalone、A2HS、低存储 quota |
+| Android Chrome | 最新两个 stable | ✅(Chromium mobile profile) | ✅(真 Android) | 安装提示、离线队列、deep link |
+| 不支持 | IE / Opera Mini / UC | — | — | 显示"浏览器不受支持"降级页 |
+
+#### 5.11.2 真机验收清单(每周末跑)
+
+- macOS Safari 真机:OAuth callback 不被 ITP 拦;IndexedDB 7 天未访问被回收后重建无崩;SW 更新真生效(Safari SW 更新比 Chrome 慢)
+- iPhone Safari 真机:PWA standalone 启动 OK;键盘弹起不挤压 toolbar;低存储下 IndexedDB 被回收的恢复流程;Private Browsing 模式 IndexedDB 禁用的兜底
+- Firefox ETP "严格":第三方资源被拦的影响(预期我们没第三方);Container 标签:同账号 cookie 隔离不会让 SDK 跨容器看见 session
+- Edge 企业策略:`PerProfileNetworkPrediction` / 第三方 cookie ban / WS 被代理禁(走 §5.3 polling 降级)
+- 低存储 quota 测试:Chrome DevTools 设 IndexedDB quota = 50MB,验证 §5.6.2 LRU 清理触发正常
+
+#### 5.11.3 FR 表
 
 | ID | 需求 | 优先级 | 验收标准 |
 |---|---|---|---|
-| FR-WEB-76 | 浏览器探测 | P0 | 入口 JS 早期探测 UA,不支持的浏览器渲染静态降级页 |
-| FR-WEB-77 | polyfill 策略 | P0 | Vite `target: 'es2020'`,不引 IE 相关 polyfill;BroadcastChannel / IndexedDB / fetch / Web Crypto 不做 polyfill(直接要求最低版本) |
-| FR-WEB-78 | Safari 特有验证 | P0 | iOS Safari 100vh 抖动问题用 `dvh`;`@supports` 兜底 |
-| FR-WEB-79 | Firefox 容器标签 | P1 | 容器标签下 cookie 隔离正常工作(预期 Supabase SDK 自处理) |
+| FR-WEB-76 | 浏览器探测 | P0 | 入口 JS 早期探测 UA + feature detect(IndexedDB、Web Crypto、BroadcastChannel、CSS Grid),不支持的渲染静态降级页 |
+| FR-WEB-77 | polyfill 策略 | P0 | Vite `target: 'es2020'`,不引 IE polyfill;BroadcastChannel / IndexedDB / fetch / Web Crypto 不做 polyfill;低于最低版本直接拒 |
+| FR-WEB-78 | Safari 特有验证 | P0 | 100vh 抖动用 `dvh` + visualViewport;`@supports` 兜底;`-webkit-fill-available` 不再使用(已 deprecated) |
+| FR-WEB-78b | Safari IndexedDB eviction | P0 | 7 天未访问被 ITP 回收 → 检测 `navigator.storage.persisted()`;允许时主动 `persist()` 请求(用户可见 prompt);被回收后重建,从服务端全量重拉 |
+| FR-WEB-78c | Safari Private Browsing | P0 | Private 模式 IndexedDB write 抛 quota error → 检测后切到"会话模式":memory-only cache + 警告"私密模式下离线/PWA 不可用" |
+| FR-WEB-79 | Firefox 容器/ETP | P0 | 容器标签下 cookie 隔离;ETP "严格"不阻塞 Supabase WS(同源,不算第三方);手工验证 |
+| FR-WEB-79b | PWA Storage partition | P1 | Chromium Storage Partition(企业策略可能开启)下 BroadcastChannel 在 standalone 与 tab 间不通,降级 `localStorage` 事件兜底 |
 
 ### 5.12 安全
+
+> v0.2 重写:CSP 补完整(`object-src`/`worker-src`/`manifest-src`/`font-src`/`upgrade-insecure-requests`/`report-to`);上线流程"先 Report-Only 1 周 → enforce"(review Major)。Cookie 属性条目改为"无 cookie 装 token"(承接 §5.1.1)。
+
+#### 5.12.1 完整 CSP 头
+
+**最终 enforce 形态**(`Content-Security-Policy`):
+
+```
+default-src 'self';
+script-src 'self' 'wasm-unsafe-eval';
+style-src 'self' 'nonce-<RUNTIME_NONCE>';   /* 见 §5.12.3 说明 */
+img-src 'self' data: blob: https:;
+font-src 'self' data:;
+connect-src 'self'
+  https://<project>.supabase.co
+  wss://<project>.supabase.co
+  https://*.ingest.sentry.io;
+worker-src 'self' blob:;
+manifest-src 'self';
+object-src 'none';
+frame-ancestors 'none';
+frame-src 'none';
+base-uri 'self';
+form-action 'self';
+upgrade-insecure-requests;
+report-to csp-endpoint;
+report-uri https://<sentry-dsn>/security/?sentry_key=...;
+```
+
+`Report-To` header:
+```
+Report-To: {"group":"csp-endpoint","max_age":10886400,"endpoints":[{"url":"https://<sentry-dsn>/security/?sentry_key=..."}]}
+```
+
+#### 5.12.2 上线流程
+
+1. **第 1 周(staging)**:`Content-Security-Policy-Report-Only` 头发上(同样的指令)→ Sentry 收 violation
+2. **第 2 周**:零 violation → 切 `Content-Security-Policy` enforce;有 violation → 分析、修代码或允许必要的 source
+3. **回滚通道**:enforce 后若爆发,Vercel/CF edge function 一键切回 Report-Only(部署不要求 rebuild)
+
+#### 5.12.3 style-src 处理
+
+- 移除 `'unsafe-inline'`(原版 #82 用了,review 标记需 nonce/hash)
+- React inline style(组件运行时计算)通过 build 时静态提取 + 运行时 nonce 注入解决:
+  - 使用 CSS-in-JS 改为 Vanilla Extract / CSS Modules(build 时编译)
+  - 必须运行时计算的(如主题动态变量)走 `<style nonce="<RUNTIME_NONCE>">` 注入,nonce 由服务器/edge function 在 HTML 响应里设
+- Vercel/CF edge middleware 在每次 HTML 响应注入随机 nonce
+
+#### 5.12.4 FR 表
 
 | ID | 需求 | 优先级 | 验收标准 |
 |---|---|---|---|
 | FR-WEB-80 | HTTPS only | P0 | 所有响应 + 资源 https;HTTP 永久 301 → HTTPS |
-| FR-WEB-81 | HSTS + preload | P0 | `Strict-Transport-Security: max-age=63072000; includeSubDomains; preload`;`.app` TLD 已强制,本档明确 |
-| FR-WEB-82 | CSP | P0 | `default-src 'self'; script-src 'self' 'wasm-unsafe-eval'; style-src 'self' 'unsafe-inline'; img-src 'self' data: https:; connect-src 'self' https://*.supabase.co wss://*.supabase.co https://api.openmeteo.com https://*.sentry.io; frame-ancestors 'none'; base-uri 'self'; form-action 'self'`;Vite 构建产物不引外链 CDN |
-| FR-WEB-83 | Cookie 属性 | P0 | 所有 cookie 设 `Secure; HttpOnly; SameSite=Lax`(Supabase SDK 配置确认) |
-| FR-WEB-84 | XSS 防御 | P0 | React JSX 默认 escape;严禁 `dangerouslySetInnerHTML`(除受信 Markdown 渲染走 `react-markdown` + `rehype-sanitize` 白名单);用户内容渲染前 sanitize |
-| FR-WEB-85 | CSRF | P0 | API 走 Authorization header(Bearer token),非 cookie 鉴权 → 天然免 CSRF;若走 cookie 必须加 `SameSite=Lax` + same-origin 检查 |
-| FR-WEB-86 | clickjacking | P0 | `X-Frame-Options: DENY` + CSP `frame-ancestors 'none'` |
+| FR-WEB-81 | HSTS + preload | P0 | `Strict-Transport-Security: max-age=63072000; includeSubDomains; preload`;`.app` TLD 已强制;提交 hstspreload.org |
+| FR-WEB-82 | CSP enforce | P0 | 按 §5.12.1 部署;§5.12.2 流程上线;Sentry 接 violation;production 部署后 7 天 zero violation 为通过 |
+| FR-WEB-82b | CSP Report-Only 灰度 | P0 | staging 默认 Report-Only;prod enforce 前必须 staging Report-Only 1 周 zero violation |
+| FR-WEB-83 | Cookie 属性(若有) | P0 | Web 业务代码**不主动写 cookie**;Supabase SDK 内部仅 OAuth 流转期间使用极短期 cookie,由 SDK 配置 `Secure; SameSite=Lax`(纯 SPA HttpOnly 不可由 JS 设置,见 §5.1.1) |
+| FR-WEB-84 | XSS 防御 | P0 | React JSX 默认 escape;ESLint `react/no-danger` rule;唯一允许 `dangerouslySetInnerHTML` 处:`react-markdown` + `rehype-sanitize` 白名单(只含 Todo/note 描述渲染);代码 review checklist |
+| FR-WEB-85 | CSRF | P0 | API 走 `Authorization: Bearer <token>`,非 cookie 鉴权 → 天然免 CSRF;Supabase OAuth 短期 cookie 已 SameSite=Lax |
+| FR-WEB-86 | Clickjacking | P0 | `X-Frame-Options: DENY` + CSP `frame-ancestors 'none'` |
 | FR-WEB-87 | Referrer policy | P0 | `Referrer-Policy: strict-origin-when-cross-origin` |
-| FR-WEB-88 | E2E 主密码处理 | P0 | 主密码输入仅在前端内存中存在 → Argon2id(WebAssembly 实现,`hash-wasm` 或 `argon2-browser`)派生 KEK → 解密 IndexedDB 中的 `encrypted_dek` → DEK 驻内存;主密码字符串解 DEK 后立即从内存清零(`fill('')`);页面 unload / 5 分钟不活跃 → 清 KEK + DEK,加密字段重新变"已加密" |
-| FR-WEB-89 | 内存敏感数据生命周期 | P0 | KEK/DEK 仅在 React Context 中,组件卸载即释放;严禁 `JSON.stringify` 到 localStorage / 错误日志 |
-| FR-WEB-90 | Subresource Integrity | P1 | 任何 CDN 引入(若引)必须带 `integrity=sha384-...` |
-| FR-WEB-91 | npm 供应链 | P0 | CI `pnpm audit --prod` + Dependabot;关键依赖锁版本 |
+| FR-WEB-87b | Permissions-Policy | P0 | `Permissions-Policy: camera=(), microphone=(), geolocation=(), payment=(), usb=(), magnetometer=(), gyroscope=(), accelerometer=()`(显式拒所有不用的) |
+| FR-WEB-88 | E2E 主密码处理 | P0 | 主密码仅 `useState` 在内存 → Argon2id WASM(`hash-wasm`,memoryCost 64MB / iterations 3 / parallelism 1)派生 KEK(`CryptoKey` 非 extractable)→ 解密 IndexedDB 的 `encrypted_dek` → DEK(`CryptoKey` 非 extractable)驻内存;主密码字符串在 KEK 派生后立即 `fill('\0')` + null;页面 unload / 5min idle → 清 KEK + DEK |
+| FR-WEB-89 | 内存敏感数据生命周期 | P0 | KEK/DEK 仅在 React Context 中,组件卸载即释放;`crypto.subtle` 操作完成立即让 buffer 被 GC;ESLint 自定义规则禁止 `JSON.stringify(secret)` 或 `console.log(crypto)` |
+| FR-WEB-90 | Subresource Integrity | P0(升级) | 任何 CDN 引入(若引)必须带 `integrity=sha384-...`;**v0.2 强制升 P0**:既然 Auth token 落 Web Storage,任何被注入的 CDN 脚本都可读 token,SRI 是底线 |
+| FR-WEB-91 | npm 供应链 | P0 | CI `pnpm audit --prod` + Dependabot + Socket.dev(可选);关键依赖(supabase-js / @sentry/browser / hash-wasm)锁版本 + 每月 review;新依赖 PR 必须人工 review;每月扫一次 `npm-audit-html` 产 report 留档 |
+| FR-WEB-91b | Sandbox iframe | P0 | 任何渲染用户富文本/HTML 预览的场景(P1 之后才会出现)必须 `<iframe sandbox>`(无 `allow-scripts`);v1 暂无 |
 
 ### 5.13 错误边界 + Sentry web
 
@@ -343,7 +661,7 @@
 | FR-WEB-92 | React Error Boundary | P0 | App 顶层 + 每个 lazy route 边界;捕获 → 显示 fallback UI + 上报 Sentry + "重新加载"按钮 |
 | FR-WEB-93 | Sentry web SDK | P0 | `@sentry/browser` + `@sentry/react`;DSN 与桌面同,通过 `environment: 'web-prod'`/`'web-staging'`/`'web-dev'` 区分 |
 | FR-WEB-94 | Sentry 隐私过滤 | P0 | `beforeSend` 钩子去除 query / mutation 中的 entity body(只留 entity type + id);永不上报 Todo 标题 / 卡片内容 / 用户消息;`sendDefaultPii: false` |
-| FR-WEB-95 | Source map 上传 | P0 | CI build 时 `sentry-cli releases files upload-sourcemaps`;生产 bundle 不带 sourcemap |
+| FR-WEB-95 | Source map 上传 | P0 | CI build 流程:(1) 设置 `SENTRY_AUTH_TOKEN` / `SENTRY_ORG` / `SENTRY_PROJECT` env(GitHub Actions Secrets);(2) `pnpm build`(Vite `build.sourcemap: 'hidden'` — 生成 sourcemap 但 bundle 不引用);(3) `sentry-cli releases new $GIT_SHA`;(4) `sentry-cli releases set-commits $GIT_SHA --auto`;(5) `sentry-cli sourcemaps upload --release=$GIT_SHA --url-prefix='~/assets' --validate dist/assets`;(6) `sentry-cli releases finalize $GIT_SHA`;(7) 部署后 `sentry-cli releases deploys $GIT_SHA new --env $ENV`;(8) **删除** `dist/**/*.map`,生产服务器不挂 sourcemap;staging/prod 环境分用 `--env staging` / `--env prod`;Vite `build.sourcemap = 'hidden'`,Sentry web SDK 配 `Sentry.init({ release: import.meta.env.VITE_GIT_SHA })` |
 | FR-WEB-96 | Sentry opt-in | P0 | 与桌面一致(主 PRD §6.2 / TR §1.3.2);首启弹 "是否启用匿名错误上报",拒绝则 SDK 不 init |
 | FR-WEB-97 | 网络错误聚合 | P0 | 5xx / 超时通过 Sentry breadcrumb 聚合,避免单错误上报洪泛 |
 
@@ -359,10 +677,41 @@
 
 ### 5.15 浏览器扩展接口预留(P2)
 
+> v0.2 重写:CORS 不能写 `chrome-extension://*`(等于对任意扩展开 API 入口);改为固定 extension ID allowlist + 独立 OAuth client + scope 限制 + 速率限制(review Major)。
+
+#### 5.15.1 Quick Capture RPC 契约
+
+```
+POST /rest/v1/rpc/capture.create
+Authorization: Bearer <extension-oauth-token>
+X-Sync-Version: 2026-05
+
+Body:
+{
+  "type": "todo",                   // todo | bookmark | note(P2 第二批)
+  "title": "string",
+  "url": "https://...",             // 可选,捕获页面 URL
+  "selected_text": "string",        // 可选,选中文本
+  "target": "inbox"                 // 默认 inbox;不接受用户自由指定 list,避免扩展滥用
+}
+
+Response:
+{ "entity_id": "uuid", "created_at": "ISO8601" }
+```
+
+- **scope 限制**:扩展 OAuth token 只持有 `quick_capture:write`,不能调其他 RPC;不能读现有数据;不能调 `/sync/pull`
+- **服务端只接 encrypted payload**:扩展先调 `/auth/v1/oauth/key-bundle` 获 share-style 写入信封(只含本次 mutation 的一次性公钥),扩展用之加密 payload,服务端写入后由用户主端 pull 时再解密入本地;**或** v1.5 阶段简化为"扩展直接拿临时 DEK"(用户授权时一次性下发,5min 过期)。Sync 子 PRD 决定哪种,本档暂留口
+- 速率限制:每用户每分钟 ≤ 30 次 capture
+- 审计:每次 capture 写 `audit_logs`(`extension_id`、`ip`、`ua`、`created_at`)
+
+#### 5.15.2 FR 表
+
 | ID | 需求 | 优先级 | 验收标准 |
 |---|---|---|---|
-| FR-WEB-103 | 扩展通信端点 | P2 | 后端预留 RPC `quick_capture_create_todo({ title, source_url, source_title })`,认证走 OAuth token(扩展走 `chrome.identity.launchWebAuthFlow`)|
-| FR-WEB-104 | 扩展接收 CORS | P2 | `app.xai-desktop.app` API 接收来自 `chrome-extension://*` / `moz-extension://*` 的 origin |
+| FR-WEB-103 | 扩展通信端点 | P2 | 后端预留 RPC `capture.create({type,title,url,selected_text,target})`;**仅接 encrypted payload**(Sync 子 PRD 定义包装协议) |
+| FR-WEB-103b | 扩展 OAuth | P2 | 扩展 OAuth 走**独立 client**(client_id ≠ Web SPA 的),走 PKCE flow(`chrome.identity.launchWebAuthFlow`)+ device fingerprint;颁发 token scope 仅 `quick_capture:write`,TTL 30 天滚动刷新 |
+| FR-WEB-104 | 扩展接收 CORS | P2 | API 仅接受**固定 extension ID allowlist** 的 origin(Chrome 上架后用 `chrome-extension://<production-id>`、Firefox AMO 用 `moz-extension://<amo-uuid>`);wildcard `chrome-extension://*` 严禁;开发期 allowlist 单独 staging env |
+| FR-WEB-104b | 速率限制 + 审计 | P2 | 每用户每分钟 ≤ 30 次 capture;超额 429;每次 capture 写 audit_logs(extension_id、ua、ip);超额 5 次自动暂停 token 24h |
 | FR-WEB-105 | 扩展本体 | P2 | 单独仓库 `xai-desktop-extension`,本档不涵盖实现,只确保后端端点稳定;v1.5 评估 |
 
 ### 5.16 移动端浏览器(只读 + 最小编辑)
@@ -374,31 +723,70 @@
 | FR-WEB-108 | 移动屏蔽模块 | P0 | 项目管理 / Pomodoro / Labels 管理 / 复杂详情面板:显示"此模块建议在桌面或平板打开" |
 | FR-WEB-109 | 移动手势 | P1 | Todo 左滑标完成、右滑删除 |
 | FR-WEB-110 | 移动 PWA | P1 | iOS Safari "添加到主屏幕" 后启动 standalone(承接 §5.7) |
-| FR-WEB-111 | 移动键盘适配 | P0 | 输入框聚焦时 viewport 不缩放(`viewport meta`:`width=device-width, initial-scale=1, maximum-scale=1, viewport-fit=cover`,接受不支持双指缩放的代价) |
+| FR-WEB-111 | 移动键盘适配 | P0 | viewport meta `width=device-width, initial-scale=1, viewport-fit=cover`(**不带 `maximum-scale=1`/`user-scalable=no`**,违反 WCAG 1.4.4);输入框字号 ≥ 16px(iOS Safari 16px 以下会强制缩放,与无障碍冲突);键盘弹起用 `visualViewport` 监听(承接 FR-WEB-49b) |
 
 ### 5.17 与桌面 App 的双向状态同步
 
-> 同步层细节在 `sub-prds/sync/PRD.md`;此处定义 Web 端的可观察行为。
+> 同步层细节在 `sub-prds/sync/PRD.md`;此处定义 Web 端的可观察行为。v0.2 修:协议改 Sync push/pull encrypted blob(承接 §5.2)。
 
 | ID | 需求 | 优先级 | 验收标准 |
 |---|---|---|---|
-| FR-WEB-112 | 同账号端点一致 | P0 | Web ↔ 桌面 App 走同一 Supabase project;数据库 schema 一致(主 PRD §8) |
-| FR-WEB-113 | 5s 内可见(联机态) | P0 | Web 改 → 桌面 5s 内见;桌面改 → Web 5s 内见。Realtime + 增量拉双保险 |
-| FR-WEB-114 | 离线变在线后追平 | P0 | 关网 5 分钟内本地改 10 条 → 联网后 30s 内全部 push 完成,顺序符合 last-write-wins |
-| FR-WEB-115 | 同账号多端登录可见 | P0 | 设置 → 同步状态显示"已登录设备" + 最近活跃时间 + Web 标签数;与 FR-WEB-17 一致 |
-| FR-WEB-116 | 同步状态指示 | P0 | sidebar 底部小灯:绿(已同步)/ 黄(同步中)/ 红(失败 + tooltip 显错误码)/ 灰(离线) |
-| FR-WEB-117 | 主密码不一致拒绝同步 E2E 字段 | P0 | 若 Web 端主密码与桌面端不同(理论上不应发生)→ DEK 解密失败 → 提示"主密码错误" + 不写入 |
+| FR-WEB-112 | 同账号端点一致 | P0 | Web ↔ 桌面 App 走同一 Supabase project;数据库 schema 一致(主 PRD §8 + 本档 §5.1.3 新增 devices/sessions);blob 加密协议一致(Sync 子 PRD 定义) |
+| FR-WEB-113 | 5s 内可见(联机态) | P0 | Web 改 → 桌面 5s 内见;桌面改 → Web 5s 内见;路径:Sync push → Realtime metadata 广播 → 对端 pull → 解密 → 渲染 |
+| FR-WEB-114 | 离线变在线后追平 | P0 | 关网 5 分钟内本地改 10 条 → 联网后 30s 内全部 push 完成,服务端按 mutation_id 顺序处理 + 幂等去重;冲突按 §5.4 FR-WEB-43 处理 |
+| FR-WEB-115 | 同账号多端登录可见 | P0 | 设置 → 同步状态显示"已登录设备" + 最近活跃时间 + Web 标签数;与 FR-WEB-17 一致;数据来自自建 `devices` 视图 |
+| FR-WEB-116 | 同步状态指示 | P0 | sidebar 底部小灯:绿(已同步,无 pending)/ 黄(同步中)/ 红(失败 + tooltip 显错误码 + 跳 dead-letter 视图)/ 灰(离线);WS 降级 polling 状态额外标蓝小点 |
+| FR-WEB-117 | 主密码不一致拒绝同步 E2E 字段 | P0 | 若 Web 端主密码与桌面端不同(用户改了一端没改另一端)→ Web 端 DEK 解密 blob 失败 → 提示"主密码与其他设备不一致,请输入新主密码" + 不渲染加密字段 + 不写入 |
 
-### 5.18 数据导出 / 账号删除 / GDPR
+### 5.18 数据导出 / 账号删除 / 分享链接 / GDPR
+
+> v0.2 重写:GDPR 导出改为**浏览器端打包**(零知识保留;review Critical #4)。Share 链接 **v1 不实现**,降到 P1(需 Sync 子 PRD 先出 share envelope 协议;review Critical #7)。补 DSR SLA、子处理者清单、年龄门槛、删除后备份保留(review Major)。
+
+#### 5.18.1 客户端数据导出(零知识保留)
+
+| 步骤 | 实现 |
+|---|---|
+| 1. 用户在 `/app/settings/privacy` 点"导出我的数据" | UI 提示需输入主密码(已有 DEK 则跳过) |
+| 2. 浏览器调 `/sync/pull?full=true&cursor=0` 拉**所有** entity 的 encrypted blob | 流式 batch,显进度条 |
+| 3. 浏览器本地用 DEK 逐条解密 blob | Web Worker 跑,避免阻塞 UI |
+| 4. 浏览器本地装配 JSON 文件 | 用 `JSZip` 在 Worker 内拼包 |
+| 5. 浏览器触发下载(Blob URL + `<a download>`)| 文件名 `xai-export-<account-id>-<YYYYMMDD>.zip` |
+| 6. 服务端从头到尾**不接触明文** | 服务端 RPC 只产生**短期 job token** 用于 §4.1 rate limit;不写入 Storage,不发邮件 |
+
+> **删除原 FR-WEB-118**:"后端打包 JSON zip + 邮件下载链接" 与 E2E 矛盾;且 zip 落 Supabase Storage 即使加密也扩大泄漏面。
+
+#### 5.18.2 Share 链接:v1 不实现,P1 设计
+
+> 等 Sync 子 PRD 先出 share envelope 协议(per-entity share key + URL fragment 携带解密材料 + server 存 encrypted share blob)。本档 v1 不实现 `/share/:token` 路由;§3.1 URL 表里的 `/share/:token` 行 v1 直接返回 404;§5.8 FR-WEB-65 由 P1 推进。
+
+#### 5.18.3 FR 表
 
 | ID | 需求 | 优先级 | 验收标准 |
 |---|---|---|---|
-| FR-WEB-118 | 数据导出 | P0 | 设置 → 隐私 → "导出我的数据";后端打包用户全部数据为 JSON zip(E2E 字段走客户端解密后导出明文)+ 邮件发下载链接(链接 24 小时过期);与主 PRD §6.2 一致 |
-| FR-WEB-119 | 导出格式 | P0 | 包含 `todos.json` / `labels.json` / `boards.json` / `habits.json` / `settings.json` / `README.md`(字段说明);时间为 ISO 8601 |
-| FR-WEB-120 | 账号删除 | P0 | 设置 → 账号 → "删除账号" → 二次确认输入密码 + 输入 "DELETE"  → 后端置 `deleted_at` + 30 天后硬删(主 PRD FR-AC-04);Web 端立刻登出 |
-| FR-WEB-121 | 撤销删除 | P0 | 30 天内重新登录可看到"账号待删除,点击恢复"卡 |
-| FR-WEB-122 | Cookie 横幅 | P0 | 仅当 IP 推断为 EU/UK 时显示;选项"必要 cookie 始终允许 / 错误上报 cookie 可选";默认拒绝可选项 |
-| FR-WEB-123 | 隐私政策 + 服务条款 | P0 | `/legal/privacy`、`/legal/terms`;footer + 注册页 link;支持 zh-CN / zh-TW / en 三语 |
+| FR-WEB-118 | 数据导出(客户端打包) | P0 | 设置 → 隐私 → "导出我的数据";按 §5.18.1 流程在浏览器内本地解密 + 打包 + 触发下载;**服务端不接触明文,不存导出 zip**;DEK 不在内存时引导先输入主密码;导出过程中可中断;大账号(> 100MB)分卷 zip 或提示"将下载多个文件" |
+| FR-WEB-119 | 导出格式 | P0 | zip 含 `todos.json` / `labels.json` / `boards.json` / `habits.json` / `pomodoro.json` / `settings.json`(仅 device-local & account-global 的明文设置)/ `devices.json`(自有设备列表)/ `README.md`(字段说明、时间格式 ISO 8601、字段映射到主 PRD §8 schema 的版本号) |
+| FR-WEB-119b | 导出审计 | P0 | 每次导出在 `audit_logs` 写一条(`account_id`、`exported_at`、`ip`、`ua`、`approximate_size`),用于异常检测;**不记录导出内容** |
+| FR-WEB-120 | 账号删除 | P0 | 设置 → 账号 → "删除账号" → 二次确认输入密码 + 输入 "DELETE"  → 后端置 `accounts.deleted_at = now()` + RPC 触发所有设备 Realtime `account_deleted` 事件 → Web 端立刻登出;**30 天后硬删生产数据**;主 PRD FR-AC-04 |
+| FR-WEB-120b | 备份保留窗口公开 | P0 | 隐私页明确写:"账号删除后,生产数据 30 天内可恢复;数据库备份额外保留 90 天(2026-12 当前 Supabase backup retention);备份在 30 天后无法被人工取出,仅用于灾难恢复" |
+| FR-WEB-121 | 撤销删除 | P0 | 30 天内重新登录可看到"账号待删除(剩余 X 天),点击恢复"卡;调 `account_undelete()` RPC 清 `deleted_at` |
+| FR-WEB-122 | Cookie / 同意横幅 | P0 | (a) 必要 cookie / 存储(Auth、device_id、user_prefs)**始终允许**,banner 仅声明;(b) Sentry 错误上报、PWA 安装计数 **可选**,默认 off;(c) banner 在 EU/UK/CH IP 强显,其他地区在 footer 提供 link;(d) 选择存 IndexedDB `consent`,可随时撤回 |
+| FR-WEB-122b | DSR 处理 SLA | P0 | 数据导出 / 删除 / 更正请求(DSR):用户自助(导出 + 删除)立即可执行;邮件请求 `privacy@xai-desktop.app` 自动回复 + 30 天内人工答复;Web 端通用入口在 `/legal/privacy` 下方 |
+| FR-WEB-122c | 营销 / 分析 consent 分离 | P0 | 当前 v1 **不接营销分析**;若 Phase 5+ 接 Plausible / GA,必须独立 consent toggle + 默认 off + 可撤回 |
+| FR-WEB-123 | 隐私政策 + 服务条款 | P0 | `/legal/privacy`、`/legal/terms`;footer + 注册页 + 设置 link;zh-CN / zh-TW / en 三语;privacy 页必含:子处理者清单(§5.18.4)、DSR 联系方式、数据保留期、跨境传输(SCC)、年龄门槛 |
+| FR-WEB-123b | 年龄门槛 | P0 | 注册时勾选"我已年满 13 岁(或当地法定数字同意年龄)";EU 用户 16 岁;UK 13 岁;US COPPA 13 岁;勾选写入 `accounts.age_consent_at`;false 直接拒注册 |
+| FR-WEB-123c | DPA / SCC | P0 | 隐私页放下载:Anthropic GDPR DPA 模板改的"独立开发者版"DPA;跨境传输用 EU Standard Contractual Clauses(SCC)2021 版;Supabase 已签子处理者 DPA(链接) |
+
+#### 5.18.4 子处理者清单(隐私页须列)
+
+| 子处理者 | 数据 | 区域 | DPA |
+|---|---|---|---|
+| Supabase (Singapore / EU) | Auth / encrypted blobs / Realtime metadata | 用户首次注册所在区(默认 EU 或 AP) | https://supabase.com/legal/dpa |
+| Vercel (Frankfurt / Hong Kong edge) | 静态资源 / edge logs(IP / UA,30 天)| 全球 | https://vercel.com/legal/dpa |
+| Cloudflare(若启用 备选 / DDoS) | 静态资源 / edge logs(IP,7 天)| 全球 | https://www.cloudflare.com/cloudflare-customer-dpa/ |
+| Sentry (Frankfurt / US) | 错误堆栈 / breadcrumb(已 redact 用户内容)| 默认 EU | https://sentry.io/legal/dpa/ |
+| Resend / Postmark(邮件,Phase 5)| 用户邮箱、邮件 metadata | EU | 上线前签 |
+
+> 子处理者新增/变更必须在隐私页公示 30 天后生效;原有用户邮件通知。
 
 ---
 
@@ -466,7 +854,7 @@
          │   Supabase 项目(单一后端)    │
          │  - Auth(邮箱/Apple/Google)  │
          │  - PostgREST API             │
-         │  - Realtime(postgres_changes)│
+         │  - Realtime(sync:<acct> meta) │
          │  - Storage(头像/导出 zip)   │
          │  - Postgres(主 PRD §8 schema)│
          └──────────────────────────────┘
@@ -529,15 +917,24 @@ packages/core-events/
 
 ### 8.2 IndexedDB Object Store 设计(`xai-cache` 数据库)
 
+> v0.2 重写:新增 `auth_tokens`、`entity_index`、`dead_letter_mutations`、`device`、`consent`、`pwa_install`、`audit_local`;pending_mutations 不再存明文 payload 改存 encrypted_blob;user_prefs 仅 device-local。
+
 | Object Store | key | value | 备注 |
 |---|---|---|---|
-| `query_cache` | `[entity, hash(params)]` | `{ data, queryHash, dataUpdatedAt }` | TanStack Query persistor |
-| `pending_mutations` | autoIncrement id | `{ id: uuid, op: 'create'/'update'/'delete', table, payload, baseVersion, createdAt }` | 离线编辑队列 |
-| `encrypted_dek` | userId | `{ encryptedDek, salt, kdfParams, createdAt }` | 与服务端镜像,加速登录后解密 |
-| `user_prefs` | userId | `{ lastModule, sidebarCollapsed, theme, locale }` | 加速首屏 |
+| `auth_tokens` | `account_id` | `{ accessTokenCiphertext, refreshTokenCiphertext, iv, expiresAt }` | Supabase 自定义 storage adapter;AES-GCM 加密(内存派生密钥)|
+| `device` | `'self'` | `{ device_id, created_at }` | 注销不清,登出再登保持同 device_id |
+| `query_cache` | `[entity, hash(params)]` | `{ data, queryHash, dataUpdatedAt }` | TanStack Query persistor;data 已是解密后的 plaintext |
+| `entity_index` | `[entity_type, entity_id]` | `{ id, type, sortKeys{}, fts, version, decryptedAt }` | 本地索引(明文 sort/filter 关键字段 + FTS);DEK 解密后建立;断开主密码即 wipe |
+| `pending_mutations` | autoIncrement id | `{ mutation_id, idempotency_key, entity_type, entity_id, op, base_version, encrypted_blob, base_encrypted_snapshot, created_at, retry_count }` | 离线加密 mutation 队列;**永不存明文** |
+| `dead_letter_mutations` | autoIncrement id | 同上 + `{ last_error, gave_up_at }` | 重试 3 次失败 |
+| `encrypted_dek` | `account_id` | `{ encryptedDek, salt, kdfParams, createdAt }` | 与服务端镜像;加速登录后解密 |
+| `user_prefs` | `account_id` | `{ theme, sidebarCollapsed, lastModule, notificationPrefs, sentryOptIn }` | **仅 device-local 设置**(§5.6.1) |
+| `consent` | `'gdpr'` | `{ sentry: bool, analytics: bool, decided_at }` | GDPR 同意 |
+| `pwa_install` | `'state'` | `{ event_count, last_prompt_at, dismissed_at }` | 安装提示策略(§5.7.1) |
+| `audit_local` | autoIncrement id | `{ event, at, meta }` | 本地行为日志(用于客户端反作弊)|
 | `meta` | string key | any | schema version 等 |
 
-每条记录加 `version` 字段;`xai-cache` 数据库本身有 `version` 升级时迁移;不兼容时丢弃并重新拉。
+每条记录加 `version` 字段;`xai-cache` 数据库本身有 `version` 升级时迁移(`onupgradeneeded` 迁移函数);不兼容时丢弃并重新拉(走 §5.6.3 FR-WEB-53)。
 
 ---
 
@@ -580,13 +977,39 @@ GitHub Actions:
     - 人工 approve → promote staging → prod
 ```
 
-### 9.4 回滚
+### 9.4 回滚 + SW / DB 版本契约
 
-| 情况 | 操作 | 耗时 |
-|---|---|---|
-| 前端 bug | Vercel/CF dashboard 一键 rollback 到上一 deployment | < 5min |
-| 数据库 schema 不兼容 | Supabase migration rollback(需提前演练) | < 30min |
-| 双向不兼容(API breaking) | Web 端用 `Accept-Version` 协商,后端保留上一版 endpoint 至少 90 天 | — |
+> v0.2 重写:回滚不能被 stale SW 卡死;DB migration 必须 backward-compatible 至少一版(review Major)。
+
+#### 9.4.1 SW 版本契约
+
+| 项 | 约定 |
+|---|---|
+| precache revision | 绑 `import.meta.env.VITE_GIT_SHA`,SW 文件名 `sw-<short-sha>.js`(便于 CDN 缓存 + 强制更新) |
+| HTML | `Cache-Control: no-store`(或 `max-age=0, must-revalidate`)— 永远从 CDN 拉最新 |
+| 静态资源(JS/CSS/font/img) | 文件名带 hash + `Cache-Control: public, max-age=31536000, immutable` |
+| 激活提示时机 | 必须在**空闲态**(无 in-flight mutation + 无打开 modal + 用户最近 30s 无输入)弹"刷新"banner;**不强制刷新** |
+| 紧急 kill switch | (a) 发布 `/sw-kill.js`(空 SW + `self.registration.unregister()`);(b) Vercel/CF edge function 可临时发 `Clear-Site-Data: cache, cookies, storage` header 强清;(c) 用户可走 `/?reset=1` 触发本地清并重装 SW |
+| skip-waiting 策略 | 用户点 banner → `postMessage({ type: 'SKIP_WAITING' })` → 新 SW `skipWaiting()` → 再 reload;不要自动 skip-waiting(避免 in-flight mutation 丢失) |
+| update check | 每次路由切换时调一次 `registration.update()`(SW 已缓存,头开销小)|
+
+#### 9.4.2 DB / API migration 契约
+
+| 项 | 约定 |
+|---|---|
+| Backward-compatible | 任何 schema migration **必须**在 N-1 版客户端上可读可写(至少保留一版);破坏性变更走两步:N → N.5(双写双读)→ N+1 |
+| `X-Sync-Version` 协商 | 服务端识别 client 版本;不兼容时 426 Upgrade Required + 客户端弹强刷 |
+| 公告窗口 | breaking change 提前 7 天在 status page 公告;Sentry release tag 标 `db-migration: 2026-06-xx` |
+| 回滚演练 | staging 上每月演练 schema rollback;rollback playbook 存 `docs/runbooks/migration-rollback.md` |
+
+#### 9.4.3 FR 表
+
+| 情况 | 操作 | 耗时 | 验证 |
+|---|---|---|---|
+| 前端 bug | Vercel/CF dashboard 一键 rollback 到上一 deployment | < 5min | Sentry 错误率回落 + 手工冒烟 |
+| SW 缓存了坏版本 | 发 `/sw-kill.js` 或 `Clear-Site-Data` header;紧急时通知用户访问 `/?reset=1` | < 30min | uptime 检测 + 客服 ticket |
+| DB schema 不兼容(回滚到 N-1)| Supabase migration rollback(月度演练过的步骤);因为有 N-1 兼容约定,**客户端不需要回滚**也可正常工作 | < 30min | 抽样 client 验证 |
+| API breaking(罕见)| `X-Sync-Version` 协商 + 后端并行维护 2 版至少 90 天 | — | 监控 client version 分布 |
 
 ### 9.5 监控
 
@@ -604,25 +1027,34 @@ GitHub Actions:
 
 ### 10.1 M5 公测前(2026-11-24 对齐主 PRD)
 
-- [ ] 注册 + 三种登录方式全部跑通(邮箱、Apple、Google)
-- [ ] 桌面 ↔ Web 双向同步 5s 内可见(真机 + 浏览器并排)
-- [ ] 离线编辑队列 20 条以内恢复连接 30s 内全部 push
-- [ ] Lighthouse 主路径 Performance ≥ 80、A11y ≥ 90
-- [ ] Chrome / Safari / Firefox 三浏览器 Playwright 全 green
-- [ ] Sentry 配好 + source map 可解栈
-- [ ] CSP / HSTS / cookie 属性扫描通过(securityheaders.com A+)
-- [ ] 主密码 challenge → KEK 派生 → E2E 字段读写正常
-- [ ] 移动浏览器(iPhone Safari + Chrome Android)只读 + Todo 完成 可用
-- [ ] 数据导出 + 账号删除流程可走通
+- [ ] 注册 + 三种登录方式全部跑通(邮箱、Apple PKCE、Google PKCE,含 Apple private relay 兜底)
+- [ ] 桌面 ↔ Web 双向同步 5s 内可见(真机 + 浏览器并排;metadata-only payload + pull trigger)
+- [ ] 离线 + 加密字段写入流程:DEK 在内存 → 加密入队 ✅;DEK 不在 → 拒绝写并提示 ✅
+- [ ] 离线编辑队列 20 条以内恢复连接 30s 内全部 push;dead-letter 走通(模拟 4 次失败)
+- [ ] 冲突 UI:三方 diff(base / local / remote)可展示并允许选择保留方
+- [ ] Lighthouse landing Perf ≥ 90;`/app/todos`(50 条 fixture)Perf ≥ 80;A11y ≥ 90
+- [ ] Web Vitals(LCP/INP/CLS)RUM 上报正常,按 route_group 分桶
+- [ ] Chrome / Edge / Firefox / WebKit Playwright 全 green
+- [ ] 真机:iPhone Safari + macOS Safari + Android Chrome 走通核心 flow
+- [ ] Sentry 配好:source map 可解 + `beforeSend` 单测断言 redact + release tag 正确
+- [ ] CSP Report-Only 1 周 zero violation → enforce;securityheaders.com A+
+- [ ] 主密码 challenge → Argon2id KEK → DEK → E2E 字段读写正常;5min idle 清 KEK 验证
+- [ ] 多设备管理:device_register / heartbeat / revoke / revoke_others 全跑通;被撤销设备 Realtime 立即登出
+- [ ] 移动浏览器(iPhone Safari + Chrome Android)只读 + 完成 Todo + 加 Todo 可用;无 maximum-scale 限制,可双指缩放
+- [ ] 数据导出:浏览器端本地解密 + 打包 + 下载;服务端不接触明文(网络面板验证)
+- [ ] 账号删除:30 天恢复窗口正常,Realtime `account_deleted` 触发各设备登出
 
 ### 10.2 M6 GA(2026-12-22 对齐主 PRD)
 
-- [ ] PWA 可安装(Chrome / Edge 弹安装按钮)
-- [ ] 找回密码邮件 deliverability 验证(SPF/DKIM)
-- [ ] 隐私政策 + 服务条款 zh-CN/zh-TW/en 三语完
-- [ ] 真实负载测试:同一账号 5 个 Web 标签 + 1 桌面 不互相干扰
-- [ ] 30 分钟挂线后重连无数据丢失
-- [ ] staging → prod 演练回滚至少一次
+- [ ] PWA 可安装(Chrome / Edge 按 §5.7.1 策略弹安装,3 次操作 + 无桌面 App)
+- [ ] iOS Safari A2HS 启动 standalone 正常
+- [ ] 找回密码邮件 deliverability 验证(SPF/DKIM/DMARC)
+- [ ] 隐私政策 + 服务条款 + 子处理者清单 zh-CN/zh-TW/en 三语完;DPA / SCC 模板可下载
+- [ ] 真实负载测试:同一账号 5 个 Web 标签 + 1 桌面 不互相干扰(leader 选举正常)
+- [ ] 30 分钟挂线后重连无数据丢失(cursor gap 检测正常)
+- [ ] WS 被代理禁后降级 polling 正常工作
+- [ ] staging → prod 演练 SW 紧急 kill switch + DB schema rollback 各 1 次
+- [ ] CSP enforce 后 1 周 zero violation
 
 ---
 
@@ -630,28 +1062,40 @@ GitHub Actions:
 
 | ID | 风险 | 等级 | 缓解 | 监控 |
 |---|---|---|---|---|
-| RW-01 | **浏览器存储被用户/浏览器清** → IndexedDB 丢失导致 KEK/缓存全无 | 🟡 中 | KEK 本来就只驻内存;`encrypted_dek` 服务端有镜像;首次加载检测并按需重拉 | FR-WEB-53 |
-| RW-02 | **Service Worker bug 导致 stale 资源** → 用户卡老版本 | 🟡 中 | HTML 走 network-first;`waiting` SW 弹刷新提示;紧急 escape hatch:URL 加 `?bust=...` 或注销 SW(FR-WEB-45) | FR-WEB-44/60 |
-| RW-03 | **Safari 第三方 cookie ITP 限制** → OAuth 回调失败 | 🟡 中 | 同源(app + auth 同域)+ SameSite=Lax;Supabase SDK 已处理 | Playwright WebKit job |
-| RW-04 | **跨域 / Mixed Content** → CSP 误配置全站坏 | 🟡 中 | CSP report-only 模式跑一周 → enforce;有 violation 报 Sentry | FR-WEB-82 |
-| RW-05 | **Supabase Realtime 配额超限** → 大量用户 WS 连接挤崩 | 🟡 中 | 多标签共享 channel(FR-WEB-37);后期可加 connection pooling 或自建 Realtime | FR-WEB-37 / Supabase 监控 |
-| RW-06 | **主密码忘 → 数据不可恢复** | 🔴 高 | 注册时强制助记词导出(主 PRD §2.1.1);UI 多处提示"主密码 ≠ 账号密码"|首次启用 E2E 时强制走助记词向导 | 用户支持 inbox |
+| RW-01 | **浏览器存储被用户/浏览器清** → IndexedDB 丢失导致 token/缓存全无 | 🟡 中 | token 自定义 storage 加密落 IndexedDB,被清后强制重登;`encrypted_dek` 服务端有镜像;`navigator.storage.persist()` 主动请求 | FR-WEB-53/78b |
+| RW-02 | **Service Worker bug 导致 stale 资源** → 用户卡老版本 | 🟡 中 | HTML no-store + immutable assets + precache 绑 git SHA;紧急 kill switch:`/sw-kill.js` / `Clear-Site-Data` header / `/?reset=1` | §9.4.1 |
+| RW-03 | **Safari ITP / 第三方 cookie 限制** → OAuth 回调失败 | 🟡 中 | PKCE flow 无第三方 cookie 依赖;`state`+`code_verifier` 同源 sessionStorage;Playwright WebKit + 真 macOS Safari 验证 | §5.11 真机矩阵 |
+| RW-04 | **CSP 误配置全站坏** | 🟡 中 | Report-Only 1 周 → enforce(§5.12.2);Sentry 接 violation;edge function 可一键切回 Report-Only | FR-WEB-82/82b |
+| RW-05 | **Supabase Realtime 配额超限** → 大量用户 WS 连接挤崩 | 🟡 中 | 多标签共享 channel(FR-WEB-37);WS 失败降级 polling(FR-WEB-34b);后期可加 connection pooling 或自建 Realtime | FR-WEB-37 / Supabase 监控 |
+| RW-06 | **主密码忘 → 数据不可恢复** | 🔴 高 | 注册时强制助记词导出(主 PRD §2.1.1);UI 多处提示"主密码 ≠ 账号密码";首次启用 E2E 时强制走助记词向导 | 用户支持 inbox |
 | RW-07 | **`.app` HSTS preload 后无法降级 HTTP** → 证书故障即全站 down | 🟡 中 | 多家 CA 备份 + Vercel/CF 自动续;域名证书监控告警 | Uptime + 证书过期告警 |
 | RW-08 | **国内访问慢/被墙** | 🟡 中 | v1 GA 先用 Vercel,监测中国大陆 P95;若 > 5s 启动 Plan B 切 CF Pages 或加镜像 | RUM 数据 |
-| RW-09 | **离线编辑顺序与服务端冲突** → 用户改动丢失感 | 🟡 中 | last-write-wins(主 PRD FR-SY-03)+ 显式 toast 通知(FR-WEB-43);v1 不做 CRDT | 用户反馈 |
-| RW-10 | **Sentry 误上报用户内容** | 🔴 高 | `beforeSend` 钩子强 redact + 写测试断言 + code review checklist | FR-WEB-94 |
-| RW-11 | **PWA 安装后用户与 Web 版分歧体验** | 🟢 低 | standalone 与浏览器 chrome 模式行为一致,不做独立功能 | 仅做手动验证 |
-| RW-12 | **浏览器扩展(P2)未来加入时 CSP/auth 模型变更** | 🟢 低 | v1 P0 不开口子,P2 评估时再扩 connect-src + 引入 origin 白名单 | FR-WEB-103~105 |
+| RW-09 | **冲突 UI 没有足够材料展示 diff** | 🟡 中 | 队列存 `base_encrypted_snapshot`,服务端 409 返回 `remote_encrypted_blob` → 客户端三方 diff;dead-letter 兜底 | FR-WEB-43 |
+| RW-10 | **Sentry 误上报用户内容** | 🔴 高 | `beforeSend` 强 redact + 写测试断言 + code review checklist;token 在 Web Storage 后此风险更高 | FR-WEB-94 |
+| RW-11 | **PWA 安装后行为分歧** | 🟢 低 | standalone 与 tab 模式行为一致,不做独立功能 | FR-WEB-60b |
+| RW-12 | **浏览器扩展未来加入时 auth 模型变更** | 🟢 低 | v1 不接 extension;P2 走独立 OAuth client + scope 限制 + 固定 ID allowlist(§5.15)|FR-WEB-103~105 |
+| RW-13 | **(v0.2 新增)Web Storage token 被 XSS 直读** | 🔴 高 | 严格 CSP `script-src 'self'` 无 unsafe-inline / 无 CDN + SRI + react-markdown sanitize + ESLint no-danger + pnpm audit + Dependabot + Sentry redact + 短 TTL access token;承担代价的前提是上述全栈到位;若任一项失守需考虑切 BFF | FR-WEB-90/91 + CSP report |
+| RW-14 | **(v0.2 新增)WS 被企业代理禁** → 实时同步全无 | 🟡 中 | §5.3 polling 降级 + UI 显式告知"实时降级为轮询" | FR-WEB-34b |
+| RW-15 | **(v0.2 新增)mutation 重复 / 顺序错乱** | 🟡 中 | `mutation_id`(uuid v7)+ `idempotency_key`(server 24h 去重)+ `base_version`(If-Match);dead-letter 兜底 | FR-WEB-24/24c |
+| RW-16 | **(v0.2 新增)Console 与 Web 设置漂移** | 🟢 低 | §5.6.1 显式 device-local vs account-global 映射;Console settings 表只装 account-global | §5.6.1 |
+| RW-17 | **(v0.2 新增)Sync 子 PRD 未及时出 share envelope** → FR-WEB-65 P1 阻塞 | 🟢 低 | Share 链接降到 v1 不实现;P1 触发条件清晰(envelope 协议提交) | §12 待办 |
+| RW-18 | **(v0.2 新增)devices/sessions 表迁移依赖** → Sync 子 PRD 须配合新增 | 🟡 中 | §5.1.3 给出 schema 初稿 + 4 个 RPC 名;Phase 4.5 启动前 Sync 子 PRD 必须确认这部分 | §12 待办 |
 
 ---
 
 ## 12. 待办
 
-- [ ] Console 子 PRD 提交后,本档 §4 复用表二次对齐
-- [ ] Sync 子 PRD 提交后,本档 §5.2 / §5.3 / §5.4 的端点 / 冲突描述对齐
+- [ ] Console 子 PRD 提交后,本档 §4 复用表 + §4.2 host interface 二次对齐
+- [ ] Sync 子 PRD 提交后,本档 §5.2 / §5.3 / §5.4 的端点 / payload / 冲突描述精确对齐(本档 v0.2 给的 envelope 是初稿)
+- [ ] **新增**:Sync 子 PRD 必须包含 share envelope 协议(per-entity share key + URL fragment + encrypted share blob);Web 子 PRD P1 引用
+- [ ] **新增**:Sync 子 PRD 必须新增 `devices` / `sessions` 表 + 4 个 RPC(`device_register` / `device_heartbeat` / `device_revoke` / `revoke_others`);本档 §5.1.3 给的 schema 是初稿
+- [ ] **新增**:Quick Capture 的"加密 payload 写入"协议(extension 拿一次性公钥 vs 临时 DEK 二选一)— Sync 子 PRD 决定
 - [ ] 主密码 challenge 的具体 UX 文案与控制台一致(等 plugin-account 设计稿)
 - [ ] Sentry DSN 与桌面共用 vs 拆 — Phase 4.5 启动时与运维一起决策
 - [ ] 中国大陆访问性 PoC(Vercel / CF Pages 两家各跑 1 周拿数据)— Phase 4.5 第 1 周
+- [ ] **新增**:确认 Supabase backup retention 实际窗口(本档 §5.18.3 写 90 天为占位,需查 Supabase 当前条款)
+- [ ] **新增**:本地 FTS 库选型(`flexsearch` vs `lunr` vs `minisearch`)— Phase 4.5 Week 2 做基准
+- [ ] **新增**:Argon2id WASM 参数标定(memoryCost / iterations)真机 P95 < 1.5s(低端 iPhone SE)
 
 ---
 
@@ -660,5 +1104,6 @@ GitHub Actions:
 | 日期 | 版本 | 变更 |
 |---|---|---|
 | 2026-05-14 | v0.1 (DRAFT) | 首版,主 PRD §5.15 的 FR-WEB-01~07 扩到 FR-WEB-08~126(共 119 条新增),按 §5.1~5.18 18 节组织 |
+| 2026-05-16 | v0.2 (DRAFT) | 按外部审查意见重写 5 处 Critical + 12 处 Major(详见 §0.1 基础契约表):(1) Auth 从 HttpOnly cookie 改 SPA + 自定义 storage + PKCE flow(用户拍板);(2) REST driver 重写为 Sync push/pull encrypted blob,删除直连 PostgREST 业务表;(3) Realtime 改 metadata-only payload + pull trigger;(4) 离线 E2E 队列必须加密前入队,删除"plaintext + flag 联网再加密";(5) GDPR 导出改浏览器端打包,服务端零知识;(6) 多设备登出自建 devices/sessions 表 + 4 个 RPC;(7) Share 链接降到 P1 等 envelope 协议(用户拍板);(8) CSP 补完整 + Report-Only 灰度;(9) Sentry sourcemap CI 详细化;(10) viewport 删 maximum-scale=1 修 WCAG 冲突;(11) 浏览器矩阵分 CI + 真机两层;(12) FID 改 INP,按 route_group 分预算;(13) PWA 安装提示策略;(14) Quick Capture 改 capture.create + scope 限制 + extension ID allowlist;(15) §4.2 新增 Console host interface 注入桩契约;(16) §5.6.1 新增 device-local vs account-global 设置映射;(17) §8.2 IndexedDB Object Store 全面重设;(18) §9.4 SW + DB migration 版本契约;(19) FR 数从 126 增至约 145(新增 FR-WEB-17b/c/d、20b/c、22b/c、24b/c、33b/c、34b、43b/c、46b、49b、50b、52b、60b、70b、78b/c、79b、82b、87b、91b、103b、104b、119b、120b、122b/c、123b/c)|
 
 — END —
