@@ -169,6 +169,9 @@ Main(透明 overlay)+ Control(AI Cube 快捷托盘)+ Grid Windows(每格子独�
 | 各 plugin 当前状态(In-Dev / Stable / Planned) | `docs/PLUGIN_MAP.md` |
 | 关键架构决策的设计依据 | `docs/adr/0001 静态插件注册` / `0002 双轨发布` / `0003 三个面架构` / `0004 Label 多态` |
 | Phase 0 子阶段 0.2/0.3 详细执行步骤 | `docs/planning/REFACTORING_PLAN.md` |
+| **整体控制台子 PRD**(Phase 2.5 三栏 UX + 模块视图 + 键盘流) | `docs/planning/sub-prds/console/PRD.md` + `dev-plan.md` |
+| **网页版子 PRD**(Phase 4.5 浏览器壳 + auth + 离线 + 部署) | `docs/planning/sub-prds/web/PRD.md` + `dev-plan.md` |
+| **同步通道子 PRD**(Phase 0/5 E2E 加密协议 + Realtime + 冲突) | `docs/planning/sub-prds/sync/PRD.md` + `dev-plan.md` |
 | 产品规格(FR / Schema / 路线图) | `docs/planning/2026-05-12-PRD-v1.md` |
 | Workflow V2 流程 | `docs/workflow/SUBAGENT_WORKFLOW_V2.md` |
 | Commit 格式 | `docs/conventions/COMMIT_CONVENTION.md` |

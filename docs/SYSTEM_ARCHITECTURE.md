@@ -222,7 +222,10 @@ apps/desktop/src-tauri/src/
 | 各 plugin 当前状态 | `PLUGIN_MAP.md` |
 | 关键架构决策的依据 | `adr/NNNN-*.md`(0001 静态插件注册 / 0002 双轨发布 / 0003 三个面 / 0004 Label 多态) |
 | Phase 0 子阶段 0.2/0.3 执行手册 | `planning/REFACTORING_PLAN.md`(详细重构步骤) |
-| 产品规格(FR / Schema / 路线图) | `planning/2026-05-12-PRD-v1.md` |
+| 产品规格(FR / Schema / 路线图) | `planning/2026-05-12-PRD-v1.md`(主 PRD,产品总览) |
+| 整体控制台深度规格 | `planning/sub-prds/console/{PRD,dev-plan}.md` |
+| 网页版深度规格 | `planning/sub-prds/web/{PRD,dev-plan}.md` |
+| 同步通道协议级规格 | `planning/sub-prds/sync/{PRD,dev-plan}.md` |
 | 战略概览 + 决策快照 | `planning/2026-05-12-product-development-plan-v1.md` |
 | Workflow V2 流程 | `workflow/SUBAGENT_WORKFLOW_V2.md` |
 | Commit 格式 | `conventions/COMMIT_CONVENTION.md` |
