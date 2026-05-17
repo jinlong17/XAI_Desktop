@@ -9,11 +9,11 @@
 # re-deriving the logic.
 #
 # PLACEHOLDERS: replace the <...> tokens per ../00-PORTABLE-MANIFEST.md §3 when
-# you copy this into a project. Tokens used here: packages/.
-# Install location: scripts/cowork//lib_phase_verdict.sh
+# you copy this into a project. Tokens used here: packages.
+# Install location: scripts/cowork/lib_phase_verdict.sh
 #
 # Source it:
-#   source "$(git rev-parse --show-toplevel)/scripts/cowork//lib_phase_verdict.sh"
+#   source "$(git rev-parse --show-toplevel)/scripts/cowork/lib_phase_verdict.sh"
 #
 # Two entry points:
 #   read_phase_verdict           <feature> <phase_num>          # resolve path from feature name (production)
@@ -31,7 +31,7 @@ read_phase_verdict() {
   local feature="$1"
   local n="$2"
   local repo_root="${REPO_ROOT:-$(git rev-parse --show-toplevel 2>/dev/null || pwd)}"
-  read_phase_verdict_from_path "$repo_root/packages//$feature/docs/dev_log.md" "$n"
+  read_phase_verdict_from_path "$repo_root/packages/$feature/docs/dev_log.md" "$n"
 }
 
 # Helper entry: accept an absolute dev_log path directly (unit tests + cross-feature calls).

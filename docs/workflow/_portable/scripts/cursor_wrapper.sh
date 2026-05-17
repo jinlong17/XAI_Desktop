@@ -10,7 +10,7 @@
 #   Tokens used: <quota_state_dir>.
 # Install location: <cowork_scripts_dir>/cursor_wrapper.sh
 # Usage: put this ahead of `cursor-agent` on PATH, or call it explicitly:
-#   <cowork_scripts_dir>/cursor_wrapper.sh --print --model gpt-5.5 --output-format json --workdir "$REPO" < prompt.txt
+#   <cowork_scripts_dir>/cursor_wrapper.sh --print --force --model gpt-5.5-high --output-format json --workspace "$REPO" < prompt.txt
 #
 # Exit code: mirrors the underlying `cursor-agent` exit code.
 #

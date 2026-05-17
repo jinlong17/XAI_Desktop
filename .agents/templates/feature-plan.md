@@ -45,9 +45,9 @@ feature-plan -> feature-review -> feature-build -> feature-verify -> ship
 ## Role
 
 - CAN read project docs, inspect code, initialize feature docs, and write planning artifacts.
-- CAN migrate or rename a Step 0 brief from `docs/reviews//_intake/` into `docs/reviews//<feature>/` once canonical feature name is finalized.
-- CAN create or revise `docs/reviews//<feature>/<YYYYMMDD>-discovery-review.md`.
-- CAN create or revise `packages//<feature>/docs/design.md`, `api.md`, `test.md`, and `dev_log.md`.
+- CAN migrate or rename a Step 0 brief from `docs/reviews/_intake/` into `docs/reviews/<feature>/` once canonical feature name is finalized.
+- CAN create or revise `docs/reviews/<feature>/<YYYYMMDD>-discovery-review.md`.
+- CAN create or revise `packages/<feature>/docs/design.md`, `api.md`, `test.md`, and `dev_log.md`.
 - CAN derive a canonical feature name from a feature brief when no target exists yet.
 - CAN use WebSearch and WebFetch to research candidate solutions, libraries, and open-source alternatives when the feature involves technology selection or external dependencies.
 - DO NOT implement production feature code except minimal directory/doc initialization.
@@ -67,12 +67,12 @@ Determine the target feature before any other action.
    - `Feature Title`
    - canonical `<feature_name>` / slug
    - why that name fits the brief
-4. If the incoming Step 0 brief is stored under `docs/reviews//_intake/`, treat it as a temporary path only.
-   - Once canonical `<feature_name>` is confirmed, migrate or rename that brief into `docs/reviews//<feature_name>/`.
+4. If the incoming Step 0 brief is stored under `docs/reviews/_intake/`, treat it as a temporary path only.
+   - Once canonical `<feature_name>` is confirmed, migrate or rename that brief into `docs/reviews/<feature_name>/`.
    - Do not leave a finalized planning workflow pointing only at `_intake/`.
 5. If the current working directory is already under:
-   - `packages//<feature_name>/`
-   - `docs/reviews//<feature_name>/`
+   - `packages/<feature_name>/`
+   - `docs/reviews/<feature_name>/`
    use that as an additional hint, not as the only source of truth.
 6. If explicit input conflicts with inferred feature, stop and ask for confirmation.
 7. If the derived target is ambiguous, stop and ask for confirmation before creating directories.
@@ -80,7 +80,7 @@ Determine the target feature before any other action.
 ## Read First
 
 - the incoming feature brief or requirement description
-- `developer.md`
+- `<onboarding_doc>`
 - `docs/workflow/SUBAGENT_WORKFLOW_V2.md`
 - `docs/workflow/SOP_NEW_FEATURE.md`
 - `docs/conventions/COMMIT_CONVENTION.md`
@@ -95,19 +95,19 @@ Read additional architecture docs only if the feature touches those areas.
    - if you received a feature brief, derive `<feature_name>` first
    - if you received an explicit target, resolve it
 2. Ensure these locations exist or note that they must be initialized:
-   - `docs/reviews//<feature_name>/`
-   - `packages//<feature_name>/docs/`
-3. If the incoming Step 0 brief currently lives under `docs/reviews//_intake/`:
-   - compute its final path under `docs/reviews//<feature_name>/`
+   - `docs/reviews/<feature_name>/`
+   - `packages/<feature_name>/docs/`
+3. If the incoming Step 0 brief currently lives under `docs/reviews/_intake/`:
+   - compute its final path under `docs/reviews/<feature_name>/`
    - migrate or rename it before writing downstream planning artifacts
    - keep the brief as a review artifact; do not convert it into discovery review content
 4. Read existing artifacts if present:
-   - latest `docs/reviews//<feature_name>/*-feature-brief.md`
-   - latest `docs/reviews//<feature_name>/*-discovery-review.md`
-   - `packages//<feature_name>/docs/design.md`
-   - `packages//<feature_name>/docs/api.md`
-   - `packages//<feature_name>/docs/test.md`
-   - `packages//<feature_name>/docs/dev_log.md`
+   - latest `docs/reviews/<feature_name>/*-feature-brief.md`
+   - latest `docs/reviews/<feature_name>/*-discovery-review.md`
+   - `packages/<feature_name>/docs/design.md`
+   - `packages/<feature_name>/docs/api.md`
+   - `packages/<feature_name>/docs/test.md`
+   - `packages/<feature_name>/docs/dev_log.md`
 5. Detect mode:
    - `Fresh`: a feature brief exists and no planning artifacts exist
    - `Continue`: plan exists but is incomplete
@@ -147,7 +147,7 @@ Every run must append one `Work Log` entry with:
    - `Feature Title`
    - canonical `<feature_name>`
    - naming rationale
-3. If the incoming Step 0 brief was stored under `docs/reviews//_intake/`, migrate or rename it into `docs/reviews//<feature_name>/` and use the final path from this point forward.
+3. If the incoming Step 0 brief was stored under `docs/reviews/_intake/`, migrate or rename it into `docs/reviews/<feature_name>/` and use the final path from this point forward.
 4. If the feature involves technology selection, external libraries, or open-source alternatives:
    - use WebSearch to find current candidates, comparing at least 2-3 options
    - verify library status: maintenance activity, license, compatibility with project stack
@@ -238,12 +238,12 @@ If the plan is already shipped and no new requirement is provided, stop and repo
 
 Always leave the workspace in a document-driven state.
 
-- `docs/reviews//<feature>/<YYYYMMDD>-feature-brief.md` (if Step 0 brief exists)
-- `docs/reviews//<feature>/<YYYYMMDD>-discovery-review.md`
-- `packages//<feature>/docs/design.md`
-- `packages//<feature>/docs/api.md`
-- `packages//<feature>/docs/test.md`
-- `packages//<feature>/docs/dev_log.md`
+- `docs/reviews/<feature>/<YYYYMMDD>-feature-brief.md` (if Step 0 brief exists)
+- `docs/reviews/<feature>/<YYYYMMDD>-discovery-review.md`
+- `packages/<feature>/docs/design.md`
+- `packages/<feature>/docs/api.md`
+- `packages/<feature>/docs/test.md`
+- `packages/<feature>/docs/dev_log.md`
 
 Your user-facing summary must include the work summary followed by a Handoff block.
 

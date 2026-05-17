@@ -26,6 +26,32 @@ not re-asked.
 
 ---
 
+## 1A. Precondition — Requirement/Bug presence gate (hard stop, fires BEFORE the picker)
+
+§2/§3 assume a fresh-start invocation already carries a `Requirement:` (feature) /
+`Bug:` (bugfix) free-text block. That assumption is now **enforced**, not assumed —
+it is the first thing Phase 0 INTAKE checks, before any picker:
+
+| Condition | Behaviour |
+|-----------|-----------|
+| Fresh start AND no `Requirement:`/`Bug:` line (or empty/whitespace) AND no resume target (no dev_log Status Panel) | **STOP `BLOCKED` before the picker.** Blocker: `Requirement missing — a free-text requirement cannot be acquired via a picker.` Next Step: a re-run line with an explicit `Requirement:`/`Bug:` block (+ optional `Automation Mode:` / `Verify Cross-vendor:`). Do **not** fire AskUserQuestion. |
+| Resume invocation (dev_log Status Panel exists) | Exempt — Requirement was captured at first plan/diagnose write. |
+| Fresh start WITH a non-empty `Requirement:`/`Bug:` | Proceed to §3 trigger evaluation, then §2 picker. |
+
+**Why a hard stop and not a question:** Automation Mode and Verify Cross-vendor
+are closed sets → pickable via AskUserQuestion. A requirement is open free-text →
+a picker cannot capture it. The only correct missing-field behaviour is a hard
+BLOCKED with a precise re-run instruction. This is the single asymmetry in Phase 0
+INTAKE's three fields:
+
+| Field | Missing-field behaviour |
+|-------|-------------------------|
+| Requirement / Bug | **BLOCKED** (free-text — never a picker) |
+| Automation Mode | Ask (picker §2 Q1); host can't ask → **BLOCKED** (no safe default) |
+| Verify Cross-vendor | Ask (picker §2.6 Q2); host can't ask → default `yes` (strict), **proceed** (safe default exists) |
+
+---
+
 ## 2. The picker — single AskUserQuestion, 4 options
 
 ### 2.1 Options table (feature flavor)
@@ -60,6 +86,22 @@ Requirement: <text>
 This is intentional — B/C require infrastructure (hook scripts, post-commit hook, dispatch
 scripts; for C also `feature-phase-review` registered) and should not be a one-click choice. The
 question text in §2.4 includes a one-line pointer so users know how to reach them.
+
+**What B-* covers (2026-05-16 scope).** The post-commit hook is now a **multi-state dispatcher** —
+not just a build trigger. With the right infrastructure (`dispatch_<vendor>.sh` +
+`git-post-commit` + project-layer helpers in `lib_hook_helpers.sh`):
+
+| Status transition | Auto-dispatch |
+|---|---|
+| `NEEDS_REVIEW` | `feature-review` dispatched to the OTHER vendor (§16.3 #3 STRICT) |
+| `APPROVED` | `feature-auto-build` dispatched to the lead vendor (B-* only; C-* uses the per-phase marker path) |
+| `READY_FOR_VERIFY` + `Verify Cross-vendor: yes` | `feature-verify` dispatched to the OTHER vendor |
+| `READY_FOR_VERIFY` + `Verify Cross-vendor: no` | notify only (lead-handle or direct-ship) |
+| `REVISE` / `BLOCKED` | notify only (manual intervention) |
+| `READY_TO_SHIP` / `SHIPPED` | notify only (manual ship gate) |
+
+Net result: B-* happy-path interactions drop to **0** between Step 0 and ship. See
+`_portable/04-automation-loop.md` §3.4 for the full state machine.
 
 ### 2.4 Question text
 
@@ -145,18 +187,60 @@ Each preview follows the same 5-section structure so users can compare side by s
   压力大时优先 D-Codex+Cursor。
 ```
 
+### 2.6 Verify Cross-vendor companion question (same AskUserQuestion call)
+
+When the picker fires on a fresh start AND the invocation prompt has **no**
+`Verify Cross-vendor:` line, the picker carries a **second question in the SAME
+AskUserQuestion call** — Q1 = Automation Mode (§2.1, 4 options), Q2 = Verify
+Cross-vendor (2 options). One call, two questions. Never two sequential pickers.
+
+| # | label | value written | meaning |
+|---|---|---|---|
+| 1 | Yes — strict cross-vendor verify | `yes` | build via `feature-auto-build` (stops before verify); `feature-verify` runs separately in a different executor lineage |
+| 2 | No — same-lineage (allow feature-dev-loop) | `no` | build+verify run in one executor lineage via `feature-dev-loop` |
+
+Question text:
+
+```
+Verify Cross-vendor for this <feature|bugfix>? (Yes = stricter — build and
+verify run in different executor lineages, catches lineage-specific blind
+spots. No = faster — feature-dev-loop runs build+verify in one lineage.)
+```
+
+Don't-ask / fallback (note: differs from Mode — Verify HAS a safe default):
+
+| Situation | Behaviour |
+|-----------|-----------|
+| Resume mode | Read from dev_log Status Panel `Verify Cross-vendor:`; never re-ask |
+| Explicit `Verify Cross-vendor:` value on the prompt | Use as-is; do **not** add Q2 |
+| Host tool lacks `AskUserQuestion` | Default `Verify Cross-vendor: yes` (strict) and **proceed** — NOT a BLOCKED. Only Requirement (§1A) and Automation Mode hard-block; Verify has a safe strict default. |
+| `A-Claude` (single-vendor) selected in Q1 | Q2 is still asked (per the always-ask design) but is effectively **moot**: cross-vendor verify is physically impossible single-vendor, so `feature-plan` treats `yes` as best-effort same-vendor verify and never blocks on it. |
+
+Write-authority unchanged (§6): the meta-orchestrator appends a Work Log line
+only; `feature-plan` / `bug-diagnose` write the Status Panel
+`Verify Cross-vendor:` field — exactly as for `Automation Mode:`.
+
 ---
 
 ## 3. Trigger conditions — when to ask, when not to
 
 ### 3.1 Ask
 
+**Precondition:** §1A Requirement/Bug presence gate must have passed (a fresh start
+with no `Requirement:`/`Bug:` STOPs `BLOCKED` and never reaches here).
+
 Fire the picker (§2) **if and only if** all of these hold:
 
-1. The invocation is a **fresh start** (Phase 0 INTAKE has a `Requirement:`, not a resume cue).
+1. The invocation is a **fresh start** (Phase 0 INTAKE has a non-empty
+   `Requirement:`/`Bug:` per §1A, not a resume cue).
 2. Invocation prompt has **no** `Automation Mode:` field, OR the field's value is not one of the 8
    legal variants.
 3. The host tool **supports `AskUserQuestion`**.
+
+When firing, if the prompt also has no `Verify Cross-vendor:` line, the picker
+carries the §2.6 companion question as Q2 in the same call (Mode = Q1). If
+condition 3 fails: Automation Mode → BLOCKED (no safe default); Verify
+Cross-vendor → default `yes` and proceed (§2.6).
 
 ### 3.2 Don't ask
 
@@ -165,7 +249,9 @@ Fire the picker (§2) **if and only if** all of these hold:
 | Resume mode (the `Start the <name> agent for <feature>.` short form) | Read Mode from dev_log Status Panel; never re-ask |
 | Invocation prompt has a legal `Automation Mode:` value | Use it as-is |
 | Caller is `<skill_prefix>roadmap-loop` run mode spawn | Spawn prompt is required to include a resolved `Automation Mode:` value (§4 layer 1-3); picker never fires here |
-| Host tool does not support `AskUserQuestion` | STOP with Handoff `Status: BLOCKED`, Blocker `Automation Mode missing and AskUserQuestion not available in this tool.`, Next Step `Re-run with: Start the <agent> agent. Requirement: <text>. Automation Mode: <one of the 8 — see 04 §3>` |
+| Fresh start, no `Requirement:`/`Bug:` | Handled earlier by §1A — STOP `BLOCKED` before §3 is even evaluated (never reaches the picker) |
+| Invocation prompt has a legal `Verify Cross-vendor:` value | Use it as-is; the §2.6 Q2 is not added |
+| Host tool does not support `AskUserQuestion` | **Automation Mode:** STOP with Handoff `Status: BLOCKED`, Blocker `Automation Mode missing and AskUserQuestion not available in this tool.`, Next Step `Re-run with: Start the <agent> agent. Requirement: <text>. Automation Mode: <one of the 8 — see 04 §3>`. **Verify Cross-vendor:** do NOT block — default `yes` (strict) and proceed (§2.6). |
 
 ---
 
@@ -252,22 +338,33 @@ chose to specify it during decomposition), record it and **skip** that row's per
 
 ---
 
-## 6. Write-authority — who writes the resolved Mode where
+## 6. Write-authority — who writes the resolved Mode + Verify Cross-vendor where
 
 This section is a strict subset of the canonical write-authority matrix in
-`02-handoff-and-state.md` §2.6 — do not extend it here.
+`02-handoff-and-state.md` §2.6 (hereafter **02 §2.6** — not to be confused with
+this file's §2.6, which is the Verify Cross-vendor companion question) — do not
+extend it here.
 
 | Actor | What it writes | Why |
 |-------|----------------|-----|
-| `feature-full-loop` / `bugfix-full-loop` | Append-only Work Log line: `[<ts>] Automation Mode selected via picker = <variant>` | Allowed (Work Log is append-only, not a state mutation). Never writes Status Panel. |
-| `feature-plan` | Status Panel `Automation Mode: <variant>` on first NEEDS_REVIEW write | feature-plan is in §2.6's write list for NEEDS_REVIEW; Mode is carried in as part of the row write |
-| `bug-diagnose` | Status Panel `Automation Mode: <variant>` on first NEEDS_DIAGNOSIS write | Bugfix analogue of the above |
+| `feature-full-loop` / `bugfix-full-loop` | Append-only Work Log lines: `[<ts>] Automation Mode selected via picker = <variant>` and (if asked) `[<ts>] Verify Cross-vendor selected via picker = <yes\|no>` | Allowed (Work Log is append-only, not a state mutation). Never writes Status Panel. |
+| `feature-plan` | Status Panel `Automation Mode: <variant>` **and** `Verify Cross-vendor: <yes\|no>` on first NEEDS_REVIEW write | feature-plan is in 02 §2.6's write list for NEEDS_REVIEW; both fields are carried in as part of the row write |
+| `bug-diagnose` | Status Panel `Automation Mode: <variant>` **and** `Verify Cross-vendor: <yes\|no>` on first NEEDS_DIAGNOSIS write | Bugfix analogue of the above |
 | `<skill_prefix>roadmap-loop` init | manifest header `Default Automation Mode:` and per-row `Automation Mode:` cells | Manifest is the skill's own state file; not a dev_log Status Panel |
 | `<skill_prefix>roadmap-loop` run | nothing in the manifest related to Mode; `run_time_fallback` is session-local | See §4 invariant |
 
 **Failure mode if violated:** if `feature-full-loop` writes Status Panel directly, the State
 Verification lint(`scripts/lint/check_state_verification_compliance.py`)rejects the commit because
-`feature-full-loop` is not in the Status Panel writer list (§2.6).
+`feature-full-loop` is not in the Status Panel writer list (02 §2.6).
+
+> **B-* / C-* hook scope (2026-05-16 reminder).** B-* variants now cover the full review → build →
+> verify cycle via hook auto-dispatch — see §2.3 table above and `_portable/04-automation-loop.md`
+> §3.4 for the full state machine. Setting up requires `dispatch_<vendor>.sh` +
+> `git-post-commit` installed in `<cowork_scripts_dir>` + `.git/hooks/post-commit` symlink + a
+> project-layer `lib_hook_helpers.sh` defining `determine_other_vendor` /
+> `determine_lead_from_variant` / `render_review_prompt` / `render_build_prompt` /
+> `render_verify_prompt`. Without those helpers the hook degrades to notify-only (pre-2026-05-16
+> behaviour).
 
 ---
 
@@ -287,7 +384,7 @@ Verification lint(`scripts/lint/check_state_verification_compliance.py`)rejects 
    runs Phase 2 — but if the orchestrator forgets the Work Log, a session restart sees an empty
    dev_log and re-fires the picker.
 
-4. **`feature-full-loop` writes Status Panel directly.** Violates §6 / §2.6. State Verification
+4. **`feature-full-loop` writes Status Panel directly.** Violates §6 / 02 §2.6. State Verification
    lint rejects the commit. Fix: only `feature-plan` / `bug-diagnose` write Status Panel.
 
 5. **`run` writes the run-time fallback back to the manifest.** Loses human audit trail (§4

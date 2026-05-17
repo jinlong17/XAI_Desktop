@@ -59,12 +59,12 @@ Prefer to be run by a different executor than `feature-plan`, but still work if 
 Resolve the target feature using the same rules as `feature-plan`:
 
 1. Prefer explicit input `/feature-review <feature_name>`.
-2. Infer only from `packages//<feature_name>/` or `docs/reviews//<feature_name>/`.
+2. Infer only from `packages/<feature_name>/` or `docs/reviews/<feature_name>/`.
 3. If the target remains ambiguous, stop.
 
 ## Read First
 
-- `developer.md`
+- `<onboarding_doc>`
 - `docs/workflow/SUBAGENT_WORKFLOW_V2.md`
 - `docs/workflow/SOP_NEW_FEATURE.md`
 - `docs/planning/REFACTORING_PLAN.md`
@@ -72,11 +72,11 @@ Resolve the target feature using the same rules as `feature-plan`:
 
 Then read:
 
-- latest `docs/reviews//<feature>/*-discovery-review.md`
-- `packages//<feature>/docs/design.md`
-- `packages//<feature>/docs/api.md`
-- `packages//<feature>/docs/test.md`
-- `packages//<feature>/docs/dev_log.md`
+- latest `docs/reviews/<feature>/*-discovery-review.md`
+- `packages/<feature>/docs/design.md`
+- `packages/<feature>/docs/api.md`
+- `packages/<feature>/docs/test.md`
+- `packages/<feature>/docs/dev_log.md`
 
 ## Startup Protocol
 
@@ -122,8 +122,8 @@ Review the plan against these gates:
    - each phase has clear file boundaries
    - rollback and risk are understandable
 5. Architecture risk
-   - `packages/core/` changes
-   - `manifest.json` routing changes
+   - `<core_root>` changes
+   - `<config_manifest>` routing changes
    - cross-feature contract drift
 
 ## Verdict Rules

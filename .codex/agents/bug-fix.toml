@@ -106,16 +106,16 @@ Tooling notes:
 ## Target Feature Protocol
 
 1. Prefer explicit input `/bug-fix <feature_name>`.
-2. Infer only from `packages//<feature_name>/` or `docs/reviews//<feature_name>/`.
+2. Infer only from `packages/<feature_name>/` or `docs/reviews/<feature_name>/`.
 3. Stop on ambiguity.
 
 ## Read First
 
-- `developer.md`
+- `<onboarding_doc>`
 - `docs/workflow/SUBAGENT_WORKFLOW_V2.md`
 - `docs/workflow/SOP_BUGFIX.md`
 - `docs/conventions/COMMIT_CONVENTION.md`
-- `packages//<feature>/docs/dev_log.md`
+- `packages/<feature>/docs/dev_log.md`
 
 Read `design.md`, `api.md`, and `test.md` when the bug affects those contracts.
 

@@ -30,7 +30,17 @@
       "Bash(grep -c \"Output Contract\" /Users/lijinlong/Desktop/AI_Desktop/XAI_Desktop/.codex/agents/*.toml)",
       "Bash(grep -c \"Output Contract\" /Users/lijinlong/Desktop/AI_Desktop/XAI_Desktop/.cursor/agents/*.md)",
       "Bash(git add:*)",
-      "Bash(git commit -m ':*)"
+      "Bash(git commit -m ':*)",
+      "Bash(git checkout:*)",
+      "Bash(pnpm --filter @repo/core check-types)",
+      "Bash(pnpm --filter @repo/core test)",
+      "Bash(pnpm check-types:*)",
+      "Bash(git stash:*)",
+      "Bash(pnpm --filter @repo/plugin-organizer check-types)",
+      "Bash(npx tsc:*)",
+      "Bash(npx vite:*)",
+      "Bash(wc -l /Users/lijinlong/Desktop/AI_Desktop/XAI_Desktop/docs/guides/*.md /Users/lijinlong/Desktop/AI_Desktop/XAI_Desktop/docs/conventions/COMMIT_CONVENTION.md /Users/lijinlong/Desktop/AI_Desktop/XAI_Desktop/docs/workflow/SUBAGENT_WORKFLOW_V2.md)",
+      "Bash(git restore:*)"
     ]
   }
 }

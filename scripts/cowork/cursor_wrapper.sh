@@ -3,14 +3,14 @@
 #
 # A thin quota-aware wrapper around the `cursor-agent` CLI. Pass-through of all
 # args; it intercepts the output to detect quota exhaustion and, on a detected
-# signal, writes /tmp/cw-quota//cursor-exhausted-until with a future UNIX
+# signal, writes /tmp/cw-quota/cursor-exhausted-until with a future UNIX
 # timestamp so the meta-orchestrator can route around an exhausted executor.
 #
 # PLACEHOLDERS: replace <...> per ../00-PORTABLE-MANIFEST.md §3.
-#   Tokens used: /tmp/cw-quota/.
-# Install location: scripts/cowork//cursor_wrapper.sh
+#   Tokens used: /tmp/cw-quota.
+# Install location: scripts/cowork/cursor_wrapper.sh
 # Usage: put this ahead of `cursor-agent` on PATH, or call it explicitly:
-#   scripts/cowork//cursor_wrapper.sh --print --model gpt-5.5 --output-format json --workdir "$REPO" < prompt.txt
+#   scripts/cowork/cursor_wrapper.sh --print --force --model gpt-5.5-high --output-format json --workspace "$REPO" < prompt.txt
 #
 # Exit code: mirrors the underlying `cursor-agent` exit code.
 #
@@ -20,7 +20,7 @@
 #      ("error": "rate_limit_exceeded" / "quota_exceeded")
 #   3. loose keyword match in stdout/stderr (rate limit / quota / 429)  (fallback)
 set -uo pipefail
-QUOTA_DIR="/tmp/cw-quota/"
+QUOTA_DIR="/tmp/cw-quota"
 mkdir -p "$QUOTA_DIR" 2>/dev/null || true
 COOLDOWN_SECONDS="${CW_QUOTA_COOLDOWN:-3600}"
 OUT="$(mktemp)"

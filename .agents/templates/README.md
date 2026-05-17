@@ -41,15 +41,15 @@ Every `<lower_snake_case>` token in a template is a **project-config placeholder
 when instantiating into a new project. The complete registry — what each placeholder means and this
 repo's worked-example value — is in `../00-PORTABLE-MANIFEST.md` §3:
 
-- **§3.1** path / structure placeholders (`packages/`, `packages/core/`, `docs/reviews/`,
-  `docs/workflow/SUBAGENT_WORKFLOW_V2.md`, `developer.md`, `/tmp/cw-orchestrator/`, …)
-- **§3.2** skill / role placeholders (`xai-feature-brief`, `<status_writer>`, `<feature_name>`, …)
+- **§3.1** path / structure placeholders (`packages`, `<core_root>`, `docs/reviews`,
+  `docs/workflow/SUBAGENT_WORKFLOW_V2.md`, `<onboarding_doc>`, `/tmp/cw-orchestrator`, …)
+- **§3.2** skill / role placeholders (`<step0-skill>`, `<status_writer>`, `<feature_name>`, …)
 - **§3.4** runtime fill-in tokens (`<feature>`, `<commit>`, `<first>`..`<last>`, `<ts>`, …) — these are
   **not** replaced at instantiation; the subagents fill them in at runtime. They are registered only so
   the placeholder-registration lint stays complete.
 
-Upper-case / digit forms (`XAI_Desktop — AI Smart Desktop`, `<YYYYMMDD>`, `<N>`) are a deliberately separate class —
-`XAI_Desktop — AI Smart Desktop` etc. belong in `.agents/project_background.md` (§3.3); `<YYYYMMDD>` / `<N>` are runtime stamps.
+Upper-case / digit forms (`<PROJECT_NAME>`, `<YYYYMMDD>`, `<N>`) are a deliberately separate class —
+`<PROJECT_NAME>` etc. belong in `.agents/project_background.md` (§3.3); `<YYYYMMDD>` / `<N>` are runtime stamps.
 
 The shared project context (architecture, boundaries, conventions, tooling) is **not** spelled out in
 each template — every template carries a `<!-- INJECT:PROJECT_BACKGROUND -->` marker under its
@@ -59,7 +59,7 @@ context defined once and injected everywhere.
 
 ## How a new project uses this folder
 
-1. **Copy** all 15 `templates/*.md` into the project's `.agents/templates/` (e.g. `.agents/templates/`).
+1. **Copy** all 15 `templates/*.md` into the project's `.agents/templates` (e.g. `.agents/templates/`).
 2. **Search-and-replace** the §3.1 / §3.2 placeholders across the copied templates with concrete values
    (the §3.4 runtime tokens are left as-is — the subagents fill those in).
 3. **Create** `.agents/project_background.md` from the §9 template in `01-workflow-model.md`.
@@ -74,7 +74,7 @@ context defined once and injected everywhere.
 
 ## Editing discipline
 
-`_portable/templates/` is the **portable source**. The project-instantiated copy under `.agents/templates/`
+`_portable/templates/` is the **portable source**. The project-instantiated copy under `.agents/templates`
 is a downstream artifact. When the paradigm changes (a new subagent, a new Status enum value, a changed
 Handoff field), edit the template **here first**, then re-instantiate. The reverse direction — editing
 the instantiated copy and forgetting the portable source — is the drift this layer exists to prevent.

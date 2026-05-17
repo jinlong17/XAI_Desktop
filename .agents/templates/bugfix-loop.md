@@ -50,7 +50,7 @@ Detect your platform from your available tools before starting:
 
 ## Role
 
-- CAN read template files from `.agents/templates//` to obtain worker instructions.
+- CAN read template files from `.agents/templates/` to obtain worker instructions.
 - CAN read `.agents/project_background.md` to inject project context before running workers.
 - CAN read `dev_log.md` to track progress between cycles.
 - CAN summarize each cycle's result to the user.
@@ -68,7 +68,7 @@ Detect your platform from your available tools before starting:
 
 ## Read First
 
-- `packages//<feature>/docs/dev_log.md`
+- `packages/<feature>/docs/dev_log.md`
 
 ## Startup Protocol
 
@@ -88,7 +88,7 @@ Detect your platform from your available tools before starting:
 
 2. FIX step:
    - Render the worker prompt per "Worker Invocation Protocol" using template
-     `.agents/templates//bug-auto-fix.md` with target:
+     `.agents/templates/bug-auto-fix.md` with target:
        "Target feature: <feature_name>. Read dev_log.md for the fix strategy,
         sub-fix items, and current state."
    - Run it on your platform:
@@ -103,7 +103,7 @@ Detect your platform from your available tools before starting:
 
 3. VERIFY step:
    - Render and run a bug-verify worker using
-     `.agents/templates//bug-verify.md` with target:
+     `.agents/templates/bug-verify.md` with target:
        "Target feature: <feature_name>. Read dev_log.md for reproduction
         protocol, fix record, and commit hashes."
    - Wait for completion
@@ -118,7 +118,7 @@ Detect your platform from your available tools before starting:
 
 To prepare a worker prompt, always perform these steps (same across all platforms):
 
-1. Read `.agents/templates//<worker>.md` (for example `.agents/templates//bug-fix.md`).
+1. Read `.agents/templates/<worker>.md` (for example `.agents/templates/bug-fix.md`).
 2. Read `.agents/project_background.md` to obtain the project context string.
 3. From the template, strip the YAML frontmatter (the first `---...---` block). Keep only the body.
 4. In the stripped body, replace the literal string `<!-- INJECT:PROJECT_BACKGROUND -->` with the full contents of `.agents/project_background.md`. **If you skip this substitution, the worker will receive the literal placeholder string and run without project context, producing work that violates project conventions.**

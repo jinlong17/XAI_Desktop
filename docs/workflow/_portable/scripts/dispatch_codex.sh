@@ -1,24 +1,52 @@
 #!/usr/bin/env bash
 # dispatch_codex.sh — portable reference implementation
 #
-# Fire-and-forget dispatch of one build prompt to Codex, for the event-driven
-# automation variants (B-Codex / C-Codex). The meta-orchestrator Bash-triggers
-# this script and then EXITS; it does NOT wait. A git post-commit hook later
-# notifies the user to resume. See ../04-automation-loop.md §2.6 + §3.
+# Fire-and-forget dispatch of one workflow step's prompt to Codex, for the
+# event-driven automation variants (B-Codex / C-Codex). The meta-orchestrator
+# (or the post-commit hook for review / verify dispatch) Bash-triggers this
+# script and then EXITS; it does NOT wait. The post-commit hook later notifies
+# the user to resume. See ../04-automation-loop.md §3.4.
+#
+# 2026-05-16 extension: 3rd positional arg <agent_name>. The original 2-arg
+# form (build dispatch only) still works (defaults to feature-auto-build for
+# back-compat).
 #
 # PLACEHOLDERS: replace <...> per ../00-PORTABLE-MANIFEST.md §3.
 #   Tokens used: <orchestrator_marker_dir>, <quota_state_dir>.
 # Install location: <cowork_scripts_dir>/dispatch_codex.sh
 #
-# Inputs:  $1 = <feature>   $2 = <prompt_file> (absolute path the orchestrator rendered)
+# Inputs:  $1 = <feature>
+#          $2 = <prompt_file>  (absolute path the orchestrator/hook rendered)
+#          $3 = <agent_name>   (optional, defaults to feature-auto-build)
+#                              One of: feature-plan / feature-review /
+#                                      feature-auto-build / feature-verify /
+#                                      bug-diagnose / bug-fix / bug-auto-fix /
+#                                      bug-verify
 # Exit:    0 if Codex was successfully launched; non-zero if it could not be
-#          launched (binary missing, etc.) — the orchestrator uses this to decide
-#          whether to fall through the quota fallback chain.
+#          launched (binary missing, unknown agent, etc.) — the orchestrator
+#          uses this to decide whether to fall through the quota fallback chain.
 # Side effects: starts Codex in the background, writes a run log under <quota_state_dir>.
-# MUST NOT write the dev_log Status Panel.
+# MUST NOT write the dev_log Status Panel. The dispatched agent itself writes
+# the Status Panel per the §16.3 / §2.6 write-authority matrix.
+#
+# Cross-vendor identity: this script does NOT determine "which vendor should
+# run this step". The caller (orchestrator or post-commit hook) reads
+# `Plan Executor:` / `Build Executor:` from the Status Panel and chooses
+# dispatch_codex.sh vs dispatch_cursor.sh accordingly.
 set -euo pipefail
-FEATURE="$1"
-PROMPT_FILE="$2"
+FEATURE="${1:?feature name required}"
+PROMPT_FILE="${2:?prompt file path required}"
+AGENT_NAME="${3:-feature-auto-build}"
+
+case "$AGENT_NAME" in
+  feature-plan|feature-review|feature-auto-build|feature-verify| \
+  bug-diagnose|bug-fix|bug-auto-fix|bug-verify) ;;
+  *)
+    echo "ERROR: unknown agent_name '$AGENT_NAME' (expected one of feature-plan/feature-review/feature-auto-build/feature-verify/bug-diagnose/bug-fix/bug-auto-fix/bug-verify)" >&2
+    exit 2
+    ;;
+esac
+
 REPO_ROOT="$(git rev-parse --show-toplevel)"
 RUN_DIR="<quota_state_dir>"
 mkdir -p "$RUN_DIR" "<orchestrator_marker_dir>"
@@ -49,14 +77,17 @@ if ! command -v codex >/dev/null 2>&1; then
 fi
 
 # $TIMEOUT_PREFIX is intentionally unquoted: empty -> zero args; non-empty -> two tokens.
+RUN_LOG="$RUN_DIR/${FEATURE}.${AGENT_NAME}.codex.last_run.jsonl"
+
 $TIMEOUT_PREFIX codex exec \
   --sandbox workspace-write \
   --cd "$REPO_ROOT" \
   --json \
   - < "$PROMPT_FILE" \
-  > "$RUN_DIR/${FEATURE}.codex.last_run.jsonl" 2>&1 &
+  > "$RUN_LOG" 2>&1 &
 
-date +%s > "<orchestrator_marker_dir>/${FEATURE}.codex_dispatched"
+date +%s > "<orchestrator_marker_dir>/${FEATURE}.${AGENT_NAME}.codex_dispatched"
+echo "dispatched: codex / $AGENT_NAME for $FEATURE (log: $RUN_LOG)" >&2
 exit 0
 
 # ── Documented fallback: Codex desktop app (NOT unattended) ───────────────────

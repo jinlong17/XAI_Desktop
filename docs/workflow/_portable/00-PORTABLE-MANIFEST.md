@@ -151,6 +151,9 @@ has a complete registry — there is nothing to search-and-replace for these at 
 | `<text>` | the free-text requirement body slot in an invocation-prompt example (`07-automation-mode-picker.md`) |
 | `<variant>` | the Automation Mode variant value slot — one of the 8 legal variants enumerated in `04-automation-loop.md` §3 — used in picker / invocation examples (`07-automation-mode-picker.md`) |
 | `<i>` | the feature-row index slot in a roadmap-loop `init` per-row question (`07-automation-mode-picker.md` §5.1) |
+| `<vendor>` | the generic vendor-name slot in shell-script invocation examples (`07-automation-mode-picker.md` / `04-automation-loop.md` §3.4 multi-state hook) — one of `codex` / `cursor` / `claude` |
+| `<other_vendor>` | the cross-vendor-routing slot (the vendor that is NOT the one named by the just-committed step's `* Executor:` field) used in `04-automation-loop.md` §3.4 hook state machine |
+| `<agent_name>` | the 3rd positional argument of `dispatch_<vendor>.sh` (one of the 8 V2 worker agents — `feature-plan` / `feature-review` / `feature-auto-build` / `feature-verify` / `bug-diagnose` / `bug-fix` / `bug-auto-fix` / `bug-verify`), used in shell-script invocation examples in `04-automation-loop.md` §3.4 and `scripts/README.md` |
 
 > **Note on `<YYYYMMDD>` and `<N>`:** like the table above, these are runtime stamps, not
 > instantiation-time placeholders — `<YYYYMMDD>` is a date stamp on dated files (e.g.
@@ -202,10 +205,25 @@ per-project rewrite.
    then adjust the four constants its header marks `# >>> ADJUST` (`TEMPLATES_DIR`, `BACKGROUND_FILE`,
    the model-slug maps). It is a runnable reference, not a re-implement-it spec. See `scripts/README.md`.
 6. **Run** the generation script to produce `.claude/agents/`, `.codex/agents/`, `.cursor/agents/`.
-7. **Write** a project-local concrete workflow doc (`<project_workflow_doc>`) — the worked instance,
+   ⚠️ The generator substitutes ONLY `<!-- INJECT:PROJECT_BACKGROUND -->`. It does **not**
+   substitute the `<...>` path tokens inside generated agent bodies — those are propagated by hand
+   into `.claude/.codex/.cursor` (targeted), as are any post-generation hand-fixes. Re-running with
+   `--force` **regresses** those hand-edits: re-run only when a template changed, then re-propagate.
+7. **(event-driven `B-*` / `C-*` variants only)** Copy **all** of `_portable/scripts/*` into
+   `<cowork_scripts_dir>` (the full set incl. `lib_hook_helpers.sh` — `git-post-commit`
+   hard-depends on it; copying only the dispatch/wrapper scripts yields a hook that resolves no
+   vendor and dispatches nothing). Replace each script's `<...>` placeholders. Then install
+   `.git/hooks/post-commit` as a **chained wrapper** (NOT a symlink): it backs up any pre-existing
+   post-commit hook and runs it, then `source <cowork_scripts_dir>/lib_hook_helpers.sh` and execs
+   `<cowork_scripts_dir>/git-post-commit`. Prereqs for this path: `gtimeout` (`brew install
+   coreutils`); `flock` (`brew install util-linux` — **keg-only on macOS, NOT on PATH**; the
+   dispatch scripts probe `/opt/homebrew/opt/util-linux/bin/flock`); an authenticated `codex` CLI;
+   `cursor-agent login` (cursor-agent runs `--force` on default model `gpt-5.5-high`, override via
+   `CW_CURSOR_MODEL`). Skip this entire step for synchronous variants (`A-Claude` / `D-*`).
+8. **Write** a project-local concrete workflow doc (`<project_workflow_doc>`) — the worked instance,
    like this repo's `project/SUBAGENT_WORKFLOW_V2.md`. The portable docs stay generic; the project
    doc records "how it was actually wired here".
-8. **Test-run** on one small feature, then one bugfix, before overwriting any pre-existing agents.
+9. **Test-run** on one small feature, then one bugfix, before overwriting any pre-existing agents.
 
 ---
 
@@ -307,11 +325,19 @@ Migration skill for the portable workflow paradigm. Full spec: `docs/workflow/_p
 7. **instantiate is gated on a reviewed survey.** It consumes a survey plan; it does not re-derive
    placeholders itself. If invoked without a reviewed plan, it runs survey first and stops at the
    review gate.
+8. **resync never runs against a dirty target, and never silently overwrites a hand-customized
+   template.** Before any write, resync checks the target's git working tree for every path it
+   would touch; if any is dirty it STOPS read-only and tells the human to commit/stash. If a target
+   template diverges from upstream beyond placeholder substitution (the project customized it),
+   resync lists the conflict and STOPS for a human 3-way merge — it does not clobber.
 
 ## 1. Mode detection
 
 - call arguments contain `mode: survey`, or only a target repo path is given → **survey mode**.
 - call arguments contain `mode: instantiate`, or a reviewed `plan:` file is given → **instantiate mode**.
+- call arguments contain `mode: resync` (or `mode: update`), OR the target already has a populated
+  `docs/workflow/_portable/` + a non-empty `<templates_dir>/` (migrated before, now behind
+  upstream) → **resync mode**.
 - when both could be inferred, the explicit `mode:` argument wins.
 - instantiate with no reviewed plan → run survey first, stop at its review gate, do not proceed.
 
@@ -373,7 +399,49 @@ checklist. STOP.
      `<skill_root>` and register them in the target's skill registry
    - test-run on one small feature, then one bugfix, before passing `--replace-claude`
 
-## 4. Exception handling
+## 4. resync mode
+
+Input: a target repo path that was migrated by an earlier `instantiate` and is now behind upstream
+`_portable/`. Output: the target's portable layer + instantiated scripts/agents brought up to date,
+plus a **project-layer doc-delta checklist** the human must hand-apply. STOP.
+
+resync is the repeatable answer to "the source workflow had a big update — sync my already-migrated
+project". It is **idempotent** (safe to re-run) and **non-destructive** (constraint §0.8).
+
+1. **Precondition — clean-target gate (read-only until it passes).** `git -C <target> status
+   --short` for every path resync writes: `docs/workflow/_portable/`, `<cowork_scripts_dir>/`,
+   `<templates_dir>/`, `.claude/agents/` `.codex/agents/` `.cursor/agents/`, the copied
+   `<setup_script>`, and `scripts/lint/check_portable_sync.py` if present. If ANY is dirty → STOP
+   with Handoff `Status: BLOCKED`, Blocker listing the dirty paths, Next Step "commit or stash the
+   target's work, then re-run resync". Never clobber uncommitted work.
+2. **Resolve the target's placeholder map.** Prefer a recorded migration plan; else re-derive it
+   survey-style from the target's existing instantiated artifacts (`<project_background_file>`,
+   substituted `<cowork_scripts_dir>/*`, the `<setup_script>` ADJUST constants). AskUserQuestion for
+   any slot still ambiguous — `<skill_prefix>` especially (not recoverable from substituted scripts).
+3. **Show the upstream delta.** Summarize what changed in source `_portable/` since the target's
+   copy (diff the two `_portable/` trees; list new files, changed scripts, changed `04` / `07` /
+   `00-MANIFEST`, changed templates). Do not dump full diffs.
+4. **Overwrite the target `docs/workflow/_portable/` verbatim** from source (project-agnostic;
+   always a safe whole-tree replace once §1 passed).
+5. **Re-render `_portable/scripts/*` → `<cowork_scripts_dir>/`** with the target's token map — the
+   FULL set including any new files. Re-confirm `.git/hooks/post-commit` is the chained wrapper
+   (§4 of this manifest). Scan: no `<placeholder>` may survive in `<cowork_scripts_dir>/`.
+6. **Re-instantiate templates with a conflict guard.** For each `_portable/templates/*.md`, compute
+   the placeholder-substituted upstream form and compare to the target's `<templates_dir>/` copy.
+   Differs ONLY by upstream content → overwrite. Target copy hand-customized (differs beyond
+   substitution) → do NOT overwrite; add to a CONFLICTS list. Then run the `<setup_script>` to
+   regenerate `.claude/.codex/.cursor` (note the `--force` regression caveat — §4 step 6; targeted
+   re-propagation for hand-fixed agents). If CONFLICTS is non-empty, STOP for human 3-way merge
+   before generating.
+7. **Refresh the lint.** If the project carries `scripts/lint/check_portable_sync.py`, update it
+   from source (incl. the cowork↔portable parity rule); else list it in the checklist as a
+   recommended add. Run it — must PASS (it catches any placeholder left unsubstituted in §5).
+8. **Emit the project-layer doc-delta checklist + STOP.** resync NEVER edits the target's own
+   `<project_workflow_doc>` / SOPs / usage-guide-equivalent (constraint §0.3). List the specific
+   upstream changes the human must hand-apply there. End with a Next Step: review CONFLICTS (if
+   any), apply the doc deltas, then test-run one feature to confirm the B/C hooks work end-to-end.
+
+## 5. Exception handling
 
 - **target repo path invalid / unreadable** → stop, report, do not proceed.
 - **a §3.1 placeholder has no target equivalent and is not optional** → AskUserQuestion; never guess.
@@ -385,7 +453,7 @@ checklist. STOP.
 - **pre-existing `.claude/agents/` in the target** → the generation script defaults to
   `.claude/agents-v2/`; do not pass `--replace-claude` until the human has reviewed the output.
 
-## 5. The skill satisfies the Universal Next Step Contract
+## 6. The skill satisfies the Universal Next Step Contract
 
 Both modes terminate with a copy-pasteable Next Step block (`02-handoff-and-state.md` §3.3):
 survey's points at "review the plan, then re-invoke in instantiate mode with it"; instantiate's is

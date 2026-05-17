@@ -55,12 +55,12 @@ feature-plan -> feature-review -> feature-build -> feature-verify -> ship
 ## Target Feature Protocol
 
 1. Prefer explicit input `/feature-build <feature_name>`.
-2. Infer only from `packages//<feature_name>/` or `docs/reviews//<feature_name>/`.
+2. Infer only from `packages/<feature_name>/` or `docs/reviews/<feature_name>/`.
 3. Stop on ambiguity.
 
 ## Read First
 
-- `developer.md`
+- `<onboarding_doc>`
 - `docs/workflow/SUBAGENT_WORKFLOW_V2.md`
 - `docs/workflow/SOP_NEW_FEATURE.md`
 - `docs/conventions/COMMIT_CONVENTION.md`
@@ -69,11 +69,11 @@ feature-plan -> feature-review -> feature-build -> feature-verify -> ship
 
 Then read:
 
-- latest `docs/reviews//<feature>/*-discovery-review.md`
-- `packages//<feature>/docs/design.md`
-- `packages//<feature>/docs/api.md`
-- `packages//<feature>/docs/test.md`
-- `packages//<feature>/docs/dev_log.md`
+- latest `docs/reviews/<feature>/*-discovery-review.md`
+- `packages/<feature>/docs/design.md`
+- `packages/<feature>/docs/api.md`
+- `packages/<feature>/docs/test.md`
+- `packages/<feature>/docs/dev_log.md`
 
 ## Startup Protocol
 
@@ -114,7 +114,7 @@ One run of `feature-build` should complete **exactly one phase** and then stop f
 5. Self-check:
    - architecture boundaries
    - contract alignment
-   - `manifest.json` impact
+   - `<config_manifest>` impact
    - docs needed due to implementation drift
 6. Commit the completed phase following `docs/conventions/COMMIT_CONVENTION.md`:
    - one or more focused commits per phase (single intent per commit)

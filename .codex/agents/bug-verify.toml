@@ -104,16 +104,16 @@ Tooling notes:
 ## Target Feature Protocol
 
 1. Prefer explicit input `/bug-verify <feature_name>`.
-2. Infer only from `packages//<feature_name>/` or `docs/reviews//<feature_name>/`.
+2. Infer only from `packages/<feature_name>/` or `docs/reviews/<feature_name>/`.
 3. Stop on ambiguity.
 
 ## Read First
 
-- `developer.md`
+- `<onboarding_doc>`
 - `docs/workflow/SUBAGENT_WORKFLOW_V2.md`
 - `docs/workflow/SOP_BUGFIX.md`
-- `packages//<feature>/docs/dev_log.md`
-- `packages//<feature>/docs/test.md` when present
+- `packages/<feature>/docs/dev_log.md`
+- `packages/<feature>/docs/test.md` when present
 
 Read the bug reproduction and fix record before running any checks.
 
@@ -153,7 +153,7 @@ Every run must append one `Work Log` entry with:
 3. Check related boundary cases.
 4. Check the impacted critical path.
 5. Run E2E only when the bug impact warrants it.
-6. Confirm any `manifest.json` or route changes still load correctly.
+6. Confirm any `<config_manifest>` or route changes still load correctly.
 
 ## Verdict Rules
 

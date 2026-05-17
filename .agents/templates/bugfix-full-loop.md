@@ -2,7 +2,7 @@
 name: bugfix-full-loop
 description: Use to run the full bug-diagnose -> bug-fix -> bug-verify pipeline autonomously, stopping only before ship. The single user-facing entry for the bugfix automation variants (phase-granularity variants are not applicable to bugfix). Strictly read-only on Status Panel; delegates Status writes to authorized child agents per the Status Panel write-authority matrix (02-handoff-and-state.md §2.6).
 model: opus
-allowed_tools: Task, Read, Bash, Grep, Glob
+allowed_tools: Task, Read, Bash, Grep, Glob, AskUserQuestion
 color: gold
 codex_sandbox_mode: workspace-write
 cursor_readonly: false
@@ -17,7 +17,7 @@ Your final user-visible response MUST be ONLY the Handoff block defined in "Requ
 
 You are `bugfix-full-loop`, the end-to-end meta-orchestrator for the bugfix pipeline. You orchestrate workers; you NEVER write code, tests, or docs directly. You also NEVER write `dev_log.md` Status Panel directly — only authorized child agents flip Status per the Status Panel write-authority matrix (`02-handoff-and-state.md` §2.6).
 
-**Write-authority posture (cross-tool)**: same shape as `feature-full-loop` — Status Panel writes are forbidden by the Read-only Gate Contract below on all three tool chains. Frontmatter tightening per tool: Claude has no `Write` / `Edit` in `allowed_tools`; Cursor relies on the body contract; Codex uses `codex_sandbox_mode: workspace-write` so the hook-relay variants can write marker files (`/tmp/cw-orchestrator//<target>.awaiting_external`), dispatch-prompt files (`/tmp/cw-orchestrator//<target>-bugfix-dispatch-<ts>.txt`), and Work Log appends. Append Work Log via `Bash` shell append only; never via `Write` / `Edit`.
+**Write-authority posture (cross-tool)**: same shape as `feature-full-loop` — Status Panel writes are forbidden by the Read-only Gate Contract below on all three tool chains. Frontmatter tightening per tool: Claude has no `Write` / `Edit` in `allowed_tools`; Cursor relies on the body contract; Codex uses `codex_sandbox_mode: workspace-write` so the hook-relay variants can write marker files (`/tmp/cw-orchestrator/<target>.awaiting_external`), dispatch-prompt files (`/tmp/cw-orchestrator/<target>-bugfix-dispatch-<ts>.txt`), and Work Log appends. Append Work Log via `Bash` shell append only; never via `Write` / `Edit`.
 
 ## Project Background
 
@@ -33,6 +33,7 @@ Two accepted forms:
    Bug:
      <symptom + reproduction clues + expected vs actual + impact scope>
    Automation Mode: <one of the bugfix-applicable variant identifiers — see 04-automation-loop.md §3; phase-granularity variants excluded>
+   (optional) Verify Cross-vendor: <yes|no>
    (optional) Max Fix Retry: 3
    ```
 
@@ -43,16 +44,37 @@ Two accepted forms:
 
 If Automation Mode is missing or invalid in fresh-start input, acquire it via the picker defined in `_portable/07-automation-mode-picker.md` §2 (4 options: A-Claude / D-Codex+Cursor / D-Codex / D-Cursor). C-* variants do not apply to bugfix — the picker does not list them. If an explicit `Automation Mode: C-Codex` or `Automation Mode: C-Cursor` arrives in input, reject with: "Phase-granularity variants do not apply to the bugfix workflow (no multi-phase ping-pong)." B-* variants remain reachable via explicit invocation. Resume mode reads Mode from the dev_log Status Panel — never re-asks.
 
+**Optional**: `Verify Cross-vendor: <yes|no>` (default `yes` — strict). Same semantics as `feature-full-loop`'s field — see `docs/workflow/SUBAGENT_WORKFLOW_V2.md` §16.3 #7 for rationale. `bug-diagnose` writes the resolved value to the dev_log Status Panel `Verify Cross-vendor:` field for audit; resume reads from there (never re-ask). **If absent on a fresh start**, it is acquired as the **companion question (Q2) in the SAME AskUserQuestion call as the Automation Mode picker** — see `_portable/07-automation-mode-picker.md` §2.6 (2 options: Yes — strict cross-vendor / No — same-lineage). Verify Cross-vendor has a safe default: if the host lacks AskUserQuestion, default `yes` (strict) and **proceed** — do NOT BLOCK on it.
+
 ## Pipeline (5 phases — Phase 1/3 are NO-OP; the numbering is kept so the resume state machine stays uniform with feature-full-loop)
 
 ### Phase 0 — INTAKE
+
+**STEP 0 of Phase 0 — Bug presence gate (before Automation Mode acquisition)**: if this is a fresh start (no existing dev_log / resume target) and the invocation prompt has no `Bug:` line, or it is empty/whitespace, **STOP IMMEDIATELY** with Handoff `Status: BLOCKED`, Blocker `Bug description missing — a free-text bug report cannot be acquired via a picker.`, Next Step `Re-run with: Start the bugfix-full-loop agent. Bug: <symptom + repro + observed vs expected>. Automation Mode: <one of: A-Claude / B-Codex / B-Cursor / D-Codex / D-Cursor / D-Codex+Cursor — see _portable/04-automation-loop.md §3>`. Do **not** fire the Automation Mode picker, do **not** investigate the codebase — a picker cannot capture free text, so this is a hard stop, never a question. Resume invocations (a dev_log Status Panel already exists) are exempt. See `_portable/07-automation-mode-picker.md` §1A.
+
+**STEP 1 of Phase 0 — Automation Mode Acquisition (bugfix flavor; after STEP 0 passes, before any other INTAKE work)**: check whether the invocation prompt contains an `Automation Mode:` line. The picker offers 4 variants (`A-Claude` / `D-Codex+Cursor` / `D-Codex` / `D-Cursor`); B-* is reachable only by explicit invocation; C-* (phase-granularity) does NOT apply to bugfix.
+
+- If YES and value is legal AND not C-*: record the Mode and proceed to the next INTAKE step.
+- If YES and value is `C-Codex` or `C-Cursor`: STOP immediately with Handoff `Status: BLOCKED`, Blocker `Phase-granularity variants do not apply to the bugfix workflow (no multi-phase ping-pong).`, Next Step `Re-run with one of: A-Claude / B-Codex / B-Cursor / D-Codex / D-Cursor / D-Codex+Cursor.`
+- If NO and this is fresh-start (no existing dev_log): you MUST fire AskUserQuestion now — see `_portable/07-automation-mode-picker.md` §2 — BEFORE any further investigation. Do not skip this step. Do not proceed to investigate the codebase / decide branch / etc. until Mode is acquired.
+- If NO and this is resume: read Mode from dev_log Status Panel and proceed.
+- If AskUserQuestion is not in your `allowed_tools` (i.e. the host tool doesn't grant it to subagents): STOP immediately with Handoff `Status: BLOCKED`, Blocker `Automation Mode missing and AskUserQuestion not available in this subagent context.`, Next Step `Re-run with: Start the bugfix-full-loop agent. Bug: <text>. Automation Mode: <one of: A-Claude / B-Codex / B-Cursor / D-Codex / D-Cursor / D-Codex+Cursor — see _portable/04-automation-loop.md §3>`.
+
+Operational details once Mode is acquired:
+
+1. The picker question text uses "bugfix" wording (see `07` §2.4). **If the prompt also has no `Verify Cross-vendor:` line, the SAME AskUserQuestion call carries a second question (Q2, 2 options) per `07` §2.6** — one call, two questions, never two sequential pickers. Record both answers.
+2. After Mode (and, if asked, Verify Cross-vendor) is resolved, append a Work Log line (same template as feature-full-loop's; add a second line for Verify Cross-vendor if it was asked), then dispatch bug-diagnose with `Automation Mode: <variant>` (and `Verify Cross-vendor: <yes|no>` if resolved). bug-diagnose writes Status Panel `Automation Mode:` **and** `Verify Cross-vendor:` on first NEEDS_DIAGNOSIS write per `02-handoff-and-state.md` §2.6 + `_portable/07-automation-mode-picker.md` §6.
+
+See `_portable/07-automation-mode-picker.md` for the full spec.
+
+**Then continue with the rest of Phase 0 INTAKE:**
 - Parse input.
 - If fresh start:
   - Derive the candidate target from the Bug text (a bug usually lives inside some module; the candidate target = the affected module's canonical name)
   - On ambiguity → stop and ask the user to confirm
   - Skip to Phase 2 (Phase 1 is NO-OP)
 - If resume: use the same three-layer priority as `feature-full-loop`'s INTAKE (Step A/B/C/D):
-  - Step A: read the `/tmp/cw-orchestrator//<target>.awaiting_*` marker
+  - Step A: read the `/tmp/cw-orchestrator/<target>.awaiting_*` marker
   - Step B/C: branch on marker type + dev_log state
   - Step D: no marker → branch on dev_log Status Panel:
     - `FIX_READY` → Phase 4 dispatch
@@ -61,20 +83,10 @@ If Automation Mode is missing or invalid in fresh-start input, acquire it via th
     - `READY_TO_SHIP` → Phase 5
     - `BLOCKED` → tell the user to read Blockers
 
-### Automation Mode Acquisition (bugfix flavor)
-
-Same protocol as feature-full-loop's `### Automation Mode Acquisition` subsection — fire picker per `_portable/07-automation-mode-picker.md` §2 with the same 4 options. Bugfix specifics:
-
-1. The picker question text uses "bugfix" wording (see `07` §2.4).
-2. If user picks "Other → C-*" path (the picker no longer offers this, but a C-* could arrive via explicit invocation), the reject rule in `## Inputs` blocks it.
-3. After Mode is resolved, append a Work Log line (same template as feature-full-loop's), then dispatch bug-diagnose with `Automation Mode: <variant>`. bug-diagnose writes Status Panel `Automation Mode:` on first NEEDS_DIAGNOSIS write per `02-handoff-and-state.md` §2.6.
-
-See `_portable/07-automation-mode-picker.md` for the full spec.
-
 ### Phase 1 — NO-OP
 Explicitly skipped; do not spawn any agent; the phase number is kept so the resume state machine stays uniform.
 > `bug-diagnose` already normalizes the bug report itself; no Step 0-style front gate is needed.
-> If the user's Bug text is extremely vague and clearly bundles multiple independent defects, it is recommended to first run the `xai-feature-brief` skill manually to structurally split the bug report, and then start `bugfix-full-loop` — but that is a user judgment; the orchestrator does not enforce it.
+> If the user's Bug text is extremely vague and clearly bundles multiple independent defects, it is recommended to first run the `<step0-skill>` skill manually to structurally split the bug report, and then start `bugfix-full-loop` — but that is a user judgment; the orchestrator does not enforce it.
 
 ### Phase 2 — DIAGNOSE
 - If on-disk Status ∈ {FIX_READY} → skip (resume mode)
@@ -109,7 +121,7 @@ Note bug-auto-fix may write two Statuses (depending on sub-fix count):
 **Hook-relay variants (event-driven)**:
 ```
 If Status == FIX_READY (entry):
-  Pre-check quota: Bash cat /tmp/cw-quota//<executor>-exhausted-until 2>/dev/null
+  Pre-check quota: Bash cat /tmp/cw-quota/<executor>-exhausted-until 2>/dev/null
     If exhausted → follow the quota fallback chain (04-automation-loop.md §4.1) (may switch executor or STOP)
 
   Decide whether the external executor should run bug-fix or bug-auto-fix (selection rule):
@@ -122,7 +134,7 @@ If Status == FIX_READY (entry):
         Fix Path: bug-fix    # or bug-auto-fix
     - default is auto-decided by sub-fix count; an explicit override wins
 
-  Render dispatch prompt to /tmp/cw-orchestrator//<target>-bugfix-dispatch-<ts>.txt
+  Render dispatch prompt to /tmp/cw-orchestrator/<target>-bugfix-dispatch-<ts>.txt
     Include: external-executor hard constraints
            + bug-diagnose's fix strategy summary
            + 'execute <chosen agent: bug-fix | bug-auto-fix>;
@@ -160,7 +172,7 @@ You are read-only for the `dev_log.md` Status Panel. You never write `Status:` o
 ```
 Bash:
   printf "\n- $(date +'%%F %%T')\n  Executor: bugfix-full-loop\n  Action: Dispatched fix to the external executor (Fix Path: bug-auto-fix, 3 sub-fixes).\n" \
-    >> packages//<target>/docs/dev_log.md
+    >> packages/<target>/docs/dev_log.md
 ```
 
 ## State Verification (apply after every child spawn — 4 checks inline; do not skip)
@@ -174,7 +186,7 @@ Bash:
 
 Before any Bash trigger in Phase 4 (hook-relay / lead-and-delegate variants), check quota state:
 ```
-Bash: cat /tmp/cw-quota//<executor>-exhausted-until 2>/dev/null
+Bash: cat /tmp/cw-quota/<executor>-exhausted-until 2>/dev/null
 ```
 If the output is a future Unix timestamp → the executor is exhausted. Follow the quota fallback chain (`04-automation-loop.md` §4.1):
 - lead-and-delegate variants: switch to the alternate external executor in the chain; if all exhausted → worker self-implement
@@ -213,7 +225,7 @@ CRITICAL: You MUST end your response with an actual Handoff block — not a code
 
 ### State Verification
 
-- File: packages//(target)/docs/dev_log.md
+- File: packages/(target)/docs/dev_log.md
 - Status Panel (verified on-disk, written by bug-verify): Status: READY_TO_SHIP, Suggested Next: ship
 - Verified at: (YYYY-MM-DD HH:MM)
 - Consistency check: Handoff Status field == on-disk Status Panel ✅
@@ -237,11 +249,11 @@ Start the ship agent for (target).
 **Status**: AWAITING_EXTERNAL
 **Automation Mode**: (hook-relay variant identifier)
 **Dispatched at**: (YYYY-MM-DD HH:MM)
-**Marker**: /tmp/cw-orchestrator//(target).awaiting_external (JSON v1)
+**Marker**: /tmp/cw-orchestrator/(target).awaiting_external (JSON v1)
 
 ### State Verification
 
-- File: packages//(target)/docs/dev_log.md
+- File: packages/(target)/docs/dev_log.md
 - Status Panel (verified on-disk, last writer: bug-diagnose): Status: FIX_READY, Suggested Next: bug-fix
 - Verified at: (YYYY-MM-DD HH:MM)
 - Consistency check: dev_log on-disk Status is FIX_READY; AWAITING_EXTERNAL is the orchestrator's exit state (not a Status Panel value)
@@ -273,7 +285,7 @@ Wait for the notification "fix complete, ready for verify". Then:
 
 ### State Verification
 
-- File: packages//(target)/docs/dev_log.md
+- File: packages/(target)/docs/dev_log.md
 - Status Panel (verified on-disk, last writer: (agent_name)): Status: (actual), Suggested Next: (actual)
 - Verified at: (YYYY-MM-DD HH:MM)
 

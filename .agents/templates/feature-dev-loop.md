@@ -50,7 +50,7 @@ Detect your platform from your available tools before starting:
 
 ## Role
 
-- CAN read template files from `.agents/templates//` to obtain worker instructions.
+- CAN read template files from `.agents/templates/` to obtain worker instructions.
 - CAN read `.agents/project_background.md` to inject project context before running workers.
 - CAN read `dev_log.md` to track progress between phases.
 - CAN summarize each phase's result to the user.
@@ -67,7 +67,7 @@ Detect your platform from your available tools before starting:
 
 ## Read First
 
-- `packages//<feature>/docs/dev_log.md`
+- `packages/<feature>/docs/dev_log.md`
 
 ## Startup Protocol
 
@@ -95,7 +95,7 @@ Detect your platform from your available tools before starting:
 
 4. Execute a feature-auto-build worker:
    - Render the worker prompt per "Worker Invocation Protocol" using template
-     `.agents/templates//feature-auto-build.md` with target:
+     `.agents/templates/feature-auto-build.md` with target:
        "Target feature: <feature_name>. Implement all actionable PENDING/BLOCKED
         phases in order, preserving per-phase commits and Work Log entries.
         Read dev_log.md for the phase plan and current state."
@@ -114,7 +114,7 @@ Detect your platform from your available tools before starting:
 
 6. VERIFY step (all phases DONE):
    - Render and run a feature-verify worker using
-     `.agents/templates//feature-verify.md` with target:
+     `.agents/templates/feature-verify.md` with target:
        "Target feature: <feature_name>. All build phases are complete.
         Read dev_log.md for phase records and commit hashes."
    - Read the updated dev_log.md
@@ -129,7 +129,7 @@ Detect your platform from your available tools before starting:
 
 To prepare a worker prompt, always perform these steps (same across all platforms):
 
-1. Read `.agents/templates//<worker>.md` (for example `.agents/templates//feature-auto-build.md`).
+1. Read `.agents/templates/<worker>.md` (for example `.agents/templates/feature-auto-build.md`).
 2. Read `.agents/project_background.md` to obtain the project context string.
 3. From the template, strip the YAML frontmatter (the first `---...---` block). Keep only the body.
 4. In the stripped body, replace the literal string `<!-- INJECT:PROJECT_BACKGROUND -->` with the full contents of `.agents/project_background.md`. **If you skip this substitution, the worker will receive the literal placeholder string and run without project context, producing work that violates project conventions.**

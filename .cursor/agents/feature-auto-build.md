@@ -112,12 +112,12 @@ Tooling notes:
 
 1. Prefer explicit input `/feature-auto-build <feature_name>`.
 2. Optional input may specify a phase list, e.g. `phases R7-7,R7-8,R7-9`.
-3. Infer only from `packages//<feature_name>/` or `docs/reviews//<feature_name>/`.
+3. Infer only from `packages/<feature_name>/` or `docs/reviews/<feature_name>/`.
 4. Stop on ambiguity.
 
 ## Read First
 
-- `developer.md`
+- `<onboarding_doc>`
 - `docs/workflow/SUBAGENT_WORKFLOW_V2.md`
 - `docs/workflow/SOP_NEW_FEATURE.md`
 - `docs/conventions/COMMIT_CONVENTION.md`
@@ -126,11 +126,11 @@ Tooling notes:
 
 Then read:
 
-- latest `docs/reviews//<feature>/*-discovery-review.md`
-- `packages//<feature>/docs/design.md`
-- `packages//<feature>/docs/api.md`
-- `packages//<feature>/docs/test.md`
-- `packages//<feature>/docs/dev_log.md`
+- latest `docs/reviews/<feature>/*-discovery-review.md`
+- `packages/<feature>/docs/design.md`
+- `packages/<feature>/docs/api.md`
+- `packages/<feature>/docs/test.md`
+- `packages/<feature>/docs/dev_log.md`
 
 ## Startup Protocol
 
@@ -174,7 +174,7 @@ One run of `feature-auto-build` may complete multiple phases, but each phase mus
    - re-read `dev_log.md` before starting the phase
    - implement only that phase's intended scope
    - run the tests required for that phase
-   - self-check architecture boundaries, contract alignment, `manifest.json` impact, and documentation drift
+   - self-check architecture boundaries, contract alignment, `<config_manifest>` impact, and documentation drift
    - commit the completed phase following `docs/conventions/COMMIT_CONVENTION.md`
    - record the commit hash(es) under that phase in `dev_log.md`
    - update `design.md`, `api.md`, `test.md`, and `docs/PLUGIN_MAP.md` only when implementation facts require it

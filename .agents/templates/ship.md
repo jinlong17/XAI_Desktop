@@ -57,15 +57,15 @@ Pipeline position:
 ## Target Feature Protocol
 
 1. Prefer explicit input `/ship <feature_name>`.
-2. Infer only from `packages//<feature_name>/` or `docs/reviews//<feature_name>/`.
+2. Infer only from `packages/<feature_name>/` or `docs/reviews/<feature_name>/`.
 3. Stop on ambiguity.
 
 ## Read First
 
-- `developer.md`
+- `<onboarding_doc>`
 - `docs/workflow/SUBAGENT_WORKFLOW_V2.md`
 - `docs/conventions/COMMIT_CONVENTION.md`
-- `packages//<feature>/docs/dev_log.md`
+- `packages/<feature>/docs/dev_log.md`
 
 If relevant, also read:
 

@@ -171,13 +171,26 @@ The whole layer is just two things, in different forms:
 | **Roadmap manifest** | a **file** | the single source of truth for a roadmap's state: N feature rows, dependency edges, current status |
 | **Roadmap orchestration skill** | a **skill** (slash command) | the logic: parse a human-readable roadmap doc into a manifest (`init` mode); continuously loop and drive (`run` mode) |
 
-**Why the driver is a skill, not a subagent.** A subagent is dispatched by the main session and
-returns its result to the main session; if one subagent looped N times in its own session, the N
-features' contexts would all pile up in that one session — back to the context-blowout problem — and
-the three-level nesting (subagent → `feature-full-loop` → `feature-plan`) hits the spawn-depth cap on
-some tools. A skill is a stretch of instructions that unfolds *in the current session*; it loops in
-its own session, but **each `feature-full-loop` is an independent context it spawns**, so the driver's
-own context stays small.
+**Why the driver is a skill, not a subagent — and why dispatch is emit-by-default.** Roadmap
+orchestration uses **emit-dispatch by default**, not spawn-dispatch. The driver (a skill running in
+the caller's own session) never spawns `feature-full-loop` as a subagent; instead it computes the
+eligible set per wave and emits a copy-paste-ready prompt block per feature. The user opens N
+parallel sessions and runs each block.
+
+Why: the natural chain caller → roadmap-loop-driver → `feature-full-loop` → `feature-plan` is 3
+levels of nesting and hits the spawn-depth cap on most tool platforms (Claude Code's default
+subagent depth limit; Codex's `max_depth=2`). Emit-dispatch sidesteps this by making the user the
+dispatcher — every `feature-full-loop` runs from the user's main session (only 2 levels deep:
+main → `feature-full-loop` → worker), which all platforms support.
+
+The skill is therefore a **tracker + planner + emitter**, not an executor: it parses the source
+doc, writes/reads the manifest, reconciles from dev_log truth, computes the eligibility frontier,
+and emits the prompts. The user executes in parallel. Re-invoking the skill reconciles and emits
+the next wave.
+
+Tools with ≥ 4-level nesting capacity can opt into spawn-dispatch via `dispatch: spawn`
+(§A7.3 → §3.2-opt-in). The portable spec recommends emit-dispatch unconditionally for production
+use.
 
 **Why `init` and `run` are one skill.** Both share the same manifest schema; splitting them risks
 schema drift. One `SKILL.md` decides which mode to run based on "does the manifest file already exist
@@ -215,14 +228,15 @@ The file has two parts: **header metadata** + a **feature table**.
 - Generated: <YYYY-MM-DD>
 - Default Automation Mode: D-Codex+Cursor    # one of the 8 named variants — see 04 §3
 - Default Dependency Semantics: shipped
+- Default Verify Cross-vendor: yes            # 2026-05-16 — see <project_workflow_doc> §16.3 #5 / #7
 
 ## Features
 
-| # | Slug | Source | Depends On | Dep Semantics | Status | Automation Mode | Last Run | Note |
-|---|------|--------|------------|---------------|--------|-----------------|----------|------|
-| 1 | roadmap-kickoff | §1 | — | — | PENDING | (default) | — | kickoff; unblocks the rest |
-| 2 | <slug> | §2 | roadmap-kickoff | shipped | PENDING | (default) | — | ... |
-| ... | | | | | | | | |
+| # | Slug | Source | Depends On | Dep Semantics | Status | Automation Mode | Verify Cross-vendor | Last Run | Note |
+|---|------|--------|------------|---------------|--------|-----------------|---------------------|----------|------|
+| 1 | roadmap-kickoff | §1 | — | — | PENDING | (default) | (default) | — | kickoff; unblocks the rest |
+| 2 | <slug> | §2 | roadmap-kickoff | shipped | PENDING | (default) | (default) | — | ... |
+| ... | | | | | | | | | |
 ```
 
 The `Source` cell is a roadmap-doc section anchor (`§N`) when `Init Path: parse`, or a per-feature
@@ -241,6 +255,7 @@ seed-brief path (`<roadmap_seed_brief>`) when `Init Path: decompose` — see A6.
 | `Dep Semantics` | dependency-satisfaction semantics | `shipped` (default) / `ready_to_ship`; see A4.5 |
 | `Status` | current status | see A6.4 |
 | `Automation Mode` | the variant passed to `feature-full-loop` — one of the 8 named variants (`A-Claude` / `B-Codex` / `B-Cursor` / `C-Codex` / `C-Cursor` / `D-Codex` / `D-Cursor` / `D-Codex+Cursor`, see `04` §3). Acquisition: see `_portable/07-automation-mode-picker.md` §5 (init per-row picker) and Appendix SKILL.md §3.1.5 (run preflight). Layer 3.5 never spawns `feature-full-loop` with `(default)` — preflight always resolves to a concrete variant first. | `(default)` falls back to the header Default |
+| `Verify Cross-vendor` | per-row opt-out for the cross-vendor verify gate (`<project_workflow_doc>` §16.3 #5 / #7). `(default)` inherits header `Default Verify Cross-vendor`. Set to `no` only when the feature is low-risk and you accept the echo-chamber trade-off — `feature-full-loop` will then be allowed to use `feature-dev-loop` (build + verify same lineage). When `yes`, the orchestrator must use `feature-auto-build` + a separate cross-vendor `feature-verify`. `feature-full-loop` reads this and passes it through; `feature-plan` writes the resolved value into the dev_log Status Panel `Verify Cross-vendor:` field for audit. | `(default)` falls back to the header Default; explicit `yes` / `no` overrides |
 | `Last Run` | timestamp this row was last driven | written by the skill |
 | `Note` | human-readable note | risk level, external dependency, special pacing, etc. |
 
@@ -631,30 +646,37 @@ signing off on the feature boundaries and the dependency graph the skill *propos
 `## Decomposition Rationale`, skim the seed briefs, fix anything wrong by hand-editing the manifest /
 seed briefs. When it looks right, go to Action 2.
 
-**Action 2 · `run` (once per wave — type it and walk away)**
-
-Open a new session and type:
+**Action 2 — `run` (per wave, repeat until done):**
 
 ```text
 /<skill_prefix>roadmap-loop
 manifest: <roadmap_manifest_dir>/<roadmap_name>.md
 ```
 
-Then **you can walk away.** The skill loops continuously in this one session: it picks every feature
-whose dependencies are satisfied, spawns a `feature-full-loop` for each, each running its whole
-Step 0 → plan → review → build → verify in its own independent context. Hours later it stops and
-outputs a wave summary:
+Reconciles from dev_logs, computes the eligibility frontier, and **emits one prompt block per
+eligible feature**. STOP — does NOT execute the work. Open the printed blocks in N parallel
+sessions and run each. When any feature reaches SHIPPED, re-run this command and the next wave's
+eligible blocks are emitted.
 
 ```text
-🟢 Wave complete. Processed M features this round:
-   READY_TO_SHIP (waiting for your batch ship):
-     - <slug>
-     - <slug>
-   BLOCKED (skipped, needs human intervention):
-     - <slug>
-       Blocker: plan/review did not converge in 3 rounds, requirement likely ambiguous
-   Next Step: batch-ship the items above; then re-run roadmap-loop to unlock the next wave.
+🚀 Wave <N> — <K> features eligible. Copy each block to a new session.
+
+──────────────── Block 1 (first eligible): <slug> ────────────────
+Start the feature-full-loop agent for <slug>.
+Automation Mode: <Mode_1>
+Verify Cross-vendor: <resolved value from row or header default>
+Requirement: <resolved from row.Source>
+
+──────────────── Block 2 (second eligible): <slug> ────────────────
+...
+
+Next Step: open <K> new sessions in parallel and paste each block. After any
+feature(s) SHIPPED, re-run roadmap-loop here for the next wave.
 ```
+
+If the host tool has sufficient nesting capacity and you'd rather have the skill drive the spawn
+directly, pass `dispatch: spawn` (§A7.3 → §3.2-opt-in). Most users on Claude Code / Codex should
+NOT use spawn (it hits the depth cap; see §A5).
 
 **Action 3 · batch ship (once at the end of each wave)**
 
@@ -777,13 +799,21 @@ Layer 3.5 roadmap orchestration skill. Full spec: `docs/workflow/_portable/06-ro
 9. **On the decompose path, ask before guessing.** When a decomposition decision is genuinely
    ambiguous and materially changes the manifest, raise a focused AskUserQuestion-style clarification
    round before finalising; record every guess in the Decomposition Rationale.
-10. **Run mode never asks the picker inside the main loop.** The picker fires only in init
-    (per-row, see `_portable/07-automation-mode-picker.md` §5) and as a one-time run preflight
-    fallback (`07` §4 layer 4). Main-loop spawns always receive a concrete legal Mode in their
-    prompt.
-11. **Run-time Mode fallback is session-local and never written back to the manifest.** The
+10. **Default dispatch is emit, not spawn.** `run` mode does NOT spawn `feature-full-loop` as Task
+    subagents. Instead, it emits a copy-paste-ready prompt block per eligible feature, telling the
+    user to run each in a separate session/window. Rationale: the 3-level nesting (caller →
+    roadmap-loop → feature-full-loop → feature-plan) hits the spawn-depth cap on most tool
+    platforms (Claude Code default; Codex `max_depth=2`). The user is the real dispatcher;
+    roadmap-loop is the tracker. Opt-in to spawn-dispatch by passing `dispatch: spawn` in the
+    invocation when running on a tool with sufficient nesting capacity.
+11. **Run mode never marks rows IN_PROGRESS.** Since the skill does not actually execute the work
+    (the user does, in parallel sessions), Status flips happen via reconcile reading dev_log truth
+    on the next `run` invocation. Rows stay PENDING until reconcile sees SHIPPED / BLOCKED in the
+    corresponding dev_log Status Panel. (The legacy spawn-dispatch path under `dispatch: spawn`
+    retains the old IN_PROGRESS marking — it actually drives the work and needs the lock.)
+12. **Run-time Mode fallback is session-local and never written back to the manifest.** The
     `run_time_fallback` resolved at picker `07` §4 layer 4 stays in session memory; persistence
-    requires a human hand-edit of the manifest header or a re-run of init.
+    requires init or a human hand-edit of the manifest header.
 
 ## 1. Mode detection
 
@@ -856,6 +886,11 @@ Propose a decomposition; the shared-tail review gate is where the author confirm
     per-row picker.
   - To disable the shortcut and force a full picker per row, set a project-layer config flag
     (portable spec keeps shortcut ON by default).
+- AskUserQuestion **once** for the cross-vendor verify gate (`<project_workflow_doc>` §16.3 #5):
+  - Question: "Strict cross-vendor verify gate? (recommended yes — strict; opt out to allow `feature-dev-loop` and skip the manual cross-vendor verify hand-off)"
+  - Option 1: "Yes — strict (default)" → header `Default Verify Cross-vendor: yes`
+  - Option 2: "No — allow feature-dev-loop (echo chamber accepted)" → header `Default Verify Cross-vendor: no`
+  - All row `Verify Cross-vendor` cells are written as `(default)`; the user can hand-edit individual rows post-init for per-row overrides.
 - Write the manifest to `<roadmap_manifest_dir>/<roadmap_name>.md` (set `Init Path:` accordingly);
   schema per spec §A6.
 - **Stop at the review gate.** Output the manifest path + a dependency-graph wave summary; on the
@@ -936,27 +971,70 @@ Record the resolution outcome in a per-session log line (not in the manifest):
 Resolved Automation Mode: row#<N> <slug> → <variant> (source: row|header|run_time_fallback)
 ```
 
-### 3.2 main loop
+### 3.2 main loop (emit-dispatch — default)
+
+After §3.1 reconcile + §3.1.5 Mode preflight:
+
+```
+eligible_set = rows where:
+  - Status == PENDING
+  - all deps satisfied per Dep Semantics
+      (shipped:        dep row Status == SHIPPED
+       ready_to_ship:  dep row Status ∈ {READY_TO_SHIP, SHIPPED})
+  - no dep is BLOCKED / BLOCKED_EXTERNAL
+  - row's resolved Mode is a legal variant (preflight already guarantees this)
+
+if eligible_set is empty:
+  if any PENDING rows remain → wave is blocked at dep chain; STOP with wrap-up case 3
+  else                       → all SHIPPED or BLOCKED; STOP with wrap-up case 1
+  return
+
+# Emit one prompt block per eligible feature.
+# DO NOT mark rows IN_PROGRESS. Reconcile on next invocation reads dev_log truth.
+# DO NOT spawn anything.
+
+emit to user:
+  ╔═══════════════════════════════════════════════════════════════════════════╗
+  ║ 🚀 Wave <N> — <K> features eligible. Copy each block to a new session.    ║
+  ║                                                                           ║
+  ║ ──────────────── Block 1 (first eligible): <slug> ────────────────                       ║
+  ║ Start the feature-full-loop agent for <slug>.                             ║
+  ║ Automation Mode: <Mode_1>                                                 ║
+  ║ Verify Cross-vendor: <resolved value from row or header default>          ║
+  ║ Requirement: <resolved from row.Source — see "Source resolution" below>   ║
+  ║                                                                           ║
+  ║ ──────────────── Block 2 (second eligible): <slug> ────────────────                       ║
+  ║ ...                                                                       ║
+  ╚═══════════════════════════════════════════════════════════════════════════╝
+
+  Next Step:
+    Open <K> new sessions in parallel and paste each block. Each will produce
+    its own dev_log under <feature_root>/<slug>/docs/dev_log.md and reach
+    READY_TO_SHIP (or BLOCKED) independently. After any feature(s) SHIPPED,
+    re-run `<skill_prefix>roadmap-loop manifest: <roadmap_manifest_dir>/<roadmap_name>.md` here.
+    Reconcile will pick up the new state from dev_logs and emit the next wave.
+
+  STOP. (Skill exits; no spawn, no waiting.)
+```
+
+### 3.2-opt-in spawn-dispatch (advanced, requires nesting capacity)
+
+If the invocation passes `dispatch: spawn`, use the legacy behaviour: for each eligible feature,
+mark IN_PROGRESS, spawn `feature-full-loop`, read the returned Handoff + dev_log Status Panel,
+update the manifest row, loop until the eligible set empties. This path REQUIRES the host tool to
+support ≥ 4-level nesting (caller → roadmap-loop → feature-full-loop → feature-plan / worker). On
+most tools as of 2026-05 (Claude Code's default subagent depth cap, Codex's `max_depth=2`), this
+fails. Verify the host tool's nesting cap before using.
 
 ```
 loop:
-  eligible = manifest features satisfying ALL of:
-    - Status == PENDING
-    - for each Depends On entry:
-        Dep Semantics = shipped         → that dep Status == SHIPPED
-        Dep Semantics = ready_to_ship   → that dep Status in {READY_TO_SHIP, SHIPPED}
-    - no dependency is BLOCKED / BLOCKED_EXTERNAL
-
+  eligible = (same predicate as emit-dispatch above)
   if eligible is empty: break
-
   next = lowest-numbered feature in eligible
   next.Status = IN_PROGRESS; next.Last Run = now; write the manifest to disk
-
   spawn feature-full-loop:
     Requirement: <resolved per next.Source — see "Source resolution" below>
-    Automation Mode: <resolved per §3.1.5 preflight — guaranteed concrete legal variant;
-                       BLOCKED rows already skipped>
-
+    Automation Mode: <resolved per §3.1.5 preflight — guaranteed concrete legal variant>
   after it returns, read the Handoff + <feature_root>/<slug>/docs/dev_log.md Status Panel:
     Status == READY_TO_SHIP → next.Status = READY_TO_SHIP
     Status == BLOCKED       → next.Status = BLOCKED (record the Blocker in Note)

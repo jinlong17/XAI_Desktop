@@ -53,11 +53,31 @@ If you are *migrating* the portable workflow into a new project (rather than usi
 - **You only want synchronous variants (no hook)** — skip the automation-loop reference shell-script copy step during instantiate.
 - **Pre-existing `.claude/agents/` in target** — generator defaults to `.claude/agents-v2/`; pass `--replace-claude` only after test-run.
 
+### Re-syncing an already-migrated project after an upstream update
+
+When the source workflow gets a big update, **already-migrated projects do NOT auto-update** —
+their hook layer stays frozen at migration time (B/C automation may be broken). Use the migration
+skill's **`resync` mode** (`mode: resync`). It is idempotent and **non-destructive**:
+
+- **Clean-target gate (read-only until it passes):** resync refuses to run if any path it would
+  write (`_portable/` / `<cowork_scripts_dir>/` / `<templates_dir>/` / `.claude|.codex|.cursor/
+  agents/` / the generator / the portable-sync lint) is git-dirty in the target — commit/stash
+  first. It never clobbers uncommitted work.
+- **Template conflict guard:** a hand-customized target template is never silently overwritten —
+  resync lists it and STOPS for a human 3-way merge.
+- It overwrites `_portable/` verbatim, re-renders the full `_portable/scripts/*` set (incl. brand
+  new files) with the target's token map, re-instantiates templates + regenerates agents (minding
+  the `--force` regression caveat), refreshes the portable-sync lint, and emits a **project-layer
+  doc-delta checklist** the human hand-applies (it never edits the target's own workflow docs).
+
+Full contract: `00-PORTABLE-MANIFEST.md` §4 resync mode.
+
 ### Boundary — what the skill does NOT do
 
 - Never authors `<project_workflow_doc>` / SOPs / `<your_commit_convention>` (those need human judgment).
 - Never modifies the source project's `_portable/` (only reads and copies).
 - Never runs the project's actual feature pipeline.
+- `resync` never writes a dirty target and never silent-overwrites a customized template.
 
 For the runtime picker / fallback spec, see `07-automation-mode-picker.md`. For the migration skill's full contract, see `00-PORTABLE-MANIFEST.md` appendix.
 
@@ -337,7 +357,7 @@ executors = 7`, plus `D-Codex+Cursor` as D's quota-resilient combo (`04` §3):
 | `Automation Mode:` value | Family | What it is |
 |--------------------------|--------|------------|
 | **`A-Claude`** | single-IDE | the whole pipeline runs in Claude Code; native Task-spawn, no external executor |
-| **`B-Codex`** | hook-relay | lead runs plan/review/verify; a hook wakes the Codex desktop app for build (see `04` §3.4 caveat) |
+| **`B-Codex`** | hook-relay | lead runs plan/review; a hook dispatches headless `codex exec` for build (see `04` §3.4 — the desktop-app path is a degraded manual fallback, not the automated one) |
 | **`B-Cursor`** | hook-relay | same, but the build runs headless via `cursor-agent` |
 | **`C-Codex`** | phase-granularity | per phase: one Codex build + one lead `feature-phase-review` |
 | **`C-Cursor`** | phase-granularity | per phase: one Cursor build + one lead `feature-phase-review` |
@@ -349,10 +369,12 @@ Phases 0/1/2/3/5 are identical across all 8 — **only Phase 4 (build+verify) di
 These names are **portable canonical** — Codex and Cursor are the paradigm's two external
 executors, not project-specific placeholders (`04` §3, §10).
 
-> **How a Mode gets picked at runtime:** when meta-orchestrators start without an explicit
-> `Automation Mode:` line, they fire a single AskUserQuestion with 4 options (`A-Claude` /
-> `D-Codex+Cursor` / `D-Codex` / `D-Cursor`). B/C variants are reachable only by explicit
-> invocation. See `_portable/07-automation-mode-picker.md` for the full picker spec (preview
+> **How Phase 0 INTAKE resolves its 3 fields at runtime:** (1) **Requirement/Bug** missing on a
+> fresh start → hard STOP `BLOCKED` (free-text is not pickable; never a question) — `07` §1A;
+> (2) **Automation Mode** missing → AskUserQuestion Q1, 4 options (`A-Claude` / `D-Codex+Cursor` /
+> `D-Codex` / `D-Cursor`; B/C reachable only by explicit invocation); (3) **Verify Cross-vendor**
+> missing → AskUserQuestion Q2 *in the same call* (`07` §2.6; safe default `yes` if the host
+> can't ask). See `_portable/07-automation-mode-picker.md` for the full picker spec (preview
 > content, trigger conditions, write-authority) and how roadmap-loop asks per-feature at init with
 > a smart inheritance shortcut.
 
@@ -381,8 +403,8 @@ Per the 5-phase state machine in `04` §7. You type nothing here.
 
 ```mermaid
 flowchart TD
-  U([User Input: Requirement + Automation Mode]) --> FL[feature-full-loop]
-  FL --> P0[Phase 0 · INTAKE]
+  U([User Input: Requirement + Automation Mode + Verify Cross-vendor?]) --> FL[feature-full-loop]
+  FL --> P0[Phase 0 · INTAKE<br/>Requirement missing=BLOCKED · Mode Q1 · Verify Q2]
   P0 --> P1[Phase 1 · Step 0]
   P1 -->|QA Gate PASS| P2[Phase 2 · PLAN]
   P1 -->|FAIL| B1[BLOCKED]

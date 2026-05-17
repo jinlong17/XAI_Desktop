@@ -127,9 +127,11 @@ headless mode**. Desktop-app "wake up" paths are experimental; CLI sync paths ar
 ## 3. The 7-variant matrix
 
 > **How a Mode is chosen at runtime:** this section defines *what* the 8 variants are. The runtime
-> picker (single AskUserQuestion at meta-orchestrator INTAKE / per-row at roadmap-loop init / run
-> preflight fallback) is specified in `_portable/07-automation-mode-picker.md`. The 4-option picker
-> layout is A-Claude / D-Codex+Cursor / D-Codex / D-Cursor; B/C variants are reachable only by
+> picker (at meta-orchestrator Phase 0 INTAKE / per-row at roadmap-loop init / run preflight
+> fallback) is specified in `_portable/07-automation-mode-picker.md`. Phase 0 INTAKE is **3-field**,
+> not Mode-only: Requirement/Bug missing → hard BLOCKED before any picker (`07` §1A); Mode → the
+> 4-option Q1; Verify Cross-vendor → Q2 in the *same* AskUserQuestion (`07` §2.6). The 4-option
+> Mode layout is A-Claude / D-Codex+Cursor / D-Codex / D-Cursor; B/C variants are reachable only by
 > explicit `Automation Mode: <variant>` invocation (see `07` §2.3).
 
 The paradigm has three tools: **Claude Code** is the lead IDE; **Codex** and **Cursor** are the two
@@ -139,7 +141,7 @@ have a Codex variant and a Cursor variant. `1 + 3 × 2 = 7`.
 | Mode | Skeleton | Variants |
 |------|----------|----------|
 | **A — single-IDE loop** | Step 0 → plan → review → dev-loop → ship all inside Claude Code | **A-Claude** — one variant; everything in one IDE, native Task-spawn orchestrator |
-| **B — hook relay to external executor** | The lead runs plan/review/verify/ship; after review APPROVED a hook auto-wakes the external executor for build; after it finishes a hook auto-returns to the lead for verify | **B-Codex** (Codex desktop app — see §3.4 caveat) / **B-Cursor** (`cursor-agent` CLI) |
+| **B — hook relay to external executor** | The lead runs plan/review/verify/ship; after review APPROVED a hook auto-wakes the external executor for build; after it finishes a hook auto-returns to the lead for verify | **B-Codex** (headless `codex exec` — see §3.4) / **B-Cursor** (`cursor-agent` CLI) |
 | **C — phase-granularity alternating dual executor** | Each phase = 1 external build + 1 lead `feature-phase-review` | **C-Codex** / **C-Cursor** — one external build per phase |
 | **D — lead + delegation** | The lead's `feature-auto-build` worker delegates a single phase to an external CLI; on external failure the fallback worker self-implements | **D-Codex** (`codex exec`) / **D-Cursor** (`cursor-agent`) / **D-Codex+Cursor** — the 3-layer fallback chain Codex → Cursor → self |
 
@@ -153,7 +155,7 @@ have a Codex variant and a Cursor variant. `1 + 3 × 2 = 7`.
 |-----------|-------------|-----|
 | Temporary hotfix, single-step solvable | `A-Claude` | Most stable, avoids cross-tool overhead |
 | Mid-size feature, plan APPROVED, phases ≥ 3 | `D-Codex` or `D-Cursor` | Sync path, CLI call is most direct |
-| Large phase needing a big-context model | `D-Cursor` (`gpt-5.5` large context) | Headless CLI + large context window |
+| Large phase needing a big-context model | `D-Cursor` (`gpt-5.5-high` large context) | Headless CLI + large context window |
 | High-risk change (touches core / manifest / cross-module) | `C-Codex` or `C-Cursor` | Per-phase dual-executor mandatory cross-check |
 | Primary external tool hit its cap, task is large | `D-Codex+Cursor` | Codex → Cursor → self maximizes the rolling window |
 | Both external tools exhausted | write `BLOCKED` + a Blocker; a human switches to `A-Claude` | Auto-degradation would cross the Status Panel write-authority boundary, so a human takes over |
@@ -183,35 +185,95 @@ variant and the recommended first feature.
 
 ### 3.4 Mode B — hook relay (`B-Codex` / `B-Cursor`)
 
-Event-driven (not polling — Claude Code Task sessions have wall-clock caps, so the orchestrator must
-not block waiting). The contract, B-Codex and B-Cursor sharing it:
+Event-driven **multi-state Status Panel dispatcher**. The post-commit hook fires on every dev_log
+commit, reads the new Status, and dispatches the next workflow step to the appropriate vendor per
+§16.3 cross-vendor rules. **2026-05-16 update**: hook scope expanded from "BUILD only" (APPROVED →
+external build) to "REVIEW + BUILD + (optional) VERIFY" — covering `NEEDS_REVIEW`, `APPROVED`,
+`READY_FOR_VERIFY`, `REVISE`, `BLOCKED` transitions.
+
+**State machine:**
 
 ```text
-orchestrator Phase 4 (fresh entry, Status APPROVED):
-  1. render the dispatch prompt to <orchestrator_marker_dir>/<feature>-dispatch-<ts>.txt
-  2. write the awaiting_external marker (JSON v1 — §8.1)
-  3. Bash-trigger the dispatch script (fire-and-forget):
-       B-Codex  → dispatch_codex.sh <feature> <prompt_file>
-       B-Cursor → dispatch_cursor.sh <feature> <prompt_file>
-  4. append a Work Log line (NOT a Status write); exit Handoff(Status: AWAITING_EXTERNAL)
-external executor runs async → writes commits + flips dev_log to READY_FOR_VERIFY (or BLOCKED)
-git post-commit hook (git-post-commit) detects it → notifies the user to resume
-user resumes: Start the feature-full-loop agent for <feature>.
-  → orchestrator resume entry: Status READY_FOR_VERIFY → Task-spawn feature-verify → Phase 5
+Status: APPROVED (after Step 0)
+  → orchestrator dispatches feature-plan to lead vendor (Claude)
+  → feature-plan writes Status: NEEDS_REVIEW + commits
+  → post-commit hook reads new Status:
+      ├─ Status == NEEDS_REVIEW:
+      │     resolve plan executor: grep "- Plan Executor:" then FALL BACK to the
+      │       rolling "- Executor:" line (no dedicated Plan Executor field exists)
+      │     determine OTHER vendor (cross-vendor §16.3 #3 — STRICT);
+      │       vendor_dispatchable() sends MANUAL_CLAUDE/UNKNOWN to a clean notify
+      │     render review prompt to <orchestrator_marker_dir>/<feature>-review-<ts>.txt
+      │     write awaiting_review marker
+      │     dispatch_<other_vendor>.sh <feature> <prompt_file> feature-review
+      │     notify user "review dispatched to <other_vendor>; will resume on APPROVED/REVISE"
+      ├─ Status == APPROVED:
+      │     read variant (manifest or Status Panel "Automation Mode:" field)
+      │     if variant ∈ {B-Codex, B-Cursor}:
+      │         dispatch feature-auto-build to lead vendor
+      │     notify user "build dispatched; will resume on READY_FOR_VERIFY"
+      ├─ Status == READY_FOR_VERIFY:
+      │     read "Verify Cross-vendor:" from Status Panel (set by feature-plan per §16.3 #5)
+      │     if yes:
+      │         resolve build executor (grep "- Build Executor:" then fall back
+      │           to the rolling "- Executor:" line) → dispatch feature-verify to OTHER vendor
+      │     if no:
+      │         notify user "build done; verify cross-vendor opted out;
+      │                       lead-handled or ship-direct"
+      ├─ Status == REVISE:
+      │     notify user "review returned REVISE — feed back to feature-plan manually,
+      │                   then re-loop"
+      └─ Status == BLOCKED:
+            notify user "STOP — read dev_log Blocker section"
 ```
 
-- **Reference scripts:** `_portable/scripts/dispatch_codex.sh`, `dispatch_cursor.sh`, `git-post-commit`.
+**Cross-vendor identity routing** (the hook must know which vendor ran what):
+
+- The dev_log Status Panel keeps **ONE rolling `- Executor:` line** (whoever last committed) —
+  there is **no** dedicated `Plan Executor:` / `Review Executor:` / `Build Executor:` field. The
+  hook greps the named field for back-compat, then **falls back to the rolling `- Executor:`
+  line** (at the NEEDS_REVIEW commit that line IS the plan executor; at READY_FOR_VERIFY it IS
+  the build executor — the just-committed value is correct by construction).
+- `vendor_dispatchable()` gates the result: only `codex` / `cursor` reach `dispatch_*.sh`; the
+  sentinels `MANUAL_CLAUDE` (cross-vendor peer is Claude, no headless) and `UNKNOWN` short-circuit
+  to a clean notify (a bare `[ -z ]` guard previously let them fall through to a bogus
+  `dispatch_UNKNOWN.sh` / `dispatch_MANUAL_CLAUDE.sh`).
+- "OTHER vendor" relative to a given step = any vendor in the project's executor pool except the
+  one resolved from the rolling `- Executor:` line for that step.
+- 2-vendor projects (Claude + Codex): trivially the other.
+- 3+-vendor projects: pick deterministically per a project-layer routing config; if unspecified,
+  prefer the vendor with fewest recent invocations (loose load-balancing).
+
+**Status Panel write authority (extended from existing B-* — same as `_portable/02` §2.6):**
+
+- Claude lead writes: `NEEDS_REVIEW` (via `feature-plan`), `READY_TO_SHIP`, `SHIPPED`.
+- External vendor (Codex / Cursor) writes: `APPROVED` / `REVISE` (via `feature-review`),
+  `READY_FOR_VERIFY` (via `feature-auto-build`), verify PASS / BLOCKED (via `feature-verify`).
+  Trailers name the host worker (`feature-review`, `feature-auto-build`, `feature-verify`), never
+  the tool.
+
+**Resume behaviour:**
+
+- All hook actions are fire-and-forget; the orchestrator session may have exited.
+- User receives notifications (terminal beep + macOS notification or equivalent).
+- To resume after any hook completes: re-invoke `Start the feature-full-loop agent for <feature>.`
+  The orchestrator reads current Status and decides next step (skip what's done, dispatch what's
+  next).
+
+**Reference scripts:** `_portable/scripts/dispatch_codex.sh`, `dispatch_cursor.sh`,
+`git-post-commit`. All take an `<agent_name>` 3rd parameter (NEW 2026-05-16). See
+`_portable/scripts/README.md`.
+
 - **B-Cursor** is the cleaner B variant — `cursor-agent --print` runs headless from a shell, with a
   CLI exit code + JSON envelope for failure detection.
-- **B-Codex caveat:** the Codex *desktop app* has no officially stable "inject a prompt from an
-  external process" path on macOS — `open -a "Codex"` / `codex app DIR` only open the workspace.
-  `dispatch_codex.sh` therefore defaults to the `codex exec` headless path (genuinely unattended);
-  a desktop-app B-Codex effectively degrades to D-Codex. The pbcopy + manual-`Cmd+V` fallback is
-  documented in the script for teams that insist on the desktop app.
-- **Status Panel write authority (B variants):** Claude Code writes `NEEDS_REVIEW` / `APPROVED` /
-  `READY_TO_SHIP` / `SHIPPED`; the external executor (Codex / Cursor) writes `Phase N DONE` and
-  `READY_FOR_VERIFY` — with the trailer naming the host worker (`feature-auto-build`), never the tool.
-- **Extra interactions:** +1 resume (re-typing the same resume command after the hook notification).
+- **B-Codex is headless by default:** `dispatch_codex.sh` runs `codex exec --sandbox
+  workspace-write --cd <repo> --json -` (genuinely unattended, verified working 2026-05-17 →
+  `BRIDGE-OK`). The Codex *desktop app* has no officially stable "inject a prompt from an external
+  process" path on macOS (`open -a "Codex"` / `codex app DIR` only open the workspace); the pbcopy
+  + manual-`Cmd+V` route is a documented degraded fallback for teams that insist on the desktop
+  app, not the automated path.
+- **Extra interactions:** +0 in happy path (review / build / verify all auto-dispatch). User
+  intervention only on REVISE or BLOCKED (or RTS → ship).
 
 ### 3.5 Mode C — phase-granularity (`C-Codex` / `C-Cursor`)
 
@@ -237,6 +299,12 @@ per phase N:
 - **C-Codex / C-Cursor** differ only in which executor does the per-phase build.
 - **Extra interactions:** +2N (N = phase count) — one to trigger phase-review, one to resume, per phase.
 
+> **2026-05-16 update:** like Mode B, Mode C's hook now also dispatches `feature-review` on
+> `NEEDS_REVIEW` (cross-vendor §16.3 #3 STRICT). The per-phase mechanics (per-phase external build
+> + `feature-phase-review` on the lead) remain unchanged. The `READY_FOR_VERIFY` dispatch (§3.4
+> state machine, last branch) also applies after the final phase Verdict is PASS — the multi-state
+> dispatcher is shared between B-* and C-*.
+
 ### 3.6 Mode D — lead + delegation (`D-Codex` / `D-Cursor` / `D-Codex+Cursor`)
 
 Synchronous and hook-free: the lead's `feature-auto-build` worker delegates a single phase to an
@@ -256,8 +324,11 @@ no resume — `feature-dev-loop` runs to completion in one session. The recommen
 #   the outer `gtimeout 600` provides the timeout (there is no --timeout flag)
 gtimeout 600 codex exec --sandbox workspace-write --cd <repo-root> --json - < <prompt_file>
 
-# D-Cursor — see §3.7 for the full recommended form
-cursor-agent --print --model gpt-5.5 --output-format json --workdir <repo-root> < <prompt_file>
+# D-Cursor — see §3.7 for the full recommended form. NOTE: the installed CLI
+#   REJECTS --workdir (use --workspace); needs --force (clears the Workspace
+#   Trust gate + auto-approves commands); default model gpt-5.5-high (verified
+#   via `cursor-agent --list-models`, NOT `cursor-agent models`)
+cursor-agent --print --force --model ${CW_CURSOR_MODEL:-gpt-5.5-high} --output-format json --workspace <repo-root> < <prompt_file>
 ```
 
 - **Delegation decision (per phase):** the worker keeps schema-decision / design-judgement phases
@@ -279,20 +350,27 @@ cursor-agent --print --model gpt-5.5 --output-format json --workdir <repo-root> 
 LC_ALL=en_US.UTF-8 LANG=en_US.UTF-8 \
 flock <quota_state_dir>/cursor.lock \
 gtimeout 700 \
-cursor-agent --print --model gpt-5.5 --output-format json --workdir <repo-root> \
+cursor-agent --print --force --model ${CW_CURSOR_MODEL:-gpt-5.5-high} --output-format json --workspace <repo-root> \
              < <prompt_file>
 ```
 
 - `--print` is the long form of `-p` — automation scripts pin the long flag (short flags drift).
-- `--model gpt-5.5` is nominal — **self-check with `cursor-agent models` before relying on it**;
-  fall back to a listed id if it is not accepted.
+- `--force` is **required for unattended use**: without `--trust`/`--yolo`/`-f`, headless `--print`
+  hits `⚠ Workspace Trust Required` in an untrusted dir and never runs (verified 2026-05-17).
+  `--force` also auto-approves commands so the build worker can actually write/test.
+- `--workspace <repo-root>` — the installed `cursor-agent` (2026.01.23) **rejects the older
+  `--workdir`** (`error: unknown option '--workdir'`).
+- `--model gpt-5.5-high` is the default — **self-check with `cursor-agent --list-models`** (NOT
+  `cursor-agent models`, which is not a real subcommand); model ids are account-scoped, override
+  via `CW_CURSOR_MODEL`.
 - `--output-format json` gives one JSON result; the consumer must `try/except` one JSON parse and,
   on failure, scan the last stdout line for exit semantics.
 - `flock` serializes `cursor-agent` (a known concurrent-hang issue); `gtimeout 700` guards a hung
   CLI; explicit `LC_ALL` / `LANG` guards CJK / non-UTF-8 output corruption.
-- **macOS deps:** `gtimeout` (from `brew install coreutils`) and `flock` (from `brew install
-  util-linux`) are not present by default. Dispatch scripts detect them, WARN if missing, and do
-  not hard-fail.
+- **macOS deps:** `gtimeout` (`brew install coreutils`) and `flock` (`brew install util-linux`)
+  are not present by default. **`util-linux` is keg-only — `flock` is NOT symlinked onto PATH**;
+  the dispatch scripts probe `/opt/homebrew/opt/util-linux/bin/flock` (and the `/usr/local` Intel
+  prefix). Dispatch scripts detect both, WARN if missing, and do not hard-fail.
 
 **The contract the external executor's prompt must hard-code** (so it cannot be relaxed by the
 delegated prompt): commit each phase with the trailer naming the *host worker*
@@ -734,7 +812,9 @@ short, genuinely project-specific residue stays in the project automation doc:
 
 - **The concrete values of the scratch-path placeholders** — what `<orchestrator_marker_dir>` /
   `<quota_state_dir>` / `<cowork_scripts_dir>` actually resolve to in the project.
-- **Install / wiring specifics** — the exact `.git/hooks/post-commit` symlink command, the project's
+- **Install / wiring specifics** — the exact `.git/hooks/post-commit` chained-wrapper install (back
+  up + run any prior hook, then `source lib_hook_helpers.sh` and exec `git-post-commit`; not a
+  symlink), the project's
   `.codex/config.toml` contents, any launchd / cron registration for quota monitors.
 - **A fully-instantiated, annotated copy of the meta-orchestrator prompts** (optional) — the
   placeholder-form prompts are in `_portable/templates/`; a project may keep an instantiated copy

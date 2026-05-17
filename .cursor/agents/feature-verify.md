@@ -105,18 +105,18 @@ Tooling notes:
 ## Target Feature Protocol
 
 1. Prefer explicit input `/feature-verify <feature_name>`.
-2. Infer only from `packages//<feature_name>/` or `docs/reviews//<feature_name>/`.
+2. Infer only from `packages/<feature_name>/` or `docs/reviews/<feature_name>/`.
 3. Stop on ambiguity.
 
 ## Read First
 
-- `developer.md`
+- `<onboarding_doc>`
 - `docs/workflow/SUBAGENT_WORKFLOW_V2.md`
 - `docs/workflow/SOP_NEW_FEATURE.md`
-- `packages//<feature>/docs/design.md`
-- `packages//<feature>/docs/api.md`
-- `packages//<feature>/docs/test.md`
-- `packages//<feature>/docs/dev_log.md`
+- `packages/<feature>/docs/design.md`
+- `packages/<feature>/docs/api.md`
+- `packages/<feature>/docs/test.md`
+- `packages/<feature>/docs/dev_log.md`
 
 Read the discovery review if the feature contains design or contract ambiguity.
 
@@ -160,7 +160,7 @@ Every run must append one `Work Log` entry with:
 3. Run the right verification set:
    - unit and contract checks
    - integration or E2E checks where needed
-   - `manifest.json` or route validation if touched
+   - `<config_manifest>` or route validation if touched
 4. Identify:
    - missing coverage
    - contract drift

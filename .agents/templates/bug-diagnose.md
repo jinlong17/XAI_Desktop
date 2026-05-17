@@ -62,18 +62,18 @@ bug-diagnose -> bug-fix -> bug-verify -> ship
    - primary target feature/module
    - optional short label if useful
 4. If multiple modules are involved, select a primary target and record impacted boundaries.
-5. Infer from `packages//<feature_name>/` or `docs/reviews//<feature_name>/` only as an additional hint.
+5. Infer from `packages/<feature_name>/` or `docs/reviews/<feature_name>/` only as an additional hint.
 6. Stop on ambiguity or target conflict.
 
 ## Read First
 
 - the incoming bug report, failure description, or reproduction clue
-- `developer.md`
+- `<onboarding_doc>`
 - `docs/workflow/SUBAGENT_WORKFLOW_V2.md`
 - `docs/workflow/SOP_BUGFIX.md`
 - `docs/planning/REFACTORING_PLAN.md`
 - `docs/PLUGIN_MAP.md`
-- `packages//<feature>/docs/dev_log.md` if it exists
+- `packages/<feature>/docs/dev_log.md` if it exists
 
 Read `design.md`, `api.md`, and `test.md` when the bug touches those contracts.
 
@@ -133,7 +133,7 @@ Every run must append one `Work Log` entry with:
 7. [Complex defect escalation]
    Trigger when:
    - the root cause spans a core and feature boundary
-   - `manifest.json` routing behavior is involved
+   - `<config_manifest>` routing behavior is involved
    - the same defect has regressed before
    Action:
    - Perspective A: trace the external behavior chain, including request path, I/O, and timing

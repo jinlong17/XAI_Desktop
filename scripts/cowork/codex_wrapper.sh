@@ -3,14 +3,14 @@
 #
 # A thin quota-aware wrapper around the `codex` CLI. Pass-through of all args;
 # it intercepts the output to detect quota exhaustion and, on a detected signal,
-# writes /tmp/cw-quota//codex-exhausted-until with a future UNIX timestamp so
+# writes /tmp/cw-quota/codex-exhausted-until with a future UNIX timestamp so
 # the meta-orchestrator can route around an exhausted executor.
 #
 # PLACEHOLDERS: replace <...> per ../00-PORTABLE-MANIFEST.md §3.
-#   Tokens used: /tmp/cw-quota/.
-# Install location: scripts/cowork//codex_wrapper.sh
+#   Tokens used: /tmp/cw-quota.
+# Install location: scripts/cowork/codex_wrapper.sh
 # Usage: put this ahead of `codex` on PATH, or call it explicitly:
-#   scripts/cowork//codex_wrapper.sh exec --sandbox workspace-write --cd "$REPO" - < prompt.txt
+#   scripts/cowork/codex_wrapper.sh exec --sandbox workspace-write --cd "$REPO" - < prompt.txt
 #
 # Exit code: mirrors the underlying `codex` exit code (callers can still branch on it).
 #
@@ -21,7 +21,7 @@
 #   3. loose keyword match in stdout/stderr (quota / rate limit / insufficient /
 #      exhausted / usage limit / 429)               (last-resort fallback)
 set -uo pipefail
-QUOTA_DIR="/tmp/cw-quota/"
+QUOTA_DIR="/tmp/cw-quota"
 mkdir -p "$QUOTA_DIR" 2>/dev/null || true
 COOLDOWN_SECONDS="${CW_QUOTA_COOLDOWN:-3600}"   # how long to consider Codex exhausted
 OUT="$(mktemp)"

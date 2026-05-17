@@ -2,7 +2,7 @@
 name: feature-full-loop
 description: Use to run the full step0 -> plan -> review -> build -> verify pipeline autonomously, stopping only before ship. The single user-facing entry for the automation variants. Strictly read-only on Status Panel; delegates Status writes to authorized child agents per the Status Panel write-authority matrix (02-handoff-and-state.md §2.6).
 model: opus
-allowed_tools: Task, Read, Bash, Grep, Glob
+allowed_tools: Task, Read, Bash, Grep, Glob, AskUserQuestion
 color: gold
 codex_sandbox_mode: workspace-write
 cursor_readonly: false
@@ -37,6 +37,7 @@ Two accepted forms:
    Start the feature-full-loop agent.
    Requirement: <freeform requirement text>
    Automation Mode: <one of the variant identifiers — see 04-automation-loop.md §3>
+   (optional) Verify Cross-vendor: <yes|no>
    (optional) Max Revise: 3
    ```
 
@@ -49,9 +50,39 @@ Two accepted forms:
 If `Automation Mode` is missing or invalid in fresh-start input, acquire it via the picker defined in `_portable/07-automation-mode-picker.md` §2 (trigger conditions in §3.1). Resume mode reads Mode from the dev_log Status Panel — never re-asks.
 If input contains both `Requirement` and a canonical feature name in title, prefer resume mode and warn the user about ambiguity.
 
+**Optional**: `Verify Cross-vendor: <yes|no>` (default `yes` — strict). When `no`, this feature is allowed to use `feature-dev-loop` (build + verify same executor lineage); when `yes`, the orchestrator must use `feature-auto-build` (stops before verify) and `feature-verify` runs separately in a different vendor. See `<project_workflow_doc>` §16.3 #5 for rationale. The resolved value is written by `feature-plan` to the dev_log Status Panel `Verify Cross-vendor:` field for audit; on resume, read from there (never re-ask). **If absent on a fresh start**, it is acquired as the **companion question (Q2) in the SAME AskUserQuestion call as the Automation Mode picker** — see `_portable/07-automation-mode-picker.md` §2.6 (2 options: Yes — strict cross-vendor / No — same-lineage allow feature-dev-loop). Unlike Automation Mode, Verify Cross-vendor has a safe default: if the host tool lacks AskUserQuestion, default to `yes` (strict) and **proceed** — do NOT BLOCK on it.
+
 ## Pipeline (5 phases)
 
 ### Phase 0 — INTAKE
+
+**STEP 0 of Phase 0 — Requirement presence gate (before Automation Mode acquisition)**: if this is a fresh start (no existing dev_log / resume target) and the invocation prompt has no `Requirement:` line, or it is empty/whitespace, **STOP IMMEDIATELY** with Handoff `Status: BLOCKED`, Blocker `Requirement missing — a free-text requirement cannot be acquired via a picker.`, Next Step `Re-run with: Start the feature-full-loop agent. Requirement: <1-3 sentences: motivation + who uses it + what to solve>. Automation Mode: <one of the 8 legal variants — see _portable/04-automation-loop.md §3>`. Do **not** fire the Automation Mode picker, do **not** investigate the codebase — a picker cannot capture free text, so this is a hard stop, never a question. Resume invocations (a dev_log Status Panel already exists) are exempt: Requirement was captured at first plan write. See `_portable/07-automation-mode-picker.md` §1A.
+
+**STEP 1 of Phase 0 — Automation Mode Acquisition (after STEP 0 passes, before any other INTAKE work)**: check whether the invocation prompt contains an `Automation Mode:` line with one of the 8 legal variants (`A-Claude` / `B-Codex` / `B-Cursor` / `C-Codex` / `C-Cursor` / `D-Codex` / `D-Cursor` / `D-Codex+Cursor`).
+
+- If YES and value is legal: record the Mode and proceed to the next INTAKE step.
+- If NO and this is fresh-start (no existing dev_log): you MUST fire AskUserQuestion now — see `_portable/07-automation-mode-picker.md` §2 — BEFORE any further investigation. Do not skip this step. Do not proceed to investigate the codebase / decide branch / etc. until Mode is acquired.
+- If NO and this is resume: read Mode from dev_log Status Panel and proceed.
+- If AskUserQuestion is not in your `allowed_tools` (i.e. the host tool doesn't grant it to subagents): STOP immediately with Handoff `Status: BLOCKED`, Blocker `Automation Mode missing and AskUserQuestion not available in this subagent context.`, Next Step `Re-run with: Start the feature-full-loop agent. Requirement: <text>. Automation Mode: <one of the 8 legal variants — see _portable/04-automation-loop.md §3>`.
+
+Operational details once Mode is acquired (per `_portable/07-automation-mode-picker.md` §2):
+
+1. Single AskUserQuestion with 4 options: A-Claude / D-Codex+Cursor / D-Codex / D-Cursor. B/C variants — see picker §2.3 — are reachable only by explicit `Automation Mode:` line on the start prompt; the picker text points users there. **If the prompt also has no `Verify Cross-vendor:` line, this SAME AskUserQuestion call carries a second question (Q2, 2 options) per `_portable/07-automation-mode-picker.md` §2.6** — one call, two questions, never two sequential pickers. Record both answers.
+2. After resolution, **append** a Work Log line to dev_log via Bash:
+   ```
+   [<ts>] Automation Mode acquired
+   - Executor: feature-full-loop
+   - Action: User selected Automation Mode = <variant> via picker (07 §2).
+   - Next: pass to feature-plan dispatch as `Automation Mode: <variant>`.
+   ```
+   If the §2.6 Q2 was also asked, append a second Work Log line `[<ts>] Verify Cross-vendor acquired … = <yes|no> via picker (07 §2.6)`.
+   If dev_log does not yet exist, the Bash append creates an empty file; the Status Panel header will be created by feature-plan in Phase 2 along with the `Automation Mode:` field.
+3. When dispatching feature-plan in Phase 2, include `Automation Mode: <variant>` (and, if resolved, `Verify Cross-vendor: <yes|no>`) in the dispatch prompt. feature-plan writes Status Panel `Automation Mode:` **and** `Verify Cross-vendor:` on first NEEDS_REVIEW write (per `02-handoff-and-state.md` §2.6 + `_portable/07-automation-mode-picker.md` §6). feature-full-loop must NOT write Status Panel itself; the Work Log appends in step 2 are allowed because Work Log is append-only.
+4. On STOP paths (host tool lacks AskUserQuestion / user cancels), emit a fully compliant Handoff per `02-handoff-and-state.md` §3.3 with Next Step pointing the user to re-run with an explicit `Automation Mode: <variant>` line.
+
+See `_portable/07-automation-mode-picker.md` §2-§3 + §6 for the full picker spec, trigger conditions, and write-authority rules.
+
+**Then continue with the rest of Phase 0 INTAKE:**
 
 - Parse input.
 - If fresh start:
@@ -114,24 +145,6 @@ Read the `Status:` field (**only the legal dev_log Status values**: PLAN_DRAFT /
 - `BLOCKED` → tell the user to read dev_log Blockers
 
 > **Key rule**: `AWAITING_EXTERNAL` / `AWAITING_PHASE_<N>_BUILD` / `AWAITING_PHASE_<N>_REVIEW` / `STILL_AWAITING_*` are all **Handoff exit states** and are **never written into the dev_log Status Panel**. Whether work is still pending is decided by marker files + Phase Progress, not by the Status field. See `04-automation-loop.md` §4.4.
-
-### Automation Mode Acquisition
-
-When Phase 0 INTAKE determines Automation Mode is missing or invalid (fresh-start only — resume reads from dev_log), follow `_portable/07-automation-mode-picker.md` §2 to fire the picker:
-
-1. Single AskUserQuestion with 4 options: A-Claude / D-Codex+Cursor / D-Codex / D-Cursor. B/C variants — see picker §2.3 — are reachable only by explicit `Automation Mode:` line on the start prompt; the picker text points users there.
-2. After resolution, **append** a Work Log line to dev_log via Bash:
-   ```
-   [<ts>] Automation Mode acquired
-   - Executor: feature-full-loop
-   - Action: User selected Automation Mode = <variant> via picker (07 §2).
-   - Next: pass to feature-plan dispatch as `Automation Mode: <variant>`.
-   ```
-   If dev_log does not yet exist, the Bash append creates an empty file; the Status Panel header will be created by feature-plan in Phase 2 along with the `Automation Mode:` field.
-3. When dispatching feature-plan in Phase 2, include `Automation Mode: <variant>` in the dispatch prompt. feature-plan writes Status Panel `Automation Mode:` on first NEEDS_REVIEW write (per `02-handoff-and-state.md` §2.6). feature-full-loop must NOT write Status Panel itself; the Work Log append in step 2 is allowed because Work Log is append-only.
-4. On STOP paths (host tool lacks AskUserQuestion / user cancels), emit a fully compliant Handoff per `02-handoff-and-state.md` §3.3 with Next Step pointing the user to re-run with an explicit `Automation Mode: <variant>` line.
-
-See `_portable/07-automation-mode-picker.md` §2-§3 + §6 for the full picker spec, trigger conditions, and write-authority rules.
 
 ### Phase 1 — STEP 0
 - If `<review_root>/<feature>/<YYYYMMDD>-feature-brief.md` (or `<review_root>/_intake/...`) already exists → skip.
