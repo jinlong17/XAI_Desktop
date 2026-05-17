@@ -1,0 +1,88 @@
+#!/usr/bin/env bash
+# git-post-commit — portable reference implementation
+#
+# The neutral cross-tool relay trigger for the event-driven automation variants
+# (B-Codex / B-Cursor / C-Codex / C-Cursor). Installed by the developer, e.g.
+# symlinked into .git/hooks/post-commit:
+#   ln -s ../../scripts/cowork//git-post-commit .git/hooks/post-commit
+#
+# PLACEHOLDERS: replace <...> per ../00-PORTABLE-MANIFEST.md §3.
+#   Tokens used: packages/, /tmp/cw-orchestrator/, /tmp/cw-quota/, scripts/cowork/.
+#
+# Inputs: none (git invokes it; it inspects HEAD).
+# Exit code: ALWAYS 0 — a hook failure must be a no-op, never block a commit.
+# MUST NOT write the dev_log Status Panel — it only reads state and notifies.
+set -uo pipefail
+
+REPO_ROOT="$(git rev-parse --show-toplevel 2>/dev/null || exit 0)"
+MARKER_DIR="/tmp/cw-orchestrator/"
+HOOK_STATE_DIR="/tmp/cw-quota/"
+mkdir -p "$HOOK_STATE_DIR" 2>/dev/null || true
+LOG="$HOOK_STATE_DIR/post_commit.log"
+
+# 1. If HEAD did not touch a dev_log.md → no-op.
+changed="$(git show --stat --name-only --format= HEAD 2>/dev/null || true)"
+echo "$changed" | grep -qE '/docs/dev_log\.md$' || exit 0
+
+# Resolve which feature's dev_log changed.
+DEV_LOG_REL="$(echo "$changed" | grep -E '/docs/dev_log\.md$' | head -1)"
+FEATURE="$(echo "$DEV_LOG_REL" | sed -E 's#^packages//([^/]+)/docs/dev_log\.md$#\1#')"
+DEV_LOG="$REPO_ROOT/$DEV_LOG_REL"
+[ -f "$DEV_LOG" ] || exit 0
+
+# 2. Find the matching awaiting_* marker (glob → exactly one per feature).
+MARKER_FILE="$(ls "$MARKER_DIR/${FEATURE}".awaiting_* 2>/dev/null | head -1)"
+[ -z "$MARKER_FILE" ] && exit 0
+MARKER_TYPE="$(jq -r '.marker_type' "$MARKER_FILE" 2>/dev/null || echo "")"
+
+# 3. Parse the dev_log Status Panel + Phase Progress + Automation Mode (read-only).
+STATUS="$(grep -E '^- Status:' "$DEV_LOG" | head -1 | sed -E 's/^- Status:[[:space:]]*//')"
+
+# 5-min dedup so a burst of commits does not spam notifications.
+DEDUP="$HOOK_STATE_DIR/${FEATURE}.last_notification"
+now=$(date +%s)
+if [ -f "$DEDUP" ] && [ $(( now - $(cat "$DEDUP" 2>/dev/null || echo 0) )) -lt 300 ]; then
+  exit 0
+fi
+
+notify() {
+  # Best-effort desktop notification; never fail the hook on this.
+  command -v osascript >/dev/null 2>&1 \
+    && osascript -e "display notification \"$1\" with title \"feature-full-loop\" sound name \"Glass\"" 2>/dev/null || true
+  echo "$(date '+%F %T') $FEATURE: $1" >> "$LOG" 2>/dev/null || true
+  echo "$now" > "$DEDUP" 2>/dev/null || true
+}
+
+# 4. Route on (marker_type, Status / Phase Verdict). Resolve verdicts via the
+#    shared protocol — never ad-hoc grep the table.
+source "$REPO_ROOT/scripts/cowork//lib_phase_verdict.sh" 2>/dev/null || true
+
+case "$MARKER_TYPE" in
+  awaiting_external)
+    # B variant: external build done when Status flips to a verify-ready value.
+    case "$STATUS" in
+      READY_FOR_VERIFY|FIX_READY_FOR_VERIFY)
+        notify "$FEATURE ready for verify — resume: Start the feature-full-loop agent for $FEATURE." ;;
+      BLOCKED)
+        notify "$FEATURE BLOCKED — check dev_log Blockers." ;;
+    esac
+    ;;
+  awaiting_phase_*_build)
+    # C variant: a phase's build commits landed; phase-review has not run yet.
+    PHASE="$(jq -r '.phase // empty' "$MARKER_FILE" 2>/dev/null)"
+    notify "$FEATURE phase $PHASE built — run: Start the feature-phase-review agent for $FEATURE (Phase $PHASE)."
+    # The orchestrator rewrites the marker to awaiting_phase_<N>_review on resume;
+    # the hook only reads + notifies, it does not rewrite the marker itself.
+    ;;
+  awaiting_phase_*_review)
+    # C variant: phase-review wrote a verdict.
+    PHASE="$(jq -r '.phase // empty' "$MARKER_FILE" 2>/dev/null)"
+    VERDICT="$(read_phase_verdict "$FEATURE" "$PHASE" 2>/dev/null || echo NONE)"
+    case "$VERDICT" in
+      PASS)    notify "$FEATURE phase $PHASE PASS — resume: Start the feature-full-loop agent for $FEATURE." ;;
+      BLOCKED) notify "$FEATURE phase $PHASE BLOCKED — check the Phase $PHASE Verdict block." ;;
+    esac
+    ;;
+esac
+
+exit 0
