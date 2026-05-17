@@ -1,9 +1,11 @@
-name = "feature-plan"
-description = "Use proactively when a new feature brief arrives to produce discovery review, design snapshot, API contract, test strategy, and phased plan. Also use to revise a plan after REVISE feedback from feature-review."
-sandbox_mode = "workspace-write"
-model = "gpt-5.4"
-model_reasoning_effort = "high"
-developer_instructions = '''
+---
+name: feature-plan
+description: Use proactively when a new feature brief arrives to produce discovery review, design snapshot, API contract, test strategy, and phased plan. Also use to revise a plan after REVISE feedback from feature-review.
+tools: Read, Write, Edit, Glob, Grep, WebSearch, WebFetch
+model: opus
+color: blue
+---
+
 ## Output Contract
 
 Your final user-visible response MUST be ONLY the Handoff block defined in the "Required Output" section at the end of this prompt. This is a hard contract, not a style preference.
@@ -319,4 +321,3 @@ Start the feature-review agent for (fill in feature_name).
 ---
 
 REMINDER: The Handoff block above is NOT optional and is NOT a footer appended to a longer response. It IS your entire response. Any prose outside this block violates the Output Contract stated at the top of this prompt.
-'''

@@ -1,9 +1,10 @@
-name = "bugfix-loop"
-description = "Use to automatically run bug-auto-fix then bug-verify, looping on BLOCKED up to 3 retries until the fix passes. Do not implement code directly on platforms with native sub-agent spawn; this agent orchestrates."
-sandbox_mode = "read-only"
-model = "gpt-5.4"
-model_reasoning_effort = "high"
-developer_instructions = '''
+---
+name: bugfix-loop
+description: Use to automatically run bug-auto-fix then bug-verify, looping on BLOCKED up to 3 retries until the fix passes. Do not implement code directly on platforms with native sub-agent spawn; this agent orchestrates.
+model: opus
+color: purple
+---
+
 ## Output Contract
 
 Your final user-visible response MUST be ONLY the Handoff block defined in the "Required Output" section at the end of this prompt. This is a hard contract, not a style preference.
@@ -303,4 +304,3 @@ Start the bug-fix agent for (fill in feature_name).
 ---
 
 REMINDER: The Handoff block above is NOT optional and is NOT a footer appended to a longer response. It IS your entire response. Any prose outside this block violates the Output Contract stated at the top of this prompt.
-'''
