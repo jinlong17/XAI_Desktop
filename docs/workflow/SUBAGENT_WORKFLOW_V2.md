@@ -28,15 +28,18 @@ bug-diagnose → bug-fix → bug-verify → ship
 
 ## Directory Protocol
 
+> 本项目的 `<feature>` 单元命名约定为 `plugin-<name>`（见 CLAUDE.md §Architecture），落地于 `packages/` 下，例：`plugin-organizer`。
+
 ```
-features/<feature>/docs/
+packages/<feature>/docs/              ← 例：packages/plugin-organizer/docs/
 ├── design.md     ← 决策快照
 ├── api.md        ← 接口契约
 ├── test.md       ← 测试策略
 └── dev_log.md    ← 状态机（核心）
 
-docs/reviews/<feature>/
-└── <YYYYMMDD>-discovery-review.md ← 调研主文档
+docs/reviews/<feature>/               ← 例：docs/reviews/plugin-organizer/
+├── <YYYYMMDD>-feature-brief.md       ← Step 0 需求规范化
+└── <YYYYMMDD>-discovery-review.md    ← 调研主文档
 ```
 
 ## Subagent 权限矩阵
