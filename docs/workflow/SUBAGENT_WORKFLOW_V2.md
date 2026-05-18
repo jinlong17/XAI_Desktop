@@ -24,6 +24,16 @@ bug-diagnose → bug-fix → bug-verify → ship
 
 resync 后本项目已具备完整 V2 portable 层:`feature-full-loop` / `bugfix-full-loop` meta-orchestrator 的 **Phase 0 是 3 字段**——① Requirement/Bug 缺失=硬 BLOCKED(free-text 装不进 picker,绝不问)② Automation Mode picker Q1 ③ Verify Cross-vendor picker Q2(同一次 AskUserQuestion;host 不能问时默认 `yes`)。事件驱动 `B-Codex`/`B-Cursor`(headless `codex exec` / `cursor-agent --print --force`)+ `C-*` 经 `.git/hooks/post-commit` 链式 wrapper 自动跨厂商派发 review/verify。完整规格见 `docs/workflow/_portable/07-automation-mode-picker.md` §1A/§2.6 + `04-automation-loop.md` §3.4。前置:`codex` 已认证、`cursor-agent login`、`brew install coreutils util-linux`。
 
+### Level 3 — Roadmap Orchestration（可选,跨多 feature 编排）
+
+当你有一组 feature 要按依赖波次推进时(reviewed roadmap 或 raw PRD),用 **`xai-roadmap-loop` skill**（项目层,`.teams/skills/xai-roadmap-loop/SKILL.md`）。
+
+- **`init` 模式**:吃 source doc,产出 manifest 到 `docs/workflow/roadmap/<roadmap_name>.md`,**停在人工 review gate**。
+- **`run` 模式(默认 emit-dispatch)**:reconcile 每个 feature 的 `dev_log.md`,对每个 eligible feature **emit 一段可复制粘贴的 prompt block**(指向 `feature-full-loop`),**不 spawn 任何 subagent**;每个 prompt block 由人开到独立 session 跑。skill 只做 tracker,你做 dispatcher。Feature 跑完 SHIPPED/BLOCKED 后再调一次 `run` reconcile 下一波。
+- **opt-in `dispatch: spawn`**:旧 spawn-dispatch 行为(skill 自己 spawn `feature-full-loop`),仅在嵌套深度 ≥ 4 的工具上可用(Claude Code 默认 / Codex `max_depth=2` 都不够)。
+
+完整规格:`docs/workflow/_portable/06-roadmap-orchestration.md`(§3.2 emit-dispatch / §3.2-opt-in spawn)。
+
 ## Core Rules
 
 1. **文档驱动交接** — 不靠聊天上下文，靠 `dev_log.md` + 共享文档
@@ -106,6 +116,24 @@ Start the ship agent for <feature>.
 
 ## Source Documents
 
-本项目 V2 工作流基于：
-- `COMMON_SUBAGENT_WORKFLOW_TEMPLATE.md` — 通用 Subagent 工作流模板手册
-- `SUBAGENT_WORKFLOW_V2.md` — V2 设计与落地说明
+本项目 V2 工作流基于 portable 层规格 + 项目层 SOP:
+
+**Portable 层（spec，禁止在本项目编辑；resync 同步）:**
+
+- `docs/workflow/_portable/00-PORTABLE-MANIFEST.md` — placeholder table + 迁移/resync 入口
+- `docs/workflow/_portable/01-workflow-model.md` — subagent pipeline 定义
+- `docs/workflow/_portable/02-handoff-and-state.md` — Handoff block + dev_log 状态契约
+- `docs/workflow/_portable/03-step0-brief-spec.md` — Step 0 feature-brief schema（canonical）
+- `docs/workflow/_portable/04-automation-loop.md` — `feature-full-loop` parent-session recipe + 8 个 Automation Mode 变体
+- `docs/workflow/_portable/06-roadmap-orchestration.md` — Level 3.5 roadmap-loop（emit-dispatch 默认）
+- `docs/workflow/_portable/07-automation-mode-picker.md` — Mode picker 4 层 fallback
+- **`docs/workflow/_portable/usage-guide.md` — 跨层 hands-on 教程；§0 是新项目迁移本工作流的 6 步走法（survey → review → instantiate → 项目层人工补完），需要把这套 paradigm 搬到另一个 repo 时从这里开始。**
+
+**项目层（XAI 自己写，resync 不动）:**
+
+- `docs/workflow/SUBAGENT_WORKFLOW_V2.md` — 本文件（V2 在 XAI 的具体落地）
+- `docs/workflow/SOP_NEW_FEATURE.md` — 新 feature 标准流程
+- `docs/workflow/SOP_BUGFIX.md` — bug 修复标准流程
+- `docs/conventions/COMMIT_CONVENTION.md` — commit 格式
+- `.teams/skills/xai-feature-brief/SKILL.md` — Step 0 需求规范化 skill
+- `.teams/skills/xai-roadmap-loop/SKILL.md` — Layer 3.5 roadmap 编排 skill
