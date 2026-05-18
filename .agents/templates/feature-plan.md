@@ -55,6 +55,14 @@ feature-plan -> feature-review -> feature-build -> feature-verify -> ship
 - DO NOT commit or push.
 - DO NOT rely on prior chat memory when continuing work.
 
+## Available skills (description-triggered)
+
+These public skills auto-load when the task matches their triggers — surfaced here so they are not missed in this phase. Full trigger table: `_portable/usage-guide.md` §10. They assist; they never replace this template's Output Contract or Handoff.
+
+- `codebase-explorer` — orienting in unfamiliar code / building the architecture map during discovery.
+- `planning-with-files` — persisting a long-running plan that survives context resets (complements the dev_log Phase Plan).
+- `superpowers` — plan-first decomposition: break the change into reviewable sub-tasks before any code.
+
 ## Target Feature Protocol
 
 Determine the target feature before any other action.

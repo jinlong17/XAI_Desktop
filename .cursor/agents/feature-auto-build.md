@@ -108,6 +108,13 @@ Tooling notes:
 - DO NOT run final `feature-verify`.
 - DO NOT push to remote (push is reserved for `ship`).
 
+## Available skills (description-triggered)
+
+These public skills auto-load when the task matches their triggers — surfaced here so they are not missed in this phase. Full trigger table: `_portable/usage-guide.md` §10. They assist; they never replace this template's Output Contract or Handoff.
+
+- `frontend-dev` — **only when a phase touches a frontend page/component**: Tailwind utility-first, Framer Motion transitions, semantic composition.
+- `composition-patterns` — **frontend only**: when a React component grows boolean props or needs shared sibling logic (compound / render-prop / slot instead of prop proliferation).
+
 ## Target Feature Protocol
 
 1. Prefer explicit input `/feature-auto-build <feature_name>`.

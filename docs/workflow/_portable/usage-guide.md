@@ -707,3 +707,39 @@ The orchestration roles:
   writes the Phase Verdict, not the Status Panel.
 - the `<skill_prefix>roadmap-loop` skill — **never writes a `dev_log` Status Panel at all** (it only
   writes its own manifest file), so no trailer applies.
+
+---
+
+## 10. Public skills — trigger quick-reference & the sync rule
+
+`_portable/skills/` ships **8 curated, fully-installed, description-triggered** public skills
+(ADR `0006-public-skills-portable-library.md`). "Description-triggered" means the model
+auto-loads a skill when the conversation matches its frontmatter `Triggers —` phrases — you do
+not have to invoke them. The right-hand column is the explicit override if you want to force one.
+
+`<skill_prefix>workflow-migrate` carries `_portable/skills/` verbatim into every migrated project
+(instantiate §3 step 5a; resync §4 keeps it in sync), so this table is portable canonical.
+
+| Skill | Auto-triggers (frontmatter `Triggers —`, verbatim) | Force it explicitly |
+|---|---|---|
+| **superpowers** | plan first · design before code · subagent-driven · multi-step planning · decompose this task | `use superpowers` |
+| **planning-with-files** | persistent plan · task_plan.md · /plan · long-running task plan · plan-as-file | `use planning-with-files` |
+| **skill-creator** | create a new skill · edit a skill · test a skill · skill.md frontmatter · skill author workflow | `use skill-creator` |
+| **codebase-explorer** | explore this codebase · orientation map · architecture review · where does X live · onboard me to this repo | `use codebase-explorer` |
+| **frontend-dev** | build a frontend page · framer motion · tailwind UI · refine this component · frontend polish pass | `use frontend-dev` |
+| **composition-patterns** | react composition · compound components · boolean prop proliferation · render prop pattern · slot pattern | `use composition-patterns` |
+| **gh-fix-ci** | fix CI · failing GitHub Actions · PR checks failing · why is the workflow red · github actions log | `use gh-fix-ci` |
+| **security-skills-claude-code** | security review · threat model · STRIDE · attack surface · dependency CVE | `use security review` |
+
+> The trigger phrases above are copied verbatim from each `_portable/skills/<name>/SKILL.md`
+> frontmatter. If you edit a skill's `Triggers —` line, update this row in the same commit.
+
+### 10.1 The sync rule (enforced)
+
+**Any new skill added under `_portable/skills/` MUST be added as a row in this table in the same
+commit, and mirrored into the project usage-guide's equivalent table.** This is not a convention —
+it is machine-enforced: `scripts/lint/check_portable_sync.py` **rule 7 (skill-doc registration)**
+fails if a `_portable/skills/*/SKILL.md` has no matching row here (the same gate shape as rule 2
+placeholder registration). The lint runs in the portable-sync check; a missing row blocks the
+commit/CI. Removing a skill likewise requires removing its row. Keep the project usage-guide table
+in lockstep (it points back here as canonical).

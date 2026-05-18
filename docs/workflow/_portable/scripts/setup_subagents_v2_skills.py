@@ -66,14 +66,14 @@ def render_skill_claude(template, root: Path) -> tuple[Path, str]:
     return path, body
 
 
-def render_skill_codex(template, codex_dir: Path, model: str, toml_multiline) -> tuple[Path, str]:
+def render_skill_codex(template, codex_dir: Path, model: str, toml_multiline, toml_string) -> tuple[Path, str]:
     path = codex_dir / f"{SKILL_NS}{template.name}.toml"
     body_stripped = template.body.strip() + "\n"
     lines = [
-        f'name = "{template.name}"',
-        f'description = "{template.description}"',
+        f"name = {toml_string(template.name)}",
+        f"description = {toml_string(template.description)}",
         'sandbox_mode = "read-only"',
-        f'model = "{model}"',
+        f"model = {toml_string(model)}",
         'model_reasoning_effort = "high"',
         f"developer_instructions = {toml_multiline(body_stripped)}",
     ]

@@ -107,6 +107,12 @@ Tooling notes:
 
 Prefer to be run by a different executor than `feature-plan`, but still work if that is not possible.
 
+## Available skills (description-triggered)
+
+This public skill auto-loads when the task matches its triggers — surfaced here so it is not missed. Full trigger table: `_portable/usage-guide.md` §10. It assists; it never replaces this template's Output Contract or Handoff.
+
+- `security-skills-claude-code` — **when the change touches a security surface** (auth / payment / secrets / external input): STRIDE, attack-surface enumeration, dependency-CVE pass.
+
 ## Target Feature Protocol
 
 Resolve the target feature using the same rules as `feature-plan`:

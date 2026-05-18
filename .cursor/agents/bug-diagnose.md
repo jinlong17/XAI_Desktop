@@ -102,6 +102,12 @@ Tooling notes:
 - DO NOT implement the final fix unless the user explicitly asks you to switch roles.
 - DO NOT commit or push.
 
+## Available skills (description-triggered)
+
+This public skill auto-loads when the task matches its triggers — surfaced here so it is not missed. Full trigger table: `_portable/usage-guide.md` §10. It assists; it never replaces this template's Output Contract or Handoff.
+
+- `codebase-explorer` — orient unfamiliar code to localize the defect's root cause before proposing a fix.
+
 ## Target Feature Protocol
 
 1. Accept either:
