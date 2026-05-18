@@ -248,7 +248,7 @@ Cross-vendor → default `yes` and proceed (§2.6).
 |-----------|-----------|
 | Resume mode (the `Start the <name> agent for <feature>.` short form) | Read Mode from dev_log Status Panel; never re-ask |
 | Invocation prompt has a legal `Automation Mode:` value | Use it as-is |
-| Caller is `<skill_prefix>roadmap-loop` run mode dispatch (`emit` / `bg` / `serial` / `spawn`) | The generated feature prompt or inline recipe is required to include a resolved `Automation Mode:` value (§4 layer 1-3); picker never fires here |
+| Caller is `<skill_prefix>roadmap-loop` run mode dispatch (`emit` / `bg` / `serial` / `spawn`) | The generated feature prompt or inline recipe is required to include a resolved `Automation Mode:` value (§4 layer 1-3); the Automation Mode picker never fires here. The separate dispatch-mode confirmation question lives in `06` §A7.3. |
 | Fresh start, no `Requirement:`/`Bug:` | Handled earlier by §1A — STOP `BLOCKED` before §3 is even evaluated (never reaches the picker) |
 | Invocation prompt has a legal `Verify Cross-vendor:` value | Use it as-is; the §2.6 Q2 is not added |
 | Host tool does not support `AskUserQuestion` | **Automation Mode:** STOP with Handoff `Status: BLOCKED`, Blocker `Automation Mode missing and AskUserQuestion not available in this tool.`, Next Step `Re-run with: Start the <agent> agent. Requirement: <text>. Automation Mode: <one of the 8 — see 04 §3>`. **Verify Cross-vendor:** do NOT block — default `yes` (strict) and proceed (§2.6). |

@@ -257,6 +257,8 @@ Responsibilities:
 - Check the workflow is already `READY_TO_SHIP`
 - Verify commit completeness (main commits done by feature-build / bug-fix)
 - Add commits for any missed small changes
+- When invoked with a roadmap-loop background session id or worktree path, locate and verify that
+  worktree itself; the developer should not need to manually run the worktree/git check sequence
 - Push gate + write `SHIPPED` after pushing
 
 ### 5.7 Feature Reopen / Delta Iteration
@@ -694,7 +696,7 @@ Every subagent on startup:
 
 **Verify Return Path** — Run `feature-build <name>` in tool 1 → last phase done → `Status = READY_FOR_VERIFY`. Switch to tool 2, run `feature-verify <name>` → finds an implementation/contract mismatch → `Status = BLOCKED`, `Suggested Next = feature-build`. Switch back, run `feature-build <name>` → auto-detects a verify return → fixes the mismatch (does not re-plan). Bugfix is symmetric (`bug-fix` ↔ `bug-verify`).
 
-**Ship by a different tool** — After `feature-verify <name>` reaches `READY_TO_SHIP`, switch to any tool, run `ship <name>` → reads `dev_log.md`, confirms `Status = READY_TO_SHIP`, checks git status/commit/push, writes `SHIPPED`.
+**Ship by a different tool** — After `feature-verify <name>` reaches `READY_TO_SHIP`, switch to any tool, run `ship <name>` → reads `dev_log.md`, confirms `Status = READY_TO_SHIP`, checks git status/commit/push, writes `SHIPPED`. If the work ran in a roadmap-loop background session, pass the session id or worktree path so `ship` can perform those checks in the correct checkout.
 
 ---
 

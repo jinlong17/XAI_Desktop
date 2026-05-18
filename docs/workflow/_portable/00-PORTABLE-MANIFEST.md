@@ -203,9 +203,10 @@ per-project rewrite.
    (see §3.5). The §3.4 runtime fill-in tokens are NOT replaced at this step — the subagents fill
    them in at runtime. The portable docs themselves can stay as-is (they are the spec, not the
    instance) — only the templates and background file need concrete values.
-5. **Copy** the generation script — `scripts/setup_subagents_v2.py` + `.sh` — into `<repo>/scripts/`,
-   then adjust the four constants its header marks `# >>> ADJUST` (`TEMPLATES_DIR`, `BACKGROUND_FILE`,
-   the model-slug maps). It is a runnable reference, not a re-implement-it spec. See `scripts/README.md`.
+5. **Copy** the generation script — `scripts/setup_subagents_v2.py` + `.sh` +
+   `setup_subagents_v2_skills.py` — into `<repo>/scripts/`, then adjust the constants its header
+   marks `# >>> ADJUST` (`TEMPLATES_DIR`, `BACKGROUND_FILE`, `SKILLS_DIR`, the model-slug maps). It
+   is a runnable reference, not a re-implement-it spec. See `scripts/README.md`.
 6. **Run** the generation script to produce `.claude/agents/`, `.codex/agents/`, `.cursor/agents/`.
    ⚠️ The generator substitutes ONLY `<!-- INJECT:PROJECT_BACKGROUND -->`. It does **not**
    substitute the `<...>` path tokens inside generated agent bodies — those are propagated by hand
@@ -229,6 +230,10 @@ per-project rewrite.
    dispatch scripts probe `/opt/homebrew/opt/util-linux/bin/flock`); an authenticated `codex` CLI;
    `cursor-agent login` (cursor-agent runs `--force` on default model `gpt-5.5-high`, override via
    `CW_CURSOR_MODEL`). Skip this entire step for synchronous variants (`A-Claude` / `D-*`).
+7a. **Render portable-sourced project workflow skills.** Extract the `<skill_prefix>roadmap-loop`
+   source from `06-roadmap-orchestration.md` Appendix, apply the target placeholder map, write it to
+   `<skill_root>/<skill_prefix>roadmap-loop/SKILL.md`, and register it in the target's skill
+   registry. Treat `_portable/06` as the source; do not hand-patch only the target copy.
 8. **Write** a project-local concrete workflow doc (`<project_workflow_doc>`) — the worked instance,
    like this repo's `project/SUBAGENT_WORKFLOW_V2.md`. The portable docs stay generic; the project
    doc records "how it was actually wired here".
@@ -264,9 +269,11 @@ Key points:
 ## 6. What is NOT in the portable layer (by design)
 
 The portable layer deliberately excludes anything that would change between projects. If you need
-the Any2Knowledge concrete instances — the `a2k-*` skill specs, the V2 landing details, the SOPs,
-the automation scripts, the conductor playbook — look in `../project/`. Deprecated V1 material is in
-`../_archive/`. See `../README.md` for the three-layer map.
+the Any2Knowledge concrete instances — the rendered `a2k-*` skill specs, the V2 landing details, the
+SOPs, the automation scripts, the conductor playbook — look in `../project/`. The exception is a
+portable source draft such as the `<skill_prefix>roadmap-loop` appendix in `06`: migration renders it
+into a project-prefixed skill instead of treating the target copy as the source. Deprecated V1
+material is in `../_archive/`. See `../README.md` for the three-layer map.
 
 ---
 
@@ -284,10 +291,12 @@ generation script, verifies the result, and can later update already-migrated ta
   and adjusts the generation script, runs it, verifies counts + lint, then STOPS and emits a
   **project-layer checklist**. It deliberately does **not** scaffold the target's project-layer docs
   (`<project_workflow_doc>`, the SOPs, `<your_commit_convention>`) — authoring those stays with the
-  human, exactly like §4 step 7.
+  human, exactly like §4 step 7. Project-prefixed workflow skills with a portable source, currently
+  `<skill_prefix>roadmap-loop`, are rendered from that source before the checklist.
 - **`resync`** — updates an already-migrated target after the source portable workflow changes.
   Refuses dirty targets, preserves project customizations, refreshes portable agents / public
-  skills / scripts, then STOPS with a project-layer doc-delta checklist.
+  skills / scripts, re-renders portable-sourced workflow skills, then STOPS with a project-layer
+  doc-delta checklist.
 
 The skill runs from the *source* project (where `_portable/` already lives) and operates on a target
 repo path, so there is no chicken-and-egg problem. The split — automate the mechanical copy + fill +
@@ -343,14 +352,19 @@ Migration skill for the portable workflow paradigm. Full spec: `docs/workflow/_p
    would touch; if any is dirty it STOPS read-only and tells the human to commit/stash. If a target
    template diverges from upstream beyond placeholder substitution (the project customized it),
    resync lists the conflict and STOPS for a human 3-way merge — it does not clobber.
+9. **Source-first only.** Do not patch generated outputs or target runtime copies as the primary
+   fix. Source locations are: `_portable/templates/` for generated agents,
+   `_portable/scripts/` for cowork scripts, `_portable/06-roadmap-orchestration.md` appendix for
+   `<skill_prefix>roadmap-loop`, and `_portable/skills/` for public shims. Project/generated copies
+   must be rendered from these sources or listed as conflicts.
 
 ## 1. Mode detection
 
 - call arguments contain `mode: survey`, or only a target repo path is given → **survey mode**.
 - call arguments contain `mode: instantiate`, or a reviewed `plan:` file is given → **instantiate mode**.
 - call arguments contain `mode: resync` (or `mode: update`), OR the target already has a populated
-  `docs/workflow/_portable/` + a non-empty `<templates_dir>/` (migrated before, now behind
-  upstream) → **resync mode**.
+  `docs/workflow/_portable/` + a non-empty `<templates_dir>/` (i.e. it was migrated before and is
+  now behind upstream) → **resync mode**.
 - when both could be inferred, the explicit `mode:` argument wins.
 - instantiate with no reviewed plan → run survey first, stop at its review gate, do not proceed.
 
@@ -392,21 +406,37 @@ checklist. STOP.
    `<project_background_file>`, using the plan's table. Replacing `<skill_prefix>` once resolves
    every skill name. The §3.4 runtime tokens are left untouched.
 5. **Copy the generation script** `_portable/scripts/setup_subagents_v2.py` + `.sh` +
-   `setup_subagents_v2_skills.py` into the target's `scripts/`, then adjust the four constants
-   its header marks `# >>> ADJUST` (`TEMPLATES_DIR`, `BACKGROUND_FILE`, the model-slug maps) to
-   the target's values. Set `SKILLS_DIR` to wherever the target placed `<public_skill_root>` (the
-   project running script's `ROOT` resolves to the repo root, so the path is typically
-   `ROOT / "docs" / "workflow" / "_portable" / "skills"`).
+   `setup_subagents_v2_skills.py` (the public-skill submodule) into the target's `scripts/`, then
+   adjust the four constants its header marks `# >>> ADJUST` (`TEMPLATES_DIR`, `BACKGROUND_FILE`,
+   the model-slug maps) to the target's values. Set `SKILLS_DIR` to point at the target's
+   `<public_skill_root>` (the project running script's `ROOT` resolves to the repo root, so the
+   path is typically `ROOT / "docs" / "workflow" / "_portable" / "skills"`).
 5a. **(optional public-skill carry-over)** Copy `_portable/skills/` verbatim into the target's
-   `<public_skill_root>` and `_portable/mcp-servers/` into `<mcp_servers_root>`. Skip if the target
-   opts out of the public-skill bundle. The shims are project-agnostic; no placeholder substitution
-   is needed.
-6. **Copy the automation-loop reference shell scripts** `_portable/scripts/*.sh` (the dispatch /
-   hook / quota-wrapper / `lib_phase_verdict.sh` set) into the target's `<cowork_scripts_dir>` and
-   replace their `<...>` placeholder tokens. Optional — skip if the target only wants the
-   synchronous automation variants (see `04-automation-loop.md` §3).
+   `<public_skill_root>` and `_portable/mcp-servers/` into `<mcp_servers_root>`. The shims are
+   project-agnostic; no placeholder substitution is needed. Skip if the target opts out of the
+   public-skill bundle.
+6. **(event-driven `B-*` / `C-*` variants only)** Copy **all** of `_portable/scripts/*` into the
+   target's `<cowork_scripts_dir>` — the full set including `lib_hook_helpers.sh` (`git-post-commit`
+   hard-depends on its `determine_other_vendor` / `render_*_prompt`; copying only the
+   dispatch/wrapper/`lib_phase_verdict.sh` subset yields a hook that resolves no vendor and
+   dispatches nothing). Replace every script's `<...>` tokens. Then install `.git/hooks/post-commit`
+   as a **chained wrapper** (NOT a symlink): back up + run any pre-existing post-commit hook, then
+   `source <cowork_scripts_dir>/lib_hook_helpers.sh` and exec `<cowork_scripts_dir>/git-post-commit`.
+   Prereqs: `gtimeout` (`brew install coreutils`); `flock` (`brew install util-linux` — keg-only on
+   macOS, NOT on PATH; scripts probe `/opt/homebrew/opt/util-linux/bin/flock`); authenticated
+   `codex` CLI; `cursor-agent login`. Skip this whole step for synchronous variants (`A-Claude` /
+   `D-*`) — see `04-automation-loop.md` §3.
+6b. **Render project-prefixed workflow skills with portable sources.** Extract the
+   `<skill_prefix>roadmap-loop` `SKILL.md` source from `_portable/06-roadmap-orchestration.md`
+   Appendix, replace the project placeholders (`<skill_prefix>`, `<step0-skill>`, paths from §3),
+   and write it to `<skill_root>/<skill_prefix>roadmap-loop/SKILL.md`. This is a source render, not a
+   project-layer hand patch. Other project SOP skills that do not have a portable source still stay
+   in the human checklist.
 7. **Run the generation script** to produce `.claude/agents/`, `.codex/agents/`, `.cursor/agents/`
-   and `.codex/config.toml`.
+   and `.codex/config.toml`. ⚠️ The generator substitutes ONLY `<!-- INJECT:PROJECT_BACKGROUND -->`;
+   the `<...>` path tokens in generated agent bodies (and any post-gen hand-fix) are propagated by
+   hand into `.claude/.codex/.cursor`. Re-running with `--force` **regresses** those — re-run only
+   on template change, then re-propagate. Flag this in the emitted checklist.
 8. **Verify.** Count (without `--include-skills`): 15 templates → 15 × 3 = 45 generated configs +
    1 `.codex/config.toml`. Count (with `--include-skills`): 15 × 3 = 45 frozen + 8 skills × 3 = 24
    skill outputs = **69 outputs** + 1 `.codex/config.toml`. Skip the +24 if the target opted out of
@@ -419,11 +449,13 @@ checklist. STOP.
      the reference)
    - write `<your_feature_sop>` / `<your_bugfix_sop>` / `<your_commit_convention>`
    - land all required `<skill_prefix>`-prefixed workflow skills into `<skill_root>` and register them
-     in the target's skill registry; do not migrate only one entry point. Minimum reusable set:
-     `<skill_prefix>feature-full-loop`, `<skill_prefix>roadmap-loop`, the Step 0 brief skill,
-     `<skill_prefix>workflow-migrate`, sync/registry governance helpers (`portable-sync-check`,
-     skills/agents registry, etc.), plus any project SOP skills the source workflow expects. These
-     project-prefixed skills are not the same as `_portable/skills/*` public shims.
+     in the target's skill registry; do not migrate only one entry point. `<skill_prefix>roadmap-loop`
+     is rendered automatically from `_portable/06` in step 6b. Remaining reusable skills still need
+     project-layer sources or human landing: `<skill_prefix>feature-full-loop`, the Step 0 brief
+     skill, `<skill_prefix>workflow-migrate`, sync/registry governance helpers
+     (`portable-sync-check`, skills/agents registry, etc.), plus any project SOP skills the source
+     workflow expects. These project-prefixed skills are not the same as `_portable/skills/*` public
+     shims.
    - test-run on one small feature, then one bugfix, before passing `--replace-claude`
 
 ## 4. resync mode
@@ -435,51 +467,65 @@ plus a **project-layer doc-delta checklist** the human must hand-apply. STOP.
 resync is the repeatable answer to "the source workflow had a big update — sync my already-migrated
 project". It is **idempotent** (safe to re-run) and **non-destructive** (constraint §0.8).
 
-1. **Precondition — clean-target gate (read-only until it passes).** `git -C <target> status
-   --short` for every path resync writes: `docs/workflow/_portable/`, `<cowork_scripts_dir>/`,
+1. **Precondition — clean-target gate (read-only until it passes).** `git -C <target> status --short`
+   for every path resync writes: `docs/workflow/_portable/`, `<cowork_scripts_dir>/`,
    `<templates_dir>/`, `.claude/agents/` `.codex/agents/` `.cursor/agents/`, the copied
-   `<setup_script>`, and `scripts/lint/check_portable_sync.py` if present. If ANY is dirty → STOP
-   with Handoff `Status: BLOCKED`, Blocker listing the dirty paths, Next Step "commit or stash the
-   target's work, then re-run resync". Never clobber uncommitted work.
+   `<setup_script>`, `<skill_root>/<skill_prefix>roadmap-loop/SKILL.md`, and
+   `scripts/lint/check_portable_sync.py` if present. If ANY is dirty → STOP with Handoff
+   `Status: BLOCKED`, Blocker listing the dirty paths, Next Step "commit or stash the target's work,
+   then re-run resync". Never clobber uncommitted work.
 2. **Resolve the target's placeholder map.** Prefer a recorded migration plan; else re-derive it
    survey-style from the target's existing instantiated artifacts (`<project_background_file>`,
    substituted `<cowork_scripts_dir>/*`, the `<setup_script>` ADJUST constants). AskUserQuestion for
-   any slot still ambiguous — `<skill_prefix>` especially (not recoverable from substituted scripts).
+   any slot still ambiguous — `<skill_prefix>` especially (it is not recoverable from substituted
+   scripts alone).
 3. **Show the upstream delta.** Summarize what changed in source `_portable/` since the target's
-   copy (diff the two `_portable/` trees; list new files, changed scripts, changed `04` / `07` /
-   `00-MANIFEST`, changed templates). Do not dump full diffs.
-4. **Overwrite the target `docs/workflow/_portable/` verbatim** from source (project-agnostic;
-   always a safe whole-tree replace once §1 passed). This includes `_portable/skills/` and
+   copy (diff the two `_portable/` trees; list new files like `scripts/lib_hook_helpers.sh`,
+   changed scripts, changed `04` / `07` / `00-MANIFEST`, changed templates). Do not dump full diffs.
+4. **Overwrite the target `docs/workflow/_portable/` verbatim** from source (it is project-agnostic;
+   this is always a safe whole-tree replace once §1 passed). This includes `_portable/skills/` and
    `_portable/mcp-servers/` — both are project-agnostic and ride the same whole-tree replace.
-   Additionally re-overwrite `<public_skill_root>` and `<mcp_servers_root>` from the refreshed
-   `_portable/skills/` and `_portable/mcp-servers/` (if the target adopted the public-skill
-   bundle).
+   Additionally re-overwrite `<public_skill_root>` (from `_portable/skills/`) and `<mcp_servers_root>`
+   (from `_portable/mcp-servers/`) if the target adopted the public-skill bundle.
 5. **Re-render `_portable/scripts/*` → `<cowork_scripts_dir>/`** with the target's token map — the
    FULL set including any new files. Re-confirm `.git/hooks/post-commit` is the chained wrapper
-   (§4 of this manifest). Scan: no `<placeholder>` may survive in `<cowork_scripts_dir>/`.
+   (`00-PORTABLE-MANIFEST.md` §4). Scan: no `<placeholder>` may survive in `<cowork_scripts_dir>/`.
 6. **Re-instantiate templates with a conflict guard.** For each `_portable/templates/*.md`, compute
-   the placeholder-substituted upstream form and compare to the target's `<templates_dir>/` copy.
-   Differs ONLY by upstream content → overwrite. Target copy hand-customized (differs beyond
-   substitution) → do NOT overwrite; add to a CONFLICTS list. The same conflict guard extends to
-   every `_portable/skills/<name>/SKILL.md` shim (a project-customized shim → CONFLICTS list, STOP
-   for human 3-way merge). Then run the `<setup_script>` (with `--include-skills` if the target
-   adopted the public-skill bundle) to regenerate `.claude/.codex/.cursor` (note the `--force`
-   regression caveat — §4 step 6; targeted re-propagation for hand-fixed agents). If CONFLICTS is
-   non-empty, STOP for human 3-way merge before generating.
+   the placeholder-substituted upstream form and compare to the target's `<templates_dir>/` copy. If
+   they differ ONLY by upstream content → overwrite. If the target copy has project-specific
+   hand-customization (differs beyond substitution) → **do NOT overwrite**; add it to a CONFLICTS
+   list. The same conflict guard extends to every `_portable/skills/<name>/SKILL.md` shim (a
+   project-customized shim → CONFLICTS list, STOP for human 3-way merge). Then run the
+   `<setup_script>` (with `--include-skills` if the target adopted the public-skill bundle) to
+   regenerate `.claude/.codex/.cursor` (note the `--force` regression caveat — `00-MANIFEST` §4
+   step 6; targeted re-propagation for any hand-fixed agents). If CONFLICTS is non-empty, STOP
+   after this step for human 3-way merge before generating.
+6b. **Re-render project-prefixed workflow skills with portable sources.** For
+   `<skill_prefix>roadmap-loop`, extract the canonical `SKILL.md` source from the updated
+   `_portable/06-roadmap-orchestration.md` Appendix and apply the target token map. If the target's
+   existing `<skill_root>/<skill_prefix>roadmap-loop/SKILL.md` equals the previous rendered source
+   (or is absent), overwrite it with the new render. If it contains project hand-customization beyond
+   the render, add it to CONFLICTS and STOP for a human 3-way merge. This is what makes a second
+   resync report "up to date" for roadmap-loop instead of repeatedly asking for manual skill
+   updates.
 7. **Refresh the lint.** If the project carries `scripts/lint/check_portable_sync.py`, update it
-   from source (incl. the cowork↔portable parity rule); else list it in the checklist as a
-   recommended add. Run it — must PASS (it catches any placeholder left unsubstituted in §5).
+   from source (including rule 6 cowork↔portable parity); if it does not, list it in the checklist
+   as a recommended add. Run it — must PASS (it catches any placeholder left unsubstituted in §5).
 8. **Emit the project-layer doc-delta checklist + STOP.** resync NEVER edits the target's own
-   `<project_workflow_doc>` / SOPs / usage-guide-equivalent (constraint §0.3). List the specific
-   upstream changes the human must hand-apply there, including runtime entry changes such as
-   "`feature-full-loop` runtime moved to `<skill_prefix>feature-full-loop` parent-session skill" and
-   "roadmap-loop default dispatch is emit; Claude Code parallel dispatch is bg/Agent View; serial is
-   the one-transcript fallback; spawn remains advanced opt-in". Also list any `<skill_prefix>` workflow skill
-   deltas that must be copied/renamed into `<skill_root>` as a complete set; `_portable/skills/*`
-   public shims are refreshed mechanically, but project-prefixed workflow skills are project-layer
-   artifacts. End with
-   a Next Step: review CONFLICTS (if any), apply the doc deltas, update workflow skills, then
-   test-run one feature to confirm the B/C hooks work end-to-end.
+   `<project_workflow_doc>` / SOPs / usage-guide-equivalent (constraint §0.3). Instead, list the
+   specific upstream changes the human must hand-apply there (e.g. "Phase 0 is now 3-field — add the
+   Requirement gate + Verify Cross-vendor companion to your SUBAGENT_WORKFLOW_V2 §2.5 + dev_log
+   schema", "drop any Plan/Build Executor wording", "Task-withheld-subagent constraint",
+   "`feature-full-loop` runtime moved to `<skill_prefix>feature-full-loop` parent-session skill",
+   "roadmap-loop default dispatch is emit, not spawn"). Do not list
+   `<skill_prefix>roadmap-loop` as a manual follow-up when step 6b rendered it cleanly; instead say
+   it is up to date. List only workflow skill deltas that still lack a portable source or were
+   blocked by CONFLICTS. `_portable/skills/*` public shims are refreshed mechanically, but most
+   project-prefixed SOP skills remain project-layer artifacts. End with a Next Step: review
+   CONFLICTS (if any), apply the doc deltas, update any still-manual workflow skills, then test-run
+   one feature to confirm the B/C hooks work end-to-end. If there are no portable deltas,
+   no generated/script diffs, no workflow-skill renders, and no project-layer checklist items, report
+   "up to date" explicitly.
 
 ## 5. Exception handling
 

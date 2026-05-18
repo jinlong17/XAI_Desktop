@@ -33,8 +33,8 @@ If you are *migrating* the portable workflow into a new project (rather than usi
 `<skill_prefix>workflow-migrate` (defined as a draft SKILL.md in the appendix of `_portable/00-PORTABLE-MANIFEST.md`) automates §4 of `00`. It runs from the *source* project (where `_portable/` already lives) and operates on a *target* repo path. Three modes:
 
 - **survey** — read-only. Scans the target repo, infers the §3 placeholder values, asks where ambiguous, drafts the filled placeholder table + `<project_background_file>` content + a migration plan, then STOPS for human review.
-- **instantiate** — consumes a reviewed survey plan. Copies `_portable/` into the target, fills placeholders, copies and adjusts the generation script, runs it, verifies counts + lint, then STOPS and emits a project-layer checklist. Does NOT scaffold project-layer docs.
-- **resync** — updates an already-migrated target after the source portable workflow changes. Refuses dirty targets, preserves project customizations, refreshes portable agents / public skills / scripts, and emits a project-layer doc-delta checklist. STOPS.
+- **instantiate** — consumes a reviewed survey plan. Copies `_portable/` into the target, fills placeholders, copies and adjusts the generation script, runs it, renders portable-sourced workflow skills such as `<skill_prefix>roadmap-loop`, verifies counts + lint, then STOPS and emits a project-layer checklist. Does NOT scaffold project-layer docs.
+- **resync** — updates an already-migrated target after the source portable workflow changes. Refuses dirty targets, preserves project customizations, refreshes portable agents / public skills / scripts, re-renders portable-sourced workflow skills, and emits a project-layer doc-delta checklist. STOPS.
 
 ### 6-step usage flow
 
@@ -47,7 +47,7 @@ If you are *migrating* the portable workflow into a new project (rather than usi
 5. **Run instantiate:**
    `/<skill_prefix>workflow-migrate plan: <path-to-plan-file> mode: instantiate`
    Skill copies `_portable/`, fills placeholders, copies + adjusts the generation script, runs it, verifies, emits the project-layer checklist, STOPS.
-6. **Project-layer human work.** Per the checklist: write `<project_workflow_doc>`, the SOPs, `<your_commit_convention>`; land any `<skill_prefix>`-prefixed workflow skills (for example `<skill_prefix>feature-full-loop`, `<skill_prefix>roadmap-loop`, the Step 0 brief skill, migration/governance helpers); test-run on one small feature, then one bugfix.
+6. **Project-layer human work.** Per the checklist: write `<project_workflow_doc>`, the SOPs, `<your_commit_convention>`; register and review rendered portable-sourced workflow skills (currently `<skill_prefix>roadmap-loop`), then land the remaining `<skill_prefix>`-prefixed workflow skills (for example `<skill_prefix>feature-full-loop`, the Step 0 brief skill, migration/governance helpers); test-run on one small feature, then one bugfix.
 
 For later upstream updates to an already-migrated project, copy:
 
@@ -75,22 +75,28 @@ It is idempotent and **non-destructive**:
 
 - **Clean-target gate (read-only until it passes):** resync refuses to run if any path it would
   write (`_portable/` / `<cowork_scripts_dir>/` / `<templates_dir>/` / `.claude|.codex|.cursor/
-  agents/` / the generator / the portable-sync lint) is git-dirty in the target — commit/stash
+  agents/` / the generator / portable-sourced workflow skills such as
+  `<skill_prefix>roadmap-loop` / the portable-sync lint) is git-dirty in the target — commit/stash
   first. It never clobbers uncommitted work.
 - **Template conflict guard:** a hand-customized target template is never silently overwritten —
   resync lists it and STOPS for a human 3-way merge.
 - It overwrites `_portable/` verbatim (including public skills and MCP README), re-renders the full
   `_portable/scripts/*` set (incl. brand new files) with the target's token map, re-instantiates
   templates + regenerates agents (minding the `--force` regression caveat), refreshes the
-  portable-sync lint, and emits a **project-layer doc-delta checklist** the human hand-applies (it
-  never edits the target's own workflow docs).
-- **Skill/agent reuse boundary:** all 15 V2 agents, `_portable/skills/*` public skills, and hook
-  scripts are mechanically copied/regenerated; do not migrate only `roadmap-loop` or only
-  `feature-full-loop`. Project-prefixed workflow skills must still be landed as a set under the target
-  prefix in `<skill_root>` and registered in the target registry: `<skill_prefix>feature-full-loop`,
-  `<skill_prefix>roadmap-loop`, the Step 0 brief skill, `<skill_prefix>workflow-migrate`, sync/registry
-  governance helpers, and any project SOP skills the source project expects. resync reports these
-  deltas but does not author target project SOPs / usage guides.
+  portable-sync lint, re-renders portable-sourced workflow skills, and emits a **project-layer
+  doc-delta checklist** the human hand-applies (it never edits the target's own workflow docs).
+- **Skill/agent reuse boundary:** all 15 V2 agents, `_portable/skills/*` public skills, hook
+  scripts, and portable-sourced workflow skills such as `<skill_prefix>roadmap-loop` are
+  mechanically copied/regenerated; do not migrate only `roadmap-loop` or only `feature-full-loop`.
+  Project-prefixed workflow skills still need to land as a coherent set under the target prefix in
+  `<skill_root>` and be registered in the target registry: `<skill_prefix>feature-full-loop`, the
+  rendered `<skill_prefix>roadmap-loop`, the Step 0 brief skill, `<skill_prefix>workflow-migrate`,
+  sync/registry governance helpers, and any project SOP skills the source project expects. resync
+  reports only deltas that lack a portable source or were blocked by conflicts; it does not author
+  target project SOPs / usage guides.
+- **Repeat-run expectation:** if `_portable/`, rendered scripts, generated configs, rendered workflow
+  skills, and project-layer doc checklist items have no remaining delta, a second `resync` should
+  explicitly report `up to date` rather than re-emitting the same manual checklist.
 
 Full contract: `00-PORTABLE-MANIFEST.md` §4 resync mode.
 
@@ -543,7 +549,9 @@ hand-dispatch `<skill_prefix>feature-full-loop` N times. Use the `<skill_prefix>
   paste-ready prompt block per eligible feature and stops. Recommended Claude Code `dispatch: bg`
   launches one background session per feature and lets you monitor the whole wave in Agent View.
   `dispatch: serial` runs the wave one feature at a time in the caller transcript. Opt-in
-  `dispatch: spawn` reverts to the legacy nested path and requires ≥ 4-level nesting capacity.
+  `dispatch: spawn` reverts to the legacy nested path and requires ≥ 4-level nesting capacity. Every
+  `run` pauses for a Chinese dispatch confirmation question before doing any dispatch, even when the
+  prompt already included `dispatch:` or when default `emit` was inferred.
 
 ### 6.2 The three actions
 
@@ -570,11 +578,37 @@ manifest: <roadmap_manifest_dir>/<roadmap_name>.md
 Start the ship agent for <slug>.       # for each slug in the READY_TO_SHIP queue
 ```
 
+Before Action 2 dispatches anything, it must ask the developer to confirm the actual mode in a
+Chinese AskUserQuestion-style prompt. The question must show the candidate mode and all four choices:
+
+```text
+Roadmap dispatch 模式确认
+
+候选 dispatch: <emit|bg|serial|spawn>
+来源: <prompt 显式提供 | 未提供,使用默认 emit | agent-view alias 解析为 bg>
+
+请选择本次实际使用的模式:
+- emit — 默认/最稳;只输出 prompt blocks,不启动任务,不写 IN_PROGRESS。
+- bg — Claude Code 并行;启动 claude --bg sessions,Agent View 监控,cap=3,ship 要在 worktree/attach 里做。
+- serial — 当前主会话串行;直接跑 worker agents,不 spawn meta-orchestrator,无并行。
+- spawn — legacy 高风险;只有宿主支持 >=4 层 nested agent 时才用。
+```
+
 `dispatch: bg` safety rules: satisfy one worktree visibility gate before launch (clean git tree,
 `git config worktree.baseRef=head`, or prompts with all needed manifest/seed content inlined).
 Default bg concurrency is capped at 3; extra eligible rows stay `PENDING` with a `QUEUED_BG` note.
-When a bg row reaches `READY_TO_SHIP`, ship from that session's worktree or by attaching with
-`claude attach SESSION_ID`; do not delete the background session until its commits are pushed. Agent
+When a bg row reaches `READY_TO_SHIP`, start `ship` directly with the background session id or
+worktree path; the `ship` agent owns worktree lookup, branch/status/log checks, push, and the
+`SHIPPED` state write:
+
+```text
+Start the ship agent for <slug>.
+Background Session: {session_id_or_name}
+Roadmap Manifest: <roadmap_manifest_dir>/<roadmap_name>.md
+```
+
+If the session id is ambiguous, add `Worktree: {absolute_worktree_path}`. Do not delete the
+background session until `ship` reports that commits were pushed and the dev_log is `SHIPPED`. Agent
 View PR dots are UI hints only — `dev_log` + reconcile are the A2K truth. If a nested-session guard
 blocks direct `claude --bg`, the skill emits a `scripts/cowork/roadmap_bg_run_*.sh` fallback script
 to run from a normal shell.

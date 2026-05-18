@@ -439,6 +439,50 @@ it using one of four modes. `emit` remains the default and most portable path. `
 Claude Code path when the goal is "one window to manage a parallel wave". `serial` trades parallelism
 for a single transcript. `spawn` is retained only for hosts that support deep nested agent dispatch.
 
+**Mandatory dispatch confirmation gate.** Every `run` must pause after resolving the candidate
+dispatch mode and before emitting prompt blocks, marking rows `IN_PROGRESS`, launching background
+sessions, or dispatching workers. This happens even if the prompt explicitly contains `dispatch: bg`
+/ `serial` / `spawn`; if the prompt omits `dispatch`, the candidate is default `emit` and still
+needs confirmation. The confirmation is an AskUserQuestion-style multiple-choice prompt, shown in
+Chinese for this workflow, and must include all four options with detailed explanations:
+
+```text
+AskUserQuestion: Roadmap dispatch 模式确认
+
+我检测到本次 roadmap-loop run 的候选 dispatch 模式是: {resolved_mode}
+来源: <prompt 中显式提供 | 未提供 dispatch,使用默认 emit | agent-view alias 解析为 bg>
+
+继续前请确认。四种模式含义如下:
+
+1. dispatch: emit — 默认/最稳。只输出每个 eligible feature 的
+   <skill_prefix>feature-full-loop prompt block,不启动后台任务,不把 manifest row 标成
+   IN_PROGRESS。适合 wave 较小、需要人工逐窗口掌控、或当前机器还没验证 bg 能力。
+
+2. dispatch: bg — Claude Code 推荐并行路径。为每个 eligible feature 启动独立
+   claude --bg background session,用 Agent View 统一监控;默认并发 cap=3,超出的 row
+   标 QUEUED_BG。适合 wave >= 3 且已通过 worktree/baseRef/smoke-test preflight。
+   到 READY_TO_SHIP 后必须在对应 bg worktree 或 attach session 里 ship。
+
+3. dispatch: serial — 一个主会话串行执行。当前 session 逐个 feature 直接派发
+   feature-plan → feature-review → feature-auto-build → feature-verify,不 spawn
+   <skill_prefix>feature-full-loop 这种 meta-orchestrator。适合想要一个 transcript、能接受不并行、
+   或 bg 被 nested-session guard 拦截的情况。
+
+4. dispatch: spawn — legacy 高风险路径。让 roadmap-loop 嵌套 spawn feature-full-loop。
+   只有宿主明确支持 >=4 层 nested agent 时才可选;Claude Code 默认配置和 Codex max_depth=2
+   都不推荐,日常不要使用。
+
+请选择本次实际要使用的 dispatch 模式:
+- emit
+- bg
+- serial
+- spawn
+```
+
+The user's answer overrides the dispatch mode for this `run` only and must not be written back to
+the manifest. If the host cannot ask interactively, STOP before dispatch with a Next Step telling
+the user to re-run and confirm the mode explicitly.
+
 ```text
 # ── reconcile: correct the manifest against dev_log truth first ──
 # Reconcile only writes MONOTONIC ADVANCES and never regresses a human-edited row.
@@ -558,7 +602,7 @@ STOP after launching the wave. Output:
     queued rows marked QUEUED_BG, if any
     the Agent View command (for example `claude agents --cwd /path/to/repo`)
     Worktree: pending until first file edit; check with `git worktree list | grep SESSION_ID`
-    ship-from-worktree instructions for every READY_TO_SHIP row
+    bg-aware ship prompt blocks for every READY_TO_SHIP row
     warning: Agent View PR dots are not A2K truth; dev_log Status Panel + reconcile are truth
     fallback emit blocks for any launch failure
     Next Step: monitor Agent View; after READY_TO_SHIP rows are shipped, re-run roadmap-loop
@@ -568,23 +612,22 @@ STOP after launching the wave. Output:
 SDK/script path and user-invoked skills are interactive-only there. If background sessions are not
 available, degrade to `emit` and print the exact shell commands a Claude Code user can run later.
 
-**Ship-from-worktree requirement.** For bg-dispatched features, do not run `ship` from the original
-checkout unless the background session actually committed there. The summary must tell the user to:
+**Bg-aware ship handoff.** For bg-dispatched features, do not ask the user to manually run the full
+worktree lookup/check sequence. The human gate is the explicit `ship` invocation; once the user
+starts `ship`, the `ship` agent owns worktree lookup, branch/status/log verification, push, and
+SHIPPED state write. The summary must emit a copy-pasteable block per READY_TO_SHIP row:
 
 ```text
-1. Locate the session worktree:
-   git worktree list | grep SESSION_ID
-2. Enter that worktree and verify:
-   cd WORKTREE_PATH
-   git status --short
-   git log --oneline -5
-   git rev-parse --abbrev-ref HEAD
-3. Ship from that context, preferably by attaching:
-   claude attach SESSION_ID
-   Start the ship agent for <slug>.
-4. Push/merge before cleanup. Do not `claude rm SESSION_ID` until commits are safely pushed;
-   removing the background session can remove the worktree.
+Start the ship agent for <slug>.
+Background Session: {session_id_or_name}
+Roadmap Manifest: <roadmap_manifest_dir>/<roadmap_name>.md
 ```
+
+If the session id/name is missing or ambiguous, include `Worktree: {absolute_worktree_path}` when it
+is known, or tell the user to run `git worktree list | grep {slug_or_session}` and re-run `ship` with
+that `Worktree:` line. Do not tell the user to `claude rm SESSION_ID` until after `ship` reports that
+commits were pushed and the dev_log was marked `SHIPPED`; removing the background session can remove
+the worktree.
 
 Agent View is a monitor, not the A2K source of truth. Its "Ready for review" / PR indicators only
 reflect Claude Code PR state when a PR exists. A2K shippability is determined by
@@ -923,6 +966,17 @@ When you come back, ship the `READY_TO_SHIP` queue one by one:
 Start the ship agent for <slug>.
 ```
 
+For `dispatch: bg`, prefer the bg-aware form printed by the roadmap-loop summary:
+
+```text
+Start the ship agent for <slug>.
+Background Session: {session_id_or_name}
+Roadmap Manifest: <roadmap_manifest_dir>/<roadmap_name>.md
+```
+
+The `ship` agent then performs the worktree lookup and git checks itself. If it cannot uniquely
+resolve the session worktree, re-run it with `Worktree: {absolute_worktree_path}`.
+
 `ship` still waits for your `git push` confirmation per the V2 constraint — that human gate is not
 skipped. The few features of one wave can be shipped back to back in the same session.
 
@@ -1010,10 +1064,15 @@ walk away, come back and batch-ship" — the manifest remembers progress, so you
 ````markdown
 ---
 name: <skill_prefix>roadmap-loop
-description: Roadmap orchestration layer (Layer 3.5). Parses a reviewed roadmap source doc into a manifest (init mode), then dispatches or emits <skill_prefix>feature-full-loop work wave by wave to push every eligible feature to READY_TO_SHIP (run mode). Triggers: roadmap loop, roadmap orchestration, batch-run features, auto-develop a roadmap, advance a roadmap, roadmap manifest.
+description: Roadmap orchestration layer (Layer 3.5). Parses a reviewed roadmap source doc into a manifest (init mode), then confirms dispatch mode and dispatches or emits <skill_prefix>feature-full-loop work wave by wave to push every eligible feature to READY_TO_SHIP (run mode). Triggers: roadmap loop, roadmap orchestration, batch-run features, auto-develop a roadmap, advance a roadmap, roadmap manifest.
 ---
 
 # <skill_prefix>roadmap-loop
+
+## Read First
+
+- `docs/workflow/_portable/06-roadmap-orchestration.md` (the spec)
+- `<project_workflow_doc>`
 
 Layer 3.5 roadmap orchestration skill. Full spec: `docs/workflow/_portable/06-roadmap-orchestration.md`
 (and the project's concrete roadmap-orchestration doc).
@@ -1064,6 +1123,14 @@ Layer 3.5 roadmap orchestration skill. Full spec: `docs/workflow/_portable/06-ro
     `worktree.baseRef=head` / inline-content visibility gate, respect `Wave Concurrency Cap` (default
     `3`), queue overflow rows with `QUEUED_BG`, and make ship instructions point to the background
     session worktree. Agent View PR dots are never the A2K truth source.
+15. **Dispatch confirmation is mandatory, in Chinese, on every `run`.** After resolving the candidate
+    dispatch mode but before emitting prompt blocks, marking rows `IN_PROGRESS`, launching bg
+    sessions, or dispatching any worker, present a Chinese AskUserQuestion-style confirmation that
+    lists all four modes with detailed explanations. This gate fires whether the user supplied
+    `dispatch:` in the prompt or omitted it and got the default `emit`. The answer overrides the
+    session-local dispatch choice only; never write it back to the manifest unless the human edits
+    the manifest separately. If the host cannot ask interactively, STOP with a Next Step that asks
+    the user to re-run and confirm the dispatch mode explicitly.
 
 ## 1. Mode detection
 
@@ -1242,6 +1309,49 @@ Use `bg` as the recommended one-window parallel Claude Code path when `claude ag
 back to bg-script. If background sessions are unavailable altogether, degrade to `emit` and output
 the exact commands the user can run later; do not silently fall back to `spawn`.
 
+Before continuing to any dispatch branch, show this mandatory Chinese confirmation. No prompt block
+may be emitted and no manifest row may be marked `IN_PROGRESS` before the answer is received:
+
+```text
+AskUserQuestion: Roadmap dispatch 模式确认
+
+我检测到本次 roadmap-loop run 的候选 dispatch 模式是: {resolved_mode}
+来源: <prompt 中显式提供 | 未提供 dispatch,使用默认 emit | agent-view alias 解析为 bg>
+
+继续前请确认。四种模式含义如下:
+
+1. dispatch: emit — 默认/最稳。只输出每个 eligible feature 的
+   <skill_prefix>feature-full-loop prompt block,不启动后台任务,不把 manifest row 标成 IN_PROGRESS。
+   适合 wave 较小、需要人工逐窗口掌控、或当前机器还没验证 bg 能力。
+
+2. dispatch: bg — Claude Code 推荐并行路径。为每个 eligible feature 启动独立
+   claude --bg background session,用 Agent View 统一监控;默认并发 cap=3,超出的 row
+   标 QUEUED_BG。适合 wave >= 3 且已通过 worktree/baseRef/smoke-test preflight。
+   到 READY_TO_SHIP 后必须在对应 bg worktree 或 attach session 里 ship。
+
+3. dispatch: serial — 一个主会话串行执行。当前 session 逐个 feature 直接派发
+   feature-plan → feature-review → feature-auto-build → feature-verify,不 spawn
+   <skill_prefix>feature-full-loop 这种 meta-orchestrator。适合想要一个 transcript、能接受不并行、
+   或 bg 被 nested-session guard 拦截的情况。
+
+4. dispatch: spawn — legacy 高风险路径。让 roadmap-loop 嵌套 spawn feature-full-loop。
+   只有宿主明确支持 >=4 层 nested agent 时才可选;Claude Code 默认配置和 Codex max_depth=2
+   都不推荐,日常不要使用。
+
+请选择本次实际要使用的 dispatch 模式:
+- emit
+- bg
+- serial
+- spawn
+```
+
+If the user chooses a different mode than `{resolved_mode}`, use the user's answer for this run and
+record a session-local line:
+
+```text
+Confirmed dispatch mode: {chosen_mode} (candidate: {resolved_mode}, source: {source})
+```
+
 ### 3.3 main loop (emit-dispatch — default)
 
 After §3.1 reconcile + §3.1.5 Mode preflight:
@@ -1370,7 +1480,7 @@ After launching the wave, STOP. Output:
 - queued rows marked `QUEUED_BG`, if any
 - `claude agents --cwd /path/to/repo`
 - `Worktree: pending until first file edit`; check with `git worktree list | grep SESSION_ID`
-- ship-from-worktree instructions for every READY_TO_SHIP row
+- bg-aware ship prompt blocks for every READY_TO_SHIP row
 - warning: Agent View PR dots are not A2K truth; `dev_log` Status Panel + reconcile are truth
 - the fallback emit blocks for any row that failed to launch
 - Next Step: monitor Agent View; after rows reach READY_TO_SHIP and are shipped, re-run
@@ -1379,23 +1489,22 @@ After launching the wave, STOP. Output:
 Never use `claude -p` for this mode. Headless mode is a separate SDK/script path and user-invoked
 skills are interactive-only there.
 
-**Ship-from-worktree requirement.** For bg-dispatched features, do not run `ship` from the original
-checkout unless the background session actually committed there. The summary must tell the user to:
+**Bg-aware ship handoff.** For bg-dispatched features, do not ask the user to manually run the full
+worktree lookup/check sequence. The human gate is the explicit `ship` invocation; once the user
+starts `ship`, the `ship` agent owns worktree lookup, branch/status/log verification, push, and
+SHIPPED state write. The summary must emit a copy-pasteable block per READY_TO_SHIP row:
 
 ```text
-1. Locate the session worktree:
-   git worktree list | grep SESSION_ID
-2. Enter that worktree and verify:
-   cd WORKTREE_PATH
-   git status --short
-   git log --oneline -5
-   git rev-parse --abbrev-ref HEAD
-3. Ship from that context, preferably by attaching:
-   claude attach SESSION_ID
-   Start the ship agent for <slug>.
-4. Push/merge before cleanup. Do not `claude rm SESSION_ID` until commits are safely pushed;
-   removing the background session can remove the worktree.
+Start the ship agent for <slug>.
+Background Session: {session_id_or_name}
+Roadmap Manifest: <roadmap_manifest_dir>/<roadmap_name>.md
 ```
+
+If the session id/name is missing or ambiguous, include `Worktree: {absolute_worktree_path}` when it
+is known, or tell the user to run `git worktree list | grep {slug_or_session}` and re-run `ship` with
+that `Worktree:` line. Do not tell the user to `claude rm SESSION_ID` until after `ship` reports that
+commits were pushed and the dev_log was marked `SHIPPED`; removing the background session can remove
+the worktree.
 
 Agent View is a monitor, not the A2K source of truth. Its "Ready for review" / PR indicators only
 reflect Claude Code PR state when a PR exists. A2K shippability is determined by
