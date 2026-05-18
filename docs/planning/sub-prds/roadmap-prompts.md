@@ -23,6 +23,25 @@
 
 ---
 
+## 0.5 项目可用的 Claude skill(用于 init 预热)
+
+`.claude/skills/` 下已 register 的 8 个 skill,按对哪个子 roadmap 最有杠杆做映射:
+
+| Skill | 描述 | Sync | Console | Web |
+|---|---|:-:|:-:|:-:|
+| `codebase-explorer` | 在不熟的代码库里 orient + 出 module 图 + 总结约定 | ✅ | ✅ | ✅ |
+| `planning-with-files` | 持久化 task_plan.md(survive context reset 的 day-level 进度) | ✅ | ✅ | ✅ |
+| `superpowers` | plan-first / subagent 分解(和 roadmap-loop init 同理念) | ✅ | ✅ | ✅ |
+| `security-skills-claude-code` | STRIDE 威胁建模 + 攻击面枚举 + 依赖 CVE 检查 | ✅✅ | — | ✅ |
+| `frontend-dev` | Tailwind utility-first + Framer Motion + 语义组件组合 | — | ✅✅ | ✅✅ |
+| `composition-patterns` | compound / render-prop / slot 模式;避免 boolean prop 泛滥 | — | ✅✅ | ✅ |
+| `gh-fix-ci` | GitHub Actions / 部署管线 fail 时定位 | ✅ | ✅ | ✅✅ |
+| `skill-creator` | 写 / 编辑 / 测 SKILL.md(meta) | — | — | — |
+
+**使用模式**:每个子 roadmap 的 prompt 都有一节 §X.0 "init 之前的 skill 预热",列出该 roadmap 应该先跑哪几个 skill,产出报告;init 命令再把这些报告路径填进 `extra_context`,把 skill 名填进 `skills_during_decomposition`。
+
+---
+
 ## 1. 跑 3 个 roadmap 的总顺序
 
 ```
@@ -45,6 +64,37 @@ Sync init      → 人工 review manifest → Sync   run wave 0 → batch ship �
 
 ## 2. Sync — 跑 First(R-10 高风险,先把协议落地)
 
+### 2.0 init 之前的 skill 预热(强烈建议)
+
+Sync 是密码学协议层,**STRIDE 威胁建模 + 项目结构 orient** 必须先跑。按顺序在主会话敲:
+
+```text
+Skill: codebase-explorer
+焦点:packages/plugin-account/ + packages/core-data/ + apps/desktop/src-tauri/ 的当前状态;
+绘出未来 Sync 落地涉及的所有模块入口点 + 已有的事件命名约定。
+```
+
+```text
+Skill: security-skills-claude-code
+任务:对 docs/planning/sub-prds/sync/PRD.md 跑一次 STRIDE × Trust Boundary 分析,
+特别看 §2 已列的 9 个攻击者有没有 STRIDE 维度漏(尤其 Tampering / Repudiation / EoP)。
+另外:列 packages/plugin-account/ 已计划引入的依赖(argon2、aes-gcm、x25519、ed25519、
+hpke、sqlcipher、supabase-rs)各自的最近 CVE 状态。
+```
+
+```text
+Skill: planning-with-files
+任务:给 sync-v1 创建一份持久化 task_plan.md(放 docs/workflow/project/roadmap/sync-v1.tasks.md),
+roadmap manifest 是 wave/feature 视图,task_plan.md 是 day-level 进度视图,两者互补。
+```
+
+```text
+Skill: superpowers
+触发:对 Sync 协议这种"动手前必须先想清楚"的工作,先用 plan-first 分解。
+```
+
+三个 skill 跑完(尤其 STRIDE 报告)之后,把它们的产物贴进下方 init 命令的 `extra_context` 里。
+
 ### 2.1 init 命令(粘到 Claude Code 主会话)
 
 ```text
@@ -59,6 +109,12 @@ extra_context:
   - docs/SYSTEM_ARCHITECTURE.md
   - docs/PLUGIN_SDK.md
   - docs/adr/0002-dual-track-release.md
+  - <把 §2.0 codebase-explorer 产出的 orientation 报告路径填这里>
+  - <把 §2.0 security-skills-claude-code 产出的 STRIDE + CVE 报告路径填这里>
+skills_during_decomposition:
+  - security-skills-claude-code   # 拆 feature 时确保每条 FR 对应到威胁缓解
+  - planning-with-files           # 同步维护 sync-v1.tasks.md
+  - superpowers                   # plan-first 心智
 notes: |
   这是端到端加密同步层的全集 PRD,产物路径 packages/plugin-account/ + packages/core-data/(REST driver)。
   分两个 Phase:
@@ -68,7 +124,8 @@ notes: |
   PRD §11 已把 R-10 分解为 R-10.1~R-10.8 + 新增 R-12~R-18 共 14 项。
   请按密码学最佳实践拆 feature(密钥层级、AES-GCM nonce 管理、KEK/DEK 分离、HPKE per-device wrap、
   Ed25519 recovery、Realtime channel 安全、RLS、凭据轮换、恢复演练 等)。
-  每个 feature 都要在 seed brief 写清"密码学组件"与"威胁模型对应威胁 ID"。
+  每个 feature 都要在 seed brief 写清"密码学组件"+"威胁模型对应威胁 ID"+"STRIDE 维度"。
+  生成 wave 划分时,wave 0 必须只含纯算法/纯协议骨架(无 Realtime / Edge Function)。
 ```
 
 ### 2.2 manifest review 自查清单(init 停下后必看)
@@ -119,6 +176,39 @@ Start the ship agent for <slug>.
 
 ## 3. Console — 跑 Second(Sync 骨架到位后启动)
 
+### 3.0 init 之前的 skill 预热
+
+```text
+Skill: codebase-explorer
+焦点:packages/plugin-organizer/、packages/core/(已有 plugin 体系起点)的当前实现;
+绘出 ConsoleView slot 落地后,每个业务 plugin 需要新增 / 改造的文件清单。
+特别关注 packages/plugin-* 已有的 events 命名是否符合 PLUGIN_SDK.md §4 EventMap 规范。
+```
+
+```text
+Skill: frontend-dev
+任务:为 Console 三栏 + 各模块 ConsoleView 准备视觉 / 交互设计标准 ——
+Tailwind utility 选型、Framer Motion 过渡动画时长、空状态 / 错误状态的组件模板、
+紧凑 / 标准 / 宽松密度的 token 表。
+```
+
+```text
+Skill: composition-patterns
+任务:为 plugin-console 三栏外壳 + 各 plugin ConsoleView slot 设计组合方案;
+明确用 compound components(三栏整体) + slot pattern(ConsoleView 注入) + render prop
+(sidebar 自定义渲染)中的哪几个,避免 boolean prop proliferation。产出一份 RFC 短文。
+```
+
+```text
+Skill: planning-with-files
+任务:为 console-v1 创建 docs/workflow/project/roadmap/console-v1.tasks.md
+```
+
+```text
+Skill: superpowers
+触发:plan-first / subagent 分解
+```
+
 ### 3.1 init 命令
 
 ```text
@@ -134,6 +224,14 @@ extra_context:
   - docs/TECHNICAL_REQUIREMENTS.md
   - docs/adr/0003-three-faces-architecture.md
   - docs/planning/sub-prds/sync/PRD.md   # Console 需要消费 sync 的 account events
+  - <把 §3.0 codebase-explorer 产出的 orientation 报告路径填这里>
+  - <把 §3.0 composition-patterns 产出的三栏 RFC 路径填这里>
+  - <把 §3.0 frontend-dev 产出的视觉/交互 token 表路径填这里>
+skills_during_decomposition:
+  - composition-patterns          # 拆 feature 时区分"外壳级"vs"slot 注入级"
+  - frontend-dev                  # 每个 ConsoleView 的视觉/动效一致性
+  - planning-with-files
+  - superpowers
 notes: |
   这是 XAI_Desktop 整体控制台(独立三栏窗口)子产品的全集 PRD,Phase 2.5。
   产物路径 packages/plugin-console/(三栏外壳)+ 各业务 plugin 的 ConsoleView slot。
@@ -145,7 +243,8 @@ notes: |
     wave 1+:逐 plugin 实现 ConsoleView(productivity/labels/calendar/project/...)
     wave 末:全局 Cmd+K 搜索、通知中心、设置面板、键盘流总验收
   依赖 sync 子 roadmap 的 wave 0~1(账号登录 + Realtime 订阅基础)已 SHIPPED。
-  每个 feature 的 seed brief 要写清"承载的 ConsoleView 类型"和"键盘流契约"。
+  每个 feature 的 seed brief 要写清"承载的 ConsoleView 类型"、"键盘流契约"、
+  "用到的 composition pattern(compound/slot/render-prop 之一)"。
 ```
 
 ### 3.2 manifest review 自查清单
@@ -177,6 +276,53 @@ manifest: docs/workflow/project/roadmap/console-v1.md
 
 ## 4. Web — 跑 Third(Console + Sync 都完成后启动)
 
+### 4.0 init 之前的 skill 预热
+
+```text
+Skill: codebase-explorer
+焦点:apps/web/ 当前的 scaffold 状态、packages/core-data/ 的 REST driver 已落地情况、
+packages/plugin-console/ 哪些组件已可平台无关复用;给出 Web 启动时需要新增的目录骨架草图。
+```
+
+```text
+Skill: frontend-dev
+任务:为 Web 端响应式断点(桌面 / 平板 / 手机只读)+ PWA shell + Service Worker 提示
+产出视觉/交互模板。包含 Lighthouse Performance 优化清单(LCP / FID / CLS 目标对应的具体技术决策)。
+```
+
+```text
+Skill: composition-patterns
+任务:确认 ConsoleView slot 复用方案在浏览器壳下不变 —— 哪些组件必须做平台分支
+(如 macOS Cmd 键 vs Web Ctrl 键的键盘流),哪些可零改动复用。
+```
+
+```text
+Skill: security-skills-claude-code
+任务:对 docs/planning/sub-prds/web/PRD.md 跑一次 Web 视角的 STRIDE:
+- 浏览器端 KEK 内存驻留的 攻击面(XSS / Service Worker hijack / 跨标签)
+- Cookie / Session 治理(SameSite / Secure / HttpOnly / token 存储位置)
+- CSP / HSTS / Subresource Integrity 配置 baseline
+- Supabase Auth + Realtime 在 RLS 配错时的横向数据访问风险
+- Vercel / Cloudflare Pages 部署配置中的常见漏洞
+另:列 Web 用到的 npm 依赖(@supabase/supabase-js、workbox、idb、react-router 等)的 CVE 状态。
+```
+
+```text
+Skill: gh-fix-ci
+任务:为 Web 的 GitHub Actions + Vercel/Cloudflare 部署 workflow 草拟一份"出问题怎么排"的 SOP,
+将作为 Phase 4.5 末"部署管线 + 回滚演练"feature 的 onboarding。
+```
+
+```text
+Skill: planning-with-files
+任务:为 web-v1 创建 docs/workflow/project/roadmap/web-v1.tasks.md
+```
+
+```text
+Skill: superpowers
+触发:plan-first / subagent 分解
+```
+
 ### 4.1 init 命令
 
 ```text
@@ -192,6 +338,18 @@ extra_context:
   - docs/PLUGIN_SDK.md
   - docs/adr/0003-three-faces-architecture.md
   - docs/TECHNICAL_REQUIREMENTS.md
+  - <把 §4.0 codebase-explorer 产出的目录骨架草图路径填这里>
+  - <把 §4.0 frontend-dev 产出的响应式 + Lighthouse 优化清单路径填这里>
+  - <把 §4.0 composition-patterns 产出的"哪些组件需平台分支"清单路径填这里>
+  - <把 §4.0 security-skills-claude-code 产出的 Web STRIDE + CVE 报告路径填这里>
+  - <把 §4.0 gh-fix-ci 产出的部署排障 SOP 路径填这里>
+skills_during_decomposition:
+  - frontend-dev                  # 每个 WebView 的响应式 / 性能预算一致性
+  - composition-patterns          # ConsoleView vs WebView 的复用边界
+  - security-skills-claude-code   # 浏览器特有威胁建模
+  - gh-fix-ci                     # 部署管线 features 的 CI 排障
+  - planning-with-files
+  - superpowers
 notes: |
   这是 XAI_Desktop 网页版子产品的全集 PRD,Phase 4.5。
   产物路径 apps/web/(Vite SPA 入口)+ packages/core-data/ 的 REST driver(已在 sync-v1 完成)
@@ -204,7 +362,8 @@ notes: |
     wave 3:响应式断点、PWA、Web Vitals 验收、CSP 加固
     wave 末:部署管线、staging、回滚演练、GDPR、监控
   依赖:console-v1 ALL_SHIPPED + sync-v1 ALL_SHIPPED(包括 fuzz 24h + 恢复演练)。
-  每个 feature 的 seed brief 要写清"用到的浏览器 API"+"兼容性矩阵特殊处理"。
+  每个 feature 的 seed brief 要写清"用到的浏览器 API"、"兼容性矩阵特殊处理"、
+  "Lighthouse / Web Vitals 影响维度"、"对应 STRIDE 维度"。
 ```
 
 ### 4.2 manifest review 自查清单
