@@ -93,7 +93,7 @@ and you pick per task:
 |-------|----------|-------------------------|-------------|---------|
 | **1 — Manual subagent workflow** | one command per step (or per build granularity) | you, step by step, reading `dev_log` between steps | you want full control / are learning the workflow / the meta-orchestrators are not landed yet / something went sideways and you are recovering by hand | §4 |
 | **2 — Single-feature meta-orchestrator** | one command, total | `feature-full-loop` / `bugfix-full-loop` run the 5 phases, stop before `ship` | a normal feature or bugfix you want done hands-off | §5 |
-| **3 — Roadmap orchestration skill** | one `init` + one `run` per wave | the `<skill_prefix>roadmap-loop` skill drives a whole roadmap of N features, wave by wave | you have a reviewed roadmap (or a PRD) of many features | §6 |
+| **3 — Roadmap orchestration skill** | one `init` + one `run` per wave | the `<skill_prefix>roadmap-loop` skill emits one paste-ready prompt block per eligible feature; you open each in its own session — the skill tracks, you dispatch | you have a reviewed roadmap (or a PRD) of many features | §6 |
 
 Level 2 is Level 1 with the dispatching automated. Level 3 is Level 2 called repeatedly. The **state
 contracts** underneath — the `dev_log.md` Status Panel, the §2.6 write-authority matrix, the human
@@ -108,8 +108,8 @@ the same Universal Next Step Contract. Learn §4 once and §5 / §6 are mostly "
 
 ```mermaid
 flowchart TB
-  subgraph L35 [Layer 3.5 · Roadmap Orchestration · drives a whole roadmap of N features]
-    RL[roadmap-loop skill<br/>manifest + waves → repeatedly calls Layer 3]
+  subgraph L35 [Layer 3.5 · Roadmap Orchestration · tracks a whole roadmap of N features]
+    RL[roadmap-loop skill<br/>manifest + waves → emits one prompt block per eligible feature]
   end
   subgraph L3 [Layer 3 · Meta-Orchestrator · one input → 5 phases]
     FL[feature-full-loop · bugfix-full-loop<br/>auto-runs the pipeline → stops before ship]
@@ -129,7 +129,7 @@ flowchart TB
     PR[feature-phase-review]
     SK[the Step 0 skill]
   end
-  L35 -.spawn.-> L3
+  L35 -.emit (default) / spawn (opt-in).-> L3
   L3 -.spawn.-> L1
   L3 -.spawn.-> L2
   L2 -.spawn.-> L1
@@ -147,8 +147,11 @@ flowchart TB
 **ASCII fallback:**
 
 ```text
-Layer 3.5  roadmap-loop skill            drive a whole roadmap of N features      ── §6
-              │ spawn (one per feature)
+Layer 3.5  roadmap-loop skill            track a whole roadmap of N features      ── §6
+              │ emit (default — one prompt block per eligible feature; user opens
+              │        each in a fresh session and is the real dispatcher)
+              │ spawn (opt-in via `dispatch: spawn`; requires ≥ 4-level
+              │        nesting capacity — see `06` §3.2-opt-in)
 Layer 3    feature-full-loop /           one input → 5 phases → stop before ship  ── §5
            bugfix-full-loop
               │ spawn
@@ -502,9 +505,13 @@ hand-dispatch `feature-full-loop` N times. Use the `<skill_prefix>roadmap-loop` 
   writes a seed brief per feature, and — when a boundary or dependency is genuinely ambiguous —
   **asks you a focused multiple-choice question** rather than guessing. Either way it produces a
   manifest file and **stops for your review**.
-- **`run`** — per dependency wave: type it once and walk away. The skill drives a `feature-full-loop`
-  for every feature whose dependencies are satisfied, each in its own context, then stops with a
-  `READY_TO_SHIP` queue. You batch-`ship` that queue, then `run` again for the next wave.
+- **`run`** — per dependency wave (default: emit-dispatch): type it once; the skill reconciles
+  manifest state from each feature's `dev_log`, then **emits one paste-ready prompt block per
+  eligible feature** and stops. You open each block in its own session — *you* are the real
+  dispatcher; the skill is the tracker. After any feature(s) hit `READY_TO_SHIP` and you `ship`
+  them, re-run `run` to reconcile the new state and emit the next wave. (Opt-in `dispatch: spawn`
+  reverts to the legacy "skill drives `feature-full-loop` itself" behaviour — requires ≥ 4-level
+  nesting capacity in the host tool; see `06` §3.2-opt-in.)
 
 ### 6.2 The three actions
 
@@ -532,7 +539,8 @@ Loop: `init → (run → batch ship) × W → wrap-up`.
 The manifest schema, the skill logic, the failure model, a worked example, and the troubleshooting
 table are all in **`06-roadmap-orchestration.md`** — Part A is the spec, Part B is the hands-on
 tutorial, the appendix is the `SKILL.md` draft. Level 3 changes nothing about Levels 1-2: each
-feature still runs the exact same 5-phase pipeline inside its spawned `feature-full-loop`.
+feature still runs the exact same 5-phase pipeline inside its own `feature-full-loop` invocation
+(emitted to a fresh session by default; spawn-as-subagent only on the opt-in path).
 
 ---
 
