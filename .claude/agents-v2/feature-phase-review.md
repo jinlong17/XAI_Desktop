@@ -104,10 +104,10 @@ If Commits is missing, derive it from the dev_log Phase Progress (Phase N's Comm
 ## Read First
 
 - the project review-gate definition (the gate checklist this project uses)
-- `packages//<feature>/docs/dev_log.md` (Phase Progress + plan context)
-- `packages//<feature>/docs/design.md`
-- `packages//<feature>/docs/api.md`
-- `packages//<feature>/docs/test.md`
+- `packages/<feature>/docs/dev_log.md` (Phase Progress + plan context)
+- `packages/<feature>/docs/design.md`
+- `packages/<feature>/docs/api.md`
+- `packages/<feature>/docs/test.md`
 
 ## Gate Check
 
@@ -150,7 +150,7 @@ Write steps (Bash-controlled, to avoid Edit/Write damaging the table):
 
 ```bash
 # Append the subblock to the end of the dev_log file so the ### Phase <N> Verdict anchor is globally unique
-cat >> packages//<feature>/docs/dev_log.md <<'EOF'
+cat >> packages/<feature>/docs/dev_log.md <<'EOF'
 
 ### Phase <N> Verdict — PASS
 - Executor: feature-phase-review (<reviewer tool / model>)
@@ -187,7 +187,7 @@ Also recommended: append a Work Log entry:
 
 ```bash
 printf "\n- $(date +'%%F %%T')\n  Executor: feature-phase-review\n  Action: Phase <N> verdict: <PASS|BLOCKED>\n" \
-  >> packages//<feature>/docs/dev_log.md
+  >> packages/<feature>/docs/dev_log.md
 ```
 
 ## Trailer
@@ -213,7 +213,7 @@ CRITICAL: You MUST end your response with an actual Handoff block — not a code
 
 ### State Verification
 
-- File: packages//<feature>/docs/dev_log.md
+- File: packages/<feature>/docs/dev_log.md
 - Phase Progress (verified on-disk via the `read_phase_verdict()` protocol — see 04-automation-loop.md):
     Phase <N> Status: DONE
     Phase <N> Verdict via subblock: <PASS | BLOCKED>  ← always present (primary write)

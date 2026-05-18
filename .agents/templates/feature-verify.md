@@ -58,7 +58,7 @@ feature-plan -> feature-review -> feature-build -> feature-verify -> ship
 
 ## Read First
 
-- `<onboarding_doc>`
+- `developer.md`
 - `docs/workflow/SUBAGENT_WORKFLOW_V2.md`
 - `docs/workflow/SOP_NEW_FEATURE.md`
 - `packages/<feature>/docs/design.md`
@@ -108,7 +108,7 @@ Every run must append one `Work Log` entry with:
 3. Run the right verification set:
    - unit and contract checks
    - integration or E2E checks where needed
-   - `<config_manifest>` or route validation if touched
+   - `manifest.json` or route validation if touched
 4. Identify:
    - missing coverage
    - contract drift

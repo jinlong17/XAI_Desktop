@@ -117,7 +117,7 @@ Tooling notes:
 
 ## Read First
 
-- `<onboarding_doc>`
+- `developer.md`
 - `docs/workflow/SUBAGENT_WORKFLOW_V2.md`
 - `docs/workflow/SOP_NEW_FEATURE.md`
 - `docs/conventions/COMMIT_CONVENTION.md`
@@ -174,7 +174,7 @@ One run of `feature-auto-build` may complete multiple phases, but each phase mus
    - re-read `dev_log.md` before starting the phase
    - implement only that phase's intended scope
    - run the tests required for that phase
-   - self-check architecture boundaries, contract alignment, `<config_manifest>` impact, and documentation drift
+   - self-check architecture boundaries, contract alignment, `manifest.json` impact, and documentation drift
    - commit the completed phase following `docs/conventions/COMMIT_CONVENTION.md`
    - record the commit hash(es) under that phase in `dev_log.md`
    - update `design.md`, `api.md`, `test.md`, and `docs/PLUGIN_MAP.md` only when implementation facts require it

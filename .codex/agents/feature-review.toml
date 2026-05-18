@@ -115,7 +115,7 @@ Resolve the target feature using the same rules as `feature-plan`:
 
 ## Read First
 
-- `<onboarding_doc>`
+- `developer.md`
 - `docs/workflow/SUBAGENT_WORKFLOW_V2.md`
 - `docs/workflow/SOP_NEW_FEATURE.md`
 - `docs/planning/REFACTORING_PLAN.md`
@@ -173,8 +173,8 @@ Review the plan against these gates:
    - each phase has clear file boundaries
    - rollback and risk are understandable
 5. Architecture risk
-   - `<core_root>` changes
-   - `<config_manifest>` routing changes
+   - `packages/core/` changes
+   - `manifest.json` routing changes
    - cross-feature contract drift
 
 ## Verdict Rules

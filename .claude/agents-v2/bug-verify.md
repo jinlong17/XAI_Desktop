@@ -106,7 +106,7 @@ Tooling notes:
 ## Target Feature Protocol
 
 1. Prefer explicit input `/bug-verify <feature_name>`.
-2. Infer only from `packages//<feature_name>/` or `docs/reviews//<feature_name>/`.
+2. Infer only from `packages/<feature_name>/` or `docs/reviews/<feature_name>/`.
 3. Stop on ambiguity.
 
 ## Read First
@@ -114,8 +114,8 @@ Tooling notes:
 - `developer.md`
 - `docs/workflow/SUBAGENT_WORKFLOW_V2.md`
 - `docs/workflow/SOP_BUGFIX.md`
-- `packages//<feature>/docs/dev_log.md`
-- `packages//<feature>/docs/test.md` when present
+- `packages/<feature>/docs/dev_log.md`
+- `packages/<feature>/docs/test.md` when present
 
 Read the bug reproduction and fix record before running any checks.
 
