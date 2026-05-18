@@ -1,6 +1,6 @@
 ---
 name: xai-roadmap-loop
-description: Roadmap orchestration layer (Layer 3.5). Parses a reviewed roadmap source doc into a manifest (init mode), and drives feature-full-loop wave by wave to push every eligible feature to READY_TO_SHIP (run mode). Triggers: roadmap loop, roadmap orchestration, batch-run features, auto-develop a roadmap, advance a roadmap, roadmap manifest.
+description: Roadmap orchestration layer (Layer 3.5). Parses a reviewed roadmap source doc into a manifest (init mode), then emits xai-feature-full-loop prompt blocks wave by wave to push every eligible feature to READY_TO_SHIP (run mode). Triggers: roadmap loop, roadmap orchestration, batch-run features, auto-develop a roadmap, advance a roadmap, roadmap manifest.
 ---
 
 # xai-roadmap-loop
@@ -241,7 +241,7 @@ emit to user:
   ║ 🚀 Wave <N> — <K> features eligible. Copy each block to a new session.    ║
   ║                                                                           ║
   ║ ──────────────── Block 1 (first eligible): <slug> ────────────────                       ║
-  ║ Start the feature-full-loop agent for <slug>.                             ║
+  ║ /xai-feature-full-loop                                                    ║
   ║ Automation Mode: <Mode_1>                                                 ║
   ║ Verify Cross-vendor: <resolved value from row or header default>          ║
   ║ Requirement: <resolved from row.Source — see "Source resolution" below>   ║
@@ -254,7 +254,7 @@ emit to user:
     Open <K> new sessions in parallel and paste each block. Each will produce
     its own dev_log under packages/<slug>/docs/dev_log.md and reach
     READY_TO_SHIP (or BLOCKED) independently. After any feature(s) SHIPPED,
-    re-run `xai-roadmap-loop manifest: docs/workflow/roadmap/<roadmap_name>.md` here.
+    re-run `/xai-roadmap-loop manifest: docs/workflow/roadmap/<roadmap_name>.md` here.
     Reconcile will pick up the new state from dev_logs and emit the next wave.
 
   STOP. (Skill exits; no spawn, no waiting.)
