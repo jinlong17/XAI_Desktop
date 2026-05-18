@@ -2,13 +2,13 @@
 
 > **Portable layer.** Project-agnostic. Defines **Layer 3.5** — the layer that drives a whole
 > already-reviewed roadmap of N independent features to a shippable state, hands-off, by repeatedly
-> invoking the `feature-full-loop` meta-orchestrator wave by wave.
+> emitting `<skill_prefix>feature-full-loop` parent-session recipe blocks wave by wave.
 > Source: extracted from the project's `ROADMAP_ORCHESTRATION_SPEC.md` (the paradigm parts — its
 > §1-10, §12, and the SKILL.md draft in its appendix B). Project-specific material — the concrete
 > roadmap instance, the real manifest directory, the real skill name, the landing checklist — lives
 > in the project layer (`../project/`).
-> Companion: `04-automation-loop.md` (Layer 3 — the single-feature meta-orchestrator this layer
-> calls), `02-handoff-and-state.md` (the state contracts this layer must not violate),
+> Companion: `04-automation-loop.md` (Layer 3 — the single-feature automation contract this layer
+> invokes through the parent-session recipe), `02-handoff-and-state.md` (the state contracts this layer must not violate),
 > `usage-guide.md` (the hands-on tutorial). Placeholders: `00-PORTABLE-MANIFEST.md`.
 
 ---
@@ -30,11 +30,12 @@ single-feature automation layer (`04`):
 
 **The roadmap orchestration layer** — given a roadmap-level input (either an already-decomposed
 roadmap doc, **or** a raw PRD / multi-subsystem plan the skill decomposes into features itself),
-produce a structured manifest of N independent feature pipelines, then automatically drive each of
-them, in correct dependency order, to a "ready to ship" state, hands-off in between.
+produce a structured manifest of N independent feature pipelines, then emit the independent
+parent-session feature runs needed to drive each of them, in correct dependency order, to a "ready
+to ship" state.
 
-The question it answers is **not** "how do I auto-develop one feature" — that is `feature-full-loop`'s
-job (`04`). It is:
+The question it answers is **not** "how do I auto-develop one feature" — that is
+`<skill_prefix>feature-full-loop`'s job (`04`). It is:
 
 - a roadmap (or a PRD) implies N features — who carves them out, and who drives them in the right
   order?
@@ -44,7 +45,7 @@ job (`04`). It is:
 
 One-sentence definition:
 
-> **`feature-full-loop` strings together the 5 phases of one feature; this layer strings together
+> **`<skill_prefix>feature-full-loop` strings together the 5 phases of one feature; this layer strings together
 > the N features of one roadmap.**
 
 ## A2. Where it sits — the three-and-a-half-layer structure
@@ -52,7 +53,7 @@ One-sentence definition:
 The existing automation stack has three layers (see `04` §1.1):
 
 ```text
-Layer 3   feature-full-loop / bugfix-full-loop   ← single-feature meta-orchestrator
+Layer 3   <skill_prefix>feature-full-loop         ← single-feature parent-session recipe
 Layer 2   feature-dev-loop / bugfix-loop          ← build+verify sub-loop
 Layer 1   12 + 3 worker subagents                 ← plan / review / build / verify / ship ...
 ```
@@ -61,12 +62,12 @@ This document adds **Layer 3.5**:
 
 ```text
 Layer 3.5  the roadmap orchestration layer (this doc)   ← multi-feature scheduling
-   │ spawn (one independent context per feature)
+   │ emit (one independent context per feature)
    ▼
-Layer 3    feature-full-loop                            ← the worker of this layer
+Layer 3    <skill_prefix>feature-full-loop               ← the worker of this layer
 ```
 
-It does **not** replace Layer 3 — it **repeatedly calls** it. One `feature-full-loop` run is one
+It does **not** replace Layer 3 — it **repeatedly calls** it. One `<skill_prefix>feature-full-loop` run is one
 work unit of this layer.
 
 ## A3. Design principles
@@ -82,11 +83,11 @@ directly from `04` §2.3 ("cross-tool relay goes through documents, not conversa
    feeling of a hands-off loop comes from *the loop itself never stopping* — **not** from one huge
    context. The driving logic must stay thin.
 
-3. **Each feature runs in its own independent context.** The driver uses the spawn mechanism to send
-   each `feature-full-loop` off into an independent context, where it runs the whole pipeline and
-   returns only a short Handoff summary. The driver's own context accumulates just N summaries — a
-   tiny amount. **This is why the driver can loop through every feature in one session without
-   blowing out context.**
+3. **Each feature runs in its own independent context.** The driver must not inline several feature
+   pipelines into its own context. In the default implementation it emits one paste-ready
+   `<skill_prefix>feature-full-loop` block per eligible feature; the user opens each block in a
+   separate session/window. Spawn-dispatch is an opt-in implementation only for hosts with enough
+   nesting capacity.
 
 4. **Skip-tolerant.** If one feature is BLOCKED (plan did not converge in N rounds, an external
    dependency has not arrived, build failed), the driver does not stop — it marks that feature in the
@@ -106,7 +107,7 @@ The hands-off boundary is determined entirely by the `ship` constraint in the pr
 The `ship` constraint is **two layers**, not one sentence:
 
 - **Layer 1: `ship` is never auto-triggered by an orchestrator.** Any orchestrator — `feature-dev-loop`,
-  `feature-full-loop`, or this layer — finishes at most at `READY_TO_SHIP`; it **never spawns `ship`
+  `<skill_prefix>feature-full-loop`, or this layer — finishes at most at `READY_TO_SHIP`; it **never spawns `ship`
   itself.**
 - **Layer 2: even when a human starts `ship`, there is still a "wait for human confirmation" step
   before its internal `git push`.**
@@ -180,8 +181,8 @@ parallel sessions and runs each block.
 Why: the natural chain caller → roadmap-loop-driver → `feature-full-loop` → `feature-plan` is 3
 levels of nesting and hits the spawn-depth cap on most tool platforms (Claude Code's default
 subagent depth limit; Codex's `max_depth=2`). Emit-dispatch sidesteps this by making the user the
-dispatcher — every `feature-full-loop` runs from the user's main session (only 2 levels deep:
-main → `feature-full-loop` → worker), which all platforms support.
+dispatcher — every `<skill_prefix>feature-full-loop` runs in the user's parent session and directly
+dispatches the worker subagents from there.
 
 The skill is therefore a **tracker + planner + emitter**, not an executor: it parses the source
 doc, writes/reads the manifest, reconciles from dev_log truth, computes the eligibility frontier,
@@ -254,8 +255,8 @@ seed-brief path (`<roadmap_seed_brief>`) when `Init Path: decompose` — see A6.
 | `Depends On` | upstream feature slugs | comma-separated; `—` = no dependency |
 | `Dep Semantics` | dependency-satisfaction semantics | `shipped` (default) / `ready_to_ship`; see A4.5 |
 | `Status` | current status | see A6.4 |
-| `Automation Mode` | the variant passed to `feature-full-loop` — one of the 8 named variants (`A-Claude` / `B-Codex` / `B-Cursor` / `C-Codex` / `C-Cursor` / `D-Codex` / `D-Cursor` / `D-Codex+Cursor`, see `04` §3). Acquisition: see `_portable/07-automation-mode-picker.md` §5 (init per-row picker) and Appendix SKILL.md §3.1.5 (run preflight). Layer 3.5 never spawns `feature-full-loop` with `(default)` — preflight always resolves to a concrete variant first. | `(default)` falls back to the header Default |
-| `Verify Cross-vendor` | per-row opt-out for the cross-vendor verify gate (`<project_workflow_doc>` §16.3 #5 / #7). `(default)` inherits header `Default Verify Cross-vendor`. Set to `no` only when the feature is low-risk and you accept the echo-chamber trade-off — `feature-full-loop` will then be allowed to use `feature-dev-loop` (build + verify same lineage). When `yes`, the orchestrator must use `feature-auto-build` + a separate cross-vendor `feature-verify`. `feature-full-loop` reads this and passes it through; `feature-plan` writes the resolved value into the dev_log Status Panel `Verify Cross-vendor:` field for audit. | `(default)` falls back to the header Default; explicit `yes` / `no` overrides |
+| `Automation Mode` | the variant passed to `<skill_prefix>feature-full-loop` — one of the 8 named variants (`A-Claude` / `B-Codex` / `B-Cursor` / `C-Codex` / `C-Cursor` / `D-Codex` / `D-Cursor` / `D-Codex+Cursor`, see `04` §3). Acquisition: see `_portable/07-automation-mode-picker.md` §5 (init per-row picker) and Appendix SKILL.md §3.1.5 (run preflight). Layer 3.5 never emits a block with `(default)` — preflight always resolves to a concrete variant first. | `(default)` falls back to the header Default |
+| `Verify Cross-vendor` | per-row opt-out for the cross-vendor verify gate (`<project_workflow_doc>` §16.3 #5 / #7). `(default)` inherits header `Default Verify Cross-vendor`. Set to `no` only when the feature is low-risk and you accept the echo-chamber trade-off — `<skill_prefix>feature-full-loop` will then be allowed to use `feature-dev-loop` (build + verify same lineage) on hosts where that loop can spawn. When `yes`, the recipe must use `feature-auto-build` + a separate cross-vendor `feature-verify`. `<skill_prefix>feature-full-loop` reads this and passes it through; `feature-plan` writes the resolved value into the dev_log Status Panel `Verify Cross-vendor:` field for audit. | `(default)` falls back to the header Default; explicit `yes` / `no` overrides |
 | `Last Run` | timestamp this row was last driven | written by the skill |
 | `Note` | human-readable note | risk level, external dependency, special pacing, etc. |
 
@@ -270,14 +271,16 @@ PENDING ──► IN_PROGRESS ──► READY_TO_SHIP ──►(human ship)─�
 
 - `PENDING` — not started. A row whose dependency is `BLOCKED` / `BLOCKED_EXTERNAL` also stays
   `PENDING` — it is simply *ineligible* this wave (see A7.3); `BLOCKED` never propagates downstream.
-- `IN_PROGRESS` — driver has spawned `feature-full-loop`, not yet returned. If a `run` crashes while
-  a row is here, the next `run`'s reconcile detects the stale `IN_PROGRESS` and resets it (A7.3).
-- `READY_TO_SHIP` — `feature-full-loop` finished, `dev_log` Status = `READY_TO_SHIP`. **Waiting for
+- `IN_PROGRESS` — legacy spawn-dispatch has spawned `feature-full-loop`, not yet returned. Default
+  emit-dispatch never writes this value. If a spawn-dispatch `run` crashes while a row is here, the
+  next `run`'s reconcile detects the stale `IN_PROGRESS` and resets it (A7.3).
+- `READY_TO_SHIP` — the feature's `<skill_prefix>feature-full-loop` run finished, `dev_log` Status =
+  `READY_TO_SHIP`. **Waiting for
   the human batch ship.**
 - `SHIPPED` — human ship done, `dev_log` Status = `SHIPPED`. Downstream dependencies unlock here.
-- `BLOCKED` — `feature-full-loop` returned BLOCKED for *this* feature. Driver skips it, reports it at
-  the end of the wave. This value is set **only** by a BLOCKED return from this feature's own
-  `feature-full-loop` run — it is never set because a *dependency* is blocked.
+- `BLOCKED` — this feature's `<skill_prefix>feature-full-loop` run returned BLOCKED. Driver skips it,
+  reports it at the end of the wave. This value is set **only** by a BLOCKED result from this feature's
+  own run — it is never set because a *dependency* is blocked.
 - `BLOCKED_EXTERNAL` — waiting on external input (legal sign-off, a business decision, an upstream
   vendor). Driver always skips it; not counted as a failure.
 
@@ -390,8 +393,8 @@ confirms or corrects it.
    stub at `<review_root>/<slug>/<YYYYMMDD>-roadmap-seed.md`: the 1-3 sentence requirement, the hard
    constraints, and the acceptance signal, drawn from the PRD (and from any clarification answers in
    step 4). The manifest row's `Source` cell points at this file. **The seed brief is not a
-   conformant feature brief** — it is Step 0's *input*. When `run` later spawns `feature-full-loop`
-   for this feature, Phase 1 Step 0 reads the seed brief and normalises it into the real
+	   conformant feature brief** — it is Step 0's *input*. When `run` later emits an
+	   `<skill_prefix>feature-full-loop` block for this feature, Phase 1 Step 0 reads the seed brief and normalises it into the real
    `*-feature-brief.md` through the usual QA Gate. Decompose feeds Step 0; it never bypasses it.
 6. **Write a `## Decomposition Rationale` section** into the manifest file, below the `## Features`
    table: why these boundaries, what inter-feature relationships were found (shared modules,
@@ -413,10 +416,12 @@ After the path-specific steps above, both paths converge:
   graph the skill proposed. End with a Next Step: the literal `run` invocation, to be used once the
   human is satisfied.
 
-### A7.3 `run` mode — the continuous loop
+### A7.3 `run` mode — emit-dispatch by default
 
-This is the core of hands-off operation. The skill loops **within one session**, never handing back
-to the human mid-loop.
+This is the core of hands-off operation. The skill computes one dependency wave, emits one
+`<skill_prefix>feature-full-loop` prompt block per eligible feature, and stops. The human opens those
+blocks in independent sessions; re-running `run` reconciles from `dev_log` truth and emits the next
+wave.
 
 ```text
 # ── reconcile: correct the manifest against dev_log truth first ──
@@ -438,32 +443,27 @@ for each manifest row, by prior manifest Status:
                          else → revert to PENDING for a clean retry
     PENDING          → dev_log SHIPPED/READY_TO_SHIP → set that; else stay PENDING
 
-# ── main loop ──
-loop:
-    eligible = features where:
-        Status == PENDING
-        AND every dep satisfied:
-            dep.Status == SHIPPED                          (dep semantics = shipped)
-            OR dep.Status in {READY_TO_SHIP, SHIPPED}      (dep semantics = ready_to_ship)
-        AND no dep is BLOCKED / BLOCKED_EXTERNAL
+# ── emit-dispatch ──
+eligible = features where:
+    Status == PENDING
+    AND every dep satisfied:
+        dep.Status == SHIPPED                          (dep semantics = shipped)
+        OR dep.Status in {READY_TO_SHIP, SHIPPED}      (dep semantics = ready_to_ship)
+    AND no dep is BLOCKED / BLOCKED_EXTERNAL
+    AND row Automation Mode resolves to a legal variant
 
-    if eligible is empty:
-        break
+if eligible is empty:
+    stop with the wrap-up case
 
-    next = the lowest-numbered feature in eligible (topological order + doc order)
-    set next.Status = IN_PROGRESS, next.Last Run = now; write the manifest to disk
+write the manifest to disk after reconcile updates
+emit one prompt block per eligible feature:
+    /<skill_prefix>feature-full-loop
+    Feature: <slug>
+    Automation Mode: <resolved Automation Mode>
+    Verify Cross-vendor: <resolved yes|no>
+    Requirement: <resolved from Source>
 
-    spawn feature-full-loop:
-        Requirement: <the requirement for this row, resolved from its Source cell —
-                      a §N excerpt of the roadmap doc, or the contents of its seed brief file>
-        Automation Mode: <next.Automation Mode>
-
-    on return:
-        read the returned Handoff + <feature_root>/<slug>/docs/dev_log.md Status Panel
-        if Status == READY_TO_SHIP:  next.Status = READY_TO_SHIP
-        elif Status == BLOCKED:      next.Status = BLOCKED
-        else:                        next.Status = BLOCKED  (exception fallback, record in Note)
-        write the manifest to disk
+STOP. Do not mark IN_PROGRESS. Do not spawn anything.
 
 # ── wrap-up ──
 output the wave summary:
@@ -491,10 +491,13 @@ These go verbatim into the `SKILL.md` (see Appendix):
 - **Never write any feature's `dev_log.md` Status Panel.** Status Panel write authority belongs to
   the worker subagents in the `02` §2.6 matrix. The skill writes only the roadmap manifest and — on
   the decompose path — the per-feature seed briefs (A7.2); it only *reads* every `dev_log`.
-- **Never inline-run `feature-full-loop`'s internal steps.** Every feature must go through a spawn,
-  to guarantee an independent context.
+- **Never inline-run a feature pipeline inside roadmap-loop.** Every feature must run in an
+  independent feature execution context. Default implementation: emit a paste-ready
+  `<skill_prefix>feature-full-loop` block for a new session/window.
 - **BLOCKED does not raise an exception and does not stop the whole roadmap.** Mark + skip + continue.
-- **Write the manifest to disk before and after every spawn.** Crash recovery depends on it.
+- **Write the manifest to disk before and after every state-changing dispatch.** Crash recovery depends
+  on it. In the default emit-dispatch path this means before emitting the wave summary and after every
+  reconcile update; in the legacy spawn-dispatch path it also means before/after each spawn.
 - **The manifest is the single source of state.** Never keep roadmap content in conversation memory.
 - **On the decompose path, ask before guessing.** When a decomposition decision is genuinely
   ambiguous and materially changes the manifest, raise a focused clarification question (A7.2 step
@@ -535,10 +538,11 @@ stateless logic.** Re-running `run` is always safe.
 This layer **does not**:
 
 - **Auto-push.** `ship` stays human; the project's V2 workflow is not modified.
-- **Modify the core workflow.** This layer sits entirely on top of the existing core + `feature-full-loop`,
+- **Modify the core workflow.** This layer sits entirely on top of the existing core +
+  `<skill_prefix>feature-full-loop`,
   with zero changes to `01`-`05`.
 - **Do single-feature phase orchestration.** Step 0 → plan → review → build → verify is
-  `feature-full-loop`'s job (`04`); this layer only calls it.
+  `<skill_prefix>feature-full-loop`'s job (`04`); this layer only emits work for it.
 - **Write the `dev_log` Status Panel.** See A7.5.
 - **Unilaterally own the feature decomposition or the dependency graph.** On the parse path `init`
   only extracts what the roadmap author already decided. On the decompose path `init` *proposes* a
@@ -588,7 +592,7 @@ Confirm three things before you start — miss any one and this layer cannot run
 
 | Check | How to confirm |
 |---|---|
-| `feature-full-loop` is registered as a subagent | `ls .claude/agents/feature-full-loop.md` returns a hit (and the matching `.codex/agents/` / `.cursor/agents/` config if you run those tools) |
+| `<skill_prefix>feature-full-loop` skill is in place | `ls <skill_root>/<skill_prefix>feature-full-loop/SKILL.md` returns a hit; compatibility `feature-full-loop` agents may also be registered but are not the default runtime |
 | the `<skill_prefix>roadmap-loop` skill is in place | `ls <skill_root>/<skill_prefix>roadmap-loop/SKILL.md` returns a hit |
 | you have a **reviewed** source doc | either a pre-decomposed roadmap doc (→ `init` parse path) **or** a raw PRD / multi-subsystem plan (→ `init` decompose path). Either way, the *requirements themselves* must already be reviewed and approved |
 
@@ -662,7 +666,8 @@ eligible blocks are emitted.
 🚀 Wave <N> — <K> features eligible. Copy each block to a new session.
 
 ──────────────── Block 1 (first eligible): <slug> ────────────────
-Start the feature-full-loop agent for <slug>.
+/<skill_prefix>feature-full-loop
+Feature: <slug>
 Automation Mode: <Mode_1>
 Verify Cross-vendor: <resolved value from row or header default>
 Requirement: <resolved from row.Source>
@@ -715,9 +720,9 @@ waves parsed correctly. The manifest now reads (abbreviated):
 ```
 
 **Day 1 morning** — the developer runs Action 2, `run`. Right now the only `eligible` feature is
-`roadmap-kickoff` (everything else depends on it, and it is not SHIPPED yet). The skill spawns one
-`feature-full-loop`, drives the kickoff to `READY_TO_SHIP`, then finds no other eligible feature and
-stops:
+`roadmap-kickoff` (everything else depends on it, and it is not SHIPPED yet). The skill emits one
+`<skill_prefix>feature-full-loop` block and stops. The developer opens that block in a fresh session,
+which drives the kickoff to `READY_TO_SHIP`:
 
 ```text
 🟢 Wave complete. Processed 1 feature this round:
@@ -730,8 +735,9 @@ confirms push. The kickoff's `dev_log` flips to `SHIPPED`.
 
 **Day 1 afternoon** — runs Action 2, `run`, again. The skill first reconciles: it reads each
 feature's `dev_log`, finds `roadmap-kickoff` is now `SHIPPED` → syncs the manifest row 1 to `SHIPPED`
-→ wave 1's features now have their dependency satisfied and become `eligible`. The skill spawns a
-`feature-full-loop` for each, back to back. **The developer walks away.**
+→ wave 1's features now have their dependency satisfied and become `eligible`. The skill emits one
+`<skill_prefix>feature-full-loop` block for each. The developer opens the blocks in parallel sessions
+and walks away while those runs work independently.
 
 **Day 1 evening / Day 2** — the developer comes back, sees the wave summary from Action 2: several
 `READY_TO_SHIP`, maybe one `BLOCKED`.
@@ -772,7 +778,7 @@ walk away, come back and batch-ship" — the manifest remembers progress, so you
 ````markdown
 ---
 name: <skill_prefix>roadmap-loop
-description: Roadmap orchestration layer (Layer 3.5). Parses a reviewed roadmap source doc into a manifest (init mode), and drives feature-full-loop wave by wave to push every eligible feature to READY_TO_SHIP (run mode). Triggers: roadmap loop, roadmap orchestration, batch-run features, auto-develop a roadmap, advance a roadmap, roadmap manifest.
+description: Roadmap orchestration layer (Layer 3.5). Parses a reviewed roadmap source doc into a manifest (init mode), then emits <skill_prefix>feature-full-loop prompt blocks wave by wave to push every eligible feature to READY_TO_SHIP (run mode). Triggers: roadmap loop, roadmap orchestration, batch-run features, auto-develop a roadmap, advance a roadmap, roadmap manifest.
 ---
 
 # <skill_prefix>roadmap-loop
@@ -786,10 +792,14 @@ Layer 3.5 roadmap orchestration skill. Full spec: `docs/workflow/_portable/06-ro
 2. **Never write any feature's `dev_log.md` Status Panel.** The skill writes only the roadmap
    manifest and — on the decompose path — the per-feature seed briefs (§2b step 5); it only *reads*
    every `dev_log`.
-3. **Never inline-run `feature-full-loop`'s internal steps.** Every feature must go through a spawn,
-   guaranteeing an independent context.
+3. **Never inline-run a feature pipeline inside roadmap-loop.** Every feature must run in an
+   independent feature execution context. Default implementation: emit a paste-ready
+   `<skill_prefix>feature-full-loop` prompt block for a new session/window.
 4. **BLOCKED does not raise an exception and does not stop the whole roadmap.** Mark + skip + continue.
-5. **Write the manifest to disk before and after every spawn.** Crash recovery depends on this.
+5. **Write the manifest to disk before and after every state-changing dispatch.** Crash recovery
+   depends on this. In the default emit-dispatch path this means "before emitting the wave summary"
+   and after every reconcile update; in the legacy spawn-dispatch path it also means before/after each
+   spawn.
 6. **The manifest is the single source of state.** Never keep roadmap content in conversation memory.
 7. **Every exit of every mode ends with an explicit, copy-pasteable Next Step** (the Universal Next
    Step Contract — `02` §3.3).
@@ -801,9 +811,9 @@ Layer 3.5 roadmap orchestration skill. Full spec: `docs/workflow/_portable/06-ro
    round before finalising; record every guess in the Decomposition Rationale.
 10. **Default dispatch is emit, not spawn.** `run` mode does NOT spawn `feature-full-loop` as Task
     subagents. Instead, it emits a copy-paste-ready prompt block per eligible feature, telling the
-    user to run each in a separate session/window. Rationale: the 3-level nesting (caller →
-    roadmap-loop → feature-full-loop → feature-plan) hits the spawn-depth cap on most tool
-    platforms (Claude Code default; Codex `max_depth=2`). The user is the real dispatcher;
+    user to run `<skill_prefix>feature-full-loop` in a separate session/window. Rationale: the
+    3-level nesting (caller → roadmap-loop → feature-full-loop → feature-plan) hits the
+    spawn-depth cap on most tool platforms (Claude Code default; Codex `max_depth=2`). The user is the real dispatcher;
     roadmap-loop is the tracker. Opt-in to spawn-dispatch by passing `dispatch: spawn` in the
     invocation when running on a tool with sufficient nesting capacity.
 11. **Run mode never marks rows IN_PROGRESS.** Since the skill does not actually execute the work
@@ -853,7 +863,7 @@ Propose a decomposition; the shared-tail review gate is where the author confirm
 1. Read the project's structural context — `<feature_map_doc>`, `<refactor_plan_doc>`,
    `<onboarding_doc>`, the `<feature_root>` layout — so features land on real module boundaries.
 2. Partition the PRD into the smallest independent candidate units that each make sense as one
-   `feature-full-loop` run; prefer existing project boundaries. This step MAY spawn parallel
+   `<skill_prefix>feature-full-loop` run; prefer existing project boundaries. This step MAY spawn parallel
    analysis subagents (e.g. one per subsystem named in the PRD), then synthesise their results —
    this keeps init's own context small (spec §A3 principle 3).
 3. Analyse inter-feature relationships first, then infer the dependency graph from them: shared
@@ -923,8 +933,8 @@ For each manifest row, branch on the row's **prior manifest Status** (not the de
   manual reset to `PENDING` is the **only** path out of `BLOCKED`.
 - **prior `READY_TO_SHIP`** → advance only: dev_log `SHIPPED` → manifest `SHIPPED` (downstream deps
   unlock); otherwise no-op (still waiting for the human `ship`).
-- **prior `IN_PROGRESS`** → a prior `feature-full-loop` spawn left the row mid-flight (orchestrator
-  exited `AWAITING_*`, or a crash). Reconcile by dev_log Status:
+- **prior `IN_PROGRESS`** → a legacy spawn-dispatch run left the row mid-flight (orchestrator exited
+  `AWAITING_*`, or a crash). Reconcile by dev_log Status:
   - `SHIPPED` → manifest `SHIPPED`; `READY_TO_SHIP` → manifest `READY_TO_SHIP`.
   - `BLOCKED` → manifest `BLOCKED` (record the dev_log Blocker in `Note`) — the **only** path that
     writes manifest `BLOCKED` automatically.
@@ -934,15 +944,16 @@ For each manifest row, branch on the row's **prior manifest Status** (not the de
 - **prior `PENDING`** → advance only if the dev_log clearly shows work finished outside this skill:
   `SHIPPED` → `SHIPPED`; `READY_TO_SHIP` → `READY_TO_SHIP`; anything else (including `BLOCKED` and
   the mid-pipeline values) → **stay `PENDING`** (the human may have just reset the row; the next
-  loop spawn hands the dev_log's actual state to `feature-full-loop`, which knows how to resume).
+  emitted `<skill_prefix>feature-full-loop` block hands the dev_log's actual state to the
+  parent-session recipe, which knows how to resume).
 
 **Stale `IN_PROGRESS` rule.** For an `IN_PROGRESS` row whose dev_log shows a mid-pipeline state:
 - `Last Run` recent (same human-driven session, e.g. ≤ 24 h) AND a live marker exists at
   `<orchestrator_marker_dir>/<slug>.awaiting_*` → keep `IN_PROGRESS`, add `Note: resume pending`; do
-  not re-eligibilise (the human resumes `feature-full-loop` for `<slug>` directly).
+  not re-eligibilise (the human resumes `<skill_prefix>feature-full-loop` for `<slug>` directly).
 - otherwise (stale `Last Run` or no live marker) → revert to `PENDING` so the next loop iteration
-  re-spawns `feature-full-loop` from the dev_log's current resume point; add a `Note` recording the
-  prior `IN_PROGRESS` and the dev_log Status at reconcile time.
+  emits a fresh `<skill_prefix>feature-full-loop` block from the dev_log's current resume point; add
+  a `Note` recording the prior `IN_PROGRESS` and the dev_log Status at reconcile time.
 
 ### 3.1.5 Automation Mode resolution preflight
 
@@ -998,7 +1009,8 @@ emit to user:
   ║ 🚀 Wave <N> — <K> features eligible. Copy each block to a new session.    ║
   ║                                                                           ║
   ║ ──────────────── Block 1 (first eligible): <slug> ────────────────                       ║
-  ║ Start the feature-full-loop agent for <slug>.                             ║
+  ║ /<skill_prefix>feature-full-loop                                          ║
+  ║ Feature: <slug>                                                           ║
   ║ Automation Mode: <Mode_1>                                                 ║
   ║ Verify Cross-vendor: <resolved value from row or header default>          ║
   ║ Requirement: <resolved from row.Source — see "Source resolution" below>   ║
@@ -1071,8 +1083,8 @@ After the loop ends, output the wave summary and **STOP**:
 
 - manifest parse failure / invalid schema → stop and report, do not run on a broken manifest. End
   with a Next Step describing how to fix the manifest.
-- `feature-full-loop` not registered → stop, instruct the human to land it first (spec §B1). End
-  with a Next Step.
+- `<skill_prefix>feature-full-loop` skill not available → stop, instruct the human to land it first
+  (spec §B1). End with a Next Step.
 - source doc has no matching § for a feature → mark that feature BLOCKED, Note records "source
   section missing", continue.
 ````

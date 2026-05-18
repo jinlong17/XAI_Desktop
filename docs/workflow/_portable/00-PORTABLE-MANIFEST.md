@@ -20,12 +20,12 @@ _portable/
 ├── 01-workflow-model.md      ← the paradigm core: task-typed pipelines, subagents, generation script
 ├── 02-handoff-and-state.md   ← the Handoff block + dev_log state protocol + State Verification contract
 ├── 03-step0-brief-spec.md    ← Step 0 requirement-brief gate (the front gate before planning)
-├── 04-automation-loop.md     ← meta-orchestrator + 7-variant automation matrix + quota fallback
+├── 04-automation-loop.md     ← parent-session recipe + compatibility orchestrators + 7-variant automation matrix + quota fallback
 ├── 05-commit-convention.md   ← the commit paradigm (small-step / single-intent / Definition of Done)
 ├── 06-roadmap-orchestration.md ← Layer 3.5: roadmap manifest + the roadmap-loop skill (multi-feature waves)
 ├── usage-guide.md            ← cross-cutting hands-on tutorial: the whole workflow, 3 ways to drive it
 ├── templates/                ← 15 subagent prompt templates (the generation-script source of truth)
-│                               12 workers/loops + 3 meta-orchestrators
+│                               12 workers/loops + 3 compatibility orchestrators
 └── scripts/                  ← the generation script (setup_subagents_v2.py/.sh, runnable reference)
                                 + the automation-loop reference shell scripts + README
 ```
@@ -42,11 +42,11 @@ Read in numeric order — each file builds on the previous:
 | 01 | `01-workflow-model.md` | the core paradigm: two task-typed pipelines, 12 subagents, the generation-script model |
 | 02 | `02-handoff-and-state.md` | how subagents hand off — the `## Handoff` block, the `dev_log.md` state machine, the `### State Verification` anti-echo-chamber contract |
 | 03 | `03-step0-brief-spec.md` | the requirement-normalization gate that runs before `feature-plan` |
-| 04 | `04-automation-loop.md` | how to make the whole pipeline run hands-off — meta-orchestrators, the 7-variant matrix, graceful degradation, the 5-phase state machine, the marker-file schema, the Phase Verdict protocol |
+| 04 | `04-automation-loop.md` | how to make the whole pipeline run hands-off — the single-feature parent-session recipe, compatibility orchestrators, the 7-variant matrix, graceful degradation, the 5-phase state machine, the marker-file schema, the Phase Verdict protocol |
 | 05 | `05-commit-convention.md` | the commit discipline that makes commits a review + handoff carrier |
 | 06 | `06-roadmap-orchestration.md` | Layer 3.5: how to drive a whole reviewed roadmap of N features hands-off — the roadmap manifest file, the two-mode roadmap-loop skill, dependency-wave scheduling, where the human `ship` gate lands |
-| — | `usage-guide.md` | the cross-cutting, hands-on tutorial for the **whole** workflow — three ways to drive it (manual subagent dispatch / the single-feature meta-orchestrator / the roadmap skill), what to type at each level, what to do when it stops. Read it after skimming `01`-`02` + `04` + `06`. |
-| — | `templates/*.md` | the 15 subagent prompts (12 workers/loops + 3 meta-orchestrators); feed these to the generation script |
+| — | `usage-guide.md` | the cross-cutting, hands-on tutorial for the **whole** workflow — three ways to drive it (manual subagent dispatch / the single-feature parent-session recipe / the roadmap skill), what to type at each level, what to do when it stops. Read it after skimming `01`-`02` + `04` + `06`. |
+| — | `templates/*.md` | the 15 subagent prompts (12 workers/loops + 3 compatibility orchestrators); feed these to the generation script |
 | — | `scripts/README.md` | the generation-script contract + the bundled runnable reference (`setup_subagents_v2.py/.sh`) + the automation-loop reference shell scripts |
 
 A new project's AI assistant should be pointed at `00 → 01 → 02 → 03 → 04 → 05 → 06` in that order;
@@ -239,14 +239,15 @@ per-project rewrite.
 ## 5. How to generate the agent configs
 
 The 15 subagent templates in `templates/` are the single source of truth — 12 workers/loops plus 3
-meta-orchestrators (`feature-full-loop` / `bugfix-full-loop` / `feature-phase-review`). The generation
+compatibility orchestrators (`feature-full-loop` / `bugfix-full-loop` / `feature-phase-review`). The generation
 script expands them into three tool-specific config sets. The full spec is in `01-workflow-model.md` §10
 (generation strategy, the format-compliance field-mapping table, conversion steps, parameters,
 post-generation checks) and `scripts/README.md` (what the script framework must do).
 
-> The 3 meta-orchestrators are the automation entry layer; see `04-automation-loop.md` §1.1. A new
-> project that only wants the manual subagent pipeline can defer generating them, but they are part of
-> the single source of truth and ship with `_portable/templates/`.
+> The 3 orchestrator templates are compatibility contracts; the preferred single-feature runtime on
+> hosts that withhold recursive Task is the project-prefixed `<skill_prefix>feature-full-loop` skill.
+> A new project that only wants the manual subagent pipeline can defer generating the compatibility
+> contracts, but they are part of the single source of truth and ship with `_portable/templates/`.
 
 Key points:
 
@@ -274,7 +275,7 @@ the automation scripts, the conductor playbook — look in `../project/`. Deprec
 §4 above is the by-hand instantiation procedure. It is also automatable: the appendix below is a
 portable **migration skill** that *executes* §4 — it scans a target repo, infers the §3 placeholder
 values (asking where ambiguous), then copies `_portable/`, fills the placeholders, runs the
-generation script, and verifies the result. It has two modes:
+generation script, verifies the result, and can later update already-migrated targets. It has three modes:
 
 - **`survey`** — read-only. Scans the target repo, drafts the filled §3 placeholder table + the
   `<project_background_file>` content + a migration plan, and STOPS for human review. Writes nothing
@@ -284,6 +285,9 @@ generation script, and verifies the result. It has two modes:
   **project-layer checklist**. It deliberately does **not** scaffold the target's project-layer docs
   (`<project_workflow_doc>`, the SOPs, `<your_commit_convention>`) — authoring those stays with the
   human, exactly like §4 step 7.
+- **`resync`** — updates an already-migrated target after the source portable workflow changes.
+  Refuses dirty targets, preserves project customizations, refreshes portable agents / public
+  skills / scripts, then STOPS with a project-layer doc-delta checklist.
 
 The skill runs from the *source* project (where `_portable/` already lives) and operates on a target
 repo path, so there is no chicken-and-egg problem. The split — automate the mechanical copy + fill +
@@ -303,7 +307,7 @@ generate + verify, stop at the judgement-heavy project layer — is the same bou
 ````markdown
 ---
 name: <skill_prefix>workflow-migrate
-description: Migrate the portable agent/skill workflow paradigm into a new project. survey mode scans a target repo, infers the placeholder values, asks where ambiguous, and drafts a migration plan. instantiate mode copies the portable layer, fills placeholders, runs the generation script, verifies, and emits a project-layer checklist. Triggers: migrate the workflow, port the workflow to another project, set up the workflow in a new repo, instantiate the portable layer.
+description: Migrate or resync the portable agent/skill workflow paradigm into another project. survey mode scans a target repo, instantiate mode copies the portable layer and generates agents/public skills, and resync mode updates already-migrated projects without clobbering local customizations. Triggers: migrate the workflow, resync workflow, port the workflow to another project, set up the workflow in a new repo, instantiate the portable layer.
 ---
 
 # <skill_prefix>workflow-migrate
@@ -414,8 +418,12 @@ checklist. STOP.
    - write `<project_workflow_doc>` — the concrete V2 landing (use the source project's instance as
      the reference)
    - write `<your_feature_sop>` / `<your_bugfix_sop>` / `<your_commit_convention>`
-   - land any `<skill_prefix>`-prefixed skills (roadmap-loop, the Step 0 brief skill, …) into
-     `<skill_root>` and register them in the target's skill registry
+   - land all required `<skill_prefix>`-prefixed workflow skills into `<skill_root>` and register them
+     in the target's skill registry; do not migrate only one entry point. Minimum reusable set:
+     `<skill_prefix>feature-full-loop`, `<skill_prefix>roadmap-loop`, the Step 0 brief skill,
+     `<skill_prefix>workflow-migrate`, sync/registry governance helpers (`portable-sync-check`,
+     skills/agents registry, etc.), plus any project SOP skills the source workflow expects. These
+     project-prefixed skills are not the same as `_portable/skills/*` public shims.
    - test-run on one small feature, then one bugfix, before passing `--replace-claude`
 
 ## 4. resync mode
@@ -463,8 +471,14 @@ project". It is **idempotent** (safe to re-run) and **non-destructive** (constra
    recommended add. Run it — must PASS (it catches any placeholder left unsubstituted in §5).
 8. **Emit the project-layer doc-delta checklist + STOP.** resync NEVER edits the target's own
    `<project_workflow_doc>` / SOPs / usage-guide-equivalent (constraint §0.3). List the specific
-   upstream changes the human must hand-apply there. End with a Next Step: review CONFLICTS (if
-   any), apply the doc deltas, then test-run one feature to confirm the B/C hooks work end-to-end.
+   upstream changes the human must hand-apply there, including runtime entry changes such as
+   "`feature-full-loop` runtime moved to `<skill_prefix>feature-full-loop` parent-session skill" and
+   "roadmap-loop default dispatch is emit, not spawn". Also list any `<skill_prefix>` workflow skill
+   deltas that must be copied/renamed into `<skill_root>` as a complete set; `_portable/skills/*`
+   public shims are refreshed mechanically, but project-prefixed workflow skills are project-layer
+   artifacts. End with
+   a Next Step: review CONFLICTS (if any), apply the doc deltas, update workflow skills, then
+   test-run one feature to confirm the B/C hooks work end-to-end.
 
 ## 5. Exception handling
 

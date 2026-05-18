@@ -2,12 +2,13 @@
 
 > **Portable layer.** Project-agnostic. The cross-cutting, hands-on tutorial for the **whole**
 > workflow — not just the automation loop. It ties together the manual subagent pipeline (`01` +
-> `02`), the single-feature meta-orchestrator (`04`), and the roadmap orchestration skill (`06`)
+> `02`), the single-feature parent-session recipe (`04`), and the roadmap orchestration skill (`06`)
 > into one "how do I actually drive this" guide.
 > Source: portabilized from the project's hands-on usage guide + the project's concrete V2 workflow
 > doc.
 > Spec details: `01-workflow-model.md` (the subagent pipelines), `02-handoff-and-state.md` (the
-> handoff + state contracts), `04-automation-loop.md` (the meta-orchestrator + variants),
+> handoff + state contracts), `04-automation-loop.md` (the parent-session recipe, compatibility
+> orchestrators, and variants),
 > `06-roadmap-orchestration.md` (the roadmap layer). Placeholders: `00-PORTABLE-MANIFEST.md`.
 
 ---
@@ -29,10 +30,11 @@ If you are *migrating* the portable workflow into a new project (rather than usi
 
 ### What the migration skill does
 
-`<skill_prefix>workflow-migrate` (defined as a draft SKILL.md in the appendix of `_portable/00-PORTABLE-MANIFEST.md`) automates §4 of `00`. It runs from the *source* project (where `_portable/` already lives) and operates on a *target* repo path. Two modes:
+`<skill_prefix>workflow-migrate` (defined as a draft SKILL.md in the appendix of `_portable/00-PORTABLE-MANIFEST.md`) automates §4 of `00`. It runs from the *source* project (where `_portable/` already lives) and operates on a *target* repo path. Three modes:
 
 - **survey** — read-only. Scans the target repo, infers the §3 placeholder values, asks where ambiguous, drafts the filled placeholder table + `<project_background_file>` content + a migration plan, then STOPS for human review.
 - **instantiate** — consumes a reviewed survey plan. Copies `_portable/` into the target, fills placeholders, copies and adjusts the generation script, runs it, verifies counts + lint, then STOPS and emits a project-layer checklist. Does NOT scaffold project-layer docs.
+- **resync** — updates an already-migrated target after the source portable workflow changes. Refuses dirty targets, preserves project customizations, refreshes portable agents / public skills / scripts, and emits a project-layer doc-delta checklist. STOPS.
 
 ### 6-step usage flow
 
@@ -45,7 +47,13 @@ If you are *migrating* the portable workflow into a new project (rather than usi
 5. **Run instantiate:**
    `/<skill_prefix>workflow-migrate plan: <path-to-plan-file> mode: instantiate`
    Skill copies `_portable/`, fills placeholders, copies + adjusts the generation script, runs it, verifies, emits the project-layer checklist, STOPS.
-6. **Project-layer human work.** Per the checklist: write `<project_workflow_doc>`, the SOPs, `<your_commit_convention>`; land any `<skill_prefix>`-prefixed skills; test-run on one small feature, then one bugfix.
+6. **Project-layer human work.** Per the checklist: write `<project_workflow_doc>`, the SOPs, `<your_commit_convention>`; land any `<skill_prefix>`-prefixed workflow skills (for example `<skill_prefix>feature-full-loop`, `<skill_prefix>roadmap-loop`, the Step 0 brief skill, migration/governance helpers); test-run on one small feature, then one bugfix.
+
+For later upstream updates to an already-migrated project, copy:
+
+```text
+/<skill_prefix>workflow-migrate target: <path-to-target-repo> mode: resync
+```
 
 ### Common situations
 
@@ -57,7 +65,13 @@ If you are *migrating* the portable workflow into a new project (rather than usi
 
 When the source workflow gets a big update, **already-migrated projects do NOT auto-update** —
 their hook layer stays frozen at migration time (B/C automation may be broken). Use the migration
-skill's **`resync` mode** (`mode: resync`). It is idempotent and **non-destructive**:
+skill's **`resync` mode**. Copy this from the source project session:
+
+```text
+/<skill_prefix>workflow-migrate target: <path-to-target-repo> mode: resync
+```
+
+It is idempotent and **non-destructive**:
 
 - **Clean-target gate (read-only until it passes):** resync refuses to run if any path it would
   write (`_portable/` / `<cowork_scripts_dir>/` / `<templates_dir>/` / `.claude|.codex|.cursor/
@@ -65,10 +79,18 @@ skill's **`resync` mode** (`mode: resync`). It is idempotent and **non-destructi
   first. It never clobbers uncommitted work.
 - **Template conflict guard:** a hand-customized target template is never silently overwritten —
   resync lists it and STOPS for a human 3-way merge.
-- It overwrites `_portable/` verbatim, re-renders the full `_portable/scripts/*` set (incl. brand
-  new files) with the target's token map, re-instantiates templates + regenerates agents (minding
-  the `--force` regression caveat), refreshes the portable-sync lint, and emits a **project-layer
-  doc-delta checklist** the human hand-applies (it never edits the target's own workflow docs).
+- It overwrites `_portable/` verbatim (including public skills and MCP README), re-renders the full
+  `_portable/scripts/*` set (incl. brand new files) with the target's token map, re-instantiates
+  templates + regenerates agents (minding the `--force` regression caveat), refreshes the
+  portable-sync lint, and emits a **project-layer doc-delta checklist** the human hand-applies (it
+  never edits the target's own workflow docs).
+- **Skill/agent reuse boundary:** all 15 V2 agents, `_portable/skills/*` public skills, and hook
+  scripts are mechanically copied/regenerated; do not migrate only `roadmap-loop` or only
+  `feature-full-loop`. Project-prefixed workflow skills must still be landed as a set under the target
+  prefix in `<skill_root>` and registered in the target registry: `<skill_prefix>feature-full-loop`,
+  `<skill_prefix>roadmap-loop`, the Step 0 brief skill, `<skill_prefix>workflow-migrate`, sync/registry
+  governance helpers, and any project SOP skills the source project expects. resync reports these
+  deltas but does not author target project SOPs / usage guides.
 
 Full contract: `00-PORTABLE-MANIFEST.md` §4 resync mode.
 
@@ -91,9 +113,9 @@ and you pick per task:
 
 | Level | You type | Who drives the pipeline | Use it when | Section |
 |-------|----------|-------------------------|-------------|---------|
-| **1 — Manual subagent workflow** | one command per step (or per build granularity) | you, step by step, reading `dev_log` between steps | you want full control / are learning the workflow / the meta-orchestrators are not landed yet / something went sideways and you are recovering by hand | §4 |
-| **2 — Single-feature meta-orchestrator** | one command, total | `feature-full-loop` / `bugfix-full-loop` run the 5 phases, stop before `ship` | a normal feature or bugfix you want done hands-off | §5 |
-| **3 — Roadmap orchestration skill** | one `init` + one `run` per wave | the `<skill_prefix>roadmap-loop` skill emits one paste-ready prompt block per eligible feature; you open each in its own session — the skill tracks, you dispatch | you have a reviewed roadmap (or a PRD) of many features | §6 |
+| **1 — Manual subagent workflow** | one command per step (or per build granularity) | you, step by step, reading `dev_log` between steps | you want full control / are learning the workflow / the Level 2 recipe is not landed yet / something went sideways and you are recovering by hand | §4 |
+| **2 — Single-feature parent-session recipe** | one skill command, total | `<skill_prefix>feature-full-loop` dispatches workers from the parent session, stops before `ship` | a normal feature or bugfix you want done hands-off | §5 |
+| **3 — Roadmap orchestration skill** | one `init` + one `run` per wave | the `<skill_prefix>roadmap-loop` skill emits one paste-ready `<skill_prefix>feature-full-loop` block per eligible feature; you open each in its own session — the skill tracks, you dispatch | you have a reviewed roadmap (or a PRD) of many features | §6 |
 
 Level 2 is Level 1 with the dispatching automated. Level 3 is Level 2 called repeatedly. The **state
 contracts** underneath — the `dev_log.md` Status Panel, the §2.6 write-authority matrix, the human
@@ -109,10 +131,10 @@ the same Universal Next Step Contract. Learn §4 once and §5 / §6 are mostly "
 ```mermaid
 flowchart TB
   subgraph L35 [Layer 3.5 · Roadmap Orchestration · tracks a whole roadmap of N features]
-    RL[roadmap-loop skill<br/>manifest + waves → emits one prompt block per eligible feature]
+    RL[roadmap-loop skill<br/>manifest + waves → emits one feature-full-loop skill block per eligible feature]
   end
-  subgraph L3 [Layer 3 · Meta-Orchestrator · one input → 5 phases]
-    FL[feature-full-loop · bugfix-full-loop<br/>auto-runs the pipeline → stops before ship]
+  subgraph L3 [Layer 3 · Parent-session recipe · one input → 5 phases]
+    FL[feature-full-loop skill<br/>parent session dispatches workers → stops before ship]
   end
   subgraph L2 [Layer 2 · build+verify orchestrators]
     DL[feature-dev-loop · bugfix-loop<br/>build+verify sub-loop]
@@ -152,8 +174,8 @@ Layer 3.5  roadmap-loop skill            track a whole roadmap of N features    
               │        each in a fresh session and is the real dispatcher)
               │ spawn (opt-in via `dispatch: spawn`; requires ≥ 4-level
               │        nesting capacity — see `06` §3.2-opt-in)
-Layer 3    feature-full-loop /           one input → 5 phases → stop before ship  ── §5
-           bugfix-full-loop
+Layer 3    <skill_prefix>feature-full-loop / one input → 5 phases → stop before ship  ── §5
+           bugfix-full-loop compatibility agent
               │ spawn
 Layer 2    feature-dev-loop /            build+verify sub-loop
            bugfix-loop
@@ -178,15 +200,16 @@ executor** — they do not change Layer 1 or the phase structure.
 | the main session can spawn subagents | all levels | the spawn/Task mechanism is available |
 | the 12 worker subagents are registered | all levels | `ls .claude/agents/*.md` shows the 12 (+ the `.codex/agents/` / `.cursor/agents/` configs if you run those tools) |
 | the Step 0 skill is available | all levels | `ls <skill_root>/<step0-skill>/SKILL.md` |
-| `feature-full-loop` + `bugfix-full-loop` are landed | Level 2, Level 3 | `ls .claude/agents/{feature-full-loop,bugfix-full-loop}.md` |
+| `<skill_prefix>feature-full-loop` is landed | Level 2, Level 3 | `ls <skill_root>/<skill_prefix>feature-full-loop/SKILL.md` |
+| `feature-full-loop` + `bugfix-full-loop` compatibility agents are landed | contract / fallback | `ls .claude/agents/{feature-full-loop,bugfix-full-loop}.md`; not the recommended spawned runtime on hosts that withhold recursive Task |
 | `feature-phase-review` is landed | only the phase-granularity Level 2 variants | `ls .claude/agents/feature-phase-review.md` |
 | the `<skill_prefix>roadmap-loop` skill is in place | Level 3 | `ls <skill_root>/<skill_prefix>roadmap-loop/SKILL.md` |
 | the State Verification lint is wired | only when the project enforces State Verification mechanically (it is optional, project-level — `02` §4) | the project's State Verification lint script exists |
 | `<project_workflow_doc>` has every role registered in its write-authority matrix | all levels | check its Status Panel write-authority matrix |
 
-> **Level 1 works with just the 12 workers.** If the 3 meta-orchestrators are not landed yet, you
-> can still run the whole workflow at Level 1 today (§4). Land the meta-orchestrators when you want
-> Level 2 / Level 3.
+> **Level 1 works with just the 12 workers.** If the compatibility orchestrators or
+> `<skill_prefix>feature-full-loop` recipe are not landed yet, you can still run the whole workflow at
+> Level 1 today (§4). Land the recipe + compatibility contracts when you want Level 2 / Level 3.
 
 Per-variant add-ons for Level 2 (`04` §3):
 
@@ -207,7 +230,7 @@ next step (the Universal Next Step Contract — `02` §3.3), so "drive it manual
 "copy the Next Step line".
 
 **When to use Level 1:** you want step-by-step control; you are learning the workflow; the
-meta-orchestrators are not landed yet; or a Level 2 / Level 3 run hit a BLOCKED and you are
+`<skill_prefix>feature-full-loop` recipe is not landed yet; or a Level 2 / Level 3 run hit a BLOCKED and you are
 recovering by hand.
 
 ### 4.1 The Feature Dev pipeline
@@ -314,15 +337,18 @@ for.
 
 ---
 
-## 5. Level 2 — the single-feature meta-orchestrator
+## 5. Level 2 — the single-feature parent-session recipe
 
-At Level 2 you stop dispatching Layer 1 yourself. One command starts `feature-full-loop` /
-`bugfix-full-loop`, and it runs the whole pipeline for you, stopping only before `ship`.
+At Level 2 you stop dispatching Layer 1 manually. One command starts
+`<skill_prefix>feature-full-loop`, and the **parent session** dispatches the worker subagents for
+you, stopping only before `ship`. The older `feature-full-loop` / `bugfix-full-loop` subagents
+remain as portable contracts / compatibility wrappers, but they are not the recommended runtime on
+hosts that withhold recursive Task from spawned subagents.
 
 ### 5.1 TL;DR — the one-command start
 
 ```text
-Start the feature-full-loop agent.
+/<skill_prefix>feature-full-loop
 Requirement:
   <your requirement, free text — motivation + who uses it + what problem to solve, 1-3 sentences>
 Constraints:
@@ -333,11 +359,11 @@ Automation Mode: A-Claude
   #   D-Codex / D-Cursor / D-Codex+Cursor; see §5.2
 ```
 
-The meta-orchestrator then runs:
+The parent-session recipe then runs:
 
 ```text
 Step 0 (the Step 0 skill) → feature-plan → feature-review (with REVISE reflow)
-   → feature-dev-loop (build + verify) → stops before ship
+   → feature-auto-build → feature-verify → stops before ship
 ```
 
 At the end you send one more line:
@@ -400,13 +426,13 @@ second → `D-Codex` or `D-Cursor` (feel the worker delegate); third → `D-Code
 resilience). The `B-*` (hook-relay) and `C-*` (phase-granularity) variants are experimental — defer
 them until the hook/dispatch infrastructure is landed and the team is comfortable (`04` §3.2).
 
-### 5.3 What the orchestrator does for you — the 5 phases
+### 5.3 What the parent-session recipe does for you — the 5 phases
 
 Per the 5-phase state machine in `04` §7. You type nothing here.
 
 ```mermaid
 flowchart TD
-  U([User Input: Requirement + Automation Mode + Verify Cross-vendor?]) --> FL[feature-full-loop]
+  U([User Input: Requirement + Automation Mode + Verify Cross-vendor?]) --> FL[feature-full-loop skill]
   FL --> P0[Phase 0 · INTAKE<br/>Requirement missing=BLOCKED · Mode Q1 · Verify Q2]
   P0 --> P1[Phase 1 · Step 0]
   P1 -->|QA Gate PASS| P2[Phase 2 · PLAN]
@@ -436,9 +462,11 @@ flowchart TD
 - **Phase 2 — Planning.** Spawn `feature-plan`; Read `dev_log` to confirm `NEEDS_REVIEW`.
 - **Phase 3 — Review Loop.** `feature-review` → APPROVED breaks out; REVISE reflows to
   `feature-plan` (capped at MAX_REVISE, default 3); BLOCKED → STOP.
-- **Phase 4 — Build + Verify.** The only variant-specific phase. Synchronous families run in one
-  session; event-driven families dispatch, write a marker, exit, and a hook notifies you to resume
-  (`04` §7.2). Ends with `READY_TO_SHIP`.
+- **Phase 4 — Build + Verify.** The only variant-specific phase. `Verify Cross-vendor: yes`
+  requires `feature-auto-build` followed by an independent `feature-verify`; `Verify Cross-vendor:
+  no` may use same-lineage `feature-dev-loop` on hosts where that loop can actually spawn.
+  Event-driven families dispatch, write a marker, exit, and a hook notifies you to resume (`04`
+  §7.2). Ends with `READY_TO_SHIP`.
 - **Phase 5 — Human Gate.** Stops and emits a Handoff. Does not spawn `ship`.
 
 ### 5.4 Worked examples
@@ -446,7 +474,7 @@ flowchart TD
 **Example A — `A-Claude`, a small settings increment:**
 
 ```text
-Start the feature-full-loop agent.
+/<skill_prefix>feature-full-loop
 Requirement:
   Add an "auto-renewal reminder" toggle to the settings page. Default on.
   When off, the renewal-failure email still sends, but no in-app notification.
@@ -456,13 +484,14 @@ Constraints:
 Automation Mode: A-Claude
 ```
 
-Runs Step 0 → `feature-plan` → `feature-review` → APPROVED → `feature-dev-loop` → `READY_TO_SHIP`.
+Runs Step 0 → `feature-plan` → `feature-review` → APPROVED → `feature-auto-build` →
+`feature-verify` → `READY_TO_SHIP`.
 You then type `Start the ship agent for <feature>.`
 
 **Example B — `D-Codex+Cursor` (fallback chain), a cross-layer feature:**
 
 ```text
-Start the feature-full-loop agent.
+/<skill_prefix>feature-full-loop
 Requirement:
   Give paid-tier users a "export history as CSV" capability: async job, email when done.
 Constraints:
@@ -471,9 +500,9 @@ Constraints:
 Automation Mode: D-Codex+Cursor
 ```
 
-After the first 3 phases, Phase 4 spawns `feature-dev-loop`; the worker reads the `Automation Mode`
-from `dev_log` and decides per phase whether to delegate to an external CLI, falling through the
-fallback chain on a quota cap.
+After the first 3 phases, Phase 4 runs `feature-auto-build`; the worker reads `Automation Mode` from
+`dev_log` and decides per phase whether to delegate to an external CLI, falling through the fallback
+chain on a quota cap. The parent session then dispatches `feature-verify` independently.
 
 **Example C — a fully automatic bugfix:**
 
@@ -494,7 +523,7 @@ no phase-granularity variant — use `A-Claude` / `B-Codex` / `B-Cursor` / `D-Co
 ## 6. Level 3 — the roadmap orchestration skill
 
 When you have **many** features — a reviewed roadmap, or a raw PRD / multi-subsystem plan — do not
-hand-dispatch `feature-full-loop` N times. Use the `<skill_prefix>roadmap-loop` skill: one
+hand-dispatch `<skill_prefix>feature-full-loop` N times. Use the `<skill_prefix>roadmap-loop` skill: one
 `SKILL.md`, two modes.
 
 ### 6.1 The shape
@@ -539,7 +568,7 @@ Loop: `init → (run → batch ship) × W → wrap-up`.
 The manifest schema, the skill logic, the failure model, a worked example, and the troubleshooting
 table are all in **`06-roadmap-orchestration.md`** — Part A is the spec, Part B is the hands-on
 tutorial, the appendix is the `SKILL.md` draft. Level 3 changes nothing about Levels 1-2: each
-feature still runs the exact same 5-phase pipeline inside its own `feature-full-loop` invocation
+feature still runs the exact same 5-phase pipeline inside its own `<skill_prefix>feature-full-loop` invocation
 (emitted to a fresh session by default; spawn-as-subagent only on the opt-in path).
 
 ---
@@ -548,7 +577,7 @@ feature still runs the exact same 5-phase pipeline inside its own `feature-full-
 
 Levels 1 and 2 relay through the `## Handoff` block; the Level 3 roadmap-loop skill relays through
 a manifest-backed wave summary instead (its stop conditions are different — see §6 and `06` §A7.4).
-At **Level 2** the meta-orchestrator exits with one of 2 Handoff types.
+At **Level 2** the parent-session recipe exits with one of 2 Handoff types.
 
 ### 7.1 `Status: READY_TO_SHIP` (success)
 
@@ -570,7 +599,7 @@ Read the Handoff's **Phase Stopped** + **Blockers** fields, then:
 **Resume mode** — after fixing, type:
 
 ```text
-Start the feature-full-loop agent for <feature>.
+/<skill_prefix>feature-full-loop Feature: <feature>
 ```
 
 The orchestrator reads the current `dev_log` Status and jumps to the correct phase; it does not redo
@@ -635,10 +664,10 @@ Start the feature-phase-review agent for <feature>.   # phase-granularity varian
   Phase: <N>
   Commits: <first_hash>..<last_hash>
 
-# ── Level 2 — single-feature meta-orchestrator ──
+# ── Level 2 — single-feature parent-session recipe ──
 # Automation Mode: one of 8 named variants (see §5.2) —
 #   A-Claude / B-Codex / B-Cursor / C-Codex / C-Cursor / D-Codex / D-Cursor / D-Codex+Cursor
-Start the feature-full-loop agent.
+/<skill_prefix>feature-full-loop
 Requirement: <your requirement, free text>
 Constraints: <optional hard constraints>
 Automation Mode: A-Claude
@@ -647,7 +676,7 @@ Start the bugfix-full-loop agent.
 Bug: <symptom + repro>
 Automation Mode: D-Codex
 
-Start the feature-full-loop agent for <feature>.      # resume after a BLOCKED
+/<skill_prefix>feature-full-loop Feature: <feature>   # resume after a BLOCKED
 
 # ── Level 3 — roadmap orchestration skill ──
 /<skill_prefix>roadmap-loop
@@ -709,8 +738,8 @@ abbreviation or grouping.)
 
 The orchestration roles:
 
-- `feature-full-loop` / `bugfix-full-loop` (meta-orchestrators) — **no trailer needed**: they only
-  append Work Log entries, never flip the Status Panel.
+- `feature-full-loop` / `bugfix-full-loop` compatibility orchestrators — **no trailer needed**: they
+  only append Work Log entries, never flip the Status Panel.
 - `feature-phase-review` (phase-granularity variants) — **recommended but not enforced**: it only
   writes the Phase Verdict, not the Status Panel.
 - the `<skill_prefix>roadmap-loop` skill — **never writes a `dev_log` Status Panel at all** (it only
