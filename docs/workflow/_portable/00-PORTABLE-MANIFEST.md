@@ -86,6 +86,8 @@ tells you to instantiate a path. The middle column explains the placeholder; the
 | `<skill_root>` | Root dir where skill definitions (`SKILL.md`) live in the project | `.teams/skills/` |
 | `<roadmap_manifest_dir>` | Dir where Layer 3.5 roadmap manifest files live (see `06-roadmap-orchestration.md`) | `docs/workflow/project/roadmap/` |
 | `<cowork_scripts_dir>` | Dir where the automation-loop reference shell scripts (dispatch / hook / quota wrappers / `lib_phase_verdict.sh`) are installed in the project — copy `_portable/scripts/*.sh` here | `scripts/cowork/` |
+| `<public_skill_root>` | Root dir where the portable public-skill shims live in the project — `a2k-workflow-migrate instantiate` copies `_portable/skills/` verbatim here. Optional: omit if the project does not adopt the public-skill bundle (Step 6a in §4 is skippable). | `docs/workflow/_portable/skills/` |
+| `<mcp_servers_root>` | Root dir where the portable MCP-server install README lives — `a2k-workflow-migrate instantiate` copies `_portable/mcp-servers/` verbatim here. Optional: omit if the project does not adopt any MCP servers. | `docs/workflow/_portable/mcp-servers/` |
 
 ### 3.2 Skill / role placeholders
 
@@ -209,6 +211,13 @@ per-project rewrite.
    substitute the `<...>` path tokens inside generated agent bodies — those are propagated by hand
    into `.claude/.codex/.cursor` (targeted), as are any post-generation hand-fixes. Re-running with
    `--force` **regresses** those hand-edits: re-run only when a template changed, then re-propagate.
+6a. **(optional public-skill bundle)** Run the generation script again with `--include-skills`
+   to render the public-skill shims under `<public_skill_root>` into `.claude/skills/skill-*/SKILL.md`,
+   `.codex/agents/skill-*.toml`, and `.cursor/rules/skill-*.mdc`. Optional `--skills NAME[,NAME]`
+   selects a subset. Without `--include-skills`, behavior is byte-identical to step 6.
+   Then (optional) follow `<mcp_servers_root>/README.md` for the Playwright MCP and Rube install
+   commands — those servers stay out of the generator path. Skip this step entirely if the project
+   does not adopt the public-skill bundle.
 7. **(event-driven `B-*` / `C-*` variants only)** Copy **all** of `_portable/scripts/*` into
    `<cowork_scripts_dir>` (the full set incl. `lib_hook_helpers.sh` — `git-post-commit`
    hard-depends on it; copying only the dispatch/wrapper scripts yields a hook that resolves no
@@ -378,18 +387,28 @@ checklist. STOP.
 4. **Search-and-replace** the §3.1 / §3.2 / §3.3 placeholders across `<templates_dir>/*.md` and
    `<project_background_file>`, using the plan's table. Replacing `<skill_prefix>` once resolves
    every skill name. The §3.4 runtime tokens are left untouched.
-5. **Copy the generation script** `_portable/scripts/setup_subagents_v2.py` + `.sh` into the
-   target's `scripts/`, then adjust the four constants its header marks `# >>> ADJUST`
-   (`TEMPLATES_DIR`, `BACKGROUND_FILE`, the model-slug maps) to the target's values.
+5. **Copy the generation script** `_portable/scripts/setup_subagents_v2.py` + `.sh` +
+   `setup_subagents_v2_skills.py` into the target's `scripts/`, then adjust the four constants
+   its header marks `# >>> ADJUST` (`TEMPLATES_DIR`, `BACKGROUND_FILE`, the model-slug maps) to
+   the target's values. Set `SKILLS_DIR` to wherever the target placed `<public_skill_root>` (the
+   project running script's `ROOT` resolves to the repo root, so the path is typically
+   `ROOT / "docs" / "workflow" / "_portable" / "skills"`).
+5a. **(optional public-skill carry-over)** Copy `_portable/skills/` verbatim into the target's
+   `<public_skill_root>` and `_portable/mcp-servers/` into `<mcp_servers_root>`. Skip if the target
+   opts out of the public-skill bundle. The shims are project-agnostic; no placeholder substitution
+   is needed.
 6. **Copy the automation-loop reference shell scripts** `_portable/scripts/*.sh` (the dispatch /
    hook / quota-wrapper / `lib_phase_verdict.sh` set) into the target's `<cowork_scripts_dir>` and
    replace their `<...>` placeholder tokens. Optional — skip if the target only wants the
    synchronous automation variants (see `04-automation-loop.md` §3).
 7. **Run the generation script** to produce `.claude/agents/`, `.codex/agents/`, `.cursor/agents/`
    and `.codex/config.toml`.
-8. **Verify.** Count: 15 templates → 15 × 3 = 45 generated configs + 1 `.codex/config.toml`. Run
-   `check_portable_sync.py` against the copied portable layer (must PASS). Spot-check that no
-   `<placeholder>` token survived in `<templates_dir>/*.md` or the generated configs.
+8. **Verify.** Count (without `--include-skills`): 15 templates → 15 × 3 = 45 generated configs +
+   1 `.codex/config.toml`. Count (with `--include-skills`): 15 × 3 = 45 frozen + 8 skills × 3 = 24
+   skill outputs = **69 outputs** + 1 `.codex/config.toml`. Skip the +24 if the target opted out of
+   the public-skill bundle. Run `check_portable_sync.py` against the copied portable layer (must
+   PASS). Spot-check that no `<placeholder>` token survived in `<templates_dir>/*.md` or the
+   generated configs.
 9. **Emit the project-layer checklist and STOP.** Do not author the project-layer docs — list them
    for the human:
    - write `<project_workflow_doc>` — the concrete V2 landing (use the source project's instance as
@@ -422,17 +441,23 @@ project". It is **idempotent** (safe to re-run) and **non-destructive** (constra
    copy (diff the two `_portable/` trees; list new files, changed scripts, changed `04` / `07` /
    `00-MANIFEST`, changed templates). Do not dump full diffs.
 4. **Overwrite the target `docs/workflow/_portable/` verbatim** from source (project-agnostic;
-   always a safe whole-tree replace once §1 passed).
+   always a safe whole-tree replace once §1 passed). This includes `_portable/skills/` and
+   `_portable/mcp-servers/` — both are project-agnostic and ride the same whole-tree replace.
+   Additionally re-overwrite `<public_skill_root>` and `<mcp_servers_root>` from the refreshed
+   `_portable/skills/` and `_portable/mcp-servers/` (if the target adopted the public-skill
+   bundle).
 5. **Re-render `_portable/scripts/*` → `<cowork_scripts_dir>/`** with the target's token map — the
    FULL set including any new files. Re-confirm `.git/hooks/post-commit` is the chained wrapper
    (§4 of this manifest). Scan: no `<placeholder>` may survive in `<cowork_scripts_dir>/`.
 6. **Re-instantiate templates with a conflict guard.** For each `_portable/templates/*.md`, compute
    the placeholder-substituted upstream form and compare to the target's `<templates_dir>/` copy.
    Differs ONLY by upstream content → overwrite. Target copy hand-customized (differs beyond
-   substitution) → do NOT overwrite; add to a CONFLICTS list. Then run the `<setup_script>` to
-   regenerate `.claude/.codex/.cursor` (note the `--force` regression caveat — §4 step 6; targeted
-   re-propagation for hand-fixed agents). If CONFLICTS is non-empty, STOP for human 3-way merge
-   before generating.
+   substitution) → do NOT overwrite; add to a CONFLICTS list. The same conflict guard extends to
+   every `_portable/skills/<name>/SKILL.md` shim (a project-customized shim → CONFLICTS list, STOP
+   for human 3-way merge). Then run the `<setup_script>` (with `--include-skills` if the target
+   adopted the public-skill bundle) to regenerate `.claude/.codex/.cursor` (note the `--force`
+   regression caveat — §4 step 6; targeted re-propagation for hand-fixed agents). If CONFLICTS is
+   non-empty, STOP for human 3-way merge before generating.
 7. **Refresh the lint.** If the project carries `scripts/lint/check_portable_sync.py`, update it
    from source (incl. the cowork↔portable parity rule); else list it in the checklist as a
    recommended add. Run it — must PASS (it catches any placeholder left unsubstituted in §5).

@@ -57,6 +57,16 @@ ROOT = Path(__file__).resolve().parent.parent
 TEMPLATES_DIR = ROOT / ".agents" / "templates"
 BACKGROUND_FILE = ROOT / ".agents" / "project_background.md"
 
+# >>> ADJUST (1b/2): public-skill shim source location (--include-skills only).
+# Public-skill shim SKILL.md files live in `<portable_root>/skills/<name>/SKILL.md`.
+# In a migrated project the portable layer lives at e.g. `docs/workflow/_portable/`,
+# so the project running copy of this script should set
+# `SKILLS_DIR = ROOT / "docs" / "workflow" / "_portable" / "skills"` (or wherever
+# the target placed the portable layer). The portable reference script (this
+# file, sitting under `_portable/scripts/`) resolves `ROOT / "skills"` directly
+# because its ROOT *is* `_portable/`.
+SKILLS_DIR = ROOT / "skills"
+
 # -----------------------------------------------------------------------------
 # Model slug maps — update these when platform model names change.
 # >>> ADJUST (2/2): per-project model tiering policy. The values below are the
@@ -148,6 +158,19 @@ def parse_args() -> argparse.Namespace:
         "--dry-run",
         action="store_true",
         help="Print planned output paths without writing files.",
+    )
+    parser.add_argument(
+        "--include-skills",
+        action="store_true",
+        help="Also render the public-skill shims under SKILLS_DIR into "
+             ".claude/skills/skill-*, .codex/agents/skill-*.toml, .cursor/rules/skill-*.mdc. "
+             "Without this flag, output is byte-identical to the pre-skill-bundle behavior.",
+    )
+    parser.add_argument(
+        "--skills",
+        default="",
+        help="Comma-separated subset of skill names to render. Honored only with --include-skills. "
+             "Empty (default) = all skills under SKILLS_DIR.",
     )
     return parser.parse_args()
 
@@ -306,6 +329,29 @@ def target_paths(template: Template, replace_claude: bool) -> Dict[str, Path]:
     }
 
 
+# Public-skill bundle (opt-in via --include-skills). Implementation lives in
+# the sibling submodule setup_subagents_v2_skills.py to keep this file under
+# the §9.4 single-file LOC budget. The submodule shares this module's Template
+# / parse_template / write_file / toml_multiline plumbing via parameter passing
+# (no circular import).
+from setup_subagents_v2_skills import (
+    load_skills as _load_skills_impl,
+    render_skill_claude as _render_skill_claude,
+    render_skill_codex as _render_skill_codex,
+    render_skill_cursor as _render_skill_cursor,
+    write_skill as _write_skill,
+)
+
+
+def _render_skills(skills, target: str):
+    fns = {
+        "claude": lambda s: _render_skill_claude(s, ROOT),
+        "codex": lambda s: _render_skill_codex(s, codex_output_dir(), CODEX_FAST_MODEL, toml_multiline),
+        "cursor": lambda s: _render_skill_cursor(s, ROOT),
+    }
+    return [fns[target](s) for s in skills]
+
+
 def ensure_codex_config(dry_run: bool, force: bool) -> str:
     config_path = ROOT / ".codex" / "config.toml"
     if config_path.exists():
@@ -358,6 +404,26 @@ def main() -> int:
     if "codex" in targets:
         status = ensure_codex_config(args.dry_run, args.force)
         rows.append(("codex", "_config", ".codex/config.toml", status))
+
+    if args.include_skills:
+        all_skills = list(_load_skills_impl(SKILLS_DIR, background, parse_template, Template, ROOT))
+        if not all_skills:
+            raise SystemExit(f"--include-skills requested but {SKILLS_DIR} has no shims")
+        wanted = {s.strip() for s in args.skills.split(",") if s.strip()}
+        if wanted:
+            known = {t.name for t in all_skills}
+            for n in sorted(wanted):
+                if n not in known:
+                    raise SystemExit(f"Unknown skill: {n}")
+            skills = [t for t in all_skills if t.name in wanted]
+        else:
+            skills = all_skills
+        for skill in skills:
+            for target in sorted(targets):
+                out_path, content = _render_skills([skill], target)[0]
+                ensure_dir(out_path.parent, args.dry_run)
+                status = _write_skill(out_path, content, args.force, args.dry_run, write_file)
+                rows.append((target, f"skill-{skill.name}", str(out_path.relative_to(ROOT)), status))
 
     print("Generated Workflow V2 subagent configs:")
     for target, name, rel_path, status in rows:
