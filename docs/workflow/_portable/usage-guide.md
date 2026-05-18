@@ -216,9 +216,9 @@ Per-variant add-ons for Level 2 (`04` §3):
 | Variant | Add-on |
 |---------|--------|
 | **`A-Claude`** | none |
-| **`D-Codex` / `D-Cursor` / `D-Codex+Cursor`** | the `codex` and/or `cursor-agent` CLI installed and callable (on macOS also `gtimeout` / `flock` — see `04` §3.7) |
-| **`B-Codex` / `B-Cursor`** | the external CLI + the dispatch script + the git post-commit hook wired (the reference scripts ship in `_portable/scripts/`) |
-| **`C-Codex` / `C-Cursor`** | the `B-*` add-ons + the `feature-phase-review` subagent |
+| **`D-Codex` / `D-Cursor` / `D-Codex+Cursor`** | the `codex` and/or `cursor-agent` CLI installed and callable; `feature-auto-build` uses the lead-and-delegate protocol inline (on macOS also `gtimeout` / `flock` — see `04` §3.7) |
+| **`B-Codex` / `B-Cursor`** | the external CLI + the full dispatch/wrapper/helper script set + the git post-commit chained wrapper wired (the reference scripts ship in `_portable/scripts/`) |
+| **`C-Codex` / `C-Cursor`** | the `B-*` add-ons + the `feature-phase-review` subagent; dispatch scripts must allow `feature-build` for per-phase build |
 
 ---
 

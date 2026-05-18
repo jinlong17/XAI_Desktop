@@ -17,7 +17,7 @@
 #          $2 = <prompt_file>  (absolute path the orchestrator/hook rendered)
 #          $3 = <agent_name>   (optional, defaults to feature-auto-build)
 #                              One of: feature-plan / feature-review /
-#                                      feature-auto-build / feature-verify /
+#                                      feature-build / feature-auto-build / feature-verify /
 #                                      bug-diagnose / bug-fix / bug-auto-fix /
 #                                      bug-verify
 # Exit:    0 if cursor-agent was successfully launched; non-zero otherwise.
@@ -29,7 +29,7 @@ PROMPT_FILE="${2:?prompt file path required}"
 AGENT_NAME="${3:-feature-auto-build}"
 
 case "$AGENT_NAME" in
-  feature-plan|feature-review|feature-auto-build|feature-verify| \
+  feature-plan|feature-review|feature-build|feature-auto-build|feature-verify| \
   bug-diagnose|bug-fix|bug-auto-fix|bug-verify) ;;
   *)
     echo "ERROR: unknown agent_name '$AGENT_NAME'" >&2
@@ -61,6 +61,15 @@ fi
 [ -z "$TIMEOUT_BIN" ] && echo "WARN: no timeout binary; install via 'brew install coreutils'" >&2
 [ -z "$FLOCK_BIN" ]   && echo "WARN: no flock binary; install via 'brew install util-linux' — concurrent cursor-agent calls may hang" >&2
 
+# Use the quota-aware wrapper when it is installed next to this script. The
+# wrapper still delegates to cursor-agent, but records cursor-exhausted-until on
+# quota / availability failures so D/B/C fallback logic can route around it.
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+CURSOR_BIN="cursor-agent"
+if [ -x "$SCRIPT_DIR/cursor_wrapper.sh" ]; then
+  CURSOR_BIN="$SCRIPT_DIR/cursor_wrapper.sh"
+fi
+
 # Recommended cursor-agent invocation form:
 #   --print               long form of -p (automation scripts pin the long flag — short flags drift)
 #   --force               REQUIRED for unattended use: without --trust/--yolo/-f,
@@ -82,14 +91,21 @@ fi
 #   flock                 serializes cursor-agent (a known concurrent-hang issue)
 #   timeout 700           guards against a hung CLI
 #   explicit LC_ALL/LANG  guards against CJK / non-UTF-8 output corruption
-CMD="cursor-agent --print --force --model ${CW_CURSOR_MODEL:-gpt-5.5-high} --output-format json --workspace $REPO_ROOT"
-[ -n "$TIMEOUT_BIN" ] && CMD="$TIMEOUT_BIN 700 $CMD"
-[ -n "$FLOCK_BIN" ]   && CMD="$FLOCK_BIN $RUN_DIR/cursor.lock $CMD"
+CMD=(
+  "$CURSOR_BIN"
+  --print
+  --force
+  --model "${CW_CURSOR_MODEL:-gpt-5.5-high}"
+  --output-format json
+  --workspace "$REPO_ROOT"
+)
+[ -n "$TIMEOUT_BIN" ] && CMD=("$TIMEOUT_BIN" 700 "${CMD[@]}")
+[ -n "$FLOCK_BIN" ]   && CMD=("$FLOCK_BIN" "$RUN_DIR/cursor.lock" "${CMD[@]}")
 
 RUN_LOG="$RUN_DIR/${FEATURE}.${AGENT_NAME}.cursor.last_run.json"
 
 LC_ALL=en_US.UTF-8 LANG=en_US.UTF-8 \
-  $CMD < "$PROMPT_FILE" \
+  "${CMD[@]}" < "$PROMPT_FILE" \
   > "$RUN_LOG" 2>&1 &
 
 date +%s > "<orchestrator_marker_dir>/${FEATURE}.${AGENT_NAME}.cursor_dispatched"

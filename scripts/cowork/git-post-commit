@@ -69,8 +69,14 @@ VARIANT="$(grep -E '^- Automation Mode:' "$DEV_LOG" | head -1 | sed -E 's/^- Aut
 VERIFY_CV="$(grep -E '^- Verify Cross-vendor:' "$DEV_LOG" | head -1 | sed -E 's/^- Verify Cross-vendor:[[:space:]]*//')"
 [ -z "$VERIFY_CV" ] && VERIFY_CV="yes"   # default strict
 
-# 5-min dedup so a burst of commits does not spam notifications / dispatches.
-DEDUP="$HOOK_STATE_DIR/${FEATURE}.last_notification"
+# 5-min dedup so a burst of duplicate commits does not spam notifications /
+# dispatches. Key by transition, not only feature: a fast
+# NEEDS_REVIEW -> APPROVED -> READY_FOR_VERIFY chain must not suppress the next
+# relay step.
+DEDUP_STATUS="$(printf '%s' "$STATUS" | tr -c 'A-Za-z0-9_.-' '_')"
+DEDUP_VARIANT="$(printf '%s' "$VARIANT" | tr -c 'A-Za-z0-9_.-' '_')"
+DEDUP_AGENT="$(grep -E '^- Executor:' "$DEV_LOG" | head -1 | sed -E 's/^- Executor:[[:space:]]*//' | tr -c 'A-Za-z0-9_.-' '_')"
+DEDUP="$HOOK_STATE_DIR/${FEATURE}.${DEDUP_VARIANT}.${DEDUP_STATUS}.${DEDUP_AGENT}.last_notification"
 now=$(date +%s)
 if [ -f "$DEDUP" ] && [ $(( now - $(cat "$DEDUP" 2>/dev/null || echo 0) )) -lt 300 ]; then
   exit 0

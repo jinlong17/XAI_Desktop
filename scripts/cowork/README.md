@@ -74,7 +74,7 @@ scripts in this folder:**
 | File | Role |
 |------|------|
 | `lib_phase_verdict.sh` | the shared `read_phase_verdict()` four-state reader (sourced by every reader) |
-| `dispatch_codex.sh` / `dispatch_cursor.sh` | fire-and-forget dispatch of one build prompt to Codex / Cursor |
+| `dispatch_codex.sh` / `dispatch_cursor.sh` | fire-and-forget dispatch of one workflow-step prompt to Codex / Cursor |
 | `git-post-commit` | the neutral cross-tool relay trigger (chained wrapper at `.git/hooks/post-commit`, NOT a symlink) |
 | `lib_hook_helpers.sh` | project-layer helpers `git-post-commit` HARD-DEPENDS on (`determine_other_vendor` / `determine_lead_from_variant` / `render_*_prompt`); ships here as a working reference — copy + de-placeholder like the others |
 | `codex_wrapper.sh` / `cursor_wrapper.sh` | thin quota-aware wrappers that detect executor exhaustion |
@@ -117,8 +117,9 @@ and returns immediately; it does **not** wait for the external work to finish.
     post-commit hook wrote to `<orchestrator_marker_dir>/`)
   - `$3 = <agent_name>` (optional; **NEW 2026-05-16**; defaults to `feature-auto-build` for
     back-compat with the pre-extension B-* contract). Legal values: `feature-plan` /
-    `feature-review` / `feature-auto-build` / `feature-verify` / `bug-diagnose` / `bug-fix` /
-    `bug-auto-fix` / `bug-verify`. Any other value → exit code 2.
+    `feature-review` / `feature-build` / `feature-auto-build` / `feature-verify` /
+    `bug-diagnose` / `bug-fix` / `bug-auto-fix` / `bug-verify`. Any other value → exit code 2.
+    `feature-build` is required for C-* per-phase dispatch; do not remove it from the whitelist.
 - **Outputs (side effects):** starts the external executor (headless CLI is the reliable path — see
   `../04-automation-loop.md` §2.6 + §3.4); writes a run log somewhere the user can `tail` (log
   filename includes `<agent_name>` so multi-step runs don't clobber each other).
@@ -142,6 +143,8 @@ JSON from multiple sources; never hard-depend on a single error string).
 - **Outputs (side effects):** on a detected quota-exhaustion signal, writes
   `<quota_state_dir>/<executor>-exhausted-until` containing a future UNIX timestamp.
 - **Exit code:** mirrors the underlying CLI's exit code (so callers can still branch on it).
+- Dispatch scripts should invoke these wrappers when they are installed next to the dispatch script;
+  otherwise quota fallback markers are never written.
 
 ### `git-post-commit` — the event-driven multi-state dispatcher
 
@@ -183,6 +186,9 @@ just-committed dev_log, it routes:
   `dispatch_<vendor>.sh`, and notifies.
 - The hook's dispatch path is only active for `B-Codex` / `B-Cursor` / `C-Codex` / `C-Cursor`
   variants — A and D variants never enter this code (the orchestrator drives them directly).
+- Dedup is keyed by feature + variant + status + executor, not only by feature. A fast
+  `NEEDS_REVIEW` → `APPROVED` → `READY_FOR_VERIFY` sequence must be able to dispatch every
+  transition.
 
 ### Optional: a marker / quota CLI
 

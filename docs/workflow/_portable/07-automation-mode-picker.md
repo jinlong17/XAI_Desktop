@@ -360,8 +360,9 @@ Verification lint(`scripts/lint/check_state_verification_compliance.py`)rejects 
 > **B-* / C-* hook scope (2026-05-16 reminder).** B-* variants now cover the full review → build →
 > verify cycle via hook auto-dispatch — see §2.3 table above and `_portable/04-automation-loop.md`
 > §3.4 for the full state machine. Setting up requires `dispatch_<vendor>.sh` +
-> `git-post-commit` installed in `<cowork_scripts_dir>` + `.git/hooks/post-commit` symlink + a
-> project-layer `lib_hook_helpers.sh` defining `determine_other_vendor` /
+> `git-post-commit` installed in `<cowork_scripts_dir>` + `.git/hooks/post-commit` installed as a
+> chained wrapper (backs up/runs any previous hook; **not** a symlink) + a project-layer
+> `lib_hook_helpers.sh` defining `determine_other_vendor` /
 > `determine_lead_from_variant` / `render_review_prompt` / `render_build_prompt` /
 > `render_verify_prompt`. Without those helpers the hook degrades to notify-only (pre-2026-05-16
 > behaviour).

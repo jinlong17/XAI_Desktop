@@ -377,9 +377,10 @@ cursor-agent --print --force --model ${CW_CURSOR_MODEL:-gpt-5.5-high} --output-f
 **The contract the external executor's prompt must hard-code** (so it cannot be relaxed by the
 delegated prompt): commit each phase with the trailer naming the *host worker*
 (`Co-authored-by: feature-auto-build <workflow-v2@local>`, never `cursor` / `gpt-5.5`); do not touch
-the `dev_log` Status Panel — only the specified phase's Phase Progress; do not spawn other
-subagents; do not call MCP tools that mutate external systems; stop after the single phase; on an
-ambiguous plan write a Blocker and exit (do not guess); obey the file-size hard ceilings.
+`dev_log.md`, the Status Panel, or Phase Progress — the host worker reviews the delegated result and
+writes Phase Progress / Work Log afterward; do not spawn other subagents; do not call MCP tools that
+mutate external systems; stop after the single phase; on an ambiguous plan report a Blocker and exit
+(do not guess); obey the file-size hard ceilings.
 
 **Why IDE wake-up is not in the automated chain:** neither the Cursor IDE nor the Codex desktop app
 has a publicly supported "inject a prompt into the active session from an external process" path on

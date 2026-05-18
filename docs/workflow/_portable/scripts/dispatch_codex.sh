@@ -19,7 +19,7 @@
 #          $2 = <prompt_file>  (absolute path the orchestrator/hook rendered)
 #          $3 = <agent_name>   (optional, defaults to feature-auto-build)
 #                              One of: feature-plan / feature-review /
-#                                      feature-auto-build / feature-verify /
+#                                      feature-build / feature-auto-build / feature-verify /
 #                                      bug-diagnose / bug-fix / bug-auto-fix /
 #                                      bug-verify
 # Exit:    0 if Codex was successfully launched; non-zero if it could not be
@@ -39,10 +39,10 @@ PROMPT_FILE="${2:?prompt file path required}"
 AGENT_NAME="${3:-feature-auto-build}"
 
 case "$AGENT_NAME" in
-  feature-plan|feature-review|feature-auto-build|feature-verify| \
+  feature-plan|feature-review|feature-build|feature-auto-build|feature-verify| \
   bug-diagnose|bug-fix|bug-auto-fix|bug-verify) ;;
   *)
-    echo "ERROR: unknown agent_name '$AGENT_NAME' (expected one of feature-plan/feature-review/feature-auto-build/feature-verify/bug-diagnose/bug-fix/bug-auto-fix/bug-verify)" >&2
+    echo "ERROR: unknown agent_name '$AGENT_NAME' (expected one of feature-plan/feature-review/feature-build/feature-auto-build/feature-verify/bug-diagnose/bug-fix/bug-auto-fix/bug-verify)" >&2
     exit 2
     ;;
 esac
@@ -76,10 +76,19 @@ if ! command -v codex >/dev/null 2>&1; then
   exit 1
 fi
 
+# Use the quota-aware wrapper when it is installed next to this script. The
+# wrapper still delegates to codex, but records codex-exhausted-until on quota /
+# availability failures so fallback logic can route around it.
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+CODEX_BIN="codex"
+if [ -x "$SCRIPT_DIR/codex_wrapper.sh" ]; then
+  CODEX_BIN="$SCRIPT_DIR/codex_wrapper.sh"
+fi
+
 # $TIMEOUT_PREFIX is intentionally unquoted: empty -> zero args; non-empty -> two tokens.
 RUN_LOG="$RUN_DIR/${FEATURE}.${AGENT_NAME}.codex.last_run.jsonl"
 
-$TIMEOUT_PREFIX codex exec \
+$TIMEOUT_PREFIX "$CODEX_BIN" exec \
   --sandbox workspace-write \
   --cd "$REPO_ROOT" \
   --json \
