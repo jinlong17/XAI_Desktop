@@ -18,12 +18,20 @@ bug-diagnose → bug-fix → bug-verify → ship
 - `feature-dev-loop` — 自动循环 build + verify（最多 3 轮）
 - `bugfix-loop` — 自动循环 fix + verify（最多 3 轮）
 
+> ⚠️ **Claude Code 运行时约束(2026-05-17 实测)**:`feature-dev-loop` / `bugfix-loop`（以及 resync 新带入的 `feature-full-loop` / `bugfix-full-loop` meta-orchestrator）被作为 Task subagent spawn 时,Claude Code **静默不给 `Task` 工具**(防递归)→ 它们**无法自己 spawn worker**,会立即 `Status: BLOCKED`。可工作路径:**main session 自己当 orchestrator,直接 Task-spawn worker**(`feature-plan`→`feature-review`→`feature-build`/`feature-auto-build`→`feature-verify`,每步间读 dev_log Status Panel)。事件驱动 B-*/C-* 变体不受此约束(编排在 post-commit hook,非 in-session Task)。
+
+### Phase 0 INTAKE & 事件驱动变体（resync 引入,见 `docs/workflow/_portable/`）
+
+resync 后本项目已具备完整 V2 portable 层:`feature-full-loop` / `bugfix-full-loop` meta-orchestrator 的 **Phase 0 是 3 字段**——① Requirement/Bug 缺失=硬 BLOCKED(free-text 装不进 picker,绝不问)② Automation Mode picker Q1 ③ Verify Cross-vendor picker Q2(同一次 AskUserQuestion;host 不能问时默认 `yes`)。事件驱动 `B-Codex`/`B-Cursor`(headless `codex exec` / `cursor-agent --print --force`)+ `C-*` 经 `.git/hooks/post-commit` 链式 wrapper 自动跨厂商派发 review/verify。完整规格见 `docs/workflow/_portable/07-automation-mode-picker.md` §1A/§2.6 + `04-automation-loop.md` §3.4。前置:`codex` 已认证、`cursor-agent login`、`brew install coreutils util-linux`。
+
 ## Core Rules
 
 1. **文档驱动交接** — 不靠聊天上下文，靠 `dev_log.md` + 共享文档
 2. **断点续接** — 每个 subagent 启动时自动检测 Fresh / Continue / Review / Revise / Wait / Block / Done
 3. **人工确认点** — feature-build 每个 phase 完成后停下等确认；ship 需要人工确认 push
-4. **状态写入契约** — 每次写 dev_log.md 必须维护 Workflow / Executor / Updated / Suggested Next / Work Log
+4. **状态写入契约** — 每次写 dev_log.md 必须维护 Workflow / Executor / Updated / Suggested Next / Work Log。
+   - `Executor` 是**单行滚动**字段(最后写盘者)——没有 Plan/Build/Review Executor 专用字段;hook 解析厂商时读这一行(NEEDS_REVIEW 时它=plan 执行者,READY_FOR_VERIFY 时=build 执行者)。
+   - `feature-plan`(首次 NEEDS_REVIEW)/ `bug-diagnose`(首次 FIX_READY)额外写 `Automation Mode:` **和** `Verify Cross-vendor:` 两个 Status Panel 字段;其它 agent 只读这两行。meta-orchestrator(若使用)只 append Work Log,绝不写 Status Panel。
 5. **跨工具无缝** — Claude Code / Codex / Cursor 通过读写同一组文件接力
 
 ## Directory Protocol
