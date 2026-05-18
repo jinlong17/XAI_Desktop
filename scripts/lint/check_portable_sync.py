@@ -59,11 +59,14 @@ WORKFLOW_MODEL_REL = PORTABLE_DIR / "01-workflow-model.md"
 # Each entry is a compiled regex; word-boundary anchored where a substring would
 # false-positive (E2B/LUMX), path-style otherwise.
 PROPER_NOUN_PATTERNS: tuple[tuple[str, re.Pattern[str]], ...] = (
-    # XAI_Desktop nouns. TODO(project): extend with this product's other proper nouns.
-    ("xai-", re.compile(r"xai-")),
-    ("packages/", re.compile(r"packages/")),
-    ("apps/desktop", re.compile(r"apps/desktop")),
-    ("XAI_Desktop", re.compile(r"\bXAI_Desktop\b")),
+    ("a2k-", re.compile(r"a2k-")),
+    ("features/", re.compile(r"features/")),
+    ("apps/web", re.compile(r"apps/web")),
+    ("Stripe", re.compile(r"\bStripe\b")),
+    ("E2B", re.compile(r"\bE2B\b")),
+    ("Univer", re.compile(r"\bUniver\b")),
+    ("LUMX", re.compile(r"\bLUMX\b")),
+    ("Zeabur", re.compile(r"\bZeabur\b")),
 )
 
 # Rule 3: bare project paths that must be placeholders inside templates/*.md.
@@ -110,6 +113,12 @@ COWORK_SCRIPT_FILES = (
     "lib_phase_verdict.sh",
     "lib_hook_helpers.sh",
 )
+# XAI_Desktop project token map (per survey plan 2026-05-16 §1).
+# Diverges from upstream A2K values: <feature_root> = packages (not features),
+# <project_workflow_doc> = docs/workflow/SUBAGENT_WORKFLOW_V2.md (no `project/`
+# subdir). Upstream A2K hardcodes the LUMX values; the lint design does not yet
+# expose this as a per-project config — track via resync doc-delta checklist
+# and consider sending an upstream PR to read from a sibling config file.
 COWORK_TOKEN_MAP: tuple[tuple[str, str], ...] = (
     ("<orchestrator_marker_dir>", "/tmp/cw-orchestrator"),
     ("<quota_state_dir>", "/tmp/cw-quota"),

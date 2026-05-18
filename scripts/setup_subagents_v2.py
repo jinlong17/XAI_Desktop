@@ -286,6 +286,11 @@ def toml_multiline(value: str) -> str:
     return f"'''\n{escaped}'''"
 
 
+def toml_string(value: str) -> str:
+    escaped = value.replace("\\", "\\\\").replace('"', '\\"').replace("\n", "\\n")
+    return f'"{escaped}"'
+
+
 def render_codex(template: Template) -> str:
     model = CODEX_STRONG_MODEL if template.model == "opus" else CODEX_FAST_MODEL
     # Reference-project decision (2026-05-14): flat "high" reasoning for all Codex
@@ -293,11 +298,11 @@ def render_codex(template: Template) -> str:
     reasoning = "high"
     body_stripped = template.body.strip() + "\n"
     lines = [
-        f'name = "{template.name}"',
-        f'description = "{template.description}"',
-        f'sandbox_mode = "{template.codex_sandbox_mode}"',
-        f'model = "{model}"',
-        f'model_reasoning_effort = "{reasoning}"',
+        f"name = {toml_string(template.name)}",
+        f"description = {toml_string(template.description)}",
+        f"sandbox_mode = {toml_string(template.codex_sandbox_mode)}",
+        f"model = {toml_string(model)}",
+        f"model_reasoning_effort = {toml_string(reasoning)}",
         f"developer_instructions = {toml_multiline(body_stripped)}",
     ]
     return "\n".join(lines) + "\n"
@@ -344,7 +349,7 @@ from setup_subagents_v2_skills import (
 def _render_skills(skills, target: str):
     fns = {
         "claude": lambda s: _render_skill_claude(s, ROOT),
-        "codex": lambda s: _render_skill_codex(s, codex_output_dir(), CODEX_FAST_MODEL, toml_multiline),
+        "codex": lambda s: _render_skill_codex(s, codex_output_dir(), CODEX_FAST_MODEL, toml_multiline, toml_string),
         "cursor": lambda s: _render_skill_cursor(s, ROOT),
     }
     return [fns[target](s) for s in skills]
