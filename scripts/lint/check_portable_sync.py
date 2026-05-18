@@ -120,6 +120,7 @@ COWORK_SCRIPT_FILES = (
 # expose this as a per-project config — track via resync doc-delta checklist
 # and consider sending an upstream PR to read from a sibling config file.
 COWORK_TOKEN_MAP: tuple[tuple[str, str], ...] = (
+    ("<skill_prefix>", "xai-"),
     ("<orchestrator_marker_dir>", "/tmp/cw-orchestrator"),
     ("<quota_state_dir>", "/tmp/cw-quota"),
     ("<cowork_scripts_dir>", "scripts/cowork"),
