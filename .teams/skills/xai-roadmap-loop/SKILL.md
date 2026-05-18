@@ -1,6 +1,6 @@
 ---
 name: xai-roadmap-loop
-description: Roadmap orchestration layer (Layer 3.5). Parses a reviewed roadmap source doc into a manifest (init mode), then emits xai-feature-full-loop prompt blocks wave by wave to push every eligible feature to READY_TO_SHIP (run mode). Triggers: roadmap loop, roadmap orchestration, batch-run features, auto-develop a roadmap, advance a roadmap, roadmap manifest.
+description: Roadmap orchestration layer (Layer 3.5). Parses a reviewed roadmap source doc into a manifest (init mode), then confirms dispatch mode and dispatches or emits xai-feature-full-loop work wave by wave to push every eligible feature to READY_TO_SHIP (run mode). Triggers: roadmap loop, roadmap orchestration, batch-run features, auto-develop a roadmap, advance a roadmap, roadmap manifest.
 ---
 
 # xai-roadmap-loop
@@ -21,35 +21,54 @@ behaviour and the hard constraints below.
 2. **Never write any feature's `dev_log.md` Status Panel.** The skill writes only the roadmap
    manifest and — on the decompose path — the per-feature seed briefs (§2b step 5); it only *reads*
    every `dev_log`.
-3. **Never inline-run `feature-full-loop`'s internal steps.** Every feature must go through a spawn
-   (spawn-dispatch) or be emitted as a prompt block for the user to run (emit-dispatch),
-   guaranteeing an independent context.
+3. **Every feature needs an independent execution context unless `dispatch: serial` is explicit.**
+   Default `dispatch: emit` emits a paste-ready `xai-feature-full-loop` prompt block for a
+   new session/window. Recommended Claude Code `dispatch: bg` launches one background session per
+   eligible feature and manages them through Agent View. `dispatch: serial` is the only mode allowed
+   to inline the parent-session recipe, and it must dispatch the real worker agents directly from the
+   caller context rather than spawning `feature-full-loop`.
 4. **BLOCKED does not raise an exception and does not stop the whole roadmap.** Mark + skip + continue.
-5. **Write the manifest to disk before and after every spawn.** Crash recovery depends on this.
+5. **Write the manifest to disk before and after every state-changing dispatch.** Crash recovery
+   depends on this. In `emit` this means before emitting the wave summary and after every reconcile
+   update; in `bg`, `serial`, and legacy `spawn` it also means before/after each feature dispatch.
 6. **The manifest is the single source of state.** Never keep roadmap content in conversation memory.
 7. **Every exit of every mode ends with an explicit, copy-pasteable Next Step** (the Universal Next
-   Step Contract — `_portable/02-handoff-and-state.md` §3.3).
+   Step Contract — `02` §3.3).
 8. **init never auto-continues into run, and the decompose path never bypasses Step 0.** init always
    stops at the human review gate; the decompose path's seed briefs are Step 0's *input*, not a
    replacement for it.
 9. **On the decompose path, ask before guessing.** When a decomposition decision is genuinely
    ambiguous and materially changes the manifest, raise a focused AskUserQuestion-style clarification
    round before finalising; record every guess in the Decomposition Rationale.
-10. **Default dispatch is emit, not spawn.** `run` mode does NOT spawn `feature-full-loop` as Task
-    subagents. Instead, it emits a copy-paste-ready prompt block per eligible feature, telling the
-    user to run each in a separate session/window. Rationale: the 3-level nesting (caller →
-    roadmap-loop → feature-full-loop → feature-plan) hits the spawn-depth cap on most tool
-    platforms (Claude Code default; Codex `max_depth=2`). The user is the real dispatcher;
-    roadmap-loop is the tracker. Opt-in to spawn-dispatch by passing `dispatch: spawn` in the
-    invocation when running on a tool with sufficient nesting capacity.
-11. **Run mode never marks rows IN_PROGRESS.** Since the skill does not actually execute the work
-    (the user does, in parallel sessions), Status flips happen via reconcile reading dev_log truth
-    on the next `run` invocation. Rows stay PENDING until reconcile sees SHIPPED / BLOCKED in the
-    corresponding dev_log Status Panel. (The legacy spawn-dispatch path under `dispatch: spawn`
-    retains the old IN_PROGRESS marking — it actually drives the work and needs the lock.)
+10. **Default dispatch is `emit`; recommended Claude Code parallel dispatch is `bg`.** `run` mode
+    must not make spawned `feature-full-loop` subagents the default, because the nesting chain
+    (caller → roadmap-loop → feature-full-loop → feature-plan) hits the spawn-depth cap on most tool
+    platforms (Claude Code default; Codex `max_depth=2`). `dispatch: bg` sidesteps this by starting
+    separate Claude Code background sessions. `dispatch: serial` sidesteps it by keeping the caller
+    as the orchestrator and dispatching real worker agents directly. `dispatch: spawn` remains an
+    advanced opt-in for hosts with sufficient nesting capacity.
+11. **`emit` never marks rows IN_PROGRESS; executing modes do.** In `emit`, rows stay PENDING until
+    reconcile sees SHIPPED / READY_TO_SHIP / BLOCKED in the corresponding dev_log Status Panel. In
+    `bg`, `serial`, and legacy `spawn`, mark a row IN_PROGRESS before launching that feature and
+    update it after the feature reaches READY_TO_SHIP or BLOCKED.
 12. **Run-time Mode fallback is session-local and never written back to the manifest.** The
-    `run_time_fallback` resolved at picker `_portable/07` §4 layer 4 stays in session memory;
-    persistence requires init or a human hand-edit of the manifest header.
+    `run_time_fallback` resolved at picker `07` §4 layer 4 stays in session memory; persistence
+    requires init or a human hand-edit of the manifest header.
+13. **`claude -p` is not the `bg` path.** Headless `claude -p` does not support user-invoked skills
+    the same way an interactive/background Claude Code session does; use `claude --bg` / Agent View
+    for `dispatch: bg`. Treat a future headless wrapper as a separate engineering project.
+14. **`bg` must protect worktrees and quota.** Before launching bg sessions, satisfy the clean-tree /
+    `worktree.baseRef=head` / inline-content visibility gate, respect `Wave Concurrency Cap` (default
+    `3`), queue overflow rows with `QUEUED_BG`, and make ship instructions point to the background
+    session worktree. Agent View PR dots are never the A2K truth source.
+15. **Dispatch confirmation is mandatory, in Chinese, on every `run`.** After resolving the candidate
+    dispatch mode but before emitting prompt blocks, marking rows `IN_PROGRESS`, launching bg
+    sessions, or dispatching any worker, present a Chinese AskUserQuestion-style confirmation that
+    lists all four modes with detailed explanations. This gate fires whether the user supplied
+    `dispatch:` in the prompt or omitted it and got the default `emit`. The answer overrides the
+    session-local dispatch choice only; never write it back to the manifest unless the human edits
+    the manifest separately. If the host cannot ask interactively, STOP with a Next Step that asks
+    the user to re-run and confirm the dispatch mode explicitly.
 
 ## 1. Mode detection
 
@@ -66,8 +85,8 @@ behaviour and the hard constraints below.
 
 ## 2. init mode
 
-Input: `source:` pointing at a reviewed source doc. Output: a manifest per portable spec §A6 — plus,
-on the decompose path, per-feature seed briefs and a `## Decomposition Rationale`.
+Input: `source:` pointing at a reviewed source doc. Output: a manifest per spec §A6 — plus, on the
+decompose path, per-feature seed briefs and a `## Decomposition Rationale`.
 
 ### 2a. parse path — input is an already-decomposed roadmap doc
 
@@ -87,18 +106,17 @@ Mechanical extraction; invent nothing.
 Propose a decomposition; the shared-tail review gate is where the author confirms it.
 
 1. Read the project's structural context — `docs/PLUGIN_MAP.md`, `docs/planning/REFACTORING_PLAN.md`,
-   `developer.md` (when present), the `packages/` plugin layout — so features land on real plugin
+   `developer.md` when present, and the `packages/` plugin layout — so features land on real plugin
    boundaries. XAI naming: each `<slug>` is a `plugin-<name>` package.
 2. Partition the PRD into the smallest independent candidate units that each make sense as one
-   `feature-full-loop` run; prefer existing plugin boundaries. This step MAY spawn parallel
+   `xai-feature-full-loop` run; prefer existing plugin boundaries. This step MAY spawn parallel
    analysis subagents (e.g. one per subsystem named in the PRD), then synthesise their results —
-   this keeps init's own context small (portable spec §A3 principle 3).
+   this keeps init's own context small (spec §A3 principle 3).
 3. Analyse inter-feature relationships first, then infer the dependency graph from them: shared
    modules/files (concurrent-edit conflict risk in `packages/core/` or `packages/ui/`),
-   contract/data dependencies (shared typed events in `packages/core/src/events/`),
-   sequencing/foundation, true independence (do not invent edges). Set `depends_on` +
-   `Dep Semantics` (default `shipped`; relax to `ready_to_ship` only where the PRD clearly allows).
-   Assign a canonical `Slug` per feature.
+   contract/data dependencies (shared typed events in `packages/core/src/events/`), sequencing/foundation,
+   true independence (do not invent edges). Set `depends_on` + `Dep Semantics` (default `shipped`;
+   relax to `ready_to_ship` only where the PRD clearly allows). Assign a canonical `Slug` per feature.
 4. Clarify genuine ambiguity with the user — do NOT silently guess. When a decision is genuinely
    ambiguous AND materially changes the manifest (one feature or two? real dependency or
    parallelisable? priority/sequencing? scope in or out?), pause and ask a focused, batched
@@ -126,13 +144,13 @@ Propose a decomposition; the shared-tail review gate is where the author confirm
   - To disable the shortcut and force a full picker per row, set a project-layer config flag
     (portable spec keeps shortcut ON by default).
 - AskUserQuestion **once** for the cross-vendor verify gate
-  (`docs/workflow/SUBAGENT_WORKFLOW_V2.md` cross-vendor verify section):
+  (`docs/workflow/SUBAGENT_WORKFLOW_V2.md` V2 portable-layer note):
   - Question: "Strict cross-vendor verify gate? (recommended yes — strict; opt out to allow `feature-dev-loop` and skip the manual cross-vendor verify hand-off)"
   - Option 1: "Yes — strict (default)" → header `Default Verify Cross-vendor: yes`
   - Option 2: "No — allow feature-dev-loop (echo chamber accepted)" → header `Default Verify Cross-vendor: no`
   - All row `Verify Cross-vendor` cells are written as `(default)`; the user can hand-edit individual rows post-init for per-row overrides.
 - Write the manifest to `docs/workflow/roadmap/<roadmap_name>.md` (set `Init Path:` accordingly);
-  schema per portable spec §A6.
+  schema per spec §A6.
 - **Stop at the review gate.** Output the manifest path + a dependency-graph wave summary; on the
   decompose path also surface the Decomposition Rationale and the seed-brief locations. Hand to a
   human for review. **init does not auto-continue into run** — and on the decompose path the review
@@ -163,8 +181,9 @@ For each manifest row, branch on the row's **prior manifest Status** (not the de
   manual reset to `PENDING` is the **only** path out of `BLOCKED`.
 - **prior `READY_TO_SHIP`** → advance only: dev_log `SHIPPED` → manifest `SHIPPED` (downstream deps
   unlock); otherwise no-op (still waiting for the human `ship`).
-- **prior `IN_PROGRESS`** → a prior `feature-full-loop` spawn left the row mid-flight (orchestrator
-  exited `AWAITING_*`, or a crash). Reconcile by dev_log Status:
+- **prior `IN_PROGRESS`** → an executing dispatch mode (`bg`, `serial`, or legacy `spawn`) left the
+  row mid-flight (background session still running, orchestrator exited `AWAITING_*`, or a crash).
+  Reconcile by dev_log Status:
   - `SHIPPED` → manifest `SHIPPED`; `READY_TO_SHIP` → manifest `READY_TO_SHIP`.
   - `BLOCKED` → manifest `BLOCKED` (record the dev_log Blocker in `Note`) — the **only** path that
     writes manifest `BLOCKED` automatically.
@@ -174,18 +193,18 @@ For each manifest row, branch on the row's **prior manifest Status** (not the de
 - **prior `PENDING`** → advance only if the dev_log clearly shows work finished outside this skill:
   `SHIPPED` → `SHIPPED`; `READY_TO_SHIP` → `READY_TO_SHIP`; anything else (including `BLOCKED` and
   the mid-pipeline values) → **stay `PENDING`** (the human may have just reset the row; the next
-  loop spawn hands the dev_log's actual state to `feature-full-loop`, which knows how to resume).
-
-> XAI dev_log location: `packages/<slug>/docs/dev_log.md` (where `<slug>` is the full
-> `plugin-<name>` string).
+  emitted `xai-feature-full-loop` block hands the dev_log's actual state to the
+  parent-session recipe, which knows how to resume).
 
 **Stale `IN_PROGRESS` rule.** For an `IN_PROGRESS` row whose dev_log shows a mid-pipeline state:
-- `Last Run` recent (same human-driven session, e.g. ≤ 24 h) AND a live marker exists at
-  `/tmp/cw-orchestrator/<slug>.awaiting_*` → keep `IN_PROGRESS`, add `Note: resume pending`; do
-  not re-eligibilise (the human resumes `feature-full-loop` for `<slug>` directly).
+- `Last Run` recent (same human-driven session, e.g. ≤ 24 h) AND either a live marker exists at
+  `/tmp/cw-orchestrator/<slug>.awaiting_*` OR `Note` records a live/recent background session
+  (`bg:<session-id-or-name>`) → keep `IN_PROGRESS`, add/keep `Note: resume pending`; do not
+  re-eligibilise (the human resumes `xai-feature-full-loop` for `<slug>` directly, or
+  opens the background row in Agent View).
 - otherwise (stale `Last Run` or no live marker) → revert to `PENDING` so the next loop iteration
-  re-spawns `feature-full-loop` from the dev_log's current resume point; add a `Note` recording the
-  prior `IN_PROGRESS` and the dev_log Status at reconcile time.
+  emits a fresh `xai-feature-full-loop` block from the dev_log's current resume point; add
+  a `Note` recording the prior `IN_PROGRESS` and the dev_log Status at reconcile time.
 
 ### 3.1.5 Automation Mode resolution preflight
 
@@ -214,7 +233,67 @@ Record the resolution outcome in a per-session log line (not in the manifest):
 Resolved Automation Mode: row#<N> <slug> → <variant> (source: row|header|run_time_fallback)
 ```
 
-### 3.2 main loop (emit-dispatch — default)
+### 3.2 dispatch mode resolution
+
+Resolve dispatch mode before the main loop:
+
+```
+dispatch absent or dispatch: emit       → emit-dispatch (default, portable-safe)
+dispatch: bg | dispatch: agent-view     → Claude Code background-session dispatch
+dispatch: serial                        → caller-session serial execution
+dispatch: spawn                         → legacy nested spawn-dispatch
+anything else                           → STOP with Next Step: choose emit|bg|serial|spawn
+```
+
+Use `bg` as the recommended one-window parallel Claude Code path when `claude agents` and
+`claude --bg` are available. If direct background launch is blocked by a nested-session guard, fall
+back to bg-script. If background sessions are unavailable altogether, degrade to `emit` and output
+the exact commands the user can run later; do not silently fall back to `spawn`.
+
+Before continuing to any dispatch branch, show this mandatory Chinese confirmation. No prompt block
+may be emitted and no manifest row may be marked `IN_PROGRESS` before the answer is received:
+
+```text
+AskUserQuestion: Roadmap dispatch 模式确认
+
+我检测到本次 roadmap-loop run 的候选 dispatch 模式是: {resolved_mode}
+来源: <prompt 中显式提供 | 未提供 dispatch,使用默认 emit | agent-view alias 解析为 bg>
+
+继续前请确认。四种模式含义如下:
+
+1. dispatch: emit — 默认/最稳。只输出每个 eligible feature 的
+   xai-feature-full-loop prompt block,不启动后台任务,不把 manifest row 标成 IN_PROGRESS。
+   适合 wave 较小、需要人工逐窗口掌控、或当前机器还没验证 bg 能力。
+
+2. dispatch: bg — Claude Code 推荐并行路径。为每个 eligible feature 启动独立
+   claude --bg background session,用 Agent View 统一监控;默认并发 cap=3,超出的 row
+   标 QUEUED_BG。适合 wave >= 3 且已通过 worktree/baseRef/smoke-test preflight。
+   到 READY_TO_SHIP 后必须在对应 bg worktree 或 attach session 里 ship。
+
+3. dispatch: serial — 一个主会话串行执行。当前 session 逐个 feature 直接派发
+   feature-plan → feature-review → feature-auto-build → feature-verify,不 spawn
+   xai-feature-full-loop 这种 meta-orchestrator。适合想要一个 transcript、能接受不并行、
+   或 bg 被 nested-session guard 拦截的情况。
+
+4. dispatch: spawn — legacy 高风险路径。让 roadmap-loop 嵌套 spawn feature-full-loop。
+   只有宿主明确支持 >=4 层 nested agent 时才可选;Claude Code 默认配置和 Codex max_depth=2
+   都不推荐,日常不要使用。
+
+请选择本次实际要使用的 dispatch 模式:
+- emit
+- bg
+- serial
+- spawn
+```
+
+If the user chooses a different mode than `{resolved_mode}`, use the user's answer for this run and
+record a session-local line:
+
+```text
+Confirmed dispatch mode: {chosen_mode} (candidate: {resolved_mode}, source: {source})
+```
+
+### 3.3 main loop (emit-dispatch — default)
 
 After §3.1 reconcile + §3.1.5 Mode preflight:
 
@@ -241,7 +320,8 @@ emit to user:
   ║ 🚀 Wave <N> — <K> features eligible. Copy each block to a new session.    ║
   ║                                                                           ║
   ║ ──────────────── Block 1 (first eligible): <slug> ────────────────                       ║
-  ║ /xai-feature-full-loop                                                    ║
+  ║ /xai-feature-full-loop                                          ║
+  ║ Feature: <slug>                                                           ║
   ║ Automation Mode: <Mode_1>                                                 ║
   ║ Verify Cross-vendor: <resolved value from row or header default>          ║
   ║ Requirement: <resolved from row.Source — see "Source resolution" below>   ║
@@ -252,15 +332,149 @@ emit to user:
 
   Next Step:
     Open <K> new sessions in parallel and paste each block. Each will produce
-    its own dev_log under packages/<slug>/docs/dev_log.md and reach
+    its own dev_log under `packages/<slug>/docs/dev_log.md` and reach
     READY_TO_SHIP (or BLOCKED) independently. After any feature(s) SHIPPED,
-    re-run `/xai-roadmap-loop manifest: docs/workflow/roadmap/<roadmap_name>.md` here.
+    re-run `xai-roadmap-loop manifest: docs/workflow/roadmap/<roadmap_name>.md` here.
     Reconcile will pick up the new state from dev_logs and emit the next wave.
 
   STOP. (Skill exits; no spawn, no waiting.)
 ```
 
-### 3.2-opt-in spawn-dispatch (advanced, requires nesting capacity)
+### 3.4 bg-dispatch / Agent View (recommended Claude Code parallel path)
+
+If the invocation passes `dispatch: bg` or `dispatch: agent-view`, compute the same eligible set as
+emit-dispatch, then start one Claude Code background session per eligible feature. This mode keeps
+roadmap-loop as the tracker while removing the manual copy/paste step.
+
+Before dispatching, bg mode has three hard preflight gates. At least one worktree visibility gate
+must pass, and the nested-session guard must be handled:
+
+1. **Worktree visibility gate.** Continue only when one of these is true:
+   - `git status --short` is empty.
+   - `git config worktree.baseRef` returns `head`; record `bg sessions inherit local HEAD` in the
+     wave summary.
+   - The expanded prompt inlines all required manifest/source/seed-brief content, so the background
+     session does not depend on uncommitted files being visible in its worktree.
+2. **Nested-session guard gate.** If manifest header `BG Direct Verified: yes`, try bg-direct. If it
+   is `unknown`, run or require a smoke test first. If `claude --bg` exits non-zero or stderr says it
+   is already running inside Claude Code, do not retry direct launch; fall back to bg-script.
+3. **Concurrency cap gate.** Resolve `Wave Concurrency Cap` from the manifest header; default to `3`
+   when absent or invalid. Count existing active `IN_PROGRESS` bg rows against the cap.
+
+There are two internal tiers:
+
+```text
+Tier 1: bg-direct
+  call `claude --bg --name ...` from the current session after the gates pass
+
+Tier 2: bg-script
+  write scripts/cowork/roadmap_bg_run_<roadmap_name>_wNN.sh with the same commands
+  STOP and tell the user to run that script from a normal shell, outside Claude Code
+```
+
+If bg-script is emitted, do not pretend work has launched unless the script is actually run. Rows may
+remain `PENDING` with a `bg-script:` note; the next `run` reconciles from real dev_logs.
+
+Apply the concurrency cap before launching:
+
+```text
+available_slots = max(0, Wave Concurrency Cap - active_bg_in_progress_count)
+dispatch_set = first available_slots eligible rows by manifest order
+queued_set = remaining eligible rows
+
+for each queued row:
+  keep Status = PENDING
+  set Note = "QUEUED_BG cap=N"
+  write manifest to disk
+```
+
+Before launching each feature:
+
+1. Resolve `Requirement`, `Automation Mode`, and `Verify Cross-vendor` exactly as emit-dispatch does.
+2. Set the manifest row `Status = IN_PROGRESS`, `Last Run = now`, and `Note = bg:<session-name>`.
+3. Write the manifest to disk.
+
+Launch from the repository root:
+
+```bash
+claude --bg --name "roadmap-w<row-or-wave>-<slug>" "<expanded xai-feature-full-loop prompt>"
+```
+
+The expanded prompt MUST be the same content emit-dispatch would print:
+
+```text
+/xai-feature-full-loop
+Feature: <slug>
+Automation Mode: <resolved Automation Mode>
+Verify Cross-vendor: <resolved yes|no>
+Requirement: <resolved from row.Source>
+```
+
+After every launch, read stdout and append the returned background session short id to `Note` when
+available (`bg:<session-id> name=<session-name>`), then write the manifest again. If launch fails,
+set the row back to `PENDING`, record `Note: bg dispatch failed: reason`, continue with the next
+eligible feature, and report the failure in the wave summary.
+
+After launching the wave, STOP. Output:
+
+- the background session names / ids launched
+- queued rows marked `QUEUED_BG`, if any
+- `claude agents --cwd /path/to/repo`
+- `Worktree: pending until first file edit`; check with `git worktree list | grep SESSION_ID`
+- bg-aware ship prompt blocks for every READY_TO_SHIP row
+- warning: Agent View PR dots are not A2K truth; `dev_log` Status Panel + reconcile are truth
+- the fallback emit blocks for any row that failed to launch
+- Next Step: monitor Agent View; after rows reach READY_TO_SHIP and are shipped, re-run
+  `xai-roadmap-loop manifest: docs/workflow/roadmap/<roadmap_name>.md`
+
+Never use `claude -p` for this mode. Headless mode is a separate SDK/script path and user-invoked
+skills are interactive-only there.
+
+**Bg-aware ship handoff.** For bg-dispatched features, do not ask the user to manually run the full
+worktree lookup/check sequence. The human gate is the explicit `ship` invocation; once the user
+starts `ship`, the `ship` agent owns worktree lookup, branch/status/log verification, push, and
+SHIPPED state write. The summary must emit a copy-pasteable block per READY_TO_SHIP row:
+
+```text
+Start the ship agent for <slug>.
+Background Session: {session_id_or_name}
+Roadmap Manifest: docs/workflow/roadmap/<roadmap_name>.md
+```
+
+If the session id/name is missing or ambiguous, include `Worktree: {absolute_worktree_path}` when it
+is known, or tell the user to run `git worktree list | grep {slug_or_session}` and re-run `ship` with
+that `Worktree:` line. Do not tell the user to `claude rm SESSION_ID` until after `ship` reports that
+commits were pushed and the dev_log was marked `SHIPPED`; removing the background session can remove
+the worktree.
+
+Agent View is a monitor, not the A2K source of truth. Its "Ready for review" / PR indicators only
+reflect Claude Code PR state when a PR exists. A2K shippability is determined by
+`packages/<slug>/docs/dev_log.md` `Status: READY_TO_SHIP` plus the next roadmap reconcile.
+
+### 3.5 serial-dispatch (one transcript, no parallelism)
+
+If the invocation passes `dispatch: serial`, process the eligible set one feature at a time in the
+caller session. This mode exists for users who want one transcript to keep working without opening
+parallel sessions, accepting that a wave with K features now takes roughly the sum of K feature
+runtimes.
+
+For each eligible feature:
+
+1. Set `Status = IN_PROGRESS`, `Last Run = now`, `Note = serial:timestamp`, and write the manifest.
+2. Load/read `xai-feature-full-loop` and execute its Runtime Recipe inline from the caller
+   context. Do NOT spawn `feature-full-loop` or `feature-dev-loop` as meta-orchestrators. Dispatch
+   only the real worker agents (`xai-feature-brief` as needed, then `feature-plan`, `feature-review`,
+   `feature-auto-build`, `feature-verify`) and read `packages/<slug>/docs/dev_log.md` between
+   every worker.
+3. If the feature reaches `READY_TO_SHIP`, set the manifest row to `READY_TO_SHIP`.
+4. If the feature reaches `BLOCKED`, set the manifest row to `BLOCKED`, record the blocker in `Note`,
+   and continue with the next eligible feature.
+5. If the caller context is approaching its limit or the user interrupts, write the manifest and STOP
+   with a Next Step to re-run `dispatch: serial`; reconcile will resume from disk truth.
+
+Never spawn `ship`; serial mode still stops with a batch ship queue.
+
+### 3.6 opt-in spawn-dispatch (advanced, requires nesting capacity)
 
 If the invocation passes `dispatch: spawn`, use the legacy behaviour: for each eligible feature,
 mark IN_PROGRESS, spawn `feature-full-loop`, read the returned Handoff + dev_log Status Panel,
@@ -298,7 +512,7 @@ init path that produced the row:
 If the `Source` cell is empty or unreadable, mark the row `BLOCKED` with `Note: source resolution
 failed` and continue with the next eligible row.
 
-### 3.3 wrap-up
+### 3.7 wrap-up
 
 After the loop ends, output the wave summary and **STOP**:
 
@@ -314,7 +528,7 @@ After the loop ends, output the wave summary and **STOP**:
 
 - manifest parse failure / invalid schema → stop and report, do not run on a broken manifest. End
   with a Next Step describing how to fix the manifest.
-- `feature-full-loop` not registered → stop, instruct the human to land it first (portable spec
-  §B1). End with a Next Step.
+- `xai-feature-full-loop` skill not available → stop, instruct the human to land it first
+  (spec §B1). End with a Next Step.
 - source doc has no matching § for a feature → mark that feature BLOCKED, Note records "source
   section missing", continue.

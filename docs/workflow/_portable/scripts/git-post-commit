@@ -200,7 +200,7 @@ case "$MARKER_TYPE" in
     # functions absent, vendor undecidable). Just notify.
     case "$STATUS" in
       READY_FOR_VERIFY|FIX_READY_FOR_VERIFY)
-        notify "$FEATURE ready for verify — resume: Start the feature-full-loop agent for $FEATURE." ;;
+        notify "$FEATURE ready for verify — resume: /<skill_prefix>feature-full-loop Feature: $FEATURE." ;;
       BLOCKED)
         notify "$FEATURE BLOCKED — check dev_log Blockers." ;;
     esac
@@ -213,7 +213,7 @@ case "$MARKER_TYPE" in
     PHASE="$(jq -r '.phase // empty' "$MARKER_FILE" 2>/dev/null)"
     VERDICT="$(read_phase_verdict "$FEATURE" "$PHASE" 2>/dev/null || echo NONE)"
     case "$VERDICT" in
-      PASS)    notify "$FEATURE phase $PHASE PASS — resume: Start the feature-full-loop agent for $FEATURE." ;;
+      PASS)    notify "$FEATURE phase $PHASE PASS — resume: /<skill_prefix>feature-full-loop Feature: $FEATURE." ;;
       BLOCKED) notify "$FEATURE phase $PHASE BLOCKED — check the Phase $PHASE Verdict block." ;;
     esac
     ;;

@@ -9,10 +9,15 @@ Template / parse_template / write_file / toml_multiline / codex_output_dir API
 from the main module.
 
 Public-skill shims live at SKILLS_DIR/<name>/SKILL.md (frontmatter: name,
-description, upstream, license, vendor_card). Renderers are pure
+description, license, and optionally upstream + vendor_card). Renderers are pure
 ((Template) -> (Path, str)); only write_skill touches the filesystem, and it
 enforces the `skill-` namespace prefix at the write boundary so a corrupted
 shim or path-traversal mishap cannot land outside the namespace.
+
+Two skill branches (see ADR-0006 and ADR-0008):
+  - Upstream-derived: requires vendor_card: + upstream: in frontmatter.
+  - Internal-original: license: Internal-Original opts out of vendor_card.
+    Uses PROVENANCE.md sidecar in the same directory instead.
 """
 from __future__ import annotations
 
@@ -27,10 +32,15 @@ def _resolve_vendor_card(rel: str, root: Path) -> bool:
 
 
 def parse_skill_shim(path: Path, background: str, parse_template, Template, root: Path):
-    """Parse a SKILL.md shim. Raises if `description:` or `vendor_card:` missing,
-    or if the vendor card file cannot be resolved against ROOT, CWD, or
-    <repo_root> (the portable-reference ROOT is `_portable/`, so the repo root
-    is three levels up).
+    """Parse a SKILL.md shim. Raises if `description:` missing.
+
+    For upstream-derived skills (ADR-0006): `vendor_card:` is required and the
+    vendor card file must exist. Raises if either is absent.
+
+    For internal-original skills (ADR-0008): `license: Internal-Original` opts
+    out of the vendor-card requirement. A `PROVENANCE.md` sidecar in the same
+    directory fulfils the provenance record instead. No `vendor_card:` or
+    `upstream:` fields are expected.
     """
     tmpl = parse_template(path, background)
     if not tmpl.description:
@@ -38,11 +48,18 @@ def parse_skill_shim(path: Path, background: str, parse_template, Template, root
     raw_fm = path.read_text(encoding="utf-8").split("\n---\n", 1)[0]
     fm_lines = [ln for ln in raw_fm.splitlines() if ":" in ln]
     fm = {ln.split(":", 1)[0].strip(): ln.split(":", 1)[1].strip().strip('"') for ln in fm_lines}
-    vendor_card = fm.get("vendor_card", "")
-    if not vendor_card:
-        raise ValueError(f"Skill shim missing vendor_card: {path}")
-    if not _resolve_vendor_card(vendor_card, root):
-        raise ValueError(f"Skill shim {path.name} references missing vendor card: {vendor_card}")
+    license_val = fm.get("license", "")
+    if license_val == "Internal-Original":
+        # ADR-0008: internal-original skills use PROVENANCE.md instead of vendor card.
+        # No vendor_card: or upstream: fields expected.
+        pass
+    else:
+        # ADR-0006: upstream-derived shims require a vendor_card: pointing at an existing file.
+        vendor_card = fm.get("vendor_card", "")
+        if not vendor_card:
+            raise ValueError(f"Skill shim missing vendor_card: {path}")
+        if not _resolve_vendor_card(vendor_card, root):
+            raise ValueError(f"Skill shim {path.name} references missing vendor card: {vendor_card}")
     return Template(
         name=tmpl.name, description=tmpl.description, model=tmpl.model,
         allowed_tools="", color="", codex_sandbox_mode="read-only",

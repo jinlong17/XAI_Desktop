@@ -37,7 +37,12 @@ remains a portable contract / compatibility wrapper; this skill is the recommend
 5. **Between every worker, read `packages/<feature>/docs/dev_log.md`.** Do not trust a child Handoff
    without verifying the real Status Panel. XAI plugin slices live at `packages/plugin-<name>/`, so
    `<feature>` resolves to the full `plugin-<name>` slug.
-6. **Multi-window / macOS real-hardware gate.** If the feature touches multi-window behaviour,
+6. **Background/worktree safe.** This skill may be launched by `xai-roadmap-loop dispatch: bg`
+   inside a Claude Code background session and its isolated worktree. In that case, keep all
+   reads/writes in the current checkout, do not clean up the background session/worktree, and
+   preserve any `Roadmap Manifest:`, `Background Session:`, or `Worktree:` fields passed in the
+   prompt so the final Next Step can hand `ship` the right worktree context.
+7. **Multi-window / macOS real-hardware gate.** If the feature touches multi-window behaviour,
    `packages/core/src/events/` typed events, Tauri command signatures, or macOS native APIs
    (NSWindow level / focus / DnD), record in the final Handoff that real-hardware verification is
    required before the human ship gate. See SOP_NEW_FEATURE.md Phase 6.
@@ -58,6 +63,9 @@ Resume:
 ```text
 /xai-feature-full-loop
 Feature: <canonical-feature-slug>             # e.g. plugin-organizer
+Roadmap Manifest: <optional manifest path>
+Background Session: <optional bg session id/name>
+Worktree: <optional absolute worktree path>
 ```
 
 ## Runtime Recipe
@@ -82,7 +90,9 @@ Feature: <canonical-feature-slug>             # e.g. plugin-organizer
 6. **Verify.** If `dev_log` is `READY_FOR_VERIFY`, dispatch `feature-verify` independently. Continue
    only when `dev_log` says `READY_TO_SHIP`; stop on `BLOCKED`.
 7. **Human ship gate.** Stop. Output the current Status Panel and the literal next command:
-   `Start the ship agent for <feature>.`
+   `Start the ship agent for <feature>.` If `Background Session:` or `Worktree:` was provided,
+   include those lines under the ship command. If only `Roadmap Manifest:` was provided, include it
+   as context for the human and roadmap-loop reconcile.
 
 ## Output
 
@@ -92,7 +102,7 @@ End with a compact Handoff-style block containing:
 - Current `dev_log` Status Panel values actually read from disk (`packages/<feature>/docs/dev_log.md`)
 - Workers dispatched
 - Blockers, if any (incl. "real-hardware verification still required" when applicable per
-  constraint #6)
+  constraint #7)
 - Next Step
 
 Do not append a conversational "continue?" prompt after the Next Step.

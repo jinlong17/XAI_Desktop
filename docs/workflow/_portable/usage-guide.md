@@ -33,7 +33,7 @@ If you are *migrating* the portable workflow into a new project (rather than usi
 `<skill_prefix>workflow-migrate` (defined as a draft SKILL.md in the appendix of `_portable/00-PORTABLE-MANIFEST.md`) automates §4 of `00`. It runs from the *source* project (where `_portable/` already lives) and operates on a *target* repo path. Three modes:
 
 - **survey** — read-only. Scans the target repo, infers the §3 placeholder values, asks where ambiguous, drafts the filled placeholder table + `<project_background_file>` content + a migration plan, then STOPS for human review.
-- **instantiate** — consumes a reviewed survey plan. Copies `_portable/` into the target, fills placeholders, copies and adjusts the generation script, runs it, renders portable-sourced workflow skills such as `<skill_prefix>roadmap-loop`, verifies counts + lint, then STOPS and emits a project-layer checklist. Does NOT scaffold project-layer docs.
+- **instantiate** — consumes a reviewed survey plan. Copies `_portable/` into the target, fills placeholders, copies and adjusts the generation script, runs it, renders portable-sourced workflow skills such as `<skill_prefix>feature-full-loop` and `<skill_prefix>roadmap-loop`, verifies counts + lint, then STOPS and emits a project-layer checklist. Does NOT scaffold project-layer docs.
 - **resync** — updates an already-migrated target after the source portable workflow changes. Refuses dirty targets, preserves project customizations, refreshes portable agents / public skills / scripts, re-renders portable-sourced workflow skills, and emits a project-layer doc-delta checklist. STOPS.
 
 ### 6-step usage flow
@@ -47,7 +47,7 @@ If you are *migrating* the portable workflow into a new project (rather than usi
 5. **Run instantiate:**
    `/<skill_prefix>workflow-migrate plan: <path-to-plan-file> mode: instantiate`
    Skill copies `_portable/`, fills placeholders, copies + adjusts the generation script, runs it, verifies, emits the project-layer checklist, STOPS.
-6. **Project-layer human work.** Per the checklist: write `<project_workflow_doc>`, the SOPs, `<your_commit_convention>`; register and review rendered portable-sourced workflow skills (currently `<skill_prefix>roadmap-loop`), then land the remaining `<skill_prefix>`-prefixed workflow skills (for example `<skill_prefix>feature-full-loop`, the Step 0 brief skill, migration/governance helpers); test-run on one small feature, then one bugfix.
+6. **Project-layer human work.** Per the checklist: write `<project_workflow_doc>`, the SOPs, `<your_commit_convention>`; register and review rendered portable-sourced workflow skills (currently `<skill_prefix>feature-full-loop` and `<skill_prefix>roadmap-loop`), then land the remaining `<skill_prefix>`-prefixed workflow skills (for example the Step 0 brief skill, migration/governance helpers); test-run on one small feature, then one bugfix.
 
 For later upstream updates to an already-migrated project, copy:
 
@@ -55,11 +55,30 @@ For later upstream updates to an already-migrated project, copy:
 /<skill_prefix>workflow-migrate target: <path-to-target-repo> mode: resync
 ```
 
+If the target actually runs Claude Code from an existing `.claude/agents/` directory, plain `resync`
+will AskQuestion before replacing that active directory; the recommended answer is yes for full
+sync:
+
+- **`yes` (Recommended for full resync):** replace active `.claude/agents/` with the regenerated
+  Claude agents. This makes the Claude Code active surface match `_portable/`, generated templates,
+  Codex, Cursor, and `.claude/agents-v2/`. Choose this when the target uses Claude Code and you want
+  active agents such as `ship` to be current. Active-only hand edits are overwritten and must first
+  be moved to source templates/portable docs or handled as CONFLICTS.
+- **`no`:** leave active `.claude/agents/` untouched and keep only `.claude/agents-v2/` current.
+  Choose this when Claude Code active agents are not in use or you want a manual review/copy step.
+  Codex/Cursor and `.claude/agents-v2/` will be current, but Claude Code may keep old behavior.
+
+To skip the question and replace active Claude agents directly, use:
+
+```text
+/<skill_prefix>workflow-migrate target: <path-to-target-repo> mode: resync replace_claude: yes
+```
+
 ### Common situations
 
 - **Survey inference looks wrong** — edit the plan, re-run instantiate. Survey is read-only so this is safe.
 - **You only want synchronous variants (no hook)** — skip the automation-loop reference shell-script copy step during instantiate.
-- **Pre-existing `.claude/agents/` in target** — generator defaults to `.claude/agents-v2/`; pass `--replace-claude` only after test-run.
+- **Pre-existing `.claude/agents/` in target** — generator defaults to `.claude/agents-v2/`; resync asks before replacing active `.claude/agents/` unless `replace_claude: yes|no` is explicit.
 
 ### Re-syncing an already-migrated project after an upstream update
 
@@ -76,8 +95,8 @@ It is idempotent and **non-destructive**:
 - **Clean-target gate (read-only until it passes):** resync refuses to run if any path it would
   write (`_portable/` / `<cowork_scripts_dir>/` / `<templates_dir>/` / `.claude|.codex|.cursor/
   agents/` / the generator / portable-sourced workflow skills such as
-  `<skill_prefix>roadmap-loop` / the portable-sync lint) is git-dirty in the target — commit/stash
-  first. It never clobbers uncommitted work.
+  `<skill_prefix>feature-full-loop` and `<skill_prefix>roadmap-loop` / the portable-sync lint) is
+  git-dirty in the target — commit/stash first. It never clobbers uncommitted work.
 - **Template conflict guard:** a hand-customized target template is never silently overwritten —
   resync lists it and STOPS for a human 3-way merge.
 - It overwrites `_portable/` verbatim (including public skills and MCP README), re-renders the full
@@ -86,14 +105,22 @@ It is idempotent and **non-destructive**:
   portable-sync lint, re-renders portable-sourced workflow skills, and emits a **project-layer
   doc-delta checklist** the human hand-applies (it never edits the target's own workflow docs).
 - **Skill/agent reuse boundary:** all 15 V2 agents, `_portable/skills/*` public skills, hook
-  scripts, and portable-sourced workflow skills such as `<skill_prefix>roadmap-loop` are
+  scripts, and portable-sourced workflow skills such as `<skill_prefix>feature-full-loop` and
+  `<skill_prefix>roadmap-loop` are
   mechanically copied/regenerated; do not migrate only `roadmap-loop` or only `feature-full-loop`.
   Project-prefixed workflow skills still need to land as a coherent set under the target prefix in
-  `<skill_root>` and be registered in the target registry: `<skill_prefix>feature-full-loop`, the
-  rendered `<skill_prefix>roadmap-loop`, the Step 0 brief skill, `<skill_prefix>workflow-migrate`,
+  `<skill_root>` and be registered in the target registry: the rendered
+  `<skill_prefix>feature-full-loop`, the rendered `<skill_prefix>roadmap-loop`, the Step 0 brief skill, `<skill_prefix>workflow-migrate`,
   sync/registry governance helpers, and any project SOP skills the source project expects. resync
   reports only deltas that lack a portable source or were blocked by conflicts; it does not author
   target project SOPs / usage guides.
+- **Active Claude directory:** if the target already has `.claude/agents/`, resync must resolve the
+  active-dir choice. `replace_claude: yes` replaces it directly; `replace_claude: no` keeps
+  `.claude/agents-v2/` only; omitting the field triggers an AskQuestion with "replace active Claude
+  agents" as the recommended full-sync choice. The AskQuestion options must spell out the impact:
+  yes overwrites active-only hand edits but fully updates Claude Code; no preserves active edits but
+  may leave Claude Code running stale agents. Without replacement, Codex/Cursor and
+  `.claude/agents-v2/` can be current while active `.claude/agents/` remains old.
 - **Repeat-run expectation:** if `_portable/`, rendered scripts, generated configs, rendered workflow
   skills, and project-layer doc checklist items have no remaining delta, a second `resync` should
   explicitly report `up to date` rather than re-emitting the same manual checklist.
@@ -802,7 +829,7 @@ The orchestration roles:
 
 ## 10. Public skills — trigger quick-reference & the sync rule
 
-`_portable/skills/` ships **8 curated, fully-installed, description-triggered** public skills
+`_portable/skills/` ships **9 curated, fully-installed, description-triggered** public skills
 (ADR `0006-public-skills-portable-library.md`). "Description-triggered" means the model
 auto-loads a skill when the conversation matches its frontmatter `Triggers —` phrases — you do
 not have to invoke them. The right-hand column is the explicit override if you want to force one.
@@ -820,6 +847,7 @@ not have to invoke them. The right-hand column is the explicit override if you w
 | **composition-patterns** | react composition · compound components · boolean prop proliferation · render prop pattern · slot pattern | `use composition-patterns` |
 | **gh-fix-ci** | fix CI · failing GitHub Actions · PR checks failing · why is the workflow red · github actions log | `use gh-fix-ci` |
 | **security-skills-claude-code** | security review · threat model · STRIDE · attack surface · dependency CVE | `use security review` |
+| **agent-behavioral-guidelines** | small fix · surgical edit · don't over-engineer · quick edit · verify each step | `use agent-behavioral-guidelines` |
 
 > The trigger phrases above are copied verbatim from each `_portable/skills/<name>/SKILL.md`
 > frontmatter. If you edit a skill's `Triggers —` line, update this row in the same commit.

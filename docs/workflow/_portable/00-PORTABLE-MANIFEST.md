@@ -230,10 +230,11 @@ per-project rewrite.
    dispatch scripts probe `/opt/homebrew/opt/util-linux/bin/flock`); an authenticated `codex` CLI;
    `cursor-agent login` (cursor-agent runs `--force` on default model `gpt-5.5-high`, override via
    `CW_CURSOR_MODEL`). Skip this entire step for synchronous variants (`A-Claude` / `D-*`).
-7a. **Render portable-sourced project workflow skills.** Extract the `<skill_prefix>roadmap-loop`
-   source from `06-roadmap-orchestration.md` Appendix, apply the target placeholder map, write it to
-   `<skill_root>/<skill_prefix>roadmap-loop/SKILL.md`, and register it in the target's skill
-   registry. Treat `_portable/06` as the source; do not hand-patch only the target copy.
+7a. **Render portable-sourced project workflow skills.** Extract
+   `<skill_prefix>feature-full-loop` from `04-automation-loop.md` Appendix and
+   `<skill_prefix>roadmap-loop` from `06-roadmap-orchestration.md` Appendix, apply the target
+   placeholder map, write them to `<skill_root>/`, and register them in the target's skill registry.
+   Treat `_portable/04` and `_portable/06` as the sources; do not hand-patch only the target copies.
 8. **Write** a project-local concrete workflow doc (`<project_workflow_doc>`) — the worked instance,
    like this repo's `project/SUBAGENT_WORKFLOW_V2.md`. The portable docs stay generic; the project
    doc records "how it was actually wired here".
@@ -426,20 +427,20 @@ checklist. STOP.
    macOS, NOT on PATH; scripts probe `/opt/homebrew/opt/util-linux/bin/flock`); authenticated
    `codex` CLI; `cursor-agent login`. Skip this whole step for synchronous variants (`A-Claude` /
    `D-*`) — see `04-automation-loop.md` §3.
-6b. **Render project-prefixed workflow skills with portable sources.** Extract the
-   `<skill_prefix>roadmap-loop` `SKILL.md` source from `_portable/06-roadmap-orchestration.md`
-   Appendix, replace the project placeholders (`<skill_prefix>`, `<step0-skill>`, paths from §3),
-   and write it to `<skill_root>/<skill_prefix>roadmap-loop/SKILL.md`. This is a source render, not a
-   project-layer hand patch. Other project SOP skills that do not have a portable source still stay
-   in the human checklist.
+6b. **Render project-prefixed workflow skills with portable sources.** Extract
+   `<skill_prefix>feature-full-loop` from `_portable/04-automation-loop.md` Appendix and
+   `<skill_prefix>roadmap-loop` from `_portable/06-roadmap-orchestration.md` Appendix, replace the
+   project placeholders (`<skill_prefix>`, `<step0-skill>`, paths from §3), and write them to
+   `<skill_root>/`. This is a source render, not a project-layer hand patch. Other project SOP skills
+   that do not have a portable source still stay in the human checklist.
 7. **Run the generation script** to produce `.claude/agents/`, `.codex/agents/`, `.cursor/agents/`
    and `.codex/config.toml`. ⚠️ The generator substitutes ONLY `<!-- INJECT:PROJECT_BACKGROUND -->`;
    the `<...>` path tokens in generated agent bodies (and any post-gen hand-fix) are propagated by
    hand into `.claude/.codex/.cursor`. Re-running with `--force` **regresses** those — re-run only
    on template change, then re-propagate. Flag this in the emitted checklist.
 8. **Verify.** Count (without `--include-skills`): 15 templates → 15 × 3 = 45 generated configs +
-   1 `.codex/config.toml`. Count (with `--include-skills`): 15 × 3 = 45 frozen + 8 skills × 3 = 24
-   skill outputs = **69 outputs** + 1 `.codex/config.toml`. Skip the +24 if the target opted out of
+   1 `.codex/config.toml`. Count (with `--include-skills`): 15 × 3 = 45 frozen + 9 × 3 = 27
+   skill outputs = **72 outputs** + 1 `.codex/config.toml`. Skip the +27 if the target opted out of
    the public-skill bundle. Run `check_portable_sync.py` against the copied portable layer (must
    PASS). Spot-check that no `<placeholder>` token survived in `<templates_dir>/*.md` or the
    generated configs.
@@ -449,10 +450,11 @@ checklist. STOP.
      the reference)
    - write `<your_feature_sop>` / `<your_bugfix_sop>` / `<your_commit_convention>`
    - land all required `<skill_prefix>`-prefixed workflow skills into `<skill_root>` and register them
-     in the target's skill registry; do not migrate only one entry point. `<skill_prefix>roadmap-loop`
-     is rendered automatically from `_portable/06` in step 6b. Remaining reusable skills still need
-     project-layer sources or human landing: `<skill_prefix>feature-full-loop`, the Step 0 brief
-     skill, `<skill_prefix>workflow-migrate`, sync/registry governance helpers
+     in the target's skill registry; do not migrate only one entry point.
+     `<skill_prefix>feature-full-loop` and `<skill_prefix>roadmap-loop` are rendered automatically
+     from `_portable/04` and `_portable/06` in step 6b. Remaining reusable skills still need
+     project-layer sources or human landing: the Step 0 brief skill, `<skill_prefix>workflow-migrate`,
+     sync/registry governance helpers
      (`portable-sync-check`, skills/agents registry, etc.), plus any project SOP skills the source
      workflow expects. These project-prefixed skills are not the same as `_portable/skills/*` public
      shims.
@@ -470,7 +472,8 @@ project". It is **idempotent** (safe to re-run) and **non-destructive** (constra
 1. **Precondition — clean-target gate (read-only until it passes).** `git -C <target> status --short`
    for every path resync writes: `docs/workflow/_portable/`, `<cowork_scripts_dir>/`,
    `<templates_dir>/`, `.claude/agents/` `.codex/agents/` `.cursor/agents/`, the copied
-   `<setup_script>`, `<skill_root>/<skill_prefix>roadmap-loop/SKILL.md`, and
+   `<setup_script>`, `<skill_root>/<skill_prefix>feature-full-loop/SKILL.md`,
+   `<skill_root>/<skill_prefix>roadmap-loop/SKILL.md`, and
    `scripts/lint/check_portable_sync.py` if present. If ANY is dirty → STOP with Handoff
    `Status: BLOCKED`, Blocker listing the dirty paths, Next Step "commit or stash the target's work,
    then re-run resync". Never clobber uncommitted work.
@@ -500,14 +503,32 @@ project". It is **idempotent** (safe to re-run) and **non-destructive** (constra
    regenerate `.claude/.codex/.cursor` (note the `--force` regression caveat — `00-MANIFEST` §4
    step 6; targeted re-propagation for any hand-fixed agents). If CONFLICTS is non-empty, STOP
    after this step for human 3-way merge before generating.
+   **Active Claude replacement gate:** if the target has a pre-existing `.claude/agents/` and the
+   generator writes `.claude/agents-v2/`, resolve `replace_claude` before finishing. If the
+   invocation includes `replace_claude: yes`, replace active `.claude/agents/` with the regenerated
+   output. If it includes `replace_claude: no`, keep `.claude/agents-v2/` only and report that active
+   Claude may remain old. If it is omitted, run an AskUserQuestion before replacement:
+   - **Question:** Replace active `.claude/agents/` with regenerated agents now?
+   - **Option 1 — `yes` (Recommended for full resync):** replace `.claude/agents/` with the
+     regenerated Claude agents so the Claude Code active surface matches `_portable/`, templates,
+     Codex, Cursor, and `.claude/agents-v2/`. Choose this when the target actually uses Claude Code
+     from `.claude/agents/` and you want `ship`, `feature-*`, and other active agents to be current.
+     Impact: active-only hand edits in `.claude/agents/` are overwritten; they should first be moved
+     to the source templates/portable docs or captured as CONFLICTS.
+   - **Option 2 — `no`:** keep `.claude/agents-v2/` as the regenerated review copy and leave active
+     `.claude/agents/` untouched. Choose this only when the target is not currently using Claude
+     Code active agents, or when a human wants to inspect/copy the regenerated files manually.
+     Impact: Codex/Cursor and `.claude/agents-v2/` are current, but Claude Code may still execute
+     stale `.claude/agents/` behavior until a later replacement.
 6b. **Re-render project-prefixed workflow skills with portable sources.** For
-   `<skill_prefix>roadmap-loop`, extract the canonical `SKILL.md` source from the updated
-   `_portable/06-roadmap-orchestration.md` Appendix and apply the target token map. If the target's
-   existing `<skill_root>/<skill_prefix>roadmap-loop/SKILL.md` equals the previous rendered source
-   (or is absent), overwrite it with the new render. If it contains project hand-customization beyond
-   the render, add it to CONFLICTS and STOP for a human 3-way merge. This is what makes a second
-   resync report "up to date" for roadmap-loop instead of repeatedly asking for manual skill
-   updates.
+   `<skill_prefix>feature-full-loop`, extract the canonical `SKILL.md` source from the updated
+   `_portable/04-automation-loop.md` Appendix; for `<skill_prefix>roadmap-loop`, extract the
+   canonical `SKILL.md` source from the updated `_portable/06-roadmap-orchestration.md` Appendix.
+   Apply the target token map to both. If the target's existing rendered skill equals the previous
+   rendered source (or is absent), overwrite it with the new render. If it contains project
+   hand-customization beyond the render, add it to CONFLICTS and STOP for a human 3-way merge. This
+   is what makes a second resync report "up to date" for feature-full-loop / roadmap-loop instead of
+   repeatedly asking for manual skill updates.
 7. **Refresh the lint.** If the project carries `scripts/lint/check_portable_sync.py`, update it
    from source (including rule 6 cowork↔portable parity); if it does not, list it in the checklist
    as a recommended add. Run it — must PASS (it catches any placeholder left unsubstituted in §5).
@@ -518,10 +539,11 @@ project". It is **idempotent** (safe to re-run) and **non-destructive** (constra
    schema", "drop any Plan/Build Executor wording", "Task-withheld-subagent constraint",
    "`feature-full-loop` runtime moved to `<skill_prefix>feature-full-loop` parent-session skill",
    "roadmap-loop default dispatch is emit, not spawn"). Do not list
-   `<skill_prefix>roadmap-loop` as a manual follow-up when step 6b rendered it cleanly; instead say
-   it is up to date. List only workflow skill deltas that still lack a portable source or were
-   blocked by CONFLICTS. `_portable/skills/*` public shims are refreshed mechanically, but most
-   project-prefixed SOP skills remain project-layer artifacts. End with a Next Step: review
+   `<skill_prefix>feature-full-loop` or `<skill_prefix>roadmap-loop` as manual follow-ups when step
+   6b rendered them cleanly; instead say they are up to date. List only workflow skill deltas that
+   still lack a portable source or were blocked by CONFLICTS. `_portable/skills/*` public shims are
+   refreshed mechanically, but most project-prefixed SOP skills remain project-layer artifacts. End
+   with a Next Step: review
    CONFLICTS (if any), apply the doc deltas, update any still-manual workflow skills, then test-run
    one feature to confirm the B/C hooks work end-to-end. If there are no portable deltas,
    no generated/script diffs, no workflow-skill renders, and no project-layer checklist items, report
@@ -537,7 +559,8 @@ project". It is **idempotent** (safe to re-run) and **non-destructive** (constra
   is a template that was hand-edited in the source project. Fix it in the source, then re-copy —
   never patch the target's copied portable layer directly.
 - **pre-existing `.claude/agents/` in the target** → the generation script defaults to
-  `.claude/agents-v2/`; do not pass `--replace-claude` until the human has reviewed the output.
+  `.claude/agents-v2/`; resync must either receive `replace_claude: yes|no` or ask whether to replace
+  active `.claude/agents/`. For full sync, the recommended answer is yes.
 
 ## 6. The skill satisfies the Universal Next Step Contract
 
