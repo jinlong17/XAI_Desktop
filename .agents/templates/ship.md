@@ -54,6 +54,12 @@ Pipeline position:
 - DO NOT force-push.
 - DO NOT push secrets or sensitive files.
 
+## Available skills (description-triggered)
+
+This public skill auto-loads when the task matches its triggers — surfaced here so it is not missed. Full trigger table: `_portable/usage-guide.md` §10. It assists; it never replaces this template's Output Contract or Handoff.
+
+- `gh-fix-ci` — **if a GitHub Actions / PR check is red at the ship gate**: read job logs, isolate the failing step, propose the minimal fix, re-trigger.
+
 ## Target Feature Protocol
 
 1. Prefer explicit input `/ship <feature_name>`.

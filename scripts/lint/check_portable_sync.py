@@ -4,7 +4,7 @@
 Mechanically checks that `docs/workflow/_portable/` stays project-agnostic and
 self-consistent, so the workflow paradigm can be copied cleanly into any project.
 
-Six rules:
+Seven rules:
 
   1. Proper-noun leak — `_portable/**` must not contain Any2Knowledge-specific
      nouns (`a2k-`, `features/`, `apps/web`, `Stripe`, `E2B`, `Univer`, `LUMX`,
@@ -27,6 +27,11 @@ Six rules:
      dispatch / wrapper scripts). Catches drift AND unsubstituted placeholders
      left in the running copies (e.g. a literal `<feature_root>` in a real
      read path). Token map = the migration substitution (manifest §3).
+  7. Skill-doc registration — every `_portable/skills/<name>/SKILL.md` must
+     have a row in `_portable/usage-guide.md` §10 (a `**<name>**` table cell).
+     Same gate shape as rule 2: a new public skill that is not documented in
+     the trigger quick-reference fails the lint. Keeps the §10 table (and its
+     project-usage-guide mirror) honest as skills are added/removed.
 
 Exit code: 0 = pass, 1 = violations found, 2 = lint could not run.
 
@@ -53,10 +58,8 @@ WORKFLOW_MODEL_REL = PORTABLE_DIR / "01-workflow-model.md"
 # Rule 1: project-specific proper nouns that must never appear in the portable layer.
 # Each entry is a compiled regex; word-boundary anchored where a substring would
 # false-positive (E2B/LUMX), path-style otherwise.
-# XAI_Desktop nouns. TODO(project): extend with this product's other proper
-# nouns (vendors, product names) as they appear — the rule's job is to keep
-# docs/workflow/_portable/ project-agnostic.
 PROPER_NOUN_PATTERNS: tuple[tuple[str, re.Pattern[str]], ...] = (
+    # XAI_Desktop nouns. TODO(project): extend with this product's other proper nouns.
     ("xai-", re.compile(r"xai-")),
     ("packages/", re.compile(r"packages/")),
     ("apps/desktop", re.compile(r"apps/desktop")),
@@ -82,6 +85,12 @@ PLACEHOLDER_RE = re.compile(r"<[a-z][a-z0-9_]*>")
 # Declared template count in 01-workflow-model.md, e.g. "should have 15 `.md`".
 DECLARED_COUNT_RE = re.compile(r"should have (\d+) `\.md`")
 DEFAULT_TEMPLATE_COUNT = 15
+
+# Rule 7: every _portable/skills/<name>/ must be documented in the usage-guide
+# §10 trigger table. SKILL_DIR holds the public skills; USAGE_GUIDE_REL is the
+# canonical doc whose §10 table must carry a `**<name>**` row per skill.
+SKILLS_DIR = PORTABLE_DIR / "skills"
+USAGE_GUIDE_REL = PORTABLE_DIR / "usage-guide.md"
 
 # Rule 6: scripts/cowork/<f> MUST be the placeholder-substituted instantiation
 # of _portable/scripts/<f>. The post-commit hook runs the cowork copies; if they
@@ -379,6 +388,40 @@ def check_template_count(root: Path) -> list[Violation]:
     return []
 
 
+def check_skill_doc_registration(root: Path) -> list[Violation]:
+    """Every _portable/skills/<name>/SKILL.md must have a `**<name>**` row in
+    _portable/usage-guide.md §10 (same gate shape as rule 2)."""
+    rule = "SKILL_DOC_UNREGISTERED"
+    skills_dir = root / SKILLS_DIR
+    if not skills_dir.is_dir():
+        return []  # project opted out of the public-skill bundle
+    guide = root / USAGE_GUIDE_REL
+    if not guide.is_file():
+        return [
+            Violation(
+                rule,
+                USAGE_GUIDE_REL.as_posix(),
+                None,
+                "usage-guide.md missing but _portable/skills/ present — cannot verify §10 registration",
+            )
+        ]
+    guide_text = guide.read_text(encoding="utf-8")
+    violations: list[Violation] = []
+    for skill_md in sorted(skills_dir.glob("*/SKILL.md")):
+        name = skill_md.parent.name
+        if f"**{name}**" not in guide_text:
+            violations.append(
+                Violation(
+                    rule,
+                    (SKILLS_DIR / name).as_posix(),
+                    None,
+                    f"skill '{name}' has no `**{name}**` row in {USAGE_GUIDE_REL.as_posix()} §10 "
+                    f"trigger table — add it (and mirror into the project usage-guide §10) in this commit",
+                )
+            )
+    return violations
+
+
 def run(root: Path) -> tuple[int, list[Violation]]:
     root = root.resolve()
     files = portable_markdown_files(root)
@@ -398,6 +441,7 @@ def run(root: Path) -> tuple[int, list[Violation]]:
     violations.extend(check_template_count(root))
     violations.extend(check_template_next_step(root))
     violations.extend(check_cowork_parity(root))
+    violations.extend(check_skill_doc_registration(root))
     code = 1 if violations else 0
     return code, violations
 

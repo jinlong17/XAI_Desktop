@@ -102,6 +102,12 @@ Tooling notes:
 - DO NOT implement feature code except if the user explicitly changes role expectations.
 - DO NOT commit or push.
 
+## Available skills (description-triggered)
+
+This public skill auto-loads when the task matches its triggers — surfaced here so it is not missed. Full trigger table: `_portable/usage-guide.md` §10. It assists; it never replaces this template's Output Contract or Handoff.
+
+- `security-skills-claude-code` — **when verifying a change on a security surface** (auth / payment / secrets / external input): STRIDE, attack-surface enumeration, dependency-CVE pass.
+
 ## Target Feature Protocol
 
 1. Prefer explicit input `/feature-verify <feature_name>`.
