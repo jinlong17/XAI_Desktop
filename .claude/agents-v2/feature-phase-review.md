@@ -117,7 +117,7 @@ For each commit in <first>..<last>:
 
 Apply the project's review gates (full set for a feature module; for a shared module, skip the manifest gate):
 
-1. **Boundary**: does not touch `packages/core//`; no cross-module direct imports; respects the project's module-boundary rules
+1. **Boundary**: does not touch `packages/core/`; no cross-module direct imports; respects the project's module-boundary rules
 2. **Contract**: API request/response/error semantics match `api.md`; changes match the plan
 3. **Manifest** (feature module only): if `manifest.json` was changed, its fields stay consistent with actual router/module registration behavior
 4. **Test**: required unit + contract tests exist; regression coverage present

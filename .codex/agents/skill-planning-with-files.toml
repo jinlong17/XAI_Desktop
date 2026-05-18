@@ -1,5 +1,5 @@
 name = "planning-with-files"
-description = "Use when a multi-step task needs a persistent plan file that survives context resets — drives the upstream "Planning with Files" task_plan.md discipline (long-running plan + checkbox progress + per-step rationale). Triggers — persistent plan, task_plan.md, /plan, long-running task plan, plan-as-file."
+description = "Use when a multi-step task needs a persistent plan file that survives context resets — drives the upstream \"Planning with Files\" task_plan.md discipline (long-running plan + checkbox progress + per-step rationale). Triggers — persistent plan, task_plan.md, /plan, long-running task plan, plan-as-file."
 sandbox_mode = "read-only"
 model = "gpt-5.3-codex"
 model_reasoning_effort = "high"
