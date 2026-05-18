@@ -44,7 +44,7 @@ Read in numeric order — each file builds on the previous:
 | 03 | `03-step0-brief-spec.md` | the requirement-normalization gate that runs before `feature-plan` |
 | 04 | `04-automation-loop.md` | how to make the whole pipeline run hands-off — the single-feature parent-session recipe, compatibility orchestrators, the 7-variant matrix, graceful degradation, the 5-phase state machine, the marker-file schema, the Phase Verdict protocol |
 | 05 | `05-commit-convention.md` | the commit discipline that makes commits a review + handoff carrier |
-| 06 | `06-roadmap-orchestration.md` | Layer 3.5: how to drive a whole reviewed roadmap of N features hands-off — the roadmap manifest file, the two-mode roadmap-loop skill, dependency-wave scheduling, where the human `ship` gate lands |
+| 06 | `06-roadmap-orchestration.md` | Layer 3.5: how to drive a whole reviewed roadmap of N features hands-off — the roadmap manifest file, the init/run roadmap-loop skill, dispatch modes, dependency-wave scheduling, where the human `ship` gate lands |
 | — | `usage-guide.md` | the cross-cutting, hands-on tutorial for the **whole** workflow — three ways to drive it (manual subagent dispatch / the single-feature parent-session recipe / the roadmap skill), what to type at each level, what to do when it stops. Read it after skimming `01`-`02` + `04` + `06`. |
 | — | `templates/*.md` | the 15 subagent prompts (12 workers/loops + 3 compatibility orchestrators); feed these to the generation script |
 | — | `scripts/README.md` | the generation-script contract + the bundled runnable reference (`setup_subagents_v2.py/.sh`) + the automation-loop reference shell scripts |
@@ -473,7 +473,8 @@ project". It is **idempotent** (safe to re-run) and **non-destructive** (constra
    `<project_workflow_doc>` / SOPs / usage-guide-equivalent (constraint §0.3). List the specific
    upstream changes the human must hand-apply there, including runtime entry changes such as
    "`feature-full-loop` runtime moved to `<skill_prefix>feature-full-loop` parent-session skill" and
-   "roadmap-loop default dispatch is emit, not spawn". Also list any `<skill_prefix>` workflow skill
+   "roadmap-loop default dispatch is emit; Claude Code parallel dispatch is bg/Agent View; serial is
+   the one-transcript fallback; spawn remains advanced opt-in". Also list any `<skill_prefix>` workflow skill
    deltas that must be copied/renamed into `<skill_root>` as a complete set; `_portable/skills/*`
    public shims are refreshed mechanically, but project-prefixed workflow skills are project-layer
    artifacts. End with

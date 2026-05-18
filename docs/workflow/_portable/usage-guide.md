@@ -115,7 +115,7 @@ and you pick per task:
 |-------|----------|-------------------------|-------------|---------|
 | **1 — Manual subagent workflow** | one command per step (or per build granularity) | you, step by step, reading `dev_log` between steps | you want full control / are learning the workflow / the Level 2 recipe is not landed yet / something went sideways and you are recovering by hand | §4 |
 | **2 — Single-feature parent-session recipe** | one skill command, total | `<skill_prefix>feature-full-loop` dispatches workers from the parent session, stops before `ship` | a normal feature or bugfix you want done hands-off | §5 |
-| **3 — Roadmap orchestration skill** | one `init` + one `run` per wave | the `<skill_prefix>roadmap-loop` skill emits one paste-ready `<skill_prefix>feature-full-loop` block per eligible feature; you open each in its own session — the skill tracks, you dispatch | you have a reviewed roadmap (or a PRD) of many features | §6 |
+| **3 — Roadmap orchestration skill** | one `init` + one `run` per wave | the `<skill_prefix>roadmap-loop` skill reconciles a manifest and dispatches each eligible feature by `emit` / `bg` / `serial` / `spawn` mode | you have a reviewed roadmap (or a PRD) of many features | §6 |
 
 Level 2 is Level 1 with the dispatching automated. Level 3 is Level 2 called repeatedly. The **state
 contracts** underneath — the `dev_log.md` Status Panel, the §2.6 write-authority matrix, the human
@@ -131,7 +131,7 @@ the same Universal Next Step Contract. Learn §4 once and §5 / §6 are mostly "
 ```mermaid
 flowchart TB
   subgraph L35 [Layer 3.5 · Roadmap Orchestration · tracks a whole roadmap of N features]
-    RL[roadmap-loop skill<br/>manifest + waves → emits one feature-full-loop skill block per eligible feature]
+    RL[roadmap-loop skill<br/>manifest + waves → emit/bg/serial/spawn feature-full-loop work]
   end
   subgraph L3 [Layer 3 · Parent-session recipe · one input → 5 phases]
     FL[feature-full-loop skill<br/>parent session dispatches workers → stops before ship]
@@ -151,7 +151,7 @@ flowchart TB
     PR[feature-phase-review]
     SK[the Step 0 skill]
   end
-  L35 -.emit (default) / spawn (opt-in).-> L3
+  L35 -.emit default / bg Agent View / serial / spawn opt-in.-> L3
   L3 -.spawn.-> L1
   L3 -.spawn.-> L2
   L2 -.spawn.-> L1
@@ -172,8 +172,11 @@ flowchart TB
 Layer 3.5  roadmap-loop skill            track a whole roadmap of N features      ── §6
               │ emit (default — one prompt block per eligible feature; user opens
               │        each in a fresh session and is the real dispatcher)
+              │ bg (Claude Code Agent View — one background session per feature,
+              │     true parallelism from one management window)
+              │ serial (caller session executes one feature at a time; no parallelism)
               │ spawn (opt-in via `dispatch: spawn`; requires ≥ 4-level
-              │        nesting capacity — see `06` §3.2-opt-in)
+              │        nesting capacity — see `06` §A7.3.4)
 Layer 3    <skill_prefix>feature-full-loop / one input → 5 phases → stop before ship  ── §5
            bugfix-full-loop compatibility agent
               │ spawn
@@ -204,6 +207,7 @@ executor** — they do not change Layer 1 or the phase structure.
 | `feature-full-loop` + `bugfix-full-loop` compatibility agents are landed | contract / fallback | `ls .claude/agents/{feature-full-loop,bugfix-full-loop}.md`; not the recommended spawned runtime on hosts that withhold recursive Task |
 | `feature-phase-review` is landed | only the phase-granularity Level 2 variants | `ls .claude/agents/feature-phase-review.md` |
 | the `<skill_prefix>roadmap-loop` skill is in place | Level 3 | `ls <skill_root>/<skill_prefix>roadmap-loop/SKILL.md` |
+| Claude Code Agent View / background sessions | Level 3 `dispatch: bg` | `claude --version` is new enough for Agent View, `claude agents` opens, and `claude --bg --name test "..."` can start a background session |
 | the State Verification lint is wired | only when the project enforces State Verification mechanically (it is optional, project-level — `02` §4) | the project's State Verification lint script exists |
 | `<project_workflow_doc>` has every role registered in its write-authority matrix | all levels | check its Status Panel write-authority matrix |
 
@@ -534,13 +538,12 @@ hand-dispatch `<skill_prefix>feature-full-loop` N times. Use the `<skill_prefix>
   writes a seed brief per feature, and — when a boundary or dependency is genuinely ambiguous —
   **asks you a focused multiple-choice question** rather than guessing. Either way it produces a
   manifest file and **stops for your review**.
-- **`run`** — per dependency wave (default: emit-dispatch): type it once; the skill reconciles
-  manifest state from each feature's `dev_log`, then **emits one paste-ready prompt block per
-  eligible feature** and stops. You open each block in its own session — *you* are the real
-  dispatcher; the skill is the tracker. After any feature(s) hit `READY_TO_SHIP` and you `ship`
-  them, re-run `run` to reconcile the new state and emit the next wave. (Opt-in `dispatch: spawn`
-  reverts to the legacy "skill drives `feature-full-loop` itself" behaviour — requires ≥ 4-level
-  nesting capacity in the host tool; see `06` §3.2-opt-in.)
+- **`run`** — per dependency wave: type it once; the skill reconciles manifest state from each
+  feature's `dev_log`, then dispatches the eligible set. Default `dispatch: emit` prints one
+  paste-ready prompt block per eligible feature and stops. Recommended Claude Code `dispatch: bg`
+  launches one background session per feature and lets you monitor the whole wave in Agent View.
+  `dispatch: serial` runs the wave one feature at a time in the caller transcript. Opt-in
+  `dispatch: spawn` reverts to the legacy nested path and requires ≥ 4-level nesting capacity.
 
 ### 6.2 The three actions
 
@@ -557,9 +560,24 @@ source: <roadmap_source_doc>          # a pre-decomposed roadmap doc OR a raw PR
 /<skill_prefix>roadmap-loop
 manifest: <roadmap_manifest_dir>/<roadmap_name>.md
 
+# Optional dispatch modes:
+#   dispatch: emit    # default, portable-safe, prints prompt blocks
+#   dispatch: bg      # Claude Code Agent View, true parallelism from one management window
+#   dispatch: serial  # one transcript, one feature at a time
+#   dispatch: spawn   # advanced only, needs deep nested agent support
+
 # Action 3 — batch ship (once at the end of each wave)
 Start the ship agent for <slug>.       # for each slug in the READY_TO_SHIP queue
 ```
+
+`dispatch: bg` safety rules: satisfy one worktree visibility gate before launch (clean git tree,
+`git config worktree.baseRef=head`, or prompts with all needed manifest/seed content inlined).
+Default bg concurrency is capped at 3; extra eligible rows stay `PENDING` with a `QUEUED_BG` note.
+When a bg row reaches `READY_TO_SHIP`, ship from that session's worktree or by attaching with
+`claude attach SESSION_ID`; do not delete the background session until its commits are pushed. Agent
+View PR dots are UI hints only — `dev_log` + reconcile are the A2K truth. If a nested-session guard
+blocks direct `claude --bg`, the skill emits a `scripts/cowork/roadmap_bg_run_*.sh` fallback script
+to run from a normal shell.
 
 Loop: `init → (run → batch ship) × W → wrap-up`.
 
@@ -568,8 +586,9 @@ Loop: `init → (run → batch ship) × W → wrap-up`.
 The manifest schema, the skill logic, the failure model, a worked example, and the troubleshooting
 table are all in **`06-roadmap-orchestration.md`** — Part A is the spec, Part B is the hands-on
 tutorial, the appendix is the `SKILL.md` draft. Level 3 changes nothing about Levels 1-2: each
-feature still runs the exact same 5-phase pipeline inside its own `<skill_prefix>feature-full-loop` invocation
-(emitted to a fresh session by default; spawn-as-subagent only on the opt-in path).
+feature still runs the exact same 5-phase pipeline through `<skill_prefix>feature-full-loop`.
+`emit` and `bg` preserve one independent execution context per feature; `serial` executes the same
+parent-session recipe inline from the caller context; `spawn` is advanced opt-in only.
 
 ---
 
