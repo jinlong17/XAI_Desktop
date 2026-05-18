@@ -108,7 +108,7 @@ Tooling notes:
 ## Target Feature Protocol
 
 1. Prefer explicit input `/feature-build <feature_name>`.
-2. Infer only from `packages//<feature_name>/` or `docs/reviews//<feature_name>/`.
+2. Infer only from `packages/<feature_name>/` or `docs/reviews/<feature_name>/`.
 3. Stop on ambiguity.
 
 ## Read First
@@ -122,11 +122,11 @@ Tooling notes:
 
 Then read:
 
-- latest `docs/reviews//<feature>/*-discovery-review.md`
-- `packages//<feature>/docs/design.md`
-- `packages//<feature>/docs/api.md`
-- `packages//<feature>/docs/test.md`
-- `packages//<feature>/docs/dev_log.md`
+- latest `docs/reviews/<feature>/*-discovery-review.md`
+- `packages/<feature>/docs/design.md`
+- `packages/<feature>/docs/api.md`
+- `packages/<feature>/docs/test.md`
+- `packages/<feature>/docs/dev_log.md`
 
 ## Startup Protocol
 

@@ -103,7 +103,7 @@ Tooling notes:
 
 ## Role
 
-- CAN read template files from `.agents/templates//` to obtain worker instructions.
+- CAN read template files from `.agents/templates/` to obtain worker instructions.
 - CAN read `.agents/project_background.md` to inject project context before running workers.
 - CAN read `dev_log.md` to track progress between cycles.
 - CAN summarize each cycle's result to the user.
@@ -121,7 +121,7 @@ Tooling notes:
 
 ## Read First
 
-- `packages//<feature>/docs/dev_log.md`
+- `packages/<feature>/docs/dev_log.md`
 
 ## Startup Protocol
 
@@ -141,7 +141,7 @@ Tooling notes:
 
 2. FIX step:
    - Render the worker prompt per "Worker Invocation Protocol" using template
-     `.agents/templates//bug-auto-fix.md` with target:
+     `.agents/templates/bug-auto-fix.md` with target:
        "Target feature: <feature_name>. Read dev_log.md for the fix strategy,
         sub-fix items, and current state."
    - Run it on your platform:
@@ -156,7 +156,7 @@ Tooling notes:
 
 3. VERIFY step:
    - Render and run a bug-verify worker using
-     `.agents/templates//bug-verify.md` with target:
+     `.agents/templates/bug-verify.md` with target:
        "Target feature: <feature_name>. Read dev_log.md for reproduction
         protocol, fix record, and commit hashes."
    - Wait for completion
@@ -171,7 +171,7 @@ Tooling notes:
 
 To prepare a worker prompt, always perform these steps (same across all platforms):
 
-1. Read `.agents/templates//<worker>.md` (for example `.agents/templates//bug-fix.md`).
+1. Read `.agents/templates/<worker>.md` (for example `.agents/templates/bug-fix.md`).
 2. Read `.agents/project_background.md` to obtain the project context string.
 3. From the template, strip the YAML frontmatter (the first `---...---` block). Keep only the body.
 4. In the stripped body, replace the literal string `Project: XAI_Desktop — AI Smart Desktop

@@ -111,7 +111,7 @@ Tooling notes:
 
 ## Read First
 
-- `<onboarding_doc>`
+- `developer.md`
 - `docs/workflow/SUBAGENT_WORKFLOW_V2.md`
 - `docs/workflow/SOP_NEW_FEATURE.md`
 - `docs/conventions/COMMIT_CONVENTION.md`
@@ -165,7 +165,7 @@ One run of `feature-build` should complete **exactly one phase** and then stop f
 5. Self-check:
    - architecture boundaries
    - contract alignment
-   - `<config_manifest>` impact
+   - `manifest.json` impact
    - docs needed due to implementation drift
 6. Commit the completed phase following `docs/conventions/COMMIT_CONVENTION.md`:
    - one or more focused commits per phase (single intent per commit)

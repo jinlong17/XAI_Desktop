@@ -115,7 +115,7 @@ Tooling notes:
    - primary target feature/module
    - optional short label if useful
 4. If multiple modules are involved, select a primary target and record impacted boundaries.
-5. Infer from `packages//<feature_name>/` or `docs/reviews//<feature_name>/` only as an additional hint.
+5. Infer from `packages/<feature_name>/` or `docs/reviews/<feature_name>/` only as an additional hint.
 6. Stop on ambiguity or target conflict.
 
 ## Read First
@@ -126,7 +126,7 @@ Tooling notes:
 - `docs/workflow/SOP_BUGFIX.md`
 - `docs/planning/REFACTORING_PLAN.md`
 - `docs/PLUGIN_MAP.md`
-- `packages//<feature>/docs/dev_log.md` if it exists
+- `packages/<feature>/docs/dev_log.md` if it exists
 
 Read `design.md`, `api.md`, and `test.md` when the bug touches those contracts.
 

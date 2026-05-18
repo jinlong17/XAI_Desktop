@@ -112,7 +112,7 @@ Prefer to be run by a different executor than `feature-plan`, but still work if 
 Resolve the target feature using the same rules as `feature-plan`:
 
 1. Prefer explicit input `/feature-review <feature_name>`.
-2. Infer only from `packages//<feature_name>/` or `docs/reviews//<feature_name>/`.
+2. Infer only from `packages/<feature_name>/` or `docs/reviews/<feature_name>/`.
 3. If the target remains ambiguous, stop.
 
 ## Read First
@@ -125,11 +125,11 @@ Resolve the target feature using the same rules as `feature-plan`:
 
 Then read:
 
-- latest `docs/reviews//<feature>/*-discovery-review.md`
-- `packages//<feature>/docs/design.md`
-- `packages//<feature>/docs/api.md`
-- `packages//<feature>/docs/test.md`
-- `packages//<feature>/docs/dev_log.md`
+- latest `docs/reviews/<feature>/*-discovery-review.md`
+- `packages/<feature>/docs/design.md`
+- `packages/<feature>/docs/api.md`
+- `packages/<feature>/docs/test.md`
+- `packages/<feature>/docs/dev_log.md`
 
 ## Startup Protocol
 

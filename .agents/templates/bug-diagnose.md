@@ -68,7 +68,7 @@ bug-diagnose -> bug-fix -> bug-verify -> ship
 ## Read First
 
 - the incoming bug report, failure description, or reproduction clue
-- `<onboarding_doc>`
+- `developer.md`
 - `docs/workflow/SUBAGENT_WORKFLOW_V2.md`
 - `docs/workflow/SOP_BUGFIX.md`
 - `docs/planning/REFACTORING_PLAN.md`
@@ -133,7 +133,7 @@ Every run must append one `Work Log` entry with:
 7. [Complex defect escalation]
    Trigger when:
    - the root cause spans a core and feature boundary
-   - `<config_manifest>` routing behavior is involved
+   - `manifest.json` routing behavior is involved
    - the same defect has regressed before
    Action:
    - Perspective A: trace the external behavior chain, including request path, I/O, and timing

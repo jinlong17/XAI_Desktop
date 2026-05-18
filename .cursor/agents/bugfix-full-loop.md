@@ -138,7 +138,7 @@ See `_portable/07-automation-mode-picker.md` for the full spec.
 ### Phase 1 — NO-OP
 Explicitly skipped; do not spawn any agent; the phase number is kept so the resume state machine stays uniform.
 > `bug-diagnose` already normalizes the bug report itself; no Step 0-style front gate is needed.
-> If the user's Bug text is extremely vague and clearly bundles multiple independent defects, it is recommended to first run the `<step0-skill>` skill manually to structurally split the bug report, and then start `bugfix-full-loop` — but that is a user judgment; the orchestrator does not enforce it.
+> If the user's Bug text is extremely vague and clearly bundles multiple independent defects, it is recommended to first run the `xai-feature-brief` skill manually to structurally split the bug report, and then start `bugfix-full-loop` — but that is a user judgment; the orchestrator does not enforce it.
 
 ### Phase 2 — DIAGNOSE
 - If on-disk Status ∈ {FIX_READY} → skip (resume mode)

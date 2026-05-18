@@ -113,7 +113,7 @@ Tooling notes:
 
 1. Prefer explicit input `/feature-auto-build <feature_name>`.
 2. Optional input may specify a phase list, e.g. `phases R7-7,R7-8,R7-9`.
-3. Infer only from `packages//<feature_name>/` or `docs/reviews//<feature_name>/`.
+3. Infer only from `packages/<feature_name>/` or `docs/reviews/<feature_name>/`.
 4. Stop on ambiguity.
 
 ## Read First
@@ -127,11 +127,11 @@ Tooling notes:
 
 Then read:
 
-- latest `docs/reviews//<feature>/*-discovery-review.md`
-- `packages//<feature>/docs/design.md`
-- `packages//<feature>/docs/api.md`
-- `packages//<feature>/docs/test.md`
-- `packages//<feature>/docs/dev_log.md`
+- latest `docs/reviews/<feature>/*-discovery-review.md`
+- `packages/<feature>/docs/design.md`
+- `packages/<feature>/docs/api.md`
+- `packages/<feature>/docs/test.md`
+- `packages/<feature>/docs/dev_log.md`
 
 ## Startup Protocol
 

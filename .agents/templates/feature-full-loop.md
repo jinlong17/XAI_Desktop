@@ -148,7 +148,7 @@ Read the `Status:` field (**only the legal dev_log Status values**: PLAN_DRAFT /
 
 ### Phase 1 — STEP 0
 - If `docs/reviews/<feature>/<YYYYMMDD>-feature-brief.md` (or `docs/reviews/_intake/...`) already exists → skip.
-- Else: invoke the `<step0-skill>` skill (via Skill tool if available, or via Task spawn fallback).
+- Else: invoke the `xai-feature-brief` skill (via Skill tool if available, or via Task spawn fallback).
 - Read dev_log / brief file; if the QA Gate failed → STOP, emit Handoff with Status: BLOCKED + Blocker: "Step 0 QA Gate not passed".
 
 ### Phase 2 — PLAN
@@ -449,7 +449,7 @@ Commits: (first)..(last)
 (One of the following, depending on Blocker type:)
 - Re-run: Start the feature-full-loop agent for (feature_name).
 - Manual fix: Start the (agent_name) agent for (feature_name). (e.g. feature-plan if review BLOCKED on plan quality)
-- Step back: re-run the <step0-skill> skill to revise the requirement.
+- Step back: re-run the xai-feature-brief skill to revise the requirement.
 
 ---
 

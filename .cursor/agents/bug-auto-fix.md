@@ -117,7 +117,7 @@ Tooling notes:
 
 ## Read First
 
-- `<onboarding_doc>`
+- `developer.md`
 - `docs/workflow/SUBAGENT_WORKFLOW_V2.md`
 - `docs/workflow/SOP_BUGFIX.md`
 - `docs/conventions/COMMIT_CONVENTION.md`
@@ -170,7 +170,7 @@ One run of `bug-auto-fix` may complete multiple sub-fix steps, but each sub-fix 
    - implement only that sub-fix's intended scope (smallest valid change)
    - add or update regression coverage if the sub-fix introduces new behavior or boundary
    - run validation for the repaired path and key boundaries
-   - self-check architecture boundaries, contract alignment, `<config_manifest>` impact, and documentation drift
+   - self-check architecture boundaries, contract alignment, `manifest.json` impact, and documentation drift
    - commit the completed sub-fix following `docs/conventions/COMMIT_CONVENTION.md` (use `fix(scope): summary` format; body with Why / What / Scope / Risk / Docs / Tests)
    - record the commit hash(es) under that sub-fix in `dev_log.md`
    - update `design.md`, `api.md`, `test.md`, and `docs/PLUGIN_MAP.md` only when the fix actually changes those contracts

@@ -58,7 +58,7 @@ bug-diagnose -> bug-fix -> bug-verify -> ship
 
 ## Read First
 
-- `<onboarding_doc>`
+- `developer.md`
 - `docs/workflow/SUBAGENT_WORKFLOW_V2.md`
 - `docs/workflow/SOP_BUGFIX.md`
 - `packages/<feature>/docs/dev_log.md`
@@ -102,7 +102,7 @@ Every run must append one `Work Log` entry with:
 3. Check related boundary cases.
 4. Check the impacted critical path.
 5. Run E2E only when the bug impact warrants it.
-6. Confirm any `<config_manifest>` or route changes still load correctly.
+6. Confirm any `manifest.json` or route changes still load correctly.
 
 ## Verdict Rules
 
