@@ -87,7 +87,7 @@ Two accepted forms:
 
 1. **Fresh start** (most common):
    ```
-   Start the feature-full-loop agent.
+   /xai-feature-full-loop
    Requirement: <freeform requirement text>
    Automation Mode: <one of the variant identifiers — see 04-automation-loop.md §3>
    (optional) Verify Cross-vendor: <yes|no>
@@ -96,7 +96,7 @@ Two accepted forms:
 
 2. **Resume mode**:
    ```
-   Start the feature-full-loop agent for <canonical-feature-name>.
+   /xai-feature-full-loop Feature: <canonical-feature-name>
    ```
    You will read the existing dev_log Status Panel and resume from the appropriate phase.
 
@@ -109,14 +109,14 @@ If input contains both `Requirement` and a canonical feature name in title, pref
 
 ### Phase 0 — INTAKE
 
-**STEP 0 of Phase 0 — Requirement presence gate (before Automation Mode acquisition)**: if this is a fresh start (no existing dev_log / resume target) and the invocation prompt has no `Requirement:` line, or it is empty/whitespace, **STOP IMMEDIATELY** with Handoff `Status: BLOCKED`, Blocker `Requirement missing — a free-text requirement cannot be acquired via a picker.`, Next Step `Re-run with: Start the feature-full-loop agent. Requirement: <1-3 sentences: motivation + who uses it + what to solve>. Automation Mode: <one of the 8 legal variants — see _portable/04-automation-loop.md §3>`. Do **not** fire the Automation Mode picker, do **not** investigate the codebase — a picker cannot capture free text, so this is a hard stop, never a question. Resume invocations (a dev_log Status Panel already exists) are exempt: Requirement was captured at first plan write. See `_portable/07-automation-mode-picker.md` §1A.
+**STEP 0 of Phase 0 — Requirement presence gate (before Automation Mode acquisition)**: if this is a fresh start (no existing dev_log / resume target) and the invocation prompt has no `Requirement:` line, or it is empty/whitespace, **STOP IMMEDIATELY** with Handoff `Status: BLOCKED`, Blocker `Requirement missing — a free-text requirement cannot be acquired via a picker.`, Next Step `Re-run with: /xai-feature-full-loop. Requirement: <1-3 sentences: motivation + who uses it + what to solve>. Automation Mode: <one of the 8 legal variants — see _portable/04-automation-loop.md §3>`. Do **not** fire the Automation Mode picker, do **not** investigate the codebase — a picker cannot capture free text, so this is a hard stop, never a question. Resume invocations (a dev_log Status Panel already exists) are exempt: Requirement was captured at first plan write. See `_portable/07-automation-mode-picker.md` §1A.
 
 **STEP 1 of Phase 0 — Automation Mode Acquisition (after STEP 0 passes, before any other INTAKE work)**: check whether the invocation prompt contains an `Automation Mode:` line with one of the 8 legal variants (`A-Claude` / `B-Codex` / `B-Cursor` / `C-Codex` / `C-Cursor` / `D-Codex` / `D-Cursor` / `D-Codex+Cursor`).
 
 - If YES and value is legal: record the Mode and proceed to the next INTAKE step.
 - If NO and this is fresh-start (no existing dev_log): you MUST fire AskUserQuestion now — see `_portable/07-automation-mode-picker.md` §2 — BEFORE any further investigation. Do not skip this step. Do not proceed to investigate the codebase / decide branch / etc. until Mode is acquired.
 - If NO and this is resume: read Mode from dev_log Status Panel and proceed.
-- If AskUserQuestion is not in your `allowed_tools` (i.e. the host tool doesn't grant it to subagents): STOP immediately with Handoff `Status: BLOCKED`, Blocker `Automation Mode missing and AskUserQuestion not available in this subagent context.`, Next Step `Re-run with: Start the feature-full-loop agent. Requirement: <text>. Automation Mode: <one of the 8 legal variants — see _portable/04-automation-loop.md §3>`.
+- If AskUserQuestion is not in your `allowed_tools` (i.e. the host tool doesn't grant it to subagents): STOP immediately with Handoff `Status: BLOCKED`, Blocker `Automation Mode missing and AskUserQuestion not available in this subagent context.`, Next Step `Re-run with: /xai-feature-full-loop. Requirement: <text>. Automation Mode: <one of the 8 legal variants — see _portable/04-automation-loop.md §3>`.
 
 Operational details once Mode is acquired (per `_portable/07-automation-mode-picker.md` §2):
 
@@ -405,7 +405,7 @@ Start the ship agent for (feature_name).
 
 Wait for the completion notification. Then:
 
-> Start the feature-full-loop agent for (feature_name).
+> /xai-feature-full-loop Feature: (feature_name)
 
 > The orchestrator detects dev_log Status: READY_FOR_VERIFY and spawns feature-verify.
 > Notification not arriving → check whether the external executor actually started; if needed, fall back manually by starting feature-auto-build inside the external tool.
@@ -440,7 +440,7 @@ Wait for the notification "Phase (N) build done, run phase-review". Then:
 > Phase: (N)
 > Commits: (<first>..<last>, fill in after build commits)
 
-> After phase-review finishes the hook notifies again; run `Start the feature-full-loop agent for (feature_name).` to let the orchestrator dispatch the next phase or spawn verify.
+> After phase-review finishes the hook notifies again; run `/xai-feature-full-loop Feature: (feature_name)` to let the parent-session recipe dispatch the next phase or spawn verify.
 
 ---
 
@@ -469,7 +469,7 @@ Start the feature-phase-review agent for (feature_name).
 Phase: (N)
 Commits: (first)..(last)
 
-> After phase-review runs, run `Start the feature-full-loop agent for (feature_name).` to let the orchestrator continue.
+> After phase-review runs, run `/xai-feature-full-loop Feature: (feature_name)` to let the parent-session recipe continue.
 
 ---
 
@@ -500,7 +500,7 @@ Commits: (first)..(last)
 ### Next Step
 
 (One of the following, depending on Blocker type:)
-- Re-run: Start the feature-full-loop agent for (feature_name).
+- Re-run: /xai-feature-full-loop Feature: (feature_name).
 - Manual fix: Start the (agent_name) agent for (feature_name). (e.g. feature-plan if review BLOCKED on plan quality)
 - Step back: re-run the xai-feature-brief skill to revise the requirement.
 

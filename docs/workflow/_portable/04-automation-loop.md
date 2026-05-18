@@ -1,6 +1,6 @@
 # 04 — Automation Loop: Variant Matrix, Per-Variant Contracts & Degradation Rules (Portable)
 
-> **Portable layer.** Project-agnostic. Defines the meta-orchestrator concept, the **7-variant
+> **Portable layer.** Project-agnostic. Defines the parent-session orchestration concept, the **8-variant
 > automation matrix (named: A-Claude / B-Codex / B-Cursor / C-Codex / C-Cursor / D-Codex / D-Cursor /
 > D-Codex+Cursor)**, the per-variant contracts and the real CLI invocation syntax, the
 > quota-fallback chain, and the "Status Panel must not drift" degradation rule.
@@ -22,7 +22,7 @@ orchestrators run, **full-pipeline automation** still needs three things:
 1. The automation Modes (A/B/C/D) must have explicit, selectable execution paths.
 2. The "external executor" of the cross-tool Modes can be swapped between two external tools
    (e.g. Codex ↔ Cursor). With 1 single-IDE mode + 3 cross-tool modes × 2 external tools =
-   **7 workflow variants**.
+   **8 named workflow modes**.
 3. Any variant, on quota exhaustion / tool unavailability / hook failure, must **degrade gracefully**
    to the single-IDE mode — **without letting the Status Panel drift**.
 
@@ -31,13 +31,15 @@ One-sentence definition:
 > **The core workflow (`01`/`02`) decides "who has the authority to write state"; this file decides
 > "who types, who relays the baton, who is the fallback."**
 
-### 1.1 The real entry point is a meta-orchestrator, not manually typed prompts in sequence
+### 1.1 The real entry point is a parent-session recipe, not manually typed prompts in sequence
 
-The core 12-subagent set still needs three more orchestration-layer subagents for true automation:
+The core 12-subagent set still needs one parent-session recipe plus three compatibility
+orchestration-layer contracts for true automation:
 
-1. **`feature-full-loop`** — end-to-end meta-orchestrator (feature dev)
-2. **`bugfix-full-loop`** — end-to-end meta-orchestrator (bugfix)
-3. **`feature-phase-review`** — phase-granularity gate review (Mode C only)
+1. **`<skill_prefix>feature-full-loop`** — recommended end-to-end parent-session recipe (feature dev)
+2. **`feature-full-loop`** — compatibility contract / legacy subagent wrapper (feature dev)
+3. **`bugfix-full-loop`** — end-to-end compatibility orchestrator (bugfix)
+4. **`feature-phase-review`** — phase-granularity gate review (Mode C only)
 
 Without them, a developer manually dispatches `<step0-skill>` → `feature-plan` → `feature-review` →
 `feature-dev-loop` → `ship` — that is not automation, it is manual scheduling.
@@ -45,32 +47,32 @@ Without them, a developer manually dispatches `<step0-skill>` → `feature-plan`
 The single user-facing entry point:
 
 ```text
-Start the feature-full-loop agent.
+/<skill_prefix>feature-full-loop
 Requirement: <a freeform requirement; the orchestrator derives the canonical name>
-Automation Mode: <one of the 7 variant identifiers>
+Automation Mode: <one of the 8 variant identifiers>
 ```
 
-`feature-full-loop` auto-completes Step 0 → plan → review (with REVISE return) → build → verify, and
+`<skill_prefix>feature-full-loop` auto-completes Step 0 → plan → review (with REVISE return) → build → verify, and
 **only stops before ship for human confirmation** (ship is the one mandatory human push gate).
 
-The 7 variants differ only inside `feature-full-loop`'s **Phase 4 (build + verify)** — how it
+The 8 variants differ only inside `<skill_prefix>feature-full-loop`'s **Phase 4 (build + verify)** — how it
 delegates the external executor. The other 4 phases (intake / plan / review-loop / human-gate) behave
 identically across all variants.
 
-The 7 variants, by name (the `Automation Mode:` enum — see §3): **A-Claude** (single-IDE);
+The 8 variants, by name (the `Automation Mode:` enum — see §3): **A-Claude** (single-IDE);
 **B-Codex / B-Cursor** (hook-relay); **C-Codex / C-Cursor** (phase-granularity); **D-Codex /
 D-Cursor** (lead-and-delegate), with **D-Codex+Cursor** as D's strongest quota-resilient
 fallback-chain combo. Per-variant contracts are in §3.3–§3.7.
 
 **Ideal-path interaction count:** the whole pipeline has only 2 user interactions — ① start
-`feature-full-loop` (input requirement + variant once); ② after seeing the `READY_TO_SHIP` Handoff,
+`<skill_prefix>feature-full-loop` (input requirement + variant once); ② after seeing the `READY_TO_SHIP` Handoff,
 manually run `ship`. The middle 5 phases are fully automatic. Variant-specific extra interactions:
 single-IDE / lead-and-delegate variants add 0; hook-relay variants add 1 resume; phase-granularity
 variants add 2N (N = phase count).
 
-> **Above the meta-orchestrator: Layer 3.5.** `feature-full-loop` orchestrates one feature's 5
+> **Above the recipe: Layer 3.5.** `<skill_prefix>feature-full-loop` orchestrates one feature's 5
 > phases. To drive a whole *reviewed roadmap* of N independent features hands-off — repeatedly
-> calling `feature-full-loop` wave by wave, with the human `ship` gate collapsed from per-feature to
+> emitting `<skill_prefix>feature-full-loop` blocks wave by wave, with the human `ship` gate collapsed from per-feature to
 > per-wave — see `06-roadmap-orchestration.md` (the roadmap manifest + the roadmap-loop skill). `06`
 > sits on top of this file and changes nothing here.
 
@@ -124,7 +126,7 @@ headless mode**. Desktop-app "wake up" paths are experimental; CLI sync paths ar
 
 ---
 
-## 3. The 7-variant matrix
+## 3. The 8-variant matrix
 
 > **How a Mode is chosen at runtime:** this section defines *what* the 8 variants are. The runtime
 > picker (at meta-orchestrator Phase 0 INTAKE / per-row at roadmap-loop init / run preflight
@@ -256,7 +258,7 @@ Status: APPROVED (after Step 0)
 
 - All hook actions are fire-and-forget; the orchestrator session may have exited.
 - User receives notifications (terminal beep + macOS notification or equivalent).
-- To resume after any hook completes: re-invoke `Start the feature-full-loop agent for <feature>.`
+- To resume after any hook completes: re-invoke `/<skill_prefix>feature-full-loop Feature: <feature>`.
   The orchestrator reads current Status and decides next step (skip what's done, dispatch what's
   next).
 
@@ -334,7 +336,7 @@ cursor-agent --print --force --model ${CW_CURSOR_MODEL:-gpt-5.5-high} --output-f
 - **Delegation decision (per phase):** the worker keeps schema-decision / design-judgement phases
   for Claude itself; it delegates mechanical, large-diff, multi-file phases to the external CLI.
 - **`D-Codex+Cursor`** is the 3-layer quota-resilient chain: `codex exec` → `cursor-agent` → Claude
-  self-implement (§4.1). It is the most cap-resistant of the 7 variants.
+  self-implement (§4.1). It is the most cap-resistant of the 8 variants.
 - **D mounts no hooks** — it does not depend on the B/C post-commit-hook plumbing; a `dev_log`
   `Automation Mode: D-*` makes the hook exit `0` immediately.
 - **Status Panel write authority (D variants):** the `feature-auto-build` worker (Claude) is always

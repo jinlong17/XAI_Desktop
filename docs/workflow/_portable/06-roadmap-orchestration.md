@@ -439,7 +439,7 @@ for each manifest row, by prior manifest Status:
                        dev_log BLOCKED → manifest BLOCKED (only auto-BLOCKED path);
                        dev_log missing/mid-pipeline → stale-IN_PROGRESS rule:
                          recent Last Run + live <orchestrator_marker_dir>/<slug>.awaiting_*
-                           → keep IN_PROGRESS (human resumes feature-full-loop directly)
+                          → keep IN_PROGRESS (human resumes <skill_prefix>feature-full-loop directly)
                          else → revert to PENDING for a clean retry
     PENDING          → dev_log SHIPPED/READY_TO_SHIP → set that; else stay PENDING
 
@@ -522,8 +522,8 @@ an explicit, copy-pasteable Next Step**:
 | Situation | Behaviour |
 |---|---|
 | skill crashed mid-run | the manifest was written to disk incrementally. Re-run `run` → the reconcile step reads `dev_log` truth → resumes from the correct position, does not redo `READY_TO_SHIP` / `SHIPPED` rows. |
-| a `run` crashed while a row was `IN_PROGRESS` | reconcile detects the stale `IN_PROGRESS`: if that feature's `dev_log` has not reached a terminal state, reconcile resets the row to `PENDING` (with a Note) so the next `run` cleanly retries it — re-spawning `feature-full-loop` is safe because it resumes from `dev_log`. A row is never left permanently stuck at `IN_PROGRESS`. |
-| a feature's `feature-full-loop` returned BLOCKED | manifest marks `BLOCKED`, driver skips and continues; reported at the end of the wave. After a human fixes it, manually set that row back to `PENDING`; the next `run` retries it. |
+| a `run` crashed while a row was `IN_PROGRESS` | reconcile detects the stale `IN_PROGRESS`: if that feature's `dev_log` has not reached a terminal state, reconcile resets the row to `PENDING` (with a Note) so the next `run` cleanly retries it by emitting a fresh `<skill_prefix>feature-full-loop` block that resumes from `dev_log`. A row is never left permanently stuck at `IN_PROGRESS`. |
+| a feature's `<skill_prefix>feature-full-loop` returned BLOCKED | manifest marks `BLOCKED`, driver skips and continues; reported at the end of the wave. After a human fixes it, manually set that row back to `PENDING`; the next `run` retries it. |
 | external dependency not arrived | marked `BLOCKED_EXTERNAL` at `init` time. Driver always skips it, not counted as a failure. Once the external input arrives, a human sets the row back to `PENDING`. |
 | human shipped a batch and wants to continue | just re-run `run`. The reconcile step flips the just-shipped rows to `SHIPPED`, the downstream wave unlocks automatically. |
 | dependency chain fully stuck | A7.4 case 3; output the blocking chain, human intervenes. |
