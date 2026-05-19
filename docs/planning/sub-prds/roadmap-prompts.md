@@ -271,7 +271,7 @@ notes: |
 - [ ] **wave 0** 只含"三栏外壳骨架"(无业务模块视图),业务 ConsoleView 都在 wave 1+
 - [ ] 每个 plugin 的 ConsoleView 是**独立 feature**(不要把 productivity 的 ConsoleView 和 calendar 的 ConsoleView 合并)
 - [ ] sidebar 8 个模块(Todo / 日历 / 四象限 / 番茄 / 习惯 / 项目管理 / Label / 搜索 / 设置)每个都有对应 feature
-- [ ] **依赖 sync-v1** 的 feature 用 `external_dependencies: [sync-v1#account-login, sync-v1#realtime-channel]` 标出
+- [ ] **依赖 sync-v1** 的 feature 在 `Note` 标 `blocked-by: sync-v1#account-login + sync-v1#realtime-channel SHIPPED`;`xai-roadmap-loop` 不会自动跨 manifest 检查,按 §1 总顺序人工守门
 - [ ] 性能预算 feature(冷启动 trace、模块切换 60fps 验证)独立成 feature,不要塞进其他 feature
 - [ ] empty / error states 是独立横向 feature(一次性给所有模块加),不要每个模块各加一次
 - [ ] `Default Automation Mode:` 设为 **`D-Codex+Cursor`**(UI heavy 代码,quota 弹性高)
@@ -389,7 +389,7 @@ notes: |
 
 - [ ] **wave 0** 只含 Web 脚手架 + 数据 driver 切换,无 UI 复用 feature
 - [ ] 每个业务 plugin 的 WebView 在 manifest 里**显式有一行**(productivity-web-view / labels-web-view / ...),哪怕实现就是 "= ConsoleView"
-- [ ] **依赖 console-v1 + sync-v1** 用 `external_dependencies` 写清,缺一阻塞 wave 0
+- [ ] **依赖 console-v1 + sync-v1** 在 `Note` 标 `blocked-by: console-v1 ALL_SHIPPED + sync-v1 ALL_SHIPPED`;`xai-roadmap-loop` 不会自动跨 manifest 检查,不要在前置 roadmap 完成前 run
 - [ ] Service Worker / IndexedDB / 离线队列 是**独立的 wave 2 feature**,不要并入其他 wave
 - [ ] CSP / HSTS / Cookie 安全 是独立 hardening feature,不要塞进 auth flow
 - [ ] **Lighthouse / Web Vitals 验收** 是独立 verification feature
@@ -432,7 +432,7 @@ skill 会先弹中文 dispatch 确认。Web 推荐选 `bg`;若部署或安全 ha
 
 ### 5.2 子 roadmap 之间的依赖是"全 SHIPPED 等待",不是"骨架就够了"
 
-虽然 Console 的 init 时机可以早(Sync 骨架到位即可),但 **Console wave 0 真正执行**需要 sync-v1 里被 Console 依赖的具体 feature(account-login / realtime-channel / sqlite-schema)处于 `Status: SHIPPED`。`xai-roadmap-loop run` 会检查 `external_dependencies` 字段,缺一不发 block。
+虽然 Console 的 init 时机可以早(Sync 骨架到位即可),但 **Console wave 0 真正执行**需要 sync-v1 里被 Console 依赖的具体 feature(account-login / realtime-channel / sqlite-schema)处于 `Status: SHIPPED`。`xai-roadmap-loop run` 只会自动检查**同一份 manifest 内**的 `Depends On` + `Dep Semantics`;跨 roadmap 依赖靠 §1 总顺序、manifest `Note` 里的 `blocked-by:` 标注和人工守门。
 
 ### 5.3 init 之后必须**真的人工审 manifest**
 
