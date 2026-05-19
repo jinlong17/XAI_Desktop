@@ -39,7 +39,7 @@
 - [ ] #18 onboarding-backfill-ui (FR-AC-09)
 - [x] #19 crypto-tauri-commands (T-08 / §4.2 capability allowlist)
 - [x] #20 core-data-sqlite-driver (dev-plan §2)
-- [ ] #22 menubar-sync-status-icon (T-16)
+- [x] #22 menubar-sync-status-icon (T-16)
 
 ### Day 6–12 — sync engine + edge functions + single-table E2E
 - [x] #23 commit-seq-authority (H-4/H-A)

@@ -10,10 +10,10 @@
 
 ## Current State
 
-- Current feature: `realtime-private-channel-config` (#21) shipped locally; next eligible feature is `onboarding-backfill-ui` (#18) or `rls-policies-and-tests` (#25).
-- Completed this run: `kdf-primitives` (#3), `aes-gcm-aead-core` (#4), `deterministic-cbor-aad` (#5), `bip39-mnemonic-24w` (#6), `cipher-envelope-codec` (#7), `rust-keyvault-opaque-handle` (#11), `x25519-device-keypair` (#12), `hpke-per-device-wrap` (#13), `ed25519-recovery-signing` (#14), `sqlcipher-local-db` (#16), `account-signup-login` (#17), `crypto-tauri-commands` (#19), `core-data-sqlite-driver` (#20), `commit-seq-authority` (#23), `realtime-private-channel-config` (#21) code/docs/tests locally complete with deferred gates.
-- Failed this run: no feature blocked; incidents recorded for command/script/import/fixture issues.
-- Next step: continue with #25 `rls-policies-and-tests` or #18 `onboarding-backfill-ui` depending on local testability.
+- Current feature: `menubar-sync-status-icon` (#22) shipped locally; next eligible feature is `single-table-todos-e2e` (#30) or `onboarding-backfill-ui` (#18).
+- Completed this run: `kdf-primitives` (#3), `aes-gcm-aead-core` (#4), `deterministic-cbor-aad` (#5), `bip39-mnemonic-24w` (#6), `cipher-envelope-codec` (#7), `rust-keyvault-opaque-handle` (#11), `x25519-device-keypair` (#12), `hpke-per-device-wrap` (#13), `ed25519-recovery-signing` (#14), `sqlcipher-local-db` (#16), `account-signup-login` (#17), `crypto-tauri-commands` (#19), `core-data-sqlite-driver` (#20), `commit-seq-authority` (#23), `realtime-private-channel-config` (#21), `rls-policies-and-tests` (#25), `nonce-lease-server` (#24), `sync-engine-push` (#26), `sync-engine-pull` (#27), `push-edge-function` (#28), `recovery-proof-edge-function` (#29), and `menubar-sync-status-icon` (#22) code/docs/tests locally complete with deferred gates.
+- Failed this run: no feature blocked; incidents recorded for command/script/import/fixture/type issues.
+- Next step: continue with #30 `single-table-todos-e2e` now that direct deps are satisfied, unless local context favors #18 first.
 
 ## Checkpoints
 
@@ -391,7 +391,28 @@
   - `pnpm --filter web check-types`
 - Incident fixed: first typecheck failed on `crypto.subtle.digest` BufferSource narrowing; rerun passed.
 - Deferred: live Supabase deploy, persistent challenge table/cleanup, strict Ed25519 verifier binding, and real Rust signature E2E.
-- Commit: pending `feat(recovery-proof-edge-function): add recovery proof core`.
+- Commit: `feat(recovery-proof-edge-function): add recovery proof core`.
+
+### 2026-05-19 04:14 PDT — feature checkpoint: menubar-sync-status-icon (#22)
+
+- Added `packages/plugin-account/src/sync-status.ts` with plugin-owned `account:sync-*` lifecycle emission helpers.
+- Added `runObservedSync()` wrapper that emits started/completed/failed and rethrows operation failures.
+- Added `apps/desktop/src/sync/useSyncMenuBarStatus.ts` to listen for account sync events and drive the shell adapter.
+- Added `apps/desktop/src-tauri/src/commands/menubar.rs` with Tauri tray install/update command and generated four-state RGBA icons:
+  - idle grey
+  - syncing blue spinner frames
+  - success green flash
+  - error red clickable/focus path
+- Enabled Tauri `tray-icon` feature and registered `sync_set_menubar_status`.
+- Added docs anchor `packages/menubar-sync-status-icon/docs/{design,api,test,dev_log}.md`; updated PLUGIN_MAP and plugin-account docs.
+- Tests/checks passed:
+  - `pnpm --filter @repo/plugin-account test`
+  - `pnpm --filter @repo/plugin-account check-types`
+  - `pnpm --filter desktop build`
+  - `cargo test --manifest-path apps/desktop/src-tauri/Cargo.toml menubar`
+- Incident fixed: first Rust menubar test compile failed on `AppError` conversion for tray/lock errors; rerun passed.
+- Deferred: real macOS menu-bar visual/click validation and real push/pull transition verification.
+- Commit: pending `feat(menubar-sync-status-icon): add sync status tray`.
 
 ### 2026-05-19 02:55 PDT — sweep checkpoint after next 4-feature loop
 

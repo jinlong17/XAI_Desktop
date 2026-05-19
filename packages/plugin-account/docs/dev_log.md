@@ -9,9 +9,9 @@
 | Plugin | account |
 | Package | @repo/plugin-account |
 | Status | In-Dev |
-| Phase | wave-W1 account signup/login orchestration |
+| Phase | wave-W1 menu-bar sync status |
 | Executor | Codex serial autorun |
-| Updated | 2026-05-19 03:13 |
+| Updated | 2026-05-19 04:14 |
 
 ## Scaffold scope (wave-W0)
 
@@ -28,3 +28,4 @@
 | 2026-05-19 00:20 | feature-auto-build | Phase 4 scaffold: package skeleton + docs (wave-W0, Planned status). | (see roadmap-kickoff dev_log) | feature-verify |
 | 2026-05-19 03:13 | Codex serial autorun | Added signup/login/refresh orchestration, Keychain refresh-token persistence, and Vitest coverage. | pending #17 commit | Wire real Supabase transport and Tauri crypto commands in downstream rows. |
 | 2026-05-19 03:20 | Codex serial autorun | Declared `crypto_*` command names in plugin manifest for #19. | pending #19 commit | Add TS client wiring once account runtime state is initialized. |
+| 2026-05-19 04:14 | Codex serial autorun | Added plugin-owned sync lifecycle emitters and desktop menu-bar tray adapter for #22. | pending #22 commit | Real macOS click/animation validation deferred to signed-device review. |

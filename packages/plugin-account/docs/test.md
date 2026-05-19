@@ -17,6 +17,7 @@
 | AC-9 | Same-entity outbox edits squash to latest plaintext + latest mutation_id | `pnpm --filter @repo/plugin-account test` |
 | AC-10 | Sync pull uses one global commit_seq cursor and no entity_type query param | `pnpm --filter @repo/plugin-account test` |
 | AC-11 | Pull classification handles idempotent duplicate, legit re-encrypt, E3015 rollback, and E3024 account rollback | `pnpm --filter @repo/plugin-account test` |
+| AC-12 | Sync lifecycle helpers emit started/completed/failed account events | `pnpm --filter @repo/plugin-account test` |
 
 ## 2. Compile-smoke gates (in register-plugin.ts)
 

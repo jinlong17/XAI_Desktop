@@ -5,8 +5,9 @@
 ## 1. Public surface (`src/index.ts` barrel)
 
 The barrel exports registration, `KeyHandle`, mnemonic helpers, account
-signup/login orchestration from `src/account.ts`, and the Phase 0.3 sync push
-engine from `src/sync-engine.ts`.
+signup/login orchestration from `src/account.ts`, the Phase 0.3 sync push/pull
+engine from `src/sync-engine.ts`, and sync lifecycle emission helpers from
+`src/sync-status.ts`.
 
 ## 2. `registerAccountPlugin(): void`
 
@@ -59,3 +60,15 @@ contracts.
 
 The key push invariant is that JS submits entity metadata and plaintext to the
 injected crypto seam; Rust `crypto_encrypt_for` owns CBOR AAD construction.
+
+## 8. Sync status emission
+
+`createSyncStatusEmitter()` and `runObservedSync()` are the plugin-account owned
+helpers for FR-SY-45. They are the only public helpers that emit:
+
+- `account:sync-started`
+- `account:sync-completed`
+- `account:sync-failed`
+
+Host code may listen to these events to update shell surfaces such as the
+menu-bar icon, but must not emit `account:*` events itself.

@@ -24,6 +24,16 @@ export type {
 export { registerAccountPlugin } from './register-plugin';
 export { decodeDekMnemonic, encodeDekMnemonic } from './mnemonic';
 export {
+  createSyncStatusEmitter,
+  runObservedSync,
+} from './sync-status';
+export type {
+  SyncEventEmitter,
+  SyncOperationKind,
+  SyncStatusEmitter,
+  SyncStatusEmitterOptions,
+} from './sync-status';
+export {
   SyncPushRevisionMismatchError,
   SyncAccountRollbackError,
   SyncRevisionRollbackError,

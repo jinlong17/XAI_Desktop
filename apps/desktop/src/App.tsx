@@ -2,6 +2,7 @@ import { SettingsProvider } from "./context/SettingsContext";
 import { InteractiveProvider } from "./context/InteractiveContext";
 import { OrganizerLayer, GridSystemProvider } from "@repo/plugin-organizer";
 import GlobalDndProvider from "./providers/DndProvider";
+import { useSyncMenuBarStatus } from "./sync/useSyncMenuBarStatus";
 import "./App.css";
 
 declare global {
@@ -11,6 +12,8 @@ declare global {
 }
 
 function AppInner() {
+  useSyncMenuBarStatus();
+
   return (
     <GridSystemProvider>
       <GlobalDndProvider>
