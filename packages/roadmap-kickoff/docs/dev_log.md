@@ -11,13 +11,13 @@
 | Target | roadmap-kickoff |
 | Title | Sync v1 foundational scaffold (plugin-account + core-data + shared infra) |
 | Roadmap | sync-v1 · feature #1 · wave W0 · Phase 0.3 · dev-plan T-05 |
-| Status | READY_FOR_VERIFY |
+| Status | READY_TO_SHIP |
 | Current Phase | FEATURE_VERIFY |
-| Suggested Next | feature-verify |
+| Suggested Next | ship |
 | Automation Mode | D-Codex+Cursor |
 | Verify Cross-vendor | no |
-| Executor | feature-auto-build (claude-sonnet-4-6) |
-| Updated | 2026-05-19 00:30 |
+| Executor | feature-verify (claude-opus-4-7) |
+| Updated | 2026-05-19 00:45 |
 
 ## Phase Plan
 
@@ -102,4 +102,5 @@ Advisory (non-blocking, for feature-build awareness, no re-plan needed):
 | 2026-05-19 00:18 | feature-auto-build (claude-sonnet-4-6) | Phase 2: AppError E3xxx thiserror enum + crypto/KeyHandle(u32) scaffold + mod error;/crypto; in lib.rs. Gate: cargo check PASS (2 dead-code warnings expected); cargo test 6/6 PASS (advisory A2: all E3xxx prefix assertions present). | 93034b2 | Phase 3 |
 | 2026-05-19 00:22 | feature-auto-build (claude-sonnet-4-6) | Phase 3: @repo/core-data package skeleton — Repo<T>/RepoRecord interface + createInMemoryRepo() + 7 Vitest covering put/get/delete/list round-trips. Gate: pnpm --filter @repo/core-data check-types PASS; test 7/7 PASS. | a443c88 | Phase 4 |
 | 2026-05-19 00:24 | feature-auto-build (claude-sonnet-4-6) | Phase 4: @repo/plugin-account skeleton — KeyHandle branded type + registerAccountPlugin() + compile-smoke (_AssertAccountKeysInEventMap + @ts-expect-error negative case) + manifest.json (enabled:false, 5 emit keys) + four-piece plugin docs. Gate: check-types PASS; red-line grep #4/#9 clean. | 747fa49 | Phase 5 |
-| 2026-05-19 00:30 | feature-auto-build (claude-sonnet-4-6) | Phase 5: Host wiring (main.tsx: import+registerAccountPlugin() above createRoot; Router body untouched R-1) + PLUGIN_MAP Planned rows (account + @repo/core-data) + acceptance sweep AC-1..AC-9. AC-7 pnpm dev runtime smoke deferred to feature-verify (headless env). Status → READY_FOR_VERIFY. | (this commit) | feature-verify |
+| 2026-05-19 00:30 | feature-auto-build (claude-sonnet-4-6) | Phase 5: Host wiring (main.tsx: import+registerAccountPlugin() above createRoot; Router body untouched R-1) + PLUGIN_MAP Planned rows (account + @repo/core-data) + acceptance sweep AC-1..AC-9. AC-7 pnpm dev runtime smoke deferred to feature-verify (headless env). Status → READY_FOR_VERIFY. | c4fea93 | feature-verify |
+| 2026-05-19 00:45 | feature-verify (claude-opus-4-7) | Independent verify vs worktree base 18a51d1, 5 build commits re-checked. All 9 AC re-run green: pnpm install clean; core 7/7; core-data 7/7; plugin-account check-types clean; desktop tsc exit 0; cargo check clean (2 expected scaffold warnings); cargo test 6/6 (A2 E3xxx prefixes ✔); AC-5 window.rs+invoke_handler diff empty; red lines #1/#4/#8/#9 clean; A1 @ts-expect-error live; lifecycle gate + T6/TB-3 seams confirmed. Verdict PASS. Residual: macOS pnpm dev R-1 smoke = required pre-ship human step (non-blocking — change statically inert). Status → READY_TO_SHIP. | (this commit) | ship |
