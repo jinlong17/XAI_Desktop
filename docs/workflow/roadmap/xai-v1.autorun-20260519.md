@@ -17,10 +17,10 @@
 | Gate Manifest | docs/workflow/roadmap/xai-g0-window-spike.md |
 | Current Feature | window-ground-truth |
 | Feature Source | docs/planning/execution/G0-window-spike.md §G0.1 |
-| Feature Status | IN_PROGRESS |
-| Current Commit | pending |
-| Tests | pending |
-| Next Step | Step 0 -> feature-plan -> feature-review -> build -> feature-verify |
+| Feature Status | READY_TO_SHIP |
+| Current Commit | 3b571f6 |
+| Tests | `git branch --show-current`; `sw_vers`; README content checks |
+| Next Step | Human ship for `window-ground-truth`, or continue G0 with deferred gates noted |
 
 ## Checkpoints
 
@@ -34,16 +34,29 @@
 - Manifest review is deferred because this is unattended mode; recorded in deferred gates.
 - Selected first eligible low-risk task: `window-ground-truth` (G0.1).
 
+### 2026-05-19 14:42 PDT — Feature Checkpoint: window-ground-truth
+
+- Completed Step 0, feature-plan, inline feature-review, build, and inline feature-verify for `window-ground-truth`.
+- Created branch `spike/window-ground-truth`.
+- Created evidence README with sanitized machine/display facts.
+- Committed build docs as `3b571f6 docs(window-ground-truth): Phase 1 — add G0 evidence anchor`.
+- Verification passed for G0.1 acceptance:
+  - `git branch --show-current` -> `spike/window-ground-truth`
+  - `sw_vers` -> macOS 26.4 build 25E246
+  - README includes machine model, macOS version, display count, and test date
+- Status: READY_TO_SHIP.
+- Deferred gates recorded: manifest review, cross-vendor review, cross-vendor verify.
+
 ## Feature Outcomes
 
 | Feature | Gate | Status | Commit | Tests | Notes |
 |---|---|---|---|---|---|
-| window-ground-truth | G0 | IN_PROGRESS | pending | pending | G0.1 spike branch/evidence anchor. |
+| window-ground-truth | G0 | READY_TO_SHIP | 3b571f6 | PASS: branch, sw_vers, README content | Deferred gates recorded in docs/workflow/roadmap/xai-v1.deferred-gates.md |
 
 ## Deferred Gates Summary
 
 - Manifest review deferred for `xai-g0-window-spike`.
-- Cross-vendor/human review for `window-ground-truth` will be recorded if the feature reaches verify in this serial unattended run.
+- Cross-vendor review and verify deferred for `window-ground-truth`.
 
 ## Incidents Summary
 
@@ -52,4 +65,3 @@
 ## Final 24h Summary
 
 Pending. This section must be completed when the run stops or reaches the 24h deadline.
-
