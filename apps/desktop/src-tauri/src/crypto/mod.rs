@@ -37,6 +37,9 @@ pub mod argon2;
 pub mod envelope;
 
 #[cfg(feature = "crypto")]
+pub mod device_key;
+
+#[cfg(feature = "crypto")]
 pub mod kdf;
 
 #[cfg(feature = "crypto")]

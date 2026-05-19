@@ -31,7 +31,7 @@
 
 ### Day 3–9 — key hierarchy + account + KeyVault + SQLCipher
 - [x] #11 rust-keyvault-opaque-handle (T-08)
-- [ ] #12 x25519-device-keypair (§4.2 C-A)
+- [x] #12 x25519-device-keypair (§4.2 C-A)
 - [ ] #13 hpke-per-device-wrap (§4.2 C-D / RFC 9180)
 - [ ] #14 ed25519-recovery-signing (§4.2 C-A)
 - [ ] #16 sqlcipher-local-db (T-11)

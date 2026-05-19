@@ -22,6 +22,7 @@
 | bip39-mnemonic-24w | packages/bip39-mnemonic-24w/ | Shipped | Wave W0 Phase 0.3: 24-word English BIP-39 active DEK backup codec in Rust and plugin-account. Deferred gates recorded in sync-v1 deferred gates. | 2026-05-19 |
 | cipher-envelope-codec | packages/cipher-envelope-codec/ | Shipped | Wave W0 Phase 0.3: binary envelope codec and GCM nonce reconstruction. Fuzz gate deferred to sync-v1 deferred gates. | 2026-05-19 |
 | rust-keyvault-opaque-handle | packages/rust-keyvault-opaque-handle/ | Shipped | Wave W1 Phase 0.3: Rust in-memory KeyVault with non-zero u32 opaque handles for DEK/device private keys. Deferred review/capability gates recorded in sync-v1 deferred gates. | 2026-05-19 |
+| x25519-device-keypair | packages/x25519-device-keypair/ | Shipped | Wave W1 Phase 0.3: local CSPRNG X25519 device key generation with Keychain store abstraction, KeyVault residency, and public-key rejection tests. Deferred runtime gates recorded in sync-v1 deferred gates. | 2026-05-19 |
 
 ---
 

@@ -10,10 +10,10 @@
 
 ## Current State
 
-- Current feature: `rust-keyvault-opaque-handle` (#11) shipped locally; next eligible feature is `x25519-device-keypair` (#12), `ed25519-recovery-signing` (#14), `sqlcipher-local-db` (#16), `account-signup-login` (#17), or non-crypto rows #21/#23/#25.
-- Completed this run: `kdf-primitives` (#3), `aes-gcm-aead-core` (#4), `deterministic-cbor-aad` (#5), `bip39-mnemonic-24w` (#6), `cipher-envelope-codec` (#7), `rust-keyvault-opaque-handle` (#11) code/docs/tests locally complete with deferred gates.
+- Current feature: `x25519-device-keypair` (#12) shipped locally; next eligible feature is `hpke-per-device-wrap` (#13), `ed25519-recovery-signing` (#14), `sqlcipher-local-db` (#16), `account-signup-login` (#17), or non-crypto rows #21/#23/#25.
+- Completed this run: `kdf-primitives` (#3), `aes-gcm-aead-core` (#4), `deterministic-cbor-aad` (#5), `bip39-mnemonic-24w` (#6), `cipher-envelope-codec` (#7), `rust-keyvault-opaque-handle` (#11), `x25519-device-keypair` (#12) code/docs/tests locally complete with deferred gates.
 - Failed this run: no feature blocked; incidents recorded for command/script/import/fixture issues.
-- Next step: implement next eligible feature after committing #11, starting with `x25519-device-keypair` (#12) unless dependency checks change.
+- Next step: implement next eligible feature after committing #12, starting with `hpke-per-device-wrap` (#13) unless dependency checks change.
 
 ## Checkpoints
 
@@ -107,6 +107,21 @@
   - `cargo check --manifest-path apps/desktop/src-tauri/Cargo.toml --features crypto --locked`
 - Deferred: human review, cross-vendor verify, and Tauri capability allowlist enforcement to downstream rows.
 - Commit: `feat(rust-keyvault-opaque-handle): add Rust KeyVault`.
+
+### 2026-05-19 02:53 PDT — feature checkpoint: x25519-device-keypair (#12)
+
+- Implemented `apps/desktop/src-tauri/src/crypto/device_key.rs` behind the `crypto` feature.
+- Enabled exact-pinned `x25519-dalek = "=2.0.1"` features `static_secrets` + `getrandom`.
+- Added local CSPRNG device key generation with no KEK input, Keychain store abstraction, KeyVault device-private insertion, and staging-byte zeroize.
+- Added all-zero and low-order public-key rejection.
+- Added docs anchor `packages/x25519-device-keypair/docs/{design,api,test,dev_log}.md`.
+- Tests/checks passed:
+  - `cargo test --manifest-path apps/desktop/src-tauri/Cargo.toml --features crypto crypto::device_key::tests`
+  - `cargo check --manifest-path apps/desktop/src-tauri/Cargo.toml --locked`
+  - `cargo check --manifest-path apps/desktop/src-tauri/Cargo.toml --features crypto --locked`
+  - `bash scripts/ci/check-exact-pins.sh`
+- Deferred: human review, cross-vendor verify, real signed-build Keychain ACL verification, and Supabase `device_pub` upload.
+- Commit: `feat(x25519-device-keypair): add device key generation`.
 
 ### 2026-05-19 02:17 PDT — sweep checkpoint after first 3-feature loop
 
