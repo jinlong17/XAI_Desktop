@@ -15,11 +15,11 @@
 |---|---|
 | Current Gate | G0 — window spike |
 | Gate Manifest | docs/workflow/roadmap/xai-g0-window-spike.md |
-| Current Feature | click-through-matrix |
-| Feature Source | docs/planning/execution/G0-window-spike.md §G0.3 |
+| Current Feature | finder-dnd-path |
+| Feature Source | docs/planning/execution/G0-window-spike.md §G0.4 |
 | Feature Status | BLOCKED |
 | Current Commit | pending |
-| Tests | `test -f docs/reviews/window-ground-truth/click-through-matrix/README.md` |
+| Tests | `test -f docs/reviews/window-ground-truth/finder-dnd-path/README.md` |
 | Next Step | Continue to next eligible G0 feature if dependencies allow |
 
 ## Checkpoints
@@ -82,6 +82,7 @@
 | window-ground-truth | G0 | READY_TO_SHIP | 3b571f6 | PASS: branch, sw_vers, README content | Deferred gates recorded in docs/workflow/roadmap/xai-v1.deferred-gates.md |
 | grid-window-prototype | G0 | READY_TO_SHIP | 6b121ea | PASS: plugin-organizer check-types; desktop build | Runtime Tauri alpha/beta evidence deferred. |
 | click-through-matrix | G0 | BLOCKED | pending | PASS: matrix template exists; BLOCKED: real hit-test evidence | Requires human macOS click-through matrix. |
+| finder-dnd-path | G0 | BLOCKED | pending | PASS: matrix template exists; BLOCKED: real Finder drop evidence | Requires human Finder/Tauri path matrix. |
 
 ## Deferred Gates Summary
 

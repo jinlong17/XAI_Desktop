@@ -95,3 +95,15 @@
 - Later human action: Run `pnpm --filter desktop tauri dev`, fill the matrix, and attach screenshots/logs under `docs/reviews/window-ground-truth/click-through-matrix/`.
 - Suggested verification command / environment: `pnpm --filter desktop tauri dev` on macOS with Finder/Desktop visible; compare `macOSPrivateApi=true` and `false`.
 - Files/commits affected: docs/reviews/window-ground-truth/click-through-matrix/README.md; packages/click-through-matrix/docs/*; commit pending
+
+## Entry 9
+
+- Feature: finder-dnd-path
+- Gate: G0
+- Deferred gate: Real Finder DnD path-first matrix
+- Why deferred: The acceptance requires real Finder drag/drop payloads for file, folder, App bundle, and alias in a Tauri Grid window.
+- Risk: G0 cannot prove the path-first drop model until this evidence exists.
+- What was done instead: Created the evidence matrix template and avoided changing Webview/native drop behavior without observed runtime results.
+- Later human action: Run `pnpm --filter desktop tauri dev`, drop Finder items into a Grid, and attach logs/screenshots under `docs/reviews/window-ground-truth/finder-dnd-path/`.
+- Suggested verification command / environment: `pnpm --filter desktop tauri dev` on macOS with Finder; use file, folder, `.app`, and alias drops.
+- Files/commits affected: docs/reviews/window-ground-truth/finder-dnd-path/README.md; packages/finder-dnd-path/docs/*; commit pending
