@@ -7,6 +7,7 @@ import {
   createBackfillChallenge,
   createEmergencyKitDocument,
   createEmergencyKitPayload,
+  renderEmergencyKitHtml,
   verifyBackfillChallenge,
   type BackfillAnswers,
   type BackfillLocalValidator,
@@ -151,5 +152,19 @@ describe('onboarding backfill challenge', () => {
     expect(document.qrSvg).toContain('<svg');
     expect(document.pdfDataUrl).toMatch(/^data:application\/pdf;base64,/);
     expect(new TextDecoder().decode(document.pdfBytes.slice(0, 5))).toBe('%PDF-');
+  });
+
+  it('escapes Emergency Kit HTML field values', () => {
+    const payload = createEmergencyKitPayload({
+      accountEmail: 'user&<>"\'<script@example.com',
+      secretKey: 'XAI-&<>"\'<script-1234',
+      mnemonic: MNEMONIC,
+      createdAtIso: '2026-05-19T12:00:00.000Z',
+    });
+    const html = renderEmergencyKitHtml(payload, '<svg></svg>');
+
+    expect(html).toContain('user&amp;&lt;&gt;&quot;&#39;&lt;script@example.com');
+    expect(html).toContain('XAI-&amp;&lt;&gt;&quot;&#39;&lt;script-1234');
+    expect(html).not.toContain('<script');
   });
 });
