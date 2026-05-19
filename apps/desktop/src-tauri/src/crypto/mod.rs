@@ -50,3 +50,6 @@ pub mod key_vault;
 
 #[cfg(feature = "crypto")]
 pub mod mnemonic;
+
+#[cfg(feature = "crypto")]
+pub mod recovery_signing;

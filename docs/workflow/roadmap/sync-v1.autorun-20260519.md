@@ -10,10 +10,10 @@
 
 ## Current State
 
-- Current feature: `hpke-per-device-wrap` (#13) shipped locally; next eligible feature is `ed25519-recovery-signing` (#14), `sqlcipher-local-db` (#16), `account-signup-login` (#17), or non-crypto rows #21/#23/#25.
-- Completed this run: `kdf-primitives` (#3), `aes-gcm-aead-core` (#4), `deterministic-cbor-aad` (#5), `bip39-mnemonic-24w` (#6), `cipher-envelope-codec` (#7), `rust-keyvault-opaque-handle` (#11), `x25519-device-keypair` (#12), `hpke-per-device-wrap` (#13) code/docs/tests locally complete with deferred gates.
+- Current feature: `ed25519-recovery-signing` (#14) shipped locally; next eligible feature is `sqlcipher-local-db` (#16), `account-signup-login` (#17), or non-crypto rows #21/#23/#25.
+- Completed this run: `kdf-primitives` (#3), `aes-gcm-aead-core` (#4), `deterministic-cbor-aad` (#5), `bip39-mnemonic-24w` (#6), `cipher-envelope-codec` (#7), `rust-keyvault-opaque-handle` (#11), `x25519-device-keypair` (#12), `hpke-per-device-wrap` (#13), `ed25519-recovery-signing` (#14) code/docs/tests locally complete with deferred gates.
 - Failed this run: no feature blocked; incidents recorded for command/script/import/fixture issues.
-- Next step: implement next eligible feature after committing #13, starting with `ed25519-recovery-signing` (#14) unless dependency checks change.
+- Next step: implement next eligible feature after committing #14, starting with `sqlcipher-local-db` (#16) unless dependency checks change.
 
 ## Checkpoints
 
@@ -138,6 +138,22 @@
   - `bash scripts/ci/check-exact-pins.sh`
 - Deferred: human review, cross-vendor verify, RFC 9180 official vectors, and Supabase `device_dek_wraps` write-path integration.
 - Commit: `feat(hpke-per-device-wrap): add HPKE DEK wrapping`.
+
+### 2026-05-19 03:02 PDT — feature checkpoint: ed25519-recovery-signing (#14)
+
+- Implemented `apps/desktop/src-tauri/src/crypto/recovery_signing.rs` behind the `crypto` feature.
+- Derived `recovery_seed` from resident DEK via `HKDF-Expand(DEK_current, "xai.recovery.sig.v1")`.
+- Signed the canonical 5-field CBOR recovery transcript from `crypto::aad`.
+- Added strict verification through `VerifyingKey::verify_strict` only.
+- Mapped wrong-DEK and transcript tamper verification failure to `E3014`.
+- Added docs anchor `packages/ed25519-recovery-signing/docs/{design,api,test,dev_log}.md`.
+- Tests/checks passed:
+  - `cargo test --manifest-path apps/desktop/src-tauri/Cargo.toml --features crypto crypto::recovery_signing::tests`
+  - `cargo check --manifest-path apps/desktop/src-tauri/Cargo.toml --locked`
+  - `cargo check --manifest-path apps/desktop/src-tauri/Cargo.toml --features crypto --locked`
+  - `bash scripts/ci/check-exact-pins.sh`
+- Deferred: human review, cross-vendor verify, RFC 8032 official vectors, Edge Function integration, and re-key ceremony integration.
+- Commit: `feat(ed25519-recovery-signing): add recovery proof signing`.
 
 ### 2026-05-19 02:55 PDT — sweep checkpoint after next 4-feature loop
 
