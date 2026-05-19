@@ -23,3 +23,9 @@
 /// material never crosses the IPC boundary. Scaffold only — no KeyVault yet.
 #[allow(dead_code)]
 pub struct KeyHandle(pub u32);
+
+#[cfg(feature = "crypto")]
+pub mod argon2;
+
+#[cfg(feature = "crypto")]
+pub mod kdf;
