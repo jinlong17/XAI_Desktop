@@ -42,6 +42,11 @@ hpke          = { version = "=0.12.0",  optional = true }
 rusqlite      = { version = "=0.32.1",  optional = true, features = ["bundled-sqlcipher"] }
 reqwest       = { version = "=0.12.28", optional = true, features = ["rustls-tls"] }
 
+# ── KDF consumption row (kdf-primitives, sync-v1 #3) ────────────────────────
+hkdf          = { version = "=0.12.4",  optional = true }
+sha2          = { version = "=0.10.9",  optional = true }
+zeroize       = { version = "=1.8.2",   optional = true }
+
 [features]
 # crypto — OFF by default.  Enable only in the future crypto consumption rows.
 # Exact-pinned optional deps are compiled only when this feature is active.
@@ -53,6 +58,9 @@ crypto = [
   "dep:hpke",
   "dep:rusqlite",
   "dep:reqwest",
+  "dep:hkdf",
+  "dep:sha2",
+  "dep:zeroize",
 ]
 
 [target.'cfg(target_os = "macos")'.dependencies]
