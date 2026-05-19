@@ -83,3 +83,15 @@
 - Later human action: Independently review commit `6b121ea` and rerun the manual Tauri evidence path.
 - Suggested verification command / environment: `git show --stat --oneline 6b121ea && pnpm --filter @repo/plugin-organizer check-types && pnpm --filter desktop build`
 - Files/commits affected: `6b121ea`; packages/grid-window-prototype/docs/dev_log.md; docs/workflow/roadmap/xai-g0-window-spike.md; docs/workflow/roadmap/xai-v1.autorun-20260519.md
+
+## Entry 8
+
+- Feature: click-through-matrix
+- Gate: G0
+- Deferred gate: Real macOS click-through matrix
+- Why deferred: The acceptance requires observing Finder/Desktop hit-testing and React pointer behavior in real Tauri windows with `macOSPrivateApi=true` and `false`.
+- Risk: G0 cannot reach Go/Conditional Go until this evidence exists.
+- What was done instead: Created the evidence matrix template and avoided changing window constants or Tauri config without live proof.
+- Later human action: Run `pnpm --filter desktop tauri dev`, fill the matrix, and attach screenshots/logs under `docs/reviews/window-ground-truth/click-through-matrix/`.
+- Suggested verification command / environment: `pnpm --filter desktop tauri dev` on macOS with Finder/Desktop visible; compare `macOSPrivateApi=true` and `false`.
+- Files/commits affected: docs/reviews/window-ground-truth/click-through-matrix/README.md; packages/click-through-matrix/docs/*; commit pending
