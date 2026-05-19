@@ -503,14 +503,11 @@ project". It is **idempotent** (safe to re-run) and **non-destructive** (constra
    regenerate `.claude/.codex/.cursor` (note the `--force` regression caveat — `00-MANIFEST` §4
    step 6; targeted re-propagation for any hand-fixed agents). If CONFLICTS is non-empty, STOP
    after this step for human 3-way merge before generating.
-   **Active Claude replacement gate:** after all CONFLICTS are clear, if the target has both
-   `.claude/agents/` and `.claude/agents-v2/` and the two directories differ, resolve
-   `replace_claude` before finishing — even when this resync did not regenerate templates. If the
+   **Active Claude replacement gate:** if the target has a pre-existing `.claude/agents/` and the
+   generator writes `.claude/agents-v2/`, resolve `replace_claude` before finishing. If the
    invocation includes `replace_claude: yes`, replace active `.claude/agents/` with the regenerated
    output. If it includes `replace_claude: no`, keep `.claude/agents-v2/` only and report that active
-   Claude may remain old. If it is omitted, run an AskUserQuestion before replacement. If an earlier
-   gate is BLOCKED by dirty paths or CONFLICTS, STOP there first and do not ask the replacement
-   question until the next clean rerun:
+   Claude may remain old. If it is omitted, run an AskUserQuestion before replacement:
    - **Question:** Replace active `.claude/agents/` with regenerated agents now?
    - **Option 1 — `yes` (Recommended for full resync):** replace `.claude/agents/` with the
      regenerated Claude agents so the Claude Code active surface matches `_portable/`, templates,
@@ -532,14 +529,9 @@ project". It is **idempotent** (safe to re-run) and **non-destructive** (constra
    hand-customization beyond the render, add it to CONFLICTS and STOP for a human 3-way merge. This
    is what makes a second resync report "up to date" for feature-full-loop / roadmap-loop instead of
    repeatedly asking for manual skill updates.
-7. **Refresh the lint.** If the project carries `scripts/lint/check_portable_sync.py`, replace it
-   from source. The source lint is target-project-aware: it infers `<skill_prefix>`, skill root,
-   `<feature_root>`, workflow doc, and roadmap paths from the checked repo, so target token-map
-   differences such as `xai-` / `packages/` are not a reason to fork or block on this file. If the
-   target lint has unrelated project-only checks that cannot be preserved by the shared source lint,
-   list those as a CONFLICT; otherwise take the source copy verbatim. If the target does not carry
-   the lint, list it in the checklist as a recommended add. Run it — must PASS (it catches any
-   placeholder left unsubstituted in §5 and any portable-sourced workflow skill drift from §6b).
+7. **Refresh the lint.** If the project carries `scripts/lint/check_portable_sync.py`, update it
+   from source (including rule 6 cowork↔portable parity); if it does not, list it in the checklist
+   as a recommended add. Run it — must PASS (it catches any placeholder left unsubstituted in §5).
 8. **Emit the project-layer doc-delta checklist + STOP.** resync NEVER edits the target's own
    `<project_workflow_doc>` / SOPs / usage-guide-equivalent (constraint §0.3). Instead, list the
    specific upstream changes the human must hand-apply there (e.g. "Phase 0 is now 3-field — add the
