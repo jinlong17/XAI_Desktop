@@ -62,10 +62,16 @@ Named policies (all `FOR SELECT`, read-only by design — writes go through
 `blobs_self_active_read`, `conflict_shadow_self_active_read`,
 `staging_blobs_self_active_read`, `mutation_dedup_self_active`,
 `device_progress_self_active`, `devices_self_active_read`, `audit_self`,
-`quota_self`. The active-device-gated policies use the
-`(auth.jwt() ->> 'device_id')::uuid IN (SELECT device_id FROM sync_devices
-WHERE account_id = auth.uid() AND status = 'active' AND revoked_at IS NULL)`
-predicate verbatim from PRD §6.2.
+`quota_self`.
+
+Active-device-gated policies call `public.sync_jwt_device_is_active()`, a
+narrow `SECURITY DEFINER` helper that checks the current JWT `device_id`
+against `sync_devices(account_id = auth.uid(), status = 'active',
+revoked_at IS NULL)`. This avoids recursive RLS evaluation when policies need
+to consult `sync_devices`. `public.sync_jwt_device_id()` safely parses the JWT
+claim and returns `NULL` for missing/malformed values. `sync_devices` itself is
+active-only for an active JWT device, with a pending-device exception limited
+to the pending device's own row.
 
 `nonce_lease`: RLS enabled, **no client policy** by design (PRD line 1044 —
 all access via `fn_grant_nonce_lease` SECURITY DEFINER, not in scope here).
@@ -76,7 +82,7 @@ all access via `fn_grant_nonce_lease` SECURITY DEFINER, not in scope here).
   No runtime upstream.
 - **Downstream** (consume this schema; not built here):
   - dev-plan **T-03** — RLS automated tests (two-user deny, revoked-device
-    deny). Binds against the §1.5 policy names.
+    deny). Implemented in `apps/web/supabase/tests/rls-policies.test.ts`.
   - dev-plan **T-04** — Realtime Private Channels (`realtime.messages` RLS).
   - `/sync/push` Edge Function — calls `fn_alloc_commit_seq`, writes
     `encrypted_blobs` + `used_nonces` + `mutation_dedup` in one txn.

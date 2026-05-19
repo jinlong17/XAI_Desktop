@@ -44,7 +44,7 @@
 ### Day 6–12 — sync engine + edge functions + single-table E2E
 - [x] #23 commit-seq-authority (H-4/H-A)
 - [ ] #24 nonce-lease-server (C-B/C-C)
-- [ ] #25 rls-policies-and-tests (T-03)
+- [x] #25 rls-policies-and-tests (T-03)
 - [ ] #26 sync-engine-push (T-12)
 - [ ] #27 sync-engine-pull (T-12)
 - [ ] #28 push-edge-function (T-14)

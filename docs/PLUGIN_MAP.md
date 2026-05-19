@@ -31,6 +31,7 @@
 | core-data-sqlite-driver | packages/core-data-sqlite-driver/ | Shipped | Wave W1 Phase 0.3: `@repo/core-data` SQLite driver boundary, namespace repo, mutation hook, localStorage migration, and testing backend. Real SQLCipher binding deferred. | 2026-05-19 |
 | commit-seq-authority | packages/commit-seq-authority/ | Shipped | Wave W2 Phase 0.3: global commit_seq allocator RPC with SECURITY DEFINER, per-account regression guard, and UUID hi/lo advisory locks. Live Supabase deploy deferred. | 2026-05-19 |
 | realtime-private-channel-config | packages/realtime-private-channel-config/ | Shipped | Wave W1 Phase 0.3: Supabase Realtime private-channel contract and `realtime.messages` RLS policy bound to `sync:<account_id>` plus active device. Live deploy deferred. | 2026-05-19 |
+| rls-policies-and-tests | packages/rls-policies-and-tests/ | Shipped | Wave W2 Phase 0.3: Docker-backed Vitest RLS harness plus shared active-device helper for Sync Supabase policies. Live Supabase verification deferred. | 2026-05-19 |
 
 ---
 

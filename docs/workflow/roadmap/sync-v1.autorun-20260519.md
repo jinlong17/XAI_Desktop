@@ -274,6 +274,21 @@
 - Deferred: live Supabase deploy and cross-account Realtime subscription negative test.
 - Commit: `feat(realtime-private-channel-config): add private channel policy`.
 
+### 2026-05-19 03:45 PDT — feature checkpoint: rls-policies-and-tests (#25)
+
+- Added Docker-backed Vitest harness `apps/web/supabase/tests/rls-policies.test.ts`.
+- Added `web` script `test:rls` and Vitest config.
+- Reworked active-device RLS predicates through `public.sync_jwt_device_is_active()` / `public.sync_jwt_device_id()` to avoid recursive policy evaluation.
+- Tightened `sync_devices` visibility so active devices see active rows only, pending devices can poll only their own pending row, and revoked devices see no rows.
+- Updated Realtime private-channel policy to reuse the shared active-device helper.
+- Added docs anchor `packages/rls-policies-and-tests/docs/{design,api,test,dev_log}.md`, updated PLUGIN_MAP, and updated supabase-schema API docs.
+- Tests/checks passed:
+  - `pnpm --filter web test:rls`
+  - `pnpm --filter web check-types`
+- Incident fixed: first RLS harness run failed due local auth-shim permission and UPDATE expectation mismatch; rerun passed after correction.
+- Deferred: hosted Supabase/PostgREST + `@supabase/supabase-js` verification blocked by #9.
+- Commit: pending `feat(rls-policies-and-tests): add RLS behavior harness`.
+
 ### 2026-05-19 02:55 PDT — sweep checkpoint after next 4-feature loop
 
 - Completed next eligible loop: #7 `cipher-envelope-codec`, #6 `bip39-mnemonic-24w`, #11 `rust-keyvault-opaque-handle`, #12 `x25519-device-keypair`.

@@ -22,11 +22,5 @@ CREATE POLICY realtime_sync_private_channel_active_device
   USING (
     extension = 'postgres_changes'
     AND realtime.topic() = 'sync:' || auth.uid()::text
-    AND (auth.jwt() ->> 'device_id')::uuid IN (
-      SELECT device_id
-      FROM public.sync_devices
-      WHERE account_id = auth.uid()
-        AND status = 'active'
-        AND revoked_at IS NULL
-    )
+    AND public.sync_jwt_device_is_active()
   );
