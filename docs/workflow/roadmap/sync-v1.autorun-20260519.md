@@ -530,6 +530,28 @@
 - Deferred: human review, cross-vendor verify, hosted GitHub Actions run, and branch-protection required-status-check setup.
 - Commit: pending `feat(rfc-test-vectors-gate): add crypto vector gate`.
 
+### 2026-05-19 04:55 PDT — feature checkpoint: rls-fuzz-property (#34)
+
+- Added `apps/web/supabase/tests/rls-fuzz-property.test.ts`.
+- Added `apps/web` script `test:rls-fuzz`.
+- Added `fast-check@4.8.0` to `apps/web`.
+- Harness behavior:
+  - applies Sync migrations 1-7 in a local Postgres 16 Docker container.
+  - creates 1000 accounts.
+  - creates 100 devices per account, 100,000 devices total.
+  - includes active, pending, and revoked device status distribution.
+  - uses fast-check to randomize actor account, actor device, and target account attempts.
+  - asserts zero cross-tenant rows from `encrypted_blobs`, `encrypted_blobs_conflict_shadow`, `staging_blobs`, and `device_dek_wraps`.
+  - asserts revoked/pending devices read zero rows from those active-gated tables.
+- Added docs anchor `packages/rls-fuzz-property/docs/{design,api,test,dev_log}.md`; updated PLUGIN_MAP and roadmap/task status.
+- Tests/checks passed:
+  - `pnpm --filter web test:rls-fuzz`
+  - `pnpm --filter web check-types`
+  - `pnpm install --frozen-lockfile`
+- Incident recorded: dependency install repeated existing Next/React peer warnings.
+- Deferred: human review, cross-vendor verify, and hosted Supabase/supabase-js property run.
+- Commit: pending `feat(rls-fuzz-property): add RLS property fuzz gate`.
+
 ### 2026-05-19 02:55 PDT — sweep checkpoint after next 4-feature loop
 
 - Completed next eligible loop: #7 `cipher-envelope-codec`, #6 `bip39-mnemonic-24w`, #11 `rust-keyvault-opaque-handle`, #12 `x25519-device-keypair`.

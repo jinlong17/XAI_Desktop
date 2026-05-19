@@ -14,7 +14,8 @@
     "test:push": "vitest run supabase/tests/sync-push.test.ts",
     "test:recovery": "vitest run supabase/tests/recovery-proof.test.ts",
     "test:audit": "vitest run supabase/tests/audit-log.test.ts",
-    "test:protocol": "vitest run supabase/tests/protocol-integrity.test.ts"
+    "test:protocol": "vitest run supabase/tests/protocol-integrity.test.ts",
+    "test:rls-fuzz": "vitest run supabase/tests/rls-fuzz-property.test.ts"
   },
   "dependencies": {
     "@repo/ui": "workspace:*",
@@ -29,6 +30,7 @@
     "@types/react": "19.2.2",
     "@types/react-dom": "19.2.2",
     "eslint": "^9.39.1",
+    "fast-check": "4.8.0",
     "typescript": "5.9.2",
     "vitest": "^3.2.1"
   }

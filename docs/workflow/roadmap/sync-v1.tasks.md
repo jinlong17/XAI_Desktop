@@ -63,7 +63,7 @@
 ### Week B — Re-key full chain + TLA+ + RLS fuzz + audit integrity
 - [ ] #32 rekey-two-phase (T-B1, kill-9 ×4)
 - [!] #33 tla-protocol-model (T-B2, ≥6 scenarios) — BLOCKED: TLC requires Java Runtime
-- [ ] #34 rls-fuzz-property (T-B3, 1000u×100d)
+- [x] #34 rls-fuzz-property (T-B3, 1000u×100d)
 - [x] #36 audit-log-integrity (GAP-T1 / NEW R-10.26)
 
 ### Gate
