@@ -21,7 +21,7 @@
 ### Day 1–5 — pure crypto primitives + schema (parallel after #1)
 - [x] #2 crypto-deps-lockdown (dev-plan §3.1 / GAP-T3') — pin + cargo audit/deny CI gate FIRST
 - [x] #3 kdf-primitives (T-06 argon2.rs/kdf.rs)
-- [ ] #4 aes-gcm-aead-core (T-06 aes_gcm.rs)
+- [x] #4 aes-gcm-aead-core (T-06 aes_gcm.rs)
 - [ ] #5 deterministic-cbor-aad (T-06 aad.rs)
 - [ ] #6 bip39-mnemonic-24w (T-06 mnemonic.rs)
 - [ ] #7 cipher-envelope-codec (T-06 envelope.rs)

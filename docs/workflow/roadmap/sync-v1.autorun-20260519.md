@@ -10,10 +10,10 @@
 
 ## Current State
 
-- Current feature: `kdf-primitives` (#3) shipped locally; next eligible feature is `aes-gcm-aead-core` (#4).
-- Completed this run: `kdf-primitives` (#3) code/docs/tests locally complete with deferred cross-vendor gate.
+- Current feature: `aes-gcm-aead-core` (#4) shipped locally; next eligible feature is `deterministic-cbor-aad` (#5) or `bip39-mnemonic-24w` (#6).
+- Completed this run: `kdf-primitives` (#3), `aes-gcm-aead-core` (#4) code/docs/tests locally complete with deferred gates.
 - Failed this run: none yet.
-- Next step: create audit records, reconcile known SHIPPED rows in task plan, then implement #3.
+- Next step: implement next eligible wave-W0 feature, starting with `deterministic-cbor-aad` (#5) unless dependency checks change.
 
 ## Checkpoints
 
@@ -39,3 +39,15 @@
 - Corrected one test-command usage error where Cargo rejected two simultaneous test filters; no product test failed.
 - Deferred: human review and cross-vendor verify; recorded in `sync-v1.deferred-gates.md`.
 - Commit: `feat(kdf-primitives): add sync KDF primitives`.
+
+### 2026-05-19 02:17 PDT — feature checkpoint: aes-gcm-aead-core (#4)
+
+- Implemented `apps/desktop/src-tauri/src/crypto/aes_gcm.rs` behind the `crypto` feature.
+- Added explicit-AAD AES-256-GCM encrypt/decrypt with detached tag and non-serializable key wrapper.
+- Added docs anchor `packages/aes-gcm-aead-core/docs/{design,api,test,dev_log}.md`.
+- Tests/checks passed:
+  - `cargo test --manifest-path apps/desktop/src-tauri/Cargo.toml --features crypto crypto::aes_gcm::tests`
+  - `cargo check --manifest-path apps/desktop/src-tauri/Cargo.toml --locked`
+  - `cargo check --manifest-path apps/desktop/src-tauri/Cargo.toml --features crypto --locked`
+- Deferred: human review, cross-vendor verify, and FR-SY-12 release-mode 1KB P95 benchmark.
+- Commit: `feat(aes-gcm-aead-core): add AES-GCM primitive`.
