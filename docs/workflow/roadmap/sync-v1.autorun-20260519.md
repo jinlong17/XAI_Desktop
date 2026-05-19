@@ -10,10 +10,10 @@
 
 ## Current State
 
-- Current feature: `menubar-sync-status-icon` (#22) shipped locally; next eligible feature is `single-table-todos-e2e` (#30) or `onboarding-backfill-ui` (#18).
-- Completed this run: `kdf-primitives` (#3), `aes-gcm-aead-core` (#4), `deterministic-cbor-aad` (#5), `bip39-mnemonic-24w` (#6), `cipher-envelope-codec` (#7), `rust-keyvault-opaque-handle` (#11), `x25519-device-keypair` (#12), `hpke-per-device-wrap` (#13), `ed25519-recovery-signing` (#14), `sqlcipher-local-db` (#16), `account-signup-login` (#17), `crypto-tauri-commands` (#19), `core-data-sqlite-driver` (#20), `commit-seq-authority` (#23), `realtime-private-channel-config` (#21), `rls-policies-and-tests` (#25), `nonce-lease-server` (#24), `sync-engine-push` (#26), `sync-engine-pull` (#27), `push-edge-function` (#28), `recovery-proof-edge-function` (#29), and `menubar-sync-status-icon` (#22) code/docs/tests locally complete with deferred gates.
+- Current feature: `single-table-todos-e2e` (#30) shipped locally; next eligible feature is `protocol-integrity-integration-tests` (#31), `rekey-two-phase` (#32), `tla-protocol-model` (#33), or `onboarding-backfill-ui` (#18).
+- Completed this run: `kdf-primitives` (#3), `aes-gcm-aead-core` (#4), `deterministic-cbor-aad` (#5), `bip39-mnemonic-24w` (#6), `cipher-envelope-codec` (#7), `rust-keyvault-opaque-handle` (#11), `x25519-device-keypair` (#12), `hpke-per-device-wrap` (#13), `ed25519-recovery-signing` (#14), `sqlcipher-local-db` (#16), `account-signup-login` (#17), `crypto-tauri-commands` (#19), `core-data-sqlite-driver` (#20), `commit-seq-authority` (#23), `realtime-private-channel-config` (#21), `rls-policies-and-tests` (#25), `nonce-lease-server` (#24), `sync-engine-push` (#26), `sync-engine-pull` (#27), `push-edge-function` (#28), `recovery-proof-edge-function` (#29), `menubar-sync-status-icon` (#22), and `single-table-todos-e2e` (#30) code/docs/tests locally complete with deferred gates.
 - Failed this run: no feature blocked; incidents recorded for command/script/import/fixture/type issues.
-- Next step: continue with #30 `single-table-todos-e2e` now that direct deps are satisfied, unless local context favors #18 first.
+- Next step: continue with next eligible Phase 4.8 security row or #18 UI, keeping live gates deferred.
 
 ## Checkpoints
 
@@ -412,7 +412,33 @@
   - `cargo test --manifest-path apps/desktop/src-tauri/Cargo.toml menubar`
 - Incident fixed: first Rust menubar test compile failed on `AppError` conversion for tray/lock errors; rerun passed.
 - Deferred: real macOS menu-bar visual/click validation and real push/pull transition verification.
-- Commit: pending `feat(menubar-sync-status-icon): add sync status tray`.
+- Commit: `feat(menubar-sync-status-icon): add sync status tray`.
+
+### 2026-05-19 04:21 PDT — feature checkpoint: single-table-todos-e2e (#30)
+
+- Added `packages/plugin-account/src/todo-sync.ts`.
+- Implemented local todo sync store:
+  - `account_todos` table contract
+  - `sync_outbox` table contract
+  - same-driver-transaction `putTodo()` entity + outbox write
+  - remote apply path that does not create a new outbox row
+  - outbox list/remove helpers for push flush
+- Added `packages/plugin-account/tests/integration/single-table-todos-e2e.test.ts`.
+- Local integration covers:
+  - entity + outbox writes share one transaction id
+  - Device A encrypted push through `pushBatch()` into `/sync/push` core
+  - Device B pull/decrypt/apply through `applyServerRecords()`
+  - server blob dump lacks plaintext and wrong-key decrypt fails
+  - stale Device B write returns E3015 and records conflict shadow
+- Added docs anchor `packages/single-table-todos-e2e/docs/{design,api,test,dev_log}.md`; updated PLUGIN_MAP and plugin-account docs.
+- Tests/checks passed:
+  - `pnpm --filter @repo/plugin-account test -- tests/integration/single-table-todos-e2e.test.ts`
+  - `pnpm --filter @repo/plugin-account check-types`
+  - `pnpm --filter web test:push`
+  - `pnpm --filter @repo/plugin-account test`
+- Incident fixed: first integration run passed the wrong revision-reader seam; rerun passed after harness fix.
+- Deferred: hosted Supabase deploy, real two-Mac sync, Realtime-triggered pull, SQLCipher copied-file dump PoC, and visual menu-bar transition validation.
+- Commit: pending `feat(single-table-todos-e2e): add local todos sync harness`.
 
 ### 2026-05-19 02:55 PDT — sweep checkpoint after next 4-feature loop
 

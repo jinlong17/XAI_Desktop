@@ -72,3 +72,13 @@ helpers for FR-SY-45. They are the only public helpers that emit:
 
 Host code may listen to these events to update shell surfaces such as the
 menu-bar icon, but must not emit `account:*` events itself.
+
+## 9. Single-table todo sync store
+
+`createTodoSyncStore(driver)` is the Phase 0.3 local todo entity seam. It owns
+`account_todos` and `sync_outbox` SQL statements through the injected
+`SqliteDriver`.
+
+`putTodo(todo, { mutationId })` writes the entity row and outbox row in one
+driver transaction. `applyRemoteTodo(todo)` applies decrypted pull records
+without creating a new outbox entry.

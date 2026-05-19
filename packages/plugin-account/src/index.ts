@@ -34,6 +34,19 @@ export type {
   SyncStatusEmitterOptions,
 } from './sync-status';
 export {
+  TODO_SYNC_SQL,
+  createTodoSyncStore,
+  isTodoEntity,
+  todoQueueMutation,
+} from './todo-sync';
+export type {
+  TodoMutationOptions,
+  TodoOutboxEntry,
+  TodoRecord,
+  TodoSyncStore,
+  TodoSyncStoreOptions,
+} from './todo-sync';
+export {
   SyncPushRevisionMismatchError,
   SyncAccountRollbackError,
   SyncRevisionRollbackError,
