@@ -626,6 +626,17 @@
 - Deferred: human UX review, hosted Supabase Edge deployment, real Rust/Tauri Ed25519 proof generation, native print/save-to-PDF workflow, and physical QR scan validation.
 - Commit: pending `feat(onboarding-backfill-ui): add recovery backfill flow`.
 
+### 2026-05-19 05:07 PDT — blocked checkpoint: recovery-rehearsal-3-rekey-kill9 (#54)
+
+- Reconciled #54 after #32 shipped; it is dependency-eligible because it depends only on `rekey-two-phase`.
+- Read seed `docs/reviews/recovery-rehearsal-3-rekey-kill9/20260514-roadmap-seed.md`.
+- Hard requirement is the exact rehearsal: run Re-key, `kill -9` at staging 30%, staging 70%, before swap, and after swap, restart, and prove consistency.
+- User autorun rule says recovery rehearsal gates are not executed here and must be recorded as deferred.
+- Manifest status set to `BLOCKED`; task plan set to `[!]`.
+- Deferred: real process-level kill/restart rehearsal, real app runtime, real device/data consistency checks, human/cross-vendor verification.
+- Incident recorded: #54 cannot be completed in this autorun under the explicit deferred-rehearsal policy.
+- Commit: pending `docs(recovery-rehearsal-3-rekey-kill9): mark deferred`.
+
 ### 2026-05-19 02:55 PDT — sweep checkpoint after next 4-feature loop
 
 - Completed next eligible loop: #7 `cipher-envelope-codec`, #6 `bip39-mnemonic-24w`, #11 `rust-keyvault-opaque-handle`, #12 `x25519-device-keypair`.

@@ -97,7 +97,7 @@
 - [ ] #51 account-deletion-gdpr (T-51)
 - [ ] #52 recovery-rehearsal-1-server-wipe (T-53, §10.2 ①)
 - [ ] #53 recovery-rehearsal-2-local-wipe (T-54, §10.2 ②)
-- [ ] #54 recovery-rehearsal-3-rekey-kill9 (T-55, §10.2 ③)
+- [!] #54 recovery-rehearsal-3-rekey-kill9 (T-55, §10.2 ③) — BLOCKED: recovery rehearsal requires real process kill/restart execution; deferred by autorun policy
 - [ ] #55 recovery-rehearsal-4-device-revoke-rekey (T-55b, §10.2 ④)
 
 ### GA gate
