@@ -2,7 +2,7 @@
 name: feature-verify
 description: Use after feature-build finishes its last phase to independently verify the implementation against plan, contracts, and docs. Returns READY_TO_SHIP or BLOCKED. Do not implement new feature code.
 model: opus
-allowed_tools: Read, Bash, Glob, Grep
+allowed_tools: Read, Write, Edit, Bash, Glob, Grep
 color: red
 codex_sandbox_mode: read-only
 cursor_readonly: true

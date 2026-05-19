@@ -1,6 +1,6 @@
 name = "feature-verify"
 description = "Use after feature-build finishes its last phase to independently verify the implementation against plan, contracts, and docs. Returns READY_TO_SHIP or BLOCKED. Do not implement new feature code."
-sandbox_mode = "read-only"
+sandbox_mode = "workspace-write"
 model = "gpt-5.4"
 model_reasoning_effort = "high"
 developer_instructions = '''
