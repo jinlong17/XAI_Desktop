@@ -52,7 +52,7 @@ pub fn configure_main_window(window: &tauri::WebviewWindow) {
 }
 
 /// Configure the control (AI Cube) window.
-/// Interactive, positioned at desktop icon level + 1.
+/// Interactive, positioned above Grid windows so the controller remains usable.
 pub fn configure_control_window(window: &tauri::WebviewWindow) {
     unsafe {
         let ns_window = match window.ns_window() {
@@ -65,9 +65,10 @@ pub fn configure_control_window(window: &tauri::WebviewWindow) {
 
         apply_shared_behavior(ns_window);
 
-        let level = desktop_icon_level_plus_one();
+        let level = desktop_icon_level_plus_one() + 3;
         ns_window.setLevel_(level);
         ns_window.setIgnoresMouseEvents_(NO);
+        println!("🎛️ Control window configured: level={}, click-through=NO", level);
     }
 }
 
