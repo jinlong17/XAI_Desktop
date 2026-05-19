@@ -287,7 +287,23 @@
   - `pnpm --filter web check-types`
 - Incident fixed: first RLS harness run failed due local auth-shim permission and UPDATE expectation mismatch; rerun passed after correction.
 - Deferred: hosted Supabase/PostgREST + `@supabase/supabase-js` verification blocked by #9.
-- Commit: pending `feat(rls-policies-and-tests): add RLS behavior harness`.
+- Commit: `feat(rls-policies-and-tests): add RLS behavior harness`.
+
+### 2026-05-19 03:50 PDT — feature checkpoint: nonce-lease-server (#24)
+
+- Added `apps/web/supabase/migrations/20260519000008_nonce_lease_rpc.sql`.
+- Implemented `fn_grant_nonce_lease(account_id, key_id, count)` as authenticated SECURITY DEFINER RPC.
+- RPC derives `encryption_device_id` from the active JWT device, locks the device row plus latest lease row, returns monotone non-overlapping ranges, and rejects requests at the `0xFFFFFF00` re-key threshold.
+- Added trigger-enforced `used_nonces` ledger writes for `encrypted_blobs`, `staging_blobs`, and `encrypted_blobs_conflict_shadow`.
+- Added append-only update/delete triggers for `used_nonces`.
+- Added Docker-backed Vitest harness `apps/web/supabase/tests/nonce-lease.test.ts` and web script `test:nonce`.
+- Added docs anchor `packages/nonce-lease-server/docs/{design,api,test,dev_log}.md`, updated PLUGIN_MAP, and updated supabase-schema API/test docs.
+- Tests/checks passed:
+  - `pnpm --filter web test:nonce`
+  - `pnpm --filter web check-types`
+- Incident fixed: first nonce test helper rolled back stateful RPC calls; rerun passed after committing those calls.
+- Deferred: human/cross-vendor review, live Supabase deploy/RPC test, Edge Function error mapping, and macOS Keychain `high_water` rollback rehearsal.
+- Commit: pending `feat(nonce-lease-server): add nonce lease RPC`.
 
 ### 2026-05-19 02:55 PDT — sweep checkpoint after next 4-feature loop
 

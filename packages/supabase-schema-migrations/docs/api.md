@@ -49,6 +49,23 @@
 | Function | Signature | Properties | PRD line |
 |---|---|---|---|
 | `fn_alloc_commit_seq` | `(p_account_id UUID) RETURNS BIGINT` | `LANGUAGE plpgsql`, `SECURITY DEFINER`, `SET search_path = public`, sorted two-lock `pg_advisory_xact_lock(bigint)` over UUID hi/lo 64-bit halves (H-13), `RAISE EXCEPTION` on regression; `REVOKE ALL ... FROM PUBLIC` | 773–799 |
+| `fn_grant_nonce_lease` | `(p_account_id UUID, p_key_id INTEGER, p_count INTEGER) RETURNS TABLE(encryption_device_id BIGINT, lease_start BIGINT, lease_end BIGINT)` | `LANGUAGE plpgsql`, `SECURITY DEFINER`, active JWT device required, locks the current `sync_devices` row + latest lease row, inserts a strictly monotone non-overlapping lease, rejects at `0xFFFFFF00`; executable by `authenticated` only | 1047–1050 |
+
+### 1.4.1 Nonce Ledger Triggers
+
+Migration `20260519000008_nonce_lease_rpc.sql` installs trigger-enforced
+ledger writes:
+
+- `encrypted_blobs_used_nonce` records source `blob`
+- `staging_blobs_used_nonce` records source `staging`
+- `conflict_shadow_used_nonce` records source `shadow_loser`
+- `used_nonces_no_update` / `used_nonces_no_delete` enforce append-only
+  behavior
+
+These triggers are the database hard guard that every nonce-consuming path
+records `(account_id, key_id, encryption_device_id, counter)` in
+`used_nonces` in the same transaction. A duplicate tuple raises the
+`used_nonces` primary-key violation used by Edge Functions as E3027 evidence.
 
 ### 1.5 RLS Policies (§6.2)
 RLS enabled on: `accounts`, `account_keyring`, `device_dek_wraps`,
@@ -73,8 +90,8 @@ claim and returns `NULL` for missing/malformed values. `sync_devices` itself is
 active-only for an active JWT device, with a pending-device exception limited
 to the pending device's own row.
 
-`nonce_lease`: RLS enabled, **no client policy** by design (PRD line 1044 —
-all access via `fn_grant_nonce_lease` SECURITY DEFINER, not in scope here).
+`nonce_lease`: RLS enabled, **no client policy** by design (PRD line 1044).
+Authenticated clients request ranges through `fn_grant_nonce_lease`.
 
 ## 2. Upstream / Downstream Interfaces
 
@@ -87,7 +104,7 @@ all access via `fn_grant_nonce_lease` SECURITY DEFINER, not in scope here).
   - `/sync/push` Edge Function — calls `fn_alloc_commit_seq`, writes
     `encrypted_blobs` + `used_nonces` + `mutation_dedup` in one txn.
   - `fn_grant_nonce_lease` RPC — writes `nonce_lease` under the
-    `no_lease_overlap` constraint.
+    `no_lease_overlap` constraint. Implemented in migration 8.
 
 ## 3. Error / Failure Semantics
 

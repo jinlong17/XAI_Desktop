@@ -99,3 +99,5 @@ acceptance — full behavioral RLS proof is dev-plan T-03):
   dev-plan T-03.
 - Realtime `realtime.messages` policy — dev-plan T-04.
 - Edge Function runtime behavior (E3027/E3029/E3030 mapping, idempotency).
+- Nonce lease RPC and trigger-level used nonce behavior are covered by
+  `pnpm --filter web test:nonce` after feature #24.
