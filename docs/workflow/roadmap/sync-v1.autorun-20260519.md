@@ -369,7 +369,29 @@
   - `pnpm --filter web test:push`
   - `pnpm --filter web check-types`
 - Deferred: live Supabase deploy, real service_role DB adapter/JWT extraction, and concurrent Postgres integration blocked by #9.
-- Commit: pending `feat(push-edge-function): add sync push core`.
+- Commit: `feat(push-edge-function): add sync push core`.
+
+### 2026-05-19 04:07 PDT — feature checkpoint: recovery-proof-edge-function (#29)
+
+- Added `apps/web/supabase/functions/recovery-proof/handler.ts`.
+- Added lightweight `apps/web/supabase/functions/recovery-proof/index.ts` entry.
+- Implemented recovery challenge/proof core:
+  - 32B challenge generation
+  - 5 minute TTL
+  - single-use challenge marking
+  - canonical CBOR encoder for message/payload
+  - full `new_payload` hash binding
+  - recovery payload allowlist
+  - injected strict-signature verifier seam
+  - E3014 rejection for missing/expired/used/tampered/disallowed/bad-signature paths
+- Added `apps/web/supabase/tests/recovery-proof.test.ts` and `web` script `test:recovery`.
+- Added docs anchor `packages/recovery-proof-edge-function/docs/{design,api,test,dev_log}.md`; updated PLUGIN_MAP.
+- Tests/checks passed:
+  - `pnpm --filter web test:recovery`
+  - `pnpm --filter web check-types`
+- Incident fixed: first typecheck failed on `crypto.subtle.digest` BufferSource narrowing; rerun passed.
+- Deferred: live Supabase deploy, persistent challenge table/cleanup, strict Ed25519 verifier binding, and real Rust signature E2E.
+- Commit: pending `feat(recovery-proof-edge-function): add recovery proof core`.
 
 ### 2026-05-19 02:55 PDT — sweep checkpoint after next 4-feature loop
 

@@ -36,6 +36,7 @@
 | sync-engine-push | packages/sync-engine-push/ | Shipped | Wave W2 Phase 0.3: plugin-account plaintext outbox squash, lazy-encrypt pushBatch, UUIDv7 mutation IDs, and one-shot `/sync/push` transport seam. Runtime Edge/Tauri wiring deferred. | 2026-05-19 |
 | sync-engine-pull | packages/sync-engine-pull/ | Shipped | Wave W2 Phase 0.3: global commit_seq pull cursor, H-6 revision classification, and E3015/E3024 rollback guards. Runtime Edge/decrypt routing deferred. | 2026-05-19 |
 | push-edge-function | packages/push-edge-function/ | Shipped | Wave W2 Phase 0.3: `/sync/push` Edge Function core handler for conditional writes, mutation dedup, conflict shadow, and mixed 207 responses. Live service_role adapter/deploy deferred. | 2026-05-19 |
+| recovery-proof-edge-function | packages/recovery-proof-edge-function/ | Shipped | Wave W2 Phase 0.3: recovery challenge + PATCH proof core, canonical CBOR payload hash, E3014 rejection paths. Live DB/verifier adapter deferred. | 2026-05-19 |
 
 ---
 
