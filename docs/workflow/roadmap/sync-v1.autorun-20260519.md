@@ -10,10 +10,10 @@
 
 ## Current State
 
-- Current feature: `bip39-mnemonic-24w` (#6) shipped locally; next eligible feature is `rust-keyvault-opaque-handle` (#11) or non-crypto rows #21/#23/#25.
-- Completed this run: `kdf-primitives` (#3), `aes-gcm-aead-core` (#4), `deterministic-cbor-aad` (#5), `bip39-mnemonic-24w` (#6), `cipher-envelope-codec` (#7) code/docs/tests locally complete with deferred gates.
+- Current feature: `rust-keyvault-opaque-handle` (#11) shipped locally; next eligible feature is `x25519-device-keypair` (#12), `ed25519-recovery-signing` (#14), `sqlcipher-local-db` (#16), `account-signup-login` (#17), or non-crypto rows #21/#23/#25.
+- Completed this run: `kdf-primitives` (#3), `aes-gcm-aead-core` (#4), `deterministic-cbor-aad` (#5), `bip39-mnemonic-24w` (#6), `cipher-envelope-codec` (#7), `rust-keyvault-opaque-handle` (#11) code/docs/tests locally complete with deferred gates.
 - Failed this run: no feature blocked; incidents recorded for command/script/import/fixture issues.
-- Next step: implement next eligible feature after committing #6, starting with `rust-keyvault-opaque-handle` (#11) unless dependency checks change.
+- Next step: implement next eligible feature after committing #11, starting with `x25519-device-keypair` (#12) unless dependency checks change.
 
 ## Checkpoints
 
@@ -93,6 +93,20 @@
 - Corrected initial TS subpath import and BIP-39 fixture expectation; final Rust/JS fixture smoke matches.
 - Deferred: formal independent review / admission-gate sign-off.
 - Commit: `feat(bip39-mnemonic-24w): add DEK mnemonic codec`.
+
+### 2026-05-19 02:49 PDT — feature checkpoint: rust-keyvault-opaque-handle (#11)
+
+- Implemented `apps/desktop/src-tauri/src/crypto/key_vault.rs` behind the `crypto` feature.
+- Added non-zero `KeyHandleId(u32)` opaque handle and resident-key map for DEK + device private key material.
+- Added zeroize-on-evict and zeroize-on-drop behavior.
+- Added DEK handle AES-GCM encrypt/decrypt helpers using the existing AES primitive.
+- Added docs anchor `packages/rust-keyvault-opaque-handle/docs/{design,api,test,dev_log}.md`.
+- Tests/checks passed:
+  - `cargo test --manifest-path apps/desktop/src-tauri/Cargo.toml --features crypto crypto::key_vault::tests`
+  - `cargo check --manifest-path apps/desktop/src-tauri/Cargo.toml --locked`
+  - `cargo check --manifest-path apps/desktop/src-tauri/Cargo.toml --features crypto --locked`
+- Deferred: human review, cross-vendor verify, and Tauri capability allowlist enforcement to downstream rows.
+- Commit: `feat(rust-keyvault-opaque-handle): add Rust KeyVault`.
 
 ### 2026-05-19 02:17 PDT — sweep checkpoint after first 3-feature loop
 

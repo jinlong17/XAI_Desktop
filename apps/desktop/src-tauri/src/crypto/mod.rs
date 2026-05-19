@@ -20,7 +20,7 @@
 /// This comment is the named surface; `feature-verify` will grep for it.
 
 /// Opaque key handle. JS receives and passes back this integer; raw key
-/// material never crosses the IPC boundary. Scaffold only — no KeyVault yet.
+/// material never crosses the IPC boundary.
 #[allow(dead_code)]
 pub struct KeyHandle(pub u32);
 
@@ -38,6 +38,9 @@ pub mod envelope;
 
 #[cfg(feature = "crypto")]
 pub mod kdf;
+
+#[cfg(feature = "crypto")]
+pub mod key_vault;
 
 #[cfg(feature = "crypto")]
 pub mod mnemonic;

@@ -30,7 +30,7 @@
 - [ ] #21 realtime-private-channel-config (T-04) — config only
 
 ### Day 3–9 — key hierarchy + account + KeyVault + SQLCipher
-- [ ] #11 rust-keyvault-opaque-handle (T-08)
+- [x] #11 rust-keyvault-opaque-handle (T-08)
 - [ ] #12 x25519-device-keypair (§4.2 C-A)
 - [ ] #13 hpke-per-device-wrap (§4.2 C-D / RFC 9180)
 - [ ] #14 ed25519-recovery-signing (§4.2 C-A)
