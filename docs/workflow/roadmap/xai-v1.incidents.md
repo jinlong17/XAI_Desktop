@@ -29,3 +29,13 @@
 - Attempted fixes: Created a manual matrix template and documented the exact runtime evidence required. Avoided speculative window behavior changes.
 - Current status: BLOCKED.
 - Resume instruction: Run `pnpm --filter desktop tauri dev`, fill `docs/reviews/window-ground-truth/spaces-multimonitor-matrix/README.md`, then rerun feature-verify for `spaces-multimonitor-matrix`.
+
+## Incident 4
+
+- Time: 2026-05-19 15:05 PDT
+- Feature: mas-sandbox-dry-run
+- Symptom: Feature cannot satisfy acceptance in unattended mode.
+- Root cause if known: G0.6 requires real `macOSPrivateApi=false`, sandbox entitlement, and likely signed-build validation; static notes cannot prove MAS feasibility.
+- Attempted fixes: Created MAS sandbox notes, entitlement draft, and risk matrix. Avoided speculative Tauri config/Cargo/capability changes.
+- Current status: BLOCKED.
+- Resume instruction: Run private-API-disabled and sandbox/signed validation, update `docs/reviews/window-ground-truth/mas-sandbox-dry-run/mas-sandbox-notes.md`, then rerun feature-verify for `mas-sandbox-dry-run`.

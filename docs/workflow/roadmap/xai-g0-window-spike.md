@@ -19,7 +19,7 @@
 | 3 | click-through-matrix | docs/planning/execution/G0-window-spike.md §G0.3 | grid-window-prototype | ready_to_ship | BLOCKED | D-Codex | yes | 2026-05-19 | BLOCKED 2026-05-19 · Safe prep matrix created; real macOS click-through evidence required. Deferred gates and incident recorded. |
 | 4 | finder-dnd-path | docs/planning/execution/G0-window-spike.md §G0.4 | grid-window-prototype | ready_to_ship | BLOCKED | D-Codex | yes | 2026-05-19 | BLOCKED 2026-05-19 · Safe prep matrix created; real Finder drop path evidence required. Deferred gates and incident recorded. |
 | 5 | spaces-multimonitor-matrix | docs/planning/execution/G0-window-spike.md §G0.5 | click-through-matrix, finder-dnd-path | deferred_manual | BLOCKED | D-Codex | yes | 2026-05-19 | BLOCKED 2026-05-19 · User override skipped blocked G0.3/G0.4 for safe prep only; real Spaces/fullscreen/multi-display evidence required. |
-| 6 | mas-sandbox-dry-run | docs/planning/execution/G0-window-spike.md §G0.6 | click-through-matrix, finder-dnd-path | shipped | PENDING | D-Codex | yes | — | W3 · MAS/private API/sandbox entitlements dry run; external signing review may be deferred. |
+| 6 | mas-sandbox-dry-run | docs/planning/execution/G0-window-spike.md §G0.6 | click-through-matrix, finder-dnd-path | deferred_manual | BLOCKED | D-Codex | yes | 2026-05-19 | BLOCKED 2026-05-19 · User override skipped blocked G0.3/G0.4 for safe prep only; MAS/private-API runtime evidence required. |
 
 ## Decomposition Rationale
 

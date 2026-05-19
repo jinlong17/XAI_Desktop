@@ -15,12 +15,12 @@
 |---|---|
 | Current Gate | G0 — window spike |
 | Gate Manifest | docs/workflow/roadmap/xai-g0-window-spike.md |
-| Current Feature | spaces-multimonitor-matrix |
-| Feature Source | docs/planning/execution/G0-window-spike.md §G0.5 |
+| Current Feature | mas-sandbox-dry-run |
+| Feature Source | docs/planning/execution/G0-window-spike.md §G0.6 |
 | Feature Status | BLOCKED |
 | Current Commit | pending |
-| Tests | `test -f docs/reviews/window-ground-truth/spaces-multimonitor-matrix/README.md` |
-| Next Step | Continue to G0.6 safe prep under user override |
+| Tests | `test -f docs/reviews/window-ground-truth/mas-sandbox-dry-run/mas-sandbox-notes.md` |
+| Next Step | Reconcile G0 and choose only safe downstream design/brief work |
 
 ## Checkpoints
 
@@ -94,6 +94,12 @@
 - No production code or window behavior was changed.
 - Status: BLOCKED because real Spaces/fullscreen/multi-display evidence is required.
 
+### 2026-05-19 15:05 PDT — Feature Checkpoint: mas-sandbox-dry-run
+
+- Created Step 0, discovery, design/api/test/dev_log, MAS notes, entitlement draft, and risk matrix.
+- No Tauri config, Cargo feature, entitlement, capability, or production code was changed.
+- Status: BLOCKED because real `macOSPrivateApi=false` and sandbox/private-API runtime evidence is required.
+
 ## Feature Outcomes
 
 | Feature | Gate | Status | Commit | Tests | Notes |
@@ -103,6 +109,7 @@
 | click-through-matrix | G0 | BLOCKED | 82ab268 | PASS: matrix template exists; BLOCKED: real hit-test evidence | Requires human macOS click-through matrix. |
 | finder-dnd-path | G0 | BLOCKED | 33627df | PASS: matrix template exists; BLOCKED: real Finder drop evidence | Requires human Finder/Tauri path matrix. |
 | spaces-multimonitor-matrix | G0 | BLOCKED | pending | PASS: matrix template exists; BLOCKED: real Spaces/fullscreen/multi-display evidence | Reached by user override; safe prep only. |
+| mas-sandbox-dry-run | G0 | BLOCKED | pending | PASS: MAS notes exist; BLOCKED: real sandbox/private-API evidence | Reached by user override; safe prep only. |
 
 ## Deferred Gates Summary
 
@@ -113,12 +120,14 @@
 - Real macOS click-through matrix deferred for `click-through-matrix`.
 - Real Finder DnD path matrix deferred for `finder-dnd-path`.
 - Real Spaces/fullscreen/multi-display matrix deferred for `spaces-multimonitor-matrix`.
+- Real MAS/private-API sandbox evidence deferred for `mas-sandbox-dry-run`.
 
 ## Incidents Summary
 
 - click-through-matrix blocked on real macOS hit-test evidence.
 - finder-dnd-path blocked on real Finder DnD payload evidence.
 - spaces-multimonitor-matrix blocked on real macOS Spaces/fullscreen/multi-display evidence.
+- mas-sandbox-dry-run blocked on real sandbox/private-API evidence.
 
 ## Final 24h Summary
 

@@ -131,3 +131,27 @@
 - Later human action: Run `pnpm --filter desktop tauri dev`, perform the matrix, and attach logs/screenshots under `docs/reviews/window-ground-truth/spaces-multimonitor-matrix/`.
 - Suggested verification command / environment: `pnpm --filter desktop tauri dev` on macOS with built-in + external display, Mission Control, multiple Spaces, and fullscreen app.
 - Files/commits affected: docs/reviews/window-ground-truth/spaces-multimonitor-matrix/README.md; packages/spaces-multimonitor-matrix/docs/*; commit pending
+
+## Entry 12
+
+- Feature: mas-sandbox-dry-run
+- Gate: G0
+- Deferred gate: User override to skip blocked G0.3/G0.4 dependencies for MAS safe prep
+- Why deferred: The user explicitly instructed to skip and continue, while G0.3/G0.4 remain BLOCKED and MAS conclusions depend on those results.
+- Risk: MAS prep proceeds without prerequisite click-through and Finder path evidence, so it cannot produce a real MAS feasibility conclusion.
+- What was done instead: Limited G0.6 to documentation/risk-prep only and preserved BLOCKED status for real runtime validation.
+- Later human action: Complete G0.3/G0.4 evidence, then perform MAS/private-API validation.
+- Suggested verification command / environment: `sed -n '1,140p' docs/reviews/window-ground-truth/mas-sandbox-dry-run/mas-sandbox-notes.md`
+- Files/commits affected: docs/workflow/roadmap/xai-g0-window-spike.md; docs/workflow/roadmap/xai-v1.autorun-20260519.md; commit pending
+
+## Entry 13
+
+- Feature: mas-sandbox-dry-run
+- Gate: G0
+- Deferred gate: Real MAS sandbox and `macOSPrivateApi=false` validation
+- Why deferred: The acceptance requires a real sandbox/private-API runtime comparison and likely signed-build context.
+- Risk: G0 cannot decide DMG/MAS split or MAS fallback until this evidence exists.
+- What was done instead: Created MAS notes, entitlement draft, and risk matrix; avoided Tauri config/Cargo/capability changes.
+- Later human action: Run a `macOSPrivateApi=false` build and sandbox/signed validation, then update `mas-sandbox-notes.md`.
+- Suggested verification command / environment: Build/run desktop with private API disabled and sandbox entitlements on macOS; Apple Developer signing may be required for final evidence.
+- Files/commits affected: docs/reviews/window-ground-truth/mas-sandbox-dry-run/mas-sandbox-notes.md; packages/mas-sandbox-dry-run/docs/*; commit pending
