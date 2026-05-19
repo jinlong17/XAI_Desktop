@@ -15,12 +15,12 @@
 |---|---|
 | Current Gate | G0 — window spike |
 | Gate Manifest | docs/workflow/roadmap/xai-g0-window-spike.md |
-| Current Feature | finder-dnd-path |
-| Feature Source | docs/planning/execution/G0-window-spike.md §G0.4 |
-| Feature Status | BLOCKED |
-| Current Commit | pending |
-| Tests | `test -f docs/reviews/window-ground-truth/finder-dnd-path/README.md` |
-| Next Step | Continue to next eligible G0 feature if dependencies allow |
+| Current Feature | none |
+| Feature Source | — |
+| Feature Status | STOPPED — no eligible feature |
+| Current Commit | 33627df |
+| Tests | see Feature Outcomes |
+| Next Step | Human must unblock G0.3/G0.4 real-hardware gates before G0.5/G0.6 |
 
 ## Checkpoints
 
@@ -75,14 +75,21 @@
 - Status: READY_TO_SHIP.
 - Deferred gates recorded: human G0.1 ship, cross-vendor review, cross-vendor verify, and real Tauri alpha/beta runtime evidence.
 
+### 2026-05-19 14:48 PDT — Stop Checkpoint
+
+- Stop reason: no eligible next feature.
+- G0.5 `spaces-multimonitor-matrix` depends on `click-through-matrix` and `finder-dnd-path`, both BLOCKED.
+- G0.6 `mas-sandbox-dry-run` depends on `click-through-matrix` and `finder-dnd-path`, both BLOCKED.
+- The run stopped before the 24h deadline because continuing would require real hardware/manual evidence that is explicitly recorded as deferred/blocking.
+
 ## Feature Outcomes
 
 | Feature | Gate | Status | Commit | Tests | Notes |
 |---|---|---|---|---|---|
 | window-ground-truth | G0 | READY_TO_SHIP | 3b571f6 | PASS: branch, sw_vers, README content | Deferred gates recorded in docs/workflow/roadmap/xai-v1.deferred-gates.md |
 | grid-window-prototype | G0 | READY_TO_SHIP | 6b121ea | PASS: plugin-organizer check-types; desktop build | Runtime Tauri alpha/beta evidence deferred. |
-| click-through-matrix | G0 | BLOCKED | pending | PASS: matrix template exists; BLOCKED: real hit-test evidence | Requires human macOS click-through matrix. |
-| finder-dnd-path | G0 | BLOCKED | pending | PASS: matrix template exists; BLOCKED: real Finder drop evidence | Requires human Finder/Tauri path matrix. |
+| click-through-matrix | G0 | BLOCKED | 82ab268 | PASS: matrix template exists; BLOCKED: real hit-test evidence | Requires human macOS click-through matrix. |
+| finder-dnd-path | G0 | BLOCKED | 33627df | PASS: matrix template exists; BLOCKED: real Finder drop evidence | Requires human Finder/Tauri path matrix. |
 
 ## Deferred Gates Summary
 
@@ -90,11 +97,70 @@
 - Cross-vendor review and verify deferred for `window-ground-truth`.
 - Human ship for `window-ground-truth` deferred while continuing local G0 tasks.
 - Cross-vendor review/verify and runtime Tauri alpha/beta evidence deferred for `grid-window-prototype`.
+- Real macOS click-through matrix deferred for `click-through-matrix`.
+- Real Finder DnD path matrix deferred for `finder-dnd-path`.
 
 ## Incidents Summary
 
-- None yet.
+- click-through-matrix blocked on real macOS hit-test evidence.
+- finder-dnd-path blocked on real Finder DnD payload evidence.
 
 ## Final 24h Summary
 
-Pending. This section must be completed when the run stops or reaches the 24h deadline.
+Stopped early on 2026-05-19 14:48 PDT because no eligible G0 feature remained after manual hardware gates blocked G0.3 and G0.4.
+
+### Completed Features
+
+- `window-ground-truth` — READY_TO_SHIP.
+- `grid-window-prototype` — READY_TO_SHIP.
+- `click-through-matrix` — BLOCKED after safe prep.
+- `finder-dnd-path` — BLOCKED after safe prep.
+
+### READY_TO_SHIP Features
+
+- `window-ground-truth`
+- `grid-window-prototype`
+
+### BLOCKED Features
+
+- `click-through-matrix`
+- `finder-dnd-path`
+
+### Deferred Gates
+
+- G0 manifest human review.
+- Human ship for `window-ground-truth`.
+- Cross-vendor review/verify for serial Codex-run features.
+- Real Tauri alpha/beta runtime evidence for `grid-window-prototype`.
+- Real macOS click-through matrix for `click-through-matrix`.
+- Real Finder DnD path matrix for `finder-dnd-path`.
+
+### Incidents
+
+- Incident 1: `click-through-matrix` cannot satisfy real hit-test acceptance in unattended mode.
+- Incident 2: `finder-dnd-path` cannot satisfy Finder drop acceptance in unattended mode.
+
+### Commits
+
+- `3b571f6` — `docs(window-ground-truth): Phase 1 — add G0 evidence anchor`
+- `c3b29b0` — `docs(window-ground-truth): record verify pass`
+- `6b121ea` — `feat(grid-window-prototype): Phase 1 — add G0 fallback panel`
+- `4ea65ec` — `docs(grid-window-prototype): record verify pass`
+- `82ab268` — `docs(click-through-matrix): block on manual hit-test evidence`
+- `33627df` — `docs(finder-dnd-path): block on Finder drop evidence`
+
+### Test Results
+
+- `git branch --show-current` -> `spike/window-ground-truth`
+- `sw_vers` -> macOS 26.4 build 25E246
+- `pnpm --filter @repo/plugin-organizer check-types` -> PASS
+- `pnpm --filter desktop build` -> PASS with Vite chunk-size warning
+- `test -f docs/reviews/window-ground-truth/click-through-matrix/README.md` -> PASS
+- `test -f docs/reviews/window-ground-truth/finder-dnd-path/README.md` -> PASS
+
+### Next Human Reading Order
+
+1. `docs/workflow/roadmap/xai-v1.autorun-20260519.md`
+2. `docs/workflow/roadmap/xai-v1.deferred-gates.md`
+3. `docs/workflow/roadmap/xai-v1.incidents.md`
+4. `docs/workflow/roadmap/xai-g0-window-spike.md`
