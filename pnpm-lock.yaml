@@ -172,6 +172,22 @@ importers:
         specifier: ^3.2.1
         version: 3.2.4(@types/node@22.15.3)
 
+  packages/core-data:
+    dependencies:
+      '@repo/core':
+        specifier: workspace:*
+        version: link:../core
+    devDependencies:
+      '@repo/typescript-config':
+        specifier: workspace:*
+        version: link:../typescript-config
+      typescript:
+        specifier: 5.9.2
+        version: 5.9.2
+      vitest:
+        specifier: ^3.2.1
+        version: 3.2.4(@types/node@22.15.3)
+
   packages/eslint-config:
     devDependencies:
       '@eslint/js':
