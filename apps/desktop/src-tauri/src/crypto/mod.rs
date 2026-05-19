@@ -40,6 +40,9 @@ pub mod envelope;
 pub mod device_key;
 
 #[cfg(feature = "crypto")]
+pub mod hpke_wrap;
+
+#[cfg(feature = "crypto")]
 pub mod kdf;
 
 #[cfg(feature = "crypto")]

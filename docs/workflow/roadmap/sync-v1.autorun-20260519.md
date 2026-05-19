@@ -10,10 +10,10 @@
 
 ## Current State
 
-- Current feature: `x25519-device-keypair` (#12) shipped locally; next eligible feature is `hpke-per-device-wrap` (#13), `ed25519-recovery-signing` (#14), `sqlcipher-local-db` (#16), `account-signup-login` (#17), or non-crypto rows #21/#23/#25.
-- Completed this run: `kdf-primitives` (#3), `aes-gcm-aead-core` (#4), `deterministic-cbor-aad` (#5), `bip39-mnemonic-24w` (#6), `cipher-envelope-codec` (#7), `rust-keyvault-opaque-handle` (#11), `x25519-device-keypair` (#12) code/docs/tests locally complete with deferred gates.
+- Current feature: `hpke-per-device-wrap` (#13) shipped locally; next eligible feature is `ed25519-recovery-signing` (#14), `sqlcipher-local-db` (#16), `account-signup-login` (#17), or non-crypto rows #21/#23/#25.
+- Completed this run: `kdf-primitives` (#3), `aes-gcm-aead-core` (#4), `deterministic-cbor-aad` (#5), `bip39-mnemonic-24w` (#6), `cipher-envelope-codec` (#7), `rust-keyvault-opaque-handle` (#11), `x25519-device-keypair` (#12), `hpke-per-device-wrap` (#13) code/docs/tests locally complete with deferred gates.
 - Failed this run: no feature blocked; incidents recorded for command/script/import/fixture issues.
-- Next step: implement next eligible feature after committing #12, starting with `hpke-per-device-wrap` (#13) unless dependency checks change.
+- Next step: implement next eligible feature after committing #13, starting with `ed25519-recovery-signing` (#14) unless dependency checks change.
 
 ## Checkpoints
 
@@ -122,6 +122,22 @@
   - `bash scripts/ci/check-exact-pins.sh`
 - Deferred: human review, cross-vendor verify, real signed-build Keychain ACL verification, and Supabase `device_pub` upload.
 - Commit: `feat(x25519-device-keypair): add device key generation`.
+
+### 2026-05-19 02:58 PDT — feature checkpoint: hpke-per-device-wrap (#13)
+
+- Implemented `apps/desktop/src-tauri/src/crypto/hpke_wrap.rs` behind the `crypto` feature.
+- Added fixed-suite HPKE Base-mode DEK wrap/open: DHKEM(X25519, HKDF-SHA256) + HKDF-SHA256 + AES-256-GCM.
+- Integrated with KeyVault: seal uses resident DEK handle; open uses resident device-private handle and stores recovered DEK as a new handle.
+- Enforced `info != aad`; tests use deterministic CBOR wrap AAD as HPKE `info`.
+- Added low-order recipient public-key rejection via existing `device_key` validation.
+- Added docs anchor `packages/hpke-per-device-wrap/docs/{design,api,test,dev_log}.md`.
+- Tests/checks passed:
+  - `cargo test --manifest-path apps/desktop/src-tauri/Cargo.toml --features crypto crypto::hpke_wrap::tests`
+  - `cargo check --manifest-path apps/desktop/src-tauri/Cargo.toml --locked`
+  - `cargo check --manifest-path apps/desktop/src-tauri/Cargo.toml --features crypto --locked`
+  - `bash scripts/ci/check-exact-pins.sh`
+- Deferred: human review, cross-vendor verify, RFC 9180 official vectors, and Supabase `device_dek_wraps` write-path integration.
+- Commit: `feat(hpke-per-device-wrap): add HPKE DEK wrapping`.
 
 ### 2026-05-19 02:55 PDT — sweep checkpoint after next 4-feature loop
 
