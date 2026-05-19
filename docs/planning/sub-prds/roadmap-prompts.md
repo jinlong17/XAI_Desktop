@@ -8,16 +8,16 @@
 
 ## 0. Pre-flight — 必须先满足的 4 件事
 
-照本节顺序检查 / 修补,缺一不可:
+照本节顺序检查,缺一不可:
 
 | # | 项 | 检查命令 / 操作 |
 |---|---|---|
 | 1 | 15 个 worker agents 已 register | `ls .claude/agents/` 应见 15 个 .md(已具备) |
-| 2 | **`xai-roadmap-loop` skill 已 land** | `ls .claude/skills/xai-roadmap-loop/SKILL.md`(可能未具备,从 `docs/workflow/_portable/06-roadmap-orchestration.md` 文档**最末附录的 SKILL.md draft** 拷贝,把所有 `<skill_prefix>` 替换为 `xai-`,放到 `.claude/skills/xai-roadmap-loop/SKILL.md`) |
-| 3 | **`xai-feature-brief` skill 已 land**(Step 0) | 同上,从 `_portable/03-step0-brief-spec.md` 取规格,生成 SKILL.md;每个 feature 进 `feature-plan` 前都会被自动调用 |
-| 4 | manifest 目录已建 | `mkdir -p docs/workflow/project/roadmap/`(roadmap manifest 落地处)+ `mkdir -p docs/reviews/`(Step 0 feature-brief 落地处) |
+| 2 | **`xai-roadmap-loop` skill 已 land** | `ls .claude/skills/xai-roadmap-loop/SKILL.md`(已具备;来源 `.teams/skills/xai-roadmap-loop/SKILL.md`) |
+| 3 | **`xai-feature-brief` / `xai-feature-full-loop` skills 已 land** | `ls .claude/skills/xai-feature-brief/SKILL.md .claude/skills/xai-feature-full-loop/SKILL.md`(已具备) |
+| 4 | manifest 目录已建 | `mkdir -p docs/workflow/roadmap/`(roadmap manifest 落地处)+ `mkdir -p docs/reviews/`(Step 0 feature-brief 落地处) |
 
-> 注:第 2、3 项 SKILL.md draft 在 portable 文档里是带占位符的,land 之前**必须**全文件搜索替换 `<skill_prefix>` → `xai-` 一次。
+> 注:`roadmap_name:` 在下面的 init prompt 里保留为命名 hint。若 skill 报不识别该字段,删除这一行并让它从 `source:` 文件名推断 manifest 名。
 
 **如果你的项目 skill 前缀不是 `xai-`**,把下方 prompts 里所有 `xai-` 字样替换为你的实际前缀。
 
@@ -25,7 +25,7 @@
 
 ## 0.5 项目可用的 Claude skill(用于 init 预热)
 
-`.claude/skills/` 下已 register 的 8 个 skill,按对哪个子 roadmap 最有杠杆做映射:
+`.claude/skills/` 下已 register 的 portable public skills + XAI project-layer skills,按对哪个子 roadmap 最有杠杆做映射:
 
 | Skill | 描述 | Sync | Console | Web |
 |---|---|:-:|:-:|:-:|
@@ -37,8 +37,17 @@
 | `composition-patterns` | compound / render-prop / slot 模式;避免 boolean prop 泛滥 | — | ✅✅ | ✅ |
 | `gh-fix-ci` | GitHub Actions / 部署管线 fail 时定位 | ✅ | ✅ | ✅✅ |
 | `skill-creator` | 写 / 编辑 / 测 SKILL.md(meta) | — | — | — |
+| `agent-behavioral-guidelines` | 小改动 / surgical edit / 不 over-engineer / 每步验证 | ✅ | ✅ | ✅ |
 
-**使用模式**:每个子 roadmap 的 prompt 都有一节 §X.0 "init 之前的 skill 预热",列出该 roadmap 应该先跑哪几个 skill,产出报告;init 命令再把这些报告路径填进 `extra_context`,把 skill 名填进 `skills_during_decomposition`。
+**使用模式**:每个子 roadmap 的 prompt 都有一节 §X.0 "init 之前的 skill 预热",列出该 roadmap 应该先跑哪几个 skill,产出报告;init 命令把这些报告路径和希望参考的 skill 写进 `notes:`。新版 `xai-roadmap-loop` 没有 `extra_context:` / `skills_during_decomposition:` 字段。
+
+**run 模式 dispatch**:不要在 prompt 里预写 `dispatch:`。新版 `xai-roadmap-loop` 每次 run 都会先用中文确认 `emit` / `bg` / `serial` / `spawn` 四种模式。推荐选择:
+
+- Sync:默认选 `bg`；如果 worktree / smoke test 没过,选 `emit`。
+- Console:推荐 `bg`；ConsoleView 多 feature 波次适合 Agent View 并行。
+- Web:推荐 `bg`；部署 / PWA / responsive / security hardening 可按 wave 并行。
+
+`bg` 模式 preflight:工作树干净,或 `git config worktree.baseRef head`,或 prompt 内联了所有必要内容;manifest header `BG Direct Verified: yes` 或先完成 `claude --bg` smoke test;确认 `Wave Concurrency Cap` 足够,默认 3,超出会标 `QUEUED_BG`。
 
 ---
 
@@ -84,7 +93,7 @@ hpke、sqlcipher、supabase-rs)各自的最近 CVE 状态。
 
 ```text
 Skill: planning-with-files
-任务:给 sync-v1 创建一份持久化 task_plan.md(放 docs/workflow/project/roadmap/sync-v1.tasks.md),
+任务:给 sync-v1 创建一份持久化 task_plan.md(放 docs/workflow/roadmap/sync-v1.tasks.md),
 roadmap manifest 是 wave/feature 视图,task_plan.md 是 day-level 进度视图,两者互补。
 ```
 
@@ -103,19 +112,18 @@ mode: init
 input_kind: prd
 source: docs/planning/sub-prds/sync/PRD.md
 roadmap_name: sync-v1
-extra_context:
-  - docs/planning/sub-prds/sync/dev-plan.md
-  - docs/TECHNICAL_REQUIREMENTS.md
-  - docs/SYSTEM_ARCHITECTURE.md
-  - docs/PLUGIN_SDK.md
-  - docs/adr/0002-dual-track-release.md
-  - <把 §2.0 codebase-explorer 产出的 orientation 报告路径填这里>
-  - <把 §2.0 security-skills-claude-code 产出的 STRIDE + CVE 报告路径填这里>
-skills_during_decomposition:
-  - security-skills-claude-code   # 拆 feature 时确保每条 FR 对应到威胁缓解
-  - planning-with-files           # 同步维护 sync-v1.tasks.md
-  - superpowers                   # plan-first 心智
 notes: |
+  额外上下文:
+    - docs/planning/sub-prds/sync/dev-plan.md
+    - docs/TECHNICAL_REQUIREMENTS.md
+    - docs/SYSTEM_ARCHITECTURE.md
+    - docs/PLUGIN_SDK.md
+    - docs/adr/0002-dual-track-release.md
+    - <把 §2.0 codebase-explorer 产出的 orientation 报告路径填这里>
+    - <把 §2.0 security-skills-claude-code 产出的 STRIDE + CVE 报告路径填这里>
+  分解时请参考 security-skills-claude-code 的 STRIDE 结果,确保每条 FR 对应到威胁缓解;
+  同步维护 docs/workflow/roadmap/sync-v1.tasks.md;保持 superpowers 的 plan-first 分解心智。
+
   这是端到端加密同步层的全集 PRD,产物路径 packages/plugin-account/ + packages/core-data/(REST driver)。
   分两个 Phase:
     - Phase 0 子阶段 0.3:Supabase 骨架 + 账号注册登录 + 单表同步打通(2 周)
@@ -130,7 +138,7 @@ notes: |
 
 ### 2.2 manifest review 自查清单(init 停下后必看)
 
-打开 `docs/workflow/project/roadmap/sync-v1.md`,逐项检查:
+打开 `docs/workflow/roadmap/sync-v1.md`,逐项检查:
 
 - [ ] **Decomposition Rationale 章节**清楚标了哪些 feature 来自 PRD §5.x 哪个 FR 群,有没有合并错的
 - [ ] **wave 0**(可启动 feature)只含**纯 Rust / 纯协议骨架**(如 `argon2id-kek-derivation` / `aes-gcm-blob-codec` / `supabase-schema-skeleton`),不含 Realtime / Edge Function
@@ -148,12 +156,22 @@ notes: |
 
 ```text
 /xai-roadmap-loop
-manifest: docs/workflow/project/roadmap/sync-v1.md
+manifest: docs/workflow/roadmap/sync-v1.md
 ```
 
-会打出 N 个 `feature-full-loop` 启动 block(N = 当波可启动 feature 数)。
+skill 会先弹中文 dispatch 确认。Sync 推荐选 `bg`;如果 bg preflight 没过,选 `emit`。
 
-**强制**:每个 block 单独开**新会话**粘贴执行。不要在同一会话里跑多个,会撞 dev_log 写权限。
+`emit` 会打出 N 个 `/xai-feature-full-loop` 启动 block(N = 当波可启动 feature 数),格式类似:
+
+```text
+/xai-feature-full-loop
+Feature: <slug>
+Automation Mode: <resolved mode>
+Verify Cross-vendor: <yes|no>
+Requirement: <resolved requirement>
+```
+
+`emit` 模式下,每个 block 单独开**新会话**粘贴执行。不要在同一会话里跑多个,会撞 dev_log 写权限。`bg` 模式下由 `claude --bg --name ...` 启后台 session,用 Agent View 监控,每波末按 skill 输出的 bg-aware ship block 收口。
 
 ### 2.4 batch ship(每波末)
 
@@ -201,7 +219,7 @@ Skill: composition-patterns
 
 ```text
 Skill: planning-with-files
-任务:为 console-v1 创建 docs/workflow/project/roadmap/console-v1.tasks.md
+任务:为 console-v1 创建 docs/workflow/roadmap/console-v1.tasks.md
 ```
 
 ```text
@@ -217,22 +235,21 @@ mode: init
 input_kind: prd
 source: docs/planning/sub-prds/console/PRD.md
 roadmap_name: console-v1
-extra_context:
-  - docs/planning/sub-prds/console/dev-plan.md
-  - docs/PLUGIN_SDK.md
-  - docs/SYSTEM_ARCHITECTURE.md
-  - docs/TECHNICAL_REQUIREMENTS.md
-  - docs/adr/0003-three-faces-architecture.md
-  - docs/planning/sub-prds/sync/PRD.md   # Console 需要消费 sync 的 account events
-  - <把 §3.0 codebase-explorer 产出的 orientation 报告路径填这里>
-  - <把 §3.0 composition-patterns 产出的三栏 RFC 路径填这里>
-  - <把 §3.0 frontend-dev 产出的视觉/交互 token 表路径填这里>
-skills_during_decomposition:
-  - composition-patterns          # 拆 feature 时区分"外壳级"vs"slot 注入级"
-  - frontend-dev                  # 每个 ConsoleView 的视觉/动效一致性
-  - planning-with-files
-  - superpowers
 notes: |
+  额外上下文:
+    - docs/planning/sub-prds/console/dev-plan.md
+    - docs/PLUGIN_SDK.md
+    - docs/SYSTEM_ARCHITECTURE.md
+    - docs/TECHNICAL_REQUIREMENTS.md
+    - docs/adr/0003-three-faces-architecture.md
+    - docs/planning/sub-prds/sync/PRD.md   # Console 需要消费 sync 的 account events
+    - <把 §3.0 codebase-explorer 产出的 orientation 报告路径填这里>
+    - <把 §3.0 composition-patterns 产出的三栏 RFC 路径填这里>
+    - <把 §3.0 frontend-dev 产出的视觉/交互 token 表路径填这里>
+  分解时请参考 composition-patterns 区分"外壳级"vs"slot 注入级";参考 frontend-dev
+  保持每个 ConsoleView 的视觉/动效一致性;同步维护 docs/workflow/roadmap/console-v1.tasks.md;
+  保持 superpowers 的 plan-first 分解心智。
+
   这是 XAI_Desktop 整体控制台(独立三栏窗口)子产品的全集 PRD,Phase 2.5。
   产物路径 packages/plugin-console/(三栏外壳)+ 各业务 plugin 的 ConsoleView slot。
   关键:Console 本身不带新功能,而是聚合 productivity / labels / calendar / project /
@@ -242,6 +259,8 @@ notes: |
     wave 0:三栏外壳基础、sidebar 导航壳、PluginRegistry ConsoleView slot
     wave 1+:逐 plugin 实现 ConsoleView(productivity/labels/calendar/project/...)
     wave 末:全局 Cmd+K 搜索、通知中心、设置面板、键盘流总验收
+  Console wave 1+ 可能一次有 6+ 个 plugin ConsoleView feature;若 run 时选择 bg 并希望更高并发,
+  review manifest 时可把 header `Wave Concurrency Cap:` 从默认 3 调到 6。
   依赖 sync 子 roadmap 的 wave 0~1(账号登录 + Realtime 订阅基础)已 SHIPPED。
   每个 feature 的 seed brief 要写清"承载的 ConsoleView 类型"、"键盘流契约"、
   "用到的 composition pattern(compound/slot/render-prop 之一)"。
@@ -263,8 +282,10 @@ notes: |
 
 ```text
 /xai-roadmap-loop
-manifest: docs/workflow/project/roadmap/console-v1.md
+manifest: docs/workflow/roadmap/console-v1.md
 ```
+
+skill 会先弹中文 dispatch 确认。Console 推荐选 `bg`;如果想保守人工分发,选 `emit`。
 
 ### 3.4 Console 完成判定
 
@@ -315,7 +336,7 @@ Skill: gh-fix-ci
 
 ```text
 Skill: planning-with-files
-任务:为 web-v1 创建 docs/workflow/project/roadmap/web-v1.tasks.md
+任务:为 web-v1 创建 docs/workflow/roadmap/web-v1.tasks.md
 ```
 
 ```text
@@ -331,26 +352,24 @@ mode: init
 input_kind: prd
 source: docs/planning/sub-prds/web/PRD.md
 roadmap_name: web-v1
-extra_context:
-  - docs/planning/sub-prds/web/dev-plan.md
-  - docs/planning/sub-prds/console/PRD.md   # Web 复用 Console UI
-  - docs/planning/sub-prds/sync/PRD.md      # Web 跑同一份 Sync 协议
-  - docs/PLUGIN_SDK.md
-  - docs/adr/0003-three-faces-architecture.md
-  - docs/TECHNICAL_REQUIREMENTS.md
-  - <把 §4.0 codebase-explorer 产出的目录骨架草图路径填这里>
-  - <把 §4.0 frontend-dev 产出的响应式 + Lighthouse 优化清单路径填这里>
-  - <把 §4.0 composition-patterns 产出的"哪些组件需平台分支"清单路径填这里>
-  - <把 §4.0 security-skills-claude-code 产出的 Web STRIDE + CVE 报告路径填这里>
-  - <把 §4.0 gh-fix-ci 产出的部署排障 SOP 路径填这里>
-skills_during_decomposition:
-  - frontend-dev                  # 每个 WebView 的响应式 / 性能预算一致性
-  - composition-patterns          # ConsoleView vs WebView 的复用边界
-  - security-skills-claude-code   # 浏览器特有威胁建模
-  - gh-fix-ci                     # 部署管线 features 的 CI 排障
-  - planning-with-files
-  - superpowers
 notes: |
+  额外上下文:
+    - docs/planning/sub-prds/web/dev-plan.md
+    - docs/planning/sub-prds/console/PRD.md   # Web 复用 Console UI
+    - docs/planning/sub-prds/sync/PRD.md      # Web 跑同一份 Sync 协议
+    - docs/PLUGIN_SDK.md
+    - docs/adr/0003-three-faces-architecture.md
+    - docs/TECHNICAL_REQUIREMENTS.md
+    - <把 §4.0 codebase-explorer 产出的目录骨架草图路径填这里>
+    - <把 §4.0 frontend-dev 产出的响应式 + Lighthouse 优化清单路径填这里>
+    - <把 §4.0 composition-patterns 产出的"哪些组件需平台分支"清单路径填这里>
+    - <把 §4.0 security-skills-claude-code 产出的 Web STRIDE + CVE 报告路径填这里>
+    - <把 §4.0 gh-fix-ci 产出的部署排障 SOP 路径填这里>
+  分解时请参考 frontend-dev 保持每个 WebView 的响应式 / 性能预算一致性;参考
+  composition-patterns 明确 ConsoleView vs WebView 的复用边界;参考 security-skills-claude-code
+  覆盖浏览器特有威胁建模;参考 gh-fix-ci 设计部署管线 features 的 CI 排障路径;同步维护
+  docs/workflow/roadmap/web-v1.tasks.md;保持 superpowers 的 plan-first 分解心智。
+
   这是 XAI_Desktop 网页版子产品的全集 PRD,Phase 4.5。
   产物路径 apps/web/(Vite SPA 入口)+ packages/core-data/ 的 REST driver(已在 sync-v1 完成)
   + 各业务 plugin 的 WebView slot(若与 ConsoleView 不同)。
@@ -384,8 +403,10 @@ notes: |
 
 ```text
 /xai-roadmap-loop
-manifest: docs/workflow/project/roadmap/web-v1.md
+manifest: docs/workflow/roadmap/web-v1.md
 ```
+
+skill 会先弹中文 dispatch 确认。Web 推荐选 `bg`;若部署或安全 hardening wave 需要人工逐项掌控,选 `emit`。
 
 ### 4.4 Web 完成判定
 
@@ -404,9 +425,10 @@ manifest: docs/workflow/project/roadmap/web-v1.md
 `SUBAGENT_WORKFLOW_V2.md` 里已经记录:`feature-full-loop` / `bugfix-full-loop` 被 spawn 时 Claude Code 不给 Task 工具,会立即 BLOCKED。所以:
 
 - ❌ 不要让主会话 Task-spawn `feature-full-loop`
-- ✅ 让 main session 直接当 orchestrator,顺序 Task-spawn `feature-plan` → `feature-review` → `feature-auto-build` → `feature-verify`,每步间读 dev_log
+- ✅ 用 `/xai-feature-full-loop` skill 作为单 feature 的 parent-session recipe
+- ✅ 如果确实想在一个 transcript 里串行跑完整 roadmap wave,在 `xai-roadmap-loop` 的中文 dispatch 确认里选 `serial`;它会直接派发 `feature-plan` → `feature-review` → `feature-auto-build` → `feature-verify`,每步间读 dev_log
 
-但 `xai-roadmap-loop` skill 本身**不会**spawn meta-orchestrator,它默认走 `dispatch: emit-prompts`,只是把 N 个 block 打到 stdout,你在 **N 个新会话**里粘贴执行。这就绕开了运行时约束。
+`xai-roadmap-loop` 默认候选是 `emit`:只打印 N 个 `/xai-feature-full-loop` block,你在 N 个新会话里粘贴执行。Claude Code 推荐并行路径是 `bg`:用 `claude --bg --name ...` 启后台 session,Agent View 监控,并把 manifest row 标为 `IN_PROGRESS`。日常不要选 `spawn`,除非宿主明确支持 >=4 层 nested agent。
 
 ### 5.2 子 roadmap 之间的依赖是"全 SHIPPED 等待",不是"骨架就够了"
 
@@ -422,35 +444,22 @@ manifest: docs/workflow/project/roadmap/web-v1.md
 
 ---
 
-## 6. 紧急情况:roadmap-loop skill 还没 land 怎么办?
+## 6. 当前可用 dispatch 模式怎么选?
 
-如果 §0 的 Pre-flight #2 / #3 失败(skill 没 land),有两个救火方案:
+- **emit**:最稳。只输出 `/xai-feature-full-loop` block,不启动后台任务,不把 row 标成 `IN_PROGRESS`。适合小 wave 或还没验证 bg 的机器。
+- **bg**:Claude Code 推荐并行路径。启动后台 session + Agent View 监控,默认并发 3;适合 Console / Web 这类多 plugin wave。
+- **serial**:一个主会话串行执行,不并行,但能避免多窗口管理。适合小 wave 或你想保留单 transcript。
+- **spawn**:legacy 高风险路径。会嵌套 spawn `feature-full-loop`,Claude Code 默认和 Codex `max_depth=2` 都不推荐。
 
-**方案 A — 现在 land 这两个 skill(推荐)**
-
-按 `docs/workflow/_portable/06-roadmap-orchestration.md` 文档最末附录的 SKILL.md draft + `_portable/03-step0-brief-spec.md` 的规格,把两份 SKILL.md 放到 `.claude/skills/xai-roadmap-loop/` 和 `.claude/skills/xai-feature-brief/`,替换 `<skill_prefix>` → `xai-`。约 30 分钟工作量。
-
-**方案 B — 暂时退回 Level 1 手工分发**
-
-每个 sub-PRD 自己拆 N 个 feature(看子 PRD 自带的 dev-plan §3 任务分解),然后对每个 feature:
-
-```text
-Start the feature-plan agent for <slug>.
-Attached brief: docs/planning/sub-prds/<surface>/dev-plan.md (relevant phase)
-Constraints: <hard constraints from the PRD>
-```
-
-完成 plan → review → 你 confirm → build → verify → ship 的标准 5 步循环。每个 feature 之间手工切。
-
-方案 B 适合**只跑 Sync wave 0**(最关键的密码学骨架,无论如何要保住),后面 Console / Web 等 roadmap-loop 落地了再上 Level 3。
+每次 run 都让 `xai-roadmap-loop` 的中文确认门来最终决定,不要在 prompt 里预写 `dispatch:`。
 
 ---
 
 ## 7. 一句话总结
 
 ```
-land 2 个 skill → Sync init+review → Sync run × N + ship → Console init+review →
+skills 已就绪 → Sync init+review → Sync run × N + ship → Console init+review →
 Console run × N + ship → Web init+review → Web run × N + ship → v1 GA
 ```
 
-每个 `init` 后停下**真审 manifest**,每个 `run` 后开 N 个新会话并行执行,每波末 batch ship。
+每个 `init` 后停下**真审 manifest**,每个 `run` 先通过中文 dispatch 确认选择 `emit` / `bg` / `serial` / `spawn`,每波末 batch ship。
