@@ -61,7 +61,7 @@ identically across all variants.
 
 The 8 variants, by name (the `Automation Mode:` enum — see §3): **A-Claude** (single-IDE);
 **B-Codex / B-Cursor** (hook-relay); **C-Codex / C-Cursor** (phase-granularity); **D-Codex /
-D-Cursor** (lead-and-delegate), with **D-Codex+Cursor** as D's strongest quota-resilient
+D-Cursor** (lead-and-delegate), with **D-Codex+Cursor** as D's strongest external-executor
 fallback-chain combo. Per-variant contracts are in §3.3–§3.7.
 
 **Ideal-path interaction count:** the whole pipeline has only 2 user interactions — ① start
@@ -145,7 +145,7 @@ have a Codex variant and a Cursor variant. `1 + 3 × 2 = 7`.
 | **A — single-IDE loop** | Step 0 → plan → review → dev-loop → ship all inside Claude Code | **A-Claude** — one variant; everything in one IDE, native Task-spawn orchestrator |
 | **B — hook relay to external executor** | The lead runs plan/review/verify/ship; after review APPROVED a hook auto-wakes the external executor for build; after it finishes a hook auto-returns to the lead for verify | **B-Codex** (headless `codex exec` — see §3.4) / **B-Cursor** (`cursor-agent` CLI) |
 | **C — phase-granularity alternating dual executor** | Each phase = 1 external build + 1 lead `feature-phase-review` | **C-Codex** / **C-Cursor** — one external build per phase |
-| **D — lead + delegation** | The lead's `feature-auto-build` worker delegates a single phase to an external CLI; on external failure the fallback worker self-implements | **D-Codex** (`codex exec`) / **D-Cursor** (`cursor-agent`) / **D-Codex+Cursor** — the 3-layer fallback chain Codex → Cursor → self |
+| **D — lead + delegation** | The lead's `feature-auto-build` worker delegates every implementation phase to an external CLI; if the configured external executors fail, the worker parks the phase as BLOCKED instead of self-implementing | **D-Codex** (`codex exec`) / **D-Cursor** (`cursor-agent`) / **D-Codex+Cursor** — external chain Codex → Cursor → BLOCKED |
 
 > Naming convention: in `dev_log.md`'s Status Panel mark the variant as the all-caps hyphenated
 > `Automation Mode:` field (one of the 8 names above), so hooks can route on it and logs can be
@@ -159,7 +159,7 @@ have a Codex variant and a Cursor variant. `1 + 3 × 2 = 7`.
 | Mid-size feature, plan APPROVED, phases ≥ 3 | `D-Codex` or `D-Cursor` | Sync path, CLI call is most direct |
 | Large phase needing a big-context model | `D-Cursor` (`gpt-5.5-high` large context) | Headless CLI + large context window |
 | High-risk change (touches core / manifest / cross-module) | `C-Codex` or `C-Cursor` | Per-phase dual-executor mandatory cross-check |
-| Primary external tool hit its cap, task is large | `D-Codex+Cursor` | Codex → Cursor → self maximizes the rolling window |
+| Primary external tool hit its cap, task is large | `D-Codex+Cursor` | Codex → Cursor; if both fail, park BLOCKED with evidence |
 | Both external tools exhausted | write `BLOCKED` + a Blocker; a human switches to `A-Claude` | Auto-degradation would cross the Status Panel write-authority boundary, so a human takes over |
 
 ### 3.2 Cross-tool complexity ranking
@@ -309,9 +309,10 @@ per phase N:
 
 ### 3.6 Mode D — lead + delegation (`D-Codex` / `D-Cursor` / `D-Codex+Cursor`)
 
-Synchronous and hook-free: the lead's `feature-auto-build` worker delegates a single phase to an
-external CLI inline; on external failure the worker self-implements. No marker, no post-commit hook,
-no resume — `feature-dev-loop` runs to completion in one session. The recommended cross-tool entry.
+Synchronous and hook-free: the lead's `feature-auto-build` worker delegates each implementation
+phase to an external CLI inline. No marker, no post-commit hook, no resume — `feature-dev-loop`
+runs to completion in one session. The recommended cross-tool entry when the build work must be
+performed by Codex and/or Cursor rather than by Claude.
 
 **The real CLI invocation syntax (literal — this is portable):**
 
@@ -333,10 +334,12 @@ gtimeout 600 codex exec --sandbox workspace-write --cd <repo-root> --json - < <p
 cursor-agent --print --force --model ${CW_CURSOR_MODEL:-gpt-5.5-high} --output-format json --workspace <repo-root> < <prompt_file>
 ```
 
-- **Delegation decision (per phase):** the worker keeps schema-decision / design-judgement phases
-  for Claude itself; it delegates mechanical, large-diff, multi-file phases to the external CLI.
-- **`D-Codex+Cursor`** is the 3-layer quota-resilient chain: `codex exec` → `cursor-agent` → Claude
-  self-implement (§4.1). It is the most cap-resistant of the 8 variants.
+- **Delegation decision (per phase):** every implementation phase is delegated. The Claude worker
+  may prepare prompts, review external diffs, run verification commands, update workflow state, and
+  commit status/documentation updates, but it must not implement production code, tests, migrations,
+  or feature documentation content itself in D modes.
+- **`D-Codex+Cursor`** is the external fallback chain: `codex exec` → `cursor-agent` → `BLOCKED`
+  (§4.1). It is the most cap-resistant external-only variant.
 - **D mounts no hooks** — it does not depend on the B/C post-commit-hook plumbing; a `dev_log`
   `Automation Mode: D-*` makes the hook exit `0` immediately.
 - **Status Panel write authority (D variants):** the `feature-auto-build` worker (Claude) is always
@@ -401,12 +404,14 @@ Layer 1: the current variant's primary executor — Codex CLI (codex exec) or cu
 Layer 2: the other external executor (Codex ↔ Cursor)
          (D-class variants may degrade directly; B/C-class need a human marker first)
    ↓
-Layer 3: the lead Claude worker self-implements (equivalent to A-Claude)
+Layer 3: if an A-Claude run is explicitly selected, the lead Claude worker may self-implement.
+For D-Codex / D-Cursor / D-Codex+Cursor, Layer 3 is `BLOCKED` with recorded CLI failure evidence;
+the D worker must not silently degrade to Claude implementation.
    ↓
 Layer 4: pipeline parks for a human + a Blocker is written to dev_log
 ```
 
-`D-Codex+Cursor` is this chain made explicit as a variant: Codex → Cursor → self. Quota exhaustion
+`D-Codex+Cursor` is this external chain made explicit as a variant: Codex → Cursor → BLOCKED. Quota exhaustion
 is detected by the `codex_wrapper.sh` / `cursor_wrapper.sh` reference scripts, which write
 `<quota_state_dir>/<executor>-exhausted-until` (see `_portable/scripts/` + §3.7).
 
@@ -427,7 +432,7 @@ If a fallback would require a Status change, the variant degrades to "park + wri
 
 ### 4.3 Trailer attribution across fallbacks
 
-When a worker falls through the fallback chain (Codex → Cursor → self-implement),
+When a worker falls through the external fallback chain (Codex → Cursor → BLOCKED),
 the commit's Status-Panel trailer (`02-handoff-and-state.md` §4) **always names the host worker**
 (`feature-auto-build` or `feature-build`), not the actual executing tool. The trailer does not record
 the executing tool — that is traced by a separate non-lint commit-body annotation line (e.g.
@@ -550,7 +555,8 @@ Phase 4: BUILD + VERIFY  ── variant-specific; the only phase that branches. 
 
   ── synchronous path (single-IDE / lead-and-delegate variants) ──
       Task spawn the loop orchestrator (feature-dev-loop / bugfix-loop), synchronous, wait for return.
-      The worker reads dev_log Automation Mode and routes the external CLI or self-implements.
+      The worker reads dev_log Automation Mode and routes the external CLI.
+      A-Claude may self-implement; D-* parks BLOCKED if the configured external executors fail.
       After return: Read dev_log.
         Status indicates verify passed (READY_TO_SHIP) → Phase 5.
         BLOCKED → STOP.
