@@ -10,7 +10,8 @@
     "lint": "eslint --max-warnings 0",
     "check-types": "next typegen && tsc --noEmit",
     "test:rls": "vitest run supabase/tests/rls-policies.test.ts",
-    "test:nonce": "vitest run supabase/tests/nonce-lease.test.ts"
+    "test:nonce": "vitest run supabase/tests/nonce-lease.test.ts",
+    "test:push": "vitest run supabase/tests/sync-push.test.ts"
   },
   "dependencies": {
     "@repo/ui": "workspace:*",

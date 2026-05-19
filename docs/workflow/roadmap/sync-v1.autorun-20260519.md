@@ -351,6 +351,26 @@
   - Rust dead-code warnings for currently unused AppError variants and Keychain helper types.
 - Next eligible candidates: #18 `onboarding-backfill-ui`, #22 `menubar-sync-status-icon`, #28 `push-edge-function`, #29 `recovery-proof-edge-function`, #30 `single-table-todos-e2e` once all direct deps are satisfied.
 
+### 2026-05-19 04:03 PDT — feature checkpoint: push-edge-function (#28)
+
+- Added `apps/web/supabase/functions/sync-push/handler.ts`.
+- Added lightweight `apps/web/supabase/functions/sync-push/index.ts` entry.
+- Implemented Edge Function core protocol:
+  - per-record processing
+  - mutation_dedup idempotency
+  - conditional `baseRevision/proposedRevision` validation
+  - conflict shadow insertion for stale incoming losers
+  - commit_seq allocation via injected DB seam
+  - Rust envelope metadata parsing for server columns
+  - mixed 207 per-record response
+- Added `apps/web/supabase/tests/sync-push.test.ts` and `web` script `test:push`.
+- Added docs anchor `packages/push-edge-function/docs/{design,api,test,dev_log}.md`; updated PLUGIN_MAP.
+- Tests/checks passed:
+  - `pnpm --filter web test:push`
+  - `pnpm --filter web check-types`
+- Deferred: live Supabase deploy, real service_role DB adapter/JWT extraction, and concurrent Postgres integration blocked by #9.
+- Commit: pending `feat(push-edge-function): add sync push core`.
+
 ### 2026-05-19 02:55 PDT — sweep checkpoint after next 4-feature loop
 
 - Completed next eligible loop: #7 `cipher-envelope-codec`, #6 `bip39-mnemonic-24w`, #11 `rust-keyvault-opaque-handle`, #12 `x25519-device-keypair`.

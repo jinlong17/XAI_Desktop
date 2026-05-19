@@ -47,7 +47,7 @@
 - [x] #25 rls-policies-and-tests (T-03)
 - [x] #26 sync-engine-push (T-12)
 - [x] #27 sync-engine-pull (T-12)
-- [ ] #28 push-edge-function (T-14)
+- [x] #28 push-edge-function (T-14)
 - [ ] #29 recovery-proof-edge-function (T-13)
 - [ ] #30 **single-table-todos-e2e (T-15/17/18/19) — Phase 0.3 EXIT GATE** (PRD §10.1 + ZK PoC + SQLite-dump PoC)
 
