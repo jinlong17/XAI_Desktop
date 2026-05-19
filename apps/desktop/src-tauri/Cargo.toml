@@ -24,7 +24,37 @@ serde = { version = "1", features = ["derive"] }
 serde_json = "1"
 thiserror = "1"
 
+# ── Crypto supply-chain lockdown (crypto-deps-lockdown, Wave W0, Phase 1) ────
+# All 7 crates are exact-pinned (=x.y.z) and optional = true.
+# They are gathered under the OFF-by-default `crypto` feature umbrella (D-7).
+# Pins + Cargo.lock are real and CI-enforced; no transitive compile cost today.
+# Version floors (hard constraints from stride-cve / RUSTSEC-2022-0093):
+#   ed25519-dalek >= 2, curve25519-dalek >= 4 (transitive), aes-gcm >= 0.10
+# ED25519_VERIFY_STRICT contract: any Ed25519 verify MUST use verify_strict —
+#   see api.md §4.  Machine-enforced by exact-pin + deny.toml [bans] ed25519-dalek<2.
+argon2        = { version = "=0.5.3",   optional = true }
+aes-gcm       = { version = "=0.10.3",  optional = true }
+x25519-dalek  = { version = "=2.0.1",   optional = true }
+ed25519-dalek = { version = "=2.2.0",   optional = true }
+hpke          = { version = "=0.12.0",  optional = true }
+rusqlite      = { version = "=0.32.1",  optional = true, features = ["bundled-sqlcipher"] }
+reqwest       = { version = "=0.12.28", optional = true, features = ["rustls-tls"] }
+
+[features]
+# crypto — OFF by default.  Enable only in the future crypto consumption rows.
+# Exact-pinned optional deps are compiled only when this feature is active.
+crypto = [
+  "dep:argon2",
+  "dep:aes-gcm",
+  "dep:x25519-dalek",
+  "dep:ed25519-dalek",
+  "dep:hpke",
+  "dep:rusqlite",
+  "dep:reqwest",
+]
+
 [target.'cfg(target_os = "macos")'.dependencies]
 cocoa = "0.24"
 core-graphics = "0.23"
 core-foundation = "0.9"
+security-framework = "3.7.0"
