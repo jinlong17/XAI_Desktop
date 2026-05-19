@@ -637,6 +637,47 @@
 - Incident recorded: #54 cannot be completed in this autorun under the explicit deferred-rehearsal policy.
 - Commit: pending `docs(recovery-rehearsal-3-rekey-kill9): mark deferred`.
 
+## Stop Summary — 2026-05-19 05:08 PDT
+
+Stop condition: no eligible Sync feature remains.
+
+Completed or advanced in this serial autorun:
+
+- SHIPPED: #3, #4, #5, #6, #7, #11, #12, #13, #14, #16, #17, #18, #19, #20, #21, #22, #23, #24, #25, #26, #27, #28, #29, #30, #31, #32, #34, #35, #36.
+- BLOCKED with artifact committed: #33 `tla-protocol-model` (missing Java/TLC), #54 `recovery-rehearsal-3-rekey-kill9` (recovery rehearsal deferred by autorun policy).
+- Still `BLOCKED_EXTERNAL`: #9 Supabase project provisioning, #10 Apple Developer account.
+
+Remaining PENDING rows are not eligible:
+
+- #37 `hardening-admission-gate` depends on #33 `tla-protocol-model`, which is BLOCKED.
+- #38-#53, #55, and #56 are downstream of #37 or other unshipped Phase 5 rows.
+
+Recent commits:
+
+- `3129d31 feat(onboarding-backfill-ui): add recovery backfill flow`
+- `e01b234 docs(recovery-rehearsal-3-rekey-kill9): mark deferred`
+
+Last focused verification:
+
+- `pnpm --filter @repo/plugin-account test -- tests/onboarding-backfill.test.ts` PASS.
+- `pnpm --filter @repo/plugin-account check-types` PASS.
+- `pnpm --filter web test:onboarding-backfill` PASS.
+- `pnpm --filter web check-types` PASS.
+- `pnpm install --frozen-lockfile` PASS.
+- `pnpm --filter @repo/plugin-account test` PASS.
+- `pnpm --filter web lint` PASS.
+
+Latest broad sweep:
+
+- 2026-05-19 05:00 PDT sweep passed after a lint fix: `pnpm lint`, `pnpm typecheck`, `pnpm build`, and `cargo test --manifest-path apps/desktop/src-tauri/Cargo.toml`.
+
+Manual restart priority:
+
+1. Install a Java Runtime and run TLC for #33 `tla-protocol-model`.
+2. If #33 passes, run #37 `hardening-admission-gate`.
+3. Then resume Phase 5 eligible rows.
+4. Separately provision #9 Supabase and #10 Apple Developer to close external gates.
+
 ### 2026-05-19 02:55 PDT — sweep checkpoint after next 4-feature loop
 
 - Completed next eligible loop: #7 `cipher-envelope-codec`, #6 `bip39-mnemonic-24w`, #11 `rust-keyvault-opaque-handle`, #12 `x25519-device-keypair`.
