@@ -13,14 +13,14 @@
 
 | Field | Value |
 |---|---|
-| Current Gate | G1 — native foundation (safe prep only) |
-| Gate Manifest | docs/workflow/roadmap/xai-g1-native-foundation.md |
-| Current Feature | host-business-residuals |
-| Feature Source | docs/planning/execution/G1-native-foundation.md §G1.6 |
-| Feature Status | READY_TO_SHIP |
-| Current Commit | pending |
-| Tests | `test -f docs/planning/execution/host-residuals.md`; Host residual `rg` scan |
-| Next Step | Human ship READY_TO_SHIP queue; production G1 implementation still waits for G0 |
+| Current Gate | G1 — native foundation (safe prep only); G0 static follow-up complete |
+| Gate Manifest | docs/workflow/roadmap/xai-g1-native-foundation.md; docs/workflow/roadmap/xai-g0-window-spike.md |
+| Current Feature | click-through-matrix / finder-dnd-path static-analysis follow-up |
+| Feature Source | docs/planning/execution/G0-window-spike.md §G0.3 and §G0.4 |
+| Feature Status | BLOCKED (partial static evidence complete; runtime evidence required) |
+| Current Commit | 7a1b9dd |
+| Tests | Matrix docs reviewed; static code findings recorded; runtime evidence still deferred |
+| Next Step | Human runtime evidence for G0.3/G0.4 before any G0 Go/Conditional Go decision; production G1 implementation still waits for G0 |
 
 ## Checkpoints
 
@@ -122,18 +122,27 @@
 - No production code changed.
 - Status: READY_TO_SHIP.
 
+### 2026-05-19 15:18 PDT — Static Evidence Follow-Up: click-through-matrix and finder-dnd-path
+
+- Filled static source-analysis findings into the G0.3 click-through matrix.
+- Filled static source-analysis findings into the G0.4 Finder DnD matrix.
+- Key G0.3 finding: click-through currently uses AppKit `setIgnoresMouseEvents_`; `macOSPrivateApi` affects transparent rendering risk, not the click-through API path itself.
+- Key G0.4 finding: main-window Webview DnD is disabled, Grid-window DnD appears enabled, and no Rust/JS drop handler is present yet.
+- Follow-up commit: `7a1b9dd docs(G0.3/G0.4): fill static code analysis into click-through + DnD matrices`.
+- Status remains BLOCKED because the execution pack acceptance still requires real runtime evidence.
+
 ## Feature Outcomes
 
 | Feature | Gate | Status | Commit | Tests | Notes |
 |---|---|---|---|---|---|
 | window-ground-truth | G0 | READY_TO_SHIP | 3b571f6 | PASS: branch, sw_vers, README content | Deferred gates recorded in docs/workflow/roadmap/xai-v1.deferred-gates.md |
 | grid-window-prototype | G0 | READY_TO_SHIP | 6b121ea | PASS: plugin-organizer check-types; desktop build | Runtime Tauri alpha/beta evidence deferred. |
-| click-through-matrix | G0 | BLOCKED | 82ab268 | PASS: matrix template exists; BLOCKED: real hit-test evidence | Requires human macOS click-through matrix. |
-| finder-dnd-path | G0 | BLOCKED | 33627df | PASS: matrix template exists; BLOCKED: real Finder drop evidence | Requires human Finder/Tauri path matrix. |
-| spaces-multimonitor-matrix | G0 | BLOCKED | pending | PASS: matrix template exists; BLOCKED: real Spaces/fullscreen/multi-display evidence | Reached by user override; safe prep only. |
-| mas-sandbox-dry-run | G0 | BLOCKED | pending | PASS: MAS notes exist; BLOCKED: real sandbox/private-API evidence | Reached by user override; safe prep only. |
-| window-command-contract | G1 | BLOCKED | pending | PASS: safe-prep docs exist; BLOCKED: G0 not Go/Conditional Go | Reached by user override; no production code changed. |
-| host-business-residuals | G1 | READY_TO_SHIP | pending | PASS: residual audit doc exists; Host scan recorded | Audit-only safe prep. |
+| click-through-matrix | G0 | BLOCKED | 82ab268 + 7a1b9dd | PASS: matrix template and static analysis exist; BLOCKED: real hit-test evidence | Requires human macOS click-through matrix. |
+| finder-dnd-path | G0 | BLOCKED | 33627df + 7a1b9dd | PASS: matrix template and static analysis exist; BLOCKED: real Finder drop evidence | Requires human Finder/Tauri path matrix. |
+| spaces-multimonitor-matrix | G0 | BLOCKED | 2fb6bac | PASS: matrix template exists; BLOCKED: real Spaces/fullscreen/multi-display evidence | Reached by user override; safe prep only. |
+| mas-sandbox-dry-run | G0 | BLOCKED | 071a192 | PASS: MAS notes exist; BLOCKED: real sandbox/private-API evidence | Reached by user override; safe prep only. |
+| window-command-contract | G1 | BLOCKED | 9c7b52f | PASS: safe-prep docs exist; BLOCKED: G0 not Go/Conditional Go | Reached by user override; no production code changed. |
+| host-business-residuals | G1 | READY_TO_SHIP | c6dbd77 | PASS: residual audit doc exists; Host scan recorded | Audit-only safe prep. |
 
 ## Deferred Gates Summary
 
@@ -158,7 +167,7 @@
 
 ## Final 24h Summary
 
-Stopped early on 2026-05-19 14:48 PDT because no eligible G0 feature remained after manual hardware gates blocked G0.3 and G0.4.
+Paused early on 2026-05-19 after the user override because no further production-eligible feature could proceed under the required G0 -> G1 -> G2 order without real G0 hardware/runtime evidence. Safe preparatory work continued through G0.5, G0.6, G1.1, G1.6, and static follow-up for G0.3/G0.4; no ship or push was run.
 
 ### Completed Features
 
@@ -166,16 +175,24 @@ Stopped early on 2026-05-19 14:48 PDT because no eligible G0 feature remained af
 - `grid-window-prototype` — READY_TO_SHIP.
 - `click-through-matrix` — BLOCKED after safe prep.
 - `finder-dnd-path` — BLOCKED after safe prep.
+- `spaces-multimonitor-matrix` — BLOCKED after safe prep.
+- `mas-sandbox-dry-run` — BLOCKED after safe prep.
+- `window-command-contract` — BLOCKED after safe prep.
+- `host-business-residuals` — READY_TO_SHIP audit-only.
 
 ### READY_TO_SHIP Features
 
 - `window-ground-truth`
 - `grid-window-prototype`
+- `host-business-residuals`
 
 ### BLOCKED Features
 
 - `click-through-matrix`
 - `finder-dnd-path`
+- `spaces-multimonitor-matrix`
+- `mas-sandbox-dry-run`
+- `window-command-contract`
 
 ### Deferred Gates
 
@@ -185,11 +202,18 @@ Stopped early on 2026-05-19 14:48 PDT because no eligible G0 feature remained af
 - Real Tauri alpha/beta runtime evidence for `grid-window-prototype`.
 - Real macOS click-through matrix for `click-through-matrix`.
 - Real Finder DnD path matrix for `finder-dnd-path`.
+- Real Spaces/fullscreen/multi-display matrix for `spaces-multimonitor-matrix`.
+- Real MAS/private-API sandbox evidence for `mas-sandbox-dry-run`.
+- G1 production implementation until G0 Go/Conditional Go.
+- Cross-vendor review/verify for `host-business-residuals`.
 
 ### Incidents
 
 - Incident 1: `click-through-matrix` cannot satisfy real hit-test acceptance in unattended mode.
 - Incident 2: `finder-dnd-path` cannot satisfy Finder drop acceptance in unattended mode.
+- Incident 3: `spaces-multimonitor-matrix` cannot satisfy real Spaces/fullscreen/multi-display acceptance in unattended mode.
+- Incident 4: `mas-sandbox-dry-run` cannot satisfy sandbox/private-API acceptance in unattended mode.
+- Incident 5: `window-command-contract` production implementation is blocked until G0 is Go/Conditional Go.
 
 ### Commits
 
@@ -199,6 +223,11 @@ Stopped early on 2026-05-19 14:48 PDT because no eligible G0 feature remained af
 - `4ea65ec` — `docs(grid-window-prototype): record verify pass`
 - `82ab268` — `docs(click-through-matrix): block on manual hit-test evidence`
 - `33627df` — `docs(finder-dnd-path): block on Finder drop evidence`
+- `2fb6bac` — `docs(spaces-multimonitor-matrix): block on Spaces evidence`
+- `071a192` — `docs(mas-sandbox-dry-run): block on sandbox evidence`
+- `9c7b52f` — `docs(window-command-contract): block G1 prep on G0`
+- `c6dbd77` — `docs(host-business-residuals): audit Host business logic`
+- `7a1b9dd` — `docs(G0.3/G0.4): fill static code analysis into click-through + DnD matrices`
 
 ### Test Results
 
@@ -208,6 +237,11 @@ Stopped early on 2026-05-19 14:48 PDT because no eligible G0 feature remained af
 - `pnpm --filter desktop build` -> PASS with Vite chunk-size warning
 - `test -f docs/reviews/window-ground-truth/click-through-matrix/README.md` -> PASS
 - `test -f docs/reviews/window-ground-truth/finder-dnd-path/README.md` -> PASS
+- `test -f docs/reviews/window-ground-truth/spaces-multimonitor-matrix/README.md` -> PASS
+- `test -f docs/reviews/window-ground-truth/mas-sandbox-dry-run/mas-sandbox-notes.md` -> PASS
+- `test -f packages/window-command-contract/docs/dev_log.md && test -f docs/workflow/roadmap/xai-g1-native-foundation.md` -> PASS
+- `test -f docs/planning/execution/host-residuals.md` -> PASS
+- Host residual `rg` scan -> PASS, 23 source references recorded
 
 ### Next Human Reading Order
 
@@ -215,3 +249,4 @@ Stopped early on 2026-05-19 14:48 PDT because no eligible G0 feature remained af
 2. `docs/workflow/roadmap/xai-v1.deferred-gates.md`
 3. `docs/workflow/roadmap/xai-v1.incidents.md`
 4. `docs/workflow/roadmap/xai-g0-window-spike.md`
+5. `docs/workflow/roadmap/xai-g1-native-foundation.md`

@@ -118,7 +118,7 @@
 - What was done instead: Limited G0.5 to documentation/matrix preparation only and preserved BLOCKED status for real runtime validation.
 - Later human action: Complete G0.3/G0.4 evidence, then perform G0.5 runtime validation.
 - Suggested verification command / environment: `sed -n '1,120p' docs/workflow/roadmap/xai-g0-window-spike.md`
-- Files/commits affected: docs/workflow/roadmap/xai-g0-window-spike.md; docs/workflow/roadmap/xai-v1.autorun-20260519.md; commit pending
+- Files/commits affected: docs/workflow/roadmap/xai-g0-window-spike.md; docs/workflow/roadmap/xai-v1.autorun-20260519.md; commit `2fb6bac`
 
 ## Entry 11
 
@@ -130,7 +130,7 @@
 - What was done instead: Created the evidence matrix template and avoided changing window behavior without live proof.
 - Later human action: Run `pnpm --filter desktop tauri dev`, perform the matrix, and attach logs/screenshots under `docs/reviews/window-ground-truth/spaces-multimonitor-matrix/`.
 - Suggested verification command / environment: `pnpm --filter desktop tauri dev` on macOS with built-in + external display, Mission Control, multiple Spaces, and fullscreen app.
-- Files/commits affected: docs/reviews/window-ground-truth/spaces-multimonitor-matrix/README.md; packages/spaces-multimonitor-matrix/docs/*; commit pending
+- Files/commits affected: docs/reviews/window-ground-truth/spaces-multimonitor-matrix/README.md; packages/spaces-multimonitor-matrix/docs/*; commit `2fb6bac`
 
 ## Entry 12
 
@@ -142,7 +142,7 @@
 - What was done instead: Limited G0.6 to documentation/risk-prep only and preserved BLOCKED status for real runtime validation.
 - Later human action: Complete G0.3/G0.4 evidence, then perform MAS/private-API validation.
 - Suggested verification command / environment: `sed -n '1,140p' docs/reviews/window-ground-truth/mas-sandbox-dry-run/mas-sandbox-notes.md`
-- Files/commits affected: docs/workflow/roadmap/xai-g0-window-spike.md; docs/workflow/roadmap/xai-v1.autorun-20260519.md; commit pending
+- Files/commits affected: docs/workflow/roadmap/xai-g0-window-spike.md; docs/workflow/roadmap/xai-v1.autorun-20260519.md; commit `071a192`
 
 ## Entry 13
 
@@ -154,7 +154,7 @@
 - What was done instead: Created MAS notes, entitlement draft, and risk matrix; avoided Tauri config/Cargo/capability changes.
 - Later human action: Run a `macOSPrivateApi=false` build and sandbox/signed validation, then update `mas-sandbox-notes.md`.
 - Suggested verification command / environment: Build/run desktop with private API disabled and sandbox entitlements on macOS; Apple Developer signing may be required for final evidence.
-- Files/commits affected: docs/reviews/window-ground-truth/mas-sandbox-dry-run/mas-sandbox-notes.md; packages/mas-sandbox-dry-run/docs/*; commit pending
+- Files/commits affected: docs/reviews/window-ground-truth/mas-sandbox-dry-run/mas-sandbox-notes.md; packages/mas-sandbox-dry-run/docs/*; commit `071a192`
 
 ## Entry 14
 
@@ -166,7 +166,7 @@
 - What was done instead: Created docs/contract safe prep only and marked the feature BLOCKED.
 - Later human action: Complete/review G0 evidence and decide Go/Conditional Go or fallback, then rerun feature-build for `window-command-contract`.
 - Suggested verification command / environment: Review `docs/workflow/roadmap/xai-g0-window-spike.md` and all G0 evidence folders before G1 implementation.
-- Files/commits affected: docs/workflow/roadmap/xai-g1-native-foundation.md; packages/window-command-contract/docs/*; commit pending
+- Files/commits affected: docs/workflow/roadmap/xai-g1-native-foundation.md; packages/window-command-contract/docs/*; commit `9c7b52f`
 
 ## Entry 15
 
@@ -178,4 +178,4 @@
 - What was done instead: Used a direct `rg` scan over `apps/desktop/src` and created an explicit file-by-file residual inventory.
 - Later human action: Review `docs/planning/execution/host-residuals.md` before starting G1.2/G1.6 cleanup implementation.
 - Suggested verification command / environment: `rg -n "AiCube|SettingsPanel|useSyncMenuBarStatus|OrganizerLayer|create-grid-request|useGridSystem" apps/desktop/src -g '*.{ts,tsx}'`
-- Files/commits affected: docs/planning/execution/host-residuals.md; packages/host-business-residuals/docs/*; commit pending
+- Files/commits affected: docs/planning/execution/host-residuals.md; packages/host-business-residuals/docs/*; commit `c6dbd77`
