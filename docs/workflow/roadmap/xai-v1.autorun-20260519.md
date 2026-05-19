@@ -13,14 +13,14 @@
 
 | Field | Value |
 |---|---|
-| Current Gate | G1 — native foundation (safe prep only); G0 static follow-up complete |
-| Gate Manifest | docs/workflow/roadmap/xai-g1-native-foundation.md; docs/workflow/roadmap/xai-g0-window-spike.md |
-| Current Feature | click-through-matrix / finder-dnd-path static-analysis follow-up |
-| Feature Source | docs/planning/execution/G0-window-spike.md §G0.3 and §G0.4 |
-| Feature Status | BLOCKED (partial static evidence complete; runtime evidence required) |
-| Current Commit | 7a1b9dd |
-| Tests | Matrix docs reviewed; static code findings recorded; runtime evidence still deferred |
-| Next Step | Human runtime evidence for G0.3/G0.4 before any G0 Go/Conditional Go decision; production G1 implementation still waits for G0 |
+| Current Gate | G0 — window spike |
+| Gate Manifest | docs/workflow/roadmap/xai-g0-window-spike.md |
+| Current Feature | grid-window-prototype |
+| Feature Source | docs/planning/execution/G0-window-spike.md §G0.2 |
+| Feature Status | BLOCKED (patched; human runtime confirmation required) |
+| Current Commit | 14e04c2 |
+| Tests | `pnpm --filter @repo/plugin-organizer check-types`; `pnpm --filter desktop build` |
+| Next Step | Restart `pnpm --filter desktop tauri dev`, click `+ New Grid`, confirm `create_grid_window` terminal log and visible native Grid window |
 
 ## Checkpoints
 
@@ -131,12 +131,24 @@
 - Follow-up commit: `7a1b9dd docs(G0.3/G0.4): fill static code analysis into click-through + DnD matrices`.
 - Status remains BLOCKED because the execution pack acceptance still requires real runtime evidence.
 
+### 2026-05-19 15:24 PDT — Bugfix Checkpoint: grid-window-prototype New Grid routing
+
+- User reported that clicking `+ New Grid` did not create a native Grid window.
+- Startup log showed main-window configuration but no `create_grid_window` Rust command log, so the failure was in the frontend request/sync path before Rust.
+- Patched ControlWindow to send `organizer:create-grid-request` directly to the `main` window with a `{ rect }` payload.
+- Patched OrganizerLayer to listen to the documented contract event, retain a legacy listener, and use Tauri v2 runtime detection instead of relying on `window.__TAURI__`.
+- Bugfix commit: `14e04c2 fix(grid-window): route new grid requests to main`.
+- Verification passed:
+  - `pnpm --filter @repo/plugin-organizer check-types`
+  - `pnpm --filter desktop build` (Vite chunk-size warning only)
+- Status: BLOCKED until human runtime confirmation proves the button now creates a native Grid window.
+
 ## Feature Outcomes
 
 | Feature | Gate | Status | Commit | Tests | Notes |
 |---|---|---|---|---|---|
 | window-ground-truth | G0 | READY_TO_SHIP | 3b571f6 | PASS: branch, sw_vers, README content | Deferred gates recorded in docs/workflow/roadmap/xai-v1.deferred-gates.md |
-| grid-window-prototype | G0 | READY_TO_SHIP | 6b121ea | PASS: plugin-organizer check-types; desktop build | Runtime Tauri alpha/beta evidence deferred. |
+| grid-window-prototype | G0 | BLOCKED | 6b121ea + 14e04c2 | PASS: plugin-organizer check-types; desktop build; BLOCKED: human New Grid runtime confirmation | User reported no native window; request routing/runtime detection patched. |
 | click-through-matrix | G0 | BLOCKED | 82ab268 + 7a1b9dd | PASS: matrix template and static analysis exist; BLOCKED: real hit-test evidence | Requires human macOS click-through matrix. |
 | finder-dnd-path | G0 | BLOCKED | 33627df + 7a1b9dd | PASS: matrix template and static analysis exist; BLOCKED: real Finder drop evidence | Requires human Finder/Tauri path matrix. |
 | spaces-multimonitor-matrix | G0 | BLOCKED | 2fb6bac | PASS: matrix template exists; BLOCKED: real Spaces/fullscreen/multi-display evidence | Reached by user override; safe prep only. |
@@ -172,7 +184,7 @@ Paused early on 2026-05-19 after the user override because no further production
 ### Completed Features
 
 - `window-ground-truth` — READY_TO_SHIP.
-- `grid-window-prototype` — READY_TO_SHIP.
+- `grid-window-prototype` — BLOCKED after bugfix pending human runtime confirmation.
 - `click-through-matrix` — BLOCKED after safe prep.
 - `finder-dnd-path` — BLOCKED after safe prep.
 - `spaces-multimonitor-matrix` — BLOCKED after safe prep.
@@ -183,13 +195,13 @@ Paused early on 2026-05-19 after the user override because no further production
 ### READY_TO_SHIP Features
 
 - `window-ground-truth`
-- `grid-window-prototype`
 - `host-business-residuals`
 
 ### BLOCKED Features
 
 - `click-through-matrix`
 - `finder-dnd-path`
+- `grid-window-prototype`
 - `spaces-multimonitor-matrix`
 - `mas-sandbox-dry-run`
 - `window-command-contract`
@@ -214,6 +226,7 @@ Paused early on 2026-05-19 after the user override because no further production
 - Incident 3: `spaces-multimonitor-matrix` cannot satisfy real Spaces/fullscreen/multi-display acceptance in unattended mode.
 - Incident 4: `mas-sandbox-dry-run` cannot satisfy sandbox/private-API acceptance in unattended mode.
 - Incident 5: `window-command-contract` production implementation is blocked until G0 is Go/Conditional Go.
+- Incident 6: `grid-window-prototype` `+ New Grid` did not create a native window; patched, but human runtime confirmation is required.
 
 ### Commits
 
@@ -228,6 +241,7 @@ Paused early on 2026-05-19 after the user override because no further production
 - `9c7b52f` — `docs(window-command-contract): block G1 prep on G0`
 - `c6dbd77` — `docs(host-business-residuals): audit Host business logic`
 - `7a1b9dd` — `docs(G0.3/G0.4): fill static code analysis into click-through + DnD matrices`
+- `14e04c2` — `fix(grid-window): route new grid requests to main`
 
 ### Test Results
 

@@ -49,3 +49,13 @@
 - Attempted fixes: Created G1.1 contract-planning docs and G1 manifest without touching production window command code.
 - Current status: BLOCKED.
 - Resume instruction: Complete G0 evidence and decide Go/Conditional Go, then rerun feature-build for `window-command-contract`.
+
+## Incident 6
+
+- Time: 2026-05-19 15:24 PDT
+- Feature: grid-window-prototype
+- Symptom: User reported clicking `+ New Grid` did not create a native Grid window; startup logs showed main-window configuration but no `create_grid_window` Rust command log.
+- Root cause if known: Likely frontend routing issue. `OrganizerLayer` enabled native window sync by checking `window.__TAURI__`, but this Tauri v2 app does not enable `withGlobalTauri`, so the global is absent even in the runtime. The control window also emitted the legacy unscoped `create-grid-request` event instead of the documented `organizer:create-grid-request` contract event.
+- Attempted fixes: Patched ControlWindow to `emitTo("main", "organizer:create-grid-request", { rect })`; patched OrganizerLayer to listen to the contract event, keep a legacy listener, and use Tauri v2 runtime detection via `isTauri()` / `__TAURI_INTERNALS__`; updated organizer API/design docs.
+- Current status: PATCHED in commit `14e04c2`; `pnpm --filter @repo/plugin-organizer check-types` and `pnpm --filter desktop build` pass. Human runtime confirmation is still required.
+- Resume instruction: Restart `pnpm --filter desktop tauri dev`, click `+ New Grid`, and confirm terminal output includes `🪟 Creating grid window:` followed by a visible native Grid window.

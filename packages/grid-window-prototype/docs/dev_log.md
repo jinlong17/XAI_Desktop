@@ -8,14 +8,14 @@
 | Target | grid-window-prototype |
 | Title | G0.2 alpha/beta Grid window prototype |
 | Roadmap | xai-g0-window-spike · feature #2 · G0.2 |
-| Status | READY_TO_SHIP |
-| Current Phase | FEATURE_VERIFY |
-| Suggested Next | ship |
+| Status | BLOCKED |
+| Current Phase | RUNTIME_VERIFY |
+| Suggested Next | human runtime verify `+ New Grid` |
 | Automation Mode | D-Codex |
 | Verify Cross-vendor | yes |
 | Executor | feature-verify (Codex inline) |
-| Updated | 2026-05-19 14:41 PDT |
-| Blockers | — |
+| Updated | 2026-05-19 15:24 PDT |
+| Blockers | Human runtime confirmation that `+ New Grid` creates a native Grid window |
 
 ## Phase Plan
 
@@ -67,6 +67,21 @@ Residual risks:
 - DevTools/log proof that alpha events are not delivered to beta remains deferred.
 - Independent cross-vendor verify is deferred in this serial unattended run.
 
+## Runtime Bugfix Follow-Up
+
+User report, 2026-05-19 15:24 PDT: clicking `+ New Grid` did not create a native Grid window.
+
+Patch:
+- Commit `14e04c2 fix(grid-window): route new grid requests to main`.
+- ControlWindow now sends `organizer:create-grid-request` directly to the `main` window with a `{ rect }` payload.
+- OrganizerLayer listens for the documented contract event, keeps a legacy fallback listener, and uses Tauri v2 runtime detection instead of relying on `window.__TAURI__`.
+
+Verification performed:
+- `pnpm --filter @repo/plugin-organizer check-types`: PASS.
+- `pnpm --filter desktop build`: PASS with Vite chunk-size warning only.
+
+Runtime status: BLOCKED until a human reruns `pnpm --filter desktop tauri dev`, clicks `+ New Grid`, and confirms a visible Grid window plus terminal `create_grid_window` log.
+
 ## Deferred Gates
 
 - Human ship for `window-ground-truth` is deferred; G0.2 is proceeding from local READY_TO_SHIP evidence only.
@@ -81,3 +96,4 @@ Residual risks:
 | 2026-05-19 14:38 PDT | feature-review (Codex inline) | Approved the G0.2 plan: existing command unchanged, bounded GridWindow fallback, no contract or persistence changes. | — | feature-build |
 | 2026-05-19 14:40 PDT | feature-build (Codex inline) | Phase 1: added GridWindow G0 fallback panel with window metadata and targeted scoped-event button; added manual evidence instructions. Tests passed: plugin-organizer check-types; desktop build (chunk-size warning only). | 6b121ea | feature-verify |
 | 2026-05-19 14:41 PDT | feature-verify (Codex inline) | Verified commit boundary, no command/contract/EventMap diff, reran plugin-organizer check-types and desktop build, and recorded runtime evidence as deferred. Status -> READY_TO_SHIP. | verify-status docs commit | ship |
+| 2026-05-19 15:24 PDT | bug-fix (Codex inline) | Patched `+ New Grid` request routing and Tauri runtime detection after user reported no native window. Automated checks pass; runtime confirmation still required. Status -> BLOCKED. | 14e04c2 | runtime verify |
