@@ -59,3 +59,27 @@
 - Later human action: Review `docs/reviews/grid-window-prototype/20260519-discovery-review.md` and `packages/grid-window-prototype/docs/dev_log.md` before treating G0.2 as externally reviewed.
 - Suggested verification command / environment: `sed -n '1,140p' packages/grid-window-prototype/docs/dev_log.md`
 - Files/commits affected: packages/grid-window-prototype/docs/dev_log.md; docs/workflow/roadmap/xai-v1.deferred-gates.md; commit pending
+
+## Entry 6
+
+- Feature: grid-window-prototype
+- Gate: G0
+- Deferred gate: Real Tauri alpha/beta window runtime evidence
+- Why deferred: The unattended run cannot open the desktop app, click Grid windows, or inspect per-window DevTools logs as a human.
+- Risk: Automated build checks prove the code compiles, but they do not prove two native windows are visible, independently closable, or that targeted events are not delivered cross-window at runtime.
+- What was done instead: Implemented the fallback panel and targeted `emitTo(windowLabel, ...)` path; reran typecheck/build; documented exact manual invocation and expected evidence.
+- Later human action: Run the app, invoke `create_grid_window` for `alpha` and `beta`, click each scoped-event button, and attach logs/screenshots under `docs/reviews/window-ground-truth/grid-window-prototype/`.
+- Suggested verification command / environment: `pnpm --filter desktop tauri dev`, then use the DevTools snippets in `docs/reviews/window-ground-truth/grid-window-prototype/README.md`.
+- Files/commits affected: `6b121ea`; apps/desktop/src/windows/GridWindow.tsx; docs/reviews/window-ground-truth/grid-window-prototype/README.md
+
+## Entry 7
+
+- Feature: grid-window-prototype
+- Gate: G0
+- Deferred gate: Cross-vendor feature-verify
+- Why deferred: The runtime override requires a serial Codex conductor with no spawn/bg dispatch, and no independent verifier is available in unattended mode.
+- Risk: The same executor implemented and verified a frontend/native-window spike.
+- What was done instead: Re-ran automated checks, inspected commit boundaries, and confirmed no command/contract/EventMap diff.
+- Later human action: Independently review commit `6b121ea` and rerun the manual Tauri evidence path.
+- Suggested verification command / environment: `git show --stat --oneline 6b121ea && pnpm --filter @repo/plugin-organizer check-types && pnpm --filter desktop build`
+- Files/commits affected: `6b121ea`; packages/grid-window-prototype/docs/dev_log.md; docs/workflow/roadmap/xai-g0-window-spike.md; docs/workflow/roadmap/xai-v1.autorun-20260519.md
