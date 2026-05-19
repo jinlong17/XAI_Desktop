@@ -15,7 +15,7 @@
 | # | Slug | Source | Depends On | Dep Semantics | Status | Automation Mode | Verify Cross-vendor | Last Run | Note |
 |---|------|--------|------------|---------------|--------|-----------------|---------------------|----------|------|
 | 1 | window-ground-truth | docs/planning/execution/G0-window-spike.md §G0.1 | — | — | READY_TO_SHIP | D-Codex | yes | 2026-05-19 | READY_TO_SHIP 2026-05-19 (Codex serial inline; build commit `3b571f6`) · G0.1 evidence anchor complete. Deferred gates recorded in docs/workflow/roadmap/xai-v1.deferred-gates.md |
-| 2 | grid-window-prototype | docs/planning/execution/G0-window-spike.md §G0.2 | window-ground-truth | shipped | PENDING | D-Codex | yes | — | W1 · Two Grid windows alpha/beta with scoped event evidence. |
+| 2 | grid-window-prototype | docs/planning/execution/G0-window-spike.md §G0.2 | window-ground-truth | ready_to_ship | IN_PROGRESS | D-Codex | yes | 2026-05-19 | W1 · Two Grid windows alpha/beta with scoped event evidence. Human ship for G0.1 deferred in unattended mode. |
 | 3 | click-through-matrix | docs/planning/execution/G0-window-spike.md §G0.3 | grid-window-prototype | shipped | PENDING | D-Codex | yes | — | W2 · Requires real macOS hit-test matrix; private API comparison. |
 | 4 | finder-dnd-path | docs/planning/execution/G0-window-spike.md §G0.4 | grid-window-prototype | shipped | PENDING | D-Codex | yes | — | W2 · Requires Finder drop path evidence for file/folder/App/alias. |
 | 5 | spaces-multimonitor-matrix | docs/planning/execution/G0-window-spike.md §G0.5 | click-through-matrix, finder-dnd-path | shipped | PENDING | D-Codex | yes | — | W3 · Requires Spaces/fullscreen/multi-display manual matrix. |

@@ -15,12 +15,12 @@
 |---|---|
 | Current Gate | G0 — window spike |
 | Gate Manifest | docs/workflow/roadmap/xai-g0-window-spike.md |
-| Current Feature | window-ground-truth |
-| Feature Source | docs/planning/execution/G0-window-spike.md §G0.1 |
-| Feature Status | READY_TO_SHIP |
-| Current Commit | 3b571f6 (build), current HEAD (verify-status docs) |
-| Tests | `git branch --show-current`; `sw_vers`; README content checks |
-| Next Step | Human ship for `window-ground-truth`, or continue G0 with deferred gates noted |
+| Current Feature | grid-window-prototype |
+| Feature Source | docs/planning/execution/G0-window-spike.md §G0.2 |
+| Feature Status | READY_FOR_VERIFY |
+| Current Commit | c3b29b0 |
+| Tests | `pnpm --filter @repo/plugin-organizer check-types`; `pnpm --filter desktop build` |
+| Next Step | feature-verify |
 
 ## Checkpoints
 
@@ -47,16 +47,35 @@
 - Status: READY_TO_SHIP.
 - Deferred gates recorded: manifest review, cross-vendor review, cross-vendor verify.
 
+### 2026-05-19 14:36 PDT — Next Feature: grid-window-prototype
+
+- Continuing within G0 because the execution pack is explicit and G0.2 can use the local READY_TO_SHIP evidence anchor from G0.1.
+- Human ship for `window-ground-truth` remains deferred; no `ship` or `push` was run.
+- Started Step 0 and feature-plan for `grid-window-prototype`.
+- Planned implementation avoids new Tauri commands and reuses existing `create_grid_window(gridId, rect)`.
+
+### 2026-05-19 14:46 PDT — Build Checkpoint: grid-window-prototype
+
+- Added G0 fallback panel to `GridWindow.tsx` for Grid windows with no Organizer state.
+- Fallback displays `gridId`, Tauri window label, rect/size, event count, and last scoped event.
+- Scoped event uses `emitTo(currentWindow.label, "g0-grid-prototype:scoped-ping", payload)` and includes `gridId`.
+- Added manual evidence instructions under `docs/reviews/window-ground-truth/grid-window-prototype/README.md`.
+- Tests passed:
+  - `pnpm --filter @repo/plugin-organizer check-types`
+  - `pnpm --filter desktop build` (Vite chunk-size warning only)
+
 ## Feature Outcomes
 
 | Feature | Gate | Status | Commit | Tests | Notes |
 |---|---|---|---|---|---|
 | window-ground-truth | G0 | READY_TO_SHIP | 3b571f6 | PASS: branch, sw_vers, README content | Deferred gates recorded in docs/workflow/roadmap/xai-v1.deferred-gates.md |
+| grid-window-prototype | G0 | READY_FOR_VERIFY | pending build commit | PASS: plugin-organizer check-types; desktop build | Runtime Tauri alpha/beta evidence deferred. |
 
 ## Deferred Gates Summary
 
 - Manifest review deferred for `xai-g0-window-spike`.
 - Cross-vendor review and verify deferred for `window-ground-truth`.
+- Human ship for `window-ground-truth` deferred while continuing local G0 tasks.
 
 ## Incidents Summary
 

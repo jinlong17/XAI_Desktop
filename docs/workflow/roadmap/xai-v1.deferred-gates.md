@@ -35,3 +35,27 @@
 - Later human action: Independently review commit `3b571f6` and the evidence README before shipping or using G0.1 as a reviewed base for higher-risk G0 tasks.
 - Suggested verification command / environment: `git show --stat --oneline 3b571f6 && git branch --show-current && sw_vers`
 - Files/commits affected: commit `3b571f6`; packages/window-ground-truth/docs/dev_log.md; docs/workflow/roadmap/xai-g0-window-spike.md; docs/workflow/roadmap/xai-v1.autorun-20260519.md
+
+## Entry 4
+
+- Feature: grid-window-prototype
+- Gate: G0
+- Deferred gate: Human ship of prerequisite `window-ground-truth`
+- Why deferred: The run is explicitly forbidden from running ship or pushing, but the 24h unattended goal requires continuing to the next eligible local G0 task when safe.
+- Risk: G0.2 proceeds from local `READY_TO_SHIP` evidence instead of a human-shipped prerequisite.
+- What was done instead: Limited G0.2 to the next explicit execution-pack task and changed only local dependency semantics for this row to `ready_to_ship`.
+- Later human action: Review and ship `window-ground-truth` before relying on G0.2 evidence outside this local spike branch.
+- Suggested verification command / environment: `git show --stat --oneline 3b571f6 c3b29b0 && sed -n '1,80p' docs/workflow/roadmap/xai-g0-window-spike.md`
+- Files/commits affected: docs/workflow/roadmap/xai-g0-window-spike.md; docs/workflow/roadmap/xai-v1.autorun-20260519.md; packages/grid-window-prototype/docs/dev_log.md; commit pending
+
+## Entry 5
+
+- Feature: grid-window-prototype
+- Gate: G0
+- Deferred gate: Cross-vendor feature-review
+- Why deferred: The runtime override requires a serial Codex conductor with no spawn/bg dispatch, and no independent reviewer is available in unattended mode.
+- Risk: The same executor planned and reviewed a frontend/native-window spike.
+- What was done instead: Performed an inline review focused on boundary control: no new Tauri command, no EventMap change, no Organizer persistence changes, and a visibly G0-only fallback.
+- Later human action: Review `docs/reviews/grid-window-prototype/20260519-discovery-review.md` and `packages/grid-window-prototype/docs/dev_log.md` before treating G0.2 as externally reviewed.
+- Suggested verification command / environment: `sed -n '1,140p' packages/grid-window-prototype/docs/dev_log.md`
+- Files/commits affected: packages/grid-window-prototype/docs/dev_log.md; docs/workflow/roadmap/xai-v1.deferred-gates.md; commit pending
