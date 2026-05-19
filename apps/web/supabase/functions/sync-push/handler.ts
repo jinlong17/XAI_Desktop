@@ -60,6 +60,7 @@ export interface ConflictShadowInput {
 
 export interface PushDatabase {
   transaction<T>(fn: () => Promise<T>): Promise<T>;
+  getKeyQuarantine?(accountId: string): Promise<{ currentDekKeyId: number; keyQuarantineAt: string | null } | undefined>;
   getMutationDedup(accountId: string, mutationId: string): Promise<PushRecordResult | undefined>;
   putMutationDedup(accountId: string, mutationId: string, result: PushRecordResult): Promise<void>;
   getCurrentBlob(
@@ -97,6 +98,19 @@ async function processPushRecord(
   }
 
   const proposedRevision = parseBigIntString(record.proposedRevision, 'proposedRevision');
+  const envelope = parseEnvelope(record.envelope);
+  const quarantine = await db.getKeyQuarantine?.(accountId);
+  if (quarantine?.keyQuarantineAt !== null && quarantine?.currentDekKeyId === envelope.keyId) {
+    const result: PushRecordResult = {
+      entityId: record.entityId,
+      mutationId: record.mutationId,
+      status: 'error',
+      errorCode: 'E3033',
+    };
+    await db.putMutationDedup(accountId, record.mutationId, result);
+    return result;
+  }
+
   const current = await db.getCurrentBlob(accountId, record.entityType, record.entityId);
   const currentRevision = current?.revision ?? 0n;
   const baseRevision =
@@ -113,7 +127,7 @@ async function processPushRecord(
     if (current) {
       await db.insertConflictShadow({
         accountId,
-        incoming: storedBlobFromRequest(accountId, record, proposedRevision, current.commitSeq),
+        incoming: storedBlobFromRequest(accountId, record, proposedRevision, current.commitSeq, envelope),
         winnerCommitSeq: current.commitSeq,
       });
     }
@@ -122,7 +136,7 @@ async function processPushRecord(
   }
 
   const commitSeq = await db.allocCommitSeq(accountId);
-  const blob = storedBlobFromRequest(accountId, record, proposedRevision, commitSeq);
+  const blob = storedBlobFromRequest(accountId, record, proposedRevision, commitSeq, envelope);
   await db.upsertBlob(blob);
 
   const result: PushRecordResult = {
@@ -141,8 +155,8 @@ function storedBlobFromRequest(
   record: PushRecordRequest,
   revision: bigint,
   commitSeq: bigint,
+  envelope = parseEnvelope(record.envelope),
 ): StoredBlob {
-  const envelope = parseEnvelope(record.envelope);
   return {
     accountId,
     entityType: record.entityType,

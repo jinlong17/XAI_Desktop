@@ -570,6 +570,36 @@
 - Next eligible candidates: #32 `rekey-two-phase`, #18 `onboarding-backfill-ui`. #37 remains blocked by #33 TLC/Java plus #32 pending.
 - Commit: pending `fix(protocol-integrity-integration-tests): clear lint warning`.
 
+### 2026-05-19 05:02 PDT — feature checkpoint: rekey-two-phase (#32)
+
+- Added `packages/plugin-account/src/rekey.ts` and exports.
+- Added `packages/plugin-account/tests/rekey.test.ts`.
+- Added `apps/web/supabase/migrations/20260519000010_rekey_two_phase.sql`.
+- Added `apps/web/supabase/tests/rekey.test.ts` and `web` script `test:rekey`.
+- Updated `/sync/push` core to reject quarantined current-key pushes as `E3033`.
+- Fixed nonce-ledger trigger behavior needed by rekey swap:
+  - table-specific `OLD.*` fields are now read only inside the matching table branch.
+  - encrypted blob UPDATE can consume a nonce already reserved by `staging_blobs`.
+- Local coverage:
+  - immediate key quarantine and staging key entry.
+  - E3033 old-key write rejection.
+  - E3028 mnemonic/proof gate before swap.
+  - preserved revision during staging/swap.
+  - old key retired, new key active, quarantine cleared after swap.
+  - old mnemonic rejected and new mnemonic accepted after swap.
+  - restart classification for init, staging 30%, staging 70%, before-swap, and after-swap.
+- Tests/checks passed:
+  - `pnpm --filter @repo/plugin-account test -- tests/rekey.test.ts`
+  - `pnpm --filter @repo/plugin-account check-types`
+  - `pnpm --filter @repo/plugin-account test`
+  - `pnpm --filter web test:rekey`
+  - `pnpm --filter web check-types`
+  - `pnpm --filter web test:nonce`
+  - `pnpm --filter web lint`
+- Incidents fixed: first `test:rekey` found a table-specific trigger field bug; second found the staging nonce reservation vs swap duplicate ledger issue.
+- Deferred: human review, cross-vendor verify, blocking mnemonic UI, real Tauri crypto commands, hosted service_role Edge wiring, process-level kill-9 rehearsals, and two-Mac/device-revocation E2E.
+- Commit: pending `feat(rekey-two-phase): add rekey orchestration core`.
+
 ### 2026-05-19 02:55 PDT — sweep checkpoint after next 4-feature loop
 
 - Completed next eligible loop: #7 `cipher-envelope-codec`, #6 `bip39-mnemonic-24w`, #11 `rust-keyvault-opaque-handle`, #12 `x25519-device-keypair`.

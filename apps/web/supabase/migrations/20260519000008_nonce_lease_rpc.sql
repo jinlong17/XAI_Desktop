@@ -112,29 +112,43 @@ SET search_path = public, pg_temp
 AS $$
 BEGIN
   IF TG_OP = 'UPDATE' THEN
-    IF TG_TABLE_NAME = 'encrypted_blobs'
-       AND OLD.key_id = NEW.key_id
-       AND OLD.encryption_device_id = NEW.encryption_device_id
-       AND OLD.counter = NEW.counter THEN
-      RETURN NEW;
-    END IF;
-
-    IF TG_TABLE_NAME = 'staging_blobs'
-       AND OLD.new_key_id = NEW.new_key_id
-       AND OLD.new_encryption_device_id = NEW.new_encryption_device_id
-       AND OLD.new_counter = NEW.new_counter THEN
-      RETURN NEW;
-    END IF;
-
-    IF TG_TABLE_NAME = 'encrypted_blobs_conflict_shadow'
-       AND OLD.loser_key_id = NEW.loser_key_id
-       AND OLD.loser_encryption_device_id = NEW.loser_encryption_device_id
-       AND OLD.loser_counter = NEW.loser_counter THEN
-      RETURN NEW;
+    IF TG_TABLE_NAME = 'encrypted_blobs' THEN
+      IF OLD.key_id = NEW.key_id
+         AND OLD.encryption_device_id = NEW.encryption_device_id
+         AND OLD.counter = NEW.counter THEN
+        RETURN NEW;
+      END IF;
+    ELSIF TG_TABLE_NAME = 'staging_blobs' THEN
+      IF OLD.new_key_id = NEW.new_key_id
+         AND OLD.new_encryption_device_id = NEW.new_encryption_device_id
+         AND OLD.new_counter = NEW.new_counter THEN
+        RETURN NEW;
+      END IF;
+    ELSIF TG_TABLE_NAME = 'encrypted_blobs_conflict_shadow' THEN
+      IF OLD.loser_key_id = NEW.loser_key_id
+         AND OLD.loser_encryption_device_id = NEW.loser_encryption_device_id
+         AND OLD.loser_counter = NEW.loser_counter THEN
+        RETURN NEW;
+      END IF;
     END IF;
   END IF;
 
   IF TG_TABLE_NAME = 'encrypted_blobs' THEN
+    -- Re-key swap moves a nonce already reserved by staging_blobs into the
+    -- active blob row. That is not reuse; it is the second phase of the same
+    -- nonce-consumption path.
+    IF TG_OP = 'UPDATE' AND EXISTS (
+      SELECT 1
+      FROM public.used_nonces
+      WHERE account_id = NEW.account_id
+        AND key_id = NEW.key_id
+        AND encryption_device_id = NEW.encryption_device_id
+        AND counter = NEW.counter
+        AND source = 'staging'
+    ) THEN
+      RETURN NEW;
+    END IF;
+
     INSERT INTO public.used_nonces (
       account_id, key_id, encryption_device_id, counter, source
     ) VALUES (

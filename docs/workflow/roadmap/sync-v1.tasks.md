@@ -61,7 +61,7 @@
 - [x] #35 rfc-test-vectors-gate (GAP-T3' / RFC 9106/8032/9180/8949)
 
 ### Week B — Re-key full chain + TLA+ + RLS fuzz + audit integrity
-- [ ] #32 rekey-two-phase (T-B1, kill-9 ×4)
+- [x] #32 rekey-two-phase (T-B1, kill-9 ×4)
 - [!] #33 tla-protocol-model (T-B2, ≥6 scenarios) — BLOCKED: TLC requires Java Runtime
 - [x] #34 rls-fuzz-property (T-B3, 1000u×100d)
 - [x] #36 audit-log-integrity (GAP-T1 / NEW R-10.26)

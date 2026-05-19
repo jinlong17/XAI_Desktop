@@ -35,6 +35,29 @@ export type {
 export { registerAccountPlugin } from './register-plugin';
 export { decodeDekMnemonic, encodeDekMnemonic } from './mnemonic';
 export {
+  KEY_QUARANTINED_ERROR,
+  REKEY_PROOF_ERROR,
+  assertCanPushWithKey,
+  assertRekeyProofGate,
+  beginRekey,
+  completeRekeySwap,
+  resumeRekeyAfterCrash,
+  stageRekeyBlobs,
+  validateCurrentMnemonic,
+} from './rekey';
+export type {
+  BeginRekeyInput,
+  RekeyAccountState,
+  RekeyBlobInput,
+  RekeyCrashPoint,
+  RekeyDeviceGrant,
+  RekeyKeyringEntry,
+  RekeyProofGate,
+  RekeySession,
+  RekeyStagedBlob,
+  RekeyTrigger,
+} from './rekey';
+export {
   createSyncStatusEmitter,
   runObservedSync,
 } from './sync-status';
