@@ -36,7 +36,7 @@
 | organizer:grid-close | Grid→Main | `{ gridId }` | Grid 窗口关闭 |
 | organizer:file-drop | Main→Grid | `{ gridId, files }` | 文件拖入 Grid |
 | organizer:grid-window-ready | Grid→Main | `{ gridId }` | Grid 窗口初始化完成 |
-| organizer:create-grid-request | Main→Rust | `{ rect }` | 请求创建新 Grid 窗口 |
+| organizer:create-grid-request | Control→Main | `{ rect }` | 请求主窗口创建 Grid 状态并同步原生 Grid 窗口 |
 
 ## 6. 依赖关系
 

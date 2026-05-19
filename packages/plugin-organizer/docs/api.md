@@ -41,8 +41,8 @@
 
 ### organizer:create-grid-request
 **Payload:** `{ rect: Rect }`
-**From:** Main window
-**To:** Rust backend (via Tauri invoke)
+**From:** Control window
+**To:** Main window OrganizerLayer; the main window creates grid state, then invokes Rust window commands during grid sync.
 
 ## Events (listen)
 

@@ -1,9 +1,12 @@
 import { useEffect, useMemo, useState } from "react";
-import { emit } from "@tauri-apps/api/event";
+import { emitTo } from "@tauri-apps/api/event";
 import { getCurrentWindow } from "@tauri-apps/api/window";
 import AiCube, { AnchorPosition } from "../components/AiAssistant/AiCube";
 import SettingsPanel from "../components/Settings/SettingsPanel";
 import { SettingsProvider } from "../context/SettingsContext";
+
+const CREATE_GRID_REQUEST_EVENT = "organizer:create-grid-request";
+const DEFAULT_GRID_SIZE = 220;
 
 function ControlWindowContent() {
   const [isPanelOpen, setIsPanelOpen] = useState(false);
@@ -15,7 +18,16 @@ function ControlWindowContent() {
 
   const handleCreateGrid = useMemo(
     () => (x: number, y: number) => {
-      emit("create-grid-request", { x, y });
+      emitTo("main", CREATE_GRID_REQUEST_EVENT, {
+        rect: {
+          x,
+          y,
+          width: DEFAULT_GRID_SIZE,
+          height: DEFAULT_GRID_SIZE,
+        },
+      }).catch((error) => {
+        console.error("Failed to request grid creation:", error);
+      });
     },
     [],
   );

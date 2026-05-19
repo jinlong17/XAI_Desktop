@@ -4,6 +4,21 @@ import { useGridSystem } from "./useGridSystem";
 import { useFileDrop, getFileInfoFromPath, getFileIcon } from "./hooks/useFileDrop";
 import { useMultiWindowGrids } from "./hooks/useMultiWindowGrids";
 import { listen } from "@tauri-apps/api/event";
+import { isTauri } from "@tauri-apps/api/core";
+
+const CREATE_GRID_REQUEST_EVENT = "organizer:create-grid-request";
+
+interface CreateGridRequestEvent {
+  rect?: {
+    x?: number;
+    y?: number;
+  };
+}
+
+function canUseTauriRuntime() {
+  if (typeof window === "undefined") return false;
+  return isTauri() || Boolean((window as Window & { __TAURI_INTERNALS__?: unknown }).__TAURI_INTERNALS__);
+}
 
 function OrganizerContent() {
   const {
@@ -17,8 +32,7 @@ function OrganizerContent() {
     findGridAtPosition,
   } = useGridSystem();
   const [isDraggingFile, setIsDraggingFile] = useState(false);
-  // Detect Tauri environment
-  const isTauri = typeof window !== "undefined" && "__TAURI__" in window;
+  const hasTauriRuntime = canUseTauriRuntime();
 
   // Handle file drop for a specific grid (from grid windows)
   const handleGridFileDrop = useCallback(
@@ -52,7 +66,7 @@ function OrganizerContent() {
     updateGrid,
     deleteGrid,
     handleGridFileDrop,
-    isTauri // Only enable in Tauri environment
+    hasTauriRuntime // Only enable native windows in the Tauri runtime
   );
 
   // Handle file drop on main window (creates new grid)
@@ -88,15 +102,21 @@ function OrganizerContent() {
     enabled: true,
   });
 
-  // Listen for create-grid requests from the control window
+  // Listen for create-grid requests from the control window.
   useEffect(() => {
-    const unlistenPromise = listen<{ x?: number; y?: number }>("create-grid-request", (event) => {
+    const unlistenPromise = listen<CreateGridRequestEvent>(CREATE_GRID_REQUEST_EVENT, (event) => {
+      const x = event.payload?.rect?.x ?? 64;
+      const y = event.payload?.rect?.y ?? 120;
+      createGrid(x, y);
+    });
+    const unlistenLegacyPromise = listen<{ x?: number; y?: number }>("create-grid-request", (event) => {
       const x = event.payload?.x ?? 64;
       const y = event.payload?.y ?? 120;
       createGrid(x, y);
     });
     return () => {
       unlistenPromise.then((unlisten) => unlisten());
+      unlistenLegacyPromise.then((unlisten) => unlisten());
     };
   }, [createGrid]);
 
@@ -137,7 +157,7 @@ function OrganizerContent() {
         </div>
       )}
 
-      {isTauri && gridCount > 0 && (
+      {hasTauriRuntime && gridCount > 0 && (
         <div
           style={{
             position: "fixed",
