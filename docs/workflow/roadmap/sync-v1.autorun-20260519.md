@@ -317,7 +317,25 @@
   - `pnpm --filter @repo/plugin-account check-types`
   - `pnpm --filter @repo/plugin-account test`
 - Deferred: real Tauri invoke wiring, SQLCipher-persistent outbox/entity schema, hosted `/sync/push` Edge Function, and network E2E.
-- Commit: pending `feat(sync-engine-push): add lazy push batch`.
+- Commit: `feat(sync-engine-push): add lazy push batch`.
+
+### 2026-05-19 03:59 PDT — feature checkpoint: sync-engine-pull (#27)
+
+- Extended `packages/plugin-account/src/sync-engine.ts` with PULL contracts.
+- Added `pullBatch()` using a single global `sinceCommitSeq` cursor and default limit 500.
+- Added `createSyncPullHttpTransport()` generating `GET /sync/pull?since_commit_seq=&limit=` without `entity_type`.
+- Added `applyServerRecords()` with FR-SY-68 H-6 classification:
+  - idempotent duplicate ignored
+  - same-revision key change with higher commit_seq accepted as legit re-encrypt
+  - old revision / ambiguous changed blob rejected as E3015
+  - account commit_seq rollback rejected as E3024
+- Extended `packages/plugin-account/tests/sync-engine.test.ts` and plugin-account docs.
+- Added docs anchor `packages/sync-engine-pull/docs/{design,api,test,dev_log}.md`; updated PLUGIN_MAP.
+- Tests/checks passed:
+  - `pnpm --filter @repo/plugin-account check-types`
+  - `pnpm --filter @repo/plugin-account test`
+- Deferred: hosted `/sync/pull`, real decrypt/apply routing, entity-specific SQLCipher tables, and Realtime-triggered pull scheduling.
+- Commit: pending `feat(sync-engine-pull): add global pull cursor`.
 
 ### 2026-05-19 02:55 PDT — sweep checkpoint after next 4-feature loop
 

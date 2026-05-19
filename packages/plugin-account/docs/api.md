@@ -47,9 +47,15 @@ See `packages/account-signup-login/docs/api.md` for the current local contract.
 The key invariant is that `masterPassword` and `secretKey` are accepted only by
 the injected crypto seam, while auth transport receives derived auth/check fields.
 
-## 7. Sync push engine
+## 7. Sync engine
 
-See `packages/sync-engine-push/docs/api.md` for the `createSyncOutbox`,
-`pushBatch`, `createSyncPushHttpTransport`, and UUIDv7 mutation-id contracts.
-The key invariant is that JS submits entity metadata and plaintext to the
+See `packages/sync-engine-push/docs/api.md` for the push-side
+`createSyncOutbox`, `pushBatch`, `createSyncPushHttpTransport`, and UUIDv7
+mutation-id contracts.
+
+See `packages/sync-engine-pull/docs/api.md` for pull-side
+`pullBatch`, `applyServerRecords`, global cursor, and rollback-classification
+contracts.
+
+The key push invariant is that JS submits entity metadata and plaintext to the
 injected crypto seam; Rust `crypto_encrypt_for` owns CBOR AAD construction.

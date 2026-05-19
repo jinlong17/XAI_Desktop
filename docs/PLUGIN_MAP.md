@@ -34,6 +34,7 @@
 | rls-policies-and-tests | packages/rls-policies-and-tests/ | Shipped | Wave W2 Phase 0.3: Docker-backed Vitest RLS harness plus shared active-device helper for Sync Supabase policies. Live Supabase verification deferred. | 2026-05-19 |
 | nonce-lease-server | packages/nonce-lease-server/ | Shipped | Wave W2 Phase 0.3: authenticated nonce lease RPC, used_nonces trigger ledger, and append-only nonce guard. Runtime Keychain/live gates deferred. | 2026-05-19 |
 | sync-engine-push | packages/sync-engine-push/ | Shipped | Wave W2 Phase 0.3: plugin-account plaintext outbox squash, lazy-encrypt pushBatch, UUIDv7 mutation IDs, and one-shot `/sync/push` transport seam. Runtime Edge/Tauri wiring deferred. | 2026-05-19 |
+| sync-engine-pull | packages/sync-engine-pull/ | Shipped | Wave W2 Phase 0.3: global commit_seq pull cursor, H-6 revision classification, and E3015/E3024 rollback guards. Runtime Edge/decrypt routing deferred. | 2026-05-19 |
 
 ---
 
