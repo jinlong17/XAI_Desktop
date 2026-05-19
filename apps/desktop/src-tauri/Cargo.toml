@@ -52,6 +52,7 @@ bip39         = { version = "=2.2.2",   optional = true }
 [features]
 # crypto — OFF by default.  Enable only in the future crypto consumption rows.
 # Exact-pinned optional deps are compiled only when this feature is active.
+keychain-it = []
 crypto = [
   "dep:argon2",
   "dep:aes-gcm",

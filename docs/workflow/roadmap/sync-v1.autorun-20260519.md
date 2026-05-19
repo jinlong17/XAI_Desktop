@@ -13,7 +13,7 @@
 - Current feature: `crypto-tauri-commands` (#19) shipped locally; next eligible feature is `onboarding-backfill-ui` (#18), `core-data-sqlite-driver` (#20), or non-crypto rows #21/#23/#25.
 - Completed this run: `kdf-primitives` (#3), `aes-gcm-aead-core` (#4), `deterministic-cbor-aad` (#5), `bip39-mnemonic-24w` (#6), `cipher-envelope-codec` (#7), `rust-keyvault-opaque-handle` (#11), `x25519-device-keypair` (#12), `hpke-per-device-wrap` (#13), `ed25519-recovery-signing` (#14), `sqlcipher-local-db` (#16), `account-signup-login` (#17), `crypto-tauri-commands` (#19) code/docs/tests locally complete with deferred gates.
 - Failed this run: no feature blocked; incidents recorded for command/script/import/fixture issues.
-- Next step: implement next eligible feature after committing #19, preferring `core-data-sqlite-driver` (#20) before UI-heavy #18.
+- Next step: implement next eligible feature, preferring `core-data-sqlite-driver` (#20) before UI-heavy #18.
 
 ## Checkpoints
 
@@ -201,6 +201,17 @@
   - `bash scripts/ci/check-exact-pins.sh`
 - Deferred: live account-state seeding, TS clients, real Tauri invoke from allowed packages, and malicious-plugin integration test.
 - Commit: `feat(crypto-tauri-commands): add crypto IPC handlers`.
+
+### 2026-05-19 03:24 PDT — run hygiene checkpoint
+
+- Added root `pnpm typecheck` alias to `pnpm check-types`, so the scheduled broader sweep no longer fails at script lookup.
+- Fixed existing `@repo/plugin-organizer` mock-data type error surfaced by the restored root typecheck command.
+- Declared the empty Cargo `keychain-it` feature to silence the known unexpected-cfg warning for gated Keychain integration tests.
+- Checks passed:
+  - `pnpm typecheck`
+  - `cargo check --manifest-path apps/desktop/src-tauri/Cargo.toml --features crypto --locked`
+  - `cargo test --manifest-path apps/desktop/src-tauri/Cargo.toml --features crypto crypto:: --locked`
+- Remaining non-blocking warnings: Rust dead-code warnings for unused sync/keychain variants/helpers in the current host build, and Next baseline-browser-mapping data age warnings.
 
 ### 2026-05-19 02:55 PDT — sweep checkpoint after next 4-feature loop
 
