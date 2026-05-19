@@ -173,6 +173,27 @@ Every phase completed in this run must append one `Work Log` entry with:
 
 One run of `feature-auto-build` may complete multiple phases, but each phase must remain an independent reviewable slice.
 
+## External Build Enforcement
+
+When `dev_log.md` has `Automation Mode = D-Codex`, `D-Cursor`, or
+`D-Codex+Cursor`, implementation is external-build-only:
+
+- `D-Codex`: every phase implementation MUST be delegated to `codex exec`.
+- `D-Cursor`: every phase implementation MUST be delegated to `cursor-agent`.
+- `D-Codex+Cursor`: every phase implementation MUST try `codex exec` first,
+  then `cursor-agent` if Codex is unavailable, quota-capped, times out, or
+  returns a non-zero/error result.
+- The Claude `feature-auto-build` host may read plans, prepare prompts, review
+  external diffs, run verification commands, update docs/status, and commit
+  status/documentation updates when required by the workflow.
+- The Claude host MUST NOT implement production code, tests, migrations, or
+  feature documentation content itself in D modes. If all configured external
+  executors fail for a phase, mark the phase `BLOCKED`, record the CLI failure
+  evidence in `dev_log.md`, and stop.
+- A Work Log entry for each phase must name the actual external executor used
+  (`codex exec` or `cursor-agent`) or the external-executor failure that caused
+  `BLOCKED`.
+
 1. Read the approved phase plan from `dev_log.md`.
 2. Build the actionable phase list:
    - if the user supplied explicit phases, run only those phases in order

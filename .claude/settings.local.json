@@ -40,7 +40,15 @@
       "Bash(npx tsc:*)",
       "Bash(npx vite:*)",
       "Bash(wc -l /Users/lijinlong/Desktop/AI_Desktop/XAI_Desktop/docs/guides/*.md /Users/lijinlong/Desktop/AI_Desktop/XAI_Desktop/docs/conventions/COMMIT_CONVENTION.md /Users/lijinlong/Desktop/AI_Desktop/XAI_Desktop/docs/workflow/SUBAGENT_WORKFLOW_V2.md)",
-      "Bash(git restore:*)"
+      "Bash(git restore:*)",
+      "Read(//Users/lijinlong/Desktop/AI_Sheet/Any2Knowledge_Agent_System/.teams/skills/**)",
+      "Read(//Users/lijinlong/Desktop/AI_Sheet/Any2Knowledge_Agent_System/**)",
+      "Bash(rm -rf /Users/lijinlong/Desktop/AI_Desktop/XAI_Desktop/docs/workflow/_portable/)",
+      "Bash(cp -R /Users/lijinlong/Desktop/AI_Sheet/Any2Knowledge_Agent_System/docs/workflow/_portable/ /Users/lijinlong/Desktop/AI_Desktop/XAI_Desktop/docs/workflow/_portable/)",
+      "Bash(sed -e 's|<feature_root>|packages|g' -e 's|<cowork_scripts_dir>|scripts/cowork|g' -e 's|<orchestrator_marker_dir>|/tmp/cw-orchestrator|g' -e 's|<quota_state_dir>|/tmp/cw-quota|g' -e 's|<skill_prefix>|xai-|g' docs/workflow/_portable/scripts/git-post-commit)",
+      "Bash(chmod +x scripts/cowork/git-post-commit)",
+      "Bash(python3 scripts/setup_subagents_v2.py --include-skills)",
+      "Bash(python3 /Users/lijinlong/Desktop/AI_Desktop/XAI_Desktop/scripts/lint/check_portable_sync.py)"
     ]
   }
 }
