@@ -1,0 +1,22 @@
+{
+  "name": "account",
+  "version": "0.1.0",
+  "displayName": "账户与同步",
+  "description": "Account login, logout and cross-device sync (scaffold). Planned status — no active functionality in wave-W0.",
+  "author": "Jinlong",
+  "enabled": false,
+  "contentTypes": [],
+  "windows": {},
+  "events": {
+    "emit": [
+      "account:logged-in",
+      "account:logged-out",
+      "account:sync-started",
+      "account:sync-completed",
+      "account:sync-failed"
+    ],
+    "listen": []
+  },
+  "dependencies": ["@repo/core"],
+  "tauriCommands": []
+}
