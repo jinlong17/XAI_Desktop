@@ -55,6 +55,18 @@ pub enum AppError {
 
     #[error("E3003: sync conflict")]
     SyncConflict,
+
+    #[error("E3004: sync capability denied: {0}")]
+    SyncCapabilityDenied(String),
+
+    #[error("E3005: sync invalid input: {0}")]
+    SyncInvalidInput(String),
+
+    #[error("E3010: sync crypto not initialized")]
+    SyncCryptoNotInitialized,
+
+    #[error("E3011: sync crypto operation failed: {0}")]
+    SyncCrypto(String),
     // E2xxx and E4xxx families are documented in api.md §3; not populated yet.
 }
 
@@ -69,50 +81,35 @@ mod tests {
     fn e1000_display_prefix() {
         let err = AppError::Internal("something bad".to_string());
         let s = err.to_string();
-        assert!(
-            s.starts_with("E1000:"),
-            "expected E1000: prefix, got: {s}"
-        );
+        assert!(s.starts_with("E1000:"), "expected E1000: prefix, got: {s}");
     }
 
     #[test]
     fn e3000_display_prefix() {
         let err = AppError::SyncNotInitialized;
         let s = err.to_string();
-        assert!(
-            s.starts_with("E3000:"),
-            "expected E3000: prefix, got: {s}"
-        );
+        assert!(s.starts_with("E3000:"), "expected E3000: prefix, got: {s}");
     }
 
     #[test]
     fn e3001_display_prefix() {
         let err = AppError::SyncAuthRequired;
         let s = err.to_string();
-        assert!(
-            s.starts_with("E3001:"),
-            "expected E3001: prefix, got: {s}"
-        );
+        assert!(s.starts_with("E3001:"), "expected E3001: prefix, got: {s}");
     }
 
     #[test]
     fn e3002_display_prefix() {
         let err = AppError::SyncTransport("timeout".to_string());
         let s = err.to_string();
-        assert!(
-            s.starts_with("E3002:"),
-            "expected E3002: prefix, got: {s}"
-        );
+        assert!(s.starts_with("E3002:"), "expected E3002: prefix, got: {s}");
     }
 
     #[test]
     fn e3003_display_prefix() {
         let err = AppError::SyncConflict;
         let s = err.to_string();
-        assert!(
-            s.starts_with("E3003:"),
-            "expected E3003: prefix, got: {s}"
-        );
+        assert!(s.starts_with("E3003:"), "expected E3003: prefix, got: {s}");
     }
 
     /// Advisory A2 compliance: confirms JS-parseable prefix contract is locked.
@@ -123,6 +120,10 @@ mod tests {
             (AppError::SyncAuthRequired, "E3001:"),
             (AppError::SyncTransport("x".into()), "E3002:"),
             (AppError::SyncConflict, "E3003:"),
+            (AppError::SyncCapabilityDenied("x".into()), "E3004:"),
+            (AppError::SyncInvalidInput("x".into()), "E3005:"),
+            (AppError::SyncCryptoNotInitialized, "E3010:"),
+            (AppError::SyncCrypto("x".into()), "E3011:"),
         ];
         for (err, expected_prefix) in cases {
             let s = err.to_string();
@@ -164,6 +165,10 @@ mod tests {
             (AppError::SyncAuthRequired, "E3001:"),
             (AppError::SyncTransport("x".into()), "E3002:"),
             (AppError::SyncConflict, "E3003:"),
+            (AppError::SyncCapabilityDenied("x".into()), "E3004:"),
+            (AppError::SyncInvalidInput("x".into()), "E3005:"),
+            (AppError::SyncCryptoNotInitialized, "E3010:"),
+            (AppError::SyncCrypto("x".into()), "E3011:"),
         ];
         for (err, expected_prefix) in cases {
             let s = err.to_string();
@@ -173,5 +178,4 @@ mod tests {
             );
         }
     }
-
 }

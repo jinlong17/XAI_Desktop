@@ -34,11 +34,16 @@ impl Default for GridWindowsState {
 pub fn run() {
     tauri::Builder::default()
         .plugin(tauri_plugin_opener::init())
+        .manage(commands::crypto::CryptoCommandState::default())
         .manage(GridWindowsState::default())
         .invoke_handler(tauri::generate_handler![
             commands::window::create_grid_window,
             commands::window::update_grid_window,
             commands::window::close_grid_window,
+            commands::crypto::crypto_encrypt_for,
+            commands::crypto::crypto_unwrap_dek_for_device,
+            commands::crypto::crypto_wrap_dek_for_devices,
+            commands::crypto::crypto_recovery_sign,
             commands::keychain::secret_set,
             commands::keychain::secret_get,
             commands::keychain::secret_del,

@@ -38,7 +38,7 @@ in `apps/desktop/src-tauri/src/crypto/mod.rs` (later row).
 
 ## 5. Manifest
 
-See `manifest.json` — `enabled: false`, `tauriCommands: []`, no components.
+See `manifest.json` — `enabled: false`, four `crypto_*` command declarations, no components.
 
 ## 6. Account orchestration
 

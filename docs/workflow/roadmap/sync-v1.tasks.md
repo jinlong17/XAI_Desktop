@@ -37,7 +37,7 @@
 - [x] #16 sqlcipher-local-db (T-11)
 - [x] #17 account-signup-login (T-09)
 - [ ] #18 onboarding-backfill-ui (FR-AC-09)
-- [ ] #19 crypto-tauri-commands (T-08 / §4.2 capability allowlist)
+- [x] #19 crypto-tauri-commands (T-08 / §4.2 capability allowlist)
 - [ ] #20 core-data-sqlite-driver (dev-plan §2)
 - [ ] #22 menubar-sync-status-icon (T-16)
 

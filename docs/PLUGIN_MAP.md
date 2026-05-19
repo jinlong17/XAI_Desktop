@@ -27,6 +27,7 @@
 | ed25519-recovery-signing | packages/ed25519-recovery-signing/ | Shipped | Wave W1 Phase 0.3: DEK-derived Ed25519 recovery proof signing over canonical CBOR transcript with strict verification. Deferred RFC-vector/runtime gates recorded in sync-v1 deferred gates. | 2026-05-19 |
 | sqlcipher-local-db | packages/sqlcipher-local-db/ | Shipped | Wave W1 Phase 0.3: SQLCipher local DB open/key path with KEK-derived db_key and raw-key injection guard. Deferred dump/CLI gates recorded in sync-v1 deferred gates. | 2026-05-19 |
 | account-signup-login | packages/account-signup-login/ | Shipped | Wave W1 Phase 0.3: plugin-account signup/login/refresh orchestration with local crypto/auth/keychain seams. Runtime Supabase/Tauri/Keychain gates recorded in sync-v1 deferred gates. | 2026-05-19 |
+| crypto-tauri-commands | packages/crypto-tauri-commands/ | Shipped | Wave W1 Phase 0.3: Tauri `crypto_*` command layer with Rust-built AAD, opaque KeyVault handles, and window allowlist. Runtime state/plugin identity gates recorded in sync-v1 deferred gates. | 2026-05-19 |
 
 ---
 

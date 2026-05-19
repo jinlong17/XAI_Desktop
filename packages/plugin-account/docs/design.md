@@ -45,12 +45,12 @@ apps/desktop/src/main.tsx
 
 1. `enabled: false` — plugin is still hidden from runtime UI; host skips disabled plugins in getAllEnabled().
 2. No components registered in wave-W0 (OverlayLayer, ControlWidget, etc. deferred).
-3. `tauriCommands: []` — no direct Tauri crypto commands yet; `src/account.ts`
-   consumes an injected `AccountCryptoClient` until #19 wires real commands.
+3. `tauriCommands` declares the four `crypto_*` commands; `src/account.ts`
+   still consumes an injected `AccountCryptoClient` until live runtime wiring is added.
 
 ## Deferred
 
 - Component implementations (login UI, sync status widget)
-- Tauri crypto command wiring
+- Live Tauri crypto command client wiring
 - SQLCipher `Repo` driver
 - REST transport driver

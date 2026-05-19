@@ -10,10 +10,10 @@
 
 ## Current State
 
-- Current feature: `account-signup-login` (#17) shipped locally; next eligible feature is `onboarding-backfill-ui` (#18), `crypto-tauri-commands` (#19), `core-data-sqlite-driver` (#20), or non-crypto rows #21/#23/#25.
-- Completed this run: `kdf-primitives` (#3), `aes-gcm-aead-core` (#4), `deterministic-cbor-aad` (#5), `bip39-mnemonic-24w` (#6), `cipher-envelope-codec` (#7), `rust-keyvault-opaque-handle` (#11), `x25519-device-keypair` (#12), `hpke-per-device-wrap` (#13), `ed25519-recovery-signing` (#14), `sqlcipher-local-db` (#16), `account-signup-login` (#17) code/docs/tests locally complete with deferred gates.
+- Current feature: `crypto-tauri-commands` (#19) shipped locally; next eligible feature is `onboarding-backfill-ui` (#18), `core-data-sqlite-driver` (#20), or non-crypto rows #21/#23/#25.
+- Completed this run: `kdf-primitives` (#3), `aes-gcm-aead-core` (#4), `deterministic-cbor-aad` (#5), `bip39-mnemonic-24w` (#6), `cipher-envelope-codec` (#7), `rust-keyvault-opaque-handle` (#11), `x25519-device-keypair` (#12), `hpke-per-device-wrap` (#13), `ed25519-recovery-signing` (#14), `sqlcipher-local-db` (#16), `account-signup-login` (#17), `crypto-tauri-commands` (#19) code/docs/tests locally complete with deferred gates.
 - Failed this run: no feature blocked; incidents recorded for command/script/import/fixture issues.
-- Next step: implement next eligible feature after committing #17, preferring `crypto-tauri-commands` (#19) or `core-data-sqlite-driver` (#20) before UI-heavy #18.
+- Next step: implement next eligible feature after committing #19, preferring `core-data-sqlite-driver` (#20) before UI-heavy #18.
 
 ## Checkpoints
 
@@ -184,6 +184,23 @@
 - Corrected initial Vitest fixture that embedded raw secret text in a mocked derived auth password.
 - Deferred: real Supabase E2E, Tauri crypto command wiring, signed-build Keychain ACL verification, and refresh-failure UI.
 - Commit: `feat(account-signup-login): add account auth orchestration`.
+
+### 2026-05-19 03:20 PDT — feature checkpoint: crypto-tauri-commands (#19)
+
+- Implemented `apps/desktop/src-tauri/src/commands/crypto.rs`.
+- Registered `crypto_encrypt_for`, `crypto_wrap_dek_for_devices`, `crypto_unwrap_dek_for_device`, and `crypto_recovery_sign` in `lib.rs`.
+- Added `CryptoCommandState` with default-build stubs and `crypto` feature real paths through KeyVault, envelope, deterministic AAD, HPKE wrap/open, and recovery signing.
+- Added window-label allowlist rejecting non-account/control windows before crypto state access.
+- Added `plugin-account-crypto` capability marker and declared all four `crypto_*` commands in `packages/plugin-account/manifest.json`.
+- Added docs anchor `packages/crypto-tauri-commands/docs/{design,api,test,dev_log}.md` and updated PLUGIN_MAP/plugin-account docs.
+- Tests/checks passed:
+  - `cargo check --manifest-path apps/desktop/src-tauri/Cargo.toml --locked`
+  - `cargo check --manifest-path apps/desktop/src-tauri/Cargo.toml --features crypto --locked`
+  - `cargo test --manifest-path apps/desktop/src-tauri/Cargo.toml --features crypto commands::crypto::tests -- --nocapture`
+  - `cargo test --manifest-path apps/desktop/src-tauri/Cargo.toml --features crypto error::tests -- --nocapture`
+  - `bash scripts/ci/check-exact-pins.sh`
+- Deferred: live account-state seeding, TS clients, real Tauri invoke from allowed packages, and malicious-plugin integration test.
+- Commit: `feat(crypto-tauri-commands): add crypto IPC handlers`.
 
 ### 2026-05-19 02:55 PDT — sweep checkpoint after next 4-feature loop
 
