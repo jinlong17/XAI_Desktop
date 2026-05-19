@@ -19,7 +19,7 @@ const DEBUG_CLEAR_ON_STARTUP = false;
 interface GridSystemContextValue {
   grids: GridBox[];
   items: Record<string, DesktopItem>;
-  createGrid: (x: number, y: number) => void;
+  createGrid: (x: number, y: number, requestedId?: string) => string;
   updateGrid: (id: string, patch: Partial<GridBox>) => void;
   toggleFold: (id: string) => void;
   deleteGrid: (id: string) => void;
@@ -86,13 +86,14 @@ export function GridSystemProvider({ children }: { children: ReactNode }) {
   }, []);
 
   const createGrid = useCallback(
-    (x: number, y: number) => {
-      const id = toId();
+    (x: number, y: number, requestedId?: string) => {
+      const id = requestedId ?? toId();
       const base = defaultGrid(id, x, y);
 
       // Create empty grid - no mock data
       const nextGrid: GridBox = { ...base, itemIds: [] };
-      setGrids((prev) => [...prev, nextGrid]);
+      setGrids((prev) => (prev.some((grid) => grid.id === id) ? prev : [...prev, nextGrid]));
+      return id;
     },
     [],
   );

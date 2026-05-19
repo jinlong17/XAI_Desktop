@@ -9,6 +9,7 @@ import { isTauri } from "@tauri-apps/api/core";
 const CREATE_GRID_REQUEST_EVENT = "organizer:create-grid-request";
 
 interface CreateGridRequestEvent {
+  gridId?: string;
   rect?: {
     x?: number;
     y?: number;
@@ -107,7 +108,7 @@ function OrganizerContent() {
     const unlistenPromise = listen<CreateGridRequestEvent>(CREATE_GRID_REQUEST_EVENT, (event) => {
       const x = event.payload?.rect?.x ?? 64;
       const y = event.payload?.rect?.y ?? 120;
-      createGrid(x, y);
+      createGrid(x, y, event.payload?.gridId);
     });
     const unlistenLegacyPromise = listen<{ x?: number; y?: number }>("create-grid-request", (event) => {
       const x = event.payload?.x ?? 64;

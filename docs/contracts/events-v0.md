@@ -42,7 +42,7 @@
 | `organizer:grid:ready` | `{ gridId: string }` | Grid shell | organizer,host |
 | `organizer:grid:update` | `{ gridId: string; changes: Partial<GridBox> }` | organizer | host |
 | `organizer:grid:close` | `{ gridId: string }` | host/organizer | host/organizer |
-| `organizer:grid:create-request` | `{ rect: Rect; source?: "control" \| "shortcut" }` | control | host |
+| `organizer:grid:create-request` | `{ gridId?: string; rect: Rect; source?: "control" \| "shortcut" }` | control | host |
 | `organizer:file:drop` | `{ gridId: string; files: DroppedFile[] }` | grid/native | organizer |
 | `organizer:item:selected` | `{ gridId: string; itemId: string }` | organizer | console/ai |
 
@@ -98,6 +98,7 @@ AI events only reference drafts. Persisting generated content requires user conf
 - `useEventListener<K extends keyof EventMap>(name: K, handler: ...)` 是 React listener 入口。
 - EventMap breaking change 必须更新本文件。
 - 未登记 event 不允许进入 production code。
+- Current desktop compatibility alias: `organizer:create-grid-request` carries `{ gridId?: string; rect: Rect }` until the implementation fully migrates to `organizer:grid:create-request`.
 
 ## 5. 测试
 

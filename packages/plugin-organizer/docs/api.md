@@ -40,9 +40,9 @@
 **To:** Main window
 
 ### organizer:create-grid-request
-**Payload:** `{ rect: Rect }`
+**Payload:** `{ gridId?: string; rect: Rect }`
 **From:** Control window
-**To:** Main window OrganizerLayer; the main window creates grid state, then invokes Rust window commands during grid sync.
+**To:** Main window OrganizerLayer; the main window creates grid state with the provided `gridId` when present, then invokes Rust window commands during grid sync. The control window may also invoke `create_grid_window` directly with the same `gridId` as a no-duplicate fallback.
 
 ## Events (listen)
 

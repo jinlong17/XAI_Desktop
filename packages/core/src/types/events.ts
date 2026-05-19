@@ -7,7 +7,7 @@ export interface EventMap {
   'organizer:grid-close': { gridId: string };
   'organizer:file-drop': { gridId: string; files: string[] };
   'organizer:grid-window-ready': { gridId: string };
-  'organizer:create-grid-request': { rect: Rect };
+  'organizer:create-grid-request': { gridId?: string; rect: Rect };
 
   // Global app events
   'app:interactive-mode-changed': { interactive: boolean };

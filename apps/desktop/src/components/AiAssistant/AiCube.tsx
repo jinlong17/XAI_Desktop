@@ -1,13 +1,31 @@
-import { CSSProperties, useEffect, useMemo, useRef, useState } from "react";
+import {
+  CSSProperties,
+  PointerEvent as ReactPointerEvent,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from "react";
+import { cursorPosition, getCurrentWindow, PhysicalPosition } from "@tauri-apps/api/window";
 import Draggable, { DraggableData, DraggableEvent } from "react-draggable";
 import { useSettings } from "../../context/SettingsContext";
 
 type DockSide = "left" | "right" | null;
 
+interface NativeDragState {
+  pointerId: number;
+  startCursorX: number;
+  startCursorY: number;
+  startWindowX: number;
+  startWindowY: number;
+  dragging: boolean;
+}
+
 export interface AiCubeProps {
   isPanelOpen: boolean;
   onTogglePanel: () => void;
   onAnchorChange?: (position: { x: number; y: number }) => void;
+  nativeWindowDrag?: boolean;
 }
 
 export interface AnchorPosition {
@@ -16,6 +34,8 @@ export interface AnchorPosition {
 }
 
 const EDGE_THRESHOLD = 64;
+const NATIVE_CUBE_POSITION: AnchorPosition = { x: 24, y: 24 };
+const DRAG_THRESHOLD_PX = 4;
 
 export const MOCK_DATA = [
   { title: "Quick Capture", hint: "Drop a note to Sticky plugin" },
@@ -33,9 +53,10 @@ export const MOCK_DATA = [
  * - Pointer-events are `auto` here to keep the canvas click-through by default.
  * - Docking leaves a visible tab and hovers slide the cube back onto the screen.
  */
-export function AiCube({ isPanelOpen, onTogglePanel, onAnchorChange }: AiCubeProps) {
+export function AiCube({ isPanelOpen, onTogglePanel, onAnchorChange, nativeWindowDrag = false }: AiCubeProps) {
   const { cubeOpacity, cubeSize, cubeFontSize, cubeColor, cubeTextColor } = useSettings();
   const nodeRef = useRef<HTMLDivElement | null>(null);
+  const nativeDragRef = useRef<NativeDragState | null>(null);
   const [position, setPosition] = useState<AnchorPosition>({ x: 32, y: 120 });
   const [dockedSide, setDockedSide] = useState<DockSide>(null);
   const [isHovering, setIsHovering] = useState(false);
@@ -78,8 +99,8 @@ export function AiCube({ isPanelOpen, onTogglePanel, onAnchorChange }: AiCubePro
   };
 
   const renderPosition = useMemo(
-    () => resolveDockedPosition(position),
-    [dockedSide, isHovering, position, cubeSize],
+    () => (nativeWindowDrag ? NATIVE_CUBE_POSITION : resolveDockedPosition(position)),
+    [dockedSide, isHovering, nativeWindowDrag, position, cubeSize],
   );
 
   const textColor = useMemo(() => {
@@ -97,6 +118,9 @@ export function AiCube({ isPanelOpen, onTogglePanel, onAnchorChange }: AiCubePro
   const cubeStyle = useMemo<CSSProperties>(
     () => ({
       pointerEvents: "auto",
+      position: nativeWindowDrag ? "absolute" : undefined,
+      left: nativeWindowDrag ? renderPosition.x : undefined,
+      top: nativeWindowDrag ? renderPosition.y : undefined,
       width: cubeSize,
       height: cubeSize,
       fontSize: cubeFontSize,
@@ -109,8 +133,19 @@ export function AiCube({ isPanelOpen, onTogglePanel, onAnchorChange }: AiCubePro
       boxShadow:
         "0 10px 40px rgba(0,0,0,0.35), inset 0 1px 1px rgba(255,255,255,0.4)",
       border: "1px solid rgba(255,255,255,0.28)",
+      touchAction: "none",
     }),
-    [cubeFontSize, cubeOpacity, cubeColor, cubeSize, isHovering, textColor],
+    [
+      cubeFontSize,
+      cubeOpacity,
+      cubeColor,
+      cubeSize,
+      isHovering,
+      nativeWindowDrag,
+      renderPosition.x,
+      renderPosition.y,
+      textColor,
+    ],
   );
 
   useEffect(() => {
@@ -119,26 +154,105 @@ export function AiCube({ isPanelOpen, onTogglePanel, onAnchorChange }: AiCubePro
     }
   }, [onAnchorChange, renderPosition]);
 
+  const handleNativePointerDown = async (event: ReactPointerEvent<HTMLDivElement>) => {
+    if (!nativeWindowDrag || event.button !== 0) return;
+
+    event.preventDefault();
+    event.currentTarget.setPointerCapture(event.pointerId);
+
+    try {
+      const [cursor, windowPosition] = await Promise.all([
+        cursorPosition(),
+        getCurrentWindow().outerPosition(),
+      ]);
+      nativeDragRef.current = {
+        pointerId: event.pointerId,
+        startCursorX: cursor.x,
+        startCursorY: cursor.y,
+        startWindowX: windowPosition.x,
+        startWindowY: windowPosition.y,
+        dragging: false,
+      };
+    } catch (error) {
+      nativeDragRef.current = null;
+      console.error("Failed to start AI cube native drag:", error);
+    }
+  };
+
+  const handleNativePointerMove = async (event: ReactPointerEvent<HTMLDivElement>) => {
+    const drag = nativeDragRef.current;
+    if (!nativeWindowDrag || !drag || drag.pointerId !== event.pointerId) return;
+
+    event.preventDefault();
+
+    try {
+      const cursor = await cursorPosition();
+      const deltaX = cursor.x - drag.startCursorX;
+      const deltaY = cursor.y - drag.startCursorY;
+      if (!drag.dragging && Math.hypot(deltaX, deltaY) >= DRAG_THRESHOLD_PX) {
+        drag.dragging = true;
+      }
+      if (!drag.dragging) return;
+
+      await getCurrentWindow().setPosition(
+        new PhysicalPosition(drag.startWindowX + deltaX, drag.startWindowY + deltaY),
+      );
+    } catch (error) {
+      console.error("Failed to move AI cube native window:", error);
+    }
+  };
+
+  const handleNativePointerUp = (event: ReactPointerEvent<HTMLDivElement>) => {
+    const drag = nativeDragRef.current;
+    if (!nativeWindowDrag || !drag || drag.pointerId !== event.pointerId) return;
+
+    event.preventDefault();
+    if (event.currentTarget.hasPointerCapture(event.pointerId)) {
+      event.currentTarget.releasePointerCapture(event.pointerId);
+    }
+    nativeDragRef.current = null;
+
+    if (!drag.dragging) {
+      onTogglePanel();
+    }
+  };
+
+  const cube = (
+    <div
+      ref={nodeRef}
+      className="ai-cube"
+      style={cubeStyle}
+      onMouseEnter={() => setIsHovering(true)}
+      onMouseLeave={() => setIsHovering(false)}
+      onPointerDown={nativeWindowDrag ? handleNativePointerDown : undefined}
+      onPointerMove={nativeWindowDrag ? handleNativePointerMove : undefined}
+      onPointerUp={nativeWindowDrag ? handleNativePointerUp : undefined}
+      onPointerCancel={nativeWindowDrag ? handleNativePointerUp : undefined}
+      onClick={nativeWindowDrag ? undefined : onTogglePanel}
+      role="button"
+      aria-pressed={isPanelOpen}
+      title={hoverHint}
+    >
+      {dockedSide && !nativeWindowDrag && (
+        <span
+          className={`ai-cube__tab ${
+            dockedSide === "left" ? "ai-cube__tab--left" : "ai-cube__tab--right"
+          }`}
+        />
+      )}
+      <span className="ai-cube__glyph">AI</span>
+    </div>
+  );
+
   return (
     <div className="assistant-layer">
-      <Draggable nodeRef={nodeRef} position={renderPosition} onStop={handleStop} onDrag={handleDrag}>
-        <div
-          ref={nodeRef}
-          className="ai-cube"
-          style={cubeStyle}
-          onMouseEnter={() => setIsHovering(true)}
-          onMouseLeave={() => setIsHovering(false)}
-          onClick={onTogglePanel}
-          role="button"
-          aria-pressed={isPanelOpen}
-          title={hoverHint}
-        >
-          {dockedSide && (
-            <span className={`ai-cube__tab ${dockedSide === "left" ? "ai-cube__tab--left" : "ai-cube__tab--right"}`} />
-          )}
-          <span className="ai-cube__glyph">AI</span>
-        </div>
-      </Draggable>
+      {nativeWindowDrag ? (
+        cube
+      ) : (
+        <Draggable nodeRef={nodeRef} position={renderPosition} onStop={handleStop} onDrag={handleDrag}>
+          {cube}
+        </Draggable>
+      )}
     </div>
   );
 }
