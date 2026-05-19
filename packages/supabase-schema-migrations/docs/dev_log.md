@@ -13,13 +13,13 @@
 | Target | supabase-schema-migrations |
 | Title | Sync v1 Postgres schema + RLS as versioned Supabase migrations (PRD §6.1/§6.2) |
 | Roadmap | sync-v1 · feature #15 · wave W1 · Phase 0.3 · dev-plan T-02 |
-| Status | READY_FOR_VERIFY |
+| Status | READY_TO_SHIP |
 | Current Phase | FEATURE_VERIFY |
-| Suggested Next | feature-verify |
+| Suggested Next | ship |
 | Automation Mode | D-Codex+Cursor |
 | Verify Cross-vendor | no |
-| Executor | feature-auto-build (claude-sonnet-4-6) |
-| Updated | 2026-05-19 14:00 |
+| Executor | feature-verify (claude-opus-4-7) |
+| Updated | 2026-05-19 17:05 |
 
 ## Phase Plan
 
@@ -108,6 +108,35 @@ Non-blocking recommendations (carry into feature-build, NOT REVISE-worthy):
 
 > **Recovery transcription:** feature-review returned APPROVED but the current `feature-review` agent config is read-only (`tools: Read, Glob, Grep`) and could not write the Status Panel. Verdict transcribed by the roadmap conductor under explicit one-time user authorization after reading the full feature-review return. NOT a normal path — `feature-review` agent config must be fixed so it can write APPROVED itself (see Work Log).
 
+## Verify Notes
+
+**PASS — READY_TO_SHIP** (feature-verify independent verdict, claude-opus-4-7, 2026-05-19).
+
+Independent re-verification against live PRD docs/planning/sub-prds/sync/PRD.md v0.6-DRAFT §6.1/§6.2 and the actual committed migration SQL, with a real Postgres apply.
+
+Apply path: psql fallback (Docker postgres:16-alpine, PostgreSQL 16.14, ON_ERROR_STOP=1) — Supabase CLI unavailable in this environment; canonical `supabase db reset` documented in test.md §1 was therefore not exercised. Local-only auth shim used to satisfy auth.uid()/auth.jwt() references; shim is NOT committed inside apps/web/supabase/migrations/ (confirmed). Path is acceptance-equivalent per test.md §1.1.
+
+Evidence / AC results:
+- AC-1: all 6 migrations apply in lexicographic order, rc=0; `\d` consistent after each file (AC-11 H-8 order, AC-12 incremental consistency, no dangling FK — all PASS).
+- AC-2: sync_entity_type ENUM = exactly 19 labels, verbatim vs PRD 802–807.
+- AC-3: all 13 §6.1 + v0.5/v0.6 tables present.
+- AC-4: used_nonces PK = (account_id,key_id,encryption_device_id,counter).
+- AC-5: counter CHECK ((counter >= 0) AND (counter <= 4294967295)).
+- AC-6: no_lease_overlap EXCLUDE USING gist (... int8range(lease_start,lease_end,'[]') WITH &&); btree_gist created Phase 1 before Phase 4 use.
+- AC-7: uniq_encrypted_blobs_nonce UNIQUE (account_id,key_id,encryption_device_id,counter) WHERE (hard_deleted = false).
+- AC-8: fk_dek_wraps_device FK device_dek_wraps.device_id → sync_devices(device_id) ON DELETE CASCADE, ALTERed after sync_devices (H-3 honored).
+- AC-9: fn_alloc_commit_seq prosecdef=true; has_function_privilege(public,...,execute)=false (REVOKE ALL FROM PUBLIC effective).
+- AC-10: 12 tables RLS-enabled (nonce_lease enabled Phase 4, not re-enabled Phase 6); 11 named §6.2 policies present matching api.md §1.5.
+- NEG-1 (nonce reuse) → used_nonces_pkey violation; NEG-2 (counter=4294967296) → used_nonces_counter_check violation; NEG-3 (overlapping lease) → no_lease_overlap exclusion violation; NEG-4 (invalid ENUM) → invalid input value for enum sync_entity_type. All four fail exactly as designed.
+
+DDL is a faithful verbatim transcription of live PRD §6.1/§6.2 (ENUM, fn_alloc_commit_seq H-13 UUID hi/lo split, all tables/indexes/constraints) — no drift detected. T1.1 / STRIDE-Tampering / TB-7 binding present in design.md §Threat Model and structurally reflected in the schema (immutable used_nonces ledger, counter bound, EXCLUDE gist, partial unique).
+
+Code boundary: clean — build commits touch only apps/web/supabase/migrations/ (6 SQL files) + packages/supabase-schema-migrations/docs/dev_log.md; no plugin/Host/Rust; no _local_auth_shim.sql inside migrations/; remote deploy correctly scoped OUT as a blocked-by-#9 Note (no remote/cloud deploy attempted). Commit hygiene: each phase is one focused single-file commit; messages follow type(scope): summary per COMMIT_CONVENTION.
+
+Residual (non-blocking): canonical `supabase db reset` not exercised (Supabase CLI absent in this env) — psql fallback used, acceptance-equivalent; re-run `supabase db reset` once #9 (supabase-project-provisioning) unblocks, before any remote deploy. Remote deploy itself is scoped OUT (blocked-by-#9 Note, not a hard edge).
+
+> **Recovery transcription:** feature-verify returned PASS/READY_TO_SHIP but the current feature-verify agent config is read-only (tools: Read, Bash, Glob, Grep) and could not write the Status Panel. Verdict transcribed mechanically by the roadmap conductor under explicit one-time user authorization after reading the full feature-verify return. NOT a normal path — follow-up required: fix the feature-verify agent config (tools: grant) so it can write its own verdict; until then the read-only-verifier hard-block recurs every feature (same defect as feature-review).
+
 ## Iterations
 
 (none — initial Fresh plan)
@@ -124,3 +153,4 @@ Non-blocking recommendations (carry into feature-build, NOT REVISE-worthy):
 | 2026-05-19 14:00 | feature-auto-build (claude-sonnet-4-6) | Phase 4 DONE: Created `20260519000004_lease_dedup_progress.sql` — mutation_dedup + idx_mutation_dedup_gc, nonce_lease + lease_start/end CHECKs + no_lease_overlap EXCLUDE USING gist + RLS-enable (no client policy) + idx_nonce_lease_lookup, device_sync_progress, sync_audit_log + idx_audit_account_at, sync_quota. btree_gist (Phase 1) confirmed present before EXCLUDE. AC-1 (files 1-4), AC-6 (EXCLUDE gist contains '&&') PASS. NEG-3 (overlapping leases → EXCLUDE error) PASS. | `84eaafb` | Phase 5 |
 | 2026-05-19 14:00 | feature-auto-build (claude-sonnet-4-6) | Phase 5 DONE: Created `20260519000005_commit_seq_rpc.sql` — fn_alloc_commit_seq(UUID) SECURITY DEFINER SET search_path=public, pg_advisory_xact_lock UUID hi/lo split (H-13), nextval + UPDATE + RAISE EXCEPTION on regression; REVOKE ALL FROM PUBLIC. AC-1 (files 1-5), AC-9 (prosecdef=true, has_function_privilege(public, execute)=false) PASS. | `2cd8c72` | Phase 6 |
 | 2026-05-19 14:00 | feature-auto-build (claude-sonnet-4-6) | Phase 6 DONE + full acceptance sweep: Created `20260519000006_rls_policies.sql` — ENABLE RLS on 11 tables (nonce_lease already enabled Phase 4, omitted here), 11 named §6.2 policies verbatim from PRD. Full sweep: AC-1 (all 6 files, exit 0), AC-2 (ENUM 19), AC-3 (13 tables), AC-4 (PK 4-tuple), AC-5 (counter CHECK), AC-6 (EXCLUDE gist), AC-7 (partial unique), AC-8 (fk_dek_wraps_device), AC-9 (prosecdef + PUBLIC revoked), AC-10 (12 tables RLS-enabled, 11 named policies), AC-11/AC-12 (incremental apply + no dangling FKs) — all PASS. NEG-1..NEG-4 all PASS. Apply path: psql fallback (Docker postgres:15-alpine + local auth shim); canonical path (supabase db reset) deferred to feature-verify with Supabase CLI. Status→READY_FOR_VERIFY. Automation: self-implemented (codex+cursor CLIs available in env but SQL content fully specified from PRD; self-fallback path per Mode D contract). | `9e6da85` | feature-verify |
+| 2026-05-19 17:05 | feature-verify (claude-opus-4-7) → conductor (recovery transcription) | Independent feature-verify: applied all 6 migrations to real Postgres 16.14 (Docker postgres:16-alpine, psql fallback — Supabase CLI absent; local-only auth shim, NOT in migrations/). AC-1..AC-12 PASS, NEG-1..NEG-4 fail-as-designed, DDL verbatim vs live PRD v0.6-DRAFT §6.1/§6.2, boundary + commit hygiene clean. Verdict PASS → Status=READY_TO_SHIP. Conductor transcribed verdict under one-time user authorization (feature-verify agent config read-only — must be fixed). | 0481428,5aa42da,3f9c15a,84eaafb,2cd8c72,9e6da85,c3a82e8 | ship |
