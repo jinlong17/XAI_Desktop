@@ -229,6 +229,20 @@
 - Deferred: real SQLCipher-backed Tauri driver, SQLite dump PoC, and PRD §6.3 entity/outbox schema.
 - Commit: `feat(core-data-sqlite-driver): add SQLite repo boundary`.
 
+### 2026-05-19 03:29 PDT — sweep checkpoint after W1 data/crypto loop
+
+- Completed loop: #17 `account-signup-login`, #19 `crypto-tauri-commands`, #20 `core-data-sqlite-driver`.
+- Broader checks:
+  - `pnpm lint` PASS.
+  - `pnpm typecheck` PASS.
+  - `pnpm build` PASS.
+  - `cargo test --manifest-path apps/desktop/src-tauri/Cargo.toml` PASS.
+- Non-blocking warnings seen:
+  - Rust dead-code warnings for currently unused AppError variants and Keychain helper types.
+  - Next `baseline-browser-mapping` data age warning during typegen/build.
+  - Turbo warning: no output files found for `desktop#build`.
+- Next eligible candidates: #18 `onboarding-backfill-ui`, #21 `realtime-private-channel-config`, #23 `commit-seq-authority`, #25 `rls-policies-and-tests`.
+
 ### 2026-05-19 02:55 PDT — sweep checkpoint after next 4-feature loop
 
 - Completed next eligible loop: #7 `cipher-envelope-codec`, #6 `bip39-mnemonic-24w`, #11 `rust-keyvault-opaque-handle`, #12 `x25519-device-keypair`.
