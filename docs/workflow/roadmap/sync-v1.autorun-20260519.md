@@ -507,6 +507,29 @@
 - Deferred: human review, cross-vendor verify, live Supabase deployed integration, malicious plugin/window runtime verification, and recovery/KDF performance budget.
 - Commit: pending `feat(protocol-integrity-integration-tests): add protocol regression suite`.
 
+### 2026-05-19 04:48 PDT — feature checkpoint: rfc-test-vectors-gate (#35)
+
+- Added `apps/desktop/src-tauri/src/crypto/rfc_vectors.rs` and test-only module wiring.
+- Added Rust vector coverage:
+  - RFC 9106 Argon2id v=19 KAT.
+  - RFC 8032 Ed25519 test vector 1 with `verify_strict`.
+  - RFC 9180 HPKE Base DHKEM(X25519, HKDF-SHA256) + HKDF-SHA256 + AES-256-GCM open/export vector.
+  - exact `ed25519-dalek =2.2.0` pin assertion and active strict-verify source tripwire.
+- Added JS/Python CBOR AAD cross-check scripts:
+  - `scripts/ci/check-cbor-aad-cross-impl.sh`
+  - `scripts/ci/check-cbor-aad-cborx.mjs`
+  - `scripts/ci/check-cbor-aad-cbor2.py`
+- Added root dev dependency `cbor-x@1.6.4`; installed local Python `cbor2==6.1.1` for verification.
+- Added `.github/workflows/supply-chain-security.yml` job `rfc-vectors`.
+- Added docs anchor `packages/rfc-test-vectors-gate/docs/{design,api,test,dev_log}.md`; updated PLUGIN_MAP and roadmap/task status.
+- Tests/checks passed:
+  - `cargo test --manifest-path apps/desktop/src-tauri/Cargo.toml --features crypto crypto::rfc_vectors`
+  - `bash scripts/ci/check-cbor-aad-cross-impl.sh`
+  - `bash scripts/ci/check-verify-strict.sh`
+- Incident recorded: dependency install repeated existing Next/React peer warnings.
+- Deferred: human review, cross-vendor verify, hosted GitHub Actions run, and branch-protection required-status-check setup.
+- Commit: pending `feat(rfc-test-vectors-gate): add crypto vector gate`.
+
 ### 2026-05-19 02:55 PDT — sweep checkpoint after next 4-feature loop
 
 - Completed next eligible loop: #7 `cipher-envelope-codec`, #6 `bip39-mnemonic-24w`, #11 `rust-keyvault-opaque-handle`, #12 `x25519-device-keypair`.

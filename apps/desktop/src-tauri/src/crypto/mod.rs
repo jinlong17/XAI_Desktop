@@ -54,5 +54,8 @@ pub mod mnemonic;
 #[cfg(feature = "crypto")]
 pub mod recovery_signing;
 
+#[cfg(all(feature = "crypto", test))]
+mod rfc_vectors;
+
 #[cfg(feature = "crypto")]
 pub mod sqlcipher;

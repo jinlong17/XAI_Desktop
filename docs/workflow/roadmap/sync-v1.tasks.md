@@ -58,7 +58,7 @@
 
 ### Week A — AAD / revision / recovery proof / idempotency / capability
 - [x] #31 protocol-integrity-integration-tests (T-A1/A2/A3/A4/B4/B5)
-- [ ] #35 rfc-test-vectors-gate (GAP-T3' / RFC 9106/8032/9180/8949)
+- [x] #35 rfc-test-vectors-gate (GAP-T3' / RFC 9106/8032/9180/8949)
 
 ### Week B — Re-key full chain + TLA+ + RLS fuzz + audit integrity
 - [ ] #32 rekey-two-phase (T-B1, kill-9 ×4)

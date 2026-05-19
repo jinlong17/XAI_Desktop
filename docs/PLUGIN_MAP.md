@@ -41,6 +41,7 @@
 | single-table-todos-e2e | packages/single-table-todos-e2e/ | Shipped | Wave W2 Phase 0.3 exit core: todo entity+outbox same-transaction store, local two-device encrypted push/pull, and conflict shadow harness. Live two-Mac/Supabase/SQLCipher gates deferred. | 2026-05-19 |
 | protocol-integrity-integration-tests | packages/protocol-integrity-integration-tests/ | Shipped | Wave W3 Phase 4.8: local protocol regression suite for blob-swap AAD binding, revision rollback E3015, recovery no-proof 401/E3014, mutation idempotency, and Tauri crypto allowlist denial. Live/review gates deferred. | 2026-05-19 |
 | tla-protocol-model | packages/tla-protocol-model/ | Blocked | Wave W3 Phase 4.8: `docs/spec/sync.tla` and config added for six mandatory protocol scenarios. TLC run blocked by missing Java Runtime. | 2026-05-19 |
+| rfc-test-vectors-gate | packages/rfc-test-vectors-gate/ | Shipped | Wave W3 Phase 4.8: RFC 9106/8032/9180 Rust vectors, RFC 8949 CBOR AAD cbor-x/cbor2 cross-check, active verify_strict tripwire, and CI rfc-vectors gate. Hosted CI status setup deferred. | 2026-05-19 |
 | audit-log-integrity | packages/audit-log-integrity/ | Shipped | Wave W3 Phase 4.8: append-only server audit log integrity summary plus plugin-account local count/last-hash mirror with E3025 mismatch detection. Live deploy/review gates deferred. | 2026-05-19 |
 
 ---

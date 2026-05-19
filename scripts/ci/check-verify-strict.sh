@@ -10,12 +10,10 @@
 #   ed25519-dalek non-strict verify patterns:  .verify(  without  _strict
 #   on the same line, specifically scoped to ed25519 verifying-key context.
 #
-# Why it is INERT today:
-#   No ed25519 code exists in the crypto scaffold (Wave W0).  The script
-#   will exit 0 (pass) until the future crypto row writes verification code.
-#   If that code uses the permissive `.verify(` instead of `.verify_strict(`
-#   the script fires automatically — converting a "cannot enforce at runtime
-#   yet" constraint into a durable CI guard with zero code written here.
+# Current state:
+#   Ed25519 recovery-signing code now exists under crypto/.  This script is an
+#   active trip-wire: any permissive `.verify(` call in the scoped crypto tree
+#   fails CI, while `.verify_strict(` is allowed.
 #
 # Scope:
 #   Only greps apps/desktop/src-tauri/src/crypto/ to avoid false positives
@@ -73,5 +71,4 @@ if [ -n "${VIOLATIONS}" ]; then
 fi
 
 echo "PASS: no forbidden non-strict ed25519 verify pattern found."
-echo "      (Inert today — no ed25519 code in crypto/ scaffold.)"
 exit 0

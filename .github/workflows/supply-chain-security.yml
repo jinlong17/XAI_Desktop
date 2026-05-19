@@ -6,6 +6,8 @@
 #   rust-pins   — assert all 7 crypto crates use =x.y.z exact pins;
 #                 assert Cargo.lock is in sync (--locked);
 #                 assert no forbidden non-strict ed25519 verify pattern.
+#   rfc-vectors — assert RFC 9106/8032/9180 vectors and CBOR AAD
+#                 cross-implementation vectors pass.
 #   cargo-deny  — advisories / bans / licenses / sources gate.
 #   osv-scanner — OSV.dev advisory gate for npm/JS (pnpm-lock.yaml) and
 #                 Cargo.lock (defense-in-depth).
@@ -59,6 +61,44 @@ jobs:
 
       - name: Assert no forbidden non-strict ed25519 verify pattern (trip-wire)
         run: bash scripts/ci/check-verify-strict.sh
+
+  # ── Job 1b: RFC vectors ─────────────────────────────────────────────────
+  # Asserts: RFC 9106 Argon2id, RFC 8032 Ed25519, RFC 9180 HPKE, and
+  # RFC 8949 deterministic CBOR AAD cross-implementation fixtures.
+  rfc-vectors:
+    name: RFC crypto vectors + CBOR cross-check
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683  # v4.2.2
+        with:
+          fetch-depth: 1
+
+      - name: Install Rust stable
+        uses: dtolnay/rust-toolchain@3c5f7ea28cd621ae0bf5283f0e981fb97b8a7af9  # stable as of 2026-05-19
+        with:
+          toolchain: stable
+
+      - name: Install pnpm
+        run: |
+          corepack enable
+          corepack prepare pnpm@9.0.0 --activate
+
+      - name: Install JS dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Install Python CBOR dependency
+        run: python3 -m pip install cbor2==6.1.1
+
+      - name: Run Rust RFC vector tests
+        run: >
+          cargo test
+          --manifest-path apps/desktop/src-tauri/Cargo.toml
+          --features crypto
+          crypto::rfc_vectors
+
+      - name: Assert CBOR AAD vectors match across cbor-x and cbor2
+        run: bash scripts/ci/check-cbor-aad-cross-impl.sh
 
   # ── Job 2: cargo-deny ────────────────────────────────────────────────────
   # Asserts: zero RustSec advisories (except dated/reviewed ignores in
