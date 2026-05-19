@@ -10,10 +10,10 @@
 
 ## Current State
 
-- Current feature: `crypto-tauri-commands` (#19) shipped locally; next eligible feature is `onboarding-backfill-ui` (#18), `core-data-sqlite-driver` (#20), or non-crypto rows #21/#23/#25.
-- Completed this run: `kdf-primitives` (#3), `aes-gcm-aead-core` (#4), `deterministic-cbor-aad` (#5), `bip39-mnemonic-24w` (#6), `cipher-envelope-codec` (#7), `rust-keyvault-opaque-handle` (#11), `x25519-device-keypair` (#12), `hpke-per-device-wrap` (#13), `ed25519-recovery-signing` (#14), `sqlcipher-local-db` (#16), `account-signup-login` (#17), `crypto-tauri-commands` (#19) code/docs/tests locally complete with deferred gates.
+- Current feature: `core-data-sqlite-driver` (#20) shipped locally; next eligible feature is `onboarding-backfill-ui` (#18), `realtime-private-channel-config` (#21), `commit-seq-authority` (#23), or `rls-policies-and-tests` (#25).
+- Completed this run: `kdf-primitives` (#3), `aes-gcm-aead-core` (#4), `deterministic-cbor-aad` (#5), `bip39-mnemonic-24w` (#6), `cipher-envelope-codec` (#7), `rust-keyvault-opaque-handle` (#11), `x25519-device-keypair` (#12), `hpke-per-device-wrap` (#13), `ed25519-recovery-signing` (#14), `sqlcipher-local-db` (#16), `account-signup-login` (#17), `crypto-tauri-commands` (#19), `core-data-sqlite-driver` (#20) code/docs/tests locally complete with deferred gates.
 - Failed this run: no feature blocked; incidents recorded for command/script/import/fixture issues.
-- Next step: implement next eligible feature, preferring `core-data-sqlite-driver` (#20) before UI-heavy #18.
+- Next step: run a broader sweep after committing #20, then continue with #21/#23/#25 or #18 depending on eligibility/risk.
 
 ## Checkpoints
 
@@ -212,6 +212,22 @@
   - `cargo check --manifest-path apps/desktop/src-tauri/Cargo.toml --features crypto --locked`
   - `cargo test --manifest-path apps/desktop/src-tauri/Cargo.toml --features crypto crypto:: --locked`
 - Remaining non-blocking warnings: Rust dead-code warnings for unused sync/keychain variants/helpers in the current host build, and Next baseline-browser-mapping data age warnings.
+
+### 2026-05-19 03:25 PDT — feature checkpoint: core-data-sqlite-driver (#20)
+
+- Implemented `packages/core-data/src/sqlite.ts`.
+- Added `SqliteDriver`, namespace-scoped `createSqliteRepo`, mutation hook seam, and SQL statement constants.
+- Added `packages/core-data/src/local-storage.ts` with idempotent localStorage-to-repo migration.
+- Extended `packages/core-data/src/testing.ts` with `createInMemorySqliteDriver`.
+- Added `@repo/core-data/testing` export subpath.
+- Added docs anchor `packages/core-data-sqlite-driver/docs/{design,api,test,dev_log}.md` and updated PLUGIN_MAP.
+- Tests/checks passed:
+  - `pnpm --filter @repo/core-data check-types`
+  - `pnpm --filter @repo/core-data test`
+  - red-line import grep for Tauri/deep-internal/plugin imports in core-data source/tests
+- Corrected initial TypeScript generic cast error in the in-memory SQLite test driver.
+- Deferred: real SQLCipher-backed Tauri driver, SQLite dump PoC, and PRD §6.3 entity/outbox schema.
+- Commit: `feat(core-data-sqlite-driver): add SQLite repo boundary`.
 
 ### 2026-05-19 02:55 PDT — sweep checkpoint after next 4-feature loop
 

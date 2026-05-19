@@ -28,6 +28,7 @@
 | sqlcipher-local-db | packages/sqlcipher-local-db/ | Shipped | Wave W1 Phase 0.3: SQLCipher local DB open/key path with KEK-derived db_key and raw-key injection guard. Deferred dump/CLI gates recorded in sync-v1 deferred gates. | 2026-05-19 |
 | account-signup-login | packages/account-signup-login/ | Shipped | Wave W1 Phase 0.3: plugin-account signup/login/refresh orchestration with local crypto/auth/keychain seams. Runtime Supabase/Tauri/Keychain gates recorded in sync-v1 deferred gates. | 2026-05-19 |
 | crypto-tauri-commands | packages/crypto-tauri-commands/ | Shipped | Wave W1 Phase 0.3: Tauri `crypto_*` command layer with Rust-built AAD, opaque KeyVault handles, and window allowlist. Runtime state/plugin identity gates recorded in sync-v1 deferred gates. | 2026-05-19 |
+| core-data-sqlite-driver | packages/core-data-sqlite-driver/ | Shipped | Wave W1 Phase 0.3: `@repo/core-data` SQLite driver boundary, namespace repo, mutation hook, localStorage migration, and testing backend. Real SQLCipher binding deferred. | 2026-05-19 |
 
 ---
 
@@ -37,7 +38,7 @@
 |---------|------|------|------|---------|
 | @repo/core | packages/core/ | Stable | 基础设施 + 类型 + 事件 + Registry | 2026-05-14 |
 | @repo/ui | packages/ui/ | In-Dev | 共享 UI 组件库 (3 stub 组件) | 2026-05-13 |
-| @repo/core-data | packages/core-data/ | Planned | Sync 数据访问 + REST 驱动骨架 (wave-W0 scaffold). **Phase 4 addition (keychain-bridge-macos #8)**: now also surfaces `secretSet/secretGet/secretDel` Keychain bridge via `createKeychainClient(invoke)`. Consumers mock until Stable. | 2026-05-19 |
+| @repo/core-data | packages/core-data/ | In-Dev | Sync 数据访问 + SQLite driver boundary. Surfaces `secretSet/secretGet/secretDel`, `createSqliteRepo`, localStorage migration, mutation hook, and `@repo/core-data/testing`; real SQLCipher runtime binding deferred. Consumers mock until Stable. | 2026-05-19 |
 
 ## Plugins
 

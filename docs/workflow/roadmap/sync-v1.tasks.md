@@ -38,7 +38,7 @@
 - [x] #17 account-signup-login (T-09)
 - [ ] #18 onboarding-backfill-ui (FR-AC-09)
 - [x] #19 crypto-tauri-commands (T-08 / §4.2 capability allowlist)
-- [ ] #20 core-data-sqlite-driver (dev-plan §2)
+- [x] #20 core-data-sqlite-driver (dev-plan §2)
 - [ ] #22 menubar-sync-status-icon (T-16)
 
 ### Day 6–12 — sync engine + edge functions + single-table E2E
