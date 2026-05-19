@@ -4,6 +4,7 @@ import App from "./App";
 import { GridWindow } from "./windows/GridWindow";
 import { ControlWindow } from "./windows/ControlWindow";
 import "./index.css";
+import { registerAccountPlugin } from "@repo/plugin-account";
 
 /**
  * Simple hash router for multi-window architecture.
@@ -31,6 +32,9 @@ function Router() {
   // Default: main app
   return <App />;
 }
+
+// Static plugin registration — above createRoot (red line #1/#8: registration only, no sync logic)
+registerAccountPlugin();
 
 ReactDOM.createRoot(document.getElementById("root") as HTMLElement).render(
   <React.StrictMode>

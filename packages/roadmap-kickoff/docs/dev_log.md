@@ -11,13 +11,13 @@
 | Target | roadmap-kickoff |
 | Title | Sync v1 foundational scaffold (plugin-account + core-data + shared infra) |
 | Roadmap | sync-v1 · feature #1 · wave W0 · Phase 0.3 · dev-plan T-05 |
-| Status | APPROVED |
-| Current Phase | FEATURE_REVIEW |
-| Suggested Next | feature-build |
+| Status | READY_FOR_VERIFY |
+| Current Phase | FEATURE_VERIFY |
+| Suggested Next | feature-verify |
 | Automation Mode | D-Codex+Cursor |
 | Verify Cross-vendor | no |
-| Executor | feature-review (Claude Opus) |
-| Updated | 2026-05-19 16:55 |
+| Executor | feature-auto-build (claude-sonnet-4-6) |
+| Updated | 2026-05-19 00:30 |
 
 ## Phase Plan
 
@@ -98,3 +98,8 @@ Advisory (non-blocking, for feature-build awareness, no re-plan needed):
 |---|---|---|---|---|
 | 2026-05-19 16:20 | feature-plan (Claude Opus) | Fresh plan: live-code verified vs orientation report (no drift); wrote discovery review + design/api/test/dev_log; 5-phase plan. Roadmap bg re-dispatch — job 2a941912, prior attempt b8b06068 was DEAD. Worktree base HEAD 18a51d1. | 211762a | feature-review |
 | 2026-05-19 16:55 | feature-review (Claude Opus) | Independent review vs live worktree code (base 18a51d1); all discovery claims re-verified file-by-file, no drift. 5 gates PASS. Verdict APPROVED, 0 blockers, 2 advisory notes (test-fixture typing nuance + error-code-prefix test). Status Panel → APPROVED / FEATURE_REVIEW / feature-build. | (this commit) | feature-build |
+| 2026-05-19 00:16 | feature-auto-build (claude-sonnet-4-6) | Phase 1: account:* EventMap keys + useTauriInvoke hook + Vitest (4 cases). Gate: pnpm --filter @repo/core check-types PASS; test 7/7 PASS. | de4d5e9 | Phase 2 |
+| 2026-05-19 00:18 | feature-auto-build (claude-sonnet-4-6) | Phase 2: AppError E3xxx thiserror enum + crypto/KeyHandle(u32) scaffold + mod error;/crypto; in lib.rs. Gate: cargo check PASS (2 dead-code warnings expected); cargo test 6/6 PASS (advisory A2: all E3xxx prefix assertions present). | 93034b2 | Phase 3 |
+| 2026-05-19 00:22 | feature-auto-build (claude-sonnet-4-6) | Phase 3: @repo/core-data package skeleton — Repo<T>/RepoRecord interface + createInMemoryRepo() + 7 Vitest covering put/get/delete/list round-trips. Gate: pnpm --filter @repo/core-data check-types PASS; test 7/7 PASS. | a443c88 | Phase 4 |
+| 2026-05-19 00:24 | feature-auto-build (claude-sonnet-4-6) | Phase 4: @repo/plugin-account skeleton — KeyHandle branded type + registerAccountPlugin() + compile-smoke (_AssertAccountKeysInEventMap + @ts-expect-error negative case) + manifest.json (enabled:false, 5 emit keys) + four-piece plugin docs. Gate: check-types PASS; red-line grep #4/#9 clean. | 747fa49 | Phase 5 |
+| 2026-05-19 00:30 | feature-auto-build (claude-sonnet-4-6) | Phase 5: Host wiring (main.tsx: import+registerAccountPlugin() above createRoot; Router body untouched R-1) + PLUGIN_MAP Planned rows (account + @repo/core-data) + acceptance sweep AC-1..AC-9. AC-7 pnpm dev runtime smoke deferred to feature-verify (headless env). Status → READY_FOR_VERIFY. | (this commit) | feature-verify |

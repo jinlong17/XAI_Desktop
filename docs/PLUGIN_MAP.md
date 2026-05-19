@@ -4,7 +4,7 @@
 > 只有状态为 Stable 或 Production 的 Plugin 才能被作为稳定依赖。
 > 状态为 In-Dev / Testing 的 Plugin 必须使用 Mock 数据解耦。
 >
-> 最后更新: 2026-05-13
+> 最后更新: 2026-05-19
 
 ---
 
@@ -14,12 +14,14 @@
 |---------|------|------|------|---------|
 | @repo/core | packages/core/ | Stable | 基础设施 + 类型 + 事件 + Registry | 2026-05-14 |
 | @repo/ui | packages/ui/ | In-Dev | 共享 UI 组件库 (3 stub 组件) | 2026-05-13 |
+| @repo/core-data | packages/core-data/ | Planned | Sync 数据访问 + REST 驱动骨架 (wave-W0 scaffold) | 2026-05-19 |
 
 ## Plugins
 
 | Plugin | 目录 | 状态 | PRD 章节 | 对外依赖 | 最后更新 |
 |--------|------|------|---------|---------|---------|
 | organizer | packages/plugin-organizer/ | Stable | §5.1 | @repo/core, @repo/ui | 2026-05-14 |
+| account | packages/plugin-account/ | Planned | sync/PRD §5 | @repo/core | 2026-05-19 |
 | todo | packages/plugin-todo/ | Planned | §5.2 | @repo/core | — |
 | pomodoro | packages/plugin-pomodoro/ | Planned | §5.3 | @repo/core | — |
 | habits | packages/plugin-habits/ | Planned | §5.4 | @repo/core | — |
