@@ -65,3 +65,16 @@
   - `bash scripts/ci/check-exact-pins.sh`
 - Deferred: JS/Python cross-implementation vector verification and blob-swap integration test.
 - Commit: `feat(deterministic-cbor-aad): add canonical AAD vectors`.
+
+### 2026-05-19 02:17 PDT — sweep checkpoint after first 3-feature loop
+
+- Completed first eligible loop: #3 `kdf-primitives`, #4 `aes-gcm-aead-core`, #5 `deterministic-cbor-aad`.
+- Broader checks:
+  - `pnpm lint` PASS.
+  - `pnpm build` PASS.
+  - `cargo test --manifest-path apps/desktop/src-tauri/Cargo.toml` PASS.
+  - `pnpm typecheck` FAIL: root script is not defined (`Command "typecheck" not found`); recorded in incidents.
+- Non-blocking warnings seen:
+  - Rust `keychain-it` unexpected cfg warning from pre-existing Keychain tests.
+  - Next.js `baseline-browser-mapping` data age warning during build.
+- Next eligible candidates: #6 `bip39-mnemonic-24w`, #7 `cipher-envelope-codec`, #21 `realtime-private-channel-config`, #22 `menubar-sync-status-icon`, #23 `commit-seq-authority`, #25 `rls-policies-and-tests`.
