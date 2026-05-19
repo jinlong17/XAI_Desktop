@@ -75,11 +75,10 @@ in feature-build; proposed:
 
 ## 4. Capability Allowlist
 
-Add a scoped Tauri capability entry permitting `secret_set` / `secret_get` /
-`secret_del` only for the window(s) hosting plugin-account (parallels the
-FR-SY-75 `crypto_*` allowlist intent). The current `capabilities/default.json`
-has only `core:*` / `opener:*` perms. Exact capability identifier + window
-scope frozen in feature-build; documented here once chosen.
+A dedicated capability file `capabilities/plugin-account-keychain.json`
+(identifier: `plugin-account-keychain`) scopes secret_* access to the
+`account` and `control` windows only. `capabilities/default.json` is NOT
+widened (Rec-1 from feature-review). The file was created in Phase 3.
 
 ## 5. Idempotency & Concurrency
 
@@ -91,10 +90,7 @@ scope frozen in feature-build; documented here once chosen.
   needed (multi-window safe by construction). Concurrent set/get on the same
   key relies on Keychain Services' own item-level atomicity.
 
-## 6. Open Contract Questions
+## 6. Open Contract Questions (CLOSED)
 
-- OQ-1: exact `security-framework` API path for attaching `SecAccess` +
-  accessibility to a generic-password item — resolved in Phase 1 spike, then
-  this doc's command attribute section is finalized.
-- OQ-2: in-place update vs delete+re-add for `secret_set` — prefer in-place;
-  confirm `security-framework` exposes item update preserving `SecAccess`.
+- **OQ-1** (RESOLVED — Phase 1): `SecAccessControl::create_with_protection(Some(ProtectionMode::AccessibleWhenUnlockedThisDeviceOnly), 0)` + `PasswordOptions::set_access_control()`. See `design.md §OQ-1 Resolution`.
+- **OQ-2** (RESOLVED — Phase 1): `set_generic_password_options` in `security-framework` implements find-then-update internally; existing `SecAccessControl` is preserved on updates. No delete+re-add required.

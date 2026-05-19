@@ -14,7 +14,7 @@
 |---------|------|------|------|---------|
 | @repo/core | packages/core/ | Stable | 基础设施 + 类型 + 事件 + Registry | 2026-05-14 |
 | @repo/ui | packages/ui/ | In-Dev | 共享 UI 组件库 (3 stub 组件) | 2026-05-13 |
-| @repo/core-data | packages/core-data/ | Planned | Sync 数据访问 + REST 驱动骨架 (wave-W0 scaffold) | 2026-05-19 |
+| @repo/core-data | packages/core-data/ | Planned | Sync 数据访问 + REST 驱动骨架 (wave-W0 scaffold). **Phase 4 addition (keychain-bridge-macos #8)**: now also surfaces `secretSet/secretGet/secretDel` Keychain bridge via `createKeychainClient(invoke)`. Consumers mock until Stable. | 2026-05-19 |
 
 ## Plugins
 

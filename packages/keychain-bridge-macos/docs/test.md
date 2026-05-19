@@ -1,6 +1,7 @@
 # keychain-bridge-macos — Test Strategy
 
 > Test plan / mock strategy / acceptance criteria. Cross-vendor verify: NO (single-vendor automation).
+> **Phase 1–4 implementation complete** (2026-05-19). Unattended test layers green. Real-hardware gates deferred to feature-verify.
 
 ## 1. Test Layers
 

@@ -11,13 +11,13 @@
 | Target | keychain-bridge-macos |
 | Title | macOS Keychain Bridge (secret_set / secret_get / secret_del) |
 | Roadmap | sync-v1 · feature #8 · wave W0 · Phase 0.3 · dev-plan T-10 |
-| Status | APPROVED |
-| Current Phase | FEATURE_REVIEW |
-| Suggested Next | feature-build |
+| Status | READY_FOR_VERIFY |
+| Current Phase | FEATURE_VERIFY |
+| Suggested Next | feature-verify |
 | Automation Mode | D-Codex+Cursor |
 | Verify Cross-vendor | no |
-| Executor | feature-review (claude-opus-4-7) |
-| Updated | 2026-05-19 17:40 |
+| Executor | feature-auto-build (claude-sonnet-4-6) |
+| Updated | 2026-05-19 19:00 |
 | Blockers | none |
 
 ## Phase Plan
@@ -114,3 +114,6 @@ APPROVED — 0 blockers. Plan verified against branch HEAD; all file/structure c
 |---|---|---|---|---|
 | 2026-05-19 17:05 | feature-plan (claude-opus-4-7) | Fresh plan. Step 0 brief normalized from roadmap-seed → `20260519-feature-brief.md`. Phase 1.5 solution scan (web research: security-framework vs keyring vs keychain-services.rs vs hand-FFI) → `20260519-discovery-review.md`, recommend Option A `security-framework`. Wrote four-piece docs at `packages/keychain-bridge-macos/docs/` (cross-cutting infra anchor, roadmap-kickoff precedent). 5-phase plan, each leaves tree compiling. Automation D-Codex+Cursor, no cross-vendor verify. Status → NEEDS_REVIEW / feature-review. | — | feature-review |
 | 2026-05-19 17:40 | feature-review (claude-opus-4-7) | Reviewed brief + discovery + design/api/test + 5-phase plan against branch HEAD. Verified Cargo.toml/error.rs/platform/commands/lib.rs/core-data/useTauriInvoke/capabilities claims. 0 blockers, 2 non-blocking recs (capability mechanism, OQ-1 gate). Threat binding + #10 follow-up scoping confirmed. Verdict APPROVED. | — | feature-build |
+| 2026-05-19 18:30 | feature-auto-build (claude-sonnet-4-6) | Phase 1: Added security-framework 3.7.0 to Cargo.toml macOS target deps. Created platform/macos/keychain.rs with build_item_attrs() pure constructor, macOS impl (secret_set/get/del using PasswordOptions+SecAccessControl), non-macOS compile stub, T-U2/T-U3/T-U4/T-U5 unit tests + gated T-I1/I2/I3. Declared pub mod keychain in platform/macos/mod.rs. Resolved OQ-1 (SecAccessControl::create_with_protection API path) and OQ-2 (find-then-update is built-in to set_generic_password_options). Updated design.md with OQ-1+OQ-2 resolution. Phase 2: Added E1100-E1104 variants to error.rs (additive, no existing shape touched). T-U1 tests (all E11xx Display prefixes) + T-U1 regression (E1000/E3xxx). Commit: acd3126. cargo test: 11 passed 0 failed. | acd3126 | Phase 3 |
+| 2026-05-19 18:45 | feature-auto-build (claude-sonnet-4-6) | Phase 3: Created commands/keychain.rs with #[tauri::command] secret_set/get/del delegates to platform::macos::keychain::*. Added pub mod keychain to commands/mod.rs (window.rs untouched). Added 3 commands to lib.rs invoke_handler! (window commands untouched). Created capabilities/plugin-account-keychain.json — dedicated capability file scoping to account+control windows only (Rec-1 compliant, default.json not widened). Commit: 3a208d4. cargo test: 11 passed 0 failed. Phase 4: Created packages/core-data/src/keychain.ts with KeychainError, parseKeychainError, createKeychainClient(invoke), secretSet/secretGet/secretDel convenience fns. No @tauri-apps/api import (AC-9 grep clean). Barrel export added to index.ts. 20 Vitest tests (T-T1/T-T2/T-T3 + AC-9). Commit: 04d69d7. pnpm test: 27 passed 0 failed; check-types: clean. | 3a208d4, 04d69d7 | Phase 5 |
+| 2026-05-19 19:00 | feature-auto-build (claude-sonnet-4-6) | Phase 5: Docs sync — api.md §4 capability identifier frozen (plugin-account-keychain); §6 OQ-1+OQ-2 closed. test.md header updated (implementation complete, real-hardware gates deferred). PLUGIN_MAP.md @repo/core-data row updated with Phase 4 Keychain bridge note. Acceptance sweep: AC-1/2/3/4/5/6/9/10/11 PASS (unattended). AC-7/8/12 DEFERRED to feature-verify (real-hardware gates). Status → READY_FOR_VERIFY. | (see next commit) | feature-verify |
