@@ -23,3 +23,15 @@
 - Later human action: Review `docs/reviews/window-ground-truth/20260519-discovery-review.md` and `packages/window-ground-truth/docs/dev_log.md` before treating G0.1 as externally reviewed.
 - Suggested verification command / environment: `sed -n '1,140p' packages/window-ground-truth/docs/dev_log.md`
 - Files/commits affected: packages/window-ground-truth/docs/dev_log.md; docs/workflow/roadmap/xai-v1.deferred-gates.md; commit pending
+
+## Entry 3
+
+- Feature: window-ground-truth
+- Gate: G0
+- Deferred gate: Cross-vendor feature-verify
+- Why deferred: The runtime override requires a serial Codex conductor with no spawn/bg dispatch, and no independent verifier is available in unattended mode.
+- Risk: The same executor performed final verification, so Workflow V2 independence is weaker than normal.
+- What was done instead: Re-ran the exact G0.1 acceptance checks and reviewed commit `3b571f6` for docs-only scope and commit convention compliance.
+- Later human action: Independently review commit `3b571f6` and the evidence README before shipping or using G0.1 as a reviewed base for higher-risk G0 tasks.
+- Suggested verification command / environment: `git show --stat --oneline 3b571f6 && git branch --show-current && sw_vers`
+- Files/commits affected: commit `3b571f6`; packages/window-ground-truth/docs/dev_log.md; docs/workflow/roadmap/xai-g0-window-spike.md; docs/workflow/roadmap/xai-v1.autorun-20260519.md
