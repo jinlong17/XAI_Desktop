@@ -15,12 +15,12 @@
 |---|---|
 | Current Gate | G1 — native foundation (safe prep only) |
 | Gate Manifest | docs/workflow/roadmap/xai-g1-native-foundation.md |
-| Current Feature | window-command-contract |
-| Feature Source | docs/planning/execution/G1-native-foundation.md §G1.1 |
-| Feature Status | BLOCKED |
+| Current Feature | host-business-residuals |
+| Feature Source | docs/planning/execution/G1-native-foundation.md §G1.6 |
+| Feature Status | READY_TO_SHIP |
 | Current Commit | pending |
-| Tests | safe-prep docs existence checks |
-| Next Step | Continue only safe G1 planning/brief work; production implementation waits for G0 |
+| Tests | `test -f docs/planning/execution/host-residuals.md`; Host residual `rg` scan |
+| Next Step | Human ship READY_TO_SHIP queue; production G1 implementation still waits for G0 |
 
 ## Checkpoints
 
@@ -114,6 +114,14 @@
 - No production Rust/TS command code, capability, or contract source file was changed.
 - Status: BLOCKED because G0 is not Go/Conditional Go.
 
+### 2026-05-19 15:12 PDT — Feature Checkpoint: host-business-residuals
+
+- Completed audit-only G1.6 feature.
+- Created `docs/planning/execution/host-residuals.md`.
+- Identified Host residuals: AI Cube, Settings panel/context, Grid creation control, sync tray bridge, Organizer-specific DnD provider, overlay status label, and G0 prototype fallback.
+- No production code changed.
+- Status: READY_TO_SHIP.
+
 ## Feature Outcomes
 
 | Feature | Gate | Status | Commit | Tests | Notes |
@@ -125,6 +133,7 @@
 | spaces-multimonitor-matrix | G0 | BLOCKED | pending | PASS: matrix template exists; BLOCKED: real Spaces/fullscreen/multi-display evidence | Reached by user override; safe prep only. |
 | mas-sandbox-dry-run | G0 | BLOCKED | pending | PASS: MAS notes exist; BLOCKED: real sandbox/private-API evidence | Reached by user override; safe prep only. |
 | window-command-contract | G1 | BLOCKED | pending | PASS: safe-prep docs exist; BLOCKED: G0 not Go/Conditional Go | Reached by user override; no production code changed. |
+| host-business-residuals | G1 | READY_TO_SHIP | pending | PASS: residual audit doc exists; Host scan recorded | Audit-only safe prep. |
 
 ## Deferred Gates Summary
 
@@ -137,6 +146,7 @@
 - Real Spaces/fullscreen/multi-display matrix deferred for `spaces-multimonitor-matrix`.
 - Real MAS/private-API sandbox evidence deferred for `mas-sandbox-dry-run`.
 - G1 production implementation deferred until G0 Go/Conditional Go.
+- Cross-vendor review/verify deferred for `host-business-residuals`.
 
 ## Incidents Summary
 

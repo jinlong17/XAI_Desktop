@@ -21,7 +21,7 @@
 | 3 | native-dnd-path-first | docs/planning/execution/G1-native-foundation.md §G1.3 | finder-dnd-path | shipped | PENDING | D-Codex | yes | — | Requires G0.4 Finder path conclusion. |
 | 4 | multi-grid-event-scope | docs/planning/execution/G1-native-foundation.md §G1.4 | grid-window-prototype | shipped | PENDING | D-Codex | yes | — | Requires G0.2 runtime proof. |
 | 5 | grid-persistence | docs/planning/execution/G1-native-foundation.md §G1.5 | window-command-contract | shipped | PENDING | D-Codex | yes | — | Requires G1.1 contract and G2 repository direction. |
-| 6 | host-business-residuals | docs/planning/execution/G1-native-foundation.md §G1.6 | G0 Go/Conditional Go | shipped | PENDING | D-Codex | yes | — | Safe audit possible, production cleanup blocked by gate decisions. |
+| 6 | host-business-residuals | docs/planning/execution/G1-native-foundation.md §G1.6 | — | — | READY_TO_SHIP | D-Codex | yes | 2026-05-19 | READY_TO_SHIP 2026-05-19 · Audit-only residual inventory complete; production cleanup remains blocked by G0/G1 sequencing. |
 
 ## Decomposition Rationale
 
@@ -30,4 +30,3 @@ This manifest maps one G1 execution-pack task to one Workflow V2 feature. G1 pro
 
 ### R2. Safe-Prep Boundary
 Only documentation, contract planning, and mock/brief work may proceed while G0 is blocked. Production changes to `commands/window.rs`, `window_ext.rs`, capabilities, Host shell, or Organizer runtime must wait for G0 evidence.
-

@@ -167,3 +167,15 @@
 - Later human action: Complete/review G0 evidence and decide Go/Conditional Go or fallback, then rerun feature-build for `window-command-contract`.
 - Suggested verification command / environment: Review `docs/workflow/roadmap/xai-g0-window-spike.md` and all G0 evidence folders before G1 implementation.
 - Files/commits affected: docs/workflow/roadmap/xai-g1-native-foundation.md; packages/window-command-contract/docs/*; commit pending
+
+## Entry 15
+
+- Feature: host-business-residuals
+- Gate: G1
+- Deferred gate: Cross-vendor feature-review/verify
+- Why deferred: The runtime override requires a serial Codex conductor with no spawn/bg dispatch, and no independent reviewer/verifier is available in unattended mode.
+- Risk: The same executor audited and verified the Host residual list.
+- What was done instead: Used a direct `rg` scan over `apps/desktop/src` and created an explicit file-by-file residual inventory.
+- Later human action: Review `docs/planning/execution/host-residuals.md` before starting G1.2/G1.6 cleanup implementation.
+- Suggested verification command / environment: `rg -n "AiCube|SettingsPanel|useSyncMenuBarStatus|OrganizerLayer|create-grid-request|useGridSystem" apps/desktop/src -g '*.{ts,tsx}'`
+- Files/commits affected: docs/planning/execution/host-residuals.md; packages/host-business-residuals/docs/*; commit pending
