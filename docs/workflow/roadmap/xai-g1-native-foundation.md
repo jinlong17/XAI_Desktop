@@ -1,0 +1,33 @@
+# Roadmap Manifest — xai-g1-native-foundation
+
+- Roadmap Source: docs/planning/execution/G1-native-foundation.md
+- Init Path: execution-pack
+- Generated: 2026-05-19
+- Default Automation Mode: D-Codex
+- Default Dependency Semantics: shipped
+- Default Verify Cross-vendor: yes
+- Wave Concurrency Cap: 1
+- Dispatch: serial inline Codex conductor
+- Manifest Review: DEFERRED (unattended run; see docs/workflow/roadmap/xai-v1.deferred-gates.md)
+- Gate Prerequisite: G0 Go or Conditional Go
+- Gate Status: BLOCKED_BY_G0
+
+## Features
+
+| # | Slug | Source | Depends On | Dep Semantics | Status | Automation Mode | Verify Cross-vendor | Last Run | Note |
+|---|------|--------|------------|---------------|--------|-----------------|---------------------|----------|------|
+| 1 | window-command-contract | docs/planning/execution/G1-native-foundation.md §G1.1 | G0 Go/Conditional Go | shipped | BLOCKED | D-Codex | yes | 2026-05-19 | Safe prep only via user override; production implementation blocked until G0 evidence is reviewed. |
+| 2 | grid-shell-organizer-content | docs/planning/execution/G1-native-foundation.md §G1.2 | window-command-contract | shipped | PENDING | D-Codex | yes | — | Host shell/content split; production implementation blocked by G0/G1.1. |
+| 3 | native-dnd-path-first | docs/planning/execution/G1-native-foundation.md §G1.3 | finder-dnd-path | shipped | PENDING | D-Codex | yes | — | Requires G0.4 Finder path conclusion. |
+| 4 | multi-grid-event-scope | docs/planning/execution/G1-native-foundation.md §G1.4 | grid-window-prototype | shipped | PENDING | D-Codex | yes | — | Requires G0.2 runtime proof. |
+| 5 | grid-persistence | docs/planning/execution/G1-native-foundation.md §G1.5 | window-command-contract | shipped | PENDING | D-Codex | yes | — | Requires G1.1 contract and G2 repository direction. |
+| 6 | host-business-residuals | docs/planning/execution/G1-native-foundation.md §G1.6 | G0 Go/Conditional Go | shipped | PENDING | D-Codex | yes | — | Safe audit possible, production cleanup blocked by gate decisions. |
+
+## Decomposition Rationale
+
+### R1. Source and Gate Status
+This manifest maps one G1 execution-pack task to one Workflow V2 feature. G1 production implementation is blocked because G0 is not Go or Conditional Go. The manifest exists only to preserve planning state after the user asked to skip blocked manual gates and continue safe downstream preparation.
+
+### R2. Safe-Prep Boundary
+Only documentation, contract planning, and mock/brief work may proceed while G0 is blocked. Production changes to `commands/window.rs`, `window_ext.rs`, capabilities, Host shell, or Organizer runtime must wait for G0 evidence.
+

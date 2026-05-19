@@ -39,3 +39,13 @@
 - Attempted fixes: Created MAS sandbox notes, entitlement draft, and risk matrix. Avoided speculative Tauri config/Cargo/capability changes.
 - Current status: BLOCKED.
 - Resume instruction: Run private-API-disabled and sandbox/signed validation, update `docs/reviews/window-ground-truth/mas-sandbox-dry-run/mas-sandbox-notes.md`, then rerun feature-verify for `mas-sandbox-dry-run`.
+
+## Incident 5
+
+- Time: 2026-05-19 15:08 PDT
+- Feature: window-command-contract
+- Symptom: Production implementation is blocked.
+- Root cause if known: G1 requires G0 Go or Conditional Go, and G0 still has unresolved manual/native validation blockers.
+- Attempted fixes: Created G1.1 contract-planning docs and G1 manifest without touching production window command code.
+- Current status: BLOCKED.
+- Resume instruction: Complete G0 evidence and decide Go/Conditional Go, then rerun feature-build for `window-command-contract`.

@@ -13,14 +13,14 @@
 
 | Field | Value |
 |---|---|
-| Current Gate | G0 — window spike |
-| Gate Manifest | docs/workflow/roadmap/xai-g0-window-spike.md |
-| Current Feature | mas-sandbox-dry-run |
-| Feature Source | docs/planning/execution/G0-window-spike.md §G0.6 |
+| Current Gate | G1 — native foundation (safe prep only) |
+| Gate Manifest | docs/workflow/roadmap/xai-g1-native-foundation.md |
+| Current Feature | window-command-contract |
+| Feature Source | docs/planning/execution/G1-native-foundation.md §G1.1 |
 | Feature Status | BLOCKED |
 | Current Commit | pending |
-| Tests | `test -f docs/reviews/window-ground-truth/mas-sandbox-dry-run/mas-sandbox-notes.md` |
-| Next Step | Reconcile G0 and choose only safe downstream design/brief work |
+| Tests | safe-prep docs existence checks |
+| Next Step | Continue only safe G1 planning/brief work; production implementation waits for G0 |
 
 ## Checkpoints
 
@@ -100,6 +100,20 @@
 - No Tauri config, Cargo feature, entitlement, capability, or production code was changed.
 - Status: BLOCKED because real `macOSPrivateApi=false` and sandbox/private-API runtime evidence is required.
 
+### 2026-05-19 15:06 PDT — G1 Safe-Prep Start
+
+- G0 remains not Go/Conditional Go.
+- User override allows continuing downstream, but production G1 implementation remains blocked by gate order.
+- Initialized `docs/workflow/roadmap/xai-g1-native-foundation.md`.
+- Started `window-command-contract` as docs/contract safe prep only.
+
+### 2026-05-19 15:08 PDT — Feature Checkpoint: window-command-contract
+
+- Created G1.1 Step 0, discovery, design/api/test/dev_log.
+- Cross-checked target command names and error shape against `docs/contracts/tauri-commands-v0.md`.
+- No production Rust/TS command code, capability, or contract source file was changed.
+- Status: BLOCKED because G0 is not Go/Conditional Go.
+
 ## Feature Outcomes
 
 | Feature | Gate | Status | Commit | Tests | Notes |
@@ -110,6 +124,7 @@
 | finder-dnd-path | G0 | BLOCKED | 33627df | PASS: matrix template exists; BLOCKED: real Finder drop evidence | Requires human Finder/Tauri path matrix. |
 | spaces-multimonitor-matrix | G0 | BLOCKED | pending | PASS: matrix template exists; BLOCKED: real Spaces/fullscreen/multi-display evidence | Reached by user override; safe prep only. |
 | mas-sandbox-dry-run | G0 | BLOCKED | pending | PASS: MAS notes exist; BLOCKED: real sandbox/private-API evidence | Reached by user override; safe prep only. |
+| window-command-contract | G1 | BLOCKED | pending | PASS: safe-prep docs exist; BLOCKED: G0 not Go/Conditional Go | Reached by user override; no production code changed. |
 
 ## Deferred Gates Summary
 
@@ -121,6 +136,7 @@
 - Real Finder DnD path matrix deferred for `finder-dnd-path`.
 - Real Spaces/fullscreen/multi-display matrix deferred for `spaces-multimonitor-matrix`.
 - Real MAS/private-API sandbox evidence deferred for `mas-sandbox-dry-run`.
+- G1 production implementation deferred until G0 Go/Conditional Go.
 
 ## Incidents Summary
 
@@ -128,6 +144,7 @@
 - finder-dnd-path blocked on real Finder DnD payload evidence.
 - spaces-multimonitor-matrix blocked on real macOS Spaces/fullscreen/multi-display evidence.
 - mas-sandbox-dry-run blocked on real sandbox/private-API evidence.
+- window-command-contract blocked by G0 gate status.
 
 ## Final 24h Summary
 

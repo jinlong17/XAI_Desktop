@@ -155,3 +155,15 @@
 - Later human action: Run a `macOSPrivateApi=false` build and sandbox/signed validation, then update `mas-sandbox-notes.md`.
 - Suggested verification command / environment: Build/run desktop with private API disabled and sandbox entitlements on macOS; Apple Developer signing may be required for final evidence.
 - Files/commits affected: docs/reviews/window-ground-truth/mas-sandbox-dry-run/mas-sandbox-notes.md; packages/mas-sandbox-dry-run/docs/*; commit pending
+
+## Entry 14
+
+- Feature: window-command-contract
+- Gate: G1
+- Deferred gate: G0 Go/Conditional Go prerequisite
+- Why deferred: The user explicitly instructed to skip and continue, but G1 production implementation requires G0 to pass or choose a fallback path.
+- Risk: Implementing window command lifecycle before G0 decisions could encode the wrong click-through, DnD, Spaces, or MAS assumptions.
+- What was done instead: Created docs/contract safe prep only and marked the feature BLOCKED.
+- Later human action: Complete/review G0 evidence and decide Go/Conditional Go or fallback, then rerun feature-build for `window-command-contract`.
+- Suggested verification command / environment: Review `docs/workflow/roadmap/xai-g0-window-spike.md` and all G0 evidence folders before G1 implementation.
+- Files/commits affected: docs/workflow/roadmap/xai-g1-native-foundation.md; packages/window-command-contract/docs/*; commit pending
