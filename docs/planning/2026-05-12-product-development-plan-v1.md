@@ -1,9 +1,12 @@
-# XAI_Desktop · 产品功能开发方案 v1
+# XAI_Desktop · 产品功能开发方案 v2
 
 > 创建时间：2026-05-12
-> 文档性质：**开发方案 (Development Plan)** — 用于和产品 Owner 对齐范围、优先级、技术路线；通过后再产出正式 PRD。
+> 最后审查：2026-05-19
+> 文档性质：**开发方案 (Development Plan)** — v1 为历史决策记录；v2 为当前执行版。
 > 项目代号：XAI_Desktop / AI Smart Desktop
 > 平台优先级：macOS (v1) → Windows → Linux → 移动端
+
+> **v2 覆盖规则(2026-05-19):** 本文 §1~§10 保留 2026-05-12 的推理链和拍板历史；凡与 §11 "高级执行版" 冲突,以 §11 为准。当前主 PRD 为 `2026-05-12-PRD-v1.md` v1.7-draft,子 PRD 以 Console v0.2-rev1、Web v0.3、Sync v0.6 为准。
 
 ---
 
@@ -379,8 +382,96 @@ settings            (key, value_json)
 - 用户基于此事实重新拍板：**改为 DMG + MAS 双轨并发**，从 Phase 0 就做沙箱兼容设计。
 - 双轨工期增量：约 2~2.5 周（主要在 Phase 0 文件访问 abstraction、entitlements、双 target 打包脚本）。
 
-**v1 最终工期估算**：**5~6 个月全职独开**（详见 PRD §10）
+**v1 最终工期估算(历史)**：**5~6 个月全职独开**（已被 2026-05-19 v2 重估取代）
 
 详细 PRD 见 `docs/planning/2026-05-12-PRD-v1.md`
+
+---
+
+## 11. v2 高级执行版(2026-05-19)
+
+### 11.1 当前事实快照
+
+| 领域 | 当前状态 | 执行含义 |
+|---|---|---|
+| 桌面 Host | `apps/desktop/src` 已较旧计划更瘦,但仍有 `AiCube` / `SettingsPanel` / Context 等宿主残余 | Phase 0/1 继续迁移,不要再把业务写回 Host |
+| Core | `packages/core` 已包含 types / events / hooks / registry / store | 后续不再按旧方案新拆 `core-events` / `core-shortcuts`;优先把能力收敛进 `@repo/core` |
+| Core Data | `packages/core-data` 已存在 SQLite/localStorage/keychain/testing 边界 | Phase 0.3 的重点是把 Repository 契约跑通、SQLCipher 真实运行时闭环、Web Sync blob driver 留接口 |
+| Organizer | `packages/plugin-organizer` 已承接 OrganizerLayer / GridWindow hooks | Phase 0 重点是原生 DnD、窗口层级、持久化和真机稳定性,不是 UI 重写 |
+| Account/Sync | `packages/plugin-account` + 多个 crypto/sync 路线锚点已存在 | 以 Sync PRD v0.6 为安全真理源;任何旧 "简单 REST 同步" 全部作废 |
+| Rust | 已有 `commands/window/crypto/keychain/menubar`、`crypto/`、`platform/macos/` | 旧 "lib.rs 334 行硬编码" 已部分解决;剩余是窗口地基、capability allowlist、SQLCipher/MAS entitlements |
+| GitHub | `jinlong17/XAI_Desktop` 当前没有 open issues | 规划状态主要靠本地 docs/dev_log/PLUGIN_MAP,不是 GitHub issue 流 |
+
+### 11.2 对标产品拆解后的产品战略
+
+| 赛道 | 成熟方案 | XAI 应该吸收 | XAI 不能照抄 |
+|---|---|---|---|
+| 桌面整理 | Apple Stacks、Desktop Organizer - File Zones、腾讯桌面整理 | 分区、规则、快速访问、App/File Zone 区分、零收集叙事 | Windows 化围栏、美观但低信息密度的装饰主题 |
+| 拖拽货架 | Dropover、Yoink | 拖入/拖出时的临时承载、视觉降噪、拖拽失败可解释 | 只做临时 shelf,失去长期桌面空间 |
+| 剪贴板 | Raycast Clipboard History、Maccy、Paste | 键盘优先、类型过滤、OCR、禁用应用、顺序粘贴、本地隐私 | 云端默认索引用户剪贴板 |
+| 效率套件 | TickTick、Things | Calendar / Pomodoro / Habits / Eisenhower / sidebar-list-detail | 团队协作、甘特、重度清单自定义 |
+| 项目看板 | Trello | Board/List/Card、拖拽流转、due date、checklist、label | 协作、Power-Ups、复杂自动化 |
+| 多端生态 | TickTick Web / mobile | Web 作为 Console 同构界面 + 临时设备入口 | 在 Sync 未稳定前过早公开 Web |
+
+### 11.3 v1 执行路线(门控版)
+
+| Gate | Phase | 周期基线 | 交付物 | 验收门 |
+|---|---|---:|---|---|
+| G0 | Phase 0.1 技术 spike | 1.5-2 周 | `docs/adr/0001-window-architecture.md`;最小原型验证 click-through / DnD / Spaces | 真机 Sonoma/Sequoia + 多屏;失败则改产品形态 |
+| G1 | Phase 0.2 原生地基 | 3-4 周 | Rust window ops 重建、Grid 原生 DnD、Control 稳定、跨窗口 gridId scope | overlay 空白区可点桌面;Grid 可拖真实路径;多 Grid 不串事件 |
+| G2 | Phase 0.3 数据/安全底座 | 4-5 周 | Repository 契约、SQLCipher、Keychain、menu bar、global shortcut、DMG/MAS target、Sync 单表骨架 | 本地加密 PoC、MAS entitlements 草案、single-table sync green |
+| G3 | Phase 1 Organizer 闭环 | 2-3 周 | 自动分类、一键整理、folder mapping、app/url item、Finder tag 协作 | 用户能日用"整理桌面"一整天不丢状态 |
+| G4 | Phase 2 效率 + 剪贴板 | 6-7.5 周 | Todo / Pomodoro / Clipboard / Labels / Cmd+K 本地搜索 | 剪贴板隐私门、Todo/Pomodoro 闭环、性能预算过 |
+| G5 | Phase 2.5 Console + Project | 4-6 周 | `plugin-console` + `plugin-project`;三栏/slot/search/settings/notification | Console PRD §9.1~§9.5 全过 |
+| G6 | Phase 3 Widgets + Calendar + Pet 基础 | 6-7 周 | Widgets、Calendar 聚合、Habits 增强、Progress、Pet 基础 | 桌面陪伴但不干扰;7 天长跑 |
+| G7 | Phase 4 AI | 3-4.5 周 | AI Cube 真实对话、NL task、clipboard AI context、pet AI 化身 | 成本上限、隐私边界、离线降级 |
+| G8 | Phase 4.5 Web | 8-10 周 | Web Console、Sync blob driver、IndexedDB 安全、CSP/Sentry、导出/设备撤销 | Web PRD §10.1 / §10.2 全过 |
+| G9 | Phase 4.8/5 Sync hardening + beta | 6-7 周(+2-3 周前置) | Sync v0.6 协议硬化、TLA+/property、Re-key、recovery drills、公测 | Sync PRD §10 / §11 全过 |
+| G10 | Phase 6 GA | 2-3 周 | 公证、MAS 提交、官网、隐私条款、营销素材 | DMG + MAS 双轨 release candidate |
+
+### 11.4 前 30 天工程节奏
+
+**Week 1: G0 spike**
+
+- 建最小实验分支,只验证窗口模型,不修 UI。
+- 验证 Tauri transparent/private API 与 `macOSPrivateApi=false` 的真实差异。
+- 在非透明 Grid window 上验证 Tauri 原生 DnD 能否拿真实路径。
+- 产出 ADR,明确继续 overlay / 纯多窗口 / 模式切换三选一。
+
+**Week 2-3: G1 原生地基**
+
+- 以 ADR 结论重写 `commands/window.rs` + `platform/macos/window_ext.rs`。
+- 清掉 `tauri.conf.json` 里无法 MAS 的默认路径,做 feature-gated target。
+- `plugin-organizer` 的 DnD 改为 native path-first,HTML5 DnD 只作 Web/dev fallback。
+- Grid 位置/尺寸持久化从 localStorage 迁入 core-data repo seam。
+
+**Week 4: G2 底座第一段**
+
+- `@repo/core-data` Repository 契约冻结 v0。
+- SQLCipher runtime PoC:复制 DB 文件后无 key 不可读。
+- Keychain opaque handle / refresh token / db_key 路径打通。
+- `PLUGIN_MAP.md` 更新 core/core-data/plugin-account 的真实状态。
+
+### 11.5 交付质量门
+
+| 类别 | 必须过的门 |
+|---|---|
+| 真机 | 每个 Phase 至少 Sonoma + Sequoia + 外接屏 + 睡眠唤醒 |
+| 性能 | 冷启动、唤起、剪贴板搜索、Console list virtualization 按 PRD budget 记录 |
+| 安全 | Sync/crypto 相关功能不得绕过 `plugin-account` 与 Rust KeyVault;JS 不接触 raw DEK |
+| 文档 | 每个 plugin 四件套必须同步;`dev_log.md` 是 workflow source of truth |
+| 发布 | Phase 0 末必须跑一次 Developer ID notarization dry run 和 MAS sandbox build dry run |
+| 回滚 | 每个 Gate 结束必须可回到上一 Gate 的可运行状态 |
+
+### 11.6 立即要改的旧假设
+
+| 旧假设 | 新结论 |
+|---|---|
+| Phase 0 是 1-2 周收尾 | Phase 0 是 7-9 周地基重建,且 0.3 因 Sync v0.6 上调 |
+| Web 4-6 周 | Web v0.3 已重估 8-10 周 |
+| Sync Phase 5 3-4 周 | Sync v0.6 安全协议让 Phase 5 现实值为 6-7 周,且需要 Phase 4.8 硬化门 |
+| `macOSPrivateApi=true` 可长期保留 | MAS 路线要求 `macOSPrivateApi=false` 的可行方案进入 G0/G2 |
+| 插件注册未来动态扫描 | v1 仍静态 import 注册;第三方插件运行时加载不进核心路径 |
+| Todo 可不断加深 | Todo 保持中度;看板独立给 Project,批量/附件/协作不进 v1 Todo |
 
 — END —

@@ -1,4 +1,4 @@
-# XAI_Desktop 重构方案 v1.0
+# XAI_Desktop 重构方案 v1.1
 
 # 微内核 + 插件双轨 + 文档驱动开发 (Doc-Driven Development)
 
@@ -9,7 +9,9 @@
 > - 前端插件通过 PluginRegistry 统一注册，Host 动态加载
 > - 三波次推进（文档+边界 → 前端拆分 → Rust 后端 + 基础设施）
 >
-> **创建日期:** 2026-05-13 | **维护者:** Jinlong
+> **创建日期:** 2026-05-13 | **最后审查:** 2026-05-19 | **维护者:** Jinlong
+>
+> **v1.1 说明:** v1.0 的三波重构保留为历史设计稿。2026-05-19 审查发现仓库已经完成一部分目标态(`packages/core`、`core-data`、`plugin-account`、Rust `commands/crypto/platform`),因此后续不再按"从零拆分"执行,而是按 §十二 的"剩余重构收敛计划"推进。
 >
 > **参考:** Any2Knowledge_Agent_System/docs/REFACTORING_PLAN.md v2.3
 > （微内核 + FSD + Doc-Driven Development 模式的成熟实践）
@@ -1463,7 +1465,7 @@ export const useOrganizerStore = create<OrganizerState>()(
 - **不做运行时动态插件加载** — 桌面应用编译时确定插件集，不需要运行时 discover
 - **不做新功能** — Todo/Pomodoro/Clipboard 等在重构后的新 Plugin 中从零开发，不在此方案内
 - **不做 apps/web/ 和 apps/docs/ 清理** — 保留为 scaffold，不影响桌面应用
-- **不做数据库迁移** — 当前用 localStorage，SQLite 是未来目标 (PRD §8)，不在此次
+- **不做数据库迁移** — 历史口径:当前用 localStorage，SQLite 是未来目标 (PRD §8)，不在此次。2026-05-19 起已被 §12.1/§12.3 覆盖:SQLite/SQLCipher 进入 Phase 0.3 必做验证。
 - **不做 CI/CD** — 暂无 GitHub Actions，后续单独规划
 
 ---
@@ -1478,7 +1480,7 @@ export const useOrganizerStore = create<OrganizerState>()(
 | docs/ AI 上下文入口 | 无 (需扫描 35 文件) | 三件套 + plugin 四件套 |
 | apps/desktop/src/ 业务代码行数 | ~1200 行 | <100 行 (仅路由 + 壳) |
 | lib.rs 行数 | 334 行 | <50 行 |
-| packages/core/ | 不存在 | 类型 + 事件 + Store + Registry 完整 |
+| packages/core/ | v1.0 历史口径:不存在 | 类型 + 事件 + Store + Registry 完整 |
 | packages/ui/ 组件数 | 3 | 10+ |
 | 测试文件数 | 0 | 10+ |
 | TypeScript error | 0 | 0 |
@@ -1490,6 +1492,83 @@ export const useOrganizerStore = create<OrganizerState>()(
 - **跨窗口通信有类型保障:** 新增事件只需在 EventMap 中加一行类型定义
 - **AI 协作效率提升:** PLUGIN_MAP.md 是 AI 的白名单，四件套文档是 AI 的上下文
 - **团队可扩展:** 不同 Plugin 可以并行开发，互不干扰
+
+---
+
+## 十二、v1.1 剩余重构收敛计划(2026-05-19)
+
+### 12.1 当前代码事实校正
+
+| v1.0 判断 | 2026-05-19 事实 | 处理 |
+|---|---|---|
+| `packages/core/` 不存在 | 已存在 types / events / hooks / registry / store | 改为补齐契约、测试和文档,不是新建 |
+| Rust 后端全在 `lib.rs` | 已拆出 `commands/window/crypto/keychain/menubar`、`crypto/`、`platform/macos/` | `lib.rs < 50 行` 仍是目标,但重点是窗口地基和 capability allowlist |
+| `plugin-organizer` 迁移未开始 | `OrganizerLayer`、GridWindow hooks 已在 plugin-organizer | 继续收敛 DnD / persistence / native window lifecycle |
+| SQLite 不在本次重构 | `core-data` 已存在 SQLite seam,Sync PRD 要求 SQLCipher | SQLite/SQLCipher 已进入 Phase 0.3 必做 |
+| apps/web/docs 不在范围 | Web 子 PRD 已进入 v1 全集(Phase 4.5) | apps/web 仍不在当前重构波次,但架构契约必须提前支持 Web host |
+| 插件运行时动态加载 | 系统宪法已明确 v1 不做运行时动态加载 | 删除所有"扫描插件目录作为 v1 核心"的执行期待;只保留静态目录/市场作为产品层未来能力 |
+
+### 12.2 新重构目标
+
+重构目标从"搭微内核"升级为"让微内核成为真实开发约束":
+
+1. **Host 彻底无业务**:`apps/desktop/src` 只保留 routes/window shells/providers/plugin registration;AI Cube、Settings、sync status UI 迁出。
+2. **Core 契约冻结**:`@repo/core` 的 EventMap / PluginManifest / PluginHost / useTauriInvoke / useWindow 成为唯一入口。
+3. **Data 契约冻结**:`@repo/core-data` 的 Repository 接口同时服务 Desktop SQLite 与 Web Sync blob driver。
+4. **Rust 安全边界冻结**:所有 crypto/keychain/sync command 通过 allowlist + opaque handle,JS 不接触 raw key。
+5. **窗口地基优先**:任何 UI/业务拆分不得掩盖 R-00:click-through、native DnD、Spaces、multi-window scope。
+6. **Plugin 四件套真实使用**:每个 plugin 的 `design/api/test/dev_log` 与 `PLUGIN_MAP.md` 状态同步,不允许只有空模板。
+
+### 12.3 Wave R0 · 地基/边界审计(优先于新增功能)
+
+| 步骤 | 范围 | 输出 |
+|---|---|---|
+| R0.1 | `apps/desktop/src-tauri/tauri.conf.json` | 明确 DMG/MAS target 差异;`macOSPrivateApi=true` 不再作为 MAS 默认 |
+| R0.2 | `commands/window.rs` + `platform/macos/window_ext.rs` | ADR-0001 窗口模型;main/control/grid/console 统一窗口能力表 |
+| R0.3 | `packages/plugin-organizer` | 原生 DnD path-first;Grid rect persistence;事件按 gridId scope |
+| R0.4 | `packages/core/src/events` | EventMap 覆盖 organizer/account/console baseline;emit/listen 测试 |
+| R0.5 | `packages/core-data` | Repository v0 冻结;SQLite/SQLCipher runtime PoC;localStorage migration 测试 |
+| R0.6 | `packages/plugin-account` + Rust crypto commands | Tauri capability allowlist;opaque key handle review;no raw DEK crossing JS boundary |
+
+**R0 出口标准:** M0-A/G0 技术 spike 通过,`pnpm check` / relevant Rust tests 通过,文档写入 ADR + PLUGIN_MAP。
+
+### 12.4 Wave R1 · Host 瘦身收敛
+
+| 当前残余 | 目标归属 | 说明 |
+|---|---|---|
+| `components/AiAssistant/AiCube.tsx` | `packages/plugin-ai-cube` | Phase 0~3 只作为 quick tray;Phase 4 才接 LLM |
+| `components/Settings/SettingsPanel.tsx` | `packages/plugin-settings` / Console SettingsSection | 设置容器与业务设置分离 |
+| `context/SettingsContext.tsx` | `@repo/core/store` + core-data settings repo | 主题/密度/快捷键区分 device-local vs account-global |
+| `context/InteractiveContext.tsx` | `@repo/core/store` / window adapter | 与 click-through/window mode 统一 |
+| `sync/useSyncMenuBarStatus.ts` | `plugin-account` public hook 或 `@repo/core` status bridge | menu bar 不直接知道业务细节 |
+| `windows/GridWindow.tsx` | Host shell + plugin-organizer GridContent | Grid window 只负责 shell,内容归 plugin |
+| `windows/ControlWindow.tsx` | Host shell + plugin slots | Control 不硬编码 AI/Settings |
+
+**R1 出口标准:** `apps/desktop/src` 业务代码 < 150 行;Host 只 import plugin public `index.ts`;不从 plugin `src/internal` 取任何东西。
+
+### 12.5 Wave R2 · 插件补齐顺序
+
+| 顺序 | Plugin | 为什么先/后 |
+|---|---|---|
+| 1 | `plugin-settings` | 解除 Host 设置残余,为 MAS/隐私/快捷键提供统一入口 |
+| 2 | `plugin-ai-cube` | 先托盘化,后 AI 化;避免 AI UI 留在 Host |
+| 3 | `plugin-labels` | Todo/Project/Clipboard/Calendar 共同依赖 |
+| 4 | `plugin-productivity` | Todo/Pomodoro/Habits 是 Phase 2 主价值 |
+| 5 | `plugin-clipboard` | 技术独立,但隐私/Keychain/屏幕共享检测需要 core 能力 |
+| 6 | `plugin-console` | 依赖 productivity/labels/project slot 稳定 |
+| 7 | `plugin-project` | 与 Console 并行,但数据模型独立 |
+| 8 | `plugin-widgets` / `plugin-calendar` / `plugin-pet` | Phase 3 增强层 |
+
+### 12.6 更新后的成功标准
+
+| 指标 | v1.0 目标 | v1.1 目标 |
+|---|---|---|
+| `lib.rs` 行数 | <50 | <80 可接受,但只能是 builder/setup/registrations |
+| Host 业务代码 | <100 行 | <150 行 + 无业务状态/规则 |
+| Core 测试 | 10+ | events/registry/store/core-data contract tests 必须覆盖 |
+| Plugin 状态 | 规划表 | `PLUGIN_MAP.md` 与每个 `dev_log.md` 一致 |
+| MAS 可行性 | 未定义 | sandbox build dry run + entitlements 草案在 Phase 0 末完成 |
+| 安全边界 | 未定义 | raw DEK 不跨 JS boundary;Tauri crypto command allowlist 有测试 |
 
 ---
 
