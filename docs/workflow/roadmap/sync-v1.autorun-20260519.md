@@ -10,10 +10,10 @@
 
 ## Current State
 
-- Current feature: `commit-seq-authority` (#23) shipped locally; next eligible feature is `onboarding-backfill-ui` (#18), `realtime-private-channel-config` (#21), or `rls-policies-and-tests` (#25).
-- Completed this run: `kdf-primitives` (#3), `aes-gcm-aead-core` (#4), `deterministic-cbor-aad` (#5), `bip39-mnemonic-24w` (#6), `cipher-envelope-codec` (#7), `rust-keyvault-opaque-handle` (#11), `x25519-device-keypair` (#12), `hpke-per-device-wrap` (#13), `ed25519-recovery-signing` (#14), `sqlcipher-local-db` (#16), `account-signup-login` (#17), `crypto-tauri-commands` (#19), `core-data-sqlite-driver` (#20), `commit-seq-authority` (#23) code/docs/tests locally complete with deferred gates.
+- Current feature: `realtime-private-channel-config` (#21) shipped locally; next eligible feature is `onboarding-backfill-ui` (#18) or `rls-policies-and-tests` (#25).
+- Completed this run: `kdf-primitives` (#3), `aes-gcm-aead-core` (#4), `deterministic-cbor-aad` (#5), `bip39-mnemonic-24w` (#6), `cipher-envelope-codec` (#7), `rust-keyvault-opaque-handle` (#11), `x25519-device-keypair` (#12), `hpke-per-device-wrap` (#13), `ed25519-recovery-signing` (#14), `sqlcipher-local-db` (#16), `account-signup-login` (#17), `crypto-tauri-commands` (#19), `core-data-sqlite-driver` (#20), `commit-seq-authority` (#23), `realtime-private-channel-config` (#21) code/docs/tests locally complete with deferred gates.
 - Failed this run: no feature blocked; incidents recorded for command/script/import/fixture issues.
-- Next step: continue with #21 realtime-private-channel-config or #25 rls-policies-and-tests depending on Supabase-local testability.
+- Next step: continue with #25 `rls-policies-and-tests` or #18 `onboarding-backfill-ui` depending on local testability.
 
 ## Checkpoints
 
@@ -257,6 +257,22 @@
   - Ten parallel same-account calls returned unique sorted sequence `1,2,3,4,5,6,7,8,9,10`.
 - Deferred: live Supabase deploy, `/sync/push` Edge Function transaction integration, and client pull rollback monitor.
 - Commit: `feat(commit-seq-authority): verify commit sequence RPC`.
+
+### 2026-05-19 03:36 PDT — feature checkpoint: realtime-private-channel-config (#21)
+
+- Added `apps/web/supabase/migrations/20260519000007_realtime_private_channels.sql`.
+- Added `apps/web/supabase/realtime.private-channel.json` with `channels.sync.clientConfig.private = true`.
+- Policy `realtime_sync_private_channel_active_device` binds `realtime.topic()` to `sync:<auth.uid()>`, requires `extension = 'postgres_changes'`, and requires active non-revoked JWT `device_id`.
+- Added docs anchor `packages/realtime-private-channel-config/docs/{design,api,test,dev_log}.md` and updated PLUGIN_MAP.
+- Tests/checks passed:
+  - Local `postgres:16-alpine` Docker shim for `auth` and `realtime` applied the migration.
+  - `pg_policies` contained the expected `realtime.messages` policy.
+  - Active device + matching topic read count was `1`.
+  - Active device + wrong topic read count was `0`.
+  - Revoked device + matching topic read count was `0`.
+  - Node JSON check confirmed `clientConfig.private === true`.
+- Deferred: live Supabase deploy and cross-account Realtime subscription negative test.
+- Commit: `feat(realtime-private-channel-config): add private channel policy`.
 
 ### 2026-05-19 02:55 PDT — sweep checkpoint after next 4-feature loop
 

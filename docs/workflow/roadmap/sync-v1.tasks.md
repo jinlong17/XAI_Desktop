@@ -27,7 +27,7 @@
 - [x] #7 cipher-envelope-codec (T-06 envelope.rs)
 - [x] #8 keychain-bridge-macos (T-10)
 - [x] #15 supabase-schema-migrations (T-02) — authoring; deploy waits on #9
-- [ ] #21 realtime-private-channel-config (T-04) — config only
+- [x] #21 realtime-private-channel-config (T-04) — config only
 
 ### Day 3–9 — key hierarchy + account + KeyVault + SQLCipher
 - [x] #11 rust-keyvault-opaque-handle (T-08)

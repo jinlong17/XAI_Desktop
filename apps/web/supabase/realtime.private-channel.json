@@ -1,0 +1,13 @@
+{
+  "$schema": "https://xai.local/schemas/realtime-private-channel.v1.json",
+  "channels": {
+    "sync": {
+      "nameTemplate": "sync:<account_id>",
+      "clientConfig": {
+        "private": true
+      },
+      "phase0": "configuration-only",
+      "subscriptionFeature": "realtime-subscription"
+    }
+  }
+}
