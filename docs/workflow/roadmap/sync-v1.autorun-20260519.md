@@ -123,6 +123,20 @@
 - Deferred: human review, cross-vendor verify, real signed-build Keychain ACL verification, and Supabase `device_pub` upload.
 - Commit: `feat(x25519-device-keypair): add device key generation`.
 
+### 2026-05-19 02:55 PDT — sweep checkpoint after next 4-feature loop
+
+- Completed next eligible loop: #7 `cipher-envelope-codec`, #6 `bip39-mnemonic-24w`, #11 `rust-keyvault-opaque-handle`, #12 `x25519-device-keypair`.
+- Broader checks:
+  - `pnpm lint` PASS.
+  - `pnpm build` PASS.
+  - `cargo test --manifest-path apps/desktop/src-tauri/Cargo.toml` PASS.
+  - `pnpm typecheck` FAIL: root script is not defined (`Command "typecheck" not found`); repeated known incident.
+- Non-blocking warnings seen:
+  - Rust `keychain-it` unexpected cfg warning from pre-existing Keychain gated tests.
+  - Next.js `baseline-browser-mapping` data age warning during build.
+  - Turbo warning: no output files found for `desktop#build`.
+- Next eligible candidates: #13 `hpke-per-device-wrap`, #14 `ed25519-recovery-signing`, #16 `sqlcipher-local-db`, #17 `account-signup-login`, #21 `realtime-private-channel-config`, #23 `commit-seq-authority`, #25 `rls-policies-and-tests`.
+
 ### 2026-05-19 02:17 PDT — sweep checkpoint after first 3-feature loop
 
 - Completed first eligible loop: #3 `kdf-primitives`, #4 `aes-gcm-aead-core`, #5 `deterministic-cbor-aad`.
