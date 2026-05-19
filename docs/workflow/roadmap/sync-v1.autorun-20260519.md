@@ -552,6 +552,24 @@
 - Deferred: human review, cross-vendor verify, and hosted Supabase/supabase-js property run.
 - Commit: pending `feat(rls-fuzz-property): add RLS property fuzz gate`.
 
+### 2026-05-19 05:00 PDT — sweep checkpoint after Phase 4.8 test gates
+
+- Completed this sweep window:
+  - #31 `protocol-integrity-integration-tests` (`746cfbf`)
+  - #35 `rfc-test-vectors-gate` (`53b9cf3`)
+  - #34 `rls-fuzz-property` (`c3859c4`)
+- Broader checks:
+  - `pnpm lint` initially FAIL, then PASS after removing #31 unused test import.
+  - `pnpm typecheck` PASS.
+  - `pnpm build` PASS.
+  - `cargo test --manifest-path apps/desktop/src-tauri/Cargo.toml` PASS.
+- Non-blocking warnings seen:
+  - Next `baseline-browser-mapping` data-age warning during typegen/build.
+  - Turbo warning: no output files found for `desktop#build`.
+  - Rust dead-code warnings in desktop error/keychain paths.
+- Next eligible candidates: #32 `rekey-two-phase`, #18 `onboarding-backfill-ui`. #37 remains blocked by #33 TLC/Java plus #32 pending.
+- Commit: pending `fix(protocol-integrity-integration-tests): clear lint warning`.
+
 ### 2026-05-19 02:55 PDT — sweep checkpoint after next 4-feature loop
 
 - Completed next eligible loop: #7 `cipher-envelope-codec`, #6 `bip39-mnemonic-24w`, #11 `rust-keyvault-opaque-handle`, #12 `x25519-device-keypair`.

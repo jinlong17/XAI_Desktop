@@ -10,7 +10,6 @@ import {
   type StoredBlob,
 } from '../functions/sync-push/handler';
 import type {
-  RecoveryChallenge,
   RecoveryPayload,
   RecoveryProofDatabase,
 } from '../functions/recovery-proof/handler';
@@ -51,7 +50,7 @@ describe('protocol integrity Edge checks', () => {
 
 function createRecoveryDb() {
   const db: RecoveryProofDatabase & { updatedPayload?: RecoveryPayload } = {
-    async createChallenge(_challenge: RecoveryChallenge) {
+    async createChallenge() {
       throw new Error('not used');
     },
     async getChallenge() {
