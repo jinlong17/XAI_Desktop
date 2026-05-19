@@ -8,6 +8,17 @@
 
 ---
 
+## Roadmap / CI Gate Anchors
+
+> These are NOT plugins. They are roadmap workflow anchors (`packages/<slug>/docs/`)
+> that track supply-chain / infra rows. Code boundary: Cargo.toml / CI only.
+
+| Slug | 目录 | 状态 | 说明 | 最后更新 |
+|------|------|------|------|---------|
+| crypto-deps-lockdown | packages/crypto-deps-lockdown/ | In-Dev | Wave W0 Phase 0.3: exact-pin 7 crypto deps + blocking CI gate (deny.toml + supply-chain-security.yml). READY_FOR_VERIFY. | 2026-05-19 |
+
+---
+
 ## Core Packages
 
 | Package | 目录 | 状态 | 说明 | 最后更新 |
