@@ -39,6 +39,9 @@ pub fn run() {
             commands::window::create_grid_window,
             commands::window::update_grid_window,
             commands::window::close_grid_window,
+            commands::keychain::secret_set,
+            commands::keychain::secret_get,
+            commands::keychain::secret_del,
         ])
         .setup(|app| {
             let window = app

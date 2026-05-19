@@ -1,0 +1,9 @@
+{
+  "$schema": "../gen/schemas/desktop-schema.json",
+  "identifier": "plugin-account-keychain",
+  "description": "Scoped capability for the plugin-account window: documents that secret_set / secret_get / secret_del are intended exclusively for the 'account' and 'control' windows. In Tauri v2 the capability system governs plugin permissions; custom invoke_handler commands are additionally enforced via the window-origin check in the command handlers. This file satisfies Rec-1 (feature-review): dedicated capability file, not widening capabilities/default.json.",
+  "windows": ["account", "control"],
+  "permissions": [
+    "core:default"
+  ]
+}
