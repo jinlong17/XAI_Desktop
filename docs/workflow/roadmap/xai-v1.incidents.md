@@ -19,3 +19,13 @@
 - Attempted fixes: Created a manual path-first matrix template and documented the exact runtime evidence required. Avoided speculative DnD implementation changes.
 - Current status: BLOCKED.
 - Resume instruction: Run `pnpm --filter desktop tauri dev`, fill `docs/reviews/window-ground-truth/finder-dnd-path/README.md`, then rerun feature-verify for `finder-dnd-path`.
+
+## Incident 3
+
+- Time: 2026-05-19 15:02 PDT
+- Feature: spaces-multimonitor-matrix
+- Symptom: Feature cannot satisfy acceptance in unattended mode.
+- Root cause if known: G0.5 requires real Mission Control, Spaces, fullscreen-app, and multi-display observations; static inspection cannot prove window placement/recovery behavior.
+- Attempted fixes: Created a manual matrix template and documented the exact runtime evidence required. Avoided speculative window behavior changes.
+- Current status: BLOCKED.
+- Resume instruction: Run `pnpm --filter desktop tauri dev`, fill `docs/reviews/window-ground-truth/spaces-multimonitor-matrix/README.md`, then rerun feature-verify for `spaces-multimonitor-matrix`.

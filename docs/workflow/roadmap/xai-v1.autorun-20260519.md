@@ -15,12 +15,12 @@
 |---|---|
 | Current Gate | G0 — window spike |
 | Gate Manifest | docs/workflow/roadmap/xai-g0-window-spike.md |
-| Current Feature | none |
-| Feature Source | — |
-| Feature Status | STOPPED — no eligible feature |
-| Current Commit | current HEAD (final checkpoint docs); last feature commit `33627df` |
-| Tests | see Feature Outcomes |
-| Next Step | Human must unblock G0.3/G0.4 real-hardware gates before G0.5/G0.6 |
+| Current Feature | spaces-multimonitor-matrix |
+| Feature Source | docs/planning/execution/G0-window-spike.md §G0.5 |
+| Feature Status | BLOCKED |
+| Current Commit | pending |
+| Tests | `test -f docs/reviews/window-ground-truth/spaces-multimonitor-matrix/README.md` |
+| Next Step | Continue to G0.6 safe prep under user override |
 
 ## Checkpoints
 
@@ -82,6 +82,18 @@
 - G0.6 `mas-sandbox-dry-run` depends on `click-through-matrix` and `finder-dnd-path`, both BLOCKED.
 - The run stopped before the 24h deadline because continuing would require real hardware/manual evidence that is explicitly recorded as deferred/blocking.
 
+### 2026-05-19 15:00 PDT — User Override: Skip Manual Gates
+
+- User instructed: "跳过,直接先继续往下开发".
+- Interpretation: continue safe downstream prep, but do not claim G0 Go/Conditional Go and do not erase manual blockers.
+- `spaces-multimonitor-matrix` started as safe prep only.
+
+### 2026-05-19 15:02 PDT — Feature Checkpoint: spaces-multimonitor-matrix
+
+- Created Step 0, discovery, design/api/test/dev_log, and manual matrix template.
+- No production code or window behavior was changed.
+- Status: BLOCKED because real Spaces/fullscreen/multi-display evidence is required.
+
 ## Feature Outcomes
 
 | Feature | Gate | Status | Commit | Tests | Notes |
@@ -90,6 +102,7 @@
 | grid-window-prototype | G0 | READY_TO_SHIP | 6b121ea | PASS: plugin-organizer check-types; desktop build | Runtime Tauri alpha/beta evidence deferred. |
 | click-through-matrix | G0 | BLOCKED | 82ab268 | PASS: matrix template exists; BLOCKED: real hit-test evidence | Requires human macOS click-through matrix. |
 | finder-dnd-path | G0 | BLOCKED | 33627df | PASS: matrix template exists; BLOCKED: real Finder drop evidence | Requires human Finder/Tauri path matrix. |
+| spaces-multimonitor-matrix | G0 | BLOCKED | pending | PASS: matrix template exists; BLOCKED: real Spaces/fullscreen/multi-display evidence | Reached by user override; safe prep only. |
 
 ## Deferred Gates Summary
 
@@ -99,11 +112,13 @@
 - Cross-vendor review/verify and runtime Tauri alpha/beta evidence deferred for `grid-window-prototype`.
 - Real macOS click-through matrix deferred for `click-through-matrix`.
 - Real Finder DnD path matrix deferred for `finder-dnd-path`.
+- Real Spaces/fullscreen/multi-display matrix deferred for `spaces-multimonitor-matrix`.
 
 ## Incidents Summary
 
 - click-through-matrix blocked on real macOS hit-test evidence.
 - finder-dnd-path blocked on real Finder DnD payload evidence.
+- spaces-multimonitor-matrix blocked on real macOS Spaces/fullscreen/multi-display evidence.
 
 ## Final 24h Summary
 

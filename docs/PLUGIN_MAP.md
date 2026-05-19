@@ -19,6 +19,7 @@
 | grid-window-prototype | packages/grid-window-prototype/ | Testing | G0.2 alpha/beta Grid window prototype is READY_TO_SHIP with fallback metadata panel and targeted scoped-event button. Runtime Tauri evidence deferred. | 2026-05-19 |
 | click-through-matrix | packages/click-through-matrix/ | Blocked | G0.3 click-through matrix safe prep complete; real macOS hit-test evidence required before G0 can pass. | 2026-05-19 |
 | finder-dnd-path | packages/finder-dnd-path/ | Blocked | G0.4 Finder path-first DnD matrix safe prep complete; real Finder drop evidence required before G0 can pass. | 2026-05-19 |
+| spaces-multimonitor-matrix | packages/spaces-multimonitor-matrix/ | Blocked | G0.5 Spaces/fullscreen/multi-display matrix safe prep complete via user override; real macOS evidence required before G0 can pass. | 2026-05-19 |
 | crypto-deps-lockdown | packages/crypto-deps-lockdown/ | Shipped | Wave W0 Phase 0.3: exact-pin 7 crypto deps + blocking CI gate (deny.toml + supply-chain-security.yml). | 2026-05-19 |
 | kdf-primitives | packages/kdf-primitives/ | Shipped | Wave W0 Phase 0.3: Argon2id KEK/auth_password + HKDF helpers under Tauri `crypto` feature. Deferred cross-vendor gate recorded in sync-v1 deferred gates. | 2026-05-19 |
 | aes-gcm-aead-core | packages/aes-gcm-aead-core/ | Shipped | Wave W0 Phase 0.3: AES-256-GCM primitive with explicit AAD and detached tag. Deferred gates recorded in sync-v1 deferred gates. | 2026-05-19 |

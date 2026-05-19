@@ -107,3 +107,27 @@
 - Later human action: Run `pnpm --filter desktop tauri dev`, drop Finder items into a Grid, and attach logs/screenshots under `docs/reviews/window-ground-truth/finder-dnd-path/`.
 - Suggested verification command / environment: `pnpm --filter desktop tauri dev` on macOS with Finder; use file, folder, `.app`, and alias drops.
 - Files/commits affected: docs/reviews/window-ground-truth/finder-dnd-path/README.md; packages/finder-dnd-path/docs/*; commit `33627df`
+
+## Entry 10
+
+- Feature: spaces-multimonitor-matrix
+- Gate: G0
+- Deferred gate: User override to skip blocked G0.3/G0.4 dependencies for safe prep
+- Why deferred: The user explicitly instructed to skip and continue, while G0.3/G0.4 remain BLOCKED on real hardware evidence.
+- Risk: G0.5 prep proceeds without the prerequisite hit-test and DnD evidence, so results cannot be used as a G0 pass signal.
+- What was done instead: Limited G0.5 to documentation/matrix preparation only and preserved BLOCKED status for real runtime validation.
+- Later human action: Complete G0.3/G0.4 evidence, then perform G0.5 runtime validation.
+- Suggested verification command / environment: `sed -n '1,120p' docs/workflow/roadmap/xai-g0-window-spike.md`
+- Files/commits affected: docs/workflow/roadmap/xai-g0-window-spike.md; docs/workflow/roadmap/xai-v1.autorun-20260519.md; commit pending
+
+## Entry 11
+
+- Feature: spaces-multimonitor-matrix
+- Gate: G0
+- Deferred gate: Real Spaces/fullscreen/multi-display matrix
+- Why deferred: The acceptance requires real Mission Control, multiple Spaces, fullscreen-app, and multi-display observations.
+- Risk: G0 cannot prove window placement/recovery stability until this evidence exists.
+- What was done instead: Created the evidence matrix template and avoided changing window behavior without live proof.
+- Later human action: Run `pnpm --filter desktop tauri dev`, perform the matrix, and attach logs/screenshots under `docs/reviews/window-ground-truth/spaces-multimonitor-matrix/`.
+- Suggested verification command / environment: `pnpm --filter desktop tauri dev` on macOS with built-in + external display, Mission Control, multiple Spaces, and fullscreen app.
+- Files/commits affected: docs/reviews/window-ground-truth/spaces-multimonitor-matrix/README.md; packages/spaces-multimonitor-matrix/docs/*; commit pending
