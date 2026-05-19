@@ -67,10 +67,10 @@
 - Deferred gate: Real Tauri alpha/beta window runtime evidence
 - Why deferred: The unattended run cannot open the desktop app, click Grid windows, or inspect per-window DevTools logs as a human.
 - Risk: Automated build checks prove the code compiles, but they do not prove two native windows are visible, independently closable, or that targeted events are not delivered cross-window at runtime.
-- What was done instead: Implemented the fallback panel and targeted `emitTo(windowLabel, ...)` path; patched `+ New Grid` request routing in `14e04c2`; reran typecheck/build; documented exact manual invocation and expected evidence.
-- Later human action: Run the app, click `+ New Grid`, confirm a native Grid window appears, then invoke `create_grid_window` for `alpha` and `beta`, click each scoped-event button, and attach logs/screenshots under `docs/reviews/window-ground-truth/grid-window-prototype/`.
+- What was done instead: Implemented the fallback panel and targeted `emitTo(windowLabel, ...)` path; patched `+ New Grid` request routing in `14e04c2`; raised the control window above Grid windows in `01e5167`; reran typecheck/build/Rust check; documented exact manual invocation and expected evidence.
+- Later human action: Run the app, click `+ New Grid`, confirm a native Grid window appears, verify the AI cube still opens settings and drags above the Grid window, then invoke `create_grid_window` for `alpha` and `beta`, click each scoped-event button, and attach logs/screenshots under `docs/reviews/window-ground-truth/grid-window-prototype/`.
 - Suggested verification command / environment: `pnpm --filter desktop tauri dev`, then use the DevTools snippets in `docs/reviews/window-ground-truth/grid-window-prototype/README.md`.
-- Files/commits affected: `6b121ea`, `14e04c2`; apps/desktop/src/windows/GridWindow.tsx; apps/desktop/src/windows/ControlWindow.tsx; packages/plugin-organizer/src/OrganizerLayer.tsx; docs/reviews/window-ground-truth/grid-window-prototype/README.md
+- Files/commits affected: `6b121ea`, `14e04c2`, `01e5167`; apps/desktop/src/windows/GridWindow.tsx; apps/desktop/src/windows/ControlWindow.tsx; packages/plugin-organizer/src/OrganizerLayer.tsx; apps/desktop/src-tauri/src/platform/macos/window_ext.rs; docs/reviews/window-ground-truth/grid-window-prototype/README.md
 
 ## Entry 7
 
@@ -80,9 +80,9 @@
 - Why deferred: The runtime override requires a serial Codex conductor with no spawn/bg dispatch, and no independent verifier is available in unattended mode.
 - Risk: The same executor implemented and verified a frontend/native-window spike.
 - What was done instead: Re-ran automated checks, inspected commit boundaries, and recorded the post-report routing fix.
-- Later human action: Independently review commits `6b121ea` and `14e04c2`, then rerun the manual Tauri evidence path.
-- Suggested verification command / environment: `git show --stat --oneline 6b121ea 14e04c2 && pnpm --filter @repo/plugin-organizer check-types && pnpm --filter desktop build`
-- Files/commits affected: `6b121ea`, `14e04c2`; packages/grid-window-prototype/docs/dev_log.md; docs/workflow/roadmap/xai-g0-window-spike.md; docs/workflow/roadmap/xai-v1.autorun-20260519.md
+- Later human action: Independently review commits `6b121ea`, `14e04c2`, and `01e5167`, then rerun the manual Tauri evidence path.
+- Suggested verification command / environment: `git show --stat --oneline 6b121ea 14e04c2 01e5167 && pnpm --filter @repo/plugin-organizer check-types && pnpm --filter desktop build && cargo check --manifest-path apps/desktop/src-tauri/Cargo.toml`
+- Files/commits affected: `6b121ea`, `14e04c2`, `01e5167`; packages/grid-window-prototype/docs/dev_log.md; docs/workflow/roadmap/xai-g0-window-spike.md; docs/workflow/roadmap/xai-v1.autorun-20260519.md
 
 ## Entry 8
 

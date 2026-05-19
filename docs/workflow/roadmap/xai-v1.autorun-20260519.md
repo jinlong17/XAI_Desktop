@@ -18,9 +18,9 @@
 | Current Feature | grid-window-prototype |
 | Feature Source | docs/planning/execution/G0-window-spike.md §G0.2 |
 | Feature Status | BLOCKED (patched; human runtime confirmation required) |
-| Current Commit | 14e04c2 |
-| Tests | `pnpm --filter @repo/plugin-organizer check-types`; `pnpm --filter desktop build` |
-| Next Step | Restart `pnpm --filter desktop tauri dev`, click `+ New Grid`, confirm `create_grid_window` terminal log and visible native Grid window |
+| Current Commit | 01e5167 |
+| Tests | `pnpm --filter @repo/plugin-organizer check-types`; `pnpm --filter desktop build`; `cargo check --manifest-path apps/desktop/src-tauri/Cargo.toml` |
+| Next Step | Restart `pnpm --filter desktop tauri dev`, click `+ New Grid`, confirm `create_grid_window` terminal log, visible native Grid window, and AI cube/settings remain clickable above it |
 
 ## Checkpoints
 
@@ -143,12 +143,23 @@
   - `pnpm --filter desktop build` (Vite chunk-size warning only)
 - Status: BLOCKED until human runtime confirmation proves the button now creates a native Grid window.
 
+### 2026-05-19 15:32 PDT — Bugfix Checkpoint: control window layering
+
+- User confirmed `create_grid_window` logs now appear, but reported the AI icon could not open settings or be dragged after Grid windows existed.
+- Root cause: Grid windows were configured at desktop icon level +3, while the control window was at +1, so Grid windows could cover the AI cube/settings panel and intercept pointer input.
+- Patched macOS control window level to desktop icon level +4 and added a startup log for the configured level.
+- Bugfix commit: `01e5167 fix(control-window): keep ai cube above grids`.
+- Verification passed:
+  - `cargo check --manifest-path apps/desktop/src-tauri/Cargo.toml` (existing dead-code warnings only)
+  - `pnpm --filter desktop build` (Vite chunk-size warning only)
+- Status remains BLOCKED until human runtime confirmation proves the AI icon opens settings and drags above Grid windows.
+
 ## Feature Outcomes
 
 | Feature | Gate | Status | Commit | Tests | Notes |
 |---|---|---|---|---|---|
 | window-ground-truth | G0 | READY_TO_SHIP | 3b571f6 | PASS: branch, sw_vers, README content | Deferred gates recorded in docs/workflow/roadmap/xai-v1.deferred-gates.md |
-| grid-window-prototype | G0 | BLOCKED | 6b121ea + 14e04c2 | PASS: plugin-organizer check-types; desktop build; BLOCKED: human New Grid runtime confirmation | User reported no native window; request routing/runtime detection patched. |
+| grid-window-prototype | G0 | BLOCKED | 6b121ea + 14e04c2 + 01e5167 | PASS: plugin-organizer check-types; desktop build; cargo check; BLOCKED: human New Grid/control-window runtime confirmation | User reported no native window and then control-window hit-test/layering issues; both patched. |
 | click-through-matrix | G0 | BLOCKED | 82ab268 + 7a1b9dd | PASS: matrix template and static analysis exist; BLOCKED: real hit-test evidence | Requires human macOS click-through matrix. |
 | finder-dnd-path | G0 | BLOCKED | 33627df + 7a1b9dd | PASS: matrix template and static analysis exist; BLOCKED: real Finder drop evidence | Requires human Finder/Tauri path matrix. |
 | spaces-multimonitor-matrix | G0 | BLOCKED | 2fb6bac | PASS: matrix template exists; BLOCKED: real Spaces/fullscreen/multi-display evidence | Reached by user override; safe prep only. |
@@ -227,6 +238,7 @@ Paused early on 2026-05-19 after the user override because no further production
 - Incident 4: `mas-sandbox-dry-run` cannot satisfy sandbox/private-API acceptance in unattended mode.
 - Incident 5: `window-command-contract` production implementation is blocked until G0 is Go/Conditional Go.
 - Incident 6: `grid-window-prototype` `+ New Grid` did not create a native window; patched, but human runtime confirmation is required.
+- Incident 7: `grid-window-prototype` AI cube/settings were covered by Grid windows; patched, but human runtime confirmation is required.
 
 ### Commits
 
@@ -242,6 +254,7 @@ Paused early on 2026-05-19 after the user override because no further production
 - `c6dbd77` — `docs(host-business-residuals): audit Host business logic`
 - `7a1b9dd` — `docs(G0.3/G0.4): fill static code analysis into click-through + DnD matrices`
 - `14e04c2` — `fix(grid-window): route new grid requests to main`
+- `01e5167` — `fix(control-window): keep ai cube above grids`
 
 ### Test Results
 
@@ -256,6 +269,7 @@ Paused early on 2026-05-19 after the user override because no further production
 - `test -f packages/window-command-contract/docs/dev_log.md && test -f docs/workflow/roadmap/xai-g1-native-foundation.md` -> PASS
 - `test -f docs/planning/execution/host-residuals.md` -> PASS
 - Host residual `rg` scan -> PASS, 23 source references recorded
+- `cargo check --manifest-path apps/desktop/src-tauri/Cargo.toml` -> PASS with existing dead-code warnings
 
 ### Next Human Reading Order
 

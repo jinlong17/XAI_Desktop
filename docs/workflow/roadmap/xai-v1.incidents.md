@@ -59,3 +59,13 @@
 - Attempted fixes: Patched ControlWindow to `emitTo("main", "organizer:create-grid-request", { rect })`; patched OrganizerLayer to listen to the contract event, keep a legacy listener, and use Tauri v2 runtime detection via `isTauri()` / `__TAURI_INTERNALS__`; updated organizer API/design docs.
 - Current status: PATCHED in commit `14e04c2`; `pnpm --filter @repo/plugin-organizer check-types` and `pnpm --filter desktop build` pass. Human runtime confirmation is still required.
 - Resume instruction: Restart `pnpm --filter desktop tauri dev`, click `+ New Grid`, and confirm terminal output includes `🪟 Creating grid window:` followed by a visible native Grid window.
+
+## Incident 7
+
+- Time: 2026-05-19 15:32 PDT
+- Feature: grid-window-prototype
+- Symptom: After Grid windows were successfully created, the user reported the small AI icon could not open settings or be dragged.
+- Root cause if known: The control window was configured at desktop icon level +1 while Grid windows were configured at desktop icon level +3. Newly created Grid windows could cover the control window and intercept pointer input intended for the AI cube/settings panel.
+- Attempted fixes: Raised the control window to desktop icon level +4 and added a startup log for its configured level.
+- Current status: PATCHED in commit `01e5167`; `cargo check --manifest-path apps/desktop/src-tauri/Cargo.toml` and `pnpm --filter desktop build` pass. Human runtime confirmation is still required.
+- Resume instruction: Restart `pnpm --filter desktop tauri dev`, confirm startup logs include `🎛️ Control window configured`, create a Grid, then verify the AI icon can still open settings and drag above the Grid window.
