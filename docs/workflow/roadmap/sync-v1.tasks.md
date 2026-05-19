@@ -57,7 +57,7 @@
 > ⚠ TLA+ / property tests precede implementation. **Mandatory gate before any Phase-5 entity wiring.**
 
 ### Week A — AAD / revision / recovery proof / idempotency / capability
-- [ ] #31 protocol-integrity-integration-tests (T-A1/A2/A3/A4/B4/B5)
+- [x] #31 protocol-integrity-integration-tests (T-A1/A2/A3/A4/B4/B5)
 - [ ] #35 rfc-test-vectors-gate (GAP-T3' / RFC 9106/8032/9180/8949)
 
 ### Week B — Re-key full chain + TLA+ + RLS fuzz + audit integrity

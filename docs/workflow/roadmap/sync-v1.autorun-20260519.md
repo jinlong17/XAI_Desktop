@@ -487,6 +487,26 @@
 - Deferred: human review, cross-vendor verify, live Supabase deploy/service_role integration, and runtime severe-alert UI wiring.
 - Commit: pending `feat(audit-log-integrity): add audit mirror`.
 
+### 2026-05-19 04:36 PDT — feature checkpoint: protocol-integrity-integration-tests (#31)
+
+- Added `packages/plugin-account/tests/integration/protocol-integrity.test.ts`.
+- Added `apps/web/supabase/tests/protocol-integrity.test.ts` and `web` script `test:protocol`.
+- Tightened recovery Edge handler to return HTTP 401 with `E3014` for `PATCH /auth/me` requests missing a recovery proof.
+- Added docs anchor `packages/protocol-integrity-integration-tests/docs/{design,api,test,dev_log}.md`; updated PLUGIN_MAP and roadmap/task status.
+- Local coverage:
+  - AES-GCM blob-swap rejection through entity/revision-bound AAD.
+  - Pull revision rollback rejection as `E3015`.
+  - Recovery no-proof `PATCH /auth/me` rejection as `401/E3014`.
+  - Push mutation idempotency: same `mutation_id` resent 10 times creates exactly one revision.
+  - Tauri `crypto_*` allowlist denial for non-allowlisted window.
+- Tests/checks passed:
+  - `pnpm --filter @repo/plugin-account test -- tests/integration/protocol-integrity.test.ts`
+  - `pnpm --filter web test:protocol`
+  - `pnpm --filter web check-types`
+  - `cargo test --manifest-path apps/desktop/src-tauri/Cargo.toml --features crypto commands::crypto::tests::rejects_non_allowlisted_window`
+- Deferred: human review, cross-vendor verify, live Supabase deployed integration, malicious plugin/window runtime verification, and recovery/KDF performance budget.
+- Commit: pending `feat(protocol-integrity-integration-tests): add protocol regression suite`.
+
 ### 2026-05-19 02:55 PDT — sweep checkpoint after next 4-feature loop
 
 - Completed next eligible loop: #7 `cipher-envelope-codec`, #6 `bip39-mnemonic-24w`, #11 `rust-keyvault-opaque-handle`, #12 `x25519-device-keypair`.

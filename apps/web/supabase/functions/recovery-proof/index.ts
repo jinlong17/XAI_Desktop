@@ -1,4 +1,5 @@
 import {
+  RECOVERY_PROOF_ERROR,
   issueRecoveryChallenge,
   verifyRecoveryPatch,
   type RecoveryProofDatabase,
@@ -24,7 +25,14 @@ export async function handleRecoveryProof(
   }
 
   if (request.method === 'PATCH' && url.pathname.endsWith('/auth/me')) {
-    return Response.json(await verifyRecoveryPatch({ db, verifier }, await request.json()));
+    try {
+      return Response.json(await verifyRecoveryPatch({ db, verifier }, await request.json()));
+    } catch (error) {
+      if (error instanceof Error && error.message.startsWith(RECOVERY_PROOF_ERROR)) {
+        return Response.json({ error: RECOVERY_PROOF_ERROR }, { status: 401 });
+      }
+      throw error;
+    }
   }
 
   return Response.json({ error: 'method_not_allowed' }, { status: 405 });

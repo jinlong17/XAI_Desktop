@@ -13,7 +13,8 @@
     "test:nonce": "vitest run supabase/tests/nonce-lease.test.ts",
     "test:push": "vitest run supabase/tests/sync-push.test.ts",
     "test:recovery": "vitest run supabase/tests/recovery-proof.test.ts",
-    "test:audit": "vitest run supabase/tests/audit-log.test.ts"
+    "test:audit": "vitest run supabase/tests/audit-log.test.ts",
+    "test:protocol": "vitest run supabase/tests/protocol-integrity.test.ts"
   },
   "dependencies": {
     "@repo/ui": "workspace:*",
