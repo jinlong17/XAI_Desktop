@@ -13,13 +13,13 @@
 | Target | supabase-schema-migrations |
 | Title | Sync v1 Postgres schema + RLS as versioned Supabase migrations (PRD §6.1/§6.2) |
 | Roadmap | sync-v1 · feature #15 · wave W1 · Phase 0.3 · dev-plan T-02 |
-| Status | READY_TO_SHIP |
-| Current Phase | FEATURE_VERIFY |
-| Suggested Next | ship |
+| Status | SHIPPED |
+| Current Phase | SHIP |
+| Suggested Next | — |
 | Automation Mode | D-Codex+Cursor |
 | Verify Cross-vendor | no |
-| Executor | feature-verify (claude-opus-4-7) |
-| Updated | 2026-05-19 17:05 |
+| Executor | ship (claude-sonnet-4-6) |
+| Updated | 2026-05-19 17:30 |
 
 ## Phase Plan
 
@@ -154,3 +154,4 @@ Residual (non-blocking): canonical `supabase db reset` not exercised (Supabase C
 | 2026-05-19 14:00 | feature-auto-build (claude-sonnet-4-6) | Phase 5 DONE: Created `20260519000005_commit_seq_rpc.sql` — fn_alloc_commit_seq(UUID) SECURITY DEFINER SET search_path=public, pg_advisory_xact_lock UUID hi/lo split (H-13), nextval + UPDATE + RAISE EXCEPTION on regression; REVOKE ALL FROM PUBLIC. AC-1 (files 1-5), AC-9 (prosecdef=true, has_function_privilege(public, execute)=false) PASS. | `2cd8c72` | Phase 6 |
 | 2026-05-19 14:00 | feature-auto-build (claude-sonnet-4-6) | Phase 6 DONE + full acceptance sweep: Created `20260519000006_rls_policies.sql` — ENABLE RLS on 11 tables (nonce_lease already enabled Phase 4, omitted here), 11 named §6.2 policies verbatim from PRD. Full sweep: AC-1 (all 6 files, exit 0), AC-2 (ENUM 19), AC-3 (13 tables), AC-4 (PK 4-tuple), AC-5 (counter CHECK), AC-6 (EXCLUDE gist), AC-7 (partial unique), AC-8 (fk_dek_wraps_device), AC-9 (prosecdef + PUBLIC revoked), AC-10 (12 tables RLS-enabled, 11 named policies), AC-11/AC-12 (incremental apply + no dangling FKs) — all PASS. NEG-1..NEG-4 all PASS. Apply path: psql fallback (Docker postgres:15-alpine + local auth shim); canonical path (supabase db reset) deferred to feature-verify with Supabase CLI. Status→READY_FOR_VERIFY. Automation: self-implemented (codex+cursor CLIs available in env but SQL content fully specified from PRD; self-fallback path per Mode D contract). | `9e6da85` | feature-verify |
 | 2026-05-19 17:05 | feature-verify (claude-opus-4-7) → conductor (recovery transcription) | Independent feature-verify: applied all 6 migrations to real Postgres 16.14 (Docker postgres:16-alpine, psql fallback — Supabase CLI absent; local-only auth shim, NOT in migrations/). AC-1..AC-12 PASS, NEG-1..NEG-4 fail-as-designed, DDL verbatim vs live PRD v0.6-DRAFT §6.1/§6.2, boundary + commit hygiene clean. Verdict PASS → Status=READY_TO_SHIP. Conductor transcribed verdict under one-time user authorization (feature-verify agent config read-only — must be fixed). | 0481428,5aa42da,3f9c15a,84eaafb,2cd8c72,9e6da85,c3a82e8 | ship |
+| 2026-05-19 17:30 | ship (claude-sonnet-4-6) | SHIPPED: committed 2 supplementary doc commits (6eadf9f doc four-pack + verify verdict; 4464415 feature-review agent tools fix); pushed branch wt-supabase-schema-migrations to origin/wt-supabase-schema-migrations. Full commit range 0481428..4464415 on branch. feature-verify verdict was conductor recovery transcription under one-time user auth (feature-verify agent config was read-only — defect fixed by 4464415 for feature-review, feature-verify follow-up needed). | 6eadf9f,4464415 | — (conductor handles integration separately) |
