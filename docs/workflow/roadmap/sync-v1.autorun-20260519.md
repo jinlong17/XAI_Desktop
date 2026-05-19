@@ -335,7 +335,21 @@
   - `pnpm --filter @repo/plugin-account check-types`
   - `pnpm --filter @repo/plugin-account test`
 - Deferred: hosted `/sync/pull`, real decrypt/apply routing, entity-specific SQLCipher tables, and Realtime-triggered pull scheduling.
-- Commit: pending `feat(sync-engine-pull): add global pull cursor`.
+- Commit: `feat(sync-engine-pull): add global pull cursor`.
+
+### 2026-05-19 04:00 PDT — sweep checkpoint after W2 client/protocol loop
+
+- Completed loop since previous sweep: #21 `realtime-private-channel-config`, #23 `commit-seq-authority`, #25 `rls-policies-and-tests`, #24 `nonce-lease-server`, #26 `sync-engine-push`, #27 `sync-engine-pull`.
+- Broader checks:
+  - `pnpm lint` PASS.
+  - `pnpm typecheck` PASS.
+  - `pnpm build` PASS.
+  - `cargo test --manifest-path apps/desktop/src-tauri/Cargo.toml` PASS.
+- Non-blocking warnings seen:
+  - Next `baseline-browser-mapping` data-age warning during typegen/build.
+  - Turbo warning: no output files found for `desktop#build`.
+  - Rust dead-code warnings for currently unused AppError variants and Keychain helper types.
+- Next eligible candidates: #18 `onboarding-backfill-ui`, #22 `menubar-sync-status-icon`, #28 `push-edge-function`, #29 `recovery-proof-edge-function`, #30 `single-table-todos-e2e` once all direct deps are satisfied.
 
 ### 2026-05-19 02:55 PDT — sweep checkpoint after next 4-feature loop
 
