@@ -48,7 +48,7 @@
 ### 1.4 Functions
 | Function | Signature | Properties | PRD line |
 |---|---|---|---|
-| `fn_alloc_commit_seq` | `(p_account_id UUID) RETURNS BIGINT` | `LANGUAGE plpgsql`, `SECURITY DEFINER`, `SET search_path = public`, `pg_advisory_xact_lock` (UUID hi/lo 64-bit split, H-13), `RAISE EXCEPTION` on regression; `REVOKE ALL ... FROM PUBLIC` | 773–799 |
+| `fn_alloc_commit_seq` | `(p_account_id UUID) RETURNS BIGINT` | `LANGUAGE plpgsql`, `SECURITY DEFINER`, `SET search_path = public`, sorted two-lock `pg_advisory_xact_lock(bigint)` over UUID hi/lo 64-bit halves (H-13), `RAISE EXCEPTION` on regression; `REVOKE ALL ... FROM PUBLIC` | 773–799 |
 
 ### 1.5 RLS Policies (§6.2)
 RLS enabled on: `accounts`, `account_keyring`, `device_dek_wraps`,

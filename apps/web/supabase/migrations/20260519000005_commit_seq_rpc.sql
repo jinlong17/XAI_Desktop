@@ -13,7 +13,7 @@
 -- H-9 commit_seq allocator RPC (PRD lines 773–799)
 -- SECURITY DEFINER so Edge Function /sync/push can call it with service_role
 -- context. REVOKE ALL FROM PUBLIC ensures only service_role callers can invoke it.
--- H-13: uses UUID high/low 64-bit split for advisory lock (avoids 32-bit hashtext collision).
+-- H-13: uses UUID high/low 64-bit split for advisory lock (avoids 32-bit text-hash collision).
 CREATE OR REPLACE FUNCTION fn_alloc_commit_seq(p_account_id UUID)
 RETURNS BIGINT
 LANGUAGE plpgsql
@@ -22,13 +22,25 @@ SET search_path = public
 AS $$
 DECLARE
   v_new_seq BIGINT;
+  v_uuid_hex TEXT;
+  v_lock_hi BIGINT;
+  v_lock_lo BIGINT;
+  v_lock_first BIGINT;
+  v_lock_second BIGINT;
 BEGIN
-  -- v0.6 H-13: prevent per-account commit_seq regression;
-  -- old hashtext() was 32-bit prone to collision, replaced with UUID hi/lo 64-bit split.
-  PERFORM pg_advisory_xact_lock(
-    (('x' || substr(p_account_id::text, 1, 16))::bit(64))::bigint,
-    (('x' || substr(p_account_id::text, 20, 12) || substr(p_account_id::text, 25, 4))::bit(64))::bigint
-  );
+  -- v0.6 H-13: prevent per-account commit_seq regression.
+  -- Postgres supports advisory locks as either one bigint or two int4 keys.
+  -- To keep the UUID hi/lo 64-bit split without falling back to 32-bit
+  -- text hashing, acquire both 64-bit halves in sorted order.
+  v_uuid_hex := replace(p_account_id::text, '-', '');
+  v_lock_hi := (('x' || substr(v_uuid_hex, 1, 16))::bit(64))::bigint;
+  v_lock_lo := (('x' || substr(v_uuid_hex, 17, 16))::bit(64))::bigint;
+  v_lock_first := LEAST(v_lock_hi, v_lock_lo);
+  v_lock_second := GREATEST(v_lock_hi, v_lock_lo);
+  PERFORM pg_advisory_xact_lock(v_lock_first);
+  IF v_lock_second <> v_lock_first THEN
+    PERFORM pg_advisory_xact_lock(v_lock_second);
+  END IF;
   v_new_seq := nextval('account_commit_seq_global');
   UPDATE accounts
     SET current_account_commit_seq = v_new_seq

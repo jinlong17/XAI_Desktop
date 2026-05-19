@@ -42,7 +42,7 @@
 - [ ] #22 menubar-sync-status-icon (T-16)
 
 ### Day 6–12 — sync engine + edge functions + single-table E2E
-- [ ] #23 commit-seq-authority (H-4/H-A)
+- [x] #23 commit-seq-authority (H-4/H-A)
 - [ ] #24 nonce-lease-server (C-B/C-C)
 - [ ] #25 rls-policies-and-tests (T-03)
 - [ ] #26 sync-engine-push (T-12)

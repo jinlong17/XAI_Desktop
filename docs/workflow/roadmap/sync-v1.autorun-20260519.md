@@ -10,10 +10,10 @@
 
 ## Current State
 
-- Current feature: `core-data-sqlite-driver` (#20) shipped locally; next eligible feature is `onboarding-backfill-ui` (#18), `realtime-private-channel-config` (#21), `commit-seq-authority` (#23), or `rls-policies-and-tests` (#25).
-- Completed this run: `kdf-primitives` (#3), `aes-gcm-aead-core` (#4), `deterministic-cbor-aad` (#5), `bip39-mnemonic-24w` (#6), `cipher-envelope-codec` (#7), `rust-keyvault-opaque-handle` (#11), `x25519-device-keypair` (#12), `hpke-per-device-wrap` (#13), `ed25519-recovery-signing` (#14), `sqlcipher-local-db` (#16), `account-signup-login` (#17), `crypto-tauri-commands` (#19), `core-data-sqlite-driver` (#20) code/docs/tests locally complete with deferred gates.
+- Current feature: `commit-seq-authority` (#23) shipped locally; next eligible feature is `onboarding-backfill-ui` (#18), `realtime-private-channel-config` (#21), or `rls-policies-and-tests` (#25).
+- Completed this run: `kdf-primitives` (#3), `aes-gcm-aead-core` (#4), `deterministic-cbor-aad` (#5), `bip39-mnemonic-24w` (#6), `cipher-envelope-codec` (#7), `rust-keyvault-opaque-handle` (#11), `x25519-device-keypair` (#12), `hpke-per-device-wrap` (#13), `ed25519-recovery-signing` (#14), `sqlcipher-local-db` (#16), `account-signup-login` (#17), `crypto-tauri-commands` (#19), `core-data-sqlite-driver` (#20), `commit-seq-authority` (#23) code/docs/tests locally complete with deferred gates.
 - Failed this run: no feature blocked; incidents recorded for command/script/import/fixture issues.
-- Next step: run a broader sweep after committing #20, then continue with #21/#23/#25 or #18 depending on eligibility/risk.
+- Next step: continue with #21 realtime-private-channel-config or #25 rls-policies-and-tests depending on Supabase-local testability.
 
 ## Checkpoints
 
@@ -242,6 +242,21 @@
   - Next `baseline-browser-mapping` data age warning during typegen/build.
   - Turbo warning: no output files found for `desktop#build`.
 - Next eligible candidates: #18 `onboarding-backfill-ui`, #21 `realtime-private-channel-config`, #23 `commit-seq-authority`, #25 `rls-policies-and-tests`.
+
+### 2026-05-19 03:33 PDT — feature checkpoint: commit-seq-authority (#23)
+
+- Reconciled existing migration `apps/web/supabase/migrations/20260519000005_commit_seq_rpc.sql` against #23 requirements.
+- Fixed invalid `pg_advisory_xact_lock(bigint,bigint)` usage by deriving UUID hi/lo 64-bit halves and taking two sorted single-bigint transaction advisory locks.
+- Preserved `SECURITY DEFINER`, `SET search_path = public`, `REVOKE ALL ... FROM PUBLIC`, and the `current_account_commit_seq < v_new_seq` regression guard.
+- Added docs anchor `packages/commit-seq-authority/docs/{design,api,test,dev_log}.md` and updated supabase-schema docs / PLUGIN_MAP.
+- Tests/checks passed:
+  - Local `postgres:16-alpine` Docker apply of migrations `20260519000001` through `20260519000005`.
+  - Sequential allocation observed `1,2,3`.
+  - `has_function_privilege('public', 'fn_alloc_commit_seq(uuid)', 'execute')` observed `false`.
+  - Forced sequence regression raised the expected `commit_seq regression` exception.
+  - Ten parallel same-account calls returned unique sorted sequence `1,2,3,4,5,6,7,8,9,10`.
+- Deferred: live Supabase deploy, `/sync/push` Edge Function transaction integration, and client pull rollback monitor.
+- Commit: `feat(commit-seq-authority): verify commit sequence RPC`.
 
 ### 2026-05-19 02:55 PDT — sweep checkpoint after next 4-feature loop
 

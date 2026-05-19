@@ -29,6 +29,7 @@
 | account-signup-login | packages/account-signup-login/ | Shipped | Wave W1 Phase 0.3: plugin-account signup/login/refresh orchestration with local crypto/auth/keychain seams. Runtime Supabase/Tauri/Keychain gates recorded in sync-v1 deferred gates. | 2026-05-19 |
 | crypto-tauri-commands | packages/crypto-tauri-commands/ | Shipped | Wave W1 Phase 0.3: Tauri `crypto_*` command layer with Rust-built AAD, opaque KeyVault handles, and window allowlist. Runtime state/plugin identity gates recorded in sync-v1 deferred gates. | 2026-05-19 |
 | core-data-sqlite-driver | packages/core-data-sqlite-driver/ | Shipped | Wave W1 Phase 0.3: `@repo/core-data` SQLite driver boundary, namespace repo, mutation hook, localStorage migration, and testing backend. Real SQLCipher binding deferred. | 2026-05-19 |
+| commit-seq-authority | packages/commit-seq-authority/ | Shipped | Wave W2 Phase 0.3: global commit_seq allocator RPC with SECURITY DEFINER, per-account regression guard, and UUID hi/lo advisory locks. Live Supabase deploy deferred. | 2026-05-19 |
 
 ---
 
