@@ -82,3 +82,10 @@ menu-bar icon, but must not emit `account:*` events itself.
 `putTodo(todo, { mutationId })` writes the entity row and outbox row in one
 driver transaction. `applyRemoteTodo(todo)` applies decrypted pull records
 without creating a new outbox entry.
+
+## 10. Audit mirror
+
+`createAuditMirror(driver)` stores the local account-level audit summary used at
+login/PULL. `assertConsistent(serverSummary)` compares count + last-hash and
+throws `SyncAuditMismatchError` (`E3025`) on mismatch so the caller can pause
+sync and surface a severe alert.

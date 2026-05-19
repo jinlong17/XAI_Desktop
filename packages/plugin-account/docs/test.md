@@ -19,6 +19,7 @@
 | AC-11 | Pull classification handles idempotent duplicate, legit re-encrypt, E3015 rollback, and E3024 account rollback | `pnpm --filter @repo/plugin-account test` |
 | AC-12 | Sync lifecycle helpers emit started/completed/failed account events | `pnpm --filter @repo/plugin-account test` |
 | AC-13 | Todo mutation writes entity + outbox in one transaction and local two-device sync covers conflict shadow | `pnpm --filter @repo/plugin-account test -- tests/integration/single-table-todos-e2e.test.ts` |
+| AC-14 | Audit mirror detects server count/last-hash mismatch and raises E3025 | `pnpm --filter @repo/plugin-account test -- tests/audit-log.test.ts` |
 
 ## 2. Compile-smoke gates (in register-plugin.ts)
 

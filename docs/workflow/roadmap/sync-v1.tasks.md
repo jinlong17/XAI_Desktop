@@ -64,7 +64,7 @@
 - [ ] #32 rekey-two-phase (T-B1, kill-9 ×4)
 - [!] #33 tla-protocol-model (T-B2, ≥6 scenarios) — BLOCKED: TLC requires Java Runtime
 - [ ] #34 rls-fuzz-property (T-B3, 1000u×100d)
-- [ ] #36 audit-log-integrity (GAP-T1 / NEW R-10.26)
+- [x] #36 audit-log-integrity (GAP-T1 / NEW R-10.26)
 
 ### Gate
 - [ ] #37 **hardening-admission-gate (T-B7) — PRD §10.x 10-item, BLOCKS ALL PHASE 5**

@@ -9,9 +9,9 @@
 | Plugin | account |
 | Package | @repo/plugin-account |
 | Status | In-Dev |
-| Phase | wave-W2 single-table todos E2E |
+| Phase | wave-W3 audit log integrity |
 | Executor | Codex serial autorun |
-| Updated | 2026-05-19 04:21 |
+| Updated | 2026-05-19 04:32 |
 
 ## Scaffold scope (wave-W0)
 
@@ -30,3 +30,4 @@
 | 2026-05-19 03:20 | Codex serial autorun | Declared `crypto_*` command names in plugin manifest for #19. | pending #19 commit | Add TS client wiring once account runtime state is initialized. |
 | 2026-05-19 04:14 | Codex serial autorun | Added plugin-owned sync lifecycle emitters and desktop menu-bar tray adapter for #22. | pending #22 commit | Real macOS click/animation validation deferred to signed-device review. |
 | 2026-05-19 04:21 | Codex serial autorun | Added todo sync store and local two-device integration for #30 Phase 0.3 exit core. | pending #30 commit | Live two-Mac/Supabase/SQLCipher dump gates deferred. |
+| 2026-05-19 04:32 | Codex serial autorun | Added local audit mirror and E3025 mismatch detection for #36. | pending #36 commit | Wire runtime append/alert paths after server deploy. |

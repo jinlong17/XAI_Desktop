@@ -40,6 +40,7 @@
 | recovery-proof-edge-function | packages/recovery-proof-edge-function/ | Shipped | Wave W2 Phase 0.3: recovery challenge + PATCH proof core, canonical CBOR payload hash, E3014 rejection paths. Live DB/verifier adapter deferred. | 2026-05-19 |
 | single-table-todos-e2e | packages/single-table-todos-e2e/ | Shipped | Wave W2 Phase 0.3 exit core: todo entity+outbox same-transaction store, local two-device encrypted push/pull, and conflict shadow harness. Live two-Mac/Supabase/SQLCipher gates deferred. | 2026-05-19 |
 | tla-protocol-model | packages/tla-protocol-model/ | Blocked | Wave W3 Phase 4.8: `docs/spec/sync.tla` and config added for six mandatory protocol scenarios. TLC run blocked by missing Java Runtime. | 2026-05-19 |
+| audit-log-integrity | packages/audit-log-integrity/ | Shipped | Wave W3 Phase 4.8: append-only server audit log integrity summary plus plugin-account local count/last-hash mirror with E3025 mismatch detection. Live deploy/review gates deferred. | 2026-05-19 |
 
 ---
 

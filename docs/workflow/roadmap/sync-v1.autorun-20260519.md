@@ -10,8 +10,8 @@
 
 ## Current State
 
-- Current feature: `tla-protocol-model` (#33) is BLOCKED on missing Java Runtime after spec authoring; next eligible feature is `protocol-integrity-integration-tests` (#31), `rekey-two-phase` (#32), `rls-fuzz-property` (#34), `rfc-test-vectors-gate` (#35), `audit-log-integrity` (#36), or `onboarding-backfill-ui` (#18).
-- Completed this run: `kdf-primitives` (#3), `aes-gcm-aead-core` (#4), `deterministic-cbor-aad` (#5), `bip39-mnemonic-24w` (#6), `cipher-envelope-codec` (#7), `rust-keyvault-opaque-handle` (#11), `x25519-device-keypair` (#12), `hpke-per-device-wrap` (#13), `ed25519-recovery-signing` (#14), `sqlcipher-local-db` (#16), `account-signup-login` (#17), `crypto-tauri-commands` (#19), `core-data-sqlite-driver` (#20), `commit-seq-authority` (#23), `realtime-private-channel-config` (#21), `rls-policies-and-tests` (#25), `nonce-lease-server` (#24), `sync-engine-push` (#26), `sync-engine-pull` (#27), `push-edge-function` (#28), `recovery-proof-edge-function` (#29), `menubar-sync-status-icon` (#22), and `single-table-todos-e2e` (#30) code/docs/tests locally complete with deferred gates.
+- Current feature: `audit-log-integrity` (#36) shipped locally; next eligible feature is `protocol-integrity-integration-tests` (#31), `rekey-two-phase` (#32), `rls-fuzz-property` (#34), `rfc-test-vectors-gate` (#35), or `onboarding-backfill-ui` (#18). `tla-protocol-model` (#33) remains BLOCKED on Java Runtime.
+- Completed this run: `kdf-primitives` (#3), `aes-gcm-aead-core` (#4), `deterministic-cbor-aad` (#5), `bip39-mnemonic-24w` (#6), `cipher-envelope-codec` (#7), `rust-keyvault-opaque-handle` (#11), `x25519-device-keypair` (#12), `hpke-per-device-wrap` (#13), `ed25519-recovery-signing` (#14), `sqlcipher-local-db` (#16), `account-signup-login` (#17), `crypto-tauri-commands` (#19), `core-data-sqlite-driver` (#20), `commit-seq-authority` (#23), `realtime-private-channel-config` (#21), `rls-policies-and-tests` (#25), `nonce-lease-server` (#24), `sync-engine-push` (#26), `sync-engine-pull` (#27), `push-edge-function` (#28), `recovery-proof-edge-function` (#29), `menubar-sync-status-icon` (#22), `single-table-todos-e2e` (#30), and `audit-log-integrity` (#36) code/docs/tests locally complete with deferred gates.
 - Failed this run: `tla-protocol-model` (#33) BLOCKED on missing Java Runtime for TLC; incidents recorded for command/script/import/fixture/type/runtime issues.
 - Next step: continue with next eligible Phase 4.8 security row or #18 UI; do not wait for Java install.
 
@@ -460,7 +460,32 @@
   - Downloaded `/tmp/tla2tools.jar` from the TLA+ GitHub release URL.
   - `java -jar /tmp/tla2tools.jar -deadlock -workers 2 docs/spec/sync.tla` failed because macOS reports no Java Runtime.
 - Status: BLOCKED, not shipped; model-check gate recorded in deferred gates and incident log.
-- Commit: pending `feat(tla-protocol-model): add sync tla model`.
+- Commit: `feat(tla-protocol-model): add sync tla model`.
+
+### 2026-05-19 04:32 PDT — feature checkpoint: audit-log-integrity (#36)
+
+- Added `apps/web/supabase/migrations/20260519000009_audit_log_integrity.sql`.
+- Reconciled with existing migration-4 `sync_audit_log` table by adding integrity columns instead of recreating the table.
+- Added server audit integrity primitives:
+  - `sync_audit_account_state`
+  - append-only UPDATE/DELETE rejection triggers
+  - `fn_append_sync_audit_log`
+  - `fn_sync_audit_summary`
+  - HMAC `device_hash`
+  - `payload_hash`, `prev_hash`, `entry_hash`
+- Added `apps/web/supabase/tests/audit-log.test.ts` and `web` script `test:audit`.
+- Added `packages/plugin-account/src/audit-log.ts` with local `sync_audit_mirror` summary store and `SyncAuditMismatchError` (`E3025`).
+- Added `packages/plugin-account/tests/audit-log.test.ts`.
+- Added docs anchor `packages/audit-log-integrity/docs/{design,api,test,dev_log}.md`; updated PLUGIN_MAP and plugin-account docs.
+- Tests/checks passed:
+  - `pnpm --filter web test:audit`
+  - `pnpm --filter @repo/plugin-account test -- tests/audit-log.test.ts`
+  - `pnpm --filter @repo/plugin-account check-types`
+  - `pnpm --filter @repo/plugin-account test`
+  - `pnpm --filter web check-types`
+- Incidents fixed: first audit Docker test hit existing `sync_audit_log`; second hit missing `entity_id`; migration reconciliation fixed both and rerun passed.
+- Deferred: human review, cross-vendor verify, live Supabase deploy/service_role integration, and runtime severe-alert UI wiring.
+- Commit: pending `feat(audit-log-integrity): add audit mirror`.
 
 ### 2026-05-19 02:55 PDT — sweep checkpoint after next 4-feature loop
 

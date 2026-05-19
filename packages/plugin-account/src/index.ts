@@ -1,4 +1,15 @@
 export {
+  AUDIT_MIRROR_SQL,
+  SyncAuditMismatchError,
+  createAuditMirror,
+} from './audit-log';
+export type {
+  AuditMirror,
+  AuditMirrorOptions,
+  AuditSummary,
+  ServerAuditSummary,
+} from './audit-log';
+export {
   RefreshTokenManager,
   loginAccount,
   persistRefreshToken,
