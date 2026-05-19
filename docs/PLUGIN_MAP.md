@@ -19,6 +19,7 @@
 | kdf-primitives | packages/kdf-primitives/ | Shipped | Wave W0 Phase 0.3: Argon2id KEK/auth_password + HKDF helpers under Tauri `crypto` feature. Deferred cross-vendor gate recorded in sync-v1 deferred gates. | 2026-05-19 |
 | aes-gcm-aead-core | packages/aes-gcm-aead-core/ | Shipped | Wave W0 Phase 0.3: AES-256-GCM primitive with explicit AAD and detached tag. Deferred gates recorded in sync-v1 deferred gates. | 2026-05-19 |
 | deterministic-cbor-aad | packages/deterministic-cbor-aad/ | Shipped | Wave W0 Phase 0.3: deterministic CBOR AAD schemas and fixtures. Deferred cross-implementation gates recorded in sync-v1 deferred gates. | 2026-05-19 |
+| bip39-mnemonic-24w | packages/bip39-mnemonic-24w/ | Shipped | Wave W0 Phase 0.3: 24-word English BIP-39 active DEK backup codec in Rust and plugin-account. Deferred gates recorded in sync-v1 deferred gates. | 2026-05-19 |
 | cipher-envelope-codec | packages/cipher-envelope-codec/ | Shipped | Wave W0 Phase 0.3: binary envelope codec and GCM nonce reconstruction. Fuzz gate deferred to sync-v1 deferred gates. | 2026-05-19 |
 
 ---
@@ -36,7 +37,7 @@
 | Plugin | 目录 | 状态 | PRD 章节 | 对外依赖 | 最后更新 |
 |--------|------|------|---------|---------|---------|
 | organizer | packages/plugin-organizer/ | Stable | §5.1 | @repo/core, @repo/ui | 2026-05-14 |
-| account | packages/plugin-account/ | Planned | sync/PRD §5 | @repo/core | 2026-05-19 |
+| account | packages/plugin-account/ | Planned | sync/PRD §5 | @repo/core, @scure/bip39 | 2026-05-19 |
 | todo | packages/plugin-todo/ | Planned | §5.2 | @repo/core | — |
 | pomodoro | packages/plugin-pomodoro/ | Planned | §5.3 | @repo/core | — |
 | habits | packages/plugin-habits/ | Planned | §5.4 | @repo/core | — |

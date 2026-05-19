@@ -38,3 +38,6 @@ pub mod envelope;
 
 #[cfg(feature = "crypto")]
 pub mod kdf;
+
+#[cfg(feature = "crypto")]
+pub mod mnemonic;

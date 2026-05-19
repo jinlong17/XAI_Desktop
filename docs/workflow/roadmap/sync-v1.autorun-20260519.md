@@ -10,10 +10,10 @@
 
 ## Current State
 
-- Current feature: `cipher-envelope-codec` (#7) shipped locally; next eligible feature is `bip39-mnemonic-24w` (#6) or `rust-keyvault-opaque-handle` (#11).
-- Completed this run: `kdf-primitives` (#3), `aes-gcm-aead-core` (#4), `deterministic-cbor-aad` (#5), `cipher-envelope-codec` (#7) code/docs/tests locally complete with deferred gates.
-- Failed this run: none yet.
-- Next step: implement next eligible wave-W0 feature, starting with `deterministic-cbor-aad` (#5) unless dependency checks change.
+- Current feature: `bip39-mnemonic-24w` (#6) shipped locally; next eligible feature is `rust-keyvault-opaque-handle` (#11) or non-crypto rows #21/#23/#25.
+- Completed this run: `kdf-primitives` (#3), `aes-gcm-aead-core` (#4), `deterministic-cbor-aad` (#5), `bip39-mnemonic-24w` (#6), `cipher-envelope-codec` (#7) code/docs/tests locally complete with deferred gates.
+- Failed this run: no feature blocked; incidents recorded for command/script/import/fixture issues.
+- Next step: implement next eligible feature after committing #6, starting with `rust-keyvault-opaque-handle` (#11) unless dependency checks change.
 
 ## Checkpoints
 
@@ -77,6 +77,22 @@
   - `cargo check --manifest-path apps/desktop/src-tauri/Cargo.toml --features crypto --locked`
 - Deferred: full cargo-fuzz / 24h fuzz to #47.
 - Commit: `feat(cipher-envelope-codec): add envelope codec`.
+
+### 2026-05-19 02:44 PDT — feature checkpoint: bip39-mnemonic-24w (#6)
+
+- Implemented `apps/desktop/src-tauri/src/crypto/mnemonic.rs` behind the `crypto` feature.
+- Added `packages/plugin-account/src/mnemonic.ts` and exported `encodeDekMnemonic` / `decodeDekMnemonic`.
+- Added Rust exact-pinned optional dep `bip39 = "=2.2.2"` and plugin dependency `@scure/bip39@2.2.0`.
+- Added docs anchor `packages/bip39-mnemonic-24w/docs/{design,api,test,dev_log}.md`.
+- Tests/checks passed:
+  - `cargo test --manifest-path apps/desktop/src-tauri/Cargo.toml --features crypto crypto::mnemonic::tests`
+  - `cargo check --manifest-path apps/desktop/src-tauri/Cargo.toml --locked`
+  - `cargo check --manifest-path apps/desktop/src-tauri/Cargo.toml --features crypto --locked`
+  - `pnpm --filter @repo/plugin-account check-types`
+  - `pnpm --filter @repo/plugin-account exec node --input-type=module -e "<@scure/bip39 fixture smoke>"`
+- Corrected initial TS subpath import and BIP-39 fixture expectation; final Rust/JS fixture smoke matches.
+- Deferred: formal independent review / admission-gate sign-off.
+- Commit: `feat(bip39-mnemonic-24w): add DEK mnemonic codec`.
 
 ### 2026-05-19 02:17 PDT — sweep checkpoint after first 3-feature loop
 
