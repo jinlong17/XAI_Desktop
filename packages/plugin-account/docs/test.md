@@ -13,6 +13,8 @@
 | AC-5 | registerAccountPlugin() registers; getPlugin('account') returns it | PluginRegistry integration test in feature-verify |
 | AC-6 | Signup/login orchestration does not send raw password/secret-key to auth | `pnpm --filter @repo/plugin-account test` |
 | AC-7 | Refresh token is persisted/rotated through Keychain seam | `pnpm --filter @repo/plugin-account test` |
+| AC-8 | Sync push computes `proposed_revision = base + 1`, lazy-encrypts at flush, and posts once | `pnpm --filter @repo/plugin-account test` |
+| AC-9 | Same-entity outbox edits squash to latest plaintext + latest mutation_id | `pnpm --filter @repo/plugin-account test` |
 
 ## 2. Compile-smoke gates (in register-plugin.ts)
 
@@ -36,4 +38,5 @@ confirms the manifest is reachable and idempotent on double-call.
 
 ## 5. Out of scope (later rows)
 
-Crypto vectors, SQLCipher driver, real Supabase transport, account:* cross-device network tests.
+Crypto vectors, SQLCipher driver, hosted Supabase Edge Function, account:*
+cross-device network tests.

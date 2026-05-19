@@ -45,7 +45,7 @@
 - [x] #23 commit-seq-authority (H-4/H-A)
 - [x] #24 nonce-lease-server (C-B/C-C)
 - [x] #25 rls-policies-and-tests (T-03)
-- [ ] #26 sync-engine-push (T-12)
+- [x] #26 sync-engine-push (T-12)
 - [ ] #27 sync-engine-pull (T-12)
 - [ ] #28 push-edge-function (T-14)
 - [ ] #29 recovery-proof-edge-function (T-13)

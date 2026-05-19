@@ -4,8 +4,9 @@
 
 ## 1. Public surface (`src/index.ts` barrel)
 
-The barrel exports registration, `KeyHandle`, mnemonic helpers, and account
-signup/login orchestration from `src/account.ts`.
+The barrel exports registration, `KeyHandle`, mnemonic helpers, account
+signup/login orchestration from `src/account.ts`, and the Phase 0.3 sync push
+engine from `src/sync-engine.ts`.
 
 ## 2. `registerAccountPlugin(): void`
 
@@ -45,3 +46,10 @@ See `manifest.json` — `enabled: false`, four `crypto_*` command declarations, 
 See `packages/account-signup-login/docs/api.md` for the current local contract.
 The key invariant is that `masterPassword` and `secretKey` are accepted only by
 the injected crypto seam, while auth transport receives derived auth/check fields.
+
+## 7. Sync push engine
+
+See `packages/sync-engine-push/docs/api.md` for the `createSyncOutbox`,
+`pushBatch`, `createSyncPushHttpTransport`, and UUIDv7 mutation-id contracts.
+The key invariant is that JS submits entity metadata and plaintext to the
+injected crypto seam; Rust `crypto_encrypt_for` owns CBOR AAD construction.

@@ -303,7 +303,21 @@
   - `pnpm --filter web check-types`
 - Incident fixed: first nonce test helper rolled back stateful RPC calls; rerun passed after committing those calls.
 - Deferred: human/cross-vendor review, live Supabase deploy/RPC test, Edge Function error mapping, and macOS Keychain `high_water` rollback rehearsal.
-- Commit: pending `feat(nonce-lease-server): add nonce lease RPC`.
+- Commit: `feat(nonce-lease-server): add nonce lease RPC`.
+
+### 2026-05-19 03:56 PDT — feature checkpoint: sync-engine-push (#26)
+
+- Added `packages/plugin-account/src/sync-engine.ts`.
+- Implemented plaintext `createSyncOutbox()` with same-entity squash and UUIDv7 mutation IDs.
+- Implemented `pushBatch()` to read base revision, compute `proposedRevision = base + 1`, lazy-encrypt via injected crypto seam, and send one batch through transport.
+- Implemented `createSyncPushHttpTransport()` defaulting to one JSON `POST /sync/push` with bearer auth.
+- Added `packages/plugin-account/tests/sync-engine.test.ts`.
+- Updated plugin-account docs and added docs anchor `packages/sync-engine-push/docs/{design,api,test,dev_log}.md`; updated PLUGIN_MAP.
+- Tests/checks passed:
+  - `pnpm --filter @repo/plugin-account check-types`
+  - `pnpm --filter @repo/plugin-account test`
+- Deferred: real Tauri invoke wiring, SQLCipher-persistent outbox/entity schema, hosted `/sync/push` Edge Function, and network E2E.
+- Commit: pending `feat(sync-engine-push): add lazy push batch`.
 
 ### 2026-05-19 02:55 PDT — sweep checkpoint after next 4-feature loop
 

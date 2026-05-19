@@ -29,6 +29,7 @@ apps/desktop/src/main.tsx
 @repo/plugin-account
   ├─ src/index.ts          (only public surface, red line #9)
   ├─ src/account.ts        (signup/login/refresh orchestration)
+  ├─ src/sync-engine.ts    (plaintext outbox squash + one-shot pushBatch)
   ├─ src/register-plugin.ts (PluginRegistry.register + compile-smoke)
   ├─ src/types.ts           (KeyHandle branded type)
   └─ manifest.json          (live schema, enabled: false)
@@ -45,12 +46,12 @@ apps/desktop/src/main.tsx
 
 1. `enabled: false` — plugin is still hidden from runtime UI; host skips disabled plugins in getAllEnabled().
 2. No components registered in wave-W0 (OverlayLayer, ControlWidget, etc. deferred).
-3. `tauriCommands` declares the four `crypto_*` commands; `src/account.ts`
-   still consumes an injected `AccountCryptoClient` until live runtime wiring is added.
+3. `tauriCommands` declares the four `crypto_*` commands; `src/account.ts` and
+   `src/sync-engine.ts` consume injected seams until live runtime wiring is added.
 
 ## Deferred
 
 - Component implementations (login UI, sync status widget)
 - Live Tauri crypto command client wiring
 - SQLCipher `Repo` driver
-- REST transport driver
+- Hosted Supabase `/sync/push` Edge Function
