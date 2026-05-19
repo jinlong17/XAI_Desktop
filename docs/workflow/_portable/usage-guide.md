@@ -56,8 +56,10 @@ For later upstream updates to an already-migrated project, copy:
 ```
 
 If the target actually runs Claude Code from an existing `.claude/agents/` directory, plain `resync`
-will AskQuestion before replacing that active directory; the recommended answer is yes for full
-sync:
+will AskQuestion before replacing that active directory whenever `.claude/agents/` differs from
+`.claude/agents-v2/`; the recommended answer is yes for full sync. This question appears only after
+dirty-path and CONFLICT gates are clear. If resync is BLOCKED earlier, for example by a source lint
+merge conflict, it must stop there first and will ask on the next clean rerun:
 
 - **`yes` (Recommended for full resync):** replace active `.claude/agents/` with the regenerated
   Claude agents. This makes the Claude Code active surface match `_portable/`, generated templates,
@@ -78,7 +80,9 @@ To skip the question and replace active Claude agents directly, use:
 
 - **Survey inference looks wrong** — edit the plan, re-run instantiate. Survey is read-only so this is safe.
 - **You only want synchronous variants (no hook)** — skip the automation-loop reference shell-script copy step during instantiate.
-- **Pre-existing `.claude/agents/` in target** — generator defaults to `.claude/agents-v2/`; resync asks before replacing active `.claude/agents/` unless `replace_claude: yes|no` is explicit.
+- **Pre-existing `.claude/agents/` in target** — generator defaults to `.claude/agents-v2/`; after
+  conflict gates pass, resync asks before replacing active `.claude/agents/` whenever it differs
+  from `.claude/agents-v2/`, unless `replace_claude: yes|no` is explicit.
 
 ### Re-syncing an already-migrated project after an upstream update
 
@@ -114,13 +118,16 @@ It is idempotent and **non-destructive**:
   sync/registry governance helpers, and any project SOP skills the source project expects. resync
   reports only deltas that lack a portable source or were blocked by conflicts; it does not author
   target project SOPs / usage guides.
-- **Active Claude directory:** if the target already has `.claude/agents/`, resync must resolve the
-  active-dir choice. `replace_claude: yes` replaces it directly; `replace_claude: no` keeps
-  `.claude/agents-v2/` only; omitting the field triggers an AskQuestion with "replace active Claude
-  agents" as the recommended full-sync choice. The AskQuestion options must spell out the impact:
-  yes overwrites active-only hand edits but fully updates Claude Code; no preserves active edits but
-  may leave Claude Code running stale agents. Without replacement, Codex/Cursor and
-  `.claude/agents-v2/` can be current while active `.claude/agents/` remains old.
+- **Active Claude directory:** after dirty-path and CONFLICT gates pass, if the target already has
+  `.claude/agents/` and it differs from `.claude/agents-v2/`, resync must resolve the active-dir
+  choice even when no templates were regenerated in this run. `replace_claude: yes` replaces it
+  directly; `replace_claude: no` keeps `.claude/agents-v2/` only; omitting the field triggers an
+  AskQuestion with "replace active Claude agents" as the recommended full-sync choice. The
+  AskQuestion options must spell out the impact: yes overwrites active-only hand edits but fully
+  updates Claude Code; no preserves active edits but may leave Claude Code running stale agents. If
+  an earlier gate is BLOCKED, resync stops before this AskQuestion and asks only after the conflict
+  is resolved and the command is rerun. Without replacement, Codex/Cursor and `.claude/agents-v2/`
+  can be current while active `.claude/agents/` remains old.
 - **Repeat-run expectation:** if `_portable/`, rendered scripts, generated configs, rendered workflow
   skills, and project-layer doc checklist items have no remaining delta, a second `resync` should
   explicitly report `up to date` rather than re-emitting the same manual checklist.

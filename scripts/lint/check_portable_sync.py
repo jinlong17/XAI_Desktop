@@ -4,7 +4,7 @@
 Mechanically checks that `docs/workflow/_portable/` stays project-agnostic and
 self-consistent, so the workflow paradigm can be copied cleanly into any project.
 
-Seven rules:
+Eight rules:
 
   1. Proper-noun leak — `_portable/**` must not contain Any2Knowledge-specific
      nouns (`a2k-`, `features/`, `apps/web`, `Stripe`, `E2B`, `Univer`, `LUMX`,
@@ -32,6 +32,11 @@ Seven rules:
      Same gate shape as rule 2: a new public skill that is not documented in
      the trigger quick-reference fails the lint. Keeps the §10 table (and its
      project-usage-guide mirror) honest as skills are added/removed.
+  8. Workflow skill source parity — project-prefixed workflow skills that have a
+     portable source draft must equal the rendered source. The lint infers the
+     target project's `<skill_prefix>`, skill root, feature root, workflow doc,
+     and roadmap paths from the checked repo so the same script can run in A2K,
+     XAI, or another migrated project without a permanent fork.
 
 Exit code: 0 = pass, 1 = violations found, 2 = lint could not run.
 
@@ -54,6 +59,8 @@ PORTABLE_DIR = Path("docs/workflow/_portable")
 TEMPLATES_DIR = PORTABLE_DIR / "templates"
 MANIFEST_REL = PORTABLE_DIR / "00-PORTABLE-MANIFEST.md"
 WORKFLOW_MODEL_REL = PORTABLE_DIR / "01-workflow-model.md"
+AUTOMATION_LOOP_REL = PORTABLE_DIR / "04-automation-loop.md"
+ROADMAP_ORCHESTRATION_REL = PORTABLE_DIR / "06-roadmap-orchestration.md"
 
 # Rule 1: project-specific proper nouns that must never appear in the portable layer.
 # Each entry is a compiled regex; word-boundary anchored where a substring would
@@ -99,9 +106,7 @@ USAGE_GUIDE_REL = PORTABLE_DIR / "usage-guide.md"
 # of _portable/scripts/<f>. The post-commit hook runs the cowork copies; if they
 # drift from (or fail to substitute) the portable source, a migrated project — or
 # this one — gets silently-broken hooks (e.g. a literal `<feature_root>` in a
-# real read path). The token map below is A2K-concrete, which is fine: this lint
-# lives in the project's own scripts/lint/. Keep it equal to the migration
-# substitution (00-PORTABLE-MANIFEST §3) for these script tokens.
+# real read path). The token map is inferred from the project checkout.
 PORTABLE_SCRIPTS_DIR = PORTABLE_DIR / "scripts"
 COWORK_DIR = Path("scripts/cowork")
 COWORK_SCRIPT_FILES = (
@@ -113,36 +118,138 @@ COWORK_SCRIPT_FILES = (
     "lib_phase_verdict.sh",
     "lib_hook_helpers.sh",
 )
-# XAI_Desktop project token map (per survey plan 2026-05-16 §1).
-# Diverges from upstream A2K values: <feature_root> = packages (not features),
-# <project_workflow_doc> = docs/workflow/SUBAGENT_WORKFLOW_V2.md (no `project/`
-# subdir). Upstream A2K hardcodes the LUMX values; the lint design does not yet
-# expose this as a per-project config — track via resync doc-delta checklist
-# and consider sending an upstream PR to read from a sibling config file.
-COWORK_TOKEN_MAP: tuple[tuple[str, str], ...] = (
-    ("<skill_prefix>", "xai-"),
-    ("<orchestrator_marker_dir>", "/tmp/cw-orchestrator"),
-    ("<quota_state_dir>", "/tmp/cw-quota"),
-    ("<cowork_scripts_dir>", "scripts/cowork"),
-    ("<feature_root>", "packages"),
-    ("<review_root>", "docs/reviews"),
-    ("<project_workflow_doc>", "docs/workflow/SUBAGENT_WORKFLOW_V2.md"),
-)
 
 
-def _render_portable_script(text: str) -> str:
-    for token, concrete in COWORK_TOKEN_MAP:
+@dataclass(frozen=True)
+class ProjectConfig:
+    skill_prefix: str
+    skill_root: Path
+    step0_skill: str
+    feature_root: str
+    review_root: str
+    project_workflow_doc: str
+    feature_map_doc: str
+    refactor_plan_doc: str
+    onboarding_doc: str
+    roadmap_manifest_dir: str
+    orchestrator_marker_dir: str = "/tmp/cw-orchestrator"
+    quota_state_dir: str = "/tmp/cw-quota"
+    cowork_scripts_dir: str = "scripts/cowork"
+
+    def skill_path(self, suffix: str) -> Path:
+        return self.skill_root / f"{self.skill_prefix}{suffix}" / "SKILL.md"
+
+    def token_map(self) -> tuple[tuple[str, str], ...]:
+        return (
+            ("<skill_prefix>", self.skill_prefix),
+            ("<step0-skill>", self.step0_skill),
+            ("<feature_map_doc>", self.feature_map_doc),
+            ("<refactor_plan_doc>", self.refactor_plan_doc),
+            ("<onboarding_doc>", self.onboarding_doc),
+            ("<review_root>", self.review_root),
+            ("<project_workflow_doc>", self.project_workflow_doc),
+            ("<roadmap_manifest_dir>", self.roadmap_manifest_dir),
+            ("<feature_root>", self.feature_root),
+            ("<orchestrator_marker_dir>", self.orchestrator_marker_dir),
+            ("<quota_state_dir>", self.quota_state_dir),
+            ("<cowork_scripts_dir>", self.cowork_scripts_dir),
+        )
+
+
+def _first_existing(root: Path, candidates: tuple[str, ...], default: str) -> str:
+    for rel in candidates:
+        if (root / rel).exists():
+            return rel
+    return default
+
+
+def _infer_skill_prefix(root: Path) -> str:
+    skill_dirs = (root / ".teams/skills", root / ".claude/skills", root / ".agents/skills")
+    suffixes = ("workflow-migrate", "roadmap-loop", "feature-full-loop", "feature-brief")
+    for skill_dir in skill_dirs:
+        if not skill_dir.is_dir():
+            continue
+        for child in sorted(skill_dir.iterdir()):
+            name = child.name
+            for suffix in suffixes:
+                if name.endswith(suffix) and len(name) > len(suffix):
+                    return name[: -len(suffix)]
+    return "a2k-"
+
+
+def _infer_skill_root(root: Path, prefix: str) -> Path:
+    candidates = (Path(".teams/skills"), Path(".claude/skills"), Path(".agents/skills"))
+    for candidate in candidates:
+        abs_candidate = root / candidate
+        if (abs_candidate / f"{prefix}feature-full-loop").exists() or (
+            abs_candidate / f"{prefix}roadmap-loop"
+        ).exists():
+            return candidate
+    return Path(".teams/skills")
+
+
+def _infer_feature_root(root: Path) -> str:
+    background = root / ".agents/project_background.md"
+    if background.is_file():
+        text = background.read_text(encoding="utf-8", errors="ignore")
+        for candidate in ("packages", "features", "apps"):
+            if f"{candidate}/" in text:
+                return candidate
+    workflow_doc = _first_existing(
+        root,
+        ("docs/workflow/project/SUBAGENT_WORKFLOW_V2.md", "docs/workflow/SUBAGENT_WORKFLOW_V2.md"),
+        "",
+    )
+    if workflow_doc:
+        text = (root / workflow_doc).read_text(encoding="utf-8", errors="ignore")
+        for candidate in ("packages", "features", "apps"):
+            if f"{candidate}/<" in text or f"{candidate}/" in text:
+                return candidate
+    return "features" if (root / "features").is_dir() else "packages"
+
+
+def infer_project_config(root: Path) -> ProjectConfig:
+    prefix = _infer_skill_prefix(root)
+    return ProjectConfig(
+        skill_prefix=prefix,
+        skill_root=_infer_skill_root(root, prefix),
+        step0_skill=f"{prefix}feature-brief",
+        feature_root=_infer_feature_root(root),
+        review_root=_first_existing(root, ("docs/reviews",), "docs/reviews"),
+        project_workflow_doc=_first_existing(
+            root,
+            ("docs/workflow/project/SUBAGENT_WORKFLOW_V2.md", "docs/workflow/SUBAGENT_WORKFLOW_V2.md"),
+            "docs/workflow/project/SUBAGENT_WORKFLOW_V2.md",
+        ),
+        feature_map_doc=_first_existing(root, ("docs/FEATURE_MAP.md", "docs/PLUGIN_MAP.md"), "docs/FEATURE_MAP.md"),
+        refactor_plan_doc=_first_existing(
+            root,
+            ("docs/REFACTORING_PLAN.md", "docs/planning/REFACTORING_PLAN.md"),
+            "docs/REFACTORING_PLAN.md",
+        ),
+        onboarding_doc=_first_existing(root, ("developer.md", "CLAUDE.md", "README.md"), "developer.md"),
+        roadmap_manifest_dir=_first_existing(
+            root,
+            ("docs/workflow/project/roadmap", "docs/workflow/roadmap"),
+            "docs/workflow/project/roadmap",
+        ),
+    )
+
+
+def _render_with_tokens(text: str, config: ProjectConfig) -> str:
+    for token, concrete in config.token_map():
         text = text.replace(token, concrete)
     return text
 
 
-def check_cowork_parity(root: Path) -> list[Violation]:
+def check_cowork_parity(root: Path, config: ProjectConfig) -> list[Violation]:
     """scripts/cowork/<f> must byte-equal render(_portable/scripts/<f>)."""
     rule = "COWORK_PARITY"
     violations: list[Violation] = []
+    cowork_dir = Path(config.cowork_scripts_dir)
     for name in COWORK_SCRIPT_FILES:
         portable = root / PORTABLE_SCRIPTS_DIR / name
-        cowork = root / COWORK_DIR / name
+        cowork = root / cowork_dir / name
         if not portable.is_file():
             violations.append(
                 Violation(rule, (PORTABLE_SCRIPTS_DIR / name).as_posix(), None, "portable source script missing")
@@ -152,13 +259,13 @@ def check_cowork_parity(root: Path) -> list[Violation]:
             violations.append(
                 Violation(
                     rule,
-                    (COWORK_DIR / name).as_posix(),
+                    (cowork_dir / name).as_posix(),
                     None,
                     "instantiated copy missing — copy + de-placeholder from _portable/scripts/",
                 )
             )
             continue
-        rendered = _render_portable_script(portable.read_text(encoding="utf-8"))
+        rendered = _render_with_tokens(portable.read_text(encoding="utf-8"), config)
         actual = cowork.read_text(encoding="utf-8")
         if rendered == actual:
             continue
@@ -176,7 +283,7 @@ def check_cowork_parity(root: Path) -> list[Violation]:
         violations.append(
             Violation(
                 rule,
-                (COWORK_DIR / name).as_posix(),
+                (cowork_dir / name).as_posix(),
                 lineno,
                 f"out of sync with render(_portable/scripts/{name}); regenerate the cowork copy "
                 f"by applying the migration token substitution to the portable source",
@@ -432,6 +539,224 @@ def check_skill_doc_registration(root: Path) -> list[Violation]:
     return violations
 
 
+def _extract_fenced_appendix_source(text: str, marker: str) -> str | None:
+    try:
+        marker_pos = text.index(marker)
+        start = text.index("````markdown", marker_pos) + len("````markdown")
+        end = text.index("\n````", start)
+    except ValueError:
+        return None
+    return text[start:end].strip() + "\n"
+
+
+def _extract_roadmap_skill_source(text: str) -> str | None:
+    marker = "# Appendix — the `<skill_prefix>roadmap-loop` SKILL.md draft"
+    return _extract_fenced_appendix_source(text, marker)
+
+
+def _extract_feature_full_loop_skill_source(text: str) -> str | None:
+    marker = "# Appendix — the `<skill_prefix>feature-full-loop` SKILL.md draft"
+    return _extract_fenced_appendix_source(text, marker)
+
+
+def _render_feature_full_loop_skill_source(text: str, config: ProjectConfig) -> str:
+    return _render_with_tokens(text, config)
+
+
+def _render_roadmap_skill_source(text: str, config: ProjectConfig) -> str:
+    return _render_with_tokens(text, config)
+
+
+def _extract_workflow_migrate_skill_source(text: str) -> str | None:
+    marker = "# Appendix — the `<skill_prefix>workflow-migrate` SKILL.md draft"
+    return _extract_fenced_appendix_source(text, marker)
+
+
+def _render_workflow_migrate_skill_source(text: str, config: ProjectConfig) -> str:
+    """Render only the local skill identity; target-project tokens stay generic."""
+    text = text.replace(
+        "name: <skill_prefix>workflow-migrate",
+        f"name: {config.skill_prefix}workflow-migrate",
+        1,
+    )
+    text = text.replace(
+        "# <skill_prefix>workflow-migrate",
+        f"# {config.skill_prefix}workflow-migrate",
+        1,
+    )
+    return text
+
+
+def check_roadmap_skill_source_parity(root: Path, config: ProjectConfig) -> list[Violation]:
+    """Project roadmap-loop skill must equal render(_portable/06 appendix)."""
+    rule = "ROADMAP_SKILL_SOURCE_PARITY"
+    source = root / ROADMAP_ORCHESTRATION_REL
+    target_rel = config.skill_path("roadmap-loop")
+    target = root / target_rel
+    if not source.is_file():
+        return [
+            Violation(
+                rule,
+                ROADMAP_ORCHESTRATION_REL.as_posix(),
+                None,
+                "portable roadmap orchestration source missing",
+            )
+        ]
+    if not target.is_file():
+        return [
+            Violation(
+                rule,
+                target_rel.as_posix(),
+                None,
+                "project roadmap-loop skill missing — render it from _portable/06 appendix",
+            )
+        ]
+    extracted = _extract_roadmap_skill_source(source.read_text(encoding="utf-8"))
+    if extracted is None:
+        return [
+            Violation(
+                rule,
+                ROADMAP_ORCHESTRATION_REL.as_posix(),
+                None,
+                "could not find the `<skill_prefix>roadmap-loop` SKILL.md appendix source",
+            )
+        ]
+    expected = _render_roadmap_skill_source(extracted, config)
+    actual = target.read_text(encoding="utf-8")
+    if expected == actual:
+        return []
+    e_lines = expected.splitlines()
+    a_lines = actual.splitlines()
+    lineno = next(
+        (
+            i + 1
+            for i in range(max(len(e_lines), len(a_lines)))
+            if (e_lines[i] if i < len(e_lines) else None)
+            != (a_lines[i] if i < len(a_lines) else None)
+        ),
+        None,
+    )
+    return [
+        Violation(
+            rule,
+            target_rel.as_posix(),
+            lineno,
+            "out of sync with render(_portable/06 roadmap-loop appendix); edit the portable source first, then render the project skill",
+        )
+    ]
+
+
+def check_feature_full_loop_skill_source_parity(root: Path, config: ProjectConfig) -> list[Violation]:
+    """Project feature-full-loop skill must equal render(_portable/04 appendix)."""
+    rule = "FEATURE_FULL_LOOP_SKILL_SOURCE_PARITY"
+    source = root / AUTOMATION_LOOP_REL
+    target_rel = config.skill_path("feature-full-loop")
+    target = root / target_rel
+    if not source.is_file():
+        return [
+            Violation(
+                rule,
+                AUTOMATION_LOOP_REL.as_posix(),
+                None,
+                "portable automation-loop source missing",
+            )
+        ]
+    if not target.is_file():
+        return [
+            Violation(
+                rule,
+                target_rel.as_posix(),
+                None,
+                "project feature-full-loop skill missing — render it from _portable/04 appendix",
+            )
+        ]
+    extracted = _extract_feature_full_loop_skill_source(source.read_text(encoding="utf-8"))
+    if extracted is None:
+        return [
+            Violation(
+                rule,
+                AUTOMATION_LOOP_REL.as_posix(),
+                None,
+                "could not find the `<skill_prefix>feature-full-loop` SKILL.md appendix source",
+            )
+        ]
+    expected = _render_feature_full_loop_skill_source(extracted, config)
+    actual = target.read_text(encoding="utf-8")
+    if expected == actual:
+        return []
+    e_lines = expected.splitlines()
+    a_lines = actual.splitlines()
+    lineno = next(
+        (
+            i + 1
+            for i in range(max(len(e_lines), len(a_lines)))
+            if (e_lines[i] if i < len(e_lines) else None)
+            != (a_lines[i] if i < len(a_lines) else None)
+        ),
+        None,
+    )
+    return [
+        Violation(
+            rule,
+            target_rel.as_posix(),
+            lineno,
+            "out of sync with render(_portable/04 feature-full-loop appendix); edit the portable source first, then render the project skill",
+        )
+    ]
+
+
+def check_workflow_migrate_skill_source_parity(root: Path, config: ProjectConfig) -> list[Violation]:
+    """Project workflow-migrate skill must equal render(_portable/00 appendix), when present."""
+    rule = "WORKFLOW_MIGRATE_SKILL_SOURCE_PARITY"
+    source = root / MANIFEST_REL
+    target_rel = config.skill_path("workflow-migrate")
+    target = root / target_rel
+    if not source.is_file():
+        return [
+            Violation(
+                rule,
+                MANIFEST_REL.as_posix(),
+                None,
+                "portable manifest source missing",
+            )
+        ]
+    if not target.is_file():
+        return []
+    extracted = _extract_workflow_migrate_skill_source(source.read_text(encoding="utf-8"))
+    if extracted is None:
+        return [
+            Violation(
+                rule,
+                MANIFEST_REL.as_posix(),
+                None,
+                "could not find the `<skill_prefix>workflow-migrate` SKILL.md appendix source",
+            )
+        ]
+    expected = _render_workflow_migrate_skill_source(extracted, config)
+    actual = target.read_text(encoding="utf-8")
+    if expected == actual:
+        return []
+    e_lines = expected.splitlines()
+    a_lines = actual.splitlines()
+    lineno = next(
+        (
+            i + 1
+            for i in range(max(len(e_lines), len(a_lines)))
+            if (e_lines[i] if i < len(e_lines) else None)
+            != (a_lines[i] if i < len(a_lines) else None)
+        ),
+        None,
+    )
+    return [
+        Violation(
+            rule,
+            target_rel.as_posix(),
+            lineno,
+            "out of sync with render(_portable/00 workflow-migrate appendix); edit the portable source first, then render the project skill",
+        )
+    ]
+
+
 def run(root: Path) -> tuple[int, list[Violation]]:
     root = root.resolve()
     files = portable_markdown_files(root)
@@ -444,14 +769,18 @@ def run(root: Path) -> tuple[int, list[Violation]]:
                 "no markdown files found under docs/workflow/_portable/",
             )
         ]
+    config = infer_project_config(root)
     violations: list[Violation] = []
     violations.extend(check_proper_nouns(root, files))
     violations.extend(check_placeholder_registration(root, files))
     violations.extend(check_template_bare_paths(root))
     violations.extend(check_template_count(root))
     violations.extend(check_template_next_step(root))
-    violations.extend(check_cowork_parity(root))
+    violations.extend(check_cowork_parity(root, config))
     violations.extend(check_skill_doc_registration(root))
+    violations.extend(check_feature_full_loop_skill_source_parity(root, config))
+    violations.extend(check_roadmap_skill_source_parity(root, config))
+    violations.extend(check_workflow_migrate_skill_source_parity(root, config))
     code = 1 if violations else 0
     return code, violations
 
