@@ -10,10 +10,10 @@
 
 ## Current State
 
-- Current feature: `single-table-todos-e2e` (#30) shipped locally; next eligible feature is `protocol-integrity-integration-tests` (#31), `rekey-two-phase` (#32), `tla-protocol-model` (#33), or `onboarding-backfill-ui` (#18).
+- Current feature: `tla-protocol-model` (#33) is BLOCKED on missing Java Runtime after spec authoring; next eligible feature is `protocol-integrity-integration-tests` (#31), `rekey-two-phase` (#32), `rls-fuzz-property` (#34), `rfc-test-vectors-gate` (#35), `audit-log-integrity` (#36), or `onboarding-backfill-ui` (#18).
 - Completed this run: `kdf-primitives` (#3), `aes-gcm-aead-core` (#4), `deterministic-cbor-aad` (#5), `bip39-mnemonic-24w` (#6), `cipher-envelope-codec` (#7), `rust-keyvault-opaque-handle` (#11), `x25519-device-keypair` (#12), `hpke-per-device-wrap` (#13), `ed25519-recovery-signing` (#14), `sqlcipher-local-db` (#16), `account-signup-login` (#17), `crypto-tauri-commands` (#19), `core-data-sqlite-driver` (#20), `commit-seq-authority` (#23), `realtime-private-channel-config` (#21), `rls-policies-and-tests` (#25), `nonce-lease-server` (#24), `sync-engine-push` (#26), `sync-engine-pull` (#27), `push-edge-function` (#28), `recovery-proof-edge-function` (#29), `menubar-sync-status-icon` (#22), and `single-table-todos-e2e` (#30) code/docs/tests locally complete with deferred gates.
-- Failed this run: no feature blocked; incidents recorded for command/script/import/fixture/type issues.
-- Next step: continue with next eligible Phase 4.8 security row or #18 UI, keeping live gates deferred.
+- Failed this run: `tla-protocol-model` (#33) BLOCKED on missing Java Runtime for TLC; incidents recorded for command/script/import/fixture/type/runtime issues.
+- Next step: continue with next eligible Phase 4.8 security row or #18 UI; do not wait for Java install.
 
 ## Checkpoints
 
@@ -439,6 +439,28 @@
 - Incident fixed: first integration run passed the wrong revision-reader seam; rerun passed after harness fix.
 - Deferred: hosted Supabase deploy, real two-Mac sync, Realtime-triggered pull, SQLCipher copied-file dump PoC, and visual menu-bar transition validation.
 - Commit: pending `feat(single-table-todos-e2e): add local todos sync harness`.
+
+### 2026-05-19 04:26 PDT — feature checkpoint: tla-protocol-model (#33)
+
+- Added `docs/spec/sync.tla`.
+- Added `docs/spec/sync.cfg`.
+- Added `docs/spec/sync-model-check.md`.
+- The finite model covers the six mandatory scenarios as explicit actions/markers:
+  - device revocation
+  - new-device join
+  - concurrent Re-key
+  - offline replay
+  - full recovery
+  - duplicate mutation
+- Documented known limitation: the model treats `account_commit_seq` as one honest global counter and does not prove defense against server equivocation.
+- Static checks passed:
+  - `rg "DeviceRevocation|NewDeviceJoin|ConcurrentRekey|OfflineReplay|FullRecovery|DuplicateMutation" docs/spec/sync.tla docs/spec/sync.cfg`
+  - `wc -l docs/spec/sync.tla docs/spec/sync.cfg`
+- TLC attempt:
+  - Downloaded `/tmp/tla2tools.jar` from the TLA+ GitHub release URL.
+  - `java -jar /tmp/tla2tools.jar -deadlock -workers 2 docs/spec/sync.tla` failed because macOS reports no Java Runtime.
+- Status: BLOCKED, not shipped; model-check gate recorded in deferred gates and incident log.
+- Commit: pending `feat(tla-protocol-model): add sync tla model`.
 
 ### 2026-05-19 02:55 PDT — sweep checkpoint after next 4-feature loop
 
