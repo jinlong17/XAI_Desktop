@@ -18,9 +18,9 @@
 | Current Feature | grid-window-prototype |
 | Feature Source | docs/planning/execution/G0-window-spike.md §G0.2 |
 | Feature Status | BLOCKED (patched; human runtime confirmation required) |
-| Current Commit | 01e5167 |
-| Tests | `pnpm --filter @repo/plugin-organizer check-types`; `pnpm --filter desktop build`; `cargo check --manifest-path apps/desktop/src-tauri/Cargo.toml` |
-| Next Step | Restart `pnpm --filter desktop tauri dev`, click `+ New Grid`, confirm `create_grid_window` terminal log, visible native Grid window, and AI cube/settings remain clickable above it |
+| Current Commit | b8c34fe |
+| Tests | `pnpm --filter @repo/plugin-organizer check-types`; `pnpm --filter @repo/core check-types`; `pnpm --filter desktop build`; `cargo check --manifest-path apps/desktop/src-tauri/Cargo.toml` |
+| Next Step | Restart `pnpm --filter desktop tauri dev`, drag AI cube across desktop, click `+ New Grid`, confirm `create_grid_window` terminal log, visible native Grid window, and AI cube/settings remain clickable above it |
 
 ## Checkpoints
 
@@ -154,12 +154,26 @@
   - `pnpm --filter desktop build` (Vite chunk-size warning only)
 - Status remains BLOCKED until human runtime confirmation proves the AI icon opens settings and drags above Grid windows.
 
+### 2026-05-19 15:47 PDT — Bugfix Checkpoint: native control drag and direct create fallback
+
+- User reported `+ New Grid` still did not generate in the latest runtime attempt and that AI icon movement area felt limited.
+- Root cause: AI cube dragging was still DOM-local inside the 360x360 control window, and Grid creation still depended on main-window event/state sync before a native window was guaranteed.
+- Patched AI cube dragging to move the native control window with physical cursor/window positions.
+- Patched `+ New Grid` to generate a shared `gridId`, compute screen-relative placement from the control window position, notify main for Organizer state, and directly invoke `create_grid_window` with the same `gridId` as a no-duplicate fallback.
+- Updated EventMap and `docs/contracts/events-v0.md` for optional `gridId`.
+- Bugfix commit: `b8c34fe fix(control-window): drag natively and harden grid creation`.
+- Verification passed:
+  - `pnpm --filter @repo/plugin-organizer check-types`
+  - `pnpm --filter @repo/core check-types`
+  - `pnpm --filter desktop build` (Vite chunk-size warning only)
+- Status remains BLOCKED until human runtime confirmation.
+
 ## Feature Outcomes
 
 | Feature | Gate | Status | Commit | Tests | Notes |
 |---|---|---|---|---|---|
 | window-ground-truth | G0 | READY_TO_SHIP | 3b571f6 | PASS: branch, sw_vers, README content | Deferred gates recorded in docs/workflow/roadmap/xai-v1.deferred-gates.md |
-| grid-window-prototype | G0 | BLOCKED | 6b121ea + 14e04c2 + 01e5167 | PASS: plugin-organizer check-types; desktop build; cargo check; BLOCKED: human New Grid/control-window runtime confirmation | User reported no native window and then control-window hit-test/layering issues; both patched. |
+| grid-window-prototype | G0 | BLOCKED | 6b121ea + 14e04c2 + 01e5167 + b8c34fe | PASS: plugin-organizer/core check-types; desktop build; cargo check; BLOCKED: human New Grid/control-window runtime confirmation | User reported no native window, control-window hit-test/layering issues, and control drag bounds; patched. |
 | click-through-matrix | G0 | BLOCKED | 82ab268 + 7a1b9dd | PASS: matrix template and static analysis exist; BLOCKED: real hit-test evidence | Requires human macOS click-through matrix. |
 | finder-dnd-path | G0 | BLOCKED | 33627df + 7a1b9dd | PASS: matrix template and static analysis exist; BLOCKED: real Finder drop evidence | Requires human Finder/Tauri path matrix. |
 | spaces-multimonitor-matrix | G0 | BLOCKED | 2fb6bac | PASS: matrix template exists; BLOCKED: real Spaces/fullscreen/multi-display evidence | Reached by user override; safe prep only. |
@@ -239,6 +253,7 @@ Paused early on 2026-05-19 after the user override because no further production
 - Incident 5: `window-command-contract` production implementation is blocked until G0 is Go/Conditional Go.
 - Incident 6: `grid-window-prototype` `+ New Grid` did not create a native window; patched, but human runtime confirmation is required.
 - Incident 7: `grid-window-prototype` AI cube/settings were covered by Grid windows; patched, but human runtime confirmation is required.
+- Incident 8: `grid-window-prototype` still failed to generate and AI cube movement was bounded; patched with native drag and direct create fallback, but human runtime confirmation is required.
 
 ### Commits
 
@@ -255,6 +270,7 @@ Paused early on 2026-05-19 after the user override because no further production
 - `7a1b9dd` — `docs(G0.3/G0.4): fill static code analysis into click-through + DnD matrices`
 - `14e04c2` — `fix(grid-window): route new grid requests to main`
 - `01e5167` — `fix(control-window): keep ai cube above grids`
+- `b8c34fe` — `fix(control-window): drag natively and harden grid creation`
 
 ### Test Results
 
@@ -270,6 +286,7 @@ Paused early on 2026-05-19 after the user override because no further production
 - `test -f docs/planning/execution/host-residuals.md` -> PASS
 - Host residual `rg` scan -> PASS, 23 source references recorded
 - `cargo check --manifest-path apps/desktop/src-tauri/Cargo.toml` -> PASS with existing dead-code warnings
+- `pnpm --filter @repo/core check-types` -> PASS
 
 ### Next Human Reading Order
 

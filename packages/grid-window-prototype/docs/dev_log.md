@@ -74,16 +74,20 @@ User report, 2026-05-19 15:24 PDT: clicking `+ New Grid` did not create a native
 Patch:
 - Commit `14e04c2 fix(grid-window): route new grid requests to main`.
 - Commit `01e5167 fix(control-window): keep ai cube above grids`.
+- Commit `b8c34fe fix(control-window): drag natively and harden grid creation`.
 - ControlWindow now sends `organizer:create-grid-request` directly to the `main` window with a `{ rect }` payload.
 - OrganizerLayer listens for the documented contract event, keeps a legacy fallback listener, and uses Tauri v2 runtime detection instead of relying on `window.__TAURI__`.
 - The macOS control window now sits above Grid windows so the AI cube/settings panel remains clickable and draggable after Grid creation.
+- The AI cube now moves the native control window instead of a DOM element bounded inside the 360x360 window.
+- `+ New Grid` now uses a shared `gridId`, screen-relative placement, main-window state sync, and a direct no-duplicate `create_grid_window` fallback.
 
 Verification performed:
 - `pnpm --filter @repo/plugin-organizer check-types`: PASS.
+- `pnpm --filter @repo/core check-types`: PASS.
 - `pnpm --filter desktop build`: PASS with Vite chunk-size warning only.
 - `cargo check --manifest-path apps/desktop/src-tauri/Cargo.toml`: PASS with existing dead-code warnings.
 
-Runtime status: BLOCKED until a human reruns `pnpm --filter desktop tauri dev`, clicks `+ New Grid`, confirms a visible Grid window plus terminal `create_grid_window` log, and verifies the AI cube can still open settings and drag above the Grid window.
+Runtime status: BLOCKED until a human reruns `pnpm --filter desktop tauri dev`, drags the AI cube across the desktop, clicks `+ New Grid`, confirms a visible Grid window plus terminal `create_grid_window` log, and verifies the AI cube can still open settings and drag above the Grid window.
 
 ## Deferred Gates
 
@@ -101,3 +105,4 @@ Runtime status: BLOCKED until a human reruns `pnpm --filter desktop tauri dev`, 
 | 2026-05-19 14:41 PDT | feature-verify (Codex inline) | Verified commit boundary, no command/contract/EventMap diff, reran plugin-organizer check-types and desktop build, and recorded runtime evidence as deferred. Status -> READY_TO_SHIP. | verify-status docs commit | ship |
 | 2026-05-19 15:24 PDT | bug-fix (Codex inline) | Patched `+ New Grid` request routing and Tauri runtime detection after user reported no native window. Automated checks pass; runtime confirmation still required. Status -> BLOCKED. | 14e04c2 | runtime verify |
 | 2026-05-19 15:32 PDT | bug-fix (Codex inline) | Raised the control window above Grid windows after user reported the AI icon could not open settings or drag once Grid windows existed. Rust/frontend checks pass; runtime confirmation still required. | 01e5167 | runtime verify |
+| 2026-05-19 15:47 PDT | bug-fix (Codex inline) | Added native control-window dragging and direct same-`gridId` Rust fallback for `+ New Grid` after user reported movement bounds and no generation. Type/build checks pass; runtime confirmation still required. | b8c34fe | runtime verify |
