@@ -28,6 +28,9 @@ pub struct KeyHandle(pub u32);
 pub mod aes_gcm;
 
 #[cfg(feature = "crypto")]
+pub mod aad;
+
+#[cfg(feature = "crypto")]
 pub mod argon2;
 
 #[cfg(feature = "crypto")]

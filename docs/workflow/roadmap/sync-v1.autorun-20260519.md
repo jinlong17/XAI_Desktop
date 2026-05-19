@@ -10,8 +10,8 @@
 
 ## Current State
 
-- Current feature: `aes-gcm-aead-core` (#4) shipped locally; next eligible feature is `deterministic-cbor-aad` (#5) or `bip39-mnemonic-24w` (#6).
-- Completed this run: `kdf-primitives` (#3), `aes-gcm-aead-core` (#4) code/docs/tests locally complete with deferred gates.
+- Current feature: first 3-feature loop complete; next eligible feature is `bip39-mnemonic-24w` (#6) or `cipher-envelope-codec` (#7).
+- Completed this run: `kdf-primitives` (#3), `aes-gcm-aead-core` (#4), `deterministic-cbor-aad` (#5) code/docs/tests locally complete with deferred gates.
 - Failed this run: none yet.
 - Next step: implement next eligible wave-W0 feature, starting with `deterministic-cbor-aad` (#5) unless dependency checks change.
 
@@ -51,3 +51,17 @@
   - `cargo check --manifest-path apps/desktop/src-tauri/Cargo.toml --features crypto --locked`
 - Deferred: human review, cross-vendor verify, and FR-SY-12 release-mode 1KB P95 benchmark.
 - Commit: `feat(aes-gcm-aead-core): add AES-GCM primitive`.
+
+### 2026-05-19 02:17 PDT — feature checkpoint: deterministic-cbor-aad (#5)
+
+- Implemented `apps/desktop/src-tauri/src/crypto/aad.rs` behind the `crypto` feature.
+- Added deterministic fixed-schema CBOR writer for blob, wrap, and recovery-message AAD.
+- Added fixture `apps/desktop/src-tauri/tests/fixtures/cbor_aad_vectors.json`.
+- Added docs anchor `packages/deterministic-cbor-aad/docs/{design,api,test,dev_log}.md`.
+- Tests/checks passed:
+  - `cargo test --manifest-path apps/desktop/src-tauri/Cargo.toml --features crypto crypto::aad::tests`
+  - `cargo check --manifest-path apps/desktop/src-tauri/Cargo.toml --locked`
+  - `cargo check --manifest-path apps/desktop/src-tauri/Cargo.toml --features crypto --locked`
+  - `bash scripts/ci/check-exact-pins.sh`
+- Deferred: JS/Python cross-implementation vector verification and blob-swap integration test.
+- Commit: `feat(deterministic-cbor-aad): add canonical AAD vectors`.
