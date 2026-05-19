@@ -11,13 +11,13 @@
 | Target | roadmap-kickoff |
 | Title | Sync v1 foundational scaffold (plugin-account + core-data + shared infra) |
 | Roadmap | sync-v1 · feature #1 · wave W0 · Phase 0.3 · dev-plan T-05 |
-| Status | NEEDS_REVIEW |
-| Current Phase | FEATURE_PLAN |
-| Suggested Next | feature-review |
+| Status | APPROVED |
+| Current Phase | FEATURE_REVIEW |
+| Suggested Next | feature-build |
 | Automation Mode | D-Codex+Cursor |
 | Verify Cross-vendor | no |
-| Executor | feature-plan (Claude Opus) |
-| Updated | 2026-05-19 16:20 |
+| Executor | feature-review (Claude Opus) |
+| Updated | 2026-05-19 16:55 |
 
 ## Phase Plan
 
@@ -69,6 +69,25 @@
 See discovery review §5. Top: R-1 (main.tsx routing regression), R-2 (AppError
 serde vs existing string-result commands), R-3 (workspace pickup of new packages).
 
+## Review Notes
+
+> feature-review (Claude Opus), 2026-05-19. Verdict: APPROVED. 0 blockers, 2 advisory notes.
+
+Independent live-code verification (worktree base 18a51d1) — every discovery claim re-checked file-by-file, all CONFIRMED:
+- EventMap (events.ts) organizer/app-only; emitEvent/useEventListener are `<K extends keyof EventMap>` → adding `account:*` keys is sufficient & type-safe.
+- hooks/index.ts exports only useWindow; @repo/core subpath layout intact (no core-* split); core-data genuinely new.
+- PluginManifest interface matches D-3 live schema exactly; PluginRegistry.register/getPlugin support idempotent registerAccountPlugin() + registration test.
+- main.tsx 39-line router, no plugin imports → R-1 mitigation (call above createRoot, Router() body untouched) sound.
+- Cargo.toml zero crypto/http deps; thiserror is the only new crate (pure derive macro). lib.rs `mod commands; mod platform;` → adding `mod error; mod crypto;` is isolated, invoke_handler! untouched.
+- commands/window.rs `Result<(), String>` → D-6 Option A (no migration) keeps blast radius off macOS-hardware-sensitive window code.
+- organizer package.json/manifest shape matches the mirror instruction; PLUGIN_MAP `Planned` valid.
+
+Gate results: discovery quality PASS · design alignment PASS · contract completeness PASS · phase plan quality PASS (5 phases, each leaves tree compiling, explicit file boundaries) · architecture risk PASS (core changes additive-only; red lines #1/#4/#8/#9/#12 respected; T6/FR-SY-75 KeyHandle opaque seam + crypto_* allowlist marker and STRIDE EoP/TB-3 useTauriInvoke chokepoint bound into design.md §Threat Model).
+
+Advisory (non-blocking, for feature-build awareness, no re-plan needed):
+- A1: test.md §3 "every events.emit entry is a real keyof EventMap" — PluginManifest.events.emit is typed `string[]` (verified), so this is a test-fixture/runtime assertion, not a compile-time guarantee. Plan already frames it as a fixture; keep it that way.
+- A2: AppError derives `serde::Serialize` as an externally-tagged enum (api.md §3) — fine for scaffold; ensure the E3xxx Display-prefix `#[test]` (test.md §4) actually asserts the `E3xxx:` prefix string so the JS-parseable error-code contract is locked from day one.
+
 ## Iterations
 
 (none — initial Fresh plan)
@@ -77,4 +96,5 @@ serde vs existing string-result commands), R-3 (workspace pickup of new packages
 
 | Timestamp | Executor | Action | Commits | Next |
 |---|---|---|---|---|
-| 2026-05-19 16:20 | feature-plan (Claude Opus) | Fresh plan: live-code verified vs orientation report (no drift); wrote discovery review + design/api/test/dev_log; 5-phase plan. Roadmap bg re-dispatch — job 2a941912, prior attempt b8b06068 was DEAD. Worktree base HEAD 18a51d1. | (pending commit) | feature-review |
+| 2026-05-19 16:20 | feature-plan (Claude Opus) | Fresh plan: live-code verified vs orientation report (no drift); wrote discovery review + design/api/test/dev_log; 5-phase plan. Roadmap bg re-dispatch — job 2a941912, prior attempt b8b06068 was DEAD. Worktree base HEAD 18a51d1. | 211762a | feature-review |
+| 2026-05-19 16:55 | feature-review (Claude Opus) | Independent review vs live worktree code (base 18a51d1); all discovery claims re-verified file-by-file, no drift. 5 gates PASS. Verdict APPROVED, 0 blockers, 2 advisory notes (test-fixture typing nuance + error-code-prefix test). Status Panel → APPROVED / FEATURE_REVIEW / feature-build. | (this commit) | feature-build |
