@@ -53,3 +53,6 @@ pub mod mnemonic;
 
 #[cfg(feature = "crypto")]
 pub mod recovery_signing;
+
+#[cfg(feature = "crypto")]
+pub mod sqlcipher;

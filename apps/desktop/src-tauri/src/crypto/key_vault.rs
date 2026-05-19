@@ -36,6 +36,7 @@ impl core::fmt::Debug for KeyHandleId {
 
 #[derive(Copy, Clone, Debug, PartialEq, Eq)]
 pub enum ResidentKeyKind {
+    Kek,
     Dek,
     DevicePrivate,
 }
@@ -105,6 +106,10 @@ impl KeyVault {
         self.insert_key(ResidentKeyKind::Dek, dek)
     }
 
+    pub fn insert_kek(&mut self, kek: [u8; KEY_BYTES]) -> KeyVaultResult<KeyHandleId> {
+        self.insert_key(ResidentKeyKind::Kek, kek)
+    }
+
     pub fn insert_device_private(
         &mut self,
         device_priv: [u8; KEY_BYTES],
@@ -135,6 +140,14 @@ impl KeyVault {
         f: impl FnOnce(&[u8; KEY_BYTES]) -> R,
     ) -> KeyVaultResult<R> {
         self.with_key(handle, ResidentKeyKind::Dek, f)
+    }
+
+    pub fn with_kek<R>(
+        &self,
+        handle: KeyHandleId,
+        f: impl FnOnce(&[u8; KEY_BYTES]) -> R,
+    ) -> KeyVaultResult<R> {
+        self.with_key(handle, ResidentKeyKind::Kek, f)
     }
 
     pub fn with_device_private<R>(

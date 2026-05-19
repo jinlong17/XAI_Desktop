@@ -10,10 +10,10 @@
 
 ## Current State
 
-- Current feature: `ed25519-recovery-signing` (#14) shipped locally; next eligible feature is `sqlcipher-local-db` (#16), `account-signup-login` (#17), or non-crypto rows #21/#23/#25.
-- Completed this run: `kdf-primitives` (#3), `aes-gcm-aead-core` (#4), `deterministic-cbor-aad` (#5), `bip39-mnemonic-24w` (#6), `cipher-envelope-codec` (#7), `rust-keyvault-opaque-handle` (#11), `x25519-device-keypair` (#12), `hpke-per-device-wrap` (#13), `ed25519-recovery-signing` (#14) code/docs/tests locally complete with deferred gates.
+- Current feature: `sqlcipher-local-db` (#16) shipped locally; next eligible feature is `account-signup-login` (#17), `crypto-tauri-commands` (#19), or non-crypto rows #21/#23/#25.
+- Completed this run: `kdf-primitives` (#3), `aes-gcm-aead-core` (#4), `deterministic-cbor-aad` (#5), `bip39-mnemonic-24w` (#6), `cipher-envelope-codec` (#7), `rust-keyvault-opaque-handle` (#11), `x25519-device-keypair` (#12), `hpke-per-device-wrap` (#13), `ed25519-recovery-signing` (#14), `sqlcipher-local-db` (#16) code/docs/tests locally complete with deferred gates.
 - Failed this run: no feature blocked; incidents recorded for command/script/import/fixture issues.
-- Next step: implement next eligible feature after committing #14, starting with `sqlcipher-local-db` (#16) unless dependency checks change.
+- Next step: implement next eligible feature after committing #16, starting with `account-signup-login` (#17) unless dependency checks change.
 
 ## Checkpoints
 
@@ -154,6 +154,22 @@
   - `bash scripts/ci/check-exact-pins.sh`
 - Deferred: human review, cross-vendor verify, RFC 8032 official vectors, Edge Function integration, and re-key ceremony integration.
 - Commit: `feat(ed25519-recovery-signing): add recovery proof signing`.
+
+### 2026-05-19 03:05 PDT — feature checkpoint: sqlcipher-local-db (#16)
+
+- Implemented `apps/desktop/src-tauri/src/crypto/sqlcipher.rs` behind the `crypto` feature.
+- Extended KeyVault with resident `Kek` kind plus `insert_kek` / `with_kek`.
+- Derived `db_key = HKDF(KEK, "xai.sqlite.v1")` and zeroized staging bytes after keying.
+- Added SQLCipher raw-key PRAGMA generation guarded by strict 32-byte input and internal hex encoding.
+- Applied `PRAGMA cipher_compatibility = 4` and validated keyed connection.
+- Added docs anchor `packages/sqlcipher-local-db/docs/{design,api,test,dev_log}.md`.
+- Tests/checks passed:
+  - `cargo test --manifest-path apps/desktop/src-tauri/Cargo.toml --features crypto crypto::sqlcipher::tests`
+  - `cargo check --manifest-path apps/desktop/src-tauri/Cargo.toml --locked`
+  - `cargo check --manifest-path apps/desktop/src-tauri/Cargo.toml --features crypto --locked`
+  - `bash scripts/ci/check-exact-pins.sh`
+- Deferred: SQLite dump PoC, SQLCipher CLI compatibility check, and core-data repository/schema migration.
+- Commit: `feat(sqlcipher-local-db): add SQLCipher open path`.
 
 ### 2026-05-19 02:55 PDT — sweep checkpoint after next 4-feature loop
 

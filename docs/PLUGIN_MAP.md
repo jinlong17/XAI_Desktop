@@ -25,6 +25,7 @@
 | x25519-device-keypair | packages/x25519-device-keypair/ | Shipped | Wave W1 Phase 0.3: local CSPRNG X25519 device key generation with Keychain store abstraction, KeyVault residency, and public-key rejection tests. Deferred runtime gates recorded in sync-v1 deferred gates. | 2026-05-19 |
 | hpke-per-device-wrap | packages/hpke-per-device-wrap/ | Shipped | Wave W1 Phase 0.3: HPKE Base-mode per-device DEK wrap/open with info-vs-aad enforcement and KeyVault handles. Deferred RFC-vector/runtime gates recorded in sync-v1 deferred gates. | 2026-05-19 |
 | ed25519-recovery-signing | packages/ed25519-recovery-signing/ | Shipped | Wave W1 Phase 0.3: DEK-derived Ed25519 recovery proof signing over canonical CBOR transcript with strict verification. Deferred RFC-vector/runtime gates recorded in sync-v1 deferred gates. | 2026-05-19 |
+| sqlcipher-local-db | packages/sqlcipher-local-db/ | Shipped | Wave W1 Phase 0.3: SQLCipher local DB open/key path with KEK-derived db_key and raw-key injection guard. Deferred dump/CLI gates recorded in sync-v1 deferred gates. | 2026-05-19 |
 
 ---
 

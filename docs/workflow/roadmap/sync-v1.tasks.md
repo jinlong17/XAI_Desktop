@@ -34,7 +34,7 @@
 - [x] #12 x25519-device-keypair (§4.2 C-A)
 - [x] #13 hpke-per-device-wrap (§4.2 C-D / RFC 9180)
 - [x] #14 ed25519-recovery-signing (§4.2 C-A)
-- [ ] #16 sqlcipher-local-db (T-11)
+- [x] #16 sqlcipher-local-db (T-11)
 - [ ] #17 account-signup-login (T-09)
 - [ ] #18 onboarding-backfill-ui (FR-AC-09)
 - [ ] #19 crypto-tauri-commands (T-08 / §4.2 capability allowlist)
