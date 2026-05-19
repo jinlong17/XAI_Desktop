@@ -548,6 +548,8 @@
   - `pnpm --filter web test:rls-fuzz`
   - `pnpm --filter web check-types`
   - `pnpm install --frozen-lockfile`
+  - `pnpm --filter @repo/plugin-account test`
+  - `pnpm --filter web lint`
 - Incident recorded: dependency install repeated existing Next/React peer warnings.
 - Deferred: human review, cross-vendor verify, and hosted Supabase/supabase-js property run.
 - Commit: pending `feat(rls-fuzz-property): add RLS property fuzz gate`.
@@ -599,6 +601,30 @@
 - Incidents fixed: first `test:rekey` found a table-specific trigger field bug; second found the staging nonce reservation vs swap duplicate ledger issue.
 - Deferred: human review, cross-vendor verify, blocking mnemonic UI, real Tauri crypto commands, hosted service_role Edge wiring, process-level kill-9 rehearsals, and two-Mac/device-revocation E2E.
 - Commit: pending `feat(rekey-two-phase): add rekey orchestration core`.
+
+### 2026-05-19 05:05 PDT — feature checkpoint: onboarding-backfill-ui (#18)
+
+- Added `packages/plugin-account/src/onboarding-backfill.ts` and exported the backfill API.
+- Added `packages/plugin-account/src/components/OnboardingBackfillFlow.tsx`.
+- Added `packages/plugin-account/tests/onboarding-backfill.test.ts`.
+- Added `apps/web/supabase/functions/onboarding-backfill/handler.ts`.
+- Added `apps/web/supabase/tests/onboarding-backfill.test.ts` and `web` script `test:onboarding-backfill`.
+- Added feature docs under `packages/onboarding-backfill-ui/docs/`.
+- Local coverage:
+  - weak master password rejected with real `zxcvbn >= 3` scoring.
+  - 6 of 24 mnemonic words and 4 Secret Key digits are required for completion.
+  - local `dek_check` and `secret_key_check` validation is invoked before acknowledgement.
+  - acknowledgement goes through an injected Edge Function transport/proof seam, not direct client update.
+  - Emergency Kit generation emits a PDF data URL/byte stream and QR payload.
+- Tests/checks passed:
+  - `pnpm --filter @repo/plugin-account test -- tests/onboarding-backfill.test.ts`
+  - `pnpm --filter @repo/plugin-account check-types`
+  - `pnpm --filter web test:onboarding-backfill`
+  - `pnpm --filter web check-types`
+  - `pnpm install --frozen-lockfile`
+- Incidents recorded: dependency install repeated existing Next deprecation and React 18 peer warning.
+- Deferred: human UX review, hosted Supabase Edge deployment, real Rust/Tauri Ed25519 proof generation, native print/save-to-PDF workflow, and physical QR scan validation.
+- Commit: pending `feat(onboarding-backfill-ui): add recovery backfill flow`.
 
 ### 2026-05-19 02:55 PDT — sweep checkpoint after next 4-feature loop
 

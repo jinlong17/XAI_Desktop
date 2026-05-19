@@ -1,4 +1,35 @@
 export {
+  BACKFILL_INCOMPLETE_ERROR,
+  BACKFILL_WORD_COUNT,
+  MIN_MASTER_PASSWORD_SCORE,
+  SECRET_KEY_DIGIT_COUNT,
+  assertStrongMasterPassword,
+  completeOnboardingBackfill,
+  createBackfillChallenge,
+  createEmergencyKitDocument,
+  createEmergencyKitPayload,
+  renderEmergencyKitHtml,
+  scoreMasterPassword,
+  validateLocalRecoveryChecks,
+  verifyBackfillChallenge,
+} from './onboarding-backfill';
+export type {
+  BackfillAcknowledgementProof,
+  BackfillAcknowledgementRequest,
+  BackfillAcknowledgementTransport,
+  BackfillAnswers,
+  BackfillChallenge,
+  BackfillLocalValidationInput,
+  BackfillLocalValidationResult,
+  BackfillLocalValidator,
+  BackfillVerificationResult,
+  CompleteBackfillInput,
+  EmergencyKitDocument,
+  EmergencyKitPayload,
+} from './onboarding-backfill';
+export { OnboardingBackfillFlow } from './components/OnboardingBackfillFlow';
+export type { OnboardingBackfillFlowProps } from './components/OnboardingBackfillFlow';
+export {
   AUDIT_MIRROR_SQL,
   SyncAuditMismatchError,
   createAuditMirror,

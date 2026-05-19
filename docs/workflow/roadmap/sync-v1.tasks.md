@@ -36,7 +36,7 @@
 - [x] #14 ed25519-recovery-signing (§4.2 C-A)
 - [x] #16 sqlcipher-local-db (T-11)
 - [x] #17 account-signup-login (T-09)
-- [ ] #18 onboarding-backfill-ui (FR-AC-09)
+- [x] #18 onboarding-backfill-ui (FR-AC-09)
 - [x] #19 crypto-tauri-commands (T-08 / §4.2 capability allowlist)
 - [x] #20 core-data-sqlite-driver (dev-plan §2)
 - [x] #22 menubar-sync-status-icon (T-16)
