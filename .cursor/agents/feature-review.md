@@ -2,7 +2,7 @@
 name: feature-review
 description: Use proactively after feature-plan completes a draft to review planning artifacts and issue APPROVED or REVISE. Do not rewrite the plan; send structural changes back to feature-plan.
 model: inherit
-readonly: true
+readonly: false
 ---
 
 ## Output Contract

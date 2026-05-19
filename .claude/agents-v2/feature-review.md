@@ -1,7 +1,7 @@
 ---
 name: feature-review
 description: Use proactively after feature-plan completes a draft to review planning artifacts and issue APPROVED or REVISE. Do not rewrite the plan; send structural changes back to feature-plan.
-tools: Read, Glob, Grep
+tools: Read, Write, Edit, Glob, Grep
 model: opus
 color: yellow
 ---

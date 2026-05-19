@@ -1,6 +1,6 @@
 name = "feature-review"
 description = "Use proactively after feature-plan completes a draft to review planning artifacts and issue APPROVED or REVISE. Do not rewrite the plan; send structural changes back to feature-plan."
-sandbox_mode = "read-only"
+sandbox_mode = "workspace-write"
 model = "gpt-5.4"
 model_reasoning_effort = "high"
 developer_instructions = '''
