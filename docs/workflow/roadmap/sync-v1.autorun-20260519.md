@@ -10,10 +10,10 @@
 
 ## Current State
 
-- Current feature: `sqlcipher-local-db` (#16) shipped locally; next eligible feature is `account-signup-login` (#17), `crypto-tauri-commands` (#19), or non-crypto rows #21/#23/#25.
-- Completed this run: `kdf-primitives` (#3), `aes-gcm-aead-core` (#4), `deterministic-cbor-aad` (#5), `bip39-mnemonic-24w` (#6), `cipher-envelope-codec` (#7), `rust-keyvault-opaque-handle` (#11), `x25519-device-keypair` (#12), `hpke-per-device-wrap` (#13), `ed25519-recovery-signing` (#14), `sqlcipher-local-db` (#16) code/docs/tests locally complete with deferred gates.
+- Current feature: `account-signup-login` (#17) shipped locally; next eligible feature is `onboarding-backfill-ui` (#18), `crypto-tauri-commands` (#19), `core-data-sqlite-driver` (#20), or non-crypto rows #21/#23/#25.
+- Completed this run: `kdf-primitives` (#3), `aes-gcm-aead-core` (#4), `deterministic-cbor-aad` (#5), `bip39-mnemonic-24w` (#6), `cipher-envelope-codec` (#7), `rust-keyvault-opaque-handle` (#11), `x25519-device-keypair` (#12), `hpke-per-device-wrap` (#13), `ed25519-recovery-signing` (#14), `sqlcipher-local-db` (#16), `account-signup-login` (#17) code/docs/tests locally complete with deferred gates.
 - Failed this run: no feature blocked; incidents recorded for command/script/import/fixture issues.
-- Next step: implement next eligible feature after committing #16, starting with `account-signup-login` (#17) unless dependency checks change.
+- Next step: implement next eligible feature after committing #17, preferring `crypto-tauri-commands` (#19) or `core-data-sqlite-driver` (#20) before UI-heavy #18.
 
 ## Checkpoints
 
@@ -170,6 +170,20 @@
   - `bash scripts/ci/check-exact-pins.sh`
 - Deferred: SQLite dump PoC, SQLCipher CLI compatibility check, and core-data repository/schema migration.
 - Commit: `feat(sqlcipher-local-db): add SQLCipher open path`.
+
+### 2026-05-19 03:13 PDT — feature checkpoint: account-signup-login (#17)
+
+- Implemented `packages/plugin-account/src/account.ts`.
+- Added injected seams for local crypto derivation/provisioning, auth transport, and `@repo/core-data` Keychain persistence.
+- Enforced that `masterPassword` and `secretKey` are consumed by the local crypto seam only; auth transport receives derived `authPassword`/check fields.
+- Added signup, login, refresh-token storage, rotated refresh persistence, 60-second refresh skew, and 3-failure `relogin-required` behavior.
+- Added docs anchor `packages/account-signup-login/docs/{design,api,test,dev_log}.md` and updated plugin-account docs / PLUGIN_MAP.
+- Tests/checks passed:
+  - `pnpm --filter @repo/plugin-account check-types`
+  - `pnpm --filter @repo/plugin-account test`
+- Corrected initial Vitest fixture that embedded raw secret text in a mocked derived auth password.
+- Deferred: real Supabase E2E, Tauri crypto command wiring, signed-build Keychain ACL verification, and refresh-failure UI.
+- Commit: `feat(account-signup-login): add account auth orchestration`.
 
 ### 2026-05-19 02:55 PDT — sweep checkpoint after next 4-feature loop
 

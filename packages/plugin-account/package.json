@@ -10,16 +10,19 @@
     }
   },
   "scripts": {
-    "check-types": "tsc --noEmit"
+    "check-types": "tsc --noEmit",
+    "test": "vitest run"
   },
   "dependencies": {
     "@repo/core": "workspace:*",
+    "@repo/core-data": "workspace:*",
     "@scure/bip39": "2.2.0",
     "react": "^19.2.0"
   },
   "devDependencies": {
     "@repo/typescript-config": "workspace:*",
     "@types/react": "19.2.2",
-    "typescript": "5.9.2"
+    "typescript": "5.9.2",
+    "vitest": "^3.2.1"
   }
 }

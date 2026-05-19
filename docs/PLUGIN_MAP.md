@@ -26,6 +26,7 @@
 | hpke-per-device-wrap | packages/hpke-per-device-wrap/ | Shipped | Wave W1 Phase 0.3: HPKE Base-mode per-device DEK wrap/open with info-vs-aad enforcement and KeyVault handles. Deferred RFC-vector/runtime gates recorded in sync-v1 deferred gates. | 2026-05-19 |
 | ed25519-recovery-signing | packages/ed25519-recovery-signing/ | Shipped | Wave W1 Phase 0.3: DEK-derived Ed25519 recovery proof signing over canonical CBOR transcript with strict verification. Deferred RFC-vector/runtime gates recorded in sync-v1 deferred gates. | 2026-05-19 |
 | sqlcipher-local-db | packages/sqlcipher-local-db/ | Shipped | Wave W1 Phase 0.3: SQLCipher local DB open/key path with KEK-derived db_key and raw-key injection guard. Deferred dump/CLI gates recorded in sync-v1 deferred gates. | 2026-05-19 |
+| account-signup-login | packages/account-signup-login/ | Shipped | Wave W1 Phase 0.3: plugin-account signup/login/refresh orchestration with local crypto/auth/keychain seams. Runtime Supabase/Tauri/Keychain gates recorded in sync-v1 deferred gates. | 2026-05-19 |
 
 ---
 
@@ -42,7 +43,7 @@
 | Plugin | 目录 | 状态 | PRD 章节 | 对外依赖 | 最后更新 |
 |--------|------|------|---------|---------|---------|
 | organizer | packages/plugin-organizer/ | Stable | §5.1 | @repo/core, @repo/ui | 2026-05-14 |
-| account | packages/plugin-account/ | Planned | sync/PRD §5 | @repo/core, @scure/bip39 | 2026-05-19 |
+| account | packages/plugin-account/ | In-Dev | sync/PRD §5 | @repo/core, @repo/core-data, @scure/bip39 | 2026-05-19 |
 | todo | packages/plugin-todo/ | Planned | §5.2 | @repo/core | — |
 | pomodoro | packages/plugin-pomodoro/ | Planned | §5.3 | @repo/core | — |
 | habits | packages/plugin-habits/ | Planned | §5.4 | @repo/core | — |

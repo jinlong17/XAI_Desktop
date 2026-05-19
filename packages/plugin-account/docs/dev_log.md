@@ -8,10 +8,10 @@
 |---|---|
 | Plugin | account |
 | Package | @repo/plugin-account |
-| Status | Planned |
-| Phase | wave-W0 scaffold — structural seams only |
-| Executor | feature-auto-build (claude-sonnet-4-6) |
-| Updated | 2026-05-19 00:20 |
+| Status | In-Dev |
+| Phase | wave-W1 account signup/login orchestration |
+| Executor | Codex serial autorun |
+| Updated | 2026-05-19 03:13 |
 
 ## Scaffold scope (wave-W0)
 
@@ -26,3 +26,4 @@
 | Timestamp | Executor | Action | Commits | Next |
 |---|---|---|---|---|
 | 2026-05-19 00:20 | feature-auto-build | Phase 4 scaffold: package skeleton + docs (wave-W0, Planned status). | (see roadmap-kickoff dev_log) | feature-verify |
+| 2026-05-19 03:13 | Codex serial autorun | Added signup/login/refresh orchestration, Keychain refresh-token persistence, and Vitest coverage. | pending #17 commit | Wire real Supabase transport and Tauri crypto commands in downstream rows. |

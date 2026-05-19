@@ -2,12 +2,10 @@
 
 > Wave-W0 scaffold. Public surface is minimal; implementation deferred to later rows.
 
-## 1. Public surface (`src/index.ts` — only export)
+## 1. Public surface (`src/index.ts` barrel)
 
-```ts
-export { registerAccountPlugin } from './register-plugin';
-export type { KeyHandle } from './types';
-```
+The barrel exports registration, `KeyHandle`, mnemonic helpers, and account
+signup/login orchestration from `src/account.ts`.
 
 ## 2. `registerAccountPlugin(): void`
 
@@ -41,3 +39,9 @@ in `apps/desktop/src-tauri/src/crypto/mod.rs` (later row).
 ## 5. Manifest
 
 See `manifest.json` — `enabled: false`, `tauriCommands: []`, no components.
+
+## 6. Account orchestration
+
+See `packages/account-signup-login/docs/api.md` for the current local contract.
+The key invariant is that `masterPassword` and `secretKey` are accepted only by
+the injected crypto seam, while auth transport receives derived auth/check fields.

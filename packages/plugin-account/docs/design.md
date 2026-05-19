@@ -7,7 +7,7 @@
 
 - **Plugin**: `account`
 - **Package**: `@repo/plugin-account`
-- **Status**: Planned (wave-W0 scaffold — no active functionality)
+- **Status**: In-Dev (signup/login orchestration shipped locally; runtime transport deferred)
 - **PRD**: `docs/planning/sub-prds/sync/PRD.md` v0.6-DRAFT §5
 
 ## Selected Options
@@ -28,6 +28,7 @@ apps/desktop/src/main.tsx
 
 @repo/plugin-account
   ├─ src/index.ts          (only public surface, red line #9)
+  ├─ src/account.ts        (signup/login/refresh orchestration)
   ├─ src/register-plugin.ts (PluginRegistry.register + compile-smoke)
   ├─ src/types.ts           (KeyHandle branded type)
   └─ manifest.json          (live schema, enabled: false)
@@ -42,10 +43,10 @@ apps/desktop/src/main.tsx
 
 ## Frozen Assumptions
 
-1. `enabled: false` — plugin is Planned; host skips disabled plugins in getAllEnabled().
+1. `enabled: false` — plugin is still hidden from runtime UI; host skips disabled plugins in getAllEnabled().
 2. No components registered in wave-W0 (OverlayLayer, ControlWidget, etc. deferred).
-3. `tauriCommands: []` — no crypto commands in scaffold; the Rust seam is in
-   `src-tauri/src/crypto/mod.rs` only.
+3. `tauriCommands: []` — no direct Tauri crypto commands yet; `src/account.ts`
+   consumes an injected `AccountCryptoClient` until #19 wires real commands.
 
 ## Deferred
 
