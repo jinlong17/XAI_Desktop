@@ -24,7 +24,7 @@
 - [x] #4 aes-gcm-aead-core (T-06 aes_gcm.rs)
 - [x] #5 deterministic-cbor-aad (T-06 aad.rs)
 - [ ] #6 bip39-mnemonic-24w (T-06 mnemonic.rs)
-- [ ] #7 cipher-envelope-codec (T-06 envelope.rs)
+- [x] #7 cipher-envelope-codec (T-06 envelope.rs)
 - [x] #8 keychain-bridge-macos (T-10)
 - [x] #15 supabase-schema-migrations (T-02) — authoring; deploy waits on #9
 - [ ] #21 realtime-private-channel-config (T-04) — config only

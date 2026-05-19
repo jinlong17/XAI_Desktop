@@ -10,8 +10,8 @@
 
 ## Current State
 
-- Current feature: first 3-feature loop complete; next eligible feature is `bip39-mnemonic-24w` (#6) or `cipher-envelope-codec` (#7).
-- Completed this run: `kdf-primitives` (#3), `aes-gcm-aead-core` (#4), `deterministic-cbor-aad` (#5) code/docs/tests locally complete with deferred gates.
+- Current feature: `cipher-envelope-codec` (#7) shipped locally; next eligible feature is `bip39-mnemonic-24w` (#6) or `rust-keyvault-opaque-handle` (#11).
+- Completed this run: `kdf-primitives` (#3), `aes-gcm-aead-core` (#4), `deterministic-cbor-aad` (#5), `cipher-envelope-codec` (#7) code/docs/tests locally complete with deferred gates.
 - Failed this run: none yet.
 - Next step: implement next eligible wave-W0 feature, starting with `deterministic-cbor-aad` (#5) unless dependency checks change.
 
@@ -65,6 +65,18 @@
   - `bash scripts/ci/check-exact-pins.sh`
 - Deferred: JS/Python cross-implementation vector verification and blob-swap integration test.
 - Commit: `feat(deterministic-cbor-aad): add canonical AAD vectors`.
+
+### 2026-05-19 02:17 PDT — feature checkpoint: cipher-envelope-codec (#7)
+
+- Implemented `apps/desktop/src-tauri/src/crypto/envelope.rs` behind the `crypto` feature.
+- Added PRD §7.1.1 binary serialization/deserialization and nonce reconstruction.
+- Added docs anchor `packages/cipher-envelope-codec/docs/{design,api,test,dev_log}.md`.
+- Tests/checks passed:
+  - `cargo test --manifest-path apps/desktop/src-tauri/Cargo.toml --features crypto crypto::envelope::tests`
+  - `cargo check --manifest-path apps/desktop/src-tauri/Cargo.toml --locked`
+  - `cargo check --manifest-path apps/desktop/src-tauri/Cargo.toml --features crypto --locked`
+- Deferred: full cargo-fuzz / 24h fuzz to #47.
+- Commit: `feat(cipher-envelope-codec): add envelope codec`.
 
 ### 2026-05-19 02:17 PDT — sweep checkpoint after first 3-feature loop
 

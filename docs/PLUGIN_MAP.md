@@ -19,6 +19,7 @@
 | kdf-primitives | packages/kdf-primitives/ | Shipped | Wave W0 Phase 0.3: Argon2id KEK/auth_password + HKDF helpers under Tauri `crypto` feature. Deferred cross-vendor gate recorded in sync-v1 deferred gates. | 2026-05-19 |
 | aes-gcm-aead-core | packages/aes-gcm-aead-core/ | Shipped | Wave W0 Phase 0.3: AES-256-GCM primitive with explicit AAD and detached tag. Deferred gates recorded in sync-v1 deferred gates. | 2026-05-19 |
 | deterministic-cbor-aad | packages/deterministic-cbor-aad/ | Shipped | Wave W0 Phase 0.3: deterministic CBOR AAD schemas and fixtures. Deferred cross-implementation gates recorded in sync-v1 deferred gates. | 2026-05-19 |
+| cipher-envelope-codec | packages/cipher-envelope-codec/ | Shipped | Wave W0 Phase 0.3: binary envelope codec and GCM nonce reconstruction. Fuzz gate deferred to sync-v1 deferred gates. | 2026-05-19 |
 
 ---
 

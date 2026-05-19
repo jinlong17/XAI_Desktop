@@ -34,4 +34,7 @@ pub mod aad;
 pub mod argon2;
 
 #[cfg(feature = "crypto")]
+pub mod envelope;
+
+#[cfg(feature = "crypto")]
 pub mod kdf;
