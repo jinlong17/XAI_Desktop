@@ -1,4 +1,6 @@
 mod commands;
+mod crypto;
+mod error;
 mod platform;
 
 use serde::{Deserialize, Serialize};
