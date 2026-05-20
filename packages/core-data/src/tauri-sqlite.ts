@@ -146,16 +146,88 @@ export function createTauriRepo<T extends RepoRecord>(
     ...operations,
 
     /**
-     * NOTE: G2.2 PoC scope. Cross-command atomicity will be added when
-     * the Tauri command surface gains `db_transaction_begin` and
-     * `db_transaction_commit`. The TS surface keeps the contract shape
-     * so callers do not need to rewrite when that lands.
+     * Atomic transaction (G2.6 P0 fix).
+     *
+     * Writes (`put` / `delete`) inside the callback are buffered in a
+     * TS-side queue and committed as ONE `db_put_batch` call at the end
+     * of the callback. The Rust side wraps the batch in a SQLite
+     * `BEGIN`/`COMMIT`, so a partial failure inside the batch — or a
+     * throw from `fn` before the commit — leaves the database untouched.
+     *
+     * Reads (`get` / `list` / `listByIndex` / `metadata`) inside the
+     * callback observe the pre-transaction state of the database; they
+     * do NOT see uncommitted writes from the same transaction. Callers
+     * who need read-after-write inside a transaction must keep their
+     * in-flight state in JS until commit.
      */
     async transaction<R>(
       fn: (tx: RepoTransaction<T>) => Promise<R>,
     ): Promise<R> {
       await ensureInit();
-      return fn(operations);
+
+      interface PendingPut<U extends RepoRecord> {
+        op: "put";
+        id: string;
+        json: string;
+        updatedAtMs: number;
+        record: U;
+      }
+      interface PendingDelete {
+        op: "delete";
+        id: string;
+      }
+      type PendingEntry = PendingPut<T> | PendingDelete;
+
+      const pending: PendingEntry[] = [];
+
+      const txOps: RepoTransaction<T> = {
+        async get(id: string): Promise<T | undefined> {
+          return operations.get(id);
+        },
+        async put(record: T): Promise<void> {
+          assertRepoRecord(record);
+          pending.push({
+            op: "put",
+            id: record.id,
+            json: JSON.stringify(record),
+            updatedAtMs: nowMs(),
+            record,
+          });
+        },
+        async delete(id: string): Promise<void> {
+          pending.push({ op: "delete", id });
+        },
+        list: operations.list,
+        listByIndex: operations.listByIndex,
+        metadata: operations.metadata,
+      };
+
+      // If `fn` throws we propagate without sending anything to Rust:
+      // the database is untouched, matching the same-transaction
+      // rollback contract.
+      const result = await fn(txOps);
+
+      if (pending.length === 0) {
+        return result;
+      }
+
+      await invoke<void>("db_put_batch", {
+        input: {
+          namespace,
+          entries: pending.map((entry) =>
+            entry.op === "put"
+              ? {
+                  op: "put",
+                  id: entry.id,
+                  json: entry.json,
+                  updatedAtMs: entry.updatedAtMs,
+                }
+              : { op: "delete", id: entry.id },
+          ),
+        },
+      });
+
+      return result;
     },
 
     async migrate(): Promise<never> {

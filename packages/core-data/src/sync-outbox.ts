@@ -7,11 +7,25 @@
  * **same transaction** as the entity write so a crash between the two
  * cannot leave a record without its outbox row.
  *
+ * Atomicity model (G2.6 P0 fix):
+ *
+ * The entity row and its outbox row share the SAME repo namespace. The
+ * outbox row's id is prefixed with `OUTBOX_ID_PREFIX` (`__outbox__`).
+ * Because both rows live in one namespace, `Repo<T>.transaction(fn)`
+ * commits them atomically:
+ *
+ * - `createInMemoryRepo` → snapshot-restoring transaction.
+ * - `createSqliteRepo` (in-process SQLite driver) → `BEGIN`/`COMMIT` on
+ *   the driver.
+ * - `createTauriRepo` (production / on-disk SQLite) → buffered batch
+ *   committed via the `db_put_batch` Tauri command, which wraps the
+ *   batch in one SQLite transaction on the Rust side.
+ *
  * This module owns:
  *
  * - The `OutboxEntry` record shape (an extension of `RepoRecord`).
- * - `enqueueOutboxEntry` — atomic helper that pairs an entity put with
- *   an outbox put inside a `Repo<T>.transaction(fn)` callback.
+ * - `enqueueOutboxEntry` — atomic helper that pairs an entity put/delete
+ *   with an outbox put inside a single `Repo.transaction(fn)` callback.
  * - `nextOutboxBatch` — drain helper for the sync engine.
  *
  * The actual Supabase / push-edge integration lives in
@@ -25,6 +39,23 @@ import type {
   RepoRecord,
   RepoTransaction,
 } from "./types";
+
+/**
+ * Reserved id prefix that marks a row as a sync-outbox row inside a
+ * shared entity namespace. Application code must NEVER mint an entity
+ * with this prefix as its id.
+ */
+export const OUTBOX_ID_PREFIX = "__outbox__";
+
+/** Convert a mutationId into the outbox row's id. */
+export function outboxIdFor(mutationId: string): string {
+  return `${OUTBOX_ID_PREFIX}${mutationId}`;
+}
+
+/** True if the given record id is reserved for an outbox row. */
+export function isOutboxId(id: string): boolean {
+  return id.startsWith(OUTBOX_ID_PREFIX);
+}
 
 /** A single pending sync mutation queued for push. */
 export interface OutboxEntry extends RepoRecord {
@@ -49,9 +80,31 @@ export interface OutboxEntry extends RepoRecord {
   baseRevision?: number;
 }
 
+/**
+ * `enqueueOutboxEntry` takes ONE repo. The entity row and the outbox row
+ * share its namespace; the outbox row uses the reserved id prefix
+ * `OUTBOX_ID_PREFIX` so it cannot collide with an entity id.
+ *
+ * Backwards-compatibility note: the historical signature carried both
+ * `entityRepo` and `outboxRepo`. Inline migration callers wired both to
+ * the same repo while we land the SQLite atomic path; we now accept
+ * either shape. When `outboxRepo` is provided, it must be the same
+ * `Repo` instance as `entityRepo` — passing two different repos throws
+ * because the underlying drivers cannot commit two namespaces atomically.
+ */
 export interface EnqueueOutboxInput<T extends RepoRecord> {
-  entityRepo: Repo<T>;
-  outboxRepo: Repo<OutboxEntry>;
+  /**
+   * Repo whose namespace will hold BOTH the entity row and its outbox
+   * row. Required.
+   */
+  entityRepo: Repo<T | OutboxEntry>;
+  /**
+   * Deprecated: present for source compatibility with the prior
+   * dual-namespace shape. If supplied, MUST be the same `Repo` instance
+   * as `entityRepo`. Two separate repos cannot be committed atomically
+   * against the on-disk SQLite driver and are rejected at runtime.
+   */
+  outboxRepo?: Repo<T | OutboxEntry>;
   entity: T;
   op: "put" | "delete";
   payload: string;
@@ -62,20 +115,32 @@ export interface EnqueueOutboxInput<T extends RepoRecord> {
 }
 
 /**
- * Atomically write `entity` and an outbox row. The `entityRepo`
- * transaction wraps both writes so a crash mid-state cannot leave one
- * without the other.
+ * Atomically write `entity` and an outbox row inside a single
+ * `Repo.transaction(fn)` call. The transaction guarantees that either
+ * both rows are committed or neither — see the module-level header for
+ * the per-driver atomicity model.
  */
 export async function enqueueOutboxEntry<T extends RepoRecord>(
   input: EnqueueOutboxInput<T>,
 ): Promise<OutboxEntry> {
+  if (input.outboxRepo !== undefined && input.outboxRepo !== input.entityRepo) {
+    throw new Error(
+      "E3009: enqueueOutboxEntry requires the entity repo and outbox repo to be the same Repo instance — split namespaces cannot commit atomically",
+    );
+  }
+  if (isOutboxId(input.entity.id)) {
+    throw new Error(
+      `E3010: entity id ${input.entity.id} collides with the reserved outbox prefix \`${OUTBOX_ID_PREFIX}\``,
+    );
+  }
+
   const nowIso = input.nowIso ?? (() => new Date().toISOString());
   const commitSeq = input.nextCommitSeq();
   if (!Number.isInteger(commitSeq) || commitSeq < 1) {
     throw new Error("E3008: outbox commitSeq must be a positive integer");
   }
   const entry: OutboxEntry = {
-    id: `outbox_${input.mutationId}`,
+    id: outboxIdFor(input.mutationId),
     entityType: "sync.outbox",
     schemaVersion: 1,
     createdAt: nowIso(),
@@ -92,20 +157,13 @@ export async function enqueueOutboxEntry<T extends RepoRecord>(
   };
   assertRepoRecord(entry);
 
-  await input.entityRepo.transaction(async (entityTx: RepoTransaction<T>) => {
+  await input.entityRepo.transaction(async (tx: RepoTransaction<T | OutboxEntry>) => {
     if (input.op === "put") {
-      await entityTx.put(input.entity);
+      await tx.put(input.entity);
     } else {
-      await entityTx.delete(input.entity.id);
+      await tx.delete(input.entity.id);
     }
-    // The outbox lives in its own namespace, so we open a nested
-    // transaction on the outbox repo to ensure ordering. Driver
-    // semantics: the outer (entity) transaction commits last, so a
-    // crash between the two phases on a SQLite backend rolls back the
-    // entity write via the outer transaction's snapshot.
-    await input.outboxRepo.transaction(async (outboxTx) => {
-      await outboxTx.put(entry);
-    });
+    await tx.put(entry);
   });
 
   return entry;
@@ -115,16 +173,27 @@ export interface OutboxBatchOptions {
   limit?: number;
 }
 
-/** Return the next batch of outbox entries ordered by `commitSeq`. */
+/**
+ * Return the next batch of outbox entries ordered by `commitSeq`. The
+ * caller passes the shared entity/outbox repo; this helper filters by
+ * `entityType === "sync.outbox"` so non-outbox rows in the same
+ * namespace are ignored.
+ *
+ * The repo is typed as `Repo<OutboxEntry>` because the caller is
+ * narrowing to the outbox view — pass the shared repo cast through
+ * `as unknown as Repo<OutboxEntry>` when reading from a heterogeneous
+ * namespace.
+ */
 export async function nextOutboxBatch(
-  outboxRepo: Repo<OutboxEntry>,
+  repo: Repo<OutboxEntry>,
   options: OutboxBatchOptions = {},
 ): Promise<OutboxEntry[]> {
-  return outboxRepo.list({
+  const rows = await repo.list({
     entityType: "sync.outbox",
     orderBy: { field: "commitSeq", direction: "asc" },
     limit: options.limit,
   });
+  return rows.filter((row) => isOutboxId(row.id));
 }
 
 /**
