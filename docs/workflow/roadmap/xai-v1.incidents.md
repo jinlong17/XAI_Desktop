@@ -35,10 +35,10 @@
 - Time: 2026-05-19 15:05 PDT
 - Feature: mas-sandbox-dry-run
 - Symptom: Feature cannot satisfy acceptance in unattended mode.
-- Root cause if known: G0.6 requires signed/sandbox validation. The current transparent implementation cannot compile with the private API path disabled because `.transparent(true)` is unavailable on `WebviewWindowBuilder`.
-- Attempted fixes: Created MAS sandbox notes, entitlement draft, and risk matrix. Temporarily tested with private API disabled, captured compile failure, and restored the default config/Cargo feature.
+- Root cause if known: G0.6 requires signed/sandbox validation. The original transparent implementation could not compile with the private API path disabled because `.transparent(true)` is unavailable on `WebviewWindowBuilder`.
+- Attempted fixes: Created MAS sandbox notes, entitlement draft, and risk matrix. Temporarily tested with private API disabled, captured compile failure, added the `mas-sandbox` compile fallback guard, verified the private-API-disabled compile path, and restored the default config/Cargo feature.
 - Current status: BLOCKED.
-- Resume instruction: Implement a non-transparent or conditionally compiled MAS fallback, run private-API-disabled and sandbox/signed validation, update `docs/reviews/window-ground-truth/mas-sandbox-dry-run/mas-sandbox-notes.md`, then rerun feature-verify for `mas-sandbox-dry-run`.
+- Resume instruction: Run private-API-disabled `mas-sandbox` fallback in a signed/sandbox environment, validate runtime UX/file access/bookmarks/tray behavior, update `docs/reviews/window-ground-truth/mas-sandbox-dry-run/mas-sandbox-notes.md`, then rerun feature-verify for `mas-sandbox-dry-run`.
 
 ## Incident 5
 

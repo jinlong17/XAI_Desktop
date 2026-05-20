@@ -53,6 +53,11 @@ bip39         = { version = "=2.2.2",   optional = true }
 # crypto — OFF by default.  Enable only in the future crypto consumption rows.
 # Exact-pinned optional deps are compiled only when this feature is active.
 keychain-it = []
+# mas-sandbox — compile-time guard for a non-private transparent-window fallback.
+# Default dev/DMG builds keep Tauri's `macos-private-api` dependency feature enabled;
+# MAS dry-runs can enable this flag while disabling that dependency feature to ensure
+# Rust window builders do not call private-API-only transparent constructors.
+mas-sandbox = []
 crypto = [
   "dep:argon2",
   "dep:aes-gcm",

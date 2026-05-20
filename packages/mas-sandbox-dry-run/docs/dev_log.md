@@ -10,12 +10,12 @@
 | Roadmap | xai-g0-window-spike · feature #6 · G0.6 |
 | Status | BLOCKED |
 | Current Phase | FEATURE_VERIFY |
-| Suggested Next | MAS fallback design after G0.5 |
+| Suggested Next | Signed/sandbox runtime validation after G0.5 |
 | Automation Mode | D-Codex |
 | Verify Cross-vendor | yes |
 | Executor | feature-verify (Codex inline) |
-| Updated | 2026-05-19 22:25 PDT |
-| Blockers | Signed/sandbox runtime evidence and MAS fallback implementation required |
+| Updated | 2026-05-19 22:44 PDT |
+| Blockers | Signed/sandbox runtime evidence and fallback UX validation required |
 
 ## Phase Plan
 
@@ -26,15 +26,23 @@ Status: DONE. Commit: `(this commit)`.
 - Created MAS sandbox notes and entitlement draft.
 - Avoided Tauri config, Cargo feature, entitlement, and capability changes in unattended mode.
 
+### Phase 2 — MAS compile fallback
+
+Status: DONE. Commit: `(pending commit)`.
+
+- Added `mas-sandbox` Cargo feature.
+- Guarded Rust-side Grid/control `.transparent(true)` builder calls so the non-private fallback compile path can omit them.
+- Left default DMG/dev behavior unchanged.
+
 ## Review Notes
 
 feature-review (Codex inline), 2026-05-19 15:04 PDT. Verdict: APPROVED for safe prep only.
 
 ## Verification Notes
 
-feature-verify (Codex inline), 2026-05-19 22:25 PDT. Verdict: BLOCKED / PARTIAL_EVIDENCE.
+feature-verify (Codex inline), 2026-05-19 22:44 PDT. Verdict: BLOCKED / COMPILE_FALLBACK_READY.
 
-The private-API-disabled comparison now has compile evidence: current transparent Grid/control windows cannot compile when the private API path is disabled because `.transparent(true)` is unavailable on `WebviewWindowBuilder`. G0.6 remains blocked on MAS fallback design plus signed/sandbox runtime evidence.
+The private-API-disabled comparison now has compile evidence and a compile-only fallback. Default private path still passes `cargo check`. With `macOSPrivateApi=false`, the Tauri dependency `macos-private-api` feature temporarily disabled, and the new `mas-sandbox` feature enabled, `cargo check` passes. G0.6 remains blocked on signed/sandbox runtime validation and fallback UX evidence.
 
 ## Work Log
 
@@ -45,3 +53,4 @@ The private-API-disabled comparison now has compile evidence: current transparen
 | 2026-05-19 15:05 PDT | feature-build (Codex inline) | Created MAS sandbox notes, entitlement draft, and risk matrix. | (this commit) | feature-verify |
 | 2026-05-19 15:05 PDT | feature-verify (Codex inline) | Marked BLOCKED because real sandbox/private-API acceptance cannot be automated here. | (this commit) | feature-build |
 | 2026-05-19 22:25 PDT | feature-verify (Codex inline) | Temporarily tested with private API disabled; build fails on `.transparent(true)` in Grid/control window builders. Restored default config and Cargo feature. | `4537d2d` | MAS fallback design |
+| 2026-05-19 22:44 PDT | feature-build/verify (Codex inline) | Added `mas-sandbox` compile fallback for Grid/control builders and verified both default and private-API-disabled compile paths. | (pending commit) | Signed/sandbox runtime validation |

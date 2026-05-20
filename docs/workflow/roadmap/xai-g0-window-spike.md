@@ -19,7 +19,7 @@
 | 3 | click-through-matrix | docs/planning/execution/G0-window-spike.md §G0.3 | grid-window-prototype | ready_to_ship | READY_TO_SHIP | D-Codex | yes | 2026-05-19 | READY_TO_SHIP 2026-05-19 · Default runtime hit-test passes; private-API-disabled build compile-fails on `.transparent(true)`, so MAS fallback risk moves to G0.6. |
 | 4 | finder-dnd-path | docs/planning/execution/G0-window-spike.md §G0.4 | grid-window-prototype | ready_to_ship | READY_TO_SHIP | D-Codex | yes | 2026-05-19 | READY_TO_SHIP 2026-05-19 · Tauri file, folder, `.app`, and alias paths observed; alias policy recorded in ADR-0005 as `PRESERVE_ALIAS_PATH`; duplicate fixes applied in `58c926d` and `18b48da`. Deferred gates recorded in docs/workflow/roadmap/xai-v1.deferred-gates.md |
 | 5 | spaces-multimonitor-matrix | docs/planning/execution/G0-window-spike.md §G0.5 | click-through-matrix, finder-dnd-path | ready_to_ship | BLOCKED | D-Codex | yes | 2026-05-19 | BLOCKED 2026-05-19 · G0.3/G0.4 are READY_TO_SHIP; current display facts and static collection behavior recorded; real Spaces/fullscreen/multi-display evidence is still required. |
-| 6 | mas-sandbox-dry-run | docs/planning/execution/G0-window-spike.md §G0.6 | click-through-matrix, finder-dnd-path | ready_to_ship | BLOCKED | D-Codex | yes | 2026-05-19 | BLOCKED 2026-05-19 · Private-API-disabled build fails on transparent windows; MAS fallback/sandbox evidence still required. |
+| 6 | mas-sandbox-dry-run | docs/planning/execution/G0-window-spike.md §G0.6 | click-through-matrix, finder-dnd-path | ready_to_ship | BLOCKED | D-Codex | yes | 2026-05-19 | BLOCKED 2026-05-19 · `mas-sandbox` compile fallback passes private-API-disabled `cargo check`; signed/sandbox runtime evidence still required. |
 
 ## Decomposition Rationale
 

@@ -15,12 +15,12 @@
 |---|---|
 | Current Gate | G0 — remaining manual evidence |
 | Gate Manifest | docs/workflow/roadmap/xai-g0-window-spike.md |
-| Current Feature | spaces-multimonitor-matrix |
-| Feature Source | docs/planning/execution/G0-window-spike.md §G0.5 |
+| Current Feature | mas-sandbox-dry-run |
+| Feature Source | docs/planning/execution/G0-window-spike.md §G0.6 |
 | Feature Status | BLOCKED |
-| Current Commit | bcc5785 |
-| Tests | `system_profiler SPDisplaysDataType`; `rg` static window behavior scan; G0.5 still BLOCKED on real runtime matrix |
-| Next Step | Complete Spaces/multi-display matrix, then MAS fallback/sandbox evidence |
+| Current Commit | pending G0.6 compile fallback commit |
+| Tests | default `cargo check` PASS; private-API-disabled `cargo check --no-default-features --features mas-sandbox` PASS after temporary config/dependency toggle; defaults restored |
+| Next Step | Complete Spaces/multi-display matrix and signed/sandbox MAS runtime evidence |
 
 ## Checkpoints
 
@@ -357,6 +357,17 @@
   - main/control/grid levels are intentionally ordered as main < grid < control.
 - Status remains BLOCKED because Mission Control, Space-switch, fullscreen-app, and cross-display rect behavior need real runtime evidence.
 
+### 2026-05-19 22:44 PDT — Feature Checkpoint: mas-sandbox-dry-run
+
+- Added `mas-sandbox` Cargo feature as a compile-only fallback guard.
+- Guarded Grid/control Rust window builders so `.transparent(true)` is omitted under `mas-sandbox`.
+- Default DMG/dev path remains private-API-enabled and unchanged for runtime behavior.
+- Verification:
+  - `cargo check --manifest-path apps/desktop/src-tauri/Cargo.toml` -> PASS with existing dead-code warnings.
+  - Temporarily set `"macOSPrivateApi": false` and temporarily removed Tauri dependency `macos-private-api`, then ran `cargo check --manifest-path apps/desktop/src-tauri/Cargo.toml --no-default-features --features mas-sandbox` -> PASS with existing dead-code warnings.
+  - Restored default `"macOSPrivateApi": true` and Tauri dependency `macos-private-api`.
+- Status remains BLOCKED because signed/sandbox runtime behavior, fallback UX, security-scoped bookmarks, and release signing remain unverified.
+
 ## Feature Outcomes
 
 | Feature | Gate | Status | Commit | Tests | Notes |
@@ -366,7 +377,7 @@
 | click-through-matrix | G0 | READY_TO_SHIP | 82ab268 + 7a1b9dd + e7fc4ab + 2e5e499 + 4537d2d | PASS: transparent-area click-through, Grid item pointer flash, resize-handle drag; FAIL_BUILD evidence for private-API-disabled transparent path | MAS/non-private fallback risk moved to G0.6. |
 | finder-dnd-path | G0 | READY_TO_SHIP | 33627df + 7a1b9dd + 7e20ca8 + e7fc4ab + 58c926d + 18b48da + 5e98083 | PASS: file, folder, `.app`, and alias paths observed via `tauri://drag-drop`; duplicate fixes applied; post-dedupe `.app` rerun passed; alias path policy recorded as `PRESERVE_ALIAS_PATH` | Deferred gates recorded in docs/workflow/roadmap/xai-v1.deferred-gates.md |
 | spaces-multimonitor-matrix | G0 | BLOCKED | 2fb6bac + bcc5785 | PASS: matrix template exists; current display facts and static window behavior recorded; BLOCKED: real Spaces/fullscreen/multi-display evidence | Reached by user override; safe prep only. |
-| mas-sandbox-dry-run | G0 | BLOCKED | 071a192 | PASS: MAS notes exist; BLOCKED: real sandbox/private-API evidence | Reached by user override; safe prep only. |
+| mas-sandbox-dry-run | G0 | BLOCKED | 071a192 + pending compile fallback commit | PASS: MAS notes exist; private-API-disabled compile fallback passes; BLOCKED: signed/sandbox runtime evidence | Reached by user override; fallback compile only. |
 | window-command-contract | G1 | BLOCKED | 9c7b52f | PASS: safe-prep docs exist; BLOCKED: G0 not Go/Conditional Go | Reached by user override; no production code changed. |
 | grid-shell-organizer-content | G1 | BLOCKED | eaae46e | PASS: safe-prep docs exist; BLOCKED: G0/G1.1 not ready | Reached by user override; no production code changed. |
 | native-dnd-path-first | G1 | BLOCKED | 707a8d1 | PASS: DnD discovery docs exist; BLOCKED: MAS sandbox/security-scope evidence missing | Reached by user override; no production code changed. |
@@ -511,6 +522,7 @@ Latest stop point is after 2026-05-19 22:25 PDT G0.3 private-API evidence. G0.3 
 - `5e98083` — `docs(finder-dnd-path): record alias functional verification`
 - `4537d2d` — `docs(G0.3/G0.6): record private API fallback evidence`
 - `bcc5785` — `docs(G0.5): record Spaces static evidence`
+- `(pending)` — `feat(G0.6): add MAS compile fallback guard`
 
 ### Test Results
 
@@ -546,6 +558,8 @@ Latest stop point is after 2026-05-19 22:25 PDT G0.3 private-API evidence. G0.3 
 - Restored default private-API path: `cargo check --manifest-path apps/desktop/src-tauri/Cargo.toml` -> PASS with existing dead-code warnings
 - G0.5 display evidence: `system_profiler SPDisplaysDataType` -> PASS, current LG Ultra HD + DELL P2720DC setup recorded
 - G0.5 source scan: `rg` over `window_ext.rs` -> PASS, `CanJoinAllSpaces` / `Stationary` / `IgnoresCycle` and window levels recorded
+- G0.6 default path: `cargo check --manifest-path apps/desktop/src-tauri/Cargo.toml` -> PASS with existing dead-code warnings
+- G0.6 compile fallback path: temporary `macOSPrivateApi=false` + temporary removal of Tauri dependency `macos-private-api` + `cargo check --manifest-path apps/desktop/src-tauri/Cargo.toml --no-default-features --features mas-sandbox` -> PASS with existing dead-code warnings
 
 ### Next Human Reading Order
 

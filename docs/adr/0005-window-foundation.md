@@ -106,8 +106,9 @@ G1 policy:
 结论:
 
 - 当前透明桌面 Grid/control window 路径是 DMG/private-API 路线。
-- MAS/non-private 路线不能复用当前无条件 `.transparent(true)` 实现。
-- 若继续 MAS,必须先设计非透明或条件编译 fallback,再做 sandbox/signing/runtime 验证。
+- MAS/non-private 路线不能复用无条件 `.transparent(true)` 实现。
+- G0.6 已加入 compile-only `mas-sandbox` fallback:该 feature 下 Grid/control Rust builders 不调用 `.transparent(true)`,并在临时关闭 `macOSPrivateApi` 与 Tauri dependency `macos-private-api` 后通过 `cargo check --no-default-features --features mas-sandbox`。
+- 若继续 MAS,必须在此 compile fallback 基础上做 sandbox/signing/runtime 验证,确认非透明或降级 UX 是否可接受。
 
 ## G0 Go/No-Go
 
@@ -117,7 +118,7 @@ G1 policy:
 | DnD path | Finder 文件拖入 Grid 可得到真实 path | 只能得到文件名/虚拟对象/无事件 |
 | Spaces | 多 Space/全屏切换不丢窗口或可恢复 | 窗口错层、丢失、无法恢复 |
 | Multi-grid | 两个 Grid 同时存在且事件不串 | 任意 event 无法稳定 scope |
-| MAS path | private API 关闭时有可接受方案 | 当前透明实现无法在 private API 关闭时编译 |
+| MAS path | private API 关闭时有可接受方案 | compile fallback 存在但 runtime/sandbox UX 不可接受 |
 
 ## 后果
 

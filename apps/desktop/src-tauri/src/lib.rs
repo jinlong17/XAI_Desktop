@@ -83,22 +83,26 @@ pub fn run() {
             // Grid windows spawn. React will expand the window when the settings
             // panel opens and shrink it back when it closes.
             if app.get_webview_window("control").is_none() {
-                let control_window = WebviewWindowBuilder::new(
-                    app,
-                    "control",
-                    WebviewUrl::App("/#/control".into()),
-                )
-                .title("")
-                .inner_size(96.0, 96.0)
-                .position(24.0, 80.0)
-                .transparent(true)
-                .decorations(false)
-                .shadow(false)
-                .skip_taskbar(true)
-                .resizable(false)
-                .visible(true)
-                .always_on_top(false)
-                .build();
+                // `transparent(true)` is private-API gated on macOS. The
+                // `mas-sandbox` feature keeps the control window buildable
+                // without that constructor for non-private fallback dry-runs.
+                let control_builder =
+                    WebviewWindowBuilder::new(app, "control", WebviewUrl::App("/#/control".into()))
+                        .title("")
+                        .inner_size(96.0, 96.0)
+                        .position(24.0, 80.0);
+
+                #[cfg(not(feature = "mas-sandbox"))]
+                let control_builder = control_builder.transparent(true);
+
+                let control_window = control_builder
+                    .decorations(false)
+                    .shadow(false)
+                    .skip_taskbar(true)
+                    .resizable(false)
+                    .visible(true)
+                    .always_on_top(false)
+                    .build();
 
                 if let Ok(window) = control_window {
                     #[cfg(target_os = "macos")]

@@ -24,24 +24,26 @@ pub async fn create_grid_window(
         return update_grid_window(app, gridId, rect).await;
     }
 
-    // Create the window with grid-specific settings
-    let window = WebviewWindowBuilder::new(
-        &app,
-        &label,
-        WebviewUrl::App(url.into()),
-    )
-    .title("")
-    .inner_size(rect.width, rect.height)
-    .position(rect.x, rect.y)
-    .transparent(true)
-    .decorations(false)
-    .shadow(false)
-    .skip_taskbar(true)
-    .resizable(false)
-    .visible(true)
-    .always_on_top(false)
-    .build()
-    .map_err(|e| format!("Failed to create window: {}", e))?;
+    // Create the window with grid-specific settings.
+    // `transparent(true)` is private-API gated on macOS, so the MAS dry-run
+    // feature intentionally omits it and relies on the native fallback styling.
+    let builder = WebviewWindowBuilder::new(&app, &label, WebviewUrl::App(url.into()))
+        .title("")
+        .inner_size(rect.width, rect.height)
+        .position(rect.x, rect.y);
+
+    #[cfg(not(feature = "mas-sandbox"))]
+    let builder = builder.transparent(true);
+
+    let window = builder
+        .decorations(false)
+        .shadow(false)
+        .skip_taskbar(true)
+        .resizable(false)
+        .visible(true)
+        .always_on_top(false)
+        .build()
+        .map_err(|e| format!("Failed to create window: {}", e))?;
 
     // Configure macOS-specific window settings
     #[cfg(target_os = "macos")]

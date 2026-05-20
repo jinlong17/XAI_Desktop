@@ -138,9 +138,9 @@
 - Gate: G0
 - Deferred gate: User override to skip blocked G0.3/G0.4 dependencies for MAS safe prep
 - Why deferred: The user explicitly instructed to skip and continue while G0.3/G0.4 were still blocked and MAS conclusions depended on those results. G0.3 and G0.4 have since moved to READY_TO_SHIP, but MAS fallback/sandbox evidence remains blocked.
-- Risk: MAS prep now has enough evidence to know the current transparent implementation is not MAS-ready, but cannot produce a complete MAS feasibility conclusion without a fallback and sandbox run.
-- What was done instead: Limited G0.6 to documentation/risk-prep, then recorded that the private-API-disabled path compile-fails on `.transparent(true)`.
-- Later human action: Design/implement a non-transparent or conditionally compiled MAS fallback, then perform MAS/private-API validation.
+- Risk: MAS prep now has compile evidence and a compile-only fallback, but cannot produce a complete MAS feasibility conclusion without signed/sandbox runtime evidence.
+- What was done instead: Limited G0.6 to documentation/risk-prep, then added the `mas-sandbox` compile fallback guard and verified private-API-disabled `cargo check`.
+- Later human action: Perform MAS/private-API runtime validation with the fallback enabled.
 - Suggested verification command / environment: `sed -n '1,140p' docs/reviews/window-ground-truth/mas-sandbox-dry-run/mas-sandbox-notes.md`
 - Files/commits affected: docs/workflow/roadmap/xai-g0-window-spike.md; docs/workflow/roadmap/xai-v1.autorun-20260519.md; commits `071a192`, `4537d2d`
 
@@ -149,10 +149,10 @@
 - Feature: mas-sandbox-dry-run
 - Gate: G0
 - Deferred gate: Real MAS sandbox and fallback validation
-- Why deferred: The acceptance requires signed/sandbox runtime evidence. The private-API-disabled comparison now fails at compile time for the current transparent implementation, so a fallback must exist before runtime validation can proceed.
-- Risk: G0 cannot decide a complete MAS path until a non-transparent or conditionally compiled fallback is implemented and tested under sandbox/signing.
-- What was done instead: Created MAS notes, entitlement draft, risk matrix, and private-API-disabled compile evidence. Restored `"macOSPrivateApi": true` and the Rust `macos-private-api` Cargo feature after the temporary test.
-- Later human action: Implement a MAS fallback that avoids unconditional `.transparent(true)`, then run signed/sandbox validation and update `mas-sandbox-notes.md`.
+- Why deferred: The acceptance requires signed/sandbox runtime evidence. The compile-only `mas-sandbox` fallback now builds without Rust-side transparent constructors, but runtime validation still needs a signed/sandbox environment.
+- Risk: G0 cannot decide a complete MAS path until the fallback is tested under sandbox/signing and the downgraded UX is accepted.
+- What was done instead: Created MAS notes, entitlement draft, risk matrix, private-API-disabled compile evidence, and the `mas-sandbox` compile fallback. Restored `"macOSPrivateApi": true` and the Rust `macos-private-api` Cargo feature after temporary tests.
+- Later human action: Run signed/sandbox validation with the `mas-sandbox` fallback and update `mas-sandbox-notes.md`.
 - Suggested verification command / environment: Build/run desktop with private API disabled after fallback implementation and sandbox entitlements on macOS; Apple Developer signing may be required for final evidence.
 - Files/commits affected: docs/reviews/window-ground-truth/mas-sandbox-dry-run/mas-sandbox-notes.md; packages/mas-sandbox-dry-run/docs/*; commits `071a192`, `4537d2d`
 
