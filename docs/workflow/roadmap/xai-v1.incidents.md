@@ -26,7 +26,7 @@
 - Feature: spaces-multimonitor-matrix
 - Symptom: Feature cannot satisfy acceptance in unattended mode.
 - Root cause if known: G0.5 requires real Mission Control, Spaces, fullscreen-app, and multi-display observations; static inspection cannot prove window placement/recovery behavior.
-- Attempted fixes: Created a manual matrix template and documented the exact runtime evidence required. Avoided speculative window behavior changes.
+- Attempted fixes: Created a manual matrix template, documented the exact runtime evidence required, recorded current display facts, and recorded source-level collection behavior/window level findings. Avoided speculative window behavior changes.
 - Current status: BLOCKED.
 - Resume instruction: Run `pnpm --filter desktop tauri dev`, fill `docs/reviews/window-ground-truth/spaces-multimonitor-matrix/README.md`, then rerun feature-verify for `spaces-multimonitor-matrix`.
 

@@ -2,7 +2,7 @@
 
 ## Status
 
-BLOCKED in unattended Codex run. This matrix requires real macOS window behavior evidence.
+BLOCKED / STATIC_EVIDENCE_UPDATED. Current display facts and source-level Spaces behavior are recorded, but this matrix still requires real macOS Mission Control, fullscreen, and multi-display runtime evidence.
 
 ## Manual Setup
 
@@ -12,8 +12,24 @@ pnpm --filter desktop tauri dev
 
 Use the current display setup:
 
-- Built-in Color LCD, 3024 x 1964 Retina
-- DELL P2720DC, 1440 x 2560 @ 60 Hz, rotation 90
+- LG Ultra HD, 3840 x 2160, UI looks like 1920 x 1080 @ 60 Hz, Main Display: Yes
+- DELL P2720DC, 2560 x 1440, UI looks like 2560 x 1440 @ 60 Hz
+
+Source command:
+
+```bash
+system_profiler SPDisplaysDataType
+```
+
+## Static Window Behavior Findings
+
+| Area | Source | Static finding | Runtime confidence |
+|---|---|---|---|
+| Shared Spaces behavior | `apps/desktop/src-tauri/src/platform/macos/window_ext.rs` | All XAI Desktop windows apply `CanJoinAllSpaces`, `Stationary`, and `IgnoresCycle` collection behavior. | Needs Mission Control / Space switch validation |
+| Main overlay level | `window_ext.rs` | Main window is desktop icon level + 1 and click-through. | Needs runtime layering validation |
+| Grid level | `window_ext.rs` | Grid window is desktop icon level + 3 and interactive. | Needs runtime layering validation |
+| Control level | `window_ext.rs` | Control window is desktop icon level + 4 and interactive, above Grid. | Needs runtime layering validation |
+| Rect persistence path | `apps/desktop/src-tauri/src/commands/window.rs` | `create_grid_window` uses logical `position(rect.x, rect.y)` and `inner_size(rect.width, rect.height)`. | Needs cross-display placement validation |
 
 ## Matrix
 
@@ -28,8 +44,7 @@ Use the current display setup:
 
 ## Decision Fields
 
-- Join-all-Spaces acceptable: pending
+- Join-all-Spaces acceptable: code currently uses it; runtime acceptability pending
 - Per-Space summonable fallback needed: pending
 - Multi-display rect offset issue observed: pending
 - Fullscreen fallback needed: pending
-

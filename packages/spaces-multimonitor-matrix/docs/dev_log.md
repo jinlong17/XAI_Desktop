@@ -10,12 +10,12 @@
 | Roadmap | xai-g0-window-spike · feature #5 · G0.5 |
 | Status | BLOCKED |
 | Current Phase | FEATURE_VERIFY |
-| Suggested Next | feature-build |
+| Suggested Next | Human Spaces/fullscreen/multi-display runtime matrix |
 | Automation Mode | D-Codex |
 | Verify Cross-vendor | yes |
 | Executor | feature-verify (Codex inline) |
-| Updated | 2026-05-19 15:02 PDT |
-| Blockers | Real macOS Spaces/fullscreen/multi-display evidence required |
+| Updated | 2026-05-19 22:37 PDT |
+| Blockers | Real macOS Mission Control, fullscreen, Space-switch, and multi-display placement evidence required |
 
 ## Phase Plan
 
@@ -34,7 +34,7 @@ feature-review (Codex inline), 2026-05-19 15:01 PDT. Verdict: APPROVED for safe 
 
 feature-verify (Codex inline), 2026-05-19 15:02 PDT. Verdict: BLOCKED.
 
-Automated safe-prep check can confirm the matrix template exists, but G0.5 acceptance requires real macOS window behavior observations.
+Automated safe-prep checks confirm the matrix template exists, current display facts can be collected, and source-level Spaces behavior is visible in `window_ext.rs`. G0.5 acceptance still requires real macOS window behavior observations.
 
 ## Work Log
 
@@ -44,4 +44,4 @@ Automated safe-prep check can confirm the matrix template exists, but G0.5 accep
 | 2026-05-19 15:01 PDT | feature-review (Codex inline) | Approved safe-prep plan; no window behavior changes without captured runtime evidence. | — | feature-build |
 | 2026-05-19 15:02 PDT | feature-build (Codex inline) | Created Spaces/fullscreen/multi-monitor evidence template and docs. | (this commit) | feature-verify |
 | 2026-05-19 15:02 PDT | feature-verify (Codex inline) | Marked BLOCKED because real macOS window behavior acceptance cannot be automated here. | (this commit) | feature-build |
-
+| 2026-05-19 22:37 PDT | feature-build/verify (Codex inline) | Recorded current `system_profiler SPDisplaysDataType` display facts and static window collection/level findings. Status remains BLOCKED pending real Mission Control/fullscreen/multi-display runtime evidence. | (pending commit) | Human runtime matrix |

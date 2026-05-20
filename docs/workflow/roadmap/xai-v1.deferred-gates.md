@@ -115,7 +115,7 @@
 - Deferred gate: User override to skip blocked G0.3/G0.4 dependencies for safe prep
 - Why deferred: The user explicitly instructed to skip and continue while G0.3/G0.4 were still blocked on real hardware evidence. G0.3 and G0.4 have since moved to READY_TO_SHIP.
 - Risk: G0.5 still cannot pass without real Spaces/fullscreen/multi-display evidence.
-- What was done instead: Limited G0.5 to documentation/matrix preparation only and preserved BLOCKED status for real runtime validation.
+- What was done instead: Limited G0.5 to documentation/matrix preparation and static evidence only: current display facts plus source-level collection behavior/window level findings. Preserved BLOCKED status for real runtime validation.
 - Later human action: Perform G0.5 runtime validation.
 - Suggested verification command / environment: `sed -n '1,120p' docs/workflow/roadmap/xai-g0-window-spike.md`
 - Files/commits affected: docs/workflow/roadmap/xai-g0-window-spike.md; docs/workflow/roadmap/xai-v1.autorun-20260519.md; commit `2fb6bac`
@@ -127,7 +127,7 @@
 - Deferred gate: Real Spaces/fullscreen/multi-display matrix
 - Why deferred: The acceptance requires real Mission Control, multiple Spaces, fullscreen-app, and multi-display observations.
 - Risk: G0 cannot prove window placement/recovery stability until this evidence exists.
-- What was done instead: Created the evidence matrix template and avoided changing window behavior without live proof.
+- What was done instead: Created the evidence matrix template, recorded current display facts, recorded source-level collection behavior/window level findings, and avoided changing window behavior without live proof.
 - Later human action: Run `pnpm --filter desktop tauri dev`, perform the matrix, and attach logs/screenshots under `docs/reviews/window-ground-truth/spaces-multimonitor-matrix/`.
 - Suggested verification command / environment: `pnpm --filter desktop tauri dev` on macOS with built-in + external display, Mission Control, multiple Spaces, and fullscreen app.
 - Files/commits affected: docs/reviews/window-ground-truth/spaces-multimonitor-matrix/README.md; packages/spaces-multimonitor-matrix/docs/*; commit `2fb6bac`
