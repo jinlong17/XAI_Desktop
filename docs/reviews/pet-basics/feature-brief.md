@@ -16,3 +16,5 @@ Build a desktop pet scaffold:
 - No cross-plugin event contract changes in Track A files.
 
 ## Cross-review fixes 2026-05-20
+
+- `generateAiReminder` now short-circuits when state-machine rejects the `remind` transition (e.g. pet is resting), avoiding bubble/mood inconsistency.

@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useState } from "react";
-import { nextState } from "../stateMachine";
+import { canTransition, nextState } from "../stateMachine";
 import type { PetEntity, PetReminder, PetState } from "../types";
 
 const PET_STORAGE_KEY = "xai.pet.v1";
@@ -54,6 +54,10 @@ export function usePetStore(seed: PetEntity = createDefaultPet()): PetStoreState
       persist({ ...pet, state: nextState(pet.state, "idle"), updatedAt: new Date().toISOString() });
     },
     generateAiReminder(context) {
+      if (!canTransition(pet.state, "remind")) {
+        // Pet is resting (or otherwise blocked); callers can wake it via setState("idle").
+        return;
+      }
       const message = createMockPetAiMessage(pet.personality, context);
       setReminder({ id: `reminder-${Date.now()}`, message, source: "mock-ai", dismissed: false });
       persist({ ...pet, state: nextState(pet.state, "remind"), mood: "focused", updatedAt: new Date().toISOString() });
