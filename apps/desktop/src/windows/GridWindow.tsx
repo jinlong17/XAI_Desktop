@@ -5,7 +5,6 @@ import {
   DesktopItem,
   GridBox,
   SmartContainer,
-  useFileDrop,
 } from "@repo/plugin-organizer";
 import { GlobalDndProvider } from "../providers/DndProvider";
 import { SettingsProvider, useSettings } from "../context/SettingsContext";
@@ -40,7 +39,7 @@ interface G0GridPrototypePing {
 
 interface G0FinderDropTelemetry {
   gridId: string;
-  source: "tauri://drag-drop" | "html5-drop";
+  source: "tauri://drag-drop";
   paths: string[];
   kinds: Array<"file" | "folder" | "app" | "alias" | "unknown">;
   position: { x: number; y: number } | null;
@@ -128,6 +127,7 @@ function GridWindowContent({ gridId }: { gridId: string }) {
   const [dropEventCount, setDropEventCount] = useState(0);
   const [lastDropTelemetry, setLastDropTelemetry] = useState<G0FinderDropTelemetry | null>(null);
   const { gridOpacity, gridBlur } = useSettings();
+  const lastDropKeyRef = useRef<{ key: string; receivedAt: number } | null>(null);
   // gridRef mirrors `grid` so handleUpdate can read the latest rect without
   // running side-effects inside a setState updater (multi-window position
   // sync is sensitive to stale x/y from the SmartContainer's DOM drag).
@@ -281,10 +281,19 @@ function GridWindowContent({ gridId }: { gridId: string }) {
   }, [grid, items]);
 
   const handleFileDrop = useCallback(
-    (paths: string[], position: { x: number; y: number }, source: G0FinderDropTelemetry["source"] = "html5-drop") => {
+    (paths: string[], position: { x: number; y: number }) => {
+      const dropKey = JSON.stringify(paths);
+      const now = Date.now();
+      const lastDropKey = lastDropKeyRef.current;
+      if (lastDropKey?.key === dropKey && now - lastDropKey.receivedAt < 1000) {
+        console.warn("[G0 Finder DnD] ignored duplicate drag-drop payload", paths);
+        return;
+      }
+      lastDropKeyRef.current = { key: dropKey, receivedAt: now };
+
       const telemetry: G0FinderDropTelemetry = {
         gridId,
-        source,
+        source: "tauri://drag-drop",
         paths,
         kinds: paths.map(classifyDroppedPath),
         position,
@@ -298,10 +307,6 @@ function GridWindowContent({ gridId }: { gridId: string }) {
     },
     [gridId]
   );
-
-  const handleDragHover = useCallback((hovering: boolean) => {
-    setIsDraggingFile(hovering);
-  }, []);
 
   const handleSendSpikeEvent = useCallback(async () => {
     const currentWindow = getCurrentWindow();
@@ -323,23 +328,24 @@ function GridWindowContent({ gridId }: { gridId: string }) {
   useEffect(() => {
     const unlistenDrop = listen<TauriDragDropPayload>(TauriEvent.DRAG_DROP, (event) => {
       const paths = coerceDragDropPaths(event.payload);
+      setIsDraggingFile(false);
       if (paths.length === 0) {
         console.warn("[G0 Finder DnD] drag-drop payload had no paths", event.payload);
         return;
       }
-      handleFileDrop(paths, coerceDragDropPosition(event.payload) ?? { x: 0, y: 0 }, "tauri://drag-drop");
+      handleFileDrop(paths, coerceDragDropPosition(event.payload) ?? { x: 0, y: 0 });
     });
+    const unlistenEnter = listen(TauriEvent.DRAG_ENTER, () => setIsDraggingFile(true));
+    const unlistenOver = listen(TauriEvent.DRAG_OVER, () => setIsDraggingFile(true));
+    const unlistenLeave = listen(TauriEvent.DRAG_LEAVE, () => setIsDraggingFile(false));
 
     return () => {
       unlistenDrop.then((fn) => fn());
+      unlistenEnter.then((fn) => fn());
+      unlistenOver.then((fn) => fn());
+      unlistenLeave.then((fn) => fn());
     };
   }, [handleFileDrop]);
-
-  useFileDrop({
-    onDrop: handleFileDrop,
-    onHover: handleDragHover,
-    enabled: true,
-  });
 
   if (!grid) {
     return (
