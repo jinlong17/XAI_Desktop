@@ -14,10 +14,13 @@
   },
   "dependencies": {
     "@repo/core-data": "workspace:*",
-    "@repo/plugin-widgets": "workspace:*",
     "react": "^19.2.0"
   },
+  "peerDependencies": {
+    "@repo/plugin-widgets": "workspace:*"
+  },
   "devDependencies": {
+    "@repo/plugin-widgets": "workspace:*",
     "@repo/typescript-config": "workspace:*",
     "@types/react": "19.2.2",
     "typescript": "5.9.2"

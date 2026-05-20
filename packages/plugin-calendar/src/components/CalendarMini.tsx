@@ -1,5 +1,15 @@
 import type { CalendarEvent } from "../types";
 
+const WEEKDAYS = [
+  { label: "M", name: "Monday" },
+  { label: "T", name: "Tuesday" },
+  { label: "W", name: "Wednesday" },
+  { label: "T", name: "Thursday" },
+  { label: "F", name: "Friday" },
+  { label: "S", name: "Saturday" },
+  { label: "S", name: "Sunday" },
+];
+
 export interface CalendarMiniProps {
   month: Date;
   events: readonly CalendarEvent[];
@@ -7,9 +17,16 @@ export interface CalendarMiniProps {
   onSelectDate?(date: string): void;
 }
 
+export function toLocalIsoDate(d: Date): string {
+  const y = d.getFullYear();
+  const m = String(d.getMonth() + 1).padStart(2, "0");
+  const day = String(d.getDate()).padStart(2, "0");
+  return `${y}-${m}-${day}`;
+}
+
 export function CalendarMini({ month, events, selectedDate, onSelectDate }: CalendarMiniProps) {
   const days = getMonthGrid(month);
-  const eventDates = new Set(events.map((event) => event.startsAt.slice(0, 10)));
+  const eventDates = new Set(events.map((event) => toLocalIsoDate(new Date(event.startsAt))));
 
   return (
     <div style={{ display: "grid", gap: 10 }}>
@@ -17,13 +34,18 @@ export function CalendarMini({ month, events, selectedDate, onSelectDate }: Cale
         {month.toLocaleString("default", { month: "long" })} {month.getFullYear()}
       </strong>
       <div style={{ display: "grid", gridTemplateColumns: "repeat(7, minmax(0, 1fr))", gap: 4 }}>
-        {["M", "T", "W", "T", "F", "S", "S"].map((label) => (
-          <span key={label} style={{ color: "#64748b", fontSize: 11, textAlign: "center" }}>
-            {label}
-          </span>
+        {WEEKDAYS.map((weekday) => (
+          <abbr
+            key={weekday.name}
+            title={weekday.name}
+            aria-label={weekday.name}
+            style={{ color: "#64748b", fontSize: 11, textAlign: "center", textDecoration: "none" }}
+          >
+            {weekday.label}
+          </abbr>
         ))}
         {days.map((day) => {
-          const iso = day.date.toISOString().slice(0, 10);
+          const iso = toLocalIsoDate(day.date);
           const inMonth = day.date.getMonth() === month.getMonth();
           const selected = selectedDate === iso;
           return (

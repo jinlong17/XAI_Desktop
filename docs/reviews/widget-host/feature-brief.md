@@ -20,3 +20,7 @@ Build the desktop widget scaffold for Track C:
 ## Mock Strategy
 
 Widget state persists in localStorage and mirrors into an in-memory repo-compatible adapter. Wallpaper contrast is represented by a user-controlled mock tone.
+
+## Cross-review fixes 2026-05-20
+
+Track C proposes registering `calendar.event` in the canonical data repository contract, clarifies calendar weekday labels with accessible names, derives day keys in local time, and treats `@repo/plugin-widgets` as a peer/dev dependency for calendar widget registration.
