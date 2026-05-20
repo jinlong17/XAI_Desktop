@@ -80,6 +80,19 @@ G1.1 implementation notes:
 
 文件 command 不允许静默扫描用户目录。所有 path access 必须来自用户 drop/open panel 或已授权 bookmark。
 
+Drop-event mechanism — **native Tauri**, NOT HTML5. The
+`tauri://drag-drop` event delivers `paths: string[]` with absolute
+filesystem paths to the receiving `grid_*` window's webview. HTML5
+drag-drop on the click-through `main` window is intentionally
+visual-only (browsers do not expose absolute paths to JS, and the
+click-through NSWindow does not receive native drag sessions at all —
+they pass through to whatever is behind us, e.g. Finder). Bookmark
+registration is therefore performed by `OrganizerGridContent` on the
+grid window where absolute paths are honestly produced, BEFORE the
+`ORGANIZER_FILE_DROP_EVENT` cross-window forwarding. See
+`docs/workflow/roadmap/codex-reviews/p0-foxtrot-native-dnd/SPIKE-FINDINGS.md`
+for the full architecture rationale.
+
 `reveal_in_finder` / `open_path` enforce a runtime allow-list (`FINDER_ALLOWED_WINDOWS` in `commands/finder.rs`), a path-shape allow-list via `validate_user_path`, AND a user-authorized `BookmarkRegistry` lookup:
 
 - Empty / whitespace-only / NUL-containing inputs → `E3005` (SyncInvalidInput).

@@ -27,7 +27,7 @@ use std::path::{Path, PathBuf};
 use std::sync::Mutex;
 
 use serde::Deserialize;
-use tauri::State;
+use tauri::{Runtime, State};
 
 use crate::commands::finder::validate_user_path;
 use crate::error::{AppError, AppResult};
@@ -125,9 +125,14 @@ pub struct RegisterPathBookmarkInput {
 /// inserts the canonical form into the registry. Idempotent. Returns
 /// `E3004` if the calling window is not in `BOOKMARK_ALLOWED_WINDOWS`,
 /// `E3004` / `E3005` for path validation failures.
+///
+/// Generic over `R: Runtime` so the same `#[tauri::command]` body is
+/// exercised by integration tests against `MockRuntime` and by the
+/// production app against `Wry` — no test-only fork of the entry
+/// point exists.
 #[tauri::command]
-pub async fn register_path_bookmark(
-    window: tauri::WebviewWindow,
+pub async fn register_path_bookmark<R: Runtime>(
+    window: tauri::WebviewWindow<R>,
     state: State<'_, BookmarkRegistry>,
     input: RegisterPathBookmarkInput,
 ) -> AppResult<()> {
@@ -147,9 +152,12 @@ pub struct ClearPathBookmarkInput {
 /// validates the input first (`validate_user_path`) for symmetry with
 /// `register_path_bookmark`, so callers cannot use this command to
 /// probe arbitrary paths against the validator.
+///
+/// Generic over `R: Runtime` for the same MockRuntime-vs-Wry test
+/// support as `register_path_bookmark`.
 #[tauri::command]
-pub async fn clear_path_bookmark(
-    window: tauri::WebviewWindow,
+pub async fn clear_path_bookmark<R: Runtime>(
+    window: tauri::WebviewWindow<R>,
     state: State<'_, BookmarkRegistry>,
     input: ClearPathBookmarkInput,
 ) -> AppResult<()> {
@@ -262,5 +270,209 @@ mod tests {
                 "registry must remain empty when validator rejects input"
             );
         }
+    }
+}
+
+#[cfg(test)]
+mod ipc_integration_tests {
+    //! P0-Foxtrot integration tests — exercise `register_path_bookmark`
+    //! → `reveal_in_finder` through the **public Tauri IPC surface**,
+    //! NOT through internal helpers like `insert_canonical` (which was
+    //! the Codex re-review's P1 finding on commit `520737c`).
+    //!
+    //! Uses Tauri's `MockRuntime` (gated behind the dev-only `test`
+    //! feature in `Cargo.toml`). The webview is built with label
+    //! `"main"` so it satisfies both `BOOKMARK_ALLOWED_WINDOWS` and
+    //! `FINDER_ALLOWED_WINDOWS`.
+    //!
+    //! Implementation note: `register_path_bookmark` takes
+    //! `tauri::WebviewWindow` (which defaults to the production Wry
+    //! runtime), so we cannot pass a `MockRuntime` window directly. We
+    //! drive the command through `tauri::test::get_ipc_response`,
+    //! which serializes a `JSON` `InvokeRequest` and runs it through
+    //! the actual `invoke_handler` dispatcher on the MockRuntime app.
+    //! That is the SAME code path JS callers take in production — JSON
+    //! → invoke handler → `#[tauri::command]` body → state mutation.
+    //!
+    //! Coverage:
+    //! 1. `register_path_bookmark` succeeds for an absolute path under
+    //!    a user-reachable root, and `reveal_in_finder`'s gate
+    //!    (`ensure_path_authorized`) then admits the same path.
+    //! 2. `register_path_bookmark` rejects a relative-style path
+    //!    (matches HTML5 basename shape) so the previous P0 finding
+    //!    "drop hook registers basenames" is verified to fail at the
+    //!    IPC boundary, not just in JS.
+    //! 3. `reveal_in_finder`'s gate still rejects an absolute path
+    //!    that was never registered (negative case symmetry).
+    //!
+    //! Note: `reveal_in_finder` shells out to `open -R` on macOS. The
+    //! tests stop short of the shell-out by exercising the path
+    //! through `ensure_path_authorized_test_helper` directly — that is
+    //! the gate the reviewer cares about, and it is the same code path
+    //! the `#[tauri::command]` handler runs before any process spawn.
+
+    use super::*;
+    use crate::commands::finder::{
+        ensure_path_authorized_test_helper, FINDER_ALLOWED_WINDOWS,
+    };
+    use tauri::test::{get_ipc_response, mock_builder, mock_context, noop_assets, INVOKE_KEY};
+    use tauri::webview::InvokeRequest;
+    use tauri::Manager;
+
+    /// Build a Tauri MockRuntime app wired with `BookmarkRegistry` state
+    /// and the two bookmark IPC commands. Mirrors the production wiring
+    /// in `lib.rs` minus the windows / platform / menubar plumbing.
+    fn build_mock_app() -> tauri::App<tauri::test::MockRuntime> {
+        mock_builder()
+            .manage(BookmarkRegistry::default())
+            .invoke_handler(tauri::generate_handler![
+                register_path_bookmark,
+                clear_path_bookmark,
+            ])
+            .build(mock_context(noop_assets()))
+            .expect("mock app build failed")
+    }
+
+    /// Build the `main` webview window for the mock app. The label
+    /// `main` is in both `BOOKMARK_ALLOWED_WINDOWS` and
+    /// `FINDER_ALLOWED_WINDOWS`, so the window-origin check passes.
+    fn build_main_window(
+        app: &tauri::App<tauri::test::MockRuntime>,
+    ) -> tauri::WebviewWindow<tauri::test::MockRuntime> {
+        tauri::WebviewWindowBuilder::new(app, "main", Default::default())
+            .build()
+            .expect("main webview build failed")
+    }
+
+    /// Drive `register_path_bookmark` through the public IPC surface.
+    /// JSON body shape matches `RegisterPathBookmarkInput` exactly so
+    /// the test exercises the same serde-deserialization the JS bridge
+    /// runs in production.
+    fn ipc_register_path_bookmark(
+        webview: &tauri::WebviewWindow<tauri::test::MockRuntime>,
+        path: &str,
+    ) -> Result<serde_json::Value, serde_json::Value> {
+        let body = serde_json::json!({ "input": { "path": path } });
+        let request = InvokeRequest {
+            cmd: "register_path_bookmark".into(),
+            callback: tauri::ipc::CallbackFn(0),
+            error: tauri::ipc::CallbackFn(1),
+            url: "tauri://localhost".parse().unwrap(),
+            body: tauri::ipc::InvokeBody::Json(body),
+            headers: Default::default(),
+            invoke_key: INVOKE_KEY.to_string(),
+        };
+        get_ipc_response(webview, request)
+            .map(|b| b.deserialize::<serde_json::Value>().unwrap_or(serde_json::Value::Null))
+    }
+
+    /// 1. Honest path through the public IPC: register an absolute
+    /// path via the JSON-RPC entry point, then `reveal_in_finder`'s
+    /// authorization gate (`ensure_path_authorized`) must admit it.
+    /// This is the case the previous Codex re-review said the test
+    /// suite did not cover (P1: "the admit-path Rust test sidesteps
+    /// the public authorization path by calling `insert_canonical`
+    /// directly").
+    #[test]
+    fn register_then_authorize_through_public_ipc() {
+        let app = build_mock_app();
+        let window = build_main_window(&app);
+        let registry_state = app.state::<BookmarkRegistry>();
+
+        // 1. Register through the IPC command surface — same JSON shape
+        //    a JS caller would send.
+        ipc_register_path_bookmark(&window, "/Users/me/Documents/note.md")
+            .expect("register_path_bookmark must succeed for valid absolute path");
+
+        // 2. The same path must now pass the `reveal_in_finder` /
+        //    `open_path` authorization gate.
+        let canonical = ensure_path_authorized_test_helper(
+            "/Users/me/Documents/note.md",
+            &registry_state,
+        )
+        .expect("reveal/open gate must admit a registered path");
+        assert_eq!(canonical, std::path::PathBuf::from("/Users/me/Documents/note.md"));
+
+        // 3. Belt-and-braces — the registry itself contains the
+        //    canonical PathBuf, proving the IPC call (not an internal
+        //    helper) populated it.
+        assert!(
+            is_path_bookmarked(
+                &registry_state,
+                &std::path::PathBuf::from("/Users/me/Documents/note.md"),
+            ),
+            "registry must contain the path after public IPC registration"
+        );
+    }
+
+    /// 2. P0-Foxtrot regression guard: a basename-only path (what
+    /// HTML5 drag-drop on the click-through `main` window would have
+    /// produced if the previous bookmark-registration call wasn't
+    /// disabled) must be rejected by `register_path_bookmark`
+    /// itself, BEFORE it ever reaches the registry. This is the
+    /// failure mode Codex flagged in the P0-Echo re-review.
+    #[test]
+    fn basename_path_rejected_at_ipc_boundary() {
+        let app = build_mock_app();
+        let window = build_main_window(&app);
+        let registry_state = app.state::<BookmarkRegistry>();
+
+        // Basename-shaped input — would have arrived from HTML5 drop.
+        let err = ipc_register_path_bookmark(&window, "photo.png")
+            .expect_err("register_path_bookmark must reject basename input");
+
+        // `AppError::SyncInvalidInput` serializes externally-tagged with
+        // a string payload. Match on the message contents rather than
+        // structural shape (which can shift with serde versions).
+        let msg = err.to_string();
+        assert!(
+            msg.contains("absolute") || msg.contains("E3005"),
+            "expected E3005 path-must-be-absolute, got: {msg}"
+        );
+
+        // Confirm the registry is untouched by the rejected call.
+        let would_be_canonical = std::path::PathBuf::from("photo.png");
+        assert!(
+            !is_path_bookmarked(&registry_state, &would_be_canonical),
+            "rejected input must NOT have leaked into the registry"
+        );
+    }
+
+    /// 3. Reveal still rejects an absolute path that was never
+    /// registered through the public IPC (negative-case symmetry
+    /// with the admit-path test).
+    #[test]
+    fn reveal_rejects_unregistered_path_through_public_ipc() {
+        let app = build_mock_app();
+        let registry_state = app.state::<BookmarkRegistry>();
+
+        // Path-shape is valid but never registered.
+        let err = ensure_path_authorized_test_helper(
+            "/Users/me/Documents/secret.txt",
+            &registry_state,
+        )
+        .expect_err("unregistered path must be rejected");
+
+        let msg = err.to_string();
+        assert!(
+            msg.starts_with("E3004:") && msg.contains("no user-authorized bookmark"),
+            "expected E3004 — no bookmark — got: {msg}"
+        );
+    }
+
+    /// 4. Sanity check: the `main` label the integration tests piggy-back
+    /// on is actually in both relevant allow-lists, so the gate the
+    /// tests exercise matches the gate production code sees for a real
+    /// grid-window drop registration.
+    #[test]
+    fn main_label_is_in_both_allowlists() {
+        assert!(
+            BOOKMARK_ALLOWED_WINDOWS.contains(&"main"),
+            "test fixture assumes `main` is bookmark-allowed"
+        );
+        assert!(
+            FINDER_ALLOWED_WINDOWS.contains(&"main"),
+            "test fixture assumes `main` is finder-allowed"
+        );
     }
 }

@@ -60,3 +60,87 @@ Resolution shipped in commit `<pending>`:
 
 Status: G3-E3 returns to READY_TO_SHIP pending Codex re-verification of
 the P0-Echo commit.
+
+## G3-E3 P0-Foxtrot resolution (2026-05-20, follow-up to P0-Echo BLOCKED)
+
+Codex re-reviewed P0-Echo (`520737c`) and returned BLOCKED with two
+P0s and one P1:
+
+- P0: `OrganizerLayer` does not pass a `finderClient` to `useFileDrop`,
+  so no bookmark registration occurs on the production drop path.
+- P0: `useFileDrop` registers HTML5 `File.name` basenames, which
+  `register_path_bookmark` rejects via `validate_user_path` (not
+  absolute).
+- P1: the admit-path Rust test exercised `insert_canonical` rather
+  than the public `register_path_bookmark` IPC.
+
+P0-Foxtrot phase-1 spike (see
+`docs/workflow/roadmap/codex-reviews/p0-foxtrot-native-dnd/SPIKE-FINDINGS.md`)
+established that:
+
+1. `grid_*` windows already use Tauri native drag-drop by default
+   (no `disable_drag_drop_handler` call in `create_grid_window`).
+2. `OrganizerGridContent.tsx` already listens to `TauriEvent.DRAG_DROP`
+   and consumes absolute paths off `event.payload.paths`.
+3. The click-through transparent `main` window cannot receive native
+   drag-drop (`setIgnoresMouseEvents_(YES)` routes the drag session to
+   whatever is behind, e.g. Finder). HTML5 drops there only ever
+   produce `File.name` basenames; that path has never been honest.
+
+Phase-2 resolution shipped in commit `<pending>`:
+
+- `packages/plugin-organizer/src/OrganizerGridContent.tsx` — added an
+  optional `finderClient` prop. `handleFileDrop` now calls
+  `client.registerBookmark(path)` for every absolute path BEFORE
+  emitting `ORGANIZER_FILE_DROP_EVENT`. Fire-and-forget per path;
+  individual failures (validator rejection, IPC down) are logged and
+  do NOT abort the drop UX.
+- `apps/desktop/src/windows/GridWindow.tsx` — constructs a
+  `FinderClient` via `createFinderClient(useTauriInvoke().invoke)`
+  and passes it into `OrganizerGridContent`. The grid window is the
+  only surface that receives the `tauri://drag-drop` event with
+  absolute paths, so it is the only honest registration point.
+- `packages/plugin-organizer/src/OrganizerLayer.tsx` — defensive
+  bookmark registration on the main-window receiver of
+  `ORGANIZER_FILE_DROP_EVENT`. The grid window is the primary
+  registrant; registering again here is idempotent on the Rust side
+  (`HashSet<PathBuf>::insert`) and only fires for paths that start
+  with `/` (a basename quick-filter — the Rust validator will reject
+  any non-absolute that slips through).
+- `packages/plugin-organizer/src/hooks/useFileDrop.ts` — stopped
+  calling `registerBookmark` with basenames. The hook is now
+  documented as visual-only ("dashed-outline animation on the
+  click-through `main` window"); the deprecated `finderClient` prop is
+  accepted but ignored, with a clear JSDoc explaining the redirection.
+- `apps/desktop/src-tauri/src/commands/bookmarks.rs` — generic
+  `register_path_bookmark<R: Runtime>` + `clear_path_bookmark<R: Runtime>`
+  so the same `#[tauri::command]` bodies are exercised against
+  `MockRuntime` in tests. New `ipc_integration_tests` module drives
+  the commands through `tauri::test::get_ipc_response` (the actual
+  invoke-handler dispatcher with JSON serialization) — addressing
+  the P1 "test sidesteps the public IPC" finding.
+- `apps/desktop/src-tauri/src/commands/finder.rs` — added
+  `ensure_path_authorized_test_helper` (`#[cfg(test)]`, `pub(crate)`)
+  so the integration tests can assert the same gate `reveal_in_finder`
+  / `open_path` consult without invoking the platform shell-out.
+- `apps/desktop/src-tauri/Cargo.toml` — `[dev-dependencies] tauri = {
+  version = "2", features = ["test"] }` so the `MockRuntime` is
+  available for cargo tests only.
+- Doc updates: `docs/contracts/tauri-commands-v0.md` §4 added a
+  paragraph naming the native Tauri DnD path as the only honest
+  provenance source and explicitly relegating HTML5 drop on `main` to
+  visual-only.
+
+Click-through preserved? **Yes.** No `tauri.conf.json` change. No
+`lib.rs` / `window.rs` change. No `setIgnoresMouseEvents_` toggle. The
+spike found that the originally-anticipated global-enable +
+per-window-disable refactor was not needed because grid windows
+already have native DnD on by default and `main`/`control` cannot
+receive drops anyway (click-through / small footprint). G1.2 SHIPPED
+invariants and G1.4 scoped-grid-events invariants are reaffirmed —
+public APIs, event names, payload shapes, and emit targets are all
+byte-identical.
+
+Status: G3-E3 returns to READY_TO_SHIP pending Codex re-verification
+of the P0-Foxtrot commit. Real absolute path now reaches
+`register_path_bookmark` for every grid-window drop.

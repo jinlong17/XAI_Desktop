@@ -10,6 +10,7 @@
     "tauri": "tauri"
   },
   "dependencies": {
+    "@repo/core": "workspace:*",
     "@repo/plugin-account": "workspace:*",
     "@repo/plugin-organizer": "workspace:*",
     "@tauri-apps/api": "^2",
