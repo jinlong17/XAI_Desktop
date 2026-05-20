@@ -3,12 +3,26 @@ import { useProjectStore } from "../hooks/useProjectStore";
 import type { Card } from "../types";
 import { CardDetail } from "./CardDetail";
 
-function CardTile({ card, onOpen }: { card: Card; onOpen: (card: Card) => void }) {
+function CardTile({
+  card,
+  onDropAbove,
+  onOpen,
+}: {
+  card: Card;
+  onDropAbove: (draggedId: string, beforeCard: Card) => void;
+  onOpen: (card: Card) => void;
+}) {
   return (
     <article
       draggable
       onClick={() => onOpen(card)}
+      onDragOver={(event) => event.preventDefault()}
       onDragStart={(event) => event.dataTransfer.setData("text/plain", card.id)}
+      onDrop={(event) => {
+        event.stopPropagation();
+        const draggedId = event.dataTransfer.getData("text/plain");
+        if (draggedId && draggedId !== card.id) onDropAbove(draggedId, card);
+      }}
       style={{
         background: "#ffffff",
         border: "1px solid #e5e7eb",
@@ -77,7 +91,17 @@ export function BoardView() {
                 </header>
                 <div style={{ display: "grid", gap: 8 }}>
                   {cards.map((card) => (
-                    <CardTile card={card} key={card.id} onOpen={(nextCard) => setSelectedCardId(nextCard.id)} />
+                    <CardTile
+                      card={card}
+                      key={card.id}
+                      onDropAbove={(draggedId, beforeCard) => {
+                        const targetIndex = cards.findIndex((current) => current.id === beforeCard.id);
+                        const draggedIndex = cards.findIndex((current) => current.id === draggedId);
+                        const order = draggedIndex > -1 && draggedIndex < targetIndex ? targetIndex - 1 : targetIndex;
+                        void moveCard(draggedId, list.id, order);
+                      }}
+                      onOpen={(nextCard) => setSelectedCardId(nextCard.id)}
+                    />
                   ))}
                 </div>
                 <form onSubmit={(event) => submitCard(event, list.id)} style={{ display: "flex", gap: 6 }}>
