@@ -9,6 +9,7 @@ import {
 } from "react";
 import { LocalStorageAdapter } from "../data/LocalStorageAdapter";
 import type { Card, CardDraft, ChecklistItem, DataAdapter, Project, ProjectDraft } from "../types";
+import { createId } from "../utils/id";
 
 const PROJECT_STORAGE_KEY = "xai.plugin-project.projects";
 const CARD_STORAGE_KEY = "xai.plugin-project.cards";
@@ -60,11 +61,6 @@ const seedCards: Card[] = [
     updatedAt: SEED_TIMESTAMP,
   },
 ];
-
-function createId(prefix: string): string {
-  if (typeof crypto !== "undefined" && "randomUUID" in crypto) return `${prefix}-${crypto.randomUUID()}`;
-  return `${prefix}-${Date.now()}-${Math.random().toString(16).slice(2)}`;
-}
 
 function normalizeCardOrder(cards: Card[], listId: string): Card[] {
   return cards

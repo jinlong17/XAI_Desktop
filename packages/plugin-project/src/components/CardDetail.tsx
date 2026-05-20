@@ -1,6 +1,7 @@
 import { useEffect, useState, type FormEvent } from "react";
 import { useProjectStore } from "../hooks/useProjectStore";
 import type { Card, ChecklistItem } from "../types";
+import { createId } from "../utils/id";
 
 export interface CardDetailProps {
   card: Card;
@@ -24,7 +25,7 @@ export function CardDetail({ card }: CardDetailProps) {
     event.preventDefault();
     if (!checkText.trim()) return;
     const item: ChecklistItem = {
-      id: `check-${Date.now()}-${Math.random().toString(16).slice(2)}`,
+      id: createId("check"),
       text: checkText.trim(),
       done: false,
     };
