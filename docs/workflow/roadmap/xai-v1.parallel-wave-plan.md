@@ -216,10 +216,20 @@ Track A 在 G2 阶段会定义 Repository v0 contract，Track B/C 的 MockDataAd
 | **G9 全部** (7 Epics) | 依赖 G2 + G8 + Supabase | **第二轮独立窗口** |
 | **G10 全部** (6 Epics) | 依赖 G9 Beta + 法律/签名 | **第三轮** |
 
-### 第二轮规划 (本轮完成后)
+### 第二轮 (2026-05-20, 三 Track 合并后, 2 窗口并行)
 
-| 窗口 | 内容 | 预估 |
-|------|------|------|
-| W4 | G3 剩余 (S4/S5/S6) + G5-S7 + 合并对齐 | 4-6h |
-| W5 | G9 Sync hardening 全量 (需要 Supabase) | 8-10h |
-| W6 | G8 剩余 (S2/S3/S4) + G10 Release prep | 6-8h |
+| 窗口 | Branch | 内容 | Features | 预估 |
+|------|--------|------|----------|------|
+| W4 | codex/track-d-repo-integration | G3 剩余(3) + G5-S7 + G8-S4 + 9 plugin 接入 Repository | 14 | 8h |
+| W5 | codex/track-e-sync-hardening | G9 全量 7 Epics (mock Supabase) | 8 | 8h |
+
+Prompt 文件:
+- [Window 4](codex-prompts/window-4-repo-integration.md)
+- [Window 5](codex-prompts/window-5-sync-hardening.md)
+
+### 第三轮 (第二轮完成后)
+
+| 窗口 | 内容 | 前置 | 预估 |
+|------|------|------|------|
+| W6 | G8 剩余 (S2/S3/S4) + 真实 Supabase 对接 | Supabase 环境 | 6-8h |
+| W7 | G10 Release GA 全量 (6 Epics) | G9 Beta passed | 6-8h |
