@@ -1,0 +1,2375 @@
+Reading additional input from stdin...
+OpenAI Codex v0.132.0
+--------
+workdir: /Users/lijinlong/Desktop/AI_Desktop/XAI_Desktop
+model: gpt-5.4
+provider: openai
+approval: never
+sandbox: workspace-write [workdir, /tmp, $TMPDIR]
+reasoning effort: high
+reasoning summaries: none
+session id: 019e46be-35bb-7ac0-a340-27137281b192
+--------
+user
+# Codex Feature Post-fix Re-review
+
+You are acting as the `feature-review` subagent (Codex inline, cross-vendor verify pass), **re-reviewing** a P0 fix that the Claude Code main agent landed on `codex/track-a-desktop-foundation` in response to your previous BLOCKED verdict.
+
+## Your only job
+
+Decide whether the new commit closes the P0 issue you previously flagged. Output ONLY the markdown block below — no preamble, no follow-up. Under 500 words.
+
+```md
+## Codex Post-fix Re-review
+
+**Feature**: p1-delta-finder-contract-tests
+**Original verdict**: BLOCKED
+**Fix commit(s)**: 2237395
+**Reviewer**: codex feature-review · gpt-5.4 high reasoning
+**New verdict**: APPROVED | REVISE | BLOCKED
+
+### Was the original P0 resolved?
+- Original issue (paraphrased): …
+- Evidence the fix resolves it: <file:line citations>
+- Was the resolution honest (no smuggled scope-cut or stub-only fix)?
+
+### Remaining gaps (max 4 bullets, severity-tagged)
+- [P1|P2] …
+
+### Regressions introduced (max 3 bullets)
+- …
+
+### Next action
+- If APPROVED: re-mark the manifest row to READY_TO_SHIP and move on.
+- If REVISE: one or two concrete follow-up bullets (≤ half a day each).
+- If BLOCKED: state which contract is still false.
+```
+
+## How to evaluate
+
+1. The fix commit's diff is your primary evidence. Use `git show --stat 2237395` and `git show 2237395` to read it end-to-end.
+2. Compare the diff against the original P0 issue:
+   G3-E3 reveal_in_finder / open_path only validated label + empty/NUL paths; arbitrary absolute paths under any allowed window violated the user-authorized-path-only contract. G2.1 tests/repository-contract.ts under-covered negative paths (corrupted payload, migration version mismatch, listByIndex bad field). G3-batch process deviation (5 features bundled) was not documented.
+3. Look for the **specific change** the previous review demanded. Smuggled scope-cuts (e.g. silently deferring the invariant to a follow-up) must downgrade the verdict.
+4. Scan for **regressions**: imports added, capabilities widened, tests skipped, doc invariants weakened.
+5. Validate the test commands listed in the fix commit message actually exist and pass (treat the commit body's "Tests" section as the executor's claim — does the diff support it?).
+
+## Feature-specific context
+
+See commit body of 2237395 for full file list and rationale. Run `git show --stat 2237395` and `git show 2237395` for the diff.
+codex
+Reviewing commit `2237395` against the specific P0 contract issues you listed. I’m pulling the full diff and affected files first, then I’ll verify whether the negative-path coverage and Finder path authorization invariant are actually closed.
+exec
+/bin/zsh -lc 'git show --format=fuller --name-only 2237395' in /Users/lijinlong/Desktop/AI_Desktop/XAI_Desktop
+ succeeded in 0ms:
+commit 22373959b781e9f1636e95b868df95005733d36d
+Author:     InnoPeak <global_ai@innopeaktech.com>
+AuthorDate: Wed May 20 11:40:51 2026 -0700
+Commit:     InnoPeak <global_ai@innopeaktech.com>
+CommitDate: Wed May 20 11:47:18 2026 -0700
+
+    fix(commands/finder, core-data tests): path authorization + negative contract cases (P1 D-group)
+    
+    Why
+    - G3-E3 review (codex-reviews/g3-organizer-batch) flagged that `reveal_in_finder`
+      and `open_path` only validated empty / NUL and accepted any absolute path,
+      in violation of `docs/contracts/tauri-commands-v0.md` §4 "all path access
+      must come from user drop/open panel or authorized bookmark".
+    - G2.1 Repository v0 contract suite (`runRepositoryContractTests`) covered
+      happy paths but lacked the documented `E3005` (invalid record) / `E3006`
+      (migration version mismatch) negative cases and the `listByIndex` unknown-
+      field shape, so neither driver was actually gated on the published contract.
+    - The G3-batch commit `533391e` bundled five sub-features into one
+      `feature-build` commit, deviating from the one-phase-per-run rule. The
+      deviation needs to be recorded so Track A automation has a documented
+      guard going forward.
+    
+    What
+    - `apps/desktop/src-tauri/src/commands/finder.rs`
+      - Replaced `validate_path` with `validate_user_path(raw) -> AppResult<PathBuf>`.
+      - Rejects empty / whitespace-only / NUL (E3005), relative paths and any
+        `..` component (E3005), and paths not under user-reachable roots
+        (`/Users/`, `/Applications/`, `/Volumes/`, `/tmp/` on macOS; `/tmp/`
+        only on other targets) with E3004.
+      - Uses lexical normalization via `Path::components` (filesystem
+        `canonicalize()` is deferred — it requires the path to exist on disk
+        and a full bookmark store is a later gate).
+      - Passes the normalized `PathBuf` to `open` / `open -R` instead of the
+        raw input.
+      - Added 4 cargo tests:
+        `validate_user_path_rejects_dotdot`,
+        `validate_user_path_rejects_etc_root`,
+        `validate_user_path_admits_user_home`,
+        `validate_user_path_admits_applications` (and updated existing tests
+        to target the new function name).
+    - `docs/contracts/tauri-commands-v0.md` §4
+      - Replaced the two-row description for `reveal_in_finder` / `open_path`
+        with the new path-shape contract ("non-empty / NUL-free / non-`..` /
+        under user-reachable roots"). Documented the E3005 vs E3004 split and
+        the lexical-normalization rationale. §6/§7 untouched.
+    - `packages/core-data/tests/repository-contract.ts`
+      - Added 3 negative contract cases (apply to every Repo<T> driver):
+        - corrupted record (missing entityType / `schemaVersion=0`) → E3005;
+        - migration plan with `fromVersion=5` against a fresh repo at
+          migrationVersion=0 → `E3006: ... expected version`;
+        - `listByIndex("nonExistentField" as never, "x" as never)` resolves
+          to `[]`, not throwing or undefined, both empty-repo and populated.
+      - Both `in-memory-repo.test.ts` and `sqlite-repo.test.ts` already invoke
+        `runRepositoryContractTests`, so the new cases run against both drivers.
+    - `packages/plugin-organizer/docs/dev_log.md`
+      - Rewrote with a Status Panel reflecting current state (Workflow=FEATURE_DEV,
+        Status=ACTIVE — multiple G3 features landed, Executor=Claude Code /
+        Track A, Updated=2026-05-20 PDT).
+      - Added a Work Log row per G3-batch sub-feature citing commit `533391e`
+        and the Codex REVISE verdict, plus a row for this P1-Delta closure.
+    - `docs/workflow/roadmap/codex-reviews/g3-organizer-batch/PROCESS-NOTE.md`
+      - New file. Documents the G3-batch deviation acceptance (5 sub-features
+        bundled into `533391e`), the forward guard ("future sub-feature batches
+        MUST be split per the one-phase-per-run rule"), and the carry-forward
+        P1/P2 closure table.
+    
+    Scope
+    - apps/desktop/src-tauri/src/commands/finder.rs
+    - docs/contracts/tauri-commands-v0.md (§4 only — §6/§7 untouched)
+    - packages/core-data/tests/repository-contract.ts
+    - packages/plugin-organizer/docs/dev_log.md
+    - docs/workflow/roadmap/codex-reviews/g3-organizer-batch/PROCESS-NOTE.md (new)
+    - DO NOT TOUCH: keychain.rs / database.rs / window.rs / menubar.rs / crypto/ /
+      @repo/core / plugin-organizer/src/ / @repo/core-data/src/.
+    
+    Risk
+    - Behavior change for `reveal_in_finder` / `open_path`: any caller passing
+      a path outside the four allowed roots will now receive E3004 instead of
+      the OS-level `open` exit code. This is the intended hardening; callers
+      must route through drag-drop / open-panel / authorized bookmark.
+    - `/private/var/...` is intentionally rejected for now — the `/var → /private/var`
+      macOS symlink dance means a future bookmark resolver may want to widen
+      the allow-list, but for P1 we keep the conservative set.
+    - Lexical normalization (not `canonicalize()`) means a symlink under one of
+      the allowed roots is still admitted; tightening this is the bookmark-store
+      follow-up.
+    - Repository contract negative tests are additive — no production code
+      change; both `createInMemoryRepo` and `createSqliteRepo` already throw
+      the right error codes via `assertRepoRecord` / `assertMigrationPlan`.
+    
+    Docs
+    - `docs/contracts/tauri-commands-v0.md` §4 updated (rules + error codes +
+      rationale).
+    - `packages/plugin-organizer/docs/dev_log.md` — Status Panel + Work Log
+      rows for the G3-batch and the P1-Delta closure.
+    - `docs/workflow/roadmap/codex-reviews/g3-organizer-batch/PROCESS-NOTE.md`
+      — deviation acceptance + carry-forward table.
+    
+    Tests
+    - `cargo test --manifest-path apps/desktop/src-tauri/Cargo.toml finder::`
+      → 7 passed / 0 failed (includes the 4 required new tests).
+    - `cargo check --manifest-path apps/desktop/src-tauri/Cargo.toml`
+      → clean (5 pre-existing unrelated dead-code warnings).
+    - `pnpm --filter @repo/core-data test`
+      → 72 passed / 0 failed across 7 test files; in-memory + sqlite drivers
+        both exercise the 3 new negative-path cases.
+    - `pnpm --filter @repo/core-data check-types`
+      → clean (tsc --noEmit).
+
+apps/desktop/src-tauri/src/commands/finder.rs
+docs/contracts/tauri-commands-v0.md
+docs/workflow/roadmap/codex-reviews/g3-organizer-batch/PROCESS-NOTE.md
+packages/core-data/tests/repository-contract.ts
+packages/plugin-organizer/docs/dev_log.md
+
+exec
+/bin/zsh -lc 'git show --stat 2237395' in /Users/lijinlong/Desktop/AI_Desktop/XAI_Desktop
+ succeeded in 0ms:
+commit 22373959b781e9f1636e95b868df95005733d36d
+Author: InnoPeak <global_ai@innopeaktech.com>
+Date:   Wed May 20 11:40:51 2026 -0700
+
+    fix(commands/finder, core-data tests): path authorization + negative contract cases (P1 D-group)
+    
+    Why
+    - G3-E3 review (codex-reviews/g3-organizer-batch) flagged that `reveal_in_finder`
+      and `open_path` only validated empty / NUL and accepted any absolute path,
+      in violation of `docs/contracts/tauri-commands-v0.md` §4 "all path access
+      must come from user drop/open panel or authorized bookmark".
+    - G2.1 Repository v0 contract suite (`runRepositoryContractTests`) covered
+      happy paths but lacked the documented `E3005` (invalid record) / `E3006`
+      (migration version mismatch) negative cases and the `listByIndex` unknown-
+      field shape, so neither driver was actually gated on the published contract.
+    - The G3-batch commit `533391e` bundled five sub-features into one
+      `feature-build` commit, deviating from the one-phase-per-run rule. The
+      deviation needs to be recorded so Track A automation has a documented
+      guard going forward.
+    
+    What
+    - `apps/desktop/src-tauri/src/commands/finder.rs`
+      - Replaced `validate_path` with `validate_user_path(raw) -> AppResult<PathBuf>`.
+      - Rejects empty / whitespace-only / NUL (E3005), relative paths and any
+        `..` component (E3005), and paths not under user-reachable roots
+        (`/Users/`, `/Applications/`, `/Volumes/`, `/tmp/` on macOS; `/tmp/`
+        only on other targets) with E3004.
+      - Uses lexical normalization via `Path::components` (filesystem
+        `canonicalize()` is deferred — it requires the path to exist on disk
+        and a full bookmark store is a later gate).
+      - Passes the normalized `PathBuf` to `open` / `open -R` instead of the
+        raw input.
+      - Added 4 cargo tests:
+        `validate_user_path_rejects_dotdot`,
+        `validate_user_path_rejects_etc_root`,
+        `validate_user_path_admits_user_home`,
+        `validate_user_path_admits_applications` (and updated existing tests
+        to target the new function name).
+    - `docs/contracts/tauri-commands-v0.md` §4
+      - Replaced the two-row description for `reveal_in_finder` / `open_path`
+        with the new path-shape contract ("non-empty / NUL-free / non-`..` /
+        under user-reachable roots"). Documented the E3005 vs E3004 split and
+        the lexical-normalization rationale. §6/§7 untouched.
+    - `packages/core-data/tests/repository-contract.ts`
+      - Added 3 negative contract cases (apply to every Repo<T> driver):
+        - corrupted record (missing entityType / `schemaVersion=0`) → E3005;
+        - migration plan with `fromVersion=5` against a fresh repo at
+          migrationVersion=0 → `E3006: ... expected version`;
+        - `listByIndex("nonExistentField" as never, "x" as never)` resolves
+          to `[]`, not throwing or undefined, both empty-repo and populated.
+      - Both `in-memory-repo.test.ts` and `sqlite-repo.test.ts` already invoke
+        `runRepositoryContractTests`, so the new cases run against both drivers.
+    - `packages/plugin-organizer/docs/dev_log.md`
+      - Rewrote with a Status Panel reflecting current state (Workflow=FEATURE_DEV,
+        Status=ACTIVE — multiple G3 features landed, Executor=Claude Code /
+        Track A, Updated=2026-05-20 PDT).
+      - Added a Work Log row per G3-batch sub-feature citing commit `533391e`
+        and the Codex REVISE verdict, plus a row for this P1-Delta closure.
+    - `docs/workflow/roadmap/codex-reviews/g3-organizer-batch/PROCESS-NOTE.md`
+      - New file. Documents the G3-batch deviation acceptance (5 sub-features
+        bundled into `533391e`), the forward guard ("future sub-feature batches
+        MUST be split per the one-phase-per-run rule"), and the carry-forward
+        P1/P2 closure table.
+    
+    Scope
+    - apps/desktop/src-tauri/src/commands/finder.rs
+    - docs/contracts/tauri-commands-v0.md (§4 only — §6/§7 untouched)
+    - packages/core-data/tests/repository-contract.ts
+    - packages/plugin-organizer/docs/dev_log.md
+    - docs/workflow/roadmap/codex-reviews/g3-organizer-batch/PROCESS-NOTE.md (new)
+    - DO NOT TOUCH: keychain.rs / database.rs / window.rs / menubar.rs / crypto/ /
+      @repo/core / plugin-organizer/src/ / @repo/core-data/src/.
+    
+    Risk
+    - Behavior change for `reveal_in_finder` / `open_path`: any caller passing
+      a path outside the four allowed roots will now receive E3004 instead of
+      the OS-level `open` exit code. This is the intended hardening; callers
+      must route through drag-drop / open-panel / authorized bookmark.
+    - `/private/var/...` is intentionally rejected for now — the `/var → /private/var`
+      macOS symlink dance means a future bookmark resolver may want to widen
+      the allow-list, but for P1 we keep the conservative set.
+    - Lexical normalization (not `canonicalize()`) means a symlink under one of
+      the allowed roots is still admitted; tightening this is the bookmark-store
+      follow-up.
+    - Repository contract negative tests are additive — no production code
+      change; both `createInMemoryRepo` and `createSqliteRepo` already throw
+      the right error codes via `assertRepoRecord` / `assertMigrationPlan`.
+    
+    Docs
+    - `docs/contracts/tauri-commands-v0.md` §4 updated (rules + error codes +
+      rationale).
+    - `packages/plugin-organizer/docs/dev_log.md` — Status Panel + Work Log
+      rows for the G3-batch and the P1-Delta closure.
+    - `docs/workflow/roadmap/codex-reviews/g3-organizer-batch/PROCESS-NOTE.md`
+      — deviation acceptance + carry-forward table.
+    
+    Tests
+    - `cargo test --manifest-path apps/desktop/src-tauri/Cargo.toml finder::`
+      → 7 passed / 0 failed (includes the 4 required new tests).
+    - `cargo check --manifest-path apps/desktop/src-tauri/Cargo.toml`
+      → clean (5 pre-existing unrelated dead-code warnings).
+    - `pnpm --filter @repo/core-data test`
+      → 72 passed / 0 failed across 7 test files; in-memory + sqlite drivers
+        both exercise the 3 new negative-path cases.
+    - `pnpm --filter @repo/core-data check-types`
+      → clean (tsc --noEmit).
+
+ apps/desktop/src-tauri/src/commands/finder.rs      | 180 +++++++++++++++++++--
+ docs/contracts/tauri-commands-v0.md                |  13 +-
+ .../g3-organizer-batch/PROCESS-NOTE.md             |  24 +++
+ packages/core-data/tests/repository-contract.ts    |  59 +++++++
+ packages/plugin-organizer/docs/dev_log.md          |  38 +++--
+ 5 files changed, 285 insertions(+), 29 deletions(-)
+
+codex
+The commit message lines up with the review target. I’m checking the actual code and tests now to confirm the claimed invariant is enforced in code, not just documented in the commit body.
+exec
+/bin/zsh -lc 'git show --unified=80 2237395 -- apps/desktop/src-tauri/src/commands/finder.rs' in /Users/lijinlong/Desktop/AI_Desktop/XAI_Desktop
+ succeeded in 0ms:
+commit 22373959b781e9f1636e95b868df95005733d36d
+Author: InnoPeak <global_ai@innopeaktech.com>
+Date:   Wed May 20 11:40:51 2026 -0700
+
+    fix(commands/finder, core-data tests): path authorization + negative contract cases (P1 D-group)
+    
+    Why
+    - G3-E3 review (codex-reviews/g3-organizer-batch) flagged that `reveal_in_finder`
+      and `open_path` only validated empty / NUL and accepted any absolute path,
+      in violation of `docs/contracts/tauri-commands-v0.md` §4 "all path access
+      must come from user drop/open panel or authorized bookmark".
+    - G2.1 Repository v0 contract suite (`runRepositoryContractTests`) covered
+      happy paths but lacked the documented `E3005` (invalid record) / `E3006`
+      (migration version mismatch) negative cases and the `listByIndex` unknown-
+      field shape, so neither driver was actually gated on the published contract.
+    - The G3-batch commit `533391e` bundled five sub-features into one
+      `feature-build` commit, deviating from the one-phase-per-run rule. The
+      deviation needs to be recorded so Track A automation has a documented
+      guard going forward.
+    
+    What
+    - `apps/desktop/src-tauri/src/commands/finder.rs`
+      - Replaced `validate_path` with `validate_user_path(raw) -> AppResult<PathBuf>`.
+      - Rejects empty / whitespace-only / NUL (E3005), relative paths and any
+        `..` component (E3005), and paths not under user-reachable roots
+        (`/Users/`, `/Applications/`, `/Volumes/`, `/tmp/` on macOS; `/tmp/`
+        only on other targets) with E3004.
+      - Uses lexical normalization via `Path::components` (filesystem
+        `canonicalize()` is deferred — it requires the path to exist on disk
+        and a full bookmark store is a later gate).
+      - Passes the normalized `PathBuf` to `open` / `open -R` instead of the
+        raw input.
+      - Added 4 cargo tests:
+        `validate_user_path_rejects_dotdot`,
+        `validate_user_path_rejects_etc_root`,
+        `validate_user_path_admits_user_home`,
+        `validate_user_path_admits_applications` (and updated existing tests
+        to target the new function name).
+    - `docs/contracts/tauri-commands-v0.md` §4
+      - Replaced the two-row description for `reveal_in_finder` / `open_path`
+        with the new path-shape contract ("non-empty / NUL-free / non-`..` /
+        under user-reachable roots"). Documented the E3005 vs E3004 split and
+        the lexical-normalization rationale. §6/§7 untouched.
+    - `packages/core-data/tests/repository-contract.ts`
+      - Added 3 negative contract cases (apply to every Repo<T> driver):
+        - corrupted record (missing entityType / `schemaVersion=0`) → E3005;
+        - migration plan with `fromVersion=5` against a fresh repo at
+          migrationVersion=0 → `E3006: ... expected version`;
+        - `listByIndex("nonExistentField" as never, "x" as never)` resolves
+          to `[]`, not throwing or undefined, both empty-repo and populated.
+      - Both `in-memory-repo.test.ts` and `sqlite-repo.test.ts` already invoke
+        `runRepositoryContractTests`, so the new cases run against both drivers.
+    - `packages/plugin-organizer/docs/dev_log.md`
+      - Rewrote with a Status Panel reflecting current state (Workflow=FEATURE_DEV,
+        Status=ACTIVE — multiple G3 features landed, Executor=Claude Code /
+        Track A, Updated=2026-05-20 PDT).
+      - Added a Work Log row per G3-batch sub-feature citing commit `533391e`
+        and the Codex REVISE verdict, plus a row for this P1-Delta closure.
+    - `docs/workflow/roadmap/codex-reviews/g3-organizer-batch/PROCESS-NOTE.md`
+      - New file. Documents the G3-batch deviation acceptance (5 sub-features
+        bundled into `533391e`), the forward guard ("future sub-feature batches
+        MUST be split per the one-phase-per-run rule"), and the carry-forward
+        P1/P2 closure table.
+    
+    Scope
+    - apps/desktop/src-tauri/src/commands/finder.rs
+    - docs/contracts/tauri-commands-v0.md (§4 only — §6/§7 untouched)
+    - packages/core-data/tests/repository-contract.ts
+    - packages/plugin-organizer/docs/dev_log.md
+    - docs/workflow/roadmap/codex-reviews/g3-organizer-batch/PROCESS-NOTE.md (new)
+    - DO NOT TOUCH: keychain.rs / database.rs / window.rs / menubar.rs / crypto/ /
+      @repo/core / plugin-organizer/src/ / @repo/core-data/src/.
+    
+    Risk
+    - Behavior change for `reveal_in_finder` / `open_path`: any caller passing
+      a path outside the four allowed roots will now receive E3004 instead of
+      the OS-level `open` exit code. This is the intended hardening; callers
+      must route through drag-drop / open-panel / authorized bookmark.
+    - `/private/var/...` is intentionally rejected for now — the `/var → /private/var`
+      macOS symlink dance means a future bookmark resolver may want to widen
+      the allow-list, but for P1 we keep the conservative set.
+    - Lexical normalization (not `canonicalize()`) means a symlink under one of
+      the allowed roots is still admitted; tightening this is the bookmark-store
+      follow-up.
+    - Repository contract negative tests are additive — no production code
+      change; both `createInMemoryRepo` and `createSqliteRepo` already throw
+      the right error codes via `assertRepoRecord` / `assertMigrationPlan`.
+    
+    Docs
+    - `docs/contracts/tauri-commands-v0.md` §4 updated (rules + error codes +
+      rationale).
+    - `packages/plugin-organizer/docs/dev_log.md` — Status Panel + Work Log
+      rows for the G3-batch and the P1-Delta closure.
+    - `docs/workflow/roadmap/codex-reviews/g3-organizer-batch/PROCESS-NOTE.md`
+      — deviation acceptance + carry-forward table.
+    
+    Tests
+    - `cargo test --manifest-path apps/desktop/src-tauri/Cargo.toml finder::`
+      → 7 passed / 0 failed (includes the 4 required new tests).
+    - `cargo check --manifest-path apps/desktop/src-tauri/Cargo.toml`
+      → clean (5 pre-existing unrelated dead-code warnings).
+    - `pnpm --filter @repo/core-data test`
+      → 72 passed / 0 failed across 7 test files; in-memory + sqlite drivers
+        both exercise the 3 new negative-path cases.
+    - `pnpm --filter @repo/core-data check-types`
+      → clean (tsc --noEmit).
+
+diff --git a/apps/desktop/src-tauri/src/commands/finder.rs b/apps/desktop/src-tauri/src/commands/finder.rs
+index c6a618a..3a86301 100644
+--- a/apps/desktop/src-tauri/src/commands/finder.rs
++++ b/apps/desktop/src-tauri/src/commands/finder.rs
+@@ -1,144 +1,290 @@
+ //! Finder collaboration commands (G3-E3).
+ //!
+ //! Three minimal user-initiated path actions:
+ //!
+ //! - `reveal_in_finder` — opens a Finder window highlighting the path.
+ //! - `open_path` — opens the path in its default handler (file → app).
+ //! - `remove_item_from_grid` — pure logical removal; does NOT touch the
+ //!   user's filesystem. The Organizer plugin owns the "send file to
+ //!   Trash" decision and must surface a confirmation UI before invoking
+ //!   any future destructive variant.
+ //!
+-//! All commands enforce a window-origin allow-list and validate that
+-//! the path is non-empty before touching the platform layer.
++//! All commands enforce a window-origin allow-list and validate the path
++//! against the user-reachable root allow-list (see `validate_user_path`)
++//! before touching the platform layer.
++
++use std::path::{Component, Path, PathBuf};
+ 
+ use serde::Deserialize;
+ 
+ use crate::error::{AppError, AppResult};
+ 
+ const FINDER_ALLOWED_WINDOWS: &[&str] = &["main", "control", "console"];
+ 
++/// User-reachable filesystem roots a desktop file/app drop or open-panel
++/// selection can produce on macOS. Paths outside these roots are rejected
++/// for now — full bookmark-store enforcement is a later gate. On non-macOS
++/// targets only `/tmp/` is admitted, mirroring the existing macOS-only
++/// behavior of the platform commands.
++#[cfg(target_os = "macos")]
++const USER_REACHABLE_ROOTS: &[&str] = &["/Users/", "/Applications/", "/Volumes/", "/tmp/"];
++
++#[cfg(not(target_os = "macos"))]
++const USER_REACHABLE_ROOTS: &[&str] = &["/tmp/"];
++
+ fn is_finder_window_allowed(label: &str) -> bool {
+     if FINDER_ALLOWED_WINDOWS.contains(&label) {
+         return true;
+     }
+     label.starts_with("grid_")
+ }
+ 
+ fn ensure_finder_window_allowed(label: &str) -> AppResult<()> {
+     if is_finder_window_allowed(label) {
+         return Ok(());
+     }
+     Err(AppError::SyncCapabilityDenied(format!(
+         "window `{label}` is not allowed to invoke Finder commands"
+     )))
+ }
+ 
+-fn validate_path(path: &str) -> AppResult<()> {
+-    if path.trim().is_empty() {
++/// Validate `raw` looks like a user-authorized absolute path and return its
++/// lexically-normalized canonical form.
++///
++/// Rules:
++/// - rejects empty / NUL / whitespace-only input.
++/// - rejects relative paths and any `..` parent-dir segment (even when the
++///   raw string would normalize away, e.g. `/Users/me/../etc/passwd`).
++/// - rejects paths whose normalized form does NOT start with one of the
++///   allowed user-reachable roots (`/Users/`, `/Applications/`, `/Volumes/`,
++///   `/tmp/` on macOS; only `/tmp/` on other targets).
++///
++/// Returns the normalized `PathBuf` on success. This is a *lexical*
++/// normalization (`Path::components`) rather than `canonicalize()` because
++/// `canonicalize` requires the path to exist on disk; that stricter check
++/// is a follow-up once a bookmark store lands.
++pub(crate) fn validate_user_path(raw: &str) -> AppResult<PathBuf> {
++    if raw.trim().is_empty() {
+         return Err(AppError::SyncInvalidInput(
+             "path must be non-empty".into(),
+         ));
+     }
+-    if path.contains('\0') {
++    if raw.contains('\0') {
+         return Err(AppError::SyncInvalidInput(
+             "path must not contain NUL".into(),
+         ));
+     }
+-    Ok(())
++
++    let path = Path::new(raw);
++    if !path.is_absolute() {
++        return Err(AppError::SyncInvalidInput(format!(
++            "path must be absolute: `{raw}`"
++        )));
++    }
++
++    // Walk components, refusing any `..` (parent) segment. This catches
++    // both `/Users/me/../etc/passwd` and `/Applications/../etc/passwd`.
++    let mut normalized = PathBuf::new();
++    for component in path.components() {
++        match component {
++            Component::ParentDir => {
++                return Err(AppError::SyncInvalidInput(format!(
++                    "path must not contain `..` segments: `{raw}`"
++                )));
++            }
++            Component::CurDir => {
++                // Drop `.` — harmless lexical no-op.
++            }
++            other => normalized.push(other.as_os_str()),
++        }
++    }
++
++    let normalized_str = normalized.to_string_lossy().to_string();
++    let under_allowed_root = USER_REACHABLE_ROOTS
++        .iter()
++        .any(|root| normalized_str.starts_with(root));
++
++    if !under_allowed_root {
++        return Err(AppError::SyncCapabilityDenied(format!(
++            "path `{normalized_str}` is not under a user-reachable root"
++        )));
++    }
++
++    Ok(normalized)
+ }
+ 
+ #[derive(Debug, Deserialize)]
+ pub struct RevealInFinderInput {
+     pub path: String,
+ }
+ 
+ #[tauri::command]
+ pub async fn reveal_in_finder(
+     window: tauri::WebviewWindow,
+     input: RevealInFinderInput,
+ ) -> AppResult<()> {
+     ensure_finder_window_allowed(window.label())?;
+-    validate_path(&input.path)?;
++    let canonical = validate_user_path(&input.path)?;
+     #[cfg(target_os = "macos")]
+     {
+         use std::process::Command;
+         let status = Command::new("open")
+             .arg("-R")
+-            .arg(&input.path)
++            .arg(&canonical)
+             .status()
+             .map_err(|err| AppError::Internal(format!("open -R failed: {err}")))?;
+         if !status.success() {
+             return Err(AppError::Internal(format!(
+                 "open -R exited with status {status}"
+             )));
+         }
+         Ok(())
+     }
+     #[cfg(not(target_os = "macos"))]
+     {
+-        let _ = input;
++        let _ = canonical;
+         Err(AppError::Internal("reveal_in_finder is macOS-only".into()))
+     }
+ }
+ 
+ #[derive(Debug, Deserialize)]
+ pub struct OpenPathInput {
+     pub path: String,
+ }
+ 
+ #[tauri::command]
+ pub async fn open_path(
+     window: tauri::WebviewWindow,
+     input: OpenPathInput,
+ ) -> AppResult<()> {
+     ensure_finder_window_allowed(window.label())?;
+-    validate_path(&input.path)?;
++    let canonical = validate_user_path(&input.path)?;
+     #[cfg(target_os = "macos")]
+     {
+         use std::process::Command;
+         let status = Command::new("open")
+-            .arg(&input.path)
++            .arg(&canonical)
+             .status()
+             .map_err(|err| AppError::Internal(format!("open failed: {err}")))?;
+         if !status.success() {
+             return Err(AppError::Internal(format!(
+                 "open exited with status {status}"
+             )));
+         }
+         Ok(())
+     }
+     #[cfg(not(target_os = "macos"))]
+     {
+-        let _ = input;
++        let _ = canonical;
+         Err(AppError::Internal("open_path is macOS-only".into()))
+     }
+ }
+ 
+ #[cfg(test)]
+ mod tests {
+     use super::*;
+ 
+     #[test]
+     fn allowlist_admits_documented_labels_and_grids() {
+         for label in FINDER_ALLOWED_WINDOWS {
+             assert!(ensure_finder_window_allowed(label).is_ok());
+         }
+         assert!(ensure_finder_window_allowed("grid_x").is_ok());
+     }
+ 
+     #[test]
+     fn allowlist_rejects_widgets_pet_aicube() {
+         for label in ["widget_clock", "pet", "ai_cube", "popup"] {
+             assert!(ensure_finder_window_allowed(label).is_err());
+         }
+     }
+ 
+     #[test]
+-    fn path_validation_rejects_empty_and_nul() {
+-        assert!(validate_path("").is_err());
+-        assert!(validate_path("   ").is_err());
+-        assert!(validate_path("/Users/me/file\0").is_err());
+-        assert!(validate_path("/Users/me/file").is_ok());
++    fn validate_user_path_rejects_empty_and_nul() {
++        assert!(validate_user_path("").is_err());
++        assert!(validate_user_path("   ").is_err());
++        assert!(validate_user_path("/Users/me/file\0").is_err());
++    }
++
++    /// Any `..` parent-dir component must be rejected, even when the
++    /// surrounding path lexically points back into an allowed root.
++    #[test]
++    fn validate_user_path_rejects_dotdot() {
++        // direct parent-escape attempt
++        let err = validate_user_path("/Users/me/../etc/passwd").unwrap_err();
++        let msg = err.to_string();
++        assert!(
++            msg.contains("..") || msg.starts_with("E3005:"),
++            "expected `..` rejection, got: {msg}"
++        );
++
++        // even nested deeper
++        assert!(validate_user_path("/Users/me/sub/../../etc/passwd").is_err());
++
++        // relative input should also fail (not absolute → E3005)
++        assert!(validate_user_path("..").is_err());
++        assert!(validate_user_path("relative/path").is_err());
++    }
++
++    /// Paths outside the user-reachable root allow-list (e.g. `/etc/...`,
++    /// `/private/var/...`, `/System/...`) must be rejected.
++    #[test]
++    fn validate_user_path_rejects_etc_root() {
++        for raw in [
++            "/etc/passwd",
++            "/private/var/db/secret",
++            "/System/Library/CoreServices",
++            "/var/log/system.log",
++            "/bin/sh",
++        ] {
++            let result = validate_user_path(raw);
++            let err = match result {
++                Ok(ok) => panic!("expected `{raw}` to be rejected, got Ok({})", ok.display()),
++                Err(e) => e,
++            };
++            let msg = err.to_string();
++            assert!(
++                msg.contains("not under a user-reachable root") || msg.starts_with("E3004:"),
++                "expected user-reachable-root rejection for `{raw}`, got: {msg}"
++            );
++        }
++    }
++
++    /// Paths under `/Users/...` should be admitted. Note: this is a
++    /// path-shape check; the function does NOT require the path to exist
++    /// on disk (lexical normalization only — full `canonicalize()` is a
++    /// follow-up once a bookmark store lands).
++    #[test]
++    fn validate_user_path_admits_user_home() {
++        let out = validate_user_path("/Users/me/file.txt").expect("user-home path should be admitted");
++        assert_eq!(out, PathBuf::from("/Users/me/file.txt"));
++
++        // nested subpath
++        let nested = validate_user_path("/Users/me/Documents/note.md").unwrap();
++        assert_eq!(nested, PathBuf::from("/Users/me/Documents/note.md"));
++    }
++
++    /// Paths under `/Applications/...` should be admitted on macOS. On
++    /// other targets the function only admits `/tmp/`, so we gate the
++    /// assertion accordingly.
++    #[test]
++    fn validate_user_path_admits_applications() {
++        #[cfg(target_os = "macos")]
++        {
++            let out = validate_user_path("/Applications/Safari.app")
++                .expect("/Applications path should be admitted on macOS");
++            assert_eq!(out, PathBuf::from("/Applications/Safari.app"));
++
++            // /Volumes/ and /tmp/ also admitted on macOS
++            assert!(validate_user_path("/Volumes/ExternalDrive/file").is_ok());
++            assert!(validate_user_path("/tmp/scratch").is_ok());
++        }
++        #[cfg(not(target_os = "macos"))]
++        {
++            // /Applications/ is NOT a user-reachable root off macOS
++            assert!(validate_user_path("/Applications/Safari.app").is_err());
++            // /tmp/ still admitted everywhere
++            assert!(validate_user_path("/tmp/scratch").is_ok());
++        }
+     }
+ }
+
+exec
+/bin/zsh -lc 'git show --unified=80 2237395 -- packages/core-data/tests/repository-contract.ts' in /Users/lijinlong/Desktop/AI_Desktop/XAI_Desktop
+ succeeded in 0ms:
+commit 22373959b781e9f1636e95b868df95005733d36d
+Author: InnoPeak <global_ai@innopeaktech.com>
+Date:   Wed May 20 11:40:51 2026 -0700
+
+    fix(commands/finder, core-data tests): path authorization + negative contract cases (P1 D-group)
+    
+    Why
+    - G3-E3 review (codex-reviews/g3-organizer-batch) flagged that `reveal_in_finder`
+      and `open_path` only validated empty / NUL and accepted any absolute path,
+      in violation of `docs/contracts/tauri-commands-v0.md` §4 "all path access
+      must come from user drop/open panel or authorized bookmark".
+    - G2.1 Repository v0 contract suite (`runRepositoryContractTests`) covered
+      happy paths but lacked the documented `E3005` (invalid record) / `E3006`
+      (migration version mismatch) negative cases and the `listByIndex` unknown-
+      field shape, so neither driver was actually gated on the published contract.
+    - The G3-batch commit `533391e` bundled five sub-features into one
+      `feature-build` commit, deviating from the one-phase-per-run rule. The
+      deviation needs to be recorded so Track A automation has a documented
+      guard going forward.
+    
+    What
+    - `apps/desktop/src-tauri/src/commands/finder.rs`
+      - Replaced `validate_path` with `validate_user_path(raw) -> AppResult<PathBuf>`.
+      - Rejects empty / whitespace-only / NUL (E3005), relative paths and any
+        `..` component (E3005), and paths not under user-reachable roots
+        (`/Users/`, `/Applications/`, `/Volumes/`, `/tmp/` on macOS; `/tmp/`
+        only on other targets) with E3004.
+      - Uses lexical normalization via `Path::components` (filesystem
+        `canonicalize()` is deferred — it requires the path to exist on disk
+        and a full bookmark store is a later gate).
+      - Passes the normalized `PathBuf` to `open` / `open -R` instead of the
+        raw input.
+      - Added 4 cargo tests:
+        `validate_user_path_rejects_dotdot`,
+        `validate_user_path_rejects_etc_root`,
+        `validate_user_path_admits_user_home`,
+        `validate_user_path_admits_applications` (and updated existing tests
+        to target the new function name).
+    - `docs/contracts/tauri-commands-v0.md` §4
+      - Replaced the two-row description for `reveal_in_finder` / `open_path`
+        with the new path-shape contract ("non-empty / NUL-free / non-`..` /
+        under user-reachable roots"). Documented the E3005 vs E3004 split and
+        the lexical-normalization rationale. §6/§7 untouched.
+    - `packages/core-data/tests/repository-contract.ts`
+      - Added 3 negative contract cases (apply to every Repo<T> driver):
+        - corrupted record (missing entityType / `schemaVersion=0`) → E3005;
+        - migration plan with `fromVersion=5` against a fresh repo at
+          migrationVersion=0 → `E3006: ... expected version`;
+        - `listByIndex("nonExistentField" as never, "x" as never)` resolves
+          to `[]`, not throwing or undefined, both empty-repo and populated.
+      - Both `in-memory-repo.test.ts` and `sqlite-repo.test.ts` already invoke
+        `runRepositoryContractTests`, so the new cases run against both drivers.
+    - `packages/plugin-organizer/docs/dev_log.md`
+      - Rewrote with a Status Panel reflecting current state (Workflow=FEATURE_DEV,
+        Status=ACTIVE — multiple G3 features landed, Executor=Claude Code /
+        Track A, Updated=2026-05-20 PDT).
+      - Added a Work Log row per G3-batch sub-feature citing commit `533391e`
+        and the Codex REVISE verdict, plus a row for this P1-Delta closure.
+    - `docs/workflow/roadmap/codex-reviews/g3-organizer-batch/PROCESS-NOTE.md`
+      - New file. Documents the G3-batch deviation acceptance (5 sub-features
+        bundled into `533391e`), the forward guard ("future sub-feature batches
+        MUST be split per the one-phase-per-run rule"), and the carry-forward
+        P1/P2 closure table.
+    
+    Scope
+    - apps/desktop/src-tauri/src/commands/finder.rs
+    - docs/contracts/tauri-commands-v0.md (§4 only — §6/§7 untouched)
+    - packages/core-data/tests/repository-contract.ts
+    - packages/plugin-organizer/docs/dev_log.md
+    - docs/workflow/roadmap/codex-reviews/g3-organizer-batch/PROCESS-NOTE.md (new)
+    - DO NOT TOUCH: keychain.rs / database.rs / window.rs / menubar.rs / crypto/ /
+      @repo/core / plugin-organizer/src/ / @repo/core-data/src/.
+    
+    Risk
+    - Behavior change for `reveal_in_finder` / `open_path`: any caller passing
+      a path outside the four allowed roots will now receive E3004 instead of
+      the OS-level `open` exit code. This is the intended hardening; callers
+      must route through drag-drop / open-panel / authorized bookmark.
+    - `/private/var/...` is intentionally rejected for now — the `/var → /private/var`
+      macOS symlink dance means a future bookmark resolver may want to widen
+      the allow-list, but for P1 we keep the conservative set.
+    - Lexical normalization (not `canonicalize()`) means a symlink under one of
+      the allowed roots is still admitted; tightening this is the bookmark-store
+      follow-up.
+    - Repository contract negative tests are additive — no production code
+      change; both `createInMemoryRepo` and `createSqliteRepo` already throw
+      the right error codes via `assertRepoRecord` / `assertMigrationPlan`.
+    
+    Docs
+    - `docs/contracts/tauri-commands-v0.md` §4 updated (rules + error codes +
+      rationale).
+    - `packages/plugin-organizer/docs/dev_log.md` — Status Panel + Work Log
+      rows for the G3-batch and the P1-Delta closure.
+    - `docs/workflow/roadmap/codex-reviews/g3-organizer-batch/PROCESS-NOTE.md`
+      — deviation acceptance + carry-forward table.
+    
+    Tests
+    - `cargo test --manifest-path apps/desktop/src-tauri/Cargo.toml finder::`
+      → 7 passed / 0 failed (includes the 4 required new tests).
+    - `cargo check --manifest-path apps/desktop/src-tauri/Cargo.toml`
+      → clean (5 pre-existing unrelated dead-code warnings).
+    - `pnpm --filter @repo/core-data test`
+      → 72 passed / 0 failed across 7 test files; in-memory + sqlite drivers
+        both exercise the 3 new negative-path cases.
+    - `pnpm --filter @repo/core-data check-types`
+      → clean (tsc --noEmit).
+
+diff --git a/packages/core-data/tests/repository-contract.ts b/packages/core-data/tests/repository-contract.ts
+index 262c4f7..6bc7b26 100644
+--- a/packages/core-data/tests/repository-contract.ts
++++ b/packages/core-data/tests/repository-contract.ts
+@@ -46,100 +46,159 @@ export function runRepositoryContractTests(
+           orderBy: { field: "priority", direction: "asc" },
+         }),
+       ).resolves.toEqual([
+         makeRecord("todo-1", { priority: 1, tag: "work" }),
+         makeRecord("todo-2", { priority: 2, tag: "work" }),
+       ]);
+     });
+ 
+     it("lists records by index and honors query options", async () => {
+       const repo = createRepo();
+ 
+       await repo.put(makeRecord("todo-2", { priority: 2, tag: "work" }));
+       await repo.put(makeRecord("todo-1", { priority: 1, tag: "work" }));
+       await repo.put(makeRecord("todo-3", { priority: 3, tag: "home" }));
+ 
+       await expect(
+         repo.listByIndex("tag", "work", {
+           orderBy: { field: "id", direction: "asc" },
+           limit: 1,
+         }),
+       ).resolves.toEqual([makeRecord("todo-1", { priority: 1, tag: "work" })]);
+     });
+ 
+     it("rolls back transaction writes when the callback throws", async () => {
+       const repo = createRepo();
+ 
+       await expect(
+         repo.transaction(async (tx) => {
+           await tx.put(makeRecord("todo-1"));
+           throw new Error("boom");
+         }),
+       ).rejects.toThrow("boom");
+ 
+       await expect(repo.get("todo-1")).resolves.toBeUndefined();
+     });
+ 
+     it("applies migrations once and exposes metadata", async () => {
+       const repo = createRepo();
+ 
+       await expect(
+         repo.migrate({
+           id: "migrate-v1",
+           fromVersion: 0,
+           toVersion: 1,
+           steps: [
+             async (tx) => {
+               await tx.put(makeRecord("todo-1"));
+             },
+           ],
+         }),
+       ).resolves.toMatchObject({
+         id: "migrate-v1",
+         fromVersion: 0,
+         toVersion: 1,
+         applied: true,
+       });
+ 
+       await expect(
+         repo.migrate({
+           id: "migrate-v1",
+           fromVersion: 0,
+           toVersion: 1,
+           steps: [
+             async (tx) => {
+               await tx.put(makeRecord("todo-2"));
+             },
+           ],
+         }),
+       ).resolves.toMatchObject({
+         id: "migrate-v1",
+         applied: false,
+       });
+ 
+       await expect(repo.get("todo-2")).resolves.toBeUndefined();
+       await expect(repo.metadata()).resolves.toMatchObject({
+         schemaVersion: 1,
+         migrationVersion: 1,
+         recordCount: 1,
+       });
+     });
++
++    // ── Negative-path contract (P1 D2) ─────────────────────────────────────
++    //
++    // Every Repo<T> driver MUST reject malformed records and bad migration
++    // plans with the documented `E3005` / `E3006` codes, and `listByIndex`
++    // on an unknown field MUST return an empty array rather than throwing
++    // or returning `undefined`.
++
++    it("rejects invalid records with E3005 (missing entityType / bad schemaVersion)", async () => {
++      const repo = createRepo();
++
++      // Missing entityType.
++      const missingEntity = {
++        ...makeRecord("bad-1"),
++        entityType: "",
++      } as ContractRecord;
++      await expect(repo.put(missingEntity)).rejects.toThrow(/E3005/);
++
++      // schemaVersion = 0 (below the minimum positive integer).
++      const badSchema = {
++        ...makeRecord("bad-2"),
++        schemaVersion: 0,
++      } as ContractRecord;
++      await expect(repo.put(badSchema)).rejects.toThrow(/E3005/);
++    });
++
++    it("rejects a migration plan whose fromVersion does not match the current migrationVersion (E3006)", async () => {
++      const repo = createRepo();
++
++      // Repo is freshly created at migrationVersion=0, so a plan claiming
++      // fromVersion=5 → toVersion=6 must surface `E3006: ... expected version`.
++      await expect(
++        repo.migrate({
++          id: "bad-migration",
++          fromVersion: 5,
++          toVersion: 6,
++          steps: [],
++        }),
++      ).rejects.toThrow(/E3006:.*expected version/);
++    });
++
++    it("returns an empty array for listByIndex with a non-existent field", async () => {
++      const repo = createRepo();
++
++      // Even with no records the call must resolve to an array, never throw.
++      await expect(
++        repo.listByIndex("nonExistentField" as never, "x" as never),
++      ).resolves.toEqual([]);
++
++      // Same with records present — unknown indexed field still returns [].
++      await repo.put(makeRecord("todo-1"));
++      await repo.put(makeRecord("todo-2"));
++      const result = await repo.listByIndex(
++        "nonExistentField" as never,
++        "x" as never,
++      );
++      expect(Array.isArray(result)).toBe(true);
++      expect(result).toEqual([]);
++    });
+   });
+ }
+ 
+ export function makeRecord(
+   id: string,
+   overrides: Partial<ContractRecord> = {},
+ ): ContractRecord {
+   return {
+     id,
+     entityType: "productivity.todo",
+     schemaVersion: 1,
+     createdAt: "2026-05-19T00:00:00.000Z",
+     updatedAt: "2026-05-19T00:00:00.000Z",
+     syncScope: "account-sync",
+     title: id,
+     priority: 1,
+     tag: "work",
+     ...overrides,
+   };
+ }
+
+exec
+/bin/zsh -lc 'git show --unified=80 2237395 -- docs/contracts/tauri-commands-v0.md docs/workflow/roadmap/codex-reviews/g3-organizer-batch/PROCESS-NOTE.md packages/plugin-organizer/docs/dev_log.md' in /Users/lijinlong/Desktop/AI_Desktop/XAI_Desktop
+ succeeded in 0ms:
+commit 22373959b781e9f1636e95b868df95005733d36d
+Author: InnoPeak <global_ai@innopeaktech.com>
+Date:   Wed May 20 11:40:51 2026 -0700
+
+    fix(commands/finder, core-data tests): path authorization + negative contract cases (P1 D-group)
+    
+    Why
+    - G3-E3 review (codex-reviews/g3-organizer-batch) flagged that `reveal_in_finder`
+      and `open_path` only validated empty / NUL and accepted any absolute path,
+      in violation of `docs/contracts/tauri-commands-v0.md` §4 "all path access
+      must come from user drop/open panel or authorized bookmark".
+    - G2.1 Repository v0 contract suite (`runRepositoryContractTests`) covered
+      happy paths but lacked the documented `E3005` (invalid record) / `E3006`
+      (migration version mismatch) negative cases and the `listByIndex` unknown-
+      field shape, so neither driver was actually gated on the published contract.
+    - The G3-batch commit `533391e` bundled five sub-features into one
+      `feature-build` commit, deviating from the one-phase-per-run rule. The
+      deviation needs to be recorded so Track A automation has a documented
+      guard going forward.
+    
+    What
+    - `apps/desktop/src-tauri/src/commands/finder.rs`
+      - Replaced `validate_path` with `validate_user_path(raw) -> AppResult<PathBuf>`.
+      - Rejects empty / whitespace-only / NUL (E3005), relative paths and any
+        `..` component (E3005), and paths not under user-reachable roots
+        (`/Users/`, `/Applications/`, `/Volumes/`, `/tmp/` on macOS; `/tmp/`
+        only on other targets) with E3004.
+      - Uses lexical normalization via `Path::components` (filesystem
+        `canonicalize()` is deferred — it requires the path to exist on disk
+        and a full bookmark store is a later gate).
+      - Passes the normalized `PathBuf` to `open` / `open -R` instead of the
+        raw input.
+      - Added 4 cargo tests:
+        `validate_user_path_rejects_dotdot`,
+        `validate_user_path_rejects_etc_root`,
+        `validate_user_path_admits_user_home`,
+        `validate_user_path_admits_applications` (and updated existing tests
+        to target the new function name).
+    - `docs/contracts/tauri-commands-v0.md` §4
+      - Replaced the two-row description for `reveal_in_finder` / `open_path`
+        with the new path-shape contract ("non-empty / NUL-free / non-`..` /
+        under user-reachable roots"). Documented the E3005 vs E3004 split and
+        the lexical-normalization rationale. §6/§7 untouched.
+    - `packages/core-data/tests/repository-contract.ts`
+      - Added 3 negative contract cases (apply to every Repo<T> driver):
+        - corrupted record (missing entityType / `schemaVersion=0`) → E3005;
+        - migration plan with `fromVersion=5` against a fresh repo at
+          migrationVersion=0 → `E3006: ... expected version`;
+        - `listByIndex("nonExistentField" as never, "x" as never)` resolves
+          to `[]`, not throwing or undefined, both empty-repo and populated.
+      - Both `in-memory-repo.test.ts` and `sqlite-repo.test.ts` already invoke
+        `runRepositoryContractTests`, so the new cases run against both drivers.
+    - `packages/plugin-organizer/docs/dev_log.md`
+      - Rewrote with a Status Panel reflecting current state (Workflow=FEATURE_DEV,
+        Status=ACTIVE — multiple G3 features landed, Executor=Claude Code /
+        Track A, Updated=2026-05-20 PDT).
+      - Added a Work Log row per G3-batch sub-feature citing commit `533391e`
+        and the Codex REVISE verdict, plus a row for this P1-Delta closure.
+    - `docs/workflow/roadmap/codex-reviews/g3-organizer-batch/PROCESS-NOTE.md`
+      - New file. Documents the G3-batch deviation acceptance (5 sub-features
+        bundled into `533391e`), the forward guard ("future sub-feature batches
+        MUST be split per the one-phase-per-run rule"), and the carry-forward
+        P1/P2 closure table.
+    
+    Scope
+    - apps/desktop/src-tauri/src/commands/finder.rs
+    - docs/contracts/tauri-commands-v0.md (§4 only — §6/§7 untouched)
+    - packages/core-data/tests/repository-contract.ts
+    - packages/plugin-organizer/docs/dev_log.md
+    - docs/workflow/roadmap/codex-reviews/g3-organizer-batch/PROCESS-NOTE.md (new)
+    - DO NOT TOUCH: keychain.rs / database.rs / window.rs / menubar.rs / crypto/ /
+      @repo/core / plugin-organizer/src/ / @repo/core-data/src/.
+    
+    Risk
+    - Behavior change for `reveal_in_finder` / `open_path`: any caller passing
+      a path outside the four allowed roots will now receive E3004 instead of
+      the OS-level `open` exit code. This is the intended hardening; callers
+      must route through drag-drop / open-panel / authorized bookmark.
+    - `/private/var/...` is intentionally rejected for now — the `/var → /private/var`
+      macOS symlink dance means a future bookmark resolver may want to widen
+      the allow-list, but for P1 we keep the conservative set.
+    - Lexical normalization (not `canonicalize()`) means a symlink under one of
+      the allowed roots is still admitted; tightening this is the bookmark-store
+      follow-up.
+    - Repository contract negative tests are additive — no production code
+      change; both `createInMemoryRepo` and `createSqliteRepo` already throw
+      the right error codes via `assertRepoRecord` / `assertMigrationPlan`.
+    
+    Docs
+    - `docs/contracts/tauri-commands-v0.md` §4 updated (rules + error codes +
+      rationale).
+    - `packages/plugin-organizer/docs/dev_log.md` — Status Panel + Work Log
+      rows for the G3-batch and the P1-Delta closure.
+    - `docs/workflow/roadmap/codex-reviews/g3-organizer-batch/PROCESS-NOTE.md`
+      — deviation acceptance + carry-forward table.
+    
+    Tests
+    - `cargo test --manifest-path apps/desktop/src-tauri/Cargo.toml finder::`
+      → 7 passed / 0 failed (includes the 4 required new tests).
+    - `cargo check --manifest-path apps/desktop/src-tauri/Cargo.toml`
+      → clean (5 pre-existing unrelated dead-code warnings).
+    - `pnpm --filter @repo/core-data test`
+      → 72 passed / 0 failed across 7 test files; in-memory + sqlite drivers
+        both exercise the 3 new negative-path cases.
+    - `pnpm --filter @repo/core-data check-types`
+      → clean (tsc --noEmit).
+
+diff --git a/docs/contracts/tauri-commands-v0.md b/docs/contracts/tauri-commands-v0.md
+index da3a852..b4927fc 100644
+--- a/docs/contracts/tauri-commands-v0.md
++++ b/docs/contracts/tauri-commands-v0.md
+@@ -1,161 +1,168 @@
+ # Tauri Commands Contract v0
+ 
+ | 字段 | 值 |
+ |---|---|
+ | Owner | Desktop Host |
+ | Source | `apps/desktop/src-tauri/src/commands/*` |
+ | 状态 | Draft |
+ | 适用 | Desktop app, plugins via `@repo/core` adapters |
+ 
+ ## 1. 原则
+ 
+ - Plugin 不直接调用 `@tauri-apps/api`。
+ - Plugin 通过 `@repo/core` 的 adapter/hook 调用 host capability。
+ - Rust command 必须有 owner、allowed windows、input、output、error code。
+ - Capability allowlist 是安全边界的一部分,不是生成物。
+ - Raw key、access token、raw DEK 不跨 JS/Rust IPC。
+ 
+ ## 2. Window Labels
+ 
+ | Window | Label |
+ |---|---|
+ | Main | `main` |
+ | Control | `control` |
+ | Grid | `grid_{gridId}` |
+ | Console | `console` |
+ | Account | `account` |
+ | Widget | `widget_{widgetId}` |
+ | Pet | `pet` |
+ 
+ Rust 是 label 生成权威。TS 侧不能手写除 public helper 以外的 label 拼接。
+ 
+ ## 3. Window Commands
+ 
+ | Command | Owner | Allowed windows | Input | Output |
+ |---|---|---|---|---|
+ | `create_grid_window` | organizer/host | `main`,`control` | `{ gridId, rect }` | `GridWindowSnapshot` |
+ | `update_grid_window` | organizer/host | `main`,`control` | `{ gridId, rect }` | `GridWindowSnapshot` |
+ | `close_grid_window` | organizer/host | `main`,`control` | `{ gridId }` | `void` |
+ | `list_grid_windows` | organizer/host | `main`,`control` | `void` | `GridWindowSnapshot[]` |
+ | `focus_grid_window` | organizer/host | `main`,`control` | `{ gridId }` | `GridWindowSnapshot` |
+ 
+ Target G1 output type:
+ 
+ ```ts
+ interface GridWindowSnapshot {
+   gridId: string;
+   label: `grid_${string}`;
+   rect: Rect;
+   visible: boolean;
+ }
+ ```
+ 
+ G1.1 implementation notes:
+ 
+ - Rust is the only label generation point via `grid_{gridId}`.
+ - Invalid `gridId` values return `INVALID_GRID_ID`.
+ - Missing windows return `WINDOW_NOT_FOUND`.
+ - Native window failures return `WINDOW_NATIVE_ERROR`.
+ - Runtime allow-list `commands::window::WINDOW_ALLOWED_WINDOWS`
+   (`main`, `control`) enforces the table above at the IPC boundary
+   with `WINDOW_CAPABILITY_DENIED`. `grid_*` windows are intentionally
+   excluded — a grid window must request lifecycle changes for itself
+   via cross-window events routed through `control`, not by directly
+   invoking `update_grid_window` / `close_grid_window` against another
+   grid. Widget / pet / ai-cube / console are likewise rejected.
+ - The `window: tauri::WebviewWindow` argument is injected by the
+   Tauri IPC layer; JS callers do NOT include it in the args payload
+   (mirrors the crypto / database / keychain command pattern).
+ 
+ ## 4. File / Open Commands
+ 
+ | Command | Owner | Allowed windows | Input | 说明 |
+ |---|---|---|---|---|
+-| `reveal_in_finder` | organizer (G3-E3) | `main`,`control`,`grid_*`,`console` | `{ input: { path } }` | path-backed item action; shells out to `open -R` on macOS |
+-| `open_path` | organizer (G3-E3) | `main`,`control`,`grid_*`,`console` | `{ input: { path } }` | user-initiated only; shells out to `open` on macOS |
++| `reveal_in_finder` | organizer (G3-E3) | `main`,`control`,`grid_*`,`console` | `{ input: { path } }` | validates path is non-empty / NUL-free / non-`..` / under user-reachable roots (`/Users/`, `/Applications/`, `/Volumes/`, `/tmp/` on macOS; `/tmp/` only on other targets); shells out to `open -R` with the lexically-normalized path on macOS |
++| `open_path` | organizer (G3-E3) | `main`,`control`,`grid_*`,`console` | `{ input: { path } }` | same path-authorization rules as `reveal_in_finder`; user-initiated only; shells out to `open` with the lexically-normalized path on macOS |
+ | `resolve_alias` | organizer | `control`,`grid_*` | TBD | G1/G2 根据 sandbox 决定 |
+ | `create_security_scoped_bookmark` | organizer/account | `control`,`grid_*` | TBD | MAS path if required |
+ 
+ 文件 command 不允许静默扫描用户目录。所有 path access 必须来自用户 drop/open panel 或已授权 bookmark。
+ 
+-`reveal_in_finder` / `open_path` enforce a runtime allow-list (`FINDER_ALLOWED_WINDOWS` in `commands/finder.rs`) and reject empty / NUL-containing paths with `E3005` (SyncInvalidInput) before reaching the platform layer.
++`reveal_in_finder` / `open_path` enforce a runtime allow-list (`FINDER_ALLOWED_WINDOWS` in `commands/finder.rs`) AND a path-shape allow-list via `validate_user_path`:
++
++- Empty / whitespace-only / NUL-containing inputs → `E3005` (SyncInvalidInput).
++- Relative paths or any `..` parent-dir segment (even when the raw string would normalize back into an allowed root, e.g. `/Users/me/../etc/passwd`) → `E3005`.
++- Paths whose lexically-normalized form is NOT under one of the user-reachable roots (`/Users/`, `/Applications/`, `/Volumes/`, `/tmp/` on macOS; `/tmp/` only on other targets) → `E3004` (SyncCapabilityDenied). `/private/var/...`, `/etc/...`, `/System/...`, `/bin/...` are intentionally rejected until a full security-scoped bookmark store lands.
++- On success the canonical (lexically-normalized) `PathBuf` is passed to `open` / `open -R`, not the raw input.
++
++Lexical normalization is used rather than `std::fs::canonicalize()` because the latter requires the path to exist on disk; full filesystem canonicalization is a follow-up once `create_security_scoped_bookmark` is wired.
+ 
+ ## 5. Clipboard Commands
+ 
+ | Command | Owner | Allowed windows | 说明 |
+ |---|---|---|---|
+ | `clipboard_start_watching` | clipboard | `control`,`console` | 用户启用后 |
+ | `clipboard_stop_watching` | clipboard | `control`,`console` | privacy control |
+ | `clipboard_write_item` | clipboard | `control`,`console` | user action |
+ | `clipboard_get_item_preview` | clipboard | `control`,`console` | 不返回 secret app 内容 |
+ 
+ Clipboard disabled-app policy 必须在写入历史前执行。
+ 
+ ## 6. Crypto / Keychain Commands
+ 
+ Current source:
+ - `apps/desktop/src-tauri/src/commands/crypto.rs`
+ - `apps/desktop/src-tauri/src/commands/keychain.rs`
+ - `apps/desktop/src-tauri/capabilities/plugin-account-crypto.json`
+ - `apps/desktop/src-tauri/capabilities/plugin-account-keychain.json`
+ 
+ | Command | Allowed windows | Security rule |
+ |---|---|---|
+ | `crypto_encrypt_for` | `account`,`control` | plaintext in,encrypted envelope out; key resolved in Rust |
+ | `crypto_wrap_dek_for_devices` | `account`,`control` | DEK handle only |
+ | `crypto_unwrap_dek_for_device` | `account`,`control` | returns handle,not raw key |
+ | `crypto_recovery_sign` | `account`,`control` | transcript signed in Rust |
+ | `secret_set` / `secret_get` / `secret_del` | `account`,`control` | Keychain scoped by account/device. Runtime `commands::keychain::KEYCHAIN_ALLOWED_WINDOWS` (`account`, `control`) check rejects any other origin (widget / pet / ai-cube / grid / main / console) with `E3004` before reaching the platform layer. |
+ 
+ Raw DEK must never cross IPC. JS may hold opaque handle ids only.
+ 
+ ### 6.0.1 Keychain ↔ KeyVault opaque-handle boundary (G2.4)
+ 
+ JS-visible Keychain surface is limited to the three `secret_*` commands;
+ JS-visible KeyVault surface is limited to `KeyHandleId` integers returned
+ from `crypto_*` commands. The ONE authorised crossing between the two —
+ "Keychain bytes → KeyVault handle" — lives in
+ `apps/desktop/src-tauri/src/crypto/keychain_handle.rs`:
+ 
+ | Helper | Direction | Behaviour |
+ |---|---|---|
+ | `keychain_handle::load_kek_into_vault(key, vault)` | Keychain → KeyVault | `secret_get` then `KeyVault::insert_kek`. Zeroizes the byte buffer before returning. Result is only `KeyHandleId`. |
+ | `keychain_handle::insert_kek_from_bytes(bytes, vault)` | caller bytes → KeyVault | Same insertion + zeroize for callers that already hold bytes (e.g. recovery flow). |
+ 
+ Rule (machine-enforced by code review + the dedicated tests):
+ 
+ - `secret_get` MUST NOT be called by any Tauri command that exposes its
+   return value to JS for KEK / DEK / device-private bytes. Such material
+   must flow through `keychain_handle::*` so JS only ever sees a handle.
+ - `secret_get` is allowed to surface bytes to JS for **non-key material**:
+   refresh tokens, account-id markers, encrypted recovery transcripts, etc.
+ 
+ Rust-internal errors (do not cross IPC; calling Tauri commands that use
+ this bridge must map them to JS-visible `E11xx` / `E13xx` variants):
+ 
+ - `KeychainHandleError::Keychain(AppError)` — passthrough from `secret_get`.
+ - `KeychainHandleError::InvalidKeyLength` — payload length is not exactly 32 bytes.
+ - `KeychainHandleError::KeyVault(KeyVaultError)` — vault insertion failure.
+ 
+ ## 6.1 Database Commands (G2.2 PoC)
+ 
+ Current source:
+ - `apps/desktop/src-tauri/src/commands/database.rs`
+ - `packages/core-data/src/tauri-sqlite.ts` (TS driver factory)
+ - `apps/desktop/src-tauri/capabilities/plugin-data-database.json` (G2.5)
+ - `apps/desktop/src-tauri/capabilities/AUDIT.md` (full audit table)
+ 
+ | Command | Allowed windows | Input | Output | Security rule |
+ |---|---|---|---|---|
+ | `db_init` | `main`,`control`,`grid_*`,`account` | `{ namespace }` | `{ namespace, path }` | Idempotent. Opens or creates `xai-repo-v0.db` under `app_data_dir`. |
+ | `db_put` | same | `{ input: { namespace, id, json, updatedAtMs } }` | `void` | Upsert. `json` payload is opaque; raw bytes do not cross IPC. |
+ | `db_get` | same | `{ input: { namespace, id } }` | `string \| null` | Returns the stored JSON or `null` if absent. |
+ | `db_list` | same | `{ input: { namespace } }` | `string[]` | All payloads in the namespace, sorted by id. |
+ | `db_delete` | same | `{ input: { namespace, id } }` | `void` | Idempotent. |
+ | `db_put_batch` | same | `{ input: { namespace, entries: [{ op: "put" \| "delete", id, json?, updatedAtMs? }] } }` | `void` | Atomic. Wraps every entry in one SQLite `BEGIN`/`COMMIT`. Any validation or backend failure rolls back the whole batch. Required by the sync-outbox to commit the entity row and its outbox row together (G2.6 P0 fix). |
+ 
+ PoC scope:
+ - Plain SQLite via `rusqlite` (bundled-sqlcipher build but no `PRAGMA key` applied).
+ - SQLCipher PRAGMA path is exercised by `apps/desktop/src-tauri/src/crypto/sqlcipher.rs` and will be wired into `db_init` once G2.4 publishes a stable opaque KEK handle.
+ - Cross-namespace transactions are not exposed; the TS `createTauriRepo` shim runs `transaction(fn)` callbacks against a single namespace and dispatches all buffered writes through `db_put_batch`.
+ - Namespace must match `[A-Za-z0-9._:-]+` and be ≤ 128 chars. Id must be 1..=256 chars.
+diff --git a/docs/workflow/roadmap/codex-reviews/g3-organizer-batch/PROCESS-NOTE.md b/docs/workflow/roadmap/codex-reviews/g3-organizer-batch/PROCESS-NOTE.md
+new file mode 100644
+index 0000000..9287005
+--- /dev/null
++++ b/docs/workflow/roadmap/codex-reviews/g3-organizer-batch/PROCESS-NOTE.md
+@@ -0,0 +1,24 @@
++# G3-batch Process Note
++
++**Feature**: g3-organizer-batch
++**Commit**: `533391e` (`feat(plugin-organizer): G3 organizer-loop utilities + Finder commands`)
++**Track**: Track A — Claude Code unattended (D-Codex automation mode)
++**Reviewer feedback**: see `docs/workflow/roadmap/codex-reviews/g3-organizer-batch/output.md` (verdict REVISE)
++
++## G3-batch deviation accepted (2026-05-20)
++
++The G3-E1 / G3-S3 / G3-E2 / G3-E3 / G3-E4 implementations were bundled into commit `533391e` under Track A unattended mode. The project rule "`feature-build` runs ONE phase per run, then stops for human confirmation" (see `CLAUDE.md` → Key Rules and Workflow V2 Subagent Output Display) was deviated from: five sub-features were combined into a single `feature-build` commit instead of being split per-feature with intermediate review/verify checkpoints.
++
++**Decision**: deviation is accepted post-hoc because (a) the work is done and tested — Codex `feature-review` exercised every sub-feature and surfaced concrete P1/P2 items, all of which are tracked as carry-forward in `packages/plugin-organizer/docs/dev_log.md`, and (b) splitting `533391e` retroactively would generate churn without changing the resulting state of the repository (the same lines of code would land, just with re-shaped commit boundaries).
++
++**Forward guard**: future sub-feature batches MUST be split per the one-phase-per-run rule. Track A automation that produces multi-feature `feature-build` commits will be treated as a workflow defect, not a productivity win. The carry-forward P1 closures from this batch (e.g. P1-Delta path authorization, P1-folder-inference, capability/audit entry) are landing as individual focused commits to demonstrate the correct shape going forward.
++
++## Carry-forward P1/P2 status
++
++| Codex finding | Severity | Status | Closure commit |
++|---|---|---|---|
++| G3-E1 folder inference uses trailing-`/` heuristic that misses real folder-drop payloads | P1 | open | _pending_ |
++| G3-E3 `reveal_in_finder` / `open_path` accept any absolute path (no provenance / root enforcement) | P1 | **closed** | P1-Delta — `fix(commands/finder, core-data tests): path authorization + negative contract cases (P1 D-group)` |
++| Workflow V2 hygiene incomplete (`packages/plugin-organizer/docs/dev_log.md` missing Status Panel; 5-feature `feature-build` commit) | P1 | **closed (post-hoc)** | P1-Delta (this note + dev_log Status Panel + Work Log rows) |
++| `apps/desktop/src-tauri/capabilities/AUDIT.md` / public API contract not updated for new Finder surface | P2 | open | _pending_ |
++| Coverage gaps (folder-path shape regression; `data:` / custom-scheme rejection; multi-grid same-rule stability; command-blocking failure behavior) | P2 | open | _pending_ |
+diff --git a/packages/plugin-organizer/docs/dev_log.md b/packages/plugin-organizer/docs/dev_log.md
+index dddc9be..52a2f88 100644
+--- a/packages/plugin-organizer/docs/dev_log.md
++++ b/packages/plugin-organizer/docs/dev_log.md
+@@ -1,26 +1,46 @@
+ # Organizer — Dev Log
+ 
+-## Current Status
+-Stable
++## Status Panel
++
++| Field | Value |
++|---|---|
++| Workflow | FEATURE_DEV |
++| Target | plugin-organizer |
++| Title | G3 Organizer-loop utilities + Finder commands |
++| Roadmap | xai-v1 · G3 (organizer-loop) |
++| Status | ACTIVE — multiple G3 features landed via Track A unattended batch |
++| Current Phase | feature-build (batched) → feature-verify done; carry-forward P1s open |
++| Suggested Next | address remaining G3 P1s (incl. P1-Delta path-authorization closure) |
++| Automation Mode | D-Codex (Track A unattended) |
++| Verify Cross-vendor | yes (Codex feature-review verdict: REVISE — see `docs/workflow/roadmap/codex-reviews/g3-organizer-batch/output.md`) |
++| Executor | Claude Code / Track A |
++| Updated | 2026-05-20 PDT |
++| Blockers | G3-batch deviation accepted post-hoc (see Process Note in `docs/workflow/roadmap/codex-reviews/g3-organizer-batch/PROCESS-NOTE.md`); future sub-feature batches must be split per the one-phase-per-run rule |
+ 
+ ## TODO
+ - [ ] 迁移 OrganizerLayer 从 apps/desktop/src/plugins/ 到 plugin 内部 (Wave 2)
+ - [ ] 迁移 useMultiWindowGrids 从 apps/desktop/src/hooks/ 到 plugin 内部 (Wave 2)
+ - [ ] 迁移 useGridWindow 从 apps/desktop/src/hooks/ 到 plugin 内部 (Wave 2)
+ - [ ] 替换 Tauri 事件调用为 @repo/core/events 类型安全版本 (Wave 2)
+ - [ ] 注册到 PluginRegistry (Wave 2)
+ - [ ] 添加 Vitest 单元测试 (Wave 3)
+ - [ ] Zustand store 替代 React Context + localStorage (Wave 3)
++- [ ] G3-E1 folder-inference regression fix (Codex P1 carry-forward — `inferKindFromPath` misclassifies real folder drops without trailing slash)
++- [ ] G3-E3 Finder capability/audit entry follow-up (capability JSON + `apps/desktop/src-tauri/capabilities/AUDIT.md` row)
++- [ ] G3 coverage gaps: `data:` / custom-scheme URL rejection tests; multi-grid same-rule stability test; command-blocking / shell-failure behavior test
+ 
+ ## Known Issues
+ - SmartContainer 477 行过于膨胀，需要拆分
+ - 缺少 Vitest 覆盖 Control→Main create-grid 事件路由
++- G3-batch (commit `533391e`) bundled 5 features into one `feature-build` commit; deviation accepted post-hoc (see Process Note)
++- G3-E3 `reveal_in_finder` / `open_path` originally accepted any absolute path; closed in P1-Delta (see Work Log row)
+ 
+-## 踩坑记录
+-### 2026-05-13
+-- 初始化四件套文档，基于 REFACTORING_PLAN v1.0
++## Work Log
+ 
+-### 2026-05-19
+-- Tauri v2 默认不暴露 `window.__TAURI__`，除非开启 `app.withGlobalTauri`。Organizer 原先用这个全局判断运行环境，会导致 `useMultiWindowGrids` 在真实 Tauri runtime 中被关闭。修复为 `isTauri()` / `__TAURI_INTERNALS__` 检测。
+-- ControlWindow 的 `+ New Grid` 需要向 `main` 定向发送 `organizer:create-grid-request`，由主窗口维护 grid state 后再同步原生 Grid window。
+-- 为避免 control/main 事件链偶发失败导致按钮无反馈，ControlWindow 会用同一 `gridId` 直接调用 `create_grid_window` 作为兜底；Rust command label 去重会把重复调用收敛成 update。
++| Timestamp | Executor | Action | Commits | Next |
++|---|---|---|---|---|
++| 2026-05-13 | feature-plan (initial) | 初始化四件套文档，基于 REFACTORING_PLAN v1.0 | — | — |
++| 2026-05-19 | bug-fix | Tauri v2 默认不暴露 `window.__TAURI__`；修复 `isTauri()` 检测；ControlWindow `+ New Grid` 路由到 `main` + 同 `gridId` 兜底 `create_grid_window`. | — | — |
++| 2026-05-20 PDT | feature-build (Claude Code, Track A — G3 batch, unattended) | Landed G3-E1 (folder/URL drop classifier + bulk adapter), G3-S3 (auto-classify rules), G3-E2 (organizer-loop deterministic seams), G3-E3 (Finder commands + `reveal_in_finder` / `open_path`), G3-E4 (item-health evaluator). **Deviation from one-phase-per-run rule** — 5 features in one commit. See Process Note. | `533391e` | feature-review (Codex) |
++| 2026-05-20 PDT | feature-review (Codex cross-vendor) | Verdict: REVISE. Flagged P1s: folder-inference shape, path-authorization gap, missing Workflow V2 hygiene; P2s on capability audit and coverage. Output captured in `docs/workflow/roadmap/codex-reviews/g3-organizer-batch/output.md`. | `533391e` | feature-build (carry-forward fixes — split by issue) |
++| 2026-05-20 PDT | bug-fix (Claude Code, Track A, P1-Delta) | G3-E3 path-authorization closure: replaced `validate_path` with `validate_user_path` in `apps/desktop/src-tauri/src/commands/finder.rs`; rejects `..`, relative paths, and paths outside `/Users/`, `/Applications/`, `/Volumes/`, `/tmp/`; added 4 cargo tests (dotdot / etc-root / user-home / Applications). Doc updated in `docs/contracts/tauri-commands-v0.md` §4. Carry-forward P1 closed. | _pending P1-D commit_ | continue G3 carry-forward (folder-inference, capability/audit entry, coverage gaps) |
+
+codex
+The code change is substantive, not just docs. I’m running the exact claimed verification commands now to see whether the new tests exist and hold under the current tree.
+exec
+/bin/zsh -lc 'cargo test --manifest-path apps/desktop/src-tauri/Cargo.toml finder::' in /Users/lijinlong/Desktop/AI_Desktop/XAI_Desktop
+exec
+/bin/zsh -lc 'cargo check --manifest-path apps/desktop/src-tauri/Cargo.toml' in /Users/lijinlong/Desktop/AI_Desktop/XAI_Desktop
+exec
+/bin/zsh -lc 'pnpm --filter @repo/core-data check-types' in /Users/lijinlong/Desktop/AI_Desktop/XAI_Desktop
+exec
+/bin/zsh -lc 'pnpm --filter @repo/core-data test' in /Users/lijinlong/Desktop/AI_Desktop/XAI_Desktop
+ succeeded in 4657ms:
+
+> @repo/core-data@0.0.0 check-types /Users/lijinlong/Desktop/AI_Desktop/XAI_Desktop/packages/core-data
+> tsc --noEmit
+
+
+ succeeded in 7431ms:
+
+> @repo/core-data@0.0.0 test /Users/lijinlong/Desktop/AI_Desktop/XAI_Desktop/packages/core-data
+> vitest run
+
+
+ RUN  v3.2.4 /Users/lijinlong/Desktop/AI_Desktop/XAI_Desktop/packages/core-data
+
+11:56:10 AM [vite] (ssr) warning: Duplicate key "skipped" in object literal
+100 |        skipped: 0,
+101 |        removedLegacy: false,
+102 |        skipped: 0,
+    |        ^
+103 |      });
+104 |  
+
+  Plugin: vite:esbuild
+  File: /Users/lijinlong/Desktop/AI_Desktop/XAI_Desktop/packages/core-data/tests/organizer-layout-migration.test.ts
+ ✓ tests/keychain.test.ts (20 tests) 12ms
+ ✓ tests/sync-outbox.test.ts (9 tests) 22ms
+ ✓ tests/tauri-sqlite.test.ts (7 tests) 51ms
+ ✓ tests/entities.test.ts (6 tests) 49ms
+ ✓ tests/organizer-layout-migration.test.ts (7 tests) 58ms
+ ✓ tests/sqlite-repo.test.ts (12 tests) 99ms
+ ✓ tests/in-memory-repo.test.ts (15 tests) 235ms
+
+ Test Files  7 passed (7)
+      Tests  76 passed (76)
+   Start at  11:56:07
+   Duration  3.07s (transform 3.81s, setup 0ms, collect 6.18s, tests 526ms, environment 1ms, prepare 3.33s)
+
+
+ succeeded in 23207ms:
+   Compiling desktop v0.1.0 (/Users/lijinlong/Desktop/AI_Desktop/XAI_Desktop/apps/desktop/src-tauri)
+warning: multiple variants are never constructed
+  --> src/error.rs:44:5
+   |
+15 | pub enum AppError {
+   |          -------- variants in this enum
+...
+44 |     KeychainUnsupportedPlatform,
+   |     ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+...
+48 |     SyncNotInitialized,
+   |     ^^^^^^^^^^^^^^^^^^
+...
+51 |     SyncAuthRequired,
+   |     ^^^^^^^^^^^^^^^^
+...
+54 |     SyncTransport(String),
+   |     ^^^^^^^^^^^^^
+...
+57 |     SyncConflict,
+   |     ^^^^^^^^^^^^
+...
+69 |     SyncCrypto(String),
+   |     ^^^^^^^^^^
+...
+74 |     DatabaseNotInitialized,
+   |     ^^^^^^^^^^^^^^^^^^^^^^
+...
+78 |     DatabaseInvalidInput(String),
+   |     ^^^^^^^^^^^^^^^^^^^^
+...
+82 |     DatabaseBackend(String),
+   |     ^^^^^^^^^^^^^^^
+   |
+   = note: `AppError` has a derived impl for the trait `Debug`, but this is intentionally ignored during dead code analysis
+   = note: `#[warn(dead_code)]` (part of `#[warn(unused)]`) on by default
+
+warning: constant `BUNDLE_ID` is never used
+  --> src/platform/macos/keychain.rs:24:11
+   |
+24 | pub const BUNDLE_ID: &str = "com.jinlong.desktop";
+   |           ^^^^^^^^^
+
+warning: struct `KeychainItemAttrs` is never constructed
+  --> src/platform/macos/keychain.rs:32:12
+   |
+32 | pub struct KeychainItemAttrs {
+   |            ^^^^^^^^^^^^^^^^^
+
+warning: enum `KeychainAccessibility` is never used
+  --> src/platform/macos/keychain.rs:43:10
+   |
+43 | pub enum KeychainAccessibility {
+   |          ^^^^^^^^^^^^^^^^^^^^^
+
+warning: function `build_item_attrs` is never used
+  --> src/platform/macos/keychain.rs:52:8
+   |
+52 | pub fn build_item_attrs() -> KeychainItemAttrs {
+   |        ^^^^^^^^^^^^^^^^
+
+warning: `desktop` (lib) generated 5 warnings
+    Finished `dev` profile [unoptimized + debuginfo] target(s) in 22.53s
+
+codex
+The core-data side passes, and it’s actually stronger than the commit claims now: `76` tests passed, not `72`. I’m waiting on the Tauri compile/test pair, which are contending on the same target directory.
+2026-05-20T18:56:28.682898Z ERROR codex_core::tools::router: error=write_stdin failed: stdin is closed for this session; rerun exec_command with tty=true to keep stdin open
+ succeeded in 24167ms:
+    Blocking waiting for file lock on build directory
+warning: multiple variants are never constructed
+  --> src/error.rs:44:5
+   |
+15 | pub enum AppError {
+   |          -------- variants in this enum
+...
+44 |     KeychainUnsupportedPlatform,
+   |     ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+...
+48 |     SyncNotInitialized,
+   |     ^^^^^^^^^^^^^^^^^^
+...
+51 |     SyncAuthRequired,
+   |     ^^^^^^^^^^^^^^^^
+...
+54 |     SyncTransport(String),
+   |     ^^^^^^^^^^^^^
+...
+57 |     SyncConflict,
+   |     ^^^^^^^^^^^^
+...
+69 |     SyncCrypto(String),
+   |     ^^^^^^^^^^
+...
+74 |     DatabaseNotInitialized,
+   |     ^^^^^^^^^^^^^^^^^^^^^^
+...
+78 |     DatabaseInvalidInput(String),
+   |     ^^^^^^^^^^^^^^^^^^^^
+...
+82 |     DatabaseBackend(String),
+   |     ^^^^^^^^^^^^^^^
+   |
+   = note: `AppError` has a derived impl for the trait `Debug`, but this is intentionally ignored during dead code analysis
+   = note: `#[warn(dead_code)]` (part of `#[warn(unused)]`) on by default
+
+warning: constant `BUNDLE_ID` is never used
+  --> src/platform/macos/keychain.rs:24:11
+   |
+24 | pub const BUNDLE_ID: &str = "com.jinlong.desktop";
+   |           ^^^^^^^^^
+
+warning: struct `KeychainItemAttrs` is never constructed
+  --> src/platform/macos/keychain.rs:32:12
+   |
+32 | pub struct KeychainItemAttrs {
+   |            ^^^^^^^^^^^^^^^^^
+
+warning: enum `KeychainAccessibility` is never used
+  --> src/platform/macos/keychain.rs:43:10
+   |
+43 | pub enum KeychainAccessibility {
+   |          ^^^^^^^^^^^^^^^^^^^^^
+
+warning: function `build_item_attrs` is never used
+  --> src/platform/macos/keychain.rs:52:8
+   |
+52 | pub fn build_item_attrs() -> KeychainItemAttrs {
+   |        ^^^^^^^^^^^^^^^^
+
+warning: variants `DatabaseNotInitialized`, `DatabaseInvalidInput`, and `DatabaseBackend` are never constructed
+  --> src/error.rs:74:5
+   |
+15 | pub enum AppError {
+   |          -------- variants in this enum
+...
+74 |     DatabaseNotInitialized,
+   |     ^^^^^^^^^^^^^^^^^^^^^^
+...
+78 |     DatabaseInvalidInput(String),
+   |     ^^^^^^^^^^^^^^^^^^^^
+...
+82 |     DatabaseBackend(String),
+   |     ^^^^^^^^^^^^^^^
+   |
+   = note: `AppError` has a derived impl for the trait `Debug`, but this is intentionally ignored during dead code analysis
+   = note: `#[warn(dead_code)]` (part of `#[warn(unused)]`) on by default
+
+warning: `desktop` (lib) generated 5 warnings
+warning: `desktop` (lib test) generated 1 warning
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 23.86s
+     Running unittests src/lib.rs (apps/desktop/src-tauri/target/debug/deps/desktop_lib-ff5361a3bfb57d15)
+
+running 7 tests
+test commands::finder::tests::allowlist_admits_documented_labels_and_grids ... ok
+test commands::finder::tests::allowlist_rejects_widgets_pet_aicube ... ok
+test commands::finder::tests::validate_user_path_admits_applications ... ok
+test commands::finder::tests::validate_user_path_rejects_dotdot ... ok
+test commands::finder::tests::validate_user_path_rejects_empty_and_nul ... ok
+test commands::finder::tests::validate_user_path_rejects_etc_root ... ok
+test commands::finder::tests::validate_user_path_admits_user_home ... ok
+
+test result: ok. 7 passed; 0 failed; 0 ignored; 0 measured; 19 filtered out; finished in 0.00s
+
+     Running unittests src/main.rs (apps/desktop/src-tauri/target/debug/deps/desktop-6e10a2304337d3d4)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+
+codex
+I’ve got enough to decide the main point, but I need exact line anchors for the review note. Pulling the current line numbers around the new guard and the new contract tests now.
+exec
+/bin/zsh -lc "nl -ba docs/contracts/tauri-commands-v0.md | sed -n '65,110p'" in /Users/lijinlong/Desktop/AI_Desktop/XAI_Desktop
+exec
+/bin/zsh -lc "nl -ba apps/desktop/src-tauri/src/commands/finder.rs | sed -n '1,220p'" in /Users/lijinlong/Desktop/AI_Desktop/XAI_Desktop
+exec
+/bin/zsh -lc "nl -ba packages/core-data/tests/repository-contract.ts | sed -n '1,220p'" in /Users/lijinlong/Desktop/AI_Desktop/XAI_Desktop
+exec
+/bin/zsh -lc "nl -ba packages/core-data/tests/in-memory-repo.test.ts packages/core-data/tests/sqlite-repo.test.ts docs/workflow/roadmap/codex-reviews/g3-organizer-batch/PROCESS-NOTE.md | sed -n '1,220p'" in /Users/lijinlong/Desktop/AI_Desktop/XAI_Desktop
+ succeeded in 0ms:
+    65	  grid. Widget / pet / ai-cube / console are likewise rejected.
+    66	- The `window: tauri::WebviewWindow` argument is injected by the
+    67	  Tauri IPC layer; JS callers do NOT include it in the args payload
+    68	  (mirrors the crypto / database / keychain command pattern).
+    69	
+    70	## 4. File / Open Commands
+    71	
+    72	| Command | Owner | Allowed windows | Input | 说明 |
+    73	|---|---|---|---|---|
+    74	| `reveal_in_finder` | organizer (G3-E3) | `main`,`control`,`grid_*`,`console` | `{ input: { path } }` | validates path is non-empty / NUL-free / non-`..` / under user-reachable roots (`/Users/`, `/Applications/`, `/Volumes/`, `/tmp/` on macOS; `/tmp/` only on other targets); shells out to `open -R` with the lexically-normalized path on macOS |
+    75	| `open_path` | organizer (G3-E3) | `main`,`control`,`grid_*`,`console` | `{ input: { path } }` | same path-authorization rules as `reveal_in_finder`; user-initiated only; shells out to `open` with the lexically-normalized path on macOS |
+    76	| `resolve_alias` | organizer | `control`,`grid_*` | TBD | G1/G2 根据 sandbox 决定 |
+    77	| `create_security_scoped_bookmark` | organizer/account | `control`,`grid_*` | TBD | MAS path if required |
+    78	
+    79	文件 command 不允许静默扫描用户目录。所有 path access 必须来自用户 drop/open panel 或已授权 bookmark。
+    80	
+    81	`reveal_in_finder` / `open_path` enforce a runtime allow-list (`FINDER_ALLOWED_WINDOWS` in `commands/finder.rs`) AND a path-shape allow-list via `validate_user_path`:
+    82	
+    83	- Empty / whitespace-only / NUL-containing inputs → `E3005` (SyncInvalidInput).
+    84	- Relative paths or any `..` parent-dir segment (even when the raw string would normalize back into an allowed root, e.g. `/Users/me/../etc/passwd`) → `E3005`.
+    85	- Paths whose lexically-normalized form is NOT under one of the user-reachable roots (`/Users/`, `/Applications/`, `/Volumes/`, `/tmp/` on macOS; `/tmp/` only on other targets) → `E3004` (SyncCapabilityDenied). `/private/var/...`, `/etc/...`, `/System/...`, `/bin/...` are intentionally rejected until a full security-scoped bookmark store lands.
+    86	- On success the canonical (lexically-normalized) `PathBuf` is passed to `open` / `open -R`, not the raw input.
+    87	
+    88	Lexical normalization is used rather than `std::fs::canonicalize()` because the latter requires the path to exist on disk; full filesystem canonicalization is a follow-up once `create_security_scoped_bookmark` is wired.
+    89	
+    90	## 5. Clipboard Commands
+    91	
+    92	| Command | Owner | Allowed windows | 说明 |
+    93	|---|---|---|---|
+    94	| `clipboard_start_watching` | clipboard | `control`,`console` | 用户启用后 |
+    95	| `clipboard_stop_watching` | clipboard | `control`,`console` | privacy control |
+    96	| `clipboard_write_item` | clipboard | `control`,`console` | user action |
+    97	| `clipboard_get_item_preview` | clipboard | `control`,`console` | 不返回 secret app 内容 |
+    98	
+    99	Clipboard disabled-app policy 必须在写入历史前执行。
+   100	
+   101	## 6. Crypto / Keychain Commands
+   102	
+   103	Current source:
+   104	- `apps/desktop/src-tauri/src/commands/crypto.rs`
+   105	- `apps/desktop/src-tauri/src/commands/keychain.rs`
+   106	- `apps/desktop/src-tauri/capabilities/plugin-account-crypto.json`
+   107	- `apps/desktop/src-tauri/capabilities/plugin-account-keychain.json`
+   108	
+   109	| Command | Allowed windows | Security rule |
+   110	|---|---|---|
+
+ succeeded in 0ms:
+     1	import { describe, expect, it } from "vitest";
+     2	
+     3	import type { Repo, RepoRecord } from "../src/types";
+     4	
+     5	export interface ContractRecord extends RepoRecord {
+     6	  title: string;
+     7	  priority: number;
+     8	  tag: string;
+     9	}
+    10	
+    11	export function runRepositoryContractTests(
+    12	  name: string,
+    13	  createRepo: () => Repo<ContractRecord>,
+    14	): void {
+    15	  describe(name, () => {
+    16	    it("performs CRUD roundtrip and preserves metadata fields", async () => {
+    17	      const repo = createRepo();
+    18	      const record = makeRecord("todo-1", { title: "first" });
+    19	
+    20	      await expect(repo.get("missing")).resolves.toBeUndefined();
+    21	      await repo.put(record);
+    22	
+    23	      await expect(repo.get("todo-1")).resolves.toEqual(record);
+    24	      await repo.delete("todo-1");
+    25	      await expect(repo.get("todo-1")).resolves.toBeUndefined();
+    26	    });
+    27	
+    28	    it("filters list queries and applies explicit stable ordering", async () => {
+    29	      const repo = createRepo();
+    30	
+    31	      await repo.put(makeRecord("todo-2", { priority: 2, tag: "work" }));
+    32	      await repo.put(makeRecord("todo-1", { priority: 1, tag: "work" }));
+    33	      await repo.put(
+    34	        makeRecord("clip-1", {
+    35	          entityType: "clipboard.item",
+    36	          priority: 3,
+    37	          syncScope: "device-local",
+    38	          tag: "local",
+    39	        }),
+    40	      );
+    41	
+    42	      await expect(
+    43	        repo.list({
+    44	          entityType: "productivity.todo",
+    45	          syncScope: "account-sync",
+    46	          orderBy: { field: "priority", direction: "asc" },
+    47	        }),
+    48	      ).resolves.toEqual([
+    49	        makeRecord("todo-1", { priority: 1, tag: "work" }),
+    50	        makeRecord("todo-2", { priority: 2, tag: "work" }),
+    51	      ]);
+    52	    });
+    53	
+    54	    it("lists records by index and honors query options", async () => {
+    55	      const repo = createRepo();
+    56	
+    57	      await repo.put(makeRecord("todo-2", { priority: 2, tag: "work" }));
+    58	      await repo.put(makeRecord("todo-1", { priority: 1, tag: "work" }));
+    59	      await repo.put(makeRecord("todo-3", { priority: 3, tag: "home" }));
+    60	
+    61	      await expect(
+    62	        repo.listByIndex("tag", "work", {
+    63	          orderBy: { field: "id", direction: "asc" },
+    64	          limit: 1,
+    65	        }),
+    66	      ).resolves.toEqual([makeRecord("todo-1", { priority: 1, tag: "work" })]);
+    67	    });
+    68	
+    69	    it("rolls back transaction writes when the callback throws", async () => {
+    70	      const repo = createRepo();
+    71	
+    72	      await expect(
+    73	        repo.transaction(async (tx) => {
+    74	          await tx.put(makeRecord("todo-1"));
+    75	          throw new Error("boom");
+    76	        }),
+    77	      ).rejects.toThrow("boom");
+    78	
+    79	      await expect(repo.get("todo-1")).resolves.toBeUndefined();
+    80	    });
+    81	
+    82	    it("applies migrations once and exposes metadata", async () => {
+    83	      const repo = createRepo();
+    84	
+    85	      await expect(
+    86	        repo.migrate({
+    87	          id: "migrate-v1",
+    88	          fromVersion: 0,
+    89	          toVersion: 1,
+    90	          steps: [
+    91	            async (tx) => {
+    92	              await tx.put(makeRecord("todo-1"));
+    93	            },
+    94	          ],
+    95	        }),
+    96	      ).resolves.toMatchObject({
+    97	        id: "migrate-v1",
+    98	        fromVersion: 0,
+    99	        toVersion: 1,
+   100	        applied: true,
+   101	      });
+   102	
+   103	      await expect(
+   104	        repo.migrate({
+   105	          id: "migrate-v1",
+   106	          fromVersion: 0,
+   107	          toVersion: 1,
+   108	          steps: [
+   109	            async (tx) => {
+   110	              await tx.put(makeRecord("todo-2"));
+   111	            },
+   112	          ],
+   113	        }),
+   114	      ).resolves.toMatchObject({
+   115	        id: "migrate-v1",
+   116	        applied: false,
+   117	      });
+   118	
+   119	      await expect(repo.get("todo-2")).resolves.toBeUndefined();
+   120	      await expect(repo.metadata()).resolves.toMatchObject({
+   121	        schemaVersion: 1,
+   122	        migrationVersion: 1,
+   123	        recordCount: 1,
+   124	      });
+   125	    });
+   126	
+   127	    // ── Negative-path contract (P1 D2) ─────────────────────────────────────
+   128	    //
+   129	    // Every Repo<T> driver MUST reject malformed records and bad migration
+   130	    // plans with the documented `E3005` / `E3006` codes, and `listByIndex`
+   131	    // on an unknown field MUST return an empty array rather than throwing
+   132	    // or returning `undefined`.
+   133	
+   134	    it("rejects invalid records with E3005 (missing entityType / bad schemaVersion)", async () => {
+   135	      const repo = createRepo();
+   136	
+   137	      // Missing entityType.
+   138	      const missingEntity = {
+   139	        ...makeRecord("bad-1"),
+   140	        entityType: "",
+   141	      } as ContractRecord;
+   142	      await expect(repo.put(missingEntity)).rejects.toThrow(/E3005/);
+   143	
+   144	      // schemaVersion = 0 (below the minimum positive integer).
+   145	      const badSchema = {
+   146	        ...makeRecord("bad-2"),
+   147	        schemaVersion: 0,
+   148	      } as ContractRecord;
+   149	      await expect(repo.put(badSchema)).rejects.toThrow(/E3005/);
+   150	    });
+   151	
+   152	    it("rejects a migration plan whose fromVersion does not match the current migrationVersion (E3006)", async () => {
+   153	      const repo = createRepo();
+   154	
+   155	      // Repo is freshly created at migrationVersion=0, so a plan claiming
+   156	      // fromVersion=5 → toVersion=6 must surface `E3006: ... expected version`.
+   157	      await expect(
+   158	        repo.migrate({
+   159	          id: "bad-migration",
+   160	          fromVersion: 5,
+   161	          toVersion: 6,
+   162	          steps: [],
+   163	        }),
+   164	      ).rejects.toThrow(/E3006:.*expected version/);
+   165	    });
+   166	
+   167	    it("returns an empty array for listByIndex with a non-existent field", async () => {
+   168	      const repo = createRepo();
+   169	
+   170	      // Even with no records the call must resolve to an array, never throw.
+   171	      await expect(
+   172	        repo.listByIndex("nonExistentField" as never, "x" as never),
+   173	      ).resolves.toEqual([]);
+   174	
+   175	      // Same with records present — unknown indexed field still returns [].
+   176	      await repo.put(makeRecord("todo-1"));
+   177	      await repo.put(makeRecord("todo-2"));
+   178	      const result = await repo.listByIndex(
+   179	        "nonExistentField" as never,
+   180	        "x" as never,
+   181	      );
+   182	      expect(Array.isArray(result)).toBe(true);
+   183	      expect(result).toEqual([]);
+   184	    });
+   185	  });
+   186	}
+   187	
+   188	export function makeRecord(
+   189	  id: string,
+   190	  overrides: Partial<ContractRecord> = {},
+   191	): ContractRecord {
+   192	  return {
+   193	    id,
+   194	    entityType: "productivity.todo",
+   195	    schemaVersion: 1,
+   196	    createdAt: "2026-05-19T00:00:00.000Z",
+   197	    updatedAt: "2026-05-19T00:00:00.000Z",
+   198	    syncScope: "account-sync",
+   199	    title: id,
+   200	    priority: 1,
+   201	    tag: "work",
+   202	    ...overrides,
+   203	  };
+   204	}
+
+ succeeded in 0ms:
+     1	//! Finder collaboration commands (G3-E3).
+     2	//!
+     3	//! Three minimal user-initiated path actions:
+     4	//!
+     5	//! - `reveal_in_finder` — opens a Finder window highlighting the path.
+     6	//! - `open_path` — opens the path in its default handler (file → app).
+     7	//! - `remove_item_from_grid` — pure logical removal; does NOT touch the
+     8	//!   user's filesystem. The Organizer plugin owns the "send file to
+     9	//!   Trash" decision and must surface a confirmation UI before invoking
+    10	//!   any future destructive variant.
+    11	//!
+    12	//! All commands enforce a window-origin allow-list and validate the path
+    13	//! against the user-reachable root allow-list (see `validate_user_path`)
+    14	//! before touching the platform layer.
+    15	
+    16	use std::path::{Component, Path, PathBuf};
+    17	
+    18	use serde::Deserialize;
+    19	
+    20	use crate::error::{AppError, AppResult};
+    21	
+    22	const FINDER_ALLOWED_WINDOWS: &[&str] = &["main", "control", "console"];
+    23	
+    24	/// User-reachable filesystem roots a desktop file/app drop or open-panel
+    25	/// selection can produce on macOS. Paths outside these roots are rejected
+    26	/// for now — full bookmark-store enforcement is a later gate. On non-macOS
+    27	/// targets only `/tmp/` is admitted, mirroring the existing macOS-only
+    28	/// behavior of the platform commands.
+    29	#[cfg(target_os = "macos")]
+    30	const USER_REACHABLE_ROOTS: &[&str] = &["/Users/", "/Applications/", "/Volumes/", "/tmp/"];
+    31	
+    32	#[cfg(not(target_os = "macos"))]
+    33	const USER_REACHABLE_ROOTS: &[&str] = &["/tmp/"];
+    34	
+    35	fn is_finder_window_allowed(label: &str) -> bool {
+    36	    if FINDER_ALLOWED_WINDOWS.contains(&label) {
+    37	        return true;
+    38	    }
+    39	    label.starts_with("grid_")
+    40	}
+    41	
+    42	fn ensure_finder_window_allowed(label: &str) -> AppResult<()> {
+    43	    if is_finder_window_allowed(label) {
+    44	        return Ok(());
+    45	    }
+    46	    Err(AppError::SyncCapabilityDenied(format!(
+    47	        "window `{label}` is not allowed to invoke Finder commands"
+    48	    )))
+    49	}
+    50	
+    51	/// Validate `raw` looks like a user-authorized absolute path and return its
+    52	/// lexically-normalized canonical form.
+    53	///
+    54	/// Rules:
+    55	/// - rejects empty / NUL / whitespace-only input.
+    56	/// - rejects relative paths and any `..` parent-dir segment (even when the
+    57	///   raw string would normalize away, e.g. `/Users/me/../etc/passwd`).
+    58	/// - rejects paths whose normalized form does NOT start with one of the
+    59	///   allowed user-reachable roots (`/Users/`, `/Applications/`, `/Volumes/`,
+    60	///   `/tmp/` on macOS; only `/tmp/` on other targets).
+    61	///
+    62	/// Returns the normalized `PathBuf` on success. This is a *lexical*
+    63	/// normalization (`Path::components`) rather than `canonicalize()` because
+    64	/// `canonicalize` requires the path to exist on disk; that stricter check
+    65	/// is a follow-up once a bookmark store lands.
+    66	pub(crate) fn validate_user_path(raw: &str) -> AppResult<PathBuf> {
+    67	    if raw.trim().is_empty() {
+    68	        return Err(AppError::SyncInvalidInput(
+    69	            "path must be non-empty".into(),
+    70	        ));
+    71	    }
+    72	    if raw.contains('\0') {
+    73	        return Err(AppError::SyncInvalidInput(
+    74	            "path must not contain NUL".into(),
+    75	        ));
+    76	    }
+    77	
+    78	    let path = Path::new(raw);
+    79	    if !path.is_absolute() {
+    80	        return Err(AppError::SyncInvalidInput(format!(
+    81	            "path must be absolute: `{raw}`"
+    82	        )));
+    83	    }
+    84	
+    85	    // Walk components, refusing any `..` (parent) segment. This catches
+    86	    // both `/Users/me/../etc/passwd` and `/Applications/../etc/passwd`.
+    87	    let mut normalized = PathBuf::new();
+    88	    for component in path.components() {
+    89	        match component {
+    90	            Component::ParentDir => {
+    91	                return Err(AppError::SyncInvalidInput(format!(
+    92	                    "path must not contain `..` segments: `{raw}`"
+    93	                )));
+    94	            }
+    95	            Component::CurDir => {
+    96	                // Drop `.` — harmless lexical no-op.
+    97	            }
+    98	            other => normalized.push(other.as_os_str()),
+    99	        }
+   100	    }
+   101	
+   102	    let normalized_str = normalized.to_string_lossy().to_string();
+   103	    let under_allowed_root = USER_REACHABLE_ROOTS
+   104	        .iter()
+   105	        .any(|root| normalized_str.starts_with(root));
+   106	
+   107	    if !under_allowed_root {
+   108	        return Err(AppError::SyncCapabilityDenied(format!(
+   109	            "path `{normalized_str}` is not under a user-reachable root"
+   110	        )));
+   111	    }
+   112	
+   113	    Ok(normalized)
+   114	}
+   115	
+   116	#[derive(Debug, Deserialize)]
+   117	pub struct RevealInFinderInput {
+   118	    pub path: String,
+   119	}
+   120	
+   121	#[tauri::command]
+   122	pub async fn reveal_in_finder(
+   123	    window: tauri::WebviewWindow,
+   124	    input: RevealInFinderInput,
+   125	) -> AppResult<()> {
+   126	    ensure_finder_window_allowed(window.label())?;
+   127	    let canonical = validate_user_path(&input.path)?;
+   128	    #[cfg(target_os = "macos")]
+   129	    {
+   130	        use std::process::Command;
+   131	        let status = Command::new("open")
+   132	            .arg("-R")
+   133	            .arg(&canonical)
+   134	            .status()
+   135	            .map_err(|err| AppError::Internal(format!("open -R failed: {err}")))?;
+   136	        if !status.success() {
+   137	            return Err(AppError::Internal(format!(
+   138	                "open -R exited with status {status}"
+   139	            )));
+   140	        }
+   141	        Ok(())
+   142	    }
+   143	    #[cfg(not(target_os = "macos"))]
+   144	    {
+   145	        let _ = canonical;
+   146	        Err(AppError::Internal("reveal_in_finder is macOS-only".into()))
+   147	    }
+   148	}
+   149	
+   150	#[derive(Debug, Deserialize)]
+   151	pub struct OpenPathInput {
+   152	    pub path: String,
+   153	}
+   154	
+   155	#[tauri::command]
+   156	pub async fn open_path(
+   157	    window: tauri::WebviewWindow,
+   158	    input: OpenPathInput,
+   159	) -> AppResult<()> {
+   160	    ensure_finder_window_allowed(window.label())?;
+   161	    let canonical = validate_user_path(&input.path)?;
+   162	    #[cfg(target_os = "macos")]
+   163	    {
+   164	        use std::process::Command;
+   165	        let status = Command::new("open")
+   166	            .arg(&canonical)
+   167	            .status()
+   168	            .map_err(|err| AppError::Internal(format!("open failed: {err}")))?;
+   169	        if !status.success() {
+   170	            return Err(AppError::Internal(format!(
+   171	                "open exited with status {status}"
+   172	            )));
+   173	        }
+   174	        Ok(())
+   175	    }
+   176	    #[cfg(not(target_os = "macos"))]
+   177	    {
+   178	        let _ = canonical;
+   179	        Err(AppError::Internal("open_path is macOS-only".into()))
+   180	    }
+   181	}
+   182	
+   183	#[cfg(test)]
+   184	mod tests {
+   185	    use super::*;
+   186	
+   187	    #[test]
+   188	    fn allowlist_admits_documented_labels_and_grids() {
+   189	        for label in FINDER_ALLOWED_WINDOWS {
+   190	            assert!(ensure_finder_window_allowed(label).is_ok());
+   191	        }
+   192	        assert!(ensure_finder_window_allowed("grid_x").is_ok());
+   193	    }
+   194	
+   195	    #[test]
+   196	    fn allowlist_rejects_widgets_pet_aicube() {
+   197	        for label in ["widget_clock", "pet", "ai_cube", "popup"] {
+   198	            assert!(ensure_finder_window_allowed(label).is_err());
+   199	        }
+   200	    }
+   201	
+   202	    #[test]
+   203	    fn validate_user_path_rejects_empty_and_nul() {
+   204	        assert!(validate_user_path("").is_err());
+   205	        assert!(validate_user_path("   ").is_err());
+   206	        assert!(validate_user_path("/Users/me/file\0").is_err());
+   207	    }
+   208	
+   209	    /// Any `..` parent-dir component must be rejected, even when the
+   210	    /// surrounding path lexically points back into an allowed root.
+   211	    #[test]
+   212	    fn validate_user_path_rejects_dotdot() {
+   213	        // direct parent-escape attempt
+   214	        let err = validate_user_path("/Users/me/../etc/passwd").unwrap_err();
+   215	        let msg = err.to_string();
+   216	        assert!(
+   217	            msg.contains("..") || msg.starts_with("E3005:"),
+   218	            "expected `..` rejection, got: {msg}"
+   219	        );
+   220	
+
+ succeeded in 0ms:
+usage: nl [-p] [-b type] [-d delim] [-f type] [-h type] [-i incr] [-l num]
+          [-n format] [-s sep] [-v startnum] [-w width] [file]
+
+exec
+/bin/zsh -lc "nl -ba packages/core-data/tests/sqlite-repo.test.ts | sed -n '1,140p'" in /Users/lijinlong/Desktop/AI_Desktop/XAI_Desktop
+exec
+/bin/zsh -lc "nl -ba packages/core-data/tests/in-memory-repo.test.ts | sed -n '1,120p'" in /Users/lijinlong/Desktop/AI_Desktop/XAI_Desktop
+ succeeded in 0ms:
+     1	import { describe, expect, it, vi } from "vitest";
+     2	
+     3	import { createInMemorySqliteDriver } from "@repo/core-data/testing";
+     4	
+     5	import { migrateLocalStorageToRepo } from "../src/local-storage";
+     6	import { createSqliteRepo } from "../src/sqlite";
+     7	import type { RepoRecord } from "../src/types";
+     8	import {
+     9	  makeRecord,
+    10	  runRepositoryContractTests,
+    11	  type ContractRecord,
+    12	} from "./repository-contract";
+    13	
+    14	interface TodoRecord extends RepoRecord {
+    15	  title: string;
+    16	  done: boolean;
+    17	}
+    18	
+    19	runRepositoryContractTests("createSqliteRepo contract", () =>
+    20	  createSqliteRepo<ContractRecord>(createInMemorySqliteDriver(), {
+    21	    namespace: "contract",
+    22	  }),
+    23	);
+    24	
+    25	function createStorage(initial: Record<string, string>) {
+    26	  const values = new Map(Object.entries(initial));
+    27	  return {
+    28	    get length() {
+    29	      return values.size;
+    30	    },
+    31	    key(index: number): string | null {
+    32	      return [...values.keys()][index] ?? null;
+    33	    },
+    34	    getItem(key: string): string | null {
+    35	      return values.get(key) ?? null;
+    36	    },
+    37	    removeItem(key: string): void {
+    38	      values.delete(key);
+    39	    },
+    40	  };
+    41	}
+    42	
+    43	describe("createSqliteRepo", () => {
+    44	  it("performs CRUD through the SQLite driver boundary", async () => {
+    45	    const driver = createInMemorySqliteDriver();
+    46	    const repo = createSqliteRepo<TodoRecord>(driver, { namespace: "todos" });
+    47	
+    48	    await repo.put({
+    49	      ...makeTodoRecord("todo-2"),
+    50	      title: "second",
+    51	      done: false,
+    52	    });
+    53	    await repo.put({ ...makeTodoRecord("todo-1"), title: "first", done: true });
+    54	
+    55	    await expect(repo.get("todo-1")).resolves.toEqual({
+    56	      ...makeTodoRecord("todo-1"),
+    57	      title: "first",
+    58	      done: true,
+    59	    });
+    60	    await expect(repo.list()).resolves.toEqual([
+    61	      { ...makeTodoRecord("todo-1"), title: "first", done: true },
+    62	      { ...makeTodoRecord("todo-2"), title: "second", done: false },
+    63	    ]);
+    64	
+    65	    await repo.delete("todo-1");
+    66	    await expect(repo.get("todo-1")).resolves.toBeUndefined();
+    67	  });
+    68	
+    69	  it("runs mutation hooks inside put and delete transactions", async () => {
+    70	    const driver = createInMemorySqliteDriver();
+    71	    const onMutation = vi.fn(async () => undefined);
+    72	    const repo = createSqliteRepo<TodoRecord>(driver, {
+    73	      namespace: "todos",
+    74	      onMutation,
+    75	    });
+    76	
+    77	    await repo.put({
+    78	      ...makeTodoRecord("todo-1"),
+    79	      title: "first",
+    80	      done: false,
+    81	    });
+    82	    await repo.delete("todo-1");
+    83	
+    84	    expect(onMutation).toHaveBeenNthCalledWith(
+    85	      1,
+    86	      {
+    87	        kind: "put",
+    88	        namespace: "todos",
+    89	        id: "todo-1",
+    90	        record: { ...makeTodoRecord("todo-1"), title: "first", done: false },
+    91	      },
+    92	      driver,
+    93	    );
+    94	    expect(onMutation).toHaveBeenNthCalledWith(
+    95	      2,
+    96	      {
+    97	        kind: "delete",
+    98	        namespace: "todos",
+    99	        id: "todo-1",
+   100	      },
+   101	      driver,
+   102	    );
+   103	  });
+   104	});
+   105	
+   106	describe("migrateLocalStorageToRepo", () => {
+   107	  it("is idempotent when rerun against the same legacy keys", async () => {
+   108	    const driver = createInMemorySqliteDriver();
+   109	    const repo = createSqliteRepo<TodoRecord>(driver, { namespace: "todos" });
+   110	    const storage = createStorage({
+   111	      "todo:1": JSON.stringify({
+   112	        ...makeTodoRecord("todo-1"),
+   113	        title: "first",
+   114	        done: false,
+   115	      }),
+   116	      "todo:2": JSON.stringify({
+   117	        ...makeTodoRecord("todo-2"),
+   118	        title: "second",
+   119	        done: true,
+   120	      }),
+   121	      "other:1": JSON.stringify({
+   122	        ...makeTodoRecord("other-1"),
+   123	        title: "ignored",
+   124	        done: false,
+   125	      }),
+   126	    });
+   127	
+   128	    await expect(
+   129	      migrateLocalStorageToRepo({ storage, keyPrefix: "todo:", repo }),
+   130	    ).resolves.toEqual({ migrated: 2, skipped: 0, removed: 0 });
+   131	    await expect(
+   132	      migrateLocalStorageToRepo({ storage, keyPrefix: "todo:", repo }),
+   133	    ).resolves.toEqual({ migrated: 2, skipped: 0, removed: 0 });
+   134	    await expect(repo.list()).resolves.toEqual([
+   135	      { ...makeTodoRecord("todo-1"), title: "first", done: false },
+   136	      { ...makeTodoRecord("todo-2"), title: "second", done: true },
+   137	    ]);
+   138	  });
+   139	
+   140	  it("can remove migrated legacy keys after a successful put", async () => {
+
+ succeeded in 0ms:
+     1	import { describe, it, expect, beforeEach } from "vitest";
+     2	import { createInMemoryRepo } from "../src/testing";
+     3	import type { RepoRecord } from "../src/types";
+     4	import {
+     5	  makeRecord,
+     6	  runRepositoryContractTests,
+     7	  type ContractRecord,
+     8	} from "./repository-contract";
+     9	
+    10	interface TestRecord extends RepoRecord {
+    11	  value: string;
+    12	}
+    13	
+    14	runRepositoryContractTests("createInMemoryRepo contract", () =>
+    15	  createInMemoryRepo<ContractRecord>({ namespace: "contract" }),
+    16	);
+    17	
+    18	describe("createInMemoryRepo", () => {
+    19	  let repo: ReturnType<typeof createInMemoryRepo<TestRecord>>;
+    20	
+    21	  beforeEach(() => {
+    22	    repo = createInMemoryRepo<TestRecord>();
+    23	  });
+    24	
+    25	  it("should return undefined for a missing record", async () => {
+    26	    const result = await repo.get("nonexistent");
+    27	    expect(result).toBeUndefined();
+    28	  });
+    29	
+    30	  it("should put and get a record round-trip", async () => {
+    31	    const record: TestRecord = { ...makeRecord("r1"), value: "hello" };
+    32	    await repo.put(record);
+    33	    const result = await repo.get("r1");
+    34	    expect(result).toEqual(record);
+    35	  });
+    36	
+    37	  it("should overwrite a record on repeated put (upsert)", async () => {
+    38	    await repo.put({ ...makeRecord("r1"), value: "first" });
+    39	    await repo.put({ ...makeRecord("r1"), value: "second" });
+    40	    const result = await repo.get("r1");
+    41	    expect(result?.value).toBe("second");
+    42	  });
+    43	
+    44	  it("should delete a record and return undefined after", async () => {
+    45	    await repo.put({ ...makeRecord("r2"), value: "data" });
+    46	    await repo.delete("r2");
+    47	    const result = await repo.get("r2");
+    48	    expect(result).toBeUndefined();
+    49	  });
+    50	
+    51	  it("delete is a no-op when record does not exist", async () => {
+    52	    await expect(repo.delete("ghost")).resolves.toBeUndefined();
+    53	  });
+    54	
+    55	  it("should list all stored records", async () => {
+    56	    await repo.put({ ...makeRecord("a"), value: "1" });
+    57	    await repo.put({ ...makeRecord("b"), value: "2" });
+    58	    const all = await repo.list();
+    59	    expect(all).toHaveLength(2);
+    60	    const ids = all.map((r) => r.id).sort();
+    61	    expect(ids).toEqual(["a", "b"]);
+    62	  });
+    63	
+    64	  it("should list empty array for empty repo", async () => {
+    65	    const all = await repo.list();
+    66	    expect(all).toEqual([]);
+    67	  });
+    68	});
+
+exec
+/bin/zsh -lc "nl -ba docs/workflow/roadmap/codex-reviews/g3-organizer-batch/PROCESS-NOTE.md | sed -n '1,120p'" in /Users/lijinlong/Desktop/AI_Desktop/XAI_Desktop
+ succeeded in 133ms:
+     1	# G3-batch Process Note
+     2	
+     3	**Feature**: g3-organizer-batch
+     4	**Commit**: `533391e` (`feat(plugin-organizer): G3 organizer-loop utilities + Finder commands`)
+     5	**Track**: Track A — Claude Code unattended (D-Codex automation mode)
+     6	**Reviewer feedback**: see `docs/workflow/roadmap/codex-reviews/g3-organizer-batch/output.md` (verdict REVISE)
+     7	
+     8	## G3-batch deviation accepted (2026-05-20)
+     9	
+    10	The G3-E1 / G3-S3 / G3-E2 / G3-E3 / G3-E4 implementations were bundled into commit `533391e` under Track A unattended mode. The project rule "`feature-build` runs ONE phase per run, then stops for human confirmation" (see `CLAUDE.md` → Key Rules and Workflow V2 Subagent Output Display) was deviated from: five sub-features were combined into a single `feature-build` commit instead of being split per-feature with intermediate review/verify checkpoints.
+    11	
+    12	**Decision**: deviation is accepted post-hoc because (a) the work is done and tested — Codex `feature-review` exercised every sub-feature and surfaced concrete P1/P2 items, all of which are tracked as carry-forward in `packages/plugin-organizer/docs/dev_log.md`, and (b) splitting `533391e` retroactively would generate churn without changing the resulting state of the repository (the same lines of code would land, just with re-shaped commit boundaries).
+    13	
+    14	**Forward guard**: future sub-feature batches MUST be split per the one-phase-per-run rule. Track A automation that produces multi-feature `feature-build` commits will be treated as a workflow defect, not a productivity win. The carry-forward P1 closures from this batch (e.g. P1-Delta path authorization, P1-folder-inference, capability/audit entry) are landing as individual focused commits to demonstrate the correct shape going forward.
+    15	
+    16	## Carry-forward P1/P2 status
+    17	
+    18	| Codex finding | Severity | Status | Closure commit |
+    19	|---|---|---|---|
+    20	| G3-E1 folder inference uses trailing-`/` heuristic that misses real folder-drop payloads | P1 | open | _pending_ |
+    21	| G3-E3 `reveal_in_finder` / `open_path` accept any absolute path (no provenance / root enforcement) | P1 | **closed** | P1-Delta — `fix(commands/finder, core-data tests): path authorization + negative contract cases (P1 D-group)` |
+    22	| Workflow V2 hygiene incomplete (`packages/plugin-organizer/docs/dev_log.md` missing Status Panel; 5-feature `feature-build` commit) | P1 | **closed (post-hoc)** | P1-Delta (this note + dev_log Status Panel + Work Log rows) |
+    23	| `apps/desktop/src-tauri/capabilities/AUDIT.md` / public API contract not updated for new Finder surface | P2 | open | _pending_ |
+    24	| Coverage gaps (folder-path shape regression; `data:` / custom-scheme rejection; multi-grid same-rule stability; command-blocking failure behavior) | P2 | open | _pending_ |
+
+codex
+## Codex Post-fix Re-review
+
+**Feature**: p1-delta-finder-contract-tests
+**Original verdict**: BLOCKED
+**Fix commit(s)**: 2237395
+**Reviewer**: codex feature-review · gpt-5.4 high reasoning
+**New verdict**: BLOCKED
+
+### Was the original P0 resolved?
+- Original issue (paraphrased): `reveal_in_finder` / `open_path` accepted arbitrary absolute paths from allowed windows, violating the published "user drop/open panel or authorized bookmark only" contract; repo contract negatives and the G3 batch process deviation were also under-covered / undocumented.
+- Evidence the fix resolves it: the repo negative cases are now present in [packages/core-data/tests/repository-contract.ts:127](\/Users\/lijinlong\/Desktop\/AI_Desktop\/XAI_Desktop\/packages\/core-data\/tests\/repository-contract.ts:127) through [packages/core-data/tests/repository-contract.ts:184](\/Users\/lijinlong\/Desktop\/AI_Desktop\/XAI_Desktop\/packages\/core-data\/tests\/repository-contract.ts:184), and they run for both drivers via [packages/core-data/tests/in-memory-repo.test.ts:14](\/Users\/lijinlong\/Desktop\/AI_Desktop\/XAI_Desktop\/packages\/core-data\/tests\/in-memory-repo.test.ts:14) and [packages/core-data/tests/sqlite-repo.test.ts:19](\/Users\/lijinlong\/Desktop\/AI_Desktop\/XAI_Desktop\/packages\/core-data\/tests\/sqlite-repo.test.ts:19). The batch deviation is now documented in [docs/workflow/roadmap/codex-reviews/g3-organizer-batch/PROCESS-NOTE.md:8](\/Users\/lijinlong\/Desktop\/AI_Desktop\/XAI_Desktop\/docs\/workflow\/roadmap\/codex-reviews\/g3-organizer-batch\/PROCESS-NOTE.md:8) through [docs/workflow/roadmap/codex-reviews/g3-organizer-batch/PROCESS-NOTE.md:24](\/Users\/lijinlong\/Desktop\/AI_Desktop\/XAI_Desktop\/docs\/workflow\/roadmap\/codex-reviews\/g3-organizer-batch\/PROCESS-NOTE.md:24).
+- Evidence it does **not** resolve the P0: `validate_user_path` only checks lexical shape plus a coarse root prefix allow-list (`/Users/`, `/Applications/`, `/Volumes/`, `/tmp/`) at [apps/desktop/src-tauri/src/commands/finder.rs:24](\/Users\/lijinlong\/Desktop\/AI_Desktop\/XAI_Desktop\/apps\/desktop\/src-tauri\/src\/commands\/finder.rs:24) through [apps/desktop/src-tauri/src/commands/finder.rs:30](\/Users\/lijinlong\/Desktop\/AI_Desktop\/XAI_Desktop\/apps\/desktop\/src-tauri\/src\/commands\/finder.rs:30) and [apps/desktop/src-tauri/src/commands/finder.rs:102](\/Users\/lijinlong\/Desktop\/AI_Desktop\/XAI_Desktop\/apps\/desktop\/src-tauri\/src\/commands\/finder.rs:102) through [apps/desktop/src-tauri/src/commands/finder.rs:113](\/Users\/lijinlong\/Desktop\/AI_Desktop\/XAI_Desktop\/apps\/desktop\/src-tauri\/src\/commands\/finder.rs:113); it does not prove the path came from a user action or authorized bookmark before `open` / `open -R` at [apps/desktop/src-tauri/src/commands/finder.rs:121](\/Users\/lijinlong\/Desktop\/AI_Desktop\/XAI_Desktop\/apps\/desktop\/src-tauri\/src\/commands\/finder.rs:121) through [apps/desktop/src-tauri/src/commands/finder.rs:179](\/Users\/lijinlong\/Desktop\/AI_Desktop\/XAI_Desktop\/apps\/desktop\/src-tauri\/src\/commands\/finder.rs:179).
+- Was the resolution honest (no smuggled scope-cut or stub-only fix)? No. The doc now weakens the executable rule to a root-shape check while still retaining the stronger policy sentence at [docs/contracts/tauri-commands-v0.md:79](\/Users\/lijinlong\/Desktop\/AI_Desktop\/XAI_Desktop\/docs\/contracts\/tauri-commands-v0.md:79) and explicitly defers bookmark enforcement at [docs/contracts/tauri-commands-v0.md:85](\/Users\/lijinlong\/Desktop\/AI_Desktop\/XAI_Desktop\/docs\/contracts\/tauri-commands-v0.md:85) through [docs/contracts/tauri-commands-v0.md:88](\/Users\/lijinlong\/Desktop\/AI_Desktop\/XAI_Desktop\/docs\/contracts\/tauri-commands-v0.md:88).
+
+### Remaining gaps (max 4 bullets, severity-tagged)
+- [P0] The user-authorized-path-only contract is still false: any allowed window can open arbitrary paths under `/Users/` or `/Volumes/` without provenance or bookmark proof.
+- [P2] The tests added in [apps/desktop/src-tauri/src/commands/finder.rs:202](\/Users\/lijinlong\/Desktop\/AI_Desktop\/XAI_Desktop\/apps\/desktop\/src-tauri\/src\/commands\/finder.rs:202) through [apps/desktop/src-tauri/src/commands/finder.rs:290](\/Users\/lijinlong\/Desktop\/AI_Desktop\/XAI_Desktop\/apps\/desktop\/src-tauri\/src\/commands\/finder.rs:290) only validate shape/root cases, not authorization provenance.
+
+### Regressions introduced (max 3 bullets)
+- The contract doc was narrowed to match the implementation instead of the implementation being raised to the documented security boundary.
+
+### Next action
+- BLOCKED: the `reveal_in_finder` / `open_path` contract "path access must come from user drop/open panel or authorized bookmark" is still false.
+tokens used
+53,253
+## Codex Post-fix Re-review
+
+**Feature**: p1-delta-finder-contract-tests
+**Original verdict**: BLOCKED
+**Fix commit(s)**: 2237395
+**Reviewer**: codex feature-review · gpt-5.4 high reasoning
+**New verdict**: BLOCKED
+
+### Was the original P0 resolved?
+- Original issue (paraphrased): `reveal_in_finder` / `open_path` accepted arbitrary absolute paths from allowed windows, violating the published "user drop/open panel or authorized bookmark only" contract; repo contract negatives and the G3 batch process deviation were also under-covered / undocumented.
+- Evidence the fix resolves it: the repo negative cases are now present in [packages/core-data/tests/repository-contract.ts:127](\/Users\/lijinlong\/Desktop\/AI_Desktop\/XAI_Desktop\/packages\/core-data\/tests\/repository-contract.ts:127) through [packages/core-data/tests/repository-contract.ts:184](\/Users\/lijinlong\/Desktop\/AI_Desktop\/XAI_Desktop\/packages\/core-data\/tests\/repository-contract.ts:184), and they run for both drivers via [packages/core-data/tests/in-memory-repo.test.ts:14](\/Users\/lijinlong\/Desktop\/AI_Desktop\/XAI_Desktop\/packages\/core-data\/tests\/in-memory-repo.test.ts:14) and [packages/core-data/tests/sqlite-repo.test.ts:19](\/Users\/lijinlong\/Desktop\/AI_Desktop\/XAI_Desktop\/packages\/core-data\/tests\/sqlite-repo.test.ts:19). The batch deviation is now documented in [docs/workflow/roadmap/codex-reviews/g3-organizer-batch/PROCESS-NOTE.md:8](\/Users\/lijinlong\/Desktop\/AI_Desktop\/XAI_Desktop\/docs\/workflow\/roadmap\/codex-reviews\/g3-organizer-batch\/PROCESS-NOTE.md:8) through [docs/workflow/roadmap/codex-reviews/g3-organizer-batch/PROCESS-NOTE.md:24](\/Users\/lijinlong\/Desktop\/AI_Desktop\/XAI_Desktop\/docs\/workflow\/roadmap\/codex-reviews\/g3-organizer-batch\/PROCESS-NOTE.md:24).
+- Evidence it does **not** resolve the P0: `validate_user_path` only checks lexical shape plus a coarse root prefix allow-list (`/Users/`, `/Applications/`, `/Volumes/`, `/tmp/`) at [apps/desktop/src-tauri/src/commands/finder.rs:24](\/Users\/lijinlong\/Desktop\/AI_Desktop\/XAI_Desktop\/apps\/desktop\/src-tauri\/src\/commands\/finder.rs:24) through [apps/desktop/src-tauri/src/commands/finder.rs:30](\/Users\/lijinlong\/Desktop\/AI_Desktop\/XAI_Desktop\/apps\/desktop\/src-tauri\/src\/commands\/finder.rs:30) and [apps/desktop/src-tauri/src/commands/finder.rs:102](\/Users\/lijinlong\/Desktop\/AI_Desktop\/XAI_Desktop\/apps\/desktop\/src-tauri\/src\/commands\/finder.rs:102) through [apps/desktop/src-tauri/src/commands/finder.rs:113](\/Users\/lijinlong\/Desktop\/AI_Desktop\/XAI_Desktop\/apps\/desktop\/src-tauri\/src\/commands\/finder.rs:113); it does not prove the path came from a user action or authorized bookmark before `open` / `open -R` at [apps/desktop/src-tauri/src/commands/finder.rs:121](\/Users\/lijinlong\/Desktop\/AI_Desktop\/XAI_Desktop\/apps\/desktop\/src-tauri\/src\/commands\/finder.rs:121) through [apps/desktop/src-tauri/src/commands/finder.rs:179](\/Users\/lijinlong\/Desktop\/AI_Desktop\/XAI_Desktop\/apps\/desktop\/src-tauri\/src\/commands\/finder.rs:179).
+- Was the resolution honest (no smuggled scope-cut or stub-only fix)? No. The doc now weakens the executable rule to a root-shape check while still retaining the stronger policy sentence at [docs/contracts/tauri-commands-v0.md:79](\/Users\/lijinlong\/Desktop\/AI_Desktop\/XAI_Desktop\/docs\/contracts\/tauri-commands-v0.md:79) and explicitly defers bookmark enforcement at [docs/contracts/tauri-commands-v0.md:85](\/Users\/lijinlong\/Desktop\/AI_Desktop\/XAI_Desktop\/docs\/contracts\/tauri-commands-v0.md:85) through [docs/contracts/tauri-commands-v0.md:88](\/Users\/lijinlong\/Desktop\/AI_Desktop\/XAI_Desktop\/docs\/contracts\/tauri-commands-v0.md:88).
+
+### Remaining gaps (max 4 bullets, severity-tagged)
+- [P0] The user-authorized-path-only contract is still false: any allowed window can open arbitrary paths under `/Users/` or `/Volumes/` without provenance or bookmark proof.
+- [P2] The tests added in [apps/desktop/src-tauri/src/commands/finder.rs:202](\/Users\/lijinlong\/Desktop\/AI_Desktop\/XAI_Desktop\/apps\/desktop\/src-tauri\/src\/commands\/finder.rs:202) through [apps/desktop/src-tauri/src/commands/finder.rs:290](\/Users\/lijinlong\/Desktop\/AI_Desktop\/XAI_Desktop\/apps\/desktop\/src-tauri\/src\/commands\/finder.rs:290) only validate shape/root cases, not authorization provenance.
+
+### Regressions introduced (max 3 bullets)
+- The contract doc was narrowed to match the implementation instead of the implementation being raised to the documented security boundary.
+
+### Next action
+- BLOCKED: the `reveal_in_finder` / `open_path` contract "path access must come from user drop/open panel or authorized bookmark" is still false.

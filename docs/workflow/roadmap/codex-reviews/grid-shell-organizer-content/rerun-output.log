@@ -1,0 +1,2007 @@
+Reading additional input from stdin...
+OpenAI Codex v0.132.0
+--------
+workdir: /Users/lijinlong/Desktop/AI_Desktop/XAI_Desktop
+model: gpt-5.4
+provider: openai
+approval: never
+sandbox: workspace-write [workdir, /tmp, $TMPDIR]
+reasoning effort: high
+reasoning summaries: none
+session id: 019e44ae-3be1-7183-bc27-74fdf06d0f0f
+--------
+user
+# Codex Feature Post-fix Re-review
+
+You are acting as the `feature-review` subagent (Codex inline, cross-vendor verify pass), **re-reviewing** a P0 fix that the Claude Code main agent landed on `codex/track-a-desktop-foundation` in response to your previous BLOCKED verdict.
+
+## Your only job
+
+Decide whether the new commit closes the P0 issue you previously flagged. Output ONLY the markdown block below — no preamble, no follow-up. Under 500 words.
+
+```md
+## Codex Post-fix Re-review
+
+**Feature**: grid-shell-organizer-content
+**Original verdict**: BLOCKED
+**Fix commit(s)**: f818f0d
+**Reviewer**: codex feature-review · gpt-5.4 high reasoning
+**New verdict**: APPROVED | REVISE | BLOCKED
+
+### Was the original P0 resolved?
+- Original issue (paraphrased): …
+- Evidence the fix resolves it: <file:line citations>
+- Was the resolution honest (no smuggled scope-cut or stub-only fix)?
+
+### Remaining gaps (max 4 bullets, severity-tagged)
+- [P1|P2] …
+
+### Regressions introduced (max 3 bullets)
+- …
+
+### Next action
+- If APPROVED: re-mark the manifest row to READY_TO_SHIP and move on.
+- If REVISE: one or two concrete follow-up bullets (≤ half a day each).
+- If BLOCKED: state which contract is still false.
+```
+
+## How to evaluate
+
+1. The fix commit's diff is your primary evidence. Use `git show --stat f818f0d` and `git show f818f0d` to read it end-to-end.
+2. Compare the diff against the original P0 issue:
+   OrganizerGridContent.tsx imported @tauri-apps/api/event and @tauri-apps/api/window directly, violating red-line #4. The G1.2 SHIPPED row certified a broken contract.
+3. Look for the **specific change** the previous review demanded. Smuggled scope-cuts (e.g. silently deferring the invariant to a follow-up) must downgrade the verdict.
+4. Scan for **regressions**: imports added, capabilities widened, tests skipped, doc invariants weakened.
+5. Validate the test commands listed in the fix commit message actually exist and pass (treat the commit body's "Tests" section as the executor's claim — does the diff support it?).
+
+## Feature-specific context
+
+Feature ID: G1.2 / grid-shell-organizer-content
+Branch: codex/track-a-desktop-foundation
+Commits under review:
+- 653219b — docs(ship): promote G1.2 and G1.4 manifest rows to SHIPPED (current Track A ship)
+- 26d9f57 — feat(grid-shell-organizer-content): expose Organizer grid content (production refactor, pre-Track-A)
+- 03ca86a — docs(ship): mark G0.1-G0.5 and G1.1+G1.6 as SHIPPED (manifest ledger)
+- 3751f43 — docs(G1.2): mark grid shell split ready (dev_log → READY_TO_SHIP)
+
+Files involved:
+- packages/plugin-organizer/src/OrganizerGridContent.tsx (extracted from Host GridWindow)
+- packages/plugin-organizer/src/index.ts (public export of OrganizerGridContent)
+- apps/desktop/src/windows/GridWindow.tsx (thinned to native shell only)
+- docs/contracts/plugin-organizer-public-api-v0.md
+- packages/grid-shell-organizer-content/docs/dev_log.md (Status: SHIPPED on Track A)
+- docs/workflow/roadmap/xai-g1-native-foundation.md row #2 (SHIPPED)
+
+Intended scope:
+- Move Grid window content / state / event / drop behavior out of the Host's
+  `GridWindow.tsx` into a public `OrganizerGridContent` component owned by
+  plugin-organizer. Host keeps native shell responsibilities only (settings provider,
+  DnD provider, AppKit drag handoff).
+
+Cross-vendor checklist:
+1. Is the public Organizer API surface (only `OrganizerGridContent` + types) sufficient
+   for the Host to import without leaking internals?
+2. Does `apps/desktop/src/windows/GridWindow.tsx` still contain any business logic that
+   should live in plugin-organizer? Grep for SmartContainer / GridBox / DesktopItem /
+   useFileDrop / Organizer internal imports — confirm they are absent.
+3. Are deferred gates (cross-vendor verify, manual two-Grid native runtime smoke)
+   correctly listed and still valid?
+4. Is the manifest promotion to SHIPPED defensible — does the dev_log record the right
+   commit references and Work Log row?
+5. Workflow hygiene: commit message Why/What/Scope/Risk/Docs/Tests present?
+6. Architecture red line #4 (host depends on plugin only via public surface): violated
+   anywhere?
+codex
+Reviewing `f818f0d` against the original P0 and the current G1.2 contract. I’m starting with the full diff and then checking the affected files for any remaining host/plugin boundary violations or scope-cut markers.
+exec
+/bin/zsh -lc 'git show --stat --format=fuller f818f0d' in /Users/lijinlong/Desktop/AI_Desktop/XAI_Desktop
+ succeeded in 0ms:
+commit f818f0daffc2734e71099a0be9cda8fa600e771a
+Author:     InnoPeak <global_ai@innopeaktech.com>
+AuthorDate: Wed May 20 02:09:01 2026 -0700
+Commit:     InnoPeak <global_ai@innopeaktech.com>
+CommitDate: Wed May 20 02:17:44 2026 -0700
+
+    fix(plugin-organizer): route Grid window content through @repo/core hooks (P0 G1.2)
+    
+    Why:
+    Codex cross-vendor review flagged `OrganizerGridContent.tsx` (lines 2-3)
+    importing `@tauri-apps/api/event` and `@tauri-apps/api/window` directly.
+    This breaks `docs/SYSTEM_ARCHITECTURE.md` §4 red-line #4 (plugins must
+    consume Tauri capabilities through `@repo/core/hooks`). Because the G1.2
+    manifest row `grid-shell-organizer-content` is already SHIPPED, the
+    manifest was certifying a broken contract.
+    
+    What:
+    - Added `useTauriEvent` (with re-exported `TauriEvent` enum) and
+      `useTauriWindow` in `packages/core/src/hooks/`, exposed via
+      `@repo/core/hooks`. These are the minimal wrappers needed so plugins
+      never reach `@tauri-apps/api/event` or `@tauri-apps/api/window`
+      directly.
+    - Refactored `OrganizerGridContent.tsx` to consume the new hooks.
+      Behavior is byte-identical: same event names, same payload shapes,
+      same emit targets, same drag-drop lifecycle, same `setInterval`
+      cadence for window metadata refresh.
+    - Updated `packages/grid-shell-organizer-content/docs/dev_log.md` with
+      a `Verification Notes` paragraph and a Work Log row dated 2026-05-20
+      documenting the P0 fix.
+    
+    Scope:
+    - `packages/core/src/hooks/` — two new hook files + index export.
+    - `packages/plugin-organizer/src/OrganizerGridContent.tsx` only.
+    - `packages/grid-shell-organizer-content/docs/dev_log.md`.
+    
+    Risk:
+    - Low. Inline event handlers are now read through a ref inside
+      `useTauriEvent`, so subscription identity is stable across renders
+      (matches original `useEffect`-based lifecycle).
+    - Three pre-existing red-line #4 offenders remain in plugin-organizer
+      (`OrganizerLayer.tsx`, `hooks/useGridWindow.ts`,
+      `hooks/useMultiWindowGrids.ts`); they are out of scope for this P0-1
+      fix and are flagged in the dev_log Verification Notes for follow-up.
+    
+    Docs:
+    - `packages/grid-shell-organizer-content/docs/dev_log.md` — Verification
+      Notes paragraph + Work Log row (2026-05-20).
+    
+    Tests:
+    - `pnpm --filter @repo/core check-types` — PASS
+    - `pnpm --filter @repo/plugin-organizer check-types` — PASS
+    - `pnpm --filter @repo/plugin-organizer test` — PASS (41/41)
+    - `pnpm --filter desktop build` — PASS
+    - Boundary scan `grep -rn 'from "@tauri-apps/api' packages/plugin-organizer/src/`
+      confirms `OrganizerGridContent.tsx` is clean.
+    
+    Co-Authored-By: Claude Opus 4.7 (1M context) <noreply@anthropic.com>
+
+ packages/core/src/hooks/index.ts                   |   8 ++
+ packages/core/src/hooks/useTauriEvent.ts           |  64 +++++++++
+ packages/core/src/hooks/useTauriWindow.ts          |  78 +++++++++++
+ .../grid-shell-organizer-content/docs/dev_log.md   |  28 ++++
+ .../plugin-organizer/src/OrganizerGridContent.tsx  | 154 +++++++++------------
+ 5 files changed, 243 insertions(+), 89 deletions(-)
+
+exec
+/bin/zsh -lc 'git show --format=fuller --no-ext-diff f818f0d' in /Users/lijinlong/Desktop/AI_Desktop/XAI_Desktop
+ succeeded in 0ms:
+commit f818f0daffc2734e71099a0be9cda8fa600e771a
+Author:     InnoPeak <global_ai@innopeaktech.com>
+AuthorDate: Wed May 20 02:09:01 2026 -0700
+Commit:     InnoPeak <global_ai@innopeaktech.com>
+CommitDate: Wed May 20 02:17:44 2026 -0700
+
+    fix(plugin-organizer): route Grid window content through @repo/core hooks (P0 G1.2)
+    
+    Why:
+    Codex cross-vendor review flagged `OrganizerGridContent.tsx` (lines 2-3)
+    importing `@tauri-apps/api/event` and `@tauri-apps/api/window` directly.
+    This breaks `docs/SYSTEM_ARCHITECTURE.md` §4 red-line #4 (plugins must
+    consume Tauri capabilities through `@repo/core/hooks`). Because the G1.2
+    manifest row `grid-shell-organizer-content` is already SHIPPED, the
+    manifest was certifying a broken contract.
+    
+    What:
+    - Added `useTauriEvent` (with re-exported `TauriEvent` enum) and
+      `useTauriWindow` in `packages/core/src/hooks/`, exposed via
+      `@repo/core/hooks`. These are the minimal wrappers needed so plugins
+      never reach `@tauri-apps/api/event` or `@tauri-apps/api/window`
+      directly.
+    - Refactored `OrganizerGridContent.tsx` to consume the new hooks.
+      Behavior is byte-identical: same event names, same payload shapes,
+      same emit targets, same drag-drop lifecycle, same `setInterval`
+      cadence for window metadata refresh.
+    - Updated `packages/grid-shell-organizer-content/docs/dev_log.md` with
+      a `Verification Notes` paragraph and a Work Log row dated 2026-05-20
+      documenting the P0 fix.
+    
+    Scope:
+    - `packages/core/src/hooks/` — two new hook files + index export.
+    - `packages/plugin-organizer/src/OrganizerGridContent.tsx` only.
+    - `packages/grid-shell-organizer-content/docs/dev_log.md`.
+    
+    Risk:
+    - Low. Inline event handlers are now read through a ref inside
+      `useTauriEvent`, so subscription identity is stable across renders
+      (matches original `useEffect`-based lifecycle).
+    - Three pre-existing red-line #4 offenders remain in plugin-organizer
+      (`OrganizerLayer.tsx`, `hooks/useGridWindow.ts`,
+      `hooks/useMultiWindowGrids.ts`); they are out of scope for this P0-1
+      fix and are flagged in the dev_log Verification Notes for follow-up.
+    
+    Docs:
+    - `packages/grid-shell-organizer-content/docs/dev_log.md` — Verification
+      Notes paragraph + Work Log row (2026-05-20).
+    
+    Tests:
+    - `pnpm --filter @repo/core check-types` — PASS
+    - `pnpm --filter @repo/plugin-organizer check-types` — PASS
+    - `pnpm --filter @repo/plugin-organizer test` — PASS (41/41)
+    - `pnpm --filter desktop build` — PASS
+    - Boundary scan `grep -rn 'from "@tauri-apps/api' packages/plugin-organizer/src/`
+      confirms `OrganizerGridContent.tsx` is clean.
+    
+    Co-Authored-By: Claude Opus 4.7 (1M context) <noreply@anthropic.com>
+
+diff --git a/packages/core/src/hooks/index.ts b/packages/core/src/hooks/index.ts
+index 16b6fc2..1fb568e 100644
+--- a/packages/core/src/hooks/index.ts
++++ b/packages/core/src/hooks/index.ts
+@@ -1,2 +1,10 @@
+ export { useWindow } from './useWindow';
+ export { useTauriInvoke } from './useTauriInvoke';
++export { useTauriEvent, TauriEvent } from './useTauriEvent';
++export type { TauriEventHandler } from './useTauriEvent';
++export { useTauriWindow } from './useTauriWindow';
++export type {
++  TauriWindowHandle,
++  TauriWindowPosition,
++  TauriWindowSize,
++} from './useTauriWindow';
+diff --git a/packages/core/src/hooks/useTauriEvent.ts b/packages/core/src/hooks/useTauriEvent.ts
+new file mode 100644
+index 0000000..d51f0fb
+--- /dev/null
++++ b/packages/core/src/hooks/useTauriEvent.ts
+@@ -0,0 +1,64 @@
++import { useEffect, useRef } from 'react';
++import { listen, TauriEvent } from '@tauri-apps/api/event';
++
++/**
++ * Re-export of Tauri's built-in event enum so plugins never need to import
++ * `@tauri-apps/api/event` directly (red-line #4).
++ */
++export { TauriEvent };
++
++/** Event handler signature exposed to plugins. */
++export type TauriEventHandler<T> = (event: { payload: T }) => void;
++
++/**
++ * Generic, untyped Tauri event listener hook.
++ *
++ * Use this when subscribing to:
++ *   - Built-in `TauriEvent` enum values (e.g. drag-drop lifecycle)
++ *   - Ad-hoc event names that are not yet codified in `@repo/core` `EventMap`
++ *
++ * For codified cross-window events, prefer `useEventListener` from
++ * `@repo/core/events`, which is constrained to `EventMap` keys.
++ *
++ * This is the ONLY place plugins are permitted to reach Tauri event IPC
++ * (red-line #4). Importing `@tauri-apps/api/event` directly from a plugin
++ * is a red-line #4 violation.
++ *
++ * The handler is read through a ref so callers may pass inline arrow
++ * functions without retriggering the subscription on every render. The
++ * subscription is established once per `event` (and per `enabled` flag).
++ */
++export function useTauriEvent<T>(
++  event: `${TauriEvent}` | (string & Record<never, never>),
++  handler: TauriEventHandler<T>,
++  options?: { enabled?: boolean },
++): void {
++  const enabled = options?.enabled ?? true;
++  const handlerRef = useRef(handler);
++
++  useEffect(() => {
++    handlerRef.current = handler;
++  }, [handler]);
++
++  useEffect(() => {
++    if (!enabled) return;
++    let cancelled = false;
++    let unlistenFn: (() => void) | null = null;
++
++    listen<T>(event, (e) => {
++      if (cancelled) return;
++      handlerRef.current(e);
++    }).then((fn) => {
++      if (cancelled) {
++        fn();
++        return;
++      }
++      unlistenFn = fn;
++    });
++
++    return () => {
++      cancelled = true;
++      if (unlistenFn) unlistenFn();
++    };
++  }, [event, enabled]);
++}
+diff --git a/packages/core/src/hooks/useTauriWindow.ts b/packages/core/src/hooks/useTauriWindow.ts
+new file mode 100644
+index 0000000..bab076e
+--- /dev/null
++++ b/packages/core/src/hooks/useTauriWindow.ts
+@@ -0,0 +1,78 @@
++import { useMemo } from 'react';
++import { getCurrentWindow } from '@tauri-apps/api/window';
++
++/** Minimal physical position shape exposed to plugins. */
++export interface TauriWindowPosition {
++  x: number;
++  y: number;
++}
++
++/** Minimal physical size shape exposed to plugins. */
++export interface TauriWindowSize {
++  width: number;
++  height: number;
++}
++
++/**
++ * Plugin-facing handle to the current Tauri window.
++ *
++ * Wraps the Tauri `Window` instance so that plugins never need to import
++ * `@tauri-apps/api/window` directly (red-line #4). Surface area is kept
++ * intentionally small and only exposes the operations Organizer-class
++ * plugins currently require.
++ *
++ * Returned methods are stable identity for the lifetime of the host window
++ * because they delegate to the live Tauri window each call; consumers can
++ * safely depend on the returned object inside `useCallback` / `useEffect`
++ * without retriggering subscriptions.
++ */
++export interface TauriWindowHandle {
++  /** Unique window label assigned by Tauri (e.g. `main`, `grid_<id>`). */
++  readonly label: string;
++  /** Outer (top-left) position in physical pixels. */
++  outerPosition(): Promise<TauriWindowPosition>;
++  /** Inner size in physical pixels. */
++  innerSize(): Promise<TauriWindowSize>;
++  /** Closes the current window. */
++  close(): Promise<void>;
++  /** Emits an event on the Tauri global bus, scoped to this window. */
++  emit<T>(event: string, payload?: T): Promise<void>;
++  /** Emits an event targeted at a specific window label. */
++  emitTo<T>(target: string, event: string, payload?: T): Promise<void>;
++}
++
++/**
++ * Returns a stable handle to the current Tauri window for plugin code.
++ *
++ * This is the ONLY place plugins are permitted to reach Tauri window IPC
++ * (red-line #4). Importing `@tauri-apps/api/window` directly from a plugin
++ * is a red-line #4 violation.
++ *
++ * The hook does not perform any IPC on mount — calling code drives the
++ * lifecycle by invoking the returned methods on demand.
++ */
++export function useTauriWindow(): TauriWindowHandle {
++  return useMemo<TauriWindowHandle>(() => {
++    const current = getCurrentWindow();
++    return {
++      label: current.label,
++      async outerPosition() {
++        const position = await current.outerPosition();
++        return { x: position.x, y: position.y };
++      },
++      async innerSize() {
++        const size = await current.innerSize();
++        return { width: size.width, height: size.height };
++      },
++      async close() {
++        await current.close();
++      },
++      async emit<T>(event: string, payload?: T) {
++        await current.emit(event, payload);
++      },
++      async emitTo<T>(target: string, event: string, payload?: T) {
++        await current.emitTo(target, event, payload);
++      },
++    };
++  }, []);
++}
+diff --git a/packages/grid-shell-organizer-content/docs/dev_log.md b/packages/grid-shell-organizer-content/docs/dev_log.md
+index 0f8a88e..baff078 100644
+--- a/packages/grid-shell-organizer-content/docs/dev_log.md
++++ b/packages/grid-shell-organizer-content/docs/dev_log.md
+@@ -69,6 +69,33 @@ Verification passed:
+ 
+ Cross-vendor verify and manual two-Grid native runtime smoke are deferred in `docs/workflow/roadmap/xai-v1.deferred-gates.md`; no ship or push was run.
+ 
++feature-verify (Claude Code, Track A, P0-1 follow-up), 2026-05-20 PDT. Verdict: PATCH_APPLIED.
++
++Codex cross-vendor review flagged that the SHIPPED `OrganizerGridContent.tsx`
++still imported `@tauri-apps/api/event` and `@tauri-apps/api/window` directly,
++which violates `docs/SYSTEM_ARCHITECTURE.md` §4 red-line #4 (plugins MUST
++consume Tauri capabilities through `@repo/core/hooks`). Because this row is
++SHIPPED, the G1.2 manifest entry was certifying a broken contract.
++
++Patch applied in this update:
++
++- Added `useTauriEvent` (with re-exported `TauriEvent` enum) and `useTauriWindow`
++  in `packages/core/src/hooks/`, exported through `@repo/core/hooks`.
++- Refactored `packages/plugin-organizer/src/OrganizerGridContent.tsx` to
++  consume `useTauriEvent` / `useTauriWindow` instead of importing
++  `@tauri-apps/api` directly. Behavior is byte-identical: same event names,
++  same payload shapes, same emit targets, same drag-drop lifecycle.
++- Verified: `pnpm --filter @repo/core check-types`,
++  `pnpm --filter @repo/plugin-organizer check-types`,
++  `pnpm --filter @repo/plugin-organizer test`,
++  `pnpm --filter desktop build` — all pass.
++- Boundary scan on `packages/plugin-organizer/src/` confirms
++  `OrganizerGridContent.tsx` is clean. Three pre-existing, separately-tracked
++  red-line #4 offenders remain in this package (`OrganizerLayer.tsx`,
++  `hooks/useGridWindow.ts`, `hooks/useMultiWindowGrids.ts`) and are out of
++  scope for this P0-1 fix; they should be addressed under a follow-up
++  manifest row.
++
+ ## Work Log
+ 
+ | Timestamp | Executor | Action | Commits | Next |
+@@ -82,3 +109,4 @@ Cross-vendor verify and manual two-Grid native runtime smoke are deferred in `do
+ | 2026-05-19 23:18 PDT | feature-build (Codex inline) | Implemented `OrganizerGridContent`, thinned Host `GridWindow.tsx`, and added public API contract docs. | `26d9f57` | feature-verify |
+ | 2026-05-19 23:22 PDT | feature-verify (Codex inline) | Verified TypeScript/build/boundary/public API checks; marked READY_TO_SHIP. | `26d9f57`, `03ca86a` | manual ship only; continue roadmap |
+ | 2026-05-20 00:32 PDT | ship (Claude Code, Track A) | Manifest promotion → SHIPPED. Production split already on `main` lineage (commits `26d9f57`/`03ca86a`); G1 manifest row updated to SHIPPED. Push deferred to end-of-session bundle. | `26d9f57`, `03ca86a` | continue roadmap |
++| 2026-05-20 PDT | bug-fix (Claude Code, Track A, P0-1) | P0 contract fix: routed `OrganizerGridContent.tsx` Tauri event + window IPC through new `@repo/core/hooks` (`useTauriEvent`, `useTauriWindow`); behavior byte-identical; check-types/test/build green. | _pending commit_ | track follow-up to clear remaining three pre-existing offenders in `packages/plugin-organizer/src/` |
+diff --git a/packages/plugin-organizer/src/OrganizerGridContent.tsx b/packages/plugin-organizer/src/OrganizerGridContent.tsx
+index e143765..60d1b6e 100644
+--- a/packages/plugin-organizer/src/OrganizerGridContent.tsx
++++ b/packages/plugin-organizer/src/OrganizerGridContent.tsx
+@@ -1,6 +1,5 @@
+ import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+-import { listen, TauriEvent } from "@tauri-apps/api/event";
+-import { getCurrentWindow } from "@tauri-apps/api/window";
++import { TauriEvent, useTauriEvent, useTauriWindow } from "@repo/core/hooks";
+ import type { DesktopItem, GridBox } from "./types";
+ import { SmartContainer } from "./SmartContainer";
+ import {
+@@ -133,6 +132,8 @@ export function OrganizerGridContent({
+   const lastDropKeyRef = useRef<{ key: string; receivedAt: number } | null>(null);
+   const gridRef = useRef<GridBox | null>(null);
+ 
++  const tauriWindow = useTauriWindow();
++
+   useEffect(() => {
+     gridRef.current = grid;
+   }, [grid]);
+@@ -141,15 +142,14 @@ export function OrganizerGridContent({
+     let cancelled = false;
+ 
+     const refreshWindowMeta = async () => {
+-      const currentWindow = getCurrentWindow();
+       try {
+         const [position, size] = await Promise.all([
+-          currentWindow.outerPosition(),
+-          currentWindow.innerSize(),
++          tauriWindow.outerPosition(),
++          tauriWindow.innerSize(),
+         ]);
+ 
+         if (!cancelled) {
+-          setWindowLabel(currentWindow.label);
++          setWindowLabel(tauriWindow.label);
+           setWindowRect({
+             x: position.x,
+             y: position.y,
+@@ -160,7 +160,7 @@ export function OrganizerGridContent({
+       } catch (error) {
+         console.warn("[G0 grid prototype] failed to read window metadata", error);
+         if (!cancelled) {
+-          setWindowLabel(currentWindow.label);
++          setWindowLabel(tauriWindow.label);
+         }
+       }
+     };
+@@ -172,65 +172,51 @@ export function OrganizerGridContent({
+       cancelled = true;
+       window.clearInterval(timer);
+     };
+-  }, []);
+-
+-  useEffect(() => {
+-    const unlistenSpike = listen<G0GridPrototypePing>(
+-      G0_GRID_PROTOTYPE_EVENT,
+-      (event) => {
+-        if (event.payload.gridId !== gridId) {
+-          console.warn("[G0 grid prototype] ignored out-of-scope event", {
+-            currentGridId: gridId,
+-            payload: event.payload,
+-          });
+-          return;
+-        }
+-
+-        console.log("[G0 grid prototype] received scoped event", event.payload);
+-        setLastSpikeEvent(event.payload);
+-      }
+-    );
++  }, [tauriWindow]);
+ 
+-    return () => {
+-      unlistenSpike.then((fn) => fn());
+-    };
+-  }, [gridId]);
++  useTauriEvent<G0GridPrototypePing>(G0_GRID_PROTOTYPE_EVENT, (event) => {
++    if (event.payload.gridId !== gridId) {
++      console.warn("[G0 grid prototype] ignored out-of-scope event", {
++        currentGridId: gridId,
++        payload: event.payload,
++      });
++      return;
++    }
++
++    console.log("[G0 grid prototype] received scoped event", event.payload);
++    setLastSpikeEvent(event.payload);
++  });
++
++  useTauriEvent<unknown>(ORGANIZER_GRID_STATE_EVENT, (event) => {
++    if (!isGridStatePayload(event.payload)) {
++      console.warn("[OrganizerGridContent] ignored invalid grid state event", event.payload);
++      return;
++    }
++    if (event.payload.gridId === gridId) {
++      setGrid(event.payload.grid);
++      setItems(event.payload.items);
++    }
++  });
++
++  useTauriEvent<unknown>(ORGANIZER_GRID_CLOSE_EVENT, (event) => {
++    if (!isGridClosePayload(event.payload)) {
++      console.warn("[OrganizerGridContent] ignored invalid grid close event", event.payload);
++      return;
++    }
++    if (event.payload.gridId === gridId) {
++      tauriWindow.close();
++    }
++  });
+ 
+   useEffect(() => {
+-    const unlistenUpdate = listen<unknown>(ORGANIZER_GRID_STATE_EVENT, (event) => {
+-      if (!isGridStatePayload(event.payload)) {
+-        console.warn("[OrganizerGridContent] ignored invalid grid state event", event.payload);
+-        return;
+-      }
+-      if (event.payload.gridId === gridId) {
+-        setGrid(event.payload.grid);
+-        setItems(event.payload.items);
+-      }
+-    });
+-
+-    const unlistenDelete = listen<unknown>(ORGANIZER_GRID_CLOSE_EVENT, (event) => {
+-      if (!isGridClosePayload(event.payload)) {
+-        console.warn("[OrganizerGridContent] ignored invalid grid close event", event.payload);
+-        return;
+-      }
+-      if (event.payload.gridId === gridId) {
+-        getCurrentWindow().close();
+-      }
+-    });
+-
+-    getCurrentWindow().emit(ORGANIZER_GRID_READY_EVENT, { gridId });
+-
+-    return () => {
+-      unlistenUpdate.then((fn) => fn());
+-      unlistenDelete.then((fn) => fn());
+-    };
+-  }, [gridId]);
++    tauriWindow.emit(ORGANIZER_GRID_READY_EVENT, { gridId });
++  }, [gridId, tauriWindow]);
+ 
+   const emitUpdate = useCallback(
+     (patch: Partial<GridBox>) => {
+-      getCurrentWindow().emit(ORGANIZER_GRID_UPDATE_EVENT, { gridId, changes: patch });
++      tauriWindow.emit(ORGANIZER_GRID_UPDATE_EVENT, { gridId, changes: patch });
+     },
+-    [gridId]
++    [gridId, tauriWindow]
+   );
+ 
+   const handleUpdate = useCallback(
+@@ -256,9 +242,9 @@ export function OrganizerGridContent({
+ 
+   const handleClose = useCallback(
+     (_id: string) => {
+-      getCurrentWindow().emit(ORGANIZER_GRID_CLOSE_EVENT, { gridId });
++      tauriWindow.emit(ORGANIZER_GRID_CLOSE_EVENT, { gridId });
+     },
+-    [gridId]
++    [gridId, tauriWindow]
+   );
+ 
+   const handleToggleFold = useCallback(
+@@ -305,17 +291,16 @@ export function OrganizerGridContent({
+       console.log("[G0 Finder DnD] path-first drop", telemetry);
+       setLastDropTelemetry(telemetry);
+       setDropEventCount((count) => count + 1);
+-      getCurrentWindow().emit(ORGANIZER_FILE_DROP_EVENT, {
++      tauriWindow.emit(ORGANIZER_FILE_DROP_EVENT, {
+         gridId,
+         files: paths.map(toDroppedFile),
+       });
+     },
+-    [gridId]
++    [gridId, tauriWindow]
+   );
+ 
+   const handleSendSpikeEvent = useCallback(async () => {
+-    const currentWindow = getCurrentWindow();
+-    const label = windowLabel || currentWindow.label;
++    const label = windowLabel || tauriWindow.label;
+     const nextCount = spikeEventCount + 1;
+     const payload: G0GridPrototypePing = {
+       gridId,
+@@ -326,31 +311,22 @@ export function OrganizerGridContent({
+     };
+ 
+     console.log("[G0 grid prototype] sending scoped event", payload);
+-    await currentWindow.emitTo(label, G0_GRID_PROTOTYPE_EVENT, payload);
++    await tauriWindow.emitTo(label, G0_GRID_PROTOTYPE_EVENT, payload);
+     setSpikeEventCount(nextCount);
+-  }, [gridId, spikeEventCount, windowLabel, windowRect]);
+-
+-  useEffect(() => {
+-    const unlistenDrop = listen<TauriDragDropPayload>(TauriEvent.DRAG_DROP, (event) => {
+-      const paths = coerceDragDropPaths(event.payload);
+-      setIsDraggingFile(false);
+-      if (paths.length === 0) {
+-        console.warn("[G0 Finder DnD] drag-drop payload had no paths", event.payload);
+-        return;
+-      }
+-      handleFileDrop(paths, coerceDragDropPosition(event.payload) ?? { x: 0, y: 0 });
+-    });
+-    const unlistenEnter = listen(TauriEvent.DRAG_ENTER, () => setIsDraggingFile(true));
+-    const unlistenOver = listen(TauriEvent.DRAG_OVER, () => setIsDraggingFile(true));
+-    const unlistenLeave = listen(TauriEvent.DRAG_LEAVE, () => setIsDraggingFile(false));
+-
+-    return () => {
+-      unlistenDrop.then((fn) => fn());
+-      unlistenEnter.then((fn) => fn());
+-      unlistenOver.then((fn) => fn());
+-      unlistenLeave.then((fn) => fn());
+-    };
+-  }, [handleFileDrop]);
++  }, [gridId, spikeEventCount, tauriWindow, windowLabel, windowRect]);
++
++  useTauriEvent<TauriDragDropPayload>(TauriEvent.DRAG_DROP, (event) => {
++    const paths = coerceDragDropPaths(event.payload);
++    setIsDraggingFile(false);
++    if (paths.length === 0) {
++      console.warn("[G0 Finder DnD] drag-drop payload had no paths", event.payload);
++      return;
++    }
++    handleFileDrop(paths, coerceDragDropPosition(event.payload) ?? { x: 0, y: 0 });
++  });
++  useTauriEvent(TauriEvent.DRAG_ENTER, () => setIsDraggingFile(true));
++  useTauriEvent(TauriEvent.DRAG_OVER, () => setIsDraggingFile(true));
++  useTauriEvent(TauriEvent.DRAG_LEAVE, () => setIsDraggingFile(false));
+ 
+   if (!grid) {
+     return (
+
+exec
+/bin/zsh -lc 'rg -n "@tauri-apps/api/(event|window)|SmartContainer|GridBox|DesktopItem|useFileDrop|plugin-organizer/src|OrganizerGridContent" apps/desktop/src/windows/GridWindow.tsx packages/plugin-organizer/src/OrganizerGridContent.tsx packages/plugin-organizer/src/index.ts docs/contracts/plugin-organizer-public-api-v0.md packages/grid-shell-organizer-content/docs/dev_log.md docs/workflow/roadmap/xai-g1-native-foundation.md' in /Users/lijinlong/Desktop/AI_Desktop/XAI_Desktop
+ succeeded in 0ms:
+packages/plugin-organizer/src/index.ts:4:export * from "./SmartContainer";
+packages/plugin-organizer/src/index.ts:6:export * from "./hooks/useFileDrop";
+packages/plugin-organizer/src/index.ts:10:export { OrganizerGridContent } from "./OrganizerGridContent";
+packages/plugin-organizer/src/index.ts:11:export type { OrganizerGridContentProps } from "./OrganizerGridContent";
+apps/desktop/src/windows/GridWindow.tsx:2:import { getCurrentWindow } from "@tauri-apps/api/window";
+apps/desktop/src/windows/GridWindow.tsx:3:import { OrganizerGridContent } from "@repo/plugin-organizer";
+apps/desktop/src/windows/GridWindow.tsx:77:      <OrganizerGridContent gridId={gridId} gridOpacity={gridOpacity} gridBlur={gridBlur} />
+docs/contracts/plugin-organizer-public-api-v0.md:6:| Source | `packages/plugin-organizer/src/index.ts` |
+docs/contracts/plugin-organizer-public-api-v0.md:20:export interface OrganizerGridContentProps {
+docs/contracts/plugin-organizer-public-api-v0.md:26:export function OrganizerGridContent(
+docs/contracts/plugin-organizer-public-api-v0.md:27:  props: OrganizerGridContentProps
+docs/contracts/plugin-organizer-public-api-v0.md:31:`OrganizerGridContent` is the only public content component the desktop Grid
+docs/contracts/plugin-organizer-public-api-v0.md:40:- Pass presentation settings into `OrganizerGridContent`.
+docs/contracts/plugin-organizer-public-api-v0.md:45:- Render `SmartContainer` directly for Grid windows.
+docs/contracts/plugin-organizer-public-api-v0.md:51:- `apps/desktop/src/windows/GridWindow.tsx` imports `OrganizerGridContent` from `@repo/plugin-organizer`.
+docs/contracts/plugin-organizer-public-api-v0.md:52:- `apps/desktop/src/windows/GridWindow.tsx` does not import `SmartContainer`, `GridBox`, `DesktopItem`, or Organizer internal paths.
+docs/contracts/plugin-organizer-public-api-v0.md:53:- `packages/plugin-organizer/src/index.ts` exports `OrganizerGridContent`.
+packages/grid-shell-organizer-content/docs/dev_log.md:35:- Added public `OrganizerGridContent` in `packages/plugin-organizer`.
+packages/grid-shell-organizer-content/docs/dev_log.md:58:- Public API contract scan for `OrganizerGridContent`
+packages/grid-shell-organizer-content/docs/dev_log.md:66:- Host boundary scan confirms `GridWindow.tsx` has no direct `SmartContainer`, `GridBox`, `DesktopItem`, `useFileDrop`, or Organizer internal imports.
+packages/grid-shell-organizer-content/docs/dev_log.md:67:- Public API scan confirms `OrganizerGridContent` is used from `@repo/plugin-organizer`, exported by `packages/plugin-organizer/src/index.ts`, and documented in `docs/contracts/plugin-organizer-public-api-v0.md`.
+packages/grid-shell-organizer-content/docs/dev_log.md:74:Codex cross-vendor review flagged that the SHIPPED `OrganizerGridContent.tsx`
+packages/grid-shell-organizer-content/docs/dev_log.md:75:still imported `@tauri-apps/api/event` and `@tauri-apps/api/window` directly,
+packages/grid-shell-organizer-content/docs/dev_log.md:84:- Refactored `packages/plugin-organizer/src/OrganizerGridContent.tsx` to
+packages/grid-shell-organizer-content/docs/dev_log.md:92:- Boundary scan on `packages/plugin-organizer/src/` confirms
+packages/grid-shell-organizer-content/docs/dev_log.md:93:  `OrganizerGridContent.tsx` is clean. Three pre-existing, separately-tracked
+packages/grid-shell-organizer-content/docs/dev_log.md:109:| 2026-05-19 23:18 PDT | feature-build (Codex inline) | Implemented `OrganizerGridContent`, thinned Host `GridWindow.tsx`, and added public API contract docs. | `26d9f57` | feature-verify |
+packages/grid-shell-organizer-content/docs/dev_log.md:112:| 2026-05-20 PDT | bug-fix (Claude Code, Track A, P0-1) | P0 contract fix: routed `OrganizerGridContent.tsx` Tauri event + window IPC through new `@repo/core/hooks` (`useTauriEvent`, `useTauriWindow`); behavior byte-identical; check-types/test/build green. | _pending commit_ | track follow-up to clear remaining three pre-existing offenders in `packages/plugin-organizer/src/` |
+packages/plugin-organizer/src/OrganizerGridContent.tsx:3:import type { DesktopItem, GridBox } from "./types";
+packages/plugin-organizer/src/OrganizerGridContent.tsx:4:import { SmartContainer } from "./SmartContainer";
+packages/plugin-organizer/src/OrganizerGridContent.tsx:48:export interface OrganizerGridContentProps {
+packages/plugin-organizer/src/OrganizerGridContent.tsx:118:export function OrganizerGridContent({
+packages/plugin-organizer/src/OrganizerGridContent.tsx:122:}: OrganizerGridContentProps) {
+packages/plugin-organizer/src/OrganizerGridContent.tsx:123:  const [grid, setGrid] = useState<GridBox | null>(null);
+packages/plugin-organizer/src/OrganizerGridContent.tsx:124:  const [items, setItems] = useState<Record<string, DesktopItem>>({});
+packages/plugin-organizer/src/OrganizerGridContent.tsx:133:  const gridRef = useRef<GridBox | null>(null);
+packages/plugin-organizer/src/OrganizerGridContent.tsx:192:      console.warn("[OrganizerGridContent] ignored invalid grid state event", event.payload);
+packages/plugin-organizer/src/OrganizerGridContent.tsx:203:      console.warn("[OrganizerGridContent] ignored invalid grid close event", event.payload);
+packages/plugin-organizer/src/OrganizerGridContent.tsx:216:    (patch: Partial<GridBox>) => {
+packages/plugin-organizer/src/OrganizerGridContent.tsx:223:    (_id: string, patch: Partial<GridBox>) => {
+packages/plugin-organizer/src/OrganizerGridContent.tsx:226:      let safePatch: Partial<GridBox> = patch;
+packages/plugin-organizer/src/OrganizerGridContent.tsx:268:      .filter((item): item is DesktopItem => Boolean(item));
+packages/plugin-organizer/src/OrganizerGridContent.tsx:418:      <SmartContainer
+packages/plugin-organizer/src/OrganizerGridContent.tsx:445:export default OrganizerGridContent;
+
+codex
+The core boundary change is in place; now I’m checking whether the surrounding contract is still accurately documented and whether the claimed test commands are real and credible.
+exec
+/bin/zsh -lc "sed -n '1,160p' packages/plugin-organizer/src/index.ts" in /Users/lijinlong/Desktop/AI_Desktop/XAI_Desktop
+ succeeded in 0ms:
+export * from "./types";
+export * from "./mockData";
+export * from "./useGridSystem";
+export * from "./SmartContainer";
+export * from "./GridItem";
+export * from "./hooks/useFileDrop";
+export * from "./hooks/useGridWindow";
+export * from "./hooks/useMultiWindowGrids";
+export { OrganizerLayer } from "./OrganizerLayer";
+export { OrganizerGridContent } from "./OrganizerGridContent";
+export type { OrganizerGridContentProps } from "./OrganizerGridContent";
+export * from "./gridEvents";
+export {
+  ORGANIZER_LAYOUT_STORAGE_KEY,
+  localStorageLayoutStore,
+  repositoryLayoutStore,
+} from "./layoutStore";
+export type {
+  LayoutStore,
+  LocalStorageLayoutStoreOptions,
+  RepositoryLayoutStoreOptions,
+} from "./layoutStore";
+export {
+  InvalidUrlError,
+  createAppGridItem,
+  createFileGridItem,
+  createFolderGridItem,
+  createGridItemsFromFinderDrop,
+  createUrlGridItem,
+  inferKindFromPath,
+} from "./gridItemFactory";
+export {
+  classifyGridItem,
+  defaultClassificationRules,
+  fileExtension,
+} from "./autoClassify";
+export type {
+  ClassificationContext,
+  ClassificationResult,
+  ClassificationRule,
+} from "./autoClassify";
+export { createFinderClient } from "./finderClient";
+export type { FinderClient } from "./finderClient";
+export {
+  defaultEmptyStateActions,
+  evaluateItemHealth,
+} from "./itemHealth";
+export type {
+  EmptyStateAction,
+  ItemHealthOptions,
+  ItemHealthReport,
+  ItemHealthStatus,
+} from "./itemHealth";
+export type {
+  CreateAppGridItemInput,
+  CreateFileGridItemInput,
+  CreateFolderGridItemInput,
+  CreateUrlGridItemInput,
+  FinderDropEntry,
+  GridItemFactoryDeps,
+  GridItemKind,
+} from "./gridItemFactory";
+
+exec
+/bin/zsh -lc "sed -n '1,180p' apps/desktop/src/windows/GridWindow.tsx" in /Users/lijinlong/Desktop/AI_Desktop/XAI_Desktop
+ succeeded in 0ms:
+import { MouseEvent as ReactMouseEvent, useCallback } from "react";
+import { getCurrentWindow } from "@tauri-apps/api/window";
+import { OrganizerGridContent } from "@repo/plugin-organizer";
+import { GlobalDndProvider } from "../providers/DndProvider";
+import { SettingsProvider, useSettings } from "../context/SettingsContext";
+
+const DRAG_THRESHOLD_PX = 4;
+
+/**
+ * Native Grid window shell.
+ *
+ * Host owns provider wiring and AppKit drag handoff. Organizer owns the Grid
+ * content, item rendering, drop semantics, and cross-window state events.
+ */
+function GridWindowShell({ gridId }: { gridId: string }) {
+  const { gridOpacity, gridBlur } = useSettings();
+
+  // Intercept mousedown on the Organizer title bar (or the G0 fallback
+  // panel) in CAPTURE phase. We stopPropagation so react-draggable's
+  // onMouseDown synthetic handler never fires — its DOM-drag is meaningless
+  // in multi-window mode and emits bogus rect.x/y that warp the window. Past
+  // DRAG_THRESHOLD_PX we hand off to Tauri startDragging, which drives the
+  // window from AppKit's mouse-drag loop and gives unrestricted screen-wide
+  // movement (same pattern as the AI cube in 7b7ff35).
+  const handleHeaderDragStart = useCallback((event: ReactMouseEvent<HTMLDivElement>) => {
+    if (event.button !== 0) return;
+    const target = event.target as HTMLElement | null;
+    if (!target) return;
+
+    const onGridDragHandle =
+      Boolean(target.closest(".grid-title-bar")) ||
+      Boolean(target.closest("[data-g0-grid-prototype]"));
+    if (!onGridDragHandle) return;
+
+    // Don't hijack interactive children: buttons (lock/fold/view/close/etc.),
+    // the title edit input, the rename span's dblclick, or the resize handles.
+    if (target.closest("button, input, select, textarea, .resize-handle")) return;
+
+    event.preventDefault();
+    event.stopPropagation();
+
+    const startScreenX = event.screenX;
+    const startScreenY = event.screenY;
+    let handed = false;
+
+    const cleanup = () => {
+      window.removeEventListener("mousemove", onMove, true);
+      window.removeEventListener("mouseup", onUp, true);
+    };
+
+    const onMove = (ev: MouseEvent) => {
+      if (handed) return;
+      const dx = ev.screenX - startScreenX;
+      const dy = ev.screenY - startScreenY;
+      if (Math.hypot(dx, dy) >= DRAG_THRESHOLD_PX) {
+        handed = true;
+        void getCurrentWindow()
+          .startDragging()
+          .catch((err) => {
+            console.error("[GridWindow] startDragging failed:", err);
+          });
+        cleanup();
+      }
+    };
+
+    const onUp = () => cleanup();
+
+    window.addEventListener("mousemove", onMove, true);
+    window.addEventListener("mouseup", onUp, true);
+  }, []);
+
+  return (
+    <div
+      onMouseDownCapture={handleHeaderDragStart}
+      style={{ width: "100%", height: "100%" }}
+    >
+      <OrganizerGridContent gridId={gridId} gridOpacity={gridOpacity} gridBlur={gridBlur} />
+    </div>
+  );
+}
+
+export function GridWindow({ gridId }: { gridId: string }) {
+  return (
+    <SettingsProvider>
+      <GlobalDndProvider>
+        <GridWindowShell gridId={gridId} />
+      </GlobalDndProvider>
+    </SettingsProvider>
+  );
+}
+
+export default GridWindow;
+
+exec
+/bin/zsh -lc "sed -n '1,200p' packages/plugin-organizer/package.json && printf '\\n---\\n' && sed -n '1,200p' packages/core/package.json && printf '\\n---\\n' && sed -n '1,220p' apps/desktop/package.json" in /Users/lijinlong/Desktop/AI_Desktop/XAI_Desktop
+ succeeded in 0ms:
+{
+  "name": "@repo/plugin-organizer",
+  "version": "0.0.0",
+  "private": true,
+  "description": "Smart file containers plugin for AI Smart Desktop (independent floating organizers).",
+  "exports": {
+    ".": {
+      "types": "./src/index.ts",
+      "import": "./src/index.ts"
+    }
+  },
+  "scripts": {
+    "check-types": "tsc --noEmit",
+    "test": "vitest run"
+  },
+  "dependencies": {
+    "@repo/core": "workspace:*",
+    "@repo/core-data": "workspace:*",
+    "@dnd-kit/core": "^6.1.0",
+    "@dnd-kit/utilities": "^3.2.1",
+    "@tauri-apps/api": "^2",
+    "react": "^19.2.0",
+    "react-dom": "^19.2.0",
+    "react-draggable": "^4.4.6",
+    "react-resizable": "^3.0.5"
+  },
+  "devDependencies": {
+    "@repo/typescript-config": "workspace:*",
+    "@types/node": "^22.15.3",
+    "@types/react": "19.2.2",
+    "@types/react-dom": "19.2.2",
+    "typescript": "5.9.2",
+    "vitest": "^3.2.1"
+  }
+}
+
+---
+{
+  "name": "@repo/core",
+  "version": "0.0.0",
+  "private": true,
+  "description": "Core infrastructure for XAI_Desktop — types, events, store, registry. Zero business logic.",
+  "exports": {
+    ".": {
+      "types": "./src/index.ts",
+      "import": "./src/index.ts"
+    },
+    "./types": {
+      "types": "./src/types/index.ts",
+      "import": "./src/types/index.ts"
+    },
+    "./events": {
+      "types": "./src/events/index.ts",
+      "import": "./src/events/index.ts"
+    },
+    "./hooks": {
+      "types": "./src/hooks/index.ts",
+      "import": "./src/hooks/index.ts"
+    },
+    "./registry": {
+      "types": "./src/registry/index.ts",
+      "import": "./src/registry/index.ts"
+    },
+    "./store": {
+      "types": "./src/store/index.ts",
+      "import": "./src/store/index.ts"
+    }
+  },
+  "scripts": {
+    "check-types": "tsc --noEmit",
+    "test": "vitest run"
+  },
+  "dependencies": {
+    "@tauri-apps/api": "^2",
+    "react": "^19.2.0",
+    "react-dom": "^19.2.0"
+  },
+  "devDependencies": {
+    "@repo/typescript-config": "workspace:*",
+    "@types/react": "19.2.2",
+    "@types/react-dom": "19.2.2",
+    "typescript": "5.9.2",
+    "vitest": "^3.2.1"
+  }
+}
+
+---
+{
+  "name": "desktop",
+  "private": true,
+  "version": "0.1.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc && vite build",
+    "preview": "vite preview",
+    "tauri": "tauri"
+  },
+  "dependencies": {
+    "@repo/plugin-account": "workspace:*",
+    "@repo/plugin-organizer": "workspace:*",
+    "@tauri-apps/api": "^2",
+    "@tauri-apps/plugin-opener": "^2",
+    "@dnd-kit/core": "^6.1.0",
+    "@dnd-kit/utilities": "^3.2.1",
+    "react": "^19.1.0",
+    "react-dom": "^19.1.0",
+    "react-draggable": "^4.4.6"
+  },
+  "devDependencies": {
+    "@tauri-apps/cli": "^2.9.4",
+    "@types/react": "^19.1.8",
+    "@types/react-dom": "^19.1.6",
+    "@vitejs/plugin-react": "^4.6.0",
+    "typescript": "~5.8.3",
+    "vite": "^7.0.4"
+  }
+}
+
+exec
+/bin/zsh -lc "rg -n 'from \"@tauri-apps/api|from ''@tauri-apps/api' packages/plugin-organizer/src" in /Users/lijinlong/Desktop/AI_Desktop/XAI_Desktop
+ succeeded in 0ms:
+packages/plugin-organizer/src/hooks/useMultiWindowGrids.ts:2:import { listen } from "@tauri-apps/api/event";
+packages/plugin-organizer/src/hooks/useMultiWindowGrids.ts:3:import { emit } from "@tauri-apps/api/event";
+packages/plugin-organizer/src/hooks/useGridWindow.ts:1:import { invoke } from "@tauri-apps/api/core";
+packages/plugin-organizer/src/OrganizerLayer.tsx:6:import { listen } from "@tauri-apps/api/event";
+packages/plugin-organizer/src/OrganizerLayer.tsx:7:import { isTauri } from "@tauri-apps/api/core";
+
+codex
+I’ve confirmed the commit message points at real scripts. Running the claimed checks now and lining up exact line citations for the final verdict.
+exec
+/bin/zsh -lc 'pnpm --filter @repo/core check-types' in /Users/lijinlong/Desktop/AI_Desktop/XAI_Desktop
+exec
+/bin/zsh -lc 'pnpm --filter @repo/plugin-organizer check-types' in /Users/lijinlong/Desktop/AI_Desktop/XAI_Desktop
+exec
+/bin/zsh -lc 'pnpm --filter @repo/plugin-organizer test' in /Users/lijinlong/Desktop/AI_Desktop/XAI_Desktop
+exec
+/bin/zsh -lc 'pnpm --filter desktop build' in /Users/lijinlong/Desktop/AI_Desktop/XAI_Desktop
+ succeeded in 2723ms:
+
+> @repo/core@0.0.0 check-types /Users/lijinlong/Desktop/AI_Desktop/XAI_Desktop/packages/core
+> tsc --noEmit
+
+
+ succeeded in 2791ms:
+
+> @repo/plugin-organizer@0.0.0 test /Users/lijinlong/Desktop/AI_Desktop/XAI_Desktop/packages/plugin-organizer
+> vitest run
+
+
+ RUN  v3.2.4 /Users/lijinlong/Desktop/AI_Desktop/XAI_Desktop/packages/plugin-organizer
+
+ ✓ src/gridEvents.test.ts (4 tests) 4ms
+ ✓ src/gridItemFactory.test.ts (13 tests) 4ms
+ ✓ src/autoClassify.test.ts (8 tests) 15ms
+ ✓ src/itemHealth.test.ts (7 tests) 2ms
+ ✓ src/layoutStore.test.ts (9 tests) 8ms
+
+ Test Files  5 passed (5)
+      Tests  41 passed (41)
+   Start at  02:19:29
+   Duration  989ms (transform 397ms, setup 0ms, collect 771ms, tests 34ms, environment 1ms, prepare 900ms)
+
+
+ succeeded in 3308ms:
+
+> @repo/plugin-organizer@0.0.0 check-types /Users/lijinlong/Desktop/AI_Desktop/XAI_Desktop/packages/plugin-organizer
+> tsc --noEmit
+
+
+ succeeded in 5059ms:
+
+> desktop@0.1.0 build /Users/lijinlong/Desktop/AI_Desktop/XAI_Desktop/apps/desktop
+> tsc && vite build
+
+vite v7.2.4 building client environment for production...
+transforming...
+✓ 359 modules transformed.
+rendering chunks...
+computing gzip size...
+dist/index.html                     0.47 kB │ gzip:   0.31 kB
+dist/assets/index-iOmQ4O8K.css      2.58 kB │ gzip:   1.10 kB
+dist/assets/index-JCSFsTx5.js   1,592.40 kB │ gzip: 680.51 kB
+
+(!) Some chunks are larger than 500 kB after minification. Consider:
+- Using dynamic import() to code-split the application
+- Use build.rollupOptions.output.manualChunks to improve chunking: https://rollupjs.org/configuration-options/#output-manualchunks
+- Adjust chunk size limit for this warning via build.chunkSizeWarningLimit.
+✓ built in 1.42s
+
+codex
+The checks are still running. After they settle I’ll decide whether the fix is genuinely closed or just narrowed.
+exec
+/bin/zsh -lc "nl -ba packages/plugin-organizer/src/OrganizerGridContent.tsx | sed -n '1,340p'" in /Users/lijinlong/Desktop/AI_Desktop/XAI_Desktop
+ succeeded in 0ms:
+     1	import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+     2	import { TauriEvent, useTauriEvent, useTauriWindow } from "@repo/core/hooks";
+     3	import type { DesktopItem, GridBox } from "./types";
+     4	import { SmartContainer } from "./SmartContainer";
+     5	import {
+     6	  ORGANIZER_FILE_DROP_EVENT,
+     7	  ORGANIZER_GRID_CLOSE_EVENT,
+     8	  ORGANIZER_GRID_READY_EVENT,
+     9	  ORGANIZER_GRID_STATE_EVENT,
+    10	  ORGANIZER_GRID_UPDATE_EVENT,
+    11	  isGridClosePayload,
+    12	  isGridStatePayload,
+    13	  toDroppedFile,
+    14	} from "./gridEvents";
+    15	
+    16	interface G0GridPrototypeRect {
+    17	  x: number;
+    18	  y: number;
+    19	  width: number;
+    20	  height: number;
+    21	}
+    22	
+    23	interface G0GridPrototypePing {
+    24	  gridId: string;
+    25	  windowLabel: string;
+    26	  rect: G0GridPrototypeRect | null;
+    27	  count: number;
+    28	  sentAt: string;
+    29	}
+    30	
+    31	interface G0FinderDropTelemetry {
+    32	  gridId: string;
+    33	  source: "tauri://drag-drop";
+    34	  paths: string[];
+    35	  kinds: Array<"file" | "folder" | "app" | "alias" | "unknown">;
+    36	  position: { x: number; y: number } | null;
+    37	  receivedAt: string;
+    38	}
+    39	
+    40	interface TauriDragDropPayload {
+    41	  paths?: unknown;
+    42	  position?: {
+    43	    x?: unknown;
+    44	    y?: unknown;
+    45	  };
+    46	}
+    47	
+    48	export interface OrganizerGridContentProps {
+    49	  gridId: string;
+    50	  gridOpacity?: number;
+    51	  gridBlur?: boolean;
+    52	}
+    53	
+    54	const G0_GRID_PROTOTYPE_EVENT = "g0-grid-prototype:scoped-ping";
+    55	
+    56	function classifyDroppedPath(path: string): G0FinderDropTelemetry["kinds"][number] {
+    57	  const lower = path.toLowerCase();
+    58	  if (lower.endsWith(".app")) return "app";
+    59	  if (lower.endsWith(".alias")) return "alias";
+    60	  if (path.includes(".")) return "file";
+    61	  return "folder";
+    62	}
+    63	
+    64	function coerceDragDropPaths(payload: TauriDragDropPayload): string[] {
+    65	  if (!Array.isArray(payload.paths)) return [];
+    66	  return payload.paths.filter((path): path is string => typeof path === "string" && path.length > 0);
+    67	}
+    68	
+    69	function coerceDragDropPosition(payload: TauriDragDropPayload): G0FinderDropTelemetry["position"] {
+    70	  const x = payload.position?.x;
+    71	  const y = payload.position?.y;
+    72	  if (typeof x !== "number" || typeof y !== "number") return null;
+    73	  return { x, y };
+    74	}
+    75	
+    76	function G0DropTelemetryPanel({
+    77	  count,
+    78	  telemetry,
+    79	}: {
+    80	  count: number;
+    81	  telemetry: G0FinderDropTelemetry | null;
+    82	}) {
+    83	  return (
+    84	    <div
+    85	      style={{
+    86	        border: "1px solid rgba(56, 189, 248, 0.28)",
+    87	        borderRadius: 8,
+    88	        padding: "8px 10px",
+    89	        background: "rgba(8, 47, 73, 0.42)",
+    90	        minWidth: 0,
+    91	      }}
+    92	    >
+    93	      <div style={{ display: "flex", justifyContent: "space-between", gap: 8 }}>
+    94	        <strong style={{ color: "#bae6fd" }}>Finder DnD</strong>
+    95	        <span style={{ color: "#7dd3fc" }}>drops {count}</span>
+    96	      </div>
+    97	      <div style={{ marginTop: 6, color: "#cbd5e1", overflowWrap: "anywhere" }}>
+    98	        {telemetry ? (
+    99	          <>
+   100	            <div>{telemetry.source}</div>
+   101	            <div>{telemetry.kinds.join(", ") || "unknown"}</div>
+   102	            <div>{telemetry.paths.join(" | ")}</div>
+   103	          </>
+   104	        ) : (
+   105	          "Drop Finder file/folder/app/alias here"
+   106	        )}
+   107	      </div>
+   108	    </div>
+   109	  );
+   110	}
+   111	
+   112	/**
+   113	 * Public Organizer-owned content for a single native Grid window.
+   114	 *
+   115	 * The desktop Host owns native window providers and drag chrome; this component
+   116	 * owns Grid business UI, cross-window state events, and path-first drop wiring.
+   117	 */
+   118	export function OrganizerGridContent({
+   119	  gridId,
+   120	  gridOpacity = 0.8,
+   121	  gridBlur = true,
+   122	}: OrganizerGridContentProps) {
+   123	  const [grid, setGrid] = useState<GridBox | null>(null);
+   124	  const [items, setItems] = useState<Record<string, DesktopItem>>({});
+   125	  const [isDraggingFile, setIsDraggingFile] = useState(false);
+   126	  const [windowLabel, setWindowLabel] = useState("");
+   127	  const [windowRect, setWindowRect] = useState<G0GridPrototypeRect | null>(null);
+   128	  const [spikeEventCount, setSpikeEventCount] = useState(0);
+   129	  const [lastSpikeEvent, setLastSpikeEvent] = useState<G0GridPrototypePing | null>(null);
+   130	  const [dropEventCount, setDropEventCount] = useState(0);
+   131	  const [lastDropTelemetry, setLastDropTelemetry] = useState<G0FinderDropTelemetry | null>(null);
+   132	  const lastDropKeyRef = useRef<{ key: string; receivedAt: number } | null>(null);
+   133	  const gridRef = useRef<GridBox | null>(null);
+   134	
+   135	  const tauriWindow = useTauriWindow();
+   136	
+   137	  useEffect(() => {
+   138	    gridRef.current = grid;
+   139	  }, [grid]);
+   140	
+   141	  useEffect(() => {
+   142	    let cancelled = false;
+   143	
+   144	    const refreshWindowMeta = async () => {
+   145	      try {
+   146	        const [position, size] = await Promise.all([
+   147	          tauriWindow.outerPosition(),
+   148	          tauriWindow.innerSize(),
+   149	        ]);
+   150	
+   151	        if (!cancelled) {
+   152	          setWindowLabel(tauriWindow.label);
+   153	          setWindowRect({
+   154	            x: position.x,
+   155	            y: position.y,
+   156	            width: size.width,
+   157	            height: size.height,
+   158	          });
+   159	        }
+   160	      } catch (error) {
+   161	        console.warn("[G0 grid prototype] failed to read window metadata", error);
+   162	        if (!cancelled) {
+   163	          setWindowLabel(tauriWindow.label);
+   164	        }
+   165	      }
+   166	    };
+   167	
+   168	    refreshWindowMeta();
+   169	    const timer = window.setInterval(refreshWindowMeta, 1000);
+   170	
+   171	    return () => {
+   172	      cancelled = true;
+   173	      window.clearInterval(timer);
+   174	    };
+   175	  }, [tauriWindow]);
+   176	
+   177	  useTauriEvent<G0GridPrototypePing>(G0_GRID_PROTOTYPE_EVENT, (event) => {
+   178	    if (event.payload.gridId !== gridId) {
+   179	      console.warn("[G0 grid prototype] ignored out-of-scope event", {
+   180	        currentGridId: gridId,
+   181	        payload: event.payload,
+   182	      });
+   183	      return;
+   184	    }
+   185	
+   186	    console.log("[G0 grid prototype] received scoped event", event.payload);
+   187	    setLastSpikeEvent(event.payload);
+   188	  });
+   189	
+   190	  useTauriEvent<unknown>(ORGANIZER_GRID_STATE_EVENT, (event) => {
+   191	    if (!isGridStatePayload(event.payload)) {
+   192	      console.warn("[OrganizerGridContent] ignored invalid grid state event", event.payload);
+   193	      return;
+   194	    }
+   195	    if (event.payload.gridId === gridId) {
+   196	      setGrid(event.payload.grid);
+   197	      setItems(event.payload.items);
+   198	    }
+   199	  });
+   200	
+   201	  useTauriEvent<unknown>(ORGANIZER_GRID_CLOSE_EVENT, (event) => {
+   202	    if (!isGridClosePayload(event.payload)) {
+   203	      console.warn("[OrganizerGridContent] ignored invalid grid close event", event.payload);
+   204	      return;
+   205	    }
+   206	    if (event.payload.gridId === gridId) {
+   207	      tauriWindow.close();
+   208	    }
+   209	  });
+   210	
+   211	  useEffect(() => {
+   212	    tauriWindow.emit(ORGANIZER_GRID_READY_EVENT, { gridId });
+   213	  }, [gridId, tauriWindow]);
+   214	
+   215	  const emitUpdate = useCallback(
+   216	    (patch: Partial<GridBox>) => {
+   217	      tauriWindow.emit(ORGANIZER_GRID_UPDATE_EVENT, { gridId, changes: patch });
+   218	    },
+   219	    [gridId, tauriWindow]
+   220	  );
+   221	
+   222	  const handleUpdate = useCallback(
+   223	    (_id: string, patch: Partial<GridBox>) => {
+   224	      const prev = gridRef.current;
+   225	      if (!prev) return;
+   226	      let safePatch: Partial<GridBox> = patch;
+   227	      if (patch.rect) {
+   228	        safePatch = {
+   229	          ...patch,
+   230	          rect: {
+   231	            ...prev.rect,
+   232	            width: patch.rect.width,
+   233	            height: patch.rect.height,
+   234	          },
+   235	        };
+   236	      }
+   237	      setGrid({ ...prev, ...safePatch });
+   238	      emitUpdate(safePatch);
+   239	    },
+   240	    [emitUpdate]
+   241	  );
+   242	
+   243	  const handleClose = useCallback(
+   244	    (_id: string) => {
+   245	      tauriWindow.emit(ORGANIZER_GRID_CLOSE_EVENT, { gridId });
+   246	    },
+   247	    [gridId, tauriWindow]
+   248	  );
+   249	
+   250	  const handleToggleFold = useCallback(
+   251	    (_id: string) => {
+   252	      emitUpdate({ isFolded: !grid?.isFolded });
+   253	    },
+   254	    [emitUpdate, grid?.isFolded]
+   255	  );
+   256	
+   257	  const handleToggleLock = useCallback(
+   258	    (_id: string) => {
+   259	      emitUpdate({ isLocked: !grid?.isLocked });
+   260	    },
+   261	    [emitUpdate, grid?.isLocked]
+   262	  );
+   263	
+   264	  const resolvedItems = useMemo(() => {
+   265	    if (!grid) return [];
+   266	    return grid.itemIds
+   267	      .map((id) => items[id])
+   268	      .filter((item): item is DesktopItem => Boolean(item));
+   269	  }, [grid, items]);
+   270	
+   271	  const handleFileDrop = useCallback(
+   272	    (paths: string[], position: { x: number; y: number }) => {
+   273	      const dropKey = JSON.stringify(paths);
+   274	      const now = Date.now();
+   275	      const lastDropKey = lastDropKeyRef.current;
+   276	      if (lastDropKey?.key === dropKey && now - lastDropKey.receivedAt < 1000) {
+   277	        console.warn("[G0 Finder DnD] ignored duplicate drag-drop payload", paths);
+   278	        return;
+   279	      }
+   280	      lastDropKeyRef.current = { key: dropKey, receivedAt: now };
+   281	
+   282	      const telemetry: G0FinderDropTelemetry = {
+   283	        gridId,
+   284	        source: "tauri://drag-drop",
+   285	        paths,
+   286	        kinds: paths.map(classifyDroppedPath),
+   287	        position,
+   288	        receivedAt: new Date().toISOString(),
+   289	      };
+   290	
+   291	      console.log("[G0 Finder DnD] path-first drop", telemetry);
+   292	      setLastDropTelemetry(telemetry);
+   293	      setDropEventCount((count) => count + 1);
+   294	      tauriWindow.emit(ORGANIZER_FILE_DROP_EVENT, {
+   295	        gridId,
+   296	        files: paths.map(toDroppedFile),
+   297	      });
+   298	    },
+   299	    [gridId, tauriWindow]
+   300	  );
+   301	
+   302	  const handleSendSpikeEvent = useCallback(async () => {
+   303	    const label = windowLabel || tauriWindow.label;
+   304	    const nextCount = spikeEventCount + 1;
+   305	    const payload: G0GridPrototypePing = {
+   306	      gridId,
+   307	      windowLabel: label,
+   308	      rect: windowRect,
+   309	      count: nextCount,
+   310	      sentAt: new Date().toISOString(),
+   311	    };
+   312	
+   313	    console.log("[G0 grid prototype] sending scoped event", payload);
+   314	    await tauriWindow.emitTo(label, G0_GRID_PROTOTYPE_EVENT, payload);
+   315	    setSpikeEventCount(nextCount);
+   316	  }, [gridId, spikeEventCount, tauriWindow, windowLabel, windowRect]);
+   317	
+   318	  useTauriEvent<TauriDragDropPayload>(TauriEvent.DRAG_DROP, (event) => {
+   319	    const paths = coerceDragDropPaths(event.payload);
+   320	    setIsDraggingFile(false);
+   321	    if (paths.length === 0) {
+   322	      console.warn("[G0 Finder DnD] drag-drop payload had no paths", event.payload);
+   323	      return;
+   324	    }
+   325	    handleFileDrop(paths, coerceDragDropPosition(event.payload) ?? { x: 0, y: 0 });
+   326	  });
+   327	  useTauriEvent(TauriEvent.DRAG_ENTER, () => setIsDraggingFile(true));
+   328	  useTauriEvent(TauriEvent.DRAG_OVER, () => setIsDraggingFile(true));
+   329	  useTauriEvent(TauriEvent.DRAG_LEAVE, () => setIsDraggingFile(false));
+   330	
+   331	  if (!grid) {
+   332	    return (
+   333	      <div
+   334	        data-g0-grid-prototype="true"
+   335	        style={{
+   336	          boxSizing: "border-box",
+   337	          display: "grid",
+   338	          gridTemplateRows: "auto 1fr auto auto",
+   339	          gap: 10,
+   340	          width: "100%",
+
+exec
+/bin/zsh -lc "nl -ba packages/core/src/hooks/useTauriEvent.ts | sed -n '1,220p' && printf '\\n---\\n' && nl -ba packages/core/src/hooks/useTauriWindow.ts | sed -n '1,220p' && printf '\\n---\\n' && nl -ba packages/core/src/hooks/index.ts | sed -n '1,80p'" in /Users/lijinlong/Desktop/AI_Desktop/XAI_Desktop
+ succeeded in 0ms:
+     1	import { useEffect, useRef } from 'react';
+     2	import { listen, TauriEvent } from '@tauri-apps/api/event';
+     3	
+     4	/**
+     5	 * Re-export of Tauri's built-in event enum so plugins never need to import
+     6	 * `@tauri-apps/api/event` directly (red-line #4).
+     7	 */
+     8	export { TauriEvent };
+     9	
+    10	/** Event handler signature exposed to plugins. */
+    11	export type TauriEventHandler<T> = (event: { payload: T }) => void;
+    12	
+    13	/**
+    14	 * Generic, untyped Tauri event listener hook.
+    15	 *
+    16	 * Use this when subscribing to:
+    17	 *   - Built-in `TauriEvent` enum values (e.g. drag-drop lifecycle)
+    18	 *   - Ad-hoc event names that are not yet codified in `@repo/core` `EventMap`
+    19	 *
+    20	 * For codified cross-window events, prefer `useEventListener` from
+    21	 * `@repo/core/events`, which is constrained to `EventMap` keys.
+    22	 *
+    23	 * This is the ONLY place plugins are permitted to reach Tauri event IPC
+    24	 * (red-line #4). Importing `@tauri-apps/api/event` directly from a plugin
+    25	 * is a red-line #4 violation.
+    26	 *
+    27	 * The handler is read through a ref so callers may pass inline arrow
+    28	 * functions without retriggering the subscription on every render. The
+    29	 * subscription is established once per `event` (and per `enabled` flag).
+    30	 */
+    31	export function useTauriEvent<T>(
+    32	  event: `${TauriEvent}` | (string & Record<never, never>),
+    33	  handler: TauriEventHandler<T>,
+    34	  options?: { enabled?: boolean },
+    35	): void {
+    36	  const enabled = options?.enabled ?? true;
+    37	  const handlerRef = useRef(handler);
+    38	
+    39	  useEffect(() => {
+    40	    handlerRef.current = handler;
+    41	  }, [handler]);
+    42	
+    43	  useEffect(() => {
+    44	    if (!enabled) return;
+    45	    let cancelled = false;
+    46	    let unlistenFn: (() => void) | null = null;
+    47	
+    48	    listen<T>(event, (e) => {
+    49	      if (cancelled) return;
+    50	      handlerRef.current(e);
+    51	    }).then((fn) => {
+    52	      if (cancelled) {
+    53	        fn();
+    54	        return;
+    55	      }
+    56	      unlistenFn = fn;
+    57	    });
+    58	
+    59	    return () => {
+    60	      cancelled = true;
+    61	      if (unlistenFn) unlistenFn();
+    62	    };
+    63	  }, [event, enabled]);
+    64	}
+
+---
+     1	import { useMemo } from 'react';
+     2	import { getCurrentWindow } from '@tauri-apps/api/window';
+     3	
+     4	/** Minimal physical position shape exposed to plugins. */
+     5	export interface TauriWindowPosition {
+     6	  x: number;
+     7	  y: number;
+     8	}
+     9	
+    10	/** Minimal physical size shape exposed to plugins. */
+    11	export interface TauriWindowSize {
+    12	  width: number;
+    13	  height: number;
+    14	}
+    15	
+    16	/**
+    17	 * Plugin-facing handle to the current Tauri window.
+    18	 *
+    19	 * Wraps the Tauri `Window` instance so that plugins never need to import
+    20	 * `@tauri-apps/api/window` directly (red-line #4). Surface area is kept
+    21	 * intentionally small and only exposes the operations Organizer-class
+    22	 * plugins currently require.
+    23	 *
+    24	 * Returned methods are stable identity for the lifetime of the host window
+    25	 * because they delegate to the live Tauri window each call; consumers can
+    26	 * safely depend on the returned object inside `useCallback` / `useEffect`
+    27	 * without retriggering subscriptions.
+    28	 */
+    29	export interface TauriWindowHandle {
+    30	  /** Unique window label assigned by Tauri (e.g. `main`, `grid_<id>`). */
+    31	  readonly label: string;
+    32	  /** Outer (top-left) position in physical pixels. */
+    33	  outerPosition(): Promise<TauriWindowPosition>;
+    34	  /** Inner size in physical pixels. */
+    35	  innerSize(): Promise<TauriWindowSize>;
+    36	  /** Closes the current window. */
+    37	  close(): Promise<void>;
+    38	  /** Emits an event on the Tauri global bus, scoped to this window. */
+    39	  emit<T>(event: string, payload?: T): Promise<void>;
+    40	  /** Emits an event targeted at a specific window label. */
+    41	  emitTo<T>(target: string, event: string, payload?: T): Promise<void>;
+    42	}
+    43	
+    44	/**
+    45	 * Returns a stable handle to the current Tauri window for plugin code.
+    46	 *
+    47	 * This is the ONLY place plugins are permitted to reach Tauri window IPC
+    48	 * (red-line #4). Importing `@tauri-apps/api/window` directly from a plugin
+    49	 * is a red-line #4 violation.
+    50	 *
+    51	 * The hook does not perform any IPC on mount — calling code drives the
+    52	 * lifecycle by invoking the returned methods on demand.
+    53	 */
+    54	export function useTauriWindow(): TauriWindowHandle {
+    55	  return useMemo<TauriWindowHandle>(() => {
+    56	    const current = getCurrentWindow();
+    57	    return {
+    58	      label: current.label,
+    59	      async outerPosition() {
+    60	        const position = await current.outerPosition();
+    61	        return { x: position.x, y: position.y };
+    62	      },
+    63	      async innerSize() {
+    64	        const size = await current.innerSize();
+    65	        return { width: size.width, height: size.height };
+    66	      },
+    67	      async close() {
+    68	        await current.close();
+    69	      },
+    70	      async emit<T>(event: string, payload?: T) {
+    71	        await current.emit(event, payload);
+    72	      },
+    73	      async emitTo<T>(target: string, event: string, payload?: T) {
+    74	        await current.emitTo(target, event, payload);
+    75	      },
+    76	    };
+    77	  }, []);
+    78	}
+
+---
+     1	export { useWindow } from './useWindow';
+     2	export { useTauriInvoke } from './useTauriInvoke';
+     3	export { useTauriEvent, TauriEvent } from './useTauriEvent';
+     4	export type { TauriEventHandler } from './useTauriEvent';
+     5	export { useTauriWindow } from './useTauriWindow';
+     6	export type {
+     7	  TauriWindowHandle,
+     8	  TauriWindowPosition,
+     9	  TauriWindowSize,
+    10	} from './useTauriWindow';
+
+exec
+/bin/zsh -lc "nl -ba packages/grid-shell-organizer-content/docs/dev_log.md | sed -n '60,125p' && printf '\\n---\\n' && nl -ba docs/workflow/roadmap/xai-g1-native-foundation.md | sed -n '1,80p'" in /Users/lijinlong/Desktop/AI_Desktop/XAI_Desktop
+ succeeded in 0ms:
+    60	feature-verify (Codex inline), 2026-05-19 23:22 PDT. Verdict: READY_TO_SHIP.
+    61	
+    62	Verification passed:
+    63	
+    64	- `pnpm --filter @repo/plugin-organizer check-types`
+    65	- `pnpm --filter desktop build`
+    66	- Host boundary scan confirms `GridWindow.tsx` has no direct `SmartContainer`, `GridBox`, `DesktopItem`, `useFileDrop`, or Organizer internal imports.
+    67	- Public API scan confirms `OrganizerGridContent` is used from `@repo/plugin-organizer`, exported by `packages/plugin-organizer/src/index.ts`, and documented in `docs/contracts/plugin-organizer-public-api-v0.md`.
+    68	- Required review/package docs and contract doc exist.
+    69	
+    70	Cross-vendor verify and manual two-Grid native runtime smoke are deferred in `docs/workflow/roadmap/xai-v1.deferred-gates.md`; no ship or push was run.
+    71	
+    72	feature-verify (Claude Code, Track A, P0-1 follow-up), 2026-05-20 PDT. Verdict: PATCH_APPLIED.
+    73	
+    74	Codex cross-vendor review flagged that the SHIPPED `OrganizerGridContent.tsx`
+    75	still imported `@tauri-apps/api/event` and `@tauri-apps/api/window` directly,
+    76	which violates `docs/SYSTEM_ARCHITECTURE.md` §4 red-line #4 (plugins MUST
+    77	consume Tauri capabilities through `@repo/core/hooks`). Because this row is
+    78	SHIPPED, the G1.2 manifest entry was certifying a broken contract.
+    79	
+    80	Patch applied in this update:
+    81	
+    82	- Added `useTauriEvent` (with re-exported `TauriEvent` enum) and `useTauriWindow`
+    83	  in `packages/core/src/hooks/`, exported through `@repo/core/hooks`.
+    84	- Refactored `packages/plugin-organizer/src/OrganizerGridContent.tsx` to
+    85	  consume `useTauriEvent` / `useTauriWindow` instead of importing
+    86	  `@tauri-apps/api` directly. Behavior is byte-identical: same event names,
+    87	  same payload shapes, same emit targets, same drag-drop lifecycle.
+    88	- Verified: `pnpm --filter @repo/core check-types`,
+    89	  `pnpm --filter @repo/plugin-organizer check-types`,
+    90	  `pnpm --filter @repo/plugin-organizer test`,
+    91	  `pnpm --filter desktop build` — all pass.
+    92	- Boundary scan on `packages/plugin-organizer/src/` confirms
+    93	  `OrganizerGridContent.tsx` is clean. Three pre-existing, separately-tracked
+    94	  red-line #4 offenders remain in this package (`OrganizerLayer.tsx`,
+    95	  `hooks/useGridWindow.ts`, `hooks/useMultiWindowGrids.ts`) and are out of
+    96	  scope for this P0-1 fix; they should be addressed under a follow-up
+    97	  manifest row.
+    98	
+    99	## Work Log
+   100	
+   101	| Timestamp | Executor | Action | Commits | Next |
+   102	|---|---|---|---|---|
+   103	| 2026-05-19 20:33 PDT | feature-plan (Codex inline) | Step 0 and plan: scoped G1.2 to docs-only safe prep under user override. | — | feature-review |
+   104	| 2026-05-19 20:34 PDT | feature-review (Codex inline) | Approved safe prep; production shell/content refactor remains blocked. | — | feature-build |
+   105	| 2026-05-19 20:34 PDT | feature-build (Codex inline) | Created boundary docs and package dev docs. | `eaae46e` | feature-verify |
+   106	| 2026-05-19 20:34 PDT | feature-verify (Codex inline) | Verified docs-only scope; status remains BLOCKED. | `eaae46e` | Human/G0 prerequisite |
+   107	| 2026-05-19 23:18 PDT | feature-plan (Codex inline) | Reopened G1.2 after G0 Conditional Go and G1.1 READY_TO_SHIP; scoped production split to public Organizer content API. | `5d7652f` | feature-review |
+   108	| 2026-05-19 23:18 PDT | feature-review (Codex inline) | Approved bounded production split with no event/DnD/persistence contract changes. | — | feature-build |
+   109	| 2026-05-19 23:18 PDT | feature-build (Codex inline) | Implemented `OrganizerGridContent`, thinned Host `GridWindow.tsx`, and added public API contract docs. | `26d9f57` | feature-verify |
+   110	| 2026-05-19 23:22 PDT | feature-verify (Codex inline) | Verified TypeScript/build/boundary/public API checks; marked READY_TO_SHIP. | `26d9f57`, `03ca86a` | manual ship only; continue roadmap |
+   111	| 2026-05-20 00:32 PDT | ship (Claude Code, Track A) | Manifest promotion → SHIPPED. Production split already on `main` lineage (commits `26d9f57`/`03ca86a`); G1 manifest row updated to SHIPPED. Push deferred to end-of-session bundle. | `26d9f57`, `03ca86a` | continue roadmap |
+   112	| 2026-05-20 PDT | bug-fix (Claude Code, Track A, P0-1) | P0 contract fix: routed `OrganizerGridContent.tsx` Tauri event + window IPC through new `@repo/core/hooks` (`useTauriEvent`, `useTauriWindow`); behavior byte-identical; check-types/test/build green. | _pending commit_ | track follow-up to clear remaining three pre-existing offenders in `packages/plugin-organizer/src/` |
+
+---
+     1	# Roadmap Manifest — xai-g1-native-foundation
+     2	
+     3	- Roadmap Source: docs/planning/execution/G1-native-foundation.md
+     4	- Init Path: execution-pack
+     5	- Generated: 2026-05-19
+     6	- Default Automation Mode: D-Codex
+     7	- Default Dependency Semantics: shipped
+     8	- Default Verify Cross-vendor: yes
+     9	- Wave Concurrency Cap: 1
+    10	- Dispatch: serial inline Codex conductor
+    11	- Manifest Review: DEFERRED (unattended run; see docs/workflow/roadmap/xai-v1.deferred-gates.md)
+    12	- Gate Prerequisite: G0 Go or Conditional Go
+    13	- Gate Status: CONDITIONAL_GO_UNBLOCKED (2026-05-19 22:54 PDT)
+    14	
+    15	## Features
+    16	
+    17	| # | Slug | Source | Depends On | Dep Semantics | Status | Automation Mode | Verify Cross-vendor | Last Run | Note |
+    18	|---|------|--------|------------|---------------|--------|-----------------|---------------------|----------|------|
+    19	| 1 | window-command-contract | docs/planning/execution/G1-native-foundation.md §G1.1 | G0 Go/Conditional Go | shipped | SHIPPED | D-Codex | yes | 2026-05-19 | SHIPPED 2026-05-19 · Pushed to origin/spike/window-ground-truth. Rust command contract, TS types, Organizer adapter, manifest, and contract docs verified. Commits `dce4fb9`, `1fa8c75`. |
+    20	| 2 | grid-shell-organizer-content | docs/planning/execution/G1-native-foundation.md §G1.2 | window-command-contract | shipped | SHIPPED | D-Codex | yes | 2026-05-20 | SHIPPED 2026-05-20 (Track A) · Manifest promoted on `codex/track-a-desktop-foundation`. Production split commits: `26d9f57` (feat), `03ca86a` (docs ship promote), `3751f43` (dev_log ready). |
+    21	| 3 | native-dnd-path-first | docs/planning/execution/G1-native-foundation.md §G1.3 | finder-dnd-path | shipped | BLOCKED_EXTERNAL | D-Codex | yes | 2026-05-19 | Production implementation still blocked by MAS/security-scope evidence; skip under unattended mode and continue next eligible feature. |
+    22	| 4 | multi-grid-event-scope | docs/planning/execution/G1-native-foundation.md §G1.4 | grid-window-prototype | shipped | SHIPPED | D-Codex | yes | 2026-05-20 | SHIPPED 2026-05-20 (Track A) · Manifest promoted on `codex/track-a-desktop-foundation`. Event migration commits: `78aef01` (feat), `59da1e5` (docs ship promote), `44345cf` (dev_log ready). |
+    23	| 5 | grid-persistence | docs/planning/execution/G1-native-foundation.md §G1.5 | window-command-contract, repository-v0-contract | shipped | READY_TO_SHIP | D-Codex | yes | 2026-05-20 | LayoutStore seam landed in plugin-organizer; localStorage default preserved; Repository v0 adapter available; hydrate is async + corrupt-state safe (cannot whiteout). 9 vitest cases passing. |
+    24	| 6 | host-business-residuals | docs/planning/execution/G1-native-foundation.md §G1.6 | — | — | SHIPPED | D-Codex | yes | 2026-05-19 | SHIPPED 2026-05-19 · Pushed to origin/spike/window-ground-truth. Audit-only residual inventory complete; production cleanup remains blocked by G0/G1 sequencing. |
+    25	
+    26	## Decomposition Rationale
+    27	
+    28	### R1. Source and Gate Status
+    29	This manifest maps one G1 execution-pack task to one Workflow V2 feature. G1 production implementation was initially blocked because G0 was not Go or Conditional Go. On 2026-05-19, G0 reached Conditional Go for the DMG/private path after G0.5 user runtime confirmation; MAS signed/sandbox validation remains an external deferred gate.
+    30	
+    31	### R2. Safe-Prep Boundary
+    32	Only documentation, contract planning, and mock/brief work proceeded while G0 was blocked. Production changes to `commands/window.rs`, `window_ext.rs`, capabilities, Host shell, or Organizer runtime may now proceed only within the G1.1 approved scope and DMG/private-path assumptions; MAS-specific behavior must remain behind the `mas-sandbox` deferred validation path.
+    33	
+    34	### R3. Ship Record
+    35	G1.1 (window-command-contract) and G1.6 (host-business-residuals) shipped 2026-05-19 by human-authorized push to `origin/spike/window-ground-truth`. G1.2 dependency on G1.1 is formally met (shipped semantics satisfied); G1.2 itself remains READY_TO_SHIP pending its own human ship authorization. G1.3 remains BLOCKED_EXTERNAL (MAS sandbox dependency). G1.4 is READY_TO_SHIP pending human ship authorization. G1.5 remains BLOCKED pending G2 Repository v0.
+
+exec
+/bin/zsh -lc "nl -ba apps/desktop/src/windows/GridWindow.tsx | sed -n '1,140p' && printf '\\n---\\n' && nl -ba docs/contracts/plugin-organizer-public-api-v0.md | sed -n '1,120p'" in /Users/lijinlong/Desktop/AI_Desktop/XAI_Desktop
+ succeeded in 0ms:
+     1	import { MouseEvent as ReactMouseEvent, useCallback } from "react";
+     2	import { getCurrentWindow } from "@tauri-apps/api/window";
+     3	import { OrganizerGridContent } from "@repo/plugin-organizer";
+     4	import { GlobalDndProvider } from "../providers/DndProvider";
+     5	import { SettingsProvider, useSettings } from "../context/SettingsContext";
+     6	
+     7	const DRAG_THRESHOLD_PX = 4;
+     8	
+     9	/**
+    10	 * Native Grid window shell.
+    11	 *
+    12	 * Host owns provider wiring and AppKit drag handoff. Organizer owns the Grid
+    13	 * content, item rendering, drop semantics, and cross-window state events.
+    14	 */
+    15	function GridWindowShell({ gridId }: { gridId: string }) {
+    16	  const { gridOpacity, gridBlur } = useSettings();
+    17	
+    18	  // Intercept mousedown on the Organizer title bar (or the G0 fallback
+    19	  // panel) in CAPTURE phase. We stopPropagation so react-draggable's
+    20	  // onMouseDown synthetic handler never fires — its DOM-drag is meaningless
+    21	  // in multi-window mode and emits bogus rect.x/y that warp the window. Past
+    22	  // DRAG_THRESHOLD_PX we hand off to Tauri startDragging, which drives the
+    23	  // window from AppKit's mouse-drag loop and gives unrestricted screen-wide
+    24	  // movement (same pattern as the AI cube in 7b7ff35).
+    25	  const handleHeaderDragStart = useCallback((event: ReactMouseEvent<HTMLDivElement>) => {
+    26	    if (event.button !== 0) return;
+    27	    const target = event.target as HTMLElement | null;
+    28	    if (!target) return;
+    29	
+    30	    const onGridDragHandle =
+    31	      Boolean(target.closest(".grid-title-bar")) ||
+    32	      Boolean(target.closest("[data-g0-grid-prototype]"));
+    33	    if (!onGridDragHandle) return;
+    34	
+    35	    // Don't hijack interactive children: buttons (lock/fold/view/close/etc.),
+    36	    // the title edit input, the rename span's dblclick, or the resize handles.
+    37	    if (target.closest("button, input, select, textarea, .resize-handle")) return;
+    38	
+    39	    event.preventDefault();
+    40	    event.stopPropagation();
+    41	
+    42	    const startScreenX = event.screenX;
+    43	    const startScreenY = event.screenY;
+    44	    let handed = false;
+    45	
+    46	    const cleanup = () => {
+    47	      window.removeEventListener("mousemove", onMove, true);
+    48	      window.removeEventListener("mouseup", onUp, true);
+    49	    };
+    50	
+    51	    const onMove = (ev: MouseEvent) => {
+    52	      if (handed) return;
+    53	      const dx = ev.screenX - startScreenX;
+    54	      const dy = ev.screenY - startScreenY;
+    55	      if (Math.hypot(dx, dy) >= DRAG_THRESHOLD_PX) {
+    56	        handed = true;
+    57	        void getCurrentWindow()
+    58	          .startDragging()
+    59	          .catch((err) => {
+    60	            console.error("[GridWindow] startDragging failed:", err);
+    61	          });
+    62	        cleanup();
+    63	      }
+    64	    };
+    65	
+    66	    const onUp = () => cleanup();
+    67	
+    68	    window.addEventListener("mousemove", onMove, true);
+    69	    window.addEventListener("mouseup", onUp, true);
+    70	  }, []);
+    71	
+    72	  return (
+    73	    <div
+    74	      onMouseDownCapture={handleHeaderDragStart}
+    75	      style={{ width: "100%", height: "100%" }}
+    76	    >
+    77	      <OrganizerGridContent gridId={gridId} gridOpacity={gridOpacity} gridBlur={gridBlur} />
+    78	    </div>
+    79	  );
+    80	}
+    81	
+    82	export function GridWindow({ gridId }: { gridId: string }) {
+    83	  return (
+    84	    <SettingsProvider>
+    85	      <GlobalDndProvider>
+    86	        <GridWindowShell gridId={gridId} />
+    87	      </GlobalDndProvider>
+    88	    </SettingsProvider>
+    89	  );
+    90	}
+    91	
+    92	export default GridWindow;
+
+---
+     1	# Plugin Organizer Public API Contract v0
+     2	
+     3	| Field | Value |
+     4	|---|---|
+     5	| Owner | `@repo/plugin-organizer` |
+     6	| Source | `packages/plugin-organizer/src/index.ts` |
+     7	| Status | Draft |
+     8	| Applies To | Desktop Host, Organizer package |
+     9	
+    10	## 1. Principles
+    11	
+    12	- Desktop Host imports Organizer UI only from `@repo/plugin-organizer`.
+    13	- Host must not import Organizer internal source files.
+    14	- Host owns native window shell, provider wiring, and AppKit drag handoff.
+    15	- Organizer owns Grid business UI, item rendering, file-drop behavior, and scoped cross-window events.
+    16	
+    17	## 2. Public Grid Window Surface
+    18	
+    19	```ts
+    20	export interface OrganizerGridContentProps {
+    21	  gridId: string;
+    22	  gridOpacity?: number;
+    23	  gridBlur?: boolean;
+    24	}
+    25	
+    26	export function OrganizerGridContent(
+    27	  props: OrganizerGridContentProps
+    28	): JSX.Element;
+    29	```
+    30	
+    31	`OrganizerGridContent` is the only public content component the desktop Grid
+    32	window shell may render.
+    33	
+    34	## 3. Host Boundary
+    35	
+    36	Allowed Host responsibilities:
+    37	
+    38	- Parse or receive `gridId` from the native window route.
+    39	- Install `SettingsProvider` and drag/drop providers.
+    40	- Pass presentation settings into `OrganizerGridContent`.
+    41	- Handle native window dragging/chrome behavior.
+    42	
+    43	Disallowed Host responsibilities:
+    44	
+    45	- Render `SmartContainer` directly for Grid windows.
+    46	- Own Grid item placement or drop semantics.
+    47	- Emit Grid update/drop/close business events directly, except through the Organizer public component.
+    48	
+    49	## 4. Tests
+    50	
+    51	- `apps/desktop/src/windows/GridWindow.tsx` imports `OrganizerGridContent` from `@repo/plugin-organizer`.
+    52	- `apps/desktop/src/windows/GridWindow.tsx` does not import `SmartContainer`, `GridBox`, `DesktopItem`, or Organizer internal paths.
+    53	- `packages/plugin-organizer/src/index.ts` exports `OrganizerGridContent`.
+
+codex
+I have enough to rule on the P0 itself. I’m grabbing one last set of line numbers so the final decision is evidence-backed rather than descriptive.
+exec
+/bin/zsh -lc "nl -ba packages/plugin-organizer/package.json | sed -n '1,80p' && printf '\\n---\\n' && nl -ba packages/core/package.json | sed -n '1,80p' && printf '\\n---\\n' && nl -ba apps/desktop/package.json | sed -n '1,80p'" in /Users/lijinlong/Desktop/AI_Desktop/XAI_Desktop
+ succeeded in 0ms:
+     1	{
+     2	  "name": "@repo/plugin-organizer",
+     3	  "version": "0.0.0",
+     4	  "private": true,
+     5	  "description": "Smart file containers plugin for AI Smart Desktop (independent floating organizers).",
+     6	  "exports": {
+     7	    ".": {
+     8	      "types": "./src/index.ts",
+     9	      "import": "./src/index.ts"
+    10	    }
+    11	  },
+    12	  "scripts": {
+    13	    "check-types": "tsc --noEmit",
+    14	    "test": "vitest run"
+    15	  },
+    16	  "dependencies": {
+    17	    "@repo/core": "workspace:*",
+    18	    "@repo/core-data": "workspace:*",
+    19	    "@dnd-kit/core": "^6.1.0",
+    20	    "@dnd-kit/utilities": "^3.2.1",
+    21	    "@tauri-apps/api": "^2",
+    22	    "react": "^19.2.0",
+    23	    "react-dom": "^19.2.0",
+    24	    "react-draggable": "^4.4.6",
+    25	    "react-resizable": "^3.0.5"
+    26	  },
+    27	  "devDependencies": {
+    28	    "@repo/typescript-config": "workspace:*",
+    29	    "@types/node": "^22.15.3",
+    30	    "@types/react": "19.2.2",
+    31	    "@types/react-dom": "19.2.2",
+    32	    "typescript": "5.9.2",
+    33	    "vitest": "^3.2.1"
+    34	  }
+    35	}
+
+---
+     1	{
+     2	  "name": "@repo/core",
+     3	  "version": "0.0.0",
+     4	  "private": true,
+     5	  "description": "Core infrastructure for XAI_Desktop — types, events, store, registry. Zero business logic.",
+     6	  "exports": {
+     7	    ".": {
+     8	      "types": "./src/index.ts",
+     9	      "import": "./src/index.ts"
+    10	    },
+    11	    "./types": {
+    12	      "types": "./src/types/index.ts",
+    13	      "import": "./src/types/index.ts"
+    14	    },
+    15	    "./events": {
+    16	      "types": "./src/events/index.ts",
+    17	      "import": "./src/events/index.ts"
+    18	    },
+    19	    "./hooks": {
+    20	      "types": "./src/hooks/index.ts",
+    21	      "import": "./src/hooks/index.ts"
+    22	    },
+    23	    "./registry": {
+    24	      "types": "./src/registry/index.ts",
+    25	      "import": "./src/registry/index.ts"
+    26	    },
+    27	    "./store": {
+    28	      "types": "./src/store/index.ts",
+    29	      "import": "./src/store/index.ts"
+    30	    }
+    31	  },
+    32	  "scripts": {
+    33	    "check-types": "tsc --noEmit",
+    34	    "test": "vitest run"
+    35	  },
+    36	  "dependencies": {
+    37	    "@tauri-apps/api": "^2",
+    38	    "react": "^19.2.0",
+    39	    "react-dom": "^19.2.0"
+    40	  },
+    41	  "devDependencies": {
+    42	    "@repo/typescript-config": "workspace:*",
+    43	    "@types/react": "19.2.2",
+    44	    "@types/react-dom": "19.2.2",
+    45	    "typescript": "5.9.2",
+    46	    "vitest": "^3.2.1"
+    47	  }
+    48	}
+
+---
+     1	{
+     2	  "name": "desktop",
+     3	  "private": true,
+     4	  "version": "0.1.0",
+     5	  "type": "module",
+     6	  "scripts": {
+     7	    "dev": "vite",
+     8	    "build": "tsc && vite build",
+     9	    "preview": "vite preview",
+    10	    "tauri": "tauri"
+    11	  },
+    12	  "dependencies": {
+    13	    "@repo/plugin-account": "workspace:*",
+    14	    "@repo/plugin-organizer": "workspace:*",
+    15	    "@tauri-apps/api": "^2",
+    16	    "@tauri-apps/plugin-opener": "^2",
+    17	    "@dnd-kit/core": "^6.1.0",
+    18	    "@dnd-kit/utilities": "^3.2.1",
+    19	    "react": "^19.1.0",
+    20	    "react-dom": "^19.1.0",
+    21	    "react-draggable": "^4.4.6"
+    22	  },
+    23	  "devDependencies": {
+    24	    "@tauri-apps/cli": "^2.9.4",
+    25	    "@types/react": "^19.1.8",
+    26	    "@types/react-dom": "^19.1.6",
+    27	    "@vitejs/plugin-react": "^4.6.0",
+    28	    "typescript": "~5.8.3",
+    29	    "vite": "^7.0.4"
+    30	  }
+    31	}
+
+exec
+/bin/zsh -lc "git grep -n '@tauri-apps/api/event\\|@tauri-apps/api/window' f818f0d"'^:packages/plugin-organizer/src/OrganizerGridContent.tsx f818f0d:packages/plugin-organizer/src/OrganizerGridContent.tsx' in /Users/lijinlong/Desktop/AI_Desktop/XAI_Desktop
+ succeeded in 0ms:
+f818f0d^:packages/plugin-organizer/src/OrganizerGridContent.tsx:2:import { listen, TauriEvent } from "@tauri-apps/api/event";
+f818f0d^:packages/plugin-organizer/src/OrganizerGridContent.tsx:3:import { getCurrentWindow } from "@tauri-apps/api/window";
+
+codex
+## Codex Post-fix Re-review
+
+**Feature**: grid-shell-organizer-content
+**Original verdict**: BLOCKED
+**Fix commit(s)**: f818f0d
+**Reviewer**: codex feature-review · gpt-5.4 high reasoning
+**New verdict**: APPROVED
+
+### Was the original P0 resolved?
+- Original issue (paraphrased): `OrganizerGridContent.tsx` imported `@tauri-apps/api/event` and `@tauri-apps/api/window` directly, so G1.2’s SHIPPED row certified a false red-line #4 boundary.
+- Evidence the fix resolves it: `packages/plugin-organizer/src/OrganizerGridContent.tsx:2` now imports only `TauriEvent`, `useTauriEvent`, and `useTauriWindow` from `@repo/core/hooks`; all window/event touchpoints route through those wrappers at `packages/plugin-organizer/src/OrganizerGridContent.tsx:135-213` and `packages/plugin-organizer/src/OrganizerGridContent.tsx:318-329`. The boundary is centralized in core at `packages/core/src/hooks/useTauriEvent.ts:23-25`, `packages/core/src/hooks/useTauriWindow.ts:47-49`, and exported via `packages/core/src/hooks/index.ts:3-10`.
+- Was the resolution honest (no smuggled scope-cut or stub-only fix)? Yes. The exact violating call sites were replaced, not deferred, and the dev log explicitly discloses the three remaining unrelated plugin-organizer offenders instead of pretending package-wide cleanup (`packages/grid-shell-organizer-content/docs/dev_log.md:72-97`). The claimed test commands are real (`packages/core/package.json:32-34`, `packages/plugin-organizer/package.json:12-15`, `apps/desktop/package.json:6-10`) and reran green.
+
+### Remaining gaps (max 4 bullets, severity-tagged)
+- [P2] `packages/grid-shell-organizer-content/docs/dev_log.md:112` still records the fix row as `_pending commit_`; it should name `f818f0d`.
+- [P2] `docs/workflow/roadmap/xai-g1-native-foundation.md:20` still cites only the pre-fix G1.2 commits, so the shipped evidence trail omits the repair commit.
+- [P2] `packages/plugin-organizer/src/index.ts:1-49` still exposes a much broader package surface than the contract language in `docs/contracts/plugin-organizer-public-api-v0.md:31-32` suggests.
+- [P2] Pre-existing package-level red-line #4 debt remains in `packages/plugin-organizer/src/OrganizerLayer.tsx:6-7`, `packages/plugin-organizer/src/hooks/useGridWindow.ts:1`, and `packages/plugin-organizer/src/hooks/useMultiWindowGrids.ts:2-3`.
+
+### Regressions introduced (max 3 bullets)
+- None found in the reviewed scope; host boundary remains intact in `apps/desktop/src/windows/GridWindow.tsx:1-5` and `apps/desktop/src/windows/GridWindow.tsx:72-89`.
+
+### Next action
+- Re-mark the manifest row to READY_TO_SHIP and move on.
+tokens used
+48,515
+## Codex Post-fix Re-review
+
+**Feature**: grid-shell-organizer-content
+**Original verdict**: BLOCKED
+**Fix commit(s)**: f818f0d
+**Reviewer**: codex feature-review · gpt-5.4 high reasoning
+**New verdict**: APPROVED
+
+### Was the original P0 resolved?
+- Original issue (paraphrased): `OrganizerGridContent.tsx` imported `@tauri-apps/api/event` and `@tauri-apps/api/window` directly, so G1.2’s SHIPPED row certified a false red-line #4 boundary.
+- Evidence the fix resolves it: `packages/plugin-organizer/src/OrganizerGridContent.tsx:2` now imports only `TauriEvent`, `useTauriEvent`, and `useTauriWindow` from `@repo/core/hooks`; all window/event touchpoints route through those wrappers at `packages/plugin-organizer/src/OrganizerGridContent.tsx:135-213` and `packages/plugin-organizer/src/OrganizerGridContent.tsx:318-329`. The boundary is centralized in core at `packages/core/src/hooks/useTauriEvent.ts:23-25`, `packages/core/src/hooks/useTauriWindow.ts:47-49`, and exported via `packages/core/src/hooks/index.ts:3-10`.
+- Was the resolution honest (no smuggled scope-cut or stub-only fix)? Yes. The exact violating call sites were replaced, not deferred, and the dev log explicitly discloses the three remaining unrelated plugin-organizer offenders instead of pretending package-wide cleanup (`packages/grid-shell-organizer-content/docs/dev_log.md:72-97`). The claimed test commands are real (`packages/core/package.json:32-34`, `packages/plugin-organizer/package.json:12-15`, `apps/desktop/package.json:6-10`) and reran green.
+
+### Remaining gaps (max 4 bullets, severity-tagged)
+- [P2] `packages/grid-shell-organizer-content/docs/dev_log.md:112` still records the fix row as `_pending commit_`; it should name `f818f0d`.
+- [P2] `docs/workflow/roadmap/xai-g1-native-foundation.md:20` still cites only the pre-fix G1.2 commits, so the shipped evidence trail omits the repair commit.
+- [P2] `packages/plugin-organizer/src/index.ts:1-49` still exposes a much broader package surface than the contract language in `docs/contracts/plugin-organizer-public-api-v0.md:31-32` suggests.
+- [P2] Pre-existing package-level red-line #4 debt remains in `packages/plugin-organizer/src/OrganizerLayer.tsx:6-7`, `packages/plugin-organizer/src/hooks/useGridWindow.ts:1`, and `packages/plugin-organizer/src/hooks/useMultiWindowGrids.ts:2-3`.
+
+### Regressions introduced (max 3 bullets)
+- None found in the reviewed scope; host boundary remains intact in `apps/desktop/src/windows/GridWindow.tsx:1-5` and `apps/desktop/src/windows/GridWindow.tsx:72-89`.
+
+### Next action
+- Re-mark the manifest row to READY_TO_SHIP and move on.

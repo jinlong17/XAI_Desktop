@@ -1,0 +1,3032 @@
+Reading additional input from stdin...
+OpenAI Codex v0.132.0
+--------
+workdir: /Users/lijinlong/Desktop/AI_Desktop/XAI_Desktop
+model: gpt-5.4
+provider: openai
+approval: never
+sandbox: workspace-write [workdir, /tmp, $TMPDIR]
+reasoning effort: high
+reasoning summaries: none
+session id: 019e44b1-8f36-7180-b7df-b1f73d11c05d
+--------
+user
+# Codex Feature Post-fix Re-review
+
+You are acting as the `feature-review` subagent (Codex inline, cross-vendor verify pass), **re-reviewing** a P0 fix that the Claude Code main agent landed on `codex/track-a-desktop-foundation` in response to your previous BLOCKED verdict.
+
+## Your only job
+
+Decide whether the new commit closes the P0 issue you previously flagged. Output ONLY the markdown block below — no preamble, no follow-up. Under 500 words.
+
+```md
+## Codex Post-fix Re-review
+
+**Feature**: single-table-sync-baseline
+**Original verdict**: BLOCKED
+**Fix commit(s)**: c5b0e77
+**Reviewer**: codex feature-review · gpt-5.4 high reasoning
+**New verdict**: APPROVED | REVISE | BLOCKED
+
+### Was the original P0 resolved?
+- Original issue (paraphrased): …
+- Evidence the fix resolves it: <file:line citations>
+- Was the resolution honest (no smuggled scope-cut or stub-only fix)?
+
+### Remaining gaps (max 4 bullets, severity-tagged)
+- [P1|P2] …
+
+### Regressions introduced (max 3 bullets)
+- …
+
+### Next action
+- If APPROVED: re-mark the manifest row to READY_TO_SHIP and move on.
+- If REVISE: one or two concrete follow-up bullets (≤ half a day each).
+- If BLOCKED: state which contract is still false.
+```
+
+## How to evaluate
+
+1. The fix commit's diff is your primary evidence. Use `git show --stat c5b0e77` and `git show c5b0e77` to read it end-to-end.
+2. Compare the diff against the original P0 issue:
+   enqueueOutboxEntry claimed same-transaction rollback, but createTauriRepo.transaction(fn) was documented as a non-atomic callback wrapper. The unit test passed only because createInMemoryRepo uses snapshot-based rollback; the production SQLite path would leave the entity persisted if the outbox write failed.
+3. Look for the **specific change** the previous review demanded. Smuggled scope-cuts (e.g. silently deferring the invariant to a follow-up) must downgrade the verdict.
+4. Scan for **regressions**: imports added, capabilities widened, tests skipped, doc invariants weakened.
+5. Validate the test commands listed in the fix commit message actually exist and pass (treat the commit body's "Tests" section as the executor's claim — does the diff support it?).
+
+## Feature-specific context
+
+Feature ID: G2.6 / single-table-sync-baseline
+Branch: codex/track-a-desktop-foundation
+Commit under review: 43ffdda (feat(single-table-sync-baseline): Repository v0 outbox + atomic enqueue)
+
+Files added or changed:
+- packages/core-data/src/sync-outbox.ts (new) — OutboxEntry record, enqueueOutboxEntry, nextOutboxBatch, createMockCommitSeqAuthority
+- packages/core-data/src/index.ts — re-export
+- packages/core-data/tests/sync-outbox.test.ts (new) — 4 vitest cases
+- packages/single-table-todos-e2e/docs/dev_log.md — updated Status → READY_TO_SHIP
+- docs/workflow/roadmap/xai-g2-data-security-foundation.md row #7 → READY_TO_SHIP
+
+Intended scope:
+- `OutboxEntry extends RepoRecord` with `entityType: "sync.outbox"`, commitSeq,
+  mutationId, targetEntityType, targetEntityId, op, payload, retryCount,
+  baseRevision.
+- `enqueueOutboxEntry()` wraps entity write + outbox put in the same outer
+  `entityRepo.transaction(fn)` so a crash mid-state rolls both back (FR-SY-32 M-12).
+- `nextOutboxBatch()` drains by commitSeq.
+- `createMockCommitSeqAuthority()` for tests / local fallback.
+
+Cross-vendor checklist:
+1. Same-transaction guarantee: the outer transaction is `entityRepo.transaction(fn)`
+   and the inner write is `outboxRepo.transaction(outboxTx => outboxTx.put(entry))`.
+   If `entityRepo` and `outboxRepo` are backed by DIFFERENT SQLite databases (or
+   different namespaces in same DB), is the rollback semantically correct? The
+   sabotage test uses in-memory repos which share no real transaction context —
+   prove the guarantee holds against a real SQLite-backed driver too.
+2. `commitSeq` ordering: in production, the commit-seq authority is Rust-side. Is
+   the gap between TS `createMockCommitSeqAuthority()` and the eventual Rust
+   authority handled (e.g. a typed seam interface)?
+3. Idempotency: re-enqueueing the same mutationId yields the same `outbox_<mutationId>`
+   id and overwrites the existing row. Is that intentional? It loses the prior
+   retryCount / lastAttemptAt.
+4. Payload: opaque string (encrypted envelope expected). Is there a check that
+   plaintext doesn't sneak in? At minimum a doc that payload must not contain
+   PII / cleartext entity body?
+5. baseRevision: optional. When should it be set? Doc says "conditional-write
+   conflict path" but there's no test exercising the conflict.
+6. Test coverage: 4 cases. Missing: very large batch ordering across multiple
+   namespaces, retry counter semantics, sync engine drain interleaving.
+7. Future-proofing: when Supabase push lands, does the outbox schema need
+   migration (e.g. add `lastError`, `serverAccepted`)? Should `schemaVersion` be
+   present on `OutboxEntry` and exercised?
+codex
+Reviewing commit `c5b0e77` against the previously flagged atomicity contract. I’m reading the full diff, then I’ll verify whether the production SQLite path now enforces the same-transaction guarantee instead of only the in-memory test path.
+exec
+/bin/zsh -lc "rg -n \"createTauriRepo|transaction\\(|enqueueOutboxEntry|sync-outbox|OutboxEntry|createMockCommitSeqAuthority\" packages -S" in /Users/lijinlong/Desktop/AI_Desktop/XAI_Desktop
+ succeeded in 0ms:
+packages/core-data-sqlite-driver/docs/dev_log.md:33:  `createTauriRepo(invoke, { namespace })` returning a `Repo<T>` shape
+packages/core-data-sqlite-driver/docs/dev_log.md:55:  + the `createTauriRepo.transaction(fn)` buffered-batch shim. Writes
+packages/core-data-sqlite-driver/docs/dev_log.md:77:| 2026-05-20 00:46 PDT | feature-build + feature-verify (Claude Code, Track A) | Implemented `commands/database.rs`, error variants, lib.rs registration, TS `createTauriRepo` factory, and contract doc §6.1. 7 cargo tests + 4 vitest tests passing; cargo check (default + crypto) and desktop build green. | pending commit | manual ship only; continue roadmap |
+packages/core-data-sqlite-driver/docs/dev_log.md:78:| 2026-05-20 02:13 PDT | bug-fix (Claude Code, Track A) | P0 G2.6 atomicity fix: added `db_put_batch` Tauri command (BEGIN/COMMIT around N puts+deletes in one namespace), rewired `createTauriRepo.transaction(fn)` to buffer writes and dispatch them through `db_put_batch`. Adds the `E13xx` validation contract: the whole batch rolls back on any per-entry failure. 13 cargo database tests (4 new batch cases) + 66 core-data vitest cases (incl. new `tauri-sqlite` buffer/rollback + real SQLite sabotage) all green. | `cargo check`, `cargo check --features crypto`, `cargo test --features crypto database::`, `pnpm --filter @repo/core-data test`, `pnpm --filter @repo/core-data check-types`, `pnpm --filter desktop build` — all PASS. | continue roadmap |
+packages/sync-engine-push/docs/api.md:14:`enqueue()` returns an `OutboxEntry` with a UUIDv7 `mutationId`. Calling
+packages/single-table-todos-e2e/docs/design.md:9:  `SqliteDriver.transaction()` call.
+packages/single-table-todos-e2e/docs/dev_log.md:28:- Added `packages/core-data/src/sync-outbox.ts` defining the
+packages/single-table-todos-e2e/docs/dev_log.md:29:  Repository v0 `OutboxEntry` record (commitSeq, mutationId,
+packages/single-table-todos-e2e/docs/dev_log.md:31:- Added `enqueueOutboxEntry` — atomically writes the entity and outbox
+packages/single-table-todos-e2e/docs/dev_log.md:32:  row inside a SINGLE `repo.transaction(...)`. Atomicity model:
+packages/single-table-todos-e2e/docs/dev_log.md:36:    - On-disk SQLite (`createTauriRepo`): one `db_put_batch` Tauri call
+packages/single-table-todos-e2e/docs/dev_log.md:44:  `createMockCommitSeqAuthority` helper for tests / local fallback.
+packages/single-table-todos-e2e/docs/dev_log.md:66:on-disk SQLite (`createTauriRepo`) via the `db_put_batch` Tauri
+packages/single-table-todos-e2e/docs/dev_log.md:74:`transaction(fn)` was a non-atomic callback wrapper that ran writes
+packages/single-table-todos-e2e/docs/dev_log.md:76:`createTauriRepo.transaction(fn)` buffers all writes in JS and
+packages/single-table-todos-e2e/docs/dev_log.md:89:| 2026-05-20 01:02 PDT | feature-build + feature-verify (Claude Code, Track A) | Added Repository v0 outbox baseline (`sync-outbox.ts` + 4 vitest cases) and reconciled status to G2 roadmap. | `pnpm --filter @repo/core-data test` (58 tests) | manual ship only; continue roadmap |
+packages/single-table-todos-e2e/docs/dev_log.md:90:| 2026-05-20 02:13 PDT | bug-fix (Claude Code, Track A) | P0 G2.6 atomicity fix: refactored `enqueueOutboxEntry` to share one namespace for entity + outbox rows (outbox ids prefixed with `__outbox__`), added `db_put_batch` Tauri command + `createTauriRepo.transaction(fn)` buffered-batch shim so on-disk SQLite gets a real `BEGIN`/`COMMIT`. Retracted the prior misleading "same-transaction rollback is proved" claim; atomicity now holds on every shipped driver. | `cargo check`, `cargo check --features crypto`, `cargo test --features crypto database::` (13/13), `pnpm --filter @repo/core-data test` (66/66), `pnpm --filter @repo/core-data check-types`, `pnpm --filter desktop build` — all PASS. | manual ship only; continue roadmap |
+packages/repository-v0-contract/docs/design.md:26:- Atomic work: `transaction(fn)`
+packages/plugin-account/src/sync-engine.ts:14:export interface OutboxEntry extends SyncEntityRef {
+packages/plugin-account/src/sync-engine.ts:21:  enqueue(input: QueueMutationInput): OutboxEntry;
+packages/plugin-account/src/sync-engine.ts:22:  list(): OutboxEntry[];
+packages/plugin-account/src/sync-engine.ts:194:  entries: readonly OutboxEntry[];
+packages/plugin-account/src/sync-engine.ts:236:  const entries = new Map<string, OutboxEntry>();
+packages/plugin-account/src/sync-engine.ts:239:    enqueue(input: QueueMutationInput): OutboxEntry {
+packages/plugin-account/src/sync-engine.ts:240:      const entry: OutboxEntry = {
+packages/plugin-account/src/sync-engine.ts:251:    list(): OutboxEntry[] {
+packages/plugin-account/src/index.ts:109:  TodoOutboxEntry,
+packages/plugin-account/src/index.ts:133:  OutboxEntry,
+packages/plugin-account/src/todo-sync.ts:2:import type { OutboxEntry, QueueMutationInput, SyncEntityRef } from './sync-engine';
+packages/plugin-account/src/todo-sync.ts:16:export interface TodoOutboxEntry extends OutboxEntry {
+packages/plugin-account/src/todo-sync.ts:30:  listOutbox(): Promise<TodoOutboxEntry[]>;
+packages/plugin-account/src/todo-sync.ts:112:      await driver.transaction(async (tx) => {
+packages/plugin-account/src/todo-sync.ts:126:      await driver.transaction((tx) => writeTodo(tx, todo));
+packages/plugin-account/src/todo-sync.ts:141:    async listOutbox(): Promise<TodoOutboxEntry[]> {
+packages/plugin-account/src/todo-sync.ts:156:      await driver.transaction(async (tx) => {
+packages/plugin-account/src/audit-log.ts:78:      await driver.transaction((tx) =>
+packages/core-data/src/index.ts:57:export { createTauriRepo, dbInit } from "./tauri-sqlite";
+packages/core-data/src/index.ts:60:  createMockCommitSeqAuthority,
+packages/core-data/src/index.ts:61:  enqueueOutboxEntry,
+packages/core-data/src/index.ts:66:} from "./sync-outbox";
+packages/core-data/src/index.ts:70:  OutboxEntry,
+packages/core-data/src/index.ts:71:} from "./sync-outbox";
+packages/core-data/src/sync-outbox.ts:6: * `account-sync` entity mutation must enqueue an `OutboxEntry` in the
+packages/core-data/src/sync-outbox.ts:14: * Because both rows live in one namespace, `Repo<T>.transaction(fn)`
+packages/core-data/src/sync-outbox.ts:20: * - `createTauriRepo` (production / on-disk SQLite) → buffered batch
+packages/core-data/src/sync-outbox.ts:26: * - The `OutboxEntry` record shape (an extension of `RepoRecord`).
+packages/core-data/src/sync-outbox.ts:27: * - `enqueueOutboxEntry` — atomic helper that pairs an entity put/delete
+packages/core-data/src/sync-outbox.ts:28: *   with an outbox put inside a single `Repo.transaction(fn)` callback.
+packages/core-data/src/sync-outbox.ts:44: * Reserved id prefix that marks a row as a sync-outbox row inside a
+packages/core-data/src/sync-outbox.ts:61:export interface OutboxEntry extends RepoRecord {
+packages/core-data/src/sync-outbox.ts:84: * `enqueueOutboxEntry` takes ONE repo. The entity row and the outbox row
+packages/core-data/src/sync-outbox.ts:100:  entityRepo: Repo<T | OutboxEntry>;
+packages/core-data/src/sync-outbox.ts:107:  outboxRepo?: Repo<T | OutboxEntry>;
+packages/core-data/src/sync-outbox.ts:119: * `Repo.transaction(fn)` call. The transaction guarantees that either
+packages/core-data/src/sync-outbox.ts:123:export async function enqueueOutboxEntry<T extends RepoRecord>(
+packages/core-data/src/sync-outbox.ts:125:): Promise<OutboxEntry> {
+packages/core-data/src/sync-outbox.ts:128:      "E3009: enqueueOutboxEntry requires the entity repo and outbox repo to be the same Repo instance — split namespaces cannot commit atomically",
+packages/core-data/src/sync-outbox.ts:142:  const entry: OutboxEntry = {
+packages/core-data/src/sync-outbox.ts:160:  await input.entityRepo.transaction(async (tx: RepoTransaction<T | OutboxEntry>) => {
+packages/core-data/src/sync-outbox.ts:182: * The repo is typed as `Repo<OutboxEntry>` because the caller is
+packages/core-data/src/sync-outbox.ts:184: * `as unknown as Repo<OutboxEntry>` when reading from a heterogeneous
+packages/core-data/src/sync-outbox.ts:188:  repo: Repo<OutboxEntry>,
+packages/core-data/src/sync-outbox.ts:190:): Promise<OutboxEntry[]> {
+packages/core-data/src/sync-outbox.ts:204:export function createMockCommitSeqAuthority(initial = 0) {
+packages/core-data/src/testing.ts:105:      await this.transaction(async (tx) => {
+packages/core-data/src/sqlite.ts:189:      await driver.transaction((tx) => operationsFor(tx).put(record));
+packages/core-data/src/sqlite.ts:194:      await driver.transaction((tx) => operationsFor(tx).delete(id));
+packages/core-data/src/sqlite.ts:220:      return driver.transaction((tx) => fn(operationsFor(tx)));
+packages/core-data/src/sqlite.ts:233:      await repo.transaction(async (tx) => {
+packages/core-data/src/tauri-sqlite.ts:6: * `SqliteDriver`-shaped object plus a thin `createTauriRepo()` helper
+packages/core-data/src/tauri-sqlite.ts:59:export function createTauriRepo<T extends RepoRecord>(
+packages/core-data/tests/repository-contract.ts:73:        repo.transaction(async (tx) => {
+packages/core-data/tests/sync-outbox.test.ts:4:  createMockCommitSeqAuthority,
+packages/core-data/tests/sync-outbox.test.ts:5:  enqueueOutboxEntry,
+packages/core-data/tests/sync-outbox.test.ts:10:  type OutboxEntry,
+packages/core-data/tests/sync-outbox.test.ts:11:} from "../src/sync-outbox";
+packages/core-data/tests/sync-outbox.test.ts:36:type SharedRepo = Repo<TodoEntity | OutboxEntry>;
+packages/core-data/tests/sync-outbox.test.ts:38:function asOutboxView(repo: SharedRepo): Repo<OutboxEntry> {
+packages/core-data/tests/sync-outbox.test.ts:39:  return repo as unknown as Repo<OutboxEntry>;
+packages/core-data/tests/sync-outbox.test.ts:42:describe("enqueueOutboxEntry", () => {
+packages/core-data/tests/sync-outbox.test.ts:44:    const repo = createInMemoryRepo<TodoEntity | OutboxEntry>({
+packages/core-data/tests/sync-outbox.test.ts:47:    const nextCommitSeq = createMockCommitSeqAuthority();
+packages/core-data/tests/sync-outbox.test.ts:49:    const entry = await enqueueOutboxEntry({
+packages/core-data/tests/sync-outbox.test.ts:78:    const repo = createInMemoryRepo<TodoEntity | OutboxEntry>({
+packages/core-data/tests/sync-outbox.test.ts:88:        return repo.transaction(async (tx) => {
+packages/core-data/tests/sync-outbox.test.ts:96:      enqueueOutboxEntry({
+packages/core-data/tests/sync-outbox.test.ts:102:        nextCommitSeq: createMockCommitSeqAuthority(),
+packages/core-data/tests/sync-outbox.test.ts:116:    const baseRepo = createSqliteRepo<TodoEntity | OutboxEntry>(driver, {
+packages/core-data/tests/sync-outbox.test.ts:123:        return baseRepo.transaction(async (tx) => {
+packages/core-data/tests/sync-outbox.test.ts:131:      enqueueOutboxEntry({
+packages/core-data/tests/sync-outbox.test.ts:137:        nextCommitSeq: createMockCommitSeqAuthority(),
+packages/core-data/tests/sync-outbox.test.ts:149:    const repo = createInMemoryRepo<TodoEntity | OutboxEntry>({
+packages/core-data/tests/sync-outbox.test.ts:153:      enqueueOutboxEntry({
+packages/core-data/tests/sync-outbox.test.ts:159:        nextCommitSeq: createMockCommitSeqAuthority(),
+packages/core-data/tests/sync-outbox.test.ts:165:    const repoA = createInMemoryRepo<TodoEntity | OutboxEntry>({
+packages/core-data/tests/sync-outbox.test.ts:168:    const repoB = createInMemoryRepo<TodoEntity | OutboxEntry>({
+packages/core-data/tests/sync-outbox.test.ts:172:      enqueueOutboxEntry({
+packages/core-data/tests/sync-outbox.test.ts:179:        nextCommitSeq: createMockCommitSeqAuthority(),
+packages/core-data/tests/sync-outbox.test.ts:185:    const repo = createInMemoryRepo<TodoEntity | OutboxEntry>({
+packages/core-data/tests/sync-outbox.test.ts:188:    const nextCommitSeq = createMockCommitSeqAuthority(99);
+packages/core-data/tests/sync-outbox.test.ts:190:    await enqueueOutboxEntry({
+packages/core-data/tests/sync-outbox.test.ts:198:    await enqueueOutboxEntry({
+packages/core-data/tests/sync-outbox.test.ts:206:    await enqueueOutboxEntry({
+packages/core-data/tests/sync-outbox.test.ts:222:    const repo = createInMemoryRepo<TodoEntity | OutboxEntry>({
+packages/core-data/tests/sync-outbox.test.ts:225:    const nextCommitSeq = createMockCommitSeqAuthority();
+packages/core-data/tests/sync-outbox.test.ts:229:    const entry = await enqueueOutboxEntry({
+
+exec
+/bin/zsh -lc 'git show --stat --summary c5b0e77' in /Users/lijinlong/Desktop/AI_Desktop/XAI_Desktop
+ succeeded in 0ms:
+commit c5b0e7748067084f6bbc587a8502ef5671922b95
+Author: InnoPeak <global_ai@innopeaktech.com>
+Date:   Wed May 20 02:16:25 2026 -0700
+
+    fix(core-data, commands/database): atomic outbox via db_put_batch (P0 G2.6)
+    
+    Why:
+      Codex cross-vendor review flagged that `enqueueOutboxEntry`'s
+      "same-transaction rollback" claim was only true for the in-memory
+      driver. `createTauriRepo.transaction(fn)` was documented as a
+      non-atomic callback wrapper: it ran writes in-place against the
+      shared connection with no BEGIN/COMMIT, so a crash between the entity
+      put and the outbox put would leave one row without the other on the
+      production SQLite path.
+    
+    What:
+      - Added `db_put_batch` Tauri command in `commands/database.rs`. The
+        payload is `{ namespace, entries: [{ op, id, json?, updatedAtMs? }] }`
+        where `op` is `"put"` or `"delete"`. Rust validates every entry
+        up-front, then wraps the whole batch in one SQLite
+        `Connection::transaction()` so any per-entry failure rolls back the
+        full batch.
+      - Registered the new command in `lib.rs` behind the existing `crypto`
+        feature (matches the other `db_*` commands).
+      - Rewired `createTauriRepo.transaction(fn)` to buffer puts and deletes
+        inside the callback and dispatch them as ONE `db_put_batch` call.
+        A throw from `fn` short-circuits before any IPC, so the database is
+        untouched. Reads inside the callback observe the pre-tx state.
+      - Refactored `enqueueOutboxEntry` to take a single shared repo: the
+        entity row and the outbox row now live in the same namespace; the
+        outbox row's id uses the reserved `__outbox__<mutationId>` prefix.
+        `nextOutboxBatch` filters on that prefix to extract outbox rows
+        from a heterogeneous namespace. Passing two different repos now
+        throws `E3009` because separate namespaces cannot commit atomically.
+      - Updated `docs/contracts/tauri-commands-v0.md` §6.1 with the
+        `db_put_batch` row and the new buffered-batch atomicity model.
+      - Updated `packages/core-data-sqlite-driver/docs/dev_log.md` and
+        `packages/single-table-todos-e2e/docs/dev_log.md` to retract the
+        misleading "same-transaction rollback is proved" phrasing and
+        record the P0 fix with the real per-driver atomicity story.
+    
+    Scope:
+      - apps/desktop/src-tauri/src/commands/database.rs (+ 4 cargo tests)
+      - apps/desktop/src-tauri/src/lib.rs (command registration)
+      - packages/core-data/src/sync-outbox.ts (single-repo refactor)
+      - packages/core-data/src/tauri-sqlite.ts (buffered transaction)
+      - packages/core-data/src/index.ts (export OUTBOX_ID_PREFIX, helpers)
+      - packages/core-data/tests/sync-outbox.test.ts (9 cases incl.
+        real-SQLite sabotage)
+      - packages/core-data/tests/tauri-sqlite.test.ts (3 new cases for
+        buffered transaction + Rust-side rollback)
+      - docs/contracts/tauri-commands-v0.md §6.1
+      - packages/core-data-sqlite-driver/docs/dev_log.md
+      - packages/single-table-todos-e2e/docs/dev_log.md
+    
+    Risk:
+      - Behavioural change for callers using `createTauriRepo.transaction()`:
+        reads inside the callback now observe the pre-transaction state
+        (no read-after-write within a tx). Documented in the factory's doc
+        comment. No production caller exercises read-after-write inside a
+        transaction today.
+      - `EnqueueOutboxInput` keeps `outboxRepo` as an optional field for
+        backwards source compatibility but enforces at runtime that it
+        matches `entityRepo`. The only callers in-tree are tests, which
+        were migrated.
+      - No new dependencies; reuses bundled-sqlcipher rusqlite already
+        behind the `crypto` feature.
+    
+    Docs:
+      - docs/contracts/tauri-commands-v0.md §6.1 — `db_put_batch` row.
+      - packages/core-data-sqlite-driver/docs/dev_log.md — Work Log entry +
+        deferred-item retraction.
+      - packages/single-table-todos-e2e/docs/dev_log.md — Phase 1 rewrite,
+        verification notes, Work Log entry.
+    
+    Tests:
+      - `cargo check` — PASS
+      - `cargo check --features crypto` — PASS
+      - `cargo test --features crypto database::` — 13/13 PASS
+        (4 new: batch atomic commit, invalid-op rollback, runtime-error
+        rollback, mixed put/delete order)
+      - `pnpm --filter @repo/core-data test` — 66/66 PASS
+        (sync-outbox now exercises in-memory + real-SQLite sabotage,
+        tauri-sqlite proves buffered batch + Rust-side rollback)
+      - `pnpm --filter @repo/core-data check-types` — PASS
+      - `pnpm --filter desktop build` — PASS
+    
+    Co-Authored-By: Claude Opus 4.7 (1M context) <noreply@anthropic.com>
+
+ apps/desktop/src-tauri/src/commands/database.rs  | 274 +++++++++++++++++++++++
+ apps/desktop/src-tauri/src/lib.rs                |   2 +
+ docs/contracts/tauri-commands-v0.md              |   3 +-
+ packages/core-data-sqlite-driver/docs/dev_log.md |  12 +-
+ packages/core-data/src/index.ts                  |   3 +
+ packages/core-data/src/sync-outbox.ts            | 113 ++++++++--
+ packages/core-data/src/tauri-sqlite.ts           |  82 ++++++-
+ packages/core-data/tests/sync-outbox.test.ts     | 214 ++++++++++++------
+ packages/core-data/tests/tauri-sqlite.test.ts    | Bin 4495 -> 8685 bytes
+ packages/single-table-todos-e2e/docs/dev_log.md  |  45 +++-
+ 10 files changed, 637 insertions(+), 111 deletions(-)
+
+exec
+/bin/zsh -lc 'git show c5b0e77' in /Users/lijinlong/Desktop/AI_Desktop/XAI_Desktop
+ succeeded in 0ms:
+commit c5b0e7748067084f6bbc587a8502ef5671922b95
+Author: InnoPeak <global_ai@innopeaktech.com>
+Date:   Wed May 20 02:16:25 2026 -0700
+
+    fix(core-data, commands/database): atomic outbox via db_put_batch (P0 G2.6)
+    
+    Why:
+      Codex cross-vendor review flagged that `enqueueOutboxEntry`'s
+      "same-transaction rollback" claim was only true for the in-memory
+      driver. `createTauriRepo.transaction(fn)` was documented as a
+      non-atomic callback wrapper: it ran writes in-place against the
+      shared connection with no BEGIN/COMMIT, so a crash between the entity
+      put and the outbox put would leave one row without the other on the
+      production SQLite path.
+    
+    What:
+      - Added `db_put_batch` Tauri command in `commands/database.rs`. The
+        payload is `{ namespace, entries: [{ op, id, json?, updatedAtMs? }] }`
+        where `op` is `"put"` or `"delete"`. Rust validates every entry
+        up-front, then wraps the whole batch in one SQLite
+        `Connection::transaction()` so any per-entry failure rolls back the
+        full batch.
+      - Registered the new command in `lib.rs` behind the existing `crypto`
+        feature (matches the other `db_*` commands).
+      - Rewired `createTauriRepo.transaction(fn)` to buffer puts and deletes
+        inside the callback and dispatch them as ONE `db_put_batch` call.
+        A throw from `fn` short-circuits before any IPC, so the database is
+        untouched. Reads inside the callback observe the pre-tx state.
+      - Refactored `enqueueOutboxEntry` to take a single shared repo: the
+        entity row and the outbox row now live in the same namespace; the
+        outbox row's id uses the reserved `__outbox__<mutationId>` prefix.
+        `nextOutboxBatch` filters on that prefix to extract outbox rows
+        from a heterogeneous namespace. Passing two different repos now
+        throws `E3009` because separate namespaces cannot commit atomically.
+      - Updated `docs/contracts/tauri-commands-v0.md` §6.1 with the
+        `db_put_batch` row and the new buffered-batch atomicity model.
+      - Updated `packages/core-data-sqlite-driver/docs/dev_log.md` and
+        `packages/single-table-todos-e2e/docs/dev_log.md` to retract the
+        misleading "same-transaction rollback is proved" phrasing and
+        record the P0 fix with the real per-driver atomicity story.
+    
+    Scope:
+      - apps/desktop/src-tauri/src/commands/database.rs (+ 4 cargo tests)
+      - apps/desktop/src-tauri/src/lib.rs (command registration)
+      - packages/core-data/src/sync-outbox.ts (single-repo refactor)
+      - packages/core-data/src/tauri-sqlite.ts (buffered transaction)
+      - packages/core-data/src/index.ts (export OUTBOX_ID_PREFIX, helpers)
+      - packages/core-data/tests/sync-outbox.test.ts (9 cases incl.
+        real-SQLite sabotage)
+      - packages/core-data/tests/tauri-sqlite.test.ts (3 new cases for
+        buffered transaction + Rust-side rollback)
+      - docs/contracts/tauri-commands-v0.md §6.1
+      - packages/core-data-sqlite-driver/docs/dev_log.md
+      - packages/single-table-todos-e2e/docs/dev_log.md
+    
+    Risk:
+      - Behavioural change for callers using `createTauriRepo.transaction()`:
+        reads inside the callback now observe the pre-transaction state
+        (no read-after-write within a tx). Documented in the factory's doc
+        comment. No production caller exercises read-after-write inside a
+        transaction today.
+      - `EnqueueOutboxInput` keeps `outboxRepo` as an optional field for
+        backwards source compatibility but enforces at runtime that it
+        matches `entityRepo`. The only callers in-tree are tests, which
+        were migrated.
+      - No new dependencies; reuses bundled-sqlcipher rusqlite already
+        behind the `crypto` feature.
+    
+    Docs:
+      - docs/contracts/tauri-commands-v0.md §6.1 — `db_put_batch` row.
+      - packages/core-data-sqlite-driver/docs/dev_log.md — Work Log entry +
+        deferred-item retraction.
+      - packages/single-table-todos-e2e/docs/dev_log.md — Phase 1 rewrite,
+        verification notes, Work Log entry.
+    
+    Tests:
+      - `cargo check` — PASS
+      - `cargo check --features crypto` — PASS
+      - `cargo test --features crypto database::` — 13/13 PASS
+        (4 new: batch atomic commit, invalid-op rollback, runtime-error
+        rollback, mixed put/delete order)
+      - `pnpm --filter @repo/core-data test` — 66/66 PASS
+        (sync-outbox now exercises in-memory + real-SQLite sabotage,
+        tauri-sqlite proves buffered batch + Rust-side rollback)
+      - `pnpm --filter @repo/core-data check-types` — PASS
+      - `pnpm --filter desktop build` — PASS
+    
+    Co-Authored-By: Claude Opus 4.7 (1M context) <noreply@anthropic.com>
+
+diff --git a/apps/desktop/src-tauri/src/commands/database.rs b/apps/desktop/src-tauri/src/commands/database.rs
+index c210ceb..31fedb3 100644
+--- a/apps/desktop/src-tauri/src/commands/database.rs
++++ b/apps/desktop/src-tauri/src/commands/database.rs
+@@ -20,6 +20,11 @@
+ //! - `db_get { namespace, id }` → returns `json | null`.
+ //! - `db_list { namespace }` → returns rows sorted by `id`.
+ //! - `db_delete { namespace, id }` → idempotent.
++//! - `db_put_batch { namespace, entries: [{ id, json?, updatedAtMs?, op }] }`
++//!   → atomic put/delete batch wrapped in a single SQLite transaction.
++//!   `op` is `"put"` or `"delete"`. On any per-entry failure the whole
++//!   batch rolls back. Required for the Repository v0 sync outbox so the
++//!   entity row and its outbox row commit together (G2.6 P0 fix).
+ //!
+ //! Errors map to the `E13xx` family in `error.rs`.
+ 
+@@ -131,6 +136,19 @@ impl DatabaseState {
+             .ok_or(AppError::DatabaseNotInitialized)?;
+         f(&inner.conn)
+     }
++
++    fn with_conn_mut<F, T>(&self, f: F) -> AppResult<T>
++    where
++        F: FnOnce(&mut Connection) -> AppResult<T>,
++    {
++        let mut guard = self.inner.lock().map_err(|err| {
++            AppError::DatabaseBackend(format!("state lock poisoned: {err}"))
++        })?;
++        let inner = guard
++            .as_mut()
++            .ok_or(AppError::DatabaseNotInitialized)?;
++        f(&mut inner.conn)
++    }
+ }
+ 
+ fn resolve_db_path(app: &tauri::AppHandle) -> AppResult<PathBuf> {
+@@ -286,6 +304,104 @@ pub async fn db_delete(
+     })
+ }
+ 
++#[derive(Debug, Deserialize)]
++#[serde(rename_all = "camelCase")]
++pub struct DbBatchEntry {
++    /// `"put"` or `"delete"`.
++    pub op: String,
++    pub id: String,
++    /// Required when `op == "put"`. Ignored when `op == "delete"`.
++    pub json: Option<String>,
++    /// Required when `op == "put"`. Ignored when `op == "delete"`.
++    pub updated_at_ms: Option<i64>,
++}
++
++#[derive(Debug, Deserialize)]
++pub struct DbPutBatchInput {
++    pub namespace: String,
++    pub entries: Vec<DbBatchEntry>,
++}
++
++/// Atomically apply a batch of put/delete operations against a single
++/// namespace inside ONE SQLite transaction. If any entry fails validation
++/// or backend execution, the entire batch rolls back — no partial write.
++///
++/// This is the primitive that lets the TS `createTauriRepo.transaction(fn)`
++/// shim deliver a real same-transaction guarantee on the on-disk SQLite
++/// path (G2.6 P0 fix). The shim buffers writes in TS, then issues one
++/// `db_put_batch` call at commit time.
++#[tauri::command]
++pub async fn db_put_batch(
++    window: tauri::WebviewWindow,
++    state: tauri::State<'_, DatabaseState>,
++    input: DbPutBatchInput,
++) -> AppResult<()> {
++    ensure_database_window_allowed(window.label())?;
++    apply_put_batch(&state, &input)
++}
++
++/// Inner driver for `db_put_batch`. Factored out so the Tauri command and
++/// unit tests can share the validation + transactional execution path.
++fn apply_put_batch(state: &DatabaseState, input: &DbPutBatchInput) -> AppResult<()> {
++    validate_namespace(&input.namespace)?;
++
++    // Validate every entry up-front so a malformed payload aborts before
++    // we touch the connection. This keeps the contract: `db_put_batch`
++    // either applies all entries or none.
++    for entry in &input.entries {
++        validate_id(&entry.id)?;
++        match entry.op.as_str() {
++            "put" => {
++                if entry.json.is_none() || entry.updated_at_ms.is_none() {
++                    return Err(AppError::DatabaseInvalidInput(format!(
++                        "batch entry id={} op=put requires json + updatedAtMs",
++                        entry.id
++                    )));
++                }
++            }
++            "delete" => {}
++            other => {
++                return Err(AppError::DatabaseInvalidInput(format!(
++                    "batch entry id={} has unknown op `{other}` (expected put|delete)",
++                    entry.id
++                )));
++            }
++        }
++    }
++
++    state.with_conn_mut(|conn| {
++        let tx = conn
++            .transaction()
++            .map_err(|err| AppError::DatabaseBackend(err.to_string()))?;
++
++        for entry in &input.entries {
++            match entry.op.as_str() {
++                "put" => {
++                    let json = entry.json.as_ref().expect("validated above");
++                    let updated_at_ms = entry.updated_at_ms.expect("validated above");
++                    tx.execute(
++                        UPSERT_RECORD_SQL,
++                        params![input.namespace, entry.id, json, updated_at_ms],
++                    )
++                    .map_err(|err| AppError::DatabaseBackend(err.to_string()))?;
++                }
++                "delete" => {
++                    tx.execute(
++                        DELETE_RECORD_SQL,
++                        params![input.namespace, entry.id],
++                    )
++                    .map_err(|err| AppError::DatabaseBackend(err.to_string()))?;
++                }
++                _ => unreachable!("validated above"),
++            }
++        }
++
++        tx.commit()
++            .map_err(|err| AppError::DatabaseBackend(err.to_string()))?;
++        Ok(())
++    })
++}
++
+ fn validate_namespace(value: &str) -> AppResult<()> {
+     if value.is_empty() || value.len() > 128 {
+         return Err(AppError::DatabaseInvalidInput(format!(
+@@ -497,4 +613,162 @@ mod tests {
+             .unwrap_err();
+         assert!(matches!(err, AppError::DatabaseNotInitialized));
+     }
++
++    fn count(state: &DatabaseState, ns: &str) -> usize {
++        state
++            .with_conn(|conn| {
++                let mut stmt = conn.prepare(SELECT_ALL_SQL).unwrap();
++                let rows = stmt
++                    .query_map(params![ns], |row| row.get::<_, String>(0))
++                    .unwrap();
++                Ok(rows.map(|r| r.unwrap()).collect::<Vec<_>>().len())
++            })
++            .unwrap()
++    }
++
++    #[test]
++    fn put_batch_commits_all_entries_atomically() {
++        let path = temp_db_path("batch-ok");
++        let state = opened(&path);
++        let input = DbPutBatchInput {
++            namespace: "todos".into(),
++            entries: vec![
++                DbBatchEntry {
++                    op: "put".into(),
++                    id: "t1".into(),
++                    json: Some(r#"{"id":"t1"}"#.into()),
++                    updated_at_ms: Some(1),
++                },
++                DbBatchEntry {
++                    op: "put".into(),
++                    id: "t2".into(),
++                    json: Some(r#"{"id":"t2"}"#.into()),
++                    updated_at_ms: Some(2),
++                },
++            ],
++        };
++        apply_put_batch(&state, &input).unwrap();
++        assert_eq!(count(&state, "todos"), 2);
++        let _ = std::fs::remove_file(path);
++    }
++
++    #[test]
++    fn put_batch_rolls_back_when_a_later_entry_is_invalid() {
++        // The second entry has op=put but is missing json — validation
++        // fails BEFORE the connection is touched, so nothing persists.
++        let path = temp_db_path("batch-invalid-op");
++        let state = opened(&path);
++        // Pre-seed an unrelated row to prove only the batch is rolled back.
++        put(&state, "todos", "seed", r#"{"v":0}"#, 0).unwrap();
++
++        let input = DbPutBatchInput {
++            namespace: "todos".into(),
++            entries: vec![
++                DbBatchEntry {
++                    op: "put".into(),
++                    id: "t1".into(),
++                    json: Some(r#"{"id":"t1"}"#.into()),
++                    updated_at_ms: Some(1),
++                },
++                DbBatchEntry {
++                    op: "put".into(),
++                    id: "t2".into(),
++                    json: None, // sabotage
++                    updated_at_ms: None,
++                },
++            ],
++        };
++        let err = apply_put_batch(&state, &input).unwrap_err();
++        assert!(matches!(err, AppError::DatabaseInvalidInput(_)));
++
++        // Seed row still present, neither batch row applied.
++        assert_eq!(count(&state, "todos"), 1);
++        let only = state
++            .with_conn(|conn| {
++                Ok(conn
++                    .query_row(SELECT_RECORD_SQL, params!["todos", "seed"], |row| {
++                        row.get::<_, String>(0)
++                    })
++                    .unwrap())
++            })
++            .unwrap();
++        assert_eq!(only, r#"{"v":0}"#);
++        let _ = std::fs::remove_file(path);
++    }
++
++    #[test]
++    fn put_batch_rolls_back_on_runtime_backend_error() {
++        // Force a backend rollback by violating the NOT NULL constraint via
++        // an empty namespace... wait — namespace is validated. Instead we
++        // use a PRIMARY KEY conflict free path: a single batch can include
++        // a `delete` of a row plus a re-`put` of the same id, which both
++        // succeed individually, so we cannot easily force a runtime SQLite
++        // error without modifying the schema. Use a second-pass strategy:
++        // first apply a batch successfully, then attempt a batch whose
++        // last entry references an id over the validation limit AFTER the
++        // first put has been issued at the SQL layer. Because validate_id
++        // is called up-front (not inline), this still rolls back before
++        // touching the connection — same guarantee, just verifying.
++        let path = temp_db_path("batch-bad-id");
++        let state = opened(&path);
++        let input = DbPutBatchInput {
++            namespace: "todos".into(),
++            entries: vec![
++                DbBatchEntry {
++                    op: "put".into(),
++                    id: "ok".into(),
++                    json: Some(r#"{"v":1}"#.into()),
++                    updated_at_ms: Some(1),
++                },
++                DbBatchEntry {
++                    op: "put".into(),
++                    id: "x".repeat(257), // exceeds validate_id cap
++                    json: Some(r#"{"v":2}"#.into()),
++                    updated_at_ms: Some(2),
++                },
++            ],
++        };
++        let err = apply_put_batch(&state, &input).unwrap_err();
++        assert!(matches!(err, AppError::DatabaseInvalidInput(_)));
++        assert_eq!(count(&state, "todos"), 0);
++        let _ = std::fs::remove_file(path);
++    }
++
++    #[test]
++    fn put_batch_mixes_put_and_delete_in_order() {
++        let path = temp_db_path("batch-mix");
++        let state = opened(&path);
++        put(&state, "todos", "old", r#"{"v":0}"#, 0).unwrap();
++
++        let input = DbPutBatchInput {
++            namespace: "todos".into(),
++            entries: vec![
++                DbBatchEntry {
++                    op: "put".into(),
++                    id: "new".into(),
++                    json: Some(r#"{"v":1}"#.into()),
++                    updated_at_ms: Some(1),
++                },
++                DbBatchEntry {
++                    op: "delete".into(),
++                    id: "old".into(),
++                    json: None,
++                    updated_at_ms: None,
++                },
++            ],
++        };
++        apply_put_batch(&state, &input).unwrap();
++        assert_eq!(count(&state, "todos"), 1);
++        let surviving = state
++            .with_conn(|conn| {
++                Ok(conn
++                    .query_row(SELECT_RECORD_SQL, params!["todos", "new"], |row| {
++                        row.get::<_, String>(0)
++                    })
++                    .unwrap())
++            })
++            .unwrap();
++        assert_eq!(surviving, r#"{"v":1}"#);
++        let _ = std::fs::remove_file(path);
++    }
+ }
+diff --git a/apps/desktop/src-tauri/src/lib.rs b/apps/desktop/src-tauri/src/lib.rs
+index c7617c1..286f0ab 100644
+--- a/apps/desktop/src-tauri/src/lib.rs
++++ b/apps/desktop/src-tauri/src/lib.rs
+@@ -87,6 +87,8 @@ pub fn run() {
+             commands::database::db_list,
+             #[cfg(feature = "crypto")]
+             commands::database::db_delete,
++            #[cfg(feature = "crypto")]
++            commands::database::db_put_batch,
+         ])
+         .setup(|app| {
+             let window = app
+diff --git a/docs/contracts/tauri-commands-v0.md b/docs/contracts/tauri-commands-v0.md
+index 7e12599..905a4f2 100644
+--- a/docs/contracts/tauri-commands-v0.md
++++ b/docs/contracts/tauri-commands-v0.md
+@@ -142,11 +142,12 @@ Current source:
+ | `db_get` | same | `{ input: { namespace, id } }` | `string \| null` | Returns the stored JSON or `null` if absent. |
+ | `db_list` | same | `{ input: { namespace } }` | `string[]` | All payloads in the namespace, sorted by id. |
+ | `db_delete` | same | `{ input: { namespace, id } }` | `void` | Idempotent. |
++| `db_put_batch` | same | `{ input: { namespace, entries: [{ op: "put" \| "delete", id, json?, updatedAtMs? }] } }` | `void` | Atomic. Wraps every entry in one SQLite `BEGIN`/`COMMIT`. Any validation or backend failure rolls back the whole batch. Required by the sync-outbox to commit the entity row and its outbox row together (G2.6 P0 fix). |
+ 
+ PoC scope:
+ - Plain SQLite via `rusqlite` (bundled-sqlcipher build but no `PRAGMA key` applied).
+ - SQLCipher PRAGMA path is exercised by `apps/desktop/src-tauri/src/crypto/sqlcipher.rs` and will be wired into `db_init` once G2.4 publishes a stable opaque KEK handle.
+-- Cross-namespace transactions are not exposed; the TS `createTauriRepo` shim runs `transaction(fn)` callbacks against a single namespace.
++- Cross-namespace transactions are not exposed; the TS `createTauriRepo` shim runs `transaction(fn)` callbacks against a single namespace and dispatches all buffered writes through `db_put_batch`.
+ - Namespace must match `[A-Za-z0-9._:-]+` and be ≤ 128 chars. Id must be 1..=256 chars.
+ - Errors: `E1300` (not initialized), `E1301` (invalid input), `E1302` (backend SQLite/FS error).
+ - Feature-gated: registered only when the desktop crate is built with `--features crypto` (the gate that also enables `rusqlite`).
+diff --git a/packages/core-data-sqlite-driver/docs/dev_log.md b/packages/core-data-sqlite-driver/docs/dev_log.md
+index 25f5f95..78cd384 100644
+--- a/packages/core-data-sqlite-driver/docs/dev_log.md
++++ b/packages/core-data-sqlite-driver/docs/dev_log.md
+@@ -14,7 +14,7 @@
+ | Automation Mode | D-Codex |
+ | Verify Cross-vendor | yes |
+ | Executor | feature-build + feature-verify (Claude Code, Track A) |
+-| Updated | 2026-05-20 00:46 PDT |
++| Updated | 2026-05-20 02:13 PDT |
+ | Blockers | SQLCipher PRAGMA path deferred to G2.4 KEK handle publication; cross-vendor verify deferred in serial mode |
+ 
+ ## Phase Plan
+@@ -51,9 +51,12 @@ Deferred / out-of-scope for G2.2:
+ - SQLCipher `PRAGMA key` application — already exercised in
+   `apps/desktop/src-tauri/src/crypto/sqlcipher.rs`; will be wired into
+   `db_init` after G2.4 publishes the opaque KEK handle.
+-- Cross-command transactions — TS `transaction(fn)` currently runs the
+-  callback against the same `Repo<T>` operations object; full atomic
+-  semantics require `db_transaction_begin`/`commit` commands.
++- Cross-command transactions — superseded 2026-05-20 by `db_put_batch`
++  + the `createTauriRepo.transaction(fn)` buffered-batch shim. Writes
++  inside a transaction now commit as one SQLite `BEGIN`/`COMMIT`. Reads
++  inside a transaction still observe the pre-transaction state (no
++  read-after-write inside the same tx) — that limitation is documented
++  in the TS factory's doc comment.
+ - Real `app_data_dir` runtime verification on macOS — needs a
+   Tauri-host integration test; deferred under unattended mode.
+ 
+@@ -72,3 +75,4 @@ G2.4/G2.6 roadmap.
+ |---|---|---|---|---|
+ | 2026-05-19 03:25 PDT | Codex serial autorun | Added SQLite driver boundary, namespace repo, mutation hook, localStorage migration, in-memory SQLite test driver, and `@repo/core-data/testing` subpath export. | — | Real SQLCipher/Tauri binding deferred |
+ | 2026-05-20 00:46 PDT | feature-build + feature-verify (Claude Code, Track A) | Implemented `commands/database.rs`, error variants, lib.rs registration, TS `createTauriRepo` factory, and contract doc §6.1. 7 cargo tests + 4 vitest tests passing; cargo check (default + crypto) and desktop build green. | pending commit | manual ship only; continue roadmap |
++| 2026-05-20 02:13 PDT | bug-fix (Claude Code, Track A) | P0 G2.6 atomicity fix: added `db_put_batch` Tauri command (BEGIN/COMMIT around N puts+deletes in one namespace), rewired `createTauriRepo.transaction(fn)` to buffer writes and dispatch them through `db_put_batch`. Adds the `E13xx` validation contract: the whole batch rolls back on any per-entry failure. 13 cargo database tests (4 new batch cases) + 66 core-data vitest cases (incl. new `tauri-sqlite` buffer/rollback + real SQLite sabotage) all green. | `cargo check`, `cargo check --features crypto`, `cargo test --features crypto database::`, `pnpm --filter @repo/core-data test`, `pnpm --filter @repo/core-data check-types`, `pnpm --filter desktop build` — all PASS. | continue roadmap |
+diff --git a/packages/core-data/src/index.ts b/packages/core-data/src/index.ts
+index a753c37..374716e 100644
+--- a/packages/core-data/src/index.ts
++++ b/packages/core-data/src/index.ts
+@@ -59,7 +59,10 @@ export type { CreateTauriRepoOptions, DbInitOutput } from "./tauri-sqlite";
+ export {
+   createMockCommitSeqAuthority,
+   enqueueOutboxEntry,
++  isOutboxId,
+   nextOutboxBatch,
++  OUTBOX_ID_PREFIX,
++  outboxIdFor,
+ } from "./sync-outbox";
+ export type {
+   EnqueueOutboxInput,
+diff --git a/packages/core-data/src/sync-outbox.ts b/packages/core-data/src/sync-outbox.ts
+index b9e1c01..c45310a 100644
+--- a/packages/core-data/src/sync-outbox.ts
++++ b/packages/core-data/src/sync-outbox.ts
+@@ -7,11 +7,25 @@
+  * **same transaction** as the entity write so a crash between the two
+  * cannot leave a record without its outbox row.
+  *
++ * Atomicity model (G2.6 P0 fix):
++ *
++ * The entity row and its outbox row share the SAME repo namespace. The
++ * outbox row's id is prefixed with `OUTBOX_ID_PREFIX` (`__outbox__`).
++ * Because both rows live in one namespace, `Repo<T>.transaction(fn)`
++ * commits them atomically:
++ *
++ * - `createInMemoryRepo` → snapshot-restoring transaction.
++ * - `createSqliteRepo` (in-process SQLite driver) → `BEGIN`/`COMMIT` on
++ *   the driver.
++ * - `createTauriRepo` (production / on-disk SQLite) → buffered batch
++ *   committed via the `db_put_batch` Tauri command, which wraps the
++ *   batch in one SQLite transaction on the Rust side.
++ *
+  * This module owns:
+  *
+  * - The `OutboxEntry` record shape (an extension of `RepoRecord`).
+- * - `enqueueOutboxEntry` — atomic helper that pairs an entity put with
+- *   an outbox put inside a `Repo<T>.transaction(fn)` callback.
++ * - `enqueueOutboxEntry` — atomic helper that pairs an entity put/delete
++ *   with an outbox put inside a single `Repo.transaction(fn)` callback.
+  * - `nextOutboxBatch` — drain helper for the sync engine.
+  *
+  * The actual Supabase / push-edge integration lives in
+@@ -26,6 +40,23 @@ import type {
+   RepoTransaction,
+ } from "./types";
+ 
++/**
++ * Reserved id prefix that marks a row as a sync-outbox row inside a
++ * shared entity namespace. Application code must NEVER mint an entity
++ * with this prefix as its id.
++ */
++export const OUTBOX_ID_PREFIX = "__outbox__";
++
++/** Convert a mutationId into the outbox row's id. */
++export function outboxIdFor(mutationId: string): string {
++  return `${OUTBOX_ID_PREFIX}${mutationId}`;
++}
++
++/** True if the given record id is reserved for an outbox row. */
++export function isOutboxId(id: string): boolean {
++  return id.startsWith(OUTBOX_ID_PREFIX);
++}
++
+ /** A single pending sync mutation queued for push. */
+ export interface OutboxEntry extends RepoRecord {
+   entityType: "sync.outbox";
+@@ -49,9 +80,31 @@ export interface OutboxEntry extends RepoRecord {
+   baseRevision?: number;
+ }
+ 
++/**
++ * `enqueueOutboxEntry` takes ONE repo. The entity row and the outbox row
++ * share its namespace; the outbox row uses the reserved id prefix
++ * `OUTBOX_ID_PREFIX` so it cannot collide with an entity id.
++ *
++ * Backwards-compatibility note: the historical signature carried both
++ * `entityRepo` and `outboxRepo`. Inline migration callers wired both to
++ * the same repo while we land the SQLite atomic path; we now accept
++ * either shape. When `outboxRepo` is provided, it must be the same
++ * `Repo` instance as `entityRepo` — passing two different repos throws
++ * because the underlying drivers cannot commit two namespaces atomically.
++ */
+ export interface EnqueueOutboxInput<T extends RepoRecord> {
+-  entityRepo: Repo<T>;
+-  outboxRepo: Repo<OutboxEntry>;
++  /**
++   * Repo whose namespace will hold BOTH the entity row and its outbox
++   * row. Required.
++   */
++  entityRepo: Repo<T | OutboxEntry>;
++  /**
++   * Deprecated: present for source compatibility with the prior
++   * dual-namespace shape. If supplied, MUST be the same `Repo` instance
++   * as `entityRepo`. Two separate repos cannot be committed atomically
++   * against the on-disk SQLite driver and are rejected at runtime.
++   */
++  outboxRepo?: Repo<T | OutboxEntry>;
+   entity: T;
+   op: "put" | "delete";
+   payload: string;
+@@ -62,20 +115,32 @@ export interface EnqueueOutboxInput<T extends RepoRecord> {
+ }
+ 
+ /**
+- * Atomically write `entity` and an outbox row. The `entityRepo`
+- * transaction wraps both writes so a crash mid-state cannot leave one
+- * without the other.
++ * Atomically write `entity` and an outbox row inside a single
++ * `Repo.transaction(fn)` call. The transaction guarantees that either
++ * both rows are committed or neither — see the module-level header for
++ * the per-driver atomicity model.
+  */
+ export async function enqueueOutboxEntry<T extends RepoRecord>(
+   input: EnqueueOutboxInput<T>,
+ ): Promise<OutboxEntry> {
++  if (input.outboxRepo !== undefined && input.outboxRepo !== input.entityRepo) {
++    throw new Error(
++      "E3009: enqueueOutboxEntry requires the entity repo and outbox repo to be the same Repo instance — split namespaces cannot commit atomically",
++    );
++  }
++  if (isOutboxId(input.entity.id)) {
++    throw new Error(
++      `E3010: entity id ${input.entity.id} collides with the reserved outbox prefix \`${OUTBOX_ID_PREFIX}\``,
++    );
++  }
++
+   const nowIso = input.nowIso ?? (() => new Date().toISOString());
+   const commitSeq = input.nextCommitSeq();
+   if (!Number.isInteger(commitSeq) || commitSeq < 1) {
+     throw new Error("E3008: outbox commitSeq must be a positive integer");
+   }
+   const entry: OutboxEntry = {
+-    id: `outbox_${input.mutationId}`,
++    id: outboxIdFor(input.mutationId),
+     entityType: "sync.outbox",
+     schemaVersion: 1,
+     createdAt: nowIso(),
+@@ -92,20 +157,13 @@ export async function enqueueOutboxEntry<T extends RepoRecord>(
+   };
+   assertRepoRecord(entry);
+ 
+-  await input.entityRepo.transaction(async (entityTx: RepoTransaction<T>) => {
++  await input.entityRepo.transaction(async (tx: RepoTransaction<T | OutboxEntry>) => {
+     if (input.op === "put") {
+-      await entityTx.put(input.entity);
++      await tx.put(input.entity);
+     } else {
+-      await entityTx.delete(input.entity.id);
++      await tx.delete(input.entity.id);
+     }
+-    // The outbox lives in its own namespace, so we open a nested
+-    // transaction on the outbox repo to ensure ordering. Driver
+-    // semantics: the outer (entity) transaction commits last, so a
+-    // crash between the two phases on a SQLite backend rolls back the
+-    // entity write via the outer transaction's snapshot.
+-    await input.outboxRepo.transaction(async (outboxTx) => {
+-      await outboxTx.put(entry);
+-    });
++    await tx.put(entry);
+   });
+ 
+   return entry;
+@@ -115,16 +173,27 @@ export interface OutboxBatchOptions {
+   limit?: number;
+ }
+ 
+-/** Return the next batch of outbox entries ordered by `commitSeq`. */
++/**
++ * Return the next batch of outbox entries ordered by `commitSeq`. The
++ * caller passes the shared entity/outbox repo; this helper filters by
++ * `entityType === "sync.outbox"` so non-outbox rows in the same
++ * namespace are ignored.
++ *
++ * The repo is typed as `Repo<OutboxEntry>` because the caller is
++ * narrowing to the outbox view — pass the shared repo cast through
++ * `as unknown as Repo<OutboxEntry>` when reading from a heterogeneous
++ * namespace.
++ */
+ export async function nextOutboxBatch(
+-  outboxRepo: Repo<OutboxEntry>,
++  repo: Repo<OutboxEntry>,
+   options: OutboxBatchOptions = {},
+ ): Promise<OutboxEntry[]> {
+-  return outboxRepo.list({
++  const rows = await repo.list({
+     entityType: "sync.outbox",
+     orderBy: { field: "commitSeq", direction: "asc" },
+     limit: options.limit,
+   });
++  return rows.filter((row) => isOutboxId(row.id));
+ }
+ 
+ /**
+diff --git a/packages/core-data/src/tauri-sqlite.ts b/packages/core-data/src/tauri-sqlite.ts
+index dc7ad75..c45d22f 100644
+--- a/packages/core-data/src/tauri-sqlite.ts
++++ b/packages/core-data/src/tauri-sqlite.ts
+@@ -146,16 +146,88 @@ export function createTauriRepo<T extends RepoRecord>(
+     ...operations,
+ 
+     /**
+-     * NOTE: G2.2 PoC scope. Cross-command atomicity will be added when
+-     * the Tauri command surface gains `db_transaction_begin` and
+-     * `db_transaction_commit`. The TS surface keeps the contract shape
+-     * so callers do not need to rewrite when that lands.
++     * Atomic transaction (G2.6 P0 fix).
++     *
++     * Writes (`put` / `delete`) inside the callback are buffered in a
++     * TS-side queue and committed as ONE `db_put_batch` call at the end
++     * of the callback. The Rust side wraps the batch in a SQLite
++     * `BEGIN`/`COMMIT`, so a partial failure inside the batch — or a
++     * throw from `fn` before the commit — leaves the database untouched.
++     *
++     * Reads (`get` / `list` / `listByIndex` / `metadata`) inside the
++     * callback observe the pre-transaction state of the database; they
++     * do NOT see uncommitted writes from the same transaction. Callers
++     * who need read-after-write inside a transaction must keep their
++     * in-flight state in JS until commit.
+      */
+     async transaction<R>(
+       fn: (tx: RepoTransaction<T>) => Promise<R>,
+     ): Promise<R> {
+       await ensureInit();
+-      return fn(operations);
++
++      interface PendingPut<U extends RepoRecord> {
++        op: "put";
++        id: string;
++        json: string;
++        updatedAtMs: number;
++        record: U;
++      }
++      interface PendingDelete {
++        op: "delete";
++        id: string;
++      }
++      type PendingEntry = PendingPut<T> | PendingDelete;
++
++      const pending: PendingEntry[] = [];
++
++      const txOps: RepoTransaction<T> = {
++        async get(id: string): Promise<T | undefined> {
++          return operations.get(id);
++        },
++        async put(record: T): Promise<void> {
++          assertRepoRecord(record);
++          pending.push({
++            op: "put",
++            id: record.id,
++            json: JSON.stringify(record),
++            updatedAtMs: nowMs(),
++            record,
++          });
++        },
++        async delete(id: string): Promise<void> {
++          pending.push({ op: "delete", id });
++        },
++        list: operations.list,
++        listByIndex: operations.listByIndex,
++        metadata: operations.metadata,
++      };
++
++      // If `fn` throws we propagate without sending anything to Rust:
++      // the database is untouched, matching the same-transaction
++      // rollback contract.
++      const result = await fn(txOps);
++
++      if (pending.length === 0) {
++        return result;
++      }
++
++      await invoke<void>("db_put_batch", {
++        input: {
++          namespace,
++          entries: pending.map((entry) =>
++            entry.op === "put"
++              ? {
++                  op: "put",
++                  id: entry.id,
++                  json: entry.json,
++                  updatedAtMs: entry.updatedAtMs,
++                }
++              : { op: "delete", id: entry.id },
++          ),
++        },
++      });
++
++      return result;
+     },
+ 
+     async migrate(): Promise<never> {
+diff --git a/packages/core-data/tests/sync-outbox.test.ts b/packages/core-data/tests/sync-outbox.test.ts
+index 5e70e9f..ed36f53 100644
+--- a/packages/core-data/tests/sync-outbox.test.ts
++++ b/packages/core-data/tests/sync-outbox.test.ts
+@@ -3,11 +3,19 @@ import { describe, expect, it } from "vitest";
+ import {
+   createMockCommitSeqAuthority,
+   enqueueOutboxEntry,
++  isOutboxId,
+   nextOutboxBatch,
++  OUTBOX_ID_PREFIX,
++  outboxIdFor,
+   type OutboxEntry,
+ } from "../src/sync-outbox";
+-import { createInMemoryRepo } from "../src/testing";
++import { createSqliteRepo } from "../src/sqlite";
++import {
++  createInMemoryRepo,
++  createInMemorySqliteDriver,
++} from "../src/testing";
+ import type { TodoEntity } from "../src/entities";
++import type { Repo, RepoRecord } from "../src/types";
+ 
+ function todoFixture(id: string, overrides: Partial<TodoEntity> = {}): TodoEntity {
+   return {
+@@ -24,19 +32,22 @@ function todoFixture(id: string, overrides: Partial<TodoEntity> = {}): TodoEntit
+   };
+ }
+ 
++/** Heterogeneous repo holding both entity rows and outbox rows. */
++type SharedRepo = Repo<TodoEntity | OutboxEntry>;
++
++function asOutboxView(repo: SharedRepo): Repo<OutboxEntry> {
++  return repo as unknown as Repo<OutboxEntry>;
++}
++
+ describe("enqueueOutboxEntry", () => {
+   it("writes the entity and its outbox row in the same transaction", async () => {
+-    const entityRepo = createInMemoryRepo<TodoEntity>({
++    const repo = createInMemoryRepo<TodoEntity | OutboxEntry>({
+       namespace: "productivity.todos",
+     });
+-    const outboxRepo = createInMemoryRepo<OutboxEntry>({
+-      namespace: "sync.outbox",
+-    });
+     const nextCommitSeq = createMockCommitSeqAuthority();
+ 
+     const entry = await enqueueOutboxEntry({
+-      entityRepo,
+-      outboxRepo,
++      entityRepo: repo,
+       entity: todoFixture("todo-1", { title: "first" }),
+       op: "put",
+       payload: "ENC(first)",
+@@ -46,90 +57,138 @@ describe("enqueueOutboxEntry", () => {
+     });
+ 
+     expect(entry).toMatchObject({
+-      id: "outbox_mut-1",
++      id: outboxIdFor("mut-1"),
+       commitSeq: 1,
+       targetEntityType: "productivity.todo",
+       targetEntityId: "todo-1",
+       op: "put",
+     });
++    expect(isOutboxId(entry.id)).toBe(true);
++    expect(entry.id.startsWith(OUTBOX_ID_PREFIX)).toBe(true);
+ 
+-    const todo = await entityRepo.get("todo-1");
++    const todo = (await repo.get("todo-1")) as TodoEntity | undefined;
+     expect(todo).toMatchObject({ id: "todo-1", title: "first" });
+ 
+-    const outbox = await nextOutboxBatch(outboxRepo);
++    const outbox = await nextOutboxBatch(asOutboxView(repo));
+     expect(outbox).toHaveLength(1);
+     expect(outbox[0]).toEqual(entry);
+   });
+ 
+-  it("rolls back the entity write when the outbox write throws", async () => {
+-    const entityRepo = createInMemoryRepo<TodoEntity>({
++  it("rolls back the entity write when the transaction throws (in-memory)", async () => {
++    const repo = createInMemoryRepo<TodoEntity | OutboxEntry>({
+       namespace: "productivity.todos",
+     });
+-    const baseOutbox = createInMemoryRepo<OutboxEntry>({
+-      namespace: "sync.outbox",
+-    });
+-    // Force the outbox put to throw to prove the outer transaction rolls back.
+-    const sabotagedOutbox = {
+-      ...baseOutbox,
+-      async transaction<R>(fn: (tx: typeof baseOutbox) => Promise<R>) {
+-        return baseOutbox.transaction(async (tx) => {
+-          await tx.put({
+-            ...(await firstOutboxRow()),
+-            id: "trip",
+-          });
+-          throw new Error("simulated outbox failure");
+-          return fn(tx);
++    // Sabotage: wrap transaction so the fn runs but the commit boundary
++    // ultimately throws — the snapshot-restore must undo the entity put.
++    const sabotagedRepo: SharedRepo = {
++      ...repo,
++      async transaction<R>(
++        fn: (tx: Parameters<typeof repo.transaction>[0] extends (tx: infer X) => unknown ? X : never) => Promise<R>,
++      ) {
++        return repo.transaction(async (tx) => {
++          await fn(tx as never);
++          throw new Error("simulated commit failure");
+         });
+       },
+-    } as typeof baseOutbox;
+-
+-    async function firstOutboxRow(): Promise<OutboxEntry> {
+-      return {
+-        id: "trip",
+-        entityType: "sync.outbox",
+-        schemaVersion: 1,
+-        createdAt: "x",
+-        updatedAt: "x",
+-        syncScope: "account-sync",
+-        commitSeq: 0,
+-        mutationId: "trip",
+-        targetEntityType: "productivity.todo",
+-        targetEntityId: "todo-x",
+-        op: "put",
+-        payload: "",
+-        retryCount: 0,
+-      };
+-    }
++    } as SharedRepo;
+ 
+     await expect(
+       enqueueOutboxEntry({
+-        entityRepo,
+-        outboxRepo: sabotagedOutbox,
++        entityRepo: sabotagedRepo,
+         entity: todoFixture("todo-2"),
+         op: "put",
+         payload: "ENC",
+         mutationId: "mut-2",
+         nextCommitSeq: createMockCommitSeqAuthority(),
+       }),
+-    ).rejects.toThrow("simulated outbox failure");
++    ).rejects.toThrow("simulated commit failure");
+ 
+-    // Entity rollback: the put inside the outer transaction must NOT
+-    // survive — that is the same-transaction guarantee G2.6 promises.
+-    await expect(entityRepo.get("todo-2")).resolves.toBeUndefined();
++    // Both rows must be rolled back — the same-transaction guarantee.
++    await expect(repo.get("todo-2")).resolves.toBeUndefined();
++    await expect(repo.get(outboxIdFor("mut-2"))).resolves.toBeUndefined();
+   });
+ 
+-  it("orders the batch by commitSeq", async () => {
+-    const entityRepo = createInMemoryRepo<TodoEntity>({
++  it("rolls back the entity write on the in-process SQLite driver path", async () => {
++    // Real SQLite (in-memory driver). Sabotage forces the outer
++    // transaction to throw AFTER the entity has been written inside the
++    // BEGIN, proving the SQLite driver actually issues a ROLLBACK.
++    const driver = createInMemorySqliteDriver();
++    const baseRepo = createSqliteRepo<TodoEntity | OutboxEntry>(driver, {
++      namespace: "productivity.todos",
++    });
++
++    const sabotagedRepo: SharedRepo = {
++      ...baseRepo,
++      async transaction<R>(fn: (tx: never) => Promise<R>) {
++        return baseRepo.transaction(async (tx) => {
++          await fn(tx as never);
++          throw new Error("simulated sqlite commit failure");
++        });
++      },
++    } as SharedRepo;
++
++    await expect(
++      enqueueOutboxEntry({
++        entityRepo: sabotagedRepo,
++        entity: todoFixture("todo-sqlite"),
++        op: "put",
++        payload: "ENC",
++        mutationId: "mut-sqlite",
++        nextCommitSeq: createMockCommitSeqAuthority(),
++      }),
++    ).rejects.toThrow("simulated sqlite commit failure");
++
++    // Entity AND outbox row must NOT survive in the SQLite store.
++    await expect(baseRepo.get("todo-sqlite")).resolves.toBeUndefined();
++    await expect(
++      baseRepo.get(outboxIdFor("mut-sqlite")),
++    ).resolves.toBeUndefined();
++  });
++
++  it("rejects an entity whose id collides with the reserved outbox prefix", async () => {
++    const repo = createInMemoryRepo<TodoEntity | OutboxEntry>({
++      namespace: "productivity.todos",
++    });
++    await expect(
++      enqueueOutboxEntry({
++        entityRepo: repo,
++        entity: todoFixture(`${OUTBOX_ID_PREFIX}sneaky`),
++        op: "put",
++        payload: "ENC",
++        mutationId: "mut-x",
++        nextCommitSeq: createMockCommitSeqAuthority(),
++      }),
++    ).rejects.toThrow(/E3010/);
++  });
++
++  it("rejects a split entityRepo / outboxRepo pair (cannot commit atomically)", async () => {
++    const repoA = createInMemoryRepo<TodoEntity | OutboxEntry>({
+       namespace: "productivity.todos",
+     });
+-    const outboxRepo = createInMemoryRepo<OutboxEntry>({
++    const repoB = createInMemoryRepo<TodoEntity | OutboxEntry>({
+       namespace: "sync.outbox",
+     });
++    await expect(
++      enqueueOutboxEntry({
++        entityRepo: repoA,
++        outboxRepo: repoB,
++        entity: todoFixture("todo-split"),
++        op: "put",
++        payload: "ENC",
++        mutationId: "mut-split",
++        nextCommitSeq: createMockCommitSeqAuthority(),
++      }),
++    ).rejects.toThrow(/E3009/);
++  });
++
++  it("orders the batch by commitSeq", async () => {
++    const repo = createInMemoryRepo<TodoEntity | OutboxEntry>({
++      namespace: "productivity.todos",
++    });
+     const nextCommitSeq = createMockCommitSeqAuthority(99);
+ 
+     await enqueueOutboxEntry({
+-      entityRepo,
+-      outboxRepo,
++      entityRepo: repo,
+       entity: todoFixture("todo-1"),
+       op: "put",
+       payload: "ENC1",
+@@ -137,8 +196,7 @@ describe("enqueueOutboxEntry", () => {
+       nextCommitSeq,
+     });
+     await enqueueOutboxEntry({
+-      entityRepo,
+-      outboxRepo,
++      entityRepo: repo,
+       entity: todoFixture("todo-2"),
+       op: "put",
+       payload: "ENC2",
+@@ -146,8 +204,7 @@ describe("enqueueOutboxEntry", () => {
+       nextCommitSeq,
+     });
+     await enqueueOutboxEntry({
+-      entityRepo,
+-      outboxRepo,
++      entityRepo: repo,
+       entity: todoFixture("todo-1"),
+       op: "delete",
+       payload: "ENCdel",
+@@ -155,26 +212,22 @@ describe("enqueueOutboxEntry", () => {
+       nextCommitSeq,
+     });
+ 
+-    const batch = await nextOutboxBatch(outboxRepo, { limit: 2 });
++    const batch = await nextOutboxBatch(asOutboxView(repo), { limit: 2 });
+     expect(batch.map((row) => row.mutationId)).toEqual(["mut-a", "mut-b"]);
+     expect(batch[0].commitSeq).toBe(100);
+     expect(batch[1].commitSeq).toBe(101);
+   });
+ 
+-  it("supports delete ops and clears the entity inside the outer transaction", async () => {
+-    const entityRepo = createInMemoryRepo<TodoEntity>({
++  it("supports delete ops and clears the entity inside the same transaction", async () => {
++    const repo = createInMemoryRepo<TodoEntity | OutboxEntry>({
+       namespace: "productivity.todos",
+     });
+-    const outboxRepo = createInMemoryRepo<OutboxEntry>({
+-      namespace: "sync.outbox",
+-    });
+     const nextCommitSeq = createMockCommitSeqAuthority();
+     const entity = todoFixture("todo-1");
+-    await entityRepo.put(entity);
++    await repo.put(entity);
+ 
+     const entry = await enqueueOutboxEntry({
+-      entityRepo,
+-      outboxRepo,
++      entityRepo: repo,
+       entity,
+       op: "delete",
+       payload: "ENC(del)",
+@@ -182,6 +235,27 @@ describe("enqueueOutboxEntry", () => {
+       nextCommitSeq,
+     });
+     expect(entry.op).toBe("delete");
+-    await expect(entityRepo.get("todo-1")).resolves.toBeUndefined();
++    await expect(repo.get("todo-1")).resolves.toBeUndefined();
++  });
++});
++
++describe("isOutboxId / outboxIdFor", () => {
++  it("round-trips a mutation id through the outbox prefix", () => {
++    const id = outboxIdFor("abc");
++    expect(id).toBe(`${OUTBOX_ID_PREFIX}abc`);
++    expect(isOutboxId(id)).toBe(true);
++    expect(isOutboxId("abc")).toBe(false);
++  });
++
++  it("classifies non-outbox repo records as non-outbox", () => {
++    const record: RepoRecord = {
++      id: "todo-1",
++      entityType: "productivity.todo",
++      schemaVersion: 1,
++      createdAt: "x",
++      updatedAt: "x",
++      syncScope: "account-sync",
++    };
++    expect(isOutboxId(record.id)).toBe(false);
+   });
+ });
+diff --git a/packages/core-data/tests/tauri-sqlite.test.ts b/packages/core-data/tests/tauri-sqlite.test.ts
+index 44da155..9d84691 100644
+Binary files a/packages/core-data/tests/tauri-sqlite.test.ts and b/packages/core-data/tests/tauri-sqlite.test.ts differ
+diff --git a/packages/single-table-todos-e2e/docs/dev_log.md b/packages/single-table-todos-e2e/docs/dev_log.md
+index 7197d84..c4a7836 100644
+--- a/packages/single-table-todos-e2e/docs/dev_log.md
++++ b/packages/single-table-todos-e2e/docs/dev_log.md
+@@ -14,7 +14,7 @@
+ | Automation Mode | D-Codex |
+ | Verify Cross-vendor | yes |
+ | Executor | feature-build + feature-verify (Claude Code, Track A) |
+-| Updated | 2026-05-20 01:02 PDT |
++| Updated | 2026-05-20 02:13 PDT |
+ | Blockers | Live Supabase provisioning + 2-Mac smoke deferred (see `xai-v1.deferred-gates.md`); SQLCipher PRAGMA wiring deferred to G2.4 follow-up |
+ 
+ ## Phase Plan
+@@ -29,13 +29,22 @@ Status: DONE.
+   Repository v0 `OutboxEntry` record (commitSeq, mutationId,
+   targetEntityType/Id, op, payload, retryCount, baseRevision).
+ - Added `enqueueOutboxEntry` — atomically writes the entity and outbox
+-  row inside an outer `entityRepo.transaction(...)` so a crash mid-
+-  state cannot leave one without the other (FR-SY-32 M-12 in the
+-  sync-v1 PRD).
++  row inside a SINGLE `repo.transaction(...)`. Atomicity model:
++    - In-memory driver: snapshot-restoring transaction.
++    - In-process SQLite driver (`createSqliteRepo`): `BEGIN`/`COMMIT`
++      on the driver.
++    - On-disk SQLite (`createTauriRepo`): one `db_put_batch` Tauri call
++      wrapping the entity + outbox writes in one SQLite transaction
++      (G2.6 P0 fix landed 2026-05-20).
++  Entity and outbox rows now share a namespace; outbox ids are prefixed
++  with the reserved `__outbox__` sentinel so they cannot collide with
++  application records. Splitting the entity/outbox repos is rejected at
++  runtime with `E3009` because two namespaces cannot commit atomically.
+ - Added `nextOutboxBatch` ordering by `commitSeq` and a
+   `createMockCommitSeqAuthority` helper for tests / local fallback.
+-- Added 4 vitest cases covering happy-path put, rollback on outbox
+-  failure, ordering, and delete op.
++- Added vitest coverage for happy-path put, in-memory rollback, real
++  SQLite-driver rollback (sabotage), ordering, delete op, split-repo
++  rejection, and outbox-id collision rejection.
+ 
+ ### Phase 2 — Verify and document deferred gates
+ 
+@@ -51,9 +60,26 @@ Status: DONE.
+ 
+ feature-verify (Claude Code, Track A), 2026-05-20 01:02 PDT. Verdict: READY_TO_SHIP.
+ 
+-The Repository v0 outbox baseline is in place and the same-transaction
+-invariant has a proven test. The remaining live verification gates are
+-external and already recorded as deferred.
++The Repository v0 outbox baseline is in place. Atomic-rollback is
++proved on every shipped driver: in-memory via snapshot restore;
++in-process SQLite (`createSqliteRepo`) via driver `BEGIN`/`COMMIT`;
++on-disk SQLite (`createTauriRepo`) via the `db_put_batch` Tauri
++command added 2026-05-20 (P0 fix). The remaining live verification
++gates are external and already recorded as deferred.
++
++bug-fix follow-up (Claude Code, Track A), 2026-05-20 02:13 PDT.
++
++Codex cross-vendor review flagged the prior "same-transaction rollback
++is proved" claim as inaccurate against the Tauri driver: its
++`transaction(fn)` was a non-atomic callback wrapper that ran writes
++in-place against the shared connection. This is now fixed:
++`createTauriRepo.transaction(fn)` buffers all writes in JS and
++dispatches them as ONE `db_put_batch` Tauri call; the Rust side wraps
++the batch in a SQLite `BEGIN`/`COMMIT`, so any per-entry failure (or a
++throw from `fn` before the commit point) leaves the database
++untouched. See `docs/contracts/tauri-commands-v0.md` §6.1 and
++`apps/desktop/src-tauri/src/commands/database.rs` for the wire-level
++contract.
+ 
+ ## Work Log
+ 
+@@ -61,3 +87,4 @@ external and already recorded as deferred.
+ |---|---|---|---|---|
+ | 2026-05-19 04:21 PDT | Codex serial autorun | Added todo sync store and local two-device integration harness (sync-v1). | `pnpm --filter @repo/plugin-account test ...` | Run live two-Mac/Supabase/SQLCipher dump gates after #9. |
+ | 2026-05-20 01:02 PDT | feature-build + feature-verify (Claude Code, Track A) | Added Repository v0 outbox baseline (`sync-outbox.ts` + 4 vitest cases) and reconciled status to G2 roadmap. | `pnpm --filter @repo/core-data test` (58 tests) | manual ship only; continue roadmap |
++| 2026-05-20 02:13 PDT | bug-fix (Claude Code, Track A) | P0 G2.6 atomicity fix: refactored `enqueueOutboxEntry` to share one namespace for entity + outbox rows (outbox ids prefixed with `__outbox__`), added `db_put_batch` Tauri command + `createTauriRepo.transaction(fn)` buffered-batch shim so on-disk SQLite gets a real `BEGIN`/`COMMIT`. Retracted the prior misleading "same-transaction rollback is proved" claim; atomicity now holds on every shipped driver. | `cargo check`, `cargo check --features crypto`, `cargo test --features crypto database::` (13/13), `pnpm --filter @repo/core-data test` (66/66), `pnpm --filter @repo/core-data check-types`, `pnpm --filter desktop build` — all PASS. | manual ship only; continue roadmap |
+
+codex
+The main question is now narrower: whether the production Tauri repo gained a real atomic commit boundary instead of a callback illusion. I’m pulling exact line references from the repo and running the relevant tests that the fix claims are green.
+exec
+/bin/zsh -lc "nl -ba packages/core-data/src/tauri-sqlite.ts | sed -n '1,280p'" in /Users/lijinlong/Desktop/AI_Desktop/XAI_Desktop
+exec
+/bin/zsh -lc "nl -ba packages/core-data/src/sync-outbox.ts | sed -n '1,260p'" in /Users/lijinlong/Desktop/AI_Desktop/XAI_Desktop
+ succeeded in 0ms:
+     1	/**
+     2	 * Tauri-backed `SqliteDriver` factory.
+     3	 *
+     4	 * Wraps the Tauri `db_*` commands declared in
+     5	 * `apps/desktop/src-tauri/src/commands/database.rs` and exposes a
+     6	 * `SqliteDriver`-shaped object plus a thin `createTauriRepo()` helper
+     7	 * that returns a Repository v0-compatible API per namespace.
+     8	 *
+     9	 * Red line #4: this module NEVER imports `@tauri-apps/api` directly.
+    10	 * The caller must pass an `invoke` function obtained from
+    11	 * `useTauriInvoke()` (`@repo/core/hooks`).
+    12	 *
+    13	 * The PoC keeps a single shared connection on the Rust side; multiple
+    14	 * TS callers can reuse the returned driver safely.
+    15	 */
+    16	
+    17	import { applyRepoIndexQuery, applyRepoListQuery, assertRepoRecord } from "./repo-utils";
+    18	import type {
+    19	  Repo,
+    20	  RepoListQuery,
+    21	  RepoMetadata,
+    22	  RepoRecord,
+    23	  RepoTransaction,
+    24	} from "./types";
+    25	
+    26	type InvokeFn = <T>(cmd: string, args?: Record<string, unknown>) => Promise<T>;
+    27	
+    28	export interface CreateTauriRepoOptions {
+    29	  namespace: string;
+    30	  schemaVersion?: number;
+    31	  nowMs?: () => number;
+    32	}
+    33	
+    34	export interface DbInitOutput {
+    35	  namespace: string;
+    36	  path: string;
+    37	}
+    38	
+    39	/**
+    40	 * Initialize the Repository v0 SQLite database. Idempotent.
+    41	 *
+    42	 * Returns the namespace plus the resolved absolute path of the database
+    43	 * file so the caller can surface it in diagnostic UIs.
+    44	 */
+    45	export async function dbInit(
+    46	  invoke: InvokeFn,
+    47	  namespace: string,
+    48	): Promise<DbInitOutput> {
+    49	  return invoke<DbInitOutput>("db_init", { namespace });
+    50	}
+    51	
+    52	/**
+    53	 * Create a Repository v0-compatible API bound to the Tauri SQLite
+    54	 * driver for a single namespace.
+    55	 *
+    56	 * The repo lazily calls `db_init` on its first operation. Subsequent
+    57	 * operations reuse the open connection.
+    58	 */
+    59	export function createTauriRepo<T extends RepoRecord>(
+    60	  invoke: InvokeFn,
+    61	  options: CreateTauriRepoOptions,
+    62	): Repo<T> {
+    63	  const { namespace } = options;
+    64	  const nowMs = options.nowMs ?? Date.now;
+    65	  let initialized: Promise<void> | undefined;
+    66	
+    67	  async function ensureInit(): Promise<void> {
+    68	    if (!initialized) {
+    69	      initialized = invoke<DbInitOutput>("db_init", { namespace }).then(
+    70	        () => undefined,
+    71	      );
+    72	    }
+    73	    await initialized;
+    74	  }
+    75	
+    76	  async function listAll(): Promise<T[]> {
+    77	    await ensureInit();
+    78	    const rows = await invoke<string[]>("db_list", {
+    79	      input: { namespace },
+    80	    });
+    81	    return rows.map((json) => {
+    82	      const parsed = JSON.parse(json) as T;
+    83	      assertRepoRecord(parsed);
+    84	      return parsed;
+    85	    });
+    86	  }
+    87	
+    88	  const operations: RepoTransaction<T> = {
+    89	    async get(id: string): Promise<T | undefined> {
+    90	      await ensureInit();
+    91	      const raw = await invoke<string | null>("db_get", {
+    92	        input: { namespace, id },
+    93	      });
+    94	      if (raw == null) return undefined;
+    95	      const parsed = JSON.parse(raw) as T;
+    96	      assertRepoRecord(parsed);
+    97	      return parsed;
+    98	    },
+    99	
+   100	    async put(record: T): Promise<void> {
+   101	      assertRepoRecord(record);
+   102	      await ensureInit();
+   103	      await invoke<void>("db_put", {
+   104	        input: {
+   105	          namespace,
+   106	          id: record.id,
+   107	          json: JSON.stringify(record),
+   108	          updatedAtMs: nowMs(),
+   109	        },
+   110	      });
+   111	    },
+   112	
+   113	    async delete(id: string): Promise<void> {
+   114	      await ensureInit();
+   115	      await invoke<void>("db_delete", {
+   116	        input: { namespace, id },
+   117	      });
+   118	    },
+   119	
+   120	    async list(query?: RepoListQuery<T>): Promise<T[]> {
+   121	      return applyRepoListQuery(await listAll(), query);
+   122	    },
+   123	
+   124	    async listByIndex<K extends Extract<keyof T, string>>(
+   125	      field: K,
+   126	      value: T[K],
+   127	      query?: RepoListQuery<T>,
+   128	    ): Promise<T[]> {
+   129	      return applyRepoIndexQuery(await listAll(), field, value, query);
+   130	    },
+   131	
+   132	    async metadata(): Promise<RepoMetadata> {
+   133	      const records = await listAll();
+   134	      return {
+   135	        driver: "tauri-sqlite",
+   136	        namespace,
+   137	        schemaVersion: options.schemaVersion ?? 1,
+   138	        migrationVersion: 0,
+   139	        recordCount: records.length,
+   140	        migrations: [],
+   141	      };
+   142	    },
+   143	  };
+   144	
+   145	  return {
+   146	    ...operations,
+   147	
+   148	    /**
+   149	     * Atomic transaction (G2.6 P0 fix).
+   150	     *
+   151	     * Writes (`put` / `delete`) inside the callback are buffered in a
+   152	     * TS-side queue and committed as ONE `db_put_batch` call at the end
+   153	     * of the callback. The Rust side wraps the batch in a SQLite
+   154	     * `BEGIN`/`COMMIT`, so a partial failure inside the batch — or a
+   155	     * throw from `fn` before the commit — leaves the database untouched.
+   156	     *
+   157	     * Reads (`get` / `list` / `listByIndex` / `metadata`) inside the
+   158	     * callback observe the pre-transaction state of the database; they
+   159	     * do NOT see uncommitted writes from the same transaction. Callers
+   160	     * who need read-after-write inside a transaction must keep their
+   161	     * in-flight state in JS until commit.
+   162	     */
+   163	    async transaction<R>(
+   164	      fn: (tx: RepoTransaction<T>) => Promise<R>,
+   165	    ): Promise<R> {
+   166	      await ensureInit();
+   167	
+   168	      interface PendingPut<U extends RepoRecord> {
+   169	        op: "put";
+   170	        id: string;
+   171	        json: string;
+   172	        updatedAtMs: number;
+   173	        record: U;
+   174	      }
+   175	      interface PendingDelete {
+   176	        op: "delete";
+   177	        id: string;
+   178	      }
+   179	      type PendingEntry = PendingPut<T> | PendingDelete;
+   180	
+   181	      const pending: PendingEntry[] = [];
+   182	
+   183	      const txOps: RepoTransaction<T> = {
+   184	        async get(id: string): Promise<T | undefined> {
+   185	          return operations.get(id);
+   186	        },
+   187	        async put(record: T): Promise<void> {
+   188	          assertRepoRecord(record);
+   189	          pending.push({
+   190	            op: "put",
+   191	            id: record.id,
+   192	            json: JSON.stringify(record),
+   193	            updatedAtMs: nowMs(),
+   194	            record,
+   195	          });
+   196	        },
+   197	        async delete(id: string): Promise<void> {
+   198	          pending.push({ op: "delete", id });
+   199	        },
+   200	        list: operations.list,
+   201	        listByIndex: operations.listByIndex,
+   202	        metadata: operations.metadata,
+   203	      };
+   204	
+   205	      // If `fn` throws we propagate without sending anything to Rust:
+   206	      // the database is untouched, matching the same-transaction
+   207	      // rollback contract.
+   208	      const result = await fn(txOps);
+   209	
+   210	      if (pending.length === 0) {
+   211	        return result;
+   212	      }
+   213	
+   214	      await invoke<void>("db_put_batch", {
+   215	        input: {
+   216	          namespace,
+   217	          entries: pending.map((entry) =>
+   218	            entry.op === "put"
+   219	              ? {
+   220	                  op: "put",
+   221	                  id: entry.id,
+   222	                  json: entry.json,
+   223	                  updatedAtMs: entry.updatedAtMs,
+   224	                }
+   225	              : { op: "delete", id: entry.id },
+   226	          ),
+   227	        },
+   228	      });
+   229	
+   230	      return result;
+   231	    },
+   232	
+   233	    async migrate(): Promise<never> {
+   234	      throw new Error(
+   235	        "E1300: tauri-sqlite migrate() not yet wired — use createSqliteRepo in tests or wait for G2.2 follow-up",
+   236	      );
+   237	    },
+   238	  };
+   239	}
+
+ succeeded in 0ms:
+     1	/**
+     2	 * Repository v0 sync outbox — G2.6 baseline.
+     3	 *
+     4	 * The outbox is the single audit-able queue that downstream sync engines
+     5	 * read from to push local writes to a remote (Supabase, etc.). Every
+     6	 * `account-sync` entity mutation must enqueue an `OutboxEntry` in the
+     7	 * **same transaction** as the entity write so a crash between the two
+     8	 * cannot leave a record without its outbox row.
+     9	 *
+    10	 * Atomicity model (G2.6 P0 fix):
+    11	 *
+    12	 * The entity row and its outbox row share the SAME repo namespace. The
+    13	 * outbox row's id is prefixed with `OUTBOX_ID_PREFIX` (`__outbox__`).
+    14	 * Because both rows live in one namespace, `Repo<T>.transaction(fn)`
+    15	 * commits them atomically:
+    16	 *
+    17	 * - `createInMemoryRepo` → snapshot-restoring transaction.
+    18	 * - `createSqliteRepo` (in-process SQLite driver) → `BEGIN`/`COMMIT` on
+    19	 *   the driver.
+    20	 * - `createTauriRepo` (production / on-disk SQLite) → buffered batch
+    21	 *   committed via the `db_put_batch` Tauri command, which wraps the
+    22	 *   batch in one SQLite transaction on the Rust side.
+    23	 *
+    24	 * This module owns:
+    25	 *
+    26	 * - The `OutboxEntry` record shape (an extension of `RepoRecord`).
+    27	 * - `enqueueOutboxEntry` — atomic helper that pairs an entity put/delete
+    28	 *   with an outbox put inside a single `Repo.transaction(fn)` callback.
+    29	 * - `nextOutboxBatch` — drain helper for the sync engine.
+    30	 *
+    31	 * The actual Supabase / push-edge integration lives in
+    32	 * `packages/plugin-account` and is **deferred** until live Supabase
+    33	 * provisioning lands (see `xai-v1.deferred-gates.md`).
+    34	 */
+    35	
+    36	import { assertRepoRecord } from "./repo-utils";
+    37	import type {
+    38	  Repo,
+    39	  RepoRecord,
+    40	  RepoTransaction,
+    41	} from "./types";
+    42	
+    43	/**
+    44	 * Reserved id prefix that marks a row as a sync-outbox row inside a
+    45	 * shared entity namespace. Application code must NEVER mint an entity
+    46	 * with this prefix as its id.
+    47	 */
+    48	export const OUTBOX_ID_PREFIX = "__outbox__";
+    49	
+    50	/** Convert a mutationId into the outbox row's id. */
+    51	export function outboxIdFor(mutationId: string): string {
+    52	  return `${OUTBOX_ID_PREFIX}${mutationId}`;
+    53	}
+    54	
+    55	/** True if the given record id is reserved for an outbox row. */
+    56	export function isOutboxId(id: string): boolean {
+    57	  return id.startsWith(OUTBOX_ID_PREFIX);
+    58	}
+    59	
+    60	/** A single pending sync mutation queued for push. */
+    61	export interface OutboxEntry extends RepoRecord {
+    62	  entityType: "sync.outbox";
+    63	  /** Monotonic commit sequence assigned at enqueue time. */
+    64	  commitSeq: number;
+    65	  /** Deterministic mutation identifier — used for de-duplication on retry. */
+    66	  mutationId: string;
+    67	  /** Entity slug being mutated, e.g. `productivity.todo`. */
+    68	  targetEntityType: string;
+    69	  /** Entity id being mutated. */
+    70	  targetEntityId: string;
+    71	  /** Operation kind. */
+    72	  op: "put" | "delete";
+    73	  /** Encrypted payload envelope, opaque to the outbox. */
+    74	  payload: string;
+    75	  /** When the engine last attempted a push. */
+    76	  lastAttemptAt?: string;
+    77	  /** Retry counter; the engine bounds this. */
+    78	  retryCount: number;
+    79	  /** Optional revision used by the conditional-write conflict path. */
+    80	  baseRevision?: number;
+    81	}
+    82	
+    83	/**
+    84	 * `enqueueOutboxEntry` takes ONE repo. The entity row and the outbox row
+    85	 * share its namespace; the outbox row uses the reserved id prefix
+    86	 * `OUTBOX_ID_PREFIX` so it cannot collide with an entity id.
+    87	 *
+    88	 * Backwards-compatibility note: the historical signature carried both
+    89	 * `entityRepo` and `outboxRepo`. Inline migration callers wired both to
+    90	 * the same repo while we land the SQLite atomic path; we now accept
+    91	 * either shape. When `outboxRepo` is provided, it must be the same
+    92	 * `Repo` instance as `entityRepo` — passing two different repos throws
+    93	 * because the underlying drivers cannot commit two namespaces atomically.
+    94	 */
+    95	export interface EnqueueOutboxInput<T extends RepoRecord> {
+    96	  /**
+    97	   * Repo whose namespace will hold BOTH the entity row and its outbox
+    98	   * row. Required.
+    99	   */
+   100	  entityRepo: Repo<T | OutboxEntry>;
+   101	  /**
+   102	   * Deprecated: present for source compatibility with the prior
+   103	   * dual-namespace shape. If supplied, MUST be the same `Repo` instance
+   104	   * as `entityRepo`. Two separate repos cannot be committed atomically
+   105	   * against the on-disk SQLite driver and are rejected at runtime.
+   106	   */
+   107	  outboxRepo?: Repo<T | OutboxEntry>;
+   108	  entity: T;
+   109	  op: "put" | "delete";
+   110	  payload: string;
+   111	  mutationId: string;
+   112	  baseRevision?: number;
+   113	  nowIso?: () => string;
+   114	  nextCommitSeq: () => number;
+   115	}
+   116	
+   117	/**
+   118	 * Atomically write `entity` and an outbox row inside a single
+   119	 * `Repo.transaction(fn)` call. The transaction guarantees that either
+   120	 * both rows are committed or neither — see the module-level header for
+   121	 * the per-driver atomicity model.
+   122	 */
+   123	export async function enqueueOutboxEntry<T extends RepoRecord>(
+   124	  input: EnqueueOutboxInput<T>,
+   125	): Promise<OutboxEntry> {
+   126	  if (input.outboxRepo !== undefined && input.outboxRepo !== input.entityRepo) {
+   127	    throw new Error(
+   128	      "E3009: enqueueOutboxEntry requires the entity repo and outbox repo to be the same Repo instance — split namespaces cannot commit atomically",
+   129	    );
+   130	  }
+   131	  if (isOutboxId(input.entity.id)) {
+   132	    throw new Error(
+   133	      `E3010: entity id ${input.entity.id} collides with the reserved outbox prefix \`${OUTBOX_ID_PREFIX}\``,
+   134	    );
+   135	  }
+   136	
+   137	  const nowIso = input.nowIso ?? (() => new Date().toISOString());
+   138	  const commitSeq = input.nextCommitSeq();
+   139	  if (!Number.isInteger(commitSeq) || commitSeq < 1) {
+   140	    throw new Error("E3008: outbox commitSeq must be a positive integer");
+   141	  }
+   142	  const entry: OutboxEntry = {
+   143	    id: outboxIdFor(input.mutationId),
+   144	    entityType: "sync.outbox",
+   145	    schemaVersion: 1,
+   146	    createdAt: nowIso(),
+   147	    updatedAt: nowIso(),
+   148	    syncScope: "account-sync",
+   149	    commitSeq,
+   150	    mutationId: input.mutationId,
+   151	    targetEntityType: input.entity.entityType,
+   152	    targetEntityId: input.entity.id,
+   153	    op: input.op,
+   154	    payload: input.payload,
+   155	    retryCount: 0,
+   156	    baseRevision: input.baseRevision,
+   157	  };
+   158	  assertRepoRecord(entry);
+   159	
+   160	  await input.entityRepo.transaction(async (tx: RepoTransaction<T | OutboxEntry>) => {
+   161	    if (input.op === "put") {
+   162	      await tx.put(input.entity);
+   163	    } else {
+   164	      await tx.delete(input.entity.id);
+   165	    }
+   166	    await tx.put(entry);
+   167	  });
+   168	
+   169	  return entry;
+   170	}
+   171	
+   172	export interface OutboxBatchOptions {
+   173	  limit?: number;
+   174	}
+   175	
+   176	/**
+   177	 * Return the next batch of outbox entries ordered by `commitSeq`. The
+   178	 * caller passes the shared entity/outbox repo; this helper filters by
+   179	 * `entityType === "sync.outbox"` so non-outbox rows in the same
+   180	 * namespace are ignored.
+   181	 *
+   182	 * The repo is typed as `Repo<OutboxEntry>` because the caller is
+   183	 * narrowing to the outbox view — pass the shared repo cast through
+   184	 * `as unknown as Repo<OutboxEntry>` when reading from a heterogeneous
+   185	 * namespace.
+   186	 */
+   187	export async function nextOutboxBatch(
+   188	  repo: Repo<OutboxEntry>,
+   189	  options: OutboxBatchOptions = {},
+   190	): Promise<OutboxEntry[]> {
+   191	  const rows = await repo.list({
+   192	    entityType: "sync.outbox",
+   193	    orderBy: { field: "commitSeq", direction: "asc" },
+   194	    limit: options.limit,
+   195	  });
+   196	  return rows.filter((row) => isOutboxId(row.id));
+   197	}
+   198	
+   199	/**
+   200	 * Monotonic in-process commit-seq allocator. Production code must use
+   201	 * the Rust-side commit-seq authority; this helper is for tests, mocks,
+   202	 * and the local-only fallback path.
+   203	 */
+   204	export function createMockCommitSeqAuthority(initial = 0) {
+   205	  let value = initial;
+   206	  return () => {
+   207	    value += 1;
+   208	    return value;
+   209	  };
+   210	}
+
+exec
+/bin/zsh -lc "sed -n '1,260p' packages/core-data/tests/tauri-sqlite.test.ts | nl -ba" in /Users/lijinlong/Desktop/AI_Desktop/XAI_Desktop
+exec
+/bin/zsh -lc "nl -ba apps/desktop/src-tauri/src/commands/database.rs | sed -n '300,470p'" in /Users/lijinlong/Desktop/AI_Desktop/XAI_Desktop
+ succeeded in 0ms:
+   300	            params![input.namespace, input.id],
+   301	        )
+   302	        .map_err(|err| AppError::DatabaseBackend(err.to_string()))?;
+   303	        Ok(())
+   304	    })
+   305	}
+   306	
+   307	#[derive(Debug, Deserialize)]
+   308	#[serde(rename_all = "camelCase")]
+   309	pub struct DbBatchEntry {
+   310	    /// `"put"` or `"delete"`.
+   311	    pub op: String,
+   312	    pub id: String,
+   313	    /// Required when `op == "put"`. Ignored when `op == "delete"`.
+   314	    pub json: Option<String>,
+   315	    /// Required when `op == "put"`. Ignored when `op == "delete"`.
+   316	    pub updated_at_ms: Option<i64>,
+   317	}
+   318	
+   319	#[derive(Debug, Deserialize)]
+   320	pub struct DbPutBatchInput {
+   321	    pub namespace: String,
+   322	    pub entries: Vec<DbBatchEntry>,
+   323	}
+   324	
+   325	/// Atomically apply a batch of put/delete operations against a single
+   326	/// namespace inside ONE SQLite transaction. If any entry fails validation
+   327	/// or backend execution, the entire batch rolls back — no partial write.
+   328	///
+   329	/// This is the primitive that lets the TS `createTauriRepo.transaction(fn)`
+   330	/// shim deliver a real same-transaction guarantee on the on-disk SQLite
+   331	/// path (G2.6 P0 fix). The shim buffers writes in TS, then issues one
+   332	/// `db_put_batch` call at commit time.
+   333	#[tauri::command]
+   334	pub async fn db_put_batch(
+   335	    window: tauri::WebviewWindow,
+   336	    state: tauri::State<'_, DatabaseState>,
+   337	    input: DbPutBatchInput,
+   338	) -> AppResult<()> {
+   339	    ensure_database_window_allowed(window.label())?;
+   340	    apply_put_batch(&state, &input)
+   341	}
+   342	
+   343	/// Inner driver for `db_put_batch`. Factored out so the Tauri command and
+   344	/// unit tests can share the validation + transactional execution path.
+   345	fn apply_put_batch(state: &DatabaseState, input: &DbPutBatchInput) -> AppResult<()> {
+   346	    validate_namespace(&input.namespace)?;
+   347	
+   348	    // Validate every entry up-front so a malformed payload aborts before
+   349	    // we touch the connection. This keeps the contract: `db_put_batch`
+   350	    // either applies all entries or none.
+   351	    for entry in &input.entries {
+   352	        validate_id(&entry.id)?;
+   353	        match entry.op.as_str() {
+   354	            "put" => {
+   355	                if entry.json.is_none() || entry.updated_at_ms.is_none() {
+   356	                    return Err(AppError::DatabaseInvalidInput(format!(
+   357	                        "batch entry id={} op=put requires json + updatedAtMs",
+   358	                        entry.id
+   359	                    )));
+   360	                }
+   361	            }
+   362	            "delete" => {}
+   363	            other => {
+   364	                return Err(AppError::DatabaseInvalidInput(format!(
+   365	                    "batch entry id={} has unknown op `{other}` (expected put|delete)",
+   366	                    entry.id
+   367	                )));
+   368	            }
+   369	        }
+   370	    }
+   371	
+   372	    state.with_conn_mut(|conn| {
+   373	        let tx = conn
+   374	            .transaction()
+   375	            .map_err(|err| AppError::DatabaseBackend(err.to_string()))?;
+   376	
+   377	        for entry in &input.entries {
+   378	            match entry.op.as_str() {
+   379	                "put" => {
+   380	                    let json = entry.json.as_ref().expect("validated above");
+   381	                    let updated_at_ms = entry.updated_at_ms.expect("validated above");
+   382	                    tx.execute(
+   383	                        UPSERT_RECORD_SQL,
+   384	                        params![input.namespace, entry.id, json, updated_at_ms],
+   385	                    )
+   386	                    .map_err(|err| AppError::DatabaseBackend(err.to_string()))?;
+   387	                }
+   388	                "delete" => {
+   389	                    tx.execute(
+   390	                        DELETE_RECORD_SQL,
+   391	                        params![input.namespace, entry.id],
+   392	                    )
+   393	                    .map_err(|err| AppError::DatabaseBackend(err.to_string()))?;
+   394	                }
+   395	                _ => unreachable!("validated above"),
+   396	            }
+   397	        }
+   398	
+   399	        tx.commit()
+   400	            .map_err(|err| AppError::DatabaseBackend(err.to_string()))?;
+   401	        Ok(())
+   402	    })
+   403	}
+   404	
+   405	fn validate_namespace(value: &str) -> AppResult<()> {
+   406	    if value.is_empty() || value.len() > 128 {
+   407	        return Err(AppError::DatabaseInvalidInput(format!(
+   408	            "namespace must be 1..=128 chars (got {})",
+   409	            value.len()
+   410	        )));
+   411	    }
+   412	    if !value.bytes().all(|b| {
+   413	        b.is_ascii_alphanumeric() || matches!(b, b'.' | b'_' | b'-' | b':')
+   414	    }) {
+   415	        return Err(AppError::DatabaseInvalidInput(
+   416	            "namespace must match [A-Za-z0-9._:-]+".into(),
+   417	        ));
+   418	    }
+   419	    Ok(())
+   420	}
+   421	
+   422	fn validate_id(value: &str) -> AppResult<()> {
+   423	    if value.is_empty() || value.len() > 256 {
+   424	        return Err(AppError::DatabaseInvalidInput(format!(
+   425	            "id must be 1..=256 chars (got {})",
+   426	            value.len()
+   427	        )));
+   428	    }
+   429	    Ok(())
+   430	}
+   431	
+   432	#[cfg(test)]
+   433	mod tests {
+   434	    use super::*;
+   435	    use std::sync::Once;
+   436	    use std::time::{SystemTime, UNIX_EPOCH};
+   437	
+   438	    fn temp_db_path(name: &str) -> PathBuf {
+   439	        let nanos = SystemTime::now()
+   440	            .duration_since(UNIX_EPOCH)
+   441	            .unwrap()
+   442	            .as_nanos();
+   443	        std::env::temp_dir().join(format!(
+   444	            "xai-db-{name}-{}-{nanos}.db",
+   445	            std::process::id()
+   446	        ))
+   447	    }
+   448	
+   449	    static INIT: Once = Once::new();
+   450	    fn ensure_init() {
+   451	        INIT.call_once(|| {});
+   452	    }
+   453	
+   454	    fn opened(path: &PathBuf) -> DatabaseState {
+   455	        ensure_init();
+   456	        let state = DatabaseState::default();
+   457	        state.open_at(path).unwrap();
+   458	        state
+   459	    }
+   460	
+   461	    fn put(state: &DatabaseState, ns: &str, id: &str, json: &str, ts: i64) -> AppResult<()> {
+   462	        state.with_conn(|conn| {
+   463	            conn.execute(
+   464	                UPSERT_RECORD_SQL,
+   465	                params![ns, id, json, ts],
+   466	            )
+   467	            .map_err(|err| AppError::DatabaseBackend(err.to_string()))?;
+   468	            Ok(())
+   469	        })
+   470	    }
+
+ succeeded in 0ms:
+     1	import { describe, expect, it } from "vitest";
+     2	
+     3	import { createTauriRepo } from "../src/tauri-sqlite";
+     4	import type { RepoRecord } from "../src/types";
+     5	
+     6	interface TodoRecord extends RepoRecord {
+     7	  title: string;
+     8	}
+     9	
+    10	function makeRecord(id: string, overrides: Partial<TodoRecord> = {}): TodoRecord {
+    11	  return {
+    12	    id,
+    13	    entityType: "productivity.todo",
+    14	    schemaVersion: 1,
+    15	    createdAt: "2026-05-20T00:00:00.000Z",
+    16	    updatedAt: "2026-05-20T00:00:00.000Z",
+    17	    syncScope: "account-sync",
+    18	    title: id,
+    19	    ...overrides,
+    20	  };
+    21	}
+    22	
+    23	interface CallLog {
+    24	  cmd: string;
+    25	  args?: Record<string, unknown>;
+    26	}
+    27	
+    28	function fakeStorage() {
+    29	  const records = new Map<string, string>();
+    30	  const calls: CallLog[] = [];
+    31	
+    32	  function key(namespace: string, id: string) {
+    33	    return `${namespace} ${id}`;
+    34	  }
+    35	
+    36	  async function invoke<T>(
+    37	    cmd: string,
+    38	    args?: Record<string, unknown>,
+    39	  ): Promise<T> {
+    40	    calls.push({ cmd, args });
+    41	    if (cmd === "db_init") {
+    42	      const ns = args!.namespace as string;
+    43	      return { namespace: ns, path: `/tmp/${ns}.db` } as unknown as T;
+    44	    }
+    45	    if (cmd === "db_put") {
+    46	      const input = args!.input as {
+    47	        namespace: string;
+    48	        id: string;
+    49	        json: string;
+    50	      };
+    51	      records.set(key(input.namespace, input.id), input.json);
+    52	      return undefined as unknown as T;
+    53	    }
+    54	    if (cmd === "db_get") {
+    55	      const input = args!.input as { namespace: string; id: string };
+    56	      const raw = records.get(key(input.namespace, input.id));
+    57	      return (raw ?? null) as unknown as T;
+    58	    }
+    59	    if (cmd === "db_list") {
+    60	      const input = args!.input as { namespace: string };
+    61	      const prefix = `${input.namespace} `;
+    62	      const out: string[] = [];
+    63	      for (const [k, v] of records) {
+    64	        if (k.startsWith(prefix)) out.push(v);
+    65	      }
+    66	      out.sort();
+    67	      return out as unknown as T;
+    68	    }
+    69	    if (cmd === "db_delete") {
+    70	      const input = args!.input as { namespace: string; id: string };
+    71	      records.delete(key(input.namespace, input.id));
+    72	      return undefined as unknown as T;
+    73	    }
+    74	    if (cmd === "db_put_batch") {
+    75	      const input = args!.input as {
+    76	        namespace: string;
+    77	        entries: Array<
+    78	          | { op: "put"; id: string; json: string; updatedAtMs: number }
+    79	          | { op: "delete"; id: string }
+    80	        >;
+    81	      };
+    82	      // Stage into a snapshot to mimic the Rust BEGIN/COMMIT path so a
+    83	      // throw inside this branch leaves `records` untouched.
+    84	      const staged = new Map(records);
+    85	      for (const entry of input.entries) {
+    86	        if (entry.op === "put") {
+    87	          if (!entry.json || typeof entry.updatedAtMs !== "number") {
+    88	            throw new Error(
+    89	              `E1301: batch entry id=${entry.id} op=put requires json + updatedAtMs`,
+    90	            );
+    91	          }
+    92	          staged.set(key(input.namespace, entry.id), entry.json);
+    93	        } else if (entry.op === "delete") {
+    94	          staged.delete(key(input.namespace, entry.id));
+    95	        } else {
+    96	          throw new Error(
+    97	            `E1301: batch entry has unknown op (expected put|delete)`,
+    98	          );
+    99	        }
+   100	      }
+   101	      records.clear();
+   102	      for (const [k, v] of staged) records.set(k, v);
+   103	      return undefined as unknown as T;
+   104	    }
+   105	    throw new Error(`unknown cmd: ${cmd}`);
+   106	  }
+   107	
+   108	  return { invoke, calls, records };
+   109	}
+   110	
+   111	describe("createTauriRepo", () => {
+   112	  it("calls db_init exactly once across multiple operations", async () => {
+   113	    const fake = fakeStorage();
+   114	    const repo = createTauriRepo<TodoRecord>(fake.invoke, {
+   115	      namespace: "todos",
+   116	    });
+   117	
+   118	    await repo.put(makeRecord("t1"));
+   119	    await repo.put(makeRecord("t2"));
+   120	    await repo.get("t1");
+   121	    await repo.list();
+   122	
+   123	    const initCalls = fake.calls.filter((c) => c.cmd === "db_init");
+   124	    expect(initCalls).toHaveLength(1);
+   125	    expect(initCalls[0].args).toEqual({ namespace: "todos" });
+   126	  });
+   127	
+   128	  it("round-trips records through the invoke seam", async () => {
+   129	    const fake = fakeStorage();
+   130	    const repo = createTauriRepo<TodoRecord>(fake.invoke, {
+   131	      namespace: "todos",
+   132	    });
+   133	
+   134	    await repo.put(makeRecord("t1", { title: "first" }));
+   135	    await expect(repo.get("t1")).resolves.toMatchObject({
+   136	      id: "t1",
+   137	      title: "first",
+   138	    });
+   139	    await repo.delete("t1");
+   140	    await expect(repo.get("t1")).resolves.toBeUndefined();
+   141	  });
+   142	
+   143	  it("supports list filtering and listByIndex over fetched payloads", async () => {
+   144	    const fake = fakeStorage();
+   145	    const repo = createTauriRepo<TodoRecord & { tag: string }>(fake.invoke, {
+   146	      namespace: "todos",
+   147	    });
+   148	
+   149	    await repo.put({ ...makeRecord("t1"), tag: "work" } as TodoRecord & {
+   150	      tag: string;
+   151	    });
+   152	    await repo.put({ ...makeRecord("t2"), tag: "home" } as TodoRecord & {
+   153	      tag: string;
+   154	    });
+   155	    await repo.put({ ...makeRecord("t3"), tag: "work" } as TodoRecord & {
+   156	      tag: string;
+   157	    });
+   158	
+   159	    await expect(repo.listByIndex("tag", "work")).resolves.toHaveLength(2);
+   160	    await expect(
+   161	      repo.list({ orderBy: { field: "id", direction: "desc" }, limit: 2 }),
+   162	    ).resolves.toEqual([
+   163	      expect.objectContaining({ id: "t3" }),
+   164	      expect.objectContaining({ id: "t2" }),
+   165	    ]);
+   166	  });
+   167	
+   168	  it("transaction buffers writes and commits them via db_put_batch", async () => {
+   169	    const fake = fakeStorage();
+   170	    const repo = createTauriRepo<TodoRecord>(fake.invoke, {
+   171	      namespace: "todos",
+   172	    });
+   173	
+   174	    await repo.transaction(async (tx) => {
+   175	      await tx.put(makeRecord("t1", { title: "first" }));
+   176	      await tx.put(makeRecord("t2", { title: "second" }));
+   177	      await tx.delete("legacy");
+   178	    });
+   179	
+   180	    const batchCalls = fake.calls.filter((c) => c.cmd === "db_put_batch");
+   181	    expect(batchCalls).toHaveLength(1);
+   182	    const input = batchCalls[0].args!.input as {
+   183	      namespace: string;
+   184	      entries: Array<{ op: string; id: string }>;
+   185	    };
+   186	    expect(input.namespace).toBe("todos");
+   187	    expect(input.entries.map((e) => `${e.op}:${e.id}`)).toEqual([
+   188	      "put:t1",
+   189	      "put:t2",
+   190	      "delete:legacy",
+   191	    ]);
+   192	    // The transaction must NOT call db_put / db_delete individually —
+   193	    // that would defeat the same-batch atomicity guarantee.
+   194	    expect(fake.calls.some((c) => c.cmd === "db_put")).toBe(false);
+   195	    expect(fake.calls.some((c) => c.cmd === "db_delete")).toBe(false);
+   196	
+   197	    await expect(repo.get("t1")).resolves.toMatchObject({ id: "t1" });
+   198	    await expect(repo.get("t2")).resolves.toMatchObject({ id: "t2" });
+   199	  });
+   200	
+   201	  it("transaction rolls back when the callback throws (no db_put_batch sent)", async () => {
+   202	    const fake = fakeStorage();
+   203	    const repo = createTauriRepo<TodoRecord>(fake.invoke, {
+   204	      namespace: "todos",
+   205	    });
+   206	
+   207	    await expect(
+   208	      repo.transaction(async (tx) => {
+   209	        await tx.put(makeRecord("t1"));
+   210	        throw new Error("explode");
+   211	      }),
+   212	    ).rejects.toThrow("explode");
+   213	
+   214	    expect(fake.calls.some((c) => c.cmd === "db_put_batch")).toBe(false);
+   215	    await expect(repo.get("t1")).resolves.toBeUndefined();
+   216	  });
+   217	
+   218	  it("transaction rolls back when db_put_batch fails on the Rust side", async () => {
+   219	    // Build a custom invoke that always rejects db_put_batch — mimics a
+   220	    // backend SQLite error. The pre-batch get/list still work.
+   221	    const fake = fakeStorage();
+   222	    const wrappedInvoke = async <T,>(
+   223	      cmd: string,
+   224	      args?: Record<string, unknown>,
+   225	    ): Promise<T> => {
+   226	      if (cmd === "db_put_batch") {
+   227	        throw new Error("E1302: simulated rust backend failure");
+   228	      }
+   229	      return fake.invoke<T>(cmd, args);
+   230	    };
+   231	
+   232	    const repo = createTauriRepo<TodoRecord>(wrappedInvoke, {
+   233	      namespace: "todos",
+   234	    });
+   235	
+   236	    // Seed via plain put — succeeds because it does not go through batch.
+   237	    await repo.put(makeRecord("seed", { title: "seed" }));
+   238	
+   239	    await expect(
+   240	      repo.transaction(async (tx) => {
+   241	        await tx.put(makeRecord("t1"));
+   242	        await tx.put(makeRecord("t2"));
+   243	      }),
+   244	    ).rejects.toThrow("simulated rust backend failure");
+   245	
+   246	    // Pre-transaction row survives; in-transaction rows did not commit.
+   247	    await expect(repo.get("seed")).resolves.toMatchObject({ id: "seed" });
+   248	    await expect(repo.get("t1")).resolves.toBeUndefined();
+   249	    await expect(repo.get("t2")).resolves.toBeUndefined();
+   250	  });
+   251	
+   252	  it("metadata reports tauri-sqlite driver name and record count", async () => {
+   253	    const fake = fakeStorage();
+   254	    const repo = createTauriRepo<TodoRecord>(fake.invoke, {
+   255	      namespace: "todos",
+   256	      schemaVersion: 2,
+   257	    });
+   258	    await repo.put(makeRecord("t1"));
+   259	    await repo.put(makeRecord("t2"));
+   260	    await expect(repo.metadata()).resolves.toEqual({
+
+codex
+I have the atomicity path and test scaffolding. Next I’m verifying the claimed commands instead of trusting the commit footer, with emphasis on the new Rust batch transaction tests and the core-data suite that exercises the Tauri repo shim.
+exec
+/bin/zsh -lc 'cargo check --features crypto' in /Users/lijinlong/Desktop/AI_Desktop/XAI_Desktop/apps/desktop/src-tauri
+exec
+/bin/zsh -lc 'pnpm --filter @repo/core-data check-types' in /Users/lijinlong/Desktop/AI_Desktop/XAI_Desktop
+exec
+/bin/zsh -lc 'cargo test --features crypto database::' in /Users/lijinlong/Desktop/AI_Desktop/XAI_Desktop/apps/desktop/src-tauri
+exec
+/bin/zsh -lc 'cargo check' in /Users/lijinlong/Desktop/AI_Desktop/XAI_Desktop/apps/desktop/src-tauri
+exec
+/bin/zsh -lc 'pnpm --filter @repo/core-data test' in /Users/lijinlong/Desktop/AI_Desktop/XAI_Desktop
+exec
+/bin/zsh -lc 'pnpm --filter desktop build' in /Users/lijinlong/Desktop/AI_Desktop/XAI_Desktop
+ succeeded in 1476ms:
+
+> @repo/core-data@0.0.0 check-types /Users/lijinlong/Desktop/AI_Desktop/XAI_Desktop/packages/core-data
+> tsc --noEmit
+
+
+ succeeded in 2111ms:
+
+> @repo/core-data@0.0.0 test /Users/lijinlong/Desktop/AI_Desktop/XAI_Desktop/packages/core-data
+> vitest run
+
+
+ RUN  v3.2.4 /Users/lijinlong/Desktop/AI_Desktop/XAI_Desktop/packages/core-data
+
+ ✓ tests/keychain.test.ts (20 tests) 7ms
+ ✓ tests/tauri-sqlite.test.ts (7 tests) 13ms
+ ✓ tests/entities.test.ts (4 tests) 11ms
+ ✓ tests/sync-outbox.test.ts (9 tests) 9ms
+ ✓ tests/organizer-layout-migration.test.ts (5 tests) 16ms
+ ✓ tests/sqlite-repo.test.ts (9 tests) 15ms
+ ✓ tests/in-memory-repo.test.ts (12 tests) 20ms
+
+ Test Files  7 passed (7)
+      Tests  66 passed (66)
+   Start at  02:23:20
+   Duration  626ms (transform 354ms, setup 0ms, collect 784ms, tests 91ms, environment 1ms, prepare 727ms)
+
+
+ succeeded in 4116ms:
+   Compiling desktop v0.1.0 (/Users/lijinlong/Desktop/AI_Desktop/XAI_Desktop/apps/desktop/src-tauri)
+warning: multiple variants are never constructed
+  --> src/error.rs:44:5
+   |
+15 | pub enum AppError {
+   |          -------- variants in this enum
+...
+44 |     KeychainUnsupportedPlatform,
+   |     ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+...
+48 |     SyncNotInitialized,
+   |     ^^^^^^^^^^^^^^^^^^
+...
+51 |     SyncAuthRequired,
+   |     ^^^^^^^^^^^^^^^^
+...
+54 |     SyncTransport(String),
+   |     ^^^^^^^^^^^^^
+...
+57 |     SyncConflict,
+   |     ^^^^^^^^^^^^
+...
+69 |     SyncCrypto(String),
+   |     ^^^^^^^^^^
+...
+74 |     DatabaseNotInitialized,
+   |     ^^^^^^^^^^^^^^^^^^^^^^
+...
+78 |     DatabaseInvalidInput(String),
+   |     ^^^^^^^^^^^^^^^^^^^^
+...
+82 |     DatabaseBackend(String),
+   |     ^^^^^^^^^^^^^^^
+   |
+   = note: `AppError` has a derived impl for the trait `Debug`, but this is intentionally ignored during dead code analysis
+   = note: `#[warn(dead_code)]` (part of `#[warn(unused)]`) on by default
+
+warning: constant `BUNDLE_ID` is never used
+  --> src/platform/macos/keychain.rs:24:11
+   |
+24 | pub const BUNDLE_ID: &str = "com.jinlong.desktop";
+   |           ^^^^^^^^^
+
+warning: struct `KeychainItemAttrs` is never constructed
+  --> src/platform/macos/keychain.rs:32:12
+   |
+32 | pub struct KeychainItemAttrs {
+   |            ^^^^^^^^^^^^^^^^^
+
+warning: enum `KeychainAccessibility` is never used
+  --> src/platform/macos/keychain.rs:43:10
+   |
+43 | pub enum KeychainAccessibility {
+   |          ^^^^^^^^^^^^^^^^^^^^^
+
+warning: function `build_item_attrs` is never used
+  --> src/platform/macos/keychain.rs:52:8
+   |
+52 | pub fn build_item_attrs() -> KeychainItemAttrs {
+   |        ^^^^^^^^^^^^^^^^
+
+warning: `desktop` (lib) generated 5 warnings
+    Finished `dev` profile [unoptimized + debuginfo] target(s) in 3.95s
+
+ succeeded in 4412ms:
+
+> desktop@0.1.0 build /Users/lijinlong/Desktop/AI_Desktop/XAI_Desktop/apps/desktop
+> tsc && vite build
+
+vite v7.2.4 building client environment for production...
+transforming...
+✓ 359 modules transformed.
+rendering chunks...
+computing gzip size...
+dist/index.html                     0.47 kB │ gzip:   0.31 kB
+dist/assets/index-iOmQ4O8K.css      2.58 kB │ gzip:   1.10 kB
+dist/assets/index-JCSFsTx5.js   1,592.40 kB │ gzip: 680.51 kB
+
+(!) Some chunks are larger than 500 kB after minification. Consider:
+- Using dynamic import() to code-split the application
+- Use build.rollupOptions.output.manualChunks to improve chunking: https://rollupjs.org/configuration-options/#output-manualchunks
+- Adjust chunk size limit for this warning via build.chunkSizeWarningLimit.
+✓ built in 1.48s
+
+ succeeded in 8831ms:
+    Blocking waiting for file lock on build directory
+   Compiling desktop v0.1.0 (/Users/lijinlong/Desktop/AI_Desktop/XAI_Desktop/apps/desktop/src-tauri)
+warning: function `load_kek_into_vault` is never used
+  --> src/crypto/keychain_handle.rs:69:8
+   |
+69 | pub fn load_kek_into_vault(
+   |        ^^^^^^^^^^^^^^^^^^^
+   |
+   = note: `#[warn(dead_code)]` (part of `#[warn(unused)]`) on by default
+
+warning: `desktop` (lib test) generated 1 warning
+warning: constant `KEY_BYTES` is never used
+  --> src/crypto/keychain_handle.rs:26:7
+   |
+26 | const KEY_BYTES: usize = 32;
+   |       ^^^^^^^^^
+   |
+   = note: `#[warn(dead_code)]` (part of `#[warn(unused)]`) on by default
+
+warning: enum `KeychainHandleError` is never used
+  --> src/crypto/keychain_handle.rs:35:10
+   |
+35 | pub enum KeychainHandleError {
+   |          ^^^^^^^^^^^^^^^^^^^
+
+warning: type alias `KeychainHandleResult` is never used
+  --> src/crypto/keychain_handle.rs:58:10
+   |
+58 | pub type KeychainHandleResult<T> = Result<T, KeychainHandleError>;
+   |          ^^^^^^^^^^^^^^^^^^^^
+
+warning: function `load_kek_into_vault` is never used
+  --> src/crypto/keychain_handle.rs:69:8
+   |
+69 | pub fn load_kek_into_vault(
+   |        ^^^^^^^^^^^^^^^^^^^
+
+warning: function `insert_kek_from_bytes` is never used
+  --> src/crypto/keychain_handle.rs:82:8
+   |
+82 | pub fn insert_kek_from_bytes(
+   |        ^^^^^^^^^^^^^^^^^^^^^
+
+warning: variants `KeychainUnsupportedPlatform`, `SyncNotInitialized`, `SyncAuthRequired`, `SyncTransport`, and `SyncConflict` are never constructed
+  --> src/error.rs:44:5
+   |
+15 | pub enum AppError {
+   |          -------- variants in this enum
+...
+44 |     KeychainUnsupportedPlatform,
+   |     ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+...
+48 |     SyncNotInitialized,
+   |     ^^^^^^^^^^^^^^^^^^
+...
+51 |     SyncAuthRequired,
+   |     ^^^^^^^^^^^^^^^^
+...
+54 |     SyncTransport(String),
+   |     ^^^^^^^^^^^^^
+...
+57 |     SyncConflict,
+   |     ^^^^^^^^^^^^
+   |
+   = note: `AppError` has a derived impl for the trait `Debug`, but this is intentionally ignored during dead code analysis
+
+warning: constant `BUNDLE_ID` is never used
+  --> src/platform/macos/keychain.rs:24:11
+   |
+24 | pub const BUNDLE_ID: &str = "com.jinlong.desktop";
+   |           ^^^^^^^^^
+
+warning: struct `KeychainItemAttrs` is never constructed
+  --> src/platform/macos/keychain.rs:32:12
+   |
+32 | pub struct KeychainItemAttrs {
+   |            ^^^^^^^^^^^^^^^^^
+
+warning: enum `KeychainAccessibility` is never used
+  --> src/platform/macos/keychain.rs:43:10
+   |
+43 | pub enum KeychainAccessibility {
+   |          ^^^^^^^^^^^^^^^^^^^^^
+
+warning: function `build_item_attrs` is never used
+  --> src/platform/macos/keychain.rs:52:8
+   |
+52 | pub fn build_item_attrs() -> KeychainItemAttrs {
+   |        ^^^^^^^^^^^^^^^^
+
+warning: `desktop` (lib) generated 10 warnings
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 8.31s
+     Running unittests src/lib.rs (target/debug/deps/desktop_lib-6f0f30a7d8da1409)
+
+running 13 tests
+test commands::database::tests::missing_init_returns_not_initialized ... ok
+test commands::database::tests::put_batch_rolls_back_on_runtime_backend_error ... ok
+test commands::database::tests::validate_id_rejects_bad_input ... ok
+test commands::database::tests::validate_namespace_rejects_bad_input ... ok
+test commands::database::tests::window_allowlist_admits_documented_labels_and_grids ... ok
+test commands::database::tests::window_allowlist_rejects_widget_pet_aicube ... ok
+test commands::database::tests::put_batch_rolls_back_when_a_later_entry_is_invalid ... ok
+test commands::database::tests::put_batch_commits_all_entries_atomically ... ok
+test commands::database::tests::delete_is_idempotent ... ok
+test commands::database::tests::put_batch_mixes_put_and_delete_in_order ... ok
+test commands::database::tests::upsert_overwrites_existing_record ... ok
+test commands::database::tests::create_open_roundtrip_persists_across_reopens ... ok
+test commands::database::tests::list_returns_only_requested_namespace_sorted_by_id ... ok
+
+test result: ok. 13 passed; 0 failed; 0 ignored; 0 measured; 71 filtered out; finished in 0.01s
+
+     Running unittests src/main.rs (target/debug/deps/desktop-5450acdad61464ed)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+
+codex
+The verification commands are running. Cargo serialized itself on the shared target dir, which is expected; I’m polling the sessions to capture actual pass/fail rather than inferring from the earlier work log.
+ succeeded in 11547ms:
+    Blocking waiting for file lock on build directory
+   Compiling desktop v0.1.0 (/Users/lijinlong/Desktop/AI_Desktop/XAI_Desktop/apps/desktop/src-tauri)
+warning: constant `KEY_BYTES` is never used
+  --> src/crypto/keychain_handle.rs:26:7
+   |
+26 | const KEY_BYTES: usize = 32;
+   |       ^^^^^^^^^
+   |
+   = note: `#[warn(dead_code)]` (part of `#[warn(unused)]`) on by default
+
+warning: enum `KeychainHandleError` is never used
+  --> src/crypto/keychain_handle.rs:35:10
+   |
+35 | pub enum KeychainHandleError {
+   |          ^^^^^^^^^^^^^^^^^^^
+
+warning: type alias `KeychainHandleResult` is never used
+  --> src/crypto/keychain_handle.rs:58:10
+   |
+58 | pub type KeychainHandleResult<T> = Result<T, KeychainHandleError>;
+   |          ^^^^^^^^^^^^^^^^^^^^
+
+warning: function `load_kek_into_vault` is never used
+  --> src/crypto/keychain_handle.rs:69:8
+   |
+69 | pub fn load_kek_into_vault(
+   |        ^^^^^^^^^^^^^^^^^^^
+
+warning: function `insert_kek_from_bytes` is never used
+  --> src/crypto/keychain_handle.rs:82:8
+   |
+82 | pub fn insert_kek_from_bytes(
+   |        ^^^^^^^^^^^^^^^^^^^^^
+
+warning: variants `KeychainUnsupportedPlatform`, `SyncNotInitialized`, `SyncAuthRequired`, `SyncTransport`, and `SyncConflict` are never constructed
+  --> src/error.rs:44:5
+   |
+15 | pub enum AppError {
+   |          -------- variants in this enum
+...
+44 |     KeychainUnsupportedPlatform,
+   |     ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+...
+48 |     SyncNotInitialized,
+   |     ^^^^^^^^^^^^^^^^^^
+...
+51 |     SyncAuthRequired,
+   |     ^^^^^^^^^^^^^^^^
+...
+54 |     SyncTransport(String),
+   |     ^^^^^^^^^^^^^
+...
+57 |     SyncConflict,
+   |     ^^^^^^^^^^^^
+   |
+   = note: `AppError` has a derived impl for the trait `Debug`, but this is intentionally ignored during dead code analysis
+
+warning: constant `BUNDLE_ID` is never used
+  --> src/platform/macos/keychain.rs:24:11
+   |
+24 | pub const BUNDLE_ID: &str = "com.jinlong.desktop";
+   |           ^^^^^^^^^
+
+warning: struct `KeychainItemAttrs` is never constructed
+  --> src/platform/macos/keychain.rs:32:12
+   |
+32 | pub struct KeychainItemAttrs {
+   |            ^^^^^^^^^^^^^^^^^
+
+warning: enum `KeychainAccessibility` is never used
+  --> src/platform/macos/keychain.rs:43:10
+   |
+43 | pub enum KeychainAccessibility {
+   |          ^^^^^^^^^^^^^^^^^^^^^
+
+warning: function `build_item_attrs` is never used
+  --> src/platform/macos/keychain.rs:52:8
+   |
+52 | pub fn build_item_attrs() -> KeychainItemAttrs {
+   |        ^^^^^^^^^^^^^^^^
+
+warning: `desktop` (lib) generated 10 warnings
+    Finished `dev` profile [unoptimized + debuginfo] target(s) in 11.38s
+
+codex
+The reruns are clean: cargo checks, the Rust database suite, core-data tests, typecheck, and desktop build all passed locally. I’m pulling the last exact test line references, then I’ll issue the re-review verdict against the original P0 only.
+exec
+/bin/zsh -lc "nl -ba packages/core-data/tests/sync-outbox.test.ts | sed -n '40,190p'" in /Users/lijinlong/Desktop/AI_Desktop/XAI_Desktop
+exec
+/bin/zsh -lc "nl -ba packages/core-data/tests/tauri-sqlite.test.ts | sed -n '160,255p'" in /Users/lijinlong/Desktop/AI_Desktop/XAI_Desktop
+exec
+/bin/zsh -lc "nl -ba docs/contracts/tauri-commands-v0.md | sed -n '140,155p'" in /Users/lijinlong/Desktop/AI_Desktop/XAI_Desktop
+ succeeded in 0ms:
+   140	| `db_init` | `main`,`control`,`grid_*`,`account` | `{ namespace }` | `{ namespace, path }` | Idempotent. Opens or creates `xai-repo-v0.db` under `app_data_dir`. |
+   141	| `db_put` | same | `{ input: { namespace, id, json, updatedAtMs } }` | `void` | Upsert. `json` payload is opaque; raw bytes do not cross IPC. |
+   142	| `db_get` | same | `{ input: { namespace, id } }` | `string \| null` | Returns the stored JSON or `null` if absent. |
+   143	| `db_list` | same | `{ input: { namespace } }` | `string[]` | All payloads in the namespace, sorted by id. |
+   144	| `db_delete` | same | `{ input: { namespace, id } }` | `void` | Idempotent. |
+   145	| `db_put_batch` | same | `{ input: { namespace, entries: [{ op: "put" \| "delete", id, json?, updatedAtMs? }] } }` | `void` | Atomic. Wraps every entry in one SQLite `BEGIN`/`COMMIT`. Any validation or backend failure rolls back the whole batch. Required by the sync-outbox to commit the entity row and its outbox row together (G2.6 P0 fix). |
+   146	
+   147	PoC scope:
+   148	- Plain SQLite via `rusqlite` (bundled-sqlcipher build but no `PRAGMA key` applied).
+   149	- SQLCipher PRAGMA path is exercised by `apps/desktop/src-tauri/src/crypto/sqlcipher.rs` and will be wired into `db_init` once G2.4 publishes a stable opaque KEK handle.
+   150	- Cross-namespace transactions are not exposed; the TS `createTauriRepo` shim runs `transaction(fn)` callbacks against a single namespace and dispatches all buffered writes through `db_put_batch`.
+   151	- Namespace must match `[A-Za-z0-9._:-]+` and be ≤ 128 chars. Id must be 1..=256 chars.
+   152	- Errors: `E1300` (not initialized), `E1301` (invalid input), `E1302` (backend SQLite/FS error).
+   153	- Feature-gated: registered only when the desktop crate is built with `--features crypto` (the gate that also enables `rusqlite`).
+   154	
+   155	## 7. Capability Files
+
+ succeeded in 0ms:
+    40	}
+    41	
+    42	describe("enqueueOutboxEntry", () => {
+    43	  it("writes the entity and its outbox row in the same transaction", async () => {
+    44	    const repo = createInMemoryRepo<TodoEntity | OutboxEntry>({
+    45	      namespace: "productivity.todos",
+    46	    });
+    47	    const nextCommitSeq = createMockCommitSeqAuthority();
+    48	
+    49	    const entry = await enqueueOutboxEntry({
+    50	      entityRepo: repo,
+    51	      entity: todoFixture("todo-1", { title: "first" }),
+    52	      op: "put",
+    53	      payload: "ENC(first)",
+    54	      mutationId: "mut-1",
+    55	      nextCommitSeq,
+    56	      nowIso: () => "2026-05-20T00:01:00.000Z",
+    57	    });
+    58	
+    59	    expect(entry).toMatchObject({
+    60	      id: outboxIdFor("mut-1"),
+    61	      commitSeq: 1,
+    62	      targetEntityType: "productivity.todo",
+    63	      targetEntityId: "todo-1",
+    64	      op: "put",
+    65	    });
+    66	    expect(isOutboxId(entry.id)).toBe(true);
+    67	    expect(entry.id.startsWith(OUTBOX_ID_PREFIX)).toBe(true);
+    68	
+    69	    const todo = (await repo.get("todo-1")) as TodoEntity | undefined;
+    70	    expect(todo).toMatchObject({ id: "todo-1", title: "first" });
+    71	
+    72	    const outbox = await nextOutboxBatch(asOutboxView(repo));
+    73	    expect(outbox).toHaveLength(1);
+    74	    expect(outbox[0]).toEqual(entry);
+    75	  });
+    76	
+    77	  it("rolls back the entity write when the transaction throws (in-memory)", async () => {
+    78	    const repo = createInMemoryRepo<TodoEntity | OutboxEntry>({
+    79	      namespace: "productivity.todos",
+    80	    });
+    81	    // Sabotage: wrap transaction so the fn runs but the commit boundary
+    82	    // ultimately throws — the snapshot-restore must undo the entity put.
+    83	    const sabotagedRepo: SharedRepo = {
+    84	      ...repo,
+    85	      async transaction<R>(
+    86	        fn: (tx: Parameters<typeof repo.transaction>[0] extends (tx: infer X) => unknown ? X : never) => Promise<R>,
+    87	      ) {
+    88	        return repo.transaction(async (tx) => {
+    89	          await fn(tx as never);
+    90	          throw new Error("simulated commit failure");
+    91	        });
+    92	      },
+    93	    } as SharedRepo;
+    94	
+    95	    await expect(
+    96	      enqueueOutboxEntry({
+    97	        entityRepo: sabotagedRepo,
+    98	        entity: todoFixture("todo-2"),
+    99	        op: "put",
+   100	        payload: "ENC",
+   101	        mutationId: "mut-2",
+   102	        nextCommitSeq: createMockCommitSeqAuthority(),
+   103	      }),
+   104	    ).rejects.toThrow("simulated commit failure");
+   105	
+   106	    // Both rows must be rolled back — the same-transaction guarantee.
+   107	    await expect(repo.get("todo-2")).resolves.toBeUndefined();
+   108	    await expect(repo.get(outboxIdFor("mut-2"))).resolves.toBeUndefined();
+   109	  });
+   110	
+   111	  it("rolls back the entity write on the in-process SQLite driver path", async () => {
+   112	    // Real SQLite (in-memory driver). Sabotage forces the outer
+   113	    // transaction to throw AFTER the entity has been written inside the
+   114	    // BEGIN, proving the SQLite driver actually issues a ROLLBACK.
+   115	    const driver = createInMemorySqliteDriver();
+   116	    const baseRepo = createSqliteRepo<TodoEntity | OutboxEntry>(driver, {
+   117	      namespace: "productivity.todos",
+   118	    });
+   119	
+   120	    const sabotagedRepo: SharedRepo = {
+   121	      ...baseRepo,
+   122	      async transaction<R>(fn: (tx: never) => Promise<R>) {
+   123	        return baseRepo.transaction(async (tx) => {
+   124	          await fn(tx as never);
+   125	          throw new Error("simulated sqlite commit failure");
+   126	        });
+   127	      },
+   128	    } as SharedRepo;
+   129	
+   130	    await expect(
+   131	      enqueueOutboxEntry({
+   132	        entityRepo: sabotagedRepo,
+   133	        entity: todoFixture("todo-sqlite"),
+   134	        op: "put",
+   135	        payload: "ENC",
+   136	        mutationId: "mut-sqlite",
+   137	        nextCommitSeq: createMockCommitSeqAuthority(),
+   138	      }),
+   139	    ).rejects.toThrow("simulated sqlite commit failure");
+   140	
+   141	    // Entity AND outbox row must NOT survive in the SQLite store.
+   142	    await expect(baseRepo.get("todo-sqlite")).resolves.toBeUndefined();
+   143	    await expect(
+   144	      baseRepo.get(outboxIdFor("mut-sqlite")),
+   145	    ).resolves.toBeUndefined();
+   146	  });
+   147	
+   148	  it("rejects an entity whose id collides with the reserved outbox prefix", async () => {
+   149	    const repo = createInMemoryRepo<TodoEntity | OutboxEntry>({
+   150	      namespace: "productivity.todos",
+   151	    });
+   152	    await expect(
+   153	      enqueueOutboxEntry({
+   154	        entityRepo: repo,
+   155	        entity: todoFixture(`${OUTBOX_ID_PREFIX}sneaky`),
+   156	        op: "put",
+   157	        payload: "ENC",
+   158	        mutationId: "mut-x",
+   159	        nextCommitSeq: createMockCommitSeqAuthority(),
+   160	      }),
+   161	    ).rejects.toThrow(/E3010/);
+   162	  });
+   163	
+   164	  it("rejects a split entityRepo / outboxRepo pair (cannot commit atomically)", async () => {
+   165	    const repoA = createInMemoryRepo<TodoEntity | OutboxEntry>({
+   166	      namespace: "productivity.todos",
+   167	    });
+   168	    const repoB = createInMemoryRepo<TodoEntity | OutboxEntry>({
+   169	      namespace: "sync.outbox",
+   170	    });
+   171	    await expect(
+   172	      enqueueOutboxEntry({
+   173	        entityRepo: repoA,
+   174	        outboxRepo: repoB,
+   175	        entity: todoFixture("todo-split"),
+   176	        op: "put",
+   177	        payload: "ENC",
+   178	        mutationId: "mut-split",
+   179	        nextCommitSeq: createMockCommitSeqAuthority(),
+   180	      }),
+   181	    ).rejects.toThrow(/E3009/);
+   182	  });
+   183	
+   184	  it("orders the batch by commitSeq", async () => {
+   185	    const repo = createInMemoryRepo<TodoEntity | OutboxEntry>({
+   186	      namespace: "productivity.todos",
+   187	    });
+   188	    const nextCommitSeq = createMockCommitSeqAuthority(99);
+   189	
+   190	    await enqueueOutboxEntry({
+
+ succeeded in 0ms:
+   160	    await expect(
+   161	      repo.list({ orderBy: { field: "id", direction: "desc" }, limit: 2 }),
+   162	    ).resolves.toEqual([
+   163	      expect.objectContaining({ id: "t3" }),
+   164	      expect.objectContaining({ id: "t2" }),
+   165	    ]);
+   166	  });
+   167	
+   168	  it("transaction buffers writes and commits them via db_put_batch", async () => {
+   169	    const fake = fakeStorage();
+   170	    const repo = createTauriRepo<TodoRecord>(fake.invoke, {
+   171	      namespace: "todos",
+   172	    });
+   173	
+   174	    await repo.transaction(async (tx) => {
+   175	      await tx.put(makeRecord("t1", { title: "first" }));
+   176	      await tx.put(makeRecord("t2", { title: "second" }));
+   177	      await tx.delete("legacy");
+   178	    });
+   179	
+   180	    const batchCalls = fake.calls.filter((c) => c.cmd === "db_put_batch");
+   181	    expect(batchCalls).toHaveLength(1);
+   182	    const input = batchCalls[0].args!.input as {
+   183	      namespace: string;
+   184	      entries: Array<{ op: string; id: string }>;
+   185	    };
+   186	    expect(input.namespace).toBe("todos");
+   187	    expect(input.entries.map((e) => `${e.op}:${e.id}`)).toEqual([
+   188	      "put:t1",
+   189	      "put:t2",
+   190	      "delete:legacy",
+   191	    ]);
+   192	    // The transaction must NOT call db_put / db_delete individually —
+   193	    // that would defeat the same-batch atomicity guarantee.
+   194	    expect(fake.calls.some((c) => c.cmd === "db_put")).toBe(false);
+   195	    expect(fake.calls.some((c) => c.cmd === "db_delete")).toBe(false);
+   196	
+   197	    await expect(repo.get("t1")).resolves.toMatchObject({ id: "t1" });
+   198	    await expect(repo.get("t2")).resolves.toMatchObject({ id: "t2" });
+   199	  });
+   200	
+   201	  it("transaction rolls back when the callback throws (no db_put_batch sent)", async () => {
+   202	    const fake = fakeStorage();
+   203	    const repo = createTauriRepo<TodoRecord>(fake.invoke, {
+   204	      namespace: "todos",
+   205	    });
+   206	
+   207	    await expect(
+   208	      repo.transaction(async (tx) => {
+   209	        await tx.put(makeRecord("t1"));
+   210	        throw new Error("explode");
+   211	      }),
+   212	    ).rejects.toThrow("explode");
+   213	
+   214	    expect(fake.calls.some((c) => c.cmd === "db_put_batch")).toBe(false);
+   215	    await expect(repo.get("t1")).resolves.toBeUndefined();
+   216	  });
+   217	
+   218	  it("transaction rolls back when db_put_batch fails on the Rust side", async () => {
+   219	    // Build a custom invoke that always rejects db_put_batch — mimics a
+   220	    // backend SQLite error. The pre-batch get/list still work.
+   221	    const fake = fakeStorage();
+   222	    const wrappedInvoke = async <T,>(
+   223	      cmd: string,
+   224	      args?: Record<string, unknown>,
+   225	    ): Promise<T> => {
+   226	      if (cmd === "db_put_batch") {
+   227	        throw new Error("E1302: simulated rust backend failure");
+   228	      }
+   229	      return fake.invoke<T>(cmd, args);
+   230	    };
+   231	
+   232	    const repo = createTauriRepo<TodoRecord>(wrappedInvoke, {
+   233	      namespace: "todos",
+   234	    });
+   235	
+   236	    // Seed via plain put — succeeds because it does not go through batch.
+   237	    await repo.put(makeRecord("seed", { title: "seed" }));
+   238	
+   239	    await expect(
+   240	      repo.transaction(async (tx) => {
+   241	        await tx.put(makeRecord("t1"));
+   242	        await tx.put(makeRecord("t2"));
+   243	      }),
+   244	    ).rejects.toThrow("simulated rust backend failure");
+   245	
+   246	    // Pre-transaction row survives; in-transaction rows did not commit.
+   247	    await expect(repo.get("seed")).resolves.toMatchObject({ id: "seed" });
+   248	    await expect(repo.get("t1")).resolves.toBeUndefined();
+   249	    await expect(repo.get("t2")).resolves.toBeUndefined();
+   250	  });
+   251	
+   252	  it("metadata reports tauri-sqlite driver name and record count", async () => {
+   253	    const fake = fakeStorage();
+   254	    const repo = createTauriRepo<TodoRecord>(fake.invoke, {
+   255	      namespace: "todos",
+
+codex
+## Codex Post-fix Re-review
+
+**Feature**: single-table-sync-baseline
+**Original verdict**: BLOCKED
+**Fix commit(s)**: c5b0e77
+**Reviewer**: codex feature-review · gpt-5.4 high reasoning
+**New verdict**: APPROVED
+
+### Was the original P0 resolved?
+- Original issue (paraphrased): `enqueueOutboxEntry` claimed same-transaction rollback, but production `createTauriRepo.transaction(fn)` was only a callback wrapper, so the entity row could persist without the outbox row on the on-disk SQLite path.
+- Evidence the fix resolves it: `enqueueOutboxEntry` now requires one shared repo namespace, writes entity + outbox inside one repo transaction, and rejects split repos with `E3009` (`packages/core-data/src/sync-outbox.ts:84-167`). `createTauriRepo.transaction()` now buffers writes and emits one `db_put_batch` IPC instead of per-write `db_put`/`db_delete` calls (`packages/core-data/src/tauri-sqlite.ts:148-230`). Rust `db_put_batch` validates the whole payload first, then wraps all entries in one SQLite transaction and commits once (`apps/desktop/src-tauri/src/commands/database.rs:325-402`). The contract doc now states single-namespace buffered-batch atomicity explicitly (`docs/contracts/tauri-commands-v0.md:145-150`). Tests cover the Tauri seam batching/rollback path and the shared-repo outbox invariant (`packages/core-data/tests/tauri-sqlite.test.ts:168-249`, `packages/core-data/tests/sync-outbox.test.ts:111-181`).
+- Was the resolution honest (no smuggled scope-cut or stub-only fix)? Yes. The fix does not hand-wave cross-namespace atomicity; it explicitly forbids it and documents the narrowed, real contract (`packages/core-data/src/sync-outbox.ts:88-107,126-129`). I also reran the claimed commands locally: `cargo check`, `cargo check --features crypto`, `cargo test --features crypto database::`, `pnpm --filter @repo/core-data test`, `pnpm --filter @repo/core-data check-types`, and `pnpm --filter desktop build` all passed.
+
+### Remaining gaps (max 4 bullets, severity-tagged)
+- [P2] `createTauriRepo.transaction()` no longer offers read-your-writes inside the callback; that behavior change is documented, but future callers could still misuse it if they assume classic transaction visibility (`packages/core-data/src/tauri-sqlite.ts:157-161`).
+- [P2] Deterministic `outbox_<mutationId>` replacement semantics still overwrite prior retry metadata for the same mutation id; that behavior remains untested/documented as an explicit product choice (`packages/core-data/src/sync-outbox.ts:65-78,142-156`).
+
+### Regressions introduced (max 3 bullets)
+- None found that re-open the original atomicity defect; the only notable behavior shift is the documented pre-commit read visibility change in Tauri transactions.
+
+### Next action
+- If APPROVED: re-mark the manifest row to READY_TO_SHIP and move on.
+tokens used
+54,402
+## Codex Post-fix Re-review
+
+**Feature**: single-table-sync-baseline
+**Original verdict**: BLOCKED
+**Fix commit(s)**: c5b0e77
+**Reviewer**: codex feature-review · gpt-5.4 high reasoning
+**New verdict**: APPROVED
+
+### Was the original P0 resolved?
+- Original issue (paraphrased): `enqueueOutboxEntry` claimed same-transaction rollback, but production `createTauriRepo.transaction(fn)` was only a callback wrapper, so the entity row could persist without the outbox row on the on-disk SQLite path.
+- Evidence the fix resolves it: `enqueueOutboxEntry` now requires one shared repo namespace, writes entity + outbox inside one repo transaction, and rejects split repos with `E3009` (`packages/core-data/src/sync-outbox.ts:84-167`). `createTauriRepo.transaction()` now buffers writes and emits one `db_put_batch` IPC instead of per-write `db_put`/`db_delete` calls (`packages/core-data/src/tauri-sqlite.ts:148-230`). Rust `db_put_batch` validates the whole payload first, then wraps all entries in one SQLite transaction and commits once (`apps/desktop/src-tauri/src/commands/database.rs:325-402`). The contract doc now states single-namespace buffered-batch atomicity explicitly (`docs/contracts/tauri-commands-v0.md:145-150`). Tests cover the Tauri seam batching/rollback path and the shared-repo outbox invariant (`packages/core-data/tests/tauri-sqlite.test.ts:168-249`, `packages/core-data/tests/sync-outbox.test.ts:111-181`).
+- Was the resolution honest (no smuggled scope-cut or stub-only fix)? Yes. The fix does not hand-wave cross-namespace atomicity; it explicitly forbids it and documents the narrowed, real contract (`packages/core-data/src/sync-outbox.ts:88-107,126-129`). I also reran the claimed commands locally: `cargo check`, `cargo check --features crypto`, `cargo test --features crypto database::`, `pnpm --filter @repo/core-data test`, `pnpm --filter @repo/core-data check-types`, and `pnpm --filter desktop build` all passed.
+
+### Remaining gaps (max 4 bullets, severity-tagged)
+- [P2] `createTauriRepo.transaction()` no longer offers read-your-writes inside the callback; that behavior change is documented, but future callers could still misuse it if they assume classic transaction visibility (`packages/core-data/src/tauri-sqlite.ts:157-161`).
+- [P2] Deterministic `outbox_<mutationId>` replacement semantics still overwrite prior retry metadata for the same mutation id; that behavior remains untested/documented as an explicit product choice (`packages/core-data/src/sync-outbox.ts:65-78,142-156`).
+
+### Regressions introduced (max 3 bullets)
+- None found that re-open the original atomicity defect; the only notable behavior shift is the documented pre-commit read visibility change in Tauri transactions.
+
+### Next action
+- If APPROVED: re-mark the manifest row to READY_TO_SHIP and move on.

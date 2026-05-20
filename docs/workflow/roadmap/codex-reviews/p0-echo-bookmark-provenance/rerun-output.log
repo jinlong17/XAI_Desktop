@@ -1,0 +1,2667 @@
+Reading additional input from stdin...
+OpenAI Codex v0.132.0
+--------
+workdir: /Users/lijinlong/Desktop/AI_Desktop/XAI_Desktop
+model: gpt-5.4
+provider: openai
+approval: never
+sandbox: workspace-write [workdir, /tmp, $TMPDIR]
+reasoning effort: high
+reasoning summaries: none
+session id: 019e46cf-8137-77d3-8b87-935aa705c752
+--------
+user
+# Codex Feature Post-fix Re-review
+
+You are acting as the `feature-review` subagent (Codex inline, cross-vendor verify pass), **re-reviewing** a P0 fix that the Claude Code main agent landed on `codex/track-a-desktop-foundation` in response to your previous BLOCKED verdict.
+
+## Your only job
+
+Decide whether the new commit closes the P0 issue you previously flagged. Output ONLY the markdown block below — no preamble, no follow-up. Under 500 words.
+
+```md
+## Codex Post-fix Re-review
+
+**Feature**: p0-echo-bookmark-provenance
+**Original verdict**: BLOCKED
+**Fix commit(s)**: 520737c
+**Reviewer**: codex feature-review · gpt-5.4 high reasoning
+**New verdict**: APPROVED | REVISE | BLOCKED
+
+### Was the original P0 resolved?
+- Original issue (paraphrased): …
+- Evidence the fix resolves it: <file:line citations>
+- Was the resolution honest (no smuggled scope-cut or stub-only fix)?
+
+### Remaining gaps (max 4 bullets, severity-tagged)
+- [P1|P2] …
+
+### Regressions introduced (max 3 bullets)
+- …
+
+### Next action
+- If APPROVED: re-mark the manifest row to READY_TO_SHIP and move on.
+- If REVISE: one or two concrete follow-up bullets (≤ half a day each).
+- If BLOCKED: state which contract is still false.
+```
+
+## How to evaluate
+
+1. The fix commit's diff is your primary evidence. Use `git show --stat 520737c` and `git show 520737c` to read it end-to-end.
+2. Compare the diff against the original P0 issue:
+   reveal_in_finder / open_path accepted any path under /Users//Applications//Volumes//tmp/ without proving user provenance; the previous fix weakened the contract doc to match the implementation. This rerun verifies the bookmark-registry-based gate that the Echo sub-agent landed.
+3. Look for the **specific change** the previous review demanded. Smuggled scope-cuts (e.g. silently deferring the invariant to a follow-up) must downgrade the verdict.
+4. Scan for **regressions**: imports added, capabilities widened, tests skipped, doc invariants weakened.
+5. Validate the test commands listed in the fix commit message actually exist and pass (treat the commit body's "Tests" section as the executor's claim — does the diff support it?).
+
+## Feature-specific context
+
+Feature ID: P0-Echo (Delta escalation)
+Branch: codex/track-a-desktop-foundation
+Commit under review: 520737c (fix(commands/bookmarks, commands/finder): user-authorized bookmark provenance for reveal/open (P0 Delta escalation))
+
+# Context (must read before scoring)
+
+Previous Codex review of commit `2237395` (P1-Delta finder + tests) returned BLOCKED with the verdict:
+> "The user-authorized-path-only contract is still false: any allowed window can open arbitrary paths under /Users/ or /Volumes/ without provenance or bookmark proof. The contract doc was narrowed to match the implementation instead of the implementation being raised to the documented security boundary."
+
+The Echo sub-agent was tasked to implement an in-memory `BookmarkRegistry` that:
+1. Holds canonical paths registered by an explicit Tauri command.
+2. Gets populated when the user drops files (via `useFileDrop` → `finderClient.registerBookmark`).
+3. Gates `reveal_in_finder` / `open_path` — paths not in the registry are rejected.
+
+# Files changed (read these end-to-end)
+
+- apps/desktop/src-tauri/src/commands/bookmarks.rs (NEW)
+  Tauri-state `BookmarkRegistry` with `register_path_bookmark` / `clear_path_bookmark` IPC commands + Rust-internal `is_path_bookmarked` helper. 5 cargo tests.
+- apps/desktop/src-tauri/src/commands/finder.rs (modified)
+  `validate_user_path` made `pub(crate)`. `reveal_in_finder` and `open_path` take `tauri::State<'_, BookmarkRegistry>` and reject unregistered paths with `E3004`. 2 new cargo tests (reveal_rejects_unbookmarked_path, reveal_allows_bookmarked_path).
+- apps/desktop/src-tauri/src/commands/mod.rs (modified)  `pub mod bookmarks;`
+- apps/desktop/src-tauri/src/lib.rs (modified) registers BookmarkRegistry + 2 new commands.
+- packages/plugin-organizer/src/finderClient.ts (modified) adds `registerBookmark` / `clearBookmark` methods + 4 new vitest cases.
+- packages/plugin-organizer/src/hooks/useFileDrop.ts (modified) optional `finderClient` arg; on drop, registers each path. Warns when client missing.
+- docs/contracts/tauri-commands-v0.md (modified) §4 restored the strict "user drop/open panel or authorized bookmark" sentence; deleted the previous "deferred bookmark enforcement" caveat; added rows for `register_path_bookmark` / `clear_path_bookmark`.
+- apps/desktop/src-tauri/capabilities/AUDIT.md (modified) added rows for the 2 new bookmark commands.
+- packages/grid-shell-organizer-content/docs/dev_log.md or G3-E3 dev_log (modified) noting P0 resolution.
+- docs/workflow/roadmap/codex-reviews/g3-organizer-batch/PROCESS-NOTE.md (modified) G3-E3 P0 resolution.
+
+# What to evaluate for the rerun
+
+1. Does the fix actually close the previously cited P0? The path-shape gate is still there as a first-line defense, but **the new gate that matters** is the registry lookup. Confirm both `reveal_in_finder` and `open_path` call `is_path_bookmarked` AFTER `validate_user_path`.
+2. Is the registry populated honestly? The only TS caller is `useFileDrop`, triggered by an actual user drop event. There is no other code path that auto-registers paths.
+3. Did the contract doc actually restore the strict sentence and delete the deferred caveat (the previous bug was the OPPOSITE: doc was weakened)?
+4. Are there gaps:
+   - Open-panel registration isn't wired yet — is this called out clearly as a TODO with a code marker?
+   - Bookmark registry is in-memory and clears on restart — is this an acceptable trade-off documented in the dev_log?
+   - Any test that PROVES `register_path_bookmark` is the only entry point (e.g. no other commands write to the registry)?
+   - Any way a non-allowed window can register a bookmark and then have an allowed window read it?
+5. Are tests honest? Specifically, does the `reveal_allows_bookmarked_path` cargo test populate the registry through the public API or sidestep it via internal helpers?
+
+# Verdict guidance
+
+- **APPROVED**: registry is the dominant gate; only path is via user-action `register_path_bookmark`; doc strict-text restored; tests prove both admit and reject behavior; in-memory + session-scoped trade-off is acknowledged.
+- **REVISE**: the gate works but some hole exists (e.g. doc still keeps old caveat; missing open-panel TODO; weak test).
+- **BLOCKED**: the registry can be bypassed; or `validate_user_path` is still the only check on one of the two commands.
+
+# Out of scope for this rerun
+
+- Persistent bookmark store across restarts.
+- macOS NSURL security-scoped bookmark integration (that's G2.7 MAS work).
+- `Open…` panel registration wiring (the prompt explicitly said leave a TODO).
+exec
+/bin/zsh -lc 'git show --stat --format=fuller 520737c' in /Users/lijinlong/Desktop/AI_Desktop/XAI_Desktop
+exec
+/bin/zsh -lc 'git show --format=fuller 520737c -- apps/desktop/src-tauri/src/commands/bookmarks.rs apps/desktop/src-tauri/src/commands/finder.rs apps/desktop/src-tauri/src/commands/mod.rs apps/desktop/src-tauri/src/lib.rs packages/plugin-organizer/src/finderClient.ts packages/plugin-organizer/src/hooks/useFileDrop.ts docs/contracts/tauri-commands-v0.md apps/desktop/src-tauri/capabilities/AUDIT.md docs/workflow/roadmap/codex-reviews/g3-organizer-batch/PROCESS-NOTE.md packages/grid-shell-organizer-content/docs/dev_log.md' in /Users/lijinlong/Desktop/AI_Desktop/XAI_Desktop
+ succeeded in 0ms:
+commit 520737ca8c6c52524affd3344a04cb2409274bb1
+Author:     InnoPeak <global_ai@innopeaktech.com>
+AuthorDate: Wed May 20 12:12:23 2026 -0700
+Commit:     InnoPeak <global_ai@innopeaktech.com>
+CommitDate: Wed May 20 12:12:23 2026 -0700
+
+    fix(commands/bookmarks, commands/finder): user-authorized bookmark provenance for reveal/open (P0 Delta escalation)
+    
+    Why:
+      Codex re-reviewed the P1-Delta `validate_user_path` lexical gate and
+      escalated G3-E3 from P1 to P0. The contract in
+      `docs/contracts/tauri-commands-v0.md` §4 states every path access must
+      come from a user drop/open panel or authorized bookmark; the lexical
+      gate alone only narrows the attack surface (any path under `/Users/`,
+      `/Applications/`, `/Volumes/`, `/tmp/` was still admitted). P1-Delta
+      weakened the contract to match the implementation; this commit raises
+      the implementation to match the contract.
+    
+    What:
+      New `apps/desktop/src-tauri/src/commands/bookmarks.rs`:
+      - `BookmarkRegistry: Mutex<HashSet<PathBuf>>` Tauri-managed state
+        keyed by the canonical path produced by `validate_user_path`.
+      - `register_path_bookmark` / `clear_path_bookmark` IPC commands
+        scoped to the same allow-list as `reveal_in_finder` / `open_path`.
+      - `is_path_bookmarked(state, canonical) -> bool` Rust-internal helper.
+      - 5 cargo unit tests: allow-list admit/reject, register-lookup-clear
+        round-trip, idempotent clear, validator-rejects-before-registry.
+    
+      `commands/finder.rs`:
+      - `validate_user_path` promoted to `pub(crate)` for bookmark module
+        re-use; `FINDER_ALLOWED_WINDOWS` exposed `pub(crate)` for symmetry.
+      - New `ensure_path_authorized` helper layers the registry lookup on
+        top of the lexical gate; unbookmarked paths → `E3004 sync
+        capability denied — no user-authorized bookmark`.
+      - `reveal_in_finder` / `open_path` now take `tauri::State<'_,
+        BookmarkRegistry>` and call `ensure_path_authorized` before the
+        `open` / `open -R` shell-out.
+      - 2 new cargo unit tests via the shared helper:
+        `reveal_rejects_unbookmarked_path`, `reveal_allows_bookmarked_path`.
+    
+      `commands/mod.rs` and `lib.rs`:
+      - Register the new module, manage `BookmarkRegistry::default()`, and
+        add the two new commands to `invoke_handler`.
+    
+      `packages/plugin-organizer/src/finderClient.ts`:
+      - Exposes `registerBookmark(path)` / `clearBookmark(path)` over the
+        existing `useTauriInvoke` seam (red-line #4 preserved — no direct
+        `@tauri-apps/api` import).
+      - New `finderClient.test.ts` with 4 vitest cases covering all 4
+        methods' `invoke(...)` shape.
+    
+      `packages/plugin-organizer/src/hooks/useFileDrop.ts`:
+      - Optional `finderClient?: FinderClient` in `UseFileDropOptions`.
+      - When provided, every dropped path is registered via
+        `registerBookmark` (fire-and-forget with per-path warn-on-fail).
+      - When absent, a one-shot console warning explains why subsequent
+        reveal/open will be rejected with `E3004`. Keeps existing unit
+        tests working without modification.
+      - TODO row added for the user-initiated `Open…` panel path.
+    
+    Scope:
+      - `apps/desktop/src-tauri/src/commands/bookmarks.rs` (new)
+      - `apps/desktop/src-tauri/src/commands/finder.rs`
+      - `apps/desktop/src-tauri/src/commands/mod.rs`
+      - `apps/desktop/src-tauri/src/lib.rs`
+      - `apps/desktop/src-tauri/capabilities/AUDIT.md`
+      - `packages/plugin-organizer/src/finderClient.ts`
+      - `packages/plugin-organizer/src/finderClient.test.ts` (new)
+      - `packages/plugin-organizer/src/hooks/useFileDrop.ts`
+      - `docs/contracts/tauri-commands-v0.md`
+      - `docs/workflow/roadmap/codex-reviews/g3-organizer-batch/PROCESS-NOTE.md`
+      - `packages/plugin-organizer/docs/dev_log.md`
+    
+    Risk:
+      - Storage is in-memory only — every desktop restart clears the
+        registry. Users must re-authorize a path (re-drop or re-open) after
+        a restart before reveal/open work for it. This is intentionally
+        more restrictive than the contract requires; every authorized path
+        now has recent, explicit user provenance. A persistent
+        security-scoped bookmark store remains a separate follow-up for
+        the MAS sandbox build.
+      - `useFileDrop` keeps its `finderClient` optional so the change does
+        not propagate into the do-not-touch `OrganizerLayer` / test files;
+        however, this means a misconfigured caller silently degrades to
+        "every reveal/open returns E3004". The one-shot warn-on-missing
+        keeps the failure mode visible in DevTools without surfacing it as
+        a runtime exception.
+    
+    Docs:
+      - `docs/contracts/tauri-commands-v0.md` §4 restored the strict "user
+        drop/open panel or authorized bookmark" sentence, added rows for
+        the two new commands, updated the reveal/open row to reference the
+        `BookmarkRegistry`, and DELETED the previous "deferred bookmark
+        enforcement" caveat. §7 G2.5 invariants table extended with a row
+        for the new commands.
+      - `apps/desktop/src-tauri/capabilities/AUDIT.md` adds the new
+        commands and notes the registry lookup on the finder row.
+      - `docs/workflow/roadmap/codex-reviews/g3-organizer-batch/PROCESS-NOTE.md`
+        adds a "G3-E3 P0 resolution (2026-05-20)" subsection; P2 capability
+        audit row also closed under this commit.
+      - `packages/plugin-organizer/docs/dev_log.md` Work Log row records
+        P0-Echo and the open-panel TODO; Known Issues row updated.
+    
+    Tests:
+      - cargo check (no features) — PASS
+      - cargo check --features crypto — PASS
+      - cargo test bookmarks:: — PASS (5)
+      - cargo test finder:: — PASS (9; 7 existing + 2 new)
+      - pnpm --filter @repo/plugin-organizer test — PASS (50; 4 new finderClient cases)
+      - pnpm --filter @repo/plugin-organizer check-types — PASS
+      - pnpm --filter desktop build — PASS
+    
+    Co-Authored-By: Claude Opus 4.7 (1M context) <noreply@anthropic.com>
+
+ apps/desktop/src-tauri/capabilities/AUDIT.md       |   3 +-
+ apps/desktop/src-tauri/src/commands/bookmarks.rs   | 266 +++++++++++++++++++++
+ apps/desktop/src-tauri/src/commands/finder.rs      |  74 +++++-
+ apps/desktop/src-tauri/src/commands/mod.rs         |   1 +
+ apps/desktop/src-tauri/src/lib.rs                  |   3 +
+ docs/contracts/tauri-commands-v0.md                |  16 +-
+ .../g3-organizer-batch/PROCESS-NOTE.md             |  40 +++-
+ packages/plugin-organizer/docs/dev_log.md          |   6 +-
+ packages/plugin-organizer/src/finderClient.test.ts |  43 ++++
+ packages/plugin-organizer/src/finderClient.ts      |  27 ++-
+ packages/plugin-organizer/src/hooks/useFileDrop.ts |  51 +++-
+ 11 files changed, 516 insertions(+), 14 deletions(-)
+
+ succeeded in 0ms:
+commit 520737ca8c6c52524affd3344a04cb2409274bb1
+Author:     InnoPeak <global_ai@innopeaktech.com>
+AuthorDate: Wed May 20 12:12:23 2026 -0700
+Commit:     InnoPeak <global_ai@innopeaktech.com>
+CommitDate: Wed May 20 12:12:23 2026 -0700
+
+    fix(commands/bookmarks, commands/finder): user-authorized bookmark provenance for reveal/open (P0 Delta escalation)
+    
+    Why:
+      Codex re-reviewed the P1-Delta `validate_user_path` lexical gate and
+      escalated G3-E3 from P1 to P0. The contract in
+      `docs/contracts/tauri-commands-v0.md` §4 states every path access must
+      come from a user drop/open panel or authorized bookmark; the lexical
+      gate alone only narrows the attack surface (any path under `/Users/`,
+      `/Applications/`, `/Volumes/`, `/tmp/` was still admitted). P1-Delta
+      weakened the contract to match the implementation; this commit raises
+      the implementation to match the contract.
+    
+    What:
+      New `apps/desktop/src-tauri/src/commands/bookmarks.rs`:
+      - `BookmarkRegistry: Mutex<HashSet<PathBuf>>` Tauri-managed state
+        keyed by the canonical path produced by `validate_user_path`.
+      - `register_path_bookmark` / `clear_path_bookmark` IPC commands
+        scoped to the same allow-list as `reveal_in_finder` / `open_path`.
+      - `is_path_bookmarked(state, canonical) -> bool` Rust-internal helper.
+      - 5 cargo unit tests: allow-list admit/reject, register-lookup-clear
+        round-trip, idempotent clear, validator-rejects-before-registry.
+    
+      `commands/finder.rs`:
+      - `validate_user_path` promoted to `pub(crate)` for bookmark module
+        re-use; `FINDER_ALLOWED_WINDOWS` exposed `pub(crate)` for symmetry.
+      - New `ensure_path_authorized` helper layers the registry lookup on
+        top of the lexical gate; unbookmarked paths → `E3004 sync
+        capability denied — no user-authorized bookmark`.
+      - `reveal_in_finder` / `open_path` now take `tauri::State<'_,
+        BookmarkRegistry>` and call `ensure_path_authorized` before the
+        `open` / `open -R` shell-out.
+      - 2 new cargo unit tests via the shared helper:
+        `reveal_rejects_unbookmarked_path`, `reveal_allows_bookmarked_path`.
+    
+      `commands/mod.rs` and `lib.rs`:
+      - Register the new module, manage `BookmarkRegistry::default()`, and
+        add the two new commands to `invoke_handler`.
+    
+      `packages/plugin-organizer/src/finderClient.ts`:
+      - Exposes `registerBookmark(path)` / `clearBookmark(path)` over the
+        existing `useTauriInvoke` seam (red-line #4 preserved — no direct
+        `@tauri-apps/api` import).
+      - New `finderClient.test.ts` with 4 vitest cases covering all 4
+        methods' `invoke(...)` shape.
+    
+      `packages/plugin-organizer/src/hooks/useFileDrop.ts`:
+      - Optional `finderClient?: FinderClient` in `UseFileDropOptions`.
+      - When provided, every dropped path is registered via
+        `registerBookmark` (fire-and-forget with per-path warn-on-fail).
+      - When absent, a one-shot console warning explains why subsequent
+        reveal/open will be rejected with `E3004`. Keeps existing unit
+        tests working without modification.
+      - TODO row added for the user-initiated `Open…` panel path.
+    
+    Scope:
+      - `apps/desktop/src-tauri/src/commands/bookmarks.rs` (new)
+      - `apps/desktop/src-tauri/src/commands/finder.rs`
+      - `apps/desktop/src-tauri/src/commands/mod.rs`
+      - `apps/desktop/src-tauri/src/lib.rs`
+      - `apps/desktop/src-tauri/capabilities/AUDIT.md`
+      - `packages/plugin-organizer/src/finderClient.ts`
+      - `packages/plugin-organizer/src/finderClient.test.ts` (new)
+      - `packages/plugin-organizer/src/hooks/useFileDrop.ts`
+      - `docs/contracts/tauri-commands-v0.md`
+      - `docs/workflow/roadmap/codex-reviews/g3-organizer-batch/PROCESS-NOTE.md`
+      - `packages/plugin-organizer/docs/dev_log.md`
+    
+    Risk:
+      - Storage is in-memory only — every desktop restart clears the
+        registry. Users must re-authorize a path (re-drop or re-open) after
+        a restart before reveal/open work for it. This is intentionally
+        more restrictive than the contract requires; every authorized path
+        now has recent, explicit user provenance. A persistent
+        security-scoped bookmark store remains a separate follow-up for
+        the MAS sandbox build.
+      - `useFileDrop` keeps its `finderClient` optional so the change does
+        not propagate into the do-not-touch `OrganizerLayer` / test files;
+        however, this means a misconfigured caller silently degrades to
+        "every reveal/open returns E3004". The one-shot warn-on-missing
+        keeps the failure mode visible in DevTools without surfacing it as
+        a runtime exception.
+    
+    Docs:
+      - `docs/contracts/tauri-commands-v0.md` §4 restored the strict "user
+        drop/open panel or authorized bookmark" sentence, added rows for
+        the two new commands, updated the reveal/open row to reference the
+        `BookmarkRegistry`, and DELETED the previous "deferred bookmark
+        enforcement" caveat. §7 G2.5 invariants table extended with a row
+        for the new commands.
+      - `apps/desktop/src-tauri/capabilities/AUDIT.md` adds the new
+        commands and notes the registry lookup on the finder row.
+      - `docs/workflow/roadmap/codex-reviews/g3-organizer-batch/PROCESS-NOTE.md`
+        adds a "G3-E3 P0 resolution (2026-05-20)" subsection; P2 capability
+        audit row also closed under this commit.
+      - `packages/plugin-organizer/docs/dev_log.md` Work Log row records
+        P0-Echo and the open-panel TODO; Known Issues row updated.
+    
+    Tests:
+      - cargo check (no features) — PASS
+      - cargo check --features crypto — PASS
+      - cargo test bookmarks:: — PASS (5)
+      - cargo test finder:: — PASS (9; 7 existing + 2 new)
+      - pnpm --filter @repo/plugin-organizer test — PASS (50; 4 new finderClient cases)
+      - pnpm --filter @repo/plugin-organizer check-types — PASS
+      - pnpm --filter desktop build — PASS
+    
+    Co-Authored-By: Claude Opus 4.7 (1M context) <noreply@anthropic.com>
+
+diff --git a/apps/desktop/src-tauri/capabilities/AUDIT.md b/apps/desktop/src-tauri/capabilities/AUDIT.md
+index 85094a3..37b3a14 100644
+--- a/apps/desktop/src-tauri/capabilities/AUDIT.md
++++ b/apps/desktop/src-tauri/capabilities/AUDIT.md
+@@ -31,7 +31,8 @@ Source files audited:
+ | `crypto_*` | plugin-account-crypto.json | `commands::crypto::CRYPTO_ALLOWED_WINDOWS` (account, control) |
+ | `secret_set` / `secret_get` / `secret_del` | plugin-account-keychain.json | `commands::keychain::KEYCHAIN_ALLOWED_WINDOWS` (account, control) |
+ | `db_init` / `db_put` / `db_get` / `db_list` / `db_delete` / `db_put_batch` | plugin-data-database.json (G2.5) | `commands::database::DATABASE_ALLOWED_WINDOWS` (main, control, account, console) + `grid_*` prefix |
+-| `reveal_in_finder` / `open_path` | default.json | `commands::finder::FINDER_ALLOWED_WINDOWS` (main, control, console) + `grid_*` prefix |
++| `reveal_in_finder` / `open_path` | default.json | `commands::finder::FINDER_ALLOWED_WINDOWS` (main, control, console) + `grid_*` prefix; plus `BookmarkRegistry` lookup (G3-E3 P0 — honest provenance) |
++| `register_path_bookmark` / `clear_path_bookmark` | default.json | `commands::bookmarks::BOOKMARK_ALLOWED_WINDOWS` (main, control, console) + `grid_*` prefix; mirrors `FINDER_ALLOWED_WINDOWS` so only surfaces that can call `reveal_in_finder` / `open_path` can authorize the underlying paths |
+ 
+ ## Minimization notes
+ 
+diff --git a/apps/desktop/src-tauri/src/commands/bookmarks.rs b/apps/desktop/src-tauri/src/commands/bookmarks.rs
+new file mode 100644
+index 0000000..7e5cb2e
+--- /dev/null
++++ b/apps/desktop/src-tauri/src/commands/bookmarks.rs
+@@ -0,0 +1,266 @@
++//! User-authorized path bookmark registry (G3-E3 P0 fix).
++//!
++//! Implements an in-memory `BookmarkRegistry` that records every path the
++//! user has explicitly authorized via a drag-drop or open-panel selection.
++//! `reveal_in_finder` / `open_path` consult this registry as the second
++//! gate (after `validate_user_path`'s lexical shape check) so they cannot
++//! be invoked against arbitrary paths inside the user-reachable roots.
++//!
++//! The contract in `docs/contracts/tauri-commands-v0.md` §4 requires that
++//! "all path access must come from user drop/open panel or authorized
++//! bookmark"; the lexical shape gate alone only narrowed the attack
++//! surface — it did not constitute honest provenance. This module raises
++//! the implementation to match the contract.
++//!
++//! Storage model: in-memory `HashSet<PathBuf>` keyed by the canonical
++//! (lexically-normalized) form produced by `validate_user_path`. Each
++//! session starts empty — the user must re-authorize every path after a
++//! restart. This is intentionally more restrictive than the contract
++//! promises: every authorized path has explicit, recent provenance.
++//!
++//! Tauri injects `window: tauri::WebviewWindow` automatically; JS callers
++//! do NOT include it in the args payload (mirrors the existing crypto /
++//! database / keychain / finder command pattern).
++
++use std::collections::HashSet;
++use std::path::{Path, PathBuf};
++use std::sync::Mutex;
++
++use serde::Deserialize;
++use tauri::State;
++
++use crate::commands::finder::validate_user_path;
++use crate::error::{AppError, AppResult};
++
++/// Windows allowed to invoke bookmark commands. Mirrors
++/// `commands::finder::FINDER_ALLOWED_WINDOWS` because the bookmark
++/// registry is a strict companion to the Finder commands — only the
++/// surfaces that can call `reveal_in_finder` / `open_path` should be
++/// allowed to register a path bookmark in the first place.
++///
++/// Duplicated (rather than shared via `pub`) intentionally: the finder
++/// allow-list is `pub(crate)` only for `validate_user_path` re-use; a
++/// minor copy here keeps the two modules independently auditable so a
++/// future widening of one cannot silently widen the other.
++const BOOKMARK_ALLOWED_WINDOWS: &[&str] = &["main", "control", "console"];
++
++fn is_bookmark_window_allowed(label: &str) -> bool {
++    if BOOKMARK_ALLOWED_WINDOWS.contains(&label) {
++        return true;
++    }
++    label.starts_with("grid_")
++}
++
++fn ensure_bookmark_window_allowed(label: &str) -> AppResult<()> {
++    if is_bookmark_window_allowed(label) {
++        return Ok(());
++    }
++    Err(AppError::SyncCapabilityDenied(format!(
++        "window `{label}` is not allowed to invoke bookmark commands"
++    )))
++}
++
++/// In-memory registry of user-authorized canonical paths.
++///
++/// Backed by a `Mutex<HashSet<PathBuf>>`. Each entry is the
++/// lexically-normalized canonical form output by `validate_user_path`,
++/// so the gate is consistent with the path used by the platform `open`
++/// / `open -R` shell-out.
++pub struct BookmarkRegistry {
++    inner: Mutex<HashSet<PathBuf>>,
++}
++
++impl Default for BookmarkRegistry {
++    fn default() -> Self {
++        Self {
++            inner: Mutex::new(HashSet::new()),
++        }
++    }
++}
++
++impl BookmarkRegistry {
++    /// Insert a canonical path. Idempotent. Returns `Ok(())` on success.
++    pub fn insert_canonical(&self, canonical: PathBuf) -> AppResult<()> {
++        let mut guard = self
++            .inner
++            .lock()
++            .map_err(|err| AppError::Internal(format!("bookmark registry poisoned: {err}")))?;
++        guard.insert(canonical);
++        Ok(())
++    }
++
++    /// Remove a canonical path. Idempotent.
++    pub fn remove_canonical(&self, canonical: &Path) -> AppResult<()> {
++        let mut guard = self
++            .inner
++            .lock()
++            .map_err(|err| AppError::Internal(format!("bookmark registry poisoned: {err}")))?;
++        guard.remove(canonical);
++        Ok(())
++    }
++
++    /// Check whether a canonical path has been authorized.
++    pub fn contains_canonical(&self, canonical: &Path) -> bool {
++        let Ok(guard) = self.inner.lock() else {
++            return false;
++        };
++        guard.contains(canonical)
++    }
++}
++
++/// Rust-internal helper for callers (notably `commands::finder`) to
++/// consult the registry without having to know the lock layout.
++pub fn is_path_bookmarked(state: &BookmarkRegistry, canonical: &Path) -> bool {
++    state.contains_canonical(canonical)
++}
++
++#[derive(Debug, Deserialize)]
++pub struct RegisterPathBookmarkInput {
++    pub path: String,
++}
++
++/// Register a user-authorized path bookmark.
++///
++/// Lexically validates the input first (`validate_user_path`), then
++/// inserts the canonical form into the registry. Idempotent. Returns
++/// `E3004` if the calling window is not in `BOOKMARK_ALLOWED_WINDOWS`,
++/// `E3004` / `E3005` for path validation failures.
++#[tauri::command]
++pub async fn register_path_bookmark(
++    window: tauri::WebviewWindow,
++    state: State<'_, BookmarkRegistry>,
++    input: RegisterPathBookmarkInput,
++) -> AppResult<()> {
++    ensure_bookmark_window_allowed(window.label())?;
++    let canonical = validate_user_path(&input.path)?;
++    state.insert_canonical(canonical)
++}
++
++#[derive(Debug, Deserialize)]
++pub struct ClearPathBookmarkInput {
++    pub path: String,
++}
++
++/// Clear a user-authorized path bookmark.
++///
++/// Idempotent: removing an absent path is not an error. Lexically
++/// validates the input first (`validate_user_path`) for symmetry with
++/// `register_path_bookmark`, so callers cannot use this command to
++/// probe arbitrary paths against the validator.
++#[tauri::command]
++pub async fn clear_path_bookmark(
++    window: tauri::WebviewWindow,
++    state: State<'_, BookmarkRegistry>,
++    input: ClearPathBookmarkInput,
++) -> AppResult<()> {
++    ensure_bookmark_window_allowed(window.label())?;
++    let canonical = validate_user_path(&input.path)?;
++    state.remove_canonical(&canonical)
++}
++
++#[cfg(test)]
++mod tests {
++    use super::*;
++
++    /// Allow-list admits the documented labels and any `grid_*`.
++    #[test]
++    fn allowlist_admits_documented_labels_and_grids() {
++        for label in BOOKMARK_ALLOWED_WINDOWS {
++            assert!(ensure_bookmark_window_allowed(label).is_ok());
++        }
++        assert!(ensure_bookmark_window_allowed("grid_a1b2").is_ok());
++    }
++
++    /// Allow-list rejects widget / pet / ai-cube / unknown.
++    #[test]
++    fn allowlist_rejects_widget_pet_aicube() {
++        for label in ["widget_clock", "pet", "ai_cube", "popup", "account"] {
++            assert!(ensure_bookmark_window_allowed(label).is_err());
++        }
++    }
++
++    /// Lookup returns false before register, true after, false after clear.
++    #[test]
++    fn register_then_lookup_then_clear() {
++        let registry = BookmarkRegistry::default();
++        let canonical = validate_user_path("/Users/me/file.txt").expect("valid path");
++
++        assert!(
++            !is_path_bookmarked(&registry, &canonical),
++            "fresh registry must not contain any path"
++        );
++
++        registry
++            .insert_canonical(canonical.clone())
++            .expect("insert");
++        assert!(
++            is_path_bookmarked(&registry, &canonical),
++            "registry must contain the path after register"
++        );
++
++        registry.remove_canonical(&canonical).expect("remove");
++        assert!(
++            !is_path_bookmarked(&registry, &canonical),
++            "registry must not contain the path after clear"
++        );
++    }
++
++    /// `clear_path_bookmark` is idempotent — removing absent is OK.
++    #[test]
++    fn clear_is_idempotent() {
++        let registry = BookmarkRegistry::default();
++        let canonical = validate_user_path("/Users/me/missing.txt").expect("valid path");
++
++        // remove without register must not error
++        registry.remove_canonical(&canonical).expect("remove absent");
++        assert!(!is_path_bookmarked(&registry, &canonical));
++
++        // double-register is idempotent (no count exposed, but no error)
++        registry.insert_canonical(canonical.clone()).expect("first");
++        registry
++            .insert_canonical(canonical.clone())
++            .expect("second");
++        assert!(is_path_bookmarked(&registry, &canonical));
++
++        // double-remove is idempotent
++        registry.remove_canonical(&canonical).expect("first remove");
++        registry
++            .remove_canonical(&canonical)
++            .expect("second remove");
++        assert!(!is_path_bookmarked(&registry, &canonical));
++    }
++
++    /// Invalid paths are rejected by `validate_user_path` and never reach
++    /// the registry. We exercise this through the validator directly so
++    /// the test does not need a `WebviewWindow`.
++    #[test]
++    fn invalid_path_is_rejected_before_registry() {
++        let registry = BookmarkRegistry::default();
++
++        // `..` in the path → SyncInvalidInput
++        let bad_dotdot = validate_user_path("/Users/me/../etc/passwd");
++        assert!(bad_dotdot.is_err());
++
++        // outside user-reachable root → SyncCapabilityDenied
++        let bad_root = validate_user_path("/etc/passwd");
++        assert!(bad_root.is_err());
++
++        // empty / whitespace → SyncInvalidInput
++        assert!(validate_user_path("").is_err());
++        assert!(validate_user_path("   ").is_err());
++
++        // Confirm none of the above leaked into the registry. They never
++        // produced a canonical PathBuf, so there is nothing to look up;
++        // but we verify by enumerating a couple of would-be canonical
++        // forms and asserting absence.
++        for raw in [
++            PathBuf::from("/etc/passwd"),
++            PathBuf::from("/Users/me/etc/passwd"),
++        ] {
++            assert!(
++                !is_path_bookmarked(&registry, &raw),
++                "registry must remain empty when validator rejects input"
++            );
++        }
++    }
++}
+diff --git a/apps/desktop/src-tauri/src/commands/finder.rs b/apps/desktop/src-tauri/src/commands/finder.rs
+index 3a86301..7c34792 100644
+--- a/apps/desktop/src-tauri/src/commands/finder.rs
++++ b/apps/desktop/src-tauri/src/commands/finder.rs
+@@ -17,9 +17,10 @@ use std::path::{Component, Path, PathBuf};
+ 
+ use serde::Deserialize;
+ 
++use crate::commands::bookmarks::{is_path_bookmarked, BookmarkRegistry};
+ use crate::error::{AppError, AppResult};
+ 
+-const FINDER_ALLOWED_WINDOWS: &[&str] = &["main", "control", "console"];
++pub(crate) const FINDER_ALLOWED_WINDOWS: &[&str] = &["main", "control", "console"];
+ 
+ /// User-reachable filesystem roots a desktop file/app drop or open-panel
+ /// selection can produce on macOS. Paths outside these roots are rejected
+@@ -113,6 +114,34 @@ pub(crate) fn validate_user_path(raw: &str) -> AppResult<PathBuf> {
+     Ok(normalized)
+ }
+ 
++/// Enforce honest user-authorized provenance for a finder action.
++///
++/// Two-stage gate:
++///
++/// 1. `validate_user_path` lexically normalizes and shape-checks the raw
++///    input (absolute, no `..`, under a user-reachable root).
++/// 2. `BookmarkRegistry` lookup asserts the user explicitly registered
++///    the canonical path through a prior drag-drop or open-panel action.
++///
++/// Stage 1 alone is NOT honest provenance — it only narrows the attack
++/// surface. The contract in `docs/contracts/tauri-commands-v0.md` §4
++/// requires that "all path access must come from user drop/open panel
++/// or authorized bookmark". This helper raises the implementation to
++/// match the contract.
++fn ensure_path_authorized(
++    raw: &str,
++    registry: &BookmarkRegistry,
++) -> AppResult<PathBuf> {
++    let canonical = validate_user_path(raw)?;
++    if !is_path_bookmarked(registry, &canonical) {
++        return Err(AppError::SyncCapabilityDenied(format!(
++            "path `{}` has no user-authorized bookmark",
++            canonical.display()
++        )));
++    }
++    Ok(canonical)
++}
++
+ #[derive(Debug, Deserialize)]
+ pub struct RevealInFinderInput {
+     pub path: String,
+@@ -121,10 +150,11 @@ pub struct RevealInFinderInput {
+ #[tauri::command]
+ pub async fn reveal_in_finder(
+     window: tauri::WebviewWindow,
++    registry: tauri::State<'_, BookmarkRegistry>,
+     input: RevealInFinderInput,
+ ) -> AppResult<()> {
+     ensure_finder_window_allowed(window.label())?;
+-    let canonical = validate_user_path(&input.path)?;
++    let canonical = ensure_path_authorized(&input.path, &registry)?;
+     #[cfg(target_os = "macos")]
+     {
+         use std::process::Command;
+@@ -155,10 +185,11 @@ pub struct OpenPathInput {
+ #[tauri::command]
+ pub async fn open_path(
+     window: tauri::WebviewWindow,
++    registry: tauri::State<'_, BookmarkRegistry>,
+     input: OpenPathInput,
+ ) -> AppResult<()> {
+     ensure_finder_window_allowed(window.label())?;
+-    let canonical = validate_user_path(&input.path)?;
++    let canonical = ensure_path_authorized(&input.path, &registry)?;
+     #[cfg(target_os = "macos")]
+     {
+         use std::process::Command;
+@@ -264,6 +295,43 @@ mod tests {
+         assert_eq!(nested, PathBuf::from("/Users/me/Documents/note.md"));
+     }
+ 
++    /// G3-E3 P0: `reveal_in_finder` must reject any path that has not
++    /// been explicitly registered via `register_path_bookmark`, even if
++    /// the path passes the lexical shape gate. Exercised via the shared
++    /// `ensure_path_authorized` helper because the command takes a
++    /// `tauri::State<'_, BookmarkRegistry>` injected by the runtime and
++    /// we cannot construct one in a unit test.
++    #[test]
++    fn reveal_rejects_unbookmarked_path() {
++        let registry = BookmarkRegistry::default();
++        // path-shape is valid (under `/Users/`) so the only thing that
++        // can fail the gate is the bookmark lookup.
++        let err = ensure_path_authorized("/Users/me/Documents/secret.txt", &registry)
++            .expect_err("unbookmarked path must be rejected");
++        let msg = err.to_string();
++        assert!(
++            msg.starts_with("E3004:") && msg.contains("no user-authorized bookmark"),
++            "expected SyncCapabilityDenied for unbookmarked path, got: {msg}"
++        );
++    }
++
++    /// G3-E3 P0: `reveal_in_finder` must admit a path after it has been
++    /// registered. Exercised through the Rust helper directly (no Tauri
++    /// command spawn needed). The shell-out arm is NOT exercised — the
++    /// test only needs to reach the bookmark gate.
++    #[test]
++    fn reveal_allows_bookmarked_path() {
++        let registry = BookmarkRegistry::default();
++        let canonical = validate_user_path("/Users/me/Documents/note.md").unwrap();
++        registry
++            .insert_canonical(canonical.clone())
++            .expect("insert");
++
++        let result = ensure_path_authorized("/Users/me/Documents/note.md", &registry)
++            .expect("bookmarked path must be admitted");
++        assert_eq!(result, canonical);
++    }
++
+     /// Paths under `/Applications/...` should be admitted on macOS. On
+     /// other targets the function only admits `/tmp/`, so we gate the
+     /// assertion accordingly.
+diff --git a/apps/desktop/src-tauri/src/commands/mod.rs b/apps/desktop/src-tauri/src/commands/mod.rs
+index 71c63be..5fcc554 100644
+--- a/apps/desktop/src-tauri/src/commands/mod.rs
++++ b/apps/desktop/src-tauri/src/commands/mod.rs
+@@ -1,3 +1,4 @@
++pub mod bookmarks;
+ pub mod crypto;
+ #[cfg(feature = "crypto")]
+ pub mod database;
+diff --git a/apps/desktop/src-tauri/src/lib.rs b/apps/desktop/src-tauri/src/lib.rs
+index 286f0ab..51ffdf9 100644
+--- a/apps/desktop/src-tauri/src/lib.rs
++++ b/apps/desktop/src-tauri/src/lib.rs
+@@ -55,6 +55,7 @@ pub fn run() {
+         .plugin(tauri_plugin_opener::init())
+         .manage(commands::crypto::CryptoCommandState::default())
+         .manage(commands::menubar::SyncMenuBarState::default())
++        .manage(commands::bookmarks::BookmarkRegistry::default())
+         .manage(GridWindowsState::default());
+ 
+     #[cfg(feature = "crypto")]
+@@ -77,6 +78,8 @@ pub fn run() {
+             commands::keychain::secret_del,
+             commands::finder::reveal_in_finder,
+             commands::finder::open_path,
++            commands::bookmarks::register_path_bookmark,
++            commands::bookmarks::clear_path_bookmark,
+             #[cfg(feature = "crypto")]
+             commands::database::db_init,
+             #[cfg(feature = "crypto")]
+diff --git a/docs/contracts/tauri-commands-v0.md b/docs/contracts/tauri-commands-v0.md
+index b4927fc..b2a2144 100644
+--- a/docs/contracts/tauri-commands-v0.md
++++ b/docs/contracts/tauri-commands-v0.md
+@@ -71,20 +71,25 @@ G1.1 implementation notes:
+ 
+ | Command | Owner | Allowed windows | Input | 说明 |
+ |---|---|---|---|---|
+-| `reveal_in_finder` | organizer (G3-E3) | `main`,`control`,`grid_*`,`console` | `{ input: { path } }` | validates path is non-empty / NUL-free / non-`..` / under user-reachable roots (`/Users/`, `/Applications/`, `/Volumes/`, `/tmp/` on macOS; `/tmp/` only on other targets); shells out to `open -R` with the lexically-normalized path on macOS |
+-| `open_path` | organizer (G3-E3) | `main`,`control`,`grid_*`,`console` | `{ input: { path } }` | same path-authorization rules as `reveal_in_finder`; user-initiated only; shells out to `open` with the lexically-normalized path on macOS |
++| `reveal_in_finder` | organizer (G3-E3) | `main`,`control`,`grid_*`,`console` | `{ input: { path } }` | requires the canonical path to be present in the in-memory `BookmarkRegistry` (registered via `register_path_bookmark` after a user drop / open-panel selection); validates path is non-empty / NUL-free / non-`..` / under user-reachable roots (`/Users/`, `/Applications/`, `/Volumes/`, `/tmp/` on macOS; `/tmp/` only on other targets); shells out to `open -R` with the lexically-normalized path on macOS |
++| `open_path` | organizer (G3-E3) | `main`,`control`,`grid_*`,`console` | `{ input: { path } }` | same path-authorization and bookmark-registry rules as `reveal_in_finder`; user-initiated only; shells out to `open` with the lexically-normalized path on macOS |
++| `register_path_bookmark` | organizer (G3-E3 P0) | `main`,`control`,`grid_*`,`console` | `{ input: { path } }` | records a user-authorized path in the in-memory `BookmarkRegistry`; validates path shape via `validate_user_path` before inserting; idempotent. Called by the Organizer drop/open-panel handler immediately after a user-initiated path enters JS scope. |
++| `clear_path_bookmark` | organizer (G3-E3 P0) | `main`,`control`,`grid_*`,`console` | `{ input: { path } }` | removes a previously-registered path from the `BookmarkRegistry`; idempotent (removing an absent path is not an error); validates path shape first for symmetry. |
+ | `resolve_alias` | organizer | `control`,`grid_*` | TBD | G1/G2 根据 sandbox 决定 |
+ | `create_security_scoped_bookmark` | organizer/account | `control`,`grid_*` | TBD | MAS path if required |
+ 
+ 文件 command 不允许静默扫描用户目录。所有 path access 必须来自用户 drop/open panel 或已授权 bookmark。
+ 
+-`reveal_in_finder` / `open_path` enforce a runtime allow-list (`FINDER_ALLOWED_WINDOWS` in `commands/finder.rs`) AND a path-shape allow-list via `validate_user_path`:
++`reveal_in_finder` / `open_path` enforce a runtime allow-list (`FINDER_ALLOWED_WINDOWS` in `commands/finder.rs`), a path-shape allow-list via `validate_user_path`, AND a user-authorized `BookmarkRegistry` lookup:
+ 
+ - Empty / whitespace-only / NUL-containing inputs → `E3005` (SyncInvalidInput).
+ - Relative paths or any `..` parent-dir segment (even when the raw string would normalize back into an allowed root, e.g. `/Users/me/../etc/passwd`) → `E3005`.
+-- Paths whose lexically-normalized form is NOT under one of the user-reachable roots (`/Users/`, `/Applications/`, `/Volumes/`, `/tmp/` on macOS; `/tmp/` only on other targets) → `E3004` (SyncCapabilityDenied). `/private/var/...`, `/etc/...`, `/System/...`, `/bin/...` are intentionally rejected until a full security-scoped bookmark store lands.
++- Paths whose lexically-normalized form is NOT under one of the user-reachable roots (`/Users/`, `/Applications/`, `/Volumes/`, `/tmp/` on macOS; `/tmp/` only on other targets) → `E3004` (SyncCapabilityDenied). `/private/var/...`, `/etc/...`, `/System/...`, `/bin/...` are intentionally rejected.
++- Paths that pass the shape gate but were never registered via `register_path_bookmark` → `E3004` (SyncCapabilityDenied) with message `path "..." has no user-authorized bookmark`. This raises the implementation to match the contract — every authorized path now has explicit drop/open-panel provenance, not just an allow-listed root prefix.
+ - On success the canonical (lexically-normalized) `PathBuf` is passed to `open` / `open -R`, not the raw input.
+ 
++`BookmarkRegistry` storage is in-memory (`Mutex<HashSet<PathBuf>>`). Each session starts empty — the user must re-authorize every path after a desktop restart. This is intentionally more restrictive than the contract requires: every registered path has recent, explicit user provenance. A persistent macOS security-scoped bookmark store (`create_security_scoped_bookmark`) remains a separate follow-up for the MAS sandbox build.
++
+ Lexical normalization is used rather than `std::fs::canonicalize()` because the latter requires the path to exist on disk; full filesystem canonicalization is a follow-up once `create_security_scoped_bookmark` is wired.
+ 
+ ## 5. Clipboard Commands
+@@ -207,7 +212,8 @@ G2.5 invariants now enforced:
+   | `crypto_*` | `CRYPTO_ALLOWED_WINDOWS` | `commands/crypto.rs` |
+   | `secret_*` | `KEYCHAIN_ALLOWED_WINDOWS` | `commands/keychain.rs` |
+   | `db_*` | `DATABASE_ALLOWED_WINDOWS` | `commands/database.rs` |
+-  | `reveal_in_finder`, `open_path` | `FINDER_ALLOWED_WINDOWS` | `commands/finder.rs` |
++  | `reveal_in_finder`, `open_path` | `FINDER_ALLOWED_WINDOWS` + `BookmarkRegistry` | `commands/finder.rs` |
++  | `register_path_bookmark`, `clear_path_bookmark` | `BOOKMARK_ALLOWED_WINDOWS` | `commands/bookmarks.rs` |
+   | `create_grid_window`, `update_grid_window`, `close_grid_window`, `list_grid_windows`, `focus_grid_window` | `WINDOW_ALLOWED_WINDOWS` | `commands/window.rs` |
+   | `sync_set_menubar_status` | `MENUBAR_ALLOWED_WINDOWS` | `commands/menubar.rs` |
+ 
+diff --git a/docs/workflow/roadmap/codex-reviews/g3-organizer-batch/PROCESS-NOTE.md b/docs/workflow/roadmap/codex-reviews/g3-organizer-batch/PROCESS-NOTE.md
+index 9287005..7251ac6 100644
+--- a/docs/workflow/roadmap/codex-reviews/g3-organizer-batch/PROCESS-NOTE.md
++++ b/docs/workflow/roadmap/codex-reviews/g3-organizer-batch/PROCESS-NOTE.md
+@@ -19,6 +19,44 @@ The G3-E1 / G3-S3 / G3-E2 / G3-E3 / G3-E4 implementations were bundled into comm
+ |---|---|---|---|
+ | G3-E1 folder inference uses trailing-`/` heuristic that misses real folder-drop payloads | P1 | open | _pending_ |
+ | G3-E3 `reveal_in_finder` / `open_path` accept any absolute path (no provenance / root enforcement) | P1 | **closed** | P1-Delta — `fix(commands/finder, core-data tests): path authorization + negative contract cases (P1 D-group)` |
++| G3-E3 lexical root gate is not honest provenance — accepts any path under `/Users/`, `/Applications/`, `/Volumes/`, `/tmp/`; contract requires drop/open-panel or authorized bookmark (Codex re-review escalated to P0) | P0 | **closed** | P0-Echo — `fix(commands/bookmarks, commands/finder): user-authorized bookmark provenance for reveal/open (P0 Delta escalation)` |
+ | Workflow V2 hygiene incomplete (`packages/plugin-organizer/docs/dev_log.md` missing Status Panel; 5-feature `feature-build` commit) | P1 | **closed (post-hoc)** | P1-Delta (this note + dev_log Status Panel + Work Log rows) |
+-| `apps/desktop/src-tauri/capabilities/AUDIT.md` / public API contract not updated for new Finder surface | P2 | open | _pending_ |
++| `apps/desktop/src-tauri/capabilities/AUDIT.md` / public API contract not updated for new Finder surface | P2 | **closed** | P0-Echo (rolled into the bookmark-provenance commit — adds `register_path_bookmark` / `clear_path_bookmark` rows and updates the `reveal_in_finder` / `open_path` row to reference `BookmarkRegistry`) |
+ | Coverage gaps (folder-path shape regression; `data:` / custom-scheme rejection; multi-grid same-rule stability; command-blocking failure behavior) | P2 | open | _pending_ |
++
++## G3-E3 P0 resolution (2026-05-20)
++
++Codex re-reviewed P1-Delta and escalated the finding to P0: the lexical
++path-shape gate in `validate_user_path` narrows the attack surface but is
++not honest provenance — any path under `/Users/`, `/Applications/`,
++`/Volumes/`, `/tmp/` would still be admitted, and the contract
++(`docs/contracts/tauri-commands-v0.md` §4) requires "user drop/open
++panel or authorized bookmark". P1-Delta weakened the contract to match
++the implementation; P0-Echo raises the implementation to match the
++contract.
++
++Resolution shipped in commit `<pending>`:
++
++- New `apps/desktop/src-tauri/src/commands/bookmarks.rs` introduces a
++  `BookmarkRegistry: Mutex<HashSet<PathBuf>>` Tauri-managed state, plus
++  two new IPC commands `register_path_bookmark` and
++  `clear_path_bookmark` scoped to the same allow-list as `reveal_in_finder`
++  / `open_path`.
++- `commands::finder::reveal_in_finder` and `commands::finder::open_path`
++  now take a `tauri::State<'_, BookmarkRegistry>` and consult the registry
++  *after* the lexical gate. Unbookmarked paths → `E3004 sync capability
++  denied — no user-authorized bookmark`.
++- `packages/plugin-organizer/src/finderClient.ts` exposes
++  `registerBookmark` / `clearBookmark`; `useFileDrop` calls
++  `registerBookmark` for every dropped path (optional injected client so
++  existing unit tests keep working — TODO row for the open-panel path).
++- Contract doc §4 restored the "user drop/open panel or authorized
++  bookmark" sentence and DELETED the previous "deferred bookmark
++  enforcement" caveat. Capability `AUDIT.md` adds the two new commands
++  and notes the `BookmarkRegistry` lookup on the finder row.
++- Storage is in-memory and per-session: every desktop restart clears
++  the registry. This is intentionally more restrictive than the contract
++  promises — every authorized path has recent, explicit provenance.
++
++Status: G3-E3 returns to READY_TO_SHIP pending Codex re-verification of
++the P0-Echo commit.
+diff --git a/packages/plugin-organizer/src/finderClient.ts b/packages/plugin-organizer/src/finderClient.ts
+index 8452c73..62123bb 100644
+--- a/packages/plugin-organizer/src/finderClient.ts
++++ b/packages/plugin-organizer/src/finderClient.ts
+@@ -1,9 +1,17 @@
+ /**
+  * Finder collaboration client (G3-E3).
+  *
+- * Wraps the Tauri `reveal_in_finder` / `open_path` commands and never
++ * Wraps the Tauri `reveal_in_finder` / `open_path` /
++ * `register_path_bookmark` / `clear_path_bookmark` commands and never
+  * imports `@tauri-apps/api` directly (red line #4). The caller must
+  * pass an `invoke` function obtained from `useTauriInvoke()`.
++ *
++ * G3-E3 P0 (honest provenance): the Rust side now requires every
++ * `reveal_in_finder` / `open_path` target to be present in the
++ * in-memory `BookmarkRegistry`. Callers MUST invoke `registerBookmark`
++ * for each user-authorized path (drag-drop or open-panel selection)
++ * before they can be revealed/opened, otherwise the Rust command
++ * returns `E3004 sync capability denied — no user-authorized bookmark`.
+  */
+ 
+ type InvokeFn = <T>(cmd: string, args?: Record<string, unknown>) => Promise<T>;
+@@ -11,6 +19,17 @@ type InvokeFn = <T>(cmd: string, args?: Record<string, unknown>) => Promise<T>;
+ export interface FinderClient {
+   revealInFinder(path: string): Promise<void>;
+   openPath(path: string): Promise<void>;
++  /**
++   * Record a user-authorized path bookmark. Required before
++   * `revealInFinder` / `openPath` will succeed for that path.
++   * Idempotent — safe to call multiple times for the same path.
++   */
++  registerBookmark(path: string): Promise<void>;
++  /**
++   * Remove a previously-registered path bookmark. Idempotent —
++   * removing an absent path is not an error.
++   */
++  clearBookmark(path: string): Promise<void>;
+ }
+ 
+ export function createFinderClient(invoke: InvokeFn): FinderClient {
+@@ -21,5 +40,11 @@ export function createFinderClient(invoke: InvokeFn): FinderClient {
+     async openPath(path: string) {
+       await invoke<void>("open_path", { input: { path } });
+     },
++    async registerBookmark(path: string) {
++      await invoke<void>("register_path_bookmark", { input: { path } });
++    },
++    async clearBookmark(path: string) {
++      await invoke<void>("clear_path_bookmark", { input: { path } });
++    },
+   };
+ }
+diff --git a/packages/plugin-organizer/src/hooks/useFileDrop.ts b/packages/plugin-organizer/src/hooks/useFileDrop.ts
+index 11c1b1f..a14da2b 100644
+--- a/packages/plugin-organizer/src/hooks/useFileDrop.ts
++++ b/packages/plugin-organizer/src/hooks/useFileDrop.ts
+@@ -1,5 +1,7 @@
+ import { useEffect, useRef } from 'react';
+ 
++import type { FinderClient } from '../finderClient';
++
+ export interface FileDropPayload {
+   paths: string[];
+   position: { x: number; y: number };
+@@ -11,6 +13,24 @@ export interface UseFileDropOptions {
+   onEnter?: () => void;  // Called when files enter the window
+   onLeave?: () => void;  // Called when files leave or drop is cancelled
+   enabled?: boolean;
++  /**
++   * Optional Finder client used to register a user-authorized path
++   * bookmark for every dropped path (G3-E3 P0 — honest provenance).
++   *
++   * When omitted, the hook logs a warning once and skips bookmark
++   * registration; subsequent `reveal_in_finder` / `open_path` calls
++   * for those paths will be rejected by the Rust side with
++   * `E3004 sync capability denied — no user-authorized bookmark`.
++   *
++   * Production callers SHOULD pass a `FinderClient` built via
++   * `createFinderClient(invoke)`. The optionality exists so existing
++   * unit tests that exercise the drag-drop event plumbing without a
++   * Tauri bridge keep working without modification.
++   *
++   * TODO: extend the hook to also register paths surfaced by a
++   * user-initiated `Open…` panel (not in scope for this PR).
++   */
++  finderClient?: FinderClient;
+ }
+ 
+ /**
+@@ -28,11 +48,13 @@ export interface UseFileDropOptions {
+  * - drop: Files were dropped (with File objects and position)
+  * - dragleave: Drag operation cancelled or files left window
+  */
+-export function useFileDrop({ onDrop, onHover, onEnter, onLeave, enabled = true }: UseFileDropOptions) {
++export function useFileDrop({ onDrop, onHover, onEnter, onLeave, enabled = true, finderClient }: UseFileDropOptions) {
+   const onDropRef = useRef(onDrop);
+   const onHoverRef = useRef(onHover);
+   const onEnterRef = useRef(onEnter);
+   const onLeaveRef = useRef(onLeave);
++  const finderClientRef = useRef(finderClient);
++  const finderClientMissingWarnedRef = useRef(false);
+   const isDraggingRef = useRef(false);
+   const dragCounterRef = useRef(0); // Track nested drag enter/leave
+ 
+@@ -53,6 +75,10 @@ export function useFileDrop({ onDrop, onHover, onEnter, onLeave, enabled = true
+     onLeaveRef.current = onLeave;
+   }, [onLeave]);
+ 
++  useEffect(() => {
++    finderClientRef.current = finderClient;
++  }, [finderClient]);
++
+   // Setup HTML5 drag-drop event listeners
+   useEffect(() => {
+     if (typeof window === 'undefined' || !enabled) {
+@@ -125,6 +151,29 @@ export function useFileDrop({ onDrop, onHover, onEnter, onLeave, enabled = true
+         (window as unknown as { __droppedFiles: Map<string, File> }).__droppedFiles = fileMap;
+ 
+         onDropRef.current(fileNames, position);
++
++        // G3-E3 P0: register every dropped path as a user-authorized
++        // bookmark so subsequent reveal_in_finder / open_path calls are
++        // admitted by the Rust side. We fire-and-forget per path —
++        // individual failures (validator rejection, IPC down) are
++        // logged and do NOT abort the drop UX.
++        const client = finderClientRef.current;
++        if (client) {
++          for (const path of fileNames) {
++            void client.registerBookmark(path).catch((err: unknown) => {
++              console.warn(
++                '[useFileDrop] register_path_bookmark failed for',
++                path,
++                err,
++              );
++            });
++          }
++        } else if (!finderClientMissingWarnedRef.current) {
++          finderClientMissingWarnedRef.current = true;
++          console.warn(
++            '[useFileDrop] no finderClient provided; reveal_in_finder / open_path will be rejected with E3004 until paths are bookmarked',
++          );
++        }
+       }
+     };
+ 
+
+exec
+/bin/zsh -lc "nl -ba apps/desktop/src-tauri/src/commands/bookmarks.rs | sed -n '1,260p'" in /Users/lijinlong/Desktop/AI_Desktop/XAI_Desktop
+exec
+/bin/zsh -lc "nl -ba apps/desktop/src-tauri/src/commands/finder.rs | sed -n '1,260p'" in /Users/lijinlong/Desktop/AI_Desktop/XAI_Desktop
+exec
+/bin/zsh -lc "nl -ba packages/plugin-organizer/src/hooks/useFileDrop.ts | sed -n '1,240p'" in /Users/lijinlong/Desktop/AI_Desktop/XAI_Desktop
+ succeeded in 0ms:
+     1	//! User-authorized path bookmark registry (G3-E3 P0 fix).
+     2	//!
+     3	//! Implements an in-memory `BookmarkRegistry` that records every path the
+     4	//! user has explicitly authorized via a drag-drop or open-panel selection.
+     5	//! `reveal_in_finder` / `open_path` consult this registry as the second
+     6	//! gate (after `validate_user_path`'s lexical shape check) so they cannot
+     7	//! be invoked against arbitrary paths inside the user-reachable roots.
+     8	//!
+     9	//! The contract in `docs/contracts/tauri-commands-v0.md` §4 requires that
+    10	//! "all path access must come from user drop/open panel or authorized
+    11	//! bookmark"; the lexical shape gate alone only narrowed the attack
+    12	//! surface — it did not constitute honest provenance. This module raises
+    13	//! the implementation to match the contract.
+    14	//!
+    15	//! Storage model: in-memory `HashSet<PathBuf>` keyed by the canonical
+    16	//! (lexically-normalized) form produced by `validate_user_path`. Each
+    17	//! session starts empty — the user must re-authorize every path after a
+    18	//! restart. This is intentionally more restrictive than the contract
+    19	//! promises: every authorized path has explicit, recent provenance.
+    20	//!
+    21	//! Tauri injects `window: tauri::WebviewWindow` automatically; JS callers
+    22	//! do NOT include it in the args payload (mirrors the existing crypto /
+    23	//! database / keychain / finder command pattern).
+    24	
+    25	use std::collections::HashSet;
+    26	use std::path::{Path, PathBuf};
+    27	use std::sync::Mutex;
+    28	
+    29	use serde::Deserialize;
+    30	use tauri::State;
+    31	
+    32	use crate::commands::finder::validate_user_path;
+    33	use crate::error::{AppError, AppResult};
+    34	
+    35	/// Windows allowed to invoke bookmark commands. Mirrors
+    36	/// `commands::finder::FINDER_ALLOWED_WINDOWS` because the bookmark
+    37	/// registry is a strict companion to the Finder commands — only the
+    38	/// surfaces that can call `reveal_in_finder` / `open_path` should be
+    39	/// allowed to register a path bookmark in the first place.
+    40	///
+    41	/// Duplicated (rather than shared via `pub`) intentionally: the finder
+    42	/// allow-list is `pub(crate)` only for `validate_user_path` re-use; a
+    43	/// minor copy here keeps the two modules independently auditable so a
+    44	/// future widening of one cannot silently widen the other.
+    45	const BOOKMARK_ALLOWED_WINDOWS: &[&str] = &["main", "control", "console"];
+    46	
+    47	fn is_bookmark_window_allowed(label: &str) -> bool {
+    48	    if BOOKMARK_ALLOWED_WINDOWS.contains(&label) {
+    49	        return true;
+    50	    }
+    51	    label.starts_with("grid_")
+    52	}
+    53	
+    54	fn ensure_bookmark_window_allowed(label: &str) -> AppResult<()> {
+    55	    if is_bookmark_window_allowed(label) {
+    56	        return Ok(());
+    57	    }
+    58	    Err(AppError::SyncCapabilityDenied(format!(
+    59	        "window `{label}` is not allowed to invoke bookmark commands"
+    60	    )))
+    61	}
+    62	
+    63	/// In-memory registry of user-authorized canonical paths.
+    64	///
+    65	/// Backed by a `Mutex<HashSet<PathBuf>>`. Each entry is the
+    66	/// lexically-normalized canonical form output by `validate_user_path`,
+    67	/// so the gate is consistent with the path used by the platform `open`
+    68	/// / `open -R` shell-out.
+    69	pub struct BookmarkRegistry {
+    70	    inner: Mutex<HashSet<PathBuf>>,
+    71	}
+    72	
+    73	impl Default for BookmarkRegistry {
+    74	    fn default() -> Self {
+    75	        Self {
+    76	            inner: Mutex::new(HashSet::new()),
+    77	        }
+    78	    }
+    79	}
+    80	
+    81	impl BookmarkRegistry {
+    82	    /// Insert a canonical path. Idempotent. Returns `Ok(())` on success.
+    83	    pub fn insert_canonical(&self, canonical: PathBuf) -> AppResult<()> {
+    84	        let mut guard = self
+    85	            .inner
+    86	            .lock()
+    87	            .map_err(|err| AppError::Internal(format!("bookmark registry poisoned: {err}")))?;
+    88	        guard.insert(canonical);
+    89	        Ok(())
+    90	    }
+    91	
+    92	    /// Remove a canonical path. Idempotent.
+    93	    pub fn remove_canonical(&self, canonical: &Path) -> AppResult<()> {
+    94	        let mut guard = self
+    95	            .inner
+    96	            .lock()
+    97	            .map_err(|err| AppError::Internal(format!("bookmark registry poisoned: {err}")))?;
+    98	        guard.remove(canonical);
+    99	        Ok(())
+   100	    }
+   101	
+   102	    /// Check whether a canonical path has been authorized.
+   103	    pub fn contains_canonical(&self, canonical: &Path) -> bool {
+   104	        let Ok(guard) = self.inner.lock() else {
+   105	            return false;
+   106	        };
+   107	        guard.contains(canonical)
+   108	    }
+   109	}
+   110	
+   111	/// Rust-internal helper for callers (notably `commands::finder`) to
+   112	/// consult the registry without having to know the lock layout.
+   113	pub fn is_path_bookmarked(state: &BookmarkRegistry, canonical: &Path) -> bool {
+   114	    state.contains_canonical(canonical)
+   115	}
+   116	
+   117	#[derive(Debug, Deserialize)]
+   118	pub struct RegisterPathBookmarkInput {
+   119	    pub path: String,
+   120	}
+   121	
+   122	/// Register a user-authorized path bookmark.
+   123	///
+   124	/// Lexically validates the input first (`validate_user_path`), then
+   125	/// inserts the canonical form into the registry. Idempotent. Returns
+   126	/// `E3004` if the calling window is not in `BOOKMARK_ALLOWED_WINDOWS`,
+   127	/// `E3004` / `E3005` for path validation failures.
+   128	#[tauri::command]
+   129	pub async fn register_path_bookmark(
+   130	    window: tauri::WebviewWindow,
+   131	    state: State<'_, BookmarkRegistry>,
+   132	    input: RegisterPathBookmarkInput,
+   133	) -> AppResult<()> {
+   134	    ensure_bookmark_window_allowed(window.label())?;
+   135	    let canonical = validate_user_path(&input.path)?;
+   136	    state.insert_canonical(canonical)
+   137	}
+   138	
+   139	#[derive(Debug, Deserialize)]
+   140	pub struct ClearPathBookmarkInput {
+   141	    pub path: String,
+   142	}
+   143	
+   144	/// Clear a user-authorized path bookmark.
+   145	///
+   146	/// Idempotent: removing an absent path is not an error. Lexically
+   147	/// validates the input first (`validate_user_path`) for symmetry with
+   148	/// `register_path_bookmark`, so callers cannot use this command to
+   149	/// probe arbitrary paths against the validator.
+   150	#[tauri::command]
+   151	pub async fn clear_path_bookmark(
+   152	    window: tauri::WebviewWindow,
+   153	    state: State<'_, BookmarkRegistry>,
+   154	    input: ClearPathBookmarkInput,
+   155	) -> AppResult<()> {
+   156	    ensure_bookmark_window_allowed(window.label())?;
+   157	    let canonical = validate_user_path(&input.path)?;
+   158	    state.remove_canonical(&canonical)
+   159	}
+   160	
+   161	#[cfg(test)]
+   162	mod tests {
+   163	    use super::*;
+   164	
+   165	    /// Allow-list admits the documented labels and any `grid_*`.
+   166	    #[test]
+   167	    fn allowlist_admits_documented_labels_and_grids() {
+   168	        for label in BOOKMARK_ALLOWED_WINDOWS {
+   169	            assert!(ensure_bookmark_window_allowed(label).is_ok());
+   170	        }
+   171	        assert!(ensure_bookmark_window_allowed("grid_a1b2").is_ok());
+   172	    }
+   173	
+   174	    /// Allow-list rejects widget / pet / ai-cube / unknown.
+   175	    #[test]
+   176	    fn allowlist_rejects_widget_pet_aicube() {
+   177	        for label in ["widget_clock", "pet", "ai_cube", "popup", "account"] {
+   178	            assert!(ensure_bookmark_window_allowed(label).is_err());
+   179	        }
+   180	    }
+   181	
+   182	    /// Lookup returns false before register, true after, false after clear.
+   183	    #[test]
+   184	    fn register_then_lookup_then_clear() {
+   185	        let registry = BookmarkRegistry::default();
+   186	        let canonical = validate_user_path("/Users/me/file.txt").expect("valid path");
+   187	
+   188	        assert!(
+   189	            !is_path_bookmarked(&registry, &canonical),
+   190	            "fresh registry must not contain any path"
+   191	        );
+   192	
+   193	        registry
+   194	            .insert_canonical(canonical.clone())
+   195	            .expect("insert");
+   196	        assert!(
+   197	            is_path_bookmarked(&registry, &canonical),
+   198	            "registry must contain the path after register"
+   199	        );
+   200	
+   201	        registry.remove_canonical(&canonical).expect("remove");
+   202	        assert!(
+   203	            !is_path_bookmarked(&registry, &canonical),
+   204	            "registry must not contain the path after clear"
+   205	        );
+   206	    }
+   207	
+   208	    /// `clear_path_bookmark` is idempotent — removing absent is OK.
+   209	    #[test]
+   210	    fn clear_is_idempotent() {
+   211	        let registry = BookmarkRegistry::default();
+   212	        let canonical = validate_user_path("/Users/me/missing.txt").expect("valid path");
+   213	
+   214	        // remove without register must not error
+   215	        registry.remove_canonical(&canonical).expect("remove absent");
+   216	        assert!(!is_path_bookmarked(&registry, &canonical));
+   217	
+   218	        // double-register is idempotent (no count exposed, but no error)
+   219	        registry.insert_canonical(canonical.clone()).expect("first");
+   220	        registry
+   221	            .insert_canonical(canonical.clone())
+   222	            .expect("second");
+   223	        assert!(is_path_bookmarked(&registry, &canonical));
+   224	
+   225	        // double-remove is idempotent
+   226	        registry.remove_canonical(&canonical).expect("first remove");
+   227	        registry
+   228	            .remove_canonical(&canonical)
+   229	            .expect("second remove");
+   230	        assert!(!is_path_bookmarked(&registry, &canonical));
+   231	    }
+   232	
+   233	    /// Invalid paths are rejected by `validate_user_path` and never reach
+   234	    /// the registry. We exercise this through the validator directly so
+   235	    /// the test does not need a `WebviewWindow`.
+   236	    #[test]
+   237	    fn invalid_path_is_rejected_before_registry() {
+   238	        let registry = BookmarkRegistry::default();
+   239	
+   240	        // `..` in the path → SyncInvalidInput
+   241	        let bad_dotdot = validate_user_path("/Users/me/../etc/passwd");
+   242	        assert!(bad_dotdot.is_err());
+   243	
+   244	        // outside user-reachable root → SyncCapabilityDenied
+   245	        let bad_root = validate_user_path("/etc/passwd");
+   246	        assert!(bad_root.is_err());
+   247	
+   248	        // empty / whitespace → SyncInvalidInput
+   249	        assert!(validate_user_path("").is_err());
+   250	        assert!(validate_user_path("   ").is_err());
+   251	
+   252	        // Confirm none of the above leaked into the registry. They never
+   253	        // produced a canonical PathBuf, so there is nothing to look up;
+   254	        // but we verify by enumerating a couple of would-be canonical
+   255	        // forms and asserting absence.
+   256	        for raw in [
+   257	            PathBuf::from("/etc/passwd"),
+   258	            PathBuf::from("/Users/me/etc/passwd"),
+   259	        ] {
+   260	            assert!(
+
+ succeeded in 0ms:
+     1	//! Finder collaboration commands (G3-E3).
+     2	//!
+     3	//! Three minimal user-initiated path actions:
+     4	//!
+     5	//! - `reveal_in_finder` — opens a Finder window highlighting the path.
+     6	//! - `open_path` — opens the path in its default handler (file → app).
+     7	//! - `remove_item_from_grid` — pure logical removal; does NOT touch the
+     8	//!   user's filesystem. The Organizer plugin owns the "send file to
+     9	//!   Trash" decision and must surface a confirmation UI before invoking
+    10	//!   any future destructive variant.
+    11	//!
+    12	//! All commands enforce a window-origin allow-list and validate the path
+    13	//! against the user-reachable root allow-list (see `validate_user_path`)
+    14	//! before touching the platform layer.
+    15	
+    16	use std::path::{Component, Path, PathBuf};
+    17	
+    18	use serde::Deserialize;
+    19	
+    20	use crate::commands::bookmarks::{is_path_bookmarked, BookmarkRegistry};
+    21	use crate::error::{AppError, AppResult};
+    22	
+    23	pub(crate) const FINDER_ALLOWED_WINDOWS: &[&str] = &["main", "control", "console"];
+    24	
+    25	/// User-reachable filesystem roots a desktop file/app drop or open-panel
+    26	/// selection can produce on macOS. Paths outside these roots are rejected
+    27	/// for now — full bookmark-store enforcement is a later gate. On non-macOS
+    28	/// targets only `/tmp/` is admitted, mirroring the existing macOS-only
+    29	/// behavior of the platform commands.
+    30	#[cfg(target_os = "macos")]
+    31	const USER_REACHABLE_ROOTS: &[&str] = &["/Users/", "/Applications/", "/Volumes/", "/tmp/"];
+    32	
+    33	#[cfg(not(target_os = "macos"))]
+    34	const USER_REACHABLE_ROOTS: &[&str] = &["/tmp/"];
+    35	
+    36	fn is_finder_window_allowed(label: &str) -> bool {
+    37	    if FINDER_ALLOWED_WINDOWS.contains(&label) {
+    38	        return true;
+    39	    }
+    40	    label.starts_with("grid_")
+    41	}
+    42	
+    43	fn ensure_finder_window_allowed(label: &str) -> AppResult<()> {
+    44	    if is_finder_window_allowed(label) {
+    45	        return Ok(());
+    46	    }
+    47	    Err(AppError::SyncCapabilityDenied(format!(
+    48	        "window `{label}` is not allowed to invoke Finder commands"
+    49	    )))
+    50	}
+    51	
+    52	/// Validate `raw` looks like a user-authorized absolute path and return its
+    53	/// lexically-normalized canonical form.
+    54	///
+    55	/// Rules:
+    56	/// - rejects empty / NUL / whitespace-only input.
+    57	/// - rejects relative paths and any `..` parent-dir segment (even when the
+    58	///   raw string would normalize away, e.g. `/Users/me/../etc/passwd`).
+    59	/// - rejects paths whose normalized form does NOT start with one of the
+    60	///   allowed user-reachable roots (`/Users/`, `/Applications/`, `/Volumes/`,
+    61	///   `/tmp/` on macOS; only `/tmp/` on other targets).
+    62	///
+    63	/// Returns the normalized `PathBuf` on success. This is a *lexical*
+    64	/// normalization (`Path::components`) rather than `canonicalize()` because
+    65	/// `canonicalize` requires the path to exist on disk; that stricter check
+    66	/// is a follow-up once a bookmark store lands.
+    67	pub(crate) fn validate_user_path(raw: &str) -> AppResult<PathBuf> {
+    68	    if raw.trim().is_empty() {
+    69	        return Err(AppError::SyncInvalidInput(
+    70	            "path must be non-empty".into(),
+    71	        ));
+    72	    }
+    73	    if raw.contains('\0') {
+    74	        return Err(AppError::SyncInvalidInput(
+    75	            "path must not contain NUL".into(),
+    76	        ));
+    77	    }
+    78	
+    79	    let path = Path::new(raw);
+    80	    if !path.is_absolute() {
+    81	        return Err(AppError::SyncInvalidInput(format!(
+    82	            "path must be absolute: `{raw}`"
+    83	        )));
+    84	    }
+    85	
+    86	    // Walk components, refusing any `..` (parent) segment. This catches
+    87	    // both `/Users/me/../etc/passwd` and `/Applications/../etc/passwd`.
+    88	    let mut normalized = PathBuf::new();
+    89	    for component in path.components() {
+    90	        match component {
+    91	            Component::ParentDir => {
+    92	                return Err(AppError::SyncInvalidInput(format!(
+    93	                    "path must not contain `..` segments: `{raw}`"
+    94	                )));
+    95	            }
+    96	            Component::CurDir => {
+    97	                // Drop `.` — harmless lexical no-op.
+    98	            }
+    99	            other => normalized.push(other.as_os_str()),
+   100	        }
+   101	    }
+   102	
+   103	    let normalized_str = normalized.to_string_lossy().to_string();
+   104	    let under_allowed_root = USER_REACHABLE_ROOTS
+   105	        .iter()
+   106	        .any(|root| normalized_str.starts_with(root));
+   107	
+   108	    if !under_allowed_root {
+   109	        return Err(AppError::SyncCapabilityDenied(format!(
+   110	            "path `{normalized_str}` is not under a user-reachable root"
+   111	        )));
+   112	    }
+   113	
+   114	    Ok(normalized)
+   115	}
+   116	
+   117	/// Enforce honest user-authorized provenance for a finder action.
+   118	///
+   119	/// Two-stage gate:
+   120	///
+   121	/// 1. `validate_user_path` lexically normalizes and shape-checks the raw
+   122	///    input (absolute, no `..`, under a user-reachable root).
+   123	/// 2. `BookmarkRegistry` lookup asserts the user explicitly registered
+   124	///    the canonical path through a prior drag-drop or open-panel action.
+   125	///
+   126	/// Stage 1 alone is NOT honest provenance — it only narrows the attack
+   127	/// surface. The contract in `docs/contracts/tauri-commands-v0.md` §4
+   128	/// requires that "all path access must come from user drop/open panel
+   129	/// or authorized bookmark". This helper raises the implementation to
+   130	/// match the contract.
+   131	fn ensure_path_authorized(
+   132	    raw: &str,
+   133	    registry: &BookmarkRegistry,
+   134	) -> AppResult<PathBuf> {
+   135	    let canonical = validate_user_path(raw)?;
+   136	    if !is_path_bookmarked(registry, &canonical) {
+   137	        return Err(AppError::SyncCapabilityDenied(format!(
+   138	            "path `{}` has no user-authorized bookmark",
+   139	            canonical.display()
+   140	        )));
+   141	    }
+   142	    Ok(canonical)
+   143	}
+   144	
+   145	#[derive(Debug, Deserialize)]
+   146	pub struct RevealInFinderInput {
+   147	    pub path: String,
+   148	}
+   149	
+   150	#[tauri::command]
+   151	pub async fn reveal_in_finder(
+   152	    window: tauri::WebviewWindow,
+   153	    registry: tauri::State<'_, BookmarkRegistry>,
+   154	    input: RevealInFinderInput,
+   155	) -> AppResult<()> {
+   156	    ensure_finder_window_allowed(window.label())?;
+   157	    let canonical = ensure_path_authorized(&input.path, &registry)?;
+   158	    #[cfg(target_os = "macos")]
+   159	    {
+   160	        use std::process::Command;
+   161	        let status = Command::new("open")
+   162	            .arg("-R")
+   163	            .arg(&canonical)
+   164	            .status()
+   165	            .map_err(|err| AppError::Internal(format!("open -R failed: {err}")))?;
+   166	        if !status.success() {
+   167	            return Err(AppError::Internal(format!(
+   168	                "open -R exited with status {status}"
+   169	            )));
+   170	        }
+   171	        Ok(())
+   172	    }
+   173	    #[cfg(not(target_os = "macos"))]
+   174	    {
+   175	        let _ = canonical;
+   176	        Err(AppError::Internal("reveal_in_finder is macOS-only".into()))
+   177	    }
+   178	}
+   179	
+   180	#[derive(Debug, Deserialize)]
+   181	pub struct OpenPathInput {
+   182	    pub path: String,
+   183	}
+   184	
+   185	#[tauri::command]
+   186	pub async fn open_path(
+   187	    window: tauri::WebviewWindow,
+   188	    registry: tauri::State<'_, BookmarkRegistry>,
+   189	    input: OpenPathInput,
+   190	) -> AppResult<()> {
+   191	    ensure_finder_window_allowed(window.label())?;
+   192	    let canonical = ensure_path_authorized(&input.path, &registry)?;
+   193	    #[cfg(target_os = "macos")]
+   194	    {
+   195	        use std::process::Command;
+   196	        let status = Command::new("open")
+   197	            .arg(&canonical)
+   198	            .status()
+   199	            .map_err(|err| AppError::Internal(format!("open failed: {err}")))?;
+   200	        if !status.success() {
+   201	            return Err(AppError::Internal(format!(
+   202	                "open exited with status {status}"
+   203	            )));
+   204	        }
+   205	        Ok(())
+   206	    }
+   207	    #[cfg(not(target_os = "macos"))]
+   208	    {
+   209	        let _ = canonical;
+   210	        Err(AppError::Internal("open_path is macOS-only".into()))
+   211	    }
+   212	}
+   213	
+   214	#[cfg(test)]
+   215	mod tests {
+   216	    use super::*;
+   217	
+   218	    #[test]
+   219	    fn allowlist_admits_documented_labels_and_grids() {
+   220	        for label in FINDER_ALLOWED_WINDOWS {
+   221	            assert!(ensure_finder_window_allowed(label).is_ok());
+   222	        }
+   223	        assert!(ensure_finder_window_allowed("grid_x").is_ok());
+   224	    }
+   225	
+   226	    #[test]
+   227	    fn allowlist_rejects_widgets_pet_aicube() {
+   228	        for label in ["widget_clock", "pet", "ai_cube", "popup"] {
+   229	            assert!(ensure_finder_window_allowed(label).is_err());
+   230	        }
+   231	    }
+   232	
+   233	    #[test]
+   234	    fn validate_user_path_rejects_empty_and_nul() {
+   235	        assert!(validate_user_path("").is_err());
+   236	        assert!(validate_user_path("   ").is_err());
+   237	        assert!(validate_user_path("/Users/me/file\0").is_err());
+   238	    }
+   239	
+   240	    /// Any `..` parent-dir component must be rejected, even when the
+   241	    /// surrounding path lexically points back into an allowed root.
+   242	    #[test]
+   243	    fn validate_user_path_rejects_dotdot() {
+   244	        // direct parent-escape attempt
+   245	        let err = validate_user_path("/Users/me/../etc/passwd").unwrap_err();
+   246	        let msg = err.to_string();
+   247	        assert!(
+   248	            msg.contains("..") || msg.starts_with("E3005:"),
+   249	            "expected `..` rejection, got: {msg}"
+   250	        );
+   251	
+   252	        // even nested deeper
+   253	        assert!(validate_user_path("/Users/me/sub/../../etc/passwd").is_err());
+   254	
+   255	        // relative input should also fail (not absolute → E3005)
+   256	        assert!(validate_user_path("..").is_err());
+   257	        assert!(validate_user_path("relative/path").is_err());
+   258	    }
+   259	
+   260	    /// Paths outside the user-reachable root allow-list (e.g. `/etc/...`,
+
+ succeeded in 0ms:
+     1	import { useEffect, useRef } from 'react';
+     2	
+     3	import type { FinderClient } from '../finderClient';
+     4	
+     5	export interface FileDropPayload {
+     6	  paths: string[];
+     7	  position: { x: number; y: number };
+     8	}
+     9	
+    10	export interface UseFileDropOptions {
+    11	  onDrop: (paths: string[], position: { x: number; y: number }) => void;
+    12	  onHover?: (hovering: boolean) => void;
+    13	  onEnter?: () => void;  // Called when files enter the window
+    14	  onLeave?: () => void;  // Called when files leave or drop is cancelled
+    15	  enabled?: boolean;
+    16	  /**
+    17	   * Optional Finder client used to register a user-authorized path
+    18	   * bookmark for every dropped path (G3-E3 P0 — honest provenance).
+    19	   *
+    20	   * When omitted, the hook logs a warning once and skips bookmark
+    21	   * registration; subsequent `reveal_in_finder` / `open_path` calls
+    22	   * for those paths will be rejected by the Rust side with
+    23	   * `E3004 sync capability denied — no user-authorized bookmark`.
+    24	   *
+    25	   * Production callers SHOULD pass a `FinderClient` built via
+    26	   * `createFinderClient(invoke)`. The optionality exists so existing
+    27	   * unit tests that exercise the drag-drop event plumbing without a
+    28	   * Tauri bridge keep working without modification.
+    29	   *
+    30	   * TODO: extend the hook to also register paths surfaced by a
+    31	   * user-initiated `Open…` panel (not in scope for this PR).
+    32	   */
+    33	  finderClient?: FinderClient;
+    34	}
+    35	
+    36	/**
+    37	 * Hook to handle file drops from the operating system into the Tauri window.
+    38	 *
+    39	 * Uses HTML5 Drag & Drop API (with dragDropEnabled: false in tauri.conf.json).
+    40	 * This approach works better with transparent windows on macOS.
+    41	 *
+    42	 * Note: HTML5 API provides File objects, not file paths. For security reasons,
+    43	 * browsers don't expose full file paths. We use file.name as the identifier.
+    44	 *
+    45	 * Events:
+    46	 * - dragenter: Files have entered the window area
+    47	 * - dragover: Files are being dragged over the window (with position)
+    48	 * - drop: Files were dropped (with File objects and position)
+    49	 * - dragleave: Drag operation cancelled or files left window
+    50	 */
+    51	export function useFileDrop({ onDrop, onHover, onEnter, onLeave, enabled = true, finderClient }: UseFileDropOptions) {
+    52	  const onDropRef = useRef(onDrop);
+    53	  const onHoverRef = useRef(onHover);
+    54	  const onEnterRef = useRef(onEnter);
+    55	  const onLeaveRef = useRef(onLeave);
+    56	  const finderClientRef = useRef(finderClient);
+    57	  const finderClientMissingWarnedRef = useRef(false);
+    58	  const isDraggingRef = useRef(false);
+    59	  const dragCounterRef = useRef(0); // Track nested drag enter/leave
+    60	
+    61	  // Keep refs updated
+    62	  useEffect(() => {
+    63	    onDropRef.current = onDrop;
+    64	  }, [onDrop]);
+    65	
+    66	  useEffect(() => {
+    67	    onHoverRef.current = onHover;
+    68	  }, [onHover]);
+    69	
+    70	  useEffect(() => {
+    71	    onEnterRef.current = onEnter;
+    72	  }, [onEnter]);
+    73	
+    74	  useEffect(() => {
+    75	    onLeaveRef.current = onLeave;
+    76	  }, [onLeave]);
+    77	
+    78	  useEffect(() => {
+    79	    finderClientRef.current = finderClient;
+    80	  }, [finderClient]);
+    81	
+    82	  // Setup HTML5 drag-drop event listeners
+    83	  useEffect(() => {
+    84	    if (typeof window === 'undefined' || !enabled) {
+    85	      return;
+    86	    }
+    87	
+    88	    const handleDragEnter = (e: DragEvent) => {
+    89	      e.preventDefault();
+    90	      e.stopPropagation();
+    91	
+    92	      dragCounterRef.current++;
+    93	
+    94	      if (!isDraggingRef.current) {
+    95	        isDraggingRef.current = true;
+    96	        console.log('📂 [useFileDrop] Files entered window');
+    97	        onHoverRef.current?.(true);
+    98	        onEnterRef.current?.();
+    99	      }
+   100	    };
+   101	
+   102	    const handleDragOver = (e: DragEvent) => {
+   103	      e.preventDefault();
+   104	      e.stopPropagation();
+   105	      // Allow drop
+   106	      if (e.dataTransfer) {
+   107	        e.dataTransfer.dropEffect = 'copy';
+   108	      }
+   109	    };
+   110	
+   111	    const handleDragLeave = (e: DragEvent) => {
+   112	      e.preventDefault();
+   113	      e.stopPropagation();
+   114	
+   115	      dragCounterRef.current--;
+   116	
+   117	      // Only trigger leave when all nested elements have been left
+   118	      if (dragCounterRef.current === 0 && isDraggingRef.current) {
+   119	        isDraggingRef.current = false;
+   120	        console.log('📂 [useFileDrop] Drag left window');
+   121	        onHoverRef.current?.(false);
+   122	        onLeaveRef.current?.();
+   123	      }
+   124	    };
+   125	
+   126	    const handleDrop = (e: DragEvent) => {
+   127	      e.preventDefault();
+   128	      e.stopPropagation();
+   129	
+   130	      dragCounterRef.current = 0;
+   131	      isDraggingRef.current = false;
+   132	      onHoverRef.current?.(false);
+   133	
+   134	      const files = e.dataTransfer?.files;
+   135	      if (files && files.length > 0) {
+   136	        // HTML5 API doesn't provide full paths for security reasons
+   137	        // We'll use file names as identifiers
+   138	        // For a real desktop app, you might need to use Tauri's file dialog
+   139	        // or save files to a temp location first
+   140	        const fileNames = Array.from(files).map(f => f.name);
+   141	        const position = { x: e.clientX, y: e.clientY };
+   142	
+   143	        console.log('📂 [useFileDrop] Files dropped:', fileNames, 'at', position);
+   144	
+   145	        // Store File objects in a global map so they can be accessed later
+   146	        // This is needed because we can't pass File objects through the path string
+   147	        const fileMap = (window as unknown as { __droppedFiles?: Map<string, File> }).__droppedFiles || new Map<string, File>();
+   148	        Array.from(files).forEach(file => {
+   149	          fileMap.set(file.name, file);
+   150	        });
+   151	        (window as unknown as { __droppedFiles: Map<string, File> }).__droppedFiles = fileMap;
+   152	
+   153	        onDropRef.current(fileNames, position);
+   154	
+   155	        // G3-E3 P0: register every dropped path as a user-authorized
+   156	        // bookmark so subsequent reveal_in_finder / open_path calls are
+   157	        // admitted by the Rust side. We fire-and-forget per path —
+   158	        // individual failures (validator rejection, IPC down) are
+   159	        // logged and do NOT abort the drop UX.
+   160	        const client = finderClientRef.current;
+   161	        if (client) {
+   162	          for (const path of fileNames) {
+   163	            void client.registerBookmark(path).catch((err: unknown) => {
+   164	              console.warn(
+   165	                '[useFileDrop] register_path_bookmark failed for',
+   166	                path,
+   167	                err,
+   168	              );
+   169	            });
+   170	          }
+   171	        } else if (!finderClientMissingWarnedRef.current) {
+   172	          finderClientMissingWarnedRef.current = true;
+   173	          console.warn(
+   174	            '[useFileDrop] no finderClient provided; reveal_in_finder / open_path will be rejected with E3004 until paths are bookmarked',
+   175	          );
+   176	        }
+   177	      }
+   178	    };
+   179	
+   180	    // Add listeners to document for global drag-drop
+   181	    document.addEventListener('dragenter', handleDragEnter, true);
+   182	    document.addEventListener('dragover', handleDragOver, true);
+   183	    document.addEventListener('dragleave', handleDragLeave, true);
+   184	    document.addEventListener('drop', handleDrop, true);
+   185	
+   186	    console.log('✅ [useFileDrop] HTML5 drag-drop listeners registered');
+   187	
+   188	    return () => {
+   189	      document.removeEventListener('dragenter', handleDragEnter, true);
+   190	      document.removeEventListener('dragover', handleDragOver, true);
+   191	      document.removeEventListener('dragleave', handleDragLeave, true);
+   192	      document.removeEventListener('drop', handleDrop, true);
+   193	    };
+   194	  }, [enabled]);
+   195	}
+   196	
+   197	/**
+   198	 * Utility to extract file information from a path or filename
+   199	 */
+   200	export function getFileInfoFromPath(filePath: string): {
+   201	  name: string;
+   202	  extension: string;
+   203	  type: 'file' | 'folder' | 'app';
+   204	} {
+   205	  const parts = filePath.split('/');
+   206	  const name = parts[parts.length - 1] || 'Unknown';
+   207	  const extension = name.includes('.') ? name.split('.').pop()?.toLowerCase() || '' : '';
+   208	
+   209	  // Determine type
+   210	  let type: 'file' | 'folder' | 'app' = 'file';
+   211	  if (extension === 'app') {
+   212	    type = 'app';
+   213	  } else if (!extension && !name.includes('.')) {
+   214	    // No extension might be a folder (heuristic)
+   215	    type = 'folder';
+   216	  }
+   217	
+   218	  return { name, extension, type };
+   219	}
+   220	
+   221	/**
+   222	 * Get an appropriate icon for a file type
+   223	 */
+   224	export function getFileIcon(extension: string, type: 'file' | 'folder' | 'app'): string {
+   225	  if (type === 'folder') return '📁';
+   226	  if (type === 'app') return '📦';
+   227	
+   228	  const iconMap: Record<string, string> = {
+   229	    pdf: '📄',
+   230	    doc: '📝',
+   231	    docx: '📝',
+   232	    txt: '📃',
+   233	    md: '📃',
+   234	    jpg: '🖼️',
+   235	    jpeg: '🖼️',
+   236	    png: '🖼️',
+   237	    gif: '🖼️',
+   238	    webp: '🖼️',
+   239	    svg: '🖼️',
+   240	    mp4: '🎬',
+
+exec
+/bin/zsh -lc "rg -n \"register_path_bookmark|clear_path_bookmark|BookmarkRegistry|registerBookmark|useFileDrop\\(\" -S apps/desktop packages/plugin-organizer docs | sed -n '1,240p'" in /Users/lijinlong/Desktop/AI_Desktop/XAI_Desktop
+ succeeded in 0ms:
+packages/plugin-organizer/src/finderClient.test.ts:24:  it("registerBookmark calls invoke('register_path_bookmark', { input: { path } })", async () => {
+packages/plugin-organizer/src/finderClient.test.ts:27:    await client.registerBookmark("/Users/me/Documents/photo.jpg");
+packages/plugin-organizer/src/finderClient.test.ts:29:    expect(invoke).toHaveBeenCalledWith("register_path_bookmark", {
+packages/plugin-organizer/src/finderClient.test.ts:34:  it("clearBookmark calls invoke('clear_path_bookmark', { input: { path } })", async () => {
+packages/plugin-organizer/src/finderClient.test.ts:39:    expect(invoke).toHaveBeenCalledWith("clear_path_bookmark", {
+packages/plugin-organizer/src/OrganizerLayer.tsx:144:  useFileDrop({
+packages/plugin-organizer/src/finderClient.ts:5: * `register_path_bookmark` / `clear_path_bookmark` commands and never
+packages/plugin-organizer/src/finderClient.ts:11: * in-memory `BookmarkRegistry`. Callers MUST invoke `registerBookmark`
+packages/plugin-organizer/src/finderClient.ts:27:  registerBookmark(path: string): Promise<void>;
+packages/plugin-organizer/src/finderClient.ts:43:    async registerBookmark(path: string) {
+packages/plugin-organizer/src/finderClient.ts:44:      await invoke<void>("register_path_bookmark", { input: { path } });
+packages/plugin-organizer/src/finderClient.ts:47:      await invoke<void>("clear_path_bookmark", { input: { path } });
+packages/plugin-organizer/docs/dev_log.md:30:- [ ] G3-E3 open-panel bookmark registration (TODO in `packages/plugin-organizer/src/hooks/useFileDrop.ts`) — register user-initiated `Open…` paths in `BookmarkRegistry` alongside drag-drop paths
+packages/plugin-organizer/docs/dev_log.md:48:| 2026-05-20 PDT | bug-fix (Claude Code, Track A, P0-Echo) | G3-E3 P0 honest-provenance closure: Codex re-reviewed the P1-Delta lexical gate and escalated to P0 (any `/Users/` path was still admitted; contract requires drop/open-panel or authorized bookmark). Added `apps/desktop/src-tauri/src/commands/bookmarks.rs` with `BookmarkRegistry: Mutex<HashSet<PathBuf>>` + `register_path_bookmark` / `clear_path_bookmark` IPC commands; rewired `reveal_in_finder` / `open_path` to consult the registry after the lexical gate (unbookmarked → `E3004 no user-authorized bookmark`). TS side: `finderClient.ts` now exposes `registerBookmark` / `clearBookmark`; `useFileDrop` accepts optional `finderClient` and registers every dropped path. Contract doc §4 restored "user drop/open panel or authorized bookmark" and dropped the deferred-enforcement caveat. `capabilities/AUDIT.md` adds new rows. Tests: 5 cargo bookmarks tests + 2 new finder tests (reveal_rejects_unbookmarked_path / reveal_allows_bookmarked_path) + 4 vitest finderClient tests; all green plus `pnpm --filter desktop build`. Open-panel bookmark registration tracked as TODO. | _pending P0-E commit_ | Codex re-verify of P0-Echo; G3-E3 returns to READY_TO_SHIP after green re-review |
+packages/plugin-organizer/src/hooks/useFileDrop.ts:51:export function useFileDrop({ onDrop, onHover, onEnter, onLeave, enabled = true, finderClient }: UseFileDropOptions) {
+packages/plugin-organizer/src/hooks/useFileDrop.ts:163:            void client.registerBookmark(path).catch((err: unknown) => {
+packages/plugin-organizer/src/hooks/useFileDrop.ts:165:                '[useFileDrop] register_path_bookmark failed for',
+apps/desktop/src-tauri/src/commands/finder.rs:20:use crate::commands::bookmarks::{is_path_bookmarked, BookmarkRegistry};
+apps/desktop/src-tauri/src/commands/finder.rs:123:/// 2. `BookmarkRegistry` lookup asserts the user explicitly registered
+apps/desktop/src-tauri/src/commands/finder.rs:133:    registry: &BookmarkRegistry,
+apps/desktop/src-tauri/src/commands/finder.rs:153:    registry: tauri::State<'_, BookmarkRegistry>,
+apps/desktop/src-tauri/src/commands/finder.rs:188:    registry: tauri::State<'_, BookmarkRegistry>,
+apps/desktop/src-tauri/src/commands/finder.rs:299:    /// been explicitly registered via `register_path_bookmark`, even if
+apps/desktop/src-tauri/src/commands/finder.rs:302:    /// `tauri::State<'_, BookmarkRegistry>` injected by the runtime and
+apps/desktop/src-tauri/src/commands/finder.rs:306:        let registry = BookmarkRegistry::default();
+apps/desktop/src-tauri/src/commands/finder.rs:324:        let registry = BookmarkRegistry::default();
+apps/desktop/src-tauri/src/commands/bookmarks.rs:3://! Implements an in-memory `BookmarkRegistry` that records every path the
+apps/desktop/src-tauri/src/commands/bookmarks.rs:69:pub struct BookmarkRegistry {
+apps/desktop/src-tauri/src/commands/bookmarks.rs:73:impl Default for BookmarkRegistry {
+apps/desktop/src-tauri/src/commands/bookmarks.rs:81:impl BookmarkRegistry {
+apps/desktop/src-tauri/src/commands/bookmarks.rs:113:pub fn is_path_bookmarked(state: &BookmarkRegistry, canonical: &Path) -> bool {
+apps/desktop/src-tauri/src/commands/bookmarks.rs:129:pub async fn register_path_bookmark(
+apps/desktop/src-tauri/src/commands/bookmarks.rs:131:    state: State<'_, BookmarkRegistry>,
+apps/desktop/src-tauri/src/commands/bookmarks.rs:148:/// `register_path_bookmark`, so callers cannot use this command to
+apps/desktop/src-tauri/src/commands/bookmarks.rs:151:pub async fn clear_path_bookmark(
+apps/desktop/src-tauri/src/commands/bookmarks.rs:153:    state: State<'_, BookmarkRegistry>,
+apps/desktop/src-tauri/src/commands/bookmarks.rs:185:        let registry = BookmarkRegistry::default();
+apps/desktop/src-tauri/src/commands/bookmarks.rs:208:    /// `clear_path_bookmark` is idempotent — removing absent is OK.
+apps/desktop/src-tauri/src/commands/bookmarks.rs:211:        let registry = BookmarkRegistry::default();
+apps/desktop/src-tauri/src/commands/bookmarks.rs:238:        let registry = BookmarkRegistry::default();
+apps/desktop/src-tauri/src/lib.rs:58:        .manage(commands::bookmarks::BookmarkRegistry::default())
+apps/desktop/src-tauri/src/lib.rs:81:            commands::bookmarks::register_path_bookmark,
+apps/desktop/src-tauri/src/lib.rs:82:            commands::bookmarks::clear_path_bookmark,
+docs/workflow/roadmap/xai-v1.next-phase-targets.md:32:Resolution path: Echo sub-agent (in flight) is adding a minimal in-memory `BookmarkRegistry` Tauri state populated by `register_path_bookmark` (called from `useFileDrop.onDrop`). `reveal_in_finder` / `open_path` then refuse paths that are not in the registry. The strict contract sentence is restored; the previous "deferred bookmark enforcement" caveat is removed.
+apps/desktop/src-tauri/capabilities/AUDIT.md:34:| `reveal_in_finder` / `open_path` | default.json | `commands::finder::FINDER_ALLOWED_WINDOWS` (main, control, console) + `grid_*` prefix; plus `BookmarkRegistry` lookup (G3-E3 P0 — honest provenance) |
+apps/desktop/src-tauri/capabilities/AUDIT.md:35:| `register_path_bookmark` / `clear_path_bookmark` | default.json | `commands::bookmarks::BOOKMARK_ALLOWED_WINDOWS` (main, control, console) + `grid_*` prefix; mirrors `FINDER_ALLOWED_WINDOWS` so only surfaces that can call `reveal_in_finder` / `open_path` can authorize the underlying paths |
+docs/contracts/tauri-commands-v0.md:74:| `reveal_in_finder` | organizer (G3-E3) | `main`,`control`,`grid_*`,`console` | `{ input: { path } }` | requires the canonical path to be present in the in-memory `BookmarkRegistry` (registered via `register_path_bookmark` after a user drop / open-panel selection); validates path is non-empty / NUL-free / non-`..` / under user-reachable roots (`/Users/`, `/Applications/`, `/Volumes/`, `/tmp/` on macOS; `/tmp/` only on other targets); shells out to `open -R` with the lexically-normalized path on macOS |
+docs/contracts/tauri-commands-v0.md:76:| `register_path_bookmark` | organizer (G3-E3 P0) | `main`,`control`,`grid_*`,`console` | `{ input: { path } }` | records a user-authorized path in the in-memory `BookmarkRegistry`; validates path shape via `validate_user_path` before inserting; idempotent. Called by the Organizer drop/open-panel handler immediately after a user-initiated path enters JS scope. |
+docs/contracts/tauri-commands-v0.md:77:| `clear_path_bookmark` | organizer (G3-E3 P0) | `main`,`control`,`grid_*`,`console` | `{ input: { path } }` | removes a previously-registered path from the `BookmarkRegistry`; idempotent (removing an absent path is not an error); validates path shape first for symmetry. |
+docs/contracts/tauri-commands-v0.md:83:`reveal_in_finder` / `open_path` enforce a runtime allow-list (`FINDER_ALLOWED_WINDOWS` in `commands/finder.rs`), a path-shape allow-list via `validate_user_path`, AND a user-authorized `BookmarkRegistry` lookup:
+docs/contracts/tauri-commands-v0.md:88:- Paths that pass the shape gate but were never registered via `register_path_bookmark` → `E3004` (SyncCapabilityDenied) with message `path "..." has no user-authorized bookmark`. This raises the implementation to match the contract — every authorized path now has explicit drop/open-panel provenance, not just an allow-listed root prefix.
+docs/contracts/tauri-commands-v0.md:91:`BookmarkRegistry` storage is in-memory (`Mutex<HashSet<PathBuf>>`). Each session starts empty — the user must re-authorize every path after a desktop restart. This is intentionally more restrictive than the contract requires: every registered path has recent, explicit user provenance. A persistent macOS security-scoped bookmark store (`create_security_scoped_bookmark`) remains a separate follow-up for the MAS sandbox build.
+docs/contracts/tauri-commands-v0.md:215:  | `reveal_in_finder`, `open_path` | `FINDER_ALLOWED_WINDOWS` + `BookmarkRegistry` | `commands/finder.rs` |
+docs/contracts/tauri-commands-v0.md:216:  | `register_path_bookmark`, `clear_path_bookmark` | `BOOKMARK_ALLOWED_WINDOWS` | `commands/bookmarks.rs` |
+docs/workflow/roadmap/codex-reviews/p0-echo-bookmark-provenance/rerun-output.log:68:The Echo sub-agent was tasked to implement an in-memory `BookmarkRegistry` that:
+docs/workflow/roadmap/codex-reviews/p0-echo-bookmark-provenance/rerun-output.log:70:2. Gets populated when the user drops files (via `useFileDrop` → `finderClient.registerBookmark`).
+docs/workflow/roadmap/codex-reviews/p0-echo-bookmark-provenance/rerun-output.log:76:  Tauri-state `BookmarkRegistry` with `register_path_bookmark` / `clear_path_bookmark` IPC commands + Rust-internal `is_path_bookmarked` helper. 5 cargo tests.
+docs/workflow/roadmap/codex-reviews/p0-echo-bookmark-provenance/rerun-output.log:78:  `validate_user_path` made `pub(crate)`. `reveal_in_finder` and `open_path` take `tauri::State<'_, BookmarkRegistry>` and reject unregistered paths with `E3004`. 2 new cargo tests (reveal_rejects_unbookmarked_path, reveal_allows_bookmarked_path).
+docs/workflow/roadmap/codex-reviews/p0-echo-bookmark-provenance/rerun-output.log:80:- apps/desktop/src-tauri/src/lib.rs (modified) registers BookmarkRegistry + 2 new commands.
+docs/workflow/roadmap/codex-reviews/p0-echo-bookmark-provenance/rerun-output.log:81:- packages/plugin-organizer/src/finderClient.ts (modified) adds `registerBookmark` / `clearBookmark` methods + 4 new vitest cases.
+docs/workflow/roadmap/codex-reviews/p0-echo-bookmark-provenance/rerun-output.log:83:- docs/contracts/tauri-commands-v0.md (modified) §4 restored the strict "user drop/open panel or authorized bookmark" sentence; deleted the previous "deferred bookmark enforcement" caveat; added rows for `register_path_bookmark` / `clear_path_bookmark`.
+docs/workflow/roadmap/codex-reviews/p0-echo-bookmark-provenance/rerun-output.log:96:   - Any test that PROVES `register_path_bookmark` is the only entry point (e.g. no other commands write to the registry)?
+docs/workflow/roadmap/codex-reviews/p0-echo-bookmark-provenance/rerun-output.log:102:- **APPROVED**: registry is the dominant gate; only path is via user-action `register_path_bookmark`; doc strict-text restored; tests prove both admit and reject behavior; in-memory + session-scoped trade-off is acknowledged.
+docs/workflow/roadmap/codex-reviews/p0-echo-bookmark-provenance/rerun-output.log:136:      - `BookmarkRegistry: Mutex<HashSet<PathBuf>>` Tauri-managed state
+docs/workflow/roadmap/codex-reviews/p0-echo-bookmark-provenance/rerun-output.log:138:      - `register_path_bookmark` / `clear_path_bookmark` IPC commands
+docs/workflow/roadmap/codex-reviews/p0-echo-bookmark-provenance/rerun-output.log:151:        BookmarkRegistry>` and call `ensure_path_authorized` before the
+docs/workflow/roadmap/codex-reviews/p0-echo-bookmark-provenance/rerun-output.log:157:      - Register the new module, manage `BookmarkRegistry::default()`, and
+docs/workflow/roadmap/codex-reviews/p0-echo-bookmark-provenance/rerun-output.log:161:      - Exposes `registerBookmark(path)` / `clearBookmark(path)` over the
+docs/workflow/roadmap/codex-reviews/p0-echo-bookmark-provenance/rerun-output.log:170:        `registerBookmark` (fire-and-forget with per-path warn-on-fail).
+docs/workflow/roadmap/codex-reviews/p0-echo-bookmark-provenance/rerun-output.log:208:        `BookmarkRegistry`, and DELETED the previous "deferred bookmark
+docs/workflow/roadmap/codex-reviews/p0-echo-bookmark-provenance/rerun-output.log:264:      - `BookmarkRegistry: Mutex<HashSet<PathBuf>>` Tauri-managed state
+docs/workflow/roadmap/codex-reviews/p0-echo-bookmark-provenance/rerun-output.log:266:      - `register_path_bookmark` / `clear_path_bookmark` IPC commands
+docs/workflow/roadmap/codex-reviews/p0-echo-bookmark-provenance/rerun-output.log:279:        BookmarkRegistry>` and call `ensure_path_authorized` before the
+docs/workflow/roadmap/codex-reviews/p0-echo-bookmark-provenance/rerun-output.log:285:      - Register the new module, manage `BookmarkRegistry::default()`, and
+docs/workflow/roadmap/codex-reviews/p0-echo-bookmark-provenance/rerun-output.log:289:      - Exposes `registerBookmark(path)` / `clearBookmark(path)` over the
+docs/workflow/roadmap/codex-reviews/p0-echo-bookmark-provenance/rerun-output.log:298:        `registerBookmark` (fire-and-forget with per-path warn-on-fail).
+docs/workflow/roadmap/codex-reviews/p0-echo-bookmark-provenance/rerun-output.log:336:        `BookmarkRegistry`, and DELETED the previous "deferred bookmark
+docs/workflow/roadmap/codex-reviews/p0-echo-bookmark-provenance/rerun-output.log:367:+| `reveal_in_finder` / `open_path` | default.json | `commands::finder::FINDER_ALLOWED_WINDOWS` (main, control, console) + `grid_*` prefix; plus `BookmarkRegistry` lookup (G3-E3 P0 — honest provenance) |
+docs/workflow/roadmap/codex-reviews/p0-echo-bookmark-provenance/rerun-output.log:368:+| `register_path_bookmark` / `clear_path_bookmark` | default.json | `commands::bookmarks::BOOKMARK_ALLOWED_WINDOWS` (main, control, console) + `grid_*` prefix; mirrors `FINDER_ALLOWED_WINDOWS` so only surfaces that can call `reveal_in_finder` / `open_path` can authorize the underlying paths |
+docs/workflow/roadmap/codex-reviews/p0-echo-bookmark-provenance/rerun-output.log:380:+//! Implements an in-memory `BookmarkRegistry` that records every path the
+docs/workflow/roadmap/codex-reviews/p0-echo-bookmark-provenance/rerun-output.log:446:+pub struct BookmarkRegistry {
+docs/workflow/roadmap/codex-reviews/p0-echo-bookmark-provenance/rerun-output.log:450:+impl Default for BookmarkRegistry {
+docs/workflow/roadmap/codex-reviews/p0-echo-bookmark-provenance/rerun-output.log:458:+impl BookmarkRegistry {
+docs/workflow/roadmap/codex-reviews/p0-echo-bookmark-provenance/rerun-output.log:490:+pub fn is_path_bookmarked(state: &BookmarkRegistry, canonical: &Path) -> bool {
+docs/workflow/roadmap/codex-reviews/p0-echo-bookmark-provenance/rerun-output.log:506:+pub async fn register_path_bookmark(
+docs/workflow/roadmap/codex-reviews/p0-echo-bookmark-provenance/rerun-output.log:508:+    state: State<'_, BookmarkRegistry>,
+docs/workflow/roadmap/codex-reviews/p0-echo-bookmark-provenance/rerun-output.log:525:+/// `register_path_bookmark`, so callers cannot use this command to
+docs/workflow/roadmap/codex-reviews/p0-echo-bookmark-provenance/rerun-output.log:528:+pub async fn clear_path_bookmark(
+docs/workflow/roadmap/codex-reviews/p0-echo-bookmark-provenance/rerun-output.log:530:+    state: State<'_, BookmarkRegistry>,
+docs/workflow/roadmap/codex-reviews/p0-echo-bookmark-provenance/rerun-output.log:562:+        let registry = BookmarkRegistry::default();
+docs/workflow/roadmap/codex-reviews/p0-echo-bookmark-provenance/rerun-output.log:585:+    /// `clear_path_bookmark` is idempotent — removing absent is OK.
+docs/workflow/roadmap/codex-reviews/p0-echo-bookmark-provenance/rerun-output.log:588:+        let registry = BookmarkRegistry::default();
+docs/workflow/roadmap/codex-reviews/p0-echo-bookmark-provenance/rerun-output.log:615:+        let registry = BookmarkRegistry::default();
+docs/workflow/roadmap/codex-reviews/p0-echo-bookmark-provenance/rerun-output.log:652:+use crate::commands::bookmarks::{is_path_bookmarked, BookmarkRegistry};
+docs/workflow/roadmap/codex-reviews/p0-echo-bookmark-provenance/rerun-output.log:670:+/// 2. `BookmarkRegistry` lookup asserts the user explicitly registered
+docs/workflow/roadmap/codex-reviews/p0-echo-bookmark-provenance/rerun-output.log:680:+    registry: &BookmarkRegistry,
+docs/workflow/roadmap/codex-reviews/p0-echo-bookmark-provenance/rerun-output.log:699:+    registry: tauri::State<'_, BookmarkRegistry>,
+docs/workflow/roadmap/codex-reviews/p0-echo-bookmark-provenance/rerun-output.log:712:+    registry: tauri::State<'_, BookmarkRegistry>,
+docs/workflow/roadmap/codex-reviews/p0-echo-bookmark-provenance/rerun-output.log:726:+    /// been explicitly registered via `register_path_bookmark`, even if
+docs/workflow/roadmap/codex-reviews/p0-echo-bookmark-provenance/rerun-output.log:729:+    /// `tauri::State<'_, BookmarkRegistry>` injected by the runtime and
+docs/workflow/roadmap/codex-reviews/p0-echo-bookmark-provenance/rerun-output.log:733:+        let registry = BookmarkRegistry::default();
+docs/workflow/roadmap/codex-reviews/p0-echo-bookmark-provenance/rerun-output.log:751:+        let registry = BookmarkRegistry::default();
+docs/workflow/roadmap/codex-reviews/p0-echo-bookmark-provenance/rerun-output.log:782:+        .manage(commands::bookmarks::BookmarkRegistry::default())
+docs/workflow/roadmap/codex-reviews/p0-echo-bookmark-provenance/rerun-output.log:790:+            commands::bookmarks::register_path_bookmark,
+docs/workflow/roadmap/codex-reviews/p0-echo-bookmark-provenance/rerun-output.log:791:+            commands::bookmarks::clear_path_bookmark,
+docs/workflow/roadmap/codex-reviews/p0-echo-bookmark-provenance/rerun-output.log:805:+| `reveal_in_finder` | organizer (G3-E3) | `main`,`control`,`grid_*`,`console` | `{ input: { path } }` | requires the canonical path to be present in the in-memory `BookmarkRegistry` (registered via `register_path_bookmark` after a user drop / open-panel selection); validates path is non-empty / NUL-free / non-`..` / under user-reachable roots (`/Users/`, `/Applications/`, `/Volumes/`, `/tmp/` on macOS; `/tmp/` only on other targets); shells out to `open -R` with the lexically-normalized path on macOS |
+docs/workflow/roadmap/codex-reviews/p0-echo-bookmark-provenance/rerun-output.log:807:+| `register_path_bookmark` | organizer (G3-E3 P0) | `main`,`control`,`grid_*`,`console` | `{ input: { path } }` | records a user-authorized path in the in-memory `BookmarkRegistry`; validates path shape via `validate_user_path` before inserting; idempotent. Called by the Organizer drop/open-panel handler immediately after a user-initiated path enters JS scope. |
+docs/workflow/roadmap/codex-reviews/p0-echo-bookmark-provenance/rerun-output.log:808:+| `clear_path_bookmark` | organizer (G3-E3 P0) | `main`,`control`,`grid_*`,`console` | `{ input: { path } }` | removes a previously-registered path from the `BookmarkRegistry`; idempotent (removing an absent path is not an error); validates path shape first for symmetry. |
+docs/workflow/roadmap/codex-reviews/p0-echo-bookmark-provenance/rerun-output.log:815:+`reveal_in_finder` / `open_path` enforce a runtime allow-list (`FINDER_ALLOWED_WINDOWS` in `commands/finder.rs`), a path-shape allow-list via `validate_user_path`, AND a user-authorized `BookmarkRegistry` lookup:
+docs/workflow/roadmap/codex-reviews/p0-echo-bookmark-provenance/rerun-output.log:821:+- Paths that pass the shape gate but were never registered via `register_path_bookmark` → `E3004` (SyncCapabilityDenied) with message `path "..." has no user-authorized bookmark`. This raises the implementation to match the contract — every authorized path now has explicit drop/open-panel provenance, not just an allow-listed root prefix.
+docs/workflow/roadmap/codex-reviews/p0-echo-bookmark-provenance/rerun-output.log:824:+`BookmarkRegistry` storage is in-memory (`Mutex<HashSet<PathBuf>>`). Each session starts empty — the user must re-authorize every path after a desktop restart. This is intentionally more restrictive than the contract requires: every registered path has recent, explicit user provenance. A persistent macOS security-scoped bookmark store (`create_security_scoped_bookmark`) remains a separate follow-up for the MAS sandbox build.
+docs/workflow/roadmap/codex-reviews/p0-echo-bookmark-provenance/rerun-output.log:834:+  | `reveal_in_finder`, `open_path` | `FINDER_ALLOWED_WINDOWS` + `BookmarkRegistry` | `commands/finder.rs` |
+docs/workflow/roadmap/codex-reviews/p0-echo-bookmark-provenance/rerun-output.log:835:+  | `register_path_bookmark`, `clear_path_bookmark` | `BOOKMARK_ALLOWED_WINDOWS` | `commands/bookmarks.rs` |
+docs/workflow/roadmap/codex-reviews/p0-echo-bookmark-provenance/rerun-output.log:850:+| `apps/desktop/src-tauri/capabilities/AUDIT.md` / public API contract not updated for new Finder surface | P2 | **closed** | P0-Echo (rolled into the bookmark-provenance commit — adds `register_path_bookmark` / `clear_path_bookmark` rows and updates the `reveal_in_finder` / `open_path` row to reference `BookmarkRegistry`) |
+docs/workflow/roadmap/codex-reviews/p0-echo-bookmark-provenance/rerun-output.log:867:+  `BookmarkRegistry: Mutex<HashSet<PathBuf>>` Tauri-managed state, plus
+docs/workflow/roadmap/codex-reviews/p0-echo-bookmark-provenance/rerun-output.log:868:+  two new IPC commands `register_path_bookmark` and
+docs/workflow/roadmap/codex-reviews/p0-echo-bookmark-provenance/rerun-output.log:869:+  `clear_path_bookmark` scoped to the same allow-list as `reveal_in_finder`
+docs/workflow/roadmap/codex-reviews/p0-echo-bookmark-provenance/rerun-output.log:872:+  now take a `tauri::State<'_, BookmarkRegistry>` and consult the registry
+docs/workflow/roadmap/codex-reviews/p0-echo-bookmark-provenance/rerun-output.log:876:+  `registerBookmark` / `clearBookmark`; `useFileDrop` calls
+docs/workflow/roadmap/codex-reviews/p0-echo-bookmark-provenance/rerun-output.log:877:+  `registerBookmark` for every dropped path (optional injected client so
+docs/workflow/roadmap/codex-reviews/p0-echo-bookmark-provenance/rerun-output.log:882:+  and notes the `BookmarkRegistry` lookup on the finder row.
+docs/workflow/roadmap/codex-reviews/p0-echo-bookmark-provenance/rerun-output.log:899:+ * `register_path_bookmark` / `clear_path_bookmark` commands and never
+docs/workflow/roadmap/codex-reviews/p0-echo-bookmark-provenance/rerun-output.log:905:+ * in-memory `BookmarkRegistry`. Callers MUST invoke `registerBookmark`
+docs/workflow/roadmap/codex-reviews/p0-echo-bookmark-provenance/rerun-output.log:921:+  registerBookmark(path: string): Promise<void>;
+docs/workflow/roadmap/codex-reviews/p0-echo-bookmark-provenance/rerun-output.log:934:+    async registerBookmark(path: string) {
+docs/workflow/roadmap/codex-reviews/p0-echo-bookmark-provenance/rerun-output.log:935:+      await invoke<void>("register_path_bookmark", { input: { path } });
+docs/workflow/roadmap/codex-reviews/p0-echo-bookmark-provenance/rerun-output.log:938:+      await invoke<void>("clear_path_bookmark", { input: { path } });
+docs/workflow/roadmap/codex-reviews/p0-echo-bookmark-provenance/rerun-output.log:983:-export function useFileDrop({ onDrop, onHover, onEnter, onLeave, enabled = true }: UseFileDropOptions) {
+docs/workflow/roadmap/codex-reviews/p0-echo-bookmark-provenance/rerun-output.log:984:+export function useFileDrop({ onDrop, onHover, onEnter, onLeave, enabled = true, finderClient }: UseFileDropOptions) {
+docs/workflow/roadmap/codex-reviews/p0-echo-bookmark-provenance/rerun-output.log:994:@@ -53,6 +75,10 @@ export function useFileDrop({ onDrop, onHover, onEnter, onLeave, enabled = true
+docs/workflow/roadmap/codex-reviews/p0-echo-bookmark-provenance/rerun-output.log:1005:@@ -125,6 +151,29 @@ export function useFileDrop({ onDrop, onHover, onEnter, onLeave, enabled = true
+docs/workflow/roadmap/codex-reviews/p0-echo-bookmark-provenance/rerun-output.log:1018:+            void client.registerBookmark(path).catch((err: unknown) => {
+docs/workflow/roadmap/codex-reviews/p0-echo-bookmark-provenance/rerun-output.log:1020:+                '[useFileDrop] register_path_bookmark failed for',
+docs/workflow/roadmap/codex-reviews/p0-echo-bookmark-provenance/context.md:10:The Echo sub-agent was tasked to implement an in-memory `BookmarkRegistry` that:
+docs/workflow/roadmap/codex-reviews/p0-echo-bookmark-provenance/context.md:12:2. Gets populated when the user drops files (via `useFileDrop` → `finderClient.registerBookmark`).
+docs/workflow/roadmap/codex-reviews/p0-echo-bookmark-provenance/context.md:18:  Tauri-state `BookmarkRegistry` with `register_path_bookmark` / `clear_path_bookmark` IPC commands + Rust-internal `is_path_bookmarked` helper. 5 cargo tests.
+docs/workflow/roadmap/codex-reviews/p0-echo-bookmark-provenance/context.md:20:  `validate_user_path` made `pub(crate)`. `reveal_in_finder` and `open_path` take `tauri::State<'_, BookmarkRegistry>` and reject unregistered paths with `E3004`. 2 new cargo tests (reveal_rejects_unbookmarked_path, reveal_allows_bookmarked_path).
+docs/workflow/roadmap/codex-reviews/p0-echo-bookmark-provenance/context.md:22:- apps/desktop/src-tauri/src/lib.rs (modified) registers BookmarkRegistry + 2 new commands.
+docs/workflow/roadmap/codex-reviews/p0-echo-bookmark-provenance/context.md:23:- packages/plugin-organizer/src/finderClient.ts (modified) adds `registerBookmark` / `clearBookmark` methods + 4 new vitest cases.
+docs/workflow/roadmap/codex-reviews/p0-echo-bookmark-provenance/context.md:25:- docs/contracts/tauri-commands-v0.md (modified) §4 restored the strict "user drop/open panel or authorized bookmark" sentence; deleted the previous "deferred bookmark enforcement" caveat; added rows for `register_path_bookmark` / `clear_path_bookmark`.
+docs/workflow/roadmap/codex-reviews/p0-echo-bookmark-provenance/context.md:38:   - Any test that PROVES `register_path_bookmark` is the only entry point (e.g. no other commands write to the registry)?
+docs/workflow/roadmap/codex-reviews/p0-echo-bookmark-provenance/context.md:44:- **APPROVED**: registry is the dominant gate; only path is via user-action `register_path_bookmark`; doc strict-text restored; tests prove both admit and reject behavior; in-memory + session-scoped trade-off is acknowledged.
+docs/workflow/roadmap/codex-reviews/p0-echo-bookmark-provenance/rerun-prompt.md:55:The Echo sub-agent was tasked to implement an in-memory `BookmarkRegistry` that:
+docs/workflow/roadmap/codex-reviews/p0-echo-bookmark-provenance/rerun-prompt.md:57:2. Gets populated when the user drops files (via `useFileDrop` → `finderClient.registerBookmark`).
+docs/workflow/roadmap/codex-reviews/p0-echo-bookmark-provenance/rerun-prompt.md:63:  Tauri-state `BookmarkRegistry` with `register_path_bookmark` / `clear_path_bookmark` IPC commands + Rust-internal `is_path_bookmarked` helper. 5 cargo tests.
+docs/workflow/roadmap/codex-reviews/p0-echo-bookmark-provenance/rerun-prompt.md:65:  `validate_user_path` made `pub(crate)`. `reveal_in_finder` and `open_path` take `tauri::State<'_, BookmarkRegistry>` and reject unregistered paths with `E3004`. 2 new cargo tests (reveal_rejects_unbookmarked_path, reveal_allows_bookmarked_path).
+docs/workflow/roadmap/codex-reviews/p0-echo-bookmark-provenance/rerun-prompt.md:67:- apps/desktop/src-tauri/src/lib.rs (modified) registers BookmarkRegistry + 2 new commands.
+docs/workflow/roadmap/codex-reviews/p0-echo-bookmark-provenance/rerun-prompt.md:68:- packages/plugin-organizer/src/finderClient.ts (modified) adds `registerBookmark` / `clearBookmark` methods + 4 new vitest cases.
+docs/workflow/roadmap/codex-reviews/p0-echo-bookmark-provenance/rerun-prompt.md:70:- docs/contracts/tauri-commands-v0.md (modified) §4 restored the strict "user drop/open panel or authorized bookmark" sentence; deleted the previous "deferred bookmark enforcement" caveat; added rows for `register_path_bookmark` / `clear_path_bookmark`.
+docs/workflow/roadmap/codex-reviews/p0-echo-bookmark-provenance/rerun-prompt.md:83:   - Any test that PROVES `register_path_bookmark` is the only entry point (e.g. no other commands write to the registry)?
+docs/workflow/roadmap/codex-reviews/p0-echo-bookmark-provenance/rerun-prompt.md:89:- **APPROVED**: registry is the dominant gate; only path is via user-action `register_path_bookmark`; doc strict-text restored; tests prove both admit and reject behavior; in-memory + session-scoped trade-off is acknowledged.
+docs/workflow/roadmap/codex-reviews/g3-organizer-batch/PROCESS-NOTE.md:24:| `apps/desktop/src-tauri/capabilities/AUDIT.md` / public API contract not updated for new Finder surface | P2 | **closed** | P0-Echo (rolled into the bookmark-provenance commit — adds `register_path_bookmark` / `clear_path_bookmark` rows and updates the `reveal_in_finder` / `open_path` row to reference `BookmarkRegistry`) |
+docs/workflow/roadmap/codex-reviews/g3-organizer-batch/PROCESS-NOTE.md:41:  `BookmarkRegistry: Mutex<HashSet<PathBuf>>` Tauri-managed state, plus
+docs/workflow/roadmap/codex-reviews/g3-organizer-batch/PROCESS-NOTE.md:42:  two new IPC commands `register_path_bookmark` and
+docs/workflow/roadmap/codex-reviews/g3-organizer-batch/PROCESS-NOTE.md:43:  `clear_path_bookmark` scoped to the same allow-list as `reveal_in_finder`
+docs/workflow/roadmap/codex-reviews/g3-organizer-batch/PROCESS-NOTE.md:46:  now take a `tauri::State<'_, BookmarkRegistry>` and consult the registry
+docs/workflow/roadmap/codex-reviews/g3-organizer-batch/PROCESS-NOTE.md:50:  `registerBookmark` / `clearBookmark`; `useFileDrop` calls
+docs/workflow/roadmap/codex-reviews/g3-organizer-batch/PROCESS-NOTE.md:51:  `registerBookmark` for every dropped path (optional injected client so
+docs/workflow/roadmap/codex-reviews/g3-organizer-batch/PROCESS-NOTE.md:56:  and notes the `BookmarkRegistry` lookup on the finder row.
+
+exec
+/bin/zsh -lc "nl -ba packages/plugin-organizer/src/OrganizerLayer.tsx | sed -n '120,220p'" in /Users/lijinlong/Desktop/AI_Desktop/XAI_Desktop
+ succeeded in 0ms:
+   120	      console.log("📂 Files dropped on main window at position:", position, paths);
+   121	
+   122	      // Find the grid at drop position
+   123	      const targetGrid = findGridAtPosition(position.x, position.y);
+   124	
+   125	      // If no grid at position, create a new one
+   126	      if (!targetGrid) {
+   127	        console.log("📂 No grid at position, creating new one");
+   128	        createGrid(position.x, position.y);
+   129	        return;
+   130	      }
+   131	
+   132	      // If dropped on an existing grid area, forward to that grid's file drop handler
+   133	      handleGridFileDrop(targetGrid.id, paths);
+   134	    },
+   135	    [findGridAtPosition, createGrid, handleGridFileDrop]
+   136	  );
+   137	
+   138	  // Handle drag hover state
+   139	  const handleDragHover = useCallback((hovering: boolean) => {
+   140	    setIsDraggingFile(hovering);
+   141	  }, []);
+   142	
+   143	  // Setup file drop listener for main window
+   144	  useFileDrop({
+   145	    onDrop: handleMainWindowFileDrop,
+   146	    onHover: handleDragHover,
+   147	    enabled: true,
+   148	  });
+   149	
+   150	  // Listen for create-grid requests from the control window.
+   151	  useEffect(() => {
+   152	    const unlistenPromise = listen<unknown>(ORGANIZER_GRID_CREATE_REQUEST_EVENT, (event) => {
+   153	      if (!isGridCreateRequestPayload(event.payload)) {
+   154	        console.warn("⚠️ Ignored invalid organizer grid create request", event.payload);
+   155	        return;
+   156	      }
+   157	      createGrid(event.payload.rect.x, event.payload.rect.y, event.payload.gridId);
+   158	    });
+   159	    const unlistenLegacyOrganizerPromise = listen<CreateGridRequestEvent>(
+   160	      LEGACY_ORGANIZER_CREATE_GRID_REQUEST_EVENT,
+   161	      (event) => {
+   162	        const x = event.payload?.rect?.x ?? 64;
+   163	        const y = event.payload?.rect?.y ?? 120;
+   164	        createGrid(x, y, event.payload?.gridId);
+   165	      }
+   166	    );
+   167	    const unlistenLegacyPromise = listen<{ x?: number; y?: number }>(LEGACY_CREATE_GRID_REQUEST_EVENT, (event) => {
+   168	      const x = event.payload?.x ?? 64;
+   169	      const y = event.payload?.y ?? 120;
+   170	      createGrid(x, y);
+   171	    });
+   172	    const unlistenClearPromise = listen(CLEAR_ALL_REQUEST_EVENT, () => {
+   173	      console.log("🧹 Clearing all grids per control window request");
+   174	      clearAll();
+   175	    });
+   176	    return () => {
+   177	      unlistenPromise.then((unlisten) => unlisten());
+   178	      unlistenLegacyOrganizerPromise.then((unlisten) => unlisten());
+   179	      unlistenLegacyPromise.then((unlisten) => unlisten());
+   180	      unlistenClearPromise.then((unlisten) => unlisten());
+   181	    };
+   182	  }, [createGrid, clearAll]);
+   183	
+   184	  // Grid info display (for debugging/status)
+   185	  const gridCount = grids.length;
+   186	
+   187	  return (
+   188	    <div
+   189	      style={{
+   190	        position: "absolute",
+   191	        inset: 0,
+   192	        pointerEvents: "none",
+   193	        outline: isDraggingFile ? "3px dashed rgba(56, 189, 248, 0.6)" : "none",
+   194	        outlineOffset: "-3px",
+   195	        transition: "outline 150ms ease",
+   196	      }}
+   197	      data-organizer-layer="true"
+   198	    >
+   199	      {/* Drop hint when dragging files and no grids exist */}
+   200	      {isDraggingFile && gridCount === 0 && (
+   201	        <div
+   202	          style={{
+   203	            position: "absolute",
+   204	            top: "50%",
+   205	            left: "50%",
+   206	            transform: "translate(-50%, -50%)",
+   207	            padding: "24px 32px",
+   208	            borderRadius: 16,
+   209	            background: "rgba(15, 23, 42, 0.8)",
+   210	            border: "2px dashed rgba(56, 189, 248, 0.6)",
+   211	            color: "#e7ecf3",
+   212	            fontSize: 16,
+   213	            fontWeight: 500,
+   214	            pointerEvents: "none",
+   215	          }}
+   216	        >
+   217	          Drop files here to create a new Grid
+   218	        </div>
+   219	      )}
+   220	
+
+exec
+/bin/zsh -lc "nl -ba packages/plugin-organizer/src/finderClient.test.ts | sed -n '1,220p'" in /Users/lijinlong/Desktop/AI_Desktop/XAI_Desktop
+ succeeded in 0ms:
+     1	import { describe, expect, it, vi } from "vitest";
+     2	
+     3	import { createFinderClient } from "./finderClient";
+     4	
+     5	describe("createFinderClient", () => {
+     6	  it("revealInFinder calls invoke('reveal_in_finder', ...)", async () => {
+     7	    const invoke = vi.fn().mockResolvedValue(undefined);
+     8	    const client = createFinderClient(invoke);
+     9	    await client.revealInFinder("/Users/me/file.txt");
+    10	    expect(invoke).toHaveBeenCalledWith("reveal_in_finder", {
+    11	      input: { path: "/Users/me/file.txt" },
+    12	    });
+    13	  });
+    14	
+    15	  it("openPath calls invoke('open_path', ...)", async () => {
+    16	    const invoke = vi.fn().mockResolvedValue(undefined);
+    17	    const client = createFinderClient(invoke);
+    18	    await client.openPath("/Users/me/file.txt");
+    19	    expect(invoke).toHaveBeenCalledWith("open_path", {
+    20	      input: { path: "/Users/me/file.txt" },
+    21	    });
+    22	  });
+    23	
+    24	  it("registerBookmark calls invoke('register_path_bookmark', { input: { path } })", async () => {
+    25	    const invoke = vi.fn().mockResolvedValue(undefined);
+    26	    const client = createFinderClient(invoke);
+    27	    await client.registerBookmark("/Users/me/Documents/photo.jpg");
+    28	    expect(invoke).toHaveBeenCalledTimes(1);
+    29	    expect(invoke).toHaveBeenCalledWith("register_path_bookmark", {
+    30	      input: { path: "/Users/me/Documents/photo.jpg" },
+    31	    });
+    32	  });
+    33	
+    34	  it("clearBookmark calls invoke('clear_path_bookmark', { input: { path } })", async () => {
+    35	    const invoke = vi.fn().mockResolvedValue(undefined);
+    36	    const client = createFinderClient(invoke);
+    37	    await client.clearBookmark("/Users/me/Documents/photo.jpg");
+    38	    expect(invoke).toHaveBeenCalledTimes(1);
+    39	    expect(invoke).toHaveBeenCalledWith("clear_path_bookmark", {
+    40	      input: { path: "/Users/me/Documents/photo.jpg" },
+    41	    });
+    42	  });
+    43	});
+
+exec
+/bin/zsh -lc "nl -ba packages/plugin-organizer/docs/dev_log.md | sed -n '1,120p'" in /Users/lijinlong/Desktop/AI_Desktop/XAI_Desktop
+ succeeded in 0ms:
+     1	# Organizer — Dev Log
+     2	
+     3	## Status Panel
+     4	
+     5	| Field | Value |
+     6	|---|---|
+     7	| Workflow | FEATURE_DEV |
+     8	| Target | plugin-organizer |
+     9	| Title | G3 Organizer-loop utilities + Finder commands |
+    10	| Roadmap | xai-v1 · G3 (organizer-loop) |
+    11	| Status | ACTIVE — multiple G3 features landed via Track A unattended batch |
+    12	| Current Phase | feature-build (batched) → feature-verify done; carry-forward P1s open |
+    13	| Suggested Next | address remaining G3 P1s (incl. P1-Delta path-authorization closure) |
+    14	| Automation Mode | D-Codex (Track A unattended) |
+    15	| Verify Cross-vendor | yes (Codex feature-review verdict: REVISE — see `docs/workflow/roadmap/codex-reviews/g3-organizer-batch/output.md`) |
+    16	| Executor | Claude Code / Track A |
+    17	| Updated | 2026-05-20 PDT |
+    18	| Blockers | G3-batch deviation accepted post-hoc (see Process Note in `docs/workflow/roadmap/codex-reviews/g3-organizer-batch/PROCESS-NOTE.md`); future sub-feature batches must be split per the one-phase-per-run rule |
+    19	
+    20	## TODO
+    21	- [ ] 迁移 OrganizerLayer 从 apps/desktop/src/plugins/ 到 plugin 内部 (Wave 2)
+    22	- [ ] 迁移 useMultiWindowGrids 从 apps/desktop/src/hooks/ 到 plugin 内部 (Wave 2)
+    23	- [ ] 迁移 useGridWindow 从 apps/desktop/src/hooks/ 到 plugin 内部 (Wave 2)
+    24	- [ ] 替换 Tauri 事件调用为 @repo/core/events 类型安全版本 (Wave 2)
+    25	- [ ] 注册到 PluginRegistry (Wave 2)
+    26	- [ ] 添加 Vitest 单元测试 (Wave 3)
+    27	- [ ] Zustand store 替代 React Context + localStorage (Wave 3)
+    28	- [ ] G3-E1 folder-inference regression fix (Codex P1 carry-forward — `inferKindFromPath` misclassifies real folder drops without trailing slash)
+    29	- [x] G3-E3 Finder capability/audit entry follow-up (`apps/desktop/src-tauri/capabilities/AUDIT.md` updated under P0-Echo)
+    30	- [ ] G3-E3 open-panel bookmark registration (TODO in `packages/plugin-organizer/src/hooks/useFileDrop.ts`) — register user-initiated `Open…` paths in `BookmarkRegistry` alongside drag-drop paths
+    31	- [ ] G3 coverage gaps: `data:` / custom-scheme URL rejection tests; multi-grid same-rule stability test; command-blocking / shell-failure behavior test
+    32	
+    33	## Known Issues
+    34	- SmartContainer 477 行过于膨胀，需要拆分
+    35	- 缺少 Vitest 覆盖 Control→Main create-grid 事件路由
+    36	- G3-batch (commit `533391e`) bundled 5 features into one `feature-build` commit; deviation accepted post-hoc (see Process Note)
+    37	- G3-E3 `reveal_in_finder` / `open_path` originally accepted any absolute path; closed in P1-Delta (lexical root gate). Codex re-review escalated to P0 because the lexical gate is not honest provenance; P0-Echo (bookmark registry) closes it for real — see Work Log row.
+    38	
+    39	## Work Log
+    40	
+    41	| Timestamp | Executor | Action | Commits | Next |
+    42	|---|---|---|---|---|
+    43	| 2026-05-13 | feature-plan (initial) | 初始化四件套文档，基于 REFACTORING_PLAN v1.0 | — | — |
+    44	| 2026-05-19 | bug-fix | Tauri v2 默认不暴露 `window.__TAURI__`；修复 `isTauri()` 检测；ControlWindow `+ New Grid` 路由到 `main` + 同 `gridId` 兜底 `create_grid_window`. | — | — |
+    45	| 2026-05-20 PDT | feature-build (Claude Code, Track A — G3 batch, unattended) | Landed G3-E1 (folder/URL drop classifier + bulk adapter), G3-S3 (auto-classify rules), G3-E2 (organizer-loop deterministic seams), G3-E3 (Finder commands + `reveal_in_finder` / `open_path`), G3-E4 (item-health evaluator). **Deviation from one-phase-per-run rule** — 5 features in one commit. See Process Note. | `533391e` | feature-review (Codex) |
+    46	| 2026-05-20 PDT | feature-review (Codex cross-vendor) | Verdict: REVISE. Flagged P1s: folder-inference shape, path-authorization gap, missing Workflow V2 hygiene; P2s on capability audit and coverage. Output captured in `docs/workflow/roadmap/codex-reviews/g3-organizer-batch/output.md`. | `533391e` | feature-build (carry-forward fixes — split by issue) |
+    47	| 2026-05-20 PDT | bug-fix (Claude Code, Track A, P1-Delta) | G3-E3 path-authorization closure: replaced `validate_path` with `validate_user_path` in `apps/desktop/src-tauri/src/commands/finder.rs`; rejects `..`, relative paths, and paths outside `/Users/`, `/Applications/`, `/Volumes/`, `/tmp/`; added 4 cargo tests (dotdot / etc-root / user-home / Applications). Doc updated in `docs/contracts/tauri-commands-v0.md` §4. Carry-forward P1 closed. | _pending P1-D commit_ | continue G3 carry-forward (folder-inference, capability/audit entry, coverage gaps) |
+    48	| 2026-05-20 PDT | bug-fix (Claude Code, Track A, P0-Echo) | G3-E3 P0 honest-provenance closure: Codex re-reviewed the P1-Delta lexical gate and escalated to P0 (any `/Users/` path was still admitted; contract requires drop/open-panel or authorized bookmark). Added `apps/desktop/src-tauri/src/commands/bookmarks.rs` with `BookmarkRegistry: Mutex<HashSet<PathBuf>>` + `register_path_bookmark` / `clear_path_bookmark` IPC commands; rewired `reveal_in_finder` / `open_path` to consult the registry after the lexical gate (unbookmarked → `E3004 no user-authorized bookmark`). TS side: `finderClient.ts` now exposes `registerBookmark` / `clearBookmark`; `useFileDrop` accepts optional `finderClient` and registers every dropped path. Contract doc §4 restored "user drop/open panel or authorized bookmark" and dropped the deferred-enforcement caveat. `capabilities/AUDIT.md` adds new rows. Tests: 5 cargo bookmarks tests + 2 new finder tests (reveal_rejects_unbookmarked_path / reveal_allows_bookmarked_path) + 4 vitest finderClient tests; all green plus `pnpm --filter desktop build`. Open-panel bookmark registration tracked as TODO. | _pending P0-E commit_ | Codex re-verify of P0-Echo; G3-E3 returns to READY_TO_SHIP after green re-review |
+
+exec
+/bin/zsh -lc 'cargo test finder:: bookmarks:: --manifest-path apps/desktop/src-tauri/Cargo.toml' in /Users/lijinlong/Desktop/AI_Desktop/XAI_Desktop
+ exited 1 in 0ms:
+error: unexpected argument 'bookmarks::' found
+
+Usage: cargo test [OPTIONS] [TESTNAME] [-- [ARGS]...]
+
+For more information, try '--help'.
+
+exec
+/bin/zsh -lc 'cat packages/plugin-organizer/package.json' in /Users/lijinlong/Desktop/AI_Desktop/XAI_Desktop
+ succeeded in 0ms:
+{
+  "name": "@repo/plugin-organizer",
+  "version": "0.0.0",
+  "private": true,
+  "description": "Smart file containers plugin for AI Smart Desktop (independent floating organizers).",
+  "exports": {
+    ".": {
+      "types": "./src/index.ts",
+      "import": "./src/index.ts"
+    }
+  },
+  "scripts": {
+    "check-types": "tsc --noEmit",
+    "test": "vitest run"
+  },
+  "dependencies": {
+    "@dnd-kit/core": "^6.1.0",
+    "@dnd-kit/utilities": "^3.2.1",
+    "@repo/core": "workspace:*",
+    "@repo/core-data": "workspace:*",
+    "@tauri-apps/api": "^2",
+    "react": "^19.2.0",
+    "react-dom": "^19.2.0",
+    "react-draggable": "^4.4.6",
+    "react-resizable": "^3.0.5"
+  },
+  "devDependencies": {
+    "@repo/typescript-config": "workspace:*",
+    "@testing-library/react": "^16.3.2",
+    "@types/node": "^22.15.3",
+    "@types/react": "19.2.2",
+    "@types/react-dom": "19.2.2",
+    "jsdom": "^29.1.1",
+    "typescript": "5.9.2",
+    "vitest": "^3.2.1"
+  }
+}
+
+exec
+/bin/zsh -lc 'cargo test bookmarks:: --manifest-path apps/desktop/src-tauri/Cargo.toml' in /Users/lijinlong/Desktop/AI_Desktop/XAI_Desktop
+exec
+/bin/zsh -lc 'cargo test finder:: --manifest-path apps/desktop/src-tauri/Cargo.toml' in /Users/lijinlong/Desktop/AI_Desktop/XAI_Desktop
+exec
+/bin/zsh -lc "rg -n \"createFinderClient\\(|revealInFinder\\(|openPath\\(|registerBookmark\\(\" packages/plugin-organizer/src -S" in /Users/lijinlong/Desktop/AI_Desktop/XAI_Desktop
+ succeeded in 0ms:
+packages/plugin-organizer/src/finderClient.test.ts:8:    const client = createFinderClient(invoke);
+packages/plugin-organizer/src/finderClient.test.ts:9:    await client.revealInFinder("/Users/me/file.txt");
+packages/plugin-organizer/src/finderClient.test.ts:17:    const client = createFinderClient(invoke);
+packages/plugin-organizer/src/finderClient.test.ts:18:    await client.openPath("/Users/me/file.txt");
+packages/plugin-organizer/src/finderClient.test.ts:26:    const client = createFinderClient(invoke);
+packages/plugin-organizer/src/finderClient.test.ts:27:    await client.registerBookmark("/Users/me/Documents/photo.jpg");
+packages/plugin-organizer/src/finderClient.test.ts:36:    const client = createFinderClient(invoke);
+packages/plugin-organizer/src/finderClient.ts:20:  revealInFinder(path: string): Promise<void>;
+packages/plugin-organizer/src/finderClient.ts:21:  openPath(path: string): Promise<void>;
+packages/plugin-organizer/src/finderClient.ts:27:  registerBookmark(path: string): Promise<void>;
+packages/plugin-organizer/src/finderClient.ts:35:export function createFinderClient(invoke: InvokeFn): FinderClient {
+packages/plugin-organizer/src/finderClient.ts:37:    async revealInFinder(path: string) {
+packages/plugin-organizer/src/finderClient.ts:40:    async openPath(path: string) {
+packages/plugin-organizer/src/finderClient.ts:43:    async registerBookmark(path: string) {
+packages/plugin-organizer/src/hooks/useFileDrop.ts:26:   * `createFinderClient(invoke)`. The optionality exists so existing
+packages/plugin-organizer/src/hooks/useFileDrop.ts:163:            void client.registerBookmark(path).catch((err: unknown) => {
+
+ succeeded in 5544ms:
+    Blocking waiting for file lock on build directory
+warning: multiple variants are never constructed
+  --> src/error.rs:44:5
+   |
+15 | pub enum AppError {
+   |          -------- variants in this enum
+...
+44 |     KeychainUnsupportedPlatform,
+   |     ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+...
+48 |     SyncNotInitialized,
+   |     ^^^^^^^^^^^^^^^^^^
+...
+51 |     SyncAuthRequired,
+   |     ^^^^^^^^^^^^^^^^
+...
+54 |     SyncTransport(String),
+   |     ^^^^^^^^^^^^^
+...
+57 |     SyncConflict,
+   |     ^^^^^^^^^^^^
+...
+69 |     SyncCrypto(String),
+   |     ^^^^^^^^^^
+...
+74 |     DatabaseNotInitialized,
+   |     ^^^^^^^^^^^^^^^^^^^^^^
+...
+78 |     DatabaseInvalidInput(String),
+   |     ^^^^^^^^^^^^^^^^^^^^
+...
+82 |     DatabaseBackend(String),
+   |     ^^^^^^^^^^^^^^^
+   |
+   = note: `AppError` has a derived impl for the trait `Debug`, but this is intentionally ignored during dead code analysis
+   = note: `#[warn(dead_code)]` (part of `#[warn(unused)]`) on by default
+
+warning: constant `BUNDLE_ID` is never used
+  --> src/platform/macos/keychain.rs:24:11
+   |
+24 | pub const BUNDLE_ID: &str = "com.jinlong.desktop";
+   |           ^^^^^^^^^
+
+warning: struct `KeychainItemAttrs` is never constructed
+  --> src/platform/macos/keychain.rs:32:12
+   |
+32 | pub struct KeychainItemAttrs {
+   |            ^^^^^^^^^^^^^^^^^
+
+warning: enum `KeychainAccessibility` is never used
+  --> src/platform/macos/keychain.rs:43:10
+   |
+43 | pub enum KeychainAccessibility {
+   |          ^^^^^^^^^^^^^^^^^^^^^
+
+warning: function `build_item_attrs` is never used
+  --> src/platform/macos/keychain.rs:52:8
+   |
+52 | pub fn build_item_attrs() -> KeychainItemAttrs {
+   |        ^^^^^^^^^^^^^^^^
+
+warning: variants `DatabaseNotInitialized`, `DatabaseInvalidInput`, and `DatabaseBackend` are never constructed
+  --> src/error.rs:74:5
+   |
+15 | pub enum AppError {
+   |          -------- variants in this enum
+...
+74 |     DatabaseNotInitialized,
+   |     ^^^^^^^^^^^^^^^^^^^^^^
+...
+78 |     DatabaseInvalidInput(String),
+   |     ^^^^^^^^^^^^^^^^^^^^
+...
+82 |     DatabaseBackend(String),
+   |     ^^^^^^^^^^^^^^^
+   |
+   = note: `AppError` has a derived impl for the trait `Debug`, but this is intentionally ignored during dead code analysis
+   = note: `#[warn(dead_code)]` (part of `#[warn(unused)]`) on by default
+
+warning: `desktop` (lib) generated 5 warnings
+warning: `desktop` (lib test) generated 1 warning
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 5.22s
+     Running unittests src/lib.rs (apps/desktop/src-tauri/target/debug/deps/desktop_lib-ff5361a3bfb57d15)
+
+running 5 tests
+test commands::bookmarks::tests::allowlist_rejects_widget_pet_aicube ... ok
+test commands::bookmarks::tests::allowlist_admits_documented_labels_and_grids ... ok
+test commands::bookmarks::tests::clear_is_idempotent ... ok
+test commands::bookmarks::tests::invalid_path_is_rejected_before_registry ... ok
+test commands::bookmarks::tests::register_then_lookup_then_clear ... ok
+
+test result: ok. 5 passed; 0 failed; 0 ignored; 0 measured; 28 filtered out; finished in 0.00s
+
+     Running unittests src/main.rs (apps/desktop/src-tauri/target/debug/deps/desktop-6e10a2304337d3d4)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+
+ succeeded in 5548ms:
+   Compiling desktop v0.1.0 (/Users/lijinlong/Desktop/AI_Desktop/XAI_Desktop/apps/desktop/src-tauri)
+warning: variants `DatabaseNotInitialized`, `DatabaseInvalidInput`, and `DatabaseBackend` are never constructed
+  --> src/error.rs:74:5
+   |
+15 | pub enum AppError {
+   |          -------- variants in this enum
+...
+74 |     DatabaseNotInitialized,
+   |     ^^^^^^^^^^^^^^^^^^^^^^
+...
+78 |     DatabaseInvalidInput(String),
+   |     ^^^^^^^^^^^^^^^^^^^^
+...
+82 |     DatabaseBackend(String),
+   |     ^^^^^^^^^^^^^^^
+   |
+   = note: `AppError` has a derived impl for the trait `Debug`, but this is intentionally ignored during dead code analysis
+   = note: `#[warn(dead_code)]` (part of `#[warn(unused)]`) on by default
+
+warning: `desktop` (lib test) generated 1 warning
+warning: multiple variants are never constructed
+  --> src/error.rs:44:5
+   |
+15 | pub enum AppError {
+   |          -------- variants in this enum
+...
+44 |     KeychainUnsupportedPlatform,
+   |     ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+...
+48 |     SyncNotInitialized,
+   |     ^^^^^^^^^^^^^^^^^^
+...
+51 |     SyncAuthRequired,
+   |     ^^^^^^^^^^^^^^^^
+...
+54 |     SyncTransport(String),
+   |     ^^^^^^^^^^^^^
+...
+57 |     SyncConflict,
+   |     ^^^^^^^^^^^^
+...
+69 |     SyncCrypto(String),
+   |     ^^^^^^^^^^
+...
+74 |     DatabaseNotInitialized,
+   |     ^^^^^^^^^^^^^^^^^^^^^^
+...
+78 |     DatabaseInvalidInput(String),
+   |     ^^^^^^^^^^^^^^^^^^^^
+...
+82 |     DatabaseBackend(String),
+   |     ^^^^^^^^^^^^^^^
+   |
+   = note: `AppError` has a derived impl for the trait `Debug`, but this is intentionally ignored during dead code analysis
+   = note: `#[warn(dead_code)]` (part of `#[warn(unused)]`) on by default
+
+warning: constant `BUNDLE_ID` is never used
+  --> src/platform/macos/keychain.rs:24:11
+   |
+24 | pub const BUNDLE_ID: &str = "com.jinlong.desktop";
+   |           ^^^^^^^^^
+
+warning: struct `KeychainItemAttrs` is never constructed
+  --> src/platform/macos/keychain.rs:32:12
+   |
+32 | pub struct KeychainItemAttrs {
+   |            ^^^^^^^^^^^^^^^^^
+
+warning: enum `KeychainAccessibility` is never used
+  --> src/platform/macos/keychain.rs:43:10
+   |
+43 | pub enum KeychainAccessibility {
+   |          ^^^^^^^^^^^^^^^^^^^^^
+
+warning: function `build_item_attrs` is never used
+  --> src/platform/macos/keychain.rs:52:8
+   |
+52 | pub fn build_item_attrs() -> KeychainItemAttrs {
+   |        ^^^^^^^^^^^^^^^^
+
+warning: `desktop` (lib) generated 5 warnings
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 5.09s
+     Running unittests src/lib.rs (apps/desktop/src-tauri/target/debug/deps/desktop_lib-ff5361a3bfb57d15)
+
+running 9 tests
+test commands::finder::tests::allowlist_admits_documented_labels_and_grids ... ok
+test commands::finder::tests::allowlist_rejects_widgets_pet_aicube ... ok
+test commands::finder::tests::validate_user_path_rejects_dotdot ... ok
+test commands::finder::tests::reveal_allows_bookmarked_path ... ok
+test commands::finder::tests::validate_user_path_rejects_empty_and_nul ... ok
+test commands::finder::tests::validate_user_path_admits_user_home ... ok
+test commands::finder::tests::validate_user_path_admits_applications ... ok
+test commands::finder::tests::reveal_rejects_unbookmarked_path ... ok
+test commands::finder::tests::validate_user_path_rejects_etc_root ... ok
+
+test result: ok. 9 passed; 0 failed; 0 ignored; 0 measured; 24 filtered out; finished in 0.00s
+
+     Running unittests src/main.rs (apps/desktop/src-tauri/target/debug/deps/desktop-6e10a2304337d3d4)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+
+exec
+/bin/zsh -lc "nl -ba docs/contracts/tauri-commands-v0.md | sed -n '70,95p'" in /Users/lijinlong/Desktop/AI_Desktop/XAI_Desktop
+ succeeded in 0ms:
+    70	## 4. File / Open Commands
+    71	
+    72	| Command | Owner | Allowed windows | Input | 说明 |
+    73	|---|---|---|---|---|
+    74	| `reveal_in_finder` | organizer (G3-E3) | `main`,`control`,`grid_*`,`console` | `{ input: { path } }` | requires the canonical path to be present in the in-memory `BookmarkRegistry` (registered via `register_path_bookmark` after a user drop / open-panel selection); validates path is non-empty / NUL-free / non-`..` / under user-reachable roots (`/Users/`, `/Applications/`, `/Volumes/`, `/tmp/` on macOS; `/tmp/` only on other targets); shells out to `open -R` with the lexically-normalized path on macOS |
+    75	| `open_path` | organizer (G3-E3) | `main`,`control`,`grid_*`,`console` | `{ input: { path } }` | same path-authorization and bookmark-registry rules as `reveal_in_finder`; user-initiated only; shells out to `open` with the lexically-normalized path on macOS |
+    76	| `register_path_bookmark` | organizer (G3-E3 P0) | `main`,`control`,`grid_*`,`console` | `{ input: { path } }` | records a user-authorized path in the in-memory `BookmarkRegistry`; validates path shape via `validate_user_path` before inserting; idempotent. Called by the Organizer drop/open-panel handler immediately after a user-initiated path enters JS scope. |
+    77	| `clear_path_bookmark` | organizer (G3-E3 P0) | `main`,`control`,`grid_*`,`console` | `{ input: { path } }` | removes a previously-registered path from the `BookmarkRegistry`; idempotent (removing an absent path is not an error); validates path shape first for symmetry. |
+    78	| `resolve_alias` | organizer | `control`,`grid_*` | TBD | G1/G2 根据 sandbox 决定 |
+    79	| `create_security_scoped_bookmark` | organizer/account | `control`,`grid_*` | TBD | MAS path if required |
+    80	
+    81	文件 command 不允许静默扫描用户目录。所有 path access 必须来自用户 drop/open panel 或已授权 bookmark。
+    82	
+    83	`reveal_in_finder` / `open_path` enforce a runtime allow-list (`FINDER_ALLOWED_WINDOWS` in `commands/finder.rs`), a path-shape allow-list via `validate_user_path`, AND a user-authorized `BookmarkRegistry` lookup:
+    84	
+    85	- Empty / whitespace-only / NUL-containing inputs → `E3005` (SyncInvalidInput).
+    86	- Relative paths or any `..` parent-dir segment (even when the raw string would normalize back into an allowed root, e.g. `/Users/me/../etc/passwd`) → `E3005`.
+    87	- Paths whose lexically-normalized form is NOT under one of the user-reachable roots (`/Users/`, `/Applications/`, `/Volumes/`, `/tmp/` on macOS; `/tmp/` only on other targets) → `E3004` (SyncCapabilityDenied). `/private/var/...`, `/etc/...`, `/System/...`, `/bin/...` are intentionally rejected.
+    88	- Paths that pass the shape gate but were never registered via `register_path_bookmark` → `E3004` (SyncCapabilityDenied) with message `path "..." has no user-authorized bookmark`. This raises the implementation to match the contract — every authorized path now has explicit drop/open-panel provenance, not just an allow-listed root prefix.
+    89	- On success the canonical (lexically-normalized) `PathBuf` is passed to `open` / `open -R`, not the raw input.
+    90	
+    91	`BookmarkRegistry` storage is in-memory (`Mutex<HashSet<PathBuf>>`). Each session starts empty — the user must re-authorize every path after a desktop restart. This is intentionally more restrictive than the contract requires: every registered path has recent, explicit user provenance. A persistent macOS security-scoped bookmark store (`create_security_scoped_bookmark`) remains a separate follow-up for the MAS sandbox build.
+    92	
+    93	Lexical normalization is used rather than `std::fs::canonicalize()` because the latter requires the path to exist on disk; full filesystem canonicalization is a follow-up once `create_security_scoped_bookmark` is wired.
+    94	
+    95	## 5. Clipboard Commands
+
+exec
+/bin/zsh -lc 'pnpm --filter @repo/plugin-organizer test -- finderClient' in /Users/lijinlong/Desktop/AI_Desktop/XAI_Desktop
+ succeeded in 1052ms:
+
+> @repo/plugin-organizer@0.0.0 test /Users/lijinlong/Desktop/AI_Desktop/XAI_Desktop/packages/plugin-organizer
+> vitest run finderClient
+
+
+ RUN  v3.2.4 /Users/lijinlong/Desktop/AI_Desktop/XAI_Desktop/packages/plugin-organizer
+
+ ✓ src/finderClient.test.ts (4 tests) 4ms
+
+ Test Files  1 passed (1)
+      Tests  4 passed (4)
+   Start at  12:15:21
+   Duration  319ms (transform 76ms, setup 0ms, collect 73ms, tests 4ms, environment 0ms, prepare 44ms)
+
+
+exec
+/bin/zsh -lc "nl -ba apps/desktop/src-tauri/src/commands/finder.rs | sed -n '290,340p'" in /Users/lijinlong/Desktop/AI_Desktop/XAI_Desktop
+ succeeded in 0ms:
+   290	        let out = validate_user_path("/Users/me/file.txt").expect("user-home path should be admitted");
+   291	        assert_eq!(out, PathBuf::from("/Users/me/file.txt"));
+   292	
+   293	        // nested subpath
+   294	        let nested = validate_user_path("/Users/me/Documents/note.md").unwrap();
+   295	        assert_eq!(nested, PathBuf::from("/Users/me/Documents/note.md"));
+   296	    }
+   297	
+   298	    /// G3-E3 P0: `reveal_in_finder` must reject any path that has not
+   299	    /// been explicitly registered via `register_path_bookmark`, even if
+   300	    /// the path passes the lexical shape gate. Exercised via the shared
+   301	    /// `ensure_path_authorized` helper because the command takes a
+   302	    /// `tauri::State<'_, BookmarkRegistry>` injected by the runtime and
+   303	    /// we cannot construct one in a unit test.
+   304	    #[test]
+   305	    fn reveal_rejects_unbookmarked_path() {
+   306	        let registry = BookmarkRegistry::default();
+   307	        // path-shape is valid (under `/Users/`) so the only thing that
+   308	        // can fail the gate is the bookmark lookup.
+   309	        let err = ensure_path_authorized("/Users/me/Documents/secret.txt", &registry)
+   310	            .expect_err("unbookmarked path must be rejected");
+   311	        let msg = err.to_string();
+   312	        assert!(
+   313	            msg.starts_with("E3004:") && msg.contains("no user-authorized bookmark"),
+   314	            "expected SyncCapabilityDenied for unbookmarked path, got: {msg}"
+   315	        );
+   316	    }
+   317	
+   318	    /// G3-E3 P0: `reveal_in_finder` must admit a path after it has been
+   319	    /// registered. Exercised through the Rust helper directly (no Tauri
+   320	    /// command spawn needed). The shell-out arm is NOT exercised — the
+   321	    /// test only needs to reach the bookmark gate.
+   322	    #[test]
+   323	    fn reveal_allows_bookmarked_path() {
+   324	        let registry = BookmarkRegistry::default();
+   325	        let canonical = validate_user_path("/Users/me/Documents/note.md").unwrap();
+   326	        registry
+   327	            .insert_canonical(canonical.clone())
+   328	            .expect("insert");
+   329	
+   330	        let result = ensure_path_authorized("/Users/me/Documents/note.md", &registry)
+   331	            .expect("bookmarked path must be admitted");
+   332	        assert_eq!(result, canonical);
+   333	    }
+   334	
+   335	    /// Paths under `/Applications/...` should be admitted on macOS. On
+   336	    /// other targets the function only admits `/tmp/`, so we gate the
+   337	    /// assertion accordingly.
+   338	    #[test]
+   339	    fn validate_user_path_admits_applications() {
+   340	        #[cfg(target_os = "macos")]
+
+exec
+/bin/zsh -lc "nl -ba apps/desktop/src-tauri/capabilities/AUDIT.md | sed -n '30,38p'" in /Users/lijinlong/Desktop/AI_Desktop/XAI_Desktop
+ succeeded in 0ms:
+    30	| `sync_set_menubar_status` | default.json | `commands::menubar::MENUBAR_ALLOWED_WINDOWS` (control, main) |
+    31	| `crypto_*` | plugin-account-crypto.json | `commands::crypto::CRYPTO_ALLOWED_WINDOWS` (account, control) |
+    32	| `secret_set` / `secret_get` / `secret_del` | plugin-account-keychain.json | `commands::keychain::KEYCHAIN_ALLOWED_WINDOWS` (account, control) |
+    33	| `db_init` / `db_put` / `db_get` / `db_list` / `db_delete` / `db_put_batch` | plugin-data-database.json (G2.5) | `commands::database::DATABASE_ALLOWED_WINDOWS` (main, control, account, console) + `grid_*` prefix |
+    34	| `reveal_in_finder` / `open_path` | default.json | `commands::finder::FINDER_ALLOWED_WINDOWS` (main, control, console) + `grid_*` prefix; plus `BookmarkRegistry` lookup (G3-E3 P0 — honest provenance) |
+    35	| `register_path_bookmark` / `clear_path_bookmark` | default.json | `commands::bookmarks::BOOKMARK_ALLOWED_WINDOWS` (main, control, console) + `grid_*` prefix; mirrors `FINDER_ALLOWED_WINDOWS` so only surfaces that can call `reveal_in_finder` / `open_path` can authorize the underlying paths |
+    36	
+    37	## Minimization notes
+    38	
+
+exec
+/bin/zsh -lc "nl -ba apps/desktop/src-tauri/src/lib.rs | sed -n '52,88p'" in /Users/lijinlong/Desktop/AI_Desktop/XAI_Desktop
+ succeeded in 0ms:
+    52	#[cfg_attr(mobile, tauri::mobile_entry_point)]
+    53	pub fn run() {
+    54	    let builder = tauri::Builder::default()
+    55	        .plugin(tauri_plugin_opener::init())
+    56	        .manage(commands::crypto::CryptoCommandState::default())
+    57	        .manage(commands::menubar::SyncMenuBarState::default())
+    58	        .manage(commands::bookmarks::BookmarkRegistry::default())
+    59	        .manage(GridWindowsState::default());
+    60	
+    61	    #[cfg(feature = "crypto")]
+    62	    let builder = builder.manage(commands::database::DatabaseState::default());
+    63	
+    64	    builder
+    65	        .invoke_handler(tauri::generate_handler![
+    66	            commands::window::create_grid_window,
+    67	            commands::window::update_grid_window,
+    68	            commands::window::close_grid_window,
+    69	            commands::window::list_grid_windows,
+    70	            commands::window::focus_grid_window,
+    71	            commands::menubar::sync_set_menubar_status,
+    72	            commands::crypto::crypto_encrypt_for,
+    73	            commands::crypto::crypto_unwrap_dek_for_device,
+    74	            commands::crypto::crypto_wrap_dek_for_devices,
+    75	            commands::crypto::crypto_recovery_sign,
+    76	            commands::keychain::secret_set,
+    77	            commands::keychain::secret_get,
+    78	            commands::keychain::secret_del,
+    79	            commands::finder::reveal_in_finder,
+    80	            commands::finder::open_path,
+    81	            commands::bookmarks::register_path_bookmark,
+    82	            commands::bookmarks::clear_path_bookmark,
+    83	            #[cfg(feature = "crypto")]
+    84	            commands::database::db_init,
+    85	            #[cfg(feature = "crypto")]
+    86	            commands::database::db_put,
+    87	            #[cfg(feature = "crypto")]
+    88	            commands::database::db_get,
+
+exec
+/bin/zsh -lc 'git show 520737c -- packages/plugin-organizer/src/OrganizerLayer.tsx' in /Users/lijinlong/Desktop/AI_Desktop/XAI_Desktop
+ succeeded in 0ms:
+codex
+## Codex Post-fix Re-review
+
+**Feature**: p0-echo-bookmark-provenance
+**Original verdict**: BLOCKED
+**Fix commit(s)**: 520737c
+**Reviewer**: codex feature-review · gpt-5.4 high reasoning
+**New verdict**: BLOCKED
+
+### Was the original P0 resolved?
+- Original issue (paraphrased): `reveal_in_finder` / `open_path` accepted any allow-listed root path without proving it came from an actual user authorization event.
+- Evidence the fix resolves it: the Rust side now does the right gate in isolation: both Finder commands call `ensure_path_authorized`, which runs `validate_user_path` and then `BookmarkRegistry` lookup (`apps/desktop/src-tauri/src/commands/finder.rs:131-157`, `apps/desktop/src-tauri/src/commands/finder.rs:186-193`). Bookmark registration itself is scoped to the mirrored allow-list and validates before insert (`apps/desktop/src-tauri/src/commands/bookmarks.rs:122-158`). The contract doc was restored to the strict provenance rule and the deferred caveat was removed (`docs/contracts/tauri-commands-v0.md:74-91`).
+- Was the resolution honest (no smuggled scope-cut or stub-only fix)? No. The production JS wiring does not actually supply valid authorized paths to that registry. The only live `useFileDrop` call still omits `finderClient` entirely (`packages/plugin-organizer/src/OrganizerLayer.tsx:144-148`), and even if wired, the hook registers `file.name` values, not absolute paths (`packages/plugin-organizer/src/hooks/useFileDrop.ts:42-44`, `packages/plugin-organizer/src/hooks/useFileDrop.ts:136-175`), while `register_path_bookmark` requires an absolute path accepted by `validate_user_path` (`apps/desktop/src-tauri/src/commands/bookmarks.rs:124-136`, `apps/desktop/src-tauri/src/commands/finder.rs:79-115`). So the end-to-end contract is still false.
+
+### Remaining gaps (max 4 bullets, severity-tagged)
+- [P0] The registry population path is non-functional in production: `OrganizerLayer` does not pass a `finderClient`, so no bookmark registration occurs on user drop (`packages/plugin-organizer/src/OrganizerLayer.tsx:144-148`).
+- [P0] The drop hook registers basenames, not absolute filesystem paths, so `register_path_bookmark` would reject them as non-absolute even if the client were passed (`packages/plugin-organizer/src/hooks/useFileDrop.ts:136-175`, `apps/desktop/src-tauri/src/commands/finder.rs:79-115`).
+- [P1] The admit-path Rust test sidesteps the public authorization path by calling `insert_canonical` directly instead of exercising `register_path_bookmark` (`apps/desktop/src-tauri/src/commands/finder.rs:318-332`).
+- [P2] Open-panel registration is still only a documented TODO, not implemented (`packages/plugin-organizer/src/hooks/useFileDrop.ts:30-31`, `packages/plugin-organizer/docs/dev_log.md:30`).
+
+### Regressions introduced (max 3 bullets)
+- Legitimate user drops in the current UI still cannot satisfy the new provenance gate, so subsequent reveal/open now fail with `E3004` instead of working for actual dropped items (`packages/plugin-organizer/src/OrganizerLayer.tsx:144-148`, `packages/plugin-organizer/src/hooks/useFileDrop.ts:171-175`).
+
+### Next action
+- Wire a real production `FinderClient` into `useFileDrop` from the organizer surface and prove the registration call is reached on actual user drop.
+- Replace basename-based drop data with a real absolute-path source for desktop drops, then add one integration test that exercises `register_path_bookmark` -> `reveal/open` through the public path rather than `insert_canonical`.
+tokens used
+61,675
+## Codex Post-fix Re-review
+
+**Feature**: p0-echo-bookmark-provenance
+**Original verdict**: BLOCKED
+**Fix commit(s)**: 520737c
+**Reviewer**: codex feature-review · gpt-5.4 high reasoning
+**New verdict**: BLOCKED
+
+### Was the original P0 resolved?
+- Original issue (paraphrased): `reveal_in_finder` / `open_path` accepted any allow-listed root path without proving it came from an actual user authorization event.
+- Evidence the fix resolves it: the Rust side now does the right gate in isolation: both Finder commands call `ensure_path_authorized`, which runs `validate_user_path` and then `BookmarkRegistry` lookup (`apps/desktop/src-tauri/src/commands/finder.rs:131-157`, `apps/desktop/src-tauri/src/commands/finder.rs:186-193`). Bookmark registration itself is scoped to the mirrored allow-list and validates before insert (`apps/desktop/src-tauri/src/commands/bookmarks.rs:122-158`). The contract doc was restored to the strict provenance rule and the deferred caveat was removed (`docs/contracts/tauri-commands-v0.md:74-91`).
+- Was the resolution honest (no smuggled scope-cut or stub-only fix)? No. The production JS wiring does not actually supply valid authorized paths to that registry. The only live `useFileDrop` call still omits `finderClient` entirely (`packages/plugin-organizer/src/OrganizerLayer.tsx:144-148`), and even if wired, the hook registers `file.name` values, not absolute paths (`packages/plugin-organizer/src/hooks/useFileDrop.ts:42-44`, `packages/plugin-organizer/src/hooks/useFileDrop.ts:136-175`), while `register_path_bookmark` requires an absolute path accepted by `validate_user_path` (`apps/desktop/src-tauri/src/commands/bookmarks.rs:124-136`, `apps/desktop/src-tauri/src/commands/finder.rs:79-115`). So the end-to-end contract is still false.
+
+### Remaining gaps (max 4 bullets, severity-tagged)
+- [P0] The registry population path is non-functional in production: `OrganizerLayer` does not pass a `finderClient`, so no bookmark registration occurs on user drop (`packages/plugin-organizer/src/OrganizerLayer.tsx:144-148`).
+- [P0] The drop hook registers basenames, not absolute filesystem paths, so `register_path_bookmark` would reject them as non-absolute even if the client were passed (`packages/plugin-organizer/src/hooks/useFileDrop.ts:136-175`, `apps/desktop/src-tauri/src/commands/finder.rs:79-115`).
+- [P1] The admit-path Rust test sidesteps the public authorization path by calling `insert_canonical` directly instead of exercising `register_path_bookmark` (`apps/desktop/src-tauri/src/commands/finder.rs:318-332`).
+- [P2] Open-panel registration is still only a documented TODO, not implemented (`packages/plugin-organizer/src/hooks/useFileDrop.ts:30-31`, `packages/plugin-organizer/docs/dev_log.md:30`).
+
+### Regressions introduced (max 3 bullets)
+- Legitimate user drops in the current UI still cannot satisfy the new provenance gate, so subsequent reveal/open now fail with `E3004` instead of working for actual dropped items (`packages/plugin-organizer/src/OrganizerLayer.tsx:144-148`, `packages/plugin-organizer/src/hooks/useFileDrop.ts:171-175`).
+
+### Next action
+- Wire a real production `FinderClient` into `useFileDrop` from the organizer surface and prove the registration call is reached on actual user drop.
+- Replace basename-based drop data with a real absolute-path source for desktop drops, then add one integration test that exercises `register_path_bookmark` -> `reveal/open` through the public path rather than `insert_canonical`.
