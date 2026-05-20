@@ -15,11 +15,11 @@
 |---|---|
 | Current Gate | G1 — native foundation safe prep |
 | Gate Manifest | docs/workflow/roadmap/xai-g1-native-foundation.md |
-| Current Feature | native-dnd-path-first |
-| Feature Source | docs/planning/execution/G1-native-foundation.md §G1.3 |
+| Current Feature | grid-persistence |
+| Feature Source | docs/planning/execution/G1-native-foundation.md §G1.5 |
 | Feature Status | BLOCKED |
-| Current Commit | 707a8d1 |
-| Tests | `test -f docs/reviews/native-dnd-path-first/20260519-feature-brief.md`; `test -f packages/native-dnd-path-first/docs/dev_log.md`; `rg -n "DroppedFile|securityScope|alias|FileDrop|DragDrop|tauri://drag-drop|grid-window-file-drop|useFileDrop" apps/desktop/src packages/plugin-organizer/src packages/core/src docs/contracts docs/reviews/window-ground-truth/finder-dnd-path -g '*.{ts,tsx,md}'` |
+| Current Commit | pending G1.5 docs commit |
+| Tests | `test -f docs/reviews/grid-persistence/20260519-feature-brief.md`; `test -f packages/grid-persistence/docs/dev_log.md`; `rg -n "PersistedLayout|localStorage|repository|Repository|Grid.*persist|restore|open Grid|last active|sqlite|sqlcipher|GridBox|DesktopItem" packages/plugin-organizer/src packages/core/src packages/core-data docs/contracts docs/planning/execution -g '*.{ts,tsx,rs,md}'` |
 | Next Step | Human G0 evidence, or continue only with safe downstream prep because G0/G1.1 are blocked |
 
 ## Checkpoints
@@ -228,6 +228,18 @@
 - No production source files changed.
 - Status: BLOCKED because G0.4 Finder path evidence and MAS sandbox decisions are still missing.
 
+### 2026-05-19 20:41 PDT — Feature Checkpoint: grid-persistence
+
+- Continued safe downstream prep with G1.5 `grid-persistence`.
+- Audited current Organizer persistence:
+  - storage key `xai-desktop-layout`
+  - shape `PersistedLayout { grids, items }`
+  - hydration/save/clear paths in `useGridSystem.tsx`
+- Identified blockers: G1.1 window lifecycle commands and G2 Repository v0/localStorage migration direction.
+- Created feature brief, discovery review, and package docs.
+- No production source files changed.
+- Status: BLOCKED because production repository persistence must wait for G1.1/G2.
+
 ## Feature Outcomes
 
 | Feature | Gate | Status | Commit | Tests | Notes |
@@ -242,6 +254,7 @@
 | grid-shell-organizer-content | G1 | BLOCKED | eaae46e | PASS: safe-prep docs exist; BLOCKED: G0/G1.1 not ready | Reached by user override; no production code changed. |
 | native-dnd-path-first | G1 | BLOCKED | 707a8d1 | PASS: DnD discovery docs exist; BLOCKED: G0.4/MAS evidence missing | Reached by user override; no production code changed. |
 | multi-grid-event-scope | G1 | BLOCKED | a7d4803 | PASS: event audit docs exist; BLOCKED: G0/G1.1 not ready | Reached by user override; no production code changed. |
+| grid-persistence | G1 | BLOCKED | pending G1.5 docs commit | PASS: persistence discovery docs exist; BLOCKED: G1.1/G2 not ready | Reached by user override; no production code changed. |
 | host-business-residuals | G1 | READY_TO_SHIP | c6dbd77 | PASS: residual audit doc exists; Host scan recorded | Audit-only safe prep. |
 
 ## Deferred Gates Summary
@@ -258,6 +271,7 @@
 - G1.2 production shell/content split deferred until G0 Go/Conditional Go and G1.1 implementation.
 - G1.3 production DnD path-first implementation deferred until G0.4 and MAS evidence.
 - G1.4 production event migration deferred until G0 Go/Conditional Go and G1.1 implementation.
+- G1.5 production persistence deferred until G1.1 and G2 Repository v0.
 - Cross-vendor review/verify deferred for `host-business-residuals`.
 
 ## Incidents Summary
@@ -270,6 +284,7 @@
 - grid-shell-organizer-content blocked by G0/G1.1 gate status.
 - native-dnd-path-first blocked by G0.4/MAS evidence.
 - multi-grid-event-scope blocked by G0/G1.1 gate status.
+- grid-persistence blocked by G1.1/G2 status.
 
 ## Final 24h Summary
 
@@ -287,6 +302,7 @@ Paused early on 2026-05-19 after the user override because no further production
 - `grid-shell-organizer-content` — BLOCKED after safe prep.
 - `native-dnd-path-first` — BLOCKED after safe prep.
 - `multi-grid-event-scope` — BLOCKED after safe prep.
+- `grid-persistence` — BLOCKED after safe prep.
 - `host-business-residuals` — READY_TO_SHIP audit-only.
 
 ### READY_TO_SHIP Features
@@ -317,6 +333,7 @@ Paused early on 2026-05-19 after the user override because no further production
 - G1.2 shell/content production refactor until G1.1 is implemented.
 - G1.3 DnD path-first implementation until G0.4 Finder evidence and MAS sandbox decision.
 - G1.4 event migration until G1.1 is implemented and G0 DnD payload shape is settled.
+- G1.5 persistence implementation until G2 Repository v0 is ready.
 - Cross-vendor review/verify for `host-business-residuals`.
 
 ### Incidents

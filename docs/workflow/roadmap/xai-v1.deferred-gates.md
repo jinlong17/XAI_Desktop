@@ -215,3 +215,15 @@
 - Later human action: Complete the G0.4 Finder matrix with the `7e20ca8` telemetry panel/logs, complete MAS sandbox dry run, then rerun feature-build for DnD implementation.
 - Suggested verification command / environment: `pnpm --filter desktop tauri dev` on macOS with Finder; drop file, folder, `.app`, and alias into a Grid.
 - Files/commits affected: docs/reviews/native-dnd-path-first/*; packages/native-dnd-path-first/docs/*; commit `707a8d1`
+
+## Entry 19
+
+- Feature: grid-persistence
+- Gate: G1
+- Deferred gate: G1.1 Window Command Contract and G2 Repository v0
+- Why deferred: G1.5 production implementation depends on stable window lifecycle commands and the G2 repository contract/migration path.
+- Risk: Implementing persistence now would extend direct `localStorage` use or invent a repository shape ahead of the authoritative G2 contract.
+- What was done instead: Created docs-only feature brief, discovery review, design, API, test plan, and dev_log mapping current localStorage behavior and target repository boundary.
+- Later human action: Complete G1.1 and G2 Repository v0, then rerun feature-build for Grid persistence and localStorage migration.
+- Suggested verification command / environment: `sed -n '1,220p' docs/reviews/grid-persistence/20260519-discovery-review.md`
+- Files/commits affected: docs/reviews/grid-persistence/*; packages/grid-persistence/docs/*; pending G1.5 docs commit

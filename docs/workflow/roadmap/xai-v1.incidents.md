@@ -109,3 +109,13 @@
 - Attempted fixes: Created safe-prep docs mapping current drop behavior, target `DroppedFile[]` shape, and unresolved receiver/alias/security-scope decisions. Avoided production source changes.
 - Current status: BLOCKED.
 - Resume instruction: Complete G0.4 Finder matrix and MAS sandbox dry run, then rerun feature-build for `native-dnd-path-first`.
+
+## Incident 12
+
+- Time: 2026-05-19 20:41 PDT
+- Feature: grid-persistence
+- Symptom: Production Grid persistence implementation cannot start.
+- Root cause if known: G1.5 depends on G1.1 window command lifecycle and G2 Repository v0/localStorage migration decisions.
+- Attempted fixes: Created safe-prep docs mapping current localStorage behavior, target repository boundary, and deferred restore/migration tests. Avoided production source changes.
+- Current status: BLOCKED.
+- Resume instruction: Complete G1.1 and G2 Repository v0, then rerun feature-build for `grid-persistence`.
