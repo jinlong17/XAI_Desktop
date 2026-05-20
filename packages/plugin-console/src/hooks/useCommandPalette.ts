@@ -54,6 +54,19 @@ export function useCommandPalette({
   const [activeIndex, setActiveIndex] = useState(0);
   const [registered, setRegistered] = useState<SearchableEntity[]>([]);
 
+  const setQueryStable = useCallback((nextQuery: string) => {
+    setQuery(nextQuery);
+    setActiveIndex(0);
+  }, []);
+
+  const open = useCallback(() => {
+    setIsOpen(true);
+  }, []);
+
+  const toggle = useCallback(() => {
+    setIsOpen((current) => !current);
+  }, []);
+
   useEffect(() => {
     if (!registry) return;
     let cancelled = false;
@@ -69,13 +82,13 @@ export function useCommandPalette({
     const listener = (event: KeyboardEvent) => {
       if ((event.metaKey || event.ctrlKey) && event.key.toLowerCase() === "k") {
         event.preventDefault();
-        setIsOpen((current) => !current);
+        toggle();
       }
       if (event.key === "Escape") setIsOpen(false);
     };
     window.addEventListener("keydown", listener);
     return () => window.removeEventListener("keydown", listener);
-  }, []);
+  }, [toggle]);
 
   const effectiveEntities = entities ?? (registry ? registered : defaultEntities);
 
@@ -106,14 +119,11 @@ export function useCommandPalette({
     query,
     results,
     activeIndex,
-    setQuery: (nextQuery) => {
-      setQuery(nextQuery);
-      setActiveIndex(0);
-    },
+    setQuery: setQueryStable,
     setActiveIndex,
-    open: () => setIsOpen(true),
+    open,
     close,
-    toggle: () => setIsOpen((current) => !current),
+    toggle,
     execute,
   };
 }
