@@ -1,6 +1,7 @@
 {
   "name": "@repo/tla-protocol-model",
   "version": "0.0.0",
+  "description": "Protocol state-space explorer mirroring docs/spec/sync.tla (NOT TLC-based)",
   "private": true,
   "exports": {
     ".": {
