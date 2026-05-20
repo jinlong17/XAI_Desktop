@@ -263,3 +263,15 @@
 - Later human action: Run the desktop app, create two Grid windows, move/resize/close/toggle each, and drop a Finder path into one Grid to confirm scoped behavior.
 - Suggested verification command / environment: `pnpm --filter desktop tauri dev` on macOS, then use Control `+ New Grid` twice and verify only the target Grid changes on updates/drops.
 - Files/commits affected: apps/desktop/src/windows/GridWindow.tsx; packages/plugin-organizer/src/OrganizerGridContent.tsx; commit `26d9f57`
+
+## Entry 23
+
+- Feature: mas-sandbox-dry-run (G0.6)
+- Gate: G0 ship gate
+- Deferred gate: G0.6 not shipped — BLOCKED_EXTERNAL (Apple Developer signing)
+- Why deferred: G0.6 production implementation requires a signed/sandboxed Apple Developer environment for MAS runtime evidence. The `mas-sandbox` compile fallback passes private-API-disabled `cargo check`, but runtime sandbox behavior cannot be validated without Apple Developer signing or an equivalent sandbox environment.
+- Risk: G0.6 cannot verify the MAS path until signing is available. This does not block G1 native foundation, which proceeds on the DMG/private path under the Conditional Go decision.
+- What was done instead: G0.1-G0.5 were shipped to `origin/spike/window-ground-truth` on 2026-05-19. G0.6 is explicitly excluded from this ship and remains BLOCKED_EXTERNAL.
+- Later human action: When Apple Developer signing/sandbox environment is available, complete G0.6 runtime validation and ship separately.
+- Suggested verification command / environment: Build/run desktop with `mas-sandbox` feature and private API disabled after obtaining Apple Developer signing; verify sandbox entitlements and window transparency fallback behavior.
+- Files/commits affected: docs/workflow/roadmap/xai-g0-window-spike.md (G0.6 row); packages/mas-sandbox-dry-run/docs/*; commits `071a192`, `4537d2d`, `2fda0c8`

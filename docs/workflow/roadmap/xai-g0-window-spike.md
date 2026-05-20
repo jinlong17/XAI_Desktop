@@ -9,18 +9,18 @@
 - Wave Concurrency Cap: 1
 - Dispatch: serial inline Codex conductor
 - Manifest Review: DEFERRED (unattended run; see docs/workflow/roadmap/xai-v1.deferred-gates.md)
-- Gate Verdict: CONDITIONAL_GO (2026-05-19 22:54 PDT) — DMG/private path can proceed to G1; MAS signed/sandbox runtime validation remains deferred and non-blocking for G1 native foundation.
+- Gate Verdict: CONDITIONAL_GO (2026-05-19 22:54 PDT) — DMG/private path can proceed to G1; MAS signed/sandbox runtime validation remains deferred and non-blocking for G1 native foundation. G0.1-G0.5 SHIPPED 2026-05-19 on spike/window-ground-truth.
 
 ## Features
 
 | # | Slug | Source | Depends On | Dep Semantics | Status | Automation Mode | Verify Cross-vendor | Last Run | Note |
 |---|------|--------|------------|---------------|--------|-----------------|---------------------|----------|------|
-| 1 | window-ground-truth | docs/planning/execution/G0-window-spike.md §G0.1 | — | — | READY_TO_SHIP | D-Codex | yes | 2026-05-19 | READY_TO_SHIP 2026-05-19 (Codex serial inline; build commit `3b571f6`) · G0.1 evidence anchor complete. Deferred gates recorded in docs/workflow/roadmap/xai-v1.deferred-gates.md |
-| 2 | grid-window-prototype | docs/planning/execution/G0-window-spike.md §G0.2 | window-ground-truth | ready_to_ship | READY_TO_SHIP | D-Codex | yes | 2026-05-19 | READY_TO_SHIP 2026-05-19 · Runtime fixed/confirmed via commits `7b7ff35`, `f65a1b5`, `a33c74d`; automated checks pass. Deferred review/verify gates remain recorded. |
-| 3 | click-through-matrix | docs/planning/execution/G0-window-spike.md §G0.3 | grid-window-prototype | ready_to_ship | READY_TO_SHIP | D-Codex | yes | 2026-05-19 | READY_TO_SHIP 2026-05-19 · Default runtime hit-test passes; private-API-disabled build compile-fails on `.transparent(true)`, so MAS fallback risk moves to G0.6. |
-| 4 | finder-dnd-path | docs/planning/execution/G0-window-spike.md §G0.4 | grid-window-prototype | ready_to_ship | READY_TO_SHIP | D-Codex | yes | 2026-05-19 | READY_TO_SHIP 2026-05-19 · Tauri file, folder, `.app`, and alias paths observed; alias policy recorded in ADR-0005 as `PRESERVE_ALIAS_PATH`; duplicate fixes applied in `58c926d` and `18b48da`. Deferred gates recorded in docs/workflow/roadmap/xai-v1.deferred-gates.md |
-| 5 | spaces-multimonitor-matrix | docs/planning/execution/G0-window-spike.md §G0.5 | click-through-matrix, finder-dnd-path | ready_to_ship | READY_TO_SHIP | D-Codex | yes | 2026-05-19 | READY_TO_SHIP 2026-05-19 · User confirmed Grid follows across Spaces/multi-display on the DELL setup; optional independent screenshot replay remains allowed. |
-| 6 | mas-sandbox-dry-run | docs/planning/execution/G0-window-spike.md §G0.6 | click-through-matrix, finder-dnd-path | ready_to_ship | BLOCKED_EXTERNAL | D-Codex | yes | 2026-05-19 | BLOCKED_EXTERNAL 2026-05-19 · `mas-sandbox` compile fallback passes private-API-disabled `cargo check`; Apple Developer/signed sandbox runtime evidence deferred and decoupled from G1 DMG/private path. |
+| 1 | window-ground-truth | docs/planning/execution/G0-window-spike.md §G0.1 | — | — | SHIPPED | D-Codex | yes | 2026-05-19 | SHIPPED 2026-05-19 · Pushed to origin/spike/window-ground-truth. Build commit `3b571f6`; evidence anchor complete. |
+| 2 | grid-window-prototype | docs/planning/execution/G0-window-spike.md §G0.2 | window-ground-truth | shipped | SHIPPED | D-Codex | yes | 2026-05-19 | SHIPPED 2026-05-19 · Pushed to origin/spike/window-ground-truth. Runtime fixed/confirmed via commits `7b7ff35`, `f65a1b5`, `a33c74d`. |
+| 3 | click-through-matrix | docs/planning/execution/G0-window-spike.md §G0.3 | grid-window-prototype | shipped | SHIPPED | D-Codex | yes | 2026-05-19 | SHIPPED 2026-05-19 · Pushed to origin/spike/window-ground-truth. Default runtime hit-test passes; MAS fallback risk tracked under G0.6. |
+| 4 | finder-dnd-path | docs/planning/execution/G0-window-spike.md §G0.4 | grid-window-prototype | shipped | SHIPPED | D-Codex | yes | 2026-05-19 | SHIPPED 2026-05-19 · Pushed to origin/spike/window-ground-truth. Tauri file/folder/.app/alias paths confirmed; `PRESERVE_ALIAS_PATH` in ADR-0005; commits `58c926d`, `18b48da`. |
+| 5 | spaces-multimonitor-matrix | docs/planning/execution/G0-window-spike.md §G0.5 | click-through-matrix, finder-dnd-path | shipped | SHIPPED | D-Codex | yes | 2026-05-19 | SHIPPED 2026-05-19 · Pushed to origin/spike/window-ground-truth. User confirmed Grid follows across Spaces/multi-display on DELL setup. |
+| 6 | mas-sandbox-dry-run | docs/planning/execution/G0-window-spike.md §G0.6 | click-through-matrix, finder-dnd-path | ready_to_ship | BLOCKED_EXTERNAL | D-Codex | yes | 2026-05-19 | BLOCKED_EXTERNAL 2026-05-19 · `mas-sandbox` compile fallback passes private-API-disabled `cargo check`; Apple Developer/signed sandbox runtime evidence deferred and decoupled from G1 DMG/private path. Not shipped — requires Apple Developer signing environment. See docs/workflow/roadmap/xai-v1.deferred-gates.md Entry 13. |
 
 ## Decomposition Rationale
 
@@ -35,3 +35,6 @@ Manifest review normally stops for human approval. This autorun is unattended, s
 
 ### R4. Conditional Go
 2026-05-19 user confirmation closes the G0.5 Spaces/multi-display runtime blocker for the current DMG/private path. G0.6 MAS signed/sandbox runtime validation still requires Apple Developer/signing or equivalent sandbox environment, so it remains deferred as an external release gate. G1 native foundation may proceed under Conditional Go using the DMG/private path, while MAS-specific behavior stays behind `mas-sandbox` validation.
+
+### R5. Ship Record
+G0.1-G0.5 shipped 2026-05-19 by human-authorized push to `origin/spike/window-ground-truth`. G0.6 remains BLOCKED_EXTERNAL pending Apple Developer signing environment; this does not block G1 native foundation under the Conditional Go DMG/private-path decision.
