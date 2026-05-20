@@ -1,0 +1,18 @@
+{
+  "name": "ai-cube",
+  "version": "0.1.0",
+  "displayName": "AI Cube",
+  "description": "Mock AI conversation panel, privacy gate, cost guard, and offline fallback.",
+  "author": "Jinlong",
+  "enabled": false,
+  "contentTypes": ["ai-message"],
+  "windows": {
+    "control": true
+  },
+  "events": {
+    "emit": ["ai-cube:mock-action", "ai-cube:privacy-reviewed"],
+    "listen": []
+  },
+  "dependencies": ["@repo/core-data"],
+  "tauriCommands": []
+}

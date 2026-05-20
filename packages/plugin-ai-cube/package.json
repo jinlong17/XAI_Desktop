@@ -1,0 +1,24 @@
+{
+  "name": "@repo/plugin-ai-cube",
+  "version": "0.0.0",
+  "private": true,
+  "description": "AI Cube conversation scaffold with privacy, cost, latency, and offline mocks.",
+  "exports": {
+    ".": {
+      "types": "./src/index.ts",
+      "import": "./src/index.ts"
+    }
+  },
+  "scripts": {
+    "check-types": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@repo/core-data": "workspace:*",
+    "react": "^19.2.0"
+  },
+  "devDependencies": {
+    "@repo/typescript-config": "workspace:*",
+    "@types/react": "19.2.2",
+    "typescript": "5.9.2"
+  }
+}
