@@ -45,4 +45,4 @@ Safe-prep docs are complete. G0 now has Conditional Go for the DMG/private path,
 | 2026-05-19 15:07 PDT | feature-review (Codex inline) | Approved docs-only plan; production command implementation remains blocked by G0. | — | feature-build |
 | 2026-05-19 15:08 PDT | feature-build (Codex inline) | Created Window Command Contract prep docs. | (this commit) | feature-verify |
 | 2026-05-19 15:08 PDT | feature-verify (Codex inline) | Marked BLOCKED_BY_G0; no production code changed. | (this commit) | feature-build |
-| 2026-05-19 22:54 PDT | feature-verify (Codex inline) | Reconciled G0 Conditional Go and unblocked G1.1 production build for the DMG/private path. | (pending commit) | feature-build |
+| 2026-05-19 22:54 PDT | feature-verify (Codex inline) | Reconciled G0 Conditional Go and unblocked G1.1 production build for the DMG/private path. | `1701583` | feature-build |

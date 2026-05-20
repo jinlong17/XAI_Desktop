@@ -54,4 +54,4 @@ The private-API-disabled comparison now has compile evidence and a compile-only 
 | 2026-05-19 15:05 PDT | feature-verify (Codex inline) | Marked BLOCKED because real sandbox/private-API acceptance cannot be automated here. | (this commit) | feature-build |
 | 2026-05-19 22:25 PDT | feature-verify (Codex inline) | Temporarily tested with private API disabled; build fails on `.transparent(true)` in Grid/control window builders. Restored default config and Cargo feature. | `4537d2d` | MAS fallback design |
 | 2026-05-19 22:44 PDT | feature-build/verify (Codex inline) | Added `mas-sandbox` compile fallback for Grid/control builders and verified both default and private-API-disabled compile paths. | `2fda0c8` | Signed/sandbox runtime validation |
-| 2026-05-19 22:54 PDT | human + feature-verify (Codex inline) | Recorded Apple Developer/signed sandbox runtime validation as deferred external and decoupled it from G1 DMG/private path. | (pending commit) | G1.1 |
+| 2026-05-19 22:54 PDT | human + feature-verify (Codex inline) | Recorded Apple Developer/signed sandbox runtime validation as deferred external and decoupled it from G1 DMG/private path. | `1701583` | G1.1 |

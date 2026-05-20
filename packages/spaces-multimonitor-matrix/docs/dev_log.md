@@ -45,4 +45,4 @@ Automated safe-prep checks confirm the matrix template exists, current display f
 | 2026-05-19 15:02 PDT | feature-build (Codex inline) | Created Spaces/fullscreen/multi-monitor evidence template and docs. | (this commit) | feature-verify |
 | 2026-05-19 15:02 PDT | feature-verify (Codex inline) | Marked BLOCKED because real macOS window behavior acceptance cannot be automated here. | (this commit) | feature-build |
 | 2026-05-19 22:37 PDT | feature-build/verify (Codex inline) | Recorded current `system_profiler SPDisplaysDataType` display facts and static window collection/level findings. Status remains BLOCKED pending real Mission Control/fullscreen/multi-display runtime evidence. | `bcc5785` | Human runtime matrix |
-| 2026-05-19 22:54 PDT | human + feature-verify (Codex inline) | Recorded user confirmation that Grid follows across Spaces/multi-display on the DELL setup. Status -> READY_TO_SHIP. | (pending commit) | G1.1 |
+| 2026-05-19 22:54 PDT | human + feature-verify (Codex inline) | Recorded user confirmation that Grid follows across Spaces/multi-display on the DELL setup. Status -> READY_TO_SHIP. | `1701583` | G1.1 |
