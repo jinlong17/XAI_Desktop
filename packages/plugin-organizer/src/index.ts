@@ -48,8 +48,16 @@ export {
   useOrganizerGridCreateTaskEvent,
 } from "./taskEvents";
 export type { OrganizerGridCreateTaskPayload } from "./taskEvents";
-export { exportEntities, importEntities } from "./ExportService";
-export type { ExportBundle, ExportSource } from "./ExportService";
+export {
+  exportEntities,
+  importEntities,
+  ExportImportError,
+} from "./ExportService";
+export type {
+  ExportBundle,
+  ExportSource,
+  ImportResult,
+} from "./ExportService";
 export type {
   ClassificationContext,
   ClassificationResult,

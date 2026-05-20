@@ -13,6 +13,7 @@ export type {
   RepoTransaction,
   SyncScope,
 } from "./types";
+export { assertRepoRecord } from "./repo-utils";
 export { SQLITE_STATEMENTS, createSqliteRepo } from "./sqlite";
 export type {
   MutationHook,

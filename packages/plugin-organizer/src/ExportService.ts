@@ -1,4 +1,4 @@
-import type { RepoRecord } from "@repo/core-data";
+import { assertRepoRecord, type RepoRecord } from "@repo/core-data";
 
 export interface DataAdapter<T extends { id: string }> {
   getAll(): Promise<T[]>;
@@ -19,6 +19,19 @@ export interface ExportBundle {
   payload: string;
 }
 
+export interface ImportResult {
+  imported: number;
+  skipped: number;
+  errors: string[];
+}
+
+export class ExportImportError extends Error {
+  constructor(message: string) {
+    super(message);
+    this.name = "ExportImportError";
+  }
+}
+
 export async function exportEntities(sources: readonly ExportSource<RepoRecord>[], passphrase: string): Promise<ExportBundle> {
   const records = (await Promise.all(sources.map((source) => source.adapter.getAll()))).flat();
   return {
@@ -29,17 +42,52 @@ export async function exportEntities(sources: readonly ExportSource<RepoRecord>[
   };
 }
 
-export async function importEntities(bundle: ExportBundle, sources: readonly ExportSource<RepoRecord>[], passphrase: string): Promise<number> {
-  const decoded = await decryptJson<{ records: RepoRecord[] }>(bundle.payload, passphrase);
-  const byEntityType = new Map(sources.map((source) => [source.entityType, source.adapter] as const));
-  let count = 0;
-  for (const record of decoded.records) {
-    const adapter = byEntityType.get(record.entityType);
-    if (!adapter) continue;
-    await adapter.save(record);
-    count += 1;
+/**
+ * Import an encrypted export bundle.
+ *
+ * Each decoded record passes through `assertRepoRecord` before being
+ * written to its plugin's adapter. AES-GCM auth tag guarantees
+ * cryptographic integrity, but a valid-passphrase payload with a
+ * tampered shape (e.g. missing `entityType`) would otherwise corrupt
+ * the repo. Records with unknown `entityType` are silently skipped
+ * (no matching adapter); records that fail shape validation are
+ * collected in `errors` and the caller must surface them.
+ */
+export async function importEntities(
+  bundle: ExportBundle,
+  sources: readonly ExportSource<RepoRecord>[],
+  passphrase: string,
+): Promise<ImportResult> {
+  const decoded = await decryptJson<{ records: unknown }>(bundle.payload, passphrase);
+  if (!decoded || !Array.isArray(decoded.records)) {
+    throw new ExportImportError("Invalid bundle payload: records is not an array");
   }
-  return count;
+
+  const byEntityType = new Map(sources.map((source) => [source.entityType, source.adapter] as const));
+  let imported = 0;
+  let skipped = 0;
+  const errors: string[] = [];
+
+  for (const raw of decoded.records) {
+    try {
+      assertRepoRecord(raw as RepoRecord);
+    } catch (error) {
+      errors.push(`record rejected: ${error instanceof Error ? error.message : String(error)}`);
+      continue;
+    }
+
+    const record = raw as RepoRecord;
+    const adapter = byEntityType.get(record.entityType);
+    if (!adapter) {
+      skipped += 1;
+      continue;
+    }
+
+    await adapter.save(record);
+    imported += 1;
+  }
+
+  return { imported, skipped, errors };
 }
 
 async function encryptJson(value: unknown, passphrase: string): Promise<string> {
