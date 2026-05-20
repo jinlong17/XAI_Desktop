@@ -859,3 +859,53 @@ Consolidated G3 organizer-loop feature batch (Track A scope):
   - `cargo test --manifest-path apps/desktop/src-tauri/Cargo.toml finder::` -> 3 tests PASS.
   - `pnpm --filter desktop build` -> PASS.
 - Deferred: actual UI wire-up in `SmartContainer.tsx` / `OrganizerGridContent.tsx` to consume the new helpers + render empty-state actions. Currently parked because the host integration needs careful interaction with the existing drag-drop flow. Recorded in `xai-v1.deferred-gates.md` as the G3 UI cut-over follow-up.
+
+### 2026-05-20 01:17 PDT — Track A Session Summary
+
+Branch: `codex/track-a-desktop-foundation` · Commits in this session (newest first):
+
+1. `533391e` G3 organizer-loop utilities + Finder commands (G3-E1 / S3 / E2 / E3 / E4)
+2. `91dc6b6` LayoutStore seam with whiteout-safe hydrate (G1.5)
+3. `43ffdda` Repository v0 outbox + atomic enqueue (G2.6)
+4. `ad5f1d3` db capability file + runtime window allow-list (G2.5)
+5. `d1fe45a` Keychain ↔ KeyVault bridge with byte zeroization (G2.4)
+6. `2784397` organizer-layout → Repository v0 adapter (G2.3)
+7. `f3dd30b` Tauri db_* command bridge + TS createTauriRepo (G2.2)
+8. `653219b` promote G1.2 and G1.4 manifest rows to SHIPPED
+9. `744d578` freeze Repository v0 entity surface (G2.1)
+
+Feature outcomes:
+
+| Roadmap row | Status | Notes |
+|---|---|---|
+| G1.2 grid-shell-organizer-content | SHIPPED | manifest promotion only |
+| G1.4 multi-grid-event-scope | SHIPPED | manifest promotion only |
+| G1.5 grid-persistence | READY_TO_SHIP | LayoutStore seam + Repository adapter |
+| G2.1 repository-v0-contract | READY_TO_SHIP | typed entity surface + 45 tests |
+| G2.2 core-data-sqlite-driver | READY_TO_SHIP | Tauri db_* + createTauriRepo |
+| G2.3 localstorage-migration | READY_TO_SHIP | organizer-layout adapter + 5 tests |
+| G2.4 keychain-opaque-handle | READY_TO_SHIP | Keychain → KeyVault bridge |
+| G2.5 tauri-capability-allowlist | READY_TO_SHIP | plugin-data-database.json + AUDIT.md |
+| G2.6 single-table-sync-baseline | READY_TO_SHIP | Repository v0 outbox + 4 tests |
+| G3-E1 grid item model | READY_TO_SHIP | typed factory + 13 tests |
+| G3-S3 new URL item | READY_TO_SHIP | InvalidUrlError, http(s) only |
+| G3-E2 auto-classification rules | READY_TO_SHIP | rule engine + 8 tests |
+| G3-E3 Finder collaboration | READY_TO_SHIP | reveal_in_finder / open_path + 3 cargo tests |
+| G3-E4 empty state + recovery | READY_TO_SHIP | evaluateItemHealth + 7 tests |
+
+Test totals:
+
+- `pnpm --filter @repo/core-data test`: 58 PASS
+- `pnpm --filter @repo/plugin-organizer test`: 41 PASS
+- `cargo test --features crypto`: 78 PASS
+- `cargo check` (default + crypto): PASS
+- `pnpm --filter desktop build`: PASS
+
+Ship policy: G1.2 and G1.4 manifest promotions were authorized; all other rows stop at READY_TO_SHIP without push.
+
+Deferred-gate follow-ups (recorded in `xai-v1.deferred-gates.md` / individual dev_logs):
+
+- SQLCipher PRAGMA wiring into `db_init` (depends on G2.4 KEK handle being threaded into the database state).
+- Live Supabase / 2-Mac / zero-knowledge dump PoC.
+- Host UI cut-over to consume `repositoryLayoutStore`, `createTauriRepo`, classifier, finder client, item-health, empty-state actions.
+- macOS signed-runtime / MAS sandbox smoke (G0.6, G2.7).
