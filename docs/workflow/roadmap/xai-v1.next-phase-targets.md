@@ -4,13 +4,31 @@ Generated: 2026-05-20 01:53 PDT
 Branch: codex/track-a-desktop-foundation
 Reviewer: codex `feature-review` · gpt-5.4 high reasoning
 
-> **Update 2026-05-20 12:05 PDT — P0/P1 fix cycle complete + new P0 escalation**
+> **Update 2026-05-20 13:11 PDT — full P0/P1 fix cycle closed**
 >
-> First-round Codex review (10 features): 3 BLOCKED + 7 REVISE.
-> P0 fix cycle (Claude sub-agents Alpha/Beta/Gamma): **all 3 APPROVED** on the second round (commits `f818f0d` / `143bca5` / `c5b0e77`).
-> P1 fix cycle (Claude sub-agents Alpha/Beta/Gamma/Delta): **3 of 4 APPROVED**; Delta's path-authz fix was **escalated to a fresh P0** by Codex because the lexical path-shape gate (`validate_user_path`) does not prove bookmark provenance. A follow-up sub-agent (Echo) is implementing a minimal bookmark registry; see "P0 — Delta escalation" below.
+> Five Codex review rounds against Track A finished. All P0 are resolved.
+> The only remaining open item is one P2 test-coverage gap on Foxtrot.
 >
-> Track A HEAD as of this update: `4b0c8aa` after `0bc3afa` / `1b34b54` / `7e97dc3` / `2237395` cherry-picks. Tests: core-data 76/76 · plugin-organizer 46/46 · cargo +crypto 93/93 · desktop build green.
+> | Round | Scope | Result |
+> |---|---|---|
+> | R1 | First-pass review of 10 Track A features | 3 BLOCKED (G1.2, G2.5, G2.6) + 7 REVISE |
+> | R2 | P0 fixes (Alpha/Beta/Gamma) | **3/3 APPROVED** — commits `f818f0d` / `143bca5` / `c5b0e77` |
+> | R3 | P1 fixes (4 sub-agents) | 3 APPROVED + **1 BLOCKED** (Delta path-authz escalated to a fresh P0) |
+> | R4 | Echo bookmark-registry fix | **BLOCKED** — production wiring + basename-vs-absolute path |
+> | R5 | Foxtrot native-DnD provenance closure | **REVISE** — production path honest, 1 P2 test-coverage gap |
+>
+> Production behavior at HEAD: real user drops on Grid windows produce
+> absolute paths via Tauri native DnD → bookmark registration → reveal/open
+> gate. G1.2 transparent click-through preserved; no regressions detected.
+>
+> Track A HEAD: `b28e991` after Foxtrot cherry-pick `a8c847b`.
+> Tests: plugin-organizer 54/54 · core-data 76/76 · cargo +crypto 104/104 · desktop build green.
+
+## Remaining open P2
+
+1. **[Foxtrot test coverage]** Rust integration tests still drive `ensure_path_authorized` through `ensure_path_authorized_test_helper` directly instead of through `tauri::test::get_ipc_response` on `reveal_in_finder` / `open_path`. Add MockRuntime IPC coverage with one registered positive case and one unregistered negative case. Half-day work.
+
+2. (All previous P2 items below remain — these are doc/test polish, not contract breaks.)
 
 ## Executive summary
 
