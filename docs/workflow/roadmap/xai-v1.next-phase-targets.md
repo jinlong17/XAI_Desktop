@@ -4,6 +4,14 @@ Generated: 2026-05-20 01:53 PDT
 Branch: codex/track-a-desktop-foundation
 Reviewer: codex `feature-review` · gpt-5.4 high reasoning
 
+> **Update 2026-05-20 12:05 PDT — P0/P1 fix cycle complete + new P0 escalation**
+>
+> First-round Codex review (10 features): 3 BLOCKED + 7 REVISE.
+> P0 fix cycle (Claude sub-agents Alpha/Beta/Gamma): **all 3 APPROVED** on the second round (commits `f818f0d` / `143bca5` / `c5b0e77`).
+> P1 fix cycle (Claude sub-agents Alpha/Beta/Gamma/Delta): **3 of 4 APPROVED**; Delta's path-authz fix was **escalated to a fresh P0** by Codex because the lexical path-shape gate (`validate_user_path`) does not prove bookmark provenance. A follow-up sub-agent (Echo) is implementing a minimal bookmark registry; see "P0 — Delta escalation" below.
+>
+> Track A HEAD as of this update: `4b0c8aa` after `0bc3afa` / `1b34b54` / `7e97dc3` / `2237395` cherry-picks. Tests: core-data 76/76 · plugin-organizer 46/46 · cargo +crypto 93/93 · desktop build green.
+
 ## Executive summary
 
 Across 10 Codex cross-vendor reviews of the Track A commits, 3 features
@@ -16,6 +24,14 @@ transactional atomicity), and *test-coverage holes* on the negative paths.
 Recommended order for the next session: clear all P0 first (atomic, ≤ 1
 half-day each), then tackle the runtime-validation P1 batch as a single
 `core-data` hardening feature.
+
+## P0 — Delta escalation (fresh, opened 2026-05-20 12:05)
+
+**[G3-E3 reveal/open bookmark provenance]** The `commands/finder.rs` `reveal_in_finder` / `open_path` accept any path that passes the lexical shape gate (under `/Users/`, `/Applications/`, `/Volumes/`, `/tmp/` + no `..`). The contract requires every path access to come from a *user drop/open panel or authorized bookmark*. Currently any allowed window can ask the host to open `/Users/<victim>/.ssh/id_rsa` because nothing checks that the path actually originated from a user action.
+
+Resolution path: Echo sub-agent (in flight) is adding a minimal in-memory `BookmarkRegistry` Tauri state populated by `register_path_bookmark` (called from `useFileDrop.onDrop`). `reveal_in_finder` / `open_path` then refuse paths that are not in the registry. The strict contract sentence is restored; the previous "deferred bookmark enforcement" caveat is removed.
+
+Until Echo lands, the G3-E3 manifest row should be considered **PROVISIONAL** — the lexical gate is in place and meaningful, but the full contract is not satisfied.
 
 ## P0 — must fix before any further G2/G3 build
 
