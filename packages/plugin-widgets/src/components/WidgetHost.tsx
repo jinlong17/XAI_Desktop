@@ -5,6 +5,8 @@ import { createSeedWidget, useWidgetStore } from "../hooks/useWidgetStore";
 import { createWidgetRegistry } from "../registry";
 import type { WidgetDefinition, WidgetManifestRegistration } from "../types";
 
+const EMPTY_REGISTRATIONS: readonly WidgetManifestRegistration[] = [];
+
 export interface WidgetHostProps {
   registrations?: readonly WidgetManifestRegistration[];
   height?: number;
@@ -20,7 +22,7 @@ const hostStyle: CSSProperties = {
   borderRadius: 12,
 };
 
-export function WidgetHost({ registrations = [], height = 540 }: WidgetHostProps) {
+export function WidgetHost({ registrations = EMPTY_REGISTRATIONS, height = 540 }: WidgetHostProps) {
   const registry = useMemo(() => createWidgetRegistry([builtInWidgetManifest, ...registrations]), [registrations]);
   const seed = useMemo(
     () => [
