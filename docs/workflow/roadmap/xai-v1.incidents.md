@@ -46,9 +46,9 @@
 - Feature: window-command-contract
 - Symptom: Production implementation is blocked.
 - Root cause if known: G1 required G0 Go or Conditional Go. G0 has now reached Conditional Go for DMG/private path; MAS remains a deferred external release gate.
-- Attempted fixes: Created G1.1 contract-planning docs and G1 manifest without touching production window command code.
-- Current status: RESOLVED as prerequisite blocker; `window-command-contract` may proceed to production build.
-- Resume instruction: Run feature-build for `window-command-contract`.
+- Attempted fixes: Created G1.1 contract-planning docs, reconciled G0 Conditional Go, implemented structured window lifecycle commands, and verified Rust/TS/desktop/contract consistency.
+- Current status: RESOLVED; `window-command-contract` is READY_TO_SHIP for the DMG/private path. Cross-vendor verify remains deferred.
+- Resume instruction: Human may review `dce4fb9` and run ship manually; roadmap continuation should proceed to G1.2 `grid-shell-organizer-content`.
 
 ## Incident 6
 
@@ -85,20 +85,20 @@
 - Time: 2026-05-19 20:34 PDT
 - Feature: grid-shell-organizer-content
 - Symptom: Production shell/content split cannot start.
-- Root cause if known: G1.2 depends on G0 Go/Conditional Go and G1.1 Window Command Contract. Both remain blocked.
+- Root cause if known: G1.2 depends on G0 Go/Conditional Go and G1.1 Window Command Contract. Both are now satisfied for unattended DMG/private-path continuation because G0 is Conditional Go and G1.1 is READY_TO_SHIP.
 - Attempted fixes: Created safe-prep docs mapping current Host/Organizer boundary and target public Organizer content API. Avoided production source changes.
-- Current status: BLOCKED.
-- Resume instruction: Complete G0 evidence, implement G1.1, then rerun feature-build for `grid-shell-organizer-content`.
+- Current status: RESOLVED as prerequisite blocker; production feature-build may proceed.
+- Resume instruction: Run feature-build for `grid-shell-organizer-content`.
 
 ## Incident 10
 
 - Time: 2026-05-19 20:37 PDT
 - Feature: multi-grid-event-scope
 - Symptom: Production Grid event migration cannot start.
-- Root cause if known: G1.4 depends on G0 Go/Conditional Go and G1.1 Window Command Contract. Finder DnD payload shape is also unsettled.
+- Root cause if known: G1.4 depends on a stable Host/Grid shell boundary; G1.2 production split has not run yet.
 - Attempted fixes: Created safe-prep docs auditing current event names, target contracts, and missing runtime `gridId` guard requirements. Avoided production source changes.
 - Current status: BLOCKED.
-- Resume instruction: Complete G0 evidence and G1.1, then rerun feature-build for `multi-grid-event-scope`.
+- Resume instruction: Complete G1.2 shell/content split, then rerun feature-build for `multi-grid-event-scope`.
 
 ## Incident 11
 
@@ -115,7 +115,7 @@
 - Time: 2026-05-19 20:41 PDT
 - Feature: grid-persistence
 - Symptom: Production Grid persistence implementation cannot start.
-- Root cause if known: G1.5 depends on G1.1 window command lifecycle and G2 Repository v0/localStorage migration decisions.
+- Root cause if known: G1.5 depends on G2 Repository v0/localStorage migration decisions.
 - Attempted fixes: Created safe-prep docs mapping current localStorage behavior, target repository boundary, and deferred restore/migration tests. Avoided production source changes.
 - Current status: BLOCKED.
-- Resume instruction: Complete G1.1 and G2 Repository v0, then rerun feature-build for `grid-persistence`.
+- Resume instruction: Complete G2 Repository v0, then rerun feature-build for `grid-persistence`.

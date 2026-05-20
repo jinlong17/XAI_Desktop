@@ -17,10 +17,10 @@
 | Gate Manifest | docs/workflow/roadmap/xai-g1-native-foundation.md |
 | Current Feature | window-command-contract |
 | Feature Source | docs/planning/execution/G1-native-foundation.md §G1.1 |
-| Feature Status | READY_FOR_VERIFY |
+| Feature Status | READY_TO_SHIP |
 | Current Commit | latest local docs checkpoint; use `git log -1 --oneline` for the exact self-referential commit |
-| Tests | default `cargo check` PASS; private-API-disabled `cargo check --no-default-features --features mas-sandbox` PASS after temporary config/dependency toggle; defaults restored |
-| Next Step | Run G1.1 feature-verify |
+| Tests | G1.1 PASS: cargo check, core check-types, plugin-organizer check-types, desktop build, contract consistency scan |
+| Next Step | Do not ship/push; continue to G1.2 `grid-shell-organizer-content` production build |
 
 ## Checkpoints
 
@@ -401,6 +401,19 @@
   - updated `docs/contracts/tauri-commands-v0.md`.
 - Status: `window-command-contract` -> READY_FOR_VERIFY.
 
+### 2026-05-19 23:09 PDT — Feature Verify: window-command-contract
+
+- Verified G1.1 production command contract.
+- Checks:
+  - `cargo check --manifest-path apps/desktop/src-tauri/Cargo.toml` -> PASS with existing dead-code warnings;
+  - `pnpm --filter @repo/core check-types` -> PASS;
+  - `pnpm --filter @repo/plugin-organizer check-types` -> PASS;
+  - `pnpm --filter desktop build` -> PASS with existing Vite chunk-size warning;
+  - contract consistency scan across Rust commands, Organizer manifest/hook, core TS types, and `docs/contracts/tauri-commands-v0.md` -> PASS.
+- Deferred cross-vendor verify is recorded in `docs/workflow/roadmap/xai-v1.deferred-gates.md`.
+- Status: `window-command-contract` -> READY_TO_SHIP. Ship/push was not run.
+- Next eligible feature: `grid-shell-organizer-content` (G1.2).
+
 ## Feature Outcomes
 
 | Feature | Gate | Status | Commit | Tests | Notes |
@@ -411,11 +424,11 @@
 | finder-dnd-path | G0 | READY_TO_SHIP | 33627df + 7a1b9dd + 7e20ca8 + e7fc4ab + 58c926d + 18b48da + 5e98083 | PASS: file, folder, `.app`, and alias paths observed via `tauri://drag-drop`; duplicate fixes applied; post-dedupe `.app` rerun passed; alias path policy recorded as `PRESERVE_ALIAS_PATH` | Deferred gates recorded in docs/workflow/roadmap/xai-v1.deferred-gates.md |
 | spaces-multimonitor-matrix | G0 | READY_TO_SHIP | 2fb6bac + bcc5785 + 1701583 | PASS: matrix template exists; current display facts, static window behavior, and user manual Spaces/multi-display follow evidence recorded | Optional independent screenshot replay before ship. |
 | mas-sandbox-dry-run | G0 | BLOCKED_EXTERNAL | 071a192 + 4537d2d + 2fda0c8 | PASS: MAS notes exist; private-API-disabled compile fallback passes; BLOCKED_EXTERNAL: Apple Developer/signed sandbox runtime evidence | Deferred external release gate; decoupled from G1 DMG/private path. |
-| window-command-contract | G1 | READY_FOR_VERIFY | 9c7b52f + dce4fb9 | PENDING_VERIFY: production command contract implemented | Awaiting feature-verify checks. |
-| grid-shell-organizer-content | G1 | BLOCKED | eaae46e | PASS: safe-prep docs exist; BLOCKED: G0/G1.1 not ready | Reached by user override; no production code changed. |
+| window-command-contract | G1 | READY_TO_SHIP | 9c7b52f + dce4fb9 + 1fa8c75 | PASS: cargo check, core check-types, plugin-organizer check-types, desktop build, contract consistency scan | Deferred cross-vendor verify recorded; ship/push not run. |
+| grid-shell-organizer-content | G1 | ELIGIBLE | eaae46e | PASS: safe-prep docs exist; G1.1 READY_TO_SHIP now unblocks production build | Next eligible feature. |
 | native-dnd-path-first | G1 | BLOCKED | 707a8d1 | PASS: DnD discovery docs exist; BLOCKED: MAS sandbox/security-scope evidence missing | Reached by user override; no production code changed. |
-| multi-grid-event-scope | G1 | BLOCKED | a7d4803 | PASS: event audit docs exist; BLOCKED: G0/G1.1 not ready | Reached by user override; no production code changed. |
-| grid-persistence | G1 | BLOCKED | dcf2750 | PASS: persistence discovery docs exist; BLOCKED: G1.1/G2 not ready | Reached by user override; no production code changed. |
+| multi-grid-event-scope | G1 | BLOCKED | a7d4803 | PASS: event audit docs exist; BLOCKED: wait for G1.2 shell/content split | Reached by user override; no production code changed. |
+| grid-persistence | G1 | BLOCKED | dcf2750 | PASS: persistence discovery docs exist; BLOCKED: G2 Repository v0 not ready | Reached by user override; no production code changed. |
 | host-business-residuals | G1 | READY_TO_SHIP | c6dbd77 | PASS: residual audit doc exists; Host scan recorded | Audit-only safe prep. |
 
 ## Deferred Gates Summary
@@ -429,10 +442,11 @@
 - Spaces/fullscreen/multi-display matrix deferral for `spaces-multimonitor-matrix` resolved by user manual confirmation; optional screenshot replay remains.
 - Real MAS/private-API sandbox runtime evidence deferred external for `mas-sandbox-dry-run`; compile fallback is ready.
 - G1 production implementation prerequisite resolved by G0 Conditional Go.
-- G1.2 production shell/content split deferred until G0 Go/Conditional Go and G1.1 implementation.
+- Cross-vendor verify deferred for `window-command-contract`; Codex inline verification passed.
+- G1.2 production shell/content split is now eligible after G1.1 READY_TO_SHIP.
 - G1.3 production DnD path-first implementation deferred until MAS/security-scope evidence.
-- G1.4 production event migration deferred until G0 Go/Conditional Go and G1.1 implementation.
-- G1.5 production persistence deferred until G1.1 and G2 Repository v0.
+- G1.4 production event migration deferred until G1.2 shell/content split.
+- G1.5 production persistence deferred until G2 Repository v0.
 - Cross-vendor review/verify deferred for `host-business-residuals`.
 
 ## Incidents Summary
@@ -441,15 +455,15 @@
 - finder-dnd-path incident resolved; G0.4 is READY_TO_SHIP after alias path-form evidence and ADR update.
 - spaces-multimonitor-matrix incident resolved; G0.5 is READY_TO_SHIP.
 - mas-sandbox-dry-run blocked external on real sandbox/private-API runtime evidence, but no longer blocks G1 DMG/private path.
-- window-command-contract G0 prerequisite resolved; production build is now eligible.
-- grid-shell-organizer-content blocked by G0/G1.1 gate status.
+- window-command-contract G0 prerequisite and production build are resolved; feature is READY_TO_SHIP.
+- grid-shell-organizer-content G0/G1.1 blocker resolved; production build is next eligible.
 - native-dnd-path-first blocked by MAS/security-scope evidence.
-- multi-grid-event-scope blocked by G0/G1.1 gate status.
-- grid-persistence blocked by G1.1/G2 status.
+- multi-grid-event-scope blocked by G1.2 shell/content split.
+- grid-persistence blocked by G2 Repository v0.
 
 ## Final 24h Summary
 
-Latest checkpoint is 2026-05-19 22:54 PDT. G0 is Conditional Go for the DMG/private path: G0.3/G0.4/G0.5 are READY_TO_SHIP, and G0.6 signed/sandbox MAS runtime validation is deferred external. No ship or push was run.
+Latest checkpoint is 2026-05-19 23:09 PDT. G0 is Conditional Go for the DMG/private path: G0.3/G0.4/G0.5 are READY_TO_SHIP, and G0.6 signed/sandbox MAS runtime validation is deferred external. G1.1 `window-command-contract` is READY_TO_SHIP. No ship or push was run.
 
 ### Completed Features
 
@@ -459,8 +473,8 @@ Latest checkpoint is 2026-05-19 22:54 PDT. G0 is Conditional Go for the DMG/priv
 - `finder-dnd-path` — READY_TO_SHIP after Tauri file/folder/app/alias path evidence, duplicate fixes, post-dedupe `.app` pass, and ADR alias policy update.
 - `spaces-multimonitor-matrix` — READY_TO_SHIP after user manual Spaces/multi-display follow confirmation.
 - `mas-sandbox-dry-run` — BLOCKED_EXTERNAL after compile fallback; signed/sandbox runtime evidence remains required.
-- `window-command-contract` — ELIGIBLE after G0 Conditional Go.
-- `grid-shell-organizer-content` — BLOCKED after safe prep.
+- `window-command-contract` — READY_TO_SHIP after production command contract implementation and automated verification.
+- `grid-shell-organizer-content` — ELIGIBLE for production build after safe prep.
 - `native-dnd-path-first` — BLOCKED after safe prep.
 - `multi-grid-event-scope` — BLOCKED after safe prep.
 - `grid-persistence` — BLOCKED after safe prep.
@@ -473,12 +487,12 @@ Latest checkpoint is 2026-05-19 22:54 PDT. G0 is Conditional Go for the DMG/priv
 - `click-through-matrix`
 - `finder-dnd-path`
 - `spaces-multimonitor-matrix`
+- `window-command-contract`
 - `host-business-residuals`
 
 ### BLOCKED Features
 
 - `mas-sandbox-dry-run`
-- `grid-shell-organizer-content`
 - `native-dnd-path-first`
 - `multi-grid-event-scope`
 - `grid-persistence`
@@ -493,9 +507,10 @@ Latest checkpoint is 2026-05-19 22:54 PDT. G0 is Conditional Go for the DMG/priv
 - Optional independent replay for `finder-dnd-path`; no remaining G0.4 blocker.
 - Optional independent screenshot replay for `spaces-multimonitor-matrix`.
 - Real MAS/private-API sandbox evidence for `mas-sandbox-dry-run`.
-- G1.2 shell/content production refactor until G1.1 is implemented.
+- Cross-vendor verify for `window-command-contract`.
+- G1.2 shell/content production refactor is eligible; production verification still pending.
 - G1.3 DnD path-first implementation until MAS sandbox/security-scope decision.
-- G1.4 event migration until G1.1 is implemented and G0 DnD payload shape is settled.
+- G1.4 event migration until G1.2 shell/content split is done.
 - G1.5 persistence implementation until G2 Repository v0 is ready.
 - Cross-vendor review/verify for `host-business-residuals`.
 
@@ -505,14 +520,14 @@ Latest checkpoint is 2026-05-19 22:54 PDT. G0 is Conditional Go for the DMG/priv
 - Incident 2: `finder-dnd-path` duplicate and alias evidence gaps are resolved; G0.4 is READY_TO_SHIP.
 - Incident 3: `spaces-multimonitor-matrix` resolved by user manual runtime confirmation.
 - Incident 4: `mas-sandbox-dry-run` cannot satisfy sandbox/private-API runtime acceptance without Apple Developer/signed sandbox environment.
-- Incident 5: `window-command-contract` G0 prerequisite resolved by Conditional Go.
+- Incident 5: `window-command-contract` G0 prerequisite resolved by Conditional Go; production implementation now READY_TO_SHIP.
 - Incident 6: `grid-window-prototype` `+ New Grid` did not create a native window; resolved by runtime recovery commits.
 - Incident 7: `grid-window-prototype` AI cube/settings were covered by Grid windows; resolved by runtime recovery commits.
 - Incident 8: `grid-window-prototype` still failed to generate and AI cube movement was bounded; resolved by runtime recovery commits.
-- Incident 9: `grid-shell-organizer-content` production split is blocked by G0/G1.1.
-- Incident 10: `multi-grid-event-scope` production event migration is blocked by G0/G1.1.
+- Incident 9: `grid-shell-organizer-content` production split blocker resolved; feature is next eligible.
+- Incident 10: `multi-grid-event-scope` production event migration is blocked by G1.2 shell/content split.
 - Incident 11: `native-dnd-path-first` production DnD is blocked by MAS/security-scope evidence.
-- Incident 12: `grid-persistence` production persistence is blocked by G1.1/G2.
+- Incident 12: `grid-persistence` production persistence is blocked by G2 Repository v0.
 
 ### Commits
 
@@ -556,6 +571,8 @@ Latest checkpoint is 2026-05-19 22:54 PDT. G0 is Conditional Go for the DMG/priv
 - `2fda0c8` — `feat(G0.6): add MAS compile fallback guard`
 - `6c521d7` — `docs(roadmap): finalize MAS compile fallback checkpoint`
 - `bd8cac3` — `docs(roadmap): record G0 blocked stop checkpoint`
+- `dce4fb9` — `feat(window-command-contract): implement grid lifecycle commands`
+- `1fa8c75` — `docs(roadmap): finalize G1.1 build checkpoint`
 
 ### Test Results
 
@@ -593,6 +610,11 @@ Latest checkpoint is 2026-05-19 22:54 PDT. G0 is Conditional Go for the DMG/priv
 - G0.5 source scan: `rg` over `window_ext.rs` -> PASS, `CanJoinAllSpaces` / `Stationary` / `IgnoresCycle` and window levels recorded
 - G0.6 default path: `cargo check --manifest-path apps/desktop/src-tauri/Cargo.toml` -> PASS with existing dead-code warnings
 - G0.6 compile fallback path: temporary `macOSPrivateApi=false` + temporary removal of Tauri dependency `macos-private-api` + `cargo check --manifest-path apps/desktop/src-tauri/Cargo.toml --no-default-features --features mas-sandbox` -> PASS with existing dead-code warnings
+- G1.1 `cargo check --manifest-path apps/desktop/src-tauri/Cargo.toml` -> PASS with existing dead-code warnings
+- G1.1 `pnpm --filter @repo/core check-types` -> PASS
+- G1.1 `pnpm --filter @repo/plugin-organizer check-types` -> PASS
+- G1.1 `pnpm --filter desktop build` -> PASS with Vite chunk-size warning
+- G1.1 contract consistency scan across Rust commands, Organizer manifest/hook, core TS types, and `docs/contracts/tauri-commands-v0.md` -> PASS
 
 ### Next Human Reading Order
 

@@ -184,11 +184,11 @@
 
 - Feature: grid-shell-organizer-content
 - Gate: G1
-- Deferred gate: G0/G1.1 prerequisite for production shell/content split
-- Why deferred: The user instructed to continue, but G1.2 production implementation depends on G0 Go/Conditional Go and the G1.1 Window Command Contract.
-- Risk: Moving Grid business UI out of Host before G0 DnD/window decisions and G1.1 command contracts could freeze the wrong public plugin boundary.
+- Deferred gate: G0/G1.1 prerequisite for production shell/content split — RESOLVED 2026-05-19 23:09 PDT
+- Why deferred: The user instructed to continue, but G1.2 production implementation depended on G0 Go/Conditional Go and the G1.1 Window Command Contract. G0 is now Conditional Go and G1.1 is READY_TO_SHIP.
+- Risk: CLOSED for the prerequisite gate. G1.2 implementation still requires normal feature-build and feature-verify.
 - What was done instead: Created docs-only feature brief, discovery review, design, API, test plan, and dev_log describing the target boundary and blockers.
-- Later human action: Complete G0 evidence, implement/review G1.1, then rerun feature-build for the production shell/content split.
+- Later human action: None for this prerequisite gate; ship remains human-only after G1.2 reaches READY_TO_SHIP.
 - Suggested verification command / environment: `sed -n '1,220p' docs/reviews/grid-shell-organizer-content/20260519-discovery-review.md`
 - Files/commits affected: docs/reviews/grid-shell-organizer-content/*; packages/grid-shell-organizer-content/docs/*; commit `eaae46e`
 
@@ -196,11 +196,11 @@
 
 - Feature: multi-grid-event-scope
 - Gate: G1
-- Deferred gate: G0/G1.1 prerequisite for production event migration
-- Why deferred: The user instructed to continue, but G1.4 production implementation depends on G0 Go/Conditional Go and the G1.1 Window Command Contract.
-- Risk: Renaming events or enforcing payload guards before final window/DnD contracts could break the recovered G0 runtime path or encode the wrong drop payload.
+- Deferred gate: G1.2 prerequisite for production event migration
+- Why deferred: The user instructed to continue earlier, but G1.4 should wait until the Grid shell/content split defines the final Host/Organizer public boundary.
+- Risk: Renaming events or enforcing payload guards before the shell/content split could duplicate or churn the public Organizer boundary.
 - What was done instead: Created docs-only feature brief, discovery review, design, API, test plan, and dev_log describing current aliases, contract drift, and target migration.
-- Later human action: Complete G0 evidence, implement/review G1.1, settle Finder DnD payload shape, then rerun feature-build for event migration.
+- Later human action: Complete G1.2, then rerun feature-build for event migration.
 - Suggested verification command / environment: `sed -n '1,220p' docs/reviews/multi-grid-event-scope/20260519-discovery-review.md`
 - Files/commits affected: docs/reviews/multi-grid-event-scope/*; packages/multi-grid-event-scope/docs/*; commit `a7d4803`
 
@@ -220,10 +220,22 @@
 
 - Feature: grid-persistence
 - Gate: G1
-- Deferred gate: G1.1 Window Command Contract and G2 Repository v0
-- Why deferred: G1.5 production implementation depends on stable window lifecycle commands and the G2 repository contract/migration path.
+- Deferred gate: G2 Repository v0
+- Why deferred: G1.5 production implementation depends on the G2 repository contract/migration path.
 - Risk: Implementing persistence now would extend direct `localStorage` use or invent a repository shape ahead of the authoritative G2 contract.
 - What was done instead: Created docs-only feature brief, discovery review, design, API, test plan, and dev_log mapping current localStorage behavior and target repository boundary.
-- Later human action: Complete G1.1 and G2 Repository v0, then rerun feature-build for Grid persistence and localStorage migration.
+- Later human action: Complete G2 Repository v0, then rerun feature-build for Grid persistence and localStorage migration.
 - Suggested verification command / environment: `sed -n '1,220p' docs/reviews/grid-persistence/20260519-discovery-review.md`
 - Files/commits affected: docs/reviews/grid-persistence/*; packages/grid-persistence/docs/*; commit `dcf2750`
+
+## Entry 20
+
+- Feature: window-command-contract
+- Gate: G1
+- Deferred gate: Cross-vendor feature-verify
+- Why deferred: The runtime override requires a serial Codex conductor with no spawn/bg dispatch, so no independent cross-vendor verifier was available.
+- Risk: The same Codex execution context implemented and verified the G1.1 command contract, which reduces independent review coverage for IPC shape and window lifecycle edge cases.
+- What was done instead: Ran inline feature-verify with `cargo check`, core and Organizer type checks, desktop build, and a contract consistency scan across Rust commands, TS types, Organizer manifest/hook, and `docs/contracts/tauri-commands-v0.md`.
+- Later human action: Review `dce4fb9` and `packages/window-command-contract/docs/dev_log.md`, then run manual ship only if acceptable.
+- Suggested verification command / environment: `cargo check --manifest-path apps/desktop/src-tauri/Cargo.toml && pnpm --filter @repo/core check-types && pnpm --filter @repo/plugin-organizer check-types && pnpm --filter desktop build`
+- Files/commits affected: apps/desktop/src-tauri/src/commands/window.rs; apps/desktop/src-tauri/src/lib.rs; packages/core/src/types/window.ts; packages/plugin-organizer/src/hooks/useGridWindow.ts; docs/contracts/tauri-commands-v0.md; commits `dce4fb9`, `1fa8c75`
