@@ -15,12 +15,12 @@
 |---|---|
 | Current Gate | G0 — window spike |
 | Gate Manifest | docs/workflow/roadmap/xai-g0-window-spike.md |
-| Current Feature | click-through-matrix |
-| Feature Source | docs/planning/execution/G0-window-spike.md §G0.3 |
-| Feature Status | IN_PROGRESS |
-| Current Commit | a33c74d |
-| Tests | `pnpm --filter desktop exec tsc --noEmit`; `pnpm --filter @repo/plugin-organizer check-types`; `pnpm --filter desktop build`; `cargo check --manifest-path apps/desktop/src-tauri/Cargo.toml` |
-| Next Step | Resume G0.3 click-through-matrix now that G0.2 runtime is fixed/confirmed |
+| Current Feature | finder-dnd-path |
+| Feature Source | docs/planning/execution/G0-window-spike.md §G0.4 |
+| Feature Status | BLOCKED |
+| Current Commit | 7e20ca8 |
+| Tests | `pnpm --filter desktop exec tsc --noEmit`; `pnpm --filter @repo/plugin-organizer check-types`; `pnpm --filter desktop build` |
+| Next Step | Human Finder drop matrix, or continue only with safe downstream prep because G0 is not Go/Conditional Go |
 
 ## Checkpoints
 
@@ -184,6 +184,18 @@
 - `grid-window-prototype` status restored to READY_TO_SHIP. Independent review/verify gates remain deferred in `docs/workflow/roadmap/xai-v1.deferred-gates.md`.
 - Continuing to G0.3 `click-through-matrix`.
 
+### 2026-05-19 20:31 PDT — Feature Checkpoint: finder-dnd-path instrumentation
+
+- Reconfirmed G0.3 `click-through-matrix` remains BLOCKED because no new real macOS hit-test evidence is available.
+- Continued to G0.4 `finder-dnd-path` now that G0.2 Grid windows are runtime-confirmed.
+- Added GridWindow G0 Finder DnD telemetry in `7e20ca8`.
+- The telemetry listens for `tauri://drag-drop`, records `gridId`, paths, path-kind classification, source, position, and timestamp, then emits the existing `grid-window-file-drop` event.
+- Verification passed:
+  - `pnpm --filter desktop exec tsc --noEmit`
+  - `pnpm --filter @repo/plugin-organizer check-types`
+  - `pnpm --filter desktop build` (Vite chunk-size warning only)
+- Status remains BLOCKED because file/folder/`.app`/alias payload observations require a real Finder drag/drop run.
+
 ## Feature Outcomes
 
 | Feature | Gate | Status | Commit | Tests | Notes |
@@ -191,7 +203,7 @@
 | window-ground-truth | G0 | READY_TO_SHIP | 3b571f6 | PASS: branch, sw_vers, README content | Deferred gates recorded in docs/workflow/roadmap/xai-v1.deferred-gates.md |
 | grid-window-prototype | G0 | READY_TO_SHIP | 6b121ea + 14e04c2 + 01e5167 + b8c34fe + 7b7ff35 + f65a1b5 + a33c74d | PASS: desktop tsc; plugin-organizer check-types; desktop build; cargo check | Runtime fixed/confirmed; deferred review/verify gates recorded. |
 | click-through-matrix | G0 | BLOCKED | 82ab268 + 7a1b9dd | PASS: matrix template and static analysis exist; BLOCKED: real hit-test evidence | Requires human macOS click-through matrix. |
-| finder-dnd-path | G0 | BLOCKED | 33627df + 7a1b9dd | PASS: matrix template and static analysis exist; BLOCKED: real Finder drop evidence | Requires human Finder/Tauri path matrix. |
+| finder-dnd-path | G0 | BLOCKED | 33627df + 7a1b9dd + 7e20ca8 | PASS: matrix template, static analysis, telemetry implementation, desktop tsc, plugin-organizer check-types, desktop build; BLOCKED: real Finder drop evidence | Requires human Finder/Tauri path matrix. |
 | spaces-multimonitor-matrix | G0 | BLOCKED | 2fb6bac | PASS: matrix template exists; BLOCKED: real Spaces/fullscreen/multi-display evidence | Reached by user override; safe prep only. |
 | mas-sandbox-dry-run | G0 | BLOCKED | 071a192 | PASS: MAS notes exist; BLOCKED: real sandbox/private-API evidence | Reached by user override; safe prep only. |
 | window-command-contract | G1 | BLOCKED | 9c7b52f | PASS: safe-prep docs exist; BLOCKED: G0 not Go/Conditional Go | Reached by user override; no production code changed. |
@@ -204,7 +216,7 @@
 - Human ship for `window-ground-truth` deferred while continuing local G0 tasks.
 - Cross-vendor review/verify deferred for `grid-window-prototype`; runtime fix was confirmed by user and commits.
 - Real macOS click-through matrix deferred for `click-through-matrix`.
-- Real Finder DnD path matrix deferred for `finder-dnd-path`.
+- Real Finder DnD path matrix deferred for `finder-dnd-path`; GridWindow telemetry is now available to capture it.
 - Real Spaces/fullscreen/multi-display matrix deferred for `spaces-multimonitor-matrix`.
 - Real MAS/private-API sandbox evidence deferred for `mas-sandbox-dry-run`.
 - G1 production implementation deferred until G0 Go/Conditional Go.
@@ -213,7 +225,7 @@
 ## Incidents Summary
 
 - click-through-matrix blocked on real macOS hit-test evidence.
-- finder-dnd-path blocked on real Finder DnD payload evidence.
+- finder-dnd-path blocked on real Finder DnD payload evidence after telemetry implementation.
 - spaces-multimonitor-matrix blocked on real macOS Spaces/fullscreen/multi-display evidence.
 - mas-sandbox-dry-run blocked on real sandbox/private-API evidence.
 - window-command-contract blocked by G0 gate status.
@@ -227,7 +239,7 @@ Paused early on 2026-05-19 after the user override because no further production
 - `window-ground-truth` — READY_TO_SHIP.
 - `grid-window-prototype` — READY_TO_SHIP after runtime recovery.
 - `click-through-matrix` — BLOCKED after safe prep.
-- `finder-dnd-path` — BLOCKED after safe prep.
+- `finder-dnd-path` — BLOCKED after telemetry implementation.
 - `spaces-multimonitor-matrix` — BLOCKED after safe prep.
 - `mas-sandbox-dry-run` — BLOCKED after safe prep.
 - `window-command-contract` — BLOCKED after safe prep.
@@ -254,7 +266,7 @@ Paused early on 2026-05-19 after the user override because no further production
 - Cross-vendor review/verify for serial Codex-run features.
 - Independent review/verify for `grid-window-prototype` runtime recovery commits.
 - Real macOS click-through matrix for `click-through-matrix`.
-- Real Finder DnD path matrix for `finder-dnd-path`.
+- Real Finder DnD path matrix for `finder-dnd-path`; use the new GridWindow telemetry panel/log.
 - Real Spaces/fullscreen/multi-display matrix for `spaces-multimonitor-matrix`.
 - Real MAS/private-API sandbox evidence for `mas-sandbox-dry-run`.
 - G1 production implementation until G0 Go/Conditional Go.

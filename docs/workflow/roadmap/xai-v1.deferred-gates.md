@@ -103,10 +103,10 @@
 - Deferred gate: Real Finder DnD path-first matrix
 - Why deferred: The acceptance requires real Finder drag/drop payloads for file, folder, App bundle, and alias in a Tauri Grid window.
 - Risk: G0 cannot prove the path-first drop model until this evidence exists.
-- What was done instead: Created the evidence matrix template and avoided changing Webview/native drop behavior without observed runtime results.
-- Later human action: Run `pnpm --filter desktop tauri dev`, drop Finder items into a Grid, and attach logs/screenshots under `docs/reviews/window-ground-truth/finder-dnd-path/`.
-- Suggested verification command / environment: `pnpm --filter desktop tauri dev` on macOS with Finder; use file, folder, `.app`, and alias drops.
-- Files/commits affected: docs/reviews/window-ground-truth/finder-dnd-path/README.md; packages/finder-dnd-path/docs/*; commit `33627df`
+- What was done instead: Created the evidence matrix template, added GridWindow `tauri://drag-drop` telemetry in `7e20ca8`, and verified the implementation with TypeScript/build checks.
+- Later human action: Run `pnpm --filter desktop tauri dev`, drop Finder items into a Grid, confirm the `Finder DnD` panel increments, and attach logs/screenshots under `docs/reviews/window-ground-truth/finder-dnd-path/`.
+- Suggested verification command / environment: `pnpm --filter desktop tauri dev` on macOS with Finder; use file, folder, `.app`, and alias drops; capture console lines beginning with `[G0 Finder DnD] path-first drop`.
+- Files/commits affected: docs/reviews/window-ground-truth/finder-dnd-path/README.md; packages/finder-dnd-path/docs/*; apps/desktop/src/windows/GridWindow.tsx; commits `33627df`, `7a1b9dd`, `7e20ca8`
 
 ## Entry 10
 
