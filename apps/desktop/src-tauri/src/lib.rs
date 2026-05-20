@@ -77,7 +77,11 @@ pub fn run() {
                     .expect("failed to set position");
             }
 
-            // Create control window (AI Cube)
+            // Create control window (AI Cube).
+            // The initial inner_size matches CONTROL_CLOSED_SIZE in ControlWindow.tsx
+            // so the transparent hit-test surface doesn't blanket the area where
+            // Grid windows spawn. React will expand the window when the settings
+            // panel opens and shrink it back when it closes.
             if app.get_webview_window("control").is_none() {
                 let control_window = WebviewWindowBuilder::new(
                     app,
@@ -85,7 +89,7 @@ pub fn run() {
                     WebviewUrl::App("/#/control".into()),
                 )
                 .title("")
-                .inner_size(360.0, 360.0)
+                .inner_size(96.0, 96.0)
                 .position(24.0, 80.0)
                 .transparent(true)
                 .decorations(false)

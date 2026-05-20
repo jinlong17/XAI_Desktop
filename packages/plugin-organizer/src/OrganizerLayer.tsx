@@ -7,6 +7,7 @@ import { listen } from "@tauri-apps/api/event";
 import { isTauri } from "@tauri-apps/api/core";
 
 const CREATE_GRID_REQUEST_EVENT = "organizer:create-grid-request";
+const CLEAR_ALL_REQUEST_EVENT = "organizer:clear-all-request";
 
 interface CreateGridRequestEvent {
   gridId?: string;
@@ -28,6 +29,7 @@ function OrganizerContent() {
     updateGrid,
     deleteGrid,
     createGrid,
+    clearAll,
     addItem,
     addItemToGrid,
     findGridAtPosition,
@@ -115,11 +117,16 @@ function OrganizerContent() {
       const y = event.payload?.y ?? 120;
       createGrid(x, y);
     });
+    const unlistenClearPromise = listen(CLEAR_ALL_REQUEST_EVENT, () => {
+      console.log("🧹 Clearing all grids per control window request");
+      clearAll();
+    });
     return () => {
       unlistenPromise.then((unlisten) => unlisten());
       unlistenLegacyPromise.then((unlisten) => unlisten());
+      unlistenClearPromise.then((unlisten) => unlisten());
     };
-  }, [createGrid]);
+  }, [createGrid, clearAll]);
 
   // Grid info display (for debugging/status)
   const gridCount = grids.length;

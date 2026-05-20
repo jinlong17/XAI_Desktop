@@ -12,6 +12,8 @@ export interface SettingsPanelProps {
   isOpen: boolean;
   anchorPosition: AnchorPosition;
   onCreateGrid?: (x: number, y: number) => void;
+  onClearAll?: () => void;
+  onClose?: () => void;
 }
 
 /**
@@ -20,7 +22,7 @@ export interface SettingsPanelProps {
  * Shows canvas controls next to the AI cube. This popover stays thin on purpose
  * so new plugin settings can slot in without restructuring the host.
  */
-export function SettingsPanel({ isOpen, anchorPosition, onCreateGrid }: SettingsPanelProps) {
+export function SettingsPanel({ isOpen, anchorPosition, onCreateGrid, onClearAll, onClose }: SettingsPanelProps) {
   const {
     cubeColor,
     cubeTextColor,
@@ -54,8 +56,33 @@ export function SettingsPanel({ isOpen, anchorPosition, onCreateGrid }: Settings
     <div className="settings-panel" style={panelStyle} role="dialog" aria-label="AI Assistant Settings">
       <div className="settings-row" style={{ marginTop: 6 }}>
         <strong className="settings-label">AI Icon Settings</strong>
+        {onClose && (
+          <button
+            type="button"
+            onClick={() => onClose()}
+            aria-label="Close settings"
+            title="Close (click cube or anywhere outside to dismiss)"
+            style={{
+              pointerEvents: "auto",
+              width: 24,
+              height: 24,
+              padding: 0,
+              borderRadius: 6,
+              border: "1px solid rgba(255,255,255,0.18)",
+              background: "rgba(15,23,42,0.55)",
+              color: "#cbd5e1",
+              cursor: "pointer",
+              fontSize: 14,
+              lineHeight: 1,
+              display: "grid",
+              placeItems: "center",
+            }}
+          >
+            ×
+          </button>
+        )}
       </div>
-      <div className="settings-row">
+      <div className="settings-row" style={{ gap: 8 }}>
         <button
           type="button"
           onClick={() => {
@@ -73,6 +100,24 @@ export function SettingsPanel({ isOpen, anchorPosition, onCreateGrid }: Settings
         >
           + New Grid
         </button>
+        {onClearAll && (
+          <button
+            type="button"
+            onClick={() => onClearAll()}
+            title="Remove every grid and its persisted layout"
+            style={{
+              pointerEvents: "auto",
+              padding: "8px 10px",
+              borderRadius: 10,
+              border: "1px solid rgba(239,68,68,0.45)",
+              background: "rgba(127,29,29,0.35)",
+              color: "#fecaca",
+              cursor: "pointer",
+            }}
+          >
+            Clear All Grids
+          </button>
+        )}
       </div>
 
       <div className="settings-row">
