@@ -1,12 +1,12 @@
 export * from "./types";
 export { LocalStorageAdapter } from "./data/LocalStorageAdapter";
-export { PluginSlotRegistry, ConsoleSlotRegistry, createDefaultConsoleNavItems } from "./registry/PluginSlotRegistry";
+export { PluginSlotRegistry, createDefaultConsoleNavItems } from "./registry/PluginSlotRegistry";
 export type { SearchProvider } from "./registry/PluginSlotRegistry";
 export { useCommandPalette } from "./hooks/useCommandPalette";
 export type { CommandPaletteController, UseCommandPaletteOptions } from "./hooks/useCommandPalette";
 export { NotificationStoreProvider, useNotificationStore } from "./hooks/useNotificationStore";
 export type { NotificationStore, NotificationStoreProviderProps } from "./hooks/useNotificationStore";
-export { ConsoleDesktopBridge, consoleDesktopBridge, gridItemToTask } from "./bridge/ConsoleDesktopBridge";
+export { ConsoleDesktopBridge, gridItemToTask } from "./bridge/ConsoleDesktopBridge";
 export type { ConsoleDesktopEventHandler } from "./bridge/ConsoleDesktopBridge";
 export { ConsoleLayout } from "./components/ConsoleLayout";
 export type { ConsoleLayoutProps } from "./components/ConsoleLayout";

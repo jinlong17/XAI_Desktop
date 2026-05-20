@@ -15,3 +15,7 @@
 - Added console-desktop bridge mock and grid item to task utility.
 - Added notification center with mock Pomodoro/Todo/Habit notifications.
 - Recorded proposed desktop contract changes under `docs/reviews/console-desktop-link`.
+
+## Known Gaps
+
+- Bridge instantiation should be owned by Host via `@repo/core/events` when contract stabilizes.
