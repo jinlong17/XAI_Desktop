@@ -1,4 +1,4 @@
-import { useEffect, useState, useCallback, useMemo } from "react";
+import { MouseEvent as ReactMouseEvent, useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { listen } from "@tauri-apps/api/event";
 import { getCurrentWindow } from "@tauri-apps/api/window";
 import {
@@ -9,6 +9,8 @@ import {
 } from "@repo/plugin-organizer";
 import { GlobalDndProvider } from "../providers/DndProvider";
 import { SettingsProvider, useSettings } from "../context/SettingsContext";
+
+const DRAG_THRESHOLD_PX = 4;
 
 // Event types for cross-window communication
 interface GridUpdateEvent {
@@ -51,6 +53,13 @@ function GridWindowContent({ gridId }: { gridId: string }) {
   const [spikeEventCount, setSpikeEventCount] = useState(0);
   const [lastSpikeEvent, setLastSpikeEvent] = useState<G0GridPrototypePing | null>(null);
   const { gridOpacity, gridBlur } = useSettings();
+  // gridRef mirrors `grid` so handleUpdate can read the latest rect without
+  // running side-effects inside a setState updater (multi-window position
+  // sync is sensitive to stale x/y from the SmartContainer's DOM drag).
+  const gridRef = useRef<GridBox | null>(null);
+  useEffect(() => {
+    gridRef.current = grid;
+  }, [grid]);
 
   useEffect(() => {
     let cancelled = false;
@@ -144,8 +153,28 @@ function GridWindowContent({ gridId }: { gridId: string }) {
 
   const handleUpdate = useCallback(
     (_id: string, patch: Partial<GridBox>) => {
-      setGrid((prev) => (prev ? { ...prev, ...patch } : null));
-      emitUpdate(patch);
+      // In multi-window mode the *window* owns its on-screen position via the
+      // OS-native drag (see GridWindow's onMouseDownCapture handler below).
+      // SmartContainer always sees rect.x/y as 0 (GridWindow overrides them)
+      // so any rect.x/y coming back through react-draggable's onStop is just
+      // DOM-relative noise — if we propagated it, the window would teleport
+      // to logical (0, 0) on every header click. Strip x/y from the patch
+      // and merge size/other fields against the latest known rect.
+      const prev = gridRef.current;
+      if (!prev) return;
+      let safePatch: Partial<GridBox> = patch;
+      if (patch.rect) {
+        safePatch = {
+          ...patch,
+          rect: {
+            ...prev.rect,
+            width: patch.rect.width,
+            height: patch.rect.height,
+          },
+        };
+      }
+      setGrid({ ...prev, ...safePatch });
+      emitUpdate(safePatch);
     },
     [emitUpdate]
   );
@@ -315,10 +344,69 @@ function GridWindowContent({ gridId }: { gridId: string }) {
  * Wraps content with necessary providers.
  */
 export function GridWindow({ gridId }: { gridId: string }) {
+  // Intercept mousedown on the SmartContainer title bar (or the G0 fallback
+  // panel) in CAPTURE phase. We stopPropagation so react-draggable's
+  // onMouseDown synthetic handler never fires — its DOM-drag is meaningless
+  // in multi-window mode and emits bogus rect.x/y that warp the window. Past
+  // DRAG_THRESHOLD_PX we hand off to Tauri startDragging, which drives the
+  // window from AppKit's mouse-drag loop and gives unrestricted screen-wide
+  // movement (same pattern as the AI cube in 7b7ff35).
+  const handleHeaderDragStart = useCallback((event: ReactMouseEvent<HTMLDivElement>) => {
+    if (event.button !== 0) return;
+    const target = event.target as HTMLElement | null;
+    if (!target) return;
+
+    const onGridDragHandle =
+      Boolean(target.closest(".grid-title-bar")) ||
+      Boolean(target.closest("[data-g0-grid-prototype]"));
+    if (!onGridDragHandle) return;
+
+    // Don't hijack interactive children: buttons (lock/fold/view/close/etc.),
+    // the title edit input, the rename span's dblclick, or the resize handles.
+    if (target.closest("button, input, select, textarea, .resize-handle")) return;
+
+    event.preventDefault();
+    event.stopPropagation();
+
+    const startScreenX = event.screenX;
+    const startScreenY = event.screenY;
+    let handed = false;
+
+    const cleanup = () => {
+      window.removeEventListener("mousemove", onMove, true);
+      window.removeEventListener("mouseup", onUp, true);
+    };
+
+    const onMove = (ev: MouseEvent) => {
+      if (handed) return;
+      const dx = ev.screenX - startScreenX;
+      const dy = ev.screenY - startScreenY;
+      if (Math.hypot(dx, dy) >= DRAG_THRESHOLD_PX) {
+        handed = true;
+        void getCurrentWindow()
+          .startDragging()
+          .catch((err) => {
+            console.error("[GridWindow] startDragging failed:", err);
+          });
+        cleanup();
+      }
+    };
+
+    const onUp = () => cleanup();
+
+    window.addEventListener("mousemove", onMove, true);
+    window.addEventListener("mouseup", onUp, true);
+  }, []);
+
   return (
     <SettingsProvider>
       <GlobalDndProvider>
-        <GridWindowContent gridId={gridId} />
+        <div
+          onMouseDownCapture={handleHeaderDragStart}
+          style={{ width: "100%", height: "100%" }}
+        >
+          <GridWindowContent gridId={gridId} />
+        </div>
       </GlobalDndProvider>
     </SettingsProvider>
   );
