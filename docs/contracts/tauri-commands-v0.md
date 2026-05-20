@@ -34,8 +34,8 @@ Rust 是 label 生成权威。TS 侧不能手写除 public helper 以外的 labe
 | Command | Owner | Allowed windows | Input | Output |
 |---|---|---|---|---|
 | `create_grid_window` | organizer/host | `main`,`control` | `{ gridId, rect }` | `GridWindowSnapshot` |
-| `update_grid_window` | organizer/host | `main`,`control`,`grid_*` | `{ gridId, rect }` | `GridWindowSnapshot` |
-| `close_grid_window` | organizer/host | `main`,`control`,`grid_*` | `{ gridId }` | `void` |
+| `update_grid_window` | organizer/host | `main`,`control` | `{ gridId, rect }` | `GridWindowSnapshot` |
+| `close_grid_window` | organizer/host | `main`,`control` | `{ gridId }` | `void` |
 | `list_grid_windows` | organizer/host | `main`,`control` | `void` | `GridWindowSnapshot[]` |
 | `focus_grid_window` | organizer/host | `main`,`control` | `{ gridId }` | `GridWindowSnapshot` |
 
@@ -56,6 +56,16 @@ G1.1 implementation notes:
 - Invalid `gridId` values return `INVALID_GRID_ID`.
 - Missing windows return `WINDOW_NOT_FOUND`.
 - Native window failures return `WINDOW_NATIVE_ERROR`.
+- Runtime allow-list `commands::window::WINDOW_ALLOWED_WINDOWS`
+  (`main`, `control`) enforces the table above at the IPC boundary
+  with `WINDOW_CAPABILITY_DENIED`. `grid_*` windows are intentionally
+  excluded — a grid window must request lifecycle changes for itself
+  via cross-window events routed through `control`, not by directly
+  invoking `update_grid_window` / `close_grid_window` against another
+  grid. Widget / pet / ai-cube / console are likewise rejected.
+- The `window: tauri::WebviewWindow` argument is injected by the
+  Tauri IPC layer; JS callers do NOT include it in the args payload
+  (mirrors the crypto / database / keychain command pattern).
 
 ## 4. File / Open Commands
 
@@ -152,6 +162,18 @@ PoC scope:
 - Errors: `E1300` (not initialized), `E1301` (invalid input), `E1302` (backend SQLite/FS error).
 - Feature-gated: registered only when the desktop crate is built with `--features crypto` (the gate that also enables `rusqlite`).
 
+## 6.2 Sync Menubar Commands
+
+Current source:
+- `apps/desktop/src-tauri/src/commands/menubar.rs`
+
+| Command | Allowed windows | Input | Output | Security rule |
+|---|---|---|---|---|
+| `sync_set_menubar_status` | `control`, `main` | `{ payload: { status, kind?, message?, frame? } }` | `void` | Runtime allow-list `commands::menubar::MENUBAR_ALLOWED_WINDOWS` rejects any other origin (`grid_*`, `widget_*`, `pet`, `ai_cube`, `console`, `account`) with `E3004` before the tray icon / tooltip is touched. The menubar is a global UI surface, so only the sync supervisor in `control` and the main shell are allowed to flip it. |
+
+The `window: tauri::WebviewWindow` arg is injected by Tauri; JS callers
+do NOT include it in the args payload.
+
 ## 7. Capability Files
 
 | File | Purpose |
@@ -165,8 +187,26 @@ Full audit table: `apps/desktop/src-tauri/capabilities/AUDIT.md`.
 
 G2.5 invariants now enforced:
 
-- Every JS-callable command has a capability file declaring its allowed windows.
-- Every JS-callable command has a runtime `ensure_*_allowed(label)` check matching the capability file. Widget / pet / ai-cube windows cannot invoke `db_*`, `crypto_*`, or `secret_*` even via mis-attached capability files.
+- Every JS-callable command has a capability file declaring its allowed
+  windows.
+- The following command groups carry a runtime
+  `ensure_*_allowed(label)` defence-in-depth check that mirrors the
+  capability file scope, so widget / pet / ai-cube windows cannot
+  invoke them even if a future capability file widening lands by
+  mistake:
+
+  | Command group | Runtime allow-list constant | Source |
+  |---|---|---|
+  | `crypto_*` | `CRYPTO_ALLOWED_WINDOWS` | `commands/crypto.rs` |
+  | `secret_*` | `KEYCHAIN_ALLOWED_WINDOWS` | `commands/keychain.rs` |
+  | `db_*` | `DATABASE_ALLOWED_WINDOWS` | `commands/database.rs` |
+  | `reveal_in_finder`, `open_path` | `FINDER_ALLOWED_WINDOWS` | `commands/finder.rs` |
+  | `create_grid_window`, `update_grid_window`, `close_grid_window`, `list_grid_windows`, `focus_grid_window` | `WINDOW_ALLOWED_WINDOWS` | `commands/window.rs` |
+  | `sync_set_menubar_status` | `MENUBAR_ALLOWED_WINDOWS` | `commands/menubar.rs` |
+
+  Other commands (`clipboard_*`, etc.) currently rely on capability
+  file scope alone — their runtime allow-lists are tracked under
+  future hardening rows and not in v0.
 
 G2.7 (MAS signed runtime smoke) remains deferred under `xai-v1.deferred-gates.md`.
 

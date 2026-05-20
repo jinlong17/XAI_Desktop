@@ -8,8 +8,13 @@
  *
  * Guarantees:
  *
- * - **Idempotent.** Running the migration twice produces the same repo
- *   state; the second run is a no-op upsert.
+ * - **Repo-state idempotent.** Running the migration twice converges to the
+ *   same repo state. Records whose meaningful fields are already byte-equal
+ *   to what's stored are SKIPPED instead of re-`put` so that `updatedAt`
+ *   never gets re-stamped on a no-op rerun (which would otherwise produce a
+ *   spurious sync-conflict signal). Such records are reported via the
+ *   `unchanged` counter; only records whose payload actually changed are
+ *   counted toward `gridsMigrated` / `itemsMigrated`.
  * - **Non-destructive by default.** The legacy key is kept in
  *   `localStorage` unless the caller passes `removeLegacy: true`, so the
  *   user can roll back if SQLite is unavailable.
@@ -69,6 +74,19 @@ export interface OrganizerLayoutMigrationResult {
   parsed: boolean;
   gridsMigrated: number;
   itemsMigrated: number;
+  /**
+   * Records whose meaningful fields equal what's already in the repo and
+   * therefore did NOT trigger a re-`put` (C2). The migration is rerun-safe
+   * because of this counter — re-running against an unchanged blob bumps
+   * `unchanged` instead of touching `updatedAt`.
+   */
+  unchanged: number;
+  /**
+   * Records that were intentionally skipped by an upstream validation
+   * (A3 reserves this slot for the path-validation skip; if A3 never lands
+   * this counter remains 0 and is harmless).
+   */
+  skipped: number;
   removedLegacy: boolean;
 }
 
@@ -100,20 +118,40 @@ export async function migrateOrganizerLayoutToRepos(
   const timestamp = nowIso();
 
   let gridsMigrated = 0;
+  let itemsMigrated = 0;
+  let unchanged = 0;
+  const skipped = 0;
   for (const legacyGrid of layout.grids) {
     if (!legacyGrid || typeof legacyGrid.id !== "string") continue;
     const record = toGridEntity(legacyGrid, timestamp);
+
+    // C2 — unchanged-skip: avoid re-stamping updatedAt on a no-op rerun.
+    // Placed at the top of the per-record loop so A3's eventual validation
+    // (path-empty skip) can sit immediately after without conflicting.
+    const existing = await options.gridRepo.get(record.id);
+    if (existing && isGridRecordEqual(existing, record)) {
+      unchanged += 1;
+      continue;
+    }
+
     assertRepoRecord(record);
     await options.gridRepo.put(record);
     gridsMigrated += 1;
   }
 
-  let itemsMigrated = 0;
   for (const legacyItem of layout.items) {
     if (!legacyItem || typeof legacyItem.id !== "string") continue;
     const gridId = findOwningGridId(legacyItem.id, layout.grids);
     if (!gridId) continue;
     const record = toGridItemEntity(legacyItem, gridId, timestamp);
+
+    // C2 — unchanged-skip (see grid loop comment).
+    const existing = await options.itemRepo.get(record.id);
+    if (existing && isItemRecordEqual(existing, record)) {
+      unchanged += 1;
+      continue;
+    }
+
     assertRepoRecord(record);
     await options.itemRepo.put(record);
     itemsMigrated += 1;
@@ -130,6 +168,8 @@ export async function migrateOrganizerLayoutToRepos(
     parsed: true,
     gridsMigrated,
     itemsMigrated,
+    unchanged,
+    skipped,
     removedLegacy,
   };
 }
@@ -140,8 +180,63 @@ function emptyResult(): OrganizerLayoutMigrationResult {
     parsed: false,
     gridsMigrated: 0,
     itemsMigrated: 0,
+    unchanged: 0,
+    skipped: 0,
     removedLegacy: false,
   };
+}
+
+/**
+ * Returns true when the meaningful Grid fields of `existing` match those of
+ * the freshly-computed `candidate`. Excludes `createdAt` / `updatedAt` so a
+ * rerun of the migration does not re-stamp timestamps and trigger a false
+ * sync-conflict downstream (C2).
+ */
+function isGridRecordEqual(existing: GridEntity, candidate: GridEntity): boolean {
+  return (
+    existing.entityType === candidate.entityType &&
+    existing.schemaVersion === candidate.schemaVersion &&
+    existing.syncScope === candidate.syncScope &&
+    existing.title === candidate.title &&
+    existing.isLocked === candidate.isLocked &&
+    existing.isFolded === candidate.isFolded &&
+    existing.viewMode === candidate.viewMode &&
+    existing.themeColor === candidate.themeColor &&
+    existing.rect.x === candidate.rect.x &&
+    existing.rect.y === candidate.rect.y &&
+    existing.rect.width === candidate.rect.width &&
+    existing.rect.height === candidate.rect.height &&
+    arraysEqual(existing.itemIds, candidate.itemIds)
+  );
+}
+
+/**
+ * Like {@link isGridRecordEqual} but for `GridItemEntity`. Excludes
+ * `createdAt` / `updatedAt`.
+ */
+function isItemRecordEqual(
+  existing: GridItemEntity,
+  candidate: GridItemEntity,
+): boolean {
+  return (
+    existing.entityType === candidate.entityType &&
+    existing.schemaVersion === candidate.schemaVersion &&
+    existing.syncScope === candidate.syncScope &&
+    existing.gridId === candidate.gridId &&
+    existing.filename === candidate.filename &&
+    existing.filepath === candidate.filepath &&
+    existing.kind === candidate.kind &&
+    existing.icon === candidate.icon &&
+    existing.size === candidate.size
+  );
+}
+
+function arraysEqual(a: readonly string[], b: readonly string[]): boolean {
+  if (a.length !== b.length) return false;
+  for (let i = 0; i < a.length; i += 1) {
+    if (a[i] !== b[i]) return false;
+  }
+  return true;
 }
 
 function toGridEntity(

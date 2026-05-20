@@ -33,9 +33,12 @@ Status: DONE.
   `GridItemEntity`. Items without an owning grid (orphans) are
   dropped — they cannot survive into the typed model.
 - Added `packages/core-data/tests/organizer-layout-migration.test.ts`
-  (5 tests): mapping correctness, idempotency, default-keep-legacy,
-  opt-in `removeLegacy`, and no-op behaviour for absent / malformed
-  blobs.
+  (6 tests): mapping correctness; **repo-state idempotency**
+  (rerun-safe — equal records are skipped via a new `unchanged`
+  counter so `updatedAt` is NOT re-stamped on a no-op rerun, see C2);
+  dedicated `updatedAt`-preservation test on rerun;
+  default-keep-legacy; opt-in `removeLegacy`; and no-op behaviour for
+  absent / malformed blobs.
 - Existing generic `migrateLocalStorageToRepo` helper retained for
   prefix-keyed legacy stores (Todo / Habit / Label) once those
   plugins land.
@@ -64,10 +67,14 @@ Deferred / out-of-scope for G2.3:
 
 feature-verify (Claude Code, Track A), 2026-05-20 00:48 PDT. Verdict: READY_TO_SHIP.
 
-The migration adapter is idempotent, non-destructive by default, and
-type-checked against the G2.1 entity surface. The UI cut-over remains
-parked behind the documented G1.5 work item so a future async refactor
-of `useGridSystem` can land in one focused PR.
+The migration adapter is **repo-state idempotent** — a rerun against an
+unchanged legacy blob skips equal records (tracked via the new
+`unchanged` counter on `OrganizerLayoutMigrationResult`) so that
+`updatedAt` is NOT re-stamped and downstream sync does not see a
+spurious conflict signal (C2 hardening). The adapter is non-destructive
+by default, and type-checked against the G2.1 entity surface. The UI
+cut-over remains parked behind the documented G1.5 work item so a
+future async refactor of `useGridSystem` can land in one focused PR.
 
 ## Work Log
 
