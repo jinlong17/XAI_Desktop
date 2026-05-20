@@ -65,15 +65,19 @@ export interface NotificationStoreProviderProps {
 }
 
 export function NotificationStoreProvider({
-  adapter = new LocalStorageAdapter<ConsoleNotification>(STORAGE_KEY, seedNotifications),
+  adapter,
   children,
 }: NotificationStoreProviderProps) {
+  const [defaultAdapter] = useState(
+    () => new LocalStorageAdapter<ConsoleNotification>(STORAGE_KEY, seedNotifications),
+  );
+  const stableAdapter = adapter ?? defaultAdapter;
   const [notifications, setNotifications] = useState<ConsoleNotification[]>([]);
 
   const refresh = useCallback(async () => {
-    const next = await adapter.getAll();
+    const next = await stableAdapter.getAll();
     setNotifications(next.sort((a, b) => b.createdAt.localeCompare(a.createdAt)));
-  }, [adapter]);
+  }, [stableAdapter]);
 
   useEffect(() => {
     void refresh();
@@ -81,7 +85,7 @@ export function NotificationStoreProvider({
 
   const persist = useCallback(
     async (notification: ConsoleNotification) => {
-      await adapter.save(notification);
+      await stableAdapter.save(notification);
       setNotifications((prev) => {
         const next = prev.some((current) => current.id === notification.id)
           ? prev.map((current) => (current.id === notification.id ? notification : current))
@@ -89,7 +93,7 @@ export function NotificationStoreProvider({
         return next.sort((a, b) => b.createdAt.localeCompare(a.createdAt));
       });
     },
-    [adapter],
+    [stableAdapter],
   );
 
   const addNotification = useCallback(
@@ -108,11 +112,11 @@ export function NotificationStoreProvider({
 
   const markRead = useCallback(
     async (id: string) => {
-      const current = await adapter.getById(id);
+      const current = await stableAdapter.getById(id);
       if (!current) return;
       await persist({ ...current, read: true });
     },
-    [adapter, persist],
+    [stableAdapter, persist],
   );
 
   const markAllRead = useCallback(async () => {
@@ -121,10 +125,10 @@ export function NotificationStoreProvider({
 
   const deleteNotification = useCallback(
     async (id: string) => {
-      await adapter.delete(id);
+      await stableAdapter.delete(id);
       setNotifications((prev) => prev.filter((notification) => notification.id !== id));
     },
-    [adapter],
+    [stableAdapter],
   );
 
   const unreadCount = notifications.filter((notification) => !notification.read).length;

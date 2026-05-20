@@ -26,8 +26,6 @@ export class PluginSlotRegistry {
   }
 }
 
-export const ConsoleSlotRegistry = new PluginSlotRegistry();
-
 export function createDefaultConsoleNavItems(): ConsoleNavItem[] {
   return [
     { id: "labels", pluginId: "labels", label: "Labels", icon: "tag", order: 10 },

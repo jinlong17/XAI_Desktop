@@ -42,5 +42,3 @@ export class ConsoleDesktopBridge {
     return this.emit("console:reveal-grid-item", item);
   }
 }
-
-export const consoleDesktopBridge = new ConsoleDesktopBridge();
