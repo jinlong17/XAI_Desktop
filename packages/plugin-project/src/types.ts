@@ -16,6 +16,8 @@ export interface Project {
   name: string;
   lists: ProjectList[];
   labels: string[];
+  createdAt: string;
+  updatedAt: string;
 }
 
 export interface ChecklistItem {
@@ -33,6 +35,8 @@ export interface Card {
   dueDate?: string;
   checklist: ChecklistItem[];
   description?: string;
+  createdAt: string;
+  updatedAt: string;
 }
 
 export interface ProjectDraft {
