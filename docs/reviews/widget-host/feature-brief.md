@@ -20,3 +20,9 @@ Build the desktop widget scaffold for Track C:
 ## Mock Strategy
 
 Widget state persists in localStorage and mirrors into an in-memory repo-compatible adapter. Wallpaper contrast is represented by a user-controlled mock tone.
+
+## Cross-review fixes 2026-05-20
+
+- `packages/plugin-widgets/src/components/WidgetHost.tsx:1,24-31` imports `useMemo`, memoizes the widget registry from built-ins plus registrations, and keeps the built-in seed stable for store hydration.
+- `packages/plugin-widgets/src/hooks/useWidgetStore.ts:13,38-43,81-106` strengthens the non-crypto widget id fallback, documents seed widgets as localStorage-empty fallback only, hydrates the repo before refreshing widget state, and lets `refreshFromRepo()` persist repo state back to React state and localStorage.
+- `packages/plugin-widgets/src/components/WidgetFrame.tsx:1,27-30,33-59` stores active drag listeners behind an `AbortController`, aborts any previous drag before starting another, aborts on pointerup, and aborts in-flight drag listeners on unmount.
