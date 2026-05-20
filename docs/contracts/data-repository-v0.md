@@ -37,13 +37,23 @@ Entity type 使用 `plugin.entity`:
 | `organizer.item` | `account-sync` 或 `device-local`,按 path 权限决定 |
 | `labels.label` | `account-sync` |
 | `productivity.todo` | `account-sync` |
-| `productivity.pomodoro_session` | `account-sync` |
 | `productivity.habit` | `account-sync` |
 | `clipboard.item` | `device-local` |
 | `project.board` | `account-sync` |
 | `project.card` | `account-sync` |
-| `widgets.widget` | `device-local` |
-| `account.device` | `account-sync` |
+
+### 2.1 Deferred future entities (not in v0)
+
+The following entities are reserved for post-v0 work. They are **not** frozen
+in `packages/core-data/src/entities.ts` and are listed here only to claim the
+`entityType` slug ahead of time. Drivers and the `RepoEntity` union must not
+reference them until they ship.
+
+| Entity | syncScope 计划值 | 预计交付 | 备注 |
+|---|---|---|---|
+| `productivity.pomodoro_session` | `account-sync` | 待 plugin-productivity 番茄钟模块上线 | 与 `productivity.todo` 共享 label 维度 |
+| `widgets.widget` | `device-local` | 待 plugin-widget 落地 | 桌面小组件配置,默认设备本地 |
+| `account.device` | `account-sync` | 待 G2.4 device pairing 完成 | 用于 device list + remote revoke |
 
 ## 3. Repository Interface 目标
 

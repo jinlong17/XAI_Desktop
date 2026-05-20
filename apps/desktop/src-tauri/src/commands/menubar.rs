@@ -8,6 +8,29 @@ use tauri::{AppHandle, Manager, State, Wry};
 const TRAY_ID: &str = "sync-status";
 const ICON_SIZE: u32 = 18;
 
+/// Windows allowed to invoke `sync_set_menubar_status`.
+///
+/// The menubar (tray) is a global UI surface — the only legitimate
+/// drivers are the sync supervisor running in `control` and the main
+/// application shell in `main`. Grid windows, widgets, the pet,
+/// ai-cube, console etc. MUST NOT be able to flip the menubar status
+/// directly; the runtime check is a defence-in-depth layer on top of
+/// the capability file scope.
+pub(crate) const MENUBAR_ALLOWED_WINDOWS: &[&str] = &["control", "main"];
+
+fn is_menubar_window_allowed(label: &str) -> bool {
+    MENUBAR_ALLOWED_WINDOWS.contains(&label)
+}
+
+fn ensure_menubar_window_allowed(label: &str) -> AppResult<()> {
+    if is_menubar_window_allowed(label) {
+        return Ok(());
+    }
+    Err(AppError::SyncCapabilityDenied(format!(
+        "window `{label}` is not allowed to invoke sync_set_menubar_status"
+    )))
+}
+
 #[derive(Default)]
 pub struct SyncMenuBarState {
     tray: Mutex<Option<TrayIcon<Wry>>>,
@@ -60,9 +83,12 @@ pub fn install_sync_menubar(app: &AppHandle) -> AppResult<()> {
 
 #[tauri::command]
 pub async fn sync_set_menubar_status(
+    window: tauri::WebviewWindow,
     state: State<'_, SyncMenuBarState>,
     payload: SyncMenuBarPayload,
 ) -> AppResult<()> {
+    ensure_menubar_window_allowed(window.label())?;
+
     {
         let mut status = state
             .status
@@ -228,5 +254,46 @@ mod tests {
         let tooltip = tooltip_for(SyncMenuBarStatus::Error, Some("pull"), Some("E3015"));
         assert!(tooltip.contains("E3015"));
         assert!(tooltip.contains("Click"));
+    }
+
+    #[test]
+    fn menubar_allowlist_admits_control_main() {
+        for label in MENUBAR_ALLOWED_WINDOWS {
+            assert!(
+                is_menubar_window_allowed(label),
+                "expected `{label}` to be admitted"
+            );
+            assert!(ensure_menubar_window_allowed(label).is_ok());
+        }
+    }
+
+    #[test]
+    fn menubar_allowlist_rejects_other() {
+        for label in [
+            "grid_xxx",
+            "grid_",
+            "widget_clock",
+            "pet",
+            "ai_cube",
+            "console",
+            "account",
+            "unknown",
+        ] {
+            assert!(
+                !is_menubar_window_allowed(label),
+                "expected `{label}` to be rejected"
+            );
+            let err = ensure_menubar_window_allowed(label).unwrap_err();
+            match err {
+                AppError::SyncCapabilityDenied(msg) => {
+                    assert!(
+                        msg.contains(label),
+                        "error message `{msg}` should mention `{label}`"
+                    );
+                    assert!(msg.contains("sync_set_menubar_status"));
+                }
+                other => panic!("unexpected error for `{label}`: {other:?}"),
+            }
+        }
     }
 }

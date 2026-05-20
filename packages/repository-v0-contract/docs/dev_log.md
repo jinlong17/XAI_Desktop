@@ -58,4 +58,4 @@ Cross-vendor review/verify, SQLCipher runtime, live Supabase, plugin/UI migratio
 | Timestamp | Executor | Action | Commits | Next |
 |---|---|---|---|---|
 | 2026-05-19 23:48 PDT | feature-plan + feature-review (Codex inline) | Created Step 0 brief and feature docs. Approved scoped G2.1 plan for build. | pending | feature-build |
-| 2026-05-20 00:18 PDT | feature-build + feature-verify (Claude Code, Track A) | Implemented Repository v0 entity surface (`packages/core-data/src/entities.ts`), updated contract doc with entity table + interface, added `tests/entities.test.ts`, ran core-data test + type checks (45 tests passing). | pending commit | manual ship only; continue roadmap |
+| 2026-05-20 00:18 PDT | feature-build + feature-verify (Claude Code, Track A) | Implemented Repository v0 entity surface (`packages/core-data/src/entities.ts`), updated contract doc with entity table + interface, added `tests/entities.test.ts`, ran core-data test + type checks (45 tests passing). | `744d578` | manual ship only; continue roadmap |
