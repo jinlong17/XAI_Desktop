@@ -14,11 +14,11 @@
 
 - Time: 2026-05-19 14:47 PDT
 - Feature: finder-dnd-path
-- Symptom: Feature cannot satisfy full acceptance yet; human screenshots showed duplicate items first for file/folder and later for `.app`. Post-dedupe `.app` rerun now passes, and alias functional validation is reported as successful.
-- Root cause if known: G0.4 still requires the exact Finder/Tauri alias path behavior to be recorded in ADR-0005. Duplicate items were caused by repeated drop handling paths/events; `.app` bundles still duplicated after the GridWindow-only fix, so Organizer needed path-level idempotency.
+- Symptom: Initially could not satisfy full acceptance; human screenshots showed duplicate items first for file/folder and later for `.app`. Post-dedupe `.app` rerun now passes, and alias path-form evidence is captured.
+- Root cause if known: Duplicate items were caused by repeated drop handling paths/events; `.app` bundles still duplicated after the GridWindow-only fix, so Organizer needed path-level idempotency. Alias behavior is now recorded as preserving the alias file path returned by Finder/Tauri.
 - Attempted fixes: Created a manual path-first matrix template, filled static code-analysis findings, added GridWindow `tauri://drag-drop` telemetry in `7e20ca8`, made GridWindow path-first only in `58c926d`, and added Organizer per-grid path dedupe in `18b48da`.
-- Current status: BLOCKED on exact alias path-form evidence and ADR policy only.
-- Resume instruction: Run `pnpm --filter desktop tauri dev`, drop alias into a Grid, capture the `Finder DnD` panel and `[G0 Finder DnD] path-first drop` logs, fill exact alias payload row in `docs/reviews/window-ground-truth/finder-dnd-path/README.md`, update ADR-0005 with alias path policy, then rerun feature-verify for `finder-dnd-path`.
+- Current status: RESOLVED for G0.4; feature is READY_TO_SHIP.
+- Resume instruction: No G0.4 action required. Continue with remaining G0 blockers: `click-through-matrix` private-API comparison, `spaces-multimonitor-matrix`, and `mas-sandbox-dry-run`.
 
 ## Incident 3
 
@@ -105,10 +105,10 @@
 - Time: 2026-05-19 20:39 PDT
 - Feature: native-dnd-path-first
 - Symptom: Production path-first DnD implementation cannot start.
-- Root cause if known: G1.3 depends on G0.4 real Finder payload observations and MAS sandbox/security-scope decisions.
-- Attempted fixes: Created safe-prep docs mapping current drop behavior, target `DroppedFile[]` shape, and unresolved receiver/alias/security-scope decisions. Avoided production source changes.
+- Root cause if known: G1.3 now has G0.4 real Finder payload observations, but still depends on MAS sandbox/security-scope decisions.
+- Attempted fixes: Created safe-prep docs mapping current drop behavior, target `DroppedFile[]` shape, and unresolved receiver/security-scope decisions. Avoided production source changes.
 - Current status: BLOCKED.
-- Resume instruction: Complete G0.4 Finder matrix and MAS sandbox dry run, then rerun feature-build for `native-dnd-path-first`.
+- Resume instruction: Complete MAS sandbox dry run, then rerun feature-build for `native-dnd-path-first`.
 
 ## Incident 12
 

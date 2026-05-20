@@ -2,7 +2,7 @@
 
 ## Status
 
-PARTIAL_HUMAN_EVIDENCE / BLOCKED — GridWindow receives Tauri path-first Finder drops; file/folder and `.app` evidence exists, including post-dedupe `.app` regression evidence. Alias functional validation succeeded, but the exact alias path form still needs to be recorded.
+READY_TO_SHIP — GridWindow receives Tauri path-first Finder drops for file, folder, `.app`, and alias inputs. Alias behavior is recorded as preserving the alias file path returned by Finder/Tauri.
 
 ## Static Findings (from source, no runtime needed)
 
@@ -15,7 +15,7 @@ PARTIAL_HUMAN_EVIDENCE / BLOCKED — GridWindow receives Tauri path-first Finder
 | Tauri DnD payload type | `DragDrop { paths: Vec<PathBuf>, position: PhysicalPosition }` | Tauri 2.x API |
 | Expected path format | Absolute POSIX paths, e.g. `/Users/lijinlong/Desktop/foo.txt` | Tauri + wry on macOS |
 
-**Key insight**: Grid windows CAN receive DnD events (dragDropEnabled not disabled), and now have a G0-only JS telemetry listener. Main window drops remain explicitly blocked. Alias drops are reported working; runtime still needs to record whether Finder/Tauri sends the alias path or resolved target path.
+**Key insight**: Grid windows CAN receive DnD events (dragDropEnabled not disabled), and now have a G0-only JS telemetry listener. Main window drops remain explicitly blocked. Finder/Tauri sends an alias drop as `kind=file` with the alias file path, not the resolved target path.
 
 ## Matrix
 
@@ -23,9 +23,9 @@ PARTIAL_HUMAN_EVIDENCE / BLOCKED — GridWindow receives Tauri path-first Finder
 |---|---|---|---|---|---|
 | Unspecified Finder item | Finder item(s) | `paths: [...]` through `tauri://drag-drop` telemetry | 2026-05-19 user report: "东西能拖动进去" / items can be dragged into Grid | Not confirmed from log | PASS_PARTIAL |
 | File | `/Users/.../foo.txt` | `paths: ["/Users/.../foo.txt"]` | Screenshot shows `source: tauri://drag-drop`, kind `file`, path `/Users/lijinlong/Desktop/Jinlongsign I-140Page8.pdf`; item duplicated before fix `58c926d` | Expected yes via telemetry | PASS_WITH_DUPLICATE_BUG_FIXED |
-| Folder | `/Users/.../mydir/` | `paths: ["/Users/.../mydir"]` | Human reported folder can be dragged in; screenshot shows duplicated `AI_Desktop` folder item, exact telemetry path not captured in screenshot | Expected yes via telemetry | PASS_PARTIAL_WITH_DUPLICATE_BUG_FIXED |
+| Folder | `/Users/.../mydir/` | `paths: ["/Users/.../mydir"]` | Human reported folder can be dragged in; screenshots show `AI_Desktop` folder item with absolute path `/Users/lijinlong/Desktop/AI_Desktop`; duplicate issue fixed by `58c926d`/`18b48da` | Expected yes via telemetry | PASS |
 | App bundle | `/Applications/Safari.app` | `paths: ["/Applications/Safari.app"]` — bundle root, NOT binary inside | Screenshot shows `source: tauri://drag-drop`, kind `app`, path `/Applications/TencentMeeting.app`; item duplicated before Organizer dedupe fix `18b48da`. Post-fix screenshot shows `/Applications/QQ.app` with one Grid item and telemetry `drops 2`. | Expected yes via telemetry | PASS |
-| Alias | `/Users/.../alias` | resolved target path OR alias path — exact policy must be recorded | 2026-05-19 user report: alias verification succeeded; exact telemetry path form not provided in thread | Expected yes via telemetry | PASS_FUNCTIONAL_PATH_FORM_PENDING |
+| Alias | `/Users/.../alias` | resolved target path OR alias path — exact policy must be recorded | Screenshot shows `source: tauri://drag-drop`, kind `file`, path `/Applications/QuickTime Player.app alias`; the Grid item is `QuickTime Player.app alias`, not the resolved app path | Expected yes via telemetry | PASS_ALIAS_FILE_PATH |
 | Drop onto main window | any | **blocked** — `dragDropEnabled: false` | N/A | N/A | CONFIRMED_BLOCKED |
 
 ## Human Runtime Notes
@@ -39,7 +39,8 @@ PARTIAL_HUMAN_EVIDENCE / BLOCKED — GridWindow receives Tauri path-first Finder
 - Fix `18b48da` adds Organizer-side idempotency by `gridId + normalized filepath`, including a short recent-drop guard so repeated `.app` drop events cannot create duplicate items in the same Grid.
 - 2026-05-19 22:02 PDT: User screenshot verified the post-dedupe `.app` rerun succeeds: `/Applications/QQ.app` appears once in the Grid while the Finder DnD panel reports `source: tauri://drag-drop`, kind `app`, path `/Applications/QQ.app`, and `drops 2`.
 - 2026-05-19 22:06 PDT: User reported alias verification succeeded.
-- Remaining evidence needed: record whether the alias telemetry path is the alias file itself or the resolved target path, then update ADR-0005.
+- 2026-05-19 22:09 PDT: User screenshot verified alias path form: Finder/Tauri reports `source: tauri://drag-drop`, kind `file`, path `/Applications/QuickTime Player.app alias`, and `drops 2`.
+- Alias policy for G1: preserve the alias file path at ingress; do not silently resolve to the target app path.
 
 ## Runtime Verification Steps (human required)
 
@@ -61,7 +62,7 @@ pnpm --filter desktop tauri dev
 
 ## Decision Fields
 
-- Webview drop real path works: **PARTIAL YES** — file, folder, and `.app` paths observed from `tauri://drag-drop`; alias functional validation is positive, but exact alias path form is still unknown
-- Native drop receiver needed: **TBD** — JS telemetry now receives real file, folder, and `.app` paths; decide after alias path-form and MAS evidence
+- Webview drop real path works: **YES** — file, folder, `.app`, and alias file paths observed from `tauri://drag-drop`
+- Native drop receiver needed: **NOT FOR G0.4** — JS telemetry receives the required path-first payloads; MAS security-scoped access remains a separate G0.6/G1 risk
 - Security-scoped bookmark needed for MAS: **TBD** — required if MAS sandbox restricts arbitrary path access
-- Alias policy: **TBD** — alias drop works, but the raw observed path form must be recorded before selecting resolved-target vs alias-file policy in G1
+- Alias policy: **PRESERVE_ALIAS_PATH** — Finder/Tauri reports `/Applications/QuickTime Player.app alias` as `kind=file`; G1 should not silently resolve aliases unless a separate explicit resolution feature is designed

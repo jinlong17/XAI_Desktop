@@ -75,6 +75,21 @@ G0 不做完整 UI,只做最小真机 spike。G0 通过后进入 G1,把 spike �
 - Finder drop 以真实 path 为一等验收项。拿不到真实 path 时,G0 必须明确 fallback 产品形态。
 - 空白透明区域点击穿透必须真机验证,不能只看 DOM 行为。
 
+## G0.4 Finder DnD 结论
+
+2026-05-19 真机截图证据确认 Grid window 的 Tauri path-first DnD 路径成立:
+
+- 普通文件通过 `tauri://drag-drop` 返回绝对 path。
+- 文件夹可以拖入 Grid,并在 Organizer item 中保留绝对 path。
+- App bundle 返回 `.app` bundle root path,例如 `/Applications/QQ.app`。
+- Alias 返回 alias 文件自身 path,例如 `/Applications/QuickTime Player.app alias`,kind 归类为 `file`;不会自动解析为目标 app path。
+
+G1 policy:
+
+- 默认保留 Finder/Tauri 返回的原始 alias path。
+- 不在 DnD ingress 阶段静默解析 alias target。
+- 如后续产品需要 resolved target,必须作为显式解析/预览能力设计,并保留原始 alias path 用于审计与用户解释。
+
 ## G0 Go/No-Go
 
 | 条件 | Go | No-Go |

@@ -10,12 +10,12 @@
 | Roadmap | xai-g1-native-foundation · feature #3 · G1.3 |
 | Status | BLOCKED |
 | Current Phase | FEATURE_VERIFY |
-| Suggested Next | Human G0.4 Finder DnD matrix |
+| Suggested Next | MAS sandbox/security-scope evidence |
 | Automation Mode | D-Codex |
 | Verify Cross-vendor | yes |
 | Executor | feature-verify (Codex inline) |
-| Updated | 2026-05-19 20:39 PDT |
-| Blockers | G0.4 Finder path evidence and MAS sandbox decision |
+| Updated | 2026-05-19 22:09 PDT |
+| Blockers | MAS sandbox decision and G0 gate status |
 
 ## Phase Plan
 
@@ -26,7 +26,7 @@ Status: DONE. Commit: `707a8d1`.
 - Created G1.3 feature brief and discovery review.
 - Mapped current HTML5, Tauri telemetry, and Organizer drop paths.
 - Identified target `DroppedFile[]` contract fields and unresolved decisions.
-- Avoided production DnD changes while G0.4 remains blocked.
+- Avoided production DnD changes while G0.4 and MAS evidence were unresolved.
 
 ## Review Notes
 
@@ -34,9 +34,9 @@ feature-review (Codex inline), 2026-05-19 20:39 PDT. Verdict: APPROVED for safe 
 
 ## Verification Notes
 
-feature-verify (Codex inline), 2026-05-19 20:39 PDT. Verdict: BLOCKED.
+feature-verify (Codex inline), 2026-05-19 22:09 PDT. Verdict: BLOCKED.
 
-Docs-only prep is complete. G1.3 production acceptance remains blocked by G0.4 real Finder evidence.
+Docs-only prep is complete. G0.4 Finder evidence is now READY_TO_SHIP with alias policy `PRESERVE_ALIAS_PATH`; G1.3 production acceptance remains blocked by MAS sandbox/security-scope evidence and the overall G0 gate.
 
 ## Work Log
 
@@ -46,3 +46,4 @@ Docs-only prep is complete. G1.3 production acceptance remains blocked by G0.4 r
 | 2026-05-19 20:39 PDT | feature-review (Codex inline) | Approved safe prep; production DnD implementation remains blocked by G0.4. | — | feature-build |
 | 2026-05-19 20:39 PDT | feature-build (Codex inline) | Created DnD path-first discovery docs. | `707a8d1` | feature-verify |
 | 2026-05-19 20:39 PDT | feature-verify (Codex inline) | Verified docs-only scope; status remains BLOCKED. | `707a8d1` | Human G0.4 evidence |
+| 2026-05-19 22:09 PDT | Codex inline | Reconciled blocker after G0.4 moved to READY_TO_SHIP; G1.3 remains blocked by MAS/security-scope evidence. | `(this commit)` | MAS sandbox dry run |

@@ -8,14 +8,14 @@
 | Target | finder-dnd-path |
 | Title | G0.4 Finder DnD path-first validation |
 | Roadmap | xai-g0-window-spike · feature #4 · G0.4 |
-| Status | BLOCKED |
+| Status | READY_TO_SHIP |
 | Current Phase | FEATURE_VERIFY |
-| Suggested Next | Alias path-form capture and ADR update |
+| Suggested Next | Continue remaining G0 manual gates |
 | Automation Mode | D-Codex |
 | Verify Cross-vendor | yes |
 | Executor | feature-verify (Codex inline) |
-| Updated | 2026-05-19 22:06 PDT |
-| Blockers | Exact alias path form and ADR policy required |
+| Updated | 2026-05-19 22:09 PDT |
+| Blockers | None for G0.4; G0.3/G0.5/G0.6 still require separate manual evidence |
 
 ## Phase Plan
 
@@ -54,15 +54,22 @@ Status: DONE. Commit: `18b48da`.
 - Skips repeated receipt of the same path for the same Grid within 5 seconds.
 - Human post-fix screenshot confirms `/Applications/QQ.app` now appears once in the Grid.
 
+### Phase 5 — Alias path-form policy
+
+Status: DONE. Commit: `(this commit)`.
+
+- Human screenshot shows alias drop telemetry as `source: tauri://drag-drop`, kind `file`, path `/Applications/QuickTime Player.app alias`.
+- ADR-0005 records the G1 policy: preserve the alias file path at ingress and do not silently resolve it to the target app path.
+
 ## Review Notes
 
 feature-review (Codex inline), 2026-05-19 14:46 PDT. Verdict: APPROVED for safe prep only.
 
 ## Verification Notes
 
-feature-verify (Codex inline), 2026-05-19 22:06 PDT. Verdict: PARTIAL_HUMAN_EVIDENCE / BLOCKED.
+feature-verify (Codex inline), 2026-05-19 22:09 PDT. Verdict: READY_TO_SHIP.
 
-Human screenshot evidence confirms real file, folder, and `.app` paths through `tauri://drag-drop`. The post-dedupe `.app` rerun passed with `/Applications/QQ.app` appearing once. Human report confirms alias drop succeeds. G0.4 remains blocked until the exact alias path form is captured and ADR-0005 records the policy.
+Human screenshot evidence confirms real file, folder, `.app`, and alias file paths through `tauri://drag-drop`. The post-dedupe `.app` rerun passed with `/Applications/QQ.app` appearing once. Alias path form is `/Applications/QuickTime Player.app alias` with kind `file`, so ADR-0005 records `PRESERVE_ALIAS_PATH`. Deferred gates recorded in `docs/workflow/roadmap/xai-v1.deferred-gates.md`.
 
 ## Work Log
 
@@ -79,3 +86,4 @@ Human screenshot evidence confirms real file, folder, and `.app` paths through `
 | 2026-05-19 21:56 PDT | human + feature-build (Codex inline) | Recorded `.app` duplication screenshot and added Organizer-side path dedupe. | `18b48da` | post-dedupe app rerun |
 | 2026-05-19 22:02 PDT | human + feature-verify (Codex inline) | Recorded post-dedupe `.app` pass: `/Applications/QQ.app` appears once with Tauri path telemetry. | `18b48da` | alias payload evidence |
 | 2026-05-19 22:06 PDT | human + feature-verify (Codex inline) | Recorded alias functional validation success; exact alias path form still needs telemetry capture. | `18b48da` | alias path-form capture and ADR update |
+| 2026-05-19 22:09 PDT | human + feature-verify (Codex inline) | Recorded alias path form and ADR policy; marked G0.4 READY_TO_SHIP. | `(this commit)` | Continue G0.3/G0.5/G0.6 evidence |

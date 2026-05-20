@@ -17,10 +17,10 @@
 | Gate Manifest | docs/workflow/roadmap/xai-g0-window-spike.md |
 | Current Feature | click-through-matrix / finder-dnd-path |
 | Feature Source | docs/planning/execution/G0-window-spike.md §G0.3, §G0.4 |
-| Feature Status | PARTIAL_HUMAN_EVIDENCE / BLOCKED |
-| Current Commit | 18b48da |
-| Tests | `pnpm --filter desktop exec tsc --noEmit`; `pnpm --filter @repo/plugin-organizer check-types`; `pnpm --filter desktop build`; user manual evidence for click-through, resize, item click flash, Finder file/folder drag, `.app` path, post-dedupe `.app` rerun, and alias functional validation |
-| Next Step | Capture exact alias path form, update ADR-0005 alias policy, and compare `macOSPrivateApi=false` |
+| Feature Status | `click-through-matrix` BLOCKED; `finder-dnd-path` READY_TO_SHIP |
+| Current Commit | 5e98083 |
+| Tests | `pnpm --filter desktop exec tsc --noEmit`; `pnpm --filter @repo/plugin-organizer check-types`; `pnpm --filter desktop build`; user manual evidence for click-through, resize, item click flash, Finder file/folder drag, `.app` path, post-dedupe `.app` rerun, alias functional validation, and alias path-form capture |
+| Next Step | Compare `macOSPrivateApi=false`, then complete Spaces/multi-display and MAS sandbox evidence |
 
 ## Checkpoints
 
@@ -322,6 +322,17 @@
 - This confirms the alias drop path is functionally usable in the current Grid surface.
 - G0.4 remains BLOCKED because the execution pack requires the exact alias behavior to be recorded: either the telemetry path is the alias file itself or it is the resolved target path. ADR-0005 still needs that policy entry.
 
+### 2026-05-19 22:09 PDT — Feature Verify: finder-dnd-path READY_TO_SHIP
+
+- User screenshot verified alias path-form evidence:
+  - `source: tauri://drag-drop`
+  - kind `file`
+  - path `/Applications/QuickTime Player.app alias`
+  - telemetry `drops 2`
+- ADR-0005 now records the alias policy as `PRESERVE_ALIAS_PATH`.
+- G0.4 `finder-dnd-path` is READY_TO_SHIP.
+- G0 remains blocked by G0.3 `macOSPrivateApi=false`, G0.5 Spaces/fullscreen/multi-display, and G0.6 MAS sandbox evidence.
+
 ## Feature Outcomes
 
 | Feature | Gate | Status | Commit | Tests | Notes |
@@ -329,12 +340,12 @@
 | window-ground-truth | G0 | READY_TO_SHIP | 3b571f6 | PASS: branch, sw_vers, README content | Deferred gates recorded in docs/workflow/roadmap/xai-v1.deferred-gates.md |
 | grid-window-prototype | G0 | READY_TO_SHIP | 6b121ea + 14e04c2 + 01e5167 + b8c34fe + 7b7ff35 + f65a1b5 + a33c74d | PASS: desktop tsc; plugin-organizer check-types; desktop build; cargo check | Runtime fixed/confirmed; deferred review/verify gates recorded. |
 | click-through-matrix | G0 | BLOCKED | 82ab268 + 7a1b9dd + e7fc4ab | PASS_PARTIAL: transparent-area click-through, Grid item pointer flash, resize-handle drag; BLOCKED: `macOSPrivateApi=false` evidence | Requires remaining human macOS private-API comparison. |
-| finder-dnd-path | G0 | BLOCKED | 33627df + 7a1b9dd + 7e20ca8 + e7fc4ab + 58c926d + 18b48da | PASS_PARTIAL: file, folder, and `.app` paths observed via `tauri://drag-drop`; duplicate fixes applied; post-dedupe `.app` rerun passed; alias functional validation succeeded; BLOCKED: exact alias path form and ADR policy | Requires human Finder/Tauri alias path-form evidence. |
+| finder-dnd-path | G0 | READY_TO_SHIP | 33627df + 7a1b9dd + 7e20ca8 + e7fc4ab + 58c926d + 18b48da + 5e98083 | PASS: file, folder, `.app`, and alias paths observed via `tauri://drag-drop`; duplicate fixes applied; post-dedupe `.app` rerun passed; alias path policy recorded as `PRESERVE_ALIAS_PATH` | Deferred gates recorded in docs/workflow/roadmap/xai-v1.deferred-gates.md |
 | spaces-multimonitor-matrix | G0 | BLOCKED | 2fb6bac | PASS: matrix template exists; BLOCKED: real Spaces/fullscreen/multi-display evidence | Reached by user override; safe prep only. |
 | mas-sandbox-dry-run | G0 | BLOCKED | 071a192 | PASS: MAS notes exist; BLOCKED: real sandbox/private-API evidence | Reached by user override; safe prep only. |
 | window-command-contract | G1 | BLOCKED | 9c7b52f | PASS: safe-prep docs exist; BLOCKED: G0 not Go/Conditional Go | Reached by user override; no production code changed. |
 | grid-shell-organizer-content | G1 | BLOCKED | eaae46e | PASS: safe-prep docs exist; BLOCKED: G0/G1.1 not ready | Reached by user override; no production code changed. |
-| native-dnd-path-first | G1 | BLOCKED | 707a8d1 | PASS: DnD discovery docs exist; BLOCKED: G0.4/MAS evidence missing | Reached by user override; no production code changed. |
+| native-dnd-path-first | G1 | BLOCKED | 707a8d1 | PASS: DnD discovery docs exist; BLOCKED: MAS sandbox/security-scope evidence missing | Reached by user override; no production code changed. |
 | multi-grid-event-scope | G1 | BLOCKED | a7d4803 | PASS: event audit docs exist; BLOCKED: G0/G1.1 not ready | Reached by user override; no production code changed. |
 | grid-persistence | G1 | BLOCKED | dcf2750 | PASS: persistence discovery docs exist; BLOCKED: G1.1/G2 not ready | Reached by user override; no production code changed. |
 | host-business-residuals | G1 | READY_TO_SHIP | c6dbd77 | PASS: residual audit doc exists; Host scan recorded | Audit-only safe prep. |
@@ -346,12 +357,12 @@
 - Human ship for `window-ground-truth` deferred while continuing local G0 tasks.
 - Cross-vendor review/verify deferred for `grid-window-prototype`; runtime fix was confirmed by user and commits.
 - Remaining macOS click-through matrix rows deferred for `click-through-matrix`; default-runtime click-through, item pointer, and resize evidence are positive.
-- Remaining Finder DnD path matrix rows deferred for `finder-dnd-path`; file, folder, and `.app` path evidence is positive, duplicate fixes are in `58c926d` and `18b48da`, post-dedupe `.app` evidence passed, alias functional validation succeeded, and exact alias path-form/ADR evidence is still needed.
+- Finder DnD path matrix deferral for `finder-dnd-path` resolved; file, folder, `.app`, and alias path-form evidence are positive, duplicate fixes are in `58c926d` and `18b48da`, and ADR-0005 records `PRESERVE_ALIAS_PATH`.
 - Real Spaces/fullscreen/multi-display matrix deferred for `spaces-multimonitor-matrix`.
 - Real MAS/private-API sandbox evidence deferred for `mas-sandbox-dry-run`.
 - G1 production implementation deferred until G0 Go/Conditional Go.
 - G1.2 production shell/content split deferred until G0 Go/Conditional Go and G1.1 implementation.
-- G1.3 production DnD path-first implementation deferred until G0.4 and MAS evidence.
+- G1.3 production DnD path-first implementation deferred until MAS/security-scope evidence.
 - G1.4 production event migration deferred until G0 Go/Conditional Go and G1.1 implementation.
 - G1.5 production persistence deferred until G1.1 and G2 Repository v0.
 - Cross-vendor review/verify deferred for `host-business-residuals`.
@@ -359,12 +370,12 @@
 ## Incidents Summary
 
 - click-through-matrix blocked on `macOSPrivateApi=false` comparison after default-runtime partial pass.
-- finder-dnd-path blocked on exact alias path-form/ADR evidence after duplicate fixes, post-dedupe `.app` pass, and alias functional pass.
+- finder-dnd-path incident resolved; G0.4 is READY_TO_SHIP after alias path-form evidence and ADR update.
 - spaces-multimonitor-matrix blocked on real macOS Spaces/fullscreen/multi-display evidence.
 - mas-sandbox-dry-run blocked on real sandbox/private-API evidence.
 - window-command-contract blocked by G0 gate status.
 - grid-shell-organizer-content blocked by G0/G1.1 gate status.
-- native-dnd-path-first blocked by G0.4/MAS evidence.
+- native-dnd-path-first blocked by MAS/security-scope evidence.
 - multi-grid-event-scope blocked by G0/G1.1 gate status.
 - grid-persistence blocked by G1.1/G2 status.
 
@@ -377,7 +388,7 @@ Stopped on 2026-05-19 20:43 PDT because no remaining eligible feature can procee
 - `window-ground-truth` — READY_TO_SHIP.
 - `grid-window-prototype` — READY_TO_SHIP after runtime recovery.
 - `click-through-matrix` — BLOCKED after partial human pass for transparent clicks, Grid item pointer, and resize drag.
-- `finder-dnd-path` — BLOCKED after Tauri file/folder/app path evidence, duplicate fixes, post-dedupe `.app` pass, and alias functional pass.
+- `finder-dnd-path` — READY_TO_SHIP after Tauri file/folder/app/alias path evidence, duplicate fixes, post-dedupe `.app` pass, and ADR alias policy update.
 - `spaces-multimonitor-matrix` — BLOCKED after safe prep.
 - `mas-sandbox-dry-run` — BLOCKED after safe prep.
 - `window-command-contract` — BLOCKED after safe prep.
@@ -391,12 +402,12 @@ Stopped on 2026-05-19 20:43 PDT because no remaining eligible feature can procee
 
 - `window-ground-truth`
 - `grid-window-prototype`
+- `finder-dnd-path`
 - `host-business-residuals`
 
 ### BLOCKED Features
 
 - `click-through-matrix`
-- `finder-dnd-path`
 - `spaces-multimonitor-matrix`
 - `mas-sandbox-dry-run`
 - `window-command-contract`
@@ -412,12 +423,12 @@ Stopped on 2026-05-19 20:43 PDT because no remaining eligible feature can procee
 - Cross-vendor review/verify for serial Codex-run features.
 - Independent review/verify for `grid-window-prototype` runtime recovery commits.
 - Remaining `macOSPrivateApi=false` click-through comparison for `click-through-matrix`.
-- Remaining Finder DnD exact alias path form for `finder-dnd-path`; use the GridWindow telemetry panel/log, then update ADR-0005 alias policy.
+- Optional independent replay for `finder-dnd-path`; no remaining G0.4 blocker.
 - Real Spaces/fullscreen/multi-display matrix for `spaces-multimonitor-matrix`.
 - Real MAS/private-API sandbox evidence for `mas-sandbox-dry-run`.
 - G1 production implementation until G0 Go/Conditional Go.
 - G1.2 shell/content production refactor until G1.1 is implemented.
-- G1.3 DnD path-first implementation until G0.4 Finder evidence and MAS sandbox decision.
+- G1.3 DnD path-first implementation until MAS sandbox/security-scope decision.
 - G1.4 event migration until G1.1 is implemented and G0 DnD payload shape is settled.
 - G1.5 persistence implementation until G2 Repository v0 is ready.
 - Cross-vendor review/verify for `host-business-residuals`.
@@ -425,7 +436,7 @@ Stopped on 2026-05-19 20:43 PDT because no remaining eligible feature can procee
 ### Incidents
 
 - Incident 1: `click-through-matrix` has default-runtime human pass but still lacks `macOSPrivateApi=false` comparison.
-- Incident 2: `finder-dnd-path` has Tauri file/folder/app path evidence, duplicate fixes, post-dedupe `.app` pass, and alias functional pass, but still lacks exact alias path-form evidence and ADR policy.
+- Incident 2: `finder-dnd-path` duplicate and alias evidence gaps are resolved; G0.4 is READY_TO_SHIP.
 - Incident 3: `spaces-multimonitor-matrix` cannot satisfy real Spaces/fullscreen/multi-display acceptance in unattended mode.
 - Incident 4: `mas-sandbox-dry-run` cannot satisfy sandbox/private-API acceptance in unattended mode.
 - Incident 5: `window-command-contract` production implementation is blocked until G0 is Go/Conditional Go.
@@ -434,7 +445,7 @@ Stopped on 2026-05-19 20:43 PDT because no remaining eligible feature can procee
 - Incident 8: `grid-window-prototype` still failed to generate and AI cube movement was bounded; resolved by runtime recovery commits.
 - Incident 9: `grid-shell-organizer-content` production split is blocked by G0/G1.1.
 - Incident 10: `multi-grid-event-scope` production event migration is blocked by G0/G1.1.
-- Incident 11: `native-dnd-path-first` production DnD is blocked by G0.4/MAS evidence.
+- Incident 11: `native-dnd-path-first` production DnD is blocked by MAS/security-scope evidence.
 - Incident 12: `grid-persistence` production persistence is blocked by G1.1/G2.
 
 ### Commits
@@ -473,6 +484,7 @@ Stopped on 2026-05-19 20:43 PDT because no remaining eligible feature can procee
 - `fafe818` — `docs(g0-evidence): record detailed manual runtime results`
 - `18b48da` — `fix(finder-dnd-path): dedupe dropped paths per grid`
 - `d982dab` — `docs(finder-dnd-path): record app dedupe verification`
+- `5e98083` — `docs(finder-dnd-path): record alias functional verification`
 
 ### Test Results
 
@@ -497,7 +509,7 @@ Stopped on 2026-05-19 20:43 PDT because no remaining eligible feature can procee
 - `pnpm --filter desktop exec tsc --noEmit` after `18b48da` -> PASS
 - `pnpm --filter desktop build` after `18b48da` -> PASS with Vite chunk-size warning
 - User manual G0.4 `.app` post-dedupe rerun -> PASS
-- User manual G0.4 alias functional validation -> PASS_FUNCTIONAL_PATH_FORM_PENDING
+- User manual G0.4 alias path-form validation -> PASS, observed `/Applications/QuickTime Player.app alias` as `kind=file`
 - G1.2 safe-prep file checks and Host/Organizer boundary `rg` scan -> PASS
 - G1.3 safe-prep file checks and DnD path `rg` scan -> PASS
 - G1.4 safe-prep file checks and event-scope `rg` scan -> PASS

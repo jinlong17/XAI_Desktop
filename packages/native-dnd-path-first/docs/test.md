@@ -9,13 +9,12 @@
 ## Deferred Implementation Checks
 
 - Unit test: file/folder/app kind classification.
-- Unit test: alias raw/resolved policy once G0.4 evidence exists.
+- Unit test: alias policy preserves raw alias path by default.
 - Unit test: `DroppedFile[]` event conversion preserves `gridId`.
 - Integration test: Organizer item stores path-backed data.
 
-## Blocked Manual Checks
+## Remaining Manual Checks
 
-- `pnpm --filter desktop tauri dev`
-- Drop Finder file, folder, `.app`, and alias into a Grid.
-- Capture `[G0 Finder DnD] path-first drop` logs.
-- Decide Webview vs Rust native receiver.
+- MAS sandbox dry run for dropped paths and any required security-scoped bookmark flow.
+- `macOSPrivateApi=false` comparison before choosing the final production receiver.
+- Decide whether the verified Webview/Tauri receiver is sufficient for MAS or whether a Rust/native bridge is required.

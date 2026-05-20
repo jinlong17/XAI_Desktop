@@ -100,23 +100,23 @@
 
 - Feature: finder-dnd-path
 - Gate: G0
-- Deferred gate: Real Finder DnD path-first matrix
-- Why deferred: File/folder and `.app` drop evidence now exists, post-dedupe `.app` regression evidence passed, and alias functional validation succeeded. Exact alias path-form evidence and ADR policy are still missing.
-- Risk: G0 cannot prove the path-first drop model until all item kinds and duplicate behavior are captured.
-- What was done instead: Recorded screenshot evidence of `tauri://drag-drop` file, folder, and `.app` path delivery; fixed GridWindow duplicate risk in `58c926d`; fixed Organizer per-path duplicate risk in `18b48da`; recorded post-dedupe `.app` pass for `/Applications/QQ.app`; recorded user report that alias validation succeeds.
-- Later human action: Capture the alias telemetry path and record whether it is the alias file path or the resolved target path; attach logs/screenshots under `docs/reviews/window-ground-truth/finder-dnd-path/`; update ADR-0005 alias policy.
-- Suggested verification command / environment: `pnpm --filter desktop tauri dev` on macOS with Finder; use file, folder, `.app`, and alias drops; capture console lines beginning with `[G0 Finder DnD] path-first drop`.
-- Files/commits affected: docs/reviews/window-ground-truth/finder-dnd-path/README.md; packages/finder-dnd-path/docs/*; apps/desktop/src/windows/GridWindow.tsx; packages/plugin-organizer/src/OrganizerLayer.tsx; commits `33627df`, `7a1b9dd`, `7e20ca8`, `58c926d`, `18b48da`
+- Deferred gate: Real Finder DnD path-first matrix — RESOLVED 2026-05-19 22:09 PDT
+- Why deferred: Initially deferred because unattended Codex could not perform real Finder drag/drop. It is now resolved by human screenshots covering file, folder, `.app`, post-dedupe `.app`, and alias path-form evidence.
+- Risk: CLOSED for G0.4. Remaining MAS security-scoped bookmark risk is tracked separately under G0.6/G1.
+- What was done instead: Recorded screenshot evidence of `tauri://drag-drop` file, folder, `.app`, and alias path delivery; fixed GridWindow duplicate risk in `58c926d`; fixed Organizer per-path duplicate risk in `18b48da`; recorded alias policy in ADR-0005 as `PRESERVE_ALIAS_PATH`.
+- Later human action: Optional independent replay before ship; no remaining G0.4 blocker.
+- Suggested verification command / environment: `pnpm --filter desktop tauri dev` on macOS with Finder; use file, folder, `.app`, and alias drops; confirm GridWindow `Finder DnD` panel paths and console lines beginning with `[G0 Finder DnD] path-first drop`.
+- Files/commits affected: docs/reviews/window-ground-truth/finder-dnd-path/README.md; packages/finder-dnd-path/docs/*; apps/desktop/src/windows/GridWindow.tsx; packages/plugin-organizer/src/OrganizerLayer.tsx; docs/adr/0005-window-foundation.md; commits `33627df`, `7a1b9dd`, `7e20ca8`, `58c926d`, `18b48da`, `d982dab`, `5e98083`
 
 ## Entry 10
 
 - Feature: spaces-multimonitor-matrix
 - Gate: G0
 - Deferred gate: User override to skip blocked G0.3/G0.4 dependencies for safe prep
-- Why deferred: The user explicitly instructed to skip and continue, while G0.3/G0.4 remain BLOCKED on real hardware evidence.
+- Why deferred: The user explicitly instructed to skip and continue while G0.3/G0.4 were still blocked on real hardware evidence. G0.4 has since moved to READY_TO_SHIP; G0.3 remains blocked.
 - Risk: G0.5 prep proceeds without the prerequisite hit-test and DnD evidence, so results cannot be used as a G0 pass signal.
 - What was done instead: Limited G0.5 to documentation/matrix preparation only and preserved BLOCKED status for real runtime validation.
-- Later human action: Complete G0.3/G0.4 evidence, then perform G0.5 runtime validation.
+- Later human action: Complete G0.3 private-API comparison, then perform G0.5 runtime validation.
 - Suggested verification command / environment: `sed -n '1,120p' docs/workflow/roadmap/xai-g0-window-spike.md`
 - Files/commits affected: docs/workflow/roadmap/xai-g0-window-spike.md; docs/workflow/roadmap/xai-v1.autorun-20260519.md; commit `2fb6bac`
 
@@ -137,10 +137,10 @@
 - Feature: mas-sandbox-dry-run
 - Gate: G0
 - Deferred gate: User override to skip blocked G0.3/G0.4 dependencies for MAS safe prep
-- Why deferred: The user explicitly instructed to skip and continue, while G0.3/G0.4 remain BLOCKED and MAS conclusions depend on those results.
+- Why deferred: The user explicitly instructed to skip and continue while G0.3/G0.4 were still blocked and MAS conclusions depended on those results. G0.4 has since moved to READY_TO_SHIP; G0.3 and MAS runtime evidence remain blocked.
 - Risk: MAS prep proceeds without prerequisite click-through and Finder path evidence, so it cannot produce a real MAS feasibility conclusion.
 - What was done instead: Limited G0.6 to documentation/risk-prep only and preserved BLOCKED status for real runtime validation.
-- Later human action: Complete G0.3/G0.4 evidence, then perform MAS/private-API validation.
+- Later human action: Complete G0.3 private-API comparison, then perform MAS/private-API validation.
 - Suggested verification command / environment: `sed -n '1,140p' docs/reviews/window-ground-truth/mas-sandbox-dry-run/mas-sandbox-notes.md`
 - Files/commits affected: docs/workflow/roadmap/xai-g0-window-spike.md; docs/workflow/roadmap/xai-v1.autorun-20260519.md; commit `071a192`
 
@@ -208,12 +208,12 @@
 
 - Feature: native-dnd-path-first
 - Gate: G1
-- Deferred gate: G0.4 Finder DnD evidence and MAS sandbox decision
-- Why deferred: G1.3 production implementation depends on real Finder payload observations and MAS security-scope behavior.
-- Risk: Implementing path-first DnD before evidence could choose the wrong receiver, alias policy, or persisted security-scope model.
-- What was done instead: Created docs-only feature brief, discovery review, design, API, test plan, and dev_log mapping current HTML5/Tauri/Organizer drop paths.
-- Later human action: Complete the G0.4 Finder matrix with the `7e20ca8` telemetry panel/logs, complete MAS sandbox dry run, then rerun feature-build for DnD implementation.
-- Suggested verification command / environment: `pnpm --filter desktop tauri dev` on macOS with Finder; drop file, folder, `.app`, and alias into a Grid.
+- Deferred gate: MAS sandbox decision
+- Why deferred: G1.3 production implementation now has G0.4 Finder payload evidence, but still depends on MAS security-scope behavior.
+- Risk: Implementing path-first DnD before MAS evidence could choose the wrong persisted security-scope/bookmark model.
+- What was done instead: Created docs-only feature brief, discovery review, design, API, test plan, and dev_log mapping current HTML5/Tauri/Organizer drop paths. G0.4 later resolved with `PRESERVE_ALIAS_PATH` in ADR-0005.
+- Later human action: Complete MAS sandbox dry run, then rerun feature-build for DnD implementation.
+- Suggested verification command / environment: `pnpm --filter desktop tauri dev` and MAS sandbox dry-run environment on macOS; confirm dropped paths can be converted into any required security-scoped access model.
 - Files/commits affected: docs/reviews/native-dnd-path-first/*; packages/native-dnd-path-first/docs/*; commit `707a8d1`
 
 ## Entry 19

@@ -17,7 +17,7 @@ Prepare the G1.3 native DnD path-first feature so Finder drops can later produce
 - Map current drop handling in GridWindow and `plugin-organizer`.
 - Identify the target `DroppedFile` payload fields from `docs/contracts/events-v0.md`.
 - Record blockers from G0.4 Finder DnD evidence and MAS sandbox decisions.
-- Do not implement production DnD while G0.4 is unresolved.
+- Do not implement production DnD while MAS/security-scope evidence is unresolved.
 
 ## Non-goals
 
@@ -30,7 +30,7 @@ Prepare the G1.3 native DnD path-first feature so Finder drops can later produce
 
 - Current path/name behavior is documented.
 - Target path-first payload and unresolved fields are documented.
-- Status remains BLOCKED by G0.4 and MAS sandbox evidence.
+- Status remains BLOCKED by MAS sandbox evidence and overall G0 gate status.
 - No production source files change.
 
 ## Tests
