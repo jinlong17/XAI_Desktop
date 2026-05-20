@@ -10,12 +10,12 @@
 | Roadmap | xai-g0-window-spike · feature #4 · G0.4 |
 | Status | BLOCKED |
 | Current Phase | FEATURE_VERIFY |
-| Suggested Next | Post-dedupe app rerun plus alias evidence |
+| Suggested Next | Alias payload evidence |
 | Automation Mode | D-Codex |
 | Verify Cross-vendor | yes |
 | Executor | feature-verify (Codex inline) |
-| Updated | 2026-05-19 21:56 PDT |
-| Blockers | Alias evidence and post-dedupe app rerun required |
+| Updated | 2026-05-19 22:02 PDT |
+| Blockers | Alias evidence required |
 
 ## Phase Plan
 
@@ -52,6 +52,7 @@ Status: DONE. Commit: `18b48da`.
 - Added Organizer-side idempotency by normalized `gridId + filepath`.
 - Skips a path already present in the target Grid.
 - Skips repeated receipt of the same path for the same Grid within 5 seconds.
+- Human post-fix screenshot confirms `/Applications/QQ.app` now appears once in the Grid.
 
 ## Review Notes
 
@@ -59,9 +60,9 @@ feature-review (Codex inline), 2026-05-19 14:46 PDT. Verdict: APPROVED for safe 
 
 ## Verification Notes
 
-feature-verify (Codex inline), 2026-05-19 21:56 PDT. Verdict: PARTIAL_HUMAN_EVIDENCE / BLOCKED.
+feature-verify (Codex inline), 2026-05-19 22:02 PDT. Verdict: PARTIAL_HUMAN_EVIDENCE / BLOCKED.
 
-Human screenshot evidence confirms real file and `.app` paths through `tauri://drag-drop`. G0.4 remains blocked until `.app` is rerun after `18b48da` and alias evidence is captured.
+Human screenshot evidence confirms real file, folder, and `.app` paths through `tauri://drag-drop`. The post-dedupe `.app` rerun passed with `/Applications/QQ.app` appearing once. G0.4 remains blocked until alias evidence is captured.
 
 ## Work Log
 
@@ -76,3 +77,4 @@ Human screenshot evidence confirms real file and `.app` paths through `tauri://d
 | 2026-05-19 21:07 PDT | human + Codex inline | Recorded user report: Finder items can be dragged into Grid. | `e7fc4ab` | Capture exact per-kind payloads |
 | 2026-05-19 21:21 PDT | human + feature-build (Codex inline) | Recorded screenshot evidence and fixed duplicate item creation by making GridWindow path-first only. | `58c926d` | post-fix runtime rerun |
 | 2026-05-19 21:56 PDT | human + feature-build (Codex inline) | Recorded `.app` duplication screenshot and added Organizer-side path dedupe. | `18b48da` | post-dedupe app rerun |
+| 2026-05-19 22:02 PDT | human + feature-verify (Codex inline) | Recorded post-dedupe `.app` pass: `/Applications/QQ.app` appears once with Tauri path telemetry. | `18b48da` | alias payload evidence |

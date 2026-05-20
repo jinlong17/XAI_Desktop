@@ -14,11 +14,11 @@
 
 - Time: 2026-05-19 14:47 PDT
 - Feature: finder-dnd-path
-- Symptom: Feature cannot satisfy full acceptance yet; human screenshots showed duplicate items first for file/folder and later for `.app`.
+- Symptom: Feature cannot satisfy full acceptance yet; human screenshots showed duplicate items first for file/folder and later for `.app`. Post-dedupe `.app` rerun now passes.
 - Root cause if known: G0.4 still requires real Finder drag/drop payload observations for alias. Duplicate items were caused by repeated drop handling paths/events; `.app` bundles still duplicated after the GridWindow-only fix, so Organizer needed path-level idempotency.
 - Attempted fixes: Created a manual path-first matrix template, filled static code-analysis findings, added GridWindow `tauri://drag-drop` telemetry in `7e20ca8`, made GridWindow path-first only in `58c926d`, and added Organizer per-grid path dedupe in `18b48da`.
-- Current status: BLOCKED.
-- Resume instruction: Run `pnpm --filter desktop tauri dev`, rerun `.app` drop to confirm no duplicates after `18b48da`, then drop alias into a Grid, capture the `Finder DnD` panel and `[G0 Finder DnD] path-first drop` logs, fill exact payload rows in `docs/reviews/window-ground-truth/finder-dnd-path/README.md`, then rerun feature-verify for `finder-dnd-path`.
+- Current status: BLOCKED on alias evidence only.
+- Resume instruction: Run `pnpm --filter desktop tauri dev`, drop alias into a Grid, capture the `Finder DnD` panel and `[G0 Finder DnD] path-first drop` logs, fill exact alias payload row in `docs/reviews/window-ground-truth/finder-dnd-path/README.md`, then rerun feature-verify for `finder-dnd-path`.
 
 ## Incident 3
 
