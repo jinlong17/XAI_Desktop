@@ -1,3 +1,5 @@
+// Deprecated: use createIndexedDbRepo from ./indexedDbRepo instead. Kept temporarily for the legacy OfflineFirstStrategy demo until consumers migrate.
+
 export interface DataAdapter<T extends { id: string }> {
   get(id: string): Promise<T | undefined>;
   put(record: T): Promise<void>;

@@ -10,7 +10,9 @@ export class ErrorBoundary extends Component<{ children: ReactNode }, { error?: 
   }
 
   componentDidCatch(error: Error, errorInfo: ErrorInfo): void {
-    console.error("Sentry placeholder", { error, errorInfo });
+    if (process.env.NODE_ENV !== "production") {
+      console.error("Sentry placeholder", { error, errorInfo });
+    }
   }
 
   render() {

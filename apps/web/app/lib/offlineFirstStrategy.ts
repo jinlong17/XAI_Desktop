@@ -22,6 +22,7 @@ export class RemoteEncryptedBlobAdapter<T extends { id: string }> implements Dat
 
 export class OfflineFirstStrategy<T extends { id: string }> implements DataAdapter<T> {
   private readonly pending = new Set<string>();
+  private readonly pendingDeletes = new Set<string>();
 
   constructor(
     private readonly local: DataAdapter<T>,
@@ -30,7 +31,16 @@ export class OfflineFirstStrategy<T extends { id: string }> implements DataAdapt
   ) {}
 
   async get(id: string): Promise<T | undefined> {
-    return (await this.local.get(id)) ?? (await this.remote.get(id));
+    const localRecord = await this.local.get(id);
+    if (localRecord) {
+      return localRecord;
+    }
+
+    const remoteRecord = await this.remote.get(id);
+    if (remoteRecord) {
+      await this.local.put(remoteRecord);
+    }
+    return remoteRecord;
   }
 
   async put(record: T): Promise<void> {
@@ -41,8 +51,10 @@ export class OfflineFirstStrategy<T extends { id: string }> implements DataAdapt
 
   async delete(id: string): Promise<void> {
     await this.local.delete(id);
+    this.pendingDeletes.add(id);
     if (this.isOnline()) {
       await this.remote.delete(id);
+      this.pendingDeletes.delete(id);
     }
   }
 
@@ -53,6 +65,10 @@ export class OfflineFirstStrategy<T extends { id: string }> implements DataAdapt
   async sync(): Promise<void> {
     if (!this.isOnline()) {
       return;
+    }
+    for (const id of [...this.pendingDeletes]) {
+      await this.remote.delete(id);
+      this.pendingDeletes.delete(id);
     }
     for (const id of [...this.pending]) {
       const record = await this.local.get(id);
