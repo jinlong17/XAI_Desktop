@@ -5,15 +5,19 @@ import type {
   RepoRecord,
 } from "./types";
 
+const ENTITY_TYPE_RE = /^[a-z]+\.[a-z_]+$/;
+
 export function assertRepoRecord(record: RepoRecord): void {
   if (typeof record.id !== "string" || record.id.length === 0) {
     throw new Error("E3005: core-data record is missing id");
   }
-  if (
-    typeof record.entityType !== "string" ||
-    !record.entityType.includes(".")
-  ) {
+  if (typeof record.entityType !== "string" || record.entityType.length === 0) {
     throw new Error("E3005: core-data record is missing entityType");
+  }
+  if (!ENTITY_TYPE_RE.test(record.entityType)) {
+    throw new Error(
+      `E3005: core-data record entityType "${record.entityType}" violates plugin.entity regex`,
+    );
   }
   if (!Number.isInteger(record.schemaVersion) || record.schemaVersion < 1) {
     throw new Error("E3005: core-data record has invalid schemaVersion");
@@ -29,6 +33,14 @@ export function assertRepoRecord(record: RepoRecord): void {
     record.syncScope !== "account-sync"
   ) {
     throw new Error("E3005: core-data record has invalid syncScope");
+  }
+  if (
+    record.entityType === "clipboard.item" &&
+    record.syncScope !== "device-local"
+  ) {
+    throw new Error(
+      `E3005: clipboard.item must be device-local, got "${record.syncScope}"`,
+    );
   }
 }
 

@@ -1,5 +1,6 @@
 import { describe, expect, it } from "vitest";
 
+import { assertRepoRecord } from "../src/repo-utils";
 import { createInMemoryRepo } from "../src/testing";
 import type {
   CardEntity,
@@ -12,6 +13,7 @@ import type {
   RepoEntity,
   TodoEntity,
 } from "../src/entities";
+import type { RepoRecord } from "../src/types";
 
 const BASE = {
   schemaVersion: 1,
@@ -159,6 +161,42 @@ describe("Repo entities contract", () => {
     for (const record of all) {
       expect(record.entityType).toMatch(/^[a-z]+\.[a-z_]+$/);
     }
+  });
+
+  it("rejects records whose entityType violates the plugin.entity regex", () => {
+    const bad: RepoRecord = {
+      ...BASE,
+      id: "bad-1",
+      // Uppercase + missing dot → violates `^[a-z]+\.[a-z_]+$`.
+      entityType: "BadType",
+    } as RepoRecord;
+    expect(() => assertRepoRecord(bad)).toThrowError(
+      /E3005: core-data record entityType "BadType" violates plugin\.entity regex/,
+    );
+
+    const trailingDash: RepoRecord = {
+      ...BASE,
+      id: "bad-2",
+      entityType: "labels.label-1",
+    } as RepoRecord;
+    expect(() => assertRepoRecord(trailingDash)).toThrowError(
+      /violates plugin\.entity regex/,
+    );
+  });
+
+  it("rejects clipboard.item records with non-device-local syncScope at runtime", () => {
+    const cheating: RepoRecord = {
+      ...BASE,
+      id: "clip-bad",
+      entityType: "clipboard.item",
+      // Force account-sync via the wider RepoRecord shape — the type-level
+      // narrowing on ClipboardEntryEntity stops this in TS, but a raw
+      // SQLite row could still carry the wrong value.
+      syncScope: "account-sync",
+    } as RepoRecord;
+    expect(() => assertRepoRecord(cheating)).toThrowError(
+      /E3005: clipboard\.item must be device-local, got "account-sync"/,
+    );
   });
 
   it("supports listByIndex on entity-owned fields", async () => {
