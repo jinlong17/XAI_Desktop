@@ -13,14 +13,14 @@
 
 | Field | Value |
 |---|---|
-| Current Gate | G1 — native foundation safe prep |
+| Current Gate | G1 — native foundation safe prep complete |
 | Gate Manifest | docs/workflow/roadmap/xai-g1-native-foundation.md |
-| Current Feature | grid-persistence |
-| Feature Source | docs/planning/execution/G1-native-foundation.md §G1.5 |
-| Feature Status | BLOCKED |
-| Current Commit | dcf2750 |
+| Current Feature | none eligible |
+| Feature Source | G0/G1 blockers prevent G2 production or core-risk continuation |
+| Feature Status | STOPPED_NO_ELIGIBLE |
+| Current Commit | d8a49b3 |
 | Tests | `test -f docs/reviews/grid-persistence/20260519-feature-brief.md`; `test -f packages/grid-persistence/docs/dev_log.md`; `rg -n "PersistedLayout|localStorage|repository|Repository|Grid.*persist|restore|open Grid|last active|sqlite|sqlcipher|GridBox|DesktopItem" packages/plugin-organizer/src packages/core/src packages/core-data docs/contracts docs/planning/execution -g '*.{ts,tsx,rs,md}'` |
-| Next Step | Human G0 evidence, or continue only with safe downstream prep because G0/G1.1 are blocked |
+| Next Step | Human G0 evidence first: click-through, Finder DnD, Spaces/multi-monitor, MAS sandbox; then G1.1 |
 
 ## Checkpoints
 
@@ -240,6 +240,16 @@
 - No production source files changed.
 - Status: BLOCKED because production repository persistence must wait for G1.1/G2.
 
+### 2026-05-19 20:43 PDT — Stop Checkpoint: no eligible feature
+
+- G1 manifest now has a terminal status for every G1 feature:
+  - G1.1-G1.5: BLOCKED safe prep.
+  - G1.6: READY_TO_SHIP audit-only.
+- G0 remains not Go/Conditional Go because real click-through, Finder DnD, Spaces/multi-display, and MAS/sandbox evidence is missing.
+- G2 is not eligible because G0 -> G1 -> G2 core risks must close in order.
+- No `ship` or `push` was run.
+- Stop reason: no remaining eligible feature can proceed without bypassing Gate order or doing production implementation against blocked prerequisites.
+
 ## Feature Outcomes
 
 | Feature | Gate | Status | Commit | Tests | Notes |
@@ -288,7 +298,7 @@
 
 ## Final 24h Summary
 
-Paused early on 2026-05-19 after the user override because no further production-eligible feature could proceed under the required G0 -> G1 -> G2 order without real G0 hardware/runtime evidence. Safe preparatory work continued through G0.5, G0.6, G1.1, G1.6, and static follow-up for G0.3/G0.4; no ship or push was run.
+Stopped on 2026-05-19 20:43 PDT because no remaining eligible feature can proceed without bypassing the required G0 -> G1 -> G2 order. Safe preparatory work now covers G0.5, G0.6, all G1 tasks, and static/instrumentation follow-up for G0.3/G0.4; no ship or push was run.
 
 ### Completed Features
 
@@ -318,6 +328,10 @@ Paused early on 2026-05-19 after the user override because no further production
 - `spaces-multimonitor-matrix`
 - `mas-sandbox-dry-run`
 - `window-command-contract`
+- `grid-shell-organizer-content`
+- `native-dnd-path-first`
+- `multi-grid-event-scope`
+- `grid-persistence`
 
 ### Deferred Gates
 
@@ -346,6 +360,10 @@ Paused early on 2026-05-19 after the user override because no further production
 - Incident 6: `grid-window-prototype` `+ New Grid` did not create a native window; resolved by runtime recovery commits.
 - Incident 7: `grid-window-prototype` AI cube/settings were covered by Grid windows; resolved by runtime recovery commits.
 - Incident 8: `grid-window-prototype` still failed to generate and AI cube movement was bounded; resolved by runtime recovery commits.
+- Incident 9: `grid-shell-organizer-content` production split is blocked by G0/G1.1.
+- Incident 10: `multi-grid-event-scope` production event migration is blocked by G0/G1.1.
+- Incident 11: `native-dnd-path-first` production DnD is blocked by G0.4/MAS evidence.
+- Incident 12: `grid-persistence` production persistence is blocked by G1.1/G2.
 
 ### Commits
 
@@ -366,6 +384,17 @@ Paused early on 2026-05-19 after the user override because no further production
 - `7b7ff35` — `fix(window-runtime): unblock AI cube drag, grid window render, and silent IPC failures`
 - `f65a1b5` — `feat(control-window): live-resize, cascade spawn, focus-dismiss, clear-all UX`
 - `a33c74d` — `fix(grid-window): use OS-native startDragging so grid moves freely across the full screen`
+- `6e8323e` — `docs(grid-window-prototype): record runtime recovery`
+- `7e20ca8` — `feat(finder-dnd-path): add GridWindow drop telemetry`
+- `cfc995c` — `docs(finder-dnd-path): record drop telemetry checkpoint`
+- `eaae46e` — `docs(grid-shell-organizer-content): add safe prep boundary plan`
+- `dc31014` — `docs(roadmap): record g1 shell prep checkpoint`
+- `a7d4803` — `docs(multi-grid-event-scope): add safe prep event audit`
+- `a78f72c` — `docs(roadmap): record g1 event-scope checkpoint`
+- `707a8d1` — `docs(native-dnd-path-first): add safe prep discovery`
+- `2039f72` — `docs(roadmap): record g1 dnd prep checkpoint`
+- `dcf2750` — `docs(grid-persistence): add safe prep discovery`
+- `d8a49b3` — `docs(roadmap): record g1 persistence checkpoint`
 
 ### Test Results
 
@@ -383,6 +412,10 @@ Paused early on 2026-05-19 after the user override because no further production
 - `cargo check --manifest-path apps/desktop/src-tauri/Cargo.toml` -> PASS with existing dead-code warnings
 - `pnpm --filter desktop exec tsc --noEmit` -> PASS
 - `pnpm --filter @repo/core check-types` -> PASS
+- G1.2 safe-prep file checks and Host/Organizer boundary `rg` scan -> PASS
+- G1.3 safe-prep file checks and DnD path `rg` scan -> PASS
+- G1.4 safe-prep file checks and event-scope `rg` scan -> PASS
+- G1.5 safe-prep file checks and persistence/repository `rg` scan -> PASS
 
 ### Next Human Reading Order
 
