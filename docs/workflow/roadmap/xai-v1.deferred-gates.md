@@ -112,11 +112,11 @@
 
 - Feature: spaces-multimonitor-matrix
 - Gate: G0
-- Deferred gate: User override to skip blocked G0.3/G0.4 dependencies for safe prep
+- Deferred gate: User override to skip blocked G0.3/G0.4 dependencies for safe prep — RESOLVED 2026-05-19 22:54 PDT
 - Why deferred: The user explicitly instructed to skip and continue while G0.3/G0.4 were still blocked on real hardware evidence. G0.3 and G0.4 have since moved to READY_TO_SHIP.
-- Risk: G0.5 still cannot pass without real Spaces/fullscreen/multi-display evidence.
-- What was done instead: Limited G0.5 to documentation/matrix preparation and static evidence only: current display facts plus source-level collection behavior/window level findings. Preserved BLOCKED status for real runtime validation.
-- Later human action: Perform G0.5 runtime validation.
+- Risk: CLOSED for G0.5. Optional screenshot replay remains possible before ship.
+- What was done instead: Limited G0.5 to documentation/matrix preparation and static evidence until the user later confirmed Grid follows across Spaces/multi-display on the DELL setup.
+- Later human action: Optional independent screenshot replay before ship.
 - Suggested verification command / environment: `sed -n '1,120p' docs/workflow/roadmap/xai-g0-window-spike.md`
 - Files/commits affected: docs/workflow/roadmap/xai-g0-window-spike.md; docs/workflow/roadmap/xai-v1.autorun-20260519.md; commits `2fb6bac`, `bcc5785`
 
@@ -124,12 +124,12 @@
 
 - Feature: spaces-multimonitor-matrix
 - Gate: G0
-- Deferred gate: Real Spaces/fullscreen/multi-display matrix
+- Deferred gate: Real Spaces/fullscreen/multi-display matrix — RESOLVED 2026-05-19 22:54 PDT
 - Why deferred: The acceptance requires real Mission Control, multiple Spaces, fullscreen-app, and multi-display observations.
-- Risk: G0 cannot prove window placement/recovery stability until this evidence exists.
-- What was done instead: Created the evidence matrix template, recorded current display facts, recorded source-level collection behavior/window level findings, and avoided changing window behavior without live proof.
-- Later human action: Run `pnpm --filter desktop tauri dev`, perform the matrix, and attach logs/screenshots under `docs/reviews/window-ground-truth/spaces-multimonitor-matrix/`.
-- Suggested verification command / environment: `pnpm --filter desktop tauri dev` on macOS with built-in + external display, Mission Control, multiple Spaces, and fullscreen app.
+- Risk: CLOSED for current DMG/private path; optional independent replay remains a pre-ship confidence check.
+- What was done instead: Created the evidence matrix template, recorded current display facts, recorded source-level collection behavior/window level findings, avoided changing window behavior without live proof, then recorded user manual confirmation that Grid follows across Spaces/multi-display.
+- Later human action: Optional: run `pnpm --filter desktop tauri dev`, replay the matrix, and attach screenshots/logs under `docs/reviews/window-ground-truth/spaces-multimonitor-matrix/`.
+- Suggested verification command / environment: Optional replay: `pnpm --filter desktop tauri dev` on macOS with LG + DELL displays, Mission Control, multiple Spaces, and fullscreen app.
 - Files/commits affected: docs/reviews/window-ground-truth/spaces-multimonitor-matrix/README.md; packages/spaces-multimonitor-matrix/docs/*; commits `2fb6bac`, `bcc5785`
 
 ## Entry 12
@@ -148,11 +148,11 @@
 
 - Feature: mas-sandbox-dry-run
 - Gate: G0
-- Deferred gate: Real MAS sandbox and fallback validation
-- Why deferred: The acceptance requires signed/sandbox runtime evidence. The compile-only `mas-sandbox` fallback now builds without Rust-side transparent constructors, but runtime validation still needs a signed/sandbox environment.
+- Deferred gate: Real MAS sandbox and fallback validation — DEFERRED_EXTERNAL
+- Why deferred: The acceptance requires signed/sandbox runtime evidence and Apple Developer/signing or equivalent sandbox environment, which is unavailable now. The compile-only `mas-sandbox` fallback builds without Rust-side transparent constructors, but runtime validation still needs that environment.
 - Risk: G0 cannot decide a complete MAS path until the fallback is tested under sandbox/signing and the downgraded UX is accepted.
 - What was done instead: Created MAS notes, entitlement draft, risk matrix, private-API-disabled compile evidence, and the `mas-sandbox` compile fallback. Restored `"macOSPrivateApi": true` and the Rust `macos-private-api` Cargo feature after temporary tests.
-- Later human action: Run signed/sandbox validation with the `mas-sandbox` fallback and update `mas-sandbox-notes.md`.
+- Later human action: Run signed/sandbox validation with the `mas-sandbox` fallback once Apple Developer/signing or equivalent sandbox environment exists, then update `mas-sandbox-notes.md`.
 - Suggested verification command / environment: Build/run desktop with private API disabled after fallback implementation and sandbox entitlements on macOS; Apple Developer signing may be required for final evidence.
 - Files/commits affected: docs/reviews/window-ground-truth/mas-sandbox-dry-run/mas-sandbox-notes.md; packages/mas-sandbox-dry-run/docs/*; commits `071a192`, `4537d2d`, `2fda0c8`
 

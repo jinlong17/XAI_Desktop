@@ -2,7 +2,7 @@
 
 ## Status
 
-BLOCKED / COMPILE_FALLBACK_READY — the private-API-disabled compile comparison now has a compile-only fallback via `mas-sandbox`; signed/sandbox runtime evidence is still required.
+BLOCKED_EXTERNAL / COMPILE_FALLBACK_READY — the private-API-disabled compile comparison now has a compile-only fallback via `mas-sandbox`; signed/sandbox runtime evidence is deferred until Apple Developer/signing or equivalent sandbox environment exists.
 
 ## Current Known Repo Facts
 
@@ -50,3 +50,5 @@ This is a starting point only. It must be reviewed against actual Tauri signing/
 ## Preliminary Conclusion
 
 Current transparent desktop shape remains DMG/private-API for the default product path. The `mas-sandbox` feature proves a non-private compile fallback can avoid Rust-side transparent constructors, but MAS path remains `待验证` until signed/sandbox runtime validation proves Grid creation, acceptable fallback UX, file access, security-scoped bookmarks, tray/menu bar behavior, and any shortcut/clipboard capabilities.
+
+G0/G1 sequencing note: this MAS runtime validation is an external release gate and is decoupled from G1 native foundation for the DMG/private path.

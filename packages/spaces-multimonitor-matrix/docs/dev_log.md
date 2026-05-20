@@ -8,14 +8,14 @@
 | Target | spaces-multimonitor-matrix |
 | Title | G0.5 Spaces/fullscreen/multi-monitor validation |
 | Roadmap | xai-g0-window-spike · feature #5 · G0.5 |
-| Status | BLOCKED |
+| Status | READY_TO_SHIP |
 | Current Phase | FEATURE_VERIFY |
-| Suggested Next | Human Spaces/fullscreen/multi-display runtime matrix |
+| Suggested Next | Continue G1.1 window-command-contract under G0 Conditional Go |
 | Automation Mode | D-Codex |
 | Verify Cross-vendor | yes |
 | Executor | feature-verify (Codex inline) |
-| Updated | 2026-05-19 22:37 PDT |
-| Blockers | Real macOS Mission Control, fullscreen, Space-switch, and multi-display placement evidence required |
+| Updated | 2026-05-19 22:54 PDT |
+| Blockers | None for G0.5; optional independent screenshot replay before ship |
 
 ## Phase Plan
 
@@ -32,9 +32,9 @@ feature-review (Codex inline), 2026-05-19 15:01 PDT. Verdict: APPROVED for safe 
 
 ## Verification Notes
 
-feature-verify (Codex inline), 2026-05-19 15:02 PDT. Verdict: BLOCKED.
+feature-verify (Codex inline), 2026-05-19 22:54 PDT. Verdict: READY_TO_SHIP.
 
-Automated safe-prep checks confirm the matrix template exists, current display facts can be collected, and source-level Spaces behavior is visible in `window_ext.rs`. G0.5 acceptance still requires real macOS window behavior observations.
+Automated safe-prep checks confirm the matrix template exists, current display facts can be collected, and source-level Spaces behavior is visible in `window_ext.rs`. User manual runtime confirmation says Grid windows follow across Spaces/multi-display in the current LG + DELL setup. G0.5 is READY_TO_SHIP; optional screenshot replay remains allowed before ship.
 
 ## Work Log
 
@@ -45,3 +45,4 @@ Automated safe-prep checks confirm the matrix template exists, current display f
 | 2026-05-19 15:02 PDT | feature-build (Codex inline) | Created Spaces/fullscreen/multi-monitor evidence template and docs. | (this commit) | feature-verify |
 | 2026-05-19 15:02 PDT | feature-verify (Codex inline) | Marked BLOCKED because real macOS window behavior acceptance cannot be automated here. | (this commit) | feature-build |
 | 2026-05-19 22:37 PDT | feature-build/verify (Codex inline) | Recorded current `system_profiler SPDisplaysDataType` display facts and static window collection/level findings. Status remains BLOCKED pending real Mission Control/fullscreen/multi-display runtime evidence. | `bcc5785` | Human runtime matrix |
+| 2026-05-19 22:54 PDT | human + feature-verify (Codex inline) | Recorded user confirmation that Grid follows across Spaces/multi-display on the DELL setup. Status -> READY_TO_SHIP. | (pending commit) | G1.1 |

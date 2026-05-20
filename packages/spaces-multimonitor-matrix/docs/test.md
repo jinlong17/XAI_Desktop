@@ -8,6 +8,6 @@
 
 ## Blocked Manual Checks
 
-- `pnpm --filter desktop tauri dev`
-- Single display, dual display, Mission Control, multiple Spaces, fullscreen-app adjacent Space
-- Attach screenshots/logs to `docs/reviews/window-ground-truth/spaces-multimonitor-matrix/`
+- Optional independent replay before ship: `pnpm --filter desktop tauri dev`
+- Optional replay scenarios: single display, dual display, Mission Control, multiple Spaces, fullscreen-app adjacent Space
+- Optional evidence path: attach screenshots/logs to `docs/reviews/window-ground-truth/spaces-multimonitor-matrix/`

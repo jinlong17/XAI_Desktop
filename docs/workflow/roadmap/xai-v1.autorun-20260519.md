@@ -13,14 +13,14 @@
 
 | Field | Value |
 |---|---|
-| Current Gate | G0 — remaining manual evidence |
-| Gate Manifest | docs/workflow/roadmap/xai-g0-window-spike.md |
-| Current Feature | none — waiting on human/runtime gates |
-| Feature Source | docs/planning/execution/G0-window-spike.md §G0.5, §G0.6 |
-| Feature Status | BLOCKED |
+| Current Gate | G1 — native foundation |
+| Gate Manifest | docs/workflow/roadmap/xai-g1-native-foundation.md |
+| Current Feature | window-command-contract |
+| Feature Source | docs/planning/execution/G1-native-foundation.md §G1.1 |
+| Feature Status | ELIGIBLE |
 | Current Commit | latest local docs checkpoint; use `git log -1 --oneline` for the exact self-referential commit |
 | Tests | default `cargo check` PASS; private-API-disabled `cargo check --no-default-features --features mas-sandbox` PASS after temporary config/dependency toggle; defaults restored |
-| Next Step | Human-run G0.5 Spaces/fullscreen/multi-display matrix, then signed/sandbox G0.6 runtime validation |
+| Next Step | Start G1.1 production build under G0 Conditional Go |
 
 ## Checkpoints
 
@@ -377,6 +377,14 @@
 - G1 production implementation remains blocked until G0 reaches Go or Conditional Go.
 - No `ship` or `push` was run.
 
+### 2026-05-19 22:54 PDT — Human Evidence: G0 Conditional Go
+
+- User confirmed G0.5 Spaces/multi-display behavior: Grid windows can follow across Spaces/multi-screen on the DELL external-display setup.
+- Updated G0.5 `spaces-multimonitor-matrix` to READY_TO_SHIP with user-reported/manual evidence and optional independent screenshot replay before ship.
+- Recorded G0.6 MAS signed/sandbox runtime validation as `BLOCKED_EXTERNAL`; Apple Developer/signing or equivalent sandbox environment is unavailable and is decoupled from G1 DMG/private path.
+- ADR-0005 now records G0 verdict as Conditional Go.
+- G1 native foundation may proceed under the DMG/private path; MAS-specific behavior remains behind `mas-sandbox` validation.
+
 ## Feature Outcomes
 
 | Feature | Gate | Status | Commit | Tests | Notes |
@@ -385,9 +393,9 @@
 | grid-window-prototype | G0 | READY_TO_SHIP | 6b121ea + 14e04c2 + 01e5167 + b8c34fe + 7b7ff35 + f65a1b5 + a33c74d | PASS: desktop tsc; plugin-organizer check-types; desktop build; cargo check | Runtime fixed/confirmed; deferred review/verify gates recorded. |
 | click-through-matrix | G0 | READY_TO_SHIP | 82ab268 + 7a1b9dd + e7fc4ab + 2e5e499 + 4537d2d | PASS: transparent-area click-through, Grid item pointer flash, resize-handle drag; FAIL_BUILD evidence for private-API-disabled transparent path | MAS/non-private fallback risk moved to G0.6. |
 | finder-dnd-path | G0 | READY_TO_SHIP | 33627df + 7a1b9dd + 7e20ca8 + e7fc4ab + 58c926d + 18b48da + 5e98083 | PASS: file, folder, `.app`, and alias paths observed via `tauri://drag-drop`; duplicate fixes applied; post-dedupe `.app` rerun passed; alias path policy recorded as `PRESERVE_ALIAS_PATH` | Deferred gates recorded in docs/workflow/roadmap/xai-v1.deferred-gates.md |
-| spaces-multimonitor-matrix | G0 | BLOCKED | 2fb6bac + bcc5785 | PASS: matrix template exists; current display facts and static window behavior recorded; BLOCKED: real Spaces/fullscreen/multi-display evidence | Reached by user override; safe prep only. |
-| mas-sandbox-dry-run | G0 | BLOCKED | 071a192 + 4537d2d + 2fda0c8 | PASS: MAS notes exist; private-API-disabled compile fallback passes; BLOCKED: signed/sandbox runtime evidence | Reached by user override; fallback compile only. |
-| window-command-contract | G1 | BLOCKED | 9c7b52f | PASS: safe-prep docs exist; BLOCKED: G0 not Go/Conditional Go | Reached by user override; no production code changed. |
+| spaces-multimonitor-matrix | G0 | READY_TO_SHIP | 2fb6bac + bcc5785 + pending G0 conditional commit | PASS: matrix template exists; current display facts, static window behavior, and user manual Spaces/multi-display follow evidence recorded | Optional independent screenshot replay before ship. |
+| mas-sandbox-dry-run | G0 | BLOCKED_EXTERNAL | 071a192 + 4537d2d + 2fda0c8 | PASS: MAS notes exist; private-API-disabled compile fallback passes; BLOCKED_EXTERNAL: Apple Developer/signed sandbox runtime evidence | Deferred external release gate; decoupled from G1 DMG/private path. |
+| window-command-contract | G1 | ELIGIBLE | 9c7b52f | PASS: safe-prep docs exist; G0 Conditional Go now unblocks production build | Next eligible feature. |
 | grid-shell-organizer-content | G1 | BLOCKED | eaae46e | PASS: safe-prep docs exist; BLOCKED: G0/G1.1 not ready | Reached by user override; no production code changed. |
 | native-dnd-path-first | G1 | BLOCKED | 707a8d1 | PASS: DnD discovery docs exist; BLOCKED: MAS sandbox/security-scope evidence missing | Reached by user override; no production code changed. |
 | multi-grid-event-scope | G1 | BLOCKED | a7d4803 | PASS: event audit docs exist; BLOCKED: G0/G1.1 not ready | Reached by user override; no production code changed. |
@@ -402,9 +410,9 @@
 - Cross-vendor review/verify deferred for `grid-window-prototype`; runtime fix was confirmed by user and commits.
 - Click-through matrix deferred gate for `click-through-matrix` resolved; default-runtime click-through, item pointer, and resize evidence are positive, and the private-API-disabled transparent path fails at compile time.
 - Finder DnD path matrix deferral for `finder-dnd-path` resolved; file, folder, `.app`, and alias path-form evidence are positive, duplicate fixes are in `58c926d` and `18b48da`, and ADR-0005 records `PRESERVE_ALIAS_PATH`.
-- Real Spaces/fullscreen/multi-display matrix deferred for `spaces-multimonitor-matrix`.
-- Real MAS/private-API sandbox runtime evidence deferred for `mas-sandbox-dry-run`; compile fallback is ready.
-- G1 production implementation deferred until G0 Go/Conditional Go.
+- Spaces/fullscreen/multi-display matrix deferral for `spaces-multimonitor-matrix` resolved by user manual confirmation; optional screenshot replay remains.
+- Real MAS/private-API sandbox runtime evidence deferred external for `mas-sandbox-dry-run`; compile fallback is ready.
+- G1 production implementation prerequisite resolved by G0 Conditional Go.
 - G1.2 production shell/content split deferred until G0 Go/Conditional Go and G1.1 implementation.
 - G1.3 production DnD path-first implementation deferred until MAS/security-scope evidence.
 - G1.4 production event migration deferred until G0 Go/Conditional Go and G1.1 implementation.
@@ -415,9 +423,9 @@
 
 - click-through-matrix incident resolved; G0.3 is READY_TO_SHIP and MAS/non-private transparent fallback remains tracked by G0.6.
 - finder-dnd-path incident resolved; G0.4 is READY_TO_SHIP after alias path-form evidence and ADR update.
-- spaces-multimonitor-matrix blocked on real macOS Spaces/fullscreen/multi-display evidence.
-- mas-sandbox-dry-run blocked on real sandbox/private-API evidence.
-- window-command-contract blocked by G0 gate status.
+- spaces-multimonitor-matrix incident resolved; G0.5 is READY_TO_SHIP.
+- mas-sandbox-dry-run blocked external on real sandbox/private-API runtime evidence, but no longer blocks G1 DMG/private path.
+- window-command-contract G0 prerequisite resolved; production build is now eligible.
 - grid-shell-organizer-content blocked by G0/G1.1 gate status.
 - native-dnd-path-first blocked by MAS/security-scope evidence.
 - multi-grid-event-scope blocked by G0/G1.1 gate status.
@@ -425,7 +433,7 @@
 
 ## Final 24h Summary
 
-Latest stop point is 2026-05-19 22:47 PDT because no eligible G0 work remains without human/runtime gates. G0.3 and G0.4 are READY_TO_SHIP; G0 still cannot Go/Conditional Go because G0.5 Spaces/fullscreen/multi-display and G0.6 signed/sandbox runtime evidence remain BLOCKED. No ship or push was run.
+Latest checkpoint is 2026-05-19 22:54 PDT. G0 is Conditional Go for the DMG/private path: G0.3/G0.4/G0.5 are READY_TO_SHIP, and G0.6 signed/sandbox MAS runtime validation is deferred external. No ship or push was run.
 
 ### Completed Features
 
@@ -433,9 +441,9 @@ Latest stop point is 2026-05-19 22:47 PDT because no eligible G0 work remains wi
 - `grid-window-prototype` — READY_TO_SHIP after runtime recovery.
 - `click-through-matrix` — READY_TO_SHIP after default-runtime hit-test pass and private-API-disabled compile-fail evidence.
 - `finder-dnd-path` — READY_TO_SHIP after Tauri file/folder/app/alias path evidence, duplicate fixes, post-dedupe `.app` pass, and ADR alias policy update.
-- `spaces-multimonitor-matrix` — BLOCKED after safe prep.
-- `mas-sandbox-dry-run` — BLOCKED after compile fallback; signed/sandbox runtime evidence remains required.
-- `window-command-contract` — BLOCKED after safe prep.
+- `spaces-multimonitor-matrix` — READY_TO_SHIP after user manual Spaces/multi-display follow confirmation.
+- `mas-sandbox-dry-run` — BLOCKED_EXTERNAL after compile fallback; signed/sandbox runtime evidence remains required.
+- `window-command-contract` — ELIGIBLE after G0 Conditional Go.
 - `grid-shell-organizer-content` — BLOCKED after safe prep.
 - `native-dnd-path-first` — BLOCKED after safe prep.
 - `multi-grid-event-scope` — BLOCKED after safe prep.
@@ -448,13 +456,12 @@ Latest stop point is 2026-05-19 22:47 PDT because no eligible G0 work remains wi
 - `grid-window-prototype`
 - `click-through-matrix`
 - `finder-dnd-path`
+- `spaces-multimonitor-matrix`
 - `host-business-residuals`
 
 ### BLOCKED Features
 
-- `spaces-multimonitor-matrix`
 - `mas-sandbox-dry-run`
-- `window-command-contract`
 - `grid-shell-organizer-content`
 - `native-dnd-path-first`
 - `multi-grid-event-scope`
@@ -468,9 +475,8 @@ Latest stop point is 2026-05-19 22:47 PDT because no eligible G0 work remains wi
 - Independent review/verify for `grid-window-prototype` runtime recovery commits.
 - Optional independent replay for `click-through-matrix`; no remaining G0.3 blocker. MAS fallback risk is tracked under G0.6.
 - Optional independent replay for `finder-dnd-path`; no remaining G0.4 blocker.
-- Real Spaces/fullscreen/multi-display matrix for `spaces-multimonitor-matrix`.
+- Optional independent screenshot replay for `spaces-multimonitor-matrix`.
 - Real MAS/private-API sandbox evidence for `mas-sandbox-dry-run`.
-- G1 production implementation until G0 Go/Conditional Go.
 - G1.2 shell/content production refactor until G1.1 is implemented.
 - G1.3 DnD path-first implementation until MAS sandbox/security-scope decision.
 - G1.4 event migration until G1.1 is implemented and G0 DnD payload shape is settled.
@@ -481,9 +487,9 @@ Latest stop point is 2026-05-19 22:47 PDT because no eligible G0 work remains wi
 
 - Incident 1: `click-through-matrix` resolved for G0.3; private-API-disabled transparent path fails at compile time and is now G0.6 fallback work.
 - Incident 2: `finder-dnd-path` duplicate and alias evidence gaps are resolved; G0.4 is READY_TO_SHIP.
-- Incident 3: `spaces-multimonitor-matrix` cannot satisfy real Spaces/fullscreen/multi-display acceptance in unattended mode.
-- Incident 4: `mas-sandbox-dry-run` cannot satisfy sandbox/private-API acceptance in unattended mode.
-- Incident 5: `window-command-contract` production implementation is blocked until G0 is Go/Conditional Go.
+- Incident 3: `spaces-multimonitor-matrix` resolved by user manual runtime confirmation.
+- Incident 4: `mas-sandbox-dry-run` cannot satisfy sandbox/private-API runtime acceptance without Apple Developer/signed sandbox environment.
+- Incident 5: `window-command-contract` G0 prerequisite resolved by Conditional Go.
 - Incident 6: `grid-window-prototype` `+ New Grid` did not create a native window; resolved by runtime recovery commits.
 - Incident 7: `grid-window-prototype` AI cube/settings were covered by Grid windows; resolved by runtime recovery commits.
 - Incident 8: `grid-window-prototype` still failed to generate and AI cube movement was bounded; resolved by runtime recovery commits.

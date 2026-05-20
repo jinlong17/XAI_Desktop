@@ -10,11 +10,11 @@
 
 | Command | Input | Output | Status |
 |---|---|---|---|
-| `create_grid_window` | `CreateGridWindowInput` | `GridWindowSnapshot` or `void` final decision pending | blocked by G0 |
-| `update_grid_window` | `UpdateGridWindowInput` | `GridWindowSnapshot` or `void` final decision pending | blocked by G0 |
-| `close_grid_window` | `{ gridId: string }` | `void` | blocked by G0 |
-| `list_grid_windows` | `void` | `GridWindowSnapshot[]` | blocked by G0 |
-| `focus_grid_window` | `{ gridId: string }` | `void` | blocked by G0 |
+| `create_grid_window` | `CreateGridWindowInput` | `GridWindowSnapshot` | ready for G1.1 build |
+| `update_grid_window` | `UpdateGridWindowInput` | `GridWindowSnapshot` | ready for G1.1 build |
+| `close_grid_window` | `{ gridId: string }` | `void` | ready for G1.1 build |
+| `list_grid_windows` | `void` | `GridWindowSnapshot[]` | ready for G1.1 build |
+| `focus_grid_window` | `{ gridId: string }` | `GridWindowSnapshot` | ready for G1.1 build |
 
 ## Contract Source
 
@@ -33,5 +33,4 @@ interface CommandError {
 }
 ```
 
-Rust implementation details remain blocked by G0.
-
+Rust implementation is now unblocked by G0 Conditional Go for the DMG/private path.

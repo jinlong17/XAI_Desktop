@@ -26,9 +26,9 @@
 - Feature: spaces-multimonitor-matrix
 - Symptom: Feature cannot satisfy acceptance in unattended mode.
 - Root cause if known: G0.5 requires real Mission Control, Spaces, fullscreen-app, and multi-display observations; static inspection cannot prove window placement/recovery behavior.
-- Attempted fixes: Created a manual matrix template, documented the exact runtime evidence required, recorded current display facts, and recorded source-level collection behavior/window level findings. Avoided speculative window behavior changes.
-- Current status: BLOCKED.
-- Resume instruction: Run `pnpm --filter desktop tauri dev`, fill `docs/reviews/window-ground-truth/spaces-multimonitor-matrix/README.md`, then rerun feature-verify for `spaces-multimonitor-matrix`.
+- Attempted fixes: Created a manual matrix template, documented the exact runtime evidence required, recorded current display facts, recorded source-level collection behavior/window level findings, and recorded user manual confirmation that Grid follows across Spaces/multi-display on the DELL setup. Avoided speculative window behavior changes.
+- Current status: RESOLVED for G0.5; feature is READY_TO_SHIP.
+- Resume instruction: No G0.5 action required for G1. Optional: replay `pnpm --filter desktop tauri dev` and attach screenshots before ship.
 
 ## Incident 4
 
@@ -37,18 +37,18 @@
 - Symptom: Feature cannot satisfy acceptance in unattended mode.
 - Root cause if known: G0.6 requires signed/sandbox validation. The original transparent implementation could not compile with the private API path disabled because `.transparent(true)` is unavailable on `WebviewWindowBuilder`.
 - Attempted fixes: Created MAS sandbox notes, entitlement draft, and risk matrix. Temporarily tested with private API disabled, captured compile failure, added the `mas-sandbox` compile fallback guard, verified the private-API-disabled compile path, and restored the default config/Cargo feature.
-- Current status: BLOCKED.
-- Resume instruction: Run private-API-disabled `mas-sandbox` fallback in a signed/sandbox environment, validate runtime UX/file access/bookmarks/tray behavior, update `docs/reviews/window-ground-truth/mas-sandbox-dry-run/mas-sandbox-notes.md`, then rerun feature-verify for `mas-sandbox-dry-run`.
+- Current status: BLOCKED_EXTERNAL; not blocking G1 DMG/private path under G0 Conditional Go.
+- Resume instruction: When Apple Developer/signing or equivalent sandbox environment exists, run private-API-disabled `mas-sandbox` fallback in a signed/sandbox environment, validate runtime UX/file access/bookmarks/tray behavior, update `docs/reviews/window-ground-truth/mas-sandbox-dry-run/mas-sandbox-notes.md`, then rerun feature-verify for `mas-sandbox-dry-run`.
 
 ## Incident 5
 
 - Time: 2026-05-19 15:08 PDT
 - Feature: window-command-contract
 - Symptom: Production implementation is blocked.
-- Root cause if known: G1 requires G0 Go or Conditional Go, and G0 still has unresolved manual/native validation blockers.
+- Root cause if known: G1 required G0 Go or Conditional Go. G0 has now reached Conditional Go for DMG/private path; MAS remains a deferred external release gate.
 - Attempted fixes: Created G1.1 contract-planning docs and G1 manifest without touching production window command code.
-- Current status: BLOCKED.
-- Resume instruction: Complete G0 evidence and decide Go/Conditional Go, then rerun feature-build for `window-command-contract`.
+- Current status: RESOLVED as prerequisite blocker; `window-command-contract` may proceed to production build.
+- Resume instruction: Run feature-build for `window-command-contract`.
 
 ## Incident 6
 

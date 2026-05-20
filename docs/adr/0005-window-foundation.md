@@ -2,7 +2,7 @@
 
 | 字段 | 值 |
 |------|---|
-| 状态 | Proposed |
+| 状态 | Accepted — Conditional Go |
 | 日期 | 2026-05-19 |
 | 决策者 | Product Owner + Codex |
 
@@ -110,6 +110,18 @@ G1 policy:
 - G0.6 已加入 compile-only `mas-sandbox` fallback:该 feature 下 Grid/control Rust builders 不调用 `.transparent(true)`,并在临时关闭 `macOSPrivateApi` 与 Tauri dependency `macos-private-api` 后通过 `cargo check --no-default-features --features mas-sandbox`。
 - 若继续 MAS,必须在此 compile fallback 基础上做 sandbox/signing/runtime 验证,确认非透明或降级 UX 是否可接受。
 
+## G0.5 Spaces / Multi-Display 结论
+
+2026-05-19 用户人工验证确认:
+
+- 在当前 LG Ultra HD + DELL P2720DC 双屏环境下,Grid window 可以跟随 Spaces/多屏移动。
+- 未报告随机消失、错层、无法恢复或明显 rect 偏移。
+- `CanJoinAllSpaces` / `Stationary` / `IgnoresCycle` 的当前实现可作为 G1 DMG/private path 的基础。
+
+可选项:
+
+- ship 前仍可独立重放截图矩阵,但该项不再阻塞 G1 native foundation。
+
 ## G0 Go/No-Go
 
 | 条件 | Go | No-Go |
@@ -118,7 +130,12 @@ G1 policy:
 | DnD path | Finder 文件拖入 Grid 可得到真实 path | 只能得到文件名/虚拟对象/无事件 |
 | Spaces | 多 Space/全屏切换不丢窗口或可恢复 | 窗口错层、丢失、无法恢复 |
 | Multi-grid | 两个 Grid 同时存在且事件不串 | 任意 event 无法稳定 scope |
-| MAS path | private API 关闭时有可接受方案 | compile fallback 存在但 runtime/sandbox UX 不可接受 |
+| MAS path | compile fallback 存在且 release gate 可延后验证 | compile fallback 存在但 runtime/sandbox UX 不可接受 |
+
+G0 Verdict: **Conditional Go**。
+
+- DMG/private path:可以进入 G1 native foundation。
+- MAS path:保留为外部 release gate,需要 Apple Developer/signing 或等效 sandbox 环境后再验证。
 
 ## 后果
 
