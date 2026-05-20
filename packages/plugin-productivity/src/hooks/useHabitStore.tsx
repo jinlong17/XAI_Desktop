@@ -24,6 +24,8 @@ const seedHabits: Habit[] = [
       { date: "2026-05-20", count: 1, completedAt: "2026-05-20T09:00:00.000Z" },
     ],
     labels: ["label-focus"],
+    createdAt: "2026-05-18T09:00:00.000Z",
+    updatedAt: "2026-05-18T09:00:00.000Z",
   },
 ];
 
@@ -32,17 +34,18 @@ function createId(prefix: string): string {
   return `${prefix}-${Date.now()}-${Math.random().toString(16).slice(2)}`;
 }
 
-function todayKey(): string {
+function todayUtcKey(): string {
   return new Date().toISOString().slice(0, 10);
 }
 
 function calculateStreak(history: HabitHistoryEntry[]): number {
   const completed = new Set(history.filter((entry) => entry.count > 0).map((entry) => entry.date));
   let streak = 0;
-  const cursor = new Date(`${todayKey()}T00:00:00`);
+  // Streaks use UTC day boundaries so timezone and DST shifts do not change the count.
+  const cursor = new Date(`${todayUtcKey()}T00:00:00Z`);
   while (completed.has(cursor.toISOString().slice(0, 10))) {
     streak += 1;
-    cursor.setDate(cursor.getDate() - 1);
+    cursor.setUTCDate(cursor.getUTCDate() - 1);
   }
   return streak;
 }
@@ -53,7 +56,7 @@ export interface HabitStore {
   error: string | null;
   refresh(): Promise<void>;
   createHabit(input: HabitDraft): Promise<Habit>;
-  updateHabit(id: string, patch: Partial<Omit<Habit, "id">>): Promise<void>;
+  updateHabit(id: string, patch: Partial<Omit<Habit, "id" | "createdAt" | "updatedAt">>): Promise<void>;
   deleteHabit(id: string): Promise<void>;
   checkIn(id: string, date?: string): Promise<void>;
   getHabitById(id: string): Habit | null;
@@ -66,10 +69,9 @@ export interface HabitStoreProviderProps {
   children: ReactNode;
 }
 
-export function HabitStoreProvider({
-  adapter = new LocalStorageAdapter<Habit>(STORAGE_KEY, seedHabits),
-  children,
-}: HabitStoreProviderProps) {
+export function HabitStoreProvider({ adapter, children }: HabitStoreProviderProps) {
+  const [defaultAdapter] = useState(() => new LocalStorageAdapter<Habit>(STORAGE_KEY, seedHabits));
+  const stableAdapter = adapter ?? defaultAdapter;
   const [habits, setHabits] = useState<Habit[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -78,34 +80,37 @@ export function HabitStoreProvider({
     setIsLoading(true);
     setError(null);
     try {
-      setHabits(await adapter.getAll());
+      setHabits(await stableAdapter.getAll());
     } catch (cause) {
       setError(cause instanceof Error ? cause.message : "Unable to load habits");
     } finally {
       setIsLoading(false);
     }
-  }, [adapter]);
+  }, [stableAdapter]);
 
   useEffect(() => {
     void refresh();
   }, [refresh]);
 
   const persist = useCallback(
-    async (habit: Habit) => {
-      await adapter.save(habit);
+    async (habit: Habit, options: { touchUpdatedAt?: boolean } = {}) => {
+      const nextHabit = options.touchUpdatedAt === false ? habit : { ...habit, updatedAt: new Date().toISOString() };
+      await stableAdapter.save(nextHabit);
       setHabits((prev) =>
-        prev.some((current) => current.id === habit.id)
-          ? prev.map((current) => (current.id === habit.id ? habit : current))
-          : [habit, ...prev],
+        prev.some((current) => current.id === nextHabit.id)
+          ? prev.map((current) => (current.id === nextHabit.id ? nextHabit : current))
+          : [nextHabit, ...prev],
       );
+      return nextHabit;
     },
-    [adapter],
+    [stableAdapter],
   );
 
   const createHabit = useCallback(
     async (input: HabitDraft) => {
       const name = input.name.trim();
       if (!name) throw new Error("Habit name is required");
+      const now = new Date().toISOString();
       const habit: Habit = {
         id: createId("habit"),
         name,
@@ -113,34 +118,35 @@ export function HabitStoreProvider({
         streak: 0,
         history: [],
         labels: input.labels ?? [],
+        createdAt: now,
+        updatedAt: now,
       };
-      await persist(habit);
-      return habit;
+      return persist(habit, { touchUpdatedAt: false });
     },
     [persist],
   );
 
   const updateHabit = useCallback(
-    async (id: string, patch: Partial<Omit<Habit, "id">>) => {
-      const current = await adapter.getById(id);
+    async (id: string, patch: Partial<Omit<Habit, "id" | "createdAt" | "updatedAt">>) => {
+      const current = await stableAdapter.getById(id);
       if (!current) return;
       const history = patch.history ?? current.history;
       await persist({ ...current, ...patch, streak: calculateStreak(history) });
     },
-    [adapter, persist],
+    [stableAdapter, persist],
   );
 
   const deleteHabit = useCallback(
     async (id: string) => {
-      await adapter.delete(id);
+      await stableAdapter.delete(id);
       setHabits((prev) => prev.filter((habit) => habit.id !== id));
     },
-    [adapter],
+    [stableAdapter],
   );
 
   const checkIn = useCallback(
-    async (id: string, date = todayKey()) => {
-      const current = await adapter.getById(id);
+    async (id: string, date = todayUtcKey()) => {
+      const current = await stableAdapter.getById(id);
       if (!current) return;
       const existing = current.history.find((entry) => entry.date === date);
       const history = existing
@@ -150,7 +156,7 @@ export function HabitStoreProvider({
         : [...current.history, { date, count: 1, completedAt: new Date().toISOString() }];
       await persist({ ...current, history, streak: calculateStreak(history) });
     },
-    [adapter, persist],
+    [stableAdapter, persist],
   );
 
   const getHabitById = useCallback(

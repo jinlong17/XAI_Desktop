@@ -24,6 +24,7 @@ const seedTodos: Todo[] = [
     labels: ["label-focus"],
     pomodoroCount: 1,
     createdAt: "2026-05-20T00:00:00.000Z",
+    updatedAt: "2026-05-20T00:00:00.000Z",
   },
   {
     id: "todo-clean-inbox",
@@ -35,6 +36,7 @@ const seedTodos: Todo[] = [
     labels: [],
     pomodoroCount: 0,
     createdAt: "2026-05-20T00:00:00.000Z",
+    updatedAt: "2026-05-20T00:00:00.000Z",
   },
 ];
 
@@ -72,7 +74,7 @@ export interface TodoStore {
   error: string | null;
   refresh(): Promise<void>;
   createTodo(input: TodoDraft): Promise<Todo>;
-  updateTodo(id: string, patch: Partial<Omit<Todo, "id" | "createdAt">>): Promise<void>;
+  updateTodo(id: string, patch: Partial<Omit<Todo, "id" | "createdAt" | "updatedAt">>): Promise<void>;
   deleteTodo(id: string): Promise<void>;
   setStatus(id: string, status: TodoStatus): Promise<void>;
   moveToQuadrant(id: string, quadrant: TodoQuadrant): Promise<void>;
@@ -87,10 +89,9 @@ export interface TodoStoreProviderProps {
   children: ReactNode;
 }
 
-export function TodoStoreProvider({
-  adapter = new LocalStorageAdapter<Todo>(STORAGE_KEY, seedTodos),
-  children,
-}: TodoStoreProviderProps) {
+export function TodoStoreProvider({ adapter, children }: TodoStoreProviderProps) {
+  const [defaultAdapter] = useState(() => new LocalStorageAdapter<Todo>(STORAGE_KEY, seedTodos));
+  const stableAdapter = adapter ?? defaultAdapter;
   const [todos, setTodos] = useState<Todo[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -99,30 +100,32 @@ export function TodoStoreProvider({
     setIsLoading(true);
     setError(null);
     try {
-      const next = await adapter.getAll();
+      const next = await stableAdapter.getAll();
       setTodos(next.sort((a, b) => b.createdAt.localeCompare(a.createdAt)));
     } catch (cause) {
       setError(cause instanceof Error ? cause.message : "Unable to load todos");
     } finally {
       setIsLoading(false);
     }
-  }, [adapter]);
+  }, [stableAdapter]);
 
   useEffect(() => {
     void refresh();
   }, [refresh]);
 
   const persist = useCallback(
-    async (todo: Todo) => {
-      await adapter.save(todo);
+    async (todo: Todo, options: { touchUpdatedAt?: boolean } = {}) => {
+      const nextTodo = options.touchUpdatedAt === false ? todo : { ...todo, updatedAt: new Date().toISOString() };
+      await stableAdapter.save(nextTodo);
       setTodos((prev) => {
-        const next = prev.some((current) => current.id === todo.id)
-          ? prev.map((current) => (current.id === todo.id ? todo : current))
-          : [todo, ...prev];
+        const next = prev.some((current) => current.id === nextTodo.id)
+          ? prev.map((current) => (current.id === nextTodo.id ? nextTodo : current))
+          : [nextTodo, ...prev];
         return next.sort((a, b) => b.createdAt.localeCompare(a.createdAt));
       });
+      return nextTodo;
     },
-    [adapter],
+    [stableAdapter],
   );
 
   const createTodo = useCallback(
@@ -130,6 +133,7 @@ export function TodoStoreProvider({
       const title = input.title.trim();
       if (!title) throw new Error("Todo title is required");
       const quadrant = input.quadrant ?? autoAssignQuadrant(title, input.dueDate);
+      const createdAt = new Date().toISOString();
       const todo: Todo = {
         id: createId("todo"),
         title,
@@ -140,29 +144,29 @@ export function TodoStoreProvider({
         dueDate: input.dueDate,
         labels: input.labels ?? [],
         pomodoroCount: 0,
-        createdAt: new Date().toISOString(),
+        createdAt,
+        updatedAt: createdAt,
       };
-      await persist(todo);
-      return todo;
+      return persist(todo, { touchUpdatedAt: false });
     },
     [persist],
   );
 
   const updateTodo = useCallback(
-    async (id: string, patch: Partial<Omit<Todo, "id" | "createdAt">>) => {
-      const current = await adapter.getById(id);
+    async (id: string, patch: Partial<Omit<Todo, "id" | "createdAt" | "updatedAt">>) => {
+      const current = await stableAdapter.getById(id);
       if (!current) return;
       await persist({ ...current, ...patch });
     },
-    [adapter, persist],
+    [stableAdapter, persist],
   );
 
   const deleteTodo = useCallback(
     async (id: string) => {
-      await adapter.delete(id);
+      await stableAdapter.delete(id);
       setTodos((prev) => prev.filter((todo) => todo.id !== id));
     },
-    [adapter],
+    [stableAdapter],
   );
 
   const setStatus = useCallback(
@@ -177,11 +181,11 @@ export function TodoStoreProvider({
 
   const incrementPomodoro = useCallback(
     async (id: string) => {
-      const current = await adapter.getById(id);
+      const current = await stableAdapter.getById(id);
       if (!current) return;
       await persist({ ...current, pomodoroCount: current.pomodoroCount + 1 });
     },
-    [adapter, persist],
+    [stableAdapter, persist],
   );
 
   const getTodoById = useCallback(

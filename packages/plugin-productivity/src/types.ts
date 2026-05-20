@@ -20,6 +20,7 @@ export interface Todo {
   labels: string[];
   pomodoroCount: number;
   createdAt: string;
+  updatedAt: string;
 }
 
 export interface TodoDraft {
@@ -67,6 +68,8 @@ export interface Habit {
   streak: number;
   history: HabitHistoryEntry[];
   labels: string[];
+  createdAt: string;
+  updatedAt: string;
 }
 
 export interface HabitDraft {

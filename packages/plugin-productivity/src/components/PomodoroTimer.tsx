@@ -1,6 +1,13 @@
-import { useEffect, useRef } from "react";
+import { useEffect, useMemo, useRef } from "react";
 import { usePomodoroStore } from "../hooks/usePomodoroStore";
 import { useTodoStore } from "../hooks/useTodoStore";
+import type { PomodoroMode } from "../types";
+
+const modeLabel: Record<PomodoroMode, string> = {
+  focus: "Focus",
+  "short-break": "Short break",
+  "long-break": "Long break",
+};
 
 function formatSeconds(total: number): string {
   const minutes = Math.floor(total / 60).toString().padStart(2, "0");
@@ -13,6 +20,10 @@ export function PomodoroTimer() {
   const { todos, incrementPomodoro } = useTodoStore();
   const handledCompletion = useRef<string | null>(null);
   const activeTodo = pomodoro.activeTodoId ? todos.find((todo) => todo.id === pomodoro.activeTodoId) : null;
+  const selectableTodos = useMemo(
+    () => todos.filter((todo) => todo.status === "open" || todo.status === "in-progress"),
+    [todos],
+  );
 
   useEffect(() => {
     if (!pomodoro.lastCompletedAt || !pomodoro.lastCompletedTodoId) return;
@@ -35,7 +46,7 @@ export function PomodoroTimer() {
     >
       <header style={{ alignItems: "center", display: "flex", gap: 8, justifyContent: "space-between" }}>
         <div>
-          <strong>{pomodoro.mode}</strong>
+          <strong>{modeLabel[pomodoro.mode]}</strong>
           <span style={{ color: "#6b7280", display: "block", fontSize: 12 }}>
             {activeTodo ? activeTodo.title : "No task selected"}
           </span>
@@ -52,7 +63,7 @@ export function PomodoroTimer() {
         value={pomodoro.activeTodoId ?? ""}
       >
         <option value="">No task</option>
-        {todos.map((todo) => (
+        {selectableTodos.map((todo) => (
           <option key={todo.id} value={todo.id}>
             {todo.title}
           </option>
