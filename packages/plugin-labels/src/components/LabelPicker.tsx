@@ -58,7 +58,8 @@ export function LabelPicker({
   const handleKeyDown = (event: KeyboardEvent<HTMLInputElement>) => {
     if (event.key === "ArrowDown") {
       event.preventDefault();
-      setActiveIndex((index) => Math.min(index + 1, filteredLabels.length + (canCreate ? 0 : -1)));
+      const upperBound = filteredLabels.length - (canCreate ? 0 : 1);
+      setActiveIndex((index) => Math.min(index + 1, Math.max(upperBound, 0)));
       return;
     }
     if (event.key === "ArrowUp") {

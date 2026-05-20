@@ -110,7 +110,11 @@ export function LabelStoreProvider({
         icon: patch.icon?.trim() || patch.icon,
       };
       await stableAdapter.save(next);
-      setLabels((prev) => prev.map((label) => (label.id === id ? next : label)));
+      setLabels((prev) =>
+        prev
+          .map((label) => (label.id === id ? next : label))
+          .sort((a, b) => a.name.localeCompare(b.name)),
+      );
     },
     [stableAdapter],
   );
