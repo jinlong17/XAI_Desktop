@@ -1,10 +1,11 @@
 import { useMemo, useState } from "react";
+import { toLocalIsoDate } from "../components/CalendarMini";
 import type { CalendarEvent, CalendarStoreState } from "../types";
 
 export function useCalendarStore(seedEvents: CalendarEvent[] = createMockEvents()): CalendarStoreState {
   const today = useMemo(() => new Date(), []);
   const [month, setMonth] = useState(() => new Date(today.getFullYear(), today.getMonth(), 1));
-  const [selectedDate, selectDate] = useState(today.toISOString().slice(0, 10));
+  const [selectedDate, selectDate] = useState(toLocalIsoDate(today));
 
   return {
     events: seedEvents,

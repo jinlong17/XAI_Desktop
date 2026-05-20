@@ -1,3 +1,4 @@
+import { toLocalIsoDate } from "./CalendarMini";
 import type { CalendarEvent } from "../types";
 
 export interface CalendarDayProps {
@@ -7,7 +8,7 @@ export interface CalendarDayProps {
 
 export function CalendarDay({ date, events }: CalendarDayProps) {
   const dayEvents = events
-    .filter((event) => event.startsAt.slice(0, 10) === date)
+    .filter((event) => toLocalIsoDate(new Date(event.startsAt)) === date)
     .sort((a, b) => a.startsAt.localeCompare(b.startsAt));
 
   return (
