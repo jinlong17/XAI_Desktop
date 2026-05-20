@@ -1,0 +1,23 @@
+## Codex Post-fix Re-review
+
+**Feature**: p1-delta-finder-contract-tests
+**Original verdict**: BLOCKED
+**Fix commit(s)**: 2237395
+**Reviewer**: codex feature-review · gpt-5.4 high reasoning
+**New verdict**: BLOCKED
+
+### Was the original P0 resolved?
+- Original issue (paraphrased): `reveal_in_finder` / `open_path` accepted arbitrary absolute paths from allowed windows, violating the published "user drop/open panel or authorized bookmark only" contract; repo contract negatives and the G3 batch process deviation were also under-covered / undocumented.
+- Evidence the fix resolves it: the repo negative cases are now present in [packages/core-data/tests/repository-contract.ts:127](\/Users\/lijinlong\/Desktop\/AI_Desktop\/XAI_Desktop\/packages\/core-data\/tests\/repository-contract.ts:127) through [packages/core-data/tests/repository-contract.ts:184](\/Users\/lijinlong\/Desktop\/AI_Desktop\/XAI_Desktop\/packages\/core-data\/tests\/repository-contract.ts:184), and they run for both drivers via [packages/core-data/tests/in-memory-repo.test.ts:14](\/Users\/lijinlong\/Desktop\/AI_Desktop\/XAI_Desktop\/packages\/core-data\/tests\/in-memory-repo.test.ts:14) and [packages/core-data/tests/sqlite-repo.test.ts:19](\/Users\/lijinlong\/Desktop\/AI_Desktop\/XAI_Desktop\/packages\/core-data\/tests\/sqlite-repo.test.ts:19). The batch deviation is now documented in [docs/workflow/roadmap/codex-reviews/g3-organizer-batch/PROCESS-NOTE.md:8](\/Users\/lijinlong\/Desktop\/AI_Desktop\/XAI_Desktop\/docs\/workflow\/roadmap\/codex-reviews\/g3-organizer-batch\/PROCESS-NOTE.md:8) through [docs/workflow/roadmap/codex-reviews/g3-organizer-batch/PROCESS-NOTE.md:24](\/Users\/lijinlong\/Desktop\/AI_Desktop\/XAI_Desktop\/docs\/workflow\/roadmap\/codex-reviews\/g3-organizer-batch\/PROCESS-NOTE.md:24).
+- Evidence it does **not** resolve the P0: `validate_user_path` only checks lexical shape plus a coarse root prefix allow-list (`/Users/`, `/Applications/`, `/Volumes/`, `/tmp/`) at [apps/desktop/src-tauri/src/commands/finder.rs:24](\/Users\/lijinlong\/Desktop\/AI_Desktop\/XAI_Desktop\/apps\/desktop\/src-tauri\/src\/commands\/finder.rs:24) through [apps/desktop/src-tauri/src/commands/finder.rs:30](\/Users\/lijinlong\/Desktop\/AI_Desktop\/XAI_Desktop\/apps\/desktop\/src-tauri\/src\/commands\/finder.rs:30) and [apps/desktop/src-tauri/src/commands/finder.rs:102](\/Users\/lijinlong\/Desktop\/AI_Desktop\/XAI_Desktop\/apps\/desktop\/src-tauri\/src\/commands\/finder.rs:102) through [apps/desktop/src-tauri/src/commands/finder.rs:113](\/Users\/lijinlong\/Desktop\/AI_Desktop\/XAI_Desktop\/apps\/desktop\/src-tauri\/src\/commands\/finder.rs:113); it does not prove the path came from a user action or authorized bookmark before `open` / `open -R` at [apps/desktop/src-tauri/src/commands/finder.rs:121](\/Users\/lijinlong\/Desktop\/AI_Desktop\/XAI_Desktop\/apps\/desktop\/src-tauri\/src\/commands\/finder.rs:121) through [apps/desktop/src-tauri/src/commands/finder.rs:179](\/Users\/lijinlong\/Desktop\/AI_Desktop\/XAI_Desktop\/apps\/desktop\/src-tauri\/src\/commands\/finder.rs:179).
+- Was the resolution honest (no smuggled scope-cut or stub-only fix)? No. The doc now weakens the executable rule to a root-shape check while still retaining the stronger policy sentence at [docs/contracts/tauri-commands-v0.md:79](\/Users\/lijinlong\/Desktop\/AI_Desktop\/XAI_Desktop\/docs\/contracts\/tauri-commands-v0.md:79) and explicitly defers bookmark enforcement at [docs/contracts/tauri-commands-v0.md:85](\/Users\/lijinlong\/Desktop\/AI_Desktop\/XAI_Desktop\/docs\/contracts\/tauri-commands-v0.md:85) through [docs/contracts/tauri-commands-v0.md:88](\/Users\/lijinlong\/Desktop\/AI_Desktop\/XAI_Desktop\/docs\/contracts\/tauri-commands-v0.md:88).
+
+### Remaining gaps (max 4 bullets, severity-tagged)
+- [P0] The user-authorized-path-only contract is still false: any allowed window can open arbitrary paths under `/Users/` or `/Volumes/` without provenance or bookmark proof.
+- [P2] The tests added in [apps/desktop/src-tauri/src/commands/finder.rs:202](\/Users\/lijinlong\/Desktop\/AI_Desktop\/XAI_Desktop\/apps\/desktop\/src-tauri\/src\/commands\/finder.rs:202) through [apps/desktop/src-tauri/src/commands/finder.rs:290](\/Users\/lijinlong\/Desktop\/AI_Desktop\/XAI_Desktop\/apps\/desktop\/src-tauri\/src\/commands\/finder.rs:290) only validate shape/root cases, not authorization provenance.
+
+### Regressions introduced (max 3 bullets)
+- The contract doc was narrowed to match the implementation instead of the implementation being raised to the documented security boundary.
+
+### Next action
+- BLOCKED: the `reveal_in_finder` / `open_path` contract "path access must come from user drop/open panel or authorized bookmark" is still false.
