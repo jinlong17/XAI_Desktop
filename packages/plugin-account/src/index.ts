@@ -47,11 +47,16 @@ export {
   createAccountRateLimiter,
   createSupportFeedback,
   exportEncryptedAccountData,
+  importEncryptedAccountData,
   planAccountDeletion,
 } from './beta-ops';
 export type {
   AccountDeletionPlan,
+  EncryptedExportEnvelopeV1,
+  EncryptedExportEnvelopeV2,
   EncryptedExportRecord,
+  ExportOptions,
+  ImportOptions,
   RateLimitConfig,
   StorageQuotaConfig,
   StorageUsage,
