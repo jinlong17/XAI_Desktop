@@ -214,4 +214,4 @@
 - What was done instead: Created docs-only feature brief, discovery review, design, API, test plan, and dev_log mapping current HTML5/Tauri/Organizer drop paths.
 - Later human action: Complete the G0.4 Finder matrix with the `7e20ca8` telemetry panel/logs, complete MAS sandbox dry run, then rerun feature-build for DnD implementation.
 - Suggested verification command / environment: `pnpm --filter desktop tauri dev` on macOS with Finder; drop file, folder, `.app`, and alias into a Grid.
-- Files/commits affected: docs/reviews/native-dnd-path-first/*; packages/native-dnd-path-first/docs/*; pending G1.3 docs commit
+- Files/commits affected: docs/reviews/native-dnd-path-first/*; packages/native-dnd-path-first/docs/*; commit `707a8d1`

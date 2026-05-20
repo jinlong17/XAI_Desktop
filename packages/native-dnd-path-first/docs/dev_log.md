@@ -21,7 +21,7 @@
 
 ### Phase 1 — DnD path-first prep
 
-Status: DONE. Commit: `(pending docs commit)`.
+Status: DONE. Commit: `707a8d1`.
 
 - Created G1.3 feature brief and discovery review.
 - Mapped current HTML5, Tauri telemetry, and Organizer drop paths.
@@ -44,5 +44,5 @@ Docs-only prep is complete. G1.3 production acceptance remains blocked by G0.4 r
 |---|---|---|---|---|
 | 2026-05-19 20:38 PDT | feature-plan (Codex inline) | Step 0 and plan: scoped G1.3 to DnD safe prep under user override. | — | feature-review |
 | 2026-05-19 20:39 PDT | feature-review (Codex inline) | Approved safe prep; production DnD implementation remains blocked by G0.4. | — | feature-build |
-| 2026-05-19 20:39 PDT | feature-build (Codex inline) | Created DnD path-first discovery docs. | (pending docs commit) | feature-verify |
-| 2026-05-19 20:39 PDT | feature-verify (Codex inline) | Verified docs-only scope; status remains BLOCKED. | (pending docs commit) | Human G0.4 evidence |
+| 2026-05-19 20:39 PDT | feature-build (Codex inline) | Created DnD path-first discovery docs. | `707a8d1` | feature-verify |
+| 2026-05-19 20:39 PDT | feature-verify (Codex inline) | Verified docs-only scope; status remains BLOCKED. | `707a8d1` | Human G0.4 evidence |
