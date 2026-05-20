@@ -1,3 +1,5 @@
+"use client";
+
 export function InputBar({ value, onChange, onSend }: { value: string; onChange(value: string): void; onSend(): void }) {
   return (
     <form

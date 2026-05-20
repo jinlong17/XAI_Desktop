@@ -1,3 +1,5 @@
+"use client";
+
 import { useAiConversation } from "../hooks/useAiConversation";
 import { ActionSuggestionButton } from "./ActionSuggestion";
 import { CostGuard } from "./CostGuard";

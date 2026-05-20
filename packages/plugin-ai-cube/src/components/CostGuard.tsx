@@ -1,3 +1,5 @@
+"use client";
+
 import type { CostGuardApi } from "../hooks/useCostGuard";
 
 export function CostGuard({ guard }: { guard: CostGuardApi }) {

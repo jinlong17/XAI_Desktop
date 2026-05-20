@@ -36,14 +36,27 @@ export function useCostGuard(defaultLimit = 30): CostGuardApi {
   };
 }
 
+function todayKey(): string {
+  const d = new Date();
+  return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(d.getDate()).padStart(2, "0")}`;
+}
+
 function readState(defaultLimit: number): CostGuardState {
+  const today = todayKey();
   if (typeof window === "undefined") {
-    return { dailyLimit: defaultLimit, usedToday: 0, offline: false };
+    return { dailyLimit: defaultLimit, usedToday: 0, offline: false, lastResetDate: today };
   }
   try {
     const raw = window.localStorage.getItem(COST_KEY);
-    return raw ? (JSON.parse(raw) as CostGuardState) : { dailyLimit: defaultLimit, usedToday: 0, offline: false };
+    if (!raw) {
+      return { dailyLimit: defaultLimit, usedToday: 0, offline: false, lastResetDate: today };
+    }
+    const parsed = JSON.parse(raw) as CostGuardState;
+    if (parsed.lastResetDate !== today) {
+      return { ...parsed, usedToday: 0, lastResetDate: today };
+    }
+    return parsed;
   } catch {
-    return { dailyLimit: defaultLimit, usedToday: 0, offline: false };
+    return { dailyLimit: defaultLimit, usedToday: 0, offline: false, lastResetDate: today };
   }
 }
