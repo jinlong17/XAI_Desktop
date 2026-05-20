@@ -476,7 +476,7 @@
 | window-command-contract | G1 | READY_TO_SHIP | 9c7b52f + dce4fb9 + 1fa8c75 | PASS: cargo check, core check-types, plugin-organizer check-types, desktop build, contract consistency scan | Deferred cross-vendor verify recorded; ship/push not run. |
 | grid-shell-organizer-content | G1 | READY_TO_SHIP | eaae46e + 26d9f57 + 03ca86a | PASS: plugin-organizer check-types, desktop build, Host boundary scan, public API scan, file checks | Deferred cross-vendor/manual runtime smoke recorded; ship/push not run. |
 | native-dnd-path-first | G1 | BLOCKED_EXTERNAL | 707a8d1 | PASS: DnD discovery docs exist; BLOCKED_EXTERNAL: MAS sandbox/security-scope evidence missing | Skip under unattended mode. |
-| multi-grid-event-scope | G1 | READY_FOR_VERIFY | a7d4803 + pending G1.4 build commit | PASS: core check-types, plugin-organizer check-types/test, desktop build, event scans | Awaiting feature-verify. |
+| multi-grid-event-scope | G1 | READY_FOR_VERIFY | a7d4803 + 78aef01 | PASS: core check-types, plugin-organizer check-types/test, desktop build, event scans | Awaiting feature-verify. |
 | grid-persistence | G1 | BLOCKED | dcf2750 | PASS: persistence discovery docs exist; BLOCKED: G2 Repository v0 not ready | Reached by user override; no production code changed. |
 | host-business-residuals | G1 | READY_TO_SHIP | c6dbd77 | PASS: residual audit doc exists; Host scan recorded | Audit-only safe prep. |
 

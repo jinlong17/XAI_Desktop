@@ -30,7 +30,7 @@ Status: DONE. Commit: `a7d4803`.
 
 ### Phase 2 — Production event migration
 
-Status: DONE. Commit: `(pending commit)`.
+Status: DONE. Commit: `78aef01`.
 
 - Added public Organizer event constants and runtime guards.
 - Migrated Grid runtime events to `organizer:grid:*` and `organizer:file:drop`.
@@ -68,4 +68,4 @@ Docs-only prep completed while G0/G1.1 were blocked. That blocker is now resolve
 | 2026-05-19 20:37 PDT | feature-verify (Codex inline) | Verified docs-only scope; status remains BLOCKED. | `a7d4803` | Human/G0 prerequisite |
 | 2026-05-19 23:30 PDT | feature-plan (Codex inline) | Reopened G1.4 after G1.2 READY_TO_SHIP; scoped production event migration and guard tests. | `3751f43` | feature-review |
 | 2026-05-19 23:30 PDT | feature-review (Codex inline) | Approved bounded event-name/guard migration. | — | feature-build |
-| 2026-05-19 23:30 PDT | feature-build (Codex inline) | Migrated Grid runtime events, EventMap, contract docs, and guard tests. | (pending commit) | feature-verify |
+| 2026-05-19 23:30 PDT | feature-build (Codex inline) | Migrated Grid runtime events, EventMap, contract docs, and guard tests. | `78aef01` | feature-verify |
