@@ -8,14 +8,14 @@
 | Target | grid-shell-organizer-content |
 | Title | G1.2 Grid shell and Organizer content split |
 | Roadmap | xai-g1-native-foundation · feature #2 · G1.2 |
-| Status | READY_FOR_VERIFY |
-| Current Phase | FEATURE_BUILD |
-| Suggested Next | feature-verify |
+| Status | READY_TO_SHIP |
+| Current Phase | FEATURE_VERIFY |
+| Suggested Next | manual ship only; continue G1.4 after G1.3 remains external-blocked |
 | Automation Mode | D-Codex |
 | Verify Cross-vendor | yes |
-| Executor | feature-build (Codex inline) |
-| Updated | 2026-05-19 23:18 PDT |
-| Blockers | None for G1.2 DMG/private path; cross-vendor verify remains deferred |
+| Executor | feature-verify (Codex inline) |
+| Updated | 2026-05-19 23:22 PDT |
+| Blockers | None for G1.2 DMG/private path; deferred gates recorded in roadmap logs |
 
 ## Phase Plan
 
@@ -48,7 +48,7 @@ feature-review (Codex inline), 2026-05-19 23:18 PDT. Verdict: APPROVED for produ
 
 feature-verify (Codex inline), 2026-05-19 20:34 PDT. Verdict: BLOCKED.
 
-Docs-only prep is complete. G1.2 production acceptance remains blocked by G0 and G1.1.
+Docs-only prep completed while G0/G1.1 were blocked. That blocker was resolved at 2026-05-19 23:09 PDT when G0 reached Conditional Go and G1.1 became READY_TO_SHIP.
 
 Production build is ready for feature-verify after focused checks:
 
@@ -56,6 +56,18 @@ Production build is ready for feature-verify after focused checks:
 - `pnpm --filter desktop build`
 - Host boundary `rg` scan for forbidden Grid content imports
 - Public API contract scan for `OrganizerGridContent`
+
+feature-verify (Codex inline), 2026-05-19 23:22 PDT. Verdict: READY_TO_SHIP.
+
+Verification passed:
+
+- `pnpm --filter @repo/plugin-organizer check-types`
+- `pnpm --filter desktop build`
+- Host boundary scan confirms `GridWindow.tsx` has no direct `SmartContainer`, `GridBox`, `DesktopItem`, `useFileDrop`, or Organizer internal imports.
+- Public API scan confirms `OrganizerGridContent` is used from `@repo/plugin-organizer`, exported by `packages/plugin-organizer/src/index.ts`, and documented in `docs/contracts/plugin-organizer-public-api-v0.md`.
+- Required review/package docs and contract doc exist.
+
+Cross-vendor verify and manual two-Grid native runtime smoke are deferred in `docs/workflow/roadmap/xai-v1.deferred-gates.md`; no ship or push was run.
 
 ## Work Log
 
@@ -68,3 +80,4 @@ Production build is ready for feature-verify after focused checks:
 | 2026-05-19 23:18 PDT | feature-plan (Codex inline) | Reopened G1.2 after G0 Conditional Go and G1.1 READY_TO_SHIP; scoped production split to public Organizer content API. | `5d7652f` | feature-review |
 | 2026-05-19 23:18 PDT | feature-review (Codex inline) | Approved bounded production split with no event/DnD/persistence contract changes. | — | feature-build |
 | 2026-05-19 23:18 PDT | feature-build (Codex inline) | Implemented `OrganizerGridContent`, thinned Host `GridWindow.tsx`, and added public API contract docs. | `26d9f57` | feature-verify |
+| 2026-05-19 23:22 PDT | feature-verify (Codex inline) | Verified TypeScript/build/boundary/public API checks; marked READY_TO_SHIP. | `26d9f57`, `03ca86a` | manual ship only; continue roadmap |

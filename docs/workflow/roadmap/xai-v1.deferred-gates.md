@@ -196,11 +196,11 @@
 
 - Feature: multi-grid-event-scope
 - Gate: G1
-- Deferred gate: G1.2 prerequisite for production event migration
+- Deferred gate: G1.2 prerequisite for production event migration — RESOLVED 2026-05-19 23:22 PDT
 - Why deferred: The user instructed to continue earlier, but G1.4 should wait until the Grid shell/content split defines the final Host/Organizer public boundary.
-- Risk: Renaming events or enforcing payload guards before the shell/content split could duplicate or churn the public Organizer boundary.
+- Risk: CLOSED for the prerequisite gate. G1.4 still needs its own feature-build and feature-verify.
 - What was done instead: Created docs-only feature brief, discovery review, design, API, test plan, and dev_log describing current aliases, contract drift, and target migration.
-- Later human action: Complete G1.2, then rerun feature-build for event migration.
+- Later human action: None for this prerequisite gate; proceed to G1.4 production build.
 - Suggested verification command / environment: `sed -n '1,220p' docs/reviews/multi-grid-event-scope/20260519-discovery-review.md`
 - Files/commits affected: docs/reviews/multi-grid-event-scope/*; packages/multi-grid-event-scope/docs/*; commit `a7d4803`
 
@@ -239,3 +239,27 @@
 - Later human action: Review `dce4fb9` and `packages/window-command-contract/docs/dev_log.md`, then run manual ship only if acceptable.
 - Suggested verification command / environment: `cargo check --manifest-path apps/desktop/src-tauri/Cargo.toml && pnpm --filter @repo/core check-types && pnpm --filter @repo/plugin-organizer check-types && pnpm --filter desktop build`
 - Files/commits affected: apps/desktop/src-tauri/src/commands/window.rs; apps/desktop/src-tauri/src/lib.rs; packages/core/src/types/window.ts; packages/plugin-organizer/src/hooks/useGridWindow.ts; docs/contracts/tauri-commands-v0.md; commits `dce4fb9`, `1fa8c75`
+
+## Entry 21
+
+- Feature: grid-shell-organizer-content
+- Gate: G1
+- Deferred gate: Cross-vendor feature-verify
+- Why deferred: The runtime override requires a serial Codex conductor with no spawn/bg dispatch, so no independent cross-vendor verifier was available.
+- Risk: The same Codex execution context implemented and verified the Host/Organizer content boundary refactor.
+- What was done instead: Ran inline feature-verify with plugin-organizer type checking, desktop build, Host forbidden-import boundary scan, public API scan, and file existence checks.
+- Later human action: Review `26d9f57` and `packages/grid-shell-organizer-content/docs/dev_log.md`, then run manual ship only if acceptable.
+- Suggested verification command / environment: `pnpm --filter @repo/plugin-organizer check-types && pnpm --filter desktop build`
+- Files/commits affected: apps/desktop/src/windows/GridWindow.tsx; packages/plugin-organizer/src/OrganizerGridContent.tsx; packages/plugin-organizer/src/index.ts; docs/contracts/plugin-organizer-public-api-v0.md; commits `26d9f57`, `03ca86a`
+
+## Entry 22
+
+- Feature: grid-shell-organizer-content
+- Gate: G1
+- Deferred gate: Manual native two-Grid runtime smoke
+- Why deferred: Automated Codex verification cannot visually confirm two native Grid windows, scoped update/close/drop/toggle behavior, and drag behavior in the running macOS app without human/manual UI interaction.
+- Risk: The refactor moved code without intended behavior changes, but a native runtime smoke could still catch provider wiring, window event, or DnD regressions that TypeScript/build checks cannot see.
+- What was done instead: Preserved existing event names and payloads, moved content code behind the public Organizer API, and ran type/build/boundary checks.
+- Later human action: Run the desktop app, create two Grid windows, move/resize/close/toggle each, and drop a Finder path into one Grid to confirm scoped behavior.
+- Suggested verification command / environment: `pnpm --filter desktop tauri dev` on macOS, then use Control `+ New Grid` twice and verify only the target Grid changes on updates/drops.
+- Files/commits affected: apps/desktop/src/windows/GridWindow.tsx; packages/plugin-organizer/src/OrganizerGridContent.tsx; commit `26d9f57`

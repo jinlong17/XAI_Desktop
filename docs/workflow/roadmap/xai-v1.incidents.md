@@ -48,7 +48,7 @@
 - Root cause if known: G1 required G0 Go or Conditional Go. G0 has now reached Conditional Go for DMG/private path; MAS remains a deferred external release gate.
 - Attempted fixes: Created G1.1 contract-planning docs, reconciled G0 Conditional Go, implemented structured window lifecycle commands, and verified Rust/TS/desktop/contract consistency.
 - Current status: RESOLVED; `window-command-contract` is READY_TO_SHIP for the DMG/private path. Cross-vendor verify remains deferred.
-- Resume instruction: Human may review `dce4fb9` and run ship manually; roadmap continuation should proceed to G1.2 `grid-shell-organizer-content`.
+- Resume instruction: Human may review `dce4fb9` and run ship manually; roadmap continuation has proceeded beyond G1.2 and should continue with G1.4 `multi-grid-event-scope`.
 
 ## Incident 6
 
@@ -86,19 +86,19 @@
 - Feature: grid-shell-organizer-content
 - Symptom: Production shell/content split cannot start.
 - Root cause if known: G1.2 depends on G0 Go/Conditional Go and G1.1 Window Command Contract. Both are now satisfied for unattended DMG/private-path continuation because G0 is Conditional Go and G1.1 is READY_TO_SHIP.
-- Attempted fixes: Created safe-prep docs mapping current Host/Organizer boundary and target public Organizer content API. Avoided production source changes.
-- Current status: RESOLVED as prerequisite blocker; production feature-build may proceed.
-- Resume instruction: Run feature-build for `grid-shell-organizer-content`.
+- Attempted fixes: Created safe-prep docs, then implemented public `OrganizerGridContent`, thinned Host `GridWindow.tsx`, and verified TypeScript/build/boundary checks.
+- Current status: RESOLVED; `grid-shell-organizer-content` is READY_TO_SHIP for the DMG/private path. Cross-vendor verify and manual runtime smoke remain deferred.
+- Resume instruction: Human may review `26d9f57` and run ship manually; roadmap continuation should proceed to G1.4 `multi-grid-event-scope`.
 
 ## Incident 10
 
 - Time: 2026-05-19 20:37 PDT
 - Feature: multi-grid-event-scope
 - Symptom: Production Grid event migration cannot start.
-- Root cause if known: G1.4 depends on a stable Host/Grid shell boundary; G1.2 production split has not run yet.
+- Root cause if known: G1.4 depends on a stable Host/Grid shell boundary. G1.2 is now READY_TO_SHIP.
 - Attempted fixes: Created safe-prep docs auditing current event names, target contracts, and missing runtime `gridId` guard requirements. Avoided production source changes.
-- Current status: BLOCKED.
-- Resume instruction: Complete G1.2 shell/content split, then rerun feature-build for `multi-grid-event-scope`.
+- Current status: RESOLVED as prerequisite blocker; G1.2 is READY_TO_SHIP.
+- Resume instruction: Run feature-build for `multi-grid-event-scope`.
 
 ## Incident 11
 
@@ -107,7 +107,7 @@
 - Symptom: Production path-first DnD implementation cannot start.
 - Root cause if known: G1.3 now has G0.4 real Finder payload observations, but still depends on MAS sandbox/security-scope decisions.
 - Attempted fixes: Created safe-prep docs mapping current drop behavior, target `DroppedFile[]` shape, and unresolved receiver/security-scope decisions. Avoided production source changes.
-- Current status: BLOCKED.
+- Current status: BLOCKED_EXTERNAL.
 - Resume instruction: Complete MAS sandbox dry run, then rerun feature-build for `native-dnd-path-first`.
 
 ## Incident 12
