@@ -105,6 +105,16 @@ for the full architecture rationale.
 
 Lexical normalization is used rather than `std::fs::canonicalize()` because the latter requires the path to exist on disk; full filesystem canonicalization is a follow-up once `create_security_scoped_bookmark` is wired.
 
+### 4.1 IPC test coverage (P2-Foxtrot closure, 2026-05-20)
+
+`reveal_in_finder` and `open_path` are exercised end-to-end through the public Tauri IPC surface via `tauri::test::get_ipc_response` against a `MockRuntime` app. The integration tests live in `apps/desktop/src-tauri/src/commands/bookmarks.rs::ipc_integration_tests` and cover both branches of each command:
+
+- `reveal_in_finder_admits_registered_path` — register a path through `register_path_bookmark` IPC, then drive `reveal_in_finder` IPC against the same path; the call returns `Ok(())` (serialized as JSON `null`).
+- `reveal_in_finder_rejects_unregistered_path` — call `reveal_in_finder` IPC for a path-shape-valid path that was never registered; the call returns `SyncCapabilityDenied` (E3004) with payload `path "..." has no user-authorized bookmark`.
+- `open_path_admits_registered_path` / `open_path_rejects_unregistered_path` — symmetric pair for the second finder entrypoint.
+
+The post-authorization shell-out (`open` / `open -R`) is factored behind a `#[cfg(test)]` noop seam in `commands::finder::shell_out_{reveal,open}`. Production builds still spawn `/usr/bin/open` exactly as before; test builds short-circuit AFTER `ensure_path_authorized` has run, so the IPC dispatcher, serde deserialization, window-origin gate, path-shape gate, and bookmark-registry lookup are all part of the exercised path. There is no `_test_helper` shortcut for these four cases — they drive everything through `get_ipc_response`, satisfying the Codex R5 verdict that the public IPC contract must be the unit of coverage.
+
 ## 5. Clipboard Commands
 
 | Command | Owner | Allowed windows | 说明 |
