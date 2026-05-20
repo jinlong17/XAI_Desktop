@@ -22,3 +22,4 @@ The legacy `IndexedDBAdapter<T>` remains only for the temporary `OfflineFirstStr
 - Added Repository v0 IndexedDB adapter under `apps/web/app/lib/indexedDbRepo.ts`.
 - Offline deletes now queue while offline and sync before pending puts.
 - Remote reads hydrate local IndexedDB when a local cache miss succeeds remotely.
+- `listByIndex` now consults the IDB index for `entityType` / `syncScope` (the only indexed fields); other fields still fall back to in-memory filter, preserving correctness.

@@ -145,14 +145,26 @@ function createOperations<T extends RepoRecord>({
       value: T[K],
       query?: RepoListQuery<T>,
     ): Promise<T[]> {
-      return withStore("readonly", async (activeStore) =>
-        applyRepoIndexQuery(
+      return withStore("readonly", async (activeStore) => {
+        // Fast path: entityType and syncScope have IDB indexes (see onupgradeneeded). Other fields fall back to getAll + in-memory filter.
+        if (isIndexedField(field)) {
+          return applyRepoListQuery(
+            await request<T[]>(
+              activeStore
+                .index(field)
+                .getAll(IDBKeyRange.only(value as IDBValidKey)),
+            ),
+            query,
+          );
+        }
+
+        return applyRepoIndexQuery(
           await request<T[]>(activeStore.getAll()),
           field,
           value,
           query,
-        ),
-      );
+        );
+      });
     },
 
     async metadata(): Promise<RepoMetadata> {
@@ -201,6 +213,12 @@ function ensureIndex(store: IDBObjectStore, key: string): void {
   if (!store.indexNames.contains(key)) {
     store.createIndex(key, key, { unique: false });
   }
+}
+
+function isIndexedField(
+  field: PropertyKey,
+): field is "entityType" | "syncScope" {
+  return field === "entityType" || field === "syncScope";
 }
 
 function request<T>(operation: IDBRequest): Promise<T> {
