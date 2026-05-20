@@ -61,14 +61,21 @@ G1.1 implementation notes:
 
 | Command | Owner | Allowed windows | Input | 说明 |
 |---|---|---|---|---|
-| `reveal_in_finder` | organizer (G3-E3) | `main`,`control`,`grid_*`,`console` | `{ input: { path } }` | path-backed item action; shells out to `open -R` on macOS |
-| `open_path` | organizer (G3-E3) | `main`,`control`,`grid_*`,`console` | `{ input: { path } }` | user-initiated only; shells out to `open` on macOS |
+| `reveal_in_finder` | organizer (G3-E3) | `main`,`control`,`grid_*`,`console` | `{ input: { path } }` | validates path is non-empty / NUL-free / non-`..` / under user-reachable roots (`/Users/`, `/Applications/`, `/Volumes/`, `/tmp/` on macOS; `/tmp/` only on other targets); shells out to `open -R` with the lexically-normalized path on macOS |
+| `open_path` | organizer (G3-E3) | `main`,`control`,`grid_*`,`console` | `{ input: { path } }` | same path-authorization rules as `reveal_in_finder`; user-initiated only; shells out to `open` with the lexically-normalized path on macOS |
 | `resolve_alias` | organizer | `control`,`grid_*` | TBD | G1/G2 根据 sandbox 决定 |
 | `create_security_scoped_bookmark` | organizer/account | `control`,`grid_*` | TBD | MAS path if required |
 
 文件 command 不允许静默扫描用户目录。所有 path access 必须来自用户 drop/open panel 或已授权 bookmark。
 
-`reveal_in_finder` / `open_path` enforce a runtime allow-list (`FINDER_ALLOWED_WINDOWS` in `commands/finder.rs`) and reject empty / NUL-containing paths with `E3005` (SyncInvalidInput) before reaching the platform layer.
+`reveal_in_finder` / `open_path` enforce a runtime allow-list (`FINDER_ALLOWED_WINDOWS` in `commands/finder.rs`) AND a path-shape allow-list via `validate_user_path`:
+
+- Empty / whitespace-only / NUL-containing inputs → `E3005` (SyncInvalidInput).
+- Relative paths or any `..` parent-dir segment (even when the raw string would normalize back into an allowed root, e.g. `/Users/me/../etc/passwd`) → `E3005`.
+- Paths whose lexically-normalized form is NOT under one of the user-reachable roots (`/Users/`, `/Applications/`, `/Volumes/`, `/tmp/` on macOS; `/tmp/` only on other targets) → `E3004` (SyncCapabilityDenied). `/private/var/...`, `/etc/...`, `/System/...`, `/bin/...` are intentionally rejected until a full security-scoped bookmark store lands.
+- On success the canonical (lexically-normalized) `PathBuf` is passed to `open` / `open -R`, not the raw input.
+
+Lexical normalization is used rather than `std::fs::canonicalize()` because the latter requires the path to exist on disk; full filesystem canonicalization is a follow-up once `create_security_scoped_bookmark` is wired.
 
 ## 5. Clipboard Commands
 
