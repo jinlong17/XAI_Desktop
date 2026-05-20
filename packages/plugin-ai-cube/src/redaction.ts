@@ -4,6 +4,7 @@ export interface RedactionResult {
 }
 
 const secretPatterns: readonly [string, RegExp][] = [
+  ["bearer", /\bBearer\s+[A-Za-z0-9._~+/=-]{16,}/g],
   ["jwt", /\beyJ[A-Za-z0-9_-]{10,}\.[A-Za-z0-9_-]{10,}\.[A-Za-z0-9_-]{10,}\b/g],
   ["github_pat", /\bgh[pousr]_[A-Za-z0-9]{30,}\b/g],
   ["aws_access_key", /\bAKIA[0-9A-Z]{16}\b/g],
@@ -11,7 +12,6 @@ const secretPatterns: readonly [string, RegExp][] = [
   ["slack_token", /\bxox[bpars]-[A-Za-z0-9-]{10,}\b/g],
   ["openai_key", /\bsk-[A-Za-z0-9_-]{20,}\b/g],
   ["ssh_private_key_block", /-----BEGIN (?:RSA |OPENSSH |EC |DSA |PGP )?PRIVATE KEY-----[\s\S]+?-----END [^-]*PRIVATE KEY-----/g],
-  ["bearer", /\bBearer\s+[A-Za-z0-9._~+/=-]{16,}/g],
   ["email", /\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}\b/g],
   ["macos_home_path", /\/Users\/[^/\s]+(?=\/|\s|$)/g],
   // Credit card handled separately with Luhn check below.
@@ -20,7 +20,7 @@ const secretPatterns: readonly [string, RegExp][] = [
   ["token", /\b(?:token|secret)\s*[:=]\s*\S+/gi],
 ];
 
-const ccCandidate = /\b(?:\d[ -]?){13,19}\b/g;
+const ccCandidate = /\b\d(?:\d[ -]?){11,17}\d\b/g;
 
 function luhn(raw: string): boolean {
   const digits = raw.replace(/[^\d]/g, "");
