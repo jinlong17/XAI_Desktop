@@ -24,6 +24,9 @@ Completed:
 
 Checks:
 - `pnpm --filter web check-types` passed.
+- Dev server started at `http://localhost:3000`.
+- HTTP smoke checks passed for `/`, `/console`, and `/settings`.
+- `/` returns CSP, `X-Content-Type-Options`, `Referrer-Policy`, and `Permissions-Policy` headers.
 - `pnpm --filter @repo/plugin-widgets check-types` blocked because the new workspace package has no local `node_modules`; `@repo/typescript-config`, `react`, and `@repo/core-data` cannot resolve without running install/link.
 - `pnpm --filter @repo/plugin-calendar check-types` blocked by the same missing workspace links.
 - `pnpm --filter @repo/plugin-pet check-types` blocked by the same missing workspace links.
@@ -32,6 +35,7 @@ Checks:
 Incidents:
 - New package workspace links are absent. Per instruction, no dependency install was run. Recovery action is to run the repository's normal pnpm install/link step later, then rerun all plugin check-types commands.
 - `apps/web` is an existing Next app, not Vite. Track C kept the existing app runtime instead of replacing it.
+- In-app Browser verification could not run because the required browser Node execution tool was not exposed in this session. HTTP smoke checks were used as fallback.
 
 Contract notes:
 - Proposed widget and AI events were recorded under `docs/reviews/*/proposed-contract-changes.md`.
