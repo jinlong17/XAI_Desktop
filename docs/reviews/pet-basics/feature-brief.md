@@ -14,3 +14,5 @@ Build a desktop pet scaffold:
 - No Lottie dependency.
 - No real AI API.
 - No cross-plugin event contract changes in Track A files.
+
+## Cross-review fixes 2026-05-20
