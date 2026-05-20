@@ -3,7 +3,7 @@ export { LocalStorageAdapter } from "./data/LocalStorageAdapter";
 export { TodoStoreProvider, autoAssignQuadrant, useTodoStore } from "./hooks/useTodoStore";
 export type { TodoStore, TodoStoreProviderProps } from "./hooks/useTodoStore";
 export { PomodoroStoreProvider, usePomodoroStore } from "./hooks/usePomodoroStore";
-export type { PomodoroStore } from "./hooks/usePomodoroStore";
+export type { PomodoroStore, PomodoroStoreProviderProps } from "./hooks/usePomodoroStore";
 export { HabitStoreProvider, useHabitStore } from "./hooks/useHabitStore";
 export type { HabitStore, HabitStoreProviderProps } from "./hooks/useHabitStore";
 export { TodoItem } from "./components/TodoItem";

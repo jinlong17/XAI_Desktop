@@ -4,10 +4,15 @@ import {
   useContext,
   useEffect,
   useMemo,
+  useRef,
   useState,
   type ReactNode,
 } from "react";
-import type { PomodoroMode, PomodoroSettings, PomodoroState } from "../types";
+import { LocalStorageAdapter } from "../data/LocalStorageAdapter";
+import type { DataAdapter, PomodoroMode, PomodoroSettings, PomodoroState, PomodoroStatus } from "../types";
+
+const STORAGE_KEY = "xai.plugin-productivity.pomodoro";
+const SESSION_ID = "pomodoro-session-current";
 
 const DEFAULT_SETTINGS: PomodoroSettings = {
   focusMinutes: 25,
@@ -26,6 +31,21 @@ function nextModeAfterFocus(cyclesCompleted: number, settings: PomodoroSettings)
   return cyclesCompleted > 0 && cyclesCompleted % settings.longBreakEvery === 0 ? "long-break" : "short-break";
 }
 
+const defaultState: PomodoroState = {
+  mode: "focus",
+  status: "idle",
+  activeTodoId: null,
+  remainingSeconds: secondsForMode("focus", DEFAULT_SETTINGS),
+  cyclesCompleted: 0,
+  lastCompletedTodoId: null,
+  lastCompletedAt: null,
+  settings: DEFAULT_SETTINGS,
+};
+
+interface PomodoroRecord extends PomodoroState {
+  id: string;
+}
+
 export interface PomodoroStore extends PomodoroState {
   start(todoId?: string | null): void;
   pause(): void;
@@ -38,17 +58,46 @@ export interface PomodoroStore extends PomodoroState {
 
 const PomodoroStoreContext = createContext<PomodoroStore | undefined>(undefined);
 
-export function PomodoroStoreProvider({ children }: { children: ReactNode }) {
-  const [state, setState] = useState<PomodoroState>({
-    mode: "focus",
-    status: "idle",
-    activeTodoId: null,
-    remainingSeconds: secondsForMode("focus", DEFAULT_SETTINGS),
-    cyclesCompleted: 0,
-    lastCompletedTodoId: null,
-    lastCompletedAt: null,
-    settings: DEFAULT_SETTINGS,
-  });
+export interface PomodoroStoreProviderProps {
+  adapter?: DataAdapter<PomodoroRecord>;
+  children: ReactNode;
+}
+
+export function PomodoroStoreProvider({ adapter, children }: PomodoroStoreProviderProps) {
+  const [defaultAdapter] = useState(() => new LocalStorageAdapter<PomodoroRecord>(STORAGE_KEY, []));
+  const stableAdapter = adapter ?? defaultAdapter;
+  const [state, setState] = useState<PomodoroState>(defaultState);
+  const hydratedRef = useRef(false);
+
+  useEffect(() => {
+    let cancelled = false;
+    hydratedRef.current = false;
+    void stableAdapter.getById(SESSION_ID).then((row) => {
+      if (cancelled) return;
+      if (row) {
+        const status: PomodoroStatus = row.status === "running" ? "paused" : row.status;
+        setState({
+          mode: row.mode,
+          status,
+          activeTodoId: row.activeTodoId,
+          remainingSeconds: row.remainingSeconds,
+          cyclesCompleted: row.cyclesCompleted,
+          lastCompletedTodoId: row.lastCompletedTodoId,
+          lastCompletedAt: row.lastCompletedAt,
+          settings: row.settings,
+        });
+      }
+      hydratedRef.current = true;
+    });
+    return () => {
+      cancelled = true;
+    };
+  }, [stableAdapter]);
+
+  useEffect(() => {
+    if (!hydratedRef.current) return;
+    void stableAdapter.save({ id: SESSION_ID, ...state });
+  }, [stableAdapter, state]);
 
   useEffect(() => {
     if (state.status !== "running") return undefined;
