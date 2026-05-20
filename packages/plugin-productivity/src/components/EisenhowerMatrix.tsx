@@ -1,3 +1,4 @@
+import { useMemo } from "react";
 import { usePomodoroStore } from "../hooks/usePomodoroStore";
 import { useTodoStore } from "../hooks/useTodoStore";
 import type { Todo, TodoQuadrant } from "../types";
@@ -10,13 +11,17 @@ const quadrantMeta: Array<{ id: TodoQuadrant; title: string; hint: string; color
   { id: "eliminate", title: "Eliminate", hint: "Low leverage", color: "#f3f4f6" },
 ];
 
-function byQuadrant(todos: Todo[], quadrant: TodoQuadrant): Todo[] {
-  return todos.filter((todo) => todo.quadrant === quadrant && todo.status !== "archived");
-}
-
 export function EisenhowerMatrix() {
   const { todos, moveToQuadrant, setStatus } = useTodoStore();
   const pomodoro = usePomodoroStore();
+  const todosByQuadrant = useMemo(() => {
+    const buckets: Record<TodoQuadrant, Todo[]> = { do: [], schedule: [], delegate: [], eliminate: [] };
+    for (const todo of todos) {
+      if (todo.status === "archived") continue;
+      buckets[todo.quadrant].push(todo);
+    }
+    return buckets;
+  }, [todos]);
 
   return (
     <section
@@ -41,7 +46,7 @@ export function EisenhowerMatrix() {
             <strong>{quadrant.title}</strong>
             <span style={{ color: "#6b7280", display: "block", fontSize: 12 }}>{quadrant.hint}</span>
           </header>
-          {byQuadrant(todos, quadrant.id).map((todo) => (
+          {todosByQuadrant[quadrant.id].map((todo) => (
             <div
               draggable
               key={todo.id}
