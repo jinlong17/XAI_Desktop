@@ -749,22 +749,3 @@ Latest checkpoint is 2026-05-19 23:34 PDT. G0 is Conditional Go for the DMG/priv
 ### R4. Ship Record (updated)
 
 G1.1 (window-command-contract), G1.6 (host-business-residuals), G1.2 (grid-shell-organizer-content), and G1.4 (multi-grid-event-scope) are now manifest-SHIPPED. G1.3 remains BLOCKED_EXTERNAL (MAS sandbox). G1.5 unblocks now that G2.1 Repository v0 is READY_TO_SHIP and the contract is published; G1.5 production work will be picked up after G2 risk-closing rows.
-
-### 2026-05-20 00:46 PDT — Feature Checkpoint: G2.2 core-data-sqlite-driver READY_TO_SHIP
-
-- Added Tauri command bridge `apps/desktop/src-tauri/src/commands/database.rs` exposing `db_init`/`db_put`/`db_get`/`db_list`/`db_delete`.
-- Added `E13xx` error family (1300 not initialized, 1301 invalid input, 1302 backend) in `error.rs`.
-- Registered `DatabaseState` and the 5 database commands in `lib.rs`, gated behind the existing `crypto` cargo feature so `rusqlite` stays optional.
-- Added TS-side `packages/core-data/src/tauri-sqlite.ts` exporting `createTauriRepo(invoke, { namespace })` returning a `Repo<T>`-shaped handle bound to invoke; never imports `@tauri-apps/api`.
-- Added `packages/core-data/tests/tauri-sqlite.test.ts` (4 tests) using a mock invoke; verifies `db_init` is called exactly once, roundtrip, list/listByIndex filtering, and metadata.
-- Updated `docs/contracts/tauri-commands-v0.md` with §6.1 Database Commands and its security rules.
-- Updated `packages/core-data-sqlite-driver/docs/dev_log.md` Status Panel → READY_TO_SHIP.
-- G2 manifest row #2 promoted to READY_TO_SHIP.
-- Tests run:
-  - `cargo check --manifest-path apps/desktop/src-tauri/Cargo.toml` -> PASS
-  - `cargo check --features crypto` -> PASS
-  - `cargo test --features crypto database::` -> 7 tests PASS
-  - `pnpm --filter @repo/core-data test` -> 49 tests PASS
-  - `pnpm --filter @repo/core-data check-types` -> PASS
-  - `pnpm --filter desktop build` -> PASS
-- Deferred: SQLCipher PRAGMA wiring (depends on G2.4 opaque KEK handle); cross-command transactions; real `app_data_dir` macOS runtime smoke (recorded in `xai-v1.deferred-gates.md`).

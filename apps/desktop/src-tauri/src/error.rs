@@ -67,19 +67,6 @@ pub enum AppError {
 
     #[error("E3011: sync crypto operation failed: {0}")]
     SyncCrypto(String),
-
-    // ── E13xx: Repository v0 SQLite driver (G2.2) ────────────────────────────
-    /// E1300 — `db_init` not yet called on this AppHandle.
-    #[error("E1300: database not initialized — call db_init first")]
-    DatabaseNotInitialized,
-
-    /// E1301 — invalid namespace or id input.
-    #[error("E1301: database invalid input: {0}")]
-    DatabaseInvalidInput(String),
-
-    /// E1302 — underlying SQLite / FS error.
-    #[error("E1302: database backend error: {0}")]
-    DatabaseBackend(String),
     // E2xxx and E4xxx families are documented in api.md §3; not populated yet.
 }
 
