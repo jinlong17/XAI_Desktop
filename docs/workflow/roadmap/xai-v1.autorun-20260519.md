@@ -768,3 +768,19 @@ G1.1 (window-command-contract), G1.6 (host-business-residuals), G1.2 (grid-shell
   - `pnpm --filter @repo/core-data check-types` -> PASS
   - `pnpm --filter desktop build` -> PASS
 - Deferred: SQLCipher PRAGMA wiring (depends on G2.4 opaque KEK handle); cross-command transactions; real `app_data_dir` macOS runtime smoke (recorded in `xai-v1.deferred-gates.md`).
+
+### 2026-05-20 00:48 PDT — Feature Checkpoint: G2.3 localstorage-migration READY_TO_SHIP
+
+- Added `packages/core-data/src/organizer-layout-migration.ts` exporting `migrateOrganizerLayoutToRepos({ storage, gridRepo, itemRepo })` and `LEGACY_LAYOUT_STORAGE_KEY = "xai-desktop-layout"`.
+- Maps legacy `PersistedLayout` → typed `GridEntity` / `GridItemEntity`. Orphan items (no owning grid) are dropped.
+- Non-destructive by default; `removeLegacy: true` opt-in.
+- Added 5 vitest cases (`tests/organizer-layout-migration.test.ts`): mapping, idempotency, default-keep-legacy, opt-in removal, absent/malformed no-op.
+- Created `packages/localstorage-migration/docs/dev_log.md` and promoted G2 manifest row #4 to READY_TO_SHIP.
+- Tests run:
+  - `pnpm --filter @repo/core-data test` -> 54 tests PASS.
+  - `pnpm --filter @repo/core-data check-types` -> PASS.
+- UI runtime cut-over (`useGridSystem.tsx` async refactor) is parked under G1.5 `grid-persistence` so it lands in a single focused PR.
+
+### Branch Hygiene Note (Track A)
+
+- 00:32 PDT: my G2.2 commit landed on `codex/track-c-widgets-web-ai` because a parallel agent had switched the working-tree branch. Cherry-picked `92e2ba6` onto `codex/track-a-desktop-foundation` as `f3dd30b`; the duplicate remains on Track C and will be reconciled when the tracks merge to main.

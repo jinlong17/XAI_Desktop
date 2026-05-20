@@ -56,3 +56,14 @@ export type {
 } from "./entities";
 export { createTauriRepo, dbInit } from "./tauri-sqlite";
 export type { CreateTauriRepoOptions, DbInitOutput } from "./tauri-sqlite";
+export {
+  LEGACY_LAYOUT_STORAGE_KEY,
+  migrateOrganizerLayoutToRepos,
+} from "./organizer-layout-migration";
+export type {
+  LegacyDesktopItem,
+  LegacyGridBox,
+  LegacyOrganizerLayout,
+  OrganizerLayoutMigrationOptions,
+  OrganizerLayoutMigrationResult,
+} from "./organizer-layout-migration";
