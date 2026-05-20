@@ -53,12 +53,11 @@ export function GridItem({ item, variant = "grid", onUpdate, onCreateTask }: Gri
     };
   }, [finderClient, item.filepath, item.finderTags, item.id, onUpdate]);
 
-  const updateTags = (nextTags: DesktopItem["finderTags"]) => {
-    onUpdate?.(item.id, { finderTags: nextTags });
-    if (item.filepath) {
-      void finderClient.writeFinderTags(item.filepath, nextTags ?? []).catch(() => undefined);
-    }
-  };
+  // Write path gated: write_finder_tags is a no-op in Rust and is not yet
+  // registered in lib.rs. Re-enable once both the xattr implementation and
+  // the command registration land. See docs/reviews/finder-tag-read-write/
+  // proposed-contract-changes.md.
+  const updateTags: undefined = undefined;
 
   const style: CSSProperties = {
     ...baseItemStyle,
@@ -104,7 +103,7 @@ export function GridItem({ item, variant = "grid", onUpdate, onCreateTask }: Gri
         </div>
         {tagsOpen ? (
           <div onPointerDown={(event) => event.stopPropagation()} style={{ marginTop: 6 }}>
-            <TagPicker tags={tags} onChange={updateTags} />
+            <TagPicker tags={tags} onChange={updateTags} readOnly />
           </div>
         ) : null}
       </div>
