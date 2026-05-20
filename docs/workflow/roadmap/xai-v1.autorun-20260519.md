@@ -15,12 +15,12 @@
 |---|---|
 | Current Gate | G1 — native foundation |
 | Gate Manifest | docs/workflow/roadmap/xai-g1-native-foundation.md |
-| Current Feature | window-command-contract |
-| Feature Source | docs/planning/execution/G1-native-foundation.md §G1.1 |
-| Feature Status | READY_TO_SHIP |
+| Current Feature | grid-shell-organizer-content |
+| Feature Source | docs/planning/execution/G1-native-foundation.md §G1.2 |
+| Feature Status | READY_FOR_VERIFY |
 | Current Commit | latest local docs checkpoint; use `git log -1 --oneline` for the exact self-referential commit |
-| Tests | G1.1 PASS: cargo check, core check-types, plugin-organizer check-types, desktop build, contract consistency scan |
-| Next Step | Do not ship/push; continue to G1.2 `grid-shell-organizer-content` production build |
+| Tests | G1.2 build PASS: plugin-organizer check-types, desktop build, Host boundary scan, public API scan |
+| Next Step | Run G1.2 feature-verify; do not ship/push |
 
 ## Checkpoints
 
@@ -414,6 +414,21 @@
 - Status: `window-command-contract` -> READY_TO_SHIP. Ship/push was not run.
 - Next eligible feature: `grid-shell-organizer-content` (G1.2).
 
+### 2026-05-19 23:18 PDT — Feature Build: grid-shell-organizer-content
+
+- Reopened G1.2 after G0 Conditional Go and G1.1 READY_TO_SHIP.
+- Implemented production Grid shell/content split:
+  - moved Grid content/state/event/drop behavior into public `OrganizerGridContent`;
+  - exported `OrganizerGridContent` from `packages/plugin-organizer/src/index.ts`;
+  - reduced Host `GridWindow.tsx` to settings/DnD providers plus native AppKit drag shell;
+  - added `docs/contracts/plugin-organizer-public-api-v0.md` and updated contracts README.
+- Checks:
+  - `pnpm --filter @repo/plugin-organizer check-types` -> PASS;
+  - `pnpm --filter desktop build` -> PASS with existing Vite chunk-size warning;
+  - Host forbidden-import boundary scan -> PASS;
+  - `OrganizerGridContent` public API scan -> PASS.
+- Status: `grid-shell-organizer-content` -> READY_FOR_VERIFY.
+
 ## Feature Outcomes
 
 | Feature | Gate | Status | Commit | Tests | Notes |
@@ -425,7 +440,7 @@
 | spaces-multimonitor-matrix | G0 | READY_TO_SHIP | 2fb6bac + bcc5785 + 1701583 | PASS: matrix template exists; current display facts, static window behavior, and user manual Spaces/multi-display follow evidence recorded | Optional independent screenshot replay before ship. |
 | mas-sandbox-dry-run | G0 | BLOCKED_EXTERNAL | 071a192 + 4537d2d + 2fda0c8 | PASS: MAS notes exist; private-API-disabled compile fallback passes; BLOCKED_EXTERNAL: Apple Developer/signed sandbox runtime evidence | Deferred external release gate; decoupled from G1 DMG/private path. |
 | window-command-contract | G1 | READY_TO_SHIP | 9c7b52f + dce4fb9 + 1fa8c75 | PASS: cargo check, core check-types, plugin-organizer check-types, desktop build, contract consistency scan | Deferred cross-vendor verify recorded; ship/push not run. |
-| grid-shell-organizer-content | G1 | ELIGIBLE | eaae46e | PASS: safe-prep docs exist; G1.1 READY_TO_SHIP now unblocks production build | Next eligible feature. |
+| grid-shell-organizer-content | G1 | READY_FOR_VERIFY | eaae46e + pending G1.2 build commit | PASS: plugin-organizer check-types, desktop build, Host boundary scan, public API scan | Awaiting feature-verify. |
 | native-dnd-path-first | G1 | BLOCKED | 707a8d1 | PASS: DnD discovery docs exist; BLOCKED: MAS sandbox/security-scope evidence missing | Reached by user override; no production code changed. |
 | multi-grid-event-scope | G1 | BLOCKED | a7d4803 | PASS: event audit docs exist; BLOCKED: wait for G1.2 shell/content split | Reached by user override; no production code changed. |
 | grid-persistence | G1 | BLOCKED | dcf2750 | PASS: persistence discovery docs exist; BLOCKED: G2 Repository v0 not ready | Reached by user override; no production code changed. |
@@ -443,7 +458,7 @@
 - Real MAS/private-API sandbox runtime evidence deferred external for `mas-sandbox-dry-run`; compile fallback is ready.
 - G1 production implementation prerequisite resolved by G0 Conditional Go.
 - Cross-vendor verify deferred for `window-command-contract`; Codex inline verification passed.
-- G1.2 production shell/content split is now eligible after G1.1 READY_TO_SHIP.
+- G1.2 production shell/content split implemented and ready for feature-verify.
 - G1.3 production DnD path-first implementation deferred until MAS/security-scope evidence.
 - G1.4 production event migration deferred until G1.2 shell/content split.
 - G1.5 production persistence deferred until G2 Repository v0.
@@ -456,7 +471,7 @@
 - spaces-multimonitor-matrix incident resolved; G0.5 is READY_TO_SHIP.
 - mas-sandbox-dry-run blocked external on real sandbox/private-API runtime evidence, but no longer blocks G1 DMG/private path.
 - window-command-contract G0 prerequisite and production build are resolved; feature is READY_TO_SHIP.
-- grid-shell-organizer-content G0/G1.1 blocker resolved; production build is next eligible.
+- grid-shell-organizer-content production build complete; feature-verify pending.
 - native-dnd-path-first blocked by MAS/security-scope evidence.
 - multi-grid-event-scope blocked by G1.2 shell/content split.
 - grid-persistence blocked by G2 Repository v0.

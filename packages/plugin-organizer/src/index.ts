@@ -7,3 +7,5 @@ export * from "./hooks/useFileDrop";
 export * from "./hooks/useGridWindow";
 export * from "./hooks/useMultiWindowGrids";
 export { OrganizerLayer } from "./OrganizerLayer";
+export { OrganizerGridContent } from "./OrganizerGridContent";
+export type { OrganizerGridContentProps } from "./OrganizerGridContent";

@@ -9,6 +9,7 @@
 | `events-v0.md` | `@repo/core` EventMap 和跨窗口事件规则 |
 | `data-repository-v0.md` | `@repo/core-data` Repository / migration / driver contract |
 | `tauri-commands-v0.md` | Tauri command、window label、capability allowlist contract |
+| `plugin-organizer-public-api-v0.md` | Host 与 `@repo/plugin-organizer` 的 public import / Grid content contract |
 
 ## 变更规则
 

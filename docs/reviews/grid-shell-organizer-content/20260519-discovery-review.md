@@ -33,3 +33,15 @@ Do safe prep only. Production refactor should wait for:
 ## Blocker
 
 G1 production implementation remains blocked. Moving the shell/content boundary now could freeze the wrong DnD/event/command shape before G0 and G1.1 have closed.
+
+## Production Revision — 2026-05-19 23:18 PDT
+
+G0 has Conditional Go for the DMG/private path and G1.1 is READY_TO_SHIP, so the safe-prep blocker is resolved for this production split.
+
+Approved bounded build:
+
+- Preserve current Grid behavior; do not rename events or change DnD payloads in G1.2.
+- Move the existing Grid window content implementation into `packages/plugin-organizer/src/OrganizerGridContent.tsx`.
+- Export `OrganizerGridContent` through `packages/plugin-organizer/src/index.ts`.
+- Keep only native shell/provider/drag responsibilities in `apps/desktop/src/windows/GridWindow.tsx`.
+- Document the Host/Organizer public API in `docs/contracts/plugin-organizer-public-api-v0.md`.

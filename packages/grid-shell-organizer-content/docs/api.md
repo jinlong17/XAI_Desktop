@@ -1,23 +1,25 @@
 # grid-shell-organizer-content — API
 
-## Planning Contract
+## Production Contract
 
-No production API was added in this slice.
+Production API was added in `packages/plugin-organizer/src/index.ts` and documented in `docs/contracts/plugin-organizer-public-api-v0.md`.
 
-## Candidate Public Surface
+## Public Surface
 
 ```ts
 export interface OrganizerGridContentProps {
   gridId: string;
+  gridOpacity?: number;
+  gridBlur?: boolean;
 }
 
 export function OrganizerGridContent(props: OrganizerGridContentProps): JSX.Element;
 ```
 
-## Later Contract Checks
+## Contract Checks
 
-- `packages/plugin-organizer/src/index.ts` should be the only Host import surface for Organizer content.
-- Host should not import Organizer internal files.
+- `packages/plugin-organizer/src/index.ts` is the only Host import surface for Organizer content.
+- Host does not import Organizer internal files.
 - Grid event payloads must remain scoped by `gridId`.
-- Any new event names must update `docs/contracts/events-v0.md`.
-- Any new Tauri command usage must update `docs/contracts/tauri-commands-v0.md`.
+- No event names changed in G1.2.
+- No new Tauri command usage was added in G1.2.
