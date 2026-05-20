@@ -820,3 +820,17 @@ G1.1 (window-command-contract), G1.6 (host-business-residuals), G1.2 (grid-shell
 - Promoted G2 manifest row #7 to READY_TO_SHIP.
 - Tests run: `pnpm --filter @repo/core-data test` -> 58 tests PASS.
 - Deferred: live Supabase project provisioning + 2-Mac smoke + zero-knowledge dump PoC (recorded in `xai-v1.deferred-gates.md`).
+
+### 2026-05-20 01:08 PDT — Feature Checkpoint: G1.5 grid-persistence READY_TO_SHIP
+
+- Added `packages/plugin-organizer/src/layoutStore.ts` exporting `LayoutStore` interface, `localStorageLayoutStore()` (preserves the historical synchronous path), and `repositoryLayoutStore()` (G2.1 Repository-backed adapter; uses `GridEntity`/`GridItemEntity`).
+- Both adapters catch `load()` / `save()` errors and surface them via optional `onLoadError`/`onSaveError` callbacks. Corrupted state can never whiteout the desktop.
+- Wired `GridSystemProvider` to accept `store?: LayoutStore`. Default behaviour is unchanged. Hydrate is async with a try/catch fallback to empty state; save and `clearAll` delegate to the store.
+- Added `@repo/core-data` workspace dep to `packages/plugin-organizer/package.json`. `pnpm install --offline` linked the workspace (no new deps pulled).
+- Added 9 vitest cases (`src/layoutStore.test.ts`) covering round-trip, missing key, malformed JSON, type guard, save quota error, repo empty layout, repo round-trip, repo cull on disappearance, and repo load failure → null.
+- Promoted G1 manifest row #5 to READY_TO_SHIP.
+- Tests run:
+  - `pnpm --filter @repo/plugin-organizer test` -> 13 tests PASS
+  - `pnpm --filter @repo/plugin-organizer check-types` -> PASS
+  - `pnpm --filter desktop build` -> PASS
+- Deferred: actual host wire-up that passes `repositoryLayoutStore(tauriGridRepo, tauriItemRepo)` to `GridSystemProvider`. Currently parked because the host integration needs a `useTauriInvoke()` adapter and live macOS Tauri runtime smoke; recorded in `xai-v1.deferred-gates.md` as a follow-up.

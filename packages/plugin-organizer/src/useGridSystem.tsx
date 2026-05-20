@@ -10,8 +10,13 @@ import {
 } from "react";
 import { DesktopItem, GridBox, PersistedLayout } from "./types";
 import { defaultGrid } from "./mockData";
+import {
+  ORGANIZER_LAYOUT_STORAGE_KEY,
+  localStorageLayoutStore,
+  type LayoutStore,
+} from "./layoutStore";
 
-const STORAGE_KEY = "xai-desktop-layout";
+const STORAGE_KEY = ORGANIZER_LAYOUT_STORAGE_KEY;
 const TITLE_BAR_HEIGHT = 40;
 
 const DEBUG_CLEAR_ON_STARTUP = false;
@@ -38,23 +43,21 @@ const toId = () =>
     ? crypto.randomUUID()
     : `grid-${Math.random().toString(16).slice(2)}`;
 
-function loadLayout(): PersistedLayout | null {
-  if (typeof localStorage === "undefined") return null;
-  const raw = localStorage.getItem(STORAGE_KEY);
-  if (!raw) return null;
-  try {
-    return JSON.parse(raw) as PersistedLayout;
-  } catch {
-    return null;
-  }
+export interface GridSystemProviderProps {
+  children: ReactNode;
+  /**
+   * Optional opt-in seam for the G1.5 Repository-backed persistence
+   * adapter. Defaults to `localStorageLayoutStore()` to preserve the
+   * historical synchronous localStorage path.
+   *
+   * Both `load()` and `save()` throws are caught by the adapter so a
+   * corrupted state can never whiteout the desktop.
+   */
+  store?: LayoutStore;
 }
 
-function saveLayout(payload: PersistedLayout) {
-  if (typeof localStorage === "undefined") return;
-  localStorage.setItem(STORAGE_KEY, JSON.stringify(payload));
-}
-
-export function GridSystemProvider({ children }: { children: ReactNode }) {
+export function GridSystemProvider({ children, store }: GridSystemProviderProps) {
+  const layoutStore = useMemo(() => store ?? localStorageLayoutStore(), [store]);
   const [grids, setGrids] = useState<GridBox[]>([]);
   const [items, setItems] = useState<Record<string, DesktopItem>>({});
   const [hydrated, setHydrated] = useState(false);
@@ -64,27 +67,44 @@ export function GridSystemProvider({ children }: { children: ReactNode }) {
   // Hydrate
   useEffect(() => {
     if (DEBUG_CLEAR_ON_STARTUP) {
-      localStorage.removeItem(STORAGE_KEY);
+      if (typeof localStorage !== "undefined") {
+        localStorage.removeItem(STORAGE_KEY);
+      }
       setGrids([]);
       setItems({});
       setHydrated(true);
       return;
     }
 
-    const data = loadLayout();
-    if (data) {
-      const mappedItems: Record<string, DesktopItem> = {};
-      data.items.forEach((item) => {
-        mappedItems[item.id] = item;
-      });
-      setItems(mappedItems);
-      setGrids(data.grids);
-    } else {
-      setGrids([]);
-      setItems({});
-    }
-    setHydrated(true);
-  }, []);
+    let cancelled = false;
+    void (async () => {
+      let data: PersistedLayout | null = null;
+      try {
+        data = await layoutStore.load();
+      } catch {
+        // Defence in depth — every concrete LayoutStore already swallows
+        // its own errors. We catch here so a future store implementation
+        // cannot whiteout the desktop on startup.
+        data = null;
+      }
+      if (cancelled) return;
+      if (data && Array.isArray(data.grids) && Array.isArray(data.items)) {
+        const mappedItems: Record<string, DesktopItem> = {};
+        data.items.forEach((item) => {
+          mappedItems[item.id] = item;
+        });
+        setItems(mappedItems);
+        setGrids(data.grids);
+      } else {
+        setGrids([]);
+        setItems({});
+      }
+      setHydrated(true);
+    })();
+    return () => {
+      cancelled = true;
+    };
+  }, [layoutStore]);
 
   const createGrid = useCallback(
     (x: number, y: number, requestedId?: string) => {
@@ -139,10 +159,8 @@ export function GridSystemProvider({ children }: { children: ReactNode }) {
     setGrids([]);
     setItems({});
     heightCache.current = {};
-    if (typeof localStorage !== "undefined") {
-      localStorage.removeItem(STORAGE_KEY);
-    }
-  }, []);
+    void layoutStore.save({ grids: [], items: [] });
+  }, [layoutStore]);
 
   const moveItem = useCallback(
     (itemId: string, fromId: string, toId: string) => {
@@ -206,14 +224,14 @@ export function GridSystemProvider({ children }: { children: ReactNode }) {
     }
     saveTimer.current = window.setTimeout(() => {
       const payload: PersistedLayout = { grids, items: Object.values(items) };
-      saveLayout(payload);
+      void layoutStore.save(payload);
     }, 1000);
     return () => {
       if (saveTimer.current) {
         window.clearTimeout(saveTimer.current);
       }
     };
-  }, [grids, items, hydrated]);
+  }, [grids, items, hydrated, layoutStore]);
 
   const value = useMemo<GridSystemContextValue>(
     () => ({
