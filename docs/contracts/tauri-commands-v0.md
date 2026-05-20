@@ -95,7 +95,7 @@ Current source:
 | `crypto_wrap_dek_for_devices` | `account`,`control` | DEK handle only |
 | `crypto_unwrap_dek_for_device` | `account`,`control` | returns handle,not raw key |
 | `crypto_recovery_sign` | `account`,`control` | transcript signed in Rust |
-| `secret_set` / `secret_get` / `secret_del` | `account`,`control` | Keychain scoped by account/device |
+| `secret_set` / `secret_get` / `secret_del` | `account`,`control` | Keychain scoped by account/device. Runtime `commands::keychain::KEYCHAIN_ALLOWED_WINDOWS` (`account`, `control`) check rejects any other origin (widget / pet / ai-cube / grid / main / console) with `E3004` before reaching the platform layer. |
 
 Raw DEK must never cross IPC. JS may hold opaque handle ids only.
 
