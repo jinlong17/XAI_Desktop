@@ -202,4 +202,4 @@
 - What was done instead: Created docs-only feature brief, discovery review, design, API, test plan, and dev_log describing current aliases, contract drift, and target migration.
 - Later human action: Complete G0 evidence, implement/review G1.1, settle Finder DnD payload shape, then rerun feature-build for event migration.
 - Suggested verification command / environment: `sed -n '1,220p' docs/reviews/multi-grid-event-scope/20260519-discovery-review.md`
-- Files/commits affected: docs/reviews/multi-grid-event-scope/*; packages/multi-grid-event-scope/docs/*; pending G1.4 docs commit
+- Files/commits affected: docs/reviews/multi-grid-event-scope/*; packages/multi-grid-event-scope/docs/*; commit `a7d4803`

@@ -21,7 +21,7 @@
 
 ### Phase 1 — Event-scope audit
 
-Status: DONE. Commit: `(pending docs commit)`.
+Status: DONE. Commit: `a7d4803`.
 
 - Created G1.4 feature brief and discovery review.
 - Audited current Grid event names and payloads.
@@ -44,5 +44,5 @@ Docs-only prep is complete. G1.4 production acceptance remains blocked by G0 and
 |---|---|---|---|---|
 | 2026-05-19 20:36 PDT | feature-plan (Codex inline) | Step 0 and plan: scoped G1.4 to event audit safe prep under user override. | — | feature-review |
 | 2026-05-19 20:37 PDT | feature-review (Codex inline) | Approved safe prep; production event migration remains blocked. | — | feature-build |
-| 2026-05-19 20:37 PDT | feature-build (Codex inline) | Created event inventory and package docs. | (pending docs commit) | feature-verify |
-| 2026-05-19 20:37 PDT | feature-verify (Codex inline) | Verified docs-only scope; status remains BLOCKED. | (pending docs commit) | Human/G0 prerequisite |
+| 2026-05-19 20:37 PDT | feature-build (Codex inline) | Created event inventory and package docs. | `a7d4803` | feature-verify |
+| 2026-05-19 20:37 PDT | feature-verify (Codex inline) | Verified docs-only scope; status remains BLOCKED. | `a7d4803` | Human/G0 prerequisite |
