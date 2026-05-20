@@ -28,7 +28,7 @@ Source files audited:
 | `opener:default` | default.json | Tauri plugin |
 | `create_grid_window` and siblings | default.json | host validates gridId |
 | `crypto_*` | plugin-account-crypto.json | `commands::crypto::CRYPTO_ALLOWED_WINDOWS` (account, control) |
-| `secret_set` / `secret_get` / `secret_del` | plugin-account-keychain.json | window-origin check inside `commands::keychain` |
+| `secret_set` / `secret_get` / `secret_del` | plugin-account-keychain.json | `commands::keychain::KEYCHAIN_ALLOWED_WINDOWS` (account, control) |
 | `db_init` / `db_put` / `db_get` / `db_list` / `db_delete` | plugin-data-database.json (G2.5) | `commands::database::DATABASE_ALLOWED_WINDOWS` (main, control, account, console) + `grid_*` prefix |
 
 ## Minimization notes
