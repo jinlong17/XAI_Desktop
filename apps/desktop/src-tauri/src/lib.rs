@@ -87,6 +87,8 @@ pub fn run() {
             commands::database::db_list,
             #[cfg(feature = "crypto")]
             commands::database::db_delete,
+            #[cfg(feature = "crypto")]
+            commands::database::db_put_batch,
         ])
         .setup(|app| {
             let window = app

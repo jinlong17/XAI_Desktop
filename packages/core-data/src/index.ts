@@ -59,7 +59,10 @@ export type { CreateTauriRepoOptions, DbInitOutput } from "./tauri-sqlite";
 export {
   createMockCommitSeqAuthority,
   enqueueOutboxEntry,
+  isOutboxId,
   nextOutboxBatch,
+  OUTBOX_ID_PREFIX,
+  outboxIdFor,
 } from "./sync-outbox";
 export type {
   EnqueueOutboxInput,

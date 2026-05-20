@@ -14,7 +14,7 @@
 | Automation Mode | D-Codex |
 | Verify Cross-vendor | yes |
 | Executor | feature-build + feature-verify (Claude Code, Track A) |
-| Updated | 2026-05-20 00:46 PDT |
+| Updated | 2026-05-20 02:13 PDT |
 | Blockers | SQLCipher PRAGMA path deferred to G2.4 KEK handle publication; cross-vendor verify deferred in serial mode |
 
 ## Phase Plan
@@ -51,9 +51,12 @@ Deferred / out-of-scope for G2.2:
 - SQLCipher `PRAGMA key` application — already exercised in
   `apps/desktop/src-tauri/src/crypto/sqlcipher.rs`; will be wired into
   `db_init` after G2.4 publishes the opaque KEK handle.
-- Cross-command transactions — TS `transaction(fn)` currently runs the
-  callback against the same `Repo<T>` operations object; full atomic
-  semantics require `db_transaction_begin`/`commit` commands.
+- Cross-command transactions — superseded 2026-05-20 by `db_put_batch`
+  + the `createTauriRepo.transaction(fn)` buffered-batch shim. Writes
+  inside a transaction now commit as one SQLite `BEGIN`/`COMMIT`. Reads
+  inside a transaction still observe the pre-transaction state (no
+  read-after-write inside the same tx) — that limitation is documented
+  in the TS factory's doc comment.
 - Real `app_data_dir` runtime verification on macOS — needs a
   Tauri-host integration test; deferred under unattended mode.
 
@@ -72,3 +75,4 @@ G2.4/G2.6 roadmap.
 |---|---|---|---|---|
 | 2026-05-19 03:25 PDT | Codex serial autorun | Added SQLite driver boundary, namespace repo, mutation hook, localStorage migration, in-memory SQLite test driver, and `@repo/core-data/testing` subpath export. | — | Real SQLCipher/Tauri binding deferred |
 | 2026-05-20 00:46 PDT | feature-build + feature-verify (Claude Code, Track A) | Implemented `commands/database.rs`, error variants, lib.rs registration, TS `createTauriRepo` factory, and contract doc §6.1. 7 cargo tests + 4 vitest tests passing; cargo check (default + crypto) and desktop build green. | pending commit | manual ship only; continue roadmap |
+| 2026-05-20 02:13 PDT | bug-fix (Claude Code, Track A) | P0 G2.6 atomicity fix: added `db_put_batch` Tauri command (BEGIN/COMMIT around N puts+deletes in one namespace), rewired `createTauriRepo.transaction(fn)` to buffer writes and dispatch them through `db_put_batch`. Adds the `E13xx` validation contract: the whole batch rolls back on any per-entry failure. 13 cargo database tests (4 new batch cases) + 66 core-data vitest cases (incl. new `tauri-sqlite` buffer/rollback + real SQLite sabotage) all green. | `cargo check`, `cargo check --features crypto`, `cargo test --features crypto database::`, `pnpm --filter @repo/core-data test`, `pnpm --filter @repo/core-data check-types`, `pnpm --filter desktop build` — all PASS. | continue roadmap |

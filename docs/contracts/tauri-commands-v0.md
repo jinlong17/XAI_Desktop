@@ -142,11 +142,12 @@ Current source:
 | `db_get` | same | `{ input: { namespace, id } }` | `string \| null` | Returns the stored JSON or `null` if absent. |
 | `db_list` | same | `{ input: { namespace } }` | `string[]` | All payloads in the namespace, sorted by id. |
 | `db_delete` | same | `{ input: { namespace, id } }` | `void` | Idempotent. |
+| `db_put_batch` | same | `{ input: { namespace, entries: [{ op: "put" \| "delete", id, json?, updatedAtMs? }] } }` | `void` | Atomic. Wraps every entry in one SQLite `BEGIN`/`COMMIT`. Any validation or backend failure rolls back the whole batch. Required by the sync-outbox to commit the entity row and its outbox row together (G2.6 P0 fix). |
 
 PoC scope:
 - Plain SQLite via `rusqlite` (bundled-sqlcipher build but no `PRAGMA key` applied).
 - SQLCipher PRAGMA path is exercised by `apps/desktop/src-tauri/src/crypto/sqlcipher.rs` and will be wired into `db_init` once G2.4 publishes a stable opaque KEK handle.
-- Cross-namespace transactions are not exposed; the TS `createTauriRepo` shim runs `transaction(fn)` callbacks against a single namespace.
+- Cross-namespace transactions are not exposed; the TS `createTauriRepo` shim runs `transaction(fn)` callbacks against a single namespace and dispatches all buffered writes through `db_put_batch`.
 - Namespace must match `[A-Za-z0-9._:-]+` and be ≤ 128 chars. Id must be 1..=256 chars.
 - Errors: `E1300` (not initialized), `E1301` (invalid input), `E1302` (backend SQLite/FS error).
 - Feature-gated: registered only when the desktop crate is built with `--features crypto` (the gate that also enables `rusqlite`).
