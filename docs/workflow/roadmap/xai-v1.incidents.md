@@ -57,7 +57,7 @@
 - Symptom: User reported clicking `+ New Grid` did not create a native Grid window; startup logs showed main-window configuration but no `create_grid_window` Rust command log.
 - Root cause if known: Likely frontend routing issue. `OrganizerLayer` enabled native window sync by checking `window.__TAURI__`, but this Tauri v2 app does not enable `withGlobalTauri`, so the global is absent even in the runtime. The control window also emitted the legacy unscoped `create-grid-request` event instead of the documented `organizer:create-grid-request` contract event.
 - Attempted fixes: Patched ControlWindow to `emitTo("main", "organizer:create-grid-request", { rect })`; patched OrganizerLayer to listen to the contract event, keep a legacy listener, and use Tauri v2 runtime detection via `isTauri()` / `__TAURI_INTERNALS__`; updated organizer API/design docs.
-- Current status: PATCHED in commit `14e04c2`; `pnpm --filter @repo/plugin-organizer check-types` and `pnpm --filter desktop build` pass. Human runtime confirmation is still required.
+- Current status: RESOLVED 2026-05-19. User confirmed runtime fixed after commits `7b7ff35`, `f65a1b5`, and `a33c74d`; Codex checks pass.
 - Resume instruction: Restart `pnpm --filter desktop tauri dev`, click `+ New Grid`, and confirm terminal output includes `🪟 Creating grid window:` followed by a visible native Grid window.
 
 ## Incident 7
@@ -67,7 +67,7 @@
 - Symptom: After Grid windows were successfully created, the user reported the small AI icon could not open settings or be dragged.
 - Root cause if known: The control window was configured at desktop icon level +1 while Grid windows were configured at desktop icon level +3. Newly created Grid windows could cover the control window and intercept pointer input intended for the AI cube/settings panel.
 - Attempted fixes: Raised the control window to desktop icon level +4 and added a startup log for its configured level.
-- Current status: PATCHED in commit `01e5167`; `cargo check --manifest-path apps/desktop/src-tauri/Cargo.toml` and `pnpm --filter desktop build` pass. Human runtime confirmation is still required.
+- Current status: RESOLVED 2026-05-19. User confirmed runtime fixed after commits `7b7ff35`, `f65a1b5`, and `a33c74d`; Codex checks pass.
 - Resume instruction: Restart `pnpm --filter desktop tauri dev`, confirm startup logs include `🎛️ Control window configured`, create a Grid, then verify the AI icon can still open settings and drag above the Grid window.
 
 ## Incident 8
@@ -77,5 +77,5 @@
 - Symptom: User reported `+ New Grid` still did not generate a visible window in the latest runtime attempt, and the AI icon movement area felt limited.
 - Root cause if known: The AI cube was still dragged as a DOM node inside the fixed 360x360 control window, so movement was bounded by that native window. The create-grid path also depended on the main window event/state sync path before a native window was guaranteed.
 - Attempted fixes: Added native control-window dragging for the AI cube, changed `+ New Grid` to compute screen-relative Grid placement from the control window position, added direct `create_grid_window` invoke fallback using the same `gridId` as the main-window event, and updated EventMap/contracts for optional `gridId`.
-- Current status: PATCHED in commit `b8c34fe`; `pnpm --filter @repo/plugin-organizer check-types`, `pnpm --filter @repo/core check-types`, and `pnpm --filter desktop build` pass. Human runtime confirmation is still required.
+- Current status: RESOLVED 2026-05-19. User confirmed runtime fixed after commits `7b7ff35`, `f65a1b5`, and `a33c74d`; Codex checks pass.
 - Resume instruction: Restart `pnpm --filter desktop tauri dev`, drag the AI icon across the desktop, open settings, click `+ New Grid`, and confirm a visible Grid window plus terminal `create_grid_window` logs.

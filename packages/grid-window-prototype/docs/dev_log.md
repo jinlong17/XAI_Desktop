@@ -8,14 +8,14 @@
 | Target | grid-window-prototype |
 | Title | G0.2 alpha/beta Grid window prototype |
 | Roadmap | xai-g0-window-spike · feature #2 · G0.2 |
-| Status | BLOCKED |
-| Current Phase | RUNTIME_VERIFY |
-| Suggested Next | human runtime verify `+ New Grid` |
+| Status | READY_TO_SHIP |
+| Current Phase | FEATURE_VERIFY |
+| Suggested Next | G0.3 click-through-matrix |
 | Automation Mode | D-Codex |
 | Verify Cross-vendor | yes |
 | Executor | feature-verify (Codex inline) |
-| Updated | 2026-05-19 15:24 PDT |
-| Blockers | Human runtime confirmation that `+ New Grid` creates a native Grid window |
+| Updated | 2026-05-19 20:25 PDT |
+| Blockers | — |
 
 ## Phase Plan
 
@@ -87,7 +87,24 @@ Verification performed:
 - `pnpm --filter desktop build`: PASS with Vite chunk-size warning only.
 - `cargo check --manifest-path apps/desktop/src-tauri/Cargo.toml`: PASS with existing dead-code warnings.
 
-Runtime status: BLOCKED until a human reruns `pnpm --filter desktop tauri dev`, drags the AI cube across the desktop, clicks `+ New Grid`, confirms a visible Grid window plus terminal `create_grid_window` log, and verifies the AI cube can still open settings and drag above the Grid window.
+Runtime status at 2026-05-19 15:47 PDT: BLOCKED until human runtime confirmation. Superseded by the 2026-05-19 20:25 PDT runtime recovery confirmation below.
+
+## Runtime Recovery Confirmation
+
+User report, 2026-05-19 20:25 PDT: runtime issues are fixed and committed.
+
+Confirmed commits:
+- `7b7ff35 fix(window-runtime): unblock AI cube drag, grid window render, and silent IPC failures`.
+- `f65a1b5 feat(control-window): live-resize, cascade spawn, focus-dismiss, clear-all UX`.
+- `a33c74d fix(grid-window): use OS-native startDragging so grid moves freely across the full screen`.
+
+Verification performed after these commits:
+- `pnpm --filter desktop exec tsc --noEmit`: PASS.
+- `pnpm --filter @repo/plugin-organizer check-types`: PASS.
+- `pnpm --filter desktop build`: PASS with Vite chunk-size warning only.
+- `cargo check --manifest-path apps/desktop/src-tauri/Cargo.toml`: PASS with existing dead-code warnings.
+
+Status: READY_TO_SHIP. Deferred gates remain recorded for independent review/verify and any deeper alpha/beta scoped-event evidence.
 
 ## Deferred Gates
 
@@ -106,3 +123,4 @@ Runtime status: BLOCKED until a human reruns `pnpm --filter desktop tauri dev`, 
 | 2026-05-19 15:24 PDT | bug-fix (Codex inline) | Patched `+ New Grid` request routing and Tauri runtime detection after user reported no native window. Automated checks pass; runtime confirmation still required. Status -> BLOCKED. | 14e04c2 | runtime verify |
 | 2026-05-19 15:32 PDT | bug-fix (Codex inline) | Raised the control window above Grid windows after user reported the AI icon could not open settings or drag once Grid windows existed. Rust/frontend checks pass; runtime confirmation still required. | 01e5167 | runtime verify |
 | 2026-05-19 15:47 PDT | bug-fix (Codex inline) | Added native control-window dragging and direct same-`gridId` Rust fallback for `+ New Grid` after user reported movement bounds and no generation. Type/build checks pass; runtime confirmation still required. | b8c34fe | runtime verify |
+| 2026-05-19 20:25 PDT | runtime-verify (human + Codex checks) | User confirmed runtime fixed; reviewed commits `7b7ff35`, `f65a1b5`, `a33c74d`; reran desktop/plugin/Cargo checks. Status -> READY_TO_SHIP. | 7b7ff35, f65a1b5, a33c74d | G0.3 |

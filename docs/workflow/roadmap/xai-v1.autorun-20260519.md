@@ -15,12 +15,12 @@
 |---|---|
 | Current Gate | G0 — window spike |
 | Gate Manifest | docs/workflow/roadmap/xai-g0-window-spike.md |
-| Current Feature | grid-window-prototype |
-| Feature Source | docs/planning/execution/G0-window-spike.md §G0.2 |
-| Feature Status | BLOCKED (patched; human runtime confirmation required) |
-| Current Commit | b8c34fe |
-| Tests | `pnpm --filter @repo/plugin-organizer check-types`; `pnpm --filter @repo/core check-types`; `pnpm --filter desktop build`; `cargo check --manifest-path apps/desktop/src-tauri/Cargo.toml` |
-| Next Step | Restart `pnpm --filter desktop tauri dev`, drag AI cube across desktop, click `+ New Grid`, confirm `create_grid_window` terminal log, visible native Grid window, and AI cube/settings remain clickable above it |
+| Current Feature | click-through-matrix |
+| Feature Source | docs/planning/execution/G0-window-spike.md §G0.3 |
+| Feature Status | IN_PROGRESS |
+| Current Commit | a33c74d |
+| Tests | `pnpm --filter desktop exec tsc --noEmit`; `pnpm --filter @repo/plugin-organizer check-types`; `pnpm --filter desktop build`; `cargo check --manifest-path apps/desktop/src-tauri/Cargo.toml` |
+| Next Step | Resume G0.3 click-through-matrix now that G0.2 runtime is fixed/confirmed |
 
 ## Checkpoints
 
@@ -168,12 +168,28 @@
   - `pnpm --filter desktop build` (Vite chunk-size warning only)
 - Status remains BLOCKED until human runtime confirmation.
 
+### 2026-05-19 20:25 PDT — Runtime Recovery Confirmation: grid-window-prototype
+
+- User reported the runtime issues are fixed and committed.
+- Reviewed new commits:
+  - `7b7ff35 fix(window-runtime): unblock AI cube drag, grid window render, and silent IPC failures`
+  - `f65a1b5 feat(control-window): live-resize, cascade spawn, focus-dismiss, clear-all UX`
+  - `a33c74d fix(grid-window): use OS-native startDragging so grid moves freely across the full screen`
+- Key fixes confirmed from commit messages and diff: missing Tauri window capabilities, GridWindow render crash from missing GridSystemProvider context, control-window transparent hit-test area, cascade spawn placement, and native Grid drag handoff.
+- Verification passed:
+  - `pnpm --filter desktop exec tsc --noEmit`
+  - `pnpm --filter @repo/plugin-organizer check-types`
+  - `pnpm --filter desktop build` (Vite chunk-size warning only)
+  - `cargo check --manifest-path apps/desktop/src-tauri/Cargo.toml` (existing dead-code warnings only)
+- `grid-window-prototype` status restored to READY_TO_SHIP. Independent review/verify gates remain deferred in `docs/workflow/roadmap/xai-v1.deferred-gates.md`.
+- Continuing to G0.3 `click-through-matrix`.
+
 ## Feature Outcomes
 
 | Feature | Gate | Status | Commit | Tests | Notes |
 |---|---|---|---|---|---|
 | window-ground-truth | G0 | READY_TO_SHIP | 3b571f6 | PASS: branch, sw_vers, README content | Deferred gates recorded in docs/workflow/roadmap/xai-v1.deferred-gates.md |
-| grid-window-prototype | G0 | BLOCKED | 6b121ea + 14e04c2 + 01e5167 + b8c34fe | PASS: plugin-organizer/core check-types; desktop build; cargo check; BLOCKED: human New Grid/control-window runtime confirmation | User reported no native window, control-window hit-test/layering issues, and control drag bounds; patched. |
+| grid-window-prototype | G0 | READY_TO_SHIP | 6b121ea + 14e04c2 + 01e5167 + b8c34fe + 7b7ff35 + f65a1b5 + a33c74d | PASS: desktop tsc; plugin-organizer check-types; desktop build; cargo check | Runtime fixed/confirmed; deferred review/verify gates recorded. |
 | click-through-matrix | G0 | BLOCKED | 82ab268 + 7a1b9dd | PASS: matrix template and static analysis exist; BLOCKED: real hit-test evidence | Requires human macOS click-through matrix. |
 | finder-dnd-path | G0 | BLOCKED | 33627df + 7a1b9dd | PASS: matrix template and static analysis exist; BLOCKED: real Finder drop evidence | Requires human Finder/Tauri path matrix. |
 | spaces-multimonitor-matrix | G0 | BLOCKED | 2fb6bac | PASS: matrix template exists; BLOCKED: real Spaces/fullscreen/multi-display evidence | Reached by user override; safe prep only. |
@@ -186,7 +202,7 @@
 - Manifest review deferred for `xai-g0-window-spike`.
 - Cross-vendor review and verify deferred for `window-ground-truth`.
 - Human ship for `window-ground-truth` deferred while continuing local G0 tasks.
-- Cross-vendor review/verify and runtime Tauri alpha/beta evidence deferred for `grid-window-prototype`.
+- Cross-vendor review/verify deferred for `grid-window-prototype`; runtime fix was confirmed by user and commits.
 - Real macOS click-through matrix deferred for `click-through-matrix`.
 - Real Finder DnD path matrix deferred for `finder-dnd-path`.
 - Real Spaces/fullscreen/multi-display matrix deferred for `spaces-multimonitor-matrix`.
@@ -209,7 +225,7 @@ Paused early on 2026-05-19 after the user override because no further production
 ### Completed Features
 
 - `window-ground-truth` — READY_TO_SHIP.
-- `grid-window-prototype` — BLOCKED after bugfix pending human runtime confirmation.
+- `grid-window-prototype` — READY_TO_SHIP after runtime recovery.
 - `click-through-matrix` — BLOCKED after safe prep.
 - `finder-dnd-path` — BLOCKED after safe prep.
 - `spaces-multimonitor-matrix` — BLOCKED after safe prep.
@@ -220,13 +236,13 @@ Paused early on 2026-05-19 after the user override because no further production
 ### READY_TO_SHIP Features
 
 - `window-ground-truth`
+- `grid-window-prototype`
 - `host-business-residuals`
 
 ### BLOCKED Features
 
 - `click-through-matrix`
 - `finder-dnd-path`
-- `grid-window-prototype`
 - `spaces-multimonitor-matrix`
 - `mas-sandbox-dry-run`
 - `window-command-contract`
@@ -236,7 +252,7 @@ Paused early on 2026-05-19 after the user override because no further production
 - G0 manifest human review.
 - Human ship for `window-ground-truth`.
 - Cross-vendor review/verify for serial Codex-run features.
-- Real Tauri alpha/beta runtime evidence for `grid-window-prototype`.
+- Independent review/verify for `grid-window-prototype` runtime recovery commits.
 - Real macOS click-through matrix for `click-through-matrix`.
 - Real Finder DnD path matrix for `finder-dnd-path`.
 - Real Spaces/fullscreen/multi-display matrix for `spaces-multimonitor-matrix`.
@@ -251,9 +267,9 @@ Paused early on 2026-05-19 after the user override because no further production
 - Incident 3: `spaces-multimonitor-matrix` cannot satisfy real Spaces/fullscreen/multi-display acceptance in unattended mode.
 - Incident 4: `mas-sandbox-dry-run` cannot satisfy sandbox/private-API acceptance in unattended mode.
 - Incident 5: `window-command-contract` production implementation is blocked until G0 is Go/Conditional Go.
-- Incident 6: `grid-window-prototype` `+ New Grid` did not create a native window; patched, but human runtime confirmation is required.
-- Incident 7: `grid-window-prototype` AI cube/settings were covered by Grid windows; patched, but human runtime confirmation is required.
-- Incident 8: `grid-window-prototype` still failed to generate and AI cube movement was bounded; patched with native drag and direct create fallback, but human runtime confirmation is required.
+- Incident 6: `grid-window-prototype` `+ New Grid` did not create a native window; resolved by runtime recovery commits.
+- Incident 7: `grid-window-prototype` AI cube/settings were covered by Grid windows; resolved by runtime recovery commits.
+- Incident 8: `grid-window-prototype` still failed to generate and AI cube movement was bounded; resolved by runtime recovery commits.
 
 ### Commits
 
@@ -271,6 +287,9 @@ Paused early on 2026-05-19 after the user override because no further production
 - `14e04c2` — `fix(grid-window): route new grid requests to main`
 - `01e5167` — `fix(control-window): keep ai cube above grids`
 - `b8c34fe` — `fix(control-window): drag natively and harden grid creation`
+- `7b7ff35` — `fix(window-runtime): unblock AI cube drag, grid window render, and silent IPC failures`
+- `f65a1b5` — `feat(control-window): live-resize, cascade spawn, focus-dismiss, clear-all UX`
+- `a33c74d` — `fix(grid-window): use OS-native startDragging so grid moves freely across the full screen`
 
 ### Test Results
 
@@ -286,6 +305,7 @@ Paused early on 2026-05-19 after the user override because no further production
 - `test -f docs/planning/execution/host-residuals.md` -> PASS
 - Host residual `rg` scan -> PASS, 23 source references recorded
 - `cargo check --manifest-path apps/desktop/src-tauri/Cargo.toml` -> PASS with existing dead-code warnings
+- `pnpm --filter desktop exec tsc --noEmit` -> PASS
 - `pnpm --filter @repo/core check-types` -> PASS
 
 ### Next Human Reading Order
