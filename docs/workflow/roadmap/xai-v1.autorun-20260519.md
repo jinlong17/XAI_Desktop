@@ -18,7 +18,7 @@
 | Current Feature | click-through-matrix / finder-dnd-path |
 | Feature Source | docs/planning/execution/G0-window-spike.md §G0.3, §G0.4 |
 | Feature Status | PARTIAL_HUMAN_EVIDENCE / BLOCKED |
-| Current Commit | e7fc4ab |
+| Current Commit | e9a95ec |
 | Tests | User manual evidence: transparent-area click-through normal; Finder items can be dragged into Grid |
 | Next Step | Complete exact G0.3/G0.4 matrix rows: grid item/resize, `macOSPrivateApi=false`, and Finder file/folder/`.app`/alias payload logs |
 
@@ -412,6 +412,7 @@ Stopped on 2026-05-19 20:43 PDT because no remaining eligible feature can procee
 - `dcf2750` — `docs(grid-persistence): add safe prep discovery`
 - `d8a49b3` — `docs(roadmap): record g1 persistence checkpoint`
 - `e7fc4ab` — `docs(g0-evidence): record partial manual runtime results`
+- `e9a95ec` — `docs(roadmap): finalize g0 evidence checkpoint`
 
 ### Test Results
 
