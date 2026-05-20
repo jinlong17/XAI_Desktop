@@ -1,4 +1,4 @@
-import { memo, useCallback, useState, useEffect } from "react";
+import { memo, useCallback, useState, useEffect, useRef } from "react";
 import { DesktopItem } from "./types";
 import { useGridSystem } from "./useGridSystem";
 import { useFileDrop, getFileInfoFromPath, getFileIcon } from "./hooks/useFileDrop";
@@ -22,6 +22,14 @@ function canUseTauriRuntime() {
   return isTauri() || Boolean((window as Window & { __TAURI_INTERNALS__?: unknown }).__TAURI_INTERNALS__);
 }
 
+function normalizeDroppedPath(path: string): string {
+  return path.trim().replace(/\/+$/, "");
+}
+
+function toGridPathKey(gridId: string, path: string): string {
+  return `${gridId}:${path}`;
+}
+
 function OrganizerContent() {
   const {
     grids,
@@ -36,13 +44,42 @@ function OrganizerContent() {
   } = useGridSystem();
   const [isDraggingFile, setIsDraggingFile] = useState(false);
   const hasTauriRuntime = canUseTauriRuntime();
+  const recentGridPathDrops = useRef<Map<string, number>>(new Map());
 
   // Handle file drop for a specific grid (from grid windows)
   const handleGridFileDrop = useCallback(
     (gridId: string, paths: string[]) => {
       console.log(`📂 Files dropped on grid ${gridId}:`, paths);
+      const now = Date.now();
+      const recentDropTtlMs = 5000;
+      const targetGrid = grids.find((grid) => grid.id === gridId);
+      const existingPaths = new Set(
+        targetGrid?.itemIds
+          .map((itemId) => items[itemId]?.filepath)
+          .filter((path): path is string => typeof path === "string")
+          .map(normalizeDroppedPath) ?? [],
+      );
 
-      paths.forEach((filePath, index) => {
+      recentGridPathDrops.current.forEach((receivedAt, key) => {
+        if (now - receivedAt > recentDropTtlMs) {
+          recentGridPathDrops.current.delete(key);
+        }
+      });
+
+      paths.forEach((rawPath, index) => {
+        const filePath = normalizeDroppedPath(rawPath);
+        if (!filePath) return;
+
+        const dedupeKey = toGridPathKey(gridId, filePath);
+        const recentDropAt = recentGridPathDrops.current.get(dedupeKey);
+        if (existingPaths.has(filePath) || (recentDropAt !== undefined && now - recentDropAt < recentDropTtlMs)) {
+          console.warn(`⏭️ Skipping duplicate drop for grid ${gridId}:`, filePath);
+          return;
+        }
+
+        existingPaths.add(filePath);
+        recentGridPathDrops.current.set(dedupeKey, now);
+
         const fileInfo = getFileInfoFromPath(filePath);
         const newItem: DesktopItem = {
           id: `file-${Date.now()}-${index}-${Math.random().toString(36).slice(2, 7)}`,
@@ -58,7 +95,7 @@ function OrganizerContent() {
         console.log(`✅ Added file "${fileInfo.name}" to grid ${gridId}`);
       });
     },
-    [addItem, addItemToGrid]
+    [addItem, addItemToGrid, grids, items]
   );
 
   // Use multi-window grid management in Tauri environment
