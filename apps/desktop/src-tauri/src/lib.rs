@@ -51,11 +51,16 @@ impl Default for GridWindowsState {
 
 #[cfg_attr(mobile, tauri::mobile_entry_point)]
 pub fn run() {
-    tauri::Builder::default()
+    let builder = tauri::Builder::default()
         .plugin(tauri_plugin_opener::init())
         .manage(commands::crypto::CryptoCommandState::default())
         .manage(commands::menubar::SyncMenuBarState::default())
-        .manage(GridWindowsState::default())
+        .manage(GridWindowsState::default());
+
+    #[cfg(feature = "crypto")]
+    let builder = builder.manage(commands::database::DatabaseState::default());
+
+    builder
         .invoke_handler(tauri::generate_handler![
             commands::window::create_grid_window,
             commands::window::update_grid_window,
@@ -70,6 +75,16 @@ pub fn run() {
             commands::keychain::secret_set,
             commands::keychain::secret_get,
             commands::keychain::secret_del,
+            #[cfg(feature = "crypto")]
+            commands::database::db_init,
+            #[cfg(feature = "crypto")]
+            commands::database::db_put,
+            #[cfg(feature = "crypto")]
+            commands::database::db_get,
+            #[cfg(feature = "crypto")]
+            commands::database::db_list,
+            #[cfg(feature = "crypto")]
+            commands::database::db_delete,
         ])
         .setup(|app| {
             let window = app

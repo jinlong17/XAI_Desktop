@@ -97,6 +97,29 @@ Current source:
 
 Raw DEK must never cross IPC. JS may hold opaque handle ids only.
 
+## 6.1 Database Commands (G2.2 PoC)
+
+Current source:
+- `apps/desktop/src-tauri/src/commands/database.rs`
+- `packages/core-data/src/tauri-sqlite.ts` (TS driver factory)
+- `apps/desktop/src-tauri/capabilities/default.json`
+
+| Command | Allowed windows | Input | Output | Security rule |
+|---|---|---|---|---|
+| `db_init` | `main`,`control`,`grid_*`,`account` | `{ namespace }` | `{ namespace, path }` | Idempotent. Opens or creates `xai-repo-v0.db` under `app_data_dir`. |
+| `db_put` | same | `{ input: { namespace, id, json, updatedAtMs } }` | `void` | Upsert. `json` payload is opaque; raw bytes do not cross IPC. |
+| `db_get` | same | `{ input: { namespace, id } }` | `string \| null` | Returns the stored JSON or `null` if absent. |
+| `db_list` | same | `{ input: { namespace } }` | `string[]` | All payloads in the namespace, sorted by id. |
+| `db_delete` | same | `{ input: { namespace, id } }` | `void` | Idempotent. |
+
+PoC scope:
+- Plain SQLite via `rusqlite` (bundled-sqlcipher build but no `PRAGMA key` applied).
+- SQLCipher PRAGMA path is exercised by `apps/desktop/src-tauri/src/crypto/sqlcipher.rs` and will be wired into `db_init` once G2.4 publishes a stable opaque KEK handle.
+- Cross-namespace transactions are not exposed; the TS `createTauriRepo` shim runs `transaction(fn)` callbacks against a single namespace.
+- Namespace must match `[A-Za-z0-9._:-]+` and be ≤ 128 chars. Id must be 1..=256 chars.
+- Errors: `E1300` (not initialized), `E1301` (invalid input), `E1302` (backend SQLite/FS error).
+- Feature-gated: registered only when the desktop crate is built with `--features crypto` (the gate that also enables `rusqlite`).
+
 ## 7. Capability Files
 
 | File | Purpose |
