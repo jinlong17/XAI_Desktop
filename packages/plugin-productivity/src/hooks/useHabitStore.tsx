@@ -8,6 +8,7 @@ import {
   type ReactNode,
 } from "react";
 import { LocalStorageAdapter } from "../data/LocalStorageAdapter";
+import { useProductivityRepoAdapters } from "../data/RepoProvider";
 import type { DataAdapter, Habit, HabitDraft, HabitHistoryEntry } from "../types";
 
 const STORAGE_KEY = "xai.plugin-productivity.habits";
@@ -15,6 +16,9 @@ const STORAGE_KEY = "xai.plugin-productivity.habits";
 const seedHabits: Habit[] = [
   {
     id: "habit-deep-work",
+    entityType: "productivity.habit",
+    schemaVersion: 1,
+    syncScope: "account-sync",
     name: "Deep work block",
     frequency: "daily",
     streak: 3,
@@ -26,6 +30,7 @@ const seedHabits: Habit[] = [
     labels: ["label-focus"],
     createdAt: "2026-05-18T09:00:00.000Z",
     updatedAt: "2026-05-18T09:00:00.000Z",
+    version: 1,
   },
 ];
 
@@ -70,8 +75,9 @@ export interface HabitStoreProviderProps {
 }
 
 export function HabitStoreProvider({ adapter, children }: HabitStoreProviderProps) {
+  const repoAdapters = useProductivityRepoAdapters();
   const [defaultAdapter] = useState(() => new LocalStorageAdapter<Habit>(STORAGE_KEY, seedHabits));
-  const stableAdapter = adapter ?? defaultAdapter;
+  const stableAdapter = adapter ?? repoAdapters?.habitAdapter ?? defaultAdapter;
   const [habits, setHabits] = useState<Habit[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -94,7 +100,7 @@ export function HabitStoreProvider({ adapter, children }: HabitStoreProviderProp
 
   const persist = useCallback(
     async (habit: Habit, options: { touchUpdatedAt?: boolean } = {}) => {
-      const nextHabit = options.touchUpdatedAt === false ? habit : { ...habit, updatedAt: new Date().toISOString() };
+      const nextHabit = options.touchUpdatedAt === false ? habit : { ...habit, updatedAt: new Date().toISOString(), version: habit.version + 1 };
       await stableAdapter.save(nextHabit);
       setHabits((prev) =>
         prev.some((current) => current.id === nextHabit.id)
@@ -113,6 +119,9 @@ export function HabitStoreProvider({ adapter, children }: HabitStoreProviderProp
       const now = new Date().toISOString();
       const habit: Habit = {
         id: createId("habit"),
+        entityType: "productivity.habit",
+        schemaVersion: 1,
+        syncScope: "account-sync",
         name,
         frequency: input.frequency ?? "daily",
         streak: 0,
@@ -120,6 +129,7 @@ export function HabitStoreProvider({ adapter, children }: HabitStoreProviderProp
         labels: input.labels ?? [],
         createdAt: now,
         updatedAt: now,
+        version: 1,
       };
       return persist(habit, { touchUpdatedAt: false });
     },

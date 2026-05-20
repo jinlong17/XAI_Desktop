@@ -18,6 +18,15 @@ export interface PetEntity extends RepoRecord {
   personality: PetPersonality;
   hidden: boolean;
   state: PetState;
+  version: number;
+  deletedAt?: string;
+}
+
+export interface DataAdapter<T extends { id: string }> {
+  getAll(): Promise<T[]>;
+  getById(id: string): Promise<T | null>;
+  save(item: T): Promise<void>;
+  delete(id: string): Promise<void>;
 }
 
 export interface PetReminder {

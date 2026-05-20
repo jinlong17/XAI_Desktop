@@ -9,3 +9,4 @@ Plan:
 
 Updates:
 - Added `CalendarMini`, `CalendarDay`, `CalendarWidget`, and `calendarWidgetManifest`.
+- 2026-05-20 Track D: added optional local `calendar.event` Repository v0 data layer with `RepoAdapter`/`CalendarRepoProvider` while preserving mock aggregate mode; passed `pnpm --filter @repo/plugin-calendar check-types`.

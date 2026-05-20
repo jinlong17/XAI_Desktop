@@ -8,6 +8,7 @@ import {
   type ReactNode,
 } from "react";
 import { LocalStorageAdapter } from "../data/LocalStorageAdapter";
+import { useConsoleRepoAdapter } from "../data/RepoProvider";
 import type { ConsoleNotification, DataAdapter } from "../types";
 
 const STORAGE_KEY = "xai.plugin-console.notifications";
@@ -15,29 +16,44 @@ const STORAGE_KEY = "xai.plugin-console.notifications";
 const seedNotifications: ConsoleNotification[] = [
   {
     id: "notice-pomodoro-complete",
+    entityType: "console.notification",
+    schemaVersion: 1,
+    syncScope: "device-local",
     type: "success",
     title: "Pomodoro complete",
     body: "Focus block finished for Review Track B roadmap.",
     read: false,
     createdAt: "2026-05-20T09:00:00.000Z",
+    updatedAt: "2026-05-20T09:00:00.000Z",
+    version: 1,
     sourcePlugin: "productivity",
   },
   {
     id: "notice-todo-due",
+    entityType: "console.notification",
+    schemaVersion: 1,
+    syncScope: "device-local",
     type: "warning",
     title: "Todo due today",
     body: "Review Track B roadmap is due today.",
     read: false,
     createdAt: "2026-05-20T09:05:00.000Z",
+    updatedAt: "2026-05-20T09:05:00.000Z",
+    version: 1,
     sourcePlugin: "productivity",
   },
   {
     id: "notice-habit-reminder",
+    entityType: "console.notification",
+    schemaVersion: 1,
+    syncScope: "device-local",
     type: "info",
     title: "Habit reminder",
     body: "Deep work block is still open.",
     read: true,
     createdAt: "2026-05-20T09:10:00.000Z",
+    updatedAt: "2026-05-20T09:10:00.000Z",
+    version: 1,
     sourcePlugin: "productivity",
   },
 ];
@@ -68,10 +84,11 @@ export function NotificationStoreProvider({
   adapter,
   children,
 }: NotificationStoreProviderProps) {
+  const repoAdapter = useConsoleRepoAdapter();
   const [defaultAdapter] = useState(
     () => new LocalStorageAdapter<ConsoleNotification>(STORAGE_KEY, seedNotifications),
   );
-  const stableAdapter = adapter ?? defaultAdapter;
+  const stableAdapter = adapter ?? repoAdapter ?? defaultAdapter;
   const [notifications, setNotifications] = useState<ConsoleNotification[]>([]);
 
   const refresh = useCallback(async () => {
@@ -101,8 +118,13 @@ export function NotificationStoreProvider({
       const notification: ConsoleNotification = {
         ...input,
         id: createId("notice"),
+        entityType: "console.notification",
+        schemaVersion: 1,
+        syncScope: "device-local",
         read: input.read ?? false,
         createdAt: new Date().toISOString(),
+        updatedAt: new Date().toISOString(),
+        version: 1,
       };
       await persist(notification);
       return notification;
@@ -114,13 +136,13 @@ export function NotificationStoreProvider({
     async (id: string) => {
       const current = await stableAdapter.getById(id);
       if (!current) return;
-      await persist({ ...current, read: true });
+      await persist({ ...current, read: true, updatedAt: new Date().toISOString(), version: current.version + 1 });
     },
     [stableAdapter, persist],
   );
 
   const markAllRead = useCallback(async () => {
-    await Promise.all(notifications.map((notification) => persist({ ...notification, read: true })));
+    await Promise.all(notifications.map((notification) => persist({ ...notification, read: true, updatedAt: new Date().toISOString(), version: notification.version + 1 })));
   }, [notifications, persist]);
 
   const deleteNotification = useCallback(

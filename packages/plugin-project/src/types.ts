@@ -1,3 +1,5 @@
+import type { RepoRecord } from "@repo/core-data";
+
 export interface DataAdapter<T extends { id: string }> {
   getAll(): Promise<T[]>;
   getById(id: string): Promise<T | null>;
@@ -11,13 +13,17 @@ export interface ProjectList {
   order: number;
 }
 
-export interface Project {
+export interface Project extends RepoRecord {
   id: string;
+  entityType: "project.project";
+  schemaVersion: 1;
   name: string;
   lists: ProjectList[];
   labels: string[];
   createdAt: string;
   updatedAt: string;
+  version: number;
+  deletedAt?: string;
 }
 
 export interface ChecklistItem {
@@ -26,8 +32,10 @@ export interface ChecklistItem {
   done: boolean;
 }
 
-export interface Card {
+export interface Card extends RepoRecord {
   id: string;
+  entityType: "project.card";
+  schemaVersion: 1;
   title: string;
   listId: string;
   order: number;
@@ -37,6 +45,8 @@ export interface Card {
   description?: string;
   createdAt: string;
   updatedAt: string;
+  version: number;
+  deletedAt?: string;
 }
 
 export interface ProjectDraft {

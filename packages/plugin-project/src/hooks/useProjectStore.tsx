@@ -8,6 +8,7 @@ import {
   type ReactNode,
 } from "react";
 import { LocalStorageAdapter } from "../data/LocalStorageAdapter";
+import { useProjectRepoAdapters } from "../data/RepoProvider";
 import type { Card, CardDraft, ChecklistItem, DataAdapter, Project, ProjectDraft } from "../types";
 import { createId } from "../utils/id";
 
@@ -25,17 +26,24 @@ const defaultLists = [
 const seedProjects: Project[] = [
   {
     id: "project-track-b",
+    entityType: "project.project",
+    schemaVersion: 1,
+    syncScope: "account-sync",
     name: "Track B Console",
     lists: defaultLists,
     labels: ["label-focus"],
     createdAt: SEED_TIMESTAMP,
     updatedAt: SEED_TIMESTAMP,
+    version: 1,
   },
 ];
 
 const seedCards: Card[] = [
   {
     id: "card-console-shell",
+    entityType: "project.card",
+    schemaVersion: 1,
+    syncScope: "account-sync",
     title: "Console shell scaffold",
     listId: "list-active",
     order: 0,
@@ -48,9 +56,13 @@ const seedCards: Card[] = [
     description: "Mock-first shell for Track B packages.",
     createdAt: SEED_TIMESTAMP,
     updatedAt: SEED_TIMESTAMP,
+    version: 1,
   },
   {
     id: "card-project-board",
+    entityType: "project.card",
+    schemaVersion: 1,
+    syncScope: "account-sync",
     title: "Project board scaffold",
     listId: "list-backlog",
     order: 0,
@@ -59,6 +71,7 @@ const seedCards: Card[] = [
     description: "Pure React drag and drop board.",
     createdAt: SEED_TIMESTAMP,
     updatedAt: SEED_TIMESTAMP,
+    version: 1,
   },
 ];
 
@@ -94,12 +107,13 @@ export interface ProjectStoreProviderProps {
 }
 
 export function ProjectStoreProvider({ projectAdapter, cardAdapter, children }: ProjectStoreProviderProps) {
+  const repoAdapters = useProjectRepoAdapters();
   const [defaultProjectAdapter] = useState(
     () => new LocalStorageAdapter<Project>(PROJECT_STORAGE_KEY, seedProjects),
   );
   const [defaultCardAdapter] = useState(() => new LocalStorageAdapter<Card>(CARD_STORAGE_KEY, seedCards));
-  const stableProjectAdapter = projectAdapter ?? defaultProjectAdapter;
-  const stableCardAdapter = cardAdapter ?? defaultCardAdapter;
+  const stableProjectAdapter = projectAdapter ?? repoAdapters?.projectAdapter ?? defaultProjectAdapter;
+  const stableCardAdapter = cardAdapter ?? repoAdapters?.cardAdapter ?? defaultCardAdapter;
   const [projects, setProjects] = useState<Project[]>([]);
   const [cards, setCards] = useState<Card[]>([]);
   const [activeProjectId, setActiveProjectId] = useState<string | null>(null);
@@ -122,11 +136,15 @@ export function ProjectStoreProvider({ projectAdapter, cardAdapter, children }: 
       const now = new Date().toISOString();
       const project: Project = {
         id: createId("project"),
+        entityType: "project.project",
+        schemaVersion: 1,
+        syncScope: "account-sync",
         name,
         lists: defaultLists,
         labels: input.labels ?? [],
         createdAt: now,
         updatedAt: now,
+        version: 1,
       };
       await stableProjectAdapter.save(project);
       setProjects((prev) => [...prev, project]);
@@ -144,6 +162,9 @@ export function ProjectStoreProvider({ projectAdapter, cardAdapter, children }: 
       const now = new Date().toISOString();
       const card: Card = {
         id: createId("card"),
+        entityType: "project.card",
+        schemaVersion: 1,
+        syncScope: "account-sync",
         title,
         listId: input.listId,
         order: siblingCount,
@@ -153,6 +174,7 @@ export function ProjectStoreProvider({ projectAdapter, cardAdapter, children }: 
         description: input.description,
         createdAt: now,
         updatedAt: now,
+        version: 1,
       };
       await stableCardAdapter.save(card);
       setCards((prev) => [...prev, card]);
@@ -165,7 +187,7 @@ export function ProjectStoreProvider({ projectAdapter, cardAdapter, children }: 
     async (id: string, patch: Partial<Omit<Card, "id">>) => {
       const current = await stableCardAdapter.getById(id);
       if (!current) return;
-      const next = { ...current, ...patch, updatedAt: new Date().toISOString() };
+      const next = { ...current, ...patch, updatedAt: new Date().toISOString(), version: current.version + 1 };
       await stableCardAdapter.save(next);
       setCards((prev) => prev.map((card) => (card.id === id ? next : card)));
     },
@@ -198,10 +220,10 @@ export function ProjectStoreProvider({ projectAdapter, cardAdapter, children }: 
         return !before || before.listId !== card.listId || before.order !== card.order;
       });
       const dirtyIds = new Set(dirty.map((card) => card.id));
-      const dirtyWithTimestamp = dirty.map((card) => ({ ...card, updatedAt: movedAt }));
+      const dirtyWithTimestamp = dirty.map((card) => ({ ...card, updatedAt: movedAt, version: card.version + 1 }));
       const unaffected = withoutTarget.filter((card) => card.listId !== listId && card.listId !== target.listId);
       const nextCards = [...unaffected, ...sourceList, ...normalizedTargetList].map((card) =>
-        dirtyIds.has(card.id) ? { ...card, updatedAt: movedAt } : card,
+        dirtyIds.has(card.id) ? { ...card, updatedAt: movedAt, version: card.version + 1 } : card,
       );
       await Promise.all(dirtyWithTimestamp.map((card) => stableCardAdapter.save(card)));
       setCards(nextCards);

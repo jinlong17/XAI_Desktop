@@ -1,7 +1,13 @@
 {
   "extends": "@repo/typescript-config/react-library.json",
   "compilerOptions": {
-    "outDir": "dist"
+    "outDir": "dist",
+    "baseUrl": ".",
+    "paths": {
+      "@repo/core-data": ["../core-data/src/index"],
+      "@repo/core/hooks": ["../core/src/hooks/index"],
+      "@repo/plugin-widgets": ["../plugin-widgets/src/index"]
+    }
   },
   "include": ["src"],
   "exclude": ["node_modules", "dist"]

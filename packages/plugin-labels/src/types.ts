@@ -1,9 +1,16 @@
-export interface Label {
+import type { RepoRecord } from "@repo/core-data";
+
+export interface Label extends RepoRecord {
   id: string;
+  entityType: "labels.label";
+  schemaVersion: 1;
   name: string;
   color: string;
   icon?: string;
   createdAt: string;
+  updatedAt: string;
+  version: number;
+  deletedAt?: string;
 }
 
 export interface DataAdapter<T extends { id: string }> {

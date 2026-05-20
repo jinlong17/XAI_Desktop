@@ -14,6 +14,13 @@ export interface WidgetSize {
   height: number;
 }
 
+export interface DataAdapter<T extends { id: string }> {
+  getAll(): Promise<T[]>;
+  getById(id: string): Promise<T | null>;
+  save(item: T): Promise<void>;
+  delete(id: string): Promise<void>;
+}
+
 export interface WidgetEntity extends RepoRecord {
   entityType: "widgets.widget";
   type: string;
@@ -21,6 +28,8 @@ export interface WidgetEntity extends RepoRecord {
   size: WidgetSize;
   config: Record<string, unknown>;
   visible: boolean;
+  version: number;
+  deletedAt?: string;
 }
 
 export interface WidgetComponentProps<TConfig = Record<string, unknown>> {

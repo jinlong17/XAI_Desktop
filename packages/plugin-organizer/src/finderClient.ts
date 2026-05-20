@@ -30,6 +30,13 @@ export interface FinderClient {
    * removing an absent path is not an error.
    */
   clearBookmark(path: string): Promise<void>;
+  readFinderTags(path: string): Promise<FinderTagPayload[]>;
+  writeFinderTags(path: string, tags: FinderTagPayload[]): Promise<void>;
+}
+
+export interface FinderTagPayload {
+  name: string;
+  color?: string;
 }
 
 export function createFinderClient(invoke: InvokeFn): FinderClient {
@@ -45,6 +52,12 @@ export function createFinderClient(invoke: InvokeFn): FinderClient {
     },
     async clearBookmark(path: string) {
       await invoke<void>("clear_path_bookmark", { input: { path } });
+    },
+    async readFinderTags(path: string) {
+      return invoke<FinderTagPayload[]>("read_finder_tags", { input: { path } });
+    },
+    async writeFinderTags(path: string, tags: FinderTagPayload[]) {
+      await invoke<void>("write_finder_tags", { input: { path, tags } });
     },
   };
 }

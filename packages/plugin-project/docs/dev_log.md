@@ -20,3 +20,4 @@
 - `feat(plugin-project): drop card above another to insert at position`
 - `feat(plugin-project): add createdAt/updatedAt to Project and Card`
 - `chore(plugin-project): memoize BoardView list sort, share createId helper, document event-emit gap`
+- 2026-05-20 Track D: migrated Project/Card to Repository v0, added `RepoAdapter`/`ProjectRepoProvider`, preserved card order updates, and passed `pnpm --filter @repo/plugin-project check-types`.

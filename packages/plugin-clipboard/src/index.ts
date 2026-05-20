@@ -1,5 +1,8 @@
 export * from "./types";
 export { LocalStorageAdapter } from "./data/LocalStorageAdapter";
+export { RepoAdapter as ClipboardRepoAdapter } from "./data/RepoAdapter";
+export { ClipboardRepoProvider, useClipboardRepoAdapter } from "./data/RepoProvider";
+export type { ClipboardRepoProviderProps } from "./data/RepoProvider";
 export { ClipboardStoreProvider, useClipboardStore } from "./hooks/useClipboardStore";
 export type { ClipboardStore, ClipboardStoreProviderProps } from "./hooks/useClipboardStore";
 export { usePasteQueue } from "./hooks/usePasteQueue";

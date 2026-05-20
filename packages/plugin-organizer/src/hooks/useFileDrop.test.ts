@@ -42,6 +42,13 @@ function makeStubFinderClient(): FinderClient & {
     clearBookmark: vi.fn(async (...args: unknown[]) => {
       calls.push({ name: "clearBookmark", args });
     }),
+    readFinderTags: vi.fn(async (...args: unknown[]) => {
+      calls.push({ name: "readFinderTags", args });
+      return [];
+    }),
+    writeFinderTags: vi.fn(async (...args: unknown[]) => {
+      calls.push({ name: "writeFinderTags", args });
+    }),
   };
 }
 

@@ -9,6 +9,7 @@ import {
   type ReactNode,
 } from "react";
 import { LocalStorageAdapter } from "../data/LocalStorageAdapter";
+import { useClipboardRepoAdapter } from "../data/RepoProvider";
 import type {
   ClipboardDraft,
   ClipboardEntry,
@@ -30,27 +31,42 @@ const defaultPrivacy: ClipboardPrivacySettings = {
 const seedEntries: ClipboardEntry[] = [
   {
     id: "clip-email",
+    entityType: "clipboard.entry",
+    schemaVersion: 1,
+    syncScope: "device-local",
     content: "Follow up with design@example.com about the console shell.",
     type: "text",
     source: "mock",
     pinned: true,
     createdAt: "2026-05-20T08:00:00.000Z",
+    updatedAt: "2026-05-20T08:00:00.000Z",
+    version: 1,
   },
   {
     id: "clip-url",
+    entityType: "clipboard.entry",
+    schemaVersion: 1,
+    syncScope: "device-local",
     content: "https://example.test/productivity-roadmap",
     type: "url",
     source: "browser",
     pinned: false,
     createdAt: "2026-05-20T08:10:00.000Z",
+    updatedAt: "2026-05-20T08:10:00.000Z",
+    version: 1,
   },
   {
     id: "clip-image",
+    entityType: "clipboard.entry",
+    schemaVersion: 1,
+    syncScope: "device-local",
     content: "mock-screenshot://task-list",
     type: "image",
     source: "screenshot",
     pinned: false,
     createdAt: "2026-05-20T08:15:00.000Z",
+    updatedAt: "2026-05-20T08:15:00.000Z",
+    version: 1,
   },
 ];
 
@@ -126,8 +142,9 @@ export function ClipboardStoreProvider({
   adapter,
   children,
 }: ClipboardStoreProviderProps) {
+  const repoAdapter = useClipboardRepoAdapter();
   const [fallbackAdapter] = useState(() => new LocalStorageAdapter<ClipboardEntry>(STORAGE_KEY, seedEntries));
-  const stableAdapter = adapter ?? fallbackAdapter;
+  const stableAdapter = adapter ?? repoAdapter ?? fallbackAdapter;
   const [entries, setEntries] = useState<ClipboardEntry[]>([]);
   const [privacy, setPrivacy] = useState<ClipboardPrivacySettings>(defaultPrivacy);
   const [isLoading, setIsLoading] = useState(true);
@@ -144,7 +161,7 @@ export function ClipboardStoreProvider({
       for (const entry of sourceEntries) {
         const redacted = applyRedactions(entry.content, settings);
         if (redacted !== entry.content) {
-          const nextEntry = { ...entry, content: redacted };
+          const nextEntry = { ...entry, content: redacted, updatedAt: new Date().toISOString(), version: entry.version + 1 };
           await stableAdapter.save(nextEntry);
           changedEntries.push(nextEntry);
         }
@@ -209,11 +226,16 @@ export function ClipboardStoreProvider({
       if (!content) throw new Error("Clipboard content is required");
       const entry: ClipboardEntry = {
         id: createId("clip"),
+        entityType: "clipboard.entry",
+        schemaVersion: 1,
+        syncScope: "device-local",
         content,
         type: input.type ?? inferType(content),
         source: input.source,
         pinned: input.pinned ?? false,
         createdAt: new Date().toISOString(),
+        updatedAt: new Date().toISOString(),
+        version: 1,
       };
       await persist(entry);
       return entry;
@@ -227,7 +249,7 @@ export function ClipboardStoreProvider({
       if (!current) return;
       const sanitizedPatch =
         typeof patch.content === "string" ? { ...patch, content: applyRedactions(patch.content, privacy) } : patch;
-      await persist({ ...current, ...sanitizedPatch });
+      await persist({ ...current, ...sanitizedPatch, updatedAt: new Date().toISOString(), version: current.version + 1 });
     },
     [persist, privacy, stableAdapter],
   );

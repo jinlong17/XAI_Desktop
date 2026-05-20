@@ -1,4 +1,8 @@
 export type { CalendarEvent, CalendarEventSource, CalendarStoreState } from "./types";
+export { LocalStorageAdapter } from "./data/LocalStorageAdapter";
+export { RepoAdapter as CalendarRepoAdapter } from "./data/RepoAdapter";
+export { CalendarRepoProvider, useCalendarRepoAdapter } from "./data/RepoProvider";
+export type { CalendarRepoProviderProps } from "./data/RepoProvider";
 export { useCalendarStore, createMockEvents } from "./hooks/useCalendarStore";
 export { CalendarDay } from "./components/CalendarDay";
 export { CalendarMini } from "./components/CalendarMini";

@@ -1,4 +1,5 @@
 import type { ComponentType, ReactNode } from "react";
+import type { RepoRecord } from "@repo/core-data";
 
 export interface DataAdapter<T extends { id: string }> {
   getAll(): Promise<T[]>;
@@ -44,13 +45,18 @@ export interface CommandSearchResult {
 
 export type NotificationType = "info" | "success" | "warning" | "error";
 
-export interface ConsoleNotification {
+export interface ConsoleNotification extends RepoRecord {
   id: string;
+  entityType: "console.notification";
+  schemaVersion: 1;
   type: NotificationType;
   title: string;
   body: string;
   read: boolean;
   createdAt: string;
+  updatedAt: string;
+  version: number;
+  deletedAt?: string;
   sourcePlugin: string;
 }
 
