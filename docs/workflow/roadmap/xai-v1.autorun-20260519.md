@@ -809,3 +809,14 @@ G1.1 (window-command-contract), G1.6 (host-business-residuals), G1.2 (grid-shell
   - `cargo test --features crypto database::` -> 9 tests PASS
   - `cargo check` (default) -> PASS
 - Deferred: MAS sandbox capability validation under signed runtime; `tauri-plugin-opener` minimization (follow-up audit).
+
+### 2026-05-20 01:02 PDT — Feature Checkpoint: G2.6 single-table-sync-baseline READY_TO_SHIP
+
+- Added `packages/core-data/src/sync-outbox.ts`: `OutboxEntry` record (`commitSeq`, `mutationId`, `targetEntityType`/`Id`, `op`, `payload`, `retryCount`, `baseRevision`), `enqueueOutboxEntry()` atomic helper, `nextOutboxBatch()` ordered drain, and `createMockCommitSeqAuthority()` test helper.
+- `enqueueOutboxEntry` wraps the entity write and outbox put in the same outer transaction, so a crash between the two phases rolls both back. Proved by a sabotaged outbox test.
+- Added 4 vitest cases (`tests/sync-outbox.test.ts`): happy-path put, rollback on outbox failure, ordering by commitSeq, delete op.
+- Re-exported the new surface from `@repo/core-data` index.
+- Updated `packages/single-table-todos-e2e/docs/dev_log.md` Status Panel to READY_TO_SHIP and recorded the Repository v0 reconciliation.
+- Promoted G2 manifest row #7 to READY_TO_SHIP.
+- Tests run: `pnpm --filter @repo/core-data test` -> 58 tests PASS.
+- Deferred: live Supabase project provisioning + 2-Mac smoke + zero-knowledge dump PoC (recorded in `xai-v1.deferred-gates.md`).

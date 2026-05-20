@@ -57,6 +57,16 @@ export type {
 export { createTauriRepo, dbInit } from "./tauri-sqlite";
 export type { CreateTauriRepoOptions, DbInitOutput } from "./tauri-sqlite";
 export {
+  createMockCommitSeqAuthority,
+  enqueueOutboxEntry,
+  nextOutboxBatch,
+} from "./sync-outbox";
+export type {
+  EnqueueOutboxInput,
+  OutboxBatchOptions,
+  OutboxEntry,
+} from "./sync-outbox";
+export {
   LEGACY_LAYOUT_STORAGE_KEY,
   migrateOrganizerLayoutToRepos,
 } from "./organizer-layout-migration";
