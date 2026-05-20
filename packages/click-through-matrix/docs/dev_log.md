@@ -8,14 +8,14 @@
 | Target | click-through-matrix |
 | Title | G0.3 click-through hit-test matrix |
 | Roadmap | xai-g0-window-spike · feature #3 · G0.3 |
-| Status | BLOCKED |
+| Status | READY_TO_SHIP |
 | Current Phase | FEATURE_VERIFY |
-| Suggested Next | macOSPrivateApi=false runtime comparison |
+| Suggested Next | Continue G0.5 Spaces/multi-monitor matrix |
 | Automation Mode | D-Codex |
 | Verify Cross-vendor | yes |
 | Executor | feature-verify (Codex inline) |
-| Updated | 2026-05-19 21:21 PDT |
-| Blockers | macOSPrivateApi=false comparison still required |
+| Updated | 2026-05-19 22:25 PDT |
+| Blockers | None for G0.3; MAS fallback remains tracked by G0.6 |
 
 ## Phase Plan
 
@@ -32,9 +32,9 @@ feature-review (Codex inline), 2026-05-19 14:43 PDT. Verdict: APPROVED for safe 
 
 ## Verification Notes
 
-feature-verify (Codex inline), 2026-05-19 21:21 PDT. Verdict: PARTIAL_HUMAN_EVIDENCE / BLOCKED.
+feature-verify (Codex inline), 2026-05-19 22:25 PDT. Verdict: READY_TO_SHIP.
 
-Manual evidence now confirms transparent-area clicks behave normally, the Grid resize handle can be dragged, and clicking a file item reaches React with a visual flash. G0.3 remains blocked until the `macOSPrivateApi=false` comparison is recorded.
+Manual evidence confirms transparent-area clicks behave normally, the Grid resize handle can be dragged, and clicking a file item reaches React with a visual flash. The private-API-disabled comparison fails at compile time because the current transparent-window implementation calls `.transparent(true)` on `WebviewWindowBuilder`, which is unavailable without private API support. This closes G0.3 evidence and moves the non-private/MAS fallback risk to G0.6.
 
 ## Work Log
 
@@ -45,4 +45,5 @@ Manual evidence now confirms transparent-area clicks behave normally, the Grid r
 | 2026-05-19 14:44 PDT | feature-build (Codex inline) | Created click-through matrix template and docs. | (this commit) | feature-verify |
 | 2026-05-19 14:44 PDT | feature-verify (Codex inline) | Marked BLOCKED because real macOS hit-test acceptance cannot be automated here. | (this commit) | feature-build |
 | 2026-05-19 21:07 PDT | human + Codex inline | Recorded user report: transparent-area click-through behaved normally. | `e7fc4ab` | Complete remaining matrix |
-| 2026-05-19 21:21 PDT | human + Codex inline | Recorded user report: resize handle drags and item click flashes, proving Grid pointer delivery. | `fafe818` | macOSPrivateApi=false comparison |
+| 2026-05-19 21:21 PDT | human + Codex inline | Recorded user report: resize handle drags and item click flashes, proving Grid pointer delivery. | `fafe818` | private-API-disabled comparison |
+| 2026-05-19 22:25 PDT | feature-verify (Codex inline) | Temporarily tested with private API disabled; build fails because transparent window builder methods are unavailable without private API. Restored default config and Cargo feature. Status -> READY_TO_SHIP. | (pending commit) | G0.5 |

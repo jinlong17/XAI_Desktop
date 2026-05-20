@@ -13,14 +13,14 @@
 
 | Field | Value |
 |---|---|
-| Current Gate | G0 — partial human evidence |
+| Current Gate | G0 — remaining manual evidence |
 | Gate Manifest | docs/workflow/roadmap/xai-g0-window-spike.md |
-| Current Feature | click-through-matrix / finder-dnd-path |
-| Feature Source | docs/planning/execution/G0-window-spike.md §G0.3, §G0.4 |
-| Feature Status | `click-through-matrix` BLOCKED; `finder-dnd-path` READY_TO_SHIP |
-| Current Commit | 5e98083 |
-| Tests | `pnpm --filter desktop exec tsc --noEmit`; `pnpm --filter @repo/plugin-organizer check-types`; `pnpm --filter desktop build`; user manual evidence for click-through, resize, item click flash, Finder file/folder drag, `.app` path, post-dedupe `.app` rerun, alias functional validation, and alias path-form capture |
-| Next Step | Compare `macOSPrivateApi=false`, then complete Spaces/multi-display and MAS sandbox evidence |
+| Current Feature | spaces-multimonitor-matrix |
+| Feature Source | docs/planning/execution/G0-window-spike.md §G0.5 |
+| Feature Status | BLOCKED |
+| Current Commit | pending G0.3 private-API evidence commit |
+| Tests | `pnpm --filter desktop tauri dev` with private API temporarily disabled -> FAIL_BUILD on `.transparent(true)`; default config/Cargo feature restored |
+| Next Step | Complete Spaces/multi-display matrix, then MAS fallback/sandbox evidence |
 
 ## Checkpoints
 
@@ -331,7 +331,20 @@
   - telemetry `drops 2`
 - ADR-0005 now records the alias policy as `PRESERVE_ALIAS_PATH`.
 - G0.4 `finder-dnd-path` is READY_TO_SHIP.
-- G0 remains blocked by G0.3 `macOSPrivateApi=false`, G0.5 Spaces/fullscreen/multi-display, and G0.6 MAS sandbox evidence.
+- G0 remains blocked by G0.5 Spaces/fullscreen/multi-display and G0.6 MAS sandbox/fallback evidence.
+
+### 2026-05-19 22:25 PDT — Feature Verify: click-through-matrix READY_TO_SHIP
+
+- Temporarily disabled the private API path:
+  - `apps/desktop/src-tauri/tauri.conf.json`: `"macOSPrivateApi": false`
+  - `apps/desktop/src-tauri/Cargo.toml`: removed Rust `macos-private-api` feature for the comparison
+- Ran `pnpm --filter desktop tauri dev`.
+- Build failed before runtime:
+  - `src/commands/window.rs:36`: `WebviewWindowBuilder` has no `.transparent(true)` method.
+  - `src/lib.rs:94`: `WebviewWindowBuilder` has no `.transparent(true)` method.
+- Restored the default private-API-enabled config and Cargo feature.
+- Conclusion: G0.3 evidence is complete; default hit-test passes, while the non-private transparent implementation cannot compile and is G0.6 MAS fallback work.
+- Status: `click-through-matrix` -> READY_TO_SHIP.
 
 ## Feature Outcomes
 
@@ -339,7 +352,7 @@
 |---|---|---|---|---|---|
 | window-ground-truth | G0 | READY_TO_SHIP | 3b571f6 | PASS: branch, sw_vers, README content | Deferred gates recorded in docs/workflow/roadmap/xai-v1.deferred-gates.md |
 | grid-window-prototype | G0 | READY_TO_SHIP | 6b121ea + 14e04c2 + 01e5167 + b8c34fe + 7b7ff35 + f65a1b5 + a33c74d | PASS: desktop tsc; plugin-organizer check-types; desktop build; cargo check | Runtime fixed/confirmed; deferred review/verify gates recorded. |
-| click-through-matrix | G0 | BLOCKED | 82ab268 + 7a1b9dd + e7fc4ab | PASS_PARTIAL: transparent-area click-through, Grid item pointer flash, resize-handle drag; BLOCKED: `macOSPrivateApi=false` evidence | Requires remaining human macOS private-API comparison. |
+| click-through-matrix | G0 | READY_TO_SHIP | 82ab268 + 7a1b9dd + e7fc4ab + 2e5e499 + pending evidence commit | PASS: transparent-area click-through, Grid item pointer flash, resize-handle drag; FAIL_BUILD evidence for private-API-disabled transparent path | MAS/non-private fallback risk moved to G0.6. |
 | finder-dnd-path | G0 | READY_TO_SHIP | 33627df + 7a1b9dd + 7e20ca8 + e7fc4ab + 58c926d + 18b48da + 5e98083 | PASS: file, folder, `.app`, and alias paths observed via `tauri://drag-drop`; duplicate fixes applied; post-dedupe `.app` rerun passed; alias path policy recorded as `PRESERVE_ALIAS_PATH` | Deferred gates recorded in docs/workflow/roadmap/xai-v1.deferred-gates.md |
 | spaces-multimonitor-matrix | G0 | BLOCKED | 2fb6bac | PASS: matrix template exists; BLOCKED: real Spaces/fullscreen/multi-display evidence | Reached by user override; safe prep only. |
 | mas-sandbox-dry-run | G0 | BLOCKED | 071a192 | PASS: MAS notes exist; BLOCKED: real sandbox/private-API evidence | Reached by user override; safe prep only. |
@@ -356,7 +369,7 @@
 - Cross-vendor review and verify deferred for `window-ground-truth`.
 - Human ship for `window-ground-truth` deferred while continuing local G0 tasks.
 - Cross-vendor review/verify deferred for `grid-window-prototype`; runtime fix was confirmed by user and commits.
-- Remaining macOS click-through matrix rows deferred for `click-through-matrix`; default-runtime click-through, item pointer, and resize evidence are positive.
+- Click-through matrix deferred gate for `click-through-matrix` resolved; default-runtime click-through, item pointer, and resize evidence are positive, and the private-API-disabled transparent path fails at compile time.
 - Finder DnD path matrix deferral for `finder-dnd-path` resolved; file, folder, `.app`, and alias path-form evidence are positive, duplicate fixes are in `58c926d` and `18b48da`, and ADR-0005 records `PRESERVE_ALIAS_PATH`.
 - Real Spaces/fullscreen/multi-display matrix deferred for `spaces-multimonitor-matrix`.
 - Real MAS/private-API sandbox evidence deferred for `mas-sandbox-dry-run`.
@@ -369,7 +382,7 @@
 
 ## Incidents Summary
 
-- click-through-matrix blocked on `macOSPrivateApi=false` comparison after default-runtime partial pass.
+- click-through-matrix incident resolved; G0.3 is READY_TO_SHIP and MAS/non-private transparent fallback remains tracked by G0.6.
 - finder-dnd-path incident resolved; G0.4 is READY_TO_SHIP after alias path-form evidence and ADR update.
 - spaces-multimonitor-matrix blocked on real macOS Spaces/fullscreen/multi-display evidence.
 - mas-sandbox-dry-run blocked on real sandbox/private-API evidence.
@@ -381,13 +394,13 @@
 
 ## Final 24h Summary
 
-Stopped on 2026-05-19 20:43 PDT because no remaining eligible feature can proceed without bypassing the required G0 -> G1 -> G2 order. Safe preparatory work now covers G0.5, G0.6, all G1 tasks, and static/instrumentation follow-up for G0.3/G0.4; no ship or push was run.
+Latest stop point is after 2026-05-19 22:25 PDT G0.3 private-API evidence. G0.3 and G0.4 are READY_TO_SHIP; G0 still cannot Go/Conditional Go because G0.5 Spaces/fullscreen/multi-display and G0.6 MAS fallback/sandbox evidence remain BLOCKED. No ship or push was run.
 
 ### Completed Features
 
 - `window-ground-truth` — READY_TO_SHIP.
 - `grid-window-prototype` — READY_TO_SHIP after runtime recovery.
-- `click-through-matrix` — BLOCKED after partial human pass for transparent clicks, Grid item pointer, and resize drag.
+- `click-through-matrix` — READY_TO_SHIP after default-runtime hit-test pass and private-API-disabled compile-fail evidence.
 - `finder-dnd-path` — READY_TO_SHIP after Tauri file/folder/app/alias path evidence, duplicate fixes, post-dedupe `.app` pass, and ADR alias policy update.
 - `spaces-multimonitor-matrix` — BLOCKED after safe prep.
 - `mas-sandbox-dry-run` — BLOCKED after safe prep.
@@ -402,12 +415,12 @@ Stopped on 2026-05-19 20:43 PDT because no remaining eligible feature can procee
 
 - `window-ground-truth`
 - `grid-window-prototype`
+- `click-through-matrix`
 - `finder-dnd-path`
 - `host-business-residuals`
 
 ### BLOCKED Features
 
-- `click-through-matrix`
 - `spaces-multimonitor-matrix`
 - `mas-sandbox-dry-run`
 - `window-command-contract`
@@ -422,7 +435,7 @@ Stopped on 2026-05-19 20:43 PDT because no remaining eligible feature can procee
 - Human ship for `window-ground-truth`.
 - Cross-vendor review/verify for serial Codex-run features.
 - Independent review/verify for `grid-window-prototype` runtime recovery commits.
-- Remaining `macOSPrivateApi=false` click-through comparison for `click-through-matrix`.
+- Optional independent replay for `click-through-matrix`; no remaining G0.3 blocker. MAS fallback risk is tracked under G0.6.
 - Optional independent replay for `finder-dnd-path`; no remaining G0.4 blocker.
 - Real Spaces/fullscreen/multi-display matrix for `spaces-multimonitor-matrix`.
 - Real MAS/private-API sandbox evidence for `mas-sandbox-dry-run`.
@@ -435,7 +448,7 @@ Stopped on 2026-05-19 20:43 PDT because no remaining eligible feature can procee
 
 ### Incidents
 
-- Incident 1: `click-through-matrix` has default-runtime human pass but still lacks `macOSPrivateApi=false` comparison.
+- Incident 1: `click-through-matrix` resolved for G0.3; private-API-disabled transparent path fails at compile time and is now G0.6 fallback work.
 - Incident 2: `finder-dnd-path` duplicate and alias evidence gaps are resolved; G0.4 is READY_TO_SHIP.
 - Incident 3: `spaces-multimonitor-matrix` cannot satisfy real Spaces/fullscreen/multi-display acceptance in unattended mode.
 - Incident 4: `mas-sandbox-dry-run` cannot satisfy sandbox/private-API acceptance in unattended mode.
@@ -516,6 +529,8 @@ Stopped on 2026-05-19 20:43 PDT because no remaining eligible feature can procee
 - G1.5 safe-prep file checks and persistence/repository `rg` scan -> PASS
 - User manual G0.3 transparent-area click-through report -> PASS_PARTIAL
 - User manual G0.4 drag-into-Grid report -> PASS_PARTIAL
+- G0.3 private-API-disabled comparison: `pnpm --filter desktop tauri dev` -> FAIL_BUILD on `.transparent(true)` in `src/commands/window.rs:36` and `src/lib.rs:94`
+- Restored default private-API path: `cargo check --manifest-path apps/desktop/src-tauri/Cargo.toml` -> PASS with existing dead-code warnings
 
 ### Next Human Reading Order
 

@@ -88,13 +88,13 @@
 
 - Feature: click-through-matrix
 - Gate: G0
-- Deferred gate: Real macOS click-through matrix
-- Why deferred: Default-runtime evidence now exists, but acceptance still requires comparing `macOSPrivateApi=true` and `false`.
-- Risk: G0 cannot reach Go/Conditional Go until the MAS/private-API fallback path is known.
-- What was done instead: Recorded human evidence that transparent clicks work, Grid item pointer delivery flashes, and resize handles drag in the default runtime.
-- Later human action: Run the same checks with `macOSPrivateApi=false`, fill the matrix, and attach screenshots/logs under `docs/reviews/window-ground-truth/click-through-matrix/`.
-- Suggested verification command / environment: `pnpm --filter desktop tauri dev` on macOS with Finder/Desktop visible; compare `macOSPrivateApi=true` and `false`.
-- Files/commits affected: docs/reviews/window-ground-truth/click-through-matrix/README.md; packages/click-through-matrix/docs/*; commit `82ab268`
+- Deferred gate: Real macOS click-through matrix — RESOLVED 2026-05-19 22:25 PDT
+- Why deferred: Initially deferred because unattended Codex could not perform real hit-test checks and private-API comparison.
+- Risk: CLOSED for G0.3 evidence. MAS fallback risk remains tracked under G0.6 because the private-API-disabled path cannot compile the current transparent-window implementation.
+- What was done instead: Recorded human evidence that transparent clicks work, Grid item pointer delivery flashes, and resize handles drag in the default runtime. Then temporarily disabled the private API path (`"macOSPrivateApi": false` plus the Rust `macos-private-api` Cargo feature) and confirmed `pnpm --filter desktop tauri dev` fails at compile time on `.transparent(true)` in Grid/control window builders.
+- Later human action: Optional independent replay before ship; no remaining G0.3 blocker. For MAS, continue G0.6 fallback/sandbox validation.
+- Suggested verification command / environment: `pnpm --filter desktop tauri dev` with default config; for non-private path, temporarily set `"macOSPrivateApi": false` and disable the Rust `macos-private-api` Cargo feature, then confirm the documented compile failure unless a fallback has been implemented.
+- Files/commits affected: docs/reviews/window-ground-truth/click-through-matrix/README.md; packages/click-through-matrix/docs/*; docs/adr/0005-window-foundation.md; commits `82ab268`, `7a1b9dd`, `e7fc4ab`, `fafe818`
 
 ## Entry 9
 
@@ -113,10 +113,10 @@
 - Feature: spaces-multimonitor-matrix
 - Gate: G0
 - Deferred gate: User override to skip blocked G0.3/G0.4 dependencies for safe prep
-- Why deferred: The user explicitly instructed to skip and continue while G0.3/G0.4 were still blocked on real hardware evidence. G0.4 has since moved to READY_TO_SHIP; G0.3 remains blocked.
-- Risk: G0.5 prep proceeds without the prerequisite hit-test and DnD evidence, so results cannot be used as a G0 pass signal.
+- Why deferred: The user explicitly instructed to skip and continue while G0.3/G0.4 were still blocked on real hardware evidence. G0.3 and G0.4 have since moved to READY_TO_SHIP.
+- Risk: G0.5 still cannot pass without real Spaces/fullscreen/multi-display evidence.
 - What was done instead: Limited G0.5 to documentation/matrix preparation only and preserved BLOCKED status for real runtime validation.
-- Later human action: Complete G0.3 private-API comparison, then perform G0.5 runtime validation.
+- Later human action: Perform G0.5 runtime validation.
 - Suggested verification command / environment: `sed -n '1,120p' docs/workflow/roadmap/xai-g0-window-spike.md`
 - Files/commits affected: docs/workflow/roadmap/xai-g0-window-spike.md; docs/workflow/roadmap/xai-v1.autorun-20260519.md; commit `2fb6bac`
 
@@ -137,10 +137,10 @@
 - Feature: mas-sandbox-dry-run
 - Gate: G0
 - Deferred gate: User override to skip blocked G0.3/G0.4 dependencies for MAS safe prep
-- Why deferred: The user explicitly instructed to skip and continue while G0.3/G0.4 were still blocked and MAS conclusions depended on those results. G0.4 has since moved to READY_TO_SHIP; G0.3 and MAS runtime evidence remain blocked.
-- Risk: MAS prep proceeds without prerequisite click-through and Finder path evidence, so it cannot produce a real MAS feasibility conclusion.
-- What was done instead: Limited G0.6 to documentation/risk-prep only and preserved BLOCKED status for real runtime validation.
-- Later human action: Complete G0.3 private-API comparison, then perform MAS/private-API validation.
+- Why deferred: The user explicitly instructed to skip and continue while G0.3/G0.4 were still blocked and MAS conclusions depended on those results. G0.3 and G0.4 have since moved to READY_TO_SHIP, but MAS fallback/sandbox evidence remains blocked.
+- Risk: MAS prep now has enough evidence to know the current transparent implementation is not MAS-ready, but cannot produce a complete MAS feasibility conclusion without a fallback and sandbox run.
+- What was done instead: Limited G0.6 to documentation/risk-prep, then recorded that the private-API-disabled path compile-fails on `.transparent(true)`.
+- Later human action: Design/implement a non-transparent or conditionally compiled MAS fallback, then perform MAS/private-API validation.
 - Suggested verification command / environment: `sed -n '1,140p' docs/reviews/window-ground-truth/mas-sandbox-dry-run/mas-sandbox-notes.md`
 - Files/commits affected: docs/workflow/roadmap/xai-g0-window-spike.md; docs/workflow/roadmap/xai-v1.autorun-20260519.md; commit `071a192`
 
@@ -148,12 +148,12 @@
 
 - Feature: mas-sandbox-dry-run
 - Gate: G0
-- Deferred gate: Real MAS sandbox and `macOSPrivateApi=false` validation
-- Why deferred: The acceptance requires a real sandbox/private-API runtime comparison and likely signed-build context.
-- Risk: G0 cannot decide DMG/MAS split or MAS fallback until this evidence exists.
-- What was done instead: Created MAS notes, entitlement draft, and risk matrix; avoided Tauri config/Cargo/capability changes.
-- Later human action: Run a `macOSPrivateApi=false` build and sandbox/signed validation, then update `mas-sandbox-notes.md`.
-- Suggested verification command / environment: Build/run desktop with private API disabled and sandbox entitlements on macOS; Apple Developer signing may be required for final evidence.
+- Deferred gate: Real MAS sandbox and fallback validation
+- Why deferred: The acceptance requires signed/sandbox runtime evidence. The private-API-disabled comparison now fails at compile time for the current transparent implementation, so a fallback must exist before runtime validation can proceed.
+- Risk: G0 cannot decide a complete MAS path until a non-transparent or conditionally compiled fallback is implemented and tested under sandbox/signing.
+- What was done instead: Created MAS notes, entitlement draft, risk matrix, and private-API-disabled compile evidence. Restored `"macOSPrivateApi": true` and the Rust `macos-private-api` Cargo feature after the temporary test.
+- Later human action: Implement a MAS fallback that avoids unconditional `.transparent(true)`, then run signed/sandbox validation and update `mas-sandbox-notes.md`.
+- Suggested verification command / environment: Build/run desktop with private API disabled after fallback implementation and sandbox entitlements on macOS; Apple Developer signing may be required for final evidence.
 - Files/commits affected: docs/reviews/window-ground-truth/mas-sandbox-dry-run/mas-sandbox-notes.md; packages/mas-sandbox-dry-run/docs/*; commit `071a192`
 
 ## Entry 14

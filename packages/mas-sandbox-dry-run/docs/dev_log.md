@@ -10,12 +10,12 @@
 | Roadmap | xai-g0-window-spike · feature #6 · G0.6 |
 | Status | BLOCKED |
 | Current Phase | FEATURE_VERIFY |
-| Suggested Next | feature-build |
+| Suggested Next | MAS fallback design after G0.5 |
 | Automation Mode | D-Codex |
 | Verify Cross-vendor | yes |
 | Executor | feature-verify (Codex inline) |
-| Updated | 2026-05-19 15:05 PDT |
-| Blockers | Real sandbox/private-API runtime evidence required |
+| Updated | 2026-05-19 22:25 PDT |
+| Blockers | Signed/sandbox runtime evidence and MAS fallback implementation required |
 
 ## Phase Plan
 
@@ -32,9 +32,9 @@ feature-review (Codex inline), 2026-05-19 15:04 PDT. Verdict: APPROVED for safe 
 
 ## Verification Notes
 
-feature-verify (Codex inline), 2026-05-19 15:05 PDT. Verdict: BLOCKED.
+feature-verify (Codex inline), 2026-05-19 22:25 PDT. Verdict: BLOCKED / PARTIAL_EVIDENCE.
 
-Automated safe-prep check can confirm the notes exist, but G0.6 acceptance requires real sandbox/private-API runtime evidence.
+The private-API-disabled comparison now has compile evidence: current transparent Grid/control windows cannot compile when the private API path is disabled because `.transparent(true)` is unavailable on `WebviewWindowBuilder`. G0.6 remains blocked on MAS fallback design plus signed/sandbox runtime evidence.
 
 ## Work Log
 
@@ -44,4 +44,4 @@ Automated safe-prep check can confirm the notes exist, but G0.6 acceptance requi
 | 2026-05-19 15:04 PDT | feature-review (Codex inline) | Approved safe-prep plan; no Tauri config/capability changes without runtime evidence. | — | feature-build |
 | 2026-05-19 15:05 PDT | feature-build (Codex inline) | Created MAS sandbox notes, entitlement draft, and risk matrix. | (this commit) | feature-verify |
 | 2026-05-19 15:05 PDT | feature-verify (Codex inline) | Marked BLOCKED because real sandbox/private-API acceptance cannot be automated here. | (this commit) | feature-build |
-
+| 2026-05-19 22:25 PDT | feature-verify (Codex inline) | Temporarily tested with private API disabled; build fails on `.transparent(true)` in Grid/control window builders. Restored default config and Cargo feature. | (pending commit) | MAS fallback design |

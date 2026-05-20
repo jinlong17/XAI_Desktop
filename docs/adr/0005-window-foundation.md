@@ -90,6 +90,25 @@ G1 policy:
 - 不在 DnD ingress 阶段静默解析 alias target。
 - 如后续产品需要 resolved target,必须作为显式解析/预览能力设计,并保留原始 alias path 用于审计与用户解释。
 
+## G0.3 Click-Through / Private API 结论
+
+2026-05-19 真机与构建证据确认:
+
+- `macOSPrivateApi=true` 默认运行时下,透明空白区域点击可落到桌面/Finder。
+- Grid item 区域可收到 React/dnd-kit pointer 反馈。
+- Resize handle 可拖动,说明 Grid window 交互区域 hit-test 正常。
+- 临时关闭 private API 路径后运行 `pnpm --filter desktop tauri dev`,构建失败:
+  - `apps/desktop/src-tauri/tauri.conf.json` 改为 `"macOSPrivateApi": false`。
+  - `apps/desktop/src-tauri/Cargo.toml` 临时移除 Rust `macos-private-api` feature。
+  - `src/commands/window.rs:36`: `WebviewWindowBuilder` 无 `.transparent(true)` 方法。
+  - `src/lib.rs:94`: `WebviewWindowBuilder` 无 `.transparent(true)` 方法。
+
+结论:
+
+- 当前透明桌面 Grid/control window 路径是 DMG/private-API 路线。
+- MAS/non-private 路线不能复用当前无条件 `.transparent(true)` 实现。
+- 若继续 MAS,必须先设计非透明或条件编译 fallback,再做 sandbox/signing/runtime 验证。
+
 ## G0 Go/No-Go
 
 | 条件 | Go | No-Go |
@@ -98,7 +117,7 @@ G1 policy:
 | DnD path | Finder 文件拖入 Grid 可得到真实 path | 只能得到文件名/虚拟对象/无事件 |
 | Spaces | 多 Space/全屏切换不丢窗口或可恢复 | 窗口错层、丢失、无法恢复 |
 | Multi-grid | 两个 Grid 同时存在且事件不串 | 任意 event 无法稳定 scope |
-| MAS path | `macOSPrivateApi=false` 有可接受方案 | MAS 必须依赖 private API |
+| MAS path | private API 关闭时有可接受方案 | 当前透明实现无法在 private API 关闭时编译 |
 
 ## 后果
 

@@ -4,11 +4,11 @@
 
 - Time: 2026-05-19 14:44 PDT
 - Feature: click-through-matrix
-- Symptom: Feature cannot satisfy full acceptance yet.
-- Root cause if known: G0.3 still requires real macOS hit-test observations across `macOSPrivateApi=true` and `false`; default-runtime click-through, Grid item pointer delivery, and resize drag now have positive human evidence.
-- Attempted fixes: Created a manual matrix template, filled static code-analysis findings, recorded human evidence for transparent-area clicks, resize handle drag, and item click flash, and documented the remaining private-API comparison. Avoided unsafe NSWindow/Tauri config changes without complete live validation.
-- Current status: BLOCKED.
-- Resume instruction: Run `pnpm --filter desktop tauri dev` with `macOSPrivateApi=false`, fill remaining rows in `docs/reviews/window-ground-truth/click-through-matrix/README.md`, then rerun feature-verify for `click-through-matrix`.
+- Symptom: Initially could not satisfy full acceptance; private-API comparison was missing.
+- Root cause if known: Default-runtime hit-testing works. The private-API-disabled comparison fails at compile time because the current transparent Grid/control window builders call `.transparent(true)`, which is unavailable without private API support.
+- Attempted fixes: Created a manual matrix template, filled static code-analysis findings, recorded human evidence for transparent-area clicks, resize handle drag, and item click flash, then temporarily tested with private API disabled and restored the default config/Cargo feature.
+- Current status: RESOLVED for G0.3; feature is READY_TO_SHIP.
+- Resume instruction: No G0.3 action required. Continue with G0.5 Spaces/fullscreen/multi-display evidence and G0.6 MAS fallback/sandbox validation.
 
 ## Incident 2
 
@@ -18,7 +18,7 @@
 - Root cause if known: Duplicate items were caused by repeated drop handling paths/events; `.app` bundles still duplicated after the GridWindow-only fix, so Organizer needed path-level idempotency. Alias behavior is now recorded as preserving the alias file path returned by Finder/Tauri.
 - Attempted fixes: Created a manual path-first matrix template, filled static code-analysis findings, added GridWindow `tauri://drag-drop` telemetry in `7e20ca8`, made GridWindow path-first only in `58c926d`, and added Organizer per-grid path dedupe in `18b48da`.
 - Current status: RESOLVED for G0.4; feature is READY_TO_SHIP.
-- Resume instruction: No G0.4 action required. Continue with remaining G0 blockers: `click-through-matrix` private-API comparison, `spaces-multimonitor-matrix`, and `mas-sandbox-dry-run`.
+- Resume instruction: No G0.4 action required. Continue with remaining G0 blockers: `spaces-multimonitor-matrix` and `mas-sandbox-dry-run`.
 
 ## Incident 3
 
@@ -35,10 +35,10 @@
 - Time: 2026-05-19 15:05 PDT
 - Feature: mas-sandbox-dry-run
 - Symptom: Feature cannot satisfy acceptance in unattended mode.
-- Root cause if known: G0.6 requires real `macOSPrivateApi=false`, sandbox entitlement, and likely signed-build validation; static notes cannot prove MAS feasibility.
-- Attempted fixes: Created MAS sandbox notes, entitlement draft, and risk matrix. Avoided speculative Tauri config/Cargo/capability changes.
+- Root cause if known: G0.6 requires signed/sandbox validation. The current transparent implementation cannot compile with the private API path disabled because `.transparent(true)` is unavailable on `WebviewWindowBuilder`.
+- Attempted fixes: Created MAS sandbox notes, entitlement draft, and risk matrix. Temporarily tested with private API disabled, captured compile failure, and restored the default config/Cargo feature.
 - Current status: BLOCKED.
-- Resume instruction: Run private-API-disabled and sandbox/signed validation, update `docs/reviews/window-ground-truth/mas-sandbox-dry-run/mas-sandbox-notes.md`, then rerun feature-verify for `mas-sandbox-dry-run`.
+- Resume instruction: Implement a non-transparent or conditionally compiled MAS fallback, run private-API-disabled and sandbox/signed validation, update `docs/reviews/window-ground-truth/mas-sandbox-dry-run/mas-sandbox-notes.md`, then rerun feature-verify for `mas-sandbox-dry-run`.
 
 ## Incident 5
 
