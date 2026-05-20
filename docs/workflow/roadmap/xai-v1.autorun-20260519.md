@@ -18,7 +18,7 @@
 | Current Feature | mas-sandbox-dry-run |
 | Feature Source | docs/planning/execution/G0-window-spike.md §G0.6 |
 | Feature Status | BLOCKED |
-| Current Commit | pending G0.6 compile fallback commit |
+| Current Commit | 2fda0c8 |
 | Tests | default `cargo check` PASS; private-API-disabled `cargo check --no-default-features --features mas-sandbox` PASS after temporary config/dependency toggle; defaults restored |
 | Next Step | Complete Spaces/multi-display matrix and signed/sandbox MAS runtime evidence |
 
@@ -377,7 +377,7 @@
 | click-through-matrix | G0 | READY_TO_SHIP | 82ab268 + 7a1b9dd + e7fc4ab + 2e5e499 + 4537d2d | PASS: transparent-area click-through, Grid item pointer flash, resize-handle drag; FAIL_BUILD evidence for private-API-disabled transparent path | MAS/non-private fallback risk moved to G0.6. |
 | finder-dnd-path | G0 | READY_TO_SHIP | 33627df + 7a1b9dd + 7e20ca8 + e7fc4ab + 58c926d + 18b48da + 5e98083 | PASS: file, folder, `.app`, and alias paths observed via `tauri://drag-drop`; duplicate fixes applied; post-dedupe `.app` rerun passed; alias path policy recorded as `PRESERVE_ALIAS_PATH` | Deferred gates recorded in docs/workflow/roadmap/xai-v1.deferred-gates.md |
 | spaces-multimonitor-matrix | G0 | BLOCKED | 2fb6bac + bcc5785 | PASS: matrix template exists; current display facts and static window behavior recorded; BLOCKED: real Spaces/fullscreen/multi-display evidence | Reached by user override; safe prep only. |
-| mas-sandbox-dry-run | G0 | BLOCKED | 071a192 + pending compile fallback commit | PASS: MAS notes exist; private-API-disabled compile fallback passes; BLOCKED: signed/sandbox runtime evidence | Reached by user override; fallback compile only. |
+| mas-sandbox-dry-run | G0 | BLOCKED | 071a192 + 4537d2d + 2fda0c8 | PASS: MAS notes exist; private-API-disabled compile fallback passes; BLOCKED: signed/sandbox runtime evidence | Reached by user override; fallback compile only. |
 | window-command-contract | G1 | BLOCKED | 9c7b52f | PASS: safe-prep docs exist; BLOCKED: G0 not Go/Conditional Go | Reached by user override; no production code changed. |
 | grid-shell-organizer-content | G1 | BLOCKED | eaae46e | PASS: safe-prep docs exist; BLOCKED: G0/G1.1 not ready | Reached by user override; no production code changed. |
 | native-dnd-path-first | G1 | BLOCKED | 707a8d1 | PASS: DnD discovery docs exist; BLOCKED: MAS sandbox/security-scope evidence missing | Reached by user override; no production code changed. |
@@ -394,7 +394,7 @@
 - Click-through matrix deferred gate for `click-through-matrix` resolved; default-runtime click-through, item pointer, and resize evidence are positive, and the private-API-disabled transparent path fails at compile time.
 - Finder DnD path matrix deferral for `finder-dnd-path` resolved; file, folder, `.app`, and alias path-form evidence are positive, duplicate fixes are in `58c926d` and `18b48da`, and ADR-0005 records `PRESERVE_ALIAS_PATH`.
 - Real Spaces/fullscreen/multi-display matrix deferred for `spaces-multimonitor-matrix`.
-- Real MAS/private-API sandbox evidence deferred for `mas-sandbox-dry-run`.
+- Real MAS/private-API sandbox runtime evidence deferred for `mas-sandbox-dry-run`; compile fallback is ready.
 - G1 production implementation deferred until G0 Go/Conditional Go.
 - G1.2 production shell/content split deferred until G0 Go/Conditional Go and G1.1 implementation.
 - G1.3 production DnD path-first implementation deferred until MAS/security-scope evidence.
@@ -416,7 +416,7 @@
 
 ## Final 24h Summary
 
-Latest stop point is after 2026-05-19 22:25 PDT G0.3 private-API evidence. G0.3 and G0.4 are READY_TO_SHIP; G0 still cannot Go/Conditional Go because G0.5 Spaces/fullscreen/multi-display and G0.6 MAS fallback/sandbox evidence remain BLOCKED. No ship or push was run.
+Latest stop point is after 2026-05-19 22:44 PDT G0.6 compile fallback. G0.3 and G0.4 are READY_TO_SHIP; G0 still cannot Go/Conditional Go because G0.5 Spaces/fullscreen/multi-display and G0.6 signed/sandbox runtime evidence remain BLOCKED. No ship or push was run.
 
 ### Completed Features
 
@@ -425,7 +425,7 @@ Latest stop point is after 2026-05-19 22:25 PDT G0.3 private-API evidence. G0.3 
 - `click-through-matrix` — READY_TO_SHIP after default-runtime hit-test pass and private-API-disabled compile-fail evidence.
 - `finder-dnd-path` — READY_TO_SHIP after Tauri file/folder/app/alias path evidence, duplicate fixes, post-dedupe `.app` pass, and ADR alias policy update.
 - `spaces-multimonitor-matrix` — BLOCKED after safe prep.
-- `mas-sandbox-dry-run` — BLOCKED after safe prep.
+- `mas-sandbox-dry-run` — BLOCKED after compile fallback; signed/sandbox runtime evidence remains required.
 - `window-command-contract` — BLOCKED after safe prep.
 - `grid-shell-organizer-content` — BLOCKED after safe prep.
 - `native-dnd-path-first` — BLOCKED after safe prep.
@@ -522,7 +522,7 @@ Latest stop point is after 2026-05-19 22:25 PDT G0.3 private-API evidence. G0.3 
 - `5e98083` — `docs(finder-dnd-path): record alias functional verification`
 - `4537d2d` — `docs(G0.3/G0.6): record private API fallback evidence`
 - `bcc5785` — `docs(G0.5): record Spaces static evidence`
-- `(pending)` — `feat(G0.6): add MAS compile fallback guard`
+- `2fda0c8` — `feat(G0.6): add MAS compile fallback guard`
 
 ### Test Results
 

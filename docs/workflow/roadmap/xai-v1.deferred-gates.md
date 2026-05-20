@@ -142,7 +142,7 @@
 - What was done instead: Limited G0.6 to documentation/risk-prep, then added the `mas-sandbox` compile fallback guard and verified private-API-disabled `cargo check`.
 - Later human action: Perform MAS/private-API runtime validation with the fallback enabled.
 - Suggested verification command / environment: `sed -n '1,140p' docs/reviews/window-ground-truth/mas-sandbox-dry-run/mas-sandbox-notes.md`
-- Files/commits affected: docs/workflow/roadmap/xai-g0-window-spike.md; docs/workflow/roadmap/xai-v1.autorun-20260519.md; commits `071a192`, `4537d2d`
+- Files/commits affected: docs/workflow/roadmap/xai-g0-window-spike.md; docs/workflow/roadmap/xai-v1.autorun-20260519.md; commits `071a192`, `4537d2d`, `2fda0c8`
 
 ## Entry 13
 
@@ -154,7 +154,7 @@
 - What was done instead: Created MAS notes, entitlement draft, risk matrix, private-API-disabled compile evidence, and the `mas-sandbox` compile fallback. Restored `"macOSPrivateApi": true` and the Rust `macos-private-api` Cargo feature after temporary tests.
 - Later human action: Run signed/sandbox validation with the `mas-sandbox` fallback and update `mas-sandbox-notes.md`.
 - Suggested verification command / environment: Build/run desktop with private API disabled after fallback implementation and sandbox entitlements on macOS; Apple Developer signing may be required for final evidence.
-- Files/commits affected: docs/reviews/window-ground-truth/mas-sandbox-dry-run/mas-sandbox-notes.md; packages/mas-sandbox-dry-run/docs/*; commits `071a192`, `4537d2d`
+- Files/commits affected: docs/reviews/window-ground-truth/mas-sandbox-dry-run/mas-sandbox-notes.md; packages/mas-sandbox-dry-run/docs/*; commits `071a192`, `4537d2d`, `2fda0c8`
 
 ## Entry 14
 

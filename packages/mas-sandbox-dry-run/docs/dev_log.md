@@ -28,7 +28,7 @@ Status: DONE. Commit: `(this commit)`.
 
 ### Phase 2 — MAS compile fallback
 
-Status: DONE. Commit: `(pending commit)`.
+Status: DONE. Commit: `2fda0c8`.
 
 - Added `mas-sandbox` Cargo feature.
 - Guarded Rust-side Grid/control `.transparent(true)` builder calls so the non-private fallback compile path can omit them.
@@ -53,4 +53,4 @@ The private-API-disabled comparison now has compile evidence and a compile-only 
 | 2026-05-19 15:05 PDT | feature-build (Codex inline) | Created MAS sandbox notes, entitlement draft, and risk matrix. | (this commit) | feature-verify |
 | 2026-05-19 15:05 PDT | feature-verify (Codex inline) | Marked BLOCKED because real sandbox/private-API acceptance cannot be automated here. | (this commit) | feature-build |
 | 2026-05-19 22:25 PDT | feature-verify (Codex inline) | Temporarily tested with private API disabled; build fails on `.transparent(true)` in Grid/control window builders. Restored default config and Cargo feature. | `4537d2d` | MAS fallback design |
-| 2026-05-19 22:44 PDT | feature-build/verify (Codex inline) | Added `mas-sandbox` compile fallback for Grid/control builders and verified both default and private-API-disabled compile paths. | (pending commit) | Signed/sandbox runtime validation |
+| 2026-05-19 22:44 PDT | feature-build/verify (Codex inline) | Added `mas-sandbox` compile fallback for Grid/control builders and verified both default and private-API-disabled compile paths. | `2fda0c8` | Signed/sandbox runtime validation |
