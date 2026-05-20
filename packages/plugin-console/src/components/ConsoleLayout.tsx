@@ -1,4 +1,5 @@
 import { useMemo, useState, type ReactNode } from "react";
+import { useCommandPalette } from "../hooks/useCommandPalette";
 import { createDefaultConsoleNavItems, type PluginSlotRegistry } from "../registry/PluginSlotRegistry";
 import type { ConsoleNavItem } from "../types";
 import { CommandPalette } from "./CommandPalette";
@@ -22,6 +23,7 @@ function Placeholder({ label }: { label: string }) {
 }
 
 export function ConsoleLayout({ registry, navItems, title = "XAI Console", children }: ConsoleLayoutProps) {
+  const palette = useCommandPalette({ registry });
   const items = useMemo(() => {
     const registered = registry?.getNavItems() ?? [];
     return [...createDefaultConsoleNavItems(), ...registered, ...(navItems ?? [])].sort(
@@ -94,11 +96,11 @@ export function ConsoleLayout({ registry, navItems, title = "XAI Console", child
             <strong>{activeItem?.label ?? "Console"}</strong>
             <span style={{ color: "#6b7280", display: "block", fontSize: 12 }}>{activeItem?.pluginId ?? "console"}</span>
           </div>
-          <ConsoleSearch />
+          <ConsoleSearch onOpenPalette={palette.open} />
         </header>
         <div style={{ minWidth: 0, overflow: "auto", padding: 18 }}>{mainContent}</div>
       </main>
-      <CommandPalette />
+      <CommandPalette controller={palette} />
     </div>
   );
 }

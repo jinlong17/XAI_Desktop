@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
+import type { PluginSlotRegistry } from "../registry/PluginSlotRegistry";
 import type { CommandSearchResult, SearchResultAction, SearchableEntity } from "../types";
 
 const defaultEntities: SearchableEntity[] = [
@@ -39,16 +40,30 @@ export interface CommandPaletteController {
 
 export interface UseCommandPaletteOptions {
   entities?: SearchableEntity[];
+  registry?: PluginSlotRegistry;
   onExecute?: (result: CommandSearchResult, action: SearchResultAction) => void;
 }
 
 export function useCommandPalette({
-  entities = defaultEntities,
+  entities,
+  registry,
   onExecute,
 }: UseCommandPaletteOptions = {}): CommandPaletteController {
   const [isOpen, setIsOpen] = useState(false);
   const [query, setQuery] = useState("");
   const [activeIndex, setActiveIndex] = useState(0);
+  const [registered, setRegistered] = useState<SearchableEntity[]>([]);
+
+  useEffect(() => {
+    if (!registry) return;
+    let cancelled = false;
+    void registry.getSearchEntities().then((next) => {
+      if (!cancelled) setRegistered(next);
+    });
+    return () => {
+      cancelled = true;
+    };
+  }, [registry]);
 
   useEffect(() => {
     const listener = (event: KeyboardEvent) => {
@@ -62,13 +77,15 @@ export function useCommandPalette({
     return () => window.removeEventListener("keydown", listener);
   }, []);
 
+  const effectiveEntities = entities ?? (registry ? registered : defaultEntities);
+
   const results = useMemo<CommandSearchResult[]>(() => {
-    return entities
+    return effectiveEntities
       .map((entity) => ({ id: `${entity.type}:${entity.id}`, entity, score: scoreEntity(entity, query), actions: actionsFor(entity) }))
       .filter((result) => result.score > 0)
       .sort((a, b) => b.score - a.score || a.entity.title.localeCompare(b.entity.title))
       .slice(0, 12);
-  }, [entities, query]);
+  }, [effectiveEntities, query]);
 
   const close = useCallback(() => {
     setIsOpen(false);

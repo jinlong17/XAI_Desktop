@@ -1,13 +1,35 @@
 import { useEffect, useRef, type KeyboardEvent } from "react";
-import { useCommandPalette, type UseCommandPaletteOptions } from "../hooks/useCommandPalette";
+import { useCommandPalette, type CommandPaletteController, type UseCommandPaletteOptions } from "../hooks/useCommandPalette";
 import { SearchResult } from "./SearchResult";
 
 export interface CommandPaletteProps extends UseCommandPaletteOptions {
+  controller?: CommandPaletteController;
   placeholder?: string;
 }
 
-export function CommandPalette({ placeholder = "Search labels, tasks, habits, clips, projects", ...options }: CommandPaletteProps) {
+export function CommandPalette({ controller, placeholder = "Search labels, tasks, habits, clips, projects", ...options }: CommandPaletteProps) {
+  if (controller) return <CommandPaletteContent palette={controller} placeholder={placeholder} />;
+  return <CommandPaletteWithHook options={options} placeholder={placeholder} />;
+}
+
+function CommandPaletteWithHook({
+  options,
+  placeholder,
+}: {
+  options: UseCommandPaletteOptions;
+  placeholder: string;
+}) {
   const palette = useCommandPalette(options);
+  return <CommandPaletteContent palette={palette} placeholder={placeholder} />;
+}
+
+function CommandPaletteContent({
+  palette,
+  placeholder,
+}: {
+  palette: CommandPaletteController;
+  placeholder: string;
+}) {
   const inputRef = useRef<HTMLInputElement | null>(null);
 
   useEffect(() => {
