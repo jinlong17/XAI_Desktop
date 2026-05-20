@@ -203,3 +203,15 @@
 - Later human action: Complete G0 evidence, implement/review G1.1, settle Finder DnD payload shape, then rerun feature-build for event migration.
 - Suggested verification command / environment: `sed -n '1,220p' docs/reviews/multi-grid-event-scope/20260519-discovery-review.md`
 - Files/commits affected: docs/reviews/multi-grid-event-scope/*; packages/multi-grid-event-scope/docs/*; commit `a7d4803`
+
+## Entry 18
+
+- Feature: native-dnd-path-first
+- Gate: G1
+- Deferred gate: G0.4 Finder DnD evidence and MAS sandbox decision
+- Why deferred: G1.3 production implementation depends on real Finder payload observations and MAS security-scope behavior.
+- Risk: Implementing path-first DnD before evidence could choose the wrong receiver, alias policy, or persisted security-scope model.
+- What was done instead: Created docs-only feature brief, discovery review, design, API, test plan, and dev_log mapping current HTML5/Tauri/Organizer drop paths.
+- Later human action: Complete the G0.4 Finder matrix with the `7e20ca8` telemetry panel/logs, complete MAS sandbox dry run, then rerun feature-build for DnD implementation.
+- Suggested verification command / environment: `pnpm --filter desktop tauri dev` on macOS with Finder; drop file, folder, `.app`, and alias into a Grid.
+- Files/commits affected: docs/reviews/native-dnd-path-first/*; packages/native-dnd-path-first/docs/*; pending G1.3 docs commit

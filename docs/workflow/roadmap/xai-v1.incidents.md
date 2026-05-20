@@ -99,3 +99,13 @@
 - Attempted fixes: Created safe-prep docs auditing current event names, target contracts, and missing runtime `gridId` guard requirements. Avoided production source changes.
 - Current status: BLOCKED.
 - Resume instruction: Complete G0 evidence and G1.1, then rerun feature-build for `multi-grid-event-scope`.
+
+## Incident 11
+
+- Time: 2026-05-19 20:39 PDT
+- Feature: native-dnd-path-first
+- Symptom: Production path-first DnD implementation cannot start.
+- Root cause if known: G1.3 depends on G0.4 real Finder payload observations and MAS sandbox/security-scope decisions.
+- Attempted fixes: Created safe-prep docs mapping current drop behavior, target `DroppedFile[]` shape, and unresolved receiver/alias/security-scope decisions. Avoided production source changes.
+- Current status: BLOCKED.
+- Resume instruction: Complete G0.4 Finder matrix and MAS sandbox dry run, then rerun feature-build for `native-dnd-path-first`.
