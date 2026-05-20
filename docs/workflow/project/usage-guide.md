@@ -428,7 +428,7 @@ Project-layer skills:
 | Claude Code | `claude -p "<prompt>" --allowedTools "Read Glob Grep" > out.md` | stdout 重定向 |
 | Codex | `codex exec -o out.md "<prompt>"` | `-o` flag |
 | Codex review | `codex review --base main "<prompt>"` | stdout |
-| Cursor | `cursor agent "<prompt>" > out.md` | stdout 重定向 |
+| Cursor | `cursor agent --trust "<prompt>" > out.md` | stdout 重定向 |
 
 ### 11.2 核心规则
 
