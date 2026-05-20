@@ -204,6 +204,49 @@ The script reads extended frontmatter fields from templates and generates platfo
 ./scripts/setup_subagents_v2.sh --dry-run
 ```
 
+## Cross-Tool CLI Dispatch
+
+This machine has three AI coding tools installed. Each can invoke the others
+non-interactively via CLI. **When the user asks you to use another tool
+(e.g. "让 codex review 一下", "用 cursor 去改"), invoke it directly via Bash.
+Do NOT refuse with "跨厂商边界" or suggest the user copy-paste manually.**
+
+### Available CLIs
+
+| Tool | Non-interactive command | Output |
+|------|----------------------|--------|
+| Claude Code | `claude -p "<prompt>" --allowedTools "Bash(git *) Read Glob Grep" > out.md` | stdout |
+| Codex | `codex exec -o out.md "<prompt>"` | `-o` flag |
+| Codex review | `codex review --base main "<prompt>"` | stdout |
+| Cursor | `cursor agent "<prompt>" > out.md` | stdout |
+
+### Usage patterns
+
+```bash
+# Single feature review via Codex
+codex exec -o docs/reviews/organizer/codex-review.md \
+  "Review packages/plugin-organizer/ for correctness, edge cases, and missing error handling. Output structured markdown."
+
+# Claude Code review from another tool (Codex / Cursor calling Claude)
+claude -p "Review packages/plugin-organizer/ for architecture compliance with docs/SYSTEM_ARCHITECTURE.md" \
+  --allowedTools "Read Glob Grep" > docs/reviews/organizer/claude-review.md
+
+# Batch background dispatch (multiple features)
+for pkg in plugin-organizer plugin-grid plugin-sync; do
+  codex exec -o "docs/reviews/${pkg}/codex-review.md" \
+    "Review packages/${pkg}/ for correctness and edge cases." &
+done
+wait
+```
+
+### Rules
+
+1. Always write output to `docs/reviews/<feature>/` for traceability
+2. Use `--base main` for Codex review to scope to branch changes
+3. Background dispatch (`&`) is fine — use `wait` to collect results
+4. The dispatched tool reads the same repo; no extra context is needed
+5. Cross-reference: `docs/workflow/_portable/04-automation-loop.md` for advanced dispatch patterns
+
 ## Workflow V2 Subagent Output Display
 
 When spawning any Workflow V2 subagent (feature-plan, feature-review,

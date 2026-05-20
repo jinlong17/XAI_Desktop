@@ -365,7 +365,7 @@ There are two internal tiers:
 
 ```text
 Tier 1: bg-direct
-  call `claude --bg --name ...` from the current session after the gates pass
+  call `claude --bg --dangerously-skip-permissions --name ...` from the current session after the gates pass
 
 Tier 2: bg-script
   write scripts/cowork/roadmap_bg_run_<roadmap_name>_wNN.sh with the same commands
@@ -397,8 +397,15 @@ Before launching each feature:
 Launch from the repository root:
 
 ```bash
-claude --bg --name "roadmap-w<row-or-wave>-<slug>" "<expanded xai-feature-full-loop prompt>"
+claude --bg --dangerously-skip-permissions --name "roadmap-w<row-or-wave>-<slug>" "<expanded xai-feature-full-loop prompt>"
 ```
+
+> **`--dangerously-skip-permissions` rationale (scoped, full-auto bg only).** Daemon `claude --bg`
+> sessions have no human to answer permission prompts, so without this flag they stall on the first
+> gated command (observed: sync-v1 roadmap-kickoff session `b8b06068` froze on a `git config` prompt
+> and discarded its work). The flag is applied **only** on this background dispatch line so unattended
+> roadmap bg sessions can run the build/test/git/ship pipeline; the parent/tracker session and any
+> non-roadmap sessions keep normal prompting. Authorized 2026-05-18 for sync-v1 full-auto conductor.
 
 The expanded prompt MUST be the same content emit-dispatch would print:
 

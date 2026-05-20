@@ -72,12 +72,50 @@ Each `.toml` agent includes `sandbox_mode` sourced from the template's
 
 ---
 
-## 3. Cross-Platform Rule Sync
+## 3. Cross-Tool CLI Dispatch
 
-| File | Platform | Handoff display rule |
-|------|----------|---------------------|
-| `CLAUDE.md` §Workflow V2 Subagent Output Display | Claude Code | Task tool return — do not rewrite |
-| `AGENTS.md` §1 (this file) | Codex | Built-in agent-spawn return — do not rewrite + inline fallback |
-| `.cursor/rules/handoff.mdc` V2.x | Cursor | Inline execution — final response must be Handoff block |
+This machine has three AI coding tools installed. Each can invoke the others
+non-interactively via CLI. **When the user asks you to use another tool
+(e.g. "让 claude review 一下", "用 cursor 去改"), invoke it directly via shell.
+Do NOT refuse or suggest the user copy-paste manually.**
 
-**Any change to Handoff display rules must be synced across all three files.**
+### Available CLIs (from Codex's perspective)
+
+| Tool | Command | Output |
+|------|---------|--------|
+| Claude Code | `claude -p "<prompt>" --allowedTools "Read Glob Grep" > out.md` | stdout |
+| Codex (self) | `codex exec -o out.md "<prompt>"` | `-o` flag |
+| Cursor | `cursor agent "<prompt>" > out.md` | stdout |
+
+### Usage example
+
+```bash
+# Ask Claude Code to review a feature
+claude -p "Review packages/plugin-organizer/ for architecture compliance with docs/SYSTEM_ARCHITECTURE.md" \
+  --allowedTools "Read Glob Grep" > docs/reviews/organizer/claude-review.md
+
+# Ask Cursor to build a component
+cursor agent "Implement the FileCard component in packages/plugin-organizer/src/components/FileCard.tsx per docs/design.md" \
+  > docs/reviews/organizer/cursor-build-log.md
+```
+
+### Rules
+
+1. Write output to `docs/reviews/<feature>/` for traceability
+2. The dispatched tool reads the same repo; no extra context needed
+3. Cross-reference: `docs/workflow/_portable/04-automation-loop.md` for advanced patterns
+
+---
+
+## 4. Cross-Platform Rule Sync
+
+| File | Platform | Scope |
+|------|----------|-------|
+| `CLAUDE.md` §Workflow V2 Subagent Output Display | Claude Code | Handoff display |
+| `CLAUDE.md` §Cross-Tool CLI Dispatch | Claude Code | CLI dispatch |
+| `AGENTS.md` §1 (this file) | Codex | Handoff display |
+| `AGENTS.md` §3 (this file) | Codex | CLI dispatch |
+| `.cursor/rules/handoff.mdc` | Cursor | Handoff display |
+| `.cursor/rules/cli-dispatch.mdc` | Cursor | CLI dispatch |
+
+**Any change to these rules must be synced across all three files.**
