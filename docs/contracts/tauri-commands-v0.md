@@ -97,6 +97,34 @@ Current source:
 
 Raw DEK must never cross IPC. JS may hold opaque handle ids only.
 
+### 6.0.1 Keychain ↔ KeyVault opaque-handle boundary (G2.4)
+
+JS-visible Keychain surface is limited to the three `secret_*` commands;
+JS-visible KeyVault surface is limited to `KeyHandleId` integers returned
+from `crypto_*` commands. The ONE authorised crossing between the two —
+"Keychain bytes → KeyVault handle" — lives in
+`apps/desktop/src-tauri/src/crypto/keychain_handle.rs`:
+
+| Helper | Direction | Behaviour |
+|---|---|---|
+| `keychain_handle::load_kek_into_vault(key, vault)` | Keychain → KeyVault | `secret_get` then `KeyVault::insert_kek`. Zeroizes the byte buffer before returning. Result is only `KeyHandleId`. |
+| `keychain_handle::insert_kek_from_bytes(bytes, vault)` | caller bytes → KeyVault | Same insertion + zeroize for callers that already hold bytes (e.g. recovery flow). |
+
+Rule (machine-enforced by code review + the dedicated tests):
+
+- `secret_get` MUST NOT be called by any Tauri command that exposes its
+  return value to JS for KEK / DEK / device-private bytes. Such material
+  must flow through `keychain_handle::*` so JS only ever sees a handle.
+- `secret_get` is allowed to surface bytes to JS for **non-key material**:
+  refresh tokens, account-id markers, encrypted recovery transcripts, etc.
+
+Rust-internal errors (do not cross IPC; calling Tauri commands that use
+this bridge must map them to JS-visible `E11xx` / `E13xx` variants):
+
+- `KeychainHandleError::Keychain(AppError)` — passthrough from `secret_get`.
+- `KeychainHandleError::InvalidKeyLength` — payload length is not exactly 32 bytes.
+- `KeychainHandleError::KeyVault(KeyVaultError)` — vault insertion failure.
+
 ## 6.1 Database Commands (G2.2 PoC)
 
 Current source:

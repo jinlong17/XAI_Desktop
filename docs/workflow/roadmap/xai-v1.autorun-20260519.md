@@ -784,3 +784,15 @@ G1.1 (window-command-contract), G1.6 (host-business-residuals), G1.2 (grid-shell
 ### Branch Hygiene Note (Track A)
 
 - 00:32 PDT: my G2.2 commit landed on `codex/track-c-widgets-web-ai` because a parallel agent had switched the working-tree branch. Cherry-picked `92e2ba6` onto `codex/track-a-desktop-foundation` as `f3dd30b`; the duplicate remains on Track C and will be reconciled when the tracks merge to main.
+
+### 2026-05-20 00:54 PDT — Feature Checkpoint: G2.4 keychain-opaque-handle READY_TO_SHIP
+
+- Added `apps/desktop/src-tauri/src/crypto/keychain_handle.rs` with `load_kek_into_vault(key, vault)` and `insert_kek_from_bytes(bytes, vault)`. Both return only `KeyHandleId`; byte buffers are zeroized.
+- Rust-internal `KeychainHandleError` (Keychain passthrough, InvalidKeyLength, KeyVault) — does not cross IPC; callers map to JS-visible variants.
+- Updated `docs/contracts/tauri-commands-v0.md` §6.0.1 documenting the single authorised "Keychain bytes → KeyVault handle" crossing and the rule that `secret_get` MUST NOT surface KEK/DEK/device-private bytes to JS.
+- Created `packages/keychain-opaque-handle/docs/dev_log.md`.
+- Promoted G2 manifest row #5 to READY_TO_SHIP.
+- Tests run:
+  - `cargo check --features crypto` -> PASS
+  - `cargo test --features crypto keychain_handle::` -> 3 tests PASS
+- Deferred: `db_init` SQLCipher PRAGMA wiring (G2.6); live macOS Keychain runtime smoke (covered by keychain-bridge-macos package).
