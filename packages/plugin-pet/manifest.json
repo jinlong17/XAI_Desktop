@@ -1,0 +1,19 @@
+{
+  "name": "pet",
+  "version": "0.1.0",
+  "displayName": "Desktop Pet",
+  "description": "Non-intrusive pet companion with reminders and AI persona mock reactions.",
+  "author": "Jinlong",
+  "enabled": false,
+  "contentTypes": ["pet"],
+  "windows": {
+    "overlay": true,
+    "control": true
+  },
+  "events": {
+    "emit": ["pet:hidden", "pet:ai-suggestion", "pet:interaction"],
+    "listen": ["ai-cube:mock-action"]
+  },
+  "dependencies": ["@repo/core-data"],
+  "tauriCommands": []
+}
