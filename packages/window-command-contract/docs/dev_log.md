@@ -8,13 +8,13 @@
 | Target | window-command-contract |
 | Title | G1.1 Window Command Contract |
 | Roadmap | xai-g1-native-foundation · feature #1 · G1.1 |
-| Status | READY_TO_SHIP |
-| Current Phase | FEATURE_VERIFY |
-| Suggested Next | manual ship only; continue G1.2 production build |
+| Status | SHIPPED |
+| Current Phase | SHIP |
+| Suggested Next | G1.2 verify → ship |
 | Automation Mode | D-Codex |
 | Verify Cross-vendor | yes |
-| Executor | feature-verify (Codex inline) |
-| Updated | 2026-05-19 23:09 PDT |
+| Executor | ship (claude-sonnet-4-6) |
+| Updated | 2026-05-19 23:30 PDT |
 | Blockers | None for G1.1 DMG/private path; cross-vendor verify and MAS runtime remain deferred gates |
 
 ## Phase Plan
@@ -70,3 +70,4 @@ Deferred gates are recorded in `docs/workflow/roadmap/xai-v1.deferred-gates.md`;
 | 2026-05-19 22:54 PDT | feature-verify (Codex inline) | Reconciled G0 Conditional Go and unblocked G1.1 production build for the DMG/private path. | `1701583` | feature-build |
 | 2026-05-19 23:05 PDT | feature-build (Codex inline) | Implemented structured window command contract, snapshots, list/focus commands, core TS types, and contract docs. | `dce4fb9` | feature-verify |
 | 2026-05-19 23:09 PDT | feature-verify (Codex inline) | Verified Rust, TS, desktop build, and contract consistency; marked READY_TO_SHIP. | `dce4fb9`, `1fa8c75` | manual ship only; continue G1.2 |
+| 2026-05-19 23:30 PDT | ship (claude-sonnet-4-6) | Human-authorized push to origin/spike/window-ground-truth; marked SHIPPED in xai-g1-native-foundation.md. | `dce4fb9`, `1fa8c75`, `83c0baf` | G1.2 verify → ship |
