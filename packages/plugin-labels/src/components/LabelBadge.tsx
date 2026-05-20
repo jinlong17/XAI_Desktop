@@ -56,7 +56,7 @@ export function LabelBadge({ label, compact = false, onRemove }: LabelBadgeProps
           }}
           type="button"
         >
-          x
+          ×
         </button>
       ) : null}
     </span>
