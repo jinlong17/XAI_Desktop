@@ -40,7 +40,9 @@
       "Bash(npx tsc:*)",
       "Bash(npx vite:*)",
       "Bash(wc -l /Users/lijinlong/Desktop/AI_Desktop/XAI_Desktop/docs/guides/*.md /Users/lijinlong/Desktop/AI_Desktop/XAI_Desktop/docs/conventions/COMMIT_CONVENTION.md /Users/lijinlong/Desktop/AI_Desktop/XAI_Desktop/docs/workflow/SUBAGENT_WORKFLOW_V2.md)",
-      "Bash(git restore:*)"
+      "Bash(git restore:*)",
+      "Bash(codex exec:*)",
+      "Bash(cursor agent:*)"
     ]
   }
 }
