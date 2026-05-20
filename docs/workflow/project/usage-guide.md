@@ -60,6 +60,10 @@ packages/plugin-account/docs/dev_log.md
 ls .claude/agents
 ls .codex/agents
 ls .cursor/agents
+ls docs/workflow/_portable/skills/workflow-router/SKILL.md
+ls .claude/skills/skill-workflow-router/SKILL.md
+ls .codex/agents/skill-workflow-router.toml
+ls .cursor/rules/skill-workflow-router.mdc
 ls .teams/skills/xai-feature-brief/SKILL.md
 ls .teams/skills/xai-feature-full-loop/SKILL.md
 ls .teams/skills/xai-roadmap-loop/SKILL.md
@@ -71,7 +75,8 @@ ls .claude/skills/xai-roadmap-loop/SKILL.md
 当前 XAI 约定:
 
 - 15 个 Workflow V2 agent 三端生成: Claude / Codex / Cursor。
-- 9 个 portable public skills 三端生成,包含 `agent-behavioral-guidelines`。
+- 10 个 portable public skills 三端生成,包含 `agent-behavioral-guidelines` 和
+  `workflow-router`。
 - 3 个 XAI project-layer skills:
   - `xai-feature-brief`
   - `xai-feature-full-loop`
@@ -401,6 +406,7 @@ Portable public skills 是 description-triggered 的辅助能力。常用:
 | `codebase-explorer` | 不熟悉模块、要 orientation map |
 | `planning-with-files` | 长任务要 `task_plan.md` |
 | `superpowers` | 先设计、再实现、需要分解 |
+| `workflow-router` | 把自由需求/问题转换成可复制的 Claude/Codex goal prompt,或当前窗口 task prompt 预览 |
 | `security-skills-claude-code` | STRIDE、攻击面、依赖 CVE |
 | `frontend-dev` | UI 页面 / component polish |
 | `composition-patterns` | React compound / slot / render-prop 设计 |
@@ -613,6 +619,7 @@ rg -n "Start the feature-full-loop agent|/xai-feature-full-loop Feature" scripts
 
 | 想做什么 | 入口 |
 |---|---|
+| 把想法转换成 Claude/Codex goal 或当前窗口 task prompt | `use workflow-router` |
 | 跑单个新 feature | `/xai-feature-full-loop` |
 | 手动跑 feature | `docs/workflow/SOP_NEW_FEATURE.md` + Level 1 agents |
 | 跑 bugfix | `docs/workflow/SOP_BUGFIX.md` |
