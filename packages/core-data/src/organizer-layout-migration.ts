@@ -70,6 +70,8 @@ export interface OrganizerLayoutMigrationResult {
   gridsMigrated: number;
   itemsMigrated: number;
   removedLegacy: boolean;
+  /** Legacy items rejected by positive validation (e.g. empty filepath). */
+  skipped: number;
 }
 
 export async function migrateOrganizerLayoutToRepos(
@@ -109,11 +111,16 @@ export async function migrateOrganizerLayoutToRepos(
   }
 
   let itemsMigrated = 0;
+  let skipped = 0;
   for (const legacyItem of layout.items) {
     if (!legacyItem || typeof legacyItem.id !== "string") continue;
     const gridId = findOwningGridId(legacyItem.id, layout.grids);
     if (!gridId) continue;
     const record = toGridItemEntity(legacyItem, gridId, timestamp);
+    if (!record) {
+      skipped += 1;
+      continue;
+    }
     assertRepoRecord(record);
     await options.itemRepo.put(record);
     itemsMigrated += 1;
@@ -131,6 +138,7 @@ export async function migrateOrganizerLayoutToRepos(
     gridsMigrated,
     itemsMigrated,
     removedLegacy,
+    skipped,
   };
 }
 
@@ -141,6 +149,7 @@ function emptyResult(): OrganizerLayoutMigrationResult {
     gridsMigrated: 0,
     itemsMigrated: 0,
     removedLegacy: false,
+    skipped: 0,
   };
 }
 
@@ -174,8 +183,16 @@ function toGridItemEntity(
   legacy: LegacyDesktopItem,
   gridId: string,
   timestamp: string,
-): GridItemEntity {
-  const kind: GridItemEntity["kind"] = legacy.type ?? "file";
+): GridItemEntity | null {
+  const rawKind = (legacy as { type?: string }).type ?? "file";
+  // url items are not produced by this adapter — reject defensively to
+  // keep the migration's contract focused on file-system items.
+  if (rawKind !== "file" && rawKind !== "folder" && rawKind !== "app") {
+    return null;
+  }
+  if (typeof legacy.filepath !== "string" || legacy.filepath.length === 0) {
+    return null;
+  }
   return {
     id: legacy.id,
     entityType: "organizer.item",
@@ -186,7 +203,7 @@ function toGridItemEntity(
     gridId,
     filename: legacy.filename ?? legacy.id,
     filepath: legacy.filepath,
-    kind,
+    kind: rawKind,
     icon: legacy.icon ?? "doc",
     size: legacy.size,
   };

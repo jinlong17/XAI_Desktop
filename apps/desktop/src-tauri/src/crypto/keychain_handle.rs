@@ -17,7 +17,7 @@
 
 #![cfg(feature = "crypto")]
 
-use zeroize::Zeroize;
+use zeroize::{Zeroize, Zeroizing};
 
 use super::key_vault::{KeyHandleId, KeyVault, KeyVaultError};
 use crate::error::AppError;
@@ -84,17 +84,24 @@ pub fn insert_kek_from_bytes(
     vault: &mut KeyVault,
 ) -> KeychainHandleResult<KeyHandleId> {
     if bytes.len() != KEY_BYTES {
+        let actual = bytes.len();
+        // Scrub the caller buffer on the early-return path too — defence in
+        // depth: a wrong-length payload may still be sensitive material.
+        bytes.zeroize();
         return Err(KeychainHandleError::InvalidKeyLength {
             expected: KEY_BYTES,
-            actual: bytes.len(),
+            actual,
         });
     }
 
-    let mut owned = [0u8; KEY_BYTES];
+    // Wrap the stack-local copy in `Zeroizing` so the local buffer is scrubbed
+    // when it goes out of scope — even though the vault receives an owned
+    // copy of the bytes, the local must not linger on the stack.
+    let mut owned: Zeroizing<[u8; KEY_BYTES]> = Zeroizing::new([0u8; KEY_BYTES]);
     owned.copy_from_slice(bytes);
     bytes.zeroize();
 
-    let handle = vault.insert_kek(owned)?;
+    let handle = vault.insert_kek(*owned)?;
     Ok(handle)
 }
 
@@ -135,5 +142,22 @@ mod tests {
 
         let observed = vault.with_kek(handle, |kek| *kek).unwrap();
         assert_eq!(observed, [0x77u8; KEY_BYTES]);
+    }
+
+    #[test]
+    fn wrong_length_zeroizes_caller_buffer() {
+        // A 16-byte payload pre-filled with non-zero key-shaped material must
+        // be scrubbed even though the function bails early on length error.
+        let mut bytes = vec![0xABu8; 16];
+        let mut vault = KeyVault::new();
+        let err = insert_kek_from_bytes(&mut bytes, &mut vault).unwrap_err();
+        match err {
+            KeychainHandleError::InvalidKeyLength { expected, actual } => {
+                assert_eq!(expected, KEY_BYTES);
+                assert_eq!(actual, 16);
+            }
+            other => panic!("unexpected error: {other:?}"),
+        }
+        assert_eq!(bytes, vec![0u8; 16]);
     }
 }

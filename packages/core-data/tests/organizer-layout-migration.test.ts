@@ -97,6 +97,7 @@ describe("migrateOrganizerLayoutToRepos", () => {
       gridsMigrated: 2,
       itemsMigrated: 2,
       removedLegacy: false,
+      skipped: 0,
     });
 
     const grids = await gridRepo.list({
@@ -180,6 +181,61 @@ describe("migrateOrganizerLayoutToRepos", () => {
     });
     expect(result.removedLegacy).toBe(true);
     expect(storage.getItem(LEGACY_LAYOUT_STORAGE_KEY)).toBeNull();
+  });
+
+  it("drops items with an empty filepath and increments skipped", async () => {
+    const layout: LegacyOrganizerLayout = {
+      grids: [
+        {
+          id: "grid-1",
+          title: "Today",
+          rect: { x: 0, y: 0, width: 240, height: 320 },
+          itemIds: ["good", "bad"],
+        },
+      ],
+      items: [
+        {
+          id: "good",
+          filename: "ok.md",
+          filepath: "/Users/me/ok.md",
+          type: "file",
+          icon: "doc",
+        },
+        {
+          id: "bad",
+          filename: "missing",
+          // Empty filepath → must be dropped.
+          filepath: "",
+          type: "file",
+          icon: "doc",
+        },
+      ],
+    };
+    const storage = fakeStorage({
+      [LEGACY_LAYOUT_STORAGE_KEY]: JSON.stringify(layout),
+    });
+    const gridRepo = createInMemoryRepo<GridEntity>({ namespace: "grids" });
+    const itemRepo = createInMemoryRepo<GridItemEntity>({
+      namespace: "items",
+    });
+
+    const result = await migrateOrganizerLayoutToRepos({
+      storage,
+      gridRepo,
+      itemRepo,
+      nowIso: () => "2026-05-20T00:00:00.000Z",
+    });
+
+    expect(result).toEqual({
+      scanned: true,
+      parsed: true,
+      gridsMigrated: 1,
+      itemsMigrated: 1,
+      removedLegacy: false,
+      skipped: 1,
+    });
+    const items = await itemRepo.list();
+    expect(items.map((it) => it.id)).toEqual(["good"]);
   });
 
   it("is a no-op when the legacy key is absent or malformed", async () => {
