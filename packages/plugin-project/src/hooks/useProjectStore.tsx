@@ -176,9 +176,15 @@ export function ProjectStoreProvider({ projectAdapter, cardAdapter, children }: 
       targetList.splice(clampedOrder, 0, { ...target, listId, order: clampedOrder });
       const normalizedTargetList = targetList.map((card, index) => ({ ...card, order: index }));
       const sourceList = target.listId === listId ? [] : normalizeCardOrder(withoutTarget, target.listId);
+      const currentById = new Map(cards.map((card) => [card.id, card] as const));
+      const merged = [...normalizedTargetList, ...sourceList];
+      const dirty = merged.filter((card) => {
+        const before = currentById.get(card.id);
+        return !before || before.listId !== card.listId || before.order !== card.order;
+      });
       const unaffected = withoutTarget.filter((card) => card.listId !== listId && card.listId !== target.listId);
       const nextCards = [...unaffected, ...sourceList, ...normalizedTargetList];
-      await Promise.all(nextCards.map((card) => stableCardAdapter.save(card)));
+      await Promise.all(dirty.map((card) => stableCardAdapter.save(card)));
       setCards(nextCards);
     },
     [cards, stableCardAdapter],
