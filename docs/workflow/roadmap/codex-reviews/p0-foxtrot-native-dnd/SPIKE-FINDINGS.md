@@ -230,3 +230,48 @@ in §4. The implementation will be committed under the
 registration on the native drag-drop path (P0 Foxtrot)` title (renamed
 from the originally-suggested title because the actual file footprint
 turned out to be JS + tests + docs only).
+
+## 7. P2 closure (2026-05-20)
+
+Codex's R5 verdict (`a8c847b`) flagged a single residual P2: the Rust
+integration tests covered `register_path_bookmark` through
+`get_ipc_response` but the `reveal_in_finder` / `open_path` admit /
+reject cases still went through `ensure_path_authorized_test_helper`
+directly, partially sidestepping the public IPC contract.
+
+Closure plan executed in `apps/desktop/src-tauri/src/commands/{finder,bookmarks}.rs`:
+
+1. **Shell-out seam (approach (b) — `#[cfg(test)]` noop).**
+   `reveal_in_finder` / `open_path` now call `shell_out_reveal` /
+   `shell_out_open`. Production (`#[cfg(not(test))]`) spawns
+   `/usr/bin/open` via `std::process::Command` exactly as before;
+   tests (`#[cfg(test)]`) return `Ok(())` AFTER
+   `ensure_path_authorized` runs, so the IPC dispatcher, serde
+   deserialization, window-origin gate, path-shape gate, and
+   bookmark-registry lookup are all part of the exercised path.
+2. **Runtime-generic command bodies.** `reveal_in_finder` and
+   `open_path` were lifted to `#[tauri::command] pub async fn
+   …<R: Runtime>(window: WebviewWindow<R>, …)`, mirroring
+   `register_path_bookmark` / `clear_path_bookmark`. The production
+   `Wry` runtime and the `MockRuntime` now share the same entry-point
+   body — no test-only fork exists.
+3. **Four new IPC tests.** `commands::bookmarks::ipc_integration_tests`
+   gained:
+   - `reveal_in_finder_admits_registered_path`
+   - `reveal_in_finder_rejects_unregistered_path`
+   - `open_path_admits_registered_path`
+   - `open_path_rejects_unregistered_path`
+   All four drive their respective `#[tauri::command]` through
+   `tauri::test::get_ipc_response` against the same MockRuntime app
+   that hosts `register_path_bookmark` / `clear_path_bookmark`. None of
+   them call `_test_helper` or `insert_canonical` — they use only the
+   public JSON IPC contract a JS caller would use in production.
+
+Test counts after closure:
+- `cargo test`: 37 → 41 (+4 new IPC cases)
+- `cargo test --features crypto`: 104 → 108 (+4 same cases also run
+  under crypto feature)
+
+Contract doc `docs/contracts/tauri-commands-v0.md` gained a new §4.1
+"IPC test coverage (P2-Foxtrot closure)" subsection naming the four
+tests and the `#[cfg(test)]` shell-out seam.

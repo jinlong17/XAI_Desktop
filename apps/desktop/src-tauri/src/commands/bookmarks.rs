@@ -305,29 +305,47 @@ mod ipc_integration_tests {
     //! 3. `reveal_in_finder`'s gate still rejects an absolute path
     //!    that was never registered (negative case symmetry).
     //!
-    //! Note: `reveal_in_finder` shells out to `open -R` on macOS. The
-    //! tests stop short of the shell-out by exercising the path
-    //! through `ensure_path_authorized_test_helper` directly — that is
-    //! the gate the reviewer cares about, and it is the same code path
-    //! the `#[tauri::command]` handler runs before any process spawn.
+    //! P2-Foxtrot closure (2026-05-20): the four `reveal_in_finder` /
+    //! `open_path` cases below drive the command entrypoints through
+    //! `get_ipc_response` against the same MockRuntime app. The
+    //! post-authorization shell-out (`open` / `open -R`) is factored
+    //! behind a `#[cfg(test)]` noop seam in `commands::finder`, so the
+    //! IPC handler still executes the window-allow-list, path-shape,
+    //! and bookmark-registry gates in full — only the actual process
+    //! spawn is skipped in test builds. The previous Codex review
+    //! flagged that the admit/reject cases for these two commands were
+    //! still going through `ensure_path_authorized_test_helper`
+    //! directly; the new tests close that gap by exercising the public
+    //! IPC contract end-to-end.
 
     use super::*;
     use crate::commands::finder::{
         ensure_path_authorized_test_helper, FINDER_ALLOWED_WINDOWS,
     };
+    // `generate_handler!` expands to `crate::commands::xxx::yyy` plus
+    // companion proc-macro-generated items (`__cmd__yyy`,
+    // `__tauri_command_name_yyy`) that live in the SAME module as the
+    // `#[tauri::command]` it annotates. We path-qualify the command
+    // idents inside `generate_handler!` so the macro resolves the
+    // companions correctly without needing a glob import here.
     use tauri::test::{get_ipc_response, mock_builder, mock_context, noop_assets, INVOKE_KEY};
     use tauri::webview::InvokeRequest;
     use tauri::Manager;
 
     /// Build a Tauri MockRuntime app wired with `BookmarkRegistry` state
-    /// and the two bookmark IPC commands. Mirrors the production wiring
-    /// in `lib.rs` minus the windows / platform / menubar plumbing.
+    /// and the bookmark + finder IPC commands. Mirrors the production
+    /// wiring in `lib.rs` minus the windows / platform / menubar
+    /// plumbing. `reveal_in_finder` / `open_path` are included so the
+    /// P2-Foxtrot closure tests can drive them through
+    /// `get_ipc_response` against the same MockRuntime app.
     fn build_mock_app() -> tauri::App<tauri::test::MockRuntime> {
         mock_builder()
             .manage(BookmarkRegistry::default())
             .invoke_handler(tauri::generate_handler![
                 register_path_bookmark,
                 clear_path_bookmark,
+                crate::commands::finder::reveal_in_finder,
+                crate::commands::finder::open_path,
             ])
             .build(mock_context(noop_assets()))
             .expect("mock app build failed")
@@ -344,17 +362,18 @@ mod ipc_integration_tests {
             .expect("main webview build failed")
     }
 
-    /// Drive `register_path_bookmark` through the public IPC surface.
-    /// JSON body shape matches `RegisterPathBookmarkInput` exactly so
-    /// the test exercises the same serde-deserialization the JS bridge
-    /// runs in production.
-    fn ipc_register_path_bookmark(
+    /// Drive a `path`-shaped IPC command through the public IPC
+    /// surface. JSON body shape matches the production
+    /// `{ input: { path } }` envelope so the test exercises the same
+    /// serde-deserialization the JS bridge runs in production.
+    fn ipc_call_path_command(
         webview: &tauri::WebviewWindow<tauri::test::MockRuntime>,
+        cmd: &str,
         path: &str,
     ) -> Result<serde_json::Value, serde_json::Value> {
         let body = serde_json::json!({ "input": { "path": path } });
         let request = InvokeRequest {
-            cmd: "register_path_bookmark".into(),
+            cmd: cmd.into(),
             callback: tauri::ipc::CallbackFn(0),
             error: tauri::ipc::CallbackFn(1),
             url: "tauri://localhost".parse().unwrap(),
@@ -364,6 +383,30 @@ mod ipc_integration_tests {
         };
         get_ipc_response(webview, request)
             .map(|b| b.deserialize::<serde_json::Value>().unwrap_or(serde_json::Value::Null))
+    }
+
+    /// Convenience wrapper for `register_path_bookmark` IPC calls.
+    fn ipc_register_path_bookmark(
+        webview: &tauri::WebviewWindow<tauri::test::MockRuntime>,
+        path: &str,
+    ) -> Result<serde_json::Value, serde_json::Value> {
+        ipc_call_path_command(webview, "register_path_bookmark", path)
+    }
+
+    /// Convenience wrapper for `reveal_in_finder` IPC calls.
+    fn ipc_reveal_in_finder(
+        webview: &tauri::WebviewWindow<tauri::test::MockRuntime>,
+        path: &str,
+    ) -> Result<serde_json::Value, serde_json::Value> {
+        ipc_call_path_command(webview, "reveal_in_finder", path)
+    }
+
+    /// Convenience wrapper for `open_path` IPC calls.
+    fn ipc_open_path(
+        webview: &tauri::WebviewWindow<tauri::test::MockRuntime>,
+        path: &str,
+    ) -> Result<serde_json::Value, serde_json::Value> {
+        ipc_call_path_command(webview, "open_path", path)
     }
 
     /// 1. Honest path through the public IPC: register an absolute
@@ -473,6 +516,108 @@ mod ipc_integration_tests {
         assert!(
             FINDER_ALLOWED_WINDOWS.contains(&"main"),
             "test fixture assumes `main` is finder-allowed"
+        );
+    }
+
+    // ─────────────────────────────────────────────────────────────────
+    // P2-Foxtrot closure — `reveal_in_finder` / `open_path` IPC coverage
+    //
+    // These four cases drive the two finder command entrypoints through
+    // `get_ipc_response`, covering both the admit (registered) and
+    // reject (unregistered) branches. The post-authorization shell-out
+    // is short-circuited by the `#[cfg(test)]` seam in
+    // `commands::finder::shell_out_{reveal,open}`, so the IPC dispatch,
+    // serde deserialization, window-origin gate, path-shape gate, and
+    // bookmark-registry lookup all run in full — only the literal
+    // `Command::new("open")` spawn is skipped.
+    // ─────────────────────────────────────────────────────────────────
+
+    /// 5. `reveal_in_finder` admits a path previously registered via
+    /// the public IPC surface. Drives the full IPC path:
+    /// `register_path_bookmark` (IPC) → `reveal_in_finder` (IPC).
+    #[test]
+    fn reveal_in_finder_admits_registered_path() {
+        let app = build_mock_app();
+        let window = build_main_window(&app);
+
+        // Register through the IPC command surface.
+        ipc_register_path_bookmark(&window, "/Users/me/Documents/note.md")
+            .expect("register_path_bookmark must succeed for valid absolute path");
+
+        // `reveal_in_finder` through the IPC surface must succeed —
+        // the cfg(test) shell-out seam returns Ok(()) after the
+        // authorization gate admits the registered path.
+        let response = ipc_reveal_in_finder(&window, "/Users/me/Documents/note.md")
+            .expect("reveal_in_finder must admit a registered path");
+        // `()` serializes to JSON `null`.
+        assert!(
+            response.is_null(),
+            "reveal_in_finder Ok(()) must serialize to null, got: {response}"
+        );
+    }
+
+    /// 6. `reveal_in_finder` rejects a path that was never registered.
+    /// Path-shape is valid (under `/Users/`) but no bookmark exists,
+    /// so the gate must return `SyncCapabilityDenied` (E3004 in the
+    /// `AppError::Display` form; serialized externally-tagged at the
+    /// IPC boundary).
+    #[test]
+    fn reveal_in_finder_rejects_unregistered_path() {
+        let app = build_mock_app();
+        let window = build_main_window(&app);
+
+        let err = ipc_reveal_in_finder(&window, "/Users/me/Documents/secret.txt")
+            .expect_err("reveal_in_finder must reject an unregistered path");
+
+        // `AppError` serializes externally-tagged at the IPC boundary,
+        // so a `SyncCapabilityDenied(String)` variant becomes
+        // `{"SyncCapabilityDenied": "path `...` has no user-authorized bookmark"}`.
+        let payload = err
+            .get("SyncCapabilityDenied")
+            .and_then(|v| v.as_str())
+            .unwrap_or_else(|| panic!("expected SyncCapabilityDenied tag, got: {err}"));
+        assert!(
+            payload.contains("no user-authorized bookmark"),
+            "expected `no user-authorized bookmark` in payload, got: {payload}"
+        );
+    }
+
+    /// 7. `open_path` admits a path previously registered via the
+    /// public IPC surface — symmetric with case 5 but for the second
+    /// finder entrypoint.
+    #[test]
+    fn open_path_admits_registered_path() {
+        let app = build_mock_app();
+        let window = build_main_window(&app);
+
+        ipc_register_path_bookmark(&window, "/Users/me/Documents/report.pdf")
+            .expect("register_path_bookmark must succeed for valid absolute path");
+
+        let response = ipc_open_path(&window, "/Users/me/Documents/report.pdf")
+            .expect("open_path must admit a registered path");
+        assert!(
+            response.is_null(),
+            "open_path Ok(()) must serialize to null, got: {response}"
+        );
+    }
+
+    /// 8. `open_path` rejects a path that was never registered —
+    /// symmetric with case 6.
+    #[test]
+    fn open_path_rejects_unregistered_path() {
+        let app = build_mock_app();
+        let window = build_main_window(&app);
+
+        let err = ipc_open_path(&window, "/Users/me/Documents/private.key")
+            .expect_err("open_path must reject an unregistered path");
+
+        let payload = err
+            .get("SyncCapabilityDenied")
+            .and_then(|v| v.as_str())
+            .unwrap_or_else(|| panic!("expected SyncCapabilityDenied tag, got: {err}"));
+        assert!(
+            payload.contains("no user-authorized bookmark"),
+            "expected `no user-authorized bookmark` in payload, got: {payload}"
         );
     }
 }

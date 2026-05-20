@@ -16,6 +16,7 @@
 use std::path::{Component, Path, PathBuf};
 
 use serde::Deserialize;
+use tauri::Runtime;
 
 use crate::commands::bookmarks::{is_path_bookmarked, BookmarkRegistry};
 use crate::error::{AppError, AppResult};
@@ -157,25 +158,28 @@ pub(crate) fn ensure_path_authorized_test_helper(
     ensure_path_authorized(raw, registry)
 }
 
-#[derive(Debug, Deserialize)]
-pub struct RevealInFinderInput {
-    pub path: String,
-}
-
-#[tauri::command]
-pub async fn reveal_in_finder(
-    window: tauri::WebviewWindow,
-    registry: tauri::State<'_, BookmarkRegistry>,
-    input: RevealInFinderInput,
-) -> AppResult<()> {
-    ensure_finder_window_allowed(window.label())?;
-    let canonical = ensure_path_authorized(&input.path, &registry)?;
+/// Shell-out seam for the platform `open` / `open -R` invocations.
+///
+/// Production builds spawn `/usr/bin/open` via `std::process::Command`.
+/// Test builds (`#[cfg(test)]`) short-circuit BEFORE any process spawn
+/// and return `Ok(())` once the canonical path is in hand — so the
+/// integration tests in `commands::bookmarks::ipc_integration_tests`
+/// can drive `reveal_in_finder` / `open_path` end-to-end through the
+/// public IPC surface (`get_ipc_response`) without launching a real
+/// Finder window on the test host.
+///
+/// This is approach (b) from the P2-Foxtrot fix plan — a `#[cfg(test)]`
+/// noop shell, not a runtime `Executor` trait. Production code still
+/// spawns `open` exactly as before; the test build literally skips
+/// the spawn site.
+#[cfg(not(test))]
+fn shell_out_reveal(canonical: &Path) -> AppResult<()> {
     #[cfg(target_os = "macos")]
     {
         use std::process::Command;
         let status = Command::new("open")
             .arg("-R")
-            .arg(&canonical)
+            .arg(canonical)
             .status()
             .map_err(|err| AppError::Internal(format!("open -R failed: {err}")))?;
         if !status.success() {
@@ -192,24 +196,22 @@ pub async fn reveal_in_finder(
     }
 }
 
-#[derive(Debug, Deserialize)]
-pub struct OpenPathInput {
-    pub path: String,
+#[cfg(test)]
+fn shell_out_reveal(_canonical: &Path) -> AppResult<()> {
+    // Tests have already passed `ensure_path_authorized`; the only thing
+    // we would do next in production is `open -R <canonical>`. Skipping
+    // the spawn keeps the IPC entrypoint exercisable from `cargo test`
+    // without launching Finder on the developer's machine.
+    Ok(())
 }
 
-#[tauri::command]
-pub async fn open_path(
-    window: tauri::WebviewWindow,
-    registry: tauri::State<'_, BookmarkRegistry>,
-    input: OpenPathInput,
-) -> AppResult<()> {
-    ensure_finder_window_allowed(window.label())?;
-    let canonical = ensure_path_authorized(&input.path, &registry)?;
+#[cfg(not(test))]
+fn shell_out_open(canonical: &Path) -> AppResult<()> {
     #[cfg(target_os = "macos")]
     {
         use std::process::Command;
         let status = Command::new("open")
-            .arg(&canonical)
+            .arg(canonical)
             .status()
             .map_err(|err| AppError::Internal(format!("open failed: {err}")))?;
         if !status.success() {
@@ -224,6 +226,54 @@ pub async fn open_path(
         let _ = canonical;
         Err(AppError::Internal("open_path is macOS-only".into()))
     }
+}
+
+#[cfg(test)]
+fn shell_out_open(_canonical: &Path) -> AppResult<()> {
+    // Mirror of `shell_out_reveal` — see that doc comment for rationale.
+    Ok(())
+}
+
+#[derive(Debug, Deserialize)]
+pub struct RevealInFinderInput {
+    pub path: String,
+}
+
+/// Open a Finder window highlighting the given path.
+///
+/// Generic over `R: Runtime` so the same `#[tauri::command]` body runs
+/// against both the production `Wry` runtime and the `MockRuntime`
+/// used by `commands::bookmarks::ipc_integration_tests` — no test-only
+/// fork of the entry point exists.
+#[tauri::command]
+pub async fn reveal_in_finder<R: Runtime>(
+    window: tauri::WebviewWindow<R>,
+    registry: tauri::State<'_, BookmarkRegistry>,
+    input: RevealInFinderInput,
+) -> AppResult<()> {
+    ensure_finder_window_allowed(window.label())?;
+    let canonical = ensure_path_authorized(&input.path, &registry)?;
+    shell_out_reveal(&canonical)
+}
+
+#[derive(Debug, Deserialize)]
+pub struct OpenPathInput {
+    pub path: String,
+}
+
+/// Open the given path in its default handler (file → app).
+///
+/// Generic over `R: Runtime` for the same MockRuntime-vs-Wry test
+/// parity as `reveal_in_finder`.
+#[tauri::command]
+pub async fn open_path<R: Runtime>(
+    window: tauri::WebviewWindow<R>,
+    registry: tauri::State<'_, BookmarkRegistry>,
+    input: OpenPathInput,
+) -> AppResult<()> {
+    ensure_finder_window_allowed(window.label())?;
+    let canonical = ensure_path_authorized(&input.path, &registry)?;
+    shell_out_open(&canonical)
 }
 
 #[cfg(test)]
