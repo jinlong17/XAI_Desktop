@@ -6,9 +6,9 @@
 - Feature: click-through-matrix
 - Symptom: Feature cannot satisfy acceptance in unattended mode.
 - Root cause if known: G0.3 requires real macOS hit-test observations across `macOSPrivateApi=true` and `false`; static code review and build checks cannot prove click-through behavior.
-- Attempted fixes: Created a manual matrix template, filled static code-analysis findings, and documented the exact runtime evidence required. Avoided unsafe NSWindow/Tauri config changes without live validation.
+- Attempted fixes: Created a manual matrix template, filled static code-analysis findings, recorded the 2026-05-19 user report that transparent-area clicks behave normally, and documented the remaining runtime evidence required. Avoided unsafe NSWindow/Tauri config changes without complete live validation.
 - Current status: BLOCKED.
-- Resume instruction: Run `pnpm --filter desktop tauri dev`, fill `docs/reviews/window-ground-truth/click-through-matrix/README.md`, then rerun feature-verify for `click-through-matrix`.
+- Resume instruction: Run `pnpm --filter desktop tauri dev`, fill remaining grid-region and `macOSPrivateApi=false` rows in `docs/reviews/window-ground-truth/click-through-matrix/README.md`, then rerun feature-verify for `click-through-matrix`.
 
 ## Incident 2
 
@@ -16,9 +16,9 @@
 - Feature: finder-dnd-path
 - Symptom: Feature cannot satisfy acceptance in unattended mode.
 - Root cause if known: G0.4 requires real Finder drag/drop payload observations for file, folder, App bundle, and alias; static inspection cannot prove path payload behavior.
-- Attempted fixes: Created a manual path-first matrix template, filled static code-analysis findings, added GridWindow `tauri://drag-drop` telemetry in `7e20ca8`, and documented the exact runtime evidence required. Avoided Rust/native drop behavior changes without real payload evidence.
+- Attempted fixes: Created a manual path-first matrix template, filled static code-analysis findings, added GridWindow `tauri://drag-drop` telemetry in `7e20ca8`, recorded the 2026-05-19 user report that items can be dragged into Grid, and documented the exact runtime evidence required. Avoided Rust/native drop behavior changes without full per-kind payload evidence.
 - Current status: BLOCKED.
-- Resume instruction: Run `pnpm --filter desktop tauri dev`, drop a Finder file/folder/`.app`/alias into a Grid, capture the `Finder DnD` panel and `[G0 Finder DnD] path-first drop` logs, fill `docs/reviews/window-ground-truth/finder-dnd-path/README.md`, then rerun feature-verify for `finder-dnd-path`.
+- Resume instruction: Run `pnpm --filter desktop tauri dev`, drop a Finder file/folder/`.app`/alias into a Grid, capture the `Finder DnD` panel and `[G0 Finder DnD] path-first drop` logs, fill exact payload rows in `docs/reviews/window-ground-truth/finder-dnd-path/README.md`, then rerun feature-verify for `finder-dnd-path`.
 
 ## Incident 3
 

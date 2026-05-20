@@ -13,14 +13,14 @@
 
 | Field | Value |
 |---|---|
-| Current Gate | G1 — native foundation safe prep complete |
-| Gate Manifest | docs/workflow/roadmap/xai-g1-native-foundation.md |
-| Current Feature | none eligible |
-| Feature Source | G0/G1 blockers prevent G2 production or core-risk continuation |
-| Feature Status | STOPPED_NO_ELIGIBLE |
-| Current Commit | d8a49b3 |
-| Tests | `test -f docs/reviews/grid-persistence/20260519-feature-brief.md`; `test -f packages/grid-persistence/docs/dev_log.md`; `rg -n "PersistedLayout|localStorage|repository|Repository|Grid.*persist|restore|open Grid|last active|sqlite|sqlcipher|GridBox|DesktopItem" packages/plugin-organizer/src packages/core/src packages/core-data docs/contracts docs/planning/execution -g '*.{ts,tsx,rs,md}'` |
-| Next Step | Human G0 evidence first: click-through, Finder DnD, Spaces/multi-monitor, MAS sandbox; then G1.1 |
+| Current Gate | G0 — partial human evidence |
+| Gate Manifest | docs/workflow/roadmap/xai-g0-window-spike.md |
+| Current Feature | click-through-matrix / finder-dnd-path |
+| Feature Source | docs/planning/execution/G0-window-spike.md §G0.3, §G0.4 |
+| Feature Status | PARTIAL_HUMAN_EVIDENCE / BLOCKED |
+| Current Commit | pending G0 evidence commit |
+| Tests | User manual evidence: transparent-area click-through normal; Finder items can be dragged into Grid |
+| Next Step | Complete exact G0.3/G0.4 matrix rows: grid item/resize, `macOSPrivateApi=false`, and Finder file/folder/`.app`/alias payload logs |
 
 ## Checkpoints
 
@@ -250,14 +250,30 @@
 - No `ship` or `push` was run.
 - Stop reason: no remaining eligible feature can proceed without bypassing Gate order or doing production implementation against blocked prerequisites.
 
+### 2026-05-19 21:07 PDT — Human Evidence Checkpoint: G0.3/G0.4 partial pass
+
+- User reported G0.3 click-through manual result: clicking transparent areas all behaved normally and produced the expected reaction.
+- User reported G0.4 Finder DnD manual result: items can be dragged into Grid.
+- Recorded both as PARTIAL_HUMAN_EVIDENCE because the reports prove the main path is promising but do not yet cover every acceptance row.
+- G0.3 still needs:
+  - Grid item pointer behavior.
+  - Grid resize handle pointer behavior.
+  - `macOSPrivateApi=false` comparison.
+- G0.4 still needs exact `[G0 Finder DnD] path-first drop` payloads for:
+  - file
+  - folder
+  - `.app`
+  - alias
+- No production status was promoted to G0 Go/Conditional Go.
+
 ## Feature Outcomes
 
 | Feature | Gate | Status | Commit | Tests | Notes |
 |---|---|---|---|---|---|
 | window-ground-truth | G0 | READY_TO_SHIP | 3b571f6 | PASS: branch, sw_vers, README content | Deferred gates recorded in docs/workflow/roadmap/xai-v1.deferred-gates.md |
 | grid-window-prototype | G0 | READY_TO_SHIP | 6b121ea + 14e04c2 + 01e5167 + b8c34fe + 7b7ff35 + f65a1b5 + a33c74d | PASS: desktop tsc; plugin-organizer check-types; desktop build; cargo check | Runtime fixed/confirmed; deferred review/verify gates recorded. |
-| click-through-matrix | G0 | BLOCKED | 82ab268 + 7a1b9dd | PASS: matrix template and static analysis exist; BLOCKED: real hit-test evidence | Requires human macOS click-through matrix. |
-| finder-dnd-path | G0 | BLOCKED | 33627df + 7a1b9dd + 7e20ca8 | PASS: matrix template, static analysis, telemetry implementation, desktop tsc, plugin-organizer check-types, desktop build; BLOCKED: real Finder drop evidence | Requires human Finder/Tauri path matrix. |
+| click-through-matrix | G0 | BLOCKED | 82ab268 + 7a1b9dd + pending G0 evidence commit | PASS_PARTIAL: transparent-area click-through user report; BLOCKED: grid-region and `macOSPrivateApi=false` evidence | Requires remaining human macOS click-through matrix rows. |
+| finder-dnd-path | G0 | BLOCKED | 33627df + 7a1b9dd + 7e20ca8 + pending G0 evidence commit | PASS_PARTIAL: user reported items can be dragged into Grid; BLOCKED: exact file/folder/app/alias payload evidence | Requires human Finder/Tauri path matrix payloads. |
 | spaces-multimonitor-matrix | G0 | BLOCKED | 2fb6bac | PASS: matrix template exists; BLOCKED: real Spaces/fullscreen/multi-display evidence | Reached by user override; safe prep only. |
 | mas-sandbox-dry-run | G0 | BLOCKED | 071a192 | PASS: MAS notes exist; BLOCKED: real sandbox/private-API evidence | Reached by user override; safe prep only. |
 | window-command-contract | G1 | BLOCKED | 9c7b52f | PASS: safe-prep docs exist; BLOCKED: G0 not Go/Conditional Go | Reached by user override; no production code changed. |
@@ -273,8 +289,8 @@
 - Cross-vendor review and verify deferred for `window-ground-truth`.
 - Human ship for `window-ground-truth` deferred while continuing local G0 tasks.
 - Cross-vendor review/verify deferred for `grid-window-prototype`; runtime fix was confirmed by user and commits.
-- Real macOS click-through matrix deferred for `click-through-matrix`.
-- Real Finder DnD path matrix deferred for `finder-dnd-path`; GridWindow telemetry is now available to capture it.
+- Remaining macOS click-through matrix rows deferred for `click-through-matrix`; transparent-area click-through has partial positive human evidence.
+- Remaining Finder DnD path matrix rows deferred for `finder-dnd-path`; drag-in has partial positive human evidence and GridWindow telemetry is available to capture exact payloads.
 - Real Spaces/fullscreen/multi-display matrix deferred for `spaces-multimonitor-matrix`.
 - Real MAS/private-API sandbox evidence deferred for `mas-sandbox-dry-run`.
 - G1 production implementation deferred until G0 Go/Conditional Go.
@@ -286,8 +302,8 @@
 
 ## Incidents Summary
 
-- click-through-matrix blocked on real macOS hit-test evidence.
-- finder-dnd-path blocked on real Finder DnD payload evidence after telemetry implementation.
+- click-through-matrix blocked on remaining macOS hit-test evidence after transparent-area partial pass.
+- finder-dnd-path blocked on exact Finder DnD payload evidence after drag-in partial pass.
 - spaces-multimonitor-matrix blocked on real macOS Spaces/fullscreen/multi-display evidence.
 - mas-sandbox-dry-run blocked on real sandbox/private-API evidence.
 - window-command-contract blocked by G0 gate status.
@@ -304,8 +320,8 @@ Stopped on 2026-05-19 20:43 PDT because no remaining eligible feature can procee
 
 - `window-ground-truth` — READY_TO_SHIP.
 - `grid-window-prototype` — READY_TO_SHIP after runtime recovery.
-- `click-through-matrix` — BLOCKED after safe prep.
-- `finder-dnd-path` — BLOCKED after telemetry implementation.
+- `click-through-matrix` — BLOCKED after partial transparent-area human pass.
+- `finder-dnd-path` — BLOCKED after partial drag-in human pass.
 - `spaces-multimonitor-matrix` — BLOCKED after safe prep.
 - `mas-sandbox-dry-run` — BLOCKED after safe prep.
 - `window-command-contract` — BLOCKED after safe prep.
@@ -339,8 +355,8 @@ Stopped on 2026-05-19 20:43 PDT because no remaining eligible feature can procee
 - Human ship for `window-ground-truth`.
 - Cross-vendor review/verify for serial Codex-run features.
 - Independent review/verify for `grid-window-prototype` runtime recovery commits.
-- Real macOS click-through matrix for `click-through-matrix`.
-- Real Finder DnD path matrix for `finder-dnd-path`; use the new GridWindow telemetry panel/log.
+- Remaining macOS click-through matrix rows for `click-through-matrix`.
+- Remaining Finder DnD path matrix payloads for `finder-dnd-path`; use the new GridWindow telemetry panel/log.
 - Real Spaces/fullscreen/multi-display matrix for `spaces-multimonitor-matrix`.
 - Real MAS/private-API sandbox evidence for `mas-sandbox-dry-run`.
 - G1 production implementation until G0 Go/Conditional Go.
@@ -352,8 +368,8 @@ Stopped on 2026-05-19 20:43 PDT because no remaining eligible feature can procee
 
 ### Incidents
 
-- Incident 1: `click-through-matrix` cannot satisfy real hit-test acceptance in unattended mode.
-- Incident 2: `finder-dnd-path` cannot satisfy Finder drop acceptance in unattended mode.
+- Incident 1: `click-through-matrix` has partial transparent-area human pass but still lacks full matrix evidence.
+- Incident 2: `finder-dnd-path` has partial drag-in human pass but still lacks exact per-kind payload evidence.
 - Incident 3: `spaces-multimonitor-matrix` cannot satisfy real Spaces/fullscreen/multi-display acceptance in unattended mode.
 - Incident 4: `mas-sandbox-dry-run` cannot satisfy sandbox/private-API acceptance in unattended mode.
 - Incident 5: `window-command-contract` production implementation is blocked until G0 is Go/Conditional Go.
@@ -395,6 +411,7 @@ Stopped on 2026-05-19 20:43 PDT because no remaining eligible feature can procee
 - `2039f72` — `docs(roadmap): record g1 dnd prep checkpoint`
 - `dcf2750` — `docs(grid-persistence): add safe prep discovery`
 - `d8a49b3` — `docs(roadmap): record g1 persistence checkpoint`
+- pending G0 evidence commit — record partial human G0.3/G0.4 evidence
 
 ### Test Results
 
@@ -416,6 +433,8 @@ Stopped on 2026-05-19 20:43 PDT because no remaining eligible feature can procee
 - G1.3 safe-prep file checks and DnD path `rg` scan -> PASS
 - G1.4 safe-prep file checks and event-scope `rg` scan -> PASS
 - G1.5 safe-prep file checks and persistence/repository `rg` scan -> PASS
+- User manual G0.3 transparent-area click-through report -> PASS_PARTIAL
+- User manual G0.4 drag-into-Grid report -> PASS_PARTIAL
 
 ### Next Human Reading Order
 

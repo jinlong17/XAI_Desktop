@@ -2,7 +2,7 @@
 
 ## Status
 
-PARTIAL — static code analysis complete; runtime visual verification still required.
+PARTIAL_HUMAN_EVIDENCE / BLOCKED — user reported transparent-area clicks behaved normally; full matrix still requires grid-region and `macOSPrivateApi=false` verification.
 
 ## Static Findings (from source, no runtime needed)
 
@@ -22,12 +22,17 @@ PARTIAL — static code analysis complete; runtime visual verification still req
 
 | macOS | Display | macOSPrivateApi | Window | Region | Expected (from code) | Observed | Result |
 |---|---|---|---|---|---|---|---|
-| 26.4 | built-in + DELL | true | main | transparent blank area | Click reaches Finder/Desktop (`setIgnoresMouseEvents_=YES`) | **needs runtime** | NEEDS_VERIFY |
-| 26.4 | built-in + DELL | true | main | any region | All clicks pass through | **needs runtime** | NEEDS_VERIFY |
+| 26.4 | built-in + DELL | true | main | transparent blank area | Click reaches Finder/Desktop (`setIgnoresMouseEvents_=YES`) | 2026-05-19 user report: transparent-area clicks all behaved normally / underlying target reacted | PASS_PARTIAL |
+| 26.4 | built-in + DELL | true | main | any transparent region | All clicks pass through | 2026-05-19 user report: transparent areas behaved normally | PASS_PARTIAL |
 | 26.4 | built-in + DELL | true | grid | Grid item area | React pointer event fires (`setIgnoresMouseEvents_=NO`) | **needs runtime** | NEEDS_VERIFY |
 | 26.4 | built-in + DELL | true | grid | resize handle | Pointer event fires | **needs runtime** | NEEDS_VERIFY |
 | 26.4 | built-in + DELL | false | main | transparent area | Transparency may break; click-through logic unchanged | **needs runtime** | NEEDS_VERIFY |
 | 26.4 | built-in + DELL | false | grid | Grid item area | React pointer event fires (unchanged by macOSPrivateApi) | **needs runtime** | NEEDS_VERIFY |
+
+## Human Runtime Notes
+
+- 2026-05-19 21:07 PDT: User reported G0.3 click-through manual test result: clicking transparent areas all produced the expected reaction and appeared normal.
+- Remaining evidence needed: grid item pointer behavior, resize handle behavior, and the `macOSPrivateApi=false` comparison.
 
 ## Runtime Verification Steps (human required)
 
