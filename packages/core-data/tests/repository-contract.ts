@@ -123,6 +123,65 @@ export function runRepositoryContractTests(
         recordCount: 1,
       });
     });
+
+    // ── Negative-path contract (P1 D2) ─────────────────────────────────────
+    //
+    // Every Repo<T> driver MUST reject malformed records and bad migration
+    // plans with the documented `E3005` / `E3006` codes, and `listByIndex`
+    // on an unknown field MUST return an empty array rather than throwing
+    // or returning `undefined`.
+
+    it("rejects invalid records with E3005 (missing entityType / bad schemaVersion)", async () => {
+      const repo = createRepo();
+
+      // Missing entityType.
+      const missingEntity = {
+        ...makeRecord("bad-1"),
+        entityType: "",
+      } as ContractRecord;
+      await expect(repo.put(missingEntity)).rejects.toThrow(/E3005/);
+
+      // schemaVersion = 0 (below the minimum positive integer).
+      const badSchema = {
+        ...makeRecord("bad-2"),
+        schemaVersion: 0,
+      } as ContractRecord;
+      await expect(repo.put(badSchema)).rejects.toThrow(/E3005/);
+    });
+
+    it("rejects a migration plan whose fromVersion does not match the current migrationVersion (E3006)", async () => {
+      const repo = createRepo();
+
+      // Repo is freshly created at migrationVersion=0, so a plan claiming
+      // fromVersion=5 → toVersion=6 must surface `E3006: ... expected version`.
+      await expect(
+        repo.migrate({
+          id: "bad-migration",
+          fromVersion: 5,
+          toVersion: 6,
+          steps: [],
+        }),
+      ).rejects.toThrow(/E3006:.*expected version/);
+    });
+
+    it("returns an empty array for listByIndex with a non-existent field", async () => {
+      const repo = createRepo();
+
+      // Even with no records the call must resolve to an array, never throw.
+      await expect(
+        repo.listByIndex("nonExistentField" as never, "x" as never),
+      ).resolves.toEqual([]);
+
+      // Same with records present — unknown indexed field still returns [].
+      await repo.put(makeRecord("todo-1"));
+      await repo.put(makeRecord("todo-2"));
+      const result = await repo.listByIndex(
+        "nonExistentField" as never,
+        "x" as never,
+      );
+      expect(Array.isArray(result)).toBe(true);
+      expect(result).toEqual([]);
+    });
   });
 }
 
