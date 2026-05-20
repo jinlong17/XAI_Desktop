@@ -10,7 +10,9 @@
     }
   },
   "scripts": {
-    "check-types": "tsc --noEmit"
+    "check-types": "tsc --noEmit",
+    "test": "vitest run",
+    "test:watch": "vitest"
   },
   "dependencies": {
     "@repo/core": "workspace:*",
@@ -24,6 +26,7 @@
     "@repo/plugin-widgets": "workspace:*",
     "@repo/typescript-config": "workspace:*",
     "@types/react": "19.2.2",
-    "typescript": "5.9.2"
+    "typescript": "5.9.2",
+    "vitest": "^3.2.1"
   }
 }
