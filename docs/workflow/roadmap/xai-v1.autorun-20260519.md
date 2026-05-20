@@ -18,9 +18,9 @@
 | Current Feature | click-through-matrix / finder-dnd-path |
 | Feature Source | docs/planning/execution/G0-window-spike.md §G0.3, §G0.4 |
 | Feature Status | PARTIAL_HUMAN_EVIDENCE / BLOCKED |
-| Current Commit | latest roadmap log commit; evidence commits `e7fc4ab`, `e9a95ec` |
-| Tests | User manual evidence: transparent-area click-through normal; Finder items can be dragged into Grid |
-| Next Step | Complete exact G0.3/G0.4 matrix rows: grid item/resize, `macOSPrivateApi=false`, and Finder file/folder/`.app`/alias payload logs |
+| Current Commit | 58c926d |
+| Tests | `pnpm --filter desktop exec tsc --noEmit`; `pnpm --filter @repo/plugin-organizer check-types`; `pnpm --filter desktop build`; user manual evidence for click-through, resize, item click flash, and Finder file/folder drag |
+| Next Step | Rerun Finder file/folder after `58c926d`, capture `.app`/alias payloads, and compare `macOSPrivateApi=false` |
 
 ## Checkpoints
 
@@ -266,14 +266,35 @@
   - alias
 - No production status was promoted to G0 Go/Conditional Go.
 
+### 2026-05-19 21:21 PDT — Human Evidence + Bugfix: Finder duplicate drop
+
+- User provided screenshot evidence for G0.4:
+  - `Finder DnD` telemetry panel shows `source: tauri://drag-drop`.
+  - File kind is `file`.
+  - Observed file path: `/Users/lijinlong/Desktop/Jinlongsign I-140Page8.pdf`.
+  - A folder (`AI_Desktop`) and the PDF file both appeared in the Grid, but each appeared twice.
+- User completed additional G0.3 checks:
+  - Grid resize handle can be dragged.
+  - Clicking a file item flashes visually, proving pointer delivery to React; no further action is currently bound.
+- Implemented duplicate-drop fix in `58c926d`:
+  - GridWindow now uses Tauri path-first drop only.
+  - Removed the HTML5 `useFileDrop` fallback from GridWindow.
+  - Added Tauri drag enter/over/leave hover state and a 1-second duplicate payload guard.
+- Verification passed:
+  - `pnpm --filter desktop exec tsc --noEmit`
+  - `pnpm --filter @repo/plugin-organizer check-types`
+  - `pnpm --filter desktop build` (Vite chunk-size warning only)
+- G0.3 remains BLOCKED until `macOSPrivateApi=false` comparison.
+- G0.4 remains BLOCKED until file/folder post-fix rerun plus `.app` and alias payload evidence.
+
 ## Feature Outcomes
 
 | Feature | Gate | Status | Commit | Tests | Notes |
 |---|---|---|---|---|---|
 | window-ground-truth | G0 | READY_TO_SHIP | 3b571f6 | PASS: branch, sw_vers, README content | Deferred gates recorded in docs/workflow/roadmap/xai-v1.deferred-gates.md |
 | grid-window-prototype | G0 | READY_TO_SHIP | 6b121ea + 14e04c2 + 01e5167 + b8c34fe + 7b7ff35 + f65a1b5 + a33c74d | PASS: desktop tsc; plugin-organizer check-types; desktop build; cargo check | Runtime fixed/confirmed; deferred review/verify gates recorded. |
-| click-through-matrix | G0 | BLOCKED | 82ab268 + 7a1b9dd + e7fc4ab | PASS_PARTIAL: transparent-area click-through user report; BLOCKED: grid-region and `macOSPrivateApi=false` evidence | Requires remaining human macOS click-through matrix rows. |
-| finder-dnd-path | G0 | BLOCKED | 33627df + 7a1b9dd + 7e20ca8 + e7fc4ab | PASS_PARTIAL: user reported items can be dragged into Grid; BLOCKED: exact file/folder/app/alias payload evidence | Requires human Finder/Tauri path matrix payloads. |
+| click-through-matrix | G0 | BLOCKED | 82ab268 + 7a1b9dd + e7fc4ab | PASS_PARTIAL: transparent-area click-through, Grid item pointer flash, resize-handle drag; BLOCKED: `macOSPrivateApi=false` evidence | Requires remaining human macOS private-API comparison. |
+| finder-dnd-path | G0 | BLOCKED | 33627df + 7a1b9dd + 7e20ca8 + e7fc4ab + 58c926d | PASS_PARTIAL: file path observed via `tauri://drag-drop`; duplicate bug fixed; BLOCKED: post-fix file/folder rerun plus app/alias payload evidence | Requires human Finder/Tauri path matrix payloads. |
 | spaces-multimonitor-matrix | G0 | BLOCKED | 2fb6bac | PASS: matrix template exists; BLOCKED: real Spaces/fullscreen/multi-display evidence | Reached by user override; safe prep only. |
 | mas-sandbox-dry-run | G0 | BLOCKED | 071a192 | PASS: MAS notes exist; BLOCKED: real sandbox/private-API evidence | Reached by user override; safe prep only. |
 | window-command-contract | G1 | BLOCKED | 9c7b52f | PASS: safe-prep docs exist; BLOCKED: G0 not Go/Conditional Go | Reached by user override; no production code changed. |
@@ -289,8 +310,8 @@
 - Cross-vendor review and verify deferred for `window-ground-truth`.
 - Human ship for `window-ground-truth` deferred while continuing local G0 tasks.
 - Cross-vendor review/verify deferred for `grid-window-prototype`; runtime fix was confirmed by user and commits.
-- Remaining macOS click-through matrix rows deferred for `click-through-matrix`; transparent-area click-through has partial positive human evidence.
-- Remaining Finder DnD path matrix rows deferred for `finder-dnd-path`; drag-in has partial positive human evidence and GridWindow telemetry is available to capture exact payloads.
+- Remaining macOS click-through matrix rows deferred for `click-through-matrix`; default-runtime click-through, item pointer, and resize evidence are positive.
+- Remaining Finder DnD path matrix rows deferred for `finder-dnd-path`; file path evidence is positive, duplicate bug is fixed in `58c926d`, and app/alias/post-fix rerun evidence is still needed.
 - Real Spaces/fullscreen/multi-display matrix deferred for `spaces-multimonitor-matrix`.
 - Real MAS/private-API sandbox evidence deferred for `mas-sandbox-dry-run`.
 - G1 production implementation deferred until G0 Go/Conditional Go.
@@ -302,8 +323,8 @@
 
 ## Incidents Summary
 
-- click-through-matrix blocked on remaining macOS hit-test evidence after transparent-area partial pass.
-- finder-dnd-path blocked on exact Finder DnD payload evidence after drag-in partial pass.
+- click-through-matrix blocked on `macOSPrivateApi=false` comparison after default-runtime partial pass.
+- finder-dnd-path blocked on post-fix file/folder rerun and `.app`/alias payload evidence after duplicate bugfix.
 - spaces-multimonitor-matrix blocked on real macOS Spaces/fullscreen/multi-display evidence.
 - mas-sandbox-dry-run blocked on real sandbox/private-API evidence.
 - window-command-contract blocked by G0 gate status.
@@ -320,8 +341,8 @@ Stopped on 2026-05-19 20:43 PDT because no remaining eligible feature can procee
 
 - `window-ground-truth` — READY_TO_SHIP.
 - `grid-window-prototype` — READY_TO_SHIP after runtime recovery.
-- `click-through-matrix` — BLOCKED after partial transparent-area human pass.
-- `finder-dnd-path` — BLOCKED after partial drag-in human pass.
+- `click-through-matrix` — BLOCKED after partial human pass for transparent clicks, Grid item pointer, and resize drag.
+- `finder-dnd-path` — BLOCKED after partial Tauri path evidence and duplicate bugfix.
 - `spaces-multimonitor-matrix` — BLOCKED after safe prep.
 - `mas-sandbox-dry-run` — BLOCKED after safe prep.
 - `window-command-contract` — BLOCKED after safe prep.
@@ -355,8 +376,8 @@ Stopped on 2026-05-19 20:43 PDT because no remaining eligible feature can procee
 - Human ship for `window-ground-truth`.
 - Cross-vendor review/verify for serial Codex-run features.
 - Independent review/verify for `grid-window-prototype` runtime recovery commits.
-- Remaining macOS click-through matrix rows for `click-through-matrix`.
-- Remaining Finder DnD path matrix payloads for `finder-dnd-path`; use the new GridWindow telemetry panel/log.
+- Remaining `macOSPrivateApi=false` click-through comparison for `click-through-matrix`.
+- Remaining Finder DnD app/alias payloads and post-fix file/folder duplicate check for `finder-dnd-path`; use the GridWindow telemetry panel/log.
 - Real Spaces/fullscreen/multi-display matrix for `spaces-multimonitor-matrix`.
 - Real MAS/private-API sandbox evidence for `mas-sandbox-dry-run`.
 - G1 production implementation until G0 Go/Conditional Go.
@@ -368,8 +389,8 @@ Stopped on 2026-05-19 20:43 PDT because no remaining eligible feature can procee
 
 ### Incidents
 
-- Incident 1: `click-through-matrix` has partial transparent-area human pass but still lacks full matrix evidence.
-- Incident 2: `finder-dnd-path` has partial drag-in human pass but still lacks exact per-kind payload evidence.
+- Incident 1: `click-through-matrix` has default-runtime human pass but still lacks `macOSPrivateApi=false` comparison.
+- Incident 2: `finder-dnd-path` has Tauri path evidence and duplicate fix, but still lacks post-fix file/folder rerun plus app/alias payloads.
 - Incident 3: `spaces-multimonitor-matrix` cannot satisfy real Spaces/fullscreen/multi-display acceptance in unattended mode.
 - Incident 4: `mas-sandbox-dry-run` cannot satisfy sandbox/private-API acceptance in unattended mode.
 - Incident 5: `window-command-contract` production implementation is blocked until G0 is Go/Conditional Go.
@@ -413,6 +434,7 @@ Stopped on 2026-05-19 20:43 PDT because no remaining eligible feature can procee
 - `d8a49b3` — `docs(roadmap): record g1 persistence checkpoint`
 - `e7fc4ab` — `docs(g0-evidence): record partial manual runtime results`
 - `e9a95ec` — `docs(roadmap): finalize g0 evidence checkpoint`
+- `58c926d` — `fix(finder-dnd-path): prefer Tauri drop path in grid windows`
 
 ### Test Results
 
@@ -430,6 +452,9 @@ Stopped on 2026-05-19 20:43 PDT because no remaining eligible feature can procee
 - `cargo check --manifest-path apps/desktop/src-tauri/Cargo.toml` -> PASS with existing dead-code warnings
 - `pnpm --filter desktop exec tsc --noEmit` -> PASS
 - `pnpm --filter @repo/core check-types` -> PASS
+- `pnpm --filter desktop exec tsc --noEmit` after `58c926d` -> PASS
+- `pnpm --filter @repo/plugin-organizer check-types` after `58c926d` -> PASS
+- `pnpm --filter desktop build` after `58c926d` -> PASS with Vite chunk-size warning
 - G1.2 safe-prep file checks and Host/Organizer boundary `rg` scan -> PASS
 - G1.3 safe-prep file checks and DnD path `rg` scan -> PASS
 - G1.4 safe-prep file checks and event-scope `rg` scan -> PASS

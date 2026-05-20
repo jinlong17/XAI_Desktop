@@ -2,7 +2,7 @@
 
 ## Status
 
-PARTIAL_HUMAN_EVIDENCE / BLOCKED — user reported transparent-area clicks behaved normally; full matrix still requires grid-region and `macOSPrivateApi=false` verification.
+PARTIAL_HUMAN_EVIDENCE / BLOCKED — default-runtime click-through, Grid resize-handle drag, and Grid item pointer delivery were manually observed; `macOSPrivateApi=false` comparison is still required.
 
 ## Static Findings (from source, no runtime needed)
 
@@ -24,15 +24,16 @@ PARTIAL_HUMAN_EVIDENCE / BLOCKED — user reported transparent-area clicks behav
 |---|---|---|---|---|---|---|---|
 | 26.4 | built-in + DELL | true | main | transparent blank area | Click reaches Finder/Desktop (`setIgnoresMouseEvents_=YES`) | 2026-05-19 user report: transparent-area clicks all behaved normally / underlying target reacted | PASS_PARTIAL |
 | 26.4 | built-in + DELL | true | main | any transparent region | All clicks pass through | 2026-05-19 user report: transparent areas behaved normally | PASS_PARTIAL |
-| 26.4 | built-in + DELL | true | grid | Grid item area | React pointer event fires (`setIgnoresMouseEvents_=NO`) | **needs runtime** | NEEDS_VERIFY |
-| 26.4 | built-in + DELL | true | grid | resize handle | Pointer event fires | **needs runtime** | NEEDS_VERIFY |
+| 26.4 | built-in + DELL | true | grid | Grid item area | React pointer event fires (`setIgnoresMouseEvents_=NO`) | Clicking a file item flashes visually, but no additional action is bound | PASS_POINTER_ONLY |
+| 26.4 | built-in + DELL | true | grid | resize handle | Pointer event fires | Resize handle can be dragged | PASS_MANUAL |
 | 26.4 | built-in + DELL | false | main | transparent area | Transparency may break; click-through logic unchanged | **needs runtime** | NEEDS_VERIFY |
 | 26.4 | built-in + DELL | false | grid | Grid item area | React pointer event fires (unchanged by macOSPrivateApi) | **needs runtime** | NEEDS_VERIFY |
 
 ## Human Runtime Notes
 
 - 2026-05-19 21:07 PDT: User reported G0.3 click-through manual test result: clicking transparent areas all produced the expected reaction and appeared normal.
-- Remaining evidence needed: grid item pointer behavior, resize handle behavior, and the `macOSPrivateApi=false` comparison.
+- 2026-05-19 21:21 PDT: User reported the Grid resize handle can be dragged; clicking a file item flashes visually but no other action is currently bound.
+- Remaining evidence needed: `macOSPrivateApi=false` comparison.
 
 ## Runtime Verification Steps (human required)
 

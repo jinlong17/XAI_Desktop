@@ -4,21 +4,21 @@
 
 - Time: 2026-05-19 14:44 PDT
 - Feature: click-through-matrix
-- Symptom: Feature cannot satisfy acceptance in unattended mode.
-- Root cause if known: G0.3 requires real macOS hit-test observations across `macOSPrivateApi=true` and `false`; static code review and build checks cannot prove click-through behavior.
-- Attempted fixes: Created a manual matrix template, filled static code-analysis findings, recorded the 2026-05-19 user report that transparent-area clicks behave normally, and documented the remaining runtime evidence required. Avoided unsafe NSWindow/Tauri config changes without complete live validation.
+- Symptom: Feature cannot satisfy full acceptance yet.
+- Root cause if known: G0.3 still requires real macOS hit-test observations across `macOSPrivateApi=true` and `false`; default-runtime click-through, Grid item pointer delivery, and resize drag now have positive human evidence.
+- Attempted fixes: Created a manual matrix template, filled static code-analysis findings, recorded human evidence for transparent-area clicks, resize handle drag, and item click flash, and documented the remaining private-API comparison. Avoided unsafe NSWindow/Tauri config changes without complete live validation.
 - Current status: BLOCKED.
-- Resume instruction: Run `pnpm --filter desktop tauri dev`, fill remaining grid-region and `macOSPrivateApi=false` rows in `docs/reviews/window-ground-truth/click-through-matrix/README.md`, then rerun feature-verify for `click-through-matrix`.
+- Resume instruction: Run `pnpm --filter desktop tauri dev` with `macOSPrivateApi=false`, fill remaining rows in `docs/reviews/window-ground-truth/click-through-matrix/README.md`, then rerun feature-verify for `click-through-matrix`.
 
 ## Incident 2
 
 - Time: 2026-05-19 14:47 PDT
 - Feature: finder-dnd-path
-- Symptom: Feature cannot satisfy acceptance in unattended mode.
-- Root cause if known: G0.4 requires real Finder drag/drop payload observations for file, folder, App bundle, and alias; static inspection cannot prove path payload behavior.
-- Attempted fixes: Created a manual path-first matrix template, filled static code-analysis findings, added GridWindow `tauri://drag-drop` telemetry in `7e20ca8`, recorded the 2026-05-19 user report that items can be dragged into Grid, and documented the exact runtime evidence required. Avoided Rust/native drop behavior changes without full per-kind payload evidence.
+- Symptom: Feature cannot satisfy full acceptance yet; human screenshot also showed dragged file/folder items duplicated.
+- Root cause if known: G0.4 still requires real Finder drag/drop payload observations for file, folder, App bundle, and alias. Duplicate items were likely caused by GridWindow handling the same Finder drop through both Tauri `tauri://drag-drop` and the HTML5 `useFileDrop` fallback.
+- Attempted fixes: Created a manual path-first matrix template, filled static code-analysis findings, added GridWindow `tauri://drag-drop` telemetry in `7e20ca8`, recorded human screenshot evidence, and fixed duplicate item creation in `58c926d` by making GridWindow path-first only.
 - Current status: BLOCKED.
-- Resume instruction: Run `pnpm --filter desktop tauri dev`, drop a Finder file/folder/`.app`/alias into a Grid, capture the `Finder DnD` panel and `[G0 Finder DnD] path-first drop` logs, fill exact payload rows in `docs/reviews/window-ground-truth/finder-dnd-path/README.md`, then rerun feature-verify for `finder-dnd-path`.
+- Resume instruction: Run `pnpm --filter desktop tauri dev`, rerun file/folder drops to confirm no duplicates after `58c926d`, then drop `.app` and alias into a Grid, capture the `Finder DnD` panel and `[G0 Finder DnD] path-first drop` logs, fill exact payload rows in `docs/reviews/window-ground-truth/finder-dnd-path/README.md`, then rerun feature-verify for `finder-dnd-path`.
 
 ## Incident 3
 

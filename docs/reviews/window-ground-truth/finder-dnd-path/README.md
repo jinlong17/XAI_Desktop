@@ -2,7 +2,7 @@
 
 ## Status
 
-PARTIAL_HUMAN_EVIDENCE / BLOCKED — GridWindow has G0 Finder drop telemetry and user reported items can be dragged into Grid; exact per-kind payload observation is still required.
+PARTIAL_HUMAN_EVIDENCE / BLOCKED — GridWindow receives Tauri path-first Finder drops; file/folder evidence exists, but app/alias and post-fix duplicate regression checks are still required.
 
 ## Static Findings (from source, no runtime needed)
 
@@ -22,8 +22,8 @@ PARTIAL_HUMAN_EVIDENCE / BLOCKED — GridWindow has G0 Finder drop telemetry and
 | Item kind | Source example | Expected payload (from code) | Observed payload | gridId present | Result |
 |---|---|---|---|---|---|
 | Unspecified Finder item | Finder item(s) | `paths: [...]` through `tauri://drag-drop` telemetry | 2026-05-19 user report: "东西能拖动进去" / items can be dragged into Grid | Not confirmed from log | PASS_PARTIAL |
-| File | `/Users/.../foo.txt` | `paths: ["/Users/.../foo.txt"]` | **needs runtime** | Expected yes via telemetry | NEEDS_VERIFY |
-| Folder | `/Users/.../mydir/` | `paths: ["/Users/.../mydir"]` | **needs runtime** | Expected yes via telemetry | NEEDS_VERIFY |
+| File | `/Users/.../foo.txt` | `paths: ["/Users/.../foo.txt"]` | Screenshot shows `source: tauri://drag-drop`, kind `file`, path `/Users/lijinlong/Desktop/Jinlongsign I-140Page8.pdf`; item duplicated before fix `58c926d` | Expected yes via telemetry | PASS_WITH_DUPLICATE_BUG_FIXED |
+| Folder | `/Users/.../mydir/` | `paths: ["/Users/.../mydir"]` | Human reported folder can be dragged in; screenshot shows duplicated `AI_Desktop` folder item, exact telemetry path not captured in screenshot | Expected yes via telemetry | PASS_PARTIAL_WITH_DUPLICATE_BUG_FIXED |
 | App bundle | `/Applications/Safari.app` | `paths: ["/Applications/Safari.app"]` — bundle root, NOT binary inside | **needs runtime** | Expected yes via telemetry | NEEDS_VERIFY |
 | Alias | `/Users/.../alias` | resolved target path OR alias path — **behaviour undefined without test** | **needs runtime** | Expected yes via telemetry | NEEDS_VERIFY |
 | Drop onto main window | any | **blocked** — `dragDropEnabled: false` | N/A | N/A | CONFIRMED_BLOCKED |
@@ -31,7 +31,11 @@ PARTIAL_HUMAN_EVIDENCE / BLOCKED — GridWindow has G0 Finder drop telemetry and
 ## Human Runtime Notes
 
 - 2026-05-19 21:07 PDT: User reported G0.4 manual test result: items can be dragged into Grid.
-- Remaining evidence needed: exact `[G0 Finder DnD] path-first drop` console payload for a file, folder, `.app`, and alias, including `gridId`, `paths`, `kinds`, and `position`.
+- 2026-05-19 21:21 PDT: Screenshot evidence showed the telemetry panel with `drops 2`, `source: tauri://drag-drop`, kind `file`, and path `/Users/lijinlong/Desktop/Jinlongsign I-140Page8.pdf`.
+- 2026-05-19 21:21 PDT: The same screenshot/user report showed a folder (`AI_Desktop`) and a PDF file both appeared twice before the duplicate fix.
+- Duplicate root cause is consistent with GridWindow also running the HTML5 `useFileDrop` fallback while the Tauri path-first listener is active.
+- Fix `58c926d` removes the GridWindow HTML5 fallback, uses Tauri `DRAG_ENTER/OVER/LEAVE` for hover state, and ignores identical Tauri drop payloads received within 1 second.
+- Remaining evidence needed: rerun folder/file drop after `58c926d`, then test `.app` and alias payloads.
 
 ## Runtime Verification Steps (human required)
 
@@ -53,7 +57,7 @@ pnpm --filter desktop tauri dev
 
 ## Decision Fields
 
-- Webview drop real path works: **TBD** — needs runtime payload observation
-- Native drop receiver needed: **TBD** — JS telemetry now exists; decide after runtime path evidence
+- Webview drop real path works: **PARTIAL YES** — file path observed from `tauri://drag-drop`; folder exact telemetry needs post-fix capture
+- Native drop receiver needed: **TBD** — JS telemetry now receives real file paths; decide after folder/app/alias and MAS evidence
 - Security-scoped bookmark needed for MAS: **TBD** — required if MAS sandbox restricts arbitrary path access
 - Alias policy: **TBD** — record raw observed path first, decide resolution strategy in G1
