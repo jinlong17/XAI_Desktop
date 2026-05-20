@@ -50,10 +50,47 @@ function randomSlug(): string {
   return Math.random().toString(16).slice(2, 12);
 }
 
-/** Heuristic kind inference from a filesystem path. */
-export function inferKindFromPath(path: string): GridItemKind {
+export interface InferKindOptions {
+  /**
+   * Explicit FS knowledge from the caller (e.g. a Tauri drop adapter
+   * that has already stat-ed the path). When provided, it overrides the
+   * extension-based heuristic — `true` forces `folder`, `false` allows
+   * the regular file/app classification.
+   */
+  isDirectory?: boolean;
+}
+
+/**
+ * Heuristic kind inference from a filesystem path.
+ *
+ * Rules (in priority order):
+ *
+ * 1. If `opts.isDirectory` is explicitly provided, it wins — `true`
+ *    returns `folder`, `false` falls through to the heuristic but
+ *    skips the directory guess.
+ * 2. `.app` (case-insensitive) → `app`.
+ * 3. Otherwise: if `opts.isDirectory !== false` and the basename has
+ *    no `.` extension, default to `folder`. Real Finder drops never
+ *    have trailing slashes, so we cannot rely on `endsWith("/")`.
+ * 4. Trailing `/` still maps to `folder` (legacy explicit signal).
+ * 5. Anything else falls through to `file`.
+ */
+export function inferKindFromPath(
+  path: string,
+  opts?: InferKindOptions,
+): GridItemKind {
+  if (opts?.isDirectory === true) return "folder";
   if (path.toLowerCase().endsWith(APP_BUNDLE_SUFFIX)) return "app";
   if (path.endsWith("/")) return "folder";
+  if (opts?.isDirectory !== false) {
+    // Extract the basename and test for an extension dot. Paths with no
+    // extension (e.g. `/Users/me/Photos`) default to folder because the
+    // Finder drop path doesn't include the trailing slash.
+    const trimmed = path.replace(/\/+$/, "");
+    const lastSlash = trimmed.lastIndexOf("/");
+    const basename = lastSlash >= 0 ? trimmed.slice(lastSlash + 1) : trimmed;
+    if (basename.length > 0 && !basename.includes(".")) return "folder";
+  }
   // The drop adapter labels folders explicitly; the bare path heuristic
   // defaults the unknown case to "file" — most drag-ins are files.
   return "file";

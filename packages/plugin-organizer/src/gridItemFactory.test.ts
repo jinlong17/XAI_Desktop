@@ -27,6 +27,20 @@ describe("inferKindFromPath", () => {
   ])("infers %s → %s", (path, expected) => {
     expect(inferKindFromPath(path)).toBe(expected);
   });
+
+  it("infers folder for an extensionless basename without a trailing slash", () => {
+    // Real Finder drops never include a trailing slash; the heuristic
+    // must still recognise a directory by absence of an extension dot.
+    expect(inferKindFromPath("/Users/me/Photos")).toBe("folder");
+  });
+
+  it("honors explicit isDirectory override against the extension heuristic", () => {
+    // The opts override should win — note.md has a `.md` extension, so
+    // the default heuristic would return "file", but the FS-truth wins.
+    expect(
+      inferKindFromPath("/Users/me/note.md", { isDirectory: true }),
+    ).toBe("folder");
+  });
 });
 
 describe("file/folder/app factories", () => {

@@ -108,36 +108,42 @@ export function repositoryLayoutStore(
     async save(layout) {
       try {
         const timestamp = nowIso();
-        const seen = new Set<string>();
 
-        // Upsert grids
-        for (const grid of layout.grids) {
-          await options.gridRepo.put(gridBoxToEntity(grid, timestamp));
-          seen.add(grid.id);
-        }
-        // Cull grids that disappeared.
-        const existingGrids = await options.gridRepo.list();
-        for (const existing of existingGrids) {
-          if (!seen.has(existing.id)) {
-            await options.gridRepo.delete(existing.id);
+        // Wrap grid upsert + cull in a single transaction so a partial
+        // failure rolls back. On the in-memory driver this is
+        // snapshot-atomic; on the Tauri SQLite driver (post-G2.6) this
+        // batches via db_put_batch. Either way, `onSaveError` still
+        // surfaces the throw to consumers.
+        await options.gridRepo.transaction(async (tx) => {
+          const seen = new Set<string>();
+          for (const grid of layout.grids) {
+            await tx.put(gridBoxToEntity(grid, timestamp));
+            seen.add(grid.id);
           }
-        }
+          const existingGrids = await tx.list();
+          for (const existing of existingGrids) {
+            if (!seen.has(existing.id)) {
+              await tx.delete(existing.id);
+            }
+          }
+        });
 
-        const seenItems = new Set<string>();
-        for (const item of layout.items) {
-          const owningGridId = findOwningGridId(item.id, layout.grids);
-          if (!owningGridId) continue;
-          await options.itemRepo.put(
-            desktopItemToEntity(item, owningGridId, timestamp),
-          );
-          seenItems.add(item.id);
-        }
-        const existingItems = await options.itemRepo.list();
-        for (const existing of existingItems) {
-          if (!seenItems.has(existing.id)) {
-            await options.itemRepo.delete(existing.id);
+        // Same atomicity story for items.
+        await options.itemRepo.transaction(async (tx) => {
+          const seenItems = new Set<string>();
+          for (const item of layout.items) {
+            const owningGridId = findOwningGridId(item.id, layout.grids);
+            if (!owningGridId) continue;
+            await tx.put(desktopItemToEntity(item, owningGridId, timestamp));
+            seenItems.add(item.id);
           }
-        }
+          const existingItems = await tx.list();
+          for (const existing of existingItems) {
+            if (!seenItems.has(existing.id)) {
+              await tx.delete(existing.id);
+            }
+          }
+        });
       } catch (error) {
         options.onSaveError?.(error);
       }
@@ -170,15 +176,26 @@ function entityToGridBox(grid: GridEntity): GridBox {
 }
 
 function entityToDesktopItem(item: GridItemEntity): DesktopItem {
-  return {
+  const base: DesktopItem = {
     id: item.id,
     filename: item.filename,
     filepath: item.filepath ?? "",
-    type: item.kind === "url" ? "file" : item.kind,
+    type: item.kind,
     icon: item.icon,
     size: item.size,
     createdAt: 0,
   };
+  // Preserve the url payload — previously lossy (mapped url → file and
+  // dropped url metadata).
+  if (item.kind === "url" && item.url) {
+    base.url = {
+      href: item.url.href,
+      title: item.url.title,
+      description: item.url.description,
+      favicon: item.url.favicon,
+    };
+  }
+  return base;
 }
 
 function gridBoxToEntity(grid: GridBox, timestamp: string): GridEntity {
@@ -204,7 +221,7 @@ function desktopItemToEntity(
   gridId: string,
   timestamp: string,
 ): GridItemEntity {
-  return {
+  const entity: GridItemEntity = {
     id: item.id,
     entityType: "organizer.item",
     schemaVersion: 1,
@@ -218,6 +235,17 @@ function desktopItemToEntity(
     icon: item.icon,
     size: item.size,
   };
+  // Symmetric url payload preservation — DesktopItem.url ↔
+  // GridItemEntity.url for the round-trip.
+  if (item.type === "url" && item.url) {
+    entity.url = {
+      href: item.url.href,
+      title: item.url.title,
+      description: item.url.description,
+      favicon: item.url.favicon,
+    };
+  }
+  return entity;
 }
 
 function findOwningGridId(

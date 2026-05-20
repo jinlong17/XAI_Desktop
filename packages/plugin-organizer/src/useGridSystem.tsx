@@ -63,6 +63,11 @@ export function GridSystemProvider({ children, store }: GridSystemProviderProps)
   const [hydrated, setHydrated] = useState(false);
   const heightCache = useRef<Record<string, number>>({});
   const saveTimer = useRef<number | null>(null);
+  // Tracks whether the user has mutated state before hydrate resolves.
+  // If true, a late hydrate result must NOT clobber the in-memory
+  // grids/items — we still flip `hydrated` so the debounced save effect
+  // activates and persists the user's current state.
+  const userTouched = useRef(false);
 
   // Hydrate
   useEffect(() => {
@@ -88,6 +93,17 @@ export function GridSystemProvider({ children, store }: GridSystemProviderProps)
         data = null;
       }
       if (cancelled) return;
+      if (userTouched.current) {
+        // User created/edited grids before the async load resolved.
+        // Discard the loaded payload so we don't overwrite their edits;
+        // still flip hydrated so the debounced save persists current
+        // state.
+        console.warn(
+          "[useGridSystem] hydrate result discarded: user touched state before load resolved",
+        );
+        setHydrated(true);
+        return;
+      }
       if (data && Array.isArray(data.grids) && Array.isArray(data.items)) {
         const mappedItems: Record<string, DesktopItem> = {};
         data.items.forEach((item) => {
@@ -108,6 +124,7 @@ export function GridSystemProvider({ children, store }: GridSystemProviderProps)
 
   const createGrid = useCallback(
     (x: number, y: number, requestedId?: string) => {
+      userTouched.current = true;
       const id = requestedId ?? toId();
       const base = defaultGrid(id, x, y);
 
@@ -121,6 +138,7 @@ export function GridSystemProvider({ children, store }: GridSystemProviderProps)
 
   const updateGrid = useCallback(
     (id: string, patch: Partial<GridBox>) => {
+      userTouched.current = true;
       setGrids((prev) => prev.map((grid) => (grid.id === id ? { ...grid, ...patch } : grid)));
     },
     [],
@@ -128,6 +146,7 @@ export function GridSystemProvider({ children, store }: GridSystemProviderProps)
 
   const toggleFold = useCallback(
     (id: string) => {
+      userTouched.current = true;
       setGrids((prev) =>
         prev.map((grid) => {
           if (grid.id !== id) return grid;
@@ -145,6 +164,7 @@ export function GridSystemProvider({ children, store }: GridSystemProviderProps)
 
   const deleteGrid = useCallback(
     (id: string) => {
+      userTouched.current = true;
       setGrids((prev) => {
         const nextGrids = prev.filter((grid) => grid.id !== id);
         return nextGrids;
@@ -156,6 +176,7 @@ export function GridSystemProvider({ children, store }: GridSystemProviderProps)
   // Wipe all grids + items and forget the persisted layout. useMultiWindowGrids
   // observes `grids` going from N to 0 and will close every native window.
   const clearAll = useCallback(() => {
+    userTouched.current = true;
     setGrids([]);
     setItems({});
     heightCache.current = {};
@@ -165,6 +186,7 @@ export function GridSystemProvider({ children, store }: GridSystemProviderProps)
   const moveItem = useCallback(
     (itemId: string, fromId: string, toId: string) => {
       if (fromId === toId) return;
+      userTouched.current = true;
       setGrids((prev) =>
         prev.map((grid) => {
           if (grid.id === fromId) {
@@ -181,16 +203,19 @@ export function GridSystemProvider({ children, store }: GridSystemProviderProps)
   );
 
   const toggleLock = useCallback((id: string) => {
+    userTouched.current = true;
     setGrids((prev) =>
       prev.map((grid) => (grid.id === id ? { ...grid, isLocked: !grid.isLocked } : grid)),
     );
   }, []);
 
   const addItem = useCallback((item: DesktopItem) => {
+    userTouched.current = true;
     setItems((prev) => ({ ...prev, [item.id]: item }));
   }, []);
 
   const addItemToGrid = useCallback((gridId: string, itemId: string) => {
+    userTouched.current = true;
     setGrids((prev) =>
       prev.map((grid) =>
         grid.id === gridId && !grid.itemIds.includes(itemId)
