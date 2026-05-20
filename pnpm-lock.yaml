@@ -287,6 +287,9 @@ importers:
 
   packages/plugin-ai-cube:
     dependencies:
+      '@repo/core':
+        specifier: workspace:*
+        version: link:../core
       '@repo/core-data':
         specifier: workspace:*
         version: link:../core-data
@@ -309,6 +312,9 @@ importers:
 
   packages/plugin-calendar:
     dependencies:
+      '@repo/core':
+        specifier: workspace:*
+        version: link:../core
       '@repo/core-data':
         specifier: workspace:*
         version: link:../core-data
@@ -331,6 +337,12 @@ importers:
 
   packages/plugin-clipboard:
     dependencies:
+      '@repo/core':
+        specifier: workspace:*
+        version: link:../core
+      '@repo/core-data':
+        specifier: workspace:*
+        version: link:../core-data
       react:
         specifier: ^19.2.0
         version: 19.2.0
@@ -353,6 +365,12 @@ importers:
 
   packages/plugin-console:
     dependencies:
+      '@repo/core':
+        specifier: workspace:*
+        version: link:../core
+      '@repo/core-data':
+        specifier: workspace:*
+        version: link:../core-data
       react:
         specifier: ^19.2.0
         version: 19.2.0
@@ -375,6 +393,12 @@ importers:
 
   packages/plugin-labels:
     dependencies:
+      '@repo/core':
+        specifier: workspace:*
+        version: link:../core
+      '@repo/core-data':
+        specifier: workspace:*
+        version: link:../core-data
       react:
         specifier: ^19.2.0
         version: 19.2.0
@@ -452,6 +476,9 @@ importers:
 
   packages/plugin-pet:
     dependencies:
+      '@repo/core':
+        specifier: workspace:*
+        version: link:../core
       '@repo/core-data':
         specifier: workspace:*
         version: link:../core-data
@@ -471,6 +498,12 @@ importers:
 
   packages/plugin-productivity:
     dependencies:
+      '@repo/core':
+        specifier: workspace:*
+        version: link:../core
+      '@repo/core-data':
+        specifier: workspace:*
+        version: link:../core-data
       react:
         specifier: ^19.2.0
         version: 19.2.0
@@ -493,6 +526,12 @@ importers:
 
   packages/plugin-project:
     dependencies:
+      '@repo/core':
+        specifier: workspace:*
+        version: link:../core
+      '@repo/core-data':
+        specifier: workspace:*
+        version: link:../core-data
       react:
         specifier: ^19.2.0
         version: 19.2.0
@@ -515,6 +554,9 @@ importers:
 
   packages/plugin-widgets:
     dependencies:
+      '@repo/core':
+        specifier: workspace:*
+        version: link:../core
       '@repo/core-data':
         specifier: workspace:*
         version: link:../core-data
