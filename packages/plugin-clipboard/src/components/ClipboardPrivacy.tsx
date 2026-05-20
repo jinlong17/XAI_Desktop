@@ -4,12 +4,23 @@ import { useClipboardStore } from "../hooks/useClipboardStore";
 export function ClipboardPrivacy() {
   const { privacy, updatePrivacy, clearUnpinned } = useClipboardStore();
   const [pattern, setPattern] = useState("");
+  const [confirmingRedaction, setConfirmingRedaction] = useState(false);
+  const [understandsIrreversibility, setUnderstandsIrreversibility] = useState(false);
 
   const addPattern = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     if (!pattern.trim()) return;
     updatePrivacy({ redactPatterns: [...privacy.redactPatterns, pattern.trim()] });
     setPattern("");
+  };
+
+  const toggleRedaction = (enabled: boolean) => {
+    if (enabled && !privacy.acknowledgedRedactIrreversibility) {
+      setUnderstandsIrreversibility(false);
+      setConfirmingRedaction(true);
+      return;
+    }
+    updatePrivacy({ redactEnabled: enabled });
   };
 
   return (
@@ -20,7 +31,7 @@ export function ClipboardPrivacy() {
       <label style={{ alignItems: "center", display: "flex", gap: 8 }}>
         <input
           checked={privacy.redactEnabled}
-          onChange={(event) => updatePrivacy({ redactEnabled: event.target.checked })}
+          onChange={(event) => toggleRedaction(event.target.checked)}
           type="checkbox"
         />
         Redact sensitive patterns
@@ -68,6 +79,60 @@ export function ClipboardPrivacy() {
       >
         Clear unpinned
       </button>
+      {confirmingRedaction ? (
+        <div
+          aria-modal="true"
+          role="dialog"
+          style={{
+            alignItems: "center",
+            background: "rgba(17, 24, 39, 0.35)",
+            display: "flex",
+            inset: 0,
+            justifyContent: "center",
+            padding: 16,
+            position: "fixed",
+            zIndex: 20,
+          }}
+        >
+          <div style={{ background: "#ffffff", borderRadius: 8, display: "grid", gap: 12, maxWidth: 420, padding: 16 }}>
+            <strong>Enable redaction</strong>
+            <p style={{ margin: 0 }}>
+              Enabling redaction will rewrite all stored clipboard content matching the configured patterns. Original values cannot be
+              recovered.
+            </p>
+            <label style={{ alignItems: "center", display: "flex", gap: 8 }}>
+              <input
+                checked={understandsIrreversibility}
+                onChange={(event) => setUnderstandsIrreversibility(event.target.checked)}
+                type="checkbox"
+              />
+              I understand
+            </label>
+            <div style={{ display: "flex", gap: 8, justifyContent: "flex-end" }}>
+              <button
+                onClick={() => {
+                  setConfirmingRedaction(false);
+                  setUnderstandsIrreversibility(false);
+                }}
+                type="button"
+              >
+                Cancel
+              </button>
+              <button
+                disabled={!understandsIrreversibility}
+                onClick={() => {
+                  updatePrivacy({ redactEnabled: true, acknowledgedRedactIrreversibility: true });
+                  setConfirmingRedaction(false);
+                  setUnderstandsIrreversibility(false);
+                }}
+                type="button"
+              >
+                Enable redaction
+              </button>
+            </div>
+          </div>
+        </div>
+      ) : null}
     </section>
   );
 }

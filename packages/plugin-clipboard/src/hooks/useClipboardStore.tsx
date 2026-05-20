@@ -4,6 +4,7 @@ import {
   useContext,
   useEffect,
   useMemo,
+  useRef,
   useState,
   type ReactNode,
 } from "react";
@@ -21,6 +22,7 @@ const PRIVACY_KEY = "xai.plugin-clipboard.privacy";
 
 const defaultPrivacy: ClipboardPrivacySettings = {
   redactEnabled: true,
+  acknowledgedRedactIrreversibility: false,
   redactPatterns: ["[A-Z0-9._%+-]+@[A-Z0-9.-]+\\.[A-Z]{2,}", "\\b\\d{3}-\\d{2}-\\d{4}\\b"],
   autoClearMinutes: null,
 };
@@ -58,9 +60,16 @@ function createId(prefix: string): string {
 }
 
 function inferType(content: string): ClipboardEntryType {
-  if (/^https?:\/\//.test(content.trim())) return "url";
-  if (/function\s|const\s|let\s|=>|class\s/.test(content)) return "code";
+  const trimmed = content.trim();
+  if (/^https?:\/\//.test(trimmed)) return "url";
+  const hasStructural = /[{};]|=>|\bfunction\b|\bclass\b/.test(trimmed);
+  const looksMultilineCode = trimmed.includes("\n") && /^\s{2,}|\t/.test(trimmed);
+  if (hasStructural && (looksMultilineCode || /^[{[]/.test(trimmed))) return "code";
   return "text";
+}
+
+function sortEntries(entries: ClipboardEntry[]): ClipboardEntry[] {
+  return [...entries].sort((a, b) => Number(b.pinned) - Number(a.pinned) || b.createdAt.localeCompare(a.createdAt));
 }
 
 function readPrivacy(): ClipboardPrivacySettings {
@@ -114,27 +123,53 @@ export interface ClipboardStoreProviderProps {
 }
 
 export function ClipboardStoreProvider({
-  adapter = new LocalStorageAdapter<ClipboardEntry>(STORAGE_KEY, seedEntries),
+  adapter,
   children,
 }: ClipboardStoreProviderProps) {
+  const [fallbackAdapter] = useState(() => new LocalStorageAdapter<ClipboardEntry>(STORAGE_KEY, seedEntries));
+  const stableAdapter = adapter ?? fallbackAdapter;
   const [entries, setEntries] = useState<ClipboardEntry[]>([]);
   const [privacy, setPrivacy] = useState<ClipboardPrivacySettings>(defaultPrivacy);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const entriesRef = useRef<ClipboardEntry[]>(entries);
+
+  useEffect(() => {
+    entriesRef.current = entries;
+  }, [entries]);
+
+  const backfillRedactedEntries = useCallback(
+    async (sourceEntries: ClipboardEntry[], settings: ClipboardPrivacySettings) => {
+      const changedEntries: ClipboardEntry[] = [];
+      for (const entry of sourceEntries) {
+        const redacted = applyRedactions(entry.content, settings);
+        if (redacted !== entry.content) {
+          const nextEntry = { ...entry, content: redacted };
+          await stableAdapter.save(nextEntry);
+          changedEntries.push(nextEntry);
+        }
+      }
+      return changedEntries;
+    },
+    [stableAdapter],
+  );
 
   const refresh = useCallback(async () => {
     setIsLoading(true);
     setError(null);
     try {
-      const next = await adapter.getAll();
-      setEntries(next.sort((a, b) => Number(b.pinned) - Number(a.pinned) || b.createdAt.localeCompare(a.createdAt)));
-      setPrivacy(readPrivacy());
+      const storedPrivacy = readPrivacy();
+      const next = await stableAdapter.getAll();
+      const changedEntries = storedPrivacy.redactEnabled ? await backfillRedactedEntries(next, storedPrivacy) : [];
+      const changedById = new Map(changedEntries.map((entry) => [entry.id, entry]));
+      setEntries(sortEntries(next.map((entry) => changedById.get(entry.id) ?? entry)));
+      setPrivacy(storedPrivacy);
     } catch (cause) {
       setError(cause instanceof Error ? cause.message : "Unable to load clipboard history");
     } finally {
       setIsLoading(false);
     }
-  }, [adapter]);
+  }, [backfillRedactedEntries, stableAdapter]);
 
   useEffect(() => {
     void refresh();
@@ -145,32 +180,32 @@ export function ClipboardStoreProvider({
     if (!autoClearMinutes) return undefined;
     const interval = window.setInterval(() => {
       const cutoff = Date.now() - autoClearMinutes * 60_000;
-      entries
-        .filter((entry) => !entry.pinned && new Date(entry.createdAt).getTime() < cutoff)
-        .forEach((entry) => {
-          void adapter.delete(entry.id);
-        });
+      const stale = entriesRef.current.filter((entry) => !entry.pinned && new Date(entry.createdAt).getTime() < cutoff);
+      if (stale.length === 0) return;
+      stale.forEach((entry) => {
+        void stableAdapter.delete(entry.id);
+      });
       setEntries((prev) => prev.filter((entry) => entry.pinned || new Date(entry.createdAt).getTime() >= cutoff));
     }, 30_000);
     return () => window.clearInterval(interval);
-  }, [adapter, entries, privacy.autoClearMinutes]);
+  }, [stableAdapter, privacy.autoClearMinutes]);
 
   const persist = useCallback(
     async (entry: ClipboardEntry) => {
-      await adapter.save(entry);
+      await stableAdapter.save(entry);
       setEntries((prev) => {
         const next = prev.some((current) => current.id === entry.id)
           ? prev.map((current) => (current.id === entry.id ? entry : current))
           : [entry, ...prev];
-        return next.sort((a, b) => Number(b.pinned) - Number(a.pinned) || b.createdAt.localeCompare(a.createdAt));
+        return sortEntries(next);
       });
     },
-    [adapter],
+    [stableAdapter],
   );
 
   const addMockEntry = useCallback(
     async (input: ClipboardDraft) => {
-      const content = input.content.trim();
+      const content = applyRedactions(input.content.trim(), privacy);
       if (!content) throw new Error("Clipboard content is required");
       const entry: ClipboardEntry = {
         id: createId("clip"),
@@ -183,47 +218,56 @@ export function ClipboardStoreProvider({
       await persist(entry);
       return entry;
     },
-    [persist],
+    [persist, privacy],
   );
 
   const updateEntry = useCallback(
     async (id: string, patch: Partial<Omit<ClipboardEntry, "id" | "createdAt">>) => {
-      const current = await adapter.getById(id);
+      const current = await stableAdapter.getById(id);
       if (!current) return;
-      await persist({ ...current, ...patch });
+      const sanitizedPatch =
+        typeof patch.content === "string" ? { ...patch, content: applyRedactions(patch.content, privacy) } : patch;
+      await persist({ ...current, ...sanitizedPatch });
     },
-    [adapter, persist],
+    [persist, privacy, stableAdapter],
   );
 
   const deleteEntry = useCallback(
     async (id: string) => {
-      await adapter.delete(id);
+      await stableAdapter.delete(id);
       setEntries((prev) => prev.filter((entry) => entry.id !== id));
     },
-    [adapter],
+    [stableAdapter],
   );
 
   const clearUnpinned = useCallback(async () => {
-    await Promise.all(entries.filter((entry) => !entry.pinned).map((entry) => adapter.delete(entry.id)));
+    await Promise.all(entries.filter((entry) => !entry.pinned).map((entry) => stableAdapter.delete(entry.id)));
     setEntries((prev) => prev.filter((entry) => entry.pinned));
-  }, [adapter, entries]);
+  }, [entries, stableAdapter]);
 
   const togglePinned = useCallback(
     async (id: string) => {
-      const current = await adapter.getById(id);
+      const current = await stableAdapter.getById(id);
       if (!current) return;
       await persist({ ...current, pinned: !current.pinned });
     },
-    [adapter, persist],
+    [persist, stableAdapter],
   );
 
   const updatePrivacy = useCallback((patch: Partial<ClipboardPrivacySettings>) => {
     setPrivacy((current) => {
       const next = { ...current, ...patch };
       writePrivacy(next);
+      if (patch.redactEnabled === true && !current.redactEnabled) {
+        void backfillRedactedEntries(entriesRef.current, next).then((changedEntries) => {
+          if (changedEntries.length === 0) return;
+          const changedById = new Map(changedEntries.map((entry) => [entry.id, entry]));
+          setEntries((prev) => sortEntries(prev.map((entry) => changedById.get(entry.id) ?? entry)));
+        });
+      }
       return next;
     });
-  }, []);
+  }, [backfillRedactedEntries]);
 
   const getEntryById = useCallback(
     (id: string) => entries.find((entry) => entry.id === id) ?? null,
