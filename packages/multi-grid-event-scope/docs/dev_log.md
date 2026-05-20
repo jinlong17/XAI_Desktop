@@ -8,14 +8,14 @@
 | Target | multi-grid-event-scope |
 | Title | G1.4 Multi-Grid event scope |
 | Roadmap | xai-g1-native-foundation · feature #4 · G1.4 |
-| Status | READY_FOR_VERIFY |
-| Current Phase | FEATURE_BUILD |
-| Suggested Next | feature-verify |
+| Status | READY_TO_SHIP |
+| Current Phase | FEATURE_VERIFY |
+| Suggested Next | manual ship only; continue G2 Repository v0 because G1.5 depends on it |
 | Automation Mode | D-Codex |
 | Verify Cross-vendor | yes |
-| Executor | feature-build (Codex inline) |
-| Updated | 2026-05-19 23:30 PDT |
-| Blockers | None for G1.4 DMG/private path; manual multi-window runtime smoke remains deferred |
+| Executor | feature-verify (Codex inline) |
+| Updated | 2026-05-19 23:34 PDT |
+| Blockers | None for G1.4 DMG/private path; deferred gates recorded in roadmap logs |
 
 ## Phase Plan
 
@@ -58,6 +58,20 @@ Docs-only prep completed while G0/G1.1 were blocked. That blocker is now resolve
 - Legacy event string scan
 - Target event/API scan
 
+feature-verify (Codex inline), 2026-05-19 23:34 PDT. Verdict: READY_TO_SHIP.
+
+Verification passed:
+
+- `pnpm --filter @repo/core check-types`
+- `pnpm --filter @repo/plugin-organizer check-types`
+- `pnpm --filter @repo/plugin-organizer test` (4 tests)
+- `pnpm --filter desktop build`
+- Legacy event scan: only compatibility constants remain.
+- Target event/API scan confirms `organizer:grid:*`, `organizer:file:drop`, and guard usage.
+- Required review/package docs exist.
+
+Cross-vendor verify and manual two-Grid runtime smoke/listener cleanup checks are deferred in `docs/workflow/roadmap/xai-v1.deferred-gates.md`; no ship or push was run.
+
 ## Work Log
 
 | Timestamp | Executor | Action | Commits | Next |
@@ -69,3 +83,4 @@ Docs-only prep completed while G0/G1.1 were blocked. That blocker is now resolve
 | 2026-05-19 23:30 PDT | feature-plan (Codex inline) | Reopened G1.4 after G1.2 READY_TO_SHIP; scoped production event migration and guard tests. | `3751f43` | feature-review |
 | 2026-05-19 23:30 PDT | feature-review (Codex inline) | Approved bounded event-name/guard migration. | — | feature-build |
 | 2026-05-19 23:30 PDT | feature-build (Codex inline) | Migrated Grid runtime events, EventMap, contract docs, and guard tests. | `78aef01` | feature-verify |
+| 2026-05-19 23:34 PDT | feature-verify (Codex inline) | Verified type checks, guard tests, desktop build, and event contract scans; marked READY_TO_SHIP. | `78aef01`, `59da1e5` | manual ship only; continue roadmap |

@@ -266,6 +266,30 @@
 
 ## Entry 23
 
+- Feature: multi-grid-event-scope
+- Gate: G1
+- Deferred gate: Cross-vendor feature-verify
+- Why deferred: The runtime override requires a serial Codex conductor with no spawn/bg dispatch, so no independent cross-vendor verifier was available.
+- Risk: The same Codex execution context implemented and verified the event migration.
+- What was done instead: Ran inline feature-verify with core and Organizer type checks, Organizer guard tests, desktop build, legacy event scan, target event/API scan, and file existence checks.
+- Later human action: Review `78aef01` and `packages/multi-grid-event-scope/docs/dev_log.md`, then run manual ship only if acceptable.
+- Suggested verification command / environment: `pnpm --filter @repo/core check-types && pnpm --filter @repo/plugin-organizer check-types && pnpm --filter @repo/plugin-organizer test && pnpm --filter desktop build`
+- Files/commits affected: packages/plugin-organizer/src/gridEvents.ts; packages/plugin-organizer/src/hooks/useMultiWindowGrids.ts; packages/plugin-organizer/src/OrganizerGridContent.tsx; packages/core/src/types/events.ts; docs/contracts/events-v0.md; commits `78aef01`, `59da1e5`
+
+## Entry 24
+
+- Feature: multi-grid-event-scope
+- Gate: G1
+- Deferred gate: Manual two-Grid runtime event-scope smoke
+- Why deferred: Automated Codex verification cannot visually operate two native Grid windows and confirm update/drop/close isolation plus listener cleanup in the running macOS app without human/manual UI interaction.
+- Risk: Runtime Tauri event routing could still reveal duplicate listener, wrong-window, or close/drop isolation issues that type checks and guard tests cannot fully prove.
+- What was done instead: Added runtime guards for missing `gridId`, migrated production event names, preserved create-request compatibility aliases as listeners only, and added guard tests.
+- Later human action: Run the desktop app, create two Grid windows, update/close/drop in each, and confirm only the matching `gridId` changes.
+- Suggested verification command / environment: `pnpm --filter desktop tauri dev` on macOS, then use Control `+ New Grid` twice and exercise update, close, and Finder drop on each Grid.
+- Files/commits affected: packages/plugin-organizer/src/gridEvents.ts; packages/plugin-organizer/src/hooks/useMultiWindowGrids.ts; packages/plugin-organizer/src/OrganizerGridContent.tsx; commit `78aef01`
+
+## Entry 23
+
 - Feature: mas-sandbox-dry-run (G0.6)
 - Gate: G0 ship gate
 - Deferred gate: G0.6 not shipped — BLOCKED_EXTERNAL (Apple Developer signing)

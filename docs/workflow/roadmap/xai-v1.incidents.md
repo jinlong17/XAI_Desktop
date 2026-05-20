@@ -48,7 +48,7 @@
 - Root cause if known: G1 required G0 Go or Conditional Go. G0 has now reached Conditional Go for DMG/private path; MAS remains a deferred external release gate.
 - Attempted fixes: Created G1.1 contract-planning docs, reconciled G0 Conditional Go, implemented structured window lifecycle commands, and verified Rust/TS/desktop/contract consistency.
 - Current status: RESOLVED; `window-command-contract` is READY_TO_SHIP for the DMG/private path. Cross-vendor verify remains deferred.
-- Resume instruction: Human may review `dce4fb9` and run ship manually; roadmap continuation has proceeded beyond G1.2 and should continue with G1.4 `multi-grid-event-scope`.
+- Resume instruction: Human may review `dce4fb9` and run ship manually; roadmap continuation has proceeded beyond G1.4 and should continue with G2 because G1.5 depends on G2 Repository v0.
 
 ## Incident 6
 
@@ -88,7 +88,7 @@
 - Root cause if known: G1.2 depends on G0 Go/Conditional Go and G1.1 Window Command Contract. Both are now satisfied for unattended DMG/private-path continuation because G0 is Conditional Go and G1.1 is READY_TO_SHIP.
 - Attempted fixes: Created safe-prep docs, then implemented public `OrganizerGridContent`, thinned Host `GridWindow.tsx`, and verified TypeScript/build/boundary checks.
 - Current status: RESOLVED; `grid-shell-organizer-content` is READY_TO_SHIP for the DMG/private path. Cross-vendor verify and manual runtime smoke remain deferred.
-- Resume instruction: Human may review `26d9f57` and run ship manually; roadmap continuation should proceed to G1.4 `multi-grid-event-scope`.
+- Resume instruction: Human may review `26d9f57` and run ship manually; roadmap continuation has proceeded beyond G1.4 and should continue with G2 because G1.5 depends on G2 Repository v0.
 
 ## Incident 10
 
@@ -96,9 +96,9 @@
 - Feature: multi-grid-event-scope
 - Symptom: Production Grid event migration cannot start.
 - Root cause if known: G1.4 depends on a stable Host/Grid shell boundary. G1.2 is now READY_TO_SHIP.
-- Attempted fixes: Created safe-prep docs auditing current event names, target contracts, and missing runtime `gridId` guard requirements. Avoided production source changes.
-- Current status: RESOLVED as prerequisite blocker; G1.2 is READY_TO_SHIP.
-- Resume instruction: Run feature-build for `multi-grid-event-scope`.
+- Attempted fixes: Created safe-prep docs, migrated production Grid events to `organizer:grid:*` / `organizer:file:drop`, added runtime guards and guard tests, and updated EventMap/contracts.
+- Current status: RESOLVED; `multi-grid-event-scope` is READY_TO_SHIP for the DMG/private path. Cross-vendor verify and manual runtime smoke remain deferred.
+- Resume instruction: Human may review `78aef01` and run ship manually; roadmap continuation should proceed to G2 because G1.5 depends on G2 Repository v0.
 
 ## Incident 11
 

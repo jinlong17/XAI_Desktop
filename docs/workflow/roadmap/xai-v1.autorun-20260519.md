@@ -17,10 +17,10 @@
 | Gate Manifest | docs/workflow/roadmap/xai-g1-native-foundation.md |
 | Current Feature | multi-grid-event-scope |
 | Feature Source | docs/planning/execution/G1-native-foundation.md §G1.4 |
-| Feature Status | READY_FOR_VERIFY |
+| Feature Status | READY_TO_SHIP |
 | Current Commit | latest local docs checkpoint; use `git log -1 --oneline` for the exact self-referential commit |
-| Tests | G1.4 build PASS: core check-types, plugin-organizer check-types/test, desktop build, event scans |
-| Next Step | Run G1.4 feature-verify; do not ship/push |
+| Tests | G1.4 PASS: core check-types, plugin-organizer check-types/test, desktop build, event scans, file checks |
+| Next Step | Do not ship/push; G1.5 is blocked by G2 Repository v0, so continue to G2 |
 
 ## Checkpoints
 
@@ -463,6 +463,21 @@
   - target event/API scan -> PASS.
 - Status: `multi-grid-event-scope` -> READY_FOR_VERIFY.
 
+### 2026-05-19 23:34 PDT — Feature Verify: multi-grid-event-scope
+
+- Verified G1.4 production event-scope migration.
+- Checks:
+  - `pnpm --filter @repo/core check-types` -> PASS;
+  - `pnpm --filter @repo/plugin-organizer check-types` -> PASS;
+  - `pnpm --filter @repo/plugin-organizer test` -> PASS, 4 tests;
+  - `pnpm --filter desktop build` -> PASS with existing Vite chunk-size warning;
+  - legacy event scan -> PASS, only compatibility constants remain;
+  - target event/API scan -> PASS;
+  - review/package docs and guard test file existence checks -> PASS.
+- Deferred cross-vendor verify and manual two-Grid event-scope runtime smoke are recorded in `docs/workflow/roadmap/xai-v1.deferred-gates.md`.
+- Status: `multi-grid-event-scope` -> READY_TO_SHIP. Ship/push was not run.
+- G1.5 `grid-persistence` remains blocked by G2 Repository v0; next roadmap step is G2.
+
 ## Feature Outcomes
 
 | Feature | Gate | Status | Commit | Tests | Notes |
@@ -476,7 +491,7 @@
 | window-command-contract | G1 | READY_TO_SHIP | 9c7b52f + dce4fb9 + 1fa8c75 | PASS: cargo check, core check-types, plugin-organizer check-types, desktop build, contract consistency scan | Deferred cross-vendor verify recorded; ship/push not run. |
 | grid-shell-organizer-content | G1 | READY_TO_SHIP | eaae46e + 26d9f57 + 03ca86a | PASS: plugin-organizer check-types, desktop build, Host boundary scan, public API scan, file checks | Deferred cross-vendor/manual runtime smoke recorded; ship/push not run. |
 | native-dnd-path-first | G1 | BLOCKED_EXTERNAL | 707a8d1 | PASS: DnD discovery docs exist; BLOCKED_EXTERNAL: MAS sandbox/security-scope evidence missing | Skip under unattended mode. |
-| multi-grid-event-scope | G1 | READY_FOR_VERIFY | a7d4803 + 78aef01 | PASS: core check-types, plugin-organizer check-types/test, desktop build, event scans | Awaiting feature-verify. |
+| multi-grid-event-scope | G1 | READY_TO_SHIP | a7d4803 + 78aef01 + 59da1e5 | PASS: core check-types, plugin-organizer check-types/test, desktop build, event scans, file checks | Deferred cross-vendor/manual runtime smoke recorded; ship/push not run. |
 | grid-persistence | G1 | BLOCKED | dcf2750 | PASS: persistence discovery docs exist; BLOCKED: G2 Repository v0 not ready | Reached by user override; no production code changed. |
 | host-business-residuals | G1 | READY_TO_SHIP | c6dbd77 | PASS: residual audit doc exists; Host scan recorded | Audit-only safe prep. |
 
@@ -495,7 +510,8 @@
 - Cross-vendor verify and manual runtime smoke deferred for `grid-shell-organizer-content`; Codex inline verification passed.
 - G1.2 production shell/content split is READY_TO_SHIP.
 - G1.3 production DnD path-first implementation deferred until MAS/security-scope evidence.
-- G1.4 production event migration is eligible after G1.2 READY_TO_SHIP.
+- Cross-vendor verify and manual runtime smoke deferred for `multi-grid-event-scope`; Codex inline verification passed.
+- G1.4 production event migration is READY_TO_SHIP.
 - G1.5 production persistence deferred until G2 Repository v0.
 - Cross-vendor review/verify deferred for `host-business-residuals`.
 
@@ -508,12 +524,12 @@
 - window-command-contract G0 prerequisite and production build are resolved; feature is READY_TO_SHIP.
 - grid-shell-organizer-content production build and verify complete; feature is READY_TO_SHIP.
 - native-dnd-path-first remains BLOCKED_EXTERNAL by MAS/security-scope evidence.
-- multi-grid-event-scope G1.2 prerequisite resolved; production build is next eligible.
+- multi-grid-event-scope production build and verify complete; feature is READY_TO_SHIP.
 - grid-persistence blocked by G2 Repository v0.
 
 ## Final 24h Summary
 
-Latest checkpoint is 2026-05-19 23:22 PDT. G0 is Conditional Go for the DMG/private path: G0.3/G0.4/G0.5 are READY_TO_SHIP, and G0.6 signed/sandbox MAS runtime validation is deferred external. G1.1 `window-command-contract` and G1.2 `grid-shell-organizer-content` are READY_TO_SHIP. No ship or push was run.
+Latest checkpoint is 2026-05-19 23:34 PDT. G0 is Conditional Go for the DMG/private path: G0.3/G0.4/G0.5 are READY_TO_SHIP, and G0.6 signed/sandbox MAS runtime validation is deferred external. G1.1 `window-command-contract`, G1.2 `grid-shell-organizer-content`, and G1.4 `multi-grid-event-scope` are READY_TO_SHIP. No ship or push was run.
 
 ### Completed Features
 
@@ -526,7 +542,7 @@ Latest checkpoint is 2026-05-19 23:22 PDT. G0 is Conditional Go for the DMG/priv
 - `window-command-contract` — READY_TO_SHIP after production command contract implementation and automated verification.
 - `grid-shell-organizer-content` — READY_TO_SHIP after public Organizer content split and automated verification.
 - `native-dnd-path-first` — BLOCKED_EXTERNAL after safe prep; MAS/security-scope evidence remains required.
-- `multi-grid-event-scope` — ELIGIBLE for production build after safe prep.
+- `multi-grid-event-scope` — READY_TO_SHIP after scoped event migration and automated verification.
 - `grid-persistence` — BLOCKED after safe prep.
 - `host-business-residuals` — READY_TO_SHIP audit-only.
 
@@ -539,6 +555,7 @@ Latest checkpoint is 2026-05-19 23:22 PDT. G0 is Conditional Go for the DMG/priv
 - `spaces-multimonitor-matrix`
 - `window-command-contract`
 - `grid-shell-organizer-content`
+- `multi-grid-event-scope`
 - `host-business-residuals`
 
 ### BLOCKED Features
@@ -560,7 +577,7 @@ Latest checkpoint is 2026-05-19 23:22 PDT. G0 is Conditional Go for the DMG/priv
 - Cross-vendor verify for `window-command-contract`.
 - Cross-vendor verify and manual two-Grid runtime smoke for `grid-shell-organizer-content`.
 - G1.3 DnD path-first implementation until MAS sandbox/security-scope decision.
-- G1.4 event migration is eligible; production verification still pending.
+- Cross-vendor verify and manual two-Grid runtime smoke/listener cleanup for `multi-grid-event-scope`.
 - G1.5 persistence implementation until G2 Repository v0 is ready.
 - Cross-vendor review/verify for `host-business-residuals`.
 
@@ -575,7 +592,7 @@ Latest checkpoint is 2026-05-19 23:22 PDT. G0 is Conditional Go for the DMG/priv
 - Incident 7: `grid-window-prototype` AI cube/settings were covered by Grid windows; resolved by runtime recovery commits.
 - Incident 8: `grid-window-prototype` still failed to generate and AI cube movement was bounded; resolved by runtime recovery commits.
 - Incident 9: `grid-shell-organizer-content` production split blocker resolved; feature is READY_TO_SHIP.
-- Incident 10: `multi-grid-event-scope` production event migration prerequisite resolved; feature is next eligible.
+- Incident 10: `multi-grid-event-scope` production event migration prerequisite resolved; feature is READY_TO_SHIP.
 - Incident 11: `native-dnd-path-first` production DnD is blocked by MAS/security-scope evidence.
 - Incident 12: `grid-persistence` production persistence is blocked by G2 Repository v0.
 
@@ -625,6 +642,8 @@ Latest checkpoint is 2026-05-19 23:22 PDT. G0 is Conditional Go for the DMG/priv
 - `1fa8c75` — `docs(roadmap): finalize G1.1 build checkpoint`
 - `26d9f57` — `feat(grid-shell-organizer-content): expose Organizer grid content`
 - `03ca86a` — `docs(roadmap): finalize G1.2 build checkpoint`
+- `78aef01` — `feat(multi-grid-event-scope): migrate grid events to scoped contract`
+- `59da1e5` — `docs(roadmap): finalize G1.4 build checkpoint`
 
 ### Test Results
 
@@ -672,6 +691,13 @@ Latest checkpoint is 2026-05-19 23:22 PDT. G0 is Conditional Go for the DMG/priv
 - G1.2 Host forbidden-import boundary scan -> PASS
 - G1.2 `OrganizerGridContent` public API scan -> PASS
 - G1.2 review/package/contract file existence checks -> PASS
+- G1.4 `pnpm --filter @repo/core check-types` -> PASS
+- G1.4 `pnpm --filter @repo/plugin-organizer check-types` -> PASS
+- G1.4 `pnpm --filter @repo/plugin-organizer test` -> PASS, 4 tests
+- G1.4 `pnpm --filter desktop build` -> PASS with Vite chunk-size warning
+- G1.4 legacy event scan -> PASS, only compatibility constants remain
+- G1.4 target event/API scan -> PASS
+- G1.4 review/package docs and guard test file existence checks -> PASS
 
 ### Next Human Reading Order
 
