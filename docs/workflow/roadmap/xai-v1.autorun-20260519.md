@@ -18,7 +18,7 @@
 | Current Feature | spaces-multimonitor-matrix |
 | Feature Source | docs/planning/execution/G0-window-spike.md §G0.5 |
 | Feature Status | BLOCKED |
-| Current Commit | pending G0.5 static evidence commit |
+| Current Commit | bcc5785 |
 | Tests | `system_profiler SPDisplaysDataType`; `rg` static window behavior scan; G0.5 still BLOCKED on real runtime matrix |
 | Next Step | Complete Spaces/multi-display matrix, then MAS fallback/sandbox evidence |
 
@@ -365,7 +365,7 @@
 | grid-window-prototype | G0 | READY_TO_SHIP | 6b121ea + 14e04c2 + 01e5167 + b8c34fe + 7b7ff35 + f65a1b5 + a33c74d | PASS: desktop tsc; plugin-organizer check-types; desktop build; cargo check | Runtime fixed/confirmed; deferred review/verify gates recorded. |
 | click-through-matrix | G0 | READY_TO_SHIP | 82ab268 + 7a1b9dd + e7fc4ab + 2e5e499 + 4537d2d | PASS: transparent-area click-through, Grid item pointer flash, resize-handle drag; FAIL_BUILD evidence for private-API-disabled transparent path | MAS/non-private fallback risk moved to G0.6. |
 | finder-dnd-path | G0 | READY_TO_SHIP | 33627df + 7a1b9dd + 7e20ca8 + e7fc4ab + 58c926d + 18b48da + 5e98083 | PASS: file, folder, `.app`, and alias paths observed via `tauri://drag-drop`; duplicate fixes applied; post-dedupe `.app` rerun passed; alias path policy recorded as `PRESERVE_ALIAS_PATH` | Deferred gates recorded in docs/workflow/roadmap/xai-v1.deferred-gates.md |
-| spaces-multimonitor-matrix | G0 | BLOCKED | 2fb6bac + pending static evidence commit | PASS: matrix template exists; current display facts and static window behavior recorded; BLOCKED: real Spaces/fullscreen/multi-display evidence | Reached by user override; safe prep only. |
+| spaces-multimonitor-matrix | G0 | BLOCKED | 2fb6bac + bcc5785 | PASS: matrix template exists; current display facts and static window behavior recorded; BLOCKED: real Spaces/fullscreen/multi-display evidence | Reached by user override; safe prep only. |
 | mas-sandbox-dry-run | G0 | BLOCKED | 071a192 | PASS: MAS notes exist; BLOCKED: real sandbox/private-API evidence | Reached by user override; safe prep only. |
 | window-command-contract | G1 | BLOCKED | 9c7b52f | PASS: safe-prep docs exist; BLOCKED: G0 not Go/Conditional Go | Reached by user override; no production code changed. |
 | grid-shell-organizer-content | G1 | BLOCKED | eaae46e | PASS: safe-prep docs exist; BLOCKED: G0/G1.1 not ready | Reached by user override; no production code changed. |
@@ -510,7 +510,7 @@ Latest stop point is after 2026-05-19 22:25 PDT G0.3 private-API evidence. G0.3 
 - `d982dab` — `docs(finder-dnd-path): record app dedupe verification`
 - `5e98083` — `docs(finder-dnd-path): record alias functional verification`
 - `4537d2d` — `docs(G0.3/G0.6): record private API fallback evidence`
-- `(pending)` — `docs(G0.5): record Spaces static evidence`
+- `bcc5785` — `docs(G0.5): record Spaces static evidence`
 
 ### Test Results
 

@@ -118,7 +118,7 @@
 - What was done instead: Limited G0.5 to documentation/matrix preparation and static evidence only: current display facts plus source-level collection behavior/window level findings. Preserved BLOCKED status for real runtime validation.
 - Later human action: Perform G0.5 runtime validation.
 - Suggested verification command / environment: `sed -n '1,120p' docs/workflow/roadmap/xai-g0-window-spike.md`
-- Files/commits affected: docs/workflow/roadmap/xai-g0-window-spike.md; docs/workflow/roadmap/xai-v1.autorun-20260519.md; commit `2fb6bac`
+- Files/commits affected: docs/workflow/roadmap/xai-g0-window-spike.md; docs/workflow/roadmap/xai-v1.autorun-20260519.md; commits `2fb6bac`, `bcc5785`
 
 ## Entry 11
 
@@ -130,7 +130,7 @@
 - What was done instead: Created the evidence matrix template, recorded current display facts, recorded source-level collection behavior/window level findings, and avoided changing window behavior without live proof.
 - Later human action: Run `pnpm --filter desktop tauri dev`, perform the matrix, and attach logs/screenshots under `docs/reviews/window-ground-truth/spaces-multimonitor-matrix/`.
 - Suggested verification command / environment: `pnpm --filter desktop tauri dev` on macOS with built-in + external display, Mission Control, multiple Spaces, and fullscreen app.
-- Files/commits affected: docs/reviews/window-ground-truth/spaces-multimonitor-matrix/README.md; packages/spaces-multimonitor-matrix/docs/*; commit `2fb6bac`
+- Files/commits affected: docs/reviews/window-ground-truth/spaces-multimonitor-matrix/README.md; packages/spaces-multimonitor-matrix/docs/*; commits `2fb6bac`, `bcc5785`
 
 ## Entry 12
 
