@@ -1,23 +1,15 @@
-import { useEffect } from "react";
 import { useClipboardStore } from "../hooks/useClipboardStore";
 import { usePasteQueue } from "../hooks/usePasteQueue";
 
 export function PasteQueue() {
   const { entries, renderContent } = useClipboardStore();
   const queue = usePasteQueue({
+    delayMs: 450,
     entries,
     onPaste: async () => {
       await Promise.resolve();
     },
   });
-
-  useEffect(() => {
-    if (queue.status !== "running" || !queue.currentEntry) return undefined;
-    const timer = window.setTimeout(() => {
-      void queue.pasteCurrent();
-    }, 450);
-    return () => window.clearTimeout(timer);
-  }, [queue, queue.currentEntry, queue.status]);
 
   return (
     <section aria-label="Sequential paste queue" style={{ border: "1px solid #e5e7eb", borderRadius: 8, display: "grid", gap: 12, padding: 12 }}>
