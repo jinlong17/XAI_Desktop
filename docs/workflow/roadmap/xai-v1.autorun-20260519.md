@@ -18,7 +18,7 @@
 | Current Feature | click-through-matrix / finder-dnd-path |
 | Feature Source | docs/planning/execution/G0-window-spike.md §G0.3, §G0.4 |
 | Feature Status | PARTIAL_HUMAN_EVIDENCE / BLOCKED |
-| Current Commit | 58c926d |
+| Current Commit | fafe818 |
 | Tests | `pnpm --filter desktop exec tsc --noEmit`; `pnpm --filter @repo/plugin-organizer check-types`; `pnpm --filter desktop build`; user manual evidence for click-through, resize, item click flash, and Finder file/folder drag |
 | Next Step | Rerun Finder file/folder after `58c926d`, capture `.app`/alias payloads, and compare `macOSPrivateApi=false` |
 
@@ -435,6 +435,7 @@ Stopped on 2026-05-19 20:43 PDT because no remaining eligible feature can procee
 - `e7fc4ab` — `docs(g0-evidence): record partial manual runtime results`
 - `e9a95ec` — `docs(roadmap): finalize g0 evidence checkpoint`
 - `58c926d` — `fix(finder-dnd-path): prefer Tauri drop path in grid windows`
+- `fafe818` — `docs(g0-evidence): record detailed manual runtime results`
 
 ### Test Results
 

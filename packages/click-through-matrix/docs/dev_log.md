@@ -45,4 +45,4 @@ Manual evidence now confirms transparent-area clicks behave normally, the Grid r
 | 2026-05-19 14:44 PDT | feature-build (Codex inline) | Created click-through matrix template and docs. | (this commit) | feature-verify |
 | 2026-05-19 14:44 PDT | feature-verify (Codex inline) | Marked BLOCKED because real macOS hit-test acceptance cannot be automated here. | (this commit) | feature-build |
 | 2026-05-19 21:07 PDT | human + Codex inline | Recorded user report: transparent-area click-through behaved normally. | `e7fc4ab` | Complete remaining matrix |
-| 2026-05-19 21:21 PDT | human + Codex inline | Recorded user report: resize handle drags and item click flashes, proving Grid pointer delivery. | pending evidence commit | macOSPrivateApi=false comparison |
+| 2026-05-19 21:21 PDT | human + Codex inline | Recorded user report: resize handle drags and item click flashes, proving Grid pointer delivery. | `fafe818` | macOSPrivateApi=false comparison |
