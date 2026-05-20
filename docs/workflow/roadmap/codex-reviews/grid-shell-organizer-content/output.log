@@ -1,0 +1,2758 @@
+Reading additional input from stdin...
+2026-05-20T08:27:11.309324Z ERROR codex_core_skills::loader: failed to stat skills path /Users/lijinlong/.codex/plugins/cache/openai-curated/gmail/ed8ce2eacc07964f0f556519e0737a420da14e00/skills/gmail/assets: No such file or directory (os error 2)
+2026-05-20T08:27:11.309403Z ERROR codex_core_skills::loader: failed to read skills dir /Users/lijinlong/.codex/plugins/cache/openai-curated/gmail/ed8ce2eacc07964f0f556519e0737a420da14e00/skills/gmail-inbox-triage/agents: No such file or directory (os error 2)
+2026-05-20T08:27:11.309572Z ERROR codex_core_skills::loader: failed to read skills dir /Users/lijinlong/.codex/plugins/cache/openai-curated/gmail/ed8ce2eacc07964f0f556519e0737a420da14e00/skills/gmail-inbox-triage/assets: No such file or directory (os error 2)
+2026-05-20T08:27:11.309643Z ERROR codex_core_skills::loader: failed to read skills dir /Users/lijinlong/.codex/plugins/cache/openai-curated/gmail/ed8ce2eacc07964f0f556519e0737a420da14e00/skills/gmail/references: No such file or directory (os error 2)
+2026-05-20T08:27:11.309746Z ERROR codex_core_skills::loader: failed to read skills dir /Users/lijinlong/.codex/plugins/cache/openai-curated/gmail/ed8ce2eacc07964f0f556519e0737a420da14e00/skills/gmail/agents: No such file or directory (os error 2)
+OpenAI Codex v0.132.0
+--------
+workdir: /Users/lijinlong/Desktop/AI_Desktop/XAI_Desktop
+model: gpt-5.4
+provider: openai
+approval: never
+sandbox: workspace-write [workdir, /tmp, $TMPDIR]
+reasoning effort: high
+reasoning summaries: none
+session id: 019e447e-f484-77d2-b1aa-c61a286329a5
+--------
+user
+# Codex Feature Post-merge Review
+
+You are acting as the `feature-review` subagent (Codex inline, cross-vendor verify pass).
+Your job is to audit a Track A feature that has already been built and committed to
+`codex/track-a-desktop-foundation`. The original executor was Claude Code; you provide an
+independent cross-vendor verdict.
+
+## Hard output contract
+
+Output ONLY the markdown block below — no preamble, no follow-up, no chatter. Keep total
+length under 600 words.
+
+```md
+## Codex Cross-vendor Review
+
+**Feature**: grid-shell-organizer-content
+**Commit(s)**: 26d9f57 03ca86a 3751f43 653219b
+**Reviewer**: codex feature-review (cross-vendor) · gpt-5.4 high
+**Verdict**: APPROVED | REVISE | BLOCKED
+
+### Strengths (max 4 bullets)
+- …
+
+### Gaps & risks (max 6 bullets, severity-tagged)
+- [P0|P1|P2] …
+
+### Concrete next-phase targets (max 6 bullets)
+- …
+
+### Out of scope confirmed
+- …
+```
+
+## How to evaluate
+
+1. Read the listed dev_log and contract docs to understand the *intended* scope.
+2. Run `git show --stat 26d9f57 03ca86a 3751f43 653219b` mentally — review the diff for the listed files.
+3. Score against:
+   - **Contract integrity** (red lines #4 / #8 / #9 in `docs/SYSTEM_ARCHITECTURE.md` §4)
+   - **Test coverage adequacy** (boundary, error, concurrency, capability)
+   - **Doc-code alignment** (`docs/contracts/*` matches actual surface)
+   - **Security boundary** (raw key bytes, capability allow-list, IPC payload)
+   - **Workflow V2 hygiene** (dev_log Status Panel, Work Log row, commit message Why/What/Scope/Risk)
+   - **Future-proofing** (does the design accommodate the next 1-2 G2/G3 rows?)
+4. Verdict guidance:
+   - **APPROVED**: ship-ready; gaps are P2-only and recorded.
+   - **REVISE**: at least one P1 issue worth fixing before next phase.
+   - **BLOCKED**: at least one P0 issue (broken contract, missing test on critical path, security regression).
+5. Concrete next-phase targets must be small, mergeable items (each ≤ half a day).
+6. Out-of-scope: confirm which deferred gates remain valid (live Supabase, MAS sandbox, real
+   macOS Finder smoke, etc.) — call them out so the next agent does not re-investigate.
+
+## Feature-specific context
+
+Feature ID: G1.2 / grid-shell-organizer-content
+Branch: codex/track-a-desktop-foundation
+Commits under review:
+- 653219b — docs(ship): promote G1.2 and G1.4 manifest rows to SHIPPED (current Track A ship)
+- 26d9f57 — feat(grid-shell-organizer-content): expose Organizer grid content (production refactor, pre-Track-A)
+- 03ca86a — docs(ship): mark G0.1-G0.5 and G1.1+G1.6 as SHIPPED (manifest ledger)
+- 3751f43 — docs(G1.2): mark grid shell split ready (dev_log → READY_TO_SHIP)
+
+Files involved:
+- packages/plugin-organizer/src/OrganizerGridContent.tsx (extracted from Host GridWindow)
+- packages/plugin-organizer/src/index.ts (public export of OrganizerGridContent)
+- apps/desktop/src/windows/GridWindow.tsx (thinned to native shell only)
+- docs/contracts/plugin-organizer-public-api-v0.md
+- packages/grid-shell-organizer-content/docs/dev_log.md (Status: SHIPPED on Track A)
+- docs/workflow/roadmap/xai-g1-native-foundation.md row #2 (SHIPPED)
+
+Intended scope:
+- Move Grid window content / state / event / drop behavior out of the Host's
+  `GridWindow.tsx` into a public `OrganizerGridContent` component owned by
+  plugin-organizer. Host keeps native shell responsibilities only (settings provider,
+  DnD provider, AppKit drag handoff).
+
+Cross-vendor checklist:
+1. Is the public Organizer API surface (only `OrganizerGridContent` + types) sufficient
+   for the Host to import without leaking internals?
+2. Does `apps/desktop/src/windows/GridWindow.tsx` still contain any business logic that
+   should live in plugin-organizer? Grep for SmartContainer / GridBox / DesktopItem /
+   useFileDrop / Organizer internal imports — confirm they are absent.
+3. Are deferred gates (cross-vendor verify, manual two-Grid native runtime smoke)
+   correctly listed and still valid?
+4. Is the manifest promotion to SHIPPED defensible — does the dev_log record the right
+   commit references and Work Log row?
+5. Workflow hygiene: commit message Why/What/Scope/Risk/Docs/Tests present?
+6. Architecture red line #4 (host depends on plugin only via public surface): violated
+   anywhere?
+codex
+Reviewing the four commits against the stated contract and workflow docs. I’m pulling the target files, architecture red lines, and commit metadata first, then I’ll score scope, API boundaries, tests, and ledger hygiene.
+exec
+/bin/zsh -lc "sed -n '1,260p' packages/grid-shell-organizer-content/docs/dev_log.md" in /Users/lijinlong/Desktop/AI_Desktop/XAI_Desktop
+exec
+/bin/zsh -lc "sed -n '1,240p' docs/contracts/plugin-organizer-public-api-v0.md" in /Users/lijinlong/Desktop/AI_Desktop/XAI_Desktop
+exec
+/bin/zsh -lc "sed -n '1,220p' docs/workflow/roadmap/xai-g1-native-foundation.md" in /Users/lijinlong/Desktop/AI_Desktop/XAI_Desktop
+exec
+/bin/zsh -lc "sed -n '1,240p' docs/SYSTEM_ARCHITECTURE.md" in /Users/lijinlong/Desktop/AI_Desktop/XAI_Desktop
+ succeeded in 0ms:
+# Roadmap Manifest — xai-g1-native-foundation
+
+- Roadmap Source: docs/planning/execution/G1-native-foundation.md
+- Init Path: execution-pack
+- Generated: 2026-05-19
+- Default Automation Mode: D-Codex
+- Default Dependency Semantics: shipped
+- Default Verify Cross-vendor: yes
+- Wave Concurrency Cap: 1
+- Dispatch: serial inline Codex conductor
+- Manifest Review: DEFERRED (unattended run; see docs/workflow/roadmap/xai-v1.deferred-gates.md)
+- Gate Prerequisite: G0 Go or Conditional Go
+- Gate Status: CONDITIONAL_GO_UNBLOCKED (2026-05-19 22:54 PDT)
+
+## Features
+
+| # | Slug | Source | Depends On | Dep Semantics | Status | Automation Mode | Verify Cross-vendor | Last Run | Note |
+|---|------|--------|------------|---------------|--------|-----------------|---------------------|----------|------|
+| 1 | window-command-contract | docs/planning/execution/G1-native-foundation.md §G1.1 | G0 Go/Conditional Go | shipped | SHIPPED | D-Codex | yes | 2026-05-19 | SHIPPED 2026-05-19 · Pushed to origin/spike/window-ground-truth. Rust command contract, TS types, Organizer adapter, manifest, and contract docs verified. Commits `dce4fb9`, `1fa8c75`. |
+| 2 | grid-shell-organizer-content | docs/planning/execution/G1-native-foundation.md §G1.2 | window-command-contract | shipped | SHIPPED | D-Codex | yes | 2026-05-20 | SHIPPED 2026-05-20 (Track A) · Manifest promoted on `codex/track-a-desktop-foundation`. Production split commits: `26d9f57` (feat), `03ca86a` (docs ship promote), `3751f43` (dev_log ready). |
+| 3 | native-dnd-path-first | docs/planning/execution/G1-native-foundation.md §G1.3 | finder-dnd-path | shipped | BLOCKED_EXTERNAL | D-Codex | yes | 2026-05-19 | Production implementation still blocked by MAS/security-scope evidence; skip under unattended mode and continue next eligible feature. |
+| 4 | multi-grid-event-scope | docs/planning/execution/G1-native-foundation.md §G1.4 | grid-window-prototype | shipped | SHIPPED | D-Codex | yes | 2026-05-20 | SHIPPED 2026-05-20 (Track A) · Manifest promoted on `codex/track-a-desktop-foundation`. Event migration commits: `78aef01` (feat), `59da1e5` (docs ship promote), `44345cf` (dev_log ready). |
+| 5 | grid-persistence | docs/planning/execution/G1-native-foundation.md §G1.5 | window-command-contract, repository-v0-contract | shipped | READY_TO_SHIP | D-Codex | yes | 2026-05-20 | LayoutStore seam landed in plugin-organizer; localStorage default preserved; Repository v0 adapter available; hydrate is async + corrupt-state safe (cannot whiteout). 9 vitest cases passing. |
+| 6 | host-business-residuals | docs/planning/execution/G1-native-foundation.md §G1.6 | — | — | SHIPPED | D-Codex | yes | 2026-05-19 | SHIPPED 2026-05-19 · Pushed to origin/spike/window-ground-truth. Audit-only residual inventory complete; production cleanup remains blocked by G0/G1 sequencing. |
+
+## Decomposition Rationale
+
+### R1. Source and Gate Status
+This manifest maps one G1 execution-pack task to one Workflow V2 feature. G1 production implementation was initially blocked because G0 was not Go or Conditional Go. On 2026-05-19, G0 reached Conditional Go for the DMG/private path after G0.5 user runtime confirmation; MAS signed/sandbox validation remains an external deferred gate.
+
+### R2. Safe-Prep Boundary
+Only documentation, contract planning, and mock/brief work proceeded while G0 was blocked. Production changes to `commands/window.rs`, `window_ext.rs`, capabilities, Host shell, or Organizer runtime may now proceed only within the G1.1 approved scope and DMG/private-path assumptions; MAS-specific behavior must remain behind the `mas-sandbox` deferred validation path.
+
+### R3. Ship Record
+G1.1 (window-command-contract) and G1.6 (host-business-residuals) shipped 2026-05-19 by human-authorized push to `origin/spike/window-ground-truth`. G1.2 dependency on G1.1 is formally met (shipped semantics satisfied); G1.2 itself remains READY_TO_SHIP pending its own human ship authorization. G1.3 remains BLOCKED_EXTERNAL (MAS sandbox dependency). G1.4 is READY_TO_SHIP pending human ship authorization. G1.5 remains BLOCKED pending G2 Repository v0.
+
+ succeeded in 0ms:
+# SYSTEM_ARCHITECTURE.md — 系统宪法
+
+> 本文档定义 XAI_Desktop 的架构约束与编码红线。
+> 所有开发（人类和 AI）必须遵守此文档中的规则。
+>
+> 最后更新: 2026-05-14
+
+---
+
+## 1. 架构流派
+
+- **前端:** 微内核 (Microkernel) — Host 壳 + Plugin 业务层
+- **Rust:** 模块化命令 + macOS 平台适配层
+- **通信:** Plugin 间通过 Tauri 事件系统或 `@repo/core/events`，禁止直接 import 内部模块
+
+## 2. 技术栈版本锁定
+
+| 技术 | 版本 | 备注 |
+|------|------|------|
+| Tauri | 2.x | macOS private API 启用 |
+| React | 19.x | 函数式组件 + Hooks |
+| TypeScript | 5.x | strict mode |
+| Vite | 7.x | 前端构建 |
+| Rust | 1.80+ | Tauri 后端 |
+| pnpm | 9.x | 包管理 |
+| Turborepo | 2.6+ | Monorepo 编排 |
+
+## 3. 三层边界规则
+
+```
+apps/desktop/src/     → Host 壳 (路由 + Provider + PluginHost 渲染，不含业务)
+packages/core/        → 基础设施 (类型 + 事件 + Store + Registry，不含业务)
+packages/plugin-*/    → 业务插件 (所有业务逻辑的唯一归宿)
+packages/ui/          → 共享 UI (无业务逻辑的纯 UI 组件)
+```
+
+- **Host** (`apps/desktop/src/`): 窗口壳 + 路由 + 全局 Provider。禁止放业务逻辑
+- **Plugin** (`packages/plugin-*/`): 业务功能自治单元。禁止跨 Plugin 直接 import 内部模块
+- **Core** (`packages/core/`): 基础设施 + 共享类型。所有 Plugin 可依赖 Core
+- **UI** (`packages/ui/`): 共享 UI 组件库。无业务逻辑
+
+## 4. 编码红线
+
+1. 禁止在 Host 写业务逻辑 → 业务代码必须在 plugin 包内
+2. 禁止跨 Plugin 直接 import 对方 `src/` 内部模块
+3. Plugin 间通信必须通过 `@repo/core/events` 的类型安全事件
+4. 禁止在 Plugin 内直接调用 `@tauri-apps/api` → 通过 `@repo/core/hooks` 封装
+5. 所有 Tauri 事件 payload 必须在 `@repo/core/types` 中定义类型
+6. 每个 Plugin 的 `manifest.json` 是注册的唯一入口
+7. 禁止使用 `console.log` 做生产日志 → 开发环境可用
+8. 依赖方向严格单向: `Host → Plugin → Core/UI`，禁止反向
+9. `index.ts` 是每个 Plugin 的唯一出口 → 外部只能从 `packages/plugin-*/src/index.ts` 导入
+10. Plugin 内部目录结构自由组织 → `components/` `hooks/` `store/` `types/` 按需存在
+11. UI 组件归属: 通用组件 → `packages/ui/`；业务组件 → plugin 内部
+12. 禁止运行时动态插件加载 → 桌面应用编译时确定插件集，静态 import 注册
+
+## 5. 多窗口架构
+
+### 5.1 窗口分类
+
+| 类型 | Label 模式 | 用途 | 交互模式 |
+|------|-----------|------|---------|
+| main | `main` | 全屏透明 overlay | 默认点击穿透 (`ignoresMouseEvents: YES`) |
+| control | `control` | AI Cube 控制台 (360x360) | 始终可交互 |
+| grid_\<id\> | `grid_xxx` | 独立 Grid 窗口 | 始终可交互 |
+| widget_\<id\> | `widget_xxx` | Widget 窗口 | 始终可交互 (未来) |
+
+### 5.2 macOS 窗口层级
+
+所有窗口使用 `CGWindowLevelForKey(DesktopIconWindow)` 作为基准:
+
+- **main 窗口:** `desktop_icon_level + 1`，始终 click-through
+- **control 窗口:** `desktop_icon_level + 1`，可交互
+- **grid 窗口:** `desktop_icon_level + 3`，可交互，置于 icon 之上
+
+所有窗口加入 `NSWindowCollectionBehavior`: canJoinAllSpaces + stationary + ignoresCycle。
+
+### 5.3 Pointer-Events 策略
+
+- 根容器 `pointer-events: none` 实现桌面点击穿透
+- 交互元素 (SmartContainer, AiCube, SettingsPanel) 显式设置 `pointer-events: auto`
+- 每个 Grid 独立原生窗口，不受主窗口 pointer-events 限制
+
+## 6. 跨窗口通信规则
+
+- 所有事件通过 `@repo/core/events` 发送，payload 必须可序列化
+- 事件命名: `<plugin>:<action>`，禁止使用 `window.postMessage`，禁止直接操作其他窗口的 DOM
+
+### 6.1 事件前缀约定
+
+| 前缀 | 归属 | 示例 |
+|------|------|------|
+| `app:` | 全局/Host | `app:interactive-mode-changed` |
+| `organizer:` | plugin-organizer | `organizer:grid-update` |
+| `todo:` | plugin-todo | `todo:item-completed` |
+| `clipboard:` | plugin-clipboard | `clipboard:item-copied` |
+| `widgets:` | plugin-widgets | `widgets:clock-tick` |
+| `ai:` | plugin-ai-cube | `ai:query-response` |
+
+## 7. 状态持久化
+
+- 当前使用 localStorage，key: `xai-desktop-layout`
+- 数据结构: `PersistedLayout { grids: GridBox[], items: DesktopItem[] }`
+- 目标迁移到 Zustand + persist middleware
+- 扩展 `GridBox` 字段时确保序列化兼容
+
+## 8. DnD 系统
+
+- 使用 `@dnd-kit/core`
+- `GridItem` 为 draggable，容器为 droppable
+- `moveItem` 函数处理跨容器拖拽，更新 `itemIds`
+- 全局 DnD Provider 在 Host 层提供
+
+## 9. Rust 后端模块结构
+
+```
+apps/desktop/src-tauri/src/
+├── main.rs                # Tauri entry point
+├── lib.rs                 # Builder 配置 — 注册 command 模块 + setup (<100 行)
+├── commands/
+│   ├── mod.rs             # 模块声明
+│   └── window.rs          # create/update/close_grid_window
+└── platform/
+    ├── mod.rs
+    └── macos/
+        ├── mod.rs
+        └── window_ext.rs  # NSWindow/CGWindowLevel/ignoresMouseEvents
+```
+
+- `lib.rs` 只做 builder 配置和模块注册，禁止放业务逻辑
+- 按领域拆分 commands (window, fs, system)
+- macOS 平台代码集中在 `platform/macos/`，用 `#[cfg(target_os = "macos")]` 隔离
+
+## 10. 新建 Plugin 标准路径
+
+```
+1. 创建 packages/plugin-xxx/ (含 package.json, tsconfig.json, manifest.json)
+2. 实现 src/index.ts + 业务组件/hooks
+3. 创建 docs/ 四件套 (design.md, api.md, test.md, dev_log.md)
+4. 在 apps/desktop/src/main.tsx 添加 import 注册
+5. 更新 docs/PLUGIN_MAP.md 状态列
+```
+
+## 11. 明确排除项 (不做什么)
+
+以下明确不在项目范围内：
+
+- **不做运行时动态插件加载** — 编译时确定插件集
+- **不做 apps/web/ 和 apps/docs/ 清理** — 保留为 scaffold
+- **不做数据库迁移** — 当前用 localStorage，SQLite 是未来目标
+- **不做 CI/CD** — 暂无 GitHub Actions
+
+ succeeded in 0ms:
+# Plugin Organizer Public API Contract v0
+
+| Field | Value |
+|---|---|
+| Owner | `@repo/plugin-organizer` |
+| Source | `packages/plugin-organizer/src/index.ts` |
+| Status | Draft |
+| Applies To | Desktop Host, Organizer package |
+
+## 1. Principles
+
+- Desktop Host imports Organizer UI only from `@repo/plugin-organizer`.
+- Host must not import Organizer internal source files.
+- Host owns native window shell, provider wiring, and AppKit drag handoff.
+- Organizer owns Grid business UI, item rendering, file-drop behavior, and scoped cross-window events.
+
+## 2. Public Grid Window Surface
+
+```ts
+export interface OrganizerGridContentProps {
+  gridId: string;
+  gridOpacity?: number;
+  gridBlur?: boolean;
+}
+
+export function OrganizerGridContent(
+  props: OrganizerGridContentProps
+): JSX.Element;
+```
+
+`OrganizerGridContent` is the only public content component the desktop Grid
+window shell may render.
+
+## 3. Host Boundary
+
+Allowed Host responsibilities:
+
+- Parse or receive `gridId` from the native window route.
+- Install `SettingsProvider` and drag/drop providers.
+- Pass presentation settings into `OrganizerGridContent`.
+- Handle native window dragging/chrome behavior.
+
+Disallowed Host responsibilities:
+
+- Render `SmartContainer` directly for Grid windows.
+- Own Grid item placement or drop semantics.
+- Emit Grid update/drop/close business events directly, except through the Organizer public component.
+
+## 4. Tests
+
+- `apps/desktop/src/windows/GridWindow.tsx` imports `OrganizerGridContent` from `@repo/plugin-organizer`.
+- `apps/desktop/src/windows/GridWindow.tsx` does not import `SmartContainer`, `GridBox`, `DesktopItem`, or Organizer internal paths.
+- `packages/plugin-organizer/src/index.ts` exports `OrganizerGridContent`.
+
+ succeeded in 0ms:
+# grid-shell-organizer-content — Dev Log
+
+## Status Panel
+
+| Field | Value |
+|---|---|
+| Workflow | FEATURE_DEV |
+| Target | grid-shell-organizer-content |
+| Title | G1.2 Grid shell and Organizer content split |
+| Roadmap | xai-g1-native-foundation · feature #2 · G1.2 |
+| Status | SHIPPED |
+| Current Phase | SHIPPED |
+| Suggested Next | continue roadmap (G2 Repository v0 → G3 organizer loop) |
+| Automation Mode | D-Codex |
+| Verify Cross-vendor | yes |
+| Executor | ship (Claude Code, Track A — manifest promotion) |
+| Updated | 2026-05-20 00:32 PDT |
+| Blockers | None; deferred gates remain tracked in `xai-v1.deferred-gates.md` |
+
+## Phase Plan
+
+### Phase 1 — Boundary safe prep
+
+Status: DONE. Commit: `eaae46e`.
+
+- Created G1.2 feature brief and discovery review.
+- Mapped current Host/Organizer boundary.
+- Defined target public Organizer content surface.
+- Avoided production refactor while prerequisites remain blocked.
+
+### Phase 2 — Production shell/content split
+
+Status: DONE. Commit: `26d9f57`.
+
+- Added public `OrganizerGridContent` in `packages/plugin-organizer`.
+- Moved Grid window content/state/event/drop behavior out of Host `GridWindow.tsx`.
+- Kept Host native shell responsibilities: settings provider, DnD provider, and AppKit drag handoff.
+- Added `docs/contracts/plugin-organizer-public-api-v0.md` and updated contracts README.
+- Verified Host imports Organizer content only from the public package surface.
+
+## Review Notes
+
+feature-review (Codex inline), 2026-05-19 20:34 PDT. Verdict: APPROVED for safe prep only.
+
+feature-review (Codex inline), 2026-05-19 23:18 PDT. Verdict: APPROVED for production build. Scope is limited to moving existing Grid content behind the public Organizer API; no event rename, DnD payload change, persistence change, or command contract change.
+
+## Verification Notes
+
+feature-verify (Codex inline), 2026-05-19 20:34 PDT. Verdict: BLOCKED.
+
+Docs-only prep completed while G0/G1.1 were blocked. That blocker was resolved at 2026-05-19 23:09 PDT when G0 reached Conditional Go and G1.1 became READY_TO_SHIP.
+
+Production build is ready for feature-verify after focused checks:
+
+- `pnpm --filter @repo/plugin-organizer check-types`
+- `pnpm --filter desktop build`
+- Host boundary `rg` scan for forbidden Grid content imports
+- Public API contract scan for `OrganizerGridContent`
+
+feature-verify (Codex inline), 2026-05-19 23:22 PDT. Verdict: READY_TO_SHIP.
+
+Verification passed:
+
+- `pnpm --filter @repo/plugin-organizer check-types`
+- `pnpm --filter desktop build`
+- Host boundary scan confirms `GridWindow.tsx` has no direct `SmartContainer`, `GridBox`, `DesktopItem`, `useFileDrop`, or Organizer internal imports.
+- Public API scan confirms `OrganizerGridContent` is used from `@repo/plugin-organizer`, exported by `packages/plugin-organizer/src/index.ts`, and documented in `docs/contracts/plugin-organizer-public-api-v0.md`.
+- Required review/package docs and contract doc exist.
+
+Cross-vendor verify and manual two-Grid native runtime smoke are deferred in `docs/workflow/roadmap/xai-v1.deferred-gates.md`; no ship or push was run.
+
+## Work Log
+
+| Timestamp | Executor | Action | Commits | Next |
+|---|---|---|---|---|
+| 2026-05-19 20:33 PDT | feature-plan (Codex inline) | Step 0 and plan: scoped G1.2 to docs-only safe prep under user override. | — | feature-review |
+| 2026-05-19 20:34 PDT | feature-review (Codex inline) | Approved safe prep; production shell/content refactor remains blocked. | — | feature-build |
+| 2026-05-19 20:34 PDT | feature-build (Codex inline) | Created boundary docs and package dev docs. | `eaae46e` | feature-verify |
+| 2026-05-19 20:34 PDT | feature-verify (Codex inline) | Verified docs-only scope; status remains BLOCKED. | `eaae46e` | Human/G0 prerequisite |
+| 2026-05-19 23:18 PDT | feature-plan (Codex inline) | Reopened G1.2 after G0 Conditional Go and G1.1 READY_TO_SHIP; scoped production split to public Organizer content API. | `5d7652f` | feature-review |
+| 2026-05-19 23:18 PDT | feature-review (Codex inline) | Approved bounded production split with no event/DnD/persistence contract changes. | — | feature-build |
+| 2026-05-19 23:18 PDT | feature-build (Codex inline) | Implemented `OrganizerGridContent`, thinned Host `GridWindow.tsx`, and added public API contract docs. | `26d9f57` | feature-verify |
+| 2026-05-19 23:22 PDT | feature-verify (Codex inline) | Verified TypeScript/build/boundary/public API checks; marked READY_TO_SHIP. | `26d9f57`, `03ca86a` | manual ship only; continue roadmap |
+| 2026-05-20 00:32 PDT | ship (Claude Code, Track A) | Manifest promotion → SHIPPED. Production split already on `main` lineage (commits `26d9f57`/`03ca86a`); G1 manifest row updated to SHIPPED. Push deferred to end-of-session bundle. | `26d9f57`, `03ca86a` | continue roadmap |
+
+exec
+/bin/zsh -lc 'git show --stat --oneline --decorate=short 26d9f57 03ca86a 3751f43 653219b' in /Users/lijinlong/Desktop/AI_Desktop/XAI_Desktop
+ succeeded in 0ms:
+26d9f57 feat(grid-shell-organizer-content): expose Organizer grid content
+ apps/desktop/src/windows/GridWindow.tsx            | 485 +--------------------
+ docs/contracts/README.md                           |   1 +
+ docs/contracts/plugin-organizer-public-api-v0.md   |  53 +++
+ .../20260519-discovery-review.md                   |  12 +
+ .../20260519-feature-brief.md                      |  20 +
+ docs/workflow/roadmap/xai-g1-native-foundation.md  |   2 +-
+ docs/workflow/roadmap/xai-v1.autorun-20260519.md   |  31 +-
+ packages/grid-shell-organizer-content/docs/api.md  |  18 +-
+ .../grid-shell-organizer-content/docs/design.md    |  28 +-
+ .../grid-shell-organizer-content/docs/dev_log.md   |  34 +-
+ packages/grid-shell-organizer-content/docs/test.md |  11 +-
+ .../plugin-organizer/src/OrganizerGridContent.tsx  | 458 +++++++++++++++++++
+ packages/plugin-organizer/src/index.ts             |   2 +
+ 13 files changed, 653 insertions(+), 502 deletions(-)
+03ca86a docs(roadmap): finalize G1.2 build checkpoint
+ docs/workflow/roadmap/xai-v1.autorun-20260519.md      | 2 +-
+ packages/grid-shell-organizer-content/docs/dev_log.md | 4 ++--
+ 2 files changed, 3 insertions(+), 3 deletions(-)
+3751f43 docs(G1.2): mark grid shell split ready
+ docs/workflow/roadmap/xai-g1-native-foundation.md  |  6 +--
+ docs/workflow/roadmap/xai-v1.autorun-20260519.md   | 62 +++++++++++++++-------
+ docs/workflow/roadmap/xai-v1.deferred-gates.md     | 30 +++++++++--
+ docs/workflow/roadmap/xai-v1.incidents.md          | 16 +++---
+ .../grid-shell-organizer-content/docs/dev_log.md   | 27 +++++++---
+ 5 files changed, 100 insertions(+), 41 deletions(-)
+653219b docs(ship): promote G1.2 and G1.4 manifest rows to SHIPPED
+ docs/workflow/roadmap/xai-g1-native-foundation.md     |  4 ++--
+ docs/workflow/roadmap/xai-v1.autorun-20260519.md      | 13 +++++++++++++
+ packages/grid-shell-organizer-content/docs/dev_log.md | 13 +++++++------
+ packages/multi-grid-event-scope/docs/dev_log.md       | 13 +++++++------
+ 4 files changed, 29 insertions(+), 14 deletions(-)
+
+codex
+I have the contract and ledger context. Next pass is the actual code surface: current `GridWindow`, extracted organizer component, exports, and the exact commit bodies to see whether the SHIPPED promotion is defensible or if there’s a missed boundary/test gap.
+exec
+/bin/zsh -lc "sed -n '1,260p' apps/desktop/src/windows/GridWindow.tsx" in /Users/lijinlong/Desktop/AI_Desktop/XAI_Desktop
+ succeeded in 0ms:
+import { MouseEvent as ReactMouseEvent, useCallback } from "react";
+import { getCurrentWindow } from "@tauri-apps/api/window";
+import { OrganizerGridContent } from "@repo/plugin-organizer";
+import { GlobalDndProvider } from "../providers/DndProvider";
+import { SettingsProvider, useSettings } from "../context/SettingsContext";
+
+const DRAG_THRESHOLD_PX = 4;
+
+/**
+ * Native Grid window shell.
+ *
+ * Host owns provider wiring and AppKit drag handoff. Organizer owns the Grid
+ * content, item rendering, drop semantics, and cross-window state events.
+ */
+function GridWindowShell({ gridId }: { gridId: string }) {
+  const { gridOpacity, gridBlur } = useSettings();
+
+  // Intercept mousedown on the Organizer title bar (or the G0 fallback
+  // panel) in CAPTURE phase. We stopPropagation so react-draggable's
+  // onMouseDown synthetic handler never fires — its DOM-drag is meaningless
+  // in multi-window mode and emits bogus rect.x/y that warp the window. Past
+  // DRAG_THRESHOLD_PX we hand off to Tauri startDragging, which drives the
+  // window from AppKit's mouse-drag loop and gives unrestricted screen-wide
+  // movement (same pattern as the AI cube in 7b7ff35).
+  const handleHeaderDragStart = useCallback((event: ReactMouseEvent<HTMLDivElement>) => {
+    if (event.button !== 0) return;
+    const target = event.target as HTMLElement | null;
+    if (!target) return;
+
+    const onGridDragHandle =
+      Boolean(target.closest(".grid-title-bar")) ||
+      Boolean(target.closest("[data-g0-grid-prototype]"));
+    if (!onGridDragHandle) return;
+
+    // Don't hijack interactive children: buttons (lock/fold/view/close/etc.),
+    // the title edit input, the rename span's dblclick, or the resize handles.
+    if (target.closest("button, input, select, textarea, .resize-handle")) return;
+
+    event.preventDefault();
+    event.stopPropagation();
+
+    const startScreenX = event.screenX;
+    const startScreenY = event.screenY;
+    let handed = false;
+
+    const cleanup = () => {
+      window.removeEventListener("mousemove", onMove, true);
+      window.removeEventListener("mouseup", onUp, true);
+    };
+
+    const onMove = (ev: MouseEvent) => {
+      if (handed) return;
+      const dx = ev.screenX - startScreenX;
+      const dy = ev.screenY - startScreenY;
+      if (Math.hypot(dx, dy) >= DRAG_THRESHOLD_PX) {
+        handed = true;
+        void getCurrentWindow()
+          .startDragging()
+          .catch((err) => {
+            console.error("[GridWindow] startDragging failed:", err);
+          });
+        cleanup();
+      }
+    };
+
+    const onUp = () => cleanup();
+
+    window.addEventListener("mousemove", onMove, true);
+    window.addEventListener("mouseup", onUp, true);
+  }, []);
+
+  return (
+    <div
+      onMouseDownCapture={handleHeaderDragStart}
+      style={{ width: "100%", height: "100%" }}
+    >
+      <OrganizerGridContent gridId={gridId} gridOpacity={gridOpacity} gridBlur={gridBlur} />
+    </div>
+  );
+}
+
+export function GridWindow({ gridId }: { gridId: string }) {
+  return (
+    <SettingsProvider>
+      <GlobalDndProvider>
+        <GridWindowShell gridId={gridId} />
+      </GlobalDndProvider>
+    </SettingsProvider>
+  );
+}
+
+export default GridWindow;
+
+exec
+/bin/zsh -lc "sed -n '1,340p' packages/plugin-organizer/src/OrganizerGridContent.tsx" in /Users/lijinlong/Desktop/AI_Desktop/XAI_Desktop
+ succeeded in 0ms:
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { listen, TauriEvent } from "@tauri-apps/api/event";
+import { getCurrentWindow } from "@tauri-apps/api/window";
+import type { DesktopItem, GridBox } from "./types";
+import { SmartContainer } from "./SmartContainer";
+import {
+  ORGANIZER_FILE_DROP_EVENT,
+  ORGANIZER_GRID_CLOSE_EVENT,
+  ORGANIZER_GRID_READY_EVENT,
+  ORGANIZER_GRID_STATE_EVENT,
+  ORGANIZER_GRID_UPDATE_EVENT,
+  isGridClosePayload,
+  isGridStatePayload,
+  toDroppedFile,
+} from "./gridEvents";
+
+interface G0GridPrototypeRect {
+  x: number;
+  y: number;
+  width: number;
+  height: number;
+}
+
+interface G0GridPrototypePing {
+  gridId: string;
+  windowLabel: string;
+  rect: G0GridPrototypeRect | null;
+  count: number;
+  sentAt: string;
+}
+
+interface G0FinderDropTelemetry {
+  gridId: string;
+  source: "tauri://drag-drop";
+  paths: string[];
+  kinds: Array<"file" | "folder" | "app" | "alias" | "unknown">;
+  position: { x: number; y: number } | null;
+  receivedAt: string;
+}
+
+interface TauriDragDropPayload {
+  paths?: unknown;
+  position?: {
+    x?: unknown;
+    y?: unknown;
+  };
+}
+
+export interface OrganizerGridContentProps {
+  gridId: string;
+  gridOpacity?: number;
+  gridBlur?: boolean;
+}
+
+const G0_GRID_PROTOTYPE_EVENT = "g0-grid-prototype:scoped-ping";
+
+function classifyDroppedPath(path: string): G0FinderDropTelemetry["kinds"][number] {
+  const lower = path.toLowerCase();
+  if (lower.endsWith(".app")) return "app";
+  if (lower.endsWith(".alias")) return "alias";
+  if (path.includes(".")) return "file";
+  return "folder";
+}
+
+function coerceDragDropPaths(payload: TauriDragDropPayload): string[] {
+  if (!Array.isArray(payload.paths)) return [];
+  return payload.paths.filter((path): path is string => typeof path === "string" && path.length > 0);
+}
+
+function coerceDragDropPosition(payload: TauriDragDropPayload): G0FinderDropTelemetry["position"] {
+  const x = payload.position?.x;
+  const y = payload.position?.y;
+  if (typeof x !== "number" || typeof y !== "number") return null;
+  return { x, y };
+}
+
+function G0DropTelemetryPanel({
+  count,
+  telemetry,
+}: {
+  count: number;
+  telemetry: G0FinderDropTelemetry | null;
+}) {
+  return (
+    <div
+      style={{
+        border: "1px solid rgba(56, 189, 248, 0.28)",
+        borderRadius: 8,
+        padding: "8px 10px",
+        background: "rgba(8, 47, 73, 0.42)",
+        minWidth: 0,
+      }}
+    >
+      <div style={{ display: "flex", justifyContent: "space-between", gap: 8 }}>
+        <strong style={{ color: "#bae6fd" }}>Finder DnD</strong>
+        <span style={{ color: "#7dd3fc" }}>drops {count}</span>
+      </div>
+      <div style={{ marginTop: 6, color: "#cbd5e1", overflowWrap: "anywhere" }}>
+        {telemetry ? (
+          <>
+            <div>{telemetry.source}</div>
+            <div>{telemetry.kinds.join(", ") || "unknown"}</div>
+            <div>{telemetry.paths.join(" | ")}</div>
+          </>
+        ) : (
+          "Drop Finder file/folder/app/alias here"
+        )}
+      </div>
+    </div>
+  );
+}
+
+/**
+ * Public Organizer-owned content for a single native Grid window.
+ *
+ * The desktop Host owns native window providers and drag chrome; this component
+ * owns Grid business UI, cross-window state events, and path-first drop wiring.
+ */
+export function OrganizerGridContent({
+  gridId,
+  gridOpacity = 0.8,
+  gridBlur = true,
+}: OrganizerGridContentProps) {
+  const [grid, setGrid] = useState<GridBox | null>(null);
+  const [items, setItems] = useState<Record<string, DesktopItem>>({});
+  const [isDraggingFile, setIsDraggingFile] = useState(false);
+  const [windowLabel, setWindowLabel] = useState("");
+  const [windowRect, setWindowRect] = useState<G0GridPrototypeRect | null>(null);
+  const [spikeEventCount, setSpikeEventCount] = useState(0);
+  const [lastSpikeEvent, setLastSpikeEvent] = useState<G0GridPrototypePing | null>(null);
+  const [dropEventCount, setDropEventCount] = useState(0);
+  const [lastDropTelemetry, setLastDropTelemetry] = useState<G0FinderDropTelemetry | null>(null);
+  const lastDropKeyRef = useRef<{ key: string; receivedAt: number } | null>(null);
+  const gridRef = useRef<GridBox | null>(null);
+
+  useEffect(() => {
+    gridRef.current = grid;
+  }, [grid]);
+
+  useEffect(() => {
+    let cancelled = false;
+
+    const refreshWindowMeta = async () => {
+      const currentWindow = getCurrentWindow();
+      try {
+        const [position, size] = await Promise.all([
+          currentWindow.outerPosition(),
+          currentWindow.innerSize(),
+        ]);
+
+        if (!cancelled) {
+          setWindowLabel(currentWindow.label);
+          setWindowRect({
+            x: position.x,
+            y: position.y,
+            width: size.width,
+            height: size.height,
+          });
+        }
+      } catch (error) {
+        console.warn("[G0 grid prototype] failed to read window metadata", error);
+        if (!cancelled) {
+          setWindowLabel(currentWindow.label);
+        }
+      }
+    };
+
+    refreshWindowMeta();
+    const timer = window.setInterval(refreshWindowMeta, 1000);
+
+    return () => {
+      cancelled = true;
+      window.clearInterval(timer);
+    };
+  }, []);
+
+  useEffect(() => {
+    const unlistenSpike = listen<G0GridPrototypePing>(
+      G0_GRID_PROTOTYPE_EVENT,
+      (event) => {
+        if (event.payload.gridId !== gridId) {
+          console.warn("[G0 grid prototype] ignored out-of-scope event", {
+            currentGridId: gridId,
+            payload: event.payload,
+          });
+          return;
+        }
+
+        console.log("[G0 grid prototype] received scoped event", event.payload);
+        setLastSpikeEvent(event.payload);
+      }
+    );
+
+    return () => {
+      unlistenSpike.then((fn) => fn());
+    };
+  }, [gridId]);
+
+  useEffect(() => {
+    const unlistenUpdate = listen<unknown>(ORGANIZER_GRID_STATE_EVENT, (event) => {
+      if (!isGridStatePayload(event.payload)) {
+        console.warn("[OrganizerGridContent] ignored invalid grid state event", event.payload);
+        return;
+      }
+      if (event.payload.gridId === gridId) {
+        setGrid(event.payload.grid);
+        setItems(event.payload.items);
+      }
+    });
+
+    const unlistenDelete = listen<unknown>(ORGANIZER_GRID_CLOSE_EVENT, (event) => {
+      if (!isGridClosePayload(event.payload)) {
+        console.warn("[OrganizerGridContent] ignored invalid grid close event", event.payload);
+        return;
+      }
+      if (event.payload.gridId === gridId) {
+        getCurrentWindow().close();
+      }
+    });
+
+    getCurrentWindow().emit(ORGANIZER_GRID_READY_EVENT, { gridId });
+
+    return () => {
+      unlistenUpdate.then((fn) => fn());
+      unlistenDelete.then((fn) => fn());
+    };
+  }, [gridId]);
+
+  const emitUpdate = useCallback(
+    (patch: Partial<GridBox>) => {
+      getCurrentWindow().emit(ORGANIZER_GRID_UPDATE_EVENT, { gridId, changes: patch });
+    },
+    [gridId]
+  );
+
+  const handleUpdate = useCallback(
+    (_id: string, patch: Partial<GridBox>) => {
+      const prev = gridRef.current;
+      if (!prev) return;
+      let safePatch: Partial<GridBox> = patch;
+      if (patch.rect) {
+        safePatch = {
+          ...patch,
+          rect: {
+            ...prev.rect,
+            width: patch.rect.width,
+            height: patch.rect.height,
+          },
+        };
+      }
+      setGrid({ ...prev, ...safePatch });
+      emitUpdate(safePatch);
+    },
+    [emitUpdate]
+  );
+
+  const handleClose = useCallback(
+    (_id: string) => {
+      getCurrentWindow().emit(ORGANIZER_GRID_CLOSE_EVENT, { gridId });
+    },
+    [gridId]
+  );
+
+  const handleToggleFold = useCallback(
+    (_id: string) => {
+      emitUpdate({ isFolded: !grid?.isFolded });
+    },
+    [emitUpdate, grid?.isFolded]
+  );
+
+  const handleToggleLock = useCallback(
+    (_id: string) => {
+      emitUpdate({ isLocked: !grid?.isLocked });
+    },
+    [emitUpdate, grid?.isLocked]
+  );
+
+  const resolvedItems = useMemo(() => {
+    if (!grid) return [];
+    return grid.itemIds
+      .map((id) => items[id])
+      .filter((item): item is DesktopItem => Boolean(item));
+  }, [grid, items]);
+
+  const handleFileDrop = useCallback(
+    (paths: string[], position: { x: number; y: number }) => {
+      const dropKey = JSON.stringify(paths);
+      const now = Date.now();
+      const lastDropKey = lastDropKeyRef.current;
+      if (lastDropKey?.key === dropKey && now - lastDropKey.receivedAt < 1000) {
+        console.warn("[G0 Finder DnD] ignored duplicate drag-drop payload", paths);
+        return;
+      }
+      lastDropKeyRef.current = { key: dropKey, receivedAt: now };
+
+      const telemetry: G0FinderDropTelemetry = {
+        gridId,
+        source: "tauri://drag-drop",
+        paths,
+        kinds: paths.map(classifyDroppedPath),
+        position,
+        receivedAt: new Date().toISOString(),
+      };
+
+      console.log("[G0 Finder DnD] path-first drop", telemetry);
+      setLastDropTelemetry(telemetry);
+      setDropEventCount((count) => count + 1);
+      getCurrentWindow().emit(ORGANIZER_FILE_DROP_EVENT, {
+        gridId,
+        files: paths.map(toDroppedFile),
+      });
+    },
+    [gridId]
+  );
+
+  const handleSendSpikeEvent = useCallback(async () => {
+    const currentWindow = getCurrentWindow();
+    const label = windowLabel || currentWindow.label;
+    const nextCount = spikeEventCount + 1;
+    const payload: G0GridPrototypePing = {
+      gridId,
+      windowLabel: label,
+      rect: windowRect,
+      count: nextCount,
+      sentAt: new Date().toISOString(),
+    };
+
+    console.log("[G0 grid prototype] sending scoped event", payload);
+    await currentWindow.emitTo(label, G0_GRID_PROTOTYPE_EVENT, payload);
+    setSpikeEventCount(nextCount);
+  }, [gridId, spikeEventCount, windowLabel, windowRect]);
+
+  useEffect(() => {
+    const unlistenDrop = listen<TauriDragDropPayload>(TauriEvent.DRAG_DROP, (event) => {
+      const paths = coerceDragDropPaths(event.payload);
+      setIsDraggingFile(false);
+      if (paths.length === 0) {
+        console.warn("[G0 Finder DnD] drag-drop payload had no paths", event.payload);
+        return;
+      }
+
+exec
+/bin/zsh -lc "sed -n '1,200p' packages/plugin-organizer/src/index.ts" in /Users/lijinlong/Desktop/AI_Desktop/XAI_Desktop
+ succeeded in 0ms:
+export * from "./types";
+export * from "./mockData";
+export * from "./useGridSystem";
+export * from "./SmartContainer";
+export * from "./GridItem";
+export * from "./hooks/useFileDrop";
+export * from "./hooks/useGridWindow";
+export * from "./hooks/useMultiWindowGrids";
+export { OrganizerLayer } from "./OrganizerLayer";
+export { OrganizerGridContent } from "./OrganizerGridContent";
+export type { OrganizerGridContentProps } from "./OrganizerGridContent";
+export * from "./gridEvents";
+export {
+  ORGANIZER_LAYOUT_STORAGE_KEY,
+  localStorageLayoutStore,
+  repositoryLayoutStore,
+} from "./layoutStore";
+export type {
+  LayoutStore,
+  LocalStorageLayoutStoreOptions,
+  RepositoryLayoutStoreOptions,
+} from "./layoutStore";
+export {
+  InvalidUrlError,
+  createAppGridItem,
+  createFileGridItem,
+  createFolderGridItem,
+  createGridItemsFromFinderDrop,
+  createUrlGridItem,
+  inferKindFromPath,
+} from "./gridItemFactory";
+export {
+  classifyGridItem,
+  defaultClassificationRules,
+  fileExtension,
+} from "./autoClassify";
+export type {
+  ClassificationContext,
+  ClassificationResult,
+  ClassificationRule,
+} from "./autoClassify";
+export { createFinderClient } from "./finderClient";
+export type { FinderClient } from "./finderClient";
+export {
+  defaultEmptyStateActions,
+  evaluateItemHealth,
+} from "./itemHealth";
+export type {
+  EmptyStateAction,
+  ItemHealthOptions,
+  ItemHealthReport,
+  ItemHealthStatus,
+} from "./itemHealth";
+export type {
+  CreateAppGridItemInput,
+  CreateFileGridItemInput,
+  CreateFolderGridItemInput,
+  CreateUrlGridItemInput,
+  FinderDropEntry,
+  GridItemFactoryDeps,
+  GridItemKind,
+} from "./gridItemFactory";
+
+exec
+/bin/zsh -lc 'rg -n "SmartContainer|GridBox|DesktopItem|useFileDrop|plugin-organizer/src|useDesktopStore|GridItem|itemIds|organizer:" apps/desktop/src/windows/GridWindow.tsx packages/plugin-organizer/src/OrganizerGridContent.tsx docs/workflow/roadmap/xai-v1.deferred-gates.md packages/grid-shell-organizer-content/docs/test.md' in /Users/lijinlong/Desktop/AI_Desktop/XAI_Desktop
+ succeeded in 0ms:
+packages/grid-shell-organizer-content/docs/test.md:9:- `rg -n "SmartContainer|DesktopItem|GridBox|useFileDrop|@repo/plugin-organizer/src|packages/plugin-organizer/src" apps/desktop/src/windows/GridWindow.tsx` should return no matches.
+packages/grid-shell-organizer-content/docs/test.md:10:- `rg -n "OrganizerGridContent" apps/desktop/src/windows/GridWindow.tsx packages/plugin-organizer/src/index.ts docs/contracts/plugin-organizer-public-api-v0.md`
+packages/plugin-organizer/src/OrganizerGridContent.tsx:4:import type { DesktopItem, GridBox } from "./types";
+packages/plugin-organizer/src/OrganizerGridContent.tsx:5:import { SmartContainer } from "./SmartContainer";
+packages/plugin-organizer/src/OrganizerGridContent.tsx:124:  const [grid, setGrid] = useState<GridBox | null>(null);
+packages/plugin-organizer/src/OrganizerGridContent.tsx:125:  const [items, setItems] = useState<Record<string, DesktopItem>>({});
+packages/plugin-organizer/src/OrganizerGridContent.tsx:134:  const gridRef = useRef<GridBox | null>(null);
+packages/plugin-organizer/src/OrganizerGridContent.tsx:230:    (patch: Partial<GridBox>) => {
+packages/plugin-organizer/src/OrganizerGridContent.tsx:237:    (_id: string, patch: Partial<GridBox>) => {
+packages/plugin-organizer/src/OrganizerGridContent.tsx:240:      let safePatch: Partial<GridBox> = patch;
+packages/plugin-organizer/src/OrganizerGridContent.tsx:280:    return grid.itemIds
+packages/plugin-organizer/src/OrganizerGridContent.tsx:282:      .filter((item): item is DesktopItem => Boolean(item));
+packages/plugin-organizer/src/OrganizerGridContent.tsx:442:      <SmartContainer
+docs/workflow/roadmap/xai-v1.deferred-gates.md:73:- Files/commits affected: `6b121ea`, `14e04c2`, `01e5167`, `b8c34fe`, `7b7ff35`, `f65a1b5`, `a33c74d`; apps/desktop/src/windows/GridWindow.tsx; apps/desktop/src/windows/ControlWindow.tsx; apps/desktop/src/components/AiAssistant/AiCube.tsx; packages/plugin-organizer/src/OrganizerLayer.tsx; packages/plugin-organizer/src/useGridSystem.tsx; apps/desktop/src-tauri/src/platform/macos/window_ext.rs; docs/reviews/window-ground-truth/grid-window-prototype/README.md
+docs/workflow/roadmap/xai-v1.deferred-gates.md:109:- Files/commits affected: docs/reviews/window-ground-truth/finder-dnd-path/README.md; packages/finder-dnd-path/docs/*; apps/desktop/src/windows/GridWindow.tsx; packages/plugin-organizer/src/OrganizerLayer.tsx; docs/adr/0005-window-foundation.md; commits `33627df`, `7a1b9dd`, `7e20ca8`, `58c926d`, `18b48da`, `d982dab`, `5e98083`
+docs/workflow/roadmap/xai-v1.deferred-gates.md:241:- Files/commits affected: apps/desktop/src-tauri/src/commands/window.rs; apps/desktop/src-tauri/src/lib.rs; packages/core/src/types/window.ts; packages/plugin-organizer/src/hooks/useGridWindow.ts; docs/contracts/tauri-commands-v0.md; commits `dce4fb9`, `1fa8c75`
+docs/workflow/roadmap/xai-v1.deferred-gates.md:253:- Files/commits affected: apps/desktop/src/windows/GridWindow.tsx; packages/plugin-organizer/src/OrganizerGridContent.tsx; packages/plugin-organizer/src/index.ts; docs/contracts/plugin-organizer-public-api-v0.md; commits `26d9f57`, `03ca86a`
+docs/workflow/roadmap/xai-v1.deferred-gates.md:265:- Files/commits affected: apps/desktop/src/windows/GridWindow.tsx; packages/plugin-organizer/src/OrganizerGridContent.tsx; commit `26d9f57`
+docs/workflow/roadmap/xai-v1.deferred-gates.md:277:- Files/commits affected: packages/plugin-organizer/src/gridEvents.ts; packages/plugin-organizer/src/hooks/useMultiWindowGrids.ts; packages/plugin-organizer/src/OrganizerGridContent.tsx; packages/core/src/types/events.ts; docs/contracts/events-v0.md; commits `78aef01`, `59da1e5`
+docs/workflow/roadmap/xai-v1.deferred-gates.md:289:- Files/commits affected: packages/plugin-organizer/src/gridEvents.ts; packages/plugin-organizer/src/hooks/useMultiWindowGrids.ts; packages/plugin-organizer/src/OrganizerGridContent.tsx; commit `78aef01`
+
+exec
+/bin/zsh -lc 'git show --format=fuller --no-patch 26d9f57 03ca86a 3751f43 653219b' in /Users/lijinlong/Desktop/AI_Desktop/XAI_Desktop
+ succeeded in 0ms:
+commit 26d9f57a1c2ecbc548c727bb4e2b72a78307d0bb
+Author:     InnoPeak <global_ai@innopeaktech.com>
+AuthorDate: Tue May 19 23:21:01 2026 -0700
+Commit:     InnoPeak <global_ai@innopeaktech.com>
+CommitDate: Tue May 19 23:21:01 2026 -0700
+
+    feat(grid-shell-organizer-content): expose Organizer grid content
+
+commit 03ca86ac2b4e465982a58373d1d5379f263bdce2
+Author:     InnoPeak <global_ai@innopeaktech.com>
+AuthorDate: Tue May 19 23:21:30 2026 -0700
+Commit:     InnoPeak <global_ai@innopeaktech.com>
+CommitDate: Tue May 19 23:21:30 2026 -0700
+
+    docs(roadmap): finalize G1.2 build checkpoint
+
+commit 3751f43fbcde6376cd993a169ef7be350164df53
+Author:     InnoPeak <global_ai@innopeaktech.com>
+AuthorDate: Tue May 19 23:25:11 2026 -0700
+Commit:     InnoPeak <global_ai@innopeaktech.com>
+CommitDate: Tue May 19 23:25:11 2026 -0700
+
+    docs(G1.2): mark grid shell split ready
+
+commit 653219be26954973e53fba3e1c5ddbf96b057eaa
+Author:     InnoPeak <global_ai@innopeaktech.com>
+AuthorDate: Wed May 20 00:20:46 2026 -0700
+Commit:     InnoPeak <global_ai@innopeaktech.com>
+CommitDate: Wed May 20 00:20:46 2026 -0700
+
+    docs(ship): promote G1.2 and G1.4 manifest rows to SHIPPED
+    
+    Why
+    - Goal authorizes ship for G1.2 grid-shell-organizer-content and G1.4
+      multi-grid-event-scope; both already had complete READY_TO_SHIP
+      commits on the main lineage. The only outstanding step was promoting
+      the G1 manifest row and the package dev_log Status Panel to SHIPPED.
+    
+    What
+    - xai-g1-native-foundation manifest rows #2 (G1.2) and #4 (G1.4) →
+      SHIPPED with commit references and Track A attribution.
+    - packages/grid-shell-organizer-content/docs/dev_log.md Status →
+      SHIPPED; appended ship Work Log row.
+    - packages/multi-grid-event-scope/docs/dev_log.md Status → SHIPPED;
+      appended ship Work Log row.
+    - xai-v1.autorun-20260519.md ship checkpoint and updated ship-record
+      rationale (R4).
+    
+    Scope
+    - Documentation/manifest only. No code or runtime change.
+    
+    Risk
+    - None. No source code modification; the production refactors landed in
+      earlier commits (G1.2 `26d9f57`/`03ca86a`; G1.4 `78aef01`/`59da1e5`).
+    
+    Co-Authored-By: Claude Opus 4.7 (1M context) <noreply@anthropic.com>
+
+codex
+The host boundary is mostly clean in current code. I’m checking two likely fault lines before verdict: whether the “public surface” is broader than the contract claims, and whether deferred gates and ship metadata were promoted with enough evidence.
+exec
+/bin/zsh -lc "sed -n '240,320p' docs/workflow/roadmap/xai-v1.deferred-gates.md" in /Users/lijinlong/Desktop/AI_Desktop/XAI_Desktop
+ succeeded in 0ms:
+- Suggested verification command / environment: `cargo check --manifest-path apps/desktop/src-tauri/Cargo.toml && pnpm --filter @repo/core check-types && pnpm --filter @repo/plugin-organizer check-types && pnpm --filter desktop build`
+- Files/commits affected: apps/desktop/src-tauri/src/commands/window.rs; apps/desktop/src-tauri/src/lib.rs; packages/core/src/types/window.ts; packages/plugin-organizer/src/hooks/useGridWindow.ts; docs/contracts/tauri-commands-v0.md; commits `dce4fb9`, `1fa8c75`
+
+## Entry 21
+
+- Feature: grid-shell-organizer-content
+- Gate: G1
+- Deferred gate: Cross-vendor feature-verify
+- Why deferred: The runtime override requires a serial Codex conductor with no spawn/bg dispatch, so no independent cross-vendor verifier was available.
+- Risk: The same Codex execution context implemented and verified the Host/Organizer content boundary refactor.
+- What was done instead: Ran inline feature-verify with plugin-organizer type checking, desktop build, Host forbidden-import boundary scan, public API scan, and file existence checks.
+- Later human action: Review `26d9f57` and `packages/grid-shell-organizer-content/docs/dev_log.md`, then run manual ship only if acceptable.
+- Suggested verification command / environment: `pnpm --filter @repo/plugin-organizer check-types && pnpm --filter desktop build`
+- Files/commits affected: apps/desktop/src/windows/GridWindow.tsx; packages/plugin-organizer/src/OrganizerGridContent.tsx; packages/plugin-organizer/src/index.ts; docs/contracts/plugin-organizer-public-api-v0.md; commits `26d9f57`, `03ca86a`
+
+## Entry 22
+
+- Feature: grid-shell-organizer-content
+- Gate: G1
+- Deferred gate: Manual native two-Grid runtime smoke
+- Why deferred: Automated Codex verification cannot visually confirm two native Grid windows, scoped update/close/drop/toggle behavior, and drag behavior in the running macOS app without human/manual UI interaction.
+- Risk: The refactor moved code without intended behavior changes, but a native runtime smoke could still catch provider wiring, window event, or DnD regressions that TypeScript/build checks cannot see.
+- What was done instead: Preserved existing event names and payloads, moved content code behind the public Organizer API, and ran type/build/boundary checks.
+- Later human action: Run the desktop app, create two Grid windows, move/resize/close/toggle each, and drop a Finder path into one Grid to confirm scoped behavior.
+- Suggested verification command / environment: `pnpm --filter desktop tauri dev` on macOS, then use Control `+ New Grid` twice and verify only the target Grid changes on updates/drops.
+- Files/commits affected: apps/desktop/src/windows/GridWindow.tsx; packages/plugin-organizer/src/OrganizerGridContent.tsx; commit `26d9f57`
+
+## Entry 23
+
+- Feature: multi-grid-event-scope
+- Gate: G1
+- Deferred gate: Cross-vendor feature-verify
+- Why deferred: The runtime override requires a serial Codex conductor with no spawn/bg dispatch, so no independent cross-vendor verifier was available.
+- Risk: The same Codex execution context implemented and verified the event migration.
+- What was done instead: Ran inline feature-verify with core and Organizer type checks, Organizer guard tests, desktop build, legacy event scan, target event/API scan, and file existence checks.
+- Later human action: Review `78aef01` and `packages/multi-grid-event-scope/docs/dev_log.md`, then run manual ship only if acceptable.
+- Suggested verification command / environment: `pnpm --filter @repo/core check-types && pnpm --filter @repo/plugin-organizer check-types && pnpm --filter @repo/plugin-organizer test && pnpm --filter desktop build`
+- Files/commits affected: packages/plugin-organizer/src/gridEvents.ts; packages/plugin-organizer/src/hooks/useMultiWindowGrids.ts; packages/plugin-organizer/src/OrganizerGridContent.tsx; packages/core/src/types/events.ts; docs/contracts/events-v0.md; commits `78aef01`, `59da1e5`
+
+## Entry 24
+
+- Feature: multi-grid-event-scope
+- Gate: G1
+- Deferred gate: Manual two-Grid runtime event-scope smoke
+- Why deferred: Automated Codex verification cannot visually operate two native Grid windows and confirm update/drop/close isolation plus listener cleanup in the running macOS app without human/manual UI interaction.
+- Risk: Runtime Tauri event routing could still reveal duplicate listener, wrong-window, or close/drop isolation issues that type checks and guard tests cannot fully prove.
+- What was done instead: Added runtime guards for missing `gridId`, migrated production event names, preserved create-request compatibility aliases as listeners only, and added guard tests.
+- Later human action: Run the desktop app, create two Grid windows, update/close/drop in each, and confirm only the matching `gridId` changes.
+- Suggested verification command / environment: `pnpm --filter desktop tauri dev` on macOS, then use Control `+ New Grid` twice and exercise update, close, and Finder drop on each Grid.
+- Files/commits affected: packages/plugin-organizer/src/gridEvents.ts; packages/plugin-organizer/src/hooks/useMultiWindowGrids.ts; packages/plugin-organizer/src/OrganizerGridContent.tsx; commit `78aef01`
+
+## Entry 23
+
+- Feature: mas-sandbox-dry-run (G0.6)
+- Gate: G0 ship gate
+- Deferred gate: G0.6 not shipped — BLOCKED_EXTERNAL (Apple Developer signing)
+- Why deferred: G0.6 production implementation requires a signed/sandboxed Apple Developer environment for MAS runtime evidence. The `mas-sandbox` compile fallback passes private-API-disabled `cargo check`, but runtime sandbox behavior cannot be validated without Apple Developer signing or an equivalent sandbox environment.
+- Risk: G0.6 cannot verify the MAS path until signing is available. This does not block G1 native foundation, which proceeds on the DMG/private path under the Conditional Go decision.
+- What was done instead: G0.1-G0.5 were shipped to `origin/spike/window-ground-truth` on 2026-05-19. G0.6 is explicitly excluded from this ship and remains BLOCKED_EXTERNAL.
+- Later human action: When Apple Developer signing/sandbox environment is available, complete G0.6 runtime validation and ship separately.
+- Suggested verification command / environment: Build/run desktop with `mas-sandbox` feature and private API disabled after obtaining Apple Developer signing; verify sandbox entitlements and window transparency fallback behavior.
+- Files/commits affected: docs/workflow/roadmap/xai-g0-window-spike.md (G0.6 row); packages/mas-sandbox-dry-run/docs/*; commits `071a192`, `4537d2d`, `2fda0c8`
+
+## Entry 25
+
+- Feature: xai-g2-data-security-foundation manifest
+- Gate: G2
+- Deferred gate: Manifest review
+- Why deferred: The run is operating in unattended serial Codex mode and no human/cross-vendor reviewer is available to approve the newly initialized G2 manifest.
+- Risk: The G2 decomposition may need human adjustment, especially around previously shipped sync-v1 artifacts, opaque-handle security semantics, and MAS/Supabase external gates.
+- What was done instead: Initialized a conservative G2 manifest from the authoritative execution pack, marked only G2.1 `repository-v0-contract` as ELIGIBLE, and left external/security/runtime rows as WAITING, RECONCILE_AFTER_G2.1, or BLOCKED_EXTERNAL.
+- Later human action: Review `docs/workflow/roadmap/xai-g2-data-security-foundation.md` before shipping any G2 feature.
+- Suggested verification command / environment: `sed -n '1,220p' docs/workflow/roadmap/xai-g2-data-security-foundation.md`
+- Files/commits affected: docs/workflow/roadmap/xai-g2-data-security-foundation.md; docs/workflow/roadmap/xai-v1.autorun-20260519.md; docs/workflow/roadmap/xai-v1.deferred-gates.md
+
+exec
+/bin/zsh -lc "sed -n '1,220p' packages/grid-shell-organizer-content/docs/test.md" in /Users/lijinlong/Desktop/AI_Desktop/XAI_Desktop
+ succeeded in 0ms:
+# grid-shell-organizer-content — Test Plan
+
+## Automated Checks
+
+- `test -f docs/reviews/grid-shell-organizer-content/20260519-feature-brief.md`
+- `test -f packages/grid-shell-organizer-content/docs/dev_log.md`
+- `pnpm --filter @repo/plugin-organizer check-types`
+- `pnpm --filter desktop build`
+- `rg -n "SmartContainer|DesktopItem|GridBox|useFileDrop|@repo/plugin-organizer/src|packages/plugin-organizer/src" apps/desktop/src/windows/GridWindow.tsx` should return no matches.
+- `rg -n "OrganizerGridContent" apps/desktop/src/windows/GridWindow.tsx packages/plugin-organizer/src/index.ts docs/contracts/plugin-organizer-public-api-v0.md`
+
+## Manual Checks
+
+- Open two Grid windows.
+- Confirm Host `GridWindow.tsx` renders through the public Organizer component.
+- Confirm Grid update/close/drop/toggle behavior remains scoped per `gridId`.
+
+exec
+/bin/zsh -lc "sed -n '340,520p' packages/plugin-organizer/src/OrganizerGridContent.tsx" in /Users/lijinlong/Desktop/AI_Desktop/XAI_Desktop
+ succeeded in 0ms:
+      }
+      handleFileDrop(paths, coerceDragDropPosition(event.payload) ?? { x: 0, y: 0 });
+    });
+    const unlistenEnter = listen(TauriEvent.DRAG_ENTER, () => setIsDraggingFile(true));
+    const unlistenOver = listen(TauriEvent.DRAG_OVER, () => setIsDraggingFile(true));
+    const unlistenLeave = listen(TauriEvent.DRAG_LEAVE, () => setIsDraggingFile(false));
+
+    return () => {
+      unlistenDrop.then((fn) => fn());
+      unlistenEnter.then((fn) => fn());
+      unlistenOver.then((fn) => fn());
+      unlistenLeave.then((fn) => fn());
+    };
+  }, [handleFileDrop]);
+
+  if (!grid) {
+    return (
+      <div
+        data-g0-grid-prototype="true"
+        style={{
+          boxSizing: "border-box",
+          display: "grid",
+          gridTemplateRows: "auto 1fr auto auto",
+          gap: 10,
+          width: "100%",
+          height: "100%",
+          padding: 14,
+          background: "rgba(10, 14, 22, 0.82)",
+          color: "#e7ecf3",
+          fontFamily: "system-ui, -apple-system, BlinkMacSystemFont, sans-serif",
+          fontSize: 12,
+          overflow: "hidden",
+        }}
+      >
+        <div style={{ display: "grid", gap: 2 }}>
+          <strong style={{ fontSize: 13, fontWeight: 650 }}>G0 Grid Prototype</strong>
+          <span style={{ color: "#9ca3af" }}>Waiting for Organizer state; spike fallback is active.</span>
+        </div>
+
+        <dl
+          style={{
+            display: "grid",
+            gridTemplateColumns: "74px 1fr",
+            alignContent: "start",
+            gap: "6px 10px",
+            minWidth: 0,
+            margin: 0,
+          }}
+        >
+          <dt style={{ color: "#9ca3af" }}>gridId</dt>
+          <dd style={{ margin: 0, overflowWrap: "anywhere" }}>{gridId}</dd>
+          <dt style={{ color: "#9ca3af" }}>label</dt>
+          <dd style={{ margin: 0, overflowWrap: "anywhere" }}>{windowLabel || "unknown"}</dd>
+          <dt style={{ color: "#9ca3af" }}>rect</dt>
+          <dd style={{ margin: 0, overflowWrap: "anywhere" }}>
+            {windowRect
+              ? `x=${windowRect.x}, y=${windowRect.y}, ${windowRect.width}x${windowRect.height}`
+              : "unknown"}
+          </dd>
+          <dt style={{ color: "#9ca3af" }}>events</dt>
+          <dd style={{ margin: 0 }}>{spikeEventCount}</dd>
+          <dt style={{ color: "#9ca3af" }}>last</dt>
+          <dd style={{ margin: 0, overflowWrap: "anywhere" }}>
+            {lastSpikeEvent
+              ? `${lastSpikeEvent.gridId} #${lastSpikeEvent.count} ${lastSpikeEvent.sentAt}`
+              : "none"}
+          </dd>
+        </dl>
+
+        <G0DropTelemetryPanel count={dropEventCount} telemetry={lastDropTelemetry} />
+
+        <button
+          type="button"
+          onClick={handleSendSpikeEvent}
+          style={{
+            width: "100%",
+            minHeight: 34,
+            border: "1px solid rgba(148, 163, 184, 0.45)",
+            borderRadius: 8,
+            background: "rgba(30, 41, 59, 0.9)",
+            color: "#f8fafc",
+            cursor: "pointer",
+            font: "inherit",
+            fontWeight: 650,
+          }}
+        >
+          Send Scoped Event
+        </button>
+      </div>
+    );
+  }
+
+  return (
+    <div
+      style={{
+        width: "100%",
+        height: "100%",
+        outline: isDraggingFile ? "3px dashed rgba(56, 189, 248, 0.6)" : "none",
+        outlineOffset: "-3px",
+        transition: "outline 150ms ease",
+      }}
+    >
+      <SmartContainer
+        data={{ ...grid, rect: { ...grid.rect, x: 0, y: 0 } }}
+        items={resolvedItems}
+        onUpdate={handleUpdate}
+        onClose={handleClose}
+        onToggleFold={handleToggleFold}
+        onToggleLock={handleToggleLock}
+        onFocus={() => {}}
+        gridOpacity={gridOpacity}
+        gridBlur={gridBlur}
+      />
+      <div
+        style={{
+          position: "fixed",
+          left: 8,
+          bottom: 8,
+          width: "calc(100% - 16px)",
+          pointerEvents: "none",
+          fontSize: 11,
+        }}
+      >
+        <G0DropTelemetryPanel count={dropEventCount} telemetry={lastDropTelemetry} />
+      </div>
+    </div>
+  );
+}
+
+export default OrganizerGridContent;
+
+exec
+/bin/zsh -lc 'git diff --unified=80 26d9f57''^ 26d9f57 -- apps/desktop/src/windows/GridWindow.tsx packages/plugin-organizer/src/OrganizerGridContent.tsx packages/plugin-organizer/src/index.ts docs/contracts/plugin-organizer-public-api-v0.md' in /Users/lijinlong/Desktop/AI_Desktop/XAI_Desktop
+ succeeded in 0ms:
+diff --git a/apps/desktop/src/windows/GridWindow.tsx b/apps/desktop/src/windows/GridWindow.tsx
+index d19e098..33b0c2b 100644
+--- a/apps/desktop/src/windows/GridWindow.tsx
++++ b/apps/desktop/src/windows/GridWindow.tsx
+@@ -1,537 +1,92 @@
+-import { MouseEvent as ReactMouseEvent, useCallback, useEffect, useMemo, useRef, useState } from "react";
+-import { listen, TauriEvent } from "@tauri-apps/api/event";
++import { MouseEvent as ReactMouseEvent, useCallback } from "react";
+ import { getCurrentWindow } from "@tauri-apps/api/window";
+-import {
+-  DesktopItem,
+-  GridBox,
+-  SmartContainer,
+-} from "@repo/plugin-organizer";
++import { OrganizerGridContent } from "@repo/plugin-organizer";
+ import { GlobalDndProvider } from "../providers/DndProvider";
+ import { SettingsProvider, useSettings } from "../context/SettingsContext";
+ 
+ const DRAG_THRESHOLD_PX = 4;
+ 
+-// Event types for cross-window communication
+-interface GridUpdateEvent {
+-  gridId: string;
+-  grid: GridBox;
+-  items: Record<string, DesktopItem>;
+-}
+-
+-interface GridDeleteEvent {
+-  gridId: string;
+-}
+-
+-interface G0GridPrototypeRect {
+-  x: number;
+-  y: number;
+-  width: number;
+-  height: number;
+-}
+-
+-interface G0GridPrototypePing {
+-  gridId: string;
+-  windowLabel: string;
+-  rect: G0GridPrototypeRect | null;
+-  count: number;
+-  sentAt: string;
+-}
+-
+-interface G0FinderDropTelemetry {
+-  gridId: string;
+-  source: "tauri://drag-drop";
+-  paths: string[];
+-  kinds: Array<"file" | "folder" | "app" | "alias" | "unknown">;
+-  position: { x: number; y: number } | null;
+-  receivedAt: string;
+-}
+-
+-interface TauriDragDropPayload {
+-  paths?: unknown;
+-  position?: {
+-    x?: unknown;
+-    y?: unknown;
+-  };
+-}
+-
+-const G0_GRID_PROTOTYPE_EVENT = "g0-grid-prototype:scoped-ping";
+-
+-function classifyDroppedPath(path: string): G0FinderDropTelemetry["kinds"][number] {
+-  const lower = path.toLowerCase();
+-  if (lower.endsWith(".app")) return "app";
+-  if (lower.endsWith(".alias")) return "alias";
+-  if (path.includes(".")) return "file";
+-  return "folder";
+-}
+-
+-function coerceDragDropPaths(payload: TauriDragDropPayload): string[] {
+-  if (!Array.isArray(payload.paths)) return [];
+-  return payload.paths.filter((path): path is string => typeof path === "string" && path.length > 0);
+-}
+-
+-function coerceDragDropPosition(payload: TauriDragDropPayload): G0FinderDropTelemetry["position"] {
+-  const x = payload.position?.x;
+-  const y = payload.position?.y;
+-  if (typeof x !== "number" || typeof y !== "number") return null;
+-  return { x, y };
+-}
+-
+-function G0DropTelemetryPanel({
+-  count,
+-  telemetry,
+-}: {
+-  count: number;
+-  telemetry: G0FinderDropTelemetry | null;
+-}) {
+-  return (
+-    <div
+-      style={{
+-        border: "1px solid rgba(56, 189, 248, 0.28)",
+-        borderRadius: 8,
+-        padding: "8px 10px",
+-        background: "rgba(8, 47, 73, 0.42)",
+-        minWidth: 0,
+-      }}
+-    >
+-      <div style={{ display: "flex", justifyContent: "space-between", gap: 8 }}>
+-        <strong style={{ color: "#bae6fd" }}>Finder DnD</strong>
+-        <span style={{ color: "#7dd3fc" }}>drops {count}</span>
+-      </div>
+-      <div style={{ marginTop: 6, color: "#cbd5e1", overflowWrap: "anywhere" }}>
+-        {telemetry ? (
+-          <>
+-            <div>{telemetry.source}</div>
+-            <div>{telemetry.kinds.join(", ") || "unknown"}</div>
+-            <div>{telemetry.paths.join(" | ")}</div>
+-          </>
+-        ) : (
+-          "Drop Finder file/folder/app/alias here"
+-        )}
+-      </div>
+-    </div>
+-  );
+-}
+-
+ /**
+- * GridWindowContent renders a single SmartContainer in its own native window.
+- * Communicates with the main window via Tauri events.
++ * Native Grid window shell.
++ *
++ * Host owns provider wiring and AppKit drag handoff. Organizer owns the Grid
++ * content, item rendering, drop semantics, and cross-window state events.
+  */
+-function GridWindowContent({ gridId }: { gridId: string }) {
+-  const [grid, setGrid] = useState<GridBox | null>(null);
+-  const [items, setItems] = useState<Record<string, DesktopItem>>({});
+-  const [isDraggingFile, setIsDraggingFile] = useState(false);
+-  const [windowLabel, setWindowLabel] = useState("");
+-  const [windowRect, setWindowRect] = useState<G0GridPrototypeRect | null>(null);
+-  const [spikeEventCount, setSpikeEventCount] = useState(0);
+-  const [lastSpikeEvent, setLastSpikeEvent] = useState<G0GridPrototypePing | null>(null);
+-  const [dropEventCount, setDropEventCount] = useState(0);
+-  const [lastDropTelemetry, setLastDropTelemetry] = useState<G0FinderDropTelemetry | null>(null);
++function GridWindowShell({ gridId }: { gridId: string }) {
+   const { gridOpacity, gridBlur } = useSettings();
+-  const lastDropKeyRef = useRef<{ key: string; receivedAt: number } | null>(null);
+-  // gridRef mirrors `grid` so handleUpdate can read the latest rect without
+-  // running side-effects inside a setState updater (multi-window position
+-  // sync is sensitive to stale x/y from the SmartContainer's DOM drag).
+-  const gridRef = useRef<GridBox | null>(null);
+-  useEffect(() => {
+-    gridRef.current = grid;
+-  }, [grid]);
+-
+-  useEffect(() => {
+-    let cancelled = false;
+-
+-    const refreshWindowMeta = async () => {
+-      const currentWindow = getCurrentWindow();
+-      try {
+-        const [position, size] = await Promise.all([
+-          currentWindow.outerPosition(),
+-          currentWindow.innerSize(),
+-        ]);
+-
+-        if (!cancelled) {
+-          setWindowLabel(currentWindow.label);
+-          setWindowRect({
+-            x: position.x,
+-            y: position.y,
+-            width: size.width,
+-            height: size.height,
+-          });
+-        }
+-      } catch (error) {
+-        console.warn("[G0 grid prototype] failed to read window metadata", error);
+-        if (!cancelled) {
+-          setWindowLabel(currentWindow.label);
+-        }
+-      }
+-    };
+-
+-    refreshWindowMeta();
+-    const timer = window.setInterval(refreshWindowMeta, 1000);
+-
+-    return () => {
+-      cancelled = true;
+-      window.clearInterval(timer);
+-    };
+-  }, []);
+ 
+-  useEffect(() => {
+-    const unlistenSpike = listen<G0GridPrototypePing>(
+-      G0_GRID_PROTOTYPE_EVENT,
+-      (event) => {
+-        if (event.payload.gridId !== gridId) {
+-          console.warn("[G0 grid prototype] ignored out-of-scope event", {
+-            currentGridId: gridId,
+-            payload: event.payload,
+-          });
+-          return;
+-        }
+-
+-        console.log("[G0 grid prototype] received scoped event", event.payload);
+-        setLastSpikeEvent(event.payload);
+-      }
+-    );
+-
+-    return () => {
+-      unlistenSpike.then((fn) => fn());
+-    };
+-  }, [gridId]);
+-
+-  // Listen for grid updates from main window
+-  useEffect(() => {
+-    const unlistenUpdate = listen<GridUpdateEvent>("grid-update", (event) => {
+-      if (event.payload.gridId === gridId) {
+-        setGrid(event.payload.grid);
+-        setItems(event.payload.items);
+-      }
+-    });
+-
+-    const unlistenDelete = listen<GridDeleteEvent>("grid-delete", (event) => {
+-      if (event.payload.gridId === gridId) {
+-        getCurrentWindow().close();
+-      }
+-    });
+-
+-    // Request initial data
+-    getCurrentWindow().emit("grid-window-ready", { gridId });
+-
+-    return () => {
+-      unlistenUpdate.then((fn) => fn());
+-      unlistenDelete.then((fn) => fn());
+-    };
+-  }, [gridId]);
+-
+-  const emitUpdate = useCallback(
+-    (patch: Partial<GridBox>) => {
+-      getCurrentWindow().emit("grid-window-update", { gridId, patch });
+-    },
+-    [gridId]
+-  );
+-
+-  const handleUpdate = useCallback(
+-    (_id: string, patch: Partial<GridBox>) => {
+-      // In multi-window mode the *window* owns its on-screen position via the
+-      // OS-native drag (see GridWindow's onMouseDownCapture handler below).
+-      // SmartContainer always sees rect.x/y as 0 (GridWindow overrides them)
+-      // so any rect.x/y coming back through react-draggable's onStop is just
+-      // DOM-relative noise — if we propagated it, the window would teleport
+-      // to logical (0, 0) on every header click. Strip x/y from the patch
+-      // and merge size/other fields against the latest known rect.
+-      const prev = gridRef.current;
+-      if (!prev) return;
+-      let safePatch: Partial<GridBox> = patch;
+-      if (patch.rect) {
+-        safePatch = {
+-          ...patch,
+-          rect: {
+-            ...prev.rect,
+-            width: patch.rect.width,
+-            height: patch.rect.height,
+-          },
+-        };
+-      }
+-      setGrid({ ...prev, ...safePatch });
+-      emitUpdate(safePatch);
+-    },
+-    [emitUpdate]
+-  );
+-
+-  const handleClose = useCallback(
+-    (_id: string) => {
+-      getCurrentWindow().emit("grid-window-close", { gridId });
+-    },
+-    [gridId]
+-  );
+-
+-  const handleToggleFold = useCallback(
+-    (_id: string) => {
+-      emitUpdate({ isFolded: !grid?.isFolded });
+-    },
+-    [emitUpdate, grid?.isFolded]
+-  );
+-
+-  const handleToggleLock = useCallback(
+-    (_id: string) => {
+-      emitUpdate({ isLocked: !grid?.isLocked });
+-    },
+-    [emitUpdate, grid?.isLocked]
+-  );
+-
+-  const resolvedItems = useMemo(() => {
+-    if (!grid) return [];
+-    return grid.itemIds.map((id) => items[id]).filter(Boolean);
+-  }, [grid, items]);
+-
+-  const handleFileDrop = useCallback(
+-    (paths: string[], position: { x: number; y: number }) => {
+-      const dropKey = JSON.stringify(paths);
+-      const now = Date.now();
+-      const lastDropKey = lastDropKeyRef.current;
+-      if (lastDropKey?.key === dropKey && now - lastDropKey.receivedAt < 1000) {
+-        console.warn("[G0 Finder DnD] ignored duplicate drag-drop payload", paths);
+-        return;
+-      }
+-      lastDropKeyRef.current = { key: dropKey, receivedAt: now };
+-
+-      const telemetry: G0FinderDropTelemetry = {
+-        gridId,
+-        source: "tauri://drag-drop",
+-        paths,
+-        kinds: paths.map(classifyDroppedPath),
+-        position,
+-        receivedAt: new Date().toISOString(),
+-      };
+-
+-      console.log("[G0 Finder DnD] path-first drop", telemetry);
+-      setLastDropTelemetry(telemetry);
+-      setDropEventCount((count) => count + 1);
+-      getCurrentWindow().emit("grid-window-file-drop", { gridId, paths });
+-    },
+-    [gridId]
+-  );
+-
+-  const handleSendSpikeEvent = useCallback(async () => {
+-    const currentWindow = getCurrentWindow();
+-    const label = windowLabel || currentWindow.label;
+-    const nextCount = spikeEventCount + 1;
+-    const payload: G0GridPrototypePing = {
+-      gridId,
+-      windowLabel: label,
+-      rect: windowRect,
+-      count: nextCount,
+-      sentAt: new Date().toISOString(),
+-    };
+-
+-    console.log("[G0 grid prototype] sending scoped event", payload);
+-    await currentWindow.emitTo(label, G0_GRID_PROTOTYPE_EVENT, payload);
+-    setSpikeEventCount(nextCount);
+-  }, [gridId, spikeEventCount, windowLabel, windowRect]);
+-
+-  useEffect(() => {
+-    const unlistenDrop = listen<TauriDragDropPayload>(TauriEvent.DRAG_DROP, (event) => {
+-      const paths = coerceDragDropPaths(event.payload);
+-      setIsDraggingFile(false);
+-      if (paths.length === 0) {
+-        console.warn("[G0 Finder DnD] drag-drop payload had no paths", event.payload);
+-        return;
+-      }
+-      handleFileDrop(paths, coerceDragDropPosition(event.payload) ?? { x: 0, y: 0 });
+-    });
+-    const unlistenEnter = listen(TauriEvent.DRAG_ENTER, () => setIsDraggingFile(true));
+-    const unlistenOver = listen(TauriEvent.DRAG_OVER, () => setIsDraggingFile(true));
+-    const unlistenLeave = listen(TauriEvent.DRAG_LEAVE, () => setIsDraggingFile(false));
+-
+-    return () => {
+-      unlistenDrop.then((fn) => fn());
+-      unlistenEnter.then((fn) => fn());
+-      unlistenOver.then((fn) => fn());
+-      unlistenLeave.then((fn) => fn());
+-    };
+-  }, [handleFileDrop]);
+-
+-  if (!grid) {
+-    return (
+-      <div
+-        data-g0-grid-prototype="true"
+-        style={{
+-          boxSizing: "border-box",
+-          display: "grid",
+-          gridTemplateRows: "auto 1fr auto auto",
+-          gap: 10,
+-          width: "100%",
+-          height: "100%",
+-          padding: 14,
+-          background: "rgba(10, 14, 22, 0.82)",
+-          color: "#e7ecf3",
+-          fontFamily: "system-ui, -apple-system, BlinkMacSystemFont, sans-serif",
+-          fontSize: 12,
+-          overflow: "hidden",
+-        }}
+-      >
+-        <div style={{ display: "grid", gap: 2 }}>
+-          <strong style={{ fontSize: 13, fontWeight: 650 }}>G0 Grid Prototype</strong>
+-          <span style={{ color: "#9ca3af" }}>Waiting for Organizer state; spike fallback is active.</span>
+-        </div>
+-
+-        <dl
+-          style={{
+-            display: "grid",
+-            gridTemplateColumns: "74px 1fr",
+-            alignContent: "start",
+-            gap: "6px 10px",
+-            minWidth: 0,
+-            margin: 0,
+-          }}
+-        >
+-          <dt style={{ color: "#9ca3af" }}>gridId</dt>
+-          <dd style={{ margin: 0, overflowWrap: "anywhere" }}>{gridId}</dd>
+-          <dt style={{ color: "#9ca3af" }}>label</dt>
+-          <dd style={{ margin: 0, overflowWrap: "anywhere" }}>{windowLabel || "unknown"}</dd>
+-          <dt style={{ color: "#9ca3af" }}>rect</dt>
+-          <dd style={{ margin: 0, overflowWrap: "anywhere" }}>
+-            {windowRect
+-              ? `x=${windowRect.x}, y=${windowRect.y}, ${windowRect.width}x${windowRect.height}`
+-              : "unknown"}
+-          </dd>
+-          <dt style={{ color: "#9ca3af" }}>events</dt>
+-          <dd style={{ margin: 0 }}>{spikeEventCount}</dd>
+-          <dt style={{ color: "#9ca3af" }}>last</dt>
+-          <dd style={{ margin: 0, overflowWrap: "anywhere" }}>
+-            {lastSpikeEvent
+-              ? `${lastSpikeEvent.gridId} #${lastSpikeEvent.count} ${lastSpikeEvent.sentAt}`
+-              : "none"}
+-          </dd>
+-        </dl>
+-
+-        <G0DropTelemetryPanel count={dropEventCount} telemetry={lastDropTelemetry} />
+-
+-        <button
+-          type="button"
+-          onClick={handleSendSpikeEvent}
+-          style={{
+-            width: "100%",
+-            minHeight: 34,
+-            border: "1px solid rgba(148, 163, 184, 0.45)",
+-            borderRadius: 8,
+-            background: "rgba(30, 41, 59, 0.9)",
+-            color: "#f8fafc",
+-            cursor: "pointer",
+-            font: "inherit",
+-            fontWeight: 650,
+-          }}
+-        >
+-          Send Scoped Event
+-        </button>
+-      </div>
+-    );
+-  }
+-
+-  return (
+-    <div
+-      style={{
+-        width: "100%",
+-        height: "100%",
+-        outline: isDraggingFile ? "3px dashed rgba(56, 189, 248, 0.6)" : "none",
+-        outlineOffset: "-3px",
+-        transition: "outline 150ms ease",
+-      }}
+-    >
+-      <SmartContainer
+-        data={{ ...grid, rect: { ...grid.rect, x: 0, y: 0 } }}
+-        items={resolvedItems}
+-        onUpdate={handleUpdate}
+-        onClose={handleClose}
+-        onToggleFold={handleToggleFold}
+-        onToggleLock={handleToggleLock}
+-        onFocus={() => {}}
+-        gridOpacity={gridOpacity}
+-        gridBlur={gridBlur}
+-      />
+-      <div
+-        style={{
+-          position: "fixed",
+-          left: 8,
+-          bottom: 8,
+-          width: "calc(100% - 16px)",
+-          pointerEvents: "none",
+-          fontSize: 11,
+-        }}
+-      >
+-        <G0DropTelemetryPanel count={dropEventCount} telemetry={lastDropTelemetry} />
+-      </div>
+-    </div>
+-  );
+-}
+-
+-/**
+- * GridWindow is the root component for a grid window.
+- * Wraps content with necessary providers.
+- */
+-export function GridWindow({ gridId }: { gridId: string }) {
+-  // Intercept mousedown on the SmartContainer title bar (or the G0 fallback
++  // Intercept mousedown on the Organizer title bar (or the G0 fallback
+   // panel) in CAPTURE phase. We stopPropagation so react-draggable's
+   // onMouseDown synthetic handler never fires — its DOM-drag is meaningless
+   // in multi-window mode and emits bogus rect.x/y that warp the window. Past
+   // DRAG_THRESHOLD_PX we hand off to Tauri startDragging, which drives the
+   // window from AppKit's mouse-drag loop and gives unrestricted screen-wide
+   // movement (same pattern as the AI cube in 7b7ff35).
+   const handleHeaderDragStart = useCallback((event: ReactMouseEvent<HTMLDivElement>) => {
+     if (event.button !== 0) return;
+     const target = event.target as HTMLElement | null;
+     if (!target) return;
+ 
+     const onGridDragHandle =
+       Boolean(target.closest(".grid-title-bar")) ||
+       Boolean(target.closest("[data-g0-grid-prototype]"));
+     if (!onGridDragHandle) return;
+ 
+     // Don't hijack interactive children: buttons (lock/fold/view/close/etc.),
+     // the title edit input, the rename span's dblclick, or the resize handles.
+     if (target.closest("button, input, select, textarea, .resize-handle")) return;
+ 
+     event.preventDefault();
+     event.stopPropagation();
+ 
+     const startScreenX = event.screenX;
+     const startScreenY = event.screenY;
+     let handed = false;
+ 
+     const cleanup = () => {
+       window.removeEventListener("mousemove", onMove, true);
+       window.removeEventListener("mouseup", onUp, true);
+     };
+ 
+     const onMove = (ev: MouseEvent) => {
+       if (handed) return;
+       const dx = ev.screenX - startScreenX;
+       const dy = ev.screenY - startScreenY;
+       if (Math.hypot(dx, dy) >= DRAG_THRESHOLD_PX) {
+         handed = true;
+         void getCurrentWindow()
+           .startDragging()
+           .catch((err) => {
+             console.error("[GridWindow] startDragging failed:", err);
+           });
+         cleanup();
+       }
+     };
+ 
+     const onUp = () => cleanup();
+ 
+     window.addEventListener("mousemove", onMove, true);
+     window.addEventListener("mouseup", onUp, true);
+   }, []);
+ 
++  return (
++    <div
++      onMouseDownCapture={handleHeaderDragStart}
++      style={{ width: "100%", height: "100%" }}
++    >
++      <OrganizerGridContent gridId={gridId} gridOpacity={gridOpacity} gridBlur={gridBlur} />
++    </div>
++  );
++}
++
++export function GridWindow({ gridId }: { gridId: string }) {
+   return (
+     <SettingsProvider>
+       <GlobalDndProvider>
+-        <div
+-          onMouseDownCapture={handleHeaderDragStart}
+-          style={{ width: "100%", height: "100%" }}
+-        >
+-          <GridWindowContent gridId={gridId} />
+-        </div>
++        <GridWindowShell gridId={gridId} />
+       </GlobalDndProvider>
+     </SettingsProvider>
+   );
+ }
+ 
+ export default GridWindow;
+diff --git a/docs/contracts/plugin-organizer-public-api-v0.md b/docs/contracts/plugin-organizer-public-api-v0.md
+new file mode 100644
+index 0000000..f31840d
+--- /dev/null
++++ b/docs/contracts/plugin-organizer-public-api-v0.md
+@@ -0,0 +1,53 @@
++# Plugin Organizer Public API Contract v0
++
++| Field | Value |
++|---|---|
++| Owner | `@repo/plugin-organizer` |
++| Source | `packages/plugin-organizer/src/index.ts` |
++| Status | Draft |
++| Applies To | Desktop Host, Organizer package |
++
++## 1. Principles
++
++- Desktop Host imports Organizer UI only from `@repo/plugin-organizer`.
++- Host must not import Organizer internal source files.
++- Host owns native window shell, provider wiring, and AppKit drag handoff.
++- Organizer owns Grid business UI, item rendering, file-drop behavior, and scoped cross-window events.
++
++## 2. Public Grid Window Surface
++
++```ts
++export interface OrganizerGridContentProps {
++  gridId: string;
++  gridOpacity?: number;
++  gridBlur?: boolean;
++}
++
++export function OrganizerGridContent(
++  props: OrganizerGridContentProps
++): JSX.Element;
++```
++
++`OrganizerGridContent` is the only public content component the desktop Grid
++window shell may render.
++
++## 3. Host Boundary
++
++Allowed Host responsibilities:
++
++- Parse or receive `gridId` from the native window route.
++- Install `SettingsProvider` and drag/drop providers.
++- Pass presentation settings into `OrganizerGridContent`.
++- Handle native window dragging/chrome behavior.
++
++Disallowed Host responsibilities:
++
++- Render `SmartContainer` directly for Grid windows.
++- Own Grid item placement or drop semantics.
++- Emit Grid update/drop/close business events directly, except through the Organizer public component.
++
++## 4. Tests
++
++- `apps/desktop/src/windows/GridWindow.tsx` imports `OrganizerGridContent` from `@repo/plugin-organizer`.
++- `apps/desktop/src/windows/GridWindow.tsx` does not import `SmartContainer`, `GridBox`, `DesktopItem`, or Organizer internal paths.
++- `packages/plugin-organizer/src/index.ts` exports `OrganizerGridContent`.
+diff --git a/packages/plugin-organizer/src/OrganizerGridContent.tsx b/packages/plugin-organizer/src/OrganizerGridContent.tsx
+new file mode 100644
+index 0000000..6713247
+--- /dev/null
++++ b/packages/plugin-organizer/src/OrganizerGridContent.tsx
+@@ -0,0 +1,458 @@
++import { useCallback, useEffect, useMemo, useRef, useState } from "react";
++import { listen, TauriEvent } from "@tauri-apps/api/event";
++import { getCurrentWindow } from "@tauri-apps/api/window";
++import type { DesktopItem, GridBox } from "./types";
++import { SmartContainer } from "./SmartContainer";
++
++interface GridUpdateEvent {
++  gridId: string;
++  grid: GridBox;
++  items: Record<string, DesktopItem>;
++}
++
++interface GridDeleteEvent {
++  gridId: string;
++}
++
++interface G0GridPrototypeRect {
++  x: number;
++  y: number;
++  width: number;
++  height: number;
++}
++
++interface G0GridPrototypePing {
++  gridId: string;
++  windowLabel: string;
++  rect: G0GridPrototypeRect | null;
++  count: number;
++  sentAt: string;
++}
++
++interface G0FinderDropTelemetry {
++  gridId: string;
++  source: "tauri://drag-drop";
++  paths: string[];
++  kinds: Array<"file" | "folder" | "app" | "alias" | "unknown">;
++  position: { x: number; y: number } | null;
++  receivedAt: string;
++}
++
++interface TauriDragDropPayload {
++  paths?: unknown;
++  position?: {
++    x?: unknown;
++    y?: unknown;
++  };
++}
++
++export interface OrganizerGridContentProps {
++  gridId: string;
++  gridOpacity?: number;
++  gridBlur?: boolean;
++}
++
++const G0_GRID_PROTOTYPE_EVENT = "g0-grid-prototype:scoped-ping";
++
++function classifyDroppedPath(path: string): G0FinderDropTelemetry["kinds"][number] {
++  const lower = path.toLowerCase();
++  if (lower.endsWith(".app")) return "app";
++  if (lower.endsWith(".alias")) return "alias";
++  if (path.includes(".")) return "file";
++  return "folder";
++}
++
++function coerceDragDropPaths(payload: TauriDragDropPayload): string[] {
++  if (!Array.isArray(payload.paths)) return [];
++  return payload.paths.filter((path): path is string => typeof path === "string" && path.length > 0);
++}
++
++function coerceDragDropPosition(payload: TauriDragDropPayload): G0FinderDropTelemetry["position"] {
++  const x = payload.position?.x;
++  const y = payload.position?.y;
++  if (typeof x !== "number" || typeof y !== "number") return null;
++  return { x, y };
++}
++
++function G0DropTelemetryPanel({
++  count,
++  telemetry,
++}: {
++  count: number;
++  telemetry: G0FinderDropTelemetry | null;
++}) {
++  return (
++    <div
++      style={{
++        border: "1px solid rgba(56, 189, 248, 0.28)",
++        borderRadius: 8,
++        padding: "8px 10px",
++        background: "rgba(8, 47, 73, 0.42)",
++        minWidth: 0,
++      }}
++    >
++      <div style={{ display: "flex", justifyContent: "space-between", gap: 8 }}>
++        <strong style={{ color: "#bae6fd" }}>Finder DnD</strong>
++        <span style={{ color: "#7dd3fc" }}>drops {count}</span>
++      </div>
++      <div style={{ marginTop: 6, color: "#cbd5e1", overflowWrap: "anywhere" }}>
++        {telemetry ? (
++          <>
++            <div>{telemetry.source}</div>
++            <div>{telemetry.kinds.join(", ") || "unknown"}</div>
++            <div>{telemetry.paths.join(" | ")}</div>
++          </>
++        ) : (
++          "Drop Finder file/folder/app/alias here"
++        )}
++      </div>
++    </div>
++  );
++}
++
++/**
++ * Public Organizer-owned content for a single native Grid window.
++ *
++ * The desktop Host owns native window providers and drag chrome; this component
++ * owns Grid business UI, cross-window state events, and path-first drop wiring.
++ */
++export function OrganizerGridContent({
++  gridId,
++  gridOpacity = 0.8,
++  gridBlur = true,
++}: OrganizerGridContentProps) {
++  const [grid, setGrid] = useState<GridBox | null>(null);
++  const [items, setItems] = useState<Record<string, DesktopItem>>({});
++  const [isDraggingFile, setIsDraggingFile] = useState(false);
++  const [windowLabel, setWindowLabel] = useState("");
++  const [windowRect, setWindowRect] = useState<G0GridPrototypeRect | null>(null);
++  const [spikeEventCount, setSpikeEventCount] = useState(0);
++  const [lastSpikeEvent, setLastSpikeEvent] = useState<G0GridPrototypePing | null>(null);
++  const [dropEventCount, setDropEventCount] = useState(0);
++  const [lastDropTelemetry, setLastDropTelemetry] = useState<G0FinderDropTelemetry | null>(null);
++  const lastDropKeyRef = useRef<{ key: string; receivedAt: number } | null>(null);
++  const gridRef = useRef<GridBox | null>(null);
++
++  useEffect(() => {
++    gridRef.current = grid;
++  }, [grid]);
++
++  useEffect(() => {
++    let cancelled = false;
++
++    const refreshWindowMeta = async () => {
++      const currentWindow = getCurrentWindow();
++      try {
++        const [position, size] = await Promise.all([
++          currentWindow.outerPosition(),
++          currentWindow.innerSize(),
++        ]);
++
++        if (!cancelled) {
++          setWindowLabel(currentWindow.label);
++          setWindowRect({
++            x: position.x,
++            y: position.y,
++            width: size.width,
++            height: size.height,
++          });
++        }
++      } catch (error) {
++        console.warn("[G0 grid prototype] failed to read window metadata", error);
++        if (!cancelled) {
++          setWindowLabel(currentWindow.label);
++        }
++      }
++    };
++
++    refreshWindowMeta();
++    const timer = window.setInterval(refreshWindowMeta, 1000);
++
++    return () => {
++      cancelled = true;
++      window.clearInterval(timer);
++    };
++  }, []);
++
++  useEffect(() => {
++    const unlistenSpike = listen<G0GridPrototypePing>(
++      G0_GRID_PROTOTYPE_EVENT,
++      (event) => {
++        if (event.payload.gridId !== gridId) {
++          console.warn("[G0 grid prototype] ignored out-of-scope event", {
++            currentGridId: gridId,
++            payload: event.payload,
++          });
++          return;
++        }
++
++        console.log("[G0 grid prototype] received scoped event", event.payload);
++        setLastSpikeEvent(event.payload);
++      }
++    );
++
++    return () => {
++      unlistenSpike.then((fn) => fn());
++    };
++  }, [gridId]);
++
++  useEffect(() => {
++    const unlistenUpdate = listen<GridUpdateEvent>("grid-update", (event) => {
++      if (event.payload.gridId === gridId) {
++        setGrid(event.payload.grid);
++        setItems(event.payload.items);
++      }
++    });
++
++    const unlistenDelete = listen<GridDeleteEvent>("grid-delete", (event) => {
++      if (event.payload.gridId === gridId) {
++        getCurrentWindow().close();
++      }
++    });
++
++    getCurrentWindow().emit("grid-window-ready", { gridId });
++
++    return () => {
++      unlistenUpdate.then((fn) => fn());
++      unlistenDelete.then((fn) => fn());
++    };
++  }, [gridId]);
++
++  const emitUpdate = useCallback(
++    (patch: Partial<GridBox>) => {
++      getCurrentWindow().emit("grid-window-update", { gridId, patch });
++    },
++    [gridId]
++  );
++
++  const handleUpdate = useCallback(
++    (_id: string, patch: Partial<GridBox>) => {
++      const prev = gridRef.current;
++      if (!prev) return;
++      let safePatch: Partial<GridBox> = patch;
++      if (patch.rect) {
++        safePatch = {
++          ...patch,
++          rect: {
++            ...prev.rect,
++            width: patch.rect.width,
++            height: patch.rect.height,
++          },
++        };
++      }
++      setGrid({ ...prev, ...safePatch });
++      emitUpdate(safePatch);
++    },
++    [emitUpdate]
++  );
++
++  const handleClose = useCallback(
++    (_id: string) => {
++      getCurrentWindow().emit("grid-window-close", { gridId });
++    },
++    [gridId]
++  );
++
++  const handleToggleFold = useCallback(
++    (_id: string) => {
++      emitUpdate({ isFolded: !grid?.isFolded });
++    },
++    [emitUpdate, grid?.isFolded]
++  );
++
++  const handleToggleLock = useCallback(
++    (_id: string) => {
++      emitUpdate({ isLocked: !grid?.isLocked });
++    },
++    [emitUpdate, grid?.isLocked]
++  );
++
++  const resolvedItems = useMemo(() => {
++    if (!grid) return [];
++    return grid.itemIds
++      .map((id) => items[id])
++      .filter((item): item is DesktopItem => Boolean(item));
++  }, [grid, items]);
++
++  const handleFileDrop = useCallback(
++    (paths: string[], position: { x: number; y: number }) => {
++      const dropKey = JSON.stringify(paths);
++      const now = Date.now();
++      const lastDropKey = lastDropKeyRef.current;
++      if (lastDropKey?.key === dropKey && now - lastDropKey.receivedAt < 1000) {
++        console.warn("[G0 Finder DnD] ignored duplicate drag-drop payload", paths);
++        return;
++      }
++      lastDropKeyRef.current = { key: dropKey, receivedAt: now };
++
++      const telemetry: G0FinderDropTelemetry = {
++        gridId,
++        source: "tauri://drag-drop",
++        paths,
++        kinds: paths.map(classifyDroppedPath),
++        position,
++        receivedAt: new Date().toISOString(),
++      };
++
++      console.log("[G0 Finder DnD] path-first drop", telemetry);
++      setLastDropTelemetry(telemetry);
++      setDropEventCount((count) => count + 1);
++      getCurrentWindow().emit("grid-window-file-drop", { gridId, paths });
++    },
++    [gridId]
++  );
++
++  const handleSendSpikeEvent = useCallback(async () => {
++    const currentWindow = getCurrentWindow();
++    const label = windowLabel || currentWindow.label;
++    const nextCount = spikeEventCount + 1;
++    const payload: G0GridPrototypePing = {
++      gridId,
++      windowLabel: label,
++      rect: windowRect,
++      count: nextCount,
++      sentAt: new Date().toISOString(),
++    };
++
++    console.log("[G0 grid prototype] sending scoped event", payload);
++    await currentWindow.emitTo(label, G0_GRID_PROTOTYPE_EVENT, payload);
++    setSpikeEventCount(nextCount);
++  }, [gridId, spikeEventCount, windowLabel, windowRect]);
++
++  useEffect(() => {
++    const unlistenDrop = listen<TauriDragDropPayload>(TauriEvent.DRAG_DROP, (event) => {
++      const paths = coerceDragDropPaths(event.payload);
++      setIsDraggingFile(false);
++      if (paths.length === 0) {
++        console.warn("[G0 Finder DnD] drag-drop payload had no paths", event.payload);
++        return;
++      }
++      handleFileDrop(paths, coerceDragDropPosition(event.payload) ?? { x: 0, y: 0 });
++    });
++    const unlistenEnter = listen(TauriEvent.DRAG_ENTER, () => setIsDraggingFile(true));
++    const unlistenOver = listen(TauriEvent.DRAG_OVER, () => setIsDraggingFile(true));
++    const unlistenLeave = listen(TauriEvent.DRAG_LEAVE, () => setIsDraggingFile(false));
++
++    return () => {
++      unlistenDrop.then((fn) => fn());
++      unlistenEnter.then((fn) => fn());
++      unlistenOver.then((fn) => fn());
++      unlistenLeave.then((fn) => fn());
++    };
++  }, [handleFileDrop]);
++
++  if (!grid) {
++    return (
++      <div
++        data-g0-grid-prototype="true"
++        style={{
++          boxSizing: "border-box",
++          display: "grid",
++          gridTemplateRows: "auto 1fr auto auto",
++          gap: 10,
++          width: "100%",
++          height: "100%",
++          padding: 14,
++          background: "rgba(10, 14, 22, 0.82)",
++          color: "#e7ecf3",
++          fontFamily: "system-ui, -apple-system, BlinkMacSystemFont, sans-serif",
++          fontSize: 12,
++          overflow: "hidden",
++        }}
++      >
++        <div style={{ display: "grid", gap: 2 }}>
++          <strong style={{ fontSize: 13, fontWeight: 650 }}>G0 Grid Prototype</strong>
++          <span style={{ color: "#9ca3af" }}>Waiting for Organizer state; spike fallback is active.</span>
++        </div>
++
++        <dl
++          style={{
++            display: "grid",
++            gridTemplateColumns: "74px 1fr",
++            alignContent: "start",
++            gap: "6px 10px",
++            minWidth: 0,
++            margin: 0,
++          }}
++        >
++          <dt style={{ color: "#9ca3af" }}>gridId</dt>
++          <dd style={{ margin: 0, overflowWrap: "anywhere" }}>{gridId}</dd>
++          <dt style={{ color: "#9ca3af" }}>label</dt>
++          <dd style={{ margin: 0, overflowWrap: "anywhere" }}>{windowLabel || "unknown"}</dd>
++          <dt style={{ color: "#9ca3af" }}>rect</dt>
++          <dd style={{ margin: 0, overflowWrap: "anywhere" }}>
++            {windowRect
++              ? `x=${windowRect.x}, y=${windowRect.y}, ${windowRect.width}x${windowRect.height}`
++              : "unknown"}
++          </dd>
++          <dt style={{ color: "#9ca3af" }}>events</dt>
++          <dd style={{ margin: 0 }}>{spikeEventCount}</dd>
++          <dt style={{ color: "#9ca3af" }}>last</dt>
++          <dd style={{ margin: 0, overflowWrap: "anywhere" }}>
++            {lastSpikeEvent
++              ? `${lastSpikeEvent.gridId} #${lastSpikeEvent.count} ${lastSpikeEvent.sentAt}`
++              : "none"}
++          </dd>
++        </dl>
++
++        <G0DropTelemetryPanel count={dropEventCount} telemetry={lastDropTelemetry} />
++
++        <button
++          type="button"
++          onClick={handleSendSpikeEvent}
++          style={{
++            width: "100%",
++            minHeight: 34,
++            border: "1px solid rgba(148, 163, 184, 0.45)",
++            borderRadius: 8,
++            background: "rgba(30, 41, 59, 0.9)",
++            color: "#f8fafc",
++            cursor: "pointer",
++            font: "inherit",
++            fontWeight: 650,
++          }}
++        >
++          Send Scoped Event
++        </button>
++      </div>
++    );
++  }
++
++  return (
++    <div
++      style={{
++        width: "100%",
++        height: "100%",
++        outline: isDraggingFile ? "3px dashed rgba(56, 189, 248, 0.6)" : "none",
++        outlineOffset: "-3px",
++        transition: "outline 150ms ease",
++      }}
++    >
++      <SmartContainer
++        data={{ ...grid, rect: { ...grid.rect, x: 0, y: 0 } }}
++        items={resolvedItems}
++        onUpdate={handleUpdate}
++        onClose={handleClose}
++        onToggleFold={handleToggleFold}
++        onToggleLock={handleToggleLock}
++        onFocus={() => {}}
++        gridOpacity={gridOpacity}
++        gridBlur={gridBlur}
++      />
++      <div
++        style={{
++          position: "fixed",
++          left: 8,
++          bottom: 8,
++          width: "calc(100% - 16px)",
++          pointerEvents: "none",
++          fontSize: 11,
++        }}
++      >
++        <G0DropTelemetryPanel count={dropEventCount} telemetry={lastDropTelemetry} />
++      </div>
++    </div>
++  );
++}
++
++export default OrganizerGridContent;
+diff --git a/packages/plugin-organizer/src/index.ts b/packages/plugin-organizer/src/index.ts
+index 13fbfdf..194195b 100644
+--- a/packages/plugin-organizer/src/index.ts
++++ b/packages/plugin-organizer/src/index.ts
+@@ -1,9 +1,11 @@
+ export * from "./types";
+ export * from "./mockData";
+ export * from "./useGridSystem";
+ export * from "./SmartContainer";
+ export * from "./GridItem";
+ export * from "./hooks/useFileDrop";
+ export * from "./hooks/useGridWindow";
+ export * from "./hooks/useMultiWindowGrids";
+ export { OrganizerLayer } from "./OrganizerLayer";
++export { OrganizerGridContent } from "./OrganizerGridContent";
++export type { OrganizerGridContentProps } from "./OrganizerGridContent";
+
+exec
+/bin/zsh -lc 'git show --format=medium --stat 26d9f57 03ca86a 3751f43 653219b' in /Users/lijinlong/Desktop/AI_Desktop/XAI_Desktop
+ succeeded in 0ms:
+commit 26d9f57a1c2ecbc548c727bb4e2b72a78307d0bb
+Author: InnoPeak <global_ai@innopeaktech.com>
+Date:   Tue May 19 23:21:01 2026 -0700
+
+    feat(grid-shell-organizer-content): expose Organizer grid content
+
+ apps/desktop/src/windows/GridWindow.tsx            | 485 +--------------------
+ docs/contracts/README.md                           |   1 +
+ docs/contracts/plugin-organizer-public-api-v0.md   |  53 +++
+ .../20260519-discovery-review.md                   |  12 +
+ .../20260519-feature-brief.md                      |  20 +
+ docs/workflow/roadmap/xai-g1-native-foundation.md  |   2 +-
+ docs/workflow/roadmap/xai-v1.autorun-20260519.md   |  31 +-
+ packages/grid-shell-organizer-content/docs/api.md  |  18 +-
+ .../grid-shell-organizer-content/docs/design.md    |  28 +-
+ .../grid-shell-organizer-content/docs/dev_log.md   |  34 +-
+ packages/grid-shell-organizer-content/docs/test.md |  11 +-
+ .../plugin-organizer/src/OrganizerGridContent.tsx  | 458 +++++++++++++++++++
+ packages/plugin-organizer/src/index.ts             |   2 +
+ 13 files changed, 653 insertions(+), 502 deletions(-)
+
+commit 03ca86ac2b4e465982a58373d1d5379f263bdce2
+Author: InnoPeak <global_ai@innopeaktech.com>
+Date:   Tue May 19 23:21:30 2026 -0700
+
+    docs(roadmap): finalize G1.2 build checkpoint
+
+ docs/workflow/roadmap/xai-v1.autorun-20260519.md      | 2 +-
+ packages/grid-shell-organizer-content/docs/dev_log.md | 4 ++--
+ 2 files changed, 3 insertions(+), 3 deletions(-)
+
+commit 3751f43fbcde6376cd993a169ef7be350164df53
+Author: InnoPeak <global_ai@innopeaktech.com>
+Date:   Tue May 19 23:25:11 2026 -0700
+
+    docs(G1.2): mark grid shell split ready
+
+ docs/workflow/roadmap/xai-g1-native-foundation.md  |  6 +--
+ docs/workflow/roadmap/xai-v1.autorun-20260519.md   | 62 +++++++++++++++-------
+ docs/workflow/roadmap/xai-v1.deferred-gates.md     | 30 +++++++++--
+ docs/workflow/roadmap/xai-v1.incidents.md          | 16 +++---
+ .../grid-shell-organizer-content/docs/dev_log.md   | 27 +++++++---
+ 5 files changed, 100 insertions(+), 41 deletions(-)
+
+commit 653219be26954973e53fba3e1c5ddbf96b057eaa
+Author: InnoPeak <global_ai@innopeaktech.com>
+Date:   Wed May 20 00:20:46 2026 -0700
+
+    docs(ship): promote G1.2 and G1.4 manifest rows to SHIPPED
+    
+    Why
+    - Goal authorizes ship for G1.2 grid-shell-organizer-content and G1.4
+      multi-grid-event-scope; both already had complete READY_TO_SHIP
+      commits on the main lineage. The only outstanding step was promoting
+      the G1 manifest row and the package dev_log Status Panel to SHIPPED.
+    
+    What
+    - xai-g1-native-foundation manifest rows #2 (G1.2) and #4 (G1.4) →
+      SHIPPED with commit references and Track A attribution.
+    - packages/grid-shell-organizer-content/docs/dev_log.md Status →
+      SHIPPED; appended ship Work Log row.
+    - packages/multi-grid-event-scope/docs/dev_log.md Status → SHIPPED;
+      appended ship Work Log row.
+    - xai-v1.autorun-20260519.md ship checkpoint and updated ship-record
+      rationale (R4).
+    
+    Scope
+    - Documentation/manifest only. No code or runtime change.
+    
+    Risk
+    - None. No source code modification; the production refactors landed in
+      earlier commits (G1.2 `26d9f57`/`03ca86a`; G1.4 `78aef01`/`59da1e5`).
+    
+    Co-Authored-By: Claude Opus 4.7 (1M context) <noreply@anthropic.com>
+
+ docs/workflow/roadmap/xai-g1-native-foundation.md     |  4 ++--
+ docs/workflow/roadmap/xai-v1.autorun-20260519.md      | 13 +++++++++++++
+ packages/grid-shell-organizer-content/docs/dev_log.md | 13 +++++++------
+ packages/multi-grid-event-scope/docs/dev_log.md       | 13 +++++++------
+ 4 files changed, 29 insertions(+), 14 deletions(-)
+
+codex
+One contract issue stands out strongly enough to decide the verdict: the refactor moved multiple `@tauri-apps/api` calls into `packages/plugin-organizer`, which is explicitly forbidden by architecture red line #4. I’m confirming whether there’s an existing core-hook escape hatch or whether this feature really shipped in a non-compliant shape.
+exec
+/bin/zsh -lc "rg -n \"@repo/core/hooks|from \\\"@tauri-apps/api|from '@tauri-apps/api'\" packages/plugin-organizer packages/core apps/desktop/src/windows -g '"'!**/dist/**'"'" in /Users/lijinlong/Desktop/AI_Desktop/XAI_Desktop
+ succeeded in 0ms:
+packages/plugin-organizer/src/OrganizerGridContent.tsx:2:import { listen, TauriEvent } from "@tauri-apps/api/event";
+packages/plugin-organizer/src/OrganizerGridContent.tsx:3:import { getCurrentWindow } from "@tauri-apps/api/window";
+packages/plugin-organizer/src/OrganizerLayer.tsx:6:import { listen } from "@tauri-apps/api/event";
+packages/plugin-organizer/src/OrganizerLayer.tsx:7:import { isTauri } from "@tauri-apps/api/core";
+apps/desktop/src/windows/GridWindow.tsx:2:import { getCurrentWindow } from "@tauri-apps/api/window";
+apps/desktop/src/windows/ControlWindow.tsx:2:import { invoke } from "@tauri-apps/api/core";
+apps/desktop/src/windows/ControlWindow.tsx:3:import { emitTo } from "@tauri-apps/api/event";
+apps/desktop/src/windows/ControlWindow.tsx:4:import { getCurrentWindow, LogicalSize, PhysicalPosition } from "@tauri-apps/api/window";
+packages/plugin-organizer/src/hooks/useMultiWindowGrids.ts:2:import { listen } from "@tauri-apps/api/event";
+packages/plugin-organizer/src/hooks/useMultiWindowGrids.ts:3:import { emit } from "@tauri-apps/api/event";
+packages/plugin-organizer/src/hooks/useGridWindow.ts:1:import { invoke } from "@tauri-apps/api/core";
+
+exec
+/bin/zsh -lc "rg -n \"export .*hooks|function use.*Window|listen\\(|getCurrentWindow\\(|TauriEvent\" packages/core -g '"'!**/dist/**'"'" in /Users/lijinlong/Desktop/AI_Desktop/XAI_Desktop
+ succeeded in 0ms:
+packages/core/src/index.ts:3:export * from './hooks';
+packages/core/src/hooks/useWindow.ts:8:export function useWindow(): {
+
+exec
+/bin/zsh -lc 'pnpm --filter desktop build' in /Users/lijinlong/Desktop/AI_Desktop/XAI_Desktop
+exec
+/bin/zsh -lc 'pnpm --filter @repo/plugin-organizer check-types' in /Users/lijinlong/Desktop/AI_Desktop/XAI_Desktop
+ succeeded in 2135ms:
+
+> @repo/plugin-organizer@0.0.0 check-types /Users/lijinlong/Desktop/AI_Desktop/XAI_Desktop/packages/plugin-organizer
+> tsc --noEmit
+
+
+ succeeded in 4963ms:
+
+> desktop@0.1.0 build /Users/lijinlong/Desktop/AI_Desktop/XAI_Desktop/apps/desktop
+> tsc && vite build
+
+vite v7.2.4 building client environment for production...
+transforming...
+✓ 354 modules transformed.
+rendering chunks...
+computing gzip size...
+dist/index.html                     0.47 kB │ gzip:   0.31 kB
+dist/assets/index-iOmQ4O8K.css      2.58 kB │ gzip:   1.10 kB
+dist/assets/index-Dfcq8QXO.js   1,592.14 kB │ gzip: 680.42 kB
+
+(!) Some chunks are larger than 500 kB after minification. Consider:
+- Using dynamic import() to code-split the application
+- Use build.rollupOptions.output.manualChunks to improve chunking: https://rollupjs.org/configuration-options/#output-manualchunks
+- Adjust chunk size limit for this warning via build.chunkSizeWarningLimit.
+✓ built in 1.91s
+
+codex
+Typecheck and desktop build are running. I also found `packages/core/src/hooks/useWindow.ts`, so there is at least some intended core wrapper surface, which makes the new direct Tauri imports harder to excuse as an unavoidable exception.
+exec
+/bin/zsh -lc "sed -n '1,220p' packages/core/src/hooks/useWindow.ts" in /Users/lijinlong/Desktop/AI_Desktop/XAI_Desktop
+ succeeded in 0ms:
+import { useMemo } from 'react';
+import type { WindowType, WindowLabel } from '../types/window';
+
+/**
+ * Detects current window type and label from the URL hash.
+ * Window routing: /#/grid?id=xxx → grid window, /#/control → control window, etc.
+ */
+export function useWindow(): {
+  windowLabel: WindowLabel;
+  windowType: WindowType;
+  isMainWindow: boolean;
+  isControlWindow: boolean;
+  isGridWindow: boolean;
+} {
+  return useMemo(() => {
+    const hash = window.location.hash;
+
+    if (hash.startsWith('#/grid')) {
+      const params = new URLSearchParams(hash.split('?')[1] || '');
+      const gridId = params.get('id') || 'unknown';
+      return {
+        windowLabel: `grid_${gridId}` as WindowLabel,
+        windowType: 'grid' as const,
+        isMainWindow: false,
+        isControlWindow: false,
+        isGridWindow: true,
+      };
+    }
+
+    if (hash.startsWith('#/control')) {
+      return {
+        windowLabel: 'control' as WindowLabel,
+        windowType: 'control' as const,
+        isMainWindow: false,
+        isControlWindow: true,
+        isGridWindow: false,
+      };
+    }
+
+    return {
+      windowLabel: 'main' as WindowLabel,
+      windowType: 'main' as const,
+      isMainWindow: true,
+      isControlWindow: false,
+      isGridWindow: false,
+    };
+  }, []);
+}
+
+exec
+/bin/zsh -lc "sed -n '1,240p' packages/plugin-organizer/src/hooks/useGridWindow.ts" in /Users/lijinlong/Desktop/AI_Desktop/XAI_Desktop
+exec
+/bin/zsh -lc "sed -n '1,220p' packages/core/src/hooks/index.ts" in /Users/lijinlong/Desktop/AI_Desktop/XAI_Desktop
+ succeeded in 0ms:
+export { useWindow } from './useWindow';
+export { useTauriInvoke } from './useTauriInvoke';
+
+ succeeded in 0ms:
+import { invoke } from "@tauri-apps/api/core";
+import type { GridWindowRect, GridWindowSnapshot } from "@repo/core/types";
+
+export type { GridWindowRect, GridWindowSnapshot };
+
+/**
+ * Create a new grid window at the specified position
+ */
+export async function createGridWindow(
+  gridId: string,
+  rect: GridWindowRect
+): Promise<GridWindowSnapshot> {
+  try {
+    const snapshot = await invoke<GridWindowSnapshot>("create_grid_window", {
+      gridId,
+      rect,
+    });
+    console.log(`✅ Created grid window: ${gridId}`);
+    return snapshot;
+  } catch (error) {
+    console.error(`❌ Failed to create grid window: ${gridId}`, error);
+    throw error;
+  }
+}
+
+/**
+ * Update an existing grid window's position and size
+ */
+export async function updateGridWindow(
+  gridId: string,
+  rect: GridWindowRect
+): Promise<GridWindowSnapshot> {
+  try {
+    return await invoke<GridWindowSnapshot>("update_grid_window", {
+      gridId,
+      rect,
+    });
+  } catch (error) {
+    console.error(`❌ Failed to update grid window: ${gridId}`, error);
+    throw error;
+  }
+}
+
+/**
+ * Close and destroy a grid window
+ */
+export async function closeGridWindow(gridId: string): Promise<void> {
+  try {
+    await invoke("close_grid_window", {
+      gridId,
+    });
+    console.log(`🗑️ Closed grid window: ${gridId}`);
+  } catch (error) {
+    console.error(`❌ Failed to close grid window: ${gridId}`, error);
+    throw error;
+  }
+}
+
+export async function listGridWindows(): Promise<GridWindowSnapshot[]> {
+  try {
+    return await invoke<GridWindowSnapshot[]>("list_grid_windows");
+  } catch (error) {
+    console.error("❌ Failed to list grid windows", error);
+    throw error;
+  }
+}
+
+export async function focusGridWindow(gridId: string): Promise<GridWindowSnapshot> {
+  try {
+    return await invoke<GridWindowSnapshot>("focus_grid_window", {
+      gridId,
+    });
+  } catch (error) {
+    console.error(`❌ Failed to focus grid window: ${gridId}`, error);
+    throw error;
+  }
+}
+
+codex
+## Codex Cross-vendor Review
+
+**Feature**: grid-shell-organizer-content
+**Commit(s)**: 26d9f57 03ca86a 3751f43 653219b
+**Reviewer**: codex feature-review (cross-vendor) · gpt-5.4 high
+**Verdict**: BLOCKED
+
+### Strengths (max 4 bullets)
+- Host thinning is real: `apps/desktop/src/windows/GridWindow.tsx` now renders through `OrganizerGridContent` and no longer imports `SmartContainer`, `GridBox`, `DesktopItem`, `useFileDrop`, or Organizer internal paths.
+- The extracted component keeps the intended shell/content split clear: Host owns providers and native drag handoff; Organizer owns grid UI, drop behavior, and window-scoped state/event handling.
+- Ship ledger hygiene is mostly coherent: `dev_log`, manifest row #2, and deferred-gate entries all point back to `26d9f57` and the later docs-only promotion commits.
+- Validation evidence is at least reproducible: `pnpm --filter @repo/plugin-organizer check-types` and `pnpm --filter desktop build` pass, and the deferred manual smoke is explicitly tracked.
+
+### Gaps & risks (max 6 bullets, severity-tagged)
+- [P0] `packages/plugin-organizer/src/OrganizerGridContent.tsx` directly imports `@tauri-apps/api/event` and `@tauri-apps/api/window`, violating `docs/SYSTEM_ARCHITECTURE.md` red line #4 (`Plugin` must not call Tauri APIs directly; use `@repo/core/hooks`/adapter surface). This is a contract-integrity break introduced by the refactor.
+- [P1] `packages/plugin-organizer/src/index.ts` exposes a much broader public surface than the contract implies (`SmartContainer`, `useFileDrop`, window hooks, etc.). The Host currently behaves, but the package API still leaves easy escape hatches, so the “only `OrganizerGridContent` + types” boundary is not actually enforced.
+- [P1] Test coverage is thin for an extraction that moved event/listener/drop logic: there is no focused automated regression for `gridId` scoping, close/update isolation, duplicate drop suppression, or listener cleanup; only typecheck/build/grep plus deferred manual smoke.
+- [P2] Workflow hygiene is inconsistent across the reviewed set: `653219b` has proper `Why/What/Scope/Risk`, but `26d9f57`, `03ca86a`, and `3751f43` do not.
+- [P2] `docs/contracts/plugin-organizer-public-api-v0.md` is still marked `Status | Draft` even though the feature was promoted to `SHIPPED`, which weakens doc-code-state alignment.
+
+### Concrete next-phase targets (max 6 bullets)
+- Replace direct Tauri calls inside `OrganizerGridContent` with a Core-owned hook/adapter layer and re-review against red line #4.
+- Split or narrow the Host-facing Organizer export surface so Grid window consumers get only `OrganizerGridContent` and its prop/types contract.
+- Add focused automated tests for grid-scoped update/close/drop behavior and duplicate-drop guard behavior.
+- Run the deferred manual two-Grid macOS smoke after the adapter fix and record the result in `packages/grid-shell-organizer-content/docs/dev_log.md`.
+- Promote the public API contract from `Draft` to an accepted/shipped state once the API boundary is actually enforced.
+
+### Out of scope confirmed
+- Manual native two-Grid runtime smoke, including Finder path drop behavior, remains a valid deferred gate and should not be skipped.
+- MAS sandbox / Apple-signing validation remains an external G0.6 gate and is not reopened by this review.
+- G2/G3 repository, live Supabase, and security-handle gates remain deferred and should stay out of this G1.2 closure pass.
+tokens used
+51,311
+## Codex Cross-vendor Review
+
+**Feature**: grid-shell-organizer-content
+**Commit(s)**: 26d9f57 03ca86a 3751f43 653219b
+**Reviewer**: codex feature-review (cross-vendor) · gpt-5.4 high
+**Verdict**: BLOCKED
+
+### Strengths (max 4 bullets)
+- Host thinning is real: `apps/desktop/src/windows/GridWindow.tsx` now renders through `OrganizerGridContent` and no longer imports `SmartContainer`, `GridBox`, `DesktopItem`, `useFileDrop`, or Organizer internal paths.
+- The extracted component keeps the intended shell/content split clear: Host owns providers and native drag handoff; Organizer owns grid UI, drop behavior, and window-scoped state/event handling.
+- Ship ledger hygiene is mostly coherent: `dev_log`, manifest row #2, and deferred-gate entries all point back to `26d9f57` and the later docs-only promotion commits.
+- Validation evidence is at least reproducible: `pnpm --filter @repo/plugin-organizer check-types` and `pnpm --filter desktop build` pass, and the deferred manual smoke is explicitly tracked.
+
+### Gaps & risks (max 6 bullets, severity-tagged)
+- [P0] `packages/plugin-organizer/src/OrganizerGridContent.tsx` directly imports `@tauri-apps/api/event` and `@tauri-apps/api/window`, violating `docs/SYSTEM_ARCHITECTURE.md` red line #4 (`Plugin` must not call Tauri APIs directly; use `@repo/core/hooks`/adapter surface). This is a contract-integrity break introduced by the refactor.
+- [P1] `packages/plugin-organizer/src/index.ts` exposes a much broader public surface than the contract implies (`SmartContainer`, `useFileDrop`, window hooks, etc.). The Host currently behaves, but the package API still leaves easy escape hatches, so the “only `OrganizerGridContent` + types” boundary is not actually enforced.
+- [P1] Test coverage is thin for an extraction that moved event/listener/drop logic: there is no focused automated regression for `gridId` scoping, close/update isolation, duplicate drop suppression, or listener cleanup; only typecheck/build/grep plus deferred manual smoke.
+- [P2] Workflow hygiene is inconsistent across the reviewed set: `653219b` has proper `Why/What/Scope/Risk`, but `26d9f57`, `03ca86a`, and `3751f43` do not.
+- [P2] `docs/contracts/plugin-organizer-public-api-v0.md` is still marked `Status | Draft` even though the feature was promoted to `SHIPPED`, which weakens doc-code-state alignment.
+
+### Concrete next-phase targets (max 6 bullets)
+- Replace direct Tauri calls inside `OrganizerGridContent` with a Core-owned hook/adapter layer and re-review against red line #4.
+- Split or narrow the Host-facing Organizer export surface so Grid window consumers get only `OrganizerGridContent` and its prop/types contract.
+- Add focused automated tests for grid-scoped update/close/drop behavior and duplicate-drop guard behavior.
+- Run the deferred manual two-Grid macOS smoke after the adapter fix and record the result in `packages/grid-shell-organizer-content/docs/dev_log.md`.
+- Promote the public API contract from `Draft` to an accepted/shipped state once the API boundary is actually enforced.
+
+### Out of scope confirmed
+- Manual native two-Grid runtime smoke, including Finder path drop behavior, remains a valid deferred gate and should not be skipped.
+- MAS sandbox / Apple-signing validation remains an external G0.6 gate and is not reopened by this review.
+- G2/G3 repository, live Supabase, and security-handle gates remain deferred and should stay out of this G1.2 closure pass.

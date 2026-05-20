@@ -1,0 +1,3551 @@
+Reading additional input from stdin...
+OpenAI Codex v0.132.0
+--------
+workdir: /Users/lijinlong/Desktop/AI_Desktop/XAI_Desktop
+model: gpt-5.4
+provider: openai
+approval: never
+sandbox: workspace-write [workdir, /tmp, $TMPDIR]
+reasoning effort: high
+reasoning summaries: none
+session id: 019e448f-3b79-7b50-a173-fc16e62a0a51
+--------
+user
+# Codex Feature Post-merge Review
+
+You are acting as the `feature-review` subagent (Codex inline, cross-vendor verify pass).
+Your job is to audit a Track A feature that has already been built and committed to
+`codex/track-a-desktop-foundation`. The original executor was Claude Code; you provide an
+independent cross-vendor verdict.
+
+## Hard output contract
+
+Output ONLY the markdown block below — no preamble, no follow-up, no chatter. Keep total
+length under 600 words.
+
+```md
+## Codex Cross-vendor Review
+
+**Feature**: grid-persistence
+**Commit(s)**: 91dc6b6
+**Reviewer**: codex feature-review (cross-vendor) · gpt-5.4 high
+**Verdict**: APPROVED | REVISE | BLOCKED
+
+### Strengths (max 4 bullets)
+- …
+
+### Gaps & risks (max 6 bullets, severity-tagged)
+- [P0|P1|P2] …
+
+### Concrete next-phase targets (max 6 bullets)
+- …
+
+### Out of scope confirmed
+- …
+```
+
+## How to evaluate
+
+1. Read the listed dev_log and contract docs to understand the *intended* scope.
+2. Run `git show --stat 91dc6b6` mentally — review the diff for the listed files.
+3. Score against:
+   - **Contract integrity** (red lines #4 / #8 / #9 in `docs/SYSTEM_ARCHITECTURE.md` §4)
+   - **Test coverage adequacy** (boundary, error, concurrency, capability)
+   - **Doc-code alignment** (`docs/contracts/*` matches actual surface)
+   - **Security boundary** (raw key bytes, capability allow-list, IPC payload)
+   - **Workflow V2 hygiene** (dev_log Status Panel, Work Log row, commit message Why/What/Scope/Risk)
+   - **Future-proofing** (does the design accommodate the next 1-2 G2/G3 rows?)
+4. Verdict guidance:
+   - **APPROVED**: ship-ready; gaps are P2-only and recorded.
+   - **REVISE**: at least one P1 issue worth fixing before next phase.
+   - **BLOCKED**: at least one P0 issue (broken contract, missing test on critical path, security regression).
+5. Concrete next-phase targets must be small, mergeable items (each ≤ half a day).
+6. Out-of-scope: confirm which deferred gates remain valid (live Supabase, MAS sandbox, real
+   macOS Finder smoke, etc.) — call them out so the next agent does not re-investigate.
+
+## Feature-specific context
+
+Feature ID: G1.5 / grid-persistence
+Branch: codex/track-a-desktop-foundation
+Commit under review: 91dc6b6 (feat(grid-persistence): LayoutStore seam with whiteout-safe hydrate)
+
+Files added or changed:
+- packages/plugin-organizer/src/layoutStore.ts (new) — LayoutStore interface, localStorageLayoutStore, repositoryLayoutStore
+- packages/plugin-organizer/src/layoutStore.test.ts (new) — 9 vitest cases
+- packages/plugin-organizer/src/index.ts — re-export
+- packages/plugin-organizer/src/useGridSystem.tsx — accept `store?: LayoutStore`, async hydrate, delegate save+clearAll
+- packages/plugin-organizer/package.json — adds @repo/core-data workspace dep
+- packages/grid-persistence/docs/dev_log.md → READY_TO_SHIP
+- docs/workflow/roadmap/xai-g1-native-foundation.md row #5 → READY_TO_SHIP
+
+Intended scope:
+- Production persistence seam decouples plugin-organizer from a hard-coded
+  localStorage path.
+- `localStorageLayoutStore()` (default; sync historical path) and
+  `repositoryLayoutStore(gridRepo, itemRepo)` (G2.1 entity-backed) both swallow
+  load/save errors via onLoadError/onSaveError so corrupted state cannot whiteout
+  the desktop.
+- Async hydrate with try/catch fallback to empty state.
+- Host UI integration / actual swap to repositoryLayoutStore is parked under
+  follow-up.
+
+Cross-vendor checklist:
+1. Whiteout-safety: a malformed localStorage payload returning `null` → empty
+   layout. But what about a localStorage payload that PARSES but is missing
+   `grids` or `items` arrays? The `isPersistedLayout` guard rejects to null but
+   the test uses `{ grids: "oops" }` — confirm a missing-`items`-array case is
+   covered too.
+2. Repository adapter `repositoryLayoutStore.save()` upserts then culls by
+   diffing the previous list. Is this transactionally safe — if the upsert
+   succeeds but the cull throws, do we leave stale rows? Should this be wrapped
+   in `gridRepo.transaction(...)` and `itemRepo.transaction(...)` both?
+3. `entityToDesktopItem` collapses `kind: "url"` back to `"file"` for the
+   DesktopItem (legacy shape). Does that silently lose URL items if the host
+   later writes them back? This is a one-way lossy mapping.
+4. `repositoryLayoutStore.load()` returns `{ grids: [], items: [] }` for an
+   empty repo (not null). But the hook then sets `hydrated=true` and any new
+   user state will be saved — overwriting any localStorage fallback that might
+   still exist. Is that desired or a regression vs. progressive migration?
+5. Concurrency: hydrate is async with `cancelled` guard. But the save effect
+   uses `setTimeout(...)` debouncer; if hydrate completes after a user action
+   sets state, can we overwrite user state with the hydrated payload? The
+   `hydrated` flag protects this — confirm the dependency array is correct.
+6. Workspace dep addition: `@repo/core-data` workspace dep was added; does it
+   create a circular dep with `@repo/core` indirectly?
+7. Test coverage: 9 vitest cases. Missing: storage write quota during save
+   debouncer fire, repositoryLayoutStore save failure path, repo `transaction`
+   rollback.
+exec
+/bin/zsh -lc "sed -n '1,260p' packages/grid-persistence/docs/dev_log.md" in /Users/lijinlong/Desktop/AI_Desktop/XAI_Desktop
+ succeeded in 0ms:
+# grid-persistence — Dev Log
+
+## Status Panel
+
+| Field | Value |
+|---|---|
+| Workflow | FEATURE_DEV |
+| Target | grid-persistence |
+| Title | G1.5 Grid persistence |
+| Roadmap | xai-g1-native-foundation · feature #5 · G1.5 |
+| Status | READY_TO_SHIP |
+| Current Phase | VERIFY |
+| Suggested Next | manual ship only; full Repository cut-over runtime smoke deferred |
+| Automation Mode | D-Codex |
+| Verify Cross-vendor | yes |
+| Executor | feature-build + feature-verify (Claude Code, Track A) |
+| Updated | 2026-05-20 01:08 PDT |
+| Blockers | None for the persistence seam scope; live `tauri-sqlite` cut-over runtime smoke deferred |
+
+## Phase Plan
+
+### Phase 1 — Persistence safe prep
+
+Status: DONE. Commit: `dcf2750`.
+
+- Created G1.5 feature brief and discovery review.
+- Audited current `localStorage` key, shape, hydration, save, and clear behavior.
+- Identified repository/migration blockers.
+- Avoided production persistence changes while prerequisites remain blocked.
+
+## Review Notes
+
+feature-review (Codex inline), 2026-05-19 20:41 PDT. Verdict: APPROVED for safe prep only.
+
+## Verification Notes
+
+feature-verify (Codex inline), 2026-05-19 20:41 PDT. Verdict: BLOCKED.
+
+Docs-only prep is complete. G1.5 production acceptance remains blocked by G1.1 and G2.
+
+## Work Log
+
+| Timestamp | Executor | Action | Commits | Next |
+|---|---|---|---|---|
+| 2026-05-19 20:40 PDT | feature-plan (Codex inline) | Step 0 and plan: scoped G1.5 to persistence safe prep under user override. | — | feature-review |
+| 2026-05-19 20:41 PDT | feature-review (Codex inline) | Approved safe prep; production repository persistence remains blocked. | — | feature-build |
+| 2026-05-19 20:41 PDT | feature-build (Codex inline) | Created Grid persistence discovery docs. | `dcf2750` | feature-verify |
+| 2026-05-19 20:41 PDT | feature-verify (Codex inline) | Verified docs-only scope; status remains BLOCKED. | `dcf2750` | G1.1/G2 |
+| 2026-05-20 01:08 PDT | feature-build + feature-verify (Claude Code, Track A) | Production persistence seam: added `packages/plugin-organizer/src/layoutStore.ts` (LayoutStore, localStorage adapter, Repository v0 adapter), wired `GridSystemProvider` to accept `store?: LayoutStore`, made hydrate async + corrupt-state safe (cannot whiteout), refactored save + clearAll to delegate. 9 vitest cases + plugin-organizer types + desktop build PASS. | pending commit | manual ship only; continue G3 |
+
+exec
+/bin/zsh -lc "sed -n '1,220p' docs/workflow/roadmap/xai-g1-native-foundation.md" in /Users/lijinlong/Desktop/AI_Desktop/XAI_Desktop
+ succeeded in 0ms:
+# Roadmap Manifest — xai-g1-native-foundation
+
+- Roadmap Source: docs/planning/execution/G1-native-foundation.md
+- Init Path: execution-pack
+- Generated: 2026-05-19
+- Default Automation Mode: D-Codex
+- Default Dependency Semantics: shipped
+- Default Verify Cross-vendor: yes
+- Wave Concurrency Cap: 1
+- Dispatch: serial inline Codex conductor
+- Manifest Review: DEFERRED (unattended run; see docs/workflow/roadmap/xai-v1.deferred-gates.md)
+- Gate Prerequisite: G0 Go or Conditional Go
+- Gate Status: CONDITIONAL_GO_UNBLOCKED (2026-05-19 22:54 PDT)
+
+## Features
+
+| # | Slug | Source | Depends On | Dep Semantics | Status | Automation Mode | Verify Cross-vendor | Last Run | Note |
+|---|------|--------|------------|---------------|--------|-----------------|---------------------|----------|------|
+| 1 | window-command-contract | docs/planning/execution/G1-native-foundation.md §G1.1 | G0 Go/Conditional Go | shipped | SHIPPED | D-Codex | yes | 2026-05-19 | SHIPPED 2026-05-19 · Pushed to origin/spike/window-ground-truth. Rust command contract, TS types, Organizer adapter, manifest, and contract docs verified. Commits `dce4fb9`, `1fa8c75`. |
+| 2 | grid-shell-organizer-content | docs/planning/execution/G1-native-foundation.md §G1.2 | window-command-contract | shipped | SHIPPED | D-Codex | yes | 2026-05-20 | SHIPPED 2026-05-20 (Track A) · Manifest promoted on `codex/track-a-desktop-foundation`. Production split commits: `26d9f57` (feat), `03ca86a` (docs ship promote), `3751f43` (dev_log ready). |
+| 3 | native-dnd-path-first | docs/planning/execution/G1-native-foundation.md §G1.3 | finder-dnd-path | shipped | BLOCKED_EXTERNAL | D-Codex | yes | 2026-05-19 | Production implementation still blocked by MAS/security-scope evidence; skip under unattended mode and continue next eligible feature. |
+| 4 | multi-grid-event-scope | docs/planning/execution/G1-native-foundation.md §G1.4 | grid-window-prototype | shipped | SHIPPED | D-Codex | yes | 2026-05-20 | SHIPPED 2026-05-20 (Track A) · Manifest promoted on `codex/track-a-desktop-foundation`. Event migration commits: `78aef01` (feat), `59da1e5` (docs ship promote), `44345cf` (dev_log ready). |
+| 5 | grid-persistence | docs/planning/execution/G1-native-foundation.md §G1.5 | window-command-contract, repository-v0-contract | shipped | READY_TO_SHIP | D-Codex | yes | 2026-05-20 | LayoutStore seam landed in plugin-organizer; localStorage default preserved; Repository v0 adapter available; hydrate is async + corrupt-state safe (cannot whiteout). 9 vitest cases passing. |
+| 6 | host-business-residuals | docs/planning/execution/G1-native-foundation.md §G1.6 | — | — | SHIPPED | D-Codex | yes | 2026-05-19 | SHIPPED 2026-05-19 · Pushed to origin/spike/window-ground-truth. Audit-only residual inventory complete; production cleanup remains blocked by G0/G1 sequencing. |
+
+## Decomposition Rationale
+
+### R1. Source and Gate Status
+This manifest maps one G1 execution-pack task to one Workflow V2 feature. G1 production implementation was initially blocked because G0 was not Go or Conditional Go. On 2026-05-19, G0 reached Conditional Go for the DMG/private path after G0.5 user runtime confirmation; MAS signed/sandbox validation remains an external deferred gate.
+
+### R2. Safe-Prep Boundary
+Only documentation, contract planning, and mock/brief work proceeded while G0 was blocked. Production changes to `commands/window.rs`, `window_ext.rs`, capabilities, Host shell, or Organizer runtime may now proceed only within the G1.1 approved scope and DMG/private-path assumptions; MAS-specific behavior must remain behind the `mas-sandbox` deferred validation path.
+
+### R3. Ship Record
+G1.1 (window-command-contract) and G1.6 (host-business-residuals) shipped 2026-05-19 by human-authorized push to `origin/spike/window-ground-truth`. G1.2 dependency on G1.1 is formally met (shipped semantics satisfied); G1.2 itself remains READY_TO_SHIP pending its own human ship authorization. G1.3 remains BLOCKED_EXTERNAL (MAS sandbox dependency). G1.4 is READY_TO_SHIP pending human ship authorization. G1.5 remains BLOCKED pending G2 Repository v0.
+
+exec
+/bin/zsh -lc "sed -n '1,240p' docs/SYSTEM_ARCHITECTURE.md" in /Users/lijinlong/Desktop/AI_Desktop/XAI_Desktop
+ succeeded in 0ms:
+# SYSTEM_ARCHITECTURE.md — 系统宪法
+
+> 本文档定义 XAI_Desktop 的架构约束与编码红线。
+> 所有开发（人类和 AI）必须遵守此文档中的规则。
+>
+> 最后更新: 2026-05-14
+
+---
+
+## 1. 架构流派
+
+- **前端:** 微内核 (Microkernel) — Host 壳 + Plugin 业务层
+- **Rust:** 模块化命令 + macOS 平台适配层
+- **通信:** Plugin 间通过 Tauri 事件系统或 `@repo/core/events`，禁止直接 import 内部模块
+
+## 2. 技术栈版本锁定
+
+| 技术 | 版本 | 备注 |
+|------|------|------|
+| Tauri | 2.x | macOS private API 启用 |
+| React | 19.x | 函数式组件 + Hooks |
+| TypeScript | 5.x | strict mode |
+| Vite | 7.x | 前端构建 |
+| Rust | 1.80+ | Tauri 后端 |
+| pnpm | 9.x | 包管理 |
+| Turborepo | 2.6+ | Monorepo 编排 |
+
+## 3. 三层边界规则
+
+```
+apps/desktop/src/     → Host 壳 (路由 + Provider + PluginHost 渲染，不含业务)
+packages/core/        → 基础设施 (类型 + 事件 + Store + Registry，不含业务)
+packages/plugin-*/    → 业务插件 (所有业务逻辑的唯一归宿)
+packages/ui/          → 共享 UI (无业务逻辑的纯 UI 组件)
+```
+
+- **Host** (`apps/desktop/src/`): 窗口壳 + 路由 + 全局 Provider。禁止放业务逻辑
+- **Plugin** (`packages/plugin-*/`): 业务功能自治单元。禁止跨 Plugin 直接 import 内部模块
+- **Core** (`packages/core/`): 基础设施 + 共享类型。所有 Plugin 可依赖 Core
+- **UI** (`packages/ui/`): 共享 UI 组件库。无业务逻辑
+
+## 4. 编码红线
+
+1. 禁止在 Host 写业务逻辑 → 业务代码必须在 plugin 包内
+2. 禁止跨 Plugin 直接 import 对方 `src/` 内部模块
+3. Plugin 间通信必须通过 `@repo/core/events` 的类型安全事件
+4. 禁止在 Plugin 内直接调用 `@tauri-apps/api` → 通过 `@repo/core/hooks` 封装
+5. 所有 Tauri 事件 payload 必须在 `@repo/core/types` 中定义类型
+6. 每个 Plugin 的 `manifest.json` 是注册的唯一入口
+7. 禁止使用 `console.log` 做生产日志 → 开发环境可用
+8. 依赖方向严格单向: `Host → Plugin → Core/UI`，禁止反向
+9. `index.ts` 是每个 Plugin 的唯一出口 → 外部只能从 `packages/plugin-*/src/index.ts` 导入
+10. Plugin 内部目录结构自由组织 → `components/` `hooks/` `store/` `types/` 按需存在
+11. UI 组件归属: 通用组件 → `packages/ui/`；业务组件 → plugin 内部
+12. 禁止运行时动态插件加载 → 桌面应用编译时确定插件集，静态 import 注册
+
+## 5. 多窗口架构
+
+### 5.1 窗口分类
+
+| 类型 | Label 模式 | 用途 | 交互模式 |
+|------|-----------|------|---------|
+| main | `main` | 全屏透明 overlay | 默认点击穿透 (`ignoresMouseEvents: YES`) |
+| control | `control` | AI Cube 控制台 (360x360) | 始终可交互 |
+| grid_\<id\> | `grid_xxx` | 独立 Grid 窗口 | 始终可交互 |
+| widget_\<id\> | `widget_xxx` | Widget 窗口 | 始终可交互 (未来) |
+
+### 5.2 macOS 窗口层级
+
+所有窗口使用 `CGWindowLevelForKey(DesktopIconWindow)` 作为基准:
+
+- **main 窗口:** `desktop_icon_level + 1`，始终 click-through
+- **control 窗口:** `desktop_icon_level + 1`，可交互
+- **grid 窗口:** `desktop_icon_level + 3`，可交互，置于 icon 之上
+
+所有窗口加入 `NSWindowCollectionBehavior`: canJoinAllSpaces + stationary + ignoresCycle。
+
+### 5.3 Pointer-Events 策略
+
+- 根容器 `pointer-events: none` 实现桌面点击穿透
+- 交互元素 (SmartContainer, AiCube, SettingsPanel) 显式设置 `pointer-events: auto`
+- 每个 Grid 独立原生窗口，不受主窗口 pointer-events 限制
+
+## 6. 跨窗口通信规则
+
+- 所有事件通过 `@repo/core/events` 发送，payload 必须可序列化
+- 事件命名: `<plugin>:<action>`，禁止使用 `window.postMessage`，禁止直接操作其他窗口的 DOM
+
+### 6.1 事件前缀约定
+
+| 前缀 | 归属 | 示例 |
+|------|------|------|
+| `app:` | 全局/Host | `app:interactive-mode-changed` |
+| `organizer:` | plugin-organizer | `organizer:grid-update` |
+| `todo:` | plugin-todo | `todo:item-completed` |
+| `clipboard:` | plugin-clipboard | `clipboard:item-copied` |
+| `widgets:` | plugin-widgets | `widgets:clock-tick` |
+| `ai:` | plugin-ai-cube | `ai:query-response` |
+
+## 7. 状态持久化
+
+- 当前使用 localStorage，key: `xai-desktop-layout`
+- 数据结构: `PersistedLayout { grids: GridBox[], items: DesktopItem[] }`
+- 目标迁移到 Zustand + persist middleware
+- 扩展 `GridBox` 字段时确保序列化兼容
+
+## 8. DnD 系统
+
+- 使用 `@dnd-kit/core`
+- `GridItem` 为 draggable，容器为 droppable
+- `moveItem` 函数处理跨容器拖拽，更新 `itemIds`
+- 全局 DnD Provider 在 Host 层提供
+
+## 9. Rust 后端模块结构
+
+```
+apps/desktop/src-tauri/src/
+├── main.rs                # Tauri entry point
+├── lib.rs                 # Builder 配置 — 注册 command 模块 + setup (<100 行)
+├── commands/
+│   ├── mod.rs             # 模块声明
+│   └── window.rs          # create/update/close_grid_window
+└── platform/
+    ├── mod.rs
+    └── macos/
+        ├── mod.rs
+        └── window_ext.rs  # NSWindow/CGWindowLevel/ignoresMouseEvents
+```
+
+- `lib.rs` 只做 builder 配置和模块注册，禁止放业务逻辑
+- 按领域拆分 commands (window, fs, system)
+- macOS 平台代码集中在 `platform/macos/`，用 `#[cfg(target_os = "macos")]` 隔离
+
+## 10. 新建 Plugin 标准路径
+
+```
+1. 创建 packages/plugin-xxx/ (含 package.json, tsconfig.json, manifest.json)
+2. 实现 src/index.ts + 业务组件/hooks
+3. 创建 docs/ 四件套 (design.md, api.md, test.md, dev_log.md)
+4. 在 apps/desktop/src/main.tsx 添加 import 注册
+5. 更新 docs/PLUGIN_MAP.md 状态列
+```
+
+## 11. 明确排除项 (不做什么)
+
+以下明确不在项目范围内：
+
+- **不做运行时动态插件加载** — 编译时确定插件集
+- **不做 apps/web/ 和 apps/docs/ 清理** — 保留为 scaffold
+- **不做数据库迁移** — 当前用 localStorage，SQLite 是未来目标
+- **不做 CI/CD** — 暂无 GitHub Actions
+
+exec
+/bin/zsh -lc 'git show --stat --oneline 91dc6b6' in /Users/lijinlong/Desktop/AI_Desktop/XAI_Desktop
+ succeeded in 0ms:
+91dc6b6 feat(grid-persistence): LayoutStore seam with whiteout-safe hydrate
+ docs/workflow/roadmap/xai-g1-native-foundation.md |   2 +-
+ docs/workflow/roadmap/xai-v1.autorun-20260519.md  |  14 ++
+ packages/grid-persistence/docs/dev_log.md         |  13 +-
+ packages/plugin-organizer/package.json            |   1 +
+ packages/plugin-organizer/src/index.ts            |  10 +
+ packages/plugin-organizer/src/layoutStore.test.ts | 177 +++++++++++++++++
+ packages/plugin-organizer/src/layoutStore.ts      | 231 ++++++++++++++++++++++
+ packages/plugin-organizer/src/useGridSystem.tsx   |  92 +++++----
+ pnpm-lock.yaml                                    | 119 ++++++++++-
+ 9 files changed, 612 insertions(+), 47 deletions(-)
+
+exec
+/bin/zsh -lc 'cat packages/plugin-organizer/package.json' in /Users/lijinlong/Desktop/AI_Desktop/XAI_Desktop
+ succeeded in 0ms:
+{
+  "name": "@repo/plugin-organizer",
+  "version": "0.0.0",
+  "private": true,
+  "description": "Smart file containers plugin for AI Smart Desktop (independent floating organizers).",
+  "exports": {
+    ".": {
+      "types": "./src/index.ts",
+      "import": "./src/index.ts"
+    }
+  },
+  "scripts": {
+    "check-types": "tsc --noEmit",
+    "test": "vitest run"
+  },
+  "dependencies": {
+    "@repo/core": "workspace:*",
+    "@repo/core-data": "workspace:*",
+    "@dnd-kit/core": "^6.1.0",
+    "@dnd-kit/utilities": "^3.2.1",
+    "@tauri-apps/api": "^2",
+    "react": "^19.2.0",
+    "react-dom": "^19.2.0",
+    "react-draggable": "^4.4.6",
+    "react-resizable": "^3.0.5"
+  },
+  "devDependencies": {
+    "@repo/typescript-config": "workspace:*",
+    "@types/node": "^22.15.3",
+    "@types/react": "19.2.2",
+    "@types/react-dom": "19.2.2",
+    "typescript": "5.9.2",
+    "vitest": "^3.2.1"
+  }
+}
+
+exec
+/bin/zsh -lc "rg -n 'transaction\\(|GridRepository|ItemRepository|gridRepo|itemRepo|DesktopItemEntity|GridEntity' packages -g '*.ts' -g '*.tsx'" in /Users/lijinlong/Desktop/AI_Desktop/XAI_Desktop
+ succeeded in 0ms:
+packages/plugin-organizer/src/layoutStore.ts:24:import type { GridEntity, GridItemEntity, Repo } from "@repo/core-data";
+packages/plugin-organizer/src/layoutStore.ts:75:  gridRepo: Repo<GridEntity>;
+packages/plugin-organizer/src/layoutStore.ts:76:  itemRepo: Repo<GridItemEntity>;
+packages/plugin-organizer/src/layoutStore.ts:90:        const grids = await options.gridRepo.list({
+packages/plugin-organizer/src/layoutStore.ts:93:        const items = await options.itemRepo.list({
+packages/plugin-organizer/src/layoutStore.ts:115:          await options.gridRepo.put(gridBoxToEntity(grid, timestamp));
+packages/plugin-organizer/src/layoutStore.ts:119:        const existingGrids = await options.gridRepo.list();
+packages/plugin-organizer/src/layoutStore.ts:122:            await options.gridRepo.delete(existing.id);
+packages/plugin-organizer/src/layoutStore.ts:130:          await options.itemRepo.put(
+packages/plugin-organizer/src/layoutStore.ts:135:        const existingItems = await options.itemRepo.list();
+packages/plugin-organizer/src/layoutStore.ts:138:            await options.itemRepo.delete(existing.id);
+packages/plugin-organizer/src/layoutStore.ts:159:function entityToGridBox(grid: GridEntity): GridBox {
+packages/plugin-organizer/src/layoutStore.ts:184:function gridBoxToEntity(grid: GridBox, timestamp: string): GridEntity {
+packages/plugin-organizer/src/autoClassify.ts:5: * and the set of available `GridEntity` targets, pick the best Grid to
+packages/plugin-organizer/src/autoClassify.ts:16:import type { GridEntity, GridItemEntity } from "@repo/core-data";
+packages/plugin-organizer/src/autoClassify.ts:20:  grids: GridEntity[];
+packages/plugin-organizer/src/autoClassify.ts:87:function titleTokens(grid: GridEntity): string[] {
+packages/plugin-account/src/todo-sync.ts:112:      await driver.transaction(async (tx) => {
+packages/plugin-account/src/todo-sync.ts:126:      await driver.transaction((tx) => writeTodo(tx, todo));
+packages/plugin-account/src/todo-sync.ts:156:      await driver.transaction(async (tx) => {
+packages/plugin-account/src/audit-log.ts:78:      await driver.transaction((tx) =>
+packages/plugin-organizer/src/autoClassify.test.ts:9:import type { GridEntity } from "@repo/core-data";
+packages/plugin-organizer/src/autoClassify.test.ts:11:function grid(id: string, title: string): GridEntity {
+packages/core-data/src/sqlite.ts:189:      await driver.transaction((tx) => operationsFor(tx).put(record));
+packages/core-data/src/sqlite.ts:194:      await driver.transaction((tx) => operationsFor(tx).delete(id));
+packages/core-data/src/sqlite.ts:220:      return driver.transaction((tx) => fn(operationsFor(tx)));
+packages/core-data/src/sqlite.ts:233:      await repo.transaction(async (tx) => {
+packages/core-data/src/entities.ts:17:export interface GridEntity extends RepoRecord {
+packages/core-data/src/entities.ts:111:  | GridEntity
+packages/core-data/src/entities.ts:122:  "organizer.grid": GridEntity;
+packages/core-data/src/index.ts:47:  GridEntity,
+packages/core-data/src/testing.ts:105:      await this.transaction(async (tx) => {
+packages/core-data/src/organizer-layout-migration.ts:7: * records — `GridEntity` per grid and `GridItemEntity` per item.
+packages/core-data/src/organizer-layout-migration.ts:22:  GridEntity,
+packages/core-data/src/organizer-layout-migration.ts:60:  gridRepo: Repo<GridEntity>;
+packages/core-data/src/organizer-layout-migration.ts:61:  itemRepo: Repo<GridItemEntity>;
+packages/core-data/src/organizer-layout-migration.ts:105:    const record = toGridEntity(legacyGrid, timestamp);
+packages/core-data/src/organizer-layout-migration.ts:107:    await options.gridRepo.put(record);
+packages/core-data/src/organizer-layout-migration.ts:118:    await options.itemRepo.put(record);
+packages/core-data/src/organizer-layout-migration.ts:147:function toGridEntity(
+packages/core-data/src/organizer-layout-migration.ts:150:): GridEntity {
+packages/core-data/src/sync-outbox.ts:14: *   an outbox put inside a `Repo<T>.transaction(fn)` callback.
+packages/core-data/src/sync-outbox.ts:95:  await input.entityRepo.transaction(async (entityTx: RepoTransaction<T>) => {
+packages/core-data/src/sync-outbox.ts:106:    await input.outboxRepo.transaction(async (outboxTx) => {
+packages/plugin-organizer/src/layoutStore.test.ts:8:import type { GridEntity, GridItemEntity } from "@repo/core-data";
+packages/plugin-organizer/src/layoutStore.test.ts:102:    const gridRepo = createInMemoryRepo<GridEntity>({ namespace: "grids" });
+packages/plugin-organizer/src/layoutStore.test.ts:103:    const itemRepo = createInMemoryRepo<GridItemEntity>({
+packages/plugin-organizer/src/layoutStore.test.ts:106:    const store = repositoryLayoutStore({ gridRepo, itemRepo });
+packages/plugin-organizer/src/layoutStore.test.ts:112:    const gridRepo = createInMemoryRepo<GridEntity>({ namespace: "grids" });
+packages/plugin-organizer/src/layoutStore.test.ts:113:    const itemRepo = createInMemoryRepo<GridItemEntity>({
+packages/plugin-organizer/src/layoutStore.test.ts:117:      gridRepo,
+packages/plugin-organizer/src/layoutStore.test.ts:118:      itemRepo,
+packages/plugin-organizer/src/layoutStore.test.ts:124:    const grids = await gridRepo.list();
+packages/plugin-organizer/src/layoutStore.test.ts:132:    const items = await itemRepo.list();
+packages/plugin-organizer/src/layoutStore.test.ts:146:    const gridRepo = createInMemoryRepo<GridEntity>({ namespace: "grids" });
+packages/plugin-organizer/src/layoutStore.test.ts:147:    const itemRepo = createInMemoryRepo<GridItemEntity>({
+packages/plugin-organizer/src/layoutStore.test.ts:150:    const store = repositoryLayoutStore({ gridRepo, itemRepo });
+packages/plugin-organizer/src/layoutStore.test.ts:153:    await expect(gridRepo.list()).resolves.toEqual([]);
+packages/plugin-organizer/src/layoutStore.test.ts:154:    await expect(itemRepo.list()).resolves.toEqual([]);
+packages/plugin-organizer/src/layoutStore.test.ts:158:    const gridRepo = createInMemoryRepo<GridEntity>({ namespace: "grids" });
+packages/plugin-organizer/src/layoutStore.test.ts:159:    const itemRepo = createInMemoryRepo<GridItemEntity>({
+packages/plugin-organizer/src/layoutStore.test.ts:163:      ...gridRepo,
+packages/plugin-organizer/src/layoutStore.test.ts:167:    } as typeof gridRepo;
+packages/plugin-organizer/src/layoutStore.test.ts:170:      gridRepo: broken,
+packages/plugin-organizer/src/layoutStore.test.ts:171:      itemRepo,
+packages/core-data/tests/repository-contract.ts:73:        repo.transaction(async (tx) => {
+packages/core-data/tests/entities.test.ts:7:  GridEntity,
+packages/core-data/tests/entities.test.ts:23:function gridFixture(id: string): GridEntity {
+packages/core-data/tests/sync-outbox.test.ts:75:        return baseOutbox.transaction(async (tx) => {
+packages/core-data/tests/organizer-layout-migration.test.ts:9:import type { GridEntity, GridItemEntity } from "../src/entities";
+packages/core-data/tests/organizer-layout-migration.test.ts:83:    const gridRepo = createInMemoryRepo<GridEntity>({ namespace: "grids" });
+packages/core-data/tests/organizer-layout-migration.test.ts:84:    const itemRepo = createInMemoryRepo<GridItemEntity>({
+packages/core-data/tests/organizer-layout-migration.test.ts:90:      gridRepo,
+packages/core-data/tests/organizer-layout-migration.test.ts:91:      itemRepo,
+packages/core-data/tests/organizer-layout-migration.test.ts:102:    const grids = await gridRepo.list({
+packages/core-data/tests/organizer-layout-migration.test.ts:120:    const items = await itemRepo.list({
+packages/core-data/tests/organizer-layout-migration.test.ts:140:    const gridRepo = createInMemoryRepo<GridEntity>({ namespace: "grids" });
+packages/core-data/tests/organizer-layout-migration.test.ts:141:    const itemRepo = createInMemoryRepo<GridItemEntity>({
+packages/core-data/tests/organizer-layout-migration.test.ts:147:        gridRepo,
+packages/core-data/tests/organizer-layout-migration.test.ts:148:        itemRepo,
+packages/core-data/tests/organizer-layout-migration.test.ts:155:    expect((await gridRepo.list()).length).toBe(2);
+packages/core-data/tests/organizer-layout-migration.test.ts:156:    expect((await itemRepo.list()).length).toBe(2);
+packages/core-data/tests/organizer-layout-migration.test.ts:165:      gridRepo: createInMemoryRepo<GridEntity>({ namespace: "grids" }),
+packages/core-data/tests/organizer-layout-migration.test.ts:166:      itemRepo: createInMemoryRepo<GridItemEntity>({ namespace: "items" }),
+packages/core-data/tests/organizer-layout-migration.test.ts:177:      gridRepo: createInMemoryRepo<GridEntity>({ namespace: "grids" }),
+packages/core-data/tests/organizer-layout-migration.test.ts:178:      itemRepo: createInMemoryRepo<GridItemEntity>({ namespace: "items" }),
+packages/core-data/tests/organizer-layout-migration.test.ts:190:        gridRepo: createInMemoryRepo<GridEntity>({ namespace: "grids" }),
+packages/core-data/tests/organizer-layout-migration.test.ts:191:        itemRepo: createInMemoryRepo<GridItemEntity>({ namespace: "items" }),
+packages/core-data/tests/organizer-layout-migration.test.ts:201:        gridRepo: createInMemoryRepo<GridEntity>({ namespace: "grids" }),
+packages/core-data/tests/organizer-layout-migration.test.ts:202:        itemRepo: createInMemoryRepo<GridItemEntity>({ namespace: "items" }),
+
+exec
+/bin/zsh -lc 'git show 91dc6b6 -- packages/plugin-organizer/src/layoutStore.ts packages/plugin-organizer/src/useGridSystem.tsx packages/plugin-organizer/src/layoutStore.test.ts packages/plugin-organizer/src/index.ts packages/plugin-organizer/package.json packages/grid-persistence/docs/dev_log.md docs/workflow/roadmap/xai-g1-native-foundation.md' in /Users/lijinlong/Desktop/AI_Desktop/XAI_Desktop
+ succeeded in 0ms:
+commit 91dc6b63d5cc58efda089e270a9f06197ddefcce
+Author: InnoPeak <global_ai@innopeaktech.com>
+Date:   Wed May 20 00:54:56 2026 -0700
+
+    feat(grid-persistence): LayoutStore seam with whiteout-safe hydrate
+    
+    Why
+    - G1.5 needs Grid persistence to consume the Repository v0 contract
+      from G2.1, restore all open Grids on startup, and survive corrupted
+      persisted state without whiteing out the desktop. The hook currently
+      reads/writes localStorage synchronously, which couples the runtime to
+      one backend and offers no recovery if the parsed payload is missing
+      required arrays.
+    
+    What
+    - Add `packages/plugin-organizer/src/layoutStore.ts` exporting a
+      `LayoutStore` interface, `localStorageLayoutStore()` (default;
+      preserves the historical sync path), and `repositoryLayoutStore()`
+      backed by `GridEntity`/`GridItemEntity` repos.
+    - Both adapters catch errors and surface them via optional
+      `onLoadError`/`onSaveError` callbacks. Returning `null` from `load()`
+      signals "no prior state" and never throws.
+    - Wire `GridSystemProvider` to accept `store?: LayoutStore` (defaults
+      to localStorage). Hydrate is now async with a defence-in-depth
+      try/catch that falls back to empty state if any future store throws.
+      `save` and `clearAll` delegate to the store.
+    - Add `@repo/core-data` to plugin-organizer workspace deps so the new
+      adapter can import the entity types and `createInMemoryRepo`.
+    - Add 9 vitest cases in `src/layoutStore.test.ts`: round-trip, missing
+      key, malformed JSON, type guard, save quota error, repo empty
+      layout, repo round-trip, cull-on-disappearance, repo load failure.
+    
+    Scope
+    - packages/plugin-organizer/ (layoutStore + provider refactor + tests
+      + package.json), packages/grid-persistence/docs/, G1 manifest,
+      autorun log. No Tauri or Host runtime changes; the host can opt into
+      `repositoryLayoutStore` once `tauri-sqlite` adapters are wired (G3-E1
+      / runtime follow-up).
+    
+    Risk
+    - Low. Default behaviour is unchanged because the provider keeps using
+      `localStorageLayoutStore()` when no `store` prop is supplied. New
+      async hydrate path keeps the same eventual-state shape (empty layout
+      on any error).
+    
+    Docs
+    - packages/grid-persistence/docs/dev_log.md → READY_TO_SHIP, G1
+      manifest row #5 → READY_TO_SHIP, autorun log checkpoint.
+    
+    Tests
+    - pnpm --filter @repo/plugin-organizer test : 13 tests PASS
+    - pnpm --filter @repo/plugin-organizer check-types : PASS
+    - pnpm --filter desktop build : PASS
+    
+    Co-Authored-By: Claude Opus 4.7 (1M context) <noreply@anthropic.com>
+
+diff --git a/docs/workflow/roadmap/xai-g1-native-foundation.md b/docs/workflow/roadmap/xai-g1-native-foundation.md
+index 79f8ae0..97c71d1 100644
+--- a/docs/workflow/roadmap/xai-g1-native-foundation.md
++++ b/docs/workflow/roadmap/xai-g1-native-foundation.md
+@@ -20,7 +20,7 @@
+ | 2 | grid-shell-organizer-content | docs/planning/execution/G1-native-foundation.md §G1.2 | window-command-contract | shipped | SHIPPED | D-Codex | yes | 2026-05-20 | SHIPPED 2026-05-20 (Track A) · Manifest promoted on `codex/track-a-desktop-foundation`. Production split commits: `26d9f57` (feat), `03ca86a` (docs ship promote), `3751f43` (dev_log ready). |
+ | 3 | native-dnd-path-first | docs/planning/execution/G1-native-foundation.md §G1.3 | finder-dnd-path | shipped | BLOCKED_EXTERNAL | D-Codex | yes | 2026-05-19 | Production implementation still blocked by MAS/security-scope evidence; skip under unattended mode and continue next eligible feature. |
+ | 4 | multi-grid-event-scope | docs/planning/execution/G1-native-foundation.md §G1.4 | grid-window-prototype | shipped | SHIPPED | D-Codex | yes | 2026-05-20 | SHIPPED 2026-05-20 (Track A) · Manifest promoted on `codex/track-a-desktop-foundation`. Event migration commits: `78aef01` (feat), `59da1e5` (docs ship promote), `44345cf` (dev_log ready). |
+-| 5 | grid-persistence | docs/planning/execution/G1-native-foundation.md §G1.5 | window-command-contract | shipped | BLOCKED | D-Codex | yes | 2026-05-19 | Safe prep only via user override; production implementation blocked by G2 Repository v0. |
++| 5 | grid-persistence | docs/planning/execution/G1-native-foundation.md §G1.5 | window-command-contract, repository-v0-contract | shipped | READY_TO_SHIP | D-Codex | yes | 2026-05-20 | LayoutStore seam landed in plugin-organizer; localStorage default preserved; Repository v0 adapter available; hydrate is async + corrupt-state safe (cannot whiteout). 9 vitest cases passing. |
+ | 6 | host-business-residuals | docs/planning/execution/G1-native-foundation.md §G1.6 | — | — | SHIPPED | D-Codex | yes | 2026-05-19 | SHIPPED 2026-05-19 · Pushed to origin/spike/window-ground-truth. Audit-only residual inventory complete; production cleanup remains blocked by G0/G1 sequencing. |
+ 
+ ## Decomposition Rationale
+diff --git a/packages/grid-persistence/docs/dev_log.md b/packages/grid-persistence/docs/dev_log.md
+index 4fb47a2..89ed13f 100644
+--- a/packages/grid-persistence/docs/dev_log.md
++++ b/packages/grid-persistence/docs/dev_log.md
+@@ -8,14 +8,14 @@
+ | Target | grid-persistence |
+ | Title | G1.5 Grid persistence |
+ | Roadmap | xai-g1-native-foundation · feature #5 · G1.5 |
+-| Status | BLOCKED |
+-| Current Phase | FEATURE_VERIFY |
+-| Suggested Next | G1.1 and G2 Repository v0 |
++| Status | READY_TO_SHIP |
++| Current Phase | VERIFY |
++| Suggested Next | manual ship only; full Repository cut-over runtime smoke deferred |
+ | Automation Mode | D-Codex |
+ | Verify Cross-vendor | yes |
+-| Executor | feature-verify (Codex inline) |
+-| Updated | 2026-05-19 20:41 PDT |
+-| Blockers | G1.1 contract and G2 repository direction |
++| Executor | feature-build + feature-verify (Claude Code, Track A) |
++| Updated | 2026-05-20 01:08 PDT |
++| Blockers | None for the persistence seam scope; live `tauri-sqlite` cut-over runtime smoke deferred |
+ 
+ ## Phase Plan
+ 
+@@ -46,3 +46,4 @@ Docs-only prep is complete. G1.5 production acceptance remains blocked by G1.1 a
+ | 2026-05-19 20:41 PDT | feature-review (Codex inline) | Approved safe prep; production repository persistence remains blocked. | — | feature-build |
+ | 2026-05-19 20:41 PDT | feature-build (Codex inline) | Created Grid persistence discovery docs. | `dcf2750` | feature-verify |
+ | 2026-05-19 20:41 PDT | feature-verify (Codex inline) | Verified docs-only scope; status remains BLOCKED. | `dcf2750` | G1.1/G2 |
++| 2026-05-20 01:08 PDT | feature-build + feature-verify (Claude Code, Track A) | Production persistence seam: added `packages/plugin-organizer/src/layoutStore.ts` (LayoutStore, localStorage adapter, Repository v0 adapter), wired `GridSystemProvider` to accept `store?: LayoutStore`, made hydrate async + corrupt-state safe (cannot whiteout), refactored save + clearAll to delegate. 9 vitest cases + plugin-organizer types + desktop build PASS. | pending commit | manual ship only; continue G3 |
+diff --git a/packages/plugin-organizer/package.json b/packages/plugin-organizer/package.json
+index 8f1799a..5d0738b 100644
+--- a/packages/plugin-organizer/package.json
++++ b/packages/plugin-organizer/package.json
+@@ -15,6 +15,7 @@
+   },
+   "dependencies": {
+     "@repo/core": "workspace:*",
++    "@repo/core-data": "workspace:*",
+     "@dnd-kit/core": "^6.1.0",
+     "@dnd-kit/utilities": "^3.2.1",
+     "@tauri-apps/api": "^2",
+diff --git a/packages/plugin-organizer/src/index.ts b/packages/plugin-organizer/src/index.ts
+index ef02ed4..0b29dfe 100644
+--- a/packages/plugin-organizer/src/index.ts
++++ b/packages/plugin-organizer/src/index.ts
+@@ -10,3 +10,13 @@ export { OrganizerLayer } from "./OrganizerLayer";
+ export { OrganizerGridContent } from "./OrganizerGridContent";
+ export type { OrganizerGridContentProps } from "./OrganizerGridContent";
+ export * from "./gridEvents";
++export {
++  ORGANIZER_LAYOUT_STORAGE_KEY,
++  localStorageLayoutStore,
++  repositoryLayoutStore,
++} from "./layoutStore";
++export type {
++  LayoutStore,
++  LocalStorageLayoutStoreOptions,
++  RepositoryLayoutStoreOptions,
++} from "./layoutStore";
+diff --git a/packages/plugin-organizer/src/layoutStore.test.ts b/packages/plugin-organizer/src/layoutStore.test.ts
+new file mode 100644
+index 0000000..56c5745
+--- /dev/null
++++ b/packages/plugin-organizer/src/layoutStore.test.ts
+@@ -0,0 +1,177 @@
++import { describe, expect, it, vi } from "vitest";
++
++import {
++  ORGANIZER_LAYOUT_STORAGE_KEY,
++  localStorageLayoutStore,
++  repositoryLayoutStore,
++} from "./layoutStore";
++import type { GridEntity, GridItemEntity } from "@repo/core-data";
++import { createInMemoryRepo } from "@repo/core-data";
++import type { PersistedLayout } from "./types";
++
++function memoryStorage() {
++  const map = new Map<string, string>();
++  return {
++    getItem: (k: string) => map.get(k) ?? null,
++    setItem: (k: string, v: string) => {
++      map.set(k, v);
++    },
++    removeItem: (k: string) => {
++      map.delete(k);
++    },
++  } satisfies Pick<Storage, "getItem" | "setItem" | "removeItem">;
++}
++
++function sampleLayout(): PersistedLayout {
++  return {
++    grids: [
++      {
++        id: "grid-1",
++        title: "Today",
++        rect: { x: 16, y: 24, width: 320, height: 480 },
++        isLocked: false,
++        isFolded: false,
++        viewMode: "grid",
++        itemIds: ["item-1"],
++      },
++    ],
++    items: [
++      {
++        id: "item-1",
++        filename: "draft.md",
++        filepath: "/Users/me/draft.md",
++        type: "file",
++        icon: "doc.text",
++        createdAt: 0,
++      },
++    ],
++  };
++}
++
++describe("localStorageLayoutStore", () => {
++  it("round-trips a layout through the configured storage", async () => {
++    const storage = memoryStorage();
++    const store = localStorageLayoutStore({ storage });
++    await store.save(sampleLayout());
++    const loaded = await store.load();
++    expect(loaded).toEqual(sampleLayout());
++  });
++
++  it("returns null when the storage key is absent", async () => {
++    const store = localStorageLayoutStore({ storage: memoryStorage() });
++    await expect(store.load()).resolves.toBeNull();
++  });
++
++  it("returns null and reports the error for malformed JSON", async () => {
++    const storage = memoryStorage();
++    storage.setItem(ORGANIZER_LAYOUT_STORAGE_KEY, "{not json");
++    const onLoadError = vi.fn();
++    const store = localStorageLayoutStore({ storage, onLoadError });
++    await expect(store.load()).resolves.toBeNull();
++    expect(onLoadError).toHaveBeenCalledOnce();
++  });
++
++  it("returns null when the parsed payload misses grids/items arrays", async () => {
++    const storage = memoryStorage();
++    storage.setItem(
++      ORGANIZER_LAYOUT_STORAGE_KEY,
++      JSON.stringify({ grids: "oops" }),
++    );
++    const store = localStorageLayoutStore({ storage });
++    await expect(store.load()).resolves.toBeNull();
++  });
++
++  it("swallows save errors and surfaces them via onSaveError", async () => {
++    const error = new Error("quota");
++    const storage = {
++      getItem: () => null,
++      setItem: () => {
++        throw error;
++      },
++      removeItem: () => undefined,
++    };
++    const onSaveError = vi.fn();
++    const store = localStorageLayoutStore({ storage, onSaveError });
++    await store.save(sampleLayout());
++    expect(onSaveError).toHaveBeenCalledWith(error);
++  });
++});
++
++describe("repositoryLayoutStore", () => {
++  it("returns null for an empty repo (not an empty layout) to keep startup neutral", async () => {
++    const gridRepo = createInMemoryRepo<GridEntity>({ namespace: "grids" });
++    const itemRepo = createInMemoryRepo<GridItemEntity>({
++      namespace: "items",
++    });
++    const store = repositoryLayoutStore({ gridRepo, itemRepo });
++    const loaded = await store.load();
++    expect(loaded).toEqual({ grids: [], items: [] });
++  });
++
++  it("round-trips a layout via the underlying repos", async () => {
++    const gridRepo = createInMemoryRepo<GridEntity>({ namespace: "grids" });
++    const itemRepo = createInMemoryRepo<GridItemEntity>({
++      namespace: "items",
++    });
++    const store = repositoryLayoutStore({
++      gridRepo,
++      itemRepo,
++      nowIso: () => "2026-05-20T00:00:00.000Z",
++    });
++
++    await store.save(sampleLayout());
++
++    const grids = await gridRepo.list();
++    expect(grids).toHaveLength(1);
++    expect(grids[0]).toMatchObject({
++      id: "grid-1",
++      title: "Today",
++      entityType: "organizer.grid",
++    });
++
++    const items = await itemRepo.list();
++    expect(items).toHaveLength(1);
++    expect(items[0]).toMatchObject({
++      id: "item-1",
++      gridId: "grid-1",
++      kind: "file",
++    });
++
++    const reloaded = await store.load();
++    expect(reloaded?.grids).toHaveLength(1);
++    expect(reloaded?.items).toHaveLength(1);
++  });
++
++  it("culls grids and items that disappeared between saves", async () => {
++    const gridRepo = createInMemoryRepo<GridEntity>({ namespace: "grids" });
++    const itemRepo = createInMemoryRepo<GridItemEntity>({
++      namespace: "items",
++    });
++    const store = repositoryLayoutStore({ gridRepo, itemRepo });
++    await store.save(sampleLayout());
++    await store.save({ grids: [], items: [] });
++    await expect(gridRepo.list()).resolves.toEqual([]);
++    await expect(itemRepo.list()).resolves.toEqual([]);
++  });
++
++  it("swallows load errors and returns null so the desktop never whiteouts", async () => {
++    const gridRepo = createInMemoryRepo<GridEntity>({ namespace: "grids" });
++    const itemRepo = createInMemoryRepo<GridItemEntity>({
++      namespace: "items",
++    });
++    const broken = {
++      ...gridRepo,
++      list: async () => {
++        throw new Error("driver dead");
++      },
++    } as typeof gridRepo;
++    const onLoadError = vi.fn();
++    const store = repositoryLayoutStore({
++      gridRepo: broken,
++      itemRepo,
++      onLoadError,
++    });
++    await expect(store.load()).resolves.toBeNull();
++    expect(onLoadError).toHaveBeenCalledOnce();
++  });
++});
+diff --git a/packages/plugin-organizer/src/layoutStore.ts b/packages/plugin-organizer/src/layoutStore.ts
+new file mode 100644
+index 0000000..d03e3fe
+--- /dev/null
++++ b/packages/plugin-organizer/src/layoutStore.ts
+@@ -0,0 +1,231 @@
++/**
++ * Organizer layout persistence seam (G1.5).
++ *
++ * The default behaviour stays unchanged: `localStorageLayoutStore`
++ * preserves the historical synchronous localStorage path used by
++ * `useGridSystem`. The new `repositoryLayoutStore` accepts G2.1
++ * Repository v0 repos for Grid and GridItem entities, returning a
++ * Promise-shaped layout so the same provider can be opted into the
++ * SQLite-backed path once the Host wires it.
++ *
++ * Hardening invariants — both implementations:
++ *
++ * 1. Returning `null` from `load()` means "no prior state"; callers
++ *    must treat it as an empty layout, not as a failure.
++ * 2. Any parse or driver error during `load()` is **caught** and
++ *    surfaces as `null` so a corrupted state can never whiteout the
++ *    desktop. Production telemetry hooks can attach via
++ *    `onLoadError`.
++ * 3. `save(layout)` is best-effort. Failures during save are caught
++ *    and surfaced through the optional `onSaveError` callback so the
++ *    in-memory state stays authoritative for the session.
++ */
++
++import type { GridEntity, GridItemEntity, Repo } from "@repo/core-data";
++import type { DesktopItem, GridBox, PersistedLayout } from "./types";
++
++export const ORGANIZER_LAYOUT_STORAGE_KEY = "xai-desktop-layout";
++
++export interface LayoutStore {
++  load(): Promise<PersistedLayout | null>;
++  save(layout: PersistedLayout): Promise<void>;
++}
++
++export interface LocalStorageLayoutStoreOptions {
++  storage?: Pick<Storage, "getItem" | "setItem" | "removeItem">;
++  storageKey?: string;
++  onLoadError?: (error: unknown) => void;
++  onSaveError?: (error: unknown) => void;
++}
++
++export function localStorageLayoutStore(
++  options: LocalStorageLayoutStoreOptions = {},
++): LayoutStore {
++  const storageKey = options.storageKey ?? ORGANIZER_LAYOUT_STORAGE_KEY;
++  const resolveStorage = () => options.storage ?? globalStorage();
++
++  return {
++    async load() {
++      const storage = resolveStorage();
++      if (!storage) return null;
++      try {
++        const raw = storage.getItem(storageKey);
++        if (!raw) return null;
++        const parsed = JSON.parse(raw) as PersistedLayout;
++        if (!isPersistedLayout(parsed)) return null;
++        return parsed;
++      } catch (error) {
++        options.onLoadError?.(error);
++        return null;
++      }
++    },
++    async save(layout) {
++      const storage = resolveStorage();
++      if (!storage) return;
++      try {
++        storage.setItem(storageKey, JSON.stringify(layout));
++      } catch (error) {
++        options.onSaveError?.(error);
++      }
++    },
++  };
++}
++
++export interface RepositoryLayoutStoreOptions {
++  gridRepo: Repo<GridEntity>;
++  itemRepo: Repo<GridItemEntity>;
++  nowIso?: () => string;
++  onLoadError?: (error: unknown) => void;
++  onSaveError?: (error: unknown) => void;
++}
++
++export function repositoryLayoutStore(
++  options: RepositoryLayoutStoreOptions,
++): LayoutStore {
++  const nowIso = options.nowIso ?? (() => new Date().toISOString());
++
++  return {
++    async load() {
++      try {
++        const grids = await options.gridRepo.list({
++          orderBy: { field: "id", direction: "asc" },
++        });
++        const items = await options.itemRepo.list({
++          orderBy: { field: "id", direction: "asc" },
++        });
++
++        const gridBoxes: GridBox[] = grids.map(entityToGridBox);
++        const desktopItems: DesktopItem[] = items.map(entityToDesktopItem);
++        return {
++          grids: gridBoxes,
++          items: desktopItems,
++        };
++      } catch (error) {
++        options.onLoadError?.(error);
++        return null;
++      }
++    },
++    async save(layout) {
++      try {
++        const timestamp = nowIso();
++        const seen = new Set<string>();
++
++        // Upsert grids
++        for (const grid of layout.grids) {
++          await options.gridRepo.put(gridBoxToEntity(grid, timestamp));
++          seen.add(grid.id);
++        }
++        // Cull grids that disappeared.
++        const existingGrids = await options.gridRepo.list();
++        for (const existing of existingGrids) {
++          if (!seen.has(existing.id)) {
++            await options.gridRepo.delete(existing.id);
++          }
++        }
++
++        const seenItems = new Set<string>();
++        for (const item of layout.items) {
++          const owningGridId = findOwningGridId(item.id, layout.grids);
++          if (!owningGridId) continue;
++          await options.itemRepo.put(
++            desktopItemToEntity(item, owningGridId, timestamp),
++          );
++          seenItems.add(item.id);
++        }
++        const existingItems = await options.itemRepo.list();
++        for (const existing of existingItems) {
++          if (!seenItems.has(existing.id)) {
++            await options.itemRepo.delete(existing.id);
++          }
++        }
++      } catch (error) {
++        options.onSaveError?.(error);
++      }
++    },
++  };
++}
++
++function globalStorage(): Storage | undefined {
++  if (typeof localStorage === "undefined") return undefined;
++  return localStorage;
++}
++
++function isPersistedLayout(value: unknown): value is PersistedLayout {
++  if (!value || typeof value !== "object") return false;
++  const obj = value as { grids?: unknown; items?: unknown };
++  return Array.isArray(obj.grids) && Array.isArray(obj.items);
++}
++
++function entityToGridBox(grid: GridEntity): GridBox {
++  return {
++    id: grid.id,
++    title: grid.title,
++    rect: { ...grid.rect },
++    isLocked: grid.isLocked,
++    isFolded: grid.isFolded,
++    viewMode: grid.viewMode,
++    itemIds: [...grid.itemIds],
++    themeColor: grid.themeColor,
++  };
++}
++
++function entityToDesktopItem(item: GridItemEntity): DesktopItem {
++  return {
++    id: item.id,
++    filename: item.filename,
++    filepath: item.filepath ?? "",
++    type: item.kind === "url" ? "file" : item.kind,
++    icon: item.icon,
++    size: item.size,
++    createdAt: 0,
++  };
++}
++
++function gridBoxToEntity(grid: GridBox, timestamp: string): GridEntity {
++  return {
++    id: grid.id,
++    entityType: "organizer.grid",
++    schemaVersion: 1,
++    createdAt: timestamp,
++    updatedAt: timestamp,
++    syncScope: "account-sync",
++    title: grid.title,
++    rect: { ...grid.rect },
++    isLocked: grid.isLocked,
++    isFolded: grid.isFolded,
++    viewMode: grid.viewMode,
++    itemIds: [...grid.itemIds],
++    themeColor: grid.themeColor,
++  };
++}
++
++function desktopItemToEntity(
++  item: DesktopItem,
++  gridId: string,
++  timestamp: string,
++): GridItemEntity {
++  return {
++    id: item.id,
++    entityType: "organizer.item",
++    schemaVersion: 1,
++    createdAt: timestamp,
++    updatedAt: timestamp,
++    syncScope: "account-sync",
++    gridId,
++    filename: item.filename,
++    filepath: item.filepath,
++    kind: item.type,
++    icon: item.icon,
++    size: item.size,
++  };
++}
++
++function findOwningGridId(
++  itemId: string,
++  grids: GridBox[],
++): string | undefined {
++  for (const grid of grids) {
++    if (grid.itemIds.includes(itemId)) return grid.id;
++  }
++  return undefined;
++}
+diff --git a/packages/plugin-organizer/src/useGridSystem.tsx b/packages/plugin-organizer/src/useGridSystem.tsx
+index 73a6422..a1861eb 100644
+--- a/packages/plugin-organizer/src/useGridSystem.tsx
++++ b/packages/plugin-organizer/src/useGridSystem.tsx
+@@ -10,8 +10,13 @@ import {
+ } from "react";
+ import { DesktopItem, GridBox, PersistedLayout } from "./types";
+ import { defaultGrid } from "./mockData";
++import {
++  ORGANIZER_LAYOUT_STORAGE_KEY,
++  localStorageLayoutStore,
++  type LayoutStore,
++} from "./layoutStore";
+ 
+-const STORAGE_KEY = "xai-desktop-layout";
++const STORAGE_KEY = ORGANIZER_LAYOUT_STORAGE_KEY;
+ const TITLE_BAR_HEIGHT = 40;
+ 
+ const DEBUG_CLEAR_ON_STARTUP = false;
+@@ -38,23 +43,21 @@ const toId = () =>
+     ? crypto.randomUUID()
+     : `grid-${Math.random().toString(16).slice(2)}`;
+ 
+-function loadLayout(): PersistedLayout | null {
+-  if (typeof localStorage === "undefined") return null;
+-  const raw = localStorage.getItem(STORAGE_KEY);
+-  if (!raw) return null;
+-  try {
+-    return JSON.parse(raw) as PersistedLayout;
+-  } catch {
+-    return null;
+-  }
+-}
+-
+-function saveLayout(payload: PersistedLayout) {
+-  if (typeof localStorage === "undefined") return;
+-  localStorage.setItem(STORAGE_KEY, JSON.stringify(payload));
++export interface GridSystemProviderProps {
++  children: ReactNode;
++  /**
++   * Optional opt-in seam for the G1.5 Repository-backed persistence
++   * adapter. Defaults to `localStorageLayoutStore()` to preserve the
++   * historical synchronous localStorage path.
++   *
++   * Both `load()` and `save()` throws are caught by the adapter so a
++   * corrupted state can never whiteout the desktop.
++   */
++  store?: LayoutStore;
+ }
+ 
+-export function GridSystemProvider({ children }: { children: ReactNode }) {
++export function GridSystemProvider({ children, store }: GridSystemProviderProps) {
++  const layoutStore = useMemo(() => store ?? localStorageLayoutStore(), [store]);
+   const [grids, setGrids] = useState<GridBox[]>([]);
+   const [items, setItems] = useState<Record<string, DesktopItem>>({});
+   const [hydrated, setHydrated] = useState(false);
+@@ -64,27 +67,44 @@ export function GridSystemProvider({ children }: { children: ReactNode }) {
+   // Hydrate
+   useEffect(() => {
+     if (DEBUG_CLEAR_ON_STARTUP) {
+-      localStorage.removeItem(STORAGE_KEY);
++      if (typeof localStorage !== "undefined") {
++        localStorage.removeItem(STORAGE_KEY);
++      }
+       setGrids([]);
+       setItems({});
+       setHydrated(true);
+       return;
+     }
+ 
+-    const data = loadLayout();
+-    if (data) {
+-      const mappedItems: Record<string, DesktopItem> = {};
+-      data.items.forEach((item) => {
+-        mappedItems[item.id] = item;
+-      });
+-      setItems(mappedItems);
+-      setGrids(data.grids);
+-    } else {
+-      setGrids([]);
+-      setItems({});
+-    }
+-    setHydrated(true);
+-  }, []);
++    let cancelled = false;
++    void (async () => {
++      let data: PersistedLayout | null = null;
++      try {
++        data = await layoutStore.load();
++      } catch {
++        // Defence in depth — every concrete LayoutStore already swallows
++        // its own errors. We catch here so a future store implementation
++        // cannot whiteout the desktop on startup.
++        data = null;
++      }
++      if (cancelled) return;
++      if (data && Array.isArray(data.grids) && Array.isArray(data.items)) {
++        const mappedItems: Record<string, DesktopItem> = {};
++        data.items.forEach((item) => {
++          mappedItems[item.id] = item;
++        });
++        setItems(mappedItems);
++        setGrids(data.grids);
++      } else {
++        setGrids([]);
++        setItems({});
++      }
++      setHydrated(true);
++    })();
++    return () => {
++      cancelled = true;
++    };
++  }, [layoutStore]);
+ 
+   const createGrid = useCallback(
+     (x: number, y: number, requestedId?: string) => {
+@@ -139,10 +159,8 @@ export function GridSystemProvider({ children }: { children: ReactNode }) {
+     setGrids([]);
+     setItems({});
+     heightCache.current = {};
+-    if (typeof localStorage !== "undefined") {
+-      localStorage.removeItem(STORAGE_KEY);
+-    }
+-  }, []);
++    void layoutStore.save({ grids: [], items: [] });
++  }, [layoutStore]);
+ 
+   const moveItem = useCallback(
+     (itemId: string, fromId: string, toId: string) => {
+@@ -206,14 +224,14 @@ export function GridSystemProvider({ children }: { children: ReactNode }) {
+     }
+     saveTimer.current = window.setTimeout(() => {
+       const payload: PersistedLayout = { grids, items: Object.values(items) };
+-      saveLayout(payload);
++      void layoutStore.save(payload);
+     }, 1000);
+     return () => {
+       if (saveTimer.current) {
+         window.clearTimeout(saveTimer.current);
+       }
+     };
+-  }, [grids, items, hydrated]);
++  }, [grids, items, hydrated, layoutStore]);
+ 
+   const value = useMemo<GridSystemContextValue>(
+     () => ({
+
+exec
+/bin/zsh -lc "rg -n \"repository-v0|grid persistence|layout store|PersistedLayout|GridRepo|ItemRepo|Repository v0|grid-persistence\" docs packages -g '*.md' -g '*.ts' -g '*.tsx'" in /Users/lijinlong/Desktop/AI_Desktop/XAI_Desktop
+ succeeded in 0ms:
+packages/multi-grid-event-scope/docs/dev_log.md:13:| Suggested Next | continue roadmap (G2 Repository v0 → G3 organizer loop) |
+packages/localstorage-migration/docs/dev_log.md:9:| Title | G2.3 localStorage → Repository v0 migration adapter |
+packages/localstorage-migration/docs/dev_log.md:28:    `xai-desktop-layout` holds `PersistedLayout` (`{ grids, items }`).
+packages/localstorage-migration/docs/dev_log.md:55:  `localStorage` → Repository is tracked under G1.5 `grid-persistence`
+docs/reviews/grid-persistence/20260519-feature-brief.md:1:# Feature Brief — grid-persistence
+docs/reviews/grid-persistence/20260519-feature-brief.md:5:| Feature | grid-persistence |
+docs/reviews/grid-persistence/20260519-feature-brief.md:38:- `rg -n "PersistedLayout|localStorage|repository|Repository|Grid.*persist|restore|open Grid|last active|sqlite|sqlcipher|GridBox|DesktopItem" packages/plugin-organizer/src packages/core/src packages/core-data docs/contracts docs/planning/execution -g '*.{ts,tsx,rs,md}'`
+docs/reviews/grid-persistence/20260519-feature-brief.md:39:- `test -f docs/reviews/grid-persistence/20260519-feature-brief.md`
+docs/reviews/grid-persistence/20260519-feature-brief.md:40:- `test -f packages/grid-persistence/docs/dev_log.md`
+docs/reviews/grid-persistence/20260519-feature-brief.md:44:Planning only. Later implementation must update `docs/contracts/data-repository-v0.md` or add an ADR if Grid repository methods extend the existing repository contract.
+packages/single-table-todos-e2e/docs/dev_log.md:9:| Title | G2.6 Single-table sync baseline (Repository v0 outbox) |
+packages/single-table-todos-e2e/docs/dev_log.md:22:### Phase 1 — Repository v0 outbox baseline + mock tests
+packages/single-table-todos-e2e/docs/dev_log.md:27:  G2.1 Repository v0 contract.
+packages/single-table-todos-e2e/docs/dev_log.md:29:  Repository v0 `OutboxEntry` record (commitSeq, mutationId,
+packages/single-table-todos-e2e/docs/dev_log.md:54:The Repository v0 outbox baseline is in place and the same-transaction
+packages/single-table-todos-e2e/docs/dev_log.md:63:| 2026-05-20 01:02 PDT | feature-build + feature-verify (Claude Code, Track A) | Added Repository v0 outbox baseline (`sync-outbox.ts` + 4 vitest cases) and reconciled status to G2 roadmap. | `pnpm --filter @repo/core-data test` (58 tests) | manual ship only; continue roadmap |
+docs/reviews/grid-persistence/20260519-discovery-review.md:1:# Discovery Review — grid-persistence
+docs/reviews/grid-persistence/20260519-discovery-review.md:5:G1.5 cannot start production implementation because it depends on G1.1 window command stability and G2 repository direction. Current Organizer state is persisted directly in `localStorage` under `xai-desktop-layout`, using `PersistedLayout { grids, items }`. This is sufficient for G0/G1 spike continuity but does not meet the long-term rule that plugins use repository interfaces instead of direct storage.
+docs/reviews/grid-persistence/20260519-discovery-review.md:16:| Repository baseline | G2 owns Repository v0 and localStorage migration | `docs/contracts/data-repository-v0.md`, `G2-data-security-foundation.md` |
+docs/reviews/grid-persistence/20260519-discovery-review.md:31:2. Wait for G2 Repository v0 to define plugin storage access.
+packages/repository-v0-contract/docs/test.md:1:# repository-v0-contract — Test Plan
+packages/repository-v0-contract/docs/design.md:1:# repository-v0-contract — Design
+packages/repository-v0-contract/docs/design.md:5:Upgrade the existing `@repo/core-data` seam in place and keep the feature docs under the roadmap anchor `packages/repository-v0-contract/docs/`.
+packages/repository-v0-contract/docs/design.md:9:The feature owns the Repository v0 TypeScript contract, in-memory implementation, SQLite-shaped implementation compatibility, and reusable driver contract tests.
+packages/repository-v0-contract/docs/design.md:13:Repository v0 records carry audit and sync metadata:
+packages/repository-v0-contract/docs/design.md:22:Repository v0 operations:
+docs/planning/execution/G2-data-security-foundation.md:9:| 输出 | Repository v0 + SQLite/SQLCipher PoC + Keychain opaque handle + MAS/Sandbox dry run |
+docs/planning/execution/G2-data-security-foundation.md:36:| `packages/core-data/src/types.ts` | Repository v0 contract |
+docs/planning/execution/G2-data-security-foundation.md:49:### G2.1 Repository v0 contract
+packages/plugin-organizer/src/layoutStore.ts:7: * Repository v0 repos for Grid and GridItem entities, returning a
+packages/plugin-organizer/src/layoutStore.ts:25:import type { DesktopItem, GridBox, PersistedLayout } from "./types";
+packages/plugin-organizer/src/layoutStore.ts:30:  load(): Promise<PersistedLayout | null>;
+packages/plugin-organizer/src/layoutStore.ts:31:  save(layout: PersistedLayout): Promise<void>;
+packages/plugin-organizer/src/layoutStore.ts:54:        const parsed = JSON.parse(raw) as PersistedLayout;
+packages/plugin-organizer/src/layoutStore.ts:55:        if (!isPersistedLayout(parsed)) return null;
+packages/plugin-organizer/src/layoutStore.ts:153:function isPersistedLayout(value: unknown): value is PersistedLayout {
+packages/repository-v0-contract/docs/dev_log.md:1:# repository-v0-contract — Dev Log
+packages/repository-v0-contract/docs/dev_log.md:8:| Target | repository-v0-contract |
+packages/repository-v0-contract/docs/dev_log.md:9:| Title | G2.1 Repository v0 Contract |
+packages/repository-v0-contract/docs/dev_log.md:27:- Sync `docs/contracts/data-repository-v0.md`.
+packages/repository-v0-contract/docs/dev_log.md:51:- Repository v0 entity surface added at `packages/core-data/src/entities.ts` covers Grid, GridItem, Label, Todo, Habit, ClipboardEntry, Project, Card.
+packages/repository-v0-contract/docs/dev_log.md:52:- `docs/contracts/data-repository-v0.md` updated with entity table, interface (incl. `listByIndex` + `metadata`), and entity-level testing contract.
+packages/repository-v0-contract/docs/dev_log.md:61:| 2026-05-20 00:18 PDT | feature-build + feature-verify (Claude Code, Track A) | Implemented Repository v0 entity surface (`packages/core-data/src/entities.ts`), updated contract doc with entity table + interface, added `tests/entities.test.ts`, ran core-data test + type checks (45 tests passing). | pending commit | manual ship only; continue roadmap |
+docs/SYSTEM_ARCHITECTURE.md:103:- 数据结构: `PersistedLayout { grids: GridBox[], items: DesktopItem[] }`
+packages/repository-v0-contract/docs/api.md:1:# repository-v0-contract — API
+packages/repository-v0-contract/docs/api.md:18:## Repository v0
+packages/repository-v0-contract/docs/api.md:45:Existing callers using `get`, `put`, `delete`, and `list()` continue to work after they provide Repository v0 metadata on records. Downstream drivers must implement the full interface before being marked G2 complete.
+packages/plugin-organizer/src/types.ts:29:export interface PersistedLayout {
+packages/plugin-organizer/src/gridItemFactory.ts:5: * pasteboard) to the G2.1 Repository v0 entity surface. Plugin code
+packages/plugin-organizer/src/layoutStore.test.ts:10:import type { PersistedLayout } from "./types";
+packages/plugin-organizer/src/layoutStore.test.ts:25:function sampleLayout(): PersistedLayout {
+packages/plugin-organizer/src/useGridSystem.tsx:11:import { DesktopItem, GridBox, PersistedLayout } from "./types";
+packages/plugin-organizer/src/useGridSystem.tsx:81:      let data: PersistedLayout | null = null;
+packages/plugin-organizer/src/useGridSystem.tsx:226:      const payload: PersistedLayout = { grids, items: Object.values(items) };
+docs/workflow/roadmap/xai-g1-native-foundation.md:23:| 5 | grid-persistence | docs/planning/execution/G1-native-foundation.md §G1.5 | window-command-contract, repository-v0-contract | shipped | READY_TO_SHIP | D-Codex | yes | 2026-05-20 | LayoutStore seam landed in plugin-organizer; localStorage default preserved; Repository v0 adapter available; hydrate is async + corrupt-state safe (cannot whiteout). 9 vitest cases passing. |
+docs/workflow/roadmap/xai-g1-native-foundation.md:35:G1.1 (window-command-contract) and G1.6 (host-business-residuals) shipped 2026-05-19 by human-authorized push to `origin/spike/window-ground-truth`. G1.2 dependency on G1.1 is formally met (shipped semantics satisfied); G1.2 itself remains READY_TO_SHIP pending its own human ship authorization. G1.3 remains BLOCKED_EXTERNAL (MAS sandbox dependency). G1.4 is READY_TO_SHIP pending human ship authorization. G1.5 remains BLOCKED pending G2 Repository v0.
+packages/plugin-organizer/docs/design.md:20:- `PersistedLayout`: 持久化结构 `{ grids: GridBox[], items: DesktopItem[] }`
+packages/plugin-organizer/docs/api.md:61:- Types: `GridBox`, `DesktopItem`, `PersistedLayout`
+docs/workflow/roadmap/xai-v1.incidents.md:51:- Resume instruction: Human may review `dce4fb9` and run ship manually; roadmap continuation has proceeded beyond G1.4 and should continue with G2 because G1.5 depends on G2 Repository v0.
+docs/workflow/roadmap/xai-v1.incidents.md:91:- Resume instruction: Human may review `26d9f57` and run ship manually; roadmap continuation has proceeded beyond G1.4 and should continue with G2 because G1.5 depends on G2 Repository v0.
+docs/workflow/roadmap/xai-v1.incidents.md:101:- Resume instruction: Human may review `78aef01` and run ship manually; roadmap continuation should proceed to G2 because G1.5 depends on G2 Repository v0.
+docs/workflow/roadmap/xai-v1.incidents.md:116:- Feature: grid-persistence
+docs/workflow/roadmap/xai-v1.incidents.md:118:- Root cause if known: G1.5 depends on G2 Repository v0/localStorage migration decisions.
+docs/workflow/roadmap/xai-v1.incidents.md:121:- Resume instruction: Complete G2 Repository v0, then rerun feature-build for `grid-persistence`.
+packages/core-data/src/sync-outbox.ts:2: * Repository v0 sync outbox — G2.6 baseline.
+packages/core-data/src/types.ts:8: * Base record shape every Repository v0 entry must satisfy.
+docs/workflow/roadmap/xai-v1.autorun-20260519.md:18:| Current Feature | repository-v0-contract |
+docs/workflow/roadmap/xai-v1.autorun-20260519.md:23:| Next Step | Run Workflow V2 inline for G2.1 Repository v0 contract; do not ship/push |
+docs/workflow/roadmap/xai-v1.autorun-20260519.md:231:### 2026-05-19 20:41 PDT — Feature Checkpoint: grid-persistence
+docs/workflow/roadmap/xai-v1.autorun-20260519.md:233:- Continued safe downstream prep with G1.5 `grid-persistence`.
+docs/workflow/roadmap/xai-v1.autorun-20260519.md:236:  - shape `PersistedLayout { grids, items }`
+docs/workflow/roadmap/xai-v1.autorun-20260519.md:238:- Identified blockers: G1.1 window lifecycle commands and G2 Repository v0/localStorage migration direction.
+docs/workflow/roadmap/xai-v1.autorun-20260519.md:479:- G1.5 `grid-persistence` remains blocked by G2 Repository v0; next roadmap step is G2.
+docs/workflow/roadmap/xai-v1.autorun-20260519.md:495:| grid-persistence | G1 | BLOCKED | dcf2750 | PASS: persistence discovery docs exist; BLOCKED: G2 Repository v0 not ready | Reached by user override; no production code changed. |
+docs/workflow/roadmap/xai-v1.autorun-20260519.md:515:- G1.5 production persistence deferred until G2 Repository v0.
+docs/workflow/roadmap/xai-v1.autorun-20260519.md:528:- grid-persistence blocked by G2 Repository v0.
+docs/workflow/roadmap/xai-v1.autorun-20260519.md:546:- `grid-persistence` — BLOCKED after safe prep.
+docs/workflow/roadmap/xai-v1.autorun-20260519.md:565:- `grid-persistence`
+docs/workflow/roadmap/xai-v1.autorun-20260519.md:581:- G1.5 persistence implementation until G2 Repository v0 is ready.
+docs/workflow/roadmap/xai-v1.autorun-20260519.md:597:- Incident 12: `grid-persistence` production persistence is blocked by G2 Repository v0.
+docs/workflow/roadmap/xai-v1.autorun-20260519.md:627:- `dcf2750` — `docs(grid-persistence): add safe prep discovery`
+docs/workflow/roadmap/xai-v1.autorun-20260519.md:715:- Reconciled current roadmap position: G1.5 `grid-persistence` is blocked by G2 Repository v0, so the next eligible risk-closing feature is G2.1 `repository-v0-contract`.
+docs/workflow/roadmap/xai-v1.autorun-20260519.md:718:- Current state: G2.1 `repository-v0-contract` selected for inline Workflow V2.
+docs/workflow/roadmap/xai-v1.autorun-20260519.md:722:- Branch `codex/track-a-desktop-foundation` cut from prior HEAD (`7fc45a4 docs(repository-v0-contract): add G2.1 workflow plan`).
+docs/workflow/roadmap/xai-v1.autorun-20260519.md:727:### 2026-05-20 00:24 PDT — Feature Checkpoint: G2.1 repository-v0-contract READY_TO_SHIP
+docs/workflow/roadmap/xai-v1.autorun-20260519.md:729:- Completed `feature-build` and inline `feature-verify` for `repository-v0-contract` (Workflow V2 phase plan unchanged).
+docs/workflow/roadmap/xai-v1.autorun-20260519.md:730:- Added Repository v0 entity surface: `packages/core-data/src/entities.ts` covering Grid, GridItem, Label, Todo, Habit, ClipboardEntry, Project, Card.
+docs/workflow/roadmap/xai-v1.autorun-20260519.md:732:- Updated `docs/contracts/data-repository-v0.md` with entity table, full `Repo<T>` interface, and entity-level testing contract.
+docs/workflow/roadmap/xai-v1.autorun-20260519.md:738:- `packages/repository-v0-contract/docs/dev_log.md` updated to READY_TO_SHIP; manual ship deferred per Track A scope.
+docs/workflow/roadmap/xai-v1.autorun-20260519.md:751:G1.1 (window-command-contract), G1.6 (host-business-residuals), G1.2 (grid-shell-organizer-content), and G1.4 (multi-grid-event-scope) are now manifest-SHIPPED. G1.3 remains BLOCKED_EXTERNAL (MAS sandbox). G1.5 unblocks now that G2.1 Repository v0 is READY_TO_SHIP and the contract is published; G1.5 production work will be picked up after G2 risk-closing rows.
+docs/workflow/roadmap/xai-v1.autorun-20260519.md:775:- Maps legacy `PersistedLayout` → typed `GridEntity` / `GridItemEntity`. Orphan items (no owning grid) are dropped.
+docs/workflow/roadmap/xai-v1.autorun-20260519.md:782:- UI runtime cut-over (`useGridSystem.tsx` async refactor) is parked under G1.5 `grid-persistence` so it lands in a single focused PR.
+docs/workflow/roadmap/xai-v1.autorun-20260519.md:819:- Updated `packages/single-table-todos-e2e/docs/dev_log.md` Status Panel to READY_TO_SHIP and recorded the Repository v0 reconciliation.
+docs/workflow/roadmap/xai-v1.autorun-20260519.md:824:### 2026-05-20 01:08 PDT — Feature Checkpoint: G1.5 grid-persistence READY_TO_SHIP
+docs/workflow/roadmap/xai-v1.autorun-20260519.md:836:- Deferred: actual host wire-up that passes `repositoryLayoutStore(tauriGridRepo, tauriItemRepo)` to `GridSystemProvider`. Currently parked because the host integration needs a `useTauriInvoke()` adapter and live macOS Tauri runtime smoke; recorded in `xai-v1.deferred-gates.md` as a follow-up.
+docs/workflow/roadmap/xai-v1.autorun-20260519.md:869:3. `43ffdda` Repository v0 outbox + atomic enqueue (G2.6)
+docs/workflow/roadmap/xai-v1.autorun-20260519.md:872:6. `2784397` organizer-layout → Repository v0 adapter (G2.3)
+docs/workflow/roadmap/xai-v1.autorun-20260519.md:875:9. `744d578` freeze Repository v0 entity surface (G2.1)
+docs/workflow/roadmap/xai-v1.autorun-20260519.md:883:| G1.5 grid-persistence | READY_TO_SHIP | LayoutStore seam + Repository adapter |
+docs/workflow/roadmap/xai-v1.autorun-20260519.md:884:| G2.1 repository-v0-contract | READY_TO_SHIP | typed entity surface + 45 tests |
+docs/workflow/roadmap/xai-v1.autorun-20260519.md:889:| G2.6 single-table-sync-baseline | READY_TO_SHIP | Repository v0 outbox + 4 tests |
+packages/core-data/src/organizer-layout-migration.ts:2: * Legacy `xai-desktop-layout` localStorage blob → Repository v0 migration.
+packages/core-data/src/organizer-layout-migration.ts:6: * `xai-desktop-layout`. G2.3 splits that blob into typed Repository v0
+packages/core-data/src/tauri-sqlite.ts:7: * that returns a Repository v0-compatible API per namespace.
+packages/core-data/src/tauri-sqlite.ts:40: * Initialize the Repository v0 SQLite database. Idempotent.
+packages/core-data/src/tauri-sqlite.ts:53: * Create a Repository v0-compatible API bound to the Tauri SQLite
+packages/core-data/src/entities.ts:2: * Repository v0 entity surface.
+packages/core-data/src/entities.ts:109:/** Discriminated union of all Repository v0 entity types. */
+docs/reviews/repository-v0-contract/20260519-feature-brief.md:1:# repository-v0-contract — Feature Brief
+docs/reviews/repository-v0-contract/20260519-feature-brief.md:5:| Feature | repository-v0-contract |
+docs/reviews/repository-v0-contract/20260519-feature-brief.md:14:G1.5 Grid persistence and the G2 data/security stack need a stable Repository v0 contract before SQLite, SQLCipher, localStorage migration, and sync baseline work can be honestly claimed. The current `@repo/core-data` contract is a minimal CRUD seam and does not encode metadata, transaction, index query, or migration-version semantics required by the G2 execution pack.
+docs/reviews/repository-v0-contract/20260519-feature-brief.md:18:- Upgrade `packages/core-data/src/types.ts` to Repository v0.
+docs/reviews/repository-v0-contract/20260519-feature-brief.md:21:- Sync `docs/contracts/data-repository-v0.md`.
+docs/reviews/repository-v0-contract/20260519-feature-brief.md:38:- `docs/contracts/data-repository-v0.md` matches the implemented API.
+docs/reviews/repository-v0-contract/20260519-feature-brief.md:54:- Feature slug: `repository-v0-contract`
+docs/reviews/repository-v0-contract/20260519-feature-brief.md:56:- Implementation should be restricted to `packages/core-data`, `docs/contracts/data-repository-v0.md`, and the feature/log docs.
+docs/workflow/roadmap/xai-v1.deferred-gates.md:221:- Feature: grid-persistence
+docs/workflow/roadmap/xai-v1.deferred-gates.md:223:- Deferred gate: G2 Repository v0
+docs/workflow/roadmap/xai-v1.deferred-gates.md:227:- Later human action: Complete G2 Repository v0, then rerun feature-build for Grid persistence and localStorage migration.
+docs/workflow/roadmap/xai-v1.deferred-gates.md:228:- Suggested verification command / environment: `sed -n '1,220p' docs/reviews/grid-persistence/20260519-discovery-review.md`
+docs/workflow/roadmap/xai-v1.deferred-gates.md:229:- Files/commits affected: docs/reviews/grid-persistence/*; packages/grid-persistence/docs/*; commit `dcf2750`
+docs/workflow/roadmap/xai-v1.deferred-gates.md:310:- What was done instead: Initialized a conservative G2 manifest from the authoritative execution pack, marked only G2.1 `repository-v0-contract` as ELIGIBLE, and left external/security/runtime rows as WAITING, RECONCILE_AFTER_G2.1, or BLOCKED_EXTERNAL.
+packages/core-data/tests/entities.test.ts:110:    title: "Repository v0",
+docs/workflow/roadmap/codex-prompts/window-1-desktop-foundation.md:33:- packages/grid-persistence/docs/
+docs/workflow/roadmap/codex-prompts/window-1-desktop-foundation.md:34:- packages/repository-v0-contract/docs/
+docs/workflow/roadmap/codex-prompts/window-1-desktop-foundation.md:61:3. G2.1 Repository v0 contract
+docs/workflow/roadmap/codex-prompts/window-1-desktop-foundation.md:64:   - 在 packages/core-data/ 定义 Repository v0 接口:
+docs/workflow/roadmap/codex-prompts/window-1-desktop-foundation.md:68:   - 更新 docs/contracts/data-repository-v0.md
+docs/workflow/roadmap/codex-prompts/window-1-desktop-foundation.md:97:9. G1.5 grid-persistence (在 G2.1 完成后解锁)
+docs/workflow/roadmap/codex-prompts/window-1-desktop-foundation.md:99:   - 接入 G2.1 Repository v0
+docs/planning/sub-prds/roadmap-prompts.md:44:- 基础设施或安全任务可使用 roadmap anchor,例如 `packages/window-ground-truth/docs/`、`packages/repository-v0-contract/docs/`。
+docs/planning/sub-prds/roadmap-prompts.md:53:- Repository / driver / migration: `docs/contracts/data-repository-v0.md`
+docs/planning/sub-prds/roadmap-prompts.md:329:| `grid-persistence` | G1.5 | 重启恢复 rect/items,损坏 state 可 reset |
+docs/planning/sub-prds/roadmap-prompts.md:350:| `repository-v0-contract` | G2.1 | `core-data` 不 import plugin,contract tests 复用于 drivers |
+docs/contracts/tauri-commands-v0.md:161:| `plugin-data-database.json` | main/control/grid/account/console Repository v0 marker + runtime allowlist (G2.5) |
+docs/contracts/data-repository-v0.md:69:## 3.1 Repository v0 Entity 表
+docs/contracts/README.md:10:| `data-repository-v0.md` | `@repo/core-data` Repository / migration / driver contract |
+docs/workflow/roadmap/xai-g2-data-security-foundation.md:16:- Rationale: G0 is Conditional Go for the DMG/private path. G1.1, G1.2, and G1.4 have completed local Workflow V2 verification; G1.3 remains external-blocked by MAS/security-scope evidence; G1.5 is blocked by G2 Repository v0. Proceeding to G2.1 is the next eligible risk-closing step and does not bypass a production dependency.
+docs/workflow/roadmap/xai-g2-data-security-foundation.md:23:| 1 | repository-v0-contract | docs/planning/execution/G2-data-security-foundation.md §G2.1 | G1 data interface freeze | packages/repository-v0-contract/docs | READY_TO_SHIP | D-Codex | yes | 2026-05-20 | Repository v0 contract + entity surface (Grid, GridItem, Label, Todo, Habit, ClipboardEntry, Project, Card) implemented in `packages/core-data`; contract doc + tests updated; 45 tests passing. Manual ship deferred. |
+docs/workflow/roadmap/xai-g2-data-security-foundation.md:24:| 2 | core-data-sqlite-driver | docs/planning/execution/G2-data-security-foundation.md §G2.2 SQLite driver PoC | repository-v0-contract | packages/core-data-sqlite-driver/docs | READY_TO_SHIP | D-Codex | yes | 2026-05-20 | Tauri `commands/database.rs` (db_init/put/get/list/delete) + `createTauriRepo` TS factory + contract §6.1 wired to Repository v0. 7 cargo + 4 vitest tests passing. SQLCipher PRAGMA path deferred to G2.4 KEK handle. |
+docs/workflow/roadmap/xai-g2-data-security-foundation.md:25:| 3 | sqlcipher-local-db | docs/planning/execution/G2-data-security-foundation.md §G2.2 SQLCipher encrypted DB PoC | repository-v0-contract, core-data-sqlite-driver, keychain-opaque-handle | packages/sqlcipher-local-db/docs | RECONCILE_AFTER_G2.1 | D-Codex | yes | 2026-05-19 | Existing SQLCipher open/key path is present, but G2 still needs Repository integration and dump/wrong-key evidence review. |
+docs/workflow/roadmap/xai-g2-data-security-foundation.md:26:| 4 | localstorage-migration | docs/planning/execution/G2-data-security-foundation.md §G2.3 | repository-v0-contract, core-data-sqlite-driver | packages/localstorage-migration/docs | READY_TO_SHIP | D-Codex | yes | 2026-05-20 | `migrateOrganizerLayoutToRepos` adapter implemented in `@repo/core-data`; non-destructive by default; 5 vitest cases passing. UI cut-over parked under G1.5 grid-persistence. |
+docs/workflow/roadmap/xai-g2-data-security-foundation.md:27:| 5 | keychain-opaque-handle | docs/planning/execution/G2-data-security-foundation.md §G2.4 | repository-v0-contract | packages/keychain-opaque-handle/docs | READY_TO_SHIP | D-Codex | yes | 2026-05-20 | `crypto/keychain_handle.rs` bridges Keychain bytes → `KeyVault::insert_kek` returning only `KeyHandleId`; raw KEK/DEK never cross IPC. 3 cargo tests passing; contract §6.0.1 documents the boundary. |
+docs/workflow/roadmap/xai-g2-data-security-foundation.md:29:| 7 | single-table-sync-baseline | docs/planning/execution/G2-data-security-foundation.md §G2.6 | repository-v0-contract, keychain-opaque-handle, tauri-capability-allowlist | packages/single-table-todos-e2e/docs | READY_TO_SHIP | D-Codex | yes | 2026-05-20 | Repository v0 `sync-outbox.ts` baseline (commitSeq, mutationId, atomic enqueue) + 4 vitest cases; same-transaction rollback proved. Live Supabase / 2-Mac / SQLCipher dump gates remain deferred. |
+docs/workflow/roadmap/xai-g2-data-security-foundation.md:34:- G2.1 is the first eligible feature because downstream SQLite, SQLCipher, migration, Grid persistence, and sync work all depend on a frozen Repository v0 contract.
+docs/workflow/roadmap/xai-v1.parallel-wave-plan.md:11:         ├─ G2.1 Repository v0 ──┬──────────────────────────────────────────┐
+docs/workflow/roadmap/xai-v1.parallel-wave-plan.md:115:| 0.5h-2h | G2.1 Repository v0 contract | 1.5h | Production |
+docs/workflow/roadmap/xai-v1.parallel-wave-plan.md:119:| 5.5h-6.5h | G1.5 grid-persistence (G2.1 解锁后) | 1h | Production |
+docs/workflow/roadmap/xai-v1.parallel-wave-plan.md:182:Track A 在 G2 阶段会定义 Repository v0 contract，Track B/C 的 MockDataAdapter 接口要与之兼容。
+packages/grid-persistence/docs/test.md:1:# grid-persistence — Test Plan
+packages/grid-persistence/docs/test.md:5:- `test -f docs/reviews/grid-persistence/20260519-feature-brief.md`
+packages/grid-persistence/docs/test.md:6:- `test -f packages/grid-persistence/docs/dev_log.md`
+packages/grid-persistence/docs/test.md:7:- `rg -n "PersistedLayout|localStorage|repository|Repository|Grid.*persist|restore|open Grid|last active|sqlite|sqlcipher|GridBox|DesktopItem" packages/plugin-organizer/src packages/core/src packages/core-data docs/contracts docs/planning/execution -g '*.{ts,tsx,rs,md}'`
+docs/workflow/roadmap/codex-reviews/localstorage-migration/prompt.md:57:Commit under review: 2784397 (feat(localstorage-migration): organizer-layout → Repository v0 adapter)
+docs/workflow/roadmap/codex-reviews/localstorage-migration/prompt.md:68:  PersistedLayout { grids, items }) into typed Repository v0 entities:
+docs/workflow/roadmap/codex-reviews/localstorage-migration/prompt.md:72:- UI runtime cut-over deferred to G1.5 grid-persistence.
+docs/workflow/roadmap/codex-reviews/localstorage-migration/prompt.md:91:   `isPersistedLayout`-style guard reject obviously-bad payloads cleanly?
+docs/planning/REFACTORING_PLAN.md:98:├── types.ts                   # GridBox, DesktopItem, PersistedLayout
+docs/planning/REFACTORING_PLAN.md:769:│   │   ├── grid.ts           # GridBox, DesktopItem, PersistedLayout (从 plugin-organizer 提升)
+docs/planning/REFACTORING_PLAN.md:1530:| R0.5 | `packages/core-data` | Repository v0 冻结;SQLite/SQLCipher runtime PoC;localStorage migration 测试 |
+docs/planning/REFACTORING_PLAN.md:1609:export type { GridBox, DesktopItem, PersistedLayout } from '@repo/core/types';
+packages/grid-persistence/docs/design.md:1:# grid-persistence — Design
+packages/grid-persistence/docs/design.md:8:| Review Doc Path | docs/reviews/grid-persistence/20260519-discovery-review.md |
+packages/grid-persistence/docs/design.md:14:- Organizer stores `PersistedLayout` directly in `localStorage`.
+packages/grid-persistence/docs/design.md:27:- Do not add plugin-specific repository methods before G2 Repository v0 is reviewed.
+docs/workflow/roadmap/codex-reviews/localstorage-migration/output.md:31:- UI runtime cut-over to repository-backed Organizer state remains G1.5 `grid-persistence`.
+packages/grid-persistence/docs/dev_log.md:1:# grid-persistence — Dev Log
+packages/grid-persistence/docs/dev_log.md:8:| Target | grid-persistence |
+packages/grid-persistence/docs/dev_log.md:49:| 2026-05-20 01:08 PDT | feature-build + feature-verify (Claude Code, Track A) | Production persistence seam: added `packages/plugin-organizer/src/layoutStore.ts` (LayoutStore, localStorage adapter, Repository v0 adapter), wired `GridSystemProvider` to accept `store?: LayoutStore`, made hydrate async + corrupt-state safe (cannot whiteout), refactored save + clearAll to delegate. 9 vitest cases + plugin-organizer types + desktop build PASS. | pending commit | manual ship only; continue G3 |
+docs/planning/BACKLOG-v1.md:66:| XAI-G2-001 | G2 | Repository v0 contract | `core-data/src/types.ts` | contract tests |
+packages/grid-persistence/docs/api.md:1:# grid-persistence — API
+packages/grid-persistence/docs/api.md:11:  loadLayout(): Promise<PersistedLayout | null>;
+packages/grid-persistence/docs/api.md:12:  saveLayout(layout: PersistedLayout): Promise<void>;
+packages/grid-persistence/docs/api.md:28:Final API must be reconciled with `docs/contracts/data-repository-v0.md`.
+docs/workflow/roadmap/codex-reviews/localstorage-migration/context.md:3:Commit under review: 2784397 (feat(localstorage-migration): organizer-layout → Repository v0 adapter)
+docs/workflow/roadmap/codex-reviews/localstorage-migration/context.md:14:  PersistedLayout { grids, items }) into typed Repository v0 entities:
+docs/workflow/roadmap/codex-reviews/localstorage-migration/context.md:18:- UI runtime cut-over deferred to G1.5 grid-persistence.
+docs/workflow/roadmap/codex-reviews/localstorage-migration/context.md:37:   `isPersistedLayout`-style guard reject obviously-bad payloads cleanly?
+docs/workflow/roadmap/codex-reviews/single-table-sync-baseline/prompt.md:57:Commit under review: 43ffdda (feat(single-table-sync-baseline): Repository v0 outbox + atomic enqueue)
+docs/workflow/roadmap/codex-reviews/single-table-sync-baseline/context.md:3:Commit under review: 43ffdda (feat(single-table-sync-baseline): Repository v0 outbox + atomic enqueue)
+packages/core/src/types/grid.ts:33:export interface PersistedLayout {
+packages/grid-window-prototype/docs/api.md:51:| `docs/contracts/data-repository-v0.md` | None |
+packages/core/src/types/index.ts:1:export type { GridBox, DesktopItem, PersistedLayout, Rect } from './grid';
+docs/workflow/roadmap/codex-reviews/repository-v0-contract/prompt.md:16:**Feature**: repository-v0-contract
+docs/workflow/roadmap/codex-reviews/repository-v0-contract/prompt.md:55:Feature ID: G2.1 / repository-v0-contract
+docs/workflow/roadmap/codex-reviews/repository-v0-contract/prompt.md:57:Commit under review: 744d578 (feat(repository-v0-contract): freeze Repository v0 entity surface)
+docs/workflow/roadmap/codex-reviews/repository-v0-contract/prompt.md:60:- packages/core-data/src/entities.ts (new) — canonical Repository v0 entity surface
+docs/workflow/roadmap/codex-reviews/repository-v0-contract/prompt.md:70:- docs/contracts/data-repository-v0.md — adds §3.1 entity table, full Repo<T> interface
+docs/workflow/roadmap/codex-reviews/repository-v0-contract/prompt.md:71:- packages/repository-v0-contract/docs/dev_log.md — Status → READY_TO_SHIP
+docs/workflow/roadmap/codex-reviews/repository-v0-contract/prompt.md:89:- Repository v0 helpers (assertRepoRecord, applyRepoListQuery, applyRepoIndexQuery)
+docs/workflow/roadmap/codex-reviews/repository-v0-contract/prompt.md:97:1. Does the entity surface match docs/contracts/data-repository-v0.md §3.1 row-for-row?
+docs/workflow/roadmap/codex-reviews/repository-v0-contract/output.md:3:**Feature**: repository-v0-contract  
+docs/workflow/roadmap/codex-reviews/repository-v0-contract/output.md:9:- `packages/core-data/src/entities.ts` gives a clean canonical TS surface for the eight intended G2.1 entities, and `docs/contracts/data-repository-v0.md` §3.1 matches that table row-for-row.
+docs/workflow/roadmap/codex-reviews/repository-v0-contract/output.md:17:- [P1] `packages/core-data/tests/repository-contract.ts` under-covers the contract it claims to be canonical for. It does not test corrupted storage handling, wrong-key/encrypted-driver failure, or runtime sync-scope enforcement, yet `docs/contracts/data-repository-v0.md` lists those as required driver proofs.
+docs/workflow/roadmap/codex-reviews/repository-v0-contract/output.md:19:- [P2] Workflow hygiene is close but not finished: `packages/repository-v0-contract/docs/dev_log.md` leaves the Work Log commit column as “pending commit” even though `744d578` exists.
+docs/workflow/roadmap/codex-reviews/repository-v0-contract/output.md:26:- Reconcile `docs/contracts/data-repository-v0.md` so non-G2.1 entities are either removed from v0 tables or explicitly marked deferred.
+docs/workflow/roadmap/codex-reviews/repository-v0-contract/output.md:27:- Update `packages/repository-v0-contract/docs/dev_log.md` Work Log to record `744d578`.
+docs/workflow/roadmap/codex-reviews/repository-v0-contract/context.md:1:Feature ID: G2.1 / repository-v0-contract
+docs/workflow/roadmap/codex-reviews/repository-v0-contract/context.md:3:Commit under review: 744d578 (feat(repository-v0-contract): freeze Repository v0 entity surface)
+docs/workflow/roadmap/codex-reviews/repository-v0-contract/context.md:6:- packages/core-data/src/entities.ts (new) — canonical Repository v0 entity surface
+docs/workflow/roadmap/codex-reviews/repository-v0-contract/context.md:16:- docs/contracts/data-repository-v0.md — adds §3.1 entity table, full Repo<T> interface
+docs/workflow/roadmap/codex-reviews/repository-v0-contract/context.md:17:- packages/repository-v0-contract/docs/dev_log.md — Status → READY_TO_SHIP
+docs/workflow/roadmap/codex-reviews/repository-v0-contract/context.md:35:- Repository v0 helpers (assertRepoRecord, applyRepoListQuery, applyRepoIndexQuery)
+docs/workflow/roadmap/codex-reviews/repository-v0-contract/context.md:43:1. Does the entity surface match docs/contracts/data-repository-v0.md §3.1 row-for-row?
+packages/window-ground-truth/docs/api.md:12:| `docs/contracts/data-repository-v0.md` | None |
+docs/workflow/roadmap/codex-reviews/grid-persistence/prompt.md:16:**Feature**: grid-persistence
+docs/workflow/roadmap/codex-reviews/grid-persistence/prompt.md:55:Feature ID: G1.5 / grid-persistence
+docs/workflow/roadmap/codex-reviews/grid-persistence/prompt.md:57:Commit under review: 91dc6b6 (feat(grid-persistence): LayoutStore seam with whiteout-safe hydrate)
+docs/workflow/roadmap/codex-reviews/grid-persistence/prompt.md:65:- packages/grid-persistence/docs/dev_log.md → READY_TO_SHIP
+docs/workflow/roadmap/codex-reviews/grid-persistence/prompt.md:82:   `grids` or `items` arrays? The `isPersistedLayout` guard rejects to null but
+docs/workflow/roadmap/codex-reviews/grid-persistence/context.md:1:Feature ID: G1.5 / grid-persistence
+docs/workflow/roadmap/codex-reviews/grid-persistence/context.md:3:Commit under review: 91dc6b6 (feat(grid-persistence): LayoutStore seam with whiteout-safe hydrate)
+docs/workflow/roadmap/codex-reviews/grid-persistence/context.md:11:- packages/grid-persistence/docs/dev_log.md → READY_TO_SHIP
+docs/workflow/roadmap/codex-reviews/grid-persistence/context.md:28:   `grids` or `items` arrays? The `isPersistedLayout` guard rejects to null but
+docs/workflow/roadmap/codex-reviews/core-data-sqlite-driver/output.md:15:- [P1] `createTauriRepo` claims to return `Repo<T>`, but `transaction()` is not atomic and `migrate()` always throws. That violates the frozen Repository v0 contract and would fail the canonical rollback/migration cases in `packages/core-data/tests/repository-contract.ts`.
+packages/core-data-sqlite-driver/docs/dev_log.md:64:The Repository v0 contract from G2.1 is now reachable end-to-end from
+packages/grid-shell-organizer-content/docs/dev_log.md:13:| Suggested Next | continue roadmap (G2 Repository v0 → G3 organizer loop) |
+docs/CORE_INFRA.md:29:| `types.ts` | 规范数据类型: `GridBox`, `DesktopItem`, `PersistedLayout` |
+docs/CORE_INFRA.md:131:interface PersistedLayout {
+
+exec
+/bin/zsh -lc "sed -n '1,260p' docs/contracts/data-repository-v0.md" in /Users/lijinlong/Desktop/AI_Desktop/XAI_Desktop
+exec
+/bin/zsh -lc "sed -n '1,220p' packages/grid-persistence/docs/api.md" in /Users/lijinlong/Desktop/AI_Desktop/XAI_Desktop
+ succeeded in 0ms:
+# Data Repository Contract v0
+
+| 字段 | 值 |
+|---|---|
+| Owner | `@repo/core-data` |
+| Source | `packages/core-data/src/types.ts` |
+| 状态 | Draft |
+| 适用 | Desktop SQLite/SQLCipher, Web IndexedDB/remote encrypted blob, tests |
+
+## 1. 原则
+
+- Plugin 不直接访问 localStorage、SQLite、IndexedDB 或 Supabase。
+- Plugin 只依赖 Repository interface。
+- Repository driver 不 import plugin package。
+- 所有记录必须包含 `id`、`entityType`、`schemaVersion`、`createdAt`、`updatedAt`。
+- Device-local 与 syncable 数据必须显式区分。
+- Clipboard 默认 device-local。
+
+## 2. Record Model
+
+```ts
+interface RepoRecord {
+  id: string;
+  entityType: string;
+  schemaVersion: number;
+  createdAt: string;
+  updatedAt: string;
+  syncScope: "device-local" | "account-sync";
+}
+```
+
+Entity type 使用 `plugin.entity`:
+
+| Entity | syncScope 默认值 |
+|---|---|
+| `organizer.grid` | `account-sync` |
+| `organizer.item` | `account-sync` 或 `device-local`,按 path 权限决定 |
+| `labels.label` | `account-sync` |
+| `productivity.todo` | `account-sync` |
+| `productivity.pomodoro_session` | `account-sync` |
+| `productivity.habit` | `account-sync` |
+| `clipboard.item` | `device-local` |
+| `project.board` | `account-sync` |
+| `project.card` | `account-sync` |
+| `widgets.widget` | `device-local` |
+| `account.device` | `account-sync` |
+
+## 3. Repository Interface 目标
+
+```ts
+interface Repo<T extends RepoRecord> {
+  get(id: string): Promise<T | undefined>;
+  put(record: T): Promise<void>;
+  delete(id: string): Promise<void>;
+  list(query?: RepoListQuery<T>): Promise<T[]>;
+  listByIndex<K extends keyof T>(
+    field: K,
+    value: T[K],
+    query?: RepoListQuery<T>,
+  ): Promise<T[]>;
+  metadata(): Promise<RepoMetadata>;
+  transaction<R>(fn: (tx: RepoTransaction<T>) => Promise<R>): Promise<R>;
+  migrate(plan: MigrationPlan<T>): Promise<MigrationResult>;
+}
+```
+
+`list()` 的默认顺序不稳定。需要稳定顺序时必须显式传 query。
+
+## 3.1 Repository v0 Entity 表
+
+`packages/core-data/src/entities.ts` 是 entity 类型的 canonical source。每个具体
+entity 都是 `RepoRecord` 的扩展,`entityType` 必须使用下表中固定的 dotted slug。
+
+| Entity (TS) | `entityType` | 默认 syncScope | 关键字段 |
+|---|---|---|---|
+| `GridEntity` | `organizer.grid` | `account-sync` | `title`, `rect`, `itemIds`, `isLocked`, `isFolded`, `viewMode` |
+| `GridItemEntity` | `organizer.item` | `account-sync` (file/folder/app 可能 device-local) | `gridId`, `kind`, `filename`, `filepath?`, `url?` |
+| `LabelEntity` | `labels.label` | `account-sync` | `name`, `color`, `parentId?` |
+| `TodoEntity` | `productivity.todo` | `account-sync` | `title`, `done`, `labelIds`, `dueAt?`, `projectId?` |
+| `HabitEntity` | `productivity.habit` | `account-sync` | `title`, `cadence`, `completions[]`, `labelIds` |
+| `ClipboardEntryEntity` | `clipboard.item` | `device-local`(强制) | `kind`, `payload`, `pinned?` |
+| `ProjectEntity` | `project.board` | `account-sync` | `title`, `labelIds`, `archivedAt?` |
+| `CardEntity` | `project.card` | `account-sync` | `projectId`, `status`, `position`, `labelIds` |
+
+新增 entity 必须遵守以下规则:
+
+1. `entityType` 形如 `^[a-z]+\.[a-z_]+$`,plugin 段必须真实存在。
+2. Device-local 类型必须把 `syncScope` 收窄为字面量 `"device-local"`。
+3. `id` 由 plugin 生成,driver 不会自动赋值;命名需 plugin-scoped (例 `grid_<uuid>`)。
+4. 修改任何 entity 字段必须同步 `schemaVersion` 提升 + migration plan。
+
+## 4. Driver
+
+| Driver | 用途 | 要求 |
+|---|---|---|
+| in-memory | tests | 复用 contract tests |
+| localStorage migration | one-time import | 只读旧数据,不作为长期 driver |
+| SQLite | desktop dev baseline | 支持 transaction/index |
+| SQLCipher | desktop secure baseline | 错 key 不可读 |
+| IndexedDB | Web local cache | 不存明文 secret |
+| Remote encrypted blob | Sync/Web | 只传 encrypted envelope |
+
+## 5. Migration Rules
+
+- Migration 必须幂等。
+- Migration failure 不删除旧数据。
+- Migration 必须记录 source version、target version、startedAt、completedAt。
+- 用户可导出迁移前数据或保留 fallback。
+
+## 6. Sync Rules
+
+- `device-local` 不进入 remote outbox。
+- `account-sync` 写入必须具备 account/device context。
+- Remote blob 不存明文 payload。
+- Conflict resolution 必须 deterministic,不能靠 UI 随机顺序。
+
+## 7. Testing Contract
+
+每个 driver 必须通过同一组测试 (`packages/core-data/tests/repository-contract.ts` 是
+canonical suite):
+
+- CRUD roundtrip。
+- list query and stable ordering。
+- listByIndex 命中 + query options 组合。
+- transaction rollback。
+- migration idempotency。
+- corrupted storage handling。
+- syncScope enforcement。
+- encrypted driver wrong-key failure。
+
+Entity-level 测试 (`packages/core-data/tests/entities.test.ts`) 校验:
+
+- 每个 entity 类型可通过 `Repo<RepoEntity>` round-trip。
+- `entityType` 命名遵守 `plugin.entity` 正则。
+- `listByIndex` 在 entity-owned 字段 (例 `gridId`) 上工作。
+- Clipboard 在类型层面被约束为 `device-local`。
+
+## 8. Open Questions
+
+- SQLCipher 具体依赖和 Tauri bundling 策略在 G2 确认。
+- Organizer path-backed item 是否默认 sync path metadata,需按 MAS sandbox 结果决定。
+- Clipboard Sync 是否进入 v1 默认关闭,PRD 当前倾向默认 device-local。
+
+ succeeded in 0ms:
+# grid-persistence — API
+
+## Planning Contract
+
+No production API was changed in this slice.
+
+## Candidate Repository Boundary
+
+```ts
+interface GridLayoutRepository {
+  loadLayout(): Promise<PersistedLayout | null>;
+  saveLayout(layout: PersistedLayout): Promise<void>;
+  clearLayout(): Promise<void>;
+  markActiveGrid(gridId: string): Promise<void>;
+}
+```
+
+## Migration Candidate
+
+```ts
+interface LocalStorageLayoutMigration {
+  sourceKey: "xai-desktop-layout";
+  readOnly: true;
+  importOnce(): Promise<"imported" | "empty" | "invalid" | "skipped">;
+}
+```
+
+Final API must be reconciled with `docs/contracts/data-repository-v0.md`.
+
+exec
+/bin/zsh -lc 'cat packages/core/package.json' in /Users/lijinlong/Desktop/AI_Desktop/XAI_Desktop
+exec
+/bin/zsh -lc "sed -n '1,220p' packages/grid-persistence/docs/design.md" in /Users/lijinlong/Desktop/AI_Desktop/XAI_Desktop
+ succeeded in 0ms:
+{
+  "name": "@repo/core",
+  "version": "0.0.0",
+  "private": true,
+  "description": "Core infrastructure for XAI_Desktop — types, events, store, registry. Zero business logic.",
+  "exports": {
+    ".": {
+      "types": "./src/index.ts",
+      "import": "./src/index.ts"
+    },
+    "./types": {
+      "types": "./src/types/index.ts",
+      "import": "./src/types/index.ts"
+    },
+    "./events": {
+      "types": "./src/events/index.ts",
+      "import": "./src/events/index.ts"
+    },
+    "./hooks": {
+      "types": "./src/hooks/index.ts",
+      "import": "./src/hooks/index.ts"
+    },
+    "./registry": {
+      "types": "./src/registry/index.ts",
+      "import": "./src/registry/index.ts"
+    },
+    "./store": {
+      "types": "./src/store/index.ts",
+      "import": "./src/store/index.ts"
+    }
+  },
+  "scripts": {
+    "check-types": "tsc --noEmit",
+    "test": "vitest run"
+  },
+  "dependencies": {
+    "@tauri-apps/api": "^2",
+    "react": "^19.2.0",
+    "react-dom": "^19.2.0"
+  },
+  "devDependencies": {
+    "@repo/typescript-config": "workspace:*",
+    "@types/react": "19.2.2",
+    "@types/react-dom": "19.2.2",
+    "typescript": "5.9.2",
+    "vitest": "^3.2.1"
+  }
+}
+
+ succeeded in 0ms:
+# grid-persistence — Design
+
+## Decision Snapshot
+
+| Field | Value |
+|---|---|
+| Selected Option | Safe prep only; production persistence blocked |
+| Review Doc Path | docs/reviews/grid-persistence/20260519-discovery-review.md |
+| Review Date/Version | 2026-05-19 |
+| Feature Type | G1/G2 repository planning |
+
+## Current Shape
+
+- Organizer stores `PersistedLayout` directly in `localStorage`.
+- Layout save is debounced and in-memory state is the source of truth while the app runs.
+- There is a manual `clearAll()` reset path.
+
+## Target Shape
+
+- Organizer reads/writes Grid layout through a repository interface.
+- Startup can restore all open Grids or the last active Grid through G1.1 commands.
+- LocalStorage migration is read-only, idempotent, and never deletes source data on failure.
+- Corrupt repository state does not blank the app; Control can reset.
+
+## Frozen Assumptions
+
+- Do not add plugin-specific repository methods before G2 Repository v0 is reviewed.
+- Do not restore native windows before G1.1 lifecycle commands are stable.
+- Keep the existing localStorage path intact until migration is explicitly implemented.
+
+exec
+/bin/zsh -lc 'cat packages/core-data/package.json' in /Users/lijinlong/Desktop/AI_Desktop/XAI_Desktop
+ succeeded in 0ms:
+{
+  "name": "@repo/core-data",
+  "version": "0.0.0",
+  "private": true,
+  "description": "Data access seam for XAI_Desktop — Repo interface, SQLCipher/SQLite driver boundary, localStorage migration, and in-memory testing backends.",
+  "exports": {
+    ".": {
+      "types": "./src/index.ts",
+      "import": "./src/index.ts"
+    },
+    "./testing": {
+      "types": "./src/testing.ts",
+      "import": "./src/testing.ts"
+    }
+  },
+  "scripts": {
+    "check-types": "tsc --noEmit",
+    "test": "vitest run"
+  },
+  "dependencies": {
+    "@repo/core": "workspace:*"
+  },
+  "devDependencies": {
+    "@repo/typescript-config": "workspace:*",
+    "typescript": "5.9.2",
+    "vitest": "^3.2.1"
+  }
+}
+
+exec
+/bin/zsh -lc "nl -ba packages/plugin-organizer/src/layoutStore.ts | sed -n '1,280p'" in /Users/lijinlong/Desktop/AI_Desktop/XAI_Desktop
+ succeeded in 0ms:
+     1	/**
+     2	 * Organizer layout persistence seam (G1.5).
+     3	 *
+     4	 * The default behaviour stays unchanged: `localStorageLayoutStore`
+     5	 * preserves the historical synchronous localStorage path used by
+     6	 * `useGridSystem`. The new `repositoryLayoutStore` accepts G2.1
+     7	 * Repository v0 repos for Grid and GridItem entities, returning a
+     8	 * Promise-shaped layout so the same provider can be opted into the
+     9	 * SQLite-backed path once the Host wires it.
+    10	 *
+    11	 * Hardening invariants — both implementations:
+    12	 *
+    13	 * 1. Returning `null` from `load()` means "no prior state"; callers
+    14	 *    must treat it as an empty layout, not as a failure.
+    15	 * 2. Any parse or driver error during `load()` is **caught** and
+    16	 *    surfaces as `null` so a corrupted state can never whiteout the
+    17	 *    desktop. Production telemetry hooks can attach via
+    18	 *    `onLoadError`.
+    19	 * 3. `save(layout)` is best-effort. Failures during save are caught
+    20	 *    and surfaced through the optional `onSaveError` callback so the
+    21	 *    in-memory state stays authoritative for the session.
+    22	 */
+    23	
+    24	import type { GridEntity, GridItemEntity, Repo } from "@repo/core-data";
+    25	import type { DesktopItem, GridBox, PersistedLayout } from "./types";
+    26	
+    27	export const ORGANIZER_LAYOUT_STORAGE_KEY = "xai-desktop-layout";
+    28	
+    29	export interface LayoutStore {
+    30	  load(): Promise<PersistedLayout | null>;
+    31	  save(layout: PersistedLayout): Promise<void>;
+    32	}
+    33	
+    34	export interface LocalStorageLayoutStoreOptions {
+    35	  storage?: Pick<Storage, "getItem" | "setItem" | "removeItem">;
+    36	  storageKey?: string;
+    37	  onLoadError?: (error: unknown) => void;
+    38	  onSaveError?: (error: unknown) => void;
+    39	}
+    40	
+    41	export function localStorageLayoutStore(
+    42	  options: LocalStorageLayoutStoreOptions = {},
+    43	): LayoutStore {
+    44	  const storageKey = options.storageKey ?? ORGANIZER_LAYOUT_STORAGE_KEY;
+    45	  const resolveStorage = () => options.storage ?? globalStorage();
+    46	
+    47	  return {
+    48	    async load() {
+    49	      const storage = resolveStorage();
+    50	      if (!storage) return null;
+    51	      try {
+    52	        const raw = storage.getItem(storageKey);
+    53	        if (!raw) return null;
+    54	        const parsed = JSON.parse(raw) as PersistedLayout;
+    55	        if (!isPersistedLayout(parsed)) return null;
+    56	        return parsed;
+    57	      } catch (error) {
+    58	        options.onLoadError?.(error);
+    59	        return null;
+    60	      }
+    61	    },
+    62	    async save(layout) {
+    63	      const storage = resolveStorage();
+    64	      if (!storage) return;
+    65	      try {
+    66	        storage.setItem(storageKey, JSON.stringify(layout));
+    67	      } catch (error) {
+    68	        options.onSaveError?.(error);
+    69	      }
+    70	    },
+    71	  };
+    72	}
+    73	
+    74	export interface RepositoryLayoutStoreOptions {
+    75	  gridRepo: Repo<GridEntity>;
+    76	  itemRepo: Repo<GridItemEntity>;
+    77	  nowIso?: () => string;
+    78	  onLoadError?: (error: unknown) => void;
+    79	  onSaveError?: (error: unknown) => void;
+    80	}
+    81	
+    82	export function repositoryLayoutStore(
+    83	  options: RepositoryLayoutStoreOptions,
+    84	): LayoutStore {
+    85	  const nowIso = options.nowIso ?? (() => new Date().toISOString());
+    86	
+    87	  return {
+    88	    async load() {
+    89	      try {
+    90	        const grids = await options.gridRepo.list({
+    91	          orderBy: { field: "id", direction: "asc" },
+    92	        });
+    93	        const items = await options.itemRepo.list({
+    94	          orderBy: { field: "id", direction: "asc" },
+    95	        });
+    96	
+    97	        const gridBoxes: GridBox[] = grids.map(entityToGridBox);
+    98	        const desktopItems: DesktopItem[] = items.map(entityToDesktopItem);
+    99	        return {
+   100	          grids: gridBoxes,
+   101	          items: desktopItems,
+   102	        };
+   103	      } catch (error) {
+   104	        options.onLoadError?.(error);
+   105	        return null;
+   106	      }
+   107	    },
+   108	    async save(layout) {
+   109	      try {
+   110	        const timestamp = nowIso();
+   111	        const seen = new Set<string>();
+   112	
+   113	        // Upsert grids
+   114	        for (const grid of layout.grids) {
+   115	          await options.gridRepo.put(gridBoxToEntity(grid, timestamp));
+   116	          seen.add(grid.id);
+   117	        }
+   118	        // Cull grids that disappeared.
+   119	        const existingGrids = await options.gridRepo.list();
+   120	        for (const existing of existingGrids) {
+   121	          if (!seen.has(existing.id)) {
+   122	            await options.gridRepo.delete(existing.id);
+   123	          }
+   124	        }
+   125	
+   126	        const seenItems = new Set<string>();
+   127	        for (const item of layout.items) {
+   128	          const owningGridId = findOwningGridId(item.id, layout.grids);
+   129	          if (!owningGridId) continue;
+   130	          await options.itemRepo.put(
+   131	            desktopItemToEntity(item, owningGridId, timestamp),
+   132	          );
+   133	          seenItems.add(item.id);
+   134	        }
+   135	        const existingItems = await options.itemRepo.list();
+   136	        for (const existing of existingItems) {
+   137	          if (!seenItems.has(existing.id)) {
+   138	            await options.itemRepo.delete(existing.id);
+   139	          }
+   140	        }
+   141	      } catch (error) {
+   142	        options.onSaveError?.(error);
+   143	      }
+   144	    },
+   145	  };
+   146	}
+   147	
+   148	function globalStorage(): Storage | undefined {
+   149	  if (typeof localStorage === "undefined") return undefined;
+   150	  return localStorage;
+   151	}
+   152	
+   153	function isPersistedLayout(value: unknown): value is PersistedLayout {
+   154	  if (!value || typeof value !== "object") return false;
+   155	  const obj = value as { grids?: unknown; items?: unknown };
+   156	  return Array.isArray(obj.grids) && Array.isArray(obj.items);
+   157	}
+   158	
+   159	function entityToGridBox(grid: GridEntity): GridBox {
+   160	  return {
+   161	    id: grid.id,
+   162	    title: grid.title,
+   163	    rect: { ...grid.rect },
+   164	    isLocked: grid.isLocked,
+   165	    isFolded: grid.isFolded,
+   166	    viewMode: grid.viewMode,
+   167	    itemIds: [...grid.itemIds],
+   168	    themeColor: grid.themeColor,
+   169	  };
+   170	}
+   171	
+   172	function entityToDesktopItem(item: GridItemEntity): DesktopItem {
+   173	  return {
+   174	    id: item.id,
+   175	    filename: item.filename,
+   176	    filepath: item.filepath ?? "",
+   177	    type: item.kind === "url" ? "file" : item.kind,
+   178	    icon: item.icon,
+   179	    size: item.size,
+   180	    createdAt: 0,
+   181	  };
+   182	}
+   183	
+   184	function gridBoxToEntity(grid: GridBox, timestamp: string): GridEntity {
+   185	  return {
+   186	    id: grid.id,
+   187	    entityType: "organizer.grid",
+   188	    schemaVersion: 1,
+   189	    createdAt: timestamp,
+   190	    updatedAt: timestamp,
+   191	    syncScope: "account-sync",
+   192	    title: grid.title,
+   193	    rect: { ...grid.rect },
+   194	    isLocked: grid.isLocked,
+   195	    isFolded: grid.isFolded,
+   196	    viewMode: grid.viewMode,
+   197	    itemIds: [...grid.itemIds],
+   198	    themeColor: grid.themeColor,
+   199	  };
+   200	}
+   201	
+   202	function desktopItemToEntity(
+   203	  item: DesktopItem,
+   204	  gridId: string,
+   205	  timestamp: string,
+   206	): GridItemEntity {
+   207	  return {
+   208	    id: item.id,
+   209	    entityType: "organizer.item",
+   210	    schemaVersion: 1,
+   211	    createdAt: timestamp,
+   212	    updatedAt: timestamp,
+   213	    syncScope: "account-sync",
+   214	    gridId,
+   215	    filename: item.filename,
+   216	    filepath: item.filepath,
+   217	    kind: item.type,
+   218	    icon: item.icon,
+   219	    size: item.size,
+   220	  };
+   221	}
+   222	
+   223	function findOwningGridId(
+   224	  itemId: string,
+   225	  grids: GridBox[],
+   226	): string | undefined {
+   227	  for (const grid of grids) {
+   228	    if (grid.itemIds.includes(itemId)) return grid.id;
+   229	  }
+   230	  return undefined;
+   231	}
+
+exec
+/bin/zsh -lc "nl -ba packages/plugin-organizer/src/useGridSystem.tsx | sed -n '1,320p'" in /Users/lijinlong/Desktop/AI_Desktop/XAI_Desktop
+ succeeded in 0ms:
+     1	import {
+     2	  ReactNode,
+     3	  createContext,
+     4	  useCallback,
+     5	  useContext,
+     6	  useEffect,
+     7	  useMemo,
+     8	  useRef,
+     9	  useState,
+    10	} from "react";
+    11	import { DesktopItem, GridBox, PersistedLayout } from "./types";
+    12	import { defaultGrid } from "./mockData";
+    13	import {
+    14	  ORGANIZER_LAYOUT_STORAGE_KEY,
+    15	  localStorageLayoutStore,
+    16	  type LayoutStore,
+    17	} from "./layoutStore";
+    18	
+    19	const STORAGE_KEY = ORGANIZER_LAYOUT_STORAGE_KEY;
+    20	const TITLE_BAR_HEIGHT = 40;
+    21	
+    22	const DEBUG_CLEAR_ON_STARTUP = false;
+    23	
+    24	interface GridSystemContextValue {
+    25	  grids: GridBox[];
+    26	  items: Record<string, DesktopItem>;
+    27	  createGrid: (x: number, y: number, requestedId?: string) => string;
+    28	  updateGrid: (id: string, patch: Partial<GridBox>) => void;
+    29	  toggleFold: (id: string) => void;
+    30	  deleteGrid: (id: string) => void;
+    31	  clearAll: () => void;
+    32	  moveItem: (itemId: string, fromId: string, toId: string) => void;
+    33	  toggleLock: (id: string) => void;
+    34	  addItem: (item: DesktopItem) => void;
+    35	  addItemToGrid: (gridId: string, itemId: string) => void;
+    36	  findGridAtPosition: (x: number, y: number) => GridBox | null;
+    37	}
+    38	
+    39	const GridSystemContext = createContext<GridSystemContextValue | undefined>(undefined);
+    40	
+    41	const toId = () =>
+    42	  typeof crypto !== "undefined" && crypto.randomUUID
+    43	    ? crypto.randomUUID()
+    44	    : `grid-${Math.random().toString(16).slice(2)}`;
+    45	
+    46	export interface GridSystemProviderProps {
+    47	  children: ReactNode;
+    48	  /**
+    49	   * Optional opt-in seam for the G1.5 Repository-backed persistence
+    50	   * adapter. Defaults to `localStorageLayoutStore()` to preserve the
+    51	   * historical synchronous localStorage path.
+    52	   *
+    53	   * Both `load()` and `save()` throws are caught by the adapter so a
+    54	   * corrupted state can never whiteout the desktop.
+    55	   */
+    56	  store?: LayoutStore;
+    57	}
+    58	
+    59	export function GridSystemProvider({ children, store }: GridSystemProviderProps) {
+    60	  const layoutStore = useMemo(() => store ?? localStorageLayoutStore(), [store]);
+    61	  const [grids, setGrids] = useState<GridBox[]>([]);
+    62	  const [items, setItems] = useState<Record<string, DesktopItem>>({});
+    63	  const [hydrated, setHydrated] = useState(false);
+    64	  const heightCache = useRef<Record<string, number>>({});
+    65	  const saveTimer = useRef<number | null>(null);
+    66	
+    67	  // Hydrate
+    68	  useEffect(() => {
+    69	    if (DEBUG_CLEAR_ON_STARTUP) {
+    70	      if (typeof localStorage !== "undefined") {
+    71	        localStorage.removeItem(STORAGE_KEY);
+    72	      }
+    73	      setGrids([]);
+    74	      setItems({});
+    75	      setHydrated(true);
+    76	      return;
+    77	    }
+    78	
+    79	    let cancelled = false;
+    80	    void (async () => {
+    81	      let data: PersistedLayout | null = null;
+    82	      try {
+    83	        data = await layoutStore.load();
+    84	      } catch {
+    85	        // Defence in depth — every concrete LayoutStore already swallows
+    86	        // its own errors. We catch here so a future store implementation
+    87	        // cannot whiteout the desktop on startup.
+    88	        data = null;
+    89	      }
+    90	      if (cancelled) return;
+    91	      if (data && Array.isArray(data.grids) && Array.isArray(data.items)) {
+    92	        const mappedItems: Record<string, DesktopItem> = {};
+    93	        data.items.forEach((item) => {
+    94	          mappedItems[item.id] = item;
+    95	        });
+    96	        setItems(mappedItems);
+    97	        setGrids(data.grids);
+    98	      } else {
+    99	        setGrids([]);
+   100	        setItems({});
+   101	      }
+   102	      setHydrated(true);
+   103	    })();
+   104	    return () => {
+   105	      cancelled = true;
+   106	    };
+   107	  }, [layoutStore]);
+   108	
+   109	  const createGrid = useCallback(
+   110	    (x: number, y: number, requestedId?: string) => {
+   111	      const id = requestedId ?? toId();
+   112	      const base = defaultGrid(id, x, y);
+   113	
+   114	      // Create empty grid - no mock data
+   115	      const nextGrid: GridBox = { ...base, itemIds: [] };
+   116	      setGrids((prev) => (prev.some((grid) => grid.id === id) ? prev : [...prev, nextGrid]));
+   117	      return id;
+   118	    },
+   119	    [],
+   120	  );
+   121	
+   122	  const updateGrid = useCallback(
+   123	    (id: string, patch: Partial<GridBox>) => {
+   124	      setGrids((prev) => prev.map((grid) => (grid.id === id ? { ...grid, ...patch } : grid)));
+   125	    },
+   126	    [],
+   127	  );
+   128	
+   129	  const toggleFold = useCallback(
+   130	    (id: string) => {
+   131	      setGrids((prev) =>
+   132	        prev.map((grid) => {
+   133	          if (grid.id !== id) return grid;
+   134	          if (!grid.isFolded) {
+   135	            heightCache.current[id] = grid.rect.height;
+   136	            return { ...grid, isFolded: true, rect: { ...grid.rect, height: TITLE_BAR_HEIGHT } };
+   137	          }
+   138	          const restoredHeight = heightCache.current[id] ?? 220;
+   139	          return { ...grid, isFolded: false, rect: { ...grid.rect, height: restoredHeight } };
+   140	        }),
+   141	      );
+   142	    },
+   143	    [],
+   144	  );
+   145	
+   146	  const deleteGrid = useCallback(
+   147	    (id: string) => {
+   148	      setGrids((prev) => {
+   149	        const nextGrids = prev.filter((grid) => grid.id !== id);
+   150	        return nextGrids;
+   151	      });
+   152	    },
+   153	    [],
+   154	  );
+   155	
+   156	  // Wipe all grids + items and forget the persisted layout. useMultiWindowGrids
+   157	  // observes `grids` going from N to 0 and will close every native window.
+   158	  const clearAll = useCallback(() => {
+   159	    setGrids([]);
+   160	    setItems({});
+   161	    heightCache.current = {};
+   162	    void layoutStore.save({ grids: [], items: [] });
+   163	  }, [layoutStore]);
+   164	
+   165	  const moveItem = useCallback(
+   166	    (itemId: string, fromId: string, toId: string) => {
+   167	      if (fromId === toId) return;
+   168	      setGrids((prev) =>
+   169	        prev.map((grid) => {
+   170	          if (grid.id === fromId) {
+   171	            return { ...grid, itemIds: grid.itemIds.filter((id) => id !== itemId) };
+   172	          }
+   173	          if (grid.id === toId) {
+   174	            return { ...grid, itemIds: [...grid.itemIds, itemId] };
+   175	          }
+   176	          return grid;
+   177	        }),
+   178	      );
+   179	    },
+   180	    [],
+   181	  );
+   182	
+   183	  const toggleLock = useCallback((id: string) => {
+   184	    setGrids((prev) =>
+   185	      prev.map((grid) => (grid.id === id ? { ...grid, isLocked: !grid.isLocked } : grid)),
+   186	    );
+   187	  }, []);
+   188	
+   189	  const addItem = useCallback((item: DesktopItem) => {
+   190	    setItems((prev) => ({ ...prev, [item.id]: item }));
+   191	  }, []);
+   192	
+   193	  const addItemToGrid = useCallback((gridId: string, itemId: string) => {
+   194	    setGrids((prev) =>
+   195	      prev.map((grid) =>
+   196	        grid.id === gridId && !grid.itemIds.includes(itemId)
+   197	          ? { ...grid, itemIds: [...grid.itemIds, itemId] }
+   198	          : grid
+   199	      ),
+   200	    );
+   201	  }, []);
+   202	
+   203	  const findGridAtPosition = useCallback(
+   204	    (x: number, y: number): GridBox | null => {
+   205	      // Find the grid that contains the given position
+   206	      return grids.find((grid) => {
+   207	        const { rect } = grid;
+   208	        return (
+   209	          x >= rect.x &&
+   210	          x <= rect.x + rect.width &&
+   211	          y >= rect.y &&
+   212	          y <= rect.y + rect.height
+   213	        );
+   214	      }) || null;
+   215	    },
+   216	    [grids],
+   217	  );
+   218	
+   219	  // Debounced persistence
+   220	  useEffect(() => {
+   221	    if (!hydrated) return;
+   222	    if (saveTimer.current) {
+   223	      window.clearTimeout(saveTimer.current);
+   224	    }
+   225	    saveTimer.current = window.setTimeout(() => {
+   226	      const payload: PersistedLayout = { grids, items: Object.values(items) };
+   227	      void layoutStore.save(payload);
+   228	    }, 1000);
+   229	    return () => {
+   230	      if (saveTimer.current) {
+   231	        window.clearTimeout(saveTimer.current);
+   232	      }
+   233	    };
+   234	  }, [grids, items, hydrated, layoutStore]);
+   235	
+   236	  const value = useMemo<GridSystemContextValue>(
+   237	    () => ({
+   238	      grids,
+   239	      items,
+   240	      createGrid,
+   241	      updateGrid,
+   242	      toggleFold,
+   243	      deleteGrid,
+   244	      clearAll,
+   245	      moveItem,
+   246	      toggleLock,
+   247	      addItem,
+   248	      addItemToGrid,
+   249	      findGridAtPosition,
+   250	    }),
+   251	    [
+   252	      addItem,
+   253	      addItemToGrid,
+   254	      clearAll,
+   255	      createGrid,
+   256	      deleteGrid,
+   257	      findGridAtPosition,
+   258	      grids,
+   259	      items,
+   260	      moveItem,
+   261	      toggleFold,
+   262	      toggleLock,
+   263	      updateGrid,
+   264	    ],
+   265	  );
+   266	
+   267	  return <GridSystemContext.Provider value={value}>{children}</GridSystemContext.Provider>;
+   268	}
+   269	
+   270	export function useGridSystem(): GridSystemContextValue {
+   271	  const ctx = useContext(GridSystemContext);
+   272	  if (!ctx) throw new Error("useGridSystem must be used within a GridSystemProvider");
+   273	  return ctx;
+   274	}
+   275	
+   276	/**
+   277	 * Same as useGridSystem, but returns null instead of throwing when no
+   278	 * GridSystemProvider is present. Use this in components that may render in
+   279	 * windows that don't host the grid state (e.g. per-grid native windows).
+   280	 */
+   281	export function useGridSystemOptional(): GridSystemContextValue | null {
+   282	  return useContext(GridSystemContext) ?? null;
+   283	}
+
+exec
+/bin/zsh -lc "nl -ba packages/core-data/src/types.ts | sed -n '1,260p'" in /Users/lijinlong/Desktop/AI_Desktop/XAI_Desktop
+exec
+/bin/zsh -lc "nl -ba docs/workflow/roadmap/xai-g1-native-foundation.md | sed -n '1,120p'" in /Users/lijinlong/Desktop/AI_Desktop/XAI_Desktop
+exec
+/bin/zsh -lc "nl -ba packages/plugin-organizer/src/types.ts | sed -n '1,220p'" in /Users/lijinlong/Desktop/AI_Desktop/XAI_Desktop
+ succeeded in 0ms:
+     1	/** Device-local records never enter remote sync. */
+     2	export type SyncScope = "device-local" | "account-sync";
+     3	
+     4	export type RepoSortDirection = "asc" | "desc";
+     5	export type RepoIndexKey<T extends RepoRecord> = Extract<keyof T, string>;
+     6	
+     7	/**
+     8	 * Base record shape every Repository v0 entry must satisfy.
+     9	 *
+    10	 * `entityType` uses the `plugin.entity` naming form, for example
+    11	 * `organizer.grid` or `productivity.todo`.
+    12	 */
+    13	export interface RepoRecord {
+    14	  id: string;
+    15	  entityType: string;
+    16	  schemaVersion: number;
+    17	  createdAt: string;
+    18	  updatedAt: string;
+    19	  syncScope: SyncScope;
+    20	}
+    21	
+    22	export interface RepoOrderBy<T extends RepoRecord = RepoRecord> {
+    23	  field: RepoIndexKey<T>;
+    24	  direction?: RepoSortDirection;
+    25	}
+    26	
+    27	export interface RepoListQuery<T extends RepoRecord = RepoRecord> {
+    28	  entityType?: string;
+    29	  syncScope?: SyncScope;
+    30	  orderBy?: RepoOrderBy<T>;
+    31	  limit?: number;
+    32	}
+    33	
+    34	export interface RepoMetadata {
+    35	  driver: string;
+    36	  namespace: string;
+    37	  schemaVersion: number;
+    38	  migrationVersion: number;
+    39	  recordCount: number;
+    40	  migrations: readonly MigrationResult[];
+    41	}
+    42	
+    43	export interface MigrationResult {
+    44	  id: string;
+    45	  fromVersion: number;
+    46	  toVersion: number;
+    47	  startedAt: string;
+    48	  completedAt: string;
+    49	  applied: boolean;
+    50	}
+    51	
+    52	export type MigrationStep<T extends RepoRecord> = (
+    53	  tx: RepoTransaction<T>,
+    54	) => Promise<void>;
+    55	
+    56	export interface MigrationPlan<T extends RepoRecord = RepoRecord> {
+    57	  id: string;
+    58	  fromVersion: number;
+    59	  toVersion: number;
+    60	  steps: readonly MigrationStep<T>[];
+    61	}
+    62	
+    63	export interface RepoOperations<T extends RepoRecord> {
+    64	  get(id: string): Promise<T | undefined>;
+    65	  put(record: T): Promise<void>;
+    66	  delete(id: string): Promise<void>;
+    67	  list(query?: RepoListQuery<T>): Promise<T[]>;
+    68	  listByIndex<K extends RepoIndexKey<T>>(
+    69	    field: K,
+    70	    value: T[K],
+    71	    query?: RepoListQuery<T>,
+    72	  ): Promise<T[]>;
+    73	  metadata(): Promise<RepoMetadata>;
+    74	}
+    75	
+    76	export interface RepoTransaction<T extends RepoRecord>
+    77	  extends RepoOperations<T> {}
+    78	
+    79	export interface Repo<T extends RepoRecord> extends RepoOperations<T> {
+    80	  transaction<R>(fn: (tx: RepoTransaction<T>) => Promise<R>): Promise<R>;
+    81	  migrate(plan: MigrationPlan<T>): Promise<MigrationResult>;
+    82	}
+
+ succeeded in 0ms:
+     1	export interface GridBox {
+     2	  id: string;
+     3	  title: string;
+     4	  rect: {
+     5	    x: number;
+     6	    y: number;
+     7	    width: number;
+     8	    height: number;
+     9	  };
+    10	  isLocked: boolean;
+    11	  isFolded: boolean;
+    12	  viewMode: "grid" | "list";
+    13	  itemIds: string[];
+    14	  themeColor?: string;
+    15	}
+    16	
+    17	export type DesktopItemType = "file" | "folder" | "app";
+    18	
+    19	export interface DesktopItem {
+    20	  id: string;
+    21	  filename: string;
+    22	  filepath: string;
+    23	  type: DesktopItemType;
+    24	  icon: string;
+    25	  size?: number;
+    26	  createdAt: number;
+    27	}
+    28	
+    29	export interface PersistedLayout {
+    30	  grids: GridBox[];
+    31	  items: DesktopItem[];
+    32	}
+
+ succeeded in 0ms:
+     1	# Roadmap Manifest — xai-g1-native-foundation
+     2	
+     3	- Roadmap Source: docs/planning/execution/G1-native-foundation.md
+     4	- Init Path: execution-pack
+     5	- Generated: 2026-05-19
+     6	- Default Automation Mode: D-Codex
+     7	- Default Dependency Semantics: shipped
+     8	- Default Verify Cross-vendor: yes
+     9	- Wave Concurrency Cap: 1
+    10	- Dispatch: serial inline Codex conductor
+    11	- Manifest Review: DEFERRED (unattended run; see docs/workflow/roadmap/xai-v1.deferred-gates.md)
+    12	- Gate Prerequisite: G0 Go or Conditional Go
+    13	- Gate Status: CONDITIONAL_GO_UNBLOCKED (2026-05-19 22:54 PDT)
+    14	
+    15	## Features
+    16	
+    17	| # | Slug | Source | Depends On | Dep Semantics | Status | Automation Mode | Verify Cross-vendor | Last Run | Note |
+    18	|---|------|--------|------------|---------------|--------|-----------------|---------------------|----------|------|
+    19	| 1 | window-command-contract | docs/planning/execution/G1-native-foundation.md §G1.1 | G0 Go/Conditional Go | shipped | SHIPPED | D-Codex | yes | 2026-05-19 | SHIPPED 2026-05-19 · Pushed to origin/spike/window-ground-truth. Rust command contract, TS types, Organizer adapter, manifest, and contract docs verified. Commits `dce4fb9`, `1fa8c75`. |
+    20	| 2 | grid-shell-organizer-content | docs/planning/execution/G1-native-foundation.md §G1.2 | window-command-contract | shipped | SHIPPED | D-Codex | yes | 2026-05-20 | SHIPPED 2026-05-20 (Track A) · Manifest promoted on `codex/track-a-desktop-foundation`. Production split commits: `26d9f57` (feat), `03ca86a` (docs ship promote), `3751f43` (dev_log ready). |
+    21	| 3 | native-dnd-path-first | docs/planning/execution/G1-native-foundation.md §G1.3 | finder-dnd-path | shipped | BLOCKED_EXTERNAL | D-Codex | yes | 2026-05-19 | Production implementation still blocked by MAS/security-scope evidence; skip under unattended mode and continue next eligible feature. |
+    22	| 4 | multi-grid-event-scope | docs/planning/execution/G1-native-foundation.md §G1.4 | grid-window-prototype | shipped | SHIPPED | D-Codex | yes | 2026-05-20 | SHIPPED 2026-05-20 (Track A) · Manifest promoted on `codex/track-a-desktop-foundation`. Event migration commits: `78aef01` (feat), `59da1e5` (docs ship promote), `44345cf` (dev_log ready). |
+    23	| 5 | grid-persistence | docs/planning/execution/G1-native-foundation.md §G1.5 | window-command-contract, repository-v0-contract | shipped | READY_TO_SHIP | D-Codex | yes | 2026-05-20 | LayoutStore seam landed in plugin-organizer; localStorage default preserved; Repository v0 adapter available; hydrate is async + corrupt-state safe (cannot whiteout). 9 vitest cases passing. |
+    24	| 6 | host-business-residuals | docs/planning/execution/G1-native-foundation.md §G1.6 | — | — | SHIPPED | D-Codex | yes | 2026-05-19 | SHIPPED 2026-05-19 · Pushed to origin/spike/window-ground-truth. Audit-only residual inventory complete; production cleanup remains blocked by G0/G1 sequencing. |
+    25	
+    26	## Decomposition Rationale
+    27	
+    28	### R1. Source and Gate Status
+    29	This manifest maps one G1 execution-pack task to one Workflow V2 feature. G1 production implementation was initially blocked because G0 was not Go or Conditional Go. On 2026-05-19, G0 reached Conditional Go for the DMG/private path after G0.5 user runtime confirmation; MAS signed/sandbox validation remains an external deferred gate.
+    30	
+    31	### R2. Safe-Prep Boundary
+    32	Only documentation, contract planning, and mock/brief work proceeded while G0 was blocked. Production changes to `commands/window.rs`, `window_ext.rs`, capabilities, Host shell, or Organizer runtime may now proceed only within the G1.1 approved scope and DMG/private-path assumptions; MAS-specific behavior must remain behind the `mas-sandbox` deferred validation path.
+    33	
+    34	### R3. Ship Record
+    35	G1.1 (window-command-contract) and G1.6 (host-business-residuals) shipped 2026-05-19 by human-authorized push to `origin/spike/window-ground-truth`. G1.2 dependency on G1.1 is formally met (shipped semantics satisfied); G1.2 itself remains READY_TO_SHIP pending its own human ship authorization. G1.3 remains BLOCKED_EXTERNAL (MAS sandbox dependency). G1.4 is READY_TO_SHIP pending human ship authorization. G1.5 remains BLOCKED pending G2 Repository v0.
+
+exec
+/bin/zsh -lc "nl -ba packages/core-data/src/testing.ts | sed -n '1,220p'" in /Users/lijinlong/Desktop/AI_Desktop/XAI_Desktop
+exec
+/bin/zsh -lc "nl -ba packages/core-data/src/index.ts | sed -n '1,180p'" in /Users/lijinlong/Desktop/AI_Desktop/XAI_Desktop
+ succeeded in 0ms:
+     1	import type { SqlParams, SqliteDriver, SqlValue } from "./sqlite";
+     2	import { SQLITE_STATEMENTS } from "./sqlite";
+     3	import {
+     4	  applyRepoIndexQuery,
+     5	  applyRepoListQuery,
+     6	  assertMigrationPlan,
+     7	  assertRepoRecord,
+     8	  skippedMigrationResult,
+     9	} from "./repo-utils";
+    10	import type {
+    11	  MigrationPlan,
+    12	  MigrationResult,
+    13	  Repo,
+    14	  RepoListQuery,
+    15	  RepoMetadata,
+    16	  RepoRecord,
+    17	  RepoTransaction,
+    18	} from "./types";
+    19	
+    20	/**
+    21	 * In-memory `Repo` implementation for use in unit tests. Zero external
+    22	 * dependencies; no Tauri, no SQLite, no network.
+    23	 */
+    24	export interface InMemoryRepoOptions {
+    25	  namespace?: string;
+    26	  schemaVersion?: number;
+    27	  migrationVersion?: number;
+    28	  nowIso?: () => string;
+    29	}
+    30	
+    31	export function createInMemoryRepo<T extends RepoRecord>(
+    32	  options: InMemoryRepoOptions = {},
+    33	): Repo<T> {
+    34	  const store = new Map<string, T>();
+    35	  const namespace = options.namespace ?? "in-memory";
+    36	  const schemaVersion = options.schemaVersion ?? 1;
+    37	  const nowIso = options.nowIso ?? (() => new Date().toISOString());
+    38	  let migrationVersion = options.migrationVersion ?? 0;
+    39	  const migrations: MigrationResult[] = [];
+    40	
+    41	  const operations: RepoTransaction<T> = {
+    42	    async get(id: string): Promise<T | undefined> {
+    43	      return store.get(id);
+    44	    },
+    45	
+    46	    async put(record: T): Promise<void> {
+    47	      assertRepoRecord(record);
+    48	      store.set(record.id, record);
+    49	    },
+    50	
+    51	    async delete(id: string): Promise<void> {
+    52	      store.delete(id);
+    53	    },
+    54	
+    55	    async list(query?: RepoListQuery<T>): Promise<T[]> {
+    56	      return applyRepoListQuery(store.values(), query);
+    57	    },
+    58	
+    59	    async listByIndex<K extends Extract<keyof T, string>>(
+    60	      field: K,
+    61	      value: T[K],
+    62	      query?: RepoListQuery<T>,
+    63	    ): Promise<T[]> {
+    64	      return applyRepoIndexQuery(store.values(), field, value, query);
+    65	    },
+    66	
+    67	    async metadata(): Promise<RepoMetadata> {
+    68	      return {
+    69	        driver: "in-memory",
+    70	        namespace,
+    71	        schemaVersion,
+    72	        migrationVersion,
+    73	        recordCount: store.size,
+    74	        migrations: [...migrations],
+    75	      };
+    76	    },
+    77	  };
+    78	
+    79	  return {
+    80	    ...operations,
+    81	
+    82	    async transaction<R>(
+    83	      fn: (tx: RepoTransaction<T>) => Promise<R>,
+    84	    ): Promise<R> {
+    85	      const snapshot = new Map(store);
+    86	      try {
+    87	        return await fn(operations);
+    88	      } catch (error) {
+    89	        store.clear();
+    90	        for (const [id, record] of snapshot) {
+    91	          store.set(id, record);
+    92	        }
+    93	        throw error;
+    94	      }
+    95	    },
+    96	
+    97	    async migrate(plan: MigrationPlan<T>): Promise<MigrationResult> {
+    98	      if (migrationVersion >= plan.toVersion) {
+    99	        return skippedMigrationResult(plan, nowIso);
+   100	      }
+   101	
+   102	      assertMigrationPlan(plan, migrationVersion);
+   103	      const startedAt = nowIso();
+   104	
+   105	      await this.transaction(async (tx) => {
+   106	        for (const step of plan.steps) {
+   107	          await step(tx);
+   108	        }
+   109	      });
+   110	
+   111	      migrationVersion = plan.toVersion;
+   112	      const result: MigrationResult = {
+   113	        id: plan.id,
+   114	        fromVersion: plan.fromVersion,
+   115	        toVersion: plan.toVersion,
+   116	        startedAt,
+   117	        completedAt: nowIso(),
+   118	        applied: true,
+   119	      };
+   120	      migrations.push(result);
+   121	      return result;
+   122	    },
+   123	  };
+   124	}
+   125	
+   126	export function createInMemorySqliteDriver(): SqliteDriver {
+   127	  const records = new Map<string, StoredRow>();
+   128	  const txLog: string[] = [];
+   129	
+   130	  const driver: SqliteDriver = {
+   131	    async execute(sql: string, params: SqlParams = []): Promise<void> {
+   132	      const normalized = normalizeSql(sql);
+   133	      txLog.push(normalized);
+   134	
+   135	      if (normalized === normalizeSql(SQLITE_STATEMENTS.createRecords)) {
+   136	        return;
+   137	      }
+   138	
+   139	      if (normalized === normalizeSql(SQLITE_STATEMENTS.upsertRecord)) {
+   140	        const [namespace, id, json, updatedAtMs] = params;
+   141	        records.set(rowKey(asString(namespace), asString(id)), {
+   142	          namespace: asString(namespace),
+   143	          id: asString(id),
+   144	          json: asString(json),
+   145	          updatedAtMs: asNumber(updatedAtMs),
+   146	        });
+   147	        return;
+   148	      }
+   149	
+   150	      if (normalized === normalizeSql(SQLITE_STATEMENTS.deleteRecord)) {
+   151	        const [namespace, id] = params;
+   152	        records.delete(rowKey(asString(namespace), asString(id)));
+   153	        return;
+   154	      }
+   155	
+   156	      throw new Error(`unsupported test SQL execute: ${normalized}`);
+   157	    },
+   158	
+   159	    async query<T extends Record<string, unknown>>(
+   160	      sql: string,
+   161	      params: SqlParams = [],
+   162	    ): Promise<T[]> {
+   163	      const normalized = normalizeSql(sql);
+   164	      txLog.push(normalized);
+   165	
+   166	      if (normalized === normalizeSql(SQLITE_STATEMENTS.selectRecord)) {
+   167	        const [namespace, id] = params;
+   168	        const row = records.get(rowKey(asString(namespace), asString(id)));
+   169	        return (row ? [{ json: row.json }] : []) as unknown as T[];
+   170	      }
+   171	
+   172	      if (normalized === normalizeSql(SQLITE_STATEMENTS.selectAll)) {
+   173	        const [namespace] = params;
+   174	        return [...records.values()]
+   175	          .filter((row) => row.namespace === namespace)
+   176	          .sort((a, b) => a.id.localeCompare(b.id))
+   177	          .map((row) => ({ json: row.json })) as unknown as T[];
+   178	      }
+   179	
+   180	      throw new Error(`unsupported test SQL query: ${normalized}`);
+   181	    },
+   182	
+   183	    async transaction<T>(fn: (tx: SqliteDriver) => Promise<T>): Promise<T> {
+   184	      const snapshot = new Map(records);
+   185	      try {
+   186	        return await fn(driver);
+   187	      } catch (error) {
+   188	        records.clear();
+   189	        for (const [id, record] of snapshot) {
+   190	          records.set(id, record);
+   191	        }
+   192	        throw error;
+   193	      }
+   194	    },
+   195	  };
+   196	
+   197	  return driver;
+   198	}
+   199	
+   200	interface StoredRow {
+   201	  namespace: string;
+   202	  id: string;
+   203	  json: string;
+   204	  updatedAtMs: number;
+   205	}
+   206	
+   207	function rowKey(namespace: string, id: string): string {
+   208	  return `${namespace}\u0000${id}`;
+   209	}
+   210	
+   211	function normalizeSql(sql: string): string {
+   212	  return sql.replace(/\s+/g, " ").trim();
+   213	}
+   214	
+   215	function asString(value: SqlValue | undefined): string {
+   216	  if (typeof value !== "string") {
+   217	    throw new Error("expected string SQL param");
+   218	  }
+   219	  return value;
+   220	}
+
+ succeeded in 0ms:
+     1	export type {
+     2	  MigrationPlan,
+     3	  MigrationResult,
+     4	  MigrationStep,
+     5	  Repo,
+     6	  RepoIndexKey,
+     7	  RepoListQuery,
+     8	  RepoMetadata,
+     9	  RepoOperations,
+    10	  RepoOrderBy,
+    11	  RepoRecord,
+    12	  RepoSortDirection,
+    13	  RepoTransaction,
+    14	  SyncScope,
+    15	} from "./types";
+    16	export { SQLITE_STATEMENTS, createSqliteRepo } from "./sqlite";
+    17	export type {
+    18	  MutationHook,
+    19	  MutationKind,
+    20	  RepoMutation,
+    21	  SqlParams,
+    22	  SqlValue,
+    23	  SqliteDriver,
+    24	  SqliteRepo,
+    25	  SqliteRepoOptions,
+    26	} from "./sqlite";
+    27	export { migrateLocalStorageToRepo } from "./local-storage";
+    28	export type {
+    29	  LocalStorageMigrationOptions,
+    30	  LocalStorageMigrationResult,
+    31	  StorageLike,
+    32	} from "./local-storage";
+    33	export { createInMemoryRepo, createInMemorySqliteDriver } from "./testing";
+    34	export {
+    35	  KEYCHAIN_ERROR_CODES,
+    36	  KeychainError,
+    37	  parseKeychainError,
+    38	  createKeychainClient,
+    39	  secretSet,
+    40	  secretGet,
+    41	  secretDel,
+    42	} from "./keychain";
+    43	export type { KeychainErrorCode, KeychainClient } from "./keychain";
+    44	export type {
+    45	  CardEntity,
+    46	  ClipboardEntryEntity,
+    47	  GridEntity,
+    48	  GridItemEntity,
+    49	  HabitEntity,
+    50	  LabelEntity,
+    51	  ProjectEntity,
+    52	  RepoEntity,
+    53	  RepoEntityType,
+    54	  RepoEntityTypeMap,
+    55	  TodoEntity,
+    56	} from "./entities";
+    57	export { createTauriRepo, dbInit } from "./tauri-sqlite";
+    58	export type { CreateTauriRepoOptions, DbInitOutput } from "./tauri-sqlite";
+    59	export {
+    60	  createMockCommitSeqAuthority,
+    61	  enqueueOutboxEntry,
+    62	  nextOutboxBatch,
+    63	} from "./sync-outbox";
+    64	export type {
+    65	  EnqueueOutboxInput,
+    66	  OutboxBatchOptions,
+    67	  OutboxEntry,
+    68	} from "./sync-outbox";
+    69	export {
+    70	  LEGACY_LAYOUT_STORAGE_KEY,
+    71	  migrateOrganizerLayoutToRepos,
+    72	} from "./organizer-layout-migration";
+    73	export type {
+    74	  LegacyDesktopItem,
+    75	  LegacyGridBox,
+    76	  LegacyOrganizerLayout,
+    77	  OrganizerLayoutMigrationOptions,
+    78	  OrganizerLayoutMigrationResult,
+    79	} from "./organizer-layout-migration";
+
+exec
+/bin/zsh -lc "nl -ba packages/core-data/src/entities.ts | sed -n '1,220p'" in /Users/lijinlong/Desktop/AI_Desktop/XAI_Desktop
+ succeeded in 0ms:
+     1	/**
+     2	 * Repository v0 entity surface.
+     3	 *
+     4	 * Concrete `RepoRecord` shapes used across the desktop. Plugin packages must
+     5	 * read and write these through the `Repo<T>` interface only; the canonical
+     6	 * type definitions live here so that drivers (SQLite, IndexedDB, sync) and
+     7	 * plugins agree on the same payload shape.
+     8	 *
+     9	 * Field-level constraints are enforced by `assertRepoRecord` and per-entity
+    10	 * schemas owned by the plugins. Adding a new field requires bumping
+    11	 * `schemaVersion` and writing a migration.
+    12	 */
+    13	
+    14	import type { RepoRecord } from "./types";
+    15	
+    16	/** A floating Grid container ("Smart Container") on the desktop. */
+    17	export interface GridEntity extends RepoRecord {
+    18	  entityType: "organizer.grid";
+    19	  title: string;
+    20	  rect: {
+    21	    x: number;
+    22	    y: number;
+    23	    width: number;
+    24	    height: number;
+    25	  };
+    26	  isLocked: boolean;
+    27	  isFolded: boolean;
+    28	  viewMode: "grid" | "list";
+    29	  itemIds: string[];
+    30	  themeColor?: string;
+    31	}
+    32	
+    33	/** A typed item inside a Grid: file / folder / app / url. */
+    34	export interface GridItemEntity extends RepoRecord {
+    35	  entityType: "organizer.item";
+    36	  gridId: string;
+    37	  filename: string;
+    38	  /** Optional for non-fs items (e.g. URLs); required for file/folder/app. */
+    39	  filepath?: string;
+    40	  kind: "file" | "folder" | "app" | "url";
+    41	  icon: string;
+    42	  size?: number;
+    43	  /** Populated when kind === "url"; metadata is best-effort, may be empty. */
+    44	  url?: {
+    45	    href: string;
+    46	    title?: string;
+    47	    description?: string;
+    48	    favicon?: string;
+    49	  };
+    50	}
+    51	
+    52	/** Global label shared across todo/grid/clipboard/project. */
+    53	export interface LabelEntity extends RepoRecord {
+    54	  entityType: "labels.label";
+    55	  name: string;
+    56	  color: string;
+    57	  parentId?: string;
+    58	}
+    59	
+    60	export interface TodoEntity extends RepoRecord {
+    61	  entityType: "productivity.todo";
+    62	  title: string;
+    63	  done: boolean;
+    64	  labelIds: string[];
+    65	  dueAt?: string;
+    66	  notes?: string;
+    67	  projectId?: string;
+    68	}
+    69	
+    70	export interface HabitEntity extends RepoRecord {
+    71	  entityType: "productivity.habit";
+    72	  title: string;
+    73	  cadence: "daily" | "weekly" | "custom";
+    74	  /** ISO date strings (YYYY-MM-DD) of completion. */
+    75	  completions: string[];
+    76	  labelIds: string[];
+    77	}
+    78	
+    79	/** Clipboard items are always device-local (`syncScope: "device-local"`). */
+    80	export interface ClipboardEntryEntity extends RepoRecord {
+    81	  entityType: "clipboard.item";
+    82	  syncScope: "device-local";
+    83	  kind: "text" | "image" | "file" | "url";
+    84	  /** UTF-8 text or base64 for binary. Driver decides storage encoding. */
+    85	  payload: string;
+    86	  preview?: string;
+    87	  pinned?: boolean;
+    88	}
+    89	
+    90	export interface ProjectEntity extends RepoRecord {
+    91	  entityType: "project.board";
+    92	  title: string;
+    93	  description?: string;
+    94	  archivedAt?: string;
+    95	  labelIds: string[];
+    96	}
+    97	
+    98	export interface CardEntity extends RepoRecord {
+    99	  entityType: "project.card";
+   100	  projectId: string;
+   101	  title: string;
+   102	  description?: string;
+   103	  status: "todo" | "doing" | "done" | "blocked";
+   104	  position: number;
+   105	  assigneeId?: string;
+   106	  labelIds: string[];
+   107	}
+   108	
+   109	/** Discriminated union of all Repository v0 entity types. */
+   110	export type RepoEntity =
+   111	  | GridEntity
+   112	  | GridItemEntity
+   113	  | LabelEntity
+   114	  | TodoEntity
+   115	  | HabitEntity
+   116	  | ClipboardEntryEntity
+   117	  | ProjectEntity
+   118	  | CardEntity;
+   119	
+   120	/** Map from `entityType` string to its concrete record shape. */
+   121	export interface RepoEntityTypeMap {
+   122	  "organizer.grid": GridEntity;
+   123	  "organizer.item": GridItemEntity;
+   124	  "labels.label": LabelEntity;
+   125	  "productivity.todo": TodoEntity;
+   126	  "productivity.habit": HabitEntity;
+   127	  "clipboard.item": ClipboardEntryEntity;
+   128	  "project.board": ProjectEntity;
+   129	  "project.card": CardEntity;
+   130	}
+   131	
+   132	export type RepoEntityType = keyof RepoEntityTypeMap;
+
+exec
+/bin/zsh -lc 'pnpm --filter @repo/plugin-organizer test' in /Users/lijinlong/Desktop/AI_Desktop/XAI_Desktop
+ succeeded in 1651ms:
+
+> @repo/plugin-organizer@0.0.0 test /Users/lijinlong/Desktop/AI_Desktop/XAI_Desktop/packages/plugin-organizer
+> vitest run
+
+
+ RUN  v3.2.4 /Users/lijinlong/Desktop/AI_Desktop/XAI_Desktop/packages/plugin-organizer
+
+ ✓ src/itemHealth.test.ts (7 tests) 6ms
+ ✓ src/gridEvents.test.ts (4 tests) 4ms
+ ✓ src/autoClassify.test.ts (8 tests) 8ms
+ ✓ src/gridItemFactory.test.ts (13 tests) 10ms
+ ✓ src/layoutStore.test.ts (9 tests) 6ms
+
+ Test Files  5 passed (5)
+      Tests  41 passed (41)
+   Start at  01:45:56
+   Duration  574ms (transform 480ms, setup 0ms, collect 601ms, tests 34ms, environment 0ms, prepare 480ms)
+
+
+exec
+/bin/zsh -lc "sed -n '760,850p' docs/workflow/roadmap/xai-v1.autorun-20260519.md" in /Users/lijinlong/Desktop/AI_Desktop/XAI_Desktop
+ succeeded in 0ms:
+- Updated `docs/contracts/tauri-commands-v0.md` with §6.1 Database Commands and its security rules.
+- Updated `packages/core-data-sqlite-driver/docs/dev_log.md` Status Panel → READY_TO_SHIP.
+- G2 manifest row #2 promoted to READY_TO_SHIP.
+- Tests run:
+  - `cargo check --manifest-path apps/desktop/src-tauri/Cargo.toml` -> PASS
+  - `cargo check --features crypto` -> PASS
+  - `cargo test --features crypto database::` -> 7 tests PASS
+  - `pnpm --filter @repo/core-data test` -> 49 tests PASS
+  - `pnpm --filter @repo/core-data check-types` -> PASS
+  - `pnpm --filter desktop build` -> PASS
+- Deferred: SQLCipher PRAGMA wiring (depends on G2.4 opaque KEK handle); cross-command transactions; real `app_data_dir` macOS runtime smoke (recorded in `xai-v1.deferred-gates.md`).
+
+### 2026-05-20 00:48 PDT — Feature Checkpoint: G2.3 localstorage-migration READY_TO_SHIP
+
+- Added `packages/core-data/src/organizer-layout-migration.ts` exporting `migrateOrganizerLayoutToRepos({ storage, gridRepo, itemRepo })` and `LEGACY_LAYOUT_STORAGE_KEY = "xai-desktop-layout"`.
+- Maps legacy `PersistedLayout` → typed `GridEntity` / `GridItemEntity`. Orphan items (no owning grid) are dropped.
+- Non-destructive by default; `removeLegacy: true` opt-in.
+- Added 5 vitest cases (`tests/organizer-layout-migration.test.ts`): mapping, idempotency, default-keep-legacy, opt-in removal, absent/malformed no-op.
+- Created `packages/localstorage-migration/docs/dev_log.md` and promoted G2 manifest row #4 to READY_TO_SHIP.
+- Tests run:
+  - `pnpm --filter @repo/core-data test` -> 54 tests PASS.
+  - `pnpm --filter @repo/core-data check-types` -> PASS.
+- UI runtime cut-over (`useGridSystem.tsx` async refactor) is parked under G1.5 `grid-persistence` so it lands in a single focused PR.
+
+### Branch Hygiene Note (Track A)
+
+- 00:32 PDT: my G2.2 commit landed on `codex/track-c-widgets-web-ai` because a parallel agent had switched the working-tree branch. Cherry-picked `92e2ba6` onto `codex/track-a-desktop-foundation` as `f3dd30b`; the duplicate remains on Track C and will be reconciled when the tracks merge to main.
+
+### 2026-05-20 00:54 PDT — Feature Checkpoint: G2.4 keychain-opaque-handle READY_TO_SHIP
+
+- Added `apps/desktop/src-tauri/src/crypto/keychain_handle.rs` with `load_kek_into_vault(key, vault)` and `insert_kek_from_bytes(bytes, vault)`. Both return only `KeyHandleId`; byte buffers are zeroized.
+- Rust-internal `KeychainHandleError` (Keychain passthrough, InvalidKeyLength, KeyVault) — does not cross IPC; callers map to JS-visible variants.
+- Updated `docs/contracts/tauri-commands-v0.md` §6.0.1 documenting the single authorised "Keychain bytes → KeyVault handle" crossing and the rule that `secret_get` MUST NOT surface KEK/DEK/device-private bytes to JS.
+- Created `packages/keychain-opaque-handle/docs/dev_log.md`.
+- Promoted G2 manifest row #5 to READY_TO_SHIP.
+- Tests run:
+  - `cargo check --features crypto` -> PASS
+  - `cargo test --features crypto keychain_handle::` -> 3 tests PASS
+- Deferred: `db_init` SQLCipher PRAGMA wiring (G2.6); live macOS Keychain runtime smoke (covered by keychain-bridge-macos package).
+
+### 2026-05-20 00:58 PDT — Feature Checkpoint: G2.5 tauri-capability-allowlist READY_TO_SHIP
+
+- Audited existing capability files (`default.json`, `plugin-account-crypto.json`, `plugin-account-keychain.json`) and added `plugin-data-database.json` scoped to main/control/grid_*/account/console.
+- Added defence-in-depth `DATABASE_ALLOWED_WINDOWS` runtime allow-list in `commands/database.rs` so widget / pet / ai_cube windows cannot reach `db_*` even via a mis-attached capability file. 2 new cargo tests cover admit/reject paths.
+- Recorded the full audit (windows ↔ commands ↔ enforcement layer) in `apps/desktop/src-tauri/capabilities/AUDIT.md`.
+- Updated `docs/contracts/tauri-commands-v0.md` §6.1 and §7 with the new capability file + audit pointer.
+- Created `packages/tauri-capability-allowlist/docs/dev_log.md`; promoted G2 manifest row #6 to READY_TO_SHIP.
+- Tests run:
+  - `cargo check --features crypto` -> PASS
+  - `cargo test --features crypto database::` -> 9 tests PASS
+  - `cargo check` (default) -> PASS
+- Deferred: MAS sandbox capability validation under signed runtime; `tauri-plugin-opener` minimization (follow-up audit).
+
+### 2026-05-20 01:02 PDT — Feature Checkpoint: G2.6 single-table-sync-baseline READY_TO_SHIP
+
+- Added `packages/core-data/src/sync-outbox.ts`: `OutboxEntry` record (`commitSeq`, `mutationId`, `targetEntityType`/`Id`, `op`, `payload`, `retryCount`, `baseRevision`), `enqueueOutboxEntry()` atomic helper, `nextOutboxBatch()` ordered drain, and `createMockCommitSeqAuthority()` test helper.
+- `enqueueOutboxEntry` wraps the entity write and outbox put in the same outer transaction, so a crash between the two phases rolls both back. Proved by a sabotaged outbox test.
+- Added 4 vitest cases (`tests/sync-outbox.test.ts`): happy-path put, rollback on outbox failure, ordering by commitSeq, delete op.
+- Re-exported the new surface from `@repo/core-data` index.
+- Updated `packages/single-table-todos-e2e/docs/dev_log.md` Status Panel to READY_TO_SHIP and recorded the Repository v0 reconciliation.
+- Promoted G2 manifest row #7 to READY_TO_SHIP.
+- Tests run: `pnpm --filter @repo/core-data test` -> 58 tests PASS.
+- Deferred: live Supabase project provisioning + 2-Mac smoke + zero-knowledge dump PoC (recorded in `xai-v1.deferred-gates.md`).
+
+### 2026-05-20 01:08 PDT — Feature Checkpoint: G1.5 grid-persistence READY_TO_SHIP
+
+- Added `packages/plugin-organizer/src/layoutStore.ts` exporting `LayoutStore` interface, `localStorageLayoutStore()` (preserves the historical synchronous path), and `repositoryLayoutStore()` (G2.1 Repository-backed adapter; uses `GridEntity`/`GridItemEntity`).
+- Both adapters catch `load()` / `save()` errors and surface them via optional `onLoadError`/`onSaveError` callbacks. Corrupted state can never whiteout the desktop.
+- Wired `GridSystemProvider` to accept `store?: LayoutStore`. Default behaviour is unchanged. Hydrate is async with a try/catch fallback to empty state; save and `clearAll` delegate to the store.
+- Added `@repo/core-data` workspace dep to `packages/plugin-organizer/package.json`. `pnpm install --offline` linked the workspace (no new deps pulled).
+- Added 9 vitest cases (`src/layoutStore.test.ts`) covering round-trip, missing key, malformed JSON, type guard, save quota error, repo empty layout, repo round-trip, repo cull on disappearance, and repo load failure → null.
+- Promoted G1 manifest row #5 to READY_TO_SHIP.
+- Tests run:
+  - `pnpm --filter @repo/plugin-organizer test` -> 13 tests PASS
+  - `pnpm --filter @repo/plugin-organizer check-types` -> PASS
+  - `pnpm --filter desktop build` -> PASS
+- Deferred: actual host wire-up that passes `repositoryLayoutStore(tauriGridRepo, tauriItemRepo)` to `GridSystemProvider`. Currently parked because the host integration needs a `useTauriInvoke()` adapter and live macOS Tauri runtime smoke; recorded in `xai-v1.deferred-gates.md` as a follow-up.
+
+### 2026-05-20 01:14 PDT — Feature Checkpoint: G3-E1 / S3 / E2 / E3 / E4 READY_TO_SHIP
+
+Consolidated G3 organizer-loop feature batch (Track A scope):
+
+- **G3-E1** Grid item model productization
+  - `packages/plugin-organizer/src/gridItemFactory.ts`: typed factories for file / folder / app entities + `createGridItemsFromFinderDrop` bulk adapter; deterministic IDs and timestamps via injectable deps.
+  - `inferKindFromPath` heuristic with `.app` bundle detection.
+- **G3-S3** New URL item
+  - `createUrlGridItem` validates http/https protocols, normalises hostname-based filename, rejects file:// / javascript: / unparseable URLs via `InvalidUrlError`.
+- **G3-E2** Auto-classification rules
+  - `packages/plugin-organizer/src/autoClassify.ts`: rule-engine seam with `ClassificationRule[]`. Default rules cover kind-title (score 10), extension-group-title (score 20: images/videos/audio/pdfs/notes/archives), and parent-folder-title (score 25).
+- **G3-E3** Finder collaboration
+  - `apps/desktop/src-tauri/src/commands/finder.rs`: `reveal_in_finder` / `open_path` Tauri commands with runtime `FINDER_ALLOWED_WINDOWS` allow-list and path validation. Registered in `lib.rs` `invoke_handler`. 3 cargo tests.
+
+exec
+/bin/zsh -lc "nl -ba packages/core-data/src/organizer-layout-migration.ts | sed -n '1,260p'" in /Users/lijinlong/Desktop/AI_Desktop/XAI_Desktop
+ succeeded in 0ms:
+     1	/**
+     2	 * Legacy `xai-desktop-layout` localStorage blob → Repository v0 migration.
+     3	 *
+     4	 * The Organizer originally serialised the entire desktop layout as one JSON
+     5	 * blob (`{ grids: GridBox[], items: DesktopItem[] }`) under the key
+     6	 * `xai-desktop-layout`. G2.3 splits that blob into typed Repository v0
+     7	 * records — `GridEntity` per grid and `GridItemEntity` per item.
+     8	 *
+     9	 * Guarantees:
+    10	 *
+    11	 * - **Idempotent.** Running the migration twice produces the same repo
+    12	 *   state; the second run is a no-op upsert.
+    13	 * - **Non-destructive by default.** The legacy key is kept in
+    14	 *   `localStorage` unless the caller passes `removeLegacy: true`, so the
+    15	 *   user can roll back if SQLite is unavailable.
+    16	 * - **Pure data transform.** No Tauri / no React; safe to call from
+    17	 *   either side of the IPC boundary.
+    18	 */
+    19	
+    20	import { assertRepoRecord } from "./repo-utils";
+    21	import type {
+    22	  GridEntity,
+    23	  GridItemEntity,
+    24	} from "./entities";
+    25	import type { Repo } from "./types";
+    26	import type { StorageLike } from "./local-storage";
+    27	
+    28	export const LEGACY_LAYOUT_STORAGE_KEY = "xai-desktop-layout";
+    29	
+    30	/** Minimal shape of a record inside the legacy `grids[]` array. */
+    31	export interface LegacyGridBox {
+    32	  id: string;
+    33	  title: string;
+    34	  rect: { x: number; y: number; width: number; height: number };
+    35	  isLocked?: boolean;
+    36	  isFolded?: boolean;
+    37	  viewMode?: "grid" | "list";
+    38	  itemIds?: string[];
+    39	  themeColor?: string;
+    40	}
+    41	
+    42	/** Minimal shape of a record inside the legacy `items[]` array. */
+    43	export interface LegacyDesktopItem {
+    44	  id: string;
+    45	  filename: string;
+    46	  filepath: string;
+    47	  type: "file" | "folder" | "app";
+    48	  icon: string;
+    49	  size?: number;
+    50	  createdAt?: number;
+    51	}
+    52	
+    53	export interface LegacyOrganizerLayout {
+    54	  grids: LegacyGridBox[];
+    55	  items: LegacyDesktopItem[];
+    56	}
+    57	
+    58	export interface OrganizerLayoutMigrationOptions {
+    59	  storage: StorageLike;
+    60	  gridRepo: Repo<GridEntity>;
+    61	  itemRepo: Repo<GridItemEntity>;
+    62	  legacyKey?: string;
+    63	  nowIso?: () => string;
+    64	  removeLegacy?: boolean;
+    65	}
+    66	
+    67	export interface OrganizerLayoutMigrationResult {
+    68	  scanned: boolean;
+    69	  parsed: boolean;
+    70	  gridsMigrated: number;
+    71	  itemsMigrated: number;
+    72	  removedLegacy: boolean;
+    73	}
+    74	
+    75	export async function migrateOrganizerLayoutToRepos(
+    76	  options: OrganizerLayoutMigrationOptions,
+    77	): Promise<OrganizerLayoutMigrationResult> {
+    78	  const legacyKey = options.legacyKey ?? LEGACY_LAYOUT_STORAGE_KEY;
+    79	  const raw = options.storage.getItem(legacyKey);
+    80	  if (raw === null) {
+    81	    return emptyResult();
+    82	  }
+    83	
+    84	  let layout: LegacyOrganizerLayout;
+    85	  try {
+    86	    layout = JSON.parse(raw) as LegacyOrganizerLayout;
+    87	  } catch {
+    88	    return { ...emptyResult(), scanned: true };
+    89	  }
+    90	
+    91	  if (
+    92	    !layout ||
+    93	    !Array.isArray(layout.grids) ||
+    94	    !Array.isArray(layout.items)
+    95	  ) {
+    96	    return { ...emptyResult(), scanned: true };
+    97	  }
+    98	
+    99	  const nowIso = options.nowIso ?? (() => new Date().toISOString());
+   100	  const timestamp = nowIso();
+   101	
+   102	  let gridsMigrated = 0;
+   103	  for (const legacyGrid of layout.grids) {
+   104	    if (!legacyGrid || typeof legacyGrid.id !== "string") continue;
+   105	    const record = toGridEntity(legacyGrid, timestamp);
+   106	    assertRepoRecord(record);
+   107	    await options.gridRepo.put(record);
+   108	    gridsMigrated += 1;
+   109	  }
+   110	
+   111	  let itemsMigrated = 0;
+   112	  for (const legacyItem of layout.items) {
+   113	    if (!legacyItem || typeof legacyItem.id !== "string") continue;
+   114	    const gridId = findOwningGridId(legacyItem.id, layout.grids);
+   115	    if (!gridId) continue;
+   116	    const record = toGridItemEntity(legacyItem, gridId, timestamp);
+   117	    assertRepoRecord(record);
+   118	    await options.itemRepo.put(record);
+   119	    itemsMigrated += 1;
+   120	  }
+   121	
+   122	  let removedLegacy = false;
+   123	  if (options.removeLegacy) {
+   124	    options.storage.removeItem(legacyKey);
+   125	    removedLegacy = true;
+   126	  }
+   127	
+   128	  return {
+   129	    scanned: true,
+   130	    parsed: true,
+   131	    gridsMigrated,
+   132	    itemsMigrated,
+   133	    removedLegacy,
+   134	  };
+   135	}
+   136	
+   137	function emptyResult(): OrganizerLayoutMigrationResult {
+   138	  return {
+   139	    scanned: false,
+   140	    parsed: false,
+   141	    gridsMigrated: 0,
+   142	    itemsMigrated: 0,
+   143	    removedLegacy: false,
+   144	  };
+   145	}
+   146	
+   147	function toGridEntity(
+   148	  legacy: LegacyGridBox,
+   149	  timestamp: string,
+   150	): GridEntity {
+   151	  return {
+   152	    id: legacy.id,
+   153	    entityType: "organizer.grid",
+   154	    schemaVersion: 1,
+   155	    createdAt: timestamp,
+   156	    updatedAt: timestamp,
+   157	    syncScope: "account-sync",
+   158	    title: legacy.title ?? "Untitled",
+   159	    rect: {
+   160	      x: numberOrZero(legacy.rect?.x),
+   161	      y: numberOrZero(legacy.rect?.y),
+   162	      width: numberOrDefault(legacy.rect?.width, 240),
+   163	      height: numberOrDefault(legacy.rect?.height, 320),
+   164	    },
+   165	    isLocked: Boolean(legacy.isLocked),
+   166	    isFolded: Boolean(legacy.isFolded),
+   167	    viewMode: legacy.viewMode === "list" ? "list" : "grid",
+   168	    itemIds: Array.isArray(legacy.itemIds) ? [...legacy.itemIds] : [],
+   169	    themeColor: legacy.themeColor,
+   170	  };
+   171	}
+   172	
+   173	function toGridItemEntity(
+   174	  legacy: LegacyDesktopItem,
+   175	  gridId: string,
+   176	  timestamp: string,
+   177	): GridItemEntity {
+   178	  const kind: GridItemEntity["kind"] = legacy.type ?? "file";
+   179	  return {
+   180	    id: legacy.id,
+   181	    entityType: "organizer.item",
+   182	    schemaVersion: 1,
+   183	    createdAt: timestamp,
+   184	    updatedAt: timestamp,
+   185	    syncScope: "account-sync",
+   186	    gridId,
+   187	    filename: legacy.filename ?? legacy.id,
+   188	    filepath: legacy.filepath,
+   189	    kind,
+   190	    icon: legacy.icon ?? "doc",
+   191	    size: legacy.size,
+   192	  };
+   193	}
+   194	
+   195	function findOwningGridId(
+   196	  itemId: string,
+   197	  grids: LegacyGridBox[],
+   198	): string | undefined {
+   199	  for (const grid of grids) {
+   200	    if (Array.isArray(grid.itemIds) && grid.itemIds.includes(itemId)) {
+   201	      return grid.id;
+   202	    }
+   203	  }
+   204	  return undefined;
+   205	}
+   206	
+   207	function numberOrZero(value: unknown): number {
+   208	  return typeof value === "number" && Number.isFinite(value) ? value : 0;
+   209	}
+   210	
+   211	function numberOrDefault(value: unknown, fallback: number): number {
+   212	  return typeof value === "number" && Number.isFinite(value) ? value : fallback;
+   213	}
+
+exec
+/bin/zsh -lc "rg -n \"type: \\\"url\\\"|kind: \\\"url\\\"|url:\" packages/plugin-organizer packages/core-data -g '*.ts' -g '*.tsx'" in /Users/lijinlong/Desktop/AI_Desktop/XAI_Desktop
+ succeeded in 0ms:
+packages/plugin-organizer/src/itemHealth.test.ts:62:    const broken = { ...item, url: { ...item.url!, href: "::not a url::" } };
+packages/plugin-organizer/src/itemHealth.test.ts:71:    const without = { ...item, url: undefined } as typeof item;
+packages/plugin-organizer/src/gridItemFactory.ts:25:  url: "globe",
+packages/plugin-organizer/src/gridItemFactory.ts:174:  let url: URL;
+packages/plugin-organizer/src/gridItemFactory.ts:199:    kind: "url",
+packages/plugin-organizer/src/gridItemFactory.ts:201:    url: {
+packages/plugin-organizer/src/gridItemFactory.test.ts:107:      kind: "url",
+packages/plugin-organizer/src/gridItemFactory.test.ts:109:      url: { href: "https://example.com/path/?q=1" },
+packages/plugin-organizer/src/autoClassify.ts:72:  url: ["links", "bookmarks", "web"],
+
+exec
+/bin/zsh -lc "nl -ba packages/plugin-organizer/src/gridItemFactory.ts | sed -n '1,260p'" in /Users/lijinlong/Desktop/AI_Desktop/XAI_Desktop
+ succeeded in 0ms:
+     1	/**
+     2	 * Typed `GridItemEntity` factory (G3-E1 / G3-S3).
+     3	 *
+     4	 * Bridges the Organizer's runtime sources (Finder DnD, URL paste,
+     5	 * pasteboard) to the G2.1 Repository v0 entity surface. Plugin code
+     6	 * should pass through these helpers rather than constructing
+     7	 * `GridItemEntity` objects directly so the dotted `entityType`,
+     8	 * `syncScope`, and timestamp conventions stay consistent.
+     9	 */
+    10	
+    11	import type { GridItemEntity } from "@repo/core-data";
+    12	
+    13	export type GridItemKind = GridItemEntity["kind"];
+    14	
+    15	/**
+    16	 * App bundle suffix — overridable for test rigs. Anything ending with
+    17	 * `.app` (case-insensitive) is treated as a macOS application bundle.
+    18	 */
+    19	const APP_BUNDLE_SUFFIX = ".app";
+    20	
+    21	const DEFAULT_ICONS: Record<GridItemKind, string> = {
+    22	  file: "doc.text",
+    23	  folder: "folder",
+    24	  app: "app.dashed",
+    25	  url: "globe",
+    26	};
+    27	
+    28	export interface GridItemFactoryDeps {
+    29	  /** Returns an ISO timestamp; defaults to `new Date().toISOString()`. */
+    30	  nowIso?: () => string;
+    31	  /** Returns a unique id; defaults to a `crypto.randomUUID`-backed shim. */
+    32	  newId?: (kind: GridItemKind) => string;
+    33	}
+    34	
+    35	function resolveDeps(deps: GridItemFactoryDeps = {}): Required<
+    36	  Pick<GridItemFactoryDeps, "nowIso" | "newId">
+    37	> {
+    38	  return {
+    39	    nowIso: deps.nowIso ?? (() => new Date().toISOString()),
+    40	    newId:
+    41	      deps.newId ??
+    42	      ((kind: GridItemKind) => `${kind}_${randomSlug()}`),
+    43	  };
+    44	}
+    45	
+    46	function randomSlug(): string {
+    47	  if (typeof crypto !== "undefined" && crypto.randomUUID) {
+    48	    return crypto.randomUUID();
+    49	  }
+    50	  return Math.random().toString(16).slice(2, 12);
+    51	}
+    52	
+    53	/** Heuristic kind inference from a filesystem path. */
+    54	export function inferKindFromPath(path: string): GridItemKind {
+    55	  if (path.toLowerCase().endsWith(APP_BUNDLE_SUFFIX)) return "app";
+    56	  if (path.endsWith("/")) return "folder";
+    57	  // The drop adapter labels folders explicitly; the bare path heuristic
+    58	  // defaults the unknown case to "file" — most drag-ins are files.
+    59	  return "file";
+    60	}
+    61	
+    62	export interface CreateFileGridItemInput {
+    63	  gridId: string;
+    64	  filename: string;
+    65	  filepath: string;
+    66	  size?: number;
+    67	  icon?: string;
+    68	}
+    69	
+    70	export function createFileGridItem(
+    71	  input: CreateFileGridItemInput,
+    72	  deps: GridItemFactoryDeps = {},
+    73	): GridItemEntity {
+    74	  const { nowIso, newId } = resolveDeps(deps);
+    75	  const timestamp = nowIso();
+    76	  return {
+    77	    id: newId("file"),
+    78	    entityType: "organizer.item",
+    79	    schemaVersion: 1,
+    80	    createdAt: timestamp,
+    81	    updatedAt: timestamp,
+    82	    syncScope: "account-sync",
+    83	    gridId: input.gridId,
+    84	    filename: input.filename,
+    85	    filepath: input.filepath,
+    86	    kind: "file",
+    87	    icon: input.icon ?? DEFAULT_ICONS.file,
+    88	    size: input.size,
+    89	  };
+    90	}
+    91	
+    92	export interface CreateFolderGridItemInput {
+    93	  gridId: string;
+    94	  name: string;
+    95	  filepath: string;
+    96	  icon?: string;
+    97	}
+    98	
+    99	export function createFolderGridItem(
+   100	  input: CreateFolderGridItemInput,
+   101	  deps: GridItemFactoryDeps = {},
+   102	): GridItemEntity {
+   103	  const { nowIso, newId } = resolveDeps(deps);
+   104	  const timestamp = nowIso();
+   105	  return {
+   106	    id: newId("folder"),
+   107	    entityType: "organizer.item",
+   108	    schemaVersion: 1,
+   109	    createdAt: timestamp,
+   110	    updatedAt: timestamp,
+   111	    syncScope: "account-sync",
+   112	    gridId: input.gridId,
+   113	    filename: input.name,
+   114	    filepath: input.filepath,
+   115	    kind: "folder",
+   116	    icon: input.icon ?? DEFAULT_ICONS.folder,
+   117	  };
+   118	}
+   119	
+   120	export interface CreateAppGridItemInput {
+   121	  gridId: string;
+   122	  name: string;
+   123	  filepath: string;
+   124	  icon?: string;
+   125	}
+   126	
+   127	export function createAppGridItem(
+   128	  input: CreateAppGridItemInput,
+   129	  deps: GridItemFactoryDeps = {},
+   130	): GridItemEntity {
+   131	  const { nowIso, newId } = resolveDeps(deps);
+   132	  const timestamp = nowIso();
+   133	  return {
+   134	    id: newId("app"),
+   135	    entityType: "organizer.item",
+   136	    schemaVersion: 1,
+   137	    createdAt: timestamp,
+   138	    updatedAt: timestamp,
+   139	    syncScope: "account-sync",
+   140	    gridId: input.gridId,
+   141	    filename: input.name,
+   142	    filepath: input.filepath,
+   143	    kind: "app",
+   144	    icon: input.icon ?? DEFAULT_ICONS.app,
+   145	  };
+   146	}
+   147	
+   148	export interface CreateUrlGridItemInput {
+   149	  gridId: string;
+   150	  href: string;
+   151	  title?: string;
+   152	  description?: string;
+   153	  favicon?: string;
+   154	  icon?: string;
+   155	}
+   156	
+   157	export class InvalidUrlError extends Error {
+   158	  constructor(message: string) {
+   159	    super(message);
+   160	    this.name = "InvalidUrlError";
+   161	  }
+   162	}
+   163	
+   164	/**
+   165	 * Build a URL item. Validates that `href` parses as a `URL` and that
+   166	 * its protocol is `http(s):`, otherwise throws `InvalidUrlError`. Other
+   167	 * protocols (file://, mailto:) are rejected because they require Finder
+   168	 * collaboration paths that have their own factories.
+   169	 */
+   170	export function createUrlGridItem(
+   171	  input: CreateUrlGridItemInput,
+   172	  deps: GridItemFactoryDeps = {},
+   173	): GridItemEntity {
+   174	  let url: URL;
+   175	  try {
+   176	    url = new URL(input.href);
+   177	  } catch {
+   178	    throw new InvalidUrlError(
+   179	      `URL parse failed for "${input.href}" — must be a fully qualified http(s) URL`,
+   180	    );
+   181	  }
+   182	  if (url.protocol !== "http:" && url.protocol !== "https:") {
+   183	    throw new InvalidUrlError(
+   184	      `URL protocol "${url.protocol}" not allowed; expected http: or https:`,
+   185	    );
+   186	  }
+   187	
+   188	  const { nowIso, newId } = resolveDeps(deps);
+   189	  const timestamp = nowIso();
+   190	  return {
+   191	    id: newId("url"),
+   192	    entityType: "organizer.item",
+   193	    schemaVersion: 1,
+   194	    createdAt: timestamp,
+   195	    updatedAt: timestamp,
+   196	    syncScope: "account-sync",
+   197	    gridId: input.gridId,
+   198	    filename: input.title?.trim() || url.hostname,
+   199	    kind: "url",
+   200	    icon: input.icon ?? DEFAULT_ICONS.url,
+   201	    url: {
+   202	      href: url.toString(),
+   203	      title: input.title?.trim() || undefined,
+   204	      description: input.description?.trim() || undefined,
+   205	      favicon: input.favicon,
+   206	    },
+   207	  };
+   208	}
+   209	
+   210	/**
+   211	 * Bulk factory for Finder-style drop adapters. Each path becomes a
+   212	 * typed item; kind is inferred from `inferKindFromPath` unless the
+   213	 * caller pins it explicitly via `kindOverride`.
+   214	 */
+   215	export interface FinderDropEntry {
+   216	  filepath: string;
+   217	  filename: string;
+   218	  size?: number;
+   219	  kindOverride?: GridItemKind;
+   220	}
+   221	
+   222	export function createGridItemsFromFinderDrop(
+   223	  gridId: string,
+   224	  entries: FinderDropEntry[],
+   225	  deps: GridItemFactoryDeps = {},
+   226	): GridItemEntity[] {
+   227	  return entries.map((entry) => {
+   228	    const kind = entry.kindOverride ?? inferKindFromPath(entry.filepath);
+   229	    switch (kind) {
+   230	      case "app":
+   231	        return createAppGridItem(
+   232	          { gridId, name: entry.filename, filepath: entry.filepath },
+   233	          deps,
+   234	        );
+   235	      case "folder":
+   236	        return createFolderGridItem(
+   237	          { gridId, name: entry.filename, filepath: entry.filepath },
+   238	          deps,
+   239	        );
+   240	      case "url":
+   241	        // Unusual — Finder drops are filesystem paths. If the caller
+   242	        // pins `kindOverride = "url"` we treat the path as the href
+   243	        // for parity with the pasteboard URL path.
+   244	        return createUrlGridItem({ gridId, href: entry.filepath }, deps);
+   245	      case "file":
+   246	      default:
+   247	        return createFileGridItem(
+   248	          {
+   249	            gridId,
+   250	            filename: entry.filename,
+   251	            filepath: entry.filepath,
+   252	            size: entry.size,
+   253	          },
+   254	          deps,
+   255	        );
+   256	    }
+   257	  });
+   258	}
+
+exec
+/bin/zsh -lc "rg -n \"interface DesktopItem|type DesktopItem|url\\?:|kind: \\\"url\\\"|DesktopItemType\" packages/plugin-organizer/src -g '*.ts' -g '*.tsx'" in /Users/lijinlong/Desktop/AI_Desktop/XAI_Desktop
+ succeeded in 0ms:
+packages/plugin-organizer/src/mockData.ts:1:import { DesktopItem, DesktopItemType, GridBox } from "./types";
+packages/plugin-organizer/src/mockData.ts:4:  { filename: "Report.pdf", type: "file" as DesktopItemType },
+packages/plugin-organizer/src/mockData.ts:5:  { filename: "Design.sketch", type: "file" as DesktopItemType },
+packages/plugin-organizer/src/mockData.ts:6:  { filename: "Screenshots", type: "folder" as DesktopItemType },
+packages/plugin-organizer/src/mockData.ts:7:  { filename: "Notes.txt", type: "file" as DesktopItemType },
+packages/plugin-organizer/src/mockData.ts:8:  { filename: "Music.app", type: "app" as DesktopItemType },
+packages/plugin-organizer/src/mockData.ts:9:  { filename: "Budget.xlsx", type: "file" as DesktopItemType },
+packages/plugin-organizer/src/gridItemFactory.ts:199:    kind: "url",
+packages/plugin-organizer/src/gridItemFactory.test.ts:107:      kind: "url",
+packages/plugin-organizer/src/types.ts:17:export type DesktopItemType = "file" | "folder" | "app";
+packages/plugin-organizer/src/types.ts:19:export interface DesktopItem {
+packages/plugin-organizer/src/types.ts:23:  type: DesktopItemType;
+
+codex
+## Codex Cross-vendor Review
+
+**Feature**: grid-persistence
+**Commit(s)**: 91dc6b6
+**Reviewer**: codex feature-review (cross-vendor) · gpt-5.4 high
+**Verdict**: REVISE
+
+### Strengths (max 4 bullets)
+- `LayoutStore` is a clean seam: default `localStorageLayoutStore()` preserves existing behavior while exposing a repository-backed path without touching Host runtime yet.
+- Whiteout-safety is materially improved: both adapters swallow `load`/`save` failures, and `GridSystemProvider` keeps a defense-in-depth startup fallback to empty state.
+- Contract integrity is mostly respected: no new Host business logic, no new plugin-side Tauri calls, and the new surface is exported through `packages/plugin-organizer/src/index.ts`.
+- Targeted tests exist for the core happy-path and corrupt-load cases across both storage backends.
+
+### Gaps & risks (max 6 bullets, severity-tagged)
+- [P1] `packages/plugin-organizer/src/layoutStore.ts` saves grids/items via multi-step `put`/cull loops outside `Repo.transaction()`. If upsert succeeds and later cull/delete fails, the repo is left in a mixed generation while the error is swallowed. That is not safe enough for the eventual SQLite cut-over.
+- [P1] `packages/plugin-organizer/src/useGridSystem.tsx` can clobber user edits made before async hydrate resolves. `hydrated` only gates persistence; it does not prevent late `load()` results from overwriting in-memory state after the UI has already rendered.
+- [P1] `packages/plugin-organizer/src/layoutStore.ts` maps `GridItemEntity.kind === "url"` back to `DesktopItem.type === "file"` and drops `url` metadata. That makes repository round-trip lossy against the G2.1 entity contract and is a poor fit for the next URL-item phase.
+- [P2] Doc/code alignment is stale: `packages/grid-persistence/docs/api.md` still says no production API changed, `packages/grid-persistence/docs/design.md` still says “safe prep only,” and `docs/workflow/roadmap/xai-g1-native-foundation.md` still says G1.5 remains blocked in the rationale section.
+- [P2] Workflow hygiene is incomplete: `packages/grid-persistence/docs/dev_log.md` Work Log still records the production row as `pending commit` even though `91dc6b6` exists.
+- [P2] Test coverage misses the highest-risk repository edges: no explicit missing-`items` malformed payload case, no repo-save failure callback case, and no rollback/partial-write proof.
+
+### Concrete next-phase targets (max 6 bullets)
+- Wrap repository save phases in `transaction()` and add a sabotaged-driver rollback test.
+- Add a hydrate generation/dirty-state guard so late loads cannot overwrite pre-hydration user actions.
+- Make Organizer runtime state URL-capable, or explicitly reject `url` entities until that support lands.
+- Reconcile `grid-persistence` docs and roadmap rationale with the shipped scope.
+- Record `91dc6b6` in the dev log Work Log row.
+- Define cut-over order: run `migrateOrganizerLayoutToRepos` before enabling `repositoryLayoutStore`, and keep legacy localStorage until runtime smoke passes.
+
+### Out of scope confirmed
+- Actual Host wiring to pass `repositoryLayoutStore(...)` into `GridSystemProvider`.
+- Live `tauri-sqlite` / macOS desktop runtime smoke for restart-restore behavior.
+- MAS sandbox / security-scope validation for path-backed items.
+- Live Supabase, 2-Mac sync, and SQLCipher dump/wrong-key gates from later G2 rows.
+tokens used
+71,813
+## Codex Cross-vendor Review
+
+**Feature**: grid-persistence
+**Commit(s)**: 91dc6b6
+**Reviewer**: codex feature-review (cross-vendor) · gpt-5.4 high
+**Verdict**: REVISE
+
+### Strengths (max 4 bullets)
+- `LayoutStore` is a clean seam: default `localStorageLayoutStore()` preserves existing behavior while exposing a repository-backed path without touching Host runtime yet.
+- Whiteout-safety is materially improved: both adapters swallow `load`/`save` failures, and `GridSystemProvider` keeps a defense-in-depth startup fallback to empty state.
+- Contract integrity is mostly respected: no new Host business logic, no new plugin-side Tauri calls, and the new surface is exported through `packages/plugin-organizer/src/index.ts`.
+- Targeted tests exist for the core happy-path and corrupt-load cases across both storage backends.
+
+### Gaps & risks (max 6 bullets, severity-tagged)
+- [P1] `packages/plugin-organizer/src/layoutStore.ts` saves grids/items via multi-step `put`/cull loops outside `Repo.transaction()`. If upsert succeeds and later cull/delete fails, the repo is left in a mixed generation while the error is swallowed. That is not safe enough for the eventual SQLite cut-over.
+- [P1] `packages/plugin-organizer/src/useGridSystem.tsx` can clobber user edits made before async hydrate resolves. `hydrated` only gates persistence; it does not prevent late `load()` results from overwriting in-memory state after the UI has already rendered.
+- [P1] `packages/plugin-organizer/src/layoutStore.ts` maps `GridItemEntity.kind === "url"` back to `DesktopItem.type === "file"` and drops `url` metadata. That makes repository round-trip lossy against the G2.1 entity contract and is a poor fit for the next URL-item phase.
+- [P2] Doc/code alignment is stale: `packages/grid-persistence/docs/api.md` still says no production API changed, `packages/grid-persistence/docs/design.md` still says “safe prep only,” and `docs/workflow/roadmap/xai-g1-native-foundation.md` still says G1.5 remains blocked in the rationale section.
+- [P2] Workflow hygiene is incomplete: `packages/grid-persistence/docs/dev_log.md` Work Log still records the production row as `pending commit` even though `91dc6b6` exists.
+- [P2] Test coverage misses the highest-risk repository edges: no explicit missing-`items` malformed payload case, no repo-save failure callback case, and no rollback/partial-write proof.
+
+### Concrete next-phase targets (max 6 bullets)
+- Wrap repository save phases in `transaction()` and add a sabotaged-driver rollback test.
+- Add a hydrate generation/dirty-state guard so late loads cannot overwrite pre-hydration user actions.
+- Make Organizer runtime state URL-capable, or explicitly reject `url` entities until that support lands.
+- Reconcile `grid-persistence` docs and roadmap rationale with the shipped scope.
+- Record `91dc6b6` in the dev log Work Log row.
+- Define cut-over order: run `migrateOrganizerLayoutToRepos` before enabling `repositoryLayoutStore`, and keep legacy localStorage until runtime smoke passes.
+
+### Out of scope confirmed
+- Actual Host wiring to pass `repositoryLayoutStore(...)` into `GridSystemProvider`.
+- Live `tauri-sqlite` / macOS desktop runtime smoke for restart-restore behavior.
+- MAS sandbox / security-scope validation for path-backed items.
+- Live Supabase, 2-Mac sync, and SQLCipher dump/wrong-key gates from later G2 rows.

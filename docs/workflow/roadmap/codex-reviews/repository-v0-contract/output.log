@@ -1,0 +1,3178 @@
+Reading additional input from stdin...
+OpenAI Codex v0.132.0
+--------
+workdir: /Users/lijinlong/Desktop/AI_Desktop/XAI_Desktop
+model: gpt-5.4
+provider: openai
+approval: never
+sandbox: workspace-write [workdir, /tmp, $TMPDIR]
+reasoning effort: high
+reasoning summaries: none
+session id: 019e4479-9068-7883-b318-ce61a2a22056
+--------
+user
+# Codex Feature Post-merge Review
+
+You are acting as the `feature-review` subagent (Codex inline, cross-vendor verify pass).
+Your job is to audit a Track A feature that has already been built and committed to
+`codex/track-a-desktop-foundation`. The original executor was Claude Code; you provide an
+independent cross-vendor verdict.
+
+## Hard output contract
+
+Output ONLY the markdown block below — no preamble, no follow-up, no chatter. Keep total
+length under 600 words.
+
+```md
+## Codex Cross-vendor Review
+
+**Feature**: repository-v0-contract
+**Commit(s)**: 744d578
+**Reviewer**: codex feature-review (cross-vendor) · gpt-5.4 high
+**Verdict**: APPROVED | REVISE | BLOCKED
+
+### Strengths (max 4 bullets)
+- …
+
+### Gaps & risks (max 6 bullets, severity-tagged)
+- [P0|P1|P2] …
+
+### Concrete next-phase targets (max 6 bullets)
+- …
+
+### Out of scope confirmed
+- …
+```
+
+## How to evaluate
+
+1. Read the listed dev_log and contract docs to understand the *intended* scope.
+2. Run `git show --stat 744d578` mentally — review the diff for the listed files.
+3. Score against:
+   - **Contract integrity** (red lines #4 / #8 / #9 in `docs/SYSTEM_ARCHITECTURE.md` §4)
+   - **Test coverage adequacy** (boundary, error, concurrency, capability)
+   - **Doc-code alignment** (`docs/contracts/*` matches actual surface)
+   - **Security boundary** (raw key bytes, capability allow-list, IPC payload)
+   - **Workflow V2 hygiene** (dev_log Status Panel, Work Log row, commit message Why/What/Scope/Risk)
+   - **Future-proofing** (does the design accommodate the next 1-2 G2/G3 rows?)
+4. Verdict guidance:
+   - **APPROVED**: ship-ready; gaps are P2-only and recorded.
+   - **REVISE**: at least one P1 issue worth fixing before next phase.
+   - **BLOCKED**: at least one P0 issue (broken contract, missing test on critical path, security regression).
+5. Concrete next-phase targets must be small, mergeable items (each ≤ half a day).
+6. Out-of-scope: confirm which deferred gates remain valid (live Supabase, MAS sandbox, real
+   macOS Finder smoke, etc.) — call them out so the next agent does not re-investigate.
+
+## Feature-specific context
+
+Feature ID: G2.1 / repository-v0-contract
+Branch: codex/track-a-desktop-foundation
+Commit under review: 744d578 (feat(repository-v0-contract): freeze Repository v0 entity surface)
+
+Files added or changed by this commit (read these):
+- packages/core-data/src/entities.ts (new) — canonical Repository v0 entity surface
+- packages/core-data/src/index.ts — re-exports
+- packages/core-data/src/types.ts — RepoRecord / Repo / Migration types
+- packages/core-data/src/sqlite.ts — createSqliteRepo + SqliteDriver
+- packages/core-data/src/repo-utils.ts (new) — applyRepoListQuery / listByIndex helpers / assertRepoRecord
+- packages/core-data/src/testing.ts — createInMemoryRepo + createInMemorySqliteDriver
+- packages/core-data/tests/entities.test.ts (new) — entity round-trip + naming regex + listByIndex
+- packages/core-data/tests/in-memory-repo.test.ts
+- packages/core-data/tests/sqlite-repo.test.ts
+- packages/core-data/tests/repository-contract.ts (new) — reusable contract suite
+- docs/contracts/data-repository-v0.md — adds §3.1 entity table, full Repo<T> interface
+- packages/repository-v0-contract/docs/dev_log.md — Status → READY_TO_SHIP
+- docs/workflow/roadmap/xai-g2-data-security-foundation.md — manifest row #1 → READY_TO_SHIP
+
+Intended scope:
+- Define a typed entity surface for every persisted plugin (Grid, GridItem, Label, Todo,
+  Habit, ClipboardEntry, Project, Card) on top of the RepoRecord base.
+- Freeze the Repo<T> interface so SQLite, sync, and plugins agree on it.
+- Provide a reusable contract test suite that drivers must pass.
+
+Explicit non-goals (deferred):
+- SQLCipher PRAGMA application (G2.4)
+- Live Supabase / 2-Mac smoke (G2.6 follow-up)
+- localStorage runtime cut-over in plugin-organizer (G1.5 / G3-E1)
+- MAS / signed-runtime smoke (G0.6 / G2.7)
+
+Key invariants to verify:
+- ClipboardEntryEntity narrows syncScope to the literal "device-local" (cannot be widened).
+- entityType matches /^[a-z]+\.[a-z_]+$/.
+- Repository v0 helpers (assertRepoRecord, applyRepoListQuery, applyRepoIndexQuery)
+  reject bad records with E3005 / E3006 messages.
+
+Test evidence:
+- pnpm --filter @repo/core-data test → 45 tests (now 58 after later commits) passing.
+- pnpm --filter @repo/core-data check-types passes.
+
+Cross-vendor checklist (verify or flag):
+1. Does the entity surface match docs/contracts/data-repository-v0.md §3.1 row-for-row?
+2. Are there entities the project clearly needs (e.g. WidgetEntity / AccountDeviceEntity)
+   that were missed?
+3. Is the `RepoEntity` discriminated union usable from plugins without runtime narrowing
+   helpers? Suggest a helper if missing.
+4. Is the test in tests/repository-contract.ts adequate for a new SQLCipher-backed driver
+   to claim contract compliance?
+5. Any naming-regex edge cases? (e.g. `productivity.todo-list`?)
+6. Future-proof: if G2.6 adds OutboxEntry (`sync.outbox`) — does the naming regex accept it?
+exec
+/bin/zsh -lc "sed -n '1,260p' docs/contracts/data-repository-v0.md" in /Users/lijinlong/Desktop/AI_Desktop/XAI_Desktop
+exec
+/bin/zsh -lc "sed -n '1,260p' packages/repository-v0-contract/docs/dev_log.md" in /Users/lijinlong/Desktop/AI_Desktop/XAI_Desktop
+ succeeded in 0ms:
+# Data Repository Contract v0
+
+| 字段 | 值 |
+|---|---|
+| Owner | `@repo/core-data` |
+| Source | `packages/core-data/src/types.ts` |
+| 状态 | Draft |
+| 适用 | Desktop SQLite/SQLCipher, Web IndexedDB/remote encrypted blob, tests |
+
+## 1. 原则
+
+- Plugin 不直接访问 localStorage、SQLite、IndexedDB 或 Supabase。
+- Plugin 只依赖 Repository interface。
+- Repository driver 不 import plugin package。
+- 所有记录必须包含 `id`、`entityType`、`schemaVersion`、`createdAt`、`updatedAt`。
+- Device-local 与 syncable 数据必须显式区分。
+- Clipboard 默认 device-local。
+
+## 2. Record Model
+
+```ts
+interface RepoRecord {
+  id: string;
+  entityType: string;
+  schemaVersion: number;
+  createdAt: string;
+  updatedAt: string;
+  syncScope: "device-local" | "account-sync";
+}
+```
+
+Entity type 使用 `plugin.entity`:
+
+| Entity | syncScope 默认值 |
+|---|---|
+| `organizer.grid` | `account-sync` |
+| `organizer.item` | `account-sync` 或 `device-local`,按 path 权限决定 |
+| `labels.label` | `account-sync` |
+| `productivity.todo` | `account-sync` |
+| `productivity.pomodoro_session` | `account-sync` |
+| `productivity.habit` | `account-sync` |
+| `clipboard.item` | `device-local` |
+| `project.board` | `account-sync` |
+| `project.card` | `account-sync` |
+| `widgets.widget` | `device-local` |
+| `account.device` | `account-sync` |
+
+## 3. Repository Interface 目标
+
+```ts
+interface Repo<T extends RepoRecord> {
+  get(id: string): Promise<T | undefined>;
+  put(record: T): Promise<void>;
+  delete(id: string): Promise<void>;
+  list(query?: RepoListQuery<T>): Promise<T[]>;
+  listByIndex<K extends keyof T>(
+    field: K,
+    value: T[K],
+    query?: RepoListQuery<T>,
+  ): Promise<T[]>;
+  metadata(): Promise<RepoMetadata>;
+  transaction<R>(fn: (tx: RepoTransaction<T>) => Promise<R>): Promise<R>;
+  migrate(plan: MigrationPlan<T>): Promise<MigrationResult>;
+}
+```
+
+`list()` 的默认顺序不稳定。需要稳定顺序时必须显式传 query。
+
+## 3.1 Repository v0 Entity 表
+
+`packages/core-data/src/entities.ts` 是 entity 类型的 canonical source。每个具体
+entity 都是 `RepoRecord` 的扩展,`entityType` 必须使用下表中固定的 dotted slug。
+
+| Entity (TS) | `entityType` | 默认 syncScope | 关键字段 |
+|---|---|---|---|
+| `GridEntity` | `organizer.grid` | `account-sync` | `title`, `rect`, `itemIds`, `isLocked`, `isFolded`, `viewMode` |
+| `GridItemEntity` | `organizer.item` | `account-sync` (file/folder/app 可能 device-local) | `gridId`, `kind`, `filename`, `filepath?`, `url?` |
+| `LabelEntity` | `labels.label` | `account-sync` | `name`, `color`, `parentId?` |
+| `TodoEntity` | `productivity.todo` | `account-sync` | `title`, `done`, `labelIds`, `dueAt?`, `projectId?` |
+| `HabitEntity` | `productivity.habit` | `account-sync` | `title`, `cadence`, `completions[]`, `labelIds` |
+| `ClipboardEntryEntity` | `clipboard.item` | `device-local`(强制) | `kind`, `payload`, `pinned?` |
+| `ProjectEntity` | `project.board` | `account-sync` | `title`, `labelIds`, `archivedAt?` |
+| `CardEntity` | `project.card` | `account-sync` | `projectId`, `status`, `position`, `labelIds` |
+
+新增 entity 必须遵守以下规则:
+
+1. `entityType` 形如 `^[a-z]+\.[a-z_]+$`,plugin 段必须真实存在。
+2. Device-local 类型必须把 `syncScope` 收窄为字面量 `"device-local"`。
+3. `id` 由 plugin 生成,driver 不会自动赋值;命名需 plugin-scoped (例 `grid_<uuid>`)。
+4. 修改任何 entity 字段必须同步 `schemaVersion` 提升 + migration plan。
+
+## 4. Driver
+
+| Driver | 用途 | 要求 |
+|---|---|---|
+| in-memory | tests | 复用 contract tests |
+| localStorage migration | one-time import | 只读旧数据,不作为长期 driver |
+| SQLite | desktop dev baseline | 支持 transaction/index |
+| SQLCipher | desktop secure baseline | 错 key 不可读 |
+| IndexedDB | Web local cache | 不存明文 secret |
+| Remote encrypted blob | Sync/Web | 只传 encrypted envelope |
+
+## 5. Migration Rules
+
+- Migration 必须幂等。
+- Migration failure 不删除旧数据。
+- Migration 必须记录 source version、target version、startedAt、completedAt。
+- 用户可导出迁移前数据或保留 fallback。
+
+## 6. Sync Rules
+
+- `device-local` 不进入 remote outbox。
+- `account-sync` 写入必须具备 account/device context。
+- Remote blob 不存明文 payload。
+- Conflict resolution 必须 deterministic,不能靠 UI 随机顺序。
+
+## 7. Testing Contract
+
+每个 driver 必须通过同一组测试 (`packages/core-data/tests/repository-contract.ts` 是
+canonical suite):
+
+- CRUD roundtrip。
+- list query and stable ordering。
+- listByIndex 命中 + query options 组合。
+- transaction rollback。
+- migration idempotency。
+- corrupted storage handling。
+- syncScope enforcement。
+- encrypted driver wrong-key failure。
+
+Entity-level 测试 (`packages/core-data/tests/entities.test.ts`) 校验:
+
+- 每个 entity 类型可通过 `Repo<RepoEntity>` round-trip。
+- `entityType` 命名遵守 `plugin.entity` 正则。
+- `listByIndex` 在 entity-owned 字段 (例 `gridId`) 上工作。
+- Clipboard 在类型层面被约束为 `device-local`。
+
+## 8. Open Questions
+
+- SQLCipher 具体依赖和 Tauri bundling 策略在 G2 确认。
+- Organizer path-backed item 是否默认 sync path metadata,需按 MAS sandbox 结果决定。
+- Clipboard Sync 是否进入 v1 默认关闭,PRD 当前倾向默认 device-local。
+
+ succeeded in 0ms:
+# repository-v0-contract — Dev Log
+
+## Status Panel
+
+| Field | Value |
+|---|---|
+| Workflow | FEATURE_DEV |
+| Target | repository-v0-contract |
+| Title | G2.1 Repository v0 Contract |
+| Roadmap | xai-g2-data-security-foundation · feature #1 · G2.1 |
+| Status | READY_TO_SHIP |
+| Current Phase | VERIFY |
+| Suggested Next | manual ship only; continue roadmap |
+| Automation Mode | D-Codex |
+| Verify Cross-vendor | yes |
+| Executor | feature-verify (Claude Code, Track A) |
+| Updated | 2026-05-20 00:18 PDT |
+| Blockers | Cross-vendor verify deferred in serial mode; no blocker for scoped contract |
+
+## Phase Plan
+
+### Phase 1 — Contract and tests
+
+- Upgrade `packages/core-data/src/types.ts`.
+- Update in-memory and SQLite-shaped implementations.
+- Add reusable contract tests for in-memory and SQLite-shaped repos.
+- Sync `docs/contracts/data-repository-v0.md`.
+
+### Phase 2 — Verify and logs
+
+- Run `@repo/core-data` tests and type checks.
+- Run boundary scan for plugin/Tauri imports.
+- Update G2 manifest, autorun log, and deferred gate log.
+
+## Review Notes
+
+feature-review (Codex inline), 2026-05-19 23:48 PDT. Verdict: APPROVED.
+
+The plan is scoped to the G2.1 contract and reusable tests. SQLCipher runtime, live Supabase, localStorage UI migration, and MAS/sandbox evidence are excluded and tracked by later G2 rows.
+
+## Verification Notes
+
+feature-verify (Claude Code, Track A), 2026-05-20 00:18 PDT. Verdict: READY_TO_SHIP.
+
+Verification passed locally:
+
+- `pnpm --filter @repo/core-data test` — 45 tests across in-memory, SQLite, keychain, and the new entity contract suite.
+- `pnpm --filter @repo/core-data check-types`.
+- `pnpm --filter @repo/core check-types`.
+- `pnpm --filter @repo/plugin-organizer check-types`.
+- Repository v0 entity surface added at `packages/core-data/src/entities.ts` covers Grid, GridItem, Label, Todo, Habit, ClipboardEntry, Project, Card.
+- `docs/contracts/data-repository-v0.md` updated with entity table, interface (incl. `listByIndex` + `metadata`), and entity-level testing contract.
+
+Cross-vendor review/verify, SQLCipher runtime, live Supabase, plugin/UI migration, and MAS/sandbox runtime are explicitly out of scope for G2.1 and remain on later G2 rows or `xai-v1.deferred-gates.md`.
+
+## Work Log
+
+| Timestamp | Executor | Action | Commits | Next |
+|---|---|---|---|---|
+| 2026-05-19 23:48 PDT | feature-plan + feature-review (Codex inline) | Created Step 0 brief and feature docs. Approved scoped G2.1 plan for build. | pending | feature-build |
+| 2026-05-20 00:18 PDT | feature-build + feature-verify (Claude Code, Track A) | Implemented Repository v0 entity surface (`packages/core-data/src/entities.ts`), updated contract doc with entity table + interface, added `tests/entities.test.ts`, ran core-data test + type checks (45 tests passing). | pending commit | manual ship only; continue roadmap |
+
+exec
+/bin/zsh -lc "rg -n \"§4|red lines|Red lines|4\\.\" docs/SYSTEM_ARCHITECTURE.md && sed -n '1,260p' docs/SYSTEM_ARCHITECTURE.md" in /Users/lijinlong/Desktop/AI_Desktop/XAI_Desktop
+ succeeded in 0ms:
+42:## 4. 编码红线
+47:4. 禁止在 Plugin 内直接调用 `@tauri-apps/api` → 通过 `@repo/core/hooks` 封装
+140:4. 在 apps/desktop/src/main.tsx 添加 import 注册
+# SYSTEM_ARCHITECTURE.md — 系统宪法
+
+> 本文档定义 XAI_Desktop 的架构约束与编码红线。
+> 所有开发（人类和 AI）必须遵守此文档中的规则。
+>
+> 最后更新: 2026-05-14
+
+---
+
+## 1. 架构流派
+
+- **前端:** 微内核 (Microkernel) — Host 壳 + Plugin 业务层
+- **Rust:** 模块化命令 + macOS 平台适配层
+- **通信:** Plugin 间通过 Tauri 事件系统或 `@repo/core/events`，禁止直接 import 内部模块
+
+## 2. 技术栈版本锁定
+
+| 技术 | 版本 | 备注 |
+|------|------|------|
+| Tauri | 2.x | macOS private API 启用 |
+| React | 19.x | 函数式组件 + Hooks |
+| TypeScript | 5.x | strict mode |
+| Vite | 7.x | 前端构建 |
+| Rust | 1.80+ | Tauri 后端 |
+| pnpm | 9.x | 包管理 |
+| Turborepo | 2.6+ | Monorepo 编排 |
+
+## 3. 三层边界规则
+
+```
+apps/desktop/src/     → Host 壳 (路由 + Provider + PluginHost 渲染，不含业务)
+packages/core/        → 基础设施 (类型 + 事件 + Store + Registry，不含业务)
+packages/plugin-*/    → 业务插件 (所有业务逻辑的唯一归宿)
+packages/ui/          → 共享 UI (无业务逻辑的纯 UI 组件)
+```
+
+- **Host** (`apps/desktop/src/`): 窗口壳 + 路由 + 全局 Provider。禁止放业务逻辑
+- **Plugin** (`packages/plugin-*/`): 业务功能自治单元。禁止跨 Plugin 直接 import 内部模块
+- **Core** (`packages/core/`): 基础设施 + 共享类型。所有 Plugin 可依赖 Core
+- **UI** (`packages/ui/`): 共享 UI 组件库。无业务逻辑
+
+## 4. 编码红线
+
+1. 禁止在 Host 写业务逻辑 → 业务代码必须在 plugin 包内
+2. 禁止跨 Plugin 直接 import 对方 `src/` 内部模块
+3. Plugin 间通信必须通过 `@repo/core/events` 的类型安全事件
+4. 禁止在 Plugin 内直接调用 `@tauri-apps/api` → 通过 `@repo/core/hooks` 封装
+5. 所有 Tauri 事件 payload 必须在 `@repo/core/types` 中定义类型
+6. 每个 Plugin 的 `manifest.json` 是注册的唯一入口
+7. 禁止使用 `console.log` 做生产日志 → 开发环境可用
+8. 依赖方向严格单向: `Host → Plugin → Core/UI`，禁止反向
+9. `index.ts` 是每个 Plugin 的唯一出口 → 外部只能从 `packages/plugin-*/src/index.ts` 导入
+10. Plugin 内部目录结构自由组织 → `components/` `hooks/` `store/` `types/` 按需存在
+11. UI 组件归属: 通用组件 → `packages/ui/`；业务组件 → plugin 内部
+12. 禁止运行时动态插件加载 → 桌面应用编译时确定插件集，静态 import 注册
+
+## 5. 多窗口架构
+
+### 5.1 窗口分类
+
+| 类型 | Label 模式 | 用途 | 交互模式 |
+|------|-----------|------|---------|
+| main | `main` | 全屏透明 overlay | 默认点击穿透 (`ignoresMouseEvents: YES`) |
+| control | `control` | AI Cube 控制台 (360x360) | 始终可交互 |
+| grid_\<id\> | `grid_xxx` | 独立 Grid 窗口 | 始终可交互 |
+| widget_\<id\> | `widget_xxx` | Widget 窗口 | 始终可交互 (未来) |
+
+### 5.2 macOS 窗口层级
+
+所有窗口使用 `CGWindowLevelForKey(DesktopIconWindow)` 作为基准:
+
+- **main 窗口:** `desktop_icon_level + 1`，始终 click-through
+- **control 窗口:** `desktop_icon_level + 1`，可交互
+- **grid 窗口:** `desktop_icon_level + 3`，可交互，置于 icon 之上
+
+所有窗口加入 `NSWindowCollectionBehavior`: canJoinAllSpaces + stationary + ignoresCycle。
+
+### 5.3 Pointer-Events 策略
+
+- 根容器 `pointer-events: none` 实现桌面点击穿透
+- 交互元素 (SmartContainer, AiCube, SettingsPanel) 显式设置 `pointer-events: auto`
+- 每个 Grid 独立原生窗口，不受主窗口 pointer-events 限制
+
+## 6. 跨窗口通信规则
+
+- 所有事件通过 `@repo/core/events` 发送，payload 必须可序列化
+- 事件命名: `<plugin>:<action>`，禁止使用 `window.postMessage`，禁止直接操作其他窗口的 DOM
+
+### 6.1 事件前缀约定
+
+| 前缀 | 归属 | 示例 |
+|------|------|------|
+| `app:` | 全局/Host | `app:interactive-mode-changed` |
+| `organizer:` | plugin-organizer | `organizer:grid-update` |
+| `todo:` | plugin-todo | `todo:item-completed` |
+| `clipboard:` | plugin-clipboard | `clipboard:item-copied` |
+| `widgets:` | plugin-widgets | `widgets:clock-tick` |
+| `ai:` | plugin-ai-cube | `ai:query-response` |
+
+## 7. 状态持久化
+
+- 当前使用 localStorage，key: `xai-desktop-layout`
+- 数据结构: `PersistedLayout { grids: GridBox[], items: DesktopItem[] }`
+- 目标迁移到 Zustand + persist middleware
+- 扩展 `GridBox` 字段时确保序列化兼容
+
+## 8. DnD 系统
+
+- 使用 `@dnd-kit/core`
+- `GridItem` 为 draggable，容器为 droppable
+- `moveItem` 函数处理跨容器拖拽，更新 `itemIds`
+- 全局 DnD Provider 在 Host 层提供
+
+## 9. Rust 后端模块结构
+
+```
+apps/desktop/src-tauri/src/
+├── main.rs                # Tauri entry point
+├── lib.rs                 # Builder 配置 — 注册 command 模块 + setup (<100 行)
+├── commands/
+│   ├── mod.rs             # 模块声明
+│   └── window.rs          # create/update/close_grid_window
+└── platform/
+    ├── mod.rs
+    └── macos/
+        ├── mod.rs
+        └── window_ext.rs  # NSWindow/CGWindowLevel/ignoresMouseEvents
+```
+
+- `lib.rs` 只做 builder 配置和模块注册，禁止放业务逻辑
+- 按领域拆分 commands (window, fs, system)
+- macOS 平台代码集中在 `platform/macos/`，用 `#[cfg(target_os = "macos")]` 隔离
+
+## 10. 新建 Plugin 标准路径
+
+```
+1. 创建 packages/plugin-xxx/ (含 package.json, tsconfig.json, manifest.json)
+2. 实现 src/index.ts + 业务组件/hooks
+3. 创建 docs/ 四件套 (design.md, api.md, test.md, dev_log.md)
+4. 在 apps/desktop/src/main.tsx 添加 import 注册
+5. 更新 docs/PLUGIN_MAP.md 状态列
+```
+
+## 11. 明确排除项 (不做什么)
+
+以下明确不在项目范围内：
+
+- **不做运行时动态插件加载** — 编译时确定插件集
+- **不做 apps/web/ 和 apps/docs/ 清理** — 保留为 scaffold
+- **不做数据库迁移** — 当前用 localStorage，SQLite 是未来目标
+- **不做 CI/CD** — 暂无 GitHub Actions
+
+exec
+/bin/zsh -lc 'git show --stat --summary --format=fuller 744d578' in /Users/lijinlong/Desktop/AI_Desktop/XAI_Desktop
+ succeeded in 0ms:
+commit 744d57825bb5a4c707656d4645b6e1c3f6c9bd8c
+Author:     InnoPeak <global_ai@innopeaktech.com>
+AuthorDate: Wed May 20 00:19:03 2026 -0700
+Commit:     InnoPeak <global_ai@innopeaktech.com>
+CommitDate: Wed May 20 00:19:03 2026 -0700
+
+    feat(repository-v0-contract): freeze Repository v0 entity surface
+    
+    Why
+    - G2.1 required the Repository v0 contract to publish concrete entity
+      types for every plugin that persists data (Grid, GridItem, Label,
+      Todo, Habit, ClipboardEntry, Project, Card) so SQLite, sync, and
+      plugins agree on the same payload shape before downstream G2.2-G2.6
+      work begins.
+    
+    What
+    - Add `packages/core-data/src/entities.ts` with `RepoRecord`-typed
+      entities plus a `RepoEntity` union and `RepoEntityTypeMap`.
+    - Re-export the new types from `@repo/core-data` index.
+    - Add `packages/core-data/tests/entities.test.ts` covering roundtrip,
+      `plugin.entity` naming regex, `listByIndex`, and the device-local
+      invariant on Clipboard.
+    - Update `docs/contracts/data-repository-v0.md` with the entity table,
+      the full `Repo<T>` interface (incl. `listByIndex` + `metadata`), and
+      the entity-level testing contract.
+    - Mark `repository-v0-contract` dev_log and G2 manifest row as
+      READY_TO_SHIP.
+    
+    Scope
+    - packages/core-data/, packages/repository-v0-contract/docs/,
+      docs/contracts/data-repository-v0.md, G2 manifest, autorun log.
+    - No plugin/UI/Tauri changes; SQLCipher, live Supabase, MAS sandbox
+      out of scope.
+    
+    Risk
+    - Low. Type-only additions; existing in-memory + SQLite contract tests
+      unchanged. 45/45 core-data tests passing.
+    
+    Docs
+    - docs/contracts/data-repository-v0.md, repository-v0-contract dev_log,
+      xai-g2-data-security-foundation manifest, xai-v1.autorun-20260519.
+    
+    Tests
+    - pnpm --filter @repo/core-data test (45 tests)
+    - pnpm --filter @repo/core-data check-types
+    - pnpm --filter @repo/core check-types
+    - pnpm --filter @repo/plugin-organizer check-types
+    
+    Co-Authored-By: Claude Opus 4.7 (1M context) <noreply@anthropic.com>
+
+ docs/contracts/data-repository-v0.md               |  46 ++++-
+ .../roadmap/xai-g2-data-security-foundation.md     |   2 +-
+ docs/workflow/roadmap/xai-v1.autorun-20260519.md   |  20 +++
+ packages/core-data/src/entities.ts                 | 132 ++++++++++++++
+ packages/core-data/src/index.ts                    |  46 +++--
+ packages/core-data/src/repo-utils.ts               | 114 ++++++++++++
+ packages/core-data/src/sqlite.ts                   | 193 +++++++++++++++++----
+ packages/core-data/src/testing.ts                  | 140 ++++++++++++---
+ packages/core-data/src/types.ts                    |  90 +++++++---
+ packages/core-data/tests/entities.test.ts          | 189 ++++++++++++++++++++
+ packages/core-data/tests/in-memory-repo.test.ts    |  60 ++++---
+ packages/core-data/tests/repository-contract.ts    | 145 ++++++++++++++++
+ packages/core-data/tests/sqlite-repo.test.ts       | 136 ++++++++++-----
+ packages/repository-v0-contract/docs/dev_log.md    |  28 ++-
+ 14 files changed, 1171 insertions(+), 170 deletions(-)
+ create mode 100644 packages/core-data/src/entities.ts
+ create mode 100644 packages/core-data/src/repo-utils.ts
+ create mode 100644 packages/core-data/tests/entities.test.ts
+ create mode 100644 packages/core-data/tests/repository-contract.ts
+
+exec
+/bin/zsh -lc "git show 744d578:packages/core-data/src/types.ts | sed -n '1,260p'" in /Users/lijinlong/Desktop/AI_Desktop/XAI_Desktop
+exec
+/bin/zsh -lc "git show 744d578:packages/core-data/src/entities.ts | sed -n '1,260p'" in /Users/lijinlong/Desktop/AI_Desktop/XAI_Desktop
+ succeeded in 0ms:
+/** Device-local records never enter remote sync. */
+export type SyncScope = "device-local" | "account-sync";
+
+export type RepoSortDirection = "asc" | "desc";
+export type RepoIndexKey<T extends RepoRecord> = Extract<keyof T, string>;
+
+/**
+ * Base record shape every Repository v0 entry must satisfy.
+ *
+ * `entityType` uses the `plugin.entity` naming form, for example
+ * `organizer.grid` or `productivity.todo`.
+ */
+export interface RepoRecord {
+  id: string;
+  entityType: string;
+  schemaVersion: number;
+  createdAt: string;
+  updatedAt: string;
+  syncScope: SyncScope;
+}
+
+export interface RepoOrderBy<T extends RepoRecord = RepoRecord> {
+  field: RepoIndexKey<T>;
+  direction?: RepoSortDirection;
+}
+
+export interface RepoListQuery<T extends RepoRecord = RepoRecord> {
+  entityType?: string;
+  syncScope?: SyncScope;
+  orderBy?: RepoOrderBy<T>;
+  limit?: number;
+}
+
+export interface RepoMetadata {
+  driver: string;
+  namespace: string;
+  schemaVersion: number;
+  migrationVersion: number;
+  recordCount: number;
+  migrations: readonly MigrationResult[];
+}
+
+export interface MigrationResult {
+  id: string;
+  fromVersion: number;
+  toVersion: number;
+  startedAt: string;
+  completedAt: string;
+  applied: boolean;
+}
+
+export type MigrationStep<T extends RepoRecord> = (
+  tx: RepoTransaction<T>,
+) => Promise<void>;
+
+export interface MigrationPlan<T extends RepoRecord = RepoRecord> {
+  id: string;
+  fromVersion: number;
+  toVersion: number;
+  steps: readonly MigrationStep<T>[];
+}
+
+export interface RepoOperations<T extends RepoRecord> {
+  get(id: string): Promise<T | undefined>;
+  put(record: T): Promise<void>;
+  delete(id: string): Promise<void>;
+  list(query?: RepoListQuery<T>): Promise<T[]>;
+  listByIndex<K extends RepoIndexKey<T>>(
+    field: K,
+    value: T[K],
+    query?: RepoListQuery<T>,
+  ): Promise<T[]>;
+  metadata(): Promise<RepoMetadata>;
+}
+
+export interface RepoTransaction<T extends RepoRecord>
+  extends RepoOperations<T> {}
+
+export interface Repo<T extends RepoRecord> extends RepoOperations<T> {
+  transaction<R>(fn: (tx: RepoTransaction<T>) => Promise<R>): Promise<R>;
+  migrate(plan: MigrationPlan<T>): Promise<MigrationResult>;
+}
+
+ succeeded in 0ms:
+/**
+ * Repository v0 entity surface.
+ *
+ * Concrete `RepoRecord` shapes used across the desktop. Plugin packages must
+ * read and write these through the `Repo<T>` interface only; the canonical
+ * type definitions live here so that drivers (SQLite, IndexedDB, sync) and
+ * plugins agree on the same payload shape.
+ *
+ * Field-level constraints are enforced by `assertRepoRecord` and per-entity
+ * schemas owned by the plugins. Adding a new field requires bumping
+ * `schemaVersion` and writing a migration.
+ */
+
+import type { RepoRecord } from "./types";
+
+/** A floating Grid container ("Smart Container") on the desktop. */
+export interface GridEntity extends RepoRecord {
+  entityType: "organizer.grid";
+  title: string;
+  rect: {
+    x: number;
+    y: number;
+    width: number;
+    height: number;
+  };
+  isLocked: boolean;
+  isFolded: boolean;
+  viewMode: "grid" | "list";
+  itemIds: string[];
+  themeColor?: string;
+}
+
+/** A typed item inside a Grid: file / folder / app / url. */
+export interface GridItemEntity extends RepoRecord {
+  entityType: "organizer.item";
+  gridId: string;
+  filename: string;
+  /** Optional for non-fs items (e.g. URLs); required for file/folder/app. */
+  filepath?: string;
+  kind: "file" | "folder" | "app" | "url";
+  icon: string;
+  size?: number;
+  /** Populated when kind === "url"; metadata is best-effort, may be empty. */
+  url?: {
+    href: string;
+    title?: string;
+    description?: string;
+    favicon?: string;
+  };
+}
+
+/** Global label shared across todo/grid/clipboard/project. */
+export interface LabelEntity extends RepoRecord {
+  entityType: "labels.label";
+  name: string;
+  color: string;
+  parentId?: string;
+}
+
+export interface TodoEntity extends RepoRecord {
+  entityType: "productivity.todo";
+  title: string;
+  done: boolean;
+  labelIds: string[];
+  dueAt?: string;
+  notes?: string;
+  projectId?: string;
+}
+
+export interface HabitEntity extends RepoRecord {
+  entityType: "productivity.habit";
+  title: string;
+  cadence: "daily" | "weekly" | "custom";
+  /** ISO date strings (YYYY-MM-DD) of completion. */
+  completions: string[];
+  labelIds: string[];
+}
+
+/** Clipboard items are always device-local (`syncScope: "device-local"`). */
+export interface ClipboardEntryEntity extends RepoRecord {
+  entityType: "clipboard.item";
+  syncScope: "device-local";
+  kind: "text" | "image" | "file" | "url";
+  /** UTF-8 text or base64 for binary. Driver decides storage encoding. */
+  payload: string;
+  preview?: string;
+  pinned?: boolean;
+}
+
+export interface ProjectEntity extends RepoRecord {
+  entityType: "project.board";
+  title: string;
+  description?: string;
+  archivedAt?: string;
+  labelIds: string[];
+}
+
+export interface CardEntity extends RepoRecord {
+  entityType: "project.card";
+  projectId: string;
+  title: string;
+  description?: string;
+  status: "todo" | "doing" | "done" | "blocked";
+  position: number;
+  assigneeId?: string;
+  labelIds: string[];
+}
+
+/** Discriminated union of all Repository v0 entity types. */
+export type RepoEntity =
+  | GridEntity
+  | GridItemEntity
+  | LabelEntity
+  | TodoEntity
+  | HabitEntity
+  | ClipboardEntryEntity
+  | ProjectEntity
+  | CardEntity;
+
+/** Map from `entityType` string to its concrete record shape. */
+export interface RepoEntityTypeMap {
+  "organizer.grid": GridEntity;
+  "organizer.item": GridItemEntity;
+  "labels.label": LabelEntity;
+  "productivity.todo": TodoEntity;
+  "productivity.habit": HabitEntity;
+  "clipboard.item": ClipboardEntryEntity;
+  "project.board": ProjectEntity;
+  "project.card": CardEntity;
+}
+
+export type RepoEntityType = keyof RepoEntityTypeMap;
+
+exec
+/bin/zsh -lc "git show 744d578:packages/core-data/src/repo-utils.ts | sed -n '1,260p'" in /Users/lijinlong/Desktop/AI_Desktop/XAI_Desktop
+ succeeded in 0ms:
+import type {
+  MigrationPlan,
+  MigrationResult,
+  RepoListQuery,
+  RepoRecord,
+} from "./types";
+
+export function assertRepoRecord(record: RepoRecord): void {
+  if (typeof record.id !== "string" || record.id.length === 0) {
+    throw new Error("E3005: core-data record is missing id");
+  }
+  if (
+    typeof record.entityType !== "string" ||
+    !record.entityType.includes(".")
+  ) {
+    throw new Error("E3005: core-data record is missing entityType");
+  }
+  if (!Number.isInteger(record.schemaVersion) || record.schemaVersion < 1) {
+    throw new Error("E3005: core-data record has invalid schemaVersion");
+  }
+  if (
+    typeof record.createdAt !== "string" ||
+    typeof record.updatedAt !== "string"
+  ) {
+    throw new Error("E3005: core-data record is missing timestamps");
+  }
+  if (
+    record.syncScope !== "device-local" &&
+    record.syncScope !== "account-sync"
+  ) {
+    throw new Error("E3005: core-data record has invalid syncScope");
+  }
+}
+
+export function applyRepoListQuery<T extends RepoRecord>(
+  records: Iterable<T>,
+  query: RepoListQuery<T> = {},
+): T[] {
+  let result = [...records];
+
+  if (query.entityType) {
+    result = result.filter((record) => record.entityType === query.entityType);
+  }
+
+  if (query.syncScope) {
+    result = result.filter((record) => record.syncScope === query.syncScope);
+  }
+
+  if (query.orderBy) {
+    const { field, direction = "asc" } = query.orderBy;
+    result.sort((left, right) => {
+      const order = compareRepoValues(left[field], right[field]);
+      return direction === "asc" ? order : -order;
+    });
+  }
+
+  if (query.limit !== undefined) {
+    if (!Number.isInteger(query.limit) || query.limit < 0) {
+      throw new Error("E3005: core-data list query has invalid limit");
+    }
+    result = result.slice(0, query.limit);
+  }
+
+  return result;
+}
+
+export function applyRepoIndexQuery<
+  T extends RepoRecord,
+  K extends Extract<keyof T, string>,
+>(records: Iterable<T>, field: K, value: T[K], query?: RepoListQuery<T>): T[] {
+  return applyRepoListQuery(
+    [...records].filter((record) => Object.is(record[field], value)),
+    query,
+  );
+}
+
+export function assertMigrationPlan<T extends RepoRecord>(
+  plan: MigrationPlan<T>,
+  migrationVersion: number,
+): void {
+  if (plan.fromVersion >= plan.toVersion) {
+    throw new Error("E3006: core-data migration must increase version");
+  }
+  if (migrationVersion !== plan.fromVersion) {
+    throw new Error(
+      `E3006: core-data migration expected version ${plan.fromVersion}, got ${migrationVersion}`,
+    );
+  }
+}
+
+export function skippedMigrationResult<T extends RepoRecord>(
+  plan: MigrationPlan<T>,
+  nowIso: () => string,
+): MigrationResult {
+  const timestamp = nowIso();
+  return {
+    id: plan.id,
+    fromVersion: plan.fromVersion,
+    toVersion: plan.toVersion,
+    startedAt: timestamp,
+    completedAt: timestamp,
+    applied: false,
+  };
+}
+
+function compareRepoValues(left: unknown, right: unknown): number {
+  if (left === right) {
+    return 0;
+  }
+  if (typeof left === "number" && typeof right === "number") {
+    return left < right ? -1 : 1;
+  }
+  return String(left).localeCompare(String(right));
+}
+
+exec
+/bin/zsh -lc "git show 744d578:packages/core-data/tests/repository-contract.ts | sed -n '1,260p'" in /Users/lijinlong/Desktop/AI_Desktop/XAI_Desktop
+ succeeded in 0ms:
+import { describe, expect, it } from "vitest";
+
+import type { Repo, RepoRecord } from "../src/types";
+
+export interface ContractRecord extends RepoRecord {
+  title: string;
+  priority: number;
+  tag: string;
+}
+
+export function runRepositoryContractTests(
+  name: string,
+  createRepo: () => Repo<ContractRecord>,
+): void {
+  describe(name, () => {
+    it("performs CRUD roundtrip and preserves metadata fields", async () => {
+      const repo = createRepo();
+      const record = makeRecord("todo-1", { title: "first" });
+
+      await expect(repo.get("missing")).resolves.toBeUndefined();
+      await repo.put(record);
+
+      await expect(repo.get("todo-1")).resolves.toEqual(record);
+      await repo.delete("todo-1");
+      await expect(repo.get("todo-1")).resolves.toBeUndefined();
+    });
+
+    it("filters list queries and applies explicit stable ordering", async () => {
+      const repo = createRepo();
+
+      await repo.put(makeRecord("todo-2", { priority: 2, tag: "work" }));
+      await repo.put(makeRecord("todo-1", { priority: 1, tag: "work" }));
+      await repo.put(
+        makeRecord("clip-1", {
+          entityType: "clipboard.item",
+          priority: 3,
+          syncScope: "device-local",
+          tag: "local",
+        }),
+      );
+
+      await expect(
+        repo.list({
+          entityType: "productivity.todo",
+          syncScope: "account-sync",
+          orderBy: { field: "priority", direction: "asc" },
+        }),
+      ).resolves.toEqual([
+        makeRecord("todo-1", { priority: 1, tag: "work" }),
+        makeRecord("todo-2", { priority: 2, tag: "work" }),
+      ]);
+    });
+
+    it("lists records by index and honors query options", async () => {
+      const repo = createRepo();
+
+      await repo.put(makeRecord("todo-2", { priority: 2, tag: "work" }));
+      await repo.put(makeRecord("todo-1", { priority: 1, tag: "work" }));
+      await repo.put(makeRecord("todo-3", { priority: 3, tag: "home" }));
+
+      await expect(
+        repo.listByIndex("tag", "work", {
+          orderBy: { field: "id", direction: "asc" },
+          limit: 1,
+        }),
+      ).resolves.toEqual([makeRecord("todo-1", { priority: 1, tag: "work" })]);
+    });
+
+    it("rolls back transaction writes when the callback throws", async () => {
+      const repo = createRepo();
+
+      await expect(
+        repo.transaction(async (tx) => {
+          await tx.put(makeRecord("todo-1"));
+          throw new Error("boom");
+        }),
+      ).rejects.toThrow("boom");
+
+      await expect(repo.get("todo-1")).resolves.toBeUndefined();
+    });
+
+    it("applies migrations once and exposes metadata", async () => {
+      const repo = createRepo();
+
+      await expect(
+        repo.migrate({
+          id: "migrate-v1",
+          fromVersion: 0,
+          toVersion: 1,
+          steps: [
+            async (tx) => {
+              await tx.put(makeRecord("todo-1"));
+            },
+          ],
+        }),
+      ).resolves.toMatchObject({
+        id: "migrate-v1",
+        fromVersion: 0,
+        toVersion: 1,
+        applied: true,
+      });
+
+      await expect(
+        repo.migrate({
+          id: "migrate-v1",
+          fromVersion: 0,
+          toVersion: 1,
+          steps: [
+            async (tx) => {
+              await tx.put(makeRecord("todo-2"));
+            },
+          ],
+        }),
+      ).resolves.toMatchObject({
+        id: "migrate-v1",
+        applied: false,
+      });
+
+      await expect(repo.get("todo-2")).resolves.toBeUndefined();
+      await expect(repo.metadata()).resolves.toMatchObject({
+        schemaVersion: 1,
+        migrationVersion: 1,
+        recordCount: 1,
+      });
+    });
+  });
+}
+
+export function makeRecord(
+  id: string,
+  overrides: Partial<ContractRecord> = {},
+): ContractRecord {
+  return {
+    id,
+    entityType: "productivity.todo",
+    schemaVersion: 1,
+    createdAt: "2026-05-19T00:00:00.000Z",
+    updatedAt: "2026-05-19T00:00:00.000Z",
+    syncScope: "account-sync",
+    title: id,
+    priority: 1,
+    tag: "work",
+    ...overrides,
+  };
+}
+
+exec
+/bin/zsh -lc "git show 744d578:packages/core-data/src/sqlite.ts | sed -n '1,340p'" in /Users/lijinlong/Desktop/AI_Desktop/XAI_Desktop
+exec
+/bin/zsh -lc "git show 744d578:packages/core-data/src/testing.ts | sed -n '1,320p'" in /Users/lijinlong/Desktop/AI_Desktop/XAI_Desktop
+ succeeded in 0ms:
+import {
+  applyRepoIndexQuery,
+  applyRepoListQuery,
+  assertMigrationPlan,
+  assertRepoRecord,
+  skippedMigrationResult,
+} from "./repo-utils";
+import type {
+  MigrationPlan,
+  MigrationResult,
+  Repo,
+  RepoListQuery,
+  RepoMetadata,
+  RepoRecord,
+  RepoTransaction,
+} from "./types";
+
+export type SqlValue = string | number | null;
+export type SqlParams = readonly SqlValue[];
+
+export interface SqliteDriver {
+  execute(sql: string, params?: SqlParams): Promise<void>;
+  query<T extends Record<string, unknown>>(
+    sql: string,
+    params?: SqlParams,
+  ): Promise<T[]>;
+  transaction<T>(fn: (tx: SqliteDriver) => Promise<T>): Promise<T>;
+}
+
+export type MutationKind = "put" | "delete";
+
+export interface RepoMutation<T extends RepoRecord> {
+  kind: MutationKind;
+  namespace: string;
+  id: string;
+  record?: T;
+}
+
+export type MutationHook<T extends RepoRecord> = (
+  mutation: RepoMutation<T>,
+  tx: SqliteDriver,
+) => Promise<void>;
+
+export interface SqliteRepoOptions<T extends RepoRecord> {
+  namespace: string;
+  driverName?: string;
+  schemaVersion?: number;
+  migrationVersion?: number;
+  nowMs?: () => number;
+  nowIso?: () => string;
+  onMutation?: MutationHook<T>;
+}
+
+export interface SqliteRepo<T extends RepoRecord> extends Repo<T> {
+  init(): Promise<void>;
+}
+
+const CREATE_RECORDS_SQL = `
+CREATE TABLE IF NOT EXISTS core_data_records (
+  namespace TEXT NOT NULL,
+  id TEXT NOT NULL,
+  json TEXT NOT NULL,
+  updated_at_ms INTEGER NOT NULL,
+  PRIMARY KEY (namespace, id)
+)`;
+
+const UPSERT_RECORD_SQL = `
+INSERT INTO core_data_records (namespace, id, json, updated_at_ms)
+VALUES (?, ?, ?, ?)
+ON CONFLICT(namespace, id) DO UPDATE SET
+  json = excluded.json,
+  updated_at_ms = excluded.updated_at_ms`;
+
+const SELECT_RECORD_SQL = `
+SELECT json FROM core_data_records
+WHERE namespace = ? AND id = ?`;
+
+const SELECT_ALL_SQL = `
+SELECT json FROM core_data_records
+WHERE namespace = ?
+ORDER BY id ASC`;
+
+const DELETE_RECORD_SQL = `
+DELETE FROM core_data_records
+WHERE namespace = ? AND id = ?`;
+
+export function createSqliteRepo<T extends RepoRecord>(
+  driver: SqliteDriver,
+  options: SqliteRepoOptions<T>,
+): SqliteRepo<T> {
+  const driverName = options.driverName ?? "sqlite";
+  const schemaVersion = options.schemaVersion ?? 1;
+  const nowIso = options.nowIso ?? (() => new Date().toISOString());
+  const nowMs = options.nowMs ?? Date.now;
+  let migrationVersion = options.migrationVersion ?? 0;
+  const migrations: MigrationResult[] = [];
+  let initPromise: Promise<void> | undefined;
+
+  async function init(): Promise<void> {
+    initPromise ??= driver.execute(CREATE_RECORDS_SQL);
+    await initPromise;
+  }
+
+  function operationsFor(activeDriver: SqliteDriver): RepoTransaction<T> {
+    async function allRecords(): Promise<T[]> {
+      const rows = await activeDriver.query<{ json: string }>(SELECT_ALL_SQL, [
+        options.namespace,
+      ]);
+      return rows.map((row) => parseRecord<T>(row.json));
+    }
+
+    return {
+      async get(id: string): Promise<T | undefined> {
+        const rows = await activeDriver.query<{ json: string }>(
+          SELECT_RECORD_SQL,
+          [options.namespace, id],
+        );
+        return rows[0] ? parseRecord<T>(rows[0].json) : undefined;
+      },
+
+      async put(record: T): Promise<void> {
+        assertRepoRecord(record);
+        await activeDriver.execute(UPSERT_RECORD_SQL, [
+          options.namespace,
+          record.id,
+          JSON.stringify(record),
+          nowMs(),
+        ]);
+        await options.onMutation?.(
+          {
+            kind: "put",
+            namespace: options.namespace,
+            id: record.id,
+            record,
+          },
+          activeDriver,
+        );
+      },
+
+      async delete(id: string): Promise<void> {
+        await activeDriver.execute(DELETE_RECORD_SQL, [options.namespace, id]);
+        await options.onMutation?.(
+          {
+            kind: "delete",
+            namespace: options.namespace,
+            id,
+          },
+          activeDriver,
+        );
+      },
+
+      async list(query?: RepoListQuery<T>): Promise<T[]> {
+        return applyRepoListQuery(await allRecords(), query);
+      },
+
+      async listByIndex<K extends Extract<keyof T, string>>(
+        field: K,
+        value: T[K],
+        query?: RepoListQuery<T>,
+      ): Promise<T[]> {
+        return applyRepoIndexQuery(await allRecords(), field, value, query);
+      },
+
+      async metadata(): Promise<RepoMetadata> {
+        return {
+          driver: driverName,
+          namespace: options.namespace,
+          schemaVersion,
+          migrationVersion,
+          recordCount: (await allRecords()).length,
+          migrations: [...migrations],
+        };
+      },
+    };
+  }
+
+  const rootOperations = operationsFor(driver);
+
+  const repo: SqliteRepo<T> = {
+    init,
+
+    async get(id: string): Promise<T | undefined> {
+      await init();
+      return rootOperations.get(id);
+    },
+
+    async put(record: T): Promise<void> {
+      await init();
+      await driver.transaction((tx) => operationsFor(tx).put(record));
+    },
+
+    async delete(id: string): Promise<void> {
+      await init();
+      await driver.transaction((tx) => operationsFor(tx).delete(id));
+    },
+
+    async list(query?: RepoListQuery<T>): Promise<T[]> {
+      await init();
+      return rootOperations.list(query);
+    },
+
+    async listByIndex<K extends Extract<keyof T, string>>(
+      field: K,
+      value: T[K],
+      query?: RepoListQuery<T>,
+    ): Promise<T[]> {
+      await init();
+      return rootOperations.listByIndex(field, value, query);
+    },
+
+    async metadata(): Promise<RepoMetadata> {
+      await init();
+      return rootOperations.metadata();
+    },
+
+    async transaction<R>(
+      fn: (tx: RepoTransaction<T>) => Promise<R>,
+    ): Promise<R> {
+      await init();
+      return driver.transaction((tx) => fn(operationsFor(tx)));
+    },
+
+    async migrate(plan: MigrationPlan<T>): Promise<MigrationResult> {
+      await init();
+
+      if (migrationVersion >= plan.toVersion) {
+        return skippedMigrationResult(plan, nowIso);
+      }
+
+      assertMigrationPlan(plan, migrationVersion);
+      const startedAt = nowIso();
+
+      await repo.transaction(async (tx) => {
+        for (const step of plan.steps) {
+          await step(tx);
+        }
+      });
+
+      migrationVersion = plan.toVersion;
+      const result: MigrationResult = {
+        id: plan.id,
+        fromVersion: plan.fromVersion,
+        toVersion: plan.toVersion,
+        startedAt,
+        completedAt: nowIso(),
+        applied: true,
+      };
+      migrations.push(result);
+      return result;
+    },
+  };
+
+  return repo;
+}
+
+function parseRecord<T extends RepoRecord>(json: string): T {
+  const parsed = JSON.parse(json) as T;
+  assertRepoRecord(parsed);
+  return parsed;
+}
+
+export const SQLITE_STATEMENTS = {
+  createRecords: CREATE_RECORDS_SQL,
+  upsertRecord: UPSERT_RECORD_SQL,
+  selectRecord: SELECT_RECORD_SQL,
+  selectAll: SELECT_ALL_SQL,
+  deleteRecord: DELETE_RECORD_SQL,
+} as const;
+
+ succeeded in 0ms:
+import type { SqlParams, SqliteDriver, SqlValue } from "./sqlite";
+import { SQLITE_STATEMENTS } from "./sqlite";
+import {
+  applyRepoIndexQuery,
+  applyRepoListQuery,
+  assertMigrationPlan,
+  assertRepoRecord,
+  skippedMigrationResult,
+} from "./repo-utils";
+import type {
+  MigrationPlan,
+  MigrationResult,
+  Repo,
+  RepoListQuery,
+  RepoMetadata,
+  RepoRecord,
+  RepoTransaction,
+} from "./types";
+
+/**
+ * In-memory `Repo` implementation for use in unit tests. Zero external
+ * dependencies; no Tauri, no SQLite, no network.
+ */
+export interface InMemoryRepoOptions {
+  namespace?: string;
+  schemaVersion?: number;
+  migrationVersion?: number;
+  nowIso?: () => string;
+}
+
+export function createInMemoryRepo<T extends RepoRecord>(
+  options: InMemoryRepoOptions = {},
+): Repo<T> {
+  const store = new Map<string, T>();
+  const namespace = options.namespace ?? "in-memory";
+  const schemaVersion = options.schemaVersion ?? 1;
+  const nowIso = options.nowIso ?? (() => new Date().toISOString());
+  let migrationVersion = options.migrationVersion ?? 0;
+  const migrations: MigrationResult[] = [];
+
+  const operations: RepoTransaction<T> = {
+    async get(id: string): Promise<T | undefined> {
+      return store.get(id);
+    },
+
+    async put(record: T): Promise<void> {
+      assertRepoRecord(record);
+      store.set(record.id, record);
+    },
+
+    async delete(id: string): Promise<void> {
+      store.delete(id);
+    },
+
+    async list(query?: RepoListQuery<T>): Promise<T[]> {
+      return applyRepoListQuery(store.values(), query);
+    },
+
+    async listByIndex<K extends Extract<keyof T, string>>(
+      field: K,
+      value: T[K],
+      query?: RepoListQuery<T>,
+    ): Promise<T[]> {
+      return applyRepoIndexQuery(store.values(), field, value, query);
+    },
+
+    async metadata(): Promise<RepoMetadata> {
+      return {
+        driver: "in-memory",
+        namespace,
+        schemaVersion,
+        migrationVersion,
+        recordCount: store.size,
+        migrations: [...migrations],
+      };
+    },
+  };
+
+  return {
+    ...operations,
+
+    async transaction<R>(
+      fn: (tx: RepoTransaction<T>) => Promise<R>,
+    ): Promise<R> {
+      const snapshot = new Map(store);
+      try {
+        return await fn(operations);
+      } catch (error) {
+        store.clear();
+        for (const [id, record] of snapshot) {
+          store.set(id, record);
+        }
+        throw error;
+      }
+    },
+
+    async migrate(plan: MigrationPlan<T>): Promise<MigrationResult> {
+      if (migrationVersion >= plan.toVersion) {
+        return skippedMigrationResult(plan, nowIso);
+      }
+
+      assertMigrationPlan(plan, migrationVersion);
+      const startedAt = nowIso();
+
+      await this.transaction(async (tx) => {
+        for (const step of plan.steps) {
+          await step(tx);
+        }
+      });
+
+      migrationVersion = plan.toVersion;
+      const result: MigrationResult = {
+        id: plan.id,
+        fromVersion: plan.fromVersion,
+        toVersion: plan.toVersion,
+        startedAt,
+        completedAt: nowIso(),
+        applied: true,
+      };
+      migrations.push(result);
+      return result;
+    },
+  };
+}
+
+export function createInMemorySqliteDriver(): SqliteDriver {
+  const records = new Map<string, StoredRow>();
+  const txLog: string[] = [];
+
+  const driver: SqliteDriver = {
+    async execute(sql: string, params: SqlParams = []): Promise<void> {
+      const normalized = normalizeSql(sql);
+      txLog.push(normalized);
+
+      if (normalized === normalizeSql(SQLITE_STATEMENTS.createRecords)) {
+        return;
+      }
+
+      if (normalized === normalizeSql(SQLITE_STATEMENTS.upsertRecord)) {
+        const [namespace, id, json, updatedAtMs] = params;
+        records.set(rowKey(asString(namespace), asString(id)), {
+          namespace: asString(namespace),
+          id: asString(id),
+          json: asString(json),
+          updatedAtMs: asNumber(updatedAtMs),
+        });
+        return;
+      }
+
+      if (normalized === normalizeSql(SQLITE_STATEMENTS.deleteRecord)) {
+        const [namespace, id] = params;
+        records.delete(rowKey(asString(namespace), asString(id)));
+        return;
+      }
+
+      throw new Error(`unsupported test SQL execute: ${normalized}`);
+    },
+
+    async query<T extends Record<string, unknown>>(
+      sql: string,
+      params: SqlParams = [],
+    ): Promise<T[]> {
+      const normalized = normalizeSql(sql);
+      txLog.push(normalized);
+
+      if (normalized === normalizeSql(SQLITE_STATEMENTS.selectRecord)) {
+        const [namespace, id] = params;
+        const row = records.get(rowKey(asString(namespace), asString(id)));
+        return (row ? [{ json: row.json }] : []) as unknown as T[];
+      }
+
+      if (normalized === normalizeSql(SQLITE_STATEMENTS.selectAll)) {
+        const [namespace] = params;
+        return [...records.values()]
+          .filter((row) => row.namespace === namespace)
+          .sort((a, b) => a.id.localeCompare(b.id))
+          .map((row) => ({ json: row.json })) as unknown as T[];
+      }
+
+      throw new Error(`unsupported test SQL query: ${normalized}`);
+    },
+
+    async transaction<T>(fn: (tx: SqliteDriver) => Promise<T>): Promise<T> {
+      const snapshot = new Map(records);
+      try {
+        return await fn(driver);
+      } catch (error) {
+        records.clear();
+        for (const [id, record] of snapshot) {
+          records.set(id, record);
+        }
+        throw error;
+      }
+    },
+  };
+
+  return driver;
+}
+
+interface StoredRow {
+  namespace: string;
+  id: string;
+  json: string;
+  updatedAtMs: number;
+}
+
+function rowKey(namespace: string, id: string): string {
+  return `${namespace}\u0000${id}`;
+}
+
+function normalizeSql(sql: string): string {
+  return sql.replace(/\s+/g, " ").trim();
+}
+
+function asString(value: SqlValue | undefined): string {
+  if (typeof value !== "string") {
+    throw new Error("expected string SQL param");
+  }
+  return value;
+}
+
+function asNumber(value: SqlValue | undefined): number {
+  if (typeof value !== "number") {
+    throw new Error("expected number SQL param");
+  }
+  return value;
+}
+
+exec
+/bin/zsh -lc "git show 744d578:packages/core-data/tests/entities.test.ts | sed -n '1,280p'" in /Users/lijinlong/Desktop/AI_Desktop/XAI_Desktop
+ succeeded in 0ms:
+import { describe, expect, it } from "vitest";
+
+import { createInMemoryRepo } from "../src/testing";
+import type {
+  CardEntity,
+  ClipboardEntryEntity,
+  GridEntity,
+  GridItemEntity,
+  HabitEntity,
+  LabelEntity,
+  ProjectEntity,
+  RepoEntity,
+  TodoEntity,
+} from "../src/entities";
+
+const BASE = {
+  schemaVersion: 1,
+  createdAt: "2026-05-19T00:00:00.000Z",
+  updatedAt: "2026-05-19T00:00:00.000Z",
+  syncScope: "account-sync" as const,
+};
+
+function gridFixture(id: string): GridEntity {
+  return {
+    ...BASE,
+    id,
+    entityType: "organizer.grid",
+    title: "Today",
+    rect: { x: 0, y: 0, width: 240, height: 320 },
+    isLocked: false,
+    isFolded: false,
+    viewMode: "grid",
+    itemIds: [],
+  };
+}
+
+function gridItemFixture(id: string): GridItemEntity {
+  return {
+    ...BASE,
+    id,
+    entityType: "organizer.item",
+    gridId: "grid-1",
+    filename: "report.md",
+    filepath: "/Users/me/Documents/report.md",
+    kind: "file",
+    icon: "doc.text",
+  };
+}
+
+function todoFixture(id: string): TodoEntity {
+  return {
+    ...BASE,
+    id,
+    entityType: "productivity.todo",
+    title: "Ship G2.1",
+    done: false,
+    labelIds: [],
+  };
+}
+
+function habitFixture(id: string): HabitEntity {
+  return {
+    ...BASE,
+    id,
+    entityType: "productivity.habit",
+    title: "Read 20 min",
+    cadence: "daily",
+    completions: [],
+    labelIds: [],
+  };
+}
+
+function labelFixture(id: string): LabelEntity {
+  return {
+    ...BASE,
+    id,
+    entityType: "labels.label",
+    name: "Work",
+    color: "#3a86ff",
+  };
+}
+
+function clipboardFixture(id: string): ClipboardEntryEntity {
+  return {
+    ...BASE,
+    id,
+    entityType: "clipboard.item",
+    syncScope: "device-local",
+    kind: "text",
+    payload: "hello",
+  };
+}
+
+function projectFixture(id: string): ProjectEntity {
+  return {
+    ...BASE,
+    id,
+    entityType: "project.board",
+    title: "XAI Desktop GA",
+    labelIds: [],
+  };
+}
+
+function cardFixture(id: string): CardEntity {
+  return {
+    ...BASE,
+    id,
+    entityType: "project.card",
+    projectId: "proj-1",
+    title: "Repository v0",
+    status: "doing",
+    position: 0,
+    labelIds: [],
+  };
+}
+
+describe("Repo entities contract", () => {
+  it("round-trips every entity type through the in-memory repo", async () => {
+    const repo = createInMemoryRepo<RepoEntity>({ namespace: "entities" });
+
+    const fixtures: RepoEntity[] = [
+      gridFixture("grid-1"),
+      gridItemFixture("item-1"),
+      labelFixture("label-1"),
+      todoFixture("todo-1"),
+      habitFixture("habit-1"),
+      clipboardFixture("clip-1"),
+      projectFixture("proj-1"),
+      cardFixture("card-1"),
+    ];
+
+    for (const record of fixtures) {
+      await repo.put(record);
+    }
+
+    for (const record of fixtures) {
+      await expect(repo.get(record.id)).resolves.toEqual(record);
+    }
+
+    await expect(
+      repo.list({ entityType: "clipboard.item" }),
+    ).resolves.toEqual([clipboardFixture("clip-1")]);
+  });
+
+  it("enforces clipboard items are device-local at the type level", () => {
+    const clip = clipboardFixture("clip-2");
+    // Type assertion: `syncScope` is the literal `"device-local"` only.
+    const scope: "device-local" = clip.syncScope;
+    expect(scope).toBe("device-local");
+  });
+
+  it("uses plugin.entity dotted entityType naming", async () => {
+    const repo = createInMemoryRepo<RepoEntity>({ namespace: "entities" });
+    await repo.put(gridFixture("grid-1"));
+    await repo.put(labelFixture("label-1"));
+    await repo.put(todoFixture("todo-1"));
+
+    const all = await repo.list();
+    for (const record of all) {
+      expect(record.entityType).toMatch(/^[a-z]+\.[a-z_]+$/);
+    }
+  });
+
+  it("supports listByIndex on entity-owned fields", async () => {
+    const repo = createInMemoryRepo<GridItemEntity>({
+      namespace: "organizer.items",
+    });
+    const item1: GridItemEntity = {
+      ...gridItemFixture("item-1"),
+      gridId: "grid-a",
+    };
+    const item2: GridItemEntity = {
+      ...gridItemFixture("item-2"),
+      gridId: "grid-b",
+    };
+    const item3: GridItemEntity = {
+      ...gridItemFixture("item-3"),
+      gridId: "grid-a",
+    };
+    await repo.put(item1);
+    await repo.put(item2);
+    await repo.put(item3);
+
+    const byGrid = await repo.listByIndex("gridId", "grid-a", {
+      orderBy: { field: "id", direction: "asc" },
+    });
+    expect(byGrid.map((it) => it.id)).toEqual(["item-1", "item-3"]);
+  });
+});
+
+exec
+/bin/zsh -lc "git show 744d578:packages/core-data/tests/sqlite-repo.test.ts | sed -n '1,280p'" in /Users/lijinlong/Desktop/AI_Desktop/XAI_Desktop
+ succeeded in 0ms:
+import { describe, expect, it, vi } from "vitest";
+
+import { createInMemorySqliteDriver } from "@repo/core-data/testing";
+
+import { migrateLocalStorageToRepo } from "../src/local-storage";
+import { createSqliteRepo } from "../src/sqlite";
+import type { RepoRecord } from "../src/types";
+import {
+  makeRecord,
+  runRepositoryContractTests,
+  type ContractRecord,
+} from "./repository-contract";
+
+interface TodoRecord extends RepoRecord {
+  title: string;
+  done: boolean;
+}
+
+runRepositoryContractTests("createSqliteRepo contract", () =>
+  createSqliteRepo<ContractRecord>(createInMemorySqliteDriver(), {
+    namespace: "contract",
+  }),
+);
+
+function createStorage(initial: Record<string, string>) {
+  const values = new Map(Object.entries(initial));
+  return {
+    get length() {
+      return values.size;
+    },
+    key(index: number): string | null {
+      return [...values.keys()][index] ?? null;
+    },
+    getItem(key: string): string | null {
+      return values.get(key) ?? null;
+    },
+    removeItem(key: string): void {
+      values.delete(key);
+    },
+  };
+}
+
+describe("createSqliteRepo", () => {
+  it("performs CRUD through the SQLite driver boundary", async () => {
+    const driver = createInMemorySqliteDriver();
+    const repo = createSqliteRepo<TodoRecord>(driver, { namespace: "todos" });
+
+    await repo.put({
+      ...makeTodoRecord("todo-2"),
+      title: "second",
+      done: false,
+    });
+    await repo.put({ ...makeTodoRecord("todo-1"), title: "first", done: true });
+
+    await expect(repo.get("todo-1")).resolves.toEqual({
+      ...makeTodoRecord("todo-1"),
+      title: "first",
+      done: true,
+    });
+    await expect(repo.list()).resolves.toEqual([
+      { ...makeTodoRecord("todo-1"), title: "first", done: true },
+      { ...makeTodoRecord("todo-2"), title: "second", done: false },
+    ]);
+
+    await repo.delete("todo-1");
+    await expect(repo.get("todo-1")).resolves.toBeUndefined();
+  });
+
+  it("runs mutation hooks inside put and delete transactions", async () => {
+    const driver = createInMemorySqliteDriver();
+    const onMutation = vi.fn(async () => undefined);
+    const repo = createSqliteRepo<TodoRecord>(driver, {
+      namespace: "todos",
+      onMutation,
+    });
+
+    await repo.put({
+      ...makeTodoRecord("todo-1"),
+      title: "first",
+      done: false,
+    });
+    await repo.delete("todo-1");
+
+    expect(onMutation).toHaveBeenNthCalledWith(
+      1,
+      {
+        kind: "put",
+        namespace: "todos",
+        id: "todo-1",
+        record: { ...makeTodoRecord("todo-1"), title: "first", done: false },
+      },
+      driver,
+    );
+    expect(onMutation).toHaveBeenNthCalledWith(
+      2,
+      {
+        kind: "delete",
+        namespace: "todos",
+        id: "todo-1",
+      },
+      driver,
+    );
+  });
+});
+
+describe("migrateLocalStorageToRepo", () => {
+  it("is idempotent when rerun against the same legacy keys", async () => {
+    const driver = createInMemorySqliteDriver();
+    const repo = createSqliteRepo<TodoRecord>(driver, { namespace: "todos" });
+    const storage = createStorage({
+      "todo:1": JSON.stringify({
+        ...makeTodoRecord("todo-1"),
+        title: "first",
+        done: false,
+      }),
+      "todo:2": JSON.stringify({
+        ...makeTodoRecord("todo-2"),
+        title: "second",
+        done: true,
+      }),
+      "other:1": JSON.stringify({
+        ...makeTodoRecord("other-1"),
+        title: "ignored",
+        done: false,
+      }),
+    });
+
+    await expect(
+      migrateLocalStorageToRepo({ storage, keyPrefix: "todo:", repo }),
+    ).resolves.toEqual({ migrated: 2, skipped: 0, removed: 0 });
+    await expect(
+      migrateLocalStorageToRepo({ storage, keyPrefix: "todo:", repo }),
+    ).resolves.toEqual({ migrated: 2, skipped: 0, removed: 0 });
+    await expect(repo.list()).resolves.toEqual([
+      { ...makeTodoRecord("todo-1"), title: "first", done: false },
+      { ...makeTodoRecord("todo-2"), title: "second", done: true },
+    ]);
+  });
+
+  it("can remove migrated legacy keys after a successful put", async () => {
+    const driver = createInMemorySqliteDriver();
+    const repo = createSqliteRepo<TodoRecord>(driver, { namespace: "todos" });
+    const storage = createStorage({
+      "todo:1": JSON.stringify({
+        ...makeTodoRecord("todo-1"),
+        title: "first",
+        done: false,
+      }),
+    });
+
+    await expect(
+      migrateLocalStorageToRepo({
+        storage,
+        keyPrefix: "todo:",
+        repo,
+        removeAfterMigrate: true,
+      }),
+    ).resolves.toEqual({ migrated: 1, skipped: 0, removed: 1 });
+    expect(storage.length).toBe(0);
+    await expect(repo.get("todo-1")).resolves.toEqual({
+      ...makeTodoRecord("todo-1"),
+      title: "first",
+      done: false,
+    });
+  });
+});
+
+function makeTodoRecord(
+  id: string,
+  overrides: Partial<TodoRecord> = {},
+): TodoRecord {
+  return {
+    ...makeRecord(id),
+    done: false,
+    ...overrides,
+  };
+}
+
+exec
+/bin/zsh -lc "git show 744d578:packages/core-data/tests/in-memory-repo.test.ts | sed -n '1,260p'" in /Users/lijinlong/Desktop/AI_Desktop/XAI_Desktop
+exec
+/bin/zsh -lc "git show 744d578:packages/core-data/src/index.ts | sed -n '1,220p'" in /Users/lijinlong/Desktop/AI_Desktop/XAI_Desktop
+ succeeded in 0ms:
+import { describe, it, expect, beforeEach } from "vitest";
+import { createInMemoryRepo } from "../src/testing";
+import type { RepoRecord } from "../src/types";
+import {
+  makeRecord,
+  runRepositoryContractTests,
+  type ContractRecord,
+} from "./repository-contract";
+
+interface TestRecord extends RepoRecord {
+  value: string;
+}
+
+runRepositoryContractTests("createInMemoryRepo contract", () =>
+  createInMemoryRepo<ContractRecord>({ namespace: "contract" }),
+);
+
+describe("createInMemoryRepo", () => {
+  let repo: ReturnType<typeof createInMemoryRepo<TestRecord>>;
+
+  beforeEach(() => {
+    repo = createInMemoryRepo<TestRecord>();
+  });
+
+  it("should return undefined for a missing record", async () => {
+    const result = await repo.get("nonexistent");
+    expect(result).toBeUndefined();
+  });
+
+  it("should put and get a record round-trip", async () => {
+    const record: TestRecord = { ...makeRecord("r1"), value: "hello" };
+    await repo.put(record);
+    const result = await repo.get("r1");
+    expect(result).toEqual(record);
+  });
+
+  it("should overwrite a record on repeated put (upsert)", async () => {
+    await repo.put({ ...makeRecord("r1"), value: "first" });
+    await repo.put({ ...makeRecord("r1"), value: "second" });
+    const result = await repo.get("r1");
+    expect(result?.value).toBe("second");
+  });
+
+  it("should delete a record and return undefined after", async () => {
+    await repo.put({ ...makeRecord("r2"), value: "data" });
+    await repo.delete("r2");
+    const result = await repo.get("r2");
+    expect(result).toBeUndefined();
+  });
+
+  it("delete is a no-op when record does not exist", async () => {
+    await expect(repo.delete("ghost")).resolves.toBeUndefined();
+  });
+
+  it("should list all stored records", async () => {
+    await repo.put({ ...makeRecord("a"), value: "1" });
+    await repo.put({ ...makeRecord("b"), value: "2" });
+    const all = await repo.list();
+    expect(all).toHaveLength(2);
+    const ids = all.map((r) => r.id).sort();
+    expect(ids).toEqual(["a", "b"]);
+  });
+
+  it("should list empty array for empty repo", async () => {
+    const all = await repo.list();
+    expect(all).toEqual([]);
+  });
+});
+
+ succeeded in 0ms:
+export type {
+  MigrationPlan,
+  MigrationResult,
+  MigrationStep,
+  Repo,
+  RepoIndexKey,
+  RepoListQuery,
+  RepoMetadata,
+  RepoOperations,
+  RepoOrderBy,
+  RepoRecord,
+  RepoSortDirection,
+  RepoTransaction,
+  SyncScope,
+} from "./types";
+export { SQLITE_STATEMENTS, createSqliteRepo } from "./sqlite";
+export type {
+  MutationHook,
+  MutationKind,
+  RepoMutation,
+  SqlParams,
+  SqlValue,
+  SqliteDriver,
+  SqliteRepo,
+  SqliteRepoOptions,
+} from "./sqlite";
+export { migrateLocalStorageToRepo } from "./local-storage";
+export type {
+  LocalStorageMigrationOptions,
+  LocalStorageMigrationResult,
+  StorageLike,
+} from "./local-storage";
+export { createInMemoryRepo, createInMemorySqliteDriver } from "./testing";
+export {
+  KEYCHAIN_ERROR_CODES,
+  KeychainError,
+  parseKeychainError,
+  createKeychainClient,
+  secretSet,
+  secretGet,
+  secretDel,
+} from "./keychain";
+export type { KeychainErrorCode, KeychainClient } from "./keychain";
+export type {
+  CardEntity,
+  ClipboardEntryEntity,
+  GridEntity,
+  GridItemEntity,
+  HabitEntity,
+  LabelEntity,
+  ProjectEntity,
+  RepoEntity,
+  RepoEntityType,
+  RepoEntityTypeMap,
+  TodoEntity,
+} from "./entities";
+
+exec
+/bin/zsh -lc "git show 744d578:docs/workflow/roadmap/xai-g2-data-security-foundation.md | sed -n '1,260p'" in /Users/lijinlong/Desktop/AI_Desktop/XAI_Desktop
+ succeeded in 0ms:
+# XAI G2 Data Security Foundation Roadmap
+
+| Field | Value |
+|---|---|
+| Roadmap | xai-g2-data-security-foundation |
+| Source | docs/planning/execution/G2-data-security-foundation.md |
+| Gate | G2 — data and security foundation |
+| Default Automation Mode | D-Codex |
+| Default Verify Cross-vendor | yes |
+| Manifest Review | DEFERRED in unattended mode; see docs/workflow/roadmap/xai-v1.deferred-gates.md |
+| Updated | 2026-05-19 23:40 PDT |
+
+## Gate Status
+
+- Gate Status: ACTIVE_UNDER_G1_DATA_INTERFACE_FREEZE
+- Rationale: G0 is Conditional Go for the DMG/private path. G1.1, G1.2, and G1.4 have completed local Workflow V2 verification; G1.3 remains external-blocked by MAS/security-scope evidence; G1.5 is blocked by G2 Repository v0. Proceeding to G2.1 is the next eligible risk-closing step and does not bypass a production dependency.
+- Ship policy: no automatic ship and no push.
+
+## Manifest
+
+| # | Feature | Source | Dependencies | Package Docs | Status | Executor | Verify | Updated | Notes |
+|---:|---|---|---|---|---|---|---|---|---|
+| 1 | repository-v0-contract | docs/planning/execution/G2-data-security-foundation.md §G2.1 | G1 data interface freeze | packages/repository-v0-contract/docs | READY_TO_SHIP | D-Codex | yes | 2026-05-20 | Repository v0 contract + entity surface (Grid, GridItem, Label, Todo, Habit, ClipboardEntry, Project, Card) implemented in `packages/core-data`; contract doc + tests updated; 45 tests passing. Manual ship deferred. |
+| 2 | core-data-sqlite-driver | docs/planning/execution/G2-data-security-foundation.md §G2.2 SQLite driver PoC | repository-v0-contract | packages/core-data-sqlite-driver/docs | RECONCILE_AFTER_G2.1 | D-Codex | yes | 2026-05-19 | Existing sync-v1 local SQLite-shaped driver docs/code must be reconciled to the frozen Repository v0 contract before this row can be claimed for G2. |
+| 3 | sqlcipher-local-db | docs/planning/execution/G2-data-security-foundation.md §G2.2 SQLCipher encrypted DB PoC | repository-v0-contract, core-data-sqlite-driver, keychain-opaque-handle | packages/sqlcipher-local-db/docs | RECONCILE_AFTER_G2.1 | D-Codex | yes | 2026-05-19 | Existing SQLCipher open/key path is present, but G2 still needs Repository integration and dump/wrong-key evidence review. |
+| 4 | localstorage-migration | docs/planning/execution/G2-data-security-foundation.md §G2.3 | repository-v0-contract, core-data-sqlite-driver | packages/localstorage-migration/docs | WAITING | D-Codex | yes | 2026-05-19 | Must inventory current localStorage keys and prove idempotent migration without deleting originals. |
+| 5 | keychain-opaque-handle | docs/planning/execution/G2-data-security-foundation.md §G2.4 | repository-v0-contract | packages/keychain-opaque-handle/docs | WAITING | D-Codex | yes | 2026-05-19 | Prior keychain bridge work must be reconciled against G2's stricter opaque-handle rule: raw DEK must not cross the JS boundary. |
+| 6 | tauri-capability-allowlist | docs/planning/execution/G2-data-security-foundation.md §G2.5 | keychain-opaque-handle, crypto-tauri-commands | packages/tauri-capability-allowlist/docs | WAITING | D-Codex | yes | 2026-05-19 | Split/justify command capabilities and sync `docs/contracts/tauri-commands-v0.md`. |
+| 7 | single-table-sync-baseline | docs/planning/execution/G2-data-security-foundation.md §G2.6 | repository-v0-contract, keychain-opaque-handle, tauri-capability-allowlist | packages/single-table-todos-e2e/docs | RECONCILE_AFTER_G2.1 | D-Codex | yes | 2026-05-19 | Existing local two-device sync harness exists; live Supabase/SQLCipher gates remain deferred until external prerequisites are available. |
+| 8 | dmg-mas-security-dry-run | docs/planning/execution/G2-data-security-foundation.md §G2.7 | tauri-capability-allowlist, G0.6 MAS sandbox environment | packages/release-sandbox-dry-run/docs | BLOCKED_EXTERNAL | D-Codex | yes | 2026-05-19 | Apple Developer signing/MAS sandbox runtime evidence is unavailable; keep as deferred release/security gate. |
+
+## Decomposition Rationale
+
+- G2.1 is the first eligible feature because downstream SQLite, SQLCipher, migration, Grid persistence, and sync work all depend on a frozen Repository v0 contract.
+- G2.2 is split into SQLite driver and SQLCipher encrypted DB because the execution-pack task contains two separable evidence tracks; each feature must claim only one clear task slice.
+- Existing sync-v1 artifacts are treated as evidence to reconcile, not as automatic G2 completion, because this roadmap uses the G0-G10 execution packs as the authoritative entry.
+- G2.7 is explicitly external-blocked and does not block G2.1 contract work.
+
+## Verification Policy
+
+- Each feature must run its minimal relevant checks.
+- Contract changes must update `docs/contracts/*`.
+- Cross-vendor review/verify is deferred in this serial Codex run and must be recorded per feature.
+- Real MAS, Apple Developer, live Supabase, multi-device, long-run, or signed-runtime gates must be recorded in `xai-v1.deferred-gates.md` instead of being simulated.
+
+exec
+/bin/zsh -lc 'git show 744d578''^:packages/core-data/src/types.ts | sed -n '"'1,240p'" in /Users/lijinlong/Desktop/AI_Desktop/XAI_Desktop
+ succeeded in 0ms:
+/**
+ * Abstract async CRUD interface seam.
+ *
+ * Implementations:
+ *   - `createInMemoryRepo()` in testing.ts — used in unit tests (no external deps)
+ *   - SQLCipher driver — deferred to a later sync wave
+ *
+ * Depends only on @repo/core (red line #8). Never import @repo/plugin-*.
+ */
+
+/** Base record shape every Repo entry must satisfy. */
+export interface RepoRecord {
+  id: string;
+}
+
+/**
+ * Async CRUD interface for plugin data stores.
+ * All operations are keyed by `record.id` (string).
+ */
+export interface Repo<T extends RepoRecord> {
+  /** Retrieve a record by id. Returns undefined if not found. */
+  get(id: string): Promise<T | undefined>;
+
+  /** Insert or replace a record. */
+  put(record: T): Promise<void>;
+
+  /** Delete a record by id. No-op if not found. */
+  delete(id: string): Promise<void>;
+
+  /** List all records. Order is implementation-defined. */
+  list(): Promise<T[]>;
+}
+
+exec
+/bin/zsh -lc "git grep -n \"E3005\\|E3006\\|assertRepoRecord\\|applyRepoIndexQuery\\|corrupted storage\\|wrong-key\" 744d578 -- packages/core-data/tests packages/core-data/src docs/contracts/data-repository-v0.md" in /Users/lijinlong/Desktop/AI_Desktop/XAI_Desktop
+ succeeded in 0ms:
+744d578:docs/contracts/data-repository-v0.md:127:- corrupted storage handling。
+744d578:docs/contracts/data-repository-v0.md:129:- encrypted driver wrong-key failure。
+744d578:packages/core-data/src/entities.ts:9: * Field-level constraints are enforced by `assertRepoRecord` and per-entity
+744d578:packages/core-data/src/repo-utils.ts:8:export function assertRepoRecord(record: RepoRecord): void {
+744d578:packages/core-data/src/repo-utils.ts:10:    throw new Error("E3005: core-data record is missing id");
+744d578:packages/core-data/src/repo-utils.ts:16:    throw new Error("E3005: core-data record is missing entityType");
+744d578:packages/core-data/src/repo-utils.ts:19:    throw new Error("E3005: core-data record has invalid schemaVersion");
+744d578:packages/core-data/src/repo-utils.ts:25:    throw new Error("E3005: core-data record is missing timestamps");
+744d578:packages/core-data/src/repo-utils.ts:31:    throw new Error("E3005: core-data record has invalid syncScope");
+744d578:packages/core-data/src/repo-utils.ts:59:      throw new Error("E3005: core-data list query has invalid limit");
+744d578:packages/core-data/src/repo-utils.ts:67:export function applyRepoIndexQuery<
+744d578:packages/core-data/src/repo-utils.ts:82:    throw new Error("E3006: core-data migration must increase version");
+744d578:packages/core-data/src/repo-utils.ts:86:      `E3006: core-data migration expected version ${plan.fromVersion}, got ${migrationVersion}`,
+744d578:packages/core-data/src/sqlite.ts:2:  applyRepoIndexQuery,
+744d578:packages/core-data/src/sqlite.ts:5:  assertRepoRecord,
+744d578:packages/core-data/src/sqlite.ts:122:        assertRepoRecord(record);
+744d578:packages/core-data/src/sqlite.ts:161:        return applyRepoIndexQuery(await allRecords(), field, value, query);
+744d578:packages/core-data/src/sqlite.ts:258:  assertRepoRecord(parsed);
+744d578:packages/core-data/src/testing.ts:4:  applyRepoIndexQuery,
+744d578:packages/core-data/src/testing.ts:7:  assertRepoRecord,
+744d578:packages/core-data/src/testing.ts:47:      assertRepoRecord(record);
+744d578:packages/core-data/src/testing.ts:64:      return applyRepoIndexQuery(store.values(), field, value, query);
+
+exec
+/bin/zsh -lc 'git diff 744d578''^ 744d578 -- packages/core-data/tests/repository-contract.ts packages/core-data/tests/entities.test.ts packages/core-data/src/repo-utils.ts packages/core-data/src/types.ts docs/contracts/data-repository-v0.md' in /Users/lijinlong/Desktop/AI_Desktop/XAI_Desktop
+ succeeded in 111ms:
+diff --git a/docs/contracts/data-repository-v0.md b/docs/contracts/data-repository-v0.md
+index d8ee986..a3616eb 100644
+--- a/docs/contracts/data-repository-v0.md
++++ b/docs/contracts/data-repository-v0.md
+@@ -52,14 +52,43 @@ interface Repo<T extends RepoRecord> {
+   get(id: string): Promise<T | undefined>;
+   put(record: T): Promise<void>;
+   delete(id: string): Promise<void>;
+-  list(query?: RepoListQuery): Promise<T[]>;
+-  transaction<R>(fn: (tx: RepoTransaction) => Promise<R>): Promise<R>;
+-  migrate(plan: MigrationPlan): Promise<MigrationResult>;
++  list(query?: RepoListQuery<T>): Promise<T[]>;
++  listByIndex<K extends keyof T>(
++    field: K,
++    value: T[K],
++    query?: RepoListQuery<T>,
++  ): Promise<T[]>;
++  metadata(): Promise<RepoMetadata>;
++  transaction<R>(fn: (tx: RepoTransaction<T>) => Promise<R>): Promise<R>;
++  migrate(plan: MigrationPlan<T>): Promise<MigrationResult>;
+ }
+ ```
+ 
+ `list()` 的默认顺序不稳定。需要稳定顺序时必须显式传 query。
+ 
++## 3.1 Repository v0 Entity 表
++
++`packages/core-data/src/entities.ts` 是 entity 类型的 canonical source。每个具体
++entity 都是 `RepoRecord` 的扩展,`entityType` 必须使用下表中固定的 dotted slug。
++
++| Entity (TS) | `entityType` | 默认 syncScope | 关键字段 |
++|---|---|---|---|
++| `GridEntity` | `organizer.grid` | `account-sync` | `title`, `rect`, `itemIds`, `isLocked`, `isFolded`, `viewMode` |
++| `GridItemEntity` | `organizer.item` | `account-sync` (file/folder/app 可能 device-local) | `gridId`, `kind`, `filename`, `filepath?`, `url?` |
++| `LabelEntity` | `labels.label` | `account-sync` | `name`, `color`, `parentId?` |
++| `TodoEntity` | `productivity.todo` | `account-sync` | `title`, `done`, `labelIds`, `dueAt?`, `projectId?` |
++| `HabitEntity` | `productivity.habit` | `account-sync` | `title`, `cadence`, `completions[]`, `labelIds` |
++| `ClipboardEntryEntity` | `clipboard.item` | `device-local`(强制) | `kind`, `payload`, `pinned?` |
++| `ProjectEntity` | `project.board` | `account-sync` | `title`, `labelIds`, `archivedAt?` |
++| `CardEntity` | `project.card` | `account-sync` | `projectId`, `status`, `position`, `labelIds` |
++
++新增 entity 必须遵守以下规则:
++
++1. `entityType` 形如 `^[a-z]+\.[a-z_]+$`,plugin 段必须真实存在。
++2. Device-local 类型必须把 `syncScope` 收窄为字面量 `"device-local"`。
++3. `id` 由 plugin 生成,driver 不会自动赋值;命名需 plugin-scoped (例 `grid_<uuid>`)。
++4. 修改任何 entity 字段必须同步 `schemaVersion` 提升 + migration plan。
++
+ ## 4. Driver
+ 
+ | Driver | 用途 | 要求 |
+@@ -87,16 +116,25 @@ interface Repo<T extends RepoRecord> {
+ 
+ ## 7. Testing Contract
+ 
+-每个 driver 必须通过同一组测试:
++每个 driver 必须通过同一组测试 (`packages/core-data/tests/repository-contract.ts` 是
++canonical suite):
+ 
+ - CRUD roundtrip。
+ - list query and stable ordering。
++- listByIndex 命中 + query options 组合。
+ - transaction rollback。
+ - migration idempotency。
+ - corrupted storage handling。
+ - syncScope enforcement。
+ - encrypted driver wrong-key failure。
+ 
++Entity-level 测试 (`packages/core-data/tests/entities.test.ts`) 校验:
++
++- 每个 entity 类型可通过 `Repo<RepoEntity>` round-trip。
++- `entityType` 命名遵守 `plugin.entity` 正则。
++- `listByIndex` 在 entity-owned 字段 (例 `gridId`) 上工作。
++- Clipboard 在类型层面被约束为 `device-local`。
++
+ ## 8. Open Questions
+ 
+ - SQLCipher 具体依赖和 Tauri bundling 策略在 G2 确认。
+diff --git a/packages/core-data/src/repo-utils.ts b/packages/core-data/src/repo-utils.ts
+new file mode 100644
+index 0000000..b75602b
+--- /dev/null
++++ b/packages/core-data/src/repo-utils.ts
+@@ -0,0 +1,114 @@
++import type {
++  MigrationPlan,
++  MigrationResult,
++  RepoListQuery,
++  RepoRecord,
++} from "./types";
++
++export function assertRepoRecord(record: RepoRecord): void {
++  if (typeof record.id !== "string" || record.id.length === 0) {
++    throw new Error("E3005: core-data record is missing id");
++  }
++  if (
++    typeof record.entityType !== "string" ||
++    !record.entityType.includes(".")
++  ) {
++    throw new Error("E3005: core-data record is missing entityType");
++  }
++  if (!Number.isInteger(record.schemaVersion) || record.schemaVersion < 1) {
++    throw new Error("E3005: core-data record has invalid schemaVersion");
++  }
++  if (
++    typeof record.createdAt !== "string" ||
++    typeof record.updatedAt !== "string"
++  ) {
++    throw new Error("E3005: core-data record is missing timestamps");
++  }
++  if (
++    record.syncScope !== "device-local" &&
++    record.syncScope !== "account-sync"
++  ) {
++    throw new Error("E3005: core-data record has invalid syncScope");
++  }
++}
++
++export function applyRepoListQuery<T extends RepoRecord>(
++  records: Iterable<T>,
++  query: RepoListQuery<T> = {},
++): T[] {
++  let result = [...records];
++
++  if (query.entityType) {
++    result = result.filter((record) => record.entityType === query.entityType);
++  }
++
++  if (query.syncScope) {
++    result = result.filter((record) => record.syncScope === query.syncScope);
++  }
++
++  if (query.orderBy) {
++    const { field, direction = "asc" } = query.orderBy;
++    result.sort((left, right) => {
++      const order = compareRepoValues(left[field], right[field]);
++      return direction === "asc" ? order : -order;
++    });
++  }
++
++  if (query.limit !== undefined) {
++    if (!Number.isInteger(query.limit) || query.limit < 0) {
++      throw new Error("E3005: core-data list query has invalid limit");
++    }
++    result = result.slice(0, query.limit);
++  }
++
++  return result;
++}
++
++export function applyRepoIndexQuery<
++  T extends RepoRecord,
++  K extends Extract<keyof T, string>,
++>(records: Iterable<T>, field: K, value: T[K], query?: RepoListQuery<T>): T[] {
++  return applyRepoListQuery(
++    [...records].filter((record) => Object.is(record[field], value)),
++    query,
++  );
++}
++
++export function assertMigrationPlan<T extends RepoRecord>(
++  plan: MigrationPlan<T>,
++  migrationVersion: number,
++): void {
++  if (plan.fromVersion >= plan.toVersion) {
++    throw new Error("E3006: core-data migration must increase version");
++  }
++  if (migrationVersion !== plan.fromVersion) {
++    throw new Error(
++      `E3006: core-data migration expected version ${plan.fromVersion}, got ${migrationVersion}`,
++    );
++  }
++}
++
++export function skippedMigrationResult<T extends RepoRecord>(
++  plan: MigrationPlan<T>,
++  nowIso: () => string,
++): MigrationResult {
++  const timestamp = nowIso();
++  return {
++    id: plan.id,
++    fromVersion: plan.fromVersion,
++    toVersion: plan.toVersion,
++    startedAt: timestamp,
++    completedAt: timestamp,
++    applied: false,
++  };
++}
++
++function compareRepoValues(left: unknown, right: unknown): number {
++  if (left === right) {
++    return 0;
++  }
++  if (typeof left === "number" && typeof right === "number") {
++    return left < right ? -1 : 1;
++  }
++  return String(left).localeCompare(String(right));
++}
+diff --git a/packages/core-data/src/types.ts b/packages/core-data/src/types.ts
+index f7c32ca..5149abc 100644
+--- a/packages/core-data/src/types.ts
++++ b/packages/core-data/src/types.ts
+@@ -1,32 +1,82 @@
++/** Device-local records never enter remote sync. */
++export type SyncScope = "device-local" | "account-sync";
++
++export type RepoSortDirection = "asc" | "desc";
++export type RepoIndexKey<T extends RepoRecord> = Extract<keyof T, string>;
++
+ /**
+- * Abstract async CRUD interface seam.
+- *
+- * Implementations:
+- *   - `createInMemoryRepo()` in testing.ts — used in unit tests (no external deps)
+- *   - SQLCipher driver — deferred to a later sync wave
++ * Base record shape every Repository v0 entry must satisfy.
+  *
+- * Depends only on @repo/core (red line #8). Never import @repo/plugin-*.
++ * `entityType` uses the `plugin.entity` naming form, for example
++ * `organizer.grid` or `productivity.todo`.
+  */
+-
+-/** Base record shape every Repo entry must satisfy. */
+ export interface RepoRecord {
+   id: string;
++  entityType: string;
++  schemaVersion: number;
++  createdAt: string;
++  updatedAt: string;
++  syncScope: SyncScope;
+ }
+ 
+-/**
+- * Async CRUD interface for plugin data stores.
+- * All operations are keyed by `record.id` (string).
+- */
+-export interface Repo<T extends RepoRecord> {
+-  /** Retrieve a record by id. Returns undefined if not found. */
+-  get(id: string): Promise<T | undefined>;
++export interface RepoOrderBy<T extends RepoRecord = RepoRecord> {
++  field: RepoIndexKey<T>;
++  direction?: RepoSortDirection;
++}
+ 
+-  /** Insert or replace a record. */
+-  put(record: T): Promise<void>;
++export interface RepoListQuery<T extends RepoRecord = RepoRecord> {
++  entityType?: string;
++  syncScope?: SyncScope;
++  orderBy?: RepoOrderBy<T>;
++  limit?: number;
++}
++
++export interface RepoMetadata {
++  driver: string;
++  namespace: string;
++  schemaVersion: number;
++  migrationVersion: number;
++  recordCount: number;
++  migrations: readonly MigrationResult[];
++}
+ 
+-  /** Delete a record by id. No-op if not found. */
++export interface MigrationResult {
++  id: string;
++  fromVersion: number;
++  toVersion: number;
++  startedAt: string;
++  completedAt: string;
++  applied: boolean;
++}
++
++export type MigrationStep<T extends RepoRecord> = (
++  tx: RepoTransaction<T>,
++) => Promise<void>;
++
++export interface MigrationPlan<T extends RepoRecord = RepoRecord> {
++  id: string;
++  fromVersion: number;
++  toVersion: number;
++  steps: readonly MigrationStep<T>[];
++}
++
++export interface RepoOperations<T extends RepoRecord> {
++  get(id: string): Promise<T | undefined>;
++  put(record: T): Promise<void>;
+   delete(id: string): Promise<void>;
++  list(query?: RepoListQuery<T>): Promise<T[]>;
++  listByIndex<K extends RepoIndexKey<T>>(
++    field: K,
++    value: T[K],
++    query?: RepoListQuery<T>,
++  ): Promise<T[]>;
++  metadata(): Promise<RepoMetadata>;
++}
++
++export interface RepoTransaction<T extends RepoRecord>
++  extends RepoOperations<T> {}
+ 
+-  /** List all records. Order is implementation-defined. */
+-  list(): Promise<T[]>;
++export interface Repo<T extends RepoRecord> extends RepoOperations<T> {
++  transaction<R>(fn: (tx: RepoTransaction<T>) => Promise<R>): Promise<R>;
++  migrate(plan: MigrationPlan<T>): Promise<MigrationResult>;
+ }
+diff --git a/packages/core-data/tests/entities.test.ts b/packages/core-data/tests/entities.test.ts
+new file mode 100644
+index 0000000..e034046
+--- /dev/null
++++ b/packages/core-data/tests/entities.test.ts
+@@ -0,0 +1,189 @@
++import { describe, expect, it } from "vitest";
++
++import { createInMemoryRepo } from "../src/testing";
++import type {
++  CardEntity,
++  ClipboardEntryEntity,
++  GridEntity,
++  GridItemEntity,
++  HabitEntity,
++  LabelEntity,
++  ProjectEntity,
++  RepoEntity,
++  TodoEntity,
++} from "../src/entities";
++
++const BASE = {
++  schemaVersion: 1,
++  createdAt: "2026-05-19T00:00:00.000Z",
++  updatedAt: "2026-05-19T00:00:00.000Z",
++  syncScope: "account-sync" as const,
++};
++
++function gridFixture(id: string): GridEntity {
++  return {
++    ...BASE,
++    id,
++    entityType: "organizer.grid",
++    title: "Today",
++    rect: { x: 0, y: 0, width: 240, height: 320 },
++    isLocked: false,
++    isFolded: false,
++    viewMode: "grid",
++    itemIds: [],
++  };
++}
++
++function gridItemFixture(id: string): GridItemEntity {
++  return {
++    ...BASE,
++    id,
++    entityType: "organizer.item",
++    gridId: "grid-1",
++    filename: "report.md",
++    filepath: "/Users/me/Documents/report.md",
++    kind: "file",
++    icon: "doc.text",
++  };
++}
++
++function todoFixture(id: string): TodoEntity {
++  return {
++    ...BASE,
++    id,
++    entityType: "productivity.todo",
++    title: "Ship G2.1",
++    done: false,
++    labelIds: [],
++  };
++}
++
++function habitFixture(id: string): HabitEntity {
++  return {
++    ...BASE,
++    id,
++    entityType: "productivity.habit",
++    title: "Read 20 min",
++    cadence: "daily",
++    completions: [],
++    labelIds: [],
++  };
++}
++
++function labelFixture(id: string): LabelEntity {
++  return {
++    ...BASE,
++    id,
++    entityType: "labels.label",
++    name: "Work",
++    color: "#3a86ff",
++  };
++}
++
++function clipboardFixture(id: string): ClipboardEntryEntity {
++  return {
++    ...BASE,
++    id,
++    entityType: "clipboard.item",
++    syncScope: "device-local",
++    kind: "text",
++    payload: "hello",
++  };
++}
++
++function projectFixture(id: string): ProjectEntity {
++  return {
++    ...BASE,
++    id,
++    entityType: "project.board",
++    title: "XAI Desktop GA",
++    labelIds: [],
++  };
++}
++
++function cardFixture(id: string): CardEntity {
++  return {
++    ...BASE,
++    id,
++    entityType: "project.card",
++    projectId: "proj-1",
++    title: "Repository v0",
++    status: "doing",
++    position: 0,
++    labelIds: [],
++  };
++}
++
++describe("Repo entities contract", () => {
++  it("round-trips every entity type through the in-memory repo", async () => {
++    const repo = createInMemoryRepo<RepoEntity>({ namespace: "entities" });
++
++    const fixtures: RepoEntity[] = [
++      gridFixture("grid-1"),
++      gridItemFixture("item-1"),
++      labelFixture("label-1"),
++      todoFixture("todo-1"),
++      habitFixture("habit-1"),
++      clipboardFixture("clip-1"),
++      projectFixture("proj-1"),
++      cardFixture("card-1"),
++    ];
++
++    for (const record of fixtures) {
++      await repo.put(record);
++    }
++
++    for (const record of fixtures) {
++      await expect(repo.get(record.id)).resolves.toEqual(record);
++    }
++
++    await expect(
++      repo.list({ entityType: "clipboard.item" }),
++    ).resolves.toEqual([clipboardFixture("clip-1")]);
++  });
++
++  it("enforces clipboard items are device-local at the type level", () => {
++    const clip = clipboardFixture("clip-2");
++    // Type assertion: `syncScope` is the literal `"device-local"` only.
++    const scope: "device-local" = clip.syncScope;
++    expect(scope).toBe("device-local");
++  });
++
++  it("uses plugin.entity dotted entityType naming", async () => {
++    const repo = createInMemoryRepo<RepoEntity>({ namespace: "entities" });
++    await repo.put(gridFixture("grid-1"));
++    await repo.put(labelFixture("label-1"));
++    await repo.put(todoFixture("todo-1"));
++
++    const all = await repo.list();
++    for (const record of all) {
++      expect(record.entityType).toMatch(/^[a-z]+\.[a-z_]+$/);
++    }
++  });
++
++  it("supports listByIndex on entity-owned fields", async () => {
++    const repo = createInMemoryRepo<GridItemEntity>({
++      namespace: "organizer.items",
++    });
++    const item1: GridItemEntity = {
++      ...gridItemFixture("item-1"),
++      gridId: "grid-a",
++    };
++    const item2: GridItemEntity = {
++      ...gridItemFixture("item-2"),
++      gridId: "grid-b",
++    };
++    const item3: GridItemEntity = {
++      ...gridItemFixture("item-3"),
++      gridId: "grid-a",
++    };
++    await repo.put(item1);
++    await repo.put(item2);
++    await repo.put(item3);
++
++    const byGrid = await repo.listByIndex("gridId", "grid-a", {
++      orderBy: { field: "id", direction: "asc" },
++    });
++    expect(byGrid.map((it) => it.id)).toEqual(["item-1", "item-3"]);
++  });
++});
+diff --git a/packages/core-data/tests/repository-contract.ts b/packages/core-data/tests/repository-contract.ts
+new file mode 100644
+index 0000000..262c4f7
+--- /dev/null
++++ b/packages/core-data/tests/repository-contract.ts
+@@ -0,0 +1,145 @@
++import { describe, expect, it } from "vitest";
++
++import type { Repo, RepoRecord } from "../src/types";
++
++export interface ContractRecord extends RepoRecord {
++  title: string;
++  priority: number;
++  tag: string;
++}
++
++export function runRepositoryContractTests(
++  name: string,
++  createRepo: () => Repo<ContractRecord>,
++): void {
++  describe(name, () => {
++    it("performs CRUD roundtrip and preserves metadata fields", async () => {
++      const repo = createRepo();
++      const record = makeRecord("todo-1", { title: "first" });
++
++      await expect(repo.get("missing")).resolves.toBeUndefined();
++      await repo.put(record);
++
++      await expect(repo.get("todo-1")).resolves.toEqual(record);
++      await repo.delete("todo-1");
++      await expect(repo.get("todo-1")).resolves.toBeUndefined();
++    });
++
++    it("filters list queries and applies explicit stable ordering", async () => {
++      const repo = createRepo();
++
++      await repo.put(makeRecord("todo-2", { priority: 2, tag: "work" }));
++      await repo.put(makeRecord("todo-1", { priority: 1, tag: "work" }));
++      await repo.put(
++        makeRecord("clip-1", {
++          entityType: "clipboard.item",
++          priority: 3,
++          syncScope: "device-local",
++          tag: "local",
++        }),
++      );
++
++      await expect(
++        repo.list({
++          entityType: "productivity.todo",
++          syncScope: "account-sync",
++          orderBy: { field: "priority", direction: "asc" },
++        }),
++      ).resolves.toEqual([
++        makeRecord("todo-1", { priority: 1, tag: "work" }),
++        makeRecord("todo-2", { priority: 2, tag: "work" }),
++      ]);
++    });
++
++    it("lists records by index and honors query options", async () => {
++      const repo = createRepo();
++
++      await repo.put(makeRecord("todo-2", { priority: 2, tag: "work" }));
++      await repo.put(makeRecord("todo-1", { priority: 1, tag: "work" }));
++      await repo.put(makeRecord("todo-3", { priority: 3, tag: "home" }));
++
++      await expect(
++        repo.listByIndex("tag", "work", {
++          orderBy: { field: "id", direction: "asc" },
++          limit: 1,
++        }),
++      ).resolves.toEqual([makeRecord("todo-1", { priority: 1, tag: "work" })]);
++    });
++
++    it("rolls back transaction writes when the callback throws", async () => {
++      const repo = createRepo();
++
++      await expect(
++        repo.transaction(async (tx) => {
++          await tx.put(makeRecord("todo-1"));
++          throw new Error("boom");
++        }),
++      ).rejects.toThrow("boom");
++
++      await expect(repo.get("todo-1")).resolves.toBeUndefined();
++    });
++
++    it("applies migrations once and exposes metadata", async () => {
++      const repo = createRepo();
++
++      await expect(
++        repo.migrate({
++          id: "migrate-v1",
++          fromVersion: 0,
++          toVersion: 1,
++          steps: [
++            async (tx) => {
++              await tx.put(makeRecord("todo-1"));
++            },
++          ],
++        }),
++      ).resolves.toMatchObject({
++        id: "migrate-v1",
++        fromVersion: 0,
++        toVersion: 1,
++        applied: true,
++      });
++
++      await expect(
++        repo.migrate({
++          id: "migrate-v1",
++          fromVersion: 0,
++          toVersion: 1,
++          steps: [
++            async (tx) => {
++              await tx.put(makeRecord("todo-2"));
++            },
++          ],
++        }),
++      ).resolves.toMatchObject({
++        id: "migrate-v1",
++        applied: false,
++      });
++
++      await expect(repo.get("todo-2")).resolves.toBeUndefined();
++      await expect(repo.metadata()).resolves.toMatchObject({
++        schemaVersion: 1,
++        migrationVersion: 1,
++        recordCount: 1,
++      });
++    });
++  });
++}
++
++export function makeRecord(
++  id: string,
++  overrides: Partial<ContractRecord> = {},
++): ContractRecord {
++  return {
++    id,
++    entityType: "productivity.todo",
++    schemaVersion: 1,
++    createdAt: "2026-05-19T00:00:00.000Z",
++    updatedAt: "2026-05-19T00:00:00.000Z",
++    syncScope: "account-sync",
++    title: id,
++    priority: 1,
++    tag: "work",
++    ...overrides,
++  };
++}
+
+exec
+/bin/zsh -lc "git show 744d578:packages/core-data/package.json && printf '\\n---\\n' && git show 744d578:packages/core-data/tsconfig.json" in /Users/lijinlong/Desktop/AI_Desktop/XAI_Desktop
+exec
+/bin/zsh -lc "rg -n \"widget|account\\.device|WidgetEntity|AccountDevice|pomodoro|outbox|sync\\.outbox\" packages docs | sed -n '1,240p'" in /Users/lijinlong/Desktop/AI_Desktop/XAI_Desktop
+ succeeded in 234ms:
+{
+  "name": "@repo/core-data",
+  "version": "0.0.0",
+  "private": true,
+  "description": "Data access seam for XAI_Desktop — Repo interface, SQLCipher/SQLite driver boundary, localStorage migration, and in-memory testing backends.",
+  "exports": {
+    ".": {
+      "types": "./src/index.ts",
+      "import": "./src/index.ts"
+    },
+    "./testing": {
+      "types": "./src/testing.ts",
+      "import": "./src/testing.ts"
+    }
+  },
+  "scripts": {
+    "check-types": "tsc --noEmit",
+    "test": "vitest run"
+  },
+  "dependencies": {
+    "@repo/core": "workspace:*"
+  },
+  "devDependencies": {
+    "@repo/typescript-config": "workspace:*",
+    "typescript": "5.9.2",
+    "vitest": "^3.2.1"
+  }
+}
+
+---
+{
+  "extends": "@repo/typescript-config/react-library.json",
+  "compilerOptions": {
+    "outDir": "dist"
+  },
+  "include": ["src"],
+  "exclude": ["node_modules", "dist"]
+}
+
+ succeeded in 236ms:
+packages/core-data-sqlite-driver/docs/test.md:22:- PRD §6.3 entity-specific schema and sync outbox transaction wiring.
+docs/TECHNICAL_REQUIREMENTS.md:196:| `pomodoro_sessions` | ✅ SQLCipher / WebCrypto | ❌ 不上传 | 隐私优先 |
+packages/core-data-sqlite-driver/docs/design.md:15:- `MutationHook`: same-transaction hook seam for future outbox writes.
+packages/core-data-sqlite-driver/docs/design.md:33:This is intentionally generic for Phase 0.3. Entity-specific SQLite tables and encrypted sync outbox expansion are downstream rows.
+packages/core-data-sqlite-driver/docs/api.md:27:    // future sync_outbox writes use tx
+docs/planning/execution/G5-console-project.md:35:| G5-E4 | Epic | 通知中心 baseline | due/pomodoro/sync/privacy warning |
+docs/planning/execution/G2-data-security-foundation.md:118:- 本地写入 test entity -> outbox -> remote -> pull 回本地。
+docs/workflow/roadmap/sync-v1.tasks.md:82:- [ ] #40 offline-outbox-resilience (T-30~34/56)
+packages/plugin-account/src/todo-sync.ts:44:CREATE TABLE IF NOT EXISTS sync_outbox (
+packages/plugin-account/src/todo-sync.ts:62:INSERT INTO sync_outbox (
+packages/plugin-account/src/todo-sync.ts:85:FROM sync_outbox
+packages/plugin-account/src/todo-sync.ts:89:DELETE FROM sync_outbox
+docs/planning/execution/README.md:15:| G6 | `G6-widgets-calendar-pet.md` | epic/story/task |
+docs/workflow/roadmap/sync-v1.review-20260519.md:46:- **#30 e2e**: same-txn todo+outbox, encrypted push/pull, server-dump opacity, stale conflict shadow.
+docs/planning/execution/G4-productivity-clipboard.md:60:| `pomodoro_session` | 计时记录 |
+docs/planning/execution/G4-productivity-clipboard.md:64:Clipboard 默认 device-local。除非用户明确开启 Sync,否则不进入云端 outbox。
+docs/workflow/roadmap/sync-v1.md:41:| 26 | sync-engine-push | docs/reviews/sync-engine-push/20260514-roadmap-seed.md | crypto-tauri-commands, core-data-sqlite-driver | shipped | SHIPPED | (default) | (default) | 2026-05-19 | SHIPPED 2026-05-19 (Codex serial autorun; local commit `feat(sync-engine-push): add lazy push batch`) · `@repo/plugin-account` push engine stores plaintext outbox entries, squashes same-entity edits, computes `proposed_revision = base + 1`, lazy-encrypts through injected `crypto_encrypt_for` seam, and posts one `/sync/push` request. Deferred gates recorded in docs/workflow/roadmap/sync-v1.deferred-gates.md |
+docs/workflow/roadmap/sync-v1.md:45:| 30 | single-table-todos-e2e | docs/reviews/single-table-todos-e2e/20260514-roadmap-seed.md | sync-engine-pull, push-edge-function, nonce-lease-server, commit-seq-authority, menubar-sync-status-icon | shipped | SHIPPED | (default) | (default) | 2026-05-19 | SHIPPED 2026-05-19 (Codex serial autorun; local commit `feat(single-table-todos-e2e): add local todos sync harness`) · local Phase 0.3 exit core covers same-transaction todo+outbox write, encrypted two-device push/pull, server dump opacity, and stale-write conflict shadow. Deferred gates recorded in docs/workflow/roadmap/sync-v1.deferred-gates.md |
+docs/workflow/roadmap/sync-v1.md:55:| 40 | offline-outbox-resilience | docs/reviews/offline-outbox-resilience/20260514-roadmap-seed.md | hardening-admission-gate | shipped | PENDING | (default) | (default) | — | W5 · Phase 5 · FR-SY-32~37/47~49/65/66/78 M-12/H-06 dev-plan T-30~34/56 · outbox same-txn + DAG replay + squash + reachability flush + backoff + dead-letter · T9 |
+docs/workflow/roadmap/sync-v1.md:71:| 56 | ga-acceptance-suite | docs/reviews/ga-acceptance-suite/20260514-roadmap-seed.md | realtime-subscription, all-entity-types-wiring, offline-outbox-resilience, mnemonic-full-recovery, fuzz-harness-24h, recovery-rehearsal-1-server-wipe, recovery-rehearsal-2-local-wipe, recovery-rehearsal-3-rekey-kill9, recovery-rehearsal-4-device-revoke-rekey, data-export-encrypted, quota-rate-limit, supply-chain-hardening, credential-rotation-sop, sync-audit-conflict-ui, device-pairing-anti-abuse, account-deletion-gdpr, oauth-passkey | shipped | PENDING | (default) | (default) | — | W7 · **GA GATE** · PRD §10.2 13-item + §10.3 M6 · 2-Mac+1-browser 30min 100%, property 100k, kill-9 ×100, clock-jump, toxiproxy, all PoCs, R-10.1~R-10.27 closure |
+docs/workflow/roadmap/xai-v1.autorun-20260519.md:786:- 00:32 PDT: my G2.2 commit landed on `codex/track-c-widgets-web-ai` because a parallel agent had switched the working-tree branch. Cherry-picked `92e2ba6` onto `codex/track-a-desktop-foundation` as `f3dd30b`; the duplicate remains on Track C and will be reconciled when the tracks merge to main.
+docs/workflow/roadmap/xai-v1.autorun-20260519.md:803:- Added defence-in-depth `DATABASE_ALLOWED_WINDOWS` runtime allow-list in `commands/database.rs` so widget / pet / ai_cube windows cannot reach `db_*` even via a mis-attached capability file. 2 new cargo tests cover admit/reject paths.
+docs/workflow/roadmap/xai-v1.autorun-20260519.md:815:- Added `packages/core-data/src/sync-outbox.ts`: `OutboxEntry` record (`commitSeq`, `mutationId`, `targetEntityType`/`Id`, `op`, `payload`, `retryCount`, `baseRevision`), `enqueueOutboxEntry()` atomic helper, `nextOutboxBatch()` ordered drain, and `createMockCommitSeqAuthority()` test helper.
+docs/workflow/roadmap/xai-v1.autorun-20260519.md:816:- `enqueueOutboxEntry` wraps the entity write and outbox put in the same outer transaction, so a crash between the two phases rolls both back. Proved by a sabotaged outbox test.
+docs/workflow/roadmap/xai-v1.autorun-20260519.md:817:- Added 4 vitest cases (`tests/sync-outbox.test.ts`): happy-path put, rollback on outbox failure, ordering by commitSeq, delete op.
+docs/workflow/roadmap/xai-v1.autorun-20260519.md:869:3. `43ffdda` Repository v0 outbox + atomic enqueue (G2.6)
+docs/workflow/roadmap/xai-v1.autorun-20260519.md:889:| G2.6 single-table-sync-baseline | READY_TO_SHIP | Repository v0 outbox + 4 tests |
+docs/planning/REFACTORING_PLAN.md:153:│  ├── plugin-pomodoro/      番茄钟 (PRD §5.3)                              │
+docs/planning/REFACTORING_PLAN.md:156:│  ├── plugin-widgets/       桌面 Widgets (PRD §5.6)                        │
+docs/planning/REFACTORING_PLAN.md:266:| widget_<id> | `widget_xxx` | Widget 窗口 | 始终可交互 (未来) |
+docs/planning/REFACTORING_PLAN.md:295:| pomodoro | packages/plugin-pomodoro | Planned | §5.3 | @repo/core | — |
+docs/planning/REFACTORING_PLAN.md:298:| widgets | packages/plugin-widgets | Planned | §5.6 | @repo/core | — |
+docs/planning/REFACTORING_PLAN.md:833:│   ├── ControlWindow.tsx      # 控制窗口 — 渲染已注册的 Plugin control widget
+docs/planning/REFACTORING_PLAN.md:1019:  /** 渲染在控制窗口中的 widget */
+docs/planning/REFACTORING_PLAN.md:1076:  const widgets = PluginRegistry.getControlWidgets();
+docs/planning/REFACTORING_PLAN.md:1079:      {widgets.map((Widget, i) => <Widget key={i} />)}
+docs/planning/REFACTORING_PLAN.md:1177:| `widgets:` | plugin-widgets | `widgets:clock-tick` |
+docs/planning/REFACTORING_PLAN.md:1560:| 8 | `plugin-widgets` / `plugin-calendar` / `plugin-pet` | Phase 3 增强层 |
+docs/planning/REFACTORING_PLAN.md:1589:packages/plugin-pomodoro/
+docs/planning/REFACTORING_PLAN.md:1592:packages/plugin-widgets/
+packages/tauri-capability-allowlist/docs/dev_log.md:35:  widget / pet windows the `db_*` surface silently.
+packages/tauri-capability-allowlist/docs/dev_log.md:57:- Capability files for `widget_*` / `pet` / `ai_cube`. Track B/C plugin
+docs/planning/execution/G6-widgets-calendar-pet.md:25:| G6-E1 | Epic | Widget host | clock/weather/note/progress/habit widgets |
+docs/planning/execution/G6-widgets-calendar-pet.md:38:- 新增 `packages/plugin-widgets`
+docs/planning/execution/G6-widgets-calendar-pet.md:57:pnpm --filter @repo/plugin-widgets test
+docs/planning/execution/G6-widgets-calendar-pet.md:65:- 添加 5 个 widgets,重启后恢复。
+docs/planning/BACKLOG-v1.md:27:| G6 | `execution/G6-widgets-calendar-pet.md` | 6-7 周 | Widgets、Calendar、Pet 基础 |
+docs/planning/BACKLOG-v1.md:47:| Widgets | G6 | `packages/plugin-widgets` |
+docs/planning/BACKLOG-v1.md:49:| Time progress/countdown | G6 | `packages/plugin-widgets` |
+docs/reviews/single-table-todos-e2e/20260514-roadmap-seed.md:8:The Phase 0.3 EXIT integration: wire todos as the single end-to-end synced entity — same-transaction entity + outbox write, 2-Mac todos sync E2E (including conditional-write conflict path), plus the zero-knowledge PoC and the SQLite-dump PoC (PRD §10.1).
+docs/reviews/single-table-todos-e2e/20260514-roadmap-seed.md:11:- Mutations atomic: entity table write + `sync_outbox` write in the SAME SQLite transaction (`BEGIN IMMEDIATE; ... COMMIT;`); crash mid-state (data without outbox row) must never occur (FR-SY-32 M-12).
+docs/workflow/roadmap/codex-prompts/window-3-widgets-web-ai.md:16:Branch: codex/track-c-widgets-web-ai
+docs/workflow/roadmap/codex-prompts/window-3-widgets-web-ai.md:20:- packages/plugin-widgets/  (新建或已有)
+docs/workflow/roadmap/codex-prompts/window-3-widgets-web-ai.md:48:1. G6-E1 Widget host — plugin-widgets
+docs/workflow/roadmap/codex-prompts/window-3-widgets-web-ai.md:49:   - 新建 packages/plugin-widgets/
+docs/workflow/roadmap/codex-prompts/window-3-widgets-web-ai.md:51:   - WidgetHost component (管理所有 widget 的容器)
+docs/workflow/roadmap/codex-prompts/window-3-widgets-web-ai.md:52:   - WidgetFrame component (单个 widget 的可拖拽/可调整大小框架)
+docs/workflow/roadmap/codex-prompts/window-3-widgets-web-ai.md:54:   - Widget 注册机制: 其他 plugin 通过 manifest 注册 widget type
+docs/workflow/roadmap/codex-prompts/window-3-widgets-web-ai.md:57:   - Feature brief: docs/reviews/widget-host/feature-brief.md
+docs/workflow/roadmap/codex-prompts/window-3-widgets-web-ai.md:59:2. G6-E4 Time progress widget
+docs/workflow/roadmap/codex-prompts/window-3-widgets-web-ai.md:60:   - 在 plugin-widgets 内添加内置 widget
+docs/workflow/roadmap/codex-prompts/window-3-widgets-web-ai.md:85:   - 在 plugin-widgets 内
+docs/workflow/roadmap/codex-prompts/window-3-widgets-web-ai.md:87:   - WallpaperAwareContrast: 读取系统壁纸色调调整 widget 对比度 (mock, 实际需要 Tauri command)
+docs/workflow/roadmap/codex-prompts/window-3-widgets-web-ai.md:133:    - 在 plugin-widgets 或 plugin-calendar 内 (看哪个更合适)
+docs/workflow/roadmap/codex-prompts/window-3-widgets-web-ai.md:192:- pnpm --filter @repo/plugin-widgets check-types (如果存在)
+docs/planning/2026-05-12-product-development-plan-v1.md:181:├─ plugin-widgets/             ← 新增（时钟 + 天气 + 便签 + 冥想）
+docs/planning/2026-05-12-product-development-plan-v1.md:203:todos               (id, grid_id, title, done, due_at, pomodoro_count)
+docs/planning/2026-05-12-product-development-plan-v1.md:204:pomodoro_sessions   (id, task_id, started_at, duration, completed)
+docs/planning/sub-prds/console/dev-plan.md:103:- `plugin-widgets`(时间进度条):Phase 3 才完整;Phase 2.5 内 progress-tracker 子模块若已就位则接入,否则灰显
+docs/planning/sub-prds/console/dev-plan.md:146:| D12 | `plugin-widgets` 的进度条子模块提供 ConsoleView:列表 + 详情 + 一键预置 | FR-CON-81~83 |
+docs/planning/sub-prds/console/dev-plan.md:203:| plugin-widgets / 进度条子模块 | 进度条列表 + 详情 ConsoleView | 进度条模块 |
+docs/planning/sub-prds/console/dev-plan.md:221:| `productivity:todo-*` / `productivity:pomodoro-*` / `productivity:habit-*` | plugin-productivity | 任务到期 tab 刷新;搜索索引刷新 |
+docs/workflow/roadmap/codex-prompts/window-2-productivity-console.md:34:- packages/plugin-widgets/
+docs/workflow/roadmap/codex-prompts/window-2-productivity-console.md:69:   - Todo entity: { id, title, description, status, priority, quadrant, dueDate, labels[], pomodoroCount, createdAt }
+docs/workflow/roadmap/codex-prompts/window-1-desktop-foundation.md:14:- Track C (另一窗口): G6+G7+G8 scaffold (plugin-widgets/calendar/pet/ai-cube, apps/web)
+docs/PLUGIN_SDK.md:96:    "control": true,                // 是否在 control 窗口提供 widget
+docs/PLUGIN_SDK.md:149:    "web": "subset",                // 网页版是否支持(plugin-clipboard / plugin-widgets 通常是 'none')
+docs/PLUGIN_SDK.md:233:  /** 渲染在控制窗口(AI Cube 托盘)中的 widget */
+docs/PLUGIN_SDK.md:513:import '@repo/plugin-widgets/register';
+docs/PLUGIN_SDK.md:553:  'productivity:pomodoro-started': { sessionId: string; taskId: string | null; duration: number };
+docs/PLUGIN_SDK.md:554:  'productivity:pomodoro-completed': { sessionId: string; interruptions: number };
+docs/PLUGIN_SDK.md:555:  'productivity:pomodoro-cancelled': { sessionId: string };
+docs/PLUGIN_SDK.md:572:  // ─── widgets:* 时钟/天气/便签/进度条/桌宠/冥想 ─
+docs/PLUGIN_SDK.md:573:  'widgets:clock-tick': { utc: number };
+docs/PLUGIN_SDK.md:574:  'widgets:weather-updated': { cityId: string };
+docs/PLUGIN_SDK.md:575:  'widgets:note-saved': { noteId: string };
+docs/PLUGIN_SDK.md:576:  'widgets:progress-updated': { trackerId: string; percent: number };
+docs/PLUGIN_SDK.md:577:  'widgets:meditation-started': { duration: number };
+docs/PLUGIN_SDK.md:578:  'widgets:meditation-ended': { reason: 'completed' | 'user-exit' };
+docs/PLUGIN_SDK.md:875:  "contentTypes": ["todo-list", "pomodoro-capsule", "habit-tracker", "matrix-view"],
+docs/PLUGIN_SDK.md:878:    "emit": ["productivity:todo-*", "productivity:pomodoro-*", "productivity:habit-*"],
+docs/PLUGIN_SDK.md:881:  "shortcuts": [{ "id": "quick-add-todo", "default": "Cmd+Shift+T" }, { "id": "toggle-pomodoro", "default": "Cmd+Shift+P" }],
+docs/PLUGIN_SDK.md:883:  "data": { "tables": ["todos", "lists", "todo_reminders", "pomodoro_sessions", "habits", "habit_logs"] }
+docs/PLUGIN_SDK.md:923:  "events": { "emit": ["calendar:*"], "listen": ["productivity:todo-*", "productivity:habit-logged", "productivity:pomodoro-completed"] },
+docs/PLUGIN_SDK.md:961:### 9.9 AI 桌面宠物(归属 plugin-widgets,子模块)
+docs/PLUGIN_SDK.md:965:  "name": "widgets",
+docs/PLUGIN_SDK.md:967:  "events": { "emit": ["widgets:*", "pet:*"], "listen": ["productivity:pomodoro-*", "account:sync-*", "ai:query-*"] }
+docs/PLUGIN_SDK.md:979:  "dependencies": ["@repo/core", "@repo/plugin-widgets"]
+docs/PLUGIN_SDK.md:989:  "events": { "emit": ["account:*"], "listen": ["productivity:*", "organizer:*", "labels:*", "project:*", "widgets:note-saved"] },
+docs/PLUGIN_SDK.md:995:> 其余 5 个 sub-widget(冥想 / 时间进度条 / 时钟 / 天气 / 便签)归 plugin-widgets,在 manifest 用 contentTypes 列。
+docs/contracts/tauri-commands-v0.md:27:| Widget | `widget_{widgetId}` |
+packages/plugin-account/docs/test.md:17:| AC-9 | Same-entity outbox edits squash to latest plaintext + latest mutation_id | `pnpm --filter @repo/plugin-account test` |
+packages/plugin-account/docs/test.md:21:| AC-13 | Todo mutation writes entity + outbox in one transaction and local two-device sync covers conflict shadow | `pnpm --filter @repo/plugin-account test -- tests/integration/single-table-todos-e2e.test.ts` |
+docs/contracts/data-repository-v0.md:40:| `productivity.pomodoro_session` | `account-sync` |
+docs/contracts/data-repository-v0.md:45:| `widgets.widget` | `device-local` |
+docs/contracts/data-repository-v0.md:46:| `account.device` | `account-sync` |
+docs/contracts/data-repository-v0.md:112:- `device-local` 不进入 remote outbox。
+packages/plugin-account/docs/design.md:32:  ├─ src/sync-engine.ts    (plaintext outbox squash + one-shot pushBatch)
+packages/plugin-account/docs/design.md:54:- Component implementations (login UI, sync status widget)
+docs/planning/sub-prds/console/PRD.md:64:| **P2-Later** | v1.x 或 v2(sidebar 拖动重排、批量操作、看板 widget 入口、自定义象限色名)| ❌ 不做 |
+docs/planning/sub-prds/console/PRD.md:177:    └── (子页由 plugin-account / plugin-productivity / plugin-widgets /
+docs/planning/sub-prds/console/PRD.md:208:  | "pomodoro"
+docs/planning/sub-prds/console/PRD.md:221:    pomodoro?: { tab: "current" | "history"; historyAnchorMs: number };
+docs/planning/sub-prds/console/PRD.md:1273:        其他窗口(overlay Grid、Control widget)的 listener
+docs/planning/sub-prds/console/PRD.md:1343:| `console.calendar.layers` | `{todo, habit, pomodoro}` bools | global | 日历图层开关(Phase 3 才用)|
+docs/workflow/roadmap/sync-v1.autorun-20260519.md:229:- Deferred: real SQLCipher-backed Tauri driver, SQLite dump PoC, and PRD §6.3 entity/outbox schema.
+docs/workflow/roadmap/sync-v1.autorun-20260519.md:319:- Deferred: real Tauri invoke wiring, SQLCipher-persistent outbox/entity schema, hosted `/sync/push` Edge Function, and network E2E.
+docs/workflow/roadmap/sync-v1.autorun-20260519.md:422:  - `sync_outbox` table contract
+docs/workflow/roadmap/sync-v1.autorun-20260519.md:423:  - same-driver-transaction `putTodo()` entity + outbox write
+docs/workflow/roadmap/sync-v1.autorun-20260519.md:424:  - remote apply path that does not create a new outbox row
+docs/workflow/roadmap/sync-v1.autorun-20260519.md:425:  - outbox list/remove helpers for push flush
+docs/workflow/roadmap/sync-v1.autorun-20260519.md:428:  - entity + outbox writes share one transaction id
+packages/plugin-account/docs/api.md:79:`account_todos` and `sync_outbox` SQL statements through the injected
+packages/plugin-account/docs/api.md:82:`putTodo(todo, { mutationId })` writes the entity row and outbox row in one
+packages/plugin-account/docs/api.md:84:without creating a new outbox entry.
+docs/workflow/roadmap/xai-g2-data-security-foundation.md:29:| 7 | single-table-sync-baseline | docs/planning/execution/G2-data-security-foundation.md §G2.6 | repository-v0-contract, keychain-opaque-handle, tauri-capability-allowlist | packages/single-table-todos-e2e/docs | READY_TO_SHIP | D-Codex | yes | 2026-05-20 | Repository v0 `sync-outbox.ts` baseline (commitSeq, mutationId, atomic enqueue) + 4 vitest cases; same-transaction rollback proved. Live Supabase / 2-Mac / SQLCipher dump gates remain deferred. |
+docs/workflow/roadmap/xai-v1.parallel-wave-plan.md:43:     │   ├─ G6-E4 Time progress widget  │
+docs/workflow/roadmap/xai-v1.parallel-wave-plan.md:85:| C | 桌面挂件 + Web + AI | Window 3 | G6→G7→G8 | plugin-widgets, plugin-calendar, plugin-pet, plugin-ai-cube, apps/web | Scaffold + Design |
+docs/workflow/roadmap/xai-v1.parallel-wave-plan.md:100:| packages/plugin-widgets/ | ❌ | ❌ | ✅ own |
+docs/workflow/roadmap/xai-v1.parallel-wave-plan.md:131:| 3h-3.5h | G4-E3 Pomodoro timer widget | 0.5h | Mock 先行 |
+docs/workflow/roadmap/xai-v1.parallel-wave-plan.md:189:- Window 3: `codex/track-c-widgets-web-ai`
+docs/contracts/events-v0.md:29:| `widgets:*` | `plugin-widgets` | Widget lifecycle |
+docs/contracts/events-v0.md:68:| `productivity:pomodoro:completed` | `{ sessionId: string; todoId?: string }` | productivity |
+docs/planning/sub-prds/sync/dev-plan.md:72:2. 离线 outbox 队列 + 回放 v0.2(FR-SY-32~37)— **同事务原子性 + DAG 拓扑合并**(M-12 / H-06)
+docs/planning/sub-prds/sync/dev-plan.md:135:- T-15: 接入 `core-data` 的 todos 表;在 INSERT/UPDATE/DELETE 时同事务写 entity 表 + sync_outbox(M-12);Phase 0 暂不开 outbox flush(直接 push 走 engine)
+docs/planning/sub-prds/sync/dev-plan.md:175:- T-30: `sync_outbox` 表 + migration
+docs/planning/sub-prds/sync/dev-plan.md:176:- T-31: 改造 mutation 入口:统一走 `engine.enqueueMutation()` → 写 SQLite + 入 outbox
+docs/planning/sub-prds/sync/dev-plan.md:177:- T-32: outbox flush 任务(后台 setInterval,网络可用时 + Realtime 断线时也尝试)
+docs/planning/sub-prds/sync/dev-plan.md:237:// ── 同步 mutation(v0.3 outbox 入参)──────────────
+docs/planning/sub-prds/sync/dev-plan.md:379:  outboxPending: number;
+docs/planning/sub-prds/sync/dev-plan.md:380:  outboxDeadLetter: number;
+docs/planning/sub-prds/sync/dev-plan.md:606:| `sync/outbox` | ≥ 80% | 顺序回放、合并、死信、退避 |
+docs/planning/sub-prds/sync/dev-plan.md:623:  5. 离线写 200 条 → outbox squash 同 entity 多次写 → 上线 flush → 与对端一致(H-N)
+docs/planning/sub-prds/sync/dev-plan.md:713:| `core-data` | data layer 提供 mutation hook,plugin-account 监听并入 outbox |
+docs/planning/sub-prds/sync/dev-plan.md:716:| `plugin-productivity` | todos / habits / pomodoro 表的写入路径必须经过 core-data;pomodoro 表特别标 noSync |
+docs/planning/sub-prds/sync/dev-plan.md:719:| `plugin-widgets`(桌宠) | pet_memory 标 noSync(v1);pets row 走同步 |
+docs/adr/0003-three-faces-architecture.md:42:│  plugin-project / plugin-console / plugin-widgets ...      │
+docs/workflow/roadmap/codex-reviews/repository-v0-contract/prompt.md:98:2. Are there entities the project clearly needs (e.g. WidgetEntity / AccountDeviceEntity)
+docs/workflow/roadmap/codex-reviews/repository-v0-contract/prompt.md:105:6. Future-proof: if G2.6 adds OutboxEntry (`sync.outbox`) — does the naming regex accept it?
+docs/reviews/onboarding-backfill-ui/20260514-roadmap-seed.md:13:- Business components live inside `plugin-account`; generic widgets (PasswordPrompt / MnemonicDisplay) may go in `@repo/ui` (dev-plan §2, codebase-orientation §6).
+packages/sync-engine-push/docs/test.md:12:- same-entity edits squash to one outbox entry
+packages/sync-engine-push/docs/test.md:25:- outbox persistence in SQLCipher entity tables
+docs/adr/0005-window-foundation.md:67:| widget | `widget_{id}` | 小组件 | position/always-on-top | widget content |
+docs/planning/sub-prds/sync/REVIEW-2026-05-15.md:20:3. **LWW + tombstone 在客户端时钟/网络分区下的边界 case**:`updated_at` 与 `server_updated_at` 在 PRD 里混用、cursor 仅基于 timestamp、tombstone 永久优先、outbox 合并去重不顾依赖,这四个加起来让"最终一致"实际上是"最后一个写的盖掉所有人",并且**没有 loser shadow** —— 用户编辑被静默丢失没有任何痕迹。
+docs/planning/sub-prds/sync/REVIEW-2026-05-15.md:234:  - 每 mutation 带 `mutation_id`(client 生成的 UUID v7,持久化在 outbox),server 按 `(account_id, mutation_id)` 唯一索引去重。
+docs/planning/sub-prds/sync/REVIEW-2026-05-15.md:344:- 修正:首次登录后**显式确认**"是否启用云同步";至少对 notes / API keys / pomodoro session 提供独立开关默认 OFF。这跟 FR-SY-55 模块级禁同步配套提前到 P0。
+docs/planning/sub-prds/sync/REVIEW-2026-05-15.md:364:  - 进程 `kill -9` × 100 次随机注入(写 blob / 写 outbox / re-key 中)。
+docs/planning/sub-prds/sync/REVIEW-2026-05-15.md:376:- 现状:"离线时所有 mutation 直接写本地 SQLite + 入 sync_outbox 表"。没说这两步是不是同一 transaction。
+docs/planning/sub-prds/sync/REVIEW-2026-05-15.md:377:- 修正:必须是 **同一 `BEGIN IMMEDIATE; ... COMMIT;`**,否则 crash 在两步之间会导致本地有数据但 outbox 无记录,永远不同步。dev-plan T-31 显式声明事务模式。
+docs/planning/sub-prds/sync/REVIEW-2026-05-15.md:434:LWW + tombstone + outbox 合并 + idempotency 这套组合在哪些 ordering 下能收敛、哪些 ordering 下不能,PRD 没说也没验证。Phase 5 验收 §10.2 的"30 分钟数据 100% 一致" 是行为级测试,不是形式验证。
+docs/planning/sub-prds/sync/REVIEW-2026-05-15.md:458:§3.2 line 99 排 3-4 周做 Realtime + 全 entity + outbox + 多设备 + 助记词恢复 + Re-key + quota + 删除 + fuzz + 演练 + OAuth。这是 **不可能完成的工作量**,且强行压会让 Re-key / 恢复演练 / fuzz 这些"出事即灾难" 的项被压缩。
+docs/planning/sub-prds/sync/REVIEW-2026-05-15.md:598:| H-06 Outbox DAG 拓扑合并 | FR-SY-34 v0.2 重写 + sync_outbox.causal_deps |
+docs/planning/sub-prds/sync/REVIEW-2026-05-15.md:729:| `docs/planning/sub-prds/sync/PRD.md` | 大改(v0.3 → v0.4-DRAFT) | §2 威胁模型 T11 v0.4 残余风险 / §3.1 流程图 device key CSPRNG / §3.2 auth_password 表必含 secret_key / §3.3 注册流程 device key 独立生成 / §3.4 新设备登录 / §3.5 recovery proof 绑定完整 payload / §3.6 助记词恢复 auth_password 修正 + encryption_device_id server 分配 / §3.7 SQLCipher 4 + Keychain 锚点 / §5.2 FR-SY-07/08/15/16/68/69/71/74/76/78 改 / §6.1 schema (device_dek_wraps FK + staging_blobs metadata + shadow AAD metadata + outbox payload_plain + nonce_counter 注释) / §6.2 RLS 严格化 (device_dek_wraps SELECT self+active, encrypted_blobs read 加 active, encrypted_blobs write 关闭) / §7.3-7.4 协议 (per-record 207, applied_revision, commit_seq string, 账户级 cursor) / §7.6 错误码 E3021-E3025 / §11 R-10 子风险 R-10.18-R-10.21 / §13 changelog v0.4 |
+docs/planning/sub-prds/sync/REVIEW-2026-05-15.md:745:| **C-G** outbox lazy encrypt at flush | FR-SY-78 重写 + §6.3 sync_outbox.payload_plain + flush 流程注释 | 集成测试:离线同 entity 3 次 → flush → AAD 绑正确 revision → server 解密通过 |
+docs/planning/sub-prds/sync/REVIEW-2026-05-15.md:792:- ✅ outbox lazy encrypt 在 FR-SY-78 / §6.3 sync_outbox.payload_plain 一致
+packages/plugin-account/tests/sync-engine.test.ts:26:    const outbox = createSyncOutbox({
+packages/plugin-account/tests/sync-engine.test.ts:31:    outbox.enqueue({
+packages/plugin-account/tests/sync-engine.test.ts:36:    outbox.enqueue({
+packages/plugin-account/tests/sync-engine.test.ts:42:    const entries = outbox.list();
+docs/workflow/roadmap/codex-reviews/repository-v0-contract/output.log:111:2. Are there entities the project clearly needs (e.g. WidgetEntity / AccountDeviceEntity)
+docs/workflow/roadmap/codex-reviews/repository-v0-contract/output.log:118:6. Future-proof: if G2.6 adds OutboxEntry (`sync.outbox`) — does the naming regex accept it?
+docs/workflow/roadmap/codex-reviews/repository-v0-contract/output.log:163:| `productivity.pomodoro_session` | `account-sync` |
+docs/workflow/roadmap/codex-reviews/repository-v0-contract/output.log:168:| `widgets.widget` | `device-local` |
+docs/workflow/roadmap/codex-reviews/repository-v0-contract/output.log:169:| `account.device` | `account-sync` |
+docs/workflow/roadmap/codex-reviews/repository-v0-contract/output.log:235:- `device-local` 不进入 remote outbox。
+docs/workflow/roadmap/codex-reviews/repository-v0-contract/output.log:401:| widget_\<id\> | `widget_xxx` | Widget 窗口 | 始终可交互 (未来) |
+docs/workflow/roadmap/codex-reviews/repository-v0-contract/output.log:432:| `widgets:` | plugin-widgets | `widgets:clock-tick` |
+docs/workflow/roadmap/codex-reviews/repository-v0-contract/output.log:2827:/bin/zsh -lc "rg -n \"widget|account\\.device|WidgetEntity|AccountDevice|pomodoro|outbox|sync\\.outbox\" packages docs | sed -n '1,240p'" in /Users/lijinlong/Desktop/AI_Desktop/XAI_Desktop
+packages/sync-engine-push/docs/dev_log.md:5:| 2026-05-19 03:55 PDT | Added `packages/plugin-account/src/sync-engine.ts` with plaintext outbox, UUIDv7 mutation IDs, `pushBatch`, and HTTP transport. | `pnpm --filter @repo/plugin-account check-types` passed. | JS passes proposed revision to crypto seam; AAD stays in Rust. |
+packages/sync-engine-push/docs/api.md:6:const outbox = createSyncOutbox();
+packages/sync-engine-push/docs/api.md:7:const entry = outbox.enqueue({
+packages/sync-engine-push/docs/api.md:22:  { entries: outbox.list() },
+docs/workflow/roadmap/codex-reviews/repository-v0-contract/context.md:44:2. Are there entities the project clearly needs (e.g. WidgetEntity / AccountDeviceEntity)
+docs/workflow/roadmap/codex-reviews/repository-v0-contract/context.md:51:6. Future-proof: if G2.6 adds OutboxEntry (`sync.outbox`) — does the naming regex accept it?
+packages/plugin-account/tests/integration/single-table-todos-e2e.test.ts:22:  it('writes todo and sync_outbox rows in one transaction', async () => {
+packages/plugin-account/tests/integration/single-table-todos-e2e.test.ts:267:  const outbox = new Map<string, OutboxRow>();
+packages/plugin-account/tests/integration/single-table-todos-e2e.test.ts:299:        const current = outbox.get(key);
+packages/plugin-account/tests/integration/single-table-todos-e2e.test.ts:300:        outbox.set(key, {
+packages/plugin-account/tests/integration/single-table-todos-e2e.test.ts:313:        for (const [key, row] of outbox) {
+packages/plugin-account/tests/integration/single-table-todos-e2e.test.ts:315:            outbox.delete(key);
+packages/plugin-account/tests/integration/single-table-todos-e2e.test.ts:341:        return [...outbox.values()].sort((left, right) => left.sequence - right.sequence) as T[];
+docs/planning/sub-prds/sync/PRD.md:558:| `pomodoro_sessions` | ❌ | — | 不上传 | **隐私决策** |
+docs/planning/sub-prds/sync/PRD.md:630:| **FR-SY-72** | P0 | **Mutation idempotency(v0.2 新,H-07)** | 每 mutation 带 `mutation_id UUIDv7`(client 生成,持久化在 outbox);server `encrypted_blobs` + `mutation_dedup` 表按 `(account_id, mutation_id)` UNIQUE;重复 mutation_id 返回上次 result(true idempotency),不产生新 revision | 网络抖动 / 重试 |
+docs/planning/sub-prds/sync/PRD.md:636:| **FR-SY-78** | P0 | **离线 squash + lazy encrypt at flush(v0.5 C-F 明确 one-shot push)** | outbox 不存预加密 ciphertext,改存 plaintext payload + 元数据;同 entity 多次编辑取最新 plaintext + 最新 mutation_id;**flush 时 client 单步**:① 从本地 `entity_state` 读 `base_revision = max_seen_revision`;② 计算 `proposed_revision = base_revision + 1`;③ 用 proposed_revision 构造 CBOR AAD;④ 即时加密(nonce 从 nonce_counter 取,counter 必须在 active lease 内 — C-C);⑤ **一次 POST /sync/push** 带完整 envelope + base_revision + proposed_revision;⑥ server 验证 `base_revision == server.current_revision`,通过则 INSERT(`applied_revision = proposed_revision`),失败 → 409 conflict shadow;**禁止两阶段 reservation**(原 v0.4 "server 先返 proposed_revision 再加密" 暗示被废弃 — 与 PUSH 请求形态矛盾且增加竞态) | 离线 / C-F v0.5 |
+docs/planning/sub-prds/sync/PRD.md:676:| FR-SY-32 | P0 | **离线写入队列(原子事务,v0.2 强化,M-12)** | 离线时所有 mutation 在**同一 SQLite transaction** 内完成:`BEGIN IMMEDIATE; -- 写 entity 表 -- 写 sync_outbox -- COMMIT;`;crash 中间状态绝不出现(本地有数据但无 outbox 记录) |
+docs/planning/sub-prds/sync/PRD.md:677:| FR-SY-33 | P0 | sync_outbox 表结构(v0.2 扩展) | 增加 `mutation_id`, `base_revision`, `causal_deps`(JSON,引用的其他 entity 的 max_seen revision,P-01);见 §6.3 |
+docs/planning/sub-prds/sync/PRD.md:680:| FR-SY-36 | P0 | 网络变化触发 flush | macOS 监听 `SCNetworkReachability` callback;从离线→在线触发 outbox flush |
+docs/planning/sub-prds/sync/PRD.md:705:| FR-SY-46 | P0 | **批次处理模型 v0.3(H-F)** | 改 per-record transaction:服务端逐条处理,**允许混合 status**(ok / conflict / causal_dep_unsatisfied / duplicate / revision_mismatch),返回 207 详细 result(见 §7.3 v0.3);客户端按 result 逐条更新 outbox(成功删除,conflict 走 FR-SY-71,死信走 FR-SY-48);原 v0.2 "batch atomic 整批全成或全败" 与 207 partial response 矛盾,被废弃 |
+docs/planning/sub-prds/sync/PRD.md:715:| FR-SY-51 | P0 | 导出 Markdown 子集(默认加密) | todos / notes / habits / pomodoro 转 .md;打包 .zip.age 加密(同 FR-SY-70 派生 key);明文 zip 需二次确认 |
+docs/planning/sub-prds/sync/PRD.md:722:| FR-SY-53 | P0 | **同步默认显式确认(v0.3 M-5 修订)** | 注册流程**不默认勾选**云同步;首次登录后弹"启用云同步" 屏,用户显式确认才开;隐私偏执用户可保持仅本地模式;notes / API keys / pomodoro session 提供独立开关默认 OFF;原 v0.2 "默认开启" 设计与隐私承诺张力被废弃 |
+docs/planning/sub-prds/sync/PRD.md:1247:CREATE TABLE sync_outbox (
+docs/planning/sub-prds/sync/PRD.md:1264:CREATE INDEX idx_outbox_pending ON sync_outbox(dead_letter, next_retry_at);
+docs/planning/sub-prds/sync/PRD.md:1267:-- 1. SELECT outbox rows WHERE dead_letter=0 AND (next_retry_at IS NULL OR next_retry_at <= now())
+docs/planning/sub-prds/sync/PRD.md:1274:-- 4. 207 partial response:逐条更新 outbox(ok 删除,conflict 走 FR-SY-71 shadow,死信走 FR-SY-48)
+docs/planning/sub-prds/sync/PRD.md:1659:  - outbox 当前长度 + 死信数
+docs/planning/sub-prds/sync/PRD.md:1699:- [ ] **进程 `kill -9` × 100 次**随机注入(写 blob / 写 outbox / Re-key 中)
+docs/planning/sub-prds/sync/PRD.md:1707:- [ ] 离线 1 小时 + 写 200 条 mutation,联网后 outbox 完全 flush 且与另一端最终一致;**含跨实体依赖场景**(create label → assign → delete label,DAG 拓扑正确,H-06)
+docs/planning/sub-prds/sync/PRD.md:1747:| R-10.21 | **outbox plaintext 在 SQLCipher 被回滚 + Keychain 锁定时的残余风险(v0.4 C-G)** | 🟢 低 | SQLCipher 整库加密 + Keychain WhenUnlocked,设备锁屏拿不到;Time Machine 回滚 SQLite 后 outbox 内 plaintext 即使被读也无 KEK 解;Re-key 拒绝加密保证不会用错 revision 上传 | 文档说明 |
+docs/planning/sub-prds/sync/PRD.md:1763:- [ ] **M-07**:同步默认开启改"首次登录显式确认",notes / pomodoro / API keys 独立开关 OFF
+docs/planning/sub-prds/sync/PRD.md:1788:| 2026-05-16 | **v0.4-DRAFT(协议硬化第三轮,修复 v0.3 致命缺陷)** | 基于第三轮 codex 审查 Critical + High 全部落实。**致命修复**:① **C-A device key 由 KEK 派生 → 本地 CSPRNG**:v0.3 用 `HKDF-Expand(KEK, "xai.devicekey.v1")` 让旧设备能算新设备 device_priv,per-device wrap 整套安全前提塌;v0.4 改 `device_priv = csprng(32)` 仅存 Keychain;② **C-B RLS device_dek_wraps SELECT 限自身 active device**;encrypted_blobs SELECT 加 status='active' 校验;pending device 不能读 wrap/blobs;③ **C-C nonce 双重锚点**:Keychain ThisDeviceOnly high_water + SQLCipher next_counter 双写;Time Machine 回滚 SQLite 后 Keychain 未变 → 加密拒绝 + E3021;④ **C-D encrypted_blobs 客户端只读**:删除 RLS write policy,所有写入走 /sync/push Edge Function service_role;⑤ **C-E Recovery 签名绑定完整 payload**:message 含 `SHA256(CBOR_canonical(new_payload))` 而非字段级 hash,防 server 篡改未列入 hash 字段;⑥ **C-F 助记词恢复修正**:auth_password' 必含 secret_key(与注册一致);encryption_device_id 由 server 分配 client 不传;⑦ **C-G outbox lazy encrypt**:outbox 改存 plaintext + 元数据(SQLCipher 已加密本表),flush 时即时加密用正确 proposed_revision,避免 squash 让 AAD 与 revision 不一致 → tag fail;⑧ **C-H conflict shadow 完整 AAD metadata**:加 key_id/encryption_device_id/counter/revision/deleted_flag/schema_version/blob_size/mutation_id/loser_commit_seq,30 天后 loser 可重建 AAD 解密。**High 11 条**:H-2 §3.2 auth_password 表必含 secret_key;H-3 X25519 wrap 改 HPKE Base mode (RFC 9180);H-4 commit_seq BIGSERIAL + SECURITY DEFINER RPC fn_alloc_commit_seq;H-5 Re-key staging 不改 entity revision 只换 key + rekey_session_order;H-6 revision rollback 改 `(entity_id, revision, commit_seq, blob_hash)` 区分幂等 vs re-encrypt vs 真 rollback;H-7 PULL 改账户级全局 cursor (PullRecord 含 entity_type);H-8 BIGINT 改 string (JSON number 精度不够);H-9 crypto_encrypt_for 不接 encryption_device_id (Rust 从 device state 读);H-10 device_dek_wraps FK to sync_devices + grant RPC SELECT FOR UPDATE;H-11 REST 协议示例清 v0.2 残留 (server 分配 revision / batch atomic)。**Medium/Low**:CBOR 测试向量改真实向量;OPAQUE 引用统一 draft;Realtime topic 加 device claim;错误码补 E3021-E3025;同步范围矩阵 accounts 字段对齐;父 PRD §5.9 标题升 v0.3/v0.4。**R-10 子风险扩展**:R-10.18 强化为高 + Keychain 锚点;R-10.19 device key 派生缺陷(已修);R-10.20 shadow AAD rebuild;R-10.21 outbox plaintext 残余风险。**协议正确性**:Phase 4.8 TLA+ 模型升级为前置阻断,最低必含 6 场景。**Open(v2)**:OPAQUE PAKE;helmet seed;AES-GCM-SIV;Merkle root(account_commit_seq 不是密码学完整性,只防粗暴回滚)|
+docs/planning/sub-prds/sync/PRD.md:1790:| 2026-05-15 | **v0.2-DRAFT(协议硬化第一轮)** | 基于第一轮审查 `REVIEW-2026-05-15.md` Critical + High 全面落实。主要变更:<br>**密钥**:① master_password 与 auth_password 完全分离(C-01);② 24 词 BIP-39 编码 256-bit DEK(C-05);③ 客户端 Secret Key 抗字典攻击(FR-SY-73 / H-14);④ Recovery proof 阻断恶意 PATCH(C-04 / FR-SY-69)<br>**加密原语**:① AAD 必须绑定 entity 语境(C-02 / FR-SY-67);② Deterministic nonce(H-01);③ Envelope 加 `key_id`(C-07);④ Re-key 两阶段 + keyring(FR-SY-13 升 P0);⑤ DEK 常驻 Rust KeyVault,JS 只拿 opaque handle(C-06 / FR-SY-75)<br>**协议**:① Conditional write + base_revision(H-05);② Mutation_id 全局 idempotency(H-07 / FR-SY-72);③ commit_seq BIGSERIAL 替代 timestamp 作权威排序与 cursor(H-02/H-04);④ delete 不再有特殊优先级,按 commit_seq 决胜(H-03);⑤ Outbox 按依赖 DAG 合并(H-06);⑥ 冲突 shadow 30 天保留(FR-SY-71);⑦ Realtime Private Channels + Authorization 强制(H-09)<br>**本地存储**:① SQLCipher 加密本地 SQLite(C-09 / FR-SY-74);② 导出文件默认 age 加密(C-10 / FR-SY-70);③ outbox 与 entity 写入同事务原子性(M-12)<br>**多设备**:① 设备撤销强制 Re-key(H-11 / FR-AC-14 升 P0);② RLS 加 device 校验(H-08);③ JWT embed device_id claim<br>**Schema**:① 新增 `account_keyring` / `mutation_dedup` / `encrypted_blobs_conflict_shadow` / `staging_blobs` / `device_sync_progress` 5 张表;② accounts 加 `secret_key_check / dek_check / recovery_proof_hash / current_dek_key_id`;③ encrypted_blobs 加 `revision / key_id / commit_seq / mutation_id`;④ `entity_type` 改 ENUM(M-09)<br>**威胁模型**:新增 T1.1 / T3.5 / T10~T13;补"防 vs 不防"边界(L-01);R-10 子风险扩展到 R-10.13<br>**验收**:新增 §10.x 协议硬化里程碑准入门;Phase 5 验收加零知识 PoC / SQLite dump PoC / 导出文件加密验证<br>**Open**:Invisible Salamanders(R-10.9)v1 不防护,v2 评估 AES-GCM-SIV;OPAQUE 为 C-01 的 v2 升级路径 |
+docs/workflow/roadmap/sync-v1.deferred-gates.md:22:| 2026-05-19 03:25 PDT | core-data-sqlite-driver (#20) | Real SQLCipher-backed Tauri driver, SQLite dump PoC, and PRD §6.3 entity/outbox schema | Local TypeScript repo/driver boundary and in-memory SQLite tests passed, but no live Tauri SQLCipher connection is bound to `@repo/core-data` yet. Entity-specific tables and sync outbox are downstream rows. | Bind `SqliteDriver` to the Rust SQLCipher DB from #16, run copied-file negative PoC, and add entity/outbox schema in sync-engine rows. |
+docs/workflow/roadmap/sync-v1.deferred-gates.md:27:| 2026-05-19 03:56 PDT | sync-engine-push (#26) | Real Tauri `crypto_encrypt_for` invoke wiring, SQLCipher-persistent outbox, hosted `/sync/push` Edge Function, and multi-device network E2E | Local unit tests verify the client push contract and lazy-encrypt seam, but runtime crypto state, SQLCipher entity/outbox schema, and server push behavior are downstream/not provisioned. | Wire Tauri crypto client and SQLCipher outbox in downstream rows; implement/deploy #28; run #30 single-table E2E. |
+docs/planning/sub-prds/roadmap-prompts.md:167:| `xai-g6-widgets-calendar-pet` | `G6-widgets-calendar-pet.md` | G5 稳定 | `D-Codex+Cursor` | yes |
+docs/planning/sub-prds/roadmap-prompts.md:403:- `plugin-productivity-pomodoro`: 任务绑定计时、暂停、完成记录、桌面轻量计时器。
+docs/planning/sub-prds/roadmap-prompts.md:420:隐私门: Clipboard 默认 device-local。除非用户明确开启 Sync,否则不进入 remote outbox。
+docs/planning/sub-prds/roadmap-prompts.md:436:- `notification-center-baseline`: due/pomodoro/sync/privacy warning。
+docs/planning/sub-prds/roadmap-prompts.md:451:Source: `docs/planning/execution/G6-widgets-calendar-pet.md`
+docs/planning/sub-prds/roadmap-prompts.md:455:- `plugin-widgets-host`: add/remove/move/resize/persist。
+docs/planning/sub-prds/roadmap-prompts.md:456:- `plugin-widgets-theme-density`: compact/comfortable,light/dark。
+docs/planning/sub-prds/roadmap-prompts.md:459:- `plugin-widgets-time-progress`: day/week/month/project countdown。
+docs/planning/sub-prds/roadmap-prompts.md:467:pnpm --filter @repo/plugin-widgets test
+packages/single-table-todos-e2e/docs/test.md:14:- Todo row and `sync_outbox` row are written in the same driver transaction.
+packages/single-table-todos-e2e/docs/design.md:8:- Local todo mutation writes the todo row and `sync_outbox` row through one
+packages/single-table-todos-e2e/docs/dev_log.md:9:| Title | G2.6 Single-table sync baseline (Repository v0 outbox) |
+packages/single-table-todos-e2e/docs/dev_log.md:22:### Phase 1 — Repository v0 outbox baseline + mock tests
+packages/single-table-todos-e2e/docs/dev_log.md:28:- Added `packages/core-data/src/sync-outbox.ts` defining the
+packages/single-table-todos-e2e/docs/dev_log.md:31:- Added `enqueueOutboxEntry` — atomically writes the entity and outbox
+packages/single-table-todos-e2e/docs/dev_log.md:37:- Added 4 vitest cases covering happy-path put, rollback on outbox
+packages/single-table-todos-e2e/docs/dev_log.md:44:- `pnpm --filter @repo/core-data test`: 58 tests PASS (4 new outbox).
+packages/single-table-todos-e2e/docs/dev_log.md:54:The Repository v0 outbox baseline is in place and the same-transaction
+packages/single-table-todos-e2e/docs/dev_log.md:63:| 2026-05-20 01:02 PDT | feature-build + feature-verify (Claude Code, Track A) | Added Repository v0 outbox baseline (`sync-outbox.ts` + 4 vitest cases) and reconciled status to G2 roadmap. | `pnpm --filter @repo/core-data test` (58 tests) | manual ship only; continue roadmap |
+docs/planning/sub-prds/web/PRD.md:113:| `/app/pomodoro` | 番茄统计 | 必须登录 |
+docs/planning/sub-prds/web/PRD.md:888:| FR-WEB-119 | 导出格式 | P0 | zip 含 `todos.json` / `labels.json` / `boards.json` / `habits.json` / `pomodoro.json` / `settings.json`(仅 device-local & account-global 的明文设置)/ `devices.json`(自有设备列表)/ `README.md`(字段说明、时间格式 ISO 8601、字段映射到主 PRD §8 schema 的版本号) |
+docs/planning/2026-05-12-PRD-v1.md:74:5. **重构方向不是"从零拆微内核"**,当前代码已存在 `packages/core`、`packages/core-data`、`plugin-account`、Rust `commands/crypto/platform` 等基础;后续重点是收敛边界、补齐 `plugin-console/productivity/project/labels/widgets` 和清掉 Host 残余业务。
+docs/planning/2026-05-12-PRD-v1.md:252:| FR-PM-04 | 番茄记录 | 完成的番茄写入 `pomodoro_sessions`,关联到 task_id |
+docs/planning/2026-05-12-PRD-v1.md:422:| FR-SY-01 | 同步实体 | grids / grid_items / todos / habits / settings + 子 PRD §4 全 19 类(剪贴板和 pomodoro 不上传 — 隐私) |
+docs/planning/2026-05-12-PRD-v1.md:426:| FR-SY-05 | 离线编辑 | 离线期间所有写操作入 outbox 同事务原子 + DAG 拓扑合并 + mutation_id 幂等 |
+docs/planning/2026-05-12-PRD-v1.md:511:桌面日历**没有自己的数据表**——它是 `todos` / `habit_logs` / `pomodoro_sessions` 的聚合视图。因此"同步"实际上是这三张表的同步(已在 §5.9 同步范围内),日历模块本身只是渲染层。
+docs/planning/2026-05-12-PRD-v1.md:801:│  │plugin-widgets│  │plugin-ai    │  │plugin-account │  │
+
+codex
+## Codex Cross-vendor Review
+
+**Feature**: repository-v0-contract  
+**Commit(s)**: 744d578  
+**Reviewer**: codex feature-review (cross-vendor) · gpt-5.4 high  
+**Verdict**: REVISE
+
+### Strengths (max 4 bullets)
+- `packages/core-data/src/entities.ts` gives a clean canonical TS surface for the eight intended G2.1 entities, and `docs/contracts/data-repository-v0.md` §3.1 matches that table row-for-row.
+- Boundary discipline is good: the contract stays in `@repo/core-data`, adds no plugin-to-plugin coupling, and does not violate architecture red lines #4/#8/#9.
+- `Repo<T>` now freezes the important cross-driver surface (`listByIndex`, `metadata`, `transaction`, `migrate`) early enough for G2.2-G2.6 to build against one seam.
+- The reusable contract harness is a solid start, and the discriminated `RepoEntity` union is directly usable from plugin code via `entityType` switches without extra narrowing helpers.
+
+### Gaps & risks (max 6 bullets, severity-tagged)
+- [P1] `packages/core-data/src/repo-utils.ts` does not actually enforce the documented `entityType` invariant. `assertRepoRecord()` only checks for `"."`, so invalid values that should fail the frozen contract still pass; this contradicts the stated `^[a-z]+\.[a-z_]+$` rule and the “helpers reject bad records with E3005” requirement.
+- [P1] Clipboard’s device-local guarantee is only type-level. Runtime code accepts a malformed `"clipboard.item"` record with `syncScope: "account-sync"`, so a casted or decoded payload could cross the later sync boundary despite docs saying this invariant is enforced.
+- [P1] `packages/core-data/tests/repository-contract.ts` under-covers the contract it claims to be canonical for. It does not test corrupted storage handling, wrong-key/encrypted-driver failure, or runtime sync-scope enforcement, yet `docs/contracts/data-repository-v0.md` lists those as required driver proofs.
+- [P2] Doc/code alignment is incomplete outside §3.1: the same contract doc still lists `productivity.pomodoro_session`, `widgets.widget`, and `account.device` in the earlier entity table, which makes the v0 surface read broader than the code actually freezes.
+- [P2] Workflow hygiene is close but not finished: `packages/repository-v0-contract/docs/dev_log.md` leaves the Work Log commit column as “pending commit” even though `744d578` exists.
+- [P2] The naming rule intentionally accepts future `sync.outbox`, but would reject hyphenated second segments such as `productivity.todo-list`; if hyphenated slugs are ever desired, that needs an explicit contract decision rather than silent drift.
+
+### Concrete next-phase targets (max 6 bullets)
+- Add `assertRepoEntity`-level runtime validation for regex-conformant `entityType` values and entity-specific `syncScope` rules, especially `clipboard.item`.
+- Extend the canonical contract suite with negative cases for corrupted JSON rows, invalid record payloads, and migration/version errors that must surface as `E3005`/`E3006`.
+- Split encrypted-driver obligations into an opt-in contract block so SQLCipher/wrong-key behavior is actually testable before G2.3/G2.6 claims compliance.
+- Reconcile `docs/contracts/data-repository-v0.md` so non-G2.1 entities are either removed from v0 tables or explicitly marked deferred.
+- Update `packages/repository-v0-contract/docs/dev_log.md` Work Log to record `744d578`.
+- Add a tiny exported helper such as `isRepoEntityType`/`assertRepoEntityType` for plugin code that decodes untyped payloads.
+
+### Out of scope confirmed
+- SQLCipher PRAGMA application and real wrong-key runtime proof remain deferred to later G2 rows.
+- Live Supabase / two-Mac sync smoke, real outbox/network E2E, and signed-runtime/MAS sandbox evidence remain deferred.
+- `plugin-organizer` localStorage runtime cut-over and real macOS Finder/runtime smoke are still valid deferred gates, not regressions in this review.
+tokens used
+103,698
+## Codex Cross-vendor Review
+
+**Feature**: repository-v0-contract  
+**Commit(s)**: 744d578  
+**Reviewer**: codex feature-review (cross-vendor) · gpt-5.4 high  
+**Verdict**: REVISE
+
+### Strengths (max 4 bullets)
+- `packages/core-data/src/entities.ts` gives a clean canonical TS surface for the eight intended G2.1 entities, and `docs/contracts/data-repository-v0.md` §3.1 matches that table row-for-row.
+- Boundary discipline is good: the contract stays in `@repo/core-data`, adds no plugin-to-plugin coupling, and does not violate architecture red lines #4/#8/#9.
+- `Repo<T>` now freezes the important cross-driver surface (`listByIndex`, `metadata`, `transaction`, `migrate`) early enough for G2.2-G2.6 to build against one seam.
+- The reusable contract harness is a solid start, and the discriminated `RepoEntity` union is directly usable from plugin code via `entityType` switches without extra narrowing helpers.
+
+### Gaps & risks (max 6 bullets, severity-tagged)
+- [P1] `packages/core-data/src/repo-utils.ts` does not actually enforce the documented `entityType` invariant. `assertRepoRecord()` only checks for `"."`, so invalid values that should fail the frozen contract still pass; this contradicts the stated `^[a-z]+\.[a-z_]+$` rule and the “helpers reject bad records with E3005” requirement.
+- [P1] Clipboard’s device-local guarantee is only type-level. Runtime code accepts a malformed `"clipboard.item"` record with `syncScope: "account-sync"`, so a casted or decoded payload could cross the later sync boundary despite docs saying this invariant is enforced.
+- [P1] `packages/core-data/tests/repository-contract.ts` under-covers the contract it claims to be canonical for. It does not test corrupted storage handling, wrong-key/encrypted-driver failure, or runtime sync-scope enforcement, yet `docs/contracts/data-repository-v0.md` lists those as required driver proofs.
+- [P2] Doc/code alignment is incomplete outside §3.1: the same contract doc still lists `productivity.pomodoro_session`, `widgets.widget`, and `account.device` in the earlier entity table, which makes the v0 surface read broader than the code actually freezes.
+- [P2] Workflow hygiene is close but not finished: `packages/repository-v0-contract/docs/dev_log.md` leaves the Work Log commit column as “pending commit” even though `744d578` exists.
+- [P2] The naming rule intentionally accepts future `sync.outbox`, but would reject hyphenated second segments such as `productivity.todo-list`; if hyphenated slugs are ever desired, that needs an explicit contract decision rather than silent drift.
+
+### Concrete next-phase targets (max 6 bullets)
+- Add `assertRepoEntity`-level runtime validation for regex-conformant `entityType` values and entity-specific `syncScope` rules, especially `clipboard.item`.
+- Extend the canonical contract suite with negative cases for corrupted JSON rows, invalid record payloads, and migration/version errors that must surface as `E3005`/`E3006`.
+- Split encrypted-driver obligations into an opt-in contract block so SQLCipher/wrong-key behavior is actually testable before G2.3/G2.6 claims compliance.
+- Reconcile `docs/contracts/data-repository-v0.md` so non-G2.1 entities are either removed from v0 tables or explicitly marked deferred.
+- Update `packages/repository-v0-contract/docs/dev_log.md` Work Log to record `744d578`.
+- Add a tiny exported helper such as `isRepoEntityType`/`assertRepoEntityType` for plugin code that decodes untyped payloads.
+
+### Out of scope confirmed
+- SQLCipher PRAGMA application and real wrong-key runtime proof remain deferred to later G2 rows.
+- Live Supabase / two-Mac sync smoke, real outbox/network E2E, and signed-runtime/MAS sandbox evidence remain deferred.
+- `plugin-organizer` localStorage runtime cut-over and real macOS Finder/runtime smoke are still valid deferred gates, not regressions in this review.
