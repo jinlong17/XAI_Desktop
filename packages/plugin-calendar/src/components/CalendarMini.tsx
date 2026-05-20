@@ -1,3 +1,4 @@
+import { toLocalIsoDate } from "../utils/date";
 import type { CalendarEvent } from "../types";
 
 const WEEKDAYS = [
@@ -15,13 +16,6 @@ export interface CalendarMiniProps {
   events: readonly CalendarEvent[];
   selectedDate?: string;
   onSelectDate?(date: string): void;
-}
-
-export function toLocalIsoDate(d: Date): string {
-  const y = d.getFullYear();
-  const m = String(d.getMonth() + 1).padStart(2, "0");
-  const day = String(d.getDate()).padStart(2, "0");
-  return `${y}-${m}-${day}`;
 }
 
 export function CalendarMini({ month, events, selectedDate, onSelectDate }: CalendarMiniProps) {

@@ -24,3 +24,5 @@ Widget state persists in localStorage and mirrors into an in-memory repo-compati
 ## Cross-review fixes 2026-05-20
 
 Track C proposes registering `calendar.event` in the canonical data repository contract, clarifies calendar weekday labels with accessible names, derives day keys in local time, and treats `@repo/plugin-widgets` as a peer/dev dependency for calendar widget registration.
+
+- Moved `toLocalIsoDate` from `components/CalendarMini` to `utils/date` so hooks no longer import from components.
