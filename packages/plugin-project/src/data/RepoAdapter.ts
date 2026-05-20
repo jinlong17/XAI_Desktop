@@ -6,7 +6,7 @@ export interface RepoAdapterOptions<T extends RepoRecord> {
   seed?: T[];
 }
 
-export class RepoAdapter<T extends RepoRecord & { deletedAt?: string }> implements DataAdapter<T> {
+export class RepoAdapter<T extends RepoRecord & { deletedAt?: string; version?: number }> implements DataAdapter<T> {
   private seeded = false;
 
   constructor(
@@ -34,6 +34,15 @@ export class RepoAdapter<T extends RepoRecord & { deletedAt?: string }> implemen
   }
 
   async delete(id: string): Promise<void> {
-    await this.repo.delete(id);
+    const current = await this.repo.get(id);
+    if (!current) return;
+
+    const now = new Date().toISOString();
+    await this.repo.put({
+      ...current,
+      deletedAt: now,
+      updatedAt: now,
+      ...(typeof current.version === "number" ? { version: current.version + 1 } : {}),
+    });
   }
 }
