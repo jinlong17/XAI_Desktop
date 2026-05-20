@@ -75,6 +75,8 @@ pub fn run() {
             commands::keychain::secret_set,
             commands::keychain::secret_get,
             commands::keychain::secret_del,
+            commands::finder::reveal_in_finder,
+            commands::finder::open_path,
             #[cfg(feature = "crypto")]
             commands::database::db_init,
             #[cfg(feature = "crypto")]

@@ -834,3 +834,28 @@ G1.1 (window-command-contract), G1.6 (host-business-residuals), G1.2 (grid-shell
   - `pnpm --filter @repo/plugin-organizer check-types` -> PASS
   - `pnpm --filter desktop build` -> PASS
 - Deferred: actual host wire-up that passes `repositoryLayoutStore(tauriGridRepo, tauriItemRepo)` to `GridSystemProvider`. Currently parked because the host integration needs a `useTauriInvoke()` adapter and live macOS Tauri runtime smoke; recorded in `xai-v1.deferred-gates.md` as a follow-up.
+
+### 2026-05-20 01:14 PDT — Feature Checkpoint: G3-E1 / S3 / E2 / E3 / E4 READY_TO_SHIP
+
+Consolidated G3 organizer-loop feature batch (Track A scope):
+
+- **G3-E1** Grid item model productization
+  - `packages/plugin-organizer/src/gridItemFactory.ts`: typed factories for file / folder / app entities + `createGridItemsFromFinderDrop` bulk adapter; deterministic IDs and timestamps via injectable deps.
+  - `inferKindFromPath` heuristic with `.app` bundle detection.
+- **G3-S3** New URL item
+  - `createUrlGridItem` validates http/https protocols, normalises hostname-based filename, rejects file:// / javascript: / unparseable URLs via `InvalidUrlError`.
+- **G3-E2** Auto-classification rules
+  - `packages/plugin-organizer/src/autoClassify.ts`: rule-engine seam with `ClassificationRule[]`. Default rules cover kind-title (score 10), extension-group-title (score 20: images/videos/audio/pdfs/notes/archives), and parent-folder-title (score 25).
+- **G3-E3** Finder collaboration
+  - `apps/desktop/src-tauri/src/commands/finder.rs`: `reveal_in_finder` / `open_path` Tauri commands with runtime `FINDER_ALLOWED_WINDOWS` allow-list and path validation. Registered in `lib.rs` `invoke_handler`. 3 cargo tests.
+  - `packages/plugin-organizer/src/finderClient.ts`: TS wrapper bound to injected `invoke`.
+- **G3-E4** Empty state + error recovery
+  - `packages/plugin-organizer/src/itemHealth.ts`: `evaluateItemHealth(item, { pathExists? })` classifies items into `healthy / missing-path / missing-protocol / broken-url / unknown`. Plus `defaultEmptyStateActions()` (create-grid / drop-here / add-url / choose-folder CTAs).
+
+- Updated `docs/contracts/tauri-commands-v0.md` §4 with `reveal_in_finder` / `open_path` security rules.
+- Tests run:
+  - `pnpm --filter @repo/plugin-organizer test` -> 41 tests PASS (4 prior + 13 gridItemFactory + 9 layoutStore + 8 autoClassify + 7 itemHealth).
+  - `pnpm --filter @repo/plugin-organizer check-types` -> PASS
+  - `cargo test --manifest-path apps/desktop/src-tauri/Cargo.toml finder::` -> 3 tests PASS.
+  - `pnpm --filter desktop build` -> PASS.
+- Deferred: actual UI wire-up in `SmartContainer.tsx` / `OrganizerGridContent.tsx` to consume the new helpers + render empty-state actions. Currently parked because the host integration needs careful interaction with the existing drag-drop flow. Recorded in `xai-v1.deferred-gates.md` as the G3 UI cut-over follow-up.

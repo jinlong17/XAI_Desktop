@@ -59,14 +59,16 @@ G1.1 implementation notes:
 
 ## 4. File / Open Commands
 
-| Command | Owner | Allowed windows | 说明 |
-|---|---|---|---|
-| `reveal_in_finder` | organizer | `control`,`grid_*`,`console` | path-backed item action |
-| `open_path` | organizer | `control`,`grid_*`,`console` | user-initiated only |
-| `resolve_alias` | organizer | `control`,`grid_*` | G1/G2 根据 sandbox 决定 |
-| `create_security_scoped_bookmark` | organizer/account | `control`,`grid_*` | MAS path if required |
+| Command | Owner | Allowed windows | Input | 说明 |
+|---|---|---|---|---|
+| `reveal_in_finder` | organizer (G3-E3) | `main`,`control`,`grid_*`,`console` | `{ input: { path } }` | path-backed item action; shells out to `open -R` on macOS |
+| `open_path` | organizer (G3-E3) | `main`,`control`,`grid_*`,`console` | `{ input: { path } }` | user-initiated only; shells out to `open` on macOS |
+| `resolve_alias` | organizer | `control`,`grid_*` | TBD | G1/G2 根据 sandbox 决定 |
+| `create_security_scoped_bookmark` | organizer/account | `control`,`grid_*` | TBD | MAS path if required |
 
 文件 command 不允许静默扫描用户目录。所有 path access 必须来自用户 drop/open panel 或已授权 bookmark。
+
+`reveal_in_finder` / `open_path` enforce a runtime allow-list (`FINDER_ALLOWED_WINDOWS` in `commands/finder.rs`) and reject empty / NUL-containing paths with `E3005` (SyncInvalidInput) before reaching the platform layer.
 
 ## 5. Clipboard Commands
 

@@ -20,3 +20,43 @@ export type {
   LocalStorageLayoutStoreOptions,
   RepositoryLayoutStoreOptions,
 } from "./layoutStore";
+export {
+  InvalidUrlError,
+  createAppGridItem,
+  createFileGridItem,
+  createFolderGridItem,
+  createGridItemsFromFinderDrop,
+  createUrlGridItem,
+  inferKindFromPath,
+} from "./gridItemFactory";
+export {
+  classifyGridItem,
+  defaultClassificationRules,
+  fileExtension,
+} from "./autoClassify";
+export type {
+  ClassificationContext,
+  ClassificationResult,
+  ClassificationRule,
+} from "./autoClassify";
+export { createFinderClient } from "./finderClient";
+export type { FinderClient } from "./finderClient";
+export {
+  defaultEmptyStateActions,
+  evaluateItemHealth,
+} from "./itemHealth";
+export type {
+  EmptyStateAction,
+  ItemHealthOptions,
+  ItemHealthReport,
+  ItemHealthStatus,
+} from "./itemHealth";
+export type {
+  CreateAppGridItemInput,
+  CreateFileGridItemInput,
+  CreateFolderGridItemInput,
+  CreateUrlGridItemInput,
+  FinderDropEntry,
+  GridItemFactoryDeps,
+  GridItemKind,
+} from "./gridItemFactory";
