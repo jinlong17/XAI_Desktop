@@ -1,5 +1,5 @@
 import { MouseEvent as ReactMouseEvent, useCallback, useEffect, useMemo, useRef, useState } from "react";
-import { listen } from "@tauri-apps/api/event";
+import { listen, TauriEvent } from "@tauri-apps/api/event";
 import { getCurrentWindow } from "@tauri-apps/api/window";
 import {
   DesktopItem,
@@ -38,7 +38,80 @@ interface G0GridPrototypePing {
   sentAt: string;
 }
 
+interface G0FinderDropTelemetry {
+  gridId: string;
+  source: "tauri://drag-drop" | "html5-drop";
+  paths: string[];
+  kinds: Array<"file" | "folder" | "app" | "alias" | "unknown">;
+  position: { x: number; y: number } | null;
+  receivedAt: string;
+}
+
+interface TauriDragDropPayload {
+  paths?: unknown;
+  position?: {
+    x?: unknown;
+    y?: unknown;
+  };
+}
+
 const G0_GRID_PROTOTYPE_EVENT = "g0-grid-prototype:scoped-ping";
+
+function classifyDroppedPath(path: string): G0FinderDropTelemetry["kinds"][number] {
+  const lower = path.toLowerCase();
+  if (lower.endsWith(".app")) return "app";
+  if (lower.endsWith(".alias")) return "alias";
+  if (path.includes(".")) return "file";
+  return "folder";
+}
+
+function coerceDragDropPaths(payload: TauriDragDropPayload): string[] {
+  if (!Array.isArray(payload.paths)) return [];
+  return payload.paths.filter((path): path is string => typeof path === "string" && path.length > 0);
+}
+
+function coerceDragDropPosition(payload: TauriDragDropPayload): G0FinderDropTelemetry["position"] {
+  const x = payload.position?.x;
+  const y = payload.position?.y;
+  if (typeof x !== "number" || typeof y !== "number") return null;
+  return { x, y };
+}
+
+function G0DropTelemetryPanel({
+  count,
+  telemetry,
+}: {
+  count: number;
+  telemetry: G0FinderDropTelemetry | null;
+}) {
+  return (
+    <div
+      style={{
+        border: "1px solid rgba(56, 189, 248, 0.28)",
+        borderRadius: 8,
+        padding: "8px 10px",
+        background: "rgba(8, 47, 73, 0.42)",
+        minWidth: 0,
+      }}
+    >
+      <div style={{ display: "flex", justifyContent: "space-between", gap: 8 }}>
+        <strong style={{ color: "#bae6fd" }}>Finder DnD</strong>
+        <span style={{ color: "#7dd3fc" }}>drops {count}</span>
+      </div>
+      <div style={{ marginTop: 6, color: "#cbd5e1", overflowWrap: "anywhere" }}>
+        {telemetry ? (
+          <>
+            <div>{telemetry.source}</div>
+            <div>{telemetry.kinds.join(", ") || "unknown"}</div>
+            <div>{telemetry.paths.join(" | ")}</div>
+          </>
+        ) : (
+          "Drop Finder file/folder/app/alias here"
+        )}
+      </div>
+    </div>
+  );
+}
 
 /**
  * GridWindowContent renders a single SmartContainer in its own native window.
@@ -52,6 +125,8 @@ function GridWindowContent({ gridId }: { gridId: string }) {
   const [windowRect, setWindowRect] = useState<G0GridPrototypeRect | null>(null);
   const [spikeEventCount, setSpikeEventCount] = useState(0);
   const [lastSpikeEvent, setLastSpikeEvent] = useState<G0GridPrototypePing | null>(null);
+  const [dropEventCount, setDropEventCount] = useState(0);
+  const [lastDropTelemetry, setLastDropTelemetry] = useState<G0FinderDropTelemetry | null>(null);
   const { gridOpacity, gridBlur } = useSettings();
   // gridRef mirrors `grid` so handleUpdate can read the latest rect without
   // running side-effects inside a setState updater (multi-window position
@@ -206,7 +281,19 @@ function GridWindowContent({ gridId }: { gridId: string }) {
   }, [grid, items]);
 
   const handleFileDrop = useCallback(
-    (paths: string[], _position: { x: number; y: number }) => {
+    (paths: string[], position: { x: number; y: number }, source: G0FinderDropTelemetry["source"] = "html5-drop") => {
+      const telemetry: G0FinderDropTelemetry = {
+        gridId,
+        source,
+        paths,
+        kinds: paths.map(classifyDroppedPath),
+        position,
+        receivedAt: new Date().toISOString(),
+      };
+
+      console.log("[G0 Finder DnD] path-first drop", telemetry);
+      setLastDropTelemetry(telemetry);
+      setDropEventCount((count) => count + 1);
       getCurrentWindow().emit("grid-window-file-drop", { gridId, paths });
     },
     [gridId]
@@ -233,6 +320,21 @@ function GridWindowContent({ gridId }: { gridId: string }) {
     setSpikeEventCount(nextCount);
   }, [gridId, spikeEventCount, windowLabel, windowRect]);
 
+  useEffect(() => {
+    const unlistenDrop = listen<TauriDragDropPayload>(TauriEvent.DRAG_DROP, (event) => {
+      const paths = coerceDragDropPaths(event.payload);
+      if (paths.length === 0) {
+        console.warn("[G0 Finder DnD] drag-drop payload had no paths", event.payload);
+        return;
+      }
+      handleFileDrop(paths, coerceDragDropPosition(event.payload) ?? { x: 0, y: 0 }, "tauri://drag-drop");
+    });
+
+    return () => {
+      unlistenDrop.then((fn) => fn());
+    };
+  }, [handleFileDrop]);
+
   useFileDrop({
     onDrop: handleFileDrop,
     onHover: handleDragHover,
@@ -246,7 +348,7 @@ function GridWindowContent({ gridId }: { gridId: string }) {
         style={{
           boxSizing: "border-box",
           display: "grid",
-          gridTemplateRows: "auto 1fr auto",
+          gridTemplateRows: "auto 1fr auto auto",
           gap: 10,
           width: "100%",
           height: "100%",
@@ -293,6 +395,8 @@ function GridWindowContent({ gridId }: { gridId: string }) {
           </dd>
         </dl>
 
+        <G0DropTelemetryPanel count={dropEventCount} telemetry={lastDropTelemetry} />
+
         <button
           type="button"
           onClick={handleSendSpikeEvent}
@@ -335,6 +439,18 @@ function GridWindowContent({ gridId }: { gridId: string }) {
         gridOpacity={gridOpacity}
         gridBlur={gridBlur}
       />
+      <div
+        style={{
+          position: "fixed",
+          left: 8,
+          bottom: 8,
+          width: "calc(100% - 16px)",
+          pointerEvents: "none",
+          fontSize: 11,
+        }}
+      >
+        <G0DropTelemetryPanel count={dropEventCount} telemetry={lastDropTelemetry} />
+      </div>
     </div>
   );
 }
