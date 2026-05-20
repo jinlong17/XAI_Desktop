@@ -204,20 +204,6 @@ The script reads extended frontmatter fields from templates and generates platfo
 ./scripts/setup_subagents_v2.sh --dry-run
 ```
 
-## Cross-Tool CLI Dispatch
-
-This machine has Claude Code, Codex CLI, and Cursor CLI installed.
-**When the user asks to use another tool (e.g. "让 codex review 一下", "用 cursor 去改"),
-invoke it directly via Bash. Do NOT refuse or suggest manual copy-paste.**
-
-| Tool | Command | Output |
-|------|---------|--------|
-| Codex exec | `codex exec -o out.md "<prompt>"` | `-o` flag |
-| Codex review | `codex review --base main "<prompt>"` | stdout |
-| Cursor | `cursor agent --trust "<prompt>" > out.md` | stdout |
-
-Output goes to `docs/reviews/<feature>/`. Details: `docs/workflow/project/usage-guide.md` §11.
-
 ## Workflow V2 Subagent Output Display
 
 When spawning any Workflow V2 subagent (feature-plan, feature-review,

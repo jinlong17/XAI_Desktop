@@ -72,30 +72,12 @@ Each `.toml` agent includes `sandbox_mode` sourced from the template's
 
 ---
 
-## 3. Cross-Tool CLI Dispatch
+## 3. Cross-Platform Rule Sync
 
-This machine has Claude Code, Codex CLI, and Cursor CLI installed.
-**When the user asks to use another tool (e.g. "让 claude review 一下", "用 cursor 去改"),
-invoke it directly via shell. Do NOT refuse or suggest manual copy-paste.**
+| File | Platform | Handoff display rule |
+|------|----------|---------------------|
+| `CLAUDE.md` §Workflow V2 Subagent Output Display | Claude Code | Task tool return — do not rewrite |
+| `AGENTS.md` §1 (this file) | Codex | Built-in agent-spawn return — do not rewrite + inline fallback |
+| `.cursor/rules/handoff.mdc` V2.x | Cursor | Inline execution — final response must be Handoff block |
 
-| Tool | Command | Output |
-|------|---------|--------|
-| Claude Code | `claude -p "<prompt>" --allowedTools "Read Glob Grep" > out.md` | stdout |
-| Cursor | `cursor agent --trust "<prompt>" > out.md` | stdout |
-
-Output goes to `docs/reviews/<feature>/`. Details: `docs/workflow/project/usage-guide.md` §11.
-
----
-
-## 4. Cross-Platform Rule Sync
-
-| File | Platform | Scope |
-|------|----------|-------|
-| `CLAUDE.md` §Workflow V2 Subagent Output Display | Claude Code | Handoff display |
-| `CLAUDE.md` §Cross-Tool CLI Dispatch | Claude Code | CLI dispatch |
-| `AGENTS.md` §1 (this file) | Codex | Handoff display |
-| `AGENTS.md` §3 (this file) | Codex | CLI dispatch |
-| `.cursor/rules/handoff.mdc` | Cursor | Handoff display |
-| `.cursor/rules/cli-dispatch.mdc` | Cursor | CLI dispatch |
-
-**Any change to these rules must be synced across all three files.**
+**Any change to Handoff display rules must be synced across all three files.**

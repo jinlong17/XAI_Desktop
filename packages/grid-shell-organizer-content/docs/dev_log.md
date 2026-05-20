@@ -8,14 +8,14 @@
 | Target | grid-shell-organizer-content |
 | Title | G1.2 Grid shell and Organizer content split |
 | Roadmap | xai-g1-native-foundation · feature #2 · G1.2 |
-| Status | SHIPPED |
-| Current Phase | SHIPPED |
-| Suggested Next | continue roadmap (G2 Repository v0 → G3 organizer loop) |
+| Status | READY_TO_SHIP |
+| Current Phase | FEATURE_VERIFY |
+| Suggested Next | manual ship only; continue G1.4 after G1.3 remains external-blocked |
 | Automation Mode | D-Codex |
 | Verify Cross-vendor | yes |
-| Executor | ship (Claude Code, Track A — manifest promotion) |
-| Updated | 2026-05-20 00:32 PDT |
-| Blockers | None; deferred gates remain tracked in `xai-v1.deferred-gates.md` |
+| Executor | feature-verify (Codex inline) |
+| Updated | 2026-05-19 23:22 PDT |
+| Blockers | None for G1.2 DMG/private path; deferred gates recorded in roadmap logs |
 
 ## Phase Plan
 
@@ -81,4 +81,3 @@ Cross-vendor verify and manual two-Grid native runtime smoke are deferred in `do
 | 2026-05-19 23:18 PDT | feature-review (Codex inline) | Approved bounded production split with no event/DnD/persistence contract changes. | — | feature-build |
 | 2026-05-19 23:18 PDT | feature-build (Codex inline) | Implemented `OrganizerGridContent`, thinned Host `GridWindow.tsx`, and added public API contract docs. | `26d9f57` | feature-verify |
 | 2026-05-19 23:22 PDT | feature-verify (Codex inline) | Verified TypeScript/build/boundary/public API checks; marked READY_TO_SHIP. | `26d9f57`, `03ca86a` | manual ship only; continue roadmap |
-| 2026-05-20 00:32 PDT | ship (Claude Code, Track A) | Manifest promotion → SHIPPED. Production split already on `main` lineage (commits `26d9f57`/`03ca86a`); G1 manifest row updated to SHIPPED. Push deferred to end-of-session bundle. | `26d9f57`, `03ca86a` | continue roadmap |

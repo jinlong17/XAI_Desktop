@@ -8,14 +8,14 @@
 | Target | multi-grid-event-scope |
 | Title | G1.4 Multi-Grid event scope |
 | Roadmap | xai-g1-native-foundation · feature #4 · G1.4 |
-| Status | SHIPPED |
-| Current Phase | SHIPPED |
-| Suggested Next | continue roadmap (G2 Repository v0 → G3 organizer loop) |
+| Status | READY_TO_SHIP |
+| Current Phase | FEATURE_VERIFY |
+| Suggested Next | manual ship only; continue G2 Repository v0 because G1.5 depends on it |
 | Automation Mode | D-Codex |
 | Verify Cross-vendor | yes |
-| Executor | ship (Claude Code, Track A — manifest promotion) |
-| Updated | 2026-05-20 00:32 PDT |
-| Blockers | None; deferred gates remain tracked in `xai-v1.deferred-gates.md` |
+| Executor | feature-verify (Codex inline) |
+| Updated | 2026-05-19 23:34 PDT |
+| Blockers | None for G1.4 DMG/private path; deferred gates recorded in roadmap logs |
 
 ## Phase Plan
 
@@ -84,4 +84,3 @@ Cross-vendor verify and manual two-Grid runtime smoke/listener cleanup checks ar
 | 2026-05-19 23:30 PDT | feature-review (Codex inline) | Approved bounded event-name/guard migration. | — | feature-build |
 | 2026-05-19 23:30 PDT | feature-build (Codex inline) | Migrated Grid runtime events, EventMap, contract docs, and guard tests. | `78aef01` | feature-verify |
 | 2026-05-19 23:34 PDT | feature-verify (Codex inline) | Verified type checks, guard tests, desktop build, and event contract scans; marked READY_TO_SHIP. | `78aef01`, `59da1e5` | manual ship only; continue roadmap |
-| 2026-05-20 00:32 PDT | ship (Claude Code, Track A) | Manifest promotion → SHIPPED. Event scope migration already on `main` lineage (commits `78aef01`/`59da1e5`); G1 manifest row updated to SHIPPED. Push deferred to end-of-session bundle. | `78aef01`, `59da1e5` | continue roadmap |

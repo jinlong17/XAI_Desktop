@@ -39,4 +39,8 @@ Incidents:
 
 Contract notes:
 - Proposed widget and AI events were recorded under `docs/reviews/*/proposed-contract-changes.md`.
-- No Track A owned contract or core type files were modified.
+- After reverting 92e2ba6 on 2026-05-20, Track C touches only widgets/calendar/pet/ai-cube plugins, apps/web, and docs/reviews/*.
+
+## 2026-05-20 Revert checkpoint
+
+Commit `92e2ba6` was reverted after cross-review found it duplicated Track A's `f3dd30b` core-data-sqlite-driver work without Track A's later `ad5f1d3` `DATABASE_ALLOWED_WINDOWS` guard. Track A remains canonical for G2.2 SQLite driver work; Track C scope is limited to G6/G7/G8.
