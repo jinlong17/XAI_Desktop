@@ -18,7 +18,7 @@
 | Current Feature | none — waiting on human/runtime gates |
 | Feature Source | docs/planning/execution/G0-window-spike.md §G0.5, §G0.6 |
 | Feature Status | BLOCKED |
-| Current Commit | 6c521d7 |
+| Current Commit | bd8cac3 |
 | Tests | default `cargo check` PASS; private-API-disabled `cargo check --no-default-features --features mas-sandbox` PASS after temporary config/dependency toggle; defaults restored |
 | Next Step | Human-run G0.5 Spaces/fullscreen/multi-display matrix, then signed/sandbox G0.6 runtime validation |
 
@@ -533,7 +533,7 @@ Latest stop point is 2026-05-19 22:47 PDT because no eligible G0 work remains wi
 - `bcc5785` — `docs(G0.5): record Spaces static evidence`
 - `2fda0c8` — `feat(G0.6): add MAS compile fallback guard`
 - `6c521d7` — `docs(roadmap): finalize MAS compile fallback checkpoint`
-- `(pending)` — `docs(roadmap): record G0 blocked stop checkpoint`
+- `bd8cac3` — `docs(roadmap): record G0 blocked stop checkpoint`
 
 ### Test Results
 
