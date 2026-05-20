@@ -2,6 +2,7 @@ import type { PetEntity } from "../types";
 
 export function PetAvatar({ pet }: { pet: PetEntity }) {
   const eye = pet.state === "rest" ? "-" : "o";
+  // TODO: replace with SVG/sprite before production.
   return (
     <div
       aria-label={`${pet.name} is ${pet.mood}`}
