@@ -191,3 +191,15 @@
 - Later human action: Complete G0 evidence, implement/review G1.1, then rerun feature-build for the production shell/content split.
 - Suggested verification command / environment: `sed -n '1,220p' docs/reviews/grid-shell-organizer-content/20260519-discovery-review.md`
 - Files/commits affected: docs/reviews/grid-shell-organizer-content/*; packages/grid-shell-organizer-content/docs/*; commit `eaae46e`
+
+## Entry 17
+
+- Feature: multi-grid-event-scope
+- Gate: G1
+- Deferred gate: G0/G1.1 prerequisite for production event migration
+- Why deferred: The user instructed to continue, but G1.4 production implementation depends on G0 Go/Conditional Go and the G1.1 Window Command Contract.
+- Risk: Renaming events or enforcing payload guards before final window/DnD contracts could break the recovered G0 runtime path or encode the wrong drop payload.
+- What was done instead: Created docs-only feature brief, discovery review, design, API, test plan, and dev_log describing current aliases, contract drift, and target migration.
+- Later human action: Complete G0 evidence, implement/review G1.1, settle Finder DnD payload shape, then rerun feature-build for event migration.
+- Suggested verification command / environment: `sed -n '1,220p' docs/reviews/multi-grid-event-scope/20260519-discovery-review.md`
+- Files/commits affected: docs/reviews/multi-grid-event-scope/*; packages/multi-grid-event-scope/docs/*; pending G1.4 docs commit

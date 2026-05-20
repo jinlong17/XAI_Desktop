@@ -89,3 +89,13 @@
 - Attempted fixes: Created safe-prep docs mapping current Host/Organizer boundary and target public Organizer content API. Avoided production source changes.
 - Current status: BLOCKED.
 - Resume instruction: Complete G0 evidence, implement G1.1, then rerun feature-build for `grid-shell-organizer-content`.
+
+## Incident 10
+
+- Time: 2026-05-19 20:37 PDT
+- Feature: multi-grid-event-scope
+- Symptom: Production Grid event migration cannot start.
+- Root cause if known: G1.4 depends on G0 Go/Conditional Go and G1.1 Window Command Contract. Finder DnD payload shape is also unsettled.
+- Attempted fixes: Created safe-prep docs auditing current event names, target contracts, and missing runtime `gridId` guard requirements. Avoided production source changes.
+- Current status: BLOCKED.
+- Resume instruction: Complete G0 evidence and G1.1, then rerun feature-build for `multi-grid-event-scope`.

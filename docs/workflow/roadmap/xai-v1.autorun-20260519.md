@@ -15,11 +15,11 @@
 |---|---|
 | Current Gate | G1 — native foundation safe prep |
 | Gate Manifest | docs/workflow/roadmap/xai-g1-native-foundation.md |
-| Current Feature | grid-shell-organizer-content |
-| Feature Source | docs/planning/execution/G1-native-foundation.md §G1.2 |
+| Current Feature | multi-grid-event-scope |
+| Feature Source | docs/planning/execution/G1-native-foundation.md §G1.4 |
 | Feature Status | BLOCKED |
-| Current Commit | eaae46e |
-| Tests | `test -f docs/reviews/grid-shell-organizer-content/20260519-feature-brief.md`; `test -f packages/grid-shell-organizer-content/docs/dev_log.md`; `rg -n "SmartContainer|useFileDrop|GridSystem|OrganizerLayer|useMultiWindowGrids" apps/desktop/src packages/plugin-organizer/src -g '*.{ts,tsx}'` |
+| Current Commit | pending G1.4 docs commit |
+| Tests | `test -f docs/reviews/multi-grid-event-scope/20260519-feature-brief.md`; `test -f packages/multi-grid-event-scope/docs/dev_log.md`; `rg -n "grid-window-|organizer:grid|grid-update|grid-delete|grid-window-ready|grid-window-file-drop|organizer:create-grid-request|create-grid-request" apps/desktop/src packages/plugin-organizer/src packages/core/src docs/contracts -g '*.{ts,tsx,md}'` |
 | Next Step | Human G0 evidence, or continue only with safe downstream prep because G0/G1.1 are blocked |
 
 ## Checkpoints
@@ -207,6 +207,16 @@
 - No production source files changed.
 - Status: BLOCKED because G0 is not Go/Conditional Go and G1.1 `window-command-contract` remains blocked.
 
+### 2026-05-19 20:37 PDT — Feature Checkpoint: multi-grid-event-scope
+
+- Continued safe downstream prep with G1.4 `multi-grid-event-scope`.
+- Audited Grid event names across Host, `plugin-organizer`, `EventMap`, and `docs/contracts/events-v0.md`.
+- Current implementation carries `gridId` on Grid window payloads, but still uses legacy names such as `grid-window-update`, `grid-update`, and `grid-delete`.
+- Contract docs target `organizer:grid:*`; `packages/core/src/types/events.ts` still contains older hyphen-style organizer event names.
+- Created feature brief, discovery review, and package docs.
+- No production source files changed.
+- Status: BLOCKED because production event migration must wait for G0/G1.1 and final DnD payload decisions.
+
 ## Feature Outcomes
 
 | Feature | Gate | Status | Commit | Tests | Notes |
@@ -219,6 +229,7 @@
 | mas-sandbox-dry-run | G0 | BLOCKED | 071a192 | PASS: MAS notes exist; BLOCKED: real sandbox/private-API evidence | Reached by user override; safe prep only. |
 | window-command-contract | G1 | BLOCKED | 9c7b52f | PASS: safe-prep docs exist; BLOCKED: G0 not Go/Conditional Go | Reached by user override; no production code changed. |
 | grid-shell-organizer-content | G1 | BLOCKED | eaae46e | PASS: safe-prep docs exist; BLOCKED: G0/G1.1 not ready | Reached by user override; no production code changed. |
+| multi-grid-event-scope | G1 | BLOCKED | pending G1.4 docs commit | PASS: event audit docs exist; BLOCKED: G0/G1.1 not ready | Reached by user override; no production code changed. |
 | host-business-residuals | G1 | READY_TO_SHIP | c6dbd77 | PASS: residual audit doc exists; Host scan recorded | Audit-only safe prep. |
 
 ## Deferred Gates Summary
@@ -233,6 +244,7 @@
 - Real MAS/private-API sandbox evidence deferred for `mas-sandbox-dry-run`.
 - G1 production implementation deferred until G0 Go/Conditional Go.
 - G1.2 production shell/content split deferred until G0 Go/Conditional Go and G1.1 implementation.
+- G1.4 production event migration deferred until G0 Go/Conditional Go and G1.1 implementation.
 - Cross-vendor review/verify deferred for `host-business-residuals`.
 
 ## Incidents Summary
@@ -243,6 +255,7 @@
 - mas-sandbox-dry-run blocked on real sandbox/private-API evidence.
 - window-command-contract blocked by G0 gate status.
 - grid-shell-organizer-content blocked by G0/G1.1 gate status.
+- multi-grid-event-scope blocked by G0/G1.1 gate status.
 
 ## Final 24h Summary
 
@@ -258,6 +271,7 @@ Paused early on 2026-05-19 after the user override because no further production
 - `mas-sandbox-dry-run` — BLOCKED after safe prep.
 - `window-command-contract` — BLOCKED after safe prep.
 - `grid-shell-organizer-content` — BLOCKED after safe prep.
+- `multi-grid-event-scope` — BLOCKED after safe prep.
 - `host-business-residuals` — READY_TO_SHIP audit-only.
 
 ### READY_TO_SHIP Features
@@ -286,6 +300,7 @@ Paused early on 2026-05-19 after the user override because no further production
 - Real MAS/private-API sandbox evidence for `mas-sandbox-dry-run`.
 - G1 production implementation until G0 Go/Conditional Go.
 - G1.2 shell/content production refactor until G1.1 is implemented.
+- G1.4 event migration until G1.1 is implemented and G0 DnD payload shape is settled.
 - Cross-vendor review/verify for `host-business-residuals`.
 
 ### Incidents

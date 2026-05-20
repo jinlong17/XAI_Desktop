@@ -19,7 +19,7 @@
 | 1 | window-command-contract | docs/planning/execution/G1-native-foundation.md §G1.1 | G0 Go/Conditional Go | shipped | BLOCKED | D-Codex | yes | 2026-05-19 | Safe prep only via user override; production implementation blocked until G0 evidence is reviewed. |
 | 2 | grid-shell-organizer-content | docs/planning/execution/G1-native-foundation.md §G1.2 | window-command-contract | shipped | BLOCKED | D-Codex | yes | 2026-05-19 | Safe prep only via user override; boundary docs complete, production implementation blocked by G0/G1.1. |
 | 3 | native-dnd-path-first | docs/planning/execution/G1-native-foundation.md §G1.3 | finder-dnd-path | shipped | PENDING | D-Codex | yes | — | Requires G0.4 Finder path conclusion. |
-| 4 | multi-grid-event-scope | docs/planning/execution/G1-native-foundation.md §G1.4 | grid-window-prototype | shipped | PENDING | D-Codex | yes | — | Requires G0.2 runtime proof. |
+| 4 | multi-grid-event-scope | docs/planning/execution/G1-native-foundation.md §G1.4 | grid-window-prototype | shipped | BLOCKED | D-Codex | yes | 2026-05-19 | Safe prep only via user override; event-scope audit complete, production implementation blocked by G0/G1.1. |
 | 5 | grid-persistence | docs/planning/execution/G1-native-foundation.md §G1.5 | window-command-contract | shipped | PENDING | D-Codex | yes | — | Requires G1.1 contract and G2 repository direction. |
 | 6 | host-business-residuals | docs/planning/execution/G1-native-foundation.md §G1.6 | — | — | READY_TO_SHIP | D-Codex | yes | 2026-05-19 | READY_TO_SHIP 2026-05-19 · Audit-only residual inventory complete; production cleanup remains blocked by G0/G1 sequencing. |
 
