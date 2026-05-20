@@ -18,6 +18,7 @@ const newMnemonic = 'new '.repeat(24).trim();
 describe('two-phase rekey orchestration', () => {
   it('starts staging and quarantines the old active key immediately', () => {
     const { account, session } = beginRekey({
+      accountId: 'account-1',
       account: accountState(),
       trigger: 'device_revocation',
       sessionId: 'rekey-1',
@@ -38,6 +39,7 @@ describe('two-phase rekey orchestration', () => {
 
   it('preserves entity revision while staging blobs under the new key', () => {
     const started = beginRekey({
+      accountId: 'account-1',
       account: accountState(),
       trigger: 'user',
       sessionId: 'rekey-2',
@@ -56,6 +58,7 @@ describe('two-phase rekey orchestration', () => {
 
   it('requires mnemonic confirmation and old recovery proof before swap', () => {
     const started = beginRekey({
+      accountId: 'account-1',
       account: accountState(),
       trigger: 'user',
       sessionId: 'rekey-3',
@@ -82,6 +85,7 @@ describe('two-phase rekey orchestration', () => {
 
   it('atomically retires old key, activates new key, clears quarantine, and rotates mnemonic', () => {
     const started = beginRekey({
+      accountId: 'account-1',
       account: accountState(),
       trigger: 'user',
       sessionId: 'rekey-4',
@@ -109,6 +113,7 @@ describe('two-phase rekey orchestration', () => {
     'retries after kill -9 at %s',
     (point) => {
       const started = beginRekey({
+        accountId: 'account-1',
         account: accountState(),
         trigger: 'user',
         sessionId: 'rekey-5',
@@ -124,6 +129,7 @@ describe('two-phase rekey orchestration', () => {
 
   it('continues dual-read path after kill -9 post-swap', () => {
     const started = beginRekey({
+      accountId: 'account-1',
       account: accountState(),
       trigger: 'user',
       sessionId: 'rekey-6',
@@ -139,6 +145,64 @@ describe('two-phase rekey orchestration', () => {
     });
 
     expect(resumeRekeyAfterCrash(completed.session, 'after_swap')).toBe('continue_after_swap');
+  });
+
+  it('completeRekeySwap returns cleanup plan with old DEK wraps for all active devices', () => {
+    const started = beginRekey({
+      accountId: 'account-cleanup',
+      account: accountState(),
+      trigger: 'device_revocation',
+      sessionId: 'rekey-7',
+      newMnemonic,
+      newRecoverySigningPub: bytes(8, 32),
+      devices: [
+        { deviceId: 'active-a', devicePub: bytes(12, 32), status: 'active' },
+        { deviceId: 'active-b', devicePub: bytes(13, 32), status: 'active' },
+        { deviceId: 'revoked-a', devicePub: bytes(14, 32), status: 'revoked' },
+      ],
+      nowMs: () => 1,
+    });
+    const session = stageRekeyBlobs(started.session, [blob('todo-1', 1n)]);
+
+    const completed = completeRekeySwap(started.account, session, {
+      mnemonicConfirmed: true,
+      oldRecoveryProofValid: true,
+    });
+
+    expect(completed.cleanup).toEqual({
+      oldKeyId: 1,
+      deviceDekWrapsToDelete: [
+        { accountId: 'account-cleanup', keyId: 1 },
+        { accountId: 'account-cleanup', keyId: 1 },
+      ],
+      keyMaterialZeroized: false,
+    });
+  });
+
+  it('completeRekeySwap zeroizes materialBuffer when present', () => {
+    const materialBuffer = new Uint8Array([9, 8, 7, 6]);
+    const started = beginRekey({
+      accountId: 'account-zeroize',
+      account: {
+        ...accountState(),
+        keyring: [{ keyId: 1, status: 'active', materialBuffer }],
+      },
+      trigger: 'user',
+      sessionId: 'rekey-8',
+      newMnemonic,
+      newRecoverySigningPub: bytes(9, 32),
+      devices: [],
+      nowMs: () => 1,
+    });
+    const session = stageRekeyBlobs(started.session, [blob('todo-1', 1n)]);
+
+    const completed = completeRekeySwap(started.account, session, {
+      mnemonicConfirmed: true,
+      oldRecoveryProofValid: true,
+    });
+
+    expect([...materialBuffer]).toEqual([0, 0, 0, 0]);
+    expect(completed.cleanup.keyMaterialZeroized).toBe(true);
   });
 });
 

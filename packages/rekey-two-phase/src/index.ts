@@ -7,6 +7,7 @@ import {
   type RekeyBlobInput,
   type RekeyProofGate,
   type RekeySession,
+  type RetiredKeyCleanupPlan,
 } from '../../plugin-account/src/rekey';
 
 export type RekeyCheckpointPhase = 'init' | 'staging' | 'before_swap' | 'after_swap';
@@ -15,6 +16,7 @@ export interface RekeyCheckpoint {
   phase: RekeyCheckpointPhase;
   account: RekeyAccountState;
   session: RekeySession;
+  cleanup?: RetiredKeyCleanupPlan;
 }
 
 export interface RekeyCheckpointStore {
@@ -73,6 +75,7 @@ export async function completeTwoPhaseRekey(
     phase: 'after_swap',
     account: completed.account,
     session: completed.session,
+    cleanup: completed.cleanup,
   };
   await store.save(afterSwap);
   return afterSwap;
@@ -98,12 +101,12 @@ export async function resumeTwoPhaseRekey(
 }
 
 function cloneCheckpoint(checkpoint: RekeyCheckpoint): RekeyCheckpoint {
-  return {
+  const cloned: RekeyCheckpoint = {
     phase: checkpoint.phase,
     account: {
       ...checkpoint.account,
       recoverySigningPub: new Uint8Array(checkpoint.account.recoverySigningPub),
-      keyring: checkpoint.account.keyring.map((entry) => ({ ...entry })),
+      keyring: checkpoint.account.keyring.map(cloneKeyringEntry),
     },
     session: {
       ...checkpoint.session,
@@ -111,5 +114,21 @@ function cloneCheckpoint(checkpoint: RekeyCheckpoint): RekeyCheckpoint {
       activeDeviceIds: [...checkpoint.session.activeDeviceIds],
       staged: checkpoint.session.staged.map((blob) => ({ ...blob })),
     },
+  };
+  if (checkpoint.cleanup) {
+    cloned.cleanup = cloneCleanupPlan(checkpoint.cleanup);
+  }
+  return cloned;
+}
+
+function cloneKeyringEntry(entry: RekeyAccountState['keyring'][number]): RekeyAccountState['keyring'][number] {
+  return entry.materialBuffer ? { ...entry, materialBuffer: new Uint8Array(entry.materialBuffer) } : { ...entry };
+}
+
+function cloneCleanupPlan(cleanup: RetiredKeyCleanupPlan): RetiredKeyCleanupPlan {
+  return {
+    oldKeyId: cleanup.oldKeyId,
+    deviceDekWrapsToDelete: cleanup.deviceDekWrapsToDelete.map((wrap) => ({ ...wrap })),
+    keyMaterialZeroized: cleanup.keyMaterialZeroized,
   };
 }

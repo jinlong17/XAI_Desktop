@@ -34,10 +34,36 @@ describe('rekey two-phase checkpoints', () => {
     ).rejects.toThrow(/E3028/);
     await expect(store.load('rekey-b')).resolves.toMatchObject({ phase: 'before_swap' });
   });
+
+  it('checkpoint carries cleanup plan after_swap', async () => {
+    const store = new InMemoryRekeyCheckpointStore();
+    const started = await startTwoPhaseRekey(store, beginInput('rekey-c'));
+    const staged = await stageTwoPhaseRekey(store, started, [blob('todo-1')]);
+
+    const completed = await completeTwoPhaseRekey(store, staged, {
+      mnemonicConfirmed: true,
+      oldRecoveryProofValid: true,
+    });
+    const resumed = await resumeTwoPhaseRekey(store, 'rekey-c', {
+      blobs: [blob('todo-1')],
+      gate: { mnemonicConfirmed: true, oldRecoveryProofValid: true },
+    });
+
+    expect(completed.cleanup).toEqual({
+      oldKeyId: 1,
+      deviceDekWrapsToDelete: [{ accountId: 'account-1', keyId: 1 }],
+      keyMaterialZeroized: false,
+    });
+    expect(resumed).toMatchObject({
+      phase: 'after_swap',
+      cleanup: completed.cleanup,
+    });
+  });
 });
 
 function beginInput(sessionId: string) {
   return {
+    accountId: 'account-1',
     account: {
       currentKeyId: 1,
       keyQuarantineAt: null,

@@ -104,6 +104,7 @@ export type {
   RekeySession,
   RekeyStagedBlob,
   RekeyTrigger,
+  RetiredKeyCleanupPlan,
 } from './rekey';
 export {
   createSyncStatusEmitter,
