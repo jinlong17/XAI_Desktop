@@ -30,7 +30,7 @@ Status: DONE. Commit: `eaae46e`.
 
 ### Phase 2 — Production shell/content split
 
-Status: DONE. Commit: `(pending commit)`.
+Status: DONE. Commit: `26d9f57`.
 
 - Added public `OrganizerGridContent` in `packages/plugin-organizer`.
 - Moved Grid window content/state/event/drop behavior out of Host `GridWindow.tsx`.
@@ -67,4 +67,4 @@ Production build is ready for feature-verify after focused checks:
 | 2026-05-19 20:34 PDT | feature-verify (Codex inline) | Verified docs-only scope; status remains BLOCKED. | `eaae46e` | Human/G0 prerequisite |
 | 2026-05-19 23:18 PDT | feature-plan (Codex inline) | Reopened G1.2 after G0 Conditional Go and G1.1 READY_TO_SHIP; scoped production split to public Organizer content API. | `5d7652f` | feature-review |
 | 2026-05-19 23:18 PDT | feature-review (Codex inline) | Approved bounded production split with no event/DnD/persistence contract changes. | — | feature-build |
-| 2026-05-19 23:18 PDT | feature-build (Codex inline) | Implemented `OrganizerGridContent`, thinned Host `GridWindow.tsx`, and added public API contract docs. | (pending commit) | feature-verify |
+| 2026-05-19 23:18 PDT | feature-build (Codex inline) | Implemented `OrganizerGridContent`, thinned Host `GridWindow.tsx`, and added public API contract docs. | `26d9f57` | feature-verify |

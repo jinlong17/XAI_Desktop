@@ -440,7 +440,7 @@
 | spaces-multimonitor-matrix | G0 | READY_TO_SHIP | 2fb6bac + bcc5785 + 1701583 | PASS: matrix template exists; current display facts, static window behavior, and user manual Spaces/multi-display follow evidence recorded | Optional independent screenshot replay before ship. |
 | mas-sandbox-dry-run | G0 | BLOCKED_EXTERNAL | 071a192 + 4537d2d + 2fda0c8 | PASS: MAS notes exist; private-API-disabled compile fallback passes; BLOCKED_EXTERNAL: Apple Developer/signed sandbox runtime evidence | Deferred external release gate; decoupled from G1 DMG/private path. |
 | window-command-contract | G1 | READY_TO_SHIP | 9c7b52f + dce4fb9 + 1fa8c75 | PASS: cargo check, core check-types, plugin-organizer check-types, desktop build, contract consistency scan | Deferred cross-vendor verify recorded; ship/push not run. |
-| grid-shell-organizer-content | G1 | READY_FOR_VERIFY | eaae46e + pending G1.2 build commit | PASS: plugin-organizer check-types, desktop build, Host boundary scan, public API scan | Awaiting feature-verify. |
+| grid-shell-organizer-content | G1 | READY_FOR_VERIFY | eaae46e + 26d9f57 | PASS: plugin-organizer check-types, desktop build, Host boundary scan, public API scan | Awaiting feature-verify. |
 | native-dnd-path-first | G1 | BLOCKED | 707a8d1 | PASS: DnD discovery docs exist; BLOCKED: MAS sandbox/security-scope evidence missing | Reached by user override; no production code changed. |
 | multi-grid-event-scope | G1 | BLOCKED | a7d4803 | PASS: event audit docs exist; BLOCKED: wait for G1.2 shell/content split | Reached by user override; no production code changed. |
 | grid-persistence | G1 | BLOCKED | dcf2750 | PASS: persistence discovery docs exist; BLOCKED: G2 Repository v0 not ready | Reached by user override; no production code changed. |
