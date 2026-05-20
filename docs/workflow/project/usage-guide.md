@@ -63,6 +63,7 @@ ls .cursor/agents
 ls docs/workflow/_portable/skills/workflow-router/SKILL.md
 ls .claude/skills/skill-workflow-router/SKILL.md
 ls .codex/agents/skill-workflow-router.toml
+ls .codex/skills/workflow-router/SKILL.md
 ls .cursor/rules/skill-workflow-router.mdc
 ls .teams/skills/xai-feature-brief/SKILL.md
 ls .teams/skills/xai-feature-full-loop/SKILL.md

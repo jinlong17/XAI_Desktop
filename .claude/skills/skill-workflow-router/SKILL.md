@@ -41,6 +41,9 @@ that should be copied or confirmed.
    - `goal`: produce a prompt the user will copy into another Claude/Codex window
    - `task`: produce a prompt preview for the current window; do not run until the
      user approves it
+   Treat explicit user wording such as "goal prompt", "task prompt", "prompt for
+   Codex", or "prompt for Claude" as already answered choices; only ask for
+   unresolved choices.
 5. If `goal`, ask the target host:
    - `Claude`: cap the final prompt at 4000 characters
    - `Codex`: no hard character cap, but keep it concise and self-contained
@@ -56,13 +59,18 @@ plain text and wait. Do not silently choose `goal` or `task`.
 Choose the underlying workflow entry before writing the prompt:
 
 - New feature, extension, refactor, or unclear implementation idea:
-  the project's feature full-loop skill, usually `/xai-feature-full-loop` or
-  `<skill_prefix>feature-full-loop`
+  the project's feature full-loop entry. For Claude goal prompts this is usually
+  `/xai-feature-full-loop` or `<skill_prefix>feature-full-loop`; for Codex goal
+  prompts prefer `Start the feature-full-loop agent.` unless the target project
+  has a native Codex project-layer skill.
 - Need only Step 0 normalization or the idea is still vague:
   the project's Step 0 feature brief skill, usually `/xai-feature-brief` or
   `<step0-skill>`
 - Bug with observable actual/expected behavior:
-  `Start the bug-diagnose agent.`
+  `Start the bug-diagnose agent.` when the user needs diagnosis or the fix
+  strategy is not approved yet; `Start the bugfix-full-loop agent.` when the
+  user asks for an end-to-end bugfix run and provides enough repro/expected
+  behavior context.
 - Multi-feature PRD, roadmap, or dependency wave:
   the project's roadmap-loop skill, usually `/xai-roadmap-loop mode: init` or
   `<skill_prefix>roadmap-loop mode: init`

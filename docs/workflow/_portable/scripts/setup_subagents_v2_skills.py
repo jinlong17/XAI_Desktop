@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """Public-skill bundle for setup_subagents_v2 (opt-in via --include-skills).
 
-This submodule holds the skill shim parser, three per-vendor skill renderers,
+This submodule holds the skill shim parser, per-vendor skill renderers,
 and the namespace-guarded write helper. It is imported by setup_subagents_v2.py
 when the user passes --include-skills. Keeping it here prevents the main script
 from breaching the §9.4 single-file LOC budget while preserving the shared
@@ -97,6 +97,22 @@ def render_skill_codex(template, codex_dir: Path, model: str, toml_multiline, to
     return path, "\n".join(lines) + "\n"
 
 
+def render_skill_codex_native(template, root: Path) -> list[tuple[Path, str]]:
+    """Render the Codex-native SKILL.md surface in addition to the agent wrapper.
+
+    Codex discovers native skills from SKILL.md folders, while the TOML wrapper
+    keeps the same public skill callable as a read-only custom agent. Preserve
+    the original shim frontmatter for the native skill so provenance/license
+    metadata remains intact.
+    """
+    skill_dir = root / ".codex" / "skills" / template.name
+    outputs = [(skill_dir / "SKILL.md", template.path.read_text(encoding="utf-8"))]
+    provenance = template.path.parent / "PROVENANCE.md"
+    if provenance.is_file():
+        outputs.append((skill_dir / "PROVENANCE.md", provenance.read_text(encoding="utf-8")))
+    return outputs
+
+
 def render_skill_cursor(template, root: Path) -> tuple[Path, str]:
     path = root / ".cursor" / "rules" / f"{SKILL_NS}{template.name}.mdc"
     body = f"---\ndescription: {template.description}\nalwaysApply: false\n---\n\n{template.body}"
@@ -110,7 +126,12 @@ def write_skill(path: Path, content: str, force: bool, dry_run: bool, write_file
     """
     fname = path.name
     parent = path.parent.name
-    if path.suffix == ".md" and fname == "SKILL.md" and not parent.startswith(SKILL_NS):
+    codex_native_skill = (
+        fname == "SKILL.md"
+        and path.parent.parent.name == "skills"
+        and path.parent.parent.parent.name == ".codex"
+    )
+    if path.suffix == ".md" and fname == "SKILL.md" and not parent.startswith(SKILL_NS) and not codex_native_skill:
         return "blocked-namespace"
     if path.suffix in (".toml", ".mdc") and not fname.startswith(SKILL_NS):
         return "blocked-namespace"
