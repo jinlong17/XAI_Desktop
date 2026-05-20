@@ -11,6 +11,10 @@ export type {
   WidgetSize,
   WidgetTheme,
 } from "./types";
+export { LocalStorageAdapter } from "./data/LocalStorageAdapter";
+export { RepoAdapter as WidgetRepoAdapter } from "./data/RepoAdapter";
+export { WidgetRepoProvider, useWidgetRepoAdapter } from "./data/RepoProvider";
+export type { WidgetRepoProviderProps } from "./data/RepoProvider";
 export { createWidgetRegistry, WidgetRegistry } from "./registry";
 export { createSeedWidget, useWidgetStore } from "./hooks/useWidgetStore";
 export { WidgetHost } from "./components/WidgetHost";

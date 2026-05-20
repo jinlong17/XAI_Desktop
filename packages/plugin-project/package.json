@@ -13,6 +13,8 @@
     "check-types": "tsc --noEmit"
   },
   "dependencies": {
+    "@repo/core": "workspace:*",
+    "@repo/core-data": "workspace:*",
     "react": "^19.2.0",
     "react-dom": "^19.2.0"
   },

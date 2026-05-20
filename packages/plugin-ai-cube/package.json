@@ -14,6 +14,7 @@
     "test": "vitest run"
   },
   "dependencies": {
+    "@repo/core": "workspace:*",
     "@repo/core-data": "workspace:*",
     "react": "^19.2.0"
   },

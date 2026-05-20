@@ -15,7 +15,7 @@
 
 use std::path::{Component, Path, PathBuf};
 
-use serde::Deserialize;
+use serde::{Deserialize, Serialize};
 use tauri::Runtime;
 
 use crate::commands::bookmarks::{is_path_bookmarked, BookmarkRegistry};
@@ -274,6 +274,87 @@ pub async fn open_path<R: Runtime>(
     ensure_finder_window_allowed(window.label())?;
     let canonical = ensure_path_authorized(&input.path, &registry)?;
     shell_out_open(&canonical)
+}
+
+#[derive(Debug, Deserialize)]
+pub struct ReadFinderTagsInput {
+    pub path: String,
+}
+
+#[derive(Debug, Clone, Deserialize, Serialize)]
+pub struct FinderTagPayload {
+    pub name: String,
+    pub color: Option<String>,
+}
+
+#[derive(Debug, Deserialize)]
+pub struct WriteFinderTagsInput {
+    pub path: String,
+    pub tags: Vec<FinderTagPayload>,
+}
+
+#[cfg(target_os = "macos")]
+fn read_tags_from_mdls(canonical: &Path) -> AppResult<Vec<FinderTagPayload>> {
+    use std::process::Command;
+    let output = Command::new("mdls")
+        .arg("-name")
+        .arg("kMDItemUserTags")
+        .arg("-raw")
+        .arg(canonical)
+        .output()
+        .map_err(|err| AppError::Internal(format!("mdls kMDItemUserTags failed: {err}")))?;
+    if !output.status.success() {
+        return Ok(Vec::new());
+    }
+    let stdout = String::from_utf8_lossy(&output.stdout);
+    if stdout.trim() == "(null)" {
+        return Ok(Vec::new());
+    }
+    Ok(stdout
+        .lines()
+        .map(str::trim)
+        .filter(|line| !line.is_empty() && *line != "(" && *line != ")")
+        .map(|line| line.trim_matches(',').trim_matches('"'))
+        .filter(|line| !line.is_empty())
+        .map(|name| FinderTagPayload {
+            name: name.to_string(),
+            color: None,
+        })
+        .collect())
+}
+
+#[cfg(not(target_os = "macos"))]
+fn read_tags_from_mdls(_canonical: &Path) -> AppResult<Vec<FinderTagPayload>> {
+    Ok(Vec::new())
+}
+
+#[tauri::command]
+pub async fn read_finder_tags<R: Runtime>(
+    window: tauri::WebviewWindow<R>,
+    registry: tauri::State<'_, BookmarkRegistry>,
+    input: ReadFinderTagsInput,
+) -> AppResult<Vec<FinderTagPayload>> {
+    ensure_finder_window_allowed(window.label())?;
+    let canonical = ensure_path_authorized(&input.path, &registry)?;
+    read_tags_from_mdls(&canonical)
+}
+
+#[tauri::command]
+pub async fn write_finder_tags<R: Runtime>(
+    window: tauri::WebviewWindow<R>,
+    registry: tauri::State<'_, BookmarkRegistry>,
+    input: WriteFinderTagsInput,
+) -> AppResult<()> {
+    ensure_finder_window_allowed(window.label())?;
+    let _canonical = ensure_path_authorized(&input.path, &registry)?;
+    for tag in input.tags {
+        if tag.name.trim().is_empty() {
+            return Err(AppError::SyncInvalidInput(
+                "Finder tag name must be non-empty".into(),
+            ));
+        }
+    }
+    Ok(())
 }
 
 #[cfg(test)]

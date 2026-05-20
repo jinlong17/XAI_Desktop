@@ -7,6 +7,8 @@ import { listen } from "@tauri-apps/api/event";
 import { isTauri } from "@tauri-apps/api/core";
 import { useTauriInvoke } from "@repo/core/hooks";
 import { createFinderClient } from "./finderClient";
+import { FolderGrid } from "./FolderGrid";
+import { OrganizerOneClick } from "./OrganizerOneClick";
 import {
   LEGACY_CREATE_GRID_REQUEST_EVENT,
   LEGACY_ORGANIZER_CREATE_GRID_REQUEST_EVENT,
@@ -66,6 +68,25 @@ function OrganizerContent() {
   useEffect(() => {
     finderClientRef.current = finderClient;
   }, [finderClient]);
+
+  const ensureGrid = useCallback(
+    (x: number, y: number, title?: string) => {
+      const id = createGrid(x, y);
+      if (title) updateGrid(id, { title });
+      return id;
+    },
+    [createGrid, updateGrid],
+  );
+
+  const addItemToSpecificGrid = useCallback(
+    (item: DesktopItem, gridId: string) => {
+      const alreadyMapped = Object.values(items).some((current) => current.filepath === item.filepath);
+      if (alreadyMapped) return;
+      addItem(item);
+      addItemToGrid(gridId, item.id);
+    },
+    [addItem, addItemToGrid, items],
+  );
 
   // Handle file drop for a specific grid (from grid windows)
   const handleGridFileDrop = useCallback(
@@ -233,6 +254,21 @@ function OrganizerContent() {
       }}
       data-organizer-layer="true"
     >
+      <div
+        style={{
+          display: "flex",
+          gap: 8,
+          left: 12,
+          pointerEvents: "auto",
+          position: "fixed",
+          top: 12,
+          zIndex: 20,
+        }}
+      >
+        <OrganizerOneClick grids={grids} onEnsureGrid={ensureGrid} onAddItem={addItemToSpecificGrid} />
+        <FolderGrid grids={grids} onEnsureGrid={ensureGrid} onAddItem={addItemToSpecificGrid} />
+      </div>
+
       {/* Drop hint when dragging files and no grids exist */}
       {isDraggingFile && gridCount === 0 && (
         <div

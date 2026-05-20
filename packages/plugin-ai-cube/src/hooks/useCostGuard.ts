@@ -1,5 +1,6 @@
-import { useMemo, useState } from "react";
-import type { CostGuardState } from "../types";
+import { useEffect, useMemo, useState } from "react";
+import { useAiCubeRepoAdapters } from "../data/RepoProvider";
+import type { CostGuardState, CostUsage } from "../types";
 
 const COST_KEY = "xai.ai-cube.cost.v1";
 
@@ -11,14 +12,29 @@ export interface CostGuardApi extends CostGuardState {
 }
 
 export function useCostGuard(defaultLimit = 30): CostGuardApi {
+  const repoAdapters = useAiCubeRepoAdapters();
   const initial = useMemo(() => readState(defaultLimit), [defaultLimit]);
   const [state, setState] = useState<CostGuardState>(initial);
+
+  useEffect(() => {
+    if (!repoAdapters) return;
+    let cancelled = false;
+    void repoAdapters.costUsageAdapter.getById(costUsageId(todayKey())).then((usage) => {
+      if (!cancelled && usage) {
+        setState({ dailyLimit: usage.dailyLimit, usedToday: usage.used, offline: usage.offline, lastResetDate: usage.date });
+      }
+    });
+    return () => {
+      cancelled = true;
+    };
+  }, [repoAdapters]);
 
   function persist(next: CostGuardState): void {
     setState(next);
     if (typeof window !== "undefined") {
       window.localStorage.setItem(COST_KEY, JSON.stringify(next));
     }
+    void repoAdapters?.costUsageAdapter.save(toCostUsage(next));
   }
 
   return {
@@ -33,6 +49,28 @@ export function useCostGuard(defaultLimit = 30): CostGuardApi {
     setOffline(offline) {
       persist({ ...state, offline });
     },
+  };
+}
+
+function costUsageId(date: string): string {
+  return `cost-${date}`;
+}
+
+function toCostUsage(state: CostGuardState): CostUsage {
+  const timestamp = new Date().toISOString();
+  const date = state.lastResetDate ?? todayKey();
+  return {
+    id: costUsageId(date),
+    entityType: "ai-cube.cost-usage",
+    schemaVersion: 1,
+    createdAt: timestamp,
+    updatedAt: timestamp,
+    syncScope: "device-local",
+    date,
+    dailyLimit: state.dailyLimit,
+    used: state.usedToday,
+    offline: state.offline,
+    version: 1,
   };
 }
 

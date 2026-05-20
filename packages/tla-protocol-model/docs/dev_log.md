@@ -1,5 +1,11 @@
 # tla-protocol-model — Dev Log
 
+## 2026-05-20 14:55 PDT
+
+- Implemented TypeScript state-space exploration fallback for nonce lease and rekey state transitions.
+- Verified invariant coverage, deadlock absence, and eventual rekey swap.
+- Verification: `pnpm --filter @repo/tla-protocol-model test`; package `check-types`.
+
 ## Status Panel
 
 | Field | Value |

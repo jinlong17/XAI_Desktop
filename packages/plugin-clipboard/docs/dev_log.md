@@ -20,3 +20,4 @@
 - Added irreversible-redaction acknowledgement UI before first enabling persisted redaction.
 - Stabilized auto-clear against entry churn, tightened type inference, made paste queue `start()` auto-step, and rendered URL entries as links.
 - Pending: emit clipboard:entry-created / paste-queued / ocr-requested via @repo/core/events.
+- 2026-05-20 Track D: migrated `ClipboardEntry` to Repository v0 with `device-local` sync scope, added `RepoAdapter`/`ClipboardRepoProvider`, retained redaction backfill semantics, and passed `pnpm --filter @repo/plugin-clipboard check-types`.

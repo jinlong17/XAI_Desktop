@@ -1,3 +1,5 @@
+import type { RepoRecord } from "@repo/core-data";
+
 export interface DataAdapter<T extends { id: string }> {
   getAll(): Promise<T[]>;
   getById(id: string): Promise<T | null>;
@@ -7,13 +9,18 @@ export interface DataAdapter<T extends { id: string }> {
 
 export type ClipboardEntryType = "text" | "url" | "code" | "image" | "file";
 
-export interface ClipboardEntry {
+export interface ClipboardEntry extends RepoRecord {
   id: string;
+  entityType: "clipboard.entry";
+  schemaVersion: 1;
   content: string;
   type: ClipboardEntryType;
   source?: string;
   pinned: boolean;
   createdAt: string;
+  updatedAt: string;
+  version: number;
+  deletedAt?: string;
 }
 
 export interface ClipboardDraft {

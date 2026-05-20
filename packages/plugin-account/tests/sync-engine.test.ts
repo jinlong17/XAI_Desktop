@@ -6,6 +6,7 @@ import {
   SyncRevisionRollbackError,
   applyServerRecords,
   createSyncPullHttpTransport,
+  createSyncNonceLeaseManager,
   createSyncPushHttpTransport,
   createSyncOutbox,
   createUuidV7,
@@ -180,6 +181,47 @@ describe('createSyncPushHttpTransport', () => {
         body: JSON.stringify(request),
       },
     ]);
+  });
+});
+
+describe('createSyncNonceLeaseManager', () => {
+  it('requests, renews, releases nonce leases and persists progress', async () => {
+    const released: unknown[] = [];
+    const progress: unknown[] = [];
+    const manager = createSyncNonceLeaseManager(
+      {
+        async requestLease(input) {
+          return {
+            ...input,
+            encryptionDeviceId: 1001n,
+            leaseStart: 0n,
+            leaseEnd: BigInt(input.count - 1),
+            expiresAtMs: 100,
+          };
+        },
+        async renewLease(lease) {
+          return { ...lease, expiresAtMs: 200 };
+        },
+        async releaseLease(lease) {
+          released.push(lease);
+        },
+        async persistProgress(checkpoint) {
+          progress.push(checkpoint);
+        },
+      },
+      { nowMs: () => 123 },
+    );
+
+    await expect(
+      manager.request({ accountId: 'acct', deviceId: 'dev-a', keyId: 1, count: 3 }),
+    ).resolves.toMatchObject({ leaseEnd: 2n });
+    await expect(manager.renew()).resolves.toMatchObject({ expiresAtMs: 200 });
+    await expect(manager.persistProgress(7n)).resolves.toMatchObject({ lastAckCommitSeq: 7n, updatedAtMs: 123 });
+    await manager.release();
+
+    expect(progress).toHaveLength(1);
+    expect(released).toHaveLength(1);
+    expect(manager.current()).toBeUndefined();
   });
 });
 

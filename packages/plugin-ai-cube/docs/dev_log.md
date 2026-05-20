@@ -9,3 +9,4 @@ Plan:
 
 Updates:
 - Added conversation hook, message/input/suggestion components, privacy dialog, cost guard, and offline fallback.
+- 2026-05-20 Track D: added Repository v0 adapters/providers for conversation history and daily cost usage, retained local fallback behavior, and passed `pnpm --filter @repo/plugin-ai-cube check-types`.

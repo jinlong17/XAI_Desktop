@@ -8,6 +8,7 @@ import {
   type ReactNode,
 } from "react";
 import { LocalStorageAdapter } from "../data/LocalStorageAdapter";
+import { useLabelRepoAdapter } from "../data/RepoProvider";
 import type { DataAdapter, Label, LabelDraft, LabelStore } from "../types";
 
 const STORAGE_KEY = "xai.plugin-labels.labels";
@@ -15,9 +16,42 @@ const RECENT_KEY = "xai.plugin-labels.recent";
 const FALLBACK_COLORS = ["#2563eb", "#16a34a", "#dc2626", "#9333ea", "#ea580c", "#0891b2"];
 
 const seedLabels: Label[] = [
-  { id: "label-focus", name: "Focus", color: "#2563eb", icon: "target", createdAt: "2026-05-20T00:00:00.000Z" },
-  { id: "label-waiting", name: "Waiting", color: "#9333ea", icon: "clock", createdAt: "2026-05-20T00:00:00.000Z" },
-  { id: "label-home", name: "Home", color: "#16a34a", icon: "home", createdAt: "2026-05-20T00:00:00.000Z" },
+  {
+    id: "label-focus",
+    entityType: "labels.label",
+    schemaVersion: 1,
+    syncScope: "account-sync",
+    name: "Focus",
+    color: "#2563eb",
+    icon: "target",
+    createdAt: "2026-05-20T00:00:00.000Z",
+    updatedAt: "2026-05-20T00:00:00.000Z",
+    version: 1,
+  },
+  {
+    id: "label-waiting",
+    entityType: "labels.label",
+    schemaVersion: 1,
+    syncScope: "account-sync",
+    name: "Waiting",
+    color: "#9333ea",
+    icon: "clock",
+    createdAt: "2026-05-20T00:00:00.000Z",
+    updatedAt: "2026-05-20T00:00:00.000Z",
+    version: 1,
+  },
+  {
+    id: "label-home",
+    entityType: "labels.label",
+    schemaVersion: 1,
+    syncScope: "account-sync",
+    name: "Home",
+    color: "#16a34a",
+    icon: "home",
+    createdAt: "2026-05-20T00:00:00.000Z",
+    updatedAt: "2026-05-20T00:00:00.000Z",
+    version: 1,
+  },
 ];
 
 function createId(prefix: string): string {
@@ -53,10 +87,11 @@ export function LabelStoreProvider({
   adapter,
   children,
 }: LabelStoreProviderProps) {
+  const repoAdapter = useLabelRepoAdapter();
   const [defaultAdapter] = useState(
     () => new LocalStorageAdapter<Label>(STORAGE_KEY, seedLabels),
   );
-  const stableAdapter = adapter ?? defaultAdapter;
+  const stableAdapter = adapter ?? repoAdapter ?? defaultAdapter;
 
   const [labels, setLabels] = useState<Label[]>([]);
   const [recentLabelIds, setRecentLabelIds] = useState<string[]>([]);
@@ -86,10 +121,15 @@ export function LabelStoreProvider({
       const color = input.color ?? FALLBACK_COLORS[labels.length % FALLBACK_COLORS.length] ?? "#2563eb";
       const label: Label = {
         id: createId("label"),
+        entityType: "labels.label",
+        schemaVersion: 1,
+        syncScope: "account-sync",
         name: input.name.trim(),
         color,
         icon: input.icon?.trim() || undefined,
         createdAt: new Date().toISOString(),
+        updatedAt: new Date().toISOString(),
+        version: 1,
       };
       if (!label.name) throw new Error("Label name is required");
       await stableAdapter.save(label);
@@ -108,6 +148,8 @@ export function LabelStoreProvider({
         ...patch,
         name: patch.name?.trim() ?? current.name,
         icon: patch.icon?.trim() || patch.icon,
+        updatedAt: new Date().toISOString(),
+        version: current.version + 1,
       };
       await stableAdapter.save(next);
       setLabels((prev) =>

@@ -41,18 +41,21 @@ export interface CommandPaletteController {
 export interface UseCommandPaletteOptions {
   entities?: SearchableEntity[];
   registry?: PluginSlotRegistry;
+  repoSearchProvider?: () => Promise<SearchableEntity[]>;
   onExecute?: (result: CommandSearchResult, action: SearchResultAction) => void;
 }
 
 export function useCommandPalette({
   entities,
   registry,
+  repoSearchProvider,
   onExecute,
 }: UseCommandPaletteOptions = {}): CommandPaletteController {
   const [isOpen, setIsOpen] = useState(false);
   const [query, setQuery] = useState("");
   const [activeIndex, setActiveIndex] = useState(0);
   const [registered, setRegistered] = useState<SearchableEntity[]>([]);
+  const [repoEntities, setRepoEntities] = useState<SearchableEntity[]>([]);
 
   const setQueryStable = useCallback((nextQuery: string) => {
     setQuery(nextQuery);
@@ -79,6 +82,17 @@ export function useCommandPalette({
   }, [registry]);
 
   useEffect(() => {
+    if (!repoSearchProvider) return;
+    let cancelled = false;
+    void repoSearchProvider().then((next) => {
+      if (!cancelled) setRepoEntities(next);
+    });
+    return () => {
+      cancelled = true;
+    };
+  }, [repoSearchProvider]);
+
+  useEffect(() => {
     const listener = (event: KeyboardEvent) => {
       if ((event.metaKey || event.ctrlKey) && event.key.toLowerCase() === "k") {
         event.preventDefault();
@@ -90,7 +104,7 @@ export function useCommandPalette({
     return () => window.removeEventListener("keydown", listener);
   }, [toggle]);
 
-  const effectiveEntities = entities ?? (registry ? registered : defaultEntities);
+  const effectiveEntities = entities ?? (repoSearchProvider ? repoEntities : registry ? registered : defaultEntities);
 
   const results = useMemo<CommandSearchResult[]>(() => {
     return effectiveEntities

@@ -8,6 +8,8 @@ import {
   type ReactNode,
 } from "react";
 import { LocalStorageAdapter } from "../data/LocalStorageAdapter";
+import { useProductivityRepoAdapters } from "../data/RepoProvider";
+import { useOrganizerGridTaskListener } from "../events/organizerGridTasks";
 import type { DataAdapter, Todo, TodoDraft, TodoPriority, TodoQuadrant, TodoStatus } from "../types";
 
 const STORAGE_KEY = "xai.plugin-productivity.todos";
@@ -15,6 +17,9 @@ const STORAGE_KEY = "xai.plugin-productivity.todos";
 const seedTodos: Todo[] = [
   {
     id: "todo-review-roadmap",
+    entityType: "productivity.todo",
+    schemaVersion: 1,
+    syncScope: "account-sync",
     title: "Review Track B roadmap",
     description: "Keep package boundaries aligned with parallel tracks.",
     status: "in-progress",
@@ -25,9 +30,13 @@ const seedTodos: Todo[] = [
     pomodoroCount: 1,
     createdAt: "2026-05-20T00:00:00.000Z",
     updatedAt: "2026-05-20T00:00:00.000Z",
+    version: 1,
   },
   {
     id: "todo-clean-inbox",
+    entityType: "productivity.todo",
+    schemaVersion: 1,
+    syncScope: "account-sync",
     title: "Triage low priority captures",
     description: "Move stale captures into clipboard or archive.",
     status: "open",
@@ -37,6 +46,7 @@ const seedTodos: Todo[] = [
     pomodoroCount: 0,
     createdAt: "2026-05-20T00:00:00.000Z",
     updatedAt: "2026-05-20T00:00:00.000Z",
+    version: 1,
   },
 ];
 
@@ -90,8 +100,9 @@ export interface TodoStoreProviderProps {
 }
 
 export function TodoStoreProvider({ adapter, children }: TodoStoreProviderProps) {
+  const repoAdapters = useProductivityRepoAdapters();
   const [defaultAdapter] = useState(() => new LocalStorageAdapter<Todo>(STORAGE_KEY, seedTodos));
-  const stableAdapter = adapter ?? defaultAdapter;
+  const stableAdapter = adapter ?? repoAdapters?.todoAdapter ?? defaultAdapter;
   const [todos, setTodos] = useState<Todo[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -115,7 +126,7 @@ export function TodoStoreProvider({ adapter, children }: TodoStoreProviderProps)
 
   const persist = useCallback(
     async (todo: Todo, options: { touchUpdatedAt?: boolean } = {}) => {
-      const nextTodo = options.touchUpdatedAt === false ? todo : { ...todo, updatedAt: new Date().toISOString() };
+      const nextTodo = options.touchUpdatedAt === false ? todo : { ...todo, updatedAt: new Date().toISOString(), version: todo.version + 1 };
       await stableAdapter.save(nextTodo);
       setTodos((prev) => {
         const next = prev.some((current) => current.id === nextTodo.id)
@@ -136,6 +147,9 @@ export function TodoStoreProvider({ adapter, children }: TodoStoreProviderProps)
       const createdAt = new Date().toISOString();
       const todo: Todo = {
         id: createId("todo"),
+        entityType: "productivity.todo",
+        schemaVersion: 1,
+        syncScope: "account-sync",
         title,
         description: input.description?.trim() ?? "",
         status: "open",
@@ -146,11 +160,14 @@ export function TodoStoreProvider({ adapter, children }: TodoStoreProviderProps)
         pomodoroCount: 0,
         createdAt,
         updatedAt: createdAt,
+        version: 1,
       };
       return persist(todo, { touchUpdatedAt: false });
     },
     [persist],
   );
+
+  useOrganizerGridTaskListener(createTodo);
 
   const updateTodo = useCallback(
     async (id: string, patch: Partial<Omit<Todo, "id" | "createdAt" | "updatedAt">>) => {
