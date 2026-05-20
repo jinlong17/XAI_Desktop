@@ -13,14 +13,14 @@
 
 | Field | Value |
 |---|---|
-| Current Gate | G0 — window spike |
-| Gate Manifest | docs/workflow/roadmap/xai-g0-window-spike.md |
-| Current Feature | finder-dnd-path |
-| Feature Source | docs/planning/execution/G0-window-spike.md §G0.4 |
+| Current Gate | G1 — native foundation safe prep |
+| Gate Manifest | docs/workflow/roadmap/xai-g1-native-foundation.md |
+| Current Feature | grid-shell-organizer-content |
+| Feature Source | docs/planning/execution/G1-native-foundation.md §G1.2 |
 | Feature Status | BLOCKED |
-| Current Commit | 7e20ca8 |
-| Tests | `pnpm --filter desktop exec tsc --noEmit`; `pnpm --filter @repo/plugin-organizer check-types`; `pnpm --filter desktop build` |
-| Next Step | Human Finder drop matrix, or continue only with safe downstream prep because G0 is not Go/Conditional Go |
+| Current Commit | pending G1.2 docs commit |
+| Tests | `test -f docs/reviews/grid-shell-organizer-content/20260519-feature-brief.md`; `test -f packages/grid-shell-organizer-content/docs/dev_log.md`; `rg -n "SmartContainer|useFileDrop|GridSystem|OrganizerLayer|useMultiWindowGrids" apps/desktop/src packages/plugin-organizer/src -g '*.{ts,tsx}'` |
+| Next Step | Human G0 evidence, or continue only with safe downstream prep because G0/G1.1 are blocked |
 
 ## Checkpoints
 
@@ -196,6 +196,17 @@
   - `pnpm --filter desktop build` (Vite chunk-size warning only)
 - Status remains BLOCKED because file/folder/`.app`/alias payload observations require a real Finder drag/drop run.
 
+### 2026-05-19 20:34 PDT — Feature Checkpoint: grid-shell-organizer-content
+
+- Continued safe downstream prep under the user's skip/continue override.
+- Started G1.2 `grid-shell-organizer-content` as docs-only boundary planning.
+- Reviewed current Host/Organizer boundary:
+  - `GridWindow.tsx` renders `SmartContainer` and owns update/close/toggle/drop/G0 telemetry wiring.
+  - `plugin-organizer/src/index.ts` exposes public building blocks but no dedicated `OrganizerGridContent`.
+- Created feature brief, discovery review, and package docs.
+- No production source files changed.
+- Status: BLOCKED because G0 is not Go/Conditional Go and G1.1 `window-command-contract` remains blocked.
+
 ## Feature Outcomes
 
 | Feature | Gate | Status | Commit | Tests | Notes |
@@ -207,6 +218,7 @@
 | spaces-multimonitor-matrix | G0 | BLOCKED | 2fb6bac | PASS: matrix template exists; BLOCKED: real Spaces/fullscreen/multi-display evidence | Reached by user override; safe prep only. |
 | mas-sandbox-dry-run | G0 | BLOCKED | 071a192 | PASS: MAS notes exist; BLOCKED: real sandbox/private-API evidence | Reached by user override; safe prep only. |
 | window-command-contract | G1 | BLOCKED | 9c7b52f | PASS: safe-prep docs exist; BLOCKED: G0 not Go/Conditional Go | Reached by user override; no production code changed. |
+| grid-shell-organizer-content | G1 | BLOCKED | pending G1.2 docs commit | PASS: safe-prep docs exist; BLOCKED: G0/G1.1 not ready | Reached by user override; no production code changed. |
 | host-business-residuals | G1 | READY_TO_SHIP | c6dbd77 | PASS: residual audit doc exists; Host scan recorded | Audit-only safe prep. |
 
 ## Deferred Gates Summary
@@ -220,6 +232,7 @@
 - Real Spaces/fullscreen/multi-display matrix deferred for `spaces-multimonitor-matrix`.
 - Real MAS/private-API sandbox evidence deferred for `mas-sandbox-dry-run`.
 - G1 production implementation deferred until G0 Go/Conditional Go.
+- G1.2 production shell/content split deferred until G0 Go/Conditional Go and G1.1 implementation.
 - Cross-vendor review/verify deferred for `host-business-residuals`.
 
 ## Incidents Summary
@@ -229,6 +242,7 @@
 - spaces-multimonitor-matrix blocked on real macOS Spaces/fullscreen/multi-display evidence.
 - mas-sandbox-dry-run blocked on real sandbox/private-API evidence.
 - window-command-contract blocked by G0 gate status.
+- grid-shell-organizer-content blocked by G0/G1.1 gate status.
 
 ## Final 24h Summary
 
@@ -243,6 +257,7 @@ Paused early on 2026-05-19 after the user override because no further production
 - `spaces-multimonitor-matrix` — BLOCKED after safe prep.
 - `mas-sandbox-dry-run` — BLOCKED after safe prep.
 - `window-command-contract` — BLOCKED after safe prep.
+- `grid-shell-organizer-content` — BLOCKED after safe prep.
 - `host-business-residuals` — READY_TO_SHIP audit-only.
 
 ### READY_TO_SHIP Features
@@ -270,6 +285,7 @@ Paused early on 2026-05-19 after the user override because no further production
 - Real Spaces/fullscreen/multi-display matrix for `spaces-multimonitor-matrix`.
 - Real MAS/private-API sandbox evidence for `mas-sandbox-dry-run`.
 - G1 production implementation until G0 Go/Conditional Go.
+- G1.2 shell/content production refactor until G1.1 is implemented.
 - Cross-vendor review/verify for `host-business-residuals`.
 
 ### Incidents

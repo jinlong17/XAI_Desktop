@@ -79,3 +79,13 @@
 - Attempted fixes: Added native control-window dragging for the AI cube, changed `+ New Grid` to compute screen-relative Grid placement from the control window position, added direct `create_grid_window` invoke fallback using the same `gridId` as the main-window event, and updated EventMap/contracts for optional `gridId`.
 - Current status: RESOLVED 2026-05-19. User confirmed runtime fixed after commits `7b7ff35`, `f65a1b5`, and `a33c74d`; Codex checks pass.
 - Resume instruction: Restart `pnpm --filter desktop tauri dev`, drag the AI icon across the desktop, open settings, click `+ New Grid`, and confirm a visible Grid window plus terminal `create_grid_window` logs.
+
+## Incident 9
+
+- Time: 2026-05-19 20:34 PDT
+- Feature: grid-shell-organizer-content
+- Symptom: Production shell/content split cannot start.
+- Root cause if known: G1.2 depends on G0 Go/Conditional Go and G1.1 Window Command Contract. Both remain blocked.
+- Attempted fixes: Created safe-prep docs mapping current Host/Organizer boundary and target public Organizer content API. Avoided production source changes.
+- Current status: BLOCKED.
+- Resume instruction: Complete G0 evidence, implement G1.1, then rerun feature-build for `grid-shell-organizer-content`.

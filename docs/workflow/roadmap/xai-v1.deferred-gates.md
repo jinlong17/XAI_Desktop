@@ -179,3 +179,15 @@
 - Later human action: Review `docs/planning/execution/host-residuals.md` before starting G1.2/G1.6 cleanup implementation.
 - Suggested verification command / environment: `rg -n "AiCube|SettingsPanel|useSyncMenuBarStatus|OrganizerLayer|create-grid-request|useGridSystem" apps/desktop/src -g '*.{ts,tsx}'`
 - Files/commits affected: docs/planning/execution/host-residuals.md; packages/host-business-residuals/docs/*; commit `c6dbd77`
+
+## Entry 16
+
+- Feature: grid-shell-organizer-content
+- Gate: G1
+- Deferred gate: G0/G1.1 prerequisite for production shell/content split
+- Why deferred: The user instructed to continue, but G1.2 production implementation depends on G0 Go/Conditional Go and the G1.1 Window Command Contract.
+- Risk: Moving Grid business UI out of Host before G0 DnD/window decisions and G1.1 command contracts could freeze the wrong public plugin boundary.
+- What was done instead: Created docs-only feature brief, discovery review, design, API, test plan, and dev_log describing the target boundary and blockers.
+- Later human action: Complete G0 evidence, implement/review G1.1, then rerun feature-build for the production shell/content split.
+- Suggested verification command / environment: `sed -n '1,220p' docs/reviews/grid-shell-organizer-content/20260519-discovery-review.md`
+- Files/commits affected: docs/reviews/grid-shell-organizer-content/*; packages/grid-shell-organizer-content/docs/*; pending G1.2 docs commit
