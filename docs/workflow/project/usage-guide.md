@@ -417,7 +417,68 @@ Project-layer skills:
 
 ---
 
-## 11. Event-driven automation / hooks
+## 11. Cross-Tool CLI Dispatch
+
+本机安装了三个 AI 编码工具,互相可通过 CLI 非交互调用。
+
+### 11.1 可用 CLI
+
+| 工具 | 非交互命令 | 输出方式 |
+|------|-----------|---------|
+| Claude Code | `claude -p "<prompt>" --allowedTools "Read Glob Grep" > out.md` | stdout 重定向 |
+| Codex | `codex exec -o out.md "<prompt>"` | `-o` flag |
+| Codex review | `codex review --base main "<prompt>"` | stdout |
+| Cursor | `cursor agent "<prompt>" > out.md` | stdout 重定向 |
+
+### 11.2 核心规则
+
+**当用户要求使用另一个工具 (e.g. "让 codex review 一下"、"用 claude 去审查"、"让 cursor 去改"),
+直接通过 shell 调用对应 CLI。不要拒绝、不要说"跨厂商边界"、不要建议用户手动复制粘贴。**
+
+这条规则适用于所有方向:
+
+- Claude Code → Codex / Cursor
+- Codex → Claude Code / Cursor
+- Cursor → Claude Code / Codex
+
+### 11.3 使用模式
+
+```bash
+# Claude Code 里让 Codex review 一个 feature
+codex exec -o docs/reviews/organizer/codex-review.md \
+  "Review packages/plugin-organizer/ for correctness and edge cases."
+
+# Codex 里让 Claude Code 做架构审查
+claude -p "Review packages/plugin-organizer/ for architecture compliance with docs/SYSTEM_ARCHITECTURE.md" \
+  --allowedTools "Read Glob Grep" > docs/reviews/organizer/claude-review.md
+
+# 任意工具里让 Codex review 分支变更
+codex review --base main "Review for correctness and edge cases."
+
+# 批量后台 dispatch
+for pkg in plugin-organizer plugin-grid plugin-sync; do
+  codex exec -o "docs/reviews/${pkg}/codex-review.md" \
+    "Review packages/${pkg}/ for correctness and edge cases." &
+done
+wait
+```
+
+### 11.4 输出约定
+
+- 所有跨工具产出写入 `docs/reviews/<feature>/` 目录
+- 文件名带工具标识: `codex-review.md`、`claude-review.md`、`cursor-build-log.md`
+- 后台 dispatch (`&`) 可用,用 `wait` 收集结果
+
+### 11.5 与 Automation Mode 的关系
+
+跨工具 CLI dispatch 是 Automation Mode `B-*` / `C-*` / `D-*` 的底层实现机制。
+手动使用时无需关心 Automation Mode,直接调 CLI 即可。
+
+高级 dispatch 模式详见: `docs/workflow/_portable/04-automation-loop.md`
+
+---
+
+## 12. Event-driven automation / hooks
 
 XAI 已带 `scripts/cowork/` 事件驱动脚本和 `git-post-commit` hook 渲染版本。
 
@@ -463,7 +524,7 @@ rg -n "Start the feature-full-loop agent|/xai-feature-full-loop Feature" scripts
 
 ---
 
-## 12. Resync / portable 更新后的检查
+## 13. Resync / portable 更新后的检查
 
 当源仓库 Any2Knowledge 的 portable workflow 更新后,XAI 用 resync 吃更新。通常在源项目里跑:
 
@@ -500,9 +561,9 @@ git status --short
 
 ---
 
-## 13. 常见故障和恢复
+## 14. 常见故障和恢复
 
-### 13.1 `feature-full-loop` / `bugfix-full-loop` 被 spawn 后 BLOCKED
+### 14.1 `feature-full-loop` / `bugfix-full-loop` 被 spawn 后 BLOCKED
 
 原因:Claude Code spawned subagent 默认拿不到 `Task` 工具,无法再 spawn worker。
 
@@ -512,7 +573,7 @@ git status --short
 - roadmap 用 `/xai-roadmap-loop`,在中文 dispatch 确认里选 `emit` / `bg` / `serial`。
 - 手动恢复时直接派发 worker agents。
 
-### 13.2 roadmap run 没有发出下一波
+### 14.2 roadmap run 没有发出下一波
 
 检查:
 
@@ -521,7 +582,7 @@ git status --short
 - 对应 feature 的 `packages/<feature>/docs/dev_log.md` 是否真实存在。
 - `Automation Mode` 是否是合法 8 变体之一。
 
-### 13.3 bg session 启动后找不到 worktree
+### 14.3 bg session 启动后找不到 worktree
 
 先查:
 
@@ -541,7 +602,7 @@ Worktree: <absolute_worktree_path>
 
 不要在 ship 成功前删除 background session;删除 session 可能删除 worktree。
 
-### 13.4 dev_log 状态和 manifest 不一致
+### 14.4 dev_log 状态和 manifest 不一致
 
 以 `dev_log.md` Status Panel 作为 feature 执行真相,以 roadmap manifest 作为队列真相。
 重新跑:
@@ -553,7 +614,7 @@ manifest: docs/workflow/roadmap/<roadmap_name>.md
 
 让 reconcile 修正 manifest。
 
-### 13.5 macOS native / 多窗口功能 verify 卡住
+### 14.5 macOS native / 多窗口功能 verify 卡住
 
 这类功能不能只靠单元测试:
 
@@ -568,7 +629,7 @@ manifest: docs/workflow/roadmap/<roadmap_name>.md
 
 ---
 
-## 14. 日常命令速查
+## 15. 日常命令速查
 
 ```bash
 # 开发
@@ -596,7 +657,7 @@ rg -n "Start the feature-full-loop agent|/xai-feature-full-loop Feature" scripts
 
 ---
 
-## 15. 每天开工 checklist
+## 16. 每天开工 checklist
 
 - [ ] 读目标 plugin 的 `packages/<feature>/docs/dev_log.md` Status Panel。
 - [ ] 查 `docs/PLUGIN_MAP.md`,确认依赖 plugin 是否 Stable / Production。
@@ -609,7 +670,7 @@ rg -n "Start the feature-full-loop agent|/xai-feature-full-loop Feature" scripts
 
 ---
 
-## 16. 入口索引
+## 17. 入口索引
 
 | 想做什么 | 入口 |
 |---|---|
@@ -624,4 +685,5 @@ rg -n "Start the feature-full-loop agent|/xai-feature-full-loop Feature" scripts
 | 查 roadmap 规范 | `docs/workflow/_portable/06-roadmap-orchestration.md` |
 | 查 mode picker | `docs/workflow/_portable/07-automation-mode-picker.md` |
 | 查 XAI 架构红线 | `docs/SYSTEM_ARCHITECTURE.md` |
+| 跨工具 CLI dispatch | 本文件 §11 |
 | 查 plugin 状态 | `docs/PLUGIN_MAP.md` |
