@@ -101,12 +101,12 @@
 - Feature: finder-dnd-path
 - Gate: G0
 - Deferred gate: Real Finder DnD path-first matrix
-- Why deferred: File/folder drop evidence now exists, but `.app`, alias, and post-fix duplicate regression evidence are still missing.
+- Why deferred: File/folder and `.app` drop evidence now exists, but alias and post-dedupe duplicate regression evidence are still missing.
 - Risk: G0 cannot prove the path-first drop model until all item kinds and duplicate behavior are captured.
-- What was done instead: Recorded screenshot evidence of `tauri://drag-drop` file path delivery and fixed duplicate item creation in `58c926d`.
-- Later human action: Rerun folder/file drops after `58c926d`, then drop `.app` and alias items into a Grid; attach logs/screenshots under `docs/reviews/window-ground-truth/finder-dnd-path/`.
+- What was done instead: Recorded screenshot evidence of `tauri://drag-drop` file and `.app` path delivery; fixed GridWindow duplicate risk in `58c926d` and Organizer per-path duplicate risk in `18b48da`.
+- Later human action: Rerun `.app` drop after `18b48da`, then drop alias items into a Grid; attach logs/screenshots under `docs/reviews/window-ground-truth/finder-dnd-path/`.
 - Suggested verification command / environment: `pnpm --filter desktop tauri dev` on macOS with Finder; use file, folder, `.app`, and alias drops; capture console lines beginning with `[G0 Finder DnD] path-first drop`.
-- Files/commits affected: docs/reviews/window-ground-truth/finder-dnd-path/README.md; packages/finder-dnd-path/docs/*; apps/desktop/src/windows/GridWindow.tsx; commits `33627df`, `7a1b9dd`, `7e20ca8`, `58c926d`
+- Files/commits affected: docs/reviews/window-ground-truth/finder-dnd-path/README.md; packages/finder-dnd-path/docs/*; apps/desktop/src/windows/GridWindow.tsx; packages/plugin-organizer/src/OrganizerLayer.tsx; commits `33627df`, `7a1b9dd`, `7e20ca8`, `58c926d`, `18b48da`
 
 ## Entry 10
 

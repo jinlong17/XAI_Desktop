@@ -2,7 +2,7 @@
 
 ## Status
 
-PARTIAL_HUMAN_EVIDENCE / BLOCKED — GridWindow receives Tauri path-first Finder drops; file/folder evidence exists, but app/alias and post-fix duplicate regression checks are still required.
+PARTIAL_HUMAN_EVIDENCE / BLOCKED — GridWindow receives Tauri path-first Finder drops; file/folder and `.app` evidence exists, but alias and post-dedupe regression checks are still required.
 
 ## Static Findings (from source, no runtime needed)
 
@@ -24,7 +24,7 @@ PARTIAL_HUMAN_EVIDENCE / BLOCKED — GridWindow receives Tauri path-first Finder
 | Unspecified Finder item | Finder item(s) | `paths: [...]` through `tauri://drag-drop` telemetry | 2026-05-19 user report: "东西能拖动进去" / items can be dragged into Grid | Not confirmed from log | PASS_PARTIAL |
 | File | `/Users/.../foo.txt` | `paths: ["/Users/.../foo.txt"]` | Screenshot shows `source: tauri://drag-drop`, kind `file`, path `/Users/lijinlong/Desktop/Jinlongsign I-140Page8.pdf`; item duplicated before fix `58c926d` | Expected yes via telemetry | PASS_WITH_DUPLICATE_BUG_FIXED |
 | Folder | `/Users/.../mydir/` | `paths: ["/Users/.../mydir"]` | Human reported folder can be dragged in; screenshot shows duplicated `AI_Desktop` folder item, exact telemetry path not captured in screenshot | Expected yes via telemetry | PASS_PARTIAL_WITH_DUPLICATE_BUG_FIXED |
-| App bundle | `/Applications/Safari.app` | `paths: ["/Applications/Safari.app"]` — bundle root, NOT binary inside | **needs runtime** | Expected yes via telemetry | NEEDS_VERIFY |
+| App bundle | `/Applications/Safari.app` | `paths: ["/Applications/Safari.app"]` — bundle root, NOT binary inside | Screenshot shows `source: tauri://drag-drop`, kind `app`, path `/Applications/TencentMeeting.app`; item duplicated before Organizer dedupe fix `18b48da` | Expected yes via telemetry | PASS_WITH_DUPLICATE_BUG_FIXED |
 | Alias | `/Users/.../alias` | resolved target path OR alias path — **behaviour undefined without test** | **needs runtime** | Expected yes via telemetry | NEEDS_VERIFY |
 | Drop onto main window | any | **blocked** — `dragDropEnabled: false` | N/A | N/A | CONFIRMED_BLOCKED |
 
@@ -35,7 +35,9 @@ PARTIAL_HUMAN_EVIDENCE / BLOCKED — GridWindow receives Tauri path-first Finder
 - 2026-05-19 21:21 PDT: The same screenshot/user report showed a folder (`AI_Desktop`) and a PDF file both appeared twice before the duplicate fix.
 - Duplicate root cause is consistent with GridWindow also running the HTML5 `useFileDrop` fallback while the Tauri path-first listener is active.
 - Fix `58c926d` removes the GridWindow HTML5 fallback, uses Tauri `DRAG_ENTER/OVER/LEAVE` for hover state, and ignores identical Tauri drop payloads received within 1 second.
-- Remaining evidence needed: rerun folder/file drop after `58c926d`, then test `.app` and alias payloads.
+- 2026-05-19 21:56 PDT: User reported file drops are normal after `58c926d`, but `.app` drops still duplicate. Screenshot shows `/Applications/TencentMeeting.app` with kind `app`.
+- Fix `18b48da` adds Organizer-side idempotency by `gridId + normalized filepath`, including a short recent-drop guard so repeated `.app` drop events cannot create duplicate items in the same Grid.
+- Remaining evidence needed: rerun `.app` drop after `18b48da`, then test alias payloads.
 
 ## Runtime Verification Steps (human required)
 
@@ -57,7 +59,7 @@ pnpm --filter desktop tauri dev
 
 ## Decision Fields
 
-- Webview drop real path works: **PARTIAL YES** — file path observed from `tauri://drag-drop`; folder exact telemetry needs post-fix capture
-- Native drop receiver needed: **TBD** — JS telemetry now receives real file paths; decide after folder/app/alias and MAS evidence
+- Webview drop real path works: **PARTIAL YES** — file and `.app` paths observed from `tauri://drag-drop`; alias behavior still unknown
+- Native drop receiver needed: **TBD** — JS telemetry now receives real file and `.app` paths; decide after alias and MAS evidence
 - Security-scoped bookmark needed for MAS: **TBD** — required if MAS sandbox restricts arbitrary path access
 - Alias policy: **TBD** — record raw observed path first, decide resolution strategy in G1

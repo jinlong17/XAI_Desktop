@@ -10,12 +10,12 @@
 | Roadmap | xai-g0-window-spike · feature #4 · G0.4 |
 | Status | BLOCKED |
 | Current Phase | FEATURE_VERIFY |
-| Suggested Next | Post-fix file/folder rerun plus app/alias evidence |
+| Suggested Next | Post-dedupe app rerun plus alias evidence |
 | Automation Mode | D-Codex |
 | Verify Cross-vendor | yes |
 | Executor | feature-verify (Codex inline) |
-| Updated | 2026-05-19 21:21 PDT |
-| Blockers | App/alias evidence and post-duplicate-fix rerun required |
+| Updated | 2026-05-19 21:56 PDT |
+| Blockers | Alias evidence and post-dedupe app rerun required |
 
 ## Phase Plan
 
@@ -44,15 +44,24 @@ Status: DONE. Commit: `58c926d`.
 - Preserved hover state with Tauri `DRAG_ENTER`, `DRAG_OVER`, and `DRAG_LEAVE`.
 - Added a 1-second identical payload guard for duplicate Tauri drop events.
 
+### Phase 4 — Deduplicate dropped paths per Grid
+
+Status: DONE. Commit: `18b48da`.
+
+- Human screenshot showed `.app` drops still duplicated after the GridWindow path-first fix.
+- Added Organizer-side idempotency by normalized `gridId + filepath`.
+- Skips a path already present in the target Grid.
+- Skips repeated receipt of the same path for the same Grid within 5 seconds.
+
 ## Review Notes
 
 feature-review (Codex inline), 2026-05-19 14:46 PDT. Verdict: APPROVED for safe prep only.
 
 ## Verification Notes
 
-feature-verify (Codex inline), 2026-05-19 21:21 PDT. Verdict: PARTIAL_HUMAN_EVIDENCE / BLOCKED.
+feature-verify (Codex inline), 2026-05-19 21:56 PDT. Verdict: PARTIAL_HUMAN_EVIDENCE / BLOCKED.
 
-Human screenshot evidence confirms a real file path through `tauri://drag-drop`. G0.4 remains blocked until post-fix folder/file rerun plus `.app` and alias evidence.
+Human screenshot evidence confirms real file and `.app` paths through `tauri://drag-drop`. G0.4 remains blocked until `.app` is rerun after `18b48da` and alias evidence is captured.
 
 ## Work Log
 
@@ -66,3 +75,4 @@ Human screenshot evidence confirms a real file path through `tauri://drag-drop`.
 | 2026-05-19 20:31 PDT | feature-verify (Codex inline) | `desktop tsc`, `plugin-organizer check-types`, and `desktop build` pass; runtime Finder matrix remains manual. | `7e20ca8` | Human runtime evidence |
 | 2026-05-19 21:07 PDT | human + Codex inline | Recorded user report: Finder items can be dragged into Grid. | `e7fc4ab` | Capture exact per-kind payloads |
 | 2026-05-19 21:21 PDT | human + feature-build (Codex inline) | Recorded screenshot evidence and fixed duplicate item creation by making GridWindow path-first only. | `58c926d` | post-fix runtime rerun |
+| 2026-05-19 21:56 PDT | human + feature-build (Codex inline) | Recorded `.app` duplication screenshot and added Organizer-side path dedupe. | `18b48da` | post-dedupe app rerun |

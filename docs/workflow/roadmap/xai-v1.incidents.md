@@ -14,11 +14,11 @@
 
 - Time: 2026-05-19 14:47 PDT
 - Feature: finder-dnd-path
-- Symptom: Feature cannot satisfy full acceptance yet; human screenshot also showed dragged file/folder items duplicated.
-- Root cause if known: G0.4 still requires real Finder drag/drop payload observations for file, folder, App bundle, and alias. Duplicate items were likely caused by GridWindow handling the same Finder drop through both Tauri `tauri://drag-drop` and the HTML5 `useFileDrop` fallback.
-- Attempted fixes: Created a manual path-first matrix template, filled static code-analysis findings, added GridWindow `tauri://drag-drop` telemetry in `7e20ca8`, recorded human screenshot evidence, and fixed duplicate item creation in `58c926d` by making GridWindow path-first only.
+- Symptom: Feature cannot satisfy full acceptance yet; human screenshots showed duplicate items first for file/folder and later for `.app`.
+- Root cause if known: G0.4 still requires real Finder drag/drop payload observations for alias. Duplicate items were caused by repeated drop handling paths/events; `.app` bundles still duplicated after the GridWindow-only fix, so Organizer needed path-level idempotency.
+- Attempted fixes: Created a manual path-first matrix template, filled static code-analysis findings, added GridWindow `tauri://drag-drop` telemetry in `7e20ca8`, made GridWindow path-first only in `58c926d`, and added Organizer per-grid path dedupe in `18b48da`.
 - Current status: BLOCKED.
-- Resume instruction: Run `pnpm --filter desktop tauri dev`, rerun file/folder drops to confirm no duplicates after `58c926d`, then drop `.app` and alias into a Grid, capture the `Finder DnD` panel and `[G0 Finder DnD] path-first drop` logs, fill exact payload rows in `docs/reviews/window-ground-truth/finder-dnd-path/README.md`, then rerun feature-verify for `finder-dnd-path`.
+- Resume instruction: Run `pnpm --filter desktop tauri dev`, rerun `.app` drop to confirm no duplicates after `18b48da`, then drop alias into a Grid, capture the `Finder DnD` panel and `[G0 Finder DnD] path-first drop` logs, fill exact payload rows in `docs/reviews/window-ground-truth/finder-dnd-path/README.md`, then rerun feature-verify for `finder-dnd-path`.
 
 ## Incident 3
 
