@@ -18,7 +18,7 @@
 | Current Feature | click-through-matrix / finder-dnd-path |
 | Feature Source | docs/planning/execution/G0-window-spike.md §G0.3, §G0.4 |
 | Feature Status | PARTIAL_HUMAN_EVIDENCE / BLOCKED |
-| Current Commit | pending G0 evidence commit |
+| Current Commit | e7fc4ab |
 | Tests | User manual evidence: transparent-area click-through normal; Finder items can be dragged into Grid |
 | Next Step | Complete exact G0.3/G0.4 matrix rows: grid item/resize, `macOSPrivateApi=false`, and Finder file/folder/`.app`/alias payload logs |
 
@@ -272,8 +272,8 @@
 |---|---|---|---|---|---|
 | window-ground-truth | G0 | READY_TO_SHIP | 3b571f6 | PASS: branch, sw_vers, README content | Deferred gates recorded in docs/workflow/roadmap/xai-v1.deferred-gates.md |
 | grid-window-prototype | G0 | READY_TO_SHIP | 6b121ea + 14e04c2 + 01e5167 + b8c34fe + 7b7ff35 + f65a1b5 + a33c74d | PASS: desktop tsc; plugin-organizer check-types; desktop build; cargo check | Runtime fixed/confirmed; deferred review/verify gates recorded. |
-| click-through-matrix | G0 | BLOCKED | 82ab268 + 7a1b9dd + pending G0 evidence commit | PASS_PARTIAL: transparent-area click-through user report; BLOCKED: grid-region and `macOSPrivateApi=false` evidence | Requires remaining human macOS click-through matrix rows. |
-| finder-dnd-path | G0 | BLOCKED | 33627df + 7a1b9dd + 7e20ca8 + pending G0 evidence commit | PASS_PARTIAL: user reported items can be dragged into Grid; BLOCKED: exact file/folder/app/alias payload evidence | Requires human Finder/Tauri path matrix payloads. |
+| click-through-matrix | G0 | BLOCKED | 82ab268 + 7a1b9dd + e7fc4ab | PASS_PARTIAL: transparent-area click-through user report; BLOCKED: grid-region and `macOSPrivateApi=false` evidence | Requires remaining human macOS click-through matrix rows. |
+| finder-dnd-path | G0 | BLOCKED | 33627df + 7a1b9dd + 7e20ca8 + e7fc4ab | PASS_PARTIAL: user reported items can be dragged into Grid; BLOCKED: exact file/folder/app/alias payload evidence | Requires human Finder/Tauri path matrix payloads. |
 | spaces-multimonitor-matrix | G0 | BLOCKED | 2fb6bac | PASS: matrix template exists; BLOCKED: real Spaces/fullscreen/multi-display evidence | Reached by user override; safe prep only. |
 | mas-sandbox-dry-run | G0 | BLOCKED | 071a192 | PASS: MAS notes exist; BLOCKED: real sandbox/private-API evidence | Reached by user override; safe prep only. |
 | window-command-contract | G1 | BLOCKED | 9c7b52f | PASS: safe-prep docs exist; BLOCKED: G0 not Go/Conditional Go | Reached by user override; no production code changed. |
@@ -411,7 +411,7 @@ Stopped on 2026-05-19 20:43 PDT because no remaining eligible feature can procee
 - `2039f72` — `docs(roadmap): record g1 dnd prep checkpoint`
 - `dcf2750` — `docs(grid-persistence): add safe prep discovery`
 - `d8a49b3` — `docs(roadmap): record g1 persistence checkpoint`
-- pending G0 evidence commit — record partial human G0.3/G0.4 evidence
+- `e7fc4ab` — `docs(g0-evidence): record partial manual runtime results`
 
 ### Test Results
 

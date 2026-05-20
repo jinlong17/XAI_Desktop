@@ -55,4 +55,4 @@ User reported items can be dragged into Grid. G0.4 acceptance still requires exa
 | 2026-05-19 14:47 PDT | feature-verify (Codex inline) | Marked BLOCKED because real Finder drop acceptance cannot be automated here. | (this commit) | feature-build |
 | 2026-05-19 20:31 PDT | feature-build (Codex inline) | Added G0 Finder DnD telemetry to GridWindow after runtime grid-window recovery. | `7e20ca8` | feature-verify |
 | 2026-05-19 20:31 PDT | feature-verify (Codex inline) | `desktop tsc`, `plugin-organizer check-types`, and `desktop build` pass; runtime Finder matrix remains manual. | `7e20ca8` | Human runtime evidence |
-| 2026-05-19 21:07 PDT | human + Codex inline | Recorded user report: Finder items can be dragged into Grid. | (pending evidence commit) | Capture exact per-kind payloads |
+| 2026-05-19 21:07 PDT | human + Codex inline | Recorded user report: Finder items can be dragged into Grid. | `e7fc4ab` | Capture exact per-kind payloads |
