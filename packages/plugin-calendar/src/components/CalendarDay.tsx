@@ -1,4 +1,4 @@
-import { toLocalIsoDate } from "./CalendarMini";
+import { toLocalIsoDate } from "../utils/date";
 import type { CalendarEvent } from "../types";
 
 export interface CalendarDayProps {

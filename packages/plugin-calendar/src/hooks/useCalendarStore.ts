@@ -1,5 +1,5 @@
 import { useMemo, useState } from "react";
-import { toLocalIsoDate } from "../components/CalendarMini";
+import { toLocalIsoDate } from "../utils/date";
 import type { CalendarEvent, CalendarStoreState } from "../types";
 
 export function useCalendarStore(seedEvents: CalendarEvent[] = createMockEvents()): CalendarStoreState {

@@ -28,3 +28,4 @@ Widget state persists in localStorage and mirrors into an in-memory repo-compati
 - `packages/plugin-widgets/src/components/WidgetFrame.tsx:1,27-30,33-59` stores active drag listeners behind an `AbortController`, aborts any previous drag before starting another, aborts on pointerup, and aborts in-flight drag listeners on unmount.
 - Stabilized WidgetHost default `registrations` via module-level constant to preserve useMemo identity.
 - Track C proposes registering `calendar.event` in the canonical data repository contract, clarifies calendar weekday labels with accessible names, derives day keys in local time, and treats `@repo/plugin-widgets` as a peer/dev dependency for calendar widget registration.
+- Moved `toLocalIsoDate` from `components/CalendarMini` to `utils/date` so hooks no longer import from components.
