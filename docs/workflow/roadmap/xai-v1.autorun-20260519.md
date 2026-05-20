@@ -18,7 +18,7 @@
 | Current Feature | none — waiting on human/runtime gates |
 | Feature Source | docs/planning/execution/G0-window-spike.md §G0.5, §G0.6 |
 | Feature Status | BLOCKED |
-| Current Commit | bd8cac3 |
+| Current Commit | latest local docs checkpoint; use `git log -1 --oneline` for the exact self-referential commit |
 | Tests | default `cargo check` PASS; private-API-disabled `cargo check --no-default-features --features mas-sandbox` PASS after temporary config/dependency toggle; defaults restored |
 | Next Step | Human-run G0.5 Spaces/fullscreen/multi-display matrix, then signed/sandbox G0.6 runtime validation |
 
