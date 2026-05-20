@@ -69,6 +69,33 @@ Verification passed:
 
 Cross-vendor verify and manual two-Grid native runtime smoke are deferred in `docs/workflow/roadmap/xai-v1.deferred-gates.md`; no ship or push was run.
 
+feature-verify (Claude Code, Track A, P0-1 follow-up), 2026-05-20 PDT. Verdict: PATCH_APPLIED.
+
+Codex cross-vendor review flagged that the SHIPPED `OrganizerGridContent.tsx`
+still imported `@tauri-apps/api/event` and `@tauri-apps/api/window` directly,
+which violates `docs/SYSTEM_ARCHITECTURE.md` §4 red-line #4 (plugins MUST
+consume Tauri capabilities through `@repo/core/hooks`). Because this row is
+SHIPPED, the G1.2 manifest entry was certifying a broken contract.
+
+Patch applied in this update:
+
+- Added `useTauriEvent` (with re-exported `TauriEvent` enum) and `useTauriWindow`
+  in `packages/core/src/hooks/`, exported through `@repo/core/hooks`.
+- Refactored `packages/plugin-organizer/src/OrganizerGridContent.tsx` to
+  consume `useTauriEvent` / `useTauriWindow` instead of importing
+  `@tauri-apps/api` directly. Behavior is byte-identical: same event names,
+  same payload shapes, same emit targets, same drag-drop lifecycle.
+- Verified: `pnpm --filter @repo/core check-types`,
+  `pnpm --filter @repo/plugin-organizer check-types`,
+  `pnpm --filter @repo/plugin-organizer test`,
+  `pnpm --filter desktop build` — all pass.
+- Boundary scan on `packages/plugin-organizer/src/` confirms
+  `OrganizerGridContent.tsx` is clean. Three pre-existing, separately-tracked
+  red-line #4 offenders remain in this package (`OrganizerLayer.tsx`,
+  `hooks/useGridWindow.ts`, `hooks/useMultiWindowGrids.ts`) and are out of
+  scope for this P0-1 fix; they should be addressed under a follow-up
+  manifest row.
+
 ## Work Log
 
 | Timestamp | Executor | Action | Commits | Next |
@@ -82,3 +109,4 @@ Cross-vendor verify and manual two-Grid native runtime smoke are deferred in `do
 | 2026-05-19 23:18 PDT | feature-build (Codex inline) | Implemented `OrganizerGridContent`, thinned Host `GridWindow.tsx`, and added public API contract docs. | `26d9f57` | feature-verify |
 | 2026-05-19 23:22 PDT | feature-verify (Codex inline) | Verified TypeScript/build/boundary/public API checks; marked READY_TO_SHIP. | `26d9f57`, `03ca86a` | manual ship only; continue roadmap |
 | 2026-05-20 00:32 PDT | ship (Claude Code, Track A) | Manifest promotion → SHIPPED. Production split already on `main` lineage (commits `26d9f57`/`03ca86a`); G1 manifest row updated to SHIPPED. Push deferred to end-of-session bundle. | `26d9f57`, `03ca86a` | continue roadmap |
+| 2026-05-20 PDT | bug-fix (Claude Code, Track A, P0-1) | P0 contract fix: routed `OrganizerGridContent.tsx` Tauri event + window IPC through new `@repo/core/hooks` (`useTauriEvent`, `useTauriWindow`); behavior byte-identical; check-types/test/build green. | _pending commit_ | track follow-up to clear remaining three pre-existing offenders in `packages/plugin-organizer/src/` |

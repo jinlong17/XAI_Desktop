@@ -1,6 +1,5 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
-import { listen, TauriEvent } from "@tauri-apps/api/event";
-import { getCurrentWindow } from "@tauri-apps/api/window";
+import { TauriEvent, useTauriEvent, useTauriWindow } from "@repo/core/hooks";
 import type { DesktopItem, GridBox } from "./types";
 import { SmartContainer } from "./SmartContainer";
 import {
@@ -133,6 +132,8 @@ export function OrganizerGridContent({
   const lastDropKeyRef = useRef<{ key: string; receivedAt: number } | null>(null);
   const gridRef = useRef<GridBox | null>(null);
 
+  const tauriWindow = useTauriWindow();
+
   useEffect(() => {
     gridRef.current = grid;
   }, [grid]);
@@ -141,15 +142,14 @@ export function OrganizerGridContent({
     let cancelled = false;
 
     const refreshWindowMeta = async () => {
-      const currentWindow = getCurrentWindow();
       try {
         const [position, size] = await Promise.all([
-          currentWindow.outerPosition(),
-          currentWindow.innerSize(),
+          tauriWindow.outerPosition(),
+          tauriWindow.innerSize(),
         ]);
 
         if (!cancelled) {
-          setWindowLabel(currentWindow.label);
+          setWindowLabel(tauriWindow.label);
           setWindowRect({
             x: position.x,
             y: position.y,
@@ -160,7 +160,7 @@ export function OrganizerGridContent({
       } catch (error) {
         console.warn("[G0 grid prototype] failed to read window metadata", error);
         if (!cancelled) {
-          setWindowLabel(currentWindow.label);
+          setWindowLabel(tauriWindow.label);
         }
       }
     };
@@ -172,65 +172,51 @@ export function OrganizerGridContent({
       cancelled = true;
       window.clearInterval(timer);
     };
-  }, []);
+  }, [tauriWindow]);
+
+  useTauriEvent<G0GridPrototypePing>(G0_GRID_PROTOTYPE_EVENT, (event) => {
+    if (event.payload.gridId !== gridId) {
+      console.warn("[G0 grid prototype] ignored out-of-scope event", {
+        currentGridId: gridId,
+        payload: event.payload,
+      });
+      return;
+    }
+
+    console.log("[G0 grid prototype] received scoped event", event.payload);
+    setLastSpikeEvent(event.payload);
+  });
+
+  useTauriEvent<unknown>(ORGANIZER_GRID_STATE_EVENT, (event) => {
+    if (!isGridStatePayload(event.payload)) {
+      console.warn("[OrganizerGridContent] ignored invalid grid state event", event.payload);
+      return;
+    }
+    if (event.payload.gridId === gridId) {
+      setGrid(event.payload.grid);
+      setItems(event.payload.items);
+    }
+  });
+
+  useTauriEvent<unknown>(ORGANIZER_GRID_CLOSE_EVENT, (event) => {
+    if (!isGridClosePayload(event.payload)) {
+      console.warn("[OrganizerGridContent] ignored invalid grid close event", event.payload);
+      return;
+    }
+    if (event.payload.gridId === gridId) {
+      tauriWindow.close();
+    }
+  });
 
   useEffect(() => {
-    const unlistenSpike = listen<G0GridPrototypePing>(
-      G0_GRID_PROTOTYPE_EVENT,
-      (event) => {
-        if (event.payload.gridId !== gridId) {
-          console.warn("[G0 grid prototype] ignored out-of-scope event", {
-            currentGridId: gridId,
-            payload: event.payload,
-          });
-          return;
-        }
-
-        console.log("[G0 grid prototype] received scoped event", event.payload);
-        setLastSpikeEvent(event.payload);
-      }
-    );
-
-    return () => {
-      unlistenSpike.then((fn) => fn());
-    };
-  }, [gridId]);
-
-  useEffect(() => {
-    const unlistenUpdate = listen<unknown>(ORGANIZER_GRID_STATE_EVENT, (event) => {
-      if (!isGridStatePayload(event.payload)) {
-        console.warn("[OrganizerGridContent] ignored invalid grid state event", event.payload);
-        return;
-      }
-      if (event.payload.gridId === gridId) {
-        setGrid(event.payload.grid);
-        setItems(event.payload.items);
-      }
-    });
-
-    const unlistenDelete = listen<unknown>(ORGANIZER_GRID_CLOSE_EVENT, (event) => {
-      if (!isGridClosePayload(event.payload)) {
-        console.warn("[OrganizerGridContent] ignored invalid grid close event", event.payload);
-        return;
-      }
-      if (event.payload.gridId === gridId) {
-        getCurrentWindow().close();
-      }
-    });
-
-    getCurrentWindow().emit(ORGANIZER_GRID_READY_EVENT, { gridId });
-
-    return () => {
-      unlistenUpdate.then((fn) => fn());
-      unlistenDelete.then((fn) => fn());
-    };
-  }, [gridId]);
+    tauriWindow.emit(ORGANIZER_GRID_READY_EVENT, { gridId });
+  }, [gridId, tauriWindow]);
 
   const emitUpdate = useCallback(
     (patch: Partial<GridBox>) => {
-      getCurrentWindow().emit(ORGANIZER_GRID_UPDATE_EVENT, { gridId, changes: patch });
+      tauriWindow.emit(ORGANIZER_GRID_UPDATE_EVENT, { gridId, changes: patch });
     },
-    [gridId]
+    [gridId, tauriWindow]
   );
 
   const handleUpdate = useCallback(
@@ -256,9 +242,9 @@ export function OrganizerGridContent({
 
   const handleClose = useCallback(
     (_id: string) => {
-      getCurrentWindow().emit(ORGANIZER_GRID_CLOSE_EVENT, { gridId });
+      tauriWindow.emit(ORGANIZER_GRID_CLOSE_EVENT, { gridId });
     },
-    [gridId]
+    [gridId, tauriWindow]
   );
 
   const handleToggleFold = useCallback(
@@ -305,17 +291,16 @@ export function OrganizerGridContent({
       console.log("[G0 Finder DnD] path-first drop", telemetry);
       setLastDropTelemetry(telemetry);
       setDropEventCount((count) => count + 1);
-      getCurrentWindow().emit(ORGANIZER_FILE_DROP_EVENT, {
+      tauriWindow.emit(ORGANIZER_FILE_DROP_EVENT, {
         gridId,
         files: paths.map(toDroppedFile),
       });
     },
-    [gridId]
+    [gridId, tauriWindow]
   );
 
   const handleSendSpikeEvent = useCallback(async () => {
-    const currentWindow = getCurrentWindow();
-    const label = windowLabel || currentWindow.label;
+    const label = windowLabel || tauriWindow.label;
     const nextCount = spikeEventCount + 1;
     const payload: G0GridPrototypePing = {
       gridId,
@@ -326,31 +311,22 @@ export function OrganizerGridContent({
     };
 
     console.log("[G0 grid prototype] sending scoped event", payload);
-    await currentWindow.emitTo(label, G0_GRID_PROTOTYPE_EVENT, payload);
+    await tauriWindow.emitTo(label, G0_GRID_PROTOTYPE_EVENT, payload);
     setSpikeEventCount(nextCount);
-  }, [gridId, spikeEventCount, windowLabel, windowRect]);
+  }, [gridId, spikeEventCount, tauriWindow, windowLabel, windowRect]);
 
-  useEffect(() => {
-    const unlistenDrop = listen<TauriDragDropPayload>(TauriEvent.DRAG_DROP, (event) => {
-      const paths = coerceDragDropPaths(event.payload);
-      setIsDraggingFile(false);
-      if (paths.length === 0) {
-        console.warn("[G0 Finder DnD] drag-drop payload had no paths", event.payload);
-        return;
-      }
-      handleFileDrop(paths, coerceDragDropPosition(event.payload) ?? { x: 0, y: 0 });
-    });
-    const unlistenEnter = listen(TauriEvent.DRAG_ENTER, () => setIsDraggingFile(true));
-    const unlistenOver = listen(TauriEvent.DRAG_OVER, () => setIsDraggingFile(true));
-    const unlistenLeave = listen(TauriEvent.DRAG_LEAVE, () => setIsDraggingFile(false));
-
-    return () => {
-      unlistenDrop.then((fn) => fn());
-      unlistenEnter.then((fn) => fn());
-      unlistenOver.then((fn) => fn());
-      unlistenLeave.then((fn) => fn());
-    };
-  }, [handleFileDrop]);
+  useTauriEvent<TauriDragDropPayload>(TauriEvent.DRAG_DROP, (event) => {
+    const paths = coerceDragDropPaths(event.payload);
+    setIsDraggingFile(false);
+    if (paths.length === 0) {
+      console.warn("[G0 Finder DnD] drag-drop payload had no paths", event.payload);
+      return;
+    }
+    handleFileDrop(paths, coerceDragDropPosition(event.payload) ?? { x: 0, y: 0 });
+  });
+  useTauriEvent(TauriEvent.DRAG_ENTER, () => setIsDraggingFile(true));
+  useTauriEvent(TauriEvent.DRAG_OVER, () => setIsDraggingFile(true));
+  useTauriEvent(TauriEvent.DRAG_LEAVE, () => setIsDraggingFile(false));
 
   if (!grid) {
     return (
