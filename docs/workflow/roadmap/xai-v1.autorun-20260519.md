@@ -716,3 +716,23 @@ Latest checkpoint is 2026-05-19 23:34 PDT. G0 is Conditional Go for the DMG/priv
 - Created `docs/workflow/roadmap/xai-g2-data-security-foundation.md`.
 - Manifest review is deferred in unattended serial Codex mode and recorded in `docs/workflow/roadmap/xai-v1.deferred-gates.md`.
 - Current state: G2.1 `repository-v0-contract` selected for inline Workflow V2.
+
+### 2026-05-20 00:18 PDT — Track A Resume Checkpoint: parallel-wave dispatch start
+
+- Branch `codex/track-a-desktop-foundation` cut from prior HEAD (`7fc45a4 docs(repository-v0-contract): add G2.1 workflow plan`).
+- Track A scope: G1 ship gates (G1.2 / G1.4) → G2 data-security production → G3 organizer loop.
+- Track B/C ownership respected; Track A only modifies the files listed in goal allowlist.
+- Ship policy unchanged: no auto-ship, no auto-push; G1.2/G1.4 manual ship is explicitly authorized by goal.
+
+### 2026-05-20 00:24 PDT — Feature Checkpoint: G2.1 repository-v0-contract READY_TO_SHIP
+
+- Completed `feature-build` and inline `feature-verify` for `repository-v0-contract` (Workflow V2 phase plan unchanged).
+- Added Repository v0 entity surface: `packages/core-data/src/entities.ts` covering Grid, GridItem, Label, Todo, Habit, ClipboardEntry, Project, Card.
+- Added entity contract test (`packages/core-data/tests/entities.test.ts`): roundtrip, naming regex, `listByIndex`, clipboard `device-local` invariant.
+- Updated `docs/contracts/data-repository-v0.md` with entity table, full `Repo<T>` interface, and entity-level testing contract.
+- Tests run:
+  - `pnpm --filter @repo/core-data test` -> PASS, 45 tests.
+  - `pnpm --filter @repo/core-data check-types` -> PASS.
+  - `pnpm --filter @repo/core check-types` -> PASS.
+  - `pnpm --filter @repo/plugin-organizer check-types` -> PASS.
+- `packages/repository-v0-contract/docs/dev_log.md` updated to READY_TO_SHIP; manual ship deferred per Track A scope.

@@ -1,8 +1,19 @@
-export type { Repo, RepoRecord } from './types';
-export {
-  SQLITE_STATEMENTS,
-  createSqliteRepo,
-} from './sqlite';
+export type {
+  MigrationPlan,
+  MigrationResult,
+  MigrationStep,
+  Repo,
+  RepoIndexKey,
+  RepoListQuery,
+  RepoMetadata,
+  RepoOperations,
+  RepoOrderBy,
+  RepoRecord,
+  RepoSortDirection,
+  RepoTransaction,
+  SyncScope,
+} from "./types";
+export { SQLITE_STATEMENTS, createSqliteRepo } from "./sqlite";
 export type {
   MutationHook,
   MutationKind,
@@ -12,14 +23,14 @@ export type {
   SqliteDriver,
   SqliteRepo,
   SqliteRepoOptions,
-} from './sqlite';
-export { migrateLocalStorageToRepo } from './local-storage';
+} from "./sqlite";
+export { migrateLocalStorageToRepo } from "./local-storage";
 export type {
   LocalStorageMigrationOptions,
   LocalStorageMigrationResult,
   StorageLike,
-} from './local-storage';
-export { createInMemoryRepo, createInMemorySqliteDriver } from './testing';
+} from "./local-storage";
+export { createInMemoryRepo, createInMemorySqliteDriver } from "./testing";
 export {
   KEYCHAIN_ERROR_CODES,
   KeychainError,
@@ -28,5 +39,18 @@ export {
   secretSet,
   secretGet,
   secretDel,
-} from './keychain';
-export type { KeychainErrorCode, KeychainClient } from './keychain';
+} from "./keychain";
+export type { KeychainErrorCode, KeychainClient } from "./keychain";
+export type {
+  CardEntity,
+  ClipboardEntryEntity,
+  GridEntity,
+  GridItemEntity,
+  HabitEntity,
+  LabelEntity,
+  ProjectEntity,
+  RepoEntity,
+  RepoEntityType,
+  RepoEntityTypeMap,
+  TodoEntity,
+} from "./entities";

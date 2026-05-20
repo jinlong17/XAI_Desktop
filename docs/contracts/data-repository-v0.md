@@ -52,13 +52,42 @@ interface Repo<T extends RepoRecord> {
   get(id: string): Promise<T | undefined>;
   put(record: T): Promise<void>;
   delete(id: string): Promise<void>;
-  list(query?: RepoListQuery): Promise<T[]>;
-  transaction<R>(fn: (tx: RepoTransaction) => Promise<R>): Promise<R>;
-  migrate(plan: MigrationPlan): Promise<MigrationResult>;
+  list(query?: RepoListQuery<T>): Promise<T[]>;
+  listByIndex<K extends keyof T>(
+    field: K,
+    value: T[K],
+    query?: RepoListQuery<T>,
+  ): Promise<T[]>;
+  metadata(): Promise<RepoMetadata>;
+  transaction<R>(fn: (tx: RepoTransaction<T>) => Promise<R>): Promise<R>;
+  migrate(plan: MigrationPlan<T>): Promise<MigrationResult>;
 }
 ```
 
 `list()` 的默认顺序不稳定。需要稳定顺序时必须显式传 query。
+
+## 3.1 Repository v0 Entity 表
+
+`packages/core-data/src/entities.ts` 是 entity 类型的 canonical source。每个具体
+entity 都是 `RepoRecord` 的扩展,`entityType` 必须使用下表中固定的 dotted slug。
+
+| Entity (TS) | `entityType` | 默认 syncScope | 关键字段 |
+|---|---|---|---|
+| `GridEntity` | `organizer.grid` | `account-sync` | `title`, `rect`, `itemIds`, `isLocked`, `isFolded`, `viewMode` |
+| `GridItemEntity` | `organizer.item` | `account-sync` (file/folder/app 可能 device-local) | `gridId`, `kind`, `filename`, `filepath?`, `url?` |
+| `LabelEntity` | `labels.label` | `account-sync` | `name`, `color`, `parentId?` |
+| `TodoEntity` | `productivity.todo` | `account-sync` | `title`, `done`, `labelIds`, `dueAt?`, `projectId?` |
+| `HabitEntity` | `productivity.habit` | `account-sync` | `title`, `cadence`, `completions[]`, `labelIds` |
+| `ClipboardEntryEntity` | `clipboard.item` | `device-local`(强制) | `kind`, `payload`, `pinned?` |
+| `ProjectEntity` | `project.board` | `account-sync` | `title`, `labelIds`, `archivedAt?` |
+| `CardEntity` | `project.card` | `account-sync` | `projectId`, `status`, `position`, `labelIds` |
+
+新增 entity 必须遵守以下规则:
+
+1. `entityType` 形如 `^[a-z]+\.[a-z_]+$`,plugin 段必须真实存在。
+2. Device-local 类型必须把 `syncScope` 收窄为字面量 `"device-local"`。
+3. `id` 由 plugin 生成,driver 不会自动赋值;命名需 plugin-scoped (例 `grid_<uuid>`)。
+4. 修改任何 entity 字段必须同步 `schemaVersion` 提升 + migration plan。
 
 ## 4. Driver
 
@@ -87,15 +116,24 @@ interface Repo<T extends RepoRecord> {
 
 ## 7. Testing Contract
 
-每个 driver 必须通过同一组测试:
+每个 driver 必须通过同一组测试 (`packages/core-data/tests/repository-contract.ts` 是
+canonical suite):
 
 - CRUD roundtrip。
 - list query and stable ordering。
+- listByIndex 命中 + query options 组合。
 - transaction rollback。
 - migration idempotency。
 - corrupted storage handling。
 - syncScope enforcement。
 - encrypted driver wrong-key failure。
+
+Entity-level 测试 (`packages/core-data/tests/entities.test.ts`) 校验:
+
+- 每个 entity 类型可通过 `Repo<RepoEntity>` round-trip。
+- `entityType` 命名遵守 `plugin.entity` 正则。
+- `listByIndex` 在 entity-owned 字段 (例 `gridId`) 上工作。
+- Clipboard 在类型层面被约束为 `device-local`。
 
 ## 8. Open Questions
 
