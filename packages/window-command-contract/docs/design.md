@@ -39,3 +39,10 @@ interface CommandError {
   details?: unknown;
 }
 ```
+
+## Build Notes
+
+- Rust remains the only Grid label generation authority via `grid_{gridId}`.
+- `gridId` validation accepts ASCII letters, numbers, `-`, and `_`.
+- `list_grid_windows` is state-backed and reports visibility from the native window when present.
+- `focus_grid_window` focuses by `gridId` and returns the same snapshot shape.

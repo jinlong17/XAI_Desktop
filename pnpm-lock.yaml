@@ -281,6 +281,9 @@ importers:
 
   packages/plugin-organizer:
     dependencies:
+      '@repo/core':
+        specifier: workspace:*
+        version: link:../core
       '@dnd-kit/core':
         specifier: ^6.1.0
         version: 6.3.1(react-dom@19.2.0(react@19.2.0))(react@19.2.0)

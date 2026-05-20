@@ -1,5 +1,15 @@
 export type { GridBox, DesktopItem, PersistedLayout, Rect } from './grid';
-export type { WindowType, WindowLabel, WindowConfig } from './window';
+export type {
+  WindowType,
+  WindowLabel,
+  WindowConfig,
+  GridWindowLabel,
+  GridWindowRect,
+  CreateGridWindowInput,
+  UpdateGridWindowInput,
+  GridWindowSnapshot,
+  CommandError,
+} from './window';
 export type { EventMap } from './events';
 export type {
   PluginManifest,

@@ -1,11 +1,7 @@
 import { invoke } from "@tauri-apps/api/core";
+import type { GridWindowRect, GridWindowSnapshot } from "@repo/core/types";
 
-export interface GridWindowRect {
-  x: number;
-  y: number;
-  width: number;
-  height: number;
-}
+export type { GridWindowRect, GridWindowSnapshot };
 
 /**
  * Create a new grid window at the specified position
@@ -13,13 +9,14 @@ export interface GridWindowRect {
 export async function createGridWindow(
   gridId: string,
   rect: GridWindowRect
-): Promise<void> {
+): Promise<GridWindowSnapshot> {
   try {
-    await invoke("create_grid_window", {
+    const snapshot = await invoke<GridWindowSnapshot>("create_grid_window", {
       gridId,
       rect,
     });
     console.log(`✅ Created grid window: ${gridId}`);
+    return snapshot;
   } catch (error) {
     console.error(`❌ Failed to create grid window: ${gridId}`, error);
     throw error;
@@ -32,9 +29,9 @@ export async function createGridWindow(
 export async function updateGridWindow(
   gridId: string,
   rect: GridWindowRect
-): Promise<void> {
+): Promise<GridWindowSnapshot> {
   try {
-    await invoke("update_grid_window", {
+    return await invoke<GridWindowSnapshot>("update_grid_window", {
       gridId,
       rect,
     });
@@ -55,6 +52,26 @@ export async function closeGridWindow(gridId: string): Promise<void> {
     console.log(`🗑️ Closed grid window: ${gridId}`);
   } catch (error) {
     console.error(`❌ Failed to close grid window: ${gridId}`, error);
+    throw error;
+  }
+}
+
+export async function listGridWindows(): Promise<GridWindowSnapshot[]> {
+  try {
+    return await invoke<GridWindowSnapshot[]>("list_grid_windows");
+  } catch (error) {
+    console.error("❌ Failed to list grid windows", error);
+    throw error;
+  }
+}
+
+export async function focusGridWindow(gridId: string): Promise<GridWindowSnapshot> {
+  try {
+    return await invoke<GridWindowSnapshot>("focus_grid_window", {
+      gridId,
+    });
+  } catch (error) {
+    console.error(`❌ Failed to focus grid window: ${gridId}`, error);
     throw error;
   }
 }

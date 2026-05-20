@@ -8,7 +8,7 @@ use std::collections::HashMap;
 use std::sync::Mutex;
 use tauri::{Manager, WebviewUrl, WebviewWindowBuilder};
 
-/// Grid window position and size data
+/// Grid window position and size data.
 #[derive(Clone, Serialize, Deserialize, Debug)]
 pub struct GridWindowRect {
     pub x: f64,
@@ -17,7 +17,26 @@ pub struct GridWindowRect {
     pub height: f64,
 }
 
-/// State to track all grid windows
+/// Stable Grid window lifecycle snapshot returned by window commands.
+#[derive(Clone, Serialize, Deserialize, Debug)]
+pub struct GridWindowSnapshot {
+    #[serde(rename = "gridId")]
+    pub grid_id: String,
+    pub label: String,
+    pub rect: GridWindowRect,
+    pub visible: bool,
+}
+
+/// Structured command error shape for UI-safe handling.
+#[derive(Clone, Serialize, Deserialize, Debug)]
+pub struct CommandError {
+    pub code: String,
+    pub message: String,
+    pub recoverable: bool,
+    pub details: Option<serde_json::Value>,
+}
+
+/// State to track all grid windows.
 pub struct GridWindowsState {
     pub windows: Mutex<HashMap<String, GridWindowRect>>,
 }
@@ -41,6 +60,8 @@ pub fn run() {
             commands::window::create_grid_window,
             commands::window::update_grid_window,
             commands::window::close_grid_window,
+            commands::window::list_grid_windows,
+            commands::window::focus_grid_window,
             commands::menubar::sync_set_menubar_status,
             commands::crypto::crypto_encrypt_for,
             commands::crypto::crypto_unwrap_dek_for_device,

@@ -33,11 +33,11 @@ Rust 是 label 生成权威。TS 侧不能手写除 public helper 以外的 labe
 
 | Command | Owner | Allowed windows | Input | Output |
 |---|---|---|---|---|
-| `create_grid_window` | organizer/host | `main`,`control` | `{ gridId, rect }` | `void` |
-| `update_grid_window` | organizer/host | `main`,`control`,`grid_*` | `{ gridId, rect }` | `void` |
+| `create_grid_window` | organizer/host | `main`,`control` | `{ gridId, rect }` | `GridWindowSnapshot` |
+| `update_grid_window` | organizer/host | `main`,`control`,`grid_*` | `{ gridId, rect }` | `GridWindowSnapshot` |
 | `close_grid_window` | organizer/host | `main`,`control`,`grid_*` | `{ gridId }` | `void` |
 | `list_grid_windows` | organizer/host | `main`,`control` | `void` | `GridWindowSnapshot[]` |
-| `focus_grid_window` | organizer/host | `main`,`control` | `{ gridId }` | `void` |
+| `focus_grid_window` | organizer/host | `main`,`control` | `{ gridId }` | `GridWindowSnapshot` |
 
 Target G1 output type:
 
@@ -49,6 +49,13 @@ interface GridWindowSnapshot {
   visible: boolean;
 }
 ```
+
+G1.1 implementation notes:
+
+- Rust is the only label generation point via `grid_{gridId}`.
+- Invalid `gridId` values return `INVALID_GRID_ID`.
+- Missing windows return `WINDOW_NOT_FOUND`.
+- Native window failures return `WINDOW_NATIVE_ERROR`.
 
 ## 4. File / Open Commands
 

@@ -16,5 +16,11 @@
     "listen": ["organizer:grid-window-ready", "organizer:create-grid-request"]
   },
   "dependencies": ["@repo/core", "@repo/ui"],
-  "tauriCommands": ["create_grid_window", "update_grid_window", "close_grid_window"]
+  "tauriCommands": [
+    "create_grid_window",
+    "update_grid_window",
+    "close_grid_window",
+    "list_grid_windows",
+    "focus_grid_window"
+  ]
 }

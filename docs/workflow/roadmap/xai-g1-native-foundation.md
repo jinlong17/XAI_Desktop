@@ -16,7 +16,7 @@
 
 | # | Slug | Source | Depends On | Dep Semantics | Status | Automation Mode | Verify Cross-vendor | Last Run | Note |
 |---|------|--------|------------|---------------|--------|-----------------|---------------------|----------|------|
-| 1 | window-command-contract | docs/planning/execution/G1-native-foundation.md §G1.1 | G0 Go/Conditional Go | shipped | ELIGIBLE | D-Codex | yes | 2026-05-19 | G0 Conditional Go unblocks G1.1 production implementation for DMG/private path; MAS runtime remains deferred external. |
+| 1 | window-command-contract | docs/planning/execution/G1-native-foundation.md §G1.1 | G0 Go/Conditional Go | shipped | READY_FOR_VERIFY | D-Codex | yes | 2026-05-19 | Production command contract implemented: structured errors, snapshots, list/focus commands, core TS types, and contract docs. |
 | 2 | grid-shell-organizer-content | docs/planning/execution/G1-native-foundation.md §G1.2 | window-command-contract | shipped | BLOCKED | D-Codex | yes | 2026-05-19 | Safe prep only via user override; boundary docs complete, production implementation blocked by G0/G1.1. |
 | 3 | native-dnd-path-first | docs/planning/execution/G1-native-foundation.md §G1.3 | finder-dnd-path | shipped | BLOCKED | D-Codex | yes | 2026-05-19 | Safe prep only via user override; G0.4 is READY_TO_SHIP, production implementation still blocked by MAS/security-scope evidence and G0 gate status. |
 | 4 | multi-grid-event-scope | docs/planning/execution/G1-native-foundation.md §G1.4 | grid-window-prototype | shipped | BLOCKED | D-Codex | yes | 2026-05-19 | Safe prep only via user override; event-scope audit complete, production implementation blocked by G0/G1.1. |

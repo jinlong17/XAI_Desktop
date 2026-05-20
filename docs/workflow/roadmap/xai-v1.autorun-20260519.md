@@ -17,10 +17,10 @@
 | Gate Manifest | docs/workflow/roadmap/xai-g1-native-foundation.md |
 | Current Feature | window-command-contract |
 | Feature Source | docs/planning/execution/G1-native-foundation.md §G1.1 |
-| Feature Status | ELIGIBLE |
+| Feature Status | READY_FOR_VERIFY |
 | Current Commit | latest local docs checkpoint; use `git log -1 --oneline` for the exact self-referential commit |
 | Tests | default `cargo check` PASS; private-API-disabled `cargo check --no-default-features --features mas-sandbox` PASS after temporary config/dependency toggle; defaults restored |
-| Next Step | Start G1.1 production build under G0 Conditional Go |
+| Next Step | Run G1.1 feature-verify |
 
 ## Checkpoints
 
@@ -385,6 +385,22 @@
 - ADR-0005 now records G0 verdict as Conditional Go.
 - G1 native foundation may proceed under the DMG/private path; MAS-specific behavior remains behind `mas-sandbox` validation.
 
+### 2026-05-19 23:05 PDT — Feature Build: window-command-contract
+
+- Implemented G1.1 production window command contract.
+- Rust changes:
+  - added `GridWindowSnapshot` and structured `CommandError`;
+  - changed `create_grid_window` and `update_grid_window` to return `GridWindowSnapshot`;
+  - added `list_grid_windows` and `focus_grid_window`;
+  - kept Rust as the only `grid_{gridId}` label generation authority;
+  - added `gridId` validation and structured error codes.
+- TS/docs changes:
+  - added core window contract types;
+  - updated Organizer window hook return types and command adapters;
+  - updated Organizer manifest command list;
+  - updated `docs/contracts/tauri-commands-v0.md`.
+- Status: `window-command-contract` -> READY_FOR_VERIFY.
+
 ## Feature Outcomes
 
 | Feature | Gate | Status | Commit | Tests | Notes |
@@ -395,7 +411,7 @@
 | finder-dnd-path | G0 | READY_TO_SHIP | 33627df + 7a1b9dd + 7e20ca8 + e7fc4ab + 58c926d + 18b48da + 5e98083 | PASS: file, folder, `.app`, and alias paths observed via `tauri://drag-drop`; duplicate fixes applied; post-dedupe `.app` rerun passed; alias path policy recorded as `PRESERVE_ALIAS_PATH` | Deferred gates recorded in docs/workflow/roadmap/xai-v1.deferred-gates.md |
 | spaces-multimonitor-matrix | G0 | READY_TO_SHIP | 2fb6bac + bcc5785 + 1701583 | PASS: matrix template exists; current display facts, static window behavior, and user manual Spaces/multi-display follow evidence recorded | Optional independent screenshot replay before ship. |
 | mas-sandbox-dry-run | G0 | BLOCKED_EXTERNAL | 071a192 + 4537d2d + 2fda0c8 | PASS: MAS notes exist; private-API-disabled compile fallback passes; BLOCKED_EXTERNAL: Apple Developer/signed sandbox runtime evidence | Deferred external release gate; decoupled from G1 DMG/private path. |
-| window-command-contract | G1 | ELIGIBLE | 9c7b52f | PASS: safe-prep docs exist; G0 Conditional Go now unblocks production build | Next eligible feature. |
+| window-command-contract | G1 | READY_FOR_VERIFY | 9c7b52f + pending G1.1 build commit | PENDING_VERIFY: production command contract implemented | Awaiting feature-verify checks. |
 | grid-shell-organizer-content | G1 | BLOCKED | eaae46e | PASS: safe-prep docs exist; BLOCKED: G0/G1.1 not ready | Reached by user override; no production code changed. |
 | native-dnd-path-first | G1 | BLOCKED | 707a8d1 | PASS: DnD discovery docs exist; BLOCKED: MAS sandbox/security-scope evidence missing | Reached by user override; no production code changed. |
 | multi-grid-event-scope | G1 | BLOCKED | a7d4803 | PASS: event audit docs exist; BLOCKED: G0/G1.1 not ready | Reached by user override; no production code changed. |

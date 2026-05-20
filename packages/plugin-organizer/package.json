@@ -13,6 +13,7 @@
     "check-types": "tsc --noEmit"
   },
   "dependencies": {
+    "@repo/core": "workspace:*",
     "@dnd-kit/core": "^6.1.0",
     "@dnd-kit/utilities": "^3.2.1",
     "@tauri-apps/api": "^2",
