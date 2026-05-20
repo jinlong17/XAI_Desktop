@@ -32,3 +32,9 @@ Expanded redaction coverage for:
 - macOS home path
 - Credit card with Luhn validation
 - Existing password, API key, token, and secret assignment patterns
+
+## Cross-review followups 2026-05-20
+
+- Wired `packages/plugin-ai-cube` for Vitest and converted `redaction.test.ts` from inert `if (false)` assertions into executable Vitest cases.
+- Reordered bearer token redaction before JWT redaction so `Bearer eyJ...` reports `bearer`, while bare JWTs still report `jwt`.
+- Tightened the credit-card candidate regex so matches end on a digit and preserve surrounding text, including the space before following words.
