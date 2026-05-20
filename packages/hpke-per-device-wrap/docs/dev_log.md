@@ -50,3 +50,10 @@
 | Timestamp | Executor | Action | Commits | Next |
 |---|---|---|---|---|
 | 2026-05-19 02:58 PDT | Codex serial autorun | Implemented #13 HPKE per-device DEK wrap/open, KeyVault integration, docs, and tests. | local commit `feat(hpke-per-device-wrap): add HPKE DEK wrapping` | ed25519-recovery-signing (#14) |
+
+## 2026-05-20 P0 Fix - HKDF-SHA256 KDF
+
+- Prompt reference: "Track E P0-1 修复 — packages/hpke-per-device-wrap/ 的 deriveAesKey 不是真 HKDF。"
+- Replaced the ad-hoc `SHA256("xai.hpke.wrap.v1" || sharedSecret || info)` KDF with RFC 5869 HKDF-SHA256 using fixed salt `xai.hpke.wrap.v1.salt`, caller-provided `info`, and 32-byte output for AES-256-GCM.
+- Kept suite name `X25519-HKDF-SHA256-AES256GCM`; implementation now matches the advertised suite.
+- Added deterministic X25519/HKDF/AES-GCM vector coverage for fixed keys, IV, DEK, info, and AAD.

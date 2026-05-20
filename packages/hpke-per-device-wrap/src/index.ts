@@ -1,10 +1,12 @@
-import { createCipheriv, createDecipheriv, createHash, randomBytes } from 'node:crypto';
+import { createCipheriv, createDecipheriv, hkdfSync, randomBytes } from 'node:crypto';
 
 import {
   deriveDeviceSharedSecret,
   generateDeviceKeypair,
   type X25519DeviceKeypair,
 } from '../../x25519-device-keypair/src';
+
+const HPKE_WRAP_HKDF_SALT = new TextEncoder().encode('xai.hpke.wrap.v1.salt');
 
 export interface DeviceDekWrap {
   suite: 'X25519-HKDF-SHA256-AES256GCM';
@@ -68,7 +70,7 @@ export function openDekForDevice(input: {
 }
 
 function deriveAesKey(sharedSecret: Uint8Array, info: Uint8Array): Uint8Array {
-  return new Uint8Array(createHash('sha256').update('xai.hpke.wrap.v1').update(sharedSecret).update(info).digest());
+  return new Uint8Array(hkdfSync('sha256', sharedSecret, HPKE_WRAP_HKDF_SALT, info, 32));
 }
 
 function assertInfoAndAadDistinct(info: Uint8Array, aad: Uint8Array): void {
