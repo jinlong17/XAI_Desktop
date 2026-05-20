@@ -1,0 +1,19 @@
+{
+  "name": "widgets",
+  "version": "0.1.0",
+  "displayName": "Desktop Widgets",
+  "description": "Widget host, built-in time progress widgets, habit stats, and personalization tokens.",
+  "author": "Jinlong",
+  "enabled": false,
+  "contentTypes": ["widget"],
+  "windows": {
+    "overlay": true,
+    "control": true
+  },
+  "events": {
+    "emit": ["widgets:changed", "widgets:preference-updated"],
+    "listen": ["calendar:events-changed", "pet:ai-suggestion"]
+  },
+  "dependencies": ["@repo/core-data"],
+  "tauriCommands": []
+}

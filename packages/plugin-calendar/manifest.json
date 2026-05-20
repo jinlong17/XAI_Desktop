@@ -1,0 +1,18 @@
+{
+  "name": "calendar",
+  "version": "0.1.0",
+  "displayName": "Calendar",
+  "description": "Month mini view and day timeline using mock aggregated events.",
+  "author": "Jinlong",
+  "enabled": false,
+  "contentTypes": ["calendar-event"],
+  "windows": {
+    "control": true
+  },
+  "events": {
+    "emit": ["calendar:events-changed"],
+    "listen": ["productivity:todo-changed", "project:milestone-changed"]
+  },
+  "dependencies": ["@repo/core-data", "@repo/plugin-widgets"],
+  "tauriCommands": []
+}
