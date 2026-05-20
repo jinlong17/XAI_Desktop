@@ -31,6 +31,15 @@ export class RepoAdapter implements DataAdapter<ClipboardEntry> {
   }
 
   async delete(id: string): Promise<void> {
-    await this.repo.delete(id);
+    const current = await this.repo.get(id);
+    if (!current) return;
+
+    const now = new Date().toISOString();
+    await this.repo.put({
+      ...current,
+      deletedAt: now,
+      updatedAt: now,
+      version: current.version + 1,
+    });
   }
 }
