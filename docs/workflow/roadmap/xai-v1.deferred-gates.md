@@ -94,7 +94,7 @@
 - What was done instead: Recorded human evidence that transparent clicks work, Grid item pointer delivery flashes, and resize handles drag in the default runtime. Then temporarily disabled the private API path (`"macOSPrivateApi": false` plus the Rust `macos-private-api` Cargo feature) and confirmed `pnpm --filter desktop tauri dev` fails at compile time on `.transparent(true)` in Grid/control window builders.
 - Later human action: Optional independent replay before ship; no remaining G0.3 blocker. For MAS, continue G0.6 fallback/sandbox validation.
 - Suggested verification command / environment: `pnpm --filter desktop tauri dev` with default config; for non-private path, temporarily set `"macOSPrivateApi": false` and disable the Rust `macos-private-api` Cargo feature, then confirm the documented compile failure unless a fallback has been implemented.
-- Files/commits affected: docs/reviews/window-ground-truth/click-through-matrix/README.md; packages/click-through-matrix/docs/*; docs/adr/0005-window-foundation.md; commits `82ab268`, `7a1b9dd`, `e7fc4ab`, `fafe818`
+- Files/commits affected: docs/reviews/window-ground-truth/click-through-matrix/README.md; packages/click-through-matrix/docs/*; docs/adr/0005-window-foundation.md; commits `82ab268`, `7a1b9dd`, `e7fc4ab`, `fafe818`, `4537d2d`
 
 ## Entry 9
 
@@ -142,7 +142,7 @@
 - What was done instead: Limited G0.6 to documentation/risk-prep, then recorded that the private-API-disabled path compile-fails on `.transparent(true)`.
 - Later human action: Design/implement a non-transparent or conditionally compiled MAS fallback, then perform MAS/private-API validation.
 - Suggested verification command / environment: `sed -n '1,140p' docs/reviews/window-ground-truth/mas-sandbox-dry-run/mas-sandbox-notes.md`
-- Files/commits affected: docs/workflow/roadmap/xai-g0-window-spike.md; docs/workflow/roadmap/xai-v1.autorun-20260519.md; commit `071a192`
+- Files/commits affected: docs/workflow/roadmap/xai-g0-window-spike.md; docs/workflow/roadmap/xai-v1.autorun-20260519.md; commits `071a192`, `4537d2d`
 
 ## Entry 13
 
@@ -154,7 +154,7 @@
 - What was done instead: Created MAS notes, entitlement draft, risk matrix, and private-API-disabled compile evidence. Restored `"macOSPrivateApi": true` and the Rust `macos-private-api` Cargo feature after the temporary test.
 - Later human action: Implement a MAS fallback that avoids unconditional `.transparent(true)`, then run signed/sandbox validation and update `mas-sandbox-notes.md`.
 - Suggested verification command / environment: Build/run desktop with private API disabled after fallback implementation and sandbox entitlements on macOS; Apple Developer signing may be required for final evidence.
-- Files/commits affected: docs/reviews/window-ground-truth/mas-sandbox-dry-run/mas-sandbox-notes.md; packages/mas-sandbox-dry-run/docs/*; commit `071a192`
+- Files/commits affected: docs/reviews/window-ground-truth/mas-sandbox-dry-run/mas-sandbox-notes.md; packages/mas-sandbox-dry-run/docs/*; commits `071a192`, `4537d2d`
 
 ## Entry 14
 

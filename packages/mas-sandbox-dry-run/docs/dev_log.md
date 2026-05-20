@@ -44,4 +44,4 @@ The private-API-disabled comparison now has compile evidence: current transparen
 | 2026-05-19 15:04 PDT | feature-review (Codex inline) | Approved safe-prep plan; no Tauri config/capability changes without runtime evidence. | — | feature-build |
 | 2026-05-19 15:05 PDT | feature-build (Codex inline) | Created MAS sandbox notes, entitlement draft, and risk matrix. | (this commit) | feature-verify |
 | 2026-05-19 15:05 PDT | feature-verify (Codex inline) | Marked BLOCKED because real sandbox/private-API acceptance cannot be automated here. | (this commit) | feature-build |
-| 2026-05-19 22:25 PDT | feature-verify (Codex inline) | Temporarily tested with private API disabled; build fails on `.transparent(true)` in Grid/control window builders. Restored default config and Cargo feature. | (pending commit) | MAS fallback design |
+| 2026-05-19 22:25 PDT | feature-verify (Codex inline) | Temporarily tested with private API disabled; build fails on `.transparent(true)` in Grid/control window builders. Restored default config and Cargo feature. | `4537d2d` | MAS fallback design |

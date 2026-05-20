@@ -18,7 +18,7 @@
 | Current Feature | spaces-multimonitor-matrix |
 | Feature Source | docs/planning/execution/G0-window-spike.md §G0.5 |
 | Feature Status | BLOCKED |
-| Current Commit | pending G0.3 private-API evidence commit |
+| Current Commit | 4537d2d |
 | Tests | `pnpm --filter desktop tauri dev` with private API temporarily disabled -> FAIL_BUILD on `.transparent(true)`; default config/Cargo feature restored |
 | Next Step | Complete Spaces/multi-display matrix, then MAS fallback/sandbox evidence |
 
@@ -352,7 +352,7 @@
 |---|---|---|---|---|---|
 | window-ground-truth | G0 | READY_TO_SHIP | 3b571f6 | PASS: branch, sw_vers, README content | Deferred gates recorded in docs/workflow/roadmap/xai-v1.deferred-gates.md |
 | grid-window-prototype | G0 | READY_TO_SHIP | 6b121ea + 14e04c2 + 01e5167 + b8c34fe + 7b7ff35 + f65a1b5 + a33c74d | PASS: desktop tsc; plugin-organizer check-types; desktop build; cargo check | Runtime fixed/confirmed; deferred review/verify gates recorded. |
-| click-through-matrix | G0 | READY_TO_SHIP | 82ab268 + 7a1b9dd + e7fc4ab + 2e5e499 + pending evidence commit | PASS: transparent-area click-through, Grid item pointer flash, resize-handle drag; FAIL_BUILD evidence for private-API-disabled transparent path | MAS/non-private fallback risk moved to G0.6. |
+| click-through-matrix | G0 | READY_TO_SHIP | 82ab268 + 7a1b9dd + e7fc4ab + 2e5e499 + 4537d2d | PASS: transparent-area click-through, Grid item pointer flash, resize-handle drag; FAIL_BUILD evidence for private-API-disabled transparent path | MAS/non-private fallback risk moved to G0.6. |
 | finder-dnd-path | G0 | READY_TO_SHIP | 33627df + 7a1b9dd + 7e20ca8 + e7fc4ab + 58c926d + 18b48da + 5e98083 | PASS: file, folder, `.app`, and alias paths observed via `tauri://drag-drop`; duplicate fixes applied; post-dedupe `.app` rerun passed; alias path policy recorded as `PRESERVE_ALIAS_PATH` | Deferred gates recorded in docs/workflow/roadmap/xai-v1.deferred-gates.md |
 | spaces-multimonitor-matrix | G0 | BLOCKED | 2fb6bac | PASS: matrix template exists; BLOCKED: real Spaces/fullscreen/multi-display evidence | Reached by user override; safe prep only. |
 | mas-sandbox-dry-run | G0 | BLOCKED | 071a192 | PASS: MAS notes exist; BLOCKED: real sandbox/private-API evidence | Reached by user override; safe prep only. |
@@ -498,6 +498,7 @@ Latest stop point is after 2026-05-19 22:25 PDT G0.3 private-API evidence. G0.3 
 - `18b48da` — `fix(finder-dnd-path): dedupe dropped paths per grid`
 - `d982dab` — `docs(finder-dnd-path): record app dedupe verification`
 - `5e98083` — `docs(finder-dnd-path): record alias functional verification`
+- `4537d2d` — `docs(G0.3/G0.6): record private API fallback evidence`
 
 ### Test Results
 
