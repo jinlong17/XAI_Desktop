@@ -90,21 +90,23 @@ export interface ProjectStoreProviderProps {
   children: ReactNode;
 }
 
-export function ProjectStoreProvider({
-  projectAdapter = new LocalStorageAdapter<Project>(PROJECT_STORAGE_KEY, seedProjects),
-  cardAdapter = new LocalStorageAdapter<Card>(CARD_STORAGE_KEY, seedCards),
-  children,
-}: ProjectStoreProviderProps) {
+export function ProjectStoreProvider({ projectAdapter, cardAdapter, children }: ProjectStoreProviderProps) {
+  const [defaultProjectAdapter] = useState(
+    () => new LocalStorageAdapter<Project>(PROJECT_STORAGE_KEY, seedProjects),
+  );
+  const [defaultCardAdapter] = useState(() => new LocalStorageAdapter<Card>(CARD_STORAGE_KEY, seedCards));
+  const stableProjectAdapter = projectAdapter ?? defaultProjectAdapter;
+  const stableCardAdapter = cardAdapter ?? defaultCardAdapter;
   const [projects, setProjects] = useState<Project[]>([]);
   const [cards, setCards] = useState<Card[]>([]);
   const [activeProjectId, setActiveProjectId] = useState<string | null>(null);
 
   const refresh = useCallback(async () => {
-    const [nextProjects, nextCards] = await Promise.all([projectAdapter.getAll(), cardAdapter.getAll()]);
+    const [nextProjects, nextCards] = await Promise.all([stableProjectAdapter.getAll(), stableCardAdapter.getAll()]);
     setProjects(nextProjects);
     setCards(nextCards);
     setActiveProjectId((current) => current ?? nextProjects[0]?.id ?? null);
-  }, [cardAdapter, projectAdapter]);
+  }, [stableCardAdapter, stableProjectAdapter]);
 
   useEffect(() => {
     void refresh();
@@ -115,12 +117,12 @@ export function ProjectStoreProvider({
       const name = input.name.trim();
       if (!name) throw new Error("Project name is required");
       const project: Project = { id: createId("project"), name, lists: defaultLists, labels: input.labels ?? [] };
-      await projectAdapter.save(project);
+      await stableProjectAdapter.save(project);
       setProjects((prev) => [...prev, project]);
       setActiveProjectId(project.id);
       return project;
     },
-    [projectAdapter],
+    [stableProjectAdapter],
   );
 
   const createCard = useCallback(
@@ -138,30 +140,30 @@ export function ProjectStoreProvider({
         checklist: [],
         description: input.description,
       };
-      await cardAdapter.save(card);
+      await stableCardAdapter.save(card);
       setCards((prev) => [...prev, card]);
       return card;
     },
-    [cardAdapter, cards],
+    [cards, stableCardAdapter],
   );
 
   const updateCard = useCallback(
     async (id: string, patch: Partial<Omit<Card, "id">>) => {
-      const current = await cardAdapter.getById(id);
+      const current = await stableCardAdapter.getById(id);
       if (!current) return;
       const next = { ...current, ...patch };
-      await cardAdapter.save(next);
+      await stableCardAdapter.save(next);
       setCards((prev) => prev.map((card) => (card.id === id ? next : card)));
     },
-    [cardAdapter],
+    [stableCardAdapter],
   );
 
   const deleteCard = useCallback(
     async (id: string) => {
-      await cardAdapter.delete(id);
+      await stableCardAdapter.delete(id);
       setCards((prev) => prev.filter((card) => card.id !== id));
     },
-    [cardAdapter],
+    [stableCardAdapter],
   );
 
   const moveCard = useCallback(
@@ -176,10 +178,10 @@ export function ProjectStoreProvider({
       const sourceList = target.listId === listId ? [] : normalizeCardOrder(withoutTarget, target.listId);
       const unaffected = withoutTarget.filter((card) => card.listId !== listId && card.listId !== target.listId);
       const nextCards = [...unaffected, ...sourceList, ...normalizedTargetList];
-      await Promise.all(nextCards.map((card) => cardAdapter.save(card)));
+      await Promise.all(nextCards.map((card) => stableCardAdapter.save(card)));
       setCards(nextCards);
     },
-    [cardAdapter, cards],
+    [cards, stableCardAdapter],
   );
 
   const updateChecklist = useCallback(
