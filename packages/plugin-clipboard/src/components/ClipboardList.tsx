@@ -61,30 +61,39 @@ export function ClipboardList() {
         </select>
       </div>
       <div style={{ display: "grid", gap: 8 }}>
-        {visibleEntries.map((entry) => (
-          <article
-            key={entry.id}
-            style={{
-              background: entry.pinned ? "#fffbeb" : "#ffffff",
-              border: "1px solid #e5e7eb",
-              borderRadius: 8,
-              display: "grid",
-              gap: 8,
-              padding: 10,
-            }}
-          >
-            <header style={{ alignItems: "center", color: "#6b7280", display: "flex", fontSize: 12, gap: 8 }}>
-              <strong style={{ color: "#111827" }}>{entry.type}</strong>
-              {entry.source ? <span>{entry.source}</span> : null}
-              <time dateTime={entry.createdAt}>{new Date(entry.createdAt).toLocaleString()}</time>
-              <button onClick={() => void togglePinned(entry.id)} style={{ marginLeft: "auto" }} type="button">
-                {entry.pinned ? "Unpin" : "Pin"}
-              </button>
-              <button onClick={() => void deleteEntry(entry.id)} type="button">Delete</button>
-            </header>
-            <pre style={{ margin: 0, overflow: "auto", whiteSpace: "pre-wrap" }}>{renderContent(entry)}</pre>
-          </article>
-        ))}
+        {visibleEntries.map((entry) => {
+          const content = renderContent(entry);
+          return (
+            <article
+              key={entry.id}
+              style={{
+                background: entry.pinned ? "#fffbeb" : "#ffffff",
+                border: "1px solid #e5e7eb",
+                borderRadius: 8,
+                display: "grid",
+                gap: 8,
+                padding: 10,
+              }}
+            >
+              <header style={{ alignItems: "center", color: "#6b7280", display: "flex", fontSize: 12, gap: 8 }}>
+                <strong style={{ color: "#111827" }}>{entry.type}</strong>
+                {entry.source ? <span>{entry.source}</span> : null}
+                <time dateTime={entry.createdAt}>{new Date(entry.createdAt).toLocaleString()}</time>
+                <button onClick={() => void togglePinned(entry.id)} style={{ marginLeft: "auto" }} type="button">
+                  {entry.pinned ? "Unpin" : "Pin"}
+                </button>
+                <button onClick={() => void deleteEntry(entry.id)} type="button">Delete</button>
+              </header>
+              {entry.type === "url" ? (
+                <a href={content} rel="noopener noreferrer" target="_blank">
+                  {content}
+                </a>
+              ) : (
+                <pre style={{ margin: 0, overflow: "auto", whiteSpace: "pre-wrap" }}>{content}</pre>
+              )}
+            </article>
+          );
+        })}
       </div>
       <ClipboardPrivacy />
     </section>

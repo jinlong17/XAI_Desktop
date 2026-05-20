@@ -25,6 +25,7 @@ export interface ClipboardDraft {
 
 export interface ClipboardPrivacySettings {
   redactEnabled: boolean;
+  acknowledgedRedactIrreversibility: boolean;
   redactPatterns: string[];
   autoClearMinutes: number | null;
 }

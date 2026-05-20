@@ -1,4 +1,4 @@
-import { useCallback, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import type { ClipboardEntry, PasteQueueState } from "../types";
 
 export interface PasteQueueController extends PasteQueueState {
@@ -15,10 +15,11 @@ export interface PasteQueueController extends PasteQueueState {
 
 export interface UsePasteQueueOptions {
   entries: ClipboardEntry[];
+  delayMs?: number;
   onPaste?: (entry: ClipboardEntry) => Promise<void> | void;
 }
 
-export function usePasteQueue({ entries, onPaste }: UsePasteQueueOptions): PasteQueueController {
+export function usePasteQueue({ entries, delayMs = 800, onPaste }: UsePasteQueueOptions): PasteQueueController {
   const [state, setState] = useState<PasteQueueState>({
     entryIds: [],
     currentIndex: 0,
@@ -80,6 +81,14 @@ export function usePasteQueue({ entries, onPaste }: UsePasteQueueOptions): Paste
       };
     });
   }, [currentEntry, onPaste]);
+
+  useEffect(() => {
+    if (state.status !== "running" || !currentEntry) return undefined;
+    const timer = window.setTimeout(() => {
+      void pasteCurrent();
+    }, delayMs);
+    return () => window.clearTimeout(timer);
+  }, [state.status, currentEntry, delayMs, pasteCurrent]);
 
   const reset = useCallback(() => {
     setState((current) => ({ ...current, currentIndex: 0, status: "idle", completedIds: [] }));
