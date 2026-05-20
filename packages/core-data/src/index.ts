@@ -54,3 +54,5 @@ export type {
   RepoEntityTypeMap,
   TodoEntity,
 } from "./entities";
+export { createTauriRepo, dbInit } from "./tauri-sqlite";
+export type { CreateTauriRepoOptions, DbInitOutput } from "./tauri-sqlite";
