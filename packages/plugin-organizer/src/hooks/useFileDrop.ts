@@ -14,47 +14,75 @@ export interface UseFileDropOptions {
   onLeave?: () => void;  // Called when files leave or drop is cancelled
   enabled?: boolean;
   /**
-   * Optional Finder client used to register a user-authorized path
-   * bookmark for every dropped path (G3-E3 P0 — honest provenance).
+   * Deprecated parameter kept for backwards compatibility. The hook
+   * NO LONGER calls `registerBookmark` itself.
    *
-   * When omitted, the hook logs a warning once and skips bookmark
-   * registration; subsequent `reveal_in_finder` / `open_path` calls
-   * for those paths will be rejected by the Rust side with
-   * `E3004 sync capability denied — no user-authorized bookmark`.
+   * Why: `useFileDrop` is mounted on the click-through transparent
+   * `main` window which cannot receive native drag-drop (AppKit's
+   * `setIgnoresMouseEvents_(YES)` routes the drag session to whatever
+   * window is behind us, e.g. Finder). The HTML5 fallback this hook
+   * uses NEVER produces absolute filesystem paths — browsers only
+   * surface `File.name` (basename) for security. Passing those
+   * basenames to `register_path_bookmark` deterministically fails the
+   * Rust-side `validate_user_path` lexical check (basenames are not
+   * absolute), so the hook's previous bookmark wiring was a no-op
+   * that masqueraded as honest provenance.
    *
-   * Production callers SHOULD pass a `FinderClient` built via
-   * `createFinderClient(invoke)`. The optionality exists so existing
-   * unit tests that exercise the drag-drop event plumbing without a
-   * Tauri bridge keep working without modification.
+   * Honest bookmark registration is performed in
+   * `OrganizerGridContent.handleFileDrop`, which is mounted on `grid_*`
+   * windows and receives the Tauri `tauri://drag-drop` event with real
+   * `paths: string[]`. See
+   * `docs/workflow/roadmap/codex-reviews/p0-foxtrot-native-dnd/SPIKE-FINDINGS.md`
+   * for the full rationale.
    *
-   * TODO: extend the hook to also register paths surfaced by a
-   * user-initiated `Open…` panel (not in scope for this PR).
+   * Callers that still pass this prop will see it accepted-but-ignored.
+   * Remove the prop in a follow-up cleanup PR.
+   *
+   * @deprecated since P0-Foxtrot — bookmark registration moved to
+   *   `OrganizerGridContent`. This field is accepted but never used.
    */
   finderClient?: FinderClient;
 }
 
 /**
- * Hook to handle file drops from the operating system into the Tauri window.
+ * `useFileDrop` — HTML5 drag-over visual indicator for the click-through
+ * `main` window.
  *
- * Uses HTML5 Drag & Drop API (with dragDropEnabled: false in tauri.conf.json).
- * This approach works better with transparent windows on macOS.
+ * SCOPE (post P0-Foxtrot):
+ * - Visual-only. The hook listens to HTML5 `dragenter` / `dragover` /
+ *   `dragleave` / `drop` events to drive the dashed-outline animation
+ *   on the `main` window's desktop overlay.
+ * - The `onDrop` callback fires with the HTML5 `File.name` basenames
+ *   (not absolute paths), preserved only to keep existing legacy code
+ *   compiling. Any caller that treats `onDrop` output as filesystem
+ *   paths is wrong.
  *
- * Note: HTML5 API provides File objects, not file paths. For security reasons,
- * browsers don't expose full file paths. We use file.name as the identifier.
+ * REAL PATHS COME FROM ELSEWHERE:
+ * - `grid_*` windows have native Tauri DnD enabled by default and
+ *   receive `tauri://drag-drop` with absolute `paths: string[]`.
+ *   `OrganizerGridContent` listens to that event and registers each
+ *   path with the Rust `BookmarkRegistry` via `register_path_bookmark`
+ *   before forwarding the drop cross-window.
+ * - The `main` window CANNOT receive native drag-drop because it is
+ *   click-through (`setIgnoresMouseEvents_(YES)` on macOS). HTML5 drops
+ *   inside its WebView surface produce only basenames.
  *
- * Events:
+ * EVENTS DRIVEN:
  * - dragenter: Files have entered the window area
  * - dragover: Files are being dragged over the window (with position)
- * - drop: Files were dropped (with File objects and position)
+ * - drop: Files were dropped (with File objects and position) — basenames only
  * - dragleave: Drag operation cancelled or files left window
  */
-export function useFileDrop({ onDrop, onHover, onEnter, onLeave, enabled = true, finderClient }: UseFileDropOptions) {
+export function useFileDrop({ onDrop, onHover, onEnter, onLeave, enabled = true, finderClient: _deprecatedFinderClient }: UseFileDropOptions) {
+  // Acknowledge the deprecated prop to silence the unused-var lint
+  // without emitting it into the runtime path. The hook intentionally
+  // does NOT call `_deprecatedFinderClient.registerBookmark(...)` —
+  // see the JSDoc on `finderClient` for the full rationale.
+  void _deprecatedFinderClient;
   const onDropRef = useRef(onDrop);
   const onHoverRef = useRef(onHover);
   const onEnterRef = useRef(onEnter);
   const onLeaveRef = useRef(onLeave);
-  const finderClientRef = useRef(finderClient);
-  const finderClientMissingWarnedRef = useRef(false);
   const isDraggingRef = useRef(false);
   const dragCounterRef = useRef(0); // Track nested drag enter/leave
 
@@ -74,10 +102,6 @@ export function useFileDrop({ onDrop, onHover, onEnter, onLeave, enabled = true,
   useEffect(() => {
     onLeaveRef.current = onLeave;
   }, [onLeave]);
-
-  useEffect(() => {
-    finderClientRef.current = finderClient;
-  }, [finderClient]);
 
   // Setup HTML5 drag-drop event listeners
   useEffect(() => {
@@ -133,17 +157,16 @@ export function useFileDrop({ onDrop, onHover, onEnter, onLeave, enabled = true,
 
       const files = e.dataTransfer?.files;
       if (files && files.length > 0) {
-        // HTML5 API doesn't provide full paths for security reasons
-        // We'll use file names as identifiers
-        // For a real desktop app, you might need to use Tauri's file dialog
-        // or save files to a temp location first
+        // HTML5 API only exposes basenames (not absolute paths) for
+        // security reasons. These are NOT honest path provenance — the
+        // grid window's `tauri://drag-drop` event is.
         const fileNames = Array.from(files).map(f => f.name);
         const position = { x: e.clientX, y: e.clientY };
 
-        console.log('📂 [useFileDrop] Files dropped:', fileNames, 'at', position);
+        console.log('📂 [useFileDrop] Files dropped (basenames only):', fileNames, 'at', position);
 
-        // Store File objects in a global map so they can be accessed later
-        // This is needed because we can't pass File objects through the path string
+        // Preserve legacy File-object cache so existing organizer logic
+        // that maps the basename back to a File handle keeps working.
         const fileMap = (window as unknown as { __droppedFiles?: Map<string, File> }).__droppedFiles || new Map<string, File>();
         Array.from(files).forEach(file => {
           fileMap.set(file.name, file);
@@ -152,28 +175,9 @@ export function useFileDrop({ onDrop, onHover, onEnter, onLeave, enabled = true,
 
         onDropRef.current(fileNames, position);
 
-        // G3-E3 P0: register every dropped path as a user-authorized
-        // bookmark so subsequent reveal_in_finder / open_path calls are
-        // admitted by the Rust side. We fire-and-forget per path —
-        // individual failures (validator rejection, IPC down) are
-        // logged and do NOT abort the drop UX.
-        const client = finderClientRef.current;
-        if (client) {
-          for (const path of fileNames) {
-            void client.registerBookmark(path).catch((err: unknown) => {
-              console.warn(
-                '[useFileDrop] register_path_bookmark failed for',
-                path,
-                err,
-              );
-            });
-          }
-        } else if (!finderClientMissingWarnedRef.current) {
-          finderClientMissingWarnedRef.current = true;
-          console.warn(
-            '[useFileDrop] no finderClient provided; reveal_in_finder / open_path will be rejected with E3004 until paths are bookmarked',
-          );
-        }
+        // No bookmark registration here. See `finderClient` JSDoc and
+        // `OrganizerGridContent.handleFileDrop` for where honest
+        // provenance is recorded.
       }
     };
 
@@ -183,7 +187,7 @@ export function useFileDrop({ onDrop, onHover, onEnter, onLeave, enabled = true,
     document.addEventListener('dragleave', handleDragLeave, true);
     document.addEventListener('drop', handleDrop, true);
 
-    console.log('✅ [useFileDrop] HTML5 drag-drop listeners registered');
+    console.log('✅ [useFileDrop] HTML5 drag-drop listeners registered (visual-only on `main`)');
 
     return () => {
       document.removeEventListener('dragenter', handleDragEnter, true);

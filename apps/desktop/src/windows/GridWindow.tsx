@@ -1,6 +1,7 @@
-import { MouseEvent as ReactMouseEvent, useCallback } from "react";
+import { MouseEvent as ReactMouseEvent, useCallback, useMemo } from "react";
 import { getCurrentWindow } from "@tauri-apps/api/window";
-import { OrganizerGridContent } from "@repo/plugin-organizer";
+import { useTauriInvoke } from "@repo/core/hooks";
+import { OrganizerGridContent, createFinderClient } from "@repo/plugin-organizer";
 import { GlobalDndProvider } from "../providers/DndProvider";
 import { SettingsProvider, useSettings } from "../context/SettingsContext";
 
@@ -14,6 +15,14 @@ const DRAG_THRESHOLD_PX = 4;
  */
 function GridWindowShell({ gridId }: { gridId: string }) {
   const { gridOpacity, gridBlur } = useSettings();
+  const { invoke } = useTauriInvoke();
+  // Construct once per shell mount. The Finder client is the IPC bridge
+  // for `register_path_bookmark` (G3-E3 / P0-Foxtrot honest provenance).
+  // The grid window is the only surface that receives absolute paths
+  // from a user drag-drop (Tauri `tauri://drag-drop` event), so it is
+  // the only place that can honestly register the bookmark before the
+  // path is forwarded cross-window via `ORGANIZER_FILE_DROP_EVENT`.
+  const finderClient = useMemo(() => createFinderClient(invoke), [invoke]);
 
   // Intercept mousedown on the Organizer title bar (or the G0 fallback
   // panel) in CAPTURE phase. We stopPropagation so react-draggable's
@@ -74,7 +83,12 @@ function GridWindowShell({ gridId }: { gridId: string }) {
       onMouseDownCapture={handleHeaderDragStart}
       style={{ width: "100%", height: "100%" }}
     >
-      <OrganizerGridContent gridId={gridId} gridOpacity={gridOpacity} gridBlur={gridBlur} />
+      <OrganizerGridContent
+        gridId={gridId}
+        gridOpacity={gridOpacity}
+        gridBlur={gridBlur}
+        finderClient={finderClient}
+      />
     </div>
   );
 }

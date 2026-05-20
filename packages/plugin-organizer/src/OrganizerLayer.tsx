@@ -1,10 +1,12 @@
-import { memo, useCallback, useState, useEffect, useRef } from "react";
+import { memo, useCallback, useState, useEffect, useMemo, useRef } from "react";
 import { DesktopItem } from "./types";
 import { useGridSystem } from "./useGridSystem";
 import { useFileDrop, getFileInfoFromPath, getFileIcon } from "./hooks/useFileDrop";
 import { useMultiWindowGrids } from "./hooks/useMultiWindowGrids";
 import { listen } from "@tauri-apps/api/event";
 import { isTauri } from "@tauri-apps/api/core";
+import { useTauriInvoke } from "@repo/core/hooks";
+import { createFinderClient } from "./finderClient";
 import {
   LEGACY_CREATE_GRID_REQUEST_EVENT,
   LEGACY_ORGANIZER_CREATE_GRID_REQUEST_EVENT,
@@ -51,6 +53,20 @@ function OrganizerContent() {
   const hasTauriRuntime = canUseTauriRuntime();
   const recentGridPathDrops = useRef<Map<string, number>>(new Map());
 
+  // Finder client for defensive bookmark registration on the
+  // main-window side of `ORGANIZER_FILE_DROP_EVENT`. The grid window
+  // is the primary registrant (it receives `tauri://drag-drop` first
+  // and registers there inside `OrganizerGridContent`), but registering
+  // again here is idempotent on the Rust side (`HashSet<PathBuf>::insert`)
+  // and gives us a second line of defense if a future refactor moves
+  // the cross-window event seam.
+  const { invoke } = useTauriInvoke();
+  const finderClient = useMemo(() => createFinderClient(invoke), [invoke]);
+  const finderClientRef = useRef(finderClient);
+  useEffect(() => {
+    finderClientRef.current = finderClient;
+  }, [finderClient]);
+
   // Handle file drop for a specific grid (from grid windows)
   const handleGridFileDrop = useCallback(
     (gridId: string, paths: string[]) => {
@@ -84,6 +100,27 @@ function OrganizerContent() {
 
         existingPaths.add(filePath);
         recentGridPathDrops.current.set(dedupeKey, now);
+
+        // G3-E3 / P0-Foxtrot — defensive bookmark registration on the
+        // main-window receiver of `ORGANIZER_FILE_DROP_EVENT`. The grid
+        // window already registered each path before emitting (see
+        // `OrganizerGridContent.handleFileDrop`); registering again here
+        // is idempotent on the Rust side (`HashSet<PathBuf>::insert`).
+        // Only absolute paths reach this branch — relative paths and
+        // basenames are filtered out by `validate_user_path` in the
+        // Rust handler, so a basename will simply be rejected on the
+        // Rust side without polluting the registry.
+        if (filePath.startsWith("/")) {
+          void finderClientRef.current
+            .registerBookmark(filePath)
+            .catch((err: unknown) => {
+              console.warn(
+                "[OrganizerLayer] register_path_bookmark failed for",
+                filePath,
+                err,
+              );
+            });
+        }
 
         const fileInfo = getFileInfoFromPath(filePath);
         const newItem: DesktopItem = {

@@ -142,6 +142,21 @@ fn ensure_path_authorized(
     Ok(canonical)
 }
 
+/// Test-only re-export of `ensure_path_authorized` so the bookmark IPC
+/// integration tests (`commands::bookmarks::ipc_integration_tests`) can
+/// exercise the same gate `reveal_in_finder` and `open_path` use,
+/// without needing to spawn the platform `open` shell-out.
+///
+/// `#[cfg(test)]` to ensure it does NOT widen the public surface of
+/// the crate — the helper remains private to test builds only.
+#[cfg(test)]
+pub(crate) fn ensure_path_authorized_test_helper(
+    raw: &str,
+    registry: &BookmarkRegistry,
+) -> AppResult<PathBuf> {
+    ensure_path_authorized(raw, registry)
+}
+
 #[derive(Debug, Deserialize)]
 pub struct RevealInFinderInput {
     pub path: String,

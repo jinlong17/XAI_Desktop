@@ -35,6 +35,9 @@ importers:
       '@dnd-kit/utilities':
         specifier: ^3.2.1
         version: 3.2.2(react@19.2.0)
+      '@repo/core':
+        specifier: workspace:*
+        version: link:../../packages/core
       '@repo/plugin-account':
         specifier: workspace:*
         version: link:../../packages/plugin-account
@@ -279,50 +282,6 @@ importers:
         specifier: ^3.2.1
         version: 3.2.4(@types/node@22.15.3)(jsdom@29.1.1(@noble/hashes@2.2.0))
 
-  packages/plugin-clipboard:
-    dependencies:
-      react:
-        specifier: ^19.2.0
-        version: 19.2.0
-      react-dom:
-        specifier: ^19.2.0
-        version: 19.2.0(react@19.2.0)
-    devDependencies:
-      '@repo/typescript-config':
-        specifier: workspace:*
-        version: link:../typescript-config
-      '@types/react':
-        specifier: 19.2.2
-        version: 19.2.2
-      '@types/react-dom':
-        specifier: 19.2.2
-        version: 19.2.2(@types/react@19.2.2)
-      typescript:
-        specifier: 5.9.2
-        version: 5.9.2
-
-  packages/plugin-console:
-    dependencies:
-      react:
-        specifier: ^19.2.0
-        version: 19.2.0
-      react-dom:
-        specifier: ^19.2.0
-        version: 19.2.0(react@19.2.0)
-    devDependencies:
-      '@repo/typescript-config':
-        specifier: workspace:*
-        version: link:../typescript-config
-      '@types/react':
-        specifier: 19.2.2
-        version: 19.2.2
-      '@types/react-dom':
-        specifier: 19.2.2
-        version: 19.2.2(@types/react@19.2.2)
-      typescript:
-        specifier: 5.9.2
-        version: 5.9.2
-
   packages/plugin-labels:
     dependencies:
       react:
@@ -399,50 +358,6 @@ importers:
       vitest:
         specifier: ^3.2.1
         version: 3.2.4(@types/node@22.15.3)(jsdom@29.1.1(@noble/hashes@2.2.0))
-
-  packages/plugin-productivity:
-    dependencies:
-      react:
-        specifier: ^19.2.0
-        version: 19.2.0
-      react-dom:
-        specifier: ^19.2.0
-        version: 19.2.0(react@19.2.0)
-    devDependencies:
-      '@repo/typescript-config':
-        specifier: workspace:*
-        version: link:../typescript-config
-      '@types/react':
-        specifier: 19.2.2
-        version: 19.2.2
-      '@types/react-dom':
-        specifier: 19.2.2
-        version: 19.2.2(@types/react@19.2.2)
-      typescript:
-        specifier: 5.9.2
-        version: 5.9.2
-
-  packages/plugin-project:
-    dependencies:
-      react:
-        specifier: ^19.2.0
-        version: 19.2.0
-      react-dom:
-        specifier: ^19.2.0
-        version: 19.2.0(react@19.2.0)
-    devDependencies:
-      '@repo/typescript-config':
-        specifier: workspace:*
-        version: link:../typescript-config
-      '@types/react':
-        specifier: 19.2.2
-        version: 19.2.2
-      '@types/react-dom':
-        specifier: 19.2.2
-        version: 19.2.2(@types/react@19.2.2)
-      typescript:
-        specifier: 5.9.2
-        version: 5.9.2
 
   packages/typescript-config: {}
 

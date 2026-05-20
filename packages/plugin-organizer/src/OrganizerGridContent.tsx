@@ -2,6 +2,7 @@ import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { TauriEvent, useTauriEvent, useTauriWindow } from "@repo/core/hooks";
 import type { DesktopItem, GridBox } from "./types";
 import { SmartContainer } from "./SmartContainer";
+import type { FinderClient } from "./finderClient";
 import {
   ORGANIZER_FILE_DROP_EVENT,
   ORGANIZER_GRID_CLOSE_EVENT,
@@ -49,6 +50,29 @@ export interface OrganizerGridContentProps {
   gridId: string;
   gridOpacity?: number;
   gridBlur?: boolean;
+  /**
+   * Optional Finder client used to register a user-authorized path
+   * bookmark for every dropped path (G3-E3 / P0-Foxtrot — honest
+   * provenance).
+   *
+   * `OrganizerGridContent` is the ONLY surface in the app that
+   * receives absolute filesystem paths from a real user drag-drop
+   * (the Tauri `tauri://drag-drop` event payload carries
+   * `paths: string[]`). Registering each path with the
+   * `BookmarkRegistry` here — BEFORE emitting
+   * `ORGANIZER_FILE_DROP_EVENT` cross-window — is what makes
+   * subsequent `reveal_in_finder` / `open_path` calls honest:
+   * every authorized path has explicit, recent drop provenance.
+   *
+   * When omitted, the component logs a warning once per session
+   * and skips bookmark registration. Subsequent reveal/open calls
+   * for those paths will be rejected by the Rust side with
+   * `E3004 — no user-authorized bookmark`. The host shell SHOULD
+   * pass a client built via `createFinderClient(invoke)` in
+   * production; the optionality exists for legacy callers and
+   * tests that exercise the drag-drop seam without an IPC bridge.
+   */
+  finderClient?: FinderClient;
 }
 
 const G0_GRID_PROTOTYPE_EVENT = "g0-grid-prototype:scoped-ping";
@@ -119,6 +143,7 @@ export function OrganizerGridContent({
   gridId,
   gridOpacity = 0.8,
   gridBlur = true,
+  finderClient,
 }: OrganizerGridContentProps) {
   const [grid, setGrid] = useState<GridBox | null>(null);
   const [items, setItems] = useState<Record<string, DesktopItem>>({});
@@ -131,12 +156,18 @@ export function OrganizerGridContent({
   const [lastDropTelemetry, setLastDropTelemetry] = useState<G0FinderDropTelemetry | null>(null);
   const lastDropKeyRef = useRef<{ key: string; receivedAt: number } | null>(null);
   const gridRef = useRef<GridBox | null>(null);
+  const finderClientRef = useRef<FinderClient | undefined>(finderClient);
+  const finderClientMissingWarnedRef = useRef(false);
 
   const tauriWindow = useTauriWindow();
 
   useEffect(() => {
     gridRef.current = grid;
   }, [grid]);
+
+  useEffect(() => {
+    finderClientRef.current = finderClient;
+  }, [finderClient]);
 
   useEffect(() => {
     let cancelled = false;
@@ -291,6 +322,33 @@ export function OrganizerGridContent({
       console.log("[G0 Finder DnD] path-first drop", telemetry);
       setLastDropTelemetry(telemetry);
       setDropEventCount((count) => count + 1);
+
+      // G3-E3 / P0-Foxtrot — honest provenance. Register each absolute
+      // path with the Rust `BookmarkRegistry` BEFORE we forward the drop
+      // cross-window. This is the only surface in the app that receives
+      // real absolute paths from a user drag-drop, so it is the only
+      // honest place to record provenance. We fire-and-forget per path:
+      // a failure to register one path does NOT abort the drop UX, it
+      // simply means subsequent reveal/open for that one path will be
+      // rejected by Rust with `E3004 — no user-authorized bookmark`.
+      const client = finderClientRef.current;
+      if (client) {
+        for (const path of paths) {
+          void client.registerBookmark(path).catch((err: unknown) => {
+            console.warn(
+              "[OrganizerGridContent] register_path_bookmark failed for",
+              path,
+              err,
+            );
+          });
+        }
+      } else if (!finderClientMissingWarnedRef.current) {
+        finderClientMissingWarnedRef.current = true;
+        console.warn(
+          "[OrganizerGridContent] no finderClient provided; reveal_in_finder / open_path will be rejected with E3004 until paths are bookmarked",
+        );
+      }
+
       tauriWindow.emit(ORGANIZER_FILE_DROP_EVENT, {
         gridId,
         files: paths.map(toDroppedFile),

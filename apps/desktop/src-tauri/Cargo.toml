@@ -78,3 +78,11 @@ cocoa = "0.24"
 core-graphics = "0.23"
 core-foundation = "0.9"
 security-framework = "3.7.0"
+
+# Dev-only dependency on Tauri's `test` feature so integration tests can
+# spin a `MockRuntime` and exercise `#[tauri::command]` entry points
+# through the real IPC surface (G3-E3 / P0-Foxtrot — Codex reviewer
+# requirement to test `register_path_bookmark -> reveal_in_finder` via
+# the public IPC path, not via internal helpers like `insert_canonical`).
+[dev-dependencies]
+tauri = { version = "2", features = ["test"] }
