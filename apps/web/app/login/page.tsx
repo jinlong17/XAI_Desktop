@@ -1,3 +1,5 @@
+"use client";
+
 import { WebLayout } from "../components/WebLayout";
 
 export default function LoginPage() {
@@ -15,7 +17,14 @@ export default function LoginPage() {
             Password
             <input type="password" placeholder="Local mock only" />
           </label>
-          <button type="button">Continue</button>
+          <button
+            type="button"
+            onClick={() =>
+              alert("Mock login only — auth is not wired in this scaffold.")
+            }
+          >
+            Continue
+          </button>
         </form>
       </section>
     </WebLayout>

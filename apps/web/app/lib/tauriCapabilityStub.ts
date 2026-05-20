@@ -15,13 +15,35 @@ export function createTauriCapabilityStub() {
   return {
     async invoke<T = unknown>(command: string, payload?: unknown): Promise<CapabilityResponse<T>> {
       if (webSafeCommands.has(command)) {
-        return {
-          command,
-          status: "degraded",
-          available: true,
-          message: `${command} is using a browser-safe substitute.`,
-          data: payload as T,
-        };
+        if (typeof navigator === "undefined" || !navigator.clipboard) {
+          return {
+            command,
+            status: "degraded",
+            available: false,
+            message: "Clipboard API not available in this runtime.",
+          };
+        }
+
+        try {
+          const data =
+            command === "clipboard_read_text"
+              ? await navigator.clipboard.readText()
+              : await navigator.clipboard.writeText(payload as string);
+          return {
+            command,
+            status: "available",
+            available: true,
+            message: "Used navigator.clipboard.",
+            data: data as T,
+          };
+        } catch (error) {
+          return {
+            command,
+            status: "degraded",
+            available: false,
+            message: error instanceof Error ? error.message : String(error),
+          };
+        }
       }
       if (degradedCommands.has(command)) {
         return {

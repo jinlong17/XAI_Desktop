@@ -14,7 +14,7 @@ export default function SettingsPage() {
         </div>
         <div className="workspace-panel">
           <h2>Security</h2>
-          <p>CSP and security headers are configured in `next.config.js`.</p>
+          <p>CSP middleware and security headers are active.</p>
           <label className="switch-row">
             <input type="checkbox" defaultChecked />
             <span>Enable local rate limit guard</span>

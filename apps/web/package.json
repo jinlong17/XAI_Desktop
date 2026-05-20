@@ -20,6 +20,7 @@
     "test:onboarding-backfill": "vitest run supabase/tests/onboarding-backfill.test.ts"
   },
   "dependencies": {
+    "@repo/core-data": "workspace:*",
     "@repo/ui": "workspace:*",
     "next": "^16.0.1",
     "react": "^19.2.0",
