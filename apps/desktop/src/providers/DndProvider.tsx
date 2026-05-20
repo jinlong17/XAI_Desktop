@@ -1,11 +1,21 @@
 import { PropsWithChildren } from "react";
 import { DndContext, DragEndEvent, DragOverlay, DragStartEvent } from "@dnd-kit/core";
 import { useState } from "react";
-import { useGridSystem } from "@repo/plugin-organizer";
+import { useGridSystemOptional } from "@repo/plugin-organizer";
 import { DesktopItem } from "@repo/plugin-organizer";
 
+/**
+ * Provides the @dnd-kit context for the whole app. In the main window the
+ * GridSystemProvider is present so cross-grid item moves are wired up; in
+ * per-grid native windows it isn't present, so we degrade to a context-only
+ * provider (no cross-grid moveItem). Throwing here previously took down the
+ * entire grid window's React tree.
+ */
 export function GlobalDndProvider({ children }: PropsWithChildren) {
-  const { grids, items, moveItem } = useGridSystem();
+  const gridSystem = useGridSystemOptional();
+  const grids = gridSystem?.grids ?? [];
+  const items = gridSystem?.items ?? {};
+  const moveItem = gridSystem?.moveItem;
   const [activeId, setActiveId] = useState<string | null>(null);
 
   const activeItem: DesktopItem | null = activeId ? items[activeId] ?? null : null;
@@ -19,7 +29,7 @@ export function GlobalDndProvider({ children }: PropsWithChildren) {
     const itemId = event.active.id.toString();
     const overId = event.over?.id?.toString();
 
-    if (itemId && overId) {
+    if (itemId && overId && moveItem) {
       const sourceGrid = grids.find((g) => g.itemIds.includes(itemId));
       if (sourceGrid && sourceGrid.id !== overId) {
         moveItem(itemId, sourceGrid.id, overId);

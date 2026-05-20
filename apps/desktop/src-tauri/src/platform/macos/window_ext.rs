@@ -65,6 +65,8 @@ pub fn configure_control_window(window: &tauri::WebviewWindow) {
 
         apply_shared_behavior(ns_window);
 
+        // Control sits above any Grid window so the AI cube + Settings stay clickable.
+        // Effective levels: main = icon+1, grid = icon+3, control = icon+4.
         let level = desktop_icon_level_plus_one() + 3;
         ns_window.setLevel_(level);
         ns_window.setIgnoresMouseEvents_(NO);
@@ -73,7 +75,7 @@ pub fn configure_control_window(window: &tauri::WebviewWindow) {
 }
 
 /// Configure a grid window.
-/// Interactive, positioned at desktop icon level + 3 (above icons).
+/// Interactive, positioned above the main overlay but below the control window.
 pub fn configure_grid_window(window: &tauri::WebviewWindow) {
     unsafe {
         let ns_window = match window.ns_window() {
@@ -86,6 +88,7 @@ pub fn configure_grid_window(window: &tauri::WebviewWindow) {
 
         apply_shared_behavior(ns_window);
 
+        // Effective levels: main = icon+1, grid = icon+3, control = icon+4.
         let level = desktop_icon_level_plus_one() + 2;
         ns_window.setLevel_(level);
         ns_window.setIgnoresMouseEvents_(NO);

@@ -6,7 +6,7 @@ import {
   useRef,
   useState,
 } from "react";
-import { cursorPosition, getCurrentWindow, PhysicalPosition } from "@tauri-apps/api/window";
+import { getCurrentWindow } from "@tauri-apps/api/window";
 import Draggable, { DraggableData, DraggableEvent } from "react-draggable";
 import { useSettings } from "../../context/SettingsContext";
 
@@ -14,11 +14,14 @@ type DockSide = "left" | "right" | null;
 
 interface NativeDragState {
   pointerId: number;
-  startCursorX: number;
-  startCursorY: number;
-  startWindowX: number;
-  startWindowY: number;
-  dragging: boolean;
+  // Pointer screen coordinates at drag start, in CSS pixels — only used to
+  // detect "did the user actually move past the drag threshold" so we can
+  // distinguish a click from a drag. The OS handles the actual motion.
+  startScreenX: number;
+  startScreenY: number;
+  // Set to true once we've handed off to OS-native startDragging. After this
+  // point the OS owns the gesture; we never call setPosition ourselves.
+  dragHandedOff: boolean;
 }
 
 export interface AiCubeProps {
@@ -154,52 +157,45 @@ export function AiCube({ isPanelOpen, onTogglePanel, onAnchorChange, nativeWindo
     }
   }, [onAnchorChange, renderPosition]);
 
-  const handleNativePointerDown = async (event: ReactPointerEvent<HTMLDivElement>) => {
+  const handleNativePointerDown = (event: ReactPointerEvent<HTMLDivElement>) => {
     if (!nativeWindowDrag || event.button !== 0) return;
 
     event.preventDefault();
     event.currentTarget.setPointerCapture(event.pointerId);
 
-    try {
-      const [cursor, windowPosition] = await Promise.all([
-        cursorPosition(),
-        getCurrentWindow().outerPosition(),
-      ]);
-      nativeDragRef.current = {
-        pointerId: event.pointerId,
-        startCursorX: cursor.x,
-        startCursorY: cursor.y,
-        startWindowX: windowPosition.x,
-        startWindowY: windowPosition.y,
-        dragging: false,
-      };
-    } catch (error) {
-      nativeDragRef.current = null;
-      console.error("Failed to start AI cube native drag:", error);
-    }
+    // Record the start position so we can tell a click apart from a drag at the
+    // first pointermove that crosses DRAG_THRESHOLD_PX. We do NOT call any
+    // Tauri API here — that previously made click-vs-drag flaky on slow IPC.
+    nativeDragRef.current = {
+      pointerId: event.pointerId,
+      startScreenX: event.screenX,
+      startScreenY: event.screenY,
+      dragHandedOff: false,
+    };
   };
 
-  const handleNativePointerMove = async (event: ReactPointerEvent<HTMLDivElement>) => {
+  const handleNativePointerMove = (event: ReactPointerEvent<HTMLDivElement>) => {
     const drag = nativeDragRef.current;
     if (!nativeWindowDrag || !drag || drag.pointerId !== event.pointerId) return;
+    if (drag.dragHandedOff) return;
 
+    const deltaCssX = event.screenX - drag.startScreenX;
+    const deltaCssY = event.screenY - drag.startScreenY;
+    if (Math.hypot(deltaCssX, deltaCssY) < DRAG_THRESHOLD_PX) return;
+
+    // Past threshold → hand the gesture to the OS via Tauri's startDragging.
+    // macOS then drives the window movement directly off the AppKit mouse-drag
+    // loop, which avoids retina scale-factor / setPosition ordering bugs and
+    // gives unconstrained, smooth movement across the full screen.
+    drag.dragHandedOff = true;
     event.preventDefault();
-
-    try {
-      const cursor = await cursorPosition();
-      const deltaX = cursor.x - drag.startCursorX;
-      const deltaY = cursor.y - drag.startCursorY;
-      if (!drag.dragging && Math.hypot(deltaX, deltaY) >= DRAG_THRESHOLD_PX) {
-        drag.dragging = true;
-      }
-      if (!drag.dragging) return;
-
-      await getCurrentWindow().setPosition(
-        new PhysicalPosition(drag.startWindowX + deltaX, drag.startWindowY + deltaY),
-      );
-    } catch (error) {
-      console.error("Failed to move AI cube native window:", error);
-    }
+    void getCurrentWindow()
+      .startDragging()
+      .catch((error) => {
+        console.error("[AiCube] startDragging failed:", error);
+        // Don't reset dragHandedOff — if startDragging permission is missing the
+        // user will see a console error rather than a phantom click on release.
+      });
   };
 
   const handleNativePointerUp = (event: ReactPointerEvent<HTMLDivElement>) => {
@@ -210,9 +206,10 @@ export function AiCube({ isPanelOpen, onTogglePanel, onAnchorChange, nativeWindo
     if (event.currentTarget.hasPointerCapture(event.pointerId)) {
       event.currentTarget.releasePointerCapture(event.pointerId);
     }
+    const wasDragged = drag.dragHandedOff;
     nativeDragRef.current = null;
 
-    if (!drag.dragging) {
+    if (!wasDragged) {
       onTogglePanel();
     }
   };

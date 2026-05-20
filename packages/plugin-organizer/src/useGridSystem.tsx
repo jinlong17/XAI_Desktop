@@ -23,6 +23,7 @@ interface GridSystemContextValue {
   updateGrid: (id: string, patch: Partial<GridBox>) => void;
   toggleFold: (id: string) => void;
   deleteGrid: (id: string) => void;
+  clearAll: () => void;
   moveItem: (itemId: string, fromId: string, toId: string) => void;
   toggleLock: (id: string) => void;
   addItem: (item: DesktopItem) => void;
@@ -132,6 +133,17 @@ export function GridSystemProvider({ children }: { children: ReactNode }) {
     [],
   );
 
+  // Wipe all grids + items and forget the persisted layout. useMultiWindowGrids
+  // observes `grids` going from N to 0 and will close every native window.
+  const clearAll = useCallback(() => {
+    setGrids([]);
+    setItems({});
+    heightCache.current = {};
+    if (typeof localStorage !== "undefined") {
+      localStorage.removeItem(STORAGE_KEY);
+    }
+  }, []);
+
   const moveItem = useCallback(
     (itemId: string, fromId: string, toId: string) => {
       if (fromId === toId) return;
@@ -211,13 +223,27 @@ export function GridSystemProvider({ children }: { children: ReactNode }) {
       updateGrid,
       toggleFold,
       deleteGrid,
+      clearAll,
       moveItem,
       toggleLock,
       addItem,
       addItemToGrid,
       findGridAtPosition,
     }),
-    [createGrid, deleteGrid, grids, items, moveItem, toggleFold, toggleLock, updateGrid, addItem, addItemToGrid, findGridAtPosition],
+    [
+      addItem,
+      addItemToGrid,
+      clearAll,
+      createGrid,
+      deleteGrid,
+      findGridAtPosition,
+      grids,
+      items,
+      moveItem,
+      toggleFold,
+      toggleLock,
+      updateGrid,
+    ],
   );
 
   return <GridSystemContext.Provider value={value}>{children}</GridSystemContext.Provider>;
@@ -227,4 +253,13 @@ export function useGridSystem(): GridSystemContextValue {
   const ctx = useContext(GridSystemContext);
   if (!ctx) throw new Error("useGridSystem must be used within a GridSystemProvider");
   return ctx;
+}
+
+/**
+ * Same as useGridSystem, but returns null instead of throwing when no
+ * GridSystemProvider is present. Use this in components that may render in
+ * windows that don't host the grid state (e.g. per-grid native windows).
+ */
+export function useGridSystemOptional(): GridSystemContextValue | null {
+  return useContext(GridSystemContext) ?? null;
 }
