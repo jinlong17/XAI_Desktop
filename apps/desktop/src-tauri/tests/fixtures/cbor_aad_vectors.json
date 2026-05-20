@@ -1,0 +1,19 @@
+{
+  "vectors": [
+    {
+      "name": "blob_aad_v1",
+      "schema": "blob AAD v1",
+      "expected_cbor_hex": "a901010250000102030405060708090a0b0c0d0e0f0365746f646f730466746f646f2d310507060107000801091a000186ca"
+    },
+    {
+      "name": "wrap_aad_v2",
+      "schema": "device_dek_wraps AAD v2",
+      "expected_cbor_hex": "a501020250101112131415161718191a1b1c1d1e1f0350202122232425262728292a2b2c2d2e2f04030550303132333435363738393a3b3c3d3e3f"
+    },
+    {
+      "name": "recovery_message_v1",
+      "schema": "recovery message v1",
+      "expected_cbor_hex": "a501010250404142434445464748494a4b4c4d4e4f0350000102030405060708090a0b0c0d0e0f045820808182838485868788898a8b8c8d8e8f909192939495969798999a9b9c9d9e9f051903e8"
+    }
+  ]
+}

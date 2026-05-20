@@ -1,13 +1,34 @@
-import { CSSProperties, useEffect, useMemo, useRef, useState } from "react";
+import {
+  CSSProperties,
+  PointerEvent as ReactPointerEvent,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from "react";
+import { getCurrentWindow } from "@tauri-apps/api/window";
 import Draggable, { DraggableData, DraggableEvent } from "react-draggable";
 import { useSettings } from "../../context/SettingsContext";
 
 type DockSide = "left" | "right" | null;
 
+interface NativeDragState {
+  pointerId: number;
+  // Pointer screen coordinates at drag start, in CSS pixels — only used to
+  // detect "did the user actually move past the drag threshold" so we can
+  // distinguish a click from a drag. The OS handles the actual motion.
+  startScreenX: number;
+  startScreenY: number;
+  // Set to true once we've handed off to OS-native startDragging. After this
+  // point the OS owns the gesture; we never call setPosition ourselves.
+  dragHandedOff: boolean;
+}
+
 export interface AiCubeProps {
   isPanelOpen: boolean;
   onTogglePanel: () => void;
   onAnchorChange?: (position: { x: number; y: number }) => void;
+  nativeWindowDrag?: boolean;
 }
 
 export interface AnchorPosition {
@@ -16,6 +37,8 @@ export interface AnchorPosition {
 }
 
 const EDGE_THRESHOLD = 64;
+const NATIVE_CUBE_POSITION: AnchorPosition = { x: 24, y: 24 };
+const DRAG_THRESHOLD_PX = 4;
 
 export const MOCK_DATA = [
   { title: "Quick Capture", hint: "Drop a note to Sticky plugin" },
@@ -33,9 +56,10 @@ export const MOCK_DATA = [
  * - Pointer-events are `auto` here to keep the canvas click-through by default.
  * - Docking leaves a visible tab and hovers slide the cube back onto the screen.
  */
-export function AiCube({ isPanelOpen, onTogglePanel, onAnchorChange }: AiCubeProps) {
+export function AiCube({ isPanelOpen, onTogglePanel, onAnchorChange, nativeWindowDrag = false }: AiCubeProps) {
   const { cubeOpacity, cubeSize, cubeFontSize, cubeColor, cubeTextColor } = useSettings();
   const nodeRef = useRef<HTMLDivElement | null>(null);
+  const nativeDragRef = useRef<NativeDragState | null>(null);
   const [position, setPosition] = useState<AnchorPosition>({ x: 32, y: 120 });
   const [dockedSide, setDockedSide] = useState<DockSide>(null);
   const [isHovering, setIsHovering] = useState(false);
@@ -78,8 +102,8 @@ export function AiCube({ isPanelOpen, onTogglePanel, onAnchorChange }: AiCubePro
   };
 
   const renderPosition = useMemo(
-    () => resolveDockedPosition(position),
-    [dockedSide, isHovering, position, cubeSize],
+    () => (nativeWindowDrag ? NATIVE_CUBE_POSITION : resolveDockedPosition(position)),
+    [dockedSide, isHovering, nativeWindowDrag, position, cubeSize],
   );
 
   const textColor = useMemo(() => {
@@ -97,6 +121,9 @@ export function AiCube({ isPanelOpen, onTogglePanel, onAnchorChange }: AiCubePro
   const cubeStyle = useMemo<CSSProperties>(
     () => ({
       pointerEvents: "auto",
+      position: nativeWindowDrag ? "absolute" : undefined,
+      left: nativeWindowDrag ? renderPosition.x : undefined,
+      top: nativeWindowDrag ? renderPosition.y : undefined,
       width: cubeSize,
       height: cubeSize,
       fontSize: cubeFontSize,
@@ -109,8 +136,19 @@ export function AiCube({ isPanelOpen, onTogglePanel, onAnchorChange }: AiCubePro
       boxShadow:
         "0 10px 40px rgba(0,0,0,0.35), inset 0 1px 1px rgba(255,255,255,0.4)",
       border: "1px solid rgba(255,255,255,0.28)",
+      touchAction: "none",
     }),
-    [cubeFontSize, cubeOpacity, cubeColor, cubeSize, isHovering, textColor],
+    [
+      cubeFontSize,
+      cubeOpacity,
+      cubeColor,
+      cubeSize,
+      isHovering,
+      nativeWindowDrag,
+      renderPosition.x,
+      renderPosition.y,
+      textColor,
+    ],
   );
 
   useEffect(() => {
@@ -119,26 +157,99 @@ export function AiCube({ isPanelOpen, onTogglePanel, onAnchorChange }: AiCubePro
     }
   }, [onAnchorChange, renderPosition]);
 
+  const handleNativePointerDown = (event: ReactPointerEvent<HTMLDivElement>) => {
+    if (!nativeWindowDrag || event.button !== 0) return;
+
+    event.preventDefault();
+    event.currentTarget.setPointerCapture(event.pointerId);
+
+    // Record the start position so we can tell a click apart from a drag at the
+    // first pointermove that crosses DRAG_THRESHOLD_PX. We do NOT call any
+    // Tauri API here — that previously made click-vs-drag flaky on slow IPC.
+    nativeDragRef.current = {
+      pointerId: event.pointerId,
+      startScreenX: event.screenX,
+      startScreenY: event.screenY,
+      dragHandedOff: false,
+    };
+  };
+
+  const handleNativePointerMove = (event: ReactPointerEvent<HTMLDivElement>) => {
+    const drag = nativeDragRef.current;
+    if (!nativeWindowDrag || !drag || drag.pointerId !== event.pointerId) return;
+    if (drag.dragHandedOff) return;
+
+    const deltaCssX = event.screenX - drag.startScreenX;
+    const deltaCssY = event.screenY - drag.startScreenY;
+    if (Math.hypot(deltaCssX, deltaCssY) < DRAG_THRESHOLD_PX) return;
+
+    // Past threshold → hand the gesture to the OS via Tauri's startDragging.
+    // macOS then drives the window movement directly off the AppKit mouse-drag
+    // loop, which avoids retina scale-factor / setPosition ordering bugs and
+    // gives unconstrained, smooth movement across the full screen.
+    drag.dragHandedOff = true;
+    event.preventDefault();
+    void getCurrentWindow()
+      .startDragging()
+      .catch((error) => {
+        console.error("[AiCube] startDragging failed:", error);
+        // Don't reset dragHandedOff — if startDragging permission is missing the
+        // user will see a console error rather than a phantom click on release.
+      });
+  };
+
+  const handleNativePointerUp = (event: ReactPointerEvent<HTMLDivElement>) => {
+    const drag = nativeDragRef.current;
+    if (!nativeWindowDrag || !drag || drag.pointerId !== event.pointerId) return;
+
+    event.preventDefault();
+    if (event.currentTarget.hasPointerCapture(event.pointerId)) {
+      event.currentTarget.releasePointerCapture(event.pointerId);
+    }
+    const wasDragged = drag.dragHandedOff;
+    nativeDragRef.current = null;
+
+    if (!wasDragged) {
+      onTogglePanel();
+    }
+  };
+
+  const cube = (
+    <div
+      ref={nodeRef}
+      className="ai-cube"
+      style={cubeStyle}
+      onMouseEnter={() => setIsHovering(true)}
+      onMouseLeave={() => setIsHovering(false)}
+      onPointerDown={nativeWindowDrag ? handleNativePointerDown : undefined}
+      onPointerMove={nativeWindowDrag ? handleNativePointerMove : undefined}
+      onPointerUp={nativeWindowDrag ? handleNativePointerUp : undefined}
+      onPointerCancel={nativeWindowDrag ? handleNativePointerUp : undefined}
+      onClick={nativeWindowDrag ? undefined : onTogglePanel}
+      role="button"
+      aria-pressed={isPanelOpen}
+      title={hoverHint}
+    >
+      {dockedSide && !nativeWindowDrag && (
+        <span
+          className={`ai-cube__tab ${
+            dockedSide === "left" ? "ai-cube__tab--left" : "ai-cube__tab--right"
+          }`}
+        />
+      )}
+      <span className="ai-cube__glyph">AI</span>
+    </div>
+  );
+
   return (
     <div className="assistant-layer">
-      <Draggable nodeRef={nodeRef} position={renderPosition} onStop={handleStop} onDrag={handleDrag}>
-        <div
-          ref={nodeRef}
-          className="ai-cube"
-          style={cubeStyle}
-          onMouseEnter={() => setIsHovering(true)}
-          onMouseLeave={() => setIsHovering(false)}
-          onClick={onTogglePanel}
-          role="button"
-          aria-pressed={isPanelOpen}
-          title={hoverHint}
-        >
-          {dockedSide && (
-            <span className={`ai-cube__tab ${dockedSide === "left" ? "ai-cube__tab--left" : "ai-cube__tab--right"}`} />
-          )}
-          <span className="ai-cube__glyph">AI</span>
-        </div>
-      </Draggable>
+      {nativeWindowDrag ? (
+        cube
+      ) : (
+        <Draggable nodeRef={nodeRef} position={renderPosition} onStop={handleStop} onDrag={handleDrag}>
+          {cube}
+        </Draggable>
+      )}
     </div>
   );
 }

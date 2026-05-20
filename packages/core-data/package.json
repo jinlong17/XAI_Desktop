@@ -1,0 +1,28 @@
+{
+  "name": "@repo/core-data",
+  "version": "0.0.0",
+  "private": true,
+  "description": "Data access seam for XAI_Desktop — Repo interface, SQLCipher/SQLite driver boundary, localStorage migration, and in-memory testing backends.",
+  "exports": {
+    ".": {
+      "types": "./src/index.ts",
+      "import": "./src/index.ts"
+    },
+    "./testing": {
+      "types": "./src/testing.ts",
+      "import": "./src/testing.ts"
+    }
+  },
+  "scripts": {
+    "check-types": "tsc --noEmit",
+    "test": "vitest run"
+  },
+  "dependencies": {
+    "@repo/core": "workspace:*"
+  },
+  "devDependencies": {
+    "@repo/typescript-config": "workspace:*",
+    "typescript": "5.9.2",
+    "vitest": "^3.2.1"
+  }
+}

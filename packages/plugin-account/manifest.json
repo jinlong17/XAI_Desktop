@@ -1,0 +1,27 @@
+{
+  "name": "account",
+  "version": "0.1.0",
+  "displayName": "账户与同步",
+  "description": "Account login, logout and cross-device sync. Signup/login orchestration is in development; runtime UI remains disabled.",
+  "author": "Jinlong",
+  "enabled": false,
+  "contentTypes": [],
+  "windows": {},
+  "events": {
+    "emit": [
+      "account:logged-in",
+      "account:logged-out",
+      "account:sync-started",
+      "account:sync-completed",
+      "account:sync-failed"
+    ],
+    "listen": []
+  },
+  "dependencies": ["@repo/core", "@repo/core-data"],
+  "tauriCommands": [
+    "crypto_encrypt_for",
+    "crypto_unwrap_dek_for_device",
+    "crypto_wrap_dek_for_devices",
+    "crypto_recovery_sign"
+  ]
+}

@@ -14,7 +14,7 @@ const sampleIcon = "data:image/svg+xml;base64,";
 export function generateMockItems(count = 5, desktopPath = "/Users/you/Desktop"): DesktopItem[] {
   const items: DesktopItem[] = [];
   for (let i = 0; i < count; i += 1) {
-    const pick = SAMPLE_NAMES[i % SAMPLE_NAMES.length];
+    const pick = SAMPLE_NAMES[i % SAMPLE_NAMES.length]!;
     items.push({
       id: `item-${
         typeof crypto !== "undefined" && crypto.randomUUID

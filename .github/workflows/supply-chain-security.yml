@@ -1,0 +1,143 @@
+# supply-chain-security.yml — crypto-deps-lockdown (Wave W0, Phase 3)
+# First CI workflow in this repo.
+# Contract: packages/crypto-deps-lockdown/docs/api.md §1
+#
+# Three BLOCKING jobs:
+#   rust-pins   — assert all 7 crypto crates use =x.y.z exact pins;
+#                 assert Cargo.lock is in sync (--locked);
+#                 assert no forbidden non-strict ed25519 verify pattern.
+#   rfc-vectors — assert RFC 9106/8032/9180 vectors and CBOR AAD
+#                 cross-implementation vectors pass.
+#   cargo-deny  — advisories / bans / licenses / sources gate.
+#   osv-scanner — OSV.dev advisory gate for npm/JS (pnpm-lock.yaml) and
+#                 Cargo.lock (defense-in-depth).
+#
+# All third-party Actions are pinned to commit SHAs consistent with this
+# row's own supply-chain thesis (reviewer recommendation R-3.2).
+#
+# Human ship step (R-4): flip each job to a GitHub "required status check"
+# via repo Settings → Branches → branch protection after first CI run.
+
+name: Supply-chain security
+
+on:
+  pull_request:
+    branches: ["**"]
+  push:
+    branches: [main]
+
+permissions:
+  contents: read
+
+jobs:
+
+  # ── Job 1: rust-pins ────────────────────────────────────────────────────
+  # Asserts: all 7 crypto crates are exact-pinned (=x.y.z), Cargo.lock is
+  # in sync, and no forbidden non-strict ed25519 verify pattern exists.
+  rust-pins:
+    name: Rust exact pins + lock check
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683  # v4.2.2
+        with:
+          fetch-depth: 1
+
+      - name: Install Rust stable
+        uses: dtolnay/rust-toolchain@3c5f7ea28cd621ae0bf5283f0e981fb97b8a7af9  # stable as of 2026-05-19
+        with:
+          toolchain: stable
+
+      - name: Assert exact pins on all 7 crypto crates
+        run: bash scripts/ci/check-exact-pins.sh
+
+      - name: Assert Cargo.lock is in sync (--locked)
+        run: >
+          cargo metadata
+          --locked
+          --manifest-path apps/desktop/src-tauri/Cargo.toml
+          --format-version 1
+          > /dev/null
+
+      - name: Assert no forbidden non-strict ed25519 verify pattern (trip-wire)
+        run: bash scripts/ci/check-verify-strict.sh
+
+  # ── Job 1b: RFC vectors ─────────────────────────────────────────────────
+  # Asserts: RFC 9106 Argon2id, RFC 8032 Ed25519, RFC 9180 HPKE, and
+  # RFC 8949 deterministic CBOR AAD cross-implementation fixtures.
+  rfc-vectors:
+    name: RFC crypto vectors + CBOR cross-check
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683  # v4.2.2
+        with:
+          fetch-depth: 1
+
+      - name: Install Rust stable
+        uses: dtolnay/rust-toolchain@3c5f7ea28cd621ae0bf5283f0e981fb97b8a7af9  # stable as of 2026-05-19
+        with:
+          toolchain: stable
+
+      - name: Install pnpm
+        run: |
+          corepack enable
+          corepack prepare pnpm@9.0.0 --activate
+
+      - name: Install JS dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Install Python CBOR dependency
+        run: python3 -m pip install cbor2==6.1.1
+
+      - name: Run Rust RFC vector tests
+        run: >
+          cargo test
+          --manifest-path apps/desktop/src-tauri/Cargo.toml
+          --features crypto
+          crypto::rfc_vectors
+
+      - name: Assert CBOR AAD vectors match across cbor-x and cbor2
+        run: bash scripts/ci/check-cbor-aad-cross-impl.sh
+
+  # ── Job 2: cargo-deny ────────────────────────────────────────────────────
+  # Asserts: zero RustSec advisories (except dated/reviewed ignores in
+  # deny.toml), no banned crate versions, all licenses in allow list,
+  # all sources are crates.io.
+  cargo-deny:
+    name: cargo-deny (advisories / bans / licenses / sources)
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683  # v4.2.2
+        with:
+          fetch-depth: 1
+
+      - name: Run cargo-deny
+        uses: EmbarkStudios/cargo-deny-action@0105f7c440bc8084c17cad47fe92e63049519458  # v2.0.18 pinned SHA
+        with:
+          command: check advisories bans licenses sources
+          arguments: --manifest-path apps/desktop/src-tauri/Cargo.toml --all-features
+
+  # ── Job 3: osv-scanner ────────────────────────────────────────────────────
+  # Asserts: zero OSV.dev advisories for npm/JS packages (pnpm-lock.yaml)
+  # and Rust packages (Cargo.lock).
+  # fail-on-vuln: true ensures any advisory = non-zero exit = job fails.
+  # Pinned to commit SHA (reviewer recommendation for supply-chain hygiene).
+  osv-scanner:
+    name: OSV scanner (npm + Cargo)
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683  # v4.2.2
+        with:
+          fetch-depth: 1
+
+      - name: Run OSV scanner
+        uses: google/osv-scanner-action@9a498708959aeaef5ef730655706c5a1df1edbc2  # v2.3.8 pinned SHA
+        with:
+          # fail-on-vuln: true → non-zero exit on any advisory = job fails
+          fail-on-vuln: true
+          scan-args: |-
+            --lockfile=pnpm-lock.yaml
+            --lockfile=apps/desktop/src-tauri/Cargo.lock

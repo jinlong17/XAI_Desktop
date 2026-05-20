@@ -1,0 +1,222 @@
+#!/usr/bin/env bash
+# git-post-commit — portable reference implementation (multi-state dispatcher, 2026-05-16)
+#
+# The neutral cross-tool relay trigger for the event-driven automation variants
+# (B-Codex / B-Cursor / C-Codex / C-Cursor). Installed by the developer as a
+# CHAINED WRAPPER at .git/hooks/post-commit (NOT a symlink): the wrapper backs
+# up + runs any pre-existing post-commit hook, then `source`s
+# <cowork_scripts_dir>/lib_hook_helpers.sh and execs this script — so it
+# coexists with other post-commit hooks. See ../00-PORTABLE-MANIFEST.md §4.
+#
+# **Pre-2026-05-16:** detected dev_log changes + matching awaiting_* marker +
+# notified the user. BUILD-only dispatch path; review and verify hand-offs
+# stayed manual.
+#
+# **2026-05-16 extension:** the hook is now a multi-state Status Panel
+# dispatcher per ../04-automation-loop.md §3.4. After parsing the new Status
+# value from the just-committed dev_log, it routes:
+#   NEEDS_REVIEW      → dispatch feature-review to OTHER vendor (§16.3 #3 STRICT)
+#   APPROVED          → dispatch feature-auto-build to lead vendor (B-* only)
+#   READY_FOR_VERIFY  → if verify_cross_vendor=yes: dispatch feature-verify to OTHER vendor
+#                       if no: notify user (lead-handled or direct-ship)
+#   REVISE / BLOCKED  → notify user (manual intervention)
+#   READY_TO_SHIP / SHIPPED → notify user (manual ship gate)
+#
+# Marker-file branches (awaiting_phase_<N>_build / _review) for C-* remain.
+#
+# PLACEHOLDERS: replace <...> per ../00-PORTABLE-MANIFEST.md §3.
+#   Tokens used: <feature_root>, <orchestrator_marker_dir>, <quota_state_dir>, <cowork_scripts_dir>.
+#
+# Inputs: none (git invokes it; it inspects HEAD).
+# Exit code: ALWAYS 0 — a hook failure must be a no-op, never block a commit.
+# MUST NOT write the dev_log Status Panel — it only reads state, dispatches, and notifies.
+#
+# Project-layer helpers (implement in <cowork_scripts_dir>/lib_hook_helpers.sh):
+#   determine_other_vendor <executor>        → echoes "codex" | "cursor" | "claude"
+#   determine_lead_from_variant <variant>    → echoes "codex" | "cursor" | "claude"
+#   render_review_prompt <feature>           → stdout = review prompt body
+#   render_build_prompt <feature>            → stdout = build prompt body
+#   render_verify_prompt <feature>           → stdout = verify prompt body
+# A working reference implementation ships as lib_hook_helpers.sh alongside
+# this file — copy it into <cowork_scripts_dir>/ and replace the placeholders.
+
+set -uo pipefail
+
+REPO_ROOT="$(git rev-parse --show-toplevel 2>/dev/null || exit 0)"
+MARKER_DIR="<orchestrator_marker_dir>"
+HOOK_STATE_DIR="<quota_state_dir>"
+COWORK_DIR="$REPO_ROOT/<cowork_scripts_dir>"
+mkdir -p "$HOOK_STATE_DIR" 2>/dev/null || true
+LOG="$HOOK_STATE_DIR/post_commit.log"
+
+# Load helpers (best-effort; if absent the multi-state branches below degrade
+# to notify-only — same behaviour as pre-2026-05-16).
+[ -f "$COWORK_DIR/lib_hook_helpers.sh" ] && source "$COWORK_DIR/lib_hook_helpers.sh" 2>/dev/null || true
+[ -f "$COWORK_DIR/lib_phase_verdict.sh" ] && source "$COWORK_DIR/lib_phase_verdict.sh" 2>/dev/null || true
+
+# 1. If HEAD did not touch any dev_log.md → no-op.
+changed="$(git show --stat --name-only --format= HEAD 2>/dev/null || true)"
+echo "$changed" | grep -qE '/docs/dev_log\.md$' || exit 0
+
+DEV_LOG_REL="$(echo "$changed" | grep -E '/docs/dev_log\.md$' | head -1)"
+FEATURE="$(echo "$DEV_LOG_REL" | sed -E 's#^<feature_root>/([^/]+)/docs/dev_log\.md$#\1#')"
+DEV_LOG="$REPO_ROOT/$DEV_LOG_REL"
+[ -f "$DEV_LOG" ] || exit 0
+
+# 2. Parse Status Panel (read-only — never write).
+STATUS="$(grep -E '^- Status:' "$DEV_LOG" | head -1 | sed -E 's/^- Status:[[:space:]]*//')"
+VARIANT="$(grep -E '^- Automation Mode:' "$DEV_LOG" | head -1 | sed -E 's/^- Automation Mode:[[:space:]]*//')"
+VERIFY_CV="$(grep -E '^- Verify Cross-vendor:' "$DEV_LOG" | head -1 | sed -E 's/^- Verify Cross-vendor:[[:space:]]*//')"
+[ -z "$VERIFY_CV" ] && VERIFY_CV="yes"   # default strict
+
+# 5-min dedup so a burst of duplicate commits does not spam notifications /
+# dispatches. Key by transition, not only feature: a fast
+# NEEDS_REVIEW -> APPROVED -> READY_FOR_VERIFY chain must not suppress the next
+# relay step.
+DEDUP_STATUS="$(printf '%s' "$STATUS" | tr -c 'A-Za-z0-9_.-' '_')"
+DEDUP_VARIANT="$(printf '%s' "$VARIANT" | tr -c 'A-Za-z0-9_.-' '_')"
+DEDUP_AGENT="$(grep -E '^- Executor:' "$DEV_LOG" | head -1 | sed -E 's/^- Executor:[[:space:]]*//' | tr -c 'A-Za-z0-9_.-' '_')"
+DEDUP="$HOOK_STATE_DIR/${FEATURE}.${DEDUP_VARIANT}.${DEDUP_STATUS}.${DEDUP_AGENT}.last_notification"
+now=$(date +%s)
+if [ -f "$DEDUP" ] && [ $(( now - $(cat "$DEDUP" 2>/dev/null || echo 0) )) -lt 300 ]; then
+  exit 0
+fi
+
+notify() {
+  command -v osascript >/dev/null 2>&1 \
+    && osascript -e "display notification \"$1\" with title \"feature-full-loop\" sound name \"Glass\"" 2>/dev/null || true
+  echo "$(date '+%F %T') $FEATURE: $1" >> "$LOG" 2>/dev/null || true
+  echo "$now" > "$DEDUP" 2>/dev/null || true
+}
+
+dispatch() {
+  # $1 = vendor (codex|cursor)   $2 = agent_name   $3 = prompt body (stdin alternative)
+  local vendor="$1" agent="$2"
+  local prompt_file="$MARKER_DIR/${FEATURE}-${agent}-$(date +%s).txt"
+  cat > "$prompt_file"
+  "$COWORK_DIR/dispatch_${vendor}.sh" "$FEATURE" "$prompt_file" "$agent" || {
+    notify "$FEATURE: dispatch to $vendor for $agent FAILED — fall back manual"
+    return 1
+  }
+  return 0
+}
+
+# Only "codex" / "cursor" map to a real dispatch_<x>.sh. determine_other_vendor
+# legitimately returns the sentinel MANUAL_CLAUDE (cross-vendor step lands on
+# Claude, which has no headless exec) or UNKNOWN (executor field missing from
+# the Status Panel). Both must short-circuit to notify — never reach dispatch()
+# (a `[ -z ]` guard let these non-empty sentinels through → dispatch_UNKNOWN.sh).
+vendor_dispatchable() {
+  case "$1" in
+    codex|cursor) return 0 ;;
+    *) return 1 ;;
+  esac
+}
+
+# 3. Multi-state dispatch path (B-* / C-*). Other variants (A, D) take the
+#    marker-only legacy path below.
+case "$VARIANT" in
+  B-Codex|B-Cursor|C-Codex|C-Cursor)
+    case "$STATUS" in
+      NEEDS_REVIEW)
+        plan_executor="$(grep -E '^- Plan Executor:' "$DEV_LOG" | head -1 | sed -E 's/^- Plan Executor:[[:space:]]*//')"
+        # Schema reality: the panel keeps ONE rolling `- Executor:` line, not a
+        # dedicated `Plan Executor:`. At the NEEDS_REVIEW commit that rolling
+        # value IS the plan agent (it just wrote NEEDS_REVIEW) → use it as fallback.
+        [ -z "$plan_executor" ] && plan_executor="$(grep -E '^- Executor:' "$DEV_LOG" | head -1 | sed -E 's/^- Executor:[[:space:]]*//')"
+        other_vendor="$(determine_other_vendor "$plan_executor" 2>/dev/null || echo "")"
+        if ! vendor_dispatchable "$other_vendor"; then
+          if [ "$other_vendor" = "MANUAL_CLAUDE" ]; then
+            notify "$FEATURE: NEEDS_REVIEW — cross-vendor reviewer is Claude (no headless); run feature-review manually"
+          else
+            notify "$FEATURE: NEEDS_REVIEW — cannot resolve reviewer vendor (Plan Executor missing in Status Panel?); manual review needed"
+          fi
+        else
+          render_review_prompt "$FEATURE" 2>/dev/null | dispatch "$other_vendor" feature-review
+          [ $? -eq 0 ] && notify "$FEATURE: review dispatched to $other_vendor; resume on APPROVED/REVISE"
+        fi
+        exit 0
+        ;;
+      APPROVED)
+        if [ "$VARIANT" = "B-Codex" ] || [ "$VARIANT" = "B-Cursor" ]; then
+          lead_vendor="$(determine_lead_from_variant "$VARIANT" 2>/dev/null || echo "")"
+          if ! vendor_dispatchable "$lead_vendor"; then
+            notify "$FEATURE: APPROVED — cannot determine lead vendor; manual build needed"
+          else
+            render_build_prompt "$FEATURE" 2>/dev/null | dispatch "$lead_vendor" feature-auto-build
+            [ $? -eq 0 ] && notify "$FEATURE: build dispatched to $lead_vendor; resume on READY_FOR_VERIFY"
+          fi
+        fi
+        # C-* variants take the per-phase build path via marker — handled below.
+        exit 0
+        ;;
+      READY_FOR_VERIFY|FIX_READY_FOR_VERIFY)
+        if [ "$VERIFY_CV" = "no" ]; then
+          notify "$FEATURE: build done; verify cross-vendor opted out — lead-handle or direct-ship"
+        else
+          build_executor="$(grep -E '^- Build Executor:' "$DEV_LOG" | head -1 | sed -E 's/^- Build Executor:[[:space:]]*//')"
+          # Same fallback: at the READY_FOR_VERIFY commit the rolling `- Executor:`
+          # line IS the build agent (it just wrote READY_FOR_VERIFY).
+          [ -z "$build_executor" ] && build_executor="$(grep -E '^- Executor:' "$DEV_LOG" | head -1 | sed -E 's/^- Executor:[[:space:]]*//')"
+          other_vendor="$(determine_other_vendor "$build_executor" 2>/dev/null || echo "")"
+          if ! vendor_dispatchable "$other_vendor"; then
+            if [ "$other_vendor" = "MANUAL_CLAUDE" ]; then
+              notify "$FEATURE: READY_FOR_VERIFY — cross-vendor verifier is Claude (no headless); run feature-verify manually"
+            else
+              notify "$FEATURE: READY_FOR_VERIFY — cannot resolve verifier vendor (Build Executor missing in Status Panel?); manual verify needed"
+            fi
+          else
+            render_verify_prompt "$FEATURE" 2>/dev/null | dispatch "$other_vendor" feature-verify
+            [ $? -eq 0 ] && notify "$FEATURE: verify dispatched to $other_vendor; resume on READY_TO_SHIP/BLOCKED"
+          fi
+        fi
+        exit 0
+        ;;
+      REVISE)
+        notify "$FEATURE: review returned REVISE — feed back to feature-plan manually, then re-loop"
+        exit 0
+        ;;
+      BLOCKED)
+        notify "$FEATURE: BLOCKED — read dev_log Blocker section"
+        exit 0
+        ;;
+      READY_TO_SHIP|SHIPPED)
+        notify "$FEATURE: $STATUS — manual ship gate"
+        exit 0
+        ;;
+    esac
+    ;;
+esac
+
+# 4. Marker-file branches (legacy + C-* per-phase). The orchestrator wrote a
+#    marker before exiting; the hook only reads + notifies, never rewrites it.
+MARKER_FILE="$(ls "$MARKER_DIR/${FEATURE}".awaiting_* 2>/dev/null | head -1)"
+[ -z "$MARKER_FILE" ] && exit 0
+MARKER_TYPE="$(jq -r '.marker_type' "$MARKER_FILE" 2>/dev/null || echo "")"
+
+case "$MARKER_TYPE" in
+  awaiting_external)
+    # B variant legacy branch (when multi-state above didn't fire — e.g. helper
+    # functions absent, vendor undecidable). Just notify.
+    case "$STATUS" in
+      READY_FOR_VERIFY|FIX_READY_FOR_VERIFY)
+        notify "$FEATURE ready for verify — resume: /<skill_prefix>feature-full-loop Feature: $FEATURE." ;;
+      BLOCKED)
+        notify "$FEATURE BLOCKED — check dev_log Blockers." ;;
+    esac
+    ;;
+  awaiting_phase_*_build)
+    PHASE="$(jq -r '.phase // empty' "$MARKER_FILE" 2>/dev/null)"
+    notify "$FEATURE phase $PHASE built — run: Start the feature-phase-review agent for $FEATURE (Phase $PHASE)."
+    ;;
+  awaiting_phase_*_review)
+    PHASE="$(jq -r '.phase // empty' "$MARKER_FILE" 2>/dev/null)"
+    VERDICT="$(read_phase_verdict "$FEATURE" "$PHASE" 2>/dev/null || echo NONE)"
+    case "$VERDICT" in
+      PASS)    notify "$FEATURE phase $PHASE PASS — resume: /<skill_prefix>feature-full-loop Feature: $FEATURE." ;;
+      BLOCKED) notify "$FEATURE phase $PHASE BLOCKED — check the Phase $PHASE Verdict block." ;;
+    esac
+    ;;
+esac
+
+exit 0

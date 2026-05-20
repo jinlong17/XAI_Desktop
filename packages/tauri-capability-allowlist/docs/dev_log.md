@@ -1,0 +1,79 @@
+# tauri-capability-allowlist — Dev Log
+
+## Status Panel
+
+| Field | Value |
+|---|---|
+| Workflow | FEATURE_DEV |
+| Target | tauri-capability-allowlist |
+| Title | G2.5 Tauri capability allowlist audit + db scope file |
+| Roadmap | xai-g2-data-security-foundation · feature #6 · G2.5 |
+| Status | SHIPPED |
+| Current Phase | SHIPPED |
+| Suggested Next | manual ship only; MAS signed-runtime smoke deferred |
+| Automation Mode | D-Codex |
+| Verify Cross-vendor | yes |
+| Executor | feature-build + feature-verify (Claude Code, Track A) |
+| Updated | 2026-05-20 13:25 PDT |
+| Blockers | None for desktop dev path; MAS / signed-runtime smoke remains in `xai-v1.deferred-gates.md` |
+
+## Phase Plan
+
+### Phase 1 — Audit + database capability file
+
+Status: DONE.
+
+- Audited `apps/desktop/src-tauri/capabilities/`:
+  - `default.json` — main / control / grid_* core surface.
+  - `plugin-account-crypto.json` — account / control crypto seam.
+  - `plugin-account-keychain.json` — account / control Keychain seam.
+- Added `apps/desktop/src-tauri/capabilities/plugin-data-database.json`
+  scoped to `main`, `control`, `grid_*`, `account`, `console`. Widget /
+  pet / ai-cube windows explicitly excluded.
+- Added defence-in-depth `DATABASE_ALLOWED_WINDOWS` runtime check in
+  `commands/database.rs` so a future capability widening cannot grant
+  widget / pet windows the `db_*` surface silently.
+- 2 new cargo tests cover the allow-list and rejection paths.
+- Recorded the full audit (windows ↔ commands ↔ enforcement layer) in
+  `apps/desktop/src-tauri/capabilities/AUDIT.md`.
+- Updated `docs/contracts/tauri-commands-v0.md` §6.1 with the
+  capability file reference and §7 with the audit pointer.
+
+### Phase 2 — Verify
+
+Status: DONE.
+
+- `cargo check --features crypto`: PASS.
+- `cargo test --features crypto database::` : 9 tests PASS (7 prior + 2
+  allow-list).
+- `cargo check --manifest-path apps/desktop/src-tauri/Cargo.toml`: PASS.
+
+Deferred / out-of-scope for G2.5:
+
+- MAS sandbox capability validation (signed runtime smoke). Remains on
+  G0.6 / G2.7 external-blocked rows.
+- `tauri-plugin-opener` minimization. Recorded in AUDIT.md as a
+  follow-up.
+- Capability files for `widget_*` / `pet` / `ai_cube`. Track B/C plugin
+  scopes own these when those plugins land in production.
+
+## Verification Notes
+
+feature-verify (Claude Code, Track A), 2026-05-20 00:58 PDT. Verdict: READY_TO_SHIP.
+
+Every JS-callable command now has:
+
+1. A capability file declaring its allowed windows.
+2. A custom invoke_handler with a defence-in-depth window-origin check
+   matching the capability file's window list.
+
+Widget / pet / ai-cube windows cannot reach `db_*`, `crypto_*`, or
+`secret_*` even via mis-attached capability files.
+
+## Work Log
+
+| Timestamp | Executor | Action | Commits | Next |
+|---|---|---|---|---|
+| 2026-05-20 00:58 PDT | feature-build + feature-verify (Claude Code, Track A) | Added `plugin-data-database.json`, `AUDIT.md`, runtime allow-list with 2 new cargo tests, contract doc cross-refs. | pending commit | manual ship only; continue roadmap |
+| 2026-05-20 PDT | bug-fix (Claude Code, Track A) | P0-2: `commands/keychain.rs` was missing the runtime `ensure_*_allowed` check that AUDIT.md / contracts v0 §7 claimed every JS-callable command had — fixed by adding `KEYCHAIN_ALLOWED_WINDOWS = ["account", "control"]`, `is_keychain_window_allowed`, `ensure_keychain_window_allowed`, and injecting `window: WebviewWindow` as the first parameter of `secret_set` / `secret_get` / `secret_del`. Added 2 cargo tests (admit account/control, reject widget/pet/ai_cube/unknown/grid_*/main/console). Updated AUDIT.md to name the constant explicitly and contracts v0 §6 to mention the runtime check. TS keychain.ts unchanged (Tauri auto-injects `window`). | pending commit | none — closes Codex cross-vendor P0-2 |
+| 2026-05-20 13:25 PDT | ship (Claude Code, Track A) | Manifest + Status Panel promoted SHIPPED. Includes P0 G2.5 secret_* runtime gate + P1 Gamma window/menubar allow-list extension. Codex R2 APPROVED on keychain fix. | `ad5f1d3`, `143bca5`, `7e97dc3` | continue roadmap |

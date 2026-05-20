@@ -4,6 +4,8 @@ version = "0.1.0"
 description = "A Tauri App"
 authors = ["you"]
 edition = "2021"
+license = "MIT"
+publish = false  # internal application binary; not published to crates.io
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
@@ -18,12 +20,69 @@ crate-type = ["staticlib", "cdylib", "rlib"]
 tauri-build = { version = "2", features = [] }
 
 [dependencies]
-tauri = { version = "2", features = ["macos-private-api"] }
+tauri = { version = "2", features = ["macos-private-api", "tray-icon"] }
 tauri-plugin-opener = "2"
 serde = { version = "1", features = ["derive"] }
 serde_json = "1"
+thiserror = "1"
+
+# ── Crypto supply-chain lockdown (crypto-deps-lockdown, Wave W0, Phase 1) ────
+# All 7 crates are exact-pinned (=x.y.z) and optional = true.
+# They are gathered under the OFF-by-default `crypto` feature umbrella (D-7).
+# Pins + Cargo.lock are real and CI-enforced; no transitive compile cost today.
+# Version floors (hard constraints from stride-cve / RUSTSEC-2022-0093):
+#   ed25519-dalek >= 2, curve25519-dalek >= 4 (transitive), aes-gcm >= 0.10
+# ED25519_VERIFY_STRICT contract: any Ed25519 verify MUST use verify_strict —
+#   see api.md §4.  Machine-enforced by exact-pin + deny.toml [bans] ed25519-dalek<2.
+argon2        = { version = "=0.5.3",   optional = true }
+aes-gcm       = { version = "=0.10.3",  optional = true }
+x25519-dalek  = { version = "=2.0.1",   optional = true, features = ["static_secrets", "getrandom"] }
+ed25519-dalek = { version = "=2.2.0",   optional = true }
+hpke          = { version = "=0.12.0",  optional = true }
+rusqlite      = { version = "=0.32.1",  optional = true, features = ["bundled-sqlcipher"] }
+reqwest       = { version = "=0.12.28", optional = true, features = ["rustls-tls"] }
+
+# ── KDF consumption row (kdf-primitives, sync-v1 #3) ────────────────────────
+hkdf          = { version = "=0.12.4",  optional = true }
+sha2          = { version = "=0.10.9",  optional = true }
+zeroize       = { version = "=1.8.2",   optional = true }
+ciborium      = { version = "=0.2.2",   optional = true }
+bip39         = { version = "=2.2.2",   optional = true }
+
+[features]
+# crypto — OFF by default.  Enable only in the future crypto consumption rows.
+# Exact-pinned optional deps are compiled only when this feature is active.
+keychain-it = []
+# mas-sandbox — compile-time guard for a non-private transparent-window fallback.
+# Default dev/DMG builds keep Tauri's `macos-private-api` dependency feature enabled;
+# MAS dry-runs can enable this flag while disabling that dependency feature to ensure
+# Rust window builders do not call private-API-only transparent constructors.
+mas-sandbox = []
+crypto = [
+  "dep:argon2",
+  "dep:aes-gcm",
+  "dep:x25519-dalek",
+  "dep:ed25519-dalek",
+  "dep:hpke",
+  "dep:rusqlite",
+  "dep:reqwest",
+  "dep:hkdf",
+  "dep:sha2",
+  "dep:zeroize",
+  "dep:ciborium",
+  "dep:bip39",
+]
 
 [target.'cfg(target_os = "macos")'.dependencies]
 cocoa = "0.24"
 core-graphics = "0.23"
 core-foundation = "0.9"
+security-framework = "3.7.0"
+
+# Dev-only dependency on Tauri's `test` feature so integration tests can
+# spin a `MockRuntime` and exercise `#[tauri::command]` entry points
+# through the real IPC surface (G3-E3 / P0-Foxtrot — Codex reviewer
+# requirement to test `register_path_bookmark -> reveal_in_finder` via
+# the public IPC path, not via internal helpers like `insert_canonical`).
+[dev-dependencies]
+tauri = { version = "2", features = ["test"] }

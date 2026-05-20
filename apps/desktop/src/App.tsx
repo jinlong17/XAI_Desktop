@@ -1,9 +1,8 @@
-import { useMemo } from "react";
 import { SettingsProvider } from "./context/SettingsContext";
 import { InteractiveProvider } from "./context/InteractiveContext";
-import OrganizerLayer from "./plugins/OrganizerLayer";
-import { GridSystemProvider } from "@repo/plugin-organizer";
-import GlobalDndProvider from "./components/DndProvider";
+import { OrganizerLayer, GridSystemProvider } from "@repo/plugin-organizer";
+import GlobalDndProvider from "./providers/DndProvider";
+import { useSyncMenuBarStatus } from "./sync/useSyncMenuBarStatus";
 import "./App.css";
 
 declare global {
@@ -13,7 +12,7 @@ declare global {
 }
 
 function AppInner() {
-  const isTauri = useMemo(() => typeof window !== "undefined" && Boolean(window.__TAURI__), []);
+  useSyncMenuBarStatus();
 
   return (
     <GridSystemProvider>

@@ -1,0 +1,28 @@
+---
+name: frontend-dev
+description: Use when building or refining a frontend page or component — drives MiniMax's upstream "frontend-dev" pattern (Tailwind utility-first, Framer Motion for transitions, semantic component composition). Triggers — build a frontend page, framer motion, tailwind UI, refine this component, frontend polish pass.
+upstream: https://github.com/MiniMax-AI/skills
+license: Apache-2.0
+vendor_card: docs/vendor-cards/minimax-skills.md
+---
+
+# frontend-dev
+
+**Purpose.** Adopt MiniMax's upstream frontend-dev discipline when building or refining a frontend page: Tailwind utility-first styling, Framer Motion for transitions, and a semantic component composition pattern. The shim is description-triggered: agents load it when the conversation matches one of the trigger phrases below.
+
+## Triggers
+
+- "build a frontend page"
+- "framer motion"
+- "tailwind UI"
+- "refine this component"
+- "frontend polish pass"
+
+## How to deepen
+
+The full SKILL.md and reference component templates live upstream at
+<https://github.com/MiniMax-AI/skills> (path: `skills/frontend-dev`). Pull
+the upstream content on demand when a task needs the deeper material — this
+shim deliberately keeps the in-tree footprint small (no vendored upstream
+content). See the vendor card for license, sync owner, and the recorded
+upstream commit pin.

@@ -1,0 +1,133 @@
+# cargo-deny policy — crypto-deps-lockdown (Wave W0, Phase 2)
+# Authoritative supply-chain policy for apps/desktop/src-tauri.
+# Design: docs/reviews/crypto-deps-lockdown/20260519-discovery-review.md
+# Contract: packages/crypto-deps-lockdown/docs/api.md §3
+#
+# Key invariants:
+#   - NO blanket advisories.ignore.  Every entry is a dated, crate-specific,
+#     reviewed justification.
+#   - [bans] deny entries are the machine-checked half of the
+#     ED25519_VERIFY_STRICT contract and the stride-cve version-floor policy
+#     (api.md §3-4).
+#   - [sources] crates.io-only blocks registry-swap / typosquat.
+
+# ── 1. Advisories ────────────────────────────────────────────────────────────
+
+[advisories]
+version = 2
+yanked = "deny"
+
+# Reviewed ignore entries (2026-05-19).
+# All entries are "unmaintained" advisories for Tauri 2.x transitive
+# dependencies.  They are NOT exploitable vulnerabilities — they signal that
+# upstream maintainers have archived the crate.  The primary product target is
+# macOS; Linux GTK3 crates are compiled only for Linux targets.
+# Policy: each entry is a single, dated, individually justified advisory ID.
+ignore = [
+  # ── gtk-rs GTK3 bindings — archived 2024, Linux-only ────────────────────
+  # Tauri 2.x pulls these for its Linux backend.  Not compiled on macOS.
+  # No upstream replacement available as of 2026-05-19 (Tauri gtk4 migration
+  # is in-progress; track https://github.com/tauri-apps/tauri/issues).
+  { id = "RUSTSEC-2024-0411", reason = "gtk-rs GTK3/Wayland binding gdkwayland-sys 0.18.2: unmaintained, Linux-only, Tauri 2.x transitive dep. Not an exploitable vuln." },
+  { id = "RUSTSEC-2024-0412", reason = "gtk-rs GTK3 binding gdk 0.18.2: unmaintained, Linux-only, Tauri 2.x transitive dep. Not an exploitable vuln." },
+  { id = "RUSTSEC-2024-0413", reason = "gtk-rs GTK3 binding atk 0.18.2: unmaintained, Linux-only, Tauri 2.x transitive dep. Not an exploitable vuln." },
+  { id = "RUSTSEC-2024-0414", reason = "gtk-rs GTK3 binding gdkx11-sys 0.18.2: unmaintained, Linux-only, Tauri 2.x transitive dep. Not an exploitable vuln." },
+  { id = "RUSTSEC-2024-0415", reason = "gtk-rs GTK3 binding gtk 0.18.2: unmaintained, Linux-only, Tauri 2.x transitive dep. Not an exploitable vuln." },
+  { id = "RUSTSEC-2024-0416", reason = "gtk-rs GTK3 binding atk-sys 0.18.2: unmaintained, Linux-only, Tauri 2.x transitive dep. Not an exploitable vuln." },
+  { id = "RUSTSEC-2024-0417", reason = "gtk-rs GTK3 binding gdkx11 0.18.2: unmaintained, Linux-only, Tauri 2.x transitive dep. Not an exploitable vuln." },
+  { id = "RUSTSEC-2024-0418", reason = "gtk-rs GTK3 binding gdk-sys 0.18.2: unmaintained, Linux-only, Tauri 2.x transitive dep. Not an exploitable vuln." },
+  { id = "RUSTSEC-2024-0419", reason = "gtk-rs GTK3 macros gtk3-macros 0.18.2: unmaintained, Linux-only, Tauri 2.x transitive dep. Not an exploitable vuln." },
+  { id = "RUSTSEC-2024-0420", reason = "gtk-rs GTK3 binding gtk-sys 0.18.2: unmaintained, Linux-only, Tauri 2.x transitive dep. Not an exploitable vuln." },
+  # ── proc-macro-error 1.0.4 — build-time only ─────────────────────────────
+  # Used by tauri-macros / gtk3-macros at build time; not compiled into the
+  # final macOS binary.  Migration to manyhow/proc-macro-error2 is controlled
+  # by Tauri upstream.  Track tauri-macros changelog.
+  { id = "RUSTSEC-2024-0370", reason = "proc-macro-error 1.0.4: unmaintained build-tooling dep pulled by Tauri 2.x macros. Build-time only; not in final binary. Not an exploitable vuln." },
+  # ── unic-* Unicode crates — rust-unic project, unmaintained 2025 ─────────
+  # Pulled by tauri-utils / markup5ever via html5ever.  The recommended
+  # replacement (icu_properties) is already a separate dependency.  Upgrade
+  # is controlled by Tauri upstream.
+  { id = "RUSTSEC-2025-0075", reason = "unic-char-range 0.9.0: unmaintained rust-unic Unicode crate, Tauri 2.x transitive dep. Not an exploitable vuln. Track Tauri upgrade to icu." },
+  { id = "RUSTSEC-2025-0080", reason = "unic-common 0.9.0: unmaintained rust-unic Unicode crate, Tauri 2.x transitive dep. Not an exploitable vuln. Same context as RUSTSEC-2025-0075." },
+  { id = "RUSTSEC-2025-0081", reason = "unic-char-property 0.9.0: unmaintained rust-unic Unicode crate, Tauri 2.x transitive dep. Not an exploitable vuln. Same context as RUSTSEC-2025-0075." },
+  { id = "RUSTSEC-2025-0098", reason = "unic-ucd-version 0.9.0: unmaintained rust-unic Unicode crate, Tauri 2.x transitive dep. Not an exploitable vuln. Same context as RUSTSEC-2025-0075." },
+  { id = "RUSTSEC-2025-0100", reason = "unic-ucd-ident 0.9.0: unmaintained rust-unic Unicode crate, Tauri 2.x transitive dep. Not an exploitable vuln. Same context as RUSTSEC-2025-0075." },
+]
+
+# ── 2. Bans ──────────────────────────────────────────────────────────────────
+
+[bans]
+# Version-floor enforcement = machine-checked half of the verify_strict /
+# fix-line constraints (design.md D-5 / api.md §3-4).
+#   RUSTSEC-2022-0093: ed25519-dalek < 2 had a decoupled-keypair oracle.
+#   stride-cve §3: curve25519-dalek < 4 and aes-gcm < 0.10 are affected.
+multiple-versions = "warn"   # informational only; not a hard blocker
+deny = [
+  { name = "ed25519-dalek",    version = "<2",    reason = "RUSTSEC-2022-0093: decoupled-keypair oracle; fixed in v2. ED25519_VERIFY_STRICT contract (api.md §4)." },
+  { name = "curve25519-dalek", version = "<4",    reason = "stride-cve §3 fix-line floor. Transitive of ed25519-dalek/x25519-dalek; enforced via exact pins." },
+  { name = "aes-gcm",          version = "<0.10", reason = "stride-cve §3 #2/#3 fix-line floor. Pinned to aes-gcm=0.10.3." },
+]
+
+# ── 3. Licenses ───────────────────────────────────────────────────────────────
+
+[licenses]
+version = 2
+# Curated permissive allow list (design.md D-6).
+# All licenses individually reviewed and accepted on 2026-05-19:
+#   MIT, Apache-2.0, BSD-{2,3}-Clause, ISC, Zlib — standard permissive
+#   0BSD — permissive (zero-clause BSD, effectively public domain)
+#   CC0-1.0 — public domain dedication (dunce crate)
+#   Unlicense — public domain / permissive (aho-corasick, byteorder, memchr etc.)
+#   CDLA-Permissive-2.0 — Community Data License Agreement permissive (webpki-roots)
+#   BSL-1.0 — Boost Software License 1.0, permissive (ryu, which is Apache-2.0 OR BSL-1.0)
+#   MPL-2.0 — Mozilla Public License 2.0 (cssparser family from html5ever/tauri)
+#   Unicode-3.0, Unicode-DFS-2016 — Unicode Data Files license (permissive)
+allow = [
+  "MIT",
+  "Apache-2.0",
+  "Apache-2.0 WITH LLVM-exception",
+  "BSD-2-Clause",
+  "BSD-3-Clause",
+  "ISC",
+  "Zlib",
+  "Unicode-3.0",
+  "0BSD",
+  "CC0-1.0",
+  "Unlicense",
+  "CDLA-Permissive-2.0",
+  "BSL-1.0",
+  "MPL-2.0",
+]
+confidence-threshold = 0.8
+
+# SQLCipher community-edition determination (design.md D-6, api.md §3).
+# rusqlite=0.32.1 wraps libsqlite3-sys=0.30.1, which is MIT-licensed.
+# The bundled-sqlcipher feature compiles in SQLCipher source (BSD-style,
+# Zetetic / SQLITE_LICENSE).  This [[licenses.clarify]] entry IS the
+# machine-checked determination — per D-6, "CI gate, not a policy doc".
+# Attribution obligation for a future about/licenses UI row is deferred
+# (out of scope here, recorded in design.md §Deferred).
+[[licenses.clarify]]
+name = "libsqlite3-sys"
+expression = "MIT"
+license-files = [
+  { path = "LICENSE", hash = 0xe4a77e7b },
+]
+
+# r-efi — LGPL-2.1-or-later, but compiled only for UEFI targets
+# (cfg(target_os = "uefi") gate inside getrandom).  Never compiled on macOS.
+# Reviewed 2026-05-19: acceptable as a platform-gated exception.
+[[licenses.exceptions]]
+allow = ["LGPL-2.1-or-later"]
+name = "r-efi"
+
+# ── 4. Sources ────────────────────────────────────────────────────────────────
+
+[sources]
+# crates.io-only policy.  Blocks registry-swap and typosquat supply-chain
+# attacks (design.md threat model / api.md §3).
+# Add allow-git entries only for explicitly reviewed git-source dependencies
+# (none expected for the 7 crypto crates or Tauri).
+unknown-registry = "deny"
+unknown-git      = "deny"
+allow-registry   = ["https://github.com/rust-lang/crates.io-index"]

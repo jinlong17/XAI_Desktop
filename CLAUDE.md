@@ -6,13 +6,19 @@ macOS transparent desktop overlay for organizing files, folders, and apps into f
 
 ## Architecture
 
-- **Host** (`apps/desktop/`): Tauri shell — windowing, tray, shortcuts, plugin mounting. Zero business logic.
+- **Host** (`apps/desktop/src/`): Tauri shell — routing + providers + window shells. Zero business logic.
+- **Core** (`packages/core/`): Shared infrastructure — types, typed events, PluginRegistry, hooks. Zero business logic.
 - **Plugins** (`packages/plugin-*/`): Feature modules as React packages. All business logic lives here.
 - **UI Library** (`packages/ui/`): Shared components.
-- **Rust Backend** (`apps/desktop/src-tauri/`): Window lifecycle + macOS native APIs only.
+- **Rust Backend** (`apps/desktop/src-tauri/`): Modular commands (`commands/`) + macOS platform adapters (`platform/`).
 
 Multi-window: main (transparent click-through) + control (AI Cube) + per-grid native windows.
-Cross-window communication: Tauri event system (emit/listen).
+Cross-window communication: Typed event layer (`@repo/core/events`) wrapping Tauri event system.
+
+### Key Documents
+- `docs/SYSTEM_ARCHITECTURE.md` — System constitution (architectural constraints + coding red lines)
+- `docs/PLUGIN_MAP.md` — Global state machine (all plugins + their status)
+- `docs/CORE_INFRA.md` — Infrastructure API reference
 
 ## Workflow (V2)
 
@@ -39,11 +45,11 @@ bug-diagnose → bug-fix → bug-verify → ship
 - `ship` requires READY_TO_SHIP status and human confirmation to push
 
 ### Documentation Contract
-- `features/<feature>/docs/design.md` — Decision snapshot
-- `features/<feature>/docs/api.md` — Interface contracts
-- `features/<feature>/docs/test.md` — Test strategy
-- `features/<feature>/docs/dev_log.md` — Workflow state machine
-- `docs/reviews/<feature>/<YYYYMMDD>-discovery-review.md` — Discovery report
+- `packages/plugin-*/docs/design.md` — Decision snapshot
+- `packages/plugin-*/docs/api.md` — Interface contracts
+- `packages/plugin-*/docs/test.md` — Test strategy
+- `packages/plugin-*/docs/dev_log.md` — Workflow state machine
+- `docs/adr/NNNN-*.md` — Architecture decision records
 
 ## How to Use the Workflow
 
@@ -138,14 +144,34 @@ Start the bug-diagnose agent.
 ### Commits
 Format: `type(scope): summary` + body with Why / What / Scope / Risk / Docs / Tests.
 
-### Code Boundaries
+### Code Boundaries (MUST follow)
 - Business logic → `packages/plugin-*/`, never in `apps/desktop/src/`
-- Plugin-to-plugin interaction → Tauri events, not direct imports
-- Canonical data types → `packages/plugin-organizer/src/types.ts`
+- Plugin-to-plugin interaction → `@repo/core/events`, not direct imports
+- Canonical data types → `packages/core/src/types/` (global), `packages/plugin-*/src/types.ts` (local)
+- Host depends on Plugin/Core only; Plugin depends on Core only; never reverse
+- `index.ts` is a Plugin's only public surface — never import from `plugin-*/src/internal/`
+- UI: generic components → `packages/ui/`; business components → inside the owning plugin
+- Rust commands in `src-tauri/src/commands/`; macOS platform code in `src-tauri/src/platform/macos/`
+- Full rules → `docs/SYSTEM_ARCHITECTURE.md` §4 编码红线 (12 条)
+
+### Before Working on Any Plugin
+- **Check `docs/PLUGIN_MAP.md` first** — only Stable/Production plugins can be depended on
+- Plugins in Planned/In-Dev/Migrating status must be mocked if used as a dependency
 
 ### Testing
 - Desktop: `pnpm dev` in `apps/desktop/` for manual verification
+- Unit tests: `pnpm --filter @repo/core test` (Vitest)
+- Rust tests: `cargo test` in `apps/desktop/src-tauri/`
 - Check multi-window behavior on real macOS hardware
+
+### Adding a New Plugin
+```
+1. packages/plugin-xxx/ (package.json + tsconfig.json + manifest.json)
+2. src/index.ts + components + hooks
+3. docs/ 四件套 (design.md, api.md, test.md, dev_log.md)
+4. apps/desktop/src/main.tsx — add import registration
+5. docs/PLUGIN_MAP.md — add row with status
+```
 
 ## Agent Configuration
 
