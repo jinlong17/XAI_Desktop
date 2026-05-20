@@ -10,13 +10,18 @@
     "lint": "eslint --max-warnings 0",
     "check-types": "next typegen && tsc --noEmit",
     "test:rls": "vitest run supabase/tests/rls-policies.test.ts",
+    "test:rls:integration": "SUPABASE_INTEGRATION_TESTS=1 vitest run supabase/tests/rls-policies.test.ts",
     "test:nonce": "vitest run supabase/tests/nonce-lease.test.ts",
+    "test:nonce:integration": "SUPABASE_INTEGRATION_TESTS=1 vitest run supabase/tests/nonce-lease.test.ts",
     "test:push": "vitest run supabase/tests/sync-push.test.ts",
     "test:recovery": "vitest run supabase/tests/recovery-proof.test.ts",
     "test:audit": "vitest run supabase/tests/audit-log.test.ts",
+    "test:audit:integration": "SUPABASE_INTEGRATION_TESTS=1 vitest run supabase/tests/audit-log.test.ts",
     "test:protocol": "vitest run supabase/tests/protocol-integrity.test.ts",
     "test:rls-fuzz": "vitest run supabase/tests/rls-fuzz-property.test.ts",
+    "test:rls-fuzz:integration": "SUPABASE_INTEGRATION_TESTS=1 vitest run supabase/tests/rls-fuzz-property.test.ts",
     "test:rekey": "vitest run supabase/tests/rekey.test.ts",
+    "test:rekey:integration": "SUPABASE_INTEGRATION_TESTS=1 vitest run supabase/tests/rekey.test.ts",
     "test:onboarding-backfill": "vitest run supabase/tests/onboarding-backfill.test.ts"
   },
   "dependencies": {
