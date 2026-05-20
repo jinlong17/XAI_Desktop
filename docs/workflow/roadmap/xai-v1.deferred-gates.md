@@ -226,4 +226,4 @@
 - What was done instead: Created docs-only feature brief, discovery review, design, API, test plan, and dev_log mapping current localStorage behavior and target repository boundary.
 - Later human action: Complete G1.1 and G2 Repository v0, then rerun feature-build for Grid persistence and localStorage migration.
 - Suggested verification command / environment: `sed -n '1,220p' docs/reviews/grid-persistence/20260519-discovery-review.md`
-- Files/commits affected: docs/reviews/grid-persistence/*; packages/grid-persistence/docs/*; pending G1.5 docs commit
+- Files/commits affected: docs/reviews/grid-persistence/*; packages/grid-persistence/docs/*; commit `dcf2750`

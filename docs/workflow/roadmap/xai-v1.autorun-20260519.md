@@ -18,7 +18,7 @@
 | Current Feature | grid-persistence |
 | Feature Source | docs/planning/execution/G1-native-foundation.md §G1.5 |
 | Feature Status | BLOCKED |
-| Current Commit | pending G1.5 docs commit |
+| Current Commit | dcf2750 |
 | Tests | `test -f docs/reviews/grid-persistence/20260519-feature-brief.md`; `test -f packages/grid-persistence/docs/dev_log.md`; `rg -n "PersistedLayout|localStorage|repository|Repository|Grid.*persist|restore|open Grid|last active|sqlite|sqlcipher|GridBox|DesktopItem" packages/plugin-organizer/src packages/core/src packages/core-data docs/contracts docs/planning/execution -g '*.{ts,tsx,rs,md}'` |
 | Next Step | Human G0 evidence, or continue only with safe downstream prep because G0/G1.1 are blocked |
 
@@ -254,7 +254,7 @@
 | grid-shell-organizer-content | G1 | BLOCKED | eaae46e | PASS: safe-prep docs exist; BLOCKED: G0/G1.1 not ready | Reached by user override; no production code changed. |
 | native-dnd-path-first | G1 | BLOCKED | 707a8d1 | PASS: DnD discovery docs exist; BLOCKED: G0.4/MAS evidence missing | Reached by user override; no production code changed. |
 | multi-grid-event-scope | G1 | BLOCKED | a7d4803 | PASS: event audit docs exist; BLOCKED: G0/G1.1 not ready | Reached by user override; no production code changed. |
-| grid-persistence | G1 | BLOCKED | pending G1.5 docs commit | PASS: persistence discovery docs exist; BLOCKED: G1.1/G2 not ready | Reached by user override; no production code changed. |
+| grid-persistence | G1 | BLOCKED | dcf2750 | PASS: persistence discovery docs exist; BLOCKED: G1.1/G2 not ready | Reached by user override; no production code changed. |
 | host-business-residuals | G1 | READY_TO_SHIP | c6dbd77 | PASS: residual audit doc exists; Host scan recorded | Audit-only safe prep. |
 
 ## Deferred Gates Summary

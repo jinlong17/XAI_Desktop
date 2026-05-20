@@ -21,7 +21,7 @@
 
 ### Phase 1 — Persistence safe prep
 
-Status: DONE. Commit: `(pending docs commit)`.
+Status: DONE. Commit: `dcf2750`.
 
 - Created G1.5 feature brief and discovery review.
 - Audited current `localStorage` key, shape, hydration, save, and clear behavior.
@@ -44,5 +44,5 @@ Docs-only prep is complete. G1.5 production acceptance remains blocked by G1.1 a
 |---|---|---|---|---|
 | 2026-05-19 20:40 PDT | feature-plan (Codex inline) | Step 0 and plan: scoped G1.5 to persistence safe prep under user override. | — | feature-review |
 | 2026-05-19 20:41 PDT | feature-review (Codex inline) | Approved safe prep; production repository persistence remains blocked. | — | feature-build |
-| 2026-05-19 20:41 PDT | feature-build (Codex inline) | Created Grid persistence discovery docs. | (pending docs commit) | feature-verify |
-| 2026-05-19 20:41 PDT | feature-verify (Codex inline) | Verified docs-only scope; status remains BLOCKED. | (pending docs commit) | G1.1/G2 |
+| 2026-05-19 20:41 PDT | feature-build (Codex inline) | Created Grid persistence discovery docs. | `dcf2750` | feature-verify |
+| 2026-05-19 20:41 PDT | feature-verify (Codex inline) | Verified docs-only scope; status remains BLOCKED. | `dcf2750` | G1.1/G2 |
