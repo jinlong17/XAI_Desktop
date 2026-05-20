@@ -10,7 +10,7 @@ export type {
   GridWindowSnapshot,
   CommandError,
 } from './window';
-export type { EventMap } from './events';
+export type { DroppedFile, EventMap } from './events';
 export type {
   PluginManifest,
   PluginComponents,

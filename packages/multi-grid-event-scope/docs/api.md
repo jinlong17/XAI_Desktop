@@ -1,14 +1,19 @@
 # multi-grid-event-scope — API
 
-## Planning Contract
+## Production Contract
 
-No production API was changed in this slice.
+Production event constants live in `packages/plugin-organizer/src/gridEvents.ts` and are exported through `packages/plugin-organizer/src/index.ts`.
 
-## Candidate Event Names
+## Event Names
 
 ```ts
 type OrganizerGridEvents = {
   "organizer:grid:ready": { gridId: string };
+  "organizer:grid:state": {
+    gridId: string;
+    grid: GridBox;
+    items: Record<string, DesktopItem>;
+  };
   "organizer:grid:update": { gridId: string; changes: Partial<GridBox> };
   "organizer:grid:close": { gridId: string };
   "organizer:grid:create-request": {
@@ -20,7 +25,7 @@ type OrganizerGridEvents = {
 };
 ```
 
-## Runtime Guard Target
+## Runtime Guards
 
 ```ts
 function hasGridId(payload: unknown): payload is { gridId: string } {
@@ -33,4 +38,9 @@ function hasGridId(payload: unknown): payload is { gridId: string } {
 }
 ```
 
-Final guard placement should be decided during production build.
+Production listeners use dedicated guards such as `isGridUpdatePayload`, `isGridReadyPayload`, and `isFileDropPayload`.
+
+Compatibility listeners remain for:
+
+- `organizer:create-grid-request`
+- `create-grid-request`

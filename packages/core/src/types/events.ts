@@ -1,13 +1,26 @@
-import type { GridBox, Rect } from './grid';
+import type { DesktopItem, GridBox, Rect } from './grid';
+
+export interface DroppedFile {
+  path: string;
+  name: string;
+  kind: 'file' | 'folder' | 'app' | 'alias' | 'unknown';
+  size?: number;
+  securityScope?: 'none' | 'bookmark-required' | 'bookmark-granted';
+}
 
 /** All event names → payload type mapping for type-safe cross-window communication */
 export interface EventMap {
   // Organizer events
-  'organizer:grid-update': { gridId: string; changes: Partial<GridBox> };
-  'organizer:grid-close': { gridId: string };
-  'organizer:file-drop': { gridId: string; files: string[] };
-  'organizer:grid-window-ready': { gridId: string };
-  'organizer:create-grid-request': { gridId?: string; rect: Rect };
+  'organizer:grid:ready': { gridId: string };
+  'organizer:grid:state': { gridId: string; grid: GridBox; items: Record<string, DesktopItem> };
+  'organizer:grid:update': { gridId: string; changes: Partial<GridBox> };
+  'organizer:grid:close': { gridId: string };
+  'organizer:grid:create-request': {
+    gridId?: string;
+    rect: Rect;
+    source?: 'control' | 'shortcut';
+  };
+  'organizer:file:drop': { gridId: string; files: DroppedFile[] };
 
   // Global app events
   'app:interactive-mode-changed': { interactive: boolean };

@@ -3,6 +3,17 @@ import { listen } from "@tauri-apps/api/event";
 import { emit } from "@tauri-apps/api/event";
 import { GridBox, DesktopItem } from "../types";
 import {
+  ORGANIZER_FILE_DROP_EVENT,
+  ORGANIZER_GRID_CLOSE_EVENT,
+  ORGANIZER_GRID_READY_EVENT,
+  ORGANIZER_GRID_STATE_EVENT,
+  ORGANIZER_GRID_UPDATE_EVENT,
+  isFileDropPayload,
+  isGridClosePayload,
+  isGridReadyPayload,
+  isGridUpdatePayload,
+} from "../gridEvents";
+import {
   createGridWindow,
   updateGridWindow,
   closeGridWindow,
@@ -13,24 +24,6 @@ import {
 const debugLog = (msg: string) => {
   console.log(msg);
 };
-
-interface GridWindowUpdateEvent {
-  gridId: string;
-  patch: Partial<GridBox>;
-}
-
-interface GridWindowCloseEvent {
-  gridId: string;
-}
-
-interface GridWindowFileDropEvent {
-  gridId: string;
-  paths: string[];
-}
-
-interface GridWindowReadyEvent {
-  gridId: string;
-}
 
 /**
  * Hook to manage grid windows in multi-window architecture.
@@ -198,47 +191,60 @@ export function useMultiWindowGrids(
   useEffect(() => {
     if (!enabled) return;
 
-    // Listen for update events from grid windows
-    const unlistenUpdate = listen<GridWindowUpdateEvent>(
-      "grid-window-update",
+    const unlistenUpdate = listen<unknown>(
+      ORGANIZER_GRID_UPDATE_EVENT,
       (event) => {
-        const { gridId, patch } = event.payload;
-        console.log(`📨 Received update from grid window: ${gridId}`, patch);
-        onGridUpdate(gridId, patch);
+        if (!isGridUpdatePayload(event.payload)) {
+          console.warn("⚠️ Ignored invalid grid update event", event.payload);
+          return;
+        }
+        const { gridId, changes } = event.payload;
+        console.log(`📨 Received update from grid window: ${gridId}`, changes);
+        onGridUpdate(gridId, changes);
       }
     );
 
-    // Listen for close events from grid windows
-    const unlistenClose = listen<GridWindowCloseEvent>(
-      "grid-window-close",
+    const unlistenClose = listen<unknown>(
+      ORGANIZER_GRID_CLOSE_EVENT,
       (event) => {
+        if (!isGridClosePayload(event.payload)) {
+          console.warn("⚠️ Ignored invalid grid close event", event.payload);
+          return;
+        }
         const { gridId } = event.payload;
         console.log(`📨 Received close from grid window: ${gridId}`);
         onGridDelete(gridId);
       }
     );
 
-    // Listen for file drop events from grid windows
-    const unlistenFileDrop = listen<GridWindowFileDropEvent>(
-      "grid-window-file-drop",
+    const unlistenFileDrop = listen<unknown>(
+      ORGANIZER_FILE_DROP_EVENT,
       (event) => {
-        const { gridId, paths } = event.payload;
+        if (!isFileDropPayload(event.payload)) {
+          console.warn("⚠️ Ignored invalid grid file drop event", event.payload);
+          return;
+        }
+        const { gridId, files } = event.payload;
+        const paths = files.map((file) => file.path);
         console.log(`📨 Received file drop from grid window: ${gridId}`, paths);
         onFileDrop(gridId, paths);
       }
     );
 
-    // Listen for grid window ready events (to send initial data)
-    const unlistenReady = listen<GridWindowReadyEvent>(
-      "grid-window-ready",
+    const unlistenReady = listen<unknown>(
+      ORGANIZER_GRID_READY_EVENT,
       (event) => {
+        if (!isGridReadyPayload(event.payload)) {
+          console.warn("⚠️ Ignored invalid grid ready event", event.payload);
+          return;
+        }
         const { gridId } = event.payload;
         console.log(`📨 Grid window ready: ${gridId}`);
 
         // Find the grid and send its data
         const grid = grids.find((g) => g.id === gridId);
         if (grid) {
-          emit("grid-update", {
+          emit(ORGANIZER_GRID_STATE_EVENT, {
             gridId,
             grid,
             items,
@@ -262,7 +268,7 @@ export function useMultiWindowGrids(
     // When grids or items change, broadcast to all grid windows
     grids.forEach((grid) => {
       if (openWindows.current.has(grid.id)) {
-        emit("grid-update", {
+        emit(ORGANIZER_GRID_STATE_EVENT, {
           gridId: grid.id,
           grid,
           items,

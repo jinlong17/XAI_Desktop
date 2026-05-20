@@ -2,11 +2,11 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import { invoke } from "@tauri-apps/api/core";
 import { emitTo } from "@tauri-apps/api/event";
 import { getCurrentWindow, LogicalSize, PhysicalPosition } from "@tauri-apps/api/window";
+import { ORGANIZER_GRID_CREATE_REQUEST_EVENT } from "@repo/plugin-organizer";
 import AiCube, { AnchorPosition } from "../components/AiAssistant/AiCube";
 import SettingsPanel from "../components/Settings/SettingsPanel";
 import { SettingsProvider } from "../context/SettingsContext";
 
-const CREATE_GRID_REQUEST_EVENT = "organizer:create-grid-request";
 const CLEAR_ALL_REQUEST_EVENT = "organizer:clear-all-request";
 const DEFAULT_GRID_SIZE = 220;
 
@@ -120,7 +120,11 @@ function ControlWindowContent() {
       };
       const gridId = createId();
 
-      await emitTo("main", CREATE_GRID_REQUEST_EVENT, { gridId, rect }).catch((error) => {
+      await emitTo("main", ORGANIZER_GRID_CREATE_REQUEST_EVENT, {
+        gridId,
+        rect,
+        source: "control",
+      }).catch((error) => {
         console.error("Failed to notify main window about grid creation:", error);
       });
 

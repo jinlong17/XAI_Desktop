@@ -51,3 +51,16 @@ Do safe prep only. Later production migration should:
 ## Blocker
 
 G1.4 production implementation should wait for G0 Go/Conditional Go and G1.1, because event names and payloads depend on stable window command contracts and final DnD payload shape.
+
+## Production Revision — 2026-05-19 23:30 PDT
+
+The G0/G1.1/G1.2 blockers are resolved for the DMG/private path. G1.3 remains external-blocked on MAS/security-scope evidence, so this migration keeps the file-drop payload path-backed and does not add bookmark/security-scope behavior.
+
+Approved bounded build:
+
+- Introduce Organizer event constants and runtime payload guards in `packages/plugin-organizer/src/gridEvents.ts`.
+- Migrate Grid runtime events to `organizer:grid:ready`, `organizer:grid:state`, `organizer:grid:update`, `organizer:grid:close`, and `organizer:file:drop`.
+- Migrate Control create requests to `organizer:grid:create-request`.
+- Keep `organizer:create-grid-request` and `create-grid-request` as listeners only for compatibility.
+- Update `EventMap` and `docs/contracts/events-v0.md` in the same build.
+- Add guard tests for missing `gridId` and payload shape validation.

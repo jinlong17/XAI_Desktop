@@ -5,8 +5,13 @@ import { useFileDrop, getFileInfoFromPath, getFileIcon } from "./hooks/useFileDr
 import { useMultiWindowGrids } from "./hooks/useMultiWindowGrids";
 import { listen } from "@tauri-apps/api/event";
 import { isTauri } from "@tauri-apps/api/core";
+import {
+  LEGACY_CREATE_GRID_REQUEST_EVENT,
+  LEGACY_ORGANIZER_CREATE_GRID_REQUEST_EVENT,
+  ORGANIZER_GRID_CREATE_REQUEST_EVENT,
+  isGridCreateRequestPayload,
+} from "./gridEvents";
 
-const CREATE_GRID_REQUEST_EVENT = "organizer:create-grid-request";
 const CLEAR_ALL_REQUEST_EVENT = "organizer:clear-all-request";
 
 interface CreateGridRequestEvent {
@@ -144,12 +149,22 @@ function OrganizerContent() {
 
   // Listen for create-grid requests from the control window.
   useEffect(() => {
-    const unlistenPromise = listen<CreateGridRequestEvent>(CREATE_GRID_REQUEST_EVENT, (event) => {
-      const x = event.payload?.rect?.x ?? 64;
-      const y = event.payload?.rect?.y ?? 120;
-      createGrid(x, y, event.payload?.gridId);
+    const unlistenPromise = listen<unknown>(ORGANIZER_GRID_CREATE_REQUEST_EVENT, (event) => {
+      if (!isGridCreateRequestPayload(event.payload)) {
+        console.warn("⚠️ Ignored invalid organizer grid create request", event.payload);
+        return;
+      }
+      createGrid(event.payload.rect.x, event.payload.rect.y, event.payload.gridId);
     });
-    const unlistenLegacyPromise = listen<{ x?: number; y?: number }>("create-grid-request", (event) => {
+    const unlistenLegacyOrganizerPromise = listen<CreateGridRequestEvent>(
+      LEGACY_ORGANIZER_CREATE_GRID_REQUEST_EVENT,
+      (event) => {
+        const x = event.payload?.rect?.x ?? 64;
+        const y = event.payload?.rect?.y ?? 120;
+        createGrid(x, y, event.payload?.gridId);
+      }
+    );
+    const unlistenLegacyPromise = listen<{ x?: number; y?: number }>(LEGACY_CREATE_GRID_REQUEST_EVENT, (event) => {
       const x = event.payload?.x ?? 64;
       const y = event.payload?.y ?? 120;
       createGrid(x, y);
@@ -160,6 +175,7 @@ function OrganizerContent() {
     });
     return () => {
       unlistenPromise.then((unlisten) => unlisten());
+      unlistenLegacyOrganizerPromise.then((unlisten) => unlisten());
       unlistenLegacyPromise.then((unlisten) => unlisten());
       unlistenClearPromise.then((unlisten) => unlisten());
     };

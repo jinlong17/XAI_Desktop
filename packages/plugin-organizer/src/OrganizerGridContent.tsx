@@ -3,16 +3,16 @@ import { listen, TauriEvent } from "@tauri-apps/api/event";
 import { getCurrentWindow } from "@tauri-apps/api/window";
 import type { DesktopItem, GridBox } from "./types";
 import { SmartContainer } from "./SmartContainer";
-
-interface GridUpdateEvent {
-  gridId: string;
-  grid: GridBox;
-  items: Record<string, DesktopItem>;
-}
-
-interface GridDeleteEvent {
-  gridId: string;
-}
+import {
+  ORGANIZER_FILE_DROP_EVENT,
+  ORGANIZER_GRID_CLOSE_EVENT,
+  ORGANIZER_GRID_READY_EVENT,
+  ORGANIZER_GRID_STATE_EVENT,
+  ORGANIZER_GRID_UPDATE_EVENT,
+  isGridClosePayload,
+  isGridStatePayload,
+  toDroppedFile,
+} from "./gridEvents";
 
 interface G0GridPrototypeRect {
   x: number;
@@ -197,20 +197,28 @@ export function OrganizerGridContent({
   }, [gridId]);
 
   useEffect(() => {
-    const unlistenUpdate = listen<GridUpdateEvent>("grid-update", (event) => {
+    const unlistenUpdate = listen<unknown>(ORGANIZER_GRID_STATE_EVENT, (event) => {
+      if (!isGridStatePayload(event.payload)) {
+        console.warn("[OrganizerGridContent] ignored invalid grid state event", event.payload);
+        return;
+      }
       if (event.payload.gridId === gridId) {
         setGrid(event.payload.grid);
         setItems(event.payload.items);
       }
     });
 
-    const unlistenDelete = listen<GridDeleteEvent>("grid-delete", (event) => {
+    const unlistenDelete = listen<unknown>(ORGANIZER_GRID_CLOSE_EVENT, (event) => {
+      if (!isGridClosePayload(event.payload)) {
+        console.warn("[OrganizerGridContent] ignored invalid grid close event", event.payload);
+        return;
+      }
       if (event.payload.gridId === gridId) {
         getCurrentWindow().close();
       }
     });
 
-    getCurrentWindow().emit("grid-window-ready", { gridId });
+    getCurrentWindow().emit(ORGANIZER_GRID_READY_EVENT, { gridId });
 
     return () => {
       unlistenUpdate.then((fn) => fn());
@@ -220,7 +228,7 @@ export function OrganizerGridContent({
 
   const emitUpdate = useCallback(
     (patch: Partial<GridBox>) => {
-      getCurrentWindow().emit("grid-window-update", { gridId, patch });
+      getCurrentWindow().emit(ORGANIZER_GRID_UPDATE_EVENT, { gridId, changes: patch });
     },
     [gridId]
   );
@@ -248,7 +256,7 @@ export function OrganizerGridContent({
 
   const handleClose = useCallback(
     (_id: string) => {
-      getCurrentWindow().emit("grid-window-close", { gridId });
+      getCurrentWindow().emit(ORGANIZER_GRID_CLOSE_EVENT, { gridId });
     },
     [gridId]
   );
@@ -297,7 +305,10 @@ export function OrganizerGridContent({
       console.log("[G0 Finder DnD] path-first drop", telemetry);
       setLastDropTelemetry(telemetry);
       setDropEventCount((count) => count + 1);
-      getCurrentWindow().emit("grid-window-file-drop", { gridId, paths });
+      getCurrentWindow().emit(ORGANIZER_FILE_DROP_EVENT, {
+        gridId,
+        files: paths.map(toDroppedFile),
+      });
     },
     [gridId]
   );

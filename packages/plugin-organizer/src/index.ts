@@ -9,3 +9,4 @@ export * from "./hooks/useMultiWindowGrids";
 export { OrganizerLayer } from "./OrganizerLayer";
 export { OrganizerGridContent } from "./OrganizerGridContent";
 export type { OrganizerGridContentProps } from "./OrganizerGridContent";
+export * from "./gridEvents";

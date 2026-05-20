@@ -15,12 +15,12 @@
 |---|---|
 | Current Gate | G1 — native foundation |
 | Gate Manifest | docs/workflow/roadmap/xai-g1-native-foundation.md |
-| Current Feature | grid-shell-organizer-content |
-| Feature Source | docs/planning/execution/G1-native-foundation.md §G1.2 |
-| Feature Status | READY_TO_SHIP |
+| Current Feature | multi-grid-event-scope |
+| Feature Source | docs/planning/execution/G1-native-foundation.md §G1.4 |
+| Feature Status | READY_FOR_VERIFY |
 | Current Commit | latest local docs checkpoint; use `git log -1 --oneline` for the exact self-referential commit |
-| Tests | G1.2 PASS: plugin-organizer check-types, desktop build, Host boundary scan, public API scan, file checks |
-| Next Step | Do not ship/push; skip G1.3 as BLOCKED_EXTERNAL and continue G1.4 `multi-grid-event-scope` |
+| Tests | G1.4 build PASS: core check-types, plugin-organizer check-types/test, desktop build, event scans |
+| Next Step | Run G1.4 feature-verify; do not ship/push |
 
 ## Checkpoints
 
@@ -443,6 +443,26 @@
 - G1.3 `native-dnd-path-first` remains BLOCKED_EXTERNAL on MAS/security-scope evidence.
 - Next eligible feature: `multi-grid-event-scope` (G1.4).
 
+### 2026-05-19 23:30 PDT — Feature Build: multi-grid-event-scope
+
+- Skipped G1.3 `native-dnd-path-first` under unattended mode because MAS/security-scope evidence remains external-blocked.
+- Reopened G1.4 after G1.2 READY_TO_SHIP.
+- Implemented production event-scope migration:
+  - added Organizer event constants and runtime payload guards;
+  - migrated Grid events to `organizer:grid:*` and `organizer:file:drop`;
+  - migrated Control create requests to `organizer:grid:create-request`;
+  - preserved legacy create-request aliases as listeners only;
+  - updated `packages/core/src/types/events.ts` and `docs/contracts/events-v0.md`;
+  - added guard tests for missing `gridId` and payload validation.
+- Checks:
+  - `pnpm --filter @repo/core check-types` -> PASS;
+  - `pnpm --filter @repo/plugin-organizer check-types` -> PASS;
+  - `pnpm --filter @repo/plugin-organizer test` -> PASS, 4 tests;
+  - `pnpm --filter desktop build` -> PASS with existing Vite chunk-size warning;
+  - legacy event scan -> PASS, only compatibility constants remain;
+  - target event/API scan -> PASS.
+- Status: `multi-grid-event-scope` -> READY_FOR_VERIFY.
+
 ## Feature Outcomes
 
 | Feature | Gate | Status | Commit | Tests | Notes |
@@ -456,7 +476,7 @@
 | window-command-contract | G1 | READY_TO_SHIP | 9c7b52f + dce4fb9 + 1fa8c75 | PASS: cargo check, core check-types, plugin-organizer check-types, desktop build, contract consistency scan | Deferred cross-vendor verify recorded; ship/push not run. |
 | grid-shell-organizer-content | G1 | READY_TO_SHIP | eaae46e + 26d9f57 + 03ca86a | PASS: plugin-organizer check-types, desktop build, Host boundary scan, public API scan, file checks | Deferred cross-vendor/manual runtime smoke recorded; ship/push not run. |
 | native-dnd-path-first | G1 | BLOCKED_EXTERNAL | 707a8d1 | PASS: DnD discovery docs exist; BLOCKED_EXTERNAL: MAS sandbox/security-scope evidence missing | Skip under unattended mode. |
-| multi-grid-event-scope | G1 | ELIGIBLE | a7d4803 | PASS: event audit docs exist; G1.2 READY_TO_SHIP now unblocks production build | Next eligible feature. |
+| multi-grid-event-scope | G1 | READY_FOR_VERIFY | a7d4803 + pending G1.4 build commit | PASS: core check-types, plugin-organizer check-types/test, desktop build, event scans | Awaiting feature-verify. |
 | grid-persistence | G1 | BLOCKED | dcf2750 | PASS: persistence discovery docs exist; BLOCKED: G2 Repository v0 not ready | Reached by user override; no production code changed. |
 | host-business-residuals | G1 | READY_TO_SHIP | c6dbd77 | PASS: residual audit doc exists; Host scan recorded | Audit-only safe prep. |
 

@@ -40,6 +40,7 @@
 | Event | Payload | Emit | Listen |
 |---|---|---|---|
 | `organizer:grid:ready` | `{ gridId: string }` | Grid shell | organizer,host |
+| `organizer:grid:state` | `{ gridId: string; grid: GridBox; items: Record<string, DesktopItem> }` | organizer | Grid shell |
 | `organizer:grid:update` | `{ gridId: string; changes: Partial<GridBox> }` | organizer | host |
 | `organizer:grid:close` | `{ gridId: string }` | host/organizer | host/organizer |
 | `organizer:grid:create-request` | `{ gridId?: string; rect: Rect; source?: "control" \| "shortcut" }` | control | host |
@@ -98,7 +99,12 @@ AI events only reference drafts. Persisting generated content requires user conf
 - `useEventListener<K extends keyof EventMap>(name: K, handler: ...)` 是 React listener 入口。
 - EventMap breaking change 必须更新本文件。
 - 未登记 event 不允许进入 production code。
-- Current desktop compatibility alias: `organizer:create-grid-request` carries `{ gridId?: string; rect: Rect }` until the implementation fully migrates to `organizer:grid:create-request`.
+- Runtime Grid events now use `organizer:grid:*` and `organizer:file:drop`.
+- Current desktop compatibility aliases:
+  - `organizer:create-grid-request` carries `{ gridId?: string; rect?: { x?: number; y?: number } }`.
+  - `create-grid-request` carries `{ x?: number; y?: number }`.
+  These aliases are listened to only for backward compatibility and should not be used by new production code.
+- Tauri event payloads are runtime-guarded; missing or invalid `gridId` is logged and ignored.
 
 ## 5. 测试
 
