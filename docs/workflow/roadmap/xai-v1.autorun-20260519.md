@@ -13,14 +13,14 @@
 
 | Field | Value |
 |---|---|
-| Current Gate | G1 — native foundation |
-| Gate Manifest | docs/workflow/roadmap/xai-g1-native-foundation.md |
-| Current Feature | multi-grid-event-scope |
-| Feature Source | docs/planning/execution/G1-native-foundation.md §G1.4 |
-| Feature Status | READY_TO_SHIP |
+| Current Gate | G2 — data and security foundation |
+| Gate Manifest | docs/workflow/roadmap/xai-g2-data-security-foundation.md |
+| Current Feature | repository-v0-contract |
+| Feature Source | docs/planning/execution/G2-data-security-foundation.md §G2.1 |
+| Feature Status | ELIGIBLE |
 | Current Commit | latest local docs checkpoint; use `git log -1 --oneline` for the exact self-referential commit |
-| Tests | G1.4 PASS: core check-types, plugin-organizer check-types/test, desktop build, event scans, file checks |
-| Next Step | Do not ship/push; G1.5 is blocked by G2 Repository v0, so continue to G2 |
+| Tests | Manifest/log initialization only; no code tests required |
+| Next Step | Run Workflow V2 inline for G2.1 Repository v0 contract; do not ship/push |
 
 ## Checkpoints
 
@@ -706,3 +706,13 @@ Latest checkpoint is 2026-05-19 23:34 PDT. G0 is Conditional Go for the DMG/priv
 3. `docs/workflow/roadmap/xai-v1.incidents.md`
 4. `docs/workflow/roadmap/xai-g0-window-spike.md`
 5. `docs/workflow/roadmap/xai-g1-native-foundation.md`
+6. `docs/workflow/roadmap/xai-g2-data-security-foundation.md`
+
+### 2026-05-19 23:40 PDT — Resume Checkpoint: G2 manifest initialized
+
+- User confirmed G0.5 Spaces/multi-display behavior is valid on the DELL external-display setup; existing G0.5 READY_TO_SHIP/SHIPPED records remain authoritative for the DMG/private path.
+- G0.6 remains `BLOCKED_EXTERNAL` because Apple Developer signing/MAS sandbox runtime evidence is unavailable and decoupled from G0.5.
+- Reconciled current roadmap position: G1.5 `grid-persistence` is blocked by G2 Repository v0, so the next eligible risk-closing feature is G2.1 `repository-v0-contract`.
+- Created `docs/workflow/roadmap/xai-g2-data-security-foundation.md`.
+- Manifest review is deferred in unattended serial Codex mode and recorded in `docs/workflow/roadmap/xai-v1.deferred-gates.md`.
+- Current state: G2.1 `repository-v0-contract` selected for inline Workflow V2.

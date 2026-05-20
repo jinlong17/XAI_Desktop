@@ -299,3 +299,15 @@
 - Later human action: When Apple Developer signing/sandbox environment is available, complete G0.6 runtime validation and ship separately.
 - Suggested verification command / environment: Build/run desktop with `mas-sandbox` feature and private API disabled after obtaining Apple Developer signing; verify sandbox entitlements and window transparency fallback behavior.
 - Files/commits affected: docs/workflow/roadmap/xai-g0-window-spike.md (G0.6 row); packages/mas-sandbox-dry-run/docs/*; commits `071a192`, `4537d2d`, `2fda0c8`
+
+## Entry 25
+
+- Feature: xai-g2-data-security-foundation manifest
+- Gate: G2
+- Deferred gate: Manifest review
+- Why deferred: The run is operating in unattended serial Codex mode and no human/cross-vendor reviewer is available to approve the newly initialized G2 manifest.
+- Risk: The G2 decomposition may need human adjustment, especially around previously shipped sync-v1 artifacts, opaque-handle security semantics, and MAS/Supabase external gates.
+- What was done instead: Initialized a conservative G2 manifest from the authoritative execution pack, marked only G2.1 `repository-v0-contract` as ELIGIBLE, and left external/security/runtime rows as WAITING, RECONCILE_AFTER_G2.1, or BLOCKED_EXTERNAL.
+- Later human action: Review `docs/workflow/roadmap/xai-g2-data-security-foundation.md` before shipping any G2 feature.
+- Suggested verification command / environment: `sed -n '1,220p' docs/workflow/roadmap/xai-g2-data-security-foundation.md`
+- Files/commits affected: docs/workflow/roadmap/xai-g2-data-security-foundation.md; docs/workflow/roadmap/xai-v1.autorun-20260519.md; docs/workflow/roadmap/xai-v1.deferred-gates.md
