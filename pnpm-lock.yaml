@@ -162,6 +162,21 @@ importers:
         specifier: ^3.2.1
         version: 3.2.4(@types/node@22.15.3)(jsdom@29.1.1(@noble/hashes@2.2.0))
 
+  packages/audit-log-integrity:
+    devDependencies:
+      '@repo/typescript-config':
+        specifier: workspace:*
+        version: link:../typescript-config
+      '@types/node':
+        specifier: ^22.15.3
+        version: 22.15.3
+      typescript:
+        specifier: 5.9.2
+        version: 5.9.2
+      vitest:
+        specifier: ^3.2.1
+        version: 3.2.4(@types/node@22.15.3)(jsdom@29.1.1(@noble/hashes@2.2.0))
+
   packages/core:
     dependencies:
       '@tauri-apps/api':
@@ -206,6 +221,21 @@ importers:
         specifier: ^3.2.1
         version: 3.2.4(@types/node@22.15.3)(jsdom@29.1.1(@noble/hashes@2.2.0))
 
+  packages/ed25519-recovery-signing:
+    devDependencies:
+      '@repo/typescript-config':
+        specifier: workspace:*
+        version: link:../typescript-config
+      '@types/node':
+        specifier: ^22.15.3
+        version: 22.15.3
+      typescript:
+        specifier: 5.9.2
+        version: 5.9.2
+      vitest:
+        specifier: ^3.2.1
+        version: 3.2.4(@types/node@22.15.3)(jsdom@29.1.1(@noble/hashes@2.2.0))
+
   packages/eslint-config:
     devDependencies:
       '@eslint/js':
@@ -241,6 +271,37 @@ importers:
       typescript-eslint:
         specifier: ^8.46.3
         version: 8.46.3(eslint@9.39.1)(typescript@5.9.2)
+
+  packages/hpke-per-device-wrap:
+    dependencies:
+      '@repo/x25519-device-keypair':
+        specifier: workspace:*
+        version: link:../x25519-device-keypair
+    devDependencies:
+      '@repo/typescript-config':
+        specifier: workspace:*
+        version: link:../typescript-config
+      '@types/node':
+        specifier: ^22.15.3
+        version: 22.15.3
+      typescript:
+        specifier: 5.9.2
+        version: 5.9.2
+      vitest:
+        specifier: ^3.2.1
+        version: 3.2.4(@types/node@22.15.3)(jsdom@29.1.1(@noble/hashes@2.2.0))
+
+  packages/nonce-lease-server:
+    devDependencies:
+      '@repo/typescript-config':
+        specifier: workspace:*
+        version: link:../typescript-config
+      typescript:
+        specifier: 5.9.2
+        version: 5.9.2
+      vitest:
+        specifier: ^3.2.1
+        version: 3.2.4(@types/node@22.15.3)(jsdom@29.1.1(@noble/hashes@2.2.0))
 
   packages/plugin-account:
     dependencies:
@@ -532,6 +593,130 @@ importers:
         specifier: 5.9.2
         version: 5.9.2
 
+  packages/protocol-integrity-integration-tests:
+    devDependencies:
+      '@repo/typescript-config':
+        specifier: workspace:*
+        version: link:../typescript-config
+      typescript:
+        specifier: 5.9.2
+        version: 5.9.2
+      vitest:
+        specifier: ^3.2.1
+        version: 3.2.4(@types/node@22.15.3)(jsdom@29.1.1(@noble/hashes@2.2.0))
+
+  packages/push-edge-function:
+    devDependencies:
+      '@repo/typescript-config':
+        specifier: workspace:*
+        version: link:../typescript-config
+      typescript:
+        specifier: 5.9.2
+        version: 5.9.2
+      vitest:
+        specifier: ^3.2.1
+        version: 3.2.4(@types/node@22.15.3)(jsdom@29.1.1(@noble/hashes@2.2.0))
+
+  packages/realtime-private-channel-config:
+    devDependencies:
+      '@repo/typescript-config':
+        specifier: workspace:*
+        version: link:../typescript-config
+      typescript:
+        specifier: 5.9.2
+        version: 5.9.2
+      vitest:
+        specifier: ^3.2.1
+        version: 3.2.4(@types/node@22.15.3)(jsdom@29.1.1(@noble/hashes@2.2.0))
+
+  packages/recovery-proof-edge-function:
+    dependencies:
+      '@repo/ed25519-recovery-signing':
+        specifier: workspace:*
+        version: link:../ed25519-recovery-signing
+    devDependencies:
+      '@repo/typescript-config':
+        specifier: workspace:*
+        version: link:../typescript-config
+      typescript:
+        specifier: 5.9.2
+        version: 5.9.2
+      vitest:
+        specifier: ^3.2.1
+        version: 3.2.4(@types/node@22.15.3)(jsdom@29.1.1(@noble/hashes@2.2.0))
+
+  packages/recovery-rehearsal-3-rekey-kill9:
+    dependencies:
+      '@repo/rekey-two-phase':
+        specifier: workspace:*
+        version: link:../rekey-two-phase
+    devDependencies:
+      '@repo/typescript-config':
+        specifier: workspace:*
+        version: link:../typescript-config
+      typescript:
+        specifier: 5.9.2
+        version: 5.9.2
+      vitest:
+        specifier: ^3.2.1
+        version: 3.2.4(@types/node@22.15.3)(jsdom@29.1.1(@noble/hashes@2.2.0))
+
+  packages/rekey-two-phase:
+    dependencies:
+      '@repo/plugin-account':
+        specifier: workspace:*
+        version: link:../plugin-account
+    devDependencies:
+      '@repo/typescript-config':
+        specifier: workspace:*
+        version: link:../typescript-config
+      typescript:
+        specifier: 5.9.2
+        version: 5.9.2
+      vitest:
+        specifier: ^3.2.1
+        version: 3.2.4(@types/node@22.15.3)(jsdom@29.1.1(@noble/hashes@2.2.0))
+
+  packages/rls-fuzz-property:
+    dependencies:
+      '@repo/rls-policies-and-tests':
+        specifier: workspace:*
+        version: link:../rls-policies-and-tests
+    devDependencies:
+      '@repo/typescript-config':
+        specifier: workspace:*
+        version: link:../typescript-config
+      typescript:
+        specifier: 5.9.2
+        version: 5.9.2
+      vitest:
+        specifier: ^3.2.1
+        version: 3.2.4(@types/node@22.15.3)(jsdom@29.1.1(@noble/hashes@2.2.0))
+
+  packages/rls-policies-and-tests:
+    devDependencies:
+      '@repo/typescript-config':
+        specifier: workspace:*
+        version: link:../typescript-config
+      typescript:
+        specifier: 5.9.2
+        version: 5.9.2
+      vitest:
+        specifier: ^3.2.1
+        version: 3.2.4(@types/node@22.15.3)(jsdom@29.1.1(@noble/hashes@2.2.0))
+
+  packages/tla-protocol-model:
+    devDependencies:
+      '@repo/typescript-config':
+        specifier: workspace:*
+        version: link:../typescript-config
+      typescript:
+        specifier: 5.9.2
+        version: 5.9.2
+      vitest:
+        specifier: ^3.2.1
+        version: 3.2.4(@types/node@22.15.3)(jsdom@29.1.1(@noble/hashes@2.2.0))
+
   packages/typescript-config: {}
 
   packages/ui:
@@ -564,6 +749,21 @@ importers:
       typescript:
         specifier: 5.9.2
         version: 5.9.2
+
+  packages/x25519-device-keypair:
+    devDependencies:
+      '@repo/typescript-config':
+        specifier: workspace:*
+        version: link:../typescript-config
+      '@types/node':
+        specifier: ^22.15.3
+        version: 22.15.3
+      typescript:
+        specifier: 5.9.2
+        version: 5.9.2
+      vitest:
+        specifier: ^3.2.1
+        version: 3.2.4(@types/node@22.15.3)(jsdom@29.1.1(@noble/hashes@2.2.0))
 
 packages:
 
