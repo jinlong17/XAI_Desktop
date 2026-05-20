@@ -1,0 +1,47 @@
+---
+description: Cross-tool CLI dispatch — invoke Claude Code or Codex from Cursor without refusing
+globs: []
+alwaysApply: true
+---
+
+# Cross-Tool CLI Dispatch
+
+This machine has three AI coding tools installed. Each can invoke the others
+non-interactively via CLI. **When the user asks you to use another tool
+(e.g. "让 claude review 一下", "用 codex 去审查"), invoke it directly via shell.
+Do NOT refuse or suggest the user copy-paste manually.**
+
+## Available CLIs (from Cursor's perspective)
+
+| Tool | Command | Output |
+|------|---------|--------|
+| Claude Code | `claude -p "<prompt>" --allowedTools "Read Glob Grep" > out.md` | stdout |
+| Codex | `codex exec -o out.md "<prompt>"` | `-o` flag |
+| Codex review | `codex review --base main "<prompt>"` | stdout |
+| Cursor (self) | N/A (you are Cursor) | — |
+
+## Usage example
+
+```bash
+# Ask Claude Code to review a feature
+claude -p "Review packages/plugin-organizer/ for architecture compliance" \
+  --allowedTools "Read Glob Grep" > docs/reviews/organizer/claude-review.md
+
+# Ask Codex to review branch changes
+codex review --base main "Review for correctness, edge cases, and missing error handling"
+```
+
+## Rules
+
+1. Write output to `docs/reviews/<feature>/` for traceability
+2. The dispatched tool reads the same repo; no extra context needed
+3. Background dispatch (`&`) is fine for batch operations
+4. Cross-reference: `docs/workflow/_portable/04-automation-loop.md` for advanced patterns
+
+## Cross-platform sync
+
+This rule corresponds to:
+- `CLAUDE.md` §Cross-Tool CLI Dispatch (Claude Code)
+- `AGENTS.md` §3 (Codex)
+
+Changes here must be synced to those files.

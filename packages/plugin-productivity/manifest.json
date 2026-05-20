@@ -1,0 +1,24 @@
+{
+  "name": "productivity",
+  "version": "0.1.0",
+  "displayName": "效率工具",
+  "description": "Todos, Eisenhower planning, pomodoro cycles, and habit basics.",
+  "author": "Jinlong",
+  "enabled": false,
+  "contentTypes": ["todo", "pomodoro-session", "habit"],
+  "windows": {
+    "control": true,
+    "overlay": true
+  },
+  "events": {
+    "emit": [
+      "productivity:todo-created",
+      "productivity:todo-updated",
+      "productivity:pomodoro-completed",
+      "productivity:habit-checked"
+    ],
+    "listen": ["console:create-task-from-grid-item"]
+  },
+  "dependencies": [],
+  "tauriCommands": []
+}

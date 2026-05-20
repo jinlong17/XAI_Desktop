@@ -1,0 +1,27 @@
+{
+  "name": "console",
+  "version": "0.1.0",
+  "displayName": "控制台",
+  "description": "Productivity console shell with navigation slots, search, command palette, desktop bridge, and notifications.",
+  "author": "Jinlong",
+  "enabled": false,
+  "contentTypes": ["console-nav", "command-palette", "notification"],
+  "windows": {
+    "control": true
+  },
+  "events": {
+    "emit": [
+      "console:nav-opened",
+      "console:command-executed",
+      "console:create-task-from-grid-item",
+      "console:notification-read"
+    ],
+    "listen": [
+      "productivity:pomodoro-completed",
+      "productivity:todo-due",
+      "productivity:habit-reminder"
+    ]
+  },
+  "dependencies": [],
+  "tauriCommands": []
+}
