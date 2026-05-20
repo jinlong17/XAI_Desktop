@@ -1,0 +1,18 @@
+{
+  "name": "clipboard",
+  "version": "0.1.0",
+  "displayName": "剪贴板",
+  "description": "Local clipboard history, privacy rules, sequential paste queue, and OCR preview contract.",
+  "author": "Jinlong",
+  "enabled": false,
+  "contentTypes": ["clipboard-entry", "paste-queue", "ocr-preview"],
+  "windows": {
+    "control": true
+  },
+  "events": {
+    "emit": ["clipboard:entry-created", "clipboard:entry-deleted", "clipboard:paste-queued", "clipboard:ocr-requested"],
+    "listen": []
+  },
+  "dependencies": [],
+  "tauriCommands": []
+}
