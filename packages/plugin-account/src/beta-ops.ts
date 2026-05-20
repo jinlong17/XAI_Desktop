@@ -57,6 +57,28 @@ export interface AccountDeletionPlan {
   serverCleanupRequired: boolean;
 }
 
+export interface AccountDeletionStore {
+  deleteRows(table: string, filter: { accountId: string }): Promise<number>;
+  revokeDevice(deviceId: string): Promise<void>;
+}
+
+export interface AccountDeletionResult {
+  accountId: string;
+  deletedRowsByTable: Record<string, number>;
+  revokedDeviceIds: string[];
+  completed: boolean;
+}
+
+const ACCOUNT_DELETION_TABLES = [
+  'encrypted_blobs',
+  'staging_blobs',
+  'mutation_dedup',
+  'device_sync_progress',
+  'device_dek_wraps',
+  'sync_devices',
+  'accounts',
+] as const;
+
 export class StorageQuotaExceededError extends Error {
   readonly code = 'E3034';
 
@@ -178,17 +200,69 @@ export function planAccountDeletion(input: {
   return {
     accountId: input.accountId,
     revokeDeviceIds: [...input.deviceIds],
-    deleteTables: [
-      'encrypted_blobs',
-      'staging_blobs',
-      'mutation_dedup',
-      'device_sync_progress',
-      'device_dek_wraps',
-      'sync_devices',
-      'accounts',
-    ],
+    deleteTables: ACCOUNT_DELETION_TABLES,
     serverCleanupRequired: true,
   };
+}
+
+export async function executeAccountDeletion(
+  store: AccountDeletionStore,
+  plan: AccountDeletionPlan,
+): Promise<AccountDeletionResult> {
+  const deletedRowsByTable: Record<string, number> = {};
+  const revokedDeviceIds: string[] = [];
+  let completed = true;
+
+  for (const table of plan.deleteTables) {
+    try {
+      deletedRowsByTable[table] = await store.deleteRows(table, { accountId: plan.accountId });
+    } catch {
+      completed = false;
+    }
+  }
+
+  for (const deviceId of plan.revokeDeviceIds) {
+    try {
+      await store.revokeDevice(deviceId);
+      revokedDeviceIds.push(deviceId);
+    } catch {
+      completed = false;
+    }
+  }
+
+  return {
+    accountId: plan.accountId,
+    deletedRowsByTable,
+    revokedDeviceIds,
+    completed,
+  };
+}
+
+export class InMemoryAccountDeletionStore implements AccountDeletionStore {
+  readonly tables = new Map<string, Array<{ accountId: string }>>();
+  readonly revokedDeviceIds = new Set<string>();
+
+  seed(table: string, rows: Array<{ accountId: string }>): void {
+    this.tables.set(table, rows.map((row) => ({ ...row })));
+  }
+
+  async deleteRows(table: string, filter: { accountId: string }): Promise<number> {
+    const rows = this.tables.get(table) ?? [];
+    let deletedCount = 0;
+    const remainingRows = rows.filter((row) => {
+      if (row.accountId === filter.accountId) {
+        deletedCount += 1;
+        return false;
+      }
+      return true;
+    });
+    this.tables.set(table, remainingRows);
+    return deletedCount;
+  }
+
+  async revokeDevice(deviceId: string): Promise<void> {
+    this.revokedDeviceIds.add(deviceId);
+  }
 }
 
 function cloneExportRecords(records: readonly EncryptedExportRecord[]): EncryptedExportRecord[] {

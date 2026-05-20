@@ -42,16 +42,20 @@ export type {
 } from './audit-log';
 export {
   AccountRateLimitError,
+  InMemoryAccountDeletionStore,
   StorageQuotaExceededError,
   assertWithinStorageQuota,
   createAccountRateLimiter,
   createSupportFeedback,
+  executeAccountDeletion,
   exportEncryptedAccountData,
   importEncryptedAccountData,
   planAccountDeletion,
 } from './beta-ops';
 export type {
+  AccountDeletionResult,
   AccountDeletionPlan,
+  AccountDeletionStore,
   EncryptedExportEnvelopeV1,
   EncryptedExportEnvelopeV2,
   EncryptedExportRecord,
