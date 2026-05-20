@@ -736,3 +736,16 @@ Latest checkpoint is 2026-05-19 23:34 PDT. G0 is Conditional Go for the DMG/priv
   - `pnpm --filter @repo/core check-types` -> PASS.
   - `pnpm --filter @repo/plugin-organizer check-types` -> PASS.
 - `packages/repository-v0-contract/docs/dev_log.md` updated to READY_TO_SHIP; manual ship deferred per Track A scope.
+
+### 2026-05-20 00:32 PDT — Ship Checkpoint: G1.2 + G1.4 manifest promotion
+
+- Manual ship authorized for G1.2 `grid-shell-organizer-content` and G1.4 `multi-grid-event-scope` per goal directive.
+- Both already had complete READY_TO_SHIP commits on the main lineage (G1.2 `26d9f57`/`03ca86a`; G1.4 `78aef01`/`59da1e5`); the only outstanding work was manifest promotion.
+- Updated G1 manifest rows #2 and #4 to SHIPPED on `codex/track-a-desktop-foundation`.
+- Updated `packages/grid-shell-organizer-content/docs/dev_log.md` and `packages/multi-grid-event-scope/docs/dev_log.md` Status Panels and Work Logs to SHIPPED.
+- Push will be bundled with subsequent Track A commits when ship policy allows a single Track-A push.
+- No code/runtime changes; ship.md/data-repository contract unchanged in this commit.
+
+### R4. Ship Record (updated)
+
+G1.1 (window-command-contract), G1.6 (host-business-residuals), G1.2 (grid-shell-organizer-content), and G1.4 (multi-grid-event-scope) are now manifest-SHIPPED. G1.3 remains BLOCKED_EXTERNAL (MAS sandbox). G1.5 unblocks now that G2.1 Repository v0 is READY_TO_SHIP and the contract is published; G1.5 production work will be picked up after G2 risk-closing rows.
