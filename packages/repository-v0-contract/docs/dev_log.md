@@ -8,13 +8,13 @@
 | Target | repository-v0-contract |
 | Title | G2.1 Repository v0 Contract |
 | Roadmap | xai-g2-data-security-foundation · feature #1 · G2.1 |
-| Status | READY_TO_SHIP |
-| Current Phase | VERIFY |
+| Status | SHIPPED |
+| Current Phase | SHIPPED |
 | Suggested Next | manual ship only; continue roadmap |
 | Automation Mode | D-Codex |
 | Verify Cross-vendor | yes |
 | Executor | feature-verify (Claude Code, Track A) |
-| Updated | 2026-05-20 00:18 PDT |
+| Updated | 2026-05-20 13:25 PDT |
 | Blockers | Cross-vendor verify deferred in serial mode; no blocker for scoped contract |
 
 ## Phase Plan
@@ -59,3 +59,4 @@ Cross-vendor review/verify, SQLCipher runtime, live Supabase, plugin/UI migratio
 |---|---|---|---|---|
 | 2026-05-19 23:48 PDT | feature-plan + feature-review (Codex inline) | Created Step 0 brief and feature docs. Approved scoped G2.1 plan for build. | pending | feature-build |
 | 2026-05-20 00:18 PDT | feature-build + feature-verify (Claude Code, Track A) | Implemented Repository v0 entity surface (`packages/core-data/src/entities.ts`), updated contract doc with entity table + interface, added `tests/entities.test.ts`, ran core-data test + type checks (45 tests passing). | `744d578` | manual ship only; continue roadmap |
+| 2026-05-20 13:25 PDT | ship (Claude Code, Track A) | Manifest + Status Panel promoted SHIPPED. Includes P1 Alpha runtime regex + clipboard runtime invariant (`0bc3afa`). | `744d578`, `0bc3afa` | continue roadmap |

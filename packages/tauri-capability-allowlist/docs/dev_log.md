@@ -8,13 +8,13 @@
 | Target | tauri-capability-allowlist |
 | Title | G2.5 Tauri capability allowlist audit + db scope file |
 | Roadmap | xai-g2-data-security-foundation · feature #6 · G2.5 |
-| Status | READY_TO_SHIP |
-| Current Phase | VERIFY |
+| Status | SHIPPED |
+| Current Phase | SHIPPED |
 | Suggested Next | manual ship only; MAS signed-runtime smoke deferred |
 | Automation Mode | D-Codex |
 | Verify Cross-vendor | yes |
 | Executor | feature-build + feature-verify (Claude Code, Track A) |
-| Updated | 2026-05-20 00:58 PDT |
+| Updated | 2026-05-20 13:25 PDT |
 | Blockers | None for desktop dev path; MAS / signed-runtime smoke remains in `xai-v1.deferred-gates.md` |
 
 ## Phase Plan
@@ -76,3 +76,4 @@ Widget / pet / ai-cube windows cannot reach `db_*`, `crypto_*`, or
 |---|---|---|---|---|
 | 2026-05-20 00:58 PDT | feature-build + feature-verify (Claude Code, Track A) | Added `plugin-data-database.json`, `AUDIT.md`, runtime allow-list with 2 new cargo tests, contract doc cross-refs. | pending commit | manual ship only; continue roadmap |
 | 2026-05-20 PDT | bug-fix (Claude Code, Track A) | P0-2: `commands/keychain.rs` was missing the runtime `ensure_*_allowed` check that AUDIT.md / contracts v0 §7 claimed every JS-callable command had — fixed by adding `KEYCHAIN_ALLOWED_WINDOWS = ["account", "control"]`, `is_keychain_window_allowed`, `ensure_keychain_window_allowed`, and injecting `window: WebviewWindow` as the first parameter of `secret_set` / `secret_get` / `secret_del`. Added 2 cargo tests (admit account/control, reject widget/pet/ai_cube/unknown/grid_*/main/console). Updated AUDIT.md to name the constant explicitly and contracts v0 §6 to mention the runtime check. TS keychain.ts unchanged (Tauri auto-injects `window`). | pending commit | none — closes Codex cross-vendor P0-2 |
+| 2026-05-20 13:25 PDT | ship (Claude Code, Track A) | Manifest + Status Panel promoted SHIPPED. Includes P0 G2.5 secret_* runtime gate + P1 Gamma window/menubar allow-list extension. Codex R2 APPROVED on keychain fix. | `ad5f1d3`, `143bca5`, `7e97dc3` | continue roadmap |

@@ -8,13 +8,13 @@
 | Target | core-data-sqlite-driver |
 | Title | G2.2 SQLite/SQLCipher driver PoC |
 | Roadmap | xai-g2-data-security-foundation · feature #2 · G2.2 |
-| Status | READY_TO_SHIP |
-| Current Phase | VERIFY |
+| Status | SHIPPED |
+| Current Phase | SHIPPED |
 | Suggested Next | manual ship only; continue roadmap (G2.3 / G2.4) |
 | Automation Mode | D-Codex |
 | Verify Cross-vendor | yes |
 | Executor | feature-build + feature-verify (Claude Code, Track A) |
-| Updated | 2026-05-20 02:13 PDT |
+| Updated | 2026-05-20 13:25 PDT |
 | Blockers | SQLCipher PRAGMA path deferred to G2.4 KEK handle publication; cross-vendor verify deferred in serial mode |
 
 ## Phase Plan
@@ -76,3 +76,4 @@ G2.4/G2.6 roadmap.
 | 2026-05-19 03:25 PDT | Codex serial autorun | Added SQLite driver boundary, namespace repo, mutation hook, localStorage migration, in-memory SQLite test driver, and `@repo/core-data/testing` subpath export. | — | Real SQLCipher/Tauri binding deferred |
 | 2026-05-20 00:46 PDT | feature-build + feature-verify (Claude Code, Track A) | Implemented `commands/database.rs`, error variants, lib.rs registration, TS `createTauriRepo` factory, and contract doc §6.1. 7 cargo tests + 4 vitest tests passing; cargo check (default + crypto) and desktop build green. | pending commit | manual ship only; continue roadmap |
 | 2026-05-20 02:13 PDT | bug-fix (Claude Code, Track A) | P0 G2.6 atomicity fix: added `db_put_batch` Tauri command (BEGIN/COMMIT around N puts+deletes in one namespace), rewired `createTauriRepo.transaction(fn)` to buffer writes and dispatch them through `db_put_batch`. Adds the `E13xx` validation contract: the whole batch rolls back on any per-entry failure. 13 cargo database tests (4 new batch cases) + 66 core-data vitest cases (incl. new `tauri-sqlite` buffer/rollback + real SQLite sabotage) all green. | `cargo check`, `cargo check --features crypto`, `cargo test --features crypto database::`, `pnpm --filter @repo/core-data test`, `pnpm --filter @repo/core-data check-types`, `pnpm --filter desktop build` — all PASS. | continue roadmap |
+| 2026-05-20 13:25 PDT | ship (Claude Code, Track A) | Manifest + Status Panel promoted SHIPPED. Includes P0 G2.6 db_put_batch atomic seam (`c5b0e77`). | `f3dd30b`, `c5b0e77` | continue roadmap |

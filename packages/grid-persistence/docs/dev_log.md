@@ -8,13 +8,13 @@
 | Target | grid-persistence |
 | Title | G1.5 Grid persistence |
 | Roadmap | xai-g1-native-foundation · feature #5 · G1.5 |
-| Status | READY_TO_SHIP |
-| Current Phase | VERIFY |
+| Status | SHIPPED |
+| Current Phase | SHIPPED |
 | Suggested Next | manual ship only; full Repository cut-over runtime smoke deferred |
 | Automation Mode | D-Codex |
 | Verify Cross-vendor | yes |
 | Executor | feature-build + feature-verify (Claude Code, Track A) |
-| Updated | 2026-05-20 01:08 PDT |
+| Updated | 2026-05-20 13:25 PDT |
 | Blockers | None for the persistence seam scope; live `tauri-sqlite` cut-over runtime smoke deferred |
 
 ## Phase Plan
@@ -47,3 +47,4 @@ Docs-only prep is complete. G1.5 production acceptance remains blocked by G1.1 a
 | 2026-05-19 20:41 PDT | feature-build (Codex inline) | Created Grid persistence discovery docs. | `dcf2750` | feature-verify |
 | 2026-05-19 20:41 PDT | feature-verify (Codex inline) | Verified docs-only scope; status remains BLOCKED. | `dcf2750` | G1.1/G2 |
 | 2026-05-20 01:08 PDT | feature-build + feature-verify (Claude Code, Track A) | Production persistence seam: added `packages/plugin-organizer/src/layoutStore.ts` (LayoutStore, localStorage adapter, Repository v0 adapter), wired `GridSystemProvider` to accept `store?: LayoutStore`, made hydrate async + corrupt-state safe (cannot whiteout), refactored save + clearAll to delegate. 9 vitest cases + plugin-organizer types + desktop build PASS. | pending commit | manual ship only; continue G3 |
+| 2026-05-20 13:25 PDT | ship (Claude Code, Track A) | Manifest + Status Panel promoted SHIPPED. Includes P1 Beta hardening (`1b34b54`). | `91dc6b6`, `1b34b54` | continue roadmap |

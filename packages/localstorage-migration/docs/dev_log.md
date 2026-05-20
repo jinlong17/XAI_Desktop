@@ -8,13 +8,13 @@
 | Target | localstorage-migration |
 | Title | G2.3 localStorage → Repository v0 migration adapter |
 | Roadmap | xai-g2-data-security-foundation · feature #4 · G2.3 |
-| Status | READY_TO_SHIP |
-| Current Phase | VERIFY |
+| Status | SHIPPED |
+| Current Phase | SHIPPED |
 | Suggested Next | manual ship only; UI wire-up tracked under G1.5 / G3-E1 |
 | Automation Mode | D-Codex |
 | Verify Cross-vendor | yes |
 | Executor | feature-build + feature-verify (Claude Code, Track A) |
-| Updated | 2026-05-20 00:48 PDT |
+| Updated | 2026-05-20 13:25 PDT |
 | Blockers | None for migration adapter scope; runtime cut-over deferred |
 
 ## Phase Plan
@@ -81,3 +81,4 @@ future async refactor of `useGridSystem` can land in one focused PR.
 | Timestamp | Executor | Action | Commits | Next |
 |---|---|---|---|---|
 | 2026-05-20 00:48 PDT | feature-build + feature-verify (Claude Code, Track A) | Added `organizer-layout-migration.ts` + 5 vitest cases. Re-exported from `@repo/core-data`. Updated G2 manifest row #4. | pending commit | manual ship only; continue roadmap |
+| 2026-05-20 13:25 PDT | ship (Claude Code, Track A) | Manifest + Status Panel promoted SHIPPED. Includes P1 Alpha entity validation skip + P1 Gamma true-idempotency unchanged-skip (separate counters). | `2784397`, `0bc3afa`, `7e97dc3` | continue roadmap |

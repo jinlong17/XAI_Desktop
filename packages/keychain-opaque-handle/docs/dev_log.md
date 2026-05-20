@@ -8,13 +8,13 @@
 | Target | keychain-opaque-handle |
 | Title | G2.4 Keychain ↔ KeyVault opaque-handle bridge |
 | Roadmap | xai-g2-data-security-foundation · feature #5 · G2.4 |
-| Status | READY_TO_SHIP |
-| Current Phase | VERIFY |
+| Status | SHIPPED |
+| Current Phase | SHIPPED |
 | Suggested Next | manual ship only; SQLCipher PRAGMA wiring tracked under G2.6 reconciliation |
 | Automation Mode | D-Codex |
 | Verify Cross-vendor | yes |
 | Executor | feature-build + feature-verify (Claude Code, Track A) |
-| Updated | 2026-05-20 00:54 PDT |
+| Updated | 2026-05-20 13:25 PDT |
 | Blockers | None; sandbox runtime evidence remains in `xai-v1.deferred-gates.md` |
 
 ## Phase Plan
@@ -78,3 +78,4 @@ non-key material (refresh tokens, recovery transcripts, etc.).
 | Timestamp | Executor | Action | Commits | Next |
 |---|---|---|---|---|
 | 2026-05-20 00:54 PDT | feature-build + feature-verify (Claude Code, Track A) | Added `crypto/keychain_handle.rs` bridge + E1200-E1202 error codes + contract doc §6.0.1; 3 cargo tests passing. | pending commit | manual ship only; continue roadmap |
+| 2026-05-20 13:25 PDT | ship (Claude Code, Track A) | Manifest + Status Panel promoted SHIPPED. Includes P1 Alpha zeroize on length-error path + stack-local sanitization (`0bc3afa`). | `d1fe45a`, `0bc3afa` | continue roadmap |
