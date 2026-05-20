@@ -1,0 +1,1542 @@
+Reading additional input from stdin...
+OpenAI Codex v0.132.0
+--------
+workdir: /Users/lijinlong/Desktop/AI_Desktop/XAI_Desktop
+model: gpt-5.4
+provider: openai
+approval: never
+sandbox: workspace-write [workdir, /tmp, $TMPDIR]
+reasoning effort: high
+reasoning summaries: none
+session id: 019e46b7-ed14-7d81-9cd5-42d1f1465e4b
+--------
+user
+# Codex Feature Post-fix Re-review
+
+You are acting as the `feature-review` subagent (Codex inline, cross-vendor verify pass), **re-reviewing** a P0 fix that the Claude Code main agent landed on `codex/track-a-desktop-foundation` in response to your previous BLOCKED verdict.
+
+## Your only job
+
+Decide whether the new commit closes the P0 issue you previously flagged. Output ONLY the markdown block below — no preamble, no follow-up. Under 500 words.
+
+```md
+## Codex Post-fix Re-review
+
+**Feature**: p1-alpha-core-data-validation
+**Original verdict**: BLOCKED
+**Fix commit(s)**: 0bc3afa
+**Reviewer**: codex feature-review · gpt-5.4 high reasoning
+**New verdict**: APPROVED | REVISE | BLOCKED
+
+### Was the original P0 resolved?
+- Original issue (paraphrased): …
+- Evidence the fix resolves it: <file:line citations>
+- Was the resolution honest (no smuggled scope-cut or stub-only fix)?
+
+### Remaining gaps (max 4 bullets, severity-tagged)
+- [P1|P2] …
+
+### Regressions introduced (max 3 bullets)
+- …
+
+### Next action
+- If APPROVED: re-mark the manifest row to READY_TO_SHIP and move on.
+- If REVISE: one or two concrete follow-up bullets (≤ half a day each).
+- If BLOCKED: state which contract is still false.
+```
+
+## How to evaluate
+
+1. The fix commit's diff is your primary evidence. Use `git show --stat 0bc3afa` and `git show 0bc3afa` to read it end-to-end.
+2. Compare the diff against the original P0 issue:
+   G2.1 assertRepoRecord only checked for a dot, not the documented plugin.entity regex; clipboard.item runtime did not enforce device-local; G2.3 migration accepted items with empty filepath; G2.4 keychain_handle::insert_kek_from_bytes failed to zeroize the caller buffer on length-error early return, and the stack-local owned: [u8;32] (Copy) was never scrubbed.
+3. Look for the **specific change** the previous review demanded. Smuggled scope-cuts (e.g. silently deferring the invariant to a follow-up) must downgrade the verdict.
+4. Scan for **regressions**: imports added, capabilities widened, tests skipped, doc invariants weakened.
+5. Validate the test commands listed in the fix commit message actually exist and pass (treat the commit body's "Tests" section as the executor's claim — does the diff support it?).
+
+## Feature-specific context
+
+See commit body of 0bc3afa for full file list and rationale. Run `git show --stat 0bc3afa` and `git show 0bc3afa` for the diff.
+codex
+Reviewing commit `0bc3afa` against the previously flagged P0 contracts. I’m reading the full diff first, then I’ll verify whether the claimed tests and invariant changes actually cover the issue.
+exec
+/bin/zsh -lc 'git show --format=fuller 0bc3afa' in /Users/lijinlong/Desktop/AI_Desktop/XAI_Desktop
+exec
+/bin/zsh -lc 'git show --stat --format=fuller 0bc3afa' in /Users/lijinlong/Desktop/AI_Desktop/XAI_Desktop
+ succeeded in 0ms:
+commit 0bc3afa8aae269243aabfb37c086dc5243b2793a
+Author:     InnoPeak <global_ai@innopeaktech.com>
+AuthorDate: Wed May 20 11:34:02 2026 -0700
+Commit:     InnoPeak <global_ai@innopeaktech.com>
+CommitDate: Wed May 20 11:45:17 2026 -0700
+
+    fix(core-data, crypto): runtime validation + zeroization hardening (P1 A-group)
+    
+    Why:
+    Codex cross-vendor review on `codex/track-a-desktop-foundation` flagged
+    three runtime-validation gaps and one zeroization gap that allowed
+    malformed or sensitive material to bypass guards documented in
+    `docs/contracts/data-repository-v0.md` and the G2.4 keychain bridge.
+    
+    What:
+    - A1: `assertRepoRecord()` now enforces the documented
+      `^[a-z]+\.[a-z_]+$` regex via a module-level `ENTITY_TYPE_RE`,
+      refining the E3005 message to name the offending value.
+    - A2: `assertRepoRecord()` adds a runtime check rejecting any
+      `clipboard.item` record whose `syncScope` is not `device-local`,
+      closing the gap between the TS-level narrowing on
+      `ClipboardEntryEntity` and rows fetched from SQLite.
+    - A3: `migrateOrganizerLayoutToRepos()` performs positive validation in
+      `toGridItemEntity()`: legacy items must have a non-empty `filepath`
+      and a `file|folder|app` kind; everything else (including any url
+      shape) is dropped and counted via a new
+      `OrganizerLayoutMigrationResult.skipped` field.
+    - A4: `insert_kek_from_bytes()` now zeroizes the caller buffer on the
+      length-error early-return path AND wraps the stack-local
+      `[u8; KEY_BYTES]` in `zeroize::Zeroizing` so the local copy is
+      scrubbed when it drops, eliminating the leftover stack value.
+    
+    Scope:
+    - packages/core-data/src/repo-utils.ts
+    - packages/core-data/src/organizer-layout-migration.ts
+    - packages/core-data/tests/entities.test.ts
+    - packages/core-data/tests/organizer-layout-migration.test.ts
+    - apps/desktop/src-tauri/src/crypto/keychain_handle.rs
+    
+    Risk:
+    Low. Pure runtime-validation tightening + defence-in-depth zeroization.
+    No public API or schema change; `OrganizerLayoutMigrationResult` only
+    gains a new optional field consumers can ignore. The zeroize crate was
+    already enabled behind the `crypto` feature.
+    
+    Docs:
+    No doc churn required — the regex and `device-local` invariant are
+    already documented in `docs/contracts/data-repository-v0.md`; this
+    change brings the runtime in line with the contract.
+    
+    Tests:
+    - `pnpm --filter @repo/core-data test` — 7 files / 69 tests pass
+      (+3 new vitest cases: bad-regex, clipboard runtime, skipped-empty-filepath).
+    - `pnpm --filter @repo/core-data check-types` — clean.
+    - `cargo test --features crypto keychain_handle::` — 4/4 pass, including
+      the new `wrong_length_zeroizes_caller_buffer` case.
+    - `cargo check --features crypto` — clean.
+    
+    Co-Authored-By: Claude Opus 4.7 (1M context) <noreply@anthropic.com>
+
+ .../src-tauri/src/crypto/keychain_handle.rs        | 32 +++++++++++--
+ .../core-data/src/organizer-layout-migration.ts    | 23 +++++++--
+ packages/core-data/src/repo-utils.ts               | 20 ++++++--
+ packages/core-data/tests/entities.test.ts          | 38 +++++++++++++++
+ .../tests/organizer-layout-migration.test.ts       | 56 ++++++++++++++++++++++
+ 5 files changed, 158 insertions(+), 11 deletions(-)
+
+ succeeded in 102ms:
+ring" || record.id.length === 0) {
+     throw new Error("E3005: core-data record is missing id");
+   }
+-  if (
+-    typeof record.entityType !== "string" ||
+-    !record.entityType.includes(".")
+-  ) {
++  if (typeof record.entityType !== "string" || record.entityType.length === 0) {
+     throw new Error("E3005: core-data record is missing entityType");
+   }
++  if (!ENTITY_TYPE_RE.test(record.entityType)) {
++    throw new Error(
++      `E3005: core-data record entityType "${record.entityType}" violates plugin.entity regex`,
++    );
++  }
+   if (!Number.isInteger(record.schemaVersion) || record.schemaVersion < 1) {
+     throw new Error("E3005: core-data record has invalid schemaVersion");
+   }
+@@ -30,6 +34,14 @@ export function assertRepoRecord(record: RepoRecord): void {
+   ) {
+     throw new Error("E3005: core-data record has invalid syncScope");
+   }
++  if (
++    record.entityType === "clipboard.item" &&
++    record.syncScope !== "device-local"
++  ) {
++    throw new Error(
++      `E3005: clipboard.item must be device-local, got "${record.syncScope}"`,
++    );
++  }
+ }
+ 
+ export function applyRepoListQuery<T extends RepoRecord>(
+diff --git a/packages/core-data/tests/entities.test.ts b/packages/core-data/tests/entities.test.ts
+index e034046..6226084 100644
+--- a/packages/core-data/tests/entities.test.ts
++++ b/packages/core-data/tests/entities.test.ts
+@@ -1,5 +1,6 @@
+ import { describe, expect, it } from "vitest";
+ 
++import { assertRepoRecord } from "../src/repo-utils";
+ import { createInMemoryRepo } from "../src/testing";
+ import type {
+   CardEntity,
+@@ -12,6 +13,7 @@ import type {
+   RepoEntity,
+   TodoEntity,
+ } from "../src/entities";
++import type { RepoRecord } from "../src/types";
+ 
+ const BASE = {
+   schemaVersion: 1,
+@@ -161,6 +163,42 @@ describe("Repo entities contract", () => {
+     }
+   });
+ 
++  it("rejects records whose entityType violates the plugin.entity regex", () => {
++    const bad: RepoRecord = {
++      ...BASE,
++      id: "bad-1",
++      // Uppercase + missing dot → violates `^[a-z]+\.[a-z_]+$`.
++      entityType: "BadType",
++    } as RepoRecord;
++    expect(() => assertRepoRecord(bad)).toThrowError(
++      /E3005: core-data record entityType "BadType" violates plugin\.entity regex/,
++    );
++
++    const trailingDash: RepoRecord = {
++      ...BASE,
++      id: "bad-2",
++      entityType: "labels.label-1",
++    } as RepoRecord;
++    expect(() => assertRepoRecord(trailingDash)).toThrowError(
++      /violates plugin\.entity regex/,
++    );
++  });
++
++  it("rejects clipboard.item records with non-device-local syncScope at runtime", () => {
++    const cheating: RepoRecord = {
++      ...BASE,
++      id: "clip-bad",
++      entityType: "clipboard.item",
++      // Force account-sync via the wider RepoRecord shape — the type-level
++      // narrowing on ClipboardEntryEntity stops this in TS, but a raw
++      // SQLite row could still carry the wrong value.
++      syncScope: "account-sync",
++    } as RepoRecord;
++    expect(() => assertRepoRecord(cheating)).toThrowError(
++      /E3005: clipboard\.item must be device-local, got "account-sync"/,
++    );
++  });
++
+   it("supports listByIndex on entity-owned fields", async () => {
+     const repo = createInMemoryRepo<GridItemEntity>({
+       namespace: "organizer.items",
+diff --git a/packages/core-data/tests/organizer-layout-migration.test.ts b/packages/core-data/tests/organizer-layout-migration.test.ts
+index a3edfe7..bd2de92 100644
+--- a/packages/core-data/tests/organizer-layout-migration.test.ts
++++ b/packages/core-data/tests/organizer-layout-migration.test.ts
+@@ -97,6 +97,7 @@ describe("migrateOrganizerLayoutToRepos", () => {
+       gridsMigrated: 2,
+       itemsMigrated: 2,
+       removedLegacy: false,
++      skipped: 0,
+     });
+ 
+     const grids = await gridRepo.list({
+@@ -182,6 +183,61 @@ describe("migrateOrganizerLayoutToRepos", () => {
+     expect(storage.getItem(LEGACY_LAYOUT_STORAGE_KEY)).toBeNull();
+   });
+ 
++  it("drops items with an empty filepath and increments skipped", async () => {
++    const layout: LegacyOrganizerLayout = {
++      grids: [
++        {
++          id: "grid-1",
++          title: "Today",
++          rect: { x: 0, y: 0, width: 240, height: 320 },
++          itemIds: ["good", "bad"],
++        },
++      ],
++      items: [
++        {
++          id: "good",
++          filename: "ok.md",
++          filepath: "/Users/me/ok.md",
++          type: "file",
++          icon: "doc",
++        },
++        {
++          id: "bad",
++          filename: "missing",
++          // Empty filepath → must be dropped.
++          filepath: "",
++          type: "file",
++          icon: "doc",
++        },
++      ],
++    };
++    const storage = fakeStorage({
++      [LEGACY_LAYOUT_STORAGE_KEY]: JSON.stringify(layout),
++    });
++    const gridRepo = createInMemoryRepo<GridEntity>({ namespace: "grids" });
++    const itemRepo = createInMemoryRepo<GridItemEntity>({
++      namespace: "items",
++    });
++
++    const result = await migrateOrganizerLayoutToRepos({
++      storage,
++      gridRepo,
++      itemRepo,
++      nowIso: () => "2026-05-20T00:00:00.000Z",
++    });
++
++    expect(result).toEqual({
++      scanned: true,
++      parsed: true,
++      gridsMigrated: 1,
++      itemsMigrated: 1,
++      removedLegacy: false,
++      skipped: 1,
++    });
++    const items = await itemRepo.list();
++    expect(items.map((it) => it.id)).toEqual(["good"]);
++  });
++
+   it("is a no-op when the legacy key is absent or malformed", async () => {
+     const empty = fakeStorage();
+     expect(
+
+codex
+The diff addresses all four cited gaps on its face. I’m checking the exact line references in the touched files and running the claimed local verification commands so the verdict isn’t based on commit prose alone.
+exec
+/bin/zsh -lc "nl -ba packages/core-data/src/repo-utils.ts | sed -n '1,120p'" in /Users/lijinlong/Desktop/AI_Desktop/XAI_Desktop
+exec
+/bin/zsh -lc "nl -ba packages/core-data/src/organizer-layout-migration.ts | sed -n '60,240p'" in /Users/lijinlong/Desktop/AI_Desktop/XAI_Desktop
+ succeeded in 0ms:
+     1	import type {
+     2	  MigrationPlan,
+     3	  MigrationResult,
+     4	  RepoListQuery,
+     5	  RepoRecord,
+     6	} from "./types";
+     7	
+     8	const ENTITY_TYPE_RE = /^[a-z]+\.[a-z_]+$/;
+     9	
+    10	export function assertRepoRecord(record: RepoRecord): void {
+    11	  if (typeof record.id !== "string" || record.id.length === 0) {
+    12	    throw new Error("E3005: core-data record is missing id");
+    13	  }
+    14	  if (typeof record.entityType !== "string" || record.entityType.length === 0) {
+    15	    throw new Error("E3005: core-data record is missing entityType");
+    16	  }
+    17	  if (!ENTITY_TYPE_RE.test(record.entityType)) {
+    18	    throw new Error(
+    19	      `E3005: core-data record entityType "${record.entityType}" violates plugin.entity regex`,
+    20	    );
+    21	  }
+    22	  if (!Number.isInteger(record.schemaVersion) || record.schemaVersion < 1) {
+    23	    throw new Error("E3005: core-data record has invalid schemaVersion");
+    24	  }
+    25	  if (
+    26	    typeof record.createdAt !== "string" ||
+    27	    typeof record.updatedAt !== "string"
+    28	  ) {
+    29	    throw new Error("E3005: core-data record is missing timestamps");
+    30	  }
+    31	  if (
+    32	    record.syncScope !== "device-local" &&
+    33	    record.syncScope !== "account-sync"
+    34	  ) {
+    35	    throw new Error("E3005: core-data record has invalid syncScope");
+    36	  }
+    37	  if (
+    38	    record.entityType === "clipboard.item" &&
+    39	    record.syncScope !== "device-local"
+    40	  ) {
+    41	    throw new Error(
+    42	      `E3005: clipboard.item must be device-local, got "${record.syncScope}"`,
+    43	    );
+    44	  }
+    45	}
+    46	
+    47	export function applyRepoListQuery<T extends RepoRecord>(
+    48	  records: Iterable<T>,
+    49	  query: RepoListQuery<T> = {},
+    50	): T[] {
+    51	  let result = [...records];
+    52	
+    53	  if (query.entityType) {
+    54	    result = result.filter((record) => record.entityType === query.entityType);
+    55	  }
+    56	
+    57	  if (query.syncScope) {
+    58	    result = result.filter((record) => record.syncScope === query.syncScope);
+    59	  }
+    60	
+    61	  if (query.orderBy) {
+    62	    const { field, direction = "asc" } = query.orderBy;
+    63	    result.sort((left, right) => {
+    64	      const order = compareRepoValues(left[field], right[field]);
+    65	      return direction === "asc" ? order : -order;
+    66	    });
+    67	  }
+    68	
+    69	  if (query.limit !== undefined) {
+    70	    if (!Number.isInteger(query.limit) || query.limit < 0) {
+    71	      throw new Error("E3005: core-data list query has invalid limit");
+    72	    }
+    73	    result = result.slice(0, query.limit);
+    74	  }
+    75	
+    76	  return result;
+    77	}
+    78	
+    79	export function applyRepoIndexQuery<
+    80	  T extends RepoRecord,
+    81	  K extends Extract<keyof T, string>,
+    82	>(records: Iterable<T>, field: K, value: T[K], query?: RepoListQuery<T>): T[] {
+    83	  return applyRepoListQuery(
+    84	    [...records].filter((record) => Object.is(record[field], value)),
+    85	    query,
+    86	  );
+    87	}
+    88	
+    89	export function assertMigrationPlan<T extends RepoRecord>(
+    90	  plan: MigrationPlan<T>,
+    91	  migrationVersion: number,
+    92	): void {
+    93	  if (plan.fromVersion >= plan.toVersion) {
+    94	    throw new Error("E3006: core-data migration must increase version");
+    95	  }
+    96	  if (migrationVersion !== plan.fromVersion) {
+    97	    throw new Error(
+    98	      `E3006: core-data migration expected version ${plan.fromVersion}, got ${migrationVersion}`,
+    99	    );
+   100	  }
+   101	}
+   102	
+   103	export function skippedMigrationResult<T extends RepoRecord>(
+   104	  plan: MigrationPlan<T>,
+   105	  nowIso: () => string,
+   106	): MigrationResult {
+   107	  const timestamp = nowIso();
+   108	  return {
+   109	    id: plan.id,
+   110	    fromVersion: plan.fromVersion,
+   111	    toVersion: plan.toVersion,
+   112	    startedAt: timestamp,
+   113	    completedAt: timestamp,
+   114	    applied: false,
+   115	  };
+   116	}
+   117	
+   118	function compareRepoValues(left: unknown, right: unknown): number {
+   119	  if (left === right) {
+   120	    return 0;
+
+ succeeded in 0ms:
+    60	
+    61	export interface LegacyOrganizerLayout {
+    62	  grids: LegacyGridBox[];
+    63	  items: LegacyDesktopItem[];
+    64	}
+    65	
+    66	export interface OrganizerLayoutMigrationOptions {
+    67	  storage: StorageLike;
+    68	  gridRepo: Repo<GridEntity>;
+    69	  itemRepo: Repo<GridItemEntity>;
+    70	  legacyKey?: string;
+    71	  nowIso?: () => string;
+    72	  removeLegacy?: boolean;
+    73	}
+    74	
+    75	export interface OrganizerLayoutMigrationResult {
+    76	  scanned: boolean;
+    77	  parsed: boolean;
+    78	  gridsMigrated: number;
+    79	  itemsMigrated: number;
+    80	  /**
+    81	   * Records whose meaningful fields equal what's already in the repo and
+    82	   * therefore did NOT trigger a re-`put` (C2). Rerunning against an
+    83	   * unchanged blob bumps `unchanged` instead of touching `updatedAt`.
+    84	   */
+    85	  unchanged: number;
+    86	  /**
+    87	   * Legacy items rejected by positive validation (A3): empty `filepath`,
+    88	   * unsupported `kind`, etc. Not counted toward `unchanged`.
+    89	   */
+    90	  skipped: number;
+    91	  removedLegacy: boolean;
+    92	}
+    93	
+    94	export async function migrateOrganizerLayoutToRepos(
+    95	  options: OrganizerLayoutMigrationOptions,
+    96	): Promise<OrganizerLayoutMigrationResult> {
+    97	  const legacyKey = options.legacyKey ?? LEGACY_LAYOUT_STORAGE_KEY;
+    98	  const raw = options.storage.getItem(legacyKey);
+    99	  if (raw === null) {
+   100	    return emptyResult();
+   101	  }
+   102	
+   103	  let layout: LegacyOrganizerLayout;
+   104	  try {
+   105	    layout = JSON.parse(raw) as LegacyOrganizerLayout;
+   106	  } catch {
+   107	    return { ...emptyResult(), scanned: true };
+   108	  }
+   109	
+   110	  if (
+   111	    !layout ||
+   112	    !Array.isArray(layout.grids) ||
+   113	    !Array.isArray(layout.items)
+   114	  ) {
+   115	    return { ...emptyResult(), scanned: true };
+   116	  }
+   117	
+   118	  const nowIso = options.nowIso ?? (() => new Date().toISOString());
+   119	  const timestamp = nowIso();
+   120	
+   121	  let gridsMigrated = 0;
+   122	  let itemsMigrated = 0;
+   123	  let unchanged = 0;
+   124	  let skipped = 0;
+   125	
+   126	  for (const legacyGrid of layout.grids) {
+   127	    if (!legacyGrid || typeof legacyGrid.id !== "string") continue;
+   128	    const record = toGridEntity(legacyGrid, timestamp);
+   129	
+   130	    // C2 — unchanged-skip: avoid re-stamping updatedAt on a no-op rerun.
+   131	    const existing = await options.gridRepo.get(record.id);
+   132	    if (existing && isGridRecordEqual(existing, record)) {
+   133	      unchanged += 1;
+   134	      continue;
+   135	    }
+   136	
+   137	    assertRepoRecord(record);
+   138	    await options.gridRepo.put(record);
+   139	    gridsMigrated += 1;
+   140	  }
+   141	
+   142	  for (const legacyItem of layout.items) {
+   143	    if (!legacyItem || typeof legacyItem.id !== "string") continue;
+   144	    const gridId = findOwningGridId(legacyItem.id, layout.grids);
+   145	    if (!gridId) continue;
+   146	    const record = toGridItemEntity(legacyItem, gridId, timestamp);
+   147	
+   148	    // A3 — positive validation rejected this legacy item.
+   149	    if (!record) {
+   150	      skipped += 1;
+   151	      continue;
+   152	    }
+   153	
+   154	    // C2 — unchanged-skip (same rationale as the grid loop).
+   155	    const existing = await options.itemRepo.get(record.id);
+   156	    if (existing && isItemRecordEqual(existing, record)) {
+   157	      unchanged += 1;
+   158	      continue;
+   159	    }
+   160	
+   161	    assertRepoRecord(record);
+   162	    await options.itemRepo.put(record);
+   163	    itemsMigrated += 1;
+   164	  }
+   165	
+   166	  let removedLegacy = false;
+   167	  if (options.removeLegacy) {
+   168	    options.storage.removeItem(legacyKey);
+   169	    removedLegacy = true;
+   170	  }
+   171	
+   172	  return {
+   173	    scanned: true,
+   174	    parsed: true,
+   175	    gridsMigrated,
+   176	    itemsMigrated,
+   177	    unchanged,
+   178	    skipped,
+   179	    removedLegacy,
+   180	  };
+   181	}
+   182	
+   183	function emptyResult(): OrganizerLayoutMigrationResult {
+   184	  return {
+   185	    scanned: false,
+   186	    parsed: false,
+   187	    gridsMigrated: 0,
+   188	    itemsMigrated: 0,
+   189	    unchanged: 0,
+   190	    skipped: 0,
+   191	    removedLegacy: false,
+   192	  };
+   193	}
+   194	
+   195	/**
+   196	 * Returns true when the meaningful Grid fields of `existing` match those of
+   197	 * the freshly-computed `candidate`. Excludes `createdAt` / `updatedAt` so a
+   198	 * rerun of the migration does not re-stamp timestamps and trigger a false
+   199	 * sync-conflict downstream (C2).
+   200	 */
+   201	function isGridRecordEqual(existing: GridEntity, candidate: GridEntity): boolean {
+   202	  return (
+   203	    existing.entityType === candidate.entityType &&
+   204	    existing.schemaVersion === candidate.schemaVersion &&
+   205	    existing.syncScope === candidate.syncScope &&
+   206	    existing.title === candidate.title &&
+   207	    existing.isLocked === candidate.isLocked &&
+   208	    existing.isFolded === candidate.isFolded &&
+   209	    existing.viewMode === candidate.viewMode &&
+   210	    existing.themeColor === candidate.themeColor &&
+   211	    existing.rect.x === candidate.rect.x &&
+   212	    existing.rect.y === candidate.rect.y &&
+   213	    existing.rect.width === candidate.rect.width &&
+   214	    existing.rect.height === candidate.rect.height &&
+   215	    arraysEqual(existing.itemIds, candidate.itemIds)
+   216	  );
+   217	}
+   218	
+   219	/**
+   220	 * Like {@link isGridRecordEqual} but for `GridItemEntity`. Excludes
+   221	 * `createdAt` / `updatedAt`.
+   222	 */
+   223	function isItemRecordEqual(
+   224	  existing: GridItemEntity,
+   225	  candidate: GridItemEntity,
+   226	): boolean {
+   227	  return (
+   228	    existing.entityType === candidate.entityType &&
+   229	    existing.schemaVersion === candidate.schemaVersion &&
+   230	    existing.syncScope === candidate.syncScope &&
+   231	    existing.gridId === candidate.gridId &&
+   232	    existing.filename === candidate.filename &&
+   233	    existing.filepath === candidate.filepath &&
+   234	    existing.kind === candidate.kind &&
+   235	    existing.icon === candidate.icon &&
+   236	    existing.size === candidate.size
+   237	  );
+   238	}
+   239	
+   240	function arraysEqual(a: readonly string[], b: readonly string[]): boolean {
+
+exec
+/bin/zsh -lc "nl -ba apps/desktop/src-tauri/src/crypto/keychain_handle.rs | sed -n '1,220p'" in /Users/lijinlong/Desktop/AI_Desktop/XAI_Desktop
+ succeeded in 0ms:
+     1	//! Keychain ↔ KeyVault opaque-handle bridge (G2.4).
+     2	//!
+     3	//! The macOS Keychain is a byte-level store; the KeyVault is a Rust-resident,
+     4	//! handle-only key store that never lets raw key material cross the JS/Rust
+     5	//! IPC boundary. G2.4 documents the **one** path that connects them:
+     6	//!
+     7	//! `Keychain bytes ──load_kek_into_vault──▶ KeyVault::insert_kek ──▶ KeyHandleId`
+     8	//!
+     9	//! The `KeyHandleId` is the only artifact a Tauri command may return to JS for
+    10	//! key material. The raw 32 bytes are zeroized after insertion.
+    11	//!
+    12	//! This module is the **only** authorised crossing between
+    13	//! `platform::macos::keychain::secret_get` and `KeyVault::insert_*` for KEK /
+    14	//! DEK / device-private material. Any other caller that fetches Keychain bytes
+    15	//! and exposes them to JS must instead route through this helper so the
+    16	//! boundary contract holds.
+    17	
+    18	#![cfg(feature = "crypto")]
+    19	
+    20	use zeroize::{Zeroize, Zeroizing};
+    21	
+    22	use super::key_vault::{KeyHandleId, KeyVault, KeyVaultError};
+    23	use crate::error::AppError;
+    24	use crate::platform::macos::keychain;
+    25	
+    26	const KEY_BYTES: usize = 32;
+    27	
+    28	/// Errors emitted by the Keychain → KeyVault opaque-handle bridge.
+    29	///
+    30	/// These are Rust-internal — callers MUST map them to a JS-visible
+    31	/// `AppError::Keychain*` / `AppError::Sync*` variant before returning from
+    32	/// a Tauri command. They never carry their own `E1200` prefix on the IPC
+    33	/// boundary.
+    34	#[derive(Debug, thiserror::Error)]
+    35	pub enum KeychainHandleError {
+    36	    #[error("keychain bridge error: {0}")]
+    37	    Keychain(AppError),
+    38	
+    39	    #[error("keychain payload is wrong length (expected {expected}, got {actual})")]
+    40	    InvalidKeyLength { expected: usize, actual: usize },
+    41	
+    42	    #[error("key vault insert failed: {0}")]
+    43	    KeyVault(KeyVaultError),
+    44	}
+    45	
+    46	impl From<AppError> for KeychainHandleError {
+    47	    fn from(value: AppError) -> Self {
+    48	        Self::Keychain(value)
+    49	    }
+    50	}
+    51	
+    52	impl From<KeyVaultError> for KeychainHandleError {
+    53	    fn from(value: KeyVaultError) -> Self {
+    54	        Self::KeyVault(value)
+    55	    }
+    56	}
+    57	
+    58	pub type KeychainHandleResult<T> = Result<T, KeychainHandleError>;
+    59	
+    60	/// Read a 32-byte KEK from the Keychain and insert it into the vault. The raw
+    61	/// bytes are zeroized after the vault takes ownership. Returns only the
+    62	/// opaque handle id — raw key bytes must never cross IPC boundaries.
+    63	///
+    64	/// Errors (Rust-internal — see `KeychainHandleError`):
+    65	///
+    66	/// - `Keychain(AppError)` Keychain bridge failure (existing `E110x` codes).
+    67	/// - `InvalidKeyLength` payload length is not exactly 32 bytes.
+    68	/// - `KeyVault(KeyVaultError)` vault insertion failure.
+    69	pub fn load_kek_into_vault(
+    70	    key: &str,
+    71	    vault: &mut KeyVault,
+    72	) -> KeychainHandleResult<KeyHandleId> {
+    73	    let mut bytes = keychain::secret_get(key)?;
+    74	    let handle = insert_kek_from_bytes(&mut bytes, vault);
+    75	    bytes.zeroize();
+    76	    handle
+    77	}
+    78	
+    79	/// Insert a 32-byte KEK that the caller has already fetched. The caller must
+    80	/// hand over a `Vec<u8>` so this function can zeroize the buffer (the
+    81	/// `zeroize` happens at the call site as well — defence in depth).
+    82	pub fn insert_kek_from_bytes(
+    83	    bytes: &mut [u8],
+    84	    vault: &mut KeyVault,
+    85	) -> KeychainHandleResult<KeyHandleId> {
+    86	    if bytes.len() != KEY_BYTES {
+    87	        let actual = bytes.len();
+    88	        // Scrub the caller buffer on the early-return path too — defence in
+    89	        // depth: a wrong-length payload may still be sensitive material.
+    90	        bytes.zeroize();
+    91	        return Err(KeychainHandleError::InvalidKeyLength {
+    92	            expected: KEY_BYTES,
+    93	            actual,
+    94	        });
+    95	    }
+    96	
+    97	    // Wrap the stack-local copy in `Zeroizing` so the local buffer is scrubbed
+    98	    // when it goes out of scope — even though the vault receives an owned
+    99	    // copy of the bytes, the local must not linger on the stack.
+   100	    let mut owned: Zeroizing<[u8; KEY_BYTES]> = Zeroizing::new([0u8; KEY_BYTES]);
+   101	    owned.copy_from_slice(bytes);
+   102	    bytes.zeroize();
+   103	
+   104	    let handle = vault.insert_kek(*owned)?;
+   105	    Ok(handle)
+   106	}
+   107	
+   108	#[cfg(test)]
+   109	mod tests {
+   110	    use super::*;
+   111	
+   112	    #[test]
+   113	    fn rejects_wrong_length_payload() {
+   114	        let mut bytes = vec![0u8; 16];
+   115	        let mut vault = KeyVault::new();
+   116	        let err = insert_kek_from_bytes(&mut bytes, &mut vault).unwrap_err();
+   117	        match err {
+   118	            KeychainHandleError::InvalidKeyLength { expected, actual } => {
+   119	                assert_eq!(expected, KEY_BYTES);
+   120	                assert_eq!(actual, 16);
+   121	            }
+   122	            other => panic!("unexpected error: {other:?}"),
+   123	        }
+   124	    }
+   125	
+   126	    #[test]
+   127	    fn inserts_32_bytes_and_returns_handle() {
+   128	        let mut bytes = vec![0x42u8; KEY_BYTES];
+   129	        let mut vault = KeyVault::new();
+   130	        let handle = insert_kek_from_bytes(&mut bytes, &mut vault).unwrap();
+   131	        assert!(vault.contains(handle));
+   132	
+   133	        // Bytes are zeroized after handing them to the vault.
+   134	        assert!(bytes.iter().all(|b| *b == 0));
+   135	    }
+   136	
+   137	    #[test]
+   138	    fn returned_handle_resolves_to_inserted_kek() {
+   139	        let mut bytes = vec![0x77u8; KEY_BYTES];
+   140	        let mut vault = KeyVault::new();
+   141	        let handle = insert_kek_from_bytes(&mut bytes, &mut vault).unwrap();
+   142	
+   143	        let observed = vault.with_kek(handle, |kek| *kek).unwrap();
+   144	        assert_eq!(observed, [0x77u8; KEY_BYTES]);
+   145	    }
+   146	
+   147	    #[test]
+   148	    fn wrong_length_zeroizes_caller_buffer() {
+   149	        // A 16-byte payload pre-filled with non-zero key-shaped material must
+   150	        // be scrubbed even though the function bails early on length error.
+   151	        let mut bytes = vec![0xABu8; 16];
+   152	        let mut vault = KeyVault::new();
+   153	        let err = insert_kek_from_bytes(&mut bytes, &mut vault).unwrap_err();
+   154	        match err {
+   155	            KeychainHandleError::InvalidKeyLength { expected, actual } => {
+   156	                assert_eq!(expected, KEY_BYTES);
+   157	                assert_eq!(actual, 16);
+   158	            }
+   159	            other => panic!("unexpected error: {other:?}"),
+   160	        }
+   161	        assert_eq!(bytes, vec![0u8; 16]);
+   162	    }
+   163	}
+
+exec
+/bin/zsh -lc "nl -ba packages/core-data/tests/organizer-layout-migration.test.ts | sed -n '170,270p'" in /Users/lijinlong/Desktop/AI_Desktop/XAI_Desktop
+ succeeded in 0ms:
+   170	  it("rerun against an unchanged blob increments `unchanged`, not `migrated`, and preserves `updatedAt`", async () => {
+   171	    const storage = fakeStorage({
+   172	      [LEGACY_LAYOUT_STORAGE_KEY]: JSON.stringify(exampleLayout()),
+   173	    });
+   174	    const gridRepo = createInMemoryRepo<GridEntity>({ namespace: "grids" });
+   175	    const itemRepo = createInMemoryRepo<GridItemEntity>({
+   176	      namespace: "items",
+   177	    });
+   178	
+   179	    // First run stamps `updatedAt` at T0.
+   180	    const firstStamp = "2026-05-20T00:00:00.000Z";
+   181	    await migrateOrganizerLayoutToRepos({
+   182	      storage,
+   183	      gridRepo,
+   184	      itemRepo,
+   185	      nowIso: () => firstStamp,
+   186	    });
+   187	    const firstGrids = await gridRepo.list({
+   188	      orderBy: { field: "id", direction: "asc" },
+   189	    });
+   190	    const firstItems = await itemRepo.list({
+   191	      orderBy: { field: "id", direction: "asc" },
+   192	    });
+   193	
+   194	    // Second run uses a different `nowIso` — if we accidentally re-`put`,
+   195	    // the stored `updatedAt` would advance to T1.
+   196	    const secondStamp = "2026-05-21T12:34:56.000Z";
+   197	    const result = await migrateOrganizerLayoutToRepos({
+   198	      storage,
+   199	      gridRepo,
+   200	      itemRepo,
+   201	      nowIso: () => secondStamp,
+   202	    });
+   203	
+   204	    expect(result).toEqual({
+   205	      scanned: true,
+   206	      parsed: true,
+   207	      gridsMigrated: 0,
+   208	      itemsMigrated: 0,
+   209	      unchanged: 4, // 2 grids + 2 owned items
+   210	      skipped: 0,
+   211	      removedLegacy: false,
+   212	    });
+   213	
+   214	    // Verify `updatedAt` was NOT touched on the no-op rerun.
+   215	    const secondGrids = await gridRepo.list({
+   216	      orderBy: { field: "id", direction: "asc" },
+   217	    });
+   218	    const secondItems = await itemRepo.list({
+   219	      orderBy: { field: "id", direction: "asc" },
+   220	    });
+   221	    for (let i = 0; i < firstGrids.length; i += 1) {
+   222	      expect(secondGrids[i].updatedAt).toBe(firstStamp);
+   223	      expect(secondGrids[i].updatedAt).not.toBe(secondStamp);
+   224	    }
+   225	    for (let i = 0; i < firstItems.length; i += 1) {
+   226	      expect(secondItems[i].updatedAt).toBe(firstStamp);
+   227	      expect(secondItems[i].updatedAt).not.toBe(secondStamp);
+   228	    }
+   229	  });
+   230	
+   231	  it("does not delete the legacy key by default", async () => {
+   232	    const storage = fakeStorage({
+   233	      [LEGACY_LAYOUT_STORAGE_KEY]: JSON.stringify(exampleLayout()),
+   234	    });
+   235	    await migrateOrganizerLayoutToRepos({
+   236	      storage,
+   237	      gridRepo: createInMemoryRepo<GridEntity>({ namespace: "grids" }),
+   238	      itemRepo: createInMemoryRepo<GridItemEntity>({ namespace: "items" }),
+   239	    });
+   240	    expect(storage.getItem(LEGACY_LAYOUT_STORAGE_KEY)).not.toBeNull();
+   241	  });
+   242	
+   243	  it("removes the legacy key when removeLegacy=true", async () => {
+   244	    const storage = fakeStorage({
+   245	      [LEGACY_LAYOUT_STORAGE_KEY]: JSON.stringify(exampleLayout()),
+   246	    });
+   247	    const result = await migrateOrganizerLayoutToRepos({
+   248	      storage,
+   249	      gridRepo: createInMemoryRepo<GridEntity>({ namespace: "grids" }),
+   250	      itemRepo: createInMemoryRepo<GridItemEntity>({ namespace: "items" }),
+   251	      removeLegacy: true,
+   252	    });
+   253	    expect(result.removedLegacy).toBe(true);
+   254	    expect(storage.getItem(LEGACY_LAYOUT_STORAGE_KEY)).toBeNull();
+   255	  });
+   256	
+   257	  it("drops items with an empty filepath and increments skipped", async () => {
+   258	    const layout: LegacyOrganizerLayout = {
+   259	      grids: [
+   260	        {
+   261	          id: "grid-1",
+   262	          title: "Today",
+   263	          rect: { x: 0, y: 0, width: 240, height: 320 },
+   264	          itemIds: ["good", "bad"],
+   265	        },
+   266	      ],
+   267	      items: [
+   268	        {
+   269	          id: "good",
+   270	          filename: "ok.md",
+
+exec
+/bin/zsh -lc "nl -ba packages/core-data/tests/entities.test.ts | sed -n '150,240p'" in /Users/lijinlong/Desktop/AI_Desktop/XAI_Desktop
+ succeeded in 0ms:
+   150	    const scope: "device-local" = clip.syncScope;
+   151	    expect(scope).toBe("device-local");
+   152	  });
+   153	
+   154	  it("uses plugin.entity dotted entityType naming", async () => {
+   155	    const repo = createInMemoryRepo<RepoEntity>({ namespace: "entities" });
+   156	    await repo.put(gridFixture("grid-1"));
+   157	    await repo.put(labelFixture("label-1"));
+   158	    await repo.put(todoFixture("todo-1"));
+   159	
+   160	    const all = await repo.list();
+   161	    for (const record of all) {
+   162	      expect(record.entityType).toMatch(/^[a-z]+\.[a-z_]+$/);
+   163	    }
+   164	  });
+   165	
+   166	  it("rejects records whose entityType violates the plugin.entity regex", () => {
+   167	    const bad: RepoRecord = {
+   168	      ...BASE,
+   169	      id: "bad-1",
+   170	      // Uppercase + missing dot → violates `^[a-z]+\.[a-z_]+$`.
+   171	      entityType: "BadType",
+   172	    } as RepoRecord;
+   173	    expect(() => assertRepoRecord(bad)).toThrowError(
+   174	      /E3005: core-data record entityType "BadType" violates plugin\.entity regex/,
+   175	    );
+   176	
+   177	    const trailingDash: RepoRecord = {
+   178	      ...BASE,
+   179	      id: "bad-2",
+   180	      entityType: "labels.label-1",
+   181	    } as RepoRecord;
+   182	    expect(() => assertRepoRecord(trailingDash)).toThrowError(
+   183	      /violates plugin\.entity regex/,
+   184	    );
+   185	  });
+   186	
+   187	  it("rejects clipboard.item records with non-device-local syncScope at runtime", () => {
+   188	    const cheating: RepoRecord = {
+   189	      ...BASE,
+   190	      id: "clip-bad",
+   191	      entityType: "clipboard.item",
+   192	      // Force account-sync via the wider RepoRecord shape — the type-level
+   193	      // narrowing on ClipboardEntryEntity stops this in TS, but a raw
+   194	      // SQLite row could still carry the wrong value.
+   195	      syncScope: "account-sync",
+   196	    } as RepoRecord;
+   197	    expect(() => assertRepoRecord(cheating)).toThrowError(
+   198	      /E3005: clipboard\.item must be device-local, got "account-sync"/,
+   199	    );
+   200	  });
+   201	
+   202	  it("supports listByIndex on entity-owned fields", async () => {
+   203	    const repo = createInMemoryRepo<GridItemEntity>({
+   204	      namespace: "organizer.items",
+   205	    });
+   206	    const item1: GridItemEntity = {
+   207	      ...gridItemFixture("item-1"),
+   208	      gridId: "grid-a",
+   209	    };
+   210	    const item2: GridItemEntity = {
+   211	      ...gridItemFixture("item-2"),
+   212	      gridId: "grid-b",
+   213	    };
+   214	    const item3: GridItemEntity = {
+   215	      ...gridItemFixture("item-3"),
+   216	      gridId: "grid-a",
+   217	    };
+   218	    await repo.put(item1);
+   219	    await repo.put(item2);
+   220	    await repo.put(item3);
+   221	
+   222	    const byGrid = await repo.listByIndex("gridId", "grid-a", {
+   223	      orderBy: { field: "id", direction: "asc" },
+   224	    });
+   225	    expect(byGrid.map((it) => it.id)).toEqual(["item-1", "item-3"]);
+   226	  });
+   227	});
+
+codex
+I have the touched hunks with line numbers. One remaining check is whether the migration change still honors the existing result contract and whether the claimed test commands succeed in this workspace.
+exec
+/bin/zsh -lc "nl -ba packages/core-data/src/organizer-layout-migration.ts | sed -n '240,340p'" in /Users/lijinlong/Desktop/AI_Desktop/XAI_Desktop
+ succeeded in 0ms:
+   240	function arraysEqual(a: readonly string[], b: readonly string[]): boolean {
+   241	  if (a.length !== b.length) return false;
+   242	  for (let i = 0; i < a.length; i += 1) {
+   243	    if (a[i] !== b[i]) return false;
+   244	  }
+   245	  return true;
+   246	}
+   247	
+   248	function toGridEntity(
+   249	  legacy: LegacyGridBox,
+   250	  timestamp: string,
+   251	): GridEntity {
+   252	  return {
+   253	    id: legacy.id,
+   254	    entityType: "organizer.grid",
+   255	    schemaVersion: 1,
+   256	    createdAt: timestamp,
+   257	    updatedAt: timestamp,
+   258	    syncScope: "account-sync",
+   259	    title: legacy.title ?? "Untitled",
+   260	    rect: {
+   261	      x: numberOrZero(legacy.rect?.x),
+   262	      y: numberOrZero(legacy.rect?.y),
+   263	      width: numberOrDefault(legacy.rect?.width, 240),
+   264	      height: numberOrDefault(legacy.rect?.height, 320),
+   265	    },
+   266	    isLocked: Boolean(legacy.isLocked),
+   267	    isFolded: Boolean(legacy.isFolded),
+   268	    viewMode: legacy.viewMode === "list" ? "list" : "grid",
+   269	    itemIds: Array.isArray(legacy.itemIds) ? [...legacy.itemIds] : [],
+   270	    themeColor: legacy.themeColor,
+   271	  };
+   272	}
+   273	
+   274	function toGridItemEntity(
+   275	  legacy: LegacyDesktopItem,
+   276	  gridId: string,
+   277	  timestamp: string,
+   278	): GridItemEntity | null {
+   279	  const rawKind = (legacy as { type?: string }).type ?? "file";
+   280	  // url items are not produced by this adapter — reject defensively to
+   281	  // keep the migration's contract focused on file-system items.
+   282	  if (rawKind !== "file" && rawKind !== "folder" && rawKind !== "app") {
+   283	    return null;
+   284	  }
+   285	  if (typeof legacy.filepath !== "string" || legacy.filepath.length === 0) {
+   286	    return null;
+   287	  }
+   288	  return {
+   289	    id: legacy.id,
+   290	    entityType: "organizer.item",
+   291	    schemaVersion: 1,
+   292	    createdAt: timestamp,
+   293	    updatedAt: timestamp,
+   294	    syncScope: "account-sync",
+   295	    gridId,
+   296	    filename: legacy.filename ?? legacy.id,
+   297	    filepath: legacy.filepath,
+   298	    kind: rawKind,
+   299	    icon: legacy.icon ?? "doc",
+   300	    size: legacy.size,
+   301	  };
+   302	}
+   303	
+   304	function findOwningGridId(
+   305	  itemId: string,
+   306	  grids: LegacyGridBox[],
+   307	): string | undefined {
+   308	  for (const grid of grids) {
+   309	    if (Array.isArray(grid.itemIds) && grid.itemIds.includes(itemId)) {
+   310	      return grid.id;
+   311	    }
+   312	  }
+   313	  return undefined;
+   314	}
+   315	
+   316	function numberOrZero(value: unknown): number {
+   317	  return typeof value === "number" && Number.isFinite(value) ? value : 0;
+   318	}
+   319	
+   320	function numberOrDefault(value: unknown, fallback: number): number {
+   321	  return typeof value === "number" && Number.isFinite(value) ? value : fallback;
+   322	}
+
+exec
+/bin/zsh -lc 'pnpm --filter @repo/core-data test' in /Users/lijinlong/Desktop/AI_Desktop/XAI_Desktop
+exec
+/bin/zsh -lc 'cargo check --features crypto' in /Users/lijinlong/Desktop/AI_Desktop/XAI_Desktop/apps/desktop/src-tauri
+exec
+/bin/zsh -lc 'cargo test --features crypto keychain_handle::' in /Users/lijinlong/Desktop/AI_Desktop/XAI_Desktop/apps/desktop/src-tauri
+exec
+/bin/zsh -lc 'pnpm --filter @repo/core-data check-types' in /Users/lijinlong/Desktop/AI_Desktop/XAI_Desktop
+ succeeded in 2287ms:
+
+> @repo/core-data@0.0.0 check-types /Users/lijinlong/Desktop/AI_Desktop/XAI_Desktop/packages/core-data
+> tsc --noEmit
+
+
+ succeeded in 2436ms:
+warning: constant `KEY_BYTES` is never used
+  --> src/crypto/keychain_handle.rs:26:7
+   |
+26 | const KEY_BYTES: usize = 32;
+   |       ^^^^^^^^^
+   |
+   = note: `#[warn(dead_code)]` (part of `#[warn(unused)]`) on by default
+
+warning: enum `KeychainHandleError` is never used
+  --> src/crypto/keychain_handle.rs:35:10
+   |
+35 | pub enum KeychainHandleError {
+   |          ^^^^^^^^^^^^^^^^^^^
+
+warning: type alias `KeychainHandleResult` is never used
+  --> src/crypto/keychain_handle.rs:58:10
+   |
+58 | pub type KeychainHandleResult<T> = Result<T, KeychainHandleError>;
+   |          ^^^^^^^^^^^^^^^^^^^^
+
+warning: function `load_kek_into_vault` is never used
+  --> src/crypto/keychain_handle.rs:69:8
+   |
+69 | pub fn load_kek_into_vault(
+   |        ^^^^^^^^^^^^^^^^^^^
+
+warning: function `insert_kek_from_bytes` is never used
+  --> src/crypto/keychain_handle.rs:82:8
+   |
+82 | pub fn insert_kek_from_bytes(
+   |        ^^^^^^^^^^^^^^^^^^^^^
+
+warning: variants `KeychainUnsupportedPlatform`, `SyncNotInitialized`, `SyncAuthRequired`, `SyncTransport`, and `SyncConflict` are never constructed
+  --> src/error.rs:44:5
+   |
+15 | pub enum AppError {
+   |          -------- variants in this enum
+...
+44 |     KeychainUnsupportedPlatform,
+   |     ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+...
+48 |     SyncNotInitialized,
+   |     ^^^^^^^^^^^^^^^^^^
+...
+51 |     SyncAuthRequired,
+   |     ^^^^^^^^^^^^^^^^
+...
+54 |     SyncTransport(String),
+   |     ^^^^^^^^^^^^^
+...
+57 |     SyncConflict,
+   |     ^^^^^^^^^^^^
+   |
+   = note: `AppError` has a derived impl for the trait `Debug`, but this is intentionally ignored during dead code analysis
+
+warning: constant `BUNDLE_ID` is never used
+  --> src/platform/macos/keychain.rs:24:11
+   |
+24 | pub const BUNDLE_ID: &str = "com.jinlong.desktop";
+   |           ^^^^^^^^^
+
+warning: struct `KeychainItemAttrs` is never constructed
+  --> src/platform/macos/keychain.rs:32:12
+   |
+32 | pub struct KeychainItemAttrs {
+   |            ^^^^^^^^^^^^^^^^^
+
+warning: enum `KeychainAccessibility` is never used
+  --> src/platform/macos/keychain.rs:43:10
+   |
+43 | pub enum KeychainAccessibility {
+   |          ^^^^^^^^^^^^^^^^^^^^^
+
+warning: function `build_item_attrs` is never used
+  --> src/platform/macos/keychain.rs:52:8
+   |
+52 | pub fn build_item_attrs() -> KeychainItemAttrs {
+   |        ^^^^^^^^^^^^^^^^
+
+warning: function `load_kek_into_vault` is never used
+  --> src/crypto/keychain_handle.rs:69:8
+   |
+69 | pub fn load_kek_into_vault(
+   |        ^^^^^^^^^^^^^^^^^^^
+   |
+   = note: `#[warn(dead_code)]` (part of `#[warn(unused)]`) on by default
+
+warning: `desktop` (lib) generated 10 warnings
+warning: `desktop` (lib test) generated 1 warning
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 1.89s
+     Running unittests src/lib.rs (target/debug/deps/desktop_lib-6f0f30a7d8da1409)
+
+running 4 tests
+test crypto::keychain_handle::tests::wrong_length_zeroizes_caller_buffer ... ok
+test crypto::keychain_handle::tests::rejects_wrong_length_payload ... ok
+test crypto::keychain_handle::tests::returned_handle_resolves_to_inserted_kek ... ok
+test crypto::keychain_handle::tests::inserts_32_bytes_and_returns_handle ... ok
+
+test result: ok. 4 passed; 0 failed; 0 ignored; 0 measured; 89 filtered out; finished in 0.00s
+
+     Running unittests src/main.rs (target/debug/deps/desktop-5450acdad61464ed)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+
+ succeeded in 2632ms:
+
+> @repo/core-data@0.0.0 test /Users/lijinlong/Desktop/AI_Desktop/XAI_Desktop/packages/core-data
+> vitest run
+
+
+ RUN  v3.2.4 /Users/lijinlong/Desktop/AI_Desktop/XAI_Desktop/packages/core-data
+
+11:49:18 AM [vite] (ssr) warning: Duplicate key "skipped" in object literal
+100 |        skipped: 0,
+101 |        removedLegacy: false,
+102 |        skipped: 0,
+    |        ^
+103 |      });
+104 |  
+
+  Plugin: vite:esbuild
+  File: /Users/lijinlong/Desktop/AI_Desktop/XAI_Desktop/packages/core-data/tests/organizer-layout-migration.test.ts
+ ✓ tests/keychain.test.ts (20 tests) 9ms
+ ✓ tests/sync-outbox.test.ts (9 tests) 7ms
+ ✓ tests/tauri-sqlite.test.ts (7 tests) 13ms
+ ✓ tests/entities.test.ts (6 tests) 12ms
+ ✓ tests/organizer-layout-migration.test.ts (7 tests) 20ms
+ ✓ tests/in-memory-repo.test.ts (15 tests) 24ms
+ ✓ tests/sqlite-repo.test.ts (12 tests) 47ms
+
+ Test Files  7 passed (7)
+      Tests  76 passed (76)
+   Start at  11:49:18
+   Duration  928ms (transform 465ms, setup 0ms, collect 1.13s, tests 131ms, environment 1ms, prepare 1.11s)
+
+
+ succeeded in 8986ms:
+    Blocking waiting for file lock on build directory
+   Compiling desktop v0.1.0 (/Users/lijinlong/Desktop/AI_Desktop/XAI_Desktop/apps/desktop/src-tauri)
+warning: constant `KEY_BYTES` is never used
+  --> src/crypto/keychain_handle.rs:26:7
+   |
+26 | const KEY_BYTES: usize = 32;
+   |       ^^^^^^^^^
+   |
+   = note: `#[warn(dead_code)]` (part of `#[warn(unused)]`) on by default
+
+warning: enum `KeychainHandleError` is never used
+  --> src/crypto/keychain_handle.rs:35:10
+   |
+35 | pub enum KeychainHandleError {
+   |          ^^^^^^^^^^^^^^^^^^^
+
+warning: type alias `KeychainHandleResult` is never used
+  --> src/crypto/keychain_handle.rs:58:10
+   |
+58 | pub type KeychainHandleResult<T> = Result<T, KeychainHandleError>;
+   |          ^^^^^^^^^^^^^^^^^^^^
+
+warning: function `load_kek_into_vault` is never used
+  --> src/crypto/keychain_handle.rs:69:8
+   |
+69 | pub fn load_kek_into_vault(
+   |        ^^^^^^^^^^^^^^^^^^^
+
+warning: function `insert_kek_from_bytes` is never used
+  --> src/crypto/keychain_handle.rs:82:8
+   |
+82 | pub fn insert_kek_from_bytes(
+   |        ^^^^^^^^^^^^^^^^^^^^^
+
+warning: variants `KeychainUnsupportedPlatform`, `SyncNotInitialized`, `SyncAuthRequired`, `SyncTransport`, and `SyncConflict` are never constructed
+  --> src/error.rs:44:5
+   |
+15 | pub enum AppError {
+   |          -------- variants in this enum
+...
+44 |     KeychainUnsupportedPlatform,
+   |     ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+...
+48 |     SyncNotInitialized,
+   |     ^^^^^^^^^^^^^^^^^^
+...
+51 |     SyncAuthRequired,
+   |     ^^^^^^^^^^^^^^^^
+...
+54 |     SyncTransport(String),
+   |     ^^^^^^^^^^^^^
+...
+57 |     SyncConflict,
+   |     ^^^^^^^^^^^^
+   |
+   = note: `AppError` has a derived impl for the trait `Debug`, but this is intentionally ignored during dead code analysis
+
+warning: constant `BUNDLE_ID` is never used
+  --> src/platform/macos/keychain.rs:24:11
+   |
+24 | pub const BUNDLE_ID: &str = "com.jinlong.desktop";
+   |           ^^^^^^^^^
+
+warning: struct `KeychainItemAttrs` is never constructed
+  --> src/platform/macos/keychain.rs:32:12
+   |
+32 | pub struct KeychainItemAttrs {
+   |            ^^^^^^^^^^^^^^^^^
+
+warning: enum `KeychainAccessibility` is never used
+  --> src/platform/macos/keychain.rs:43:10
+   |
+43 | pub enum KeychainAccessibility {
+   |          ^^^^^^^^^^^^^^^^^^^^^
+
+warning: function `build_item_attrs` is never used
+  --> src/platform/macos/keychain.rs:52:8
+   |
+52 | pub fn build_item_attrs() -> KeychainItemAttrs {
+   |        ^^^^^^^^^^^^^^^^
+
+warning: `desktop` (lib) generated 10 warnings
+    Finished `dev` profile [unoptimized + debuginfo] target(s) in 8.57s
+
+codex
+The claimed commands passed, but the test run surfaced one new warning in the added migration test. I’m checking whether that warning is merely cosmetic or indicates a real review-level regression before I finalize the verdict.
+exec
+/bin/zsh -lc "nl -ba packages/core-data/tests/organizer-layout-migration.test.ts | sed -n '88,110p'" in /Users/lijinlong/Desktop/AI_Desktop/XAI_Desktop
+ succeeded in 0ms:
+    88	    const result = await migrateOrganizerLayoutToRepos({
+    89	      storage,
+    90	      gridRepo,
+    91	      itemRepo,
+    92	      nowIso: () => "2026-05-20T00:00:00.000Z",
+    93	    });
+    94	    expect(result).toEqual({
+    95	      scanned: true,
+    96	      parsed: true,
+    97	      gridsMigrated: 2,
+    98	      itemsMigrated: 2,
+    99	      unchanged: 0,
+   100	      skipped: 0,
+   101	      removedLegacy: false,
+   102	      skipped: 0,
+   103	    });
+   104	
+   105	    const grids = await gridRepo.list({
+   106	      orderBy: { field: "id", direction: "asc" },
+   107	    });
+   108	    expect(grids).toEqual([
+   109	      expect.objectContaining({
+   110	        id: "grid-1",
+
+exec
+/bin/zsh -lc "rg -n \"fn insert_kek|insert_kek\\(\" apps/desktop/src-tauri/src/crypto -g '*.rs'" in /Users/lijinlong/Desktop/AI_Desktop/XAI_Desktop
+exec
+/bin/zsh -lc "rg -n \"OrganizerLayoutMigrationResult\" -S packages/core-data apps | sed -n '1,120p'" in /Users/lijinlong/Desktop/AI_Desktop/XAI_Desktop
+ succeeded in 0ms:
+packages/core-data/src/index.ts:81:  OrganizerLayoutMigrationResult,
+packages/core-data/src/organizer-layout-migration.ts:75:export interface OrganizerLayoutMigrationResult {
+packages/core-data/src/organizer-layout-migration.ts:96:): Promise<OrganizerLayoutMigrationResult> {
+packages/core-data/src/organizer-layout-migration.ts:183:function emptyResult(): OrganizerLayoutMigrationResult {
+
+ succeeded in 138ms:
+apps/desktop/src-tauri/src/crypto/keychain_handle.rs:82:pub fn insert_kek_from_bytes(
+apps/desktop/src-tauri/src/crypto/keychain_handle.rs:104:    let handle = vault.insert_kek(*owned)?;
+apps/desktop/src-tauri/src/crypto/sqlcipher.rs:158:        let good_kek = vault.insert_kek([0x11; KEY_BYTES]).unwrap();
+apps/desktop/src-tauri/src/crypto/sqlcipher.rs:159:        let wrong_kek = vault.insert_kek([0x12; KEY_BYTES]).unwrap();
+apps/desktop/src-tauri/src/crypto/key_vault.rs:109:    pub fn insert_kek(&mut self, kek: [u8; KEY_BYTES]) -> KeyVaultResult<KeyHandleId> {
+
+exec
+/bin/zsh -lc "nl -ba apps/desktop/src-tauri/src/crypto/key_vault.rs | sed -n '96,150p'" in /Users/lijinlong/Desktop/AI_Desktop/XAI_Desktop
+ succeeded in 0ms:
+    96	
+    97	impl KeyVault {
+    98	    pub fn new() -> Self {
+    99	        Self {
+   100	            next_id: 1,
+   101	            entries: HashMap::new(),
+   102	        }
+   103	    }
+   104	
+   105	    pub fn insert_dek(&mut self, dek: [u8; KEY_BYTES]) -> KeyVaultResult<KeyHandleId> {
+   106	        self.insert_key(ResidentKeyKind::Dek, dek)
+   107	    }
+   108	
+   109	    pub fn insert_kek(&mut self, kek: [u8; KEY_BYTES]) -> KeyVaultResult<KeyHandleId> {
+   110	        self.insert_key(ResidentKeyKind::Kek, kek)
+   111	    }
+   112	
+   113	    pub fn insert_device_private(
+   114	        &mut self,
+   115	        device_priv: [u8; KEY_BYTES],
+   116	    ) -> KeyVaultResult<KeyHandleId> {
+   117	        self.insert_key(ResidentKeyKind::DevicePrivate, device_priv)
+   118	    }
+   119	
+   120	    pub fn contains(&self, handle: KeyHandleId) -> bool {
+   121	        self.entries.contains_key(&handle)
+   122	    }
+   123	
+   124	    pub fn kind(&self, handle: KeyHandleId) -> KeyVaultResult<ResidentKeyKind> {
+   125	        Ok(self.entry(handle)?.kind)
+   126	    }
+   127	
+   128	    pub fn drop_key(&mut self, handle: KeyHandleId) -> KeyVaultResult<()> {
+   129	        let mut entry = self
+   130	            .entries
+   131	            .remove(&handle)
+   132	            .ok_or(KeyVaultError::InvalidHandle(handle.get()))?;
+   133	        entry.zeroize();
+   134	        Ok(())
+   135	    }
+   136	
+   137	    pub fn with_dek<R>(
+   138	        &self,
+   139	        handle: KeyHandleId,
+   140	        f: impl FnOnce(&[u8; KEY_BYTES]) -> R,
+   141	    ) -> KeyVaultResult<R> {
+   142	        self.with_key(handle, ResidentKeyKind::Dek, f)
+   143	    }
+   144	
+   145	    pub fn with_kek<R>(
+   146	        &self,
+   147	        handle: KeyHandleId,
+   148	        f: impl FnOnce(&[u8; KEY_BYTES]) -> R,
+   149	    ) -> KeyVaultResult<R> {
+   150	        self.with_key(handle, ResidentKeyKind::Kek, f)
+
+exec
+/bin/zsh -lc "nl -ba apps/desktop/src-tauri/src/crypto/key_vault.rs | sed -n '150,240p'" in /Users/lijinlong/Desktop/AI_Desktop/XAI_Desktop
+ succeeded in 0ms:
+   150	        self.with_key(handle, ResidentKeyKind::Kek, f)
+   151	    }
+   152	
+   153	    pub fn with_device_private<R>(
+   154	        &self,
+   155	        handle: KeyHandleId,
+   156	        f: impl FnOnce(&[u8; KEY_BYTES]) -> R,
+   157	    ) -> KeyVaultResult<R> {
+   158	        self.with_key(handle, ResidentKeyKind::DevicePrivate, f)
+   159	    }
+   160	
+   161	    pub fn encrypt_with_dek(
+   162	        &self,
+   163	        dek_handle: KeyHandleId,
+   164	        nonce: &[u8; GCM_NONCE_BYTES],
+   165	        aad: &[u8],
+   166	        plaintext: &[u8],
+   167	    ) -> KeyVaultResult<Aes256GcmSealed> {
+   168	        let key = self.with_dek(dek_handle, |dek| Aes256GcmKey::from_bytes(*dek))?;
+   169	        encrypt_aes256_gcm(key, nonce, aad, plaintext)
+   170	            .map_err(|error| KeyVaultError::AesGcm(error.to_string()))
+   171	    }
+   172	
+   173	    pub fn decrypt_with_dek(
+   174	        &self,
+   175	        dek_handle: KeyHandleId,
+   176	        nonce: &[u8; GCM_NONCE_BYTES],
+   177	        aad: &[u8],
+   178	        sealed: &Aes256GcmSealed,
+   179	    ) -> KeyVaultResult<Vec<u8>> {
+   180	        let key = self.with_dek(dek_handle, |dek| Aes256GcmKey::from_bytes(*dek))?;
+   181	        decrypt_aes256_gcm(key, nonce, aad, sealed)
+   182	            .map_err(|error| KeyVaultError::AesGcm(error.to_string()))
+   183	    }
+   184	
+   185	    fn insert_key(
+   186	        &mut self,
+   187	        kind: ResidentKeyKind,
+   188	        bytes: [u8; KEY_BYTES],
+   189	    ) -> KeyVaultResult<KeyHandleId> {
+   190	        let handle = self.allocate_handle()?;
+   191	        self.entries.insert(handle, ResidentKey::new(kind, bytes));
+   192	        Ok(handle)
+   193	    }
+   194	
+   195	    fn allocate_handle(&mut self) -> KeyVaultResult<KeyHandleId> {
+   196	        let handle = KeyHandleId::from_raw(self.next_id)?;
+   197	        self.next_id = self
+   198	            .next_id
+   199	            .checked_add(1)
+   200	            .ok_or(KeyVaultError::HandleSpaceExhausted)?;
+   201	        Ok(handle)
+   202	    }
+   203	
+   204	    fn with_key<R>(
+   205	        &self,
+   206	        handle: KeyHandleId,
+   207	        expected: ResidentKeyKind,
+   208	        f: impl FnOnce(&[u8; KEY_BYTES]) -> R,
+   209	    ) -> KeyVaultResult<R> {
+   210	        let entry = self.entry(handle)?;
+   211	        if entry.kind != expected {
+   212	            return Err(KeyVaultError::WrongKeyKind {
+   213	                expected,
+   214	                actual: entry.kind,
+   215	            });
+   216	        }
+   217	        Ok(f(&entry.bytes))
+   218	    }
+   219	
+   220	    fn entry(&self, handle: KeyHandleId) -> KeyVaultResult<&ResidentKey> {
+   221	        self.entries
+   222	            .get(&handle)
+   223	            .ok_or(KeyVaultError::InvalidHandle(handle.get()))
+   224	    }
+   225	}
+   226	
+   227	impl Drop for KeyVault {
+   228	    fn drop(&mut self) {
+   229	        for entry in self.entries.values_mut() {
+   230	            entry.zeroize();
+   231	        }
+   232	    }
+   233	}
+   234	
+   235	#[cfg(test)]
+   236	mod tests {
+   237	    use super::*;
+   238	
+   239	    fn sample_dek() -> [u8; KEY_BYTES] {
+   240	        [
+
+codex
+## Codex Post-fix Re-review
+
+**Feature**: p1-alpha-core-data-validation
+**Original verdict**: BLOCKED
+**Fix commit(s)**: 0bc3afa
+**Reviewer**: codex feature-review · gpt-5.4 high reasoning
+**New verdict**: APPROVED
+
+### Was the original P0 resolved?
+- Original issue (paraphrased): `assertRepoRecord()` only required a dot instead of the documented `^[a-z]+\.[a-z_]+$`; `clipboard.item` rows were not runtime-enforced to stay `device-local`; organizer-layout migration accepted empty `filepath`; `insert_kek_from_bytes()` returned on wrong length without zeroizing the caller buffer and left a stack-local `[u8; 32]` copy unscrubbed.
+- Evidence the fix resolves it: `ENTITY_TYPE_RE` now enforces the documented regex and throws on violations (`packages/core-data/src/repo-utils.ts:8-21`); `clipboard.item` now hard-fails unless `syncScope === "device-local"` (`packages/core-data/src/repo-utils.ts:37-44`); migration now rejects empty/missing `filepath` and unsupported kinds, increments `skipped`, and only persists validated records (`packages/core-data/src/organizer-layout-migration.ts:142-164`, `274-301`); the keychain bridge now zeroizes the wrong-length caller buffer before returning and wraps the stack-local copy in `Zeroizing` (`apps/desktop/src-tauri/src/crypto/keychain_handle.rs:86-105`). Targeted regression tests were added for each area (`packages/core-data/tests/entities.test.ts:166-200`, `packages/core-data/tests/organizer-layout-migration.test.ts:257-313`, `apps/desktop/src-tauri/src/crypto/keychain_handle.rs:147-162`).
+- Was the resolution honest (no smuggled scope-cut or stub-only fix)? Yes. The invariants are enforced in production code, not deferred to docs/types, and the claimed verification commands exist and passed locally (`pnpm --filter @repo/core-data test`, `pnpm --filter @repo/core-data check-types`, `cargo test --features crypto keychain_handle::`, `cargo check --features crypto`).
+
+### Remaining gaps (max 4 bullets, severity-tagged)
+- [P2] The commit message says `OrganizerLayoutMigrationResult` only gains an “optional” field, but the exported interface makes `skipped` required (`packages/core-data/src/organizer-layout-migration.ts:75-92`). This is not a P0 and did not invalidate the fix.
+
+### Regressions introduced (max 3 bullets)
+- Added test warning: duplicate `skipped` key in one expectation object triggers a Vite/esbuild warning during `pnpm --filter @repo/core-data test` (`packages/core-data/tests/organizer-layout-migration.test.ts:94-103`).
+
+### Next action
+- If APPROVED: re-mark the manifest row to READY_TO_SHIP and move on.
+tokens used
+40,301
+## Codex Post-fix Re-review
+
+**Feature**: p1-alpha-core-data-validation
+**Original verdict**: BLOCKED
+**Fix commit(s)**: 0bc3afa
+**Reviewer**: codex feature-review · gpt-5.4 high reasoning
+**New verdict**: APPROVED
+
+### Was the original P0 resolved?
+- Original issue (paraphrased): `assertRepoRecord()` only required a dot instead of the documented `^[a-z]+\.[a-z_]+$`; `clipboard.item` rows were not runtime-enforced to stay `device-local`; organizer-layout migration accepted empty `filepath`; `insert_kek_from_bytes()` returned on wrong length without zeroizing the caller buffer and left a stack-local `[u8; 32]` copy unscrubbed.
+- Evidence the fix resolves it: `ENTITY_TYPE_RE` now enforces the documented regex and throws on violations (`packages/core-data/src/repo-utils.ts:8-21`); `clipboard.item` now hard-fails unless `syncScope === "device-local"` (`packages/core-data/src/repo-utils.ts:37-44`); migration now rejects empty/missing `filepath` and unsupported kinds, increments `skipped`, and only persists validated records (`packages/core-data/src/organizer-layout-migration.ts:142-164`, `274-301`); the keychain bridge now zeroizes the wrong-length caller buffer before returning and wraps the stack-local copy in `Zeroizing` (`apps/desktop/src-tauri/src/crypto/keychain_handle.rs:86-105`). Targeted regression tests were added for each area (`packages/core-data/tests/entities.test.ts:166-200`, `packages/core-data/tests/organizer-layout-migration.test.ts:257-313`, `apps/desktop/src-tauri/src/crypto/keychain_handle.rs:147-162`).
+- Was the resolution honest (no smuggled scope-cut or stub-only fix)? Yes. The invariants are enforced in production code, not deferred to docs/types, and the claimed verification commands exist and passed locally (`pnpm --filter @repo/core-data test`, `pnpm --filter @repo/core-data check-types`, `cargo test --features crypto keychain_handle::`, `cargo check --features crypto`).
+
+### Remaining gaps (max 4 bullets, severity-tagged)
+- [P2] The commit message says `OrganizerLayoutMigrationResult` only gains an “optional” field, but the exported interface makes `skipped` required (`packages/core-data/src/organizer-layout-migration.ts:75-92`). This is not a P0 and did not invalidate the fix.
+
+### Regressions introduced (max 3 bullets)
+- Added test warning: duplicate `skipped` key in one expectation object triggers a Vite/esbuild warning during `pnpm --filter @repo/core-data test` (`packages/core-data/tests/organizer-layout-migration.test.ts:94-103`).
+
+### Next action
+- If APPROVED: re-mark the manifest row to READY_TO_SHIP and move on.

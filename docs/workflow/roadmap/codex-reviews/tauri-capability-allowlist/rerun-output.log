@@ -1,0 +1,1020 @@
+Reading additional input from stdin...
+OpenAI Codex v0.132.0
+--------
+workdir: /Users/lijinlong/Desktop/AI_Desktop/XAI_Desktop
+model: gpt-5.4
+provider: openai
+approval: never
+sandbox: workspace-write [workdir, /tmp, $TMPDIR]
+reasoning effort: high
+reasoning summaries: none
+session id: 019e44b0-231d-73e2-bb67-de89ec78aa4e
+--------
+user
+# Codex Feature Post-fix Re-review
+
+You are acting as the `feature-review` subagent (Codex inline, cross-vendor verify pass), **re-reviewing** a P0 fix that the Claude Code main agent landed on `codex/track-a-desktop-foundation` in response to your previous BLOCKED verdict.
+
+## Your only job
+
+Decide whether the new commit closes the P0 issue you previously flagged. Output ONLY the markdown block below — no preamble, no follow-up. Under 500 words.
+
+```md
+## Codex Post-fix Re-review
+
+**Feature**: tauri-capability-allowlist
+**Original verdict**: BLOCKED
+**Fix commit(s)**: 143bca5
+**Reviewer**: codex feature-review · gpt-5.4 high reasoning
+**New verdict**: APPROVED | REVISE | BLOCKED
+
+### Was the original P0 resolved?
+- Original issue (paraphrased): …
+- Evidence the fix resolves it: <file:line citations>
+- Was the resolution honest (no smuggled scope-cut or stub-only fix)?
+
+### Remaining gaps (max 4 bullets, severity-tagged)
+- [P1|P2] …
+
+### Regressions introduced (max 3 bullets)
+- …
+
+### Next action
+- If APPROVED: re-mark the manifest row to READY_TO_SHIP and move on.
+- If REVISE: one or two concrete follow-up bullets (≤ half a day each).
+- If BLOCKED: state which contract is still false.
+```
+
+## How to evaluate
+
+1. The fix commit's diff is your primary evidence. Use `git show --stat 143bca5` and `git show 143bca5` to read it end-to-end.
+2. Compare the diff against the original P0 issue:
+   commands/keychain.rs secret_set/get/del had no WebviewWindow parameter and no ensure_*_allowed check, yet AUDIT.md and contracts/tauri-commands-v0.md claimed every JS-callable command runtime-enforces a window allow-list.
+3. Look for the **specific change** the previous review demanded. Smuggled scope-cuts (e.g. silently deferring the invariant to a follow-up) must downgrade the verdict.
+4. Scan for **regressions**: imports added, capabilities widened, tests skipped, doc invariants weakened.
+5. Validate the test commands listed in the fix commit message actually exist and pass (treat the commit body's "Tests" section as the executor's claim — does the diff support it?).
+
+## Feature-specific context
+
+Feature ID: G2.5 / tauri-capability-allowlist
+Branch: codex/track-a-desktop-foundation
+Commit under review: ad5f1d3 (feat(tauri-capability-allowlist): add db capability file + runtime window allow-list)
+
+Files added or changed:
+- apps/desktop/src-tauri/capabilities/plugin-data-database.json (new)
+- apps/desktop/src-tauri/capabilities/AUDIT.md (new — full window×command×layer audit)
+- apps/desktop/src-tauri/src/commands/database.rs — DATABASE_ALLOWED_WINDOWS + ensure_database_window_allowed + checks in all 5 db_* commands + 2 new cargo tests
+- docs/contracts/tauri-commands-v0.md — §6.1 cross-ref + §7 audit pointer
+- packages/tauri-capability-allowlist/docs/dev_log.md (new)
+- docs/workflow/roadmap/xai-g2-data-security-foundation.md row #6 → READY_TO_SHIP
+
+Intended scope:
+- Every JS-callable command has (a) a capability file declaring allowed windows and
+  (b) a runtime `ensure_*_allowed(label)` defence-in-depth check.
+- New capability file `plugin-data-database.json` scopes db_* to
+  main/control/grid_*/account/console.
+- Widget/pet/ai-cube cannot reach db_*/crypto_*/secret_* even with a mis-attached
+  capability file.
+
+Cross-vendor checklist:
+1. Capability files are markers only — actual permission policy lives in the runtime
+   check. Does `plugin-data-database.json` get loaded by Tauri at all (does it
+   appear in tauri.conf.json capabilities array, or auto-discovered)?
+2. Does `default.json` actually grant the surface to `widget_*` / `pet` / `ai_cube`
+   somewhere else (e.g. inherited from a wildcard)? If so, the runtime guard is the
+   only thing standing.
+3. Runtime guard test coverage: 2 new cargo tests check admit/reject. Are there
+   off-by-one cases (e.g. label `gridXXX` w/o underscore, label with NUL)?
+4. AUDIT.md correctness: does each row in the audit table actually match the
+   reality of `lib.rs` invoke_handler registration?
+5. Consistency: crypto_* uses `CRYPTO_ALLOWED_WINDOWS` constant, database uses
+   `DATABASE_ALLOWED_WINDOWS`. Should there be a shared helper / enum to prevent
+   drift?
+6. Future-proofing: when finder commands land (G3-E3) they need their own
+   FINDER_ALLOWED_WINDOWS — does the pattern scale? (Note: finder.rs already exists
+   in commit 533391e — that's a separate review.)
+7. Doc/code alignment: §6.1 says "Every JS-callable command has a runtime
+   `ensure_*_allowed(label)` check". Window commands (`create_grid_window` etc.)
+   in commands/window.rs — do they actually have such a check, or only via the
+   capability file?
+codex
+Reviewing `143bca5` against the original P0: I’m reading the full diff first, then checking the changed files against the runtime-allowlist contract and the claimed test coverage.
+exec
+/bin/zsh -lc 'git show --stat --oneline 143bca5' in /Users/lijinlong/Desktop/AI_Desktop/XAI_Desktop
+ succeeded in 0ms:
+143bca5 fix(commands/keychain): enforce KEYCHAIN_ALLOWED_WINDOWS at runtime (P0 G2.5)
+ apps/desktop/src-tauri/capabilities/AUDIT.md       |   2 +-
+ apps/desktop/src-tauri/src/commands/keychain.rs    | 105 +++++++++++++++++++--
+ docs/contracts/tauri-commands-v0.md                |   2 +-
+ .../tauri-capability-allowlist/docs/dev_log.md     |   1 +
+ 4 files changed, 99 insertions(+), 11 deletions(-)
+
+exec
+/bin/zsh -lc 'git show --format=medium --no-ext-diff 143bca5' in /Users/lijinlong/Desktop/AI_Desktop/XAI_Desktop
+ succeeded in 0ms:
+commit 143bca5c44bea01187bccf88c930759486a8f6fa
+Author: InnoPeak <global_ai@innopeaktech.com>
+Date:   Wed May 20 02:08:50 2026 -0700
+
+    fix(commands/keychain): enforce KEYCHAIN_ALLOWED_WINDOWS at runtime (P0 G2.5)
+    
+    Why
+    - Codex cross-vendor review (P0-2) flagged that `commands/keychain.rs`
+      exposed `secret_set` / `secret_get` / `secret_del` without the runtime
+      `ensure_*_allowed` window-origin check, while `capabilities/AUDIT.md`
+      and `docs/contracts/tauri-commands-v0.md` §6/§7 (added in ad5f1d3)
+      explicitly claimed every JS-callable command had one. Result: a
+      widget / pet / ai-cube / grid_* window with a mis-attached capability
+      could reach the Keychain seam, breaking the G2.5 two-layer invariant
+      promised by the docs.
+    
+    What
+    - Add `KEYCHAIN_ALLOWED_WINDOWS: &[&str] = &["account", "control"]`
+      constant in `commands/keychain.rs` mirroring the existing
+      `CRYPTO_ALLOWED_WINDOWS` / `DATABASE_ALLOWED_WINDOWS` pattern.
+    - Add `is_keychain_window_allowed(label)` and
+      `ensure_keychain_window_allowed(label) -> AppResult<()>` returning
+      `AppError::SyncCapabilityDenied(...)` (E3004) on reject.
+    - Inject `window: tauri::WebviewWindow` as the FIRST parameter of
+      `secret_set` / `secret_get` / `secret_del`; each command now calls
+      `ensure_keychain_window_allowed(window.label())?` before any platform
+      Keychain access. TS `packages/core-data/src/keychain.ts` is unchanged
+      because Tauri's IPC auto-extracts the `window` parameter from the
+      request envelope rather than the JS args payload.
+    - Add 2 new cargo unit tests:
+      - `keychain_allowlist_admits_account_and_control` covers the admit path.
+      - `keychain_allowlist_rejects_widget_pet_aicube` covers reject for
+        `widget_clock` / `pet` / `ai_cube` / `unknown` / `grid_xxx` / `grid_`
+        / `main` / `console` and asserts the error message contains both the
+        rejected label and `secret_*`.
+    - Update `capabilities/AUDIT.md` row for `secret_*` to name the new
+      `KEYCHAIN_ALLOWED_WINDOWS` constant explicitly (was: "window-origin
+      check inside `commands::keychain`").
+    - Update `docs/contracts/tauri-commands-v0.md` §6 security rule for
+      `secret_*` to mention the runtime `KEYCHAIN_ALLOWED_WINDOWS` reject
+      path and the `E3004` error code.
+    - Append 2026-05-20 row to `packages/tauri-capability-allowlist/docs/dev_log.md`
+      Work Log documenting the P0-2 fix.
+    
+    Scope
+    - apps/desktop/src-tauri/src/commands/keychain.rs (runtime check + tests),
+    - apps/desktop/src-tauri/capabilities/AUDIT.md (audit row),
+    - docs/contracts/tauri-commands-v0.md (§6 row),
+    - packages/tauri-capability-allowlist/docs/dev_log.md (Work Log).
+    
+    Risk
+    - Low. Purely additive defence-in-depth check. Legitimate Keychain
+      callers (`account`, `control`) keep their access; only mis-routed
+      callers (widget / pet / ai-cube / grid_* / main / console) are now
+      rejected at the runtime layer instead of the platform layer. No
+      existing TS callers change.
+    
+    Docs
+    - apps/desktop/src-tauri/capabilities/AUDIT.md,
+      docs/contracts/tauri-commands-v0.md,
+      packages/tauri-capability-allowlist/docs/dev_log.md.
+    
+    Tests
+    - cargo check --manifest-path apps/desktop/src-tauri/Cargo.toml : PASS
+    - cargo check --manifest-path apps/desktop/src-tauri/Cargo.toml --features crypto : PASS
+    - cargo test --manifest-path apps/desktop/src-tauri/Cargo.toml keychain:: : 5 tests PASS (2 new + 3 existing platform tests)
+    - pnpm --filter @repo/core-data test : 58 tests PASS
+    
+    Co-Authored-By: Claude Opus 4.7 (1M context) <noreply@anthropic.com>
+
+diff --git a/apps/desktop/src-tauri/capabilities/AUDIT.md b/apps/desktop/src-tauri/capabilities/AUDIT.md
+index fc4611d..9246bab 100644
+--- a/apps/desktop/src-tauri/capabilities/AUDIT.md
++++ b/apps/desktop/src-tauri/capabilities/AUDIT.md
+@@ -28,7 +28,7 @@ Source files audited:
+ | `opener:default` | default.json | Tauri plugin |
+ | `create_grid_window` and siblings | default.json | host validates gridId |
+ | `crypto_*` | plugin-account-crypto.json | `commands::crypto::CRYPTO_ALLOWED_WINDOWS` (account, control) |
+-| `secret_set` / `secret_get` / `secret_del` | plugin-account-keychain.json | window-origin check inside `commands::keychain` |
++| `secret_set` / `secret_get` / `secret_del` | plugin-account-keychain.json | `commands::keychain::KEYCHAIN_ALLOWED_WINDOWS` (account, control) |
+ | `db_init` / `db_put` / `db_get` / `db_list` / `db_delete` | plugin-data-database.json (G2.5) | `commands::database::DATABASE_ALLOWED_WINDOWS` (main, control, account, console) + `grid_*` prefix |
+ 
+ ## Minimization notes
+diff --git a/apps/desktop/src-tauri/src/commands/keychain.rs b/apps/desktop/src-tauri/src/commands/keychain.rs
+index 29bb1cc..1a56437 100644
+--- a/apps/desktop/src-tauri/src/commands/keychain.rs
++++ b/apps/desktop/src-tauri/src/commands/keychain.rs
+@@ -2,38 +2,125 @@
+ //!
+ //! These three commands are the only public surface for Keychain access.
+ //! They are registered in `lib.rs` `invoke_handler!` and scoped to the
+-//! `plugin-account` window via the `plugin-account` capability file.
++//! `account` / `control` windows via the `plugin-account-keychain`
++//! capability file. The runtime `KEYCHAIN_ALLOWED_WINDOWS` allow-list in
++//! this module is a defence-in-depth layer that mirrors the capability
++//! file: if a future capability widening grants a wider set of windows
++//! the file scope, the runtime check still rejects unauthorised origins
++//! (widget / pet / ai-cube / grid windows) before any platform call.
+ //!
+ //! All commands return `AppResult<T>` — on error the JS caller receives a
+-//! JSON-serialised `AppError` with a JS-parseable `E11xx:` prefix.
++//! JSON-serialised `AppError` with a JS-parseable `E11xx:` / `E3004:` prefix.
++//!
++//! Tauri injects `window: tauri::WebviewWindow` automatically; JS callers
++//! do NOT include it in the args payload (mirrors the crypto/database
++//! command pattern). See `commands/crypto.rs` and `commands/database.rs`.
+ 
+-use crate::error::AppResult;
++use crate::error::{AppError, AppResult};
+ use crate::platform;
+ 
++/// Windows allowed to invoke `secret_*` commands. Mirrors
++/// `capabilities/plugin-account-keychain.json`. Widget / pet / ai-cube
++/// and `grid_*` windows are intentionally NOT in this list — they must
++/// route Keychain access through the owning `plugin-account` window.
++const KEYCHAIN_ALLOWED_WINDOWS: &[&str] = &["account", "control"];
++
++fn is_keychain_window_allowed(label: &str) -> bool {
++    KEYCHAIN_ALLOWED_WINDOWS.contains(&label)
++}
++
++fn ensure_keychain_window_allowed(label: &str) -> AppResult<()> {
++    if is_keychain_window_allowed(label) {
++        return Ok(());
++    }
++    Err(AppError::SyncCapabilityDenied(format!(
++        "window `{label}` is not allowed to invoke secret_* commands"
++    )))
++}
++
+ /// Store an opaque byte blob under `key` in the macOS Keychain.
+ ///
+ /// Idempotent upsert: repeated calls with the same key update the stored bytes.
+ /// Returns `E1100` (KeychainLocked) if the device is locked, `E1103` on other
+-/// backend errors, `E1104` on non-macOS targets.
++/// backend errors, `E1104` on non-macOS targets, `E3004` if the calling window
++/// is not in `KEYCHAIN_ALLOWED_WINDOWS`.
+ #[tauri::command]
+-pub async fn secret_set(key: String, value: Vec<u8>) -> AppResult<()> {
++pub async fn secret_set(
++    window: tauri::WebviewWindow,
++    key: String,
++    value: Vec<u8>,
++) -> AppResult<()> {
++    ensure_keychain_window_allowed(window.label())?;
+     platform::macos::keychain::secret_set(&key, &value)
+ }
+ 
+ /// Retrieve the byte blob stored under `key` from the macOS Keychain.
+ ///
+ /// Returns `E1101` (KeychainItemNotFound) if the key is absent,
+-/// `E1100` (KeychainLocked) if the device is locked, `E1104` on non-macOS.
++/// `E1100` (KeychainLocked) if the device is locked, `E1104` on non-macOS,
++/// `E3004` if the calling window is not in `KEYCHAIN_ALLOWED_WINDOWS`.
+ #[tauri::command]
+-pub async fn secret_get(key: String) -> AppResult<Vec<u8>> {
++pub async fn secret_get(window: tauri::WebviewWindow, key: String) -> AppResult<Vec<u8>> {
++    ensure_keychain_window_allowed(window.label())?;
+     platform::macos::keychain::secret_get(&key)
+ }
+ 
+ /// Delete the keychain item for `key`.
+ ///
+ /// Idempotent: if the key does not exist, returns success.
+-/// Returns `E1100` (KeychainLocked) if the device is locked, `E1104` on non-macOS.
++/// Returns `E1100` (KeychainLocked) if the device is locked, `E1104` on non-macOS,
++/// `E3004` if the calling window is not in `KEYCHAIN_ALLOWED_WINDOWS`.
+ #[tauri::command]
+-pub async fn secret_del(key: String) -> AppResult<()> {
++pub async fn secret_del(window: tauri::WebviewWindow, key: String) -> AppResult<()> {
++    ensure_keychain_window_allowed(window.label())?;
+     platform::macos::keychain::secret_del(&key)
+ }
++
++#[cfg(test)]
++mod tests {
++    use super::*;
++
++    #[test]
++    fn keychain_allowlist_admits_account_and_control() {
++        for label in KEYCHAIN_ALLOWED_WINDOWS {
++            assert!(
++                is_keychain_window_allowed(label),
++                "expected `{label}` to be admitted"
++            );
++            assert!(ensure_keychain_window_allowed(label).is_ok());
++        }
++    }
++
++    #[test]
++    fn keychain_allowlist_rejects_widget_pet_aicube() {
++        // grid_* is in the database allow-list but explicitly NOT in the
++        // keychain allow-list — these windows must route Keychain access
++        // through the owning `plugin-account` window.
++        for label in [
++            "widget_clock",
++            "pet",
++            "ai_cube",
++            "unknown",
++            "grid_xxx",
++            "grid_",
++            "main",
++            "console",
++        ] {
++            assert!(
++                !is_keychain_window_allowed(label),
++                "expected `{label}` to be rejected"
++            );
++            let err = ensure_keychain_window_allowed(label).unwrap_err();
++            match err {
++                AppError::SyncCapabilityDenied(msg) => {
++                    assert!(
++                        msg.contains(label),
++                        "error message `{msg}` should mention `{label}`"
++                    );
++                    assert!(msg.contains("secret_*"));
++                }
++                other => panic!("unexpected error for `{label}`: {other:?}"),
++            }
++        }
++    }
++}
+diff --git a/docs/contracts/tauri-commands-v0.md b/docs/contracts/tauri-commands-v0.md
+index cd3b3cd..7e12599 100644
+--- a/docs/contracts/tauri-commands-v0.md
++++ b/docs/contracts/tauri-commands-v0.md
+@@ -95,7 +95,7 @@ Current source:
+ | `crypto_wrap_dek_for_devices` | `account`,`control` | DEK handle only |
+ | `crypto_unwrap_dek_for_device` | `account`,`control` | returns handle,not raw key |
+ | `crypto_recovery_sign` | `account`,`control` | transcript signed in Rust |
+-| `secret_set` / `secret_get` / `secret_del` | `account`,`control` | Keychain scoped by account/device |
++| `secret_set` / `secret_get` / `secret_del` | `account`,`control` | Keychain scoped by account/device. Runtime `commands::keychain::KEYCHAIN_ALLOWED_WINDOWS` (`account`, `control`) check rejects any other origin (widget / pet / ai-cube / grid / main / console) with `E3004` before reaching the platform layer. |
+ 
+ Raw DEK must never cross IPC. JS may hold opaque handle ids only.
+ 
+diff --git a/packages/tauri-capability-allowlist/docs/dev_log.md b/packages/tauri-capability-allowlist/docs/dev_log.md
+index 024a1ae..283d8c0 100644
+--- a/packages/tauri-capability-allowlist/docs/dev_log.md
++++ b/packages/tauri-capability-allowlist/docs/dev_log.md
+@@ -75,3 +75,4 @@ Widget / pet / ai-cube windows cannot reach `db_*`, `crypto_*`, or
+ | Timestamp | Executor | Action | Commits | Next |
+ |---|---|---|---|---|
+ | 2026-05-20 00:58 PDT | feature-build + feature-verify (Claude Code, Track A) | Added `plugin-data-database.json`, `AUDIT.md`, runtime allow-list with 2 new cargo tests, contract doc cross-refs. | pending commit | manual ship only; continue roadmap |
++| 2026-05-20 PDT | bug-fix (Claude Code, Track A) | P0-2: `commands/keychain.rs` was missing the runtime `ensure_*_allowed` check that AUDIT.md / contracts v0 §7 claimed every JS-callable command had — fixed by adding `KEYCHAIN_ALLOWED_WINDOWS = ["account", "control"]`, `is_keychain_window_allowed`, `ensure_keychain_window_allowed`, and injecting `window: WebviewWindow` as the first parameter of `secret_set` / `secret_get` / `secret_del`. Added 2 cargo tests (admit account/control, reject widget/pet/ai_cube/unknown/grid_*/main/console). Updated AUDIT.md to name the constant explicitly and contracts v0 §6 to mention the runtime check. TS keychain.ts unchanged (Tauri auto-injects `window`). | pending commit | none — closes Codex cross-vendor P0-2 |
+
+codex
+The diff is narrowly scoped to `commands/keychain.rs` plus doc updates. I’m checking the live file layout and running the claimed keychain-targeted tests to confirm the fix is real rather than documentation-only.
+exec
+/bin/zsh -lc "nl -ba apps/desktop/src-tauri/src/commands/keychain.rs | sed -n '1,220p'" in /Users/lijinlong/Desktop/AI_Desktop/XAI_Desktop
+ succeeded in 0ms:
+     1	//! Tauri IPC commands for the macOS Keychain bridge.
+     2	//!
+     3	//! These three commands are the only public surface for Keychain access.
+     4	//! They are registered in `lib.rs` `invoke_handler!` and scoped to the
+     5	//! `account` / `control` windows via the `plugin-account-keychain`
+     6	//! capability file. The runtime `KEYCHAIN_ALLOWED_WINDOWS` allow-list in
+     7	//! this module is a defence-in-depth layer that mirrors the capability
+     8	//! file: if a future capability widening grants a wider set of windows
+     9	//! the file scope, the runtime check still rejects unauthorised origins
+    10	//! (widget / pet / ai-cube / grid windows) before any platform call.
+    11	//!
+    12	//! All commands return `AppResult<T>` — on error the JS caller receives a
+    13	//! JSON-serialised `AppError` with a JS-parseable `E11xx:` / `E3004:` prefix.
+    14	//!
+    15	//! Tauri injects `window: tauri::WebviewWindow` automatically; JS callers
+    16	//! do NOT include it in the args payload (mirrors the crypto/database
+    17	//! command pattern). See `commands/crypto.rs` and `commands/database.rs`.
+    18	
+    19	use crate::error::{AppError, AppResult};
+    20	use crate::platform;
+    21	
+    22	/// Windows allowed to invoke `secret_*` commands. Mirrors
+    23	/// `capabilities/plugin-account-keychain.json`. Widget / pet / ai-cube
+    24	/// and `grid_*` windows are intentionally NOT in this list — they must
+    25	/// route Keychain access through the owning `plugin-account` window.
+    26	const KEYCHAIN_ALLOWED_WINDOWS: &[&str] = &["account", "control"];
+    27	
+    28	fn is_keychain_window_allowed(label: &str) -> bool {
+    29	    KEYCHAIN_ALLOWED_WINDOWS.contains(&label)
+    30	}
+    31	
+    32	fn ensure_keychain_window_allowed(label: &str) -> AppResult<()> {
+    33	    if is_keychain_window_allowed(label) {
+    34	        return Ok(());
+    35	    }
+    36	    Err(AppError::SyncCapabilityDenied(format!(
+    37	        "window `{label}` is not allowed to invoke secret_* commands"
+    38	    )))
+    39	}
+    40	
+    41	/// Store an opaque byte blob under `key` in the macOS Keychain.
+    42	///
+    43	/// Idempotent upsert: repeated calls with the same key update the stored bytes.
+    44	/// Returns `E1100` (KeychainLocked) if the device is locked, `E1103` on other
+    45	/// backend errors, `E1104` on non-macOS targets, `E3004` if the calling window
+    46	/// is not in `KEYCHAIN_ALLOWED_WINDOWS`.
+    47	#[tauri::command]
+    48	pub async fn secret_set(
+    49	    window: tauri::WebviewWindow,
+    50	    key: String,
+    51	    value: Vec<u8>,
+    52	) -> AppResult<()> {
+    53	    ensure_keychain_window_allowed(window.label())?;
+    54	    platform::macos::keychain::secret_set(&key, &value)
+    55	}
+    56	
+    57	/// Retrieve the byte blob stored under `key` from the macOS Keychain.
+    58	///
+    59	/// Returns `E1101` (KeychainItemNotFound) if the key is absent,
+    60	/// `E1100` (KeychainLocked) if the device is locked, `E1104` on non-macOS,
+    61	/// `E3004` if the calling window is not in `KEYCHAIN_ALLOWED_WINDOWS`.
+    62	#[tauri::command]
+    63	pub async fn secret_get(window: tauri::WebviewWindow, key: String) -> AppResult<Vec<u8>> {
+    64	    ensure_keychain_window_allowed(window.label())?;
+    65	    platform::macos::keychain::secret_get(&key)
+    66	}
+    67	
+    68	/// Delete the keychain item for `key`.
+    69	///
+    70	/// Idempotent: if the key does not exist, returns success.
+    71	/// Returns `E1100` (KeychainLocked) if the device is locked, `E1104` on non-macOS,
+    72	/// `E3004` if the calling window is not in `KEYCHAIN_ALLOWED_WINDOWS`.
+    73	#[tauri::command]
+    74	pub async fn secret_del(window: tauri::WebviewWindow, key: String) -> AppResult<()> {
+    75	    ensure_keychain_window_allowed(window.label())?;
+    76	    platform::macos::keychain::secret_del(&key)
+    77	}
+    78	
+    79	#[cfg(test)]
+    80	mod tests {
+    81	    use super::*;
+    82	
+    83	    #[test]
+    84	    fn keychain_allowlist_admits_account_and_control() {
+    85	        for label in KEYCHAIN_ALLOWED_WINDOWS {
+    86	            assert!(
+    87	                is_keychain_window_allowed(label),
+    88	                "expected `{label}` to be admitted"
+    89	            );
+    90	            assert!(ensure_keychain_window_allowed(label).is_ok());
+    91	        }
+    92	    }
+    93	
+    94	    #[test]
+    95	    fn keychain_allowlist_rejects_widget_pet_aicube() {
+    96	        // grid_* is in the database allow-list but explicitly NOT in the
+    97	        // keychain allow-list — these windows must route Keychain access
+    98	        // through the owning `plugin-account` window.
+    99	        for label in [
+   100	            "widget_clock",
+   101	            "pet",
+   102	            "ai_cube",
+   103	            "unknown",
+   104	            "grid_xxx",
+   105	            "grid_",
+   106	            "main",
+   107	            "console",
+   108	        ] {
+   109	            assert!(
+   110	                !is_keychain_window_allowed(label),
+   111	                "expected `{label}` to be rejected"
+   112	            );
+   113	            let err = ensure_keychain_window_allowed(label).unwrap_err();
+   114	            match err {
+   115	                AppError::SyncCapabilityDenied(msg) => {
+   116	                    assert!(
+   117	                        msg.contains(label),
+   118	                        "error message `{msg}` should mention `{label}`"
+   119	                    );
+   120	                    assert!(msg.contains("secret_*"));
+   121	                }
+   122	                other => panic!("unexpected error for `{label}`: {other:?}"),
+   123	            }
+   124	        }
+   125	    }
+   126	}
+
+exec
+/bin/zsh -lc "rg -n \"secret_set|secret_get|secret_del|invoke_handler|plugin-account-keychain|KEYCHAIN_ALLOWED_WINDOWS\" apps/desktop/src-tauri -g '"'!target'"'" in /Users/lijinlong/Desktop/AI_Desktop/XAI_Desktop
+ succeeded in 0ms:
+apps/desktop/src-tauri/src/error.rs:26:    /// E1101 — `secret_get` on an absent key.
+apps/desktop/src-tauri/src/lib.rs:64:        .invoke_handler(tauri::generate_handler![
+apps/desktop/src-tauri/src/lib.rs:75:            commands::keychain::secret_set,
+apps/desktop/src-tauri/src/lib.rs:76:            commands::keychain::secret_get,
+apps/desktop/src-tauri/src/lib.rs:77:            commands::keychain::secret_del,
+apps/desktop/src-tauri/src/commands/keychain.rs:4://! They are registered in `lib.rs` `invoke_handler!` and scoped to the
+apps/desktop/src-tauri/src/commands/keychain.rs:5://! `account` / `control` windows via the `plugin-account-keychain`
+apps/desktop/src-tauri/src/commands/keychain.rs:6://! capability file. The runtime `KEYCHAIN_ALLOWED_WINDOWS` allow-list in
+apps/desktop/src-tauri/src/commands/keychain.rs:23:/// `capabilities/plugin-account-keychain.json`. Widget / pet / ai-cube
+apps/desktop/src-tauri/src/commands/keychain.rs:26:const KEYCHAIN_ALLOWED_WINDOWS: &[&str] = &["account", "control"];
+apps/desktop/src-tauri/src/commands/keychain.rs:29:    KEYCHAIN_ALLOWED_WINDOWS.contains(&label)
+apps/desktop/src-tauri/src/commands/keychain.rs:46:/// is not in `KEYCHAIN_ALLOWED_WINDOWS`.
+apps/desktop/src-tauri/src/commands/keychain.rs:48:pub async fn secret_set(
+apps/desktop/src-tauri/src/commands/keychain.rs:54:    platform::macos::keychain::secret_set(&key, &value)
+apps/desktop/src-tauri/src/commands/keychain.rs:61:/// `E3004` if the calling window is not in `KEYCHAIN_ALLOWED_WINDOWS`.
+apps/desktop/src-tauri/src/commands/keychain.rs:63:pub async fn secret_get(window: tauri::WebviewWindow, key: String) -> AppResult<Vec<u8>> {
+apps/desktop/src-tauri/src/commands/keychain.rs:65:    platform::macos::keychain::secret_get(&key)
+apps/desktop/src-tauri/src/commands/keychain.rs:72:/// `E3004` if the calling window is not in `KEYCHAIN_ALLOWED_WINDOWS`.
+apps/desktop/src-tauri/src/commands/keychain.rs:74:pub async fn secret_del(window: tauri::WebviewWindow, key: String) -> AppResult<()> {
+apps/desktop/src-tauri/src/commands/keychain.rs:76:    platform::macos::keychain::secret_del(&key)
+apps/desktop/src-tauri/src/commands/keychain.rs:85:        for label in KEYCHAIN_ALLOWED_WINDOWS {
+apps/desktop/src-tauri/src/crypto/keychain_handle.rs:13://! `platform::macos::keychain::secret_get` and `KeyVault::insert_*` for KEK /
+apps/desktop/src-tauri/src/crypto/keychain_handle.rs:73:    let mut bytes = keychain::secret_get(key)?;
+apps/desktop/src-tauri/capabilities/plugin-account-crypto.json:4:  "description": "Scoped capability marker for Sync crypto commands. Custom invoke_handler commands also enforce the account/control window allowlist in commands/crypto.rs so non-account windows cannot call crypto_*.",
+apps/desktop/src-tauri/src/crypto/device_key.rs:37:        keychain::secret_set(keychain_key, device_priv)
+apps/desktop/src-tauri/capabilities/plugin-data-database.json:4:  "description": "Scoped capability marker for Repository v0 SQLite commands (db_init / db_put / db_get / db_list / db_delete). The actual allow-list is enforced by the custom invoke_handler registration in lib.rs (feature-gated to `crypto`). This file documents the *intended* scope — plugin-organizer, plugin-account, plugin-productivity, plugin-clipboard, plugin-project, and host control/menu windows — so audits do not silently grant the surface to widget / pet / ai-cube windows.",
+apps/desktop/src-tauri/capabilities/AUDIT.md:7:- `plugin-account-keychain.json` — account / control Keychain seam.
+apps/desktop/src-tauri/capabilities/AUDIT.md:12:| Window | Capability files attached | Custom invoke_handler enforcement |
+apps/desktop/src-tauri/capabilities/AUDIT.md:15:| `control` | default, plugin-account-crypto, plugin-account-keychain, plugin-data-database | all custom commands |
+apps/desktop/src-tauri/capabilities/AUDIT.md:17:| `account` | plugin-account-crypto, plugin-account-keychain, plugin-data-database | crypto_*, secret_*, db_* |
+apps/desktop/src-tauri/capabilities/AUDIT.md:31:| `secret_set` / `secret_get` / `secret_del` | plugin-account-keychain.json | `commands::keychain::KEYCHAIN_ALLOWED_WINDOWS` (account, control) |
+apps/desktop/src-tauri/capabilities/plugin-account-keychain.json:3:  "identifier": "plugin-account-keychain",
+apps/desktop/src-tauri/capabilities/plugin-account-keychain.json:4:  "description": "Scoped capability for the plugin-account window: documents that secret_set / secret_get / secret_del are intended exclusively for the 'account' and 'control' windows. In Tauri v2 the capability system governs plugin permissions; custom invoke_handler commands are additionally enforced via the window-origin check in the command handlers. This file satisfies Rec-1 (feature-review): dedicated capability file, not widening capabilities/default.json.",
+apps/desktop/src-tauri/src/platform/macos/keychain.rs:114:    pub fn secret_set_impl(key: &str, value: &[u8]) -> AppResult<()> {
+apps/desktop/src-tauri/src/platform/macos/keychain.rs:130:    pub fn secret_get_impl(key: &str) -> AppResult<Vec<u8>> {
+apps/desktop/src-tauri/src/platform/macos/keychain.rs:138:    pub fn secret_del_impl(key: &str) -> AppResult<()> {
+apps/desktop/src-tauri/src/platform/macos/keychain.rs:151:pub fn secret_set(key: &str, value: &[u8]) -> AppResult<()> {
+apps/desktop/src-tauri/src/platform/macos/keychain.rs:152:    macos_impl::secret_set_impl(key, value)
+apps/desktop/src-tauri/src/platform/macos/keychain.rs:156:pub fn secret_get(key: &str) -> AppResult<Vec<u8>> {
+apps/desktop/src-tauri/src/platform/macos/keychain.rs:157:    macos_impl::secret_get_impl(key)
+apps/desktop/src-tauri/src/platform/macos/keychain.rs:161:pub fn secret_del(key: &str) -> AppResult<()> {
+apps/desktop/src-tauri/src/platform/macos/keychain.rs:162:    macos_impl::secret_del_impl(key)
+apps/desktop/src-tauri/src/platform/macos/keychain.rs:168:pub fn secret_set(_key: &str, _value: &[u8]) -> AppResult<()> {
+apps/desktop/src-tauri/src/platform/macos/keychain.rs:173:pub fn secret_get(_key: &str) -> AppResult<Vec<u8>> {
+apps/desktop/src-tauri/src/platform/macos/keychain.rs:178:pub fn secret_del(_key: &str) -> AppResult<()> {
+apps/desktop/src-tauri/src/platform/macos/keychain.rs:218:        let set_result = secret_set("xai.test.key", b"value");
+apps/desktop/src-tauri/src/platform/macos/keychain.rs:219:        let get_result = secret_get("xai.test.key");
+apps/desktop/src-tauri/src/platform/macos/keychain.rs:220:        let del_result = secret_del("xai.test.key");
+apps/desktop/src-tauri/src/platform/macos/keychain.rs:224:            "secret_set must return KeychainUnsupportedPlatform on non-macOS"
+apps/desktop/src-tauri/src/platform/macos/keychain.rs:228:            "secret_get must return KeychainUnsupportedPlatform on non-macOS"
+apps/desktop/src-tauri/src/platform/macos/keychain.rs:232:            "secret_del must return KeychainUnsupportedPlatform on non-macOS"
+apps/desktop/src-tauri/src/platform/macos/keychain.rs:289:        secret_set(&key, val).expect("secret_set should succeed");
+apps/desktop/src-tauri/src/platform/macos/keychain.rs:290:        let got = secret_get(&key).expect("secret_get should succeed");
+apps/desktop/src-tauri/src/platform/macos/keychain.rs:292:        secret_del(&key).expect("secret_del should succeed");
+apps/desktop/src-tauri/src/platform/macos/keychain.rs:293:        let after_del = secret_get(&key);
+apps/desktop/src-tauri/src/platform/macos/keychain.rs:311:        secret_set(&key, b"first_value").expect("first set");
+apps/desktop/src-tauri/src/platform/macos/keychain.rs:312:        secret_set(&key, b"second_value").expect("second set");
+apps/desktop/src-tauri/src/platform/macos/keychain.rs:313:        let got = secret_get(&key).expect("get after double set");
+apps/desktop/src-tauri/src/platform/macos/keychain.rs:315:        secret_del(&key).expect("cleanup");
+apps/desktop/src-tauri/src/platform/macos/keychain.rs:324:        let result = secret_del(key);
+
+exec
+/bin/zsh -lc 'cargo test --manifest-path apps/desktop/src-tauri/Cargo.toml keychain::' in /Users/lijinlong/Desktop/AI_Desktop/XAI_Desktop
+ succeeded in 8926ms:
+   Compiling desktop v0.1.0 (/Users/lijinlong/Desktop/AI_Desktop/XAI_Desktop/apps/desktop/src-tauri)
+warning: variants `DatabaseNotInitialized`, `DatabaseInvalidInput`, and `DatabaseBackend` are never constructed
+  --> src/error.rs:74:5
+   |
+15 | pub enum AppError {
+   |          -------- variants in this enum
+...
+74 |     DatabaseNotInitialized,
+   |     ^^^^^^^^^^^^^^^^^^^^^^
+...
+78 |     DatabaseInvalidInput(String),
+   |     ^^^^^^^^^^^^^^^^^^^^
+...
+82 |     DatabaseBackend(String),
+   |     ^^^^^^^^^^^^^^^
+   |
+   = note: `AppError` has a derived impl for the trait `Debug`, but this is intentionally ignored during dead code analysis
+   = note: `#[warn(dead_code)]` (part of `#[warn(unused)]`) on by default
+
+warning: multiple variants are never constructed
+  --> src/error.rs:44:5
+   |
+15 | pub enum AppError {
+   |          -------- variants in this enum
+...
+44 |     KeychainUnsupportedPlatform,
+   |     ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+...
+48 |     SyncNotInitialized,
+   |     ^^^^^^^^^^^^^^^^^^
+...
+51 |     SyncAuthRequired,
+   |     ^^^^^^^^^^^^^^^^
+...
+54 |     SyncTransport(String),
+   |     ^^^^^^^^^^^^^
+...
+57 |     SyncConflict,
+   |     ^^^^^^^^^^^^
+...
+69 |     SyncCrypto(String),
+   |     ^^^^^^^^^^
+...
+74 |     DatabaseNotInitialized,
+   |     ^^^^^^^^^^^^^^^^^^^^^^
+...
+78 |     DatabaseInvalidInput(String),
+   |     ^^^^^^^^^^^^^^^^^^^^
+...
+82 |     DatabaseBackend(String),
+   |     ^^^^^^^^^^^^^^^
+   |
+   = note: `AppError` has a derived impl for the trait `Debug`, but this is intentionally ignored during dead code analysis
+   = note: `#[warn(dead_code)]` (part of `#[warn(unused)]`) on by default
+
+warning: constant `BUNDLE_ID` is never used
+  --> src/platform/macos/keychain.rs:24:11
+   |
+24 | pub const BUNDLE_ID: &str = "com.jinlong.desktop";
+   |           ^^^^^^^^^
+
+warning: struct `KeychainItemAttrs` is never constructed
+  --> src/platform/macos/keychain.rs:32:12
+   |
+32 | pub struct KeychainItemAttrs {
+   |            ^^^^^^^^^^^^^^^^^
+
+warning: enum `KeychainAccessibility` is never used
+  --> src/platform/macos/keychain.rs:43:10
+   |
+43 | pub enum KeychainAccessibility {
+   |          ^^^^^^^^^^^^^^^^^^^^^
+
+warning: function `build_item_attrs` is never used
+  --> src/platform/macos/keychain.rs:52:8
+   |
+52 | pub fn build_item_attrs() -> KeychainItemAttrs {
+   |        ^^^^^^^^^^^^^^^^
+
+warning: `desktop` (lib test) generated 1 warning
+warning: `desktop` (lib) generated 5 warnings
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 7.84s
+     Running unittests src/lib.rs (apps/desktop/src-tauri/target/debug/deps/desktop_lib-ff5361a3bfb57d15)
+
+running 5 tests
+test commands::keychain::tests::keychain_allowlist_admits_account_and_control ... ok
+test platform::macos::keychain::tests::t_u2_attribute_construction ... ok
+test platform::macos::keychain::tests::t_u3_acl_composition ... ok
+test commands::keychain::tests::keychain_allowlist_rejects_widget_pet_aicube ... ok
+test platform::macos::keychain::tests::t_u5_ostatus_mapping ... ok
+
+test result: ok. 5 passed; 0 failed; 0 ignored; 0 measured; 13 filtered out; finished in 0.13s
+
+     Running unittests src/main.rs (apps/desktop/src-tauri/target/debug/deps/desktop-6e10a2304337d3d4)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+
+codex
+The runtime check is in the command entrypoints themselves, which is the specific defense-in-depth layer the previous review required. I’m pulling exact line references from the updated docs and waiting for the targeted cargo test run to finish.
+exec
+/bin/zsh -lc "nl -ba apps/desktop/src-tauri/src/lib.rs | sed -n '60,85p'" in /Users/lijinlong/Desktop/AI_Desktop/XAI_Desktop
+exec
+/bin/zsh -lc "nl -ba apps/desktop/src-tauri/capabilities/AUDIT.md | sed -n '1,80p'" in /Users/lijinlong/Desktop/AI_Desktop/XAI_Desktop
+exec
+/bin/zsh -lc "nl -ba docs/contracts/tauri-commands-v0.md | sed -n '88,110p'" in /Users/lijinlong/Desktop/AI_Desktop/XAI_Desktop
+ succeeded in 0ms:
+    88	- `apps/desktop/src-tauri/src/commands/keychain.rs`
+    89	- `apps/desktop/src-tauri/capabilities/plugin-account-crypto.json`
+    90	- `apps/desktop/src-tauri/capabilities/plugin-account-keychain.json`
+    91	
+    92	| Command | Allowed windows | Security rule |
+    93	|---|---|---|
+    94	| `crypto_encrypt_for` | `account`,`control` | plaintext in,encrypted envelope out; key resolved in Rust |
+    95	| `crypto_wrap_dek_for_devices` | `account`,`control` | DEK handle only |
+    96	| `crypto_unwrap_dek_for_device` | `account`,`control` | returns handle,not raw key |
+    97	| `crypto_recovery_sign` | `account`,`control` | transcript signed in Rust |
+    98	| `secret_set` / `secret_get` / `secret_del` | `account`,`control` | Keychain scoped by account/device. Runtime `commands::keychain::KEYCHAIN_ALLOWED_WINDOWS` (`account`, `control`) check rejects any other origin (widget / pet / ai-cube / grid / main / console) with `E3004` before reaching the platform layer. |
+    99	
+   100	Raw DEK must never cross IPC. JS may hold opaque handle ids only.
+   101	
+   102	### 6.0.1 Keychain ↔ KeyVault opaque-handle boundary (G2.4)
+   103	
+   104	JS-visible Keychain surface is limited to the three `secret_*` commands;
+   105	JS-visible KeyVault surface is limited to `KeyHandleId` integers returned
+   106	from `crypto_*` commands. The ONE authorised crossing between the two —
+   107	"Keychain bytes → KeyVault handle" — lives in
+   108	`apps/desktop/src-tauri/src/crypto/keychain_handle.rs`:
+   109	
+   110	| Helper | Direction | Behaviour |
+
+ succeeded in 0ms:
+     1	# Tauri Capability Allowlist Audit — G2.5
+     2	
+     3	Source files audited:
+     4	
+     5	- `default.json` — main / control / grid_* surface.
+     6	- `plugin-account-crypto.json` — account / control crypto seam.
+     7	- `plugin-account-keychain.json` — account / control Keychain seam.
+     8	- `plugin-data-database.json` — Repository v0 SQLite seam (G2.5 addition).
+     9	
+    10	## Window scopes
+    11	
+    12	| Window | Capability files attached | Custom invoke_handler enforcement |
+    13	|---|---|---|
+    14	| `main` | default, plugin-data-database | host commands; database commands (window-origin check) |
+    15	| `control` | default, plugin-account-crypto, plugin-account-keychain, plugin-data-database | all custom commands |
+    16	| `grid_*` | default, plugin-data-database | window commands; database commands |
+    17	| `account` | plugin-account-crypto, plugin-account-keychain, plugin-data-database | crypto_*, secret_*, db_* |
+    18	| `console` | plugin-data-database | db_* via plugin-console (Track B) |
+    19	| `widget_*` | (none) | none — widgets must route through their owning plugin |
+    20	| `pet` | (none) | none — pet plugin owns its own state via plugin |
+    21	| `ai_cube` | (none) | none — AI commands run via control |
+    22	
+    23	## Surfaced commands and enforcement layers
+    24	
+    25	| Command | Capability file | Runtime allowlist constant |
+    26	|---|---|---|
+    27	| `core:window:*`, `core:event:*`, `core:webview:*` | default.json | Tauri permission system |
+    28	| `opener:default` | default.json | Tauri plugin |
+    29	| `create_grid_window` and siblings | default.json | host validates gridId |
+    30	| `crypto_*` | plugin-account-crypto.json | `commands::crypto::CRYPTO_ALLOWED_WINDOWS` (account, control) |
+    31	| `secret_set` / `secret_get` / `secret_del` | plugin-account-keychain.json | `commands::keychain::KEYCHAIN_ALLOWED_WINDOWS` (account, control) |
+    32	| `db_init` / `db_put` / `db_get` / `db_list` / `db_delete` | plugin-data-database.json (G2.5) | `commands::database::DATABASE_ALLOWED_WINDOWS` (main, control, account, console) + `grid_*` prefix |
+    33	
+    34	## Minimization notes
+    35	
+    36	- `default.json` keeps the `core:window:*` and `core:webview:*` set used by `lib.rs::run()` for the transparent main / control / grid construction; nothing was removed because every entry corresponds to a verified caller.
+    37	- `core:event:default` is required by the cross-window event bus (`@repo/core/events`).
+    38	- `opener:default` is intentionally retained for user-initiated file/URL openers but should be revisited if plugins start using `tauri-plugin-opener` programmatically; flagged in the audit but kept for now to avoid touching G1.3 path-DnD flows.
+    39	- No window outside the allowlist can invoke `db_*` even if a future capability file widens the file scope, because the runtime `ensure_database_window_allowed` check is layered on top of the capability system. The same defence-in-depth pattern is already in place for `crypto_*` and `secret_*`.
+    40	
+    41	## Deferred / out-of-scope for G2.5
+    42	
+    43	- MAS sandbox capability validation (signed runtime smoke). Documented in
+    44	  `xai-v1.deferred-gates.md` under the G0.6 / G2.7 entries.
+    45	- `tauri-plugin-opener` minimization. Tracked as a follow-up audit.
+    46	- `widget_*` / `pet` / `ai_cube` capability files. Track B/C will create
+    47	  these when their plugins land in production scope.
+
+ succeeded in 0ms:
+    60	    #[cfg(feature = "crypto")]
+    61	    let builder = builder.manage(commands::database::DatabaseState::default());
+    62	
+    63	    builder
+    64	        .invoke_handler(tauri::generate_handler![
+    65	            commands::window::create_grid_window,
+    66	            commands::window::update_grid_window,
+    67	            commands::window::close_grid_window,
+    68	            commands::window::list_grid_windows,
+    69	            commands::window::focus_grid_window,
+    70	            commands::menubar::sync_set_menubar_status,
+    71	            commands::crypto::crypto_encrypt_for,
+    72	            commands::crypto::crypto_unwrap_dek_for_device,
+    73	            commands::crypto::crypto_wrap_dek_for_devices,
+    74	            commands::crypto::crypto_recovery_sign,
+    75	            commands::keychain::secret_set,
+    76	            commands::keychain::secret_get,
+    77	            commands::keychain::secret_del,
+    78	            commands::finder::reveal_in_finder,
+    79	            commands::finder::open_path,
+    80	            #[cfg(feature = "crypto")]
+    81	            commands::database::db_init,
+    82	            #[cfg(feature = "crypto")]
+    83	            commands::database::db_put,
+    84	            #[cfg(feature = "crypto")]
+    85	            commands::database::db_get,
+
+codex
+The targeted tests passed locally. I’m doing one last consistency sweep for overclaimed documentation or any widened surface that would keep the original contract false.
+exec
+/bin/zsh -lc "nl -ba apps/desktop/src-tauri/capabilities/plugin-account-keychain.json | sed -n '1,80p'" in /Users/lijinlong/Desktop/AI_Desktop/XAI_Desktop
+ succeeded in 0ms:
+     1	{
+     2	  "$schema": "../gen/schemas/desktop-schema.json",
+     3	  "identifier": "plugin-account-keychain",
+     4	  "description": "Scoped capability for the plugin-account window: documents that secret_set / secret_get / secret_del are intended exclusively for the 'account' and 'control' windows. In Tauri v2 the capability system governs plugin permissions; custom invoke_handler commands are additionally enforced via the window-origin check in the command handlers. This file satisfies Rec-1 (feature-review): dedicated capability file, not widening capabilities/default.json.",
+     5	  "windows": ["account", "control"],
+     6	  "permissions": [
+     7	    "core:default"
+     8	  ]
+     9	}
+
+exec
+/bin/zsh -lc 'git show --name-only --format=oneline 143bca5' in /Users/lijinlong/Desktop/AI_Desktop/XAI_Desktop
+ succeeded in 0ms:
+143bca5c44bea01187bccf88c930759486a8f6fa fix(commands/keychain): enforce KEYCHAIN_ALLOWED_WINDOWS at runtime (P0 G2.5)
+apps/desktop/src-tauri/capabilities/AUDIT.md
+apps/desktop/src-tauri/src/commands/keychain.rs
+docs/contracts/tauri-commands-v0.md
+packages/tauri-capability-allowlist/docs/dev_log.md
+
+exec
+/bin/zsh -lc 'rg -n "Every JS-callable command|ensure_.*_allowed|KEYCHAIN_ALLOWED_WINDOWS|DATABASE_ALLOWED_WINDOWS|CRYPTO_ALLOWED_WINDOWS" docs apps/desktop/src-tauri/src apps/desktop/src-tauri/capabilities' in /Users/lijinlong/Desktop/AI_Desktop/XAI_Desktop
+ succeeded in 0ms:
+apps/desktop/src-tauri/src/commands/crypto.rs:30:const CRYPTO_ALLOWED_WINDOWS: &[&str] = &["account", "control"];
+apps/desktop/src-tauri/src/commands/crypto.rs:139:fn ensure_crypto_window_allowed(label: &str) -> AppResult<()> {
+apps/desktop/src-tauri/src/commands/crypto.rs:140:    if CRYPTO_ALLOWED_WINDOWS.contains(&label) {
+apps/desktop/src-tauri/src/commands/crypto.rs:157:    ensure_crypto_window_allowed(label)?;
+apps/desktop/src-tauri/src/commands/crypto.rs:168:    ensure_crypto_window_allowed(label)?;
+apps/desktop/src-tauri/src/commands/crypto.rs:178:    ensure_crypto_window_allowed(label)?;
+apps/desktop/src-tauri/src/commands/crypto.rs:189:    ensure_crypto_window_allowed(label)?;
+apps/desktop/src-tauri/src/commands/crypto.rs:202:    ensure_crypto_window_allowed(label)?;
+apps/desktop/src-tauri/src/commands/crypto.rs:249:    ensure_crypto_window_allowed(label)?;
+apps/desktop/src-tauri/src/commands/crypto.rs:287:    ensure_crypto_window_allowed(label)?;
+apps/desktop/src-tauri/src/commands/crypto.rs:321:    ensure_crypto_window_allowed(label)?;
+apps/desktop/src-tauri/capabilities/AUDIT.md:30:| `crypto_*` | plugin-account-crypto.json | `commands::crypto::CRYPTO_ALLOWED_WINDOWS` (account, control) |
+apps/desktop/src-tauri/capabilities/AUDIT.md:31:| `secret_set` / `secret_get` / `secret_del` | plugin-account-keychain.json | `commands::keychain::KEYCHAIN_ALLOWED_WINDOWS` (account, control) |
+apps/desktop/src-tauri/capabilities/AUDIT.md:32:| `db_init` / `db_put` / `db_get` / `db_list` / `db_delete` | plugin-data-database.json (G2.5) | `commands::database::DATABASE_ALLOWED_WINDOWS` (main, control, account, console) + `grid_*` prefix |
+apps/desktop/src-tauri/capabilities/AUDIT.md:39:- No window outside the allowlist can invoke `db_*` even if a future capability file widens the file scope, because the runtime `ensure_database_window_allowed` check is layered on top of the capability system. The same defence-in-depth pattern is already in place for `crypto_*` and `secret_*`.
+apps/desktop/src-tauri/src/commands/keychain.rs:6://! capability file. The runtime `KEYCHAIN_ALLOWED_WINDOWS` allow-list in
+apps/desktop/src-tauri/src/commands/keychain.rs:26:const KEYCHAIN_ALLOWED_WINDOWS: &[&str] = &["account", "control"];
+apps/desktop/src-tauri/src/commands/keychain.rs:29:    KEYCHAIN_ALLOWED_WINDOWS.contains(&label)
+apps/desktop/src-tauri/src/commands/keychain.rs:32:fn ensure_keychain_window_allowed(label: &str) -> AppResult<()> {
+apps/desktop/src-tauri/src/commands/keychain.rs:46:/// is not in `KEYCHAIN_ALLOWED_WINDOWS`.
+apps/desktop/src-tauri/src/commands/keychain.rs:53:    ensure_keychain_window_allowed(window.label())?;
+apps/desktop/src-tauri/src/commands/keychain.rs:61:/// `E3004` if the calling window is not in `KEYCHAIN_ALLOWED_WINDOWS`.
+apps/desktop/src-tauri/src/commands/keychain.rs:64:    ensure_keychain_window_allowed(window.label())?;
+apps/desktop/src-tauri/src/commands/keychain.rs:72:/// `E3004` if the calling window is not in `KEYCHAIN_ALLOWED_WINDOWS`.
+apps/desktop/src-tauri/src/commands/keychain.rs:75:    ensure_keychain_window_allowed(window.label())?;
+apps/desktop/src-tauri/src/commands/keychain.rs:85:        for label in KEYCHAIN_ALLOWED_WINDOWS {
+apps/desktop/src-tauri/src/commands/keychain.rs:90:            assert!(ensure_keychain_window_allowed(label).is_ok());
+apps/desktop/src-tauri/src/commands/keychain.rs:113:            let err = ensure_keychain_window_allowed(label).unwrap_err();
+apps/desktop/src-tauri/src/commands/finder.rs:28:fn ensure_finder_window_allowed(label: &str) -> AppResult<()> {
+apps/desktop/src-tauri/src/commands/finder.rs:61:    ensure_finder_window_allowed(window.label())?;
+apps/desktop/src-tauri/src/commands/finder.rs:95:    ensure_finder_window_allowed(window.label())?;
+apps/desktop/src-tauri/src/commands/finder.rs:125:            assert!(ensure_finder_window_allowed(label).is_ok());
+apps/desktop/src-tauri/src/commands/finder.rs:127:        assert!(ensure_finder_window_allowed("grid_x").is_ok());
+apps/desktop/src-tauri/src/commands/finder.rs:133:            assert!(ensure_finder_window_allowed(label).is_err());
+apps/desktop/src-tauri/src/commands/database.rs:49:const DATABASE_ALLOWED_WINDOWS: &[&str] = &["main", "control", "account", "console"];
+apps/desktop/src-tauri/src/commands/database.rs:52:    if DATABASE_ALLOWED_WINDOWS.contains(&label) {
+apps/desktop/src-tauri/src/commands/database.rs:58:fn ensure_database_window_allowed(label: &str) -> AppResult<()> {
+apps/desktop/src-tauri/src/commands/database.rs:177:    ensure_database_window_allowed(window.label())?;
+apps/desktop/src-tauri/src/commands/database.rs:204:    ensure_database_window_allowed(window.label())?;
+apps/desktop/src-tauri/src/commands/database.rs:235:    ensure_database_window_allowed(window.label())?;
+apps/desktop/src-tauri/src/commands/database.rs:264:    ensure_database_window_allowed(window.label())?;
+apps/desktop/src-tauri/src/commands/database.rs:294:    ensure_database_window_allowed(window.label())?;
+apps/desktop/src-tauri/src/commands/database.rs:339:    ensure_database_window_allowed(window.label())?;
+apps/desktop/src-tauri/src/commands/database.rs:590:        for label in DATABASE_ALLOWED_WINDOWS {
+apps/desktop/src-tauri/src/commands/database.rs:591:            assert!(ensure_database_window_allowed(label).is_ok());
+apps/desktop/src-tauri/src/commands/database.rs:593:        assert!(ensure_database_window_allowed("grid_abc-123").is_ok());
+apps/desktop/src-tauri/src/commands/database.rs:594:        assert!(ensure_database_window_allowed("grid_").is_ok()); // prefix only
+apps/desktop/src-tauri/src/commands/database.rs:600:            let err = ensure_database_window_allowed(label).unwrap_err();
+docs/contracts/tauri-commands-v0.md:98:| `secret_set` / `secret_get` / `secret_del` | `account`,`control` | Keychain scoped by account/device. Runtime `commands::keychain::KEYCHAIN_ALLOWED_WINDOWS` (`account`, `control`) check rejects any other origin (widget / pet / ai-cube / grid / main / console) with `E3004` before reaching the platform layer. |
+docs/contracts/tauri-commands-v0.md:168:- Every JS-callable command has a capability file declaring its allowed windows.
+docs/contracts/tauri-commands-v0.md:169:- Every JS-callable command has a runtime `ensure_*_allowed(label)` check matching the capability file. Widget / pet / ai-cube windows cannot invoke `db_*`, `crypto_*`, or `secret_*` even via mis-attached capability files.
+docs/workflow/roadmap/xai-v1.autorun-20260519.md:803:- Added defence-in-depth `DATABASE_ALLOWED_WINDOWS` runtime allow-list in `commands/database.rs` so widget / pet / ai_cube windows cannot reach `db_*` even via a mis-attached capability file. 2 new cargo tests cover admit/reject paths.
+docs/workflow/roadmap/xai-g2-data-security-foundation.md:28:| 6 | tauri-capability-allowlist | docs/planning/execution/G2-data-security-foundation.md §G2.5 | keychain-opaque-handle, crypto-tauri-commands | packages/tauri-capability-allowlist/docs | READY_TO_SHIP | D-Codex | yes | 2026-05-20 | Added `plugin-data-database.json` + `AUDIT.md`; database commands now enforce `DATABASE_ALLOWED_WINDOWS` allow-list at runtime; 9/9 cargo tests passing; contract §7 updated. |
+docs/workflow/roadmap/codex-reviews/_runner/drive-rerun.sh:12:  "tauri-capability-allowlist|143bca5|commands/keychain.rs secret_set/get/del had no WebviewWindow parameter and no ensure_*_allowed check, yet AUDIT.md and contracts/tauri-commands-v0.md claimed every JS-callable command runtime-enforces a window allow-list."
+docs/workflow/roadmap/xai-v1.next-phase-targets.md:32:   parameter and no `ensure_*_allowed` check, yet AUDIT.md and
+docs/workflow/roadmap/xai-v1.next-phase-targets.md:240:- Add `WebviewWindow` + runtime `ensure_database_window_allowed()` checks to all `db_*` commands, and land the matching capability/audit file in the same change.
+docs/workflow/roadmap/xai-v1.next-phase-targets.md:343:- [P0] `secret_set` / `secret_get` / `secret_del` still have no `WebviewWindow` parameter or `ensure_*_allowed` guard in `apps/desktop/src-tauri/src/commands/keychain.rs`, yet the audit and contract now state that `secret_*` is runtime-enforced. This breaks the claimed security boundary for custom commands and invalidates the core G2.5 invariant.
+docs/workflow/roadmap/xai-v1.next-phase-targets.md:345:- [P1] `docs/contracts/tauri-commands-v0.md` overclaims that “Every JS-callable command has a runtime `ensure_*_allowed(label)` check.” `window.rs`, `menubar.rs`, and `keychain.rs` do not satisfy that today.
+docs/workflow/roadmap/xai-v1.next-phase-targets.md:351:- Add `WebviewWindow` + `ensure_keychain_window_allowed` to all `secret_*` commands, and add admit/reject tests matching `account/control`.
+docs/workflow/roadmap/codex-reviews/_runner/aggregate.sh:60:  echo "   parameter and no \`ensure_*_allowed\` check, yet AUDIT.md and"
+docs/workflow/roadmap/codex-reviews/core-data-sqlite-driver/output.md:22:- Add `WebviewWindow` + runtime `ensure_database_window_allowed()` checks to all `db_*` commands, and land the matching capability/audit file in the same change.
+docs/workflow/roadmap/codex-reviews/tauri-capability-allowlist/rerun-output.log:52:   commands/keychain.rs secret_set/get/del had no WebviewWindow parameter and no ensure_*_allowed check, yet AUDIT.md and contracts/tauri-commands-v0.md claimed every JS-callable command runtime-enforces a window allow-list.
+docs/workflow/roadmap/codex-reviews/tauri-capability-allowlist/rerun-output.log:66:- apps/desktop/src-tauri/src/commands/database.rs — DATABASE_ALLOWED_WINDOWS + ensure_database_window_allowed + checks in all 5 db_* commands + 2 new cargo tests
+docs/workflow/roadmap/codex-reviews/tauri-capability-allowlist/rerun-output.log:72:- Every JS-callable command has (a) a capability file declaring allowed windows and
+docs/workflow/roadmap/codex-reviews/tauri-capability-allowlist/rerun-output.log:73:  (b) a runtime `ensure_*_allowed(label)` defence-in-depth check.
+docs/workflow/roadmap/codex-reviews/tauri-capability-allowlist/rerun-output.log:90:5. Consistency: crypto_* uses `CRYPTO_ALLOWED_WINDOWS` constant, database uses
+docs/workflow/roadmap/codex-reviews/tauri-capability-allowlist/rerun-output.log:91:   `DATABASE_ALLOWED_WINDOWS`. Should there be a shared helper / enum to prevent
+docs/workflow/roadmap/codex-reviews/tauri-capability-allowlist/rerun-output.log:96:7. Doc/code alignment: §6.1 says "Every JS-callable command has a runtime
+docs/workflow/roadmap/codex-reviews/tauri-capability-allowlist/rerun-output.log:97:   `ensure_*_allowed(label)` check". Window commands (`create_grid_window` etc.)
+docs/workflow/roadmap/codex-reviews/tauri-capability-allowlist/rerun-output.log:105:143bca5 fix(commands/keychain): enforce KEYCHAIN_ALLOWED_WINDOWS at runtime (P0 G2.5)
+docs/workflow/roadmap/codex-reviews/tauri-capability-allowlist/rerun-output.log:119:    fix(commands/keychain): enforce KEYCHAIN_ALLOWED_WINDOWS at runtime (P0 G2.5)
+docs/workflow/roadmap/codex-reviews/tauri-capability-allowlist/rerun-output.log:124:      `ensure_*_allowed` window-origin check, while `capabilities/AUDIT.md`
+docs/workflow/roadmap/codex-reviews/tauri-capability-allowlist/rerun-output.log:132:    - Add `KEYCHAIN_ALLOWED_WINDOWS: &[&str] = &["account", "control"]`
+docs/workflow/roadmap/codex-reviews/tauri-capability-allowlist/rerun-output.log:134:      `CRYPTO_ALLOWED_WINDOWS` / `DATABASE_ALLOWED_WINDOWS` pattern.
+docs/workflow/roadmap/codex-reviews/tauri-capability-allowlist/rerun-output.log:136:      `ensure_keychain_window_allowed(label) -> AppResult<()>` returning
+docs/workflow/roadmap/codex-reviews/tauri-capability-allowlist/rerun-output.log:140:      `ensure_keychain_window_allowed(window.label())?` before any platform
+docs/workflow/roadmap/codex-reviews/tauri-capability-allowlist/rerun-output.log:151:      `KEYCHAIN_ALLOWED_WINDOWS` constant explicitly (was: "window-origin
+docs/workflow/roadmap/codex-reviews/tauri-capability-allowlist/rerun-output.log:154:      `secret_*` to mention the runtime `KEYCHAIN_ALLOWED_WINDOWS` reject
+docs/workflow/roadmap/codex-reviews/tauri-capability-allowlist/rerun-output.log:192: | `crypto_*` | plugin-account-crypto.json | `commands::crypto::CRYPTO_ALLOWED_WINDOWS` (account, control) |
+docs/workflow/roadmap/codex-reviews/tauri-capability-allowlist/rerun-output.log:194:+| `secret_set` / `secret_get` / `secret_del` | plugin-account-keychain.json | `commands::keychain::KEYCHAIN_ALLOWED_WINDOWS` (account, control) |
+docs/workflow/roadmap/codex-reviews/tauri-capability-allowlist/rerun-output.log:195: | `db_init` / `db_put` / `db_get` / `db_list` / `db_delete` | plugin-data-database.json (G2.5) | `commands::database::DATABASE_ALLOWED_WINDOWS` (main, control, account, console) + `grid_*` prefix |
+docs/workflow/roadmap/codex-reviews/tauri-capability-allowlist/rerun-output.log:208:+//! capability file. The runtime `KEYCHAIN_ALLOWED_WINDOWS` allow-list in
+docs/workflow/roadmap/codex-reviews/tauri-capability-allowlist/rerun-output.log:230:+const KEYCHAIN_ALLOWED_WINDOWS: &[&str] = &["account", "control"];
+docs/workflow/roadmap/codex-reviews/tauri-capability-allowlist/rerun-output.log:233:+    KEYCHAIN_ALLOWED_WINDOWS.contains(&label)
+docs/workflow/roadmap/codex-reviews/tauri-capability-allowlist/rerun-output.log:236:+fn ensure_keychain_window_allowed(label: &str) -> AppResult<()> {
+docs/workflow/roadmap/codex-reviews/tauri-capability-allowlist/rerun-output.log:251:+/// is not in `KEYCHAIN_ALLOWED_WINDOWS`.
+docs/workflow/roadmap/codex-reviews/tauri-capability-allowlist/rerun-output.log:259:+    ensure_keychain_window_allowed(window.label())?;
+docs/workflow/roadmap/codex-reviews/tauri-capability-allowlist/rerun-output.log:268:+/// `E3004` if the calling window is not in `KEYCHAIN_ALLOWED_WINDOWS`.
+docs/workflow/roadmap/codex-reviews/tauri-capability-allowlist/rerun-output.log:272:+    ensure_keychain_window_allowed(window.label())?;
+docs/workflow/roadmap/codex-reviews/tauri-capability-allowlist/rerun-output.log:281:+/// `E3004` if the calling window is not in `KEYCHAIN_ALLOWED_WINDOWS`.
+docs/workflow/roadmap/codex-reviews/tauri-capability-allowlist/rerun-output.log:285:+    ensure_keychain_window_allowed(window.label())?;
+docs/workflow/roadmap/codex-reviews/tauri-capability-allowlist/rerun-output.log:295:+        for label in KEYCHAIN_ALLOWED_WINDOWS {
+docs/workflow/roadmap/codex-reviews/tauri-capability-allowlist/rerun-output.log:300:+            assert!(ensure_keychain_window_allowed(label).is_ok());
+docs/workflow/roadmap/codex-reviews/tauri-capability-allowlist/rerun-output.log:323:+            let err = ensure_keychain_window_allowed(label).unwrap_err();
+docs/workflow/roadmap/codex-reviews/tauri-capability-allowlist/rerun-output.log:346:+| `secret_set` / `secret_get` / `secret_del` | `account`,`control` | Keychain scoped by account/device. Runtime `commands::keychain::KEYCHAIN_ALLOWED_WINDOWS` (`account`, `control`) check rejects any other origin (widget / pet / ai-cube / grid / main / console) with `E3004` before reaching the platform layer. |
+docs/workflow/roadmap/codex-reviews/tauri-capability-allowlist/rerun-output.log:358:+| 2026-05-20 PDT | bug-fix (Claude Code, Track A) | P0-2: `commands/keychain.rs` was missing the runtime `ensure_*_allowed` check that AUDIT.md / contracts v0 §7 claimed every JS-callable command had — fixed by adding `KEYCHAIN_ALLOWED_WINDOWS = ["account", "control"]`, `is_keychain_window_allowed`, `ensure_keychain_window_allowed`, and injecting `window: WebviewWindow` as the first parameter of `secret_set` / `secret_get` / `secret_del`. Added 2 cargo tests (admit account/control, reject widget/pet/ai_cube/unknown/grid_*/main/console). Updated AUDIT.md to name the constant explicitly and contracts v0 §6 to mention the runtime check. TS keychain.ts unchanged (Tauri auto-injects `window`). | pending commit | none — closes Codex cross-vendor P0-2 |
+docs/workflow/roadmap/codex-reviews/tauri-capability-allowlist/rerun-output.log:370:     6	//! capability file. The runtime `KEYCHAIN_ALLOWED_WINDOWS` allow-list in
+docs/workflow/roadmap/codex-reviews/tauri-capability-allowlist/rerun-output.log:390:    26	const KEYCHAIN_ALLOWED_WINDOWS: &[&str] = &["account", "control"];
+docs/workflow/roadmap/codex-reviews/tauri-capability-allowlist/rerun-output.log:393:    29	    KEYCHAIN_ALLOWED_WINDOWS.contains(&label)
+docs/workflow/roadmap/codex-reviews/tauri-capability-allowlist/rerun-output.log:396:    32	fn ensure_keychain_window_allowed(label: &str) -> AppResult<()> {
+docs/workflow/roadmap/codex-reviews/tauri-capability-allowlist/rerun-output.log:410:    46	/// is not in `KEYCHAIN_ALLOWED_WINDOWS`.
+docs/workflow/roadmap/codex-reviews/tauri-capability-allowlist/rerun-output.log:417:    53	    ensure_keychain_window_allowed(window.label())?;
+docs/workflow/roadmap/codex-reviews/tauri-capability-allowlist/rerun-output.log:425:    61	/// `E3004` if the calling window is not in `KEYCHAIN_ALLOWED_WINDOWS`.
+docs/workflow/roadmap/codex-reviews/tauri-capability-allowlist/rerun-output.log:428:    64	    ensure_keychain_window_allowed(window.label())?;
+docs/workflow/roadmap/codex-reviews/tauri-capability-allowlist/rerun-output.log:436:    72	/// `E3004` if the calling window is not in `KEYCHAIN_ALLOWED_WINDOWS`.
+docs/workflow/roadmap/codex-reviews/tauri-capability-allowlist/rerun-output.log:439:    75	    ensure_keychain_window_allowed(window.label())?;
+docs/workflow/roadmap/codex-reviews/tauri-capability-allowlist/rerun-output.log:449:    85	        for label in KEYCHAIN_ALLOWED_WINDOWS {
+docs/workflow/roadmap/codex-reviews/tauri-capability-allowlist/rerun-output.log:454:    90	            assert!(ensure_keychain_window_allowed(label).is_ok());
+docs/workflow/roadmap/codex-reviews/tauri-capability-allowlist/rerun-output.log:477:   113	            let err = ensure_keychain_window_allowed(label).unwrap_err();
+docs/workflow/roadmap/codex-reviews/tauri-capability-allowlist/rerun-output.log:493:/bin/zsh -lc "rg -n \"secret_set|secret_get|secret_del|invoke_handler|plugin-account-keychain|KEYCHAIN_ALLOWED_WINDOWS\" apps/desktop/src-tauri -g '"'!target'"'" in /Users/lijinlong/Desktop/AI_Desktop/XAI_Desktop
+docs/workflow/roadmap/codex-reviews/tauri-capability-allowlist/rerun-output.log:502:apps/desktop/src-tauri/src/commands/keychain.rs:6://! capability file. The runtime `KEYCHAIN_ALLOWED_WINDOWS` allow-list in
+docs/workflow/roadmap/codex-reviews/tauri-capability-allowlist/rerun-output.log:504:apps/desktop/src-tauri/src/commands/keychain.rs:26:const KEYCHAIN_ALLOWED_WINDOWS: &[&str] = &["account", "control"];
+docs/workflow/roadmap/codex-reviews/tauri-capability-allowlist/rerun-output.log:505:apps/desktop/src-tauri/src/commands/keychain.rs:29:    KEYCHAIN_ALLOWED_WINDOWS.contains(&label)
+docs/workflow/roadmap/codex-reviews/tauri-capability-allowlist/rerun-output.log:506:apps/desktop/src-tauri/src/commands/keychain.rs:46:/// is not in `KEYCHAIN_ALLOWED_WINDOWS`.
+docs/workflow/roadmap/codex-reviews/tauri-capability-allowlist/rerun-output.log:509:apps/desktop/src-tauri/src/commands/keychain.rs:61:/// `E3004` if the calling window is not in `KEYCHAIN_ALLOWED_WINDOWS`.
+docs/workflow/roadmap/codex-reviews/tauri-capability-allowlist/rerun-output.log:512:apps/desktop/src-tauri/src/commands/keychain.rs:72:/// `E3004` if the calling window is not in `KEYCHAIN_ALLOWED_WINDOWS`.
+docs/workflow/roadmap/codex-reviews/tauri-capability-allowlist/rerun-output.log:515:apps/desktop/src-tauri/src/commands/keychain.rs:85:        for label in KEYCHAIN_ALLOWED_WINDOWS {
+docs/workflow/roadmap/codex-reviews/tauri-capability-allowlist/rerun-output.log:525:apps/desktop/src-tauri/capabilities/AUDIT.md:31:| `secret_set` / `secret_get` / `secret_del` | plugin-account-keychain.json | `commands::keychain::KEYCHAIN_ALLOWED_WINDOWS` (account, control) |
+docs/workflow/roadmap/codex-reviews/tauri-capability-allowlist/rerun-output.log:678:    98	| `secret_set` / `secret_get` / `secret_del` | `account`,`control` | Keychain scoped by account/device. Runtime `commands::keychain::KEYCHAIN_ALLOWED_WINDOWS` (`account`, `control`) check rejects any other origin (widget / pet / ai-cube / grid / main / console) with `E3004` before reaching the platform layer. |
+docs/workflow/roadmap/codex-reviews/tauri-capability-allowlist/rerun-output.log:722:    30	| `crypto_*` | plugin-account-crypto.json | `commands::crypto::CRYPTO_ALLOWED_WINDOWS` (account, control) |
+docs/workflow/roadmap/codex-reviews/tauri-capability-allowlist/rerun-output.log:723:    31	| `secret_set` / `secret_get` / `secret_del` | plugin-account-keychain.json | `commands::keychain::KEYCHAIN_ALLOWED_WINDOWS` (account, control) |
+docs/workflow/roadmap/codex-reviews/tauri-capability-allowlist/rerun-output.log:724:    32	| `db_init` / `db_put` / `db_get` / `db_list` / `db_delete` | plugin-data-database.json (G2.5) | `commands::database::DATABASE_ALLOWED_WINDOWS` (main, control, account, console) + `grid_*` prefix |
+docs/workflow/roadmap/codex-reviews/tauri-capability-allowlist/rerun-output.log:731:    39	- No window outside the allowlist can invoke `db_*` even if a future capability file widens the file scope, because the runtime `ensure_database_window_allowed` check is layered on top of the capability system. The same defence-in-depth pattern is already in place for `crypto_*` and `secret_*`.
+docs/workflow/roadmap/codex-reviews/tauri-capability-allowlist/output.md:15:- [P0] `secret_set` / `secret_get` / `secret_del` still have no `WebviewWindow` parameter or `ensure_*_allowed` guard in `apps/desktop/src-tauri/src/commands/keychain.rs`, yet the audit and contract now state that `secret_*` is runtime-enforced. This breaks the claimed security boundary for custom commands and invalidates the core G2.5 invariant.
+docs/workflow/roadmap/codex-reviews/tauri-capability-allowlist/output.md:17:- [P1] `docs/contracts/tauri-commands-v0.md` overclaims that “Every JS-callable command has a runtime `ensure_*_allowed(label)` check.” `window.rs`, `menubar.rs`, and `keychain.rs` do not satisfy that today.
+docs/workflow/roadmap/codex-reviews/tauri-capability-allowlist/output.md:23:- Add `WebviewWindow` + `ensure_keychain_window_allowed` to all `secret_*` commands, and add admit/reject tests matching `account/control`.
+docs/workflow/roadmap/codex-reviews/tauri-capability-allowlist/context.md:8:- apps/desktop/src-tauri/src/commands/database.rs — DATABASE_ALLOWED_WINDOWS + ensure_database_window_allowed + checks in all 5 db_* commands + 2 new cargo tests
+docs/workflow/roadmap/codex-reviews/tauri-capability-allowlist/context.md:14:- Every JS-callable command has (a) a capability file declaring allowed windows and
+docs/workflow/roadmap/codex-reviews/tauri-capability-allowlist/context.md:15:  (b) a runtime `ensure_*_allowed(label)` defence-in-depth check.
+docs/workflow/roadmap/codex-reviews/tauri-capability-allowlist/context.md:32:5. Consistency: crypto_* uses `CRYPTO_ALLOWED_WINDOWS` constant, database uses
+docs/workflow/roadmap/codex-reviews/tauri-capability-allowlist/context.md:33:   `DATABASE_ALLOWED_WINDOWS`. Should there be a shared helper / enum to prevent
+docs/workflow/roadmap/codex-reviews/tauri-capability-allowlist/context.md:38:7. Doc/code alignment: §6.1 says "Every JS-callable command has a runtime
+docs/workflow/roadmap/codex-reviews/tauri-capability-allowlist/context.md:39:   `ensure_*_allowed(label)` check". Window commands (`create_grid_window` etc.)
+docs/workflow/roadmap/codex-reviews/tauri-capability-allowlist/rerun-prompt.md:39:   commands/keychain.rs secret_set/get/del had no WebviewWindow parameter and no ensure_*_allowed check, yet AUDIT.md and contracts/tauri-commands-v0.md claimed every JS-callable command runtime-enforces a window allow-list.
+docs/workflow/roadmap/codex-reviews/tauri-capability-allowlist/rerun-prompt.md:53:- apps/desktop/src-tauri/src/commands/database.rs — DATABASE_ALLOWED_WINDOWS + ensure_database_window_allowed + checks in all 5 db_* commands + 2 new cargo tests
+docs/workflow/roadmap/codex-reviews/tauri-capability-allowlist/rerun-prompt.md:59:- Every JS-callable command has (a) a capability file declaring allowed windows and
+docs/workflow/roadmap/codex-reviews/tauri-capability-allowlist/rerun-prompt.md:60:  (b) a runtime `ensure_*_allowed(label)` defence-in-depth check.
+docs/workflow/roadmap/codex-reviews/tauri-capability-allowlist/rerun-prompt.md:77:5. Consistency: crypto_* uses `CRYPTO_ALLOWED_WINDOWS` constant, database uses
+docs/workflow/roadmap/codex-reviews/tauri-capability-allowlist/rerun-prompt.md:78:   `DATABASE_ALLOWED_WINDOWS`. Should there be a shared helper / enum to prevent
+docs/workflow/roadmap/codex-reviews/tauri-capability-allowlist/rerun-prompt.md:83:7. Doc/code alignment: §6.1 says "Every JS-callable command has a runtime
+docs/workflow/roadmap/codex-reviews/tauri-capability-allowlist/rerun-prompt.md:84:   `ensure_*_allowed(label)` check". Window commands (`create_grid_window` etc.)
+
+codex
+The original P0 is fixed. There is still a separate doc-overclaim question outside this commit, and I’m confirming whether it remains merely a residual P1 or something that would keep the original blocker alive.
+exec
+/bin/zsh -lc "nl -ba docs/contracts/tauri-commands-v0.md | sed -n '160,174p'" in /Users/lijinlong/Desktop/AI_Desktop/XAI_Desktop
+ succeeded in 0ms:
+   160	| `plugin-account-crypto.json` | account/control crypto marker + command-side allowlist |
+   161	| `plugin-account-keychain.json` | account/control keychain marker + command-side allowlist |
+   162	| `plugin-data-database.json` | main/control/grid/account/console Repository v0 marker + runtime allowlist (G2.5) |
+   163	
+   164	Full audit table: `apps/desktop/src-tauri/capabilities/AUDIT.md`.
+   165	
+   166	G2.5 invariants now enforced:
+   167	
+   168	- Every JS-callable command has a capability file declaring its allowed windows.
+   169	- Every JS-callable command has a runtime `ensure_*_allowed(label)` check matching the capability file. Widget / pet / ai-cube windows cannot invoke `db_*`, `crypto_*`, or `secret_*` even via mis-attached capability files.
+   170	
+   171	G2.7 (MAS signed runtime smoke) remains deferred under `xai-v1.deferred-gates.md`.
+   172	
+   173	## 8. Error Shape
+   174	
+
+exec
+/bin/zsh -lc 'rg -n "ensure_.*allowed|tauri::command|pub async fn|pub fn" apps/desktop/src-tauri/src/commands/window.rs apps/desktop/src-tauri/src/commands/menubar.rs' in /Users/lijinlong/Desktop/AI_Desktop/XAI_Desktop
+ succeeded in 0ms:
+apps/desktop/src-tauri/src/commands/menubar.rs:36:pub fn install_sync_menubar(app: &AppHandle) -> AppResult<()> {
+apps/desktop/src-tauri/src/commands/menubar.rs:61:#[tauri::command]
+apps/desktop/src-tauri/src/commands/menubar.rs:62:pub async fn sync_set_menubar_status(
+apps/desktop/src-tauri/src/commands/window.rs:74:#[tauri::command]
+apps/desktop/src-tauri/src/commands/window.rs:75:pub async fn create_grid_window(
+apps/desktop/src-tauri/src/commands/window.rs:137:#[tauri::command]
+apps/desktop/src-tauri/src/commands/window.rs:138:pub async fn update_grid_window(
+apps/desktop/src-tauri/src/commands/window.rs:182:#[tauri::command]
+apps/desktop/src-tauri/src/commands/window.rs:183:pub async fn close_grid_window(
+apps/desktop/src-tauri/src/commands/window.rs:212:#[tauri::command]
+apps/desktop/src-tauri/src/commands/window.rs:213:pub async fn list_grid_windows(
+apps/desktop/src-tauri/src/commands/window.rs:230:#[tauri::command]
+apps/desktop/src-tauri/src/commands/window.rs:231:pub async fn focus_grid_window(
+
+codex
+## Codex Post-fix Re-review
+
+**Feature**: tauri-capability-allowlist  
+**Original verdict**: BLOCKED  
+**Fix commit(s)**: 143bca5  
+**Reviewer**: codex feature-review · gpt-5.4 high reasoning  
+**New verdict**: APPROVED
+
+### Was the original P0 resolved?
+- Original issue (paraphrased): `secret_set` / `secret_get` / `secret_del` were JS-callable but lacked `WebviewWindow` origin injection and a runtime `ensure_*_allowed` gate, so a mis-attached capability could let disallowed windows hit Keychain.
+- Evidence the fix resolves it: `KEYCHAIN_ALLOWED_WINDOWS` plus `ensure_keychain_window_allowed()` now exist in `apps/desktop/src-tauri/src/commands/keychain.rs:26`, `apps/desktop/src-tauri/src/commands/keychain.rs:32`; all three commands now take `window: tauri::WebviewWindow` and reject before any platform call at `apps/desktop/src-tauri/src/commands/keychain.rs:48`, `apps/desktop/src-tauri/src/commands/keychain.rs:63`, `apps/desktop/src-tauri/src/commands/keychain.rs:74`; the commands remain exposed through the Tauri invoke handler at `apps/desktop/src-tauri/src/lib.rs:64`; audit/contract rows now point to the concrete runtime guard at `apps/desktop/src-tauri/capabilities/AUDIT.md:31` and `docs/contracts/tauri-commands-v0.md:98`; admit/reject coverage was added at `apps/desktop/src-tauri/src/commands/keychain.rs:83` and `apps/desktop/src-tauri/src/commands/keychain.rs:94`.
+- Was the resolution honest (no smuggled scope-cut or stub-only fix)? Yes. This is a real runtime behavior change in the command entrypoints, not a doc-only patch or scope deferral. The claimed targeted test command also exists and passed locally: `cargo test --manifest-path apps/desktop/src-tauri/Cargo.toml keychain::` (5/5 passing).
+
+### Remaining gaps (max 4 bullets, severity-tagged)
+- [P1] `docs/contracts/tauri-commands-v0.md:168` still overclaims that every JS-callable command has a runtime `ensure_*_allowed(label)` check; `window.rs` / `menubar.rs` do not currently implement that pattern.
+
+### Regressions introduced (max 3 bullets)
+- None observed in `143bca5`. No capability file was widened, no command surface was expanded, and the keychain-targeted tests pass.
+
+### Next action
+- If APPROVED: re-mark the manifest row to READY_TO_SHIP and move on.
+tokens used
+40,629
+## Codex Post-fix Re-review
+
+**Feature**: tauri-capability-allowlist  
+**Original verdict**: BLOCKED  
+**Fix commit(s)**: 143bca5  
+**Reviewer**: codex feature-review · gpt-5.4 high reasoning  
+**New verdict**: APPROVED
+
+### Was the original P0 resolved?
+- Original issue (paraphrased): `secret_set` / `secret_get` / `secret_del` were JS-callable but lacked `WebviewWindow` origin injection and a runtime `ensure_*_allowed` gate, so a mis-attached capability could let disallowed windows hit Keychain.
+- Evidence the fix resolves it: `KEYCHAIN_ALLOWED_WINDOWS` plus `ensure_keychain_window_allowed()` now exist in `apps/desktop/src-tauri/src/commands/keychain.rs:26`, `apps/desktop/src-tauri/src/commands/keychain.rs:32`; all three commands now take `window: tauri::WebviewWindow` and reject before any platform call at `apps/desktop/src-tauri/src/commands/keychain.rs:48`, `apps/desktop/src-tauri/src/commands/keychain.rs:63`, `apps/desktop/src-tauri/src/commands/keychain.rs:74`; the commands remain exposed through the Tauri invoke handler at `apps/desktop/src-tauri/src/lib.rs:64`; audit/contract rows now point to the concrete runtime guard at `apps/desktop/src-tauri/capabilities/AUDIT.md:31` and `docs/contracts/tauri-commands-v0.md:98`; admit/reject coverage was added at `apps/desktop/src-tauri/src/commands/keychain.rs:83` and `apps/desktop/src-tauri/src/commands/keychain.rs:94`.
+- Was the resolution honest (no smuggled scope-cut or stub-only fix)? Yes. This is a real runtime behavior change in the command entrypoints, not a doc-only patch or scope deferral. The claimed targeted test command also exists and passed locally: `cargo test --manifest-path apps/desktop/src-tauri/Cargo.toml keychain::` (5/5 passing).
+
+### Remaining gaps (max 4 bullets, severity-tagged)
+- [P1] `docs/contracts/tauri-commands-v0.md:168` still overclaims that every JS-callable command has a runtime `ensure_*_allowed(label)` check; `window.rs` / `menubar.rs` do not currently implement that pattern.
+
+### Regressions introduced (max 3 bullets)
+- None observed in `143bca5`. No capability file was widened, no command surface was expanded, and the keychain-targeted tests pass.
+
+### Next action
+- If APPROVED: re-mark the manifest row to READY_TO_SHIP and move on.

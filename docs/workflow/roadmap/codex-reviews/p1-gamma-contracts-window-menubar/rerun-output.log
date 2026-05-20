@@ -1,0 +1,2877 @@
+Reading additional input from stdin...
+OpenAI Codex v0.132.0
+--------
+workdir: /Users/lijinlong/Desktop/AI_Desktop/XAI_Desktop
+model: gpt-5.4
+provider: openai
+approval: never
+sandbox: workspace-write [workdir, /tmp, $TMPDIR]
+reasoning effort: high
+reasoning summaries: none
+session id: 019e46bc-15c2-70f2-ae97-c4c63a243b63
+--------
+user
+# Codex Feature Post-fix Re-review
+
+You are acting as the `feature-review` subagent (Codex inline, cross-vendor verify pass), **re-reviewing** a P0 fix that the Claude Code main agent landed on `codex/track-a-desktop-foundation` in response to your previous BLOCKED verdict.
+
+## Your only job
+
+Decide whether the new commit closes the P0 issue you previously flagged. Output ONLY the markdown block below — no preamble, no follow-up. Under 500 words.
+
+```md
+## Codex Post-fix Re-review
+
+**Feature**: p1-gamma-contracts-window-menubar
+**Original verdict**: BLOCKED
+**Fix commit(s)**: 7e97dc3
+**Reviewer**: codex feature-review · gpt-5.4 high reasoning
+**New verdict**: APPROVED | REVISE | BLOCKED
+
+### Was the original P0 resolved?
+- Original issue (paraphrased): …
+- Evidence the fix resolves it: <file:line citations>
+- Was the resolution honest (no smuggled scope-cut or stub-only fix)?
+
+### Remaining gaps (max 4 bullets, severity-tagged)
+- [P1|P2] …
+
+### Regressions introduced (max 3 bullets)
+- …
+
+### Next action
+- If APPROVED: re-mark the manifest row to READY_TO_SHIP and move on.
+- If REVISE: one or two concrete follow-up bullets (≤ half a day each).
+- If BLOCKED: state which contract is still false.
+```
+
+## How to evaluate
+
+1. The fix commit's diff is your primary evidence. Use `git show --stat 7e97dc3` and `git show 7e97dc3` to read it end-to-end.
+2. Compare the diff against the original P0 issue:
+   G2.1 docs/contracts/data-repository-v0.md §2 still listed unfrozen entities; G2.3 localstorage-migration overclaimed idempotency (rerun re-stamped updatedAt); G2.5 contracts §7 claimed every JS-callable command runtime-enforces an allow-list but commands/window.rs and commands/menubar.rs did not implement the pattern.
+3. Look for the **specific change** the previous review demanded. Smuggled scope-cuts (e.g. silently deferring the invariant to a follow-up) must downgrade the verdict.
+4. Scan for **regressions**: imports added, capabilities widened, tests skipped, doc invariants weakened.
+5. Validate the test commands listed in the fix commit message actually exist and pass (treat the commit body's "Tests" section as the executor's claim — does the diff support it?).
+
+## Feature-specific context
+
+See commit body of 7e97dc3 for full file list and rationale. Run `git show --stat 7e97dc3` and `git show 7e97dc3` for the diff.
+codex
+Inspecting commit `7e97dc3` and the touched contract/runtime files now. I’m checking whether the specific P0 claims are now true in code and docs, and whether the test claims are supported by the diff.
+exec
+/bin/zsh -lc 'git show --format=medium 7e97dc3' in /Users/lijinlong/Desktop/AI_Desktop/XAI_Desktop
+exec
+/bin/zsh -lc 'git show --stat --summary 7e97dc3' in /Users/lijinlong/Desktop/AI_Desktop/XAI_Desktop
+ succeeded in 0ms:
+commit 7e97dc3dd0711f10e510db98a493fa484f4d6c95
+Author: InnoPeak <global_ai@innopeaktech.com>
+Date:   Wed May 20 11:44:07 2026 -0700
+
+    fix(contracts, commands/window, commands/menubar): align docs + extend runtime allow-list (P1 B-group)
+    
+    Why:
+    P1-B group review surfaced three doc/code alignment gaps from G2.1, G2.3,
+    G2.5: (1) the data-repository contract listed entities that are not in
+    v0; (2) the localstorage-migration adapter overclaimed "idempotent" while
+    re-stamping updatedAt on every rerun, which would have produced
+    spurious sync-conflict signals; (3) the tauri-commands contract claimed
+    "every JS-callable command has a runtime ensure_*_allowed check" but
+    window.rs and menubar.rs still lacked one. Close the gaps so the
+    contracts and the runtime tell the same story.
+    
+    What:
+    C1 — Move productivity.pomodoro_session / widgets.widget / account.device
+    out of the §2 frozen entity table into a new §2.1 "Deferred future
+    entities" subsection. Replace `pending commit` with `744d578` in the
+    repository-v0-contract dev_log work-log.
+    
+    C2 — Tighten organizer-layout-migration. Before re-`put`-ing a record
+    the migration now reads the existing record via `repo.get` and skips
+    the put when all meaningful fields (excluding `createdAt` / `updatedAt`)
+    match. Add a new `unchanged` counter to OrganizerLayoutMigrationResult,
+    and pre-seed `skipped` to 0 so P1-Alpha's A3 empty-filepath skip can
+    land independently without merge conflicts. Update the existing
+    idempotency test to expect `unchanged: 4` instead of re-migrated
+    counts, and add a dedicated test proving rerun does not change
+    `updatedAt`. Update localstorage-migration dev_log to describe the new
+    precise behaviour and drop the bare "idempotent" word.
+    
+    C3 — Extend the runtime allow-list pattern to window.rs and menubar.rs.
+    Add `WINDOW_ALLOWED_WINDOWS = ["main", "control"]` and
+    `ensure_window_command_allowed(label)`; inject `window: WebviewWindow`
+    into the 5 window lifecycle commands so the IPC layer auto-extracts the
+    caller window (JS-side invoke signatures unchanged). Refactor the
+    internal create→update fallback into `update_grid_window_internal` so
+    `create_grid_window` does not re-trigger the public allow-list check
+    after it has already passed. Add `MENUBAR_ALLOWED_WINDOWS =
+    ["control", "main"]` and `ensure_menubar_window_allowed(label)` and
+    gate `sync_set_menubar_status`. Add cargo unit tests
+    `window_allowlist_admits_main_control` /
+    `window_allowlist_rejects_grid_widget` and
+    `menubar_allowlist_admits_control_main` /
+    `menubar_allowlist_rejects_other`.
+    
+    Scope:
+    - docs/contracts/data-repository-v0.md
+    - docs/contracts/tauri-commands-v0.md
+    - packages/repository-v0-contract/docs/dev_log.md
+    - packages/localstorage-migration/docs/dev_log.md
+    - packages/core-data/src/organizer-layout-migration.ts
+    - packages/core-data/tests/organizer-layout-migration.test.ts
+    - apps/desktop/src-tauri/src/commands/window.rs
+    - apps/desktop/src-tauri/src/commands/menubar.rs
+    - apps/desktop/src-tauri/capabilities/AUDIT.md
+    
+    Risk:
+    - C2 changes the `OrganizerLayoutMigrationResult` shape; only consumer
+      is the test suite (re-export from `@repo/core-data` is unchanged at
+      the type level — new fields are additive).
+    - C3 adds an extra positional `window: WebviewWindow` parameter to
+      6 Tauri commands. Tauri injects this automatically — JS callers
+      (`apps/desktop/src/...`, `packages/plugin-organizer/...`) do not
+      change their invoke signatures. Verified by reading
+      `useGridWindow.ts`, `useSyncMenuBarStatus.ts`, and `ControlWindow.tsx`.
+    - C3 reduces effective callers of `update_grid_window` /
+      `close_grid_window` from `main`+`control`+`grid_*` down to
+      `main`+`control`. The doc previously said `grid_*` was allowed but
+      there is no actual `grid_*` caller in the codebase today; grid
+      windows route through `control` via cross-window events.
+    
+    Docs:
+    - §2.1 deferred-entity subsection added to the data-repository contract.
+    - §3 window-commands runtime allow-list documented in the
+      tauri-commands contract.
+    - §6.2 sync-menubar command + allow-list documented.
+    - §7 over-broad "every JS-callable command" claim refined into an
+      enumerated table of command groups with runtime checks.
+    - AUDIT.md rows updated for window / menubar / finder commands.
+    
+    Tests:
+    - `pnpm --filter @repo/core-data test` — 67 tests pass (1 new C2 case).
+    - `pnpm --filter @repo/core-data check-types` — pass.
+    - `cargo check --manifest-path apps/desktop/src-tauri/Cargo.toml` — pass.
+    - `cargo test ... window::` — 2 new tests pass.
+    - `cargo test ... menubar::` — 2 new tests pass (4 total in module).
+    - `pnpm --filter desktop build` — pass.
+    
+    Co-Authored-By: Claude Opus 4.7 (1M context) <noreply@anthropic.com>
+
+ apps/desktop/src-tauri/capabilities/AUDIT.md       |   8 +-
+ apps/desktop/src-tauri/src/commands/menubar.rs     |  67 ++++++++++++
+ apps/desktop/src-tauri/src/commands/window.rs      | 112 ++++++++++++++++++++-
+ docs/contracts/data-repository-v0.md               |  16 ++-
+ docs/contracts/tauri-commands-v0.md                |  48 ++++++++-
+ .../core-data/src/organizer-layout-migration.ts    | 108 ++++++++++++++++++--
+ .../tests/organizer-layout-migration.test.ts       |  76 +++++++++++++-
+ packages/localstorage-migration/docs/dev_log.md    |  21 ++--
+ packages/repository-v0-contract/docs/dev_log.md    |   2 +-
+ 9 files changed, 425 insertions(+), 33 deletions(-)
+
+ succeeded in 0ms:
+commit 7e97dc3dd0711f10e510db98a493fa484f4d6c95
+Author: InnoPeak <global_ai@innopeaktech.com>
+Date:   Wed May 20 11:44:07 2026 -0700
+
+    fix(contracts, commands/window, commands/menubar): align docs + extend runtime allow-list (P1 B-group)
+    
+    Why:
+    P1-B group review surfaced three doc/code alignment gaps from G2.1, G2.3,
+    G2.5: (1) the data-repository contract listed entities that are not in
+    v0; (2) the localstorage-migration adapter overclaimed "idempotent" while
+    re-stamping updatedAt on every rerun, which would have produced
+    spurious sync-conflict signals; (3) the tauri-commands contract claimed
+    "every JS-callable command has a runtime ensure_*_allowed check" but
+    window.rs and menubar.rs still lacked one. Close the gaps so the
+    contracts and the runtime tell the same story.
+    
+    What:
+    C1 — Move productivity.pomodoro_session / widgets.widget / account.device
+    out of the §2 frozen entity table into a new §2.1 "Deferred future
+    entities" subsection. Replace `pending commit` with `744d578` in the
+    repository-v0-contract dev_log work-log.
+    
+    C2 — Tighten organizer-layout-migration. Before re-`put`-ing a record
+    the migration now reads the existing record via `repo.get` and skips
+    the put when all meaningful fields (excluding `createdAt` / `updatedAt`)
+    match. Add a new `unchanged` counter to OrganizerLayoutMigrationResult,
+    and pre-seed `skipped` to 0 so P1-Alpha's A3 empty-filepath skip can
+    land independently without merge conflicts. Update the existing
+    idempotency test to expect `unchanged: 4` instead of re-migrated
+    counts, and add a dedicated test proving rerun does not change
+    `updatedAt`. Update localstorage-migration dev_log to describe the new
+    precise behaviour and drop the bare "idempotent" word.
+    
+    C3 — Extend the runtime allow-list pattern to window.rs and menubar.rs.
+    Add `WINDOW_ALLOWED_WINDOWS = ["main", "control"]` and
+    `ensure_window_command_allowed(label)`; inject `window: WebviewWindow`
+    into the 5 window lifecycle commands so the IPC layer auto-extracts the
+    caller window (JS-side invoke signatures unchanged). Refactor the
+    internal create→update fallback into `update_grid_window_internal` so
+    `create_grid_window` does not re-trigger the public allow-list check
+    after it has already passed. Add `MENUBAR_ALLOWED_WINDOWS =
+    ["control", "main"]` and `ensure_menubar_window_allowed(label)` and
+    gate `sync_set_menubar_status`. Add cargo unit tests
+    `window_allowlist_admits_main_control` /
+    `window_allowlist_rejects_grid_widget` and
+    `menubar_allowlist_admits_control_main` /
+    `menubar_allowlist_rejects_other`.
+    
+    Scope:
+    - docs/contracts/data-repository-v0.md
+    - docs/contracts/tauri-commands-v0.md
+    - packages/repository-v0-contract/docs/dev_log.md
+    - packages/localstorage-migration/docs/dev_log.md
+    - packages/core-data/src/organizer-layout-migration.ts
+    - packages/core-data/tests/organizer-layout-migration.test.ts
+    - apps/desktop/src-tauri/src/commands/window.rs
+    - apps/desktop/src-tauri/src/commands/menubar.rs
+    - apps/desktop/src-tauri/capabilities/AUDIT.md
+    
+    Risk:
+    - C2 changes the `OrganizerLayoutMigrationResult` shape; only consumer
+      is the test suite (re-export from `@repo/core-data` is unchanged at
+      the type level — new fields are additive).
+    - C3 adds an extra positional `window: WebviewWindow` parameter to
+      6 Tauri commands. Tauri injects this automatically — JS callers
+      (`apps/desktop/src/...`, `packages/plugin-organizer/...`) do not
+      change their invoke signatures. Verified by reading
+      `useGridWindow.ts`, `useSyncMenuBarStatus.ts`, and `ControlWindow.tsx`.
+    - C3 reduces effective callers of `update_grid_window` /
+      `close_grid_window` from `main`+`control`+`grid_*` down to
+      `main`+`control`. The doc previously said `grid_*` was allowed but
+      there is no actual `grid_*` caller in the codebase today; grid
+      windows route through `control` via cross-window events.
+    
+    Docs:
+    - §2.1 deferred-entity subsection added to the data-repository contract.
+    - §3 window-commands runtime allow-list documented in the
+      tauri-commands contract.
+    - §6.2 sync-menubar command + allow-list documented.
+    - §7 over-broad "every JS-callable command" claim refined into an
+      enumerated table of command groups with runtime checks.
+    - AUDIT.md rows updated for window / menubar / finder commands.
+    
+    Tests:
+    - `pnpm --filter @repo/core-data test` — 67 tests pass (1 new C2 case).
+    - `pnpm --filter @repo/core-data check-types` — pass.
+    - `cargo check --manifest-path apps/desktop/src-tauri/Cargo.toml` — pass.
+    - `cargo test ... window::` — 2 new tests pass.
+    - `cargo test ... menubar::` — 2 new tests pass (4 total in module).
+    - `pnpm --filter desktop build` — pass.
+    
+    Co-Authored-By: Claude Opus 4.7 (1M context) <noreply@anthropic.com>
+
+diff --git a/apps/desktop/src-tauri/capabilities/AUDIT.md b/apps/desktop/src-tauri/capabilities/AUDIT.md
+index 9246bab..85094a3 100644
+--- a/apps/desktop/src-tauri/capabilities/AUDIT.md
++++ b/apps/desktop/src-tauri/capabilities/AUDIT.md
+@@ -26,17 +26,19 @@ Source files audited:
+ |---|---|---|
+ | `core:window:*`, `core:event:*`, `core:webview:*` | default.json | Tauri permission system |
+ | `opener:default` | default.json | Tauri plugin |
+-| `create_grid_window` and siblings | default.json | host validates gridId |
++| `create_grid_window` / `update_grid_window` / `close_grid_window` / `list_grid_windows` / `focus_grid_window` | default.json | `commands::window::WINDOW_ALLOWED_WINDOWS` (main, control) + gridId validation |
++| `sync_set_menubar_status` | default.json | `commands::menubar::MENUBAR_ALLOWED_WINDOWS` (control, main) |
+ | `crypto_*` | plugin-account-crypto.json | `commands::crypto::CRYPTO_ALLOWED_WINDOWS` (account, control) |
+ | `secret_set` / `secret_get` / `secret_del` | plugin-account-keychain.json | `commands::keychain::KEYCHAIN_ALLOWED_WINDOWS` (account, control) |
+-| `db_init` / `db_put` / `db_get` / `db_list` / `db_delete` | plugin-data-database.json (G2.5) | `commands::database::DATABASE_ALLOWED_WINDOWS` (main, control, account, console) + `grid_*` prefix |
++| `db_init` / `db_put` / `db_get` / `db_list` / `db_delete` / `db_put_batch` | plugin-data-database.json (G2.5) | `commands::database::DATABASE_ALLOWED_WINDOWS` (main, control, account, console) + `grid_*` prefix |
++| `reveal_in_finder` / `open_path` | default.json | `commands::finder::FINDER_ALLOWED_WINDOWS` (main, control, console) + `grid_*` prefix |
+ 
+ ## Minimization notes
+ 
+ - `default.json` keeps the `core:window:*` and `core:webview:*` set used by `lib.rs::run()` for the transparent main / control / grid construction; nothing was removed because every entry corresponds to a verified caller.
+ - `core:event:default` is required by the cross-window event bus (`@repo/core/events`).
+ - `opener:default` is intentionally retained for user-initiated file/URL openers but should be revisited if plugins start using `tauri-plugin-opener` programmatically; flagged in the audit but kept for now to avoid touching G1.3 path-DnD flows.
+-- No window outside the allowlist can invoke `db_*` even if a future capability file widens the file scope, because the runtime `ensure_database_window_allowed` check is layered on top of the capability system. The same defence-in-depth pattern is already in place for `crypto_*` and `secret_*`.
++- No window outside the allowlist can invoke `db_*` even if a future capability file widens the file scope, because the runtime `ensure_database_window_allowed` check is layered on top of the capability system. The same defence-in-depth pattern is in place for `crypto_*`, `secret_*`, `reveal_in_finder` / `open_path`, the window-lifecycle commands (`create_grid_window` and siblings), and `sync_set_menubar_status`. Other host commands (`clipboard_*`, etc.) rely on capability file scope alone for now.
+ 
+ ## Deferred / out-of-scope for G2.5
+ 
+diff --git a/apps/desktop/src-tauri/src/commands/menubar.rs b/apps/desktop/src-tauri/src/commands/menubar.rs
+index 9759e61..ee64eb1 100644
+--- a/apps/desktop/src-tauri/src/commands/menubar.rs
++++ b/apps/desktop/src-tauri/src/commands/menubar.rs
+@@ -8,6 +8,29 @@ use tauri::{AppHandle, Manager, State, Wry};
+ const TRAY_ID: &str = "sync-status";
+ const ICON_SIZE: u32 = 18;
+ 
++/// Windows allowed to invoke `sync_set_menubar_status`.
++///
++/// The menubar (tray) is a global UI surface — the only legitimate
++/// drivers are the sync supervisor running in `control` and the main
++/// application shell in `main`. Grid windows, widgets, the pet,
++/// ai-cube, console etc. MUST NOT be able to flip the menubar status
++/// directly; the runtime check is a defence-in-depth layer on top of
++/// the capability file scope.
++pub(crate) const MENUBAR_ALLOWED_WINDOWS: &[&str] = &["control", "main"];
++
++fn is_menubar_window_allowed(label: &str) -> bool {
++    MENUBAR_ALLOWED_WINDOWS.contains(&label)
++}
++
++fn ensure_menubar_window_allowed(label: &str) -> AppResult<()> {
++    if is_menubar_window_allowed(label) {
++        return Ok(());
++    }
++    Err(AppError::SyncCapabilityDenied(format!(
++        "window `{label}` is not allowed to invoke sync_set_menubar_status"
++    )))
++}
++
+ #[derive(Default)]
+ pub struct SyncMenuBarState {
+     tray: Mutex<Option<TrayIcon<Wry>>>,
+@@ -60,9 +83,12 @@ pub fn install_sync_menubar(app: &AppHandle) -> AppResult<()> {
+ 
+ #[tauri::command]
+ pub async fn sync_set_menubar_status(
++    window: tauri::WebviewWindow,
+     state: State<'_, SyncMenuBarState>,
+     payload: SyncMenuBarPayload,
+ ) -> AppResult<()> {
++    ensure_menubar_window_allowed(window.label())?;
++
+     {
+         let mut status = state
+             .status
+@@ -229,4 +255,45 @@ mod tests {
+         assert!(tooltip.contains("E3015"));
+         assert!(tooltip.contains("Click"));
+     }
++
++    #[test]
++    fn menubar_allowlist_admits_control_main() {
++        for label in MENUBAR_ALLOWED_WINDOWS {
++            assert!(
++                is_menubar_window_allowed(label),
++                "expected `{label}` to be admitted"
++            );
++            assert!(ensure_menubar_window_allowed(label).is_ok());
++        }
++    }
++
++    #[test]
++    fn menubar_allowlist_rejects_other() {
++        for label in [
++            "grid_xxx",
++            "grid_",
++            "widget_clock",
++            "pet",
++            "ai_cube",
++            "console",
++            "account",
++            "unknown",
++        ] {
++            assert!(
++                !is_menubar_window_allowed(label),
++                "expected `{label}` to be rejected"
++            );
++            let err = ensure_menubar_window_allowed(label).unwrap_err();
++            match err {
++                AppError::SyncCapabilityDenied(msg) => {
++                    assert!(
++                        msg.contains(label),
++                        "error message `{msg}` should mention `{label}`"
++                    );
++                    assert!(msg.contains("sync_set_menubar_status"));
++                }
++                other => panic!("unexpected error for `{label}`: {other:?}"),
++            }
++        }
++    }
+ }
+diff --git a/apps/desktop/src-tauri/src/commands/window.rs b/apps/desktop/src-tauri/src/commands/window.rs
+index 4937201..d7e45d4 100644
+--- a/apps/desktop/src-tauri/src/commands/window.rs
++++ b/apps/desktop/src-tauri/src/commands/window.rs
+@@ -6,6 +6,39 @@ use super::super::GridWindowRect;
+ use super::super::GridWindowSnapshot;
+ use super::super::GridWindowsState;
+ 
++/// Windows allowed to invoke window lifecycle commands
++/// (`create_grid_window` / `update_grid_window` / `close_grid_window` /
++/// `list_grid_windows` / `focus_grid_window`).
++///
++/// Mirrors the `default.json` capability scope but is enforced as a
++/// defence-in-depth runtime check: even if a future capability widening
++/// granted `grid_*` / `widget_*` / `pet` access to the file scope, the
++/// runtime layer still rejects them with `WINDOW_CAPABILITY_DENIED`.
++///
++/// `grid_*` windows are intentionally NOT in this list — grid windows
++/// can request lifecycle changes for themselves via cross-window events
++/// routed through `control`, but they cannot directly spawn / close
++/// other grid windows.
++pub(crate) const WINDOW_ALLOWED_WINDOWS: &[&str] = &["main", "control"];
++
++fn is_window_command_allowed(label: &str) -> bool {
++    WINDOW_ALLOWED_WINDOWS.contains(&label)
++}
++
++fn ensure_window_command_allowed(label: &str) -> Result<(), CommandError> {
++    if is_window_command_allowed(label) {
++        Ok(())
++    } else {
++        Err(command_error(
++            "WINDOW_CAPABILITY_DENIED",
++            format!(
++                "window `{label}` is not allowed to invoke window lifecycle commands"
++            ),
++            false,
++        ))
++    }
++}
++
+ fn grid_label(grid_id: &str) -> String {
+     format!("grid_{}", grid_id)
+ }
+@@ -73,11 +106,13 @@ fn native_error(message: impl Into<String>) -> CommandError {
+ /// Create a new grid window at the specified position
+ #[tauri::command]
+ pub async fn create_grid_window(
++    window: tauri::WebviewWindow,
+     app: AppHandle,
+     #[allow(non_snake_case)]
+     gridId: String,
+     rect: GridWindowRect,
+ ) -> Result<GridWindowSnapshot, CommandError> {
++    ensure_window_command_allowed(window.label())?;
+     validate_grid_id(&gridId)?;
+ 
+     println!("🪟 Creating grid window: {} at ({}, {}) size {}x{}",
+@@ -89,7 +124,10 @@ pub async fn create_grid_window(
+     // Check if window already exists
+     if app.get_webview_window(&label).is_some() {
+         println!("⚠️ Window {} already exists, updating instead", label);
+-        return update_grid_window(app, gridId, rect).await;
++        // Internal call after the caller's window-origin check already
++        // passed — bypass the public allow-list by going through
++        // `update_grid_window_internal`.
++        return update_grid_window_internal(app, gridId, rect).await;
+     }
+ 
+     // Create the window with grid-specific settings.
+@@ -136,14 +174,27 @@ pub async fn create_grid_window(
+ /// Update an existing grid window's position and size
+ #[tauri::command]
+ pub async fn update_grid_window(
++    window: tauri::WebviewWindow,
+     app: AppHandle,
+     #[allow(non_snake_case)]
+     gridId: String,
+     rect: GridWindowRect,
+ ) -> Result<GridWindowSnapshot, CommandError> {
+-    validate_grid_id(&gridId)?;
++    ensure_window_command_allowed(window.label())?;
++    update_grid_window_internal(app, gridId, rect).await
++}
+ 
+-    let label = grid_label(&gridId);
++/// Internal update path used by both `update_grid_window` (with origin
++/// check) and `create_grid_window` (which has already enforced its own
++/// origin check before falling back to update).
++async fn update_grid_window_internal(
++    app: AppHandle,
++    grid_id: String,
++    rect: GridWindowRect,
++) -> Result<GridWindowSnapshot, CommandError> {
++    validate_grid_id(&grid_id)?;
++
++    let label = grid_label(&grid_id);
+ 
+     if let Some(window) = app.get_webview_window(&label) {
+         window
+@@ -163,12 +214,12 @@ pub async fn update_grid_window(
+         // Update stored state
+         if let Some(state) = app.try_state::<GridWindowsState>() {
+             let mut windows = state.windows.lock().map_err(state_error)?;
+-            windows.insert(gridId.clone(), rect.clone());
++            windows.insert(grid_id.clone(), rect.clone());
+         }
+ 
+         println!("📐 Updated grid window: {} to ({}, {}) size {}x{}",
+                  label, rect.x, rect.y, rect.width, rect.height);
+-        Ok(window_snapshot(&app, &gridId, rect))
++        Ok(window_snapshot(&app, &grid_id, rect))
+     } else {
+         Err(command_error(
+             "WINDOW_NOT_FOUND",
+@@ -181,10 +232,12 @@ pub async fn update_grid_window(
+ /// Close and destroy a grid window
+ #[tauri::command]
+ pub async fn close_grid_window(
++    window: tauri::WebviewWindow,
+     app: AppHandle,
+     #[allow(non_snake_case)]
+     gridId: String,
+ ) -> Result<(), CommandError> {
++    ensure_window_command_allowed(window.label())?;
+     validate_grid_id(&gridId)?;
+ 
+     let label = grid_label(&gridId);
+@@ -211,8 +264,10 @@ pub async fn close_grid_window(
+ /// List known grid windows and their latest rect snapshots.
+ #[tauri::command]
+ pub async fn list_grid_windows(
++    window: tauri::WebviewWindow,
+     app: AppHandle,
+ ) -> Result<Vec<GridWindowSnapshot>, CommandError> {
++    ensure_window_command_allowed(window.label())?;
+     let Some(state) = app.try_state::<GridWindowsState>() else {
+         return Ok(Vec::new());
+     };
+@@ -229,10 +284,12 @@ pub async fn list_grid_windows(
+ /// Focus an existing grid window.
+ #[tauri::command]
+ pub async fn focus_grid_window(
++    window: tauri::WebviewWindow,
+     app: AppHandle,
+     #[allow(non_snake_case)]
+     gridId: String,
+ ) -> Result<GridWindowSnapshot, CommandError> {
++    ensure_window_command_allowed(window.label())?;
+     validate_grid_id(&gridId)?;
+ 
+     let label = grid_label(&gridId);
+@@ -267,3 +324,48 @@ pub async fn focus_grid_window(
+ 
+     Ok(window_snapshot(&app, &gridId, rect))
+ }
++
++#[cfg(test)]
++mod tests {
++    use super::*;
++
++    #[test]
++    fn window_allowlist_admits_main_control() {
++        for label in WINDOW_ALLOWED_WINDOWS {
++            assert!(
++                is_window_command_allowed(label),
++                "expected `{label}` to be admitted"
++            );
++            assert!(ensure_window_command_allowed(label).is_ok());
++        }
++    }
++
++    #[test]
++    fn window_allowlist_rejects_grid_widget() {
++        // Grid windows themselves are NOT allowed to invoke window lifecycle
++        // commands — they must route through `control`. Widgets / pet /
++        // ai-cube / console are also rejected.
++        for label in [
++            "grid_xxx",
++            "grid_",
++            "widget_clock",
++            "pet",
++            "ai_cube",
++            "console",
++            "account",
++            "unknown",
++        ] {
++            assert!(
++                !is_window_command_allowed(label),
++                "expected `{label}` to be rejected"
++            );
++            let err = ensure_window_command_allowed(label).unwrap_err();
++            assert_eq!(err.code, "WINDOW_CAPABILITY_DENIED");
++            assert!(
++                err.message.contains(label),
++                "error message `{}` should mention `{label}`",
++                err.message
++            );
++        }
++    }
++}
+diff --git a/docs/contracts/data-repository-v0.md b/docs/contracts/data-repository-v0.md
+index a3616eb..4feef58 100644
+--- a/docs/contracts/data-repository-v0.md
++++ b/docs/contracts/data-repository-v0.md
+@@ -37,13 +37,23 @@ Entity type 使用 `plugin.entity`:
+ | `organizer.item` | `account-sync` 或 `device-local`,按 path 权限决定 |
+ | `labels.label` | `account-sync` |
+ | `productivity.todo` | `account-sync` |
+-| `productivity.pomodoro_session` | `account-sync` |
+ | `productivity.habit` | `account-sync` |
+ | `clipboard.item` | `device-local` |
+ | `project.board` | `account-sync` |
+ | `project.card` | `account-sync` |
+-| `widgets.widget` | `device-local` |
+-| `account.device` | `account-sync` |
++
++### 2.1 Deferred future entities (not in v0)
++
++The following entities are reserved for post-v0 work. They are **not** frozen
++in `packages/core-data/src/entities.ts` and are listed here only to claim the
++`entityType` slug ahead of time. Drivers and the `RepoEntity` union must not
++reference them until they ship.
++
++| Entity | syncScope 计划值 | 预计交付 | 备注 |
++|---|---|---|---|
++| `productivity.pomodoro_session` | `account-sync` | 待 plugin-productivity 番茄钟模块上线 | 与 `productivity.todo` 共享 label 维度 |
++| `widgets.widget` | `device-local` | 待 plugin-widget 落地 | 桌面小组件配置,默认设备本地 |
++| `account.device` | `account-sync` | 待 G2.4 device pairing 完成 | 用于 device list + remote revoke |
+ 
+ ## 3. Repository Interface 目标
+ 
+diff --git a/docs/contracts/tauri-commands-v0.md b/docs/contracts/tauri-commands-v0.md
+index 905a4f2..da3a852 100644
+--- a/docs/contracts/tauri-commands-v0.md
++++ b/docs/contracts/tauri-commands-v0.md
+@@ -34,8 +34,8 @@ Rust 是 label 生成权威。TS 侧不能手写除 public helper 以外的 labe
+ | Command | Owner | Allowed windows | Input | Output |
+ |---|---|---|---|---|
+ | `create_grid_window` | organizer/host | `main`,`control` | `{ gridId, rect }` | `GridWindowSnapshot` |
+-| `update_grid_window` | organizer/host | `main`,`control`,`grid_*` | `{ gridId, rect }` | `GridWindowSnapshot` |
+-| `close_grid_window` | organizer/host | `main`,`control`,`grid_*` | `{ gridId }` | `void` |
++| `update_grid_window` | organizer/host | `main`,`control` | `{ gridId, rect }` | `GridWindowSnapshot` |
++| `close_grid_window` | organizer/host | `main`,`control` | `{ gridId }` | `void` |
+ | `list_grid_windows` | organizer/host | `main`,`control` | `void` | `GridWindowSnapshot[]` |
+ | `focus_grid_window` | organizer/host | `main`,`control` | `{ gridId }` | `GridWindowSnapshot` |
+ 
+@@ -56,6 +56,16 @@ G1.1 implementation notes:
+ - Invalid `gridId` values return `INVALID_GRID_ID`.
+ - Missing windows return `WINDOW_NOT_FOUND`.
+ - Native window failures return `WINDOW_NATIVE_ERROR`.
++- Runtime allow-list `commands::window::WINDOW_ALLOWED_WINDOWS`
++  (`main`, `control`) enforces the table above at the IPC boundary
++  with `WINDOW_CAPABILITY_DENIED`. `grid_*` windows are intentionally
++  excluded — a grid window must request lifecycle changes for itself
++  via cross-window events routed through `control`, not by directly
++  invoking `update_grid_window` / `close_grid_window` against another
++  grid. Widget / pet / ai-cube / console are likewise rejected.
++- The `window: tauri::WebviewWindow` argument is injected by the
++  Tauri IPC layer; JS callers do NOT include it in the args payload
++  (mirrors the crypto / database / keychain command pattern).
+ 
+ ## 4. File / Open Commands
+ 
+@@ -152,6 +162,18 @@ PoC scope:
+ - Errors: `E1300` (not initialized), `E1301` (invalid input), `E1302` (backend SQLite/FS error).
+ - Feature-gated: registered only when the desktop crate is built with `--features crypto` (the gate that also enables `rusqlite`).
+ 
++## 6.2 Sync Menubar Commands
++
++Current source:
++- `apps/desktop/src-tauri/src/commands/menubar.rs`
++
++| Command | Allowed windows | Input | Output | Security rule |
++|---|---|---|---|---|
++| `sync_set_menubar_status` | `control`, `main` | `{ payload: { status, kind?, message?, frame? } }` | `void` | Runtime allow-list `commands::menubar::MENUBAR_ALLOWED_WINDOWS` rejects any other origin (`grid_*`, `widget_*`, `pet`, `ai_cube`, `console`, `account`) with `E3004` before the tray icon / tooltip is touched. The menubar is a global UI surface, so only the sync supervisor in `control` and the main shell are allowed to flip it. |
++
++The `window: tauri::WebviewWindow` arg is injected by Tauri; JS callers
++do NOT include it in the args payload.
++
+ ## 7. Capability Files
+ 
+ | File | Purpose |
+@@ -165,8 +187,26 @@ Full audit table: `apps/desktop/src-tauri/capabilities/AUDIT.md`.
+ 
+ G2.5 invariants now enforced:
+ 
+-- Every JS-callable command has a capability file declaring its allowed windows.
+-- Every JS-callable command has a runtime `ensure_*_allowed(label)` check matching the capability file. Widget / pet / ai-cube windows cannot invoke `db_*`, `crypto_*`, or `secret_*` even via mis-attached capability files.
++- Every JS-callable command has a capability file declaring its allowed
++  windows.
++- The following command groups carry a runtime
++  `ensure_*_allowed(label)` defence-in-depth check that mirrors the
++  capability file scope, so widget / pet / ai-cube windows cannot
++  invoke them even if a future capability file widening lands by
++  mistake:
++
++  | Command group | Runtime allow-list constant | Source |
++  |---|---|---|
++  | `crypto_*` | `CRYPTO_ALLOWED_WINDOWS` | `commands/crypto.rs` |
++  | `secret_*` | `KEYCHAIN_ALLOWED_WINDOWS` | `commands/keychain.rs` |
++  | `db_*` | `DATABASE_ALLOWED_WINDOWS` | `commands/database.rs` |
++  | `reveal_in_finder`, `open_path` | `FINDER_ALLOWED_WINDOWS` | `commands/finder.rs` |
++  | `create_grid_window`, `update_grid_window`, `close_grid_window`, `list_grid_windows`, `focus_grid_window` | `WINDOW_ALLOWED_WINDOWS` | `commands/window.rs` |
++  | `sync_set_menubar_status` | `MENUBAR_ALLOWED_WINDOWS` | `commands/menubar.rs` |
++
++  Other commands (`clipboard_*`, etc.) currently rely on capability
++  file scope alone — their runtime allow-lists are tracked under
++  future hardening rows and not in v0.
+ 
+ G2.7 (MAS signed runtime smoke) remains deferred under `xai-v1.deferred-gates.md`.
+ 
+diff --git a/packages/core-data/src/organizer-layout-migration.ts b/packages/core-data/src/organizer-layout-migration.ts
+index 0776edb..a526fac 100644
+--- a/packages/core-data/src/organizer-layout-migration.ts
++++ b/packages/core-data/src/organizer-layout-migration.ts
+@@ -8,8 +8,16 @@
+  *
+  * Guarantees:
+  *
+- * - **Idempotent.** Running the migration twice produces the same repo
+- *   state; the second run is a no-op upsert.
++ * - **Repo-state idempotent.** Running the migration twice converges to the
++ *   same repo state. Records whose meaningful fields are already byte-equal
++ *   to what's stored are SKIPPED instead of re-`put` so that `updatedAt`
++ *   never gets re-stamped on a no-op rerun (which would otherwise produce a
++ *   spurious sync-conflict signal). Such records are reported via the
++ *   `unchanged` counter; only records whose payload actually changed are
++ *   counted toward `gridsMigrated` / `itemsMigrated`.
++ * - **Validation-rejects counted separately.** Legacy items that fail
++ *   positive validation (e.g. empty `filepath`, unsupported `kind`) are
++ *   reported via the `skipped` counter, not silently dropped.
+  * - **Non-destructive by default.** The legacy key is kept in
+  *   `localStorage` unless the caller passes `removeLegacy: true`, so the
+  *   user can roll back if SQLite is unavailable.
+@@ -69,9 +77,18 @@ export interface OrganizerLayoutMigrationResult {
+   parsed: boolean;
+   gridsMigrated: number;
+   itemsMigrated: number;
+-  removedLegacy: boolean;
+-  /** Legacy items rejected by positive validation (e.g. empty filepath). */
++  /**
++   * Records whose meaningful fields equal what's already in the repo and
++   * therefore did NOT trigger a re-`put` (C2). Rerunning against an
++   * unchanged blob bumps `unchanged` instead of touching `updatedAt`.
++   */
++  unchanged: number;
++  /**
++   * Legacy items rejected by positive validation (A3): empty `filepath`,
++   * unsupported `kind`, etc. Not counted toward `unchanged`.
++   */
+   skipped: number;
++  removedLegacy: boolean;
+ }
+ 
+ export async function migrateOrganizerLayoutToRepos(
+@@ -102,25 +119,45 @@ export async function migrateOrganizerLayoutToRepos(
+   const timestamp = nowIso();
+ 
+   let gridsMigrated = 0;
++  let itemsMigrated = 0;
++  let unchanged = 0;
++  let skipped = 0;
++
+   for (const legacyGrid of layout.grids) {
+     if (!legacyGrid || typeof legacyGrid.id !== "string") continue;
+     const record = toGridEntity(legacyGrid, timestamp);
++
++    // C2 — unchanged-skip: avoid re-stamping updatedAt on a no-op rerun.
++    const existing = await options.gridRepo.get(record.id);
++    if (existing && isGridRecordEqual(existing, record)) {
++      unchanged += 1;
++      continue;
++    }
++
+     assertRepoRecord(record);
+     await options.gridRepo.put(record);
+     gridsMigrated += 1;
+   }
+ 
+-  let itemsMigrated = 0;
+-  let skipped = 0;
+   for (const legacyItem of layout.items) {
+     if (!legacyItem || typeof legacyItem.id !== "string") continue;
+     const gridId = findOwningGridId(legacyItem.id, layout.grids);
+     if (!gridId) continue;
+     const record = toGridItemEntity(legacyItem, gridId, timestamp);
++
++    // A3 — positive validation rejected this legacy item.
+     if (!record) {
+       skipped += 1;
+       continue;
+     }
++
++    // C2 — unchanged-skip (same rationale as the grid loop).
++    const existing = await options.itemRepo.get(record.id);
++    if (existing && isItemRecordEqual(existing, record)) {
++      unchanged += 1;
++      continue;
++    }
++
+     assertRepoRecord(record);
+     await options.itemRepo.put(record);
+     itemsMigrated += 1;
+@@ -137,8 +174,9 @@ export async function migrateOrganizerLayoutToRepos(
+     parsed: true,
+     gridsMigrated,
+     itemsMigrated,
+-    removedLegacy,
++    unchanged,
+     skipped,
++    removedLegacy,
+   };
+ }
+ 
+@@ -148,11 +186,65 @@ function emptyResult(): OrganizerLayoutMigrationResult {
+     parsed: false,
+     gridsMigrated: 0,
+     itemsMigrated: 0,
+-    removedLegacy: false,
++    unchanged: 0,
+     skipped: 0,
++    removedLegacy: false,
+   };
+ }
+ 
++/**
++ * Returns true when the meaningful Grid fields of `existing` match those of
++ * the freshly-computed `candidate`. Excludes `createdAt` / `updatedAt` so a
++ * rerun of the migration does not re-stamp timestamps and trigger a false
++ * sync-conflict downstream (C2).
++ */
++function isGridRecordEqual(existing: GridEntity, candidate: GridEntity): boolean {
++  return (
++    existing.entityType === candidate.entityType &&
++    existing.schemaVersion === candidate.schemaVersion &&
++    existing.syncScope === candidate.syncScope &&
++    existing.title === candidate.title &&
++    existing.isLocked === candidate.isLocked &&
++    existing.isFolded === candidate.isFolded &&
++    existing.viewMode === candidate.viewMode &&
++    existing.themeColor === candidate.themeColor &&
++    existing.rect.x === candidate.rect.x &&
++    existing.rect.y === candidate.rect.y &&
++    existing.rect.width === candidate.rect.width &&
++    existing.rect.height === candidate.rect.height &&
++    arraysEqual(existing.itemIds, candidate.itemIds)
++  );
++}
++
++/**
++ * Like {@link isGridRecordEqual} but for `GridItemEntity`. Excludes
++ * `createdAt` / `updatedAt`.
++ */
++function isItemRecordEqual(
++  existing: GridItemEntity,
++  candidate: GridItemEntity,
++): boolean {
++  return (
++    existing.entityType === candidate.entityType &&
++    existing.schemaVersion === candidate.schemaVersion &&
++    existing.syncScope === candidate.syncScope &&
++    existing.gridId === candidate.gridId &&
++    existing.filename === candidate.filename &&
++    existing.filepath === candidate.filepath &&
++    existing.kind === candidate.kind &&
++    existing.icon === candidate.icon &&
++    existing.size === candidate.size
++  );
++}
++
++function arraysEqual(a: readonly string[], b: readonly string[]): boolean {
++  if (a.length !== b.length) return false;
++  for (let i = 0; i < a.length; i += 1) {
++    if (a[i] !== b[i]) return false;
++  }
++  return true;
++}
++
+ function toGridEntity(
+   legacy: LegacyGridBox,
+   timestamp: string,
+diff --git a/packages/core-data/tests/organizer-layout-migration.test.ts b/packages/core-data/tests/organizer-layout-migration.test.ts
+index bd2de92..bf103cc 100644
+--- a/packages/core-data/tests/organizer-layout-migration.test.ts
++++ b/packages/core-data/tests/organizer-layout-migration.test.ts
+@@ -96,6 +96,8 @@ describe("migrateOrganizerLayoutToRepos", () => {
+       parsed: true,
+       gridsMigrated: 2,
+       itemsMigrated: 2,
++      unchanged: 0,
++      skipped: 0,
+       removedLegacy: false,
+       skipped: 0,
+     });
+@@ -134,7 +136,7 @@ describe("migrateOrganizerLayoutToRepos", () => {
+     });
+   });
+ 
+-  it("is idempotent when rerun against the same legacy blob", async () => {
++  it("is repo-state idempotent when rerun against the same legacy blob", async () => {
+     const storage = fakeStorage({
+       [LEGACY_LAYOUT_STORAGE_KEY]: JSON.stringify(exampleLayout()),
+     });
+@@ -152,11 +154,80 @@ describe("migrateOrganizerLayoutToRepos", () => {
+ 
+     await run();
+     const after = await run();
+-    expect(after).toMatchObject({ gridsMigrated: 2, itemsMigrated: 2 });
++    // C2: the second pass must NOT re-`put` records — it skips them via the
++    // `unchanged` counter so `updatedAt` is not re-stamped (which would
++    // otherwise look like a spurious sync conflict downstream).
++    expect(after).toMatchObject({
++      gridsMigrated: 0,
++      itemsMigrated: 0,
++      unchanged: 4,
++      skipped: 0,
++    });
+     expect((await gridRepo.list()).length).toBe(2);
+     expect((await itemRepo.list()).length).toBe(2);
+   });
+ 
++  it("rerun against an unchanged blob increments `unchanged`, not `migrated`, and preserves `updatedAt`", async () => {
++    const storage = fakeStorage({
++      [LEGACY_LAYOUT_STORAGE_KEY]: JSON.stringify(exampleLayout()),
++    });
++    const gridRepo = createInMemoryRepo<GridEntity>({ namespace: "grids" });
++    const itemRepo = createInMemoryRepo<GridItemEntity>({
++      namespace: "items",
++    });
++
++    // First run stamps `updatedAt` at T0.
++    const firstStamp = "2026-05-20T00:00:00.000Z";
++    await migrateOrganizerLayoutToRepos({
++      storage,
++      gridRepo,
++      itemRepo,
++      nowIso: () => firstStamp,
++    });
++    const firstGrids = await gridRepo.list({
++      orderBy: { field: "id", direction: "asc" },
++    });
++    const firstItems = await itemRepo.list({
++      orderBy: { field: "id", direction: "asc" },
++    });
++
++    // Second run uses a different `nowIso` — if we accidentally re-`put`,
++    // the stored `updatedAt` would advance to T1.
++    const secondStamp = "2026-05-21T12:34:56.000Z";
++    const result = await migrateOrganizerLayoutToRepos({
++      storage,
++      gridRepo,
++      itemRepo,
++      nowIso: () => secondStamp,
++    });
++
++    expect(result).toEqual({
++      scanned: true,
++      parsed: true,
++      gridsMigrated: 0,
++      itemsMigrated: 0,
++      unchanged: 4, // 2 grids + 2 owned items
++      skipped: 0,
++      removedLegacy: false,
++    });
++
++    // Verify `updatedAt` was NOT touched on the no-op rerun.
++    const secondGrids = await gridRepo.list({
++      orderBy: { field: "id", direction: "asc" },
++    });
++    const secondItems = await itemRepo.list({
++      orderBy: { field: "id", direction: "asc" },
++    });
++    for (let i = 0; i < firstGrids.length; i += 1) {
++      expect(secondGrids[i].updatedAt).toBe(firstStamp);
++      expect(secondGrids[i].updatedAt).not.toBe(secondStamp);
++    }
++    for (let i = 0; i < firstItems.length; i += 1) {
++      expect(secondItems[i].updatedAt).toBe(firstStamp);
++      expect(secondItems[i].updatedAt).not.toBe(secondStamp);
++    }
++  });
++
+   it("does not delete the legacy key by default", async () => {
+     const storage = fakeStorage({
+       [LEGACY_LAYOUT_STORAGE_KEY]: JSON.stringify(exampleLayout()),
+@@ -231,6 +302,7 @@ describe("migrateOrganizerLayoutToRepos", () => {
+       parsed: true,
+       gridsMigrated: 1,
+       itemsMigrated: 1,
++      unchanged: 0,
+       removedLegacy: false,
+       skipped: 1,
+     });
+diff --git a/packages/localstorage-migration/docs/dev_log.md b/packages/localstorage-migration/docs/dev_log.md
+index 2db5b8a..636c9f9 100644
+--- a/packages/localstorage-migration/docs/dev_log.md
++++ b/packages/localstorage-migration/docs/dev_log.md
+@@ -33,9 +33,12 @@ Status: DONE.
+   `GridItemEntity`. Items without an owning grid (orphans) are
+   dropped — they cannot survive into the typed model.
+ - Added `packages/core-data/tests/organizer-layout-migration.test.ts`
+-  (5 tests): mapping correctness, idempotency, default-keep-legacy,
+-  opt-in `removeLegacy`, and no-op behaviour for absent / malformed
+-  blobs.
++  (6 tests): mapping correctness; **repo-state idempotency**
++  (rerun-safe — equal records are skipped via a new `unchanged`
++  counter so `updatedAt` is NOT re-stamped on a no-op rerun, see C2);
++  dedicated `updatedAt`-preservation test on rerun;
++  default-keep-legacy; opt-in `removeLegacy`; and no-op behaviour for
++  absent / malformed blobs.
+ - Existing generic `migrateLocalStorageToRepo` helper retained for
+   prefix-keyed legacy stores (Todo / Habit / Label) once those
+   plugins land.
+@@ -64,10 +67,14 @@ Deferred / out-of-scope for G2.3:
+ 
+ feature-verify (Claude Code, Track A), 2026-05-20 00:48 PDT. Verdict: READY_TO_SHIP.
+ 
+-The migration adapter is idempotent, non-destructive by default, and
+-type-checked against the G2.1 entity surface. The UI cut-over remains
+-parked behind the documented G1.5 work item so a future async refactor
+-of `useGridSystem` can land in one focused PR.
++The migration adapter is **repo-state idempotent** — a rerun against an
++unchanged legacy blob skips equal records (tracked via the new
++`unchanged` counter on `OrganizerLayoutMigrationResult`) so that
++`updatedAt` is NOT re-stamped and downstream sync does not see a
++spurious conflict signal (C2 hardening). The adapter is non-destructive
++by default, and type-checked against the G2.1 entity surface. The UI
++cut-over remains parked behind the documented G1.5 work item so a
++future async refactor of `useGridSystem` can land in one focused PR.
+ 
+ ## Work Log
+ 
+diff --git a/packages/repository-v0-contract/docs/dev_log.md b/packages/repository-v0-contract/docs/dev_log.md
+index 9c4012d..f6f9240 100644
+--- a/packages/repository-v0-contract/docs/dev_log.md
++++ b/packages/repository-v0-contract/docs/dev_log.md
+@@ -58,4 +58,4 @@ Cross-vendor review/verify, SQLCipher runtime, live Supabase, plugin/UI migratio
+ | Timestamp | Executor | Action | Commits | Next |
+ |---|---|---|---|---|
+ | 2026-05-19 23:48 PDT | feature-plan + feature-review (Codex inline) | Created Step 0 brief and feature docs. Approved scoped G2.1 plan for build. | pending | feature-build |
+-| 2026-05-20 00:18 PDT | feature-build + feature-verify (Claude Code, Track A) | Implemented Repository v0 entity surface (`packages/core-data/src/entities.ts`), updated contract doc with entity table + interface, added `tests/entities.test.ts`, ran core-data test + type checks (45 tests passing). | pending commit | manual ship only; continue roadmap |
++| 2026-05-20 00:18 PDT | feature-build + feature-verify (Claude Code, Track A) | Implemented Repository v0 entity surface (`packages/core-data/src/entities.ts`), updated contract doc with entity table + interface, added `tests/entities.test.ts`, ran core-data test + type checks (45 tests passing). | `744d578` | manual ship only; continue roadmap |
+
+codex
+I have the diff. Now I’m checking the exact post-fix line references and looking for any regressions in the touched test/runtime paths before deciding whether the original contract failure is actually closed.
+exec
+/bin/zsh -lc "nl -ba apps/desktop/src-tauri/src/commands/window.rs | sed -n '1,420p'" in /Users/lijinlong/Desktop/AI_Desktop/XAI_Desktop
+exec
+/bin/zsh -lc "nl -ba docs/contracts/data-repository-v0.md | sed -n '34,70p'" in /Users/lijinlong/Desktop/AI_Desktop/XAI_Desktop
+ succeeded in 0ms:
+     1	use tauri::{AppHandle, Manager, WebviewUrl, WebviewWindowBuilder};
+     2	use crate::platform;
+     3	
+     4	use super::super::CommandError;
+     5	use super::super::GridWindowRect;
+     6	use super::super::GridWindowSnapshot;
+     7	use super::super::GridWindowsState;
+     8	
+     9	/// Windows allowed to invoke window lifecycle commands
+    10	/// (`create_grid_window` / `update_grid_window` / `close_grid_window` /
+    11	/// `list_grid_windows` / `focus_grid_window`).
+    12	///
+    13	/// Mirrors the `default.json` capability scope but is enforced as a
+    14	/// defence-in-depth runtime check: even if a future capability widening
+    15	/// granted `grid_*` / `widget_*` / `pet` access to the file scope, the
+    16	/// runtime layer still rejects them with `WINDOW_CAPABILITY_DENIED`.
+    17	///
+    18	/// `grid_*` windows are intentionally NOT in this list — grid windows
+    19	/// can request lifecycle changes for themselves via cross-window events
+    20	/// routed through `control`, but they cannot directly spawn / close
+    21	/// other grid windows.
+    22	pub(crate) const WINDOW_ALLOWED_WINDOWS: &[&str] = &["main", "control"];
+    23	
+    24	fn is_window_command_allowed(label: &str) -> bool {
+    25	    WINDOW_ALLOWED_WINDOWS.contains(&label)
+    26	}
+    27	
+    28	fn ensure_window_command_allowed(label: &str) -> Result<(), CommandError> {
+    29	    if is_window_command_allowed(label) {
+    30	        Ok(())
+    31	    } else {
+    32	        Err(command_error(
+    33	            "WINDOW_CAPABILITY_DENIED",
+    34	            format!(
+    35	                "window `{label}` is not allowed to invoke window lifecycle commands"
+    36	            ),
+    37	            false,
+    38	        ))
+    39	    }
+    40	}
+    41	
+    42	fn grid_label(grid_id: &str) -> String {
+    43	    format!("grid_{}", grid_id)
+    44	}
+    45	
+    46	fn is_valid_grid_id(grid_id: &str) -> bool {
+    47	    !grid_id.is_empty()
+    48	        && grid_id.len() <= 128
+    49	        && grid_id
+    50	            .chars()
+    51	            .all(|c| c.is_ascii_alphanumeric() || c == '-' || c == '_')
+    52	}
+    53	
+    54	fn command_error(
+    55	    code: impl Into<String>,
+    56	    message: impl Into<String>,
+    57	    recoverable: bool,
+    58	) -> CommandError {
+    59	    CommandError {
+    60	        code: code.into(),
+    61	        message: message.into(),
+    62	        recoverable,
+    63	        details: None,
+    64	    }
+    65	}
+    66	
+    67	fn validate_grid_id(grid_id: &str) -> Result<(), CommandError> {
+    68	    if is_valid_grid_id(grid_id) {
+    69	        Ok(())
+    70	    } else {
+    71	        Err(command_error(
+    72	            "INVALID_GRID_ID",
+    73	            "gridId must be non-empty and contain only ASCII letters, numbers, '-' or '_'",
+    74	            true,
+    75	        ))
+    76	    }
+    77	}
+    78	
+    79	fn window_snapshot(
+    80	    app: &AppHandle,
+    81	    grid_id: &str,
+    82	    rect: GridWindowRect,
+    83	) -> GridWindowSnapshot {
+    84	    let label = grid_label(grid_id);
+    85	    let visible = app
+    86	        .get_webview_window(&label)
+    87	        .and_then(|window| window.is_visible().ok())
+    88	        .unwrap_or(false);
+    89	
+    90	    GridWindowSnapshot {
+    91	        grid_id: grid_id.to_string(),
+    92	        label,
+    93	        rect,
+    94	        visible,
+    95	    }
+    96	}
+    97	
+    98	fn state_error(error: impl ToString) -> CommandError {
+    99	    command_error("WINDOW_STATE_LOCKED", error.to_string(), true)
+   100	}
+   101	
+   102	fn native_error(message: impl Into<String>) -> CommandError {
+   103	    command_error("WINDOW_NATIVE_ERROR", message.into(), true)
+   104	}
+   105	
+   106	/// Create a new grid window at the specified position
+   107	#[tauri::command]
+   108	pub async fn create_grid_window(
+   109	    window: tauri::WebviewWindow,
+   110	    app: AppHandle,
+   111	    #[allow(non_snake_case)]
+   112	    gridId: String,
+   113	    rect: GridWindowRect,
+   114	) -> Result<GridWindowSnapshot, CommandError> {
+   115	    ensure_window_command_allowed(window.label())?;
+   116	    validate_grid_id(&gridId)?;
+   117	
+   118	    println!("🪟 Creating grid window: {} at ({}, {}) size {}x{}",
+   119	             gridId, rect.x, rect.y, rect.width, rect.height);
+   120	
+   121	    let label = grid_label(&gridId);
+   122	    let url = format!("/#/grid?id={}", gridId);
+   123	
+   124	    // Check if window already exists
+   125	    if app.get_webview_window(&label).is_some() {
+   126	        println!("⚠️ Window {} already exists, updating instead", label);
+   127	        // Internal call after the caller's window-origin check already
+   128	        // passed — bypass the public allow-list by going through
+   129	        // `update_grid_window_internal`.
+   130	        return update_grid_window_internal(app, gridId, rect).await;
+   131	    }
+   132	
+   133	    // Create the window with grid-specific settings.
+   134	    // `transparent(true)` is private-API gated on macOS, so the MAS dry-run
+   135	    // feature intentionally omits it and relies on the native fallback styling.
+   136	    let builder = WebviewWindowBuilder::new(&app, &label, WebviewUrl::App(url.into()))
+   137	        .title("")
+   138	        .inner_size(rect.width, rect.height)
+   139	        .position(rect.x, rect.y);
+   140	
+   141	    #[cfg(not(feature = "mas-sandbox"))]
+   142	    let builder = builder.transparent(true);
+   143	
+   144	    let window = builder
+   145	        .decorations(false)
+   146	        .shadow(false)
+   147	        .skip_taskbar(true)
+   148	        .resizable(false)
+   149	        .visible(true)
+   150	        .always_on_top(false)
+   151	        .build()
+   152	        .map_err(|e| native_error(format!("Failed to create window: {}", e)))?;
+   153	
+   154	    // Configure macOS-specific window settings
+   155	    #[cfg(target_os = "macos")]
+   156	    {
+   157	        let window_clone = window.clone();
+   158	        let _ = window.run_on_main_thread(move || {
+   159	            platform::macos::configure_grid_window(&window_clone);
+   160	        });
+   161	    }
+   162	
+   163	    // Store window state
+   164	    if let Some(state) = app.try_state::<GridWindowsState>() {
+   165	        let mut windows = state.windows.lock().map_err(state_error)?;
+   166	        windows.insert(gridId.clone(), rect.clone());
+   167	    }
+   168	
+   169	    println!("✅ Grid window created successfully: {} at ({}, {}) size {}x{}",
+   170	             label, rect.x, rect.y, rect.width, rect.height);
+   171	    Ok(window_snapshot(&app, &gridId, rect))
+   172	}
+   173	
+   174	/// Update an existing grid window's position and size
+   175	#[tauri::command]
+   176	pub async fn update_grid_window(
+   177	    window: tauri::WebviewWindow,
+   178	    app: AppHandle,
+   179	    #[allow(non_snake_case)]
+   180	    gridId: String,
+   181	    rect: GridWindowRect,
+   182	) -> Result<GridWindowSnapshot, CommandError> {
+   183	    ensure_window_command_allowed(window.label())?;
+   184	    update_grid_window_internal(app, gridId, rect).await
+   185	}
+   186	
+   187	/// Internal update path used by both `update_grid_window` (with origin
+   188	/// check) and `create_grid_window` (which has already enforced its own
+   189	/// origin check before falling back to update).
+   190	async fn update_grid_window_internal(
+   191	    app: AppHandle,
+   192	    grid_id: String,
+   193	    rect: GridWindowRect,
+   194	) -> Result<GridWindowSnapshot, CommandError> {
+   195	    validate_grid_id(&grid_id)?;
+   196	
+   197	    let label = grid_label(&grid_id);
+   198	
+   199	    if let Some(window) = app.get_webview_window(&label) {
+   200	        window
+   201	            .set_position(tauri::Position::Logical(tauri::LogicalPosition {
+   202	                x: rect.x,
+   203	                y: rect.y,
+   204	            }))
+   205	            .map_err(|e| native_error(format!("Failed to set position: {}", e)))?;
+   206	
+   207	        window
+   208	            .set_size(tauri::Size::Logical(tauri::LogicalSize {
+   209	                width: rect.width,
+   210	                height: rect.height,
+   211	            }))
+   212	            .map_err(|e| native_error(format!("Failed to set size: {}", e)))?;
+   213	
+   214	        // Update stored state
+   215	        if let Some(state) = app.try_state::<GridWindowsState>() {
+   216	            let mut windows = state.windows.lock().map_err(state_error)?;
+   217	            windows.insert(grid_id.clone(), rect.clone());
+   218	        }
+   219	
+   220	        println!("📐 Updated grid window: {} to ({}, {}) size {}x{}",
+   221	                 label, rect.x, rect.y, rect.width, rect.height);
+   222	        Ok(window_snapshot(&app, &grid_id, rect))
+   223	    } else {
+   224	        Err(command_error(
+   225	            "WINDOW_NOT_FOUND",
+   226	            format!("Window {} not found", label),
+   227	            true,
+   228	        ))
+   229	    }
+   230	}
+   231	
+   232	/// Close and destroy a grid window
+   233	#[tauri::command]
+   234	pub async fn close_grid_window(
+   235	    window: tauri::WebviewWindow,
+   236	    app: AppHandle,
+   237	    #[allow(non_snake_case)]
+   238	    gridId: String,
+   239	) -> Result<(), CommandError> {
+   240	    ensure_window_command_allowed(window.label())?;
+   241	    validate_grid_id(&gridId)?;
+   242	
+   243	    let label = grid_label(&gridId);
+   244	
+   245	    if let Some(window) = app.get_webview_window(&label) {
+   246	        window
+   247	            .close()
+   248	            .map_err(|e| native_error(format!("Failed to close window: {}", e)))?;
+   249	
+   250	        // Remove from stored state
+   251	        if let Some(state) = app.try_state::<GridWindowsState>() {
+   252	            let mut windows = state.windows.lock().map_err(state_error)?;
+   253	            windows.remove(&gridId);
+   254	        }
+   255	
+   256	        println!("🗑️ Closed grid window: {}", label);
+   257	        Ok(())
+   258	    } else {
+   259	        // Window doesn't exist, that's fine
+   260	        Ok(())
+   261	    }
+   262	}
+   263	
+   264	/// List known grid windows and their latest rect snapshots.
+   265	#[tauri::command]
+   266	pub async fn list_grid_windows(
+   267	    window: tauri::WebviewWindow,
+   268	    app: AppHandle,
+   269	) -> Result<Vec<GridWindowSnapshot>, CommandError> {
+   270	    ensure_window_command_allowed(window.label())?;
+   271	    let Some(state) = app.try_state::<GridWindowsState>() else {
+   272	        return Ok(Vec::new());
+   273	    };
+   274	
+   275	    let windows = state.windows.lock().map_err(state_error)?;
+   276	    let mut snapshots = windows
+   277	        .iter()
+   278	        .map(|(grid_id, rect)| window_snapshot(&app, grid_id, rect.clone()))
+   279	        .collect::<Vec<_>>();
+   280	    snapshots.sort_by(|a, b| a.grid_id.cmp(&b.grid_id));
+   281	    Ok(snapshots)
+   282	}
+   283	
+   284	/// Focus an existing grid window.
+   285	#[tauri::command]
+   286	pub async fn focus_grid_window(
+   287	    window: tauri::WebviewWindow,
+   288	    app: AppHandle,
+   289	    #[allow(non_snake_case)]
+   290	    gridId: String,
+   291	) -> Result<GridWindowSnapshot, CommandError> {
+   292	    ensure_window_command_allowed(window.label())?;
+   293	    validate_grid_id(&gridId)?;
+   294	
+   295	    let label = grid_label(&gridId);
+   296	    let Some(window) = app.get_webview_window(&label) else {
+   297	        return Err(command_error(
+   298	            "WINDOW_NOT_FOUND",
+   299	            format!("Window {} not found", label),
+   300	            true,
+   301	        ));
+   302	    };
+   303	
+   304	    window
+   305	        .set_focus()
+   306	        .map_err(|e| native_error(format!("Failed to focus window: {}", e)))?;
+   307	
+   308	    let rect = if let Some(state) = app.try_state::<GridWindowsState>() {
+   309	        let windows = state.windows.lock().map_err(state_error)?;
+   310	        windows.get(&gridId).cloned().unwrap_or(GridWindowRect {
+   311	            x: 0.0,
+   312	            y: 0.0,
+   313	            width: 0.0,
+   314	            height: 0.0,
+   315	        })
+   316	    } else {
+   317	        GridWindowRect {
+   318	            x: 0.0,
+   319	            y: 0.0,
+   320	            width: 0.0,
+   321	            height: 0.0,
+   322	        }
+   323	    };
+   324	
+   325	    Ok(window_snapshot(&app, &gridId, rect))
+   326	}
+   327	
+   328	#[cfg(test)]
+   329	mod tests {
+   330	    use super::*;
+   331	
+   332	    #[test]
+   333	    fn window_allowlist_admits_main_control() {
+   334	        for label in WINDOW_ALLOWED_WINDOWS {
+   335	            assert!(
+   336	                is_window_command_allowed(label),
+   337	                "expected `{label}` to be admitted"
+   338	            );
+   339	            assert!(ensure_window_command_allowed(label).is_ok());
+   340	        }
+   341	    }
+   342	
+   343	    #[test]
+   344	    fn window_allowlist_rejects_grid_widget() {
+   345	        // Grid windows themselves are NOT allowed to invoke window lifecycle
+   346	        // commands — they must route through `control`. Widgets / pet /
+   347	        // ai-cube / console are also rejected.
+   348	        for label in [
+   349	            "grid_xxx",
+   350	            "grid_",
+   351	            "widget_clock",
+   352	            "pet",
+   353	            "ai_cube",
+   354	            "console",
+   355	            "account",
+   356	            "unknown",
+   357	        ] {
+   358	            assert!(
+   359	                !is_window_command_allowed(label),
+   360	                "expected `{label}` to be rejected"
+   361	            );
+   362	            let err = ensure_window_command_allowed(label).unwrap_err();
+   363	            assert_eq!(err.code, "WINDOW_CAPABILITY_DENIED");
+   364	            assert!(
+   365	                err.message.contains(label),
+   366	                "error message `{}` should mention `{label}`",
+   367	                err.message
+   368	            );
+   369	        }
+   370	    }
+   371	}
+
+ succeeded in 0ms:
+    34	| Entity | syncScope 默认值 |
+    35	|---|---|
+    36	| `organizer.grid` | `account-sync` |
+    37	| `organizer.item` | `account-sync` 或 `device-local`,按 path 权限决定 |
+    38	| `labels.label` | `account-sync` |
+    39	| `productivity.todo` | `account-sync` |
+    40	| `productivity.habit` | `account-sync` |
+    41	| `clipboard.item` | `device-local` |
+    42	| `project.board` | `account-sync` |
+    43	| `project.card` | `account-sync` |
+    44	
+    45	### 2.1 Deferred future entities (not in v0)
+    46	
+    47	The following entities are reserved for post-v0 work. They are **not** frozen
+    48	in `packages/core-data/src/entities.ts` and are listed here only to claim the
+    49	`entityType` slug ahead of time. Drivers and the `RepoEntity` union must not
+    50	reference them until they ship.
+    51	
+    52	| Entity | syncScope 计划值 | 预计交付 | 备注 |
+    53	|---|---|---|---|
+    54	| `productivity.pomodoro_session` | `account-sync` | 待 plugin-productivity 番茄钟模块上线 | 与 `productivity.todo` 共享 label 维度 |
+    55	| `widgets.widget` | `device-local` | 待 plugin-widget 落地 | 桌面小组件配置,默认设备本地 |
+    56	| `account.device` | `account-sync` | 待 G2.4 device pairing 完成 | 用于 device list + remote revoke |
+    57	
+    58	## 3. Repository Interface 目标
+    59	
+    60	```ts
+    61	interface Repo<T extends RepoRecord> {
+    62	  get(id: string): Promise<T | undefined>;
+    63	  put(record: T): Promise<void>;
+    64	  delete(id: string): Promise<void>;
+    65	  list(query?: RepoListQuery<T>): Promise<T[]>;
+    66	  listByIndex<K extends keyof T>(
+    67	    field: K,
+    68	    value: T[K],
+    69	    query?: RepoListQuery<T>,
+    70	  ): Promise<T[]>;
+
+exec
+/bin/zsh -lc "nl -ba packages/core-data/src/organizer-layout-migration.ts | sed -n '1,280p'" in /Users/lijinlong/Desktop/AI_Desktop/XAI_Desktop
+exec
+/bin/zsh -lc "nl -ba docs/contracts/tauri-commands-v0.md | sed -n '30,220p'" in /Users/lijinlong/Desktop/AI_Desktop/XAI_Desktop
+ succeeded in 0ms:
+    30	Rust 是 label 生成权威。TS 侧不能手写除 public helper 以外的 label 拼接。
+    31	
+    32	## 3. Window Commands
+    33	
+    34	| Command | Owner | Allowed windows | Input | Output |
+    35	|---|---|---|---|---|
+    36	| `create_grid_window` | organizer/host | `main`,`control` | `{ gridId, rect }` | `GridWindowSnapshot` |
+    37	| `update_grid_window` | organizer/host | `main`,`control` | `{ gridId, rect }` | `GridWindowSnapshot` |
+    38	| `close_grid_window` | organizer/host | `main`,`control` | `{ gridId }` | `void` |
+    39	| `list_grid_windows` | organizer/host | `main`,`control` | `void` | `GridWindowSnapshot[]` |
+    40	| `focus_grid_window` | organizer/host | `main`,`control` | `{ gridId }` | `GridWindowSnapshot` |
+    41	
+    42	Target G1 output type:
+    43	
+    44	```ts
+    45	interface GridWindowSnapshot {
+    46	  gridId: string;
+    47	  label: `grid_${string}`;
+    48	  rect: Rect;
+    49	  visible: boolean;
+    50	}
+    51	```
+    52	
+    53	G1.1 implementation notes:
+    54	
+    55	- Rust is the only label generation point via `grid_{gridId}`.
+    56	- Invalid `gridId` values return `INVALID_GRID_ID`.
+    57	- Missing windows return `WINDOW_NOT_FOUND`.
+    58	- Native window failures return `WINDOW_NATIVE_ERROR`.
+    59	- Runtime allow-list `commands::window::WINDOW_ALLOWED_WINDOWS`
+    60	  (`main`, `control`) enforces the table above at the IPC boundary
+    61	  with `WINDOW_CAPABILITY_DENIED`. `grid_*` windows are intentionally
+    62	  excluded — a grid window must request lifecycle changes for itself
+    63	  via cross-window events routed through `control`, not by directly
+    64	  invoking `update_grid_window` / `close_grid_window` against another
+    65	  grid. Widget / pet / ai-cube / console are likewise rejected.
+    66	- The `window: tauri::WebviewWindow` argument is injected by the
+    67	  Tauri IPC layer; JS callers do NOT include it in the args payload
+    68	  (mirrors the crypto / database / keychain command pattern).
+    69	
+    70	## 4. File / Open Commands
+    71	
+    72	| Command | Owner | Allowed windows | Input | 说明 |
+    73	|---|---|---|---|---|
+    74	| `reveal_in_finder` | organizer (G3-E3) | `main`,`control`,`grid_*`,`console` | `{ input: { path } }` | validates path is non-empty / NUL-free / non-`..` / under user-reachable roots (`/Users/`, `/Applications/`, `/Volumes/`, `/tmp/` on macOS; `/tmp/` only on other targets); shells out to `open -R` with the lexically-normalized path on macOS |
+    75	| `open_path` | organizer (G3-E3) | `main`,`control`,`grid_*`,`console` | `{ input: { path } }` | same path-authorization rules as `reveal_in_finder`; user-initiated only; shells out to `open` with the lexically-normalized path on macOS |
+    76	| `resolve_alias` | organizer | `control`,`grid_*` | TBD | G1/G2 根据 sandbox 决定 |
+    77	| `create_security_scoped_bookmark` | organizer/account | `control`,`grid_*` | TBD | MAS path if required |
+    78	
+    79	文件 command 不允许静默扫描用户目录。所有 path access 必须来自用户 drop/open panel 或已授权 bookmark。
+    80	
+    81	`reveal_in_finder` / `open_path` enforce a runtime allow-list (`FINDER_ALLOWED_WINDOWS` in `commands/finder.rs`) AND a path-shape allow-list via `validate_user_path`:
+    82	
+    83	- Empty / whitespace-only / NUL-containing inputs → `E3005` (SyncInvalidInput).
+    84	- Relative paths or any `..` parent-dir segment (even when the raw string would normalize back into an allowed root, e.g. `/Users/me/../etc/passwd`) → `E3005`.
+    85	- Paths whose lexically-normalized form is NOT under one of the user-reachable roots (`/Users/`, `/Applications/`, `/Volumes/`, `/tmp/` on macOS; `/tmp/` only on other targets) → `E3004` (SyncCapabilityDenied). `/private/var/...`, `/etc/...`, `/System/...`, `/bin/...` are intentionally rejected until a full security-scoped bookmark store lands.
+    86	- On success the canonical (lexically-normalized) `PathBuf` is passed to `open` / `open -R`, not the raw input.
+    87	
+    88	Lexical normalization is used rather than `std::fs::canonicalize()` because the latter requires the path to exist on disk; full filesystem canonicalization is a follow-up once `create_security_scoped_bookmark` is wired.
+    89	
+    90	## 5. Clipboard Commands
+    91	
+    92	| Command | Owner | Allowed windows | 说明 |
+    93	|---|---|---|---|
+    94	| `clipboard_start_watching` | clipboard | `control`,`console` | 用户启用后 |
+    95	| `clipboard_stop_watching` | clipboard | `control`,`console` | privacy control |
+    96	| `clipboard_write_item` | clipboard | `control`,`console` | user action |
+    97	| `clipboard_get_item_preview` | clipboard | `control`,`console` | 不返回 secret app 内容 |
+    98	
+    99	Clipboard disabled-app policy 必须在写入历史前执行。
+   100	
+   101	## 6. Crypto / Keychain Commands
+   102	
+   103	Current source:
+   104	- `apps/desktop/src-tauri/src/commands/crypto.rs`
+   105	- `apps/desktop/src-tauri/src/commands/keychain.rs`
+   106	- `apps/desktop/src-tauri/capabilities/plugin-account-crypto.json`
+   107	- `apps/desktop/src-tauri/capabilities/plugin-account-keychain.json`
+   108	
+   109	| Command | Allowed windows | Security rule |
+   110	|---|---|---|
+   111	| `crypto_encrypt_for` | `account`,`control` | plaintext in,encrypted envelope out; key resolved in Rust |
+   112	| `crypto_wrap_dek_for_devices` | `account`,`control` | DEK handle only |
+   113	| `crypto_unwrap_dek_for_device` | `account`,`control` | returns handle,not raw key |
+   114	| `crypto_recovery_sign` | `account`,`control` | transcript signed in Rust |
+   115	| `secret_set` / `secret_get` / `secret_del` | `account`,`control` | Keychain scoped by account/device. Runtime `commands::keychain::KEYCHAIN_ALLOWED_WINDOWS` (`account`, `control`) check rejects any other origin (widget / pet / ai-cube / grid / main / console) with `E3004` before reaching the platform layer. |
+   116	
+   117	Raw DEK must never cross IPC. JS may hold opaque handle ids only.
+   118	
+   119	### 6.0.1 Keychain ↔ KeyVault opaque-handle boundary (G2.4)
+   120	
+   121	JS-visible Keychain surface is limited to the three `secret_*` commands;
+   122	JS-visible KeyVault surface is limited to `KeyHandleId` integers returned
+   123	from `crypto_*` commands. The ONE authorised crossing between the two —
+   124	"Keychain bytes → KeyVault handle" — lives in
+   125	`apps/desktop/src-tauri/src/crypto/keychain_handle.rs`:
+   126	
+   127	| Helper | Direction | Behaviour |
+   128	|---|---|---|
+   129	| `keychain_handle::load_kek_into_vault(key, vault)` | Keychain → KeyVault | `secret_get` then `KeyVault::insert_kek`. Zeroizes the byte buffer before returning. Result is only `KeyHandleId`. |
+   130	| `keychain_handle::insert_kek_from_bytes(bytes, vault)` | caller bytes → KeyVault | Same insertion + zeroize for callers that already hold bytes (e.g. recovery flow). |
+   131	
+   132	Rule (machine-enforced by code review + the dedicated tests):
+   133	
+   134	- `secret_get` MUST NOT be called by any Tauri command that exposes its
+   135	  return value to JS for KEK / DEK / device-private bytes. Such material
+   136	  must flow through `keychain_handle::*` so JS only ever sees a handle.
+   137	- `secret_get` is allowed to surface bytes to JS for **non-key material**:
+   138	  refresh tokens, account-id markers, encrypted recovery transcripts, etc.
+   139	
+   140	Rust-internal errors (do not cross IPC; calling Tauri commands that use
+   141	this bridge must map them to JS-visible `E11xx` / `E13xx` variants):
+   142	
+   143	- `KeychainHandleError::Keychain(AppError)` — passthrough from `secret_get`.
+   144	- `KeychainHandleError::InvalidKeyLength` — payload length is not exactly 32 bytes.
+   145	- `KeychainHandleError::KeyVault(KeyVaultError)` — vault insertion failure.
+   146	
+   147	## 6.1 Database Commands (G2.2 PoC)
+   148	
+   149	Current source:
+   150	- `apps/desktop/src-tauri/src/commands/database.rs`
+   151	- `packages/core-data/src/tauri-sqlite.ts` (TS driver factory)
+   152	- `apps/desktop/src-tauri/capabilities/plugin-data-database.json` (G2.5)
+   153	- `apps/desktop/src-tauri/capabilities/AUDIT.md` (full audit table)
+   154	
+   155	| Command | Allowed windows | Input | Output | Security rule |
+   156	|---|---|---|---|---|
+   157	| `db_init` | `main`,`control`,`grid_*`,`account` | `{ namespace }` | `{ namespace, path }` | Idempotent. Opens or creates `xai-repo-v0.db` under `app_data_dir`. |
+   158	| `db_put` | same | `{ input: { namespace, id, json, updatedAtMs } }` | `void` | Upsert. `json` payload is opaque; raw bytes do not cross IPC. |
+   159	| `db_get` | same | `{ input: { namespace, id } }` | `string \| null` | Returns the stored JSON or `null` if absent. |
+   160	| `db_list` | same | `{ input: { namespace } }` | `string[]` | All payloads in the namespace, sorted by id. |
+   161	| `db_delete` | same | `{ input: { namespace, id } }` | `void` | Idempotent. |
+   162	| `db_put_batch` | same | `{ input: { namespace, entries: [{ op: "put" \| "delete", id, json?, updatedAtMs? }] } }` | `void` | Atomic. Wraps every entry in one SQLite `BEGIN`/`COMMIT`. Any validation or backend failure rolls back the whole batch. Required by the sync-outbox to commit the entity row and its outbox row together (G2.6 P0 fix). |
+   163	
+   164	PoC scope:
+   165	- Plain SQLite via `rusqlite` (bundled-sqlcipher build but no `PRAGMA key` applied).
+   166	- SQLCipher PRAGMA path is exercised by `apps/desktop/src-tauri/src/crypto/sqlcipher.rs` and will be wired into `db_init` once G2.4 publishes a stable opaque KEK handle.
+   167	- Cross-namespace transactions are not exposed; the TS `createTauriRepo` shim runs `transaction(fn)` callbacks against a single namespace and dispatches all buffered writes through `db_put_batch`.
+   168	- Namespace must match `[A-Za-z0-9._:-]+` and be ≤ 128 chars. Id must be 1..=256 chars.
+   169	- Errors: `E1300` (not initialized), `E1301` (invalid input), `E1302` (backend SQLite/FS error).
+   170	- Feature-gated: registered only when the desktop crate is built with `--features crypto` (the gate that also enables `rusqlite`).
+   171	
+   172	## 6.2 Sync Menubar Commands
+   173	
+   174	Current source:
+   175	- `apps/desktop/src-tauri/src/commands/menubar.rs`
+   176	
+   177	| Command | Allowed windows | Input | Output | Security rule |
+   178	|---|---|---|---|---|
+   179	| `sync_set_menubar_status` | `control`, `main` | `{ payload: { status, kind?, message?, frame? } }` | `void` | Runtime allow-list `commands::menubar::MENUBAR_ALLOWED_WINDOWS` rejects any other origin (`grid_*`, `widget_*`, `pet`, `ai_cube`, `console`, `account`) with `E3004` before the tray icon / tooltip is touched. The menubar is a global UI surface, so only the sync supervisor in `control` and the main shell are allowed to flip it. |
+   180	
+   181	The `window: tauri::WebviewWindow` arg is injected by Tauri; JS callers
+   182	do NOT include it in the args payload.
+   183	
+   184	## 7. Capability Files
+   185	
+   186	| File | Purpose |
+   187	|---|---|
+   188	| `default.json` | main/control/grid baseline window capability |
+   189	| `plugin-account-crypto.json` | account/control crypto marker + command-side allowlist |
+   190	| `plugin-account-keychain.json` | account/control keychain marker + command-side allowlist |
+   191	| `plugin-data-database.json` | main/control/grid/account/console Repository v0 marker + runtime allowlist (G2.5) |
+   192	
+   193	Full audit table: `apps/desktop/src-tauri/capabilities/AUDIT.md`.
+   194	
+   195	G2.5 invariants now enforced:
+   196	
+   197	- Every JS-callable command has a capability file declaring its allowed
+   198	  windows.
+   199	- The following command groups carry a runtime
+   200	  `ensure_*_allowed(label)` defence-in-depth check that mirrors the
+   201	  capability file scope, so widget / pet / ai-cube windows cannot
+   202	  invoke them even if a future capability file widening lands by
+   203	  mistake:
+   204	
+   205	  | Command group | Runtime allow-list constant | Source |
+   206	  |---|---|---|
+   207	  | `crypto_*` | `CRYPTO_ALLOWED_WINDOWS` | `commands/crypto.rs` |
+   208	  | `secret_*` | `KEYCHAIN_ALLOWED_WINDOWS` | `commands/keychain.rs` |
+   209	  | `db_*` | `DATABASE_ALLOWED_WINDOWS` | `commands/database.rs` |
+   210	  | `reveal_in_finder`, `open_path` | `FINDER_ALLOWED_WINDOWS` | `commands/finder.rs` |
+   211	  | `create_grid_window`, `update_grid_window`, `close_grid_window`, `list_grid_windows`, `focus_grid_window` | `WINDOW_ALLOWED_WINDOWS` | `commands/window.rs` |
+   212	  | `sync_set_menubar_status` | `MENUBAR_ALLOWED_WINDOWS` | `commands/menubar.rs` |
+   213	
+   214	  Other commands (`clipboard_*`, etc.) currently rely on capability
+   215	  file scope alone — their runtime allow-lists are tracked under
+   216	  future hardening rows and not in v0.
+   217	
+   218	G2.7 (MAS signed runtime smoke) remains deferred under `xai-v1.deferred-gates.md`.
+   219	
+   220	## 8. Error Shape
+
+ succeeded in 0ms:
+     1	/**
+     2	 * Legacy `xai-desktop-layout` localStorage blob → Repository v0 migration.
+     3	 *
+     4	 * The Organizer originally serialised the entire desktop layout as one JSON
+     5	 * blob (`{ grids: GridBox[], items: DesktopItem[] }`) under the key
+     6	 * `xai-desktop-layout`. G2.3 splits that blob into typed Repository v0
+     7	 * records — `GridEntity` per grid and `GridItemEntity` per item.
+     8	 *
+     9	 * Guarantees:
+    10	 *
+    11	 * - **Repo-state idempotent.** Running the migration twice converges to the
+    12	 *   same repo state. Records whose meaningful fields are already byte-equal
+    13	 *   to what's stored are SKIPPED instead of re-`put` so that `updatedAt`
+    14	 *   never gets re-stamped on a no-op rerun (which would otherwise produce a
+    15	 *   spurious sync-conflict signal). Such records are reported via the
+    16	 *   `unchanged` counter; only records whose payload actually changed are
+    17	 *   counted toward `gridsMigrated` / `itemsMigrated`.
+    18	 * - **Validation-rejects counted separately.** Legacy items that fail
+    19	 *   positive validation (e.g. empty `filepath`, unsupported `kind`) are
+    20	 *   reported via the `skipped` counter, not silently dropped.
+    21	 * - **Non-destructive by default.** The legacy key is kept in
+    22	 *   `localStorage` unless the caller passes `removeLegacy: true`, so the
+    23	 *   user can roll back if SQLite is unavailable.
+    24	 * - **Pure data transform.** No Tauri / no React; safe to call from
+    25	 *   either side of the IPC boundary.
+    26	 */
+    27	
+    28	import { assertRepoRecord } from "./repo-utils";
+    29	import type {
+    30	  GridEntity,
+    31	  GridItemEntity,
+    32	} from "./entities";
+    33	import type { Repo } from "./types";
+    34	import type { StorageLike } from "./local-storage";
+    35	
+    36	export const LEGACY_LAYOUT_STORAGE_KEY = "xai-desktop-layout";
+    37	
+    38	/** Minimal shape of a record inside the legacy `grids[]` array. */
+    39	export interface LegacyGridBox {
+    40	  id: string;
+    41	  title: string;
+    42	  rect: { x: number; y: number; width: number; height: number };
+    43	  isLocked?: boolean;
+    44	  isFolded?: boolean;
+    45	  viewMode?: "grid" | "list";
+    46	  itemIds?: string[];
+    47	  themeColor?: string;
+    48	}
+    49	
+    50	/** Minimal shape of a record inside the legacy `items[]` array. */
+    51	export interface LegacyDesktopItem {
+    52	  id: string;
+    53	  filename: string;
+    54	  filepath: string;
+    55	  type: "file" | "folder" | "app";
+    56	  icon: string;
+    57	  size?: number;
+    58	  createdAt?: number;
+    59	}
+    60	
+    61	export interface LegacyOrganizerLayout {
+    62	  grids: LegacyGridBox[];
+    63	  items: LegacyDesktopItem[];
+    64	}
+    65	
+    66	export interface OrganizerLayoutMigrationOptions {
+    67	  storage: StorageLike;
+    68	  gridRepo: Repo<GridEntity>;
+    69	  itemRepo: Repo<GridItemEntity>;
+    70	  legacyKey?: string;
+    71	  nowIso?: () => string;
+    72	  removeLegacy?: boolean;
+    73	}
+    74	
+    75	export interface OrganizerLayoutMigrationResult {
+    76	  scanned: boolean;
+    77	  parsed: boolean;
+    78	  gridsMigrated: number;
+    79	  itemsMigrated: number;
+    80	  /**
+    81	   * Records whose meaningful fields equal what's already in the repo and
+    82	   * therefore did NOT trigger a re-`put` (C2). Rerunning against an
+    83	   * unchanged blob bumps `unchanged` instead of touching `updatedAt`.
+    84	   */
+    85	  unchanged: number;
+    86	  /**
+    87	   * Legacy items rejected by positive validation (A3): empty `filepath`,
+    88	   * unsupported `kind`, etc. Not counted toward `unchanged`.
+    89	   */
+    90	  skipped: number;
+    91	  removedLegacy: boolean;
+    92	}
+    93	
+    94	export async function migrateOrganizerLayoutToRepos(
+    95	  options: OrganizerLayoutMigrationOptions,
+    96	): Promise<OrganizerLayoutMigrationResult> {
+    97	  const legacyKey = options.legacyKey ?? LEGACY_LAYOUT_STORAGE_KEY;
+    98	  const raw = options.storage.getItem(legacyKey);
+    99	  if (raw === null) {
+   100	    return emptyResult();
+   101	  }
+   102	
+   103	  let layout: LegacyOrganizerLayout;
+   104	  try {
+   105	    layout = JSON.parse(raw) as LegacyOrganizerLayout;
+   106	  } catch {
+   107	    return { ...emptyResult(), scanned: true };
+   108	  }
+   109	
+   110	  if (
+   111	    !layout ||
+   112	    !Array.isArray(layout.grids) ||
+   113	    !Array.isArray(layout.items)
+   114	  ) {
+   115	    return { ...emptyResult(), scanned: true };
+   116	  }
+   117	
+   118	  const nowIso = options.nowIso ?? (() => new Date().toISOString());
+   119	  const timestamp = nowIso();
+   120	
+   121	  let gridsMigrated = 0;
+   122	  let itemsMigrated = 0;
+   123	  let unchanged = 0;
+   124	  let skipped = 0;
+   125	
+   126	  for (const legacyGrid of layout.grids) {
+   127	    if (!legacyGrid || typeof legacyGrid.id !== "string") continue;
+   128	    const record = toGridEntity(legacyGrid, timestamp);
+   129	
+   130	    // C2 — unchanged-skip: avoid re-stamping updatedAt on a no-op rerun.
+   131	    const existing = await options.gridRepo.get(record.id);
+   132	    if (existing && isGridRecordEqual(existing, record)) {
+   133	      unchanged += 1;
+   134	      continue;
+   135	    }
+   136	
+   137	    assertRepoRecord(record);
+   138	    await options.gridRepo.put(record);
+   139	    gridsMigrated += 1;
+   140	  }
+   141	
+   142	  for (const legacyItem of layout.items) {
+   143	    if (!legacyItem || typeof legacyItem.id !== "string") continue;
+   144	    const gridId = findOwningGridId(legacyItem.id, layout.grids);
+   145	    if (!gridId) continue;
+   146	    const record = toGridItemEntity(legacyItem, gridId, timestamp);
+   147	
+   148	    // A3 — positive validation rejected this legacy item.
+   149	    if (!record) {
+   150	      skipped += 1;
+   151	      continue;
+   152	    }
+   153	
+   154	    // C2 — unchanged-skip (same rationale as the grid loop).
+   155	    const existing = await options.itemRepo.get(record.id);
+   156	    if (existing && isItemRecordEqual(existing, record)) {
+   157	      unchanged += 1;
+   158	      continue;
+   159	    }
+   160	
+   161	    assertRepoRecord(record);
+   162	    await options.itemRepo.put(record);
+   163	    itemsMigrated += 1;
+   164	  }
+   165	
+   166	  let removedLegacy = false;
+   167	  if (options.removeLegacy) {
+   168	    options.storage.removeItem(legacyKey);
+   169	    removedLegacy = true;
+   170	  }
+   171	
+   172	  return {
+   173	    scanned: true,
+   174	    parsed: true,
+   175	    gridsMigrated,
+   176	    itemsMigrated,
+   177	    unchanged,
+   178	    skipped,
+   179	    removedLegacy,
+   180	  };
+   181	}
+   182	
+   183	function emptyResult(): OrganizerLayoutMigrationResult {
+   184	  return {
+   185	    scanned: false,
+   186	    parsed: false,
+   187	    gridsMigrated: 0,
+   188	    itemsMigrated: 0,
+   189	    unchanged: 0,
+   190	    skipped: 0,
+   191	    removedLegacy: false,
+   192	  };
+   193	}
+   194	
+   195	/**
+   196	 * Returns true when the meaningful Grid fields of `existing` match those of
+   197	 * the freshly-computed `candidate`. Excludes `createdAt` / `updatedAt` so a
+   198	 * rerun of the migration does not re-stamp timestamps and trigger a false
+   199	 * sync-conflict downstream (C2).
+   200	 */
+   201	function isGridRecordEqual(existing: GridEntity, candidate: GridEntity): boolean {
+   202	  return (
+   203	    existing.entityType === candidate.entityType &&
+   204	    existing.schemaVersion === candidate.schemaVersion &&
+   205	    existing.syncScope === candidate.syncScope &&
+   206	    existing.title === candidate.title &&
+   207	    existing.isLocked === candidate.isLocked &&
+   208	    existing.isFolded === candidate.isFolded &&
+   209	    existing.viewMode === candidate.viewMode &&
+   210	    existing.themeColor === candidate.themeColor &&
+   211	    existing.rect.x === candidate.rect.x &&
+   212	    existing.rect.y === candidate.rect.y &&
+   213	    existing.rect.width === candidate.rect.width &&
+   214	    existing.rect.height === candidate.rect.height &&
+   215	    arraysEqual(existing.itemIds, candidate.itemIds)
+   216	  );
+   217	}
+   218	
+   219	/**
+   220	 * Like {@link isGridRecordEqual} but for `GridItemEntity`. Excludes
+   221	 * `createdAt` / `updatedAt`.
+   222	 */
+   223	function isItemRecordEqual(
+   224	  existing: GridItemEntity,
+   225	  candidate: GridItemEntity,
+   226	): boolean {
+   227	  return (
+   228	    existing.entityType === candidate.entityType &&
+   229	    existing.schemaVersion === candidate.schemaVersion &&
+   230	    existing.syncScope === candidate.syncScope &&
+   231	    existing.gridId === candidate.gridId &&
+   232	    existing.filename === candidate.filename &&
+   233	    existing.filepath === candidate.filepath &&
+   234	    existing.kind === candidate.kind &&
+   235	    existing.icon === candidate.icon &&
+   236	    existing.size === candidate.size
+   237	  );
+   238	}
+   239	
+   240	function arraysEqual(a: readonly string[], b: readonly string[]): boolean {
+   241	  if (a.length !== b.length) return false;
+   242	  for (let i = 0; i < a.length; i += 1) {
+   243	    if (a[i] !== b[i]) return false;
+   244	  }
+   245	  return true;
+   246	}
+   247	
+   248	function toGridEntity(
+   249	  legacy: LegacyGridBox,
+   250	  timestamp: string,
+   251	): GridEntity {
+   252	  return {
+   253	    id: legacy.id,
+   254	    entityType: "organizer.grid",
+   255	    schemaVersion: 1,
+   256	    createdAt: timestamp,
+   257	    updatedAt: timestamp,
+   258	    syncScope: "account-sync",
+   259	    title: legacy.title ?? "Untitled",
+   260	    rect: {
+   261	      x: numberOrZero(legacy.rect?.x),
+   262	      y: numberOrZero(legacy.rect?.y),
+   263	      width: numberOrDefault(legacy.rect?.width, 240),
+   264	      height: numberOrDefault(legacy.rect?.height, 320),
+   265	    },
+   266	    isLocked: Boolean(legacy.isLocked),
+   267	    isFolded: Boolean(legacy.isFolded),
+   268	    viewMode: legacy.viewMode === "list" ? "list" : "grid",
+   269	    itemIds: Array.isArray(legacy.itemIds) ? [...legacy.itemIds] : [],
+   270	    themeColor: legacy.themeColor,
+   271	  };
+   272	}
+   273	
+   274	function toGridItemEntity(
+   275	  legacy: LegacyDesktopItem,
+   276	  gridId: string,
+   277	  timestamp: string,
+   278	): GridItemEntity | null {
+   279	  const rawKind = (legacy as { type?: string }).type ?? "file";
+   280	  // url items are not produced by this adapter — reject defensively to
+
+exec
+/bin/zsh -lc "nl -ba apps/desktop/src-tauri/src/commands/menubar.rs | sed -n '1,340p'" in /Users/lijinlong/Desktop/AI_Desktop/XAI_Desktop
+ succeeded in 0ms:
+     1	use crate::error::{AppError, AppResult};
+     2	use serde::Deserialize;
+     3	use std::sync::Mutex;
+     4	use tauri::image::Image;
+     5	use tauri::tray::{MouseButton, MouseButtonState, TrayIcon, TrayIconBuilder, TrayIconEvent};
+     6	use tauri::{AppHandle, Manager, State, Wry};
+     7	
+     8	const TRAY_ID: &str = "sync-status";
+     9	const ICON_SIZE: u32 = 18;
+    10	
+    11	/// Windows allowed to invoke `sync_set_menubar_status`.
+    12	///
+    13	/// The menubar (tray) is a global UI surface — the only legitimate
+    14	/// drivers are the sync supervisor running in `control` and the main
+    15	/// application shell in `main`. Grid windows, widgets, the pet,
+    16	/// ai-cube, console etc. MUST NOT be able to flip the menubar status
+    17	/// directly; the runtime check is a defence-in-depth layer on top of
+    18	/// the capability file scope.
+    19	pub(crate) const MENUBAR_ALLOWED_WINDOWS: &[&str] = &["control", "main"];
+    20	
+    21	fn is_menubar_window_allowed(label: &str) -> bool {
+    22	    MENUBAR_ALLOWED_WINDOWS.contains(&label)
+    23	}
+    24	
+    25	fn ensure_menubar_window_allowed(label: &str) -> AppResult<()> {
+    26	    if is_menubar_window_allowed(label) {
+    27	        return Ok(());
+    28	    }
+    29	    Err(AppError::SyncCapabilityDenied(format!(
+    30	        "window `{label}` is not allowed to invoke sync_set_menubar_status"
+    31	    )))
+    32	}
+    33	
+    34	#[derive(Default)]
+    35	pub struct SyncMenuBarState {
+    36	    tray: Mutex<Option<TrayIcon<Wry>>>,
+    37	    status: Mutex<SyncMenuBarStatus>,
+    38	}
+    39	
+    40	#[derive(Clone, Copy, Debug, Default, Deserialize, PartialEq, Eq)]
+    41	#[serde(rename_all = "lowercase")]
+    42	pub enum SyncMenuBarStatus {
+    43	    #[default]
+    44	    Idle,
+    45	    Syncing,
+    46	    Success,
+    47	    Error,
+    48	}
+    49	
+    50	#[derive(Clone, Debug, Deserialize)]
+    51	#[serde(rename_all = "camelCase")]
+    52	pub struct SyncMenuBarPayload {
+    53	    status: SyncMenuBarStatus,
+    54	    kind: Option<String>,
+    55	    message: Option<String>,
+    56	    frame: Option<u8>,
+    57	}
+    58	
+    59	pub fn install_sync_menubar(app: &AppHandle) -> AppResult<()> {
+    60	    let tray = TrayIconBuilder::with_id(TRAY_ID)
+    61	        .icon(icon_for(SyncMenuBarStatus::Idle, 0))
+    62	        .tooltip(tooltip_for(SyncMenuBarStatus::Idle, None, None))
+    63	        .show_menu_on_left_click(false)
+    64	        .on_tray_icon_event(|tray, event| {
+    65	            if is_error_click(&event) && tray_is_error(tray.app_handle()) {
+    66	                if let Some(window) = tray.app_handle().get_webview_window("main") {
+    67	                    let _ = window.show();
+    68	                    let _ = window.set_focus();
+    69	                }
+    70	            }
+    71	        })
+    72	        .build(app)
+    73	        .map_err(|error| AppError::Internal(error.to_string()))?;
+    74	
+    75	    let state = app.state::<SyncMenuBarState>();
+    76	    let mut guard = state
+    77	        .tray
+    78	        .lock()
+    79	        .map_err(|error| AppError::Internal(error.to_string()))?;
+    80	    *guard = Some(tray);
+    81	    Ok(())
+    82	}
+    83	
+    84	#[tauri::command]
+    85	pub async fn sync_set_menubar_status(
+    86	    window: tauri::WebviewWindow,
+    87	    state: State<'_, SyncMenuBarState>,
+    88	    payload: SyncMenuBarPayload,
+    89	) -> AppResult<()> {
+    90	    ensure_menubar_window_allowed(window.label())?;
+    91	
+    92	    {
+    93	        let mut status = state
+    94	            .status
+    95	            .lock()
+    96	            .map_err(|error| AppError::Internal(error.to_string()))?;
+    97	        *status = payload.status;
+    98	    }
+    99	
+   100	    let guard = state
+   101	        .tray
+   102	        .lock()
+   103	        .map_err(|error| AppError::Internal(error.to_string()))?;
+   104	    if let Some(tray) = guard.as_ref() {
+   105	        tray.set_icon(Some(icon_for(payload.status, payload.frame.unwrap_or(0))))
+   106	            .map_err(|error| AppError::Internal(error.to_string()))?;
+   107	        tray.set_tooltip(Some(tooltip_for(
+   108	            payload.status,
+   109	            payload.kind.as_deref(),
+   110	            payload.message.as_deref(),
+   111	        )))
+   112	        .map_err(|error| AppError::Internal(error.to_string()))?;
+   113	    }
+   114	
+   115	    Ok(())
+   116	}
+   117	
+   118	fn is_error_click(event: &TrayIconEvent) -> bool {
+   119	    matches!(
+   120	        event,
+   121	        TrayIconEvent::Click {
+   122	            button: MouseButton::Left,
+   123	            button_state: MouseButtonState::Down,
+   124	            ..
+   125	        }
+   126	    )
+   127	}
+   128	
+   129	fn tray_is_error(app: &AppHandle) -> bool {
+   130	    app.try_state::<SyncMenuBarState>()
+   131	        .and_then(|state| state.status.lock().ok().map(|status| *status))
+   132	        == Some(SyncMenuBarStatus::Error)
+   133	}
+   134	
+   135	fn icon_for(status: SyncMenuBarStatus, frame: u8) -> Image<'static> {
+   136	    let rgba = match status {
+   137	        SyncMenuBarStatus::Idle => dot_icon([132, 142, 154, 255], None),
+   138	        SyncMenuBarStatus::Syncing => spinner_icon(frame, [37, 99, 235, 255]),
+   139	        SyncMenuBarStatus::Success => dot_icon([34, 197, 94, 255], Some([15, 118, 110, 255])),
+   140	        SyncMenuBarStatus::Error => error_icon([220, 38, 38, 255]),
+   141	    };
+   142	    Image::new_owned(rgba, ICON_SIZE, ICON_SIZE)
+   143	}
+   144	
+   145	fn tooltip_for(status: SyncMenuBarStatus, kind: Option<&str>, message: Option<&str>) -> String {
+   146	    match status {
+   147	        SyncMenuBarStatus::Idle => "Sync idle".to_string(),
+   148	        SyncMenuBarStatus::Syncing => format!("Syncing {}", kind.unwrap_or("changes")),
+   149	        SyncMenuBarStatus::Success => message.unwrap_or("Sync completed").to_string(),
+   150	        SyncMenuBarStatus::Error => format!(
+   151	            "Sync error: {}. Click to focus X Desktop.",
+   152	            message.unwrap_or("unknown error")
+   153	        ),
+   154	    }
+   155	}
+   156	
+   157	fn dot_icon(primary: [u8; 4], accent: Option<[u8; 4]>) -> Vec<u8> {
+   158	    let mut rgba = vec![0; (ICON_SIZE * ICON_SIZE * 4) as usize];
+   159	    let center = (ICON_SIZE as f32 - 1.0) / 2.0;
+   160	    let radius = 6.2;
+   161	    let accent_radius = 2.4;
+   162	
+   163	    for y in 0..ICON_SIZE {
+   164	        for x in 0..ICON_SIZE {
+   165	            let dx = x as f32 - center;
+   166	            let dy = y as f32 - center;
+   167	            let distance = (dx * dx + dy * dy).sqrt();
+   168	            if distance <= radius {
+   169	                set_pixel(&mut rgba, x, y, primary);
+   170	            }
+   171	            if let Some(color) = accent {
+   172	                let adx = x as f32 - (center + 2.5);
+   173	                let ady = y as f32 - (center - 2.5);
+   174	                if (adx * adx + ady * ady).sqrt() <= accent_radius {
+   175	                    set_pixel(&mut rgba, x, y, color);
+   176	                }
+   177	            }
+   178	        }
+   179	    }
+   180	
+   181	    rgba
+   182	}
+   183	
+   184	fn spinner_icon(frame: u8, primary: [u8; 4]) -> Vec<u8> {
+   185	    let mut rgba = vec![0; (ICON_SIZE * ICON_SIZE * 4) as usize];
+   186	    let center = (ICON_SIZE as f32 - 1.0) / 2.0;
+   187	    let bright_index = (frame % 4) as usize;
+   188	    let points = [(9, 2), (16, 9), (9, 16), (2, 9)];
+   189	
+   190	    for (index, (x, y)) in points.iter().enumerate() {
+   191	        let alpha = if index == bright_index { 255 } else { 90 };
+   192	        let color = [primary[0], primary[1], primary[2], alpha];
+   193	        draw_disc(&mut rgba, *x, *y, 2.5, color);
+   194	    }
+   195	    draw_disc(
+   196	        &mut rgba,
+   197	        center.round() as u32,
+   198	        center.round() as u32,
+   199	        1.7,
+   200	        [primary[0], primary[1], primary[2], 130],
+   201	    );
+   202	
+   203	    rgba
+   204	}
+   205	
+   206	fn error_icon(primary: [u8; 4]) -> Vec<u8> {
+   207	    let mut rgba = dot_icon(primary, None);
+   208	    for y in 5..12 {
+   209	        draw_disc(&mut rgba, 9, y, 1.0, [255, 255, 255, 255]);
+   210	    }
+   211	    draw_disc(&mut rgba, 9, 14, 1.2, [255, 255, 255, 255]);
+   212	    rgba
+   213	}
+   214	
+   215	fn draw_disc(rgba: &mut [u8], center_x: u32, center_y: u32, radius: f32, color: [u8; 4]) {
+   216	    for y in 0..ICON_SIZE {
+   217	        for x in 0..ICON_SIZE {
+   218	            let dx = x as f32 - center_x as f32;
+   219	            let dy = y as f32 - center_y as f32;
+   220	            if (dx * dx + dy * dy).sqrt() <= radius {
+   221	                set_pixel(rgba, x, y, color);
+   222	            }
+   223	        }
+   224	    }
+   225	}
+   226	
+   227	fn set_pixel(rgba: &mut [u8], x: u32, y: u32, color: [u8; 4]) {
+   228	    let index = ((y * ICON_SIZE + x) * 4) as usize;
+   229	    rgba[index..index + 4].copy_from_slice(&color);
+   230	}
+   231	
+   232	#[cfg(test)]
+   233	mod tests {
+   234	    use super::*;
+   235	
+   236	    #[test]
+   237	    fn generated_icons_have_expected_dimensions() {
+   238	        for status in [
+   239	            SyncMenuBarStatus::Idle,
+   240	            SyncMenuBarStatus::Syncing,
+   241	            SyncMenuBarStatus::Success,
+   242	            SyncMenuBarStatus::Error,
+   243	        ] {
+   244	            let icon = icon_for(status, 2);
+   245	            assert_eq!(icon.width(), ICON_SIZE);
+   246	            assert_eq!(icon.height(), ICON_SIZE);
+   247	            assert_eq!(icon.rgba().len(), (ICON_SIZE * ICON_SIZE * 4) as usize);
+   248	            assert!(icon.rgba().iter().any(|channel| *channel != 0));
+   249	        }
+   250	    }
+   251	
+   252	    #[test]
+   253	    fn error_tooltip_is_clickable_instruction() {
+   254	        let tooltip = tooltip_for(SyncMenuBarStatus::Error, Some("pull"), Some("E3015"));
+   255	        assert!(tooltip.contains("E3015"));
+   256	        assert!(tooltip.contains("Click"));
+   257	    }
+   258	
+   259	    #[test]
+   260	    fn menubar_allowlist_admits_control_main() {
+   261	        for label in MENUBAR_ALLOWED_WINDOWS {
+   262	            assert!(
+   263	                is_menubar_window_allowed(label),
+   264	                "expected `{label}` to be admitted"
+   265	            );
+   266	            assert!(ensure_menubar_window_allowed(label).is_ok());
+   267	        }
+   268	    }
+   269	
+   270	    #[test]
+   271	    fn menubar_allowlist_rejects_other() {
+   272	        for label in [
+   273	            "grid_xxx",
+   274	            "grid_",
+   275	            "widget_clock",
+   276	            "pet",
+   277	            "ai_cube",
+   278	            "console",
+   279	            "account",
+   280	            "unknown",
+   281	        ] {
+   282	            assert!(
+   283	                !is_menubar_window_allowed(label),
+   284	                "expected `{label}` to be rejected"
+   285	            );
+   286	            let err = ensure_menubar_window_allowed(label).unwrap_err();
+   287	            match err {
+   288	                AppError::SyncCapabilityDenied(msg) => {
+   289	                    assert!(
+   290	                        msg.contains(label),
+   291	                        "error message `{msg}` should mention `{label}`"
+   292	                    );
+   293	                    assert!(msg.contains("sync_set_menubar_status"));
+   294	                }
+   295	                other => panic!("unexpected error for `{label}`: {other:?}"),
+   296	            }
+   297	        }
+   298	    }
+   299	}
+
+exec
+/bin/zsh -lc "nl -ba packages/core-data/tests/organizer-layout-migration.test.ts | sed -n '1,360p'" in /Users/lijinlong/Desktop/AI_Desktop/XAI_Desktop
+ succeeded in 0ms:
+     1	import { describe, expect, it } from "vitest";
+     2	
+     3	import {
+     4	  LEGACY_LAYOUT_STORAGE_KEY,
+     5	  migrateOrganizerLayoutToRepos,
+     6	  type LegacyOrganizerLayout,
+     7	} from "../src/organizer-layout-migration";
+     8	import { createInMemoryRepo } from "../src/testing";
+     9	import type { GridEntity, GridItemEntity } from "../src/entities";
+    10	import type { StorageLike } from "../src/local-storage";
+    11	
+    12	function fakeStorage(initial: Record<string, string> = {}): StorageLike {
+    13	  const map = new Map(Object.entries(initial));
+    14	  return {
+    15	    get length() {
+    16	      return map.size;
+    17	    },
+    18	    key(index: number) {
+    19	      return [...map.keys()][index] ?? null;
+    20	    },
+    21	    getItem(key: string) {
+    22	      return map.get(key) ?? null;
+    23	    },
+    24	    removeItem(key: string) {
+    25	      map.delete(key);
+    26	    },
+    27	  };
+    28	}
+    29	
+    30	function exampleLayout(): LegacyOrganizerLayout {
+    31	  return {
+    32	    grids: [
+    33	      {
+    34	        id: "grid-1",
+    35	        title: "Today",
+    36	        rect: { x: 24, y: 48, width: 320, height: 480 },
+    37	        isLocked: false,
+    38	        isFolded: false,
+    39	        viewMode: "grid",
+    40	        itemIds: ["item-1", "item-2"],
+    41	      },
+    42	      {
+    43	        id: "grid-2",
+    44	        title: "Inbox",
+    45	        rect: { x: 360, y: 48, width: 280, height: 360 },
+    46	        viewMode: "list",
+    47	        itemIds: [],
+    48	      },
+    49	    ],
+    50	    items: [
+    51	      {
+    52	        id: "item-1",
+    53	        filename: "draft.md",
+    54	        filepath: "/Users/me/draft.md",
+    55	        type: "file",
+    56	        icon: "doc.text",
+    57	        size: 1024,
+    58	      },
+    59	      {
+    60	        id: "item-2",
+    61	        filename: "Notes",
+    62	        filepath: "/Users/me/Notes",
+    63	        type: "folder",
+    64	        icon: "folder",
+    65	      },
+    66	      // An item with no owning grid — must be dropped.
+    67	      {
+    68	        id: "orphan",
+    69	        filename: "lost",
+    70	        filepath: "/Users/me/lost",
+    71	        type: "file",
+    72	        icon: "doc",
+    73	      },
+    74	    ],
+    75	  };
+    76	}
+    77	
+    78	describe("migrateOrganizerLayoutToRepos", () => {
+    79	  it("emits typed Grid/GridItem records for every layout entry with an owner", async () => {
+    80	    const storage = fakeStorage({
+    81	      [LEGACY_LAYOUT_STORAGE_KEY]: JSON.stringify(exampleLayout()),
+    82	    });
+    83	    const gridRepo = createInMemoryRepo<GridEntity>({ namespace: "grids" });
+    84	    const itemRepo = createInMemoryRepo<GridItemEntity>({
+    85	      namespace: "items",
+    86	    });
+    87	
+    88	    const result = await migrateOrganizerLayoutToRepos({
+    89	      storage,
+    90	      gridRepo,
+    91	      itemRepo,
+    92	      nowIso: () => "2026-05-20T00:00:00.000Z",
+    93	    });
+    94	    expect(result).toEqual({
+    95	      scanned: true,
+    96	      parsed: true,
+    97	      gridsMigrated: 2,
+    98	      itemsMigrated: 2,
+    99	      unchanged: 0,
+   100	      skipped: 0,
+   101	      removedLegacy: false,
+   102	      skipped: 0,
+   103	    });
+   104	
+   105	    const grids = await gridRepo.list({
+   106	      orderBy: { field: "id", direction: "asc" },
+   107	    });
+   108	    expect(grids).toEqual([
+   109	      expect.objectContaining({
+   110	        id: "grid-1",
+   111	        entityType: "organizer.grid",
+   112	        title: "Today",
+   113	        viewMode: "grid",
+   114	        itemIds: ["item-1", "item-2"],
+   115	      }),
+   116	      expect.objectContaining({
+   117	        id: "grid-2",
+   118	        viewMode: "list",
+   119	        itemIds: [],
+   120	      }),
+   121	    ]);
+   122	
+   123	    const items = await itemRepo.list({
+   124	      orderBy: { field: "id", direction: "asc" },
+   125	    });
+   126	    expect(items.map((it) => it.id)).toEqual(["item-1", "item-2"]);
+   127	    expect(items[0]).toMatchObject({
+   128	      entityType: "organizer.item",
+   129	      gridId: "grid-1",
+   130	      kind: "file",
+   131	      filepath: "/Users/me/draft.md",
+   132	    });
+   133	    expect(items[1]).toMatchObject({
+   134	      gridId: "grid-1",
+   135	      kind: "folder",
+   136	    });
+   137	  });
+   138	
+   139	  it("is repo-state idempotent when rerun against the same legacy blob", async () => {
+   140	    const storage = fakeStorage({
+   141	      [LEGACY_LAYOUT_STORAGE_KEY]: JSON.stringify(exampleLayout()),
+   142	    });
+   143	    const gridRepo = createInMemoryRepo<GridEntity>({ namespace: "grids" });
+   144	    const itemRepo = createInMemoryRepo<GridItemEntity>({
+   145	      namespace: "items",
+   146	    });
+   147	    const run = () =>
+   148	      migrateOrganizerLayoutToRepos({
+   149	        storage,
+   150	        gridRepo,
+   151	        itemRepo,
+   152	        nowIso: () => "2026-05-20T00:00:00.000Z",
+   153	      });
+   154	
+   155	    await run();
+   156	    const after = await run();
+   157	    // C2: the second pass must NOT re-`put` records — it skips them via the
+   158	    // `unchanged` counter so `updatedAt` is not re-stamped (which would
+   159	    // otherwise look like a spurious sync conflict downstream).
+   160	    expect(after).toMatchObject({
+   161	      gridsMigrated: 0,
+   162	      itemsMigrated: 0,
+   163	      unchanged: 4,
+   164	      skipped: 0,
+   165	    });
+   166	    expect((await gridRepo.list()).length).toBe(2);
+   167	    expect((await itemRepo.list()).length).toBe(2);
+   168	  });
+   169	
+   170	  it("rerun against an unchanged blob increments `unchanged`, not `migrated`, and preserves `updatedAt`", async () => {
+   171	    const storage = fakeStorage({
+   172	      [LEGACY_LAYOUT_STORAGE_KEY]: JSON.stringify(exampleLayout()),
+   173	    });
+   174	    const gridRepo = createInMemoryRepo<GridEntity>({ namespace: "grids" });
+   175	    const itemRepo = createInMemoryRepo<GridItemEntity>({
+   176	      namespace: "items",
+   177	    });
+   178	
+   179	    // First run stamps `updatedAt` at T0.
+   180	    const firstStamp = "2026-05-20T00:00:00.000Z";
+   181	    await migrateOrganizerLayoutToRepos({
+   182	      storage,
+   183	      gridRepo,
+   184	      itemRepo,
+   185	      nowIso: () => firstStamp,
+   186	    });
+   187	    const firstGrids = await gridRepo.list({
+   188	      orderBy: { field: "id", direction: "asc" },
+   189	    });
+   190	    const firstItems = await itemRepo.list({
+   191	      orderBy: { field: "id", direction: "asc" },
+   192	    });
+   193	
+   194	    // Second run uses a different `nowIso` — if we accidentally re-`put`,
+   195	    // the stored `updatedAt` would advance to T1.
+   196	    const secondStamp = "2026-05-21T12:34:56.000Z";
+   197	    const result = await migrateOrganizerLayoutToRepos({
+   198	      storage,
+   199	      gridRepo,
+   200	      itemRepo,
+   201	      nowIso: () => secondStamp,
+   202	    });
+   203	
+   204	    expect(result).toEqual({
+   205	      scanned: true,
+   206	      parsed: true,
+   207	      gridsMigrated: 0,
+   208	      itemsMigrated: 0,
+   209	      unchanged: 4, // 2 grids + 2 owned items
+   210	      skipped: 0,
+   211	      removedLegacy: false,
+   212	    });
+   213	
+   214	    // Verify `updatedAt` was NOT touched on the no-op rerun.
+   215	    const secondGrids = await gridRepo.list({
+   216	      orderBy: { field: "id", direction: "asc" },
+   217	    });
+   218	    const secondItems = await itemRepo.list({
+   219	      orderBy: { field: "id", direction: "asc" },
+   220	    });
+   221	    for (let i = 0; i < firstGrids.length; i += 1) {
+   222	      expect(secondGrids[i].updatedAt).toBe(firstStamp);
+   223	      expect(secondGrids[i].updatedAt).not.toBe(secondStamp);
+   224	    }
+   225	    for (let i = 0; i < firstItems.length; i += 1) {
+   226	      expect(secondItems[i].updatedAt).toBe(firstStamp);
+   227	      expect(secondItems[i].updatedAt).not.toBe(secondStamp);
+   228	    }
+   229	  });
+   230	
+   231	  it("does not delete the legacy key by default", async () => {
+   232	    const storage = fakeStorage({
+   233	      [LEGACY_LAYOUT_STORAGE_KEY]: JSON.stringify(exampleLayout()),
+   234	    });
+   235	    await migrateOrganizerLayoutToRepos({
+   236	      storage,
+   237	      gridRepo: createInMemoryRepo<GridEntity>({ namespace: "grids" }),
+   238	      itemRepo: createInMemoryRepo<GridItemEntity>({ namespace: "items" }),
+   239	    });
+   240	    expect(storage.getItem(LEGACY_LAYOUT_STORAGE_KEY)).not.toBeNull();
+   241	  });
+   242	
+   243	  it("removes the legacy key when removeLegacy=true", async () => {
+   244	    const storage = fakeStorage({
+   245	      [LEGACY_LAYOUT_STORAGE_KEY]: JSON.stringify(exampleLayout()),
+   246	    });
+   247	    const result = await migrateOrganizerLayoutToRepos({
+   248	      storage,
+   249	      gridRepo: createInMemoryRepo<GridEntity>({ namespace: "grids" }),
+   250	      itemRepo: createInMemoryRepo<GridItemEntity>({ namespace: "items" }),
+   251	      removeLegacy: true,
+   252	    });
+   253	    expect(result.removedLegacy).toBe(true);
+   254	    expect(storage.getItem(LEGACY_LAYOUT_STORAGE_KEY)).toBeNull();
+   255	  });
+   256	
+   257	  it("drops items with an empty filepath and increments skipped", async () => {
+   258	    const layout: LegacyOrganizerLayout = {
+   259	      grids: [
+   260	        {
+   261	          id: "grid-1",
+   262	          title: "Today",
+   263	          rect: { x: 0, y: 0, width: 240, height: 320 },
+   264	          itemIds: ["good", "bad"],
+   265	        },
+   266	      ],
+   267	      items: [
+   268	        {
+   269	          id: "good",
+   270	          filename: "ok.md",
+   271	          filepath: "/Users/me/ok.md",
+   272	          type: "file",
+   273	          icon: "doc",
+   274	        },
+   275	        {
+   276	          id: "bad",
+   277	          filename: "missing",
+   278	          // Empty filepath → must be dropped.
+   279	          filepath: "",
+   280	          type: "file",
+   281	          icon: "doc",
+   282	        },
+   283	      ],
+   284	    };
+   285	    const storage = fakeStorage({
+   286	      [LEGACY_LAYOUT_STORAGE_KEY]: JSON.stringify(layout),
+   287	    });
+   288	    const gridRepo = createInMemoryRepo<GridEntity>({ namespace: "grids" });
+   289	    const itemRepo = createInMemoryRepo<GridItemEntity>({
+   290	      namespace: "items",
+   291	    });
+   292	
+   293	    const result = await migrateOrganizerLayoutToRepos({
+   294	      storage,
+   295	      gridRepo,
+   296	      itemRepo,
+   297	      nowIso: () => "2026-05-20T00:00:00.000Z",
+   298	    });
+   299	
+   300	    expect(result).toEqual({
+   301	      scanned: true,
+   302	      parsed: true,
+   303	      gridsMigrated: 1,
+   304	      itemsMigrated: 1,
+   305	      unchanged: 0,
+   306	      removedLegacy: false,
+   307	      skipped: 1,
+   308	    });
+   309	    const items = await itemRepo.list();
+   310	    expect(items.map((it) => it.id)).toEqual(["good"]);
+   311	  });
+   312	
+   313	  it("is a no-op when the legacy key is absent or malformed", async () => {
+   314	    const empty = fakeStorage();
+   315	    expect(
+   316	      await migrateOrganizerLayoutToRepos({
+   317	        storage: empty,
+   318	        gridRepo: createInMemoryRepo<GridEntity>({ namespace: "grids" }),
+   319	        itemRepo: createInMemoryRepo<GridItemEntity>({ namespace: "items" }),
+   320	      }),
+   321	    ).toMatchObject({ scanned: false, parsed: false });
+   322	
+   323	    const malformed = fakeStorage({
+   324	      [LEGACY_LAYOUT_STORAGE_KEY]: "{not json",
+   325	    });
+   326	    expect(
+   327	      await migrateOrganizerLayoutToRepos({
+   328	        storage: malformed,
+   329	        gridRepo: createInMemoryRepo<GridEntity>({ namespace: "grids" }),
+   330	        itemRepo: createInMemoryRepo<GridItemEntity>({ namespace: "items" }),
+   331	      }),
+   332	    ).toMatchObject({ scanned: true, parsed: false });
+   333	  });
+   334	});
+
+codex
+The code-side fix is present. I’m running the most relevant checks now to verify the commit’s test claims, especially the migration idempotency path and the new Rust allow-list tests.
+exec
+/bin/zsh -lc 'pnpm --filter @repo/core-data test' in /Users/lijinlong/Desktop/AI_Desktop/XAI_Desktop
+exec
+/bin/zsh -lc 'cargo test --manifest-path apps/desktop/src-tauri/Cargo.toml window_allowlist_admits_main_control window_allowlist_rejects_grid_widget menubar_allowlist_admits_control_main menubar_allowlist_rejects_other' in /Users/lijinlong/Desktop/AI_Desktop/XAI_Desktop
+exec
+/bin/zsh -lc 'pnpm --filter @repo/core-data check-types' in /Users/lijinlong/Desktop/AI_Desktop/XAI_Desktop
+ exited 1 in 1100ms:
+error: unexpected argument 'window_allowlist_rejects_grid_widget' found
+
+Usage: cargo test [OPTIONS] [TESTNAME] [-- [ARGS]...]
+
+For more information, try '--help'.
+
+ succeeded in 3005ms:
+
+> @repo/core-data@0.0.0 check-types /Users/lijinlong/Desktop/AI_Desktop/XAI_Desktop/packages/core-data
+> tsc --noEmit
+
+
+ succeeded in 6427ms:
+
+> @repo/core-data@0.0.0 test /Users/lijinlong/Desktop/AI_Desktop/XAI_Desktop/packages/core-data
+> vitest run
+
+
+ RUN  v3.2.4 /Users/lijinlong/Desktop/AI_Desktop/XAI_Desktop/packages/core-data
+
+11:53:57 AM [vite] (ssr) warning: Duplicate key "skipped" in object literal
+100 |        skipped: 0,
+101 |        removedLegacy: false,
+102 |        skipped: 0,
+    |        ^
+103 |      });
+104 |  
+
+  Plugin: vite:esbuild
+  File: /Users/lijinlong/Desktop/AI_Desktop/XAI_Desktop/packages/core-data/tests/organizer-layout-migration.test.ts
+ ✓ tests/keychain.test.ts (20 tests) 6ms
+ ✓ tests/tauri-sqlite.test.ts (7 tests) 18ms
+ ✓ tests/sync-outbox.test.ts (9 tests) 11ms
+ ✓ tests/entities.test.ts (6 tests) 17ms
+ ✓ tests/organizer-layout-migration.test.ts (7 tests) 17ms
+ ✓ tests/sqlite-repo.test.ts (12 tests) 21ms
+ ✓ tests/in-memory-repo.test.ts (15 tests) 23ms
+
+ Test Files  7 passed (7)
+      Tests  76 passed (76)
+   Start at  11:53:56
+   Duration  1.70s (transform 3.86s, setup 0ms, collect 4.31s, tests 112ms, environment 2ms, prepare 2.43s)
+
+
+codex
+The Rust invocation needed narrower test filters; rerunning those as separate patterns. The TypeScript jobs are still in flight.
+exec
+/bin/zsh -lc 'cargo test --manifest-path apps/desktop/src-tauri/Cargo.toml menubar_allowlist_' in /Users/lijinlong/Desktop/AI_Desktop/XAI_Desktop
+exec
+/bin/zsh -lc 'cargo test --manifest-path apps/desktop/src-tauri/Cargo.toml window_allowlist_' in /Users/lijinlong/Desktop/AI_Desktop/XAI_Desktop
+2026-05-20T18:54:07.151445Z ERROR codex_core::tools::router: error=write_stdin failed: Unknown process id 66256
+codex
+The TypeScript test claim holds; there is a warning in the touched test file, but not a failure. I’m finishing the Rust verification serially because the crate build lock made the parallel cargo jobs contend.
+ succeeded in 34357ms:
+   Compiling desktop v0.1.0 (/Users/lijinlong/Desktop/AI_Desktop/XAI_Desktop/apps/desktop/src-tauri)
+warning: variants `DatabaseNotInitialized`, `DatabaseInvalidInput`, and `DatabaseBackend` are never constructed
+  --> src/error.rs:74:5
+   |
+15 | pub enum AppError {
+   |          -------- variants in this enum
+...
+74 |     DatabaseNotInitialized,
+   |     ^^^^^^^^^^^^^^^^^^^^^^
+...
+78 |     DatabaseInvalidInput(String),
+   |     ^^^^^^^^^^^^^^^^^^^^
+...
+82 |     DatabaseBackend(String),
+   |     ^^^^^^^^^^^^^^^
+   |
+   = note: `AppError` has a derived impl for the trait `Debug`, but this is intentionally ignored during dead code analysis
+   = note: `#[warn(dead_code)]` (part of `#[warn(unused)]`) on by default
+
+warning: multiple variants are never constructed
+  --> src/error.rs:44:5
+   |
+15 | pub enum AppError {
+   |          -------- variants in this enum
+...
+44 |     KeychainUnsupportedPlatform,
+   |     ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+...
+48 |     SyncNotInitialized,
+   |     ^^^^^^^^^^^^^^^^^^
+...
+51 |     SyncAuthRequired,
+   |     ^^^^^^^^^^^^^^^^
+...
+54 |     SyncTransport(String),
+   |     ^^^^^^^^^^^^^
+...
+57 |     SyncConflict,
+   |     ^^^^^^^^^^^^
+...
+69 |     SyncCrypto(String),
+   |     ^^^^^^^^^^
+...
+74 |     DatabaseNotInitialized,
+   |     ^^^^^^^^^^^^^^^^^^^^^^
+...
+78 |     DatabaseInvalidInput(String),
+   |     ^^^^^^^^^^^^^^^^^^^^
+...
+82 |     DatabaseBackend(String),
+   |     ^^^^^^^^^^^^^^^
+   |
+   = note: `AppError` has a derived impl for the trait `Debug`, but this is intentionally ignored during dead code analysis
+   = note: `#[warn(dead_code)]` (part of `#[warn(unused)]`) on by default
+
+warning: constant `BUNDLE_ID` is never used
+  --> src/platform/macos/keychain.rs:24:11
+   |
+24 | pub const BUNDLE_ID: &str = "com.jinlong.desktop";
+   |           ^^^^^^^^^
+
+warning: struct `KeychainItemAttrs` is never constructed
+  --> src/platform/macos/keychain.rs:32:12
+   |
+32 | pub struct KeychainItemAttrs {
+   |            ^^^^^^^^^^^^^^^^^
+
+warning: enum `KeychainAccessibility` is never used
+  --> src/platform/macos/keychain.rs:43:10
+   |
+43 | pub enum KeychainAccessibility {
+   |          ^^^^^^^^^^^^^^^^^^^^^
+
+warning: function `build_item_attrs` is never used
+  --> src/platform/macos/keychain.rs:52:8
+   |
+52 | pub fn build_item_attrs() -> KeychainItemAttrs {
+   |        ^^^^^^^^^^^^^^^^
+
+warning: `desktop` (lib test) generated 1 warning
+warning: `desktop` (lib) generated 5 warnings
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 32.52s
+     Running unittests src/lib.rs (apps/desktop/src-tauri/target/debug/deps/desktop_lib-ff5361a3bfb57d15)
+
+running 2 tests
+test commands::window::tests::window_allowlist_admits_main_control ... ok
+test commands::window::tests::window_allowlist_rejects_grid_widget ... ok
+
+test result: ok. 2 passed; 0 failed; 0 ignored; 0 measured; 24 filtered out; finished in 0.00s
+
+     Running unittests src/main.rs (apps/desktop/src-tauri/target/debug/deps/desktop-6e10a2304337d3d4)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+
+ succeeded in 34372ms:
+    Blocking waiting for file lock on build directory
+warning: multiple variants are never constructed
+  --> src/error.rs:44:5
+   |
+15 | pub enum AppError {
+   |          -------- variants in this enum
+...
+44 |     KeychainUnsupportedPlatform,
+   |     ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+...
+48 |     SyncNotInitialized,
+   |     ^^^^^^^^^^^^^^^^^^
+...
+51 |     SyncAuthRequired,
+   |     ^^^^^^^^^^^^^^^^
+...
+54 |     SyncTransport(String),
+   |     ^^^^^^^^^^^^^
+...
+57 |     SyncConflict,
+   |     ^^^^^^^^^^^^
+...
+69 |     SyncCrypto(String),
+   |     ^^^^^^^^^^
+...
+74 |     DatabaseNotInitialized,
+   |     ^^^^^^^^^^^^^^^^^^^^^^
+...
+78 |     DatabaseInvalidInput(String),
+   |     ^^^^^^^^^^^^^^^^^^^^
+...
+82 |     DatabaseBackend(String),
+   |     ^^^^^^^^^^^^^^^
+   |
+   = note: `AppError` has a derived impl for the trait `Debug`, but this is intentionally ignored during dead code analysis
+   = note: `#[warn(dead_code)]` (part of `#[warn(unused)]`) on by default
+
+warning: constant `BUNDLE_ID` is never used
+  --> src/platform/macos/keychain.rs:24:11
+   |
+24 | pub const BUNDLE_ID: &str = "com.jinlong.desktop";
+   |           ^^^^^^^^^
+
+warning: struct `KeychainItemAttrs` is never constructed
+  --> src/platform/macos/keychain.rs:32:12
+   |
+32 | pub struct KeychainItemAttrs {
+   |            ^^^^^^^^^^^^^^^^^
+
+warning: enum `KeychainAccessibility` is never used
+  --> src/platform/macos/keychain.rs:43:10
+   |
+43 | pub enum KeychainAccessibility {
+   |          ^^^^^^^^^^^^^^^^^^^^^
+
+warning: function `build_item_attrs` is never used
+  --> src/platform/macos/keychain.rs:52:8
+   |
+52 | pub fn build_item_attrs() -> KeychainItemAttrs {
+   |        ^^^^^^^^^^^^^^^^
+
+warning: variants `DatabaseNotInitialized`, `DatabaseInvalidInput`, and `DatabaseBackend` are never constructed
+  --> src/error.rs:74:5
+   |
+15 | pub enum AppError {
+   |          -------- variants in this enum
+...
+74 |     DatabaseNotInitialized,
+   |     ^^^^^^^^^^^^^^^^^^^^^^
+...
+78 |     DatabaseInvalidInput(String),
+   |     ^^^^^^^^^^^^^^^^^^^^
+...
+82 |     DatabaseBackend(String),
+   |     ^^^^^^^^^^^^^^^
+   |
+   = note: `AppError` has a derived impl for the trait `Debug`, but this is intentionally ignored during dead code analysis
+   = note: `#[warn(dead_code)]` (part of `#[warn(unused)]`) on by default
+
+warning: `desktop` (lib) generated 5 warnings
+warning: `desktop` (lib test) generated 1 warning
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 32.92s
+     Running unittests src/lib.rs (apps/desktop/src-tauri/target/debug/deps/desktop_lib-ff5361a3bfb57d15)
+
+running 2 tests
+test commands::menubar::tests::menubar_allowlist_admits_control_main ... ok
+test commands::menubar::tests::menubar_allowlist_rejects_other ... ok
+
+test result: ok. 2 passed; 0 failed; 0 ignored; 0 measured; 24 filtered out; finished in 0.00s
+
+     Running unittests src/main.rs (apps/desktop/src-tauri/target/debug/deps/desktop-6e10a2304337d3d4)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+
+exec
+/bin/zsh -lc 'pnpm --filter @repo/core-data check-types' in /Users/lijinlong/Desktop/AI_Desktop/XAI_Desktop
+ succeeded in 1830ms:
+
+> @repo/core-data@0.0.0 check-types /Users/lijinlong/Desktop/AI_Desktop/XAI_Desktop/packages/core-data
+> tsc --noEmit
+
+
+codex
+## Codex Post-fix Re-review
+
+**Feature**: p1-gamma-contracts-window-menubar
+**Original verdict**: BLOCKED
+**Fix commit(s)**: 7e97dc3
+**Reviewer**: codex feature-review · gpt-5.4 high reasoning
+**New verdict**: APPROVED
+
+### Was the original P0 resolved?
+- Original issue (paraphrased): three contract claims were false: `data-repository-v0` still presented unfrozen entities as v0 surface; `organizer-layout-migration` claimed idempotency while reruns re-stamped `updatedAt`; `tauri-commands-v0` claimed runtime allow-list enforcement that `window.rs` and `menubar.rs` did not actually implement.
+- Evidence the fix resolves it: the v0 entity table now stops at shipped entities and moves `productivity.pomodoro_session`, `widgets.widget`, and `account.device` into an explicit deferred section marked “not in v0” (`docs/contracts/data-repository-v0.md:36-56`). The migration now reads existing repo records, skips unchanged ones, reports them via `unchanged`, and avoids no-op `put`s that would re-stamp timestamps (`packages/core-data/src/organizer-layout-migration.ts:121-180`, `packages/core-data/src/organizer-layout-migration.ts:195-246`), with tests covering rerun convergence and `updatedAt` preservation (`packages/core-data/tests/organizer-layout-migration.test.ts:139-228`). Window lifecycle commands now enforce `WINDOW_ALLOWED_WINDOWS` at the IPC boundary (`apps/desktop/src-tauri/src/commands/window.rs:9-40`, `apps/desktop/src-tauri/src/commands/window.rs:106-115`, `apps/desktop/src-tauri/src/commands/window.rs:176-185`, `apps/desktop/src-tauri/src/commands/window.rs:234-293`), and `sync_set_menubar_status` now enforces `MENUBAR_ALLOWED_WINDOWS` (`apps/desktop/src-tauri/src/commands/menubar.rs:11-32`, `apps/desktop/src-tauri/src/commands/menubar.rs:84-90`). The contract doc was updated to match that runtime truth instead of overclaiming (`docs/contracts/tauri-commands-v0.md:53-68`, `docs/contracts/tauri-commands-v0.md:172-216`).
+- Was the resolution honest (no smuggled scope-cut or stub-only fix)? Yes. The fix implements the missing runtime guards and explicitly narrows §7 to the command groups that truly have defence-in-depth checks, instead of silently deferring or leaving the old blanket claim in place.
+
+### Remaining gaps (max 4 bullets, severity-tagged)
+- [P2] §7 now correctly admits some host commands still rely on capability-file scope alone (`clipboard_*`, etc.), so broader runtime-hardening remains future work rather than a v0 guarantee (`docs/contracts/tauri-commands-v0.md:197-216`).
+
+### Regressions introduced (max 3 bullets)
+- `packages/core-data/tests/organizer-layout-migration.test.ts` now contains a duplicate `skipped` key in one expected object, which emits a Vite/esbuild warning during the test run, though it does not fail the suite (`packages/core-data/tests/organizer-layout-migration.test.ts:94-103`).
+
+### Next action
+- If APPROVED: re-mark the manifest row to READY_TO_SHIP and move on.
+tokens used
+56,427
+## Codex Post-fix Re-review
+
+**Feature**: p1-gamma-contracts-window-menubar
+**Original verdict**: BLOCKED
+**Fix commit(s)**: 7e97dc3
+**Reviewer**: codex feature-review · gpt-5.4 high reasoning
+**New verdict**: APPROVED
+
+### Was the original P0 resolved?
+- Original issue (paraphrased): three contract claims were false: `data-repository-v0` still presented unfrozen entities as v0 surface; `organizer-layout-migration` claimed idempotency while reruns re-stamped `updatedAt`; `tauri-commands-v0` claimed runtime allow-list enforcement that `window.rs` and `menubar.rs` did not actually implement.
+- Evidence the fix resolves it: the v0 entity table now stops at shipped entities and moves `productivity.pomodoro_session`, `widgets.widget`, and `account.device` into an explicit deferred section marked “not in v0” (`docs/contracts/data-repository-v0.md:36-56`). The migration now reads existing repo records, skips unchanged ones, reports them via `unchanged`, and avoids no-op `put`s that would re-stamp timestamps (`packages/core-data/src/organizer-layout-migration.ts:121-180`, `packages/core-data/src/organizer-layout-migration.ts:195-246`), with tests covering rerun convergence and `updatedAt` preservation (`packages/core-data/tests/organizer-layout-migration.test.ts:139-228`). Window lifecycle commands now enforce `WINDOW_ALLOWED_WINDOWS` at the IPC boundary (`apps/desktop/src-tauri/src/commands/window.rs:9-40`, `apps/desktop/src-tauri/src/commands/window.rs:106-115`, `apps/desktop/src-tauri/src/commands/window.rs:176-185`, `apps/desktop/src-tauri/src/commands/window.rs:234-293`), and `sync_set_menubar_status` now enforces `MENUBAR_ALLOWED_WINDOWS` (`apps/desktop/src-tauri/src/commands/menubar.rs:11-32`, `apps/desktop/src-tauri/src/commands/menubar.rs:84-90`). The contract doc was updated to match that runtime truth instead of overclaiming (`docs/contracts/tauri-commands-v0.md:53-68`, `docs/contracts/tauri-commands-v0.md:172-216`).
+- Was the resolution honest (no smuggled scope-cut or stub-only fix)? Yes. The fix implements the missing runtime guards and explicitly narrows §7 to the command groups that truly have defence-in-depth checks, instead of silently deferring or leaving the old blanket claim in place.
+
+### Remaining gaps (max 4 bullets, severity-tagged)
+- [P2] §7 now correctly admits some host commands still rely on capability-file scope alone (`clipboard_*`, etc.), so broader runtime-hardening remains future work rather than a v0 guarantee (`docs/contracts/tauri-commands-v0.md:197-216`).
+
+### Regressions introduced (max 3 bullets)
+- `packages/core-data/tests/organizer-layout-migration.test.ts` now contains a duplicate `skipped` key in one expected object, which emits a Vite/esbuild warning during the test run, though it does not fail the suite (`packages/core-data/tests/organizer-layout-migration.test.ts:94-103`).
+
+### Next action
+- If APPROVED: re-mark the manifest row to READY_TO_SHIP and move on.
