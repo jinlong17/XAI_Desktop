@@ -1,0 +1,58 @@
+import { useState, type FormEvent } from "react";
+import { autoAssignQuadrant, useTodoStore } from "../hooks/useTodoStore";
+
+export function TodoQuickAdd() {
+  const { createTodo } = useTodoStore();
+  const [title, setTitle] = useState("");
+  const [dueDate, setDueDate] = useState("");
+  const previewQuadrant = title.trim() ? autoAssignQuadrant(title, dueDate || undefined) : null;
+
+  const submit = (event: FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    if (!title.trim()) return;
+    void createTodo({ title, dueDate: dueDate || undefined });
+    setTitle("");
+    setDueDate("");
+  };
+
+  return (
+    <form onSubmit={submit} style={{ alignItems: "center", display: "flex", flexWrap: "wrap", gap: 8 }}>
+      <input
+        aria-label="Todo title"
+        onChange={(event) => setTitle(event.target.value)}
+        placeholder="Add task"
+        style={{
+          border: "1px solid #d1d5db",
+          borderRadius: 8,
+          flex: "1 1 220px",
+          minHeight: 36,
+          padding: "0 10px",
+        }}
+        value={title}
+      />
+      <input
+        aria-label="Due date"
+        onChange={(event) => setDueDate(event.target.value)}
+        style={{ border: "1px solid #d1d5db", borderRadius: 8, minHeight: 36, padding: "0 10px" }}
+        type="date"
+        value={dueDate}
+      />
+      <span style={{ color: "#6b7280", fontSize: 12, minWidth: 86 }}>{previewQuadrant ?? "auto"}</span>
+      <button
+        style={{
+          background: "#2563eb",
+          border: 0,
+          borderRadius: 8,
+          color: "#ffffff",
+          cursor: "pointer",
+          fontWeight: 700,
+          minHeight: 36,
+          padding: "0 12px",
+        }}
+        type="submit"
+      >
+        Add
+      </button>
+    </form>
+  );
+}

@@ -1,0 +1,18 @@
+{
+  "name": "project",
+  "version": "0.1.0",
+  "displayName": "项目看板",
+  "description": "Project board scaffold with pure React drag-and-drop state.",
+  "author": "Jinlong",
+  "enabled": false,
+  "contentTypes": ["project", "project-card"],
+  "windows": {
+    "control": true
+  },
+  "events": {
+    "emit": ["project:card-created", "project:card-moved", "project:card-updated"],
+    "listen": []
+  },
+  "dependencies": [],
+  "tauriCommands": []
+}

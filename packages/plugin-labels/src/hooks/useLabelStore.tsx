@@ -50,9 +50,14 @@ export interface LabelStoreProviderProps {
 }
 
 export function LabelStoreProvider({
-  adapter = new LocalStorageAdapter<Label>(STORAGE_KEY, seedLabels),
+  adapter,
   children,
 }: LabelStoreProviderProps) {
+  const [defaultAdapter] = useState(
+    () => new LocalStorageAdapter<Label>(STORAGE_KEY, seedLabels),
+  );
+  const stableAdapter = adapter ?? defaultAdapter;
+
   const [labels, setLabels] = useState<Label[]>([]);
   const [recentLabelIds, setRecentLabelIds] = useState<string[]>([]);
   const [isLoading, setIsLoading] = useState(true);
@@ -62,7 +67,7 @@ export function LabelStoreProvider({
     setIsLoading(true);
     setError(null);
     try {
-      const next = await adapter.getAll();
+      const next = await stableAdapter.getAll();
       setLabels(next.sort((a, b) => a.name.localeCompare(b.name)));
       setRecentLabelIds(readRecent());
     } catch (cause) {
@@ -70,7 +75,7 @@ export function LabelStoreProvider({
     } finally {
       setIsLoading(false);
     }
-  }, [adapter]);
+  }, [stableAdapter]);
 
   useEffect(() => {
     void refresh();
@@ -87,16 +92,16 @@ export function LabelStoreProvider({
         createdAt: new Date().toISOString(),
       };
       if (!label.name) throw new Error("Label name is required");
-      await adapter.save(label);
+      await stableAdapter.save(label);
       setLabels((prev) => [...prev, label].sort((a, b) => a.name.localeCompare(b.name)));
       return label;
     },
-    [adapter, labels.length],
+    [stableAdapter, labels.length],
   );
 
   const updateLabel = useCallback(
     async (id: string, patch: Partial<Omit<Label, "id" | "createdAt">>) => {
-      const current = await adapter.getById(id);
+      const current = await stableAdapter.getById(id);
       if (!current) return;
       const next: Label = {
         ...current,
@@ -104,15 +109,19 @@ export function LabelStoreProvider({
         name: patch.name?.trim() ?? current.name,
         icon: patch.icon?.trim() || patch.icon,
       };
-      await adapter.save(next);
-      setLabels((prev) => prev.map((label) => (label.id === id ? next : label)));
+      await stableAdapter.save(next);
+      setLabels((prev) =>
+        prev
+          .map((label) => (label.id === id ? next : label))
+          .sort((a, b) => a.name.localeCompare(b.name)),
+      );
     },
-    [adapter],
+    [stableAdapter],
   );
 
   const deleteLabel = useCallback(
     async (id: string) => {
-      await adapter.delete(id);
+      await stableAdapter.delete(id);
       setLabels((prev) => prev.filter((label) => label.id !== id));
       setRecentLabelIds((prev) => {
         const next = prev.filter((recentId) => recentId !== id);
@@ -120,7 +129,7 @@ export function LabelStoreProvider({
         return next;
       });
     },
-    [adapter],
+    [stableAdapter],
   );
 
   const markRecent = useCallback((labelIds: string[]) => {
