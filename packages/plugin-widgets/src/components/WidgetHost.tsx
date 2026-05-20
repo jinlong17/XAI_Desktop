@@ -1,4 +1,4 @@
-import type { CSSProperties } from "react";
+import { useMemo, type CSSProperties } from "react";
 import { builtInWidgetManifest } from "./builtInWidgets";
 import { WidgetFrame } from "./WidgetFrame";
 import { createSeedWidget, useWidgetStore } from "../hooks/useWidgetStore";
@@ -21,11 +21,14 @@ const hostStyle: CSSProperties = {
 };
 
 export function WidgetHost({ registrations = [], height = 540 }: WidgetHostProps) {
-  const registry = createWidgetRegistry([builtInWidgetManifest, ...registrations]);
-  const seed = [
-    createSeedWidget("time-progress", { width: 260, height: 230 }, { mode: "day" }),
-    createSeedWidget("countdown", { width: 260, height: 180 }, { title: "Launch review", targetDate: "2026-06-01" }),
-  ];
+  const registry = useMemo(() => createWidgetRegistry([builtInWidgetManifest, ...registrations]), [registrations]);
+  const seed = useMemo(
+    () => [
+      createSeedWidget("time-progress", { width: 260, height: 230 }, { mode: "day" }),
+      createSeedWidget("countdown", { width: 260, height: 180 }, { title: "Launch review", targetDate: "2026-06-01" }),
+    ],
+    [],
+  );
   const store = useWidgetStore(seed);
   const tokens = getThemeStyle(store.preferences.contrast);
 

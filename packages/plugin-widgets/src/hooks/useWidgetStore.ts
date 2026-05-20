@@ -10,6 +10,7 @@ import type {
 
 const WIDGET_STORAGE_KEY = "xai.widgets.v1";
 const PREF_STORAGE_KEY = "xai.widget-preferences.v1";
+const EMPTY_SEED_WIDGETS: WidgetEntity[] = [];
 
 export interface WidgetStoreState {
   widgets: WidgetEntity[];
@@ -34,8 +35,12 @@ function nowIso(): string {
 
 function createWidget(type: string, size: WidgetSize, config: Record<string, unknown>): WidgetEntity {
   const timestamp = nowIso();
+  // SSR / non-secure context fallback only; crypto.randomUUID is preferred.
+  const fallbackId = `${Date.now()}-${Math.random().toString(36).slice(2)}-${Math.random()
+    .toString(36)
+    .slice(2)}-${Math.random().toString(36).slice(2)}`;
   return {
-    id: `widget-${type}-${crypto.randomUUID?.() ?? Math.random().toString(36).slice(2)}`,
+    id: `widget-${type}-${globalThis.crypto?.randomUUID?.() ?? fallbackId}`,
     entityType: "widgets.widget",
     schemaVersion: 1,
     createdAt: timestamp,
@@ -73,9 +78,10 @@ async function hydrateRepo(repo: Repo<WidgetEntity>, widgets: WidgetEntity[]): P
   }
 }
 
-export function useWidgetStore(seedWidgets: WidgetEntity[] = []): WidgetStoreState {
+// seedWidgets is strictly a fallback when localStorage is empty.
+export function useWidgetStore(seedWidgets: WidgetEntity[] = EMPTY_SEED_WIDGETS): WidgetStoreState {
   const repo = useMemo(() => createInMemoryRepo<WidgetEntity>({ namespace: "widgets" }), []);
-  const [widgets, setWidgets] = useState<WidgetEntity[]>(seedWidgets);
+  const [widgets, setWidgets] = useState<WidgetEntity[]>([]);
   const [preferences, setPreferences] = useState<WidgetPreferences>(defaultPreferences);
 
   const persistWidgets = useCallback((next: WidgetEntity[]) => {
@@ -83,18 +89,21 @@ export function useWidgetStore(seedWidgets: WidgetEntity[] = []): WidgetStoreSta
     writeJson(WIDGET_STORAGE_KEY, next);
   }, []);
 
-  useEffect(() => {
-    const storedWidgets = readJson<WidgetEntity[]>(WIDGET_STORAGE_KEY, seedWidgets);
-    const storedPrefs = readJson<WidgetPreferences>(PREF_STORAGE_KEY, defaultPreferences);
-    setWidgets(storedWidgets);
-    setPreferences(storedPrefs);
-    void hydrateRepo(repo, storedWidgets);
-  }, [repo, seedWidgets]);
-
   const refreshFromRepo = useCallback(async () => {
     const next = await repo.list({ entityType: "widgets.widget" });
     persistWidgets(next);
   }, [persistWidgets, repo]);
+
+  useEffect(() => {
+    const storedWidgets = readJson<WidgetEntity[]>(WIDGET_STORAGE_KEY, seedWidgets);
+    const storedPrefs = readJson<WidgetPreferences>(PREF_STORAGE_KEY, defaultPreferences);
+    setPreferences(storedPrefs);
+
+    void (async () => {
+      await hydrateRepo(repo, storedWidgets);
+      await refreshFromRepo();
+    })();
+  }, [refreshFromRepo, repo, seedWidgets]);
 
   return {
     widgets,

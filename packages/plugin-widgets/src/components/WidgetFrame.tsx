@@ -1,4 +1,4 @@
-import type { CSSProperties, PointerEvent, ReactNode } from "react";
+import { useEffect, useRef, type CSSProperties, type PointerEvent, type ReactNode } from "react";
 import type { WidgetDensity, WidgetEntity, WidgetSize } from "../types";
 
 export interface WidgetFrameProps {
@@ -24,8 +24,16 @@ const frameBase: CSSProperties = {
 
 export function WidgetFrame({ widget, title, density, children, onChange, onHide }: WidgetFrameProps) {
   const padding = density === "compact" ? 8 : 12;
+  const activeMoveRef = useRef<AbortController | null>(null);
+
+  useEffect(() => {
+    return () => activeMoveRef.current?.abort();
+  }, []);
 
   function startMove(event: PointerEvent<HTMLDivElement>): void {
+    activeMoveRef.current?.abort();
+    const controller = new AbortController();
+    activeMoveRef.current = controller;
     const startX = event.clientX;
     const startY = event.clientY;
     const startPosition = widget.position;
@@ -41,12 +49,14 @@ export function WidgetFrame({ widget, title, density, children, onChange, onHide
     }
 
     function end(): void {
-      window.removeEventListener("pointermove", move);
-      window.removeEventListener("pointerup", end);
+      controller.abort();
+      if (activeMoveRef.current === controller) {
+        activeMoveRef.current = null;
+      }
     }
 
-    window.addEventListener("pointermove", move);
-    window.addEventListener("pointerup", end);
+    window.addEventListener("pointermove", move, { signal: controller.signal });
+    window.addEventListener("pointerup", end, { signal: controller.signal });
   }
 
   function resize(delta: WidgetSize): void {
