@@ -10,12 +10,12 @@
 | Roadmap | xai-g0-window-spike · feature #4 · G0.4 |
 | Status | BLOCKED |
 | Current Phase | FEATURE_VERIFY |
-| Suggested Next | Alias payload evidence |
+| Suggested Next | Alias path-form capture and ADR update |
 | Automation Mode | D-Codex |
 | Verify Cross-vendor | yes |
 | Executor | feature-verify (Codex inline) |
-| Updated | 2026-05-19 22:02 PDT |
-| Blockers | Alias evidence required |
+| Updated | 2026-05-19 22:06 PDT |
+| Blockers | Exact alias path form and ADR policy required |
 
 ## Phase Plan
 
@@ -60,9 +60,9 @@ feature-review (Codex inline), 2026-05-19 14:46 PDT. Verdict: APPROVED for safe 
 
 ## Verification Notes
 
-feature-verify (Codex inline), 2026-05-19 22:02 PDT. Verdict: PARTIAL_HUMAN_EVIDENCE / BLOCKED.
+feature-verify (Codex inline), 2026-05-19 22:06 PDT. Verdict: PARTIAL_HUMAN_EVIDENCE / BLOCKED.
 
-Human screenshot evidence confirms real file, folder, and `.app` paths through `tauri://drag-drop`. The post-dedupe `.app` rerun passed with `/Applications/QQ.app` appearing once. G0.4 remains blocked until alias evidence is captured.
+Human screenshot evidence confirms real file, folder, and `.app` paths through `tauri://drag-drop`. The post-dedupe `.app` rerun passed with `/Applications/QQ.app` appearing once. Human report confirms alias drop succeeds. G0.4 remains blocked until the exact alias path form is captured and ADR-0005 records the policy.
 
 ## Work Log
 
@@ -78,3 +78,4 @@ Human screenshot evidence confirms real file, folder, and `.app` paths through `
 | 2026-05-19 21:21 PDT | human + feature-build (Codex inline) | Recorded screenshot evidence and fixed duplicate item creation by making GridWindow path-first only. | `58c926d` | post-fix runtime rerun |
 | 2026-05-19 21:56 PDT | human + feature-build (Codex inline) | Recorded `.app` duplication screenshot and added Organizer-side path dedupe. | `18b48da` | post-dedupe app rerun |
 | 2026-05-19 22:02 PDT | human + feature-verify (Codex inline) | Recorded post-dedupe `.app` pass: `/Applications/QQ.app` appears once with Tauri path telemetry. | `18b48da` | alias payload evidence |
+| 2026-05-19 22:06 PDT | human + feature-verify (Codex inline) | Recorded alias functional validation success; exact alias path form still needs telemetry capture. | `18b48da` | alias path-form capture and ADR update |

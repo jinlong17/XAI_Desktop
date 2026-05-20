@@ -101,10 +101,10 @@
 - Feature: finder-dnd-path
 - Gate: G0
 - Deferred gate: Real Finder DnD path-first matrix
-- Why deferred: File/folder and `.app` drop evidence now exists, and post-dedupe `.app` regression evidence passed. Alias evidence is still missing.
+- Why deferred: File/folder and `.app` drop evidence now exists, post-dedupe `.app` regression evidence passed, and alias functional validation succeeded. Exact alias path-form evidence and ADR policy are still missing.
 - Risk: G0 cannot prove the path-first drop model until all item kinds and duplicate behavior are captured.
-- What was done instead: Recorded screenshot evidence of `tauri://drag-drop` file, folder, and `.app` path delivery; fixed GridWindow duplicate risk in `58c926d`; fixed Organizer per-path duplicate risk in `18b48da`; recorded post-dedupe `.app` pass for `/Applications/QQ.app`.
-- Later human action: Drop alias items into a Grid; attach logs/screenshots under `docs/reviews/window-ground-truth/finder-dnd-path/`.
+- What was done instead: Recorded screenshot evidence of `tauri://drag-drop` file, folder, and `.app` path delivery; fixed GridWindow duplicate risk in `58c926d`; fixed Organizer per-path duplicate risk in `18b48da`; recorded post-dedupe `.app` pass for `/Applications/QQ.app`; recorded user report that alias validation succeeds.
+- Later human action: Capture the alias telemetry path and record whether it is the alias file path or the resolved target path; attach logs/screenshots under `docs/reviews/window-ground-truth/finder-dnd-path/`; update ADR-0005 alias policy.
 - Suggested verification command / environment: `pnpm --filter desktop tauri dev` on macOS with Finder; use file, folder, `.app`, and alias drops; capture console lines beginning with `[G0 Finder DnD] path-first drop`.
 - Files/commits affected: docs/reviews/window-ground-truth/finder-dnd-path/README.md; packages/finder-dnd-path/docs/*; apps/desktop/src/windows/GridWindow.tsx; packages/plugin-organizer/src/OrganizerLayer.tsx; commits `33627df`, `7a1b9dd`, `7e20ca8`, `58c926d`, `18b48da`
 
