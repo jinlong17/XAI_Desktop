@@ -18,7 +18,7 @@
 | Current Feature | grid-shell-organizer-content |
 | Feature Source | docs/planning/execution/G1-native-foundation.md §G1.2 |
 | Feature Status | BLOCKED |
-| Current Commit | pending G1.2 docs commit |
+| Current Commit | eaae46e |
 | Tests | `test -f docs/reviews/grid-shell-organizer-content/20260519-feature-brief.md`; `test -f packages/grid-shell-organizer-content/docs/dev_log.md`; `rg -n "SmartContainer|useFileDrop|GridSystem|OrganizerLayer|useMultiWindowGrids" apps/desktop/src packages/plugin-organizer/src -g '*.{ts,tsx}'` |
 | Next Step | Human G0 evidence, or continue only with safe downstream prep because G0/G1.1 are blocked |
 
@@ -218,7 +218,7 @@
 | spaces-multimonitor-matrix | G0 | BLOCKED | 2fb6bac | PASS: matrix template exists; BLOCKED: real Spaces/fullscreen/multi-display evidence | Reached by user override; safe prep only. |
 | mas-sandbox-dry-run | G0 | BLOCKED | 071a192 | PASS: MAS notes exist; BLOCKED: real sandbox/private-API evidence | Reached by user override; safe prep only. |
 | window-command-contract | G1 | BLOCKED | 9c7b52f | PASS: safe-prep docs exist; BLOCKED: G0 not Go/Conditional Go | Reached by user override; no production code changed. |
-| grid-shell-organizer-content | G1 | BLOCKED | pending G1.2 docs commit | PASS: safe-prep docs exist; BLOCKED: G0/G1.1 not ready | Reached by user override; no production code changed. |
+| grid-shell-organizer-content | G1 | BLOCKED | eaae46e | PASS: safe-prep docs exist; BLOCKED: G0/G1.1 not ready | Reached by user override; no production code changed. |
 | host-business-residuals | G1 | READY_TO_SHIP | c6dbd77 | PASS: residual audit doc exists; Host scan recorded | Audit-only safe prep. |
 
 ## Deferred Gates Summary

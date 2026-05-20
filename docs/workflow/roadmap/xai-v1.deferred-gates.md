@@ -190,4 +190,4 @@
 - What was done instead: Created docs-only feature brief, discovery review, design, API, test plan, and dev_log describing the target boundary and blockers.
 - Later human action: Complete G0 evidence, implement/review G1.1, then rerun feature-build for the production shell/content split.
 - Suggested verification command / environment: `sed -n '1,220p' docs/reviews/grid-shell-organizer-content/20260519-discovery-review.md`
-- Files/commits affected: docs/reviews/grid-shell-organizer-content/*; packages/grid-shell-organizer-content/docs/*; pending G1.2 docs commit
+- Files/commits affected: docs/reviews/grid-shell-organizer-content/*; packages/grid-shell-organizer-content/docs/*; commit `eaae46e`

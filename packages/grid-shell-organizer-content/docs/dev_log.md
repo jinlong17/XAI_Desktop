@@ -21,7 +21,7 @@
 
 ### Phase 1 — Boundary safe prep
 
-Status: DONE. Commit: `(pending docs commit)`.
+Status: DONE. Commit: `eaae46e`.
 
 - Created G1.2 feature brief and discovery review.
 - Mapped current Host/Organizer boundary.
@@ -44,5 +44,5 @@ Docs-only prep is complete. G1.2 production acceptance remains blocked by G0 and
 |---|---|---|---|---|
 | 2026-05-19 20:33 PDT | feature-plan (Codex inline) | Step 0 and plan: scoped G1.2 to docs-only safe prep under user override. | — | feature-review |
 | 2026-05-19 20:34 PDT | feature-review (Codex inline) | Approved safe prep; production shell/content refactor remains blocked. | — | feature-build |
-| 2026-05-19 20:34 PDT | feature-build (Codex inline) | Created boundary docs and package dev docs. | (pending docs commit) | feature-verify |
-| 2026-05-19 20:34 PDT | feature-verify (Codex inline) | Verified docs-only scope; status remains BLOCKED. | (pending docs commit) | Human/G0 prerequisite |
+| 2026-05-19 20:34 PDT | feature-build (Codex inline) | Created boundary docs and package dev docs. | `eaae46e` | feature-verify |
+| 2026-05-19 20:34 PDT | feature-verify (Codex inline) | Verified docs-only scope; status remains BLOCKED. | `eaae46e` | Human/G0 prerequisite |
