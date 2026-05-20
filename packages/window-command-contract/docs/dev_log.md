@@ -29,7 +29,7 @@ Status: DONE. Commit: `(this commit)`.
 
 ### Phase 2 — Production command contract
 
-Status: DONE. Commit: `(pending commit)`.
+Status: DONE. Commit: `dce4fb9`.
 
 - Added structured Rust `CommandError` and `GridWindowSnapshot`.
 - Updated create/update/focus commands to return snapshots.
@@ -56,4 +56,4 @@ Safe-prep docs are complete. G0 now has Conditional Go for the DMG/private path,
 | 2026-05-19 15:08 PDT | feature-build (Codex inline) | Created Window Command Contract prep docs. | (this commit) | feature-verify |
 | 2026-05-19 15:08 PDT | feature-verify (Codex inline) | Marked BLOCKED_BY_G0; no production code changed. | (this commit) | feature-build |
 | 2026-05-19 22:54 PDT | feature-verify (Codex inline) | Reconciled G0 Conditional Go and unblocked G1.1 production build for the DMG/private path. | `1701583` | feature-build |
-| 2026-05-19 23:05 PDT | feature-build (Codex inline) | Implemented structured window command contract, snapshots, list/focus commands, core TS types, and contract docs. | (pending commit) | feature-verify |
+| 2026-05-19 23:05 PDT | feature-build (Codex inline) | Implemented structured window command contract, snapshots, list/focus commands, core TS types, and contract docs. | `dce4fb9` | feature-verify |
