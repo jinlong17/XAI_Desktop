@@ -16,6 +16,12 @@ export interface AiConversationState {
   runSuggestion(kind: ActionSuggestion["kind"]): void;
 }
 
+// TODO(events): replace with @repo/core/events typed bus when wired.
+function emitMockAction(kind: ActionSuggestion["kind"]): void {
+  if (typeof window === "undefined") return;
+  window.dispatchEvent(new CustomEvent("ai-cube:mock-action", { detail: { kind } }));
+}
+
 export function useAiConversation(): AiConversationState {
   const [messages, setMessages] = useState<AiMessage[]>([makeMessage("system", "AI Cube is running in local mock mode.")]);
   const [input, setInput] = useState("");
@@ -31,6 +37,7 @@ export function useAiConversation(): AiConversationState {
     costGuard,
     setInput,
     requestSend() {
+      if (input.trim().length === 0) return;
       const review = buildPrivacyReview(input);
       setPendingReview(review);
     },
@@ -51,9 +58,7 @@ export function useAiConversation(): AiConversationState {
     runSuggestion(kind) {
       const suggestion = suggestions.find((item) => item.kind === kind);
       setMessages((current) => [...current, makeMessage("assistant", `Mock action queued: ${suggestion?.label ?? kind}.`)]);
-      if (typeof window !== "undefined") {
-        window.dispatchEvent(new CustomEvent("ai-cube:mock-action", { detail: { kind } }));
-      }
+      emitMockAction(kind);
     },
   };
 }
@@ -62,7 +67,7 @@ function buildPrivacyReview(input: string): PrivacyReview {
   const redacted = redactSecrets(input);
   return {
     dataTypes: ["message text", "selected mock context"],
-    scope: "Local prototype only; no real API call is made.",
+    scope: "Pattern coverage: JWT, OpenAI, GitHub PAT, AWS, Stripe, Slack, SSH key block, Bearer, email, macOS home path, credit-card (Luhn). Mock only — no real API call is made.",
     secretsDetected: redacted.findings,
     approved: false,
   };
@@ -77,7 +82,7 @@ function createSuggestions(): ActionSuggestion[] {
 }
 
 async function mockResponse(input: string, online: boolean): Promise<string> {
-  await new Promise((resolve) => window.setTimeout(resolve, 120));
+  await new Promise((resolve) => setTimeout(resolve, 120));
   if (!online) {
     return "Offline fallback: I saved a local note and will retry when AI is available.";
   }

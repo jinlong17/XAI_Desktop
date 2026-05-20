@@ -28,4 +28,5 @@ export interface CostGuardState {
   dailyLimit: number;
   usedToday: number;
   offline: boolean;
+  lastResetDate?: string;
 }

@@ -1,3 +1,5 @@
+// All exported hooks/components in this package are client-only. Consumers must wrap with "use client" in Next.js.
+
 export type { ActionSuggestion, AiActionKind, AiMessage, AiRole, CostGuardState, PrivacyReview } from "./types";
 export type { CostGuardApi } from "./hooks/useCostGuard";
 export { redactSecrets } from "./redaction";
