@@ -1,5 +1,11 @@
 # rls-policies-and-tests Dev Log
 
+## 2026-05-20 14:55 PDT
+
+- Implemented local RLS policy model for accounts, devices, wraps, blobs, mutation dedup, progress, and nonce leases.
+- Converted web RLS test from Docker/Postgres to local Vitest mock with account filter assertions.
+- Verification: `pnpm --filter @repo/rls-policies-and-tests test`; `pnpm --filter web test:rls`; package `check-types`.
+
 | Timestamp | Change | Verification | Notes |
 |---|---|---|---|
 | 2026-05-19 03:44 PDT | Added Docker-backed Vitest RLS harness for Sync v1 migrations. | `pnpm --filter web test:rls` passed. | Uses local `auth`/`realtime` shims, not live Supabase. |

@@ -1,5 +1,11 @@
 # audit-log-integrity — Dev Log
 
+## 2026-05-20 14:55 PDT
+
+- Implemented audit hash chain, tamper detection, privacy-safe telemetry, and Sentry breadcrumb/error-boundary placeholders.
+- Converted web audit test from Docker/Postgres to local Vitest mock.
+- Verification: `pnpm --filter @repo/audit-log-integrity test`; `pnpm --filter web test:audit`; package `check-types`.
+
 ## Status Panel
 
 | Field | Value |

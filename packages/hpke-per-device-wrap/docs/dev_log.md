@@ -1,5 +1,11 @@
 # hpke-per-device-wrap — Dev Log (Workflow State Machine)
 
+## 2026-05-20 14:55 PDT
+
+- Implemented per-device DEK wrap using X25519 shared secret plus AES-256-GCM local HPKE-style envelope.
+- Enforced distinct `info` and `aad`.
+- Verification: `pnpm --filter @repo/hpke-per-device-wrap test`; package `check-types`.
+
 ## Status Panel
 
 | Field | Value |
@@ -44,4 +50,3 @@
 | Timestamp | Executor | Action | Commits | Next |
 |---|---|---|---|---|
 | 2026-05-19 02:58 PDT | Codex serial autorun | Implemented #13 HPKE per-device DEK wrap/open, KeyVault integration, docs, and tests. | local commit `feat(hpke-per-device-wrap): add HPKE DEK wrapping` | ed25519-recovery-signing (#14) |
-

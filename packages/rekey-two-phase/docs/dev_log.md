@@ -1,5 +1,12 @@
 # rekey-two-phase — Dev Log
 
+## 2026-05-20 14:55 PDT
+
+- Added real scaffold package wrapping plugin-account rekey orchestration with an in-memory checkpoint store.
+- Implemented start, stage, before-swap checkpoint, complete, and resume-after-kill9 flows.
+- Converted web rekey test from Docker/Postgres to local Vitest mock.
+- Verification: `pnpm --filter @repo/rekey-two-phase test`; `pnpm --filter web test:rekey`; package `check-types`.
+
 ## Status Panel
 
 | Field | Value |
