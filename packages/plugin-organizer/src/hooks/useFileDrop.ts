@@ -1,5 +1,7 @@
 import { useEffect, useRef } from 'react';
 
+import type { FinderClient } from '../finderClient';
+
 export interface FileDropPayload {
   paths: string[];
   position: { x: number; y: number };
@@ -11,6 +13,24 @@ export interface UseFileDropOptions {
   onEnter?: () => void;  // Called when files enter the window
   onLeave?: () => void;  // Called when files leave or drop is cancelled
   enabled?: boolean;
+  /**
+   * Optional Finder client used to register a user-authorized path
+   * bookmark for every dropped path (G3-E3 P0 — honest provenance).
+   *
+   * When omitted, the hook logs a warning once and skips bookmark
+   * registration; subsequent `reveal_in_finder` / `open_path` calls
+   * for those paths will be rejected by the Rust side with
+   * `E3004 sync capability denied — no user-authorized bookmark`.
+   *
+   * Production callers SHOULD pass a `FinderClient` built via
+   * `createFinderClient(invoke)`. The optionality exists so existing
+   * unit tests that exercise the drag-drop event plumbing without a
+   * Tauri bridge keep working without modification.
+   *
+   * TODO: extend the hook to also register paths surfaced by a
+   * user-initiated `Open…` panel (not in scope for this PR).
+   */
+  finderClient?: FinderClient;
 }
 
 /**
@@ -28,11 +48,13 @@ export interface UseFileDropOptions {
  * - drop: Files were dropped (with File objects and position)
  * - dragleave: Drag operation cancelled or files left window
  */
-export function useFileDrop({ onDrop, onHover, onEnter, onLeave, enabled = true }: UseFileDropOptions) {
+export function useFileDrop({ onDrop, onHover, onEnter, onLeave, enabled = true, finderClient }: UseFileDropOptions) {
   const onDropRef = useRef(onDrop);
   const onHoverRef = useRef(onHover);
   const onEnterRef = useRef(onEnter);
   const onLeaveRef = useRef(onLeave);
+  const finderClientRef = useRef(finderClient);
+  const finderClientMissingWarnedRef = useRef(false);
   const isDraggingRef = useRef(false);
   const dragCounterRef = useRef(0); // Track nested drag enter/leave
 
@@ -52,6 +74,10 @@ export function useFileDrop({ onDrop, onHover, onEnter, onLeave, enabled = true 
   useEffect(() => {
     onLeaveRef.current = onLeave;
   }, [onLeave]);
+
+  useEffect(() => {
+    finderClientRef.current = finderClient;
+  }, [finderClient]);
 
   // Setup HTML5 drag-drop event listeners
   useEffect(() => {
@@ -125,6 +151,29 @@ export function useFileDrop({ onDrop, onHover, onEnter, onLeave, enabled = true 
         (window as unknown as { __droppedFiles: Map<string, File> }).__droppedFiles = fileMap;
 
         onDropRef.current(fileNames, position);
+
+        // G3-E3 P0: register every dropped path as a user-authorized
+        // bookmark so subsequent reveal_in_finder / open_path calls are
+        // admitted by the Rust side. We fire-and-forget per path —
+        // individual failures (validator rejection, IPC down) are
+        // logged and do NOT abort the drop UX.
+        const client = finderClientRef.current;
+        if (client) {
+          for (const path of fileNames) {
+            void client.registerBookmark(path).catch((err: unknown) => {
+              console.warn(
+                '[useFileDrop] register_path_bookmark failed for',
+                path,
+                err,
+              );
+            });
+          }
+        } else if (!finderClientMissingWarnedRef.current) {
+          finderClientMissingWarnedRef.current = true;
+          console.warn(
+            '[useFileDrop] no finderClient provided; reveal_in_finder / open_path will be rejected with E3004 until paths are bookmarked',
+          );
+        }
       }
     };
 

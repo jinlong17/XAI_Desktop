@@ -1,3 +1,4 @@
+pub mod bookmarks;
 pub mod crypto;
 #[cfg(feature = "crypto")]
 pub mod database;

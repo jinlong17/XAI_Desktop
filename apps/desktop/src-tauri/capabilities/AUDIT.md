@@ -31,7 +31,8 @@ Source files audited:
 | `crypto_*` | plugin-account-crypto.json | `commands::crypto::CRYPTO_ALLOWED_WINDOWS` (account, control) |
 | `secret_set` / `secret_get` / `secret_del` | plugin-account-keychain.json | `commands::keychain::KEYCHAIN_ALLOWED_WINDOWS` (account, control) |
 | `db_init` / `db_put` / `db_get` / `db_list` / `db_delete` / `db_put_batch` | plugin-data-database.json (G2.5) | `commands::database::DATABASE_ALLOWED_WINDOWS` (main, control, account, console) + `grid_*` prefix |
-| `reveal_in_finder` / `open_path` | default.json | `commands::finder::FINDER_ALLOWED_WINDOWS` (main, control, console) + `grid_*` prefix |
+| `reveal_in_finder` / `open_path` | default.json | `commands::finder::FINDER_ALLOWED_WINDOWS` (main, control, console) + `grid_*` prefix; plus `BookmarkRegistry` lookup (G3-E3 P0 — honest provenance) |
+| `register_path_bookmark` / `clear_path_bookmark` | default.json | `commands::bookmarks::BOOKMARK_ALLOWED_WINDOWS` (main, control, console) + `grid_*` prefix; mirrors `FINDER_ALLOWED_WINDOWS` so only surfaces that can call `reveal_in_finder` / `open_path` can authorize the underlying paths |
 
 ## Minimization notes
 

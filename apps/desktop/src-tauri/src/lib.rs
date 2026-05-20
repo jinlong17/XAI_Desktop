@@ -55,6 +55,7 @@ pub fn run() {
         .plugin(tauri_plugin_opener::init())
         .manage(commands::crypto::CryptoCommandState::default())
         .manage(commands::menubar::SyncMenuBarState::default())
+        .manage(commands::bookmarks::BookmarkRegistry::default())
         .manage(GridWindowsState::default());
 
     #[cfg(feature = "crypto")]
@@ -77,6 +78,8 @@ pub fn run() {
             commands::keychain::secret_del,
             commands::finder::reveal_in_finder,
             commands::finder::open_path,
+            commands::bookmarks::register_path_bookmark,
+            commands::bookmarks::clear_path_bookmark,
             #[cfg(feature = "crypto")]
             commands::database::db_init,
             #[cfg(feature = "crypto")]

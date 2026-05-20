@@ -71,19 +71,24 @@ G1.1 implementation notes:
 
 | Command | Owner | Allowed windows | Input | 说明 |
 |---|---|---|---|---|
-| `reveal_in_finder` | organizer (G3-E3) | `main`,`control`,`grid_*`,`console` | `{ input: { path } }` | validates path is non-empty / NUL-free / non-`..` / under user-reachable roots (`/Users/`, `/Applications/`, `/Volumes/`, `/tmp/` on macOS; `/tmp/` only on other targets); shells out to `open -R` with the lexically-normalized path on macOS |
-| `open_path` | organizer (G3-E3) | `main`,`control`,`grid_*`,`console` | `{ input: { path } }` | same path-authorization rules as `reveal_in_finder`; user-initiated only; shells out to `open` with the lexically-normalized path on macOS |
+| `reveal_in_finder` | organizer (G3-E3) | `main`,`control`,`grid_*`,`console` | `{ input: { path } }` | requires the canonical path to be present in the in-memory `BookmarkRegistry` (registered via `register_path_bookmark` after a user drop / open-panel selection); validates path is non-empty / NUL-free / non-`..` / under user-reachable roots (`/Users/`, `/Applications/`, `/Volumes/`, `/tmp/` on macOS; `/tmp/` only on other targets); shells out to `open -R` with the lexically-normalized path on macOS |
+| `open_path` | organizer (G3-E3) | `main`,`control`,`grid_*`,`console` | `{ input: { path } }` | same path-authorization and bookmark-registry rules as `reveal_in_finder`; user-initiated only; shells out to `open` with the lexically-normalized path on macOS |
+| `register_path_bookmark` | organizer (G3-E3 P0) | `main`,`control`,`grid_*`,`console` | `{ input: { path } }` | records a user-authorized path in the in-memory `BookmarkRegistry`; validates path shape via `validate_user_path` before inserting; idempotent. Called by the Organizer drop/open-panel handler immediately after a user-initiated path enters JS scope. |
+| `clear_path_bookmark` | organizer (G3-E3 P0) | `main`,`control`,`grid_*`,`console` | `{ input: { path } }` | removes a previously-registered path from the `BookmarkRegistry`; idempotent (removing an absent path is not an error); validates path shape first for symmetry. |
 | `resolve_alias` | organizer | `control`,`grid_*` | TBD | G1/G2 根据 sandbox 决定 |
 | `create_security_scoped_bookmark` | organizer/account | `control`,`grid_*` | TBD | MAS path if required |
 
 文件 command 不允许静默扫描用户目录。所有 path access 必须来自用户 drop/open panel 或已授权 bookmark。
 
-`reveal_in_finder` / `open_path` enforce a runtime allow-list (`FINDER_ALLOWED_WINDOWS` in `commands/finder.rs`) AND a path-shape allow-list via `validate_user_path`:
+`reveal_in_finder` / `open_path` enforce a runtime allow-list (`FINDER_ALLOWED_WINDOWS` in `commands/finder.rs`), a path-shape allow-list via `validate_user_path`, AND a user-authorized `BookmarkRegistry` lookup:
 
 - Empty / whitespace-only / NUL-containing inputs → `E3005` (SyncInvalidInput).
 - Relative paths or any `..` parent-dir segment (even when the raw string would normalize back into an allowed root, e.g. `/Users/me/../etc/passwd`) → `E3005`.
-- Paths whose lexically-normalized form is NOT under one of the user-reachable roots (`/Users/`, `/Applications/`, `/Volumes/`, `/tmp/` on macOS; `/tmp/` only on other targets) → `E3004` (SyncCapabilityDenied). `/private/var/...`, `/etc/...`, `/System/...`, `/bin/...` are intentionally rejected until a full security-scoped bookmark store lands.
+- Paths whose lexically-normalized form is NOT under one of the user-reachable roots (`/Users/`, `/Applications/`, `/Volumes/`, `/tmp/` on macOS; `/tmp/` only on other targets) → `E3004` (SyncCapabilityDenied). `/private/var/...`, `/etc/...`, `/System/...`, `/bin/...` are intentionally rejected.
+- Paths that pass the shape gate but were never registered via `register_path_bookmark` → `E3004` (SyncCapabilityDenied) with message `path "..." has no user-authorized bookmark`. This raises the implementation to match the contract — every authorized path now has explicit drop/open-panel provenance, not just an allow-listed root prefix.
 - On success the canonical (lexically-normalized) `PathBuf` is passed to `open` / `open -R`, not the raw input.
+
+`BookmarkRegistry` storage is in-memory (`Mutex<HashSet<PathBuf>>`). Each session starts empty — the user must re-authorize every path after a desktop restart. This is intentionally more restrictive than the contract requires: every registered path has recent, explicit user provenance. A persistent macOS security-scoped bookmark store (`create_security_scoped_bookmark`) remains a separate follow-up for the MAS sandbox build.
 
 Lexical normalization is used rather than `std::fs::canonicalize()` because the latter requires the path to exist on disk; full filesystem canonicalization is a follow-up once `create_security_scoped_bookmark` is wired.
 
@@ -207,7 +212,8 @@ G2.5 invariants now enforced:
   | `crypto_*` | `CRYPTO_ALLOWED_WINDOWS` | `commands/crypto.rs` |
   | `secret_*` | `KEYCHAIN_ALLOWED_WINDOWS` | `commands/keychain.rs` |
   | `db_*` | `DATABASE_ALLOWED_WINDOWS` | `commands/database.rs` |
-  | `reveal_in_finder`, `open_path` | `FINDER_ALLOWED_WINDOWS` | `commands/finder.rs` |
+  | `reveal_in_finder`, `open_path` | `FINDER_ALLOWED_WINDOWS` + `BookmarkRegistry` | `commands/finder.rs` |
+  | `register_path_bookmark`, `clear_path_bookmark` | `BOOKMARK_ALLOWED_WINDOWS` | `commands/bookmarks.rs` |
   | `create_grid_window`, `update_grid_window`, `close_grid_window`, `list_grid_windows`, `focus_grid_window` | `WINDOW_ALLOWED_WINDOWS` | `commands/window.rs` |
   | `sync_set_menubar_status` | `MENUBAR_ALLOWED_WINDOWS` | `commands/menubar.rs` |
 

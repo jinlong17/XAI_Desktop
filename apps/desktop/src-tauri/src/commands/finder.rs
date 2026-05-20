@@ -17,9 +17,10 @@ use std::path::{Component, Path, PathBuf};
 
 use serde::Deserialize;
 
+use crate::commands::bookmarks::{is_path_bookmarked, BookmarkRegistry};
 use crate::error::{AppError, AppResult};
 
-const FINDER_ALLOWED_WINDOWS: &[&str] = &["main", "control", "console"];
+pub(crate) const FINDER_ALLOWED_WINDOWS: &[&str] = &["main", "control", "console"];
 
 /// User-reachable filesystem roots a desktop file/app drop or open-panel
 /// selection can produce on macOS. Paths outside these roots are rejected
@@ -113,6 +114,34 @@ pub(crate) fn validate_user_path(raw: &str) -> AppResult<PathBuf> {
     Ok(normalized)
 }
 
+/// Enforce honest user-authorized provenance for a finder action.
+///
+/// Two-stage gate:
+///
+/// 1. `validate_user_path` lexically normalizes and shape-checks the raw
+///    input (absolute, no `..`, under a user-reachable root).
+/// 2. `BookmarkRegistry` lookup asserts the user explicitly registered
+///    the canonical path through a prior drag-drop or open-panel action.
+///
+/// Stage 1 alone is NOT honest provenance — it only narrows the attack
+/// surface. The contract in `docs/contracts/tauri-commands-v0.md` §4
+/// requires that "all path access must come from user drop/open panel
+/// or authorized bookmark". This helper raises the implementation to
+/// match the contract.
+fn ensure_path_authorized(
+    raw: &str,
+    registry: &BookmarkRegistry,
+) -> AppResult<PathBuf> {
+    let canonical = validate_user_path(raw)?;
+    if !is_path_bookmarked(registry, &canonical) {
+        return Err(AppError::SyncCapabilityDenied(format!(
+            "path `{}` has no user-authorized bookmark",
+            canonical.display()
+        )));
+    }
+    Ok(canonical)
+}
+
 #[derive(Debug, Deserialize)]
 pub struct RevealInFinderInput {
     pub path: String,
@@ -121,10 +150,11 @@ pub struct RevealInFinderInput {
 #[tauri::command]
 pub async fn reveal_in_finder(
     window: tauri::WebviewWindow,
+    registry: tauri::State<'_, BookmarkRegistry>,
     input: RevealInFinderInput,
 ) -> AppResult<()> {
     ensure_finder_window_allowed(window.label())?;
-    let canonical = validate_user_path(&input.path)?;
+    let canonical = ensure_path_authorized(&input.path, &registry)?;
     #[cfg(target_os = "macos")]
     {
         use std::process::Command;
@@ -155,10 +185,11 @@ pub struct OpenPathInput {
 #[tauri::command]
 pub async fn open_path(
     window: tauri::WebviewWindow,
+    registry: tauri::State<'_, BookmarkRegistry>,
     input: OpenPathInput,
 ) -> AppResult<()> {
     ensure_finder_window_allowed(window.label())?;
-    let canonical = validate_user_path(&input.path)?;
+    let canonical = ensure_path_authorized(&input.path, &registry)?;
     #[cfg(target_os = "macos")]
     {
         use std::process::Command;
@@ -262,6 +293,43 @@ mod tests {
         // nested subpath
         let nested = validate_user_path("/Users/me/Documents/note.md").unwrap();
         assert_eq!(nested, PathBuf::from("/Users/me/Documents/note.md"));
+    }
+
+    /// G3-E3 P0: `reveal_in_finder` must reject any path that has not
+    /// been explicitly registered via `register_path_bookmark`, even if
+    /// the path passes the lexical shape gate. Exercised via the shared
+    /// `ensure_path_authorized` helper because the command takes a
+    /// `tauri::State<'_, BookmarkRegistry>` injected by the runtime and
+    /// we cannot construct one in a unit test.
+    #[test]
+    fn reveal_rejects_unbookmarked_path() {
+        let registry = BookmarkRegistry::default();
+        // path-shape is valid (under `/Users/`) so the only thing that
+        // can fail the gate is the bookmark lookup.
+        let err = ensure_path_authorized("/Users/me/Documents/secret.txt", &registry)
+            .expect_err("unbookmarked path must be rejected");
+        let msg = err.to_string();
+        assert!(
+            msg.starts_with("E3004:") && msg.contains("no user-authorized bookmark"),
+            "expected SyncCapabilityDenied for unbookmarked path, got: {msg}"
+        );
+    }
+
+    /// G3-E3 P0: `reveal_in_finder` must admit a path after it has been
+    /// registered. Exercised through the Rust helper directly (no Tauri
+    /// command spawn needed). The shell-out arm is NOT exercised — the
+    /// test only needs to reach the bookmark gate.
+    #[test]
+    fn reveal_allows_bookmarked_path() {
+        let registry = BookmarkRegistry::default();
+        let canonical = validate_user_path("/Users/me/Documents/note.md").unwrap();
+        registry
+            .insert_canonical(canonical.clone())
+            .expect("insert");
+
+        let result = ensure_path_authorized("/Users/me/Documents/note.md", &registry)
+            .expect("bookmarked path must be admitted");
+        assert_eq!(result, canonical);
     }
 
     /// Paths under `/Applications/...` should be admitted on macOS. On
