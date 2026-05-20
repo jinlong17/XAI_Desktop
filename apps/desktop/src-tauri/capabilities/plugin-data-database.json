@@ -1,0 +1,9 @@
+{
+  "$schema": "../gen/schemas/desktop-schema.json",
+  "identifier": "plugin-data-database",
+  "description": "Scoped capability marker for Repository v0 SQLite commands (db_init / db_put / db_get / db_list / db_delete). The actual allow-list is enforced by the custom invoke_handler registration in lib.rs (feature-gated to `crypto`). This file documents the *intended* scope — plugin-organizer, plugin-account, plugin-productivity, plugin-clipboard, plugin-project, and host control/menu windows — so audits do not silently grant the surface to widget / pet / ai-cube windows.",
+  "windows": ["main", "control", "grid_*", "account", "console"],
+  "permissions": [
+    "core:default"
+  ]
+}

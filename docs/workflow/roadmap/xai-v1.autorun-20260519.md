@@ -796,3 +796,16 @@ G1.1 (window-command-contract), G1.6 (host-business-residuals), G1.2 (grid-shell
   - `cargo check --features crypto` -> PASS
   - `cargo test --features crypto keychain_handle::` -> 3 tests PASS
 - Deferred: `db_init` SQLCipher PRAGMA wiring (G2.6); live macOS Keychain runtime smoke (covered by keychain-bridge-macos package).
+
+### 2026-05-20 00:58 PDT — Feature Checkpoint: G2.5 tauri-capability-allowlist READY_TO_SHIP
+
+- Audited existing capability files (`default.json`, `plugin-account-crypto.json`, `plugin-account-keychain.json`) and added `plugin-data-database.json` scoped to main/control/grid_*/account/console.
+- Added defence-in-depth `DATABASE_ALLOWED_WINDOWS` runtime allow-list in `commands/database.rs` so widget / pet / ai_cube windows cannot reach `db_*` even via a mis-attached capability file. 2 new cargo tests cover admit/reject paths.
+- Recorded the full audit (windows ↔ commands ↔ enforcement layer) in `apps/desktop/src-tauri/capabilities/AUDIT.md`.
+- Updated `docs/contracts/tauri-commands-v0.md` §6.1 and §7 with the new capability file + audit pointer.
+- Created `packages/tauri-capability-allowlist/docs/dev_log.md`; promoted G2 manifest row #6 to READY_TO_SHIP.
+- Tests run:
+  - `cargo check --features crypto` -> PASS
+  - `cargo test --features crypto database::` -> 9 tests PASS
+  - `cargo check` (default) -> PASS
+- Deferred: MAS sandbox capability validation under signed runtime; `tauri-plugin-opener` minimization (follow-up audit).

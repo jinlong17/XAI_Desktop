@@ -36,6 +36,29 @@ use crate::error::{AppError, AppResult};
 
 const DB_FILE_NAME: &str = "xai-repo-v0.db";
 
+/// Windows allowed to invoke `db_*` commands. Mirrors
+/// `capabilities/plugin-data-database.json`. `grid_*` matches the
+/// per-Grid native windows. Widget / pet / ai-cube windows are
+/// explicitly excluded — they must not persist Repository v0 data
+/// directly; they go through the owning plugin instead.
+const DATABASE_ALLOWED_WINDOWS: &[&str] = &["main", "control", "account", "console"];
+
+fn is_database_window_allowed(label: &str) -> bool {
+    if DATABASE_ALLOWED_WINDOWS.contains(&label) {
+        return true;
+    }
+    label.starts_with("grid_")
+}
+
+fn ensure_database_window_allowed(label: &str) -> AppResult<()> {
+    if is_database_window_allowed(label) {
+        return Ok(());
+    }
+    Err(AppError::SyncCapabilityDenied(format!(
+        "window `{label}` is not allowed to invoke db_* commands"
+    )))
+}
+
 const CREATE_RECORDS_SQL: &str = "CREATE TABLE IF NOT EXISTS core_data_records (\
     namespace TEXT NOT NULL, \
     id TEXT NOT NULL, \
@@ -129,9 +152,11 @@ pub struct DbInitOutput {
 #[tauri::command]
 pub async fn db_init(
     app: tauri::AppHandle,
+    window: tauri::WebviewWindow,
     state: tauri::State<'_, DatabaseState>,
     namespace: String,
 ) -> AppResult<DbInitOutput> {
+    ensure_database_window_allowed(window.label())?;
     validate_namespace(&namespace)?;
     let path = resolve_db_path(&app)?;
     state.open_at(&path)?;
@@ -154,9 +179,11 @@ pub struct DbPutInput {
 /// the caller's responsibility (the driver does not parse it).
 #[tauri::command]
 pub async fn db_put(
+    window: tauri::WebviewWindow,
     state: tauri::State<'_, DatabaseState>,
     input: DbPutInput,
 ) -> AppResult<()> {
+    ensure_database_window_allowed(window.label())?;
     validate_namespace(&input.namespace)?;
     validate_id(&input.id)?;
     state.with_conn(|conn| {
@@ -183,9 +210,11 @@ pub struct DbGetInput {
 /// Fetch a single record's JSON payload. Returns `null` if absent.
 #[tauri::command]
 pub async fn db_get(
+    window: tauri::WebviewWindow,
     state: tauri::State<'_, DatabaseState>,
     input: DbGetInput,
 ) -> AppResult<Option<String>> {
+    ensure_database_window_allowed(window.label())?;
     validate_namespace(&input.namespace)?;
     validate_id(&input.id)?;
     state.with_conn(|conn| {
@@ -210,9 +239,11 @@ pub struct DbListInput {
 /// List all JSON payloads in a namespace, sorted by `id`.
 #[tauri::command]
 pub async fn db_list(
+    window: tauri::WebviewWindow,
     state: tauri::State<'_, DatabaseState>,
     input: DbListInput,
 ) -> AppResult<Vec<String>> {
+    ensure_database_window_allowed(window.label())?;
     validate_namespace(&input.namespace)?;
     state.with_conn(|conn| {
         let mut stmt = conn
@@ -238,9 +269,11 @@ pub struct DbDeleteInput {
 /// Delete a single record. Idempotent.
 #[tauri::command]
 pub async fn db_delete(
+    window: tauri::WebviewWindow,
     state: tauri::State<'_, DatabaseState>,
     input: DbDeleteInput,
 ) -> AppResult<()> {
+    ensure_database_window_allowed(window.label())?;
     validate_namespace(&input.namespace)?;
     validate_id(&input.id)?;
     state.with_conn(|conn| {
@@ -434,6 +467,26 @@ mod tests {
         assert!(validate_id("").is_err());
         assert!(validate_id(&"a".repeat(257)).is_err());
         assert!(validate_id("abc-123").is_ok());
+    }
+
+    #[test]
+    fn window_allowlist_admits_documented_labels_and_grids() {
+        for label in DATABASE_ALLOWED_WINDOWS {
+            assert!(ensure_database_window_allowed(label).is_ok());
+        }
+        assert!(ensure_database_window_allowed("grid_abc-123").is_ok());
+        assert!(ensure_database_window_allowed("grid_").is_ok()); // prefix only
+    }
+
+    #[test]
+    fn window_allowlist_rejects_widget_pet_aicube() {
+        for label in ["widget_clock", "pet", "ai_cube", "unknown"] {
+            let err = ensure_database_window_allowed(label).unwrap_err();
+            match err {
+                AppError::SyncCapabilityDenied(msg) => assert!(msg.contains(label)),
+                other => panic!("unexpected error: {other:?}"),
+            }
+        }
     }
 
     #[test]

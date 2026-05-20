@@ -130,7 +130,8 @@ this bridge must map them to JS-visible `E11xx` / `E13xx` variants):
 Current source:
 - `apps/desktop/src-tauri/src/commands/database.rs`
 - `packages/core-data/src/tauri-sqlite.ts` (TS driver factory)
-- `apps/desktop/src-tauri/capabilities/default.json`
+- `apps/desktop/src-tauri/capabilities/plugin-data-database.json` (G2.5)
+- `apps/desktop/src-tauri/capabilities/AUDIT.md` (full audit table)
 
 | Command | Allowed windows | Input | Output | Security rule |
 |---|---|---|---|---|
@@ -155,11 +156,16 @@ PoC scope:
 | `default.json` | main/control/grid baseline window capability |
 | `plugin-account-crypto.json` | account/control crypto marker + command-side allowlist |
 | `plugin-account-keychain.json` | account/control keychain marker + command-side allowlist |
+| `plugin-data-database.json` | main/control/grid/account/console Repository v0 marker + runtime allowlist (G2.5) |
 
-G2 target:
-- Split broad window permissions if possible。
-- Document every custom command owner。
-- MAS build dry run validates capability set。
+Full audit table: `apps/desktop/src-tauri/capabilities/AUDIT.md`.
+
+G2.5 invariants now enforced:
+
+- Every JS-callable command has a capability file declaring its allowed windows.
+- Every JS-callable command has a runtime `ensure_*_allowed(label)` check matching the capability file. Widget / pet / ai-cube windows cannot invoke `db_*`, `crypto_*`, or `secret_*` even via mis-attached capability files.
+
+G2.7 (MAS signed runtime smoke) remains deferred under `xai-v1.deferred-gates.md`.
 
 ## 8. Error Shape
 
