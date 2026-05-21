@@ -117,7 +117,6 @@ export function useFileDrop({ onDrop, onHover, onEnter, onLeave, enabled = true,
 
       if (!isDraggingRef.current) {
         isDraggingRef.current = true;
-        console.log('📂 [useFileDrop] Files entered window');
         onHoverRef.current?.(true);
         onEnterRef.current?.();
       }
@@ -141,7 +140,6 @@ export function useFileDrop({ onDrop, onHover, onEnter, onLeave, enabled = true,
       // Only trigger leave when all nested elements have been left
       if (dragCounterRef.current === 0 && isDraggingRef.current) {
         isDraggingRef.current = false;
-        console.log('📂 [useFileDrop] Drag left window');
         onHoverRef.current?.(false);
         onLeaveRef.current?.();
       }
@@ -162,8 +160,6 @@ export function useFileDrop({ onDrop, onHover, onEnter, onLeave, enabled = true,
         // grid window's `tauri://drag-drop` event is.
         const fileNames = Array.from(files).map(f => f.name);
         const position = { x: e.clientX, y: e.clientY };
-
-        console.log('📂 [useFileDrop] Files dropped (basenames only):', fileNames, 'at', position);
 
         // Preserve legacy File-object cache so existing organizer logic
         // that maps the basename back to a File handle keeps working.
@@ -186,8 +182,6 @@ export function useFileDrop({ onDrop, onHover, onEnter, onLeave, enabled = true,
     document.addEventListener('dragover', handleDragOver, true);
     document.addEventListener('dragleave', handleDragLeave, true);
     document.addEventListener('drop', handleDrop, true);
-
-    console.log('✅ [useFileDrop] HTML5 drag-drop listeners registered (visual-only on `main`)');
 
     return () => {
       document.removeEventListener('dragenter', handleDragEnter, true);

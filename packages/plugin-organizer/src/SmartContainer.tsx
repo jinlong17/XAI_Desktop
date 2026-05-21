@@ -395,6 +395,14 @@ export function SmartContainer({
       onClick: () => {},
     },
     {
+      key: "delete",
+      label: "Delete Grid",
+      onClick: () => {
+        onClose(data.id);
+      },
+      tone: "danger",
+    },
+    {
       key: "close",
       label: "Close Grid",
       onClick: () => {
