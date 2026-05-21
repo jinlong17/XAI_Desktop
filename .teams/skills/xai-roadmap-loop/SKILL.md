@@ -1,6 +1,11 @@
 ---
 name: xai-roadmap-loop
-description: Roadmap orchestration layer (Layer 3.5). Parses a reviewed roadmap source doc into a manifest (init mode), then confirms dispatch mode and dispatches or emits xai-feature-full-loop work wave by wave to push every eligible feature to READY_TO_SHIP (run mode). Triggers: roadmap loop, roadmap orchestration, batch-run features, auto-develop a roadmap, advance a roadmap, roadmap manifest.
+description: >
+  Roadmap orchestration layer (Layer 3.5). Parses a reviewed roadmap source doc into a manifest
+  (init mode), then confirms dispatch mode and dispatches or emits xai-feature-full-loop work wave
+  by wave to push every eligible feature to READY_TO_SHIP (run mode). Triggers: roadmap loop,
+  roadmap orchestration, batch-run features, auto-develop a roadmap, advance a roadmap,
+  roadmap manifest.
 ---
 
 # xai-roadmap-loop
