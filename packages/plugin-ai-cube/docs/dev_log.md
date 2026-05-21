@@ -13,7 +13,7 @@
 | Automation Mode | A-Claude |
 | Verify Cross-vendor | no |
 | Executor | gpt-5 / feature-auto-build |
-| Updated | 2026-05-21 03:38 PDT |
+| Updated | 2026-05-21 03:39 PDT |
 | Blockers | none |
 
 ## Package Ownership
@@ -85,4 +85,4 @@
 | 2026-05-21 03:27 PDT | gpt-5.4 / feature-review | Reviewed the F2 planning artifacts against Workflow V2 gates and approved the plan as executable. Locked the implementation guardrails around `ControlHost` rendering, preview-only conversation affordances, and placeholder action scope. | — | feature-build |
 | 2026-05-21 03:35 PDT | gpt-5 / feature-auto-build | Phase 1 — Registration and shell boundary: added `registerAiCubePlugin()`, enabled and aligned plugin manifest, wired static registration in `apps/desktop/src/main.tsx`, and converted `ControlWindow` to shell/provider/bridge rendering via `ControlHost`. | `e50bcdd` | feature-auto-build |
 | 2026-05-21 03:36 PDT | gpt-5 / feature-auto-build | Phase 2 — Plugin-owned control surface boundary cleanup: removed Host business implementations (`apps/desktop/src/components/AiAssistant/AiCube.tsx`, `apps/desktop/src/components/Settings/SettingsPanel.tsx`) after plugin-owned control widget took over. | `f573d06` | feature-auto-build |
-| 2026-05-21 03:38 PDT | gpt-5 / feature-auto-build | Phase 3 — Action wiring and verification: kept organizer callbacks in Host bridge (`createGrid` / `clearAllGrids`), kept clipboard/pomodoro/search disabled placeholders, added registration/provider/preview tests, and ran desktop contract checks. Evidence: `pnpm --filter @repo/plugin-ai-cube check-types` pass; `pnpm --filter @repo/plugin-ai-cube test` pass (24 tests); `pnpm --filter desktop build` pass; `ControlWindow` renders `ControlHost`; preview status text explicitly marks Phase 0–3 disabled mode. | (this phase commit) | feature-verify |
+| 2026-05-21 03:38 PDT | gpt-5 / feature-auto-build | Phase 3 — Action wiring and verification: kept organizer callbacks in Host bridge (`createGrid` / `clearAllGrids`), kept clipboard/pomodoro/search disabled placeholders, added registration/provider/preview tests, and ran desktop contract checks. Evidence: `pnpm --filter @repo/plugin-ai-cube check-types` pass; `pnpm --filter @repo/plugin-ai-cube test` pass (24 tests); `pnpm --filter desktop build` pass; `ControlWindow` renders `ControlHost`; preview status text explicitly marks Phase 0–3 disabled mode. | `881bb13` | feature-verify |
