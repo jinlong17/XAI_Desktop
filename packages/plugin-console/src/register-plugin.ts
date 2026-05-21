@@ -1,6 +1,5 @@
 import { PluginRegistry } from "@repo/core/registry";
-import type { ConsoleViewRegistration, PluginManifest } from "@repo/core/types";
-import { LabelsConsoleView } from "./mockViews";
+import type { PluginManifest } from "@repo/core/types";
 
 const consoleManifest: PluginManifest = {
   name: "console",
@@ -13,22 +12,6 @@ const consoleManifest: PluginManifest = {
   contentTypes: ["console-shell", "console-view-slot", "console-search", "notification"],
   windows: {
     console: true,
-  },
-  ui: {
-    consoleSidebar: {
-      entries: [
-        {
-          id: "labels",
-          label: "Labels",
-          icon: "tag",
-          order: 80,
-          group: "labels",
-          enabled: true,
-          placeholder: true,
-          moduleId: "labels",
-        },
-      ],
-    },
   },
   events: {
     emit: [
@@ -51,25 +34,6 @@ const consoleManifest: PluginManifest = {
   ],
 };
 
-const consoleViews: ConsoleViewRegistration[] = [
-  {
-    moduleId: "labels",
-    sidebar: {
-      id: "labels",
-      label: "Labels",
-      icon: "tag",
-      order: 80,
-      group: "labels",
-      enabled: true,
-      placeholder: true,
-      moduleId: "labels",
-    },
-    render: LabelsConsoleView,
-  },
-];
-
 export function registerConsolePlugin(): void {
-  PluginRegistry.register(consoleManifest, {
-    ConsoleViews: consoleViews,
-  });
+  PluginRegistry.register(consoleManifest, {});
 }

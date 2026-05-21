@@ -9,3 +9,5 @@ export { LabelBadge } from "./components/LabelBadge";
 export type { LabelBadgeProps } from "./components/LabelBadge";
 export { LabelPicker } from "./components/LabelPicker";
 export type { LabelPickerProps } from "./components/LabelPicker";
+export { LabelsConsoleView, labelsConsoleViews } from "./console-view";
+export { registerLabelsPlugin } from "./register-plugin";

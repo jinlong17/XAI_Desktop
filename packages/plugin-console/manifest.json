@@ -9,22 +9,6 @@
   "windows": {
     "console": true
   },
-  "ui": {
-    "consoleSidebar": {
-      "entries": [
-        {
-          "id": "labels",
-          "label": "Labels",
-          "icon": "tag",
-          "order": 80,
-          "group": "labels",
-          "enabled": true,
-          "placeholder": true,
-          "moduleId": "labels"
-        }
-      ]
-    }
-  },
   "events": {
     "emit": [
       "console:navigate-module",
