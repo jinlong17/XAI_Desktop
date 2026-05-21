@@ -1,7 +1,7 @@
 {
   "$schema": "https://schema.tauri.app/config/2",
   "productName": "X Desktop",
-  "version": "0.1.0",
+  "version": "1.0.0-rc.1",
   "identifier": "com.jinlong.desktop",
   "build": {
     "beforeDevCommand": "pnpm dev",
@@ -45,5 +45,19 @@
       "icons/icon.icns",
       "icons/icon.ico"
     ]
+  },
+  "plugins": {
+    "updater": {
+      "pubkey": "DEFERRED_TAURI_UPDATER_PUBLIC_KEY",
+      "endpoints": [
+        "https://updates.example.invalid/xai-desktop/{{target}}/{{arch}}/{{current_version}}/latest.json"
+      ]
+    },
+    "crashReporting": {
+      "provider": "sentry",
+      "dsn": "https://examplePublicKey@o0.ingest.sentry.io/0",
+      "release": "x-desktop@1.0.0-rc.1",
+      "environment": "release-candidate"
+    }
   }
 }

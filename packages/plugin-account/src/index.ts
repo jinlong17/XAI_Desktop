@@ -127,6 +127,24 @@ export type {
 } from './sync-status';
 export { SupportFeedbackForm } from './components/SupportFeedbackForm';
 export type { SupportFeedbackFormProps } from './components/SupportFeedbackForm';
+export { LoginPage } from './components/LoginPage';
+export type { AccountLoginPageProps } from './components/LoginPage';
+export { DeviceCard } from './components/DeviceCard';
+export type { DeviceCardProps } from './components/DeviceCard';
+export { DeviceListPage } from './components/DeviceListPage';
+export type { DeviceListPageProps } from './components/DeviceListPage';
+export {
+  createMockDeviceRevokeTransport,
+  markDeviceRevoked,
+  revokeAccountDevice,
+} from './device-management';
+export type {
+  AccountDevice,
+  AccountDeviceStatus,
+  DeviceRevokeRequest,
+  DeviceRevokeResult,
+  DeviceRevokeTransport,
+} from './device-management';
 export {
   TODO_SYNC_SQL,
   createTodoSyncStore,
