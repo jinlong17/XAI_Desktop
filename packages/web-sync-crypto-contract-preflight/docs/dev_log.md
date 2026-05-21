@@ -8,14 +8,14 @@
 | Target | web-sync-crypto-contract-preflight |
 | Title | W1 Web Sync crypto and contract preflight |
 | Roadmap | web-ticktick-parity · feature #3 · W1 |
-| Status | BLOCKED |
-| Current Phase | FEATURE_BUILD |
-| Suggested Next | feature-auto-build |
+| Status | READY_FOR_VERIFY |
+| Current Phase | FEATURE_VERIFY |
+| Suggested Next | feature-verify |
 | Automation Mode | A-Claude |
 | Verify Cross-vendor | no |
-| Executor | feature-auto-build (Codex gpt-5-codex) |
-| Updated | 2026-05-21 12:18 PDT |
-| Blockers | Live Supabase / Realtime / nonce-lease verification remains deferred by requirement; this row is docs-only and mock-first. Local Git index is currently not writable in this session (`.git/index.lock: Operation not permitted`), so phase commit is blocked. |
+| Executor | feature-auto-build (Codex gpt-5.3-codex) |
+| Updated | 2026-05-21 12:20 PDT |
+| Blockers | None. Live Supabase / Realtime / nonce-lease validation remains intentionally deferred to later runtime/verify rows per docs-only scope. |
 
 ## Phase Plan
 
@@ -58,3 +58,4 @@ Option B matches `ADR-0006` and the roadmap's existing browser runtime direction
 | 2026-05-21 12:06 PDT | feature-plan (Codex inline) | Fresh plan: created the formal feature brief, wrote the discovery review with external browser-crypto evidence, and initialized design/api/test/dev_log docs that freeze the browser crypto choice, Sync wire semantics, and local mock strategy. | — | feature-review |
 | 2026-05-21 12:11 PDT | feature-review (Codex inline) | Approved the docs-only preflight: Option B is consistent with ADR-0006 and roadmap direction; `since_commit_seq` / `commit_seq`, derived `blob_aad`, and the mock/live seam all align with shipped Sync authority. | — | feature-build |
 | 2026-05-21 12:16 PDT | feature-auto-build (Codex gpt-5-codex) | Revalidated the docs-only acceptance package: confirmed Option B browser crypto choice, frozen `/sync/pull` + `/sync/push` payload/header semantics, required RFC vector gates (9106/8949/9180/8032), local mock plan, and deferred live gates across discovery + design/api/test docs. Attempted to stage the feature-scope docs for required phase commit, but Git failed with `.git/index.lock: Operation not permitted`; cannot complete commit step in this session. | — | feature-auto-build |
+| 2026-05-21 12:20 PDT | feature-auto-build (Codex gpt-5.3-codex) | Re-read the committed docs package and validated that commit `8697e60` satisfies approved Phase 1 docs-only deliverable scope (`docs/reviews/web-sync-crypto-contract-preflight/` + `packages/web-sync-crypto-contract-preflight/docs/`). Cleared stale local index-lock blocker and advanced workflow state to verification handoff. | `8697e60` (`docs(web-sync): freeze browser crypto contract`) | feature-verify |
