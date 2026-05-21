@@ -2,7 +2,9 @@ import { describe, expect, it } from "vitest";
 import {
   hasGridId,
   isFileDropPayload,
+  isGridClosePayload,
   isGridCreateRequestPayload,
+  isGridDeletePayload,
   isGridStatePayload,
   isGridUpdatePayload,
   toDroppedFile,
@@ -21,6 +23,9 @@ describe("grid event guards", () => {
 
     expect(isGridStatePayload({ gridId: "grid-1", grid: {}, items: {} })).toBe(true);
     expect(isGridStatePayload({ gridId: "grid-1", grid: {} })).toBe(false);
+
+    expect(isGridClosePayload({ gridId: "grid-1" })).toBe(true);
+    expect(isGridDeletePayload({ gridId: "grid-1" })).toBe(true);
   });
 
   it("guards create requests and file drops", () => {

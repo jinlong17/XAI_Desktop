@@ -7,6 +7,7 @@ import type { FinderClient } from "./finderClient";
 import {
   ORGANIZER_FILE_DROP_EVENT,
   ORGANIZER_GRID_CLOSE_EVENT,
+  ORGANIZER_GRID_DELETE_EVENT,
   ORGANIZER_GRID_READY_EVENT,
   ORGANIZER_GRID_STATE_EVENT,
   ORGANIZER_GRID_UPDATE_EVENT,
@@ -170,6 +171,13 @@ export function OrganizerGridContent({
     [gridId, tauriWindow],
   );
 
+  const handleDelete = useCallback(
+    (_id: string) => {
+      tauriWindow.emit(ORGANIZER_GRID_DELETE_EVENT, { gridId });
+    },
+    [gridId, tauriWindow],
+  );
+
   const handleToggleFold = useCallback(
     (_id: string) => {
       emitUpdate({ isFolded: !grid?.isFolded });
@@ -287,6 +295,7 @@ export function OrganizerGridContent({
         items={resolvedItems}
         onUpdate={handleUpdate}
         onClose={handleClose}
+        onDelete={handleDelete}
         onToggleFold={handleToggleFold}
         onToggleLock={handleToggleLock}
         onUpdateItem={handleUpdateItem}

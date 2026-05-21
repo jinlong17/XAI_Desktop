@@ -5,6 +5,7 @@ export const ORGANIZER_GRID_READY_EVENT = "organizer:grid:ready";
 export const ORGANIZER_GRID_STATE_EVENT = "organizer:grid:state";
 export const ORGANIZER_GRID_UPDATE_EVENT = "organizer:grid:update";
 export const ORGANIZER_GRID_CLOSE_EVENT = "organizer:grid:close";
+export const ORGANIZER_GRID_DELETE_EVENT = "organizer:grid:delete";
 export const ORGANIZER_GRID_CREATE_REQUEST_EVENT = "organizer:grid:create-request";
 export const ORGANIZER_FILE_DROP_EVENT = "organizer:file:drop";
 
@@ -27,6 +28,10 @@ export interface OrganizerGridUpdatePayload {
 }
 
 export interface OrganizerGridClosePayload {
+  gridId: string;
+}
+
+export interface OrganizerGridDeletePayload {
   gridId: string;
 }
 
@@ -93,6 +98,10 @@ export function isGridUpdatePayload(payload: unknown): payload is OrganizerGridU
 }
 
 export function isGridClosePayload(payload: unknown): payload is OrganizerGridClosePayload {
+  return hasGridId(payload);
+}
+
+export function isGridDeletePayload(payload: unknown): payload is OrganizerGridDeletePayload {
   return hasGridId(payload);
 }
 

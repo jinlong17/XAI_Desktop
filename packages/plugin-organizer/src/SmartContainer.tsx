@@ -36,6 +36,7 @@ export interface SmartContainerProps {
   items: DesktopItem[];
   onUpdate: (id: string, patch: Partial<GridBox>) => void;
   onClose: (id: string) => void;
+  onDelete?: (id: string) => void;
   onToggleFold: (id: string) => void;
   onToggleLock: (id: string) => void;
   onUpdateItem?: (itemId: string, patch: Partial<DesktopItem>) => void;
@@ -100,6 +101,7 @@ export function SmartContainer({
   items,
   onUpdate,
   onClose,
+  onDelete,
   onToggleFold,
   onToggleLock,
   onUpdateItem,
@@ -398,7 +400,7 @@ export function SmartContainer({
       key: "delete",
       label: "Delete Grid",
       onClick: () => {
-        onClose(data.id);
+        (onDelete ?? onClose)(data.id);
       },
       tone: "danger",
     },

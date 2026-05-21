@@ -5,11 +5,13 @@ import { GridBox, DesktopItem } from "../types";
 import {
   ORGANIZER_FILE_DROP_EVENT,
   ORGANIZER_GRID_CLOSE_EVENT,
+  ORGANIZER_GRID_DELETE_EVENT,
   ORGANIZER_GRID_READY_EVENT,
   ORGANIZER_GRID_STATE_EVENT,
   ORGANIZER_GRID_UPDATE_EVENT,
   isFileDropPayload,
   isGridClosePayload,
+  isGridDeletePayload,
   isGridReadyPayload,
   isGridUpdatePayload,
 } from "../gridEvents";
@@ -189,6 +191,17 @@ export function useMultiWindowGrids(
           return;
         }
         const { gridId } = event.payload;
+        closeWindow(gridId);
+      }
+    );
+
+    const unlistenDelete = listen<unknown>(
+      ORGANIZER_GRID_DELETE_EVENT,
+      (event) => {
+        if (!isGridDeletePayload(event.payload)) {
+          return;
+        }
+        const { gridId } = event.payload;
         onGridDelete(gridId);
       }
     );
@@ -228,10 +241,11 @@ export function useMultiWindowGrids(
     return () => {
       unlistenUpdate.then((fn) => fn());
       unlistenClose.then((fn) => fn());
+      unlistenDelete.then((fn) => fn());
       unlistenFileDrop.then((fn) => fn());
       unlistenReady.then((fn) => fn());
     };
-  }, [enabled, grids, items, onGridUpdate, onGridDelete, onFileDrop]);
+  }, [enabled, grids, items, onGridUpdate, onGridDelete, onFileDrop, closeWindow]);
 
   // Broadcast grid updates to all windows
   useEffect(() => {
