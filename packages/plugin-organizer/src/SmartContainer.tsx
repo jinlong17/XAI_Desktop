@@ -425,7 +425,7 @@ export function SmartContainer({
         onFocus?.(data.id);
       }}
       handle=".grid-title-bar"
-      cancel=".smart-container__input, .resize-handle, .react-resizable-handle"
+      cancel=".smart-container__input, .resize-handle"
       disabled={data.isLocked}
     >
       <div
