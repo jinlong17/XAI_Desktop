@@ -4,24 +4,58 @@
   "displayName": "控制台",
   "description": "Productivity console shell with navigation slots, search, command palette, desktop bridge, and notifications.",
   "author": "Jinlong",
-  "enabled": false,
-  "contentTypes": ["console-nav", "command-palette", "notification"],
+  "enabled": true,
+  "contentTypes": ["console-shell", "console-view-slot", "console-search", "notification"],
   "windows": {
-    "control": true
+    "console": true
+  },
+  "ui": {
+    "consoleSidebar": {
+      "entries": [
+        {
+          "id": "tasks",
+          "label": "Tasks",
+          "icon": "check-square",
+          "order": 20,
+          "group": "productivity",
+          "enabled": true,
+          "placeholder": true,
+          "moduleId": "tasks"
+        },
+        {
+          "id": "labels",
+          "label": "Labels",
+          "icon": "tag",
+          "order": 30,
+          "group": "labels",
+          "enabled": true,
+          "placeholder": true,
+          "moduleId": "labels"
+        }
+      ]
+    }
   },
   "events": {
     "emit": [
-      "console:nav-opened",
-      "console:command-executed",
-      "console:create-task-from-grid-item",
-      "console:notification-read"
+      "console:navigate-module",
+      "console:sidebar-toggled",
+      "console:search-opened",
+      "console:detail-selection-changed",
+      "console:reconcile-requested",
+      "console:ack-applied"
     ],
     "listen": [
-      "productivity:pomodoro-completed",
-      "productivity:todo-due",
-      "productivity:habit-reminder"
+      "account:sync-started",
+      "account:sync-completed",
+      "account:sync-failed"
     ]
   },
   "dependencies": [],
-  "tauriCommands": []
+  "tauriCommands": [
+    "open_console_window",
+    "close_console_window",
+    "focus_console_window",
+    "get_console_window_frame",
+    "set_console_window_frame"
+  ]
 }

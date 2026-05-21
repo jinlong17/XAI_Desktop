@@ -2,6 +2,8 @@ import type {
   PluginManifest,
   PluginComponents,
   PluginRegistration,
+  ConsoleSidebarEntry,
+  ConsoleViewRegistration,
 } from '../types/plugin';
 import type { ComponentType } from 'react';
 
@@ -40,6 +42,17 @@ class PluginRegistryImpl {
       }
     }
     return map;
+  }
+
+  getConsoleViewRegistrations(): ConsoleViewRegistration[] {
+    return this.getAllEnabled()
+      .filter((p) => p.manifest.windows.console)
+      .flatMap((p) => p.components.ConsoleViews ?? [])
+      .sort((a, b) => a.sidebar.order - b.sidebar.order || a.sidebar.label.localeCompare(b.sidebar.label));
+  }
+
+  getConsoleSidebarEntries(): ConsoleSidebarEntry[] {
+    return this.getConsoleViewRegistrations().map((registration) => registration.sidebar);
   }
 }
 

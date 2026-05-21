@@ -16,4 +16,11 @@ export type {
   PluginComponents,
   PluginRegistration,
   ContentType,
+  ConsoleModuleId,
+  ConsoleRouteState,
+  ConsoleThemeState,
+  ConsoleViewCapabilities,
+  ConsoleViewProps,
+  ConsoleSidebarEntry,
+  ConsoleViewRegistration,
 } from './plugin';

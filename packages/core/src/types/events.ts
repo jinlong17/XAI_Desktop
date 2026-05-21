@@ -33,4 +33,33 @@ export interface EventMap {
   'account:sync-started': { kind: 'push' | 'pull' };
   'account:sync-completed': { kind: 'push' | 'pull'; durationMs: number };
   'account:sync-failed': { kind: 'push' | 'pull'; error: string };
+
+  // Console shell events
+  'console:navigate-module': {
+    moduleId: string;
+    listId?: string;
+    detailId?: string;
+    source: 'sidebar' | 'command-palette' | 'shortcut' | 'restore';
+  };
+  'console:sidebar-toggled': {
+    collapsed: boolean;
+  };
+  'console:search-opened': {
+    query?: string;
+    source: 'shortcut' | 'click' | 'programmatic';
+  };
+  'console:detail-selection-changed': {
+    moduleId: string;
+    selection: Record<string, string | number | boolean | null>;
+  };
+  'console:reconcile-requested': {
+    moduleId: string;
+    reason?: string;
+    revisionHint?: number;
+  };
+  'console:ack-applied': {
+    moduleId: string;
+    revision: number;
+    acknowledgedAt: string;
+  };
 }

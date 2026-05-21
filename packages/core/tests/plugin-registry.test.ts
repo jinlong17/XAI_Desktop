@@ -46,4 +46,60 @@ describe('PluginRegistry', () => {
     expect(names).toContain('enabled-plugin');
     expect(names).not.toContain('disabled-plugin');
   });
+
+  it('should expose console registrations from enabled console plugins only', async () => {
+    const { PluginRegistry } = await import('../src/registry/plugin-registry');
+    PluginRegistry.register(
+      {
+        ...createMockManifest('console-enabled', true),
+        windows: { console: true },
+      },
+      {
+      ConsoleViews: [
+        {
+          moduleId: 'tasks',
+          sidebar: {
+            id: 'tasks',
+            label: 'Tasks',
+            icon: 'check',
+            order: 10,
+            group: 'productivity',
+            enabled: true,
+            placeholder: false,
+            moduleId: 'tasks',
+          },
+          render: (() => null) as any,
+        },
+      ],
+      },
+    );
+    PluginRegistry.register(
+      {
+        ...createMockManifest('console-disabled', false),
+        windows: { console: true },
+      },
+      {
+        ConsoleViews: [
+          {
+            moduleId: 'labels',
+            sidebar: {
+              id: 'labels',
+              label: 'Labels',
+              icon: 'tag',
+              order: 20,
+              group: 'labels',
+              enabled: true,
+              placeholder: false,
+              moduleId: 'labels',
+            },
+            render: (() => null) as any,
+          },
+        ],
+      },
+    );
+
+    const consoleModules = PluginRegistry.getConsoleViewRegistrations().map((registration) => registration.moduleId);
+    expect(consoleModules).toContain('tasks');
+    expect(consoleModules).not.toContain('labels');
+  });
 });
