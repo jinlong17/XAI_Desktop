@@ -76,7 +76,7 @@
 | clipboard | packages/plugin-clipboard/ | Planned | §5.5 | @repo/core | — |
 | widgets | packages/plugin-widgets/ | Planned | §5.6 | @repo/core | — |
 | meditation | packages/plugin-meditation/ | Planned | §5.7 | @repo/core | — |
-| ai-cube | packages/plugin-ai-cube/ | Planned | §5.8 | @repo/core | — |
+| ai-cube | packages/plugin-ai-cube/ | In-Dev | §5.8 | @repo/core, @repo/core-data, @repo/ui | 2026-05-21 |
 | settings | packages/plugin-settings/ | Planned | — | @repo/core, @repo/ui | — |
 
 ## 已完成功能 (organizer)

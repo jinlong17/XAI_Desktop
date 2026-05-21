@@ -41,6 +41,9 @@ importers:
       '@repo/plugin-account':
         specifier: workspace:*
         version: link:../../packages/plugin-account
+      '@repo/plugin-ai-cube':
+        specifier: workspace:*
+        version: link:../../packages/plugin-ai-cube
       '@repo/plugin-organizer':
         specifier: workspace:*
         version: link:../../packages/plugin-organizer
@@ -354,6 +357,9 @@ importers:
       '@repo/core-data':
         specifier: workspace:*
         version: link:../core-data
+      '@repo/ui':
+        specifier: workspace:*
+        version: link:../ui
       react:
         specifier: ^19.2.0
         version: 19.2.0
