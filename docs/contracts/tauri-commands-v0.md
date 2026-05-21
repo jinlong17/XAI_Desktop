@@ -75,6 +75,7 @@ G1.1 implementation notes:
 | `open_path` | organizer (G3-E3) | `main`,`control`,`grid_*`,`console` | `{ input: { path } }` | same path-authorization and bookmark-registry rules as `reveal_in_finder`; user-initiated only; shells out to `open` with the lexically-normalized path on macOS |
 | `register_path_bookmark` | organizer (G3-E3 P0) | `main`,`control`,`grid_*`,`console` | `{ input: { path } }` | records a user-authorized path in the in-memory `BookmarkRegistry`; validates path shape via `validate_user_path` before inserting; idempotent. Called by the Organizer drop/open-panel handler immediately after a user-initiated path enters JS scope. |
 | `clear_path_bookmark` | organizer (G3-E3 P0) | `main`,`control`,`grid_*`,`console` | `{ input: { path } }` | removes a previously-registered path from the `BookmarkRegistry`; idempotent (removing an absent path is not an error); validates path shape first for symmetry. |
+| `generate_file_thumbnail` | organizer (F3-P4) | `main`,`control`,`grid_*`,`console` | `{ input: { path, maxSize? } }` | additive-only thumbnail seam. Requires the same `validate_user_path` + `BookmarkRegistry` authorization gate as Finder commands, then generates a macOS Quick Look thumbnail (`qlmanage -t`) for image/PDF/video types; returns `null` on unsupported types or generation failure so UI can fall back gracefully. |
 | `resolve_alias` | organizer | `control`,`grid_*` | TBD | G1/G2 根据 sandbox 决定 |
 | `create_security_scoped_bookmark` | organizer/account | `control`,`grid_*` | TBD | MAS path if required |
 

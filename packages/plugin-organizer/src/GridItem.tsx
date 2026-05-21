@@ -6,6 +6,7 @@ import { DesktopItem, type FinderTagColor } from "./types";
 import { useTauriInvoke } from "@repo/core/hooks";
 import { createFinderClient } from "./finderClient";
 import { TagPicker } from "./TagPicker";
+import { getFileThumbnail, isThumbnailCandidate } from "./thumbnailCache";
 
 type ItemVariant = "grid" | "list";
 
@@ -55,6 +56,7 @@ export function GridItem({ item, variant = "grid", onUpdate, onCreateTask, onRem
   const finderClient = useMemo(() => createFinderClient(invoke), [invoke]);
   const [tagsOpen, setTagsOpen] = useState(false);
   const [itemMenu, setItemMenu] = useState<ItemMenuState>(null);
+  const [thumbnailSrc, setThumbnailSrc] = useState<string | null>(null);
   const tags = item.finderTags ?? [];
 
   useEffect(() => {
@@ -77,6 +79,22 @@ export function GridItem({ item, variant = "grid", onUpdate, onCreateTask, onRem
       cancelled = true;
     };
   }, [finderClient, item.filepath, item.finderTags, item.id, onUpdate]);
+
+  useEffect(() => {
+    let cancelled = false;
+    if (!isThumbnailCandidate(item)) {
+      setThumbnailSrc(null);
+      return;
+    }
+    void getFileThumbnail(invoke, item.filepath).then((src) => {
+      if (!cancelled) {
+        setThumbnailSrc(src);
+      }
+    });
+    return () => {
+      cancelled = true;
+    };
+  }, [invoke, item]);
 
   // Write path gated: write_finder_tags is a no-op in Rust and is not yet
   // registered in lib.rs. Re-enable once both the xattr implementation and
@@ -148,8 +166,17 @@ export function GridItem({ item, variant = "grid", onUpdate, onCreateTask, onRem
 
   return (
     <div ref={setNodeRef} style={{ ...style, position: "relative" }} {...listeners} {...attributes} onContextMenu={handleItemContextMenu}>
-      <div style={iconSurfaceStyle} aria-hidden>
-        <DesktopIcon name={iconName} size={16} />
+      <div style={{ ...iconSurfaceStyle, overflow: "hidden" }} aria-hidden>
+        {thumbnailSrc ? (
+          <img
+            src={thumbnailSrc}
+            alt=""
+            style={{ width: "100%", height: "100%", objectFit: "cover" }}
+            draggable={false}
+          />
+        ) : (
+          <DesktopIcon name={iconName} size={16} />
+        )}
       </div>
       <div style={{ textAlign: variant === "list" ? "left" : "center", minWidth: 0, flex: 1 }}>
         <div

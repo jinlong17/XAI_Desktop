@@ -28,6 +28,8 @@ import "./resize-handles.css";
 const RESIZE_DIRECTIONS: ResizeDirection[] = ["s", "e", "se", "w", "n", "nw", "ne", "sw"];
 const MIN_SIZE = 150;
 const TITLE_BAR_HEIGHT = 40;
+const EDGE_SNAP_THRESHOLD = 24;
+const EDGE_HIDE_REVEAL_PX = 52;
 
 export interface SmartContainerProps {
   data: GridBox;
@@ -50,6 +52,41 @@ type GridMenuAction = {
   onClick: () => void;
   tone?: "default" | "danger";
 };
+
+type Rect = GridBox["rect"];
+
+function applyEdgeSnap(rect: Rect, isFolded: boolean): Rect {
+  if (typeof window === "undefined") {
+    return rect;
+  }
+
+  const maxX = Math.max(0, window.innerWidth - rect.width);
+  const maxY = Math.max(0, window.innerHeight - rect.height);
+  let x = rect.x;
+  let y = rect.y;
+
+  if (x <= EDGE_SNAP_THRESHOLD) {
+    x = 0;
+  } else if (x >= maxX - EDGE_SNAP_THRESHOLD) {
+    x = maxX;
+  }
+
+  if (y <= EDGE_SNAP_THRESHOLD) {
+    y = 0;
+  } else if (y >= maxY - EDGE_SNAP_THRESHOLD) {
+    y = maxY;
+  }
+
+  if (isFolded) {
+    if (x <= EDGE_SNAP_THRESHOLD) {
+      x = Math.min(0, EDGE_HIDE_REVEAL_PX - rect.width);
+    } else if (x >= maxX - EDGE_SNAP_THRESHOLD) {
+      x = Math.max(0, window.innerWidth - EDGE_HIDE_REVEAL_PX);
+    }
+  }
+
+  return { ...rect, x, y };
+}
 
 /**
  * ## SmartContainer (Independent File Fence)
@@ -143,8 +180,12 @@ export function SmartContainer({
 
   const handleDragStop = (_event: DraggableEvent, dataEvent: DraggableData) => {
     setIsDragging(false);
-    setDragPosition({ x: dataEvent.x, y: dataEvent.y });
-    onUpdate(data.id, { rect: { ...data.rect, x: dataEvent.x, y: dataEvent.y } });
+    const snappedRect = applyEdgeSnap(
+      { ...data.rect, x: dataEvent.x, y: dataEvent.y },
+      data.isFolded,
+    );
+    setDragPosition({ x: snappedRect.x, y: snappedRect.y });
+    onUpdate(data.id, { rect: snappedRect });
   };
 
   const handleDrag = (_event: DraggableEvent, dataEvent: DraggableData) => {

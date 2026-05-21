@@ -33,13 +33,14 @@ Source files audited:
 | `db_init` / `db_put` / `db_get` / `db_list` / `db_delete` / `db_put_batch` | plugin-data-database.json (G2.5) | `commands::database::DATABASE_ALLOWED_WINDOWS` (main, control, account, console) + `grid_*` prefix |
 | `reveal_in_finder` / `open_path` | default.json | `commands::finder::FINDER_ALLOWED_WINDOWS` (main, control, console) + `grid_*` prefix; plus `BookmarkRegistry` lookup (G3-E3 P0 — honest provenance) |
 | `register_path_bookmark` / `clear_path_bookmark` | default.json | `commands::bookmarks::BOOKMARK_ALLOWED_WINDOWS` (main, control, console) + `grid_*` prefix; mirrors `FINDER_ALLOWED_WINDOWS` so only surfaces that can call `reveal_in_finder` / `open_path` can authorize the underlying paths |
+| `generate_file_thumbnail` | default.json | `commands::thumbnail::THUMBNAIL_ALLOWED_WINDOWS` (main, control, console) + `grid_*` prefix; plus `BookmarkRegistry` lookup and `validate_user_path` shape gate before `qlmanage` generation |
 
 ## Minimization notes
 
 - `default.json` keeps the `core:window:*` and `core:webview:*` set used by `lib.rs::run()` for the transparent main / control / grid construction; nothing was removed because every entry corresponds to a verified caller.
 - `core:event:default` is required by the cross-window event bus (`@repo/core/events`).
 - `opener:default` is intentionally retained for user-initiated file/URL openers but should be revisited if plugins start using `tauri-plugin-opener` programmatically; flagged in the audit but kept for now to avoid touching G1.3 path-DnD flows.
-- No window outside the allowlist can invoke `db_*` even if a future capability file widens the file scope, because the runtime `ensure_database_window_allowed` check is layered on top of the capability system. The same defence-in-depth pattern is in place for `crypto_*`, `secret_*`, `reveal_in_finder` / `open_path`, the window-lifecycle commands (`create_grid_window` and siblings), and `sync_set_menubar_status`. Other host commands (`clipboard_*`, etc.) rely on capability file scope alone for now.
+- No window outside the allowlist can invoke `db_*` even if a future capability file widens the file scope, because the runtime `ensure_database_window_allowed` check is layered on top of the capability system. The same defence-in-depth pattern is in place for `crypto_*`, `secret_*`, `reveal_in_finder` / `open_path`, `generate_file_thumbnail`, the window-lifecycle commands (`create_grid_window` and siblings), and `sync_set_menubar_status`. Other host commands (`clipboard_*`, etc.) rely on capability file scope alone for now.
 
 ## Deferred / out-of-scope for G2.5
 

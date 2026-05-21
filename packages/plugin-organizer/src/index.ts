@@ -66,6 +66,11 @@ export type {
 export { createFinderClient } from "./finderClient";
 export type { FinderClient } from "./finderClient";
 export {
+  clearThumbnailCache,
+  getFileThumbnail,
+  isThumbnailCandidate,
+} from "./thumbnailCache";
+export {
   defaultEmptyStateActions,
   evaluateItemHealth,
 } from "./itemHealth";

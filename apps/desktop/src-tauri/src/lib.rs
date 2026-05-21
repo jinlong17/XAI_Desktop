@@ -80,6 +80,7 @@ pub fn run() {
             commands::finder::open_path,
             commands::bookmarks::register_path_bookmark,
             commands::bookmarks::clear_path_bookmark,
+            commands::thumbnail::generate_file_thumbnail,
             #[cfg(feature = "crypto")]
             commands::database::db_init,
             #[cfg(feature = "crypto")]
