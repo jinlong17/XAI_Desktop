@@ -13,20 +13,10 @@
     "consoleSidebar": {
       "entries": [
         {
-          "id": "tasks",
-          "label": "Tasks",
-          "icon": "check-square",
-          "order": 20,
-          "group": "productivity",
-          "enabled": true,
-          "placeholder": true,
-          "moduleId": "tasks"
-        },
-        {
           "id": "labels",
           "label": "Labels",
           "icon": "tag",
-          "order": 30,
+          "order": 80,
           "group": "labels",
           "enabled": true,
           "placeholder": true,

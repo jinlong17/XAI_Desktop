@@ -8,6 +8,7 @@ import "./index.css";
 import { registerAccountPlugin } from "@repo/plugin-account";
 import { registerAiCubePlugin } from "@repo/plugin-ai-cube";
 import { registerConsolePlugin } from "../../../packages/plugin-console/src";
+import { registerProductivityPlugin } from "../../../packages/plugin-productivity/src";
 
 /**
  * Simple hash router for multi-window architecture.
@@ -44,6 +45,7 @@ function Router() {
 // Static plugin registration — above createRoot (red line #1/#8: registration only, no sync logic)
 registerAccountPlugin();
 registerAiCubePlugin();
+registerProductivityPlugin();
 registerConsolePlugin();
 
 ReactDOM.createRoot(document.getElementById("root") as HTMLElement).render(

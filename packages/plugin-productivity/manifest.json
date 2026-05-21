@@ -4,11 +4,12 @@
   "displayName": "效率工具",
   "description": "Todos, Eisenhower planning, pomodoro cycles, and habit basics.",
   "author": "Jinlong",
-  "enabled": false,
+  "enabled": true,
   "contentTypes": ["todo", "pomodoro-session", "habit"],
   "windows": {
     "control": true,
-    "overlay": true
+    "overlay": true,
+    "console": true
   },
   "events": {
     "emit": [
@@ -19,6 +20,6 @@
     ],
     "listen": ["console:create-task-from-grid-item"]
   },
-  "dependencies": [],
+  "dependencies": ["@repo/core", "@repo/core-data"],
   "tauriCommands": []
 }

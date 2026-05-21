@@ -21,3 +21,11 @@ export type { HabitCalendarMiniProps } from "./components/HabitCalendarMini";
 export { HabitCard } from "./components/HabitCard";
 export type { HabitCardProps } from "./components/HabitCard";
 export { HabitList } from "./components/HabitList";
+export {
+  HabitsConsoleView,
+  MatrixConsoleView,
+  PomodoroConsoleView,
+  TasksConsoleView,
+  productivityConsoleViews,
+} from "./console-views";
+export { registerProductivityPlugin } from "./register-plugin";
