@@ -15,6 +15,8 @@
 
 本文档 **只覆盖浏览器特有的内容**。控制台 UI(三栏布局 / 各模块视图 / 键盘流 / 主题 / 设置 / 全局搜索 / sidebar 导航)全部继承自 `sub-prds/console/PRD.md`,本档不重复。
 
+> 2026-05-21 更新: `docs/adr/0006-web-face-hybrid-reuse-boundary.md` 已对 `ADR-0003` 做 Web 面收窄。Web 继续共享数据契约、Sync/Repository 语义与 Console PRD 的共享 UI truth，但不再把“直接复用现有 plugin 源码”作为硬前提。
+
 **心智模型一句话(v0.2 修正)**:网页版 = 控制台子 PRD 的 React 组件树 + 浏览器壳 + **Sync push/pull encrypted blob driver**(不是直连业务表的 PostgREST CRUD)+ 浏览器特有的运行约束(认证 / 缓存 / 实时同步 / 离线 / 部署)。
 
 ### 0.1 基础契约(v0.3 拍板,后续 FR 全部据此展开)
@@ -50,7 +52,7 @@
 
 ### 1.1 角色
 
-网页版是 XAI_Desktop 的"第三个面"(见 ADR-0003):桌面 overlay + 整体控制台 + 网页版三者**共享同一套 plugin 业务层与同一套后端数据**,差异只在宿主壳与数据 driver。
+网页版是 XAI_Desktop 的"第三个面"(见 ADR-0003,并受 ADR-0006 收窄):桌面 overlay + 整体控制台 + 网页版三者共享同一套后端数据、数据契约与交互真理源;**Web 的宿主壳与浏览器视图层可独立实现**,而源码级 plugin 复用不再是硬前提。
 
 ### 1.2 为什么进 v1
 
@@ -1026,7 +1028,7 @@ packages/core-events/
     └── testing.ts
 ```
 
-### 7.3 平台无关性约束(继承 ADR-0003)
+### 7.3 平台无关性约束(继承 ADR-0003,并受 ADR-0006 收窄)
 
 - Plugin 业务代码 0 import `@tauri-apps/api`;所有跨平台能力通过 `@repo/core-*` 注入
 - Plugin 在 Web build 中失活的部分(剪贴板监听 / 桌宠浮窗)通过 manifest `windows.web = false` 静态剔除,不进 bundle
