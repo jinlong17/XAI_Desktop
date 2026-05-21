@@ -52,8 +52,26 @@ that should be copied or confirmed.
    `Status: AWAITING_CONFIRMATION`. Execute only after the user explicitly
    confirms in a later message.
 
-If the host cannot present AskUserQuestion UI, ask the same choices in compact
-plain text and wait. Do not silently choose `goal` or `task`.
+## Host Interaction Compatibility
+
+Treat "AskQuestion" as a host-specific capability, not as one literal tool name.
+
+- **Claude Code**: use `AskUserQuestion` when available. Claude subagents may receive
+  that tool through their `allowed_tools` frontmatter.
+- **Codex parent session**: use Codex's structured `request_user_input` capability when
+  it is available in the current mode. Keep option labels short, put the recommended
+  option first, and include the same reason / ETA / affected-feature metadata required
+  by this skill.
+- **Codex spawned subagents**: do not assume `request_user_input` is available. For any
+  prompt intended to run inside a Codex subagent, pre-resolve closed-set fields in the
+  parent prompt instead of relying on an in-subagent picker.
+- **Cursor or plain text hosts**: when no structured question tool is available, ask the
+  same choices in compact plain text and wait.
+
+Never silently choose `goal` or `task`. For Codex goal prompts, do not emit a workflow
+prompt that expects the destination subagent to recover missing `Automation Mode:` or
+`Verify Cross-vendor:` via `AskUserQuestion`; collect those values first or include a
+safe explicit value.
 
 ## Routing Heuristics
 
@@ -153,6 +171,12 @@ For Codex goal prompts:
 - Make the prompt self-contained enough for a new Codex window.
 - Mention project agent rules and the project usage guide as local rules to read.
 - If using a Workflow V2 subagent, require verbatim `## Handoff` display.
+- Include explicit values for every closed-set Workflow V2 field that a Claude prompt
+  might otherwise collect via `AskUserQuestion`, especially `Automation Mode:` and
+  `Verify Cross-vendor:`.
+- Prefer parent-session skills (`/<skill_prefix>feature-full-loop`,
+  `/<skill_prefix>roadmap-loop`) over spawned compatibility meta-orchestrators when
+  the project documents them as the runtime entry.
 
 Recommended goal prompt shape:
 
