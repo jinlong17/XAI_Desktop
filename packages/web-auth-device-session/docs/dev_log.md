@@ -8,13 +8,13 @@
 | Target | web-auth-device-session |
 | Title | W3 browser auth and app-device session foundation |
 | Roadmap | web-ticktick-parity · feature #6 · W3 |
-| Status | READY_FOR_VERIFY |
+| Status | READY_TO_SHIP |
 | Current Phase | FEATURE_VERIFY |
-| Suggested Next | feature-verify |
+| Suggested Next | ship |
 | Automation Mode | A-Claude |
 | Verify Cross-vendor | no |
-| Executor | feature-auto-build (Codex gpt-5.3-codex inline) |
-| Updated | 2026-05-21 16:10 PDT |
+| Executor | feature-verify (Codex gpt-5.3-codex inline) |
+| Updated | 2026-05-21 16:14 PDT |
 | Blockers | — |
 
 ## Source Context
@@ -128,6 +128,17 @@ Scoped verification:
 - APPROVED. The split from `web-browser-e2e-crypto-runtime` is clean enough for build: this row owns auth-token/session storage and device registration/heartbeat/request injection, while the later runtime row owns DEK/KEK/AES envelope behavior.
 - APPROVED WITH EXECUTION DISCIPLINE. Keep `@repo/plugin-account` reference-only during build, keep the `next` allowlist limited to same-origin relative `/app` and explicit `/auth/*` completion routes, and centralize `401 unknown_device` / `403 device_revoked` cleanup in the package-owned request/session seam rather than host pages.
 
+## Verification Summary
+
+- PASS. Reviewed commits `690e766`, `7186d5f`, `15a297a`, `f2816d5`, `a2617c3`, and `d219bd1`; each kept a single intent, stayed within its phase or docs boundary, and used the required commit body format.
+- PASS. Current implementation still matches the approved Phase 1/2/3 plan: `apps/web` remains a thin host wrapper, business auth/device logic stays in `packages/web-auth-device-session`, and there is no runtime dependency on `@repo/plugin-account`.
+- PASS. Prior blockers are closed in the current tree: PKCE `code_verifier` keys route to `sessionStorage` while durable auth/session keys stay in IndexedDB, and email verification completion is wired through same-origin `/auth/verify` callback handling.
+- PASS. Verification commands run locally: `pnpm --filter @repo/web-auth-device-session test` (33 passed), `pnpm --filter @repo/web-auth-device-session check-types`, and `pnpm --filter @repo/web check-types`.
+
+## Residual Risks
+
+- Deferred live gates remain unchanged: real Supabase redirect allowlists, Google/Apple OAuth credentials, real email delivery/verification links, browser-specific IndexedDB behavior, and hosted `X-Device-Id` middleware semantics still need environment-backed validation in later rows or pre-ship acceptance.
+
 ## Work Log
 
 | Timestamp | Executor | Action | Commits | Next |
@@ -139,3 +150,4 @@ Scoped verification:
 | 2026-05-21 15:56 PDT | feature-auto-build (Codex gpt-5.3-codex inline) | Completed Phase 3 implementation: device register/heartbeat lifecycle, canonical device-bound fetch seam (`Authorization` + `X-Device-Id` + `X-Sync-Version`), and unknown/revoked cleanup wiring in provider/app shell. Validation run: `pnpm --filter @repo/web-auth-device-session test` (26 passed), `pnpm --filter @repo/web-auth-device-session check-types`, `pnpm --filter @repo/web check-types`. | `15a297a` | feature-verify |
 | 2026-05-21 16:02 PDT | feature-verify (Codex gpt-5.3-codex inline) | Verification blocked after reviewing commits `690e766`, `7186d5f`, `15a297a`, and `f2816d5`. Commit scope stayed phase-aligned and the thin-host/package boundary held, but two contract drifts remain: Supabase PKCE stores `${storageKey}-code-verifier` in the configured IndexedDB auth storage instead of `sessionStorage`, and Phase 2 does not wire email verification completion because sign-up omits `emailRedirectTo` while the auth page only handles `/auth/callback`. Verification commands run locally after hydrating workspace deps with `pnpm install --frozen-lockfile`: `pnpm --filter @repo/web-auth-device-session test` (26 passed), `pnpm --filter @repo/web-auth-device-session check-types`, `pnpm --filter @repo/web check-types`. | `690e766`, `7186d5f`, `15a297a`, `f2816d5` | feature-build |
 | 2026-05-21 16:08 PDT | feature-auto-build (Codex gpt-5.3-codex inline) | Repaired verify blockers only. B1: `createAuthSessionStorage` now uses package-owned key routing so Supabase durable auth/session keys remain in IndexedDB while `${storageKey}-code-verifier` is persisted in `sessionStorage` (covered by `src/storage.test.ts` with durable/transient store assertions). B2: `signUpWithEmail` now sets same-origin `emailRedirectTo=/auth/verify?next=...`, `/auth/verify` is treated as a completion route in `WebAuthPage`, and callback handling supports verify completion without PKCE transient state while still requiring PKCE state for `/auth/callback` (covered by `src/auth-actions.test.ts`, `src/callback.test.ts`, `src/components/WebAuthPage.test.ts`). Validation run: `pnpm --filter @repo/web-auth-device-session test` (33 passed), `pnpm --filter @repo/web-auth-device-session check-types`, `pnpm --filter @repo/web check-types`. | `a2617c3` | feature-verify |
+| 2026-05-21 16:14 PDT | feature-verify (Codex gpt-5.3-codex inline) | Verification passed after reviewing phase commits `690e766`, `7186d5f`, `15a297a`, docs commits `f2816d5`, `d219bd1`, and repair commit `a2617c3`. Commit scope/body hygiene matches the convention, the package/host boundary remains correct, prior PKCE and email-verification blockers are closed in code and tests, and scoped validation is clean: `pnpm --filter @repo/web-auth-device-session test` (33 passed), `pnpm --filter @repo/web-auth-device-session check-types`, `pnpm --filter @repo/web check-types`. | `690e766`, `7186d5f`, `15a297a`, `f2816d5`, `a2617c3`, `d219bd1` | ship |
