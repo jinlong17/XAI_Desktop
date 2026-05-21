@@ -16,6 +16,13 @@ export interface GridBox {
 
 export type DesktopItemType = "file" | "folder" | "app" | "url";
 
+export type FinderTagColor = "gray" | "green" | "purple" | "blue" | "yellow" | "red" | "orange";
+
+export interface FinderTag {
+  name: string;
+  color?: FinderTagColor;
+}
+
 export interface DesktopItem {
   id: string;
   filename: string;
@@ -24,6 +31,7 @@ export interface DesktopItem {
   icon: string;
   size?: number;
   createdAt: number;
+  finderTags?: FinderTag[];
   /**
    * Populated when `type === "url"`. Behaviour-preserving widening from
    * the original file/folder/app union — code that only reads `type`

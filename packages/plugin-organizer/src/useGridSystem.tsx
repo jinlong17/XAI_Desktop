@@ -32,6 +32,7 @@ interface GridSystemContextValue {
   moveItem: (itemId: string, fromId: string, toId: string) => void;
   toggleLock: (id: string) => void;
   addItem: (item: DesktopItem) => void;
+  updateItem: (itemId: string, patch: Partial<DesktopItem>) => void;
   addItemToGrid: (gridId: string, itemId: string) => void;
   findGridAtPosition: (x: number, y: number) => GridBox | null;
 }
@@ -214,6 +215,15 @@ export function GridSystemProvider({ children, store }: GridSystemProviderProps)
     setItems((prev) => ({ ...prev, [item.id]: item }));
   }, []);
 
+  const updateItem = useCallback((itemId: string, patch: Partial<DesktopItem>) => {
+    userTouched.current = true;
+    setItems((prev) => {
+      const current = prev[itemId];
+      if (!current) return prev;
+      return { ...prev, [itemId]: { ...current, ...patch } };
+    });
+  }, []);
+
   const addItemToGrid = useCallback((gridId: string, itemId: string) => {
     userTouched.current = true;
     setGrids((prev) =>
@@ -270,11 +280,13 @@ export function GridSystemProvider({ children, store }: GridSystemProviderProps)
       moveItem,
       toggleLock,
       addItem,
+      updateItem,
       addItemToGrid,
       findGridAtPosition,
     }),
     [
       addItem,
+      updateItem,
       addItemToGrid,
       clearAll,
       createGrid,

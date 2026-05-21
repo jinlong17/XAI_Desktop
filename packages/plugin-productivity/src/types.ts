@@ -1,3 +1,5 @@
+import type { RepoRecord } from "@repo/core-data";
+
 export interface DataAdapter<T extends { id: string }> {
   getAll(): Promise<T[]>;
   getById(id: string): Promise<T | null>;
@@ -9,8 +11,10 @@ export type TodoStatus = "open" | "in-progress" | "done" | "archived";
 export type TodoPriority = "low" | "medium" | "high";
 export type TodoQuadrant = "do" | "schedule" | "delegate" | "eliminate";
 
-export interface Todo {
+export interface Todo extends RepoRecord {
   id: string;
+  entityType: "productivity.todo";
+  schemaVersion: 1;
   title: string;
   description: string;
   status: TodoStatus;
@@ -21,6 +25,8 @@ export interface Todo {
   pomodoroCount: number;
   createdAt: string;
   updatedAt: string;
+  version: number;
+  deletedAt?: string;
 }
 
 export interface TodoDraft {
@@ -61,8 +67,10 @@ export interface HabitHistoryEntry {
   completedAt: string;
 }
 
-export interface Habit {
+export interface Habit extends RepoRecord {
   id: string;
+  entityType: "productivity.habit";
+  schemaVersion: 1;
   name: string;
   frequency: HabitFrequency;
   streak: number;
@@ -70,6 +78,8 @@ export interface Habit {
   labels: string[];
   createdAt: string;
   updatedAt: string;
+  version: number;
+  deletedAt?: string;
 }
 
 export interface HabitDraft {

@@ -1,6 +1,10 @@
 // All exported hooks/components in this package are client-only. Consumers must wrap with "use client" in Next.js.
 
-export type { ActionSuggestion, AiActionKind, AiMessage, AiRole, CostGuardState, PrivacyReview } from "./types";
+export type { ActionSuggestion, AiActionKind, AiMessage, AiRole, CostGuardState, CostUsage, PrivacyReview } from "./types";
+export { LocalStorageAdapter } from "./data/LocalStorageAdapter";
+export { RepoAdapter as AiCubeRepoAdapter } from "./data/RepoAdapter";
+export { AiCubeRepoProvider, useAiCubeRepoAdapters } from "./data/RepoProvider";
+export type { AiCubeRepoAdapters, AiCubeRepoProviderProps } from "./data/RepoProvider";
 export type { CostGuardApi } from "./hooks/useCostGuard";
 export { redactSecrets } from "./redaction";
 export { useAiConversation } from "./hooks/useAiConversation";

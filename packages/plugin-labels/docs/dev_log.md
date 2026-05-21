@@ -20,3 +20,4 @@
 - fix(plugin-labels): stop adapter default-arg infinite render loop.
 - fix(plugin-labels): correct LabelPicker arrow-key bounds and rename re-sort.
 - chore(plugin-labels): swap remove glyph and document event-emit gap.
+- 2026-05-20 Track D: migrated Label to Repository v0 shape, added `RepoAdapter`/`LabelRepoProvider`, retained `LocalStorageAdapter` fallback, and passed `pnpm --filter @repo/plugin-labels check-types`.

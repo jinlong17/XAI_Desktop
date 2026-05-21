@@ -1,5 +1,8 @@
 export * from "./types";
 export { LocalStorageAdapter } from "./data/LocalStorageAdapter";
+export { RepoAdapter as LabelRepoAdapter } from "./data/RepoAdapter";
+export { LabelRepoProvider, useLabelRepoAdapter } from "./data/RepoProvider";
+export type { LabelRepoProviderProps } from "./data/RepoProvider";
 export { LabelStoreProvider, useLabelStore } from "./hooks/useLabelStore";
 export type { LabelStoreProviderProps } from "./hooks/useLabelStore";
 export { LabelBadge } from "./components/LabelBadge";

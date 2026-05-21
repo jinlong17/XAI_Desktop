@@ -24,3 +24,4 @@
 - fix(plugin-productivity): pin habit streak calculation to UTC
 - perf(plugin-productivity): memoize Eisenhower quadrant bucketing
 - chore(plugin-productivity): humanize Pomodoro mode labels, filter task list, document event-emit gap
+- 2026-05-20 Track D: migrated Todo/Habit to Repository v0 shape, added `RepoAdapter`/`ProductivityRepoProvider`, kept Pomodoro in memory, wired `organizer:grid:create-task` listener, and passed `pnpm --filter @repo/plugin-productivity check-types`.

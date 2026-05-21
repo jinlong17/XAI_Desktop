@@ -287,6 +287,9 @@ importers:
 
   packages/plugin-ai-cube:
     dependencies:
+      '@repo/core':
+        specifier: workspace:*
+        version: link:../core
       '@repo/core-data':
         specifier: workspace:*
         version: link:../core-data
@@ -309,6 +312,9 @@ importers:
 
   packages/plugin-calendar:
     dependencies:
+      '@repo/core':
+        specifier: workspace:*
+        version: link:../core
       '@repo/core-data':
         specifier: workspace:*
         version: link:../core-data
@@ -328,9 +334,18 @@ importers:
       typescript:
         specifier: 5.9.2
         version: 5.9.2
+      vitest:
+        specifier: ^3.2.1
+        version: 3.2.4(@types/node@22.15.3)(jsdom@29.1.1(@noble/hashes@2.2.0))
 
   packages/plugin-clipboard:
     dependencies:
+      '@repo/core':
+        specifier: workspace:*
+        version: link:../core
+      '@repo/core-data':
+        specifier: workspace:*
+        version: link:../core-data
       react:
         specifier: ^19.2.0
         version: 19.2.0
@@ -350,9 +365,18 @@ importers:
       typescript:
         specifier: 5.9.2
         version: 5.9.2
+      vitest:
+        specifier: ^3.2.1
+        version: 3.2.4(@types/node@22.15.3)(jsdom@29.1.1(@noble/hashes@2.2.0))
 
   packages/plugin-console:
     dependencies:
+      '@repo/core':
+        specifier: workspace:*
+        version: link:../core
+      '@repo/core-data':
+        specifier: workspace:*
+        version: link:../core-data
       react:
         specifier: ^19.2.0
         version: 19.2.0
@@ -372,9 +396,18 @@ importers:
       typescript:
         specifier: 5.9.2
         version: 5.9.2
+      vitest:
+        specifier: ^3.2.1
+        version: 3.2.4(@types/node@22.15.3)(jsdom@29.1.1(@noble/hashes@2.2.0))
 
   packages/plugin-labels:
     dependencies:
+      '@repo/core':
+        specifier: workspace:*
+        version: link:../core
+      '@repo/core-data':
+        specifier: workspace:*
+        version: link:../core-data
       react:
         specifier: ^19.2.0
         version: 19.2.0
@@ -394,6 +427,9 @@ importers:
       typescript:
         specifier: 5.9.2
         version: 5.9.2
+      vitest:
+        specifier: ^3.2.1
+        version: 3.2.4(@types/node@22.15.3)(jsdom@29.1.1(@noble/hashes@2.2.0))
 
   packages/plugin-organizer:
     dependencies:
@@ -452,6 +488,9 @@ importers:
 
   packages/plugin-pet:
     dependencies:
+      '@repo/core':
+        specifier: workspace:*
+        version: link:../core
       '@repo/core-data':
         specifier: workspace:*
         version: link:../core-data
@@ -468,9 +507,18 @@ importers:
       typescript:
         specifier: 5.9.2
         version: 5.9.2
+      vitest:
+        specifier: ^3.2.1
+        version: 3.2.4(@types/node@22.15.3)(jsdom@29.1.1(@noble/hashes@2.2.0))
 
   packages/plugin-productivity:
     dependencies:
+      '@repo/core':
+        specifier: workspace:*
+        version: link:../core
+      '@repo/core-data':
+        specifier: workspace:*
+        version: link:../core-data
       react:
         specifier: ^19.2.0
         version: 19.2.0
@@ -490,9 +538,18 @@ importers:
       typescript:
         specifier: 5.9.2
         version: 5.9.2
+      vitest:
+        specifier: ^3.2.1
+        version: 3.2.4(@types/node@22.15.3)(jsdom@29.1.1(@noble/hashes@2.2.0))
 
   packages/plugin-project:
     dependencies:
+      '@repo/core':
+        specifier: workspace:*
+        version: link:../core
+      '@repo/core-data':
+        specifier: workspace:*
+        version: link:../core-data
       react:
         specifier: ^19.2.0
         version: 19.2.0
@@ -512,9 +569,15 @@ importers:
       typescript:
         specifier: 5.9.2
         version: 5.9.2
+      vitest:
+        specifier: ^3.2.1
+        version: 3.2.4(@types/node@22.15.3)(jsdom@29.1.1(@noble/hashes@2.2.0))
 
   packages/plugin-widgets:
     dependencies:
+      '@repo/core':
+        specifier: workspace:*
+        version: link:../core
       '@repo/core-data':
         specifier: workspace:*
         version: link:../core-data
@@ -531,6 +594,9 @@ importers:
       typescript:
         specifier: 5.9.2
         version: 5.9.2
+      vitest:
+        specifier: ^3.2.1
+        version: 3.2.4(@types/node@22.15.3)(jsdom@29.1.1(@noble/hashes@2.2.0))
 
   packages/typescript-config: {}
 

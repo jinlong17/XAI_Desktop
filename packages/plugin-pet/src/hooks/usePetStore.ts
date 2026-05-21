@@ -1,4 +1,6 @@
 import { useCallback, useEffect, useState } from "react";
+import { LocalStorageAdapter } from "../data/LocalStorageAdapter";
+import { usePetRepoAdapter } from "../data/RepoProvider";
 import { canTransition, nextState } from "../stateMachine";
 import type { PetEntity, PetReminder, PetState } from "../types";
 
@@ -17,41 +19,47 @@ export interface PetStoreState {
 
 /** Seed is used only on the very first run; if readPet() returns a stored entity, the stored value wins on mount. */
 export function usePetStore(seed: PetEntity = createDefaultPet()): PetStoreState {
+  const repoAdapter = usePetRepoAdapter();
+  const [fallbackAdapter] = useState(() => new LocalStorageAdapter<PetEntity>(PET_STORAGE_KEY, [seed]));
+  const adapter = repoAdapter ?? fallbackAdapter;
   const [pet, setPet] = useState(seed);
   const [reminder, setReminder] = useState<PetReminder>();
 
   useEffect(() => {
-    const stored = readPet();
-    if (stored) {
-      setPet(stored);
-    }
-  }, []);
+    let cancelled = false;
+    void adapter.getAll().then((stored) => {
+      if (!cancelled) setPet(stored[0] ?? seed);
+    });
+    return () => {
+      cancelled = true;
+    };
+  }, [adapter, seed]);
 
   const persist = useCallback((next: PetEntity) => {
     setPet(next);
-    if (typeof window !== "undefined") {
-      window.localStorage.setItem(PET_STORAGE_KEY, JSON.stringify(next));
-    }
-  }, []);
+    void adapter.save(next);
+  }, [adapter]);
+
+  const touch = useCallback((next: PetEntity): PetEntity => ({ ...next, updatedAt: new Date().toISOString(), version: next.version + 1 }), []);
 
   return {
     pet,
     reminder,
     setState(state) {
-      persist({ ...pet, state: nextState(pet.state, state), updatedAt: new Date().toISOString() });
+      persist(touch({ ...pet, state: nextState(pet.state, state) }));
     },
     feed() {
-      persist({ ...pet, energy: Math.min(100, pet.energy + 20), mood: "happy", lastFed: new Date().toISOString(), state: nextState(pet.state, "interact") });
+      persist(touch({ ...pet, energy: Math.min(100, pet.energy + 20), mood: "happy", lastFed: new Date().toISOString(), state: nextState(pet.state, "interact") }));
     },
     hide() {
-      persist({ ...pet, hidden: true, updatedAt: new Date().toISOString() });
+      persist(touch({ ...pet, hidden: true }));
     },
     show() {
-      persist({ ...pet, hidden: false, updatedAt: new Date().toISOString() });
+      persist(touch({ ...pet, hidden: false }));
     },
     dismissBubble() {
       setReminder((current) => (current ? { ...current, dismissed: true } : current));
-      persist({ ...pet, state: nextState(pet.state, "idle"), updatedAt: new Date().toISOString() });
+      persist(touch({ ...pet, state: nextState(pet.state, "idle") }));
     },
     generateAiReminder(context) {
       if (!canTransition(pet.state, "remind")) {
@@ -60,7 +68,7 @@ export function usePetStore(seed: PetEntity = createDefaultPet()): PetStoreState
       }
       const message = createMockPetAiMessage(pet.personality, context);
       setReminder({ id: `reminder-${Date.now()}`, message, source: "mock-ai", dismissed: false });
-      persist({ ...pet, state: nextState(pet.state, "remind"), mood: "focused", updatedAt: new Date().toISOString() });
+      persist(touch({ ...pet, state: nextState(pet.state, "remind"), mood: "focused" }));
     },
   };
 }
@@ -81,24 +89,13 @@ export function createDefaultPet(): PetEntity {
     lastFed: timestamp,
     hidden: false,
     state: "idle",
+    version: 1,
     personality: {
       name: "Mika",
       voiceTone: "gentle",
       reminderStyle: "minimal",
     },
   };
-}
-
-function readPet(): PetEntity | undefined {
-  if (typeof window === "undefined") {
-    return undefined;
-  }
-  try {
-    const raw = window.localStorage.getItem(PET_STORAGE_KEY);
-    return raw ? (JSON.parse(raw) as PetEntity) : undefined;
-  } catch {
-    return undefined;
-  }
 }
 
 function createMockPetAiMessage(personality: PetEntity["personality"], context: string): string {

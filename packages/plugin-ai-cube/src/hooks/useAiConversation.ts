@@ -1,4 +1,5 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { useAiCubeRepoAdapters } from "../data/RepoProvider";
 import type { ActionSuggestion, AiMessage, PrivacyReview } from "../types";
 import { redactSecrets } from "../redaction";
 import { useCostGuard } from "./useCostGuard";
@@ -23,11 +24,32 @@ function emitMockAction(kind: ActionSuggestion["kind"]): void {
 }
 
 export function useAiConversation(): AiConversationState {
+  const repoAdapters = useAiCubeRepoAdapters();
   const [messages, setMessages] = useState<AiMessage[]>([makeMessage("system", "AI Cube is running in local mock mode.")]);
   const [input, setInput] = useState("");
   const [pendingReview, setPendingReview] = useState<PrivacyReview>();
   const costGuard = useCostGuard();
   const suggestions = createSuggestions();
+
+  useEffect(() => {
+    if (!repoAdapters) return;
+    let cancelled = false;
+    void repoAdapters.messageAdapter.getAll().then((stored) => {
+      if (!cancelled && stored.length > 0) {
+        setMessages(stored.sort((a, b) => a.createdAt.localeCompare(b.createdAt)));
+      }
+    });
+    return () => {
+      cancelled = true;
+    };
+  }, [repoAdapters]);
+
+  function appendMessages(nextMessages: AiMessage[]): void {
+    setMessages((current) => [...current, ...nextMessages]);
+    nextMessages.forEach((message) => {
+      void repoAdapters?.messageAdapter.save(message);
+    });
+  }
 
   return {
     messages,
@@ -48,7 +70,7 @@ export function useAiConversation(): AiConversationState {
       if (costGuard.canSend) {
         costGuard.recordCall();
       }
-      setMessages((current) => [...current, userMessage, assistantMessage]);
+      appendMessages([userMessage, assistantMessage]);
       setInput("");
       setPendingReview(undefined);
     },
@@ -57,7 +79,7 @@ export function useAiConversation(): AiConversationState {
     },
     runSuggestion(kind) {
       const suggestion = suggestions.find((item) => item.kind === kind);
-      setMessages((current) => [...current, makeMessage("assistant", `Mock action queued: ${suggestion?.label ?? kind}.`)]);
+      appendMessages([makeMessage("assistant", `Mock action queued: ${suggestion?.label ?? kind}.`)]);
       emitMockAction(kind);
     },
   };
@@ -101,5 +123,6 @@ function makeMessage(role: AiMessage["role"], content: string, redacted = false)
     role,
     content,
     redacted,
+    version: 1,
   };
 }

@@ -19,6 +19,7 @@
 - Commit `refactor(plugin-console): remove ConsoleDesktopBridge / ConsoleSlotRegistry singletons` removed public singleton instances.
 - Commit `refactor(plugin-console): unify search through CommandPalette` made CommandPalette the canonical search surface and wired registry entities.
 - Commit `chore(plugin-console): memoize palette callbacks and document event-emit gap` stabilized palette callbacks and recorded pending console events.
+- 2026-05-20 Track D: migrated notifications to Repository v0, added `RepoAdapter`/`ConsoleRepoProvider`, added optional multi-Repo command search provider, and passed `pnpm --filter @repo/plugin-console check-types`.
 
 ## Known Gaps
 

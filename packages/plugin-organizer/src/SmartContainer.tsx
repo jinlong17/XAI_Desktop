@@ -11,6 +11,7 @@ import Draggable, { DraggableData, DraggableEvent } from "react-draggable";
 import { useDroppable } from "@dnd-kit/core";
 import { DesktopItem, GridBox } from "./types";
 import GridItem from "./GridItem";
+import { emitOrganizerGridCreateTask } from "./taskEvents";
 import { useCustomResize, RESIZE_HANDLE_STYLES, ResizeDirection } from "./hooks/useCustomResize";
 
 const RESIZE_DIRECTIONS: ResizeDirection[] = ["s", "e", "se", "w", "n", "nw", "ne", "sw"];
@@ -25,6 +26,7 @@ export interface SmartContainerProps {
   onClose: (id: string) => void;
   onToggleFold: (id: string) => void;
   onToggleLock: (id: string) => void;
+  onUpdateItem?: (itemId: string, patch: Partial<DesktopItem>) => void;
   onFocus?: (id: string) => void;
   gridOpacity?: number;
   gridBlur?: boolean;
@@ -46,6 +48,7 @@ export function SmartContainer({
   onClose,
   onToggleFold,
   onToggleLock,
+  onUpdateItem,
   onFocus,
   gridOpacity = 0.8,
   gridBlur = true,
@@ -79,6 +82,14 @@ export function SmartContainer({
   const toggleView = () => {
     const nextView: GridBox["viewMode"] = data.viewMode === "grid" ? "list" : "grid";
     onUpdate(data.id, { viewMode: nextView });
+  };
+
+  const createTaskFromItem = (item: DesktopItem) => {
+    void emitOrganizerGridCreateTask({
+      gridItemId: item.id,
+      title: item.filename,
+      path: item.filepath,
+    });
   };
 
   const handleContextMenu = (event: MouseEvent<HTMLDivElement>) => {
@@ -419,13 +430,13 @@ export function SmartContainer({
                 {data.viewMode === "grid" ? (
                   <div style={gridStyle}>
                     {items.map((file) => (
-                      <GridItem key={file.id} item={file} variant="grid" />
+                      <GridItem key={file.id} item={file} variant="grid" onUpdate={onUpdateItem} onCreateTask={createTaskFromItem} />
                     ))}
                   </div>
                 ) : (
                   <div style={listStyle}>
                     {items.map((file) => (
-                      <GridItem key={file.id} item={file} variant="list" />
+                      <GridItem key={file.id} item={file} variant="list" onUpdate={onUpdateItem} onCreateTask={createTaskFromItem} />
                     ))}
                   </div>
                 )}

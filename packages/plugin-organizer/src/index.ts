@@ -3,7 +3,14 @@ export * from "./mockData";
 export * from "./useGridSystem";
 export * from "./SmartContainer";
 export * from "./GridItem";
+export { OrganizerOneClick } from "./OrganizerOneClick";
+export type { OrganizerOneClickProps } from "./OrganizerOneClick";
+export { FolderGrid } from "./FolderGrid";
+export type { FolderGridProps } from "./FolderGrid";
+export { TagPicker } from "./TagPicker";
+export type { TagPickerProps } from "./TagPicker";
 export * from "./hooks/useFileDrop";
+export * from "./hooks/useFolderMapping";
 export * from "./hooks/useGridWindow";
 export * from "./hooks/useMultiWindowGrids";
 export { OrganizerLayer } from "./OrganizerLayer";
@@ -34,6 +41,23 @@ export {
   defaultClassificationRules,
   fileExtension,
 } from "./autoClassify";
+export { useAutoClassifier } from "./useAutoClassifier";
+export {
+  ORGANIZER_GRID_CREATE_TASK_EVENT,
+  emitOrganizerGridCreateTask,
+  useOrganizerGridCreateTaskEvent,
+} from "./taskEvents";
+export type { OrganizerGridCreateTaskPayload } from "./taskEvents";
+export {
+  exportEntities,
+  importEntities,
+  ExportImportError,
+} from "./ExportService";
+export type {
+  ExportBundle,
+  ExportSource,
+  ImportResult,
+} from "./ExportService";
 export type {
   ClassificationContext,
   ClassificationResult,

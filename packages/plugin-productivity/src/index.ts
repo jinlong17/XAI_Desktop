@@ -1,5 +1,8 @@
 export * from "./types";
 export { LocalStorageAdapter } from "./data/LocalStorageAdapter";
+export { RepoAdapter as ProductivityRepoAdapter } from "./data/RepoAdapter";
+export { ProductivityRepoProvider, useProductivityRepoAdapters } from "./data/RepoProvider";
+export type { ProductivityRepoAdapters, ProductivityRepoProviderProps } from "./data/RepoProvider";
 export { TodoStoreProvider, autoAssignQuadrant, useTodoStore } from "./hooks/useTodoStore";
 export type { TodoStore, TodoStoreProviderProps } from "./hooks/useTodoStore";
 export { PomodoroStoreProvider, usePomodoroStore } from "./hooks/usePomodoroStore";

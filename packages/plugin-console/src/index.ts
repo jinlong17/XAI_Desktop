@@ -1,5 +1,10 @@
 export * from "./types";
 export { LocalStorageAdapter } from "./data/LocalStorageAdapter";
+export { RepoAdapter as ConsoleRepoAdapter } from "./data/RepoAdapter";
+export { ConsoleRepoProvider, useConsoleRepoAdapter } from "./data/RepoProvider";
+export type { ConsoleRepoProviderProps } from "./data/RepoProvider";
+export { createRepoSearchProvider } from "./data/RepoSearch";
+export type { RepoSearchSource } from "./data/RepoSearch";
 export { PluginSlotRegistry, createDefaultConsoleNavItems } from "./registry/PluginSlotRegistry";
 export type { SearchProvider } from "./registry/PluginSlotRegistry";
 export { useCommandPalette } from "./hooks/useCommandPalette";
