@@ -35,7 +35,7 @@ describe("handleAuthCallback", () => {
     const client = createClient();
 
     await expect(
-      handleAuthCallback(client, "https://xai.local/auth/callback?code=123", createStorage())
+      handleAuthCallback(client, "https://xai.local/auth/callback?code=123", { storage: createStorage() })
     ).rejects.toMatchObject({ code: "pkce_state_missing" satisfies AuthCallbackError["code"] });
   });
 
@@ -43,7 +43,7 @@ describe("handleAuthCallback", () => {
     const storage = createStorage(JSON.stringify({ nextPath: "/app/inbox", createdAt: 1 }));
     const client = createClient();
 
-    const result = await handleAuthCallback(client, "https://xai.local/auth/callback?code=123", storage);
+    const result = await handleAuthCallback(client, "https://xai.local/auth/callback?code=123", { storage });
 
     expect(result.nextPath).toBe("/app/inbox");
     expect(result.session.access_token).toBe("token");
@@ -56,7 +56,19 @@ describe("handleAuthCallback", () => {
     const client = createClient();
 
     await expect(
-      handleAuthCallback(client, "https://xai.local/auth/callback", storage)
+      handleAuthCallback(client, "https://xai.local/auth/callback", { storage })
     ).rejects.toMatchObject({ code: "pkce_exchange_failed" satisfies AuthCallbackError["code"] });
+  });
+
+  it("supports email verification callback without PKCE state", async () => {
+    const client = createClient();
+
+    const result = await handleAuthCallback(client, "https://xai.local/auth/verify?code=123&next=%2Fapp%2Finbox", {
+      requirePkceState: false
+    });
+
+    expect(result.nextPath).toBe("/app/inbox");
+    expect(result.session.access_token).toBe("token");
+    expect(client.auth.exchangeCodeForSession).toHaveBeenCalledWith("123");
   });
 });

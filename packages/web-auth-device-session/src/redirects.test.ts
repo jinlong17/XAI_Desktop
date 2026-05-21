@@ -27,4 +27,9 @@ describe("resolveSafeNextPath", () => {
     expect(result.rejected).toBe(true);
     expect(result.reason).toBe("path_not_allowed");
   });
+
+  it("accepts auth verify completion route", () => {
+    const result = resolveSafeNextPath("/auth/verify?next=%2Fapp");
+    expect(result).toEqual({ path: "/auth/verify?next=/app", rejected: false });
+  });
 });

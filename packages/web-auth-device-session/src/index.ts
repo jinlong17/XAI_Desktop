@@ -26,7 +26,7 @@ export {
 export type { StringStorage } from "./auth-actions";
 
 export { AuthCallbackError, handleAuthCallback } from "./callback";
-export type { HandleAuthCallbackResult } from "./callback";
+export type { HandleAuthCallbackOptions, HandleAuthCallbackResult } from "./callback";
 
 export { createDeviceBoundFetch, DeviceAuthError } from "./device-fetch";
 export type { CreateDeviceBoundFetchOptions, DeviceBoundContext } from "./device-fetch";

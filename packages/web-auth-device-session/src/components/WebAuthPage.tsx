@@ -10,6 +10,20 @@ import { AuthCallbackError, handleAuthCallback } from "../callback";
 import { resolveSafeNextPath } from "../redirects";
 import { useWebAuthSession } from "../session";
 
+type AuthCompletionRoute = "oauth-callback" | "email-verify" | null;
+
+export function resolveAuthCompletionRoute(path: string): AuthCompletionRoute {
+  if (path === "/auth/callback") {
+    return "oauth-callback";
+  }
+
+  if (path === "/auth/verify") {
+    return "email-verify";
+  }
+
+  return null;
+}
+
 function getRoutePath(path?: string): string {
   if (path) {
     return path;
@@ -56,14 +70,16 @@ export function WebAuthPage({ path, search }: WebAuthPageProps) {
   const currentPath = getRoutePath(path);
   const searchParams = useMemo(() => new URLSearchParams(getSearch(search)), [search]);
   const safeNext = resolveSafeNextPath(searchParams.get("next")).path;
+  const completionRoute = resolveAuthCompletionRoute(currentPath);
 
   useEffect(() => {
-    if (!client || currentPath !== "/auth/callback") {
+    if (!client || !completionRoute) {
       return;
     }
 
     let active = true;
-    void handleAuthCallback(client)
+    const requirePkceState = completionRoute === "oauth-callback";
+    void handleAuthCallback(client, undefined, { requirePkceState })
       .then(({ session, nextPath }) => {
         if (!active) {
           return;
@@ -88,7 +104,7 @@ export function WebAuthPage({ path, search }: WebAuthPageProps) {
     return () => {
       active = false;
     };
-  }, [client, currentPath, setSession]);
+  }, [client, completionRoute, setSession]);
 
   async function onSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -108,7 +124,7 @@ export function WebAuthPage({ path, search }: WebAuthPageProps) {
       }
 
       if (mode === "signup") {
-        await signUpWithEmail(client, email, password);
+        await signUpWithEmail(client, email, password, safeNext);
         setMessage("signup_verification_sent");
         return;
       }

@@ -3,6 +3,7 @@ import {
   clearPkceState,
   readPkceState,
   requestPasswordReset,
+  signUpWithEmail,
   startOAuthLogin,
   type StringStorage
 } from "./auth-actions";
@@ -26,6 +27,7 @@ function createStorage(): StringStorage {
 function createClient() {
   return {
     auth: {
+      signUp: vi.fn(async () => ({ data: { user: null }, error: null })),
       signInWithOAuth: vi.fn(async () => ({ data: { url: "https://example.test/oauth" }, error: null })),
       resetPasswordForEmail: vi.fn(async () => ({ data: {}, error: null }))
     }
@@ -63,6 +65,20 @@ describe("auth actions", () => {
 
     expect(client.auth.resetPasswordForEmail).toHaveBeenCalledWith("a@test.dev", {
       redirectTo: "https://xai.local/auth/reset-password?next=%2Fapp%2Fboard"
+    });
+  });
+
+  it("sets email verification redirect to /auth/verify", async () => {
+    const client = createClient();
+
+    await signUpWithEmail(client, "a@test.dev", "password123", "/app/tasks", "https://xai.local");
+
+    expect(client.auth.signUp).toHaveBeenCalledWith({
+      email: "a@test.dev",
+      password: "password123",
+      options: {
+        emailRedirectTo: "https://xai.local/auth/verify?next=%2Fapp%2Ftasks"
+      }
     });
   });
 });

@@ -16,6 +16,12 @@ export interface HandleAuthCallbackResult {
   nextPath: string;
 }
 
+export interface HandleAuthCallbackOptions {
+  storage?: StringStorage | null;
+  requirePkceState?: boolean;
+  fallbackNextPath?: string;
+}
+
 function resolveStorage(storage?: StringStorage | null): StringStorage | null {
   if (storage !== undefined) {
     return storage;
@@ -47,13 +53,15 @@ function resolveUrl(url?: URL | string): URL {
 export async function handleAuthCallback(
   client: SupabaseClient,
   url?: URL | string,
-  storage?: StringStorage | null
+  options: HandleAuthCallbackOptions = {}
 ): Promise<HandleAuthCallbackResult> {
   const currentUrl = resolveUrl(url);
-  const transientStore = resolveStorage(storage);
+  const transientStore = resolveStorage(options.storage);
+  const requirePkceState = options.requirePkceState ?? true;
+  const fallbackNextPath = options.fallbackNextPath ?? "/app";
   const pkceState = readPkceState(transientStore);
 
-  if (!pkceState) {
+  if (requirePkceState && !pkceState) {
     throw new AuthCallbackError("pkce_state_missing", "PKCE callback state not found");
   }
 
@@ -67,10 +75,13 @@ export async function handleAuthCallback(
     throw new AuthCallbackError("pkce_exchange_failed", "Failed to exchange auth code");
   }
 
-  const requestedNext = currentUrl.searchParams.get("next") ?? pkceState.nextPath;
+  const requestedNext = currentUrl.searchParams.get("next") ?? pkceState?.nextPath ?? fallbackNextPath;
   const nextPath = resolveSafeNextPath(requestedNext).path;
 
-  clearPkceState(transientStore);
+  if (pkceState) {
+    clearPkceState(transientStore);
+  }
+
   return {
     session: data.session,
     nextPath
