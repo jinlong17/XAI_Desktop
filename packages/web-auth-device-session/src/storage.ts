@@ -37,15 +37,51 @@ export function createIndexedDbStore(options: CreateIndexedDbStoreOptions = {}):
 
 export interface CreateAuthSessionStorageOptions {
   store?: KeyValueStore;
+  transientStore?: KeyValueStore;
+  isTransientKey?: (key: string) => boolean;
+}
+
+const PKCE_VERIFIER_KEY_SUFFIX = "-code-verifier";
+
+function isPkceTransientKey(key: string): boolean {
+  return key.endsWith(PKCE_VERIFIER_KEY_SUFFIX);
+}
+
+function resolveSessionStorage(): Storage | null {
+  if (typeof window === "undefined") {
+    return null;
+  }
+
+  try {
+    return window.sessionStorage;
+  } catch {
+    return null;
+  }
+}
+
+export function createSessionStorageKeyValueStore(storage: Storage | null = resolveSessionStorage()): KeyValueStore {
+  return {
+    async getItem(key: string) {
+      return storage?.getItem(key) ?? null;
+    },
+    async setItem(key: string, value: string) {
+      storage?.setItem(key, value);
+    },
+    async removeItem(key: string) {
+      storage?.removeItem(key);
+    }
+  };
 }
 
 export function createAuthSessionStorage(options: CreateAuthSessionStorageOptions = {}): SupportedStorage {
   const store = options.store ?? createIndexedDbStore();
+  const transientStore = options.transientStore ?? createSessionStorageKeyValueStore();
+  const isTransientKey = options.isTransientKey ?? isPkceTransientKey;
 
   return {
-    getItem: (key) => store.getItem(key),
-    setItem: (key, value) => store.setItem(key, value),
-    removeItem: (key) => store.removeItem(key)
+    getItem: (key) => (isTransientKey(key) ? transientStore.getItem(key) : store.getItem(key)),
+    setItem: (key, value) => (isTransientKey(key) ? transientStore.setItem(key, value) : store.setItem(key, value)),
+    removeItem: (key) => (isTransientKey(key) ? transientStore.removeItem(key) : store.removeItem(key))
   };
 }
 

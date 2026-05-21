@@ -10,7 +10,7 @@ export interface ResolvedNextPath {
 }
 
 const DEFAULT_FALLBACK_PATH = "/app";
-const DEFAULT_ALLOWLIST = ["/app", "/app/*", "/auth/callback", "/auth/reset-password"] as const;
+const DEFAULT_ALLOWLIST = ["/app", "/app/*", "/auth/callback", "/auth/verify", "/auth/reset-password"] as const;
 
 function hasScheme(value: string): boolean {
   return /^[a-zA-Z][a-zA-Z\d+.-]*:/.test(value);

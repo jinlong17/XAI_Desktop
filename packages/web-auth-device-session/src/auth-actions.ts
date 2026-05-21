@@ -82,8 +82,16 @@ function resolveOrigin(origin?: string): string {
   throw new Error("auth_origin_missing");
 }
 
-export async function signUpWithEmail(client: SupabaseClient, email: string, password: string): Promise<void> {
-  const { error } = await client.auth.signUp({ email, password });
+export async function signUpWithEmail(
+  client: SupabaseClient,
+  email: string,
+  password: string,
+  nextPath: string = "/app",
+  origin?: string
+): Promise<void> {
+  const resolvedNext = resolveSafeNextPath(nextPath).path;
+  const emailRedirectTo = `${resolveOrigin(origin)}/auth/verify?next=${encodeURIComponent(resolvedNext)}`;
+  const { error } = await client.auth.signUp({ email, password, options: { emailRedirectTo } });
   if (error) {
     throw error;
   }
