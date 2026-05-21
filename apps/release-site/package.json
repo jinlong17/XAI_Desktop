@@ -1,12 +1,11 @@
 {
-  "name": "web",
+  "name": "@repo/release-site-archive",
   "version": "0.1.0",
   "type": "module",
   "private": true,
   "scripts": {
-    "dev": "next dev --port 3000",
-    "build": "next build",
-    "start": "next start",
+    "archive:dev": "next dev --port 3000",
+    "archive:build": "next build",
     "lint": "eslint --max-warnings 0",
     "check-types": "next typegen && tsc --noEmit",
     "test:rls": "vitest run supabase/tests/rls-policies.test.ts",
