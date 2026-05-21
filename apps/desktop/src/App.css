@@ -163,18 +163,6 @@ body,
   margin-top: 8px;
 }
 
-.border {
-  border-width: 1px;
-}
-
-.border-red-500 {
-  border-color: #ef4444;
-}
-
-.opacity-50 {
-  opacity: 0.5;
-}
-
 /* Tailwind-like group hover helpers for opacity */
 .group:hover .group-hover\:opacity-100 {
   opacity: 1;

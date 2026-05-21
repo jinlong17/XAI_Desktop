@@ -9,6 +9,13 @@ import {
 } from "react";
 import Draggable, { DraggableData, DraggableEvent } from "react-draggable";
 import { useDroppable } from "@dnd-kit/core";
+import {
+  colorTokens,
+  motionTokens,
+  radiusTokens,
+  shadowTokens,
+  spaceTokens,
+} from "@repo/ui/tokens";
 import { DesktopItem, GridBox } from "./types";
 import GridItem from "./GridItem";
 import { emitOrganizerGridCreateTask } from "./taskEvents";
@@ -17,7 +24,7 @@ import { useCustomResize, RESIZE_HANDLE_STYLES, ResizeDirection } from "./hooks/
 const RESIZE_DIRECTIONS: ResizeDirection[] = ["s", "e", "se", "w", "n", "nw", "ne", "sw"];
 const MIN_SIZE = 150;
 const TITLE_BAR_HEIGHT = 40;
-const HEADER_COLOR = "#111827";
+const HEADER_COLOR = colorTokens.textPrimary;
 
 export interface SmartContainerProps {
   data: GridBox;
@@ -145,18 +152,18 @@ export function SmartContainer({
       flexDirection: "column",
       backgroundColor: `rgba(255,255,255,${gridOpacity})`,
       border: `1px solid ${data.themeColor ?? "rgba(255,255,255,0.12)"}`,
-      borderRadius: 16,
+      borderRadius: radiusTokens.xl,
       boxShadow:
         isDragging
-          ? "0 16px 40px rgba(0,0,0,0.35), inset 0 1px 1px rgba(255,255,255,0.1)"
-          : "0 12px 32px rgba(0,0,0,0.25), inset 0 1px 1px rgba(255,255,255,0.08)",
+          ? shadowTokens.panelDragging
+          : shadowTokens.panel,
       backdropFilter: gridBlur ? "blur(12px)" : "none",
       WebkitBackdropFilter: gridBlur ? "blur(12px)" : "none",
       color: "#0b1220",
       overflow: "hidden",
       pointerEvents: "auto", // keep the desktop click-through intact elsewhere.
       position: "relative",
-      transition: "box-shadow 160ms ease, border-color 160ms ease, height 120ms ease",
+      transition: `box-shadow ${motionTokens.durationBaseMs}ms ${motionTokens.easingStandard}, border-color ${motionTokens.durationBaseMs}ms ${motionTokens.easingStandard}, height ${motionTokens.durationFastMs}ms ${motionTokens.easingStandard}`,
       zIndex: isDragging ? 100 : 1,
     };
   }, [
@@ -179,7 +186,7 @@ export function SmartContainer({
     display: "flex",
     alignItems: "center",
     justifyContent: "space-between",
-    padding: "8px 10px",
+    padding: `${spaceTokens.sm}px ${spaceTokens.md}px`,
     borderBottom: "1px solid rgba(255,255,255,0.06)",
     cursor: "grab",
     userSelect: "none",
@@ -191,7 +198,7 @@ export function SmartContainer({
   const viewToggleStyle: CSSProperties = {
     width: 28,
     height: 28,
-    borderRadius: 8,
+    borderRadius: radiusTokens.md,
     border: "1px solid rgba(17,24,39,0.25)",
     background: "rgba(255,255,255,0.85)",
     color: HEADER_COLOR,
@@ -282,7 +289,7 @@ export function SmartContainer({
     >
       <div
         ref={nodeRef}
-        className="smart-container border border-red-500 opacity-50"
+        className="smart-container"
         style={{ position: "absolute", pointerEvents: "auto" }}
         onContextMenu={handleContextMenu}
         onMouseEnter={() => setIsHovering(true)}

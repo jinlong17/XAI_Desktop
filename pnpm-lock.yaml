@@ -506,6 +506,9 @@ importers:
       '@repo/core-data':
         specifier: workspace:*
         version: link:../core-data
+      '@repo/ui':
+        specifier: workspace:*
+        version: link:../ui
       '@tauri-apps/api':
         specifier: ^2
         version: 2.9.0
