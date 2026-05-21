@@ -7,13 +7,13 @@
 | Workflow | FEATURE_DEV |
 | Target | plugin-ai-cube |
 | Title | AI Cube Control Surface Integration (F2) |
-| Current Phase | FEATURE_VERIFY |
-| Status | READY_TO_SHIP |
-| Suggested Next | ship |
+| Current Phase | SHIP |
+| Status | SHIPPED |
+| Suggested Next | workflow complete |
 | Automation Mode | A-Claude |
 | Verify Cross-vendor | no |
-| Executor | gpt-5 / feature-verify |
-| Updated | 2026-05-21 03:45 PDT |
+| Executor | gpt-5 / ship |
+| Updated | 2026-05-21 03:47 PDT |
 | Blockers | none |
 
 ## Package Ownership
@@ -97,3 +97,4 @@
 | 2026-05-21 03:36 PDT | gpt-5 / feature-auto-build | Phase 2 — Plugin-owned control surface boundary cleanup: removed Host business implementations (`apps/desktop/src/components/AiAssistant/AiCube.tsx`, `apps/desktop/src/components/Settings/SettingsPanel.tsx`) after plugin-owned control widget took over. | `f573d06` | feature-auto-build |
 | 2026-05-21 03:38 PDT | gpt-5 / feature-auto-build | Phase 3 — Action wiring and verification: kept organizer callbacks in Host bridge (`createGrid` / `clearAllGrids`), kept clipboard/pomodoro/search disabled placeholders, added registration/provider/preview tests, and ran desktop contract checks. Evidence: `pnpm --filter @repo/plugin-ai-cube check-types` pass; `pnpm --filter @repo/plugin-ai-cube test` pass (24 tests); `pnpm --filter desktop build` pass; `ControlWindow` renders `ControlHost`; preview status text explicitly marks Phase 0–3 disabled mode. | `881bb13` | feature-verify |
 | 2026-05-21 03:45 PDT | gpt-5 / feature-verify | Verification pass: reviewed `e50bcdd`, `f573d06`, `881bb13`, and `d6e67ae` for commit intent, contract alignment, and phase boundaries; re-ran typecheck, tests, registry coverage, and desktop build; confirmed Host cleanup, static/idempotent registration, preview-only conversation UI, and disabled placeholder tray actions. Residual risk limited to pending real macOS click-vs-drag verification. | `e50bcdd`, `f573d06`, `881bb13`, `d6e67ae` | ship |
+| 2026-05-21 03:47 PDT | gpt-5 / ship | Shipped plugin-ai-cube on `main`: verified commit quality/scope, committed pending verify-status dev_log update (`341295b`), and pushed `origin/main` (range `6563570..341295b`) without staging organizer or other unrelated dirty files. | `e50bcdd`, `f573d06`, `881bb13`, `d6e67ae`, `341295b` | workflow complete |
