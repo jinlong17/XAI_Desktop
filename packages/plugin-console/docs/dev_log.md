@@ -7,14 +7,14 @@
 | Workflow | FEATURE_DEV |
 | Target | plugin-console |
 | Title | Console TickTick parity host shell |
-| Status | APPROVED |
-| Current Phase | FEATURE_BUILD |
-| Suggested Next | feature-auto-build |
+| Status | READY_FOR_VERIFY |
+| Current Phase | FEATURE_VERIFY |
+| Suggested Next | feature-verify |
 | Automation Mode | A-Claude |
 | Verify Cross-vendor | no |
 | Executor | feature-auto-build (Codex, gpt-5.3-codex) |
-| Updated | 2026-05-21 11:57 PDT |
-| Blockers | None. Canonical dependency authority rows for `plugin-productivity` and `plugin-labels` are now present in `docs/PLUGIN_MAP.md`; Phase 3/4 can proceed in follow-up build runs. |
+| Updated | 2026-05-21 12:12 PDT |
+| Blockers | None. Phase 3/4 real module integrations landed; residual `vitest` binary absence is captured in Work Log as a verification note. |
 
 ## Legacy Context
 
@@ -47,7 +47,7 @@ Gate:
 
 ### Phase 3 — Integrate `plugin-productivity` ConsoleViews
 
-Status: PENDING.
+Status: DONE.
 
 - Precondition: satisfied on 2026-05-21 by the canonical `plugin-productivity` row in `docs/PLUGIN_MAP.md` with explicit state/dependency note.
 - Because `plugin-productivity` remains `In-Dev`, keep mock-first discipline outside the scoped Phase 3 integration boundary.
@@ -59,7 +59,7 @@ Gate:
 
 ### Phase 4 — Integrate `plugin-labels` and shell extension slots
 
-Status: PENDING.
+Status: DONE.
 
 - Precondition: satisfied on 2026-05-21 by the canonical `plugin-labels` row in `docs/PLUGIN_MAP.md` with explicit state/dependency note.
 - Because `plugin-labels` remains `In-Dev`, keep mock-first discipline outside the scoped Phase 4 integration boundary.
@@ -125,3 +125,5 @@ Gate:
 | 2026-05-21 11:44 PDT | feature-auto-build (Codex, gpt-5.3-codex) | Phase 2 — Build desktop console shell and native window lifecycle: rebuilt `ConsoleLayout` into Sidebar/List/Detail shell with persisted shell state (pane widths/nav/theme/density/font), added contract-mock ConsoleViews + plugin registration (`registerConsolePlugin`), registered desktop `#/console` route and `ConsoleWindow`, wired control action to open console window, and added Tauri console window commands (`open/close/focus/get/set_console_window_frame`) with persisted frame state and allowlist checks. | `bcacbda` feat(plugin-console): Phase 2 — console shell and window lifecycle | feature-auto-build |
 | 2026-05-21 11:47 PDT | feature-auto-build (Codex, gpt-5.3-codex) | Phase 5 — Reconcile overlay consistency and readiness gates (mock-safe subset): added reconcile→ack mock event chain (`console:reconcile-requested` + `console:ack-applied`) inside the console shell capabilities, implemented 200ms timeout partial-result degradation for slot search providers, surfaced degrade/ack state in shell header, and kept real-macOS multi-window gates deferred for verify. | `5b43712` feat(plugin-console): Phase 5 — reconcile and degrade gates | feature-auto-build |
 | 2026-05-21 11:57 PDT | feature-auto-build (Codex, gpt-5.3-codex) | Blocker fix for Phase 3/4 authority gate: added canonical `plugin-productivity` and `plugin-labels` rows to `docs/PLUGIN_MAP.md` with explicit state/dependency notes, then moved Phase 3/4 from `BLOCKED_BY_AUTHORITY` to `PENDING` and cleared Status Panel blockers for follow-up implementation runs. | `be9189d` docs(plugin-console): add Phase 3/4 dependency authority rows | feature-auto-build |
+| 2026-05-21 12:06 PDT | feature-auto-build (Codex, gpt-5.3-codex) | Phase 3 — Integrate `plugin-productivity` ConsoleViews: added real productivity ConsoleView exports (tasks/pomodoro/habits/matrix), added `registerProductivityPlugin()` static startup wiring, removed productivity mock slots from console registration, and kept labels mocked for Phase 4 boundary. Tests: `pnpm --filter @repo/plugin-productivity check-types`; `pnpm --filter @repo/plugin-console check-types`; `pnpm --filter desktop build`. | `6f2c67a` feat(plugin-console): Phase 3 — integrate productivity ConsoleViews | feature-auto-build |
+| 2026-05-21 12:11 PDT | feature-auto-build (Codex, gpt-5.3-codex) | Phase 4 — Integrate `plugin-labels` and shell extension slots: added real labels ConsoleView export + registration, wired startup `registerLabelsPlugin()`, removed remaining labels mock slots from console registration, and deleted obsolete `plugin-console/src/mockViews.tsx`. Tests: `pnpm --filter @repo/plugin-labels check-types`; `pnpm --filter @repo/plugin-productivity check-types`; `pnpm --filter @repo/plugin-console check-types`; `pnpm --filter desktop build`. Note: `pnpm --filter @repo/plugin-productivity test` and `pnpm --filter @repo/plugin-labels test` both fail locally with `vitest: command not found`. | `831791f` feat(plugin-console): Phase 4 — integrate labels ConsoleView slots | feature-verify |
