@@ -28,6 +28,27 @@ export type { StringStorage } from "./auth-actions";
 export { AuthCallbackError, handleAuthCallback } from "./callback";
 export type { HandleAuthCallbackResult } from "./callback";
 
+export { createDeviceBoundFetch, DeviceAuthError } from "./device-fetch";
+export type { CreateDeviceBoundFetchOptions, DeviceBoundContext } from "./device-fetch";
+
+export { createDeviceSessionController } from "./device-session";
+export type {
+  CreateDeviceSessionControllerOptions,
+  DeviceSessionController,
+  DeviceSessionState
+} from "./device-session";
+
+export { createRestRpcDeviceTransport, DeviceTransportError } from "./device-transport";
+export type {
+  CreateRestRpcDeviceTransportOptions,
+  DeviceFailureReason,
+  DeviceTransport,
+  DeviceTransportRequest
+} from "./device-transport";
+
+export { createHeartbeatScheduler } from "./heartbeat";
+export type { CreateHeartbeatSchedulerOptions, HeartbeatScheduler } from "./heartbeat";
+
 export { WebAuthSessionProvider, useWebAuthSession, webSyncVersion } from "./session";
 export type { WebAuthSessionContextValue, WebAuthSessionProviderProps } from "./session";
 
@@ -41,3 +62,6 @@ export type { AppRouteGateProps, AuthRouteGateProps, GuardResolution } from "./g
 
 export { WebAuthPage } from "./components/WebAuthPage";
 export type { WebAuthPageProps } from "./components/WebAuthPage";
+
+export { DeviceSessionBridge, useDeviceBoundFetch } from "./components/DeviceSessionBridge";
+export type { DeviceSessionBridgeProps } from "./components/DeviceSessionBridge";
