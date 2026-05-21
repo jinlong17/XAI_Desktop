@@ -4,7 +4,7 @@ export type AiRole = "user" | "assistant" | "system";
 export type AiActionKind = "create-todo" | "organize-desktop" | "summarize-clipboard";
 
 export interface AiMessage extends RepoRecord {
-  entityType: "ai-cube.message";
+  entityType: "aicube.message";
   role: AiRole;
   content: string;
   redacted: boolean;
