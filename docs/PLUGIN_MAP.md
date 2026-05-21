@@ -71,6 +71,8 @@
 | organizer | packages/plugin-organizer/ | Stable | §5.1 | @repo/core, @repo/ui | 2026-05-14 |
 | account | packages/plugin-account/ | In-Dev | sync/PRD §5 | @repo/core, @repo/core-data, @scure/bip39 | 2026-05-19 |
 | console | packages/plugin-console/ | In-Dev | console/PRD | @repo/core, @repo/core-data | 2026-05-21 |
+| productivity | packages/plugin-productivity/ | In-Dev | productivity/PRD | @repo/core, @repo/core-data (Console Phase 3 authority row; non-stable dependency, keep mock-first outside scoped integration) | 2026-05-21 |
+| labels | packages/plugin-labels/ | In-Dev | labels/PRD | @repo/core, @repo/core-data (Console Phase 4 authority row; non-stable dependency, keep mock-first outside scoped integration) | 2026-05-21 |
 | todo | packages/plugin-todo/ | Planned | §5.2 | @repo/core | — |
 | pomodoro | packages/plugin-pomodoro/ | Planned | §5.3 | @repo/core | — |
 | habits | packages/plugin-habits/ | Planned | §5.4 | @repo/core | — |
