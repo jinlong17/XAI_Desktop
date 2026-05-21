@@ -8,7 +8,7 @@ const NOW = "2026-05-20T00:00:00.000Z";
 function makeMessage(overrides: Partial<AiMessage> = {}): AiMessage {
   return {
     id: "msg-1",
-    entityType: "ai-cube.message",
+    entityType: "aicube.message",
     schemaVersion: 1,
     syncScope: "account-sync",
     role: "user",
@@ -24,7 +24,7 @@ function makeMessage(overrides: Partial<AiMessage> = {}): AiMessage {
 describe("plugin-ai-cube RepoAdapter", () => {
   it("save then getAll returns the record", async () => {
     const repo = createInMemoryRepo<AiMessage>({ namespace: "ai-cube-test", schemaVersion: 1 });
-    const adapter = new RepoAdapter(repo, "ai-cube.message");
+    const adapter = new RepoAdapter(repo, "aicube.message");
 
     await adapter.save(makeMessage());
 
@@ -35,7 +35,7 @@ describe("plugin-ai-cube RepoAdapter", () => {
 
   it("getById returns the saved record", async () => {
     const repo = createInMemoryRepo<AiMessage>({ namespace: "ai-cube-test", schemaVersion: 1 });
-    const adapter = new RepoAdapter(repo, "ai-cube.message");
+    const adapter = new RepoAdapter(repo, "aicube.message");
 
     await adapter.save(makeMessage());
 
@@ -44,7 +44,7 @@ describe("plugin-ai-cube RepoAdapter", () => {
 
   it("delete removes the record from getAll", async () => {
     const repo = createInMemoryRepo<AiMessage>({ namespace: "ai-cube-test", schemaVersion: 1 });
-    const adapter = new RepoAdapter(repo, "ai-cube.message");
+    const adapter = new RepoAdapter(repo, "aicube.message");
 
     await adapter.save(makeMessage());
     await adapter.delete("msg-1");
@@ -54,7 +54,7 @@ describe("plugin-ai-cube RepoAdapter", () => {
 
   it("delete makes getById return null", async () => {
     const repo = createInMemoryRepo<AiMessage>({ namespace: "ai-cube-test", schemaVersion: 1 });
-    const adapter = new RepoAdapter(repo, "ai-cube.message");
+    const adapter = new RepoAdapter(repo, "aicube.message");
 
     await adapter.save(makeMessage());
     await adapter.delete("msg-1");
@@ -64,7 +64,7 @@ describe("plugin-ai-cube RepoAdapter", () => {
 
   it("filters soft-deleted records from getAll and getById", async () => {
     const repo = createInMemoryRepo<AiMessage>({ namespace: "ai-cube-test", schemaVersion: 1 });
-    const adapter = new RepoAdapter(repo, "ai-cube.message");
+    const adapter = new RepoAdapter(repo, "aicube.message");
 
     await adapter.save(makeMessage({ deletedAt: "2026-05-20T02:00:00.000Z" }));
 

@@ -46,7 +46,7 @@ export function AiCubeRepoProvider({
       messageAdapter:
         messageAdapter ??
         (resolvedMessageRepo
-          ? new RepoAdapter<AiMessage>(resolvedMessageRepo, "ai-cube.message")
+          ? new RepoAdapter<AiMessage>(resolvedMessageRepo, "aicube.message")
           : new LocalStorageAdapter<AiMessage>(MESSAGE_STORAGE_KEY, seedMessages)),
       costUsageAdapter:
         costUsageAdapter ??
