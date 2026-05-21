@@ -49,6 +49,7 @@ export interface ConsoleNotification extends RepoRecord {
   id: string;
   entityType: "console.notification";
   schemaVersion: 1;
+  syncScope: "account-sync" | "device-local";
   type: NotificationType;
   title: string;
   body: string;

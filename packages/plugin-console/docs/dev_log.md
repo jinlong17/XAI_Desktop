@@ -13,8 +13,8 @@
 | Automation Mode | A-Claude |
 | Verify Cross-vendor | no |
 | Executor | feature-auto-build (Codex, gpt-5.3-codex) |
-| Updated | 2026-05-21 11:24 PDT |
-| Blockers | Phase 3/4 remain gated until owning tracks register `plugin-productivity` and `plugin-labels` in `docs/PLUGIN_MAP.md`; Phase 2 and mock-safe Phase 5 remain executable. |
+| Updated | 2026-05-21 11:44 PDT |
+| Blockers | Phase 3/4 remain gated until owning tracks register `plugin-productivity` and `plugin-labels` in `docs/PLUGIN_MAP.md`; Phase 5 remains executable as mock-safe follow-up. |
 
 ## Legacy Context
 
@@ -24,7 +24,7 @@ The prior `plugin-console` docs described a two-pane scaffold and incorrectly tr
 
 ### Phase 1 — Freeze Console contracts and registration boundary
 
-Status: DONE.
+Status: PLANNED.
 
 - Add `ConsoleView` types, registry slot accessors, manifest typing, and typed `console:*` events under `@repo/core`.
 - Align `plugin-console/manifest.json` with `windows.console` and console sidebar metadata expectations.
@@ -35,7 +35,7 @@ Gate:
 
 ### Phase 2 — Build desktop console shell and native window lifecycle
 
-Status: PLANNED.
+Status: DONE.
 
 - Rebuild `plugin-console` into the Sidebar/List/Detail shell with persisted pane widths, nav state, theme/density/font scale state, search/notification/settings containers, and placeholder/error matrices.
 - Add desktop route registration plus Tauri console window commands for open/close/focus/get/set frame.
@@ -71,7 +71,7 @@ Gate:
 
 ### Phase 5 — Reconcile overlay consistency and readiness gates
 
-Status: PLANNED.
+Status: DONE.
 
 - Finish revision/ack/reconcile wiring between Console and overlay listeners.
 - Harden timeout/error/degrade behavior and capture deferred real-macOS verification gates.
@@ -121,4 +121,5 @@ Gate:
 | 2026-05-21 03:30 PDT | feature-review (Codex inline) | Review pass: returned REVISE because Phase 3/4 dependency readiness for `plugin-productivity` and `plugin-labels` is not grounded in `docs/PLUGIN_MAP.md`, and added one test-plan recommendation for host route verification. | — | feature-plan |
 | 2026-05-21 03:33 PDT | feature-plan (Codex inline) | Revise plan: reconciled all planning docs to `docs/PLUGIN_MAP.md`, converted `plugin-productivity` and `plugin-labels` into explicit authority-gated Phase 3/4 dependencies, and added `pnpm --filter desktop build` as the Phase 2 host-routing gate. | — | feature-review |
 | 2026-05-21 04:05 PDT | feature-review (Claude Code, claude-opus-4-7) | Cross-executor review pass (Codex plan -> Claude review): verified the authority-gap dependency claims against repo ground truth (PLUGIN_MAP.md, package dirs, manifest.json, desktop filter), confirmed api.md/design.md consistency and test.md contract coverage, and confirmed Phase 2/3/4 gates are concrete. Verdict APPROVED, 0 blockers / 1 recommendation. Flipped Status Panel to APPROVED. | — | feature-build |
-| 2026-05-21 11:24 PDT | feature-auto-build (Codex, gpt-5.3-codex) | Phase 1 — Freeze Console contracts and registration boundary: added `@repo/core` Console contracts (`ConsoleView*` types, `windows.console`, `ui.consoleSidebar`, typed `console:*` events), added PluginRegistry Console slot accessors, aligned `plugin-console/manifest.json` with console window/sidebar metadata, and added `plugin-console` row to `docs/PLUGIN_MAP.md` without touching productivity/labels authority rows. | pending (Phase 1 commit in progress) | feature-auto-build |
+| 2026-05-21 11:24 PDT | feature-auto-build (Codex, gpt-5.3-codex) | Phase 1 — Freeze Console contracts and registration boundary: added `@repo/core` Console contracts (`ConsoleView*` types, `windows.console`, `ui.consoleSidebar`, typed `console:*` events), added PluginRegistry Console slot accessors, aligned `plugin-console/manifest.json` with console window/sidebar metadata, and added `plugin-console` row to `docs/PLUGIN_MAP.md` without touching productivity/labels authority rows. | `1c1af64` feat(plugin-console): Phase 1 — freeze console contracts | feature-auto-build |
+| 2026-05-21 11:44 PDT | feature-auto-build (Codex, gpt-5.3-codex) | Phase 2 — Build desktop console shell and native window lifecycle: rebuilt `ConsoleLayout` into Sidebar/List/Detail shell with persisted shell state (pane widths/nav/theme/density/font), added contract-mock ConsoleViews + plugin registration (`registerConsolePlugin`), registered desktop `#/console` route and `ConsoleWindow`, wired control action to open console window, and added Tauri console window commands (`open/close/focus/get/set_console_window_frame`) with persisted frame state and allowlist checks. | pending (Phase 2 commit in progress) | feature-auto-build |

@@ -2,6 +2,8 @@ use tauri::{AppHandle, Manager, WebviewUrl, WebviewWindowBuilder};
 use crate::platform;
 
 use super::super::CommandError;
+use super::super::ConsoleWindowFrame;
+use super::super::ConsoleWindowFrameState;
 use super::super::GridWindowRect;
 use super::super::GridWindowSnapshot;
 use super::super::GridWindowsState;
@@ -20,6 +22,20 @@ use super::super::GridWindowsState;
 /// routed through `control`, but they cannot directly spawn / close
 /// other grid windows.
 pub(crate) const WINDOW_ALLOWED_WINDOWS: &[&str] = &["main", "control"];
+pub(crate) const CONSOLE_WINDOW_ALLOWED_WINDOWS: &[&str] = &["main", "control", "console"];
+const CONSOLE_WINDOW_LABEL: &str = "console";
+const CONSOLE_WINDOW_URL: &str = "/#/console";
+
+fn default_console_frame() -> ConsoleWindowFrame {
+    ConsoleWindowFrame {
+        x: 180.0,
+        y: 120.0,
+        width: 1240.0,
+        height: 820.0,
+        is_fullscreen: false,
+        nav_state_version: 1,
+    }
+}
 
 fn is_window_command_allowed(label: &str) -> bool {
     WINDOW_ALLOWED_WINDOWS.contains(&label)
@@ -33,6 +49,20 @@ fn ensure_window_command_allowed(label: &str) -> Result<(), CommandError> {
             "WINDOW_CAPABILITY_DENIED",
             format!(
                 "window `{label}` is not allowed to invoke window lifecycle commands"
+            ),
+            false,
+        ))
+    }
+}
+
+fn ensure_console_window_command_allowed(label: &str) -> Result<(), CommandError> {
+    if CONSOLE_WINDOW_ALLOWED_WINDOWS.contains(&label) {
+        Ok(())
+    } else {
+        Err(command_error(
+            "WINDOW_CAPABILITY_DENIED",
+            format!(
+                "window `{label}` is not allowed to invoke console window lifecycle commands"
             ),
             false,
         ))
@@ -101,6 +131,69 @@ fn state_error(error: impl ToString) -> CommandError {
 
 fn native_error(message: impl Into<String>) -> CommandError {
     command_error("WINDOW_NATIVE_ERROR", message.into(), true)
+}
+
+fn read_console_frame(app: &AppHandle) -> Result<ConsoleWindowFrame, CommandError> {
+    if let Some(state) = app.try_state::<ConsoleWindowFrameState>() {
+        let frame = state.frame.lock().map_err(state_error)?;
+        Ok(frame.clone())
+    } else {
+        Ok(default_console_frame())
+    }
+}
+
+fn write_console_frame(app: &AppHandle, frame: ConsoleWindowFrame) -> Result<(), CommandError> {
+    if let Some(state) = app.try_state::<ConsoleWindowFrameState>() {
+        let mut stored = state.frame.lock().map_err(state_error)?;
+        *stored = frame;
+    }
+    Ok(())
+}
+
+fn validate_console_frame(frame: &ConsoleWindowFrame) -> Result<(), CommandError> {
+    if frame.width < 640.0 || frame.height < 480.0 {
+        return Err(command_error(
+            "INVALID_CONSOLE_FRAME",
+            "console frame must be at least 640x480",
+            true,
+        ));
+    }
+    if frame.width > 8192.0 || frame.height > 8192.0 {
+        return Err(command_error(
+            "INVALID_CONSOLE_FRAME",
+            "console frame dimensions exceed allowed maximum",
+            true,
+        ));
+    }
+    Ok(())
+}
+
+fn capture_console_window_frame(
+    app: &AppHandle,
+    default_frame: ConsoleWindowFrame,
+) -> Result<ConsoleWindowFrame, CommandError> {
+    let Some(window) = app.get_webview_window(CONSOLE_WINDOW_LABEL) else {
+        return Ok(default_frame);
+    };
+
+    let position = window
+        .outer_position()
+        .map_err(|e| native_error(format!("Failed to read console position: {}", e)))?;
+    let size = window
+        .outer_size()
+        .map_err(|e| native_error(format!("Failed to read console size: {}", e)))?;
+    let is_fullscreen = window
+        .is_fullscreen()
+        .map_err(|e| native_error(format!("Failed to read console fullscreen state: {}", e)))?;
+
+    Ok(ConsoleWindowFrame {
+        x: position.x as f64,
+        y: position.y as f64,
+        width: size.width as f64,
+        height: size.height as f64,
+        is_fullscreen,
+        nav_state_version: default_frame.nav_state_version,
+    })
 }
 
 /// Create a new grid window at the specified position
@@ -325,6 +418,145 @@ pub async fn focus_grid_window(
     Ok(window_snapshot(&app, &gridId, rect))
 }
 
+/// Open or focus the dedicated Console window.
+#[tauri::command]
+pub async fn open_console_window(
+    window: tauri::WebviewWindow,
+    app: AppHandle,
+) -> Result<ConsoleWindowFrame, CommandError> {
+    ensure_console_window_command_allowed(window.label())?;
+    let stored = read_console_frame(&app)?;
+    validate_console_frame(&stored)?;
+
+    if let Some(existing) = app.get_webview_window(CONSOLE_WINDOW_LABEL) {
+        existing
+            .show()
+            .map_err(|e| native_error(format!("Failed to show console window: {}", e)))?;
+        existing
+            .set_focus()
+            .map_err(|e| native_error(format!("Failed to focus console window: {}", e)))?;
+        let live = capture_console_window_frame(&app, stored)?;
+        write_console_frame(&app, live.clone())?;
+        return Ok(live);
+    }
+
+    let builder = WebviewWindowBuilder::new(
+        &app,
+        CONSOLE_WINDOW_LABEL,
+        WebviewUrl::App(CONSOLE_WINDOW_URL.into()),
+    )
+    .title("XAI Console")
+    .inner_size(stored.width, stored.height)
+    .position(stored.x, stored.y)
+    .decorations(true)
+    .resizable(true)
+    .visible(true);
+
+    let created = builder
+        .build()
+        .map_err(|e| native_error(format!("Failed to create console window: {}", e)))?;
+
+    if stored.is_fullscreen {
+        created
+            .set_fullscreen(true)
+            .map_err(|e| native_error(format!("Failed to set console fullscreen: {}", e)))?;
+    }
+
+    created
+        .set_focus()
+        .map_err(|e| native_error(format!("Failed to focus console window: {}", e)))?;
+
+    let live = capture_console_window_frame(&app, stored)?;
+    write_console_frame(&app, live.clone())?;
+    Ok(live)
+}
+
+/// Close the dedicated Console window and persist its latest frame.
+#[tauri::command]
+pub async fn close_console_window(
+    window: tauri::WebviewWindow,
+    app: AppHandle,
+) -> Result<(), CommandError> {
+    ensure_console_window_command_allowed(window.label())?;
+    let stored = read_console_frame(&app)?;
+    if let Some(existing) = app.get_webview_window(CONSOLE_WINDOW_LABEL) {
+        let live = capture_console_window_frame(&app, stored)?;
+        write_console_frame(&app, live)?;
+        existing
+            .close()
+            .map_err(|e| native_error(format!("Failed to close console window: {}", e)))?;
+    }
+    Ok(())
+}
+
+/// Focus the dedicated Console window, creating it if needed.
+#[tauri::command]
+pub async fn focus_console_window(
+    window: tauri::WebviewWindow,
+    app: AppHandle,
+) -> Result<ConsoleWindowFrame, CommandError> {
+    ensure_console_window_command_allowed(window.label())?;
+    if app.get_webview_window(CONSOLE_WINDOW_LABEL).is_none() {
+        return open_console_window(window, app).await;
+    }
+    let existing = app
+        .get_webview_window(CONSOLE_WINDOW_LABEL)
+        .ok_or_else(|| native_error("Console window not found after open check"))?;
+    existing
+        .set_focus()
+        .map_err(|e| native_error(format!("Failed to focus console window: {}", e)))?;
+
+    let stored = read_console_frame(&app)?;
+    let live = capture_console_window_frame(&app, stored)?;
+    write_console_frame(&app, live.clone())?;
+    Ok(live)
+}
+
+/// Return the latest persisted Console frame snapshot.
+#[tauri::command]
+pub async fn get_console_window_frame(
+    window: tauri::WebviewWindow,
+    app: AppHandle,
+) -> Result<ConsoleWindowFrame, CommandError> {
+    ensure_console_window_command_allowed(window.label())?;
+    let stored = read_console_frame(&app)?;
+    let live = capture_console_window_frame(&app, stored)?;
+    write_console_frame(&app, live.clone())?;
+    Ok(live)
+}
+
+/// Persist and apply a Console frame snapshot.
+#[tauri::command]
+pub async fn set_console_window_frame(
+    window: tauri::WebviewWindow,
+    app: AppHandle,
+    frame: ConsoleWindowFrame,
+) -> Result<ConsoleWindowFrame, CommandError> {
+    ensure_console_window_command_allowed(window.label())?;
+    validate_console_frame(&frame)?;
+
+    if let Some(existing) = app.get_webview_window(CONSOLE_WINDOW_LABEL) {
+        existing
+            .set_position(tauri::Position::Logical(tauri::LogicalPosition {
+                x: frame.x,
+                y: frame.y,
+            }))
+            .map_err(|e| native_error(format!("Failed to set console position: {}", e)))?;
+        existing
+            .set_size(tauri::Size::Logical(tauri::LogicalSize {
+                width: frame.width,
+                height: frame.height,
+            }))
+            .map_err(|e| native_error(format!("Failed to set console size: {}", e)))?;
+        existing
+            .set_fullscreen(frame.is_fullscreen)
+            .map_err(|e| native_error(format!("Failed to set console fullscreen: {}", e)))?;
+    }
+
+    write_console_frame(&app, frame.clone())?;
+    Ok(frame)
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
@@ -367,5 +599,26 @@ mod tests {
                 err.message
             );
         }
+    }
+
+    #[test]
+    fn console_window_allowlist_admits_console_label() {
+        for label in CONSOLE_WINDOW_ALLOWED_WINDOWS {
+            assert!(ensure_console_window_command_allowed(label).is_ok());
+        }
+    }
+
+    #[test]
+    fn console_frame_validation_rejects_too_small_frames() {
+        let mut frame = default_console_frame();
+        frame.width = 320.0;
+        let err = validate_console_frame(&frame).unwrap_err();
+        assert_eq!(err.code, "INVALID_CONSOLE_FRAME");
+    }
+
+    #[test]
+    fn console_frame_validation_accepts_default_frame() {
+        let frame = default_console_frame();
+        assert!(validate_console_frame(&frame).is_ok());
     }
 }

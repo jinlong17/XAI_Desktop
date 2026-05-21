@@ -48,6 +48,15 @@ export interface GridWindowSnapshot {
   visible: boolean;
 }
 
+export interface ConsoleWindowFrame {
+  x: number;
+  y: number;
+  width: number;
+  height: number;
+  isFullscreen: boolean;
+  navStateVersion: number;
+}
+
 export interface CommandError {
   code: string;
   message: string;

@@ -8,6 +8,7 @@ export type {
   CreateGridWindowInput,
   UpdateGridWindowInput,
   GridWindowSnapshot,
+  ConsoleWindowFrame,
   CommandError,
 } from './window';
 export type { DroppedFile, EventMap } from './events';

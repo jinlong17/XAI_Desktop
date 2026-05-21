@@ -23,3 +23,4 @@ export type { CommandPaletteProps } from "./components/CommandPalette";
 export { SearchResult } from "./components/SearchResult";
 export type { SearchResultProps } from "./components/SearchResult";
 export { NotificationPanel } from "./components/NotificationPanel";
+export { registerConsolePlugin } from "./register-plugin";

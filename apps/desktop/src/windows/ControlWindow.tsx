@@ -176,7 +176,10 @@ function ControlWindowContent() {
           logPlaceholderAction("pomodoro");
         },
         openSearch() {
-          logPlaceholderAction("search");
+          void invoke("open_console_window").catch((error) => {
+            console.error("Failed to open console window:", error);
+          });
+          setIsPanelOpen(false);
         },
         openSettings() {
           setIsPanelOpen(true);
