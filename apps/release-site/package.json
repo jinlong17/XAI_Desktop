@@ -7,7 +7,7 @@
     "archive:dev": "next dev --port 3000",
     "archive:build": "next build",
     "lint": "eslint --max-warnings 0",
-    "check-types": "next typegen && tsc --noEmit",
+    "archive:check-types": "next typegen && tsc --noEmit",
     "test:rls": "vitest run supabase/tests/rls-policies.test.ts",
     "test:rls:integration": "SUPABASE_INTEGRATION_TESTS=1 vitest run supabase/tests/rls-policies.test.ts",
     "test:nonce": "vitest run supabase/tests/nonce-lease.test.ts",
