@@ -1,4 +1,4 @@
-import { CSSProperties, useEffect, useMemo, useState } from "react";
+import { CSSProperties, MouseEvent, useEffect, useMemo, useState } from "react";
 import { useDraggable } from "@dnd-kit/core";
 import { DesktopIcon, iconAliasMap } from "@repo/ui/icons";
 import { colorTokens, radiusTokens, spaceTokens, typographyTokens } from "@repo/ui/tokens";
@@ -14,6 +14,7 @@ interface GridItemProps {
   variant?: ItemVariant;
   onUpdate?: (itemId: string, patch: Partial<DesktopItem>) => void;
   onCreateTask?: (item: DesktopItem) => void;
+  onRemove?: (itemId: string) => void;
 }
 
 const baseItemStyle: CSSProperties = {
@@ -43,7 +44,9 @@ const iconSurfaceStyle: CSSProperties = {
   color: colorTokens.textPrimary,
 };
 
-export function GridItem({ item, variant = "grid", onUpdate, onCreateTask }: GridItemProps) {
+type ItemMenuState = { x: number; y: number } | null;
+
+export function GridItem({ item, variant = "grid", onUpdate, onCreateTask, onRemove }: GridItemProps) {
   const { attributes, listeners, setNodeRef, transform, isDragging } = useDraggable({
     id: item.id,
     data: { itemId: item.id },
@@ -51,6 +54,7 @@ export function GridItem({ item, variant = "grid", onUpdate, onCreateTask }: Gri
   const { invoke } = useTauriInvoke();
   const finderClient = useMemo(() => createFinderClient(invoke), [invoke]);
   const [tagsOpen, setTagsOpen] = useState(false);
+  const [itemMenu, setItemMenu] = useState<ItemMenuState>(null);
   const tags = item.finderTags ?? [];
 
   useEffect(() => {
@@ -92,8 +96,58 @@ export function GridItem({ item, variant = "grid", onUpdate, onCreateTask }: Gri
 
   const iconName = resolveIconName(item);
 
+  useEffect(() => {
+    if (!itemMenu) return;
+    const close = () => setItemMenu(null);
+    document.addEventListener("click", close);
+    document.addEventListener("contextmenu", close);
+    return () => {
+      document.removeEventListener("click", close);
+      document.removeEventListener("contextmenu", close);
+    };
+  }, [itemMenu]);
+
+  const handleItemContextMenu = (event: MouseEvent<HTMLDivElement>) => {
+    event.preventDefault();
+    event.stopPropagation();
+    const target = event.currentTarget.getBoundingClientRect();
+    setItemMenu({
+      x: event.clientX - target.left,
+      y: event.clientY - target.top,
+    });
+  };
+
+  const handleOpen = () => {
+    if (item.type === "url" && item.url?.href) {
+      window.open(item.url.href, "_blank", "noopener,noreferrer");
+      return;
+    }
+    if (item.filepath.startsWith("/")) {
+      void finderClient.openPath(item.filepath).catch(() => undefined);
+    }
+  };
+
+  const handleReveal = () => {
+    if (item.filepath.startsWith("/")) {
+      void finderClient.revealInFinder(item.filepath).catch(() => undefined);
+    }
+  };
+
+  const menuButtonStyle: CSSProperties = {
+    width: "100%",
+    background: "transparent",
+    border: "none",
+    color: colorTokens.textOnDark,
+    fontWeight: typographyTokens.fontWeightMedium,
+    padding: "6px 8px",
+    borderRadius: radiusTokens.sm,
+    cursor: "pointer",
+    textAlign: "left",
+    fontFamily: typographyTokens.fontFamilySans,
+  };
+
   return (
-    <div ref={setNodeRef} style={style} {...listeners} {...attributes}>
+    <div ref={setNodeRef} style={{ ...style, position: "relative" }} {...listeners} {...attributes} onContextMenu={handleItemContextMenu}>
       <div style={iconSurfaceStyle} aria-hidden>
         <DesktopIcon name={iconName} size={16} />
       </div>
@@ -149,6 +203,69 @@ export function GridItem({ item, variant = "grid", onUpdate, onCreateTask }: Gri
           </div>
         ) : null}
       </div>
+      {itemMenu ? (
+        <div
+          role="menu"
+          style={{
+            position: "absolute",
+            top: itemMenu.y,
+            left: itemMenu.x,
+            zIndex: 20,
+            minWidth: 140,
+            background: colorTokens.surfaceOverlay,
+            border: `1px solid ${colorTokens.borderSubtle}`,
+            borderRadius: radiusTokens.md,
+            boxShadow: "0 10px 30px rgba(0,0,0,0.35)",
+            padding: 4,
+          }}
+          onPointerDown={(event) => event.stopPropagation()}
+        >
+          <button
+            type="button"
+            style={menuButtonStyle}
+            onClick={(event) => {
+              event.stopPropagation();
+              setItemMenu(null);
+              handleOpen();
+            }}
+          >
+            Open
+          </button>
+          <button
+            type="button"
+            style={menuButtonStyle}
+            onClick={(event) => {
+              event.stopPropagation();
+              setItemMenu(null);
+              handleReveal();
+            }}
+          >
+            Reveal in Finder
+          </button>
+          <button
+            type="button"
+            style={menuButtonStyle}
+            onClick={(event) => {
+              event.stopPropagation();
+              setItemMenu(null);
+              onCreateTask?.(item);
+            }}
+          >
+            Create Task
+          </button>
+          <button
+            type="button"
+            style={{ ...menuButtonStyle, color: "#fca5a5" }}
+            onClick={(event) => {
+              event.stopPropagation();
+              setItemMenu(null);
+              onRemove?.(item.id);
+            }}
+          >
+            Remove from Grid
+          </button>
+        </div>
+      ) : null}
     </div>
   );
 }

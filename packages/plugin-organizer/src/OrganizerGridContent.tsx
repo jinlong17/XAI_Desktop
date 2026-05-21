@@ -141,6 +141,17 @@ export function OrganizerGridContent({
     [emitUpdate, grid?.isLocked],
   );
 
+  const handleUpdateItem = useCallback((itemId: string, patch: Partial<DesktopItem>) => {
+    setItems((prev) => {
+      const item = prev[itemId];
+      if (!item) return prev;
+      return {
+        ...prev,
+        [itemId]: { ...item, ...patch },
+      };
+    });
+  }, []);
+
   const resolvedItems = useMemo(() => {
     if (!grid) return [];
     return grid.itemIds
@@ -235,6 +246,7 @@ export function OrganizerGridContent({
         onClose={handleClose}
         onToggleFold={handleToggleFold}
         onToggleLock={handleToggleLock}
+        onUpdateItem={handleUpdateItem}
         onFocus={() => {}}
         gridOpacity={gridOpacity}
         gridBlur={gridBlur}

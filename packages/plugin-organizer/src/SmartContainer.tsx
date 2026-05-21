@@ -9,7 +9,7 @@ import {
 } from "react";
 import Draggable, { DraggableData, DraggableEvent } from "react-draggable";
 import { useDroppable } from "@dnd-kit/core";
-import { DesktopIcon } from "@repo/ui/icons";
+import { DesktopIcon, type DesktopIconName } from "@repo/ui/icons";
 import {
   colorTokens,
   motionTokens,
@@ -42,6 +42,13 @@ export interface SmartContainerProps {
 }
 
 type ContextMenuState = { x: number; y: number } | null;
+type GridMenuAction = {
+  key: string;
+  label: string;
+  icon?: DesktopIconName;
+  onClick: () => void;
+  tone?: "default" | "danger";
+};
 
 /**
  * ## SmartContainer (Independent File Fence)
@@ -98,6 +105,12 @@ export function SmartContainer({
       gridItemId: item.id,
       title: item.filename,
       path: item.filepath,
+    });
+  };
+
+  const removeItemFromGrid = (itemId: string) => {
+    onUpdate(data.id, {
+      itemIds: data.itemIds.filter((current) => current !== itemId),
     });
   };
 
@@ -215,6 +228,14 @@ export function SmartContainer({
     gap: 6,
   };
 
+  const directCloseStyle: CSSProperties = {
+    ...iconButtonStyle,
+    color: "#dc2626",
+    fontSize: 16,
+    lineHeight: 1,
+    fontWeight: typographyTokens.fontWeightSemibold,
+  };
+
   const bodyStyle: CSSProperties = {
     padding: 10,
     display: "flex",
@@ -239,6 +260,70 @@ export function SmartContainer({
     flex: 1,
     overflow: "auto",
   };
+
+  const menuButtonStyle: CSSProperties = {
+    width: "100%",
+    background: "transparent",
+    border: "none",
+    color: colorTokens.textOnDark,
+    fontWeight: typographyTokens.fontWeightMedium,
+    padding: "6px 8px",
+    borderRadius: 10,
+    cursor: "pointer",
+    textAlign: "left",
+    fontFamily: typographyTokens.fontFamilySans,
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "space-between",
+  };
+
+  const menuActions: GridMenuAction[] = [
+    {
+      key: "rename",
+      label: "Rename Grid",
+      onClick: () => {
+        setIsEditingTitle(true);
+      },
+    },
+    {
+      key: "view",
+      label: data.viewMode === "grid" ? "Switch to List" : "Switch to Grid",
+      icon: data.viewMode === "grid" ? "list" : "grid",
+      onClick: () => {
+        toggleView();
+      },
+    },
+    {
+      key: "lock",
+      label: data.isLocked ? "Unlock Grid" : "Lock Grid",
+      icon: data.isLocked ? "unlock" : "lock",
+      onClick: () => {
+        onToggleLock(data.id);
+      },
+    },
+    {
+      key: "fold",
+      label: data.isFolded ? "Expand Grid" : "Fold Grid",
+      icon: data.isFolded ? "chevronDown" : "chevronUp",
+      onClick: () => {
+        onToggleFold(data.id);
+      },
+    },
+    {
+      key: "settings",
+      label: "Grid Settings",
+      icon: "settings",
+      onClick: () => {},
+    },
+    {
+      key: "close",
+      label: "Close Grid",
+      onClick: () => {
+        onClose(data.id);
+      },
+      tone: "danger",
+    },
+  ];
 
   return (
     <Draggable
@@ -286,41 +371,67 @@ export function SmartContainer({
           ))}
 
           <div className="smart-container__header grid-title-bar group" style={headerStyle}>
-            {isEditingTitle ? (
-              <input
-                className="smart-container__input"
-                autoFocus
-                value={titleDraft}
-                onChange={(event) => setTitleDraft(event.target.value)}
-                onBlur={commitTitle}
-                onKeyDown={handleTitleKey}
-                style={{
-                  flex: 1,
-                  borderRadius: radiusTokens.md,
-                  border: `1px solid ${colorTokens.borderStrong}`,
-                  background: "rgba(255,255,255,0.9)",
-                  color: colorTokens.textPrimary,
-                  padding: "6px 8px",
-                  outline: "none",
-                  fontFamily: typographyTokens.fontFamilySans,
-                }}
-              />
-            ) : (
+            <div style={{ display: "grid", gap: 2, minWidth: 0, flex: 1 }}>
+              {isEditingTitle ? (
+                <input
+                  className="smart-container__input"
+                  autoFocus
+                  value={titleDraft}
+                  onChange={(event) => setTitleDraft(event.target.value)}
+                  onBlur={commitTitle}
+                  onKeyDown={handleTitleKey}
+                  style={{
+                    flex: 1,
+                    borderRadius: radiusTokens.md,
+                    border: `1px solid ${colorTokens.borderStrong}`,
+                    background: "rgba(255,255,255,0.9)",
+                    color: colorTokens.textPrimary,
+                    padding: "6px 8px",
+                    outline: "none",
+                    fontFamily: typographyTokens.fontFamilySans,
+                  }}
+                />
+              ) : (
+                <span
+                  style={{
+                    fontWeight: typographyTokens.fontWeightSemibold,
+                    fontSize: typographyTokens.fontSizeBodyPx,
+                    cursor: "text",
+                    flex: 1,
+                    color: colorTokens.textPrimary,
+                    overflow: "hidden",
+                    textOverflow: "ellipsis",
+                    whiteSpace: "nowrap",
+                  }}
+                  onDoubleClick={() => setIsEditingTitle(true)}
+                  title="Double-click to rename"
+                >
+                  {data.title || "New Grid"}
+                </span>
+              )}
               <span
                 style={{
-                  fontWeight: typographyTokens.fontWeightSemibold,
-                  fontSize: typographyTokens.fontSizeBodyPx,
-                  cursor: "text",
-                  flex: 1,
-                  color: colorTokens.textPrimary,
+                  color: colorTokens.textSecondary,
+                  fontSize: 11,
+                  letterSpacing: typographyTokens.letterSpacingTight,
                 }}
-                onDoubleClick={() => setIsEditingTitle(true)}
-                title="Double-click to rename"
               >
-                {data.title || "New Grid"}
+                {items.length} item{items.length === 1 ? "" : "s"} · {data.viewMode}
               </span>
-            )}
+            </div>
             <div className="transition-opacity" style={{ ...actionsWrapperStyle, opacity: 1 }}>
+              <button
+                type="button"
+                style={directCloseStyle}
+                onClick={(event) => {
+                  event.stopPropagation();
+                  onClose(data.id);
+                }}
+                aria-label="Close grid"
+                title="Close grid"
+              >
+                ×
+              </button>
               <button
                 type="button"
                 style={iconButtonStyle}
@@ -368,13 +479,27 @@ export function SmartContainer({
               {data.viewMode === "grid" ? (
                 <div style={gridStyle}>
                   {items.map((file) => (
-                    <GridItem key={file.id} item={file} variant="grid" onUpdate={onUpdateItem} onCreateTask={createTaskFromItem} />
+                    <GridItem
+                      key={file.id}
+                      item={file}
+                      variant="grid"
+                      onUpdate={onUpdateItem}
+                      onCreateTask={createTaskFromItem}
+                      onRemove={removeItemFromGrid}
+                    />
                   ))}
                 </div>
               ) : (
                 <div style={listStyle}>
                   {items.map((file) => (
-                    <GridItem key={file.id} item={file} variant="list" onUpdate={onUpdateItem} onCreateTask={createTaskFromItem} />
+                    <GridItem
+                      key={file.id}
+                      item={file}
+                      variant="list"
+                      onUpdate={onUpdateItem}
+                      onCreateTask={createTaskFromItem}
+                      onRemove={removeItemFromGrid}
+                    />
                   ))}
                 </div>
               )}
@@ -397,24 +522,23 @@ export function SmartContainer({
               }}
               role="menu"
             >
-              <button
-                type="button"
-                onClick={() => onClose(data.id)}
-                style={{
-                  width: "100%",
-                  background: "transparent",
-                  border: "none",
-                  color: "#fca5a5",
-                  fontWeight: typographyTokens.fontWeightSemibold,
-                  padding: "6px 8px",
-                  borderRadius: 10,
-                  cursor: "pointer",
-                  textAlign: "left",
-                  fontFamily: typographyTokens.fontFamilySans,
-                }}
-              >
-                Close Grid
-              </button>
+              {menuActions.map((action) => (
+                <button
+                  key={action.key}
+                  type="button"
+                  onClick={() => {
+                    setContextMenu(null);
+                    action.onClick();
+                  }}
+                  style={{
+                    ...menuButtonStyle,
+                    color: action.tone === "danger" ? "#fca5a5" : colorTokens.textOnDark,
+                  }}
+                >
+                  <span>{action.label}</span>
+                  {action.icon ? <DesktopIcon name={action.icon} size={13} /> : null}
+                </button>
+              ))}
             </div>
           )}
         </div>
