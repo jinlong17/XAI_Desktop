@@ -8,13 +8,13 @@
 | Target | web-release-site-archive-vite-shell |
 | Title | Archive the current release-site shell and establish the Vite Web host |
 | Roadmap | web-ticktick-parity · feature #5 · W2 |
-| Status | READY_FOR_VERIFY |
-| Current Phase | FEATURE_VERIFY |
-| Suggested Next | feature-verify |
+| Status | SHIPPED |
+| Current Phase | SHIP |
+| Suggested Next | — |
 | Automation Mode | A-Claude |
 | Verify Cross-vendor | no |
-| Executor | feature-build (Codex gpt-5.3-codex inline) |
-| Updated | 2026-05-21 14:40 PDT |
+| Executor | ship (Codex gpt-5.3-codex inline) |
+| Updated | 2026-05-21 14:51 PDT |
 | Blockers | — |
 
 ## Source Context
@@ -141,10 +141,12 @@ Scoped verification:
 
 ## Verification Notes
 
-- Commit review: `f7c9de4`, `14f2597`, `26d1bf6`, and `abeed1d` each keep a single intent and their subjects/bodies match `docs/conventions/COMMIT_CONVENTION.md`.
-- Scoped verification passed: `pnpm --filter @repo/web build`; `pnpm --filter @repo/web check-types`; `pnpm turbo run build`.
-- Root `pnpm turbo run check-types` still fails, but the reproduced failures are in untouched packages outside this feature boundary: `@repo/plugin-project`, `@repo/plugin-widgets`, and `@repo/plugin-clipboard`. `git diff --name-only bc565ae..HEAD -- packages/plugin-project packages/plugin-widgets packages/plugin-clipboard packages/core-data` returned no changes, so these typecheck failures are unrelated to the web host/archive split.
-- Blocking artifact gap: the required review/design/api/test docs for this feature exist in the worktree but remain untracked, so the branch is not ready to ship with a complete workflow artifact set.
+- Commit review: `f7c9de4`, `14f2597`, `26d1bf6`, `abeed1d`, and blocker-repair commit `9c3e8b4` each stay within a single intent and their subjects/bodies match `docs/conventions/COMMIT_CONVENTION.md`.
+- Required workflow artifacts are now tracked and coherent: feature brief, discovery review, and package `design.md` / `api.md` / `test.md` / `dev_log.md` all exist in git and agree on the archive split, `@repo/web` Vite host, `@repo/release-site-archive` demotion, and thin-host-only boundary.
+- Implementation matches the approved plan: `apps/release-site` is the archived Next shell as `@repo/release-site-archive` with no standard `dev` / `build` / `start`; `apps/web` is the canonical thin Vite host as `@repo/web`; `apps/web/app` is absent; and `turbo.json` supports both Vite `dist/**` and Next `.next/**` outputs.
+- Fresh scoped verification passed: `pnpm --filter @repo/web build`; `pnpm --filter @repo/web check-types`; `pnpm turbo run build`.
+- Fresh root `pnpm turbo run check-types` still fails, but only in untouched packages outside this feature boundary: `@repo/plugin-widgets` and `@repo/plugin-clipboard`. `git diff --name-only bc565ae..HEAD -- packages/plugin-project packages/plugin-widgets packages/plugin-clipboard packages/core-data` returned no changes, so the global typecheck failure is unrelated to the web host/archive split.
+- `docs/reviews/web-release-site-archive-vite-shell/20260521-roadmap-seed.md` remains untracked, but this is treated as an acceptable pre-existing roadmap companion artifact rather than a ship blocker for this feature: `docs/workflow/roadmap/web-ticktick-parity.md` defines roadmap seeds as seed briefs feeding Step 0 rather than required feature deliverables, and the required tracked artifacts for this feature are already present. Keep this as roadmap hygiene follow-up if the team wants all seed stubs committed.
 
 ## Work Log
 
@@ -159,3 +161,5 @@ Scoped verification:
 | 2026-05-21 14:32 PDT | feature-auto-build (Codex gpt-5.3-codex inline) | Phase 3 — aligned Turbo outputs for mixed Vite/Next workspace (`dist/**` + `.next/**`), kept archive package out of default typecheck flow by renaming `check-types` to `archive:check-types`, and refreshed lockfile for new `@repo/web` graph. Tests run: `rg -n 'dist/\\*\\*|\\.next/\\*\\*' turbo.json`; `pnpm --filter @repo/web check-types` (pass); `pnpm --filter @repo/web build` (pass); `pnpm turbo run build` (pass); `pnpm turbo run check-types` (fails on pre-existing `@repo/plugin-widgets`/`@repo/plugin-clipboard` typecheck issues unrelated to this feature). | `26d1bf6` | feature-verify |
 | 2026-05-21 14:37 PDT | feature-verify (Codex gpt-5.3-codex inline) | Verification BLOCKED. Reviewed phase commits `f7c9de4`, `14f2597`, `26d1bf6`, `abeed1d`; confirmed archive/Vite split matches the approved design and scoped build/typecheck/build-root commands pass. Re-ran `pnpm turbo run check-types` and reproduced unrelated failures in untouched `@repo/plugin-project`, `@repo/plugin-widgets`, and `@repo/plugin-clipboard`, but the ship gate still fails because required feature brief/discovery and package design/api/test docs remain untracked in git. | `f7c9de4`, `14f2597`, `26d1bf6`, `abeed1d` | feature-build |
 | 2026-05-21 14:40 PDT | feature-build (Codex gpt-5.3-codex inline) | Fix verify blocker by confirming workflow artifacts exist/cohere, staging the previously untracked brief/discovery + design/api/test docs, and advancing status from BLOCKED to READY_FOR_VERIFY for a fresh verify pass. Checks run: artifact existence tests and contract keyword coherence scan across review/design/api/test docs. | this commit | feature-verify |
+| 2026-05-21 14:44 PDT | feature-verify (Codex gpt-5.3-codex inline) | Verification PASS after reviewing repair commit `9c3e8b4`. Reconfirmed required docs are tracked/coherent, validated the archive/Vite implementation against the approved plan, and reran scoped verification. Fresh results: `pnpm --filter @repo/web build` (pass), `pnpm --filter @repo/web check-types` (pass), `pnpm turbo run build` (pass), `pnpm turbo run check-types` (fails only in unrelated `@repo/plugin-widgets` and `@repo/plugin-clipboard`). The remaining untracked roadmap seed is accepted as a roadmap companion artifact, not a READY_TO_SHIP blocker for this feature. | `f7c9de4`, `14f2597`, `26d1bf6`, `abeed1d`, `9c3e8b4` | ship |
+| 2026-05-21 14:51 PDT | ship (Codex gpt-5.3-codex inline) | Ship gate pass: confirmed `READY_TO_SHIP`, audited commit quality/scope for `f7c9de4`, `14f2597`, `26d1bf6`, `abeed1d`, `9c3e8b4`, and preserved unrelated dirty files while limiting ship staging to this feature dev log. | reused `f7c9de4`, `14f2597`, `26d1bf6`, `abeed1d`, `9c3e8b4`; created ship commit | workflow complete |
