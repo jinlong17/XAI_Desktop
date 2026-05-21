@@ -31,47 +31,44 @@ export { zeroizeBuffer } from "./internal/buffers";
 
 import type {
   BrowserCryptoRuntime,
-  IdleLockConfig,
-  LockReason,
-  RuntimeTransitionListener,
-  UnlockInput,
-  UnlockResult,
+  DecryptBlobInput,
+  DecryptBlobResult,
+  EncryptBlobInput,
+  EncryptBlobResult,
 } from "./types";
 import { webCryptoError } from "./errors";
-import { createIdleLockController, createLockTransitionStore } from "./internal/idle-lock";
+import { createRuntimeSessionController } from "./internal/session";
 
 export function createBrowserCryptoRuntime(): BrowserCryptoRuntime {
-  const transitions = createLockTransitionStore();
-  const idleLock = createIdleLockController();
+  const session = createRuntimeSessionController();
 
   return {
-    async unlock(_input: UnlockInput): Promise<UnlockResult> {
-      throw webCryptoError("E_WEB_CRYPTO_UNSUPPORTED", "Unlock is not wired until the Sync v0.6 runtime phase");
+    unlock(input) {
+      return session.unlock(input);
     },
-    async lock(reason: LockReason = "manual"): Promise<void> {
-      idleLock.clear();
-      transitions.lock(reason);
+    lock(reason) {
+      return session.lock(reason);
     },
     getState() {
-      return transitions.getState();
+      return session.getState();
     },
-    subscribe(listener: RuntimeTransitionListener) {
-      return transitions.subscribe(listener);
+    subscribe(listener) {
+      return session.subscribe(listener);
     },
-    configureIdleLock(input: IdleLockConfig) {
-      idleLock.configure({
-        timeoutMs: input.timeoutMs,
-        onIdle: () => {
-          transitions.lock("idle");
-        },
-      });
-      transitions.setIdleDeadline(idleLock.getDeadlineMs());
+    configureIdleLock(input) {
+      session.configureIdleLock(input);
     },
-    async encryptBlob() {
-      throw webCryptoError("E_WEB_CRYPTO_LOCKED", "Encrypt requires an unlocked DEK session");
+    async encryptBlob(_input: EncryptBlobInput): Promise<EncryptBlobResult> {
+      throw webCryptoError(
+        "E_WEB_CRYPTO_LOCKED",
+        "Encrypt helper is not wired until the AES-GCM envelope phase completes",
+      );
     },
-    async decryptBlob() {
-      throw webCryptoError("E_WEB_CRYPTO_LOCKED", "Decrypt requires an unlocked DEK session");
+    async decryptBlob(_input: DecryptBlobInput): Promise<DecryptBlobResult> {
+      throw webCryptoError(
+        "E_WEB_CRYPTO_LOCKED",
+        "Decrypt helper is not wired until the AES-GCM envelope phase completes",
+      );
     },
   };
 }
