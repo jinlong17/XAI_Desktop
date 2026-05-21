@@ -8,13 +8,13 @@
 | Target | plugin-organizer |
 | Title | F3 Organizer UX rebuild |
 | Roadmap | desktop-ux-rebuild · F3 |
-| Status | READY_TO_SHIP |
-| Current Phase | FEATURE_VERIFY |
-| Suggested Next | ship |
+| Status | SHIPPED |
+| Current Phase | SHIP |
+| Suggested Next | workflow complete |
 | Automation Mode | A-Claude |
 | Verify Cross-vendor | no |
-| Executor | `Codex` / `feature-verify` |
-| Updated | 2026-05-21 04:18 PDT |
+| Executor | `Codex` / `ship` |
+| Updated | 2026-05-21 04:21 PDT |
 | Blockers | None |
 | Concurrent Stream | G3 organizer-loop carry-forward remains active; see snapshot below |
 
@@ -136,3 +136,4 @@
 | 2026-05-21 04:11 PDT | `Codex` / `feature-verify` | Re-verified commits `f95c0ae`, `4844ed9`, `2824e30`, `2e404ac`, `75b991b`, `3416bd4`, and `55369ba`. Automated checks passed again: `pnpm --filter @repo/plugin-organizer check-types`, `pnpm --filter @repo/plugin-organizer test` (65 passed), `pnpm --filter desktop build`, and `cargo test` (44 passed). Remaining blockers: `apps/desktop/src/App.tsx` still renders the production multi-window banner, and `SmartContainer`'s `Delete Grid` / `Close Grid` actions still collapse to the same delete path through `OrganizerGridContent` + `useMultiWindowGrids`. Manual macOS verification for multi-grid drag/resize/collapse, edge snap/hide, and thumbnails is still pending. | `f95c0ae`, `4844ed9`, `2824e30`, `2e404ac`, `75b991b`, `3416bd4`, `55369ba` | feature-build |
 | 2026-05-21 04:16 PDT | `Codex` / `feature-auto-build` | Second blocker-fix pass complete for verify findings only. Removed the production multi-window banner from `apps/desktop/src/App.tsx`. Separated delete vs close semantics: `SmartContainer` now routes `Delete Grid` through explicit `onDelete` and keeps `Close Grid`/direct close on `onClose`; `OrganizerGridContent` emits `organizer:grid:delete` for delete while keeping `organizer:grid:close` for close-window; `useMultiWindowGrids` now maps close events to `closeWindow(gridId)` and delete events to `onGridDelete(gridId)`. Existing payload shapes remain `{ gridId }`, and no Tauri command signatures changed. Tests: `pnpm --filter @repo/plugin-organizer check-types`; `pnpm --filter @repo/plugin-organizer test` (65 passed); `pnpm --filter desktop build`. Evidence: static grep confirms banner string removed in `App.tsx` and separate delete/close paths wired in organizer files. | _pending blocker-fix commit_ | feature-verify |
 | 2026-05-21 04:18 PDT | `Codex` / `feature-verify` | Re-verified commits `f95c0ae`, `4844ed9`, `2824e30`, `2e404ac`, `75b991b`, `3416bd4`, `55369ba`, and `f0fa5f2`. Acceptance checks are now satisfied: no production organizer banner residue remains, delete vs close semantics are separated with additive `{ gridId }` delete events, edge snap/hide and thumbnail seams remain additive, and existing window/finder command signatures are unchanged. Automated verification passed: `pnpm --filter @repo/plugin-organizer check-types`, `pnpm --filter @repo/plugin-organizer test` (65 passed), `pnpm --filter desktop build`, and `cargo test` (44 passed). Residual risk is limited to pending real-macOS manual verification for multi-grid drag/resize/collapse, edge snap/hide, and thumbnail behavior. | `f95c0ae`, `4844ed9`, `2824e30`, `2e404ac`, `75b991b`, `3416bd4`, `55369ba`, `f0fa5f2` | ship |
+| 2026-05-21 04:21 PDT | `Codex` / `ship` | Ship gate passed. Confirmed workflow status was READY_TO_SHIP, staged only in-scope organizer docs updates, created docs commit `859478f`, and pushed organizer F3 commit stack to `origin/main` (`cba6c2d..859478f`). Marked status panel as SHIPPED with workflow traceability retained. | `f95c0ae`, `4844ed9`, `2824e30`, `2e404ac`, `75b991b`, `3416bd4`, `55369ba`, `f0fa5f2`, `859478f` | workflow complete |
