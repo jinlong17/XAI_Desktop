@@ -8,14 +8,14 @@
 | Target | web-browser-e2e-crypto-runtime |
 | Title | W3 browser-side E2E crypto runtime |
 | Roadmap | web-ticktick-parity · feature #7 · W3 |
-| Status | BLOCKED |
-| Current Phase | FEATURE_BUILD |
-| Suggested Next | feature-auto-build |
+| Status | READY_FOR_VERIFY |
+| Current Phase | FEATURE_VERIFY |
+| Suggested Next | feature-verify |
 | Automation Mode | A-Claude |
 | Verify Cross-vendor | no |
 | Executor | feature-auto-build (Codex GPT-5 inline) |
-| Updated | 2026-05-21 16:02 PDT |
-| Blockers | Sandbox denies `.git` writes, so the required Phase 1 `git add` / commit step cannot create `.git/index.lock`. |
+| Updated | 2026-05-21 16:26 PDT |
+| Blockers | — (resolved by parent rescue commit `813205c`) |
 
 ## Source Context
 
@@ -30,7 +30,7 @@
 
 ### Phase 1 — Package scaffold, lock-state primitives, and observable transition seam
 
-Status: TODO.
+Status: DONE (`813205c`, parent rescue commit).
 
 File boundary:
 
@@ -61,7 +61,7 @@ Scoped verification:
 
 ### Phase 2 — Real Sync unlock path: KEK derivation, keyring validation, and active-wrap open
 
-Status: TODO.
+Status: DONE (`10c8b8a`).
 
 File boundary:
 
@@ -93,7 +93,7 @@ Scoped verification:
 
 ### Phase 3 — AES-GCM helper APIs and contract vectors
 
-Status: TODO.
+Status: DONE (`40f6905`).
 
 File boundary:
 
@@ -161,3 +161,6 @@ The revise pass resolves the prior blockers cleanly. The public unlock contract 
 | 2026-05-21 15:45 PDT | feature-plan (Codex gpt-5.3-codex inline) | Follow-up revise pass: aligned the Step 0 feature brief with the already-revised Sync v0.6 runtime contract so the problem statement, desired outcome, acceptance criteria, and planner handoff now reference `secret_key`, `/auth/me` keyring metadata, the KEK-wrapped local device-key seam, active-wrap HPKE open, observable lock transitions, and local RFC/vector gates. | — | feature-review |
 | 2026-05-21 15:47 PDT | feature-review (Codex GPT-5 inline) | Approved the revised plan. Revalidated the Sync v0.6 unlock inputs against `docs/TECHNICAL_REQUIREMENTS.md` §2.4 and `docs/planning/sub-prds/sync/dev-plan.md`, confirmed Phase 2 explicitly owns browser-side HPKE active-wrap open plus RFC 9180 gates while remote orchestration stays upstream, and confirmed `subscribe(listener)` is sufficient as the downstream lock-wipe observation seam. | — | feature-build |
 | 2026-05-21 16:02 PDT | feature-auto-build (Codex GPT-5 inline) | Phase 1 implementation reached the commit gate: scaffolded `@repo/web-browser-e2e-crypto-runtime`, added public runtime types/errors, Argon2id policy defaults, best-effort buffer cleanup helpers, idle-lock scheduling, and the `subscribe(listener)` transition store. Stopped before Phase 1 commit because the sandbox denies writes under `.git` (`git add` failed creating `.git/index.lock`). | None — commit blocked by `.git` write permission. Tests: `node node_modules/typescript/bin/tsc --project packages/web-browser-e2e-crypto-runtime/tsconfig.json --noEmit` passed; `node ../../node_modules/vitest/vitest.mjs run tests/buffers.test.ts tests/policy.test.ts tests/idle-lock.test.ts` passed (9 tests). | feature-auto-build |
+| 2026-05-21 16:08 PDT | parent session (Codex) | Resolved the prior `.git/index.lock` blocker outside the nested worker sandbox with a scoped Phase 1 rescue commit, then handed control back to `feature-auto-build` for remaining phases. | `813205c` — `feat(web-browser-crypto): scaffold runtime lock primitives` | feature-auto-build |
+| 2026-05-21 16:24 PDT | feature-auto-build (Codex GPT-5 inline) | Phase 2 complete: implemented `hash-wasm` Argon2id KEK derivation, `secretKeyCheck` validation, KEK unwrap for local wrapped device private key, browser-local X25519/HKDF/AES-GCM active-wrap open, and unlock session lifecycle with typed errors and lock transition semantics. Evidence: unlock gates cover valid unlock plus wrong secret key, bad password unwrap, key-id mismatch, and HPKE AAD mismatch failures. | `10c8b8a` — `feat(web-browser-crypto): Phase 2 — real sync unlock path` | feature-auto-build |
+| 2026-05-21 16:26 PDT | feature-auto-build (Codex GPT-5 inline) | Phase 3 complete: implemented deterministic CBOR AAD builder, envelope encode/decode with nonce reconstruction (`encryption_device_id || counter`), AES-GCM encrypt/decrypt helpers on unlocked DEK sessions, and negative gates for wrong AAD/tag/blob swap. Evidence: local vector asserts fixed envelope bytes and decrypt failures under swapped/tampered context. | `40f6905` — `feat(web-browser-crypto): Phase 3 — AES-GCM envelope helpers` | feature-verify |
