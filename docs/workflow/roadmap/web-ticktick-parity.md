@@ -16,7 +16,7 @@
 
 | # | Slug | Source | Depends On | Dep Semantics | Status | Automation Mode | Verify Cross-vendor | Last Run | Note |
 |---|------|--------|------------|---------------|--------|-----------------|---------------------|----------|------|
-| 1 | web-architecture-adr-lite | docs/reviews/web-architecture-adr-lite/20260521-roadmap-seed.md | — | — | PENDING | (default) | (default) | — | W0 · Decision drafted in ADR-0006: hybrid rule, shared contracts + Console UI truth, Web-specific shell/view layer allowed. |
+| 1 | web-architecture-adr-lite | docs/reviews/web-architecture-adr-lite/20260521-roadmap-seed.md | — | — | SHIPPED | (default) | (default) | 2026-05-21 | SHIPPED 2026-05-21 · dev_log Status=SHIPPED, Current Phase=SHIP, roadmap reconciled by ship run. |
 | 2 | web-plugin-map-contract-reconcile | docs/reviews/web-plugin-map-contract-reconcile/20260521-roadmap-seed.md | web-architecture-adr-lite | shipped | PENDING | (default) | (default) | — | W1 · Reconcile PLUGIN_MAP and package truth before implementation; brief/audit found plugin-productivity and Web status drift. |
 | 3 | web-sync-crypto-contract-preflight | docs/reviews/web-sync-crypto-contract-preflight/20260521-roadmap-seed.md | web-architecture-adr-lite | shipped | PENDING | (default) | (default) | — | W1 · Freeze browser crypto + Sync W0-W3 alignment before driver/cache/auth rows. |
 | 4 | web-external-env-provisioning | docs/reviews/web-external-env-provisioning/20260521-roadmap-seed.md | — | — | BLOCKED_EXTERNAL | (default) | (default) | — | W1 · EXTERNAL: domains/DNS, Vercel or CF project, OAuth redirect allowlists, Sentry/Vercel/Supabase secrets; blocks deployment, not local authoring. |

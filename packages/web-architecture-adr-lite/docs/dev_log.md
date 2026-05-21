@@ -8,13 +8,13 @@
 | Target | web-architecture-adr-lite |
 | Title | W0 Web architecture ADR-lite decision |
 | Roadmap | web-ticktick-parity · feature #1 · W0 |
-| Status | READY_TO_SHIP |
-| Current Phase | FEATURE_VERIFY |
-| Suggested Next | ship |
+| Status | SHIPPED |
+| Current Phase | SHIP |
+| Suggested Next | — |
 | Automation Mode | A-Claude |
 | Verify Cross-vendor | no |
-| Executor | feature-verify (Codex inline) |
-| Updated | 2026-05-21 03:30 PDT |
+| Executor | ship (Codex gpt-5.3-codex) |
+| Updated | 2026-05-21 11:42 PDT |
 | Blockers | — |
 
 ## Phase Plan
@@ -55,3 +55,4 @@ Gate:
 | 2026-05-21 03:23 PDT | feature-review (Codex subagent) | APPROVED with 0 blockers and 1 non-blocking recommendation: keep future Web-row deviation notes explicit wherever Web PRD and Console PRD may drift. | — | feature-auto-build |
 | 2026-05-21 03:26 PDT | feature-auto-build (Codex inline) | Completed Phase 1 docs-only build: validated `ADR-0006` remains Accepted with explicit hybrid boundaries, confirmed Web PRD + Step 0 brief + roadmap manifest reference the ADR, and added a roadmap review-gate note requiring per-row browser-only deviation docs citing `ADR-0006`. | `6f52c9c` | feature-verify |
 | 2026-05-21 03:30 PDT | feature-verify (Codex inline) | PASS: verified docs-only commit range against design/api/test/dev-log contracts, confirmed `ADR-0006` discoverability and hybrid-rule acceptance criteria, and confirmed no product code changed in `6563570..HEAD`. | `6f52c9c`, `b1ba1a9` | ship |
+| 2026-05-21 11:42 PDT | ship (Codex gpt-5.3-codex) | Validated ship gate on clean worktree from `origin/main`, confirmed only docs-only feature commits were required, reconciled roadmap manifest row #1, and marked workflow complete. | reused `6f52c9c`, `b1ba1a9`; created ship-state docs commit | workflow complete |
