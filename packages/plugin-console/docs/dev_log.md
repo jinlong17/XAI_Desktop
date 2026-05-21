@@ -7,13 +7,13 @@
 | Workflow | FEATURE_DEV |
 | Target | plugin-console |
 | Title | Console TickTick parity host shell |
-| Status | READY_TO_SHIP |
-| Current Phase | FEATURE_VERIFY |
-| Suggested Next | ship |
+| Status | SHIPPED |
+| Current Phase | SHIP |
+| Suggested Next | workflow complete |
 | Automation Mode | A-Claude |
 | Verify Cross-vendor | no |
-| Executor | feature-verify (Codex, gpt-5.4) |
-| Updated | 2026-05-21 12:33 PDT |
+| Executor | ship (Codex, gpt-5.3-codex) |
+| Updated | 2026-05-21 12:38 PDT |
 | Blockers | None |
 
 ## Legacy Context
@@ -205,3 +205,4 @@ Gate:
 | 2026-05-21 12:18 PDT | feature-verify (Codex, gpt-5.4) | Verification BLOCKED after reviewing commits `1c1af64`, `bcacbda`, `5b43712`, `52cc140`, `6f2c67a`, `831791f`, `dce3230`, and `be9189d`. Automated checks passed for core type/test, plugin check-types, desktop build, and Rust tests, but the required package-level Vitest gates for `plugin-console`, `plugin-productivity`, and `plugin-labels` are non-runnable (`vitest: command not found`). Contract review also found that the approved manifest-driven `ui.consoleSidebar` sidebar registration model is still not implemented; runtime navigation remains driven by `ConsoleViewRegistration.sidebar` plus hardcoded placeholder entries. | `1c1af64`, `bcacbda`, `5b43712`, `52cc140`, `6f2c67a`, `831791f`, `dce3230`, `be9189d` | feature-build |
 | 2026-05-21 12:27 PDT | feature-auto-build (Codex, gpt-5.3-codex) | Fix round for verify blockers: made package-level Vitest gates executable via package `vitest.config.ts` + workspace vitest binary path, migrated sidebar registration authority to manifest `ui.consoleSidebar.entries`, removed ConsoleLayout hardcoded sidebar entries, and switched registry assembly to manifest-driven entries with placeholder-aware fallback rendering. Tests: `pnpm --filter @repo/plugin-console test`; `pnpm --filter @repo/plugin-productivity test`; `pnpm --filter @repo/plugin-labels test`; `pnpm --filter @repo/plugin-console check-types`; `pnpm --filter @repo/plugin-productivity check-types`; `pnpm --filter @repo/plugin-labels check-types`; `pnpm --filter @repo/core check-types`; `pnpm --filter @repo/core test`; `pnpm --filter desktop build`. | `de0021e` fix(plugin-console): unblock verify blockers | feature-verify |
 | 2026-05-21 12:33 PDT | feature-verify (Codex, gpt-5.4) | Verification PASS after reviewing the full feature commit set through `de0021e`, re-running core/plugin/desktop/Rust checks, and confirming the manifest-driven sidebar contract is active in the current tree. Promoted status to `READY_TO_SHIP`; remaining risks are limited to deferred real-macOS windowing validation and future hardening of manifest/render mismatch enforcement. | `1c1af64`, `bcacbda`, `5b43712`, `be9189d`, `52cc140`, `6f2c67a`, `831791f`, `dce3230`, `de0021e` | ship |
+| 2026-05-21 12:38 PDT | ship (Codex, gpt-5.3-codex) | Ship execution: validated `READY_TO_SHIP`, confirmed plugin-console commit completeness and supplementary docs artifacts, pushed `main` to `origin`, and marked workflow `SHIPPED`. | `1c1af64`, `bcacbda`, `5b43712`, `be9189d`, `52cc140`, `6f2c67a`, `831791f`, `dce3230`, `de0021e`, `bc3ced5` | workflow complete |
