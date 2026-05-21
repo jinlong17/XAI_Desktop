@@ -13,8 +13,8 @@
 | Suggested Next | feature-verify |
 | Automation Mode | A-Claude |
 | Verify Cross-vendor | no |
-| Executor | feature-auto-build (Codex gpt-5.3-codex inline) |
-| Updated | 2026-05-21 14:32 PDT |
+| Executor | feature-build (Codex gpt-5.3-codex inline) |
+| Updated | 2026-05-21 14:40 PDT |
 | Blockers | — |
 
 ## Source Context
@@ -139,6 +139,13 @@ Scoped verification:
 - The archive contract is sufficiently frozen for execution: `apps/release-site` is reference-only as `@repo/release-site-archive`, standard `dev` / `build` / `start` are demoted away, the README guardrail explicitly demotes archived `/console`, and `apps/web` is the canonical thin-shell `@repo/web` Vite host.
 - Non-blocking recommendation: when Phase 3 is built, include root `turbo run check-types` alongside the documented build checks so the new Vite output contract is exercised against existing Next-based apps such as `apps/docs`.
 
+## Verification Notes
+
+- Commit review: `f7c9de4`, `14f2597`, `26d1bf6`, and `abeed1d` each keep a single intent and their subjects/bodies match `docs/conventions/COMMIT_CONVENTION.md`.
+- Scoped verification passed: `pnpm --filter @repo/web build`; `pnpm --filter @repo/web check-types`; `pnpm turbo run build`.
+- Root `pnpm turbo run check-types` still fails, but the reproduced failures are in untouched packages outside this feature boundary: `@repo/plugin-project`, `@repo/plugin-widgets`, and `@repo/plugin-clipboard`. `git diff --name-only bc565ae..HEAD -- packages/plugin-project packages/plugin-widgets packages/plugin-clipboard packages/core-data` returned no changes, so these typecheck failures are unrelated to the web host/archive split.
+- Blocking artifact gap: the required review/design/api/test docs for this feature exist in the worktree but remain untracked, so the branch is not ready to ship with a complete workflow artifact set.
+
 ## Work Log
 
 | Timestamp | Executor | Action | Commits | Next |
@@ -150,3 +157,5 @@ Scoped verification:
 | 2026-05-21 14:27 PDT | feature-auto-build (Codex gpt-5.3-codex inline) | Phase 1 — moved the Next.js shell from `apps/web` to `apps/release-site`, renamed the archive package to `@repo/release-site-archive`, demoted runtime scripts to `archive:*`, and added archive guardrails declaring `/console` as historical static mock and `@repo/web` as canonical host. Tests run: `test -d apps/release-site/app/console`; `test -f apps/release-site/README.md`; `rg -n "@repo/release-site-archive|archive-only|historical static mock|@repo/web" apps/release-site/package.json apps/release-site/README.md`; `jq '.scripts' apps/release-site/package.json`. | `f7c9de4` | feature-auto-build |
 | 2026-05-21 14:29 PDT | feature-auto-build (Codex gpt-5.3-codex inline) | Phase 2 — rebuilt `apps/web` as canonical Vite package `@repo/web` with thin-host seams only (`src/main.tsx`, `src/routes/**`, `src/providers/**`, `src/pages/**`, `src/service-worker/**`, `src/styles/**`) and no archived Next `/console` content. Tests run: `test -f apps/web/index.html`; `test -f apps/web/src/main.tsx`; `rg -n '"name": "@repo/web"|vite|src/main.tsx' apps/web/package.json apps/web/vite.config.ts apps/web/src/main.tsx`; `test ! -d apps/web/app`. | `14f2597` | feature-auto-build |
 | 2026-05-21 14:32 PDT | feature-auto-build (Codex gpt-5.3-codex inline) | Phase 3 — aligned Turbo outputs for mixed Vite/Next workspace (`dist/**` + `.next/**`), kept archive package out of default typecheck flow by renaming `check-types` to `archive:check-types`, and refreshed lockfile for new `@repo/web` graph. Tests run: `rg -n 'dist/\\*\\*|\\.next/\\*\\*' turbo.json`; `pnpm --filter @repo/web check-types` (pass); `pnpm --filter @repo/web build` (pass); `pnpm turbo run build` (pass); `pnpm turbo run check-types` (fails on pre-existing `@repo/plugin-widgets`/`@repo/plugin-clipboard` typecheck issues unrelated to this feature). | `26d1bf6` | feature-verify |
+| 2026-05-21 14:37 PDT | feature-verify (Codex gpt-5.3-codex inline) | Verification BLOCKED. Reviewed phase commits `f7c9de4`, `14f2597`, `26d1bf6`, `abeed1d`; confirmed archive/Vite split matches the approved design and scoped build/typecheck/build-root commands pass. Re-ran `pnpm turbo run check-types` and reproduced unrelated failures in untouched `@repo/plugin-project`, `@repo/plugin-widgets`, and `@repo/plugin-clipboard`, but the ship gate still fails because required feature brief/discovery and package design/api/test docs remain untracked in git. | `f7c9de4`, `14f2597`, `26d1bf6`, `abeed1d` | feature-build |
+| 2026-05-21 14:40 PDT | feature-build (Codex gpt-5.3-codex inline) | Fix verify blocker by confirming workflow artifacts exist/cohere, staging the previously untracked brief/discovery + design/api/test docs, and advancing status from BLOCKED to READY_FOR_VERIFY for a fresh verify pass. Checks run: artifact existence tests and contract keyword coherence scan across review/design/api/test docs. | this commit | feature-verify |
