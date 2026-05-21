@@ -41,6 +41,32 @@ export type {
   ServerAuditSummary,
 } from './audit-log';
 export {
+  AccountRateLimitError,
+  InMemoryAccountDeletionStore,
+  StorageQuotaExceededError,
+  assertWithinStorageQuota,
+  createAccountRateLimiter,
+  createSupportFeedback,
+  executeAccountDeletion,
+  exportEncryptedAccountData,
+  importEncryptedAccountData,
+  planAccountDeletion,
+} from './beta-ops';
+export type {
+  AccountDeletionResult,
+  AccountDeletionPlan,
+  AccountDeletionStore,
+  EncryptedExportEnvelopeV1,
+  EncryptedExportEnvelopeV2,
+  EncryptedExportRecord,
+  ExportOptions,
+  ImportOptions,
+  RateLimitConfig,
+  StorageQuotaConfig,
+  StorageUsage,
+  SupportFeedback,
+} from './beta-ops';
+export {
   RefreshTokenManager,
   loginAccount,
   persistRefreshToken,
@@ -87,6 +113,7 @@ export type {
   RekeySession,
   RekeyStagedBlob,
   RekeyTrigger,
+  RetiredKeyCleanupPlan,
 } from './rekey';
 export {
   createSyncStatusEmitter,
@@ -98,6 +125,8 @@ export type {
   SyncStatusEmitter,
   SyncStatusEmitterOptions,
 } from './sync-status';
+export { SupportFeedbackForm } from './components/SupportFeedbackForm';
+export type { SupportFeedbackFormProps } from './components/SupportFeedbackForm';
 export {
   TODO_SYNC_SQL,
   createTodoSyncStore,
@@ -117,6 +146,7 @@ export {
   SyncRevisionRollbackError,
   applyServerRecords,
   createSyncPullHttpTransport,
+  createSyncNonceLeaseManager,
   createSyncPushHttpTransport,
   createSyncOutbox,
   createUuidV7,
@@ -149,8 +179,12 @@ export type {
   SyncCryptoClient,
   SyncEncryptInput,
   SyncEntityRef,
+  SyncNonceLease,
+  SyncNonceLeaseManager,
+  SyncNonceLeaseTransport,
   SyncOutbox,
   SyncPlaintext,
+  SyncProgressCheckpoint,
   SyncPullFetch,
   SyncPullHttpTransportOptions,
   SyncPullTransport,

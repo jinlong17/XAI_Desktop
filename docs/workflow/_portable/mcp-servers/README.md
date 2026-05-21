@@ -15,7 +15,7 @@ This README is the carry-target for `<skill_prefix>workflow-migrate instantiate`
 
 ## 1. Why MCP servers are out of the generator
 
-The 8 public-skill shims under `_portable/skills/` are description-triggered
+The 10 public-skill shims under `_portable/skills/` are description-triggered
 **advisory** layers — they ship prompts, not capabilities. MCP servers are
 the opposite: they expose **tools** the host can call (browser automation,
 remote API access, etc.) and so live in the host tool's own MCP config, not

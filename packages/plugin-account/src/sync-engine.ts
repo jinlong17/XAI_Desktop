@@ -184,6 +184,48 @@ export interface SyncPullHttpTransportOptions {
   fetch?: SyncPullFetch;
 }
 
+export interface SyncNonceLease {
+  accountId: string;
+  deviceId: string;
+  keyId: number;
+  encryptionDeviceId: bigint;
+  leaseStart: bigint;
+  leaseEnd: bigint;
+  expiresAtMs: number;
+}
+
+export interface SyncProgressCheckpoint {
+  accountId: string;
+  deviceId: string;
+  lastAckCommitSeq: bigint;
+  updatedAtMs: number;
+}
+
+export interface SyncNonceLeaseTransport {
+  requestLease(input: {
+    accountId: string;
+    deviceId: string;
+    keyId: number;
+    count: number;
+  }): Promise<SyncNonceLease>;
+  renewLease(lease: SyncNonceLease): Promise<SyncNonceLease>;
+  releaseLease(lease: SyncNonceLease): Promise<void>;
+  persistProgress(progress: SyncProgressCheckpoint): Promise<void>;
+}
+
+export interface SyncNonceLeaseManager {
+  request(input: {
+    accountId: string;
+    deviceId: string;
+    keyId: number;
+    count: number;
+  }): Promise<SyncNonceLease>;
+  renew(): Promise<SyncNonceLease>;
+  release(): Promise<void>;
+  persistProgress(lastAckCommitSeq: bigint): Promise<SyncProgressCheckpoint>;
+  current(): SyncNonceLease | undefined;
+}
+
 export interface PushBatchDeps {
   crypto: SyncCryptoClient;
   revisions: EntityRevisionReader;
@@ -364,6 +406,58 @@ export function createSyncPullHttpTransport(
   };
 }
 
+export function createSyncNonceLeaseManager(
+  transport: SyncNonceLeaseTransport,
+  options: { nowMs?: () => number } = {},
+): SyncNonceLeaseManager {
+  const nowMs = options.nowMs ?? Date.now;
+  let currentLease: SyncNonceLease | undefined;
+
+  return {
+    async request(input) {
+      const lease = await transport.requestLease(input);
+      currentLease = cloneLease(lease);
+      return cloneLease(lease);
+    },
+
+    async renew() {
+      if (!currentLease) {
+        throw new Error('E3005: cannot renew nonce lease before request');
+      }
+      const lease = await transport.renewLease(currentLease);
+      currentLease = cloneLease(lease);
+      return cloneLease(lease);
+    },
+
+    async release() {
+      if (!currentLease) {
+        return;
+      }
+      const lease = currentLease;
+      currentLease = undefined;
+      await transport.releaseLease(lease);
+    },
+
+    async persistProgress(lastAckCommitSeq) {
+      if (!currentLease) {
+        throw new Error('E3005: cannot persist sync progress without a nonce lease');
+      }
+      const progress: SyncProgressCheckpoint = {
+        accountId: currentLease.accountId,
+        deviceId: currentLease.deviceId,
+        lastAckCommitSeq,
+        updatedAtMs: nowMs(),
+      };
+      await transport.persistProgress(progress);
+      return progress;
+    },
+
+    current() {
+      return currentLease ? cloneLease(currentLease) : undefined;
+    },
+  };
+}
+
 export async function pullBatch(
   deps: PullBatchDeps,
   input: PullBatchInput,
@@ -492,6 +586,10 @@ function parseBigIntString(value: string, field: string): bigint {
 
 function entityKey(entity: SyncEntityRef): string {
   return `${entity.entityType}\u0000${entity.entityId}`;
+}
+
+function cloneLease(lease: SyncNonceLease): SyncNonceLease {
+  return { ...lease };
 }
 
 function defaultRandomBytes(length: number): Uint8Array {

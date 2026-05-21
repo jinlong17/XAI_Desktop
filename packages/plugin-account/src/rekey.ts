@@ -7,6 +7,7 @@ export type RekeyCrashPoint = 'init' | 'staging_30' | 'staging_70' | 'before_swa
 export interface RekeyKeyringEntry {
   keyId: number;
   status: 'active' | 'staging' | 'retired';
+  materialBuffer?: Uint8Array;
 }
 
 export interface RekeyAccountState {
@@ -44,6 +45,7 @@ export interface RekeyProofGate {
 
 export interface RekeySession {
   id: string;
+  accountId: string;
   trigger: RekeyTrigger;
   oldKeyId: number;
   newKeyId: number;
@@ -54,7 +56,14 @@ export interface RekeySession {
   swapped: boolean;
 }
 
+export interface RetiredKeyCleanupPlan {
+  oldKeyId: number;
+  deviceDekWrapsToDelete: { accountId: string; keyId: number }[];
+  keyMaterialZeroized: boolean;
+}
+
 export interface BeginRekeyInput {
+  accountId: string;
   account: RekeyAccountState;
   trigger: RekeyTrigger;
   sessionId: string;
@@ -82,6 +91,7 @@ export function beginRekey(input: BeginRekeyInput): { account: RekeyAccountState
     },
     session: {
       id: input.sessionId,
+      accountId: input.accountId,
       trigger: input.trigger,
       oldKeyId,
       newKeyId,
@@ -121,29 +131,41 @@ export function completeRekeySwap(
   account: RekeyAccountState,
   session: RekeySession,
   gate: RekeyProofGate,
-): { account: RekeyAccountState; session: RekeySession } {
+): { account: RekeyAccountState; session: RekeySession; cleanup: RetiredKeyCleanupPlan } {
   assertRekeyProofGate(gate);
   if (session.staged.length === 0) {
     throw new Error('E3005: cannot swap before staging blobs');
   }
 
+  const nextAccount: RekeyAccountState = {
+    ...account,
+    currentKeyId: session.newKeyId,
+    keyQuarantineAt: null,
+    recoverySigningPub: new Uint8Array(session.newRecoverySigningPub),
+    keyring: account.keyring.map((entry) => {
+      if (entry.keyId === session.oldKeyId) {
+        return { ...entry, status: 'retired' };
+      }
+      if (entry.keyId === session.newKeyId) {
+        return { ...entry, status: 'active' };
+      }
+      return entry;
+    }),
+  };
+  const keyMaterialZeroized = zeroizeKeyMaterial(nextAccount, session.oldKeyId);
+  const cleanup: RetiredKeyCleanupPlan = {
+    oldKeyId: session.oldKeyId,
+    deviceDekWrapsToDelete: session.activeDeviceIds.map(() => ({
+      accountId: session.accountId,
+      keyId: session.oldKeyId,
+    })),
+    keyMaterialZeroized,
+  };
+
   return {
-    account: {
-      ...account,
-      currentKeyId: session.newKeyId,
-      keyQuarantineAt: null,
-      recoverySigningPub: new Uint8Array(session.newRecoverySigningPub),
-      keyring: account.keyring.map((entry) => {
-        if (entry.keyId === session.oldKeyId) {
-          return { ...entry, status: 'retired' };
-        }
-        if (entry.keyId === session.newKeyId) {
-          return { ...entry, status: 'active' };
-        }
-        return entry;
-      }),
-    },
+    account: nextAccount,
     session: { ...session, swapped: true },
+    cleanup,
   };
 }
 
@@ -162,4 +184,13 @@ export function resumeRekeyAfterCrash(session: RekeySession, point: RekeyCrashPo
 
 export function validateCurrentMnemonic(session: RekeySession, phrase: string): boolean {
   return phrase.trim() === session.newMnemonic.trim();
+}
+
+function zeroizeKeyMaterial(account: RekeyAccountState, oldKeyId: number): boolean {
+  const entry = account.keyring.find((keyringEntry) => keyringEntry.keyId === oldKeyId);
+  if (!entry?.materialBuffer) {
+    return false;
+  }
+  entry.materialBuffer.fill(0);
+  return true;
 }

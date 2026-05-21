@@ -214,8 +214,9 @@ per-project rewrite.
    `--force` **regresses** those hand-edits: re-run only when a template changed, then re-propagate.
 6a. **(optional public-skill bundle)** Run the generation script again with `--include-skills`
    to render the public-skill shims under `<public_skill_root>` into `.claude/skills/skill-*/SKILL.md`,
-   `.codex/agents/skill-*.toml`, and `.cursor/rules/skill-*.mdc`. Optional `--skills NAME[,NAME]`
-   selects a subset. Without `--include-skills`, behavior is byte-identical to step 6.
+   `.codex/agents/skill-*.toml`, `.codex/skills/*/SKILL.md`, and
+   `.cursor/rules/skill-*.mdc`. Optional `--skills NAME[,NAME]` selects a subset.
+   Without `--include-skills`, behavior is byte-identical to step 6.
    Then (optional) follow `<mcp_servers_root>/README.md` for the Playwright MCP and Rube install
    commands — those servers stay out of the generator path. Skip this step entirely if the project
    does not adopt the public-skill bundle.
@@ -439,11 +440,12 @@ checklist. STOP.
    hand into `.claude/.codex/.cursor`. Re-running with `--force` **regresses** those — re-run only
    on template change, then re-propagate. Flag this in the emitted checklist.
 8. **Verify.** Count (without `--include-skills`): 15 templates → 15 × 3 = 45 generated configs +
-   1 `.codex/config.toml`. Count (with `--include-skills`): 15 × 3 = 45 frozen + 9 × 3 = 27
-   skill outputs = **72 outputs** + 1 `.codex/config.toml`. Skip the +27 if the target opted out of
-   the public-skill bundle. Run `check_portable_sync.py` against the copied portable layer (must
-   PASS). Spot-check that no `<placeholder>` token survived in `<templates_dir>/*.md` or the
-   generated configs.
+   1 `.codex/config.toml`. Count (with `--include-skills`): 15 × 3 = 45 frozen + 10 public skills
+   rendered to Claude skill, Codex agent, Codex native skill, and Cursor rule surfaces = **85 core
+   outputs** + 1 `.codex/config.toml`, plus any copied Codex native skill sidecars such as
+   `PROVENANCE.md`. Skip the public-skill outputs if the target opted out of the public-skill
+   bundle. Run `check_portable_sync.py` against the copied portable layer (must PASS). Spot-check
+   that no `<placeholder>` token survived in `<templates_dir>/*.md` or the generated configs.
 9. **Emit the project-layer checklist and STOP.** Do not author the project-layer docs — list them
    for the human:
    - write `<project_workflow_doc>` — the concrete V2 landing (use the source project's instance as

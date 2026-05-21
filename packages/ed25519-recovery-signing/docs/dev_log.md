@@ -1,5 +1,10 @@
 # ed25519-recovery-signing — Dev Log (Workflow State Machine)
 
+## 2026-05-20 14:55 PDT
+
+- Implemented Node crypto Ed25519 recovery transcript signing, verification, and `E3014` assertion helper.
+- Verification: `pnpm --filter @repo/ed25519-recovery-signing test`; package `check-types`.
+
 ## Status Panel
 
 | Field | Value |
@@ -46,4 +51,3 @@
 | Timestamp | Executor | Action | Commits | Next |
 |---|---|---|---|---|
 | 2026-05-19 03:02 PDT | Codex serial autorun | Implemented #14 Ed25519 recovery signing, strict verification, E3014 failure mapping, docs, and tests. | local commit `feat(ed25519-recovery-signing): add recovery proof signing` | sqlcipher-local-db (#16) |
-

@@ -115,7 +115,7 @@ function makeMessage(role: AiMessage["role"], content: string, redacted = false)
   const timestamp = new Date().toISOString();
   return {
     id: `ai-message-${Date.now()}-${Math.random().toString(36).slice(2)}`,
-    entityType: "ai-cube.message",
+    entityType: "aicube.message",
     schemaVersion: 1,
     createdAt: timestamp,
     updatedAt: timestamp,

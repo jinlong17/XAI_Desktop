@@ -1,5 +1,10 @@
 # recovery-rehearsal-3-rekey-kill9 — Dev Log
 
+## 2026-05-20 14:55 PDT
+
+- Implemented four mock recovery scenarios: server wipe client resync, local wipe mnemonic restore, rekey kill-9 resume, and revoked-device write rejection.
+- Verification: `pnpm --filter @repo/recovery-rehearsal-3-rekey-kill9 test`; package `check-types`.
+
 ## Status Panel
 
 | Field | Value |

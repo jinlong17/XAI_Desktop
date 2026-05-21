@@ -1,5 +1,11 @@
 # rls-fuzz-property — Dev Log
 
+## 2026-05-20 14:55 PDT
+
+- Implemented deterministic RLS isolation fuzz runner for cross-account and other-device wrap exposure.
+- Converted web RLS fuzz test from Docker/Postgres to local Vitest mock.
+- Verification: `pnpm --filter @repo/rls-fuzz-property test`; `pnpm --filter web test:rls-fuzz`; package `check-types`.
+
 ## Status Panel
 
 | Field | Value |

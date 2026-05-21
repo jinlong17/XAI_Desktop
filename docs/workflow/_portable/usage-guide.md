@@ -836,7 +836,7 @@ The orchestration roles:
 
 ## 10. Public skills — trigger quick-reference & the sync rule
 
-`_portable/skills/` ships **9 curated, fully-installed, description-triggered** public skills
+`_portable/skills/` ships **10 curated, fully-installed, description-triggered** public skills
 (ADR `0006-public-skills-portable-library.md`). "Description-triggered" means the model
 auto-loads a skill when the conversation matches its frontmatter `Triggers —` phrases — you do
 not have to invoke them. The right-hand column is the explicit override if you want to force one.
@@ -849,6 +849,7 @@ not have to invoke them. The right-hand column is the explicit override if you w
 | **superpowers** | plan first · design before code · subagent-driven · multi-step planning · decompose this task | `use superpowers` |
 | **planning-with-files** | persistent plan · task_plan.md · /plan · long-running task plan · plan-as-file | `use planning-with-files` |
 | **skill-creator** | create a new skill · edit a skill · test a skill · skill.md frontmatter · skill author workflow | `use skill-creator` |
+| **workflow-router** | goal prompt · task prompt · workflow router · route this requirement · prompt for Claude · prompt for Codex · preview task before running | `use workflow-router` |
 | **codebase-explorer** | explore this codebase · orientation map · architecture review · where does X live · onboard me to this repo | `use codebase-explorer` |
 | **frontend-dev** | build a frontend page · framer motion · tailwind UI · refine this component · frontend polish pass | `use frontend-dev` |
 | **composition-patterns** | react composition · compound components · boolean prop proliferation · render prop pattern · slot pattern | `use composition-patterns` |
