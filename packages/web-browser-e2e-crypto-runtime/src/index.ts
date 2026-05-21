@@ -36,7 +36,7 @@ import type {
   EncryptBlobInput,
   EncryptBlobResult,
 } from "./types";
-import { webCryptoError } from "./errors";
+import { decryptBlobWithDek, encryptBlobWithDek } from "./internal/aes-gcm";
 import { createRuntimeSessionController } from "./internal/session";
 
 export function createBrowserCryptoRuntime(): BrowserCryptoRuntime {
@@ -58,17 +58,23 @@ export function createBrowserCryptoRuntime(): BrowserCryptoRuntime {
     configureIdleLock(input) {
       session.configureIdleLock(input);
     },
-    async encryptBlob(_input: EncryptBlobInput): Promise<EncryptBlobResult> {
-      throw webCryptoError(
-        "E_WEB_CRYPTO_LOCKED",
-        "Encrypt helper is not wired until the AES-GCM envelope phase completes",
-      );
+    async encryptBlob(input: EncryptBlobInput): Promise<EncryptBlobResult> {
+      return session.withActiveDek(async ({ key, kdfVersion, currentKeyId }) => {
+        return encryptBlobWithDek({
+          dekKey: key,
+          kdfVersion,
+          currentKeyId,
+          payload: input,
+        });
+      });
     },
-    async decryptBlob(_input: DecryptBlobInput): Promise<DecryptBlobResult> {
-      throw webCryptoError(
-        "E_WEB_CRYPTO_LOCKED",
-        "Decrypt helper is not wired until the AES-GCM envelope phase completes",
-      );
+    async decryptBlob(input: DecryptBlobInput): Promise<DecryptBlobResult> {
+      return session.withActiveDek(async ({ key }) => {
+        return decryptBlobWithDek({
+          dekKey: key,
+          payload: input,
+        });
+      });
     },
   };
 }
