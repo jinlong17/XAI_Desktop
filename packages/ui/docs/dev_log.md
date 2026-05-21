@@ -7,13 +7,13 @@
 | Workflow | FEATURE_DEV |
 | Target | desktop-design-system |
 | Title | Desktop Design System (Wave 0) |
-| Current Phase | FEATURE_VERIFY |
-| Status | READY_FOR_VERIFY |
-| Suggested Next | feature-verify |
+| Current Phase | SHIP |
+| Status | SHIPPED |
+| Suggested Next | workflow-complete |
 | Automation Mode | A-Claude |
 | Verify Cross-vendor | no |
-| Executor | codex / feature-auto-build |
-| Updated | 2026-05-21 03:09 PDT |
+| Executor | codex / ship |
+| Updated | 2026-05-21 03:15 PDT |
 | Blockers | none |
 
 ## Package Ownership
@@ -73,6 +73,21 @@ Non-blocking recommendations:
 - Prefer `SmartContainer` as the proof consumer because it already carries the debug-class debt cited by the acceptance criteria.
 - Treat `pnpm --filter desktop build` and targeted consumer typecheck as the primary contract smoke tests; do not assume `@repo/ui` has an independent build step.
 
+## Verification Summary
+
+feature-verify (Codex inline), 2026-05-21 03:13 PDT. Verdict: PASS.
+
+- Reviewed commits `72b2c67`, `638cf74`, and `c76ad31` against the feature brief, discovery review, design snapshot, API contract, and test strategy.
+- Confirmed `packages/ui/src/tokens.ts` exports six token classes plus `designTokens`, and `packages/ui/src/icons.tsx` exports `DesktopIcon`, `desktopIconRegistry`, `DesktopIconName`, and `iconAliasMap`.
+- Confirmed `packages/plugin-organizer/src/SmartContainer.tsx` imports `@repo/ui/tokens` as the real proof consumer.
+- Confirmed `.border`, `.border-red-500`, and `.opacity-50` helper classes are absent from `apps/desktop/src/App.css`, with no matching helper-class references remaining in the searched feature source set.
+- Confirmed `packages/ui/package.json` keeps explicit `./button`, `./card`, and `./code` exports while adding `./tokens` and `./icons`.
+
+## Residual Risks
+
+- Manual desktop visual verification on real macOS hardware is still pending; this run only verified type/build contracts and static source evidence.
+- The icon baseline contract is present and exported, but this feature wave does not yet include a real runtime icon consumer smoke path.
+
 ## Work Log
 
 | Timestamp | Executor | Action | Commits | Next |
@@ -81,3 +96,5 @@ Non-blocking recommendations:
 | 2026-05-21 10:39 PDT | gpt-5.4 / feature-review | Reviewed the F1 planning artifacts against workspace reality and approved the scoped two-phase plan. Wrote review notes, promoted Status Panel to APPROVED, and pointed Suggested Next to `feature-build`. | — | feature-build |
 | 2026-05-21 03:02 PDT | codex / feature-auto-build | Completed Phase 1 (Shared Contract): added `packages/ui/src/tokens.ts` (color/space/radius/shadow/motion/typography + `designTokens`), `packages/ui/src/icons.tsx` (`DesktopIcon`, `desktopIconRegistry`, `DesktopIconName`, `iconAliasMap`), and expanded `@repo/ui` export surface for token/icon modules while keeping existing component exports compatible. Tests: `pnpm --filter @repo/ui check-types` (pass). | `72b2c67` | feature-auto-build |
 | 2026-05-21 03:08 PDT | codex / feature-auto-build | Completed Phase 2 (Proof Integration): removed `border/border-red-500/opacity-50` debug-class dependency from `SmartContainer`, removed corresponding debug helper rules from `apps/desktop/src/App.css`, and wired `SmartContainer` token consumption via `@repo/ui/tokens`; linked organizer workspace dep to `@repo/ui` for contract resolution. Tests: `pnpm --filter @repo/ui check-types` (pass), `pnpm --filter @repo/plugin-organizer check-types` (pass), `pnpm --filter desktop build` (pass). Evidence: `rg -n \"@repo/ui/tokens\" packages/plugin-organizer/src/SmartContainer.tsx` matched import; no `border-red-500` / `opacity-50` matches remain under `apps/desktop/src` + `packages/plugin-organizer/src`. | `638cf74` | feature-verify |
+| 2026-05-21 03:13 PDT | codex / feature-verify | Verified feature scope against brief/design/api/test/dev_log and reviewed commits `72b2c67`, `638cf74`, and `c76ad31` for intent split and contract fit. Re-ran `pnpm --filter @repo/ui check-types`, `pnpm --filter @repo/plugin-organizer check-types`, and `pnpm --filter desktop build` successfully; confirmed token/icon exports, proof consumer import, and App.css debug helper removal. | `72b2c67`, `638cf74`, `c76ad31` | ship |
+| 2026-05-21 03:15 PDT | codex / ship | Completed ship gate checks on `main`, confirmed workflow status and commit quality for `72b2c67`, `638cf74`, and `c76ad31`, pushed feature commits plus ship checkpoint to `origin/main`, and marked workflow complete. | `72b2c67`, `638cf74`, `c76ad31` | done |
