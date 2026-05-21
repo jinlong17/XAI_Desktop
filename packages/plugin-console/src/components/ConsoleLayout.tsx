@@ -154,7 +154,10 @@ export function ConsoleLayout({
   children,
 }: ConsoleLayoutProps) {
   const containerRef = useRef<HTMLDivElement | null>(null);
+  const reconcileRevisionRef = useRef(0);
   const [state, setState] = useState<PersistedShellState>(() => loadPersistedState());
+  const [reconcileStatus, setReconcileStatus] = useState<"idle" | "pending" | "acked">("idle");
+  const [lastAckRevision, setLastAckRevision] = useState(0);
   const viewById = useMemo(
     () => new Map(views.map((view) => [view.moduleId, view])),
     [views],
@@ -319,10 +322,23 @@ export function ConsoleLayout({
             }));
           },
           requestReconcile: async (reason) => {
+            reconcileRevisionRef.current += 1;
+            const revision = reconcileRevisionRef.current;
+            setReconcileStatus("pending");
             void emitEvent("console:reconcile-requested", {
               moduleId: activeModuleId,
               reason,
+              revisionHint: revision,
             });
+            window.setTimeout(() => {
+              setReconcileStatus("acked");
+              setLastAckRevision(revision);
+              void emitEvent("console:ack-applied", {
+                moduleId: activeModuleId,
+                revision,
+                acknowledgedAt: new Date().toISOString(),
+              });
+            }, 120);
           },
         }}
         moduleId={activeModuleId}
@@ -498,6 +514,14 @@ export function ConsoleLayout({
             <strong>{activeItem?.label ?? "Console"}</strong>
             <span style={{ color: "#6b7280", display: "block", fontSize: 12 }}>{activeItem?.pluginId ?? "console"}</span>
           </div>
+          <small style={{ color: reconcileStatus === "pending" ? "#b45309" : "#6b7280", minWidth: 120 }}>
+            {reconcileStatus === "pending" ? "Reconcile pending..." : `Ack rev ${lastAckRevision || 0}`}
+          </small>
+          {palette.degradedProviders.length ? (
+            <small style={{ color: "#b45309", minWidth: 180 }}>
+              Search degraded: {palette.degradedProviders.join(", ")}
+            </small>
+          ) : null}
           <ConsoleSearch
             onOpenPalette={() => {
               palette.open();

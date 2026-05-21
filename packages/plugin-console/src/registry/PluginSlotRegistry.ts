@@ -1,6 +1,11 @@
 import type { ConsoleNavItem, SearchableEntity } from "../types";
 
 export type SearchProvider = () => SearchableEntity[] | Promise<SearchableEntity[]>;
+export interface SearchSnapshot {
+  entities: SearchableEntity[];
+  timedOutProviders: string[];
+  failedProviders: string[];
+}
 
 export class PluginSlotRegistry {
   private readonly navItems = new Map<string, ConsoleNavItem>();
@@ -20,9 +25,35 @@ export class PluginSlotRegistry {
     return () => this.searchProviders.delete(pluginId);
   }
 
-  async getSearchEntities(): Promise<SearchableEntity[]> {
-    const results = await Promise.all([...this.searchProviders.values()].map((provider) => provider()));
-    return results.flat();
+  async getSearchEntities(timeoutMs = 200): Promise<SearchSnapshot> {
+    const timedOutProviders: string[] = [];
+    const failedProviders: string[] = [];
+    const providers = [...this.searchProviders.entries()];
+    const results = await Promise.all(
+      providers.map(async ([pluginId, provider]) => {
+        try {
+          const value = await Promise.race([
+            Promise.resolve(provider()),
+            new Promise<null>((resolve) => {
+              globalThis.setTimeout(() => resolve(null), timeoutMs);
+            }),
+          ]);
+          if (!value) {
+            timedOutProviders.push(pluginId);
+            return [];
+          }
+          return value;
+        } catch {
+          failedProviders.push(pluginId);
+          return [];
+        }
+      }),
+    );
+    return {
+      entities: results.flat(),
+      timedOutProviders,
+      failedProviders,
+    };
   }
 }
 

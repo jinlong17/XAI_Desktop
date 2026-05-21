@@ -29,6 +29,7 @@ export interface CommandPaletteController {
   isOpen: boolean;
   query: string;
   results: CommandSearchResult[];
+  degradedProviders: string[];
   activeIndex: number;
   setQuery(query: string): void;
   setActiveIndex(index: number): void;
@@ -55,6 +56,7 @@ export function useCommandPalette({
   const [query, setQuery] = useState("");
   const [activeIndex, setActiveIndex] = useState(0);
   const [registered, setRegistered] = useState<SearchableEntity[]>([]);
+  const [degradedProviders, setDegradedProviders] = useState<string[]>([]);
   const [repoEntities, setRepoEntities] = useState<SearchableEntity[]>([]);
 
   const setQueryStable = useCallback((nextQuery: string) => {
@@ -73,8 +75,10 @@ export function useCommandPalette({
   useEffect(() => {
     if (!registry) return;
     let cancelled = false;
-    void registry.getSearchEntities().then((next) => {
-      if (!cancelled) setRegistered(next);
+    void registry.getSearchEntities(200).then((snapshot) => {
+      if (cancelled) return;
+      setRegistered(snapshot.entities);
+      setDegradedProviders([...snapshot.timedOutProviders, ...snapshot.failedProviders]);
     });
     return () => {
       cancelled = true;
@@ -132,6 +136,7 @@ export function useCommandPalette({
     isOpen,
     query,
     results,
+    degradedProviders,
     activeIndex,
     setQuery: setQueryStable,
     setActiveIndex,
