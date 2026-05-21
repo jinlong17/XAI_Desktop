@@ -1,8 +1,14 @@
-export function AuthPage() {
+import { AuthRouteGate, WebAuthPage } from "@repo/web-auth-device-session";
+
+export interface AuthPageProps {
+  path: string;
+  search: string;
+}
+
+export function AuthPage({ path, search }: AuthPageProps) {
   return (
-    <main className="host-page">
-      <h1>Authentication Shell</h1>
-      <p>Auth route placeholder for future integration.</p>
-    </main>
+    <AuthRouteGate fallback={<main className="host-page"><p>Redirecting...</p></main>}>
+      <WebAuthPage path={path} search={search} />
+    </AuthRouteGate>
   );
 }
