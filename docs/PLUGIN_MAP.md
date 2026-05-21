@@ -4,7 +4,7 @@
 > 只有状态为 Stable 或 Production 的 Plugin 才能被作为稳定依赖。
 > 状态为 In-Dev / Testing 的 Plugin 必须使用 Mock 数据解耦。
 >
-> 最后更新: 2026-05-19
+> 最后更新: 2026-05-21
 
 ---
 
@@ -61,7 +61,7 @@
 | Package | 目录 | 状态 | 说明 | 最后更新 |
 |---------|------|------|------|---------|
 | @repo/core | packages/core/ | Stable | 基础设施 + 类型 + 事件 + Registry | 2026-05-14 |
-| @repo/ui | packages/ui/ | In-Dev | 共享 UI 组件库 (3 stub 组件) | 2026-05-13 |
+| @repo/ui | packages/ui/ | In-Dev | 共享 UI 组件库 + desktop design tokens/icons baseline | 2026-05-21 |
 | @repo/core-data | packages/core-data/ | In-Dev | Sync 数据访问 + SQLite driver boundary. Surfaces `secretSet/secretGet/secretDel`, `createSqliteRepo`, localStorage migration, mutation hook, and `@repo/core-data/testing`; real SQLCipher runtime binding deferred. Consumers mock until Stable. | 2026-05-19 |
 
 ## Plugins
@@ -70,14 +70,33 @@
 |--------|------|------|---------|---------|---------|
 | organizer | packages/plugin-organizer/ | Stable | §5.1 | @repo/core, @repo/ui | 2026-05-14 |
 | account | packages/plugin-account/ | In-Dev | sync/PRD §5 | @repo/core, @repo/core-data, @scure/bip39 | 2026-05-19 |
-| todo | packages/plugin-todo/ | Planned | §5.2 | @repo/core | — |
-| pomodoro | packages/plugin-pomodoro/ | Planned | §5.3 | @repo/core | — |
-| habits | packages/plugin-habits/ | Planned | §5.4 | @repo/core | — |
+| console | packages/plugin-console/ | In-Dev | console/PRD | @repo/core, @repo/core-data | 2026-05-21 |
+| productivity | packages/plugin-productivity/ | In-Dev | productivity/PRD | @repo/core, @repo/core-data (canonical package for Todo/Pomodoro/Habits; package-local `READY_FOR_VERIFY` does not promote this row beyond non-stable dependency authority) | 2026-05-21 |
+| labels | packages/plugin-labels/ | In-Dev | labels/PRD | @repo/core, @repo/core-data (Console/Project/Web consumers remain mock-first outside scoped integration while this row is non-stable) | 2026-05-21 |
+| project | packages/plugin-project/ | In-Dev | project/PRD | @repo/core, @repo/core-data (real package exists; package-local `READY_FOR_VERIFY` does not change global dependency authority) | 2026-05-21 |
+| calendar | packages/plugin-calendar/ | In-Dev | calendar/PRD | @repo/core, @repo/core-data, @repo/plugin-widgets (peer/runtime seam; no current Web manifest declaration) | 2026-05-21 |
 | clipboard | packages/plugin-clipboard/ | Planned | §5.5 | @repo/core | — |
 | widgets | packages/plugin-widgets/ | Planned | §5.6 | @repo/core | — |
 | meditation | packages/plugin-meditation/ | Planned | §5.7 | @repo/core | — |
 | ai-cube | packages/plugin-ai-cube/ | In-Dev | §5.8 | @repo/core, @repo/core-data, @repo/ui | 2026-05-21 |
 | settings | packages/plugin-settings/ | Planned | — | @repo/core, @repo/ui | — |
+
+## Web Planning Contract (2026-05-21)
+
+> Governed by `docs/adr/0006-web-face-hybrid-reuse-boundary.md`.
+> Web rows may introduce a browser-specific host shell and view layer, but they must keep package ownership and dependency truth aligned to the real package set below.
+
+| Unit | Current repo truth | Web planning eligibility | Notes |
+|------|--------------------|--------------------------|-------|
+| `apps/web` (`web`) | Existing Next.js app used for release-site/security scaffolding and Supabase test utilities | Not the canonical Web Console host boundary | `web-release-site-archive-vite-shell` owns the archive/new-host split |
+| `@repo/core` | Stable shared types, events, registry, and host-contract seams | Eligible shared contract layer now | Web rows may depend on it directly |
+| `@repo/core-data` | In-Dev shared data contract package | Contract-only until a dedicated Web driver row lands | No shipped browser Sync blob driver exists yet |
+| `@repo/plugin-console` | Real shared Console package; current manifest declares `windows.console` only | Shared Console IA/slot contract owner, not current proof of browser-ready direct source reuse | The future browser host shell is a separate boundary under `ADR-0006` |
+| `@repo/plugin-productivity` | Real package owning Todo/Pomodoro/Habits capability family | Capability authority for later Web rows; runtime Web enablement is future work | Replaces stale standalone `plugin-todo` / `plugin-pomodoro` / `plugin-habits` assumptions |
+| `@repo/plugin-project` | Real package owning project boards/cards | Capability authority for later Web rows; runtime Web enablement is future work | Global row remains non-stable even though package-local docs report later workflow progress |
+| `@repo/plugin-labels` | Real package owning shared labels | Capability authority for later Web rows; runtime Web enablement is future work | Consumers keep mock-first discipline while this row is non-stable |
+| `@repo/plugin-calendar` | Real package owning calendar surfaces; current manifest depends on widgets-related seams and declares no Web window support | Capability authority for later Web rows; runtime Web enablement is future work | No current `windows.web` declaration exists |
+| `@repo/plugin-account` | Real package owning auth/device/session/sync seams | Shared auth/device/session contract owner for Web planning | Current manifests/docs do not yet declare Web runtime readiness |
 
 ## 已完成功能 (organizer)
 
