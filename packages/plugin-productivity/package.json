@@ -11,8 +11,8 @@
   },
   "scripts": {
     "check-types": "tsc --noEmit",
-    "test": "vitest run",
-    "test:watch": "vitest"
+    "test": "node ../core/node_modules/vitest/vitest.mjs run",
+    "test:watch": "node ../core/node_modules/vitest/vitest.mjs"
   },
   "dependencies": {
     "@repo/core": "workspace:*",

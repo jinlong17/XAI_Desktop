@@ -79,6 +79,11 @@ export interface ConsoleViewRegistration {
   render: ComponentType<ConsoleViewProps>;
 }
 
+export interface ConsoleViewDefinition {
+  moduleId: ConsoleModuleId;
+  render: ComponentType<ConsoleViewProps>;
+}
+
 /** React components a plugin registers */
 export interface PluginComponents {
   /** Rendered on the main window overlay */
@@ -90,7 +95,7 @@ export interface PluginComponents {
   /** Rendered in settings panel */
   SettingsPanel?: ComponentType;
   /** Rendered inside the Console shell by module slot */
-  ConsoleViews?: ConsoleViewRegistration[];
+  ConsoleViews?: ConsoleViewDefinition[];
 }
 
 /** A registered plugin — manifest + components */

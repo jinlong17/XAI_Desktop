@@ -1,4 +1,4 @@
-import type { ConsoleViewProps, ConsoleViewRegistration } from "@repo/core/types";
+import type { ConsoleViewDefinition, ConsoleViewProps } from "@repo/core/types";
 import { useEffect, type ReactNode } from "react";
 import { ProductivityRepoProvider } from "./data/RepoProvider";
 import { HabitStoreProvider } from "./hooks/useHabitStore";
@@ -124,61 +124,21 @@ export function MatrixConsoleView(props: ConsoleViewProps) {
   );
 }
 
-export const productivityConsoleViews: ConsoleViewRegistration[] = [
+export const productivityConsoleViews: ConsoleViewDefinition[] = [
   {
     moduleId: "tasks",
-    sidebar: {
-      id: "tasks",
-      label: "Tasks",
-      icon: "check-square",
-      order: 20,
-      group: "productivity",
-      enabled: true,
-      placeholder: false,
-      moduleId: "tasks",
-    },
     render: TasksConsoleView,
   },
   {
     moduleId: "pomodoro",
-    sidebar: {
-      id: "pomodoro",
-      label: "Pomodoro",
-      icon: "timer",
-      order: 30,
-      group: "productivity",
-      enabled: true,
-      placeholder: false,
-      moduleId: "pomodoro",
-    },
     render: PomodoroConsoleView,
   },
   {
     moduleId: "habits",
-    sidebar: {
-      id: "habits",
-      label: "Habits",
-      icon: "repeat",
-      order: 40,
-      group: "productivity",
-      enabled: true,
-      placeholder: false,
-      moduleId: "habits",
-    },
     render: HabitsConsoleView,
   },
   {
     moduleId: "matrix",
-    sidebar: {
-      id: "matrix",
-      label: "Matrix",
-      icon: "grid",
-      order: 50,
-      group: "productivity",
-      enabled: true,
-      placeholder: false,
-      moduleId: "matrix",
-    },
     render: MatrixConsoleView,
   },
 ];

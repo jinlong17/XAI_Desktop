@@ -1,4 +1,4 @@
-import type { ConsoleViewProps, ConsoleViewRegistration } from "@repo/core/types";
+import type { ConsoleViewDefinition, ConsoleViewProps } from "@repo/core/types";
 import { useEffect, useState } from "react";
 import { LabelRepoProvider } from "./data/RepoProvider";
 import { LabelStoreProvider, useLabelStore } from "./hooks/useLabelStore";
@@ -88,19 +88,9 @@ export function LabelsConsoleView(props: ConsoleViewProps) {
   );
 }
 
-export const labelsConsoleViews: ConsoleViewRegistration[] = [
+export const labelsConsoleViews: ConsoleViewDefinition[] = [
   {
     moduleId: "labels",
-    sidebar: {
-      id: "labels",
-      label: "Labels",
-      icon: "tag",
-      order: 60,
-      group: "labels",
-      enabled: true,
-      placeholder: false,
-      moduleId: "labels",
-    },
     render: LabelsConsoleView,
   },
 ];

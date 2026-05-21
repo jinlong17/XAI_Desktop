@@ -15,37 +15,6 @@ const MIN_LIST_WIDTH = 260;
 const MAX_LIST_WIDTH = 560;
 const MIN_DETAIL_WIDTH = 320;
 
-const BUILTIN_ITEMS: ConsoleNavItem[] = [
-  {
-    id: "notifications",
-    pluginId: "console",
-    label: "Notifications",
-    icon: "bell",
-    order: 90,
-  },
-  {
-    id: "settings",
-    pluginId: "console",
-    label: "Settings",
-    icon: "settings",
-    order: 100,
-  },
-  {
-    id: "calendar",
-    pluginId: "calendar",
-    label: "Calendar",
-    icon: "calendar",
-    order: 130,
-  },
-  {
-    id: "widgets",
-    pluginId: "widgets",
-    label: "Widgets",
-    icon: "sparkles",
-    order: 140,
-  },
-];
-
 const ICON_MAP: Record<string, string> = {
   "check-square": "[T]",
   timer: "[P]",
@@ -104,7 +73,10 @@ function loadPersistedState(): PersistedShellState {
   }
 }
 
-function listRowsFor(moduleId: string): Array<{ id: string; title: string; subtitle: string }> {
+function listRowsFor(moduleId: string, placeholder = false): Array<{ id: string; title: string; subtitle: string }> {
+  if (placeholder) {
+    return [{ id: `${moduleId}-placeholder`, title: "Placeholder", subtitle: "This module remains disabled in this phase" }];
+  }
   if (moduleId === "settings") {
     return [
       { id: "appearance", title: "Appearance", subtitle: "Theme, density, and font scale" },
@@ -118,9 +90,6 @@ function listRowsFor(moduleId: string): Array<{ id: string; title: string; subti
       { id: "system", title: "System", subtitle: "Runtime warnings and degrade notices" },
       { id: "all", title: "All events", subtitle: "Historical activity stream" },
     ];
-  }
-  if (moduleId === "calendar" || moduleId === "widgets") {
-    return [{ id: "placeholder", title: "Placeholder", subtitle: "This module remains disabled in this phase" }];
   }
   return [
     { id: `${moduleId}-inbox`, title: "Inbox", subtitle: "Pending or recently changed entities" },
@@ -136,6 +105,7 @@ function toNavItem(registration: ConsoleViewRegistration): ConsoleNavItem {
     label: registration.sidebar.label,
     icon: registration.sidebar.icon,
     order: registration.sidebar.order,
+    placeholder: registration.sidebar.placeholder,
     render: registration.render as never,
   };
 }
@@ -164,7 +134,7 @@ export function ConsoleLayout({
   );
   const moduleNavItems = useMemo(() => views.map(toNavItem), [views]);
   const items = useMemo(() => {
-    const merged = [...moduleNavItems, ...(navItems ?? []), ...BUILTIN_ITEMS];
+    const merged = [...moduleNavItems, ...(navItems ?? [])];
     return merged.sort((a, b) => a.order - b.order || a.label.localeCompare(b.label));
   }, [moduleNavItems, navItems]);
   const activeItem = items.find((item) => item.id === state.activeId) ?? items[0] ?? null;
@@ -185,7 +155,10 @@ export function ConsoleLayout({
     void emitEvent("console:navigate-module", { moduleId, source });
   }, []);
 
-  const activeRows = useMemo(() => listRowsFor(activeItem?.id ?? "tasks"), [activeItem?.id]);
+  const activeRows = useMemo(
+    () => listRowsFor(activeItem?.id ?? "tasks", activeItem?.placeholder ?? false),
+    [activeItem?.id, activeItem?.placeholder],
+  );
   const selectedRowId = String(state.selection.listId ?? activeRows[0]?.id ?? "");
   const activeRow = activeRows.find((row) => row.id === selectedRowId) ?? activeRows[0] ?? null;
 
@@ -268,7 +241,7 @@ export function ConsoleLayout({
     if (children) return children;
     if (activeModuleId === "settings") return <ConsoleSettings />;
     if (activeModuleId === "notifications") return <NotificationPanel />;
-    if (activeModuleId === "calendar" || activeModuleId === "widgets") {
+    if (activeItem?.placeholder) {
       return (
         <section style={{ color: "#6b7280", display: "grid", minHeight: 260, placeItems: "center" }}>
           <span>{activeItem?.label ?? "Module"} remains a disabled placeholder in this phase</span>
@@ -428,9 +401,6 @@ export function ConsoleLayout({
             </button>
           ))}
         </nav>
-        {!state.sidebarCollapsed ? (
-          <small style={{ color: "#6b7280", marginTop: 8 }}>Calendar and Widgets stay placeholder-only in this phase.</small>
-        ) : null}
         {!state.sidebarCollapsed ? (
           <div
             onMouseDown={(event) => beginResize("sidebar", event.clientX)}

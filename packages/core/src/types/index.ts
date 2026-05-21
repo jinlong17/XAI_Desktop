@@ -23,5 +23,6 @@ export type {
   ConsoleViewCapabilities,
   ConsoleViewProps,
   ConsoleSidebarEntry,
+  ConsoleViewDefinition,
   ConsoleViewRegistration,
 } from './plugin';

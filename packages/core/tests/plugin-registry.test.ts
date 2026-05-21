@@ -53,21 +53,27 @@ describe('PluginRegistry', () => {
       {
         ...createMockManifest('console-enabled', true),
         windows: { console: true },
+        ui: {
+          consoleSidebar: {
+            entries: [
+              {
+                id: 'tasks',
+                label: 'Tasks',
+                icon: 'check',
+                order: 10,
+                group: 'productivity',
+                enabled: true,
+                placeholder: false,
+                moduleId: 'tasks',
+              },
+            ],
+          },
+        },
       },
       {
       ConsoleViews: [
         {
           moduleId: 'tasks',
-          sidebar: {
-            id: 'tasks',
-            label: 'Tasks',
-            icon: 'check',
-            order: 10,
-            group: 'productivity',
-            enabled: true,
-            placeholder: false,
-            moduleId: 'tasks',
-          },
           render: (() => null) as any,
         },
       ],
@@ -77,21 +83,27 @@ describe('PluginRegistry', () => {
       {
         ...createMockManifest('console-disabled', false),
         windows: { console: true },
+        ui: {
+          consoleSidebar: {
+            entries: [
+              {
+                id: 'labels',
+                label: 'Labels',
+                icon: 'tag',
+                order: 20,
+                group: 'labels',
+                enabled: true,
+                placeholder: false,
+                moduleId: 'labels',
+              },
+            ],
+          },
+        },
       },
       {
         ConsoleViews: [
           {
             moduleId: 'labels',
-            sidebar: {
-              id: 'labels',
-              label: 'Labels',
-              icon: 'tag',
-              order: 20,
-              group: 'labels',
-              enabled: true,
-              placeholder: false,
-              moduleId: 'labels',
-            },
             render: (() => null) as any,
           },
         ],

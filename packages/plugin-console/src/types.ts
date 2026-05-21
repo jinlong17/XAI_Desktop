@@ -14,6 +14,7 @@ export interface ConsoleNavItem {
   label: string;
   icon?: string;
   order: number;
+  placeholder?: boolean;
   badgeCount?: number;
   render?: ComponentType;
 }

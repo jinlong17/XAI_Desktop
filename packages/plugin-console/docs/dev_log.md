@@ -13,8 +13,8 @@
 | Automation Mode | A-Claude |
 | Verify Cross-vendor | no |
 | Executor | feature-auto-build (Codex, gpt-5.3-codex) |
-| Updated | 2026-05-21 12:12 PDT |
-| Blockers | None. Phase 3/4 real module integrations landed; residual `vitest` binary absence is captured in Work Log as a verification note. |
+| Updated | 2026-05-21 12:27 PDT |
+| Blockers | None |
 
 ## Legacy Context
 
@@ -113,6 +113,55 @@ Gate:
 - Phase 3 and Phase 4 now carry explicit `docs/PLUGIN_MAP.md` preconditions owned by those tracks; Phase 2 remains executable with Contract Mock.
 - Added `pnpm --filter desktop build` to the automated checks and called it out as the Phase 2 host-routing gate.
 
+## Verify Notes — Round 1 (feature-verify, BLOCKED)
+
+- Verdict: BLOCKED.
+- Commit/message hygiene:
+  - Reviewed `1c1af64`, `bcacbda`, `5b43712`, `52cc140`, `6f2c67a`, `831791f`, `dce3230`, and the authority-unblock commit `be9189d`.
+  - Each commit keeps a single dominant intent and the commit bodies follow `docs/conventions/COMMIT_CONVENTION.md`.
+  - `dce3230` correctly supersedes the earlier docs-only `52cc140`; both remain part of the feature trace, but `be9189d` is also required context because it is the actual PLUGIN_MAP authority change consumed by Phase 3/4.
+- Verification checks run:
+  - PASS: `pnpm --filter @repo/core check-types`
+  - PASS: `pnpm --filter @repo/core test` (8/8)
+  - PASS: `pnpm --filter @repo/plugin-console check-types`
+  - PASS: `pnpm --filter @repo/plugin-productivity check-types`
+  - PASS: `pnpm --filter @repo/plugin-labels check-types`
+  - PASS: `pnpm --filter desktop build`
+  - PASS: `cargo test --manifest-path apps/desktop/src-tauri/Cargo.toml` (47/47)
+  - FAIL: `pnpm --filter @repo/plugin-console test` → `vitest: command not found`
+  - FAIL: `pnpm --filter @repo/plugin-productivity test` → `vitest: command not found`
+  - FAIL: `pnpm --filter @repo/plugin-labels test` → `vitest: command not found`
+- Blocker 1 — required package tests are not runnable:
+  - `packages/plugin-console`, `packages/plugin-productivity`, and `packages/plugin-labels` all declare `vitest` in `devDependencies`, but their local `node_modules/.bin/` directories expose only `tsc`/`tsserver` while `packages/core/node_modules/.bin/` includes `vitest`.
+  - Because `packages/plugin-console/docs/test.md` explicitly requires `pnpm --filter @repo/plugin-console test`, verify cannot promote the feature to `READY_TO_SHIP` while the package-level test gate is non-executable.
+- Blocker 2 — the shipped runtime still misses the approved manifest-driven sidebar contract:
+  - The approved planning/PRD/audit set requires sidebar entries to be declared by `manifest.ui.consoleSidebar` and surfaced through `pluginRegistry.getConsoleSidebarEntries()`.
+  - Current runtime instead renders module entries from `ConsoleViewRegistration.sidebar`, while `packages/plugin-console/manifest.json`, `packages/plugin-productivity/manifest.json`, and `packages/plugin-labels/manifest.json` omit `ui.consoleSidebar` entirely and `ConsoleLayout` hardcodes the Calendar/Widgets placeholders.
+  - This is contract drift, not just documentation wording: the repo now types `ui.consoleSidebar`, but the Console host still does not consume it as the canonical registration surface promised by the approved docs.
+- Non-blocking note:
+  - The Phase 5 reconcile path remains a shell-local mock-safe ack chain; real macOS multi-window verification is still deferred exactly as documented.
+
+## Fix Notes — Round 1 (feature-auto-build, unblock verify)
+
+- Blocker 1 resolved — package-level Vitest gates are executable and passing:
+  - Added package-level `vitest.config.ts` for `plugin-console`, `plugin-productivity`, and `plugin-labels` with workspace alias mapping for `@repo/core*` and `@repo/core-data/testing`.
+  - Updated each package `test`/`test:watch` script to execute the workspace-resolved binary at `node ../core/node_modules/vitest/vitest.mjs`.
+  - PASS: `pnpm --filter @repo/plugin-console test` (5/5)
+  - PASS: `pnpm --filter @repo/plugin-productivity test` (7/7)
+  - PASS: `pnpm --filter @repo/plugin-labels test` (7/7)
+- Blocker 2 resolved — sidebar registration now follows manifest-driven contract:
+  - Added `ui.consoleSidebar.entries` to `packages/plugin-console/manifest.json`, `packages/plugin-productivity/manifest.json`, and `packages/plugin-labels/manifest.json`.
+  - Switched plugin registration to import `manifest.json` as runtime source of truth, removing duplicated sidebar metadata drift in `register-plugin.ts`.
+  - Refactored `@repo/core` registry to build `getConsoleViewRegistrations()` from manifest sidebar entries + `ConsoleViews` render mapping (instead of `ConsoleViewRegistration.sidebar` as the upstream source).
+  - Removed `ConsoleLayout` hardcoded module entries and now consume only registry-provided items; placeholder rendering is driven by `sidebar.placeholder`.
+- Regression gates in this fix run:
+  - PASS: `pnpm --filter @repo/plugin-console check-types`
+  - PASS: `pnpm --filter @repo/plugin-productivity check-types`
+  - PASS: `pnpm --filter @repo/plugin-labels check-types`
+  - PASS: `pnpm --filter @repo/core check-types`
+  - PASS: `pnpm --filter @repo/core test` (8/8)
+  - PASS: `pnpm --filter desktop build`
+
 ## Work Log
 
 | Timestamp | Executor | Action | Commits | Next |
@@ -127,3 +176,5 @@ Gate:
 | 2026-05-21 11:57 PDT | feature-auto-build (Codex, gpt-5.3-codex) | Blocker fix for Phase 3/4 authority gate: added canonical `plugin-productivity` and `plugin-labels` rows to `docs/PLUGIN_MAP.md` with explicit state/dependency notes, then moved Phase 3/4 from `BLOCKED_BY_AUTHORITY` to `PENDING` and cleared Status Panel blockers for follow-up implementation runs. | `be9189d` docs(plugin-console): add Phase 3/4 dependency authority rows | feature-auto-build |
 | 2026-05-21 12:06 PDT | feature-auto-build (Codex, gpt-5.3-codex) | Phase 3 — Integrate `plugin-productivity` ConsoleViews: added real productivity ConsoleView exports (tasks/pomodoro/habits/matrix), added `registerProductivityPlugin()` static startup wiring, removed productivity mock slots from console registration, and kept labels mocked for Phase 4 boundary. Tests: `pnpm --filter @repo/plugin-productivity check-types`; `pnpm --filter @repo/plugin-console check-types`; `pnpm --filter desktop build`. | `6f2c67a` feat(plugin-console): Phase 3 — integrate productivity ConsoleViews | feature-auto-build |
 | 2026-05-21 12:11 PDT | feature-auto-build (Codex, gpt-5.3-codex) | Phase 4 — Integrate `plugin-labels` and shell extension slots: added real labels ConsoleView export + registration, wired startup `registerLabelsPlugin()`, removed remaining labels mock slots from console registration, and deleted obsolete `plugin-console/src/mockViews.tsx`. Tests: `pnpm --filter @repo/plugin-labels check-types`; `pnpm --filter @repo/plugin-productivity check-types`; `pnpm --filter @repo/plugin-console check-types`; `pnpm --filter desktop build`. Note: `pnpm --filter @repo/plugin-productivity test` and `pnpm --filter @repo/plugin-labels test` both fail locally with `vitest: command not found`. | `831791f` feat(plugin-console): Phase 4 — integrate labels ConsoleView slots | feature-verify |
+| 2026-05-21 12:18 PDT | feature-verify (Codex, gpt-5.4) | Verification BLOCKED after reviewing commits `1c1af64`, `bcacbda`, `5b43712`, `52cc140`, `6f2c67a`, `831791f`, `dce3230`, and `be9189d`. Automated checks passed for core type/test, plugin check-types, desktop build, and Rust tests, but the required package-level Vitest gates for `plugin-console`, `plugin-productivity`, and `plugin-labels` are non-runnable (`vitest: command not found`). Contract review also found that the approved manifest-driven `ui.consoleSidebar` sidebar registration model is still not implemented; runtime navigation remains driven by `ConsoleViewRegistration.sidebar` plus hardcoded placeholder entries. | `1c1af64`, `bcacbda`, `5b43712`, `52cc140`, `6f2c67a`, `831791f`, `dce3230`, `be9189d` | feature-build |
+| 2026-05-21 12:27 PDT | feature-auto-build (Codex, gpt-5.3-codex) | Fix round for verify blockers: made package-level Vitest gates executable via package `vitest.config.ts` + workspace vitest binary path, migrated sidebar registration authority to manifest `ui.consoleSidebar.entries`, removed ConsoleLayout hardcoded sidebar entries, and switched registry assembly to manifest-driven entries with placeholder-aware fallback rendering. Tests: `pnpm --filter @repo/plugin-console test`; `pnpm --filter @repo/plugin-productivity test`; `pnpm --filter @repo/plugin-labels test`; `pnpm --filter @repo/plugin-console check-types`; `pnpm --filter @repo/plugin-productivity check-types`; `pnpm --filter @repo/plugin-labels check-types`; `pnpm --filter @repo/core check-types`; `pnpm --filter @repo/core test`; `pnpm --filter desktop build`. | local blocker-fix commit in same run | feature-verify |

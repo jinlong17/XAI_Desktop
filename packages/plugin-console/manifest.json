@@ -9,6 +9,52 @@
   "windows": {
     "console": true
   },
+  "ui": {
+    "consoleSidebar": {
+      "entries": [
+        {
+          "id": "notifications",
+          "label": "Notifications",
+          "icon": "bell",
+          "order": 90,
+          "group": "console",
+          "enabled": true,
+          "placeholder": false,
+          "moduleId": "notifications"
+        },
+        {
+          "id": "settings",
+          "label": "Settings",
+          "icon": "settings",
+          "order": 100,
+          "group": "console",
+          "enabled": true,
+          "placeholder": false,
+          "moduleId": "settings"
+        },
+        {
+          "id": "calendar",
+          "label": "Calendar",
+          "icon": "calendar",
+          "order": 130,
+          "group": "calendar",
+          "enabled": true,
+          "placeholder": true,
+          "moduleId": "calendar"
+        },
+        {
+          "id": "widgets",
+          "label": "Widgets",
+          "icon": "sparkles",
+          "order": 140,
+          "group": "widgets",
+          "enabled": true,
+          "placeholder": true,
+          "moduleId": "widgets"
+        }
+      ]
+    }
+  },
   "events": {
     "emit": [
       "console:navigate-module",

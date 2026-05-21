@@ -10,6 +10,22 @@
     "control": true,
     "console": true
   },
+  "ui": {
+    "consoleSidebar": {
+      "entries": [
+        {
+          "id": "labels",
+          "label": "Labels",
+          "icon": "tag",
+          "order": 60,
+          "group": "labels",
+          "enabled": true,
+          "placeholder": false,
+          "moduleId": "labels"
+        }
+      ]
+    }
+  },
   "events": {
     "emit": ["labels:created", "labels:updated", "labels:deleted"],
     "listen": []
