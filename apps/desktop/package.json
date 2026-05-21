@@ -12,6 +12,7 @@
   "dependencies": {
     "@repo/core": "workspace:*",
     "@repo/plugin-account": "workspace:*",
+    "@repo/plugin-ai-cube": "workspace:*",
     "@repo/plugin-organizer": "workspace:*",
     "@tauri-apps/api": "^2",
     "@tauri-apps/plugin-opener": "^2",

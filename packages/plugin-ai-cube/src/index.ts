@@ -16,3 +16,13 @@ export { InputBar } from "./components/InputBar";
 export { MessageBubble } from "./components/MessageBubble";
 export { OfflineFallback } from "./components/OfflineFallback";
 export { PrivacyGateDialog } from "./components/PrivacyGateDialog";
+export { registerAiCubePlugin } from "./register-plugin";
+export { AiCubeControlProvider, useAiCubeControlBridge } from "./control/ControlBridge";
+export { AiCubeControlWidget } from "./control/ControlWidget";
+export {
+  PREVIEW_ACTIONS,
+  PREVIEW_STATUS_TEXT,
+  PREVIEW_TRANSCRIPT,
+  isPreviewActionEnabled,
+} from "./control/preview";
+export type { AiCubeControlBridge, AiCubeTrayActions } from "./control/types";

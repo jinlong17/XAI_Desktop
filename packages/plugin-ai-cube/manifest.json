@@ -2,9 +2,9 @@
   "name": "ai-cube",
   "version": "0.1.0",
   "displayName": "AI Cube",
-  "description": "Mock AI conversation panel, privacy gate, cost guard, and offline fallback.",
+  "description": "Control-window tray surface with preview conversation and settings bridge. Live AI remains disabled until Phase 4.",
   "author": "Jinlong",
-  "enabled": false,
+  "enabled": true,
   "contentTypes": ["ai-message"],
   "windows": {
     "control": true
@@ -13,6 +13,6 @@
     "emit": ["ai-cube:mock-action", "ai-cube:privacy-reviewed"],
     "listen": []
   },
-  "dependencies": ["@repo/core-data"],
+  "dependencies": ["@repo/core", "@repo/core-data", "@repo/ui"],
   "tauriCommands": []
 }

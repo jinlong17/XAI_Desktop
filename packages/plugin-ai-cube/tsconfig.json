@@ -5,7 +5,11 @@
     "baseUrl": ".",
     "paths": {
       "@repo/core-data": ["../core-data/src/index"],
-      "@repo/core/hooks": ["../core/src/hooks/index"]
+      "@repo/core/hooks": ["../core/src/hooks/index"],
+      "@repo/core/registry": ["../core/src/registry/index"],
+      "@repo/core/types": ["../core/src/types/index"],
+      "@repo/ui/icons": ["../ui/src/icons.tsx"],
+      "@repo/ui/tokens": ["../ui/src/tokens.ts"]
     }
   },
   "include": ["src"],

@@ -5,6 +5,7 @@ import { GridWindow } from "./windows/GridWindow";
 import { ControlWindow } from "./windows/ControlWindow";
 import "./index.css";
 import { registerAccountPlugin } from "@repo/plugin-account";
+import { registerAiCubePlugin } from "@repo/plugin-ai-cube";
 
 /**
  * Simple hash router for multi-window architecture.
@@ -35,6 +36,7 @@ function Router() {
 
 // Static plugin registration — above createRoot (red line #1/#8: registration only, no sync logic)
 registerAccountPlugin();
+registerAiCubePlugin();
 
 ReactDOM.createRoot(document.getElementById("root") as HTMLElement).render(
   <React.StrictMode>
