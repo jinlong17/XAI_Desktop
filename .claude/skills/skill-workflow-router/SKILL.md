@@ -51,8 +51,26 @@ that should be copied or confirmed.
    `Status: AWAITING_CONFIRMATION`. Execute only after the user explicitly
    confirms in a later message.
 
-If the host cannot present AskUserQuestion UI, ask the same choices in compact
-plain text and wait. Do not silently choose `goal` or `task`.
+## Host Interaction Compatibility
+
+Treat "AskQuestion" as a host-specific capability, not as one literal tool name.
+
+- **Claude Code**: use `AskUserQuestion` when available. Claude subagents may receive
+  that tool through their `allowed_tools` frontmatter.
+- **Codex parent session**: use Codex's structured `request_user_input` capability when
+  it is available in the current mode. Keep option labels short, put the recommended
+  option first, and include the same reason / ETA / affected-feature metadata required
+  by this skill.
+- **Codex spawned subagents**: do not assume `request_user_input` is available. For any
+  prompt intended to run inside a Codex subagent, pre-resolve closed-set fields in the
+  parent prompt instead of relying on an in-subagent picker.
+- **Cursor or plain text hosts**: when no structured question tool is available, ask the
+  same choices in compact plain text and wait.
+
+Never silently choose `goal` or `task`. For Codex goal prompts, do not emit a workflow
+prompt that expects the destination subagent to recover missing `Automation Mode:` or
+`Verify Cross-vendor:` via `AskUserQuestion`; collect those values first or include a
+safe explicit value.
 
 ## Routing Heuristics
 
@@ -61,8 +79,8 @@ Choose the underlying workflow entry before writing the prompt:
 - New feature, extension, refactor, or unclear implementation idea:
   the project's feature full-loop entry. For Claude goal prompts this is usually
   `/xai-feature-full-loop` or `<skill_prefix>feature-full-loop`; for Codex goal
-  prompts prefer `Start the feature-full-loop agent.` unless the target project
-  has a native Codex project-layer skill.
+  prompts prefer the project-layer parent-session full-loop skill when the usage
+  guide lists one, otherwise use `Start the feature-full-loop agent.`
 - Need only Step 0 normalization or the idea is still vague:
   the project's Step 0 feature brief skill, usually `/xai-feature-brief` or
   `<step0-skill>`
@@ -116,6 +134,25 @@ Ask only when two routes are genuinely close, for example:
 If one route is clearly correct, state the chosen route in the generated prompt
 instead of asking another question.
 
+## Prompt Field Safety
+
+- For feature full-loop fresh starts, do not emit `Feature: TBD` or
+  `Feature: <suggested slug>`. `Feature:` is a resume/canonical-target field in
+  many Workflow V2 projects and can make the runner treat a fresh requirement as
+  ambiguous. Use `Suggested Feature Slug: <slug>` until the feature slug is
+  confirmed by a feature map, dev_log, existing docs, or explicit user input.
+- `Automation Mode:` must be one of the legal Workflow V2 variants:
+  `A-Claude`, `B-Codex`, `B-Cursor`, `C-Codex`, `C-Cursor`, `D-Codex`,
+  `D-Cursor`, or `D-Codex+Cursor`. Never write natural-language values such as
+  `feature full loop`.
+- If the project has a parent-session feature full-loop skill, prefer that entry
+  over `Start the feature-full-loop agent.` for normal end-to-end feature work.
+  Detect this from the usage guide or files such as
+  `.teams/skills/*-feature-full-loop/SKILL.md`, `.claude/skills/*-feature-full-loop/SKILL.md`,
+  or `.codex/skills/*-feature-full-loop/SKILL.md`.
+- Use `Start the feature-full-loop agent.` only when the project docs identify it
+  as the runtime entry, or when no project-layer full-loop skill exists.
+
 ## Goal Prompt Output
 
 Output only a copyable prompt block plus minimal metadata above it.
@@ -133,14 +170,20 @@ For Codex goal prompts:
 - Make the prompt self-contained enough for a new Codex window.
 - Mention project agent rules and the project usage guide as local rules to read.
 - If using a Workflow V2 subagent, require verbatim `## Handoff` display.
+- Include explicit values for every closed-set Workflow V2 field that a Claude prompt
+  might otherwise collect via `AskUserQuestion`, especially `Automation Mode:` and
+  `Verify Cross-vendor:`.
+- Prefer parent-session skills (`/<skill_prefix>feature-full-loop`,
+  `/<skill_prefix>roadmap-loop`) over spawned compatibility meta-orchestrators when
+  the project documents them as the runtime entry.
 
 Recommended goal prompt shape:
 
 ```text
 <workflow entry>
 Requirement: <1-3 concise sentences>
-Feature: <feature slug or TBD>
-Automation Mode: <resolved or suggested mode>
+Suggested Feature Slug: <candidate slug, only if unconfirmed>
+Automation Mode: <one of A-Claude | B-Codex | B-Cursor | C-Codex | C-Cursor | D-Codex | D-Cursor | D-Codex+Cursor>
 Verify Cross-vendor: yes
 Context:
 - Read the project workflow usage guide.
