@@ -91,7 +91,6 @@ function OrganizerContent() {
   // Handle file drop for a specific grid (from grid windows)
   const handleGridFileDrop = useCallback(
     (gridId: string, paths: string[]) => {
-      console.log(`📂 Files dropped on grid ${gridId}:`, paths);
       const now = Date.now();
       const recentDropTtlMs = 5000;
       const targetGrid = grids.find((grid) => grid.id === gridId);
@@ -115,7 +114,6 @@ function OrganizerContent() {
         const dedupeKey = toGridPathKey(gridId, filePath);
         const recentDropAt = recentGridPathDrops.current.get(dedupeKey);
         if (existingPaths.has(filePath) || (recentDropAt !== undefined && now - recentDropAt < recentDropTtlMs)) {
-          console.warn(`⏭️ Skipping duplicate drop for grid ${gridId}:`, filePath);
           return;
         }
 
@@ -134,13 +132,7 @@ function OrganizerContent() {
         if (filePath.startsWith("/")) {
           void finderClientRef.current
             .registerBookmark(filePath)
-            .catch((err: unknown) => {
-              console.warn(
-                "[OrganizerLayer] register_path_bookmark failed for",
-                filePath,
-                err,
-              );
-            });
+            .catch(() => undefined);
         }
 
         const fileInfo = getFileInfoFromPath(filePath);
@@ -155,7 +147,6 @@ function OrganizerContent() {
 
         addItem(newItem);
         addItemToGrid(gridId, newItem.id);
-        console.log(`✅ Added file "${fileInfo.name}" to grid ${gridId}`);
       });
     },
     [addItem, addItemToGrid, grids, items]
@@ -175,14 +166,11 @@ function OrganizerContent() {
   // Handle file drop on main window (creates new grid)
   const handleMainWindowFileDrop = useCallback(
     (paths: string[], position: { x: number; y: number }) => {
-      console.log("📂 Files dropped on main window at position:", position, paths);
-
       // Find the grid at drop position
       const targetGrid = findGridAtPosition(position.x, position.y);
 
       // If no grid at position, create a new one
       if (!targetGrid) {
-        console.log("📂 No grid at position, creating new one");
         createGrid(position.x, position.y);
         return;
       }
@@ -209,7 +197,6 @@ function OrganizerContent() {
   useEffect(() => {
     const unlistenPromise = listen<unknown>(ORGANIZER_GRID_CREATE_REQUEST_EVENT, (event) => {
       if (!isGridCreateRequestPayload(event.payload)) {
-        console.warn("⚠️ Ignored invalid organizer grid create request", event.payload);
         return;
       }
       createGrid(event.payload.rect.x, event.payload.rect.y, event.payload.gridId);
@@ -228,7 +215,6 @@ function OrganizerContent() {
       createGrid(x, y);
     });
     const unlistenClearPromise = listen(CLEAR_ALL_REQUEST_EVENT, () => {
-      console.log("🧹 Clearing all grids per control window request");
       clearAll();
     });
     return () => {
@@ -239,7 +225,6 @@ function OrganizerContent() {
     };
   }, [createGrid, clearAll]);
 
-  // Grid info display (for debugging/status)
   const gridCount = grids.length;
 
   return (
@@ -288,24 +273,6 @@ function OrganizerContent() {
           }}
         >
           Drop files here to create a new Grid
-        </div>
-      )}
-
-      {hasTauriRuntime && gridCount > 0 && (
-        <div
-          style={{
-            position: "fixed",
-            bottom: 12,
-            left: 12,
-            padding: "6px 12px",
-            borderRadius: 6,
-            background: "rgba(15, 23, 42, 0.7)",
-            color: "#94a3b8",
-            fontSize: 12,
-            pointerEvents: "none",
-          }}
-        >
-          🪟 {gridCount} grid window{gridCount !== 1 ? "s" : ""} active
         </div>
       )}
     </div>

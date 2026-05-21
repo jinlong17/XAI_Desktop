@@ -2,6 +2,7 @@ import {
   CSSProperties,
   KeyboardEvent,
   MouseEvent,
+  useCallback,
   useEffect,
   useMemo,
   useRef,
@@ -75,10 +76,16 @@ export function SmartContainer({
   const [contextMenu, setContextMenu] = useState<ContextMenuState>(null);
   const [isDragging, setIsDragging] = useState(false);
   const [isHovering, setIsHovering] = useState(false);
+  const hoverTimerRef = useRef<number | null>(null);
+  const [dragPosition, setDragPosition] = useState({ x: data.rect.x, y: data.rect.y });
 
   useEffect(() => {
     setTitleDraft(data.title || "New Grid");
   }, [data.title]);
+
+  useEffect(() => {
+    setDragPosition({ x: data.rect.x, y: data.rect.y });
+  }, [data.rect.x, data.rect.y]);
 
   const commitTitle = () => {
     const nextTitle = titleDraft.trim() || "New Grid";
@@ -136,13 +143,44 @@ export function SmartContainer({
 
   const handleDragStop = (_event: DraggableEvent, dataEvent: DraggableData) => {
     setIsDragging(false);
+    setDragPosition({ x: dataEvent.x, y: dataEvent.y });
     onUpdate(data.id, { rect: { ...data.rect, x: dataEvent.x, y: dataEvent.y } });
   };
 
   const handleDrag = (_event: DraggableEvent, dataEvent: DraggableData) => {
     setIsDragging(true);
-    onUpdate(data.id, { rect: { ...data.rect, x: dataEvent.x, y: dataEvent.y } });
+    setDragPosition({ x: dataEvent.x, y: dataEvent.y });
   };
+
+  const handleContainerMouseEnter = useCallback(() => {
+    if (!data.isFolded) {
+      setIsHovering(true);
+      return;
+    }
+    if (hoverTimerRef.current !== null) {
+      window.clearTimeout(hoverTimerRef.current);
+    }
+    hoverTimerRef.current = window.setTimeout(() => {
+      setIsHovering(true);
+      hoverTimerRef.current = null;
+    }, 120);
+  }, [data.isFolded]);
+
+  const handleContainerMouseLeave = useCallback(() => {
+    if (hoverTimerRef.current !== null) {
+      window.clearTimeout(hoverTimerRef.current);
+      hoverTimerRef.current = null;
+    }
+    setIsHovering(false);
+  }, []);
+
+  useEffect(() => {
+    return () => {
+      if (hoverTimerRef.current !== null) {
+        window.clearTimeout(hoverTimerRef.current);
+      }
+    };
+  }, []);
 
   const { handleMouseDown: handleResizeStart } = useCustomResize({
     onResize: (width, height, x, y) => {
@@ -328,7 +366,7 @@ export function SmartContainer({
   return (
     <Draggable
       nodeRef={nodeRef}
-      position={{ x: data.rect.x, y: data.rect.y }}
+      position={dragPosition}
       onStop={handleDragStop}
       onDrag={handleDrag}
       onStart={() => {
@@ -344,8 +382,8 @@ export function SmartContainer({
         className="smart-container"
         style={{ position: "absolute", pointerEvents: "auto" }}
         onContextMenu={handleContextMenu}
-        onMouseEnter={() => setIsHovering(true)}
-        onMouseLeave={() => setIsHovering(false)}
+        onMouseEnter={handleContainerMouseEnter}
+        onMouseLeave={handleContainerMouseLeave}
       >
         <div
           ref={setNodeRef}

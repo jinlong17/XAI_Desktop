@@ -58,6 +58,9 @@ export function OrganizerGridContent({
   const lastDropKeyRef = useRef<{ key: string; receivedAt: number } | null>(null);
   const gridRef = useRef<GridBox | null>(null);
   const finderClientRef = useRef<FinderClient | undefined>(finderClient);
+  const lastRectEmitAtRef = useRef(0);
+  const pendingRectPatchRef = useRef<Partial<GridBox> | null>(null);
+  const rectEmitTimerRef = useRef<number | null>(null);
 
   const tauriWindow = useTauriWindow();
 
@@ -68,6 +71,14 @@ export function OrganizerGridContent({
   useEffect(() => {
     finderClientRef.current = finderClient;
   }, [finderClient]);
+
+  useEffect(() => {
+    return () => {
+      if (rectEmitTimerRef.current !== null) {
+        window.clearTimeout(rectEmitTimerRef.current);
+      }
+    };
+  }, []);
 
   useTauriEvent<unknown>(ORGANIZER_GRID_STATE_EVENT, (event) => {
     if (!isGridStatePayload(event.payload)) {
@@ -115,7 +126,39 @@ export function OrganizerGridContent({
         };
       }
       setGrid({ ...prev, ...safePatch });
-      emitUpdate(safePatch);
+
+      if (!safePatch.rect) {
+        emitUpdate(safePatch);
+        return;
+      }
+
+      const now = Date.now();
+      const elapsed = now - lastRectEmitAtRef.current;
+      const budgetMs = 120;
+
+      const emitPatch = (nextPatch: Partial<GridBox>) => {
+        lastRectEmitAtRef.current = Date.now();
+        emitUpdate(nextPatch);
+      };
+
+      if (elapsed >= budgetMs) {
+        emitPatch(safePatch);
+        return;
+      }
+
+      pendingRectPatchRef.current = safePatch;
+      if (rectEmitTimerRef.current !== null) {
+        return;
+      }
+
+      rectEmitTimerRef.current = window.setTimeout(() => {
+        rectEmitTimerRef.current = null;
+        const pending = pendingRectPatchRef.current;
+        pendingRectPatchRef.current = null;
+        if (pending) {
+          emitPatch(pending);
+        }
+      }, budgetMs - elapsed);
     },
     [emitUpdate],
   );
