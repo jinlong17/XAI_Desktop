@@ -8,13 +8,13 @@
 | Target | web-sync-crypto-contract-preflight |
 | Title | W1 Web Sync crypto and contract preflight |
 | Roadmap | web-ticktick-parity · feature #3 · W1 |
-| Status | READY_TO_SHIP |
-| Current Phase | FEATURE_VERIFY |
-| Suggested Next | ship |
+| Status | SHIPPED |
+| Current Phase | SHIP |
+| Suggested Next | — |
 | Automation Mode | A-Claude |
 | Verify Cross-vendor | no |
-| Executor | feature-verify (Codex gpt-5.3-codex) |
-| Updated | 2026-05-21 12:28 PDT |
+| Executor | ship (Codex gpt-5.3-codex) |
+| Updated | 2026-05-21 14:07 PDT |
 | Blockers | — |
 
 ## Phase Plan
@@ -70,3 +70,4 @@ Option B matches `ADR-0006` and the roadmap's existing browser runtime direction
 | 2026-05-21 12:23 PDT | feature-verify (Codex gpt-5.3-codex) | Verified the docs-only package against the roadmap seed, feature brief, discovery review, and shipped Sync authority docs. Content scope and contract freeze are correct, but verification is blocked on commit hygiene: `8697e60` does not use the required Why/What/Scope/Risk/Docs/Tests body, and `e2c5590` stores those fields as one literal `\\n`-escaped line instead of proper newline-delimited lines. | `8697e60`, `e2c5590` | feature-build |
 | 2026-05-21 12:25 PDT | feature-auto-build (Codex gpt-5.3-codex) | Phase 1 delta state update: inspected superseding commit `ffebdde` and confirmed commit message/body now follows `docs/conventions/COMMIT_CONVENTION.md` (`Why` / `What` / `Scope` / `Risk` / `Docs` / `Tests`) while preserving the same docs-only deliverable scope. Cleared obsolete verifier blocker text tied to `8697e60`/`e2c5590` and returned this row to verification handoff. | `ffebdde` (`docs(web-sync): freeze browser crypto contract`) | feature-verify |
 | 2026-05-21 12:28 PDT | feature-verify (Codex gpt-5.3-codex) | PASS verify: reviewed the superseding commit history (`ffebdde`, `32f1b51`), rechecked the docs package against the brief/discovery/contracts, and ran the documented file-presence, keyword-audit, and `git diff --check` validations. The docs-only row now cleanly freezes browser crypto choice, Sync wire semantics, local mock seams, and deferred live gates. | `ffebdde`, `32f1b51` | ship |
+| 2026-05-21 14:07 PDT | ship (Codex gpt-5.3-codex) | Ship gate pass for docs-only row: revalidated `READY_TO_SHIP`, reran feature-scoped docs checks, confirmed feature commits (`ffebdde`, `32f1b51`, `a24d154`) are already on `origin/main`, and marked workflow as shipped with no additional feature payload required. | `ffebdde`, `32f1b51`, `a24d154` | workflow complete |
