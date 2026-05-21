@@ -14,8 +14,8 @@
 | Automation Mode | A-Claude |
 | Verify Cross-vendor | no |
 | Executor | feature-auto-build (Codex gpt-5.3-codex) |
-| Updated | 2026-05-21 12:20 PDT |
-| Blockers | None. Live Supabase / Realtime / nonce-lease validation remains intentionally deferred to later runtime/verify rows per docs-only scope. |
+| Updated | 2026-05-21 12:25 PDT |
+| Blockers | — |
 
 ## Phase Plan
 
@@ -59,3 +59,5 @@ Option B matches `ADR-0006` and the roadmap's existing browser runtime direction
 | 2026-05-21 12:11 PDT | feature-review (Codex inline) | Approved the docs-only preflight: Option B is consistent with ADR-0006 and roadmap direction; `since_commit_seq` / `commit_seq`, derived `blob_aad`, and the mock/live seam all align with shipped Sync authority. | — | feature-build |
 | 2026-05-21 12:16 PDT | feature-auto-build (Codex gpt-5-codex) | Revalidated the docs-only acceptance package: confirmed Option B browser crypto choice, frozen `/sync/pull` + `/sync/push` payload/header semantics, required RFC vector gates (9106/8949/9180/8032), local mock plan, and deferred live gates across discovery + design/api/test docs. Attempted to stage the feature-scope docs for required phase commit, but Git failed with `.git/index.lock: Operation not permitted`; cannot complete commit step in this session. | — | feature-auto-build |
 | 2026-05-21 12:20 PDT | feature-auto-build (Codex gpt-5.3-codex) | Re-read the committed docs package and validated that commit `8697e60` satisfies approved Phase 1 docs-only deliverable scope (`docs/reviews/web-sync-crypto-contract-preflight/` + `packages/web-sync-crypto-contract-preflight/docs/`). Cleared stale local index-lock blocker and advanced workflow state to verification handoff. | `8697e60` (`docs(web-sync): freeze browser crypto contract`) | feature-verify |
+| 2026-05-21 12:23 PDT | feature-verify (Codex gpt-5.3-codex) | Verified the docs-only package against the roadmap seed, feature brief, discovery review, and shipped Sync authority docs. Content scope and contract freeze are correct, but verification is blocked on commit hygiene: `8697e60` does not use the required Why/What/Scope/Risk/Docs/Tests body, and `e2c5590` stores those fields as one literal `\\n`-escaped line instead of proper newline-delimited lines. | `8697e60`, `e2c5590` | feature-build |
+| 2026-05-21 12:25 PDT | feature-auto-build (Codex gpt-5.3-codex) | Phase 1 delta state update: inspected superseding commit `ffebdde` and confirmed commit message/body now follows `docs/conventions/COMMIT_CONVENTION.md` (`Why` / `What` / `Scope` / `Risk` / `Docs` / `Tests`) while preserving the same docs-only deliverable scope. Cleared obsolete verifier blocker text tied to `8697e60`/`e2c5590` and returned this row to verification handoff. | `ffebdde` (`docs(web-sync): freeze browser crypto contract`) | feature-verify |
