@@ -61,8 +61,8 @@ Choose the underlying workflow entry before writing the prompt:
 - New feature, extension, refactor, or unclear implementation idea:
   the project's feature full-loop entry. For Claude goal prompts this is usually
   `/xai-feature-full-loop` or `<skill_prefix>feature-full-loop`; for Codex goal
-  prompts prefer `Start the feature-full-loop agent.` unless the target project
-  has a native Codex project-layer skill.
+  prompts prefer the project-layer parent-session full-loop skill when the usage
+  guide lists one, otherwise use `Start the feature-full-loop agent.`
 - Need only Step 0 normalization or the idea is still vague:
   the project's Step 0 feature brief skill, usually `/xai-feature-brief` or
   `<step0-skill>`
@@ -116,6 +116,25 @@ Ask only when two routes are genuinely close, for example:
 If one route is clearly correct, state the chosen route in the generated prompt
 instead of asking another question.
 
+## Prompt Field Safety
+
+- For feature full-loop fresh starts, do not emit `Feature: TBD` or
+  `Feature: <suggested slug>`. `Feature:` is a resume/canonical-target field in
+  many Workflow V2 projects and can make the runner treat a fresh requirement as
+  ambiguous. Use `Suggested Feature Slug: <slug>` until the feature slug is
+  confirmed by a feature map, dev_log, existing docs, or explicit user input.
+- `Automation Mode:` must be one of the legal Workflow V2 variants:
+  `A-Claude`, `B-Codex`, `B-Cursor`, `C-Codex`, `C-Cursor`, `D-Codex`,
+  `D-Cursor`, or `D-Codex+Cursor`. Never write natural-language values such as
+  `feature full loop`.
+- If the project has a parent-session feature full-loop skill, prefer that entry
+  over `Start the feature-full-loop agent.` for normal end-to-end feature work.
+  Detect this from the usage guide or files such as
+  `.teams/skills/*-feature-full-loop/SKILL.md`, `.claude/skills/*-feature-full-loop/SKILL.md`,
+  or `.codex/skills/*-feature-full-loop/SKILL.md`.
+- Use `Start the feature-full-loop agent.` only when the project docs identify it
+  as the runtime entry, or when no project-layer full-loop skill exists.
+
 ## Goal Prompt Output
 
 Output only a copyable prompt block plus minimal metadata above it.
@@ -139,8 +158,8 @@ Recommended goal prompt shape:
 ```text
 <workflow entry>
 Requirement: <1-3 concise sentences>
-Feature: <feature slug or TBD>
-Automation Mode: <resolved or suggested mode>
+Suggested Feature Slug: <candidate slug, only if unconfirmed>
+Automation Mode: <one of A-Claude | B-Codex | B-Cursor | C-Codex | C-Cursor | D-Codex | D-Cursor | D-Codex+Cursor>
 Verify Cross-vendor: yes
 Context:
 - Read the project workflow usage guide.
