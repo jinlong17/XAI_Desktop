@@ -1,6 +1,8 @@
 # Codex global agent configuration.
 # Docs: https://developers.openai.com/codex (search: agents.max_depth)
 
+approval_policy = "never"
+sandbox_mode = "danger-full-access"
 [agents]
 # max_depth = 2 lets feature-dev-loop / bugfix-loop spawn one level of workers.
 # feature-auto-build / bug-auto-fix are direct writable workers and do not require nested spawn.
