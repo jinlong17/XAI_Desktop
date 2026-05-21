@@ -8,12 +8,12 @@
 | Target | plugin-ai-cube |
 | Title | AI Cube Control Surface Integration (F2) |
 | Current Phase | FEATURE_VERIFY |
-| Status | READY_FOR_VERIFY |
-| Suggested Next | feature-verify |
+| Status | READY_TO_SHIP |
+| Suggested Next | ship |
 | Automation Mode | A-Claude |
 | Verify Cross-vendor | no |
-| Executor | gpt-5 / feature-auto-build |
-| Updated | 2026-05-21 03:39 PDT |
+| Executor | gpt-5 / feature-verify |
+| Updated | 2026-05-21 03:45 PDT |
 | Blockers | none |
 
 ## Package Ownership
@@ -77,6 +77,16 @@
 - Approved with two execution guardrails: `ControlWindow` should render the registered widget through `ControlHost`, and Phase 0–3 conversation affordances must stay explicitly preview/disabled rather than implying live AI.
 - Placeholder tray actions for clipboard, pomodoro, and search remain disabled or no-op adapters until their owning plugins are Stable/Production; F2 must not absorb F3 organizer or broader settings extraction.
 
+## Verification Summary
+
+- Reviewed commits `e50bcdd`, `f573d06`, `881bb13`, and `d6e67ae` against the F2 plan, commit convention, and phase boundaries. Phase 1 owns registration/host shell migration, Phase 2 deletes Host business UI only, Phase 3 owns tests/docs/PLUGIN_MAP sync, and `d6e67ae` is a docs-only follow-up that backfills Phase 3 evidence.
+- Re-ran `pnpm --filter @repo/plugin-ai-cube check-types`, `pnpm --filter @repo/plugin-ai-cube test`, `pnpm --filter @repo/core test`, and `pnpm --filter desktop build` successfully.
+- Verified source/grep evidence for all acceptance gates: Host no longer contains `AiCube.tsx` / `SettingsPanel.tsx`, `ControlWindow` renders `ControlHost` inside `AiCubeControlProvider`, `registerAiCubePlugin()` is statically wired and idempotent, `PLUGIN_MAP` + four-piece docs are synced, Phase 0-3 tray actions are present with clipboard/pomodoro/search disabled, and the conversation surface is explicitly preview-only with disabled send.
+
+## Residual Risks
+
+- Real macOS hardware verification for click-vs-drag behavior remains pending; headless/unit coverage cannot prove native drag handoff feel or accidental post-drag toggle behavior.
+
 ## Work Log
 
 | Timestamp | Executor | Action | Commits | Next |
@@ -86,3 +96,4 @@
 | 2026-05-21 03:35 PDT | gpt-5 / feature-auto-build | Phase 1 — Registration and shell boundary: added `registerAiCubePlugin()`, enabled and aligned plugin manifest, wired static registration in `apps/desktop/src/main.tsx`, and converted `ControlWindow` to shell/provider/bridge rendering via `ControlHost`. | `e50bcdd` | feature-auto-build |
 | 2026-05-21 03:36 PDT | gpt-5 / feature-auto-build | Phase 2 — Plugin-owned control surface boundary cleanup: removed Host business implementations (`apps/desktop/src/components/AiAssistant/AiCube.tsx`, `apps/desktop/src/components/Settings/SettingsPanel.tsx`) after plugin-owned control widget took over. | `f573d06` | feature-auto-build |
 | 2026-05-21 03:38 PDT | gpt-5 / feature-auto-build | Phase 3 — Action wiring and verification: kept organizer callbacks in Host bridge (`createGrid` / `clearAllGrids`), kept clipboard/pomodoro/search disabled placeholders, added registration/provider/preview tests, and ran desktop contract checks. Evidence: `pnpm --filter @repo/plugin-ai-cube check-types` pass; `pnpm --filter @repo/plugin-ai-cube test` pass (24 tests); `pnpm --filter desktop build` pass; `ControlWindow` renders `ControlHost`; preview status text explicitly marks Phase 0–3 disabled mode. | `881bb13` | feature-verify |
+| 2026-05-21 03:45 PDT | gpt-5 / feature-verify | Verification pass: reviewed `e50bcdd`, `f573d06`, `881bb13`, and `d6e67ae` for commit intent, contract alignment, and phase boundaries; re-ran typecheck, tests, registry coverage, and desktop build; confirmed Host cleanup, static/idempotent registration, preview-only conversation UI, and disabled placeholder tray actions. Residual risk limited to pending real macOS click-vs-drag verification. | `e50bcdd`, `f573d06`, `881bb13`, `d6e67ae` | ship |
