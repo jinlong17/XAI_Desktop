@@ -899,6 +899,25 @@ importers:
         specifier: ^3.2.1
         version: 3.2.4(@types/node@22.15.3)(jsdom@29.1.1(@noble/hashes@2.2.0))
 
+  packages/web-browser-e2e-crypto-runtime:
+    dependencies:
+      '@noble/hashes':
+        specifier: 2.2.0
+        version: 2.2.0
+      cbor-x:
+        specifier: 1.6.4
+        version: 1.6.4
+    devDependencies:
+      '@repo/typescript-config':
+        specifier: workspace:*
+        version: link:../typescript-config
+      typescript:
+        specifier: 5.9.2
+        version: 5.9.2
+      vitest:
+        specifier: ^3.2.1
+        version: 3.2.4(@types/node@22.15.3)(jsdom@29.1.1(@noble/hashes@2.2.0))
+
   packages/x25519-device-keypair:
     devDependencies:
       '@repo/typescript-config':
