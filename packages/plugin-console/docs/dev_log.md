@@ -7,13 +7,13 @@
 | Workflow | FEATURE_DEV |
 | Target | plugin-console |
 | Title | Console TickTick parity host shell |
-| Status | READY_FOR_VERIFY |
+| Status | READY_TO_SHIP |
 | Current Phase | FEATURE_VERIFY |
-| Suggested Next | feature-verify |
+| Suggested Next | ship |
 | Automation Mode | A-Claude |
 | Verify Cross-vendor | no |
-| Executor | feature-auto-build (Codex, gpt-5.3-codex) |
-| Updated | 2026-05-21 12:27 PDT |
+| Executor | feature-verify (Codex, gpt-5.4) |
+| Updated | 2026-05-21 12:33 PDT |
 | Blockers | None |
 
 ## Legacy Context
@@ -162,6 +162,32 @@ Gate:
   - PASS: `pnpm --filter @repo/core test` (8/8)
   - PASS: `pnpm --filter desktop build`
 
+## Verification Notes — Round 2 (feature-verify, PASS)
+
+- Reviewed `1c1af64`, `bcacbda`, `5b43712`, `be9189d`, `52cc140`, `6f2c67a`, `831791f`, `dce3230`, and `de0021e`.
+- Commit scope and message format are acceptable across the feature series:
+  - Each commit stays within a single dominant phase or workflow-state update.
+  - Commit subjects and bodies follow `docs/conventions/COMMIT_CONVENTION.md`.
+- Verification checks run from the current tree:
+  - PASS: `pnpm --filter @repo/core check-types`
+  - PASS: `pnpm --filter @repo/core test` (8/8)
+  - PASS: `pnpm --filter @repo/plugin-console check-types`
+  - PASS: `pnpm --filter @repo/plugin-console test` (5/5)
+  - PASS: `pnpm --filter @repo/plugin-productivity check-types`
+  - PASS: `pnpm --filter @repo/plugin-productivity test` (7/7)
+  - PASS: `pnpm --filter @repo/plugin-labels check-types`
+  - PASS: `pnpm --filter @repo/plugin-labels test` (7/7)
+  - PASS: `pnpm --filter desktop build`
+  - PASS: `cargo test --manifest-path apps/desktop/src-tauri/Cargo.toml` (47/47)
+- Contract alignment confirmed for the blocker-fix round:
+  - Sidebar registration authority now comes from `manifest.ui.consoleSidebar.entries`.
+  - Console/productivity/labels register files import manifest metadata as the runtime source of truth.
+  - `PluginRegistry.getConsoleViewRegistrations()` synthesizes runtime registrations from manifest sidebar entries plus `ConsoleViews` renderers.
+  - `ConsoleLayout` no longer hardcodes module entries and consumes registry-provided placeholder metadata.
+- Residual risks:
+  - Real macOS `pnpm --filter desktop tauri dev` verification for menu bar, multi-Space, Stage Manager, and live window lifecycle remains deferred.
+  - Missing-view enforcement still depends on the current registration/test discipline; the registry does not yet expose a dedicated failing validator for future manifest/render mismatches.
+
 ## Work Log
 
 | Timestamp | Executor | Action | Commits | Next |
@@ -177,4 +203,5 @@ Gate:
 | 2026-05-21 12:06 PDT | feature-auto-build (Codex, gpt-5.3-codex) | Phase 3 — Integrate `plugin-productivity` ConsoleViews: added real productivity ConsoleView exports (tasks/pomodoro/habits/matrix), added `registerProductivityPlugin()` static startup wiring, removed productivity mock slots from console registration, and kept labels mocked for Phase 4 boundary. Tests: `pnpm --filter @repo/plugin-productivity check-types`; `pnpm --filter @repo/plugin-console check-types`; `pnpm --filter desktop build`. | `6f2c67a` feat(plugin-console): Phase 3 — integrate productivity ConsoleViews | feature-auto-build |
 | 2026-05-21 12:11 PDT | feature-auto-build (Codex, gpt-5.3-codex) | Phase 4 — Integrate `plugin-labels` and shell extension slots: added real labels ConsoleView export + registration, wired startup `registerLabelsPlugin()`, removed remaining labels mock slots from console registration, and deleted obsolete `plugin-console/src/mockViews.tsx`. Tests: `pnpm --filter @repo/plugin-labels check-types`; `pnpm --filter @repo/plugin-productivity check-types`; `pnpm --filter @repo/plugin-console check-types`; `pnpm --filter desktop build`. Note: `pnpm --filter @repo/plugin-productivity test` and `pnpm --filter @repo/plugin-labels test` both fail locally with `vitest: command not found`. | `831791f` feat(plugin-console): Phase 4 — integrate labels ConsoleView slots | feature-verify |
 | 2026-05-21 12:18 PDT | feature-verify (Codex, gpt-5.4) | Verification BLOCKED after reviewing commits `1c1af64`, `bcacbda`, `5b43712`, `52cc140`, `6f2c67a`, `831791f`, `dce3230`, and `be9189d`. Automated checks passed for core type/test, plugin check-types, desktop build, and Rust tests, but the required package-level Vitest gates for `plugin-console`, `plugin-productivity`, and `plugin-labels` are non-runnable (`vitest: command not found`). Contract review also found that the approved manifest-driven `ui.consoleSidebar` sidebar registration model is still not implemented; runtime navigation remains driven by `ConsoleViewRegistration.sidebar` plus hardcoded placeholder entries. | `1c1af64`, `bcacbda`, `5b43712`, `52cc140`, `6f2c67a`, `831791f`, `dce3230`, `be9189d` | feature-build |
-| 2026-05-21 12:27 PDT | feature-auto-build (Codex, gpt-5.3-codex) | Fix round for verify blockers: made package-level Vitest gates executable via package `vitest.config.ts` + workspace vitest binary path, migrated sidebar registration authority to manifest `ui.consoleSidebar.entries`, removed ConsoleLayout hardcoded sidebar entries, and switched registry assembly to manifest-driven entries with placeholder-aware fallback rendering. Tests: `pnpm --filter @repo/plugin-console test`; `pnpm --filter @repo/plugin-productivity test`; `pnpm --filter @repo/plugin-labels test`; `pnpm --filter @repo/plugin-console check-types`; `pnpm --filter @repo/plugin-productivity check-types`; `pnpm --filter @repo/plugin-labels check-types`; `pnpm --filter @repo/core check-types`; `pnpm --filter @repo/core test`; `pnpm --filter desktop build`. | local blocker-fix commit in same run | feature-verify |
+| 2026-05-21 12:27 PDT | feature-auto-build (Codex, gpt-5.3-codex) | Fix round for verify blockers: made package-level Vitest gates executable via package `vitest.config.ts` + workspace vitest binary path, migrated sidebar registration authority to manifest `ui.consoleSidebar.entries`, removed ConsoleLayout hardcoded sidebar entries, and switched registry assembly to manifest-driven entries with placeholder-aware fallback rendering. Tests: `pnpm --filter @repo/plugin-console test`; `pnpm --filter @repo/plugin-productivity test`; `pnpm --filter @repo/plugin-labels test`; `pnpm --filter @repo/plugin-console check-types`; `pnpm --filter @repo/plugin-productivity check-types`; `pnpm --filter @repo/plugin-labels check-types`; `pnpm --filter @repo/core check-types`; `pnpm --filter @repo/core test`; `pnpm --filter desktop build`. | `de0021e` fix(plugin-console): unblock verify blockers | feature-verify |
+| 2026-05-21 12:33 PDT | feature-verify (Codex, gpt-5.4) | Verification PASS after reviewing the full feature commit set through `de0021e`, re-running core/plugin/desktop/Rust checks, and confirming the manifest-driven sidebar contract is active in the current tree. Promoted status to `READY_TO_SHIP`; remaining risks are limited to deferred real-macOS windowing validation and future hardening of manifest/render mismatch enforcement. | `1c1af64`, `bcacbda`, `5b43712`, `be9189d`, `52cc140`, `6f2c67a`, `831791f`, `dce3230`, `de0021e` | ship |
