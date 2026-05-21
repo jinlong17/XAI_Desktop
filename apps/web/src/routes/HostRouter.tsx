@@ -14,7 +14,7 @@ function normalizePath(pathname: string): string {
     : pathname;
 }
 
-function resolveHostRoute(pathname: string) {
+function resolveHostRoute(pathname: string, search: string) {
   const path = normalizePath(pathname);
 
   if (path === "/") {
@@ -22,17 +22,20 @@ function resolveHostRoute(pathname: string) {
   }
 
   if (path.startsWith("/auth")) {
-    return <AuthPage />;
+    return <AuthPage path={path} search={search} />;
   }
 
   if (path.startsWith("/app")) {
-    return <AppShellPage />;
+    return <AppShellPage path={`${path}${search}`} />;
   }
 
   return <NotFoundPage />;
 }
 
 export function HostRouter() {
-  const route = useMemo(() => resolveHostRoute(window.location.pathname), []);
+  const route = useMemo(
+    () => resolveHostRoute(window.location.pathname, window.location.search),
+    []
+  );
   return route;
 }
