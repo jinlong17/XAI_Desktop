@@ -8,13 +8,13 @@
 | Target | web-architecture-adr-lite |
 | Title | W0 Web architecture ADR-lite decision |
 | Roadmap | web-ticktick-parity · feature #1 · W0 |
-| Status | READY_FOR_VERIFY |
+| Status | READY_TO_SHIP |
 | Current Phase | FEATURE_VERIFY |
-| Suggested Next | feature-verify |
+| Suggested Next | ship |
 | Automation Mode | A-Claude |
 | Verify Cross-vendor | no |
-| Executor | feature-auto-build (Codex inline) |
-| Updated | 2026-05-21 03:26 PDT |
+| Executor | feature-verify (Codex inline) |
+| Updated | 2026-05-21 03:30 PDT |
 | Blockers | — |
 
 ## Phase Plan
@@ -33,7 +33,15 @@ Status: DONE.
 Gate:
 - Reviewer can tell exactly which stance future Web rows must follow.
 
-## Risks
+## Verification Summary
+
+- Reviewed commits `6f52c9c` and `b1ba1a9`; both are single-intent docs-only commits and follow the repository commit format.
+- Confirmed `ADR-0006` is `Accepted` and discoverable from `ADR-0003`, the Web PRD, the Web roadmap manifest, and the parent Web Step 0 brief.
+- Confirmed the decision explicitly freezes the hybrid rule: Web-specific shell/view rewrite is allowed, while shared contracts, Console PRD UI truth, drift-control documentation, and maintenance tradeoffs remain explicit acceptance boundaries.
+- Verified the feature range `6563570..HEAD` changes docs only; no product/runtime code paths were modified.
+- Acceptance checks passed: required files exist, `rg` references for `ADR-0006` / hybrid rule / Console PRD are present, and `git diff --check 6563570..HEAD` is clean.
+
+## Residual Risks
 
 - If the hybrid rule is rejected, the roadmap dependency graph needs re-interpretation before implementation rows start.
 - If later Web rows stop citing the ADR, drift control will weaken.
@@ -46,3 +54,4 @@ Gate:
 | 2026-05-21 03:16 PDT | feature-plan (Codex inline) | Fresh plan: created the ADR-lite brief/discovery/docs set, authored `ADR-0006`, and aligned Web planning references to the hybrid rule. | — | feature-review |
 | 2026-05-21 03:23 PDT | feature-review (Codex subagent) | APPROVED with 0 blockers and 1 non-blocking recommendation: keep future Web-row deviation notes explicit wherever Web PRD and Console PRD may drift. | — | feature-auto-build |
 | 2026-05-21 03:26 PDT | feature-auto-build (Codex inline) | Completed Phase 1 docs-only build: validated `ADR-0006` remains Accepted with explicit hybrid boundaries, confirmed Web PRD + Step 0 brief + roadmap manifest reference the ADR, and added a roadmap review-gate note requiring per-row browser-only deviation docs citing `ADR-0006`. | `6f52c9c` | feature-verify |
+| 2026-05-21 03:30 PDT | feature-verify (Codex inline) | PASS: verified docs-only commit range against design/api/test/dev-log contracts, confirmed `ADR-0006` discoverability and hybrid-rule acceptance criteria, and confirmed no product code changed in `6563570..HEAD`. | `6f52c9c`, `b1ba1a9` | ship |
