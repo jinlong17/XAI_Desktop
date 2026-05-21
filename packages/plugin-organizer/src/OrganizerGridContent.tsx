@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { TauriEvent, useTauriEvent, useTauriWindow } from "@repo/core/hooks";
+import { colorTokens, motionTokens, radiusTokens, spaceTokens, typographyTokens } from "@repo/ui/tokens";
 import type { DesktopItem, GridBox } from "./types";
 import { SmartContainer } from "./SmartContainer";
 import type { FinderClient } from "./finderClient";
@@ -13,30 +14,6 @@ import {
   isGridStatePayload,
   toDroppedFile,
 } from "./gridEvents";
-
-interface G0GridPrototypeRect {
-  x: number;
-  y: number;
-  width: number;
-  height: number;
-}
-
-interface G0GridPrototypePing {
-  gridId: string;
-  windowLabel: string;
-  rect: G0GridPrototypeRect | null;
-  count: number;
-  sentAt: string;
-}
-
-interface G0FinderDropTelemetry {
-  gridId: string;
-  source: "tauri://drag-drop";
-  paths: string[];
-  kinds: Array<"file" | "folder" | "app" | "alias" | "unknown">;
-  position: { x: number; y: number } | null;
-  receivedAt: string;
-}
 
 interface TauriDragDropPayload {
   paths?: unknown;
@@ -54,83 +31,13 @@ export interface OrganizerGridContentProps {
    * Optional Finder client used to register a user-authorized path
    * bookmark for every dropped path (G3-E3 / P0-Foxtrot — honest
    * provenance).
-   *
-   * `OrganizerGridContent` is the ONLY surface in the app that
-   * receives absolute filesystem paths from a real user drag-drop
-   * (the Tauri `tauri://drag-drop` event payload carries
-   * `paths: string[]`). Registering each path with the
-   * `BookmarkRegistry` here — BEFORE emitting
-   * `ORGANIZER_FILE_DROP_EVENT` cross-window — is what makes
-   * subsequent `reveal_in_finder` / `open_path` calls honest:
-   * every authorized path has explicit, recent drop provenance.
-   *
-   * When omitted, the component logs a warning once per session
-   * and skips bookmark registration. Subsequent reveal/open calls
-   * for those paths will be rejected by the Rust side with
-   * `E3004 — no user-authorized bookmark`. The host shell SHOULD
-   * pass a client built via `createFinderClient(invoke)` in
-   * production; the optionality exists for legacy callers and
-   * tests that exercise the drag-drop seam without an IPC bridge.
    */
   finderClient?: FinderClient;
-}
-
-const G0_GRID_PROTOTYPE_EVENT = "g0-grid-prototype:scoped-ping";
-
-function classifyDroppedPath(path: string): G0FinderDropTelemetry["kinds"][number] {
-  const lower = path.toLowerCase();
-  if (lower.endsWith(".app")) return "app";
-  if (lower.endsWith(".alias")) return "alias";
-  if (path.includes(".")) return "file";
-  return "folder";
 }
 
 function coerceDragDropPaths(payload: TauriDragDropPayload): string[] {
   if (!Array.isArray(payload.paths)) return [];
   return payload.paths.filter((path): path is string => typeof path === "string" && path.length > 0);
-}
-
-function coerceDragDropPosition(payload: TauriDragDropPayload): G0FinderDropTelemetry["position"] {
-  const x = payload.position?.x;
-  const y = payload.position?.y;
-  if (typeof x !== "number" || typeof y !== "number") return null;
-  return { x, y };
-}
-
-function G0DropTelemetryPanel({
-  count,
-  telemetry,
-}: {
-  count: number;
-  telemetry: G0FinderDropTelemetry | null;
-}) {
-  return (
-    <div
-      style={{
-        border: "1px solid rgba(56, 189, 248, 0.28)",
-        borderRadius: 8,
-        padding: "8px 10px",
-        background: "rgba(8, 47, 73, 0.42)",
-        minWidth: 0,
-      }}
-    >
-      <div style={{ display: "flex", justifyContent: "space-between", gap: 8 }}>
-        <strong style={{ color: "#bae6fd" }}>Finder DnD</strong>
-        <span style={{ color: "#7dd3fc" }}>drops {count}</span>
-      </div>
-      <div style={{ marginTop: 6, color: "#cbd5e1", overflowWrap: "anywhere" }}>
-        {telemetry ? (
-          <>
-            <div>{telemetry.source}</div>
-            <div>{telemetry.kinds.join(", ") || "unknown"}</div>
-            <div>{telemetry.paths.join(" | ")}</div>
-          </>
-        ) : (
-          "Drop Finder file/folder/app/alias here"
-        )}
-      </div>
-    </div>
-  );
 }
 
 /**
@@ -148,16 +55,9 @@ export function OrganizerGridContent({
   const [grid, setGrid] = useState<GridBox | null>(null);
   const [items, setItems] = useState<Record<string, DesktopItem>>({});
   const [isDraggingFile, setIsDraggingFile] = useState(false);
-  const [windowLabel, setWindowLabel] = useState("");
-  const [windowRect, setWindowRect] = useState<G0GridPrototypeRect | null>(null);
-  const [spikeEventCount, setSpikeEventCount] = useState(0);
-  const [lastSpikeEvent, setLastSpikeEvent] = useState<G0GridPrototypePing | null>(null);
-  const [dropEventCount, setDropEventCount] = useState(0);
-  const [lastDropTelemetry, setLastDropTelemetry] = useState<G0FinderDropTelemetry | null>(null);
   const lastDropKeyRef = useRef<{ key: string; receivedAt: number } | null>(null);
   const gridRef = useRef<GridBox | null>(null);
   const finderClientRef = useRef<FinderClient | undefined>(finderClient);
-  const finderClientMissingWarnedRef = useRef(false);
 
   const tauriWindow = useTauriWindow();
 
@@ -169,58 +69,8 @@ export function OrganizerGridContent({
     finderClientRef.current = finderClient;
   }, [finderClient]);
 
-  useEffect(() => {
-    let cancelled = false;
-
-    const refreshWindowMeta = async () => {
-      try {
-        const [position, size] = await Promise.all([
-          tauriWindow.outerPosition(),
-          tauriWindow.innerSize(),
-        ]);
-
-        if (!cancelled) {
-          setWindowLabel(tauriWindow.label);
-          setWindowRect({
-            x: position.x,
-            y: position.y,
-            width: size.width,
-            height: size.height,
-          });
-        }
-      } catch (error) {
-        console.warn("[G0 grid prototype] failed to read window metadata", error);
-        if (!cancelled) {
-          setWindowLabel(tauriWindow.label);
-        }
-      }
-    };
-
-    refreshWindowMeta();
-    const timer = window.setInterval(refreshWindowMeta, 1000);
-
-    return () => {
-      cancelled = true;
-      window.clearInterval(timer);
-    };
-  }, [tauriWindow]);
-
-  useTauriEvent<G0GridPrototypePing>(G0_GRID_PROTOTYPE_EVENT, (event) => {
-    if (event.payload.gridId !== gridId) {
-      console.warn("[G0 grid prototype] ignored out-of-scope event", {
-        currentGridId: gridId,
-        payload: event.payload,
-      });
-      return;
-    }
-
-    console.log("[G0 grid prototype] received scoped event", event.payload);
-    setLastSpikeEvent(event.payload);
-  });
-
   useTauriEvent<unknown>(ORGANIZER_GRID_STATE_EVENT, (event) => {
     if (!isGridStatePayload(event.payload)) {
-      console.warn("[OrganizerGridContent] ignored invalid grid state event", event.payload);
       return;
     }
     if (event.payload.gridId === gridId) {
@@ -231,7 +81,6 @@ export function OrganizerGridContent({
 
   useTauriEvent<unknown>(ORGANIZER_GRID_CLOSE_EVENT, (event) => {
     if (!isGridClosePayload(event.payload)) {
-      console.warn("[OrganizerGridContent] ignored invalid grid close event", event.payload);
       return;
     }
     if (event.payload.gridId === gridId) {
@@ -247,7 +96,7 @@ export function OrganizerGridContent({
     (patch: Partial<GridBox>) => {
       tauriWindow.emit(ORGANIZER_GRID_UPDATE_EVENT, { gridId, changes: patch });
     },
-    [gridId, tauriWindow]
+    [gridId, tauriWindow],
   );
 
   const handleUpdate = useCallback(
@@ -268,28 +117,28 @@ export function OrganizerGridContent({
       setGrid({ ...prev, ...safePatch });
       emitUpdate(safePatch);
     },
-    [emitUpdate]
+    [emitUpdate],
   );
 
   const handleClose = useCallback(
     (_id: string) => {
       tauriWindow.emit(ORGANIZER_GRID_CLOSE_EVENT, { gridId });
     },
-    [gridId, tauriWindow]
+    [gridId, tauriWindow],
   );
 
   const handleToggleFold = useCallback(
     (_id: string) => {
       emitUpdate({ isFolded: !grid?.isFolded });
     },
-    [emitUpdate, grid?.isFolded]
+    [emitUpdate, grid?.isFolded],
   );
 
   const handleToggleLock = useCallback(
     (_id: string) => {
       emitUpdate({ isLocked: !grid?.isLocked });
     },
-    [emitUpdate, grid?.isLocked]
+    [emitUpdate, grid?.isLocked],
   );
 
   const resolvedItems = useMemo(() => {
@@ -300,53 +149,22 @@ export function OrganizerGridContent({
   }, [grid, items]);
 
   const handleFileDrop = useCallback(
-    (paths: string[], position: { x: number; y: number }) => {
+    (paths: string[]) => {
       const dropKey = JSON.stringify(paths);
       const now = Date.now();
       const lastDropKey = lastDropKeyRef.current;
       if (lastDropKey?.key === dropKey && now - lastDropKey.receivedAt < 1000) {
-        console.warn("[G0 Finder DnD] ignored duplicate drag-drop payload", paths);
         return;
       }
       lastDropKeyRef.current = { key: dropKey, receivedAt: now };
 
-      const telemetry: G0FinderDropTelemetry = {
-        gridId,
-        source: "tauri://drag-drop",
-        paths,
-        kinds: paths.map(classifyDroppedPath),
-        position,
-        receivedAt: new Date().toISOString(),
-      };
-
-      console.log("[G0 Finder DnD] path-first drop", telemetry);
-      setLastDropTelemetry(telemetry);
-      setDropEventCount((count) => count + 1);
-
-      // G3-E3 / P0-Foxtrot — honest provenance. Register each absolute
-      // path with the Rust `BookmarkRegistry` BEFORE we forward the drop
-      // cross-window. This is the only surface in the app that receives
-      // real absolute paths from a user drag-drop, so it is the only
-      // honest place to record provenance. We fire-and-forget per path:
-      // a failure to register one path does NOT abort the drop UX, it
-      // simply means subsequent reveal/open for that one path will be
-      // rejected by Rust with `E3004 — no user-authorized bookmark`.
       const client = finderClientRef.current;
       if (client) {
         for (const path of paths) {
-          void client.registerBookmark(path).catch((err: unknown) => {
-            console.warn(
-              "[OrganizerGridContent] register_path_bookmark failed for",
-              path,
-              err,
-            );
+          void client.registerBookmark(path).catch(() => {
+            // Bookmark failures are intentionally non-fatal for drop UX.
           });
         }
-      } else if (!finderClientMissingWarnedRef.current) {
-        finderClientMissingWarnedRef.current = true;
-        console.warn(
-          "[OrganizerGridContent] no finderClient provided; reveal_in_finder / open_path will be rejected with E3004 until paths are bookmarked",
-        );
       }
 
       tauriWindow.emit(ORGANIZER_FILE_DROP_EVENT, {
@@ -354,33 +172,16 @@ export function OrganizerGridContent({
         files: paths.map(toDroppedFile),
       });
     },
-    [gridId, tauriWindow]
+    [gridId, tauriWindow],
   );
-
-  const handleSendSpikeEvent = useCallback(async () => {
-    const label = windowLabel || tauriWindow.label;
-    const nextCount = spikeEventCount + 1;
-    const payload: G0GridPrototypePing = {
-      gridId,
-      windowLabel: label,
-      rect: windowRect,
-      count: nextCount,
-      sentAt: new Date().toISOString(),
-    };
-
-    console.log("[G0 grid prototype] sending scoped event", payload);
-    await tauriWindow.emitTo(label, G0_GRID_PROTOTYPE_EVENT, payload);
-    setSpikeEventCount(nextCount);
-  }, [gridId, spikeEventCount, tauriWindow, windowLabel, windowRect]);
 
   useTauriEvent<TauriDragDropPayload>(TauriEvent.DRAG_DROP, (event) => {
     const paths = coerceDragDropPaths(event.payload);
     setIsDraggingFile(false);
     if (paths.length === 0) {
-      console.warn("[G0 Finder DnD] drag-drop payload had no paths", event.payload);
       return;
     }
-    handleFileDrop(paths, coerceDragDropPosition(event.payload) ?? { x: 0, y: 0 });
+    handleFileDrop(paths);
   });
   useTauriEvent(TauriEvent.DRAG_ENTER, () => setIsDraggingFile(true));
   useTauriEvent(TauriEvent.DRAG_OVER, () => setIsDraggingFile(true));
@@ -389,76 +190,30 @@ export function OrganizerGridContent({
   if (!grid) {
     return (
       <div
-        data-g0-grid-prototype="true"
         style={{
-          boxSizing: "border-box",
-          display: "grid",
-          gridTemplateRows: "auto 1fr auto auto",
-          gap: 10,
           width: "100%",
           height: "100%",
-          padding: 14,
-          background: "rgba(10, 14, 22, 0.82)",
-          color: "#e7ecf3",
-          fontFamily: "system-ui, -apple-system, BlinkMacSystemFont, sans-serif",
-          fontSize: 12,
-          overflow: "hidden",
+          display: "grid",
+          placeItems: "center",
+          padding: spaceTokens.xl,
+          background: colorTokens.surfaceGlass,
+          color: colorTokens.textSecondary,
+          fontFamily: typographyTokens.fontFamilySans,
+          borderRadius: radiusTokens.xl,
+          border: `1px solid ${colorTokens.borderSubtle}`,
+          backdropFilter: gridBlur ? "blur(12px)" : "none",
+          WebkitBackdropFilter: gridBlur ? "blur(12px)" : "none",
         }}
       >
-        <div style={{ display: "grid", gap: 2 }}>
-          <strong style={{ fontSize: 13, fontWeight: 650 }}>G0 Grid Prototype</strong>
-          <span style={{ color: "#9ca3af" }}>Waiting for Organizer state; spike fallback is active.</span>
-        </div>
-
-        <dl
+        <span
           style={{
-            display: "grid",
-            gridTemplateColumns: "74px 1fr",
-            alignContent: "start",
-            gap: "6px 10px",
-            minWidth: 0,
-            margin: 0,
+            fontSize: typographyTokens.fontSizeLabelPx,
+            letterSpacing: typographyTokens.letterSpacingTight,
+            transition: `opacity ${motionTokens.durationBaseMs}ms ${motionTokens.easingStandard}`,
           }}
         >
-          <dt style={{ color: "#9ca3af" }}>gridId</dt>
-          <dd style={{ margin: 0, overflowWrap: "anywhere" }}>{gridId}</dd>
-          <dt style={{ color: "#9ca3af" }}>label</dt>
-          <dd style={{ margin: 0, overflowWrap: "anywhere" }}>{windowLabel || "unknown"}</dd>
-          <dt style={{ color: "#9ca3af" }}>rect</dt>
-          <dd style={{ margin: 0, overflowWrap: "anywhere" }}>
-            {windowRect
-              ? `x=${windowRect.x}, y=${windowRect.y}, ${windowRect.width}x${windowRect.height}`
-              : "unknown"}
-          </dd>
-          <dt style={{ color: "#9ca3af" }}>events</dt>
-          <dd style={{ margin: 0 }}>{spikeEventCount}</dd>
-          <dt style={{ color: "#9ca3af" }}>last</dt>
-          <dd style={{ margin: 0, overflowWrap: "anywhere" }}>
-            {lastSpikeEvent
-              ? `${lastSpikeEvent.gridId} #${lastSpikeEvent.count} ${lastSpikeEvent.sentAt}`
-              : "none"}
-          </dd>
-        </dl>
-
-        <G0DropTelemetryPanel count={dropEventCount} telemetry={lastDropTelemetry} />
-
-        <button
-          type="button"
-          onClick={handleSendSpikeEvent}
-          style={{
-            width: "100%",
-            minHeight: 34,
-            border: "1px solid rgba(148, 163, 184, 0.45)",
-            borderRadius: 8,
-            background: "rgba(30, 41, 59, 0.9)",
-            color: "#f8fafc",
-            cursor: "pointer",
-            font: "inherit",
-            fontWeight: 650,
-          }}
-        >
-          Send Scoped Event
-        </button>
+          Loading organizer grid...
+        </span>
       </div>
     );
   }
@@ -468,9 +223,9 @@ export function OrganizerGridContent({
       style={{
         width: "100%",
         height: "100%",
-        outline: isDraggingFile ? "3px dashed rgba(56, 189, 248, 0.6)" : "none",
-        outlineOffset: "-3px",
-        transition: "outline 150ms ease",
+        outline: isDraggingFile ? `2px dashed ${colorTokens.accentPrimary}` : "none",
+        outlineOffset: "-2px",
+        transition: `outline ${motionTokens.durationFastMs}ms ${motionTokens.easingStandard}`,
       }}
     >
       <SmartContainer
@@ -484,18 +239,6 @@ export function OrganizerGridContent({
         gridOpacity={gridOpacity}
         gridBlur={gridBlur}
       />
-      <div
-        style={{
-          position: "fixed",
-          left: 8,
-          bottom: 8,
-          width: "calc(100% - 16px)",
-          pointerEvents: "none",
-          fontSize: 11,
-        }}
-      >
-        <G0DropTelemetryPanel count={dropEventCount} telemetry={lastDropTelemetry} />
-      </div>
     </div>
   );
 }

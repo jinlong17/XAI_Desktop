@@ -1,5 +1,7 @@
 import { CSSProperties, useEffect, useMemo, useState } from "react";
 import { useDraggable } from "@dnd-kit/core";
+import { DesktopIcon, iconAliasMap } from "@repo/ui/icons";
+import { colorTokens, radiusTokens, spaceTokens, typographyTokens } from "@repo/ui/tokens";
 import { DesktopItem, type FinderTagColor } from "./types";
 import { useTauriInvoke } from "@repo/core/hooks";
 import { createFinderClient } from "./finderClient";
@@ -15,19 +17,30 @@ interface GridItemProps {
 }
 
 const baseItemStyle: CSSProperties = {
-  borderRadius: 12,
-  background: "rgba(255,255,255,0.08)",
-  border: "1px solid rgba(0,0,0,0.05)",
+  borderRadius: radiusTokens.lg,
+  background: "rgba(255,255,255,0.72)",
+  border: `1px solid ${colorTokens.borderSubtle}`,
   minHeight: 72,
-  padding: 8,
+  padding: spaceTokens.sm,
   display: "flex",
   alignItems: "center",
   justifyContent: "center",
   textAlign: "center",
-  fontSize: 12,
-  color: "#0b1220",
+  fontSize: typographyTokens.fontSizeLabelPx,
+  color: colorTokens.textPrimary,
   cursor: "grab",
   userSelect: "none",
+};
+
+const iconSurfaceStyle: CSSProperties = {
+  width: 30,
+  height: 30,
+  borderRadius: radiusTokens.md,
+  background: "rgba(15, 23, 42, 0.08)",
+  border: `1px solid ${colorTokens.borderSubtle}`,
+  display: "grid",
+  placeItems: "center",
+  color: colorTokens.textPrimary,
 };
 
 export function GridItem({ item, variant = "grid", onUpdate, onCreateTask }: GridItemProps) {
@@ -43,11 +56,19 @@ export function GridItem({ item, variant = "grid", onUpdate, onCreateTask }: Gri
   useEffect(() => {
     if (!item.filepath || item.finderTags) return;
     let cancelled = false;
-    void finderClient.readFinderTags(item.filepath).then((nextTags) => {
-      if (!cancelled && nextTags.length > 0) {
-        onUpdate?.(item.id, { finderTags: nextTags.map((tag) => ({ name: tag.name, color: normalizeTagColor(tag.color) })) });
-      }
-    }).catch(() => undefined);
+    void finderClient
+      .readFinderTags(item.filepath)
+      .then((nextTags) => {
+        if (!cancelled && nextTags.length > 0) {
+          onUpdate?.(item.id, {
+            finderTags: nextTags.map((tag) => ({
+              name: tag.name,
+              color: normalizeTagColor(tag.color),
+            })),
+          });
+        }
+      })
+      .catch(() => undefined);
     return () => {
       cancelled = true;
     };
@@ -61,43 +82,64 @@ export function GridItem({ item, variant = "grid", onUpdate, onCreateTask }: Gri
 
   const style: CSSProperties = {
     ...baseItemStyle,
-    opacity: isDragging ? 0.5 : 1,
+    opacity: isDragging ? 0.58 : 1,
     transform: transform ? `translate3d(${transform.x}px, ${transform.y}px, 0)` : undefined,
     flexDirection: variant === "list" ? "row" : "column",
-    gap: variant === "list" ? 10 : 4,
+    gap: variant === "list" ? spaceTokens.md : spaceTokens.xs,
     alignItems: variant === "list" ? "center" : "center",
     justifyContent: variant === "list" ? "flex-start" : "center",
   };
 
+  const iconName = resolveIconName(item);
+
   return (
     <div ref={setNodeRef} style={style} {...listeners} {...attributes}>
-      <div
-        style={{
-          width: 28,
-          height: 28,
-          borderRadius: 8,
-          background: "linear-gradient(135deg, #8b5cf6, #38bdf8)",
-          display: "grid",
-          placeItems: "center",
-          color: "#fff",
-          fontWeight: 700,
-          fontSize: 12,
-        }}
-        aria-hidden
-      >
-        {item.filename.substring(0, 2).toUpperCase()}
+      <div style={iconSurfaceStyle} aria-hidden>
+        <DesktopIcon name={iconName} size={16} />
       </div>
-      <div style={{ textAlign: variant === "list" ? "left" : "center" }}>
-        <div style={{ fontWeight: 600 }}>{item.filename}</div>
-        <div style={{ fontSize: 11, opacity: 0.75 }}>
+      <div style={{ textAlign: variant === "list" ? "left" : "center", minWidth: 0, flex: 1 }}>
+        <div
+          style={{
+            fontWeight: typographyTokens.fontWeightSemibold,
+            color: colorTokens.textPrimary,
+            overflow: "hidden",
+            textOverflow: "ellipsis",
+            whiteSpace: "nowrap",
+          }}
+          title={item.filename}
+        >
+          {item.filename}
+        </div>
+        <div style={{ fontSize: 11, color: colorTokens.textSecondary }}>
           {item.type}
           {variant === "list" ? ` · ${item.filepath}` : ""}
         </div>
-        <div style={{ display: "flex", gap: 4, justifyContent: variant === "list" ? "flex-start" : "center", marginTop: 4 }}>
-          <button type="button" onClick={(event) => { event.stopPropagation(); onCreateTask?.(item); }} style={miniButtonStyle}>
+        <div
+          style={{
+            display: "flex",
+            gap: 4,
+            justifyContent: variant === "list" ? "flex-start" : "center",
+            marginTop: 4,
+          }}
+        >
+          <button
+            type="button"
+            onClick={(event) => {
+              event.stopPropagation();
+              onCreateTask?.(item);
+            }}
+            style={miniButtonStyle}
+          >
             Task
           </button>
-          <button type="button" onClick={(event) => { event.stopPropagation(); setTagsOpen((open) => !open); }} style={miniButtonStyle}>
+          <button
+            type="button"
+            onClick={(event) => {
+              event.stopPropagation();
+              setTagsOpen((open) => !open);
+            }}
+            style={miniButtonStyle}
+          >
             Tags
           </button>
         </div>
@@ -112,17 +154,44 @@ export function GridItem({ item, variant = "grid", onUpdate, onCreateTask }: Gri
 }
 
 const miniButtonStyle: CSSProperties = {
-  border: "1px solid rgba(17,24,39,0.18)",
+  border: `1px solid ${colorTokens.borderStrong}`,
   borderRadius: 5,
-  background: "rgba(255,255,255,0.75)",
-  color: "#111827",
+  background: "rgba(255,255,255,0.88)",
+  color: colorTokens.textPrimary,
   cursor: "pointer",
   fontSize: 10,
-  padding: "2px 4px",
+  padding: "2px 6px",
+  fontFamily: typographyTokens.fontFamilySans,
 };
 
+function resolveIconName(item: DesktopItem) {
+  const direct = iconAliasMap[item.icon.toLowerCase() as keyof typeof iconAliasMap];
+  if (direct) {
+    return direct;
+  }
+
+  switch (item.type) {
+    case "folder":
+      return "folder";
+    case "app":
+      return "grid";
+    case "url":
+      return "link";
+    default:
+      return "file";
+  }
+}
+
 function normalizeTagColor(color: string | undefined): FinderTagColor | undefined {
-  if (color === "gray" || color === "green" || color === "purple" || color === "blue" || color === "yellow" || color === "red" || color === "orange") {
+  if (
+    color === "gray" ||
+    color === "green" ||
+    color === "purple" ||
+    color === "blue" ||
+    color === "yellow" ||
+    color === "red" ||
+    color === "orange"
+  ) {
     return color;
   }
   return undefined;
