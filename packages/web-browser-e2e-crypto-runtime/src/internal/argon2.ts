@@ -18,12 +18,14 @@ export async function deriveKekKey(input: {
   assertBytes(input.salt, "kekSalt");
 
   const subtle = requireSubtleCrypto();
-  const argonSecret = concatBytes(input.masterPassword, input.secretKey);
+  const argonPassword = copyBytes(input.masterPassword);
+  const argonSecret = copyBytes(input.secretKey);
   let keyMaterial: Uint8Array | null = null;
   try {
     keyMaterial = await argon2id({
-      password: argonSecret,
+      password: argonPassword,
       salt: input.salt,
+      secret: argonSecret,
       parallelism: input.policy.parallelism,
       iterations: input.policy.iterations,
       memorySize: input.policy.memoryKiB,
@@ -38,6 +40,7 @@ export async function deriveKekKey(input: {
   } catch (cause) {
     throw webCryptoError("E_WEB_CRYPTO_BAD_PASSWORD", "Argon2id KEK derivation failed", { cause });
   } finally {
+    zeroizeBuffer(argonPassword);
     zeroizeBuffer(argonSecret);
     if (keyMaterial !== null) {
       zeroizeBuffer(keyMaterial);

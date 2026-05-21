@@ -136,7 +136,7 @@ declare function zeroizeBuffer(buffer: Uint8Array, options?: ZeroizeOptions): vo
 ## Key Contract Assumptions
 
 - `masterPassword` and `secretKey` enter the runtime as bytes, not as long-lived React strings.
-- KEK is derived from `masterPassword + secretKey + kekSalt` via Argon2id and immediately represented as a non-extractable in-memory key handle.
+- KEK is derived via `Argon2id(password=masterPassword, salt=kekSalt, secret=secretKey, t=3, m=64MiB, p=4)` and immediately represented as a non-extractable in-memory key handle.
 - The local current-device private key is KEK-unwrapped from browser-local wrapped storage during unlock; callers do not hand the package an already-open secret by default.
 - Active DEK acquisition happens by HPKE-opening the active `device_dek_wraps` row with the unwrapped current-device private key handle.
 - This package does **not** fetch `/auth/me`, poll for wraps, or perform donor grant writes; callers provide those real inputs.
@@ -161,8 +161,10 @@ declare function zeroizeBuffer(buffer: Uint8Array, options?: ZeroizeOptions): vo
 ## Lock Transition Contract
 
 - `subscribe(listener)` is the required observation seam for downstream rows that hold decrypted cache/index/worker memory.
-- Listeners must receive transitions for:
-  - successful `unlock`
+- A successful unlock emits two transitions in order:
+  - `locked -> unlocking` with reason `unlock`
+  - `unlocking -> unlocked` with reason `unlock`
+- Listeners must also receive the first lock transition for:
   - `lock("manual")`
   - `lock("idle")`
   - `lock("unload")`

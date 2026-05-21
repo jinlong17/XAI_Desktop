@@ -2,7 +2,7 @@
 
 ## Validation Strategy
 
-This feature is not implemented yet. Validation in planning focuses on contract correctness against Sync v0.6, explicit HPKE ownership, and build-ready verification gates.
+Validation focuses on runtime contract correctness against Sync v0.6, explicit HPKE ownership, and executable local verification gates.
 
 ## Required Automated Coverage Once Built
 
@@ -22,8 +22,8 @@ This feature is not implemented yet. Validation in planning focuses on contract 
 - `/auth/me` keyring/current-key metadata adapter coverage
 - `secretKeyCheck` success/failure handling
 - active-wrap `keyId` / current-key mismatch failures
-- RFC 9106 Argon2id vectors
-- RFC 9180 HPKE Base-mode vector parity for the browser active-wrap open path
+- RFC 9106-style Argon2id keyed-input vector parity (`password`/`salt`/`secret`) plus `secretKey` sensitivity gate on KEK derivation
+- HPKE deterministic reference-vector gate for browser active-wrap open using the desktop `hpke-per-device-wrap` vector constants
 - AES-GCM success + wrong-tag + wrong-AAD failures
 - RFC 8949 deterministic CBOR AAD byte equality against repo fixtures
 - envelope header round-trip / nonce reconstruction compatibility
@@ -35,7 +35,7 @@ This feature is not implemented yet. Validation in planning focuses on contract 
 - successful `masterPassword + secretKey + keyring + wrappedDevicePrivateKey + activeWrap` unlock lifecycle
 - missing/invalid active wrap fails with typed errors
 - idle timeout clears the active DEK session
-- explicit unload/manual/error lock paths emit one observable transition and clear runtime-owned session state best effort
+- explicit unload/manual/error lock paths emit one first lock transition and clear runtime-owned session state best effort
 
 ## Local Mock Strategy
 
@@ -63,18 +63,23 @@ Rules:
 - `test -f packages/web-browser-e2e-crypto-runtime/src/index.ts`
 - `pnpm --filter @repo/web-browser-e2e-crypto-runtime check-types`
 - targeted unit tests for buffers/policy/idle lock
-- targeted tests that `subscribe()` emits one transition for unlock and one transition per first lock reason only
+- targeted tests that `subscribe()` emits `locked->unlocking` + `unlocking->unlocked` for unlock and one transition per first lock reason only
 
 ### Phase 2 — Real Sync unlock path
 
-- Argon2id vector tests pass locally
-- RFC 9180 HPKE vector tests pass locally for the browser implementation
+- Argon2id keyed-input vector tests pass locally and prove `secretKey` is wired through Argon2 `secret` (not password concatenation)
+- HPKE reference-vector tests pass locally for browser active-wrap open against deterministic desktop vector constants
 - valid `secretKeyCheck` + keyring metadata + wrapped device key + active wrap unlocks successfully
 - wrong `secretKey` produces typed failure
 - wrong password path fails before HPKE open by rejecting the wrapped device-private-key unwrap
 - missing or mismatched active wrap produces typed failure
 - repeated `lock()` is idempotent and does not emit duplicate wipe-trigger transitions
 - KEK/DEK cannot be exported through public APIs
+
+Vector boundary note:
+
+- `hash-wasm` exposes Argon2 `secret` but not an associated-data input field in its public API, so this package gates keyed RFC 9106-style inputs (`password`/`salt`/`secret`) and defers full associated-data RFC parity to the Rust `rfc-test-vectors-gate`.
+- This package's active-wrap payload format is a simplified CBOR envelope (`suite`, ephemeral public key SPKI, iv, ciphertext, tag), so HPKE gate wording here intentionally references the desktop deterministic vector boundary rather than claiming direct official RFC 9180 vector ingestion.
 
 ### Phase 3 — AES-GCM helpers and envelope gates
 
