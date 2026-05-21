@@ -8,13 +8,13 @@
 | Target | plugin-organizer |
 | Title | F3 Organizer UX rebuild |
 | Roadmap | desktop-ux-rebuild · F3 |
-| Status | READY_FOR_VERIFY |
+| Status | READY_TO_SHIP |
 | Current Phase | FEATURE_VERIFY |
-| Suggested Next | feature-verify |
+| Suggested Next | ship |
 | Automation Mode | A-Claude |
 | Verify Cross-vendor | no |
-| Executor | `Codex` / `feature-auto-build` |
-| Updated | 2026-05-21 04:16 PDT |
+| Executor | `Codex` / `feature-verify` |
+| Updated | 2026-05-21 04:18 PDT |
 | Blockers | None |
 | Concurrent Stream | G3 organizer-loop carry-forward remains active; see snapshot below |
 
@@ -101,10 +101,10 @@
 - Previous blockers are resolved: the revised docs now match the live window lifecycle payloads (`create_grid_window` / `update_grid_window` use `{ gridId, rect }`; `close_grid_window` uses `{ gridId }`) and preserve the existing bookmark-gated Finder/open-path `{ input: { path } }` semantics.
 - Phase ownership is now explicit enough for `feature-build`: each F3 phase names the overlapping organizer files, host bridge callers, and additive Rust/doc seam without erasing the preserved G3 snapshot or carry-forward TODOs.
 - The additive-only thumbnail rule and unchanged event/window/finder contracts remain clear across discovery, design, API, and test artifacts.
-- Re-verify after `3416bd4` / `55369ba` confirms the previous `useFileDrop.ts` console-noise blocker is fixed and the explicit `Delete Grid` label is present in `SmartContainer.tsx`.
-- Remaining blocker: `apps/desktop/src/App.tsx` still renders the "Multi-Window Mode - Grids render in separate windows" banner in production, so the F3 cleanup acceptance for banner residue is still not met.
-- Remaining blocker: `packages/plugin-organizer/src/SmartContainer.tsx` routes both `Delete Grid` and `Close Grid` to `onClose(data.id)`, and `OrganizerGridContent` + `useMultiWindowGrids` still map that close event to `deleteGrid`, so PRD delete vs. close behavior is not actually separated.
-- Manual macOS verification for multi-grid drag/resize/collapse, edge snap/hide, and thumbnail behavior remains pending even though automated checks are green.
+- Re-verify after `f0fa5f2` confirms the production multi-window banner is removed from `apps/desktop/src/App.tsx`, `Delete Grid` now routes through explicit `onDelete`, and `Close Grid` / direct close remain on `onClose`.
+- `OrganizerGridContent` now emits additive `organizer:grid:delete` with unchanged `{ gridId }` payload while preserving `organizer:grid:close` as `{ gridId }`, and `useMultiWindowGrids` maps those events to `onGridDelete(gridId)` vs. `closeWindow(gridId)` respectively.
+- Automated verification reran green: `pnpm --filter @repo/plugin-organizer check-types`, `pnpm --filter @repo/plugin-organizer test` (65/65), `pnpm --filter desktop build`, and `(cd apps/desktop/src-tauri && cargo test)` (44/44).
+- Manual macOS verification for multi-grid drag/resize/collapse, edge snap/hide, and thumbnail behavior remains pending as a residual ship risk even though automated checks are green.
 
 ## Revision Response
 
@@ -135,3 +135,4 @@
 | 2026-05-21 04:10 PDT | `Codex` / `feature-auto-build` | Blocker-fix pass complete for verify findings only: removed production `console.log` noise from `useFileDrop.ts` (`dragenter`, `dragleave`, `drop`, listener-registration paths) and added explicit `Delete Grid` action in SmartContainer grid context menu while preserving existing direct close affordance and `Close Grid` action semantics. Evidence: static grep returns `NO_CONSOLE_NOISE` for `useFileDrop.ts`; `SmartContainer.tsx` now contains both `Delete Grid` and `Close Grid` entries. | `3416bd4` | feature-verify |
 | 2026-05-21 04:11 PDT | `Codex` / `feature-verify` | Re-verified commits `f95c0ae`, `4844ed9`, `2824e30`, `2e404ac`, `75b991b`, `3416bd4`, and `55369ba`. Automated checks passed again: `pnpm --filter @repo/plugin-organizer check-types`, `pnpm --filter @repo/plugin-organizer test` (65 passed), `pnpm --filter desktop build`, and `cargo test` (44 passed). Remaining blockers: `apps/desktop/src/App.tsx` still renders the production multi-window banner, and `SmartContainer`'s `Delete Grid` / `Close Grid` actions still collapse to the same delete path through `OrganizerGridContent` + `useMultiWindowGrids`. Manual macOS verification for multi-grid drag/resize/collapse, edge snap/hide, and thumbnails is still pending. | `f95c0ae`, `4844ed9`, `2824e30`, `2e404ac`, `75b991b`, `3416bd4`, `55369ba` | feature-build |
 | 2026-05-21 04:16 PDT | `Codex` / `feature-auto-build` | Second blocker-fix pass complete for verify findings only. Removed the production multi-window banner from `apps/desktop/src/App.tsx`. Separated delete vs close semantics: `SmartContainer` now routes `Delete Grid` through explicit `onDelete` and keeps `Close Grid`/direct close on `onClose`; `OrganizerGridContent` emits `organizer:grid:delete` for delete while keeping `organizer:grid:close` for close-window; `useMultiWindowGrids` now maps close events to `closeWindow(gridId)` and delete events to `onGridDelete(gridId)`. Existing payload shapes remain `{ gridId }`, and no Tauri command signatures changed. Tests: `pnpm --filter @repo/plugin-organizer check-types`; `pnpm --filter @repo/plugin-organizer test` (65 passed); `pnpm --filter desktop build`. Evidence: static grep confirms banner string removed in `App.tsx` and separate delete/close paths wired in organizer files. | _pending blocker-fix commit_ | feature-verify |
+| 2026-05-21 04:18 PDT | `Codex` / `feature-verify` | Re-verified commits `f95c0ae`, `4844ed9`, `2824e30`, `2e404ac`, `75b991b`, `3416bd4`, `55369ba`, and `f0fa5f2`. Acceptance checks are now satisfied: no production organizer banner residue remains, delete vs close semantics are separated with additive `{ gridId }` delete events, edge snap/hide and thumbnail seams remain additive, and existing window/finder command signatures are unchanged. Automated verification passed: `pnpm --filter @repo/plugin-organizer check-types`, `pnpm --filter @repo/plugin-organizer test` (65 passed), `pnpm --filter desktop build`, and `cargo test` (44 passed). Residual risk is limited to pending real-macOS manual verification for multi-grid drag/resize/collapse, edge snap/hide, and thumbnail behavior. | `f95c0ae`, `4844ed9`, `2824e30`, `2e404ac`, `75b991b`, `3416bd4`, `55369ba`, `f0fa5f2` | ship |
