@@ -1,4 +1,4 @@
-import { Navigate, createBrowserRouter, Outlet } from "react-router";
+import { Navigate, createBrowserRouter, Outlet, type RouteObject } from "react-router";
 import { LandingPage } from "../pages/LandingPage";
 import { NotFoundPage } from "../pages/NotFoundPage";
 import { AppRouteElement, AuthRouteElement } from "./RouteGateElements";
@@ -9,7 +9,7 @@ import { webModuleRouteRegistrations } from "./modules/registrations";
 assertUniqueModuleRegistrations(webModuleRouteRegistrations);
 const defaultModulePath = resolveDefaultModulePath(webModuleRouteRegistrations);
 
-export const router = createBrowserRouter([
+export const webHostRouteObjects: RouteObject[] = [
   {
     path: "/",
     element: <Outlet />,
@@ -52,4 +52,6 @@ export const router = createBrowserRouter([
       },
     ],
   },
-]);
+];
+
+export const router = createBrowserRouter(webHostRouteObjects);
