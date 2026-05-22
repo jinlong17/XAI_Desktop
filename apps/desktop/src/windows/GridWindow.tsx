@@ -1,6 +1,6 @@
 import { MouseEvent as ReactMouseEvent, useCallback, useEffect, useMemo, useRef } from "react";
 import { emit, listen } from "@tauri-apps/api/event";
-import { getCurrentWindow, LogicalPosition } from "@tauri-apps/api/window";
+import { currentMonitor, getCurrentWindow, LogicalPosition } from "@tauri-apps/api/window";
 import { useTauriInvoke } from "@repo/core/hooks";
 import {
   ORGANIZER_GRID_STATE_EVENT,
@@ -16,6 +16,7 @@ const DRAG_THRESHOLD_PX = 4;
 const NATIVE_MOVE_SYNC_DELAY_MS = 120;
 const EDGE_SNAP_THRESHOLD = 24;
 const EDGE_HIDE_REVEAL_PX = 52;
+const RECT_SYNC_EPSILON = 1;
 
 type NativeWindowRect = {
   x: number;
@@ -24,31 +25,51 @@ type NativeWindowRect = {
   height: number;
 };
 
-function applyNativeEdgeSnap(rect: NativeWindowRect, isFolded: boolean): NativeWindowRect {
+type NativeMonitorBounds = {
+  x: number;
+  y: number;
+  width: number;
+  height: number;
+};
+
+function rectsNearlyEqual(a: NativeWindowRect, b: NativeWindowRect): boolean {
+  return (
+    Math.abs(a.x - b.x) <= RECT_SYNC_EPSILON &&
+    Math.abs(a.y - b.y) <= RECT_SYNC_EPSILON &&
+    Math.abs(a.width - b.width) <= RECT_SYNC_EPSILON &&
+    Math.abs(a.height - b.height) <= RECT_SYNC_EPSILON
+  );
+}
+
+function applyNativeEdgeSnap(
+  rect: NativeWindowRect,
+  isFolded: boolean,
+  monitorBounds: NativeMonitorBounds,
+): NativeWindowRect {
   if (typeof window === "undefined") {
     return rect;
   }
 
-  const screenWidth = window.screen?.availWidth || window.innerWidth;
-  const screenHeight = window.screen?.availHeight || window.innerHeight;
-  const maxX = Math.max(0, screenWidth - rect.width);
-  const maxY = Math.max(0, screenHeight - rect.height);
-  let x = rect.x;
-  let y = rect.y;
+  const localX = rect.x - monitorBounds.x;
+  const localY = rect.y - monitorBounds.y;
+  const maxLocalX = Math.max(0, monitorBounds.width - rect.width);
+  const maxLocalY = Math.max(0, monitorBounds.height - rect.height);
+  let x = localX;
+  let y = localY;
 
-  if (x <= EDGE_SNAP_THRESHOLD) {
+  if (localX <= EDGE_SNAP_THRESHOLD) {
     x = isFolded ? Math.min(0, EDGE_HIDE_REVEAL_PX - rect.width) : 0;
-  } else if (x >= maxX - EDGE_SNAP_THRESHOLD) {
-    x = isFolded ? Math.max(0, screenWidth - EDGE_HIDE_REVEAL_PX) : maxX;
+  } else if (localX >= maxLocalX - EDGE_SNAP_THRESHOLD) {
+    x = isFolded ? Math.max(0, monitorBounds.width - EDGE_HIDE_REVEAL_PX) : maxLocalX;
   }
 
-  if (y <= EDGE_SNAP_THRESHOLD) {
+  if (localY <= EDGE_SNAP_THRESHOLD) {
     y = 0;
-  } else if (y >= maxY - EDGE_SNAP_THRESHOLD) {
-    y = maxY;
+  } else if (localY >= maxLocalY - EDGE_SNAP_THRESHOLD) {
+    y = maxLocalY;
   }
 
-  return { ...rect, x, y };
+  return { ...rect, x: monitorBounds.x + x, y: monitorBounds.y + y };
 }
 
 /**
@@ -78,29 +99,45 @@ function GridWindowShell({ gridId }: { gridId: string }) {
         ? window.devicePixelRatio
         : 1;
 
-    const [position, size] = await Promise.all([currentWindow.outerPosition(), currentWindow.outerSize()]);
+    const [position, size, monitor] = await Promise.all([
+      currentWindow.outerPosition(),
+      currentWindow.outerSize(),
+      currentMonitor(),
+    ]);
     const latestGrid = latestGridRef.current;
+    const scaleFactor = monitor?.scaleFactor ?? dpr;
+    const screen = window.screen as Screen & { availLeft?: number; availTop?: number };
+    const monitorBounds = monitor
+      ? {
+          x: monitor.workArea.position.x / scaleFactor,
+          y: monitor.workArea.position.y / scaleFactor,
+          width: monitor.workArea.size.width / scaleFactor,
+          height: monitor.workArea.size.height / scaleFactor,
+        }
+      : {
+          x: screen.availLeft ?? 0,
+          y: screen.availTop ?? 0,
+          width: screen.availWidth || window.innerWidth,
+          height: screen.availHeight || window.innerHeight,
+        };
 
     const measuredRect = {
-      x: Math.round(position.x / dpr),
-      y: Math.round(position.y / dpr),
-      width: latestGrid?.rect.width ?? Math.round(size.width / dpr),
-      height: latestGrid?.rect.height ?? Math.round(size.height / dpr),
+      x: Math.round(position.x / scaleFactor),
+      y: Math.round(position.y / scaleFactor),
+      width: latestGrid?.rect.width ?? Math.round(size.width / scaleFactor),
+      height: latestGrid?.rect.height ?? Math.round(size.height / scaleFactor),
     };
-    const rect = applyNativeEdgeSnap(measuredRect, latestGrid?.isFolded ?? false);
+    const rect = applyNativeEdgeSnap(measuredRect, latestGrid?.isFolded ?? false, monitorBounds);
 
-    if (rect.x !== measuredRect.x || rect.y !== measuredRect.y) {
+    if (
+      Math.abs(rect.x - measuredRect.x) > RECT_SYNC_EPSILON ||
+      Math.abs(rect.y - measuredRect.y) > RECT_SYNC_EPSILON
+    ) {
       await currentWindow.setPosition(new LogicalPosition(rect.x, rect.y));
     }
 
     const lastRect = lastEmittedRectRef.current;
-    if (
-      lastRect &&
-      lastRect.x === rect.x &&
-      lastRect.y === rect.y &&
-      lastRect.width === rect.width &&
-      lastRect.height === rect.height
-    ) {
+    if (lastRect && rectsNearlyEqual(lastRect, rect)) {
       return;
     }
 
@@ -130,11 +167,13 @@ function GridWindowShell({ gridId }: { gridId: string }) {
         return;
       }
       if (event.payload.gridId === gridId) {
+        const wasFolded = latestGridRef.current?.isFolded;
+        const isFolded = event.payload.grid.isFolded;
         latestGridRef.current = {
-          isFolded: event.payload.grid.isFolded,
+          isFolded,
           rect: event.payload.grid.rect,
         };
-        if (event.payload.grid.isFolded) {
+        if ((wasFolded === undefined && isFolded) || (wasFolded !== undefined && wasFolded !== isFolded)) {
           scheduleNativeWindowRectSync();
         }
       }
