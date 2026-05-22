@@ -8,13 +8,13 @@
 | Target | web-todo-first-slice |
 | Title | W7 Web Todo first real slice over encrypted Sync blobs |
 | Roadmap | `web-ticktick-parity` · feature #11 · W7 |
-| Current Phase | FEATURE_VERIFY |
-| Status | READY_FOR_VERIFY |
-| Suggested Next | feature-verify |
+| Current Phase | SHIP |
+| Status | SHIPPED |
+| Suggested Next | — |
 | Automation Mode | A-Claude |
 | Verify Cross-vendor | no |
-| Executor | feature-auto-build (Codex gpt-5.3-codex inline) |
-| Updated | 2026-05-22 16:00 PDT |
+| Executor | ship (Codex gpt-5.3-codex inline) |
+| Updated | 2026-05-22 16:10 PDT |
 | Blockers | — |
 
 ## Source Context
@@ -127,6 +127,17 @@ Scoped verification:
 - Option A preserves the thin-host boundary, keeps Todo ownership in `plugin-productivity`, and uses the shipped encrypted Sync blob plus IndexedDB path instead of introducing a second Web data plane.
 - The phase split is executable and reviewable. Build should resolve `deletedAt` ownership as one explicit backward-compatible contract before touching entity/schema code.
 
+## Verification Summary
+
+- PASS. Re-reviewed the remediation commits `7f356fa`, `209b230`, and `01930af` and confirmed each keeps a single intent within the prior verify blockers: tracked review artifacts, added deterministic 0-row/50-row fixture assertions, and updated workflow state only.
+- Current `HEAD` still satisfies the prior runtime blockers: `apps/web` publishes `__XAI_WEB_TODO_SESSION__` and `__XAI_WEB_TODO_CRYPTO__` through `TodoWebRuntimeBridge`, `TodoWebModuleRoute` enforces explicit `loading` / `locked` / `ready` / `error` lanes, and `createBrowserTodoRepo()` rejects missing device-bound session seams while using the encrypted Sync blob + IndexedDB repo path.
+- Feature-scoped git hygiene is acceptable in the shared dirty worktree: all W7 review artifacts and docs are tracked, relevant feature paths are clean, and the unrelated modified/untracked roadmap files stay outside the feature scope.
+- Verified commands passed on current `HEAD`: `test -f` + `git ls-files --error-unmatch` for all required W7 docs, `pnpm --filter @repo/web check-types`, `pnpm --filter @repo/plugin-productivity check-types`, `pnpm --filter @repo/core-data check-types`, `pnpm --filter @repo/core test`, `pnpm --filter @repo/web exec vitest run src/routes/modules/buildModuleRoutes.test.ts src/routes/router.integration.test.tsx`, and `pnpm --filter @repo/plugin-productivity exec vitest run src/web/browserTodoRepo.test.ts src/web/TodoWebModuleRoute.test.tsx`.
+
+## Residual Risks
+
+- Browser runtime behavior against real Supabase session material and encrypted cache persistence still needs human/manual browser validation before ship if the release bar requires live environment proof; this is non-blocking for static verify because the W7 contract and targeted automated coverage are now satisfied.
+
 ## Work Log
 
 | Timestamp | Executor | Action | Commits | Next |
@@ -142,3 +153,5 @@ Scoped verification:
 | 2026-05-22 15:53 PDT | feature-auto-build (Codex gpt-5.3-codex inline) | BLOCKED remediation pass completed: replaced implicit todo runtime wiring with an explicit web runtime bridge seam (`__XAI_WEB_TODO_SESSION__` + runtime update event), populated `__XAI_WEB_TODO_CRYPTO__` from authenticated session metadata, enforced loading/locked/ready/error lanes in `TodoWebModuleRoute`, removed `createBrowserTodoRepo` fallback defaults, and added targeted plugin/web tests covering seam wiring, CRUD, deep-link restore, and locked-session behavior. | `debda12` | feature-verify |
 | 2026-05-22 15:57 PDT | feature-verify (Codex gpt-5 inline) | Verification BLOCKED after reviewing `debda12` and `8588746` against the approved W7 docs and current `HEAD`. Runtime and contract checks now pass for the device-bound session seam (`accountId` / `deviceId` / `fetchSync`), crypto readiness lanes (`loading` / `locked` / `ready` / `error`), encrypted Sync blob + IndexedDB repo path, no LocalStorage/account-mock fallback on the authenticated route, and CRUD/deep-link/locked-session coverage. However, ship readiness still fails on workflow/test completeness: `docs/reviews/web-todo-first-slice/{20260521-roadmap-seed,20260522-feature-brief,20260522-discovery-review}.md` are present on disk but untracked in git, and the approved W7 test contract still requires a 50-row fixture matrix / downstream seed lane that is not implemented anywhere in the current tests. Verified commands: `test -f` for all six required docs, `pnpm --filter @repo/web check-types`, `pnpm --filter @repo/plugin-productivity check-types`, `pnpm --filter @repo/core-data check-types`, `pnpm --filter @repo/core test`, `pnpm --filter @repo/web exec vitest run src/routes/modules/buildModuleRoutes.test.ts src/routes/router.integration.test.tsx`, and `pnpm --filter @repo/plugin-productivity exec vitest run`. | `debda12`, `8588746` | feature-build |
 | 2026-05-22 16:00 PDT | feature-auto-build (Codex gpt-5.3-codex inline) | BLOCKED remediation complete for verify blockers only: committed workflow artifact hygiene by tracking `docs/reviews/web-todo-first-slice/{20260521-roadmap-seed,20260522-feature-brief,20260522-discovery-review}.md`; added deterministic Phase 3 downstream fixture coverage in `TodoWebModuleRoute.test.tsx` for both `0-row` and `50-row` seeded repo lanes (asserting `smart:inbox=40`, `smart:done=5`, `smart:today=13`) while preserving existing CRUD/deep-link/locked-session tests. Verification run: `pnpm --filter @repo/plugin-productivity exec vitest run src/web/browserTodoRepo.test.ts src/web/TodoWebModuleRoute.test.tsx` and `pnpm --filter @repo/plugin-productivity check-types` both passed. | `7f356fa`, `209b230` | feature-verify |
+| 2026-05-22 16:04 PDT | feature-verify (Codex gpt-5.4 inline) | PASS verification after re-checking W7 against the approved docs and the three post-blocked commits `7f356fa`, `209b230`, and `01930af`. Confirmed review artifacts are tracked, feature-scoped git hygiene is acceptable despite unrelated shared-worktree dirt, the 0-row and 50-row fixture matrix is meaningful, and the device-bound session seam, crypto readiness lanes, encrypted Sync blob + IndexedDB repo path, CRUD, deep-link restore, and locked behavior all remain enforced on current `HEAD`. Re-ran targeted W7 verification commands successfully and advanced status to READY_TO_SHIP. | `7f356fa`, `209b230`, `01930af` | ship |
+| 2026-05-22 16:10 PDT | ship (Codex gpt-5.3-codex inline) | Re-checked ship gate in an isolated worktree from `origin/main`, confirmed only W7 commits were included for push scope, and shipped the feature by updating docs state plus roadmap row #11 without staging unrelated dirty files from the shared worktree. | `ca590b9`, `35f2c13`, `9298835`, `56ad550`, `8230110`, `69a6c4c`, `82fd730`, `0448640`, `3d6bbc1`, `b2e57f1`, `f950bdd` | done |
