@@ -1,7 +1,7 @@
 import { isRouteErrorResponse, useRouteError } from "react-router";
 
 export interface RouteErrorBoundaryProps {
-  scope: "root" | "auth" | "app";
+  scope: "root" | "auth" | "app" | "module";
 }
 
 function resolveErrorMessage(error: unknown): string {

@@ -1,46 +1,32 @@
-import { useState } from "react";
-import { useDeviceBoundFetch, useWebAuthSession } from "@repo/web-auth-device-session";
+import type { ConsoleModuleId } from "@repo/core/types";
+import { Link } from "react-router";
+import type { ReactNode } from "react";
 
 export interface AppShellPageProps {
-  path: string;
+  moduleId: ConsoleModuleId;
+  childPath: string;
+  modules: Array<{
+    moduleId: ConsoleModuleId;
+    label: string;
+  }>;
+  content: ReactNode;
 }
 
-export function AppShellPage({ path }: AppShellPageProps) {
-  const { state, deviceId } = useWebAuthSession();
-  const deviceFetch = useDeviceBoundFetch();
-  const [probeResult, setProbeResult] = useState<string>("idle");
-
-  async function probeDeviceSession() {
-    if (!deviceFetch) {
-      setProbeResult("device_fetch_unavailable");
-      return;
-    }
-
-    try {
-      const response = await deviceFetch("/rest/v1/rpc/device_heartbeat", {
-        method: "POST",
-        body: JSON.stringify({ device_id: deviceId }),
-        headers: {
-          "Content-Type": "application/json"
-        }
-      });
-      setProbeResult(`ok:${response.status}`);
-    } catch (error: unknown) {
-      setProbeResult(error instanceof Error ? error.message : "probe_failed");
-    }
-  }
-
+export function AppShellPage({ moduleId, childPath, modules, content }: AppShellPageProps) {
   return (
     <main className="host-page">
       <h1>App Shell</h1>
-      <p>Guarded app host placeholder for future module mounting.</p>
-      <p>route: {path}</p>
-      <p>session: {state}</p>
-      <p>device: {deviceId ?? "pending"}</p>
-      <button type="button" onClick={probeDeviceSession}>
-        Probe device-bound request
-      </button>
-      <p>probe: {probeResult}</p>
+      <p>Module seam: /app/:moduleId/*</p>
+      <p>active module: {moduleId}</p>
+      <p>child path: {childPath || "(index)"}</p>
+      <nav style={{ display: "flex", gap: "0.75rem", flexWrap: "wrap" }}>
+        {modules.map((entry) => (
+          <Link key={entry.moduleId} to={`/app/${entry.moduleId}`}>
+            {entry.label}
+          </Link>
+        ))}
+      </nav>
+      {content}
     </main>
   );
 }

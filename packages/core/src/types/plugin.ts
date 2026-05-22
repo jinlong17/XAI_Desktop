@@ -84,6 +84,23 @@ export interface ConsoleViewDefinition {
   render: ComponentType<ConsoleViewProps>;
 }
 
+export interface WebModuleRouteProps {
+  moduleId: ConsoleModuleId;
+  childPath: string;
+}
+
+export interface WebModuleRouteChild {
+  path: string;
+  render: ComponentType<WebModuleRouteProps>;
+}
+
+export interface WebModuleRouteRegistration {
+  moduleId: ConsoleModuleId;
+  label: string;
+  defaultChildPath?: string;
+  children: WebModuleRouteChild[];
+}
+
 /** React components a plugin registers */
 export interface PluginComponents {
   /** Rendered on the main window overlay */

@@ -170,6 +170,12 @@ importers:
 
   apps/web:
     dependencies:
+      '@repo/core':
+        specifier: workspace:^
+        version: link:../../packages/core
+      '@repo/plugin-console':
+        specifier: workspace:^
+        version: link:../../packages/plugin-console
       '@repo/web-auth-device-session':
         specifier: workspace:*
         version: link:../../packages/web-auth-device-session
@@ -207,6 +213,9 @@ importers:
       vite:
         specifier: ^7.0.4
         version: 7.2.4(@types/node@22.15.3)
+      vitest:
+        specifier: ^3.2.1
+        version: 3.2.4(@types/node@22.15.3)(jsdom@29.1.1(@noble/hashes@2.2.0))
 
   packages/audit-log-integrity:
     devDependencies:

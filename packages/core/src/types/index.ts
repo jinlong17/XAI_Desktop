@@ -25,4 +25,7 @@ export type {
   ConsoleSidebarEntry,
   ConsoleViewDefinition,
   ConsoleViewRegistration,
+  WebModuleRouteProps,
+  WebModuleRouteChild,
+  WebModuleRouteRegistration,
 } from './plugin';

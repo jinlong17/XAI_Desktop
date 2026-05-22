@@ -1,7 +1,10 @@
 import { AppRouteGate, AuthRouteGate } from "@repo/web-auth-device-session";
-import { useLocation, useNavigate } from "react-router";
+import { useLocation, useNavigate, useParams } from "react-router";
 import { AppShellPage } from "../pages/AppShellPage";
 import { AuthPage } from "../pages/AuthPage";
+import { NotFoundPage } from "../pages/NotFoundPage";
+import { resolveModuleRouteMatch } from "./modules/buildModuleRoutes";
+import { webModuleRouteRegistrations } from "./modules/registrations";
 
 export function AuthRouteElement() {
   const location = useLocation();
@@ -20,6 +23,20 @@ export function AuthRouteElement() {
 export function AppRouteElement() {
   const location = useLocation();
   const navigate = useNavigate();
+  const params = useParams();
+  const moduleId = params.moduleId ?? "";
+  const wildcard = params["*"];
+  const match = resolveModuleRouteMatch(webModuleRouteRegistrations, moduleId, wildcard);
+
+  if (!match) {
+    return <NotFoundPage />;
+  }
+
+  const child = match.registration.children.find((entry) => entry.path === match.childPath)
+    ?? match.registration.children.find((entry) => entry.path === "*")
+    ?? match.registration.children.find((entry) => entry.path === "");
+
+  const ModuleRouteContent = child?.render;
 
   return (
     <AppRouteGate
@@ -27,7 +44,15 @@ export function AppRouteElement() {
       fallback={<main className="host-page"><p>Checking session...</p></main>}
       navigate={(path) => navigate(path, { replace: true })}
     >
-      <AppShellPage path={`${location.pathname}${location.search}`} />
+      <AppShellPage
+        moduleId={match.moduleId}
+        childPath={match.childPath}
+        modules={webModuleRouteRegistrations.map((entry) => ({
+          moduleId: entry.moduleId,
+          label: entry.label,
+        }))}
+        content={ModuleRouteContent ? <ModuleRouteContent moduleId={match.moduleId} childPath={match.childPath} /> : null}
+      />
     </AppRouteGate>
   );
 }
