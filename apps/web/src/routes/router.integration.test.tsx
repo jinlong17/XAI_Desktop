@@ -99,11 +99,11 @@ describe("web host router integration", () => {
     await unmountApp(landing);
   });
 
-  it("keeps app shell stable when invoking unsupported capability stubs", async () => {
+  it("keeps app shell stable when invoking todo module controls", async () => {
     const app = await mountRouter(["/app/todos/smart:inbox"]);
 
     await act(async () => {
-      findButton(app.container, "Unsupported Native Stub").dispatchEvent(new MouseEvent("click", { bubbles: true }));
+      findButton(app.container, "Create").dispatchEvent(new MouseEvent("click", { bubbles: true }));
     });
     expect(app.container.textContent).toContain("active module: todos");
     expect(app.container.textContent).toContain("Todos");
