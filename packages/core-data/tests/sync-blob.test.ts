@@ -367,6 +367,96 @@ describe("createSyncBlobRepo", () => {
       /E_SYNC_BLOB_UPGRADE_REQUIRED/,
     );
   });
+
+  it("exposes sync cursor state for downstream cache handoff", async () => {
+    const fetchSync = createDeviceBoundFetchMock((url) => {
+      if (url.includes("/sync/pull")) {
+        return new Response(
+          JSON.stringify({
+            records: [
+              {
+                entity_type: "productivity.todo",
+                entity_id: "todo-cursor",
+                revision: "3",
+                key_id: 7,
+                blob: Buffer.from(
+                  JSON.stringify(makeRecord("todo-cursor", { title: "pulled" })),
+                  "utf8",
+                ).toString("base64"),
+                commit_seq: "11",
+                soft_deleted: false,
+                hard_deleted: false,
+                originator_device_id: "peer-device",
+              },
+            ],
+            next_commit_seq: "11",
+            has_more: false,
+          }),
+          { status: 200 },
+        );
+      }
+
+      return new Response(JSON.stringify({ accepted: true }), { status: 200 });
+    });
+
+    const repo = createSyncBlobRepo<ContractRecord>({
+      namespace: "todos",
+      accountId: "acct-1",
+      deviceId: DEVICE_ID,
+      fetchSync,
+      crypto: createMockCrypto<ContractRecord>(),
+      newMutationId: createMutationIdFactory(),
+    });
+
+    await repo.pull();
+    await repo.put(makeRecord("todo-local", { title: "local" }));
+
+    expect(repo.syncState()).toEqual({
+      lastCommitSeq: "11",
+      pendingMutationCount: 0,
+      mirroredRecordCount: 2,
+    });
+  });
+
+  it("keeps migrationVersion unchanged when migrate transaction push fails", async () => {
+    const fetchSync = createDeviceBoundFetchMock((url) => {
+      if (!url.includes("/sync/push")) {
+        return new Response(JSON.stringify({ records: [], next_commit_seq: "0" }), {
+          status: 200,
+        });
+      }
+      return new Response(JSON.stringify({ message: "nope" }), { status: 401 });
+    });
+
+    const repo = createSyncBlobRepo<ContractRecord>({
+      namespace: "todos",
+      accountId: "acct-1",
+      deviceId: DEVICE_ID,
+      fetchSync,
+      crypto: createMockCrypto<ContractRecord>(),
+      newMutationId: createMutationIdFactory(),
+      sleepMs: async () => undefined,
+    });
+
+    await expect(
+      repo.migrate({
+        id: "migrate-fail",
+        fromVersion: 0,
+        toVersion: 1,
+        steps: [
+          async (tx) => {
+            await tx.put(makeRecord("todo-migrate-fail"));
+          },
+        ],
+      }),
+    ).rejects.toThrow(/E_SYNC_BLOB_AUTH/);
+
+    await expect(repo.metadata()).resolves.toMatchObject({
+      migrationVersion: 0,
+      recordCount: 0,
+    });
+    expect(repo.syncState().pendingMutationCount).toBe(0);
+  });
 });
 
 function createMutationIdFactory() {

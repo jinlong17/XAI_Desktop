@@ -83,6 +83,7 @@ export type {
   SyncBlobCryptoAdapter,
   SyncBlobCryptoDecryptInput,
   SyncBlobCryptoEncryptInput,
+  SyncBlobDriverState,
   SyncBlobErrorCode,
   SyncBlobFetch,
   SyncBlobRepo,

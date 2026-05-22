@@ -80,9 +80,16 @@ export interface PullOptions {
   limit?: number;
 }
 
+export interface SyncBlobDriverState {
+  lastCommitSeq: string;
+  pendingMutationCount: number;
+  mirroredRecordCount: number;
+}
+
 export interface SyncBlobRepo<T extends RepoRecord> extends Repo<T> {
   pull(options?: PullOptions): Promise<void>;
   pushPending(): Promise<void>;
+  syncState(): SyncBlobDriverState;
 }
 
 interface MirrorState {
@@ -622,6 +629,11 @@ export function createSyncBlobRepo<T extends RepoRecord>(
     migrate,
     pull,
     pushPending,
+    syncState: () => ({
+      lastCommitSeq,
+      pendingMutationCount: pending.length,
+      mirroredRecordCount: mirror.size,
+    }),
   };
 }
 
