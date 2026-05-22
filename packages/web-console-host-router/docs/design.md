@@ -16,9 +16,11 @@
 - `packages/web-console-host-router/docs/` is the workflow anchor only; it is not evidence that runtime business code should live under `packages/web-console-host-router/`.
 - `@repo/web-auth-device-session` remains the owner of auth/session/device lifecycle; this row only consumes its provider and route-guard surface.
 - `plugin-console` remains the platform-neutral shell owner; this row assembles it for the Web face rather than replacing its information architecture.
+- `apps/web` consumes browser-only exports via `@repo/plugin-console/web` and `@repo/web-auth-device-session/web`; importing those package roots from `apps/web/src/**` is forbidden.
 - Browser module routing freezes at `/app/:moduleId/*` as the host-owned parent seam.
 - Later module rows attach child routes by exporting shared registration contracts from their owning package public surface; the host composes them but does not own their business route content.
 - Browser-rendered code must never import Tauri/native APIs directly.
+- local authenticated routing verification may use `VITE_WEB_AUTH_MODE=mock-authenticated`; production auth flow remains the default `live` mode.
 - `ConsoleViewCapabilities` remains the only public module capability surface; W6 extends it rather than keeping a parallel `WebHostCapabilities` type.
 - Unsupported native/Desktop capabilities must either stay unexported from the shared capability surface or return explicit unsupported/degraded results through that same shared contract.
 - Later Web module rows remain mock-first where upstream plugin authority is still non-stable in `docs/PLUGIN_MAP.md`.
@@ -53,8 +55,8 @@ This feature does not own:
   - `docs/planning/sub-prds/console/PRD.md`
   - `docs/PLUGIN_MAP.md`
 - Existing runtime seams:
-  - `apps/web/src/providers/AppProviders.tsx`
-  - `packages/web-auth-device-session/src/{guards.tsx,components/WebAuthPage.tsx,index.ts}`
+- `apps/web/src/providers/AppProviders.tsx`
+- `packages/web-auth-device-session/src/{guards.tsx,components/WebAuthPage.tsx,index.ts}`
   - `packages/plugin-console/src/components/ConsoleLayout.tsx`
   - `packages/core/src/types/plugin.ts`
 - Downstream rows unlocked:
@@ -114,6 +116,7 @@ This feature does not own:
 ### Browser-safety guard
 
 - `apps/web` owns the import/build guard for browser-rendered code
+- transitive browser routing dependencies enter `plugin-console` and `web-auth-device-session` through their `/web` subpath entrypoints only
 - the guard applies to host files and to all transitive files reachable through module registration exports
 - later rows must extend browser routes through package public surfaces only; direct `src/internal/` imports remain forbidden
 

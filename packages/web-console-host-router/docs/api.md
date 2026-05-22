@@ -10,7 +10,9 @@ This row owns host/router contracts only. It does not introduce business-domain 
 |---|---|
 | `apps/web/src/providers/AppProviders.tsx` | remains the canonical mount point for auth/session/device and later host providers |
 | `@repo/web-auth-device-session` | owns `WebAuthSessionProvider`, `AuthRouteGate`, `AppRouteGate`, `WebAuthPage`, and device-bound request/session semantics |
+| `@repo/web-auth-device-session/web` | browser-safe host entrypoint consumed by `apps/web`; excludes non-host exports so Web routing does not transitively pull unrelated runtime branches |
 | `packages/plugin-console` | owns shared Console shell and module-slot contracts; this row consumes them |
+| `@repo/plugin-console/web` | browser-safe module registration entrypoint consumed by `apps/web`; excludes desktop bridge/data-provider exports |
 | `packages/core/src/types/plugin.ts` | remains the shared contract owner for `ConsoleRouteState`, `ConsoleThemeState`, `ConsoleViewProps`, `ConsoleViewCapabilities`, and the new Web module-route registration helpers required by this row |
 | `packages/web-encrypted-indexeddb-cache` | later provides route-level cache state without letting route code own IndexedDB schemas |
 
@@ -33,7 +35,7 @@ Ownership split:
 - `apps/web/src/routes/modules/registrations.ts`
   - is the only host-owned composition seam for later module registrations and placeholder fallbacks
 - owning packages
-  - export browser-safe module registration contracts from `index.ts`
+  - export browser-safe module registration contracts from a public browser-safe entrypoint (`/web` when needed)
 - `@repo/core`
   - owns the shared registration type used between the packages and the host
 
@@ -96,6 +98,7 @@ Required semantics:
 - `/auth/*` routes wrap `AuthRouteGate`
 - `/app/*` routes wrap `AppRouteGate`
 - host code must not duplicate auth/session ownership already provided by `@repo/web-auth-device-session`
+- local verification seam: `AppProviders` accepts `VITE_WEB_AUTH_MODE=mock-authenticated` (or `mock-unauthenticated`) to exercise guarded routes without a live configured session; default is `live`
 
 ### Error-boundary contract
 
@@ -209,7 +212,7 @@ Implementation note:
 ## Browser-Safety / Build Guard Contract
 
 - `apps/web` and browser-shared packages must not import `@tauri-apps/*`.
-- browser-route files may only enter package code through public `index.ts` exports participating in the shared module registration contract.
+- browser-route files may only enter package code through browser-safe public entrypoints (`@repo/plugin-console/web`, `@repo/web-auth-device-session/web`).
 - if a capability cannot be implemented in-browser, the module must consume the shared capability seam and handle `ConsoleCapabilityResult.ok === false`.
 - the browser-safety guard lives at the `apps/web` host boundary and applies transitively to files imported through module route registrations.
 - later build work may choose lint, dedicated import-scan, or both, but the guard ownership/location is frozen in this row.

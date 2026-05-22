@@ -44,6 +44,7 @@
 ### Browser-safety coverage
 
 - static/lint/type guard proving no `@tauri-apps/*` imports in `apps/web` and any browser-shared helper touched by this row
+- restricted-import guard proving `apps/web` only imports browser-safe package entrypoints (`@repo/plugin-console/web`, `@repo/web-auth-device-session/web`) instead of package roots
 - route or capability helpers do not import Desktop-only modules
 - files transitively imported through module route registrations are included in the same browser-safety guard scope
 
@@ -68,6 +69,8 @@
   - app loads
   - guard executes
   - route remains stable after refresh
+- route integration test coverage:
+  - `apps/web/src/routes/router.integration.test.tsx` verifies guarded app route deep-link rendering, history-entry family resolution, and unsupported capability-stub interaction stability
 - browser back/forward across `/`, `/auth/*`, and `/app/*`
 - not-found routing under both top-level and module-child paths
 - route-safe app-shell fallback when a module child route is missing or throws
@@ -77,6 +80,7 @@
 
 - auth/session state
   - use mock `WebAuthSessionProvider` state or guard wrappers instead of live Supabase
+  - local manual verification can use `VITE_WEB_AUTH_MODE=mock-authenticated` to exercise `/app/:moduleId/*` without a configured external session
 - module content
   - use placeholder-safe module registrations or shell-owned fallback registrations while upstream plugin rows remain non-stable
 - host capabilities
@@ -91,8 +95,9 @@
 - `pnpm --filter @repo/core check-types`
 - `pnpm --filter @repo/plugin-console check-types`
 - `pnpm --filter @repo/web build`
-- `pnpm --filter @repo/web exec vitest run src/routes/modules/buildModuleRoutes.test.ts src/host/capabilities.test.ts`
+- `pnpm --filter @repo/web exec vitest run src/routes/modules/buildModuleRoutes.test.ts src/host/capabilities.test.ts src/routes/router.integration.test.tsx`
 - `pnpm --filter @repo/web exec eslint --max-warnings 0 src`
+- `pnpm --filter @repo/web dev:mock-auth` (manual guarded-route verification seam)
 - route-focused test suite for `apps/web`
 - manual browser verification:
   - open `/`
