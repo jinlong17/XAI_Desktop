@@ -10,6 +10,16 @@ export default [
         "error",
         {
           patterns: ["@tauri-apps/*"],
+          paths: [
+            {
+              name: "@repo/plugin-console",
+              message: "Use @repo/plugin-console/web to avoid desktop-only transitive imports in apps/web.",
+            },
+            {
+              name: "@repo/web-auth-device-session",
+              message: "Use @repo/web-auth-device-session/web to keep apps/web on browser-safe exports.",
+            },
+          ],
         },
       ],
     },

@@ -1,5 +1,5 @@
 import type { WebModuleRouteRegistration } from "@repo/core/types";
-import { createDefaultConsoleNavItems } from "@repo/plugin-console";
+import { createDefaultConsoleNavItems } from "@repo/plugin-console/web";
 import { ModuleRoutePlaceholderPage } from "../../pages/ModuleRoutePlaceholderPage";
 
 export const webModuleRouteRegistrations: WebModuleRouteRegistration[] = createDefaultConsoleNavItems().map((item) => ({

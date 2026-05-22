@@ -1,4 +1,4 @@
-import { WebAuthPage } from "@repo/web-auth-device-session";
+import { WebAuthPage } from "@repo/web-auth-device-session/web";
 
 export interface AuthPageProps {
   path: string;

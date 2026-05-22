@@ -1,4 +1,4 @@
-import { AppRouteGate, AuthRouteGate } from "@repo/web-auth-device-session";
+import { AppRouteGate, AuthRouteGate } from "@repo/web-auth-device-session/web";
 import { useLocation, useNavigate, useParams } from "react-router";
 import { createWebConsoleCapabilities } from "../host/capabilities";
 import { AppShellPage } from "../pages/AppShellPage";
