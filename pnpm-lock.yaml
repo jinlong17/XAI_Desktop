@@ -176,6 +176,9 @@ importers:
       '@repo/plugin-console':
         specifier: workspace:^
         version: link:../../packages/plugin-console
+      '@repo/plugin-productivity':
+        specifier: workspace:^
+        version: link:../../packages/plugin-productivity
       '@repo/web-auth-device-session':
         specifier: workspace:*
         version: link:../../packages/web-auth-device-session
