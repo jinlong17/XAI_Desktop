@@ -15,12 +15,33 @@ import type {
   RepoTransaction,
 } from "./types";
 
-export const SYNC_PROTOCOL_HEADER = "sync.protocol=1";
+export const SYNC_BLOB_ACCEPT_VERSION = "sync.protocol=1";
+export const SYNC_PROTOCOL_HEADER = SYNC_BLOB_ACCEPT_VERSION;
 
-export type SyncBlobFetch = (
-  input: RequestInfo | URL,
-  init?: RequestInit,
-) => Promise<Response>;
+export type SyncBlobErrorCode =
+  | "E_SYNC_BLOB_AUTH"
+  | "E_SYNC_BLOB_DEVICE_REVOKED"
+  | "E_SYNC_BLOB_CONFLICT"
+  | "E_SYNC_BLOB_UPGRADE_REQUIRED"
+  | "E_SYNC_BLOB_RATE_LIMITED"
+  | "E_SYNC_BLOB_PROTOCOL"
+  | "E_SYNC_BLOB_CRYPTO"
+  | "E_SYNC_BLOB_UNSUPPORTED";
+
+export class SyncBlobError extends Error {
+  constructor(
+    readonly code: SyncBlobErrorCode,
+    message: string,
+    readonly cause?: unknown,
+  ) {
+    super(`${code}: ${message}`);
+    this.name = "SyncBlobError";
+  }
+}
+
+export interface SyncBlobFetch {
+  (input: RequestInfo | URL, init?: RequestInit): Promise<Response>;
+}
 
 export interface SyncBlobCryptoEncryptInput<T extends RepoRecord> {
   record: T;
@@ -56,13 +77,14 @@ export interface RetryPolicy {
   jitterRatio?: number;
 }
 
-export interface SyncBlobRepoOptions<T extends RepoRecord> {
+export interface CreateSyncBlobRepoOptions<T extends RepoRecord> {
   namespace: string;
   accountId: string;
   deviceId: string;
   fetchSync: SyncBlobFetch;
   crypto: SyncBlobCryptoAdapter<T>;
   syncBaseUrl?: string;
+  encryptionDeviceId?: string;
   driverName?: string;
   schemaVersion?: number;
   migrationVersion?: number;
@@ -73,8 +95,8 @@ export interface SyncBlobRepoOptions<T extends RepoRecord> {
   sleepMs?: (ms: number) => Promise<void>;
 }
 
-export type CreateSyncBlobRepoOptions<T extends RepoRecord> =
-  SyncBlobRepoOptions<T>;
+export type SyncBlobRepoOptions<T extends RepoRecord> =
+  CreateSyncBlobRepoOptions<T>;
 
 export interface PullOptions {
   limit?: number;
@@ -148,41 +170,29 @@ const DEFAULT_RETRY_POLICY: RetryPolicy = {
   jitterRatio: 0.2,
 };
 
-export type SyncBlobErrorCode =
-  | "E_SYNC_BLOB_AUTH"
-  | "E_SYNC_BLOB_DEVICE_REVOKED"
-  | "E_SYNC_BLOB_CONFLICT"
-  | "E_SYNC_BLOB_UPGRADE_REQUIRED"
-  | "E_SYNC_BLOB_RATE_LIMITED"
-  | "E_SYNC_BLOB_PROTOCOL"
-  | "E_SYNC_BLOB_CRYPTO"
-  | "E_SYNC_BLOB_UNSUPPORTED";
-
-export class SyncBlobError extends Error {
-  constructor(
-    readonly code: SyncBlobErrorCode,
-    message: string,
-    readonly cause?: unknown,
-  ) {
-    super(`${code}: ${message}`);
-    this.name = "SyncBlobError";
-  }
-}
-
-export const SYNC_BLOB_ACCEPT_VERSION = SYNC_PROTOCOL_HEADER;
-
 export function createSyncBlobRepo<T extends RepoRecord>(
-  options: SyncBlobRepoOptions<T>,
+  options: CreateSyncBlobRepoOptions<T>,
 ): SyncBlobRepo<T> {
+  if (!options.namespace) {
+    throw new Error("E3005: sync-blob repo requires a namespace");
+  }
+  if (!options.accountId) {
+    throw new Error("E3005: sync-blob repo requires an accountId");
+  }
+  if (!options.deviceId) {
+    throw new Error("E3005: sync-blob repo requires a deviceId");
+  }
+
   const mirror = new Map<string, T>();
   const mirrorState = new Map<string, MirrorState>();
   const driverName = options.driverName ?? "sync-blob";
   const schemaVersion = options.schemaVersion ?? 1;
   const nowIso = options.nowIso ?? (() => new Date().toISOString());
   const nowMs = options.nowMs ?? Date.now;
-  const newMutationId = options.newMutationId ?? (() => crypto.randomUUID());
+  const newMutationId = options.newMutationId ?? defaultMutationId;
   const retry = mergeRetryPolicy(options.retry);
   const sleepMs = options.sleepMs ?? defaultSleep;
+  const encryptionDeviceId = options.encryptionDeviceId ?? options.deviceId;
   let migrationVersion = options.migrationVersion ?? 0;
   let lastCommitSeq = "0";
   const migrations: MigrationResult[] = [];
@@ -213,6 +223,14 @@ export function createSyncBlobRepo<T extends RepoRecord>(
     query?: RepoListQuery<T>,
   ): Promise<T[]> {
     return applyRepoIndexQuery(mirror.values(), field, value, query);
+  }
+
+  function syncState(): SyncBlobDriverState {
+    return {
+      lastCommitSeq,
+      pendingMutationCount: pending.length,
+      mirroredRecordCount: mirror.size,
+    };
   }
 
   async function pushPending(): Promise<void> {
@@ -378,7 +396,10 @@ export function createSyncBlobRepo<T extends RepoRecord>(
     }
 
     const payload = (await response.json()) as PullResponse;
-    if (!Array.isArray(payload.records) || typeof payload.next_commit_seq !== "string") {
+    if (
+      !Array.isArray(payload.records) ||
+      typeof payload.next_commit_seq !== "string"
+    ) {
       throw new SyncBlobError(
         "E_SYNC_BLOB_PROTOCOL",
         "pull response is missing required fields",
@@ -394,6 +415,7 @@ export function createSyncBlobRepo<T extends RepoRecord>(
         mirror.delete(row.entity_id);
         mirrorState.delete(row.entity_id);
       } else {
+        const envelope = tryParseEnvelopeHeader(row.blob);
         let decrypted: T;
         try {
           decrypted = await options.crypto.decryptRecord({
@@ -401,8 +423,9 @@ export function createSyncBlobRepo<T extends RepoRecord>(
             entityType: row.entity_type,
             entityId: row.entity_id,
             revision: row.revision,
-            keyId: row.key_id,
-            encryptionDeviceId: row.originator_device_id,
+            keyId: envelope?.keyId ?? row.key_id,
+            encryptionDeviceId:
+              envelope?.encryptionDeviceId ?? row.originator_device_id,
             deletedFlag: row.soft_deleted || row.hard_deleted,
           });
         } catch (error) {
@@ -424,6 +447,12 @@ export function createSyncBlobRepo<T extends RepoRecord>(
       lastCommitSeq = maxNumericString(lastCommitSeq, row.commit_seq);
     }
 
+    if (payload.current_account_commit_seq) {
+      lastCommitSeq = maxNumericString(
+        lastCommitSeq,
+        payload.current_account_commit_seq,
+      );
+    }
     lastCommitSeq = maxNumericString(lastCommitSeq, payload.next_commit_seq);
   }
 
@@ -431,25 +460,26 @@ export function createSyncBlobRepo<T extends RepoRecord>(
     record: T,
     stateView: Map<string, MirrorState> = mirrorState,
   ): Promise<PendingMutation<T>> {
-    const baseRevision = stateView.get(record.id)?.revision ?? null;
-    const proposedRevision = nextRevision(baseRevision);
+    const current = stateView.get(record.id);
+    const proposedRevision = nextRevision(current?.revision ?? null);
     const keyId = options.crypto.getCurrentKeyId();
 
     let blobBase64: string;
     try {
-      const encrypted = await options.crypto.encryptRecord({
-        record,
-        accountId: options.accountId,
-        keyId,
-        proposedRevision,
-        encryptionDeviceId: options.deviceId,
-        deletedFlag: false,
-      });
-      blobBase64 = encrypted.blobBase64;
+      blobBase64 = (
+        await options.crypto.encryptRecord({
+          record,
+          accountId: options.accountId,
+          keyId,
+          proposedRevision,
+          encryptionDeviceId,
+          deletedFlag: false,
+        })
+      ).blobBase64;
     } catch (error) {
       throw new SyncBlobError(
         "E_SYNC_BLOB_CRYPTO",
-        "failed to encrypt record for /sync/push",
+        "failed to encrypt /sync/push record",
         error,
       );
     }
@@ -458,7 +488,7 @@ export function createSyncBlobRepo<T extends RepoRecord>(
       mutationId: newMutationId(),
       entityType: record.entityType,
       entityId: record.id,
-      baseRevision,
+      baseRevision: current?.revision ?? null,
       proposedRevision,
       blobBase64,
       clientUpdatedAt: nowMs(),
@@ -469,49 +499,51 @@ export function createSyncBlobRepo<T extends RepoRecord>(
   }
 
   async function buildDeleteMutation(
-    current: T,
+    record: T,
     stateView: Map<string, MirrorState> = mirrorState,
   ): Promise<PendingMutation<T>> {
-    const baseRevision = stateView.get(current.id)?.revision ?? null;
-    const proposedRevision = nextRevision(baseRevision);
+    const current = stateView.get(record.id);
+    const proposedRevision = nextRevision(current?.revision ?? null);
     const keyId = options.crypto.getCurrentKeyId();
 
     let blobBase64: string;
     try {
-      const encrypted = await options.crypto.encryptRecord({
-        record: current,
-        accountId: options.accountId,
-        keyId,
-        proposedRevision,
-        encryptionDeviceId: options.deviceId,
-        deletedFlag: true,
-      });
-      blobBase64 = encrypted.blobBase64;
+      blobBase64 = (
+        await options.crypto.encryptRecord({
+          record,
+          accountId: options.accountId,
+          keyId,
+          proposedRevision,
+          encryptionDeviceId,
+          deletedFlag: true,
+        })
+      ).blobBase64;
     } catch (error) {
       throw new SyncBlobError(
         "E_SYNC_BLOB_CRYPTO",
-        "failed to encrypt delete envelope for /sync/push",
+        "failed to encrypt hard-delete tombstone",
         error,
       );
     }
 
     return {
       mutationId: newMutationId(),
-      entityType: current.entityType,
-      entityId: current.id,
-      baseRevision,
+      entityType: record.entityType,
+      entityId: record.id,
+      baseRevision: current?.revision ?? null,
       proposedRevision,
       blobBase64,
       clientUpdatedAt: nowMs(),
       softDelete: false,
       hardDelete: true,
+      optimisticRecord: record,
     };
   }
 
   async function pushBatchWithRetry(batch: PendingMutation<T>[]): Promise<void> {
     let attempt = 1;
 
-    for (;;) {
+    while (true) {
       const response = await options.fetchSync(
         toSyncUrl(options.syncBaseUrl, "/sync/push"),
         {
@@ -526,11 +558,43 @@ export function createSyncBlobRepo<T extends RepoRecord>(
       );
 
       if (response.ok) {
+        const payload = await safeReadJson(response);
+        if (Array.isArray(payload?.results)) {
+          for (const result of payload.results) {
+            const status =
+              typeof result?.status === "string" ? result.status : "ok";
+            if (
+              status === "ok" ||
+              status === "duplicate" ||
+              status === "duplicate_mutation_id"
+            ) {
+              continue;
+            }
+            if (status === "revision_mismatch") {
+              throw new SyncBlobError(
+                "E_SYNC_BLOB_CONFLICT",
+                "push results returned revision_mismatch",
+                result,
+              );
+            }
+            throw new SyncBlobError(
+              "E_SYNC_BLOB_PROTOCOL",
+              `unsupported push result status ${status}`,
+              result,
+            );
+          }
+        }
         return;
       }
 
       const error = await toSyncError(response);
-      const shouldRetry = await canRetry(attempt, error, response, retry, sleepMs);
+      const shouldRetry = await canRetry(
+        attempt,
+        error,
+        response,
+        retry,
+        sleepMs,
+      );
       if (!shouldRetry) {
         throw error;
       }
@@ -562,15 +626,15 @@ export function createSyncBlobRepo<T extends RepoRecord>(
         continue;
       }
 
-      const current = mutation.optimisticRecord ?? mirror.get(mutation.entityId);
-      if (!current) {
+      const record = mutation.optimisticRecord ?? mirror.get(mutation.entityId);
+      if (!record) {
         throw new SyncBlobError(
           "E_SYNC_BLOB_CONFLICT",
           `conflict refresh missing local record ${mutation.entityId}`,
         );
       }
 
-      const nextMutation = await buildPutMutation(current);
+      const nextMutation = await buildPutMutation(record);
       nextMutation.mutationId = mutation.mutationId;
       refreshed.push(nextMutation);
     }
@@ -581,11 +645,12 @@ export function createSyncBlobRepo<T extends RepoRecord>(
   function commitMutationState(batch: PendingMutation<T>[]): void {
     for (const mutation of batch) {
       if (mutation.hardDelete) {
+        mirror.delete(mutation.entityId);
         mirrorState.delete(mutation.entityId);
         continue;
       }
       if (mutation.optimisticRecord) {
-        mirror.set(mutation.optimisticRecord.id, mutation.optimisticRecord);
+        mirror.set(mutation.entityId, mutation.optimisticRecord);
       }
       mirrorState.set(mutation.entityId, {
         revision: mutation.proposedRevision,
@@ -629,11 +694,7 @@ export function createSyncBlobRepo<T extends RepoRecord>(
     migrate,
     pull,
     pushPending,
-    syncState: () => ({
-      lastCommitSeq,
-      pendingMutationCount: pending.length,
-      mirroredRecordCount: mirror.size,
-    }),
+    syncState,
   };
 }
 
@@ -697,7 +758,7 @@ function computeBackoffDelay(attempt: number, retry: RetryPolicy): number {
   }
 
   const jitter = clamped * jitterRatio;
-  const offset = (Math.random() * jitter * 2) - jitter;
+  const offset = Math.random() * jitter * 2 - jitter;
   return Math.max(0, Math.round(clamped + offset));
 }
 
@@ -740,7 +801,10 @@ function normalizePullLimit(limit?: number): number {
     return 200;
   }
   if (!Number.isInteger(limit) || limit < 1) {
-    throw new SyncBlobError("E_SYNC_BLOB_PROTOCOL", "pull limit must be >= 1 integer");
+    throw new SyncBlobError(
+      "E_SYNC_BLOB_PROTOCOL",
+      "pull limit must be >= 1 integer",
+    );
   }
   return limit;
 }
@@ -782,7 +846,9 @@ async function toSyncError(response: Response): Promise<SyncBlobError> {
   );
 }
 
-async function safeReadJson(response: Response): Promise<Record<string, unknown> | undefined> {
+async function safeReadJson(
+  response: Response,
+): Promise<Record<string, unknown> | undefined> {
   const raw = await response.text();
   if (!raw) {
     return undefined;
@@ -835,4 +901,59 @@ function maxNumericString(left: string, right: string): string {
   } catch {
     return left;
   }
+}
+
+function tryParseEnvelopeHeader(blobBase64: string): {
+  keyId: number;
+  encryptionDeviceId: string;
+} | undefined {
+  try {
+    const bytes = decodeBase64(blobBase64);
+    if (bytes.length < 18 || bytes[0] !== 1 || bytes[1] !== 1) {
+      return undefined;
+    }
+    const keyId =
+      bytes[2]! |
+      (bytes[3]! << 8) |
+      (bytes[4]! << 16) |
+      (bytes[5]! << 24);
+    let encryptionDeviceId = 0n;
+    for (let index = 0; index < 8; index += 1) {
+      encryptionDeviceId |= BigInt(bytes[6 + index]!) << BigInt(index * 8);
+    }
+    return {
+      keyId,
+      encryptionDeviceId: encryptionDeviceId.toString(),
+    };
+  } catch {
+    return undefined;
+  }
+}
+
+function decodeBase64(input: string): Uint8Array {
+  const bufferCtor = (
+    globalThis as typeof globalThis & {
+      Buffer?: { from(input: string, encoding: "base64"): Uint8Array };
+    }
+  ).Buffer;
+  if (bufferCtor) {
+    return Uint8Array.from(bufferCtor.from(input, "base64"));
+  }
+
+  const binary = atob(input);
+  const out = new Uint8Array(binary.length);
+  for (let index = 0; index < binary.length; index += 1) {
+    out[index] = binary.charCodeAt(index);
+  }
+  return out;
+}
+
+function defaultMutationId(): string {
+  const cryptoObject = globalThis.crypto as
+    | (Crypto & { randomUUID?: () => string })
+    | undefined;
+  if (cryptoObject?.randomUUID) {
+    return cryptoObject.randomUUID();
+  }
+  return `mutation-${Date.now()}-${Math.random().toString(16).slice(2)}`;
 }
