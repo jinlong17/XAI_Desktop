@@ -8,13 +8,13 @@
 | Target | web-browser-e2e-crypto-runtime |
 | Title | W3 browser-side E2E crypto runtime |
 | Roadmap | web-ticktick-parity · feature #7 · W3 |
-| Status | READY_FOR_VERIFY |
-| Current Phase | FEATURE_VERIFY |
-| Suggested Next | feature-verify |
+| Status | SHIPPED |
+| Current Phase | SHIP |
+| Suggested Next | workflow complete |
 | Automation Mode | A-Claude |
 | Verify Cross-vendor | no |
-| Executor | feature-auto-build (Codex GPT-5.3-codex inline) |
-| Updated | 2026-05-21 16:39 PDT |
+| Executor | ship (Codex parent session) |
+| Updated | 2026-05-21 22:56 PDT |
 | Blockers | None |
 
 ## Source Context
@@ -185,6 +185,18 @@ Repair verification run:
 - `pnpm --filter @repo/web-browser-e2e-crypto-runtime test` passed (11 files, 31 tests).
 - Repair commit: `af7ad24` — `fix(web-browser-crypto): align KEK contract and vector gates`.
 
+feature-verify (Codex GPT-5 inline), 2026-05-21 16:46 PDT. Verdict: PASS.
+
+- Re-ran `pnpm --filter @repo/web-browser-e2e-crypto-runtime check-types` and `pnpm --filter @repo/web-browser-e2e-crypto-runtime test`; both passed after the repair state commit (`a789658`), with 11/11 test files and 31/31 tests green.
+- Rechecked the prior blockers against source and tests:
+  - KEK derivation now uses `Argon2id(password=masterPassword, salt=kek_salt, secret=secret_key, ...)` in `src/internal/argon2.ts`.
+  - Vector/transition gates now match the repaired docs: keyed Argon2 gate, deterministic HPKE reference-wrap gate, two unlock transitions, and one first lock transition.
+  - `813205c` remains a documented rescue exception rather than a phase-pure build commit, but the provenance note is explicit, the later phase commits stay within their declared boundaries, and no history rewrite is required for ship.
+- Scope-creep scan still passes: no `/auth/me` fetch, no device register or donor grant orchestration, no `apps/web` app-shell logic, and no public `encrypted_dek` unlock API.
+- Residual risks:
+  - Verify Cross-vendor remains `no`; no independent cross-vendor crypto pass was requested for this row.
+  - Verification is package-local (`check-types` + Vitest) and does not cover live downstream browser integration beyond the local WebCrypto-capable runtime.
+
 ## Work Log
 
 | Timestamp | Executor | Action | Commits | Next |
@@ -200,3 +212,5 @@ Repair verification run:
 | 2026-05-21 16:26 PDT | feature-auto-build (Codex GPT-5 inline) | Phase 3 complete: implemented deterministic CBOR AAD builder, envelope encode/decode with nonce reconstruction (`encryption_device_id || counter`), AES-GCM encrypt/decrypt helpers on unlocked DEK sessions, and negative gates for wrong AAD/tag/blob swap. Evidence: local vector asserts fixed envelope bytes and decrypt failures under swapped/tampered context. | `40f6905` — `feat(web-browser-crypto): Phase 3 — AES-GCM envelope helpers` | feature-verify |
 | 2026-05-21 16:30 PDT | feature-verify (Codex GPT-5 inline) | Verification pass blocked ship. Re-ran package typecheck/tests, reviewed build commits `813205c`, `10c8b8a`, `40f6905`, and `4129722`, and checked implementation against the approved Sync v0.6/runtime contracts. Found three blockers: KEK derivation uses `password = masterPassword || secretKey` instead of Argon2 `secret=secret_key`; RFC 9106 / RFC 9180 gates plus the documented single unlock transition are not actually what the test suite verifies; and the Phase 1 rescue commit includes planning/docs files outside the declared phase boundary. | `813205c`, `10c8b8a`, `40f6905`, `4129722` | feature-build |
 | 2026-05-21 16:39 PDT | feature-auto-build (Codex GPT-5.3-codex inline) | Verify-blocker repair pass complete: switched KEK derivation to Argon2 `secret` contract wiring, replaced self-generated Argon2/HPKE vector gates with keyed/reference-vector assertions, aligned transition contract docs to two unlock transitions + first-lock emission semantics, and documented `813205c` rescue-commit provenance without rewriting history. Tests: `pnpm --filter @repo/web-browser-e2e-crypto-runtime check-types`; `pnpm --filter @repo/web-browser-e2e-crypto-runtime test` (11 files, 31 tests). | `af7ad24` — `fix(web-browser-crypto): align KEK contract and vector gates` | feature-verify |
+| 2026-05-21 16:46 PDT | feature-verify (Codex GPT-5 inline) | Final verification passed. Re-ran package typecheck/tests after `a789658`, reviewed commits `813205c`, `10c8b8a`, `40f6905`, `4129722`, `af7ad24`, and `a789658`, confirmed the KEK/vector/transition blockers are resolved, rechecked forbidden scope surfaces, and accepted `813205c` as a documented one-off rescue exception with adequate provenance for ship. | `813205c`, `10c8b8a`, `40f6905`, `4129722`, `af7ad24`, `a789658` | ship |
+| 2026-05-21 22:56 PDT | ship (Codex parent session) | Batch ship pass with sibling W3 auth row: revalidated `READY_TO_SHIP`, preserved the verified feature commit chain on `main`, reconciled roadmap row #7, and marked workflow `SHIPPED`. Push scope intentionally includes the adjacent `web-auth-device-session` W3 row because both verified feature chains are already contiguous on local `main` ahead of `origin/main`. | `813205c`, `10c8b8a`, `40f6905`, `4129722`, `af7ad24`, `a789658`; ship-state docs commit | workflow complete |
