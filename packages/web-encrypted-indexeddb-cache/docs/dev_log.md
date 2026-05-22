@@ -8,15 +8,15 @@
 | Target | web-encrypted-indexeddb-cache |
 | Title | W5 Encrypted IndexedDB cache and memory-only FTS boundary for Web |
 | Roadmap | `web-ticktick-parity` · feature #9 · W5 |
-| Current Phase | FEATURE_VERIFY |
-| Status | READY_TO_SHIP |
-| Suggested Next | ship |
+| Current Phase | SHIP |
+| Status | SHIPPED |
+| Suggested Next | — |
 | Automation Mode | A-Claude |
 | Verify Cross-vendor | no |
-| Executor | feature-verify (Codex gpt-5.4 inline) |
-| Updated | 2026-05-22 11:17 PDT |
+| Executor | ship (Codex gpt-5.3-codex) |
+| Updated | 2026-05-22 11:28 PDT |
 | Blockers | — |
-| Review Notes | Verification passed on the current shared worktree. The revised discovery/design/api/test docs still match the live `@repo/core-data` boundary: raw IndexedDB durable stores, encrypted-only queue rows, durable-before-push persistence, locked bootstrap/pull no-decrypt behavior, and a memory-only search worker. Fresh verification on this pass reran the targeted IndexedDB suite (11/11), full `@repo/core-data` suite (104/104), and `check-types` successfully. Roadmap tracker can remain `PENDING` until `ship` records the final state transition.
+| Review Notes | Ship completed. Pushed the feature implementation commit to `origin/main` and finalized ship-state docs updates for this feature row.
 
 ## Phase Plan
 
@@ -106,3 +106,4 @@ Gate:
 | 2026-05-22 11:03 PDT | feature-plan (Codex gpt-5.3-codex inline) | Revise pass: updated discovery/design/api/test/dev_log to match the live `@repo/core-data` implementation and close the prior `feature-review` blockers. The accepted planning boundary is now raw IndexedDB durable stores plus a minimal in-memory search worker, with encrypted-only queue persistence, durable-before-push ordering, and locked-mode no-decrypt behavior explicitly documented. | — | feature-review |
 | 2026-05-22 11:09 PDT | feature-review (Codex gpt-5.4 inline) | Approved the revised planning set. Rechecked discovery/design/api/test docs against `packages/core-data/src/indexeddb-sync-blob.ts` and `packages/core-data/tests/indexeddb-sync-blob.test.ts`; the prior blocker areas are now aligned and executable. Validation rerun on this pass: `pnpm --filter @repo/core-data exec vitest run tests/indexeddb-sync-blob.test.ts` (11 passed), `pnpm --filter @repo/core-data test` (104 passed), and `pnpm --filter @repo/core-data check-types`. | — | feature-build |
 | 2026-05-22 11:17 PDT | feature-verify (Codex gpt-5.4 inline) | Verify-after-phases pass on the current shared worktree: rechecked the revised docs package against the live `packages/core-data` implementation, confirmed the encrypted queue / durable-before-push / locked no-decrypt guarantees still hold, and reran `pnpm --filter @repo/core-data exec vitest run tests/indexeddb-sync-blob.test.ts` (11 passed), `pnpm --filter @repo/core-data test` (104 passed), and `pnpm --filter @repo/core-data check-types` (passed). No new blockers found; feature is ready for ship and the roadmap row should stay `PENDING` until ship updates it. | — | ship |
+| 2026-05-22 11:28 PDT | ship (Codex gpt-5.3-codex) | Completed ship gate for this feature: verified `READY_TO_SHIP`, created/pushed implementation commit `48ca6ac`, and advanced feature workflow state to `SHIPPED` with roadmap row update prepared. | 48ca6ac | workflow complete |
