@@ -104,6 +104,7 @@ export function GridItem({ item, variant = "grid", onUpdate, onCreateTask, onRem
 
   const style: CSSProperties = {
     ...baseItemStyle,
+    minWidth: 0,
     opacity: isDragging ? 0.58 : 1,
     transform: transform ? `translate3d(${transform.x}px, ${transform.y}px, 0)` : undefined,
     flexDirection: variant === "list" ? "row" : "column",
@@ -178,7 +179,14 @@ export function GridItem({ item, variant = "grid", onUpdate, onCreateTask, onRem
           <DesktopIcon name={iconName} size={16} />
         )}
       </div>
-      <div style={{ textAlign: variant === "list" ? "left" : "center", minWidth: 0, flex: 1 }}>
+      <div
+        style={{
+          textAlign: variant === "list" ? "left" : "center",
+          minWidth: 0,
+          width: variant === "grid" ? "100%" : undefined,
+          flex: 1,
+        }}
+      >
         <div
           style={{
             fontWeight: typographyTokens.fontWeightSemibold,
