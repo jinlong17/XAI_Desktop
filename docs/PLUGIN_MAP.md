@@ -62,7 +62,7 @@
 |---------|------|------|------|---------|
 | @repo/core | packages/core/ | Stable | 基础设施 + 类型 + 事件 + Registry | 2026-05-14 |
 | @repo/ui | packages/ui/ | In-Dev | 共享 UI 组件库 + desktop design tokens/icons baseline | 2026-05-21 |
-| @repo/core-data | packages/core-data/ | In-Dev | Sync 数据访问 + SQLite driver boundary. Surfaces `secretSet/secretGet/secretDel`, `createSqliteRepo`, localStorage migration, mutation hook, and `@repo/core-data/testing`; real SQLCipher runtime binding deferred. Consumers mock until Stable. | 2026-05-19 |
+| @repo/core-data | packages/core-data/ | In-Dev | Sync 数据访问 + SQLite/Web Sync blob driver boundary. Surfaces `secretSet/secretGet/secretDel`, `createSqliteRepo`, `createSyncBlobRepo`, localStorage migration, mutation hook, explicit sync `pull()/pushPending()/syncState()` seams, and `@repo/core-data/testing`; real SQLCipher/browser-runtime acceptance is still deferred. Consumers mock until Stable. | 2026-05-22 |
 
 ## Plugins
 
