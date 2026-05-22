@@ -65,6 +65,7 @@ export interface TodoEntity extends RepoRecord {
   dueAt?: string;
   notes?: string;
   projectId?: string;
+  deletedAt?: string;
 }
 
 export interface HabitEntity extends RepoRecord {
