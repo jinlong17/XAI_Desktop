@@ -9,12 +9,12 @@
 | Title | W4 Web Sync blob driver for `@repo/core-data` |
 | Roadmap | `web-ticktick-parity` · feature #8 · W4 |
 | Current Phase | FEATURE_VERIFY |
-| Status | READY_TO_SHIP |
-| Suggested Next | ship |
+| Status | READY_FOR_VERIFY |
+| Suggested Next | feature-verify |
 | Automation Mode | A-Claude |
 | Verify Cross-vendor | no |
-| Executor | feature-verify (Codex gpt-5.3-codex inline) |
-| Updated | 2026-05-22 00:46 PDT |
+| Executor | feature-build (Codex gpt-5.3-codex inline) |
+| Updated | 2026-05-22 00:51 PDT |
 | Blockers | — |
 
 ## Phase Plan
@@ -101,3 +101,4 @@ Gate:
 | 2026-05-22 00:20 PDT | feature-review (Codex gpt-5.3-codex inline) | Final review pass after the requested header-contract revision: verified the generated plan artifacts against the upstream preflight/auth/PRD/core-data sources, confirmed `X-Sync-Version` is absent from active build-gating requirements, and kept the row APPROVED for `feature-build`. | — | feature-build |
 | 2026-05-22 00:46 PDT | feature-auto-build (Codex gpt-5.3-codex inline fallback) | Reconciled the approved phase plan against the existing `@repo/core-data` implementation already present on `main`. Phase 1 maps to `7a26f5d`, Phase 2 maps to `d653181`, Phase 3 maps to `b72b234`, and `4ac3e24` preserves the current contract surface. Updated `design.md`, `api.md`, `test.md`, and this dev log so the feature docs match the actual `deviceId` seam, explicit `pull()` / `pushPending()` / `syncState()` runtime shape, and current verification surface. Validation run: `pnpm --filter @repo/core-data check-types`; `pnpm --filter @repo/core-data test` (93 passed). | `321f469` | feature-verify |
 | 2026-05-22 00:46 PDT | feature-verify (Codex gpt-5.3-codex inline) | Verification PASS. Reviewed existing runtime commits `7a26f5d`, `d653181`, `b72b234`, and `4ac3e24` against the approved docs, then re-ran `pnpm --filter @repo/core-data check-types` and `pnpm --filter @repo/core-data test` (93 passed). The driver remains inside `packages/core-data/`, never hits business-table CRUD, and preserves the canonical `/sync/*` contract `Authorization` + `X-Device-Id` + `Accept-Version: sync.protocol=1`. | `321f469`; reviewed runtime commits `7a26f5d`, `d653181`, `b72b234`, `4ac3e24` | ship |
+| 2026-05-22 00:51 PDT | feature-build (Codex gpt-5.3-codex inline) | Verify-repair pass for BLOCKED feedback: replaced mixed commit `4ac3e24` with single-intent commits for review docs and runtime hardening, then re-ran `pnpm --filter @repo/core-data test` and `pnpm --filter @repo/core-data check-types` (pass). | `5638003`, `4a554e1` | feature-verify |
