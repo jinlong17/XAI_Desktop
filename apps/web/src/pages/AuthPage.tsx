@@ -1,4 +1,4 @@
-import { AuthRouteGate, WebAuthPage } from "@repo/web-auth-device-session";
+import { WebAuthPage } from "@repo/web-auth-device-session";
 
 export interface AuthPageProps {
   path: string;
@@ -6,9 +6,5 @@ export interface AuthPageProps {
 }
 
 export function AuthPage({ path, search }: AuthPageProps) {
-  return (
-    <AuthRouteGate fallback={<main className="host-page"><p>Redirecting...</p></main>}>
-      <WebAuthPage path={path} search={search} />
-    </AuthRouteGate>
-  );
+  return <WebAuthPage path={path} search={search} />;
 }

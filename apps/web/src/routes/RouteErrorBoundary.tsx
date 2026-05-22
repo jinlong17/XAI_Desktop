@@ -1,0 +1,28 @@
+import { isRouteErrorResponse, useRouteError } from "react-router";
+
+export interface RouteErrorBoundaryProps {
+  scope: "root" | "auth" | "app";
+}
+
+function resolveErrorMessage(error: unknown): string {
+  if (isRouteErrorResponse(error)) {
+    return `${error.status} ${error.statusText}`;
+  }
+
+  if (error instanceof Error) {
+    return error.message;
+  }
+
+  return "unknown_route_error";
+}
+
+export function RouteErrorBoundary({ scope }: RouteErrorBoundaryProps) {
+  const error = useRouteError();
+
+  return (
+    <main className="host-page">
+      <h1>Route Error ({scope})</h1>
+      <p>{resolveErrorMessage(error)}</p>
+    </main>
+  );
+}

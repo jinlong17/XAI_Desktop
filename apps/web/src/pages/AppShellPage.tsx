@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { AppRouteGate, useDeviceBoundFetch, useWebAuthSession } from "@repo/web-auth-device-session";
+import { useDeviceBoundFetch, useWebAuthSession } from "@repo/web-auth-device-session";
 
 export interface AppShellPageProps {
   path: string;
@@ -31,24 +31,16 @@ export function AppShellPage({ path }: AppShellPageProps) {
   }
 
   return (
-    <AppRouteGate
-      path={path}
-      fallback={
-        <main className="host-page">
-          <p>Checking session...</p>
-        </main>
-      }
-    >
-      <main className="host-page">
-        <h1>App Shell</h1>
-        <p>Guarded app host placeholder for future module mounting.</p>
-        <p>session: {state}</p>
-        <p>device: {deviceId ?? "pending"}</p>
-        <button type="button" onClick={probeDeviceSession}>
-          Probe device-bound request
-        </button>
-        <p>probe: {probeResult}</p>
-      </main>
-    </AppRouteGate>
+    <main className="host-page">
+      <h1>App Shell</h1>
+      <p>Guarded app host placeholder for future module mounting.</p>
+      <p>route: {path}</p>
+      <p>session: {state}</p>
+      <p>device: {deviceId ?? "pending"}</p>
+      <button type="button" onClick={probeDeviceSession}>
+        Probe device-bound request
+      </button>
+      <p>probe: {probeResult}</p>
+    </main>
   );
 }
