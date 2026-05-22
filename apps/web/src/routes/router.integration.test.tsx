@@ -72,19 +72,19 @@ beforeAll(() => {
 
 describe("web host router integration", () => {
   it("renders authenticated module deep links and survives remount refresh", async () => {
-    const first = await mountRouter(["/app/todos/inbox"]);
+    const first = await mountRouter(["/app/todos/smart:inbox"]);
     expect(first.container.textContent).toContain("active module: todos");
-    expect(first.container.textContent).toContain("Module route: /app/todos/inbox");
+    expect(first.container.textContent).toContain("Todos");
     await unmountApp(first);
 
-    const second = await mountRouter(["/app/todos/inbox"]);
+    const second = await mountRouter(["/app/todos/smart:inbox"]);
     expect(second.container.textContent).toContain("active module: todos");
-    expect(second.container.textContent).toContain("Module route: /app/todos/inbox");
+    expect(second.container.textContent).toContain("Todos");
     await unmountApp(second);
   });
 
   it("resolves route families consistently across history entries", async () => {
-    const historyEntries = ["/", "/auth/login", "/app/todos/inbox"];
+    const historyEntries = ["/", "/auth/login", "/app/todos/smart:inbox"];
 
     const app = await mountRouter(historyEntries, 2);
     expect(app.container.textContent).toContain("active module: todos");
@@ -100,13 +100,13 @@ describe("web host router integration", () => {
   });
 
   it("keeps app shell stable when invoking unsupported capability stubs", async () => {
-    const app = await mountRouter(["/app/todos/inbox"]);
+    const app = await mountRouter(["/app/todos/smart:inbox"]);
 
     await act(async () => {
       findButton(app.container, "Unsupported Native Stub").dispatchEvent(new MouseEvent("click", { bubbles: true }));
     });
     expect(app.container.textContent).toContain("active module: todos");
-    expect(app.container.textContent).toContain("Module route: /app/todos/inbox");
+    expect(app.container.textContent).toContain("Todos");
 
     await unmountApp(app);
   });
