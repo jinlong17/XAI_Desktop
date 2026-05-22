@@ -14,7 +14,7 @@
 | Automation Mode | A-Claude |
 | Verify Cross-vendor | no |
 | Executor | feature-auto-build (Codex gpt-5.3-codex inline) |
-| Updated | 2026-05-22 00:38 PDT |
+| Updated | 2026-05-22 00:40 PDT |
 | Blockers | — |
 
 ## Phase Plan
@@ -66,7 +66,7 @@ Gate:
 
 - downstream Web rows can depend on `@repo/core-data` rather than inventing their own repository layer
 - completion evidence:
-  - commit: current Phase 3 hardening commit in this run
+  - commit `b72b234` (`feat(core-data): Phase 3 - harden sync metadata and handoff seam`)
   - added `syncState()` seam (`lastCommitSeq`, pending count, mirror count)
   - migration-failure rollback semantics verified without `migrationVersion` drift
   - feature docs updated for downstream `web-encrypted-indexeddb-cache` adoption seam
@@ -119,4 +119,4 @@ Gate:
 | 2026-05-22 00:20 PDT | feature-review (Codex gpt-5.3-codex inline) | Final review pass after the requested header-contract revision: verified the generated plan artifacts against the upstream preflight/auth/PRD/core-data sources, confirmed `X-Sync-Version` is absent from active build-gating requirements, and kept the row APPROVED for `feature-build`. | — | feature-build |
 | 2026-05-22 00:34 PDT | feature-auto-build (Codex gpt-5.3-codex inline) | Phase 1 completed (`Driver scaffold and repository-contract mirror`): implemented `createSyncBlobRepo` in `packages/core-data`, wired local mirror CRUD/transaction/migrate semantics, added `/sync/*` request scaffolding with driver-owned `Accept-Version: sync.protocol=1`, and ran repository-contract + transport-baseline tests with deterministic mock transport/crypto. | `7a26f5d` | feature-auto-build |
 | 2026-05-22 00:37 PDT | feature-auto-build (Codex gpt-5.3-codex inline) | Phase 2 completed (`Pull/push transport, status handling, and idempotent retries`): added explicit `401/403/409/426/429` + `version_required` mapping, conflict refresh path, retry/backoff handling with stable `mutation_id`, and header assertions proving requests carry injected `Authorization`/`X-Device-Id` plus driver-owned `Accept-Version`. | `d653181` | feature-auto-build |
-| 2026-05-22 00:38 PDT | feature-auto-build (Codex gpt-5.3-codex inline) | Phase 3 completed (`Contract hardening and downstream handoff`): hardened conflict mirror consistency, exported sync cursor state seam (`syncState()`), verified migration rollback invariants, updated design/api/test docs for downstream cache handoff, and re-ran core-data tests and typecheck to confirm repository-contract parity after conflict/retry logic. | current Phase 3 hardening commit | feature-verify |
+| 2026-05-22 00:38 PDT | feature-auto-build (Codex gpt-5.3-codex inline) | Phase 3 completed (`Contract hardening and downstream handoff`): hardened conflict mirror consistency, exported sync cursor state seam (`syncState()`), verified migration rollback invariants, updated design/api/test docs for downstream cache handoff, and re-ran core-data tests and typecheck to confirm repository-contract parity after conflict/retry logic. | `b72b234` | feature-verify |
