@@ -1,5 +1,5 @@
 import type { WebModuleRouteProps } from "@repo/core/types";
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { RepoAdapter } from "../data/RepoAdapter";
 import { TodoStoreProvider, useTodoStore } from "../hooks/useTodoStore";
 import type { Todo } from "../types";
@@ -13,7 +13,57 @@ import {
 } from "./browserTodoRepo";
 
 const LIST_IDS = ["smart:inbox", "smart:today", "smart:done"] as const;
+const TODO_RUNTIME_EVENT = "xai:web:todo-runtime-updated";
+
 type SmartListId = (typeof LIST_IDS)[number];
+type TodoRuntimeLane = "loading" | "locked" | "ready" | "error";
+
+interface TodoSessionRuntimeSnapshot {
+  authState?: string;
+  accountId?: string;
+  deviceId?: string;
+  fetchSync?: (input: RequestInfo | URL, init?: RequestInit) => Promise<Response>;
+}
+
+interface TodoRuntimeState {
+  lane: TodoRuntimeLane;
+  reason: string;
+  accountId: string | null;
+  deviceId: string | null;
+  fetchSync: ((input: RequestInfo | URL, init?: RequestInit) => Promise<Response>) | null;
+}
+
+function isObject(value: unknown): value is Record<string, unknown> {
+  return typeof value === "object" && value !== null;
+}
+
+function readText(source: Record<string, unknown>, key: string): string | null {
+  const value = source[key];
+  if (typeof value === "string" && value.trim().length > 0) {
+    return value.trim();
+  }
+  return null;
+}
+
+function readTodoSessionRuntime(): TodoSessionRuntimeSnapshot {
+  const runtime = globalThis as unknown as {
+    __XAI_WEB_TODO_SESSION__?: unknown;
+  };
+
+  const raw = runtime.__XAI_WEB_TODO_SESSION__;
+  if (!isObject(raw)) {
+    return {};
+  }
+
+  const authState = readText(raw, "authState") ?? undefined;
+  const accountId = readText(raw, "accountId") ?? undefined;
+  const deviceId = readText(raw, "deviceId") ?? undefined;
+  const fetchSync = typeof raw.fetchSync === "function"
+    ? raw.fetchSync as (input: RequestInfo | URL, init?: RequestInit) => Promise<Response>
+    : undefined;
+
+  return { authState, accountId, deviceId, fetchSync };
+}
 
 function parseTodoRoute(childPath: string): { listId: SmartListId; todoId?: string } {
   const segments = childPath.split("/").map((segment) => segment.trim()).filter(Boolean);
@@ -67,11 +117,35 @@ function createCryptoLockedError(): Error {
   return new Error("todo_crypto_locked:unlock_required_for_writes");
 }
 
-function WebTodoModuleInner({ childPath, capabilities, writeReady }: WebModuleRouteProps & { writeReady: boolean }) {
+function createRepoUnavailableError(reason: string): Error {
+  return new Error(reason || "todo_repo_unavailable");
+}
+
+function runtimeMessage(lane: TodoRuntimeLane, reason: string): string {
+  if (lane === "loading") {
+    return reason || "todo_runtime_loading";
+  }
+  if (lane === "locked") {
+    return reason || "todo_crypto_locked:unlock_required_for_writes";
+  }
+  if (lane === "error") {
+    return reason || "todo_repo_unavailable";
+  }
+  return "todo_runtime_ready";
+}
+
+function WebTodoModuleInner({
+  childPath,
+  capabilities,
+  runtime,
+}: WebModuleRouteProps & {
+  runtime: TodoRuntimeState;
+}) {
   const route = parseTodoRoute(childPath);
   const { todos, isLoading, error, createTodo, updateTodo, deleteTodo, setStatus } = useTodoStore();
   const [draftTitle, setDraftTitle] = useState("");
   const [draftNotes, setDraftNotes] = useState("");
+  const writeReady = runtime.lane === "ready";
 
   const visibleTodos = useMemo(() => {
     const active = todos.filter((todo) => !todo.deletedAt);
@@ -140,7 +214,7 @@ function WebTodoModuleInner({ childPath, capabilities, writeReady }: WebModuleRo
         ))}
       </header>
 
-      {!writeReady ? <p>todo_crypto_locked:unlock_required_for_writes</p> : null}
+      <p data-testid="todo-runtime-lane">{runtimeMessage(runtime.lane, runtime.reason)}</p>
 
       <div style={{ display: "grid", gridTemplateColumns: "minmax(0, 1fr) minmax(0, 1fr)", gap: 12 }}>
         <section style={{ border: "1px solid #e5e7eb", borderRadius: 8, padding: 10, display: "grid", gap: 8 }}>
@@ -210,36 +284,172 @@ function WebTodoModuleInner({ childPath, capabilities, writeReady }: WebModuleRo
 }
 
 export function TodoWebModuleRoute(props: WebModuleRouteProps) {
-  const repo = useMemo(() => createBrowserTodoRepo(), []);
+  const [runtimeRevision, setRuntimeRevision] = useState(0);
+
+  useEffect(() => {
+    const notify = () => {
+      setRuntimeRevision((value) => value + 1);
+    };
+
+    if (typeof window !== "undefined") {
+      window.addEventListener(TODO_RUNTIME_EVENT, notify);
+    }
+
+    return () => {
+      if (typeof window !== "undefined") {
+        window.removeEventListener(TODO_RUNTIME_EVENT, notify);
+      }
+    };
+  }, []);
+
+  const runtimeSession = useMemo(
+    () => readTodoSessionRuntime(),
+    [runtimeRevision],
+  );
+
+  const runtime = useMemo<TodoRuntimeState>(() => {
+    if (runtimeSession.authState === "loading") {
+      return {
+        lane: "loading",
+        reason: "todo_session_loading",
+        accountId: null,
+        deviceId: null,
+        fetchSync: null,
+      };
+    }
+
+    if (runtimeSession.authState !== "authenticated") {
+      return {
+        lane: "locked",
+        reason: "todo_device_session_missing",
+        accountId: null,
+        deviceId: null,
+        fetchSync: null,
+      };
+    }
+
+    if (!runtimeSession.accountId) {
+      return {
+        lane: "locked",
+        reason: "todo_device_session_missing",
+        accountId: null,
+        deviceId: null,
+        fetchSync: null,
+      };
+    }
+
+    if (!runtimeSession.deviceId) {
+      return {
+        lane: "loading",
+        reason: "todo_device_identity_loading",
+        accountId: runtimeSession.accountId,
+        deviceId: null,
+        fetchSync: null,
+      };
+    }
+
+    if (!runtimeSession.fetchSync) {
+      return {
+        lane: "loading",
+        reason: "todo_device_session_loading",
+        accountId: runtimeSession.accountId,
+        deviceId: runtimeSession.deviceId,
+        fetchSync: null,
+      };
+    }
+
+    const lane: TodoRuntimeLane = isTodoWriteReady() ? "ready" : "locked";
+    return {
+      lane,
+      reason: lane === "ready" ? "todo_runtime_ready" : "todo_crypto_locked:unlock_required_for_writes",
+      accountId: runtimeSession.accountId,
+      deviceId: runtimeSession.deviceId,
+      fetchSync: runtimeSession.fetchSync,
+    };
+  }, [runtimeSession]);
 
   const adapter = useMemo(() => {
+    if (!runtime.accountId || !runtime.deviceId || !runtime.fetchSync) {
+      const unavailable = createRepoUnavailableError(runtime.reason);
+      return {
+        getAll: async () => {
+          throw unavailable;
+        },
+        getById: async () => {
+          throw unavailable;
+        },
+        save: async () => {
+          throw unavailable;
+        },
+        delete: async () => {
+          throw unavailable;
+        },
+      };
+    }
+
+    let repo;
+    try {
+      repo = createBrowserTodoRepo({
+        accountId: runtime.accountId,
+        deviceId: runtime.deviceId,
+        fetchSync: runtime.fetchSync,
+      });
+    } catch (error) {
+      const unavailable = createRepoUnavailableError(error instanceof Error ? error.message : runtime.reason);
+      return {
+        getAll: async () => {
+          throw unavailable;
+        },
+        getById: async () => {
+          throw unavailable;
+        },
+        save: async () => {
+          throw unavailable;
+        },
+        delete: async () => {
+          throw unavailable;
+        },
+      };
+    }
+
     const base = new RepoAdapter<WebTodoRecord>(repo, { entityType: "productivity.todo", orderBy: "createdAt" });
 
     return {
       getAll: async () => (await base.getAll()).filter((record) => !isDeleted(record)).map(toTodoModel),
       getById: async (id: string) => {
         const record = await base.getById(id);
-        return record ? toTodoModel(record) : null;
+        if (!record || isDeleted(record)) {
+          return null;
+        }
+        return toTodoModel(record);
       },
       save: async (todo: Todo) => {
-        if (!isTodoWriteReady()) {
+        if (runtime.lane !== "ready" || !isTodoWriteReady()) {
           throw createCryptoLockedError();
         }
         const next = fromTodoModel({ ...todo, id: todo.id || createWebTodoId() });
         await base.save(next);
       },
       delete: async (id: string) => {
-        if (!isTodoWriteReady()) {
+        if (runtime.lane !== "ready" || !isTodoWriteReady()) {
           throw createCryptoLockedError();
         }
-        await base.delete(id);
+        const record = await base.getById(id);
+        if (!record) {
+          return;
+        }
+        await base.save({
+          ...record,
+          deletedAt: new Date().toISOString(),
+          updatedAt: new Date().toISOString(),
+        });
       },
     };
-  }, [repo]);
+  }, [runtime]);
 
   return (
     <TodoStoreProvider adapter={adapter}>
-      <WebTodoModuleInner {...props} writeReady={isTodoWriteReady()} />
+      <WebTodoModuleInner {...props} runtime={runtime} />
     </TodoStoreProvider>
   );
 }
