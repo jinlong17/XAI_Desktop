@@ -73,6 +73,9 @@ export interface SyncBlobRepoOptions<T extends RepoRecord> {
   sleepMs?: (ms: number) => Promise<void>;
 }
 
+export type CreateSyncBlobRepoOptions<T extends RepoRecord> =
+  SyncBlobRepoOptions<T>;
+
 export interface PullOptions {
   limit?: number;
 }
@@ -138,7 +141,7 @@ const DEFAULT_RETRY_POLICY: RetryPolicy = {
   jitterRatio: 0.2,
 };
 
-type SyncBlobErrorCode =
+export type SyncBlobErrorCode =
   | "E_SYNC_BLOB_AUTH"
   | "E_SYNC_BLOB_DEVICE_REVOKED"
   | "E_SYNC_BLOB_CONFLICT"
@@ -148,7 +151,7 @@ type SyncBlobErrorCode =
   | "E_SYNC_BLOB_CRYPTO"
   | "E_SYNC_BLOB_UNSUPPORTED";
 
-class SyncBlobError extends Error {
+export class SyncBlobError extends Error {
   constructor(
     readonly code: SyncBlobErrorCode,
     message: string,
@@ -158,6 +161,8 @@ class SyncBlobError extends Error {
     this.name = "SyncBlobError";
   }
 }
+
+export const SYNC_BLOB_ACCEPT_VERSION = SYNC_PROTOCOL_HEADER;
 
 export function createSyncBlobRepo<T extends RepoRecord>(
   options: SyncBlobRepoOptions<T>,
@@ -550,7 +555,7 @@ export function createSyncBlobRepo<T extends RepoRecord>(
         continue;
       }
 
-      const current = mirror.get(mutation.entityId);
+      const current = mutation.optimisticRecord ?? mirror.get(mutation.entityId);
       if (!current) {
         throw new SyncBlobError(
           "E_SYNC_BLOB_CONFLICT",
@@ -571,6 +576,9 @@ export function createSyncBlobRepo<T extends RepoRecord>(
       if (mutation.hardDelete) {
         mirrorState.delete(mutation.entityId);
         continue;
+      }
+      if (mutation.optimisticRecord) {
+        mirror.set(mutation.optimisticRecord.id, mutation.optimisticRecord);
       }
       mirrorState.set(mutation.entityId, {
         revision: mutation.proposedRevision,

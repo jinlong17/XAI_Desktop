@@ -25,14 +25,6 @@ export type {
   SqliteRepo,
   SqliteRepoOptions,
 } from "./sqlite";
-export { SYNC_BLOB_ACCEPT_VERSION, SyncBlobError, createSyncBlobRepo } from "./sync-blob";
-export type {
-  CreateSyncBlobRepoOptions,
-  RetryPolicy,
-  SyncBlobCryptoAdapter,
-  SyncBlobErrorCode,
-  SyncBlobFetch,
-} from "./sync-blob";
 export { migrateLocalStorageToRepo } from "./local-storage";
 export type {
   LocalStorageMigrationOptions,
@@ -78,13 +70,20 @@ export type {
   OutboxBatchOptions,
   OutboxEntry,
 } from "./sync-outbox";
-export { createSyncBlobRepo, SYNC_PROTOCOL_HEADER } from "./sync-blob";
+export {
+  SYNC_BLOB_ACCEPT_VERSION,
+  SYNC_PROTOCOL_HEADER,
+  SyncBlobError,
+  createSyncBlobRepo,
+} from "./sync-blob";
 export type {
+  CreateSyncBlobRepoOptions,
   PullOptions,
   RetryPolicy,
   SyncBlobCryptoAdapter,
   SyncBlobCryptoDecryptInput,
   SyncBlobCryptoEncryptInput,
+  SyncBlobErrorCode,
   SyncBlobFetch,
   SyncBlobRepo,
   SyncBlobRepoOptions,
