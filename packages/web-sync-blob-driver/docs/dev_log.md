@@ -13,9 +13,9 @@
 | Suggested Next | feature-verify |
 | Automation Mode | A-Claude |
 | Verify Cross-vendor | no |
-| Executor | feature-auto-build (Codex gpt-5.3-codex inline) |
-| Updated | 2026-05-22 00:55 PDT |
-| Blockers | — |
+| Executor | feature-build (Codex gpt-5.3-codex inline) |
+| Updated | 2026-05-22 01:03 PDT |
+| Blockers | none — prior docs-evidence blockers repaired; waiting for independent feature-verify confirmation |
 
 ## Phase Plan
 
@@ -78,9 +78,12 @@ Gate:
 
 ## Verification Summary
 
-- PASS. Existing `@repo/core-data` runtime commits already satisfy the approved phase plan on `main`: `7a26f5d` (Phase 1 scaffold), `d653181` (Phase 2 transport/status handling), `b72b234` (Phase 3 metadata/handoff seam), with post-repair runtime reconciliation captured by `4a554e1`.
+- PASS. Existing `@repo/core-data` runtime commits satisfy the approved phase plan on `main`: `7a26f5d` (Phase 1 scaffold), `d653181` (Phase 2 transport/status handling), `b72b234` (Phase 3 metadata/handoff seam), with post-repair runtime reconciliation captured by `4a554e1`.
 - PASS. The implementation stays within the requested boundary: business logic lives in `packages/core-data/`, requests go only to `/sync/pull` and `/sync/push`, and the driver appends only `Accept-Version: sync.protocol=1` while consuming an injected `Authorization` + `X-Device-Id` seam.
 - PASS. Local verification commands completed cleanly: `pnpm --filter @repo/core-data check-types`; `pnpm --filter @repo/core-data test` (93 passed).
+- BLOCKED. `packages/web-sync-blob-driver/docs/design.md` still records Phase 3 as `b72b234`, `4ac3e24`, even though `4ac3e24` is explicitly superseded by the repaired chain.
+- BLOCKED. `packages/web-sync-blob-driver/docs/api.md` still lists `4ac3e24` as post-phase drift evidence in the current tree, so the docs do not yet match the authoritative commit chain recorded in this dev log.
+- REPAIRED (docs-only, 2026-05-22 01:03 PDT). `design.md` and `api.md` now treat `4ac3e24` as superseded history only and use the authoritative active evidence chain `5638003`, `4a554e1`, `321f469`, `530d239`, `d74aa2e`.
 
 Authoritative post-repair chain for the next independent verify pass:
 
@@ -110,3 +113,5 @@ Authoritative post-repair chain for the next independent verify pass:
 | 2026-05-22 00:46 PDT | feature-verify (Codex gpt-5.3-codex inline) | Verification PASS. Reviewed runtime commits `7a26f5d`, `d653181`, `b72b234` against the approved docs, then re-ran `pnpm --filter @repo/core-data check-types` and `pnpm --filter @repo/core-data test` (93 passed). The driver remains inside `packages/core-data/`, never hits business-table CRUD, and preserves the canonical `/sync/*` contract `Authorization` + `X-Device-Id` + `Accept-Version: sync.protocol=1`. | `321f469`; reviewed runtime commits `7a26f5d`, `d653181`, `b72b234` | ship |
 | 2026-05-22 00:51 PDT | feature-build (Codex gpt-5.3-codex inline) | Verify-repair pass for BLOCKED feedback: replaced mixed commit `4ac3e24` with single-intent commits for review docs and runtime hardening, then re-ran `pnpm --filter @repo/core-data test` and `pnpm --filter @repo/core-data check-types` (pass). | `5638003`, `4a554e1` | feature-verify |
 | 2026-05-22 00:55 PDT | feature-auto-build (Codex gpt-5.3-codex inline) | Workflow-state reconciliation pass for feature-dev-loop blocker: kept Status Panel at `READY_FOR_VERIFY` / `FEATURE_VERIFY`, made the authoritative post-repair commit chain explicit (`7a26f5d`, `d653181`, `b72b234`, `5638003`, `4a554e1`, `321f469`, `530d239`, `d74aa2e`), and marked `4ac3e24` as superseded for current verification scope. | docs(web-sync-blob-driver): reconcile verify-state commit chain | feature-verify |
+| 2026-05-22 01:01 PDT | feature-verify (Codex gpt-5.4 inline) | Verification BLOCKED. Re-reviewed the authoritative commit chain (`7a26f5d`, `d653181`, `b72b234`, `5638003`, `4a554e1`, `321f469`, `530d239`, `d74aa2e`, `51d5b5b`) and re-ran `pnpm --filter @repo/core-data check-types` plus `pnpm --filter @repo/core-data test` (93 passed). Runtime behavior is ready, but docs traceability is still wrong because `design.md` and `api.md` continue to cite superseded commit `4ac3e24` as active evidence. | — | feature-build |
+| 2026-05-22 01:03 PDT | feature-build (Codex gpt-5.3-codex inline) | Narrow docs-only verify repair: replaced active-evidence references to superseded `4ac3e24` in `design.md` and `api.md` with the authoritative split chain (`5638003`, `4a554e1`, `321f469`, `530d239`, `d74aa2e`), and restored Status Panel to `READY_FOR_VERIFY` / `FEATURE_VERIFY` for an independent verify rerun. | pending commit | feature-verify |

@@ -106,7 +106,7 @@ Status: DONE (`d653181`).
 
 ### Phase 3 — Contract hardening and downstream adoption seam
 
-Status: DONE (`b72b234`, `4ac3e24`).
+Status: DONE (`b72b234`; split repair chain: `5638003`, `4a554e1`, `321f469`, `530d239`, `d74aa2e`; superseded history: `4ac3e24`).
 
 - tightened metadata/migration semantics and rollback behavior
 - proved parity against the repository contract suite and sync-specific conflict/retry tests

@@ -195,4 +195,7 @@ declare function createSyncBlobRepo<T extends RepoRecord>(
 - Phase 1 scaffold: `7a26f5d`
 - Phase 2 transport/status handling: `d653181`
 - Phase 3 hardening/handoff seam: `b72b234`
-- Post-phase drift reconciliation still present in current tree: `4ac3e24`
+- Review artifacts split from drift repair: `5638003`
+- Runtime drift repair: `4a554e1`
+- Runtime-doc/state traceability: `321f469`, `530d239`, `d74aa2e`
+- Superseded history only (not active evidence): `4ac3e24`
