@@ -8,13 +8,13 @@
 | Target | web-console-host-router |
 | Title | W6 Web Console host shell and browser router |
 | Roadmap | `web-ticktick-parity` · feature #10 · W6 |
-| Current Phase | FEATURE_VERIFY |
-| Status | READY_FOR_VERIFY |
-| Suggested Next | feature-verify |
+| Current Phase | SHIP |
+| Status | SHIPPED |
+| Suggested Next | — |
 | Automation Mode | A-Claude |
 | Verify Cross-vendor | no |
-| Executor | feature-auto-build (Codex gpt-5.3-codex inline) |
-| Updated | 2026-05-22 12:36 PDT |
+| Executor | ship (Codex gpt-5.3-codex inline) |
+| Updated | 2026-05-22 14:38 PDT |
 | Blockers | — |
 
 ## Source Context
@@ -142,6 +142,14 @@ Scoped verification:
 - Revised: removed the long-lived parallel `WebHostCapabilities` assumption and froze shared `ConsoleViewCapabilities` in `@repo/core` as the single public capability surface, with the browser implementation and import/build guard owned by `apps/web`.
 - Intentionally not changed: React Router remains the selected browser router, auth/session ownership stays in `@repo/web-auth-device-session`, and the hard constraints against Tauri/native imports in browser-rendered modules remain unchanged.
 
+## Verification Notes
+
+- PASS. Reviewed `6bbbf14`, `18a30c2`, `41db694`, `43989ee`, `6e070fc`, `5c5da73`, and `c8ce390`; commit messages are compliant and the runtime commits stayed within their declared phase or repair intent.
+- Re-ran scoped verification: `pnpm --filter @repo/core check-types`, `pnpm --filter @repo/plugin-console check-types`, `pnpm --filter @repo/web check-types`, `pnpm --filter @repo/web exec vitest run src/routes/modules/buildModuleRoutes.test.ts src/host/capabilities.test.ts src/routes/router.integration.test.tsx`, `pnpm --filter @repo/web exec eslint --max-warnings 0 src`, and `pnpm --filter @repo/web build`.
+- Browser-safety gate passed: `rg -n "@tauri-apps|tauri://|__TAURI__" apps/web/dist/assets` returned no matches after the fresh build, and `apps/web/src/**` imports only browser-safe `@repo/plugin-console/web` and `@repo/web-auth-device-session/web` entrypoints.
+- Local mock-auth seam passed in a real browser engine (`playwright-core` against local Chrome): authenticated `/app/todos/inbox` deep-link stayed stable across reload, `/` ⇄ `/app/todos/inbox` back/forward history resolved correctly, authenticated `/auth/login` redirected into `/app/labels/inbox`, unauthenticated `/app/todos/inbox` redirected to `/auth/login?next=%2Fapp%2Ftodos%2Finbox`, and invoking the unsupported native stub kept the app shell mounted on the same route.
+- Residual risk: route-family error boundaries are wired in `apps/web/src/routes/router.tsx` and `RouteErrorBoundary.tsx`, but this pass did not add a dedicated throw-path regression test for each boundary scope.
+
 ## Work Log
 
 | Timestamp | Executor | Action | Commits | Next |
@@ -156,3 +164,5 @@ Scoped verification:
 | 2026-05-22 12:22 PDT | feature-verify (Codex gpt-5.3-codex inline) | Verify pass BLOCKED. Reviewed `6bbbf14`, `18a30c2`, `41db694`, and `43989ee`; commit messages and phase boundaries are acceptable. Ran `pnpm --filter @repo/core check-types`, `pnpm --filter @repo/plugin-console check-types`, `pnpm --filter @repo/web check-types`, `pnpm --filter @repo/web exec vitest run src/routes/modules/buildModuleRoutes.test.ts src/host/capabilities.test.ts`, `pnpm --filter @repo/web exec eslint --max-warnings 0 src`, and `pnpm --filter @repo/web build`; browser-verified `/`, `/auth/login`, and unauthenticated `/app/todos/inbox` redirect via the local Vite host. Blocked because the built web bundle still contains Tauri/native symbols and the current host/docs provide no local mock/authenticated seam to verify `/app/:moduleId/*` module rendering, capability stubs, refresh, and history behavior after guard entry. | — | feature-build |
 | 2026-05-22 12:34 PDT | feature-auto-build (Codex gpt-5.3-codex inline) | Repair Phase B1 complete: eliminated transitive desktop leakage by introducing browser-safe package entrypoints (`@repo/plugin-console/web`, `@repo/web-auth-device-session/web`), migrating `apps/web` imports, and enforcing restricted root imports in `apps/web` lint rules. Evidence: `pnpm --filter @repo/web build` then `rg -n \"@tauri-apps|tauri://|__TAURI__\" apps/web/dist/assets/index-*.js` returned no matches. | `6e070fc` | Repair B2 |
 | 2026-05-22 12:36 PDT | feature-auto-build (Codex gpt-5.3-codex inline) | Repair Phase B2 complete: added local authenticated verify seam via `VITE_WEB_AUTH_MODE=mock-authenticated` in `AppProviders`, added guarded-route integration coverage for deep-link/remount/history-entry routing and unsupported capability-stub interaction, and reran full scoped verification matrix. | `5c5da73` | feature-verify |
+| 2026-05-22 12:44 PDT | feature-verify (Codex gpt-5.3-codex inline) | Verify retry PASS. Re-reviewed the full feature commit set through `c8ce390`, reran the scoped typecheck/lint/test/build matrix, confirmed the built bundle contains no transitive Tauri/native symbols, and browser-verified the mock-authenticated plus mock-unauthenticated guard flows, refresh/deep-link/history semantics, and unsupported-capability stub stability. | — | ship |
+| 2026-05-22 14:38 PDT | ship (Codex gpt-5.3-codex inline) | Ship gate PASS. Verified `Status=READY_TO_SHIP` and `Suggested Next=ship`, confirmed local feature commits `6bbbf14`..`c8ce390` are complete and commit-message quality matches convention, pushed feature commits to `origin/main`, and reconciled feature #10 roadmap status to `SHIPPED`. | local commits `6bbbf14`..`c8ce390` + ship-state docs commit | workflow complete |
