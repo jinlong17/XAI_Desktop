@@ -1,6 +1,8 @@
-import { useMemo, type PropsWithChildren } from "react";
+import { useEffect, useMemo, type PropsWithChildren } from "react";
 import {
   DeviceSessionBridge,
+  useDeviceBoundFetch,
+  useWebAuthSession,
   WebAuthSessionProvider,
   createRestRpcDeviceTransport
 } from "@repo/web-auth-device-session/web";
@@ -28,6 +30,22 @@ type MockAuthSession = {
     updated_at: string;
     is_anonymous: boolean;
   };
+};
+
+const MOCK_TODO_DEK_BASE64 = "MDEyMzQ1Njc4OWFiY2RlZjAxMjM0NTY3ODlhYmNkZWY=";
+const TODO_RUNTIME_EVENT = "xai:web:todo-runtime-updated";
+
+type TodoSessionRuntimeSnapshot = {
+  authState: string;
+  accountId?: string;
+  deviceId?: string;
+  fetchSync?: (input: RequestInfo | URL, init?: RequestInit) => Promise<Response>;
+};
+
+type TodoCryptoRuntimeSnapshot = {
+  dekBase64: string;
+  keyId: number;
+  encryptionDeviceId?: string;
 };
 
 type MockSupabaseLikeClient = {
@@ -66,7 +84,11 @@ function createMockSession(): MockAuthSession {
     confirmed_at: now,
     last_sign_in_at: now,
     app_metadata: { provider: "email", providers: ["email"] },
-    user_metadata: {},
+    user_metadata: {
+      xai_todo_dek_base64: MOCK_TODO_DEK_BASE64,
+      xai_todo_key_id: 1,
+      xai_todo_encryption_device_id: "mock-user",
+    },
     identities: [],
     created_at: now,
     updated_at: now,
@@ -96,6 +118,134 @@ function createMockSupabaseClient(session: MockAuthSession | null): MockSupabase
   };
 
   return { auth };
+}
+
+function isObject(value: unknown): value is Record<string, unknown> {
+  return typeof value === "object" && value !== null;
+}
+
+function readText(source: Record<string, unknown>, keys: string[]): string | null {
+  for (const key of keys) {
+    const value = source[key];
+    if (typeof value === "string" && value.trim().length > 0) {
+      return value.trim();
+    }
+  }
+  return null;
+}
+
+function readPositiveInt(source: Record<string, unknown>, keys: string[]): number | null {
+  for (const key of keys) {
+    const value = source[key];
+    if (typeof value === "number" && Number.isSafeInteger(value) && value > 0) {
+      return value;
+    }
+    if (typeof value === "string") {
+      const parsed = Number.parseInt(value, 10);
+      if (Number.isSafeInteger(parsed) && parsed > 0) {
+        return parsed;
+      }
+    }
+  }
+  return null;
+}
+
+function readTodoCryptoRuntimeSnapshot(
+  session: {
+    user?: {
+      user_metadata?: Record<string, unknown>;
+      app_metadata?: Record<string, unknown>;
+    };
+  } | null,
+  fallbackDeviceId: string | null
+): TodoCryptoRuntimeSnapshot | null {
+  if (!session?.user) {
+    return null;
+  }
+
+  const candidates: Record<string, unknown>[] = [];
+  if (isObject(session.user.user_metadata)) {
+    candidates.push(session.user.user_metadata);
+  }
+  if (isObject(session.user.app_metadata)) {
+    candidates.push(session.user.app_metadata);
+  }
+
+  for (const source of candidates) {
+    const dekBase64 = readText(source, ["xai_todo_dek_base64", "todo_dek_base64", "todoDekBase64"]);
+    const keyId = readPositiveInt(source, ["xai_todo_key_id", "todo_key_id", "todoKeyId"]);
+    if (!dekBase64 || !keyId) {
+      continue;
+    }
+
+    return {
+      dekBase64,
+      keyId,
+      encryptionDeviceId:
+        readText(source, ["xai_todo_encryption_device_id", "todo_encryption_device_id", "todoEncryptionDeviceId"])
+        ?? fallbackDeviceId
+        ?? undefined,
+    };
+  }
+
+  return null;
+}
+
+function createSessionBoundFetch(accessToken: string, deviceId: string, syncVersion: string) {
+  return async (input: RequestInfo | URL, init?: RequestInit): Promise<Response> => {
+    const headers = new Headers(init?.headers);
+    headers.set("Authorization", `Bearer ${accessToken}`);
+    headers.set("X-Device-Id", deviceId);
+    headers.set("X-Sync-Version", syncVersion);
+    return fetch(input, { ...init, headers });
+  };
+}
+
+function emitTodoRuntimeUpdated(): void {
+  if (typeof window !== "undefined") {
+    window.dispatchEvent(new Event(TODO_RUNTIME_EVENT));
+  }
+}
+
+function TodoWebRuntimeBridge({ children }: PropsWithChildren) {
+  const { state, session, deviceId, syncVersion } = useWebAuthSession();
+  const deviceBoundFetch = useDeviceBoundFetch();
+
+  const sessionFetch = useMemo(() => {
+    const token = typeof session?.access_token === "string" ? session.access_token : null;
+    if (!token || !deviceId) {
+      return null;
+    }
+    return createSessionBoundFetch(token, deviceId, syncVersion);
+  }, [deviceId, session?.access_token, syncVersion]);
+
+  useEffect(() => {
+    const runtime = globalThis as unknown as {
+      __XAI_WEB_TODO_SESSION__?: TodoSessionRuntimeSnapshot;
+      __XAI_WEB_TODO_CRYPTO__?: TodoCryptoRuntimeSnapshot;
+    };
+
+    const accountId = typeof session?.user?.id === "string" ? session.user.id : undefined;
+    const fetchSync = deviceBoundFetch ?? sessionFetch ?? undefined;
+
+    runtime.__XAI_WEB_TODO_SESSION__ = {
+      authState: state,
+      accountId,
+      deviceId: deviceId ?? undefined,
+      fetchSync,
+    };
+
+    const cryptoSnapshot = readTodoCryptoRuntimeSnapshot(session, deviceId);
+    if (cryptoSnapshot) {
+      runtime.__XAI_WEB_TODO_CRYPTO__ = cryptoSnapshot;
+    } else {
+      delete runtime.__XAI_WEB_TODO_CRYPTO__;
+    }
+
+    emitTodoRuntimeUpdated();
+  }, [deviceBoundFetch, deviceId, session, sessionFetch, state]);
+
+  return children;
 }
 
 function resolveWebSupabaseConfig() {
@@ -136,7 +286,13 @@ export function AppProviders({ children }: PropsWithChildren) {
 
   return (
     <WebAuthSessionProvider client={mockClient as never} config={authMode === "live" ? config : null}>
-      {transport ? <DeviceSessionBridge transport={transport}>{children}</DeviceSessionBridge> : children}
+      {transport ? (
+        <DeviceSessionBridge transport={transport}>
+          <TodoWebRuntimeBridge>{children}</TodoWebRuntimeBridge>
+        </DeviceSessionBridge>
+      ) : (
+        <TodoWebRuntimeBridge>{children}</TodoWebRuntimeBridge>
+      )}
     </WebAuthSessionProvider>
   );
 }

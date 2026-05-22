@@ -7,6 +7,8 @@ import { RouterProvider, createMemoryRouter } from "react-router";
 import type { PropsWithChildren } from "react";
 import { webHostRouteObjects } from "./router";
 
+const mockDeviceFetch = vi.fn(async () => new Response(JSON.stringify({ rows: [] }), { status: 200 }));
+
 vi.mock("@repo/web-auth-device-session/web", async () => {
   const actual = await vi.importActual<typeof import("@repo/web-auth-device-session/web")>(
     "@repo/web-auth-device-session/web"
@@ -16,6 +18,22 @@ vi.mock("@repo/web-auth-device-session/web", async () => {
     ...actual,
     AppRouteGate: ({ children }: PropsWithChildren) => <>{children}</>,
     AuthRouteGate: ({ children }: PropsWithChildren) => <>{children}</>,
+    useDeviceBoundFetch: () => mockDeviceFetch,
+    useWebAuthSession: () => ({
+      state: "authenticated",
+      session: {
+        user: {
+          id: "router-test-account",
+          user_metadata: {
+            xai_todo_dek_base64: "MDEyMzQ1Njc4OWFiY2RlZjAxMjM0NTY3ODlhYmNkZWY=",
+            xai_todo_key_id: 1,
+            xai_todo_encryption_device_id: "router-test-device",
+          },
+        },
+      },
+      deviceId: "router-test-device",
+      ensureDeviceIdentity: async () => "router-test-device",
+    }),
     WebAuthPage: ({ path }: { path: string }) => (
       <main className="host-page">
         <p>Route: {path}</p>
@@ -60,6 +78,7 @@ async function unmountApp(app: MountedApp): Promise<void> {
 
 afterEach(() => {
   document.body.innerHTML = "";
+  mockDeviceFetch.mockClear();
 });
 
 beforeAll(() => {

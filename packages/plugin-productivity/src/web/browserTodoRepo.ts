@@ -24,15 +24,13 @@ interface CreateBrowserTodoRepoOptions {
   namespace?: string;
 }
 
-interface TodoCryptoSnapshot {
+export interface TodoCryptoSnapshot {
   dekBase64?: string;
   keyId?: number;
   encryptionDeviceId?: string;
 }
 
 const DEFAULT_NAMESPACE = "plugin-productivity-web-todos";
-const DEFAULT_ACCOUNT_ID = "web-local-account";
-const DEFAULT_DEVICE_ID = "web-local-device";
 
 let cachedDekBase64: string | null = null;
 let cachedDekKey: CryptoKey | null = null;
@@ -47,11 +45,50 @@ function isObject(value: unknown): value is Record<string, unknown> {
   return typeof value === "object" && value !== null;
 }
 
-function getCryptoSnapshot(): TodoCryptoSnapshot {
+function coerceTodoCryptoSnapshot(input: unknown): TodoCryptoSnapshot | null {
+  if (!isObject(input)) {
+    return null;
+  }
+
+  const dekBase64 = typeof input.dekBase64 === "string" && input.dekBase64.length > 0
+    ? input.dekBase64
+    : undefined;
+  const keyId = typeof input.keyId === "number" && Number.isSafeInteger(input.keyId) && input.keyId > 0
+    ? input.keyId
+    : undefined;
+  const encryptionDeviceId = typeof input.encryptionDeviceId === "string" && input.encryptionDeviceId.length > 0
+    ? input.encryptionDeviceId
+    : undefined;
+
+  if (!dekBase64 || !keyId) {
+    return null;
+  }
+
+  return { dekBase64, keyId, encryptionDeviceId };
+}
+
+export function getTodoCryptoSnapshot(): TodoCryptoSnapshot {
+  const runtime = globalThis as unknown as {
+    __XAI_WEB_TODO_CRYPTO__?: unknown;
+  };
+  return coerceTodoCryptoSnapshot(runtime.__XAI_WEB_TODO_CRYPTO__) ?? {};
+}
+
+export function setTodoCryptoSnapshot(snapshot: TodoCryptoSnapshot | null): void {
   const runtime = globalThis as unknown as {
     __XAI_WEB_TODO_CRYPTO__?: TodoCryptoSnapshot;
   };
-  return runtime.__XAI_WEB_TODO_CRYPTO__ ?? {};
+  if (!snapshot) {
+    delete runtime.__XAI_WEB_TODO_CRYPTO__;
+    return;
+  }
+
+  const normalized = coerceTodoCryptoSnapshot(snapshot);
+  if (!normalized) {
+    delete runtime.__XAI_WEB_TODO_CRYPTO__;
+    return;
+  }
+  runtime.__XAI_WEB_TODO_CRYPTO__ = normalized;
 }
 
 function getAesGcm(): SubtleCrypto {
@@ -181,7 +218,7 @@ function createSyncBlobCryptoAdapter(accountId: string): SyncBlobCryptoAdapter<W
 
   return {
     async encryptRecord(input: SyncBlobCryptoEncryptInput<WebTodoRecord>): Promise<{ blobBase64: string }> {
-      const snapshot = getCryptoSnapshot();
+      const snapshot = getTodoCryptoSnapshot();
       const key = await resolveDekKey(snapshot);
       const subtle = getAesGcm();
       const iv = crypto.getRandomValues(new Uint8Array(12));
@@ -218,7 +255,7 @@ function createSyncBlobCryptoAdapter(accountId: string): SyncBlobCryptoAdapter<W
     },
 
     async decryptRecord(input: SyncBlobCryptoDecryptInput): Promise<WebTodoRecord> {
-      const snapshot = getCryptoSnapshot();
+      const snapshot = getTodoCryptoSnapshot();
       const key = await resolveDekKey(snapshot);
       const subtle = getAesGcm();
       const payload = decodeEnvelope(input.blobBase64);
@@ -271,7 +308,7 @@ function createSyncBlobCryptoAdapter(accountId: string): SyncBlobCryptoAdapter<W
     },
 
     getCurrentKeyId() {
-      const snapshot = getCryptoSnapshot();
+      const snapshot = getTodoCryptoSnapshot();
       readKeyId(snapshot);
       if (!snapshot.dekBase64) {
         throw new SyncBlobError("E_SYNC_BLOB_CRYPTO", "todo_crypto_locked");
@@ -282,13 +319,13 @@ function createSyncBlobCryptoAdapter(accountId: string): SyncBlobCryptoAdapter<W
 }
 
 export function createBrowserTodoRepo(options: CreateBrowserTodoRepoOptions = {}): Repo<WebTodoRecord> {
-  const accountId = options.accountId ?? DEFAULT_ACCOUNT_ID;
-  const deviceId = options.deviceId ?? DEFAULT_DEVICE_ID;
-  const fetchSync =
-    options.fetchSync ??
-    (async () => {
-      throw new SyncBlobError("E_SYNC_BLOB_AUTH", "todo_device_session_missing");
-    });
+  const accountId = options.accountId?.trim();
+  const deviceId = options.deviceId?.trim();
+  const fetchSync = options.fetchSync;
+
+  if (!accountId || !deviceId || !fetchSync) {
+    throw new SyncBlobError("E_SYNC_BLOB_AUTH", "todo_device_session_missing");
+  }
 
   const repoOptions = {
     namespace: options.namespace ?? DEFAULT_NAMESPACE,
@@ -339,6 +376,6 @@ export function isDeleted(record: WebTodoRecord): boolean {
 }
 
 export function isTodoWriteReady(): boolean {
-  const snapshot = getCryptoSnapshot();
+  const snapshot = getTodoCryptoSnapshot();
   return Boolean(snapshot.dekBase64) && typeof snapshot.keyId === "number" && snapshot.keyId > 0;
 }
