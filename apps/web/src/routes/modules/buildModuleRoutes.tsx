@@ -18,6 +18,19 @@ function normalizeSegment(value: string | undefined): string {
     .join("/");
 }
 
+function matchesDynamicPattern(pattern: string, value: string): boolean {
+  const normalizedPattern = normalizeSegment(pattern);
+  const normalizedValue = normalizeSegment(value);
+  const patternSegments = normalizedPattern ? normalizedPattern.split("/") : [];
+  const valueSegments = normalizedValue ? normalizedValue.split("/") : [];
+
+  if (patternSegments.length !== valueSegments.length) {
+    return false;
+  }
+
+  return patternSegments.every((segment, index) => segment.startsWith(":") || segment === valueSegments[index]);
+}
+
 export function assertUniqueModuleRegistrations(registrations: WebModuleRouteRegistration[]): void {
   const seen = new Set<string>();
 
@@ -52,7 +65,10 @@ export function resolveModuleRouteMatch(
   }
 
   const childPath = normalizeSegment(wildcardPath);
-  const hasExact = registration.children.some((child) => normalizeSegment(child.path) === childPath);
+  const hasExact = registration.children.some((child) => {
+    const pattern = normalizeSegment(child.path);
+    return pattern === childPath || matchesDynamicPattern(pattern, childPath);
+  });
   const hasWildcard = registration.children.some((child) => child.path === "*");
   const hasIndex = registration.children.some((child) => normalizeSegment(child.path) === "");
 

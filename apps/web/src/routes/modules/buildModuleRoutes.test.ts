@@ -67,4 +67,20 @@ describe("buildModuleRoutes", () => {
 
     expect(match).toBeNull();
   });
+
+  it("matches dynamic child routes", () => {
+    const matchList = resolveModuleRouteMatch(
+      [createRegistration("todos", ["", ":listId", ":listId/:todoId"])],
+      "todos",
+      "smart:inbox"
+    );
+    expect(matchList?.childPath).toBe("smart:inbox");
+
+    const matchDetail = resolveModuleRouteMatch(
+      [createRegistration("todos", ["", ":listId", ":listId/:todoId"])],
+      "todos",
+      "smart:inbox/todo-1"
+    );
+    expect(matchDetail?.childPath).toBe("smart:inbox/todo-1");
+  });
 });
