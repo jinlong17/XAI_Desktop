@@ -5,72 +5,20 @@ import { useTauriInvoke } from "@repo/core/hooks";
 import {
   ORGANIZER_GRID_STATE_EVENT,
   ORGANIZER_GRID_UPDATE_EVENT,
+  RECT_SYNC_EPSILON,
   OrganizerGridContent,
+  applyNativeEdgeSnap,
   createFinderClient,
   isGridStatePayload,
+  rectsNearlyEqual,
+  type NativeMonitorBounds,
+  type NativeWindowRect,
 } from "@repo/plugin-organizer";
 import { GlobalDndProvider } from "../providers/DndProvider";
 import { SettingsProvider, useSettings } from "../context/SettingsContext";
 
 const DRAG_THRESHOLD_PX = 4;
 const NATIVE_MOVE_SYNC_DELAY_MS = 120;
-const EDGE_SNAP_THRESHOLD = 24;
-const EDGE_HIDE_REVEAL_PX = 52;
-const RECT_SYNC_EPSILON = 1;
-
-type NativeWindowRect = {
-  x: number;
-  y: number;
-  width: number;
-  height: number;
-};
-
-type NativeMonitorBounds = {
-  x: number;
-  y: number;
-  width: number;
-  height: number;
-};
-
-function rectsNearlyEqual(a: NativeWindowRect, b: NativeWindowRect): boolean {
-  return (
-    Math.abs(a.x - b.x) <= RECT_SYNC_EPSILON &&
-    Math.abs(a.y - b.y) <= RECT_SYNC_EPSILON &&
-    Math.abs(a.width - b.width) <= RECT_SYNC_EPSILON &&
-    Math.abs(a.height - b.height) <= RECT_SYNC_EPSILON
-  );
-}
-
-function applyNativeEdgeSnap(
-  rect: NativeWindowRect,
-  isFolded: boolean,
-  monitorBounds: NativeMonitorBounds,
-): NativeWindowRect {
-  if (typeof window === "undefined") {
-    return rect;
-  }
-
-  const localX = rect.x - monitorBounds.x;
-  const localY = rect.y - monitorBounds.y;
-  const maxLocalX = Math.max(0, monitorBounds.width - rect.width);
-  const maxLocalY = Math.max(0, monitorBounds.height - rect.height);
-  let x = localX;
-  let y = localY;
-
-  if (localX <= EDGE_SNAP_THRESHOLD) {
-    x = isFolded ? Math.min(0, EDGE_HIDE_REVEAL_PX - rect.width) : 0;
-  } else if (localX >= maxLocalX - EDGE_SNAP_THRESHOLD) {
-    x = isFolded ? Math.max(0, monitorBounds.width - EDGE_HIDE_REVEAL_PX) : maxLocalX;
-  }
-
-  if (localY <= EDGE_SNAP_THRESHOLD) {
-    y = 0;
-  } else if (localY >= maxLocalY - EDGE_SNAP_THRESHOLD) {
-    y = maxLocalY;
-  }
-
-  return { ...rect, x: monitorBounds.x + x, y: monitorBounds.y + y };
-}
 
 /**
  * Native Grid window shell.
@@ -115,6 +63,8 @@ function GridWindowShell({ gridId }: { gridId: string }) {
           height: monitor.workArea.size.height / scaleFactor,
         }
       : {
+          // Rare fallback for currentMonitor() failures; WebKit may omit
+          // availLeft/availTop, which degrades to primary-screen coordinates.
           x: screen.availLeft ?? 0,
           y: screen.availTop ?? 0,
           width: screen.availWidth || window.innerWidth,

@@ -71,6 +71,17 @@ export {
   isThumbnailCandidate,
 } from "./thumbnailCache";
 export {
+  EDGE_HIDE_REVEAL_PX,
+  EDGE_SNAP_THRESHOLD,
+  RECT_SYNC_EPSILON,
+  applyNativeEdgeSnap,
+  rectsNearlyEqual,
+} from "./nativeGridSnap";
+export type {
+  NativeMonitorBounds,
+  NativeWindowRect,
+} from "./nativeGridSnap";
+export {
   defaultEmptyStateActions,
   evaluateItemHealth,
 } from "./itemHealth";
