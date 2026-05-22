@@ -1,4 +1,6 @@
+import { useEffect } from "react";
 import { isRouteErrorResponse, useRouteError } from "react-router";
+import { reportRouteError } from "../observability/reporting";
 
 export interface RouteErrorBoundaryProps {
   scope: "root" | "auth" | "app" | "module";
@@ -18,6 +20,9 @@ function resolveErrorMessage(error: unknown): string {
 
 export function RouteErrorBoundary({ scope }: RouteErrorBoundaryProps) {
   const error = useRouteError();
+  useEffect(() => {
+    reportRouteError(scope, error);
+  }, [error, scope]);
 
   return (
     <main className="host-page">
