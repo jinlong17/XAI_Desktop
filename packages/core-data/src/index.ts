@@ -76,6 +76,36 @@ export {
   SyncBlobError,
   createSyncBlobRepo,
 } from "./sync-blob";
+export {
+  WEB_CACHE_DB_PREFIX,
+  WEB_CACHE_DB_VERSION,
+  type CacheHealthState,
+  type CacheQuotaSnapshot,
+  type CacheWipeReport,
+  type CreateIndexedDbSyncBlobRepoOptions,
+  type DeadLetterMutationRow,
+  type EncryptedBlobRow,
+  type EntityIndexRow,
+  type EntitySortKeyRow,
+  type IndexedDbSyncBlobRepo,
+  type PendingMutationRow,
+  type SearchTextExtractor,
+  type SortPayloadCrypto,
+  type SortPayloadCryptoContext,
+  type SortPayloadExtractor,
+  type WebCacheErrorCode,
+  type WebCacheLockReason,
+  type WebCacheRuntimeOptions,
+  type WebCacheRuntimeTransition,
+  type WebCacheRuntimeTransitionSource,
+  type WebCacheSearchWorker,
+  type WebCacheSearchWorkerStatus,
+  type WebCacheStoreName,
+} from "./indexeddb-sync-blob";
+export {
+  WebCacheError,
+  createIndexedDbSyncBlobRepo,
+} from "./indexeddb-sync-blob";
 export type {
   CreateSyncBlobRepoOptions,
   PullOptions,
