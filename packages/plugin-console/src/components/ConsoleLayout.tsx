@@ -277,6 +277,18 @@ export function ConsoleLayout({
               source: "restore",
             });
           },
+          openSettings: (section) => {
+            setActiveModule("settings", "restore");
+            if (section) {
+              setState((current) => ({
+                ...current,
+                selection: {
+                  ...current.selection,
+                  listId: section,
+                },
+              }));
+            }
+          },
           openCommandPalette: (query) => {
             palette.open();
             setState((current) => ({ ...current, query: query ?? current.query }));
@@ -313,6 +325,94 @@ export function ConsoleLayout({
               });
             }, 120);
           },
+          download: async ({ blob, filename, mimeType }) => {
+            if (typeof window === "undefined") {
+              return {
+                ok: false,
+                code: "not_configured",
+                message: "window_unavailable",
+              };
+            }
+
+            const objectUrl = window.URL.createObjectURL(
+              mimeType ? new Blob([blob], { type: mimeType }) : blob,
+            );
+            const anchor = window.document.createElement("a");
+            anchor.href = objectUrl;
+            anchor.download = filename;
+            anchor.click();
+            window.URL.revokeObjectURL(objectUrl);
+            return { ok: true, value: undefined };
+          },
+          notify: async ({ title, body, tag }) => {
+            if (typeof window === "undefined" || typeof window.Notification === "undefined") {
+              return {
+                ok: false,
+                code: "unsupported_in_browser",
+                message: "notification_api_unavailable",
+              };
+            }
+
+            if (window.Notification.permission === "default") {
+              const permission = await window.Notification.requestPermission();
+              if (permission !== "granted") {
+                return {
+                  ok: false,
+                  code: "permission_denied",
+                  message: "notification_permission_denied",
+                };
+              }
+            }
+
+            if (window.Notification.permission !== "granted") {
+              return {
+                ok: false,
+                code: "permission_denied",
+                message: "notification_permission_denied",
+              };
+            }
+
+            new window.Notification(title, { body, tag });
+            return { ok: true, value: undefined };
+          },
+          registerShortcut: ({ combo }, handler) => {
+            if (typeof window === "undefined") {
+              return {
+                ok: false,
+                code: "not_configured",
+                message: "window_unavailable",
+              };
+            }
+
+            const normalized = combo.trim().toLowerCase();
+            const listener = (event: KeyboardEvent) => {
+              const key = event.key.toLowerCase();
+              const commandMatch = normalized === `meta+${key}` && event.metaKey;
+              const controlMatch = normalized === `ctrl+${key}` && event.ctrlKey;
+              if (commandMatch || controlMatch) {
+                event.preventDefault();
+                handler();
+              }
+            };
+            window.addEventListener("keydown", listener);
+            return {
+              ok: true,
+              value: () => {
+                window.removeEventListener("keydown", listener);
+              },
+            };
+          },
+          beginDrag: async () => ({
+            ok: false,
+            code: "unsupported_in_browser",
+            message: "browser_drag_stub_only",
+          }),
+          invokeNativeCapability: async () => ({
+            ok: false,
+            code: "unsupported_in_browser",
+            message: "native_capability_unavailable",
+          }),
+          status: (capability) => (capability === "native" ? "unsupported" : "supported"),
         }}
         moduleId={activeModuleId}
         query={state.query}

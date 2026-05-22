@@ -1,5 +1,6 @@
 import { AppRouteGate, AuthRouteGate } from "@repo/web-auth-device-session";
 import { useLocation, useNavigate, useParams } from "react-router";
+import { createWebConsoleCapabilities } from "../host/capabilities";
 import { AppShellPage } from "../pages/AppShellPage";
 import { AuthPage } from "../pages/AuthPage";
 import { NotFoundPage } from "../pages/NotFoundPage";
@@ -37,6 +38,13 @@ export function AppRouteElement() {
     ?? match.registration.children.find((entry) => entry.path === "");
 
   const ModuleRouteContent = child?.render;
+  const capabilities = createWebConsoleCapabilities({
+    navigateTo: (path, replace = false) => navigate(path, { replace }),
+    onOpenSearch: (query) => {
+      const next = query ? `/app/${match.moduleId}?q=${encodeURIComponent(query)}` : `/app/${match.moduleId}`;
+      navigate(next);
+    },
+  });
 
   return (
     <AppRouteGate
@@ -51,7 +59,14 @@ export function AppRouteElement() {
           moduleId: entry.moduleId,
           label: entry.label,
         }))}
-        content={ModuleRouteContent ? <ModuleRouteContent moduleId={match.moduleId} childPath={match.childPath} /> : null}
+        capabilities={capabilities}
+        content={ModuleRouteContent ? (
+          <ModuleRouteContent
+            moduleId={match.moduleId}
+            childPath={match.childPath}
+            capabilities={capabilities}
+          />
+        ) : null}
       />
     </AppRouteGate>
   );

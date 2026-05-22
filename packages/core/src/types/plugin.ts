@@ -45,12 +45,52 @@ export interface ConsoleThemeState {
   fontScale: number;
 }
 
+export type ConsoleCapabilityStatus = "supported" | "unsupported" | "blocked";
+
+export type ConsoleCapabilityErrorCode =
+  | "unsupported_in_browser"
+  | "permission_denied"
+  | "not_configured"
+  | "build_blocked";
+
+export type ConsoleCapabilityResult<T> =
+  | { ok: true; value: T }
+  | { ok: false; code: ConsoleCapabilityErrorCode; message: string };
+
+export interface ConsoleShortcutBinding {
+  id: string;
+  combo: string;
+  scope: "route" | "app";
+}
+
+export interface ConsoleDownloadRequest {
+  filename: string;
+  blob: Blob;
+  mimeType?: string;
+}
+
+export interface ConsoleNotificationRequest {
+  title: string;
+  body?: string;
+  tag?: string;
+}
+
 export interface ConsoleViewCapabilities {
   navigate(route: ConsoleRouteState): void;
+  openSettings(section?: string): void;
   openCommandPalette(query?: string): void;
   focusPane(pane: 'sidebar' | 'list' | 'detail'): void;
   persistState(partial: Partial<ConsoleRouteState>): Promise<void>;
   requestReconcile(reason?: string): Promise<void>;
+  download(request: ConsoleDownloadRequest): Promise<ConsoleCapabilityResult<void>>;
+  notify(request: ConsoleNotificationRequest): Promise<ConsoleCapabilityResult<void>>;
+  registerShortcut(
+    binding: ConsoleShortcutBinding,
+    handler: () => void,
+  ): ConsoleCapabilityResult<() => void>;
+  beginDrag(payload: unknown): Promise<ConsoleCapabilityResult<void>>;
+  invokeNativeCapability(name: string, payload?: unknown): Promise<ConsoleCapabilityResult<void>>;
+  status(capability: string): ConsoleCapabilityStatus;
 }
 
 export interface ConsoleViewProps {
@@ -87,6 +127,7 @@ export interface ConsoleViewDefinition {
 export interface WebModuleRouteProps {
   moduleId: ConsoleModuleId;
   childPath: string;
+  capabilities: ConsoleViewCapabilities;
 }
 
 export interface WebModuleRouteChild {
