@@ -1,11 +1,55 @@
-import { MouseEvent as ReactMouseEvent, useCallback, useMemo } from "react";
-import { getCurrentWindow } from "@tauri-apps/api/window";
+import { MouseEvent as ReactMouseEvent, useCallback, useEffect, useMemo, useRef } from "react";
+import { emit, listen } from "@tauri-apps/api/event";
+import { getCurrentWindow, LogicalPosition } from "@tauri-apps/api/window";
 import { useTauriInvoke } from "@repo/core/hooks";
-import { OrganizerGridContent, createFinderClient } from "@repo/plugin-organizer";
+import {
+  ORGANIZER_GRID_STATE_EVENT,
+  ORGANIZER_GRID_UPDATE_EVENT,
+  OrganizerGridContent,
+  createFinderClient,
+  isGridStatePayload,
+} from "@repo/plugin-organizer";
 import { GlobalDndProvider } from "../providers/DndProvider";
 import { SettingsProvider, useSettings } from "../context/SettingsContext";
 
 const DRAG_THRESHOLD_PX = 4;
+const NATIVE_MOVE_SYNC_DELAY_MS = 120;
+const EDGE_SNAP_THRESHOLD = 24;
+const EDGE_HIDE_REVEAL_PX = 52;
+
+type NativeWindowRect = {
+  x: number;
+  y: number;
+  width: number;
+  height: number;
+};
+
+function applyNativeEdgeSnap(rect: NativeWindowRect, isFolded: boolean): NativeWindowRect {
+  if (typeof window === "undefined") {
+    return rect;
+  }
+
+  const screenWidth = window.screen?.availWidth || window.innerWidth;
+  const screenHeight = window.screen?.availHeight || window.innerHeight;
+  const maxX = Math.max(0, screenWidth - rect.width);
+  const maxY = Math.max(0, screenHeight - rect.height);
+  let x = rect.x;
+  let y = rect.y;
+
+  if (x <= EDGE_SNAP_THRESHOLD) {
+    x = isFolded ? Math.min(0, EDGE_HIDE_REVEAL_PX - rect.width) : 0;
+  } else if (x >= maxX - EDGE_SNAP_THRESHOLD) {
+    x = isFolded ? Math.max(0, screenWidth - EDGE_HIDE_REVEAL_PX) : maxX;
+  }
+
+  if (y <= EDGE_SNAP_THRESHOLD) {
+    y = 0;
+  } else if (y >= maxY - EDGE_SNAP_THRESHOLD) {
+    y = maxY;
+  }
+
+  return { ...rect, x, y };
+}
 
 /**
  * Native Grid window shell.
@@ -16,6 +60,9 @@ const DRAG_THRESHOLD_PX = 4;
 function GridWindowShell({ gridId }: { gridId: string }) {
   const { gridOpacity, gridBlur } = useSettings();
   const { invoke } = useTauriInvoke();
+  const nativeMoveSyncTimerRef = useRef<number | null>(null);
+  const lastEmittedRectRef = useRef<NativeWindowRect | null>(null);
+  const latestGridRef = useRef<{ isFolded: boolean; rect: NativeWindowRect } | null>(null);
   // Construct once per shell mount. The Finder client is the IPC bridge
   // for `register_path_bookmark` (G3-E3 / P0-Foxtrot honest provenance).
   // The grid window is the only surface that receives absolute paths
@@ -23,6 +70,95 @@ function GridWindowShell({ gridId }: { gridId: string }) {
   // the only place that can honestly register the bookmark before the
   // path is forwarded cross-window via `ORGANIZER_FILE_DROP_EVENT`.
   const finderClient = useMemo(() => createFinderClient(invoke), [invoke]);
+
+  const emitNativeWindowRect = useCallback(async () => {
+    const currentWindow = getCurrentWindow();
+    const dpr =
+      typeof window !== "undefined" && window.devicePixelRatio
+        ? window.devicePixelRatio
+        : 1;
+
+    const [position, size] = await Promise.all([currentWindow.outerPosition(), currentWindow.outerSize()]);
+    const latestGrid = latestGridRef.current;
+
+    const measuredRect = {
+      x: Math.round(position.x / dpr),
+      y: Math.round(position.y / dpr),
+      width: latestGrid?.rect.width ?? Math.round(size.width / dpr),
+      height: latestGrid?.rect.height ?? Math.round(size.height / dpr),
+    };
+    const rect = applyNativeEdgeSnap(measuredRect, latestGrid?.isFolded ?? false);
+
+    if (rect.x !== measuredRect.x || rect.y !== measuredRect.y) {
+      await currentWindow.setPosition(new LogicalPosition(rect.x, rect.y));
+    }
+
+    const lastRect = lastEmittedRectRef.current;
+    if (
+      lastRect &&
+      lastRect.x === rect.x &&
+      lastRect.y === rect.y &&
+      lastRect.width === rect.width &&
+      lastRect.height === rect.height
+    ) {
+      return;
+    }
+
+    lastEmittedRectRef.current = rect;
+    await emit(ORGANIZER_GRID_UPDATE_EVENT, {
+      gridId,
+      changes: { rect },
+    });
+  }, [gridId]);
+
+  const scheduleNativeWindowRectSync = useCallback(() => {
+    if (nativeMoveSyncTimerRef.current !== null) {
+      window.clearTimeout(nativeMoveSyncTimerRef.current);
+    }
+
+    nativeMoveSyncTimerRef.current = window.setTimeout(() => {
+      nativeMoveSyncTimerRef.current = null;
+      void emitNativeWindowRect().catch((error) => {
+        console.error("[GridWindow] native move sync failed:", error);
+      });
+    }, NATIVE_MOVE_SYNC_DELAY_MS);
+  }, [emitNativeWindowRect]);
+
+  useEffect(() => {
+    const unlistenStatePromise = listen<unknown>(ORGANIZER_GRID_STATE_EVENT, (event) => {
+      if (!isGridStatePayload(event.payload)) {
+        return;
+      }
+      if (event.payload.gridId === gridId) {
+        latestGridRef.current = {
+          isFolded: event.payload.grid.isFolded,
+          rect: event.payload.grid.rect,
+        };
+        if (event.payload.grid.isFolded) {
+          scheduleNativeWindowRectSync();
+        }
+      }
+    });
+
+    return () => {
+      unlistenStatePromise.then((unlisten) => unlisten());
+    };
+  }, [gridId, scheduleNativeWindowRectSync]);
+
+  useEffect(() => {
+    const currentWindow = getCurrentWindow();
+    const unlistenMovedPromise = currentWindow.onMoved(() => {
+      scheduleNativeWindowRectSync();
+    });
+
+    return () => {
+      if (nativeMoveSyncTimerRef.current !== null) {
+        window.clearTimeout(nativeMoveSyncTimerRef.current);
+        nativeMoveSyncTimerRef.current = null;
+      }
+      unlistenMovedPromise.then((unlisten) => unlisten());
+    };
+  }, [scheduleNativeWindowRectSync]);
 
   // Intercept mousedown on the Organizer title bar (or the G0 fallback
   // panel) in CAPTURE phase. We stopPropagation so react-draggable's
@@ -65,6 +201,7 @@ function GridWindowShell({ gridId }: { gridId: string }) {
         handed = true;
         void getCurrentWindow()
           .startDragging()
+          .then(scheduleNativeWindowRectSync)
           .catch((err) => {
             console.error("[GridWindow] startDragging failed:", err);
           });
@@ -76,7 +213,7 @@ function GridWindowShell({ gridId }: { gridId: string }) {
 
     window.addEventListener("mousemove", onMove, true);
     window.addEventListener("mouseup", onUp, true);
-  }, []);
+  }, [scheduleNativeWindowRectSync]);
 
   return (
     <div
