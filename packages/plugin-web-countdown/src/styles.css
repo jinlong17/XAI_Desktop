@@ -1,0 +1,215 @@
+/* ============================================================
+   Countdown
+   Ported verbatim from web design/layout.css lines 950-1019
+   ============================================================ */
+.module-countdown { display: flex; flex-direction: column; padding: 14px 20px 20px; }
+.countdown-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(190px, 1fr));
+  gap: 12px;
+  align-content: start;
+}
+.cd-card {
+  position: relative;
+  height: 120px;
+  background: var(--bg-panel);
+  border: 1px solid var(--border-1);
+  border-radius: var(--r-lg);
+  padding: 12px 14px;
+  display: flex; flex-direction: column;
+  overflow: hidden;
+  cursor: pointer;
+  transition: transform var(--dur-fast) var(--ease-out), box-shadow var(--dur-fast) var(--ease-out);
+}
+.cd-card:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-2);
+}
+.cd-card.light {
+  border-color: transparent;
+  color: #fff;
+}
+.cd-overlay {
+  position: absolute; inset: 0;
+  background: linear-gradient(160deg, transparent 30%, rgba(0,0,0,0.25));
+  pointer-events: none;
+}
+.cd-head {
+  display: flex; align-items: center; gap: 6px;
+  font-size: var(--fs-sm);
+  font-weight: 600;
+  color: var(--text-2);
+  position: relative; z-index: 1;
+}
+.cd-card.light .cd-head { color: rgba(255,255,255,.92); text-shadow: 0 1px 2px rgba(0,0,0,.4); }
+.cd-emoji { font-size: 16px; line-height: 1; }
+.cd-num {
+  margin-top: auto;
+  font-size: 38px;
+  font-weight: 400;
+  letter-spacing: -0.02em;
+  line-height: 1;
+  font-family: var(--font-mono);
+  position: relative; z-index: 1;
+}
+.cd-card.light .cd-num { text-shadow: 0 2px 6px rgba(0,0,0,.3); }
+.cd-foot {
+  margin-top: 6px;
+  font-size: var(--fs-xs);
+  color: var(--text-3);
+  position: relative; z-index: 1;
+  font-family: var(--font-mono);
+}
+.cd-card.light .cd-foot { color: rgba(255,255,255,.75); }
+.cd-add {
+  border: 1.5px dashed var(--border-2, var(--border-1));
+  background: transparent;
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  gap: 6px;
+  color: var(--text-3);
+  font-size: var(--fs-sm);
+}
+.cd-add:hover { border-color: var(--accent); color: var(--accent-ink); }
+
+/* ============================================================
+   Countdown Edit Dialog
+   ============================================================ */
+.cd-dialog-scrim {
+  position: fixed; inset: 0;
+  background: rgba(0, 0, 0, 0.4);
+  z-index: 900;
+}
+.cd-dialog {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background: var(--bg-panel);
+  border: 1px solid var(--border-1);
+  border-radius: var(--r-lg);
+  padding: 24px;
+  width: 420px;
+  max-width: calc(100vw - 32px);
+  z-index: 901;
+  box-shadow: var(--shadow-2);
+}
+.cd-dialog-title {
+  font-size: var(--fs-sm);
+  font-weight: 700;
+  color: var(--text-2);
+  margin: 0 0 16px;
+}
+.cd-form-row {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  margin-bottom: 14px;
+}
+.cd-form-row label {
+  font-size: var(--fs-xs);
+  color: var(--text-3);
+  font-weight: 500;
+}
+.cd-form-row input[type="text"],
+.cd-form-row input[type="date"] {
+  background: var(--bg-panel);
+  border: 1px solid var(--border-1);
+  border-radius: calc(var(--r-lg) * 0.5);
+  padding: 7px 10px;
+  font-size: var(--fs-sm);
+  color: var(--text-2);
+  outline: none;
+  width: 100%;
+  box-sizing: border-box;
+}
+.cd-form-row input:focus {
+  border-color: var(--accent);
+}
+.cd-form-row-inline {
+  display: flex;
+  gap: 10px;
+}
+.cd-form-row-inline .cd-form-row {
+  flex: 1;
+}
+.cd-radio-group {
+  display: flex;
+  gap: 16px;
+}
+.cd-radio-group label {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: var(--fs-sm);
+  color: var(--text-2);
+  cursor: pointer;
+}
+.cd-preset-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 8px;
+  margin-top: 4px;
+}
+.cd-preset-swatch {
+  height: 52px;
+  border-radius: calc(var(--r-lg) * 0.5);
+  border: 2px solid transparent;
+  cursor: pointer;
+  transition: border-color var(--dur-fast) var(--ease-out);
+  display: flex;
+  align-items: flex-end;
+  padding: 4px 6px;
+  font-size: var(--fs-xs);
+  color: rgba(255,255,255,.85);
+  line-height: 1.2;
+}
+.cd-preset-swatch:hover {
+  border-color: rgba(255,255,255,.5);
+}
+.cd-preset-swatch.selected {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 2px var(--accent);
+}
+.cd-dialog-actions {
+  display: flex;
+  gap: 8px;
+  justify-content: flex-end;
+  margin-top: 20px;
+}
+.cd-btn {
+  padding: 7px 16px;
+  border-radius: calc(var(--r-lg) * 0.5);
+  border: 1px solid var(--border-1);
+  background: transparent;
+  font-size: var(--fs-sm);
+  color: var(--text-2);
+  cursor: pointer;
+  transition: background var(--dur-fast) var(--ease-out);
+}
+.cd-btn:hover {
+  background: var(--border-1);
+}
+.cd-btn.primary {
+  background: var(--accent);
+  border-color: var(--accent);
+  color: var(--accent-ink);
+}
+.cd-btn.primary:hover {
+  opacity: 0.85;
+}
+.cd-btn.primary:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+.cd-btn.danger {
+  color: #e55;
+  border-color: rgba(220, 60, 60, 0.3);
+}
+.cd-btn.danger:hover {
+  background: rgba(220, 60, 60, 0.1);
+}
+.cd-validation-error {
+  font-size: var(--fs-xs);
+  color: #e55;
+  margin-top: 2px;
+}
