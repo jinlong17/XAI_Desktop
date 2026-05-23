@@ -4,9 +4,11 @@ import {
   useContext,
   useEffect,
   useMemo,
+  useRef,
   useState,
   type ReactNode,
 } from "react";
+import { emitEvent } from "@repo/core/events";
 import { LocalStorageAdapter } from "../data/LocalStorageAdapter";
 import { useProductivityRepoAdapters } from "../data/RepoProvider";
 import { useOrganizerGridTaskListener } from "../events/organizerGridTasks";
@@ -62,6 +64,19 @@ function isTodayOrPast(dateText?: string): boolean {
   return Number.isFinite(due.getTime()) && due.getTime() <= today.getTime();
 }
 
+/** Returns the ISO string of the local end-of-day boundary for a YYYY-MM-DD date. */
+function dueBoundaryIso(dateText: string): string {
+  return new Date(`${dateText}T23:59:59`).toISOString();
+}
+
+/** Returns ms until the local end-of-day boundary for a YYYY-MM-DD date; negative if already past. */
+function msUntilBoundary(dateText: string): number {
+  return new Date(`${dateText}T23:59:59`).getTime() - Date.now();
+}
+
+/** Max setTimeout delay is int32 max (~24.8 days). Cap at 24 hours. */
+const MAX_TIMEOUT_MS = 24 * 60 * 60 * 1000;
+
 export function autoAssignQuadrant(title: string, dueDate?: string): TodoQuadrant {
   const lower = title.toLowerCase();
   const urgent = isTodayOrPast(dueDate) || /\b(urgent|asap|today|now|blocker|紧急|马上|今天)\b/.test(lower);
@@ -106,6 +121,8 @@ export function TodoStoreProvider({ adapter, children }: TodoStoreProviderProps)
   const [todos, setTodos] = useState<Todo[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  // Dedup: tracks (todoId:dueDate) pairs that have already been emitted.
+  const dueEmittedRef = useRef<Set<string>>(new Set());
 
   const refresh = useCallback(async () => {
     setIsLoading(true);
@@ -168,6 +185,59 @@ export function TodoStoreProvider({ adapter, children }: TodoStoreProviderProps)
   );
 
   useOrganizerGridTaskListener(createTodo);
+
+  // Emit productivity:todo-due for todos whose dueDate boundary has crossed.
+  // Dedup per (todoId:dueDate); schedule setTimeout for future boundaries.
+  useEffect(() => {
+    const emitted = dueEmittedRef.current;
+    const timers: ReturnType<typeof setTimeout>[] = [];
+
+    for (const todo of todos) {
+      if (!todo.dueDate) continue;
+      if (todo.status === "done" || todo.status === "archived") {
+        // Purge stale dedup entry so a re-open can re-emit under a new flow.
+        emitted.delete(`${todo.id}:${todo.dueDate}`);
+        continue;
+      }
+      const dedupKey = `${todo.id}:${todo.dueDate}`;
+      const delay = msUntilBoundary(todo.dueDate);
+
+      if (delay <= 0) {
+        // Already past the boundary — emit immediately if not yet emitted.
+        if (!emitted.has(dedupKey)) {
+          emitted.add(dedupKey);
+          void emitEvent("productivity:todo-due", {
+            todoId: todo.id,
+            title: todo.title,
+            dueDate: todo.dueDate,
+            quadrant: todo.quadrant,
+            dueBoundaryAt: dueBoundaryIso(todo.dueDate),
+          }).catch(() => undefined);
+        }
+      } else {
+        // Schedule a future emit; cap at MAX_TIMEOUT_MS to avoid int32 overflow.
+        const safeDelay = Math.min(delay, MAX_TIMEOUT_MS);
+        const captured = { ...todo };
+        timers.push(
+          setTimeout(() => {
+            if (emitted.has(dedupKey)) return;
+            emitted.add(dedupKey);
+            void emitEvent("productivity:todo-due", {
+              todoId: captured.id,
+              title: captured.title,
+              dueDate: captured.dueDate!,
+              quadrant: captured.quadrant,
+              dueBoundaryAt: dueBoundaryIso(captured.dueDate!),
+            }).catch(() => undefined);
+          }, safeDelay),
+        );
+      }
+    }
+
+    return () => {
+      for (const t of timers) clearTimeout(t);
+    };
+  }, [todos]);
 
   const updateTodo = useCallback(
     async (id: string, patch: Partial<Omit<Todo, "id" | "createdAt" | "updatedAt">>) => {
