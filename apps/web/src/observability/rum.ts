@@ -44,20 +44,20 @@ function sanitizeAttribution(input: unknown): Record<string, unknown> | undefine
     return undefined;
   }
 
-  const sanitized = sanitizeUnknown(input) as Record<string, unknown>;
+  const source = input as Record<string, unknown>;
   const output: Record<string, unknown> = {};
 
-  for (const [key, value] of Object.entries(sanitized)) {
+  for (const [key, value] of Object.entries(source)) {
     if (RUM_SENSITIVE_KEY_PATTERN.test(key)) {
       continue;
     }
 
     if (typeof value === "string") {
-      output[key] = value.includes("://") || value.startsWith("/") ? sanitizeUrlPath(value) : value;
+      output[key] = value.includes("://") || value.startsWith("/") ? sanitizeUrlPath(value) : sanitizeUnknown(value);
       continue;
     }
 
-    output[key] = value;
+    output[key] = sanitizeUnknown(value);
   }
 
   return Object.keys(output).length > 0 ? output : undefined;
