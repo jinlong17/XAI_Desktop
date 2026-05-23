@@ -141,7 +141,7 @@ Determine the target feature before any other action.
 ## Read First
 
 - the incoming feature brief or requirement description
-- `developer.md`
+- `<onboarding_doc>`
 - `docs/workflow/SUBAGENT_WORKFLOW_V2.md`
 - `docs/workflow/SOP_NEW_FEATURE.md`
 - `docs/conventions/COMMIT_CONVENTION.md`
