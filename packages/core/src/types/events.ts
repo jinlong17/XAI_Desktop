@@ -101,4 +101,44 @@ export interface EventMap {
     /** ISO timestamp of the check-in. */
     completedAt: string;
   };
+
+  // Labels events (emit-side owner: plugin-labels)
+  'labels:created': {
+    /** Newly created label id. */
+    id: string;
+    /** Display name at create time (trimmed). */
+    name: string;
+    /** Hex color string assigned (caller-provided or fallback). */
+    color: string;
+    /** Optional icon glyph identifier if provided by caller. */
+    icon?: string;
+    /** Owning entity type — always 'labels.label' (constant). */
+    entityType: 'labels.label';
+    /** Version at create — always 1. */
+    version: number;
+    /** ISO timestamp the store stamped at creation (matches Label.createdAt). */
+    createdAt: string;
+  };
+  'labels:updated': {
+    /** Updated label id. */
+    id: string;
+    /** Post-update display name (trimmed). */
+    name: string;
+    /** Post-update hex color. */
+    color: string;
+    /** Post-update optional icon glyph identifier. */
+    icon?: string;
+    /** Bumped version (current.version + 1). */
+    version: number;
+    /** ISO timestamp the store stamped at update (matches Label.updatedAt). */
+    updatedAt: string;
+  };
+  'labels:deleted': {
+    /** Deleted label id. */
+    id: string;
+    /** Version at delete time — the live version just before deletion. */
+    version: number;
+    /** ISO timestamp the store sampled at delete time. Event timestamp, not a tombstone query. */
+    deletedAt: string;
+  };
 }
