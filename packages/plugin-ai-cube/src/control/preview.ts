@@ -26,7 +26,7 @@ export const PREVIEW_ACTIONS: AiCubeActionDescriptor[] = [
   { id: "clear-grids", label: "Clear Grids", icon: "list", enabled: true },
   { id: "clipboard", label: "Clipboard", icon: "file", enabled: false, note: "Coming soon" },
   { id: "pomodoro", label: "Pomodoro", icon: "task", enabled: false, note: "Coming soon" },
-  { id: "search", label: "Search", icon: "folder", enabled: false, note: "Coming soon" },
+  { id: "search", label: "Console", icon: "folder", enabled: true },
   { id: "settings", label: "Settings", icon: "settings", enabled: true },
 ];
 

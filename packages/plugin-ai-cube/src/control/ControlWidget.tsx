@@ -254,7 +254,7 @@ export function AiCubeControlWidget() {
               ))}
             </div>
             <div style={{ fontSize: 11, color: "rgba(248, 250, 252, 0.72)" }}>
-              Clipboard, pomodoro, and search remain disabled placeholders in F2.
+              Clipboard and pomodoro remain disabled placeholders in F2.
             </div>
           </div>
 

@@ -10,11 +10,11 @@ describe("preview gating", () => {
     expect(PREVIEW_STATUS_TEXT.toLowerCase()).toContain("disabled");
   });
 
-  it("keeps placeholder actions disabled until owning plugins stabilize", () => {
+  it("keeps placeholder actions disabled while console entry is available", () => {
     expect(isPreviewActionEnabled("create-grid")).toBe(true);
     expect(isPreviewActionEnabled("clear-grids")).toBe(true);
     expect(isPreviewActionEnabled("clipboard")).toBe(false);
     expect(isPreviewActionEnabled("pomodoro")).toBe(false);
-    expect(isPreviewActionEnabled("search")).toBe(false);
+    expect(isPreviewActionEnabled("search")).toBe(true);
   });
 });
