@@ -31,6 +31,8 @@ import { meditationSlotRegistration } from "@repo/plugin-web-meditation";
 import { calendarSlotRegistration } from "@repo/plugin-web-calendar";
 // xai-web-dashboard-grid row #10
 import { dashboardGridSlotRegistration } from "@repo/plugin-web-dashboard-grid";
+// xai-web-board-core row #7
+import { boardCoreWebModuleRegistration } from "@repo/plugin-web-board-core";
 
 function placeholder(
   moduleId: string,
@@ -58,7 +60,7 @@ export const webShellModuleRegistrations: WebModuleSlotRegistration[] = [
   // Rail-visible modules (railOrder 1..12)
   aiChatWebModuleRegistration,  // xai-web-ai-chat row #18 (railOrder 1)
   tasksWebModuleRegistration,
-  placeholder("board",      "Boards",     "kanban",    3),
+  boardCoreWebModuleRegistration,  // xai-web-board-core row #7 (railOrder 3)
   dashboardGridSlotRegistration,  // xai-web-dashboard-grid row #10 (railOrder 4)
   calendarSlotRegistration,  // xai-web-calendar row #12 (railOrder 5)
   matrixSlotRegistration,

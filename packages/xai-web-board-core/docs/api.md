@@ -7,10 +7,13 @@
 
 ```ts
 // ---- Types ---------------------------------------------------------------
+// NOTE: `BoardCard` / `BoardList` identifiers are reserved for the React
+// component exports. Schema-type interfaces are re-exported under
+// `BoardCardData` / `BoardListData` aliases to disambiguate.
 export type {
   Board,
-  BoardList,
-  BoardCard,
+  BoardList as BoardListData,
+  BoardCard as BoardCardData,
   BoardListColorId,
   BoardTemplate,
   BoardWorkspace,

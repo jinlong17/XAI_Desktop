@@ -182,6 +182,9 @@ importers:
       '@repo/plugin-web-ai-chat':
         specifier: workspace:*
         version: link:../../packages/plugin-web-ai-chat
+      '@repo/plugin-web-board-core':
+        specifier: workspace:*
+        version: link:../../packages/plugin-web-board-core
       '@repo/plugin-web-calendar':
         specifier: workspace:*
         version: link:../../packages/xai-web-calendar
