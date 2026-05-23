@@ -17,7 +17,8 @@ describe("ingestRumPayload", () => {
               url: "https://xai.example.com/app/todos/1234?token=abc",
               userId: "u-1",
               query: "token=abc",
-              safe: "yes",
+              navigationType: "navigate",
+              note: "Buy milk",
             },
           },
         ],
@@ -31,9 +32,10 @@ describe("ingestRumPayload", () => {
     expect(result.payloads[0].routeGroup).toBe("module");
     expect(result.payloads[0].metrics[0].attribution).toEqual({
       url: "/app/todos/:id",
-      safe: "yes",
+      navigationType: "navigate",
     });
     expect(JSON.stringify(result.payloads)).not.toContain("token=abc");
     expect(JSON.stringify(result.payloads)).not.toContain("u-1");
+    expect(JSON.stringify(result.payloads)).not.toContain("Buy milk");
   });
 });
