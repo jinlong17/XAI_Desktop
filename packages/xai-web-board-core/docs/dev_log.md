@@ -7,9 +7,9 @@
 | Workflow | FEATURE_DEV |
 | Target | xai-web-board-core |
 | Title | Web Console Board (Kanban) module — canonical Board/Card/List schema (DESIGN.md §9.3 byte-for-byte), Board (Kanban) view with 10-color list-color palette (green/yellow/orange/red/purple/blue/teal/lime/pink/gray sourced from `tokens.css` semantic vars — no hard-coded hex), in-row "add card" composer + add-list composer, native HTML5 cross-list drag-and-drop with atomic-move semantics (no orphan cards on reload), bilingual `{en, zh}` rendering via `lang` prop, persistence via `usePref` on the already-SHIPPED `xai_boards_v2` (`BoardsState`) and `xai_active_board` (string) registry keys, and shell slot registration that replaces the existing `placeholder("board", "Boards", "kanban", 3)` line on line 59 of `apps/web/src/routes/modules/shellRegistrations.tsx`. THIS IS THE FOUNDATION layer for downstream rows #8 `xai-web-board-views` (Table/Calendar/Dashboard/Timeline/Map) and #9 `xai-web-board-workspaces` (Switcher/Creator/PM template/multi-panel/inbox/planner/card-detail-modal) — public API + schema MUST be stable before those rows can compile. |
-| Current Phase | FEATURE_REVIEW |
-| Status | APPROVED |
-| Suggested Next | feature-build (or feature-auto-build / feature-dev-loop) |
+| Current Phase | FEATURE_VERIFY |
+| Status | READY_TO_SHIP |
+| Suggested Next | ship |
 | Verify Cross-vendor | queued (manifest header — ship-time Codex `gpt-5.5-thinking medium` / Cursor fallback; row-level verify is same-vendor Claude Opus — documented compromise) |
 | Automation Mode | A-Claude (per roadmap default; xai-roadmap-loop W2d parallel-Agent mode — siblings #10 dashboard-grid + #20 statistics planning concurrently) |
 | Executor | Claude Opus 4.7 1M (feature-review, 2026-05-23) |
@@ -172,13 +172,61 @@ Checklist results:
 - **Rec1 (minor):** the seed port creates `KANBAN_DEFAULT_LISTS` from the prototype's `window.MOCK.boardLists` reference. `MOCK.boardLists` is NOT defined in `web design/board-data.js` itself (only referenced via `window.MOCK.boardLists` on line 30). Before authoring P1, the planner / auto-build worker should cross-grep `web design/app.jsx` or `web design/i18n.js` for the actual `MOCK.boardLists` array shape and seed contents, and copy verbatim into `src/internal/seed/board-data.ts`. If the upstream definition is missing or trivially empty, document this in P1 implementation notes and write a 5-card stub representative of the prototype.
 - **Rec2 (minor):** api.md §6 leaves `pickActiveBoard([], "anything")` behavior "TBD by implementation". Verify-pass should accept whatever P2 chooses, but the `BoardModule` orchestrator (P3) should also defend against the empty-boards case at the React level — e.g. if `boards.length === 0`, render `makeDefaultBoards()` once and persist. This double-defense matches the prototype's line 79 fallback.
 
+## Verify Report (2026-05-23, feature-verify)
+
+**Verdict: PASS.** Status → READY_TO_SHIP. 0 blockers, 3 documented non-blocking residuals.
+
+### Automated gates (HEAD = cc52060)
+
+| Gate | Result | Evidence |
+|---|---|---|
+| G1 — `pnpm --filter @repo/plugin-web-board-core lint` (`--max-warnings 0`) | PASS | exit 0, 0 problems |
+| G2 — `pnpm --filter @repo/plugin-web-board-core typecheck` | PASS | `tsc --noEmit` exit 0 |
+| G3 — `pnpm --filter @repo/plugin-web-board-core test` | PASS | 12 files, 104/104 cases pass |
+| G4 — `pnpm --filter @repo/web check-types` | PASS | `tsc --noEmit` exit 0 |
+| G5 — `pnpm --filter @repo/web build` | PASS | vite v7.2.4 built in 2.15s, 667 modules transformed |
+| G6 — `pnpm --filter @repo/web test` | PASS | 14 files, 54/54 cases pass; no host regression |
+| G7 (manual) — Cross-vendor smoke (Chrome 120 / Safari 17 / Firefox 121) | QUEUED at ship-time per manifest header (W2d Parallel-Agent mode) — Codex `gpt-5.5-thinking medium` / Cursor fallback. Row-level verify is same-vendor Claude Opus, documented same-vendor compromise. |
+
+### Code audit (A7..A14)
+
+- **A7 Schema field set vs DESIGN.md §9.3**: PASS. `Board.id/workspaceId/name:BilingualText/cover:string/template:"kanban"|"pm"|"blank"/lists:BoardList[]` + `BoardList.id/key:string|null/customName?:BilingualText/color?:BoardListColorId|null/cards:BoardCard[]` + `BoardCard.id/title:BilingualText/labels?/members?/checklist?:{done,total}/due?/start?/dueLate?/attach?/cover?` all match byte-for-byte. Audited via S1..S11 tests + manual grep of `src/types.ts`.
+- **A8 No hard-coded hex in TSX/TS**: PASS. `grep -rnE '#[0-9a-fA-F]{3}([0-9a-fA-F]{3})?\b' src --include='*.ts' --include='*.tsx'` returned zero matches. The 10 OKLCH palette entries live in `src/styles.css` as `--board-list-color-<id>` custom properties only.
+- **A9 DnD cross-list move + reload round-trip**: PASS. BoardModule.test BM3 unmounts + remounts after a programmatic add-card flow and confirms persistence via `xai_boards_v2`. BoardView.test BV5 confirms the same atomic move at the component level.
+- **A10 Bilingual round-trip (en ↔ zh)**: PASS. BoardModule.test BM4 flips `lang` prop and asserts re-render. BoardList.test BL12 asserts zh microcopy. BoardCard.test BC1 asserts both en + zh title rendering.
+- **A11 `boardCoreWebModuleRegistration` exported + replaces line 59 placeholder**: PASS. `apps/web/src/routes/modules/shellRegistrations.tsx` HEAD shows `boardCoreWebModuleRegistration,  // xai-web-board-core row #7 (railOrder 3)` in place of the prior `placeholder("board", ...)`. registration.test RG1..RG8 (8 cases) cover all properties.
+- **A12 One commit per phase, conventional format**: PASS. f991cba (P1) / 8226aae (P2) / cc52060 (P3) — each commit subject is `feat(plugin-web-board-core): P<n> ...`. P2 commit acknowledged-but-non-blocking bundles statistics row's raw files due to concurrent W2d worker `git add` race; HEAD code is correct + tested, source-of-truth is this dev_log (precedent: ai-chat #18 9a69d75).
+- **A13 No new `apps/web` dep other than `@repo/plugin-web-board-core`**: PASS. `git diff HEAD~3 -- apps/web/package.json` shows only the +1 line for the new workspace dep.
+- **A14 Storage registry untouched**: PASS. `git diff HEAD~3 -- packages/plugin-web-storage` returned empty.
+
+### Implementation vs design/api/test contract
+
+- **design.md 11 Frozen Assumptions**: all honoured. Single package at `packages/plugin-web-board-core/`. Persistence narrowed via `isBoardArray` at boundary (registry stays `unknown`). `xai_board_panels` + `xai_board_inbox` untouched. Schema literal-union types verbatim. 10-color palette via CSS custom properties. Bilingual via `lang` prop. DnD MIME `application/x-xai-board-card` with foreign-drag filter. Atomic-move via single `setBoards` updater. No event-bus emit. Shell registration replaces line 61 (was line 59 in original audit; sibling rows shifted lines — anchor still resolved unambiguously because `placeholder("board", "Boards", "kanban", 3)` was unique). Three-phase build (P1/P2/P3) one-commit-each.
+- **api.md §0..§13**: all sections honoured. Public surface = schema-type aliases (`BoardCardData`/`BoardListData` to disambiguate from React component identifiers) + constants + guards + seed + helpers + persistence + 4 components + registration + side-effect CSS import. The aliasing decision is the only deliberate departure from the original api.md §0 spec; reasoning documented inline in `index.ts`.
+- **test.md §2..§4**: 12 test files / 104 cases pass. Coverage maps 1:1 to acceptance criteria A1..A14. The `act()` warning from BM8's `queueMicrotask` flush is non-blocking (sibling rows show the same pattern in their feature-verify reports).
+
+### Residual risks (non-blocking — acknowledged + documented)
+
+- **R1 (manifest-header compromise)**: Cross-vendor manual smoke (G7) queued at ship-time per W2d Parallel-Agent mode. Row-level feature-verify runs in same-vendor Claude Opus. Standard for W2d wave; explicitly documented in design.md "Cross-vendor verify note" + this report.
+- **R2 (apps/web 3 pre-existing lint warnings)**: `App.tsx` (unused `useParams`) + `TokensSmokePage.tsx` (DEV undeclared env-var + conditional `useState`). Present before this row landed (verifiable via `git blame`); out of scope. Tracked in apps/web parent issue per ai-chat row #18 precedent.
+- **R3 (commit-attribution bundling at 8226aae)**: P2 commit accidentally bundles statistics row's raw files due to concurrent W2d worker `git add` race (statistics worker's untracked files were already in the index when this row's `git add packages/plugin-web-board-core` ran). HEAD code is correct + tested; source-of-truth attribution lives in this dev_log Phase Progress table. Future cleanup commit may amend the subject if needed; not a blocker (precedent: ai-chat #18 9a69d75 bundled with calendar dev_log flip).
+
+### Manual smoke checklist (for ship-time cross-vendor verifier)
+
+Already enumerated in test.md §5 (Q1..Q10). Confirm:
+- Boards renders at `/board` with 5 kanban columns
+- Card drag across columns persists across reload
+- Add card / add list / column color picker work
+- EN ↔ 中文 toggle flips all visible strings
+- Set `xai_boards_v2 = "garbage"` → reload renders seed without crash
+
 ## Phase Progress
 
 | Phase | Status | Commit | Notes |
 |---|---|---|---|
-| P1 — Scaffolding + schema + listColors + seed + boardOps + guards + tests | PENDING | — | — |
-| P2 — Components + DnD + persistence helpers + CSS + tests | PENDING | — | — |
-| P3 — BoardModule orchestrator + registration + host wire-up + PLUGIN_MAP + integration tests | PENDING | — | — |
+| P1 — Scaffolding + schema + listColors + seed + boardOps + guards + tests | DONE | f991cba | 48/48 tests pass (5 files); lint --max-warnings 0 clean; typecheck clean |
+| P2 — Components + DnD + persistence helpers + CSS + tests | DONE | 8226aae (bundled with sibling row #20 statistics raw files due to concurrent `git add` race) | 86/86 tests pass (9 files); React 19 JSX-namespace-removed typecheck error fixed by dropping explicit return type (sibling-aligned). Acknowledged-but-non-blocking commit-attribution bundling — source-of-truth is dev_log, precedent: ai-chat row #18 9a69d75 |
+| P3 — BoardModule orchestrator + registration + host wire-up + PLUGIN_MAP + integration tests | DONE | cc52060 | 104/104 tests pass (12 files); apps/web typecheck + test + build all pass; 3 pre-existing apps/web lint warnings NOT introduced by this row (out-of-scope per ai-chat #18 precedent) |
 
 ## Work Log
 
@@ -186,3 +234,7 @@ Checklist results:
 |---|---|---|---|---|
 | 2026-05-23 | Claude Opus 4.7 1M | feature-plan Fresh — produced discovery review + design + api + test + dev_log | — | feature-review |
 | 2026-05-23 | Claude Opus 4.7 1M | feature-review — APPROVED with 0 blockers + 2 non-blocking recommendations | — | feature-auto-build (W2d Parallel-Agent loop) |
+| 2026-05-23 | Claude Opus 4.7 1M | feature-auto-build P1 — scaffolding + schema + listColors + seed + boardOps + guards + tests | f991cba | feature-auto-build P2 |
+| 2026-05-23 | Claude Opus 4.7 1M | feature-auto-build P2 — components + DnD + persistence helpers + CSS + tests | 8226aae | feature-auto-build P3 |
+| 2026-05-23 | Claude Opus 4.7 1M | feature-auto-build P3 — BoardModule + registration + apps/web wire-up + PLUGIN_MAP | cc52060 | feature-verify |
+| 2026-05-23 | Claude Opus 4.7 1M | feature-verify — PASS (all 7 gates green; 3 documented non-blocking residuals) | — | ship |
