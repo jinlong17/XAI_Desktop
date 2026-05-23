@@ -31,8 +31,8 @@ import { meditationSlotRegistration } from "@repo/plugin-web-meditation";
 import { calendarSlotRegistration } from "@repo/plugin-web-calendar";
 // xai-web-dashboard-grid row #10
 import { dashboardGridSlotRegistration } from "@repo/plugin-web-dashboard-grid";
-// xai-web-board-core row #7
-import { boardCoreWebModuleRegistration } from "@repo/plugin-web-board-core";
+// xai-web-board-workspaces row #9 (workspace + multi-board layer wrapping row #7 board-core)
+import { boardWorkspacesWebModuleRegistration } from "@repo/plugin-web-board-workspaces";
 // xai-web-statistics row #20
 import { statisticsWebModuleRegistration } from "@repo/plugin-web-statistics";
 
@@ -62,7 +62,7 @@ export const webShellModuleRegistrations: WebModuleSlotRegistration[] = [
   // Rail-visible modules (railOrder 1..12)
   aiChatWebModuleRegistration,  // xai-web-ai-chat row #18 (railOrder 1)
   tasksWebModuleRegistration,
-  boardCoreWebModuleRegistration,  // xai-web-board-core row #7 (railOrder 3)
+  boardWorkspacesWebModuleRegistration,  // xai-web-board-workspaces row #9 (railOrder 3, replaces row #7's minimal shell wrapper)
   dashboardGridSlotRegistration,  // xai-web-dashboard-grid row #10 (railOrder 4)
   calendarSlotRegistration,  // xai-web-calendar row #12 (railOrder 5)
   matrixSlotRegistration,

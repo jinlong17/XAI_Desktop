@@ -80,3 +80,10 @@ export type { InboxPanelProps } from "./InboxPanel.js";
 
 export { PlannerPanel, computePlannerSlots } from "./PlannerPanel.js";
 export type { PlannerPanelProps } from "./PlannerPanel.js";
+
+// ---- Top-level orchestrator ----------------------------------------------
+export { BoardWorkspacesModule } from "./BoardWorkspacesModule.js";
+export type { BoardWorkspacesModuleProps } from "./BoardWorkspacesModule.js";
+
+// ---- Shell slot registration --------------------------------------------
+export { boardWorkspacesWebModuleRegistration } from "./registration.js";

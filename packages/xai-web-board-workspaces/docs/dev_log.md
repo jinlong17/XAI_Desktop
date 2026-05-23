@@ -7,12 +7,12 @@
 | Workflow | FEATURE_DEV |
 | Target | xai-web-board-workspaces |
 | Title | Web Console Board workspace + multi-board layer — colored Workspace chips (Personal / Team Workspace), Board Switcher modal (search + workspace scope tabs + grouped grid of board cards + "+ New board"), Board Creator modal (3 templates: Basic Kanban / PM for Teams / Blank), Project-Management-for-Teams template visual treatment (Status Overview SVG ring chart + 5 colored stages + percentages), 4-button multi-panel switcher (Inbox 260px / Planner 320px / Board flex / Switch boards trigger) with at-least-one-open invariant, persistence via usePref on `xai_board_panels` + `xai_board_inbox` (both already SHIPPED `unknown`-typed registry slots — narrowed at component boundary), bilingual via `STR` local tables + `useI18n(lang)` for board-core-shipped keys, wraps row #7 `@repo/plugin-web-board-core`'s `BoardView` + schema + helpers + seed (consumed via index.ts ONLY). REPLACES `boardCoreWebModuleRegistration` at line 65 of `apps/web/src/routes/modules/shellRegistrations.tsx` with this row's `boardWorkspacesWebModuleRegistration` (single-line Edit + one import-block swap; concurrent siblings #8 board-views + #11 dashboard-widgets own disjoint anchors). Pure UI sink — no event-bus emit. |
-| Current Phase | FEATURE_PLAN |
-| Status | APPROVED |
-| Suggested Next | feature-auto-build (W2e Parallel-Agent loop) |
+| Current Phase | FEATURE_AUTO_BUILD |
+| Status | READY_FOR_VERIFY |
+| Suggested Next | feature-verify |
 | Verify Cross-vendor | queued (manifest header — ship-time Codex `gpt-5.5-thinking medium` / Cursor fallback; row-level verify is same-vendor Claude Opus — documented compromise) |
 | Automation Mode | A-Claude (per roadmap default; xai-roadmap-loop W2e parallel-Agent mode — siblings #8 xai-web-board-views + #11 xai-web-dashboard-widgets planning concurrently) |
-| Executor | Claude Opus 4.7 1M (feature-review, 2026-05-23) |
+| Executor | Claude Opus 4.7 1M (feature-auto-build, 2026-05-23) |
 | Updated | 2026-05-23 |
 | Dispatched By | xai-roadmap-loop (W2e parallel dispatch, concurrent with rows #8 and #11) |
 | Roadmap Row | docs/workflow/roadmap/xai-web-console.md row #9 (W2 · Module) |
@@ -175,9 +175,9 @@ Checklist results:
 
 | Phase | Status | Commit | Notes |
 |---|---|---|---|
-| P1 — Scaffolding + narrowing types + guards + ring math + panel ops + STR + tests | PENDING | — | — |
-| P2 — 5 leaf React components + CSS + tests | PENDING | — | — |
-| P3 — BoardWorkspacesModule orchestrator + registration + host wire-up + PLUGIN_MAP + integration tests | PENDING | — | — |
+| P1 — Scaffolding + narrowing types + guards + ring math + panel ops + STR + tests | DONE | 214f28f | 46/46 tests pass (4 files); lint --max-warnings 0 clean; typecheck clean |
+| P2 — 5 leaf React components + CSS + tests | DONE | a107980 | 107/107 tests pass cumulative (9 files); lint --max-warnings 0 clean; typecheck clean; BS4 test scoped to .bs-scopes container to disambiguate "Team" string |
+| P3 — BoardWorkspacesModule orchestrator + registration + host wire-up + PLUGIN_MAP + integration tests | DONE | (commit pending — this commit) | 135/135 tests pass cumulative (12 files); apps/web check-types + build + test all pass; 3 pre-existing apps/web lint warnings NOT introduced by this row (out-of-scope per ai-chat #18 / board-core #7 precedent) |
 
 ## Work Log
 
@@ -185,3 +185,6 @@ Checklist results:
 |---|---|---|---|---|
 | 2026-05-23 | Claude Opus 4.7 1M | feature-plan Fresh — produced discovery review + design + api + test + dev_log | — | feature-review |
 | 2026-05-23 | Claude Opus 4.7 1M | feature-review — APPROVED with 0 blockers + 3 non-blocking recommendations | — | feature-auto-build (W2e Parallel-Agent loop) |
+| 2026-05-23 | Claude Opus 4.7 1M | feature-auto-build P1 — scaffolding + narrowing types + guards + ring math + panel ops + STR + 46/46 tests | 214f28f | feature-auto-build P2 |
+| 2026-05-23 | Claude Opus 4.7 1M | feature-auto-build P2 — 5 leaf components (BoardSwitcher / BoardCreator / StatusOverviewBanner / InboxPanel / PlannerPanel) + CSS + 61 component tests | a107980 | feature-auto-build P3 |
+| 2026-05-23 | Claude Opus 4.7 1M | feature-auto-build P3 — BoardWorkspacesModule orchestrator + registration + apps/web shell-reg swap + apps/web dep add + PLUGIN_MAP row + 28 integration tests | (this commit) | feature-verify |
