@@ -34,6 +34,9 @@ export interface DroppedFile {
   securityScope?: 'none' | 'bookmark-required' | 'bookmark-granted';
 }
 
+/** Eisenhower quadrant id used by web:matrix:* channels. */
+export type WebMatrixQuadrant = 'q1' | 'q2' | 'q3' | 'q4';
+
 /** All event names → payload type mapping for type-safe cross-window communication */
 export interface EventMap {
   // Organizer events
@@ -212,6 +215,18 @@ export interface EventMap {
     streak: number;
     /** ISO timestamp at check-in. */
     recordedAt: string;
+  };
+
+  // Matrix priority-tagged (owner: xai-web-matrix row #13) — declaration only in W2
+  'web:matrix:priority-tagged': {
+    /** Card id whose quadrant just changed. */
+    cardId: string;
+    /** Source quadrant; null is reserved (v1 never emits null). */
+    from: WebMatrixQuadrant | null;
+    /** Destination quadrant. */
+    to: WebMatrixQuadrant;
+    /** ISO timestamp at the moment of the drag-end / kbd-move commit. */
+    taggedAt: string;
   };
 
   // Project events (emit-side owner: plugin-project)

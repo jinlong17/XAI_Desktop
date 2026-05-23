@@ -89,6 +89,7 @@ export type DashWidgetId = string;
 export type AiConvo = unknown;
 export type PomodoroSession = unknown;
 export type Countdown = unknown;
+export type MatrixStateBlob = unknown;
 
 // ---------------------------------------------------------------------------
 // Default values (const assertions for inference)
@@ -317,6 +318,18 @@ export const PREF_REGISTRY = {
     category: "module",
     proposed: true,
   } satisfies PrefEntry<Countdown[]>,
+
+  // ---- Matrix (§S8 — declared by xai-web-matrix #13) -------------------------
+  // Opaque storage type; canonical declarations live in @repo/plugin-web-matrix.
+  xai_matrix_state: {
+    key: "xai_matrix_state",
+    codec: "json",
+    default: { schemaVersion: 1, q1: [], q2: [], q3: [], q4: [] } as MatrixStateBlob,
+    schemaVersion: 1,
+    owner: "xai-web-matrix",
+    category: "module",
+    proposed: true,
+  } satisfies PrefEntry<MatrixStateBlob>,
 } as const;
 
 // ---------------------------------------------------------------------------
