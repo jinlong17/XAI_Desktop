@@ -81,6 +81,16 @@
 | ai-cube | packages/plugin-ai-cube/ | In-Dev | §5.8 | @repo/core, @repo/core-data, @repo/ui | 2026-05-21 |
 | settings | packages/plugin-settings/ | Planned | — | @repo/core, @repo/ui | — |
 
+## Web Platform Shims (W1 parallel build)
+
+> These are browser-only infrastructure packages, NOT plugin-* business plugins.
+> No `manifest.json` is required (they do not participate in plugin routing).
+> Consumers must treat In-Dev shims as mock-first until the row reaches Stable.
+
+| Package | 目录 | 状态 | 说明 | 依赖 | 最后更新 |
+|---------|------|------|------|------|---------|
+| @repo/xai-web-event-bus | packages/xai-web-event-bus/ | In-Dev | Browser-only typed event bus (EventTarget adapter). Shares web:* EventMap keys with @repo/core. Ships emitWebEvent / onWebEvent / useWebEventListener. No manifest.json (shim, not a plugin). Verify Cross-vendor gate pending feature-verify. | @repo/core workspace:* | 2026-05-23 |
+
 ## Web Planning Contract (2026-05-21)
 
 > Governed by `docs/adr/0006-web-face-hybrid-reuse-boundary.md`.

@@ -11,7 +11,7 @@ export type {
   ConsoleWindowFrame,
   CommandError,
 } from './window';
-export type { DroppedFile, EventMap } from './events';
+export type { DroppedFile, EventMap, WebModuleId, WebPreferenceKey, WebPreferenceChange } from './events';
 export type {
   PluginManifest,
   PluginComponents,
