@@ -13,11 +13,11 @@
 | Workflow | FEATURE_DEV |
 | Target | xai-web-tasks |
 | Title | Port web Tasks module — 4-bucket DnD board with date-rewrite + persistence |
-| Current Phase | FEATURE_BUILD |
-| Status | APPROVED |
+| Current Phase | FEATURE_VERIFY |
+| Status | READY_FOR_VERIFY |
 | Executor | Claude Sonnet (claude-sonnet-4-6) |
-| Updated | 2026-05-23 13:22 |
-| Suggested Next | feature-auto-build |
+| Updated | 2026-05-23 13:29 |
+| Suggested Next | feature-verify |
 | Wave | W2b (parallel-Agent mode; siblings #14 pomodoro, #15 habits) |
 | Verify Cross-vendor | yes |
 
@@ -156,4 +156,5 @@ No blockers. Plan is executable.
 | 2026-05-23 17:30 | Claude Opus (feature-plan) | Initial plan: discovery review + design.md + api.md + test.md + dev_log.md scaffolded for `@repo/plugin-web-tasks`. Confirmed `xai_task_cols` already in PREF_REGISTRY; chose boundary-cast + validate pattern matching `xai-web-countdown`; chose HTML5 DnD (1:1 port) with extracted pure `dateForCol` helper. No new packages; only existing shipped deps consumed. | — | feature-review |
 | 2026-05-23 18:05 | Claude Opus (feature-review) | Reviewed all 9 gates (seed-brief fidelity, ADR-0007 §S4/§S6/§S7/§S8 conformance, W1 dep wiring, usePref persistence, bilingual coverage, HTML5 DnD, 3-phase split, cross-vendor, sibling-coordination). Verified anchor uniqueness in shellRegistrations.tsx via grep (one occurrence at L47). Verdict: APPROVED, 0 blockers, 3 non-blocking recommendations. Status flipped to APPROVED; Suggested Next = feature-auto-build. | — | feature-auto-build |
 | 2026-05-23 13:22 | Claude Sonnet (feature-auto-build) | P1 DONE: scaffolded @repo/plugin-web-tasks package (package.json, manifest.json, tsconfig.json, vitest.config.ts, vitest.setup.ts, eslint.config.js). Created src/types.ts, src/styles.css, src/index.ts, src/registration.tsx, src/TasksModule.tsx, src/TasksSidebar.tsx, src/TaskColumn.tsx, src/TaskCard.tsx, src/CompletedGroup.tsx, src/internal/seed/tasksMock.ts, src/internal/validate.ts, src/internal/tasksReducer.ts, src/internal/dateForCol.ts. Tests: T-SEED-1..4 + T-MOD-1..6 all pass (10/10). Lint clean. Typecheck clean. Also implemented DnD + reducer + validate + dateForCol (P2 scope) since TasksModule requires them — all wired and tested. | 3c0d6bd | P2 (host slot wiring) |
-| 2026-05-23 13:26 | Claude Sonnet (feature-auto-build) | P2 DONE: Added P2 test suite (T-DC-1..5, T-RD-1..7, T-VAL-1..4, T-PER-1..3, T-REG-1) — all 36 tests pass. Edited apps/web/src/routes/modules/shellRegistrations.tsx (replaced placeholder("tasks",...) with tasksWebModuleRegistration + import). Edited apps/web/package.json (added @repo/plugin-web-tasks: workspace:*). pnpm install clean. @repo/web check-types clean. Lint + typecheck on @repo/plugin-web-tasks clean. Rec-1 DEV warn message format applied. Rec-2 fake timers already in vitest.setup.ts. | see P2 commit | P3 (barrel + registration RTL + cross-vendor checklist) |
+| 2026-05-23 13:26 | Claude Sonnet (feature-auto-build) | P2 DONE: Added P2 test suite (T-DC-1..5, T-RD-1..7, T-VAL-1..4, T-PER-1..3, T-REG-1) — all 36 tests pass. Edited apps/web/src/routes/modules/shellRegistrations.tsx (replaced placeholder("tasks",...) with tasksWebModuleRegistration + import). Edited apps/web/package.json (added @repo/plugin-web-tasks: workspace:*). pnpm install clean. @repo/web check-types clean. Lint + typecheck on @repo/plugin-web-tasks clean. Rec-1 DEV warn message format applied. Rec-2 fake timers already in vitest.setup.ts. | e5ac21b | P3 (barrel + registration RTL + cross-vendor checklist) |
+| 2026-05-23 13:29 | Claude Sonnet (feature-auto-build) | P3 DONE: Added T-BAR-1 (index-barrel.test.ts) — verifies public surface exports and excludes internal helpers. Extended registration.test.tsx with T-REG-2 (TasksModuleRoute inside WebShellProvider renders EN h1 "All"). Final pass: 40/40 tests pass. @repo/plugin-web-tasks lint + typecheck clean. @repo/web check-types + 50 tests clean (no regression). Cross-vendor checklist (AC-7): (i) all edits used unique anchors (tasks placeholder L47 + @repo/plugin-web-matrix line in package.json); (ii) all file paths are absolute; (iii) no template-language-specific syntax leaked into source. Status → READY_FOR_VERIFY. | see P3 commit | feature-verify |
