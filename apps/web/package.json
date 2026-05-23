@@ -7,18 +7,26 @@
     "dev": "vite --port 3000",
     "dev:mock-auth": "VITE_WEB_AUTH_MODE=mock-authenticated vite --port 3000",
     "build": "vite build",
+    "build:secure": "vite build && pnpm run sourcemaps:upload && pnpm run sourcemaps:validate && pnpm run sourcemaps:finalize && pnpm run sourcemaps:clean && pnpm run sourcemaps:assert-clean",
     "lint": "eslint --max-warnings 0 .",
     "check-types": "tsc --noEmit",
-    "preview": "vite preview --port 4173"
+    "preview": "vite preview --port 4173",
+    "sourcemaps:upload": "node ./scripts/sourcemaps-upload.mjs",
+    "sourcemaps:validate": "node ./scripts/sourcemaps-validate.mjs",
+    "sourcemaps:finalize": "node ./scripts/sourcemaps-finalize.mjs",
+    "sourcemaps:clean": "node ./scripts/sourcemaps-clean.mjs",
+    "sourcemaps:assert-clean": "node ./scripts/sourcemaps-assert-clean.mjs"
   },
   "dependencies": {
+    "@sentry/react": "^10.20.0",
     "@repo/core": "workspace:^",
     "@repo/plugin-console": "workspace:^",
     "@repo/plugin-productivity": "workspace:^",
     "@repo/web-auth-device-session": "workspace:*",
     "react": "^19.2.0",
     "react-dom": "^19.2.0",
-    "react-router": "^7.15.1"
+    "react-router": "^7.15.1",
+    "web-vitals": "^5.1.0"
   },
   "devDependencies": {
     "@repo/eslint-config": "workspace:*",
