@@ -62,7 +62,10 @@ describe("createBrowserObservabilityTransport", () => {
     });
 
     expect(captureMessage).toHaveBeenCalledTimes(1);
-    expect(captureMessage.mock.calls[0]?.[0]).toBe("failure /app/task/777");
+    expect(captureMessage.mock.calls[0]?.[0]).toBe("redacted_error");
+    expect(captureMessage.mock.calls[0]?.[1]).toMatchObject({
+      extra: { event_channel: "error" },
+    });
 
     transport.send({
       channel: "rum",

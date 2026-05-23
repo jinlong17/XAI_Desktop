@@ -15,6 +15,7 @@ describe("privacy helpers", () => {
     expect(sanitizeText("failure user=550e8400-e29b-41d4-a716-446655440000?token=abc")).toBe(
       "failure user=[redacted-uuid]"
     );
+    expect(sanitizeText("task 777 failed")).toBe("task [redacted-id] failed");
   });
 
   it("drops sensitive object keys recursively", () => {
@@ -28,7 +29,7 @@ describe("privacy helpers", () => {
     }) as Record<string, unknown>;
 
     expect(output).toEqual({
-      route: "/app/todos/123",
+      route: "/app/todos/[redacted-id]",
       nested: {
         label: "safe",
       },
