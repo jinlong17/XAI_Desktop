@@ -15,7 +15,7 @@
  * design.md §1 / R11.
  */
 
-import { useEffect, useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import type { BoardListData, BoardCardData } from "@repo/plugin-web-board-core";
 import type { Lang } from "./internal/i18n.js";
 import { parseDay, dayToStr, clampDay } from "./internal/dateOps.js";
@@ -199,14 +199,13 @@ export function TimelineView({
           const name = list.key ?? (list.customName?.[lang] ?? "");
 
           return (
-            <>
-              <div key={`name-${list.id}`} className="bt-list-name" data-testid="tl-list-name">
+            <React.Fragment key={list.id}>
+              <div className="bt-list-name" data-testid="tl-list-name">
                 <span className="dot" style={{ color }} aria-hidden="true" />
                 {" "}
                 {name}
               </div>
               <div
-                key={`track-${list.id}`}
                 className="bt-track"
                 ref={items.length ? trackRef : null}
                 data-testid="tl-track"
@@ -278,7 +277,7 @@ export function TimelineView({
                   </div>
                 )}
               </div>
-            </>
+            </React.Fragment>
           );
         })}
       </div>

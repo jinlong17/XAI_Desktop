@@ -164,6 +164,7 @@ const OWNER_ROW_ADDITIONS = [
   "xai_habits_state",         // xai-web-habits #15
   "xai_pref_week_start",      // xai-web-calendar #12 (first consumer of xai_pref_* family)
   "xai_meditation_prefs",     // xai-web-meditation #16
+  "xai_board_view_by_id",     // xai-web-board-views #8 (per-board active view selection)
 ] as const;
 
 describe("AC-REG-8: Total entry count = 20 baseline + owner-row additions", () => {

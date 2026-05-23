@@ -99,6 +99,7 @@ const OWNER_ROW_EXEMPT_KEYS: ReadonlySet<string> = new Set([
   "xai_habits_state",       // xai-web-habits #15
   "xai_pref_week_start",    // xai-web-calendar #12 (xai_pref_* family per ADR-0007 §S8)
   "xai_meditation_prefs",   // xai-web-meditation #16
+  "xai_board_view_by_id",   // xai-web-board-views #8 (per-board active view selection)
 ]);
 
 describe("AC-PARITY-2: all PREF_REGISTRY explicit keys are in §9.2", () => {

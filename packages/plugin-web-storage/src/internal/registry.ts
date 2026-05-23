@@ -369,6 +369,19 @@ export const PREF_REGISTRY = {
     category: "pref",
   } satisfies PrefEntry<0 | 1>,
 
+  // ---- Board Views (§S8 — declared by xai-web-board-views #8) ---------------
+  // Shape: Record<boardId, BoardViewId> — canonical declarations live in
+  // @repo/plugin-web-board-views. Defaults to {} (no active view override;
+  // BoardModule falls back to "board" / Kanban when the key is absent).
+  xai_board_view_by_id: {
+    key: "xai_board_view_by_id",
+    codec: "json",
+    default: {} as Record<string, string>,
+    schemaVersion: 1,
+    owner: "xai-web-board-views row #8",
+    category: "module",
+  } satisfies PrefEntry<Record<string, string>>,
+
   // ---- Meditation (§S8 — declared by xai-web-meditation #16) ----------------
   // Opaque storage type; canonical declarations live in @repo/plugin-web-meditation.
   // proposed: false — canonical name approved by worker brief #16.
