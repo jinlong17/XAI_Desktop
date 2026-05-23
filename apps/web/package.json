@@ -37,6 +37,7 @@
     "@repo/plugin-web-habits": "workspace:*",
     "@repo/plugin-web-ai-chat": "workspace:*",
     "@repo/plugin-web-meditation": "workspace:*",
+    "@repo/plugin-web-calendar": "workspace:*",
     "@repo/plugin-web-tasks": "workspace:*",
     "@repo/plugin-console": "workspace:^",
     "@repo/plugin-productivity": "workspace:^",
