@@ -399,6 +399,83 @@ export const PREF_REGISTRY = {
     owner: "xai-web-meditation",
     category: "module",
   } satisfies PrefEntry<MeditationPrefsBlob>,
+
+  // ---- Features panel (§S8 — declared by xai-web-settings-features-panel #23) ----
+  // 8 boolean toggles, one per user-toggleable rail module. Defaults to `true`
+  // (every module enabled). Toggling off hides the rail entry + makes deep links
+  // resolve to <DisabledFeatureFallback>; data persistence is untouched.
+  // Canonical xai_pref_* family per ADR-0007 §S8.
+  xai_pref_features_tasks: {
+    key: "xai_pref_features_tasks",
+    codec: "boolean",
+    default: true as boolean,
+    schemaVersion: 1,
+    owner: "xai-web-settings-features-panel",
+    category: "pref",
+  } satisfies PrefEntry<boolean>,
+
+  xai_pref_features_board: {
+    key: "xai_pref_features_board",
+    codec: "boolean",
+    default: true as boolean,
+    schemaVersion: 1,
+    owner: "xai-web-settings-features-panel",
+    category: "pref",
+  } satisfies PrefEntry<boolean>,
+
+  xai_pref_features_dashboard: {
+    key: "xai_pref_features_dashboard",
+    codec: "boolean",
+    default: true as boolean,
+    schemaVersion: 1,
+    owner: "xai-web-settings-features-panel",
+    category: "pref",
+  } satisfies PrefEntry<boolean>,
+
+  xai_pref_features_calendar: {
+    key: "xai_pref_features_calendar",
+    codec: "boolean",
+    default: true as boolean,
+    schemaVersion: 1,
+    owner: "xai-web-settings-features-panel",
+    category: "pref",
+  } satisfies PrefEntry<boolean>,
+
+  xai_pref_features_matrix: {
+    key: "xai_pref_features_matrix",
+    codec: "boolean",
+    default: true as boolean,
+    schemaVersion: 1,
+    owner: "xai-web-settings-features-panel",
+    category: "pref",
+  } satisfies PrefEntry<boolean>,
+
+  xai_pref_features_pomodoro: {
+    key: "xai_pref_features_pomodoro",
+    codec: "boolean",
+    default: true as boolean,
+    schemaVersion: 1,
+    owner: "xai-web-settings-features-panel",
+    category: "pref",
+  } satisfies PrefEntry<boolean>,
+
+  xai_pref_features_habits: {
+    key: "xai_pref_features_habits",
+    codec: "boolean",
+    default: true as boolean,
+    schemaVersion: 1,
+    owner: "xai-web-settings-features-panel",
+    category: "pref",
+  } satisfies PrefEntry<boolean>,
+
+  xai_pref_features_meditation: {
+    key: "xai_pref_features_meditation",
+    codec: "boolean",
+    default: true as boolean,
+    schemaVersion: 1,
+    owner: "xai-web-settings-features-panel",
+    category: "pref",
+  } satisfies PrefEntry<boolean>,
 } as const;
 
 // ---------------------------------------------------------------------------

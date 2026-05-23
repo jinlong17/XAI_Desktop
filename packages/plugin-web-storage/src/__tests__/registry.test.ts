@@ -165,6 +165,15 @@ const OWNER_ROW_ADDITIONS = [
   "xai_pref_week_start",      // xai-web-calendar #12 (first consumer of xai_pref_* family)
   "xai_meditation_prefs",     // xai-web-meditation #16
   "xai_board_view_by_id",     // xai-web-board-views #8 (per-board active view selection)
+  // xai-web-settings-features-panel #23 — 8 boolean toggles, one per user-toggleable rail module
+  "xai_pref_features_tasks",
+  "xai_pref_features_board",
+  "xai_pref_features_dashboard",
+  "xai_pref_features_calendar",
+  "xai_pref_features_matrix",
+  "xai_pref_features_pomodoro",
+  "xai_pref_features_habits",
+  "xai_pref_features_meditation",
 ] as const;
 
 describe("AC-REG-8: Total entry count = 20 baseline + owner-row additions", () => {

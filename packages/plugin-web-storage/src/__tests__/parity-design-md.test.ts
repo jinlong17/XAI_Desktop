@@ -100,6 +100,15 @@ const OWNER_ROW_EXEMPT_KEYS: ReadonlySet<string> = new Set([
   "xai_pref_week_start",    // xai-web-calendar #12 (xai_pref_* family per ADR-0007 §S8)
   "xai_meditation_prefs",   // xai-web-meditation #16
   "xai_board_view_by_id",   // xai-web-board-views #8 (per-board active view selection)
+  // xai-web-settings-features-panel #23 — 8 boolean toggles in the xai_pref_* family per ADR-0007 §S8
+  "xai_pref_features_tasks",
+  "xai_pref_features_board",
+  "xai_pref_features_dashboard",
+  "xai_pref_features_calendar",
+  "xai_pref_features_matrix",
+  "xai_pref_features_pomodoro",
+  "xai_pref_features_habits",
+  "xai_pref_features_meditation",
 ]);
 
 describe("AC-PARITY-2: all PREF_REGISTRY explicit keys are in §9.2", () => {
