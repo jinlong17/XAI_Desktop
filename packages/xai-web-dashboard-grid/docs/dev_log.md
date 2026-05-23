@@ -48,8 +48,8 @@ Selected **Vite+TS package at `packages/xai-web-dashboard-grid/` named `@repo/pl
 
 | Phase | Status | Commit |
 |---|---|---|
-| P1 — Package skeleton + DashboardModule render + EmptyState + DashHeader + i18n delta + EventMap declaration + shell wiring | PENDING | — |
-| P2 — FLIP DnD: WidgetShell + DashboardGrid + WidgetGhost + useFlipReorder + useGridDrag + useDashOrder + sanitizeOrder | PENDING | — |
+| P1 — Package skeleton + DashboardModule render + EmptyState + DashHeader + i18n delta + EventMap declaration + shell wiring | DONE | 2d9655f |
+| P2 — FLIP DnD: WidgetShell + DashboardGrid + WidgetGhost + useFlipReorder + useGridDrag + useDashOrder + sanitizeOrder | IN_PROGRESS | — |
 | P3 — Event emission wiring + cross-row contract docs + final polish | PENDING | — |
 
 ## Phase Plan (3 phases)

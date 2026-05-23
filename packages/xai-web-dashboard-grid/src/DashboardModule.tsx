@@ -3,17 +3,18 @@
  *
  * Composition:
  * - <DashHeader> renders the greeting + bilingual date + Add-widget button.
- * - When widgets.length > 0, P2 will render <DashboardGrid> here.
- * - When widgets.length === 0, render <EmptyState>.
+ * - When widgets.length > 0, <DashboardGrid> renders the 12-col FLIP grid.
+ * - When widgets.length === 0, <EmptyState> renders the bilingual placeholder.
  *
  * The module ticks `now` once per second to drive the greeting band +
  * date subline + widget render context. Per ADR-0007 §S5, all state is
  * typed; no `useState<any>` and no `defaultProps`.
  */
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 
 import "./styles.css";
 
+import { DashboardGrid } from "./DashboardGrid.js";
 import { DashHeader } from "./DashHeader.js";
 import { EmptyState } from "./EmptyState.js";
 import type { DashboardModuleProps } from "./types.js";
@@ -26,16 +27,20 @@ export function DashboardModule({ lang, widgets, goTo }: DashboardModuleProps) {
     return () => window.clearInterval(id);
   }, []);
 
-  // P3 will replace these with bus emits; P1 leaves them as silent no-ops so
-  // every render path is exercised by tests. The DashHeader/EmptyState
-  // components are wired to call them.
-  const handleAddWidget = () => {
+  // P3 wires this to emitWebEvent("web:dashboard:add-widget-clicked", ...).
+  // For now (still P2 land) it is a no-op so both callers exercise the path.
+  const handleAddWidget = useCallback(() => {
     /* P3 wires this to emitWebEvent("web:dashboard:add-widget-clicked", ...) */
-  };
+  }, []);
 
-  // Avoid an unused-variable warning on `goTo` in P1; P2 will pass it into
-  // the grid context so widgets can deep-link.
-  void goTo;
+  // Default goTo is a no-op when caller omitted; registration.tsx always
+  // supplies a real one in production.
+  const goToCb = useCallback(
+    (moduleId: string) => {
+      if (goTo) goTo(moduleId);
+    },
+    [goTo],
+  );
 
   return (
     <div className="module module-dashboard">
@@ -43,9 +48,7 @@ export function DashboardModule({ lang, widgets, goTo }: DashboardModuleProps) {
       {widgets.length === 0 ? (
         <EmptyState lang={lang} onAddWidget={handleAddWidget} />
       ) : (
-        <div className="dash-grid" data-testid="dash-grid">
-          {/* P2: render <DashboardGrid widgets={widgets} lang={lang} now={now} goTo={goTo} /> */}
-        </div>
+        <DashboardGrid widgets={widgets} lang={lang} now={now} goTo={goToCb} />
       )}
     </div>
   );
