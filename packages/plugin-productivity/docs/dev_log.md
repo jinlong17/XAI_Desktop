@@ -7,11 +7,11 @@
 | Workflow | FEATURE_DEV |
 | Target | plugin-productivity |
 | Title | productivity:* typed events emit |
-| Status | READY_TO_SHIP |
-| Current Phase | FEATURE_VERIFY |
-| Suggested Next | ship |
-| Executor | feature-verify (Claude) |
-| Updated | 2026-05-23 |
+| Status | SHIPPED |
+| Current Phase | SHIP |
+| Suggested Next | workflow-complete |
+| Executor | ship (Claude) |
+| Updated | 2026-05-23 14:50 |
 | Automation Mode | A-Claude |
 | Verify Cross-vendor | no |
 | Blockers | none |
@@ -172,6 +172,15 @@ Each commit stays within a single phase boundary. No mixed-intent commits.
 
 ## Work Log
 
+- **2026-05-23 14:50 — ship (Claude)** — Re-verified all gates from clean dev:
+  `pnpm --filter @repo/core check-types` green;
+  `pnpm --filter @repo/plugin-productivity check-types` green;
+  `pnpm --filter @repo/plugin-productivity test` 33/33 passed (7 files).
+  Confirmed PLUGIN_MAP row 74 untouched (Status: In-Dev). Working tree clean.
+  Pushed `dev` → `origin/dev` (d0be43f..2561e08). Status → SHIPPED.
+  Commits pushed: 7ee5d6f, 975063e, 22395c4, e181917, e090dbc, b5bcfda, 2561e08
+  (W0.B scope). Next: workflow-complete.
+
 - **2026-05-23 — feature-verify (Claude)** — Read brief, discovery review,
   api.md, dev_log, and the three store implementations. Ran gates:
   `pnpm --filter @repo/core check-types` green;
@@ -262,3 +271,65 @@ Each commit stays within a single phase boundary. No mixed-intent commits.
 - perf(plugin-productivity): memoize Eisenhower quadrant bucketing
 - chore(plugin-productivity): humanize Pomodoro mode labels, filter task list, document event-emit gap
 - 2026-05-20 Track D: migrated Todo/Habit to Repository v0 shape, added `RepoAdapter`/`ProductivityRepoProvider`, kept Pomodoro in memory, wired `organizer:grid:create-task` listener, and passed `pnpm --filter @repo/plugin-productivity check-types`.
+
+## Ship Report (2026-05-23 ship)
+
+### Push target
+
+- Branch: `dev` → `origin/dev`
+- Push range: `d0be43f..2561e08` (8 commits moved; includes this feature's 7 W0.B commits + 1 co-resident unrelated commit `85d146e docs(web-console-ticktick-ui-i18n): seed goal prompt`)
+
+### W0.B commit set shipped
+
+| Commit | Subject |
+|---|---|
+| 7ee5d6f | feat(core/events): add three productivity EventMap entries (BUILD-1) |
+| 975063e | feat(plugin-productivity): wire usePomodoroStore emit + tests (BUILD-2) |
+| 22395c4 | feat(plugin-productivity): wire useTodoStore emit + dedup + tests (BUILD-3) |
+| e181917 | feat(plugin-productivity): wire useHabitStore emit + dedup + tests (BUILD-4) |
+| e090dbc | chore(plugin-productivity): update dev_log BUILD-1..4 complete, READY_FOR_VERIFY |
+| b5bcfda | docs(plugin-productivity): feature-plan artifacts for typed events emit row |
+| 2561e08 | chore(plugin-productivity): record feature-verify report + flip to READY_TO_SHIP |
+
+Co-resident commits riding the same push (not owned by this row):
+- `85d146e` — `docs(web-console-ticktick-ui-i18n): seed goal prompt + branch/codex preflight notes` (user-prepared seed for a future feature row)
+
+### Gate re-verification (ship-time)
+
+| Gate | Command | Result |
+|---|---|---|
+| Core type check | `pnpm --filter @repo/core check-types` | green (0 errors) |
+| Plugin type check | `pnpm --filter @repo/plugin-productivity check-types` | green (0 errors) |
+| Plugin vitest (full) | `pnpm --filter @repo/plugin-productivity test` | 33/33 passed — 7 files (RepoAdapter 5, browserTodoRepo 2, register-plugin 2, usePomodoroStore 6, useHabitStore 8, useTodoStore 7, TodoWebModuleRoute 3) |
+
+Note: `act(...)` not configured stderr noise in jsdom-env test files is expected
+(same pattern as `TodoWebModuleRoute.test.tsx`; documented in Risks table). All
+assertions pass.
+
+### Real-hardware verification
+
+Not required for this row. W0.B adds no multi-window navigation, no native macOS
+API calls, and no Tauri command signature change. All new code is in-process store
+hooks with co-located vitest coverage.
+
+### PLUGIN_MAP row 74 status
+
+Row 74 (`productivity | In-Dev`) was NOT touched. Status promotion to Stable is
+deferred to W0.C, which depends on this row + verification being complete.
+
+### Non-blocking review notes (N1/N2/N3) — deferred
+
+These three notes from the 2026-05-23 feature-review are acknowledged but do not
+gate ship or require an immediate follow-up row:
+
+- **N1** (`api.md` `.catch()` wording vs `plugin-account/register-plugin.ts:62` bare `void`)
+  — cosmetic doc rewording; path: `packages/plugin-productivity/docs/api.md`
+- **N2** (AC-T2/T5 `vi.useFakeTimers()` scope; full form used vs scoped form recommended)
+  — future test-pass refinement; path: `packages/plugin-productivity/src/hooks/useTodoStore.test.tsx`
+- **N3** (`useEventListener: vi.fn()` stub passthrough in Todo tests)
+  — harmless under current no-op stub; path: `packages/plugin-productivity/src/hooks/useTodoStore.test.tsx`
+
+### D-3 drift residual
+
+D-3 closure for `plugin-labels` and `plugin-project` event emissions is **out of
+scope for W0.B**. Labels + project rows remain open as separate roadmap items.
