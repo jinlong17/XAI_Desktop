@@ -7,7 +7,7 @@ export const NONCE_META_NAME = "xai-csp-nonce";
 export const NONCE_HTML_ATTRIBUTE = "data-csp-nonce";
 
 export function readRuntimeNonce(doc: Document): RuntimeNonceSource | null {
-  const meta = doc.querySelector(`meta[name=\"${NONCE_META_NAME}\"]`);
+  const meta = doc.querySelector(`meta[name="${NONCE_META_NAME}"]`);
   const metaValue = meta?.getAttribute("content")?.trim();
   if (metaValue) {
     return { value: metaValue, source: "meta" };

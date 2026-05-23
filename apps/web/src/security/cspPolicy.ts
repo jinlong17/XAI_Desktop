@@ -47,5 +47,5 @@ export function buildCspPolicy({
 }
 
 export function buildReportingEndpointsHeader(reportEndpoint = "/__csp_report", reportGroup = "csp-endpoint"): string {
-  return `${reportGroup}=\"${reportEndpoint}\"`;
+  return `${reportGroup}="${reportEndpoint}"`;
 }
