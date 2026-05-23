@@ -1,0 +1,82 @@
+/*
+ * Dashboard grid container styles.
+ *
+ * Most layout/grid rules already live in @repo/plugin-web-tokens/src/layout.css
+ * (ported via row #2 from web design/layout.css): .module-dashboard, .dash-head,
+ * .dash-greeting, .dash-date, .dash-grid, .widget-shell, .w-clock, .w-stat, etc.
+ *
+ * This file declares row-scoped additions only:
+ * - Empty state panel
+ * - Widget ghost layer (P2)
+ * - Drag state modifiers (P2)
+ *
+ * Per ADR-0007 §S5 rule 9: CSS imports are side-effect — no CSS Modules.
+ */
+
+/* ---- Empty state ----------------------------------------------------- */
+
+.dash-empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  padding: 48px 32px;
+  margin-top: 32px;
+  border: 1px dashed var(--border-1, oklch(85% 0.01 250));
+  border-radius: 16px;
+  background: var(--bg-panel-2, transparent);
+  text-align: center;
+}
+
+.dash-empty__title {
+  font-size: 18px;
+  font-weight: 600;
+  color: var(--text-1, currentColor);
+}
+
+.dash-empty__subtitle {
+  font-size: 14px;
+  color: var(--text-2, currentColor);
+  opacity: 0.75;
+  max-width: 360px;
+}
+
+.dash-empty__cta {
+  margin-top: 8px;
+}
+
+/* ---- Widget ghost (rendered while a widget is being dragged, P2) ----- */
+
+.widget-ghost {
+  position: fixed;
+  pointer-events: none;
+  z-index: 1000;
+  top: 0;
+  left: 0;
+  will-change: transform;
+  /* The widget body renders inside; the ghost shell mirrors widget-shell sizing. */
+}
+
+/* ---- Drag state modifiers (P2) --------------------------------------- */
+
+.widget-shell {
+  /* Required so iOS touch-drag works without native scroll capture (R3). */
+  touch-action: none;
+}
+
+.widget-shell.dragging {
+  opacity: 0.18;
+  pointer-events: none;
+  /* Disable FLIP transition on the source while it is the floating ghost. */
+  transition: none !important;
+  transform: none !important;
+}
+
+.dash-grid.is-dragging {
+  cursor: grabbing;
+}
+
+.dash-grid.is-dragging .widget-shell:not(.dragging) {
+  cursor: grabbing;
+}

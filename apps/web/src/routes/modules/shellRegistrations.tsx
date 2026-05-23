@@ -29,6 +29,8 @@ import { aiChatWebModuleRegistration } from "@repo/plugin-web-ai-chat";
 import { meditationSlotRegistration } from "@repo/plugin-web-meditation";
 // xai-web-calendar row #12
 import { calendarSlotRegistration } from "@repo/plugin-web-calendar";
+// xai-web-dashboard-grid row #10
+import { dashboardGridSlotRegistration } from "@repo/plugin-web-dashboard-grid";
 
 function placeholder(
   moduleId: string,
@@ -57,7 +59,7 @@ export const webShellModuleRegistrations: WebModuleSlotRegistration[] = [
   aiChatWebModuleRegistration,  // xai-web-ai-chat row #18 (railOrder 1)
   tasksWebModuleRegistration,
   placeholder("board",      "Boards",     "kanban",    3),
-  placeholder("dashboard",  "Dashboard",  "layout",    4),
+  dashboardGridSlotRegistration,  // xai-web-dashboard-grid row #10 (railOrder 4)
   calendarSlotRegistration,  // xai-web-calendar row #12 (railOrder 5)
   matrixSlotRegistration,
   pomodoroWebModuleRegistration,

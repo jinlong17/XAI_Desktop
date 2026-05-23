@@ -1,0 +1,19 @@
+{
+  "name": "@repo/plugin-web-dashboard-grid",
+  "slug": "xai-web-dashboard-grid",
+  "version": "0.0.0",
+  "status": "In-Dev",
+  "type": "ui",
+  "owner": "xai-web-dashboard-grid",
+  "description": "Dashboard grid container — 12-col responsive layout, FLIP drag-to-reorder 380ms, xai_dash_order persistence, widget-registration slot API (foundation for xai-web-dashboard-widgets row #11).",
+  "roadmap_row": 10,
+  "wave": "W2",
+  "entry": "./src/index.ts",
+  "dependencies": [
+    "@repo/core",
+    "@repo/plugin-web-tokens",
+    "@repo/plugin-web-storage",
+    "@repo/xai-web-event-bus",
+    "@repo/xai-web-shell"
+  ]
+}

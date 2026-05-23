@@ -32,6 +32,7 @@
     "@repo/xai-web-shell": "workspace:*",
     "@repo/plugin-web-pet": "workspace:*",
     "@repo/plugin-web-countdown": "workspace:*",
+    "@repo/plugin-web-dashboard-grid": "workspace:*",
     "@repo/plugin-web-matrix": "workspace:*",
     "@repo/plugin-web-pomodoro": "workspace:*",
     "@repo/plugin-web-habits": "workspace:*",

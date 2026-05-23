@@ -195,6 +195,12 @@ export interface EventMap {
     changedAt: string;
   };
 
+  // Dashboard add-widget click (owner: xai-web-dashboard-grid row #10) — declaration only; row #11 may consume
+  'web:dashboard:add-widget-clicked': {
+    /** Where the click originated. */
+    source: 'add-widget-button' | 'empty-state-cta';
+  };
+
   // Pomodoro session completion (owner: xai-web-pomodoro row #14) — declaration only in W1
   'web:pomodoro:session-finished': {
     /** Mode that just finished. */
