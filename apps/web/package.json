@@ -30,6 +30,7 @@
     "@repo/plugin-web-tokens": "workspace:*",
     "@repo/plugin-web-storage": "workspace:*",
     "@repo/xai-web-shell": "workspace:*",
+    "@repo/plugin-web-countdown": "workspace:*",
     "@repo/plugin-web-matrix": "workspace:*",
     "@repo/plugin-console": "workspace:^",
     "@repo/plugin-productivity": "workspace:^",

@@ -179,6 +179,9 @@ importers:
       '@repo/plugin-productivity':
         specifier: workspace:^
         version: link:../../packages/plugin-productivity
+      '@repo/plugin-web-countdown':
+        specifier: workspace:*
+        version: link:../../packages/plugin-web-countdown
       '@repo/plugin-web-matrix':
         specifier: workspace:*
         version: link:../../packages/xai-web-matrix

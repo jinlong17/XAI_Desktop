@@ -17,6 +17,7 @@
 import type { WebModuleSlotRegistration } from "@repo/xai-web-shell";
 import { ModuleRoutePlaceholderPage } from "../../pages/ModuleRoutePlaceholderPage";
 import { matrixSlotRegistration } from "@repo/plugin-web-matrix";
+import { countdownWebModuleRegistration } from "@repo/plugin-web-countdown";
 
 function placeholder(
   moduleId: string,
@@ -51,7 +52,7 @@ export const webShellModuleRegistrations: WebModuleSlotRegistration[] = [
   placeholder("pomodoro",   "Pomodoro",   "timer",     7),
   placeholder("habits",     "Habits",     "pin",       8),
   placeholder("meditation", "Meditation", "leaf",      9),
-  placeholder("countdown",  "Countdown",  "countdown", 10),
+  countdownWebModuleRegistration,
   placeholder("statistics", "Statistics", "chart",     11),
   // Settings — not in rail (showInRail: false)
   placeholder("settings",   "Settings",   "sliders",   99, false),

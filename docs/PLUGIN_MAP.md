@@ -81,6 +81,15 @@
 | ai-cube | packages/plugin-ai-cube/ | In-Dev | §5.8 | @repo/core, @repo/core-data, @repo/ui | 2026-05-21 |
 | settings | packages/plugin-settings/ | Planned | — | @repo/core, @repo/ui | — |
 
+## Web Modules (W2 parallel build)
+
+> Browser-only business plugins for the XAI Web Console. Each registers one slot in `apps/web/src/routes/modules/shellRegistrations.tsx`.
+> Consumers must treat In-Dev rows as mock-first until the row reaches Stable.
+
+| Package | 目录 | 状态 | 说明 | 依赖 | 最后更新 |
+|---------|------|------|------|------|---------|
+| @repo/plugin-web-countdown | packages/plugin-web-countdown/ | In-Dev | Web Console Countdown module — bilingual countdown card grid with add/edit/delete, live remaining-days (midnight setTimeout + visibilitychange), CSS gradient presets, native dialog modal. Row #17. Verify Cross-vendor gate pending feature-verify. | @repo/core, @repo/plugin-web-tokens, @repo/plugin-web-storage, @repo/xai-web-shell | 2026-05-23 |
+
 ## Web Platform Shims (W1 parallel build)
 
 > These are browser-only infrastructure packages, NOT plugin-* business plugins.
