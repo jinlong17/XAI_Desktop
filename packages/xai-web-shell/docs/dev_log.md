@@ -7,13 +7,13 @@
 | Workflow | FEATURE_DEV |
 | Target | xai-web-shell |
 | Title | Web Console Host Shell — AppRail + Topbar + AvatarMenu + Module Slot Registry |
-| Current Phase | FEATURE_BUILD |
-| Status | READY_FOR_VERIFY |
-| Suggested Next | feature-verify |
+| Current Phase | FEATURE_VERIFY |
+| Status | READY_TO_SHIP |
+| Suggested Next | ship |
 | Verify Cross-vendor | yes (4 rail positions + drag-reorder + AvatarMenu popover directions must be eyeball-validated in Chrome / Safari 17+ / Firefox latest — also absorbs deferred cross-vendor coverage for shipped rows #2/#3/#4) |
 | Automation Mode | A-Claude (per roadmap default; xai-roadmap-loop serial dispatch — no parallel siblings on this row) |
-| Executor | Claude Sonnet 4.6 — feature-auto-build |
-| Updated | 2026-05-23 12:30 |
+| Executor | Claude Opus 4.7 1M — feature-verify (re-run after BLOCKED resolution) |
+| Updated | 2026-05-23 12:45 |
 | Dispatched By | xai-roadmap-loop (serial dispatch, W1 last row, gates W2 fan-out) |
 | Roadmap Row | docs/workflow/roadmap/xai-web-console.md row #5 (Foundation W1) |
 | ADR Anchor | docs/adr/0007-xai-web-console-build-form.md §S4 (port map) + §S5 (TSX rules) + §S6 (host shell) + §S7 (event bus) |
@@ -54,7 +54,8 @@ prototype's native HTML5 DnD is ported as-is — no DnD library added.
 | P1 — Root state in App.tsx + Topbar (in @repo/xai-web-shell) | DONE | 5a1ef24 |
 | P2 — AppRail + drag-reorder + 4 rail positions | DONE | d4a6777 |
 | P3 — AvatarMenu (direction-aware popover) + slot registry | DONE | b5b5fa6 |
-| P4 — Routing wire-up + cross-vendor smoke | DONE | (see P4 commit) |
+| P4 — Routing wire-up + cross-vendor smoke | DONE | b75db5f |
+| Post-verify fix — B1 lint + B2 AvatarMenu source=shortcut + E4/E5 tests | DONE | 7da2733 |
 
 ## Phase Plan (4 phases)
 
@@ -511,4 +512,71 @@ The deferred Vite production build from row #3 (AC-E2E-2) is the only deferred g
 | 2026-05-23 11:44 | Claude Sonnet 4.6 — feature-auto-build | P3: Added registry tests (R1..R6), AvatarMenu tests (AV1..AV8), Shell smoke tests (S1..S4 + StrictMode), event-emit tests (E1..E5). Applied B3 review note: useWebShell/useWebModuleRegistry throw includes '[xai-web-shell]' prefix. 82 tests PASS. | b5b5fa6 | P4 |
 | 2026-05-23 11:48 | Claude Sonnet 4.6 — feature-auto-build | P4: Routing wire-up. Updated router.tsx to use <App> as the /app layout route element (replaces bare <Outlet/>). Updated AppRouteElement to render module content directly (no AppShellPage chrome). Removed /_shell-smoke debug route. Updated router.integration.test.tsx to remove AppShellPage-specific assertions. Added apps/web/src/__tests__/{shell.smoke.test.tsx, shell.theme.test.tsx} (9 new tests). Updated docs/PLUGIN_MAP.md with xai-web-shell In-Dev row. All tests PASS: @repo/xai-web-shell 82/82 + @repo/web 46/46. Status → READY_FOR_VERIFY. Manual verify M1..M18 across Chrome/Safari/Firefox deferred to feature-verify. B4 review note acknowledged: verifier must record browser/version per M-row. B5 review note: todoWebModuleRegistration preserved in old registrations.tsx (AppRouteElement still uses webModuleRouteRegistrations for route resolution). | b75db5f | feature-verify |
 | 2026-05-23 12:10 | Claude Opus 4.7 1M — feature-verify | Verified 4 build commits (5a1ef24 P1 / d4a6777 P2 / b5b5fa6 P3 / b75db5f P4). Reran @repo/xai-web-shell test → 82/82 PASS. Reran @repo/xai-web-shell check-types → CLEAN. Reran @repo/web test → 46/46 PASS. Reran @repo/web check-types → CLEAN. Reran @repo/web build (deferred row #3 Vite-build gate) → PASS (vite v7.2.4, 500 modules, dist/index-BNfVnwxX.js 698KB). Confirmed NO direct W2 plugin imports in packages/xai-web-shell/src/ (grep @repo/plugin-web-* finds ONLY tokens + storage). Confirmed exact 3 W1 deps in package.json (@repo/core + @repo/plugin-web-tokens + @repo/plugin-web-storage + @repo/xai-web-event-bus). Slot/registry pattern present: WebShellProvider + useWebShell + useWebModuleRegistry + WebModuleSlotRegistration all exported via index.ts. popoverGeometry.ts + AvatarMenu.tsx data-anchor mapping covers all 4 rail positions (AV3 tests in AvatarMenu.test.tsx lines 88-107). xai_rail_order persistence + reconciliation verified by AppRail tests P1/P3 + N3 + AR5. Commit hygiene PASS — each phase has a focused single-intent commit with full Why/What/Scope/Risk/Docs/Tests body. PLUGIN_MAP row present (line 93). Identified TWO blockers preventing READY_TO_SHIP: B1 (ESLint --max-warnings 0 fails with 3 unused-var warnings — explicit P4 acceptance criterion violation), B2 (AvatarMenu Settings/Statistics emit source="app-rail" instead of contracted source="shortcut" per api.md §3.2-§3.4 + AC-EMIT-3/4 + dev_log Q3 resolution; tests E4/E5 are listed in event-emit.test.tsx comments but never implemented — only E1/E2/E3 + an exactly-once check exist). Status → BLOCKED, Suggested Next → feature-build. Wrote M1..M18 cross-vendor checklist below for the human ship-time step after fixes ship. | — | feature-build |
-| 2026-05-23 12:30 | Claude Sonnet 4.6 — feature-auto-build | Resolved verify blockers B1 + B2. B1 (ESLint 3 warnings): (1) AppRail.tsx:79 changed `catch (_)` to bare `catch` (modern no-bind syntax); (2) AppRail.test.tsx:15 dropped unused `screen` import; (3) registry.test.tsx:198 dropped unused `getByText` from destructure. `pnpm --filter @repo/xai-web-shell lint` → clean exit 0, 0 warnings. B2 (AvatarMenu source drift + missing E4/E5 tests): (1) Added `onAvatarOpenSettings` / `onAvatarOpenStatistics` to `AppRailProps` in types.ts — both emit `web:shell:module-change` with `source: "shortcut"`; (2) Implemented handlers in Shell.tsx (separate from `onModuleClick` which still emits `source: "app-rail"`); (3) Shell.tsx passes both new props to AppRail; (4) AppRail.tsx wires `<AvatarMenu onOpenSettings={onAvatarOpenSettings} onOpenStatistics={onAvatarOpenStatistics}>` replacing the old `onModuleClick("settings")` / `onModuleClick("statistics")` calls; (5) AppRail.test.tsx renderRail helper updated to supply the two new required props with vi.fn() defaults; (6) event-emit.test.tsx E4 + E5 implemented — E4 opens AvatarMenu via `.rail-avatar` click then clicks first `.avm-item` (Settings) and asserts `emitWebEvent("web:shell:module-change", { moduleId: "settings", source: "shortcut" })`; E5 clicks second `.avm-item` (Statistics) and asserts `{ moduleId: "statistics", source: "shortcut" }`. `pnpm --filter @repo/xai-web-shell test` → 84/84 PASS (8 test files, +2 tests from E4/E5). `pnpm --filter @repo/web test` → 46/46 PASS. Status → READY_FOR_VERIFY. | (see commit) | feature-verify |
+## Verify Re-run Report (2026-05-23 12:45 — feature-verify after BLOCKED resolution)
+
+### Verdict: PASS — READY_TO_SHIP
+
+### Gate Results (re-run after commit 7da2733)
+
+| Gate | Result | Evidence |
+|---|---|---|
+| 1 — AC coverage | PASS | BOOT 3/3, RAIL 12/12, TOPBAR 6/6, AVM 8/8, PET 2/2, PERSIST 4/4, THEME 3/3, EMIT now 5/5 (E1+E2+E3+E4+E5+exactly-once = 6 it() in event-emit.test.tsx), SLOT 6/6, BARREL 3/3 — full AC matrix covered |
+| 2 — `pnpm --filter @repo/xai-web-shell test` | PASS | 84/84 across 8 files (was 82/82 — +2 for E4 + E5). Duration 2.24s |
+| 3 — `pnpm --filter @repo/xai-web-shell check-types` | PASS | tsc --noEmit clean |
+| 4 — `pnpm --filter @repo/xai-web-shell lint` (B1 RE-VERIFY) | PASS | `eslint --max-warnings 0 .` exits 0, ZERO warnings (was 3 unused-var warnings in prior run) |
+| 5 — `pnpm --filter @repo/web test` | PASS | 46/46 across 13 files; ZERO regressions |
+| 6 — `pnpm --filter @repo/web check-types` | PASS | tsc --noEmit clean |
+| 7 — `pnpm --filter @repo/web build` (Vite, deferred row #3 gate) | PASS | vite v7.2.4, 500 modules, dist/assets/index-8kjOVC4B.js 698.49 kB / gzip 212.09 kB. Built in 1.97s. (Chunk-size warning is informational only; code-splitting deferred to future W2 row.) |
+| 8 — B2 fix CONCRETE verification | PASS | Shell.tsx:44-52 implements `onAvatarOpenSettings` + `onAvatarOpenStatistics`, both emitting `web:shell:module-change` with `source: "shortcut"`. AppRail.tsx:139-140 wires `<AvatarMenu onOpenSettings={onAvatarOpenSettings} onOpenStatistics={onAvatarOpenStatistics}>`. `onModuleClick` (Shell.tsx:32-35, the rail-click path) STILL emits `source: "app-rail"` — E1 preserved. event-emit.test.tsx E4 (lines 132-153) and E5 (lines 155-177) actively assert the `source: "shortcut"` payload, and E1 (lines 67-81) still asserts `source: "app-rail"` for rail clicks. All three coexist in the same passing test file. |
+| 9 — No direct W2 imports | PASS | `grep @repo/plugin-web-*` returns only `@repo/plugin-web-tokens` (useI18n / Lang/Theme/Density/BgTone/RailPos types) and `@repo/plugin-web-storage` (usePref). Zero W2 module imports |
+| 10 — Exactly 3 W1 deps via index.ts | PASS | package.json deps: `@repo/core`, `@repo/plugin-web-tokens`, `@repo/plugin-web-storage`, `@repo/xai-web-event-bus` — all consumed via top-level barrels |
+| 11 — Slot/registry pattern | PASS | WebModuleSlotRegistration type (types.ts:57-66) + WebShellProvider + useWebShell + useWebModuleRegistry all exported from index.ts |
+| 12 — 5 web:* events fire correctly per AC-EMIT-1..5 | PASS | Now fully covered: E1 (rail → app-rail), E2 (pet → rail-bottom), E3 (Topbar Settings → shortcut), E4 (Avatar Settings → shortcut), E5 (Avatar Statistics → shortcut). Exactly-once guard remains |
+| 13 — Popover position per DESIGN.md §4.14 | PASS | internal/popoverGeometry.ts + AvatarMenu.tsx `data-anchor` mapping unchanged; AV3 tests assert all 4 rail positions |
+| 14 — Drag-reorder persistence via usePref('xai_rail_order') | PASS | AppRail.tsx uses usePref + reconciliation (filter unknown + append missing); AR5/AR8/P1/P3/N3 still passing |
+| 15 — M1..M18 manual matrix | DEFERRED to ship (unchanged from prior verify) | See §M1..M18 Ship-time Cross-vendor Checklist below — human ship-time work per prior verify guidance |
+| 16 — Implementation matches seed brief (cross-vendor cold-read) | PASS | All 8 root state pieces in App.tsx; 6 apply* via useEffect; matchMedia listener; 4 rail positions; drag-reorder; direction-aware AvatarMenu; EN/中文 + Light/Dark/System + Comfortable/Compact + Settings icon in Topbar — all confirmed |
+| 17 — Commit hygiene + Status Panel coherence | PASS | 5 commits (5a1ef24/d4a6777/b5b5fa6/b75db5f + 7da2733), each single-intent with full Why/What/Scope/Risk/Docs/Tests body. 7da2733 is scoped strictly to `packages/xai-web-shell/` (7 files, 221 insertions, 9 deletions) — no out-of-scope edits |
+
+### Blockers from prior verify run — BOTH RESOLVED
+
+**B1 — ESLint --max-warnings 0 (RESOLVED in 7da2733)**
+
+Prior state: 3 unused-var warnings (AppRail.tsx:79 `_` catch binding; AppRail.test.tsx:15 `screen`; registry.test.tsx:198 `getByText`).
+
+Fix applied:
+- AppRail.tsx:79 — bare `catch {` replaces `catch (_) {}` (modern TS no-bind catch — see line 79-81 of current source).
+- AppRail.test.tsx:15 — `screen` dropped from `@testing-library/react` import.
+- registry.test.tsx:198 — `getByText` dropped from render destructure.
+
+Re-verify: `pnpm --filter @repo/xai-web-shell lint` exits 0 with no output other than the eslint banner. 0 problems. CONFIRMED RESOLVED.
+
+**B2 — AvatarMenu source enum drift + missing E4/E5 (RESOLVED in 7da2733)**
+
+Prior state: AvatarMenu Settings / Statistics emitted `source: "app-rail"` (because they were wired through `onModuleClick`); E4 and E5 were declared in comments but not implemented.
+
+Fix applied:
+- types.ts:101-119 — `AppRailProps` extended with `onAvatarOpenSettings` + `onAvatarOpenStatistics`, both documented as emitting `source: "shortcut"`.
+- Shell.tsx:42-52 — both handlers implemented, each calling `emitWebEvent("web:shell:module-change", { moduleId, source: "shortcut" })` BEFORE `navigate`.
+- AppRail.tsx:31 (signature) + 139-140 (wire-up) — AvatarMenu now uses the new props instead of `() => onModuleClick("settings")` and `() => onModuleClick("statistics")`.
+- AppRail.test.tsx renderRail helper — supplies both new required props with `vi.fn()` defaults so existing tests continue to pass.
+- event-emit.test.tsx — E4 (lines 132-153) opens AvatarMenu via `.rail-avatar` click, then clicks `.avm-item:first-child` (Settings) and asserts `emitWebEvent("web:shell:module-change", { moduleId: "settings", source: "shortcut" })`. E5 (lines 155-177) does the same with the second `.avm-item` (Statistics) asserting `source: "shortcut"` for moduleId "statistics".
+
+E1 PRESERVED: rail-click path in Shell.tsx:32-35 is unchanged — still emits `source: "app-rail"`. event-emit.test.tsx E1 (lines 67-81) still asserts this and passes. CONFIRMED RESOLVED.
+
+### Residual risks (non-blocking)
+
+- **M1..M18 cross-vendor live matrix** — deferred to ship-time human verifier per prior verify guidance. Ship agent must record verifier identity + browser/version per M-row before flipping to SHIPPED.
+- **Vite bundle size warning** — 698 KB main chunk (gzip 212 KB) exceeds the 500 KB vite default warning threshold. Informational only; code-splitting is a future W2 row's concern. test.md §5.4 already acknowledges this.
+- **Helper-factory cleanup opportunity** — `apps/web/src/App.tsx` exports `createPetToggleHandler` / `createSettingsOpenHandler` that are exported-for-testing but unused by App() itself (Shell composes its own internal handlers). Minor cleanup opportunity; not a regression risk.
+
+### Verifier identity for this run
+
+Claude Opus 4.7 1M — running as feature-verify subagent. Read-only against `packages/xai-web-shell/src/` + `apps/web/src/`; only edits made were to `packages/xai-web-shell/docs/dev_log.md` (Status Panel + Phase Progress table + this Verify Report + Work Log).
+
+## Work Log (continued)
+
+| Timestamp | Executor | Action | Commits | Next Step |
+|---|---|---|---|---|
+| 2026-05-23 12:30 | Claude Sonnet 4.6 — feature-auto-build | Resolved verify blockers B1 + B2. B1 (ESLint 3 warnings): (1) AppRail.tsx:79 changed `catch (_)` to bare `catch` (modern no-bind syntax); (2) AppRail.test.tsx:15 dropped unused `screen` import; (3) registry.test.tsx:198 dropped unused `getByText` from destructure. `pnpm --filter @repo/xai-web-shell lint` → clean exit 0, 0 warnings. B2 (AvatarMenu source drift + missing E4/E5 tests): (1) Added `onAvatarOpenSettings` / `onAvatarOpenStatistics` to `AppRailProps` in types.ts — both emit `web:shell:module-change` with `source: "shortcut"`; (2) Implemented handlers in Shell.tsx (separate from `onModuleClick` which still emits `source: "app-rail"`); (3) Shell.tsx passes both new props to AppRail; (4) AppRail.tsx wires `<AvatarMenu onOpenSettings={onAvatarOpenSettings} onOpenStatistics={onAvatarOpenStatistics}>` replacing the old `onModuleClick("settings")` / `onModuleClick("statistics")` calls; (5) AppRail.test.tsx renderRail helper updated to supply the two new required props with vi.fn() defaults; (6) event-emit.test.tsx E4 + E5 implemented — E4 opens AvatarMenu via `.rail-avatar` click then clicks first `.avm-item` (Settings) and asserts `emitWebEvent("web:shell:module-change", { moduleId: "settings", source: "shortcut" })`; E5 clicks second `.avm-item` (Statistics) and asserts `{ moduleId: "statistics", source: "shortcut" }`. `pnpm --filter @repo/xai-web-shell test` → 84/84 PASS (8 test files, +2 tests from E4/E5). `pnpm --filter @repo/web test` → 46/46 PASS. Status → READY_FOR_VERIFY. | 7da2733 | feature-verify |
+| 2026-05-23 12:45 | Claude Opus 4.7 1M — feature-verify (re-run after BLOCKED resolution) | Re-verified all 15 gates after commit 7da2733. B1 (ESLint): `pnpm --filter @repo/xai-web-shell lint` exits 0 — 0 warnings (was 3). CONFIRMED RESOLVED. B2 (AvatarMenu source enum): Inspected Shell.tsx:42-52 — `onAvatarOpenSettings` + `onAvatarOpenStatistics` both emit `source: "shortcut"`; AppRail.tsx:139-140 wires them into `<AvatarMenu>`. Shell.tsx:32-35 `onModuleClick` still emits `source: "app-rail"` (E1 preserved). event-emit.test.tsx E1+E3+E4+E5 all assert correct payloads. CONFIRMED RESOLVED. Re-ran full gate suite: `@repo/xai-web-shell test` → 84/84 PASS (was 82 — +2 for E4/E5); `@repo/xai-web-shell check-types` → clean; `@repo/xai-web-shell lint` → 0 warnings; `@repo/web test` → 46/46 PASS (zero regressions); `@repo/web check-types` → clean; `@repo/web build` → vite v7.2.4, 500 modules, dist/index-8kjOVC4B.js 698.49 kB / gzip 212.09 kB, built in 1.97s. Confirmed NO direct W2 imports (only @repo/plugin-web-tokens + @repo/plugin-web-storage). Confirmed exactly 3 W1 + 1 event-bus deps via index.ts. Slot/registry pattern intact. popoverGeometry + AvatarMenu data-anchor mapping unchanged. Drag-reorder + xai_rail_order persistence intact. Commit hygiene PASS — 7da2733 is single-intent, scoped strictly to `packages/xai-web-shell/`, full Why/What/Scope/Risk/Docs/Tests body. M1..M18 cross-vendor matrix remains deferred to ship-time human verifier (unchanged from prior verify guidance). Status Panel → READY_TO_SHIP, Suggested Next → ship. | — | ship |
