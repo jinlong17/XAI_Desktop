@@ -35,6 +35,7 @@
     "@repo/plugin-web-board-workspaces": "workspace:*",
     "@repo/plugin-web-countdown": "workspace:*",
     "@repo/plugin-web-dashboard-grid": "workspace:*",
+    "@repo/plugin-web-dashboard-widgets": "workspace:*",
     "@repo/plugin-web-matrix": "workspace:*",
     "@repo/plugin-web-pomodoro": "workspace:*",
     "@repo/plugin-web-habits": "workspace:*",

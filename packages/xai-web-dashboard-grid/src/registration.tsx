@@ -15,6 +15,7 @@
 import { useCallback } from "react";
 
 import { emitWebEvent } from "@repo/xai-web-event-bus";
+import { dashboardWidgetRegistrations } from "@repo/plugin-web-dashboard-widgets";
 import type { WebModuleSlotRegistration } from "@repo/xai-web-shell";
 import { useWebShell } from "@repo/xai-web-shell";
 import type { WebModuleId } from "@repo/core/types";
@@ -38,7 +39,11 @@ const KNOWN_MODULE_IDS: ReadonlySet<WebModuleId> = new Set<WebModuleId>([
   "search",
 ]);
 
+// Row #11 (xai-web-dashboard-widgets) supplies the full 10-entry registrations
+// array. EMPTY_WIDGETS is no longer used directly but kept as a typed const for
+// any future fallback path; current host always passes dashboardWidgetRegistrations.
 const EMPTY_WIDGETS: WidgetRegistration[] = [];
+void EMPTY_WIDGETS;
 
 /** Inner host wrapper: reads lang from the shell context + supplies goTo. */
 export function DashboardSlotHost() {
@@ -52,7 +57,7 @@ export function DashboardSlotHost() {
     });
   }, []);
 
-  return <DashboardModule lang={lang} widgets={EMPTY_WIDGETS} goTo={goTo} />;
+  return <DashboardModule lang={lang} widgets={dashboardWidgetRegistrations} goTo={goTo} />;
 }
 
 /** Slot registration for the Web Console AppRail. */

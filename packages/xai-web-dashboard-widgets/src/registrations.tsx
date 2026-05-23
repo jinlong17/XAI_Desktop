@@ -10,11 +10,13 @@
 import type { WidgetRegistration } from "@repo/plugin-web-dashboard-grid";
 
 import { ClockWidget } from "./widgets/ClockWidget.js";
+import { MailWidget } from "./widgets/MailWidget.js";
 import { MiniCalWidget } from "./widgets/MiniCalWidget.js";
 import { StatPomos } from "./widgets/StatPomos.js";
 import { StatStreak } from "./widgets/StatStreak.js";
 import { StatTasks } from "./widgets/StatTasks.js";
 import { StickiesWidget } from "./widgets/StickiesWidget.js";
+import { UpcomingWidget } from "./widgets/UpcomingWidget.js";
 import { WeatherWidget } from "./widgets/WeatherWidget.js";
 import { WorldClocks } from "./widgets/WorldClocks.js";
 
@@ -73,14 +75,12 @@ export const dashboardWidgetRegistrations: WidgetRegistration[] = [
     id: "mail",
     span: "w-mail",
     ariaLabel: { en: "Inbox", zh: "收件箱" },
-    // Filled in P3.
-    render: () => null,
+    render: (ctx) => <MailWidget lang={ctx.lang} />,
   },
   {
     id: "upcoming",
     span: "w-upcoming",
     ariaLabel: { en: "Upcoming events", zh: "近期事件" },
-    // Filled in P3.
-    render: () => null,
+    render: (ctx) => <UpcomingWidget lang={ctx.lang} />,
   },
 ];

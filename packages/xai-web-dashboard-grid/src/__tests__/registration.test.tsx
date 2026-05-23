@@ -86,7 +86,7 @@ describe("DashboardSlotHost", () => {
     expect(greeting).toMatch(/(早上好|下午好|晚上好)/);
   });
 
-  it("renders empty state when widgets=[] (v1 default)", () => {
+  it("renders row #11 dashboardWidgetRegistrations (10 widget shells, not empty state)", () => {
     const { container } = render(
       <WebShellProvider
         modules={[dashboardGridSlotRegistration]}
@@ -98,6 +98,10 @@ describe("DashboardSlotHost", () => {
         <DashboardSlotHost />
       </WebShellProvider>,
     );
-    expect(container.querySelector(".dash-empty")).toBeTruthy();
+    // Post-row-#11 P3 wiring: empty state is no longer rendered; the 10
+    // widget shells from dashboardWidgetRegistrations mount instead.
+    expect(container.querySelector(".dash-empty")).toBeNull();
+    const shells = container.querySelectorAll(".widget-shell");
+    expect(shells.length).toBe(10);
   });
 });

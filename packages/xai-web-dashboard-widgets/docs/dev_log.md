@@ -7,12 +7,12 @@
 | Workflow | FEATURE_DEV |
 | Target | xai-web-dashboard-widgets |
 | Title | Web Console — Dashboard widget pack (Clock 4 styles/12tz/analog 60+12+12 · MiniCal · WorldClocks · Weather · Stickies · Mail · Upcoming · 3 mini stats) |
-| Current Phase | FEATURE_REVIEW |
-| Status | APPROVED |
-| Suggested Next | feature-auto-build |
+| Current Phase | FEATURE_BUILD |
+| Status | READY_FOR_VERIFY |
+| Suggested Next | feature-verify |
 | Verify Cross-vendor | yes (Codex primary / Cursor fallback — see test.md §6) |
 | Automation Mode | A-Claude (xai-roadmap-loop W2e parallel-Agent mode; siblings: #8 board-views, #9 board-workspaces) |
-| Executor | claude-opus-4-7 — feature-review |
+| Executor | claude-opus-4-7 — feature-auto-build |
 | Updated | 2026-05-23 |
 | Dispatched By | xai-roadmap-loop (W2e parallel dispatch, manifest row #11) |
 | Roadmap Row | docs/workflow/roadmap/xai-web-console.md row #11 |
@@ -51,9 +51,9 @@ Selected **single-export `dashboardWidgetRegistrations: WidgetRegistration[]` co
 
 | Phase | Status | Commit |
 |---|---|---|
-| P1 — Package skeleton + ClockWidget + 3 mini stats + i18n delta (clock + stat labels) + helpers (Donut/PomoDots/cityLibrary/Icon) | PENDING | — |
-| P2 — MiniCalWidget + WorldClocks (TzClock) + WeatherWidget + StickiesWidget + fixtures + i18n delta (mini_cal + world_clocks + weather + stickies) | PENDING | — |
-| P3 — MailWidget + UpcomingWidget + host wiring (registration.tsx swap + 2 package.json deps) + slotIntegration test + final polish → READY_FOR_VERIFY | PENDING | — |
+| P1 — Package skeleton + ClockWidget + 3 mini stats + i18n delta (clock + stat labels) + helpers (Donut/PomoDots/cityLibrary/Icon) + ClockStyle widening + default→"classic" | DONE | 9a78d17 |
+| P2 — MiniCalWidget + WorldClocks (TzClock) + WeatherWidget + StickiesWidget + fixtures + i18n delta (mini_cal + world_clocks) | DONE | b4bcf22 |
+| P3 — MailWidget + UpcomingWidget + host wiring (registration.tsx swap + dashboard-grid/package.json dep + apps/web/package.json dep) + slotIntegration test + dashboard-grid registration test updated → READY_FOR_VERIFY | DONE | (this commit) |
 
 ## Phase Plan (3 phases)
 
@@ -198,3 +198,6 @@ Sanity-checked: row #10 source code (types.ts, index.ts, registration.tsx) read 
 |---|---|---|---|---|
 | 2026-05-23 | claude-opus-4-7 — feature-plan | Fresh planning artifacts: discovery review + design.md + api.md + test.md + dev_log.md created. 15 frozen assumptions. 3-phase plan. 12 risks with mitigations. Sibling W2e concurrency policy applied (Edit-not-Write on 4 shared anchors). | — | feature-review |
 | 2026-05-23 | claude-opus-4-7 — feature-review | APPROVED. All 5 review gates PASS (discovery/design/contract/phase/arch-risk). 0 blockers. Sub-finding on DEFAULT_DASH_ORDER 8-vs-10 id mismatch resolved as intended sanitizeOrder reconciliation pathway — no registry edit. Updated design.md §5 + api.md §S5 with explicit reconciliation note. | — | feature-auto-build |
+| 2026-05-23 | claude-opus-4-7 — feature-auto-build | P1: package skeleton + ClockWidget (4 styles + 12-tz + analog SVG 48 minor + 12 major + 12 numerals) + 3 mini stats + helpers (Donut/PomoDots/Icon/cityLibrary) + i18n delta clock+timezone keys. 46 tests green. ClockStyle widened in storage registry from 3 to 4 (owner edit). Default flipped from "analog" to "classic". | 9a78d17 | feature-build (P2) |
+| 2026-05-23 | claude-opus-4-7 — feature-auto-build | P2: MiniCalWidget (Monday-first month, goTo via ctx, data-no-drag head/foot, mc-grid click navigates) + WorldClocks (list/analog/grid + 12-city library + add/remove/persistence + last-zone guard + unknown-id filter) + WeatherWidget (fixture-driven current + 5-day forecast) + StickiesWidget (3-note rotated stack) + TzClock helper + fixtures (WEATHER/STICKIES/MAILS/UPCOMING/CAL_EVENTS) + i18n delta mini_cal + world_clocks keys. 37 new tests (83 total). | b4bcf22 | feature-build (P3) |
+| 2026-05-23 | claude-opus-4-7 — feature-auto-build | P3: MailWidget (unread red dot + count badge) + UpcomingWidget (4-event list) + host wiring (Edit `packages/xai-web-dashboard-grid/src/registration.tsx` swapping EMPTY_WIDGETS → dashboardWidgetRegistrations + `packages/xai-web-dashboard-grid/package.json` adding workspace dep + `apps/web/package.json` adding workspace dep) + slotIntegration test + updated row #10's registration.test.tsx to assert 10 widget shells render instead of empty state. 10 new tests (93 total widgets pkg + 104 total dashboard-grid pkg). apps/web 54/54 + vite build 721 modules green. dev_log flipped to READY_FOR_VERIFY. | (this commit) | feature-verify |

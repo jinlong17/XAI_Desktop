@@ -197,6 +197,9 @@ importers:
       '@repo/plugin-web-dashboard-grid':
         specifier: workspace:*
         version: link:../../packages/xai-web-dashboard-grid
+      '@repo/plugin-web-dashboard-widgets':
+        specifier: workspace:*
+        version: link:../../packages/xai-web-dashboard-widgets
       '@repo/plugin-web-habits':
         specifier: workspace:*
         version: link:../../packages/xai-web-habits
@@ -1436,6 +1439,9 @@ importers:
       '@repo/core':
         specifier: workspace:*
         version: link:../core
+      '@repo/plugin-web-dashboard-widgets':
+        specifier: workspace:*
+        version: link:../xai-web-dashboard-widgets
       '@repo/plugin-web-storage':
         specifier: workspace:*
         version: link:../plugin-web-storage
