@@ -17,6 +17,9 @@ import "./styles.css";
 // ---- Components ------------------------------------------------------------
 export { AiChatModule } from "./AiChatModule.js";
 
+// ---- Slot registration (consumed by apps/web shellRegistrations.tsx) -------
+export { aiChatWebModuleRegistration } from "./registration.js";
+
 // ---- Public types ----------------------------------------------------------
 export type {
   AiMessage,
