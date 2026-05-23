@@ -1,6 +1,8 @@
 import { Navigate, createBrowserRouter, Outlet, type RouteObject } from "react-router";
 import { LandingPage } from "../pages/LandingPage";
 import { NotFoundPage } from "../pages/NotFoundPage";
+// Dev-only smoke route — statically imported but gated by import.meta.env.DEV inside the component
+import { TokensSmokePage } from "../pages/TokensSmokePage.js";
 import { AppRouteElement, AuthRouteElement } from "./RouteGateElements";
 import { RouteErrorBoundary } from "./RouteErrorBoundary";
 import { assertUniqueModuleRegistrations, resolveDefaultModulePath } from "./modules/buildModuleRoutes";
@@ -45,6 +47,10 @@ export const webHostRouteObjects: RouteObject[] = [
             errorElement: <RouteErrorBoundary scope="module" />,
           },
         ],
+      },
+      {
+        path: "_smoke/tokens",
+        element: <TokensSmokePage />,
       },
       {
         path: "*",
