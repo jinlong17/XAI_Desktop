@@ -1,0 +1,556 @@
+/* ====================================================================
+   styles.css — Meditation module styles
+   All colors via tokens / oklch / currentColor / scene gradients.
+   Zero hex literals (gated by AC-TOKENS-1).
+   Compositor-only animations (transform + opacity) gated by AC-TOKENS-3.
+   Reduced-motion media query gated by AC-A11Y-1.
+   Design: docs/design.md §6 + §7
+   ==================================================================== */
+
+/* ---- Module layout ------------------------------------------------- */
+
+.module-meditation {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  overflow: auto;
+  gap: var(--gap-md, 0.75rem);
+  padding: var(--p-md, 1rem);
+}
+
+.module-meditation .module-head {
+  display: flex;
+  align-items: center;
+  gap: var(--gap-sm, 0.5rem);
+  padding: 0;
+}
+
+.module-meditation .module-title {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-size: var(--fs-lg, 1.125rem);
+  font-weight: 600;
+  color: var(--text-1);
+  margin: 0;
+}
+
+.module-meditation .grow {
+  flex: 1;
+}
+
+.module-meditation .icon-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  border-radius: var(--radius-sm, 0.25rem);
+  background: transparent;
+  border: none;
+  color: var(--text-3);
+  cursor: pointer;
+}
+
+.module-meditation .icon-btn:hover {
+  background: var(--bg-hover);
+  color: var(--text-1);
+}
+
+/* ---- Layout grid --------------------------------------------------- */
+
+.med-layout {
+  display: grid;
+  grid-template-columns: minmax(320px, 1.2fr) 1.3fr;
+  gap: var(--gap-md, 0.75rem);
+  flex: 1;
+  min-height: 0;
+}
+
+@media (max-width: 900px) {
+  .med-layout {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* ---- Preview card -------------------------------------------------- */
+
+.med-preview {
+  position: relative;
+  border-radius: var(--radius-lg, 0.75rem);
+  overflow: hidden;
+  min-height: 320px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: center;
+  padding: var(--p-lg, 1.5rem);
+  color: var(--text-on-accent);
+  isolation: isolate;
+}
+
+.med-preview-overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    180deg,
+    oklch(0% 0 0 / 0) 0%,
+    oklch(0% 0 0 / 0.18) 70%,
+    oklch(0% 0 0 / 0.35) 100%
+  );
+  z-index: 0;
+  pointer-events: none;
+}
+
+.med-preview > * {
+  position: relative;
+  z-index: 1;
+}
+
+.med-preview .clk-digital,
+.med-preview .clk-split,
+.med-preview .clk-minimal {
+  font-size: 2rem;
+  margin-top: var(--gap-lg, 1rem);
+}
+
+.med-preview-foot {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: var(--gap-sm, 0.5rem);
+  align-items: stretch;
+}
+
+.mp-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--gap-sm, 0.5rem);
+  font-size: var(--fs-sm, 0.875rem);
+  color: var(--text-on-accent);
+}
+
+.mp-meta > span {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+  padding: 0.2rem 0.5rem;
+  background: oklch(100% 0 0 / 0.12);
+  border-radius: var(--radius-sm, 0.25rem);
+}
+
+.med-start {
+  align-self: flex-start;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.55rem 0.9rem;
+  border: none;
+  border-radius: var(--radius-md, 0.5rem);
+  background: oklch(100% 0 0 / 0.85);
+  color: var(--text-1);
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.med-start:hover {
+  background: oklch(100% 0 0 / 1);
+}
+
+/* ---- Picker columns ------------------------------------------------ */
+
+.med-pickers {
+  display: flex;
+  flex-direction: column;
+  gap: var(--gap-md, 0.75rem);
+  overflow: auto;
+}
+
+.picker-group {
+  display: flex;
+  flex-direction: column;
+  gap: var(--gap-sm, 0.5rem);
+}
+
+.picker-h {
+  font-size: var(--fs-sm, 0.875rem);
+  font-weight: 600;
+  color: var(--text-2);
+  margin: 0;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+/* ---- Scene picker -------------------------------------------------- */
+
+.scene-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+  gap: var(--gap-sm, 0.5rem);
+}
+
+.scene-card {
+  position: relative;
+  min-height: 72px;
+  border-radius: var(--radius-md, 0.5rem);
+  border: 2px solid transparent;
+  cursor: pointer;
+  overflow: hidden;
+  padding: var(--p-sm, 0.5rem);
+  display: flex;
+  align-items: flex-end;
+  color: var(--text-on-accent);
+  transition: border-color 0.18s ease, transform 0.18s ease;
+}
+
+.scene-card.active {
+  border-color: var(--text-on-accent);
+  transform: translateY(-2px);
+}
+
+.scene-label {
+  font-size: var(--fs-sm, 0.875rem);
+  font-weight: 600;
+  text-shadow: 0 1px 2px oklch(0% 0 0 / 0.35);
+}
+
+/* ---- Clock picker -------------------------------------------------- */
+
+.clock-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+  gap: var(--gap-sm, 0.5rem);
+}
+
+.clock-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.4rem;
+  padding: var(--p-md, 1rem);
+  border-radius: var(--radius-md, 0.5rem);
+  border: 1px solid var(--border-1);
+  background: var(--bg-panel);
+  cursor: pointer;
+  color: var(--text-1);
+}
+
+.clock-card.active {
+  border-color: var(--accent);
+  background: var(--accent-soft, var(--bg-selected));
+}
+
+.cc-preview {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 60px;
+}
+
+.cc-label {
+  font-size: var(--fs-sm, 0.875rem);
+  color: var(--text-2);
+}
+
+/* ---- Sound picker -------------------------------------------------- */
+
+.sound-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+  gap: var(--gap-sm, 0.5rem);
+}
+
+.sound-card {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.6rem 0.8rem;
+  border-radius: var(--radius-md, 0.5rem);
+  border: 1px solid var(--border-1);
+  background: var(--bg-panel);
+  cursor: pointer;
+  color: var(--text-1);
+  font-size: var(--fs-sm, 0.875rem);
+}
+
+.sound-card.active {
+  border-color: var(--accent);
+  background: var(--accent-soft, var(--bg-selected));
+}
+
+/* ---- Duration picker ----------------------------------------------- */
+
+.dur-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--gap-sm, 0.5rem);
+}
+
+.dur-chip {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 0.25rem;
+  padding: 0.5rem 0.9rem;
+  border-radius: var(--radius-pill, 999px);
+  border: 1px solid var(--border-1);
+  background: var(--bg-panel);
+  cursor: pointer;
+  color: var(--text-1);
+  font-weight: 600;
+}
+
+.dur-chip.active {
+  border-color: var(--accent);
+  background: var(--accent-soft, var(--bg-selected));
+}
+
+.dur-unit {
+  font-size: var(--fs-xs, 0.75rem);
+  font-weight: 400;
+  color: var(--text-3);
+}
+
+/* ---- ClockDisplay -------------------------------------------------- */
+
+.mono {
+  font-family: var(--font-mono, monospace);
+  font-variant-numeric: tabular-nums;
+}
+
+.clk-digital,
+.clk-split,
+.clk-minimal {
+  font-size: 2.4rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+}
+
+.clk-digital.mini,
+.clk-split.mini,
+.clk-minimal.mini {
+  font-size: 1.05rem;
+}
+
+.clk-split {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 0.15em;
+}
+
+.clk-split .clk-colon {
+  opacity: 0.7;
+}
+
+.dim {
+  opacity: 0.55;
+}
+
+.clk-analog {
+  display: block;
+}
+
+/* ---- Fullscreen player --------------------------------------------- */
+
+.med-player {
+  position: fixed;
+  inset: 0;
+  z-index: 100;
+  overflow: hidden;
+  color: var(--text-on-accent);
+  isolation: isolate;
+}
+
+.med-player-bg {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    180deg,
+    oklch(0% 0 0 / 0) 0%,
+    oklch(0% 0 0 / 0.22) 60%,
+    oklch(0% 0 0 / 0.45) 100%
+  );
+  pointer-events: none;
+  z-index: 1;
+}
+
+/* ---- Particles ----------------------------------------------------- */
+
+.med-particles {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 2;
+  overflow: hidden;
+}
+
+.med-particles .particle {
+  position: absolute;
+  bottom: -2rem;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  opacity: 0;
+  animation-name: med-particle-rise;
+  animation-iteration-count: infinite;
+  animation-timing-function: linear;
+  will-change: transform, opacity;
+}
+
+@keyframes med-particle-rise {
+  0% {
+    transform: translateY(0) scale(0.6);
+    opacity: 0;
+  }
+  10% {
+    opacity: 0.55;
+  }
+  100% {
+    transform: translateY(-100vh) scale(1);
+    opacity: 0;
+  }
+}
+
+/* ---- Centered clock + breathing ring ------------------------------- */
+
+.med-player-clock {
+  position: absolute;
+  top: 16vh;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 4;
+  font-size: 4rem;
+}
+
+.med-player-clock .clk-digital,
+.med-player-clock .clk-split,
+.med-player-clock .clk-minimal {
+  font-size: 4rem;
+}
+
+.med-breathe {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 3;
+  width: 320px;
+  height: 320px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.breathe-ring {
+  position: absolute;
+  inset: 0;
+  border: 1.5px solid currentColor;
+  border-radius: 50%;
+  animation: med-breathe 8s ease-in-out infinite alternate;
+  will-change: transform;
+}
+
+.breathe-label {
+  font-size: var(--fs-md, 1rem);
+  font-weight: 500;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+@keyframes med-breathe {
+  0% {
+    transform: scale(0.6);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+/* ---- Player footer ------------------------------------------------- */
+
+.med-player-footer {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  z-index: 5;
+  padding: var(--p-lg, 1.5rem);
+  display: flex;
+  flex-direction: column;
+  gap: var(--gap-sm, 0.5rem);
+  background: linear-gradient(0deg, oklch(0% 0 0 / 0.32) 0%, oklch(0% 0 0 / 0) 100%);
+}
+
+.mp-progress {
+  width: 100%;
+  height: 3px;
+  background: oklch(100% 0 0 / 0.25);
+  border-radius: var(--radius-pill, 999px);
+  overflow: hidden;
+}
+
+.mp-progress-bar {
+  height: 100%;
+  border-radius: var(--radius-pill, 999px);
+  transition: width 1s linear;
+}
+
+.mp-foot-row {
+  display: flex;
+  align-items: center;
+  gap: var(--gap-sm, 0.5rem);
+}
+
+.mp-remaining {
+  font-size: 1.5rem;
+  font-weight: 600;
+}
+
+.mp-info {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+  font-size: var(--fs-sm, 0.875rem);
+  opacity: 0.85;
+}
+
+/* ---- Exit button --------------------------------------------------- */
+
+.med-exit {
+  position: absolute;
+  top: var(--p-md, 1rem);
+  right: var(--p-md, 1rem);
+  z-index: 6;
+  width: 40px;
+  height: 40px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  border: 1px solid oklch(100% 0 0 / 0.4);
+  background: oklch(100% 0 0 / 0.12);
+  color: var(--text-on-accent);
+  cursor: pointer;
+  transition: background 0.18s ease, transform 0.18s ease;
+}
+
+.med-exit:hover {
+  background: oklch(100% 0 0 / 0.2);
+  transform: scale(1.06);
+}
+
+/* ---- Reduced motion ------------------------------------------------ */
+
+@media (prefers-reduced-motion: reduce) {
+  .med-particles .particle {
+    display: none;
+  }
+
+  .breathe-ring {
+    animation: none;
+    transform: scale(0.8);
+  }
+
+  .mp-progress-bar {
+    transition: none;
+  }
+}
