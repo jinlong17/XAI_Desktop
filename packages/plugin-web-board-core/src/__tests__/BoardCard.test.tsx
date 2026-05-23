@@ -1,0 +1,100 @@
+import { describe, expect, test, vi } from "vitest";
+import { fireEvent, render, screen } from "@testing-library/react";
+import { BOARD_CARD_DND_MIME, BoardCard } from "../BoardCard.js";
+import { makeDataTransferMock } from "./_helpers/dataTransfer.js";
+import type { BoardCard as BoardCardData } from "../types.js";
+
+function makeCard(extra: Partial<BoardCardData> = {}): BoardCardData {
+  return {
+    id: "c1",
+    title: { en: "Hello", zh: "你好" },
+    ...extra,
+  };
+}
+
+describe("BoardCard", () => {
+  test("BC1 renders bilingual title (en when lang=en, zh when lang=zh)", () => {
+    const { rerender } = render(<BoardCard card={makeCard()} lang="en" />);
+    expect(screen.getByText("Hello")).toBeInTheDocument();
+    rerender(<BoardCard card={makeCard()} lang="zh" />);
+    expect(screen.getByText("你好")).toBeInTheDocument();
+  });
+
+  test("BC2 renders label chips only when card.labels set", () => {
+    const { rerender, container } = render(
+      <BoardCard card={makeCard({ labels: ["l1", "l2"] })} lang="en" />,
+    );
+    expect(container.querySelectorAll(".bc-label").length).toBe(2);
+    rerender(<BoardCard card={makeCard({ labels: [] })} lang="en" />);
+    expect(container.querySelectorAll(".bc-label").length).toBe(0);
+    rerender(<BoardCard card={makeCard()} lang="en" />);
+    expect(container.querySelectorAll(".bc-label").length).toBe(0);
+  });
+
+  test("BC3 renders checklist count when card.checklist set", () => {
+    render(
+      <BoardCard
+        card={makeCard({ checklist: { done: 2, total: 5 } })}
+        lang="en"
+      />,
+    );
+    expect(screen.getByTestId("bc-checklist").textContent).toBe("2/5");
+  });
+
+  test("BC3b checklist shows `done` class when done === total", () => {
+    render(
+      <BoardCard
+        card={makeCard({ checklist: { done: 3, total: 3 } })}
+        lang="en"
+      />,
+    );
+    const chip = screen.getByTestId("bc-checklist");
+    expect(chip.className).toContain("done");
+  });
+
+  test("BC4 renders due chip when card.due set; adds late class when dueLate=true", () => {
+    const { rerender } = render(
+      <BoardCard card={makeCard({ due: "5/26" })} lang="en" />,
+    );
+    expect(screen.getByTestId("bc-due").textContent).toBe("5/26");
+    rerender(
+      <BoardCard
+        card={makeCard({ due: "Overdue", dueLate: true })}
+        lang="en"
+      />,
+    );
+    expect(screen.getByTestId("bc-due").className).toContain("late");
+  });
+
+  test("BC4b dueEn is used when lang=en + dueEn provided", () => {
+    render(
+      <BoardCard
+        card={makeCard({ due: "今天", dueEn: "Today" })}
+        lang="en"
+      />,
+    );
+    expect(screen.getByTestId("bc-due").textContent).toBe("Today");
+    expect(screen.getByTestId("bc-due").className).toContain("today");
+  });
+
+  test("BC5 draggable=true + onDragStart fires with payload matching MIME contract", () => {
+    const onDragStart = vi.fn();
+    render(
+      <BoardCard
+        card={makeCard()}
+        lang="en"
+        draggable
+        onDragStart={onDragStart}
+      />,
+    );
+    const article = screen.getByTestId("board-card");
+    expect(article.getAttribute("draggable")).toBe("true");
+
+    const dt = makeDataTransferMock();
+    fireEvent.dragStart(article, { dataTransfer: dt });
+    expect(onDragStart).toHaveBeenCalledTimes(1);
+    // payload writing is the caller's responsibility — test in BoardView.test
+    // We just confirm the MIME constant is exported and well-formed.
+    expect(BOARD_CARD_DND_MIME).toBe("application/x-xai-board-card");
+  });
+});

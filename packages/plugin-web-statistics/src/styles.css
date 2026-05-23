@@ -1,0 +1,11 @@
+/* @repo/plugin-web-statistics — module styles.
+ *
+ * P2 will port the full Statistics CSS rules from web design/layout.css.
+ * For P1 the file exists so the side-effect import resolves.
+ *
+ * api.md §0 — side-effect CSS import.
+ */
+
+.module-stats {
+  display: block;
+}
