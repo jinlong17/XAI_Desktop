@@ -6,10 +6,10 @@
 - Target: plugin-project
 - Title: project:card-* typed events emit (W0.B — D-3 closer, final of three)
 - Current Phase: FEATURE_VERIFY
-- Status: READY_FOR_VERIFY
-- Executor: feature-auto-build (claude-sonnet-4-6)
-- Updated: 2026-05-23 03:45
-- Suggested Next: feature-verify
+- Status: READY_TO_SHIP
+- Executor: feature-verify (Claude)
+- Updated: 2026-05-23
+- Suggested Next: ship
 - Automation Mode: A-Claude
 - Verify Cross-vendor: no
 - ADR-lite: not required
@@ -96,7 +96,7 @@ Two BUILD phases is sufficient: the `moveCard` payload is the richest (5 positio
 - [x] `pnpm --filter @repo/plugin-project check-types` passes.
 - [x] `pnpm --filter @repo/plugin-project test` passes.
 - [x] No edits outside declared scope (events.ts + useProjectStore.tsx + useProjectStore.test.tsx + vitest.config.ts).
-- [ ] dev_log reaches `READY_TO_SHIP` (pending feature-verify).
+- [x] dev_log reaches `READY_TO_SHIP` (feature-verify PASS, 2026-05-23).
 
 ## Out of scope (must not change)
 
@@ -106,6 +106,67 @@ Two BUILD phases is sufficient: the `moveCard` payload is the richest (5 positio
 - `plugin-console`, `plugin-account`, `plugin-productivity`, `plugin-labels`, `plugin-calendar`, `plugin-organizer`, `apps/desktop/**`
 - Tauri command / Rust / native macOS files
 - `docs/PLUGIN_MAP.md` row 76 (W0.C scope)
+
+## Verify Report (2026-05-23 — feature-verify, Claude)
+
+**Verdict: PASS → `READY_TO_SHIP`.**
+
+### Commits reviewed
+
+| Commit | Type | Scope |
+|---|---|---|
+| `f18bdd4` | `feat(core)` | `packages/core/src/types/events.ts` — three additive EventMap entries (+51 LOC), strictly additive, JSDoc per-field mirrors `labels:*` style |
+| `dcd7d52` | `feat(plugin-project)` | `useProjectStore.tsx` (+35 LOC, 3 emit sites), `useProjectStore.test.tsx` (new, 468 LOC, 16 AC scenarios), `vitest.config.ts` (new, 18 LOC, mirrors labels sibling), `dev_log.md` |
+| `a78d37e` | `docs(plugin-project)` | feature-plan artifact alignment: brief, discovery review, design.md / api.md / test.md §W0.B sections |
+
+Each commit single-intent and within phase boundary. Commit messages follow project Why/What/Scope/Risk/Docs/Tests convention.
+
+### Gates (re-run from clean `dev` HEAD = `a78d37e`)
+
+| Gate | Result |
+|---|---|
+| `pnpm --filter @repo/core check-types` | PASS (tsc --noEmit, no output) |
+| `pnpm --filter @repo/plugin-project check-types` | PASS (tsc --noEmit, no output) |
+| `pnpm --filter @repo/plugin-project test` | **21/21 PASS** (16 new W0.B + 5 pre-existing; 2.56s) |
+
+### Code-vs-contract checks
+
+1. **EventMap ↔ api.md alignment** — Verified the three new entries' field lists / types / docstrings against `api.md` §W0.B tables. Match byte-for-byte. No `projectId` in any payload (confirmed against `types.ts` — `Card` has no such field).
+2. **`createCard` emit site (`useProjectStore.tsx` L183-191)** — Fires post-`stableCardAdapter.save` (L182), before `setCards` (L192). Payload: `{ id, listId, title, order, entityType, version, createdAt }`. Uses `void emitEvent(...).catch(() => undefined)`. ✓
+3. **`moveCard` emit site (L253-263)** — Guarded by `if (dirty.length > 0)` so no-op moves (same list + same order on a normalized list) correctly suppress. `fromListId`/`fromOrder` captured at L231-232 before re-normalization. Payload: `{ id, fromListId, toListId, fromOrder, toOrder, version: target.version + 1, updatedAt: movedAt }`. ✓
+4. **`updateCard` emit site (L207-213)** — Fires post-`stableCardAdapter.save` (L203). `patchKeys` computed via `Object.keys(patch).filter(allow-list).sort()` (L204-206). Allow-list constant at L79 matches api.md exactly. Payload: `{ id, listId, patchKeys, version, updatedAt }`. ✓
+5. **`updateChecklist` wrapper (L269-272)** — Thin re-export of `updateCard(cardId, { checklist })`; emit produced at the inner outlet only. AC-P-U4 pins single-emit behaviour. ✓
+
+### Scope boundary audit
+
+```
+docs/reviews/plugin-project/20260523-discovery-review.md
+docs/reviews/plugin-project/20260523-feature-brief.md
+packages/core/src/types/events.ts                              [additive only]
+packages/plugin-project/docs/api.md
+packages/plugin-project/docs/design.md
+packages/plugin-project/docs/dev_log.md
+packages/plugin-project/docs/test.md
+packages/plugin-project/src/hooks/useProjectStore.test.tsx     [new]
+packages/plugin-project/src/hooks/useProjectStore.tsx
+packages/plugin-project/vitest.config.ts                       [new]
+```
+
+No edits to `apps/desktop/**`, Tauri/Rust/native, other plugins, `packages/core/src/events/{emitter,listener,index}.ts`, `plugin-project/src/types.ts`, or `docs/PLUGIN_MAP.md` (W0.C scope). ✓
+
+### dev_log integrity
+
+Status Panel · Phase Plan · Acceptance Criteria · Work Log internally consistent. Predecessor Track D entry (line 124) preserved verbatim. All 12 acceptance criteria now ticked (`dev_log reaches READY_TO_SHIP` flipped to checked).
+
+### Residual risks (non-blocking)
+
+- **R1 (stderr cosmetic)**: vitest emits `The current testing environment is not configured to support act(...)` warnings to stderr because the `vitest-environment jsdom` runner does not set the React 19 act-environment flag. All 16 AC assertions still pass and the behaviour matches sibling `plugin-labels`. Out of scope for this row; would be addressed by a global test-setup file (future hygiene row).
+- **R2 (entity coupling)**: `Card` has no `projectId` field, so payloads omit it. Documented in design.md as a known limit; a future row may add `projectId` across entity + all three payloads in one coupled change (additive on payload side).
+- **R3 (allow-list drift)**: `PATCH_KEYS_ALLOW_LIST` is duplicated between code (L79) and api.md table. Adding a new mutable `Card` field requires mirroring both. Mitigated by AC-P-U3 test which catches stale filtering.
+
+### Sibling-parity confirmation
+
+`plugin-productivity` W0.B (`7ee5d6f`..`99b3de9`) and `plugin-labels` W0.B (`c0a9cf8`..`3e27206`) both shipped 2026-05-23 with the same `.catch(() => undefined)` swallow + `vi.mock("@repo/core/events")` strategy. `plugin-project` is the third D-3 closer and matches the established pattern.
 
 ---
 
@@ -126,3 +187,4 @@ Two BUILD phases is sufficient: the `moveCard` payload is the richest (5 positio
 - 2026-05-23 feature-review (Claude): **APPROVED**. Verified action surface against `useProjectStore.tsx:157–237` (createCard / moveCard / updateCard / updateChecklist wrapper — match). Traced `moveCard` no-op guard math: `dirty.length > 0` is semantically equivalent to "card actually moved" and also correctly suppresses out-of-clamp-range same-list calls. Confirmed `projectId` omission is consistent across discovery / design / api docs (brief §1.9 / §1.12 pre-discovery mention is formally superseded). Confirmed no Rust-side or `packages/core/src/events/` registration is required (sibling labels emit has neither). 16 AC scenarios (4 C + 4 M + 5 U + 3 G) comfortably exceed brief §1.12 ≥ 10 minimum. Non-blocking notes N1–N4 captured in Review Notes for the builder. Set Status → APPROVED, Suggested Next → feature-build. Commits: — . Next: feature-build (orchestrator will dispatch feature-auto-build for 2-phase build).
 - 2026-05-23 03:40 feature-auto-build (claude-sonnet-4-6) — **B1 EventMap declaration**: Appended three additive `EventMap` entries (`project:card-created`, `project:card-moved`, `project:card-updated`) to `packages/core/src/types/events.ts` after the `labels:deleted` block. JSDoc per-field comments mirror the `labels:*` sibling style. No existing entries modified. Gate: `pnpm --filter @repo/core check-types` passed. Commits: f18bdd4 (`feat(core): add project:card-* EventMap entries (W0.B B1)`). Next: B2.
 - 2026-05-23 03:45 feature-auto-build (claude-sonnet-4-6) — **B2 useProjectStore emits + vitest**: Added `emitEvent` import from `@repo/core/events` to `useProjectStore.tsx`. Added `PATCH_KEYS_ALLOW_LIST` module-level constant. Wired `void emitEvent(...).catch(() => undefined)` at three call sites: `createCard` (post-save, before setCards), `updateCard` (post-save with `patchKeys` allow-list filter + sort), `moveCard` (after `dirty` computation, guarded by `dirty.length > 0`, captures `fromListId`/`fromOrder` before re-normalization). Created `vitest.config.ts` (mirrors plugin-labels sibling, adds `@repo/core/events` alias). Created co-located `useProjectStore.test.tsx` with `// @vitest-environment jsdom` directive, `vi.mock("@repo/core/events")` factory, React 19 `act` + `createRoot` harness, in-memory adapters, 16 binary AC scenarios (4 C + 4 M + 5 U + 3 G). Gates: `pnpm --filter @repo/core check-types` passed, `pnpm --filter @repo/plugin-project check-types` passed, `pnpm --filter @repo/plugin-project test` 16/16 passed (21 total including 5 pre-existing). N1 escape hatch: `as unknown as Partial<Omit<Card, "id">>` cast in AC-P-U3 (mirroring labels sibling pattern). N2 jsdom: resolved via vitest's bundled jsdom (no explicit devDep addition needed). Next: feature-verify.
+- 2026-05-23 feature-verify (Claude): **PASS → READY_TO_SHIP**. Reviewed commits `f18bdd4` (EventMap +51 LOC, additive only) + `dcd7d52` (useProjectStore + vitest + dev_log) + `a78d37e` (docs alignment); each commit single-intent and within phase boundary; commit messages follow Why/What/Scope/Risk/Docs/Tests convention. Gates re-run from clean dev: `pnpm --filter @repo/core check-types` PASS, `pnpm --filter @repo/plugin-project check-types` PASS, `pnpm --filter @repo/plugin-project test` 21/21 PASS (16 new W0.B + 5 pre-existing, 2.56s). Code-vs-contract: confirmed three new EventMap entries match api.md payload shapes verbatim (no `projectId` field on any). Emit-site spot-check on `useProjectStore.tsx`: `createCard` L183-191 emits post-save with full identity+position payload; `moveCard` L253-263 guarded by `if (dirty.length > 0)` with pre-mutation `fromListId`/`fromOrder` capture at L231-232; `updateCard` L207-213 emits post-save with `patchKeys` allow-list filter + sort; `updateChecklist` L269-272 routes through `updateCard` (no double-emit). All three emit sites use `void emitEvent(...).catch(() => undefined)` per sibling form. File-boundary respect verified: only `events.ts` (additive), `useProjectStore.{tsx,test.tsx}`, `vitest.config.ts` (new), and docs touched — no Tauri/Rust/native/other plugins/`apps/desktop/**`/`core/src/events/` edits. dev_log Status Panel, Phase Plan, Work Log internally consistent; predecessor state (Track D entry on line 124) preserved unchanged. Residual risks: vitest `act(...)` env warnings on stderr (cosmetic, non-fatal, matches sibling labels behavior). Commits: — . Next: ship.
