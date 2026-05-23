@@ -4,9 +4,11 @@ import {
   useContext,
   useEffect,
   useMemo,
+  useRef,
   useState,
   type ReactNode,
 } from "react";
+import { emitEvent } from "@repo/core/events";
 import { LocalStorageAdapter } from "../data/LocalStorageAdapter";
 import { useProductivityRepoAdapters } from "../data/RepoProvider";
 import type { DataAdapter, Habit, HabitDraft, HabitHistoryEntry } from "../types";
@@ -81,6 +83,8 @@ export function HabitStoreProvider({ adapter, children }: HabitStoreProviderProp
   const [habits, setHabits] = useState<Habit[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  // Dedup: tracks (habitId:date) pairs that have already been emitted.
+  const checkInEmittedRef = useRef<Set<string>>(new Set());
 
   const refresh = useCallback(async () => {
     setIsLoading(true);
@@ -158,13 +162,27 @@ export function HabitStoreProvider({ adapter, children }: HabitStoreProviderProp
     async (id: string, date = todayUtcKey()) => {
       const current = await stableAdapter.getById(id);
       if (!current) return;
+      const completedAt = new Date().toISOString();
       const existing = current.history.find((entry) => entry.date === date);
       const history = existing
         ? current.history.map((entry) =>
-            entry.date === date ? { ...entry, count: entry.count + 1, completedAt: new Date().toISOString() } : entry,
+            entry.date === date ? { ...entry, count: entry.count + 1, completedAt } : entry,
           )
-        : [...current.history, { date, count: 1, completedAt: new Date().toISOString() }];
-      await persist({ ...current, history, streak: calculateStreak(history) });
+        : [...current.history, { date, count: 1, completedAt }];
+      const saved = await persist({ ...current, history, streak: calculateStreak(history) });
+      // Emit productivity:habit-reminder once per (habitId, date) pair.
+      const dedupKey = `${id}:${date}`;
+      if (!checkInEmittedRef.current.has(dedupKey)) {
+        checkInEmittedRef.current.add(dedupKey);
+        void emitEvent("productivity:habit-reminder", {
+          habitId: id,
+          name: saved.name,
+          frequency: saved.frequency,
+          date,
+          streak: saved.streak,
+          completedAt,
+        }).catch(() => undefined);
+      }
     },
     [stableAdapter, persist],
   );
