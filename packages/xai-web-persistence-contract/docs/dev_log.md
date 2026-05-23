@@ -5,11 +5,11 @@
 - Workflow: FEATURE_DEV
 - Target: xai-web-persistence-contract
 - Title: W1 · typed localStorage key registry + `usePref` hook (`@repo/plugin-web-storage`)
-- Current Phase: FEATURE_REVIEW
-- Status: APPROVED
-- Executor: feature-review (Claude Opus, parallel-Agent worker dispatched by xai-roadmap-loop)
-- Updated: 2026-05-23 (review pass complete)
-- Suggested Next: feature-auto-build
+- Current Phase: FEATURE_VERIFY
+- Status: READY_FOR_VERIFY
+- Executor: feature-auto-build (claude-sonnet-4-6, xai-roadmap-loop parallel-Agent worker)
+- Updated: 2026-05-23 14:30
+- Suggested Next: feature-verify
 - Automation Mode: A-Claude (manifest default)
 - Verify Cross-vendor: yes (manifest override 2026-05-23)
 - ADR-lite: not required (governed by ADR-0007)
@@ -190,3 +190,6 @@ None — this is the row's first planning pass. No prior dev_log entries to pres
 |---|---|---|---|---|
 | 2026-05-23 | feature-plan (Claude Opus, parallel-Agent worker) | Wrote discovery review + design.md + api.md + test.md + dev_log.md scoped to `packages/xai-web-persistence-contract/`. Mode: Fresh. Selected option Axis A1 + B1 + C1 + D-own. Locked 24 logical entries (22 explicit + 2 proposed + `xai_pref_*` prefix family). Phase Plan: 3 phases (P1 registry+hook+smoke / P2 migration+autosave+pub-sub / P3 SSR+cross-vendor). Verify Cross-vendor: yes. | — | feature-review |
 | 2026-05-23 | feature-review (Claude Opus, parallel-Agent worker) | Reviewed all artifacts against 8 gates (seed-brief fidelity / ADR-0007 §S8 conformance / byte-for-byte key naming / usePref contract / versioning hook / single import path / cross-vendor verify / phase reasonableness). Verdict: **APPROVED**. 0 blockers, 2 non-blocking recommendations (REC-1 doc count cleanup "22 explicit" → actual 18; REC-2 AC floor sentence cosmetic). Flipped Status Panel to APPROVED / Suggested Next = feature-auto-build. | — | feature-auto-build |
+| 2026-05-23 14:00 | feature-auto-build (claude-sonnet-4-6, parallel-Agent worker #3) | **P1 — Typed registry + usePref hook + smoke tests.** Created `packages/plugin-web-storage/` with package.json, tsconfig.json, vitest.config.ts. Implemented: registry.ts (PREF_REGISTRY: 18 explicit + 2 proposed = 20 typed entries), codec.ts, storage.ts (getPref/setPref/removePref + same-tab pub/sub bus), usePref.ts (SSR-safe, cross-tab + same-tab reactive), migrate.ts (v1 stub), usePrefAutosave.ts (opt-in Settings autosave). Tests: registry.test.ts (14), imperative.test.ts (16), usePref.test.tsx (13), parity-design-md.test.ts (2). REC-1 doc fix: corrected "22 explicit" → "18 explicit" in discovery-review.md §1.1/§1.6, design.md §3.2, api.md §1.1, test.md AC-REG-1, dev_log.md Decision Summary. Gates: check-types exit 0; test exit 0 (45 P1-scoped tests + full 70 pass). | ce6270c | P2 |
+| 2026-05-23 14:15 | feature-auto-build (claude-sonnet-4-6, parallel-Agent worker #3) | **P2 — Migration scaffolding + usePrefAutosave + same-tab pub/sub.** Implementation landed in P1 commit (migrate.ts stub + usePrefAutosave.ts + storage.ts pub/sub bus). This commit adds test files only: migrate.test.ts (AC-MIG-1..3 + v1 count, 5 tests), usePrefAutosave.test.tsx (AC-AUTO-1..5, 8 tests), types.test-d.ts (AC-TYPE-1..6, 6 tests). All 70 tests green. | 0109326 | P3 |
+| 2026-05-23 14:30 | feature-auto-build (claude-sonnet-4-6, parallel-Agent worker #3) | **P3 — SSR smoke + consumer + cross-vendor verify gate.** Added ssr.test.ts (AC-SSR-1..6, 8 tests; @vitest-environment node) and consumer.test.tsx (AC-E2E-1..3, 4 tests). All 70 tests pass. Cross-vendor verify gate: deferred to feature-verify per Phase Plan P3 — feature-verify must dispatch Codex/Cursor re-run of `pnpm --filter @repo/plugin-web-storage test`. Flipped Status Panel: READY_FOR_VERIFY. | (this commit) | feature-verify |
