@@ -22,6 +22,9 @@ export { SettingRow }     from "./SettingRow.js";
 export { SectionBlock }   from "./SectionBlock.js";
 export { SettingsFooter } from "./SettingsFooter.js";
 
+// ---- Slot registration (consumed by apps/web shellRegistrations.tsx) -------
+export { settingsShellWebModuleRegistration } from "./registration.js";
+
 // ---- Public utilities ------------------------------------------------------
 export { resetAllPrefs } from "./internal/resetAllPrefs.js";
 export { paneRegistry }  from "./internal/paneRegistry.js";
