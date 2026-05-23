@@ -332,34 +332,50 @@ Worktree: <absolute_worktree_path>
 
 ---
 
-## 8. Sub-PRD roadmap prompts
+## 8. 子 PRD 怎么落到 Workflow V2(现役路径)
 
-XAI 当前有专门的子 PRD roadmap prompt 集:
+> 历史背景:旧版曾把 v1 拆成 Sync / Console / Web 三条独立 roadmap manifest 串行推进。
+> 这种 framing 已在 2026-05-19 由 `docs/planning/sub-prds/roadmap-prompts.md`
+> 顶部正式废弃,**当前不要再按"三条独立 manifest"思考**。
 
-```text
-docs/planning/sub-prds/roadmap-prompts.md
-```
+### 8.1 当前权威入口
 
-它覆盖:
+按 `docs/planning/sub-prds/roadmap-prompts.md` 顶部声明,v1 工程顶层 truth 是:
 
-- Sync roadmap
-- Console roadmap
-- Web roadmap
+- `docs/planning/execution/README.md` + G0-G10 执行包
+- `docs/planning/BACKLOG-v1.md`
+- `docs/contracts/README.md`
+- 这份 `docs/workflow/project/usage-guide.md`
 
-使用顺序:
+子 PRD (`sub-prds/sync/PRD.md` · `sub-prds/console/PRD.md` · `sub-prds/web/PRD.md`) 仍然是
+对应模块的深度规格来源,但**不**对应独立的 roadmap manifest。
 
-```text
-Sync init + review + run waves + ship
-Console init + review + run waves + ship
-Web init + review + run waves + ship
-```
+### 8.2 三子 PRD 当前真实推进路径
 
-关键点:
+| 子 PRD | 现役路径 | 现役 manifest / 入口 |
+|---|---|---|
+| **sync** | 单 roadmap manifest, continue | `docs/workflow/roadmap/sync-v1.md` (W0-W3 大量 Shipped, Phase 5 完善剩余) + `sync-v1.deferred-gates.md` |
+| **web** | 单 roadmap manifest, continue | `docs/workflow/roadmap/web-ticktick-parity.md` (25 row, 10 已 SHIPPED at 2026-05-22) |
+| **console** | plugin-by-plugin manual,**无**独立 manifest | `plugin-console` 已 SHIPPED;`plugin-productivity/labels/project` 走 Level 1/2 verify+ship,最后做真机走查 |
 
-- 3 个 roadmap 不要一开始并行。
-- Console 依赖 Sync 骨架。
-- Web 依赖 Console 主体 + Sync 完整版本。
-- init 前可先跑 public skills 做 orientation / STRIDE / frontend / composition / CI 预热,再把报告路径写进 `notes:`。
+### 8.3 调度规则
+
+- **不要为子 PRD 新建 manifest**(`/xai-roadmap-loop init`):现役 sync-v1 / web-ticktick-parity
+  已覆盖 sync + web,console 不需要 manifest 层。
+- 推进现役 manifest 用 `/xai-roadmap-loop` run 模式,具体见 §7。
+- 推进单个 feature(含 console 的 plugin)用 `/xai-feature-full-loop`,具体见 §5。
+- 子 PRD 自身的修订 / 新章节 / discovery 仍然在子 PRD 文件里改;但**别**用 `/xai-roadmap-loop init`
+  把它们再解构成新 manifest。
+- init 前可先跑 public skills 做 orientation / STRIDE / frontend / composition / CI 预热,
+  再把报告路径写进 feature 或 row 的 `notes:`。
+
+### 8.4 跨子 PRD 依赖顺序(参考)
+
+- console 依赖 sync 提供的 `@repo/core-data` Repository<T> 契约 + crypto 套件(均已 Shipped)。
+- web 依赖 sync 的 Sync blob protocol(`web-sync-blob-driver` 是 web manifest 内的 W4 row)+ console
+  的 PRD IA / `ui.consoleSidebar.entries` 契约(由 `ADR-0006` 强制对齐)。
+- 子 PRD 间的硬依赖落到 manifest 的 `depends_on` 列里,wave 排程自动处理;新增子 PRD 间依赖
+  时直接编辑 manifest row,不再开新 manifest。
 
 ---
 
