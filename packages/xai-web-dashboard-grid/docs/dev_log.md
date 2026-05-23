@@ -7,12 +7,12 @@
 | Workflow | FEATURE_DEV |
 | Target | xai-web-dashboard-grid |
 | Title | Web Console — Dashboard grid container (port `module-dashboard.jsx` grid + DnD wrapper section ONLY) |
-| Current Phase | FEATURE_BUILD |
-| Status | READY_FOR_VERIFY |
-| Suggested Next | feature-verify |
+| Current Phase | FEATURE_VERIFY |
+| Status | READY_TO_SHIP |
+| Suggested Next | ship |
 | Verify Cross-vendor | yes (Safari 17+ / Chrome / Firefox — empty state + Add-widget emit + lang switch + 3-widget render + FLIP drag visual + persistence reload + responsive breakpoints + touch + a11y + theme + storage round-trip — see test.md §6) |
 | Automation Mode | A-Claude (xai-roadmap-loop W2d parallel-Agent mode; siblings: #7 xai-web-board-core + #20 xai-web-statistics) |
-| Executor | claude-opus-4-7 — feature-auto-build (P3 done) |
+| Executor | claude-opus-4-7 — feature-verify |
 | Updated | 2026-05-23 |
 | Dispatched By | xai-roadmap-loop (W2d parallel dispatch, manifest row #10) |
 | Roadmap Row | docs/workflow/roadmap/xai-web-console.md row #10 (W2 Module — Dashboard grid container) |
@@ -204,4 +204,50 @@ Sanity-checked: `xai_dash_order` is pre-registered in `@repo/plugin-web-storage`
 | 2026-05-23 | claude-opus-4-7 — feature-review | APPROVED. All 5 review gates passed (discovery / design / contract / phase / arch-risk). 0 blockers, 0 recommendations. Stability contract for row #11 consumption documented. | — | feature-auto-build |
 | 2026-05-23 | claude-opus-4-7 — feature-auto-build | P1: package skeleton + DashboardModule render path + EmptyState + DashHeader + i18n delta + EventMap declaration + shell wiring + 48 tests. 9 test files green. Lint clean. Sibling-safe shared-anchor edits (apps/web/package.json, shellRegistrations.tsx, events.ts, i18n.ts) cleanly committed without contamination. | 2d9655f | feature-build (P2) |
 | 2026-05-23 | claude-opus-4-7 — feature-auto-build | P2: WidgetShell + DashboardGrid + WidgetGhost components; useFlipReorder + useGridDrag + useDashOrder + sanitizeOrder internal hooks. 50 new tests (98/98 total). PointerEvent polyfill in setup.ts (jsdom lacks it). Lint + check-types clean. | 7691f97 | feature-build (P3) |
-| 2026-05-23 | claude-opus-4-7 — feature-auto-build | P3: emit `web:dashboard:add-widget-clicked` from header button (source=add-widget-button) + empty-state CTA (source=empty-state-cta); verify goTo path (web:shell:module-change with source=mini-cal). 6 new tests (104/104 total). dev_log flipped to READY_FOR_VERIFY. | (this commit) | feature-verify |
+| 2026-05-23 | claude-opus-4-7 — feature-auto-build | P3: emit `web:dashboard:add-widget-clicked` from header button (source=add-widget-button) + empty-state CTA (source=empty-state-cta); verify goTo path (web:shell:module-change with source=mini-cal). 6 new tests (104/104 total). dev_log flipped to READY_FOR_VERIFY. | 7daa255 | feature-verify |
+| 2026-05-23 | claude-opus-4-7 — feature-verify | **PASS** — 15/15 verify gates clean. 104/104 plugin tests + 54/54 web tests + 8/8 core tests + vite build green (689 modules, 862KB main chunk, 64KB css). All 15 frozen assumptions honored (§1.1 design.md). All 10 AC families covered (test.md §2). Commit hygiene clean (3 single-intent commits, each with full Why/What/Scope/Risk/Docs/Tests body). Residual: visual FLIP timing + iOS touch + storage round-trip pending cross-vendor manual smoke (test.md §6, Codex primary / Cursor fallback). Status flipped to READY_TO_SHIP. | — | ship |
+
+## Verify Report (2026-05-23)
+
+**Verdict**: PASS (15/15 gates) — READY_TO_SHIP.
+
+### Gate-by-gate
+
+| # | Gate | Result | Evidence |
+|---|---|---|---|
+| 1 | Commits scoped to single phase | PASS | 3 commits (2d9655f / 7691f97 / 7daa255), each single-intent, each with full body. |
+| 2 | Commit messages per docs/conventions/COMMIT_CONVENTION.md | PASS | All carry type(scope): summary + Why / What / Scope / Risk / Docs / Tests sections. |
+| 3 | design.md §1.1 frozen assumptions (15 items) | PASS | All 15 honored: package name (#1), public surface (#2), persistence read-only (#3), FLIP technique (#4), slot API (#5), sanitize-on-mount (#6), pure CSS responsive (#7), bilingual empty state (#8), declared event (#9), drag-exclude (#10), EventMap declaration-only (#11), i18n delta 3×2 (#12), slot icon+order (#13), no new deps (#14), DashWidgetId=string (#15). |
+| 4 | Public surface matches api.md §S1 | PASS | DashboardModule (named+default), dashboardGridSlotRegistration, 4 type aliases. No internal leaks (AC-BARREL-5). |
+| 5 | AC matrix coverage (test.md §2) | PASS | 70 AC IDs across 10 families fully exercised in 104 tests. |
+| 6 | Sanitize semantics (F1) | PASS | 14 sanitizeOrder unit tests + 8 useDashOrder integration tests cover all 6 edge cases enumerated in api.md §S6. |
+| 7 | Drag-exclude contract (api.md §S4) | PASS | useGridDrag exclude selector "button, input, textarea, [data-no-drag]" enforced; 4 dedicated tests for each branch (AC-DRAG-2/3/4/8). |
+| 8 | EventMap declaration | PASS | packages/core/src/types/events.ts:198-203 — 'web:dashboard:add-widget-clicked' with closed source union. |
+| 9 | i18n delta (3 keys × 2 langs) | PASS | packages/plugin-web-tokens/src/i18n.ts:151-153 (en) + 351-353 (zh). add_widget / good_morning / good_afternoon / good_evening reused. |
+| 10 | xai_dash_order registry — read-only | PASS | packages/plugin-web-storage/src/internal/registry.ts:242-249 unchanged. Only consumer-side usePref hook used. |
+| 11 | Shell wiring | PASS | shellRegistrations.tsx swap at railOrder 4; dashboardGridSlotRegistration imported. AC-HOST-1..4 green in web tests. |
+| 12 | Lint clean (--max-warnings 0) | PASS | dashboard-grid + web lint both green (web's pre-existing TokensSmokePage warnings are NOT mine; introduced in commit 6c556e6 W1.P3). |
+| 13 | Check-types clean | PASS | dashboard-grid + web + core + plugin-web-tokens all green. |
+| 14 | Workspace build (vite) | PASS | pnpm --filter @repo/web build → 689 modules transformed, 862KB main, 64KB css, 2.56s. |
+| 15 | Sibling concurrency safe | PASS | All my shared-anchor edits (apps/web/package.json, shellRegistrations.tsx, events.ts, i18n.ts) used unique anchors that did NOT collide with sibling rows #7 (board-core) or #20 (statistics). Each row owns disjoint regions of those files. |
+
+### Residual risks (acceptable at ship-time, queued for cross-vendor manual smoke)
+
+| ID | Risk | Mitigation status |
+|---|---|---|
+| R2 | FLIP first-paint jank | Unit-test verifies lastRects gating; visual confirmation in test.md §6 cross-vendor smoke. |
+| R3 | iOS touch drag broken without touch-action | `.widget-shell { touch-action: none; }` present in styles.css. Manual iOS test in §6. |
+| R6 | Row #11 widget authors forget [data-no-drag] | Documented in api.md §S4 + design.md §1.1 frozen-assumption 10. Row #11's feature-plan must reference this. |
+| R10 | Greeting tied to local timezone | Documented as expected behaviour; tested at hour boundaries 0/11/12/17/18/23 in greeting.test.ts. |
+
+### Cross-vendor verify scope (queued)
+
+Manifest header: primary Codex, fallback Cursor. Verification steps enumerated in test.md §6:
+1. Empty state render + lang switch
+2. Add-widget event emission (both header + empty-state CTA)
+3. 3-widget smoke with drag-to-reorder visual + reload persistence
+4. iOS touch drag (Safari)
+5. Responsive breakpoints (1500/1300/900/600)
+6. A11y tab navigation + aria-label
+7. Light/Dark theme inversion
+8. Storage round-trip (localStorage Application tab)
