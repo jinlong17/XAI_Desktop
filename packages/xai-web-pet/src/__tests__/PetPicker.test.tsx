@@ -145,7 +145,6 @@ describe("PetPicker", () => {
 
   it("renders all 8 pet ids via rows", () => {
     const { container } = render(<PetPicker {...makeProps()} />);
-    const rows = container.querySelectorAll(".pp-row");
     // Each row should have an avatar with one of the 8 pet anim classes
     for (const id of ALL_IDS) {
       const def = PET_DEFS.find((p) => p.id === id)!;

@@ -13,7 +13,7 @@
 | Verify Cross-vendor | yes (pointer-drag + CSS `@keyframes` + bubble side-flip eyeball-validated in Chrome / Safari 17+ / Firefox latest on real macOS before READY_TO_SHIP) |
 | Automation Mode | A-Claude (parallel-Agent W2 — siblings: #13 matrix, #17 countdown) |
 | Executor | Claude Sonnet 4.6 — feature-auto-build |
-| Updated | 2026-05-23 12:38 |
+| Updated | 2026-05-23 12:46 |
 | Dispatched By | xai-roadmap-loop (W2 parallel fan-out, manifest row #19) |
 | Roadmap Row | docs/workflow/roadmap/xai-web-console.md row #19 (W2, Module) |
 | ADR Anchor | docs/adr/0007-xai-web-console-build-form.md §S4 (port map: `pet.jsx` → `packages/plugin-web-pet/src/`) + §S5 (TSX rules) + §S7 (event bus) |
@@ -338,7 +338,78 @@ Plan is executable with no blocking ambiguity. All 4 frozen assumptions verified
 
 ## Verify Section
 
-_(Filled in by feature-verify when it runs. Cross-vendor matrix from test.md §6.)_
+**Verifier**: Claude Opus 4.7 1M — feature-verify
+**Date**: 2026-05-23 12:42
+**Verdict**: BLOCKED — 1 lint blocker (2 unused-var warnings in test files; `lint --max-warnings 0` exits 1)
+
+### Verification gate results
+
+| # | Gate | Result | Evidence |
+|---|---|---|---|
+| 1 | `pnpm --filter @repo/plugin-web-pet test` | PASS | 16 test files / 129 tests green (4.22s) |
+| 2 | `pnpm --filter @repo/plugin-web-pet check-types` | PASS | tsc --noEmit clean |
+| 3 | `pnpm --filter @repo/plugin-web-pet lint` | **FAIL** | `eslint --max-warnings 0` exits 1; 2 unused-var warnings |
+| 4 | `pnpm --filter @repo/web check-types` | PASS | tsc --noEmit clean |
+| 5 | `pnpm --filter @repo/web test` | PASS | 14 test files / 50 tests green; zero regressions |
+| 6 | 8 SVG pets render (Mochi/Pip/Sprout/Lumi/Drip/Pebble/Star/Ember) | PASS | PetArt.test.tsx 20 assertions; petDefs.test.ts 14 assertions |
+| 7 | 7 keyframes (Mochi+Drip share `bob`; Pebble=`still`) | PASS | pet.css lines 19-93 (7 @keyframes); PET_DEFS lines 16-65 map 8 ids → 7 anims |
+| 8 | CSS transforms only — no JS animation loop | PASS | DesktopPet.tsx contains no `requestAnimationFrame`/`setInterval` for animation; all motion via pet.css `@keyframes` |
+| 9 | Pet identity → `xai_pet_id`; position → `xai_pet_pos` via usePref | PASS | DesktopPet.tsx lines 64-65 |
+| 10 | Pet subscribes to `web:shell:pet-toggle` via useWebEventListener | PASS | useToggleSync.ts line 25 |
+| 11 | PetPicker preview shows live animation (not static frame) | PASS | PetPicker.tsx line 87 (`pp-avatar pet-anim-${p.anim}`); PetPicker.preview.test.tsx 7 assertions |
+| 12 | Bilingual tip-bubble strings via useI18n | PASS | DesktopPet.tsx lines 80, 115-119; DesktopPet.lang.test.tsx 5 assertions |
+| 13 | Top-level mount in apps/web/src/App.tsx (NOT routed) | PASS | apps/web/src/App.tsx lines 34-35 (import) + 104-105 (JSX sibling of `<Shell>` inside `<WebShellProvider>`) |
+| 14 | AC-PET-1..16 exercised | PASS | 16 ACs mapped to 14 test files in test.md §3; all green |
+| 15 | Cross-vendor cold-read by Claude Opus 4.7 1M | PASS | This run |
+| 16 | Cross-vendor smoke (Chrome/Safari/Firefox) | DEFERRED | Recorded below — ship-time gate (manual on real macOS) |
+| 17 | Commit hygiene + dev_log Status Panel | NOTE | See cross-row hygiene note below |
+
+### Blockers (1)
+
+**B1 — Lint warnings exceed `--max-warnings 0`** (gate 3):
+
+```
+packages/xai-web-pet/src/__tests__/DesktopPet.behavior.test.tsx
+  9:18  warning  'screen' is defined but never used  @typescript-eslint/no-unused-vars
+
+packages/xai-web-pet/src/__tests__/PetPicker.test.tsx
+  148:11  warning  'rows' is assigned a value but never used  @typescript-eslint/no-unused-vars
+
+ESLint found too many warnings (maximum: 0).
+```
+
+Both are trivial unused-var warnings in test files:
+
+- `src/__tests__/DesktopPet.behavior.test.tsx` line 9: remove `screen` from the `@testing-library/react` import (only `render` is used).
+- `src/__tests__/PetPicker.test.tsx` line 148: the `rows` variable is captured but never asserted on; either drop the assignment (keep `container.querySelectorAll(".pp-row")` only if a row-count check is added, or delete the line entirely).
+
+Fix in P4 (or a follow-up feature-build run); re-run `pnpm --filter @repo/plugin-web-pet lint` to confirm exit 0 before re-submitting feature-verify.
+
+### Cross-vendor smoke matrix (gate 16 — DEFERRED to ship-time)
+
+Run `pnpm --filter @repo/web dev` on real macOS and confirm each row before `ship`:
+
+| Vendor | Smoke item | Pass criterion |
+|---|---|---|
+| Chrome latest | All 8 pets render + animate (bob/hop/sway/glow/still/twinkle/flicker) | Open picker → cycle 8 pets → each animates per `PET_DEFS[i].anim` |
+| Chrome latest | Drag pet across viewport | Position updates smoothly; clamps at viewport edges; persisted to `xai_pet_pos` after reload |
+| Chrome latest | Click pet (no drag) → happy mood + tip bubble | Bubble appears with one of 5 tip strings; mood reverts after 1.6s |
+| Chrome latest | Rail-bottom 🐾 toggle | Click 🐾 → pet hides; click again → pet returns at last pos |
+| Safari 17+ | SVG pointer-events on pet body | `pointerdown` registers on inner SVG; no swallowing (R1 mitigation) |
+| Safari 17+ | Same drag + click + toggle suite as Chrome | All pass |
+| Firefox latest | Bubble side-flip at right edge | Drag pet to `pos.x > innerWidth - 280` → bubble has class `pet-bubble-left` |
+| Firefox latest | Window resize re-clamps pet | Shrink browser window below pet pos → pet re-positioned + persisted |
+| All 3 | Reload persistence | Set pet to Ember, drag to (400,300), reload → still Ember at (400,300) |
+| All 3 | EN ↔ ZH language switch | Tip bubble + picker copy switch correctly |
+| All 3 | Picker live previews | All 8 picker rows show live animations (not static frame) |
+
+If any row fails, log a follow-up bug via `bug-diagnose`. Smoke matrix is independent of B1 — fix B1 first, then run smoke before ship.
+
+### Commit hygiene note (gate 17 — non-blocking observation)
+
+P2 commit `8c37023` cross-contaminated 7 plugin-web-countdown files (CountdownEditDialog/Module tests + internal modules) into the xai-web-pet P2 commit. Per CLAUDE.md memory entry "never mix unrelated files in one commit", this is a hygiene drift. Since these countdown files are also untouched by countdown's own subsequent commits (`bf01ff4` does only host wire-up), the working tree is consistent — but the commit log itself attributes countdown internals to the pet feature. This is a parallel-Agent W2 fan-out artifact (siblings ran concurrently from a shared worktree); it is recorded here for ship-time review but does not block this verify pass on the pet feature. Suggested follow-up: parent loop (`xai-roadmap-loop`) should add a `git status` guard between sibling Agent runs to prevent this.
+
+Status Panel itself reflects READY_FOR_VERIFY → BLOCKED transition correctly (this commit).
 
 ## Iteration Log
 
@@ -353,3 +424,5 @@ _(Empty in v1 — first ship of this feature.)_
 | 2026-05-23 12:38 | Claude Sonnet 4.6 — feature-auto-build | P1: Package scaffold + 8 SVG pets (Mochi/Pip/Sprout/Lumi/Drip/Pebble/Star/Ember) + 7 CSS keyframes (pet-bob/hop/sway/glow/still/twinkle/flicker) + PET_DEFS catalog + public barrel with P1 stubs. Tests: 3 files, 39 assertions, all green. tsc: 0 errors. | 67d2aa1 | P2 |
 | 2026-05-23 12:38 | Claude Sonnet 4.6 — feature-auto-build | P2: DesktopPet real body — drag (clampPos pure helper), usePref(xai_pet_id/xai_pet_pos), click happy+tip, tip rotation (useTipRotation), event subscription (useToggleSync via web:shell:pet-toggle), window resize re-clamp, bubble side-flip. PointerEvent polyfill for jsdom. Tests: 14 files, 104 assertions, all green. tsc: 0 errors. AC-PET-1..6, AC-PET-10..14, AC-PET-16 covered. | 8c37023 | P3 |
 | 2026-05-23 12:38 | Claude Sonnet 4.6 — feature-auto-build | P3: PetPicker modal (8 rows with live pet-anim-<animid> previews, close glyph inline SVG, EN/ZH i18n). Host wire-up: apps/web/package.json + DesktopPet import + JSX mount in App.tsx (sibling of Shell). Tests: 16 files, 129 assertions, all green. tsc: 0 errors for both packages/xai-web-pet and apps/web. AC-PET-7..9, AC-PET-15 covered. All 16 ACs green. Cross-vendor smoke: deferred to feature-verify (manual on real macOS). Status → READY_FOR_VERIFY. | (this commit) | feature-verify |
+| 2026-05-23 12:42 | Claude Opus 4.7 1M — feature-verify | Ran 17-gate verification. PASS: gates 1, 2, 4–15, 17 (test 129/129, tsc clean for plugin-web-pet AND @repo/web, content gates 6–13 all hold, AC-PET-1..16 all exercised, top-level mount in App.tsx confirmed, no JS animation loop, useToggleSync uses useWebEventListener, PetPicker preview live-animates). DEFERRED: gate 16 (cross-vendor smoke — ship-time matrix recorded in Verify Section). FAIL: gate 3 — `lint --max-warnings 0` exits 1 due to 2 unused-var warnings in test files (DesktopPet.behavior.test.tsx:9 `screen` + PetPicker.test.tsx:148 `rows`). Non-blocking observation: P2 commit 8c37023 cross-contaminated 7 plugin-web-countdown files (parallel-Agent W2 fan-out artifact; logged for parent-loop follow-up). Status → BLOCKED, Suggested Next → feature-build to clear B1. | — | feature-build |
+| 2026-05-23 12:46 | Claude Sonnet 4.6 — feature-auto-build | Fix verify blockers B1+B2: dropped `screen` from `@testing-library/react` import in DesktopPet.behavior.test.tsx:9 (B1); deleted unused `rows` assignment at PetPicker.test.tsx:148 (B2). Verified: lint exits 0 / 0 warnings; test 129/129 pass; check-types clean. Status → READY_FOR_VERIFY. | (see commit) | feature-verify |

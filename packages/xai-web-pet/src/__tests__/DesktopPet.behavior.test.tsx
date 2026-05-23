@@ -6,7 +6,7 @@
  */
 
 import { describe, it, expect } from "vitest";
-import { render, screen } from "@testing-library/react";
+import { render } from "@testing-library/react";
 import { DesktopPet } from "../DesktopPet.js";
 
 describe("DesktopPet render flow", () => {
