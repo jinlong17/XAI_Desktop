@@ -18,10 +18,10 @@
 | # | Slug | Source | Depends On | Dep Semantics | Status | Automation Mode | Verify Cross-vendor | Last Run | Note |
 |---|------|--------|------------|---------------|--------|-----------------|---------------------|----------|------|
 | 1 | xai-web-build-form-adr | docs/reviews/xai-web-build-form-adr/20260523-roadmap-seed.md | — | — | READY_TO_SHIP | (default) | (default) | 2026-05-23 | W0 · ADR-0007 Accepted; 3 commits (f167310/c4f1f1b/fe8444a); dev_log READY_TO_SHIP; all 13 verify gates PASS; awaiting human ship. |
-| 2 | xai-web-tokens-and-i18n | docs/reviews/xai-web-tokens-and-i18n/20260523-roadmap-seed.md | xai-web-build-form-adr | shipped | PENDING | (default) | (default) | — | W1 · Foundation. Port tokens.css + i18n.js to TS modules. |
-| 3 | xai-web-persistence-contract | docs/reviews/xai-web-persistence-contract/20260523-roadmap-seed.md | xai-web-build-form-adr | shipped | PENDING | (default) | (default) | — | W1 · Foundation. Typed localStorage key registry + usePref hook. |
-| 4 | xai-web-event-bus | docs/reviews/xai-web-event-bus/20260523-roadmap-seed.md | xai-web-build-form-adr | shipped | PENDING | (default) | (default) | — | W1 · Foundation. Typed cross-module event bus (per CLAUDE.md boundary rule). |
-| 5 | xai-web-shell | docs/reviews/xai-web-shell/20260523-roadmap-seed.md | xai-web-build-form-adr, xai-web-tokens-and-i18n, xai-web-persistence-contract, xai-web-event-bus | shipped | PENDING | (default) | (default) | — | W1 · Foundation. App root + AppRail + Topbar + AvatarMenu + module-switching + 4 rail positions. |
+| 2 | xai-web-tokens-and-i18n | docs/reviews/xai-web-tokens-and-i18n/20260523-roadmap-seed.md | xai-web-build-form-adr | ready_to_ship | PENDING | (default) | (default) | — | W1 · Foundation. Port tokens.css + i18n.js to TS modules. Dep relaxed §A4.5 2026-05-23 (ADR-only upstream). |
+| 3 | xai-web-persistence-contract | docs/reviews/xai-web-persistence-contract/20260523-roadmap-seed.md | xai-web-build-form-adr | ready_to_ship | PENDING | (default) | (default) | — | W1 · Foundation. Typed localStorage key registry + usePref hook. Dep relaxed §A4.5. |
+| 4 | xai-web-event-bus | docs/reviews/xai-web-event-bus/20260523-roadmap-seed.md | xai-web-build-form-adr | ready_to_ship | PENDING | (default) | (default) | — | W1 · Foundation. Typed cross-module event bus (per CLAUDE.md boundary rule). Dep relaxed §A4.5. |
+| 5 | xai-web-shell | docs/reviews/xai-web-shell/20260523-roadmap-seed.md | xai-web-build-form-adr, xai-web-tokens-and-i18n, xai-web-persistence-contract, xai-web-event-bus | ready_to_ship | PENDING | (default) | (default) | — | W1 · Foundation. App root + AppRail + Topbar + AvatarMenu + module-switching + 4 rail positions. Dep relaxed §A4.5. |
 | 6 | xai-web-tasks | docs/reviews/xai-web-tasks/20260523-roadmap-seed.md | xai-web-shell | shipped | PENDING | (default) | (default) | — | W2 · Module. 4-bucket time view + cross-column DnD date rewrite. |
 | 7 | xai-web-board-core | docs/reviews/xai-web-board-core/20260523-roadmap-seed.md | xai-web-shell | shipped | PENDING | (default) | (default) | — | W2 · Module. Kanban view + Board/Card schema + 10-color columns. |
 | 8 | xai-web-board-views | docs/reviews/xai-web-board-views/20260523-roadmap-seed.md | xai-web-board-core | ready_to_ship | PENDING | (default) | (default) | — | W2 · Module. Table / Calendar / Dashboard / Timeline / Map (5 extra views). |
@@ -95,6 +95,15 @@ Rows are cut so each is a plausible single `xai-feature-full-loop` run with one 
 - **Guess (not user-confirmed):** AI Chat's `window.claude.complete` adapter strategy under Vite/non-Claude-Artifact runtime is left to the ai-chat row's feature-plan; ADR may pre-decide.
 - **Guess (not user-confirmed):** Pomodoro session persistence key `xai_pomodoro_sessions` and Countdown persistence key `xai_countdowns` are seed-brief proposals; feature-plan rows may rename.
 - **Open uncertainty:** whether `@repo/plugin-productivity` and `@repo/plugin-console` (already deps of apps/web) get replaced, extended, or sidelined by the new packages/plugin-web-*. This is the ADR's job to settle in row #1.
+
+### R6.5 Dep semantics relaxation (2026-05-23, mid-run §A4.5)
+
+Rows #2-#5 dep semantics on row #1 (xai-web-build-form-adr) flipped from
+`shipped` → `ready_to_ship` because row #1 is an ADR-only artifact whose
+"ship" is just `git push` of three doc-only commits (f167310/c4f1f1b/fe8444a).
+ADR-0007 is Accepted; downstream W1 features can cite it now without waiting
+for the push. This is the roadmap author's tradeoff per portable §A4.5 — it
+removes ~one human round-trip between W0 and W1 batch-ship windows.
 
 ### R7. Wave plan
 
