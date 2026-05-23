@@ -21,6 +21,8 @@ import { countdownWebModuleRegistration } from "@repo/plugin-web-countdown";
 import { tasksWebModuleRegistration } from "@repo/plugin-web-tasks";
 // xai-web-habits row #15
 import { habitsSlotRegistration } from "@repo/plugin-web-habits";
+// xai-web-pomodoro row #14
+import { pomodoroWebModuleRegistration } from "@repo/plugin-web-pomodoro";
 
 function placeholder(
   moduleId: string,
@@ -52,7 +54,7 @@ export const webShellModuleRegistrations: WebModuleSlotRegistration[] = [
   placeholder("dashboard",  "Dashboard",  "layout",    4),
   placeholder("calendar",   "Calendar",   "calendar",  5),
   matrixSlotRegistration,
-  placeholder("pomodoro",   "Pomodoro",   "timer",     7),
+  pomodoroWebModuleRegistration,
   habitsSlotRegistration,  // xai-web-habits row #15 (railOrder 8)
   placeholder("meditation", "Meditation", "leaf",      9),
   countdownWebModuleRegistration,

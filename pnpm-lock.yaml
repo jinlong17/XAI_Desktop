@@ -182,15 +182,24 @@ importers:
       '@repo/plugin-web-countdown':
         specifier: workspace:*
         version: link:../../packages/plugin-web-countdown
+      '@repo/plugin-web-habits':
+        specifier: workspace:*
+        version: link:../../packages/xai-web-habits
       '@repo/plugin-web-matrix':
         specifier: workspace:*
         version: link:../../packages/xai-web-matrix
       '@repo/plugin-web-pet':
         specifier: workspace:*
         version: link:../../packages/xai-web-pet
+      '@repo/plugin-web-pomodoro':
+        specifier: workspace:*
+        version: link:../../packages/plugin-web-pomodoro
       '@repo/plugin-web-storage':
         specifier: workspace:*
         version: link:../../packages/plugin-web-storage
+      '@repo/plugin-web-tasks':
+        specifier: workspace:*
+        version: link:../../packages/xai-web-tasks
       '@repo/plugin-web-tokens':
         specifier: workspace:*
         version: link:../../packages/plugin-web-tokens
