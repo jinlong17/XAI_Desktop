@@ -179,6 +179,12 @@ importers:
       '@repo/plugin-productivity':
         specifier: workspace:^
         version: link:../../packages/plugin-productivity
+      '@repo/plugin-web-ai-chat':
+        specifier: workspace:*
+        version: link:../../packages/plugin-web-ai-chat
+      '@repo/plugin-web-calendar':
+        specifier: workspace:*
+        version: link:../../packages/xai-web-calendar
       '@repo/plugin-web-countdown':
         specifier: workspace:*
         version: link:../../packages/plugin-web-countdown
@@ -188,6 +194,9 @@ importers:
       '@repo/plugin-web-matrix':
         specifier: workspace:*
         version: link:../../packages/xai-web-matrix
+      '@repo/plugin-web-meditation':
+        specifier: workspace:*
+        version: link:../../packages/xai-web-meditation
       '@repo/plugin-web-pet':
         specifier: workspace:*
         version: link:../../packages/xai-web-pet
