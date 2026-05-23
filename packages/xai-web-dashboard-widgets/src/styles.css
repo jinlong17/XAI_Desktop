@@ -242,3 +242,424 @@
   background: var(--accent);
   border-color: var(--accent);
 }
+
+/* ---------- Common widget header ---------- */
+.wgt-h {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 12px;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--text-1);
+  border-bottom: 1px solid var(--border-1);
+}
+.wgt-h .grow {
+  flex: 1;
+}
+.icon-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 4px;
+  border: none;
+  background: transparent;
+  color: var(--text-2);
+  cursor: pointer;
+  border-radius: 4px;
+}
+.icon-btn:hover {
+  background: var(--bg-panel-2);
+}
+
+/* ---------- Weather ---------- */
+.w-weather-body {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.ww-head {
+  padding: 8px 12px 0;
+  font-size: 12px;
+  color: var(--text-2);
+}
+.ww-now {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 12px;
+  gap: 12px;
+}
+.ww-temp {
+  font-size: 40px;
+  font-weight: 700;
+  color: var(--text-1);
+  line-height: 1;
+}
+.ww-info {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  text-align: right;
+}
+.ww-cond {
+  font-size: 12px;
+  color: var(--text-2);
+}
+.ww-hilo {
+  font-size: 11px;
+  color: var(--text-3);
+}
+.ww-forecast {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 4px;
+  padding: 8px 12px 12px;
+}
+.wwf-day {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  font-size: 11px;
+}
+.wwf-d {
+  color: var(--text-3);
+}
+.wwf-t {
+  color: var(--text-1);
+  font-weight: 600;
+}
+.wwf-t .muted {
+  color: var(--text-3);
+  margin-left: 4px;
+  font-weight: 400;
+}
+
+/* ---------- Stickies ---------- */
+.w-stickies-body {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.sticky-stack {
+  display: flex;
+  flex-direction: column;
+  gap: -8px;
+  padding: 12px;
+  position: relative;
+}
+.sticky {
+  padding: 8px 10px;
+  border-radius: 6px;
+  font-size: 12px;
+  line-height: 1.45;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
+  margin-bottom: -6px;
+  position: relative;
+  color: #2a2a2a;
+}
+
+/* ---------- Mini Calendar ---------- */
+.w-mini-cal-body {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding: 8px 12px 12px;
+  cursor: pointer;
+}
+.mc-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 4px 0;
+}
+.mc-nav {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 4px;
+  border: none;
+  background: transparent;
+  color: var(--text-2);
+  cursor: pointer;
+  border-radius: 4px;
+}
+.mc-nav:hover {
+  background: var(--bg-panel-2);
+}
+.mc-title {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.mc-m {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--text-1);
+}
+.mc-today {
+  font-size: 11px;
+  color: var(--accent);
+  font-weight: 700;
+}
+.mc-grid {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 2px;
+  font-size: 11px;
+}
+.mc-wd {
+  text-align: center;
+  padding: 4px 0;
+  color: var(--text-3);
+  font-weight: 600;
+  font-size: 10px;
+}
+.mc-cell {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+  padding: 4px 0;
+  border-radius: 4px;
+  color: var(--text-1);
+  min-height: 28px;
+}
+.mc-cell.empty {
+  visibility: hidden;
+}
+.mc-cell.today {
+  background: var(--accent);
+  color: var(--bg-app);
+  font-weight: 600;
+}
+.mc-num {
+  font-size: 11px;
+}
+.mc-dots {
+  display: inline-flex;
+  gap: 2px;
+}
+.mc-dot {
+  width: 4px;
+  height: 4px;
+  border-radius: 50%;
+  background: var(--text-2);
+}
+.mc-dot-mint {
+  background: oklch(70% 0.13 165);
+}
+.mc-dot-amber {
+  background: oklch(78% 0.15 75);
+}
+.mc-dot-blue {
+  background: oklch(70% 0.12 235);
+}
+.mc-dot-violet {
+  background: oklch(70% 0.14 290);
+}
+.mc-foot {
+  display: flex;
+  justify-content: flex-end;
+  padding: 4px 0;
+}
+.mc-jump {
+  display: inline-flex;
+  align-items: center;
+  gap: 2px;
+  font-size: 11px;
+  padding: 2px 6px;
+  border: none;
+  background: transparent;
+  color: var(--accent);
+  cursor: pointer;
+  border-radius: 4px;
+}
+.mc-jump:hover {
+  background: var(--bg-panel-2);
+}
+
+/* ---------- World Clocks ---------- */
+.w-timezones-body {
+  display: flex;
+  flex-direction: column;
+  position: relative;
+}
+.tz-view-toggle {
+  display: inline-flex;
+  gap: 2px;
+  border-radius: 6px;
+  background: var(--bg-panel-2);
+  border: 1px solid var(--border-1);
+  padding: 2px;
+}
+.tz-view-toggle button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 4px;
+  border-radius: 4px;
+  background: transparent;
+  color: var(--text-2);
+  border: none;
+  cursor: pointer;
+}
+.tz-view-toggle button[aria-selected="true"] {
+  background: var(--bg-panel);
+  color: var(--text-1);
+}
+
+.tz-body {
+  padding: 8px 12px;
+}
+.tz-body-list,
+.tz-body-analog {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+.tz-body-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 6px;
+}
+.tz-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 8px;
+  border-radius: 6px;
+  border: 1px solid var(--border-1);
+  background: var(--bg-panel-2);
+}
+.tz-info {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+.tz-city {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--text-1);
+}
+.tz-meta {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 10px;
+  color: var(--text-3);
+}
+.tz-divider {
+  color: var(--text-3);
+}
+.tz-big {
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--text-1);
+  letter-spacing: 0.5px;
+}
+.tz-big .tz-colon {
+  color: var(--text-3);
+  margin: 0 1px;
+}
+.tz-ampm {
+  font-size: 10px;
+  color: var(--text-3);
+  margin-left: 4px;
+}
+.tz-card {
+  padding: 8px;
+  border-radius: 6px;
+  background: var(--bg-panel-2);
+  border: 1px solid var(--border-1);
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+.tz-card.night {
+  background: var(--bg-panel-3, oklch(35% 0.05 240));
+  color: var(--text-1);
+}
+.tz-card-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.tz-card-time {
+  font-size: 20px;
+  font-weight: 700;
+}
+.tz-card-time .tz-colon {
+  color: var(--text-3);
+}
+.tz-card-foot {
+  display: flex;
+  justify-content: space-between;
+  font-size: 10px;
+  color: var(--text-3);
+}
+.tz-remove {
+  border: none;
+  background: transparent;
+  color: var(--text-3);
+  cursor: pointer;
+  padding: 2px;
+  border-radius: 4px;
+}
+.tz-remove:hover {
+  color: var(--text-1);
+  background: var(--bg-panel-3, var(--bg-panel-2));
+}
+.tz-picker {
+  position: absolute;
+  top: 36px;
+  right: 12px;
+  z-index: 51;
+  background: var(--bg-panel);
+  border: 1px solid var(--border-1);
+  border-radius: 8px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+  min-width: 200px;
+  max-height: 260px;
+  overflow-y: auto;
+  padding: 6px;
+}
+.tz-picker-h {
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--text-2);
+  padding: 4px 6px 6px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+.tz-picker-list {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+.tz-picker-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 6px 8px;
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  border-radius: 4px;
+  color: var(--text-1);
+  font-size: 12px;
+  text-align: left;
+}
+.tz-picker-row:hover {
+  background: var(--bg-panel-2);
+}
+.tz-picker-empty {
+  padding: 8px;
+  font-size: 11px;
+  color: var(--text-3);
+  text-align: center;
+}
+.tz-clock {
+  display: block;
+}

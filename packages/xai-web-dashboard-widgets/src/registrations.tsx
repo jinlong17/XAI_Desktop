@@ -10,9 +10,13 @@
 import type { WidgetRegistration } from "@repo/plugin-web-dashboard-grid";
 
 import { ClockWidget } from "./widgets/ClockWidget.js";
+import { MiniCalWidget } from "./widgets/MiniCalWidget.js";
 import { StatPomos } from "./widgets/StatPomos.js";
 import { StatStreak } from "./widgets/StatStreak.js";
 import { StatTasks } from "./widgets/StatTasks.js";
+import { StickiesWidget } from "./widgets/StickiesWidget.js";
+import { WeatherWidget } from "./widgets/WeatherWidget.js";
+import { WorldClocks } from "./widgets/WorldClocks.js";
 
 import "./styles.css";
 
@@ -45,29 +49,25 @@ export const dashboardWidgetRegistrations: WidgetRegistration[] = [
     id: "weather",
     span: "w-weather",
     ariaLabel: { en: "Weather widget", zh: "天气组件" },
-    // Filled in P2.
-    render: () => null,
+    render: (ctx) => <WeatherWidget lang={ctx.lang} />,
   },
   {
     id: "mini-cal",
     span: "w-mini-cal",
     ariaLabel: { en: "Mini calendar", zh: "迷你日历" },
-    // Filled in P2.
-    render: () => null,
+    render: (ctx) => <MiniCalWidget lang={ctx.lang} now={ctx.now} goTo={ctx.goTo} />,
   },
   {
     id: "timezones",
     span: "w-timezones",
     ariaLabel: { en: "World clocks", zh: "世界时钟" },
-    // Filled in P2.
-    render: () => null,
+    render: (ctx) => <WorldClocks lang={ctx.lang} now={ctx.now} />,
   },
   {
     id: "stickies",
     span: "w-stickies",
     ariaLabel: { en: "Sticky notes", zh: "便签" },
-    // Filled in P2.
-    render: () => null,
+    render: (ctx) => <StickiesWidget lang={ctx.lang} />,
   },
   {
     id: "mail",
