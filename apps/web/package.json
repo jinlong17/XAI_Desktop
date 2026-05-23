@@ -25,6 +25,7 @@
   "dependencies": {
     "@sentry/react": "^10.20.0",
     "@repo/core": "workspace:^",
+    "@repo/plugin-web-tokens": "workspace:*",
     "@repo/plugin-console": "workspace:^",
     "@repo/plugin-productivity": "workspace:^",
     "@repo/web-auth-device-session": "workspace:*",

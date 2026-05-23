@@ -1,0 +1,11 @@
+{
+  "name": "@repo/plugin-web-tokens",
+  "displayName": "XAI Web Tokens & i18n",
+  "version": "0.0.0",
+  "description": "Design tokens (tokens.css + layout.css), i18n bundles (EN + ZH), useI18n hook, and apply* DOM helpers for the XAI Console Web face.",
+  "entry": "./src/index.ts",
+  "platform": "web",
+  "category": "foundation",
+  "dependencies": [],
+  "windows": {}
+}

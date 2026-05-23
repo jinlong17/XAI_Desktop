@@ -27,10 +27,10 @@ export function buildCspPolicy({
   const policyParts = [
     "default-src 'self'",
     `script-src 'self' 'nonce-${nonce}'`,
-    `style-src 'self' 'nonce-${nonce}'`,
+    `style-src 'self' 'nonce-${nonce}' https://fonts.googleapis.com`,
     "img-src 'self' data: blob:",
     `connect-src ${normalizeConnectSrc(connectSrc)}`,
-    "font-src 'self' data:",
+    "font-src 'self' data: https://fonts.gstatic.com",
     "object-src 'none'",
     "base-uri 'self'",
     "frame-ancestors 'none'",
