@@ -7,6 +7,7 @@ import {
   useState,
   type ReactNode,
 } from "react";
+import { emitEvent } from "@repo/core/events";
 import { LocalStorageAdapter } from "../data/LocalStorageAdapter";
 import { useProjectRepoAdapters } from "../data/RepoProvider";
 import type { Card, CardDraft, ChecklistItem, DataAdapter, Project, ProjectDraft } from "../types";
@@ -74,6 +75,8 @@ const seedCards: Card[] = [
     version: 1,
   },
 ];
+
+const PATCH_KEYS_ALLOW_LIST = ["checklist", "description", "dueDate", "labels", "listId", "order", "title"] as const;
 
 function normalizeCardOrder(cards: Card[], listId: string): Card[] {
   return cards
@@ -177,6 +180,15 @@ export function ProjectStoreProvider({ projectAdapter, cardAdapter, children }: 
         version: 1,
       };
       await stableCardAdapter.save(card);
+      void emitEvent("project:card-created", {
+        id: card.id,
+        listId: card.listId,
+        title: card.title,
+        order: card.order,
+        entityType: card.entityType,
+        version: card.version,
+        createdAt: card.createdAt,
+      }).catch(() => undefined);
       setCards((prev) => [...prev, card]);
       return card;
     },
@@ -189,6 +201,16 @@ export function ProjectStoreProvider({ projectAdapter, cardAdapter, children }: 
       if (!current) return;
       const next = { ...current, ...patch, updatedAt: new Date().toISOString(), version: current.version + 1 };
       await stableCardAdapter.save(next);
+      const patchKeys = Object.keys(patch)
+        .filter((k): k is (typeof PATCH_KEYS_ALLOW_LIST)[number] => (PATCH_KEYS_ALLOW_LIST as readonly string[]).includes(k))
+        .sort();
+      void emitEvent("project:card-updated", {
+        id: next.id,
+        listId: next.listId,
+        patchKeys,
+        version: next.version,
+        updatedAt: next.updatedAt,
+      }).catch(() => undefined);
       setCards((prev) => prev.map((card) => (card.id === id ? next : card)));
     },
     [stableCardAdapter],
@@ -206,6 +228,8 @@ export function ProjectStoreProvider({ projectAdapter, cardAdapter, children }: 
     async (cardId: string, listId: string, order = 0) => {
       const target = cards.find((card) => card.id === cardId);
       if (!target) return;
+      const fromListId = target.listId;
+      const fromOrder = target.order;
       const withoutTarget = cards.filter((card) => card.id !== cardId);
       const targetList = withoutTarget.filter((card) => card.listId === listId).sort((a, b) => a.order - b.order);
       const clampedOrder = Math.min(Math.max(order, 0), targetList.length);
@@ -226,6 +250,17 @@ export function ProjectStoreProvider({ projectAdapter, cardAdapter, children }: 
         dirtyIds.has(card.id) ? { ...card, updatedAt: movedAt, version: card.version + 1 } : card,
       );
       await Promise.all(dirtyWithTimestamp.map((card) => stableCardAdapter.save(card)));
+      if (dirty.length > 0) {
+        void emitEvent("project:card-moved", {
+          id: cardId,
+          fromListId,
+          toListId: listId,
+          fromOrder,
+          toOrder: clampedOrder,
+          version: target.version + 1,
+          updatedAt: movedAt,
+        }).catch(() => undefined);
+      }
       setCards(nextCards);
     },
     [cards, stableCardAdapter],
