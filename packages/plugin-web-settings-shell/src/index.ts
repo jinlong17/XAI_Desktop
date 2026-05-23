@@ -7,11 +7,22 @@
  * API contract: packages/xai-web-settings-shell/docs/api.md §0
  * ADR anchor: docs/adr/0007-xai-web-console-build-form.md §S4 (port map "module-settings.jsx")
  *
- * P1 surface (this commit): types + paneRegistry + resetAllPrefs only.
- * Components + registration land in P2 / P3 of the build plan.
+ * P2 surface (this commit): types + paneRegistry + resetAllPrefs +
+ * SettingsModule + atomic components (Toggle/SettingRow/SectionBlock/SettingsFooter).
+ * Slot registration (settingsShellWebModuleRegistration) lands in P3.
  */
 
-// ---- Public utilities (P1 phase) -------------------------------------------
+// Side-effect CSS — applied once globally when this package is first imported.
+import "./styles.css";
+
+// ---- Components ------------------------------------------------------------
+export { SettingsModule } from "./SettingsModule.js";
+export { Toggle }         from "./Toggle.js";
+export { SettingRow }     from "./SettingRow.js";
+export { SectionBlock }   from "./SectionBlock.js";
+export { SettingsFooter } from "./SettingsFooter.js";
+
+// ---- Public utilities ------------------------------------------------------
 export { resetAllPrefs } from "./internal/resetAllPrefs.js";
 export { paneRegistry }  from "./internal/paneRegistry.js";
 

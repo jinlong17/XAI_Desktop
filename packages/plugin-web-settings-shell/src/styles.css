@@ -1,0 +1,200 @@
+/**
+ * @repo/plugin-web-settings-shell — global side-effect CSS.
+ *
+ * Verbatim port of Settings chassis rules from `web design/layout.css`,
+ * scoped to `.module-settings` for isolation. Variables (oklch / --bg-*
+ * / --border-* / --text-* / --accent / --r-* / --shadow-* / --dur-* /
+ * --ease-* / --fs-*) are resolved by upstream @repo/plugin-web-tokens.
+ *
+ * Imported once globally via `src/index.ts`.
+ */
+
+.module.module-settings {
+  /* Container — outer layout is provided by @repo/xai-web-shell */
+}
+
+.module-settings .settings-shell {
+  width: min(960px, 100%);
+  display: grid;
+  grid-template-columns: 220px 1fr;
+  min-height: 540px;
+  overflow: hidden;
+}
+
+.module-settings .settings-sidebar {
+  border-right: 1px solid var(--border-1);
+  padding: 16px 8px;
+  background: var(--bg-panel-2);
+}
+
+.module-settings .settings-h {
+  margin: 4px 8px 14px;
+  font-size: var(--fs-xl);
+  font-weight: 700;
+  letter-spacing: -0.01em;
+}
+
+.module-settings .settings-group {
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+  padding-bottom: 12px;
+  margin-bottom: 12px;
+  border-bottom: 1px solid var(--border-1);
+}
+
+.module-settings .settings-group:last-child {
+  border-bottom: 0;
+}
+
+.module-settings .settings-detail {
+  padding: 28px 32px;
+  min-height: 0;
+}
+
+/* ---------- Setting row ---------- */
+.module-settings .setting-row {
+  display: grid;
+  grid-template-columns: minmax(160px, 1fr) auto;
+  gap: 16px;
+  align-items: center;
+  padding: 14px 0;
+  border-bottom: 1px solid var(--border-1);
+}
+
+.module-settings .setting-row:last-child {
+  border-bottom: 0;
+}
+
+.module-settings .sr-label {
+  font-size: var(--fs-md);
+  font-weight: 600;
+}
+
+.module-settings .sr-desc {
+  margin-top: 2px;
+  font-size: var(--fs-xs);
+  color: var(--text-3);
+}
+
+/* ---------- Section block ---------- */
+.module-settings .setting-block {
+  background: var(--bg-panel-2);
+  border: 1px solid var(--border-1);
+  border-radius: var(--r-md);
+  padding: 2px 16px;
+}
+
+.module-settings .setting-block .setting-row {
+  border-bottom: 1px solid var(--border-1);
+}
+
+.module-settings .setting-block .setting-row:last-child {
+  border-bottom: 0;
+}
+
+/* ---------- Toggle ---------- */
+.module-settings .toggle {
+  position: relative;
+  width: 36px;
+  height: 20px;
+  border-radius: 999px;
+  background: var(--border-strong);
+  cursor: pointer;
+  transition: background var(--dur-fast) var(--ease-out);
+  flex-shrink: 0;
+  border: 0;
+  padding: 0;
+}
+
+.module-settings .toggle.on {
+  background: var(--accent);
+}
+
+.module-settings .toggle-knob {
+  position: absolute;
+  top: 2px;
+  left: 2px;
+  width: 16px;
+  height: 16px;
+  border-radius: 999px;
+  background: #fff;
+  box-shadow: var(--shadow-1);
+  transition: transform var(--dur-fast) var(--ease-out);
+}
+
+.module-settings .toggle.on .toggle-knob {
+  transform: translateX(16px);
+}
+
+/* ---------- Pane footer ---------- */
+.module-settings .pane-footer {
+  display: flex;
+  gap: 10px;
+  justify-content: flex-end;
+  padding-top: 18px;
+  margin-top: 4px;
+  border-top: 1px solid var(--border-1);
+  position: sticky;
+  bottom: 0;
+  background: var(--bg-panel);
+  z-index: 2;
+}
+
+.module-settings .pane-save {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  min-width: 110px;
+  justify-content: center;
+  transition:
+    background var(--dur-fast) var(--ease-out),
+    transform var(--dur-fast) var(--ease-out);
+}
+
+.module-settings .pane-save.is-saved {
+  background: var(--accent-soft);
+  color: var(--accent-ink);
+  animation: settingsShellSaveBounce 380ms var(--ease-out);
+}
+
+@keyframes settingsShellSaveBounce {
+  0%   { transform: scale(0.94); }
+  50%  { transform: scale(1.06); }
+  100% { transform: scale(1); }
+}
+
+/* ---------- List row (sidebar entry) ---------- */
+.module-settings .list-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 10px;
+  border-radius: var(--r-sm);
+  cursor: pointer;
+  font-size: var(--fs-sm);
+  color: var(--text-1);
+  transition: background var(--dur-fast) var(--ease-out);
+}
+
+.module-settings .list-row:hover {
+  background: var(--bg-hover);
+}
+
+.module-settings .list-row[data-active="true"] {
+  background: var(--bg-active);
+  color: var(--accent-ink);
+  font-weight: 600;
+}
+
+.module-settings .list-row .grow {
+  flex: 1;
+}
+
+/* ---------- Placeholder pane body (this row only) ---------- */
+.module-settings .pane-placeholder {
+  padding: 32px 16px;
+  font-size: var(--fs-md);
+  color: var(--text-3);
+  text-align: center;
+}
