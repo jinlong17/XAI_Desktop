@@ -62,4 +62,43 @@ export interface EventMap {
     revision: number;
     acknowledgedAt: string;
   };
+
+  // Productivity events (emit-side owner: plugin-productivity)
+  'productivity:pomodoro-completed': {
+    /** The mode that just finished (focus | short-break | long-break). */
+    mode: 'focus' | 'short-break' | 'long-break';
+    /** Total focus cycles completed after the just-finished session (unchanged for break modes). */
+    cyclesCompleted: number;
+    /** Todo linked to the just-finished focus session; null for breaks or no-link focus. */
+    linkedTodoId: string | null;
+    /** ISO timestamp of completion (same value the store writes to lastCompletedAt). */
+    completedAt: string;
+    /** Configured duration of the just-finished session, in milliseconds. */
+    durationMs: number;
+  };
+  'productivity:todo-due': {
+    /** Todo whose dueDate boundary just crossed past now. */
+    todoId: string;
+    /** Snapshot of title at emit time (for downstream notifications). */
+    title: string;
+    /** Source dueDate value (YYYY-MM-DD). */
+    dueDate: string;
+    /** Eisenhower quadrant at emit time. */
+    quadrant: 'do' | 'schedule' | 'delegate' | 'eliminate';
+    /** ISO timestamp of the local-end-of-day boundary that was crossed. */
+    dueBoundaryAt: string;
+  };
+  'productivity:habit-reminder': {
+    /** Habit that just transitioned to completed-for-today (checkIn success). */
+    habitId: string;
+    /** Snapshot of name at emit time. */
+    name: string;
+    frequency: 'daily' | 'weekdays' | 'weekly';
+    /** UTC day key the check-in applied to (YYYY-MM-DD). */
+    date: string;
+    /** Post-checkIn streak value. */
+    streak: number;
+    /** ISO timestamp of the check-in. */
+    completedAt: string;
+  };
 }
