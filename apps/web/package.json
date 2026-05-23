@@ -33,6 +33,8 @@
     "@repo/plugin-web-pet": "workspace:*",
     "@repo/plugin-web-countdown": "workspace:*",
     "@repo/plugin-web-matrix": "workspace:*",
+    "@repo/plugin-web-habits": "workspace:*",
+    "@repo/plugin-web-tasks": "workspace:*",
     "@repo/plugin-console": "workspace:^",
     "@repo/plugin-productivity": "workspace:^",
     "@repo/web-auth-device-session": "workspace:*",

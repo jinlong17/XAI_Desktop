@@ -43,28 +43,28 @@ export function moveCard(
   // then re-add date fields for dated buckets (api.md §5.2).
   const newDateResult = dateForCol(toColId, now);
   const { id, title, tag, inbox } = task;
+
   const moved: TaskCard = (() => {
     if (toColId === "nodate") {
       // Strip date + dateZh + dateLabel + sub; keep tag + inbox (api.md §5.2)
-      const c: TaskCard = { id, title };
-      if (tag !== undefined) return { ...c, tag };
-      if (inbox !== undefined) return { ...c, inbox };
-      if (tag !== undefined && inbox !== undefined) return { ...c, tag, inbox };
-      return c;
+      return {
+        id,
+        title,
+        ...(tag !== undefined    ? { tag }    : {}),
+        ...(inbox !== undefined  ? { inbox }  : {}),
+      };
     }
     // Non-nodate: set date + dateZh from dateForCol; strip dateLabel + sub
-    const base: TaskCard = { id, title };
-    const withOptional = tag !== undefined && inbox !== undefined
-      ? { ...base, tag, inbox }
-      : tag !== undefined
-        ? { ...base, tag }
-        : inbox !== undefined
-          ? { ...base, inbox }
-          : base;
+    const base = {
+      id,
+      title,
+      ...(tag !== undefined   ? { tag }   : {}),
+      ...(inbox !== undefined ? { inbox } : {}),
+    };
     if (newDateResult) {
-      return { ...withOptional, date: newDateResult.date, dateZh: newDateResult.dateZh };
+      return { ...base, date: newDateResult.date, dateZh: newDateResult.dateZh };
     }
-    return withOptional;
+    return base;
   })();
 
   return prev.map((col, i) => {
