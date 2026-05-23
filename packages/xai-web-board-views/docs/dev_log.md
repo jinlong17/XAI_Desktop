@@ -239,7 +239,7 @@ _(populated by feature-verify)_
 |---|---|---|---|
 | P1 — Scaffolding + types + ViewPicker + Table + Dashboard + Map + tests | DONE | 0649c0b | 38 tests pass; lint + typecheck clean |
 | P2 — Calendar + Timeline + dateOps + persistence + tests | DONE | 1114cba | 74 total tests pass; PointerEvent polyfill added; 3-sequential-act() pattern for Timeline DnD |
-| P3 — BoardModule + registration + host wire-up + new registry entry + PLUGIN_MAP + integration tests | DONE | (pending commit) | 90 total tests pass; lint + typecheck + web build clean; storage tests updated |
+| P3 — BoardModule + registration + host wire-up + new registry entry + PLUGIN_MAP + integration tests | DONE | 0f6ca12 | 90 total tests pass; lint + typecheck + web build clean; storage tests updated |
 
 ## Work Log
 
@@ -249,4 +249,4 @@ _(populated by feature-verify)_
 | 2026-05-23 | Claude Opus 4.7 1M | feature-review — gate pass (10/10), 0 blockers + 2 advisory recommendations (REC-1 BoardModule local-state reproduction, REC-2 useI18n→lang-prop deviation visibility). dev_log flipped APPROVED. | — | feature-auto-build |
 | 2026-05-23 15:00 | claude-sonnet-4-6 | feature-auto-build P1 — scaffold + types + ViewPicker + TableView + BoardDashboardView + MapView + tests (38 tests). Lint + typecheck clean. | 0649c0b | P2 |
 | 2026-05-23 15:00 | claude-sonnet-4-6 | feature-auto-build P2 — BoardCalendarView + TimelineView + dateOps + persistence + tests (74 total). PointerEvent polyfill + 3-act() sequential DnD pattern. Fixed React key warning in TimelineView (Fragment key). | 1114cba | P3 |
-| 2026-05-23 15:00 | claude-sonnet-4-6 | feature-auto-build P3 — BoardModule orchestrator (REC-1/REC-2 applied) + registration.tsx + index.ts barrel + xai_board_view_by_id registry entry + PLUGIN_MAP row + integration tests BM1..BM8 + RG1..RG4 + IB1..IB4. 90 total tests pass. web build + check-types pass. storage tests updated (OWNER_ROW_ADDITIONS + OWNER_ROW_EXEMPT_KEYS). Status → READY_FOR_VERIFY. | (P3 commit hash) | feature-verify |
+| 2026-05-23 15:00 | claude-sonnet-4-6 | feature-auto-build P3 — BoardModule orchestrator (REC-1/REC-2 applied) + registration.tsx + index.ts barrel + xai_board_view_by_id registry entry + PLUGIN_MAP row + integration tests BM1..BM8 + RG1..RG4 + IB1..IB4. 90 total tests pass. web build + check-types pass. storage tests updated (OWNER_ROW_ADDITIONS + OWNER_ROW_EXEMPT_KEYS). Status → READY_FOR_VERIFY. | 0f6ca12 | feature-verify |
