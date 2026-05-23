@@ -5,13 +5,13 @@
 | Field | Value |
 |---|---|
 | Workflow | FEATURE_DEV |
-| Executor | claude-sonnet-4-6 (feature-auto-build, 2026-05-23) |
-| Updated | 2026-05-23 15:00 |
+| Executor | Claude Opus 4.7 1M (feature-verify, 2026-05-23 16:10) |
+| Updated | 2026-05-23 16:10 |
 | Target | xai-web-board-views |
-| Title | Web Console Board — 5 additional views (Table / Calendar / Dashboard / Timeline / Map) layered on `@repo/plugin-web-board-core` (row #7 READY_TO_SHIP). Adds a Table view (row-per-card with inline Due picker with Today/Tomorrow/Next Mon quick-shortcuts + Labels/Members multiselect + Progress column), Calendar view (month grid with HTML5 DnD-to-change-due that rewrites `card.due` via board-core's `updateCardInList` — hard constraint: same persistence path as core), Dashboard view (4 KPIs + horizontal bar chart by column + horizontal bar chart by label, no chart library), Timeline view (30-day Gantt with left/center/right pointer-DnD handles that atomically update `{start, due}` — hard constraint — with visual clip at gantt edge — hard constraint), Map view (SVG placeholder until cards get a location field), plus a ViewPicker widget and a `BoardModule` orchestrator that composes board-core's barrel exports (`BoardView`, `updateCardInList`, `loadBoardsOrDefault`, `pickActiveBoard`, `makeDefaultBoards`, `PM_LABELS`) — board-core consumed via `index.ts` barrel ONLY (no `…/src/internal/*` imports; eslint-enforced). Persists per-board active view selection in a new `xai_board_view_by_id` (`Record<string, BoardViewId>`) registry key — hard constraint. Module registration replaces line 61 of `apps/web/src/routes/modules/shellRegistrations.tsx` (the `boardCoreWebModuleRegistration` array entry) with `boardViewsWebModuleRegistration` (railOrder 3 preserved). Bilingual via `lang` prop + inline literals + a local 3-line `bilingual` helper. Three-phase build (P1 scaffold + types + ViewPicker + Table + Dashboard + Map + tests · P2 Calendar + Timeline + persistence + tests · P3 BoardModule orchestrator + registration + apps/web wire-up + new persistence registry entry + PLUGIN_MAP + integration tests). |
+| Title | Web Console Board — 5 additional views (Table / Calendar / Dashboard / Timeline / Map) layered on `@repo/plugin-web-board-core` (row #7 READY_TO_SHIP). Adds a Table view (row-per-card with inline Due picker with Today/Tomorrow/Next Mon quick-shortcuts + Labels/Members multiselect + Progress column), Calendar view (month grid with HTML5 DnD-to-change-due that rewrites `card.due` via board-core's `updateCardInList` — hard constraint: same persistence path as core), Dashboard view (4 KPIs + horizontal bar chart by column + horizontal bar chart by label, no chart library), Timeline view (30-day Gantt with left/center/right pointer-DnD handles that atomically update `{start, due}` — hard constraint — with visual clip at gantt edge — hard constraint), Map view (SVG placeholder until cards get a location field), plus a ViewPicker widget and a `BoardModule` orchestrator that composes board-core's barrel exports (`BoardView`, `updateCardInList`, `loadBoardsOrDefault`, `pickActiveBoard`, `makeDefaultBoards`, `PM_LABELS`) — board-core consumed via `index.ts` barrel ONLY (no `…/src/internal/*` imports; eslint-enforced). Persists per-board active view selection in a new `xai_board_view_by_id` (`Record<string, BoardViewId>`) registry key — hard constraint. Module registration EXPORTED via `boardViewsWebModuleRegistration` but NOT inserted into `apps/web/src/routes/modules/shellRegistrations.tsx` — concurrent sibling row #9 (board-workspaces, SHIPPED earlier) already occupies the "board" railOrder 3 slot in W2e. Documented as intentional deviation in PLUGIN_MAP row + design.md. Bilingual via `lang` prop + inline literals + a local 3-line `bilingual` helper. Three-phase build (P1 scaffold + types + ViewPicker + Table + Dashboard + Map + tests · P2 Calendar + Timeline + persistence + tests · P3 BoardModule orchestrator + registration + apps/web wire-up + new persistence registry entry + PLUGIN_MAP + integration tests). |
 | Current Phase | FEATURE_VERIFY |
-| Status | READY_FOR_VERIFY |
-| Suggested Next | feature-verify |
+| Status | READY_TO_SHIP |
+| Suggested Next | ship |
 | Verify Cross-vendor | queued (manifest header — ship-time Codex `gpt-5.5-thinking medium` / Cursor fallback; row-level verify is same-vendor Claude Opus — documented compromise) |
 | Automation Mode | A-Claude (per roadmap default; xai-roadmap-loop W2e parallel-Agent mode — siblings #9 board-workspaces + #11 dashboard-widgets planning concurrently) |
 | Executor | Claude Opus 4.7 1M (feature-review, 2026-05-23) |
@@ -231,7 +231,58 @@ All FOUR hard constraints from seed brief explicitly tested:
 
 ## Verify Report
 
-_(populated by feature-verify)_
+**Verdict: PASS** — All 17 gates green. READY_TO_SHIP.
+
+**Verifier**: Claude Opus 4.7 1M (feature-verify, 2026-05-23 16:10). Same-vendor as planner + reviewer (W2e Parallel-Agent manifest-header documented compromise — cross-vendor smoke queued at ship time per docs/workflow/roadmap/xai-web-console.md W2e policy).
+
+### Gate-by-gate results
+
+| # | Gate | Result | Evidence |
+|---|---|---|---|
+| 1 | `pnpm --filter @repo/plugin-web-board-views test` → 90/90 | PASS | 11 test files, 90 tests, 0 fail. Duration 4.46s. dueShortcuts 7 / ViewPicker 5 / TableView 13 / BoardDashboardView 10 / MapView 3 / dateOps 7 / BoardCalendarView 12 / TimelineView 17 / BoardModule 8 / registration 4 / index-barrel 4. |
+| 2 | `pnpm --filter @repo/plugin-web-board-views typecheck` clean | PASS | `tsc --noEmit` exit 0. (Note: package script is `typecheck`, not `check-types`; verify gate brief used legacy alias.) |
+| 3 | `pnpm --filter @repo/plugin-web-board-views lint --max-warnings 0` clean | PASS | `eslint --max-warnings 0 .` exit 0; `no-restricted-imports` rule active for `@repo/plugin-web-board-core/*/internal*` (eslint.config.js line 14). |
+| 4 | `pnpm --filter @repo/plugin-web-board-core typecheck` clean (additive consumer side-effect) | PASS | `tsc --noEmit` exit 0. board-core untouched in this row. |
+| 5 | `pnpm --filter @repo/plugin-web-storage check-types` clean (added `xai_board_view_by_id`) | PASS | `tsc --noEmit` exit 0. Registry entry at registry.ts lines 376–383. |
+| 6 | `pnpm --filter @repo/web check-types` clean | PASS | `tsc --noEmit` exit 0 with new `@repo/plugin-web-board-views` workspace dep wired in apps/web/package.json line 35. |
+| 7 | `pnpm --filter @repo/web test` zero regressions | PASS | 14 files / 54 tests pass. shell + router integration green. |
+| 8 | `pnpm --filter @repo/web build` green | PASS | Vite v7.2.4 production build → 721 modules transformed → dist/ written; no errors (one informational chunk-size note, pre-existing not caused by this row). |
+| 9 | All AC from test.md exercised by committed tests | PASS | Test IDs cross-referenced: DS1..DS7 (Due shortcuts), VP1..VP5 (ViewPicker), TV1..TV13 (TableView), BD1..BD10 (Dashboard), MV1..MV3 (Map), DO1..DO7 (dateOps), BC1..BC12 (Calendar incl. BC8 hard constraint), TL1..TL17 (Timeline incl. TL9/TL10/TL11 atomic + TL12/TL16 no-write-on-no-move), BM1..BM8 (BoardModule), RG1..RG4 (registration), IB1..IB4 (index barrel). 90 tests = 90 expected per test.md §2. |
+| 10 | board-views consumes `@repo/plugin-web-board-core` ONLY via index.ts barrel | PASS | grep across `packages/plugin-web-board-views/src/` returned NO matches for `…/src/internal/*` or `…/*/internal*`. All 12 board-core import sites read symbols from package barrel only: `BoardView` / `updateCardInList` / `loadBoardsOrDefault` / `pickActiveBoard` / `makeDefaultBoards` / `addCardToList` / `addNewList` / `moveCardToList` / `setListColor` / `PM_LABELS` + types. eslint rule enforces this statically. |
+| 11 | Table Due picker shortcuts (Today/Tomorrow/Next Mon) | PASS | `src/internal/dueShortcuts.ts` exports `todayShortcut` / `tomorrowShortcut` / `nextMondayShortcut`. Tests DS1..DS7 cover bilingual `Today`/`今天`, month-boundary rollover, Saturday → Monday, Monday → next Monday (today+7), Sunday → Monday (today+1). Integrated in TableView via TV7/TV8/TV9. |
+| 12 | Calendar view DnD rewrites `card.due` via SAME persistence path as core | PASS | `BoardCalendarView.tsx` handleDrop reads `cardId`+`fromListId` from dataTransfer, computes new "M/D" string, calls `updateCard(fromListId, cardId, { due, dueEn: undefined, dueLate: false })`. updateCard delegates to board-core's `updateCardInList` in BoardModule.tsx line 198+. Test BC8 asserts patch shape (hard constraint). BC9 + BC10 cover malformed payload + empty-cell no-ops. |
+| 13 | Timeline 3-handle DnD updates `{start, due}` atomically | PASS | `TimelineView.tsx` captures pointerdown on three test-ids `tl-handle-l` / `tl-bar-body` / `tl-handle-r`, accumulates preview via `window.pointermove`, commits ONE `updateCard(listId, cardId, patch)` on `window.pointerup`. Tests TL9 (resize-r → due only), TL10 (move → both start+due), TL11 (resize-l → start updated) each assert `toHaveBeenCalledOnce()` + patch shape. TL12 + TL16 assert mouseup-without-move produces NO write. Visual clamp + clip via CSS `clip-path` verified TL13/TL14/TL15. |
+| 14 | `xai_board_view_by_id` in `@repo/plugin-web-storage` registry | PASS | `packages/plugin-web-storage/src/internal/registry.ts` lines 376–383: `codec: "json"`, `default: {} as Record<string, string>`, `schemaVersion: 1`, `owner: "xai-web-board-views row #8"`, `category: "module"`. Storage parity-design-md + registry tests updated; 70/70 storage tests pass. |
+| 15 | `boardViewsWebModuleRegistration` exported but NOT in shellRegistrations.tsx (board-workspaces row #9 owns the "board" slot — confirm intentional) | PASS | Export confirmed: `packages/plugin-web-board-views/src/registration.tsx` line 36 + re-exported from `src/index.ts` line 44. Non-insertion confirmed: grep across `apps/web/` returned ZERO matches for `boardViewsWebModuleRegistration`. Intentionality documented: (a) PLUGIN_MAP row text explicitly states "boardViewsWebModuleRegistration exported but not inserted into shellRegistrations.tsx — row #9 (board-workspaces, SHIPPED) already occupies the 'board' railOrder 3 slot in W2e"; (b) Status Panel Title field updated to reflect runtime reality; (c) commit fdd1521 ("board-workspaces P3") inserted `boardWorkspacesWebModuleRegistration` at slot 3 prior to this row's P3 commit 0f6ca12. v2 strategy noted in dev_log Risk R11 + design.md §1: row #9 will wrap board-views in a future refactor. |
+| 16 | Cross-vendor cold-read | PASS-WITH-DOCUMENTED-COMPROMISE | Per W2e Parallel-Agent manifest header policy (docs/workflow/roadmap/xai-web-console.md), cross-vendor verify (Codex `gpt-5.5-thinking medium` or Cursor fallback) is queued at ship time. Row-level feature-verify is run by Claude Opus same-vendor as planner+reviewer — explicit same-vendor compromise. Documented in design.md §"Cross-vendor verify note" + test.md G8 + Status Panel `Verify Cross-vendor` field ("queued"). |
+| 17 | Commit hygiene + dev_log Status Panel coherence | PASS | 4 commits, all `type(scope): summary` per docs/conventions/COMMIT_CONVENTION.md. 0649c0b feat(plugin-web-board-views): P1 (scope = package only, 22 files / +2310 LOC). 1114cba feat(plugin-web-board-views): P2 (scope = package only, 8 files / +1169 LOC). 0f6ca12 feat(plugin-web-board-views): P3 (scope includes apps/web/package.json + 1 line in plugin-web-storage registry + 1 line in PLUGIN_MAP — all declared in plan §P3, no scope creep). d2594b7 chore(xai-web-board-views): dev_log update (single-file, status flip). Phase Progress table populated; Work Log appended per phase. |
+
+### REC roll-up (from feature-review)
+
+- **REC-1 — BoardModule local-state reproduction**: Confirmed minimal (~50 LOC: draftListIdx, composerText, showListComposer, newListName, listMenu) and matches board-core's current `BoardModule` shape (verified by reading both modules side-by-side). Future re-export refactor remains a clean swap. Acceptable for v1; carry-forward to row #9 backlog.
+- **REC-2 — useI18n→lang-prop deviation**: Confirmed in BoardModule.tsx lines 60–68 (inline doc-block citing design.md §13). All view components accept `lang: "en" | "zh"` and use the local 3-line `bilingual()` helper (`src/internal/i18n.ts`). Sibling-row precedent + board-core consistency justifies the deviation. Brief soft-guideline honoured at the user-visible level (full bilingual coverage).
+
+### Residual risks (non-blocking)
+
+- **RR-1 — board-views registration is dead code in apps/web**: `boardViewsWebModuleRegistration` is exported but never imported by the host. This is the intentional Gate 15 outcome — board-workspaces row #9 wraps the "board" slot. The exported registration is still useful as (a) the contractual surface for future row #9 wrapping, (b) the subject of in-package tests RG1..RG4 (which validate moduleId/icon/railOrder/i18nKey/showInRail). No action required; surface to row #9 backlog if row #9 ever needs to compose board-views BoardModule into its slot.
+- **RR-2 — Cross-vendor verify deferred**: Per W2e Parallel-Agent policy, cross-vendor manual smoke (Codex gpt-5.5-thinking medium / Cursor fallback) is queued to ship-time aggregate verify. Documented; not a blocker for `ship`.
+- **RR-3 — React `act(…)` warning in BoardCalendarView BC7 test (jsdom stderr)**: One non-fatal stderr emission during BC7 (`dragover preventDefault`). Test still passes; warning is jsdom-flavoured DnD synthetic event timing, not a bug. Sibling-row precedent (countdown row #17). No action.
+- **RR-4 — Cards without `start` render single-day Timeline bar (`start === due`)**: Documented in dev_log R4 + test TL5. Seed cards don't populate `start`; behaviour is correct.
+
+### Files reviewed
+
+- `packages/plugin-web-board-views/src/` — all 7 view components + index.ts + registration.tsx + internal/
+- `packages/plugin-web-board-views/src/__tests__/` — all 11 test files + 2 helper files
+- `packages/plugin-web-board-views/eslint.config.js` — `no-restricted-imports` rule
+- `packages/plugin-web-board-views/manifest.json` — `status: "In-Dev"` correctly set
+- `packages/plugin-web-board-views/package.json` — workspace deps
+- `packages/plugin-web-board-core/src/index.ts` — barrel parity check
+- `packages/plugin-web-storage/src/internal/registry.ts` — `xai_board_view_by_id` entry
+- `apps/web/src/routes/modules/shellRegistrations.tsx` — confirmed board-workspaces (not board-views) wired
+- `apps/web/package.json` — `@repo/plugin-web-board-views: workspace:*` added
+- `docs/PLUGIN_MAP.md` — row added, deviation documented
+- `packages/xai-web-board-views/docs/{design,api,test,dev_log}.md`
+- Commits 0649c0b / 1114cba / 0f6ca12 / d2594b7 — git show --stat each
 
 ## Phase Progress
 
@@ -250,3 +301,4 @@ _(populated by feature-verify)_
 | 2026-05-23 15:00 | claude-sonnet-4-6 | feature-auto-build P1 — scaffold + types + ViewPicker + TableView + BoardDashboardView + MapView + tests (38 tests). Lint + typecheck clean. | 0649c0b | P2 |
 | 2026-05-23 15:00 | claude-sonnet-4-6 | feature-auto-build P2 — BoardCalendarView + TimelineView + dateOps + persistence + tests (74 total). PointerEvent polyfill + 3-act() sequential DnD pattern. Fixed React key warning in TimelineView (Fragment key). | 1114cba | P3 |
 | 2026-05-23 15:00 | claude-sonnet-4-6 | feature-auto-build P3 — BoardModule orchestrator (REC-1/REC-2 applied) + registration.tsx + index.ts barrel + xai_board_view_by_id registry entry + PLUGIN_MAP row + integration tests BM1..BM8 + RG1..RG4 + IB1..IB4. 90 total tests pass. web build + check-types pass. storage tests updated (OWNER_ROW_ADDITIONS + OWNER_ROW_EXEMPT_KEYS). Status → READY_FOR_VERIFY. | 0f6ca12 | feature-verify |
+| 2026-05-23 16:10 | Claude Opus 4.7 1M | feature-verify — 17/17 gates PASS. board-views test 90/90, lint clean, typecheck clean, plugin-web-board-core typecheck clean, plugin-web-storage check-types clean + 70/70 tests, web check-types clean, web test 54/54 (zero regressions), web build green. Gate 15 confirmed intentional (board-workspaces row #9 owns slot; PLUGIN_MAP + design.md document deviation; boardViewsWebModuleRegistration export retained for future row #9 wrap). Hard constraints verified: Today/Tomorrow/Next-Mon (DS1..DS7 + TV7..TV9), Calendar DnD rewrites due via updateCardInList (BC8), Timeline 3-handle atomic {start,due} (TL9/TL10/TL11) + no-write-on-no-move (TL12/TL16), xai_board_view_by_id registry entry present. REC-1 + REC-2 confirmed minimal + intentional. 4 RR (non-blocking): RR-1 dead-code export (intentional), RR-2 cross-vendor deferred to ship per W2e policy, RR-3 jsdom act() stderr warning (test still passes), RR-4 single-day Timeline bar for cards w/o start (documented). Status → READY_TO_SHIP. | — | ship |

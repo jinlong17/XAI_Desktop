@@ -9,9 +9,14 @@ Updated: 2026-05-23 16:43
 
 ## Current Status
 
-Status: APPROVED
-Current Phase: FEATURE_BUILD
-Suggested Next: feature-build (P1)
+Status: IN_PROGRESS
+Current Phase: FEATURE_BUILD (P1 done, P2 starting)
+Suggested Next: feature-build (P2)
+
+## Commits
+
+- P1: `85761cd` — scaffolding + storage keys + i18n
+- P2: `79cd0e7` — FeaturesPane + thumbs + filter + fallback + tests (23 pass)
 
 ## Review Notes (feature-review · 2026-05-23 16:45)
 
