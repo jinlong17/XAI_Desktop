@@ -3,6 +3,7 @@ const UUID_PATTERN = /\b[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{
 const LONG_ID_PATTERN = /\b[a-z0-9_-]{16,}\b/i;
 const UUID_PATTERN_GLOBAL = /\b[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}\b/gi;
 const LONG_ID_PATTERN_GLOBAL = /\b[a-z0-9_-]{16,}\b/gi;
+const NUMERIC_TOKEN_GLOBAL = /\b\d{3,}\b/g;
 const NUMERIC_ID_SEGMENT = /^\d{3,}$/;
 
 function isPlainObject(value: unknown): value is Record<string, unknown> {
@@ -66,7 +67,8 @@ export function sanitizeText(input: string): string {
 
   return stripQueryAndHash(input)
     .replace(UUID_PATTERN_GLOBAL, "[redacted-uuid]")
-    .replace(LONG_ID_PATTERN_GLOBAL, "[redacted-entity]");
+    .replace(LONG_ID_PATTERN_GLOBAL, "[redacted-entity]")
+    .replace(NUMERIC_TOKEN_GLOBAL, "[redacted-id]");
 }
 
 export function sanitizeUnknown(value: unknown): unknown {

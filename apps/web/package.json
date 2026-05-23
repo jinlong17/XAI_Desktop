@@ -7,15 +7,20 @@
     "dev": "vite --port 3000",
     "dev:mock-auth": "VITE_WEB_AUTH_MODE=mock-authenticated vite --port 3000",
     "build": "vite build",
-    "build:secure": "vite build && pnpm run sourcemaps:upload && pnpm run sourcemaps:validate && pnpm run sourcemaps:finalize && pnpm run sourcemaps:clean && pnpm run sourcemaps:assert-clean",
+    "build:secure": "vite build && pnpm run sourcemaps:release:create && pnpm run sourcemaps:release:set-commits && pnpm run sourcemaps:debugids:inject && pnpm run sourcemaps:upload && pnpm run sourcemaps:validate && pnpm run sourcemaps:finalize && pnpm run sourcemaps:clean && pnpm run sourcemaps:assert-clean",
+    "build:secure:with-deploy": "pnpm run build:secure && pnpm run sourcemaps:deploy:mark",
     "lint": "eslint --max-warnings 0 .",
     "check-types": "tsc --noEmit",
     "preview": "vite preview --port 4173",
+    "sourcemaps:release:create": "node ./scripts/sourcemaps-release-create.mjs",
+    "sourcemaps:release:set-commits": "node ./scripts/sourcemaps-release-set-commits.mjs",
+    "sourcemaps:debugids:inject": "node ./scripts/sourcemaps-debugids-inject.mjs",
     "sourcemaps:upload": "node ./scripts/sourcemaps-upload.mjs",
     "sourcemaps:validate": "node ./scripts/sourcemaps-validate.mjs",
     "sourcemaps:finalize": "node ./scripts/sourcemaps-finalize.mjs",
     "sourcemaps:clean": "node ./scripts/sourcemaps-clean.mjs",
-    "sourcemaps:assert-clean": "node ./scripts/sourcemaps-assert-clean.mjs"
+    "sourcemaps:assert-clean": "node ./scripts/sourcemaps-assert-clean.mjs",
+    "sourcemaps:deploy:mark": "node ./scripts/sourcemaps-deploy-mark.mjs"
   },
   "dependencies": {
     "@sentry/react": "^10.20.0",

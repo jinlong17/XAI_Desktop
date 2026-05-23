@@ -1,8 +1,12 @@
-import { sanitizeText, sanitizeUnknown, sanitizeUrlPath } from "./privacy";
+import { sanitizeUrlPath } from "./privacy";
 import type { ObservabilityEvent, ObservabilityRouteGroup } from "./types";
 
 const SENSITIVE_KEY_PATTERN =
   /(?:token|secret|password|authorization|cookie|session|body|payload|query|email|user|account|device|id|hash|fingerprint|entity|correlat|stable|deterministic)/i;
+const SAFE_VALUE_PATTERN = /^[a-z0-9_.:@-]{1,128}$/i;
+const ALLOWED_TAG_KEYS = new Set(["route_group", "environment", "release", "error_category"]);
+const REDACTED_EVENT_MESSAGE = "redacted_error";
+const REDACTED_BREADCRUMB_MESSAGE = "redacted_breadcrumb";
 
 export interface SentryLikeBreadcrumb {
   category?: string;
@@ -53,19 +57,53 @@ export interface SentryClient {
   captureMessage: (message: string, context: SentryCaptureContext) => void;
 }
 
+function isPlainObject(value: unknown): value is Record<string, unknown> {
+  return typeof value === "object" && value !== null && !Array.isArray(value);
+}
+
+function sanitizeSafeToken(input: string): string | undefined {
+  if (!SAFE_VALUE_PATTERN.test(input)) {
+    return undefined;
+  }
+
+  return input;
+}
+
+function sanitizeStrictValue(value: unknown): unknown {
+  if (typeof value === "string") {
+    if (value.startsWith("/") || value.includes("://")) {
+      return sanitizeUrlPath(value);
+    }
+    return undefined;
+  }
+
+  if (typeof value === "boolean") {
+    return value;
+  }
+
+  if (Array.isArray(value)) {
+    const entries = value.map((entry) => sanitizeStrictValue(entry)).filter((entry) => entry !== undefined);
+    return entries.length > 0 ? entries : undefined;
+  }
+
+  if (isPlainObject(value)) {
+    const nested = sanitizeObject(value);
+    return Object.keys(nested).length > 0 ? nested : undefined;
+  }
+
+  return undefined;
+}
+
 function sanitizeObject(record: Record<string, unknown>): Record<string, unknown> {
   const sanitized: Record<string, unknown> = {};
   for (const [key, value] of Object.entries(record)) {
     if (SENSITIVE_KEY_PATTERN.test(key)) {
       continue;
     }
-    if (typeof value === "string") {
-      const looksLikePath = value.startsWith("/") || value.includes("://");
-      sanitized[key] = looksLikePath ? sanitizeUrlPath(value) : sanitizeText(value);
-      continue;
+    const sanitizedValue = sanitizeStrictValue(value);
+    if (sanitizedValue !== undefined) {
+      sanitized[key] = sanitizedValue;
     }
-
-    sanitized[key] = sanitizeUnknown(value);
   }
   return sanitized;
 }
@@ -73,35 +111,36 @@ function sanitizeObject(record: Record<string, unknown>): Record<string, unknown
 function sanitizeTags(record: Record<string, string>): Record<string, string> {
   const sanitized: Record<string, string> = {};
   for (const [key, value] of Object.entries(record)) {
-    if (SENSITIVE_KEY_PATTERN.test(key)) {
+    if (!ALLOWED_TAG_KEYS.has(key) || SENSITIVE_KEY_PATTERN.test(key)) {
       continue;
     }
 
-    sanitized[key] = sanitizeText(value);
+    const safeValue = sanitizeSafeToken(value);
+    if (safeValue) {
+      sanitized[key] = safeValue;
+    }
   }
   return sanitized;
 }
 
 export function sanitizeSentryEvent(event: SentryLikeEvent): SentryLikeEvent | null {
-  const message = event.message ? sanitizeText(event.message) : undefined;
+  const hasSignal = Boolean(event.message) || Boolean(event.exception?.values?.length);
+  if (!hasSignal) {
+    return null;
+  }
 
   const values = (event.exception?.values ?? [])
     .map((value) => ({
-      type: value.type ? sanitizeText(value.type) : undefined,
-      value: value.value ? sanitizeText(value.value) : undefined,
+      type: value.type ? sanitizeSafeToken(value.type) : undefined,
     }))
-    .filter((value) => value.type || value.value);
+    .filter((value) => value.type);
 
   const tags = event.tags ? sanitizeTags(event.tags) : undefined;
   const extra = event.extra ? sanitizeObject(event.extra) : undefined;
   const contexts = event.contexts ? sanitizeObject(event.contexts) : undefined;
 
-  if (!message && values.length === 0) {
-    return null;
-  }
-
   return {
-    message,
+    message: REDACTED_EVENT_MESSAGE,
     level: event.level,
     tags,
     extra,
@@ -111,15 +150,16 @@ export function sanitizeSentryEvent(event: SentryLikeEvent): SentryLikeEvent | n
 }
 
 export function sanitizeSentryBreadcrumb(breadcrumb: SentryLikeBreadcrumb): SentryLikeBreadcrumb | null {
-  const message = breadcrumb.message ? sanitizeText(breadcrumb.message) : undefined;
+  const message = breadcrumb.message ? REDACTED_BREADCRUMB_MESSAGE : undefined;
   const data = breadcrumb.data ? sanitizeObject(breadcrumb.data) : undefined;
+  const category = breadcrumb.category ? sanitizeSafeToken(breadcrumb.category) : undefined;
 
-  if (!breadcrumb.category && !message && !data) {
+  if (!category && !message && !data) {
     return null;
   }
 
   return {
-    category: breadcrumb.category ? sanitizeText(breadcrumb.category) : undefined,
+    category,
     message,
     data,
     level: breadcrumb.level,
@@ -147,6 +187,8 @@ export function toSentryCaptureContext(event: ObservabilityEvent, runtime: { env
       release: runtime.release,
       error_category: resolveErrorCategory(event),
     },
-    extra: (sanitizeUnknown(event.context ?? {}) as Record<string, unknown>) ?? {},
+    extra: {
+      event_channel: event.channel,
+    },
   };
 }

@@ -24,13 +24,15 @@ describe("sentry privacy filters", () => {
     });
 
     expect(event).not.toBeNull();
-    expect(event?.message).toBe("failed at /app/todos/123");
+    expect(event?.message).toBe("redacted_error");
     expect(event?.tags).toEqual({ route_group: "module" });
-    expect(event?.extra).toEqual({ safe: "ok" });
-    expect(event?.contexts).toEqual({ release: "web@1.0.0" });
+    expect(event?.extra).toEqual({});
+    expect(event?.contexts).toEqual({});
     expect(JSON.stringify(event)).not.toContain("token=abc");
     expect(JSON.stringify(event)).not.toContain("u-1");
     expect(JSON.stringify(event)).not.toContain("stablehash");
+    expect(JSON.stringify(event)).not.toContain("Buy milk");
+    expect(JSON.stringify(event)).not.toContain("123");
   });
 
   it("sanitizes breadcrumbs and strips sensitive data", () => {
@@ -45,7 +47,7 @@ describe("sentry privacy filters", () => {
     });
 
     expect(breadcrumb).not.toBeNull();
-    expect(breadcrumb?.message).toBe("POST /api/items");
+    expect(breadcrumb?.message).toBe("redacted_breadcrumb");
     expect(breadcrumb?.data).toEqual({ url: "/app/todos/:id" });
   });
 });
