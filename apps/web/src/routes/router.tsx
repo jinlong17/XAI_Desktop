@@ -3,6 +3,7 @@ import { LandingPage } from "../pages/LandingPage";
 import { NotFoundPage } from "../pages/NotFoundPage";
 // Dev-only smoke route — statically imported but gated by import.meta.env.DEV inside the component
 import { TokensSmokePage } from "../pages/TokensSmokePage.js";
+import { App } from "../App";
 import { AppRouteElement, AuthRouteElement } from "./RouteGateElements";
 import { RouteErrorBoundary } from "./RouteErrorBoundary";
 import { assertUniqueModuleRegistrations, resolveDefaultModulePath } from "./modules/buildModuleRoutes";
@@ -51,6 +52,12 @@ export const webHostRouteObjects: RouteObject[] = [
       {
         path: "_smoke/tokens",
         element: <TokensSmokePage />,
+      },
+      {
+        // P1 debug route — visual verification of Shell + Topbar before full wire-up.
+        // Removed in P4 when <App> becomes the real /app route element.
+        path: "_shell-smoke",
+        element: <App />,
       },
       {
         path: "*",

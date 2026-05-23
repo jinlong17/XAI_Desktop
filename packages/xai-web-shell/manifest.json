@@ -1,0 +1,25 @@
+{
+  "name": "xai-web-shell",
+  "displayName": "XAI Web Shell",
+  "version": "0.0.0",
+  "description": "Web Console host shell — AppRail + Topbar + AvatarMenu + Module Slot Registry",
+  "status": "In-Dev",
+  "type": "ui",
+  "author": "XAI Team",
+  "enabled": true,
+  "contentTypes": [],
+  "windows": {
+    "console": true
+  },
+  "events": {
+    "emit": ["web:shell:module-change", "web:shell:pet-toggle"],
+    "listen": []
+  },
+  "dependencies": [
+    "@repo/core",
+    "@repo/plugin-web-tokens",
+    "@repo/plugin-web-storage",
+    "@repo/xai-web-event-bus"
+  ],
+  "tauriCommands": []
+}

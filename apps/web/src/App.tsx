@@ -1,0 +1,126 @@
+/**
+ * apps/web/src/App.tsx — Host root state for XAI Web Console.
+ *
+ * Owns the 8 root state pieces:
+ *   lang, theme, density, fontScale, petOn (useState)
+ *   accentHue, railPos, bgTone (usePref — persisted)
+ *
+ * Calls apply* helpers from @repo/plugin-web-tokens on each state change.
+ * Wires <WebShellProvider> + <Shell> from @repo/xai-web-shell.
+ *
+ * Port of web design/app.jsx (lines 6-88), re-implemented in TSX using
+ * the W1 shipped packages instead of CDN globals.
+ *
+ * Phase plan: packages/xai-web-shell/docs/dev_log.md P1 (Topbar + root state)
+ */
+
+import { useState, useEffect, useMemo } from "react";
+import { Outlet, useParams, useNavigate } from "react-router";
+import {
+  applyTheme,
+  applyDensity,
+  applyFontScale,
+  applyAccentHue,
+  applyBgTone,
+  applyRailPos,
+} from "@repo/plugin-web-tokens";
+import { usePref } from "@repo/plugin-web-storage";
+import { emitWebEvent } from "@repo/xai-web-event-bus";
+import {
+  Shell,
+  WebShellProvider,
+  type WebModuleSlotRegistration,
+} from "@repo/xai-web-shell";
+import type { Lang, Theme, Density, BgTone } from "@repo/plugin-web-tokens";
+import { webShellModuleRegistrations } from "./routes/modules/shellRegistrations";
+
+// ---- App component ---------------------------------------------------------
+
+export function App() {
+  // ---- useState state pieces -----------------------------------------------
+  const [lang, setLang] = useState<Lang>("en");
+  const [theme, setTheme] = useState<Theme>("light");
+  const [density, setDensity] = useState<Density>("comfortable");
+  const [fontScale, setFontScale] = useState<number>(1);
+  const [petOn, setPetOn] = useState<boolean>(true);
+
+  // ---- usePref state pieces (persisted) ------------------------------------
+  const [accentHue, setAccentHue] = usePref("xai_accent_hue");
+  const [railPos, setRailPos] = usePref("xai_rail_pos");
+  const [bgToneRaw, setBgTone] = usePref("xai_bg_tone");
+  // plugin-web-tokens BgTone is a strict subset of plugin-web-storage's BgTone
+  // (storage adds "sage" which tokens doesn't know yet). Cast to BgTone for apply*.
+  const bgTone: BgTone = bgToneRaw as BgTone;
+
+  // Suppress unused variable warnings for setters exposed to future Settings rows
+  void setAccentHue;
+  void setRailPos;
+  void setBgTone;
+  void setFontScale;
+
+  // ---- apply* useEffects (B1: matchMedia cleanup before re-attach) ----------
+  useEffect(() => { applyTheme(theme); }, [theme]);
+  useEffect(() => { applyDensity(density); }, [density]);
+  useEffect(() => { applyFontScale(fontScale); }, [fontScale]);
+  useEffect(() => { applyAccentHue(accentHue); }, [accentHue]);
+  useEffect(() => { applyBgTone(bgTone); }, [bgTone]);
+  useEffect(() => { applyRailPos(railPos); }, [railPos]);
+
+  // system theme: matchMedia listener — B1: cleanup MUST clear before re-attach
+  useEffect(() => {
+    if (theme !== "system") return;
+    const mq = window.matchMedia("(prefers-color-scheme: dark)");
+    const onChange = () => applyTheme("system");
+    mq.addEventListener("change", onChange);
+    return () => mq.removeEventListener("change", onChange);
+  }, [theme]);
+
+  // Stable modules array (memoize to avoid WebShellProvider re-renders)
+  const modules = useMemo<WebModuleSlotRegistration[]>(
+    () => webShellModuleRegistrations,
+    [],
+  );
+
+  return (
+    <WebShellProvider
+      modules={modules}
+      lang={lang}
+      railPos={railPos}
+      petOn={petOn}
+      setPetOn={setPetOn}
+    >
+      <Shell
+        lang={lang}
+        setLang={setLang}
+        theme={theme}
+        setTheme={setTheme}
+        density={density}
+        setDensity={setDensity}
+      >
+        <Outlet />
+      </Shell>
+    </WebShellProvider>
+  );
+}
+
+// ---- AppPetToggle helper (exported for testing) ----------------------------
+
+export function createPetToggleHandler(
+  petOn: boolean,
+  setPetOn: (next: boolean) => void,
+) {
+  return () => {
+    const next = !petOn;
+    setPetOn(next);
+    emitWebEvent("web:shell:pet-toggle", { on: next, source: "rail-bottom" });
+  };
+}
+
+// ---- AppSettingsOpen helper (exported for testing) -------------------------
+
+export function createSettingsOpenHandler(navigate: ReturnType<typeof useNavigate>) {
+  return () => {
+    emitWebEvent("web:shell:module-change", { moduleId: "settings", source: "shortcut" });
+    void navigate("/app/settings");
+  };
+}
