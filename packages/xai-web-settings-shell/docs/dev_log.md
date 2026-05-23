@@ -7,9 +7,9 @@
 | Workflow | FEATURE_DEV |
 | Target | xai-web-settings-shell |
 | Title | Web Console Settings outer chassis — 13-pane sidebar (Account/Premium/Features/Smart Lists/Notifications/Date & Time/Appearance/More/Integrations/Collaborate/Sticky Note/Hotkeys/About), pane-switch navigation, atomic components (Toggle/SettingRow/SectionBlock/SettingsFooter) consumed by sibling rows #22/#23/#24, Save & apply broadcasts via `web:settings:preference-changed`, Reset to defaults clears every `xai_pref_*` key + re-applies defaults via the bus. Module registers via @repo/xai-web-shell slot pattern (showInRail:false). Chassis exports `paneRegistry: Pane[]` extensibility seam so sibling rows attach pane content without prop-drilling. NO new `@repo/core` EventMap entries (reuses existing `web:settings:preference-changed`); NO new storage keys (purely orchestrates over PREF_REGISTRY); NO direct App.tsx state mutation (broadcasts via bus). |
-| Current Phase | FEATURE_REVIEW |
-| Status | APPROVED |
-| Suggested Next | feature-auto-build |
+| Current Phase | FEATURE_VERIFY |
+| Status | READY_TO_SHIP |
+| Suggested Next | ship |
 | Verify Cross-vendor | queued for ship-time (Codex gpt-5.5-thinking medium / Cursor per W4a manifest header — Save flash setTimeout + window.confirm stubbing + emitWebEvent spy semantics + jsdom localStorage isolation + bilingual rendering) |
 | Automation Mode | A-Claude (per roadmap default; xai-roadmap-loop W4a sequential dispatch — chassis unblocks W4b parallel) |
 | Executor | Claude Opus 4.7 1M (feature-plan, 2026-05-23) |
@@ -216,3 +216,103 @@ Plan is ready for `feature-review`. No open questions; ADR-0007 §S4 + DESIGN.md
 
 **Hand-off note**:
 APPROVED. `feature-auto-build` may now walk P1 → P2 → P3 producing 3 commits.
+
+### 2026-05-23 — feature-auto-build (Claude Opus 4.7 1M)
+
+**Action**: All 3 phases executed inline (parent-session role per
+feature-dev-loop dispatch note). Each phase shipped as a discrete commit.
+
+**Commits**:
+- `3cb7e6a` feat(plugin-web-settings-shell): P1 scaffolding + pure layer (W4a row #21)
+- `f637a3d` feat(plugin-web-settings-shell): P2 components + Save/Reset + CSS port (W4a row #21)
+- `39da7af` feat(web): wire settings-shell registration + host package dep (W4a row #21)
+
+**Per-phase highlights**:
+
+P1 — Package scaffolding + pure layer:
+- New runtime package `packages/plugin-web-settings-shell/` (package.json,
+  tsconfig, manifest, eslint, vitest setup).
+- `src/types.ts` — SettingsPaneId (13-entry union) + Pane/PaneRenderProps
+  + atom prop types + SettingsModuleProps.
+- `src/internal/confirmAction.ts` — SSR-safe window.confirm wrapper.
+- `src/internal/defaults.ts` — frozen RESET_DEFAULTS table (7 entries).
+- `src/internal/resetAllPrefs.ts` — clears registered xai_* keys via
+  removePref + emits 7 web:settings:preference-changed events at the
+  compile-time defaults. Idempotent.
+- `src/internal/paneRegistry.tsx` — canonical 13-pane array with
+  bilingual placeholder render.
+- `src/index.ts` P1 surface: types + paneRegistry + resetAllPrefs.
+- 18 vitest specs across 5 files: types order parity (2),
+  confirmAction (2), paneRegistry (3), resetAllPrefs (8), barrel (3).
+
+P2 — Components + SettingsModule composition + CSS:
+- `src/Toggle.tsx`, `src/SettingRow.tsx`, `src/SectionBlock.tsx`,
+  `src/SettingsFooter.tsx`.
+- `src/internal/SettingsSidebar.tsx` + `src/internal/SettingsDetail.tsx`.
+- `src/SettingsModule.tsx` — outer chassis with useState<SettingsPaneId>("account").
+- `src/styles.css` — chassis CSS ported from layout.css, scoped under
+  .module-settings (renamed saveBounce keyframes to
+  settingsShellSaveBounce to avoid global collision).
+- P2 surface adds SettingsModule + 4 atomic components + side-effect
+  CSS import.
+- 28 new vitest specs across 6 new files: Toggle (4), SettingRow (4),
+  SectionBlock (2), SettingsFooter (8 — incl. fake-timer 1800ms flash +
+  confirm stub + emit spy), SettingsModule (10).
+
+P3 — Slot registration + host wiring:
+- `src/registration.tsx` — settingsShellWebModuleRegistration matching
+  the peer pattern from packages/plugin-web-statistics.
+- P3 surface adds settingsShellWebModuleRegistration export.
+- `apps/web/src/routes/modules/shellRegistrations.tsx` — substituted
+  placeholder("settings",...) with settingsShellWebModuleRegistration;
+  removed the now-unused placeholder() helper and
+  ModuleRoutePlaceholderPage import (every module slot is now real).
+- `apps/web/package.json` — added "@repo/plugin-web-settings-shell":
+  "workspace:*" dep.
+- 3 new vitest specs (registration RG1..RG3) + updated barrel test for
+  P3 surface.
+
+**Cumulative test count**: 11 files, 49 tests pass.
+
+**Pre-existing host lint warnings observed (NOT introduced by this row)**:
+- `apps/web/src/App.tsx` — `useParams` defined but never used
+- `apps/web/src/pages/TokensSmokePage.tsx` — DEV env-var (turbo.json) +
+  conditional useState (react-hooks/rules-of-hooks)
+
+These three warnings predate this row's edits — confirmed by git stash
+during build (3 warnings at baseline, still 3 after this commit).
+**Out of scope for row #21.**
+
+**Hand-off note**: All phases complete. Ready for `feature-verify`.
+
+### 2026-05-23 — feature-verify (Claude Opus 4.7 1M)
+
+**Action**: Verification pass — re-ran every CI gate against the post-P3 working tree to confirm the build remains green and acceptance criteria (dev_log §Acceptance) are met.
+
+**Gate results**:
+
+| Gate | Command | Result |
+|---|---|---|
+| Plugin lint | `pnpm --filter @repo/plugin-web-settings-shell lint` | ✅ exit 0 (`--max-warnings 0`) |
+| Plugin typecheck | `pnpm --filter @repo/plugin-web-settings-shell typecheck` | ✅ exit 0 |
+| Plugin test | `pnpm --filter @repo/plugin-web-settings-shell test` | ✅ exit 0 — 11 files, 49 tests pass |
+| Web typecheck | `pnpm --filter @repo/web check-types` | ✅ exit 0 |
+| Web build | `pnpm --filter @repo/web build` | ✅ exit 0 — bundle 273 kB gz |
+| Web lint | `pnpm --filter @repo/web lint` | ⚠️ 3 pre-existing warnings (App.tsx useParams + TokensSmokePage DEV/rules-of-hooks). Baseline confirmed by git stash; not introduced by this row. |
+
+**Acceptance criteria audit** (per dev_log §Acceptance):
+
+1. ✅ Plugin lint+test+typecheck all exit 0.
+2. ✅ apps/web build succeeds.
+3. ✅ Settings module reachable — `settingsShellWebModuleRegistration` in `webShellModuleRegistrations` at the Settings slot with `showInRail:false`, route renders `<SettingsModule lang={lang}/>` via `useWebShell()`.
+4. ✅ Save & apply broadcasts via `web:settings:preference-changed` — verified by `SettingsFooter.test.tsx` F4 (1 event per onSave change w/ payload + changedAt) + F5 (empty array = no event but flash).
+5. ✅ Reset to defaults clears every registered xai_* key + emits 7 events at canonical defaults — verified by `resetAllPrefs.test.ts` R1..R7.
+6. ✅ Sidebar bilingual — verified by `SettingsModule.test.tsx` M8 (EN) + M9 (zh).
+7. ✅ Public API per api.md §0 — verified by `index-barrel.test.ts` B1..B3.
+8. ✅ `placeholder("settings", ...)` removed; real registration in its place — verified manually in shellRegistrations.tsx + dead-code cleanup committed in P3.
+
+**Cross-vendor verify**: queued for ship-time per W4a manifest header (Codex gpt-5.5-thinking medium / Cursor fallback). Test specs flagged in test.md §4 are designed to be runner-agnostic.
+
+**Verdict**: **PASS** — all gates green, all acceptance criteria met. Pre-existing 3 host lint warnings on App.tsx + TokensSmokePage are out of scope and predate this row.
+
+**Hand-off note**: READY_TO_SHIP. `ship` agent may now commit the dev_log update + push 3 commits (`3cb7e6a`, `f637a3d`, `39da7af`) to remote and flip status to SHIPPED. Sibling rows #22 / #23 / #24 may begin planning once this row is shipped.
