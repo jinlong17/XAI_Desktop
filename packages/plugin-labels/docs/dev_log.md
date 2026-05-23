@@ -7,10 +7,10 @@
 | Workflow | FEATURE_DEV |
 | Target | plugin-labels |
 | Title | labels:* typed events emit |
-| Status | READY_TO_SHIP |
-| Current Phase | FEATURE_VERIFY |
-| Suggested Next | ship |
-| Executor | feature-verify (Claude) |
+| Status | SHIPPED |
+| Current Phase | SHIP |
+| Suggested Next | workflow-complete |
+| Executor | ship (Claude) |
 | Updated | 2026-05-23 |
 | Automation Mode | A-Claude |
 | Verify Cross-vendor | no |
@@ -118,6 +118,28 @@ dev_log integrity: Status Panel updated to READY_TO_SHIP / ship; Predecessor sta
 Residual risks: none blocking. Cross-window receive verification is intentionally deferred to downstream consumer rows (Console, Project) per test.md §"What is intentionally not tested".
 
 ## Work Log
+
+### 2026-05-23 — ship (Claude)
+
+- Goal: Push W0.B labels:* typed events emit commits to origin/dev; mark row SHIPPED.
+- Done:
+  - Workflow guard: dev_log Status = READY_TO_SHIP — confirmed PASS.
+  - Gate re-verify from clean dev (working tree clean, branch = dev):
+    - `pnpm --filter @repo/core check-types` — PASS (tsc clean, no output).
+    - `pnpm --filter @repo/plugin-labels check-types` — PASS (tsc clean, no output).
+    - `pnpm --filter @repo/plugin-labels test` — 18/18 PASS (11 W0.B AC scenarios + 7 pre-existing). `act(...)` stderr noise present but non-fatal — same documented pattern as sibling productivity W0.B.
+  - Sensitive-file audit: 9 files in push set; no .env, .pem, .key, or secret files detected.
+  - Commit hygiene spot-check: 5 commits (c0a9cf8..89e28cf), all type(scope): summary format with Why/What/Scope/Risk/Docs/Tests body and Co-Authored-By trailer — PASS.
+  - PLUGIN_MAP row 75 (labels) confirmed unchanged at In-Dev — W0.C handles promotion; not touched here.
+  - Pushed dev to origin/dev range 99b3de9..89e28cf (5 commits).
+  - Real-hardware verification: not required (no multi-window navigation, no native API, no Tauri command signature change).
+  - No roadmap manifest row to reconcile (standalone D-3 drift fix row, not on sync-v1.md or web-ticktick-parity.md).
+- Push target: origin/dev.
+- Pushed range: 99b3de9..89e28cf (5 commits: c0a9cf8, 1b0cf21, e664c19, 69cc645, 89e28cf).
+- Status Panel updated: Status SHIPPED, Current Phase SHIP, Suggested Next workflow-complete, Executor ship (Claude), Updated 2026-05-23.
+- Commits created by ship: dev_log SHIPPED state commit (this entry).
+- Deferred non-blocking notes: Cross-window receive verification intentionally deferred to downstream consumer rows (Console, Project) per test.md "What is intentionally not tested".
+
 
 ### 2026-05-23 — feature-verify (Claude)
 
