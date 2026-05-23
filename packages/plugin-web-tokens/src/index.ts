@@ -4,11 +4,11 @@ import "./tokens.css";
 import "./layout.css";
 
 // Types (added in P2)
-export type { Lang, Theme, Density, BgTone, RailPos } from "./types";
+export type { Lang, Theme, Density, BgTone, RailPos } from "./types.js";
 
 // i18n (added in P2)
-export { I18N, useI18n } from "./i18n";
-export type { I18NBundle } from "./i18n";
+export { I18N, useI18n } from "./i18n.js";
+export type { I18NBundle } from "./i18n.js";
 
 // apply* DOM helpers (added in P2)
 export {
@@ -18,4 +18,4 @@ export {
   applyAccentHue,
   applyBgTone,
   applyRailPos,
-} from "./apply";
+} from "./apply.js";
