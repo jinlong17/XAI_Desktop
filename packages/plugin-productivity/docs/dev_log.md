@@ -7,11 +7,11 @@
 | Workflow | FEATURE_DEV |
 | Target | plugin-productivity |
 | Title | productivity:* typed events emit |
-| Status | READY_FOR_VERIFY |
+| Status | READY_TO_SHIP |
 | Current Phase | FEATURE_VERIFY |
-| Suggested Next | feature-verify |
-| Executor | feature-auto-build (claude-sonnet-4-6) |
-| Updated | 2026-05-23 14:26 |
+| Suggested Next | ship |
+| Executor | feature-verify (Claude) |
+| Updated | 2026-05-23 |
 | Automation Mode | A-Claude |
 | Verify Cross-vendor | no |
 | Blockers | none |
@@ -84,7 +84,7 @@ Non-blocking notes (feature-build can address in passing; not gating):
 | **BUILD-2** (done) | Wire `usePomodoroStore` emit + co-located vitest | `packages/plugin-productivity/src/hooks/usePomodoroStore.tsx`, `packages/plugin-productivity/src/hooks/usePomodoroStore.test.tsx` | `pnpm --filter @repo/plugin-productivity test -- usePomodoroStore` — 6/6 passed. Commit: 975063e |
 | **BUILD-3** (done) | Wire `useTodoStore` emit + dedup + boundary scheduler + co-located vitest | `packages/plugin-productivity/src/hooks/useTodoStore.tsx`, `packages/plugin-productivity/src/hooks/useTodoStore.test.tsx` | `pnpm --filter @repo/plugin-productivity test -- useTodoStore` — 7/7 passed. Commit: 22395c4 |
 | **BUILD-4** (done) | Wire `useHabitStore` emit on `checkIn` success + dedup + co-located vitest | `packages/plugin-productivity/src/hooks/useHabitStore.tsx`, `packages/plugin-productivity/src/hooks/useHabitStore.test.tsx` | `pnpm --filter @repo/plugin-productivity test -- useHabitStore` — 8/8 passed. Full suite: 33/33. Commit: e181917 |
-| **VERIFY** (pending) | Repo gates + dev_log bookkeeping | n/a | `pnpm --filter @repo/plugin-productivity check-types && pnpm --filter @repo/plugin-productivity test && pnpm --filter @repo/core check-types` all green |
+| **VERIFY** (done) | Repo gates + dev_log bookkeeping | n/a | `pnpm --filter @repo/core check-types` green; `pnpm --filter @repo/plugin-productivity check-types` green; `pnpm --filter @repo/plugin-productivity test` 33/33 passed. See Verify Report below. |
 | **SHIP** | commit + push under standard message template | dev_log only | READY_TO_SHIP confirmed |
 
 Phasing note: the brief proposed 5 phases; this plan collapses Phase 5 of the
@@ -101,7 +101,91 @@ build phase stops for human confirmation per Workflow V2 rules.
 | `setTimeout` for far-future boundaries (>24.8 days) overflows int32 | very low | Cap delay at 24h in BUILD-3; re-schedule after each emit. |
 | Vitest `node` environment for new tests using `react-dom/client` | low | Each new test file declares `// @vitest-environment jsdom` (same pattern as `TodoWebModuleRoute.test.tsx`). |
 
+## Verify Report (2026-05-23 feature-verify)
+
+**Verdict: PASS — READY_TO_SHIP.**
+
+### Gate results
+
+| Gate | Command | Result |
+|---|---|---|
+| Core type check | `pnpm --filter @repo/core check-types` | green |
+| Plugin type check | `pnpm --filter @repo/plugin-productivity check-types` | green |
+| Plugin vitest (full) | `pnpm --filter @repo/plugin-productivity test` | 33/33 passed across 7 test files (usePomodoroStore 6, useHabitStore 8, useTodoStore 7, plus 12 pre-existing tests) |
+
+Note on stderr "act(...) not configured" noise during useTodoStore.test.tsx: the
+test file uses `react-dom/client` `createRoot()` with `// @vitest-environment jsdom`
+(same pattern as `TodoWebModuleRoute.test.tsx`); this is the documented jsdom-env
+tradeoff in the Risks table and does not represent a test failure. All assertions pass.
+
+### Code-vs-contract
+
+- `packages/core/src/types/events.ts` — three new `EventMap` entries (`productivity:pomodoro-completed`, `productivity:todo-due`, `productivity:habit-reminder`) match the payload shapes documented in `api.md` and `discovery-review §4`. String-literal unions inlined (no reverse-dep core→plugin); plugin domain types are not imported into core.
+- `usePomodoroStore.tsx` — emits exactly once per session-completion via `useEffect([state.status, state.lastCompletedAt])` gated by `lastEmittedAtRef`. `completionSnapshotRef` correctly captures the **finished** mode + durationMs + post-increment cyclesCompleted + linkedTodoId (set to `null` for break completions). Matches discovery review §2.1 plan.
+- `useTodoStore.tsx` — emits on dueAt crossing via mount-time scan + `setTimeout` capped at `MAX_TIMEOUT_MS = 24h`. Dedup keyed `${todoId}:${dueDate}` via `dueEmittedRef`. `done`/`archived` purges the dedup key (enabling re-emit under a new flow). Timers cleaned up in effect teardown.
+- `useHabitStore.tsx` — emits inside `checkIn()` after `persist()` resolves, with post-persist `streak` and pre-captured `completedAt`. Dedup keyed `${habitId}:${date}` via `checkInEmittedRef`. Multiple same-day check-ins do not re-emit (AC-H2 covers).
+- All three emit sites use `void emitEvent(...).catch(() => undefined)` per discovery-review §2.4 / api.md error semantics.
+
+### File-boundary respect
+
+Confirmed via `git diff d0be43f..b5bcfda` that the feature touches only:
+- `packages/core/src/types/events.ts` (declaration only)
+- `packages/plugin-productivity/src/hooks/{usePomodoroStore,useTodoStore,useHabitStore}.tsx` + `*.test.tsx`
+- `packages/plugin-productivity/docs/{design,api,test,dev_log}.md`
+- `docs/reviews/plugin-productivity/{20260523-feature-brief,20260523-discovery-review}.md`
+
+Locked-out scopes (`packages/core/src/events/{emitter,listener,index}.ts`, `plugin-console`, `plugin-account`, `plugin-labels`, `plugin-project`, `plugin-calendar`, `apps/desktop/**`, Tauri commands, Rust) are untouched.
+
+### Commit hygiene
+
+| Commit | Subject | Phase intent | Body convention |
+|---|---|---|---|
+| 7ee5d6f | `feat(core/events): add three productivity EventMap entries (BUILD-1)` | BUILD-1: declaration only | Why/What/Scope/Risk/Docs/Tests present |
+| 975063e | `feat(plugin-productivity): wire usePomodoroStore emit + tests (BUILD-2)` | BUILD-2: Pomodoro emit + 6 tests | Why/What/Scope/Risk/Docs/Tests present |
+| 22395c4 | `feat(plugin-productivity): wire useTodoStore emit + dedup + tests (BUILD-3)` | BUILD-3: Todo emit/dedup/timer + 7 tests | Why/What/Scope/Risk/Docs/Tests present |
+| e181917 | `feat(plugin-productivity): wire useHabitStore emit + dedup + tests (BUILD-4)` | BUILD-4: Habit emit on checkIn + 8 tests | Why/What/Scope/Risk/Docs/Tests present |
+| e090dbc | `chore(plugin-productivity): update dev_log BUILD-1..4 complete, READY_FOR_VERIFY` | dev_log bookkeeping | Why/What/Scope/Risk/Docs/Tests present |
+| b5bcfda | `docs(plugin-productivity): feature-plan artifacts for typed events emit row` | plan artifacts catch-up | Why/What/Scope/Risk/Docs/Tests present |
+
+Each commit stays within a single phase boundary. No mixed-intent commits.
+
+### Acceptance criteria (§1.12 of brief)
+
+- [x] `packages/core/src/types/events.ts` has three additive EventMap entries.
+- [x] `usePomodoroStore` emits exactly once per completed session per mode (AC-P1..P3 plus dedup AC-P4).
+- [x] `useTodoStore` emits on dueAt crossing, deduped per `(todoId, dueDate)` (AC-T1..T7).
+- [x] `useHabitStore` emits on successful `checkIn`, deduped per habit per day (AC-H1..H5).
+- [x] Three vitest test files cover trigger + payload per store (21 new + 12 pre-existing = 33 total).
+- [x] `pnpm --filter @repo/core check-types` passes.
+- [x] `pnpm --filter @repo/plugin-productivity check-types` passes.
+- [x] `pnpm --filter @repo/plugin-productivity test` passes.
+- [x] dev_log reaches `READY_TO_SHIP` (this entry).
+
+### Residual risks (non-blocking, documented)
+
+- Dedup resets on provider remount / page reload — documented limit in `api.md §Idempotency`. Consumers must be idempotent.
+- `productivity:habit-reminder` semantic = "checkIn success" rather than "scheduled reminder"; a future row may add `Habit.reminderAt` + scheduler. Tracked under Known Gaps.
+- The three non-blocking review notes (N1/N2/N3) were not addressed inline but do not gate ship:
+  - N1: `api.md` `.catch(() => undefined)` wording vs the actual `plugin-account/register-plugin.ts:62` bare `void emitEvent(...)` — cosmetic doc rewording only.
+  - N2: AC-T2/T5 use full `vi.useFakeTimers()` rather than scoped `{ toFake: ['setTimeout', 'clearTimeout', 'Date'] }`; tests pass in practice, so the suggestion remains a future-pass refinement.
+  - N3: shared mock stubs `useEventListener: vi.fn()`; Todo tests pass because `useOrganizerGridTaskListener` is harmless under the no-op stub.
+
 ## Work Log
+
+- **2026-05-23 — feature-verify (Claude)** — Read brief, discovery review,
+  api.md, dev_log, and the three store implementations. Ran gates:
+  `pnpm --filter @repo/core check-types` green;
+  `pnpm --filter @repo/plugin-productivity check-types` green;
+  `pnpm --filter @repo/plugin-productivity test` 33/33 passed
+  (usePomodoroStore 6, useHabitStore 8, useTodoStore 7, plus 12 pre-existing).
+  Verified `EventMap` entries match `api.md` payload shapes and that all three
+  emit sites use `void emitEvent(...).catch(() => undefined)`. Verified file
+  boundaries: locked-out scopes untouched. Verified six feature commits each
+  hold a single phase intent with full Why/What/Scope/Risk/Docs/Tests bodies.
+  All 17 binary AC scenarios (AC-P1..P6, AC-T1..T7, AC-H1..H5) covered by
+  the new test files. Verdict: PASS. Status → READY_TO_SHIP;
+  Suggested Next → ship. Commits reviewed: 7ee5d6f, 975063e, 22395c4,
+  e181917, e090dbc, b5bcfda. Commits: —. Next: `ship`.
 
 - **2026-05-23 14:26 — feature-auto-build (claude-sonnet-4-6)** — BUILD-4: Wired
   `useHabitStore` emit on `checkIn` success. Added `checkInEmittedRef`
