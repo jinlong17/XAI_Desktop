@@ -7,13 +7,13 @@
 | Workflow | FEATURE_DEV |
 | Target | xai-web-matrix |
 | Title | Web Console — Eisenhower 2×2 Matrix (port `module-matrix.jsx`) |
-| Current Phase | FEATURE_REVIEW |
-| Status | APPROVED |
-| Suggested Next | feature-auto-build |
+| Current Phase | FEATURE_VERIFY |
+| Status | READY_FOR_VERIFY |
+| Suggested Next | feature-verify |
 | Verify Cross-vendor | yes (Safari 17+ / Chrome / Firefox — drag-drop semantics + reload persistence + keyboard a11y fallback) |
 | Automation Mode | A-Claude (xai-roadmap-loop W2 parallel-Agent mode; siblings: #17 countdown + #19 pet) |
-| Executor | Claude Opus 4.7 1M — feature-review |
-| Updated | 2026-05-23 13:30 |
+| Executor | claude-sonnet-4-6 — feature-auto-build |
+| Updated | 2026-05-23 12:35 |
 | Dispatched By | xai-roadmap-loop (W2 parallel dispatch, manifest row #13) |
 | Roadmap Row | docs/workflow/roadmap/xai-web-console.md row #13 (W2 Module — Eisenhower 2×2) |
 | ADR Anchor | docs/adr/0007-xai-web-console-build-form.md §S4 (port map row `module-matrix.jsx` → `packages/plugin-web-matrix/src/`) + §S5 (TSX rules) + §S7 (event bus) |
@@ -52,9 +52,9 @@ Module registers via `WebModuleSlotRegistration` from `@repo/xai-web-shell`
 
 | Phase | Status | Commit |
 |---|---|---|
-| P1 — Package skeleton + read-only 4-quadrant render + shell wiring | PENDING | — |
-| P2 — DnD + persistence + EventMap entry + keyboard fallback | PENDING | — |
-| P3 — Edge cases + cross-vendor smoke + docs sync | PENDING | — |
+| P1 — Package skeleton + read-only 4-quadrant render + shell wiring | DONE | 439cd9c |
+| P2 — DnD + persistence + EventMap entry + keyboard fallback | DONE | 3161a3c |
+| P3 — Edge cases + cross-vendor smoke + docs sync | DONE | b9e1143 |
 
 ## Phase Plan (3 phases)
 
@@ -337,3 +337,4 @@ This row APPROVED additions are line-disjoint from the equivalent additions sibl
 |---|---|---|---|---|
 | 2026-05-23 13:10 | Claude Opus 4.7 1M — feature-plan | Wrote `discovery-review.md`, `design.md`, `api.md`, `test.md`, and this `dev_log.md`. Frozen 12 assumptions in `design.md` §1.1. Identified 7 open questions for review (Q1..Q7). Risks R1..R8 carried from discovery. | — | `feature-review` — examine all four docs + the discovery, answer Q1..Q7, then either APPROVE (Suggested Next → `feature-build`) or REVISE (Suggested Next → `feature-plan`). |
 | 2026-05-23 13:30 | Claude Opus 4.7 1M — feature-review | Reviewed all 4 plan artifacts + discovery + seed-brief against the 5-gate checklist. Verified upstream state: `events.ts` lines 195–215 W1 declare-now precedent confirmed; `registry.ts` lines 296–319 §S8 reservation block confirmed; `shellRegistrations.tsx` line 49 matrix placeholder confirmed. Resolved Q1..Q7 (all accepted-as-planned with minor non-blocking nuances at Q3a/Q3b + Q5). Verdict: APPROVED for feature-auto-build. Sibling-coordination contract documented for #17 / #19 line-disjoint append assurance. | — | `feature-auto-build` (or `feature-build` for manual phase-by-phase) — implement Phase P1 first; each cross-package write is a single line-disjoint append to support sibling auto-merge. |
+| 2026-05-23 12:35 | claude-sonnet-4-6 — feature-auto-build | Implemented all 3 phases (P1+P2+P3). P1: package skeleton (18 source files, 5 test files, host wiring). P2: DnD + usePref persistence + EventMap+registry additive writes + keyboard a11y (14 files). P3: edge-case tests + AC-SHELL-3 integration test (3 test files). All 54 tests pass; check-types + lint → 0 errors/warnings across all touched packages. Cross-package writes confirmed line-disjoint from siblings #17/#19 (sibling countdown already added its own entry to shellRegistrations.tsx as expected). | 439cd9c (P1), 3161a3c (P2), b9e1143 (P3) | `feature-verify` — independent verification of all AC-* gates, cross-vendor manual smoke (Safari/Chrome/Firefox), and confirm READY_TO_SHIP. |
