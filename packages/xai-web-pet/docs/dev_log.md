@@ -7,13 +7,13 @@
 | Workflow | FEATURE_DEV |
 | Target | xai-web-pet |
 | Title | Web Console Desktop Pet — 8 characters + drag + tips + picker |
-| Current Phase | FEATURE_REVIEW |
-| Status | APPROVED |
-| Suggested Next | feature-auto-build |
+| Current Phase | FEATURE_VERIFY |
+| Status | READY_FOR_VERIFY |
+| Suggested Next | feature-verify |
 | Verify Cross-vendor | yes (pointer-drag + CSS `@keyframes` + bubble side-flip eyeball-validated in Chrome / Safari 17+ / Firefox latest on real macOS before READY_TO_SHIP) |
 | Automation Mode | A-Claude (parallel-Agent W2 — siblings: #13 matrix, #17 countdown) |
-| Executor | Claude Opus 4.7 1M — feature-review |
-| Updated | 2026-05-23 19:05 |
+| Executor | Claude Sonnet 4.6 — feature-auto-build |
+| Updated | 2026-05-23 12:38 |
 | Dispatched By | xai-roadmap-loop (W2 parallel fan-out, manifest row #19) |
 | Roadmap Row | docs/workflow/roadmap/xai-web-console.md row #19 (W2, Module) |
 | ADR Anchor | docs/adr/0007-xai-web-console-build-form.md §S4 (port map: `pet.jsx` → `packages/plugin-web-pet/src/`) + §S5 (TSX rules) + §S7 (event bus) |
@@ -59,9 +59,9 @@ Selected **Option B for D1 (mount mechanism) + Option A for D2 (animation engine
 
 | Phase | Status | Commit |
 |---|---|---|
-| P1 — Package scaffold + PetArt (8 SVG) + pet.css keyframes + PET_DEFS + index barrel | PENDING | — |
-| P2 — DesktopPet body + drag (pure clamp + pointer handlers) + persistence + click happy state + tip rotation + event listener | PENDING | — |
-| P3 — PetPicker modal + host wiring in apps/web + cross-vendor smoke + full test suite green | PENDING | — |
+| P1 — Package scaffold + PetArt (8 SVG) + pet.css keyframes + PET_DEFS + index barrel | DONE | 67d2aa1 |
+| P2 — DesktopPet body + drag (pure clamp + pointer handlers) + persistence + click happy state + tip rotation + event listener | DONE | 8c37023 |
+| P3 — PetPicker modal + host wiring in apps/web + cross-vendor smoke + full test suite green | DONE | (this commit) |
 
 ## Phase Plan (3 phases)
 
@@ -350,3 +350,6 @@ _(Empty in v1 — first ship of this feature.)_
 |---|---|---|---|---|
 | 2026-05-23 18:30 | Claude Opus 4.7 1M — feature-plan | Initial planning pass for xai-web-pet (W2 parallel manifest row #19). Wrote discovery review (D1 mount → Option B top-level mount in App.tsx; D2 animation → Option A CSS keyframes in pet.css; D3 picker → Option A live preview via shared class; D4 tip rotation → verbatim port with named constants; D5 drag + bubble flip → verbatim + new resize re-clamp). Wrote design.md (decision snapshot + 4 frozen assumptions + dependency overview + state ownership table + hard out-of-scope boundary). Wrote api.md (public surface: DesktopPet + PetPicker + PET_DEFS + types; behavior contracts for visibility/drag/tip-rotation/bubble-flip/picker; manifest spec). Wrote test.md (16 ACs mapped to 14 test files + cross-vendor smoke matrix). Wrote dev_log.md (3-phase plan: scaffold+SVG → drag+tip+event → picker+host-wire+smoke). All artifacts confined to `packages/xai-web-pet/` and `docs/reviews/xai-web-pet/` — no edits to shipped W1 packages or sibling W2 row directories. | — | feature-review |
 | 2026-05-23 19:05 | Claude Opus 4.7 1M — feature-review | APPROVED. Verified all 4 frozen assumptions against shipped code: `xai_pet_id`/`xai_pet_pos` live in `packages/plugin-web-storage/src/internal/registry.ts:169-185` with `owner: "xai-web-pet"`; `pet.hello/tip1..4/working/idle` keys present in BOTH EN (i18n.ts:199-207) AND ZH (i18n.ts:393-401) bundles; `web:shell:pet-toggle` typed channel declared at events.ts:182 and emitted by `Shell.tsx:55-57`; `"paw"` icon in `WebShellIconName` at xai-web-shell/types.ts:35. D1 Option B mount approach validated against existing `apps/web/src/App.tsx:39-104` host root (one-line JSX insertion suffices). 7-keyframes-for-8-pets explained (Mochi+Drip share `bob`; Pebble uses `still`). 16 ACs mapped to 14 test files; cross-vendor smoke matrix defined. 3 phases ordered for smallest reviewable diff. 0 blockers; 3 non-blocking recommendations recorded (seed-brief→shipped i18n naming divergence already documented; Esc-key deferral; sibling merge-order check before P3 App.tsx edit). Suggested Next → feature-auto-build. | — | feature-auto-build |
+| 2026-05-23 12:38 | Claude Sonnet 4.6 — feature-auto-build | P1: Package scaffold + 8 SVG pets (Mochi/Pip/Sprout/Lumi/Drip/Pebble/Star/Ember) + 7 CSS keyframes (pet-bob/hop/sway/glow/still/twinkle/flicker) + PET_DEFS catalog + public barrel with P1 stubs. Tests: 3 files, 39 assertions, all green. tsc: 0 errors. | 67d2aa1 | P2 |
+| 2026-05-23 12:38 | Claude Sonnet 4.6 — feature-auto-build | P2: DesktopPet real body — drag (clampPos pure helper), usePref(xai_pet_id/xai_pet_pos), click happy+tip, tip rotation (useTipRotation), event subscription (useToggleSync via web:shell:pet-toggle), window resize re-clamp, bubble side-flip. PointerEvent polyfill for jsdom. Tests: 14 files, 104 assertions, all green. tsc: 0 errors. AC-PET-1..6, AC-PET-10..14, AC-PET-16 covered. | 8c37023 | P3 |
+| 2026-05-23 12:38 | Claude Sonnet 4.6 — feature-auto-build | P3: PetPicker modal (8 rows with live pet-anim-<animid> previews, close glyph inline SVG, EN/ZH i18n). Host wire-up: apps/web/package.json + DesktopPet import + JSX mount in App.tsx (sibling of Shell). Tests: 16 files, 129 assertions, all green. tsc: 0 errors for both packages/xai-web-pet and apps/web. AC-PET-7..9, AC-PET-15 covered. All 16 ACs green. Cross-vendor smoke: deferred to feature-verify (manual on real macOS). Status → READY_FOR_VERIFY. | (this commit) | feature-verify |

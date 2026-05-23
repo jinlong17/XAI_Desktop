@@ -31,6 +31,8 @@ import {
   WebShellProvider,
   type WebModuleSlotRegistration,
 } from "@repo/xai-web-shell";
+// xai-web-pet: top-level mount (D1 Option B — sibling of <Shell> per ADR-0007 §S6)
+import { DesktopPet } from "@repo/plugin-web-pet";
 import type { Lang, Theme, Density, BgTone } from "@repo/plugin-web-tokens";
 import { webShellModuleRegistrations } from "./routes/modules/shellRegistrations";
 
@@ -99,6 +101,8 @@ export function App() {
       >
         <Outlet />
       </Shell>
+      {/* xai-web-pet: floats over all routes (position:fixed); not a routed module */}
+      <DesktopPet on={petOn} lang={lang} />
     </WebShellProvider>
   );
 }
