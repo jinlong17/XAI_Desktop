@@ -16,6 +16,10 @@ describe("public surface (B)", () => {
     expect(typeof pkg.AiChatModule).toBe("function");
   });
 
+  it("B2: aiChatWebModuleRegistration is exported and has moduleId='ai'", () => {
+    expect(pkg.aiChatWebModuleRegistration.moduleId).toBe("ai");
+  });
+
   it("B3: types are re-exported (compile-time gate)", () => {
     // Compile-time only — if the type-only re-exports were missing,
     // tsc would have already failed the `pnpm typecheck` step.

@@ -23,6 +23,8 @@ import { tasksWebModuleRegistration } from "@repo/plugin-web-tasks";
 import { habitsSlotRegistration } from "@repo/plugin-web-habits";
 // xai-web-pomodoro row #14
 import { pomodoroWebModuleRegistration } from "@repo/plugin-web-pomodoro";
+// xai-web-ai-chat row #18
+import { aiChatWebModuleRegistration } from "@repo/plugin-web-ai-chat";
 
 function placeholder(
   moduleId: string,
@@ -48,7 +50,7 @@ function placeholder(
 
 export const webShellModuleRegistrations: WebModuleSlotRegistration[] = [
   // Rail-visible modules (railOrder 1..12)
-  placeholder("ai",         "XAI Chat",   "sparkle",   1),
+  aiChatWebModuleRegistration,  // xai-web-ai-chat row #18 (railOrder 1)
   tasksWebModuleRegistration,
   placeholder("board",      "Boards",     "kanban",    3),
   placeholder("dashboard",  "Dashboard",  "layout",    4),
