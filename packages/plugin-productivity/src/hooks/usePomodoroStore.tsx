@@ -8,6 +8,7 @@ import {
   useState,
   type ReactNode,
 } from "react";
+import { emitEvent } from "@repo/core/events";
 import { LocalStorageAdapter } from "../data/LocalStorageAdapter";
 import type { DataAdapter, PomodoroMode, PomodoroSettings, PomodoroState, PomodoroStatus } from "../types";
 
@@ -68,6 +69,15 @@ export function PomodoroStoreProvider({ adapter, children }: PomodoroStoreProvid
   const stableAdapter = adapter ?? defaultAdapter;
   const [state, setState] = useState<PomodoroState>(defaultState);
   const hydratedRef = useRef(false);
+  // Dedup: tracks the last-emitted completedAt ISO to prevent re-emit on re-renders.
+  const lastEmittedAtRef = useRef<string | null>(null);
+  // Capture pre-completion snapshot so the emit effect can read the completed session's mode/duration.
+  const completionSnapshotRef = useRef<{
+    mode: PomodoroMode;
+    durationMs: number;
+    cyclesCompleted: number;
+    linkedTodoId: string | null;
+  } | null>(null);
 
   useEffect(() => {
     let cancelled = false;
@@ -107,9 +117,17 @@ export function PomodoroStoreProvider({ adapter, children }: PomodoroStoreProvid
         if (current.remainingSeconds > 1) {
           return { ...current, remainingSeconds: current.remainingSeconds - 1 };
         }
+        const completedAt = new Date().toISOString();
         if (current.mode === "focus") {
           const cyclesCompleted = current.cyclesCompleted + 1;
           const mode = nextModeAfterFocus(cyclesCompleted, current.settings);
+          // Capture snapshot before the state transition for the emit effect.
+          completionSnapshotRef.current = {
+            mode: current.mode,
+            durationMs: secondsForMode(current.mode, current.settings) * 1000,
+            cyclesCompleted,
+            linkedTodoId: current.activeTodoId,
+          };
           return {
             ...current,
             mode,
@@ -117,21 +135,44 @@ export function PomodoroStoreProvider({ adapter, children }: PomodoroStoreProvid
             remainingSeconds: secondsForMode(mode, current.settings),
             cyclesCompleted,
             lastCompletedTodoId: current.activeTodoId,
-            lastCompletedAt: new Date().toISOString(),
+            lastCompletedAt: completedAt,
           };
         }
+        // Break mode completion
+        completionSnapshotRef.current = {
+          mode: current.mode,
+          durationMs: secondsForMode(current.mode, current.settings) * 1000,
+          cyclesCompleted: current.cyclesCompleted,
+          linkedTodoId: null,
+        };
         return {
           ...current,
           mode: "focus",
           status: "completed",
           remainingSeconds: secondsForMode("focus", current.settings),
           lastCompletedTodoId: null,
-          lastCompletedAt: new Date().toISOString(),
+          lastCompletedAt: completedAt,
         };
       });
     }, 1000);
     return () => window.clearInterval(timer);
   }, [state.status]);
+
+  // Emit productivity:pomodoro-completed once per session completion.
+  useEffect(() => {
+    if (state.status !== "completed" || !state.lastCompletedAt) return;
+    if (lastEmittedAtRef.current === state.lastCompletedAt) return;
+    const snapshot = completionSnapshotRef.current;
+    if (!snapshot) return;
+    lastEmittedAtRef.current = state.lastCompletedAt;
+    void emitEvent("productivity:pomodoro-completed", {
+      mode: snapshot.mode,
+      cyclesCompleted: snapshot.cyclesCompleted,
+      linkedTodoId: snapshot.linkedTodoId,
+      completedAt: state.lastCompletedAt,
+      durationMs: snapshot.durationMs,
+    }).catch(() => undefined);
+  }, [state.status, state.lastCompletedAt]);
 
   const start = useCallback((todoId?: string | null) => {
     setState((current) => ({
