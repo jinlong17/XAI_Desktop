@@ -7,6 +7,7 @@ import {
   useState,
   type ReactNode,
 } from "react";
+import { emitEvent } from "@repo/core/events";
 import { LocalStorageAdapter } from "../data/LocalStorageAdapter";
 import { useLabelRepoAdapter } from "../data/RepoProvider";
 import type { DataAdapter, Label, LabelDraft, LabelStore } from "../types";
@@ -133,6 +134,15 @@ export function LabelStoreProvider({
       };
       if (!label.name) throw new Error("Label name is required");
       await stableAdapter.save(label);
+      void emitEvent("labels:created", {
+        id: label.id,
+        name: label.name,
+        color: label.color,
+        icon: label.icon,
+        entityType: label.entityType,
+        version: label.version,
+        createdAt: label.createdAt,
+      }).catch(() => undefined);
       setLabels((prev) => [...prev, label].sort((a, b) => a.name.localeCompare(b.name)));
       return label;
     },
@@ -152,6 +162,14 @@ export function LabelStoreProvider({
         version: current.version + 1,
       };
       await stableAdapter.save(next);
+      void emitEvent("labels:updated", {
+        id: next.id,
+        name: next.name,
+        color: next.color,
+        icon: next.icon,
+        version: next.version,
+        updatedAt: next.updatedAt,
+      }).catch(() => undefined);
       setLabels((prev) =>
         prev
           .map((label) => (label.id === id ? next : label))
@@ -163,7 +181,15 @@ export function LabelStoreProvider({
 
   const deleteLabel = useCallback(
     async (id: string) => {
+      const existing = await stableAdapter.getById(id);
+      if (!existing) return;
+      const deletedAt = new Date().toISOString();
       await stableAdapter.delete(id);
+      void emitEvent("labels:deleted", {
+        id: existing.id,
+        version: existing.version,
+        deletedAt,
+      }).catch(() => undefined);
       setLabels((prev) => prev.filter((label) => label.id !== id));
       setRecentLabelIds((prev) => {
         const next = prev.filter((recentId) => recentId !== id);
