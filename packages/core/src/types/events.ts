@@ -141,4 +141,55 @@ export interface EventMap {
     /** ISO timestamp the store sampled at delete time. Event timestamp, not a tombstone query. */
     deletedAt: string;
   };
+
+  // Project events (emit-side owner: plugin-project)
+  'project:card-created': {
+    /** Newly created card id (createId("card") result). */
+    id: string;
+    /** List the card was placed in at creation time. */
+    listId: string;
+    /** Trimmed, non-empty title (post-validation). */
+    title: string;
+    /** Position within the list at insert time (== sibling count before insertion). */
+    order: number;
+    /** Owning entity type — always 'project.card' (constant). */
+    entityType: 'project.card';
+    /** Version at create — always 1. */
+    version: number;
+    /** ISO timestamp matching Card.createdAt. */
+    createdAt: string;
+  };
+  'project:card-moved': {
+    /** Moved card id. */
+    id: string;
+    /** Pre-move list id (captured before re-normalization). */
+    fromListId: string;
+    /** Post-move list id (argument passed to moveCard). */
+    toListId: string;
+    /** Pre-move order within the source list. */
+    fromOrder: number;
+    /** Clamped order in the target list (Math.min(Math.max(order, 0), targetList.length)). */
+    toOrder: number;
+    /** Bumped version: target.version + 1 (same value written to the dirty row). */
+    version: number;
+    /** ISO movedAt timestamp (same value the store writes to all dirty rows). */
+    updatedAt: string;
+  };
+  'project:card-updated': {
+    /** Updated card id. */
+    id: string;
+    /** Post-merge listId (from the saved Card.listId). */
+    listId: string;
+    /**
+     * Sorted, deduplicated subset of Object.keys(patch) filtered to the
+     * allow-list: ["checklist", "description", "dueDate", "labels", "listId", "order", "title"].
+     * Keys outside the allow-list (id, entityType, schemaVersion, syncScope,
+     * createdAt, updatedAt, version, deletedAt) are excluded.
+     */
+    patchKeys: string[];
+    /** Bumped version: current.version + 1. */
+    version: number;
+    /** ISO timestamp matching Card.updatedAt. */
+    updatedAt: string;
+  };
 }
