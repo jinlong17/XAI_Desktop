@@ -156,13 +156,23 @@ describe("AC-REG-7: Default type matches codec", () => {
   });
 });
 
-describe("AC-REG-8: Total entry count is 20 (18 explicit + 2 proposed)", () => {
-  it("PREF_REGISTRY has exactly 20 entries", () => {
-    expect(ALL_REGISTRY_KEYS.length).toBe(20);
+// Owner-row additions after the original 18 explicit + 2 proposed baseline.
+// Each W2 row that owns persisted state appends one entry here following the
+// §S8 owner-row registration pattern; the count grows as those rows ship.
+const OWNER_ROW_ADDITIONS = [
+  "xai_matrix_state",         // xai-web-matrix #13
+  "xai_habits_state",         // xai-web-habits #15
+  "xai_pref_week_start",      // xai-web-calendar #12 (first consumer of xai_pref_* family)
+  "xai_meditation_prefs",     // xai-web-meditation #16
+] as const;
+
+describe("AC-REG-8: Total entry count = 20 baseline + owner-row additions", () => {
+  it(`PREF_REGISTRY has exactly ${20 + OWNER_ROW_ADDITIONS.length} entries`, () => {
+    expect(ALL_REGISTRY_KEYS.length).toBe(20 + OWNER_ROW_ADDITIONS.length);
   });
 
-  it("registry contains all 18 explicit + all 2 proposed", () => {
-    const all = [...EXPLICIT_KEYS_18, ...PROPOSED_KEYS];
+  it("registry contains all 18 explicit + all 2 proposed + all owner-row additions", () => {
+    const all = [...EXPLICIT_KEYS_18, ...PROPOSED_KEYS, ...OWNER_ROW_ADDITIONS];
     for (const k of all) {
       expect(ALL_REGISTRY_KEYS).toContain(k);
     }

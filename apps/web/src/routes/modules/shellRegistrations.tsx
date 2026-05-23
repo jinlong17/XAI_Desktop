@@ -25,6 +25,8 @@ import { habitsSlotRegistration } from "@repo/plugin-web-habits";
 import { pomodoroWebModuleRegistration } from "@repo/plugin-web-pomodoro";
 // xai-web-ai-chat row #18
 import { aiChatWebModuleRegistration } from "@repo/plugin-web-ai-chat";
+// xai-web-meditation row #16
+import { meditationSlotRegistration } from "@repo/plugin-web-meditation";
 
 function placeholder(
   moduleId: string,
@@ -58,7 +60,7 @@ export const webShellModuleRegistrations: WebModuleSlotRegistration[] = [
   matrixSlotRegistration,
   pomodoroWebModuleRegistration,
   habitsSlotRegistration,  // xai-web-habits row #15 (railOrder 8)
-  placeholder("meditation", "Meditation", "leaf",      9),
+  meditationSlotRegistration,  // xai-web-meditation row #16 (railOrder 9)
   countdownWebModuleRegistration,
   placeholder("statistics", "Statistics", "chart",     11),
   // Settings — not in rail (showInRail: false)

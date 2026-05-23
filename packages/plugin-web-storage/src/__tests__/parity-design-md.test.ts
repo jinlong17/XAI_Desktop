@@ -91,17 +91,29 @@ describe("AC-PARITY-1: all §9.2 keys are in PREF_REGISTRY", () => {
   });
 });
 
+// Owner-row additions appended via ADR-0007 §S8 by individual W2 rows.
+// These do not appear in DESIGN.md §9.2 (which freezes the original 18 keys);
+// they are documented in the owning row's docs/api.md instead.
+const OWNER_ROW_EXEMPT_KEYS: ReadonlySet<string> = new Set([
+  "xai_matrix_state",       // xai-web-matrix #13
+  "xai_habits_state",       // xai-web-habits #15
+  "xai_pref_week_start",    // xai-web-calendar #12 (xai_pref_* family per ADR-0007 §S8)
+  "xai_meditation_prefs",   // xai-web-meditation #16
+]);
+
 describe("AC-PARITY-2: all PREF_REGISTRY explicit keys are in §9.2", () => {
-  it("no PREF_REGISTRY key (excluding proposed) is missing from §9.2", () => {
+  it("no PREF_REGISTRY key (excluding proposed + owner-row additions) is missing from §9.2", () => {
     const content = loadDesignMd();
     const designKeys = new Set(extractSection92Keys(content));
     const registryEntries = Object.entries(PREF_REGISTRY);
 
     // Exclude proposed keys — they may not appear literally in the §9.2 table
-    // (they come from ADR-0007 §S8 which adds them separately)
+    // (they come from ADR-0007 §S8 which adds them separately).
+    // Also exclude owner-row additions appended by W2 rows post-baseline.
     const nonProposedKeys = registryEntries
       .filter(([, entry]) => !(entry as { proposed?: true }).proposed)
-      .map(([key]) => key);
+      .map(([key]) => key)
+      .filter((key) => !OWNER_ROW_EXEMPT_KEYS.has(key));
 
     const missing: string[] = [];
     for (const key of nonProposedKeys) {

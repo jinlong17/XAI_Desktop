@@ -31,4 +31,13 @@ describe("shellRegistrations integration", () => {
       expect(reg.moduleId.length).toBeGreaterThan(0);
     }
   });
+
+  it("AC-SHELL-2 (meditation row #16): meditation slot is swapped (not a placeholder)", () => {
+    const meditation = webShellModuleRegistrations.find((r) => r.moduleId === "meditation");
+    expect(meditation).toBeDefined();
+    expect(meditation!.icon).toBe("leaf");
+    expect(meditation!.railOrder).toBe(9);
+    expect(meditation!.showInRail).toBe(true);
+    expect(meditation!.children[0]!.render.name).not.toBe("ModuleRoutePlaceholderPage");
+  });
 });

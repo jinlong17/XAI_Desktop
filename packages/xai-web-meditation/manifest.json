@@ -1,0 +1,18 @@
+{
+  "name": "@repo/plugin-web-meditation",
+  "slug": "xai-web-meditation",
+  "version": "0.0.0",
+  "status": "In-Dev",
+  "type": "ui",
+  "owner": "xai-web-meditation",
+  "description": "Meditation module — picker view (5 scenes + 4 live clocks + 5 ambient sounds + 5 durations) + fullscreen player (rising particles + 8s breathing ring + progress + countdown + exit). No events emitted.",
+  "roadmap_row": 16,
+  "wave": "W2",
+  "entry": "./src/index.ts",
+  "dependencies": [
+    "@repo/core",
+    "@repo/plugin-web-tokens",
+    "@repo/plugin-web-storage",
+    "@repo/xai-web-shell"
+  ]
+}
