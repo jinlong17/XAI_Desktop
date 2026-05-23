@@ -1,0 +1,160 @@
+# Roadmap Manifest — xai-web-console
+
+- Roadmap Source: web design/DESIGN.md (Claude-Artifact React prototype, 14 modules + tokens + i18n + persistence, acceptance checklist §12)
+- Source Code Reference: web design/{index.html, app.jsx, shell.jsx, module-*.jsx, pet.jsx, tokens.css, layout.css, i18n.js, board-data.js}
+- Init Path: decompose
+- Generated: 2026-05-23
+- Default Automation Mode: A-Claude    # user override 2026-05-23 — see _portable/04-automation-loop.md §3
+- Default Dependency Semantics: shipped
+- Default Verify Cross-vendor: yes      # 2026-05-23 user override; strict cross-vendor verify gate
+- Wave Concurrency Cap: 3                # bg dispatch default; raise deliberately only after quota/worktree review
+- BG Direct Verified: unknown            # set yes only after a local smoke test
+- Manifest Review: REQUIRED              # init stops here; review boundaries + dependency graph before run
+- Authority Override (2026-05-23): web design/DESIGN.md SUPERSEDES any conflicting prior PRD (sync-v1, plugin-organizer, grid-window, web-ticktick-parity PRDs). Desktop / Tauri / organizer / sync-v1 work is paused for the duration of this roadmap.
+- Interop with web-ticktick-parity: REUSE shipped platform spine (web-architecture-adr-lite, web-plugin-map-contract-reconcile, web-sync-crypto-contract-preflight, web-release-site-archive-vite-shell, web-auth-device-session, web-browser-e2e-crypto-runtime, web-encrypted-indexeddb-cache, web-console-host-router, web-security-csp-sentry). PAUSE conflicting PENDING rows: web-productivity-habits-pomodoro, web-project-label-calendar, web-search-keyboard-theme, web-statistics-views (these are SUPERSEDED by xai-web-{pomodoro,habits,calendar,board-*,statistics,settings-*}).
+
+## Features
+
+| # | Slug | Source | Depends On | Dep Semantics | Status | Automation Mode | Verify Cross-vendor | Last Run | Note |
+|---|------|--------|------------|---------------|--------|-----------------|---------------------|----------|------|
+| 1 | xai-web-build-form-adr | docs/reviews/xai-web-build-form-adr/20260523-roadmap-seed.md | — | — | READY_TO_SHIP | (default) | (default) | 2026-05-23 | W0 · ADR-0007 Accepted; 3 commits (f167310/c4f1f1b/fe8444a); dev_log READY_TO_SHIP; all 13 verify gates PASS; awaiting human ship. |
+| 2 | xai-web-tokens-and-i18n | docs/reviews/xai-web-tokens-and-i18n/20260523-roadmap-seed.md | xai-web-build-form-adr | shipped | PENDING | (default) | (default) | — | W1 · Foundation. Port tokens.css + i18n.js to TS modules. |
+| 3 | xai-web-persistence-contract | docs/reviews/xai-web-persistence-contract/20260523-roadmap-seed.md | xai-web-build-form-adr | shipped | PENDING | (default) | (default) | — | W1 · Foundation. Typed localStorage key registry + usePref hook. |
+| 4 | xai-web-event-bus | docs/reviews/xai-web-event-bus/20260523-roadmap-seed.md | xai-web-build-form-adr | shipped | PENDING | (default) | (default) | — | W1 · Foundation. Typed cross-module event bus (per CLAUDE.md boundary rule). |
+| 5 | xai-web-shell | docs/reviews/xai-web-shell/20260523-roadmap-seed.md | xai-web-build-form-adr, xai-web-tokens-and-i18n, xai-web-persistence-contract, xai-web-event-bus | shipped | PENDING | (default) | (default) | — | W1 · Foundation. App root + AppRail + Topbar + AvatarMenu + module-switching + 4 rail positions. |
+| 6 | xai-web-tasks | docs/reviews/xai-web-tasks/20260523-roadmap-seed.md | xai-web-shell | shipped | PENDING | (default) | (default) | — | W2 · Module. 4-bucket time view + cross-column DnD date rewrite. |
+| 7 | xai-web-board-core | docs/reviews/xai-web-board-core/20260523-roadmap-seed.md | xai-web-shell | shipped | PENDING | (default) | (default) | — | W2 · Module. Kanban view + Board/Card schema + 10-color columns. |
+| 8 | xai-web-board-views | docs/reviews/xai-web-board-views/20260523-roadmap-seed.md | xai-web-board-core | ready_to_ship | PENDING | (default) | (default) | — | W2 · Module. Table / Calendar / Dashboard / Timeline / Map (5 extra views). |
+| 9 | xai-web-board-workspaces | docs/reviews/xai-web-board-workspaces/20260523-roadmap-seed.md | xai-web-board-core | ready_to_ship | PENDING | (default) | (default) | — | W2 · Module. Workspaces + Switcher + Creator + PM template + multi-panel. |
+| 10 | xai-web-dashboard-grid | docs/reviews/xai-web-dashboard-grid/20260523-roadmap-seed.md | xai-web-shell | shipped | PENDING | (default) | (default) | — | W2 · Module. 12-col FLIP drag grid + widget-registration slot. |
+| 11 | xai-web-dashboard-widgets | docs/reviews/xai-web-dashboard-widgets/20260523-roadmap-seed.md | xai-web-dashboard-grid | ready_to_ship | PENDING | (default) | (default) | — | W2 · Module. Clock + MiniCal + WorldClocks + Weather + Stickies + Mail + Upcoming + 3 mini stats. |
+| 12 | xai-web-calendar | docs/reviews/xai-web-calendar/20260523-roadmap-seed.md | xai-web-shell | shipped | PENDING | (default) | (default) | — | W2 · Module. Month view + 4-color event bands + deep-link from MiniCal. |
+| 13 | xai-web-matrix | docs/reviews/xai-web-matrix/20260523-roadmap-seed.md | xai-web-shell | shipped | PENDING | (default) | (default) | — | W2 · Module. Eisenhower 2×2 with priority tagging. |
+| 14 | xai-web-pomodoro | docs/reviews/xai-web-pomodoro/20260523-roadmap-seed.md | xai-web-shell | shipped | PENDING | (default) | (default) | — | W2 · Module. Circular timer + session history. Supersedes web-ticktick-parity Pomodoro surface. |
+| 15 | xai-web-habits | docs/reviews/xai-web-habits/20260523-roadmap-seed.md | xai-web-shell | shipped | PENDING | (default) | (default) | — | W2 · Module. Weekly check-off + 4 stat cards + diary. Supersedes web-ticktick-parity Habits surface. |
+| 16 | xai-web-meditation | docs/reviews/xai-web-meditation/20260523-roadmap-seed.md | xai-web-shell | shipped | PENDING | (default) | (default) | — | W2 · Module. 5 scenes + 4 clock styles + full-screen player. |
+| 17 | xai-web-countdown | docs/reviews/xai-web-countdown/20260523-roadmap-seed.md | xai-web-shell | shipped | PENDING | (default) | (default) | — | W2 · Module. Countdown card grid (2 variants) + create-new. |
+| 18 | xai-web-ai-chat | docs/reviews/xai-web-ai-chat/20260523-roadmap-seed.md | xai-web-shell | shipped | PENDING | (default) | (default) | — | W2 · Module. Aurora bg + breathing orb + composer + window.claude.complete adapter. |
+| 19 | xai-web-pet | docs/reviews/xai-web-pet/20260523-roadmap-seed.md | xai-web-shell | shipped | PENDING | (default) | (default) | — | W2 · Module. 8 pets + drag + picker + rail toggle. |
+| 20 | xai-web-statistics | docs/reviews/xai-web-statistics/20260523-roadmap-seed.md | xai-web-tasks, xai-web-pomodoro, xai-web-habits | ready_to_ship | PENDING | (default) | (default) | — | W3 · Aggregator. 7 visualizations over Tasks/Pomodoro/Habits data. Supersedes web-ticktick-parity statistics-views. |
+| 21 | xai-web-settings-shell | docs/reviews/xai-web-settings-shell/20260523-roadmap-seed.md | xai-web-shell | shipped | PENDING | (default) | (default) | — | W4 · Settings chassis (13-pane sidebar + Save/Reset + Toggle/SettingRow/SectionBlock atoms). |
+| 22 | xai-web-settings-appearance | docs/reviews/xai-web-settings-appearance/20260523-roadmap-seed.md | xai-web-settings-shell | shipped | PENDING | (default) | (default) | — | W4 · Settings · Appearance pane (theme/density/font/accent/bg-tone/rail-pos). |
+| 23 | xai-web-settings-features-panel | docs/reviews/xai-web-settings-features-panel/20260523-roadmap-seed.md | xai-web-settings-shell, xai-web-tasks, xai-web-board-core, xai-web-dashboard-grid, xai-web-calendar, xai-web-matrix, xai-web-pomodoro, xai-web-habits, xai-web-meditation | ready_to_ship | PENDING | (default) | (default) | — | W4 · Settings · Features pane (8 module on/off + SVG thumbnails). |
+| 24 | xai-web-settings-rest | docs/reviews/xai-web-settings-rest/20260523-roadmap-seed.md | xai-web-settings-shell | shipped | PENDING | (default) | (default) | — | W4 · Settings · 10 remaining panes (Account/Premium/Smart Lists/Notifications/Date&Time/More/Integrations/Collaborate/Sticky Note/Hotkeys/About). |
+
+## Decomposition Rationale
+
+### R1. Source and init path
+
+`Init Path: decompose`. The source is `web design/DESIGN.md` — a structured Claude-Artifact React prototype PRD (24KB) plus 14 module JSX files (~340KB total) implementing it. DESIGN.md is reviewed and feature-complete as a *design spec* (its §12 acceptance checklist marks all 28 items `[x]`), but the artifact is Babel-in-browser flat files with no build, no TypeScript, no tests, and no integration with the project's existing `apps/web/` Vite app. The user's intent (2026-05-23) is to port the prototype's design fidelity into the production build under `apps/web/` + new `packages/plugin-web-*` packages while reusing the SHIPPED platform spine from the in-progress `web-ticktick-parity` roadmap.
+
+### R2. Authority override + roadmap interop
+
+User override on 2026-05-23 names `web design/DESIGN.md` as the new top-priority PRD: it supersedes any conflicting prior PRD (sync-v1, plugin-organizer, grid-window, and — implicitly — the `docs/planning/sub-prds/web/PRD.md` that drives `web-ticktick-parity`). Desktop / Tauri / organizer / sync-v1 work is paused for this roadmap's duration.
+
+The user did NOT name `web-ticktick-parity` explicitly. After AskUserQuestion (2026-05-23), the decomposition treats `web-ticktick-parity` as **platform spine to reuse, not work to redo**:
+
+- **REUSE (SHIPPED rows, treated as dependencies, not re-listed in xai-web-console):** web-architecture-adr-lite, web-plugin-map-contract-reconcile, web-sync-crypto-contract-preflight, web-release-site-archive-vite-shell, web-auth-device-session, web-browser-e2e-crypto-runtime, web-encrypted-indexeddb-cache, web-console-host-router, web-security-csp-sentry, web-todo-first-slice.
+- **PAUSE (PENDING rows superseded by xai-web-console UI surfaces):** web-productivity-habits-pomodoro, web-project-label-calendar, web-search-keyboard-theme, web-statistics-views. These are superseded by xai-web-{pomodoro,habits,calendar,board-core,board-views,board-workspaces,statistics,settings-*}. A human should hand-edit those manifest rows to `BLOCKED_EXTERNAL` with `Note: superseded by xai-web-console` after this manifest passes review.
+- **DEFERRED (independent infra concerns, neither paused nor scheduled here):** web-sync-blob-driver, web-realtime-metadata-sync, web-offline-outbox-conflicts, web-responsive-mobile, web-device-management-revoke, web-export-delete-privacy, web-pwa-sw-release, web-i18n-seo-landing, web-deploy-ci-browser-matrix, web-ga-acceptance-suite, web-external-env-provisioning. These remain owned by web-ticktick-parity and continue independently when that roadmap resumes.
+
+### R3. Structural context read
+
+- `docs/PLUGIN_MAP.md` — read; lists packages/plugin-productivity, plugin-console, plugin-project, plugin-labels, plugin-calendar already in the tree. The build-form ADR (#1) must decide whether xai-web-* rows extend those existing plugin packages or create new ones (recommendation: new `packages/plugin-web-<module>/` per row, since the prototype's design fidelity meaningfully diverges from prior plugin specs).
+- `apps/web/package.json` — read; Vite SPA, type module, already depends on `@repo/plugin-console` + `@repo/plugin-productivity` + `@repo/web-auth-device-session`. The build-form ADR must decide whether xai-web-* modules live under `apps/web/src/modules/<name>/` or under new `packages/plugin-web-<module>/` with apps/web depending on each.
+- `web design/DESIGN.md` §9.2 — 24 localStorage keys form the canonical persistence contract; key #3 (xai-web-persistence-contract) owns the registry.
+- `web design/DESIGN.md` §5 — tokens.css is the canonical design-system source of truth; key #2 (xai-web-tokens-and-i18n) owns the port.
+- CLAUDE.md `Code Boundaries` — Plugin-to-plugin interaction MUST go through `@repo/core/events`. Key #4 (xai-web-event-bus) ensures this discipline in the new modules.
+
+### R4. Feature boundaries
+
+Rows are cut so each is a plausible single `xai-feature-full-loop` run with one dominant ownership boundary:
+
+- **W0 (1 row)** — build-form-adr decides the port mapping; gates every downstream row.
+- **W1 (4 rows, parallel)** — tokens-and-i18n, persistence-contract, event-bus, shell. Foundation. Shell depends on the other three because it consumes them at compile time.
+- **W2 (14 rows, parallel)** — every leaf module. board and dashboard pre-split into core+views+workspaces and grid+widgets respectively per AskUserQuestion 2026-05-23 (granularity decision: pre-split). board-views, board-workspaces, and dashboard-widgets carry a `ready_to_ship` edge to their core/grid sibling so they can start once the core API is locked.
+- **W3 (1 row)** — statistics aggregates Tasks/Pomodoro/Habits data; `ready_to_ship` edges so all three modules need their data shape (not the full ship) before statistics can plan.
+- **W4 (4 rows)** — settings split into chassis + 3 pane families. features-panel needs every module's slot registration to render the on/off list; uses `ready_to_ship` edges to start as soon as each module's contract is locked, not after batch ship.
+
+### R5. Dependency edges
+
+- All W1 rows depend on #1 (build-form-adr, shipped) — the ADR's port mapping must be Accepted before any code lands.
+- All W2 module rows depend on #5 (shell, shipped) — they need a host to register into. They do NOT depend on each other (true independence) so wave 2 dispatches all 14 rows in parallel under the cap.
+- Board+Dashboard splits use `ready_to_ship` between core+views/grid+widgets so the second half can start once the core's contract is locked, even if the core ships separately.
+- statistics (#20) uses `ready_to_ship` on tasks/pomodoro/habits — the data-shape contract is what statistics needs, not the full UI ship.
+- settings-features-panel (#23) uses `ready_to_ship` on the 8 toggleable modules — it renders their slot info, not their behavior.
+
+### R6. Granularity & assumptions recorded
+
+- **AskUserQuestion 2026-05-23 (granularity):** user chose to pre-split board → core/views/workspaces, dashboard → grid/widgets, settings → shell/appearance/features-panel/rest. Manifest carries 24 rows instead of 17. Rationale: parallelism + clearer single-run scoping, accepted dependency-edge complexity.
+- **AskUserQuestion 2026-05-23 (build form):** user chose Vite+TS migration. Build-form ADR (#1) records the port mapping; standalone Babel form will not ship.
+- **AskUserQuestion 2026-05-23 (relationship to web-ticktick-parity):** user chose REUSE platform spine + replace UI; conflicting PENDING rows on web-ticktick-parity are paused (see R2).
+- **Mode default:** Default Automation Mode is `A-Claude` per user override 2026-05-23 (not asked per-row; user explicit value bypassed §2c picker).
+- **Verify Cross-vendor default:** `yes` per user override 2026-05-23.
+- **Guess (not user-confirmed):** new packages live under `packages/plugin-web-<module>/`; build-form ADR (#1) may overrule.
+- **Guess (not user-confirmed):** AI Chat's `window.claude.complete` adapter strategy under Vite/non-Claude-Artifact runtime is left to the ai-chat row's feature-plan; ADR may pre-decide.
+- **Guess (not user-confirmed):** Pomodoro session persistence key `xai_pomodoro_sessions` and Countdown persistence key `xai_countdowns` are seed-brief proposals; feature-plan rows may rename.
+- **Open uncertainty:** whether `@repo/plugin-productivity` and `@repo/plugin-console` (already deps of apps/web) get replaced, extended, or sidelined by the new packages/plugin-web-*. This is the ADR's job to settle in row #1.
+
+### R7. Wave plan
+
+```
+W0 — 1 row    │ #1 build-form-adr
+              ▼ (shipped)
+W1 — 4 rows   │ #2 tokens, #3 persistence, #4 event-bus, #5 shell
+                                                            ▼ (shipped)
+W2 — 14 rows  │ #6 tasks, #7 board-core, #8 board-views (rts), #9 board-workspaces (rts),
+              │ #10 dashboard-grid, #11 dashboard-widgets (rts),
+              │ #12 calendar, #13 matrix, #14 pomodoro, #15 habits,
+              │ #16 meditation, #17 countdown, #18 ai-chat, #19 pet
+              ▼ (ready_to_ship on tasks/pomodoro/habits)
+W3 — 1 row    │ #20 statistics
+              ▼ (ready_to_ship on modules)
+W4 — 4 rows   │ #21 settings-shell ▶ #22 appearance + #23 features-panel + #24 rest
+```
+
+Five dependency layers ⇒ approximately 5 batch-ship windows. With Wave Concurrency Cap=3 and `dispatch: bg`, W2 runs in ~5 sequential bg-windows of 3 features each (~14 features ÷ 3 cap). With `dispatch: emit` and full human parallelism the W2 wall-clock is min(14, available human-paste-windows) × per-feature time.
+
+---
+
+## Handoff
+
+### Status
+- Workflow: roadmap-loop init (decompose path) complete; manifest written; awaiting human review gate.
+- Manifest: docs/workflow/roadmap/xai-web-console.md
+- Seed Briefs: 24 files under docs/reviews/xai-web-*/20260523-roadmap-seed.md
+- Init does NOT auto-continue into run — human review of feature boundaries + dependency graph is required per skill §2c.
+
+### Blockers
+None during init. Two material caveats to surface for the human reviewer:
+1. Conflicting PENDING rows on `web-ticktick-parity` (web-productivity-habits-pomodoro, web-project-label-calendar, web-search-keyboard-theme, web-statistics-views) need a hand-edit to `BLOCKED_EXTERNAL` Note: superseded by xai-web-console — this skill does not write other manifests.
+2. The ADR row (#1) decides whether new packages live under `packages/plugin-web-*/` or extend existing `@repo/plugin-productivity` / `@repo/plugin-console`. Downstream rows assume new packages until the ADR ships and may need re-scoping if the ADR chooses the extend path.
+
+### Summary
+24-row roadmap manifest for xai-web-console, decomposed from `web design/DESIGN.md` along plugin-boundary lines. 1 ADR + 4 foundation rows + 14 parallel module rows + 1 aggregator + 4 settings rows across 5 dependency waves. Reuses 10 SHIPPED rows from `web-ticktick-parity` as platform spine; pauses 4 conflicting PENDING rows on that roadmap.
+
+### Next Step
+
+Two-step gate before `mode: run` can fire:
+
+**Step 1 — human review (REQUIRED):**
+1. Read `docs/workflow/roadmap/xai-web-console.md`.
+2. Read each `docs/reviews/xai-web-*/20260523-roadmap-seed.md` (24 files).
+3. Confirm feature boundaries + dependency graph + Decomposition Rationale §R2/R6 (especially the platform-spine reuse and the build-form ADR scope).
+4. Hand-edit any rows you want to retitle, re-scope, re-order, or change `Dep Semantics` on.
+5. Hand-edit conflicting `web-ticktick-parity` rows to `BLOCKED_EXTERNAL` with `Note: superseded by xai-web-console` (this skill cannot do that — it writes only its own manifest).
+
+**Step 2 — fire run mode (after Step 1):**
+
+Copy-paste into a fresh Claude window:
+
+```text
+/xai-roadmap-loop
+mode: run
+manifest: docs/workflow/roadmap/xai-web-console.md
+dispatch: bg
+```
+
+(Use `dispatch: emit` if your Claude Code does not have `claude --bg` / Agent View, or `dispatch: serial` if you want a single transcript with no parallelism. The skill's §3.2 confirmation gate will fire a Chinese AskUserQuestion to lock the choice before any background session launches.)
+
+Run mode will then dispatch wave 0 (build-form-adr) on its own. After it reaches READY_TO_SHIP and you ship it manually, re-run the same command to unlock wave 1.

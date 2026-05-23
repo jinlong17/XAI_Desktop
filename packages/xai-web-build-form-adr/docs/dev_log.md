@@ -6,10 +6,10 @@
 - Target: xai-web-build-form-adr
 - Title: ADR-0007 — XAI Web Console build-form & port mapping (Vite + TS migration)
 - Current Phase: FEATURE_VERIFY
-- Status: READY_FOR_VERIFY
-- Executor: feature-auto-build (claude-sonnet-4-6)
-- Updated: 2026-05-23 14:45
-- Suggested Next: feature-verify
+- Status: READY_TO_SHIP
+- Executor: feature-verify (Claude Opus 4.7 1M)
+- Updated: 2026-05-23 15:05
+- Suggested Next: ship (or roadmap-loop reconcile)
 - Automation Mode: A-Claude
 - Verify Cross-vendor: yes
 - Roadmap: docs/workflow/roadmap/xai-web-console.md (row #1, Wave 0)
@@ -367,6 +367,103 @@ Status flip: NEEDS_REVIEW → APPROVED. Suggested Next: feature-auto-build
   TC-T7 PASS (no conflict with ADR-0003/0006 — browser-only packages, no
   self-invented data contracts).
 - Next step: P3 — Traceability appendix + roadmap pause recommendations.
+
+### 2026-05-23 15:05 — feature-verify (Claude Opus 4.7 1M) — READY_TO_SHIP
+
+- Action: Independent verification of feature-auto-build's 3-commit landing
+  (f167310 P1 / c4f1f1b P2 / fe8444a P3). Ran TC-T1..TC-T10 from test.md and
+  the seed-brief acceptance signal + commit-hygiene + dev_log coherence
+  checks per dispatch contract. Re-read ADR-0007 cold (cross-vendor reader
+  role) and cross-checked against ADR-0003 + ADR-0006.
+- Verdict: **READY_TO_SHIP** (PASS). 0 blockers. 0 residual structural risks.
+- Gate-by-gate evidence:
+  - **TC-T1** (ADR file exists): PASS. `docs/adr/0007-xai-web-console-build-form.md`
+    created (37 432 bytes), 399 lines.
+  - **TC-T2** (Status=Accepted): PASS. Line 5 `| 状态 | Accepted |`.
+  - **TC-T3** (next ADR number is 0007): PASS. `ls docs/adr/*.md` confirms
+    0006 is prior max (excluding TEMPLATE.md); 0007 is new.
+  - **TC-T4** (all prototype files mapped): PASS. 21 prototype files in
+    `web design/` (5 CSS/JS + 4 JSX shell + 13 module-*.jsx, DESIGN.md
+    excluded as source-not-target) all present in §文件级端口映射表 (lines
+    261–283). Verified with per-file grep.
+  - **TC-T5** (owning-row slugs in manifest): PASS. 21 distinct owning slugs
+    in §文件级端口映射表 all exist in `docs/workflow/roadmap/xai-web-console.md`
+    rows #2..#24 (manifest lines 21–43). Verified row-by-row.
+  - **TC-T6** (24 persistence keys in §S8): PASS. §持久化键附录 (lines
+    292–337) lists 4 Shell/外观 + 2 桌宠 + 13 模块数据 + 1 settings 偏好
+    前缀族 + 2 proposed = 22 explicit + 1 prefix family = 24 logical entries
+    (matches DESIGN.md §9.2 + seed brief count). `xai_pomodoro_sessions` +
+    `xai_countdowns` carry `**(proposed — 所属行 feature-plan 可重命名)**`
+    label (line 328–329). Row #3 (`xai-web-persistence-contract`) named as
+    owner in §localStorage 键注册表移交 + §持久化键附录 header.
+  - **TC-T7** (cross-ADR consistency): PASS. ADR-0007 declares
+    `Supersedes: none` (line 8); §平台底座消费规则 (lines 149–154) explicitly
+    states "本 ADR 精炼（而非推翻）ADR-0003 与 ADR-0006" and itemizes
+    the affirming alignment:
+      - ADR-0003 (Plugin 平台无关, 禁止 Tauri import): respected —
+        `packages/plugin-web-*` declared as pure-browser, zero Tauri dep.
+      - ADR-0006 (Web 可独立 Vite SPA; 不得发明数据契约): respected —
+        UI prefs → localStorage; 数据实体 → SHIPPED IndexedDB + sync blob.
+    No contradictions or hidden supersessions.
+  - **TC-T8** (4 PENDING parity rows + BLOCKED_EXTERNAL recommendation): PASS.
+    All 4 rows named THREE times in ADR (冻结假设 §7 line 138–142; §已取代的
+    PENDING parity 行 lines 158–166; §手动操作推荐 lines 371–384). Canonical
+    Note text `Note: superseded by xai-web-console` present (3 instances:
+    lines 144, 167, 375). ADR explicitly states "本 ADR feature 本身不编辑
+    另一路线图" (line 144) and "本 ADR feature 不编辑 docs/workflow/roadmap/
+    web-ticktick-parity.md" (line 384). `git diff HEAD~3 HEAD -- docs/workflow/
+    roadmap/web-ticktick-parity.md docs/workflow/roadmap/xai-web-console.md`
+    returns empty — neither manifest was edited. Constraint upheld.
+  - **TC-T9** (§S9 traceability covers #2..#24): PASS. §溯源关系：xai-web-console
+    路线图 table (lines 345–369) covers all 23 rows #2..#24 with slug anchors
+    (e.g. `xai-web-tokens-and-i18n` row #2, `xai-web-settings-rest` row #24).
+    Each row has 1–3 constraining ADR section links.
+  - **TC-T10** (cross-vendor verify): PASS. Acting as independent vendor
+    (Claude Opus 4.7 1M, different from auto-build's claude-sonnet-4-6).
+    Cold-read findings:
+      - No internal contradictions; options A/B/C/D mutually exclusive with
+        clear rejection grounds.
+      - No conflict with ADR-0003 (platform-independence) or ADR-0006
+        (Vite SPA independence + no new data contracts).
+      - Port mapping table is unambiguous — for each prototype file the
+        target path, owning row, and notes are explicit.
+      - The 4 superseded `web-ticktick-parity` rows are clearly identifiable
+        (named 3× in ADR with both their old slugs and replacement slugs).
+  - **Seed-brief acceptance signal**: PASS. ADR exists, Status=Accepted,
+    §S7 / §S8 / §S9 anchors are stable and citable; a downstream feature-plan
+    can answer "where does file X go?" / "what persistence key does row Y own?"
+    / "which ADR section constrains row Z?" by reading the ADR alone, with no
+    need to re-open the build-form debate.
+  - **Commit hygiene**: PASS. 3 commits f167310 / c4f1f1b / fe8444a all
+    follow `docs(xai-web-build-form-adr): summary` format. Bodies include
+    Why / What / Scope / Risk / Docs / Tests sections per CLAUDE.md
+    `Commits` convention. Each commit has a single intent within its phase
+    boundary (P1=author draft, P2=flip status one cell, P3=dev_log status
+    flip; ADR content unchanged in P2 and P3). No cross-phase mixing.
+  - **Dev_log coherence**: PASS pre-flip. Phase Progress P1+P2+P3=DONE;
+    Status=READY_FOR_VERIFY; Suggested Next=feature-verify. After this
+    verify pass, flipped to READY_TO_SHIP + ship.
+- Residual risks (non-blocking, advisory):
+  - **R-Resid-1 (low)**: Hand-edit of 4 `web-ticktick-parity` PENDING rows to
+    `BLOCKED_EXTERNAL` remains a human action; ADR cannot self-execute.
+    Surfaced in ADR §S4 + §S9; downstream tracker is the user-side roadmap
+    bookkeeping (not a ship blocker).
+  - **R-Resid-2 (low)**: `xai_pomodoro_sessions` + `xai_countdowns` key
+    names are still proposed; their owning rows (#14, #17) may rename in
+    feature-plan. ADR explicitly accepts rename (label "proposed" on
+    those keys); no contract break.
+  - **R-Resid-3 (low)**: `docs/PLUGIN_MAP.md` staleness caveat carried
+    forward. Downstream rows must re-verify plugin status against actual
+    `packages/plugin-*/` source. ADR §S2 cites caveat.
+  - **R-Resid-4 (low)**: AI Chat `window.claude.complete` adapter strategy
+    under Vite is deferred to row #18. ADR §S5 已推迟事项 records this as
+    a known open question, not an ADR acceptance blocker.
+- Files updated: `packages/xai-web-build-form-adr/docs/dev_log.md` (this
+  file — Status Panel flip + verify verdict entry).
+- Commits: — (verify-only; no code/doc artifact changes outside dev_log).
+- Next step: `ship` (or `xai-roadmap-loop` reconcile under serial mode)
+  to push commits f167310 / c4f1f1b / fe8444a and mark row #1 SHIPPED in
+  the xai-web-console manifest.
 
 ### 2026-05-23 14:30 — feature-auto-build P3 (claude-sonnet-4-6)
 
