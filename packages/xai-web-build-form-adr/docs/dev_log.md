@@ -5,11 +5,11 @@
 - Workflow: FEATURE_DEV
 - Target: xai-web-build-form-adr
 - Title: ADR-0007 — XAI Web Console build-form & port mapping (Vite + TS migration)
-- Current Phase: FEATURE_BUILD (P1 DONE — P2 DONE — P3 IN PROGRESS)
-- Status: APPROVED
+- Current Phase: FEATURE_BUILD (P1 DONE — P2 DONE — P3 DONE)
+- Status: READY_FOR_VERIFY
 - Executor: feature-auto-build (claude-sonnet-4-6)
-- Updated: 2026-05-23 14:00
-- Suggested Next: feature-auto-build
+- Updated: 2026-05-23 14:30
+- Suggested Next: feature-verify
 - Automation Mode: A-Claude
 - Verify Cross-vendor: yes
 - Roadmap: docs/workflow/roadmap/xai-web-console.md (row #1, Wave 0)
@@ -272,3 +272,130 @@ Status flip: NEEDS_REVIEW → APPROVED. Suggested Next: feature-auto-build
   `docs/adr/0007-xai-web-console-build-form.md` per the Phase Plan
   (P1 draft → P2 flip to Accepted → P3 traceability appendix). Roadmap-loop
   serial dispatch will pick this up.
+
+### 2026-05-23 14:00 — feature-auto-build P1 (claude-sonnet-4-6)
+
+- Action: P1 — Author `docs/adr/0007-xai-web-console-build-form.md` with
+  Status=Proposed. Read design.md, api.md, test.md, dev_log.md, ADR-0003,
+  ADR-0006, xai-web-console.md manifest, DESIGN.md §9.2 (persistence keys),
+  index.html (lines 16–18 CDN scripts), discovery-review.md. Implemented all
+  10 required ADR sections per api.md S1..S10:
+  - S1 Header table (状态/日期/决策者/Supersedes/Superseded by)
+  - S2 Background (cites DESIGN.md §10 tech stack, index.html lines 16–18,
+    apps/web/package.json v0.1.0 deps, ADR-0003, ADR-0006, roadmap R2/R3/R6,
+    PLUGIN_MAP staleness caveat; central question stated)
+  - S3 Four alternatives A/B/C/D with 优点/缺点 and rejection reasoning
+  - S4 Decision: "选择方案 C"; 10 frozen assumptions inline; 10 SHIPPED parity
+    rows named (consume-don't-replace); 4 superseded PENDING rows named with
+    hand-edit recommendation (BLOCKED_EXTERNAL)
+  - S5 Consequences: 8 positive / 5 negative / 3 deferred open questions
+  - S6 Implementation Rules: 10 JSX→TSX rules (numbered); cross-module comm
+    rule (web:<module>:<verb>-<noun>, rejects @repo/plugin-web-events);
+    localStorage key registry hand-off; DESIGN.md §9 reconciliation (UI prefs
+    → localStorage; durable data → encrypted IndexedDB + sync blob)
+  - S7 File-by-file port mapping: 21-row table covering all 20 prototype files
+    (index.html + tokens.css + layout.css + i18n.js + board-data.js +
+    icons.jsx + shell.jsx + app.jsx + 13 module-*.jsx + pet.jsx) mapped to
+    20 new packages + host shell extension; all owning slugs in manifest #2..#24
+  - S8 Persistence keys: 24 DESIGN.md §9.2 keys verbatim (4 shell + 2 pet +
+    13 module data + xai_pref_* family); xai_pomodoro_sessions + xai_countdowns
+    labelled "proposed" per reviewer hint; row #3 named as owner
+  - S9 Traceability: all rows #2..#24 linked to constraining ADR sections by
+    slug anchor; 4 superseded parity rows hand-edit recommendation with
+    canonical Note text
+  - S10 Related: all 10 cross-doc links present
+  Inline-validated 3 reviewer hints from Review Notes:
+  - proposed tag on xai_pomodoro_sessions + xai_countdowns (§S8 DONE)
+  - anchor-by-slug in §S9 traceability table (DONE)
+  - header format mirrors ADR-0006 (4 rows: 状态/日期/决策者/Supersedes) (DONE)
+- Files written:
+  - `docs/adr/0007-xai-web-console-build-form.md` (new, Status=Proposed)
+  - `packages/xai-web-build-form-adr/docs/dev_log.md` (Phase Progress update)
+- Commits: f167310 docs(xai-web-build-form-adr): P1 — author ADR-0007 draft
+  (Status=Proposed)
+- Tests run: N/A (documentation-only phase; TC-T1..TC-T9 to be validated by
+  feature-verify)
+- Evidence: ADR contains all 10 sections; 20 prototype files mapped in S7;
+  24 keys enumerated in S8 with proposed tags on 2 keys; S9 traceability table
+  covers #2..#24 by slug; 4 parity rows named with hand-edit recommendation.
+- Next step: P2 — flip ADR Status Proposed → Accepted (self-review pass).
+
+### 2026-05-23 14:15 — feature-auto-build P2 (claude-sonnet-4-6)
+
+- Action: P2 — Internal review pass + flip ADR Status from Proposed to Accepted.
+  Validated all 10 sections against api.md acceptance criteria (AC-S1-1 through
+  AC-S10-1). Verified:
+  - S1 (AC-S1-1): Header table has exactly 5 rows (状态/日期/决策者/Supersedes/
+    Superseded by), format matches ADR-0006. AC-S1-2: Status cell changed to
+    Accepted. PASS.
+  - S2 (AC-S2-1..7): DESIGN.md §10 cited; index.html lines 16–18 cited;
+    apps/web/package.json deps cited; ADR-0003 + ADR-0006 cited as refine-not-
+    overrule; roadmap R2/R3/R6 cited; PLUGIN_MAP staleness caveat present;
+    central question stated. PASS.
+  - S3 (AC-S3-A..D): Options A/B/C/D present with 优点/缺点 and explicit
+    rejection/selection verdicts. PASS.
+  - S4 (AC-S4-1..4): "选择方案 C" stated; 10 frozen assumptions inline;
+    10 SHIPPED parity rows named; 4 superseded PENDING rows named with
+    BLOCKED_EXTERNAL recommendation. PASS.
+  - S5 (AC-S5-1..3): Positive / negative / deferred lists complete. PASS.
+  - S6 (AC-S6-1..4): 10 JSX→TSX rules present as numbered list; cross-module
+    comm rule + naming convention + explicit @repo/plugin-web-events rejection;
+    24-key registry hand-off with row #3 named; §9 reconciliation rule
+    (localStorage vs IndexedDB). PASS.
+  - S7 (AC-S7-1..4): Markdown table with 5 columns; all prototype files from
+    DESIGN.md §10.1 mapped; all owning row slugs in manifest #2..#24; 20 new
+    packages counted. PASS.
+  - S8 (AC-S8-1..3): 24 DESIGN.md §9.2 keys verbatim; xai_pomodoro_sessions +
+    xai_countdowns labelled "proposed"; row #3 (xai-web-persistence-contract)
+    named as owner. PASS.
+  - S9 (AC-S9-1..2): All rows #2..#24 linked to ADR sections by slug anchor;
+    4 parity rows hand-edit recommendation with canonical Note text present.
+    PASS.
+  - S10 (AC-S10-1): All 10 required cross-doc links present. PASS.
+  Cross-ADR consistency (TC-T7): ADR-0007 declares refines-not-overrules;
+  packages/plugin-web-* are browser-only (no Tauri imports); durable data flows
+  through shipped spine (not self-invented contracts) — ADR-0003 + ADR-0006
+  constraints respected. PASS.
+- Files updated:
+  - `docs/adr/0007-xai-web-console-build-form.md` (Status: Proposed → Accepted)
+  - `packages/xai-web-build-form-adr/docs/dev_log.md` (this file)
+- Commits: (to be assigned after this commit)
+- Tests run: Internal review pass against api.md AC-S1-1..AC-S10-1 (all PASS).
+  TC-T2 gate met: Status=Accepted. Independent feature-verify to run TC-T1..TC-T9.
+- Evidence: AC-S1-1 PASS (header format matches ADR-0006); AC-S1-2 PASS
+  (Status=Accepted); TC-T2 PASS (grep "Accepted" in header → confirmed);
+  TC-T7 PASS (no conflict with ADR-0003/0006 — browser-only packages, no
+  self-invented data contracts).
+- Next step: P3 — Traceability appendix + roadmap pause recommendations.
+
+### 2026-05-23 14:30 — feature-auto-build P3 (claude-sonnet-4-6)
+
+- Action: P3 — Traceability appendix + roadmap pause recommendation. The ADR
+  was authored with the full §S9 traceability table and hand-edit recommendation
+  block inline during P1 (consolidated authoring — all three of S9's required
+  elements were included in the initial draft). P3 confirms the §S9 section is
+  complete:
+  - All rows #2..#24 mapped to ADR constraining sections by slug anchor.
+  - Explicit table of 4 superseded PENDING parity rows with canonical
+    BLOCKED_EXTERNAL recommendation and Note text present.
+  - Human operator action reminder present (ADR does not self-edit
+    web-ticktick-parity manifest per permission rule).
+  Gate verified: every downstream row's seed brief at
+  docs/reviews/xai-web-*/20260523-roadmap-seed.md can in principle cite an
+  ADR anchor for its scope (TC-T9 spot-check: xai-web-tokens-and-i18n →
+  §文件级端口映射表 + §实施规则 rule 9; xai-web-shell → §文件级端口映射表 +
+  §JSX→TSX规则 1-5; xai-web-board-core → §文件级端口映射表 + §持久化键附录).
+  All three have unambiguous, citable ADR sections. PASS.
+- Files updated:
+  - `packages/xai-web-build-form-adr/docs/dev_log.md` (this file — Work Log +
+    Status Panel flip to READY_FOR_VERIFY)
+- Status Panel update: Status = READY_FOR_VERIFY, Suggested Next = feature-verify.
+- Commits: (to be assigned after this commit)
+- Tests run: TC-T9 spot-check (3 random downstream rows → all have citable
+  ADR sections). TC-T8 gate: 4 superseded rows named + BLOCKED_EXTERNAL
+  recommendation present + ADR does not edit web-ticktick-parity manifest.
+  PASS.
+- Evidence: §S9 traceability table covers #2..#24; §S9 hand-edit block names
+  all 4 superseded parity rows with canonical Note text; TC-T8 PASS; TC-T9
+  spot-check PASS.
+- Next step: `feature-verify` (cross-vendor) to run TC-T1..TC-T10 independently.

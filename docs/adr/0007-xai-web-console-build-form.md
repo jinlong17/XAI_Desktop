@@ -2,7 +2,7 @@
 
 | 字段 | 值 |
 |------|---|
-| 状态 | Proposed |
+| 状态 | Accepted |
 | 日期 | 2026-05-23 |
 | 决策者 | Jinlong (project owner) + Claude (`feature-plan` → `feature-review`) |
 | Supersedes | none |
