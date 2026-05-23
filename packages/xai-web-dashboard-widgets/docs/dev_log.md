@@ -7,12 +7,12 @@
 | Workflow | FEATURE_DEV |
 | Target | xai-web-dashboard-widgets |
 | Title | Web Console — Dashboard widget pack (Clock 4 styles/12tz/analog 60+12+12 · MiniCal · WorldClocks · Weather · Stickies · Mail · Upcoming · 3 mini stats) |
-| Current Phase | FEATURE_BUILD |
-| Status | READY_FOR_VERIFY |
-| Suggested Next | feature-verify |
+| Current Phase | FEATURE_VERIFY |
+| Status | READY_TO_SHIP |
+| Suggested Next | ship |
 | Verify Cross-vendor | yes (Codex primary / Cursor fallback — see test.md §6) |
 | Automation Mode | A-Claude (xai-roadmap-loop W2e parallel-Agent mode; siblings: #8 board-views, #9 board-workspaces) |
-| Executor | claude-opus-4-7 — feature-auto-build |
+| Executor | claude-opus-4-7 — feature-verify |
 | Updated | 2026-05-23 |
 | Dispatched By | xai-roadmap-loop (W2e parallel dispatch, manifest row #11) |
 | Roadmap Row | docs/workflow/roadmap/xai-web-console.md row #11 |
@@ -200,4 +200,69 @@ Sanity-checked: row #10 source code (types.ts, index.ts, registration.tsx) read 
 | 2026-05-23 | claude-opus-4-7 — feature-review | APPROVED. All 5 review gates PASS (discovery/design/contract/phase/arch-risk). 0 blockers. Sub-finding on DEFAULT_DASH_ORDER 8-vs-10 id mismatch resolved as intended sanitizeOrder reconciliation pathway — no registry edit. Updated design.md §5 + api.md §S5 with explicit reconciliation note. | — | feature-auto-build |
 | 2026-05-23 | claude-opus-4-7 — feature-auto-build | P1: package skeleton + ClockWidget (4 styles + 12-tz + analog SVG 48 minor + 12 major + 12 numerals) + 3 mini stats + helpers (Donut/PomoDots/Icon/cityLibrary) + i18n delta clock+timezone keys. 46 tests green. ClockStyle widened in storage registry from 3 to 4 (owner edit). Default flipped from "analog" to "classic". | 9a78d17 | feature-build (P2) |
 | 2026-05-23 | claude-opus-4-7 — feature-auto-build | P2: MiniCalWidget (Monday-first month, goTo via ctx, data-no-drag head/foot, mc-grid click navigates) + WorldClocks (list/analog/grid + 12-city library + add/remove/persistence + last-zone guard + unknown-id filter) + WeatherWidget (fixture-driven current + 5-day forecast) + StickiesWidget (3-note rotated stack) + TzClock helper + fixtures (WEATHER/STICKIES/MAILS/UPCOMING/CAL_EVENTS) + i18n delta mini_cal + world_clocks keys. 37 new tests (83 total). | b4bcf22 | feature-build (P3) |
-| 2026-05-23 | claude-opus-4-7 — feature-auto-build | P3: MailWidget (unread red dot + count badge) + UpcomingWidget (4-event list) + host wiring (Edit `packages/xai-web-dashboard-grid/src/registration.tsx` swapping EMPTY_WIDGETS → dashboardWidgetRegistrations + `packages/xai-web-dashboard-grid/package.json` adding workspace dep + `apps/web/package.json` adding workspace dep) + slotIntegration test + updated row #10's registration.test.tsx to assert 10 widget shells render instead of empty state. 10 new tests (93 total widgets pkg + 104 total dashboard-grid pkg). apps/web 54/54 + vite build 721 modules green. dev_log flipped to READY_FOR_VERIFY. | (this commit) | feature-verify |
+| 2026-05-23 | claude-opus-4-7 — feature-auto-build | P3: MailWidget (unread red dot + count badge) + UpcomingWidget (4-event list) + host wiring (Edit `packages/xai-web-dashboard-grid/src/registration.tsx` swapping EMPTY_WIDGETS → dashboardWidgetRegistrations + `packages/xai-web-dashboard-grid/package.json` adding workspace dep + `apps/web/package.json` adding workspace dep) + slotIntegration test + updated row #10's registration.test.tsx to assert 10 widget shells render instead of empty state. 10 new tests (93 total widgets pkg + 104 total dashboard-grid pkg). apps/web 54/54 + vite build 721 modules green. dev_log flipped to READY_FOR_VERIFY. | 95bbdc8 | feature-verify |
+| 2026-05-23 | claude-opus-4-7 — feature-verify | **PASS** — 15/15 verify gates clean. 93/93 widgets pkg + 104/104 dashboard-grid pkg + 70/70 storage pkg + 54/54 web tests + vite build 721 modules / 83.69KB css / 905KB main green. All 15 frozen assumptions honored (§1.1 design.md). All 10 widget ACs covered in 19 test files. Cross-package host wiring (registration.tsx + dashboard-grid/package.json + apps/web/package.json) confirmed clean — sibling-concurrency safe (siblings #8/#9 work disjoint). ClockStyle widening kept storage tests green. Residual: visual FLIP timing + iOS touch + reload-persist round-trip queued for cross-vendor manual smoke (Codex primary / Cursor fallback). Pre-existing TokensSmokePage lint warnings noted as non-blockers (introduced by W1.P3 commit 6c556e6; documented in row #10 verify too). Status flipped to READY_TO_SHIP. | — | ship |
+
+## Verify Report (2026-05-23)
+
+**Verdict**: PASS (15/15 gates) — READY_TO_SHIP.
+
+### Gate-by-gate
+
+| # | Gate | Result | Evidence |
+|---|---|---|---|
+| 1 | Commits scoped per-phase, single intent | PASS | 3 commits (9a78d17 / b4bcf22 / 95bbdc8) — each commits exactly the files documented in its dev_log Files-written list; no foreign content (siblings #8/#9 confirmed unstaged in each commit's diff). |
+| 2 | Commit messages per docs/conventions/COMMIT_CONVENTION.md | PASS | All 3 carry `type(scope): summary` + Why / What / Scope / Risk / Docs / Tests sections. |
+| 3 | design.md §1.1 frozen assumptions (15 items) | PASS | All 15 honored: pkg name (#1), single-export surface (#2), 10 prototype ids (#3), span mapping (#4), 3 persistence keys (#5), 4 clock styles (#6), analog SVG 60+12+12 (#7), 12-city library no-DST (#8), 3 world-clocks views + 4 default zones (#9), MiniCal goTo (#10), co-located fixtures (#11), dashboard.widgets.* i18n sub-namespace (#12), data-no-drag markers (#13), 3-commit plan (#14), zero new external deps (#15). |
+| 4 | Public surface matches api.md §S1 | PASS | src/index.ts re-exports only `dashboardWidgetRegistrations`; AC-PKG-4 (index-barrel.test.ts) asserts `Object.keys(Barrel).sort()` equals `["dashboardWidgetRegistrations"]`. |
+| 5 | 10-widget shape per §S3 | PASS | AC-REG-1..5 green; ids in `[clock, stat-tasks, stat-streak, stat-pomos, weather, mini-cal, timezones, stickies, mail, upcoming]`; spans in `[w-clock, w-stat×3, w-weather, w-mini-cal, w-timezones, w-stickies, w-mail, w-upcoming]`; each has bilingual ariaLabel; each render returns ReactNode without throwing. |
+| 6 | Analog clock 60+12+12 alignment (DESIGN.md §4.4 hard constraint) | PASS | AC-ANALOG-1..5 green — viewBox `0 0 100 100`, 48 minor ticks (60 minus 12 multiples of 5), 12 major ticks, 12 numerals `[12,1..11]` rendered as `<text data-numeral>`. Hour hand rotation verified at 03:00:00. |
+| 7 | ClockWidget 4 styles + 12-tz + persistence | PASS | AC-CLOCK-1..8 green — classic/split/minimal/analog all render distinct trees; `xai_clock_style` round-trips; popover lists Local + 12 cities; Shanghai +8 UTC math correct; invalid stored style falls back to "classic"; scrim close path. |
+| 8 | MiniCal goTo via event bus (hard constraint) | PASS | AC-MINICAL-6/7 — clicking body or footer link calls `ctx.goTo("calendar")`; AC-MINICAL-8 — clicking prev/next nav does NOT call goTo (data-no-drag + stopPropagation); row #10's DashboardSlotHost (registration.tsx) translates ctx.goTo to `emitWebEvent("web:shell:module-change", { moduleId: "calendar", source: "mini-cal" })` — no direct event bus import from any widget. |
+| 9 | WorldClocks 3 views + 12-city + persistence + last-zone guard | PASS | AC-WORLDCLOCKS-1..9 green — default 4 zones, view toggle works, picker shows 8 unselected cities, add/remove updates `xai_zones`, removing last zone blocked, unknown ids filtered. |
+| 10 | Drag-exclude discipline per api.md §S4 | PASS | AC-CLOCK-6 (clock-toolbar), AC-MINICAL-9 (mc-head + mc-foot), AC-WORLDCLOCKS-6 (tz-view-toggle + tz-picker) all carry data-no-drag; remove buttons are native `<button>` (auto-excluded). |
+| 11 | i18n delta scoped to dashboard.widgets.* | PASS | New keys live under existing dashboard: block at i18n.ts en lines 170-189 / zh lines 380-399 — sub-namespace `widgets.{clock, mini_cal, world_clocks}`. No collision with existing dashboard.* keys (good_morning / tasks_done / streak / pomos / weather / timezones / sticky_notes / mail / upcoming / etc.); `pnpm --filter @repo/plugin-web-tokens check-types` clean. |
+| 12 | ClockStyle widening + storage tests still green | PASS | registry.ts line 79: `ClockStyle = "classic" \| "split" \| "minimal" \| "analog"` (was 3 styles). Default switched to "classic". Storage owner string already says `xai-web-dashboard-widgets` → row #11 IS the authorized owner. `pnpm --filter @repo/plugin-web-storage test` 70/70 green (including AC-TYPE-3 which asserts `usePref('xai_clock_style')` returns `[ClockStyle, ...]`). |
+| 13 | Cross-package host wiring (P3) | PASS | `packages/xai-web-dashboard-grid/src/registration.tsx` swaps `widgets={EMPTY_WIDGETS}` → `widgets={dashboardWidgetRegistrations}`; row #10's `registration.test.tsx` updated to assert `.dash-empty == null` AND `.widget-shell` count === 10; `pnpm --filter @repo/plugin-web-dashboard-grid test` 104/104 green. |
+| 14 | apps/web build green | PASS | `pnpm --filter @repo/web build` → 721 modules transformed (was 715 in row #10's verify), 83.69KB css (was 64KB; +19.69KB from widget styles), 905.69KB main, 2.48s. No new bundler warnings introduced by row #11. |
+| 15 | Sibling concurrency safe | PASS | My 3 commits' file lists confirmed disjoint from siblings #8 (board-views) + #9 (board-workspaces). Shared anchors used: (a) `packages/plugin-web-tokens/src/i18n.ts` — additive sub-block under existing dashboard: block; (b) `packages/plugin-web-storage/src/internal/registry.ts` — single-line ClockStyle widening + default flip; (c) `apps/web/package.json` — single line dep insert; (d) `packages/xai-web-dashboard-grid/{src/registration.tsx,src/__tests__/registration.test.tsx,package.json}` — cross-package owner edits. All landed cleanly without git-lock collision (no retry triggered). |
+
+### Test totals
+
+- @repo/plugin-web-dashboard-widgets: **93 / 93** (19 test files)
+- @repo/plugin-web-dashboard-grid (unchanged scope + 1 updated test): **104 / 104** (13 test files)
+- @repo/plugin-web-storage (after ClockStyle widening): **70 / 70** (8 test files)
+- @repo/plugin-web-tokens check-types: clean
+- @repo/web: **54 / 54** (14 test files)
+- @repo/web build: 721 modules, 2.48s
+- All lints green (PRE-EXISTING TokensSmokePage warnings noted in §16 — not introduced by row #11; same as row #10 verify gate 12).
+
+### Residual risks (acceptable at ship-time, queued for cross-vendor manual smoke)
+
+| ID | Risk | Mitigation status |
+|---|---|---|
+| R1 | Analog clock alignment drift on different fonts/scales | Unit test asserts 48 + 12 + 12 + viewBox; visual confirmation deferred to cross-vendor §6 smoke. |
+| R2 | Static UTC offsets vs DST | Documented intentional v1 limitation in api.md §S10; cross-vendor smoke will surface any DST surprise visually. |
+| R3 | MiniCal click-vs-drag (mc-grid click intercepted by row #10's pointerdown) | Unit tested via 4 ACs (AC-MINICAL-6/7/8/9); visual confirmation in Safari/Chrome/Firefox in §6.4 cross-vendor smoke. |
+| R4 | WorldClocks picker pointer event leaking to drag | Unit tested AC-WORLDCLOCKS-6; visual confirm in §6.5. |
+| R7 | Mock fixtures stale | Documented in fixtures.ts header comment + DESIGN.md anchor. |
+| R8 | Sibling concurrency safe — confirmed clean at ship-time | All 3 commits inspected; sibling files unstaged in each. |
+| R11 | Cross-package commit on row #10 — confirmed clean | P3 commit includes only the single-line registration.tsx swap + 1 dep line + 1 updated test assertion; row #10's 104/104 still green. |
+
+### Cross-vendor verify scope (queued, manifest header says Codex primary / Cursor fallback)
+
+Per test.md §6: open `/app/dashboard` in Safari 17+ / Chrome / Firefox and visually verify:
+1. All 10 widgets render (no empty state)
+2. ClockWidget 4 styles + 12-tz picker + reload-persists
+3. Analog clock visual alignment (60 + 12 + 12 cleanly rendered)
+4. MiniCal day-click navigates to `/app/calendar`; prev/next month nav local-only
+5. WorldClocks toggle list/analog/grid; add/remove; reload-persists
+6. Stat widgets show donut/flame/dots
+7. Drag-to-reorder works via row #10's FLIP; `xai_dash_order` round-trips with the sanitize-on-mount 8→10 reconciliation
+8. Light/Dark theme inversion on widget bodies
+9. iOS touch drag (Safari)
+10. DevTools Application tab shows `xai_clock_style`, `xai_clock_tz`, `xai_zones`, `xai_dash_order` keys after interaction.
+
+### §16 Lint exclusion footnote
+
+`pnpm --filter @repo/web lint` reports 3 PRE-EXISTING warnings in `apps/web/src/pages/TokensSmokePage.tsx` (lines 71 + 73 — turbo undeclared `DEV` env var + react-hooks/rules-of-hooks conditional `useState`). These were introduced in W1.P3 commit `6c556e6` and are NOT my changes (`git diff HEAD apps/web/src/pages/TokensSmokePage.tsx` returns empty). Row #10's verify (gate 12) documented the same status. Treating as pre-existing technical debt, NOT a row #11 blocker — would be cleaned up by a dedicated TokensSmokePage refactor commit outside this row's scope.
