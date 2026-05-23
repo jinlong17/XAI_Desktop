@@ -12,6 +12,8 @@
  */
 import { useCallback, useEffect, useState } from "react";
 
+import { emitWebEvent } from "@repo/xai-web-event-bus";
+
 import "./styles.css";
 
 import { DashboardGrid } from "./DashboardGrid.js";
@@ -27,10 +29,14 @@ export function DashboardModule({ lang, widgets, goTo }: DashboardModuleProps) {
     return () => window.clearInterval(id);
   }, []);
 
-  // P3 wires this to emitWebEvent("web:dashboard:add-widget-clicked", ...).
-  // For now (still P2 land) it is a no-op so both callers exercise the path.
-  const handleAddWidget = useCallback(() => {
-    /* P3 wires this to emitWebEvent("web:dashboard:add-widget-clicked", ...) */
+  // Emit web:dashboard:add-widget-clicked on every Add-widget interaction;
+  // the source tells row #11 which entry point fired.
+  const handleAddFromHeader = useCallback(() => {
+    emitWebEvent("web:dashboard:add-widget-clicked", { source: "add-widget-button" });
+  }, []);
+
+  const handleAddFromEmpty = useCallback(() => {
+    emitWebEvent("web:dashboard:add-widget-clicked", { source: "empty-state-cta" });
   }, []);
 
   // Default goTo is a no-op when caller omitted; registration.tsx always
@@ -44,9 +50,9 @@ export function DashboardModule({ lang, widgets, goTo }: DashboardModuleProps) {
 
   return (
     <div className="module module-dashboard">
-      <DashHeader lang={lang} now={now} onAddWidget={handleAddWidget} />
+      <DashHeader lang={lang} now={now} onAddWidget={handleAddFromHeader} />
       {widgets.length === 0 ? (
-        <EmptyState lang={lang} onAddWidget={handleAddWidget} />
+        <EmptyState lang={lang} onAddWidget={handleAddFromEmpty} />
       ) : (
         <DashboardGrid widgets={widgets} lang={lang} now={now} goTo={goToCb} />
       )}

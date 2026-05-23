@@ -7,12 +7,12 @@
 | Workflow | FEATURE_DEV |
 | Target | xai-web-dashboard-grid |
 | Title | Web Console — Dashboard grid container (port `module-dashboard.jsx` grid + DnD wrapper section ONLY) |
-| Current Phase | FEATURE_REVIEW |
-| Status | APPROVED |
-| Suggested Next | feature-build (manual) · feature-auto-build (auto) · feature-dev-loop (loop) |
+| Current Phase | FEATURE_BUILD |
+| Status | READY_FOR_VERIFY |
+| Suggested Next | feature-verify |
 | Verify Cross-vendor | yes (Safari 17+ / Chrome / Firefox — empty state + Add-widget emit + lang switch + 3-widget render + FLIP drag visual + persistence reload + responsive breakpoints + touch + a11y + theme + storage round-trip — see test.md §6) |
 | Automation Mode | A-Claude (xai-roadmap-loop W2d parallel-Agent mode; siblings: #7 xai-web-board-core + #20 xai-web-statistics) |
-| Executor | claude-opus-4-7 — feature-review |
+| Executor | claude-opus-4-7 — feature-auto-build (P3 done) |
 | Updated | 2026-05-23 |
 | Dispatched By | xai-roadmap-loop (W2d parallel dispatch, manifest row #10) |
 | Roadmap Row | docs/workflow/roadmap/xai-web-console.md row #10 (W2 Module — Dashboard grid container) |
@@ -49,8 +49,8 @@ Selected **Vite+TS package at `packages/xai-web-dashboard-grid/` named `@repo/pl
 | Phase | Status | Commit |
 |---|---|---|
 | P1 — Package skeleton + DashboardModule render + EmptyState + DashHeader + i18n delta + EventMap declaration + shell wiring | DONE | 2d9655f |
-| P2 — FLIP DnD: WidgetShell + DashboardGrid + WidgetGhost + useFlipReorder + useGridDrag + useDashOrder + sanitizeOrder | IN_PROGRESS | — |
-| P3 — Event emission wiring + cross-row contract docs + final polish | PENDING | — |
+| P2 — FLIP DnD: WidgetShell + DashboardGrid + WidgetGhost + useFlipReorder + useGridDrag + useDashOrder + sanitizeOrder | DONE | 7691f97 |
+| P3 — Event emission wiring + cross-row contract docs + final polish | DONE | (this commit) |
 
 ## Phase Plan (3 phases)
 
@@ -202,3 +202,6 @@ Sanity-checked: `xai_dash_order` is pre-registered in `@repo/plugin-web-storage`
 |---|---|---|---|---|
 | 2026-05-23 | claude-opus-4-7 — feature-plan | Fresh planning artifacts: discovery review + design.md + api.md + test.md + dev_log.md created. Frozen 15 assumptions (Axis A1/B1/C1/D1/E1/F1/G1/H1). 3-phase plan. Sibling W2d concurrency policy applied. Confirmed `xai_dash_order` already pre-registered in `@repo/plugin-web-storage` (row #3) — read-only consumer, no registry edits. Confirmed i18n delta is 3 keys × 2 langs (existing dashboard.add_widget / good_morning / good_afternoon / good_evening reused). | — | feature-review |
 | 2026-05-23 | claude-opus-4-7 — feature-review | APPROVED. All 5 review gates passed (discovery / design / contract / phase / arch-risk). 0 blockers, 0 recommendations. Stability contract for row #11 consumption documented. | — | feature-auto-build |
+| 2026-05-23 | claude-opus-4-7 — feature-auto-build | P1: package skeleton + DashboardModule render path + EmptyState + DashHeader + i18n delta + EventMap declaration + shell wiring + 48 tests. 9 test files green. Lint clean. Sibling-safe shared-anchor edits (apps/web/package.json, shellRegistrations.tsx, events.ts, i18n.ts) cleanly committed without contamination. | 2d9655f | feature-build (P2) |
+| 2026-05-23 | claude-opus-4-7 — feature-auto-build | P2: WidgetShell + DashboardGrid + WidgetGhost components; useFlipReorder + useGridDrag + useDashOrder + sanitizeOrder internal hooks. 50 new tests (98/98 total). PointerEvent polyfill in setup.ts (jsdom lacks it). Lint + check-types clean. | 7691f97 | feature-build (P3) |
+| 2026-05-23 | claude-opus-4-7 — feature-auto-build | P3: emit `web:dashboard:add-widget-clicked` from header button (source=add-widget-button) + empty-state CTA (source=empty-state-cta); verify goTo path (web:shell:module-change with source=mini-cal). 6 new tests (104/104 total). dev_log flipped to READY_FOR_VERIFY. | (this commit) | feature-verify |
