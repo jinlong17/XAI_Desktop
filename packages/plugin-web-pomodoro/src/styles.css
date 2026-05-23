@@ -1,0 +1,107 @@
+/**
+ * Pomodoro module styles.
+ *
+ * Ported from web design/layout.css lines 657–744 (pomodoro block)
+ * plus the responsive media query for .module-pomo.
+ *
+ * CSS tokens (--bg-panel, --border-1, --r-pill, --accent, --accent-ink,
+ * --accent-soft, --bg-hover, --fs-sm, --fs-md, --fs-xs, --text-1,
+ * --text-2, --text-3, --r-sm, --dur-fast, --ease-out) are provided by
+ * @repo/plugin-web-tokens via the host's global tokens.css side-effect import.
+ *
+ * Design: packages/xai-web-pomodoro/docs/design.md §12 (Frozen Assumption 12)
+ */
+
+.module-pomo {
+  display: grid;
+  grid-template-columns: 1fr minmax(320px, 360px);
+  gap: 12px;
+  padding: 14px 20px 20px;
+}
+.pomo-main {
+  display: flex; flex-direction: column;
+  background: transparent;
+  min-height: 0;
+}
+.pomo-stage {
+  flex: 1;
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  gap: 32px;
+  padding: 20px;
+}
+.focus-pill {
+  display: inline-flex; align-items: center; gap: 4px;
+  height: 26px; padding: 0 12px;
+  border-radius: var(--r-pill);
+  background: var(--bg-panel);
+  border: 1px solid var(--border-1);
+  font-size: var(--fs-sm);
+  color: var(--text-2);
+}
+.timer-ring {
+  position: relative;
+  width: 320px; height: 320px;
+}
+.ring-svg { width: 100%; height: 100%; }
+.timer-inner {
+  position: absolute; inset: 0;
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  gap: 6px;
+}
+.timer-num {
+  font-size: 64px;
+  font-weight: 400;
+  letter-spacing: -0.02em;
+  color: var(--text-1);
+  font-variant-numeric: tabular-nums;
+}
+.timer-state {
+  font-size: var(--fs-md);
+  color: var(--text-3);
+}
+.pomo-actions { display: flex; flex-direction: column; gap: 10px; align-items: stretch; }
+.pomo-actions .btn { width: 160px; height: 38px; border-radius: var(--r-pill); }
+.pomo-actions .btn.ghost {
+  background: transparent;
+  border: 1.5px solid var(--accent);
+  color: var(--accent-ink);
+}
+
+/* Pomo side */
+.pomo-side {
+  display: flex; flex-direction: column;
+  gap: 14px;
+  overflow-y: auto;
+  padding-right: 2px;
+}
+.side-h { margin: 0; font-size: var(--fs-md); font-weight: 700; color: var(--text-1); }
+.pomo-stats { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+.pomo-stat { padding: 12px 14px; }
+.ps-label { font-size: var(--fs-xs); color: var(--text-3); }
+.ps-val { margin-top: 4px; font-size: 22px; font-weight: 700; letter-spacing: -0.02em; }
+.ps-unit { font-size: var(--fs-sm); margin-left: 2px; color: var(--text-3); font-weight: 500; }
+.record-head { display: flex; align-items: center; gap: 4px; margin-top: 6px; }
+.record-list { display: flex; flex-direction: column; gap: 14px; }
+.record-group { display: flex; flex-direction: column; gap: 4px; }
+.record-date { font-size: var(--fs-xs); color: var(--text-3); padding: 4px 4px 2px; }
+.record-row {
+  display: flex; align-items: center; gap: 8px;
+  padding: 6px 10px;
+  border-radius: var(--r-sm);
+  transition: background var(--dur-fast) var(--ease-out);
+}
+.record-row:hover { background: var(--bg-hover); }
+.rec-dot {
+  width: 18px; height: 18px;
+  border-radius: 999px;
+  background: var(--accent-soft);
+  color: var(--accent-ink);
+  display: inline-flex; align-items: center; justify-content: center;
+}
+.rec-time { font-size: var(--fs-sm); color: var(--text-2); }
+.rec-dur  { font-size: var(--fs-xs); color: var(--text-3); }
+
+/* Responsive — collapse to single column on narrow viewports */
+@media (max-width: 1000px) {
+  .module-pomo { grid-template-columns: 1fr; }
+}
