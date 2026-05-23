@@ -1,0 +1,7 @@
+/*
+ * @repo/plugin-web-board-workspaces — component styles.
+ *
+ * P1 lands an empty file (placeholder so package.json sideEffects resolves).
+ * P2 populates the BoardSwitcher / BoardCreator / StatusOverviewBanner /
+ * InboxPanel / PlannerPanel rules + scoped --planner-color-* custom properties.
+ */
