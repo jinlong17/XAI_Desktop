@@ -23,7 +23,6 @@ import { HabitDetail } from "./HabitDetail.js";
 import { usePersistedHabits } from "./internal/usePersistedHabits.js";
 import { toggleCheckIn } from "./internal/toggle.js";
 import { emitCheckInRecorded } from "./internal/emit.js";
-import { utcDateKey } from "./internal/dateKeys.js";
 import { createId } from "./internal/createId.js";
 import { AddHabitDialog } from "./internal/AddHabitDialog.js";
 

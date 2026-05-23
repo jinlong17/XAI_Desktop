@@ -29,7 +29,8 @@ describe("isHabit", () => {
   });
 
   it("rejects missing emoji", () => {
-    const { emoji: _e, ...rest } = validHabit;
+    const rest = { ...validHabit };
+    delete (rest as { emoji?: string }).emoji;
     expect(isHabit(rest)).toBe(false);
   });
 });
