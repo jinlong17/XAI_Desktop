@@ -179,6 +179,35 @@ Format: `type(scope): summary` + body with Why / What / Scope / Risk / Docs / Te
 - Background: `.agents/project_background.md`
 - Generation: `./scripts/setup_subagents_v2.sh`
 
+### Agent / Skill Tracking Contract
+
+Project-level agent, skill, and workflow settings are source-controlled project
+state, not local machine state. Any change that affects how Claude, Codex, Cursor,
+Workflow V2, or project skills behave MUST be committed and pushed so a fresh
+clone on another computer has the same behavior.
+
+Track and keep synchronized at minimum:
+
+- `.agents/` — source templates and project background
+- `.claude/agents/`, `.claude/agents-v2/`, `.claude/skills/`
+- `.codex/agents/`, `.codex/skills/`, `.codex/config.toml`
+- `.cursor/agents/`, `.cursor/rules/`
+- `.teams/skills/`
+- `docs/workflow/_portable/`
+- `CLAUDE.md`, `AGENTS.md`, `.cursor/rules/handoff.mdc`
+
+Rules:
+
+- Do not leave project agent/skill changes only in `~/.claude`, `~/.codex`, a
+  local plugin cache, or any other untracked machine-local directory.
+- Prefer changing `.agents/templates/` and `docs/workflow/_portable/` first,
+  then regenerate platform outputs when applicable.
+- Before finishing an agent/skill change, run a tracking audit such as:
+  `git ls-files -o --exclude-standard .agents .claude .codex .cursor .teams docs/workflow/_portable AGENTS.md CLAUDE.md`
+  and resolve any project-level untracked files intentionally.
+- After committing, push the branch when the change is meant to be available on
+  another machine.
+
 ### Platform-specific generation
 
 The script reads extended frontmatter fields from templates and generates platform-compliant configs:

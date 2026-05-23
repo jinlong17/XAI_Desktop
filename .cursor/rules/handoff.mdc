@@ -62,6 +62,31 @@ This rule file provides a second enforcement layer at the Cursor Rules level,
 ensuring the Handoff block is always the final output regardless of how
 the subagent was invoked.
 
+## V2.6 Agent / skill tracking
+
+Project-level agent, skill, and workflow settings are repository state. Any
+change to Cursor agents/rules, Claude agents/skills, Codex agents/skills, V2
+templates, or project skills must be Git-tracked, committed, and pushed when it
+should work on another computer.
+
+Tracked sync surface:
+
+- `.agents/`
+- `.claude/agents/`, `.claude/agents-v2/`, `.claude/skills/`
+- `.codex/agents/`, `.codex/skills/`, `.codex/config.toml`
+- `.cursor/agents/`, `.cursor/rules/`
+- `.teams/skills/`
+- `docs/workflow/_portable/`
+- `CLAUDE.md`, `AGENTS.md`, `.cursor/rules/handoff.mdc`
+
+Do not leave project behavior changes only in `~/.cursor`, `~/.claude`,
+`~/.codex`, plugin caches, or any other untracked local-only path. Before
+finishing, audit with:
+
+```bash
+git ls-files -o --exclude-standard .agents .claude .codex .cursor .teams docs/workflow/_portable AGENTS.md CLAUDE.md
+```
+
 **Cross-platform sync:** This rule corresponds to:
 - `CLAUDE.md` §Workflow V2 Subagent Output Display (Claude Code)
 - `AGENTS.md` §1 (Codex)

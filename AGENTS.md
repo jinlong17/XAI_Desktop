@@ -70,6 +70,32 @@ Each `.toml` agent includes `sandbox_mode` sourced from the template's
 - `read-only`: review, verify, loop agents — cannot write files
 - `workspace-write`: plan, build, fix, diagnose, ship agents — can write
 
+### 2.4 Agent / skill tracking
+
+Project-level agent, skill, and workflow settings are repository state and must
+be Git-tracked, committed, and pushed when they should work on another machine.
+Do not rely on local-only copies under `~/.codex`, `~/.claude`, plugin caches,
+or generated files that were never committed.
+
+The tracked sync surface includes at least:
+
+- `.agents/`
+- `.claude/agents/`, `.claude/agents-v2/`, `.claude/skills/`
+- `.codex/agents/`, `.codex/skills/`, `.codex/config.toml`
+- `.cursor/agents/`, `.cursor/rules/`
+- `.teams/skills/`
+- `docs/workflow/_portable/`
+- `CLAUDE.md`, `AGENTS.md`, `.cursor/rules/handoff.mdc`
+
+Before finishing a workflow/agent/skill change, audit for project-level
+untracked files:
+
+```bash
+git ls-files -o --exclude-standard .agents .claude .codex .cursor .teams docs/workflow/_portable AGENTS.md CLAUDE.md
+```
+
+If the change is intended to apply on another computer, push it after commit.
+
 ---
 
 ## 3. Cross-Platform Rule Sync
