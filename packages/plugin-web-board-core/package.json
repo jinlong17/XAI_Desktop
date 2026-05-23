@@ -1,0 +1,44 @@
+{
+  "name": "@repo/plugin-web-board-core",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "description": "Board (Kanban) core module for XAI Web Console — canonical Board/Card/List schema (DESIGN.md §9.3) + Kanban view + 10-color list-color palette (tokens.css OKLCH; no hard-coded hex) + native HTML5 cross-list DnD with atomic-move + in-row add-card + add-list composers + bilingual rendering + persistence via usePref on xai_boards_v2 + xai_active_board. Foundation layer for downstream rows xai-web-board-views (#8) and xai-web-board-workspaces (#9).",
+  "sideEffects": ["./src/styles.css", "./src/index.ts"],
+  "exports": {
+    ".": {
+      "types": "./src/index.ts",
+      "default": "./src/index.ts"
+    }
+  },
+  "scripts": {
+    "lint": "eslint --max-warnings 0 .",
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "test:coverage": "vitest run --coverage"
+  },
+  "peerDependencies": {
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0"
+  },
+  "dependencies": {
+    "@repo/core": "workspace:*",
+    "@repo/plugin-web-tokens": "workspace:*",
+    "@repo/plugin-web-storage": "workspace:*",
+    "@repo/xai-web-shell": "workspace:*"
+  },
+  "devDependencies": {
+    "@repo/eslint-config": "workspace:*",
+    "@repo/typescript-config": "workspace:*",
+    "@testing-library/jest-dom": "^6.0.0",
+    "@testing-library/react": "^16.0.0",
+    "@types/react": "^19.0.0",
+    "@types/react-dom": "^19.0.0",
+    "jsdom": "^26.0.0",
+    "react": "^19.2.0",
+    "react-dom": "^19.2.0",
+    "typescript": "5.9.2",
+    "vitest": "^3.2.1"
+  }
+}
