@@ -11,6 +11,18 @@ if (typeof globalThis.requestAnimationFrame !== "function") {
   }) as typeof globalThis.cancelAnimationFrame;
 }
 
+// jsdom does not implement scrollIntoView — provide a no-op so the bottom-
+// sentinel scroll effect doesn't throw.
+if (!("scrollIntoView" in HTMLElement.prototype)) {
+  Object.defineProperty(HTMLElement.prototype, "scrollIntoView", {
+    value: function scrollIntoViewStub() {
+      /* no-op */
+    },
+    writable: true,
+    configurable: true,
+  });
+}
+
 afterEach(() => {
   localStorage.clear();
   vi.useRealTimers();
