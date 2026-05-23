@@ -41,6 +41,7 @@
     "@repo/plugin-web-meditation": "workspace:*",
     "@repo/plugin-web-calendar": "workspace:*",
     "@repo/plugin-web-tasks": "workspace:*",
+    "@repo/plugin-web-statistics": "workspace:*",
     "@repo/plugin-console": "workspace:^",
     "@repo/plugin-productivity": "workspace:^",
     "@repo/web-auth-device-session": "workspace:*",

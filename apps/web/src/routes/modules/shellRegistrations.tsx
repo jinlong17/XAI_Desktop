@@ -33,6 +33,8 @@ import { calendarSlotRegistration } from "@repo/plugin-web-calendar";
 import { dashboardGridSlotRegistration } from "@repo/plugin-web-dashboard-grid";
 // xai-web-board-core row #7
 import { boardCoreWebModuleRegistration } from "@repo/plugin-web-board-core";
+// xai-web-statistics row #20
+import { statisticsWebModuleRegistration } from "@repo/plugin-web-statistics";
 
 function placeholder(
   moduleId: string,
@@ -68,7 +70,7 @@ export const webShellModuleRegistrations: WebModuleSlotRegistration[] = [
   habitsSlotRegistration,  // xai-web-habits row #15 (railOrder 8)
   meditationSlotRegistration,  // xai-web-meditation row #16 (railOrder 9)
   countdownWebModuleRegistration,
-  placeholder("statistics", "Statistics", "chart",     11),
+  statisticsWebModuleRegistration,  // xai-web-statistics row #20 (railOrder 11)
   // Settings — not in rail (showInRail: false)
   placeholder("settings",   "Settings",   "sliders",   99, false),
 ];

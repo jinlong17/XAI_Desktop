@@ -209,6 +209,9 @@ importers:
       '@repo/plugin-web-pomodoro':
         specifier: workspace:*
         version: link:../../packages/plugin-web-pomodoro
+      '@repo/plugin-web-statistics':
+        specifier: workspace:*
+        version: link:../../packages/plugin-web-statistics
       '@repo/plugin-web-storage':
         specifier: workspace:*
         version: link:../../packages/plugin-web-storage

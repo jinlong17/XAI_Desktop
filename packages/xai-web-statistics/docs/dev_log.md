@@ -7,13 +7,13 @@
 | Workflow | FEATURE_DEV |
 | Target | xai-web-statistics |
 | Title | Web Console Statistics Module — read-only aggregator over `xai_pomodoro_sessions` + `xai_habits_state` + `xai_pref_week_start`; range tabs (本周/本月/全部); 4 KPI cards with trend %; focus-duration line chart + shaded area; 24-hour productivity bars + peak auto-highlight + glow; emoji-grouped habit ring chart; top-5 habit ranking + streak flame; deterministic half-year focus heatmap (26w × 7d) with fixed 0/15/45/90/91+ minute thresholds; bilingual weekly-insight callout via typed `insightCopy(lang, vars)` pure function. NO `@repo/core` edits; NO event emit; NO new storage keys. |
-| Current Phase | FEATURE_REVIEW |
-| Status | APPROVED |
-| Suggested Next | feature-build (or feature-auto-build for the full pass) |
+| Current Phase | FEATURE_BUILD |
+| Status | READY_FOR_VERIFY |
+| Suggested Next | feature-verify |
 | Verify Cross-vendor | queued for ship-time (Codex/Cursor per W3 manifest header — ring chart `stroke-dasharray` parity + heatmap `color-mix` + reduced-motion bar transitions) |
 | Automation Mode | A-Claude (per roadmap default; xai-roadmap-loop W3 dispatch concurrent with W2d batch siblings #7 board-core + #10 dashboard-grid) |
-| Executor | Claude Opus 4.7 1M (feature-review, 2026-05-23) |
-| Updated | 2026-05-23 11:30 |
+| Executor | Claude Opus 4.7 1M (feature-auto-build, 2026-05-23) |
+| Updated | 2026-05-23 14:57 |
 | Dispatched By | xai-roadmap-loop (W3 parallel dispatch alongside W2d) |
 | Roadmap Row | docs/workflow/roadmap/xai-web-console.md row #20 (W3 · Aggregator) |
 | ADR Anchor | docs/adr/0007-xai-web-console-build-form.md §S4 (port map "module-statistics.jsx" → `packages/plugin-web-statistics/`) + §S5 (JSX→TSX rules) + §S6 (Vite SPA) + §S7 (no `web:statistics:*` channel — read-only aggregator) + §S8 (no new storage keys — reads `xai_pomodoro_sessions` / `xai_habits_state` / `xai_pref_week_start`) |
@@ -220,3 +220,36 @@ Reviewed against the five gates (discovery quality, design alignment, contract c
 - Status flipped to APPROVED. Suggested Next = feature-build (or feature-auto-build for the full pass).
 - Commits: — (review writes docs only).
 - Next step: `feature-auto-build` — execute all 3 phases per the Phase Plan, each ending with one green commit.
+
+### 2026-05-23 14:48 — Claude Opus 4.7 1M — feature-auto-build P1 (pure layer)
+
+- Scaffolded `packages/plugin-web-statistics/` (package.json, tsconfig, manifest, vitest config/setup, eslint).
+- Wrote public types in `src/types.ts` + 10 pure modules in `src/internal/` (predicates, trendPercent, rangeWindow, aggregators, heatmapCells, insightCopy, colors, icons).
+- Wrote 8 pure-layer test files (81 tests) covering V/T/W/A/H/I families.
+- Lint + typecheck + test gates all green (0 errors, 0 warnings, --max-warnings 0).
+- **Concurrency contamination note:** sibling W2d agent (board-core P2) ran `git add -A` between my `git add` and `git commit`. Result: my entire P1 file set landed inside commit **8226aae** (`feat(plugin-web-board-core): P2 components + DnD + persistence helpers + CSS + tests (W2d row #7)`) instead of in a dedicated `feat(plugin-web-statistics): P1 …` commit. Recovery option `git reset --soft HEAD~1` would destroy sibling work; pragmatic remedy chosen = leave history as-is, document the cross-attribution here, proceed to P2 with single-purpose `git add <explicit paths>` + retry-on-lock.
+- Commits attributable to this row's P1 (despite cross-attribution): **8226aae** (carries P1 file content alongside board-core P2).
+- Next step: continue to P2 components + composition.
+
+### 2026-05-23 14:54 — Claude Opus 4.7 1M — feature-auto-build P2 (components + composition + CSS)
+
+- Wrote 8 leaf components (KpiCard, LineChart, BarChart, HourBar, RingChart, HabitRank, Heatmap, InsightCallout) + `StatisticsModule.tsx` top-level composition.
+- Ported Statistics CSS rules verbatim from `web design/layout.css` lines 3669..3823 into `src/styles.css`, scoped under `.module-stats`, plus a `prefers-reduced-motion` override.
+- Wrote 9 component test files (38 new tests + 81 P1 = 119 tests across 17 files).
+- Lint (after dropping unused `Lang` import) + typecheck + test all green.
+- Clean P2 commit attribution achieved by explicit `git add <files>` listing every P2 file by name (no `git add packages/...` directory adds that could sweep unstaged sibling work).
+- Commits: **363999f** `feat(plugin-web-statistics): P2 components + StatisticsModule composition + ported CSS (W3 row #20)` (21 files, all scoped to `packages/plugin-web-statistics/`).
+- Next step: P3 — registration + host wire-up.
+
+### 2026-05-23 14:57 — Claude Opus 4.7 1M — feature-auto-build P3 (registration + host wire-up + PLUGIN_MAP)
+
+- Created `src/registration.tsx` (`statisticsWebModuleRegistration` per api.md §4).
+- Updated barrel `src/index.ts` to export the registration.
+- Wrote `src/__tests__/registration.test.tsx` (RE1..RE4) + updated `index-barrel.test.ts` (IB1..IB3 for the registration export).
+- Edited `apps/web/src/routes/modules/shellRegistrations.tsx`: added `import { statisticsWebModuleRegistration } from "@repo/plugin-web-statistics";` block + replaced the `placeholder("statistics", "Statistics", "chart", 11),` line with `statisticsWebModuleRegistration,  // xai-web-statistics row #20 (railOrder 11)`. Re-read after a sibling-induced "file modified since read" error and re-applied successfully.
+- Edited `apps/web/package.json`: added `"@repo/plugin-web-statistics": "workspace:*"` directly after the tasks entry.
+- Ran `pnpm install` to refresh workspace symlinks.
+- Added a row to `docs/PLUGIN_MAP.md` between board-core (#7) and the Web Platform Shims section.
+- Statistics gates: 124/124 tests pass, lint clean, typecheck clean.
+- Apps/web gates: `pnpm --filter @repo/web check-types` clean.
+- Next step: `feature-verify` — final acceptance + flip to READY_TO_SHIP.

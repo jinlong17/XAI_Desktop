@@ -17,6 +17,9 @@ import "./styles.css";
 // ---- Components ------------------------------------------------------------
 export { StatisticsModule } from "./StatisticsModule.js";
 
+// ---- Slot registration (consumed by apps/web shellRegistrations.tsx) -------
+export { statisticsWebModuleRegistration } from "./registration.js";
+
 // ---- Public types ----------------------------------------------------------
 export type {
   RangeId,
