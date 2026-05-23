@@ -195,7 +195,7 @@ describe("WebShellProvider + hooks (R1..R6)", () => {
       );
     }
 
-    const { getByText, getByRole } = render(
+    const { getByRole } = render(
       <MemoryRouter>
         <ControlledProvider />
       </MemoryRouter>

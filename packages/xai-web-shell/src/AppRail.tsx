@@ -28,7 +28,7 @@ interface BottomButton {
 
 // ---- AppRail component -----------------------------------------------------
 
-export function AppRail({ activeModuleId, onModuleClick, onPetToggle }: AppRailProps) {
+export function AppRail({ activeModuleId, onModuleClick, onPetToggle, onAvatarOpenSettings, onAvatarOpenStatistics }: AppRailProps) {
   const { lang, railPos, petOn } = useWebShell();
   const { t } = useI18n(lang);
   const registryModules = useWebModuleRegistry();
@@ -76,7 +76,7 @@ export function AppRail({ activeModuleId, onModuleClick, onPetToggle }: AppRailP
     e.dataTransfer.effectAllowed = "move";
     try {
       e.dataTransfer.setData("text/plain", id);
-    } catch (_) {
+    } catch {
       // Some sandboxed iframes block setData; drag still works via dragId state
     }
     setDragId(id);
@@ -136,8 +136,8 @@ export function AppRail({ activeModuleId, onModuleClick, onPetToggle }: AppRailP
         <AvatarMenu
           open={avatarOpen}
           onClose={() => setAvatarOpen(false)}
-          onOpenSettings={() => onModuleClick("settings")}
-          onOpenStatistics={() => onModuleClick("statistics")}
+          onOpenSettings={onAvatarOpenSettings}
+          onOpenStatistics={onAvatarOpenStatistics}
         />
       </div>
 

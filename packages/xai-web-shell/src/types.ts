@@ -105,6 +105,17 @@ export interface AppRailProps {
   onModuleClick: (moduleId: ConsoleModuleId) => void;
   /** Rail-bottom Pet click handler — called BEFORE the event emit. */
   onPetToggle: () => void;
+  /**
+   * Avatar-menu Settings shortcut handler.
+   * Emits web:shell:module-change with source="shortcut" then navigates.
+   * Kept separate from onModuleClick so the source enum is correct.
+   */
+  onAvatarOpenSettings: () => void;
+  /**
+   * Avatar-menu Statistics shortcut handler.
+   * Emits web:shell:module-change with source="shortcut" then navigates.
+   */
+  onAvatarOpenStatistics: () => void;
 }
 
 export interface TopbarProps {

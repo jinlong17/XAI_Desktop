@@ -12,7 +12,7 @@
  * AC-RAIL-11: Tooltips (data-tip) use i18n labels
  */
 
-import { render, screen, fireEvent } from "@testing-library/react";
+import { render, fireEvent } from "@testing-library/react";
 import { describe, it, expect, vi, beforeEach } from "vitest";
 import { MemoryRouter } from "react-router";
 import { AppRail } from "../AppRail.js";
@@ -35,6 +35,8 @@ function renderRail(overrides?: {
   setPetOn?: (next: boolean) => void;
   onModuleClick?: (id: string) => void;
   onPetToggle?: () => void;
+  onAvatarOpenSettings?: () => void;
+  onAvatarOpenStatistics?: () => void;
 }) {
   const defaults = {
     modules: FIXTURE_MODULES,
@@ -44,6 +46,8 @@ function renderRail(overrides?: {
     setPetOn: vi.fn(),
     onModuleClick: vi.fn(),
     onPetToggle: vi.fn(),
+    onAvatarOpenSettings: vi.fn(),
+    onAvatarOpenStatistics: vi.fn(),
   };
   const cfg = { ...defaults, ...overrides };
   return {
@@ -60,6 +64,8 @@ function renderRail(overrides?: {
             activeModuleId={cfg.activeModuleId}
             onModuleClick={cfg.onModuleClick}
             onPetToggle={cfg.onPetToggle}
+            onAvatarOpenSettings={cfg.onAvatarOpenSettings}
+            onAvatarOpenStatistics={cfg.onAvatarOpenStatistics}
           />
         </WebShellProvider>
       </MemoryRouter>

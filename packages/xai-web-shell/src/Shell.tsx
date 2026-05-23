@@ -39,6 +39,18 @@ export function Shell({
     void navigate("/app/settings");
   };
 
+  // AvatarMenu shortcuts — must emit source="shortcut" (not "app-rail")
+  // per api.md §3.2-§3.4 + AC-EMIT-4 + AC-EMIT-5 + dev_log Q3 resolution.
+  const onAvatarOpenSettings = () => {
+    emitWebEvent("web:shell:module-change", { moduleId: "settings" as WebModuleId, source: "shortcut" });
+    void navigate("/app/settings");
+  };
+
+  const onAvatarOpenStatistics = () => {
+    emitWebEvent("web:shell:module-change", { moduleId: "statistics" as WebModuleId, source: "shortcut" });
+    void navigate("/app/statistics");
+  };
+
   const onPetToggle = () => {
     const next = !petOn;
     setPetOn(next);
@@ -51,6 +63,8 @@ export function Shell({
         activeModuleId={activeModuleId}
         onModuleClick={onModuleClick}
         onPetToggle={onPetToggle}
+        onAvatarOpenSettings={onAvatarOpenSettings}
+        onAvatarOpenStatistics={onAvatarOpenStatistics}
       />
       <Topbar
         lang={lang}

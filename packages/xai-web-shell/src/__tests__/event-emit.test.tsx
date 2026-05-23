@@ -129,6 +129,53 @@ describe("Event emits (E1..E5)", () => {
     });
   });
 
+  it("E4 — AvatarMenu Settings click emits web:shell:module-change with source 'shortcut'", () => {
+    const { container } = renderShellWithNav();
+    // Open the AvatarMenu by clicking the avatar button
+    const avatarBtn = container.querySelector<HTMLButtonElement>(".rail-avatar");
+    if (avatarBtn) {
+      act(() => {
+        fireEvent.click(avatarBtn);
+      });
+    }
+    vi.clearAllMocks();
+    // Click the Settings entry in the AvatarMenu
+    const settingsItem = container.querySelector<HTMLButtonElement>(".avm-item:first-child");
+    if (settingsItem) {
+      act(() => {
+        fireEvent.click(settingsItem);
+      });
+    }
+    expect(emitWebEvent).toHaveBeenCalledWith("web:shell:module-change", {
+      moduleId: "settings",
+      source: "shortcut",
+    });
+  });
+
+  it("E5 — AvatarMenu Statistics click emits web:shell:module-change with source 'shortcut'", () => {
+    const { container } = renderShellWithNav();
+    // Open the AvatarMenu by clicking the avatar button
+    const avatarBtn = container.querySelector<HTMLButtonElement>(".rail-avatar");
+    if (avatarBtn) {
+      act(() => {
+        fireEvent.click(avatarBtn);
+      });
+    }
+    vi.clearAllMocks();
+    // Click the Statistics entry (second .avm-item)
+    const avmItems = container.querySelectorAll<HTMLButtonElement>(".avm-item");
+    const statisticsItem = avmItems[1];
+    if (statisticsItem) {
+      act(() => {
+        fireEvent.click(statisticsItem);
+      });
+    }
+    expect(emitWebEvent).toHaveBeenCalledWith("web:shell:module-change", {
+      moduleId: "statistics",
+      source: "shortcut",
+    });
+  });
+
   it("E1/E3 — emitWebEvent is called exactly once per user interaction", () => {
     const { container } = renderShellWithNav();
     const tasksBtn = container.querySelector<HTMLButtonElement>(
