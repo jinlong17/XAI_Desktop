@@ -7,11 +7,11 @@
 | Workflow | FEATURE_DEV |
 | Target | plugin-labels |
 | Title | labels:* typed events emit |
-| Status | READY_FOR_VERIFY |
+| Status | READY_TO_SHIP |
 | Current Phase | FEATURE_VERIFY |
-| Suggested Next | feature-verify |
-| Executor | feature-auto-build (claude-sonnet-4-6) |
-| Updated | 2026-05-23 03:13 |
+| Suggested Next | ship |
+| Executor | feature-verify (Claude) |
+| Updated | 2026-05-23 |
 | Automation Mode | A-Claude |
 | Verify Cross-vendor | no |
 | Blockers | none |
@@ -73,7 +73,68 @@ No revisions required. Hand off to `feature-build` (Automation Mode `A-Claude`, 
 | BUILD-1 | DONE | `c0a9cf8` | `pnpm --filter @repo/core check-types` PASS |
 | BUILD-2 | DONE | `1b0cf21` | `pnpm --filter @repo/plugin-labels check-types` PASS; `pnpm --filter @repo/plugin-labels test` 18/18 PASS |
 
+## Verify Report (2026-05-23 — feature-verify Claude)
+
+Verdict: **READY_TO_SHIP**.
+
+Gates re-run from clean dev (all PASS):
+
+- `pnpm --filter @repo/core check-types` — PASS (no output → tsc clean).
+- `pnpm --filter @repo/plugin-labels check-types` — PASS (no output → tsc clean).
+- `pnpm --filter @repo/plugin-labels test` — **18/18 PASS** (11 new W0.B AC scenarios + 7 pre-existing). `act(...)` stderr noise is the same noisy-but-non-fatal pattern observed in sibling productivity W0.B; tests all green.
+
+Code-vs-contract validation:
+
+- `EventMap` entries at `packages/core/src/types/events.ts:106-143` exactly match `api.md` payload schemas. `labels:created` includes literal `entityType: 'labels.label'`; `labels:updated` and `labels:deleted` omit it (per documented convention). `labels:deleted` shape is `{id, version, deletedAt}` only.
+- `useLabelStore.createLabel` (`useLabelStore.tsx:120-150`): empty-name throw at line 135 fires BEFORE `adapter.save` at line 136 → no emit on throw; emit after successful save with `{id, name, color, icon, entityType, version, createdAt}`; `.catch(() => undefined)` swallow.
+- `useLabelStore.updateLabel` (`useLabelStore.tsx:152-180`): pre-read via `adapter.getById(id)`; silent return on null; emit after `adapter.save(next)` with `{id, name, color, icon, version, updatedAt}`; `.catch(() => undefined)` swallow.
+- `useLabelStore.deleteLabel` (`useLabelStore.tsx:182-201`): pre-read via `adapter.getById(id)`; silent return on null; `deletedAt` store-sampled before `adapter.delete(id)`; emit with `{id, version: existing.version, deletedAt}`; `.catch(() => undefined)` swallow.
+
+File-boundary respect — confirmed via `git diff --name-only c0a9cf8^..HEAD`. Only allowed files touched:
+
+- `packages/core/src/types/events.ts` (declaration only)
+- `packages/plugin-labels/src/hooks/useLabelStore.{tsx,test.tsx}`
+- `packages/plugin-labels/docs/{api,design,test,dev_log}.md`
+- `docs/reviews/plugin-labels/20260523-{feature-brief,discovery-review}.md`
+
+No edits to `packages/core/src/events/{emitter,listener,index}.ts`, no other plugins, no `apps/desktop/**`, no Rust, no Tauri command surface, no `manifest.json`.
+
+Commit hygiene — 4 commits reviewed:
+
+- `c0a9cf8` feat(core/events): EventMap declaration only (40 insertions, 1 file) — BUILD-1 boundary respected.
+- `1b0cf21` feat(plugin-labels): emit wiring + 11 AC tests (330 insertions, 2 files) — BUILD-2 boundary respected.
+- `e664c19` docs(plugin-labels): dev_log advance to READY_FOR_VERIFY — docs-only.
+- `69cc645` docs(plugin-labels): feature-plan artifacts (brief, discovery review, design/api/test sections) — docs-only.
+- All four commits use conventional `type(scope): summary` format with Why/What/Scope/Risk/Docs/Tests body and `Co-Authored-By` trailer. Single-intent each; no cross-phase mixing.
+
+Non-blocking review notes from feature-review (all addressed in BUILD-2):
+
+- (1) Pre-read in `deleteLabel` for version capture — implemented (line 184) and tested by AC-L-D1.
+- (2) `:created` payload includes `entityType: 'labels.label'`; `:updated`/`:deleted` omit it — implemented and documented in `api.md`.
+- (3) `deletedAt` is store-sampled (event timestamp) — implemented (line 186) and documented in `api.md` adapter-semantic note.
+
+dev_log integrity: Status Panel updated to READY_TO_SHIP / ship; Predecessor state line preserved; Sibling pattern reference preserved; Phase Progress table accurate; Work Log appended below.
+
+Residual risks: none blocking. Cross-window receive verification is intentionally deferred to downstream consumer rows (Console, Project) per test.md §"What is intentionally not tested".
+
 ## Work Log
+
+### 2026-05-23 — feature-verify (Claude)
+
+- Goal: Verify W0.B labels:* typed events emit row against plan, contracts, and gates.
+- Done:
+  - Re-ran all three gates from clean dev: `@repo/core check-types` PASS; `@repo/plugin-labels check-types` PASS; `@repo/plugin-labels test` 18/18 PASS.
+  - Validated `EventMap` payload shapes in `events.ts:106-143` against `api.md` and `discovery-review §4` — exact match.
+  - Validated three emit sites in `useLabelStore.tsx` (lines 137-145, 165-172, 188-192): once-per-success semantics, payload shapes, `.catch(() => undefined)` swallow, pre-read in `deleteLabel`, silent no-op on stale id.
+  - File-boundary audit via `git diff --name-only c0a9cf8^..HEAD` — only allowed files touched.
+  - Commit hygiene audit: 4 commits, single-intent each, conventional format, body includes Why/What/Scope/Risk/Docs/Tests, `Co-Authored-By` trailer present.
+  - Three non-blocking review notes from feature-review confirmed addressed in code + docs.
+- Verdict: READY_TO_SHIP.
+- Status Panel updated: `Status: READY_TO_SHIP`, `Current Phase: FEATURE_VERIFY`, `Suggested Next: ship`, `Executor: feature-verify (Claude)`, `Updated: 2026-05-23`.
+- Commits: — (verify-only; dev_log update will be committed by ship).
+- Tests: 18/18 PASS on plugin-labels; type-checks PASS on core and plugin-labels.
+- Risks: none blocking. Cross-window receive verification deferred to downstream consumer rows.
+- Handoff: `ship` for plugin-labels W0.B (push commits to remote, mark SHIPPED).
 
 ### 2026-05-23 03:13 — feature-auto-build (claude-sonnet-4-6)
 
