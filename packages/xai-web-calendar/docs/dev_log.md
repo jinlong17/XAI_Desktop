@@ -7,9 +7,9 @@
 | Workflow | FEATURE_DEV |
 | Target | xai-web-calendar |
 | Title | Web Console — Calendar module (port `module-calendar.jsx`) |
-| Current Phase | FEATURE_PLAN |
-| Status | NEEDS_REVIEW |
-| Suggested Next | feature-review |
+| Current Phase | FEATURE_REVIEW |
+| Status | APPROVED |
+| Suggested Next | feature-auto-build |
 | Verify Cross-vendor | yes (Safari 17+ / Chrome / Firefox — month-grid render + chip colors + view switcher + deep-link receive + month-nav + lang switch + week-start flip — see test.md §6) |
 | Automation Mode | A-Claude (xai-roadmap-loop W2c parallel-Agent mode; siblings: #16 xai-web-meditation + #18 xai-web-ai-chat) |
 | Executor | claude-opus-4-7 — feature-plan |
@@ -378,10 +378,70 @@ preference flips weekday header order live.
 
 ## Review Notes
 
-_Will be filled by `feature-review`._
+**Verdict: APPROVED** — plan is executable with no blocking ambiguity. All 12 gates pass.
+
+### Gate-by-gate verification
+
+| Gate | Status | Evidence |
+|---|---|---|
+| 1. Seed-brief fidelity (Month view + 4-color event bands + Week/Day stubs + deep-link receive + EN/中文 parity) | PASS | `design.md` §3 component composition; §11 acceptance traceability table maps every seed-brief signal to AC IDs; §12 deep-link sequence diagram. |
+| 2. 4-color event tokens come from `web design/layout.css:849-852` byte-for-byte | PASS | `design.md` §9 copies the 4 oklch rules verbatim into `styles.css` plan; AC-TOKENS-1 grep test enforces it. |
+| 3. Deep-link via existing `web:shell:module-change` channel (no core/events.ts edit) | PASS | `design.md` §7.1 + `api.md` §2.3. Verified at `packages/core/src/types/events.ts:175-184` — channel declares `focusDate?: string`. `xai-web-event-bus/docs/api.md:197-198` already declares calendar-as-listener; this row is the listen-side contract. |
+| 4. Week-start via `usePref("xai_pref_week_start", 0)` | PASS | `design.md` §5.1 + `api.md` §2.1. New registry entry `xai_pref_week_start`, owner = `xai-web-calendar`, codec = `"number"`, default 0 (Sunday), schemaVersion 1, category = `"pref"` (matches the `xai_pref_*` ADR-0007 §S8 family). Type `PrefEntry<0 \| 1>` gives consumers exhaustiveness checks. |
+| 5. Bilingual via `useI18n` with additive `cal.*` keys | PASS | `api.md` §2.2 lists the 3 new keys with EN+ZH copy. Verified upstream: `plugin-web-tokens/i18n.ts:62-66 + 247-251` already has `cal.month/week/day/today/sample_banner`. The 3 additions (`coming_soon`, `holiday_mayday`, `holiday_mothers_day`) drop into the same namespace — no rename, no removal. `I18NBundle` typeof-derivation enforces ZH parity at compile time. |
+| 6. Module registers via `@repo/xai-web-shell` slot pattern | PASS | `design.md` §8. `calendarSlotRegistration` matches `WebModuleSlotRegistration` shape; `moduleId: "calendar"`, `icon: "calendar"` (already in `WebShellIconName` at `xai-web-shell/types.ts:22`), `railOrder: 5`, `i18nKey: "nav.calendar"` (already in `plugin-web-tokens/i18n.ts:17 + 202`), `showInRail: true`. Shell wiring swaps `shellRegistrations.tsx:55` placeholder. |
+| 7. Listen-only event surface (no emit) | PASS | `design.md` §7.2 + `api.md` §2.4. AC-EVENT-7 grep-asserts no `emitWebEvent` import. |
+| 8. 3-phase right-sized plan | PASS | P1 (skeleton + Month grid + chips + shell wiring → visible-in-rail exit). P2 (nav + deep-link + i18n + holidays + week-start). P3 (ComingSoonPanel + dark-theme + cross-vendor + edge-cases + docs sync). Each phase has clear file boundaries and quality gates; each is single-commit. |
+| 9. Cross-vendor verify: yes | PASS | `test.md` §6 declares 9 XVENDOR-* checks across Safari 17+/Chrome 120+/Firefox 120+. Recordable or DEFERRED at ship-time human per matrix / countdown / habits precedent. |
+| 10. Sibling-coordination: line-disjoint appends | PASS | Verified in actual `shellRegistrations.tsx`: line 51 = ai (placeholder, replaced by sibling #18), line 55 = calendar (this row), line 59 = meditation (placeholder, replaced by sibling #16) — all line-disjoint. `apps/web/package.json` gets 3 separate dep lines (calendar/meditation/ai-chat). `i18n.ts` namespace-disjoint (`cal.*` vs `med.*` vs `ai.*`). Storage `registry.ts` file-tail append (only calendar adds `xai_pref_week_start`; siblings add different keys at the file tail). All edits use Edit (not Write) with unique anchors per user prompt §"Concurrency rules". |
+| 11. Q1..Q10 resolved | PASS | All 10 questions answered with planner recommendation (see Question Resolution below). |
+| 12. Architectural risk: none | PASS | No `packages/core/` edit (channel pre-declared). No new event channel; listen-only. No `manifest.json` routing changes (slot pattern). No cross-feature contract drift (MiniCal emit-side is owned by future dashboard row #11; this row specifies only the listen-side contract, already approved in `xai-web-event-bus/docs/api.md:197-198`). |
+
+### Question Resolution
+
+- **Q1 (directory naming)** — APPROVE A1: `packages/xai-web-calendar/` + `@repo/plugin-web-calendar`. Matches matrix Q1 + W2 sibling convention (habits / pomodoro / pet / countdown / tasks all follow this pattern).
+- **Q2 (event data source)** — APPROVE B1: inline `SAMPLE_EVENTS` constant. Prototype banner already declares "Sample data — switch to real account…"; seed brief never asks for user-created events in v1. Storage path is gold-plating with no consumer.
+- **Q3 (week-start strategy)** — APPROVE C1: `usePref("xai_pref_week_start", 0)`. Seed brief explicitly requests this. Adds one ADR-0007 §S8 owner-row registration (`xai_pref_*` family). Note: planner correctly chose `owner: "xai-web-calendar"` for first-consumer ownership; Settings W4 row #24 can transfer ownership later via a one-line edit if needed.
+- **Q4 (ISO week-number)** — APPROVE H1: compute. 12-line pure helper + AC-ISO-1..4 (year-start, year-end, Sun-Jan-1 edge) gives correctness across all months we navigate to. Hard-code (H2) would lock us to May 2026.
+- **Q5 (month-nav)** — APPROVE G1: live `<` / `>` + `today` resets to (2026, 5). Reading buttons as no-ops would confuse users. Anchoring `today` to the design source month (rather than real `new Date()`) keeps visual parity with sample-event coverage. Follow-up §6.2 #2 records the flip when SPA ages past May 2026.
+- **Q6 (holiday i18n)** — APPROVE E1: lift to bundle. Bilingual is a hard constraint; empty EN strings violate the seed-brief acceptance signal "EN/中文 parity holds". Table-driven detection via `findHolidayKey` is extensible to future months without grid changes.
+- **Q7 (deep-link channel)** — APPROVE D1: reuse `web:shell:module-change`. User prompt §"Concurrency rules" forbids `packages/core/` edits unless ADR-0007 specifies a NEW channel for this row — it does not. The existing channel carries `focusDate?: string` and `xai-web-event-bus/docs/api.md:197-198` already declares calendar-as-listener.
+- **Q8 (today re-detect)** — APPROVE I1: mount-only memo. The countdown row (#17) interval pattern would be gold-plating for the calendar today-marker. Documented as low-impact in `discovery-review.md` §3.9.
+- **Q9 (Week/Day stub)** — APPROVE F1: ComingSoonPanel. Honors the acceptance signal verbatim ("view switcher renders all 3 tabs (Week/Day OK if stubbed with a 'Coming soon' placeholder)"). F2 (hide) would fail the literal acceptance signal.
+- **Q10 (cross-tab broadcast)** — APPROVE J1: no broadcast. Same-tab fan-out via `emitWebEvent` covers the acceptance signal; cross-tab is out of scope for v1.
+
+### Recommendations (non-blocking — apply during build at builder's discretion)
+
+1. **`displayedMonth` initializer follow-up flag** — `design.md` §1.1 assumption #7 anchors `displayedMonth` to `{2026, 5}`. The dev_log §6.2 follow-up records the flip path. Builder may add an inline `// FIXME-ROW: flip to currentMonth() once Settings W4 lands` comment in `CalendarModule.tsx` so the future maintainer doesn't need to trace docs.
+
+2. **AC-DEEPLINK-6 console.warn assertion** — `api.md` §3.3 specifies `console.warn` once for malformed `focusDate`. Builder should use `vi.spyOn(console, "warn")` + assert called exactly once (not more — the equality guard in `useState` should prevent re-warn on repeat malformed payloads).
+
+3. **`xai_pref_week_start` proposed flag** — Planner correctly omits the `proposed: true` field (canonical name approved by worker brief #12 + the `xai_pref_*` family is already established). Builder may add `// proposed: false — canonical name approved by worker brief #12, owner first-consumer pattern` comment as a paper trail for Settings W4 takeover.
+
+4. **AC-FIXTURE-3 total-count assertion** — `api.md` §1.2 says total event count = 65, derived from i18n.js inspection. Builder should also assert color-distribution counts (mint ≈ 50, amber ≈ 11, blue ≈ 3, violet ≈ 1) in `sampleEvents.test.ts` AC-FIXTURE-3/4 — this catches accidental color-class renames during the transcription. Non-blocking.
+
+5. **i18n parity test extension** — `plugin-web-tokens/__tests__/i18n.test.ts` (if it exists; else create a minimal one) should grep-assert that every key under `en.cal` also appears under `zh.cal`. This is a defense-in-depth on top of TypeScript's `I18NBundle = typeof I18N["en"]` enforcement.
+
+### Architectural risk: none
+
+- No `packages/core/` edit (channel declared at events.ts:175).
+- No new event channel; listen-only consumer.
+- No `manifest.json` routing changes (slot pattern).
+- No cross-feature contract drift (MiniCal emit-side is owned by future dashboard row #11; this row specifies only the listen-side contract, already approved in `xai-web-event-bus/docs/api.md:197-198`).
+
+### Sign-off
+
+Discovery review (14 frozen assumptions, 12 risks, 10 questions),
+design.md (12 sections + 14 frozen assumptions), api.md (9 sections
+including idempotency + error semantics + perf budget + a11y contract +
+stability rules + side-effect surface), test.md (~60 AC IDs across 17
+categories + coverage targets + cross-vendor manual smoke + verify
+checklist), dev_log.md (3-phase plan with clear scope + exit gates +
+risks R1..R12) are mutually consistent. Cleared for `feature-auto-build`.
 
 ## Work Log
 
 | Timestamp | Executor | Action | Commits | Next Step |
 |---|---|---|---|---|
-| 2026-05-23 | Claude Opus 4.7 1M — feature-plan | Wrote `discovery-review.md`, `design.md`, `api.md`, `test.md`, and this `dev_log.md`. Frozen 14 assumptions in `design.md` §1.1. Identified 10 open questions for review (Q1..Q10). Risks R1..R12 carried from discovery. Verified upstream state: `events.ts:175-184` already declares `web:shell:module-change` with `focusDate?` (no EventMap edit); `plugin-web-tokens/i18n.ts:62-66 + 247-251` already has `cal.month/week/day/today/sample_banner` (additive keys only); `WebShellIconName` already has `"calendar"` at types.ts:22; `shellRegistrations.tsx:55` placeholder swap target confirmed; `xai-web-event-bus/docs/api.md:197-198` declares calendar-as-listener on `web:shell:module-change` for `moduleId === "calendar"` with `focusDate`. Sibling-coordination contract: line-disjoint Edit on `shellRegistrations.tsx` (lines 51/55/59 for ai-chat/calendar/meditation) + `apps/web/package.json` (3 separate dep lines) + storage `registry.ts` (file-tail append) + tokens `i18n.ts` (namespace-disjoint `ai.*` / `cal.*` / `med.*`). | — | `feature-review` — examine all four docs + the discovery, answer Q1..Q10, then either APPROVE (Suggested Next → `feature-auto-build`) or REVISE (Suggested Next → `feature-plan`). |
+| 2026-05-23 | Claude Opus 4.7 1M — feature-plan | Wrote `discovery-review.md`, `design.md`, `api.md`, `test.md`, and this `dev_log.md`. Frozen 14 assumptions in `design.md` §1.1. Identified 10 open questions for review (Q1..Q10). Risks R1..R12 carried from discovery. Verified upstream state: `events.ts:175-184` already declares `web:shell:module-change` with `focusDate?` (no EventMap edit); `plugin-web-tokens/i18n.ts:62-66 + 247-251` already has `cal.month/week/day/today/sample_banner` (additive keys only); `WebShellIconName` already has `"calendar"` at types.ts:22; `shellRegistrations.tsx:55` placeholder swap target confirmed; `xai-web-event-bus/docs/api.md:197-198` declares calendar-as-listener on `web:shell:module-change` for `moduleId === "calendar"` with `focusDate`. Sibling-coordination contract: line-disjoint Edit on `shellRegistrations.tsx` (lines 51/55/59 for ai-chat/calendar/meditation) + `apps/web/package.json` (3 separate dep lines) + storage `registry.ts` (file-tail append) + tokens `i18n.ts` (namespace-disjoint `ai.*` / `cal.*` / `med.*`). | b9c5267 | `feature-review` — examine all four docs + the discovery, answer Q1..Q10, then either APPROVE (Suggested Next → `feature-auto-build`) or REVISE (Suggested Next → `feature-plan`). |
+| 2026-05-23 | Claude Opus 4.7 1M — feature-review | Reviewed all four planning docs against 12 gates. Verified upstream invariants: events.ts:175-184 (channel pre-declared with `focusDate?: string`), plugin-web-tokens/i18n.ts:62-66 + 247-251 (cal.* base keys exist; additions are namespace-extending), WebShellIconName has "calendar" at xai-web-shell/types.ts:22, shellRegistrations.tsx:55 calendar placeholder line-disjoint from ai-chat (line 51) + meditation (line 59), xai-web-event-bus/docs/api.md:197-198 (calendar-as-listener already documented). All 10 open questions resolved with planner recommendations (A1/B1/C1/D1/E1/F1/G1/H1/I1/J1). 5 non-blocking recommendations recorded for builder discretion. Verdict: **APPROVED**. Flipped Status Panel → APPROVED + Suggested Next → feature-auto-build. | — | `feature-auto-build` (batch all 3 phases, stop before verify). |
