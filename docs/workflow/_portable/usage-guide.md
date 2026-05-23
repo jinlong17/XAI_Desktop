@@ -642,10 +642,13 @@ Roadmap Manifest: <roadmap_manifest_dir>/<roadmap_name>.md
 ```
 
 If the session id is ambiguous, add `Worktree: {absolute_worktree_path}`. Do not delete the
-background session until `ship` reports that commits were pushed and the dev_log is `SHIPPED`. Agent
-View PR dots are UI hints only — `dev_log` + reconcile are the A2K truth. If a nested-session guard
-blocks direct `claude --bg`, the skill emits a `scripts/cowork/roadmap_bg_run_*.sh` fallback script
-to run from a normal shell.
+background session until `ship` reports that commits were pushed, the dev_log is `SHIPPED`, and the
+post-ship cleanliness fields have been rendered. `ship` must report safe file cleanup, deleted local
+temporary branches, and deferred residual worktrees/sessions/branches; it must not run broad
+destructive cleanup such as `git clean -fdx` or force-delete branches by default. Agent View PR dots
+are UI hints only — `dev_log` + reconcile are the A2K truth. If a nested-session guard blocks direct
+`claude --bg`, the skill emits a `scripts/cowork/roadmap_bg_run_*.sh` fallback script to run from a
+normal shell.
 
 Loop: `init → (run → batch ship) × W → wrap-up`.
 

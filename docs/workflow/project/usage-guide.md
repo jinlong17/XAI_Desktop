@@ -548,7 +548,27 @@ Worktree: <absolute_worktree_path>
 
 不要在 ship 成功前删除 background session;删除 session 可能删除 worktree。
 
-### 13.4 dev_log 状态和 manifest 不一致
+### 13.4 ship 后残留文件 / 临时分支未清理
+
+`ship` 成功 push 且写入 `SHIPPED` 后,必须执行 post-ship cleanliness:
+
+```bash
+git status --short --untracked-files=all
+git clean -nd
+git clean -ndX
+git worktree list --porcelain
+git branch --format='%(refname:short) %(upstream:short) %(worktreepath)'
+```
+
+原则:
+
+- 只自动清理安全白名单: `.DS_Store`, `.turbo/`, `coverage/`, `dist/`, `build/`, `.next/`,本次 run 明确生成的空临时目录或日志。
+- 不默认删除 `node_modules/`, `.pnpm-store/`, `.env*`, `.claude/worktrees/`,background session,本地 DB,浏览器 profile,或无法证明归属的 untracked source。
+- 分支只删本 feature/session 可证明拥有的临时分支,且必须不在任何 worktree 上、已 merge 到目标或刚被 push 覆盖。
+- 分支删除只能用 `git branch -d BRANCH_NAME`;除非用户明确二次授权,不要用 `git branch -D`。
+- Handoff 必须报告 `Cleanliness`, `Cleanup Performed`, `Branches Deleted`, `Cleanup Deferred`。
+
+### 13.5 dev_log 状态和 manifest 不一致
 
 以 `dev_log.md` Status Panel 作为 feature 执行真相,以 roadmap manifest 作为队列真相。
 重新跑:
@@ -560,7 +580,7 @@ manifest: docs/workflow/roadmap/<roadmap_name>.md
 
 让 reconcile 修正 manifest。
 
-### 13.5 macOS native / 多窗口功能 verify 卡住
+### 13.6 macOS native / 多窗口功能 verify 卡住
 
 这类功能不能只靠单元测试:
 
@@ -612,6 +632,7 @@ rg -n "Start the feature-full-loop agent|/xai-feature-full-loop Feature" scripts
 - [ ] 需要并行时优先考虑 roadmap `dispatch: bg`,但先确认 bg preflight。
 - [ ] 涉及多窗口 / macOS native / Tauri command 时,安排真机验证。
 - [ ] ship 前确认 `READY_TO_SHIP`,不要跳过 `feature-verify` / `bug-verify`。
+- [ ] ship 后检查 Handoff 里的 `Cleanliness` / `Branches Deleted` / `Cleanup Deferred`,确认临时文件、worktree、分支残留没有被忽略。
 - [ ] subagent commit 应带对应 `Co-authored-by: <agent> <workflow-v2@local>` trailer。
 
 ---

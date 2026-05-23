@@ -100,10 +100,14 @@ Tooling notes:
 - CAN inspect git state and push to remote.
 - CAN create supplementary commits only for minor omissions (e.g. a missed doc update) — the main implementation commits should already exist from `feature-build` or `bug-fix`.
 - CAN update `dev_log.md` to mark shipping completion.
+- CAN clean safe, clearly-owned temporary artifacts after a successful ship.
+- CAN delete local temporary branches only when they are clearly tied to this feature/session, fully merged or pushed, and not used by any worktree.
 - DO NOT bypass workflow guards silently.
 - DO NOT amend existing commits unless the user explicitly asks.
 - DO NOT force-push.
 - DO NOT push secrets or sensitive files.
+- DO NOT run broad destructive cleanup such as `git clean -fdx`, `rm -rf node_modules`, `rm -rf .pnpm-store`, or deleting `.claude/worktrees` / background sessions by default.
+- DO NOT delete branches that are not provably owned by the current feature/session.
 
 ## Available skills (description-triggered)
 
@@ -150,8 +154,10 @@ Resolution rules:
      confirmed by the user.
 5. The developer should not need to run the worktree lookup or git verification manually; `ship`
    owns those checks once the bg session id or worktree path is provided.
-6. Do not run `claude rm` or delete the background worktree. After successful push and SHIPPED
-   state write, tell the user it is safe to clean up the background session.
+6. Do not run `claude rm` or delete the background worktree by default. After successful push and
+   SHIPPED state write, report whether it is safe to clean up the background session. If an explicit
+   user instruction requests session cleanup, only delete the session/worktree after verifying it has
+   no unpushed commits and no uncommitted changes.
 
 ## Read First
 
@@ -214,6 +220,48 @@ Before any git action:
    - `Executor`
    - `Updated`
    - append `Work Log`
+7. Run the Post-Ship Cleanliness Protocol below and include the result in the Handoff.
+
+## Post-Ship Cleanliness Protocol
+
+Run this protocol after a successful push and `SHIPPED` state write. The goal is to leave the
+repository and local branch list clean without deleting unrelated work from parallel sessions.
+
+1. Capture final repository state:
+   - `git status --short --untracked-files=all`
+   - `git clean -nd`
+   - `git clean -ndX`
+   - `git worktree list --porcelain`
+   - `git branch --format='%(refname:short) %(upstream:short) %(worktreepath)'`
+2. Safe file cleanup:
+   - MAY delete only clearly generated, low-risk local artifacts such as `.DS_Store`, `.turbo/`,
+     `coverage/`, `dist/`, `build/`, `.next/`, and empty temporary directories created by this run.
+   - MAY delete logs or scratch files only when they are clearly produced by the current ship or
+     verification run and are not referenced by the feature's docs.
+   - MUST NOT delete dependency caches or user/session state by default: `node_modules/`,
+     `.pnpm-store/`, `.env*`, `.claude/worktrees/`, background sessions, local databases, browser
+     profile data, or untracked source directories.
+   - For anything outside the safe list, report it as residual instead of deleting it.
+3. Branch hygiene:
+   - Identify candidate temporary branches only by feature/session evidence. Examples include the
+     current ship branch, branches named for the feature, `ship/<feature>*`, `codex/<feature>*`,
+     `worktree-agent-*`, `tmp/*`, or bg/session branches referenced by the invocation, `dev_log.md`,
+     or roadmap manifest.
+   - Before deleting a local branch, verify all of these are true:
+     - it is not the current branch;
+     - it is not checked out by any worktree (`git worktree list --porcelain`);
+     - its commits are fully merged into the intended base or remote ship target, or its tip is the
+       commit that was just pushed;
+     - its name or recorded provenance ties it to the current feature/session.
+   - Use non-force deletion (`git branch -d BRANCH_NAME`) only. Never use `git branch -D` unless the
+     user explicitly asks after seeing the risk.
+   - Do not delete unrelated, ambiguous, or concurrently active branches; report them as deferred
+     cleanup.
+4. Final verification:
+   - Re-run `git status --short --untracked-files=all`.
+   - If safe cleanup created changes, stop unless they are expected deletions of ignored artifacts.
+   - Summarize `Cleanliness`, `Cleanup Performed`, `Branches Deleted`, and `Cleanup Deferred` in the
+     Handoff. If nothing was safe to delete, say so explicitly.
 
 ## Shipping Modes
 
@@ -239,6 +287,10 @@ CRITICAL: You MUST end your response with an actual Handoff block — not a code
 **Status**: SHIPPED
 **Commits Pushed**: (fill in list of commit hashes)
 **Push Result**: (fill in branch → remote)
+**Cleanliness**: (fill in clean / residuals reported / cleanup blocked)
+**Cleanup Performed**: (fill in safe files/artifacts removed, or "none")
+**Branches Deleted**: (fill in local temporary branches deleted with `git branch -d BRANCH_NAME`, or "none")
+**Cleanup Deferred**: (fill in ambiguous residual files, worktrees, sessions, or branches left for user review, or "none")
 
 ### Workflow Complete
 
@@ -256,6 +308,8 @@ CRITICAL: You MUST end your response with an actual Handoff block — not a code
 **Summary**: (fill in why shipping was blocked, 1 sentence)
 **Status**: (fill in current status)
 **Reason**: (fill in e.g. Status != READY_TO_SHIP / substantial uncommitted changes / sensitive files detected)
+**Cleanliness**: (fill in skipped because blocked / residuals reported)
+**Cleanup Deferred**: (fill in anything intentionally left untouched, or "none")
 
 ### Next Step
 
