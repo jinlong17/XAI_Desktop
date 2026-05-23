@@ -1,11 +1,251 @@
 /* @repo/plugin-web-statistics — module styles.
  *
- * P2 will port the full Statistics CSS rules from web design/layout.css.
- * For P1 the file exists so the side-effect import resolves.
+ * Ported verbatim from web design/layout.css lines 3669..3823.
+ * Scoped under the .module-stats root container — global classes
+ * (.module-head, .module-title, .panel, .grow, .seg, .muted, .mono)
+ * remain provided by @repo/plugin-web-tokens.
  *
  * api.md §0 — side-effect CSS import.
+ * design.md Frozen Assumption 14.
  */
 
-.module-stats {
-  display: block;
+.module-stats .stats-grid {
+  display: grid;
+  grid-template-columns: repeat(12, 1fr);
+  gap: 12px;
+}
+.module-stats .kpi-row {
+  grid-column: span 12;
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 12px;
+}
+.module-stats .kpi { padding: 14px 16px; }
+.module-stats .kpi-head { display: flex; align-items: center; gap: 8px; }
+.module-stats .kpi-ico {
+  width: 22px; height: 22px;
+  border-radius: var(--r-sm);
+  display: inline-flex; align-items: center; justify-content: center;
+}
+.module-stats .kpi-label {
+  font-size: var(--fs-xs);
+  color: var(--text-3);
+  text-transform: uppercase;
+  font-weight: 600;
+  letter-spacing: .04em;
+}
+.module-stats .kpi-row-val {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  margin-top: 10px;
+}
+.module-stats .kpi-val {
+  font-size: 28px;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  line-height: 1;
+}
+.module-stats .kpi-unit {
+  font-size: var(--fs-sm);
+  color: var(--text-3);
+  margin-left: 4px;
+  font-weight: 500;
+}
+.module-stats .kpi-trend {
+  font-size: var(--fs-xs);
+  color: var(--accent-ink);
+  font-weight: 700;
+  font-family: var(--font-mono);
+}
+
+.module-stats .stats-chart { grid-column: span 6; padding: 14px 18px; }
+.module-stats .sc-head { display: flex; align-items: center; padding-bottom: 8px; }
+.module-stats .sc-head h3 { margin: 0; font-size: var(--fs-md); font-weight: 700; flex: 1; }
+.module-stats .sc-totals { font-size: var(--fs-sm); color: var(--text-3); }
+
+.module-stats .bar-chart {
+  display: grid;
+  grid-template-columns: repeat(var(--bar-cols, 7), 1fr);
+  gap: 12px;
+  height: 200px;
+  padding-top: 12px;
+}
+.module-stats .bar-col {
+  display: flex; flex-direction: column; align-items: center; gap: 6px;
+}
+.module-stats .bar-val { font-size: 10px; color: var(--text-3); font-family: var(--font-mono); }
+.module-stats .bar-track {
+  flex: 1;
+  width: 100%;
+  background: var(--bg-panel-2);
+  border-radius: 4px;
+  display: flex; align-items: flex-end;
+  overflow: hidden;
+}
+.module-stats .bar-fill {
+  width: 100%;
+  border-radius: 4px 4px 0 0;
+  transition: height .4s var(--ease-out);
+  animation: statsBarIn .5s var(--ease-out);
+}
+@keyframes statsBarIn { from { height: 0; } }
+.module-stats .bar-label { font-size: var(--fs-xs); color: var(--text-3); font-weight: 600; }
+
+.module-stats .stats-donut {
+  grid-column: span 4; padding: 14px 16px;
+  display: flex; flex-direction: column; align-items: stretch;
+}
+.module-stats .stats-donut h3 { margin: 0 0 12px; font-size: var(--fs-md); font-weight: 700; }
+.module-stats .ringchart { align-self: center; margin: 8px auto 16px; }
+.module-stats .legend {
+  list-style: none; margin: 0; padding: 0;
+  display: flex; flex-direction: column; gap: 6px;
+}
+.module-stats .legend li {
+  display: flex; align-items: center; gap: 8px; font-size: var(--fs-sm);
+}
+.module-stats .leg-dot {
+  width: 8px; height: 8px;
+  border-radius: 2px;
+  background: currentColor;
+}
+
+.module-stats .stats-heat { grid-column: span 8; padding: 14px 16px; }
+.module-stats .stats-heat h3 {
+  margin: 0 0 12px; font-size: var(--fs-md); font-weight: 700;
+  display: flex; align-items: center; gap: 8px;
+}
+.module-stats .heat-legend {
+  display: inline-flex; align-items: center; gap: 4px;
+  margin-top: 10px;
+  font-size: var(--fs-xs);
+}
+.module-stats .heat-legend .heat-cell { width: 12px; height: 12px; }
+
+.module-stats .stats-trend { grid-column: span 12; }
+.module-stats .line-chart {
+  display: flex; flex-direction: column; gap: 6px;
+}
+.module-stats .line-chart svg {
+  width: 100%; height: 200px;
+}
+.module-stats .lc-labels {
+  display: flex; justify-content: space-between;
+  font-size: var(--fs-xs);
+  color: var(--text-3);
+  padding: 0 30px;
+  font-weight: 600;
+}
+
+.module-stats .hour-bar {
+  display: grid;
+  grid-template-columns: repeat(24, 1fr);
+  gap: 2px;
+  height: 200px;
+  padding-top: 8px;
+  align-items: end;
+}
+.module-stats .hbar-col {
+  display: flex; flex-direction: column; height: 100%; gap: 4px;
+}
+.module-stats .hbar-track { flex: 1; display: flex; align-items: flex-end; }
+.module-stats .hbar-fill {
+  width: 100%;
+  background: var(--blue);
+  border-radius: 3px 3px 0 0;
+  min-height: 2px;
+  transition: height .4s var(--ease-out);
+}
+.module-stats .hbar-col.peak .hbar-fill {
+  background: var(--accent);
+  box-shadow:
+    0 0 0 1.5px var(--accent),
+    0 -6px 14px color-mix(in oklch, var(--accent) 40%, transparent);
+}
+.module-stats .hbar-label {
+  font-size: 9px; color: var(--text-3);
+  text-align: center; font-family: var(--font-mono);
+}
+
+.module-stats .stats-habits { grid-column: span 4; padding: 14px 16px; }
+.module-stats .stats-habits h3 { margin: 0 0 12px; font-size: var(--fs-md); font-weight: 700; }
+.module-stats .habit-rank {
+  list-style: none; margin: 0; padding: 0;
+  display: flex; flex-direction: column; gap: 10px;
+}
+.module-stats .hrank-row { display: flex; align-items: center; gap: 10px; }
+.module-stats .hrank-i {
+  font-size: var(--fs-sm); color: var(--text-3);
+  font-weight: 700; width: 14px; text-align: right;
+}
+.module-stats .hrank-emoji { font-size: 18px; }
+.module-stats .hrank-body { flex: 1; min-width: 0; }
+.module-stats .hrank-title {
+  font-size: var(--fs-sm); font-weight: 600; color: var(--text-1);
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+}
+.module-stats .hrank-bar {
+  margin-top: 4px;
+  height: 5px;
+  background: var(--bg-panel-2);
+  border-radius: 999px;
+  overflow: hidden;
+}
+.module-stats .hrank-bar > div {
+  height: 100%;
+  background: var(--accent);
+  border-radius: 999px;
+  transition: width .4s var(--ease-out);
+  animation: statsBarIn .5s var(--ease-out);
+}
+.module-stats .hrank-streak {
+  display: inline-flex; align-items: center; gap: 3px;
+  font-size: var(--fs-xs); color: var(--text-3); font-weight: 600;
+}
+
+.module-stats .stats-insight {
+  grid-column: span 4; padding: 16px 18px;
+  display: flex; gap: 14px; align-items: flex-start;
+  background: linear-gradient(160deg, var(--accent-soft), var(--bg-panel));
+  border-color: color-mix(in oklch, var(--accent) 25%, transparent);
+}
+.module-stats .stats-insight h4 { margin: 0 0 6px; font-size: var(--fs-md); font-weight: 700; }
+.module-stats .stats-insight p {
+  margin: 0; font-size: var(--fs-sm); color: var(--text-2); line-height: 1.55;
+}
+
+.module-stats .heatmap {
+  display: grid;
+  grid-template-columns: repeat(26, 1fr);
+  gap: 3px;
+}
+.module-stats .heat-cell {
+  aspect-ratio: 1;
+  border-radius: 2px;
+  background: var(--bg-panel-2);
+}
+.module-stats .heat-1 { background: oklch(90% 0.05 165); }
+.module-stats .heat-2 { background: oklch(80% 0.10 165); }
+.module-stats .heat-3 { background: oklch(68% 0.12 165); }
+.module-stats .heat-4 { background: oklch(58% 0.13 165); }
+[data-theme="dark"] .module-stats .heat-1 { background: oklch(35% 0.04 165); }
+[data-theme="dark"] .module-stats .heat-2 { background: oklch(45% 0.07 165); }
+[data-theme="dark"] .module-stats .heat-3 { background: oklch(58% 0.10 165); }
+[data-theme="dark"] .module-stats .heat-4 { background: oklch(70% 0.12 165); }
+
+@media (max-width: 1100px) {
+  .module-stats .stats-chart { grid-column: span 12; }
+  .module-stats .stats-donut { grid-column: span 6; }
+  .module-stats .stats-heat  { grid-column: span 12; }
+  .module-stats .kpi-row { grid-template-columns: repeat(2, 1fr); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .module-stats .bar-fill,
+  .module-stats .hbar-fill,
+  .module-stats .hrank-bar > div {
+    animation: none;
+    transition: none;
+  }
 }

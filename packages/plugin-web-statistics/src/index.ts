@@ -14,6 +14,9 @@
 // Side-effect CSS — applied once globally when this package is first imported.
 import "./styles.css";
 
+// ---- Components ------------------------------------------------------------
+export { StatisticsModule } from "./StatisticsModule.js";
+
 // ---- Public types ----------------------------------------------------------
 export type {
   RangeId,
