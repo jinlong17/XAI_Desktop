@@ -90,6 +90,7 @@
 | Package | 目录 | 状态 | 说明 | 依赖 | 最后更新 |
 |---------|------|------|------|------|---------|
 | @repo/xai-web-event-bus | packages/xai-web-event-bus/ | In-Dev | Browser-only typed event bus (EventTarget adapter). Shares web:* EventMap keys with @repo/core. Ships emitWebEvent / onWebEvent / useWebEventListener. No manifest.json (shim, not a plugin). Verify Cross-vendor gate pending feature-verify. | @repo/core workspace:* | 2026-05-23 |
+| @repo/xai-web-shell | packages/xai-web-shell/ | In-Dev | Web Console host shell — AppRail + Topbar + AvatarMenu + WebShellProvider slot/registry. Emits web:shell:module-change + web:shell:pet-toggle. 4 rail positions + drag-reorder via xai_rail_order. Zero W2 module dependencies. READY_FOR_VERIFY — cross-vendor manual smoke (M1..M18) pending feature-verify. | @repo/core, @repo/plugin-web-tokens, @repo/plugin-web-storage, @repo/xai-web-event-bus, react, react-router | 2026-05-23 |
 
 ## Web Planning Contract (2026-05-21)
 

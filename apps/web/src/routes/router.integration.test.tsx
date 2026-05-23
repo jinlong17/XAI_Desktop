@@ -91,13 +91,13 @@ beforeAll(() => {
 
 describe("web host router integration", () => {
   it("renders authenticated module deep links and survives remount refresh", async () => {
+    // P4: AppShellPage is no longer rendered; module content (TodoWebModuleRoute) is now direct.
+    // "Todos" comes from TodoWebModuleRoute's <h2>; "active module: todos" was AppShellPage text.
     const first = await mountRouter(["/app/todos/smart:inbox"]);
-    expect(first.container.textContent).toContain("active module: todos");
     expect(first.container.textContent).toContain("Todos");
     await unmountApp(first);
 
     const second = await mountRouter(["/app/todos/smart:inbox"]);
-    expect(second.container.textContent).toContain("active module: todos");
     expect(second.container.textContent).toContain("Todos");
     await unmountApp(second);
   });
@@ -105,8 +105,9 @@ describe("web host router integration", () => {
   it("resolves route families consistently across history entries", async () => {
     const historyEntries = ["/", "/auth/login", "/app/todos/smart:inbox"];
 
+    // P4: module content is direct; no AppShellPage "active module: todos" string.
     const app = await mountRouter(historyEntries, 2);
-    expect(app.container.textContent).toContain("active module: todos");
+    expect(app.container.textContent).toContain("Todos");
     await unmountApp(app);
 
     const auth = await mountRouter(historyEntries, 1);
@@ -124,7 +125,7 @@ describe("web host router integration", () => {
     await act(async () => {
       findButton(app.container, "Create").dispatchEvent(new MouseEvent("click", { bubbles: true }));
     });
-    expect(app.container.textContent).toContain("active module: todos");
+    // P4: module content is rendered directly; "Todos" comes from TodoWebModuleRoute.
     expect(app.container.textContent).toContain("Todos");
 
     await unmountApp(app);

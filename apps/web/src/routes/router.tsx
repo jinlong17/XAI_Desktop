@@ -34,8 +34,10 @@ export const webHostRouteObjects: RouteObject[] = [
         ],
       },
       {
+        // P4: <App> is now the layout for all /app/* routes.
+        // <App> provides WebShellProvider + Shell with <Outlet/> for module content.
         path: "app",
-        element: <Outlet />,
+        element: <App />,
         errorElement: <RouteErrorBoundary scope="app" />,
         children: [
           {
@@ -52,12 +54,6 @@ export const webHostRouteObjects: RouteObject[] = [
       {
         path: "_smoke/tokens",
         element: <TokensSmokePage />,
-      },
-      {
-        // P1 debug route — visual verification of Shell + Topbar before full wire-up.
-        // Removed in P4 when <App> becomes the real /app route element.
-        path: "_shell-smoke",
-        element: <App />,
       },
       {
         path: "*",

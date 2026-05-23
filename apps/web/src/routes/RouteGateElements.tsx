@@ -1,11 +1,12 @@
 import { AppRouteGate, AuthRouteGate } from "@repo/web-auth-device-session/web";
 import { useLocation, useNavigate, useParams } from "react-router";
 import { createWebConsoleCapabilities } from "../host/capabilities";
-import { AppShellPage } from "../pages/AppShellPage";
 import { AuthPage } from "../pages/AuthPage";
 import { NotFoundPage } from "../pages/NotFoundPage";
 import { resolveModuleRouteMatch } from "./modules/buildModuleRoutes";
 import { webModuleRouteRegistrations } from "./modules/registrations";
+// AppShellPage is kept in place for row #21 (settings-shell) to delete later.
+// P4: AppRouteElement no longer routes to AppShellPage; module content renders directly.
 
 export function AuthRouteElement() {
   const location = useLocation();
@@ -46,28 +47,21 @@ export function AppRouteElement() {
     },
   });
 
+  // P4: render module content directly — <Shell> (from <App>) provides the chrome.
+  // AppShellPage is kept for row #21 (settings-shell) cleanup; not used here anymore.
   return (
     <AppRouteGate
       path={`${location.pathname}${location.search}`}
       fallback={<main className="host-page"><p>Checking session...</p></main>}
       navigate={(path) => navigate(path, { replace: true })}
     >
-      <AppShellPage
-        moduleId={match.moduleId}
-        childPath={match.childPath}
-        modules={webModuleRouteRegistrations.map((entry) => ({
-          moduleId: entry.moduleId,
-          label: entry.label,
-        }))}
-        capabilities={capabilities}
-        content={ModuleRouteContent ? (
-          <ModuleRouteContent
-            moduleId={match.moduleId}
-            childPath={match.childPath}
-            capabilities={capabilities}
-          />
-        ) : null}
-      />
+      {ModuleRouteContent ? (
+        <ModuleRouteContent
+          moduleId={match.moduleId}
+          childPath={match.childPath}
+          capabilities={capabilities}
+        />
+      ) : null}
     </AppRouteGate>
   );
 }
