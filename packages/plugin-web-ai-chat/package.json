@@ -1,0 +1,44 @@
+{
+  "name": "@repo/plugin-web-ai-chat",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "description": "AI Chat module for XAI Web Console — collapsible conversation sidebar + 5-layer aurora + breathing orb + composer + starter prompts. Adapter Option A: typed no-op claudeAdapter returning bilingual demo line after 600..1200 ms jitter (Option B reserved for a future row).",
+  "sideEffects": ["./src/styles.css", "./src/index.ts"],
+  "exports": {
+    ".": {
+      "types": "./src/index.ts",
+      "default": "./src/index.ts"
+    }
+  },
+  "scripts": {
+    "lint": "eslint --max-warnings 0 .",
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "test:coverage": "vitest run --coverage"
+  },
+  "peerDependencies": {
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0"
+  },
+  "dependencies": {
+    "@repo/core": "workspace:*",
+    "@repo/plugin-web-tokens": "workspace:*",
+    "@repo/plugin-web-storage": "workspace:*",
+    "@repo/xai-web-shell": "workspace:*"
+  },
+  "devDependencies": {
+    "@repo/eslint-config": "workspace:*",
+    "@repo/typescript-config": "workspace:*",
+    "@testing-library/jest-dom": "^6.0.0",
+    "@testing-library/react": "^16.0.0",
+    "@types/react": "^19.0.0",
+    "@types/react-dom": "^19.0.0",
+    "jsdom": "^26.0.0",
+    "react": "^19.2.0",
+    "react-dom": "^19.2.0",
+    "typescript": "5.9.2",
+    "vitest": "^3.2.1"
+  }
+}
