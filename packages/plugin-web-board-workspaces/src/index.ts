@@ -14,6 +14,9 @@
  * P3 lands the orchestrator + registration.
  */
 
+// ---- Side-effect CSS (must precede any other import for vite ordering) ----
+import "./styles.css";
+
 // ---- Re-exports from row #7 board-core (consumed via index.ts only) -----
 export type {
   Board,
@@ -61,3 +64,19 @@ export {
 } from "./internal/panelOps.js";
 
 export { computeRingSegments, computeDonePct } from "./internal/ringMath.js";
+
+// ---- React leaf components -----------------------------------------------
+export { BoardSwitcher } from "./BoardSwitcher.js";
+export type { BoardSwitcherProps } from "./BoardSwitcher.js";
+
+export { BoardCreator } from "./BoardCreator.js";
+export type { BoardCreatorProps } from "./BoardCreator.js";
+
+export { StatusOverviewBanner } from "./StatusOverviewBanner.js";
+export type { StatusOverviewBannerProps } from "./StatusOverviewBanner.js";
+
+export { InboxPanel } from "./InboxPanel.js";
+export type { InboxPanelProps } from "./InboxPanel.js";
+
+export { PlannerPanel, computePlannerSlots } from "./PlannerPanel.js";
+export type { PlannerPanelProps } from "./PlannerPanel.js";
