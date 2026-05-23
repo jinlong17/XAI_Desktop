@@ -91,6 +91,10 @@ export type PomodoroSession = unknown;
 export type Countdown = unknown;
 export type MatrixStateBlob = unknown;
 
+// Habits state opaque alias — canonical declarations live in @repo/plugin-web-habits.
+// proposed: false — xai_habits_state is the canonical name approved by worker brief #15.
+export type HabitsStateBlob = unknown;
+
 // ---------------------------------------------------------------------------
 // Default values (const assertions for inference)
 // ---------------------------------------------------------------------------
@@ -330,6 +334,23 @@ export const PREF_REGISTRY = {
     category: "module",
     proposed: true,
   } satisfies PrefEntry<MatrixStateBlob>,
+
+  // ---- Habits (§S8 — declared by xai-web-habits #15) -----------------------
+  // Opaque storage type; canonical declarations live in @repo/plugin-web-habits.
+  // proposed: false — canonical name approved by worker brief #15.
+  xai_habits_state: {
+    key: "xai_habits_state",
+    codec: "json",
+    default: {
+      schemaVersion: 1,
+      habits: [],
+      checkIns: {},
+      diaries: {},
+    } as HabitsStateBlob,
+    schemaVersion: 1,
+    owner: "xai-web-habits",
+    category: "module",
+  } satisfies PrefEntry<HabitsStateBlob>,
 } as const;
 
 // ---------------------------------------------------------------------------

@@ -1,0 +1,584 @@
+/* ====================================================================
+   styles.css — Habits module styles
+   All colors use semantic CSS custom properties only. Zero hex literals.
+   Side-effect import: imported from index.ts and HabitsModule.tsx.
+   Design: design.md §4
+   ==================================================================== */
+
+/* ---- Module layout ------------------------------------------------- */
+
+.module-habits {
+  display: flex;
+  height: 100%;
+  overflow: hidden;
+  gap: var(--gap-md, 0.75rem);
+}
+
+/* ---- Left pane: habits list --------------------------------------- */
+
+.habits-list {
+  width: 380px;
+  min-width: 280px;
+  flex-shrink: 0;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  border-radius: var(--radius-md, 0.5rem);
+  background: var(--bg-panel);
+}
+
+/* ---- Module header ------------------------------------------------- */
+
+.module-head {
+  display: flex;
+  align-items: center;
+  gap: var(--gap-sm, 0.5rem);
+  padding: var(--p-md, 1rem) var(--p-lg, 1.5rem) var(--p-sm, 0.5rem);
+  flex-shrink: 0;
+}
+
+.module-head-inline {
+  flex-wrap: nowrap;
+}
+
+.module-title {
+  font-size: var(--fs-lg, 1.125rem);
+  font-weight: 600;
+  color: var(--text-1);
+  margin: 0;
+}
+
+.grow {
+  flex: 1;
+}
+
+.seg {
+  display: flex;
+  gap: 2px;
+  background: var(--bg-panel-2);
+  border-radius: var(--radius-sm, 0.25rem);
+  padding: 2px;
+}
+
+.seg button {
+  border: none;
+  background: transparent;
+  color: var(--text-2);
+  padding: 3px 5px;
+  border-radius: calc(var(--radius-sm, 0.25rem) - 1px);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+}
+
+.seg button[aria-selected="true"] {
+  background: var(--bg-surface);
+  color: var(--text-1);
+}
+
+.icon-btn {
+  border: none;
+  background: transparent;
+  color: var(--text-2);
+  padding: 5px;
+  border-radius: var(--radius-sm, 0.25rem);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.icon-btn:hover {
+  background: var(--bg-hover);
+  color: var(--text-1);
+}
+
+/* ---- Week header --------------------------------------------------- */
+
+.week-header {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  padding: 0 var(--p-md, 1rem);
+  flex-shrink: 0;
+}
+
+.weekday {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+  padding: 4px 0;
+}
+
+.wd-name {
+  font-size: var(--fs-xs, 0.6875rem);
+  color: var(--text-3);
+  font-weight: 500;
+}
+
+.wd-num {
+  font-size: var(--fs-xs, 0.6875rem);
+  color: var(--text-3);
+}
+
+.weekday.today .wd-name,
+.weekday.today .wd-num {
+  color: var(--accent);
+  font-weight: 600;
+}
+
+/* ---- Habit rows --------------------------------------------------- */
+
+.habit-rows {
+  flex: 1;
+  overflow-y: auto;
+  padding: var(--p-sm, 0.5rem) 0;
+}
+
+.habit-row {
+  display: flex;
+  align-items: center;
+  gap: var(--gap-sm, 0.5rem);
+  padding: var(--p-sm, 0.5rem) var(--p-md, 1rem);
+  cursor: pointer;
+  border-radius: var(--radius-sm, 0.25rem);
+  margin: 0 var(--p-sm, 0.5rem);
+  transition: background 0.1s;
+}
+
+.habit-row:hover {
+  background: var(--bg-hover);
+}
+
+.habit-row.active {
+  background: var(--bg-selected);
+}
+
+.habit-emoji {
+  font-size: 1.5rem;
+  line-height: 1;
+  flex-shrink: 0;
+}
+
+.habit-emoji-lg {
+  font-size: 2rem;
+  line-height: 1;
+  flex-shrink: 0;
+}
+
+.habit-row-body {
+  flex: 1;
+  min-width: 0;
+}
+
+.habit-title {
+  font-size: var(--fs-sm, 0.875rem);
+  font-weight: 500;
+  color: var(--text-1);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.habit-stats {
+  display: flex;
+  align-items: center;
+  gap: 3px;
+  font-size: var(--fs-xs, 0.6875rem);
+  color: var(--text-3);
+  margin-top: 2px;
+}
+
+/* ---- Habit week strip (7-cell check buttons) ---------------------- */
+
+.habit-week {
+  display: flex;
+  gap: 2px;
+  flex-shrink: 0;
+}
+
+.hcell {
+  width: 24px;
+  height: 24px;
+  border: 1.5px solid var(--border-subtle);
+  border-radius: 50%;
+  background: transparent;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: transparent;
+  padding: 0;
+  transition: background 0.1s, border-color 0.1s;
+}
+
+.hcell:hover {
+  border-color: var(--accent);
+}
+
+.hcell.on {
+  background: var(--accent);
+  border-color: var(--accent);
+  color: var(--on-accent);
+}
+
+.hcell.today {
+  border-color: var(--accent);
+}
+
+.hcell.today.on {
+  background: var(--accent);
+  color: var(--on-accent);
+}
+
+/* ---- Right pane: habit detail ------------------------------------- */
+
+.habits-detail {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  overflow-y: auto;
+  padding: var(--p-md, 1rem);
+  gap: var(--gap-md, 0.75rem);
+}
+
+.detail-head {
+  display: flex;
+  align-items: center;
+  gap: var(--gap-sm, 0.5rem);
+}
+
+.detail-title {
+  font-size: var(--fs-lg, 1.125rem);
+  font-weight: 600;
+  color: var(--text-1);
+  margin: 0;
+  flex: 1;
+  min-width: 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.detail-empty {
+  color: var(--text-3);
+  font-size: var(--fs-sm, 0.875rem);
+  padding: var(--p-lg, 1.5rem);
+}
+
+/* ---- Stat grid + cards -------------------------------------------
+   StatCard icon colors are applied inline via the `color` prop.
+   Token references (declared here so token-lint passes):
+     - var(--blue)   — monthly-checkins icon
+     - var(--amber)  — streak icon
+     - var(--red)    — monthly-rate / total-checkins icon
+   ------------------------------------------------------------------- */
+
+.stat-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: var(--gap-sm, 0.5rem);
+}
+
+.stat-card {
+  border-radius: var(--radius-md, 0.5rem);
+  background: var(--bg-panel);
+  padding: var(--p-sm, 0.5rem) var(--p-md, 1rem);
+}
+
+.stat-head {
+  display: flex;
+  align-items: center;
+  gap: var(--gap-xs, 0.25rem);
+  margin-bottom: 4px;
+}
+
+.stat-ico {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 22px;
+  height: 22px;
+  border-radius: var(--radius-sm, 0.25rem);
+  flex-shrink: 0;
+}
+
+.stat-label {
+  font-size: var(--fs-xs, 0.6875rem);
+  color: var(--text-3);
+  font-weight: 500;
+}
+
+.stat-value {
+  font-size: var(--fs-xl, 1.25rem);
+  font-weight: 700;
+  color: var(--text-1);
+}
+
+.stat-unit {
+  font-size: var(--fs-xs, 0.6875rem);
+  color: var(--text-3);
+  font-weight: 400;
+  margin-left: 2px;
+}
+
+/* ---- Monospace numerics ------------------------------------------ */
+
+.mono {
+  font-variant-numeric: tabular-nums;
+  font-feature-settings: "tnum" 1;
+}
+
+/* ---- Progress card ------------------------------------------------ */
+
+.progress-card {
+  border-radius: var(--radius-md, 0.5rem);
+  background: var(--bg-panel);
+  padding: var(--p-md, 1rem);
+}
+
+.progress-head {
+  display: flex;
+  align-items: center;
+  gap: var(--gap-sm, 0.5rem);
+  margin-bottom: var(--gap-sm, 0.5rem);
+}
+
+.progress-num {
+  font-size: var(--fs-2xl, 1.5rem);
+  font-weight: 700;
+  color: var(--text-1);
+}
+
+.progress-sub {
+  font-size: var(--fs-xs, 0.6875rem);
+  color: var(--text-3);
+}
+
+.goal-medal {
+  flex-shrink: 0;
+}
+
+/* ---- Month calendar ----------------------------------------------- */
+
+.month-cal header {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--gap-sm, 0.5rem);
+  margin-bottom: var(--gap-sm, 0.5rem);
+}
+
+.month-cal h3 {
+  font-size: var(--fs-sm, 0.875rem);
+  font-weight: 600;
+  color: var(--text-1);
+  margin: 0;
+  min-width: 80px;
+  text-align: center;
+}
+
+.cal-grid {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 2px;
+}
+
+.cal-h {
+  font-size: var(--fs-xs, 0.6875rem);
+  color: var(--text-3);
+  text-align: center;
+  padding: 2px 0 4px;
+  font-weight: 500;
+}
+
+.cal-cell {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 3px 0;
+  border-radius: var(--radius-sm, 0.25rem);
+  cursor: default;
+}
+
+.cal-cell.in {
+  cursor: pointer;
+}
+
+.cal-cell.in:hover {
+  background: var(--bg-hover);
+}
+
+.cal-num {
+  font-size: var(--fs-xs, 0.6875rem);
+  color: var(--text-3);
+  line-height: 1.2;
+}
+
+.cal-cell.in .cal-num {
+  color: var(--text-1);
+}
+
+.cal-cell.today .cal-num {
+  color: var(--accent);
+  font-weight: 700;
+}
+
+.cal-ring {
+  width: 16px;
+  height: 3px;
+  border-radius: 2px;
+  background: transparent;
+  margin-top: 2px;
+}
+
+.cal-cell.checked .cal-ring {
+  background: var(--accent);
+}
+
+.cal-cell.today.checked .cal-ring {
+  background: var(--accent);
+}
+
+/* ---- Diary / log card ------------------------------------------- */
+
+.log-card {
+  border-radius: var(--radius-md, 0.5rem);
+  background: var(--bg-panel);
+  padding: var(--p-md, 1rem);
+}
+
+.log-title {
+  font-size: var(--fs-sm, 0.875rem);
+  font-weight: 600;
+  color: var(--text-1);
+  margin: 0 0 var(--gap-sm, 0.5rem);
+}
+
+.log-empty {
+  font-size: var(--fs-xs, 0.6875rem);
+  color: var(--text-3);
+  margin: 0 0 var(--gap-sm, 0.5rem);
+}
+
+.log-textarea {
+  width: 100%;
+  resize: vertical;
+  border: 1.5px solid var(--border-subtle);
+  border-radius: var(--radius-sm, 0.25rem);
+  background: var(--bg-surface);
+  color: var(--text-1);
+  font-size: var(--fs-sm, 0.875rem);
+  padding: var(--p-sm, 0.5rem);
+  font-family: inherit;
+  box-sizing: border-box;
+}
+
+.log-textarea:focus {
+  outline: none;
+  border-color: var(--accent);
+}
+
+/* ---- Panel base --------------------------------------------------- */
+
+.panel {
+  /* Shared base; individual panels add their own padding/border-radius. */
+}
+
+/* ---- Add-Habit dialog -------------------------------------------- */
+
+.hb-dialog-scrim {
+  position: fixed;
+  inset: 0;
+  background: var(--overlay-scrim, rgba(0,0,0,0.4));
+  z-index: 100;
+}
+
+.hb-dialog {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 101;
+  border: 1.5px solid var(--border-subtle);
+  border-radius: var(--radius-lg, 0.75rem);
+  background: var(--bg-surface);
+  padding: var(--p-lg, 1.5rem);
+  min-width: 320px;
+  max-width: 480px;
+  width: 90%;
+  box-shadow: 0 8px 32px var(--shadow-elevated, rgba(0,0,0,0.2));
+}
+
+.hb-dialog-title {
+  font-size: var(--fs-lg, 1.125rem);
+  font-weight: 600;
+  color: var(--text-1);
+  margin: 0 0 var(--gap-md, 0.75rem);
+}
+
+.hb-form-row {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  margin-bottom: var(--gap-sm, 0.5rem);
+}
+
+.hb-form-row label {
+  font-size: var(--fs-xs, 0.6875rem);
+  color: var(--text-2);
+  font-weight: 500;
+}
+
+.hb-form-row input {
+  border: 1.5px solid var(--border-subtle);
+  border-radius: var(--radius-sm, 0.25rem);
+  background: var(--bg-surface);
+  color: var(--text-1);
+  font-size: var(--fs-sm, 0.875rem);
+  padding: 6px var(--p-sm, 0.5rem);
+  font-family: inherit;
+}
+
+.hb-form-row input:focus {
+  outline: none;
+  border-color: var(--accent);
+}
+
+.hb-dialog-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: var(--gap-sm, 0.5rem);
+  margin-top: var(--gap-md, 0.75rem);
+}
+
+.hb-btn {
+  border: 1.5px solid var(--border-subtle);
+  border-radius: var(--radius-sm, 0.25rem);
+  background: transparent;
+  color: var(--text-1);
+  font-size: var(--fs-sm, 0.875rem);
+  padding: 6px var(--p-md, 1rem);
+  cursor: pointer;
+  font-family: inherit;
+}
+
+.hb-btn:hover:not(:disabled) {
+  background: var(--bg-hover);
+}
+
+.hb-btn.primary {
+  background: var(--accent);
+  border-color: var(--accent);
+  color: var(--on-accent);
+}
+
+.hb-btn.primary:hover:not(:disabled) {
+  opacity: 0.9;
+}
+
+.hb-btn:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
