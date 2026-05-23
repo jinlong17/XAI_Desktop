@@ -1,0 +1,19 @@
+{
+  "name": "@repo/plugin-web-dashboard-widgets",
+  "slug": "xai-web-dashboard-widgets",
+  "version": "0.0.0",
+  "status": "In-Dev",
+  "type": "ui",
+  "owner": "xai-web-dashboard-widgets",
+  "description": "Dashboard widget pack — Clock (4 styles + 12 timezones + analog 60+12+12) / MiniCal / WorldClocks (3 views + 12 cities) / Weather / Stickies / Mail / Upcoming / 3 mini stats. Consumes @repo/plugin-web-dashboard-grid's WidgetRegistration[] slot API.",
+  "roadmap_row": 11,
+  "wave": "W2",
+  "entry": "./src/index.ts",
+  "dependencies": [
+    "@repo/core",
+    "@repo/plugin-web-dashboard-grid",
+    "@repo/plugin-web-storage",
+    "@repo/plugin-web-tokens",
+    "@repo/xai-web-event-bus"
+  ]
+}

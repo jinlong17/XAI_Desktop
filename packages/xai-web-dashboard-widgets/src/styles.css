@@ -1,0 +1,244 @@
+/* ============================================================================
+   @repo/plugin-web-dashboard-widgets — widget-body styles.
+
+   Per api.md §S9: this file defines ONLY widget-body classes (.clock-*,
+   .ws-*, .donut, .pomo-dots, etc.). The .widget / .widget-shell / .dash-grid
+   container rules live in @repo/plugin-web-tokens layout.css (shipped by
+   rows #2 / #10) and MUST NOT be redefined here.
+
+   Source: web design/layout.css widget sections (best-effort port).
+============================================================================ */
+
+/* ---------- Clock ---------- */
+.w-clock-body {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 16px;
+  position: relative;
+}
+
+.clock-toolbar {
+  position: absolute;
+  top: 8px;
+  left: 8px;
+  right: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.clk-tz-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 4px 8px;
+  font-size: 11px;
+  border-radius: 6px;
+  background: var(--bg-panel-2);
+  color: var(--text-1);
+  border: 1px solid var(--border-1);
+  cursor: pointer;
+}
+.clk-tz-btn:hover {
+  background: var(--bg-panel-3, var(--bg-panel-2));
+}
+
+.clk-style-toggle {
+  display: inline-flex;
+  gap: 2px;
+  border-radius: 6px;
+  background: var(--bg-panel-2);
+  border: 1px solid var(--border-1);
+  padding: 2px;
+}
+.clk-style-toggle button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 4px;
+  border-radius: 4px;
+  background: transparent;
+  color: var(--text-2);
+  border: none;
+  cursor: pointer;
+}
+.clk-style-toggle button[aria-selected="true"] {
+  background: var(--bg-panel);
+  color: var(--text-1);
+}
+
+.clock-time {
+  font-size: 44px;
+  letter-spacing: 0.5px;
+  font-weight: 600;
+  color: var(--text-1);
+}
+.clk-colon {
+  color: var(--text-3);
+  margin: 0 2px;
+}
+.clk-sec {
+  font-size: 20px;
+  color: var(--text-3);
+  margin-left: 4px;
+}
+
+.clock-split {
+  font-size: 40px;
+  font-weight: 600;
+  letter-spacing: 1px;
+  color: var(--text-1);
+}
+.cs-hour,
+.cs-min {
+  color: var(--text-1);
+}
+.cs-colon {
+  margin: 0 3px;
+  color: var(--text-3);
+}
+.cs-dim {
+  color: var(--text-3);
+  font-size: 26px;
+}
+
+.clock-min {
+  font-size: 50px;
+  font-weight: 700;
+  letter-spacing: -1px;
+  color: var(--text-1);
+  display: flex;
+  align-items: baseline;
+  gap: 4px;
+}
+.cm-dim {
+  color: var(--text-3);
+}
+.cm-ampm {
+  font-size: 14px;
+  margin-left: 6px;
+  color: var(--text-2);
+  font-weight: 600;
+}
+
+.clock-analog {
+  display: block;
+}
+
+.clock-sub {
+  font-size: 11px;
+  color: var(--text-3);
+  text-align: center;
+}
+
+.popover-scrim {
+  position: fixed;
+  inset: 0;
+  background: transparent;
+  z-index: 50;
+}
+.popover {
+  position: absolute;
+  top: 32px;
+  left: 0;
+  z-index: 51;
+  background: var(--bg-panel);
+  border: 1px solid var(--border-1);
+  border-radius: 8px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+  min-width: 180px;
+  max-height: 240px;
+  overflow-y: auto;
+}
+.popover-list {
+  display: flex;
+  flex-direction: column;
+  padding: 4px;
+}
+.popover-item {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 8px;
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  border-radius: 4px;
+  color: var(--text-1);
+  font-size: 12px;
+  text-align: left;
+}
+.popover-item:hover {
+  background: var(--bg-panel-2);
+}
+.popover-item.active {
+  background: var(--bg-panel-2);
+  font-weight: 600;
+}
+.popover-divider {
+  height: 1px;
+  background: var(--border-1);
+  margin: 4px 0;
+}
+
+/* ---------- Mini stats (Tasks / Streak / Pomos) ---------- */
+.stat-tasks,
+.stat-streak,
+.stat-pomos {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: 12px 16px;
+  gap: 8px;
+}
+.ws-label {
+  font-size: 11px;
+  color: var(--text-2);
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+.ws-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
+.ws-val {
+  font-size: 32px;
+  font-weight: 700;
+  color: var(--text-1);
+  line-height: 1;
+}
+.ws-unit {
+  font-size: 14px;
+  color: var(--text-3);
+  font-weight: 500;
+  margin-left: 2px;
+}
+
+.donut {
+  display: block;
+}
+
+.pomo-dots {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 4px;
+  width: 48px;
+}
+.pd-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: var(--border-1);
+  border: 1px solid var(--border-1);
+}
+.pd-dot.on {
+  background: var(--accent);
+  border-color: var(--accent);
+}

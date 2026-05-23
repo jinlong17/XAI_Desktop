@@ -76,7 +76,7 @@ export type PetId =
   | "star"
   | "ember";
 
-export type ClockStyle = "analog" | "digital" | "minimal";
+export type ClockStyle = "classic" | "split" | "minimal" | "analog";
 
 // These complex types are "opaque" in v1 — the storage layer does not constrain
 // their shape; owner rows provide the real type declaration.
@@ -251,7 +251,7 @@ export const PREF_REGISTRY = {
   xai_clock_style: {
     key: "xai_clock_style",
     codec: "string",
-    default: "analog" as ClockStyle,
+    default: "classic" as ClockStyle,
     schemaVersion: 1,
     owner: "xai-web-dashboard-widgets",
     category: "module",

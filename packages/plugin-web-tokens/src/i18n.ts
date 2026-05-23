@@ -167,6 +167,16 @@ export const I18N = {
       countdown_date: "Date",
       countdown_add: "New countdown",
       days_left: "days",
+      widgets: {
+        clock: {
+          classic: "Classic",
+          split: "Split",
+          minimal: "Minimal",
+          analog: "Analog",
+          local_time: "Local time",
+          timezone: "Timezone",
+        },
+      },
     },
     quotes: [
       { author: "Lao Tzu",         text: "A journey of a thousand miles begins with a single step." },
@@ -367,6 +377,16 @@ export const I18N = {
       countdown_date: "日期",
       countdown_add: "新倒计时",
       days_left: "天",
+      widgets: {
+        clock: {
+          classic: "经典",
+          split: "分段",
+          minimal: "极简",
+          analog: "模拟",
+          local_time: "本地时间",
+          timezone: "时区",
+        },
+      },
     },
     quotes: [
       { author: "老子",    text: "千里之行，始于足下。" },
