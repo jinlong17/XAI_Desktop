@@ -2,20 +2,21 @@
  * Shell module registrations — the concrete WebModuleSlotRegistration[] array.
  *
  * Satisfies @repo/xai-web-shell WebModuleSlotRegistration for each module id
- * in the rail. Populated with placeholder routes for W1; each W2 row
- * (rows #6..#24) replaces its own entry in this file.
+ * in the rail. All 12 modules now ship as real registrations from their
+ * owning packages (rows #6..#21); no placeholder entries remain.
  *
  * Design constraints:
  * - The existing todoWebModuleRegistration from @repo/plugin-productivity/web
  *   is preserved for backward compat (B5 review note).
  * - Settings has showInRail: false (reachable via Topbar / Avatar only).
+ *   Chassis from xai-web-settings-shell row #21; sibling rows #22/#23/#24
+ *   substitute pane content via paneRegistry composition.
  * - Rail order matches the prototype DEFAULT_ITEMS ordering.
  *
  * Owner: apps/web (host-level concern — not inside xai-web-shell).
  */
 
 import type { WebModuleSlotRegistration } from "@repo/xai-web-shell";
-import { ModuleRoutePlaceholderPage } from "../../pages/ModuleRoutePlaceholderPage";
 import { matrixSlotRegistration } from "@repo/plugin-web-matrix";
 import { countdownWebModuleRegistration } from "@repo/plugin-web-countdown";
 import { tasksWebModuleRegistration } from "@repo/plugin-web-tasks";
@@ -35,28 +36,8 @@ import { dashboardGridSlotRegistration } from "@repo/plugin-web-dashboard-grid";
 import { boardWorkspacesWebModuleRegistration } from "@repo/plugin-web-board-workspaces";
 // xai-web-statistics row #20
 import { statisticsWebModuleRegistration } from "@repo/plugin-web-statistics";
-
-function placeholder(
-  moduleId: string,
-  label: string,
-  icon: WebModuleSlotRegistration["icon"],
-  railOrder: number,
-  showInRail = true,
-): WebModuleSlotRegistration {
-  return {
-    moduleId,
-    label,
-    defaultChildPath: "",
-    children: [
-      { path: "", render: ModuleRoutePlaceholderPage },
-      { path: "*", render: ModuleRoutePlaceholderPage },
-    ],
-    icon,
-    railOrder,
-    i18nKey: `nav.${moduleId}`,
-    showInRail,
-  };
-}
+// xai-web-settings-shell row #21 (W4a · chassis · showInRail:false)
+import { settingsShellWebModuleRegistration } from "@repo/plugin-web-settings-shell";
 
 export const webShellModuleRegistrations: WebModuleSlotRegistration[] = [
   // Rail-visible modules (railOrder 1..12)
@@ -71,8 +52,10 @@ export const webShellModuleRegistrations: WebModuleSlotRegistration[] = [
   meditationSlotRegistration,  // xai-web-meditation row #16 (railOrder 9)
   countdownWebModuleRegistration,
   statisticsWebModuleRegistration,  // xai-web-statistics row #20 (railOrder 11)
-  // Settings — not in rail (showInRail: false)
-  placeholder("settings",   "Settings",   "sliders",   99, false),
+  // Settings — not in rail (showInRail: false). Chassis from xai-web-settings-shell row #21;
+  // sibling rows #22 (appearance) / #23 (features-panel) / #24 (rest) will substitute pane
+  // content via the paneRegistry composition pattern documented in api.md §8.
+  settingsShellWebModuleRegistration,  // xai-web-settings-shell row #21 (railOrder 99)
 ];
 
 /**
