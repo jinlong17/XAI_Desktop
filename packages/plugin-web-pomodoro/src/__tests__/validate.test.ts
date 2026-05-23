@@ -17,14 +17,12 @@ describe("isPomodoroSession", () => {
 
   // V2: rejects missing id
   it("V2: rejects missing id", () => {
-    const { id: _id, ...rest } = FIXTURE_FOCUS_TODAY;
-    expect(isPomodoroSession(rest)).toBe(false);
+    expect(isPomodoroSession({ ...FIXTURE_FOCUS_TODAY, id: undefined })).toBe(false);
   });
 
   // V3: rejects missing mode
   it("V3: rejects missing mode", () => {
-    const { mode: _m, ...rest } = FIXTURE_FOCUS_TODAY;
-    expect(isPomodoroSession(rest)).toBe(false);
+    expect(isPomodoroSession({ ...FIXTURE_FOCUS_TODAY, mode: undefined })).toBe(false);
   });
 
   // V4: rejects invalid mode literal
@@ -34,8 +32,7 @@ describe("isPomodoroSession", () => {
 
   // V5: rejects missing startedAt
   it("V5: rejects missing startedAt", () => {
-    const { startedAt: _s, ...rest } = FIXTURE_FOCUS_TODAY;
-    expect(isPomodoroSession(rest)).toBe(false);
+    expect(isPomodoroSession({ ...FIXTURE_FOCUS_TODAY, startedAt: undefined })).toBe(false);
   });
 
   // V6: rejects missing finishedAt (matches FIXTURE_INVALID)

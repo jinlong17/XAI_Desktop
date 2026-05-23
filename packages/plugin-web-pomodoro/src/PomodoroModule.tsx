@@ -144,7 +144,6 @@ export function PomodoroModule({ lang }: PomodoroModuleProps) {
       onTickToZeroRef.current?.(mode, elapsedMs, sessionId, sessionStartedAt);
     };
   // stable — no deps (uses refs only)
-  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   // ---- Timer hook ---------------------------------------------------------

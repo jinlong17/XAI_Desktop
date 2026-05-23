@@ -6,7 +6,6 @@
  * rAF is polyfilled via vitest.setup.ts as setTimeout(cb, 16).
  */
 
-import React from "react";
 import { describe, it, expect, vi, beforeEach } from "vitest";
 import { renderHook, act } from "@testing-library/react";
 import { useTimerTick } from "../internal/useTimerTick.js";
