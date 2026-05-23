@@ -63,6 +63,9 @@ export const I18N = {
       month: "Month", week: "Week", day: "Day",
       today: "Today",
       sample_banner: "Sample data — switch to your account to see real events.",
+      coming_soon: "Week and Day views are coming soon.",
+      holiday_mayday: "Labor Day",
+      holiday_mothers_day: "Mother's Day",
     },
     matrix: {
       title: "Eisenhower Matrix",
@@ -257,6 +260,9 @@ export const I18N = {
       month: "月", week: "周", day: "日",
       today: "今天",
       sample_banner: "示例数据 — 登录后查看真实事件。",
+      coming_soon: "周视图与日视图即将推出。",
+      holiday_mayday: "劳动节",
+      holiday_mothers_day: "母亲节",
     },
     matrix: {
       title: "四象限",

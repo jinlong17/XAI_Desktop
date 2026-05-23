@@ -95,6 +95,10 @@ export type MatrixStateBlob = unknown;
 // proposed: false — xai_habits_state is the canonical name approved by worker brief #15.
 export type HabitsStateBlob = unknown;
 
+// Meditation prefs opaque alias — canonical declarations live in @repo/plugin-web-meditation.
+// proposed: false — xai_meditation_prefs is the canonical name approved by worker brief #16.
+export type MeditationPrefsBlob = unknown;
+
 // ---------------------------------------------------------------------------
 // Default values (const assertions for inference)
 // ---------------------------------------------------------------------------
@@ -351,6 +355,37 @@ export const PREF_REGISTRY = {
     owner: "xai-web-habits",
     category: "module",
   } satisfies PrefEntry<HabitsStateBlob>,
+
+  // ---- Week-start preference (§S8 — first-consumer xai-web-calendar #12) -----
+  // 0 = Sunday (default), 1 = Monday. First consumer claims ownership; Settings
+  // W4 may later flip `owner` to "xai-web-settings-rest" via a one-line edit.
+  // proposed: false — canonical xai_pref_* family per ADR-0007 §S8.
+  xai_pref_week_start: {
+    key: "xai_pref_week_start",
+    codec: "number",
+    default: 0,
+    schemaVersion: 1,
+    owner: "xai-web-calendar",
+    category: "pref",
+  } satisfies PrefEntry<0 | 1>,
+
+  // ---- Meditation (§S8 — declared by xai-web-meditation #16) ----------------
+  // Opaque storage type; canonical declarations live in @repo/plugin-web-meditation.
+  // proposed: false — canonical name approved by worker brief #16.
+  xai_meditation_prefs: {
+    key: "xai_meditation_prefs",
+    codec: "json",
+    default: {
+      schemaVersion: 1,
+      scene: "ocean",
+      clock: "split",
+      sound: "water",
+      duration: 15,
+    } as MeditationPrefsBlob,
+    schemaVersion: 1,
+    owner: "xai-web-meditation",
+    category: "module",
+  } satisfies PrefEntry<MeditationPrefsBlob>,
 } as const;
 
 // ---------------------------------------------------------------------------
