@@ -1,8 +1,26 @@
-import { sanitizeUnknown, sanitizeUrlPath } from "./privacy";
+import { sanitizeUrlPath } from "./privacy";
 import type { ObservabilityRouteGroup } from "./types";
 
-const RUM_SENSITIVE_KEY_PATTERN =
-  /(?:token|secret|password|authorization|cookie|session|body|payload|query|email|user|account|device|id|hash|fingerprint|entity|correlat|stable|deterministic)/i;
+const RUM_ALLOWED_URL_KEYS = new Set(["url", "pathname", "route", "navigationEntryUrl"]);
+const RUM_ALLOWED_NUMERIC_KEYS = new Set([
+  "timeToFirstByte",
+  "firstByteToFCP",
+  "firstByteToLCP",
+  "resourceLoadDelay",
+  "resourceLoadDuration",
+  "elementRenderDelay",
+  "inputDelay",
+  "processingDuration",
+  "presentationDelay",
+  "interactionTime",
+  "nextPaintTime",
+  "loadState",
+]);
+const RUM_ALLOWED_ENUM_VALUES: Record<string, readonly string[]> = {
+  navigationType: ["navigate", "reload", "back-forward", "prerender"],
+  interactionType: ["keyboard", "pointer"],
+};
+const URLISH_PATTERN = /^(?:\/|https?:\/\/)/i;
 
 export type RumMetricName = "LCP" | "INP" | "CLS" | "TTFB";
 export type RumMetricRating = "good" | "needs-improvement" | "poor";
@@ -39,6 +57,15 @@ function isRumMetricRating(value: unknown): value is RumMetricRating {
   return value === "good" || value === "needs-improvement" || value === "poor";
 }
 
+function sanitizeRouteShape(input: string): string | undefined {
+  if (!URLISH_PATTERN.test(input)) {
+    return undefined;
+  }
+
+  const normalized = sanitizeUrlPath(input);
+  return normalized.startsWith("/") ? normalized : undefined;
+}
+
 function sanitizeAttribution(input: unknown): Record<string, unknown> | undefined {
   if (!input || typeof input !== "object" || Array.isArray(input)) {
     return undefined;
@@ -48,16 +75,27 @@ function sanitizeAttribution(input: unknown): Record<string, unknown> | undefine
   const output: Record<string, unknown> = {};
 
   for (const [key, value] of Object.entries(source)) {
-    if (RUM_SENSITIVE_KEY_PATTERN.test(key)) {
+    if (RUM_ALLOWED_URL_KEYS.has(key) && typeof value === "string") {
+      const sanitizedPath = sanitizeRouteShape(value);
+      if (sanitizedPath) {
+        output[key] = sanitizedPath;
+      }
+      continue;
+    }
+
+    if (RUM_ALLOWED_NUMERIC_KEYS.has(key)) {
+      if (isFiniteNumber(value)) {
+        output[key] = value;
+      }
       continue;
     }
 
     if (typeof value === "string") {
-      output[key] = value.includes("://") || value.startsWith("/") ? sanitizeUrlPath(value) : sanitizeUnknown(value);
-      continue;
+      const allowedValues = RUM_ALLOWED_ENUM_VALUES[key];
+      if (allowedValues && allowedValues.includes(value)) {
+        output[key] = value;
+      }
     }
-
-    output[key] = sanitizeUnknown(value);
   }
 
   return Object.keys(output).length > 0 ? output : undefined;
