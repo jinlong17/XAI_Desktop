@@ -8,8 +8,8 @@
  * API contract: packages/xai-web-settings-features-panel/docs/api.md
  * ADR anchor: docs/adr/0007-xai-web-console-build-form.md §S4 + §S7 + §S8
  *
- * P1 surface (this commit): types + featureIds + storage keys (registry-side).
- * P2 lands FeaturesPane / FeatureThumb / DisabledFeatureFallback / withDisabledFallback / useFeaturePrefs / filterModulesByFeaturePrefs.
+ * P2 surface (this commit): + FeaturesPane / DisabledFeatureFallback / featuresPane /
+ * withDisabledFallback / useFeaturePrefs / filterModulesByFeaturePrefs.
  * P3 lands host wiring + integration tests.
  */
 
@@ -26,3 +26,15 @@ export type {
 
 // ---- Constants + utilities -------------------------------------------------
 export { featureIdOrder, isFeatureId, featurePrefKey } from "./featureIds.js";
+
+// ---- Hooks + pure helpers --------------------------------------------------
+export { useFeaturePrefs } from "./useFeaturePrefs.js";
+export { filterModulesByFeaturePrefs } from "./filterModulesByFeaturePrefs.js";
+
+// ---- Components ------------------------------------------------------------
+export { FeaturesPane } from "./FeaturesPane.js";
+export { DisabledFeatureFallback } from "./DisabledFeatureFallback.js";
+
+// ---- Slot composition + wrap helpers --------------------------------------
+export { featuresPane } from "./internal/featuresPane.js";
+export { withDisabledFallback } from "./withDisabledFallback.js";
