@@ -7,12 +7,12 @@
 | Workflow | FEATURE_DEV |
 | Target | xai-web-board-workspaces |
 | Title | Web Console Board workspace + multi-board layer — colored Workspace chips (Personal / Team Workspace), Board Switcher modal (search + workspace scope tabs + grouped grid of board cards + "+ New board"), Board Creator modal (3 templates: Basic Kanban / PM for Teams / Blank), Project-Management-for-Teams template visual treatment (Status Overview SVG ring chart + 5 colored stages + percentages), 4-button multi-panel switcher (Inbox 260px / Planner 320px / Board flex / Switch boards trigger) with at-least-one-open invariant, persistence via usePref on `xai_board_panels` + `xai_board_inbox` (both already SHIPPED `unknown`-typed registry slots — narrowed at component boundary), bilingual via `STR` local tables + `useI18n(lang)` for board-core-shipped keys, wraps row #7 `@repo/plugin-web-board-core`'s `BoardView` + schema + helpers + seed (consumed via index.ts ONLY). REPLACES `boardCoreWebModuleRegistration` at line 65 of `apps/web/src/routes/modules/shellRegistrations.tsx` with this row's `boardWorkspacesWebModuleRegistration` (single-line Edit + one import-block swap; concurrent siblings #8 board-views + #11 dashboard-widgets own disjoint anchors). Pure UI sink — no event-bus emit. |
-| Current Phase | FEATURE_AUTO_BUILD |
-| Status | READY_FOR_VERIFY |
-| Suggested Next | feature-verify |
+| Current Phase | FEATURE_VERIFY |
+| Status | READY_TO_SHIP |
+| Suggested Next | ship |
 | Verify Cross-vendor | queued (manifest header — ship-time Codex `gpt-5.5-thinking medium` / Cursor fallback; row-level verify is same-vendor Claude Opus — documented compromise) |
 | Automation Mode | A-Claude (per roadmap default; xai-roadmap-loop W2e parallel-Agent mode — siblings #8 xai-web-board-views + #11 xai-web-dashboard-widgets planning concurrently) |
-| Executor | Claude Opus 4.7 1M (feature-auto-build, 2026-05-23) |
+| Executor | Claude Opus 4.7 1M (feature-verify, 2026-05-23) |
 | Updated | 2026-05-23 |
 | Dispatched By | xai-roadmap-loop (W2e parallel dispatch, concurrent with rows #8 and #11) |
 | Roadmap Row | docs/workflow/roadmap/xai-web-console.md row #9 (W2 · Module) |
@@ -171,6 +171,60 @@ Checklist results:
 - **Rec2 (minor):** Rec2 of row #7's review (defensive `if (boards.length === 0) setBoardsRaw(makeDefaultBoards())` once on mount) carries over to this row's `BoardWorkspacesModule`. Test BWM18 explicitly covers this — keep it as a `useEffect` with empty dep array OR an inline ref-guard so it doesn't re-fire on subsequent renders.
 - **Rec3 (minor):** `PlannerPanel`'s color cycle `["green","blue","amber","purple"]` includes `amber` which is NOT in board-core's 10-color `LIST_COLOR_IDS`. P2 must declare scoped `--planner-color-green/-blue/-amber/-purple` OKLCH vars in this row's `src/styles.css` (NOT in `@repo/plugin-web-tokens`'s `tokens.css`). Test PP10 asserts the cycle modulo 4 — keep it as a direct assertion on rendered class names.
 
+## Verify Report (2026-05-23, feature-verify)
+
+**Verdict: PASS.** Status → READY_TO_SHIP. 0 blockers, 3 documented non-blocking residuals.
+
+### Automated gates (HEAD = fdd1521)
+
+| Gate | Result | Evidence |
+|---|---|---|
+| G1 — `pnpm --filter @repo/plugin-web-board-workspaces lint` (`--max-warnings 0`) | PASS | exit 0, 0 problems |
+| G2 — `pnpm --filter @repo/plugin-web-board-workspaces typecheck` | PASS | `tsc --noEmit` exit 0 |
+| G3 — `pnpm --filter @repo/plugin-web-board-workspaces test` | PASS | 12 files, 135/135 cases pass |
+| G4 — `pnpm --filter @repo/web check-types` | PASS | `tsc --noEmit` exit 0 |
+| G5 — `pnpm --filter @repo/web build` | PASS | vite v7.2.4 built in 2.42s, ~705 modules transformed |
+| G6 — `pnpm --filter @repo/web test` | PASS | 14 files, 54/54 cases pass; no host regression |
+| G7 (manual) — Cross-vendor smoke (Chrome 120 / Safari 17 / Firefox 121) | QUEUED at ship-time per manifest header (W2e Parallel-Agent mode) — Codex `gpt-5.5-thinking medium` / Cursor fallback. Row-level verify is same-vendor Claude Opus, documented same-vendor compromise. |
+
+### Code audit (A1..A11)
+
+- **A1 — No hard-coded hex in TSX/TS source**: PASS. `grep -rnE '#[0-9a-fA-F]{3}([0-9a-fA-F]{3})?\b' src --include='*.ts' --include='*.tsx'` returned zero matches. Two `#ffffff` literals exist only in `src/styles.css` (`.ws-chip` text color + `.bv-btn.active` text color) — same pattern as board-core's CSS (`#fff` literals are tolerated in CSS for white-text contrast roles).
+- **A2 — No `@repo/core` edits in this row's 3 commits**: PASS. `git show <commit> --stat | grep packages/core` returned zero matches for 214f28f / a107980 / fdd1521.
+- **A3 — No storage registry edits**: PASS. None of the 3 row commits touched `packages/plugin-web-storage/`. The 4 board keys remain SHIPPED `unknown`-typed slots; narrowing happens at the consumer boundary inside this row via `loadPanelsOrDefault` / `loadInboxOrDefault`.
+- **A4 — No `@repo/plugin-web-board-core` edits**: PASS. Board-core ships at row #7's READY_TO_SHIP commit `cc52060`; this row only consumes the public `index.ts` surface (re-exports BoardView + schema + helpers + seed). Audited via `git diff 214f28f^ fdd1521 -- packages/plugin-web-board-core` (filter to this row's commits — sibling rows did edit unrelated packages in interleaved commits).
+- **A5 — No `@repo/plugin-web-tokens` edits in this row**: PASS. New strings live in per-file `STR` localized tables in `src/internal/strings.ts`; consumers use them directly. `git show 214f28f a107980 fdd1521 --stat | grep plugin-web-tokens` returned zero matches.
+- **A6 — Single commit per phase, conventional format**: PASS. 214f28f (P1) / a107980 (P2) / fdd1521 (P3) — each commit subject is `feat(plugin-web-board-workspaces): P<n> …`. No bundling with other rows in this row's commits.
+- **A7 — Shell registration replaces line 65 with this row's reg**: PASS. `apps/web/src/routes/modules/shellRegistrations.tsx` HEAD shows `boardWorkspacesWebModuleRegistration,  // xai-web-board-workspaces row #9 (railOrder 3, replaces row #7's minimal shell wrapper)` in place of the prior `boardCoreWebModuleRegistration,  // xai-web-board-core row #7 (railOrder 3)`. The import block also swapped (`@repo/plugin-web-board-workspaces` replaces `@repo/plugin-web-board-core` for the registration). registration.test.tsx REG1..REG6 (6 cases) cover all properties.
+- **A8 — apps/web/package.json only added one workspace dep**: PASS. `git show fdd1521 -- apps/web/package.json` shows a single `+` line for `@repo/plugin-web-board-workspaces`, alphabetically placed right after `@repo/plugin-web-board-core`. Sibling #11 subsequently added a second `+` line for `@repo/plugin-web-dashboard-widgets` — out of scope for this row but harmless.
+- **A9 — Storage narrowing round-trip for `xai_board_panels`**: PASS. BWM8 verifies the canonical length-1 array write shape after toggling Inbox; BWM15 verifies recovery from `"garbage"`; PO5/PO6 verify acceptance of both the canonical length-1 array AND the bare-object legacy shape (Rec1 from review). After narrowing, the multi-panel invariant is enforced in BOTH `loadPanelsOrDefault` (PO7) and `togglePanelInvariant` (PO13/PO15) — defense-in-depth.
+- **A10 — Storage narrowing round-trip for `xai_board_inbox`**: PASS. BWM14 verifies write + read via the composer; BWM16 verifies recovery from `"garbage"`; PO9/PO11 verify the typed-array passthrough vs. seed fallback.
+- **A11 — PM Status Overview live ring math**: PASS. SOB10 verifies 5 segment `<circle>` elements + 1 base ring for a 5-stage PM template; SOB3 confirms 100% donePct when all cards are in a Done list; RM9 confirms float-precision (per-segment `len + (c - len) === c` within 1e-9). BWM12 confirms the gate: PM-template + overviewOpen + panels.board all must be true for the banner to mount.
+
+### Implementation vs design/api/test contract
+
+- **design.md 11 Frozen Assumptions**: all honoured. Single new package at `packages/plugin-web-board-workspaces/`. Storage narrowing at boundary via the documented length-1 array trick (PO5) + bare-object legacy shape (PO6) — registry stays untouched. `xai_board_panels` + `xai_board_inbox` consumed; `xai_boards_v2` + `xai_active_board` shared with row #7. Multi-panel layout class rules per §2; layout helper `isSinglePanelOpen` matches the prototype's `Object.values(panels).filter(Boolean).length === 1` predicate. PM Status Overview mounts only when (isPM && overviewOpen && view==="board" && panels.board). Bilingual via per-file STR tables (no tokens edit). No event-bus emit. No new tokens.css vars; scoped `--planner-color-<id>` lives in this row's `styles.css`. Shell registration replaces line 65. Three-phase build (P1/P2/P3) one-commit-each.
+- **api.md §0..§14**: all sections honoured. Public surface = re-exports from board-core + 4 net-new types + 2 narrowing guards + 4 panel helpers + 2 ring helpers + 5 leaf components + computePlannerSlots utility + BoardWorkspacesModule orchestrator + boardWorkspacesWebModuleRegistration. Persistence narrowing protocol implemented exactly as documented (length-1 array writes; accept both forms on read; invariant enforced). Multi-panel layout class rules + per-panel mount predicates implemented. PM Status Overview ring math contract implemented via pure helpers `computeRingSegments` + `computeDonePct`. Component APIs match the documented prop signatures. Registration shape matches §10.
+- **test.md §2..§5**: 12 test files / 135 cases pass. Coverage maps 1:1 to acceptance criteria A1..A14 (renamed A1..A11 here for the verify-side audit). Manual smoke checklist Q1..Q11 enumerated in test.md §5; cross-vendor execution queued per A12/W2e manifest header.
+
+### Residual risks (non-blocking — acknowledged + documented)
+
+- **R1 (manifest-header compromise)**: Cross-vendor manual smoke (G7) queued at ship-time per W2e Parallel-Agent mode. Row-level feature-verify runs in same-vendor Claude Opus. Standard for W2e wave; explicitly documented in design.md "Cross-vendor verify note" + this report.
+- **R2 (apps/web 3 pre-existing lint warnings)**: `App.tsx` (unused `useParams`) + `TokensSmokePage.tsx` (DEV undeclared env-var + conditional `useState`). Present before this row landed (verifiable via `git blame`); out of scope. Same as board-core #7 / ai-chat #18 documented residual.
+- **R3 (concurrent-sibling pnpm-lock.yaml interleaving)**: Sibling #11 added a `@repo/plugin-web-dashboard-widgets` dep entry to `apps/web/package.json` after this row's P3 commit, on a line directly below this row's `@repo/plugin-web-board-workspaces` entry. The apps/web build + tests pass at HEAD (G4–G6) so there is no functional issue. Future cleanup commit may consolidate the deps file if needed; not a blocker. Same pattern as board-core #7's R3 (concurrent-sibling commit-attribution bundling).
+
+### Manual smoke checklist (for ship-time cross-vendor verifier)
+
+Already enumerated in test.md §5 (Q1..Q11). Confirm:
+- `/board` renders with workspace chip + title button + bottom 4-button switcher
+- BoardSwitcher modal opens via title button; search filters across workspaces; "+ New board" opens BoardCreator
+- BoardCreator submits with 3 templates; new board becomes active; both modals close
+- PM-template active board + Overview toggle → StatusOverviewBanner mounts with ring chart + legend
+- Inbox + Planner toggle independently; container class flips between `board-panels-single` and `board-panels-multi`; "at least one open" invariant holds
+- Inbox composer Enter prepends; remove button filters; persistence across reload
+- EN ↔ 中文 toggle flips workspace name, board title, scope tabs, creator labels, panel headers, bottom switcher labels, overview banner text
+- Set `localStorage.xai_board_panels = "garbage"` → reload renders seed without crash; same for `xai_board_inbox`
+
 ## Phase Progress
 
 | Phase | Status | Commit | Notes |
@@ -187,4 +241,5 @@ Checklist results:
 | 2026-05-23 | Claude Opus 4.7 1M | feature-review — APPROVED with 0 blockers + 3 non-blocking recommendations | — | feature-auto-build (W2e Parallel-Agent loop) |
 | 2026-05-23 | Claude Opus 4.7 1M | feature-auto-build P1 — scaffolding + narrowing types + guards + ring math + panel ops + STR + 46/46 tests | 214f28f | feature-auto-build P2 |
 | 2026-05-23 | Claude Opus 4.7 1M | feature-auto-build P2 — 5 leaf components (BoardSwitcher / BoardCreator / StatusOverviewBanner / InboxPanel / PlannerPanel) + CSS + 61 component tests | a107980 | feature-auto-build P3 |
-| 2026-05-23 | Claude Opus 4.7 1M | feature-auto-build P3 — BoardWorkspacesModule orchestrator + registration + apps/web shell-reg swap + apps/web dep add + PLUGIN_MAP row + 28 integration tests | (this commit) | feature-verify |
+| 2026-05-23 | Claude Opus 4.7 1M | feature-auto-build P3 — BoardWorkspacesModule orchestrator + registration + apps/web shell-reg swap + apps/web dep add + PLUGIN_MAP row + 28 integration tests | fdd1521 | feature-verify |
+| 2026-05-23 | Claude Opus 4.7 1M | feature-verify — PASS (all 7 gates green; 3 documented non-blocking residuals) | — | ship |
