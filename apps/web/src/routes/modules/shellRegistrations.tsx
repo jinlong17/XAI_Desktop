@@ -16,6 +16,7 @@
 
 import type { WebModuleSlotRegistration } from "@repo/xai-web-shell";
 import { ModuleRoutePlaceholderPage } from "../../pages/ModuleRoutePlaceholderPage";
+import { matrixSlotRegistration } from "@repo/plugin-web-matrix";
 
 function placeholder(
   moduleId: string,
@@ -46,7 +47,7 @@ export const webShellModuleRegistrations: WebModuleSlotRegistration[] = [
   placeholder("board",      "Boards",     "kanban",    3),
   placeholder("dashboard",  "Dashboard",  "layout",    4),
   placeholder("calendar",   "Calendar",   "calendar",  5),
-  placeholder("matrix",     "Matrix",     "grid4",     6),
+  matrixSlotRegistration,
   placeholder("pomodoro",   "Pomodoro",   "timer",     7),
   placeholder("habits",     "Habits",     "pin",       8),
   placeholder("meditation", "Meditation", "leaf",      9),

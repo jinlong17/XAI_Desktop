@@ -1,0 +1,273 @@
+/* ====================================================================
+   matrix.css — Eisenhower 2×2 Matrix module styles
+   All colors use semantic CSS custom properties only. Zero hex literals.
+   Side-effect import: imported from MatrixModule.tsx.
+   Design: design.md §4
+   ==================================================================== */
+
+/* ---- Module layout ------------------------------------------------- */
+
+.module-matrix {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  overflow: hidden;
+}
+
+.module-matrix .module-head {
+  display: flex;
+  align-items: center;
+  gap: var(--gap-sm, 0.5rem);
+  padding: var(--p-md, 1rem) var(--p-lg, 1.5rem) var(--p-sm, 0.5rem);
+  flex-shrink: 0;
+}
+
+.module-matrix .module-title {
+  font-size: var(--fs-lg, 1.125rem);
+  font-weight: 600;
+  color: var(--text-1);
+  margin: 0;
+}
+
+/* ---- 2×2 Grid ------------------------------------------------------ */
+
+.matrix-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  grid-template-rows: 1fr 1fr;
+  gap: var(--gap-md, 0.75rem);
+  padding: var(--p-sm, 0.5rem) var(--p-lg, 1.5rem) var(--p-lg, 1.5rem);
+  flex: 1;
+  overflow: auto;
+  min-height: 0;
+}
+
+/* Responsive: stack to single column on narrow viewports */
+@media (max-width: 600px) {
+  .matrix-grid {
+    grid-template-columns: 1fr;
+    grid-template-rows: auto;
+  }
+}
+
+/* ---- Quadrant panel ------------------------------------------------ */
+
+.matrix-q {
+  background: var(--bg-panel-2);
+  border-radius: var(--radius-md, 0.5rem);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  position: relative;
+}
+
+/* Colored top bar painted from --qc (set inline per quadrant).
+   Quadrant color mapping (design.md §4 frozen assumption §8):
+     Q1 → var(--red)
+     Q2 → var(--amber)
+     Q3 → var(--blue)
+     Q4 → var(--accent)
+   Each section element carries style="--qc: var(--red|amber|blue|accent)"
+   (inline; assigned by quadrant-color.ts). The CSS reads var(--qc) here. */
+.matrix-q::before {
+  content: "";
+  display: block;
+  height: 3px;
+  background: var(--qc);
+  flex-shrink: 0;
+}
+
+/* ---- Quadrant header ----------------------------------------------- */
+
+.q-head {
+  display: flex;
+  align-items: center;
+  gap: var(--gap-xs, 0.25rem);
+  padding: var(--p-sm, 0.5rem) var(--p-sm, 0.5rem) var(--p-xs, 0.25rem);
+  color: var(--text-2);
+}
+
+.q-number {
+  font-size: var(--fs-sm, 0.875rem);
+  font-weight: 700;
+  color: var(--qc);
+  min-width: 1.25rem;
+}
+
+.q-title {
+  font-size: var(--fs-sm, 0.875rem);
+  font-weight: 600;
+  color: var(--text-1);
+  margin: 0;
+  flex: 1;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* ---- Quadrant body ------------------------------------------------- */
+
+.q-body {
+  flex: 1;
+  overflow-y: auto;
+  padding: var(--p-xs, 0.25rem) var(--p-sm, 0.5rem) var(--p-sm, 0.5rem);
+  transition: background 0.15s ease;
+}
+
+/* Drop-zone highlight when a card is dragged over this quadrant */
+.q-body[data-dragover="true"] {
+  background: color-mix(in srgb, var(--qc) 8%, transparent);
+  outline: 2px dashed var(--qc);
+  outline-offset: -2px;
+  border-radius: var(--radius-sm, 0.25rem);
+}
+
+/* ---- Empty state --------------------------------------------------- */
+
+.q-empty {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 4rem;
+  font-size: var(--fs-sm, 0.875rem);
+  color: var(--text-3);
+  font-style: italic;
+}
+
+/* ---- Group --------------------------------------------------------- */
+
+.m-group {
+  margin-bottom: var(--gap-xs, 0.25rem);
+}
+
+.m-group-head {
+  display: flex;
+  align-items: center;
+  gap: var(--gap-xs, 0.25rem);
+  padding: var(--p-xs, 0.25rem) 0;
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: var(--text-2);
+  font-size: var(--fs-xs, 0.75rem);
+  font-weight: 500;
+  width: 100%;
+  text-align: left;
+}
+
+.m-group-head:hover {
+  color: var(--text-1);
+}
+
+.col-count {
+  margin-left: auto;
+  background: var(--bg-panel-3);
+  border-radius: 999px;
+  padding: 0 var(--p-xs, 0.25rem);
+  font-size: var(--fs-xs, 0.75rem);
+  color: var(--text-3);
+}
+
+/* ---- Card rows ----------------------------------------------------- */
+
+.m-rows {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.m-row {
+  display: flex;
+  align-items: center;
+  gap: var(--gap-xs, 0.25rem);
+  padding: var(--p-xs, 0.25rem) var(--p-xs, 0.25rem);
+  border-radius: var(--radius-sm, 0.25rem);
+  font-size: var(--fs-sm, 0.875rem);
+  color: var(--text-1);
+  cursor: grab;
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+.m-row[draggable]:hover {
+  background: var(--bg-panel-3);
+  opacity: 0.92;
+}
+
+.m-row:focus {
+  outline: 2px solid var(--accent);
+  outline-offset: 1px;
+}
+
+/* Indicate drag-in-progress on the card itself */
+.m-row[aria-grabbed="true"] {
+  opacity: 0.5;
+}
+
+/* ---- Card internals ------------------------------------------------ */
+
+.cbx {
+  display: inline-flex;
+  width: 14px;
+  height: 14px;
+  border: 1.5px solid var(--border-mid);
+  border-radius: 3px;
+  flex-shrink: 0;
+}
+
+.m-title {
+  flex: 1;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.m-meta {
+  font-size: var(--fs-xs, 0.75rem);
+  color: var(--text-3);
+  white-space: nowrap;
+}
+
+.m-date {
+  font-size: var(--fs-xs, 0.75rem);
+  color: var(--text-3);
+  white-space: nowrap;
+}
+
+.mono {
+  font-family: var(--font-mono, monospace);
+}
+
+/* ---- Tag pills ----------------------------------------------------- */
+
+.tag {
+  font-size: var(--fs-xs, 0.75rem);
+  padding: 1px 6px;
+  border-radius: 999px;
+  white-space: nowrap;
+  background: var(--bg-panel-3);
+  color: var(--text-2);
+}
+
+/* ---- Utility ------------------------------------------------------- */
+
+.grow {
+  flex: 1;
+}
+
+.icon-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--p-xs, 0.25rem);
+  background: none;
+  border: none;
+  border-radius: var(--radius-sm, 0.25rem);
+  color: var(--text-3);
+  cursor: pointer;
+}
+
+.icon-btn:hover {
+  background: var(--bg-panel-3);
+  color: var(--text-1);
+}
