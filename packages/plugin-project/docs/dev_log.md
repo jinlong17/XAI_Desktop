@@ -5,11 +5,11 @@
 - Workflow: FEATURE_DEV
 - Target: plugin-project
 - Title: project:card-* typed events emit (W0.B — D-3 closer, final of three)
-- Current Phase: FEATURE_VERIFY
-- Status: READY_TO_SHIP
-- Executor: feature-verify (Claude)
-- Updated: 2026-05-23
-- Suggested Next: ship
+- Current Phase: SHIP
+- Status: SHIPPED
+- Executor: ship (Claude)
+- Updated: 2026-05-23 03:50
+- Suggested Next: workflow-complete
 - Automation Mode: A-Claude
 - Verify Cross-vendor: no
 - ADR-lite: not required
@@ -188,3 +188,49 @@ Status Panel · Phase Plan · Acceptance Criteria · Work Log internally consist
 - 2026-05-23 03:40 feature-auto-build (claude-sonnet-4-6) — **B1 EventMap declaration**: Appended three additive `EventMap` entries (`project:card-created`, `project:card-moved`, `project:card-updated`) to `packages/core/src/types/events.ts` after the `labels:deleted` block. JSDoc per-field comments mirror the `labels:*` sibling style. No existing entries modified. Gate: `pnpm --filter @repo/core check-types` passed. Commits: f18bdd4 (`feat(core): add project:card-* EventMap entries (W0.B B1)`). Next: B2.
 - 2026-05-23 03:45 feature-auto-build (claude-sonnet-4-6) — **B2 useProjectStore emits + vitest**: Added `emitEvent` import from `@repo/core/events` to `useProjectStore.tsx`. Added `PATCH_KEYS_ALLOW_LIST` module-level constant. Wired `void emitEvent(...).catch(() => undefined)` at three call sites: `createCard` (post-save, before setCards), `updateCard` (post-save with `patchKeys` allow-list filter + sort), `moveCard` (after `dirty` computation, guarded by `dirty.length > 0`, captures `fromListId`/`fromOrder` before re-normalization). Created `vitest.config.ts` (mirrors plugin-labels sibling, adds `@repo/core/events` alias). Created co-located `useProjectStore.test.tsx` with `// @vitest-environment jsdom` directive, `vi.mock("@repo/core/events")` factory, React 19 `act` + `createRoot` harness, in-memory adapters, 16 binary AC scenarios (4 C + 4 M + 5 U + 3 G). Gates: `pnpm --filter @repo/core check-types` passed, `pnpm --filter @repo/plugin-project check-types` passed, `pnpm --filter @repo/plugin-project test` 16/16 passed (21 total including 5 pre-existing). N1 escape hatch: `as unknown as Partial<Omit<Card, "id">>` cast in AC-P-U3 (mirroring labels sibling pattern). N2 jsdom: resolved via vitest's bundled jsdom (no explicit devDep addition needed). Next: feature-verify.
 - 2026-05-23 feature-verify (Claude): **PASS → READY_TO_SHIP**. Reviewed commits `f18bdd4` (EventMap +51 LOC, additive only) + `dcd7d52` (useProjectStore + vitest + dev_log) + `a78d37e` (docs alignment); each commit single-intent and within phase boundary; commit messages follow Why/What/Scope/Risk/Docs/Tests convention. Gates re-run from clean dev: `pnpm --filter @repo/core check-types` PASS, `pnpm --filter @repo/plugin-project check-types` PASS, `pnpm --filter @repo/plugin-project test` 21/21 PASS (16 new W0.B + 5 pre-existing, 2.56s). Code-vs-contract: confirmed three new EventMap entries match api.md payload shapes verbatim (no `projectId` field on any). Emit-site spot-check on `useProjectStore.tsx`: `createCard` L183-191 emits post-save with full identity+position payload; `moveCard` L253-263 guarded by `if (dirty.length > 0)` with pre-mutation `fromListId`/`fromOrder` capture at L231-232; `updateCard` L207-213 emits post-save with `patchKeys` allow-list filter + sort; `updateChecklist` L269-272 routes through `updateCard` (no double-emit). All three emit sites use `void emitEvent(...).catch(() => undefined)` per sibling form. File-boundary respect verified: only `events.ts` (additive), `useProjectStore.{tsx,test.tsx}`, `vitest.config.ts` (new), and docs touched — no Tauri/Rust/native/other plugins/`apps/desktop/**`/`core/src/events/` edits. dev_log Status Panel, Phase Plan, Work Log internally consistent; predecessor state (Track D entry on line 124) preserved unchanged. Residual risks: vitest `act(...)` env warnings on stderr (cosmetic, non-fatal, matches sibling labels behavior). Commits: — . Next: ship.
+
+
+## Ship Report (2026-05-23 — ship, Claude)
+
+**Push target**: `origin/dev`
+**Pushed range**: `3e27206..785de3f` (4 commits — `f18bdd4`, `dcd7d52`, `a78d37e`, `785de3f`)
+
+### Gate re-verify outputs (from clean dev HEAD = 785de3f)
+
+| Gate | Result |
+|---|---|
+| `pnpm --filter @repo/core check-types` | PASS (tsc --noEmit, no output) |
+| `pnpm --filter @repo/plugin-project check-types` | PASS (tsc --noEmit, no output) |
+| `pnpm --filter @repo/plugin-project test` | **21/21 PASS** (16 W0.B + 5 pre-existing; 2.37s) |
+
+### Commit hygiene spot-check
+
+All four commits follow `type(scope): summary` convention per `docs/conventions/COMMIT_CONVENTION.md`. Each commit is single-intent and within its declared phase boundary.
+
+### Residual notes
+
+- **R1 (stderr noise)**: vitest emits `The current testing environment is not configured to support act(...)` to stderr on all 16 AC scenarios. Cosmetic, non-fatal; all assertions pass. Matches sibling `plugin-labels` behaviour. Future hygiene row may add a global test-setup file to silence this.
+- **R2 (projectId omission by design)**: `Card` has no `projectId` field; payloads for all three events intentionally omit it. Documented in design.md §Payload Design Rationale. Future row may add `projectId` across entity + all three payloads in a single coupled change.
+- **R3 (patchKeys allow-list mirroring)**: `PATCH_KEYS_ALLOW_LIST` constant at `useProjectStore.tsx:79` is part of the cross-window contract and is mirrored in api.md. Adding a new mutable `Card` field requires updating both. Mitigated by AC-P-U3 test pinning the filtering behaviour.
+
+### Real-hardware verification
+
+Not required for this row. W0.B is emit-only (no multi-window navigation, no native API, no Tauri command signature change). All logic lives in `useProjectStore.tsx` (React-only, testable in jsdom). Real-hardware verification will be required for W0.C (Stable promotion).
+
+### docs/PLUGIN_MAP.md row 76 confirmation
+
+Row 76 (`plugin-project`) remains `In-Dev` — unchanged. W0.B does not promote it. W0.C will.
+
+### D-3 drift closure confirmation
+
+All three D-3 rows are now shipped on `dev` (2026-05-23):
+
+| Plugin | Commits | Shipped |
+|---|---|---|
+| `plugin-productivity` | `7ee5d6f`..`99b3de9` | 2026-05-23 |
+| `plugin-labels` | `c0a9cf8`..`3e27206` | 2026-05-23 |
+| `plugin-project` | `f18bdd4`..`785de3f` | 2026-05-23 |
+
+D-3 typed event emit drift is **fully closed** across all three plugin slices.
+
+- 2026-05-23 03:50 ship (Claude): **SHIPPED**. Workflow guard: Status was `READY_TO_SHIP`. Pre-push gate re-verify from clean dev HEAD (`785de3f`): `pnpm --filter @repo/core check-types` PASS, `pnpm --filter @repo/plugin-project check-types` PASS, `pnpm --filter @repo/plugin-project test` 21/21 PASS (2.37s). Commit hygiene spot-check: all 4 commits follow `type(scope): summary` convention, single-intent, within phase boundary. No uncommitted changes, no sensitive files. `docs/PLUGIN_MAP.md` row 76 confirmed unchanged (`In-Dev`). Pushed `dev` to `origin/dev` (range `3e27206..785de3f`). Commits: `f18bdd4`, `dcd7d52`, `a78d37e`, `785de3f`. D-3 drift fully closed (all three plugin slices shipped 2026-05-23). Next: W0.C (Stable promotion — requires per-plugin real-hardware verification).
