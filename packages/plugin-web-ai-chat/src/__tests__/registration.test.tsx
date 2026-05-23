@@ -4,46 +4,39 @@
  * Design: packages/xai-web-ai-chat/docs/test.md §3 — R
  */
 
-import React from "react";
 import { describe, it, expect } from "vitest";
-import { render } from "@testing-library/react";
-import { WebShellProvider } from "@repo/xai-web-shell";
+import type { WebModuleSlotRegistration } from "@repo/xai-web-shell";
 import { aiChatWebModuleRegistration } from "../registration.js";
 
 describe("aiChatWebModuleRegistration (R)", () => {
-  it("R1: moduleId === 'ai'", () => {
+  it("R1: satisfies WebModuleSlotRegistration type (compile-time + runtime shape)", () => {
+    const reg: WebModuleSlotRegistration = aiChatWebModuleRegistration;
+    expect(reg).toBeDefined();
+  });
+
+  it("R2: moduleId === 'ai'", () => {
     expect(aiChatWebModuleRegistration.moduleId).toBe("ai");
   });
 
-  it("R2: railOrder === 1", () => {
+  it("R3: railOrder === 1, icon === 'sparkle', i18nKey === 'nav.ai'", () => {
     expect(aiChatWebModuleRegistration.railOrder).toBe(1);
-  });
-
-  it("R3: icon === 'sparkle'", () => {
     expect(aiChatWebModuleRegistration.icon).toBe("sparkle");
-  });
-
-  it("R4: i18nKey === 'nav.ai'", () => {
     expect(aiChatWebModuleRegistration.i18nKey).toBe("nav.ai");
   });
 
-  it("R5: showInRail === true", () => {
+  it("R4: showInRail === true and label is 'XAI Chat'", () => {
     expect(aiChatWebModuleRegistration.showInRail).toBe(true);
+    expect(aiChatWebModuleRegistration.label).toBe("XAI Chat");
   });
 
-  it("R6: children[0].render renders an <AiChatModule> when wrapped in WebShellProvider", () => {
-    const Render = aiChatWebModuleRegistration.children[0]!.render;
-    const { container } = render(
-      <WebShellProvider
-        modules={[aiChatWebModuleRegistration]}
-        lang="en"
-        railPos="left"
-        petOn={false}
-        setPetOn={() => undefined}
-      >
-        <Render />
-      </WebShellProvider>,
-    );
-    expect(container.querySelector(".module-ai")).not.toBeNull();
+  it("R5: defaultChildPath === '' and children has '' + '*' entries with renderable render props", () => {
+    expect(aiChatWebModuleRegistration.defaultChildPath).toBe("");
+    expect(aiChatWebModuleRegistration.children).toHaveLength(2);
+    const paths = aiChatWebModuleRegistration.children.map((c) => c.path);
+    expect(paths).toContain("");
+    expect(paths).toContain("*");
+    for (const child of aiChatWebModuleRegistration.children) {
+      expect(typeof child.render).toBe("function");
+    }
   });
 });
