@@ -7,13 +7,13 @@
 | Workflow | FEATURE_DEV |
 | Target | xai-web-statistics |
 | Title | Web Console Statistics Module — read-only aggregator over `xai_pomodoro_sessions` + `xai_habits_state` + `xai_pref_week_start`; range tabs (本周/本月/全部); 4 KPI cards with trend %; focus-duration line chart + shaded area; 24-hour productivity bars + peak auto-highlight + glow; emoji-grouped habit ring chart; top-5 habit ranking + streak flame; deterministic half-year focus heatmap (26w × 7d) with fixed 0/15/45/90/91+ minute thresholds; bilingual weekly-insight callout via typed `insightCopy(lang, vars)` pure function. NO `@repo/core` edits; NO event emit; NO new storage keys. |
-| Current Phase | FEATURE_BUILD |
-| Status | READY_FOR_VERIFY |
-| Suggested Next | feature-verify |
+| Current Phase | FEATURE_VERIFY |
+| Status | READY_TO_SHIP |
+| Suggested Next | ship |
 | Verify Cross-vendor | queued for ship-time (Codex/Cursor per W3 manifest header — ring chart `stroke-dasharray` parity + heatmap `color-mix` + reduced-motion bar transitions) |
 | Automation Mode | A-Claude (per roadmap default; xai-roadmap-loop W3 dispatch concurrent with W2d batch siblings #7 board-core + #10 dashboard-grid) |
-| Executor | Claude Opus 4.7 1M (feature-auto-build, 2026-05-23) |
-| Updated | 2026-05-23 14:57 |
+| Executor | Claude Opus 4.7 1M (feature-verify, 2026-05-23) |
+| Updated | 2026-05-23 15:00 |
 | Dispatched By | xai-roadmap-loop (W3 parallel dispatch alongside W2d) |
 | Roadmap Row | docs/workflow/roadmap/xai-web-console.md row #20 (W3 · Aggregator) |
 | ADR Anchor | docs/adr/0007-xai-web-console-build-form.md §S4 (port map "module-statistics.jsx" → `packages/plugin-web-statistics/`) + §S5 (JSX→TSX rules) + §S6 (Vite SPA) + §S7 (no `web:statistics:*` channel — read-only aggregator) + §S8 (no new storage keys — reads `xai_pomodoro_sessions` / `xai_habits_state` / `xai_pref_week_start`) |
@@ -240,6 +240,20 @@ Reviewed against the five gates (discovery quality, design alignment, contract c
 - Clean P2 commit attribution achieved by explicit `git add <files>` listing every P2 file by name (no `git add packages/...` directory adds that could sweep unstaged sibling work).
 - Commits: **363999f** `feat(plugin-web-statistics): P2 components + StatisticsModule composition + ported CSS (W3 row #20)` (21 files, all scoped to `packages/plugin-web-statistics/`).
 - Next step: P3 — registration + host wire-up.
+
+### 2026-05-23 15:00 — Claude Opus 4.7 1M — feature-verify (PASS → READY_TO_SHIP)
+
+- Ran all four gates:
+  - `pnpm --filter @repo/plugin-web-statistics test` ⇒ **124 / 124 pass** (18 test files).
+  - `pnpm --filter @repo/plugin-web-statistics lint` ⇒ **0 errors, 0 warnings** (--max-warnings 0).
+  - `pnpm --filter @repo/plugin-web-statistics typecheck` ⇒ **0 errors**.
+  - `pnpm --filter @repo/web check-types` ⇒ **0 errors** (host typechecks against the new module + the swapped slot registration).
+- `pnpm --filter @repo/web lint` shows 3 pre-existing warnings in App.tsx + TokensSmokePage.tsx (introduced by W1 commits 6c556e6/5a1ef24) — NOT caused by this row. Statistics-scoped lint is clean. Recommend a separate cleanup PR.
+- Hard-constraint cross-check (per seed brief) all PASS — see `docs/reviews/xai-web-statistics/20260523-feature-verify-report.md`.
+- Cross-vendor smoke queued for ship-time per W3 manifest header.
+- Status flipped to READY_TO_SHIP.
+- Verify report committed.
+- Next step: `ship` — coordinate with sibling W2d rows if desired.
 
 ### 2026-05-23 14:57 — Claude Opus 4.7 1M — feature-auto-build P3 (registration + host wire-up + PLUGIN_MAP)
 
