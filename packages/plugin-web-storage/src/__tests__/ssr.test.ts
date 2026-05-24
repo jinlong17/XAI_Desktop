@@ -24,6 +24,10 @@ describe("AC-SSR-1: bare import does not throw", () => {
     expect(typeof api.migrate).toBe("function");
     expect(typeof api.usePref).toBe("function");
     expect(typeof api.usePrefAutosave).toBe("function");
+    // S1 sub-fix additions — xai_pref_* read-path imperative helpers.
+    expect(typeof api.getPrefAutosave).toBe("function");
+    expect(typeof api.setPrefAutosave).toBe("function");
+    expect(typeof api.removePrefAutosave).toBe("function");
   });
 });
 
@@ -96,6 +100,46 @@ describe("AC-SSR-6: migrate does not throw in SSR", () => {
     const { migrate } = await import("../index.js");
     expect(() => {
       migrate(1, 1);
+    }).not.toThrow();
+  });
+});
+
+// ---------------------------------------------------------------------------
+// AC-SSR-7: xai_pref_* read-path SSR fallback (S1 sub-fix)
+// ---------------------------------------------------------------------------
+
+describe("AC-SSR-7: getPrefAutosave returns defaultValue under SSR", () => {
+  it("getPrefAutosave('any_suffix', { defaultValue: 'x' }) returns 'x' in Node", async () => {
+    const { getPrefAutosave } = await import("../index.js");
+    expect(
+      getPrefAutosave<string>("ssr_suffix_smoke", { defaultValue: "x" }),
+    ).toBe("x");
+  });
+
+  it("getPrefAutosave without defaultValue returns undefined in Node", async () => {
+    const { getPrefAutosave } = await import("../index.js");
+    expect(getPrefAutosave<string>("ssr_suffix_no_default")).toBeUndefined();
+  });
+});
+
+// ---------------------------------------------------------------------------
+// AC-SSR-8: setPrefAutosave / removePrefAutosave no-op under SSR
+// ---------------------------------------------------------------------------
+
+describe("AC-SSR-8: setPrefAutosave / removePrefAutosave no-op safely in SSR", () => {
+  it("setPrefAutosave('x', 'v') returns false in Node and does not throw", async () => {
+    const { setPrefAutosave } = await import("../index.js");
+    let result: boolean | undefined;
+    expect(() => {
+      result = setPrefAutosave<string>("ssr_set_smoke", "v");
+    }).not.toThrow();
+    expect(result).toBe(false);
+  });
+
+  it("removePrefAutosave('x') does not throw in Node", async () => {
+    const { removePrefAutosave } = await import("../index.js");
+    expect(() => {
+      removePrefAutosave("ssr_remove_smoke");
     }).not.toThrow();
   });
 });
