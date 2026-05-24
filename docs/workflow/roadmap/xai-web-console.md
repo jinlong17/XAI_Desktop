@@ -42,7 +42,7 @@
 
 | 22 | xai-web-settings-appearance | docs/reviews/xai-web-settings-appearance/20260523-roadmap-seed.md | xai-web-settings-shell | ready_to_ship | READY_TO_SHIP | (default) | (default) | 2026-05-23 | W4b · @repo/plugin-web-settings-appearance; 2 commits (61f6177/17f9f18); 50+67 tests pass; 20/20 verify gates PASS. |
 | 23 | xai-web-settings-features-panel | docs/reviews/xai-web-settings-features-panel/20260523-roadmap-seed.md | xai-web-settings-shell, xai-web-tasks, xai-web-board-core, xai-web-dashboard-grid, xai-web-calendar, xai-web-matrix, xai-web-pomodoro, xai-web-habits, xai-web-meditation | ready_to_ship | READY_TO_SHIP | (default) | (default) | 2026-05-23 | W4b · @repo/plugin-web-settings-features-panel; 4 commits (85761cd/79cd0e7/9822c42/e69e249); 23+6 tests pass; verify gates PASS. |
-| 24 | xai-web-settings-rest | docs/reviews/xai-web-settings-rest/20260523-roadmap-seed.md | xai-web-settings-shell | ready_to_ship | READY_TO_SHIP | (default) | (default) | 2026-05-23 | W4b · @repo/plugin-web-settings-rest; 5 commits (bf6492e/81fbc61/72bb4de/479f314/5abeb4d); 81/81 tests pass; 19/19 verify gates PASS. |
+| 24 | xai-web-settings-rest | docs/reviews/xai-web-settings-rest/20260523-roadmap-seed.md | xai-web-settings-shell | ready_to_ship | SHIPPED | (default) | (default) | 2026-05-23 | W4b · @repo/plugin-web-settings-rest; 5 commits (bf6492e/81fbc61/72bb4de/479f314/5abeb4d); 81/81 tests pass; 19/19 verify gates PASS; SHIPPED 2026-05-23. FINAL ROW — xai-web-console roadmap 24/24 SHIPPED. |
 
 ## Decomposition Rationale
 

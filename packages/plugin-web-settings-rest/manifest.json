@@ -1,7 +1,7 @@
 {
   "name": "@repo/plugin-web-settings-rest",
   "version": "0.0.0",
-  "status": "In-Dev",
+  "status": "Stable",
   "type": "ui",
   "owner": "xai-web-settings-rest row #24",
   "description": "Settings remaining 11 panes (Account/Premium/SmartLists/Notifications/DateTime/More/Integrations/Collaborate/StickyNote/Hotkeys/About). Consumes chassis atoms from @repo/plugin-web-settings-shell.",
