@@ -581,3 +581,38 @@ Claude Opus 4.7 1M — running as feature-verify subagent. Read-only against `pa
 | 2026-05-23 12:30 | Claude Sonnet 4.6 — feature-auto-build | Resolved verify blockers B1 + B2. B1 (ESLint 3 warnings): (1) AppRail.tsx:79 changed `catch (_)` to bare `catch` (modern no-bind syntax); (2) AppRail.test.tsx:15 dropped unused `screen` import; (3) registry.test.tsx:198 dropped unused `getByText` from destructure. `pnpm --filter @repo/xai-web-shell lint` → clean exit 0, 0 warnings. B2 (AvatarMenu source drift + missing E4/E5 tests): (1) Added `onAvatarOpenSettings` / `onAvatarOpenStatistics` to `AppRailProps` in types.ts — both emit `web:shell:module-change` with `source: "shortcut"`; (2) Implemented handlers in Shell.tsx (separate from `onModuleClick` which still emits `source: "app-rail"`); (3) Shell.tsx passes both new props to AppRail; (4) AppRail.tsx wires `<AvatarMenu onOpenSettings={onAvatarOpenSettings} onOpenStatistics={onAvatarOpenStatistics}>` replacing the old `onModuleClick("settings")` / `onModuleClick("statistics")` calls; (5) AppRail.test.tsx renderRail helper updated to supply the two new required props with vi.fn() defaults; (6) event-emit.test.tsx E4 + E5 implemented — E4 opens AvatarMenu via `.rail-avatar` click then clicks first `.avm-item` (Settings) and asserts `emitWebEvent("web:shell:module-change", { moduleId: "settings", source: "shortcut" })`; E5 clicks second `.avm-item` (Statistics) and asserts `{ moduleId: "statistics", source: "shortcut" }`. `pnpm --filter @repo/xai-web-shell test` → 84/84 PASS (8 test files, +2 tests from E4/E5). `pnpm --filter @repo/web test` → 46/46 PASS. Status → READY_FOR_VERIFY. | 7da2733 | feature-verify |
 | 2026-05-23 12:45 | Claude Opus 4.7 1M — feature-verify (re-run after BLOCKED resolution) | Re-verified all 15 gates after commit 7da2733. B1 (ESLint): `pnpm --filter @repo/xai-web-shell lint` exits 0 — 0 warnings (was 3). CONFIRMED RESOLVED. B2 (AvatarMenu source enum): Inspected Shell.tsx:42-52 — `onAvatarOpenSettings` + `onAvatarOpenStatistics` both emit `source: "shortcut"`; AppRail.tsx:139-140 wires them into `<AvatarMenu>`. Shell.tsx:32-35 `onModuleClick` still emits `source: "app-rail"` (E1 preserved). event-emit.test.tsx E1+E3+E4+E5 all assert correct payloads. CONFIRMED RESOLVED. Re-ran full gate suite: `@repo/xai-web-shell test` → 84/84 PASS (was 82 — +2 for E4/E5); `@repo/xai-web-shell check-types` → clean; `@repo/xai-web-shell lint` → 0 warnings; `@repo/web test` → 46/46 PASS (zero regressions); `@repo/web check-types` → clean; `@repo/web build` → vite v7.2.4, 500 modules, dist/index-8kjOVC4B.js 698.49 kB / gzip 212.09 kB, built in 1.97s. Confirmed NO direct W2 imports (only @repo/plugin-web-tokens + @repo/plugin-web-storage). Confirmed exactly 3 W1 + 1 event-bus deps via index.ts. Slot/registry pattern intact. popoverGeometry + AvatarMenu data-anchor mapping unchanged. Drag-reorder + xai_rail_order persistence intact. Commit hygiene PASS — 7da2733 is single-intent, scoped strictly to `packages/xai-web-shell/`, full Why/What/Scope/Risk/Docs/Tests body. M1..M18 cross-vendor matrix remains deferred to ship-time human verifier (unchanged from prior verify guidance). Status Panel → READY_TO_SHIP, Suggested Next → ship. | — | ship |
 | 2026-05-23 18:38 | claude-sonnet-4-6 — ship | Verified READY_TO_SHIP status in dev_log + manifest row #5. Confirmed all 5 product commits (5a1ef24/d4a6777/b5b5fa6/b75db5f/7da2733) already on origin/main. Ran pnpm --filter @repo/xai-web-shell test → 84/84 PASS. Flipped Status Panel to SHIPPED + manifest row #5 to SHIPPED. Included untracked planning docs (api.md, design.md, test.md, discovery-review.md) in chore commit. | chore commit → pushed | — (SHIPPED) |
+
+## Cross-vendor Verify Report (2026-05-24 — Codex gpt-5.5-thinking medium)
+
+**Verdict: BLOCKED.**
+
+Scope note: retroactive audit only. Status Panel remains `SHIPPED` per user instruction. No fixes were applied.
+
+### Metadata
+
+- Verifier: Codex parent session with read-only explorer slice.
+- Model / effort label: Codex gpt-5.5-thinking / medium.
+- Date: 2026-05-24 (America/Los_Angeles).
+- Test command: `pnpm --filter @repo/xai-web-shell test` → PASS, 84/84 tests.
+- Type command: `pnpm --filter @repo/xai-web-shell check-types` → PASS.
+
+### Blocker
+
+The row's own test contract makes the Chrome/Safari/Firefox M1..M18 manual matrix the cross-vendor READY_TO_SHIP gate, and feature-verify explicitly deferred that matrix to ship-time human verification. The ship log records automated tests and the status flip, but does not record browser versions or PASS/FAIL evidence for M1..M18.
+
+### Gate Findings
+
+| Gate | Finding |
+|---|---|
+| Design conformance | PASS — shell slot registry, AppRail, Topbar, AvatarMenu, and host-owned active route model match the row design. |
+| API contract surface | PASS — root `index.ts` exports shell components, provider/hooks, and types; no W2 direct imports were found in shell. |
+| Test coverage | BLOCKED — 84/84 package tests pass, but required live-browser M1..M18 evidence is missing. |
+| Persistence semantics | PASS — `xai_rail_order` uses `usePref`, filters unknown ids, appends new module ids, and writes reconciled rail order. |
+| Typed-event contracts | PASS — shell emits `web:shell:module-change` and `web:shell:pet-toggle` with the expected source variants. |
+| Deferred W1 coverage | BLOCKED — row #5 was documented as absorbing deferred cross-vendor coverage for rows #2/#3/#4, but the Work Log lacks that matrix evidence. |
+
+### Evidence
+
+- `packages/xai-web-shell/docs/test.md` requires all M1..M18 manual scenarios in Chrome stable, Safari 17+, and Firefox latest, recorded in Work Log.
+- `packages/xai-web-shell/docs/dev_log.md` feature-verify entry says M1..M18 remain deferred to ship-time human verifier.
+- Ship entry records `pnpm --filter @repo/xai-web-shell test` but no browser matrix.
