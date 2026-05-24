@@ -270,16 +270,33 @@ post-Codex-re-review). Manual cross-browser smoke is the
 deployment-readiness gate — xai-web-deploy-cloudflare is the
 project's chosen enforcement point.
 
-EXCEPTION — Single-row carve-out (manifest §17, 2026-05-24): the
-deploy row ITSELF (xai-web-deploy-cloudflare) MAY ship Status=SHIPPED
-with `Cross-Vendor Manual Smoke: Deferred-24h` per the manifest's
-single-row carve-out clause, provided the Ship Report queues the
-follow-up `xai-web-cross-vendor-smoke-evidence` row within 24h. TC-T17
-applies that exception ONLY to the deploy row itself; ALL OTHER
-dependent rows (xai-web-shell, xai-web-dashboard-grid, and any future
-row whose test.md declares manual smoke) MUST still PASS the audit
-below — `Deferred` on those rows still BLOCKS the deploy row's verify
-gate.
+EXCEPTION — One-time carve-out (manifest §17 + ADR-0008 §S8,
+2026-05-24): the FIRST RUN of TC-T17 against `xai-web-deploy-cloudflare`
+(the row that produces the first publicly reachable `*.pages.dev` URL)
+MAY PASS even when dependent rows (`xai-web-shell`,
+`xai-web-dashboard-grid`) show `Cross-Vendor Manual Smoke:
+Deferred-24h`, IFF all three §S8 carve-out conditions are
+simultaneously satisfied at TC-T17 evaluation time:
+  (i)   the deploy row's `dev_log.md` Ship Report explicitly queues
+        the `xai-web-cross-vendor-smoke-evidence` (or equivalent)
+        follow-up row to be filed within 24 hours of first-deploy,
+  (ii)  that follow-up row commits to filling shell M1..M18 +
+        dashboard-grid §6 evidence (per the canonical browser sets
+        named in step 3.c below; checklist scaffolds DO NOT count),
+  (iii) `docs/adr/0008-cloudflare-deploy-target-and-csp.md` §S8
+        records the operator's acknowledgement.
+Per §S8 explicit scope clause, this exception applies to **one and
+only one row** — `xai-web-deploy-cloudflare`. After its 24h follow-up
+evidence row lands and itself reaches SHIPPED, the base policy
+resumes for ALL future deploy-touching rows without exception (any
+future Deferred dependent row hard-blocks the verify gate, regardless
+of whether the future row produces a new URL). NOTE: this EXCEPTION
+flips the direction Claude wrote in commit `af88393`, which incorrectly
+hard-blocked dependent-row Deferred even under the carve-out — the
+original §S8 design intent (recorded by the operator decision under
+"Option 3 — narrow policy carve-out") is to allow the deploy row to
+ship with matrices "without already filled" and defer to the 24h
+follow-up row.
 
 1. For EVERY row in docs/workflow/roadmap/xai-web-console.md whose
    own test.md requires manual cross-vendor smoke, read its dev_log
@@ -314,19 +331,46 @@ gate.
          of cross-vendor smoke is the cross-vendor coverage; partial
          evidence is treated as Deferred for the unfilled browsers.
 4. Verdict matrix:
-     - All rows show PASS with evidence → TC-T17 PASS, deploy MAY
-       proceed to READY_TO_SHIP.
-     - Any row shows Deferred → TC-T17 BLOCKED. Verify gate must
-       BLOCK ship with explicit "manual smoke not evidenced for
-       <row>; fill `<evidence file>` matrix before re-running
-       verify". This is the hard enforcement point that prevents
-       the documentation defect Codex caught on 2026-05-24
-       (checklist-shaped placeholder treated as evidence).
-     - Row missing the `Cross-Vendor Manual Smoke` field entirely
-       → TC-T17 BLOCKED. Verify gate must surface "row <slug>
-       does not declare manual-smoke status; check whether its
-       test.md should declare manual smoke and update its
-       Status Panel".
+     (A) Canonical path — full evidence:
+         All dependent rows show `Cross-Vendor Manual Smoke: PASS`
+         with valid evidence files (per 3.c browser-set rules).
+         TC-T17 PASS.
+     (B) One-time carve-out path (manifest §17 + ADR-0008 §S8 —
+         applies ONLY to `xai-web-deploy-cloudflare`'s first ship):
+         Dependent rows MAY show `Cross-Vendor Manual Smoke:
+         Deferred-24h` AND TC-T17 still PASS, IFF all three §S8
+         conditions (i)(ii)(iii) above are simultaneously satisfied
+         AND the target row is `xai-web-deploy-cloudflare`. The
+         verify gate report MUST explicitly cite §S8 + the deploy
+         dev_log Ship Report section that queues the follow-up row,
+         and include a sentence such as "PASS via §S8 carve-out;
+         dependent rows shell/dashboard-grid Deferred-24h; follow-up
+         row xai-web-cross-vendor-smoke-evidence queued — see
+         `packages/xai-web-deploy-cloudflare/docs/dev_log.md#queued-follow-up-row`".
+     (C) BLOCKED — Deferred without carve-out:
+         Any dependent row shows `Cross-Vendor Manual Smoke:
+         Deferred*` AND (B)'s three conditions are NOT all satisfied
+         OR the target row is NOT `xai-web-deploy-cloudflare`.
+         Verify gate must BLOCK ship with explicit "manual smoke
+         not evidenced for <row>; fill `<evidence file>` matrix
+         before re-running verify". This is the hard enforcement
+         point that prevents the documentation defect Codex caught
+         on 2026-05-24 (checklist-shaped placeholder treated as
+         evidence).
+     (D) BLOCKED — Status Panel field missing:
+         Row missing the `Cross-Vendor Manual Smoke` field entirely
+         → TC-T17 BLOCKED. Verify gate must surface "row <slug>
+         does not declare manual-smoke status; check whether its
+         test.md should declare manual smoke and update its
+         Status Panel".
+     (E) Future-row policy (post §S8 24h follow-up retirement):
+         Once `xai-web-cross-vendor-smoke-evidence` (or equivalent
+         follow-up) has filled the deferred matrices and itself
+         reached SHIPPED, the (B) carve-out path is RETIRED. Any
+         future deploy-touching row (e.g. staging deploys, new
+         environment deploys) hits paths (A)/(C)/(D) only — no
+         further carve-out granted without a new §-numbered ADR
+         entry explicitly extending the exception.
 
 PASS = AC-C9-6 ticked.
 ```

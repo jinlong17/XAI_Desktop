@@ -347,13 +347,22 @@ account.
   latest) + `xai-web-dashboard-grid` (§6 M1..M11 in Chrome 120 +
   Safari 17 + Firefox 121 plus T1..T2 in Safari iOS). Audit enforced
   by TC-T17 — see test.md. Any Deferred row blocks the deploy row
-  from reaching READY_TO_SHIP. **EXCEPTION**: the deploy row ITSELF
-  (xai-web-deploy-cloudflare) MAY ship Status=SHIPPED with
-  `Cross-Vendor Manual Smoke: Deferred-24h` per the manifest §17
-  single-row carve-out, provided the Ship Report queues a follow-up
-  `xai-web-cross-vendor-smoke-evidence` row within 24h. The exception
-  applies ONLY to the deploy row itself; the audit of dependent rows
-  remains a hard gate. This AC is the concrete enforcement of the
+  from reaching READY_TO_SHIP UNLESS the §S8 carve-out applies.
+  **EXCEPTION — one-time carve-out (manifest §17 + ADR-0008 §S8)**:
+  on the FIRST RUN of TC-T17 against `xai-web-deploy-cloudflare`,
+  dependent rows (xai-web-shell, xai-web-dashboard-grid) MAY show
+  `Cross-Vendor Manual Smoke: Deferred-24h` and TC-T17 still PASSes,
+  IFF all three §S8 conditions are simultaneously satisfied: (i) the
+  deploy Ship Report queues `xai-web-cross-vendor-smoke-evidence` (or
+  equivalent) follow-up row within 24h of first-deploy, (ii) that
+  follow-up row commits to filling shell M1..M18 + dashboard-grid §6
+  evidence (per the canonical browser sets above; checklist scaffolds
+  do not count), (iii) `docs/adr/0008-cloudflare-deploy-target-and-csp.md`
+  §S8 records the operator's acknowledgement. Per §S8 explicit scope
+  clause, this exception applies to **one and only one row** —
+  `xai-web-deploy-cloudflare`. After the 24h follow-up evidence row
+  lands and itself reaches SHIPPED, the base policy resumes for ALL
+  future deploy-touching rows without exception. This AC is the concrete enforcement of the
   manifest **Cross-vendor Manual Browser Smoke Policy** (2026-05-24);
   without it the policy is aspirational and the documentation defect
   Codex caught on 2026-05-24 (empty checklist file accepted as

@@ -11,7 +11,7 @@
 | Status | SHIPPED |
 | Suggested Next | — (SHIPPED) |
 | Verify Cross-vendor | yes — cold-read complete (Codex gpt-5.5-thinking medium 2026-05-24 + Claude Opus 4.7 1M 2026-05-23) reports no code-level blockers. |
-| Cross-Vendor Manual Smoke | **Deferred** (per manifest policy 2026-05-24 — "Cross-vendor Manual Browser Smoke Policy" in `docs/workflow/roadmap/xai-web-console.md`). The M1..M18 cross-browser matrix in `test.md` §"Manual Verification" remains EMPTY — Chrome / Safari 17+ / Firefox latest checks for 4 rail positions + drag-reorder + AvatarMenu popover directions are queued, NOT done. Must be evidenced before xai-web-deploy-cloudflare-pages reaches READY_TO_SHIP. This Status Panel previously did NOT distinguish "cold-read cross-vendor verify done" from "manual cross-browser smoke done" — they are now formally separate gates per the manifest policy. |
+| Cross-Vendor Manual Smoke | **Deferred** (per manifest policy 2026-05-24 — "Cross-vendor Manual Browser Smoke Policy" in `docs/workflow/roadmap/xai-web-console.md`). The M1..M18 cross-browser matrix in `test.md` §"Manual Verification" remains EMPTY — Chrome / Safari 17+ / Firefox latest checks for 4 rail positions + drag-reorder + AvatarMenu popover directions are queued, NOT done. Must be evidenced before xai-web-deploy-cloudflare reaches READY_TO_SHIP. This Status Panel previously did NOT distinguish "cold-read cross-vendor verify done" from "manual cross-browser smoke done" — they are now formally separate gates per the manifest policy. |
 | Automation Mode | A-Claude (per roadmap default; xai-roadmap-loop serial dispatch — no parallel siblings on this row) |
 | Executor | claude-sonnet-4-6 — ship |
 | Updated | 2026-05-23 18:38 |
@@ -624,6 +624,6 @@ The Codex 2026-05-24 cross-vendor cold-read above flagged this row as BLOCKED on
 
 Under the new manifest-level **Cross-vendor Manual Browser Smoke Policy** (2026-05-24, see `docs/workflow/roadmap/xai-web-console.md` header), this is a DEPLOYMENT-READINESS gate, not a SHIPPED gate. The Status Panel above now carries `Cross-Vendor Manual Smoke: Deferred` to formally distinguish "cold-read cross-vendor verify done" (which IS done — Codex + Opus both passed) from "manual cross-browser smoke done" (which is NOT done).
 
-This row legitimately stays SHIPPED under the new policy, but the M1..M18 matrix MUST be filled with Chrome / Safari / Firefox version numbers + PASS/FAIL per scenario before `xai-web-deploy-cloudflare-pages` reaches READY_TO_SHIP. Failure to evidence pre-deploy = production-readiness blocker.
+This row legitimately stays SHIPPED under the new policy, but the M1..M18 matrix MUST be filled with Chrome / Safari / Firefox version numbers + PASS/FAIL per scenario before `xai-web-deploy-cloudflare` reaches READY_TO_SHIP. Failure to evidence pre-deploy = production-readiness blocker.
 
 No code change; no regression. The 2026-05-24 12:00 Codex BLOCKED record above is preserved verbatim per V2 SOP (no history rewrite); this section is the canonical correction.
