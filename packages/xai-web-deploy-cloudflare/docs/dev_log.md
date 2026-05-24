@@ -539,7 +539,7 @@ g. Trigger cross-vendor cold-read (within 24h of first deploy): Dispatch the xai
 **Row**: `xai-web-cross-vendor-smoke-evidence`
 **Deadline**: within 24 hours of first successful `*.pages.dev` deploy (first push to `main` that triggers the `Deploy Web to Cloudflare Pages` workflow successfully)
 **Commitment**: This follow-up row MUST fill real PASS/FAIL evidence (browser versions + per-scenario verdicts) into:
-- `packages/xai-web-shell/docs/test.md` §Manual Verification — M1..M18 matrix (Chrome stable / Safari 17+ / Firefox latest / Safari iOS)
+- `packages/xai-web-shell/docs/test.md` §Manual Verification — M1..M18 matrix (Chrome stable / Safari 17+ / Firefox latest, per shell test.md §5.1)
 - `docs/reviews/xai-web-dashboard-grid/20260524-cross-vendor-smoke.md` — §6 FLIP timing / iOS touch / responsive / a11y / theme / storage round-trip (Chrome 120 / Safari 17 / Firefox 121 / Safari iOS rows all filled)
 **Note**: Checklist scaffolds DO NOT count as evidence. Real browser sessions on real hardware required.
 **Authority**: Required by the single-row carve-out recorded in `docs/workflow/roadmap/xai-web-console.md` line 17 and `docs/adr/0008-cloudflare-deploy-target-and-csp.md` §S8. The base policy continues to apply to all future deploy-touching rows.

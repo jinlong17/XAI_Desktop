@@ -313,9 +313,12 @@ follow-up row.
 3. For each row in (2), assert that:
      (a) the row's dev_log Status Panel has an explicit
          `Cross-Vendor Manual Smoke` line, AND
-     (b) that line is one of: `PASS (<browsers>, <date>)` or
+     (b) that line is one of: `PASS (<browsers>, <date>)`,
          `Deferred (per manifest policy 2026-05-24) — UNFILLED`,
-         AND
+         or `Deferred-24h (per manifest §17 + ADR-0008 §S8)`
+         (the last value is only valid under verdict path (B)
+         below — first-run audit of `xai-web-deploy-cloudflare`
+         with all three §S8 conditions satisfied), AND
      (c) if value is PASS, the linked evidence file (e.g.
          docs/reviews/xai-web-shell/<date>-manual-smoke.md or
          docs/reviews/xai-web-dashboard-grid/20260524-cross-vendor-smoke.md)
