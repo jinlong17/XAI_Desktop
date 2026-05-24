@@ -50,3 +50,5 @@ web design/
 # Wrangler (Cloudflare) local state — added in xai-web-deploy-cloudflare P2
 .dev.vars
 .wrangler/
+# Wrangler autogen types file — regenerated on every `wrangler types` invocation; lint-tripping
+apps/web/worker-configuration.d.ts

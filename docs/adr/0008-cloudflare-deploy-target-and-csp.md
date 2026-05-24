@@ -133,7 +133,7 @@ degradation confirmed. AC-C3-3 satisfied.
 
 | Option | Pros | Cons |
 |--------|------|------|
-| **A. Vanilla `pnpm --filter @repo/web build`** (selected) | First-deploy friendly; zero new secrets; no Sentry dependency in CI; `sourcemap: "hidden"` in `vite.config.ts` keeps sourcemaps off the public network. | No Sentry sourcemap correlation until follow-up row. |
+| **A. Vanilla `pnpm --filter @repo/web build`** (selected) | First-deploy friendly; zero new secrets; no Sentry dependency in CI. `sourcemap: "hidden"` in `vite.config.ts` strips the `//# sourceMappingURL=` comment from the JS bundle (browsers and DevTools will not auto-fetch `.map` files), but the `.map` files themselves DO ship to `apps/web/dist/` and ARE publicly reachable at predictable URLs on `*.pages.dev` (any operator who knows the asset filename can probe `<file>.map`). Runbook §5.2 documents this trade and names the post-build `*.map` exclusion lever for operators who want stricter exposure. This row accepts the default (publish maps) on the strength of the runbook's honest disclosure. | No Sentry sourcemap correlation until follow-up row. |
 | B. `pnpm --filter @repo/web build:secure` | Full 8-step Sentry sourcemap chain in CI. | Requires `SENTRY_AUTH_TOKEN` in GitHub Secrets; couples this row to Sentry availability; deferred to `xai-web-deploy-sentry-sourcemaps` follow-up row. |
 
 ---
@@ -349,3 +349,59 @@ Quota Monitoring / Disaster Recovery.
 - **Cloudflare Pages `_headers` spec**: https://developers.cloudflare.com/pages/configuration/headers/
 - **PLUGIN_MAP.md**: `docs/PLUGIN_MAP.md` — all 24 `xai-web-*` rows SHIPPED;
   no mocks required.
+
+---
+
+## S8 — Carve-out: single-row exception to Cross-Vendor Manual Browser Smoke Policy
+
+**Date**: 2026-05-24
+
+**Operator decision**: Following the BLOCKED verdict from `feature-verify` (2026-05-24),
+the operator (Jinlong) chose **Option 3 — narrow policy carve-out** to allow the
+`xai-web-deploy-cloudflare` row (the row that first produces the public `*.pages.dev`
+URL) to advance to `READY_TO_SHIP` without the manual cross-browser smoke matrices
+already filled.
+
+### Scope
+
+This carve-out applies to **one and only one row**: `xai-web-deploy-cloudflare`.
+The base policy at `docs/workflow/roadmap/xai-web-console.md` line 17 continues
+to apply to all future deploy-touching rows without exception.
+
+### Conditions for the carve-out to be valid
+
+All three conditions MUST be satisfied before `xai-web-deploy-cloudflare` may
+flip to `READY_TO_SHIP` under this carve-out:
+
+1. **Follow-up row commitment**: The `xai-web-deploy-cloudflare` dev_log Ship Report
+   MUST explicitly queue a follow-up row (`xai-web-cross-vendor-smoke-evidence`
+   or equivalent) to be created within 24 hours of first-deploy.
+
+2. **Evidence commitment**: That follow-up row MUST commit to filling real
+   PASS/FAIL evidence (browser versions + per-scenario verdicts) into:
+   - `packages/xai-web-shell/docs/test.md` §Manual Verification (M1..M18 matrix)
+   - `docs/reviews/xai-web-dashboard-grid/20260524-cross-vendor-smoke.md`
+   (Chrome 120 / Safari 17 / Firefox 121 / Safari iOS rows all filled; checklist
+   scaffolds DO NOT count as evidence).
+
+3. **ADR recording**: This section (§S8) constitutes the operator's recorded
+   acknowledgement of the exception, per condition (iii) of the manifest
+   carve-out clause.
+
+### Policy linkage
+
+The manifest carve-out clause is recorded at:
+`docs/workflow/roadmap/xai-web-console.md` line 17
+(appended to the Cross-Vendor Manual Browser Smoke Policy paragraph, 2026-05-24).
+
+### Rationale
+
+The primary goal of this row is to produce the **first publicly reachable
+production URL** for the XAI Web Console — a shareable URL for demos and feedback.
+Deferring that goal until manual cross-browser matrices are complete on real
+hardware creates an indefinite blocking dependency. The carve-out accepts this
+risk explicitly, records it honestly, and bounds the deferral to 24 hours via
+the follow-up row commitment. The manual smoke policy was authored 2 hours before
+the BLOCKED verify dispatch (same ahead-of-main batch); without a carve-out, the
+row would be permanently blocked by its own batch's policy until hardware testing
+is complete.
