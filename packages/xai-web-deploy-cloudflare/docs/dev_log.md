@@ -49,7 +49,7 @@ to `main` (production) and on `pull_request` (preview).
 |-------|--------|--------|
 | P1 — ADR-0008 + 四件套 docs anchor | DONE | 0e7aca7 |
 | P2 — wrangler.toml + `_headers` + `.gitignore` + `.nvmrc` + nonce strip | DONE | 7e11f50 |
-| P3 — `.github/workflows/deploy-web.yml` | DONE | (pending commit) |
+| P3 — `.github/workflows/deploy-web.yml` | DONE | c631d32 |
 | P4 — `docs/runbooks/cloudflare.md` | PENDING | — |
 | P5 — Live deploy + smoke + evidence (verify-only) | PENDING | — |
 
@@ -519,5 +519,5 @@ hash of the workflow-driven first deploy or the manual fallback deploy)_
   - AC-C4-12: actionlint → 0 errors (v1.7.12) ✅
   - AC-C4-13: deployment summary to $GITHUB_STEP_SUMMARY ✅
 - **Tests run**: actionlint clean.
-- **Commits**: (pending — will be filled after commit)
-- **Next step**: Commit P3, then proceed to P4.
+- **Commits**: c631d32 `ci(deploy-web): P3 — GitHub Actions workflow via wrangler-action@v3`
+- **Next step**: Proceed to P4.
