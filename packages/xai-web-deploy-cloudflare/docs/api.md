@@ -343,13 +343,21 @@ account.
   smoke, the value of that row's dev_log Status Panel
   `Cross-Vendor Manual Smoke` field, and (if PASS) a path to the
   filled matrix file. Required minimum row set at 2026-05-24:
-  `xai-web-shell` (M1..M18) + `xai-web-dashboard-grid` (§6). Audit
-  enforced by TC-T17 — see test.md. Any Deferred row blocks the
-  deploy row from reaching READY_TO_SHIP. This AC is the concrete
-  enforcement of the manifest **Cross-vendor Manual Browser Smoke
-  Policy** (2026-05-24); without it the policy is aspirational and
-  the documentation defect Codex caught on 2026-05-24 (empty
-  checklist file accepted as evidence) could recur.
+  `xai-web-shell` (M1..M18 in Chrome stable + Safari 17+ + Firefox
+  latest) + `xai-web-dashboard-grid` (§6 M1..M11 in Chrome 120 +
+  Safari 17 + Firefox 121 plus T1..T2 in Safari iOS). Audit enforced
+  by TC-T17 — see test.md. Any Deferred row blocks the deploy row
+  from reaching READY_TO_SHIP. **EXCEPTION**: the deploy row ITSELF
+  (xai-web-deploy-cloudflare) MAY ship Status=SHIPPED with
+  `Cross-Vendor Manual Smoke: Deferred-24h` per the manifest §17
+  single-row carve-out, provided the Ship Report queues a follow-up
+  `xai-web-cross-vendor-smoke-evidence` row within 24h. The exception
+  applies ONLY to the deploy row itself; the audit of dependent rows
+  remains a hard gate. This AC is the concrete enforcement of the
+  manifest **Cross-vendor Manual Browser Smoke Policy** (2026-05-24);
+  without it the policy is aspirational and the documentation defect
+  Codex caught on 2026-05-24 (empty checklist file accepted as
+  evidence) could recur.
 
 ---
 

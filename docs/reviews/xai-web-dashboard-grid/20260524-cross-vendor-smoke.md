@@ -5,7 +5,7 @@
 > Phase: Post-ship doc-sync (BUGFIX cycle after row #11 integration)
 > Build form: Vite SPA per ADR-0007 §S6
 > Vehicle: `pnpm --filter @repo/web dev:mock-auth` (bypasses auth-device-session flow which is out of scope for this row)
-> Status of this report: **DEFERRED per manifest policy 2026-05-24** (see `docs/workflow/roadmap/xai-web-console.md` → "Cross-vendor Manual Browser Smoke Policy"). This file is a STRUCTURED CHECKLIST SCAFFOLD awaiting real-browser evidence — it is **NOT** a closure of the manual-smoke blocker, despite earlier dev_log wording (2026-05-24 12:40 entry, since corrected). The unchecked Chrome 120 / Safari 17 / Firefox 121 / Safari iOS rows below MUST be filled with browser-version + PASS/FAIL evidence before `xai-web-deploy-cloudflare-pages` reaches READY_TO_SHIP. Automated portion (vitest + check-types + lint + vite build) IS green at row #10 SHIPPED commit `78e1b43` plus post-row-#11 re-runs.
+> Status of this report: **DEFERRED per manifest policy 2026-05-24** (see `docs/workflow/roadmap/xai-web-console.md` → "Cross-vendor Manual Browser Smoke Policy"). This file is a STRUCTURED CHECKLIST SCAFFOLD awaiting real-browser evidence — it is **NOT** a closure of the manual-smoke blocker, despite earlier dev_log wording (2026-05-24 12:40 entry, since corrected). The unchecked Chrome 120 / Safari 17 / Firefox 121 / Safari iOS rows below MUST be filled with browser-version + PASS/FAIL evidence before `xai-web-deploy-cloudflare` reaches READY_TO_SHIP. Automated portion (vitest + check-types + lint + vite build) IS green at row #10 SHIPPED commit `78e1b43` plus post-row-#11 re-runs.
 
 ---
 
@@ -37,7 +37,7 @@ This file closes that gap by:
    docs/code contract gap but does NOT substitute for real-browser
    smoke. The Chrome 120 / Safari 17 / Firefox 121 / Safari iOS rows
    below MUST be filled with browser-version + PASS/FAIL evidence
-   before `xai-web-deploy-cloudflare-pages` reaches READY_TO_SHIP.
+   before `xai-web-deploy-cloudflare` reaches READY_TO_SHIP.
 
 ---
 
@@ -94,11 +94,13 @@ Reference: `packages/xai-web-dashboard-grid/docs/dev_log.md` "Verify Report (202
 
 > The manual portion is gated on a human verifier. Each row below is a
 > structured checklist; an external verifier (Codex parent session, a
-> Cursor desktop session, or the project owner) fills the boxes in a
-> follow-up commit when wall-clock time permits, OR the manifest-allowed
-> doc-only mitigation applies (see top of file) in which case the row-S3
-> regression test stands in for the live-browser proof of the
-> row-#10 ↔ row-#11 contract.
+> Cursor desktop session, or the project owner) fills the boxes with
+> browser-version + PASS/FAIL evidence before `xai-web-deploy-cloudflare`
+> READY_TO_SHIP per the manifest **Cross-vendor Manual Browser Smoke
+> Policy** (2026-05-24). The S3 regression test
+> (`src/__tests__/DashboardSlotHost.composition.test.tsx`) does **NOT**
+> substitute for the live-browser proof — both gates are independently
+> required.
 
 ### Chrome 120
 
@@ -131,32 +133,31 @@ Reference: `packages/xai-web-dashboard-grid/docs/dev_log.md` "Verify Report (202
 
 ---
 
-## Doc-only mitigation rationale (recorded for audit)
+## Doc-only mitigation rationale — SUPERSEDED 2026-05-24 post-Codex-re-review
 
-The dev_log Status Panel records `Verify Cross-vendor: yes (deferred —
-browser MCP smoke optional; doc-only mitigation acceptable)`. This row
-qualifies for the deferred path because:
-
-1. **Cross-vendor risk surface is CSS + pointer events, not new
-   JavaScript logic.** Both surfaces were ported verbatim from
-   `web design/module-dashboard.jsx` (a prototype that already shipped
-   in Chrome / Safari / Firefox) and from `layout.css` already covered
-   by sibling rows (#2 `xai-web-tokens-and-i18n`).
-2. **The browser-tier behaviors not covered by unit tests** (FLIP
-   visual timing, iOS touch scroll capture, responsive collapse at
-   1400/1100/760) are CSS-only and have no logic branch dependent on
-   the row #10 ↔ row #11 split.
-3. **The row-#10 / row-#11 contract IS the dynamic risk** — and that
-   risk is fully addressable at the unit-test layer via the
-   `dashboardWidgetRegistrations` composition test added in sub-fix
-   S3 (`DashboardSlotHost.composition.test.tsx`).
-4. **Cross-tab BroadcastChannel persistence** is a `@repo/plugin-web-storage`
-   concern, already exercised by that package's unit tests (it is
-   listed as PASS in the 2026-05-23 verify gate matrix V13).
-
-If a future browser issue is reported against any of M1..T2, that
-issue should re-open this checklist and force a live-browser session;
-the deferral is conditional, not permanent.
+> The four-point rationale that previously occupied this section
+> (arguing that CSS + pointer events + the S3 regression test together
+> justify skipping live-browser evidence) has been **superseded** by
+> the manifest-level **Cross-vendor Manual Browser Smoke Policy**
+> (2026-05-24, see `docs/workflow/roadmap/xai-web-console.md` §17).
+>
+> Under that policy:
+>
+> - The S3 regression test is necessary but NOT sufficient.
+> - "CSS-only risk surface" is NOT an accepted basis for skipping
+>   real-browser evidence — Chrome 120 / Safari 17 / Firefox 121 /
+>   Safari iOS may render the same CSS differently (font fallback,
+>   prefers-reduced-motion, touch-action stack on iOS, etc.); empirical
+>   verification is the only safeguard.
+> - The deferral is bounded by deadline (before `xai-web-deploy-cloudflare`
+>   READY_TO_SHIP — currently SHIPPED under a single-row carve-out per
+>   manifest §17, so the dashboard-grid manual smoke is owed within
+>   the 24-hour follow-up window via the `xai-web-cross-vendor-smoke-evidence`
+>   row).
+>
+> This historical block is retained only as audit-trail context. The
+> matrix rows above MUST be filled with real-browser evidence; nothing
+> in this section authorizes skipping that work.
 
 ---
 
@@ -166,7 +167,7 @@ the deferral is conditional, not permanent.
   gates) PASS.
 - **Manual checklist NOT yet filled** — the Chrome 120 / Safari 17 /
   Firefox 121 / Safari iOS rows below are unchecked and must be
-  evidenced before `xai-web-deploy-cloudflare-pages` reaches
+  evidenced before `xai-web-deploy-cloudflare` reaches
   READY_TO_SHIP (per manifest **Cross-vendor Manual Browser Smoke
   Policy**, 2026-05-24 post-Codex-re-review). Per that policy this
   row legitimately remains SHIPPED with `Cross-Vendor Manual Smoke:

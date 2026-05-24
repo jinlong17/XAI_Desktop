@@ -267,8 +267,19 @@ PASS = AC-C9-1..C9-5 ticked.
 Enforces the manifest-level Cross-vendor Manual Browser Smoke Policy
 (see docs/workflow/roadmap/xai-web-console.md header, 2026-05-24
 post-Codex-re-review). Manual cross-browser smoke is the
-deployment-readiness gate — xai-web-deploy-cloudflare-pages is the
+deployment-readiness gate — xai-web-deploy-cloudflare is the
 project's chosen enforcement point.
+
+EXCEPTION — Single-row carve-out (manifest §17, 2026-05-24): the
+deploy row ITSELF (xai-web-deploy-cloudflare) MAY ship Status=SHIPPED
+with `Cross-Vendor Manual Smoke: Deferred-24h` per the manifest's
+single-row carve-out clause, provided the Ship Report queues the
+follow-up `xai-web-cross-vendor-smoke-evidence` row within 24h. TC-T17
+applies that exception ONLY to the deploy row itself; ALL OTHER
+dependent rows (xai-web-shell, xai-web-dashboard-grid, and any future
+row whose test.md declares manual smoke) MUST still PASS the audit
+below — `Deferred` on those rows still BLOCKS the deploy row's verify
+gate.
 
 1. For EVERY row in docs/workflow/roadmap/xai-web-console.md whose
    own test.md requires manual cross-vendor smoke, read its dev_log
@@ -291,9 +302,17 @@ project's chosen enforcement point.
      (c) if value is PASS, the linked evidence file (e.g.
          docs/reviews/xai-web-shell/<date>-manual-smoke.md or
          docs/reviews/xai-web-dashboard-grid/20260524-cross-vendor-smoke.md)
-         exists AND the in-file matrix rows for at least one tier-1
-         vendor (Chrome OR Safari OR Firefox) carry checkmarks and
-         browser-version strings.
+         exists AND **every required browser** listed in the row's
+         own test.md manual-smoke section carries checkmarks AND a
+         browser-version string AND a per-scenario PASS/FAIL verdict.
+         Required minimum browser sets at 2026-05-24:
+            - xai-web-shell: Chrome stable + Safari 17+ + Firefox latest
+              (all M1..M18 scenarios on each)
+            - xai-web-dashboard-grid: Chrome 120 + Safari 17 + Firefox 121
+              + Safari iOS (M1..M11 on the desktop tier, T1..T2 on iOS)
+         "At least one vendor" is **NOT** sufficient — the whole point
+         of cross-vendor smoke is the cross-vendor coverage; partial
+         evidence is treated as Deferred for the unfilled browsers.
 4. Verdict matrix:
      - All rows show PASS with evidence → TC-T17 PASS, deploy MAY
        proceed to READY_TO_SHIP.
@@ -375,6 +394,7 @@ A verify run is GREEN only when **all** of the following pass:
 | TC-T14 | Existing test suite stays green | TS8 |
 | TC-T15 | Runbook completeness | TS1 |
 | TC-T16 | Evidence file present and full | TS1 + TS5 |
+| TC-T17 | Dependent-row Cross-Vendor Manual Smoke audit (hard gate per manifest §17) | TS7 |
 
 Verify GREEN → Status flips `READY_FOR_VERIFY` → `READY_TO_SHIP`.
 Verify RED → Status flips `READY_FOR_VERIFY` → `BLOCKED` (Suggested Next:
