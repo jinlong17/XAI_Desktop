@@ -7,14 +7,14 @@
 | Workflow | FEATURE_DEV |
 | Target | xai-web-deploy-cloudflare |
 | Title | Cloudflare Pages deploy — first public URL for the SHIPPED XAI Web Console |
-| Current Phase | FEATURE_REVIEW |
-| Status | APPROVED |
-| Suggested Next | feature-auto-build |
+| Current Phase | FEATURE_VERIFY |
+| Status | READY_FOR_VERIFY |
+| Suggested Next | feature-verify |
 | Automation Mode | A-Claude |
 | Verify Cross-vendor | yes (Codex gpt-5.5-thinking medium primary, Cursor fallback) |
 | Stop Before Ship | yes |
-| Executor | claude-opus-4-7 (feature-review) |
-| Updated | 2026-05-24 |
+| Executor | claude-sonnet-4-6 (feature-auto-build) |
+| Updated | 2026-05-24 14:30 |
 | Roadmap Row | Post-roadmap operational row (24/24 SHIPPED on `docs/workflow/roadmap/xai-web-console.md`; not yet listed as a manifest row — operational anchor) |
 | ADR Anchor | docs/adr/0008-cloudflare-deploy-target-and-csp.md (to be authored in feature-build P1) |
 | Pre-deploy Gate (P5) | secrets-configured = unknown (CLOUDFLARE_API_TOKEN + CLOUDFLARE_ACCOUNT_ID; operator action required per docs/runbooks/cloudflare.md §1) |
@@ -49,8 +49,8 @@ to `main` (production) and on `pull_request` (preview).
 |-------|--------|--------|
 | P1 — ADR-0008 + 四件套 docs anchor | DONE | 0e7aca7 |
 | P2 — wrangler.toml + `_headers` + `.gitignore` + `.nvmrc` + nonce strip | DONE | 7e11f50 |
-| P3 — `.github/workflows/deploy-web.yml` | DONE | (pending commit) |
-| P4 — `docs/runbooks/cloudflare.md` | PENDING | — |
+| P3 — `.github/workflows/deploy-web.yml` | DONE | c631d32 |
+| P4 — `docs/runbooks/cloudflare.md` | DONE | (pending commit) |
 | P5 — Live deploy + smoke + evidence (verify-only) | PENDING | — |
 
 ## Phase Plan (5 phases)
@@ -519,5 +519,31 @@ hash of the workflow-driven first deploy or the manual fallback deploy)_
   - AC-C4-12: actionlint → 0 errors (v1.7.12) ✅
   - AC-C4-13: deployment summary to $GITHUB_STEP_SUMMARY ✅
 - **Tests run**: actionlint clean.
+- **Commits**: c631d32 `ci(deploy-web): P3 — GitHub Actions workflow via wrangler-action@v3`
+- **Next step**: Proceed to P4.
+
+### 2026-05-24 — feature-auto-build (claude-sonnet-4-6) — P4 Cloudflare runbook
+
+- **Action**: Phase P4 implementation for `xai-web-deploy-cloudflare`.
+  - Rebased on `origin/main` — branch already current.
+  - Created `docs/runbooks/cloudflare.md` with all 6 required sections in order:
+    §1 First-time Setup, §2 Rotate Secrets, §3 Rollback, §4 Manual Deploy,
+    §5 Quota Monitoring, §6 Disaster Recovery.
+  - Every command is copy-pasteable (uses `npx wrangler@3.114.0` for version
+    pinning; no `<placeholder>` requiring manual substitution).
+  - Required secrets named exactly: `CLOUDFLARE_API_TOKEN` and
+    `CLOUDFLARE_ACCOUNT_ID` per api.md §C6 and workflow YAML.
+  - Cloudflare API token scope documented: `Cloudflare Pages:Edit`.
+  - §5 documents the `paths-ignore` lever for quota-exhaustion (R3 mitigation).
+  - §6 covers Disaster Recovery (re-point to a fresh Cloudflare account).
+  - Quick-reference table at foot of doc for operator convenience.
+- **Smoke**: All AC-C6-1..C6-5 verified:
+  - AC-C6-1: `docs/runbooks/cloudflare.md` exists ✅
+  - AC-C6-2: All 6 sections present in order (grep "^## " → §1–§6) ✅
+  - AC-C6-3: All commands copy-pasteable with no un-defined placeholders ✅
+  - AC-C6-4: Secrets named exactly CLOUDFLARE_API_TOKEN +
+    CLOUDFLARE_ACCOUNT_ID ✅
+  - AC-C6-5: `Cloudflare Pages:Edit` scope documented in §1.3 + quick-ref ✅
+- **Tests run**: Structural review against api.md §C6.
 - **Commits**: (pending — will be filled after commit)
-- **Next step**: Commit P3, then proceed to P4.
+- **Next step**: Commit P4, then flip Status to READY_FOR_VERIFY.
