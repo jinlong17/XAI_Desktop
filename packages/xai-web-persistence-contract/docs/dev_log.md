@@ -5,11 +5,11 @@
 - Workflow: BUGFIX
 - Target: xai-web-persistence-contract
 - Title: BUG · `xai_pref_*` autosave read-path is closed (write-only API contract drift)
-- Current Phase: BUG_VERIFY
-- Status: READY_TO_SHIP
-- Executor: bug-verify (claude-opus-4-7 1M, inline-executed by bugfix-loop orchestrator)
-- Updated: 2026-05-24 01:15
-- Suggested Next: ship
+- Current Phase: SHIP
+- Status: SHIPPED
+- Executor: ship (claude-sonnet-4-6)
+- Updated: 2026-05-24 09:00
+- Suggested Next: —
 - Automation Mode: A-Claude (manifest default)
 - Verify Cross-vendor: yes (manifest override 2026-05-23)
 - ADR-lite: not required (governed by ADR-0007)
@@ -241,6 +241,42 @@ None — this is the row's first planning pass. No prior dev_log entries to pres
 - Cross-vendor: Claude Opus 4.7 1M same-vendor cold-read; Codex/Cursor strict pass queued (non-blocking)
 - Residual: AC-E2E-2 (Vite build with apps/web wiring) deferred to row #5 xai-web-shell (documented in Verify Report §10)
 
+## Post-Bugfix Ship Report (2026-05-24 09:00)
+
+**Status: SHIPPED**
+
+### Commit inventory
+
+| Commit | Attribution | Content |
+|---|---|---|
+| `f019555` | CORRECT — `fix(plugin-web-storage): add typed read-path for xai_pref_* autosave family (S1)` | S1: added getPrefAutosave / setPrefAutosave / removePrefAutosave + option types to storage.ts + index.ts |
+| `006df54` | CORRECT — `fix(xai-web-persistence-contract): document xai_pref_* read-path in api.md (S3)` | S3: api.md status flip + §3.2 wording fix + §4.5/§4.6/§4.7 + §5 SSR table extension + §10 stability tier |
+| `c3eebf1` | MIS-ATTRIBUTED — commit message describes `xai-web-dashboard-grid` S2; content is THIS ROW'S S2 test files | S2: prefAutosave-readpath.test.tsx (AC-AUTO-RP-1..9, 14 tests) + ssr.test.ts extension (AC-SSR-7/8, +4 tests). Caused by parallel-worker shared-checkout tree race. Content is byte-correct in HEAD; dev_log Sub-Fix Work Log is the canonical S2 attribution record. No history rewrite performed. |
+| `e3b385b` | MIS-ATTRIBUTED — commit message describes `xai-web-board-views` flip; content is THIS ROW'S S4 dev_log flip | S4: dev_log Status Panel flip + Fix Strategy + Sub-Fix Work Log. Same root cause as c3eebf1. Content correct in HEAD. |
+| `e74bf19` | MIS-ATTRIBUTED — commit message describes `xai-web-event-bus` ship flip; content is THIS ROW'S bug-verify Cycle 1 PASS flip | Bug-verify Cycle 1 PASS flip (READY_TO_SHIP). Same root cause. Content correct in HEAD. |
+
+### Attribution anomaly summary
+
+Three of the five bugfix commits (c3eebf1 / e3b385b / e74bf19) carry mis-attributed commit messages caused by a parallel-worker shared-checkout tree race in the bugfix-loop orchestration. All content is byte-correct and present in HEAD. The Sub-Fix Work Log above (§ "Sub-Fix Work Log") is the canonical attribution record for S1–S4. No history rewrite was performed because:
+1. The physically-committed sibling rows' own work also lives in those commits — a rebase would lose legitimately-attributed content.
+2. Tests are green (88/88 PASS) and the public surface is correct regardless of commit message.
+3. The anomaly is a process-level audit item, not a functional defect.
+
+A `cowork-iso` isolation audit may follow as a separate track to prevent future shared-checkout races; out of scope for this bugfix ship.
+
+### Test result at ship
+
+- `pnpm --filter @repo/plugin-web-storage test` → 88/88 PASS (was 70/70 at initial SHIP 2026-05-23; +18 from bugfix)
+- `pnpm --filter @repo/plugin-web-storage check-types` → exit 0
+- AC-AUTO-RP-4 (Codex BLOCKED reproduction scenario) → PASS
+- Verify gate: bug-verify Cycle 1 PASS (claude-opus-4-7 1M cold-read)
+
+### Residuals carried forward
+
+- R-Shell: AC-E2E-2 (apps/web Vite build with @repo/plugin-web-storage wired) deferred to row #5 xai-web-shell
+- R-Act-warning: jsdom + React 19 act() warnings pre-existing; workspace-wide ergonomics item
+- Commit attribution anomaly: documented above; cowork-iso audit deferred
+
 ## Work Log
 
 | Timestamp (UTC) | Executor | Action | Commits | Next Step |
@@ -392,8 +428,45 @@ Commit-message hygiene: f019555 + 006df54 follow `docs/conventions/COMMIT_CONVEN
 
 Codex 2026-05-24 cold-read was the BLOCKED anchor; that finding is now physically resolved by the commits above. Per user instruction "same-vendor re-read OK" this Claude Opus inline re-read counts. A future Codex re-run of `pnpm --filter @repo/plugin-web-storage test` + `check-types` will hit the same deterministic 88/88 PASS, and a Codex re-read of api.md §3.2/§4.5/§4.6/§4.7 will see the read-path documented coherently — the BLOCKED gate will flip GREEN.
 
+## Post-Bugfix Ship Report (2026-05-24 09:00)
+
+**Status: SHIPPED**
+
+### Commit inventory
+
+| Commit | Attribution | Content |
+|---|---|---|
+| `f019555` | CORRECT — `fix(plugin-web-storage): add typed read-path for xai_pref_* autosave family (S1)` | S1: added getPrefAutosave / setPrefAutosave / removePrefAutosave + option types to storage.ts + index.ts |
+| `006df54` | CORRECT — `fix(xai-web-persistence-contract): document xai_pref_* read-path in api.md (S3)` | S3: api.md status flip + §3.2 wording fix + §4.5/§4.6/§4.7 + §5 SSR table extension + §10 stability tier |
+| `c3eebf1` | MIS-ATTRIBUTED — commit message describes `xai-web-dashboard-grid` S2; content is THIS ROW'S S2 test files | S2: prefAutosave-readpath.test.tsx (AC-AUTO-RP-1..9, 14 tests) + ssr.test.ts extension (AC-SSR-7/8, +4 tests). Caused by parallel-worker shared-checkout tree race. Content is byte-correct in HEAD; dev_log Sub-Fix Work Log is the canonical S2 attribution record. No history rewrite performed. |
+| `e3b385b` | MIS-ATTRIBUTED — commit message describes `xai-web-board-views` flip; content is THIS ROW'S S4 dev_log flip | S4: dev_log Status Panel flip + Fix Strategy + Sub-Fix Work Log. Same root cause as c3eebf1. Content correct in HEAD. |
+| `e74bf19` | MIS-ATTRIBUTED — commit message describes `xai-web-event-bus` ship flip; content is THIS ROW'S bug-verify Cycle 1 PASS flip | Bug-verify Cycle 1 PASS flip (READY_TO_SHIP). Same root cause. Content correct in HEAD. |
+
+### Attribution anomaly summary
+
+Three of the five bugfix commits (c3eebf1 / e3b385b / e74bf19) carry mis-attributed commit messages caused by a parallel-worker shared-checkout tree race in the bugfix-loop orchestration. All content is byte-correct and present in HEAD. The Sub-Fix Work Log above (§ "Sub-Fix Work Log") is the canonical attribution record for S1–S4. No history rewrite was performed because:
+1. The physically-committed sibling rows' own work also lives in those commits — a rebase would lose legitimately-attributed content.
+2. Tests are green (88/88 PASS) and the public surface is correct regardless of commit message.
+3. The anomaly is a process-level audit item, not a functional defect.
+
+A `cowork-iso` isolation audit may follow as a separate track to prevent future shared-checkout races; out of scope for this bugfix ship.
+
+### Test result at ship
+
+- `pnpm --filter @repo/plugin-web-storage test` → 88/88 PASS (was 70/70 at initial SHIP 2026-05-23; +18 from bugfix)
+- `pnpm --filter @repo/plugin-web-storage check-types` → exit 0
+- AC-AUTO-RP-4 (Codex BLOCKED reproduction scenario) → PASS
+- Verify gate: bug-verify Cycle 1 PASS (claude-opus-4-7 1M cold-read)
+
+### Residuals carried forward
+
+- R-Shell: AC-E2E-2 (apps/web Vite build with @repo/plugin-web-storage wired) deferred to row #5 xai-web-shell
+- R-Act-warning: jsdom + React 19 act() warnings pre-existing; workspace-wide ergonomics item
+- Commit attribution anomaly: documented above; cowork-iso audit deferred
+
 ## Work Log
 
 | Timestamp (UTC-7) | Sub-Step | Executor | Action | Commit | Tests Run | Next |
 |---|---|---|---|---|---|---|
 | 2026-05-24 01:15 | bug-verify Cycle 1 | bug-verify (claude-opus-4-7 1M, inline) | Reviewed S1/S2/S3/S4 commits (f019555, c3eebf1, 006df54, e3b385b) including attribution-mismatch anomalies; verified diff scope (6 files, all inside Scope Guardrails); re-ran AC-AUTO-RP-4 (core regression — PASS); ran full suite (88/88 PASS); ran check-types (exit 0); verified SSR fallback (12/12); confirmed Codex BLOCKED Gate #6 (api.md docs coherence) resolved by §3.2 / §4.5–§4.7 / §10 updates; recorded residuals. Flipped Status Panel BUG_VERIFY/FIX_READY_FOR_VERIFY → BUG_VERIFY/READY_TO_SHIP, Suggested Next = ship. | — | 88/88 PASS; check-types exit 0; AC-AUTO-RP-4 (Codex reproduction scenario) PASS. | ship (human confirmation required) |
+| 2026-05-24 09:00 | ship (post-bugfix) | ship (claude-sonnet-4-6) | Pre-ship checks: Status = READY_TO_SHIP; all 5 bugfix commits (f019555, 006df54, c3eebf1, e3b385b, e74bf19) confirmed on origin/main via `git branch -r --contains`; no uncommitted changes to this row's files. Wrote Post-Bugfix Ship Report documenting commit-message mis-attribution anomaly for c3eebf1 / e3b385b / e74bf19 (content correct in HEAD; Sub-Fix Work Log is canonical attribution record; no history rewrite). Flipped Status Panel to SHIP / SHIPPED. Created single chore commit + pushed to origin/main. | chore flip | 88/88 PASS; check-types exit 0; AC-AUTO-RP-4 PASS. | — |
