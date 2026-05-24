@@ -6,9 +6,17 @@
  * attachments, messages, thinking, activeConvo, model, sidebar open.
  *
  * Send flow: append user bubble → clear input/attachments → flip thinking
- * on → seed new convo if first message → await claudeAdapter → append
- * assistant bubble → flip thinking off. mountedRef short-circuits if the
+ * on → seed new convo if first message → enqueue prompt onto a FIFO
+ * pendingSendQueue → processQueue drains entries one-at-a-time through
+ * claudeAdapter, appending each assistant bubble in order; thinking stays
+ * true until the queue is fully drained. mountedRef short-circuits if the
  * component unmounted during the await.
+ *
+ * Resend-while-thinking: per design.md state machine, a second `send()`
+ * during an in-flight adapter call is queued behind the current promise
+ * (FIFO). The user bubble appears immediately; the assistant bubble is
+ * appended only after the previous queued item resolves. No race between
+ * parallel completeChat calls.
  *
  * API contract: packages/xai-web-ai-chat/docs/api.md §1
  */
@@ -80,6 +88,19 @@ export function AiChatModule({ lang }: AiChatModuleProps) {
   // ---- Refs ---------------------------------------------------------------
   const endRef = useRef<HTMLDivElement | null>(null);
   const mountedRef = useRef(true);
+  /**
+   * FIFO queue of prompts awaiting adapter completion.
+   *
+   * Per design.md state machine: "During thinking, the composer's send stays
+   * usable but a re-send is queued behind the current promise." Each item is
+   * the trimmed user prompt + the lang at the time of send (lang change while
+   * a message is queued must not retroactively swap the demo language). The
+   * `pendingSendQueueRef` is processed one entry at a time by `processQueue`;
+   * `processingRef` guards against re-entry from a second `send` while the
+   * first adapter call is still in flight.
+   */
+  const pendingSendQueueRef = useRef<Array<{ text: string; lang: Lang }>>([]);
+  const processingRef = useRef(false);
   useEffect(() => {
     mountedRef.current = true;
     return () => {
@@ -90,6 +111,45 @@ export function AiChatModule({ lang }: AiChatModuleProps) {
   useEffect(() => {
     endRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages, thinking]);
+
+  // ---- Queue processor ----------------------------------------------------
+  /**
+   * Drains the FIFO queue one prompt at a time. Always called via a fresh
+   * microtask after enqueue. If already processing OR queue empty, returns
+   * immediately — every enqueue path is safe to re-call.
+   *
+   * `thinking` stays `true` until the queue is fully drained (so the UI
+   * shows the orb continuously across queued resends).
+   */
+  const processQueue = useCallback(async () => {
+    if (processingRef.current) return;
+    if (pendingSendQueueRef.current.length === 0) return;
+    processingRef.current = true;
+    try {
+      while (pendingSendQueueRef.current.length > 0) {
+        const next = pendingSendQueueRef.current[0];
+        if (!next) break;
+        let reply: string;
+        try {
+          reply = await completeChat(next.text, next.lang);
+        } catch {
+          reply =
+            next.lang === "zh"
+              ? "（演示）我会综合你的任务、专注数据与习惯进度，给你一份贴近实际的建议。当前网络暂不可用，请稍后再试。"
+              : "(Demo) I'd weave your tasks, focus data, and habit streaks into a tailored plan. Network unavailable right now — try again in a moment.";
+        }
+        if (!mountedRef.current) return;
+        pendingSendQueueRef.current.shift();
+        setMessages((m) => [
+          ...m,
+          { role: "assistant", text: reply, attachments: null },
+        ]);
+      }
+      if (mountedRef.current) setThinking(false);
+    } finally {
+      processingRef.current = false;
+    }
+  }, []);
 
   // ---- Send flow ----------------------------------------------------------
   const send = useCallback(
@@ -116,21 +176,12 @@ export function AiChatModule({ lang }: AiChatModuleProps) {
         });
       }
 
-      (async () => {
-        let reply: string;
-        try {
-          reply = await completeChat(text, lang);
-        } catch {
-          reply = zh
-            ? "（演示）我会综合你的任务、专注数据与习惯进度，给你一份贴近实际的建议。当前网络暂不可用，请稍后再试。"
-            : "(Demo) I'd weave your tasks, focus data, and habit streaks into a tailored plan. Network unavailable right now — try again in a moment.";
-        }
-        if (!mountedRef.current) return;
-        setMessages((m) => [...m, { role: "assistant", text: reply, attachments: null }]);
-        setThinking(false);
-      })();
+      // Enqueue → kick the processor. If already in-flight, the processor's
+      // while-loop will pick this entry up after the current promise resolves.
+      pendingSendQueueRef.current.push({ text, lang });
+      void processQueue();
     },
-    [input, attachments, activeConvo, lang, zh, setRawConvos],
+    [input, attachments, activeConvo, lang, setRawConvos, processQueue],
   );
 
   const handleNewChat = useCallback(() => {

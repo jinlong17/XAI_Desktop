@@ -271,7 +271,7 @@ describe("AiChatModule integration (I)", () => {
     expect(activeText).toContain("older");
   });
 
-  it("I15: rapid double Enter appends two user bubbles and resolves both replies", async () => {
+  it("I15: rapid double Enter queues FIFO — both user bubbles immediate, replies serialized in send order", async () => {
     const { container } = render(<AiChatModule lang="en" />);
     const inp = container.querySelector<HTMLInputElement>(".ai-input")!;
     act(() => {
@@ -286,13 +286,152 @@ describe("AiChatModule integration (I)", () => {
     act(() => {
       fireEvent.keyDown(inp, { key: "Enter", shiftKey: false });
     });
+    // Both user bubbles in place after the synchronous send phase.
     expect(container.querySelectorAll(".ai-msg-user").length).toBe(2);
+    // Drain enough fake time for both adapter resolves.
+    await act(async () => {
+      await vi.advanceTimersByTimeAsync(ADAPTER_DELAY_MAX_MS * 2 + 200);
+    });
+    // Exactly two assistant bubbles — one per user message, no duplicates
+    // and no drops.
+    expect(container.querySelectorAll(".ai-msg-assistant").length).toBe(2);
+    expect(container.querySelector(".ai-stage")?.className).not.toContain(
+      "thinking",
+    );
+    // Confirm FIFO ordering at the DOM level: both user bubbles were appended
+    // synchronously during the two send() calls, so they precede both
+    // assistant bubbles. Order: user("one") → user("two") → asst → asst.
+    const allMsgs = Array.from(container.querySelectorAll(".ai-msg"));
+    expect(allMsgs.length).toBe(4);
+    expect(allMsgs[0]?.className).toContain("ai-msg-user");
+    expect(allMsgs[0]?.textContent).toMatch(/one/);
+    expect(allMsgs[1]?.className).toContain("ai-msg-user");
+    expect(allMsgs[1]?.textContent).toMatch(/two/);
+    expect(allMsgs[2]?.className).toContain("ai-msg-assistant");
+    expect(allMsgs[3]?.className).toContain("ai-msg-assistant");
+  });
+
+  it("I17: resend-while-thinking — second send mid-flight is queued behind first, NOT raced", async () => {
+    // Stub the adapter with externally-resolvable promises so we can observe
+    // the queue's serialization without relying on fake-timer mechanics.
+    // Distinguishing assertion: the second adapter call MUST NOT begin until
+    // the first promise settles. A racing impl would call `completeChat`
+    // twice synchronously after the two `send()` calls; the queued impl
+    // invokes it once, then again only after the first promise resolves.
+    const adapterMod = await import("../internal/claudeAdapter.js");
+    const calls: string[] = [];
+    let resolveFirst: ((value: string) => void) | null = null;
+    let resolveSecond: ((value: string) => void) | null = null;
+    const spy = vi
+      .spyOn(adapterMod, "completeChat")
+      .mockImplementation(async (text: string): Promise<string> => {
+        calls.push(text);
+        return new Promise<string>((resolve) => {
+          if (calls.length === 1) resolveFirst = resolve;
+          else resolveSecond = resolve;
+        });
+      });
+    try {
+      // Switch to real timers so the act() promise plumbing isn't tangled with
+      // fake setTimeout virtual time; the stub above is the only async seam.
+      vi.useRealTimers();
+      const { container } = render(<AiChatModule lang="en" />);
+      const inp = container.querySelector<HTMLInputElement>(".ai-input")!;
+      // First send → completeChat called once, queue holds 1 in-flight item.
+      act(() => {
+        fireEvent.change(inp, { target: { value: "first" } });
+      });
+      act(() => {
+        fireEvent.keyDown(inp, { key: "Enter", shiftKey: false });
+      });
+      expect(calls.length).toBe(1);
+      expect(calls[0]).toBe("first");
+      expect(container.querySelector(".ai-stage")?.className).toContain(
+        "thinking",
+      );
+      // Second send mid-flight. KEY DISTINGUISHING ASSERTION: the queued impl
+      // does NOT invoke completeChat a second time here — the prompt sits in
+      // the queue. A racing impl WOULD invoke it now (call count would jump
+      // to 2 immediately).
+      act(() => {
+        fireEvent.change(inp, { target: { value: "second" } });
+      });
+      act(() => {
+        fireEvent.keyDown(inp, { key: "Enter", shiftKey: false });
+      });
+      expect(container.querySelectorAll(".ai-msg-user").length).toBe(2);
+      expect(calls.length).toBe(1); // ← the anti-race assertion
+      // Resolve the first promise → queue advances → second adapter call now
+      // starts.
+      await act(async () => {
+        resolveFirst?.("REPLY-1");
+        // Give the queue's while-loop a chance to schedule the second call.
+        await Promise.resolve();
+        await Promise.resolve();
+        await Promise.resolve();
+      });
+      expect(calls.length).toBe(2);
+      expect(calls[1]).toBe("second");
+      // First assistant bubble in DOM; thinking still ON because second is
+      // still pending.
+      expect(
+        container.querySelectorAll(".ai-msg-assistant").length,
+      ).toBeGreaterThanOrEqual(1);
+      expect(container.querySelector(".ai-stage")?.className).toContain(
+        "thinking",
+      );
+      // Resolve the second promise → queue drains → thinking clears.
+      await act(async () => {
+        resolveSecond?.("REPLY-2");
+        await Promise.resolve();
+        await Promise.resolve();
+        await Promise.resolve();
+      });
+      const bubbles = Array.from(
+        container.querySelectorAll(".ai-msg-assistant .ai-bubble"),
+      );
+      expect(bubbles.length).toBe(2);
+      expect(bubbles[0]?.textContent).toContain("REPLY-1");
+      expect(bubbles[1]?.textContent).toContain("REPLY-2");
+      expect(container.querySelector(".ai-stage")?.className).not.toContain(
+        "thinking",
+      );
+    } finally {
+      spy.mockRestore();
+    }
+  });
+
+  it("I18: queued resend with lang switch mid-flight preserves the send-time lang per item", async () => {
+    const { container, rerender } = render(<AiChatModule lang="en" />);
+    const inp = container.querySelector<HTMLInputElement>(".ai-input")!;
+    act(() => {
+      fireEvent.change(inp, { target: { value: "alpha" } });
+    });
+    act(() => {
+      fireEvent.keyDown(inp, { key: "Enter", shiftKey: false });
+    });
+    // Switch lang to zh mid-flight (host re-renders the route with the new lang).
+    rerender(<AiChatModule lang="zh" />);
+    const inp2 = container.querySelector<HTMLInputElement>(".ai-input")!;
+    act(() => {
+      fireEvent.change(inp2, { target: { value: "贝塔" } });
+    });
+    act(() => {
+      fireEvent.keyDown(inp2, { key: "Enter", shiftKey: false });
+    });
+    // Drain both adapter windows.
     await act(async () => {
       await vi.advanceTimersByTimeAsync(ADAPTER_DELAY_MAX_MS + 50);
     });
-    expect(container.querySelectorAll(".ai-msg-assistant").length).toBeGreaterThanOrEqual(
-      2,
-    );
+    await act(async () => {
+      await vi.advanceTimersByTimeAsync(ADAPTER_DELAY_MAX_MS + 50);
+    });
+    const assistants = container.querySelectorAll(".ai-msg-assistant .ai-bubble");
+    expect(assistants.length).toBe(2);
+    // First reply was queued under en → EN demo line.
+    expect(assistants[0]?.textContent).toContain(DEMO_REPLY_EN);
+    // Second reply was queued under zh → ZH demo line.
+    expect(assistants[1]?.textContent).toContain(DEMO_REPLY_ZH);
   });
 
   it("I16: prefers-reduced-motion CSS rule is present in the bundled stylesheet", () => {

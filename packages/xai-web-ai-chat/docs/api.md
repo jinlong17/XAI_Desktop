@@ -48,8 +48,8 @@ export function AiChatModule(props: AiChatModuleProps): JSX.Element;
   2. Clears `input` and `attachments`.
   3. Sets `thinking = true`.
   4. If `activeConvo` is `null`, generates a new convo via `makeConvoFromUserText(text, lang)` and prepends it to `convos`; sets `activeConvo` to the new id.
-  5. Calls `claudeAdapter.completeChat(text, lang)`. Awaits. Appends the result as an `{ role: "assistant", text }` `AiMessage`.
-  6. Sets `thinking = false`.
+  5. **Pushes `{ text, lang }` onto a FIFO `pendingSendQueueRef`** and calls `processQueue()`. The processor drains one entry at a time via `await claudeAdapter.completeChat(...)`; a `processingRef` flag prevents re-entry, so a second `send()` while the first promise is in flight is **queued behind the current promise** rather than racing it. Each queue item snapshots its `lang` at enqueue time (a language switch mid-flight does NOT retroactively retarget a queued item).
+  6. As each adapter promise resolves the processor appends an `{ role: "assistant", text }` `AiMessage`. When the queue is fully drained `thinking` is cleared exactly once.
 - On adapter resolve / reject: the result (resolved string OR demo line) is appended as an assistant bubble.  Option A's `completeChat` never throws; the `try/catch` path is preserved only as a defence-in-depth seam for future Option B.
 - "New chat" button resets `messages`, `input`, `attachments`, `activeConvo`. Does **not** mutate `convos`.
 - Clicking a convo row sets `activeConvo` and clears `messages` (matches artifact). Historical messages are not replayed.
@@ -210,7 +210,8 @@ All three are SHIPPED non-`proposed` entries in `packages/plugin-web-storage/src
 
 ## §11. Idempotency / re-mount safety
 
-- StrictMode double-mount: `usePref` is already StrictMode-safe (precedent: pomodoro). The thinking-state guard uses a `useRef` boolean to prevent double-resolve from two adapter promises during a single Enter press.
-- Adapter abort on unmount: a `useEffect` cleanup sets a `mountedRef.current = false` so the resolve handler short-circuits if the component unmounted (the demo bubble append is skipped silently).
+- StrictMode double-mount: `usePref` is already StrictMode-safe (precedent: pomodoro). The FIFO `pendingSendQueueRef` + `processingRef` pair guards against double-spawn of the queue processor during a single Enter press.
+- Adapter abort on unmount: a `useEffect` cleanup sets a `mountedRef.current = false` so the resolve handler short-circuits if the component unmounted (the demo bubble append is skipped silently). The queue is intentionally not drained on unmount — any pending items are dropped because there is no DOM target left to render assistant bubbles into.
+- Resend-while-thinking serialization: the queue's `processingRef` prevents two adapter calls from running concurrently. Even with rapid successive `send()` calls, exactly one `completeChat` promise is in flight at any time; the next call begins only after the previous one resolves (or rejects). This is observable in tests by stubbing `completeChat` with externally-resolvable promises and asserting `calls.length === 1` between the two `send()`s — see `test.md` I17.
 
 ---

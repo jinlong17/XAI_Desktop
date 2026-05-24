@@ -90,6 +90,9 @@
 
 - `thinking` is a single boolean.
 - During `thinking`, the composer's "send" stays usable but a re-send is queued behind the current promise.
+- The queue is **strict FIFO**: `pendingSendQueueRef.current: Array<{ text, lang }>`. Each `send()` pushes one entry; the queue processor (`processQueue`) drains entries one at a time via a single `await completeChat(...)` per iteration. A `processingRef` boolean prevents re-entry — a second `send()` mid-flight calls `processQueue()`, which short-circuits because `processingRef` is `true`. The first call's `while (queue.length > 0)` loop continues to the next entry after the in-flight promise resolves.
+- `thinking` stays `true` until the queue is fully drained (the orb animation continues smoothly across queued resends). It clears once and only once at the end of the loop.
+- Each queue item snapshots its `lang` at enqueue time — a language switch mid-flight does NOT retroactively change a queued item's demo language.
 - `attachments` and `input` are cleared on send (artifact behaviour). `messages` accumulate; not persisted.
 - `activeConvo` is set on the first user message of a fresh thread.
 - "New chat" resets `activeConvo`, `messages`, `input`, `attachments` (does **not** touch the persisted `convos` list).
