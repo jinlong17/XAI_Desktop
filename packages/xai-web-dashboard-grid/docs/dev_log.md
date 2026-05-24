@@ -7,13 +7,13 @@
 | Workflow | BUGFIX |
 | Target | xai-web-dashboard-grid |
 | Title | Stale docs/API + missing manual smoke evidence after row #11 (`@repo/plugin-web-dashboard-widgets`) integration |
-| Current Phase | BUG_VERIFY |
-| Status | READY_TO_SHIP |
-| Suggested Next | ship |
+| Current Phase | SHIP |
+| Status | SHIPPED |
+| Suggested Next | — (workflow complete) |
 | Verify Cross-vendor | yes (deferred — browser MCP smoke optional; doc-only mitigation acceptable). Doc-only mitigation evidence: `docs/reviews/xai-web-dashboard-grid/20260524-cross-vendor-smoke.md`. Unit-test lock: `src/__tests__/DashboardSlotHost.composition.test.tsx`. |
 | Automation Mode | A-Claude (bugfix-loop inline) |
-| Executor | claude-opus-4-7 — bugfix-loop / bug-verify (Cycle 2) |
-| Updated | 2026-05-24 13:15 |
+| Executor | claude-sonnet-4-6 — ship |
+| Updated | 2026-05-24 14:00 |
 | Dispatched By | xai-roadmap-loop (W2d parallel dispatch, manifest row #10) |
 | Roadmap Row | docs/workflow/roadmap/xai-web-console.md row #10 (W2 Module — Dashboard grid container) |
 | ADR Anchor | docs/adr/0007-xai-web-console-build-form.md §S4 (port map row `module-dashboard.jsx` → predeux split `plugin-web-dashboard-grid` + `plugin-web-dashboard-widgets`) + §S5 (TSX rules) + §S7 (event bus) + §S8 (`xai_dash_order` pref already in registry from row #3) |
@@ -216,6 +216,7 @@ Sanity-checked: `xai_dash_order` is pre-registered in `@repo/plugin-web-storage`
 | 2026-05-24 13:05 | claude-opus-4-7 — bugfix-loop / bug-verify (Cycle 1) | **Cycle 1 verify BLOCKED on residual doc drift.** Re-ran reproduction gates (test 112/112, check-types clean, lint clean, apps/web check-types clean). Confirmed Blocker 1 (cross-vendor smoke evidence) closed at c3eebf1 and Blocker 2 (docs/API stale) partially closed at f39a77a. Found ONE remaining stale fragment in design.md §3.3 line 230 (`In v1 it passes widgets={[]} (empty registrations because row #11 hasn't shipped); the row #11 update will swap that for widgets={dashboardWidgetRegistrations}`) — contradicts the §1 post-ship doc-sync row + §2 architecture diagram + §5.1 direct-deps that all reflect the 2026-05-24 row #11 integration. Also flagged §5.2 line 298 `(row #11, future)` as stale. Verdict: BLOCKED on F1=design.md §3.3 line 230 + F2=§5.2 line 298. Looping to Cycle 2 fix. | — | bug-fix (Cycle 2) |
 | 2026-05-24 13:10 | claude-opus-4-7 — bugfix-loop / bug-auto-fix (Cycle 2) | **Cycle 2 fix DONE.** Single sub-fix S4: rewrote design.md §3.3 paragraph below `dashboardGridSlotRegistration` code block to describe `widgets={dashboardWidgetRegistrations}` forwarding + `KNOWN_MODULE_IDS` guard, with a separate "v1 history note" callout preserving the pre-row-#11 phrasing as a historical anchor pointing to §1.1 frozen-assumption #14 + api.md §S12. Also updated §5.2 line 298 from `(row #11, future)` to `(row #11, shipped 2026-05-24)` with a sentence noting the direct workspace dep. dev_log Status flipped BLOCKED → FIX_READY_FOR_VERIFY. | 0872b8e | bug-verify (Cycle 2) |
 | 2026-05-24 13:15 | claude-opus-4-7 — bugfix-loop / bug-verify (Cycle 2) | **Cycle 2 verify PASS.** Re-ran reproduction gates: pnpm --filter @repo/plugin-web-dashboard-grid test PASS 112/112 (14 test files), check-types PASS, lint PASS (`--max-warnings 0`), pnpm --filter @repo/web check-types PASS. Final stale-reference scan across design.md + api.md cleared (only remaining match is api.md §S3 "any future row needs a new span class" which is a generic ADR-process clause, not stale). All 3 original diagnose blockers + 2 cycle-1-residuals closed: B1 cross-vendor smoke evidence → `docs/reviews/xai-web-dashboard-grid/20260524-cross-vendor-smoke.md` (c3eebf1). B2 docs/API stale → design.md §1 + §1.1 + §2 + §3.3 + §5.1 + §5.2 + api.md §S10 + §S12 all synced (f39a77a + 0872b8e). F1 design.md §3.3 line 230 + F2 §5.2 line 298 → closed at 0872b8e. Regression test lock: `src/__tests__/DashboardSlotHost.composition.test.tsx` (a9e6328) — 8 invariants of the row-#10 ↔ row-#11 contract. Commits reviewed for COMMIT_CONVENTION.md compliance: f39a77a, c3eebf1 (contaminated but functional — see 12:50 sibling-concurrency note), a9e6328, 857bd35, 0872b8e all carry full Why/What/Scope/Risk/Docs/Tests bodies. Status flipped FIX_READY_FOR_VERIFY → READY_TO_SHIP. | — | ship |
+| 2026-05-24 14:00 | claude-sonnet-4-6 — ship | **SHIPPED (post-bugfix).** Confirmed 6 bugfix commits all present on origin/main: f39a77a (S1 doc sync), c3eebf1 (S2 smoke report — audit note: cross-cuts persistence-contract S2 test files due to sibling-worker staging race; both contents legitimate), a9e6328 (S3 regression test), 857bd35 (chore: FIX_READY_FOR_VERIFY flip), 0872b8e (S4 Cycle 2 stale-ref clear), e3e2e75 (chore: READY_TO_SHIP flip). Local HEAD == origin/main at 5ae12bc — no push required. Flipped Status READY_TO_SHIP → SHIPPED. | reused: f39a77a c3eebf1 a9e6328 857bd35 0872b8e e3e2e75 | — (workflow complete) |
 
 ## Verify Report (2026-05-23)
 
