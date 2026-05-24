@@ -2,19 +2,20 @@
 
 ## Status Panel
 
-- Workflow: FEATURE_DEV
+- Workflow: BUGFIX
 - Target: xai-web-persistence-contract
-- Title: W1 · typed localStorage key registry + `usePref` hook (`@repo/plugin-web-storage`)
-- Current Phase: SHIP
-- Status: SHIPPED
-- Executor: ship (claude-sonnet-4-6)
-- Updated: 2026-05-23 18:35
-- Suggested Next: —
+- Title: BUG · `xai_pref_*` autosave read-path is closed (write-only API contract drift)
+- Current Phase: BUG_VERIFY
+- Status: FIX_READY_FOR_VERIFY
+- Executor: bug-auto-fix (claude-opus-4-7 1M, inline-executed by bugfix-loop orchestrator)
+- Updated: 2026-05-24 01:05
+- Suggested Next: bug-verify
 - Automation Mode: A-Claude (manifest default)
 - Verify Cross-vendor: yes (manifest override 2026-05-23)
 - ADR-lite: not required (governed by ADR-0007)
 - Wave: W1 (Foundation, parallel with #2 + #4)
 - Roadmap row: #3 in `docs/workflow/roadmap/xai-web-console.md`
+- Prior FEATURE_DEV outcome: SHIPPED 2026-05-23 18:35 (commits ce6270c / 0109326 / 3085911 + ship flip). Retroactively flipped to BUGFIX/NEEDS_DIAGNOSIS by cross-vendor Codex 2026-05-24, now FIX_READY.
 
 ## Brief / Review Docs
 
@@ -287,3 +288,53 @@ The open-ended `xai_pref_*` autosave API is internally inconsistent. The API con
 - `packages/plugin-web-storage/src/internal/storage.ts` defines `getPref<K extends WebPrefKey>`.
 - `packages/plugin-web-storage/src/internal/registry.ts` defines `WebPrefKey = keyof typeof PREF_REGISTRY`.
 - `packages/plugin-web-storage/src/internal/usePrefAutosave.ts` writes arbitrary `xai_pref_${suffix}` keys directly.
+
+- 
+- 2026-05-24 00:31:31
+  Executor: bugfix-full-loop
+  Action: Started bugfix pipeline for xai-web-persistence-contract (retroactive Codex BLOCKED). Mode: A-Claude. Verify Cross-vendor: yes. Fix Path override: bug-auto-fix. Dispatching bug-diagnose.
+- 2026-05-24 00:31:42
+  Executor: bugfix-full-loop
+  Action: STOPPED — orchestrator lacks Task tool in this invocation context; cannot spawn bug-diagnose / bugfix-loop / bug-verify. Returning BLOCKED Handoff so the parent session can dispatch bug-diagnose directly.
+
+## Fix Strategy (bug-diagnose / 2026-05-24)
+
+Root cause: API contract drift between `usePrefAutosave` (write-only for the
+open-ended `xai_pref_*` family) and `getPref` (typed only for the closed
+`WebPrefKey` set). Consumers cannot seed React state from previously-autosaved
+values via the documented `api.md` §3.2 path.
+
+Sub-fix list (executed by `bug-auto-fix` 2026-05-24):
+
+| ID | Description | Status |
+|---|---|---|
+| S1 | Add typed read/write/remove for `xai_pref_*` family: `getPrefAutosave<T>` / `setPrefAutosave<T>` / `removePrefAutosave` in `storage.ts`; re-export via `index.ts`. | DONE — commit f019555 |
+| S2 | Regression tests in `prefAutosave-readpath.test.tsx` (AC-AUTO-RP-1..9) + SSR coverage in `ssr.test.ts` (AC-SSR-1 extended + new AC-SSR-7/8). | DONE — physically committed under c3eebf1 due to shared-checkout parallel-worker tree race; test files are correct and in-tree |
+| S3 | Update `api.md`: flip status `PLAN_DRAFT` → `SHIPPED + 1 BUGFIX`; correct §3.2 wording; add §4.5/§4.6/§4.7; extend SSR fallback table; extend §10 Interface stability with the new exports. | DONE — commit 006df54 |
+| S4 | Flip dev_log Status Panel to FIX_READY_FOR_VERIFY; append Fix Strategy + Sub-fix Work Log; record cross-vendor verify expectation. | THIS COMMIT |
+
+## Sub-Fix Work Log
+
+| Timestamp (UTC-7) | Sub-Fix | Executor | Action | Commit | Tests Run | Next |
+|---|---|---|---|---|---|---|
+| 2026-05-24 00:47 | S1 | bug-auto-fix (claude-opus-4-7 1M, inline) | Added `getPrefAutosave<T>(suffix, options?): T \| undefined` + `setPrefAutosave<T>(suffix, value, options?): boolean` + `removePrefAutosave(suffix): void` to `src/internal/storage.ts`. Re-exported all three + `GetPrefAutosaveOptions<T>` / `SetPrefAutosaveOptions` types from `src/index.ts`. Shared suffix validator (`validateSuffix`) extracted. SSR-safe (window-undefined branch returns `defaultValue` / `false` / no-op). Compare-before-write + same-tab pub/sub mirror `setPref`. | f019555 | `pnpm --filter @repo/plugin-web-storage check-types` exit 0; `pnpm --filter @repo/plugin-web-storage test` 70/70 PASS (no new tests yet). | S2 |
+| 2026-05-24 00:50 | S2 | bug-auto-fix (claude-opus-4-7 1M, inline) | Added `src/__tests__/prefAutosave-readpath.test.tsx` (AC-AUTO-RP-1..9, 14 tests covering: default fallback, `usePrefAutosave` → `getPrefAutosave` round-trip with JSON + string codecs, **consumer seed-on-remount scenario** matching api.md §3.2 contract, imperative `setPrefAutosave`/`getPrefAutosave` round-trip + idempotency, `removePrefAutosave` restoration, decode failure fallback, suffix `/` validation, SSR fallback). Extended `src/__tests__/ssr.test.ts` (AC-SSR-1 +3 exports asserted, new AC-SSR-7 / AC-SSR-8 covering Node-env fallback for new helpers, +4 tests). File header set to `// @vitest-environment jsdom` so the jsdom auto-detect doesn't mis-classify the file. Tree-race note: the two test files were physically committed by a parallel sibling worker (xai-web-dashboard-grid) under commit `c3eebf1` because both workers were operating on the same checkout and the sibling's `git commit` swept up my staged test files. The test files themselves are correct, on the right branch, and green. No content rewrite or rebase performed (the test files are byte-identical to what S2 produced); only the commit-message attribution is off, and this dev_log row is the canonical record of S2's intent. | c3eebf1 (attribution mismatch — see note) | `pnpm --filter @repo/plugin-web-storage test` 88/88 PASS (70 prior + 14 prefAutosave-readpath + 4 ssr extension); check-types exit 0. | S3 |
+| 2026-05-24 00:54 | S3 | bug-auto-fix (claude-opus-4-7 1M, inline) | Updated `packages/xai-web-persistence-contract/docs/api.md`: header status `PLAN_DRAFT` → `SHIPPED + 1 BUGFIX (2026-05-24 — xai_pref_* read-path opened)`. §3.2 corrected — explicit pointer to `getPrefAutosave<T>` instead of `getPref` for the autosave-seed path. §3.4 example rewritten to show the canonical seed-on-mount pattern. §4.5/§4.6/§4.7 added documenting the new helpers (signatures, option types, codec-match constraint, SSR semantics, suffix validation). §5 SSR fallback table extended with three new rows. §10 Interface stability extended with "Stable from 2026-05-24 BUGFIX" tier listing the new exports. | 006df54 | No test changes; `pnpm --filter @repo/plugin-web-storage test` still 88/88 PASS. | S4 |
+| 2026-05-24 01:05 | S4 | bug-auto-fix (claude-opus-4-7 1M, inline) | Flipped Status Panel `BUG_DIAGNOSE / FIX_READY` → `BUG_VERIFY / FIX_READY_FOR_VERIFY`. `Suggested Next` = `bug-verify`. Appended this Sub-Fix Work Log. Recorded the S2 tree-race anomaly for bug-verify and audit. Cross-vendor verify expectation: `Verify Cross-vendor: yes` per manifest override; bug-verify should re-run `pnpm --filter @repo/plugin-web-storage test` + `check-types` independently and ALSO confirm the `getPrefAutosave` documented contract by reading api.md §3.4 + §4.5 + the AC-AUTO-RP-4 regression test. | THIS | `pnpm --filter @repo/plugin-web-storage test` 88/88 PASS; `pnpm --filter @repo/plugin-web-storage check-types` exit 0. | bug-verify |
+
+## Fix Summary (for bug-verify)
+
+- **Bug class**: API contract drift — write/read surface mismatch.
+- **Affected surface**: `@repo/plugin-web-storage` public exports (single `.` from `src/index.ts`).
+- **Fix shape**: additive (3 new exports + 2 new option types). No existing surface changed. No registry edit. No `manifest.json` impact. No `apps/web/` impact (apps/web wiring is row #5 `xai-web-shell`'s job and is still deferred per the original Phase Plan P3 risk note).
+- **Code commits**: `f019555` (S1 implementation).
+- **Test commit (attribution-mismatched)**: `c3eebf1` (S2 — the test files prefAutosave-readpath.test.tsx + ssr.test.ts extension are physically present and green; the commit message describes a different row's work due to a parallel-worker tree race on the shared checkout. Treat the files as the authoritative S2 evidence; do not attempt to rewrite history).
+- **Docs commit**: `006df54` (S3).
+- **Dev_log commit**: this commit (S4).
+- **Tests at handoff**: `pnpm --filter @repo/plugin-web-storage test` → 88/88 PASS (was 70/70 before BUGFIX). `check-types` exit 0.
+- **Cross-vendor verify expectation**: `yes`. Codex 2026-05-24 BLOCKED finding ("read-path closed") is the regression target — bug-verify must explicitly confirm AC-AUTO-RP-4 (consumer seed-on-remount) passes and that api.md §3.2 now reads coherently relative to the implementation.
+
+## Residual / Out-of-scope
+
+- The S2 commit-message attribution mismatch (`c3eebf1`) is a process anomaly worth flagging at the cowork-orchestrator layer (multiple parallel auto-fix workers on a single working tree), but does NOT block bug-verify since the test files are correct in HEAD. A separate `cowork-iso` audit can follow if desired; out of scope for this bugfix.
+- AC-E2E-2 (apps/web Vite build with `@repo/plugin-web-storage` wired) remains deferred to row #5 `xai-web-shell` per the original Phase Plan P3 risk note. The new helpers are exported but no consumer in `apps/web/` calls them yet.

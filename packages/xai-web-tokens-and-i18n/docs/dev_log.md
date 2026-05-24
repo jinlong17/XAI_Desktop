@@ -6,10 +6,10 @@
 - Target: xai-web-tokens-and-i18n
 - Title: API/test contract drift on `weekdays_short` dotted path + `as unknown as I18NBundle` type-bypass
 - Current Phase: BUG_VERIFY
-- Status: FIX_READY_FOR_VERIFY
-- Executor: bugfix-loop → bug-auto-fix (Claude Opus 4.7 1M)
-- Updated: 2026-05-24 07:50
-- Suggested Next: bug-verify
+- Status: SHIPPED
+- Executor: ship (Claude Sonnet 4.6)
+- Updated: 2026-05-24 08:10
+- Suggested Next: —
 - Automation Mode: A-Claude (inherited from prior ship; reconfirmed 2026-05-24)
 - Verify Cross-vendor: yes (Codex gpt-5.5-thinking medium 2026-05-24 cold-read is the BLOCKED anchor)
 - ADR-lite: not required
@@ -269,7 +269,9 @@ Cross-vendor verify: Claude Opus 4.7 1M same-vendor cold-read (documented in Ver
 | 2026-05-23 11:25 | feature-verify (Claude Opus 4.7 1M) | Verified xai-web-tokens-and-i18n against all 12 verification gates. Re-ran `pnpm --filter @repo/plugin-web-tokens test` → 50/50 pass (4 files, 1.15s); re-ran `check-types` → clean. Diff `web design/tokens.css` vs `src/tokens.css` → byte-equal; same for `layout.css`. Google Fonts `<link>` tags at correct weights present in `apps/web/index.html`. CSP `style-src` + `font-src` include Google Fonts domains. Smoke route `/_smoke/tokens` registered in router with DEV guard. `sideEffects` is array. AC coverage complete: AC-I1..I10, AC-A1..A13, AC-T1..T20, AC-E1/E2 (7 scenarios), AC-N1..N3 all exercised. Cross-vendor cold-read of `src/i18n.ts` + `src/apply.ts` + `src/index.ts` confirms implementation matches seed brief. All three commits (e44bbc3, c9079c9, 6c556e6) follow `type(scope): summary` + Why/What/Scope/Risk/Docs/Tests body. Scope discipline intact — no touch of sibling rows or roadmap file. Verdict: **READY_TO_SHIP**, 0 blockers, 3 non-blocking residual risks recorded. Flipped Status Panel → READY_TO_SHIP, Suggested Next = ship. | — | ship |
 | 2026-05-23 18:30 | ship (Claude Sonnet 4.6) | Pre-ship checks: manifest READY_TO_SHIP, dev_log READY_TO_SHIP, commits e44bbc3/c9079c9/6c556e6 on origin/main, 50/50 tests pass. Flipped dev_log → SHIPPED + appended Ship Report. Manifest row #2 flipped → SHIPPED. Flip commit pushed to origin/main. | (flip chore) | — |
 | 2026-05-24 07:45 | bugfix-loop → bug-auto-fix S1 (Claude Opus 4.7 1M) | **S1 — `weekdays_short` doc/test drift**: Updated `api.md` line 60 to clarify weekdays_short is a TOP-LEVEL key (not under `common`), updated api.md line 124 error/edge table to `s("weekdays_short.0") → "Sun"`, updated `test.md` AC-I7 wording, updated `i18n.test.ts` AC-I7 `it()` name to drop the misleading `common.` prefix and added a defensive `expect(s("common.weekdays_short.0")).not.toBe("Sun")` assertion. Verbatim source `web design/i18n.js` line 23 confirms top-level placement is correct. Re-ran `pnpm --filter @repo/plugin-web-tokens test` → 50/50 pass. Tests run: full plugin-web-tokens suite. | c5489a5 | bug-auto-fix S2 |
-| 2026-05-24 07:50 | bugfix-loop → bug-auto-fix S2 (Claude Opus 4.7 1M) | **S2 — `as unknown as I18NBundle` type-bypass**: Replaced `const _zhShapeCheck: I18NBundle = I18N.zh as unknown as I18NBundle;` with a real structural check using a new `DeepWidenLiterals<T>` type helper (widens `as const` string literals to `string` while preserving nested-object + tuple-arity shape). The new check `const _zhShapeCheck: DeepWidenLiterals<I18NBundle> = I18N.zh;` carries NO `as unknown` bypass — any ZH missing-key / extra-key / shape drift now produces a `tsc --noEmit` error. Also tightened `const t = bundle as unknown as I18NBundle;` inside `useI18n` to `const t = bundle as I18NBundle;` with an inline comment citing the upstream structural guarantee. **Drift-catch evidence**: temporarily renamed ZH `jul` → `jul_DRIFT` and confirmed `tsc --noEmit` raised `TS2322 — Property 'jul' is missing in type ... but required in type ...` at the `_zhShapeCheck` line, then reverted. Re-ran `pnpm --filter @repo/plugin-web-tokens test` → 50/50 pass; `check-types` → clean. | (next commit) | bug-verify |
+| 2026-05-24 07:50 | bugfix-loop → bug-auto-fix S2 (Claude Opus 4.7 1M) | **S2 — `as unknown as I18NBundle` type-bypass**: Replaced `const _zhShapeCheck: I18NBundle = I18N.zh as unknown as I18NBundle;` with a real structural check using a new `DeepWidenLiterals<T>` type helper (widens `as const` string literals to `string` while preserving nested-object + tuple-arity shape). The new check `const _zhShapeCheck: DeepWidenLiterals<I18NBundle> = I18N.zh;` carries NO `as unknown` bypass — any ZH missing-key / extra-key / shape drift now produces a `tsc --noEmit` error. Also tightened `const t = bundle as unknown as I18NBundle;` inside `useI18n` to `const t = bundle as I18NBundle;` with an inline comment citing the upstream structural guarantee. **Drift-catch evidence**: temporarily renamed ZH `jul` → `jul_DRIFT` and confirmed `tsc --noEmit` raised `TS2322 — Property 'jul' is missing in type ... but required in type ...` at the `_zhShapeCheck` line, then reverted. Re-ran `pnpm --filter @repo/plugin-web-tokens test` → 50/50 pass; `check-types` → clean. | 5906ce4 | bug-verify |
+| 2026-05-24 07:55 | bugfix-loop → bug-verify (Claude Opus 4.7 1M) | **VERIFY PASS — READY_TO_SHIP**: Inspected both fix commits (c5489a5 S1, 5906ce4 S2) — commit messages follow `fix(scope): summary` + Why/What/Scope/Risk/Docs/Tests, scope confined to plugin-web-tokens + this row's docs. Reproduced both Codex 2026-05-24 BLOCKERS: (1) `grep weekdays_short` across api.md/test.md/i18n.test.ts confirms top-level path used consistently; (2) `grep "as unknown as I18NBundle"` over src/i18n.ts returns 0 matches. **Independent drift-catch evidence** (run by this verify executor, separate from the auto-fix executor): renamed ZH `oct` → `oct_DRIFT_VERIFY`; `tsc --noEmit` raised `TS2322: Property 'oct' is missing in type … but required in type …` at line 585 (`_zhShapeCheck`); restored file and tsc clean again. Vitest 50/50 pass (1.91s); `check-types` clean. No `manifest.json`/route impact. Cross-vendor anchor (Codex 2026-05-24) preserved; this re-verify is the authorized Claude Opus 4.7 1M same-vendor follow-up. Flipped Status Panel → READY_TO_SHIP, Suggested Next = ship; appended Bug-Verify Report. | — | ship |
+| 2026-05-24 08:10 | ship (Claude Sonnet 4.6) | Verified dev_log READY_TO_SHIP + 2 fix commits (c5489a5 S1, 5906ce4 S2) on local main. Staged only this row's dev_log (bug-verify READY_TO_SHIP flip + Bug-Verify Report). Committed ship flip as `chore(xai-web-tokens-and-i18n): ship flip — SHIPPED bugfix (S1 weekdays_short + S2 type-bypass)`. Fetched + rebased against origin/main (concurrent sibling bugfix-loops). Pushed all 3 commits to origin/main. Status → SHIPPED. | (ship flip chore) | — |
 
 
 ## Suggested Next
@@ -335,3 +337,48 @@ The verbatim-port discipline (design.md Frozen Assumption #1) makes `web design/
 | S2 | type-system bypass on EN/ZH parity check | Replace `const _zhShapeCheck: I18NBundle = I18N.zh as unknown as I18NBundle;` with a real structural check using a `DeepWidenLiterals<T>` helper that widens `as const` string literals to `string` while preserving the nested-object + tuple-arity shape. Drop `as unknown` cast inside `useI18n` body. |
 
 Verify-cross-vendor anchor: Codex gpt-5.5-thinking medium 2026-05-24 cold-read BLOCKED audit. Re-verify by Claude Opus 4.7 1M same-vendor re-read is the accepted follow-up (per user instruction).
+
+## Bug-Verify Report (bug-verify · 2026-05-24 07:55 · Claude Opus 4.7 1M, via bugfix-loop)
+
+**Verdict: PASS — READY_TO_SHIP.** Both Codex 2026-05-24 BLOCKED items are resolved with independent evidence; 0 residual blockers.
+
+Verification gates:
+
+1. **Commit review** — `c5489a5` (S1) and `5906ce4` (S2) inspected. Each follows `fix(scope): summary` with Why/What/Scope/Risk/Docs/Tests body. Scopes confined to expected paths: S1 touches `packages/plugin-web-tokens/src/__tests__/i18n.test.ts` + `packages/xai-web-tokens-and-i18n/docs/{api.md,test.md,dev_log.md}`; S2 touches `packages/plugin-web-tokens/src/i18n.ts` + `packages/xai-web-tokens-and-i18n/docs/dev_log.md`. No sibling-row spillover (no edits to `packages/plugin-web-persistence/**` row #3 or `packages/core/src/types/events.ts` row #4 surfaces).
+2. **Original reproduction — Codex BLOCKER #1 (S1)** — `grep weekdays_short` over `api.md` + `test.md`:
+   - `api.md` line 59: `common` no longer mentions weekdays_short, instead points to top-level.
+   - `api.md` line 60: `weekdays_short` row explicitly labeled "Top-level key, … Verbatim source `web design/i18n.js` places this OUTSIDE `common`."
+   - `api.md` line 124: error/edge table now `s("weekdays_short.0") → "Sun"`.
+   - `test.md` AC-I7 line 38: `s("weekdays_short.0")` with verbatim-source citation.
+   - `i18n.test.ts` AC-I7: `it()` name corrected; assertion `expect(s("weekdays_short.0")).toBe("Sun")` matches doc; defensive `expect(s("common.weekdays_short.0")).not.toBe("Sun")` prevents future re-drift.
+   PASS.
+3. **Original reproduction — Codex BLOCKER #2 (S2)** — `grep "as unknown as I18NBundle" src/i18n.ts` → **0 matches** (both bypasses removed):
+   - Line 585: `const _zhShapeCheck: DeepWidenLiterals<I18NBundle> = I18N.zh;` — real structural check, no cast.
+   - Line 641: `const t = bundle as I18NBundle;` — direct cast with inline justification citing the upstream `_zhShapeCheck` structural guarantee.
+   PASS.
+4. **Independent drift-catch evidence** — verify executor (separate from the auto-fix executor) ran a fresh injection test: temporarily renamed `I18N.zh.common.oct` → `oct_DRIFT_VERIFY` at line 297. `pnpm --filter @repo/plugin-web-tokens check-types` raised `TS2322` at `src/i18n.ts(585,7)` with message "Property 'oct' is missing in type … but required in type …". File restored; `check-types` clean again. The compile-time parity check that was previously a no-op is now load-bearing. PASS.
+5. **Vitest** — `pnpm --filter @repo/plugin-web-tokens test` → **50 passed (50)** across 4 test files in 1.91s. No flakes, no skips. PASS.
+6. **Type-check** — `pnpm --filter @repo/plugin-web-tokens check-types` → clean (`tsc --noEmit` exits 0, no output). PASS.
+7. **Boundary path — AC-I7 documented contract** — AC-I7 in `test.md` line 38, `api.md` line 124, and `i18n.test.ts` line 61 now all use the SAME dotted path (`weekdays_short.0`). The earlier mismatch where doc said one thing and test asserted another is gone. PASS.
+8. **Critical path — `useI18n` runtime behavior** — no functional change to `useI18n` signature, `t`/`s` semantics, or missing-key warn behavior (S2 only tightens type-system casts; `bundle` value at runtime is unchanged). AC-I1..AC-I6, AC-I8..AC-I10, AC-A1..AC-A13, AC-T1..AC-T20, AC-E1, AC-E2, AC-N1..AC-N3 all continue to pass. PASS.
+9. **No manifest/route change** — neither sub-fix touched `manifest.json` or the `/_smoke/tokens` route. PASS.
+10. **Cross-vendor record** — Status Panel `Verify Cross-vendor: yes (Codex gpt-5.5-thinking medium 2026-05-24 cold-read is the BLOCKED anchor)` preserved; this re-verify is Claude Opus 4.7 1M same-vendor follow-up explicitly authorized by user. The two BLOCKER items raised by Codex 2026-05-24 are individually resolved with verifiable evidence above (gates 2, 3, 4). PASS.
+
+Residual notes (informational, non-blocking):
+
+- R-V1: `useI18n` body retains a single `bundle as I18NBundle` cast on line 641. This is now a SOUND narrowing (not an `as unknown` bypass), with an inline comment citing `_zhShapeCheck` as the structural guarantee. The cast is necessary because TS does not auto-narrow `I18N["en"] | I18N["zh"]` (a union with distinct literal types) to `I18N["en"]` — but its safety is now type-system-proven, not type-system-erased.
+- R-V2: `bug-verify` did not push commits. Push is reserved for `ship`. Both `c5489a5` and `5906ce4` are on local `main` ahead of `origin/main` and await the ship gate.
+
+## Ship Report (ship · 2026-05-24 08:10 · Claude Sonnet 4.6)
+
+**Result: SHIPPED**
+
+Pre-ship checks:
+- dev_log Status: READY_TO_SHIP, Suggested Next: ship — confirmed.
+- Workflow: BUGFIX — confirmed.
+- Fix commits c5489a5 (S1) and 5906ce4 (S2) present on local main and verified in `git log`.
+- No sensitive files staged. No substantial uncommitted source changes in this feature's scope.
+- Verify gate: 50/50 tests PASS, check-types clean, independent drift-catch confirmed (S2 parity check load-bearing).
+
+Supplementary commit: ship flip chore (dev_log READY_TO_SHIP → SHIPPED + Bug-Verify Report + Ship Report).
+Push: rebased against origin/main (concurrent sibling bugfix-loops), then pushed all 3 commits (c5489a5, 5906ce4, ship-flip) to origin/main.
