@@ -25,7 +25,7 @@ import {
   applyRailPos,
 } from "@repo/plugin-web-tokens";
 import { usePref } from "@repo/plugin-web-storage";
-import { emitWebEvent } from "@repo/xai-web-event-bus";
+import { emitWebEvent, onWebEvent } from "@repo/xai-web-event-bus";
 import {
   Shell,
   WebShellProvider,
@@ -52,18 +52,29 @@ export function App() {
   const [petOn, setPetOn] = useState<boolean>(true);
 
   // ---- usePref state pieces (persisted) ------------------------------------
-  const [accentHue, setAccentHue] = usePref("xai_accent_hue");
-  const [railPos, setRailPos] = usePref("xai_rail_pos");
-  const [bgToneRaw, setBgTone] = usePref("xai_bg_tone");
+  const [accentHue]      = usePref("xai_accent_hue");   // setter dropped — pane writes via setPref directly
+  const [railPos]        = usePref("xai_rail_pos");     // setter dropped — pane writes via setPref directly
+  const [bgToneRaw]      = usePref("xai_bg_tone");      // setter dropped — pane writes via setPref directly
   // plugin-web-tokens BgTone is a strict subset of plugin-web-storage's BgTone
   // (storage adds "sage" which tokens doesn't know yet). Cast to BgTone for apply*.
   const bgTone: BgTone = bgToneRaw as BgTone;
 
-  // Suppress unused variable warnings for setters exposed to future Settings rows
-  void setAccentHue;
-  void setRailPos;
-  void setBgTone;
-  void setFontScale;
+  // xai-web-settings-appearance row #22 — subscribe to live binding bus.
+  // AppearancePane emits web:settings:preference-changed on every onChange + on Save + on Reset.
+  // The 3 persisted dims (accentHue/railPos/bgTone) auto-rerender via usePref;
+  // the 4 useState dims (theme/density/fontScale/lang) need explicit setters here.
+  useEffect(() => {
+    const off = onWebEvent("web:settings:preference-changed", (d) => {
+      switch (d.key) {
+        case "theme":     setTheme(d.value); break;
+        case "density":   setDensity(d.value); break;
+        case "fontScale": setFontScale(d.value); break;
+        case "lang":      setLang(d.value); break;
+        // accentHue / railPos / bgTone auto-rerender via usePref — no setter needed.
+      }
+    });
+    return () => off();
+  }, []);
 
   // ---- apply* useEffects (B1: matchMedia cleanup before re-attach) ----------
   useEffect(() => { applyTheme(theme); }, [theme]);

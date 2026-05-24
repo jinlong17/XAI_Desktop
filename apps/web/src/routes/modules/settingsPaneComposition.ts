@@ -16,6 +16,8 @@ import type { Pane } from "@repo/plugin-web-settings-shell";
 import { paneRegistry } from "@repo/plugin-web-settings-shell";
 // xai-web-settings-features-panel #23
 import { featuresPane } from "@repo/plugin-web-settings-features-panel";
+// xai-web-settings-appearance #22
+import { appearancePane } from "@repo/plugin-web-settings-appearance";
 // xai-web-settings-rest #24 — 11 remaining panes (line-disjoint with row #22)
 import {
   accountPane,
@@ -41,6 +43,8 @@ import {
 export function composeSettingsPaneRegistry(): readonly Pane[] {
   return paneRegistry.map((p) => {
     if (p.id === "features") return featuresPane;
+    // ---- xai-web-settings-appearance row #22 (line-disjoint with row #24) ----
+    if (p.id === "appearance") return appearancePane;
     // ---- xai-web-settings-rest row #24 (line-disjoint with row #22) ----
     if (p.id === "account")       return accountPane;
     if (p.id === "premium")       return premiumPane;
