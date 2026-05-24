@@ -185,3 +185,39 @@ Selected **Option B (hybrid)**: append five `web:*` keys to `@repo/core/types/ev
 | 2026-05-23 11:10 | Claude Sonnet 4.6 — feature-auto-build | **P3 — Cross-package Smoke Test + Cleanup.** Added apps/web/src/__tests__/event-bus.smoke.test.tsx (A1-A4 scenarios). Added @repo/xai-web-event-bus workspace:* + @testing-library/react devDeps to apps/web/package.json. Created apps/web/vitest.config.ts (jsdom environment). Added test/test:watch scripts to apps/web/package.json. Added ./src/__fixtures__ export entry to xai-web-event-bus package.json for cross-package fixture access in tests. Created eslint.config.js with @typescript-eslint/no-explicit-any: error. Manual cross-vendor verify deferred to feature-verify (runs in live browser). `pnpm --filter @repo/web test`: 37/37 PASS across 11 test files (4 new smoke tests + 33 pre-existing). No regressions. Status → READY_FOR_VERIFY. | a798384 | feature-verify |
 | 2026-05-23 11:13 | Claude Opus 4.7 1M — feature-verify | **Verification Report V1 — PASS / READY_TO_SHIP.** Cold-read verified two committed shas (a798384 main impl + 0cb8e27 dev_log update). Re-ran all gates: `pnpm --filter @repo/xai-web-event-bus test` → 18/18 PASS (12 emitter + 6 listener); `pnpm --filter @repo/xai-web-event-bus check-types` → clean (incl. T1-T5 @ts-expect-error guards); `pnpm --filter @repo/core check-types` → clean (additive EventMap edit does not break existing types); `pnpm --filter @repo/web test` → 37/37 PASS across 11 files (4 smoke A1-A4 + 33 pre-existing, zero regressions). AC coverage matrix from docs/test.md fully exercised — every E1-E6 / S1-S5 / H1-H6 / A1-A4 / T1-T5 row maps to a committed test (audited line-by-line). Independent ADR-0007 §S7 rebuttal verified by direct read of packages/core/src/events/emitter.ts:1 (Tauri `emit` import) + listener.ts:18-21 (`__TAURI_INTERNALS__` guard) — Option B reading factually correct. Verified 5 web:* keys + WebPreferenceChange union live in packages/core/src/types/events.ts:172-215 and are exported via packages/core/src/types/index.ts:14. Verified packages/xai-web-event-bus/src/index.ts exports exactly emitWebEvent / onWebEvent / useWebEventListener + WebEventMap/WebEventKey types — no internal leakage (no src/internal/ directory exists; repo-wide grep for `@repo/xai-web-event-bus/src/internal` returned 0 matches). Verified no-op safety (E2/A3), cleanup-on-unmount (H2), StrictMode settling (H6). Scope discipline: both commits touch ONLY declared paths (packages/xai-web-event-bus/, packages/core/src/types/{events,index}.ts, apps/web/{src/__tests__,vitest.config.ts,package.json}, docs/PLUGIN_MAP.md, docs/reviews/xai-web-event-bus/) — zero edits to sibling rows #2/#3 (xai-web-tokens-and-i18n, xai-web-persistence-contract) or to docs/workflow/roadmap/xai-web-console.md. Commit hygiene: a798384 single-intent P1+P2+P3 squash with full Why/What/Scope/Risk/Docs/Tests body + Co-Author trailer; 0cb8e27 single-purpose dev_log status flip. Cross-vendor manual verify: deferred-to-shell-row per test.md §Manual Verify allowance — A1-A4 jsdom smoke + native browser EventTarget primitive equivalence make the live Chrome/Safari/Firefox gate non-blocking at this row; the row #5 (xai-web-shell) shell smoke will be the natural live-browser exercise site. Residual risks: R1 (ADR §S7 strict reading) accepted with documented technical rebuttal; R4 (cross-tab sync) out-of-v1-scope; all others mitigated. | — | ship |
 | 2026-05-23 18:36 | Claude Sonnet 4.6 — ship | **Ship Report.** Pre-ship verification: dev_log READY_TO_SHIP confirmed; manifest row #4 READY_TO_SHIP confirmed; commits a798384 + 0cb8e27 already on origin/main (no push needed for product commits). Re-ran test gates: `pnpm --filter @repo/xai-web-event-bus test` → 18/18 PASS; cross-pkg smoke `event-bus.smoke.test.tsx` → 4/4 PASS; `pnpm --filter @repo/web test` → 67/67 PASS (zero regressions). Flipped dev_log Status → SHIPPED; flipped manifest row #4 → SHIPPED. Chore commit created and pushed to origin/main. | chore commit (see push) | — (complete) |
+
+## Cross-vendor Verify Report (2026-05-24 — Codex gpt-5.5-thinking medium)
+
+**Verdict: BLOCKED.**
+
+Scope note: retroactive audit only. Status Panel remains `SHIPPED` per user instruction. No fixes were applied.
+
+### Metadata
+
+- Verifier: Codex parent session with read-only explorer slice.
+- Model / effort label: Codex gpt-5.5-thinking / medium.
+- Date: 2026-05-24 (America/Los_Angeles).
+- Test command: `pnpm --filter @repo/xai-web-event-bus test` → PASS, 18/18 tests.
+- Type command: `pnpm --filter @repo/xai-web-event-bus check-types` → PASS.
+
+### Blocker
+
+The package exposes a non-contract subpath for test fixtures. API docs say the package root is the only allowed entry point and test docs say `src/__fixtures__/` is excluded from the public API, but `package.json` exports `./src/__fixtures__` and `apps/web` imports that subpath.
+
+### Gate Findings
+
+| Gate | Finding |
+|---|---|
+| Design conformance | PASS — EventTarget runtime adapter and shared core EventMap projection match the selected approach. |
+| API contract surface | BLOCKED — fixture subpath export violates the root-only public surface contract. |
+| Test coverage | PASS-WITH-GAP — 18/18 package tests pass, but the promised restricted-import lint gate is not implemented; eslint currently enforces only `no-explicit-any`. |
+| Persistence semantics | N/A — this row owns typed events, not storage. |
+| Typed-event contracts | PASS — `WebEventMap` projects `web:*` keys, core `EventMap` contains shell/settings/dashboard/pomodoro/habits/matrix channels, and emitter/listener APIs are typed. |
+| Consumer smoke | PASS-WITH-CONTRACT-ISSUE — `apps/web` smoke tests pass but depend on the forbidden `@repo/xai-web-event-bus/src/__fixtures__` export. |
+
+### Evidence
+
+- `packages/xai-web-event-bus/docs/api.md` says root `index.ts` is the only allowed entry point.
+- `packages/xai-web-event-bus/docs/test.md` says fixtures are excluded from the package public API.
+- `packages/xai-web-event-bus/package.json` exports `./src/__fixtures__`.
+- `apps/web/src/__tests__/event-bus.smoke.test.tsx` imports that fixture subpath.
