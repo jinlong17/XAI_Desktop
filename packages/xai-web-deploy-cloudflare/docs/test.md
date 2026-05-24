@@ -261,6 +261,57 @@ PASS = AC-C6-1..C6-5 ticked.
 PASS = AC-C9-1..C9-5 ticked.
 ```
 
+### TC-T17 — Dependent-row Cross-Vendor Manual Smoke audit (hard gate per manifest policy 2026-05-24)
+
+```text
+Enforces the manifest-level Cross-vendor Manual Browser Smoke Policy
+(see docs/workflow/roadmap/xai-web-console.md header, 2026-05-24
+post-Codex-re-review). Manual cross-browser smoke is the
+deployment-readiness gate — xai-web-deploy-cloudflare-pages is the
+project's chosen enforcement point.
+
+1. For EVERY row in docs/workflow/roadmap/xai-web-console.md whose
+   own test.md requires manual cross-vendor smoke, read its dev_log
+   Status Panel `Cross-Vendor Manual Smoke` field.
+2. Required minimum set (extend if other rows declare manual smoke
+   in their test.md after 2026-05-24):
+     - xai-web-shell (test.md "Manual Verification" M1..M18 — 4 rail
+       positions + drag-reorder + AvatarMenu popover directions ×
+       Chrome stable / Safari 17+ / Firefox latest)
+     - xai-web-dashboard-grid (test.md §6 — FLIP timing, iOS touch,
+       responsive breakpoints, a11y, theme inversion, storage
+       round-trip × Chrome 120 / Safari 17 / Firefox 121 /
+       Safari iOS)
+3. For each row in (2), assert that:
+     (a) the row's dev_log Status Panel has an explicit
+         `Cross-Vendor Manual Smoke` line, AND
+     (b) that line is one of: `PASS (<browsers>, <date>)` or
+         `Deferred (per manifest policy 2026-05-24) — UNFILLED`,
+         AND
+     (c) if value is PASS, the linked evidence file (e.g.
+         docs/reviews/xai-web-shell/<date>-manual-smoke.md or
+         docs/reviews/xai-web-dashboard-grid/20260524-cross-vendor-smoke.md)
+         exists AND the in-file matrix rows for at least one tier-1
+         vendor (Chrome OR Safari OR Firefox) carry checkmarks and
+         browser-version strings.
+4. Verdict matrix:
+     - All rows show PASS with evidence → TC-T17 PASS, deploy MAY
+       proceed to READY_TO_SHIP.
+     - Any row shows Deferred → TC-T17 BLOCKED. Verify gate must
+       BLOCK ship with explicit "manual smoke not evidenced for
+       <row>; fill `<evidence file>` matrix before re-running
+       verify". This is the hard enforcement point that prevents
+       the documentation defect Codex caught on 2026-05-24
+       (checklist-shaped placeholder treated as evidence).
+     - Row missing the `Cross-Vendor Manual Smoke` field entirely
+       → TC-T17 BLOCKED. Verify gate must surface "row <slug>
+       does not declare manual-smoke status; check whether its
+       test.md should declare manual smoke and update its
+       Status Panel".
+
+PASS = AC-C9-6 ticked.
+```
+
 ---
 
 ## Phase 5 fallback — secrets not yet configured
