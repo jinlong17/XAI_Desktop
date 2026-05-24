@@ -4,16 +4,17 @@
 
 | Field | Value |
 |---|---|
-| Workflow | FEATURE_DEV |
+| Workflow | BUGFIX |
 | Target | xai-web-ai-chat |
-| Title | Web Console AI Chat Module — collapsible 248px conversation sidebar + 5-layer aurora background (90px blur + screen blend) + 3 conic gradients (40/55/70s rotate) + 60 twinkling stars + SVG grain + 4-layer accent floor + breathing 3-layer orb (9/11/13s idle → 3.5/4.2/5s thinking) + composer pill (attach + input + Haiku/Sonnet/Opus picker + voice toggle + Enter to send) + starter-prompts panel gated by top-right Insights pill. LLM call goes through a no-op typed `claudeAdapter` returning bilingual demo line after 600–1200 ms jitter (Option A — Option B reserved for a future row). Conversations persist to `xai_ai_convos`; insights toggle to `xai_ai_insights`; voice toggle to `xai_ai_voice` — all three SHIPPED non-`proposed` entries in `@repo/plugin-web-storage`. |
-| Current Phase | SHIP |
-| Status | SHIPPED |
-| Suggested Next | — |
+| Title | resend-while-thinking races (parallel completeChat calls instead of FIFO queue per design) |
+| Current Phase | BUG_VERIFY |
+| Status | FIX_READY_FOR_VERIFY |
+| Suggested Next | bug-verify |
 | Verify Cross-vendor | yes (aurora `mix-blend-mode: screen` + `color-mix(in oklch, …)` + `conic-gradient` + `prefers-reduced-motion` rendering identical across Chrome 120 / Safari 17 / Firefox 121) |
 | Automation Mode | A-Claude (per roadmap default; xai-roadmap-loop W2c parallel-Agent mode — siblings #12 calendar + #16 meditation planning concurrently) |
-| Executor | claude-sonnet-4-6 (ship, 2026-05-23) |
-| Updated | 2026-05-23 19:25 |
+| Executor | claude-opus-4-7 (bug-auto-fix, 2026-05-24 01:02) |
+| Updated | 2026-05-24 01:02 |
+| Previous Status | SHIPPED (2026-05-23 19:25, row #18) — retroactively flipped to NEEDS_DIAGNOSIS by Codex cross-vendor verify 2026-05-24, then to FIX_READY by this bug-diagnose pass |
 | Dispatched By | xai-roadmap-loop (W2c parallel dispatch, concurrent with rows #12 and #16) |
 | Roadmap Row | docs/workflow/roadmap/xai-web-console.md row #18 (W2 · Module) |
 | ADR Anchor | docs/adr/0007-xai-web-console-build-form.md §S4 (port map "module-ai.jsx" → `packages/plugin-web-ai-chat/`) + §S5 (JSX→TSX rules) + §S6 (Vite SPA build form) + §S7 (no AI event channels) + §S8 (SHIPPED `xai_ai_convos` / `xai_ai_insights` / `xai_ai_voice` keys — already non-`proposed` in storage registry) |
@@ -220,7 +221,7 @@ Checklist results:
 
 ## Suggested Next
 
-`ship`
+`bug-verify`
 
 ## Work Log
 
@@ -269,3 +270,5 @@ Design says that while `thinking` is active, another send remains usable but is 
 - `packages/xai-web-ai-chat/docs/design.md` states resend during `thinking` is queued.
 - `packages/plugin-web-ai-chat/src/AiChatModule.tsx` starts a new async `completeChat` call on every valid `send` and clears `thinking` in each resolver.
 - `packages/xai-web-ai-chat/docs/test.md` and `src/__tests__/AiChatModule.test.tsx` cover send, persistence, toggles, corrupted convos, empty input, unmount, and sidebar behavior, but not resend while thinking.
+| 2026-05-24 | bugfix-full-loop (orchestrator) | Re-entered against SHIPPED row to address Codex 2026-05-24 retroactive BLOCKED (resend-while-thinking queue gap). Mode = A-Claude (read from existing Status Panel); Verify Cross-vendor = yes (read from existing Status Panel). Dispatching bug-diagnose. | — | bug-diagnose |
+| 2026-05-24 01:02 | claude-opus-4-7 (bug-auto-fix, bugfix-loop Cycle 1) | Implemented the FIFO `pendingSendQueueRef` + `processingRef` queue processor in `AiChatModule.tsx`. `send()` now pushes `{text, lang}` onto the queue and calls `processQueue()`; the processor drains entries one at a time via a single `await completeChat(...)` per iteration. A second `send()` while the first promise is in flight is queued behind, not raced. `thinking` stays true until the queue is fully drained. Added I17 regression test (mock-based: stubs `completeChat` with externally-resolvable promises and asserts the adapter is invoked exactly once after two synchronous `send()` calls). Added I18 (lang preservation across queued resends). Updated I15 to assert exact FIFO DOM ordering. Updated design.md state machine, api.md §1 send-flow + §11 idempotency, test.md §3 I15/I17/I18 to document the queue contract. Verified anti-race by temporarily reverting to racy impl → I17 fails (`expected 2 to be 1` at `calls.length` assertion); restored queue impl → 86/86 tests pass; lint --max-warnings 0 + typecheck clean; apps/web check-types + 100/100 tests pass. | 8ffa639 | bug-verify |
