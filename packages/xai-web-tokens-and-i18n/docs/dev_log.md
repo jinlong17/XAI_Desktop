@@ -279,3 +279,40 @@ Cross-vendor verify: Claude Opus 4.7 1M same-vendor cold-read (documented in Ver
 5. Does the doc-dir vs npm-package-name duality (`packages/xai-web-tokens-and-i18n/docs/` vs `packages/plugin-web-tokens/`) need stronger cross-referencing?
 6. Is the missing-key behaviour (return path + dev warn) safe enough, or should production also warn?
 7. Does the `applyRailPos` hoist-to-`<html>` decision need locking now, or is the "row #5 may overrule" deferral acceptable?
+
+## Cross-vendor Verify Report (2026-05-24 — Codex gpt-5.5-thinking medium)
+
+**Verdict: BLOCKED.**
+
+Scope note: retroactive audit only. Status Panel remains `SHIPPED` per user instruction. No fixes were applied.
+
+### Metadata
+
+- Verifier: Codex parent session with read-only explorer slice.
+- Model / effort label: Codex gpt-5.5-thinking / medium.
+- Date: 2026-05-24 (America/Los_Angeles).
+- Test command: `pnpm --filter @repo/plugin-web-tokens test` → PASS, 50/50 tests.
+- Type command: `pnpm --filter @repo/plugin-web-tokens check-types` → PASS.
+
+### Blockers
+
+1. API/test contract drift: `api.md` and `test.md` specify `s("common.weekdays_short.0") -> "Sun"`, but implementation stores `weekdays_short` as a top-level array and the committed test asserts `s("weekdays_short.0")`.
+2. i18n structural enforcement is documented as compile-time EN/ZH shape safety, but `src/i18n.ts` casts `I18N.zh as unknown as I18NBundle`, which bypasses the advertised check.
+
+### Gate Findings
+
+| Gate | Finding |
+|---|---|
+| Design conformance | PASS-WITH-DRIFT — tokens/layout are byte-equal to `web design/`, but docs still mention the earlier 88-var count while verify lowered the guard to actual source reality. |
+| API contract surface | BLOCKED — dotted-path semantics in docs do not match implementation/test for `weekdays_short`. |
+| Test coverage | BLOCKED — tests pass, but AC-I7 was rewritten around the implementation instead of the documented public contract. |
+| Persistence semantics | N/A — this row owns tokens/i18n only and does not read/write localStorage. |
+| Typed-event contracts | N/A — this row explicitly has no `web:*` event surface. |
+| Host wiring | PASS — package dependency, global import, Google Fonts, and CSP allowances are present. |
+
+### Evidence
+
+- `packages/plugin-web-tokens/src/i18n.ts` has top-level `weekdays_short`.
+- `packages/xai-web-tokens-and-i18n/docs/api.md` and `docs/test.md` advertise `common.weekdays_short.0`.
+- `packages/plugin-web-tokens/src/__tests__/i18n.test.ts` asserts `weekdays_short.0`.
+- `packages/plugin-web-tokens/src/i18n.ts` uses `as unknown as I18NBundle` for the ZH shape check.
