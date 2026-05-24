@@ -303,3 +303,39 @@ All FOUR hard constraints from seed brief explicitly tested:
 | 2026-05-23 15:00 | claude-sonnet-4-6 | feature-auto-build P3 — BoardModule orchestrator (REC-1/REC-2 applied) + registration.tsx + index.ts barrel + xai_board_view_by_id registry entry + PLUGIN_MAP row + integration tests BM1..BM8 + RG1..RG4 + IB1..IB4. 90 total tests pass. web build + check-types pass. storage tests updated (OWNER_ROW_ADDITIONS + OWNER_ROW_EXEMPT_KEYS). Status → READY_FOR_VERIFY. | 0f6ca12 | feature-verify |
 | 2026-05-23 16:10 | Claude Opus 4.7 1M | feature-verify — 17/17 gates PASS. board-views test 90/90, lint clean, typecheck clean, plugin-web-board-core typecheck clean, plugin-web-storage check-types clean + 70/70 tests, web check-types clean, web test 54/54 (zero regressions), web build green. Gate 15 confirmed intentional (board-workspaces row #9 owns slot; PLUGIN_MAP + design.md document deviation; boardViewsWebModuleRegistration export retained for future row #9 wrap). Hard constraints verified: Today/Tomorrow/Next-Mon (DS1..DS7 + TV7..TV9), Calendar DnD rewrites due via updateCardInList (BC8), Timeline 3-handle atomic {start,due} (TL9/TL10/TL11) + no-write-on-no-move (TL12/TL16), xai_board_view_by_id registry entry present. REC-1 + REC-2 confirmed minimal + intentional. 4 RR (non-blocking): RR-1 dead-code export (intentional), RR-2 cross-vendor deferred to ship per W2e policy, RR-3 jsdom act() stderr warning (test still passes), RR-4 single-day Timeline bar for cards w/o start (documented). Status → READY_TO_SHIP. | — | ship |
 | 2026-05-23 18:46 | claude-sonnet-4-6 | ship — verified 90/90 tests pass; flipped manifest.json → Stable + dev_log → SHIPPED; single chore commit pushed to remote. | chore commit (this) | Workflow complete → row #9 xai-web-board-workspaces |
+
+## Cross-vendor Verify Report (2026-05-24 — Codex gpt-5.5-thinking medium)
+
+**Verdict: BLOCKED.**
+
+Scope note: retroactive audit only. Status Panel remains `SHIPPED` per user instruction. No fixes were applied.
+
+### Metadata
+
+- Verifier: Codex parent session with read-only explorer slice.
+- Model / effort label: Codex gpt-5.5-thinking / medium.
+- Date: 2026-05-24 (America/Los_Angeles).
+- Test command: `pnpm --filter @repo/plugin-web-board-views test` → PASS, 90/90 tests.
+- Type command: `pnpm --filter @repo/plugin-web-board-views typecheck` → PASS.
+
+### Blocker
+
+The package implementation exists and tests pass, but board-views is not mounted into the current production web host. `apps/web` registers `boardWorkspacesWebModuleRegistration`, not `boardViewsWebModuleRegistration`, and board-workspaces does not import board-views. Therefore row #8's Table/Calendar/Dashboard/Timeline/Map view picker is not reachable in the current `/app/board` runtime path.
+
+### Gate Findings
+
+| Gate | Finding |
+|---|---|
+| Design conformance | BLOCKED — frozen design/API state says board-views replaces the board-core shell entry, while final source leaves its registration unused. |
+| API contract surface | BLOCKED — `boardViewsWebModuleRegistration` is exported but not consumed by the host or by board-workspaces. |
+| Test coverage | PASS-WITH-GAP — 90/90 package tests pass, but they prove package-local behavior, not current host reachability. |
+| Persistence semantics | PASS — `xai_board_view_by_id` is registered and guarded locally; board-core persistence helpers are used through the package barrel. |
+| Typed-event contracts | N/A — this row intentionally has no `web:*` event surface. |
+| Host integration | BLOCKED — `apps/web/src/routes/modules/shellRegistrations.tsx` mounts board-workspaces at module id `board`; no runtime import path reaches board-views. |
+
+### Evidence
+
+- `apps/web/src/routes/modules/shellRegistrations.tsx` imports and registers `boardWorkspacesWebModuleRegistration`.
+- `packages/plugin-web-board-views/src/registration.tsx` says its registration is exported but not inserted during the W2e parallel build.
+- `packages/xai-web-board-views/docs/design.md` and `docs/api.md` still describe a direct host replacement contract.
+- `packages/xai-web-board-views/docs/dev_log.md` later records the dead-code registration as intentional residual risk, but that leaves the feature unreachable in the current host.
