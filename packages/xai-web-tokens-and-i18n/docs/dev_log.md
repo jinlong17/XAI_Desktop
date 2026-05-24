@@ -5,11 +5,11 @@
 - Workflow: BUGFIX
 - Target: xai-web-tokens-and-i18n
 - Title: API/test contract drift on `weekdays_short` dotted path + `as unknown as I18NBundle` type-bypass
-- Current Phase: BUG_FIX
-- Status: FIX_READY — S1 DONE, S2 PENDING (bug-auto-fix in progress)
+- Current Phase: BUG_VERIFY
+- Status: FIX_READY_FOR_VERIFY
 - Executor: bugfix-loop → bug-auto-fix (Claude Opus 4.7 1M)
-- Updated: 2026-05-24 07:45
-- Suggested Next: bug-auto-fix (continue with S2)
+- Updated: 2026-05-24 07:50
+- Suggested Next: bug-verify
 - Automation Mode: A-Claude (inherited from prior ship; reconfirmed 2026-05-24)
 - Verify Cross-vendor: yes (Codex gpt-5.5-thinking medium 2026-05-24 cold-read is the BLOCKED anchor)
 - ADR-lite: not required

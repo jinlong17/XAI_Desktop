@@ -940,6 +940,9 @@ importers:
       '@repo/plugin-web-board-core':
         specifier: workspace:*
         version: link:../plugin-web-board-core
+      '@repo/plugin-web-board-views':
+        specifier: workspace:*
+        version: link:../plugin-web-board-views
       '@repo/plugin-web-storage':
         specifier: workspace:*
         version: link:../plugin-web-storage
