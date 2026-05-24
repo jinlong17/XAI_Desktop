@@ -234,3 +234,38 @@ Checklist results:
 | 2026-05-23 14:23 | Claude Opus 4.7 1M (fix, xai-roadmap-loop W2c) | Fixed typecheck error in registration.test.tsx R6 (the render-prop call required WebModuleRouteProps which were missing). Replaced R6 with R1..R5 shape-only assertions mirroring the sibling pomodoro/countdown pattern. lint/typecheck/test all green (84/84). | 8e1f5e8 | feature-verify |
 | 2026-05-23 14:24 | Claude Opus 4.7 1M (feature-verify, xai-roadmap-loop W2c) | Ran all 6 verify gates against HEAD `8e1f5e8`: G1 plugin lint --max-warnings 0 (PASS), G2 plugin typecheck (PASS), G3 plugin test 84/84 across 12 files (PASS), G4 apps/web check-types (PASS), G5 apps/web vite build (PASS, 641 modules, 50.08kB CSS), G6 apps/web vitest 51/51 across 14 files (PASS, no regressions). Cross-vendor manual smoke remains pending the ship-time human verifier per the standard convention for W2 rows. Status flipped to READY_TO_SHIP. | — | ship |
 | 2026-05-23 19:25 | claude-sonnet-4-6 (ship) | Verified: pnpm --filter @repo/plugin-web-ai-chat test → 84/84 (12 files); pnpm --filter @repo/web test → 67/67 (18 files; grew from 51 due to subsequent W2/W4 rows landing, no regressions). Confirmed commits fa748a1/a94c91b/9a69d75/8e1f5e8/8c758e8 all on origin/main. Flipped manifest.json → Stable, dev_log → SHIPPED, PLUGIN_MAP → Stable. Chore commit pushed. Row #18 SHIPPED. | (chore) | — |
+
+## Cross-vendor Verify Report (2026-05-24 — Codex gpt-5.5-thinking medium)
+
+**Verdict: BLOCKED.**
+
+Scope note: retroactive audit only. Status Panel remains `SHIPPED` per user instruction. No fixes were applied.
+
+### Metadata
+
+- Verifier: Codex parent session with read-only explorer slice.
+- Model / effort label: Codex gpt-5.5-thinking / medium.
+- Date: 2026-05-24 (America/Los_Angeles).
+- Test command: `pnpm --filter @repo/plugin-web-ai-chat test` → PASS, 84/84 tests.
+- Type command: `pnpm --filter @repo/plugin-web-ai-chat typecheck` → PASS.
+
+### Blocker
+
+Design says that while `thinking` is active, another send remains usable but is queued behind the current promise. Implementation has no `thinking` guard or queue in `send`; each valid send starts an independent `completeChat` async call and each resolver independently clears `thinking`. There is no test covering resend-while-thinking.
+
+### Gate Findings
+
+| Gate | Finding |
+|---|---|
+| Design conformance | BLOCKED — resend-while-thinking semantics do not match the design state machine. |
+| API contract surface | PASS — root index exports `AiChatModule`, registration, and public types only. |
+| Test coverage | BLOCKED — 84/84 tests pass, but the missing queued-resend case is not represented in `test.md` or committed tests. |
+| Persistence semantics | PASS — `xai_ai_convos`, `xai_ai_insights`, and `xai_ai_voice` are consumed through `usePref`; `messages` remain local-only. |
+| Typed-event contracts | PASS — there is intentionally no `web:ai:*` event channel and source does not use the event bus. |
+| Host integration | PASS — `aiChatWebModuleRegistration` is mounted by `apps/web` at rail order 1. |
+
+### Evidence
+
+- `packages/xai-web-ai-chat/docs/design.md` states resend during `thinking` is queued.
+- `packages/plugin-web-ai-chat/src/AiChatModule.tsx` starts a new async `completeChat` call on every valid `send` and clears `thinking` in each resolver.
+- `packages/xai-web-ai-chat/docs/test.md` and `src/__tests__/AiChatModule.test.tsx` cover send, persistence, toggles, corrupted convos, empty input, unmount, and sidebar behavior, but not resend while thinking.
