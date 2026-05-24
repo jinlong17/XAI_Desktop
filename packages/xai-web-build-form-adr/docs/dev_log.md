@@ -518,3 +518,34 @@ Status flip: NEEDS_REVIEW → APPROVED. Suggested Next: feature-auto-build
   chore(xai-web-build-form-adr): ship — flip to SHIPPED).
 - Next step: ship xai-web-tokens-and-i18n (row #2, commit set
   e44bbc3/c9079c9/6c556e6, all 12 verify gates PASS).
+
+## Cross-vendor Verify Report (2026-05-24 — Codex gpt-5.5-thinking medium)
+
+**Verdict: CONFIRMED_READY_TO_SHIP.**
+
+Scope note: retroactive audit only. Status Panel remains `SHIPPED` per user instruction.
+
+### Metadata
+
+- Verifier: Codex parent session with read-only explorer slice.
+- Model / effort label: Codex gpt-5.5-thinking / medium.
+- Date: 2026-05-24 (America/Los_Angeles).
+- Test command: N/A — this row is docs/ADR-only and has no package.json test target.
+
+### Gate Findings
+
+| Gate | Finding |
+|---|---|
+| Workflow state | PASS — dev_log Status is `SHIPPED`; roadmap row #1 records ADR commits and the prior READY_TO_SHIP/ship path. |
+| ADR status | PASS — `docs/adr/0007-xai-web-console-build-form.md` is `Accepted`, not draft/proposed. |
+| Design conformance | PASS — Option C Vite+TS package migration is selected and rejects the flat Babel artifact as the v1 shipping form. |
+| API / downstream traceability | PASS — ADR port mapping names the package targets for tokens/i18n, shell, board, dashboard, ai-chat, persistence keys, and downstream row ownership. |
+| Persistence semantics | PASS — ADR cleanly splits UI prefs into the row #3 localStorage registry and durable entity data into the existing encrypted IndexedDB/sync spine. |
+| Typed-event contract | PASS — ADR freezes `web:<module>:<verb>-<noun>` naming, forbids direct plugin-to-plugin imports, and assigns EventMap additions to row #4. |
+| Residual risk | PASS-WITH-NOTE — the original ship report deferred the strict Codex/Cursor cross-vendor sample; this Codex cold-read resolves the sampled ADR row. |
+
+### Evidence
+
+- ADR accepted and selected Option C: `docs/adr/0007-xai-web-console-build-form.md`.
+- Port mapping and event/persistence rules: ADR sections S4, S7, and S8.
+- Prior ship note explicitly queued Codex/Cursor strict pass; this report closes that sampled verification for row #1.
