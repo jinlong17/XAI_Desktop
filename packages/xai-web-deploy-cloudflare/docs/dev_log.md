@@ -50,7 +50,7 @@ to `main` (production) and on `pull_request` (preview).
 | P1 — ADR-0008 + 四件套 docs anchor | DONE | 0e7aca7 |
 | P2 — wrangler.toml + `_headers` + `.gitignore` + `.nvmrc` + nonce strip | DONE | 7e11f50 |
 | P3 — `.github/workflows/deploy-web.yml` | DONE | c631d32 |
-| P4 — `docs/runbooks/cloudflare.md` | DONE | (pending commit) |
+| P4 — `docs/runbooks/cloudflare.md` | DONE | 082f28e |
 | P5 — Live deploy + smoke + evidence (verify-only) | PENDING | — |
 
 ## Phase Plan (5 phases)
@@ -545,5 +545,5 @@ hash of the workflow-driven first deploy or the manual fallback deploy)_
     CLOUDFLARE_ACCOUNT_ID ✅
   - AC-C6-5: `Cloudflare Pages:Edit` scope documented in §1.3 + quick-ref ✅
 - **Tests run**: Structural review against api.md §C6.
-- **Commits**: (pending — will be filled after commit)
-- **Next step**: Commit P4, then flip Status to READY_FOR_VERIFY.
+- **Commits**: 082f28e `docs(runbooks): P4 — Cloudflare runbook (setup/rotate/rollback/manual/quota/disaster)`
+- **Next step**: feature-verify. All 4 auto-build phases complete.
