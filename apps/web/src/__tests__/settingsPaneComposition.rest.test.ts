@@ -49,9 +49,10 @@ describe("composeSettingsPaneRegistry — row #24 rest panes (CP1..CP3)", () => 
 
   it("CP3: non-owned ids in the chassis registry have identity preserved", () => {
     const composed = composeSettingsPaneRegistry();
-    // Ids substituted by row #23 or row #24 — identity is intentionally changed.
+    // Ids substituted by row #22, #23, or #24 — identity is intentionally changed.
     const SUBSTITUTED_IDS = new Set([
       "features",      // row #23
+      "appearance",    // row #22
       "account",
       "premium",
       "smart_lists",
@@ -63,7 +64,6 @@ describe("composeSettingsPaneRegistry — row #24 rest panes (CP1..CP3)", () => 
       "sticky",
       "hotkeys",
       "about",         // row #24
-      // "appearance" — row #22, not yet shipped
     ]);
     for (let i = 0; i < paneRegistry.length; i++) {
       const orig = paneRegistry[i]!;

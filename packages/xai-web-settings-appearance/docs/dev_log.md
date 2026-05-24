@@ -4,16 +4,16 @@ Workflow: FEATURE_DEV
 Target: xai-web-settings-appearance
 Title: Settings → Appearance pane (7-dim live-bound + bilingual + Save/Reset)
 Roadmap row: #22 · W4b · Settings (split)
-Executor: Claude Opus 4.7 (1M)
-Updated: 2026-05-23 18:55
+Executor: Claude Sonnet 4.6
+Updated: 2026-05-23 19:15
 
 ---
 
 ## Current Status
 
-Status: APPROVED
-Current Phase: FEATURE_REVIEW
-Suggested Next: feature-auto-build
+Status: READY_FOR_VERIFY
+Current Phase: FEATURE_VERIFY
+Suggested Next: feature-verify
 
 ## Mode
 
@@ -213,3 +213,5 @@ Verdict: **APPROVED** — all 5 prior items resolved cleanly. Plan is executable
 - 2026-05-23 18:10 · Claude Opus 4.7 (1M) · feature-review REVISE → 2 blockers (icon literal `"type"` invalid; App.tsx unused-setter lint gap) + 3 medium (double-confirm; defaults parity test shape; bgTone 7-vs-6 union doc) · Status NEEDS_REVIEW · commits — · next feature-plan
 - 2026-05-23 18:35 · Claude Opus 4.7 (1M) · feature-plan Revise → applied all 5 fixes (B1 icon → `"sun"`; B2 setter drop from `usePref` destructure; M1 chassis owns confirm + `internal/confirmAction.ts` dropped from P1; M2 parity via public `resetAllPrefs` emit snapshot; M3 bgTone 7-vs-6 note); design.md §14/§15 added; Phase Plan P2 scope clarified; AC-RESET-6 added; AC-DEF-9 added; risks R9/R10 added · Status NEEDS_REVIEW · commits — · next feature-review
 - 2026-05-23 18:55 · Claude Opus 4.7 (1M) · feature-review Re-review → APPROVED. All 5 prior items resolved cleanly: B1 icon `"sun"` valid in WebShellIconName union and matches chassis placeholder; B2 setter disposition explicit (Option 1: drop 3 persisted setters from `usePref` destructure at lines 55-57, keep `setFontScale` for subscription, remove all 4 void lines) — verified App.tsx actually voids 4 setters as plan now states; M1 chassis owns confirm (mirrors row #23 `FeaturesPane.tsx:44`), `internal/confirmAction.ts` dropped, AC-RESET-6 added for single-call assertion; M2 parity test uses public `resetAllPrefs()` emit-snapshot with no `@internal` imports; M3 7-vs-6 union note present at api.md §7.1 + §8. Original gates re-confirmed (seed AC mapping, 2-phase split, line-disjoint sibling concurrency, persistence keys reuse, bilingual i18n). 0 blockers, 0 recommendations. · Status APPROVED · commits — · next feature-auto-build
+- 2026-05-23 19:15 · Claude Sonnet 4.6 · feature-auto-build P1 → Package scaffold + AppearancePane + 7-dim live binding + CSS port + 27 i18n keys + 50 unit tests. lint/typecheck/test all pass (0 warnings, 0 errors, 50/50). Commit: 61f6177 · next P2
+- 2026-05-23 19:15 · Claude Sonnet 4.6 · feature-auto-build P2 → Host wiring: App.tsx subscription (B2 setter disposition applied — drop 3 usePref setters + replace void block with onWebEvent subscription); settingsPaneComposition.ts appearance branch; apps/web/package.json dep; PLUGIN_MAP.md row #22 append; 4 composition integration tests. apps/web tests 67/67 pass. Status READY_FOR_VERIFY · commits (committed below) · next feature-verify

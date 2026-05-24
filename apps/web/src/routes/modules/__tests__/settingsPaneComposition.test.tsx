@@ -22,10 +22,10 @@ describe("composeSettingsPaneRegistry", () => {
 
   it("AC-COMP-3: all other entries pass through unchanged (id parity)", () => {
     const composed = composeSettingsPaneRegistry();
-    // Panes substituted by row #23 (features-panel) and row #24 (rest — 11 panes).
-    // Row #22 (appearance) will add "appearance" here when it ships.
+    // Panes substituted by row #22 (appearance), row #23 (features-panel), and row #24 (rest — 11 panes).
     const SUBSTITUTED_IDS = new Set([
-      "features",
+      "features",      // row #23
+      "appearance",    // row #22
       "account",
       "premium",
       "smart_lists",
@@ -36,7 +36,7 @@ describe("composeSettingsPaneRegistry", () => {
       "collaborate",
       "sticky",
       "hotkeys",
-      "about",
+      "about",         // row #24
     ]);
     for (let i = 0; i < paneRegistry.length; i++) {
       const orig = paneRegistry[i]!;
