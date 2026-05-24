@@ -5,13 +5,13 @@
 | Field | Value |
 |---|---|
 | Workflow | BUGFIX |
-| Executor | Claude Opus 4.7 1M (bug-auto-fix, 2026-05-24 00:55) |
-| Updated | 2026-05-24 00:55 |
+| Executor | Claude Opus 4.7 1M (bug-verify, 2026-05-24 00:57, bugfix-loop Cycle 1) |
+| Updated | 2026-05-24 00:57 |
 | Target | xai-web-board-views |
-| Title | row #8 SHIPPED but the 6-view picker (Board / Table / Calendar / Dashboard / Timeline / Map) is unreachable in the running web host — `boardViewsWebModuleRegistration` is exported but never composed by anyone. `apps/web/src/routes/modules/shellRegistrations.tsx` registers `boardWorkspacesWebModuleRegistration` (row #9) at moduleId `board` / railOrder 3, and `@repo/plugin-web-board-workspaces` does NOT depend on or import `@repo/plugin-web-board-views`. The dev_log W2e "intentional residual risk" + Verify Gate 15 PASS-WITH-COMPROMISE acknowledged the dead-code registration during parallel build but never reconciled it. Result: row #8's BoardModule + ViewPicker + 5 ported view components are present in the bundle path only via `@repo/plugin-web-board-views` workspace dep on `apps/web/package.json` line 35, but no runtime path mounts them — `/app/board` renders board-workspaces' Kanban only. 90/90 package tests pass because they prove package-local behavior, not host reachability. |
+| Title | row #8 SHIPPED but the 6-view picker (Board / Table / Calendar / Dashboard / Timeline / Map) is unreachable in the running web host — `boardViewsWebModuleRegistration` is exported but never composed by anyone. `apps/web/src/routes/modules/shellRegistrations.tsx` registers `boardWorkspacesWebModuleRegistration` (row #9) at moduleId `board` / railOrder 3, and `@repo/plugin-web-board-workspaces` does NOT depend on or import `@repo/plugin-web-board-views`. The dev_log W2e "intentional residual risk" + Verify Gate 15 PASS-WITH-COMPROMISE acknowledged the dead-code registration during parallel build but never reconciled it. Result: row #8's BoardModule + ViewPicker + 5 ported view components are present in the bundle path only via `@repo/plugin-web-board-views` workspace dep on `apps/web/package.json` line 35, but no runtime path mounts them — `/app/board` renders board-workspaces' Kanban only. 90/90 package tests pass because they prove package-local behavior, not host reachability. **(2026-05-24 00:57) bug-verify Cycle 1 PASS — fix landed in commit af8b12b: board-workspaces row #9 now composes board-views' `<ViewPicker>` into its header and switches the central panel between Kanban and the 5 alternate views based on `xai_board_view_by_id[activeBoard.id]`. New Layer D (9 cases) in `apps/web/src/routes/__tests__/router-modules.integration.test.tsx` asserts `/app/board` actually mounts the ViewPicker + each of 6 buttons. Cross-vendor verify deferred (queued at ship gate per W2e manifest header policy).** |
 | Current Phase | BUG_VERIFY |
-| Status | FIX_READY_FOR_VERIFY |
-| Suggested Next | bug-verify |
+| Status | READY_TO_SHIP |
+| Suggested Next | ship |
 | Verify Cross-vendor | queued (manifest header — ship-time Codex `gpt-5.5-thinking medium` / Cursor fallback; row-level verify is same-vendor Claude Opus — documented compromise) |
 | Automation Mode | A-Claude (per roadmap default; xai-roadmap-loop W2e parallel-Agent mode — siblings #9 board-workspaces + #11 dashboard-widgets planning concurrently) |
 | Executor | Claude Opus 4.7 1M (feature-review, 2026-05-23) |

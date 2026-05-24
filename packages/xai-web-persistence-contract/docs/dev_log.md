@@ -6,10 +6,10 @@
 - Target: xai-web-persistence-contract
 - Title: BUG · `xai_pref_*` autosave read-path is closed (write-only API contract drift)
 - Current Phase: BUG_VERIFY
-- Status: FIX_READY_FOR_VERIFY
-- Executor: bug-auto-fix (claude-opus-4-7 1M, inline-executed by bugfix-loop orchestrator)
-- Updated: 2026-05-24 01:05
-- Suggested Next: bug-verify
+- Status: READY_TO_SHIP
+- Executor: bug-verify (claude-opus-4-7 1M, inline-executed by bugfix-loop orchestrator)
+- Updated: 2026-05-24 01:15
+- Suggested Next: ship
 - Automation Mode: A-Claude (manifest default)
 - Verify Cross-vendor: yes (manifest override 2026-05-23)
 - ADR-lite: not required (governed by ADR-0007)
