@@ -13,11 +13,11 @@
 | Workflow | FEATURE_DEV |
 | Target | xai-web-tasks |
 | Title | Port web Tasks module — 4-bucket DnD board with date-rewrite + persistence |
-| Current Phase | FEATURE_VERIFY |
-| Status | READY_TO_SHIP |
-| Executor | Claude Opus (claude-opus-4-7) |
-| Updated | 2026-05-23 13:42 |
-| Suggested Next | ship |
+| Current Phase | SHIP |
+| Status | SHIPPED |
+| Executor | Claude Sonnet (claude-sonnet-4-6) |
+| Updated |  2026-05-23 18:41 |
+| Suggested Next | — (SHIPPED) |
 | Wave | W2b (parallel-Agent mode; siblings #14 pomodoro, #15 habits) |
 | Verify Cross-vendor | yes |
 
@@ -211,3 +211,4 @@ No blockers. All commits ready for `ship`.
 | 2026-05-23 13:26 | Claude Sonnet (feature-auto-build) | P2 DONE: Added P2 test suite (T-DC-1..5, T-RD-1..7, T-VAL-1..4, T-PER-1..3, T-REG-1) — all 36 tests pass. Edited apps/web/src/routes/modules/shellRegistrations.tsx (replaced placeholder("tasks",...) with tasksWebModuleRegistration + import). Edited apps/web/package.json (added @repo/plugin-web-tasks: workspace:*). pnpm install clean. @repo/web check-types clean. Lint + typecheck on @repo/plugin-web-tasks clean. Rec-1 DEV warn message format applied. Rec-2 fake timers already in vitest.setup.ts. | e5ac21b | P3 (barrel + registration RTL + cross-vendor checklist) |
 | 2026-05-23 13:29 | Claude Sonnet (feature-auto-build) | P3 DONE: Added T-BAR-1 (index-barrel.test.ts) — verifies public surface exports and excludes internal helpers. Extended registration.test.tsx with T-REG-2 (TasksModuleRoute inside WebShellProvider renders EN h1 "All"). Final pass: 40/40 tests pass. @repo/plugin-web-tasks lint + typecheck clean. @repo/web check-types + 50 tests clean (no regression). Cross-vendor checklist (AC-7): (i) all edits used unique anchors (tasks placeholder L47 + @repo/plugin-web-matrix line in package.json); (ii) all file paths are absolute; (iii) no template-language-specific syntax leaked into source. Status → READY_FOR_VERIFY. | see P3 commit | feature-verify |
 | 2026-05-23 13:42 | Claude Opus (feature-verify) | VERIFY PASS. Reran all 14 gates: (1) plugin-web-tasks 40/40 tests pass (8 files: validate 7, seed 4, dateForCol 5, tasksReducer 7, registration 5, persistence 3, TasksModule 6, index-barrel 3); (2) plugin-web-tasks typecheck clean; (3) plugin-web-tasks lint clean (0 warnings); (4) @repo/web check-types clean; (5) @repo/web 50/50 tests PASS (no regression); (6) @repo/web vite build green (5.23s, no errors); (7) bucket date rewrite verified in dateForCol.ts (overdue=-3d / next7=+2d / later=+30d / nodate=null + moveCard strips date fields); (8) 8-section sidebar bilingual verified (Smart Lists / Custom Lists / Filters / Tags / Calendar Subscription / Completed / Won't Do / Trash all use useI18n + lang switch); (9) xai_task_cols persistence via usePref + isTaskColsArray + SEED_TASK_COLS fallback verified; registry entry confirmed at plugin-web-storage/src/internal/registry.ts:193-196; (10) shellRegistrations.tsx has 13 entries (matrix + tasks + countdown + pomodoro + habits + 8 placeholders incl. settings); tasks at railOrder 2 with `tasksWebModuleRegistration` (not placeholder); (11) cross-column DnD highlight (`.drop-target` on TaskColumn when overColId===col.id) + topbar `.drag-hint` (bilingual fallback) verified in TasksModule + TaskColumn source; (12) cross-vendor cold-read: registration.tsx + TasksModule.tsx + reducer + validate all compile cleanly under fresh tsc; no template-language-specific syntax; (13) AC-XVENDOR manual deferred-to-ship — checklist recorded below (Section "Verify Notes"); (14) commit hygiene: 3 commits (3c0d6bd / e5ac21b / bbaae81), each follows `type(scope): summary` + Why/What/Scope/Risk/Docs/Tests body; each commit stays within its declared phase scope (P1 = package only; P2 = package + 2 declared shared-file edits; P3 = package + PLUGIN_MAP.md). No edits to docs/workflow/roadmap/xai-web-console.md. Sibling rows #14/#15 used disjoint anchors as planned. Status → READY_TO_SHIP. | — | ship |
+| 2026-05-23 18:41 | Claude Sonnet (ship) | SHIPPED: verified 40/40 tests pass; manifest row #6 flipped to SHIPPED; dev_log Status → SHIPPED; chore commit created and pushed to origin/main. Cross-vendor note: same-vendor (Claude Opus 4.7) cold-read accepted per user override; Codex/Cursor queued. | chore(xai-web-tasks): ship — flip dev_log + manifest #6 to SHIPPED | — (SHIPPED) |
