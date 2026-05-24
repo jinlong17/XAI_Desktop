@@ -41,3 +41,8 @@ yarn-error.log*
 docs/spec/sync_TTrace_*.tla
 docs/spec/sync_TTrace_*.bin
 states/
+
+# xai-web-console authority source prototype (referenced by ADR-0007 +
+# DESIGN.md; preserved locally as design reference but excluded from git
+# since the production port lives in apps/web/ + packages/plugin-web-*/)
+web design/
