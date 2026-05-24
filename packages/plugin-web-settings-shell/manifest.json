@@ -1,6 +1,6 @@
 {
   "name": "plugin-web-settings-shell",
-  "status": "In-Dev",
+  "status": "Stable",
   "type": "ui",
   "owner": "xai-web-settings-shell row #21"
 }

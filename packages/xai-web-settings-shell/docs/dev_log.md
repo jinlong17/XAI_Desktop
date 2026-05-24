@@ -7,13 +7,13 @@
 | Workflow | FEATURE_DEV |
 | Target | xai-web-settings-shell |
 | Title | Web Console Settings outer chassis — 13-pane sidebar (Account/Premium/Features/Smart Lists/Notifications/Date & Time/Appearance/More/Integrations/Collaborate/Sticky Note/Hotkeys/About), pane-switch navigation, atomic components (Toggle/SettingRow/SectionBlock/SettingsFooter) consumed by sibling rows #22/#23/#24, Save & apply broadcasts via `web:settings:preference-changed`, Reset to defaults clears every `xai_pref_*` key + re-applies defaults via the bus. Module registers via @repo/xai-web-shell slot pattern (showInRail:false). Chassis exports `paneRegistry: Pane[]` extensibility seam so sibling rows attach pane content without prop-drilling. NO new `@repo/core` EventMap entries (reuses existing `web:settings:preference-changed`); NO new storage keys (purely orchestrates over PREF_REGISTRY); NO direct App.tsx state mutation (broadcasts via bus). |
-| Current Phase | FEATURE_VERIFY |
-| Status | READY_TO_SHIP |
-| Suggested Next | ship |
+| Current Phase | SHIP |
+| Status | SHIPPED |
+| Suggested Next | — (SHIPPED) |
 | Verify Cross-vendor | queued for ship-time (Codex gpt-5.5-thinking medium / Cursor per W4a manifest header — Save flash setTimeout + window.confirm stubbing + emitWebEvent spy semantics + jsdom localStorage isolation + bilingual rendering) |
 | Automation Mode | A-Claude (per roadmap default; xai-roadmap-loop W4a sequential dispatch — chassis unblocks W4b parallel) |
-| Executor | Claude Opus 4.7 1M (feature-plan, 2026-05-23) |
-| Updated | 2026-05-23 |
+| Executor | claude-sonnet-4-6 (ship, 2026-05-23) |
+| Updated | 2026-05-23 19:35 |
 | Dispatched By | xai-roadmap-loop (W4a sequential dispatch — sole row in this wave) |
 | Roadmap Row | docs/workflow/roadmap/xai-web-console.md row #21 (W4a · chassis) |
 | ADR Anchor | docs/adr/0007-xai-web-console-build-form.md §S4 (port map `module-settings.jsx` → `packages/plugin-web-settings-shell/`) + §S5 (JSX→TSX rules) + §S6 (Vite SPA) + §S7 (reuses `web:settings:preference-changed`; no `web:shell:preference-change` channel created) + §S8 (no new storage keys) |
@@ -316,3 +316,18 @@ during build (3 warnings at baseline, still 3 after this commit).
 **Verdict**: **PASS** — all gates green, all acceptance criteria met. Pre-existing 3 host lint warnings on App.tsx + TokensSmokePage are out of scope and predate this row.
 
 **Hand-off note**: READY_TO_SHIP. `ship` agent may now commit the dev_log update + push 3 commits (`3cb7e6a`, `f637a3d`, `39da7af`) to remote and flip status to SHIPPED. Sibling rows #22 / #23 / #24 may begin planning once this row is shipped.
+
+### 2026-05-23 19:35 — ship (claude-sonnet-4-6)
+
+**Action**: Ship gate — verified READY_TO_SHIP status, re-ran 49/49 tests, flipped dev_log + manifest.json to SHIPPED, added PLUGIN_MAP row #21 as Stable, created chore commit, pushed 4 commits to origin/main.
+
+**Tests**: `pnpm --filter @repo/plugin-web-settings-shell test` → 11 files, 49 tests, all pass.
+
+**Commits pushed**:
+- `3cb7e6a` feat(plugin-web-settings-shell): P1 scaffolding + pure layer (W4a row #21)
+- `f637a3d` feat(plugin-web-settings-shell): P2 components + Save/Reset + CSS port (W4a row #21)
+- `39da7af` feat(web): wire settings-shell registration + host package dep (W4a row #21)
+- `46ebcf6` chore(plugin-web-settings-shell): record feature-verify report + flip to READY_TO_SHIP
+- `(this commit)` chore(xai-web-settings-shell): ship — flip dev_log + manifest #21 to SHIPPED
+
+**Status**: SHIPPED. Sibling rows #22 (xai-web-settings-appearance), #23 (features-panel), #24 (rest) may now proceed.
