@@ -7,13 +7,13 @@
 | Workflow | FEATURE_DEV |
 | Target | xai-web-ai-chat |
 | Title | Web Console AI Chat Module — collapsible 248px conversation sidebar + 5-layer aurora background (90px blur + screen blend) + 3 conic gradients (40/55/70s rotate) + 60 twinkling stars + SVG grain + 4-layer accent floor + breathing 3-layer orb (9/11/13s idle → 3.5/4.2/5s thinking) + composer pill (attach + input + Haiku/Sonnet/Opus picker + voice toggle + Enter to send) + starter-prompts panel gated by top-right Insights pill. LLM call goes through a no-op typed `claudeAdapter` returning bilingual demo line after 600–1200 ms jitter (Option A — Option B reserved for a future row). Conversations persist to `xai_ai_convos`; insights toggle to `xai_ai_insights`; voice toggle to `xai_ai_voice` — all three SHIPPED non-`proposed` entries in `@repo/plugin-web-storage`. |
-| Current Phase | FEATURE_VERIFY |
-| Status | READY_TO_SHIP |
-| Suggested Next | ship |
+| Current Phase | SHIP |
+| Status | SHIPPED |
+| Suggested Next | — |
 | Verify Cross-vendor | yes (aurora `mix-blend-mode: screen` + `color-mix(in oklch, …)` + `conic-gradient` + `prefers-reduced-motion` rendering identical across Chrome 120 / Safari 17 / Firefox 121) |
 | Automation Mode | A-Claude (per roadmap default; xai-roadmap-loop W2c parallel-Agent mode — siblings #12 calendar + #16 meditation planning concurrently) |
-| Executor | Claude Opus 4.7 1M (feature-verify, 2026-05-23) |
-| Updated | 2026-05-23 14:24 |
+| Executor | claude-sonnet-4-6 (ship, 2026-05-23) |
+| Updated | 2026-05-23 19:25 |
 | Dispatched By | xai-roadmap-loop (W2c parallel dispatch, concurrent with rows #12 and #16) |
 | Roadmap Row | docs/workflow/roadmap/xai-web-console.md row #18 (W2 · Module) |
 | ADR Anchor | docs/adr/0007-xai-web-console-build-form.md §S4 (port map "module-ai.jsx" → `packages/plugin-web-ai-chat/`) + §S5 (JSX→TSX rules) + §S6 (Vite SPA build form) + §S7 (no AI event channels) + §S8 (SHIPPED `xai_ai_convos` / `xai_ai_insights` / `xai_ai_voice` keys — already non-`proposed` in storage registry) |
@@ -233,3 +233,4 @@ Checklist results:
 | 2026-05-23 14:17 | Claude Opus 4.7 1M (feature-auto-build P3, xai-roadmap-loop W2c) | Implemented registration.tsx + apps/web shell wire-up + apps/web dep + PLUGIN_MAP row + cross-vendor-smoke artifact + index-barrel B2. **Concurrency note**: P3 files landed via the bundled commit 9a69d75 — sibling W2c #12 calendar's session ran `git add` concurrently and the consolidated commit absorbed both rows' P3 wire-ups. Source-of-truth attribution stays in this dev_log; HEAD content is correct and tested. | 9a69d75 (bundled) | feature-verify |
 | 2026-05-23 14:23 | Claude Opus 4.7 1M (fix, xai-roadmap-loop W2c) | Fixed typecheck error in registration.test.tsx R6 (the render-prop call required WebModuleRouteProps which were missing). Replaced R6 with R1..R5 shape-only assertions mirroring the sibling pomodoro/countdown pattern. lint/typecheck/test all green (84/84). | 8e1f5e8 | feature-verify |
 | 2026-05-23 14:24 | Claude Opus 4.7 1M (feature-verify, xai-roadmap-loop W2c) | Ran all 6 verify gates against HEAD `8e1f5e8`: G1 plugin lint --max-warnings 0 (PASS), G2 plugin typecheck (PASS), G3 plugin test 84/84 across 12 files (PASS), G4 apps/web check-types (PASS), G5 apps/web vite build (PASS, 641 modules, 50.08kB CSS), G6 apps/web vitest 51/51 across 14 files (PASS, no regressions). Cross-vendor manual smoke remains pending the ship-time human verifier per the standard convention for W2 rows. Status flipped to READY_TO_SHIP. | — | ship |
+| 2026-05-23 19:25 | claude-sonnet-4-6 (ship) | Verified: pnpm --filter @repo/plugin-web-ai-chat test → 84/84 (12 files); pnpm --filter @repo/web test → 67/67 (18 files; grew from 51 due to subsequent W2/W4 rows landing, no regressions). Confirmed commits fa748a1/a94c91b/9a69d75/8e1f5e8/8c758e8 all on origin/main. Flipped manifest.json → Stable, dev_log → SHIPPED, PLUGIN_MAP → Stable. Chore commit pushed. Row #18 SHIPPED. | (chore) | — |
