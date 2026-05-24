@@ -8,13 +8,13 @@
 | Target | web-console-host-router |
 | Title | host router still wired to legacy placeholder array — 23/24 SHIPPED xai-web-* modules unreachable at /app/* |
 | Roadmap | `web-ticktick-parity` · feature #10 · W6 (regression introduced by W2 rows #5–#24) |
-| Current Phase | BUG_DIAGNOSE |
-| Status | FIX_READY |
-| Suggested Next | bug-fix |
+| Current Phase | BUG_VERIFY |
+| Status | FIX_READY_FOR_VERIFY |
+| Suggested Next | bug-verify |
 | Automation Mode | A-Claude |
-| Verify Cross-vendor | no |
-| Executor | bug-diagnose (Claude Opus 4.7 1M) |
-| Updated | 2026-05-23 16:00 PDT |
+| Verify Cross-vendor | yes (Codex gpt-5.5-thinking medium primary; Cursor fallback; pnpm --filter @repo/web build green gate; manual browser smoke at /app/tasks deferred if tooling unavailable) |
+| Executor | bug-auto-fix (Claude Opus 4.7 1M inline — Cursor-style platform branch, no Task tool available) |
+| Updated | 2026-05-23 22:30 PDT |
 | Blockers | — |
 
 > Prior feature lifecycle (SHIPPED for original W6 scope) preserved below for context. The BUGFIX above is a post-ship regression discovered after rows #5–#24 (W2a..W4c) shipped their `WebModuleSlotRegistration` exports without rewiring the host router seam.
@@ -180,6 +180,28 @@ This converts the missing seam from a silent rail/router asymmetry into a single
 | Timestamp | Executor | Action | Commits | Next |
 |---|---|---|---|---|
 | 2026-05-23 16:00 PDT | bug-diagnose (Claude Opus 4.7 1M) | Diagnosed P0 host-router regression: rows #5–#24 ship `WebModuleSlotRegistration` to `shellRegistrations.tsx` (read by `<WebShellProvider>` so the rail renders), but `router.tsx` + `RouteGateElements.tsx` still import the legacy `webModuleRouteRegistrations` from `registrations.tsx` (built from a stale 8-id `createDefaultConsoleNavItems()` map where all but "todos" become `ModuleRoutePlaceholderPage`). Result: 23 of 24 SHIPPED xai-web-* modules unreachable at `/app/*`. Dual-perspective analysis confirms (a) URL-chain miss (`resolveModuleRouteMatch` reads wrong array) and (b) boundary-chain miss (`WebModuleSlotRegistration extends WebModuleRouteRegistration` was already designed for convergence — alias `webModuleSlotRegistrations` already exists at `shellRegistrations.tsx:84` with intent comment, but has zero consumers). Fix strategy: delete `registrations.tsx`, point the two host imports at `shellRegistrations.tsx`, add 7+ host-level deep-link regression tests (one per wave) + a single-source-of-truth invariant test. Decide todos retirement vs transitional shim in fix commit. | — | bug-fix |
+| 2026-05-23 22:18 PDT | bugfix-loop (Claude Opus 4.7 1M inline) | Committed `dev_log.md` diagnose pass as setup before sub-fixes (no runtime change). Recorded the dual-perspective analysis + fix strategy as immutable contract for bug-auto-fix and bug-verify. | `d7e189c` | bug-auto-fix S1 |
+| 2026-05-23 22:25 PDT | bug-auto-fix S1 (Claude Opus 4.7 1M inline) | Sub-fix S1: pointed host router at the shell registrations array. Added `webModuleRouteRegistrations: WebModuleRouteRegistration[]` export in `shellRegistrations.tsx` composed from `[...webShellModuleRegistrations, todoWebModuleRegistration]` (todos kept as a transitional shim — not in rail — so observability sanitizers + existing `/app/todos/smart:inbox` assertions continue to pass). Swapped both consumer imports (`router.tsx`, `RouteGateElements.tsx`) from `./modules/registrations` to `./modules/shellRegistrations`. DELETED `registrations.tsx` (legacy 8-id placeholder builder) and `pages/ModuleRoutePlaceholderPage.tsx` (now has zero production consumers — test files reference only the string name). Evidence: `pnpm --filter @repo/web check-types` clean. `pnpm --filter @repo/web exec eslint --max-warnings 0 src` — 3 pre-existing warnings in App.tsx + TokensSmokePage (not introduced by this fix; confirmed by stash + re-run on baseline). Scoped tests green: `pnpm --filter @repo/web exec vitest run src/routes/modules/buildModuleRoutes.test.ts src/routes/modules/__tests__/shellRegistrations.integration.test.tsx src/routes/router.integration.test.tsx` → 17 passed. | `0255b51` | bug-auto-fix S2 |
+| 2026-05-23 22:28 PDT | bug-auto-fix S2 (Claude Opus 4.7 1M inline) | Sub-fix S2: added host-router-level regression coverage. New file `apps/web/src/routes/__tests__/router-modules.integration.test.tsx` with three layers — Layer A (AC-W6-FIX-LA, 13 cases): resolution check for all 12 shell modules + todos shim; Layer B (AC-W6-FIX-1..7, 7 cases): real-render deep links per wave for tasks/matrix/calendar/pomodoro/countdown/statistics/settings asserting `.module-XXX` className + no placeholder text; Layer C (AC-W6-FIX-LC, 4 cases): single-source-of-truth invariant — `webModuleRouteRegistrations` is `[...webShellModuleRegistrations, todoWebModuleRegistration]` by reference, in order, no duplicate moduleId. Evidence: `pnpm --filter @repo/web exec vitest run src/routes/__tests__/router-modules.integration.test.tsx` → 24 passed. Full suite: `pnpm --filter @repo/web exec vitest run` → 91 passed across 19 files. Decision recorded inline: ai-chat / board / dashboard / habits / meditation are Layer-A-only (data-heavy renders covered by each row's own suite); Layer A still proves they resolve to their real render function — exactly the property the W6 regression violated. | `64a264b` | bug-auto-fix S3 |
+| 2026-05-23 22:30 PDT | bug-auto-fix S3 (Claude Opus 4.7 1M inline) | Sub-fix S3: dev_log state machine flip. Set `Current Phase=BUG_VERIFY`, `Status=FIX_READY_FOR_VERIFY`, `Suggested Next=bug-verify`, `Verify Cross-vendor=yes` (Codex gpt-5.5-thinking medium primary per the post-roadmap manifest header; build-green gate + deferred manual browser smoke per user request). All sub-fix items from the diagnose fix strategy complete; no PENDING items remain. | dev_log only | bug-verify |
+
+## Fix Record (Cycle 1, bug-auto-fix)
+
+| Sub-fix | Scope | Commit | Files Changed | Tests |
+|---|---|---|---|---|
+| S0 (setup) | Commit bug-diagnose dev_log as immutable contract before sub-fixes | `d7e189c` | `packages/web-console-host-router/docs/dev_log.md` (+172 -8) | none |
+| S1 | Seam swap: delete `registrations.tsx`, add `webModuleRouteRegistrations` export in `shellRegistrations.tsx` (shell array + todos transitional shim), repoint `router.tsx` + `RouteGateElements.tsx`, delete unused `ModuleRoutePlaceholderPage.tsx` | `0255b51` | 5 files (+33 -87): `apps/web/src/routes/modules/shellRegistrations.tsx`, `apps/web/src/routes/router.tsx`, `apps/web/src/routes/RouteGateElements.tsx`, `apps/web/src/routes/modules/registrations.tsx` (deleted), `apps/web/src/pages/ModuleRoutePlaceholderPage.tsx` (deleted) | scoped 17/17 pass |
+| S2 | Regression test: Layer A (12 + 1 resolution) + Layer B (7 deep-link real-render) + Layer C (4 single-source-of-truth invariant) | `64a264b` | 1 file (+241 -0): `apps/web/src/routes/__tests__/router-modules.integration.test.tsx` | new 24/24 + full @repo/web 91/91 |
+| S3 | dev_log state machine flip → FIX_READY_FOR_VERIFY + Work Log + Fix Record | (this commit) | `packages/web-console-host-router/docs/dev_log.md` | none |
+
+Evidence for bug-verify:
+
+- `pnpm --filter @repo/web check-types` → clean (after S1).
+- `pnpm --filter @repo/web exec eslint --max-warnings 0 src` → 3 pre-existing warnings; **not introduced by these sub-fixes** (verified via `git stash` + re-run on the d7e189c baseline).
+- `pnpm --filter @repo/web exec vitest run` → 91/91 pass across 19 files (after S2).
+- New `apps/web/src/routes/__tests__/router-modules.integration.test.tsx` exists, 24/24 pass, covers all 12 shell modules + transitional todos shim.
+- `webModuleRouteRegistrations` is now a structural composition of `[...webShellModuleRegistrations, todoWebModuleRegistration]`; future drift between the rail array and the host router array fails Layer C immediately.
+- Deferred to bug-verify: independent commit review per `COMMIT_CONVENTION.md`, independent full re-run of typecheck + lint + scoped tests + `pnpm --filter @repo/web build`, and the optional manual real-browser smoke at `/app/tasks` (deferred if browser tooling unavailable per dev_log Verify Cross-vendor note).
 
 ## Source Context
 
