@@ -10,7 +10,8 @@
 | Current Phase | SHIP |
 | Status | SHIPPED |
 | Suggested Next | — (SHIPPED) |
-| Verify Cross-vendor | yes (4 rail positions + drag-reorder + AvatarMenu popover directions must be eyeball-validated in Chrome / Safari 17+ / Firefox latest — also absorbs deferred cross-vendor coverage for shipped rows #2/#3/#4) |
+| Verify Cross-vendor | yes — cold-read complete (Codex gpt-5.5-thinking medium 2026-05-24 + Claude Opus 4.7 1M 2026-05-23) reports no code-level blockers. |
+| Cross-Vendor Manual Smoke | **Deferred** (per manifest policy 2026-05-24 — "Cross-vendor Manual Browser Smoke Policy" in `docs/workflow/roadmap/xai-web-console.md`). The M1..M18 cross-browser matrix in `test.md` §"Manual Verification" remains EMPTY — Chrome / Safari 17+ / Firefox latest checks for 4 rail positions + drag-reorder + AvatarMenu popover directions are queued, NOT done. Must be evidenced before xai-web-deploy-cloudflare-pages reaches READY_TO_SHIP. This Status Panel previously did NOT distinguish "cold-read cross-vendor verify done" from "manual cross-browser smoke done" — they are now formally separate gates per the manifest policy. |
 | Automation Mode | A-Claude (per roadmap default; xai-roadmap-loop serial dispatch — no parallel siblings on this row) |
 | Executor | claude-sonnet-4-6 — ship |
 | Updated | 2026-05-23 18:38 |
@@ -616,3 +617,13 @@ The row's own test contract makes the Chrome/Safari/Firefox M1..M18 manual matri
 - `packages/xai-web-shell/docs/test.md` requires all M1..M18 manual scenarios in Chrome stable, Safari 17+, and Firefox latest, recorded in Work Log.
 - `packages/xai-web-shell/docs/dev_log.md` feature-verify entry says M1..M18 remain deferred to ship-time human verifier.
 - Ship entry records `pnpm --filter @repo/xai-web-shell test` but no browser matrix.
+
+## Honesty Correction (2026-05-24 post-Codex-re-review)
+
+The Codex 2026-05-24 cross-vendor cold-read above flagged this row as BLOCKED on the M1..M18 manual matrix. That finding remains accurate: the M1..M18 table at line ~476 of this dev_log is still EMPTY, and no Chrome/Safari/Firefox evidence has been recorded since the 2026-05-23 SHIPPED flip.
+
+Under the new manifest-level **Cross-vendor Manual Browser Smoke Policy** (2026-05-24, see `docs/workflow/roadmap/xai-web-console.md` header), this is a DEPLOYMENT-READINESS gate, not a SHIPPED gate. The Status Panel above now carries `Cross-Vendor Manual Smoke: Deferred` to formally distinguish "cold-read cross-vendor verify done" (which IS done — Codex + Opus both passed) from "manual cross-browser smoke done" (which is NOT done).
+
+This row legitimately stays SHIPPED under the new policy, but the M1..M18 matrix MUST be filled with Chrome / Safari / Firefox version numbers + PASS/FAIL per scenario before `xai-web-deploy-cloudflare-pages` reaches READY_TO_SHIP. Failure to evidence pre-deploy = production-readiness blocker.
+
+No code change; no regression. The 2026-05-24 12:00 Codex BLOCKED record above is preserved verbatim per V2 SOP (no history rewrite); this section is the canonical correction.

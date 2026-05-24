@@ -5,7 +5,7 @@
 > Phase: Post-ship doc-sync (BUGFIX cycle after row #11 integration)
 > Build form: Vite SPA per ADR-0007 §S6
 > Vehicle: `pnpm --filter @repo/web dev:mock-auth` (bypasses auth-device-session flow which is out of scope for this row)
-> Status of this report: **deferred** — automated portion green; manual cross-browser portion is queued as a structured checklist for a human verifier or a follow-up cross-vendor agent session
+> Status of this report: **DEFERRED per manifest policy 2026-05-24** (see `docs/workflow/roadmap/xai-web-console.md` → "Cross-vendor Manual Browser Smoke Policy"). This file is a STRUCTURED CHECKLIST SCAFFOLD awaiting real-browser evidence — it is **NOT** a closure of the manual-smoke blocker, despite earlier dev_log wording (2026-05-24 12:40 entry, since corrected). The unchecked Chrome 120 / Safari 17 / Firefox 121 / Safari iOS rows below MUST be filled with browser-version + PASS/FAIL evidence before `xai-web-deploy-cloudflare-pages` reaches READY_TO_SHIP. Automated portion (vitest + check-types + lint + vite build) IS green at row #10 SHIPPED commit `78e1b43` plus post-row-#11 re-runs.
 
 ---
 
