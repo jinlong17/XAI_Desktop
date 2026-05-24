@@ -274,6 +274,6 @@ Reviewed against the five gates (discovery quality, design alignment, contract c
 - Confirmed `pnpm --filter @repo/plugin-web-statistics test` → 124/124 pass (18 test files, vitest 3.2.4).
 - Flipped `packages/plugin-web-statistics/manifest.json` status from `"In-Dev"` to `"Stable"`.
 - Flipped this dev_log Status Panel: Current Phase → SHIP, Status → SHIPPED, Suggested Next → — (SHIPPED).
-- Chore commit: chore(xai-web-statistics): ship — flip dev_log + manifest #20 to SHIPPED.
-- Commits reused: 8226aae / 363999f / 4f26fca / 8483382 (all already on origin/main). Supplementary commit for this ship-state update: (see below after push).
+- Chore commit: chore(xai-web-statistics): ship — flip dev_log + manifest #20 to SHIPPED. Hash: **1cce362**.
+- Commits reused: 8226aae / 363999f / 4f26fca / 8483382 (all already on origin/main). Supplementary ship-state commit: **1cce362**.
 - Next step: row #21 xai-web-settings-shell → Start the ship agent for xai-web-settings-shell.
