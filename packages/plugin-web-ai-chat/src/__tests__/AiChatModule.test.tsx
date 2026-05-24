@@ -271,9 +271,14 @@ describe("AiChatModule integration (I)", () => {
     expect(activeText).toContain("older");
   });
 
-  it("I15: rapid double Enter appends two user bubbles and resolves both replies", async () => {
+  it("I15: rapid double Enter queues FIFO — both user bubbles appear, replies arrive serialized", async () => {
     const { container } = render(<AiChatModule lang="en" />);
     const inp = container.querySelector<HTMLInputElement>(".ai-input")!;
+    // eslint-disable-next-line no-console
+    console.log("[diag I15 setTimeout type] is global setTimeout fake?",
+      (globalThis.setTimeout as unknown as { _isMockFunction?: boolean })._isMockFunction,
+      "vi.isMockFunction:", vi.isMockFunction(globalThis.setTimeout as unknown as () => void),
+    );
     act(() => {
       fireEvent.change(inp, { target: { value: "one" } });
     });
@@ -286,13 +291,110 @@ describe("AiChatModule integration (I)", () => {
     act(() => {
       fireEvent.keyDown(inp, { key: "Enter", shiftKey: false });
     });
+    // Both user bubbles in place before any timer advance.
     expect(container.querySelectorAll(".ai-msg-user").length).toBe(2);
+    expect(container.querySelectorAll(".ai-msg-assistant").length).toBe(0);
+    // Advance just past one adapter window — first reply lands, second still queued.
+    await act(async () => {
+      await vi.advanceTimersByTimeAsync(700);
+    });
+    expect(container.querySelectorAll(".ai-msg-assistant").length).toBe(1);
+    expect(container.querySelector(".ai-stage")?.className).toContain("thinking");
+    // Advance through the second adapter window; queue drains, thinking clears.
+    await act(async () => {
+      await vi.advanceTimersByTimeAsync(700);
+    });
+    expect(container.querySelectorAll(".ai-msg-assistant").length).toBe(2);
+    expect(container.querySelector(".ai-stage")?.className).not.toContain(
+      "thinking",
+    );
+    // Confirm FIFO ordering: the DOM message sequence is
+    // user("one") → assistant → user("two") → assistant.
+    const allMsgs = Array.from(container.querySelectorAll(".ai-msg"));
+    expect(allMsgs[0]?.className).toContain("ai-msg-user");
+    expect(allMsgs[0]?.textContent).toMatch(/one/);
+    expect(allMsgs[1]?.className).toContain("ai-msg-assistant");
+    expect(allMsgs[2]?.className).toContain("ai-msg-user");
+    expect(allMsgs[2]?.textContent).toMatch(/two/);
+    expect(allMsgs[3]?.className).toContain("ai-msg-assistant");
+  });
+
+  it("I17: resend-while-thinking — second send during in-flight adapter is queued, not raced", async () => {
+    // Pin to lower-bound delay (600 ms) for predictable per-step advancing.
+    vi.spyOn(Math, "random").mockReturnValue(0);
+    const { container } = render(<AiChatModule lang="en" />);
+    const inp = container.querySelector<HTMLInputElement>(".ai-input")!;
+    // First send → enters thinking.
+    act(() => {
+      fireEvent.change(inp, { target: { value: "first" } });
+    });
+    act(() => {
+      fireEvent.keyDown(inp, { key: "Enter", shiftKey: false });
+    });
+    expect(container.querySelector(".ai-stage")?.className).toContain("thinking");
+    expect(container.querySelectorAll(".ai-msg-assistant").length).toBe(0);
+    // Advance only partway through the adapter delay — promise still in flight.
+    await act(async () => {
+      await vi.advanceTimersByTimeAsync(300);
+    });
+    expect(container.querySelectorAll(".ai-msg-assistant").length).toBe(0);
+    // Second send mid-flight: user bubble appears immediately; assistant bubble
+    // does NOT — it stays queued behind the first.
+    act(() => {
+      fireEvent.change(inp, { target: { value: "second" } });
+    });
+    act(() => {
+      fireEvent.keyDown(inp, { key: "Enter", shiftKey: false });
+    });
+    expect(container.querySelectorAll(".ai-msg-user").length).toBe(2);
+    expect(container.querySelectorAll(".ai-msg-assistant").length).toBe(0);
+    // Complete first adapter window — only one assistant bubble lands.
+    await act(async () => {
+      await vi.advanceTimersByTimeAsync(400);
+    });
+    expect(container.querySelectorAll(".ai-msg-assistant").length).toBe(1);
+    expect(container.querySelector(".ai-stage")?.className).toContain("thinking");
+    // Complete second adapter window — queue drains; thinking clears.
+    await act(async () => {
+      await vi.advanceTimersByTimeAsync(700);
+    });
+    expect(container.querySelectorAll(".ai-msg-assistant").length).toBe(2);
+    expect(container.querySelector(".ai-stage")?.className).not.toContain(
+      "thinking",
+    );
+  });
+
+  it("I18: queued resend with lang switch mid-flight preserves the send-time lang per item", async () => {
+    const { container, rerender } = render(<AiChatModule lang="en" />);
+    const inp = container.querySelector<HTMLInputElement>(".ai-input")!;
+    act(() => {
+      fireEvent.change(inp, { target: { value: "alpha" } });
+    });
+    act(() => {
+      fireEvent.keyDown(inp, { key: "Enter", shiftKey: false });
+    });
+    // Switch lang to zh mid-flight (host re-renders the route with the new lang).
+    rerender(<AiChatModule lang="zh" />);
+    const inp2 = container.querySelector<HTMLInputElement>(".ai-input")!;
+    act(() => {
+      fireEvent.change(inp2, { target: { value: "贝塔" } });
+    });
+    act(() => {
+      fireEvent.keyDown(inp2, { key: "Enter", shiftKey: false });
+    });
+    // Drain both adapter windows.
     await act(async () => {
       await vi.advanceTimersByTimeAsync(ADAPTER_DELAY_MAX_MS + 50);
     });
-    expect(container.querySelectorAll(".ai-msg-assistant").length).toBeGreaterThanOrEqual(
-      2,
-    );
+    await act(async () => {
+      await vi.advanceTimersByTimeAsync(ADAPTER_DELAY_MAX_MS + 50);
+    });
+    const assistants = container.querySelectorAll(".ai-msg-assistant .ai-bubble");
+    expect(assistants.length).toBe(2);
+    // First reply was queued under en → EN demo line.
+    expect(assistants[0]?.textContent).toContain(DEMO_REPLY_EN);
+    // Second reply was queued under zh → ZH demo line.
+    expect(assistants[1]?.textContent).toContain(DEMO_REPLY_ZH);
   });
 
   it("I16: prefers-reduced-motion CSS rule is present in the bundled stylesheet", () => {
