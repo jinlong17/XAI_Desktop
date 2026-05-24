@@ -48,8 +48,8 @@ to `main` (production) and on `pull_request` (preview).
 | Phase | Status | Commit |
 |-------|--------|--------|
 | P1 — ADR-0008 + 四件套 docs anchor | DONE | 0e7aca7 |
-| P2 — wrangler.toml + `_headers` + `.gitignore` + `.nvmrc` + nonce strip | DONE | (pending commit) |
-| P3 — `.github/workflows/deploy-web.yml` | PENDING | — |
+| P2 — wrangler.toml + `_headers` + `.gitignore` + `.nvmrc` + nonce strip | DONE | 7e11f50 |
+| P3 — `.github/workflows/deploy-web.yml` | DONE | (pending commit) |
 | P4 — `docs/runbooks/cloudflare.md` | PENDING | — |
 | P5 — Live deploy + smoke + evidence (verify-only) | PENDING | — |
 
@@ -478,5 +478,46 @@ hash of the workflow-driven first deploy or the manual fallback deploy)_
     - Largest non-map file: `index-Di4Dj3wp.js` @ 992,768 bytes (~969 KiB)
     - Pages free-tier limits: NO individual file > 25 MiB, total < 20K files ✅
 - **Tests run**: Build smoke. Nonce grep evidence recorded above.
+- **Commits**: 7e11f50 `feat(xai-web-deploy-cloudflare): P2 — wrangler.toml + _headers + .nvmrc + nonce strip`
+- **Next step**: Proceed to P3.
+
+### 2026-05-24 — feature-auto-build (claude-sonnet-4-6) — P3 GitHub Actions workflow
+
+- **Action**: Phase P3 implementation for `xai-web-deploy-cloudflare`.
+  - Rebased on `origin/main` — branch already current.
+  - Created `.github/workflows/deploy-web.yml` per api.md §C4 contract.
+  - Triggers: `push` on `main` (production), `pull_request` (preview).
+  - Steps: `actions/checkout@v4` → `pnpm/action-setup@v4` (9.0.0) →
+    `actions/setup-node@v4` (node-version-file: .nvmrc, cache: pnpm) →
+    `pnpm install --frozen-lockfile` → `pnpm --filter @repo/web build`
+    (env: VITE_WEB_AUTH_MODE: mock-authenticated) →
+    `cloudflare/wrangler-action@v3` (wranglerVersion: 3.114.0,
+    workingDirectory: apps/web, command: pages deploy ./dist
+    --project-name=xai-web-console --branch=${{ github.head_ref || github.ref_name }}).
+  - Outputs step: `pages-deployment-id`, `pages-deployment-alias-url`,
+    `deployment-url` echoed into `$GITHUB_STEP_SUMMARY` (AC-C4-13).
+  - Security: `github.head_ref` passed via env var (not inline in shell
+    script) to avoid actionlint injection warning.
+  - **actionlint**: Installed via `brew install actionlint` (v1.7.12).
+    `actionlint .github/workflows/deploy-web.yml` → **0 errors** (AC-C4-12 PASSED).
+    Initial run had shellcheck SC2086 warnings on unquoted vars + SC2129
+    redirect style + `github.head_ref` injection warning. Fixed by using
+    env vars block for all outputs/branch refs + consolidated redirect.
+- **Smoke**: All AC-C4-1..C4-13 ticked:
+  - AC-C4-1: file exists ✅
+  - AC-C4-2: cloudflare/wrangler-action@v3 (not pages-action) ✅
+  - AC-C4-3: @v3 pin + wranglerVersion: 3.114.0 ✅
+  - AC-C4-4: secrets via ${{ secrets.* }} idiom, no literals ✅
+  - AC-C4-5: no Supabase secret ✅
+  - AC-C4-6: no Sentry secret ✅
+  - AC-C4-7: node-version-file: .nvmrc ✅
+  - AC-C4-8: pnpm version: 9.0.0 ✅
+  - AC-C4-9: pnpm install --frozen-lockfile ✅
+  - AC-C4-10: VITE_WEB_AUTH_MODE: mock-authenticated in env: block ✅
+  - AC-C4-11: pages deploy ./dist --project-name=xai-web-console
+    --branch=... (dynamic) ✅
+  - AC-C4-12: actionlint → 0 errors (v1.7.12) ✅
+  - AC-C4-13: deployment summary to $GITHUB_STEP_SUMMARY ✅
+- **Tests run**: actionlint clean.
 - **Commits**: (pending — will be filled after commit)
-- **Next step**: Commit P2, then proceed to P3.
+- **Next step**: Commit P3, then proceed to P4.

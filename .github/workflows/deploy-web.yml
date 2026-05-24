@@ -1,0 +1,82 @@
+# Deploy XAI Web Console to Cloudflare Pages
+#
+# Triggers:
+#   - push to main → production deploy
+#   - pull_request → preview deploy
+#
+# Secrets required (set in GitHub repo Settings → Secrets → Actions):
+#   CLOUDFLARE_API_TOKEN — Cloudflare API token with scope "Cloudflare Pages:Edit"
+#   CLOUDFLARE_ACCOUNT_ID — Cloudflare account ID where the project lives
+#
+# See docs/runbooks/cloudflare.md for setup, rotation, and rollback procedures.
+# See docs/adr/0008-cloudflare-deploy-target-and-csp.md for all deploy decisions.
+
+name: Deploy Web to Cloudflare Pages
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  deploy:
+    name: Build and Deploy
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 9.0.0
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version-file: .nvmrc
+          cache: pnpm
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Build
+        run: pnpm --filter @repo/web build
+        env:
+          # Decision 2 (ADR-0008): mock-authenticated ships all 24 modules
+          # with seed data. No Supabase secrets enter CI this row.
+          VITE_WEB_AUTH_MODE: mock-authenticated
+
+      - name: Deploy to Cloudflare Pages
+        id: deploy
+        uses: cloudflare/wrangler-action@v3
+        with:
+          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          wranglerVersion: 3.114.0
+          workingDirectory: apps/web
+          command: pages deploy ./dist --project-name=xai-web-console --branch=${{ github.head_ref || github.ref_name }}
+
+      - name: Deployment summary
+        if: always()
+        env:
+          DEPLOY_ID: ${{ steps.deploy.outputs.pages-deployment-id }}
+          DEPLOY_ALIAS_URL: ${{ steps.deploy.outputs.pages-deployment-alias-url }}
+          DEPLOY_URL: ${{ steps.deploy.outputs.deployment-url }}
+          DEPLOY_BRANCH: ${{ github.head_ref || github.ref_name }}
+          DEPLOY_SHA: ${{ github.sha }}
+        run: |
+          {
+            echo "## Cloudflare Pages Deployment"
+            echo ""
+            echo "| Field | Value |"
+            echo "|-------|-------|"
+            echo "| Deployment ID | ${DEPLOY_ID} |"
+            echo "| Preview URL | ${DEPLOY_ALIAS_URL} |"
+            echo "| Production URL | ${DEPLOY_URL} |"
+            echo "| Branch | ${DEPLOY_BRANCH} |"
+            echo "| Commit | ${DEPLOY_SHA} |"
+          } >> "$GITHUB_STEP_SUMMARY"
