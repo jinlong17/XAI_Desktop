@@ -7,13 +7,13 @@
 | Workflow | FEATURE_DEV |
 | Target | xai-web-board-workspaces |
 | Title | Web Console Board workspace + multi-board layer — colored Workspace chips (Personal / Team Workspace), Board Switcher modal (search + workspace scope tabs + grouped grid of board cards + "+ New board"), Board Creator modal (3 templates: Basic Kanban / PM for Teams / Blank), Project-Management-for-Teams template visual treatment (Status Overview SVG ring chart + 5 colored stages + percentages), 4-button multi-panel switcher (Inbox 260px / Planner 320px / Board flex / Switch boards trigger) with at-least-one-open invariant, persistence via usePref on `xai_board_panels` + `xai_board_inbox` (both already SHIPPED `unknown`-typed registry slots — narrowed at component boundary), bilingual via `STR` local tables + `useI18n(lang)` for board-core-shipped keys, wraps row #7 `@repo/plugin-web-board-core`'s `BoardView` + schema + helpers + seed (consumed via index.ts ONLY). REPLACES `boardCoreWebModuleRegistration` at line 65 of `apps/web/src/routes/modules/shellRegistrations.tsx` with this row's `boardWorkspacesWebModuleRegistration` (single-line Edit + one import-block swap; concurrent siblings #8 board-views + #11 dashboard-widgets own disjoint anchors). Pure UI sink — no event-bus emit. |
-| Current Phase | FEATURE_VERIFY |
-| Status | READY_TO_SHIP |
-| Suggested Next | ship |
+| Current Phase | SHIP |
+| Status | SHIPPED |
+| Suggested Next | — |
 | Verify Cross-vendor | queued (manifest header — ship-time Codex `gpt-5.5-thinking medium` / Cursor fallback; row-level verify is same-vendor Claude Opus — documented compromise) |
 | Automation Mode | A-Claude (per roadmap default; xai-roadmap-loop W2e parallel-Agent mode — siblings #8 xai-web-board-views + #11 xai-web-dashboard-widgets planning concurrently) |
-| Executor | Claude Opus 4.7 1M (feature-verify, 2026-05-23) |
-| Updated | 2026-05-23 |
+| Executor | claude-sonnet-4-6 (ship, 2026-05-23 18:55) |
+| Updated | 2026-05-23 18:55 |
 | Dispatched By | xai-roadmap-loop (W2e parallel dispatch, concurrent with rows #8 and #11) |
 | Roadmap Row | docs/workflow/roadmap/xai-web-console.md row #9 (W2 · Module) |
 | ADR Anchor | docs/adr/0007-xai-web-console-build-form.md §S4 (port map "module-board.jsx" → `packages/plugin-web-board-{core,views,workspaces}/`) + §S5 (JSX→TSX rules) + §S6 (Vite SPA build form) + §S7 (no new event channels for row #9 — pure UI sink) + §S8 (`xai_board_panels` + `xai_board_inbox` are SHIPPED `unknown`-typed slots — narrow at boundary) |
@@ -231,7 +231,7 @@ Already enumerated in test.md §5 (Q1..Q11). Confirm:
 |---|---|---|---|
 | P1 — Scaffolding + narrowing types + guards + ring math + panel ops + STR + tests | DONE | 214f28f | 46/46 tests pass (4 files); lint --max-warnings 0 clean; typecheck clean |
 | P2 — 5 leaf React components + CSS + tests | DONE | a107980 | 107/107 tests pass cumulative (9 files); lint --max-warnings 0 clean; typecheck clean; BS4 test scoped to .bs-scopes container to disambiguate "Team" string |
-| P3 — BoardWorkspacesModule orchestrator + registration + host wire-up + PLUGIN_MAP + integration tests | DONE | (commit pending — this commit) | 135/135 tests pass cumulative (12 files); apps/web check-types + build + test all pass; 3 pre-existing apps/web lint warnings NOT introduced by this row (out-of-scope per ai-chat #18 / board-core #7 precedent) |
+| P3 — BoardWorkspacesModule orchestrator + registration + host wire-up + PLUGIN_MAP + integration tests | DONE | fdd1521 | 135/135 tests pass cumulative (12 files); apps/web check-types + build + test all pass; 3 pre-existing apps/web lint warnings NOT introduced by this row (out-of-scope per ai-chat #18 / board-core #7 precedent) |
 
 ## Work Log
 
@@ -243,3 +243,4 @@ Already enumerated in test.md §5 (Q1..Q11). Confirm:
 | 2026-05-23 | Claude Opus 4.7 1M | feature-auto-build P2 — 5 leaf components (BoardSwitcher / BoardCreator / StatusOverviewBanner / InboxPanel / PlannerPanel) + CSS + 61 component tests | a107980 | feature-auto-build P3 |
 | 2026-05-23 | Claude Opus 4.7 1M | feature-auto-build P3 — BoardWorkspacesModule orchestrator + registration + apps/web shell-reg swap + apps/web dep add + PLUGIN_MAP row + 28 integration tests | fdd1521 | feature-verify |
 | 2026-05-23 | Claude Opus 4.7 1M | feature-verify — PASS (all 7 gates green; 3 documented non-blocking residuals) | — | ship |
+| 2026-05-23 18:55 | claude-sonnet-4-6 | ship — tests 135/135 confirmed; manifest.json In-Dev → Stable; dev_log SHIPPED; PLUGIN_MAP In-Dev → Stable; chore commit created + pushed | (this commit) | — |
