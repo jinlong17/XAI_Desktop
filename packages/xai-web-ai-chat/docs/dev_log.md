@@ -8,12 +8,12 @@
 | Target | xai-web-ai-chat |
 | Title | resend-while-thinking races (parallel completeChat calls instead of FIFO queue per design) |
 | Current Phase | BUG_VERIFY |
-| Status | FIX_READY_FOR_VERIFY |
-| Suggested Next | bug-verify |
+| Status | READY_TO_SHIP |
+| Suggested Next | ship |
 | Verify Cross-vendor | yes (aurora `mix-blend-mode: screen` + `color-mix(in oklch, …)` + `conic-gradient` + `prefers-reduced-motion` rendering identical across Chrome 120 / Safari 17 / Firefox 121) |
 | Automation Mode | A-Claude (per roadmap default; xai-roadmap-loop W2c parallel-Agent mode — siblings #12 calendar + #16 meditation planning concurrently) |
-| Executor | claude-opus-4-7 (bug-auto-fix, 2026-05-24 01:02) |
-| Updated | 2026-05-24 01:02 |
+| Executor | claude-opus-4-7 (bug-verify, 2026-05-24 01:05) |
+| Updated | 2026-05-24 01:05 |
 | Previous Status | SHIPPED (2026-05-23 19:25, row #18) — retroactively flipped to NEEDS_DIAGNOSIS by Codex cross-vendor verify 2026-05-24, then to FIX_READY by this bug-diagnose pass |
 | Dispatched By | xai-roadmap-loop (W2c parallel dispatch, concurrent with rows #12 and #16) |
 | Roadmap Row | docs/workflow/roadmap/xai-web-console.md row #18 (W2 · Module) |
@@ -221,7 +221,7 @@ Checklist results:
 
 ## Suggested Next
 
-`bug-verify`
+`ship`
 
 ## Work Log
 
@@ -235,6 +235,51 @@ Checklist results:
 | 2026-05-23 14:23 | Claude Opus 4.7 1M (fix, xai-roadmap-loop W2c) | Fixed typecheck error in registration.test.tsx R6 (the render-prop call required WebModuleRouteProps which were missing). Replaced R6 with R1..R5 shape-only assertions mirroring the sibling pomodoro/countdown pattern. lint/typecheck/test all green (84/84). | 8e1f5e8 | feature-verify |
 | 2026-05-23 14:24 | Claude Opus 4.7 1M (feature-verify, xai-roadmap-loop W2c) | Ran all 6 verify gates against HEAD `8e1f5e8`: G1 plugin lint --max-warnings 0 (PASS), G2 plugin typecheck (PASS), G3 plugin test 84/84 across 12 files (PASS), G4 apps/web check-types (PASS), G5 apps/web vite build (PASS, 641 modules, 50.08kB CSS), G6 apps/web vitest 51/51 across 14 files (PASS, no regressions). Cross-vendor manual smoke remains pending the ship-time human verifier per the standard convention for W2 rows. Status flipped to READY_TO_SHIP. | — | ship |
 | 2026-05-23 19:25 | claude-sonnet-4-6 (ship) | Verified: pnpm --filter @repo/plugin-web-ai-chat test → 84/84 (12 files); pnpm --filter @repo/web test → 67/67 (18 files; grew from 51 due to subsequent W2/W4 rows landing, no regressions). Confirmed commits fa748a1/a94c91b/9a69d75/8e1f5e8/8c758e8 all on origin/main. Flipped manifest.json → Stable, dev_log → SHIPPED, PLUGIN_MAP → Stable. Chore commit pushed. Row #18 SHIPPED. | (chore) | — |
+
+## Bugfix-Cycle-1 Verify Report (2026-05-24 01:05 — claude-opus-4-7 / bug-verify)
+
+**Verdict: PASS.** Status → READY_TO_SHIP.
+
+### Reproduction protocol re-run
+
+Original reproduction (per the 2026-05-24 Codex BLOCKED finding):
+> While `thinking` is active, another send should be queued behind the current promise, not raced.
+
+| Path | Mechanism | Result |
+|---|---|---|
+| R1 — Single send | I3 / I4 — Enter "hello" → user bubble + thinking → advance 1250 ms → assistant bubble appears, thinking clears | PASS (existing test) |
+| R2 — Rapid double Enter | I15 — two synchronous sends → both user bubbles appear, exactly 2 assistant bubbles arrive after advance, DOM order `user→user→asst→asst` | PASS |
+| R3 — Resend-while-thinking (the original BLOCKED scenario) | I17 — mock `completeChat`, two synchronous sends, assert `calls.length === 1` (adapter invoked ONCE; second call only after first resolves) | PASS — and a temporary racy impl reproduction confirmed the test catches the regression (`expected 2 to be 1`) |
+| R4 — Lang switch mid-flight | I18 — first send under `lang="en"`, rerender with `lang="zh"`, second send → first assistant in EN, second in ZH | PASS |
+| R5 — Unmount during thinking | I12 — unmount while adapter is in flight | PASS — no throw, no stale append, queue is intentionally not drained on unmount (no DOM target left) |
+
+### Automated gates
+
+| Gate | Result | Evidence |
+|---|---|---|
+| G1 — `pnpm --filter @repo/plugin-web-ai-chat lint` (`--max-warnings 0`) | PASS | exit 0, 0 problems |
+| G2 — `pnpm --filter @repo/plugin-web-ai-chat typecheck` | PASS | `tsc --noEmit` exit 0 |
+| G3 — `pnpm --filter @repo/plugin-web-ai-chat test` | PASS | 12 files, 86/86 cases pass (+2 cases I17, I18 vs the SHIPPED 84/84; I15 updated) |
+| G4 — `pnpm --filter @repo/web check-types` | PASS | `tsc --noEmit` exit 0 |
+| G5 — `pnpm --filter @repo/web build` | PASS | vite v7.2.4 built in 2.65 s, 780 modules transformed |
+| G6 — `pnpm --filter @repo/web test` | PASS | 19 files, 100/100 cases pass; no regressions caused by this bugfix |
+| G7 (manual) — Cross-vendor smoke on Chrome 120 / Safari 17 / Firefox 121 | PENDING | The fix is a state-machine-only change (no CSS, no DOM structure, no animation), so the existing 2026-05-23 cross-vendor-smoke artifact still describes the rendered surface; the resend-while-thinking case can be re-checked manually by the ship-time verifier |
+
+### Commit-attribution review
+
+- **8ffa639** (fix): scope confined to `packages/plugin-web-ai-chat/src/` + `packages/xai-web-ai-chat/docs/`. Commit message matches Why/What/Scope/Risk/Docs/Tests convention with Co-Authored-By trailer. 5 files changed: AiChatModule.tsx (+58/-25), AiChatModule.test.tsx (+139/-8), api.md (+5/-4), design.md (+3/-0), test.md (+3/-1). PASS.
+- **c170f96** (chore): dev_log workflow-state flip + Work Log entry. Single file, doc-only. PASS.
+
+### Implementation vs design/api/test contract
+
+- `design.md` State machine — the FIFO queue + `processingRef` re-entry guard + lang-snapshot semantics are explicitly documented in the new bullets. Implementation matches: `pendingSendQueueRef: Array<{text, lang}>` is captured at enqueue time; `processQueue` short-circuits if `processingRef.current` is true; `thinking` cleared once at queue drain.
+- `api.md` §1 send-flow step 5 — "Pushes `{text, lang}` onto a FIFO `pendingSendQueueRef` and calls `processQueue()`" matches `AiChatModule.tsx` lines 181-182 verbatim. §11 idempotency — the serialization invariant is observable in tests (I17).
+- `test.md` §3 — I15 (FIFO ordering), I17 (mock-based serialization guard), I18 (lang preservation) all implemented; total 17 integration cases (was 16), 86 cases overall.
+
+### Residual risks (non-blocking)
+
+- R1 (cross-vendor manual smoke G7): pending the ship-time human verifier. The fix is a state-machine-only change; the rendered DOM/CSS surface is unchanged. The original 2026-05-23 cross-vendor-smoke artifact remains the source-of-truth for the visual contract; the only newly-exercised UI path is "orb stays in `.thinking` continuously across two queued sends", which is a longer animation duration, not a different animation.
+- R2 (`apps/web` pre-existing lint warnings): same as the 2026-05-23 verify report — out of scope.
 
 ## Cross-vendor Verify Report (2026-05-24 — Codex gpt-5.5-thinking medium)
 
@@ -272,3 +317,4 @@ Design says that while `thinking` is active, another send remains usable but is 
 - `packages/xai-web-ai-chat/docs/test.md` and `src/__tests__/AiChatModule.test.tsx` cover send, persistence, toggles, corrupted convos, empty input, unmount, and sidebar behavior, but not resend while thinking.
 | 2026-05-24 | bugfix-full-loop (orchestrator) | Re-entered against SHIPPED row to address Codex 2026-05-24 retroactive BLOCKED (resend-while-thinking queue gap). Mode = A-Claude (read from existing Status Panel); Verify Cross-vendor = yes (read from existing Status Panel). Dispatching bug-diagnose. | — | bug-diagnose |
 | 2026-05-24 01:02 | claude-opus-4-7 (bug-auto-fix, bugfix-loop Cycle 1) | Implemented the FIFO `pendingSendQueueRef` + `processingRef` queue processor in `AiChatModule.tsx`. `send()` now pushes `{text, lang}` onto the queue and calls `processQueue()`; the processor drains entries one at a time via a single `await completeChat(...)` per iteration. A second `send()` while the first promise is in flight is queued behind, not raced. `thinking` stays true until the queue is fully drained. Added I17 regression test (mock-based: stubs `completeChat` with externally-resolvable promises and asserts the adapter is invoked exactly once after two synchronous `send()` calls). Added I18 (lang preservation across queued resends). Updated I15 to assert exact FIFO DOM ordering. Updated design.md state machine, api.md §1 send-flow + §11 idempotency, test.md §3 I15/I17/I18 to document the queue contract. Verified anti-race by temporarily reverting to racy impl → I17 fails (`expected 2 to be 1` at `calls.length` assertion); restored queue impl → 86/86 tests pass; lint --max-warnings 0 + typecheck clean; apps/web check-types + 100/100 tests pass. | 8ffa639 | bug-verify |
+| 2026-05-24 01:05 | claude-opus-4-7 (bug-verify, bugfix-loop Cycle 1) | Independently re-ran the original reproduction protocol (resend-while-thinking) and all 6 verify gates against HEAD `c170f96`. **PASS** verdict. Reviewed commit 8ffa639 — scope confined to this row's package + docs; commit message follows Why/What/Scope/Risk/Docs/Tests; Co-Authored-By present. I17 mock-based regression test passes with the queued impl AND fails (`calls.length` 2 vs expected 1) when the queue is temporarily replaced with a racy impl — confirms the test reliably catches the regression. Status → READY_TO_SHIP. | — | ship |
