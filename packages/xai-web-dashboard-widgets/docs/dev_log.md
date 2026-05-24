@@ -7,13 +7,13 @@
 | Workflow | FEATURE_DEV |
 | Target | xai-web-dashboard-widgets |
 | Title | Web Console — Dashboard widget pack (Clock 4 styles/12tz/analog 60+12+12 · MiniCal · WorldClocks · Weather · Stickies · Mail · Upcoming · 3 mini stats) |
-| Current Phase | FEATURE_VERIFY |
-| Status | READY_TO_SHIP |
-| Suggested Next | ship |
+| Current Phase | SHIP |
+| Status | SHIPPED |
+| Suggested Next | — |
 | Verify Cross-vendor | yes (Codex primary / Cursor fallback — see test.md §6) |
 | Automation Mode | A-Claude (xai-roadmap-loop W2e parallel-Agent mode; siblings: #8 board-views, #9 board-workspaces) |
-| Executor | claude-opus-4-7 — feature-verify |
-| Updated | 2026-05-23 |
+| Executor | claude-sonnet-4-6 — ship |
+| Updated | 2026-05-23 18:58 |
 | Dispatched By | xai-roadmap-loop (W2e parallel dispatch, manifest row #11) |
 | Roadmap Row | docs/workflow/roadmap/xai-web-console.md row #11 |
 | ADR Anchor | docs/adr/0007-xai-web-console-build-form.md §S4 (port-map row `module-dashboard.jsx` → predeux split: dashboard-grid + dashboard-widgets) + §S5 (TSX rules) + §S7 (event bus via ctx.goTo) + §S8 (persistence registry already pre-registered in row #3) |
@@ -202,6 +202,7 @@ Sanity-checked: row #10 source code (types.ts, index.ts, registration.tsx) read 
 | 2026-05-23 | claude-opus-4-7 — feature-auto-build | P2: MiniCalWidget (Monday-first month, goTo via ctx, data-no-drag head/foot, mc-grid click navigates) + WorldClocks (list/analog/grid + 12-city library + add/remove/persistence + last-zone guard + unknown-id filter) + WeatherWidget (fixture-driven current + 5-day forecast) + StickiesWidget (3-note rotated stack) + TzClock helper + fixtures (WEATHER/STICKIES/MAILS/UPCOMING/CAL_EVENTS) + i18n delta mini_cal + world_clocks keys. 37 new tests (83 total). | b4bcf22 | feature-build (P3) |
 | 2026-05-23 | claude-opus-4-7 — feature-auto-build | P3: MailWidget (unread red dot + count badge) + UpcomingWidget (4-event list) + host wiring (Edit `packages/xai-web-dashboard-grid/src/registration.tsx` swapping EMPTY_WIDGETS → dashboardWidgetRegistrations + `packages/xai-web-dashboard-grid/package.json` adding workspace dep + `apps/web/package.json` adding workspace dep) + slotIntegration test + updated row #10's registration.test.tsx to assert 10 widget shells render instead of empty state. 10 new tests (93 total widgets pkg + 104 total dashboard-grid pkg). apps/web 54/54 + vite build 721 modules green. dev_log flipped to READY_FOR_VERIFY. | 95bbdc8 | feature-verify |
 | 2026-05-23 | claude-opus-4-7 — feature-verify | **PASS** — 15/15 verify gates clean. 93/93 widgets pkg + 104/104 dashboard-grid pkg + 70/70 storage pkg + 54/54 web tests + vite build 721 modules / 83.69KB css / 905KB main green. All 15 frozen assumptions honored (§1.1 design.md). All 10 widget ACs covered in 19 test files. Cross-package host wiring (registration.tsx + dashboard-grid/package.json + apps/web/package.json) confirmed clean — sibling-concurrency safe (siblings #8/#9 work disjoint). ClockStyle widening kept storage tests green. Residual: visual FLIP timing + iOS touch + reload-persist round-trip queued for cross-vendor manual smoke (Codex primary / Cursor fallback). Pre-existing TokensSmokePage lint warnings noted as non-blockers (introduced by W1.P3 commit 6c556e6; documented in row #10 verify too). Status flipped to READY_TO_SHIP. | — | ship |
+| 2026-05-23 18:58 | claude-sonnet-4-6 — ship | Shipping gate: 93/93 tests pass (pnpm --filter @repo/plugin-web-dashboard-widgets test). Commits 9a78d17/b4bcf22/95bbdc8/e9891de confirmed on remote main. dev_log flipped to SHIPPED. manifest.json status → Stable. PLUGIN_MAP.md row #11 added at Stable. | chore commit (this run) | — |
 
 ## Verify Report (2026-05-23)
 
