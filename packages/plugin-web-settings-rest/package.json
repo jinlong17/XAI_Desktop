@@ -1,0 +1,46 @@
+{
+  "name": "@repo/plugin-web-settings-rest",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "description": "Settings remaining 11 panes (Account/Premium/SmartLists/Notifications/DateTime/More/Integrations/Collaborate/StickyNote/Hotkeys/About). Consumes chassis atoms from @repo/plugin-web-settings-shell. Roadmap row #24 · W4b.",
+  "sideEffects": ["./src/styles.css", "./src/index.ts"],
+  "exports": {
+    ".": {
+      "types": "./src/index.ts",
+      "default": "./src/index.ts"
+    }
+  },
+  "scripts": {
+    "lint": "eslint --max-warnings 0 .",
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "test:coverage": "vitest run --coverage"
+  },
+  "peerDependencies": {
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0"
+  },
+  "dependencies": {
+    "@repo/core": "workspace:*",
+    "@repo/plugin-web-tokens": "workspace:*",
+    "@repo/plugin-web-storage": "workspace:*",
+    "@repo/plugin-web-settings-shell": "workspace:*",
+    "@repo/xai-web-event-bus": "workspace:*",
+    "@repo/xai-web-shell": "workspace:*"
+  },
+  "devDependencies": {
+    "@repo/eslint-config": "workspace:*",
+    "@repo/typescript-config": "workspace:*",
+    "@testing-library/jest-dom": "^6.0.0",
+    "@testing-library/react": "^16.0.0",
+    "@types/react": "^19.0.0",
+    "@types/react-dom": "^19.0.0",
+    "jsdom": "^26.0.0",
+    "react": "^19.2.0",
+    "react-dom": "^19.2.0",
+    "typescript": "5.9.2",
+    "vitest": "^3.2.1"
+  }
+}

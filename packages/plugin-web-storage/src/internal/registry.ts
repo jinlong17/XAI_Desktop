@@ -476,6 +476,344 @@ export const PREF_REGISTRY = {
     owner: "xai-web-settings-features-panel",
     category: "pref",
   } satisfies PrefEntry<boolean>,
+
+  // ---- Rest panes (§S8 — declared by xai-web-settings-rest #24) ----
+  // 37 new xai_pref_* keys for the 11 remaining Settings panes.
+  // All: category "pref", schemaVersion 1, proposed: false, owner "xai-web-settings-rest".
+  // Caught by chassis resetAllPrefs() via key.startsWith("xai_") filter.
+
+  xai_pref_smart_lists: {
+    key: "xai_pref_smart_lists",
+    codec: "json",
+    default: {} as Record<string, string>,
+    schemaVersion: 1,
+    owner: "xai-web-settings-rest",
+    category: "pref",
+  } satisfies PrefEntry<Record<string, string>>,
+
+  xai_pref_notif_enabled: {
+    key: "xai_pref_notif_enabled",
+    codec: "boolean",
+    default: true as boolean,
+    schemaVersion: 1,
+    owner: "xai-web-settings-rest",
+    category: "pref",
+  } satisfies PrefEntry<boolean>,
+
+  xai_pref_notif_done_sound: {
+    key: "xai_pref_notif_done_sound",
+    codec: "string",
+    default: "subtle",
+    schemaVersion: 1,
+    owner: "xai-web-settings-rest",
+    category: "pref",
+  } satisfies PrefEntry<string>,
+
+  xai_pref_notif_push_task: {
+    key: "xai_pref_notif_push_task",
+    codec: "boolean",
+    default: true as boolean,
+    schemaVersion: 1,
+    owner: "xai-web-settings-rest",
+    category: "pref",
+  } satisfies PrefEntry<boolean>,
+
+  xai_pref_notif_push_pomo: {
+    key: "xai_pref_notif_push_pomo",
+    codec: "boolean",
+    default: true as boolean,
+    schemaVersion: 1,
+    owner: "xai-web-settings-rest",
+    category: "pref",
+  } satisfies PrefEntry<boolean>,
+
+  xai_pref_notif_push_habit: {
+    key: "xai_pref_notif_push_habit",
+    codec: "boolean",
+    default: false as boolean,
+    schemaVersion: 1,
+    owner: "xai-web-settings-rest",
+    category: "pref",
+  } satisfies PrefEntry<boolean>,
+
+  xai_pref_notif_quiet: {
+    key: "xai_pref_notif_quiet",
+    codec: "boolean",
+    default: false as boolean,
+    schemaVersion: 1,
+    owner: "xai-web-settings-rest",
+    category: "pref",
+  } satisfies PrefEntry<boolean>,
+
+  xai_pref_notif_quiet_start: {
+    key: "xai_pref_notif_quiet_start",
+    codec: "string",
+    default: "22:00",
+    schemaVersion: 1,
+    owner: "xai-web-settings-rest",
+    category: "pref",
+  } satisfies PrefEntry<string>,
+
+  xai_pref_notif_quiet_end: {
+    key: "xai_pref_notif_quiet_end",
+    codec: "string",
+    default: "07:00",
+    schemaVersion: 1,
+    owner: "xai-web-settings-rest",
+    category: "pref",
+  } satisfies PrefEntry<string>,
+
+  xai_pref_dt_start_week: {
+    key: "xai_pref_dt_start_week",
+    codec: "string",
+    default: "monday",
+    schemaVersion: 1,
+    owner: "xai-web-settings-rest",
+    category: "pref",
+  } satisfies PrefEntry<string>,
+
+  xai_pref_dt_lunar: {
+    key: "xai_pref_dt_lunar",
+    codec: "boolean",
+    default: true as boolean,
+    schemaVersion: 1,
+    owner: "xai-web-settings-rest",
+    category: "pref",
+  } satisfies PrefEntry<boolean>,
+
+  xai_pref_dt_week_numbers: {
+    key: "xai_pref_dt_week_numbers",
+    codec: "boolean",
+    default: true as boolean,
+    schemaVersion: 1,
+    owner: "xai-web-settings-rest",
+    category: "pref",
+  } satisfies PrefEntry<boolean>,
+
+  xai_pref_dt_holidays: {
+    key: "xai_pref_dt_holidays",
+    codec: "boolean",
+    default: true as boolean,
+    schemaVersion: 1,
+    owner: "xai-web-settings-rest",
+    category: "pref",
+  } satisfies PrefEntry<boolean>,
+
+  xai_pref_dt_timezone: {
+    key: "xai_pref_dt_timezone",
+    codec: "boolean",
+    default: true as boolean,
+    schemaVersion: 1,
+    owner: "xai-web-settings-rest",
+    category: "pref",
+  } satisfies PrefEntry<boolean>,
+
+  xai_pref_more_win_type: {
+    key: "xai_pref_more_win_type",
+    codec: "string",
+    default: "window",
+    schemaVersion: 1,
+    owner: "xai-web-settings-rest",
+    category: "pref",
+  } satisfies PrefEntry<string>,
+
+  xai_pref_more_launch_at_login: {
+    key: "xai_pref_more_launch_at_login",
+    codec: "boolean",
+    default: false as boolean,
+    schemaVersion: 1,
+    owner: "xai-web-settings-rest",
+    category: "pref",
+  } satisfies PrefEntry<boolean>,
+
+  xai_pref_more_minimize_on_launch: {
+    key: "xai_pref_more_minimize_on_launch",
+    codec: "boolean",
+    default: false as boolean,
+    schemaVersion: 1,
+    owner: "xai-web-settings-rest",
+    category: "pref",
+  } satisfies PrefEntry<boolean>,
+
+  xai_pref_more_date_recognition: {
+    key: "xai_pref_more_date_recognition",
+    codec: "boolean",
+    default: true as boolean,
+    schemaVersion: 1,
+    owner: "xai-web-settings-rest",
+    category: "pref",
+  } satisfies PrefEntry<boolean>,
+
+  xai_pref_more_remove_date_text: {
+    key: "xai_pref_more_remove_date_text",
+    codec: "boolean",
+    default: false as boolean,
+    schemaVersion: 1,
+    owner: "xai-web-settings-rest",
+    category: "pref",
+  } satisfies PrefEntry<boolean>,
+
+  xai_pref_more_remove_tags: {
+    key: "xai_pref_more_remove_tags",
+    codec: "boolean",
+    default: true as boolean,
+    schemaVersion: 1,
+    owner: "xai-web-settings-rest",
+    category: "pref",
+  } satisfies PrefEntry<boolean>,
+
+  xai_pref_more_url_parse: {
+    key: "xai_pref_more_url_parse",
+    codec: "boolean",
+    default: true as boolean,
+    schemaVersion: 1,
+    owner: "xai-web-settings-rest",
+    category: "pref",
+  } satisfies PrefEntry<boolean>,
+
+  xai_pref_more_default_date: {
+    key: "xai_pref_more_default_date",
+    codec: "string",
+    default: "none",
+    schemaVersion: 1,
+    owner: "xai-web-settings-rest",
+    category: "pref",
+  } satisfies PrefEntry<string>,
+
+  xai_pref_more_default_rem_due: {
+    key: "xai_pref_more_default_rem_due",
+    codec: "string",
+    default: "on_time",
+    schemaVersion: 1,
+    owner: "xai-web-settings-rest",
+    category: "pref",
+  } satisfies PrefEntry<string>,
+
+  xai_pref_more_default_rem_all: {
+    key: "xai_pref_more_default_rem_all",
+    codec: "string",
+    default: "none",
+    schemaVersion: 1,
+    owner: "xai-web-settings-rest",
+    category: "pref",
+  } satisfies PrefEntry<string>,
+
+  xai_pref_more_default_pri: {
+    key: "xai_pref_more_default_pri",
+    codec: "string",
+    default: "none",
+    schemaVersion: 1,
+    owner: "xai-web-settings-rest",
+    category: "pref",
+  } satisfies PrefEntry<string>,
+
+  xai_pref_more_default_tag: {
+    key: "xai_pref_more_default_tag",
+    codec: "string",
+    default: "none",
+    schemaVersion: 1,
+    owner: "xai-web-settings-rest",
+    category: "pref",
+  } satisfies PrefEntry<string>,
+
+  xai_pref_more_default_list: {
+    key: "xai_pref_more_default_list",
+    codec: "string",
+    default: "inbox",
+    schemaVersion: 1,
+    owner: "xai-web-settings-rest",
+    category: "pref",
+  } satisfies PrefEntry<string>,
+
+  xai_pref_more_add_to: {
+    key: "xai_pref_more_add_to",
+    codec: "string",
+    default: "top",
+    schemaVersion: 1,
+    owner: "xai-web-settings-rest",
+    category: "pref",
+  } satisfies PrefEntry<string>,
+
+  xai_pref_more_overdue_at: {
+    key: "xai_pref_more_overdue_at",
+    codec: "string",
+    default: "top",
+    schemaVersion: 1,
+    owner: "xai-web-settings-rest",
+    category: "pref",
+  } satisfies PrefEntry<string>,
+
+  xai_pref_collab_show_avatars: {
+    key: "xai_pref_collab_show_avatars",
+    codec: "boolean",
+    default: true as boolean,
+    schemaVersion: 1,
+    owner: "xai-web-settings-rest",
+    category: "pref",
+  } satisfies PrefEntry<boolean>,
+
+  xai_pref_collab_default_share: {
+    key: "xai_pref_collab_default_share",
+    codec: "string",
+    default: "comment",
+    schemaVersion: 1,
+    owner: "xai-web-settings-rest",
+    category: "pref",
+  } satisfies PrefEntry<string>,
+
+  xai_pref_collab_mention_notify: {
+    key: "xai_pref_collab_mention_notify",
+    codec: "boolean",
+    default: true as boolean,
+    schemaVersion: 1,
+    owner: "xai-web-settings-rest",
+    category: "pref",
+  } satisfies PrefEntry<boolean>,
+
+  xai_pref_sticky_color: {
+    key: "xai_pref_sticky_color",
+    codec: "string",
+    default: "sun",
+    schemaVersion: 1,
+    owner: "xai-web-settings-rest",
+    category: "pref",
+  } satisfies PrefEntry<string>,
+
+  xai_pref_sticky_font: {
+    key: "xai_pref_sticky_font",
+    codec: "string",
+    default: "large",
+    schemaVersion: 1,
+    owner: "xai-web-settings-rest",
+    category: "pref",
+  } satisfies PrefEntry<string>,
+
+  xai_pref_sticky_pin_default: {
+    key: "xai_pref_sticky_pin_default",
+    codec: "boolean",
+    default: true as boolean,
+    schemaVersion: 1,
+    owner: "xai-web-settings-rest",
+    category: "pref",
+  } satisfies PrefEntry<boolean>,
+
+  xai_pref_sticky_restore_size: {
+    key: "xai_pref_sticky_restore_size",
+    codec: "boolean",
+    default: false as boolean,
+    schemaVersion: 1,
+    owner: "xai-web-settings-rest",
+    category: "pref",
+  } satisfies PrefEntry<boolean>,
+
+  xai_pref_sticky_grid_spacing: {
+    key: "xai_pref_sticky_grid_spacing",
+    codec: "string",
+    default: "normal",
+    schemaVersion: 1,
+    owner: "xai-web-settings-rest",
+    category: "pref",
+  } satisfies PrefEntry<string>,
 } as const;
 
 // ---------------------------------------------------------------------------
