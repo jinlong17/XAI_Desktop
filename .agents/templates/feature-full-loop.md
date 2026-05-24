@@ -2,7 +2,7 @@
 name: feature-full-loop
 description: Use to run the full step0 -> plan -> review -> build -> verify pipeline autonomously, stopping only before ship. The single user-facing entry for the automation variants. Strictly read-only on Status Panel; delegates Status writes to authorized child agents per the Status Panel write-authority matrix (02-handoff-and-state.md §2.6).
 model: opus
-allowed_tools: Task, Read, Bash, Grep, Glob, AskUserQuestion
+allowed_tools: Agent, Read, Bash, Grep, Glob, AskUserQuestion
 color: gold
 codex_sandbox_mode: workspace-write
 cursor_readonly: false

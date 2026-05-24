@@ -1,7 +1,7 @@
 ---
 name: bugfix-full-loop
 description: Use to run the full bug-diagnose -> bug-fix -> bug-verify pipeline autonomously, stopping only before ship. The single user-facing entry for the bugfix automation variants (phase-granularity variants are not applicable to bugfix). Strictly read-only on Status Panel; delegates Status writes to authorized child agents per the Status Panel write-authority matrix (02-handoff-and-state.md §2.6).
-tools: Task, Read, Bash, Grep, Glob, AskUserQuestion
+tools: Agent, Read, Bash, Grep, Glob, AskUserQuestion
 model: opus
 color: gold
 ---
