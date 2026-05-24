@@ -48,7 +48,7 @@ to `main` (production) and on `pull_request` (preview).
 | Phase | Status | Commit |
 |-------|--------|--------|
 | P1 — ADR-0008 + 四件套 docs anchor | DONE | 0e7aca7 |
-| P2 — wrangler.toml + `_headers` + `.gitignore` + `.nvmrc` + nonce strip | DONE | (pending commit) |
+| P2 — wrangler.toml + `_headers` + `.gitignore` + `.nvmrc` + nonce strip | DONE | 7e11f50 |
 | P3 — `.github/workflows/deploy-web.yml` | PENDING | — |
 | P4 — `docs/runbooks/cloudflare.md` | PENDING | — |
 | P5 — Live deploy + smoke + evidence (verify-only) | PENDING | — |
@@ -478,5 +478,5 @@ hash of the workflow-driven first deploy or the manual fallback deploy)_
     - Largest non-map file: `index-Di4Dj3wp.js` @ 992,768 bytes (~969 KiB)
     - Pages free-tier limits: NO individual file > 25 MiB, total < 20K files ✅
 - **Tests run**: Build smoke. Nonce grep evidence recorded above.
-- **Commits**: (pending — will be filled after commit)
-- **Next step**: Commit P2, then proceed to P3.
+- **Commits**: 7e11f50 `feat(xai-web-deploy-cloudflare): P2 — wrangler.toml + _headers + .nvmrc + nonce strip`
+- **Next step**: Proceed to P3.
