@@ -239,3 +239,88 @@ describe("AC-W6-FIX-LC: webModuleRouteRegistrations is composed from the shell a
     expect(new Set(ids).size).toBe(ids.length);
   });
 });
+
+// =============================================================================
+// Layer D — board-views reachability at /app/board (row #8 cross-vendor verify
+// BLOCKER fix).
+//
+// The bug: board-workspaces row #9 owns the railOrder 3 "board" slot, but the
+// 6-view picker shipped in row #8 (@repo/plugin-web-board-views) was never
+// composed into anything reachable — `boardViewsWebModuleRegistration` is
+// exported but never imported by apps/web/, and the board-workspaces module
+// rendered a disabled single-button placeholder in its toolbar.
+//
+// The fix: board-workspaces now composes <ViewPicker> from board-views inside
+// its header, with the central panel switching to the corresponding view
+// component (TableView / BoardCalendarView / BoardDashboardView / TimelineView
+// / MapView) based on the per-board `xai_board_view_by_id` registry entry.
+//
+// These tests exercise the real router at /app/board (not just the package
+// internals) so a future regression that breaks the wire-up (e.g. dropping
+// the workspace dep, reverting BoardWorkspacesModule, or swapping the
+// shellRegistrations entry) fires before any feature-verify pass would.
+//
+// The pre-existing Layer A/B/C 24-case coverage (added by the web-console
+// host-router bugfix) is preserved — these are net-new cases, not a
+// replacement.
+// =============================================================================
+
+const BOARD_VIEW_IDS = ["board", "table", "calendar", "dashboard", "timeline", "map"] as const;
+
+describe("AC-W8-VIEWS-FIX-LD: /app/board mounts the 6-view picker from board-views", () => {
+  it("AC-W8-VIEWS-FIX-LD/picker: /app/board renders the ViewPicker toolbar from @repo/plugin-web-board-views", async () => {
+    const app = await mountRouter(["/app/board"]);
+    try {
+      const picker = app.container.querySelector('[data-testid="view-picker"]');
+      expect(
+        picker,
+        "/app/board did not render <ViewPicker data-testid='view-picker'> — board-views is not composed into board-workspaces",
+      ).not.toBeNull();
+    } finally {
+      await unmountApp(app);
+    }
+  });
+
+  for (const viewId of BOARD_VIEW_IDS) {
+    it(`AC-W8-VIEWS-FIX-LD/btn-${viewId}: /app/board exposes the '${viewId}' view-picker button`, async () => {
+      const app = await mountRouter(["/app/board"]);
+      try {
+        const btn = app.container.querySelector(`[data-testid="vp-btn-${viewId}"]`);
+        expect(
+          btn,
+          `/app/board did not render <button data-testid='vp-btn-${viewId}'> — the view-picker is missing the '${viewId}' entry`,
+        ).not.toBeNull();
+        // Each button must be reachable and not a disabled placeholder.
+        expect(btn instanceof HTMLButtonElement && btn.disabled).toBe(false);
+      } finally {
+        await unmountApp(app);
+      }
+    });
+  }
+
+  it("AC-W8-VIEWS-FIX-LD/default-board: /app/board's default view exposes the Kanban BoardView (active button = 'board')", async () => {
+    const app = await mountRouter(["/app/board"]);
+    try {
+      const boardBtn = app.container.querySelector('[data-testid="vp-btn-board"]');
+      expect(boardBtn).not.toBeNull();
+      expect(boardBtn!.getAttribute("aria-pressed")).toBe("true");
+    } finally {
+      await unmountApp(app);
+    }
+  });
+
+  it("AC-W8-VIEWS-FIX-LD/workspace-preserved: /app/board still renders the workspace + multi-board chrome (board-workspaces wraps board-views, not replaces it)", async () => {
+    const app = await mountRouter(["/app/board"]);
+    try {
+      // The workspace chip + bottom switcher are board-workspaces concerns —
+      // they MUST remain present after the board-views integration. If a
+      // future change accidentally swaps the registration for the raw
+      // BoardModule, these markers disappear.
+      expect(app.container.querySelector('[data-testid="ws-chip"]')).not.toBeNull();
+      expect(app.container.querySelector('[data-testid="bottom-switcher"]')).not.toBeNull();
+      expect(app.container.querySelector('[data-testid="board-workspaces-module"]')).not.toBeNull();
+    } finally {
+      await unmountApp(app);
+    }
+  });
+});

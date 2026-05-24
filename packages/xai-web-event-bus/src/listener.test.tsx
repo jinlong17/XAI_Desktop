@@ -1,7 +1,7 @@
 // @vitest-environment jsdom
-import React, { StrictMode } from 'react';
+import { StrictMode } from 'react';
 import { act, renderHook, cleanup } from '@testing-library/react';
-import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
+import { afterEach, describe, expect, it, vi } from 'vitest';
 import { emitWebEvent } from './emitter';
 import { useWebEventListener } from './listener';
 
