@@ -7,13 +7,13 @@
 | Workflow | FEATURE_DEV |
 | Target | xai-web-dashboard-grid |
 | Title | Web Console — Dashboard grid container (port `module-dashboard.jsx` grid + DnD wrapper section ONLY) |
-| Current Phase | FEATURE_VERIFY |
-| Status | READY_TO_SHIP |
-| Suggested Next | ship |
+| Current Phase | SHIP |
+| Status | SHIPPED |
+| Suggested Next | — |
 | Verify Cross-vendor | yes (Safari 17+ / Chrome / Firefox — empty state + Add-widget emit + lang switch + 3-widget render + FLIP drag visual + persistence reload + responsive breakpoints + touch + a11y + theme + storage round-trip — see test.md §6) |
 | Automation Mode | A-Claude (xai-roadmap-loop W2d parallel-Agent mode; siblings: #7 xai-web-board-core + #20 xai-web-statistics) |
-| Executor | claude-opus-4-7 — feature-verify |
-| Updated | 2026-05-23 |
+| Executor | claude-sonnet-4-6 — ship |
+| Updated | 2026-05-23 18:55 |
 | Dispatched By | xai-roadmap-loop (W2d parallel dispatch, manifest row #10) |
 | Roadmap Row | docs/workflow/roadmap/xai-web-console.md row #10 (W2 Module — Dashboard grid container) |
 | ADR Anchor | docs/adr/0007-xai-web-console-build-form.md §S4 (port map row `module-dashboard.jsx` → predeux split `plugin-web-dashboard-grid` + `plugin-web-dashboard-widgets`) + §S5 (TSX rules) + §S7 (event bus) + §S8 (`xai_dash_order` pref already in registry from row #3) |
@@ -206,6 +206,7 @@ Sanity-checked: `xai_dash_order` is pre-registered in `@repo/plugin-web-storage`
 | 2026-05-23 | claude-opus-4-7 — feature-auto-build | P2: WidgetShell + DashboardGrid + WidgetGhost components; useFlipReorder + useGridDrag + useDashOrder + sanitizeOrder internal hooks. 50 new tests (98/98 total). PointerEvent polyfill in setup.ts (jsdom lacks it). Lint + check-types clean. | 7691f97 | feature-build (P3) |
 | 2026-05-23 | claude-opus-4-7 — feature-auto-build | P3: emit `web:dashboard:add-widget-clicked` from header button (source=add-widget-button) + empty-state CTA (source=empty-state-cta); verify goTo path (web:shell:module-change with source=mini-cal). 6 new tests (104/104 total). dev_log flipped to READY_FOR_VERIFY. | 7daa255 | feature-verify |
 | 2026-05-23 | claude-opus-4-7 — feature-verify | **PASS** — 15/15 verify gates clean. 104/104 plugin tests + 54/54 web tests + 8/8 core tests + vite build green (689 modules, 862KB main chunk, 64KB css). All 15 frozen assumptions honored (§1.1 design.md). All 10 AC families covered (test.md §2). Commit hygiene clean (3 single-intent commits, each with full Why/What/Scope/Risk/Docs/Tests body). Residual: visual FLIP timing + iOS touch + storage round-trip pending cross-vendor manual smoke (test.md §6, Codex primary / Cursor fallback). Status flipped to READY_TO_SHIP. | — | ship |
+| 2026-05-23 18:55 | claude-sonnet-4-6 — ship | Verified 104/104 tests pass (pnpm --filter @repo/plugin-web-dashboard-grid test). Confirmed commits 2d9655f/7691f97/7daa255/78e1b43 already on origin/main. Added @repo/plugin-web-dashboard-grid row (Stable) to docs/PLUGIN_MAP.md. Flipped roadmap manifest row #10 to SHIPPED. Flipped dev_log Status to SHIPPED. Chore commit pushed. | chore(xai-web-dashboard-grid): ship — flip dev_log + manifest #10 to SHIPPED | — |
 
 ## Verify Report (2026-05-23)
 
