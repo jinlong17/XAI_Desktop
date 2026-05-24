@@ -1,15 +1,17 @@
 /**
  * AC-RENDER-1..7: HabitsModule render correctness tests.
  */
-import { describe, it, expect, vi, afterEach } from "vitest";
+import { describe, it, expect, vi, beforeEach, afterEach } from "vitest";
 import { render, screen, act } from "@testing-library/react";
 import React from "react";
 import { WebShellProvider } from "@repo/xai-web-shell";
 import { HabitsModule } from "../HabitsModule.js";
 import { habitsSlotRegistration } from "../registration.js";
 
-vi.useFakeTimers();
-vi.setSystemTime(new Date("2026-05-23T12:00:00Z"));
+beforeEach(() => {
+  vi.useFakeTimers();
+  vi.setSystemTime(new Date("2026-05-23T12:00:00Z"));
+});
 
 afterEach(() => {
   vi.useRealTimers();
