@@ -218,6 +218,9 @@ importers:
       '@repo/plugin-web-pomodoro':
         specifier: workspace:*
         version: link:../../packages/plugin-web-pomodoro
+      '@repo/plugin-web-settings-features-panel':
+        specifier: workspace:*
+        version: link:../../packages/xai-web-settings-features-panel
       '@repo/plugin-web-settings-shell':
         specifier: workspace:*
         version: link:../../packages/plugin-web-settings-shell

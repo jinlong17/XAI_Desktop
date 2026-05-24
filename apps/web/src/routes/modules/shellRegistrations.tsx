@@ -37,25 +37,40 @@ import { boardWorkspacesWebModuleRegistration } from "@repo/plugin-web-board-wor
 // xai-web-statistics row #20
 import { statisticsWebModuleRegistration } from "@repo/plugin-web-statistics";
 // xai-web-settings-shell row #21 (W4a · chassis · showInRail:false)
-import { settingsShellWebModuleRegistration } from "@repo/plugin-web-settings-shell";
+// row #23 (xai-web-settings-features-panel) replaces this registration with a
+// composed variant that mounts the substituted paneRegistry — kept imported
+// as documentation that the chassis is still the upstream source of truth.
+import "@repo/plugin-web-settings-shell";
+import { composedSettingsRegistration } from "./composedSettingsRegistration.js";
+// xai-web-settings-features-panel row #23 — slot-wrap deep-link guards for the
+// 8 user-toggleable modules. Wrapping reads xai_pref_features_<id> and short-
+// circuits to <DisabledFeatureFallback> when off.
+import { withDisabledFallback } from "@repo/plugin-web-settings-features-panel";
 
 export const webShellModuleRegistrations: WebModuleSlotRegistration[] = [
-  // Rail-visible modules (railOrder 1..12)
-  aiChatWebModuleRegistration,  // xai-web-ai-chat row #18 (railOrder 1)
-  tasksWebModuleRegistration,
-  boardWorkspacesWebModuleRegistration,  // xai-web-board-workspaces row #9 (railOrder 3, replaces row #7's minimal shell wrapper)
-  dashboardGridSlotRegistration,  // xai-web-dashboard-grid row #10 (railOrder 4)
-  calendarSlotRegistration,  // xai-web-calendar row #12 (railOrder 5)
-  matrixSlotRegistration,
-  pomodoroWebModuleRegistration,
-  habitsSlotRegistration,  // xai-web-habits row #15 (railOrder 8)
-  meditationSlotRegistration,  // xai-web-meditation row #16 (railOrder 9)
-  countdownWebModuleRegistration,
-  statisticsWebModuleRegistration,  // xai-web-statistics row #20 (railOrder 11)
+  // Rail-visible modules (railOrder 1..12).
+  // The 8 user-toggleable modules are wrapped with withDisabledFallback so any
+  // deep link reaching them while `xai_pref_features_<id>` is false renders
+  // <DisabledFeatureFallback> instead of the real module shell. ai-chat,
+  // countdown, statistics, settings are NOT toggleable per DESIGN.md §4.12 +
+  // row #23 scope.
+  aiChatWebModuleRegistration,  // xai-web-ai-chat row #18 (railOrder 1) — not toggleable
+  withDisabledFallback(tasksWebModuleRegistration, "tasks"),
+  withDisabledFallback(boardWorkspacesWebModuleRegistration, "board"),  // row #9 replaces row #7 wrapper
+  withDisabledFallback(dashboardGridSlotRegistration, "dashboard"),  // row #10
+  withDisabledFallback(calendarSlotRegistration, "calendar"),  // row #12
+  withDisabledFallback(matrixSlotRegistration, "matrix"),
+  withDisabledFallback(pomodoroWebModuleRegistration, "pomodoro"),
+  withDisabledFallback(habitsSlotRegistration, "habits"),  // row #15
+  withDisabledFallback(meditationSlotRegistration, "meditation"),  // row #16
+  countdownWebModuleRegistration,  // not toggleable
+  statisticsWebModuleRegistration,  // row #20 — not toggleable
   // Settings — not in rail (showInRail: false). Chassis from xai-web-settings-shell row #21;
-  // sibling rows #22 (appearance) / #23 (features-panel) / #24 (rest) will substitute pane
-  // content via the paneRegistry composition pattern documented in api.md §8.
-  settingsShellWebModuleRegistration,  // xai-web-settings-shell row #21 (railOrder 99)
+  // row #23 (xai-web-settings-features-panel) replaces the registration with
+  // composedSettingsRegistration which mounts the composed paneRegistry. Sibling
+  // rows #22 (appearance) / #24 (rest) extend the composition function — not
+  // this file.
+  composedSettingsRegistration,  // row #23 host-side replacement (uses composeSettingsPaneRegistry)
 ];
 
 /**

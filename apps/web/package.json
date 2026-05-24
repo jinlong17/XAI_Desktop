@@ -46,6 +46,7 @@
     "@repo/plugin-web-tasks": "workspace:*",
     "@repo/plugin-web-statistics": "workspace:*",
     "@repo/plugin-web-settings-shell": "workspace:*",
+    "@repo/plugin-web-settings-features-panel": "workspace:*",
     "@repo/plugin-console": "workspace:^",
     "@repo/plugin-productivity": "workspace:^",
     "@repo/web-auth-device-session": "workspace:*",

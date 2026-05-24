@@ -35,6 +35,11 @@ import {
 import { DesktopPet } from "@repo/plugin-web-pet";
 import type { Lang, Theme, Density, BgTone } from "@repo/plugin-web-tokens";
 import { webShellModuleRegistrations } from "./routes/modules/shellRegistrations";
+// xai-web-settings-features-panel row #23 — rail filter driven by xai_pref_features_*
+import {
+  useFeaturePrefs,
+  filterModulesByFeaturePrefs,
+} from "@repo/plugin-web-settings-features-panel";
 
 // ---- App component ---------------------------------------------------------
 
@@ -77,10 +82,13 @@ export function App() {
     return () => mq.removeEventListener("change", onChange);
   }, [theme]);
 
-  // Stable modules array (memoize to avoid WebShellProvider re-renders)
+  // xai-web-settings-features-panel row #23 — derive feature-prefs-aware module list.
+  // The full registrations array is stable; the filter result re-derives only when
+  // one of the 8 xai_pref_features_* booleans changes.
+  const featurePrefs = useFeaturePrefs();
   const modules = useMemo<WebModuleSlotRegistration[]>(
-    () => webShellModuleRegistrations,
-    [],
+    () => filterModulesByFeaturePrefs(webShellModuleRegistrations, featurePrefs),
+    [featurePrefs],
   );
 
   return (
