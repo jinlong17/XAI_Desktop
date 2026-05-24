@@ -6,10 +6,10 @@
 - Target: xai-web-persistence-contract
 - Title: BUG · `xai_pref_*` autosave read-path is closed (write-only API contract drift)
 - Current Phase: BUG_VERIFY
-- Status: FIX_READY_FOR_VERIFY
-- Executor: bug-auto-fix (claude-opus-4-7 1M, inline-executed by bugfix-loop orchestrator)
-- Updated: 2026-05-24 01:05
-- Suggested Next: bug-verify
+- Status: READY_TO_SHIP
+- Executor: bug-verify (claude-opus-4-7 1M, inline-executed by bugfix-loop orchestrator)
+- Updated: 2026-05-24 01:15
+- Suggested Next: ship
 - Automation Mode: A-Claude (manifest default)
 - Verify Cross-vendor: yes (manifest override 2026-05-23)
 - ADR-lite: not required (governed by ADR-0007)
@@ -338,3 +338,62 @@ Sub-fix list (executed by `bug-auto-fix` 2026-05-24):
 
 - The S2 commit-message attribution mismatch (`c3eebf1`) is a process anomaly worth flagging at the cowork-orchestrator layer (multiple parallel auto-fix workers on a single working tree), but does NOT block bug-verify since the test files are correct in HEAD. A separate `cowork-iso` audit can follow if desired; out of scope for this bugfix.
 - AC-E2E-2 (apps/web Vite build with `@repo/plugin-web-storage` wired) remains deferred to row #5 `xai-web-shell` per the original Phase Plan P3 risk note. The new helpers are exported but no consumer in `apps/web/` calls them yet.
+
+## Bug-Verify Report (2026-05-24 01:15 — Cycle 1)
+
+**Verdict: PASS — READY_TO_SHIP**
+
+### Verifier metadata
+
+- Executor: bug-verify, claude-opus-4-7 1M (inline-executed by bugfix-loop orchestrator)
+- Cross-vendor anchor: Codex gpt-5.5-thinking medium cold-read 2026-05-24 (the BLOCKED finding being verified-as-resolved). Same-vendor re-read by Claude Opus is acceptable per user instruction; an independent Codex re-read can run later without changing the verdict.
+
+### Commits reviewed
+
+| Commit | Scope | Attribution |
+|---|---|---|
+| `f019555` | S1 — implementation: getPrefAutosave / setPrefAutosave / removePrefAutosave + index re-exports | Correctly attributed: `fix(plugin-web-storage): add typed read-path for xai_pref_* autosave family (S1)` |
+| `c3eebf1` | S2 — regression tests (prefAutosave-readpath.test.tsx + ssr.test.ts AC-SSR-1/7/8) | Mis-attributed to `xai-web-dashboard-grid`'s S2 commit due to shared-checkout parallel-worker tree race. Test files are byte-correct in HEAD and exercise the documented contract. |
+| `006df54` | S3 — api.md update (status flip + §3.2 wording fix + §4.5/§4.6/§4.7 + §5 table + §10 stability tier) | Correctly attributed: `fix(xai-web-persistence-contract): document xai_pref_* read-path in api.md (S3)` |
+| `e3b385b` | S4 — dev_log Status Panel flip + Fix Strategy + Sub-Fix Work Log | Mis-attributed to `xai-web-board-views`'s flip commit due to the same parallel-worker tree race. dev_log content is byte-correct in HEAD. |
+
+Diff scope check: `git diff --stat f019555^..HEAD -- packages/plugin-web-storage packages/xai-web-persistence-contract/docs` shows 6 files / 639 insertions / 12 deletions — all inside the row's Scope Guardrails (`packages/plugin-web-storage/**` + `packages/xai-web-persistence-contract/docs/**`). NO writes to `docs/PLUGIN_MAP.md`, `apps/web/`, `packages/core/`, `manifest.json`, sibling `packages/plugin-web-*` packages, or `docs/adr/0007-*`.
+
+Commit-message hygiene: f019555 + 006df54 follow `docs/conventions/COMMIT_CONVENTION.md` Why/What/Scope/Risk/Docs/Tests structure. c3eebf1 and e3b385b are valid commits (commit-convention-compliant for the bodies they contain) that physically also carry MY S2 / S4 files due to the tree race — bug-verify accepts this anomaly because (a) the content is correct and present in HEAD, (b) attempting a force-rebase to fix attribution would lose the legitimately-attributed sibling work in the same commits, (c) the dev_log Work Log is the canonical record of intent and clearly identifies which files belong to which sub-fix.
+
+### Reproduction & regression results
+
+1. **Codex BLOCKED scenario re-test (CORE):** `pnpm --filter @repo/plugin-web-storage test -t "AC-AUTO-RP-4"` — PASS. The Settings panel re-mount scenario (consumer seeds React state from `getPrefAutosave<T>(suffix, options)` after a prior `usePrefAutosave` write) is now exercised end-to-end and green. This is the precise failure mode that Codex 2026-05-24 reported as unreachable through the documented API.
+2. **Full unit test re-run:** `pnpm --filter @repo/plugin-web-storage test` — 88/88 PASS across 9 files in ~3s. Was 70/70 at SHIPPED on 2026-05-23; +18 tests from this BUGFIX (14 in prefAutosave-readpath.test.tsx + 4 in ssr.test.ts). Zero regressions on prior 70 tests.
+3. **Type-check:** `pnpm --filter @repo/plugin-web-storage check-types` — exit 0. The new typed exports (`getPrefAutosave<T>` / `setPrefAutosave<T>` / `removePrefAutosave` + `GetPrefAutosaveOptions<T>` / `SetPrefAutosaveOptions`) compile clean with the existing `getPref<K extends WebPrefKey>` / `setPref<K extends WebPrefKey>` / `removePref<K extends WebPrefKey>` registered-key surface. No type collision.
+4. **SSR fallback:** ssr.test.ts (Node environment) — 12/12 PASS including the 4 new AC-SSR-1-extended + AC-SSR-7/8 cases proving the new helpers no-op safely without `window` / `localStorage`.
+5. **Public surface:** `src/index.ts` re-exports `getPrefAutosave`, `setPrefAutosave`, `removePrefAutosave`, `GetPrefAutosaveOptions`, `SetPrefAutosaveOptions` — confirmed by AC-SSR-1 assertions and by reading `src/index.ts` directly. Single `.` package export preserved (Hard Constraint #4 unchanged).
+6. **Docs coherence (Codex Gate Finding #6 "BLOCKED"):** `api.md` Status header now reads `SHIPPED + 1 BUGFIX (2026-05-24 — xai_pref_* read-path opened)`, replacing the stale `PLAN_DRAFT`. §3.2 now points the seed-on-mount instruction at `getPrefAutosave` instead of `getPref`. §4.5/§4.6/§4.7 added. §5 SSR table extended. §10 stability tier updated. No more drift between api.md and the in-tree registry + helpers.
+
+### Boundary / critical-path checks
+
+- **Hard Constraint #3 (SSR-safe):** `ssr.test.ts` 12 tests under `@vitest-environment node` — PASS. New helpers all defend `typeof window === "undefined"` before any localStorage access.
+- **Hard Constraint #4 (single import path):** verified — only `.` export in package.json + index.ts re-exports the new public surface. Zero internal-path leakage.
+- **Compare-before-write:** AC-AUTO-RP-5 second test asserts `setPrefAutosave` skips `setItem` on identical values (no spurious storage events). Same property as `setPref` (AC-IMP-11).
+- **Same-tab pub/sub:** `setPrefAutosave` / `removePrefAutosave` call `publishSameTab(key, value | undefined)` so live React subscribers update without a cross-tab `storage` event. Consistent with `setPref` / `removePref` (AC-HOOK-10).
+- **Suffix validation:** AC-AUTO-RP-8 (3 tests) — `/` in suffix throws in dev/test for all three new helpers, matching `usePrefAutosave`'s validation. No silent fall-through to a malformed key.
+- **Decode failure fallback:** AC-AUTO-RP-7 — corrupt JSON returns `options.defaultValue` and emits `console.warn`. Matches `getPref` behavior.
+- **No registry edits:** confirmed via `git diff f019555^..HEAD -- packages/plugin-web-storage/src/internal/registry.ts` returns no output (zero changes to PREF_REGISTRY).
+- **No manifest impact:** `@repo/plugin-web-storage` has no `manifest.json` (workspace-only React package), and no other plugin's manifest references this row.
+
+### Residual / non-blocking
+
+- **R-S2-Attribution (process)** — Test files (prefAutosave-readpath.test.tsx, ssr.test.ts extension) are physically committed under `c3eebf1` (xai-web-dashboard-grid S2 chore). dev_log Sub-Fix Work Log records the intent; no content rewrite or rebase performed. Documented above. Does not affect runtime correctness or future test reproducibility.
+- **R-S4-Attribution (process)** — dev_log Status Panel flip + Fix Strategy + Sub-Fix Work Log are physically committed under `e3b385b` (xai-web-board-views chore). Same root cause as R-S2. Same disposition.
+- **R-Act-warning (pre-existing)** — jsdom + React 19 emits "The current testing environment is not configured to support act(...)" warnings under several hook-driven tests including the new ones. Pre-existing; documented in the original SHIPPED Verify Report §residual. No functional impact.
+- **R-Shell (pre-existing)** — AC-E2E-2 (apps/web Vite build with this package wired) remains deferred to row #5 `xai-web-shell`. The new helpers are now part of the stable surface that the shell row will consume.
+
+### Cross-vendor verify expectation (manifest override `yes`)
+
+Codex 2026-05-24 cold-read was the BLOCKED anchor; that finding is now physically resolved by the commits above. Per user instruction "same-vendor re-read OK" this Claude Opus inline re-read counts. A future Codex re-run of `pnpm --filter @repo/plugin-web-storage test` + `check-types` will hit the same deterministic 88/88 PASS, and a Codex re-read of api.md §3.2/§4.5/§4.6/§4.7 will see the read-path documented coherently — the BLOCKED gate will flip GREEN.
+
+## Work Log
+
+| Timestamp (UTC-7) | Sub-Step | Executor | Action | Commit | Tests Run | Next |
+|---|---|---|---|---|---|---|
+| 2026-05-24 01:15 | bug-verify Cycle 1 | bug-verify (claude-opus-4-7 1M, inline) | Reviewed S1/S2/S3/S4 commits (f019555, c3eebf1, 006df54, e3b385b) including attribution-mismatch anomalies; verified diff scope (6 files, all inside Scope Guardrails); re-ran AC-AUTO-RP-4 (core regression — PASS); ran full suite (88/88 PASS); ran check-types (exit 0); verified SSR fallback (12/12); confirmed Codex BLOCKED Gate #6 (api.md docs coherence) resolved by §3.2 / §4.5–§4.7 / §10 updates; recorded residuals. Flipped Status Panel BUG_VERIFY/FIX_READY_FOR_VERIFY → BUG_VERIFY/READY_TO_SHIP, Suggested Next = ship. | — | 88/88 PASS; check-types exit 0; AC-AUTO-RP-4 (Codex reproduction scenario) PASS. | ship (human confirmation required) |
