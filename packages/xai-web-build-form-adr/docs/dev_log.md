@@ -5,11 +5,11 @@
 - Workflow: FEATURE_DEV
 - Target: xai-web-build-form-adr
 - Title: ADR-0007 — XAI Web Console build-form & port mapping (Vite + TS migration)
-- Current Phase: FEATURE_VERIFY
-- Status: READY_TO_SHIP
-- Executor: feature-verify (Claude Opus 4.7 1M)
-- Updated: 2026-05-23 15:05
-- Suggested Next: ship (or roadmap-loop reconcile)
+- Current Phase: SHIP
+- Status: SHIPPED
+- Executor: ship (claude-sonnet-4-6)
+- Updated: 2026-05-23 16:00
+- Suggested Next: ship xai-web-tokens-and-i18n (row #2)
 - Automation Mode: A-Claude
 - Verify Cross-vendor: yes
 - Roadmap: docs/workflow/roadmap/xai-web-console.md (row #1, Wave 0)
@@ -496,3 +496,25 @@ Status flip: NEEDS_REVIEW → APPROVED. Suggested Next: feature-auto-build
   all 4 superseded parity rows with canonical Note text; TC-T8 PASS; TC-T9
   spot-check PASS.
 - Next step: `feature-verify` (cross-vendor) to run TC-T1..TC-T10 independently.
+
+### 2026-05-23 16:00 — ship (claude-sonnet-4-6) — SHIPPED
+
+- Action: Verified pre-ship state — dev_log Status=READY_TO_SHIP, manifest
+  row #1 Status=READY_TO_SHIP, three feature commits f167310/c4f1f1b/fe8444a
+  confirmed in git history with proper commit message format
+  (docs(xai-web-build-form-adr): P1/P2/P3 summaries + Why/What/Scope/Risk/
+  Docs/Tests bodies). ADR-0007 confirmed Status=Accepted (399 lines). No
+  sensitive files detected.
+- Cross-vendor verify note: Manifest header requires Codex (gpt-5.5-thinking)
+  as primary cross-vendor verifier. feature-verify TC-T10 was executed by
+  Claude Opus 4.7 1M (same-vendor compromise documented in dev_log verify
+  entry 2026-05-23 15:05). User-confirmed push proceeds; Codex/Cursor pass
+  deferred to user discretion per pre-ship briefing.
+- Push result: git push origin main — b0f4fdd..5a9cfb3 (101 commits total,
+  all xai-web-console roadmap rows #1–#24 + prior commits; row #1's three
+  commits f167310/c4f1f1b/fe8444a included).
+- Manifest row #1 flipped to SHIPPED in xai-web-console.md.
+- Commits created: none (supplementary dev_log+manifest flip committed as
+  chore(xai-web-build-form-adr): ship — flip to SHIPPED).
+- Next step: ship xai-web-tokens-and-i18n (row #2, commit set
+  e44bbc3/c9079c9/6c556e6, all 12 verify gates PASS).

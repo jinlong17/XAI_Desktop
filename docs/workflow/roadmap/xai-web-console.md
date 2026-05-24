@@ -18,7 +18,7 @@
 
 | # | Slug | Source | Depends On | Dep Semantics | Status | Automation Mode | Verify Cross-vendor | Last Run | Note |
 |---|------|--------|------------|---------------|--------|-----------------|---------------------|----------|------|
-| 1 | xai-web-build-form-adr | docs/reviews/xai-web-build-form-adr/20260523-roadmap-seed.md | — | — | READY_TO_SHIP | (default) | (default) | 2026-05-23 | W0 · ADR-0007 Accepted; 3 commits (f167310/c4f1f1b/fe8444a); dev_log READY_TO_SHIP; all 13 verify gates PASS; awaiting human ship. |
+| 1 | xai-web-build-form-adr | docs/reviews/xai-web-build-form-adr/20260523-roadmap-seed.md | — | — | SHIPPED | (default) | (default) | 2026-05-23 | W0 · ADR-0007 Accepted; 3 commits (f167310/c4f1f1b/fe8444a) pushed 2026-05-23; all 13 verify gates PASS; SHIPPED. |
 | 2 | xai-web-tokens-and-i18n | docs/reviews/xai-web-tokens-and-i18n/20260523-roadmap-seed.md | xai-web-build-form-adr | ready_to_ship | READY_TO_SHIP | (default) | (default) | 2026-05-23 | W1 · @repo/plugin-web-tokens; 3 commits (e44bbc3/c9079c9/6c556e6); 50/50 tests pass; 12/12 verify gates PASS. |
 | 3 | xai-web-persistence-contract | docs/reviews/xai-web-persistence-contract/20260523-roadmap-seed.md | xai-web-build-form-adr | ready_to_ship | READY_TO_SHIP | (default) | (default) | 2026-05-23 | W1 · @repo/plugin-web-storage; 3 commits (ce6270c/0109326/3085911); 70/70 tests pass; 11/11 verify gates PASS. |
 | 4 | xai-web-event-bus | docs/reviews/xai-web-event-bus/20260523-roadmap-seed.md | xai-web-build-form-adr | ready_to_ship | READY_TO_SHIP | (default) | (default) | 2026-05-23 | W1 · @repo/xai-web-event-bus + 5 web:* in @repo/core; 2 commits (a798384/0cb8e27); 18+4+37/59 tests pass; 13/13 verify gates PASS. |
