@@ -16,7 +16,7 @@
 
 - **No Tauri mocks needed.** Unlike desktop `@repo/core/events` tests (which mock `@tauri-apps/api/event`), the Web bus uses native `EventTarget` available in jsdom natively. This is a deliberate simplification over the W0.B `plugin-project` test approach.
 - **Test EventMap projection:** unit tests import `WebEventMap` from `src/events.ts` to drive type assertions. They do NOT import from `@repo/core` directly inside the bus's own unit tests — the test should still pass even if `@repo/core/types/events` is not built yet (it only consumes the type alias).
-- **Fake module placeholders:** two minimal React components (`<EmitterFixture>` + `<ListenerFixture>`) live in `src/__fixtures__/` and are excluded from the package public API.
+- **Fake module placeholders:** two minimal React components (`<EmitterFixture>` + `<ListenerFixture>`) are inlined inside the consumer smoke test at `apps/web/src/__tests__/event-bus.smoke.test.tsx`. They are intentionally consumer-owned scaffolding — NOT exposed by this package — because `index.ts` is the only allowed public surface (api.md §"Public Surface"). Earlier versions exported a `./src/__fixtures__` subpath; this was removed in the 2026-05-24 contract-conformance fix.
 
 ## Unit Coverage Matrix (Vitest)
 
@@ -76,9 +76,10 @@ This satisfies the seed brief's "two distinct module placeholders subscribe + em
 
 ## Lint / Static Checks
 
-- `@typescript-eslint/no-explicit-any` — enforced strict in `packages/xai-web-event-bus/.eslintrc` so payload definitions cannot regress to `any`.
-- `import/no-restricted-paths` (or eslint-plugin-boundaries equivalent if available in monorepo) — forbid imports of `packages/xai-web-event-bus/src/internal/**` from outside the package.
-- `tsc --noEmit` is the contract-of-record for type checks.
+- `@typescript-eslint/no-explicit-any` — enforced strict in `packages/xai-web-event-bus/eslint.config.js` so payload definitions cannot regress to `any`.
+- `no-restricted-imports` — enforced in `packages/xai-web-event-bus/eslint.config.js` to forbid deep imports such as `@repo/xai-web-event-bus/src/internal/*`, `@repo/xai-web-event-bus/src/__fixtures__*`, or any other subpath. Public surface is `index.ts` only.
+- `package.json` `exports` field — structural enforcement. Only `.` is exported; any other subpath fails module resolution under Node's exports protocol (which Vite/Vitest/TS5 all honor).
+- `tsc --noEmit` is the contract-of-record for type checks (T1–T5 in §4 cover the type-level boundary).
 
 ## Coverage Target
 

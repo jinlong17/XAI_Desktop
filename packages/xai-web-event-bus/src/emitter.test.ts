@@ -1,5 +1,5 @@
 // @vitest-environment jsdom
-import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
+import { describe, expect, it, vi } from 'vitest';
 import { emitWebEvent, onWebEvent } from './emitter';
 
 // ── Reset bus between tests ─────────────────────────────────────────────────
