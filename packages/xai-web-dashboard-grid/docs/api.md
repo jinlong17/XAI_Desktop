@@ -276,21 +276,32 @@ export const dashboardGridSlotRegistration: WebModuleSlotRegistration = {
 };
 ```
 
-`DashboardSlotHost` is the host wrapper:
+`DashboardSlotHost` is the host wrapper. After row #11 (`@repo/plugin-web-dashboard-widgets`) shipped on 2026-05-24, the wrapper imports `dashboardWidgetRegistrations` and forwards them directly. The `goTo` callback is guarded by a `KNOWN_MODULE_IDS` set so widget-supplied module ids that are not declared in `WebModuleId` are silently dropped before emit (defense-in-depth against typos at the widget boundary):
 
 ```tsx
-function DashboardSlotHost() {
+const KNOWN_MODULE_IDS: ReadonlySet<WebModuleId> = new Set<WebModuleId>([
+  "tasks", "habits", "pomodoro", "calendar", "matrix", "countdown",
+  "settings", "board", "dashboard", "meditation", "statistics", "ai", "search",
+]);
+
+export function DashboardSlotHost() {
   const { lang } = useWebShell();
+
   const goTo = useCallback((moduleId: string) => {
-    emitWebEvent("web:shell:module-change", { moduleId: moduleId as WebModuleId, source: "mini-cal" });
+    if (!KNOWN_MODULE_IDS.has(moduleId as WebModuleId)) return;
+    emitWebEvent("web:shell:module-change", {
+      moduleId: moduleId as WebModuleId,
+      source: "mini-cal",
+    });
   }, []);
-  // In v1, widgets=[]. Row #11's update will replace with
-  // `dashboardWidgetRegistrations` imported from @repo/plugin-web-dashboard-widgets.
-  return <DashboardModule lang={lang} widgets={[]} goTo={goTo} />;
+
+  return <DashboardModule lang={lang} widgets={dashboardWidgetRegistrations} goTo={goTo} />;
 }
 ```
 
 The `lang` is read from `useWebShell()` (shipped in row #5). `goTo` is composed locally — it does not need to be passed through props from the host.
+
+> **v1 history note**: Prior to row #11 (between this row's first ship 2026-05-23 and the row #11 integration 2026-05-24) `DashboardSlotHost` passed `widgets={[]}`, which caused `<DashboardModule>` to render the bilingual empty state. The slot contract (`WidgetRegistration[]`) is unchanged; only the host wiring switched from the empty default to row #11's registrations.
 
 ---
 
@@ -331,9 +342,12 @@ If during P1/P2 a re-used class is found missing from `layout.css`, this row's `
 
 ## S12. Backward compat / migration
 
-This is a brand-new package shipping for the first time. No migration. The `xai_dash_order` pref default is row #11's eventual widget set, so first-mount-with-row #10-alone-shipped results in an empty grid (since `widgets=[]`, sanitize drops all default ids). Once row #11 ships and `DashboardSlotHost` is updated to pass `widgets=dashboardWidgetRegistrations`, sanitize-on-mount re-appends them in registration order.
+This is a brand-new package, shipped in two integration phases:
 
-No version bump beyond `0.0.0` (semver-managed by Turborepo).
+1. **2026-05-23 (initial ship)** — `DashboardSlotHost` passed `widgets={[]}`. `sanitize-on-mount` filtered the registry default (`["clock","minicalendar","worldclocks","weather","stickies","mail","upcoming","stats"]`) against the empty registered set, yielding `[]`; the grid rendered the empty state.
+2. **2026-05-24 (row #11 integration)** — `DashboardSlotHost` now passes `widgets={dashboardWidgetRegistrations}` from `@repo/plugin-web-dashboard-widgets`. `sanitize-on-mount` keeps any persisted ids that match row #11's widget set, appends any newly-registered ids in registration order, and writes back to `xai_dash_order` if the sanitized order differs from persisted. Users who interacted with the dashboard during phase 1 had no order entries to persist (empty grid had no draggable shells), so phase 2 first-mount returns the row #11 registration order.
+
+No version bump beyond `0.0.0` (semver-managed by Turborepo). No public-surface change between phases — the contract (`WidgetRegistration[]` prop, `dashboardGridSlotRegistration`, the 4 exported type aliases) is identical.
 
 ---
 
