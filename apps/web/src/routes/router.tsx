@@ -7,7 +7,7 @@ import { App } from "../App";
 import { AppRouteElement, AuthRouteElement } from "./RouteGateElements";
 import { RouteErrorBoundary } from "./RouteErrorBoundary";
 import { assertUniqueModuleRegistrations, resolveDefaultModulePath } from "./modules/buildModuleRoutes";
-import { webModuleRouteRegistrations } from "./modules/registrations";
+import { webModuleRouteRegistrations } from "./modules/shellRegistrations";
 
 assertUniqueModuleRegistrations(webModuleRouteRegistrations);
 const defaultModulePath = resolveDefaultModulePath(webModuleRouteRegistrations);

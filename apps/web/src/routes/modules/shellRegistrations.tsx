@@ -16,6 +16,7 @@
  * Owner: apps/web (host-level concern — not inside xai-web-shell).
  */
 
+import type { WebModuleRouteRegistration } from "@repo/core/types";
 import type { WebModuleSlotRegistration } from "@repo/xai-web-shell";
 import { matrixSlotRegistration } from "@repo/plugin-web-matrix";
 import { countdownWebModuleRegistration } from "@repo/plugin-web-countdown";
@@ -46,6 +47,12 @@ import { composedSettingsRegistration } from "./composedSettingsRegistration.js"
 // 8 user-toggleable modules. Wrapping reads xai_pref_features_<id> and short-
 // circuits to <DisabledFeatureFallback> when off.
 import { withDisabledFallback } from "@repo/plugin-web-settings-features-panel";
+// Legacy productivity todos slice — kept as a transitional route shim until
+// the /app/todos -> /app/tasks migration completes. NOT shown in the rail
+// (todos has no WebModuleSlotRegistration entry below). Existing observability
+// route sanitization, router.integration.test.tsx /app/todos/smart:inbox
+// assertions, and any external bookmark to /app/todos continue to resolve.
+import { todoWebModuleRegistration } from "@repo/plugin-productivity/web";
 
 export const webShellModuleRegistrations: WebModuleSlotRegistration[] = [
   // Rail-visible modules (railOrder 1..12).
@@ -82,3 +89,27 @@ export const webShellModuleRegistrations: WebModuleSlotRegistration[] = [
  * satisfies both shapes.
  */
 export const webModuleSlotRegistrations = webShellModuleRegistrations;
+
+/**
+ * Host router seam — consumed by apps/web/src/routes/router.tsx +
+ * RouteGateElements.tsx via resolveModuleRouteMatch / resolveDefaultModulePath
+ * / assertUniqueModuleRegistrations.
+ *
+ * Single source of truth: the same array used by <WebShellProvider> (rail) is
+ * promoted to the host router so the rail and the URL stay structurally in
+ * sync. Replaces the legacy `apps/web/src/routes/modules/registrations.tsx`
+ * deleted in this commit (P0 W6 regression fix per bug-diagnose).
+ *
+ * Transitional shim: `todoWebModuleRegistration` is appended so /app/todos/*
+ * deep links continue to resolve while the /todos -> /tasks migration is
+ * pending. todos has no slot entry (showInRail false by absence), so the rail
+ * is unchanged; the URL keeps backward compat for observability sanitizers,
+ * existing router.integration.test.tsx assertions, and external bookmarks.
+ *
+ * Future cleanup: when /app/todos is fully retired, drop the spread below and
+ * any /app/todos test/observability fixtures in one followup commit.
+ */
+export const webModuleRouteRegistrations: WebModuleRouteRegistration[] = [
+  ...webShellModuleRegistrations,
+  todoWebModuleRegistration,
+];
