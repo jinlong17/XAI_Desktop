@@ -4,7 +4,7 @@ import { createWebConsoleCapabilities } from "../host/capabilities";
 import { AuthPage } from "../pages/AuthPage";
 import { NotFoundPage } from "../pages/NotFoundPage";
 import { resolveModuleRouteMatch } from "./modules/buildModuleRoutes";
-import { webModuleRouteRegistrations } from "./modules/registrations";
+import { webModuleRouteRegistrations } from "./modules/shellRegistrations";
 // AppShellPage is kept in place for row #21 (settings-shell) to delete later.
 // P4: AppRouteElement no longer routes to AppShellPage; module content renders directly.
 
