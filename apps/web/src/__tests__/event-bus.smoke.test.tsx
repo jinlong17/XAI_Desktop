@@ -7,14 +7,79 @@
  *
  * Scenarios A1, A2, A3 from test.md §5 "Acceptance smoke".
  * Run via: pnpm --filter @repo/web test
+ *
+ * Fixtures (EmitterFixture / ListenerFixture) are inlined here as consumer-owned
+ * test scaffolding. The xai-web-event-bus package exposes ONLY its index.ts
+ * public surface (emitWebEvent / onWebEvent / useWebEventListener + types) per
+ * api.md §"Public Surface" and CLAUDE.md §"Code Boundaries". Tests must build
+ * their own placeholders rather than importing from `src/__fixtures__/`.
  */
-import React from 'react';
+import React, { useState } from 'react';
 import { act, cleanup, render, screen } from '@testing-library/react';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 
 // Import from the package root (index.ts public surface only)
-import { emitWebEvent, onWebEvent } from '@repo/xai-web-event-bus';
-import { EmitterFixture, ListenerFixture } from '@repo/xai-web-event-bus/src/__fixtures__';
+import {
+  emitWebEvent,
+  onWebEvent,
+  useWebEventListener,
+  type WebEventMap,
+} from '@repo/xai-web-event-bus';
+
+// -----------------------------------------------------------------------------
+// Inline fixtures — consumer-owned test scaffolding (NOT package surface)
+// -----------------------------------------------------------------------------
+
+interface EmitterFixtureProps {
+  onEmit?: () => void;
+}
+
+/**
+ * Minimal test fixture that emits a web:shell:module-change event on click.
+ * Simulates a "Module A" emitter.
+ */
+function EmitterFixture({ onEmit }: EmitterFixtureProps) {
+  const handleClick = () => {
+    emitWebEvent('web:shell:module-change', {
+      moduleId: 'calendar',
+      source: 'programmatic',
+    });
+    onEmit?.();
+  };
+
+  return (
+    <button type="button" data-testid="emitter" onClick={handleClick}>
+      Emit
+    </button>
+  );
+}
+
+interface ListenerFixtureProps {
+  onReceive?: (payload: WebEventMap['web:shell:module-change']) => void;
+}
+
+/**
+ * Minimal test fixture that listens on web:shell:module-change.
+ * Simulates a "Module B" listener.
+ */
+function ListenerFixture({ onReceive }: ListenerFixtureProps) {
+  const [lastModuleId, setLastModuleId] = useState<string | null>(null);
+
+  useWebEventListener('web:shell:module-change', (p) => {
+    setLastModuleId(p.moduleId);
+    onReceive?.(p);
+  });
+
+  return (
+    <div data-testid="listener" data-module-id={lastModuleId ?? ''}>
+      {lastModuleId ?? 'none'}
+    </div>
+  );
+}
+
+// -----------------------------------------------------------------------------
+// Smoke scenarios
+// -----------------------------------------------------------------------------
 
 afterEach(() => {
   cleanup();

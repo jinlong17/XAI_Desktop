@@ -7,10 +7,6 @@
     ".": {
       "types": "./src/index.ts",
       "import": "./src/index.ts"
-    },
-    "./src/__fixtures__": {
-      "types": "./src/__fixtures__/index.ts",
-      "import": "./src/__fixtures__/index.ts"
     }
   },
   "scripts": {

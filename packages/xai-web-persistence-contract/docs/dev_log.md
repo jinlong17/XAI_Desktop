@@ -2,19 +2,20 @@
 
 ## Status Panel
 
-- Workflow: FEATURE_DEV
+- Workflow: BUGFIX
 - Target: xai-web-persistence-contract
-- Title: W1 · typed localStorage key registry + `usePref` hook (`@repo/plugin-web-storage`)
-- Current Phase: SHIP
-- Status: SHIPPED
-- Executor: ship (claude-sonnet-4-6)
-- Updated: 2026-05-23 18:35
-- Suggested Next: —
+- Title: BUG · `xai_pref_*` autosave read-path is closed (write-only API contract drift)
+- Current Phase: BUG_DIAGNOSE
+- Status: FIX_READY
+- Executor: bug-diagnose (claude-opus-4-7 1M)
+- Updated: 2026-05-24 00:45
+- Suggested Next: bug-fix
 - Automation Mode: A-Claude (manifest default)
 - Verify Cross-vendor: yes (manifest override 2026-05-23)
 - ADR-lite: not required (governed by ADR-0007)
 - Wave: W1 (Foundation, parallel with #2 + #4)
 - Roadmap row: #3 in `docs/workflow/roadmap/xai-web-console.md`
+- Prior FEATURE_DEV outcome: SHIPPED 2026-05-23 18:35 (commits ce6270c / 0109326 / 3085911 + ship flip). Retroactively flipped to BUGFIX/NEEDS_DIAGNOSIS by cross-vendor Codex 2026-05-24, now FIX_READY.
 
 ## Brief / Review Docs
 
@@ -287,3 +288,11 @@ The open-ended `xai_pref_*` autosave API is internally inconsistent. The API con
 - `packages/plugin-web-storage/src/internal/storage.ts` defines `getPref<K extends WebPrefKey>`.
 - `packages/plugin-web-storage/src/internal/registry.ts` defines `WebPrefKey = keyof typeof PREF_REGISTRY`.
 - `packages/plugin-web-storage/src/internal/usePrefAutosave.ts` writes arbitrary `xai_pref_${suffix}` keys directly.
+
+- 
+- 2026-05-24 00:31:31
+  Executor: bugfix-full-loop
+  Action: Started bugfix pipeline for xai-web-persistence-contract (retroactive Codex BLOCKED). Mode: A-Claude. Verify Cross-vendor: yes. Fix Path override: bug-auto-fix. Dispatching bug-diagnose.
+- 2026-05-24 00:31:42
+  Executor: bugfix-full-loop
+  Action: STOPPED — orchestrator lacks Task tool in this invocation context; cannot spawn bug-diagnose / bugfix-loop / bug-verify. Returning BLOCKED Handoff so the parent session can dispatch bug-diagnose directly.

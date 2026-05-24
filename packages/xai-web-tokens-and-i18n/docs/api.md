@@ -56,8 +56,8 @@ Both EN and ZH bundles share the shape defined in `i18n.ts`:
 |---|---|---|
 | `app_name` | `string` | `"XAI Console"` / `"XAI 工作台"` |
 | `nav` | `{ tasks, habits, pomodoro, calendar, matrix, countdown, search, settings, board, dashboard, meditation, statistics, pet, ai: string }` | 14 module nav labels |
-| `common` | `Record<string, string>` (~50 entries) | today/tomorrow/weekdays_short months actions |
-| `weekdays_short` | `readonly [string, string, string, string, string, string, string]` | Sun..Sat / 周日..周六 |
+| `common` | `Record<string, string>` (~50 entries) | today/tomorrow/months/actions (weekdays are NOT here — see top-level `weekdays_short`) |
+| `weekdays_short` | `readonly [string, string, string, string, string, string, string]` | Top-level key, Sun..Sat / 周日..周六. Verbatim source `web design/i18n.js` places this OUTSIDE `common`. |
 | `tasks` | `{ all, next_mon, next_wed: string }` | + downstream additions |
 | `habits` | `{ title, monthly_checkins, total_checkins, monthly_rate, streak, habit_log, empty_log: string }` |  |
 | `pomo` | `{ title, focus, paused, running, start, pause, continue, end, overview, todays_pomos, todays_focus, total_pomos, total_focus, focus_record: string }` |  |
@@ -121,7 +121,7 @@ export function useI18n(lang: Lang): {
 | `useI18n("en")`, `s("nav.tasks")` | `"Tasks"` |
 | `useI18n("en")`, `s("nope.missing")` | returns `"nope.missing"`; warns in dev |
 | `useI18n("en")`, `s("")` | returns `""`; warns in dev |
-| `useI18n("en")`, `s("common.weekdays_short.0")` | returns `"Sun"` (array index resolution) |
+| `useI18n("en")`, `s("weekdays_short.0")` | returns `"Sun"` (top-level array index resolution; `weekdays_short` is NOT under `common`, matching verbatim source) |
 | `useI18n("en")`, `t.habits.title` | `"Habits"` (typed) |
 | `useI18n("zh")`, `t.tag.study` | `"学习"` (typed) |
 | `useI18n("en" as unknown as Lang)` with bad lang | throws `TypeError` at runtime with explicit message; type system forbids at compile time |

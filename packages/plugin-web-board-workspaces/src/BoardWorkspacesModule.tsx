@@ -1,18 +1,30 @@
 /**
  * BoardWorkspacesModule — top-level orchestrator that wraps board-core's
- * BoardView with the workspace + multi-board + multi-panel layer.
+ * BoardView with the workspace + multi-board + multi-panel layer, AND
+ * composes the 6-view picker from row #8 (@repo/plugin-web-board-views)
+ * inside the central panel.
  *
- * Persistence: 4 registry slots:
- *   - xai_boards_v2       (Board[])     — narrowed via loadBoardsOrDefault
- *   - xai_active_board    (string)      — resolved via pickActiveBoard
- *   - xai_board_panels    (unknown[])   — narrowed via loadPanelsOrDefault;
- *                                         written as length-1 array
- *   - xai_board_inbox     (unknown[])   — narrowed via loadInboxOrDefault
+ * Persistence: 5 registry slots:
+ *   - xai_boards_v2          (Board[])     — narrowed via loadBoardsOrDefault
+ *   - xai_active_board       (string)      — resolved via pickActiveBoard
+ *   - xai_board_panels       (unknown[])   — narrowed via loadPanelsOrDefault;
+ *                                            written as length-1 array
+ *   - xai_board_inbox        (unknown[])   — narrowed via loadInboxOrDefault
+ *   - xai_board_view_by_id   (Record<id, BoardViewId>) — narrowed via
+ *                                            loadViewByBoardIdOrEmpty
+ *                                            (declared by row #8)
  *
- * All other behavior (workspace chip, switcher modal, creator modal,
- * status-overview banner, 4-button bottom switcher, multi-panel layout
- * with at-least-one-open invariant) is layered on top of board-core's
- * BoardView for the central panel.
+ * View composition (row #8 hand-off — cross-vendor verify BLOCKER fix):
+ * The disabled header view-picker placeholder was replaced with the real
+ * `<ViewPicker>` from `@repo/plugin-web-board-views`. The central panel
+ * now renders one of 6 views (Board / Table / Calendar / Dashboard /
+ * Timeline / Map) based on the per-board active view id. The workspace
+ * chip, switcher modal, creator modal, status-overview banner, side
+ * panels (Inbox / Planner), and 4-button bottom switcher are preserved
+ * when `activeView === "board"`. When `activeView !== "board"`, the
+ * side-panel layout is bypassed so the alt view occupies the central
+ * canvas full-width — the bottom switcher remains available so the user
+ * can toggle Inbox / Planner / Switch-boards regardless of view.
  */
 
 import { useCallback, useEffect, useState } from "react";
@@ -28,13 +40,24 @@ import {
   addNewList,
   moveCardToList as moveCardOp,
   setListColor as setListColorOp,
+  updateCardInList,
 } from "@repo/plugin-web-board-core";
 import type {
   Board,
   BoardListData,
+  BoardCardData,
   BoardListColorId,
   BoardTemplate,
 } from "@repo/plugin-web-board-core";
+import {
+  ViewPicker,
+  TableView,
+  BoardCalendarView,
+  BoardDashboardView,
+  TimelineView,
+  MapView,
+} from "@repo/plugin-web-board-views";
+import type { BoardViewId } from "@repo/plugin-web-board-views";
 
 import { BoardSwitcher } from "./BoardSwitcher.js";
 import { BoardCreator } from "./BoardCreator.js";
@@ -57,18 +80,50 @@ export interface BoardWorkspacesModuleProps {
   lang: Lang;
 }
 
+/**
+ * Local narrowing for the xai_board_view_by_id registry key, mirroring the
+ * board-views package's internal helper. board-views does NOT export this
+ * helper through its index.ts (internal/persistence.ts is package-private),
+ * so we re-implement it here. Shape is `Record<boardId, BoardViewId>`.
+ */
+const VALID_VIEW_IDS = new Set<BoardViewId>([
+  "board",
+  "table",
+  "calendar",
+  "dashboard",
+  "timeline",
+  "map",
+]);
+
+function loadViewByBoardIdOrEmpty(raw: unknown): Record<string, BoardViewId> {
+  if (!raw || typeof raw !== "object" || Array.isArray(raw)) return {};
+  const result: Record<string, BoardViewId> = {};
+  for (const [k, v] of Object.entries(raw)) {
+    if (typeof v === "string" && VALID_VIEW_IDS.has(v as BoardViewId)) {
+      result[k] = v as BoardViewId;
+    }
+  }
+  return result;
+}
+
 export function BoardWorkspacesModule({ lang }: BoardWorkspacesModuleProps) {
   // ---- Persisted state ---------------------------------------------------
   const [rawBoards, setRawBoards] = usePref("xai_boards_v2");
   const [activeBoardId, setActiveBoardId] = usePref("xai_active_board");
   const [rawPanels, setRawPanels] = usePref("xai_board_panels");
   const [rawInbox, setRawInbox] = usePref("xai_board_inbox");
+  const [rawViewByBoardId, setRawViewByBoardId] = usePref(
+    "xai_board_view_by_id",
+  );
 
   const boards: Board[] = loadBoardsOrDefault(rawBoards);
   const activeBoard: Board = pickActiveBoard(boards, activeBoardId);
   const lists: BoardListData[] = activeBoard.lists;
   const panels: BoardPanelStateShape = loadPanelsOrDefault(rawPanels);
   const inboxCards: InboxCardShape[] = loadInboxOrDefault(rawInbox);
+
+  const viewByBoardId = loadViewByBoardIdOrEmpty(rawViewByBoardId);
+  const activeView: BoardViewId = viewByBoardId[activeBoard.id] ?? "board";
 
   const workspaces = DEFAULT_WORKSPACES;
   const activeWorkspace =
@@ -211,6 +266,30 @@ export function BoardWorkspacesModule({ lang }: BoardWorkspacesModuleProps) {
     [writeLists],
   );
 
+  // ---- Card mutation closure (shared by Table / Calendar / Timeline) -----
+  // All board-views card mutations route through this single closure, which
+  // delegates to board-core's updateCardInList pure helper. This preserves
+  // the row #7 atomic persistence pattern: one writeLists call = one
+  // setRawBoards = one storage write.
+  const updateCard = useCallback(
+    (listId: string, cardId: string, patch: Partial<BoardCardData>) => {
+      writeLists((prev) => updateCardInList(prev, listId, cardId, patch));
+    },
+    [writeLists],
+  );
+
+  // ---- View picker setter ------------------------------------------------
+  const setView = useCallback(
+    (next: BoardViewId) => {
+      const existing: Record<string, string> =
+        typeof rawViewByBoardId === "object" && rawViewByBoardId !== null
+          ? (rawViewByBoardId as Record<string, string>)
+          : {};
+      setRawViewByBoardId({ ...existing, [activeBoard.id]: next });
+    },
+    [rawViewByBoardId, setRawViewByBoardId, activeBoard.id],
+  );
+
   // ---- Layout class ------------------------------------------------------
   const panelsClass =
     "board-panels board-panels-" + (isSinglePanelOpen(panels) ? "single" : "multi");
@@ -239,9 +318,11 @@ export function BoardWorkspacesModule({ lang }: BoardWorkspacesModuleProps) {
         </button>
 
         <div className="view-picker-wrap">
-          <button type="button" className="view-picker-btn" disabled data-testid="view-picker-btn">
-            <span>{STR_HEADER.viewBoard[lang]}</span>
-          </button>
+          <ViewPicker
+            activeView={activeView}
+            onChange={setView}
+            lang={lang}
+          />
         </div>
 
         <span className="board-count">

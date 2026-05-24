@@ -2,17 +2,18 @@
 
 ## Status Panel
 
-- Workflow: FEATURE_DEV
+- Workflow: BUGFIX
 - Target: xai-web-tokens-and-i18n
-- Title: Port `tokens.css` + `layout.css` + `i18n.js` into `@repo/plugin-web-tokens` (Wave W1 Foundation row #2)
-- Current Phase: SHIP
-- Status: SHIPPED
-- Executor: ship (Claude Sonnet 4.6)
-- Updated: 2026-05-23 18:30
-- Suggested Next: —
-- Automation Mode: A-Claude (per roadmap default 2026-05-23)
-- Verify Cross-vendor: yes (per roadmap default 2026-05-23)
-- ADR-lite: not required (gated by ADR-0007 which is already Accepted)
+- Title: API/test contract drift on `weekdays_short` dotted path + `as unknown as I18NBundle` type-bypass
+- Current Phase: BUG_DIAGNOSE
+- Status: FIX_READY
+- Executor: bug-diagnose (Claude Opus 4.7 1M)
+- Updated: 2026-05-24 09:50
+- Suggested Next: bug-fix
+- Automation Mode: A-Claude (inherited from prior ship; reconfirmed 2026-05-24)
+- Verify Cross-vendor: yes (Codex gpt-5.5-thinking medium 2026-05-24 cold-read is the BLOCKED anchor)
+- ADR-lite: not required
+- Prior ship state (for audit): SHIPPED at 2026-05-23 18:30 by ship (Claude Sonnet 4.6) — see Ship Report below.
 
 ## Review Notes (feature-review · 2026-05-23 10:15 · Claude Opus 4.7)
 
@@ -316,3 +317,5 @@ Scope note: retroactive audit only. Status Panel remains `SHIPPED` per user inst
 - `packages/xai-web-tokens-and-i18n/docs/api.md` and `docs/test.md` advertise `common.weekdays_short.0`.
 - `packages/plugin-web-tokens/src/__tests__/i18n.test.ts` asserts `weekdays_short.0`.
 - `packages/plugin-web-tokens/src/i18n.ts` uses `as unknown as I18NBundle` for the ZH shape check.
+| %Y-%m-%d %H:%M | bugfix-full-loop (Claude Opus 4.7 1M) | Re-opened post-ship per user instruction; SHIPPED is terminal. Bug report: (1) API/test contract drift on `weekdays_short` dotted path — docs say `common.weekdays_short.0` but code+tests use top-level `weekdays_short.0`; (2) `I18N.zh as unknown as I18NBundle` bypasses the documented EN/ZH compile-time parity check. Cross-vendor: documented-deferred (Codex 2026-05-24 cold-read is the anchor). Automation Mode inherited from prior Status Panel: A-Claude. Orchestrator lacks Task tool in this context; emitting BLOCKED Handoff directing parent session to invoke bug-diagnose. | — | bug-diagnose |
+| 2026-05-24 00:31 | bugfix-full-loop (Claude Opus 4.7 1M) | Re-invoked post-ship with full inputs (Bug: weekdays_short dotted-path drift + `as unknown as I18NBundle` type-bypass; Automation Mode: A-Claude; Verify Cross-vendor: yes; Fix Path: bug-auto-fix). Phase 0 INTAKE: STEP 0 bug-presence PASS, STEP 1 Automation Mode PASS (A-Claude provided, legal, non-C-*). Cannot Task-spawn bug-diagnose from this subagent context (allowed_tools=[Read, Bash]). On-disk Status remains SHIPPED (terminal) — only bug-diagnose is authorized to flip to NEEDS_DIAGNOSIS/FIX_READY per Status Panel write-authority matrix. Emitting BLOCKED Handoff directing parent session to invoke bug-diagnose with the full bug report inline, after which a follow-up `bugfix-full-loop` resume will detect Status=FIX_READY and spawn `bugfix-loop` (A-Claude lead-and-delegate, synchronous) per the user's `Fix Path: bug-auto-fix` override. | — | bug-diagnose |

@@ -4,16 +4,16 @@
 
 | Field | Value |
 |---|---|
-| Workflow | FEATURE_DEV |
+| Workflow | BUGFIX |
 | Target | xai-web-dashboard-grid |
-| Title | Web Console — Dashboard grid container (port `module-dashboard.jsx` grid + DnD wrapper section ONLY) |
-| Current Phase | SHIP |
-| Status | SHIPPED |
-| Suggested Next | — |
-| Verify Cross-vendor | yes (Safari 17+ / Chrome / Firefox — empty state + Add-widget emit + lang switch + 3-widget render + FLIP drag visual + persistence reload + responsive breakpoints + touch + a11y + theme + storage round-trip — see test.md §6) |
-| Automation Mode | A-Claude (xai-roadmap-loop W2d parallel-Agent mode; siblings: #7 xai-web-board-core + #20 xai-web-statistics) |
-| Executor | claude-sonnet-4-6 — ship |
-| Updated | 2026-05-23 18:55 |
+| Title | Stale docs/API + missing manual smoke evidence after row #11 (`@repo/plugin-web-dashboard-widgets`) integration |
+| Current Phase | BUG_DIAGNOSE |
+| Status | FIX_READY |
+| Suggested Next | bug-fix |
+| Verify Cross-vendor | yes (deferred — browser MCP smoke optional; doc-only mitigation acceptable) |
+| Automation Mode | A-Claude |
+| Executor | claude-opus-4-7 — bug-diagnose |
+| Updated | 2026-05-24 12:00 |
 | Dispatched By | xai-roadmap-loop (W2d parallel dispatch, manifest row #10) |
 | Roadmap Row | docs/workflow/roadmap/xai-web-console.md row #10 (W2 Module — Dashboard grid container) |
 | ADR Anchor | docs/adr/0007-xai-web-console-build-form.md §S4 (port map row `module-dashboard.jsx` → predeux split `plugin-web-dashboard-grid` + `plugin-web-dashboard-widgets`) + §S5 (TSX rules) + §S7 (event bus) + §S8 (`xai_dash_order` pref already in registry from row #3) |
@@ -207,6 +207,8 @@ Sanity-checked: `xai_dash_order` is pre-registered in `@repo/plugin-web-storage`
 | 2026-05-23 | claude-opus-4-7 — feature-auto-build | P3: emit `web:dashboard:add-widget-clicked` from header button (source=add-widget-button) + empty-state CTA (source=empty-state-cta); verify goTo path (web:shell:module-change with source=mini-cal). 6 new tests (104/104 total). dev_log flipped to READY_FOR_VERIFY. | 7daa255 | feature-verify |
 | 2026-05-23 | claude-opus-4-7 — feature-verify | **PASS** — 15/15 verify gates clean. 104/104 plugin tests + 54/54 web tests + 8/8 core tests + vite build green (689 modules, 862KB main chunk, 64KB css). All 15 frozen assumptions honored (§1.1 design.md). All 10 AC families covered (test.md §2). Commit hygiene clean (3 single-intent commits, each with full Why/What/Scope/Risk/Docs/Tests body). Residual: visual FLIP timing + iOS touch + storage round-trip pending cross-vendor manual smoke (test.md §6, Codex primary / Cursor fallback). Status flipped to READY_TO_SHIP. | — | ship |
 | 2026-05-23 18:55 | claude-sonnet-4-6 — ship | Verified 104/104 tests pass (pnpm --filter @repo/plugin-web-dashboard-grid test). Confirmed commits 2d9655f/7691f97/7daa255/78e1b43 already on origin/main. Added @repo/plugin-web-dashboard-grid row (Stable) to docs/PLUGIN_MAP.md. Flipped roadmap manifest row #10 to SHIPPED. Flipped dev_log Status to SHIPPED. Chore commit pushed. | chore(xai-web-dashboard-grid): ship — flip dev_log + manifest #10 to SHIPPED | — |
+| 2026-05-24 11:55 | Codex gpt-5.5-thinking medium — cross-vendor verify (retroactive) | Cross-vendor verify cold-read: BLOCKED. 2 blockers: (1) docs/API stale vs source after row #11 integration; (2) manual browser smoke not evidenced. Status Panel was left at SHIPPED per user instruction; no fixes applied. | chore(xai-web-dashboard-grid): cross-vendor verify cold-read BLOCKED — Codex gpt-5.5-thinking medium | bug-diagnose |
+| 2026-05-24 12:00 | claude-opus-4-7 — bug-diagnose | Flipped Status SHIPPED → FIX_READY. Diagnosed 2 blockers (root cause: docs/API drift after row #11 sibling-row integration was not propagated back into row #10's design.md/api.md; manual smoke deferred but never documented). Defined minimum-scope fix strategy (3 sub-fixes: doc sync + deferred-smoke report + regression test locking widget-composition contract). | — | bug-fix |
 
 ## Verify Report (2026-05-23)
 

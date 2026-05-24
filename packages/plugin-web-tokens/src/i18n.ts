@@ -551,9 +551,38 @@ export const I18N = {
 /** Full structural type of the EN bundle — ZH must match this shape. */
 export type I18NBundle = typeof I18N["en"];
 
-// Compile-time enforcement: ZH bundle must satisfy I18NBundle shape.
-// If a key is missing in ZH, this line will produce a TypeScript error.
-const _zhShapeCheck: I18NBundle = I18N.zh as unknown as I18NBundle;
+/**
+ * Widen `as const` string literals to `string` so the ZH parity check below
+ * tests STRUCTURAL equality (same keys, same nesting, same array arity) without
+ * requiring ZH text to equal EN text. Preserves tuple/array arity and recurses
+ * into nested objects.
+ */
+type DeepWidenLiterals<T> =
+  T extends string
+    ? string
+    : T extends number
+      ? number
+      : T extends boolean
+        ? boolean
+        : T extends readonly [infer Head, ...infer Tail]
+          ? readonly [DeepWidenLiterals<Head>, ...DeepWidenLiterals<Tail>]
+          : T extends readonly (infer U)[]
+            ? readonly DeepWidenLiterals<U>[]
+            : T extends object
+              ? { [K in keyof T]: DeepWidenLiterals<T[K]> }
+              : T;
+
+/**
+ * Compile-time enforcement that the ZH bundle has the same SHAPE as EN.
+ *
+ * Real structural check — NO `as unknown` bypass. If ZH is missing a key,
+ * adds an extra key, changes a nesting level, or drops/adds an array element,
+ * `tsc --noEmit` will emit a TypeScript error here pointing at the drift.
+ *
+ * The widened-literal helper lets ZH's Chinese text (`"任务"`) satisfy the
+ * EN-derived shape without having to equal EN's literals (`"Tasks"`).
+ */
+const _zhShapeCheck: DeepWidenLiterals<I18NBundle> = I18N.zh;
 void _zhShapeCheck;
 
 // ---------------------------------------------------------------------------

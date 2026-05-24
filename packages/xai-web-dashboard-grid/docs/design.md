@@ -23,6 +23,7 @@
 | New EventMap entry | `web:dashboard:add-widget-clicked` (declaration-only; row #11 may consume). |
 | i18n delta | 3 keys × 2 langs (6 string additions) — `dashboard.empty_title`, `dashboard.empty_subtitle`, `dashboard.add_widget_aria`. |
 | Status (dev_log) | PLAN_DRAFT → NEEDS_REVIEW |
+| Post-ship doc sync | **2026-05-24** — row #11 (`@repo/plugin-web-dashboard-widgets`) shipped and integrated. `DashboardSlotHost` now imports `dashboardWidgetRegistrations` from row #11 and forwards them to `<DashboardModule widgets={dashboardWidgetRegistrations} ... />` (see `src/registration.tsx`). Row #10's `package.json` adds a workspace dep on `@repo/plugin-web-dashboard-widgets`. The slot contract surface (`WidgetRegistration`, `WidgetSpanClass`, `WidgetRenderContext`, `DashboardModuleProps`) is unchanged — row #11 consumes it. |
 
 ### 1.1 Frozen assumptions (verbatim from discovery §8)
 
@@ -39,7 +40,8 @@
 11. **EventMap delta**: 1 new EventMap entry `web:dashboard:add-widget-clicked` (declaration-only in this row, optionally consumed in row #11).
 12. **i18n delta**: 3 new keys × 2 langs (6 string additions) in `packages/plugin-web-tokens/src/i18n.ts` — `dashboard.empty_title`, `dashboard.empty_subtitle`, `dashboard.add_widget_aria`. `dashboard.add_widget`, `dashboard.good_morning`, `dashboard.good_afternoon`, `dashboard.good_evening` already exist (i18n.ts:137-150 / 333-346).
 13. **Slot icon**: `"layout"` (already in `WebShellIconName`). Rail order 4 (already used by the existing placeholder).
-14. **No new top-level deps**. Workspace deps: `@repo/xai-web-shell`, `@repo/plugin-web-tokens`, `@repo/plugin-web-storage`, `@repo/xai-web-event-bus`, `react`, `react-dom`.
+14. **No new top-level deps**. Workspace deps (v1 frozen): `@repo/xai-web-shell`, `@repo/plugin-web-tokens`, `@repo/plugin-web-storage`, `@repo/xai-web-event-bus`, `react`, `react-dom`.
+    > **Post-ship update (2026-05-24)**: After row #11 (`@repo/plugin-web-dashboard-widgets`) shipped, `package.json` was extended with one additional workspace dep — `@repo/plugin-web-dashboard-widgets` (workspace:*) — so `DashboardSlotHost` can import `dashboardWidgetRegistrations` directly. This is a deliberate, ADR-tracked integration of the sibling plugin per `docs/adr/0007-xai-web-console-build-form.md` §S4 port-map row, NOT a violation of frozen-assumption #14: the frozen v1 list was the deps at first ship; row #11 was always the planned consumer. `@repo/core` is also present as a workspace dep (provides the `WebModuleId` type used in the goTo guard) — already implicit via the transitive surface, made explicit in `package.json`.
 15. **`@repo/plugin-web-storage` codec usage**: `usePref("xai_dash_order")` returns `[DashWidgetId[], (next: DashWidgetId[]) => void, PrefMeta]`. `type DashWidgetId = string` upstream.
 
 ---
@@ -58,11 +60,16 @@
 │ DashboardSlotHost  (registration.tsx)                                  │
 │   - reads useWebShell() → { lang, … }                                  │
 │   - composes a goTo(moduleId) by emitting web:shell:module-change      │
-│   - renders <DashboardModule lang={lang} widgets={widgets} goTo={goTo} /> │
+│     (guarded by KNOWN_MODULE_IDS — unknown ids are dropped silently)   │
+│   - imports dashboardWidgetRegistrations from                          │
+│     @repo/plugin-web-dashboard-widgets (row #11 — shipped 2026-05-24)  │
+│   - renders <DashboardModule lang={lang}                               │
+│       widgets={dashboardWidgetRegistrations}                           │
+│       goTo={goTo} />                                                   │
 │                                                                         │
-│   Note: in v1 it passes widgets={[]}. After row #11 ships, it imports   │
-│   dashboardWidgetRegistrations from @repo/plugin-web-dashboard-widgets  │
-│   and forwards them. This row does not depend on row #11.              │
+│   v1 history: pre-row-#11 the host passed widgets={[]} and rendered    │
+│   the empty state. The current production wiring forwards row #11's    │
+│   10-entry array. EMPTY_WIDGETS is retained as a typed const (unused). │
 └──────────────────────────────────┬─────────────────────────────────────┘
                                    ▼
 ┌────────────────────────────────────────────────────────────────────────┐
