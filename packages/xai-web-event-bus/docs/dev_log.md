@@ -4,20 +4,21 @@
 
 | Field | Value |
 |---|---|
-| Workflow | FEATURE_DEV |
+| Workflow | BUGFIX |
 | Target | xai-web-event-bus |
-| Title | Typed Web Event Bus + Web-only Runtime Adapter |
-| Current Phase | SHIP |
-| Status | SHIPPED |
-| Suggested Next | — (complete) |
-| Verify Cross-vendor | yes (deferred to shell row #5 live-browser gate; jsdom+EventTarget structurally equivalent — see Verification Report V1) |
-| Automation Mode | A-Claude (per roadmap default) |
-| Executor | Claude Sonnet 4.6 — ship |
-| Updated | 2026-05-23 18:36 |
-| Dispatched By | xai-roadmap-loop (parallel-Agent, W1) |
+| Title | Fixture subpath leak — `./src/__fixtures__` exported but `api.md`/`test.md` say root-only |
+| Current Phase | BUG_VERIFY |
+| Status | FIX_READY_FOR_VERIFY |
+| Suggested Next | bug-verify |
+| Verify Cross-vendor | yes |
+| Automation Mode | A-Claude |
+| Executor | Claude Opus 4.7 1M — bug-auto-fix (inline via bugfix-loop) |
+| Updated | 2026-05-24 (bug-auto-fix complete) |
+| Dispatched By | bugfix-full-loop (retroactive audit follow-up) |
 | Roadmap Row | docs/workflow/roadmap/xai-web-console.md row #4 |
 | ADR Anchor | docs/adr/0007-xai-web-console-build-form.md §S4 + §S7 + 冻结假设 §4 |
-| Concurrent Siblings | xai-web-tokens-and-i18n (#2), xai-web-persistence-contract (#3) — running in parallel; write scope strictly `packages/xai-web-event-bus/` |
+| Concurrent Siblings | xai-web-tokens-and-i18n (#2), xai-web-persistence-contract (#3) — completed in W1; write scope strictly `packages/xai-web-event-bus/` (+ `apps/web/src/__tests__/`) |
+| Prior Status | SHIPPED 2026-05-23 18:36 — retroactively flipped to NEEDS_DIAGNOSIS → FIX_READY per 2026-05-24 cross-vendor verify BLOCKED finding |
 
 ## Artifacts Index
 
@@ -221,3 +222,31 @@ The package exposes a non-contract subpath for test fixtures. API docs say the p
 - `packages/xai-web-event-bus/docs/test.md` says fixtures are excluded from the package public API.
 - `packages/xai-web-event-bus/package.json` exports `./src/__fixtures__`.
 - `apps/web/src/__tests__/event-bus.smoke.test.tsx` imports that fixture subpath.
+
+- 2026-05-24 (bugfix-full-loop dispatch)
+  Executor: bugfix-full-loop
+  Action: Fresh-start bugfix invocation. Automation Mode=A-Claude, Verify Cross-vendor=yes, Fix Path=bug-auto-fix (user-specified override). Target was SHIPPED; retroactive BLOCKED per 2026-05-24 Codex audit. Dispatching bug-diagnose to formalize root cause + fix strategy.
+
+## Fix Strategy (2026-05-24 — bug-auto-fix inline via bugfix-loop)
+
+**Root cause category:** contract / public-surface boundary violation.
+
+**Root cause:** `packages/xai-web-event-bus/package.json` declared `"./src/__fixtures__"` in its `exports` map, contradicting `api.md` §"Public Surface" (root-only) and `test.md` §"Mock / Fixture Strategy" (fixtures "excluded from the package public API"). `apps/web/src/__tests__/event-bus.smoke.test.tsx` then deep-imported through that subpath, baking a forbidden coupling into the shipped consumer.
+
+**Sub-fix items (all completed in this run):**
+
+- **S1 — Move fixtures to consumer (root-cause fix).** Inline `EmitterFixture` + `ListenerFixture` directly inside `apps/web/src/__tests__/event-bus.smoke.test.tsx` as consumer-owned scaffolding. Remove the `./src/__fixtures__` entry from `packages/xai-web-event-bus/package.json` `exports`. Delete the now-orphaned `packages/xai-web-event-bus/src/__fixtures__/` directory.
+- **S2 — Add the promised restricted-import lint gate.** Add `no-restricted-imports` rule to `packages/xai-web-event-bus/eslint.config.js` forbidding deep imports of `@repo/xai-web-event-bus/src/*` (covers internal/, __fixtures__/, or any other subpath). This is the lint companion to the structural `exports`-field enforcement, satisfying the audit's "promised restricted-import lint gate is not implemented" gap. Also cleaned 4 pre-existing unused-import warnings in `emitter.test.ts` + `listener.test.tsx` so the lint passes `--max-warnings 0`.
+- **S3 — Realign docs.** Update `packages/xai-web-event-bus/docs/test.md` §"Mock / Fixture Strategy" to reflect that fixtures are now consumer-owned (inlined in the smoke test), and §"Lint / Static Checks" to describe the actual enforced rules (`@typescript-eslint/no-explicit-any` + `no-restricted-imports` + `package.json` `exports` structural gate).
+
+**Out of scope for this fix (no contract change needed):**
+
+- `api.md` already states the correct contract — no edit needed.
+- `design.md` does not reference fixtures — no edit needed.
+- No production runtime change inside `packages/xai-web-event-bus/src/{emitter,listener,events,index}.ts`. The 18 emitter+listener unit tests remain unchanged in behavior; only their unused vitest imports were trimmed.
+
+## Work Log
+
+| Timestamp | Executor | Action | Commits | Next Step |
+|---|---|---|---|---|
+| 2026-05-24 (bug-auto-fix inline) | Claude Opus 4.7 1M — bug-auto-fix via bugfix-loop | **S1 + S2 + S3 batch fix.** S1: moved `EmitterFixture`/`ListenerFixture` into `apps/web/src/__tests__/event-bus.smoke.test.tsx` as inline consumer-owned scaffolding; removed `./src/__fixtures__` entry from `packages/xai-web-event-bus/package.json` `exports`; deleted the orphaned `packages/xai-web-event-bus/src/__fixtures__/` directory (3 files). S2: added `no-restricted-imports` to `packages/xai-web-event-bus/eslint.config.js` blocking `@repo/xai-web-event-bus/src/*` / `/src/internal/*` / `/src/__fixtures__*` deep imports with an actionable error message; removed dead fixture file-glob block; trimmed pre-existing unused-import warnings in `emitter.test.ts` (`afterEach`, `beforeEach`) and `listener.test.tsx` (`React`, `beforeEach`) so the lint runs green under `--max-warnings 0`. S3: realigned `test.md` §"Mock / Fixture Strategy" (fixtures now consumer-owned + history note) and §"Lint / Static Checks" (replaced aspirational `import/no-restricted-paths` line with the actual enforced rules). Gates run: `pnpm --filter @repo/xai-web-event-bus test` → 18/18 PASS (12 emitter + 6 listener — unchanged); `pnpm --filter @repo/xai-web-event-bus check-types` → clean; `pnpm --filter @repo/xai-web-event-bus lint` → 0 errors 0 warnings (was: 0 errors 4 warnings → 1 error per `--max-warnings 0`, now green); `pnpm --filter @repo/core check-types` → clean; `pnpm --filter @repo/web check-types` → clean; `pnpm --filter @repo/web test` → 91/91 PASS across 19 files (4 smoke A1-A4 + 87 pre-existing). Status → FIX_READY_FOR_VERIFY. | (this commit) | bug-verify |
