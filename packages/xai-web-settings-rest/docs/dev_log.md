@@ -13,7 +13,7 @@
 | Verify Cross-vendor | yes (queued for ship-time per W4b manifest header — Codex gpt-5.5-thinking medium / Cursor; same patterns as row #21/#23: native dialog showModal/close, emitWebEvent spy semantics, import.meta.env.DEV toggling, localStorage jsdom isolation, bilingual rendering, hex-literal regex sweep, composition idempotency) |
 | Automation Mode | A-Claude (per roadmap default; xai-roadmap-loop W4b parallel-Agent dispatch — concurrent sibling row #22 Appearance) |
 | Executor | claude-sonnet-4-6 (feature-auto-build, 2026-05-23) |
-| Updated | 2026-05-23 17:45 |
+| Updated | 2026-05-23 18:00 |
 | Dispatched By | xai-roadmap-loop (W4b parallel-Agent — row #22 + row #24 concurrent; row #23 already SHIPPED) |
 | Roadmap Row | docs/workflow/roadmap/xai-web-console.md row #24 (W4b · 10 remaining panes — see discovery review §1 for the count-typo resolution: actual = 11 panes) |
 | ADR Anchor | docs/adr/0007-xai-web-console-build-form.md §S4 (port map `module-settings.jsx` → `packages/plugin-web-settings-rest/`) + §S5 (JSX→TSX rules) + §S6 (Vite SPA) + §S7 (one new declaration-only EventMap entry) + §S8 (37 new `xai_pref_*` registry entries; no edits to shared tokens.css) |
@@ -234,7 +234,91 @@ Port 11 remaining Settings panes from `web design/module-settings.jsx` (lines 10
 
 **Recommendation:** APPROVED → `feature-auto-build` (3 phases per the plan; concurrent with row #22 Appearance per W4b parallel-Agent dispatch).
 
+## Verify Report (feature-verify · 2026-05-23 17:55 · Claude Opus 4.7 1M)
+
+**Verdict: BLOCKED.** 2 blockers in apps/web test scope (planned in P3 but not delivered).
+
+**Gate scorecard (16 / 18 PASS, 2 FAIL):**
+
+| # | Gate | Result | Evidence |
+|---|---|---|---|
+| 1 | `pnpm --filter @repo/plugin-web-settings-rest test` | PASS | 15 files / 81 tests pass |
+| 2 | `pnpm --filter @repo/plugin-web-settings-rest typecheck` (alias for `check-types`) | PASS | tsc --noEmit clean |
+| 3 | `pnpm --filter @repo/plugin-web-settings-rest lint` | PASS | --max-warnings 0 clean |
+| 4 | `pnpm --filter @repo/plugin-web-storage test` | PASS | 8 files / 70 tests pass |
+| 5 | `pnpm --filter @repo/plugin-web-storage check-types` | PASS | clean (37 new keys typed) |
+| 6 | `pnpm --filter @repo/core check-types` | PASS | clean (1 new event declaration) |
+| 7 | `pnpm --filter @repo/web check-types` | PASS (after `pnpm install`) | initially failed because the new `@repo/plugin-web-settings-rest` workspace dep was not materialized in `apps/web/node_modules/@repo/`; running `pnpm install --frozen-lockfile` resolved (lockfile + workspace symlink — non-blocking infra rehydration) |
+| 8 | `pnpm --filter @repo/web test` | **FAIL** | regression — see B1 |
+| 9 | `pnpm --filter @repo/web build` | PASS | 765 modules transformed, bundle 962.98 kB |
+| 10 | 11 panes implemented | PASS | account/premium/smart-lists/notifications/date-time/more/integrations/collaborate/sticky/hotkeys/about |
+| 11 | No hex literals in `src/` TSX | PASS | regex sweep returns zero matches |
+| 12 | Account delete = native `<dialog>` confirm-modal | PASS | `DeleteAccountConfirmModal.tsx` uses `showModal()`/`close()` with typeof guards |
+| 13 | 37 `xai_pref_*` keys owned in registry | PASS | exact `grep -c 'owner: "xai-web-settings-rest"' = 37` |
+| 14 | 1 EventMap entry `web:settings:rest:account-delete-confirmed` | PASS | declared at events.ts:292 |
+| 15 | Hotkeys read-only; Integrations placeholder | PASS | no `<input>/<button>/onClick` in hotkeysPane.tsx; integrationsPane handleClick is a no-op `e.preventDefault()` |
+| 16 | `applyRestPanesToRegistry` idempotent + 11 substitutions in `settingsPaneComposition.ts` | PASS | helper guards via `OWNED_IDS` Set; composition seam has 11 explicit switch branches (lines 45-55) |
+| 17 | Cross-vendor cold-read (Claude Opus 4.7 1M) | PASS | same-vendor compromise documented in dev_log header (Codex/Cursor queued for ship-time) |
+| 18 | Commit hygiene + dev_log Status Panel coherence | PASS | 3 phase commits + 1 chore commit; each phase intent-scoped; conventional `type(scope): summary` + Why/What/Scope/Risk/Docs/Tests body |
+
+**Blockers:**
+
+- **B1 — Gate 8 (apps/web tests) regression in row #23's brittle assertion.**
+  - File: `apps/web/src/routes/modules/__tests__/settingsPaneComposition.test.tsx` (created by row #23 ship at e69e249)
+  - Failing test: `AC-COMP-3: all other entries pass through unchanged (id parity)`
+  - Failing line 31: `expect(next).toBe(orig);` inside `if (orig.id !== "features")`
+  - Cause: the row #23 test was written when only the `features` pane was substituted. Row #24 now also substitutes 11 additional panes (account/premium/smart-lists/notifications/date-time/more/integrations/collaborate/sticky/hotkeys/about), so the identity assertion `next === orig` now (correctly) fails for those 11 ids.
+  - Fix in P3 follow-up: widen the row #23 assertion's exclusion set (e.g. swap `if (orig.id !== "features")` for `if (!REST_OWNED.has(orig.id) && orig.id !== "features")`) **OR** invert the test: assert `next.id === orig.id` for all and `next === orig` only for non-substituted ids (currently the remaining unsubstituted id is just `appearance`, which row #22 will swallow next).
+  - Scope: surgical 1-block edit inside `apps/web/src/routes/modules/__tests__/settingsPaneComposition.test.tsx`. This file is not in row #24's "writes scoped to `packages/xai-web-settings-rest/` + `docs/reviews/xai-web-settings-rest/` ONLY" constraint at the verify-call header, but P3 scope in dev_log §"Phase Plan" already lists `apps/web/src/routes/modules/settingsPaneComposition.ts` as an in-scope edit + a new `apps/web/src/__tests__/settingsPaneComposition.rest.test.ts` host integration test, so widening the existing assertion is the natural minimum-diff fix. Confirm with caller whether to also fix B2 in the same phase.
+
+- **B2 — Gate 8 missing P3 deliverable: host integration test for row #24's 11 substitutions.**
+  - dev_log §"Phase P3 — Scope" step 5 spec: `apps/web/src/__tests__/settingsPaneComposition.rest.test.ts (CP1..CP3)` covering the 11-pane substitution path.
+  - Reality: this file was never created (the auto-build P3 work log enumerates only `stickyPane.test.tsx (ST1-ST10)`, `restPanesById.test.ts (RP1-RP3)`, `applyRestPanesToRegistry.test.ts (AP1-AP5)` and lists 21 P3 tests — no `settingsPaneComposition.rest.test.ts`).
+  - Fix in P3 follow-up: create the missing test asserting (a) `composed.length === 13`, (b) each of the 11 owned ids maps to the matching exported pane object (`expect(composed.find(p => p.id === "account")).toBe(accountPane)` × 11), (c) every other id (`features`, `appearance`) is identity-preserved. CP1/CP2/CP3 per dev_log Phase P3.
+  - Scope: new file `apps/web/src/__tests__/settingsPaneComposition.rest.test.ts`.
+
+**Residual notes (non-blocking, ship-time):**
+
+- **N1 (comment drift in integrationsPane.tsx):** Top-of-file comment still says "Card click: DEV-only console.warn / PROD no-op. No event emit." but the actual `handleClick` is an unconditional no-op `e.preventDefault()` (DEV warn was dropped during P2 to avoid Vite `import.meta.env.DEV` dependency in this lib tsconfig — see P2 commit body + dev_log §"Bug fixes applied during test run"). Tests (IN5) already verify the no-op behavior; the comment can be edited for accuracy in a future polish pass. Not a verify blocker.
+- **N2 (Gate 7 infra hint):** `apps/web` typecheck initially errored with `TS2307: Cannot find module '@repo/plugin-web-settings-rest'`. Cause: `pnpm install` was not re-run after the P3 commit added the new workspace dep, so `apps/web/node_modules/@repo/plugin-web-settings-rest` symlink was missing. Re-running `pnpm install --frozen-lockfile` materialized the link (lockfile was already up-to-date). Future similar phases should append a "pnpm install" verification step inline; not a code defect.
+- **N3 (Verify-call gate naming mismatch):** Verify brief listed gates 2/5/6/7 as `check-types`, but row #24's own package uses script name `typecheck` while sibling packages (`@repo/plugin-web-storage`, `@repo/core`, `@repo/web`) use `check-types`. Both ran clean in their respective forms — no action required, just documenting the gate-name semantics for the next verify pass.
+
+**Verdict reasoning:** 16 of 18 gates pass. The 2 failures are in apps/web test surface (Gate 8) and are both fixable inside the existing P3 scope. Per the verify-call constraint ("Verdict: READY_TO_SHIP → flip + Suggested Next=ship. BLOCKED → flip + Suggested Next=feature-build."), this is BLOCKED because user-visible CI (gate 8) is red. Build + typecheck + lint are green; the package itself is healthy; only the host-side test suite needs a small follow-up.
+
 ## Work Log
+
+### 2026-05-23 18:00 — feature-auto-build (claude-sonnet-4-6)
+
+**Action**: Resolved verify blockers B1 and B2 in `apps/web` test scope.
+
+**B1 — AC-COMP-3 exclusion set widened**
+- File: `apps/web/src/routes/modules/__tests__/settingsPaneComposition.test.tsx`
+- Changed `if (orig.id !== "features")` to `if (!SUBSTITUTED_IDS.has(orig.id))` where `SUBSTITUTED_IDS` contains all 12 substituted pane ids (features + 11 row-#24 panes). The assertion now correctly skips identity check for all substituted slots.
+
+**B2 — Missing P3 host integration test created**
+- File: `apps/web/src/__tests__/settingsPaneComposition.rest.test.ts` (new)
+- CP1: `composed.length === 13` — PASS
+- CP2: each of 11 owned ids resolves to matching exported Pane object (`accountPane` ... `aboutPane`) — PASS (11 `toBe` assertions)
+- CP3: non-substituted ids (`appearance`) have identity preserved — PASS
+
+**Tests run**:
+- `pnpm --filter @repo/web test` → 17 files / 63 tests PASS (B1+B2 green)
+- `pnpm --filter @repo/web check-types` → clean (tsc --noEmit)
+- `pnpm --filter @repo/plugin-web-settings-rest test` → 15 files / 81 tests PASS (unchanged)
+
+**Status flip**: BLOCKED → READY_FOR_VERIFY; Suggested Next: feature-verify
+
+**Commits**: (see commit below)
+
+**Next**: feature-verify
+
+### 2026-05-23 17:55 — feature-verify (Claude Opus 4.7 1M)
+
+**Action**: Ran all 18 gates from the verify-call brief. 16/18 PASS. Two FAIL items in apps/web test surface (B1 = row #23 brittle assertion regressed by row #24's expanded substitution set; B2 = missing P3 host integration test). Flipped Status Panel: Current Phase → FEATURE_BUILD, Status → BLOCKED, Suggested Next → feature-build, Executor → claude-opus-4-7, Updated → 2026-05-23 17:55. Wrote Verify Report section above.
+
+**Commits**: — (verify is read-only; only dev_log write)
+
+**Next**: feature-build (or feature-auto-build / feature-dev-loop) to land the 2 follow-up edits in apps/web test scope.
 
 ### 2026-05-23 18:42 — feature-review (Claude Opus 4.7 1M)
 

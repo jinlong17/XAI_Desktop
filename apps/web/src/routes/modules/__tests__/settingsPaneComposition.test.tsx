@@ -22,12 +22,28 @@ describe("composeSettingsPaneRegistry", () => {
 
   it("AC-COMP-3: all other entries pass through unchanged (id parity)", () => {
     const composed = composeSettingsPaneRegistry();
+    // Panes substituted by row #23 (features-panel) and row #24 (rest — 11 panes).
+    // Row #22 (appearance) will add "appearance" here when it ships.
+    const SUBSTITUTED_IDS = new Set([
+      "features",
+      "account",
+      "premium",
+      "smart_lists",
+      "notifications",
+      "date_time",
+      "more",
+      "integrations",
+      "collaborate",
+      "sticky",
+      "hotkeys",
+      "about",
+    ]);
     for (let i = 0; i < paneRegistry.length; i++) {
       const orig = paneRegistry[i]!;
       const next = composed[i]!;
       expect(next.id).toBe(orig.id);
-      if (orig.id !== "features") {
-        // Identity-preserved: sibling rows have not yet substituted.
+      if (!SUBSTITUTED_IDS.has(orig.id)) {
+        // Identity-preserved: this slot has not been substituted by any row yet.
         expect(next).toBe(orig);
       }
     }

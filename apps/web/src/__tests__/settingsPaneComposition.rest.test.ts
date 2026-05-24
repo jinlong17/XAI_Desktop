@@ -1,0 +1,79 @@
+/**
+ * Host integration test — row #24 (xai-web-settings-rest).
+ * CP1..CP3 (packages/xai-web-settings-rest/docs/dev_log.md §Phase P3 step 5).
+ *
+ * Verifies that `composeSettingsPaneRegistry()` correctly substitutes all 11
+ * panes owned by @repo/plugin-web-settings-rest into the 13-pane chassis.
+ */
+import { describe, it, expect } from "vitest";
+import { paneRegistry } from "@repo/plugin-web-settings-shell";
+import {
+  accountPane,
+  premiumPane,
+  smartListsPane,
+  notificationsPane,
+  dateTimePane,
+  morePane,
+  integrationsPane,
+  collaboratePane,
+  stickyPane,
+  hotkeysPane,
+  aboutPane,
+} from "@repo/plugin-web-settings-rest";
+import { composeSettingsPaneRegistry } from "../routes/modules/settingsPaneComposition.js";
+
+describe("composeSettingsPaneRegistry — row #24 rest panes (CP1..CP3)", () => {
+  it("CP1: composed pane list length equals 13 (full chassis)", () => {
+    const composed = composeSettingsPaneRegistry();
+    // After both #23 (features) and #24 (11 panes) substitute into the
+    // 13-pane chassis registry, the list must remain exactly 13 entries.
+    expect(composed.length).toBe(13);
+    expect(composed.length).toBe(paneRegistry.length);
+  });
+
+  it("CP2: each of the 11 row #24 owned ids resolves to its exported Pane object", () => {
+    const composed = composeSettingsPaneRegistry();
+
+    expect(composed.find((p) => p.id === "account")).toBe(accountPane);
+    expect(composed.find((p) => p.id === "premium")).toBe(premiumPane);
+    expect(composed.find((p) => p.id === "smart_lists")).toBe(smartListsPane);
+    expect(composed.find((p) => p.id === "notifications")).toBe(notificationsPane);
+    expect(composed.find((p) => p.id === "date_time")).toBe(dateTimePane);
+    expect(composed.find((p) => p.id === "more")).toBe(morePane);
+    expect(composed.find((p) => p.id === "integrations")).toBe(integrationsPane);
+    expect(composed.find((p) => p.id === "collaborate")).toBe(collaboratePane);
+    expect(composed.find((p) => p.id === "sticky")).toBe(stickyPane);
+    expect(composed.find((p) => p.id === "hotkeys")).toBe(hotkeysPane);
+    expect(composed.find((p) => p.id === "about")).toBe(aboutPane);
+  });
+
+  it("CP3: non-owned ids in the chassis registry have identity preserved", () => {
+    const composed = composeSettingsPaneRegistry();
+    // Ids substituted by row #23 or row #24 — identity is intentionally changed.
+    const SUBSTITUTED_IDS = new Set([
+      "features",      // row #23
+      "account",
+      "premium",
+      "smart_lists",
+      "notifications",
+      "date_time",
+      "more",
+      "integrations",
+      "collaborate",
+      "sticky",
+      "hotkeys",
+      "about",         // row #24
+      // "appearance" — row #22, not yet shipped
+    ]);
+    for (let i = 0; i < paneRegistry.length; i++) {
+      const orig = paneRegistry[i]!;
+      const next = composed[i]!;
+      // All entries preserve their id regardless of substitution.
+      expect(next.id).toBe(orig.id);
+      // Non-substituted entries must be the exact same object reference.
+      if (!SUBSTITUTED_IDS.has(orig.id)) {
+        expect(next).toBe(orig);
+      }
+    }
+  });
+});
