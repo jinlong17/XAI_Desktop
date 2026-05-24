@@ -1,6 +1,6 @@
 {
   "name": "@repo/plugin-web-board-views",
-  "status": "In-Dev",
+  "status": "Stable",
   "type": "ui",
   "owner": "xai-web-board-views row #8",
   "windows": [],
