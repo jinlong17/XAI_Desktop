@@ -47,7 +47,7 @@ to `main` (production) and on `pull_request` (preview).
 
 | Phase | Status | Commit |
 |-------|--------|--------|
-| P1 — ADR-0008 + 四件套 docs anchor | DONE | (pending commit) |
+| P1 — ADR-0008 + 四件套 docs anchor | DONE | 0e7aca7 |
 | P2 — wrangler.toml + `_headers` + `.gitignore` + `.nvmrc` + nonce strip | PENDING | — |
 | P3 — `.github/workflows/deploy-web.yml` | PENDING | — |
 | P4 — `docs/runbooks/cloudflare.md` | PENDING | — |
@@ -426,5 +426,5 @@ hash of the workflow-driven first deploy or the manual fallback deploy)_
   - AC-C5-8: Cross-doc links to ADR-0003/0006/0007/brief/discovery/runbook present ✅
   - AC-C5-9: Refrains from editing `docs/workflow/roadmap/xai-web-console.md` ✅
 - **Tests run**: No executable tests (docs-only phase). Nonce caller audit: CLEAN.
-- **Commits**: (pending — will be filled after commit)
-- **Next step**: Commit P1, then proceed to P2.
+- **Commits**: 0e7aca7 `chore(xai-web-deploy-cloudflare): P1 — ADR-0008 + docs anchor (no exec change)`
+- **Next step**: Proceed to P2.
