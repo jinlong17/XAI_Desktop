@@ -227,7 +227,9 @@ export const dashboardGridSlotRegistration: WebModuleSlotRegistration = {
 };
 ```
 
-`DashboardSlotHost` (in `registration.tsx`) reads `useWebShell()` for `lang` and emits a `goTo` callback. In v1 it passes `widgets={[]}` (empty registrations because row #11 hasn't shipped); the row #11 update will swap that for `widgets={dashboardWidgetRegistrations}`.
+`DashboardSlotHost` (in `registration.tsx`) reads `useWebShell()` for `lang` and emits a `goTo` callback (guarded against unknown module ids by `KNOWN_MODULE_IDS`). It forwards `widgets={dashboardWidgetRegistrations}` imported from `@repo/plugin-web-dashboard-widgets` (row #11 — shipped 2026-05-24).
+
+> **v1 history note**: Prior to row #11, the host passed `widgets={[]}` and the grid rendered the bilingual empty state. The current production wiring forwards row #11's registration array; the slot contract (`WidgetRegistration[]` shape) is unchanged between the two phases. See §1.1 frozen-assumption #14 post-ship update and api.md §S12 for the full migration narrative.
 
 ---
 
@@ -293,7 +295,7 @@ packages/xai-web-dashboard-grid/
 ### 5.2 Reverse deps
 
 - `apps/web` — consumes `dashboardGridSlotRegistration` via `shellRegistrations.tsx`.
-- `@repo/plugin-web-dashboard-widgets` (row #11, future) — consumes `WidgetRegistration`, `WidgetSpanClass`, `WidgetRenderContext` types.
+- `@repo/plugin-web-dashboard-widgets` (row #11, shipped 2026-05-24) — consumes `WidgetRegistration`, `WidgetSpanClass`, `WidgetRenderContext` types via its `dashboardWidgetRegistrations` export. This row also takes a direct workspace dep on row #11 so `DashboardSlotHost` can import that array — see §5.1.
 
 ### 5.3 Sibling row interaction (W2d)
 
