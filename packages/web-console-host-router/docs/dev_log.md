@@ -8,13 +8,13 @@
 | Target | web-console-host-router |
 | Title | host router still wired to legacy placeholder array — 23/24 SHIPPED xai-web-* modules unreachable at /app/* |
 | Roadmap | `web-ticktick-parity` · feature #10 · W6 (regression introduced by W2 rows #5–#24) |
-| Current Phase | BUG_VERIFY |
-| Status | READY_TO_SHIP |
-| Suggested Next | ship |
+| Current Phase | SHIP |
+| Status | SHIPPED |
+| Suggested Next | — (workflow complete) |
 | Automation Mode | A-Claude |
 | Verify Cross-vendor | partial PASS (build-green gate complete in-session; Codex gpt-5.5-thinking medium independent re-run + manual browser smoke at /app/tasks DEFERRED — ship gate may run them or accept the in-session evidence) |
-| Executor | bug-verify (Claude Opus 4.7 1M inline — Cursor-style platform branch, no Task tool available) |
-| Updated | 2026-05-23 22:34 PDT |
+| Executor | ship (claude-sonnet-4-6) |
+| Updated | 2026-05-23 23:05 PDT |
 | Blockers | — |
 
 > Prior feature lifecycle (SHIPPED for original W6 scope) preserved below for context. The BUGFIX above is a post-ship regression discovered after rows #5–#24 (W2a..W4c) shipped their `WebModuleSlotRegistration` exports without rewiring the host router seam.
@@ -185,6 +185,8 @@ This converts the missing seam from a silent rail/router asymmetry into a single
 | 2026-05-23 22:28 PDT | bug-auto-fix S2 (Claude Opus 4.7 1M inline) | Sub-fix S2: added host-router-level regression coverage. New file `apps/web/src/routes/__tests__/router-modules.integration.test.tsx` with three layers — Layer A (AC-W6-FIX-LA, 13 cases): resolution check for all 12 shell modules + todos shim; Layer B (AC-W6-FIX-1..7, 7 cases): real-render deep links per wave for tasks/matrix/calendar/pomodoro/countdown/statistics/settings asserting `.module-XXX` className + no placeholder text; Layer C (AC-W6-FIX-LC, 4 cases): single-source-of-truth invariant — `webModuleRouteRegistrations` is `[...webShellModuleRegistrations, todoWebModuleRegistration]` by reference, in order, no duplicate moduleId. Evidence: `pnpm --filter @repo/web exec vitest run src/routes/__tests__/router-modules.integration.test.tsx` → 24 passed. Full suite: `pnpm --filter @repo/web exec vitest run` → 91 passed across 19 files. Decision recorded inline: ai-chat / board / dashboard / habits / meditation are Layer-A-only (data-heavy renders covered by each row's own suite); Layer A still proves they resolve to their real render function — exactly the property the W6 regression violated. | `64a264b` | bug-auto-fix S3 |
 | 2026-05-23 22:30 PDT | bug-auto-fix S3 (Claude Opus 4.7 1M inline) | Sub-fix S3: dev_log state machine flip. Set `Current Phase=BUG_VERIFY`, `Status=FIX_READY_FOR_VERIFY`, `Suggested Next=bug-verify`, `Verify Cross-vendor=yes` (Codex gpt-5.5-thinking medium primary per the post-roadmap manifest header; build-green gate + deferred manual browser smoke per user request). All sub-fix items from the diagnose fix strategy complete; no PENDING items remain. | dev_log only | bug-verify |
 | 2026-05-23 22:34 PDT | bug-verify (Claude Opus 4.7 1M inline) | Cycle 1 verify PASS. Reviewed commits `d7e189c`, `0255b51`, `64a264b`, `74ed2f9` independently: all conform to `docs/conventions/COMMIT_CONVENTION.md` (`type(scope): summary` + Why/What/Scope/Risk/Docs/Tests body); scope is `apps/web/src/routes/**` + `apps/web/src/pages/` + dev_log only (no plugin packages, no `apps/desktop`, no manifest changes). Verified the reproduction protocol per dev_log §Repro for all 12 routes — see Verification Notes below. Re-ran the full gate matrix fresh: `pnpm --filter @repo/web check-types` clean; `pnpm --filter @repo/core check-types` clean; `pnpm --filter @repo/plugin-console check-types` clean; `pnpm --filter @repo/web exec eslint --max-warnings 0 src` → 3 pre-existing warnings (App.tsx unused import + 2 TokensSmokePage; not introduced by these sub-fixes — re-confirmed against the baseline before `d7e189c`); `pnpm --filter @repo/web exec vitest run` → 91/91 across 19 files (includes the new 24/24 router-modules.integration.test); `pnpm --filter @repo/web build` → success in 2.74s. Browser-safety gate: `rg @tauri-apps\|__TAURI__ apps/web/dist/assets/*.js` → 0 matches (pre-existing 14 `tauri://` substring hits in Supabase WebAuthn code are unrelated to the import-leak gate and present in the baseline). Deferred: independent Codex gpt-5.5-thinking medium re-run + real-browser smoke at `/app/tasks` — documented as DEFERRED per dev_log Verify Cross-vendor note; ship gate may execute them or accept the in-session matrix. | — | ship |
+
+| 2026-05-23 23:05 PDT | ship (claude-sonnet-4-6) | Ship gate PASS. Verified Status=READY_TO_SHIP, working tree clean (0 uncommitted changes). Spot-checked all 5 commits against COMMIT_CONVENTION.md — all conform (type(scope): summary + Why/What/Scope/Risk/Docs/Tests). No sensitive files detected. Pushed 5 bugfix commits (d7e189c..0298ed3) to origin/main (94fc3b2..0298ed3). No manifest row to flip (host-level bug, not a roadmap row). Deferred: Codex gpt-5.5-thinking medium independent re-run + real-browser smoke at /app/tasks per dev_log Verify Cross-vendor note — user may run these post-ship to confirm visually. | d7e189c, 0255b51, 64a264b, 74ed2f9, 0298ed3 pushed to origin/main | workflow complete |
 
 ## Fix Record (Cycle 1, bug-auto-fix)
 
