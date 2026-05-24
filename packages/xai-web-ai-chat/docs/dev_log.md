@@ -7,13 +7,13 @@
 | Workflow | BUGFIX |
 | Target | xai-web-ai-chat |
 | Title | resend-while-thinking races (parallel completeChat calls instead of FIFO queue per design) |
-| Current Phase | BUG_VERIFY |
-| Status | READY_TO_SHIP |
-| Suggested Next | ship |
+| Current Phase | SHIP |
+| Status | SHIPPED |
+| Suggested Next | — |
 | Verify Cross-vendor | yes (aurora `mix-blend-mode: screen` + `color-mix(in oklch, …)` + `conic-gradient` + `prefers-reduced-motion` rendering identical across Chrome 120 / Safari 17 / Firefox 121) |
 | Automation Mode | A-Claude (per roadmap default; xai-roadmap-loop W2c parallel-Agent mode — siblings #12 calendar + #16 meditation planning concurrently) |
-| Executor | claude-opus-4-7 (bug-verify, 2026-05-24 01:05) |
-| Updated | 2026-05-24 01:05 |
+| Executor | claude-sonnet-4-6 (ship, 2026-05-24) |
+| Updated | 2026-05-24 |
 | Previous Status | SHIPPED (2026-05-23 19:25, row #18) — retroactively flipped to NEEDS_DIAGNOSIS by Codex cross-vendor verify 2026-05-24, then to FIX_READY by this bug-diagnose pass |
 | Dispatched By | xai-roadmap-loop (W2c parallel dispatch, concurrent with rows #12 and #16) |
 | Roadmap Row | docs/workflow/roadmap/xai-web-console.md row #18 (W2 · Module) |
@@ -318,3 +318,4 @@ Design says that while `thinking` is active, another send remains usable but is 
 | 2026-05-24 | bugfix-full-loop (orchestrator) | Re-entered against SHIPPED row to address Codex 2026-05-24 retroactive BLOCKED (resend-while-thinking queue gap). Mode = A-Claude (read from existing Status Panel); Verify Cross-vendor = yes (read from existing Status Panel). Dispatching bug-diagnose. | — | bug-diagnose |
 | 2026-05-24 01:02 | claude-opus-4-7 (bug-auto-fix, bugfix-loop Cycle 1) | Implemented the FIFO `pendingSendQueueRef` + `processingRef` queue processor in `AiChatModule.tsx`. `send()` now pushes `{text, lang}` onto the queue and calls `processQueue()`; the processor drains entries one at a time via a single `await completeChat(...)` per iteration. A second `send()` while the first promise is in flight is queued behind, not raced. `thinking` stays true until the queue is fully drained. Added I17 regression test (mock-based: stubs `completeChat` with externally-resolvable promises and asserts the adapter is invoked exactly once after two synchronous `send()` calls). Added I18 (lang preservation across queued resends). Updated I15 to assert exact FIFO DOM ordering. Updated design.md state machine, api.md §1 send-flow + §11 idempotency, test.md §3 I15/I17/I18 to document the queue contract. Verified anti-race by temporarily reverting to racy impl → I17 fails (`expected 2 to be 1` at `calls.length` assertion); restored queue impl → 86/86 tests pass; lint --max-warnings 0 + typecheck clean; apps/web check-types + 100/100 tests pass. | 8ffa639 | bug-verify |
 | 2026-05-24 01:05 | claude-opus-4-7 (bug-verify, bugfix-loop Cycle 1) | Independently re-ran the original reproduction protocol (resend-while-thinking) and all 6 verify gates against HEAD `c170f96`. **PASS** verdict. Reviewed commit 8ffa639 — scope confined to this row's package + docs; commit message follows Why/What/Scope/Risk/Docs/Tests; Co-Authored-By present. I17 mock-based regression test passes with the queued impl AND fails (`calls.length` 2 vs expected 1) when the queue is temporarily replaced with a racy impl — confirms the test reliably catches the regression. Status → READY_TO_SHIP. | — | ship |
+| 2026-05-24 | claude-sonnet-4-6 (ship) | Confirmed 3 bugfix commits (8ffa639 fix / c170f96 chore / 37be4e5 chore) present on local branch, ahead of origin/main. Workflow guard: Status=READY_TO_SHIP — proceed. Flipped dev_log Status → SHIPPED, Current Phase → SHIP, Suggested Next → —. Pushed 4 commits (3 bugfix + this chore) to origin/main. Ship Report: 6-row Codex retroactive-BLOCKED batch complete: all 6 rows (#2 tokens / #3 persistence / #4 event-bus / #8 board-views / #10 dashboard-grid / #18 ai-chat) flipped to SHIPPED. Codex 2026-05-24 cross-vendor verifier flagged all 6 → all 6 resolved within ~24h. 23 commits across the batch. | (chore) | — |
