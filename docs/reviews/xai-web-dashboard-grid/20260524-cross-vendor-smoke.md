@@ -26,13 +26,18 @@ This file closes that gap by:
 2. Inlining the manual checklist from `test.md` §6 as un-ticked rows so
    a human verifier (Codex primary / Cursor fallback per manifest
    header) can fill them in incrementally without rewriting the file.
-3. Documenting the **doc-only mitigation** allowance recorded on the
-   dev_log Status Panel: `Verify Cross-vendor: yes (deferred — browser
-   MCP smoke optional; doc-only mitigation acceptable)`. The bugfix
-   cycle accepts a checklist-shaped evidence file in place of a
-   live-browser run, on the condition that the regression test added
-   in sub-fix S3 locks the row-#11 widget-composition contract at the
-   unit-test layer.
+3. **(SUPERSEDED 2026-05-24 post-Codex-re-review.)** The earlier
+   bugfix cycle treated this checklist file as evidence under a
+   "doc-only mitigation" allowance. That treatment was incorrect and
+   has been superseded by the manifest-level **Cross-vendor Manual
+   Browser Smoke Policy** (see `docs/workflow/roadmap/xai-web-console.md`
+   header, 2026-05-24). Under the new policy, a checklist scaffold
+   is **NOT** evidence. The S3 unit-test regression (`src/__tests__/
+   DashboardSlotHost.composition.test.tsx`, a9e6328) covers the
+   docs/code contract gap but does NOT substitute for real-browser
+   smoke. The Chrome 120 / Safari 17 / Firefox 121 / Safari iOS rows
+   below MUST be filled with browser-version + PASS/FAIL evidence
+   before `xai-web-deploy-cloudflare-pages` reaches READY_TO_SHIP.
 
 ---
 
@@ -159,9 +164,21 @@ the deferral is conditional, not permanent.
 
 - Automated portion (15 gates from 2026-05-23 + 5 post-row-#11 re-run
   gates) PASS.
-- Manual checklist queued, gated on a human verifier OR accepted under
-  the documented doc-only mitigation.
-- The S3 regression test (added in the next sub-fix) locks the
-  row-#10 ↔ row-#11 contract at the unit-test layer.
-- This report supersedes the BLOCKED finding of the 2026-05-24 Codex
-  cross-vendor cold-read for blocker (1) "manual smoke not evidenced".
+- **Manual checklist NOT yet filled** — the Chrome 120 / Safari 17 /
+  Firefox 121 / Safari iOS rows below are unchecked and must be
+  evidenced before `xai-web-deploy-cloudflare-pages` reaches
+  READY_TO_SHIP (per manifest **Cross-vendor Manual Browser Smoke
+  Policy**, 2026-05-24 post-Codex-re-review). Per that policy this
+  row legitimately remains SHIPPED with `Cross-Vendor Manual Smoke:
+  Deferred` on the Status Panel — but the deferral has a deadline.
+- The S3 regression test (`src/__tests__/DashboardSlotHost.composition.test.tsx`,
+  a9e6328) locks the row-#10 ↔ row-#11 widget-composition contract
+  at the unit-test layer. It does NOT substitute for real-browser
+  smoke; both gates are independently required.
+- **This file does NOT close the BLOCKED finding** of the 2026-05-24
+  Codex cross-vendor cold-read for blocker (1) "manual smoke not
+  evidenced". The 2026-05-24 12:40 dev_log entry that claimed
+  closure has been corrected (see `packages/xai-web-dashboard-grid/
+  docs/dev_log.md` 2026-05-24 post-Codex-re-review Work Log entry).
+  Closure of blocker (1) requires the matrix rows below to be
+  filled with real-browser PASS/FAIL evidence.
