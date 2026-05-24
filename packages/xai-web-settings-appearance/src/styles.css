@@ -1,0 +1,350 @@
+/* ===========================================================================
+   xai-web-settings-appearance — styles
+   Ported from web design/layout.css lines 1069-1270 + 210-277
+   =========================================================================== */
+
+/* Main pane wrapper */
+.appearance-pane {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.appearance-pane .pane-title {
+  font-size: 18px;
+  font-weight: 600;
+  color: var(--text-1);
+  margin: 0 0 4px 0;
+}
+
+/* Theme cards */
+.theme-cards {
+  display: flex;
+  gap: 10px;
+}
+
+.theme-card {
+  width: 92px;
+  border: 1.5px solid var(--border-1);
+  border-radius: var(--r-md);
+  padding: 8px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  align-items: stretch;
+  background: var(--bg-panel);
+  cursor: pointer;
+  transition:
+    border-color var(--dur-fast) var(--ease-out),
+    background var(--dur-fast) var(--ease-out);
+}
+
+.theme-card.active {
+  border-color: var(--accent);
+}
+
+.theme-preview {
+  height: 56px;
+  border-radius: 6px;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+.tp-bar  { height: 8px; }
+.tp-body { flex: 1; padding: 4px; display: flex; flex-direction: column; gap: 3px; }
+.tp-line { height: 3px; border-radius: 2px; }
+.tp-line.short { width: 60%; }
+
+.tp-light  .tp-bar  { background: oklch(60% 0.08 165); }
+.tp-light  .tp-body { background: #fff; }
+.tp-light  .tp-line { background: oklch(88% 0.01 220); }
+
+.tp-dark   .tp-bar  { background: oklch(36% 0.05 165); }
+.tp-dark   .tp-body { background: oklch(22% 0.01 200); }
+.tp-dark   .tp-line { background: oklch(45% 0.012 200); }
+
+.tp-system .tp-bar  { background: linear-gradient(90deg, oklch(60% 0.08 165) 50%, oklch(36% 0.05 165) 50%); }
+.tp-system .tp-body { background: linear-gradient(90deg, #fff 50%, oklch(22% 0.01 200) 50%); }
+.tp-system .tp-line { background: linear-gradient(90deg, oklch(88% 0.01 220) 50%, oklch(45% 0.012 200) 50%); }
+
+.theme-label {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  font-size: var(--fs-xs);
+  color: var(--text-2);
+  font-weight: 600;
+}
+
+.theme-card.active .theme-label {
+  color: var(--accent-ink);
+}
+
+/* Accent color picker */
+.accent-pickers {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  align-items: flex-end;
+}
+
+.accent-swatches {
+  display: flex;
+  gap: 6px;
+}
+
+.accent-sw {
+  width: 32px;
+  height: 32px;
+  border-radius: 999px;
+  border: 2px solid var(--bg-panel);
+  outline: 1px solid var(--border-1);
+  cursor: pointer;
+  transition:
+    transform var(--dur-fast) var(--ease-out),
+    outline-color var(--dur-fast) var(--ease-out);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.accent-sw:hover {
+  transform: scale(1.08);
+}
+
+.accent-sw.active {
+  outline: 2px solid var(--text-1);
+  outline-offset: 2px;
+}
+
+.accent-slider-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-width: 240px;
+}
+
+.accent-hue-preview {
+  width: 20px;
+  height: 20px;
+  border-radius: 999px;
+  flex-shrink: 0;
+  border: 2px solid var(--bg-panel);
+  box-shadow: 0 0 0 1px var(--border-1);
+}
+
+.hue-slider {
+  -webkit-appearance: none;
+  appearance: none;
+  flex: 1;
+  height: 8px;
+  border-radius: 999px;
+  background: linear-gradient(
+    to right,
+    oklch(60% 0.14 0),   oklch(60% 0.14 30),  oklch(60% 0.14 60),
+    oklch(60% 0.14 90),  oklch(60% 0.14 120), oklch(60% 0.14 150),
+    oklch(60% 0.14 180), oklch(60% 0.14 210), oklch(60% 0.14 240),
+    oklch(60% 0.14 270), oklch(60% 0.14 300), oklch(60% 0.14 330),
+    oklch(60% 0.14 360)
+  );
+  outline: none;
+}
+
+.hue-slider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  width: 18px;
+  height: 18px;
+  border-radius: 999px;
+  background: var(--bg-panel);
+  border: 2px solid var(--text-1);
+  cursor: pointer;
+  box-shadow: var(--shadow-1);
+}
+
+.hue-slider::-moz-range-thumb {
+  width: 18px;
+  height: 18px;
+  border-radius: 999px;
+  background: var(--bg-panel);
+  border: 2px solid var(--text-1);
+  cursor: pointer;
+}
+
+/* Background palette */
+.bg-tones {
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  gap: 8px;
+}
+
+.bg-tone-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  padding: 6px;
+  background: var(--bg-panel-2);
+  border: 1.5px solid var(--border-1);
+  border-radius: var(--r-md);
+  cursor: pointer;
+  transition:
+    border-color var(--dur-fast) var(--ease-out),
+    transform var(--dur-fast) var(--ease-out);
+}
+
+.bg-tone-card:hover {
+  transform: translateY(-1px);
+}
+
+.bg-tone-card.active {
+  border-color: var(--accent);
+}
+
+.bgt-preview {
+  width: 100%;
+  aspect-ratio: 16 / 10;
+  border-radius: 4px;
+  position: relative;
+  overflow: hidden;
+}
+
+.bgt-bg    { position: absolute; inset: 0; }
+.bgt-panel {
+  position: absolute;
+  left: 30%; top: 22%;
+  right: 12%; bottom: 22%;
+  background: #ffffff;
+  border-radius: 3px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.08);
+}
+.bgt-dot {
+  position: absolute;
+  left: 8%; top: 12%;
+  width: 14%; height: 76%;
+  border-radius: 3px;
+}
+
+.bgt-default  .bgt-bg { background: oklch(96.5% 0.018 158); }
+.bgt-cream    .bgt-bg { background: oklch(97% 0.025 75); }
+.bgt-mist     .bgt-bg { background: oklch(96% 0.018 230); }
+.bgt-lavender .bgt-bg { background: oklch(96% 0.022 295); }
+.bgt-peach    .bgt-bg { background: oklch(96% 0.024 35); }
+.bgt-graphite .bgt-bg { background: oklch(96% 0.005 220); }
+
+.bgt-name {
+  font-size: var(--fs-xs);
+  font-weight: 600;
+  color: var(--text-2);
+}
+
+.bg-tone-card.active .bgt-name {
+  color: var(--accent-ink);
+}
+
+/* Rail position picker */
+.rail-pos-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 8px;
+}
+
+.rail-pos-card {
+  background: var(--bg-panel-2);
+  border: 1.5px solid var(--border-1);
+  border-radius: var(--r-md);
+  padding: 8px;
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  transition: border-color var(--dur-fast) var(--ease-out);
+}
+
+.rail-pos-card.active {
+  border-color: var(--accent);
+}
+
+.rp-preview {
+  width: 100%;
+  height: 60px;
+}
+
+.rp-shell {
+  width: 100%;
+  height: 100%;
+  border-radius: 4px;
+  background: oklch(96% 0.02 200);
+  display: flex;
+  position: relative;
+  overflow: hidden;
+}
+
+.rp-rail {
+  background: oklch(60% 0.08 165);
+  display: flex;
+  gap: 3px;
+  flex-shrink: 0;
+}
+
+.rp-rail span {
+  background: rgba(255, 255, 255, 0.7);
+  border-radius: 1px;
+}
+
+.rp-body {
+  flex: 1;
+  padding: 4px;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  justify-content: center;
+}
+
+.rp-line       { height: 2px; background: oklch(85% 0.02 200); border-radius: 1px; }
+.rp-line.short { width: 60%; }
+
+/* Layout per variant */
+.rp-left  .rp-shell  { flex-direction: row; }
+.rp-left  .rp-rail   { width: 12px; height: 100%; flex-direction: column; align-items: center; justify-content: center; padding: 4px 0; }
+.rp-left  .rp-rail span { width: 6px; height: 4px; }
+
+.rp-right .rp-shell  { flex-direction: row-reverse; }
+.rp-right .rp-rail   { width: 12px; height: 100%; flex-direction: column; align-items: center; justify-content: center; padding: 4px 0; }
+.rp-right .rp-rail span { width: 6px; height: 4px; }
+
+.rp-top   .rp-shell  { flex-direction: column; }
+.rp-top   .rp-rail   { width: 100%; height: 10px; flex-direction: row; align-items: center; justify-content: center; padding: 2px 4px; }
+.rp-top   .rp-rail span { width: 4px; height: 6px; }
+
+.rp-bottom .rp-shell { flex-direction: column-reverse; }
+.rp-bottom .rp-rail  {
+  width: max-content;
+  height: 10px;
+  align-self: center;
+  margin: 0 auto 4px;
+  border-radius: 999px;
+  padding: 2px 6px;
+  flex-direction: row;
+  align-items: center;
+  gap: 3px;
+}
+.rp-bottom .rp-rail span { width: 4px; height: 6px; }
+
+.rp-label {
+  font-size: var(--fs-xs);
+  font-weight: 600;
+  color: var(--text-2);
+}
+
+.rail-pos-card.active .rp-label {
+  color: var(--accent-ink);
+}
+
+/* Font scale slider (reuses generic .slider-row — already in plugin-web-settings-shell) */
+.slider-val {
+  font-size: var(--fs-sm);
+  color: var(--text-2);
+  min-width: 36px;
+}
