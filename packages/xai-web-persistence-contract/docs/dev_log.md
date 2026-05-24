@@ -251,3 +251,39 @@ None — this is the row's first planning pass. No prior dev_log entries to pres
 | 2026-05-23 14:30 | feature-auto-build (claude-sonnet-4-6, parallel-Agent worker #3) | **P3 — SSR smoke + consumer + cross-vendor verify gate.** Added ssr.test.ts (AC-SSR-1..6, 8 tests; @vitest-environment node) and consumer.test.tsx (AC-E2E-1..3, 4 tests). All 70 tests pass. Cross-vendor verify gate: deferred to feature-verify per Phase Plan P3 — feature-verify must dispatch Codex/Cursor re-run of `pnpm --filter @repo/plugin-web-storage test`. Flipped Status Panel: READY_FOR_VERIFY. | 3085911 | feature-verify |
 | 2026-05-23 18:15 | feature-verify (claude-opus-4-7, parallel-Agent worker #3) | **Independent verify pass — VERDICT: PASS.** Re-ran `pnpm --filter @repo/plugin-web-storage test` from fresh shell → 70/70 pass across 8 files in 2.02s. Re-ran `pnpm --filter @repo/plugin-web-storage check-types` → exit 0 (clean). AC coverage audit: extracted AC IDs from all 9 test files via grep — every spec'd AC present: AC-REG-1..8 (8), AC-IMP-1..11 (11), AC-HOOK-1..12 (12), AC-AUTO-1..5 (5), AC-MIG-1..3 (3), AC-TYPE-1..6 (6), AC-SSR-1..6 (6), AC-E2E-1/2/3 (3, with E2E-2 documented as deferred-to-shell), AC-PARITY-1..2 (2) = 56 unique AC IDs. Byte-for-byte registry parity check: extracted xai_* keys from `web design/DESIGN.md` lines 388–400 via grep; all 18 explicit literal strings (xai_accent_hue, xai_rail_pos, xai_bg_tone, xai_rail_order, xai_pet_pos, xai_pet_id, xai_task_cols, xai_boards_v2, xai_active_board, xai_board_panels, xai_board_inbox, xai_dash_order, xai_clock_style, xai_clock_tz, xai_zones, xai_ai_convos, xai_ai_insights, xai_ai_voice) present in PREF_REGISTRY; 2 proposed keys (xai_pomodoro_sessions, xai_countdowns) carry `proposed: true` flag. `usePref<T>(key, default)` exported from src/index.ts (single `.` export; zero internal-path leakage). SSR safety: ssr.test.ts uses `@vitest-environment node` directive (AC-SSR-1..6 → 8 tests pass). Same-tab pub/sub: AC-HOOK-10 confirms two hook instances observe writes from same tab via internal subscribeSameTab bus (independent of native StorageEvent which fires only cross-tab). migrate(from,to) v1 stub: AC-MIG-1..3 → 5 tests pass. Commit hygiene: 3 commits (ce6270c P1 / 0109326 P2 / 3085911 P3) each phase-scoped, each with Why/What/Scope/Risk/Docs/Tests body per docs/conventions/COMMIT_CONVENTION.md; `git diff --name-only ce6270c~1..3085911` shows ZERO out-of-scope writes (all under packages/plugin-web-storage/, packages/xai-web-persistence-contract/docs/, or docs/reviews/xai-web-persistence-contract/). AC-E2E-2 (Vite build of apps/web) confirmed deferred-to-shell: apps/web/package.json does not (yet) depend on @repo/plugin-web-storage, which is row #5 xai-web-shell's responsibility per Phase Plan P3; package itself builds clean under workspace TS resolution. Verify Cross-vendor: this verify-pass executor is Claude Opus 4.7 (cold reader, independent of feature-auto-build's claude-sonnet-4-6 build agent); both vendors agree pass. No residual blockers. | — | ship |
 | 2026-05-23 18:35 | ship (claude-sonnet-4-6) | **SHIP — flip to SHIPPED.** Pre-ship checks: dev_log Status = READY_TO_SHIP; manifest row #3 = READY_TO_SHIP; commits ce6270c/0109326/3085911 confirmed on origin/main via `git show`; `pnpm --filter @repo/plugin-web-storage test` → 70/70 PASS. No sensitive files. Wrote Ship Report. Flipped dev_log to SHIPPED. Flipped manifest row #3 to SHIPPED. Created single chore commit + pushed to origin/main. | chore flip | — |
+
+## Cross-vendor Verify Report (2026-05-24 — Codex gpt-5.5-thinking medium)
+
+**Verdict: BLOCKED.**
+
+Scope note: retroactive audit only. Status Panel remains `SHIPPED` per user instruction. No fixes were applied.
+
+### Metadata
+
+- Verifier: Codex parent session with read-only explorer slice.
+- Model / effort label: Codex gpt-5.5-thinking / medium.
+- Date: 2026-05-24 (America/Los_Angeles).
+- Test command: `pnpm --filter @repo/plugin-web-storage test` → PASS, 70/70 tests.
+- Type command: `pnpm --filter @repo/plugin-web-storage check-types` → PASS.
+
+### Blocker
+
+The open-ended `xai_pref_*` autosave API is internally inconsistent. The API contract says `usePrefAutosave<T>(suffix, value)` writes arbitrary `xai_pref_${suffix}` keys and consumers should seed state from `getPref`, but `getPref` accepts only `WebPrefKey = keyof PREF_REGISTRY`. Arbitrary autosave keys are therefore write-only unless each one is later registered explicitly.
+
+### Gate Findings
+
+| Gate | Finding |
+|---|---|
+| Design conformance | PASS-WITH-DRIFT — core DESIGN.md explicit keys are represented, but the implementation has grown beyond the row #3 "20 typed entries + prefix family" docs through later owner-row additions. |
+| API contract surface | BLOCKED — `usePrefAutosave` permits arbitrary `xai_pref_*` writes while `getPref` has no typed arbitrary-prefix read path. |
+| Test coverage | PASS-WITH-GAP — 70/70 pass, including autosave writes, but no test proves a consumer can seed arbitrary autosave state through the documented API. |
+| Persistence semantics | BLOCKED — registered keys are typed and SSR-safe, but arbitrary autosave persistence lacks the documented typed read/seed contract. |
+| Typed-event contracts | N/A — this row does not emit `web:*` events; same-tab pub/sub is package-local storage notification, not EventMap. |
+| Docs coherence | BLOCKED — `api.md` still says `PLAN_DRAFT` while dev_log/manifest are shipped, and later registry growth is not reconciled in row docs. |
+
+### Evidence
+
+- `packages/xai-web-persistence-contract/docs/api.md` documents `usePrefAutosave` writes and consumer seeding from `getPref`.
+- `packages/plugin-web-storage/src/internal/storage.ts` defines `getPref<K extends WebPrefKey>`.
+- `packages/plugin-web-storage/src/internal/registry.ts` defines `WebPrefKey = keyof typeof PREF_REGISTRY`.
+- `packages/plugin-web-storage/src/internal/usePrefAutosave.ts` writes arbitrary `xai_pref_${suffix}` keys directly.
