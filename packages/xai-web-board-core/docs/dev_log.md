@@ -7,12 +7,12 @@
 | Workflow | FEATURE_DEV |
 | Target | xai-web-board-core |
 | Title | Web Console Board (Kanban) module — canonical Board/Card/List schema (DESIGN.md §9.3 byte-for-byte), Board (Kanban) view with 10-color list-color palette (green/yellow/orange/red/purple/blue/teal/lime/pink/gray sourced from `tokens.css` semantic vars — no hard-coded hex), in-row "add card" composer + add-list composer, native HTML5 cross-list drag-and-drop with atomic-move semantics (no orphan cards on reload), bilingual `{en, zh}` rendering via `lang` prop, persistence via `usePref` on the already-SHIPPED `xai_boards_v2` (`BoardsState`) and `xai_active_board` (string) registry keys, and shell slot registration that replaces the existing `placeholder("board", "Boards", "kanban", 3)` line on line 59 of `apps/web/src/routes/modules/shellRegistrations.tsx`. THIS IS THE FOUNDATION layer for downstream rows #8 `xai-web-board-views` (Table/Calendar/Dashboard/Timeline/Map) and #9 `xai-web-board-workspaces` (Switcher/Creator/PM template/multi-panel/inbox/planner/card-detail-modal) — public API + schema MUST be stable before those rows can compile. |
-| Current Phase | FEATURE_VERIFY |
-| Status | READY_TO_SHIP |
-| Suggested Next | ship |
+| Current Phase | SHIP |
+| Status | SHIPPED |
+| Suggested Next | — (SHIPPED) |
 | Verify Cross-vendor | queued (manifest header — ship-time Codex `gpt-5.5-thinking medium` / Cursor fallback; row-level verify is same-vendor Claude Opus — documented compromise) |
 | Automation Mode | A-Claude (per roadmap default; xai-roadmap-loop W2d parallel-Agent mode — siblings #10 dashboard-grid + #20 statistics planning concurrently) |
-| Executor | Claude Opus 4.7 1M (feature-review, 2026-05-23) |
+| Executor | claude-sonnet-4-6 (ship, 2026-05-23) |
 | Updated | 2026-05-23 |
 | Dispatched By | xai-roadmap-loop (W2d parallel dispatch, concurrent with rows #10 and #20) |
 | Roadmap Row | docs/workflow/roadmap/xai-web-console.md row #7 (W2 · Module) |
@@ -238,3 +238,4 @@ Already enumerated in test.md §5 (Q1..Q10). Confirm:
 | 2026-05-23 | Claude Opus 4.7 1M | feature-auto-build P2 — components + DnD + persistence helpers + CSS + tests | 8226aae | feature-auto-build P3 |
 | 2026-05-23 | Claude Opus 4.7 1M | feature-auto-build P3 — BoardModule + registration + apps/web wire-up + PLUGIN_MAP | cc52060 | feature-verify |
 | 2026-05-23 | Claude Opus 4.7 1M | feature-verify — PASS (all 7 gates green; 3 documented non-blocking residuals) | — | ship |
+| 2026-05-23 18:43 | claude-sonnet-4-6 | ship — 104/104 tests confirmed; manifest → Stable; dev_log → SHIPPED; PLUGIN_MAP row #7 → Stable; roadmap row #7 → shipped | chore commit (ship-flip) | — (SHIPPED) |
