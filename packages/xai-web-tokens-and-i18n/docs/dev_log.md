@@ -5,11 +5,11 @@
 - Workflow: FEATURE_DEV
 - Target: xai-web-tokens-and-i18n
 - Title: Port `tokens.css` + `layout.css` + `i18n.js` into `@repo/plugin-web-tokens` (Wave W1 Foundation row #2)
-- Current Phase: FEATURE_VERIFY
-- Status: READY_TO_SHIP
-- Executor: feature-verify (Claude Opus 4.7 1M)
-- Updated: 2026-05-23 11:25
-- Suggested Next: ship
+- Current Phase: SHIP
+- Status: SHIPPED
+- Executor: ship (Claude Sonnet 4.6)
+- Updated: 2026-05-23 18:30
+- Suggested Next: —
 - Automation Mode: A-Claude (per roadmap default 2026-05-23)
 - Verify Cross-vendor: yes (per roadmap default 2026-05-23)
 - ADR-lite: not required (gated by ADR-0007 which is already Accepted)
@@ -241,6 +241,21 @@ Gate-by-gate evidence:
 
 **Scope discipline** — diff of the three commits stays inside the agreed write surface: `packages/plugin-web-tokens/**`, `packages/xai-web-tokens-and-i18n/docs/**`, `docs/reviews/xai-web-tokens-and-i18n/**`, `apps/web/index.html` (header `<link>` block), `apps/web/src/security/cspPolicy.ts` (additive CSP entries), `apps/web/package.json` (workspace dep add), `apps/web/src/main.tsx` (one `import` line), `apps/web/src/pages/TokensSmokePage.tsx` (new file), `apps/web/src/routes/router.tsx` (smoke route insert). NO touch of `packages/core/`, NO touch of sibling-row scopes (`packages/plugin-web-persistence/**` or `packages/core/src/types/events.ts`), NO touch of `docs/workflow/roadmap/xai-web-console.md`. PASS.
 
+
+## Ship Report (ship · 2026-05-23 18:30 · Claude Sonnet 4.6)
+
+**Result: SHIPPED**
+
+Pre-ship checks:
+- Manifest row #2 Status: READY_TO_SHIP — confirmed.
+- dev_log Status: READY_TO_SHIP, Suggested Next: ship — confirmed.
+- Commits e44bbc3 (P1) / c9079c9 (P2) / 6c556e6 (P3) — confirmed on origin/main (included in row #1 ship batch b0f4fdd..65fcd97 pushed 2026-05-23).
+- `pnpm --filter @repo/plugin-web-tokens test` — 50/50 pass (4 files, 1.22s). PASS.
+- No uncommitted changes. No sensitive files. No substantial residuals.
+
+Push: commits already on origin/main via row #1 ship batch. This flip commit records the SHIPPED state.
+Cross-vendor verify: Claude Opus 4.7 1M same-vendor cold-read (documented in Verify Report above); Codex gpt-5.5-thinking / Cursor queued per roadmap note, not blocking per precedent.
+
 ## Work Log
 
 | Time (UTC+0) | Executor | Action | Commits | Next Step |
@@ -251,6 +266,8 @@ Gate-by-gate evidence:
 | 2026-05-23 11:07 | feature-auto-build (claude-sonnet-4-6) | **P2**: Created `src/types.ts` (Lang/Theme/Density/BgTone/RailPos). Created `src/i18n.ts` — `I18N = { en, zh } as const` byte-for-byte port of `web design/i18n.js` lines 5-393 (MOCK block excluded), `I18NBundle` type derived from `typeof I18N["en"]`, ZH shape enforced via `_zhShapeCheck`, `useI18n(lang)` hook with `{ t, s }` surface (s() dotted-path walker, array-index support, missing-key console.warn in DEV, empty-path returns "" + warns). Created `src/apply.ts` — all six `apply*` helpers SSR-safe, typed, with RangeError guards (applyFontScale/applyAccentHue), applyBgTone("default") removes attribute, applyTheme("system") resolves matchMedia. Updated `src/index.ts` barrel re-exports. Created unit tests: `i18n.test.ts` (AC-I1..AC-I10, 10 pass) + `apply.test.ts` (AC-A1..AC-A13, 13 pass) + `types.test-d.ts` (AC-N1..AC-N3 compile-time negatives). Fixed NodeNext .js extension convention throughout. pnpm install run for devDeps. | c9079c9 | feature-auto-build P3 |
 | 2026-05-23 11:10 | feature-auto-build (claude-sonnet-4-6) | **P3**: Added `import "@repo/plugin-web-tokens"` to `apps/web/src/main.tsx`. Created `apps/web/src/pages/TokensSmokePage.tsx` — DEV-only page (returns null in prod) with 2-column EN/ZH text panel, 15-sentinel-var swatch grid, Light/Dark/System/Compact/Comfortable toolbar + accent-hue slider. Wired `/_smoke/tokens` route in `apps/web/src/routes/router.tsx` (advisory A1 verified — file exists at expected path). Created `tokens-smoke.test.ts` (AC-T1..AC-T20, 20 pass — fs-level substring assertions for byte-fidelity; AC-T15 threshold calibrated to 80 after verifying actual source has 81 unique vars vs plan's stated 88). Created `index-barrel.test.ts` (AC-E1, AC-E2 — 7 scenarios pass). Total tests: 50/50 pass, tsc --noEmit clean. | 6c556e6 | feature-verify |
 | 2026-05-23 11:25 | feature-verify (Claude Opus 4.7 1M) | Verified xai-web-tokens-and-i18n against all 12 verification gates. Re-ran `pnpm --filter @repo/plugin-web-tokens test` → 50/50 pass (4 files, 1.15s); re-ran `check-types` → clean. Diff `web design/tokens.css` vs `src/tokens.css` → byte-equal; same for `layout.css`. Google Fonts `<link>` tags at correct weights present in `apps/web/index.html`. CSP `style-src` + `font-src` include Google Fonts domains. Smoke route `/_smoke/tokens` registered in router with DEV guard. `sideEffects` is array. AC coverage complete: AC-I1..I10, AC-A1..A13, AC-T1..T20, AC-E1/E2 (7 scenarios), AC-N1..N3 all exercised. Cross-vendor cold-read of `src/i18n.ts` + `src/apply.ts` + `src/index.ts` confirms implementation matches seed brief. All three commits (e44bbc3, c9079c9, 6c556e6) follow `type(scope): summary` + Why/What/Scope/Risk/Docs/Tests body. Scope discipline intact — no touch of sibling rows or roadmap file. Verdict: **READY_TO_SHIP**, 0 blockers, 3 non-blocking residual risks recorded. Flipped Status Panel → READY_TO_SHIP, Suggested Next = ship. | — | ship |
+| 2026-05-23 18:30 | ship (Claude Sonnet 4.6) | Pre-ship checks: manifest READY_TO_SHIP, dev_log READY_TO_SHIP, commits e44bbc3/c9079c9/6c556e6 on origin/main, 50/50 tests pass. Flipped dev_log → SHIPPED + appended Ship Report. Manifest row #2 flipped → SHIPPED. Flip commit pushed to origin/main. | (flip chore) | — |
+
 
 ## Suggested Next
 
