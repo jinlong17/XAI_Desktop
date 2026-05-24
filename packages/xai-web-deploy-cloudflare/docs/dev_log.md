@@ -52,7 +52,7 @@ to `main` (production) and on `pull_request` (preview).
 | P3 — `.github/workflows/deploy-web.yml` | DONE | c631d32 |
 | P4 — `docs/runbooks/cloudflare.md` | DONE | 082f28e |
 | P5 — Live deploy + smoke + evidence (verify-only) | PENDING | — |
-| P6 — Cleanup: carve-out + ADR-0008 polish + B4 | DONE | (see Work Log — commit hash added after commit) |
+| P6 — Cleanup: carve-out + ADR-0008 polish + B4 | DONE | d36d411 |
 
 ## Phase Plan (5 phases)
 
@@ -715,5 +715,5 @@ hash of the workflow-driven first deploy or the manual fallback deploy)_
   - `pnpm --filter @repo/web build` skipped (no exec changes; docs-only commit).
   - `actionlint .github/workflows/deploy-web.yml` skipped (no workflow touch).
   - `git diff --stat` confirms only: `docs/workflow/roadmap/xai-web-console.md`, `docs/adr/0008-cloudflare-deploy-target-and-csp.md`, `packages/xai-web-deploy-cloudflare/docs/dev_log.md`, `.gitignore` in diff. No `.tsx`/`.ts`/`.js`/`.css` edits.
-- **Commits**: (hash to be recorded after commit)
+- **Commits**: d36d411 `docs(xai-web-deploy-cloudflare): P6 — single-row carve-out + ADR-0008 polish + B4 cleanups`
 - **Next step**: `feature-verify` — re-run the verify gate against the P6 Cleanup commit to confirm B2 resolved + B4 cleaned. Deferred gates (P5 live deploy, cross-vendor cold-read) remain pending operator secret configuration.
