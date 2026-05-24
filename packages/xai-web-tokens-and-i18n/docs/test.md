@@ -35,7 +35,7 @@ No external HTTP and no Tauri calls — this is a Web-only design-system package
 | AC-I4 | ZH nested module | `useI18n("zh").t.matrix.urgent_important` | `"紧急 · 重要"` |
 | AC-I5 | EN dotted path | `s("nav.tasks")` | `"Tasks"` |
 | AC-I6 | ZH dotted path | `s("settings.font_scale")` | `"字体大小"` |
-| AC-I7 | Array index | `s("common.weekdays_short.0")` (EN) | `"Sun"` |
+| AC-I7 | Array index (top-level) | `s("weekdays_short.0")` (EN) | `"Sun"` — verbatim source `web design/i18n.js` line 23 places `weekdays_short` OUTSIDE `common` |
 | AC-I8 | Quotes array element | `s("quotes.0.author")` (EN) | `"Lao Tzu"` |
 | AC-I9 | Missing key returns path + warns | `s("nope.missing")` | returns `"nope.missing"`; `console.warn` called once with key+lang args |
 | AC-I10 | Empty path returns "" + warns | `s("")` | returns `""`; `console.warn` called once |

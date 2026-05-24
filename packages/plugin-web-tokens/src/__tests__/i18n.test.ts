@@ -58,10 +58,13 @@ describe("useI18n", () => {
   });
 
   // AC-I7
-  it("AC-I7: Array index — s('common.weekdays_short.0') (EN) === 'Sun'", () => {
+  it("AC-I7: Array index (top-level) — s('weekdays_short.0') (EN) === 'Sun'", () => {
     const { s } = useI18n("en");
-    // weekdays_short is a top-level array, not nested under common
+    // weekdays_short is a TOP-LEVEL array per verbatim source `web design/i18n.js` line 23
+    // (NOT nested under `common`); the dotted path must match the source shape.
     expect(s("weekdays_short.0")).toBe("Sun");
+    // Defensive: the wrong (docs-drift) path must NOT resolve to "Sun".
+    expect(s("common.weekdays_short.0")).not.toBe("Sun");
   });
 
   // AC-I8

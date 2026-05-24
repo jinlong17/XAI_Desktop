@@ -2,17 +2,18 @@
 
 ## Status Panel
 
-- Workflow: FEATURE_DEV
+- Workflow: BUGFIX
 - Target: xai-web-tokens-and-i18n
-- Title: Port `tokens.css` + `layout.css` + `i18n.js` into `@repo/plugin-web-tokens` (Wave W1 Foundation row #2)
-- Current Phase: SHIP
-- Status: SHIPPED
-- Executor: ship (Claude Sonnet 4.6)
-- Updated: 2026-05-23 18:30
-- Suggested Next: —
-- Automation Mode: A-Claude (per roadmap default 2026-05-23)
-- Verify Cross-vendor: yes (per roadmap default 2026-05-23)
-- ADR-lite: not required (gated by ADR-0007 which is already Accepted)
+- Title: API/test contract drift on `weekdays_short` dotted path + `as unknown as I18NBundle` type-bypass
+- Current Phase: BUG_FIX
+- Status: FIX_READY — S1 DONE, S2 PENDING (bug-auto-fix in progress)
+- Executor: bugfix-loop → bug-auto-fix (Claude Opus 4.7 1M)
+- Updated: 2026-05-24 07:45
+- Suggested Next: bug-auto-fix (continue with S2)
+- Automation Mode: A-Claude (inherited from prior ship; reconfirmed 2026-05-24)
+- Verify Cross-vendor: yes (Codex gpt-5.5-thinking medium 2026-05-24 cold-read is the BLOCKED anchor)
+- ADR-lite: not required
+- Prior ship state (for audit): SHIPPED at 2026-05-23 18:30 by ship (Claude Sonnet 4.6) — see Ship Report below.
 
 ## Review Notes (feature-review · 2026-05-23 10:15 · Claude Opus 4.7)
 
@@ -267,6 +268,7 @@ Cross-vendor verify: Claude Opus 4.7 1M same-vendor cold-read (documented in Ver
 | 2026-05-23 11:10 | feature-auto-build (claude-sonnet-4-6) | **P3**: Added `import "@repo/plugin-web-tokens"` to `apps/web/src/main.tsx`. Created `apps/web/src/pages/TokensSmokePage.tsx` — DEV-only page (returns null in prod) with 2-column EN/ZH text panel, 15-sentinel-var swatch grid, Light/Dark/System/Compact/Comfortable toolbar + accent-hue slider. Wired `/_smoke/tokens` route in `apps/web/src/routes/router.tsx` (advisory A1 verified — file exists at expected path). Created `tokens-smoke.test.ts` (AC-T1..AC-T20, 20 pass — fs-level substring assertions for byte-fidelity; AC-T15 threshold calibrated to 80 after verifying actual source has 81 unique vars vs plan's stated 88). Created `index-barrel.test.ts` (AC-E1, AC-E2 — 7 scenarios pass). Total tests: 50/50 pass, tsc --noEmit clean. | 6c556e6 | feature-verify |
 | 2026-05-23 11:25 | feature-verify (Claude Opus 4.7 1M) | Verified xai-web-tokens-and-i18n against all 12 verification gates. Re-ran `pnpm --filter @repo/plugin-web-tokens test` → 50/50 pass (4 files, 1.15s); re-ran `check-types` → clean. Diff `web design/tokens.css` vs `src/tokens.css` → byte-equal; same for `layout.css`. Google Fonts `<link>` tags at correct weights present in `apps/web/index.html`. CSP `style-src` + `font-src` include Google Fonts domains. Smoke route `/_smoke/tokens` registered in router with DEV guard. `sideEffects` is array. AC coverage complete: AC-I1..I10, AC-A1..A13, AC-T1..T20, AC-E1/E2 (7 scenarios), AC-N1..N3 all exercised. Cross-vendor cold-read of `src/i18n.ts` + `src/apply.ts` + `src/index.ts` confirms implementation matches seed brief. All three commits (e44bbc3, c9079c9, 6c556e6) follow `type(scope): summary` + Why/What/Scope/Risk/Docs/Tests body. Scope discipline intact — no touch of sibling rows or roadmap file. Verdict: **READY_TO_SHIP**, 0 blockers, 3 non-blocking residual risks recorded. Flipped Status Panel → READY_TO_SHIP, Suggested Next = ship. | — | ship |
 | 2026-05-23 18:30 | ship (Claude Sonnet 4.6) | Pre-ship checks: manifest READY_TO_SHIP, dev_log READY_TO_SHIP, commits e44bbc3/c9079c9/6c556e6 on origin/main, 50/50 tests pass. Flipped dev_log → SHIPPED + appended Ship Report. Manifest row #2 flipped → SHIPPED. Flip commit pushed to origin/main. | (flip chore) | — |
+| 2026-05-24 07:45 | bugfix-loop → bug-auto-fix S1 (Claude Opus 4.7 1M) | **S1 — `weekdays_short` doc/test drift**: Updated `api.md` line 60 to clarify weekdays_short is a TOP-LEVEL key (not under `common`), updated api.md line 124 error/edge table to `s("weekdays_short.0") → "Sun"`, updated `test.md` AC-I7 wording, updated `i18n.test.ts` AC-I7 `it()` name to drop the misleading `common.` prefix and added a defensive `expect(s("common.weekdays_short.0")).not.toBe("Sun")` assertion. Verbatim source `web design/i18n.js` line 23 confirms top-level placement is correct. Re-ran `pnpm --filter @repo/plugin-web-tokens test` → 50/50 pass. Tests run: full plugin-web-tokens suite. | (next commit) | bug-auto-fix S2 |
 
 
 ## Suggested Next
@@ -316,3 +318,19 @@ Scope note: retroactive audit only. Status Panel remains `SHIPPED` per user inst
 - `packages/xai-web-tokens-and-i18n/docs/api.md` and `docs/test.md` advertise `common.weekdays_short.0`.
 - `packages/plugin-web-tokens/src/__tests__/i18n.test.ts` asserts `weekdays_short.0`.
 - `packages/plugin-web-tokens/src/i18n.ts` uses `as unknown as I18NBundle` for the ZH shape check.
+
+## Fix Strategy (bug-diagnose · 2026-05-24 · Claude Opus 4.7 1M; executed by bugfix-loop 2026-05-24 07:45)
+
+Root cause category: documentation drift (S1) + type-system bypass (S2). Both are contained inside `packages/plugin-web-tokens/src/i18n.ts` and the two docs files; no cross-row spillover.
+
+**Decision rule for S1 — which side is "truth"?**
+The verbatim-port discipline (design.md Frozen Assumption #1) makes `web design/i18n.js` the source of truth. Source line 22 closes `common:`, line 23 declares `weekdays_short:` as a TOP-LEVEL key. The implementation faithfully ports this. The drift therefore lives in `api.md` + `test.md` (which incorrectly advertise `common.weekdays_short.0`); the fix aligns docs/test wording to the verbatim source, NOT the other way around. (Moving `weekdays_short` under `common` in source would VIOLATE the byte-for-byte port and is rejected.)
+
+**Sub-fix list:**
+
+| ID | Scope | Fix |
+|---|---|---|
+| S1 | docs + test wording for `weekdays_short` dotted path | Update `api.md` (line 60 wording + line 124 error/edge table), `test.md` (AC-I7), `i18n.test.ts` (AC-I7 `it()` name) to use top-level `s("weekdays_short.0")` matching verbatim source. Add a defensive `not.toBe("Sun")` for the wrong path inside AC-I7. |
+| S2 | type-system bypass on EN/ZH parity check | Replace `const _zhShapeCheck: I18NBundle = I18N.zh as unknown as I18NBundle;` with a real structural check using a `DeepWidenLiterals<T>` helper that widens `as const` string literals to `string` while preserving the nested-object + tuple-arity shape. Drop `as unknown` cast inside `useI18n` body. |
+
+Verify-cross-vendor anchor: Codex gpt-5.5-thinking medium 2026-05-24 cold-read BLOCKED audit. Re-verify by Claude Opus 4.7 1M same-vendor re-read is the accepted follow-up (per user instruction).
