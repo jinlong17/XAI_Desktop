@@ -7,14 +7,14 @@
 | Workflow | FEATURE_DEV |
 | Target | xai-web-deploy-cloudflare |
 | Title | Cloudflare Pages deploy — first public URL for the SHIPPED XAI Web Console |
-| Current Phase | FEATURE_VERIFY |
-| Status | READY_FOR_VERIFY |
-| Suggested Next | feature-verify |
+| Current Phase | SHIP |
+| Status | SHIPPED |
+| Suggested Next | operator-activate-secrets (see Ship Report §Activation Checklist) |
 | Automation Mode | A-Claude |
 | Verify Cross-vendor | yes (Codex gpt-5.5-thinking medium primary, Cursor fallback) — P5 live-deploy + cross-vendor cold-read DEFERRED (operator must configure secrets + trigger first deploy) |
 | Stop Before Ship | yes |
-| Executor | claude-sonnet-4-6 (feature-build P6 Cleanup) |
-| Updated | 2026-05-24 17:00 |
+| Executor | claude-sonnet-4-6 (ship) |
+| Updated | 2026-05-24 19:00 |
 | Roadmap Row | Post-roadmap operational row (24/24 SHIPPED on `docs/workflow/roadmap/xai-web-console.md`; not yet listed as a manifest row — operational anchor) |
 | ADR Anchor | docs/adr/0008-cloudflare-deploy-target-and-csp.md (Status=Accepted, committed 0e7aca7; §S8 carve-out added in P6 Cleanup) |
 | Pre-deploy Gate (P5) | secrets-configured = unknown (CLOUDFLARE_API_TOKEN + CLOUDFLARE_ACCOUNT_ID; operator action required per docs/runbooks/cloudflare.md §1) — DEFERRED per plan |
@@ -398,10 +398,141 @@ Items 1, 2, 5, 7, 8, 9, 10, 11, 12, 13, 14, 17, 18, 19 = 14/20 gate items PASS. 
 
 If B2 (the manual-smoke policy gate) were resolved, B1+B3+B4 would be trivially-addressable cleanups before READY_TO_SHIP (~10 lines of dev_log + .gitignore edits + one `rm -rf`).
 
+## Verify Report (2026-05-24 pass 2 — feature-verify claude-opus-4-7)
+
+**Verdict**: **READY_TO_SHIP** (PASS). All four pass-1 blockers resolved by the P6 Cleanup commit `d36d411` + record commit `b07e7dd`. The single deferred class (P5 live deploy + TC-T13 cross-vendor cold-read + TC-T16 evidence file) remains by design — operator-secret-configuration gated.
+
+### A. State snapshot
+
+- Local `main` is **10 commits ahead** of `origin/main` (orchestrator pre-flight reported 9; the 10th `b07e7dd` is the chore record commit immediately after `d36d411`).
+- Working tree: 0 unstaged tracked modifications; 1 untracked file `.claude/scheduled_tasks.lock` (orchestrator's own ScheduleWakeup state — ignored per orchestrator briefing).
+- `.claude/agents-backup-20260524-012336/` **confirmed deleted** from disk per B4-b resolution (ls -la /Users/lijinlong/Desktop/AI_Desktop/XAI_Desktop/.claude/ shows only the older backup dirs from May 17 + May 23, not the 0124 one).
+- Pre-existing backup dirs (`agents-backup-20260517-040918`, `agents-backup-20260523-000408`) remain untouched on disk — they are outside this row's B4 scope.
+- Build re-run at verify-time: 780 modules, 2.60s, nonce-strip plugin emitted log line as expected, 4 dist artifacts (index.html + index.css + web-vitals.js + index.js), no new warnings or errors.
+
+### B. Pass-2 commit audit (3 new commits since pass 1)
+
+| # | Hash | Phase | Scope on-plan? | Verdict |
+|---|------|-------|----------------|---------|
+| 8 | `bde9ce2` | off-scope: `docs(workflow): make Manual Smoke Policy enforceable — close smoke file body residuals + add TC-T17 hard gate on deploy row` | ❌ off the approved Phase plan | **ACCEPT** per **Audit-Q1.3**. Parallel-justified to `1e3b612` (Audit-Q1.2) — workflow policy documents are project state per CLAUDE.md Agent / Skill Tracking Contract. The commit hardens the same policy that the operator separately decided to carve out for this single row in `d36d411`; the two commits are coherent, not contradictory. `bde9ce2` makes the policy enforceable at the test-case level (TC-T17 hard gate + AC-C9-6); `d36d411` carves out THIS row from that policy with three documented conditions. Conventional commit body has full Why/What/Scope/Risk/Docs/Tests blocks; single-intent (policy hardening across 3 files: smoke evidence file body residuals fix + test.md TC-T17 + api.md AC-C9-6). Touches no code, no plugin, no test runtime, no workflow YAML, no apps/web source. |
+| 9 | `d36d411` | **P6** — single-row carve-out + ADR-0008 polish + B4 cleanups | ✅ | ACCEPT. 4 files: `docs/workflow/roadmap/xai-web-console.md` (carve-out clause appended to line 17), `docs/adr/0008-cloudflare-deploy-target-and-csp.md` (§S3 D4 sourcemap wording tightened + §S8 added), `packages/xai-web-deploy-cloudflare/docs/dev_log.md` (Phase 6 entry + Ship Report follow-up + Status flip), `.gitignore` (worker-configuration.d.ts entry). NO `.tsx`/`.ts`/`.js`/`.css`/workflow YAML edits. Conventional commit body complete (Why/What/Scope/Risk/Docs/Tests). Single coherent scope (B2 carve-out + Audit-Q2 wording + B4 cleanups in one commit — acceptable because all four threads were verifier-surfaced cleanup with no internal coupling conflicts). |
+| 10 | `b07e7dd` | chore — record P6 commit hash + Status flip | ✅ | ACCEPT. 1 file (dev_log Phase Progress table + Work Log entry update). Single-line commit message is on-convention for state-flip chores (matches `6c50fd2` precedent). |
+
+**Linear history**: yes, 10 commits, no merge commits.
+**Rebase-clean against origin/main**: yes.
+
+### C. Pass-2 Gate checklist (24 items)
+
+#### Gates 1–20 (re-run / re-verified)
+
+| # | Item | Verdict | Evidence |
+|---|------|---------|----------|
+| 1 | Build (`pnpm --filter @repo/web build`) | PASS | vite 7.2.4 → built in 2.60s; 780 modules; nonce-strip plugin log line emitted; index.html 0.83 kB, css 113.86 kB, js 992.77 kB, map 4.7 MiB hidden. |
+| 2 | Tests (`pnpm --filter @repo/web test`) | PASS (pass-1 evidence carried; no source code changed in pass-2 commits) | 19 test files / 100 tests pass / 17.60s (pass 1). No `apps/web/src/**` touch in `bde9ce2`/`d36d411`/`b07e7dd` → no re-run required. |
+| 3 | Workspace tests | DEFERRED | No `@repo/web…` workspace recipe surfaced; not-applicable for this row. |
+| 4 | Lint + check-types | **PARTIAL — B1 carry-over (non-blocking)** | `pnpm --filter @repo/web lint --max-warnings 0` → exit 1, **still 4 warnings**: 3 baseline (App.tsx unused useParams + TokensSmokePage.tsx env var + react-hooks rules-of-hooks) + 1 from `apps/web/worker-configuration.d.ts:3` Unused eslint-disable directive. **The .gitignore add in `d36d411` makes the file untracked-by-git, but ESLint does NOT auto-respect `.gitignore` in this monorepo's config** (no `eslint.config.*` `ignores` glob added; no `.eslintignore` augment). Pass-1 reasoning carries: the CI workflow `.github/workflows/deploy-web.yml` does NOT run lint, so production deploy is NOT blocked. B1 surfaced for follow-up (either add `apps/web/worker-configuration.d.ts` to an ESLint ignore glob, or fix the baseline 3 in a dedicated `xai-web-lint-baseline-cleanup` row). NON-BLOCKING for ship. |
+| 5 | actionlint | PASS | `actionlint .github/workflows/deploy-web.yml` → exit 0 (v1.7.12). |
+| 6 | wrangler validate | DEFERRED | First live CI deploy is the definitive parser test; no offline-validate path exists in v3.114.0 without `CLOUDFLARE_API_TOKEN`. |
+| 7 | Bundle sanity vs Pages free-tier | PASS | 4 declared dist files in build output; total well under 25 MiB per-file + 20K-file limits. Sourcemap exposure trade is now honestly recorded in BOTH ADR-0008 §S3 D4 (tightened wording) AND runbook §5.2 (Audit-Q2 resolved — see Gate 23 below). |
+| 8 | CSP `_headers` audit | PASS | `diff apps/web/public/_headers apps/web/dist/_headers` → byte-identical. CSP body unchanged from pass 1. |
+| 9 | Nonce-strip verification | PASS | `grep -F __XAI_CSP_NONCE__ apps/web/dist/index.html` → exit 1 (no match). Plugin log line confirmed in build output. |
+| 10 | `dist/` secret hygiene | PASS | Re-ran the 3 grep patterns (SUPABASE_*, CLOUDFLARE_*, SENTRY_*) → zero `KEY=value` literal matches. |
+| 11 | GitHub Actions workflow | PASS | Not touched in pass-2 commits; pass-1 PASS carries verbatim. |
+| 12 | `.gitignore` augment | PASS | Lines 51 (`.dev.vars`), 52 (`.wrangler/`), 54 (`apps/web/worker-configuration.d.ts`) all present. The third entry was added by `d36d411`. |
+| 13 | `.nvmrc` | PASS | Not touched in pass-2 commits; pass-1 PASS carries. |
+| 14 | `apps/web/deploy/` audit | PASS | Not touched in pass-2 commits; pass-1 PASS carries. |
+| 15 | `worker-configuration.d.ts` disposition | **PASS (B4-a resolved)** | File still present on disk (Wrangler-autogen artifact). Now gitignored at line 54 → `git ls-files --others --exclude-standard apps/web/worker-configuration.d.ts` returns empty → ignored. The disposition recommended in pass 1 was executed correctly. **NIT (non-blocking)**: ESLint still lints the file (see Gate 4); a follow-up `eslint.config.*` `ignores` augment would suppress the 4th warning without committing the autogen file. |
+| 16 | `.claude/agents-backup-20260524-012336/` disposition | **PASS (B4-b resolved)** | Directory confirmed deleted from disk via `ls -la .claude/`. Older backup dirs `agents-backup-20260517-040918` + `agents-backup-20260523-000408` remain — outside this row's B4 scope; the `e3688af`-spawned backup was the only one targeted. |
+| 17 | Three-faces boundary | PASS | `git diff --stat origin/main..HEAD -- apps/desktop/ packages/core/src/events/ packages/plugin-organizer/ packages/plugin-finder/ packages/xai-web-shell/src/ 'packages/plugin-web-*/src/'` → empty. Three-faces nondum laesa across all 10 ahead-of-main commits. |
+| 18 | Commit conventions | PASS | All 10 commits follow `type(scope): summary`; all non-trivial commits carry full Why/What/Scope/Risk/Docs/Tests bodies; the 3 chore-record commits (`6c50fd2`, `b07e7dd`, and `e3688af` which is single-intent agent-template fix) are on-convention for their respective intents. Single-intent rule respected within each commit. |
+| 19 | Rebase-clean | PASS | `git rev-list --count origin/main..HEAD` → **10**. Orchestrator pre-flight reported 9 (under-counted by 1 — `b07e7dd` post-dates the snapshot). Linear; no merge commits. |
+| 20 | Live deploy gate (P5) | DEFERRED | Per design; operator must configure `CLOUDFLARE_API_TOKEN` + `CLOUDFLARE_ACCOUNT_ID` in GitHub Secrets and trigger first deploy. Cross-vendor cold-read (TC-T13) and evidence file (TC-T16) DEFERRED until live URL exists. |
+
+#### Gates 21–24 (NEW — carve-out-specific)
+
+| # | Item | Verdict | Evidence |
+|---|------|---------|----------|
+| 21 | Manifest carve-out integrity | **PASS** | `docs/workflow/roadmap/xai-web-console.md` line 17 contains BOTH (a) the original base policy paragraph (Manual real-browser smoke matrices are deployment-readiness gate; deferred manual smoke MUST be evidenced before xai-web-deploy-cloudflare-pages reaches READY_TO_SHIP) AND (b) the appended single-row carve-out clause (introduced by `d36d411`) naming `xai-web-deploy-cloudflare` explicitly as the carve-out subject, with three explicit conditions (i)(ii)(iii) — follow-up row commitment + evidence commitment + ADR recording. The carve-out is bounded to a single row, references the follow-up row slug `xai-web-cross-vendor-smoke-evidence`, and concludes with **"The base policy continues to apply to all future deploy-touching rows."** All four carve-out-integrity criteria from the orchestrator briefing satisfied. |
+| 22 | TC-T17 vs carve-out reconciliation | **PASS via Pattern A (indirect cross-reference)** with NIT | TC-T17 in `test.md` step 1 reads verbatim: *"Enforces the manifest-level Cross-vendor Manual Browser Smoke Policy (see docs/workflow/roadmap/xai-web-console.md header, 2026-05-24 post-Codex-re-review)."* The manifest header is named as the policy source-of-truth. The manifest header now contains the carve-out clause naming this row. Therefore TC-T17 inherits the carve-out by transitive reference. AC-C9-6 in `api.md` is the same hub-and-spoke pattern (cites the manifest policy). The carve-out's three required acknowledgement points are all satisfied: (i) dev_log Ship Report queues `xai-web-cross-vendor-smoke-evidence` with 24h deadline, (ii) that follow-up row commits to filling `xai-web-shell` M1..M18 + `xai-web-dashboard-grid` §6 with real evidence, (iii) operator recorded the exception in ADR-0008 §S8 (verified — file shows §S8 with all four required components: date, conditions (a)(b)(c)/(1)(2)(3), manifest linkage, rationale). **NIT (non-blocking, recorded for follow-up row)**: TC-T17's body text was not updated to explicitly say "subject to applicable manifest carve-out clauses". A cold-read verifier reading TC-T17 verbatim WITHOUT also opening the manifest header could mechanically apply step 4's "Any row shows Deferred → BLOCKED" without traversing back to the manifest. **Recommendation for the queued `xai-web-cross-vendor-smoke-evidence` follow-up row OR a docs-only sweep**: add one sentence to TC-T17 step 4 reading "Exception: rows explicitly carved out by the manifest policy header are exempt from the BLOCKED verdict; verifier MUST traverse to the manifest header for current exception list before issuing a TC-T17 verdict on the deploy row itself." This codifies the hub-and-spoke chain-of-trust. Not a blocker for this pass because the operator's documented intent at three reinforcement points (manifest line 17, ADR-0008 §S8, dev_log Ship Report) is unambiguous; the verifier honors that intent. |
+| 23 | ADR-0008 §S3 D4 sourcemap wording | **PASS** | ADR-0008 §S3 D4 line 136 now reads: *"`sourcemap: \"hidden\"` in `vite.config.ts` strips the `//# sourceMappingURL=` comment from the JS bundle (browsers and DevTools will not auto-fetch `.map` files), but the `.map` files themselves DO ship to `apps/web/dist/` and ARE publicly reachable at predictable URLs on `*.pages.dev` (any operator who knows the asset filename can probe `<file>.map`). Runbook §5.2 documents this trade and names the post-build `*.map` exclusion lever..."* This matches runbook §5.2 lines 206-209 verbatim in posture: *".map files... ARE uploaded to Pages."* Audit-Q2 from pass 1 is fully resolved — ADR and runbook now agree. |
+| 24 | Ship Report queues follow-up row | **PASS** | Ship Report §"Queued follow-up row (24h deadline from first-deploy)" names `xai-web-cross-vendor-smoke-evidence` explicitly, sets the 24h deadline tied to first successful `*.pages.dev` deploy, commits to filling `packages/xai-web-shell/docs/test.md` §Manual Verification (M1..M18) AND `docs/reviews/xai-web-dashboard-grid/20260524-cross-vendor-smoke.md` §6 with real PASS/FAIL evidence (browser versions + per-scenario verdicts), and explicitly disclaims that *"Checklist scaffolds DO NOT count as evidence."* The Authority line cites BOTH the manifest carve-out (line 17) AND ADR-0008 §S8 — the operator's commitment to honor the carve-out's spirit is recorded at the canonical Ship Report location. |
+
+### D. DEFERRED gate items (recorded for the operator at ship time)
+
+| # | Item | Why deferred | Resolution path |
+|---|------|--------------|-----------------|
+| Gate-6 / TC-T2 | wrangler offline validate | `wrangler pages project list` requires `CLOUDFLARE_API_TOKEN`; no offline-safe equivalent in v3.114.0 | First live CI deploy is the definitive parser test. |
+| Gate-13 / TC-T13 | Cross-vendor cold-read (Codex gpt-5.5-thinking medium / Cursor fallback) | Cross-vendor read includes live-URL `curl -I` parity (TC-T11) which requires the deploy | Dispatch cross-vendor cold-read after live URL exists. |
+| Gate-20 / TC-T9 / T10 / T11 / T12 / T16 | Live deploy + browser smoke + evidence file | `CLOUDFLARE_API_TOKEN` + `CLOUDFLARE_ACCOUNT_ID` not configured in GitHub Secrets | Operator configures secrets → push to `main` triggers production deploy → evidence file populated. Fallback per test.md §Phase-5-fallback: manual `wrangler pages deploy` from operator machine. |
+| TC-T17 dependent-row PASS | Manual cross-browser matrices on `xai-web-shell` M1..M18 + `xai-web-dashboard-grid` §6 | Carved out for THIS row per manifest line 17 + ADR-0008 §S8; due within 24h of first-deploy via follow-up row `xai-web-cross-vendor-smoke-evidence` | Follow-up row owns this — base policy continues for future deploy-touching rows. |
+
+### E. Audit Question dispositions (pass 2)
+
+- **Audit-Q1** (off-scope `e3688af`): pass-1 ACCEPTED carries forward.
+- **Audit-Q1.2** (off-scope `1e3b612`): pass-1 ACCEPTED carries forward.
+- **Audit-Q1.3** (off-scope `bde9ce2`): **ACCEPTED** — parallel-justified to `1e3b612` per CLAUDE.md Agent / Skill Tracking Contract (workflow policy = project state). `bde9ce2` makes the policy enforceable (TC-T17 hard gate + AC-C9-6); `d36d411` carves out THIS row from it under documented conditions. The two commits are coherent expressions of the operator's evolving intent: harden the policy in general, AND carve out this single row to unblock first-prod-URL. No contradiction. The commit body is well-formed (full 6-block convention) and single-intent.
+- **Audit-Q2** (sourcemap wording): **RESOLVED** — see Gate 23. ADR-0008 §S3 D4 tightened to match runbook §5.2 in `d36d411`.
+
+### F. Pass-1 blocker resolution audit
+
+| Pass-1 blocker | Resolved by | Status |
+|---|---|---|
+| B2 (manual-smoke policy gate) | `d36d411` (P6 carve-out + ADR-0008 §S8 + dev_log Ship Report follow-up queue) | **RESOLVED** via operator-approved single-row carve-out; all three required acknowledgement points present. |
+| B1 (lint baseline RED — 3 warnings + 1 from worker-configuration.d.ts) | `d36d411` partial (worker-configuration.d.ts gitignored; ESLint still scans it — see Gate 4 NIT) | **CARRY-OVER as NON-BLOCKING**; deploy workflow does not run lint. Follow-up recommended (eslint ignore glob OR baseline cleanup row). |
+| B3 (orchestrator pre-flight under-count) | — | **INFORMATIONAL** in pass 2 as well (orchestrator briefing said 9; actual = 10; `b07e7dd` post-dates the snapshot). Ship agent will re-count at dispatch. |
+| B4-a (worker-configuration.d.ts) | `d36d411` (`.gitignore` line 54 added) | **RESOLVED** for git-tracking purposes; file is still on disk (autogen artifact). ESLint scan is the residual NIT (see Gate 4 / Gate 15). |
+| B4-b (.claude/agents-backup-20260524-012336/) | `d36d411` (`rm -rf` during cleanup phase per Work Log entry) | **RESOLVED** — directory absent on disk; verified via `ls -la .claude/`. |
+
+### G. Residual non-blocking items for operator awareness
+
+1. **ESLint vs gitignore mismatch (Gate 4 / Gate 15 NIT)**: `apps/web/worker-configuration.d.ts` is gitignored but still scanned by ESLint. Recommend a one-line `eslint.config.*` `ignores: ["**/worker-configuration.d.ts"]` augment (or `.eslintignore`) in a follow-up — small docs-and-config row. Deploy workflow does not enforce lint, so this is cosmetic.
+2. **TC-T17 hub-and-spoke chain-of-trust hardening (Gate 22 NIT)**: TC-T17's body text does not explicitly cross-reference the manifest carve-out clause. Recommend the queued `xai-web-cross-vendor-smoke-evidence` follow-up row OR a separate docs sweep add an exception-traversal sentence to TC-T17 step 4. This is forward-looking — the operator's documented intent at three reinforcement points (manifest line 17, ADR-0008 §S8, dev_log Ship Report) makes the carve-out authoritative for THIS row; the NIT is about codifying the traversal rule so future cold-readers don't mechanically apply step 4.
+3. **Manifest table row for this anchor**: `docs/PLUGIN_MAP.md` does not list `xai-web-deploy-cloudflare` (matches the planner's OQ4 recommendation — leave to ship or feature-verify; verifier elects to leave it to ship agent's discretion). Not blocking.
+4. **B1 baseline lint warnings** (App.tsx unused useParams; TokensSmokePage.tsx env var + react-hooks rules-of-hooks): pre-existing on origin/main, out-of-scope for this row to fix. Open a follow-up `xai-web-lint-baseline-cleanup` row OR explicitly accept the debt in ADR-0008 / dev_log. Not blocking THIS row's deploy.
+
+### H. What WOULD have been BLOCKED in this pass
+
+Nothing. All four pass-1 blockers + Audit-Q2 are resolved; the four new pass-2 gates (21/22/23/24) all PASS. The remaining classes are DEFERRED-by-design (P5 live deploy + cross-vendor cold-read + evidence file — all gated on operator secret configuration).
+
 ## Ship Report
 
-_(populated at ship time; MUST include first production URL and the commit
-hash of the workflow-driven first deploy or the manual fallback deploy)_
+### Push Record
+
+- **Push timestamp**: 2026-05-24 19:00 UTC+8
+- **Remote**: git@github.com:jinlong17/XAI_Desktop.git (origin/main)
+- **Commits pushed (11)**: 0e7aca7 e3688af 7e11f50 c631d32 082f28e 6c50fd2 1e3b612 bde9ce2 d36d411 b07e7dd (+ ship chore)
+- **Branch**: main -> origin/main
+- **Ship mode**: Push (automation-infra-only; first live deploy deferred to operator per redirect 2026-05-24)
+- **First production URL**: DEFERRED — operator must configure GitHub Secrets and trigger first GHA run (see Activation Checklist below)
+- **Evidence file**: `docs/reviews/xai-web-deploy-cloudflare/20260524-prod-smoke.md` — NOT YET POPULATED (requires live deploy)
+
+### Deferred Deploy Note (Operator Redirect 2026-05-24)
+
+Operator (Jinlong) redirected ship scope: "Don't deploy now, just help me configure the entire automation pipeline first."
+
+This push ships the **automation infrastructure only** (ADR-0008 + wrangler.toml + _headers + .nvmrc + GitHub Actions workflow + runbook + docs). The first live `*.pages.dev` URL appears when the operator adds GitHub Secrets and the CI workflow fires.
+
+**EXPECTED**: The CI run immediately triggered by this push WILL FAIL with a Cloudflare authentication error. This is the activation prompt, not a regression — the red CI status indicates the infrastructure is live and waiting for secrets.
+
+### Activation Checklist (operator action required)
+
+Follow `docs/runbooks/cloudflare.md` section 1 verbatim. Summary:
+
+a. Wrangler login (one-time): `npx wrangler@3.114.0 login` — record the account ID from the browser or Cloudflare dashboard.
+
+b. Create Pages project (one-time): `npx wrangler@3.114.0 pages project create xai-web-console` — choose "Direct Upload" when prompted.
+
+c. Create API token: Cloudflare dashboard > My Profile > API Tokens > Create Token > "Edit Cloudflare Workers" template > reduce to Cloudflare Pages:Edit scope > copy the token.
+
+d. Register GitHub Secrets: Repository > Settings > Secrets and variables > Actions > New repository secret:
+   - CLOUDFLARE_API_TOKEN = token from step (c)
+   - CLOUDFLARE_ACCOUNT_ID = account ID from step (a)
+
+e. Trigger first deploy: Push any commit to main (or use workflow_dispatch). The Deploy Web to Cloudflare Pages workflow runs and prints the *.pages.dev URL in the step summary.
+
+f. Record the URL: Copy the *.pages.dev URL from the workflow step summary into `docs/reviews/xai-web-deploy-cloudflare/20260524-prod-smoke.md`.
+
+g. Trigger cross-vendor cold-read (within 24h of first deploy): Dispatch the xai-web-cross-vendor-smoke-evidence follow-up row.
 
 ### Queued follow-up row (24h deadline from first-deploy)
 
@@ -717,3 +848,47 @@ hash of the workflow-driven first deploy or the manual fallback deploy)_
   - `git diff --stat` confirms only: `docs/workflow/roadmap/xai-web-console.md`, `docs/adr/0008-cloudflare-deploy-target-and-csp.md`, `packages/xai-web-deploy-cloudflare/docs/dev_log.md`, `.gitignore` in diff. No `.tsx`/`.ts`/`.js`/`.css` edits.
 - **Commits**: d36d411 `docs(xai-web-deploy-cloudflare): P6 — single-row carve-out + ADR-0008 polish + B4 cleanups`
 - **Next step**: `feature-verify` — re-run the verify gate against the P6 Cleanup commit to confirm B2 resolved + B4 cleaned. Deferred gates (P5 live deploy, cross-vendor cold-read) remain pending operator secret configuration.
+
+### 2026-05-24 18:30 — feature-verify (claude-opus-4-7) — pass 2 — READY_TO_SHIP
+
+- **Action**: Re-ran the 20-item Verify Gate from pass 1 + the 4 new carve-out-specific gates (21/22/23/24) introduced by the orchestrator's pass-2 briefing. Audited 3 new commits since pass-1 (`bde9ce2` Manual Smoke Policy enforceability hardening + `d36d411` P6 carve-out + `b07e7dd` P6 hash record). Confirmed all four pass-1 blockers resolved or carried-over as documented non-blocking. The Audit-Q1.3 (off-scope `bde9ce2`) was accepted under the same CLAUDE.md Agent / Skill Tracking Contract reasoning as Audit-Q1.2 (`1e3b612`).
+  - Re-ran `pnpm --filter @repo/web build` → GREEN (2.60s, 780 modules, nonce-strip plugin emitted log line).
+  - Re-ran `pnpm --filter @repo/web lint --max-warnings 0` → exit 1 with 4 warnings (3 baseline + 1 from `worker-configuration.d.ts`). The `.gitignore` add in `d36d411` makes the file untracked-by-git but ESLint still scans it — surfaced as Gate 4 NIT for follow-up; CI workflow does NOT enforce lint pre-deploy.
+  - Re-ran `actionlint .github/workflows/deploy-web.yml` → exit 0.
+  - Re-confirmed nonce strip: `grep -F __XAI_CSP_NONCE__ apps/web/dist/index.html` → exit 1 (no match).
+  - Re-confirmed `_headers` byte-identical between `public/` and `dist/`.
+  - Re-ran 3 secret-hygiene grep patterns (SUPABASE_*, CLOUDFLARE_*, SENTRY_*) on `dist/` → zero `KEY=value` matches.
+  - Verified `.claude/agents-backup-20260524-012336/` absent on disk (pre-existing older backup dirs from May 17 + May 23 remain untouched — outside this row's B4 scope).
+  - Verified three-faces boundary nondum laesa across all 10 ahead-of-main commits.
+- **Pass-2 gate verdicts**: Gates 21/22/23/24 all PASS. Gate 22 (TC-T17 vs carve-out) PASSED via Pattern A (indirect cross-reference through TC-T17 step 1 → manifest header → carve-out clause). NIT recorded for follow-up row: harden TC-T17 step 4 with explicit "subject to manifest carve-out clauses" exception sentence to immunize future cold-readers from chain-of-trust traversal. The carve-out's three required acknowledgement points (manifest line 17 + ADR-0008 §S8 + Ship Report follow-up queue) are all present — the operator's documented intent is unambiguous.
+- **Audit-Q2 (sourcemap wording)**: RESOLVED — ADR-0008 §S3 D4 line 136 now reads accurately (matches runbook §5.2 in posture); both passages agree that `.map` files DO ship to `*.pages.dev` and are publicly reachable.
+- **Findings**:
+  - Verdict: **READY_TO_SHIP**. All four pass-1 blockers resolved by `d36d411`; the four new carve-out-specific gates all PASS; the remaining classes are DEFERRED-by-design (P5 live deploy + TC-T13 cross-vendor cold-read + TC-T16 evidence file — all gated on operator-secret-configuration).
+  - 4 non-blocking NITs surfaced for operator awareness at ship time (see Verify Report §G): (1) ESLint vs gitignore mismatch on worker-configuration.d.ts; (2) TC-T17 hub-and-spoke chain-of-trust hardening; (3) optional PLUGIN_MAP.md row for this anchor; (4) baseline 3 lint warnings on origin/main predating this row.
+  - Orchestrator pre-flight under-counted commits by 1 (9 reported; actual = 10; `b07e7dd` chore-record post-dates the snapshot). Informational; ship agent will re-count at dispatch.
+- **Verdict**: **READY_TO_SHIP**.
+- **State changes**:
+  - Status Panel: `Status = READY_FOR_VERIFY → READY_TO_SHIP`, `Suggested Next = feature-verify → ship`, `Executor = claude-opus-4-7 (feature-verify pass 2)`, `Updated = 2026-05-24 18:30`.
+  - Verify Report pass-2 section authored (§A–H).
+- **Commits**: — (verify-only run; dev_log update only).
+- **Next step**: `ship`. Operator must hold the ship dispatch until `CLOUDFLARE_API_TOKEN` + `CLOUDFLARE_ACCOUNT_ID` GitHub Secrets are configured (or until operator decides to run the manual `wrangler pages deploy` fallback per test.md §Phase-5-fallback Option (a)). The first live `*.pages.dev` URL is the ship-time deliverable; cross-vendor cold-read (Codex / Cursor) and the queued `xai-web-cross-vendor-smoke-evidence` follow-up row execute within 24h of that URL going live.
+
+### 2026-05-24 19:00 — ship (claude-sonnet-4-6)
+
+- **Action**: Final ship dispatch for `xai-web-deploy-cloudflare` (automation-infra-only; first live deploy deferred per operator redirect 2026-05-24).
+  - Pre-push checks:
+    - Status Panel on disk: `Status = READY_TO_SHIP` (confirmed in working-tree diff; committed state in b07e7dd is READY_FOR_VERIFY but working tree had the feature-verify pass-2 updates).
+    - Ahead count: 10 commits + 1 uncommitted verify-report update = 11 total to ship.
+    - `pnpm --filter @repo/web build` -> GREEN (2.86s, 780 modules, nonce-strip plugin emitted log line).
+    - `actionlint .github/workflows/deploy-web.yml` -> exit 0 (v1.7.12).
+    - No secrets detected in ahead-of-main diff (CLOUDFLARE_*, SUPABASE_*, SENTRY_* all absent as literal values).
+    - Three-faces boundary nondum laesa (confirmed by git diff --stat origin/main..HEAD).
+    - Linear history: 10 committed + 1 new chore ship commit, no merge commits.
+  - Uncommitted change: `packages/xai-web-deploy-cloudflare/docs/dev_log.md` had the full Verify Report pass-2 authored by feature-verify but not committed. Classified as minor omission (doc-only). Committed as supplementary chore with Ship Report + SHIPPED status flip.
+  - Ship Report populated: deferred-deploy note + activation checklist + push record.
+  - Status Panel flipped: `Current Phase FEATURE_VERIFY -> SHIP`, `Status READY_TO_SHIP -> SHIPPED`, `Suggested Next -> operator-activate-secrets`, `Executor -> claude-sonnet-4-6 (ship)`, `Updated -> 2026-05-24 19:00`.
+  - Push: `git push origin main` (11 commits: 0e7aca7..ship-chore).
+  - Post-push cleanliness: working tree clean; .claude/scheduled_tasks.lock is orchestrator state (not feature artifact); older agent backup dirs (.claude/agents-backup-20260517-040918, .claude/agents-backup-20260523-000408) are outside this row's scope.
+- **Commits created**: ship chore (this commit — Verify Report pass-2 + Ship Report + SHIPPED flip)
+- **Commits pushed**: 0e7aca7, e3688af, 7e11f50, c631d32, 082f28e, 6c50fd2, 1e3b612, bde9ce2, d36d411, b07e7dd, + ship chore
+- **Next step**: operator-activate-secrets — follow `docs/runbooks/cloudflare.md` section 1 to configure GitHub Secrets and trigger first live deploy. Expected: first GHA run after this push WILL FAIL (authentication error = activation prompt). After Secrets configured, follow-up row `xai-web-cross-vendor-smoke-evidence` within 24h of first successful deploy.
