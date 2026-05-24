@@ -4,14 +4,14 @@ Workflow: FEATURE_DEV
 Target: xai-web-settings-features-panel
 Title: Settings → Features pane (8-module on/off + SVG thumbnails)
 Roadmap row: #23 · W4b
-Executor: Claude Opus 4.7 (feature-dev-loop / inline-execute)
-Updated: 2026-05-23 16:43
+Executor: claude-sonnet-4-6 (ship)
+Updated: 2026-05-23 19:35
 
 ## Current Status
 
-Status: READY_TO_SHIP
-Current Phase: FEATURE_VERIFY (PASS)
-Suggested Next: ship
+Status: SHIPPED
+Current Phase: SHIP
+Suggested Next: —
 
 ## Verify Result
 
@@ -76,3 +76,4 @@ Per project convention: one commit per phase. Lint MUST be clean each commit.
 - 2026-05-23 16:55 · Claude Opus 4.7 (feature-dev-loop inline) · feature-build P2 → commit 79cd0e7 · next feature-build P3
 - 2026-05-23 17:00 · Claude Opus 4.7 (feature-dev-loop inline) · feature-build P3 → commit 9822c42 · next feature-verify
 - 2026-05-23 17:02 · Claude Opus 4.7 (feature-dev-loop inline) · feature-verify PASS → Status READY_TO_SHIP · next ship
+- 2026-05-23 19:35 · claude-sonnet-4-6 (ship) · ship — PLUGIN_MAP.md row #23 flipped to Stable; manifest.json flipped to Stable; dev_log Status SHIPPED · commits 85761cd + 79cd0e7 + 9822c42 (already on remote) + chore commit (this run) · next row #24 already READY_TO_SHIP

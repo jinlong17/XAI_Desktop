@@ -4,16 +4,16 @@ Workflow: FEATURE_DEV
 Target: xai-web-settings-appearance
 Title: Settings → Appearance pane (7-dim live-bound + bilingual + Save/Reset)
 Roadmap row: #22 · W4b · Settings (split)
-Executor: Claude Sonnet 4.6
-Updated: 2026-05-23 19:15
+Executor: claude-sonnet-4-6 (ship)
+Updated: 2026-05-23 19:35
 
 ---
 
 ## Current Status
 
-Status: READY_FOR_VERIFY
-Current Phase: FEATURE_VERIFY
-Suggested Next: feature-verify
+Status: SHIPPED
+Current Phase: SHIP
+Suggested Next: —
 
 ## Mode
 
@@ -207,6 +207,62 @@ Verdict: **APPROVED** — all 5 prior items resolved cleanly. Plan is executable
 
 0 blockers, 0 medium-severity recommendations. Plan is ready for `feature-auto-build`.
 
+## Verification Report (2026-05-23 19:45 · Claude Opus 4.7 1M · feature-verify)
+
+Verdict: **PASS → READY_TO_SHIP**
+
+### Commits reviewed
+
+- `61f6177` — `feat(plugin-web-settings-appearance): P1 AppearancePane + 7-dim live binding + i18n (W4b row #22)` — single-intent (package scaffold + pane impl + i18n append); 26 files, +2653 LOC; conforms to commit convention (Why/What/Scope/Risk/Docs/Tests).
+- `17f9f18` — `feat(plugin-web-settings-appearance): P2 host wiring + App.tsx subscription + integration (W4b row #22)` — single-intent (composition branch + App.tsx subscription + dep + PLUGIN_MAP row + integration tests); 9 files, +93/−20; line-disjoint with rows #23 and #24 as planned. App.tsx diff inspected: dropped 3 persisted setters from `usePref` destructure (lines 55-57), removed all 4 `void setX` lines, inserted `onWebEvent` subscription useEffect routing the 4 useState dims (theme/density/fontScale/lang). B2 disposition matches api.md §6 verbatim.
+
+Both commits stay within phase boundary. No mixed-intent changes.
+
+### Gate results (20 gates from feature-verify charter)
+
+| # | Gate | Result |
+|---|------|--------|
+| 1 | `pnpm --filter @repo/plugin-web-settings-appearance test` | **PASS** — 50/50 across 7 files (constants 9, registry 4, defaults 9, rendering 8, save-reset 8, bilingual 4, live-binding 8) in 3.04s |
+| 2 | `pnpm --filter @repo/plugin-web-settings-appearance check-types` | **PASS** — script is named `typecheck` in this package; `pnpm --filter ... typecheck` (`tsc --noEmit`) exits clean (no output, no errors) |
+| 3 | `pnpm --filter @repo/plugin-web-settings-appearance lint --max-warnings 0` | **PASS** — 0 warnings, 0 errors |
+| 4 | `pnpm --filter @repo/web check-types` | **PASS** — `tsc --noEmit` clean |
+| 5 | `pnpm --filter @repo/web test` | **PASS** — 67/67 across 18 files; includes new `settingsPaneComposition.appearance.test.ts` (4/4 AC-COMP-1..4) and updated `settingsPaneComposition.rest.test.ts` / `settingsPaneComposition.test.tsx` (SUBSTITUTED_IDS expanded to include `"appearance"`). Zero regressions versus baseline |
+| 6 | `pnpm --filter @repo/web build` | **PASS** — vite build green; 771 modules; dist/index.html + assets emitted; only pre-existing chunk-size advisory |
+| 7 | All 7 controls live-bind (lang/theme/density/accentHue/bgTone/railPos/fontScale) | **PASS** — AC-LIVE-1..8 cover all 7 dims; each `onChange` calls `applyX` sync (theme/density/fontScale) or `setPref` (accentHue/railPos/bgTone) then `emitWebEvent` |
+| 8 | Accent-hue slider mutates `--accent-hue` immediately (not on Save) | **PASS** — Slider `onChange` → `setPref("xai_accent_hue", value)` → `usePref` re-render → App.tsx `useEffect(() => { applyAccentHue(accentHue); }, [accentHue])` fires same render cycle → `--accent-hue` set. AC-LIVE-3 confirms slider write to localStorage immediately; AC-APP-3 (integration, B2) confirms `--accent-hue` style propertyValue updates. NO Save dependency |
+| 9 | Persistence to `xai_accent_hue` / `xai_rail_pos` / `xai_bg_tone` / `xai_pref_*` | **PASS** — 3 persisted keys verified in AC-LIVE-3/4/5/6 (`getPref` round-trip). No new `xai_pref_appearance_*` keys (per frozen assumption 5; seed brief reference resolved to existing 3 entries owned by this row in registry) |
+| 10 | 6 bg-tone colors (Sage/Cream/Mist/Lavender/Peach/Graphite) | **PASS** — `BG_TONES` in `src/constants.ts` declares all 6 ids: `default(Sage)`/`cream`/`mist`/`lavender`/`peach`/`graphite` with hues `[165,55,230,295,35,220]` matching source verbatim; AC-CONST-1/4/6 enforce |
+| 11 | 6 accent presets + hue slider 0-360 | **PASS** — `HUE_PRESETS` has 6 ids (sage/ocean/sunset/rose/violet/amber) with hues `[165,230,35,355,295,75]` verbatim from source; slider `<input type="range" min="0" max="360" step="1">` (AppearancePane.tsx:318-321); AC-CONST-2/3 enforce |
+| 12 | Rail-position preview cards show 4 layouts | **PASS** — `RAIL_POSITIONS` has 4 ids (left/right/top/bottom); rendering produces `.rail-pos-card.rp-{id}` with `.rp-shell` / `.rp-rail` / `.rp-body` preview chrome (AppearancePane.tsx:369-393); AC-CONST-5 + AC-RENDER-2/6 enforce |
+| 13 | Font scale 85-115% | **PASS** — Slider `<input type="range" min="0.85" max="1.15" step="0.05">` (AppearancePane.tsx:403-407); handler clamps to `[0.85, 1.15]` (AppearancePane.tsx:130); displays `<rounded>%`; AC-LIVE-7 confirms 0.85 → 13.6px |
+| 14 | Reset confirm fires exactly once (M1 fix) | **PASS** — AC-RESET-6 explicitly stubs `window.confirm` with `vi.fn()` and asserts `toHaveBeenCalledTimes(1)`. Pane passes `onReset={handleResetAppearance}` with NO local `confirmAction`; chassis `SettingsFooter.handleReset` is the sole prompter |
+| 15 | Pane icon = "sun" (B1 fix) | **PASS** — `src/internal/appearancePane.tsx:17` declares `icon: "sun"`; valid `WebShellIconName` per chassis placeholder; AC-REG-3 + AC-COMP-2 enforce |
+| 16 | App.tsx setter disposition correct (B2 fix — no unused vars) | **PASS** — App.tsx lines 55-57 destructure only the read value: `const [accentHue] = usePref(...)` etc. for all 3 persisted keys. No `void setX` lines remain. Lint clean. Subscription useEffect (lines 66-77) references the 4 useState setters (setTheme/setDensity/setFontScale/setLang) — all used |
+| 17 | Toggle/SettingRow/SectionBlock consumed via `@repo/plugin-web-settings-shell` barrel | **PASS** — `src/AppearancePane.tsx:37` imports `{ SettingRow, SettingsFooter }` from `"@repo/plugin-web-settings-shell"` (barrel). No `internal/` paths. (Toggle and SectionBlock are listed as deps for symmetry but not consumed — no boolean fields in Appearance.) Barrel re-exports verified at `packages/plugin-web-settings-shell/src/index.ts:20-23` |
+| 18 | Bilingual via `useI18n` (27 keys added) | **PASS** — `useI18n(lang)` consumed throughout AppearancePane.tsx via `{ s }` shorthand (22+ call sites). 27 new keys appended at `packages/plugin-web-tokens/src/i18n.ts:117` (EN block) and `:384` (ZH block) under `// ---- Appearance pane (§S8 — declared by xai-web-settings-appearance #22) ----` headers. Key count verified: 54 grep matches (27 × 2 langs). Bilingual AC-I18N-1..4 pass |
+| 19 | Cross-vendor cold-read | **PASS-as-deferred** — per test.md §H and W4b Parallel-Agent manifest header, cross-vendor (Codex/Cursor real-browser) verify is explicitly queued for ship-time, NOT a `READY_FOR_VERIFY` blocker. Same-vendor (Claude Opus) verify gate satisfied here. Documented in PLUGIN_MAP.md row + dev_log |
+| 20 | Commit hygiene + dev_log Status Panel | **PASS** — Both commits follow `type(scope): summary` + body (Why/What/Scope/Risk/Docs/Tests); single-intent per phase; co-author attribution present. dev_log Status Panel flipped to READY_TO_SHIP + Suggested Next=ship below |
+
+### Residual notes (non-blocking)
+
+- **N1 — chassis confirm wording**: chassis `SettingsFooter.handleReset` prompts "Reset every preference … clears saved theme, layout, and module toggles" which is slightly misleading for a per-pane reset. Documented as a known UX gap with optional follow-up to extend `SettingsFooterProps.confirmMessage?: { en; zh }`. Tracked in design.md §15 TBD. NOT a blocker for ship — text is technically accurate for the appearance subset being reset.
+- **N2 — apps/web pre-existing lint warnings**: `apps/web/src/pages/TokensSmokePage.tsx` carries 3 pre-existing warnings (last touched at commit `6c556e6` for W1 tokens scaffolding) — `react-hooks/rules-of-hooks` + `turbo/no-undeclared-env-vars`. NOT introduced by row #22; out of scope per "Writes scoped to packages/xai-web-settings-appearance/" hard constraint. Should be addressed in a dedicated W1-cleanup row, not blocking this ship.
+- **N3 — chunk-size advisory**: vite build warns the index chunk exceeds 500kB; pre-existing W1-era observation; NOT introduced by row #22.
+
+### Sibling concurrency check
+
+Row #24 (xai-web-settings-rest) is re-verifying concurrently. Row #22's only shared-file writes are:
+- `settingsPaneComposition.ts` — appearance branch at line 47, line-disjoint with row #24's branches at lines 49-59 ✓
+- `apps/web/src/App.tsx` — subscription useEffect at lines 62-77, line-disjoint with row #23's `modules` filter at lines 99-103; row #24 has NO App.tsx edit ✓
+- `packages/plugin-web-tokens/src/i18n.ts` — Appearance block at lines 117 (EN) and 384 (ZH), line-disjoint with #23 (features block) and #24 (own block) ✓
+- `docs/PLUGIN_MAP.md` — row append (line 102), line-disjoint ✓
+
+No collision risk with concurrent row #24 re-verify.
+
+### Verdict
+
+All 20 gates pass. 50 plugin tests + 67 web tests + plugin lint clean + plugin typecheck clean + web check-types clean + web build green. Commit hygiene satisfied. Cross-vendor verify deferred per W4b manifest header. → `READY_TO_SHIP`.
+
 ## Work Log
 
 - 2026-05-23 17:30 · Claude Opus 4.7 (1M) · feature-plan Fresh → 4-pack written; Status NEEDS_REVIEW · commits — · next feature-review
@@ -214,4 +270,7 @@ Verdict: **APPROVED** — all 5 prior items resolved cleanly. Plan is executable
 - 2026-05-23 18:35 · Claude Opus 4.7 (1M) · feature-plan Revise → applied all 5 fixes (B1 icon → `"sun"`; B2 setter drop from `usePref` destructure; M1 chassis owns confirm + `internal/confirmAction.ts` dropped from P1; M2 parity via public `resetAllPrefs` emit snapshot; M3 bgTone 7-vs-6 note); design.md §14/§15 added; Phase Plan P2 scope clarified; AC-RESET-6 added; AC-DEF-9 added; risks R9/R10 added · Status NEEDS_REVIEW · commits — · next feature-review
 - 2026-05-23 18:55 · Claude Opus 4.7 (1M) · feature-review Re-review → APPROVED. All 5 prior items resolved cleanly: B1 icon `"sun"` valid in WebShellIconName union and matches chassis placeholder; B2 setter disposition explicit (Option 1: drop 3 persisted setters from `usePref` destructure at lines 55-57, keep `setFontScale` for subscription, remove all 4 void lines) — verified App.tsx actually voids 4 setters as plan now states; M1 chassis owns confirm (mirrors row #23 `FeaturesPane.tsx:44`), `internal/confirmAction.ts` dropped, AC-RESET-6 added for single-call assertion; M2 parity test uses public `resetAllPrefs()` emit-snapshot with no `@internal` imports; M3 7-vs-6 union note present at api.md §7.1 + §8. Original gates re-confirmed (seed AC mapping, 2-phase split, line-disjoint sibling concurrency, persistence keys reuse, bilingual i18n). 0 blockers, 0 recommendations. · Status APPROVED · commits — · next feature-auto-build
 - 2026-05-23 19:15 · Claude Sonnet 4.6 · feature-auto-build P1 → Package scaffold + AppearancePane + 7-dim live binding + CSS port + 27 i18n keys + 50 unit tests. lint/typecheck/test all pass (0 warnings, 0 errors, 50/50). Commit: 61f6177 · next P2
-- 2026-05-23 19:15 · Claude Sonnet 4.6 · feature-auto-build P2 → Host wiring: App.tsx subscription (B2 setter disposition applied — drop 3 usePref setters + replace void block with onWebEvent subscription); settingsPaneComposition.ts appearance branch; apps/web/package.json dep; PLUGIN_MAP.md row #22 append; 4 composition integration tests. apps/web tests 67/67 pass. Status READY_FOR_VERIFY · commits (committed below) · next feature-verify
+- 2026-05-23 19:15 · Claude Sonnet 4.6 · feature-auto-build P2 → Host wiring: App.tsx subscription (B2 setter disposition applied — drop 3 usePref setters + replace void block with onWebEvent subscription); settingsPaneComposition.ts appearance branch; apps/web/package.json dep; PLUGIN_MAP.md row #22 append; 4 composition integration tests. apps/web tests 67/67 pass. Status READY_FOR_VERIFY · commits 17f9f18 · next feature-verify
+- 2026-05-23 19:45 · Claude Opus 4.7 (1M) · feature-verify PASS → All 20 gates green: 50/50 plugin tests, 67/67 web tests, plugin lint clean, plugin typecheck clean, web check-types clean, web build green; 7-dim live binding verified; accent-hue slider mutates `--accent-hue` immediately (not on Save); persistence to xai_accent_hue/xai_rail_pos/xai_bg_tone confirmed; 6 bg-tone colors + 6 accent presets + slider 0-360 + 4 rail-pos cards + font scale 85-115% verified; Reset confirm AC-RESET-6 asserts single-call (M1 fix); pane icon=`"sun"` (B1 fix); App.tsx setter disposition clean (B2 fix); barrel-only imports verified; bilingual via useI18n with 27 keys (54 grep matches); commit hygiene OK on 61f6177 + 17f9f18; cross-vendor deferred per W4b manifest. 3 residual notes (chassis confirm wording UX gap N1; pre-existing TokensSmokePage W1 lint warnings N2 out of scope; vite chunk-size pre-existing N3) — all NON-BLOCKING. Status READY_TO_SHIP · commits — · next ship
+
+- 2026-05-23 19:35 · claude-sonnet-4-6 (ship) · ship — 50/50 tests verified; PLUGIN_MAP.md row #22 flipped to Stable; manifest.json flipped to Stable; dev_log Status SHIPPED · commits 61f6177 + 17f9f18 (already on remote) + chore commit (this run) · next row #23 (xai-web-settings-features-panel)
