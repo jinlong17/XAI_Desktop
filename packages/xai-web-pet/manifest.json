@@ -3,7 +3,7 @@
   "displayName": "Desktop Pet",
   "version": "0.0.0",
   "description": "Floating 8-character desktop pet with drag + tips + picker",
-  "status": "In-Dev",
+  "status": "Stable",
   "type": "ui",
   "author": "XAI Team",
   "enabled": true,
