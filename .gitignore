@@ -46,3 +46,7 @@ states/
 # DESIGN.md; preserved locally as design reference but excluded from git
 # since the production port lives in apps/web/ + packages/plugin-web-*/)
 web design/
+
+# Wrangler (Cloudflare) local state — added in xai-web-deploy-cloudflare P2
+.dev.vars
+.wrangler/

@@ -47,8 +47,8 @@ to `main` (production) and on `pull_request` (preview).
 
 | Phase | Status | Commit |
 |-------|--------|--------|
-| P1 — ADR-0008 + 四件套 docs anchor | DONE | (pending commit) |
-| P2 — wrangler.toml + `_headers` + `.gitignore` + `.nvmrc` + nonce strip | PENDING | — |
+| P1 — ADR-0008 + 四件套 docs anchor | DONE | 0e7aca7 |
+| P2 — wrangler.toml + `_headers` + `.gitignore` + `.nvmrc` + nonce strip | DONE | (pending commit) |
 | P3 — `.github/workflows/deploy-web.yml` | PENDING | — |
 | P4 — `docs/runbooks/cloudflare.md` | PENDING | — |
 | P5 — Live deploy + smoke + evidence (verify-only) | PENDING | — |
@@ -426,5 +426,57 @@ hash of the workflow-driven first deploy or the manual fallback deploy)_
   - AC-C5-8: Cross-doc links to ADR-0003/0006/0007/brief/discovery/runbook present ✅
   - AC-C5-9: Refrains from editing `docs/workflow/roadmap/xai-web-console.md` ✅
 - **Tests run**: No executable tests (docs-only phase). Nonce caller audit: CLEAN.
+- **Commits**: 0e7aca7 `chore(xai-web-deploy-cloudflare): P1 — ADR-0008 + docs anchor (no exec change)`
+- **Next step**: Proceed to P2.
+
+### 2026-05-24 — feature-auto-build (claude-sonnet-4-6) — P2 wrangler.toml + _headers + .gitignore + .nvmrc + nonce strip
+
+- **Action**: Phase P2 implementation for `xai-web-deploy-cloudflare`.
+  - Rebased on `origin/main` — branch already current (P1 commit is the tip).
+  - Created `.nvmrc` at repo root containing `22` (Node 22 LTS — resolves OQ Q15.1).
+  - Created `apps/web/wrangler.toml` with 3 required keys:
+    `name = "xai-web-console"`, `compatibility_date = "2026-05-24"`,
+    `pages_build_output_dir = "./dist"`. No `[assets]`, no `[vars]`, no secrets.
+  - Created `apps/web/public/_headers` with CSP frozen per api.md §C2 +
+    HSTS + nosniff + X-Frame-Options DENY + Referrer-Policy + Permissions-Policy.
+    No `'unsafe-inline'`, no `'unsafe-eval'`, no `*` wildcard.
+  - Augmented root `.gitignore`: added `.dev.vars` and `.wrangler/` (AC-C7-1/C7-2).
+  - **Nonce strip mechanism**: Vite `transformIndexHtml` plugin in `apps/web/vite.config.ts`.
+    Chosen as the least-invasive option: runs at build time, requires no external
+    script, is deterministic (same input HTML → same output), and emits a console
+    log confirming substitution (AC-C3-4). Removes:
+    (a) `data-csp-nonce="__XAI_CSP_NONCE__"` attribute from `<html>` tag
+    (b) `__XAI_CSP_NONCE__` literal anywhere
+    (c) `<meta name="xai-csp-nonce" content="__XAI_CSP_NONCE__">` element
+  - **Wrangler**: Installed globally `wrangler@3.114.0` via `npm install -g`.
+    `wrangler --version` confirms `3.114.0`. Note: `wrangler pages deploy --dry-run`
+    is NOT supported in wrangler 3.114.0 (no such flag). Running
+    `wrangler deploy --dry-run` errors with "looks like a Pages project — use
+    `wrangler pages deploy`" — which confirms wrangler correctly parses
+    `wrangler.toml` as a Pages config. TOML syntax is structurally valid.
+  - **`apps/web/deploy/security/` audit**: Confirmed as SHIPPED library namespace
+    (from `web-security-csp-sentry`). Contains `headers.ts`, `cspEndpoint.ts`,
+    `rumEndpoint.ts` + their tests. NOT a competing deploy artifact.
+    Left untouched per plan and ADR-0008 §S6 namespace note.
+- **Smoke results**:
+  - `pnpm --filter @repo/web build` → GREEN (3.41s) ✅
+  - `dist/index.html` nonce check: `grep -F "__XAI_CSP_NONCE__" dist/index.html`
+    → 0 matches. AC-C3-1 PASSED ✅
+  - `dist/index.html` attribute check: `grep -E 'data-csp-nonce|xai-csp-nonce'`
+    → 0 matches (both nonce-bearing attributes removed) ✅
+  - Secret hygiene: No `SUPABASE_URL`, `SUPABASE_ANON_KEY`, or actual Supabase
+    project URLs (`*.supabase.co` with tenant prefix) in dist/. The `SUPABASE_`
+    string appears once as part of bundled `@supabase/auth-js` SDK error/code
+    strings — these are not secret values, no `KEY=value` patterns. CLEAN ✅
+  - `wrangler --version` → `3.114.0` (v3.x confirmed) ✅
+  - wrangler.toml correctly recognized as Pages config ✅
+  - **Bundle stats**:
+    - Total files in `dist/`: **8 files** (well under 20K limit) ✅
+    - Total size: **5.8 MiB**
+    - Largest file: `index-Di4Dj3wp.js.map` @ 4,926,285 bytes (~4.7 MiB) — hidden
+      sourcemap; under 25 MiB limit ✅
+    - Largest non-map file: `index-Di4Dj3wp.js` @ 992,768 bytes (~969 KiB)
+    - Pages free-tier limits: NO individual file > 25 MiB, total < 20K files ✅
+- **Tests run**: Build smoke. Nonce grep evidence recorded above.
 - **Commits**: (pending — will be filled after commit)
-- **Next step**: Commit P1, then proceed to P2.
+- **Next step**: Commit P2, then proceed to P3.
