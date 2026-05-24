@@ -37,6 +37,14 @@ export {
   setPref,
   removePref,
   isPrefKey,
+  // Open-ended xai_pref_* family — typed read/write/remove (mirrors usePrefAutosave).
+  getPrefAutosave,
+  setPrefAutosave,
+  removePrefAutosave,
+} from "./internal/storage.js";
+export type {
+  GetPrefAutosaveOptions,
+  SetPrefAutosaveOptions,
 } from "./internal/storage.js";
 
 // ---- usePref hook ----------------------------------------------------------
