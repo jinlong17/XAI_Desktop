@@ -250,5 +250,43 @@ Manifest header: primary Codex, fallback Cursor. Verification steps enumerated i
 4. iOS touch drag (Safari)
 5. Responsive breakpoints (1500/1300/900/600)
 6. A11y tab navigation + aria-label
+
+## Cross-vendor Verify Report (2026-05-24 — Codex gpt-5.5-thinking medium)
+
+**Verdict: BLOCKED.**
+
+Scope note: retroactive audit only. Status Panel remains `SHIPPED` per user instruction. No fixes were applied.
+
+### Metadata
+
+- Verifier: Codex parent session with read-only explorer slice.
+- Model / effort label: Codex gpt-5.5-thinking / medium.
+- Date: 2026-05-24 (America/Los_Angeles).
+- Test command: `pnpm --filter @repo/plugin-web-dashboard-grid test` → PASS, 104/104 tests.
+- Type command: `pnpm --filter @repo/plugin-web-dashboard-grid check-types` → PASS.
+
+### Blockers
+
+1. Required cross-vendor/manual smoke is queued in `test.md` but not evidenced in the ship log or in a `docs/reviews/xai-web-dashboard-grid/*cross-vendor*` report.
+2. Docs/API are stale against current source after dashboard-widgets integration: design says no new top-level deps and API says `widgets={[]}` in v1, but package/source now depend on `@repo/plugin-web-dashboard-widgets` and pass `dashboardWidgetRegistrations`.
+
+### Gate Findings
+
+| Gate | Finding |
+|---|---|
+| Design conformance | BLOCKED — source now includes row #11 widget registrations while row #10 docs still freeze an empty-grid/no-new-dep contract. |
+| API contract surface | BLOCKED — `DashboardSlotHost` implementation no longer matches the documented `widgets={[]}` contract. |
+| Test coverage | BLOCKED — 104/104 package tests pass, but manual browser checks for FLIP visual timing, iOS touch, responsive breakpoints, a11y, theme, and storage round-trip are not recorded. |
+| Persistence semantics | PASS — `xai_dash_order` uses `usePref`, sanitizes/dedupes, writes back, and has registry ownership. |
+| Typed-event contracts | PASS — `web:dashboard:add-widget-clicked` and `web:shell:module-change` deep-link emit paths are typed and tested. |
+| Host integration | PASS — `dashboardGridSlotRegistration` is mounted by `apps/web` and supplies the dashboard module. |
+
+### Evidence
+
+- `packages/xai-web-dashboard-grid/docs/test.md` requires manual cross-vendor verify and a report file.
+- Ship log records plugin tests/status flips but no browser matrix.
+- `packages/xai-web-dashboard-grid/docs/design.md` says no new top-level deps.
+- `packages/xai-web-dashboard-grid/package.json` depends on `@repo/plugin-web-dashboard-widgets`.
+- `packages/xai-web-dashboard-grid/docs/api.md` says `widgets={[]}`; `src/registration.tsx` passes `dashboardWidgetRegistrations`.
 7. Light/Dark theme inversion
 8. Storage round-trip (localStorage Application tab)
