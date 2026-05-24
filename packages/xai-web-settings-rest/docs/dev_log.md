@@ -295,7 +295,10 @@ Port 11 remaining Settings panes from `web design/module-settings.jsx` (lines 10
 **Lint**: 0 errors, 0 warnings (--max-warnings 0)
 **Typecheck**: 0 errors
 
-**Commits**: (see commit hashes below after git commit)
+**Commits**:
+- `bf6492e` feat(plugin-web-settings-rest): P1 scaffold + 37 storage keys + 1 event + 5 simple panes (W4b #24)
+- `81fbc61` feat(plugin-web-settings-rest): P2 smart-lists/notif/dt/more/integrations panes (W4b #24)
+- `72bb4de` feat(plugin-web-settings-rest): P3 sticky pane + host wiring + final barrel (W4b #24)
 
 **Next**: feature-verify
 
