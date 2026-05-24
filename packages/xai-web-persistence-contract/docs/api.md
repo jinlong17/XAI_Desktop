@@ -1,7 +1,7 @@
 # API Contract — `@repo/plugin-web-storage`
 
 > Row: `xai-web-persistence-contract` (#3)
-> Status: PLAN_DRAFT
+> Status: SHIPPED + 1 BUGFIX (2026-05-24 — xai_pref_* read-path opened)
 > Public surface only. Implementation details (file layout, helper functions) live in `src/internal/` and are NOT exported.
 > Source PRD: `web design/DESIGN.md` §9.2
 > Governing ADR: `docs/adr/0007-xai-web-console-build-form.md` §S4 + §S8
@@ -154,7 +154,7 @@ export function usePrefAutosave<T>(
 ### 3.2 Semantics
 
 - Writes `xai_pref_${suffix}` to localStorage on every change to `value` (via `useEffect`).
-- Does NOT read the key; consumers are expected to seed their React state from `getPref` (or its own `useEffect`) at mount.
+- Does NOT read the key; consumers are expected to seed their React state from **`getPrefAutosave<T>(suffix, options?)`** (see §4.5) at mount. The older wording "seed from `getPref`" was inaccurate — `getPref` only accepts registered `WebPrefKey` values; the typed read for arbitrary `xai_pref_*` suffixes lives in `getPrefAutosave`.
 - Throws (compile-time TS error) if `suffix.includes("/")` or contains characters that would break `isPrefKey` regex; runtime validates in dev.
 - SSR fallback: silently no-ops when `typeof window === "undefined"`.
 
@@ -165,10 +165,18 @@ Per Discovery §5 Q-OPEN-2: making `xai_pref_*` autosave opt-in (not bundled int
 ### 3.4 Example
 
 ```ts
-import { usePrefAutosave } from "@repo/plugin-web-storage";
+import { usePrefAutosave, getPrefAutosave } from "@repo/plugin-web-storage";
 
 function AppearancePanel() {
-  const [density, setDensity] = useState<"comfortable" | "compact">("comfortable");
+  // Seed from the previously-autosaved value on mount, fall back to the
+  // panel-local default.
+  const [density, setDensity] = useState<"comfortable" | "compact">(
+    () =>
+      getPrefAutosave<"comfortable" | "compact">("appearance_density", {
+        codec: "string",
+        defaultValue: "comfortable",
+      }) ?? "comfortable",
+  );
   usePrefAutosave("appearance_density", density, { codec: "string" });
   // ...
 }
@@ -212,6 +220,53 @@ export function isPrefKey(s: string): s is `xai_pref_${string}`;
 
 - Runtime guard for the `xai_pref_*` open-ended family. Used by `usePrefAutosave` and by dev-tools when iterating `localStorage`.
 
+### 4.5 `getPrefAutosave` — typed read for the `xai_pref_*` family
+
+```ts
+export interface GetPrefAutosaveOptions<T> {
+  /** Codec used to deserialize. Must match the codec passed to `usePrefAutosave`. Default: "json". */
+  codec?: PrefCodec;
+  /** Value returned when the key is absent, decode fails, or running under SSR. */
+  defaultValue?: T;
+}
+
+export function getPrefAutosave<T>(
+  suffix: string,
+  options?: GetPrefAutosaveOptions<T>,
+): T | undefined;
+```
+
+- Typed read for arbitrary `xai_pref_${suffix}` keys written by `usePrefAutosave` (or by `setPrefAutosave` below).
+- Returns `options.defaultValue` (or `undefined` if none) when the key is absent, the stored value cannot be decoded with the given codec, or the function runs during SSR.
+- The codec MUST match the codec passed to the corresponding `usePrefAutosave` call. There is no per-key registry for the `xai_pref_*` family — the consumer pair (`usePrefAutosave` write + `getPrefAutosave` read) is the authoritative contract for that suffix.
+- Suffix validation matches `usePrefAutosave`: `suffix` MUST NOT contain `/`. In dev/test it throws; in production it warns and returns the default.
+
+### 4.6 `setPrefAutosave` — imperative write companion
+
+```ts
+export interface SetPrefAutosaveOptions {
+  /** Codec used to serialize. Default: "json". Must match the reader's codec. */
+  codec?: PrefCodec;
+}
+
+export function setPrefAutosave<T>(
+  suffix: string,
+  value: T,
+  options?: SetPrefAutosaveOptions,
+): boolean;
+```
+
+- Imperative write for `xai_pref_${suffix}` keys. Mirrors `setPref` semantics: compare-before-write, same-tab pub/sub on change, SSR returns `false` + one-line warn, `QuotaExceededError` returns `false`, suffix validation identical to `usePrefAutosave`.
+- Primary use case: non-React contexts (event handlers, migrations, dev-tools) that need to mutate an autosave key without mounting a hook. React consumers should keep using `usePrefAutosave`.
+
+### 4.7 `removePrefAutosave` — imperative remove
+
+```ts
+export function removePrefAutosave(suffix: string): void;
+```
+
+- Removes `xai_pref_${suffix}` from localStorage and publishes `undefined` to same-tab subscribers. SSR no-op. No return value (no failure mode worth surfacing).
+
 ---
 
 ## 5. SSR fallback table
@@ -227,6 +282,9 @@ export function isPrefKey(s: string): s is `xai_pref_${string}`;
 | `setPref(key, v)` | writes; returns `true`/`false` | returns `false` |
 | `removePref(key)` | removes | no-op |
 | `isPrefKey(s)` | pure regex | pure regex (no window access) |
+| `getPrefAutosave(suffix, opts)` | localStorage value or `opts.defaultValue` | returns `opts.defaultValue` (or `undefined`) |
+| `setPrefAutosave(suffix, v, opts)` | writes; returns `true`/`false` | returns `false` + one-line warn |
+| `removePrefAutosave(suffix)` | removes + publishes `undefined` to same-tab subs | no-op |
 | `migrate(from, to)` | runs registered migrations (v1: none) | no-op |
 | **Module import** | safe | safe — no top-level `window` / `localStorage` access |
 
@@ -316,5 +374,6 @@ Single export at `.`; no subpath exports. Consumers do `import { usePref, setPre
 ## 10. Interface stability
 
 - **Stable** (v1+ unchanged across all subsequent rows unless an ADR amendment): `WebPrefKey`, `WebPrefValue<K>`, `PrefEntry<T>`, `PrefCodec`, `usePref`, `getPref`, `setPref`, `removePref`, `isPrefKey`, `usePrefAutosave`, `PREF_REGISTRY` literal key set.
+- **Stable from 2026-05-24 BUGFIX** (added to close the Codex cross-vendor BLOCKED on the `xai_pref_*` read-path): `getPrefAutosave`, `setPrefAutosave`, `removePrefAutosave`, `GetPrefAutosaveOptions<T>`, `SetPrefAutosaveOptions`. These are the typed read/write/remove for the open-ended `xai_pref_*` family; they mirror `usePrefAutosave` semantics for non-React seed/mutate contexts.
 - **Reserved** (may be added without an ADR amendment): `registerMigration`, `withTransaction`, `usePrefDebounced`, `subscribePref` (lower-level imperative subscriber). Adding any of these is a future row PR.
 - **Renameable** (per ADR-0007 §S8 reservation): the two `proposed: true` keys. Renaming triggers a migration registered via the (future) `registerMigration` helper.
