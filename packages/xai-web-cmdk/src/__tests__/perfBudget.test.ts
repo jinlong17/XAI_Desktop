@@ -27,7 +27,7 @@ const REPRESENTATIVE_QUERY = "focus";
 function p95(samples: number[]): number {
   const sorted = [...samples].sort((a, b) => a - b);
   const idx = Math.ceil(0.95 * sorted.length) - 1;
-  return sorted[Math.max(0, idx)];
+  return sorted[Math.max(0, idx)] ?? 0;
 }
 
 let durations: number[] = [];
@@ -49,7 +49,6 @@ beforeAll(() => {
 
 it(`PB1 — buildIndex p95 < ${P95_MAX_MS}ms over ${ITERATIONS} iterations (query="${REPRESENTATIVE_QUERY}")`, () => {
   const result = p95(durations);
-  // eslint-disable-next-line no-console
   console.info(`[PB1] buildIndex p95=${result.toFixed(3)}ms (budget: ${P95_MAX_MS}ms, iterations: ${ITERATIONS})`);
   expect(result).toBeLessThan(P95_MAX_MS);
 });
@@ -62,7 +61,6 @@ it("PB1b — buildIndex p95 < 50ms with empty query (module-jump harvest)", () =
     empties.push(performance.now() - start);
   }
   const result = p95(empties);
-  // eslint-disable-next-line no-console
   console.info(`[PB1b] buildIndex(empty) p95=${result.toFixed(3)}ms (budget: ${P95_MAX_MS}ms)`);
   expect(result).toBeLessThan(P95_MAX_MS);
 });
