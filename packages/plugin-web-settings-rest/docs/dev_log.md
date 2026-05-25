@@ -7,13 +7,21 @@
 ```
 Workflow        = FEATURE_DEV
 Feature         = xai-web-settings-rest (roadmap row #24, W4b)
-Status          = READY_FOR_VERIFY
-Current Phase   = FEATURE_VERIFY
-Executor        = claude-sonnet-4-6 (feature-auto-build)
-Updated         = 2026-05-23 17:45
-Suggested Next  = feature-verify
+Status          = SHIPPED
+Current Phase   = SHIP
+Executor        = claude-opus-4-7-1m (PR-2 drift reconcile, 2026-05-24)
+Updated         = 2026-05-24
+Suggested Next  = — (workflow complete)
 Automation Mode = default
 ```
+
+> **Reconciliation note (2026-05-24, PR-2):** This Workflow State block was stale at
+> `READY_FOR_VERIFY` despite the row being SHIPPED on 2026-05-23 (commit `6b8de35`
+> "chore(xai-web-settings-rest): ship — flip dev_log + manifest #24 to SHIPPED +
+> PLUGIN_MAP row + roadmap complete"). The ship commit flipped the sibling package
+> `xai-web-settings-rest`'s dev_log + manifest + PLUGIN_MAP, but this `plugin-web-settings-rest`
+> mirror was missed. Reconciled as part of PR-2 of
+> `docs/reviews/web-priority-pivot-and-repo-cleanup/20260524-brief.md`.
 
 ---
 
