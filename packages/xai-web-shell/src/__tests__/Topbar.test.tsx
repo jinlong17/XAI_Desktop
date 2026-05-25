@@ -84,20 +84,36 @@ describe("Topbar", () => {
     expect(props.onOpenSettings).toHaveBeenCalledTimes(1);
   });
 
-  it("TP5 — search input renders with EN placeholder", () => {
+  it("TP5a — no onOpenSearch prop → renders readOnly input with EN placeholder (backwards-compat)", () => {
     renderTopbar({ lang: "en" });
+    // onOpenSearch not provided → readOnly input rendered
     const input = screen.getByPlaceholderText("Search tasks, habits, notes…");
     expect(input).toBeTruthy();
+    expect(input.tagName).toBe("INPUT");
+    expect((input as HTMLInputElement).readOnly).toBe(true);
   });
 
-  it("TP5b — search input renders with ZH placeholder", () => {
-    renderTopbar({ lang: "zh" });
-    const input = screen.getByPlaceholderText("搜索任务、习惯、笔记…");
-    expect(input).toBeTruthy();
+  it("TP5b — onOpenSearch prop provided → renders <button class='search-box'>", () => {
+    const onOpenSearch = vi.fn();
+    renderTopbar({ lang: "en", onOpenSearch });
+    // Button rendered instead of input
+    const btn = screen.getByRole("button", { name: "Search tasks, habits, notes…" });
+    expect(btn).toBeTruthy();
+    expect(btn.tagName).toBe("BUTTON");
+    // readOnly input should NOT be present
+    expect(screen.queryByPlaceholderText("Search tasks, habits, notes…")).toBeNull();
   });
 
   it("TP6 — ⌘K kbd hint is rendered", () => {
     renderTopbar();
     expect(screen.getByText("⌘K")).toBeTruthy();
+  });
+
+  it("TP7 — button click calls onOpenSearch()", () => {
+    const onOpenSearch = vi.fn();
+    renderTopbar({ lang: "en", onOpenSearch });
+    const btn = screen.getByRole("button", { name: "Search tasks, habits, notes…" });
+    fireEvent.click(btn);
+    expect(onOpenSearch).toHaveBeenCalledTimes(1);
   });
 });

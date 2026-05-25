@@ -36,7 +36,7 @@ beforeEach(() => {
 });
 
 describe("Shell cross-package smoke (A1..A4)", () => {
-  it("A1 — App renders Shell with Topbar (search input present)", () => {
+  it("A1 — App renders Shell with Topbar (search button present, xai-web-cmdk P4)", () => {
     render(
       <MemoryRouter initialEntries={["/app/dashboard"]}>
         <Routes>
@@ -46,9 +46,9 @@ describe("Shell cross-package smoke (A1..A4)", () => {
         </Routes>
       </MemoryRouter>
     );
-    // Topbar renders a search input (EN placeholder)
-    const input = screen.getByPlaceholderText("Search tasks, habits, notes…");
-    expect(input).toBeTruthy();
+    // xai-web-cmdk P4: App passes onOpenSearch, so Topbar renders a <button> (not readOnly input).
+    const btn = screen.getByRole("button", { name: "Search tasks, habits, notes…" });
+    expect(btn).toBeTruthy();
   });
 
   it("A1b — App renders AppRail (aside.app-rail present)", () => {

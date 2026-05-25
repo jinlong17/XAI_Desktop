@@ -94,6 +94,15 @@ export interface ShellProps {
   /** Density preset. */
   density: Density;
   setDensity: (next: Density) => void;
+  /**
+   * Optional callback wired by the host (apps/web/src/App.tsx) from
+   * CommandPaletteProvider. When provided, Topbar renders a clickable button
+   * instead of the readOnly search input (backwards-compatible — undefined
+   * restores the original readOnly input).
+   *
+   * xai-web-cmdk gap-closure row #3 — P4 addition.
+   */
+  onOpenSearch?: () => void;
   /** Optional render-prop for the main pane — defaults to <Outlet/> from react-router. */
   children?: ReactNode;
 }
@@ -127,6 +136,14 @@ export interface TopbarProps {
   setDensity: (next: Density) => void;
   /** Called when the Settings gear icon is clicked. Host emits + navigates. */
   onOpenSettings: () => void;
+  /**
+   * Optional callback from the command palette provider.
+   * When provided: renders a clickable <button> instead of the readOnly input.
+   * When absent: renders the original readOnly input (backwards-compatible).
+   *
+   * xai-web-cmdk gap-closure row #3 — P4 addition.
+   */
+  onOpenSearch?: () => void;
 }
 
 export interface AvatarMenuProps {

@@ -17,16 +17,35 @@ export function Topbar({
   density,
   setDensity,
   onOpenSettings,
+  onOpenSearch,
 }: TopbarProps) {
   const { s } = useI18n(lang);
 
   return (
     <header className="topbar">
-      <div className="search-box">
-        <Icon name="search" size={15} />
-        <input placeholder={s("common.search_placeholder")} readOnly />
-        <span className="kbd">⌘K</span>
-      </div>
+      {/*
+       * xai-web-cmdk P4: if onOpenSearch is provided, render a clickable button
+       * (keyboard-accessible, aria-label set). Otherwise render the original
+       * readOnly input as a decorative visual (backwards-compatible — TP5a).
+       */}
+      {onOpenSearch ? (
+        <button
+          type="button"
+          className="search-box"
+          onClick={onOpenSearch}
+          aria-label={s("common.search_placeholder")}
+        >
+          <Icon name="search" size={15} />
+          <span>{s("common.search_placeholder")}</span>
+          <span className="kbd">⌘K</span>
+        </button>
+      ) : (
+        <div className="search-box">
+          <Icon name="search" size={15} />
+          <input placeholder={s("common.search_placeholder")} readOnly />
+          <span className="kbd">⌘K</span>
+        </div>
+      )}
 
       <div className="topbar-controls">
         <div className="seg" role="tablist">

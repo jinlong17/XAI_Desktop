@@ -12,10 +12,14 @@
  * the W1 shipped packages instead of CDN globals.
  *
  * Phase plan: packages/xai-web-shell/docs/dev_log.md P1 (Topbar + root state)
+ *
+ * xai-web-cmdk P4: App is split into App (provider) + AppInner (consumer).
+ * App wraps AppInner in <CommandPaletteProvider>; AppInner reads the context
+ * via useCommandPalette() and passes onOpenSearch to <Shell>.
  */
 
 import { useState, useEffect, useMemo } from "react";
-import { Outlet, useParams, useNavigate } from "react-router";
+import { Outlet, useNavigate } from "react-router";
 import {
   applyTheme,
   applyDensity,
@@ -40,10 +44,18 @@ import {
   useFeaturePrefs,
   filterModulesByFeaturePrefs,
 } from "@repo/plugin-web-settings-features-panel";
+// xai-web-cmdk gap-closure row #3 — global Cmd+K command palette
+import {
+  CommandPaletteProvider,
+  CommandPalette,
+  useCommandPalette,
+} from "@repo/xai-web-cmdk";
 
-// ---- App component ---------------------------------------------------------
+// ---- AppInner — consumes CommandPaletteProvider context --------------------
 
-export function App() {
+function AppInner() {
+  const { open: openPalette } = useCommandPalette();
+
   // ---- useState state pieces -----------------------------------------------
   const [lang, setLang] = useState<Lang>("en");
   const [theme, setTheme] = useState<Theme>("light");
@@ -110,6 +122,10 @@ export function App() {
       petOn={petOn}
       setPetOn={setPetOn}
     >
+      {/*
+       * xai-web-cmdk P4: Shell receives onOpenSearch from the palette context.
+       * When the topbar search box is clicked, openPalette fires with source="topbar-click".
+       */}
       <Shell
         lang={lang}
         setLang={setLang}
@@ -117,12 +133,29 @@ export function App() {
         setTheme={setTheme}
         density={density}
         setDensity={setDensity}
+        onOpenSearch={() => openPalette({ source: "topbar-click" })}
       >
         <Outlet />
       </Shell>
       {/* xai-web-pet: floats over all routes (position:fixed); not a routed module */}
       <DesktopPet on={petOn} lang={lang} />
+      {/*
+       * xai-web-cmdk P4: CommandPalette is mounted as a sibling of <Shell>.
+       * It reads from CommandPaletteProvider context (above) and uses
+       * position:fixed to overlay the full viewport. HC1: not a rail entry.
+       */}
+      <CommandPalette />
     </WebShellProvider>
+  );
+}
+
+// ---- App component — wraps AppInner in CommandPaletteProvider --------------
+
+export function App() {
+  return (
+    <CommandPaletteProvider>
+      <AppInner />
+    </CommandPaletteProvider>
   );
 }
 

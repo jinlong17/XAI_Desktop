@@ -245,6 +245,9 @@ importers:
       '@repo/web-auth-device-session':
         specifier: workspace:*
         version: link:../../packages/web-auth-device-session
+      '@repo/xai-web-cmdk':
+        specifier: workspace:*
+        version: link:../../packages/xai-web-cmdk
       '@repo/xai-web-shell':
         specifier: workspace:*
         version: link:../../packages/xai-web-shell
