@@ -22,6 +22,7 @@ export function Shell({
   setTheme,
   density,
   setDensity,
+  onOpenSearch,
   children,
 }: ShellProps) {
   const { railPos, petOn, setPetOn } = useWebShell();
@@ -74,6 +75,7 @@ export function Shell({
         density={density}
         setDensity={setDensity}
         onOpenSettings={onOpenSettings}
+        onOpenSearch={onOpenSearch}
       />
       <main className="app-main">
         {children ?? <Outlet />}

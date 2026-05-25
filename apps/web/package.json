@@ -30,6 +30,7 @@
     "@repo/plugin-web-tokens": "workspace:*",
     "@repo/plugin-web-storage": "workspace:*",
     "@repo/xai-web-shell": "workspace:*",
+    "@repo/xai-web-cmdk": "workspace:*",
     "@repo/plugin-web-pet": "workspace:*",
     "@repo/plugin-web-board-core": "workspace:*",
     "@repo/plugin-web-board-views": "workspace:*",
