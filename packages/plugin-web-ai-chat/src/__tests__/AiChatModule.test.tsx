@@ -2,29 +2,56 @@
  * AiChatModule integration tests.
  *
  * Design: packages/xai-web-ai-chat/docs/test.md §3 — I
+ *
+ * I1..I18 (backward-compat): use mockNoOpStream() helper which stubs
+ * streamCompleteChat to yield the demo text synchronously. This preserves
+ * exact timing and DOM assertions from the SHIPPED no-op adapter era.
+ *
+ * I19..I23 (new streaming+error cases): use real timers + fetch mocks.
  */
 
 import React from "react";
 import { describe, it, expect, vi, beforeEach, afterEach } from "vitest";
-import { act, render, screen, fireEvent } from "@testing-library/react";
+import { act, render, screen, fireEvent, waitFor } from "@testing-library/react";
 import { AiChatModule } from "../AiChatModule.js";
 import {
   ADAPTER_DELAY_MAX_MS,
   DEMO_REPLY_EN,
   DEMO_REPLY_ZH,
 } from "../internal/claudeAdapter.js";
+import { emitWebEvent } from "@repo/xai-web-event-bus";
+import { aiKeyStorage } from "../internal/secretStore.js";
+
+// ---- mockNoOpStream --------------------------------------------------------
+// Stubs streamCompleteChat to immediately yield the EN or ZH demo string
+// (one chunk, done=true). Timers stay fake in the surrounding test.
+// Returns the spy so callers can restore it.
+async function mockNoOpStream(demoEn = DEMO_REPLY_EN, demoZh = DEMO_REPLY_ZH) {
+  const mod = await import("../internal/claudeStreamAdapter.js");
+  const spy = vi.spyOn(mod, "streamCompleteChat").mockImplementation(
+    async function* (req) {
+      const text = req.lang === "zh" ? demoZh : demoEn;
+      yield { accumulated: text, done: true };
+    },
+  );
+  return spy;
+}
 
 describe("AiChatModule integration (I)", () => {
-  beforeEach(() => {
+  beforeEach(async () => {
     vi.useFakeTimers();
     // Pin Math.random so adapter delay is the upper bound (1199 ms) — gives a
     // single predictable advance window.
     vi.spyOn(Math, "random").mockReturnValue(0.999999);
+    // Stub streamCompleteChat so I1..I18 work without a real API key or fetch.
+    await mockNoOpStream();
   });
   afterEach(() => {
     vi.useRealTimers();
     vi.restoreAllMocks();
     localStorage.clear();
+    void aiKeyStorage.clearKey("anthropic").catch(() => undefined);
+    void aiKeyStorage.clearKey("openai-compatible").catch(() => undefined);
   });
 
   it("I1: lang=en shows EN welcome heading", () => {
@@ -312,24 +339,28 @@ describe("AiChatModule integration (I)", () => {
   });
 
   it("I17: resend-while-thinking — second send mid-flight is queued behind first, NOT raced", async () => {
-    // Stub the adapter with externally-resolvable promises so we can observe
-    // the queue's serialization without relying on fake-timer mechanics.
-    // Distinguishing assertion: the second adapter call MUST NOT begin until
-    // the first promise settles. A racing impl would call `completeChat`
-    // twice synchronously after the two `send()` calls; the queued impl
-    // invokes it once, then again only after the first promise resolves.
-    const adapterMod = await import("../internal/claudeAdapter.js");
+    // Stub streamCompleteChat with externally-resolvable async generators so we
+    // can observe queue serialization without relying on fake-timer mechanics.
+    // Distinguishing assertion: the second streamCompleteChat call MUST NOT begin
+    // until the first generator completes. A racing impl would start both calls
+    // synchronously; the queued impl starts the second only after the first done.
+    const streamMod = await import("../internal/claudeStreamAdapter.js");
     const calls: string[] = [];
-    let resolveFirst: ((value: string) => void) | null = null;
-    let resolveSecond: ((value: string) => void) | null = null;
+    type Resolver = (value: { accumulated: string; done: boolean }) => void;
+    let yieldFirst: Resolver | null = null;
+    let yieldSecond: Resolver | null = null;
     const spy = vi
-      .spyOn(adapterMod, "completeChat")
-      .mockImplementation(async (text: string): Promise<string> => {
-        calls.push(text);
-        return new Promise<string>((resolve) => {
-          if (calls.length === 1) resolveFirst = resolve;
-          else resolveSecond = resolve;
-        });
+      .spyOn(streamMod, "streamCompleteChat")
+      .mockImplementation(async function* (req) {
+        calls.push(req.text);
+        // Yield one chunk when the test resolves the promise.
+        const chunk = await new Promise<{ accumulated: string; done: boolean }>(
+          (resolve) => {
+            if (calls.length === 1) yieldFirst = resolve;
+            else yieldSecond = resolve;
+          },
+        );
+        yield chunk;
       });
     try {
       // Switch to real timers so the act() promise plumbing isn't tangled with
@@ -337,7 +368,7 @@ describe("AiChatModule integration (I)", () => {
       vi.useRealTimers();
       const { container } = render(<AiChatModule lang="en" />);
       const inp = container.querySelector<HTMLInputElement>(".ai-input")!;
-      // First send → completeChat called once, queue holds 1 in-flight item.
+      // First send → streamCompleteChat called once, queue holds 1 in-flight item.
       act(() => {
         fireEvent.change(inp, { target: { value: "first" } });
       });
@@ -350,8 +381,8 @@ describe("AiChatModule integration (I)", () => {
         "thinking",
       );
       // Second send mid-flight. KEY DISTINGUISHING ASSERTION: the queued impl
-      // does NOT invoke completeChat a second time here — the prompt sits in
-      // the queue. A racing impl WOULD invoke it now (call count would jump
+      // does NOT invoke streamCompleteChat a second time here — the prompt sits
+      // in the queue. A racing impl WOULD invoke it now (call count would jump
       // to 2 immediately).
       act(() => {
         fireEvent.change(inp, { target: { value: "second" } });
@@ -361,10 +392,9 @@ describe("AiChatModule integration (I)", () => {
       });
       expect(container.querySelectorAll(".ai-msg-user").length).toBe(2);
       expect(calls.length).toBe(1); // ← the anti-race assertion
-      // Resolve the first promise → queue advances → second adapter call now
-      // starts.
+      // Resolve the first generator → queue advances → second adapter call now starts.
       await act(async () => {
-        resolveFirst?.("REPLY-1");
+        yieldFirst?.({ accumulated: "REPLY-1", done: true });
         // Give the queue's while-loop a chance to schedule the second call.
         await Promise.resolve();
         await Promise.resolve();
@@ -380,9 +410,9 @@ describe("AiChatModule integration (I)", () => {
       expect(container.querySelector(".ai-stage")?.className).toContain(
         "thinking",
       );
-      // Resolve the second promise → queue drains → thinking clears.
+      // Resolve the second generator → queue drains → thinking clears.
       await act(async () => {
-        resolveSecond?.("REPLY-2");
+        yieldSecond?.({ accumulated: "REPLY-2", done: true });
         await Promise.resolve();
         await Promise.resolve();
         await Promise.resolve();
@@ -467,5 +497,189 @@ describe("AiChatModule integration (I)", () => {
     } else {
       expect(found).toBe(true);
     }
+  });
+
+  // ---- I19..I23: streaming + error integration (new in gap-closure row #2) --
+
+  it("I19: streaming bubble mutation — DOM text grows with each chunk", async () => {
+    vi.useRealTimers();
+    vi.restoreAllMocks(); // Remove beforeEach mockNoOpStream
+    const streamMod = await import("../internal/claudeStreamAdapter.js");
+
+    // resolvers allow manual step-through
+    const resolvers: Array<() => void> = [];
+    const chunks = [
+      { accumulated: "He", done: false },
+      { accumulated: "Hello", done: false },
+      { accumulated: "Hello world", done: true },
+    ];
+    vi.spyOn(streamMod, "streamCompleteChat").mockImplementation(
+      async function* () {
+        for (const chunk of chunks) {
+          await new Promise<void>((r) => resolvers.push(r));
+          yield chunk;
+        }
+      },
+    );
+
+    const { container } = render(<AiChatModule lang="en" />);
+    const inp = container.querySelector<HTMLInputElement>(".ai-input")!;
+    act(() => {
+      fireEvent.change(inp, { target: { value: "hello" } });
+    });
+    act(() => {
+      fireEvent.keyDown(inp, { key: "Enter", shiftKey: false });
+    });
+
+    // Release chunk 1.
+    await act(async () => {
+      resolvers[0]?.();
+      await Promise.resolve();
+    });
+    let bubble = container.querySelector(".ai-msg-assistant .ai-bubble");
+    expect(bubble?.textContent).toContain("He");
+
+    // Release chunk 2.
+    await act(async () => {
+      resolvers[1]?.();
+      await Promise.resolve();
+    });
+    bubble = container.querySelector(".ai-msg-assistant .ai-bubble");
+    expect(bubble?.textContent).toContain("Hello");
+
+    // Release chunk 3 (done).
+    await act(async () => {
+      resolvers[2]?.();
+      await Promise.resolve();
+    });
+    bubble = container.querySelector(".ai-msg-assistant .ai-bubble");
+    expect(bubble?.textContent).toContain("Hello world");
+  });
+
+  it("I20: key-missing banner — ErrorBanner shows 'configure your API key' copy", async () => {
+    vi.useRealTimers();
+    vi.restoreAllMocks(); // Remove beforeEach mockNoOpStream
+
+    // Stub streamCompleteChat to throw BadKey with detail:'not-set' (simulates
+    // the no-key path where processQueue catches and sets bannerError directly).
+    const streamMod = await import("../internal/claudeStreamAdapter.js");
+    const badKeyError = { kind: "BadKey", status: 401, detail: "not-set" };
+    vi.spyOn(streamMod, "streamCompleteChat").mockImplementation(
+      async function* () {
+        // Delegate to a rejected promise so the generator throws on first iteration.
+        const items: Array<{ accumulated: string; done: boolean }> = await Promise.reject(badKeyError);
+        yield* items; // unreachable; keeps generator return type correct
+      },
+    );
+
+    const { container } = render(<AiChatModule lang="en" />);
+    const inp = container.querySelector<HTMLInputElement>(".ai-input")!;
+    act(() => {
+      fireEvent.change(inp, { target: { value: "hello" } });
+    });
+    act(() => {
+      fireEvent.keyDown(inp, { key: "Enter", shiftKey: false });
+    });
+
+    // Wait for the error banner to appear.
+    await waitFor(() => {
+      const banner = container.querySelector(".ai-error-banner");
+      expect(banner).not.toBeNull();
+      expect(banner?.textContent).toMatch(/configure your API key/i);
+    });
+  });
+
+  it("I21: rate-limited banner — banner shows countdown after rate-limit event", async () => {
+    vi.useRealTimers();
+    vi.restoreAllMocks(); // Remove beforeEach mockNoOpStream
+    const { container } = render(<AiChatModule lang="en" />);
+    act(() => {
+      emitWebEvent("web:ai:rate-limited", {
+        provider: "anthropic",
+        retryAfterSec: 5,
+        occurredAt: new Date().toISOString(),
+      });
+    });
+    const banner = container.querySelector(".ai-error-banner");
+    expect(banner).not.toBeNull();
+    // Rate-limited banner shows "Retry in 5s" or similar countdown.
+    expect(banner?.textContent).toMatch(/5s|Retry in 5/);
+    // Stage is no longer thinking (cleared by event listener).
+    expect(container.querySelector(".ai-stage")?.className).not.toContain("thinking");
+  });
+
+  it("I22: Settings link emits web:shell:module-change with moduleId:settings + detailId:ai", async () => {
+    vi.useRealTimers();
+    vi.restoreAllMocks(); // Remove beforeEach mockNoOpStream
+
+    const events: unknown[] = [];
+    // Import onWebEvent for observation (can't use useWebEventListener outside React tree).
+    const { onWebEvent } = await import("@repo/xai-web-event-bus");
+    const unsub = onWebEvent("web:shell:module-change", (e) => events.push(e));
+
+    try {
+      const { container } = render(<AiChatModule lang="en" />);
+      // Trigger the banner with a bad-key event.
+      act(() => {
+        emitWebEvent("web:ai:request-failed", {
+          provider: "anthropic",
+          kind: "bad-key",
+          status: 401,
+          occurredAt: new Date().toISOString(),
+        });
+      });
+      const settingsBtn = container.querySelector<HTMLButtonElement>(".ai-error-settings-link");
+      expect(settingsBtn).not.toBeNull();
+      act(() => {
+        fireEvent.click(settingsBtn!);
+      });
+      expect(events).toHaveLength(1);
+      const ev = events[0] as { moduleId: string; detailId?: string };
+      expect(ev.moduleId).toBe("settings");
+      expect(ev.detailId).toBe("ai");
+    } finally {
+      unsub();
+    }
+  });
+
+  it("I23: unmount mid-stream — AbortController.signal.aborted is true; no throw", async () => {
+    vi.useRealTimers();
+    vi.restoreAllMocks(); // Remove beforeEach mockNoOpStream
+    const streamMod = await import("../internal/claudeStreamAdapter.js");
+
+    let capturedSignal: AbortSignal | undefined;
+    let resolveChunk: (() => void) | undefined;
+
+    vi.spyOn(streamMod, "streamCompleteChat").mockImplementation(
+      async function* (req) {
+        capturedSignal = req.signal;
+        // Wait before yielding first chunk.
+        await new Promise<void>((r) => { resolveChunk = r; });
+        yield { accumulated: "partial", done: false };
+        // Second chunk — should not be reached after abort.
+        yield { accumulated: "partial more", done: true };
+      },
+    );
+
+    const { container, unmount } = render(<AiChatModule lang="en" />);
+    const inp = container.querySelector<HTMLInputElement>(".ai-input")!;
+    act(() => {
+      fireEvent.change(inp, { target: { value: "test" } });
+    });
+    act(() => {
+      fireEvent.keyDown(inp, { key: "Enter", shiftKey: false });
+    });
+
+    // Unmount before resolving the stream.
+    unmount();
+
+    // Release the chunk after unmount.
+    await act(async () => {
+      resolveChunk?.();
+      await Promise.resolve();
+    });
+
+    // Signal should be aborted (AbortController.abort() called on unmount).
+    expect(capturedSignal?.aborted).toBe(true);
   });
 });

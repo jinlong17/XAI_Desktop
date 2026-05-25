@@ -1,22 +1,29 @@
 /**
  * AiChatModule — root route component for the AI Chat module.
  *
- * Composes: AiSidebar + AiAurora + BreathingOrb + AiThread + AiComposer.
+ * Composes: AiSidebar + AiAurora + BreathingOrb + AiThread + AiComposer +
+ * ErrorBanner.
  * Owns: usePref for the three persistence keys; local state for input,
- * attachments, messages, thinking, activeConvo, model, sidebar open.
+ * attachments, messages, thinking, activeConvo, model, sidebar open,
+ * errorBanner (LlmError | null).
  *
  * Send flow: append user bubble → clear input/attachments → flip thinking
  * on → seed new convo if first message → enqueue prompt onto a FIFO
  * pendingSendQueue → processQueue drains entries one-at-a-time through
- * claudeAdapter, appending each assistant bubble in order; thinking stays
- * true until the queue is fully drained. mountedRef short-circuits if the
- * component unmounted during the await.
+ * streamCompleteChat, mutating an in-progress assistant bubble with each
+ * yielded chunk; thinking stays true until the queue is fully drained.
+ * mountedRef short-circuits if the component unmounted during the stream.
+ *
+ * Error handling: LlmError thrown by streamCompleteChat sets bannerError state,
+ * which renders ErrorBanner. Listening to web:ai:rate-limited and
+ * web:ai:request-failed via useWebEventListener also triggers the banner.
+ * The in-progress assistant bubble is removed on error (no partial text left).
  *
  * Resend-while-thinking: per design.md state machine, a second `send()`
  * during an in-flight adapter call is queued behind the current promise
  * (FIFO). The user bubble appears immediately; the assistant bubble is
  * appended only after the previous queued item resolves. No race between
- * parallel completeChat calls.
+ * parallel streamCompleteChat calls.
  *
  * API contract: packages/xai-web-ai-chat/docs/api.md §1
  */
@@ -30,15 +37,19 @@ import React, {
 } from "react";
 import type { Lang } from "@repo/plugin-web-tokens";
 import { usePref } from "@repo/plugin-web-storage";
+import { emitWebEvent, useWebEventListener } from "@repo/xai-web-event-bus";
 import { AiAurora } from "./AiAurora.js";
 import { BreathingOrb } from "./BreathingOrb.js";
 import { AiSidebar } from "./AiSidebar.js";
 import { AiComposer } from "./AiComposer.js";
 import { AiThread } from "./AiThread.js";
+import { ErrorBanner } from "./ErrorBanner.js";
 import { IconList, IconPlus, IconSparkle } from "./internal/icons.js";
-import { completeChat } from "./internal/claudeAdapter.js";
+import { streamCompleteChat } from "./internal/claudeStreamAdapter.js";
 import { isAiConvoRecord } from "./internal/isAiConvoRecord.js";
 import { makeConvoFromUserText } from "./internal/makeConvoFromUserText.js";
+import type { LlmError } from "./internal/llmErrors.js";
+import { getPref } from "@repo/plugin-web-storage";
 import type {
   AiAttachment,
   AiConvoRecord,
@@ -84,10 +95,14 @@ export function AiChatModule({ lang }: AiChatModuleProps) {
   const [activeConvo, setActiveConvo] = useState<string | null>(null);
   const [sidebarOpen, setSidebarOpen] = useState(true);
   const [model, setModel] = useState<AiModelId>("haiku");
+  /** Non-null when there is an active LlmError to display. */
+  const [bannerError, setBannerError] = useState<LlmError | null>(null);
 
   // ---- Refs ---------------------------------------------------------------
   const endRef = useRef<HTMLDivElement | null>(null);
   const mountedRef = useRef(true);
+  /** AbortController for the currently-active stream. Created per processQueue call. */
+  const abortCtrlRef = useRef<AbortController | null>(null);
   /**
    * FIFO queue of prompts awaiting adapter completion.
    *
@@ -105,6 +120,8 @@ export function AiChatModule({ lang }: AiChatModuleProps) {
     mountedRef.current = true;
     return () => {
       mountedRef.current = false;
+      // Abort any in-flight stream when component unmounts.
+      abortCtrlRef.current?.abort();
     };
   }, []);
 
@@ -112,11 +129,49 @@ export function AiChatModule({ lang }: AiChatModuleProps) {
     endRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages, thinking]);
 
-  // ---- Queue processor ----------------------------------------------------
+  // ---- Error event listeners (from the stream adapter) --------------------
+  // Note: these events are emitted by claudeStreamAdapter BEFORE throwing,
+  // so the processQueue catch block also fires. The event listener path is
+  // primarily for cases where the error is emitted outside processQueue
+  // (e.g. external subscribers). Inside processQueue, bannerError is set
+  // directly from the caught LlmError.
+  useWebEventListener("web:ai:rate-limited", (e) => {
+    const err: LlmError = {
+      kind: "RateLimited",
+      status: 429,
+      retryAfterSec: e.retryAfterSec ?? 60,
+    };
+    setBannerError(err);
+    setThinking(false);
+  });
+
+  useWebEventListener("web:ai:request-failed", (e) => {
+    let err: LlmError;
+    const rawStatus = e.status;
+    if (e.kind === "bad-key") {
+      const st = (rawStatus === 401 || rawStatus === 403 ? rawStatus : 401) as 401 | 403;
+      err = { kind: "BadKey", status: st };
+    } else if (e.kind === "network") {
+      err = { kind: "Network", cause: new Error("request-failed event") };
+    } else if (e.kind === "server") {
+      err = { kind: "Server", status: rawStatus ?? 500 };
+    } else {
+      err = { kind: "Malformed", where: "shape", detail: "request-failed event" };
+    }
+    setBannerError(err);
+    setThinking(false);
+  });
+
+  // ---- Queue processor (streaming) ----------------------------------------
   /**
    * Drains the FIFO queue one prompt at a time. Always called via a fresh
    * microtask after enqueue. If already processing OR queue empty, returns
    * immediately — every enqueue path is safe to re-call.
+   *
+   * Each queue item is streamed via streamCompleteChat. During streaming, a
+   * placeholder assistant bubble is appended immediately (empty text) and then
+   * mutated in place with each accumulated chunk. On LlmError, the placeholder
+   * is removed and bannerError is set.
    *
    * `thinking` stays `true` until the queue is fully drained (so the UI
    * shows the orb continuously across queued resends).
@@ -129,27 +184,94 @@ export function AiChatModule({ lang }: AiChatModuleProps) {
       while (pendingSendQueueRef.current.length > 0) {
         const next = pendingSendQueueRef.current[0];
         if (!next) break;
-        let reply: string;
+
+        // Create a new AbortController for this stream.
+        const ctrl = new AbortController();
+        abortCtrlRef.current = ctrl;
+
+        // Read model preference (non-React context: direct localStorage read per Rec2).
+        const modelPref = (getPref("xai_ai_model_default") as "haiku" | "sonnet" | "opus") ?? model;
+
+        // Placeholder ID for streaming bubble mutation. The placeholder is NOT
+        // appended until the first chunk arrives (so user bubbles always precede
+        // assistant bubbles in the message list, satisfying FIFO ordering).
+        const placeholderId = `streaming-${Date.now()}`;
+        let placeholderInserted = false;
+
+        let accumulated = "";
+        let streamError: LlmError | null = null;
+
         try {
-          reply = await completeChat(next.text, next.lang);
-        } catch {
-          reply =
-            next.lang === "zh"
-              ? "（演示）我会综合你的任务、专注数据与习惯进度，给你一份贴近实际的建议。当前网络暂不可用，请稍后再试。"
-              : "(Demo) I'd weave your tasks, focus data, and habit streaks into a tailored plan. Network unavailable right now — try again in a moment.";
+          for await (const chunk of streamCompleteChat({
+            text: next.text,
+            lang: next.lang,
+            model: modelPref,
+            signal: ctrl.signal,
+          })) {
+            if (!mountedRef.current) return;
+            accumulated = chunk.accumulated;
+
+            if (!placeholderInserted) {
+              // Insert the assistant bubble on the first chunk so DOM ordering is:
+              // all queued user bubbles → then assistant bubbles in order.
+              placeholderInserted = true;
+              setMessages((m) => [
+                ...m,
+                { role: "assistant", text: accumulated, attachments: null, _id: placeholderId } as AiMessage & { _id: string },
+              ]);
+            } else {
+              // Mutate the placeholder bubble in place for subsequent chunks.
+              setMessages((m) =>
+                m.map((msg) => {
+                  const msgWithId = msg as AiMessage & { _id?: string };
+                  return msgWithId._id === placeholderId
+                    ? { ...msg, text: accumulated }
+                    : msg;
+                }),
+              );
+            }
+
+            if (chunk.done) break;
+          }
+        } catch (err) {
+          // streamCompleteChat throws LlmError on 4xx/5xx/network failure.
+          streamError = err as LlmError;
         }
+
         if (!mountedRef.current) return;
+
+        if (streamError != null) {
+          // Remove any partial placeholder bubble and set error banner.
+          if (placeholderInserted) {
+            setMessages((m) =>
+              m.filter((msg) => (msg as AiMessage & { _id?: string })._id !== placeholderId),
+            );
+          }
+          setBannerError(streamError);
+          setThinking(false);
+          // Clear the queue — no point continuing after error.
+          pendingSendQueueRef.current = [];
+          return;
+        }
+
+        // If aborted (unmount or explicit abort) without error, just stop.
+        if (ctrl.signal.aborted) {
+          if (placeholderInserted) {
+            setMessages((m) =>
+              m.filter((msg) => (msg as AiMessage & { _id?: string })._id !== placeholderId),
+            );
+          }
+          return;
+        }
+
         pendingSendQueueRef.current.shift();
-        setMessages((m) => [
-          ...m,
-          { role: "assistant", text: reply, attachments: null },
-        ]);
       }
       if (mountedRef.current) setThinking(false);
     } finally {
       processingRef.current = false;
+      abortCtrlRef.current = null;
     }
-  }, []);
+  }, [model]);
 
   // ---- Send flow ----------------------------------------------------------
   const send = useCallback(
@@ -226,6 +348,14 @@ export function AiChatModule({ lang }: AiChatModuleProps) {
     },
     [send],
   );
+
+  const handleOpenSettings = useCallback(() => {
+    emitWebEvent("web:shell:module-change", {
+      moduleId: "settings",
+      detailId: "ai",
+      source: "programmatic",
+    });
+  }, []);
 
   const stageClass =
     "ai-stage" + (thinking ? " thinking" : "") + (messages.length === 0 ? " empty" : " chatting");
@@ -309,6 +439,18 @@ export function AiChatModule({ lang }: AiChatModuleProps) {
             endRef={endRef}
           />
         </div>
+
+        {bannerError != null && (
+          <ErrorBanner
+            error={bannerError}
+            lang={lang}
+            onDismiss={() => setBannerError(null)}
+            onRetry={() => {
+              setBannerError(null);
+            }}
+            onOpenSettings={handleOpenSettings}
+          />
+        )}
 
         <AiComposer
           input={input}

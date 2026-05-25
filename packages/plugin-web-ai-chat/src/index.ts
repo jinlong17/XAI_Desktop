@@ -16,6 +16,8 @@ import "./styles.css";
 
 // ---- Components ------------------------------------------------------------
 export { AiChatModule } from "./AiChatModule.js";
+export { ErrorBanner } from "./ErrorBanner.js";
+export type { ErrorBannerProps } from "./ErrorBanner.js";
 
 // ---- Slot registration (consumed by apps/web shellRegistrations.tsx) -------
 export { aiChatWebModuleRegistration } from "./registration.js";
