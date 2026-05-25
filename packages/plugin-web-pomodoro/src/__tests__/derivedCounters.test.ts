@@ -20,10 +20,10 @@ import {
   FIXTURE_FOCUS_YESTERDAY,
   FIXTURE_SHORT_BREAK_TODAY,
 } from "../__fixtures__/sessions.js";
-import { localDateKey } from "../internal/formatRecordDate.js";
-
-// "Today" in local timezone matches vitest.setup.ts system time
-const TODAY_LOCAL = localDateKey(new Date());
+// "Today" as a fixed literal aligned to vitest.setup.ts TEST_NOW = new Date(2026, 4, 23, 14, 30, 0).
+// Must NOT call new Date() here — module top-level runs before beforeEach installs fake timers,
+// so it would read the real host clock and diverge from the fixture anchor.
+const TODAY_LOCAL = "2026-05-23";
 
 describe("countTodaysPomos", () => {
   // DC1: empty array → 0
