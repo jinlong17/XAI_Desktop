@@ -7,6 +7,7 @@
 | 决策者 | Jinlong (project owner) + Claude (`feature-plan` → `feature-review`) |
 | Supersedes | none |
 | Superseded by | none |
+| Amendments | 2026-05-25 §S3 D3 + §S6 `_headers` — `connect-src` widened to include `https://api.anthropic.com` (row `xai-web-ai-chat-real-llm-adapter`, gap-closure #2) |
 
 ---
 
@@ -115,6 +116,32 @@ Pages cannot do per-request injection.
   `connect-src 'self'`, `font-src 'self' data: https://fonts.gstatic.com`,
   `object-src 'none'`, `base-uri 'self'`, `frame-ancestors 'none'`,
   `form-action 'self'`, `upgrade-insecure-requests`.
+
+**Amendment 2026-05-25 — `connect-src` allowlist extension (binding precedent for future waves):**
+
+`connect-src` was widened from `'self'` to `'self' https://api.anthropic.com` to
+support the `xai-web-ai-chat-real-llm-adapter` row (gap-closure #2), which calls
+the Anthropic Messages API directly from the browser when the user supplies their
+own API key.
+
+Decision pattern (binding precedent for wave 2 and wave 3 CSP rows):
+
+| Directive | Before | After |
+|---|---|---|
+| `connect-src` | `'self'` | `'self' https://api.anthropic.com` |
+
+**Extension rule**: future rows that need to reach additional external APIs MUST
+follow this same amendment pattern — add a row to the Amendments frontmatter
+field above, extend the `connect-src` allowlist in `apps/web/public/_headers`,
+update the `_headers` content snippet in §S6, and write a source-text guard test
+under `apps/web/src/__tests__/csp.test.ts`. This avoids re-litigating the
+Candidate A.1 decision each time a new external origin is added.
+
+**Security posture**: `https://api.anthropic.com` is the vendor's canonical API
+hostname; no wildcard is introduced. The key is user-supplied and stored in
+IndexedDB + WebCrypto AES-GCM-256 (see `packages/plugin-web-ai-chat/src/internal/secretStore.ts`).
+No API key is compiled into the static bundle; the CSP origin allowlist does not
+constitute a secret.
 - Google Fonts dependency (`https://fonts.googleapis.com`, `https://fonts.gstatic.com`)
   is covered by explicit allowlisting in `style-src` and `font-src`.
 - No `'unsafe-inline'`, no `'unsafe-eval'`, no `*` wildcard introduced.
@@ -282,13 +309,16 @@ Delivered at `apps/web/public/_headers` (Vite copies `public/` verbatim into
 
 ```
 /*
-  Content-Security-Policy: default-src 'self'; script-src 'self'; style-src 'self' https://fonts.googleapis.com; img-src 'self' data: blob:; connect-src 'self'; font-src 'self' data: https://fonts.gstatic.com; object-src 'none'; base-uri 'self'; frame-ancestors 'none'; form-action 'self'; upgrade-insecure-requests
+  Content-Security-Policy: default-src 'self'; script-src 'self'; style-src 'self' https://fonts.googleapis.com; img-src 'self' data: blob:; connect-src 'self' https://api.anthropic.com; font-src 'self' data: https://fonts.gstatic.com; object-src 'none'; base-uri 'self'; frame-ancestors 'none'; form-action 'self'; upgrade-insecure-requests
   Strict-Transport-Security: max-age=63072000; includeSubDomains; preload
   X-Content-Type-Options: nosniff
   X-Frame-Options: DENY
   Referrer-Policy: strict-origin-when-cross-origin
   Permissions-Policy: camera=(), microphone=(), geolocation=(), interest-cohort=()
 ```
+
+_(amended 2026-05-25: `connect-src` extended to include `https://api.anthropic.com`
+per gap-closure row #2 — see §S3 D3 Amendment above)_
 
 No `'unsafe-inline'`. No `'unsafe-eval'`. No `*` wildcard.
 

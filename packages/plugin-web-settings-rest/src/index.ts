@@ -27,6 +27,8 @@ export { collaboratePane }   from "./panes/collaboratePane.js";
 export { stickyPane }        from "./panes/stickyPane.js";
 export { hotkeysPane }       from "./panes/hotkeysPane.js";
 export { aboutPane }         from "./panes/aboutPane.js";
+// Extension 2026-05-25 — AI pane (gap-closure row #2)
+export { aiPane }            from "./panes/aiPane.js";
 
 // ---- Aggregate + composition helper --------------------------------------
 export { restPanesById }            from "./internal/restPanesById.js";

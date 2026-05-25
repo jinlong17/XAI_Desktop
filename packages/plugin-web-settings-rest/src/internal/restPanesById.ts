@@ -1,12 +1,13 @@
 /**
  * @internal — restPanesById.ts
  *
- * Aggregate map of all 11 panes this row owns, keyed by SettingsPaneId.
+ * Aggregate map of all 12 panes this row owns, keyed by SettingsPaneId.
  * Exported via public surface (src/index.ts) per api.md §1.4.
  *
  * Phase P1: 5 panes (account, premium, collaborate, hotkeys, about).
  * Phase P2: + smartLists, notifications, dateTime, more, integrations.
- * Phase P3: + sticky (final 11).
+ * Phase P3: + sticky (11 original panes).
+ * Extension 2026-05-25: + ai (12 total, gap-closure row #2).
  *
  * API contract: packages/xai-web-settings-rest/docs/api.md §1.4
  */
@@ -23,6 +24,7 @@ import { dateTimePane } from "../panes/dateTimePane.js";
 import { morePane } from "../panes/morePane.js";
 import { integrationsPane } from "../panes/integrationsPane.js";
 import { stickyPane } from "../panes/stickyPane.js";
+import { aiPane } from "../panes/aiPane.js";
 
 export const restPanesById: Readonly<
   Record<
@@ -36,7 +38,8 @@ export const restPanesById: Readonly<
     | "collaborate"
     | "sticky"
     | "hotkeys"
-    | "about",
+    | "about"
+    | "ai",
     Pane
   >
 > = {
@@ -51,4 +54,5 @@ export const restPanesById: Readonly<
   sticky: stickyPane,
   hotkeys: hotkeysPane,
   about: aboutPane,
+  ai: aiPane,
 } as const;

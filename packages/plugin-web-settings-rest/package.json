@@ -27,6 +27,7 @@
     "@repo/plugin-web-tokens": "workspace:*",
     "@repo/plugin-web-storage": "workspace:*",
     "@repo/plugin-web-settings-shell": "workspace:*",
+    "@repo/plugin-web-ai-chat": "workspace:*",
     "@repo/xai-web-event-bus": "workspace:*",
     "@repo/xai-web-shell": "workspace:*"
   },

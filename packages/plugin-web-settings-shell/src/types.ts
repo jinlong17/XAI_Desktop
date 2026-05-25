@@ -24,6 +24,7 @@ export type SettingsPaneId =
   | "notifications"
   | "date_time"
   | "appearance"
+  | "ai"
   | "more"
   | "integrations"
   | "collaborate"

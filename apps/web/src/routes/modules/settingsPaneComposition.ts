@@ -18,7 +18,7 @@ import { paneRegistry } from "@repo/plugin-web-settings-shell";
 import { featuresPane } from "@repo/plugin-web-settings-features-panel";
 // xai-web-settings-appearance #22
 import { appearancePane } from "@repo/plugin-web-settings-appearance";
-// xai-web-settings-rest #24 — 11 remaining panes (line-disjoint with row #22)
+// xai-web-settings-rest #24 — 11 original panes + AI pane (gap-closure row #2, line-disjoint with row #22)
 import {
   accountPane,
   premiumPane,
@@ -31,6 +31,7 @@ import {
   stickyPane,
   hotkeysPane,
   aboutPane,
+  aiPane,
 } from "@repo/plugin-web-settings-rest";
 // Sibling rows add their own imports BELOW this comment line — each row adds
 // exactly one import + one switch case. Do NOT inline a multi-import here.
@@ -46,6 +47,7 @@ export function composeSettingsPaneRegistry(): readonly Pane[] {
     // ---- xai-web-settings-appearance row #22 (line-disjoint with row #24) ----
     if (p.id === "appearance") return appearancePane;
     // ---- xai-web-settings-rest row #24 (line-disjoint with row #22) ----
+    if (p.id === "ai")            return aiPane;
     if (p.id === "account")       return accountPane;
     if (p.id === "premium")       return premiumPane;
     if (p.id === "smart_lists")   return smartListsPane;

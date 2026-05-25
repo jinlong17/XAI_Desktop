@@ -8,10 +8,11 @@ import { featuresPane } from "@repo/plugin-web-settings-features-panel";
 import { composeSettingsPaneRegistry } from "../settingsPaneComposition.js";
 
 describe("composeSettingsPaneRegistry", () => {
-  it("AC-COMP-1: returns the same length as upstream paneRegistry (13)", () => {
+  it("AC-COMP-1: returns the same length as upstream paneRegistry (14 after ai pane extension)", () => {
     const composed = composeSettingsPaneRegistry();
     expect(composed.length).toBe(paneRegistry.length);
-    expect(composed.length).toBe(13);
+    // Extension 2026-05-25: chassis grew from 13 → 14 with ai pane (gap-closure row #2).
+    expect(composed.length).toBe(14);
   });
 
   it("AC-COMP-2: the 'features' entry is featuresPane (row #23 substitution)", () => {
@@ -22,7 +23,8 @@ describe("composeSettingsPaneRegistry", () => {
 
   it("AC-COMP-3: all other entries pass through unchanged (id parity)", () => {
     const composed = composeSettingsPaneRegistry();
-    // Panes substituted by row #22 (appearance), row #23 (features-panel), and row #24 (rest — 11 panes).
+    // Panes substituted by row #22 (appearance), row #23 (features-panel), and row #24 (rest — 12 panes).
+    // Extension 2026-05-25: ai added (gap-closure row #2).
     const SUBSTITUTED_IDS = new Set([
       "features",      // row #23
       "appearance",    // row #22
@@ -36,7 +38,8 @@ describe("composeSettingsPaneRegistry", () => {
       "collaborate",
       "sticky",
       "hotkeys",
-      "about",         // row #24
+      "about",
+      "ai",            // row #24 (gap-closure row #2, 2026-05-25)
     ]);
     for (let i = 0; i < paneRegistry.length; i++) {
       const orig = paneRegistry[i]!;

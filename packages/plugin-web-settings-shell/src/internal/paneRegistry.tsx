@@ -53,6 +53,7 @@ export const paneRegistry: readonly Pane[] = [
   placeholderPane("notifications", "bell",     "settings.notifications"),
   placeholderPane("date_time",     "timer",    "settings.date_time"),
   placeholderPane("appearance",    "sun",      "settings.appearance"),
+  placeholderPane("ai",            "sparkle",  "settings.ai"),
   placeholderPane("more",          "help",     "settings.more"),
 
   // Group 3: integrations, collaborate, sticky, hotkeys

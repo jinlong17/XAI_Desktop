@@ -1108,6 +1108,9 @@ importers:
       '@repo/core':
         specifier: workspace:*
         version: link:../core
+      '@repo/plugin-web-ai-chat':
+        specifier: workspace:*
+        version: link:../plugin-web-ai-chat
       '@repo/plugin-web-settings-shell':
         specifier: workspace:*
         version: link:../plugin-web-settings-shell

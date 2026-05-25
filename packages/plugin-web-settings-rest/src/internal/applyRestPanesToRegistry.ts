@@ -13,7 +13,7 @@
 import type { Pane } from "@repo/plugin-web-settings-shell";
 import { restPanesById } from "./restPanesById.js";
 
-/** The 11 pane ids this row owns. */
+/** The 12 pane ids this row owns (11 original + ai from gap-closure row #2, 2026-05-25). */
 const OWNED_IDS = new Set<string>([
   "account",
   "premium",
@@ -26,6 +26,7 @@ const OWNED_IDS = new Set<string>([
   "sticky",
   "hotkeys",
   "about",
+  "ai",
 ]);
 
 /**

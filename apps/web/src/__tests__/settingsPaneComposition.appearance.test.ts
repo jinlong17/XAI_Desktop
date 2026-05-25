@@ -12,9 +12,10 @@ import { featuresPane } from "@repo/plugin-web-settings-features-panel";
 import { composeSettingsPaneRegistry } from "../routes/modules/settingsPaneComposition.js";
 
 describe("composeSettingsPaneRegistry — row #22 appearance (AC-COMP-1..4)", () => {
-  it("AC-COMP-1: composed pane list has same length as chassis (13)", () => {
+  it("AC-COMP-1: composed pane list has same length as chassis (14 after ai pane extension)", () => {
     const composed = composeSettingsPaneRegistry();
-    expect(composed.length).toBe(13);
+    // Extension 2026-05-25: chassis grew from 13 → 14 with ai pane (gap-closure row #2).
+    expect(composed.length).toBe(14);
     expect(composed.length).toBe(paneRegistry.length);
   });
 
