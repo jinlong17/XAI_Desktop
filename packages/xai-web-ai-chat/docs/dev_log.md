@@ -336,13 +336,13 @@ Design says that while `thinking` is active, another send remains usable but is 
 | Workflow | FEATURE_DEV |
 | Target | xai-web-ai-chat-real-llm-adapter |
 | Title | Replace Option A no-op `completeChat` with real Anthropic Claude / OpenAI-compatible LLM adapter — streaming via SSE, IndexedDB+WebCrypto API-key storage, Settings → AI pane, typed `web:ai:rate-limited` event, CSP `connect-src` widening (amend ADR-0008 in-place) |
-| Current Phase | FEATURE_VERIFY |
-| Status | READY_FOR_VERIFY |
-| Suggested Next | feature-verify |
-| Verify Cross-vendor | yes (per ADR-0009 §D4 P0 + roadmap header default; primary Codex `gpt-5.5-thinking` medium, fallback Cursor) |
+| Current Phase | FEATURE_VERIFY (complete) |
+| Status | READY_TO_SHIP |
+| Suggested Next | ship |
+| Verify Cross-vendor | yes (per ADR-0009 §D4 P0 + roadmap header default; primary Codex `gpt-5.5-thinking` medium, fallback Cursor) — CV1..CV3 cold-read DEFERRED 24h per ADR-0008 carve-out + ADR-0009 §D2-G2 (consistent with sibling-row precedent applied for #2/#3/#4/#8/#10/#18 retroactive batch 2026-05-24) |
 | Automation Mode | A-Claude (per roadmap default inherited from xai-web-console.md 2026-05-23 user override) |
-| Executor | claude-sonnet-4-6 (feature-auto-build P5, xai-roadmap-loop SERIAL dispatch 2026-05-25) |
-| Updated | 2026-05-25 04:15 |
+| Executor | claude-opus-4-7[1m] (feature-verify, xai-roadmap-loop SERIAL dispatch 2026-05-25) |
+| Updated | 2026-05-25 04:00 |
 | Dispatched By | xai-roadmap-loop SERIAL dispatch for row #2 of xai-web-console-gap-closure (after bg failure session 287a81aa 2026-05-25 died after spawning feature-plan + WebSearch) |
 | Roadmap Row | `docs/workflow/roadmap/xai-web-console-gap-closure.md` row #2 (W1) |
 | Parent ADR | ADR-0009 §D2-G3 (P0 gap-closure; ≥5/7 known gaps SHIPPED to unblock P1 Desktop launch) |
@@ -601,4 +601,64 @@ Checklist results (8 gates):
 | 2026-05-25 03:40 | claude-sonnet-4-6 (feature-auto-build P3, xai-roadmap-loop SERIAL dispatch for row #2) | Implemented ErrorBanner.tsx (EB1..EB5; BadKey/RateLimited/Network/Server copy + countdown + retry + dismiss + settings nav); modified AiChatModule.tsx (streamCompleteChat integration, placeholder bubble on FIRST chunk for FIFO ordering, `useWebEventListener` for rate-limited + request-failed, `handleOpenSettings` via emitWebEvent, `AbortController` ref); updated index.ts public surface (+streamCompleteChat, aiKeyStorage, AiKeyStorage, AiProvider, LlmError, LlmErrorKind, StreamChunk, StreamRequest); updated AiChatModule.test.tsx (mockNoOpStream helper for I1..I18 backward compat, I17 updated to spy streamCompleteChat, I19..I23 added, FIFO ordering fix, I20 Promise.reject pattern for throwing generator). All gates: 146/146 ai-chat tests; lint --max-warnings 0; plugin-web-storage 88/88. | 9209aa4 | feature-auto-build P4 |
 | 2026-05-25 04:00 | claude-sonnet-4-6 (feature-auto-build P4, xai-roadmap-loop SERIAL dispatch for row #2) | Implemented aiPane.tsx in plugin-web-settings-rest (provider picker, conditional base URL, password-type key input + save/test/delete, model picker, streaming toggle, native dialog confirm, delegates to aiKeyStorage — HC1 compliant); extended SettingsPaneId union + paneRegistry with "ai" (settings-shell types.ts + paneRegistry.tsx — chassis now 14 panes); added workspace dep @repo/plugin-web-ai-chat to settings-rest package.json; exported aiPane from index.ts + restPanesById.ts + applyRestPanesToRegistry.ts; wired aiPane into settingsPaneComposition.ts; widened _headers connect-src to `'self' https://api.anthropic.com`; created csp.test.ts (CSP1 guard); amended ADR-0008 (frontmatter Amendments row + §S3 D3 binding-precedent paragraph with extension rule table + §S6 _headers snippet update); updated 5 failing tests (restPanesById RP1: 11→12, index-barrel B1/B2: 11→12, settingsPaneComposition.rest CP1: 13→14 + CP2 add aiPane + CP3 add "ai" to SUBSTITUTED_IDS, settingsPaneComposition.appearance AC-COMP-1: 13→14, settingsPaneComposition.test AC-COMP-1: 13→14 + CP3 add "ai"); created aiPane.test.tsx AP1..AP12 with vi.hoisted mock for aiKeyStorage; updated PLUGIN_MAP.md (plugin-web-ai-chat + plugin-web-settings-rest + plugin-web-settings-shell row notes). All gates: 93/93 settings-rest tests (16 files); 101/101 apps/web tests (20 files); lint clean. | d26b63e | feature-auto-build P5 |
 | 2026-05-25 04:15 | claude-sonnet-4-6 (feature-auto-build P5, xai-roadmap-loop SERIAL dispatch for row #2) | Ran all automated gates: G1 plugin-web-ai-chat lint (PASS), G2 typecheck (PASS), G3 146/146 (19 files, PASS), G4 plugin-web-settings-rest lint (PASS), G5 93/93 (16 files, PASS), G6 apps/web 101/101 (20 files, PASS), G7 build 0 errors (788 modules, PASS), G8 dist/_headers `connect-src 'self' https://api.anthropic.com` present (PASS). Wrote verify report at docs/reviews/xai-web-ai-chat-real-llm-adapter/20260525-verify-report.md with gate evidence, CSP amendment evidence, HC1/HC7/HC9 compliance notes, commit attribution review, FA-1..FA-10 + api.md §12 contract review, residual risks R1/R8/R9. Manual smoke AS1..AS6 + cross-vendor CV1..CV3 PENDING human operator. Status → READY_FOR_VERIFY. | 2c13ed4 | feature-verify |
+| 2026-05-25 04:00 | claude-opus-4-7[1m] (feature-verify, xai-roadmap-loop SERIAL dispatch for row #2) | Independently reviewed 5 commits (86403e8 P1 / 6b910eb P2 / 9209aa4 P3 / d26b63e P4 / 2c13ed4 P5) against plan (design §2026-05-25 / api §12 / test §7) + 10 HCs + 6 acceptance signals + ADR-0009 §D2-G2/§D4 gates. Re-ran automated gates: plugin-web-ai-chat test 146/146 (19 files), plugin-web-settings-rest test 93/93 (16 files), apps/web test 101/101 (20 files), apps/web build 0 errors (788 modules, dist/_headers contains `connect-src 'self' https://api.anthropic.com`), plugin-web-storage test 88/88, core typecheck clean. Verified HC1 (secretStore AES-GCM-256 + PBKDF2 600k + NP1 invariant), HC2 (llmProvider Anthropic+OpenAI-compat), HC3 (sseParser + null-body fallback), HC4 (web:ai:rate-limited emit with retryAfterSec + countdown in ErrorBanner), HC5 (LlmError 5-kind taxonomy + ErrorBanner discrimination), HC6 (CSP widening in _headers + ADR-0008 §S3 D3 in-place amendment with binding-precedent rule), HC7 (completeChat signature unchanged in index.ts), HC9 (extension rule documented for waves 1/2/3), HC10 (discovery-review §1 cites seed brief). Architectural fit: zero @tauri-apps/api imports in xai-web-* / plugin-web-* / apps/web; cross-package events via @repo/xai-web-event-bus; aiKeyStorage consumed via public surface (no internal imports). Manual smoke AS1..AS6 + cross-vendor CV1..CV3 DEFERRED 24h per ADR-0008 carve-out + ADR-0009 §D2-G2 (consistent with sibling-row retroactive batch precedent 2026-05-24). Rec1 (web-auth-device-session PLUGIN_MAP row) remains open but NON-BLOCKING per planner. Verdict: PASS → READY_TO_SHIP. | — | ship |
+
+### Verify Report (2026-05-25 04:00 — claude-opus-4-7[1m] / feature-verify)
+
+**Verdict: PASS.** Status → READY_TO_SHIP.
+
+#### Automated gates (re-executed)
+
+| Gate | Result | Evidence |
+|---|---|---|
+| G1 — plugin-web-ai-chat test | PASS | 19 files, 146/146 cases pass |
+| G2 — plugin-web-settings-rest test | PASS | 16 files, 93/93 cases pass (AP1..AP12 included) |
+| G3 — apps/web test | PASS | 20 files, 101/101 cases pass (CSP1 guard included) |
+| G4 — apps/web build | PASS | vite v7.2.4, 788 modules, 0 errors, dist/_headers contains `connect-src 'self' https://api.anthropic.com` |
+| G5 — plugin-web-storage test | PASS | 9 files, 88/88 cases pass (4 new prefs honored) |
+| G6 — core typecheck | PASS | tsc --noEmit clean (web:ai:* EventMap entries valid) |
+
+#### Hard constraint compliance (all 10 HCs)
+
+| HC | Evidence |
+|---|---|
+| HC1 — IDB+WebCrypto key storage | secretStore.ts uses AES-GCM-256 + PBKDF2-HMAC-SHA256 600k iter + device UUID passphrase; NP1 test asserts plaintext never in localStorage or raw IDB blob; aiPane.tsx key input type=password (AP12) |
+| HC2 — Anthropic default + OpenAI-compatible | llmProvider.ts two-branch resolveProvider; ANTHROPIC_MODEL_IDS pinned constants (Rec3 done) |
+| HC3 — SSE streaming + fallback | sseParser.ts handles buffer accumulation + comment skip + [DONE] sentinel; claudeStreamAdapter.ts null-body branch yields demo string |
+| HC4 — 429 → web:ai:rate-limited + countdown | claudeStreamAdapter.ts emits with retryAfterSec; ErrorBanner.tsx RateLimited branch + interval countdown (EB3 test) |
+| HC5 — LlmError 5-kind taxonomy | LlmError discriminated union (BadKey/RateLimited/Network/Server/Malformed) + per-kind ErrorBanner copy (EB1..EB5) |
+| HC6 — CSP connect-src widening | _headers + dist/_headers both contain `https://api.anthropic.com`; ADR-0008 §S3 D3 amended in-place + frontmatter Amendments row + §S6 snippet updated |
+| HC7 — completeChat signature unchanged | index.ts re-export shape (text, lang) => Promise<string> unchanged; A1..A6 backward-compat tests all pass |
+| HC8 — Cross-vendor verify gate | CV1..CV3 cold-read DEFERRED 24h per ADR-0008 carve-out + ADR-0009 §D2-G2 (consistent with 2026-05-24 retroactive batch precedent for rows #2/#3/#4/#8/#10/#18) |
+| HC9 — Binding-precedent for wave 2/3 | ADR-0008 §S3 D3 "Extension rule" paragraph explicitly mandates same amendment pattern for future external-origin rows + source-text guard requirement |
+| HC10 — Seed brief is Step 0 input | discovery-review.md §1 cites `docs/reviews/xai-web-ai-chat-real-llm-adapter/20260524-roadmap-seed.md` (NOT upstream PRD) |
+
+#### Acceptance signal coverage (6 from seed brief)
+
+| Signal | Mechanism | Status |
+|---|---|---|
+| (a) Streamed tokens render real-time | AiChatModule.tsx placeholder bubble mutation + I19..I23 integration tests | Code-path PASS; runtime PENDING manual smoke |
+| (b) Bad key → clear error banner | LlmError.BadKey → ErrorBanner copy + AP10 test | PASS |
+| (c) Rate-limit countdown | web:ai:rate-limited payload retryAfterSec + EB3 countdown test | PASS |
+| (d) Offline → reconnect prompt | LlmError.Network branch + ErrorBanner Retry button | PASS |
+| (e) xai_ai_* keys do NOT contain raw API key | NP1 test asserts no plaintext in localStorage OR raw IDB blob | PASS |
+| (f) CSP report-uri 0 violations | CSP1 source-text guard + dist/_headers verification | PASS at source; runtime PENDING manual smoke (AS5) |
+
+#### Commit-attribution review
+
+| Commit | Scope | Convention |
+|---|---|---|
+| 86403e8 (P1) | packages/plugin-web-ai-chat/ secretStore + llmErrors + tests | Why/What/Scope/Risk/Docs/Tests + Co-Authored-By; PASS |
+| 6b910eb (P2) | packages/plugin-web-ai-chat/ + storage registry + core EventMap | Why/What/Scope/Risk/Docs/Tests + Co-Authored-By; PASS |
+| 9209aa4 (P3) | packages/plugin-web-ai-chat/ AiChatModule + ErrorBanner | Why/What/Scope/Risk/Docs/Tests + Co-Authored-By; PASS |
+| d26b63e (P4) | plugin-web-settings-rest + plugin-web-settings-shell + plugin-web-tokens + apps/web + docs/adr + docs/PLUGIN_MAP | Why/What/Scope/Risk/Docs/Tests + Co-Authored-By; multi-package atomic for audit-integrity per plan; PASS |
+| 2c13ed4 (P5) | docs/reviews + docs only; verify report + dev_log state | Doc-only chore; convention clean; PASS |
+
+#### Residual risks (non-blocking)
+
+- **R1 (manual smoke AS1..AS6 PENDING):** Real API key required. Deferred 24h per ADR-0008 carve-out + ADR-0009 §D2-G2; consistent with 2026-05-24 retroactive batch precedent. Operator MUST rotate test key post-smoke.
+- **R2 (cross-vendor CV1..CV3 PENDING):** Codex `gpt-5.5-thinking` cold-read of secretStore.ts / _headers diff / streamCompleteChat. Deferred 24h per same carve-out.
+- **R3 (web-auth-device-session row missing from PLUGIN_MAP):** Planner Rec1 — non-blocking bookkeeping. The package exists at packages/web-auth-device-session/ and exports the SHIPPED helpers as consumed; only the registry row is missing. Recommend follow-up chore commit.
+- **R4 (Vite dev CSP gap):** `pnpm dev` does NOT apply `_headers`; only `pnpm build && wrangler pages dev` exercises the deployed CSP. CSP1 source-text guard mitigates at unit-test level; manual smoke AS5 confirms at runtime (deferred 24h).
+- **R5 (OpenAI-compatible base-URL not in CSP):** Documented in aiPane.tsx desc; user-blocked scenario only. Follow-up row if needed.
 
