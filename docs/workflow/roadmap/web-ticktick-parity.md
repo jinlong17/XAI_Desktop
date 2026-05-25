@@ -1,5 +1,7 @@
 # Roadmap Manifest — web-ticktick-parity
 
+> **SUPERSEDED-IN-PART (2026-05-24).** UI rows (web-productivity-habits-pomodoro, web-project-label-calendar, web-search-keyboard-theme, web-statistics-views) are SUPERSEDED by `xai-web-*` rows in `docs/workflow/roadmap/xai-web-console.md` (24/24 SHIPPED). Platform spine rows (web-architecture-adr-lite, web-auth-device-session, web-browser-e2e-crypto-runtime, web-console-host-router, web-encrypted-indexeddb-cache, web-plugin-map-contract-reconcile, web-release-site-archive-vite-shell, web-security-csp-sentry, web-sync-crypto-contract-preflight, web-todo-first-slice) are REUSED as-is and remain authoritative. Independent infra rows (web-sync-blob-driver, web-realtime-metadata-sync, web-offline-outbox-conflicts, web-responsive-mobile, web-device-management-revoke, web-export-delete-privacy, web-pwa-sw-release, web-i18n-seo-landing, web-deploy-ci-browser-matrix, web-ga-acceptance-suite, web-external-env-provisioning) are DEFERRED (not paused) — they remain owned by this roadmap and resume when P0 Web gap-closure ships. Full rationale: `docs/reviews/web-priority-pivot-and-repo-cleanup/20260524-brief.md`.
+
 - Roadmap Source: docs/planning/sub-prds/web/PRD.md (DRAFT v0.3, 2026-05-16)
 - Source Dev Plan: docs/planning/sub-prds/web/dev-plan.md (DRAFT v0.3, 2026-05-16)
 - Step 0 Brief: docs/reviews/web-ticktick-parity/20260521-feature-brief.md

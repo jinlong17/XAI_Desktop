@@ -1,5 +1,7 @@
 # XAI v1 — Next-phase targets (Codex cross-vendor review)
 
+> **PAUSED (2026-05-24, per Web P0 Priority Override).** Web Console (`docs/workflow/roadmap/xai-web-console.md`) is the active roadmap. Do NOT start new work on this roadmap. SHIPPED rows remain authoritative for their domain; in-flight items: complete-or-park. Resumes only after P0 Web gap-closure ships and ADR-0009 (Web → Desktop Pivot Plan) is Accepted. Full rationale: `docs/reviews/web-priority-pivot-and-repo-cleanup/20260524-brief.md`.
+
 Generated: 2026-05-20 01:53 PDT
 Branch: codex/track-a-desktop-foundation
 Reviewer: codex `feature-review` · gpt-5.4 high reasoning

@@ -1,5 +1,7 @@
 # XAI v1 Track E — G9 Sync Hardening Log
 
+> **PAUSED (2026-05-24, per Web P0 Priority Override).** Web Console (`docs/workflow/roadmap/xai-web-console.md`) is the active roadmap. Do NOT start new work on this roadmap. SHIPPED rows remain authoritative for their domain; in-flight items: complete-or-park. Resumes only after P0 Web gap-closure ships and ADR-0009 (Web → Desktop Pivot Plan) is Accepted. Full rationale: `docs/reviews/web-priority-pivot-and-repo-cleanup/20260524-brief.md`.
+
 ## 2026-05-20 14:55 PDT Checkpoint
 
 Scope: `codex/track-e-sync-hardening`, no ship, no push.
