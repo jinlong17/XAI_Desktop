@@ -14,13 +14,13 @@
 | Workflow | BUGFIX |
 | Target | plugin-web-pomodoro |
 | Title | derivedCounters.test.ts time-handling drift — `TODAY_LOCAL` evaluated at module-import time reads host's real `Date.now()` instead of the fake-timer-anchored `vitest.setup.ts` system time, causing DC3 + DC4 to fail every day except the day the test was authored (2026-05-23) |
-| Current Phase | BUG_VERIFY (complete) |
-| Status | READY_TO_SHIP |
-| Suggested Next | ship |
+| Current Phase | SHIPPED |
+| Status | SHIPPED |
+| Suggested Next | — (workflow complete) |
 | Verify Cross-vendor | inherited `yes` (roadmap row default; small test-only fix — Codex `gpt-5.5-thinking medium` cold-read on the fix patch satisfies the gate per ADR-0009 §D2-G2) |
 | Automation Mode | A-Claude (inherited from `xai-web-console-gap-closure.md` default; current dispatch via `xai-roadmap-loop` serial mode for W0 pipeline-validator row) |
-| Executor | claude-opus-4-7 — bug-verify, 2026-05-24 |
-| Updated | 2026-05-24 20:41 |
+| Executor | claude-sonnet-4-6 — ship, 2026-05-24 |
+| Updated | 2026-05-24 21:00 |
 | Dispatched By | xai-roadmap-loop (serial mode, Wave 0, row #1) |
 | Roadmap Row | docs/workflow/roadmap/xai-web-console-gap-closure.md row #1 (W0 · pipeline validator) |
 | Parent Brief | docs/reviews/xai-web-pomodoro-counters-test-fix/20260524-roadmap-seed.md |
@@ -187,3 +187,4 @@ Dual-perspective analysis would add no signal. Single-vector diagnosis is the ri
 | 2026-05-24 20:33 | Claude Opus 4.7 (1M context) | bug-diagnose — created `packages/plugin-web-pomodoro/docs/` + this `dev_log.md` (canonical plugin-* docs contract initialized for first bugfix on this Stable package). Reproduced failure with `pnpm --filter @repo/plugin-web-pomodoro test` → 2/122 fail (DC3 + DC4) exactly as seed brief predicted. Validated root cause via `node -e` host-clock probe: real-host `localDateKey(new Date())` = `"2026-05-24"`, setup-anchored `localDateKey(TEST_NOW)` = `"2026-05-23"`, mismatch is at import-time eager eval (NOT TZ, NOT DST, NOT production logic). Defined fix strategy: hardcode `TODAY_LOCAL = "2026-05-23"` aligned to `vitest.setup.ts` TEST_NOW literal, drop now-unused `localDateKey` import, add inline comment linking back to setup. Test-only single-file change. Cross-vendor gate inherited yes. Complex escalation NOT triggered. Status FIX_READY. | — | bug-fix |
 | 2026-05-24 20:37 | claude-sonnet-4-6 | bug-fix — implemented minimal test-only fix in `src/__tests__/derivedCounters.test.ts`: replaced `const TODAY_LOCAL = localDateKey(new Date())` (module-import-time eager eval) with `const TODAY_LOCAL = "2026-05-23"` (literal pinned to `vitest.setup.ts` TEST_NOW anchor); removed now-unused `localDateKey` import; added inline comment explaining why module-top-level `new Date()` must not be used here. Ran `pnpm --filter @repo/plugin-web-pomodoro test`: 122/122 pass (16 test files, exit 0). DC3 and DC4 now green. Zero production code touched. Roadmap: `xai-web-console-gap-closure.md` row #1 (W0). | 1a9ba10 | bug-verify |
 | 2026-05-24 20:41 | claude-opus-4-7 | bug-verify — independent re-run on PDT host (real-host date 2026-05-24). Reviewed commit 1a9ba10 diff: scope clean (2 files, test + dev_log only), literal `"2026-05-23"` confirmed to match `vitest.setup.ts:17` `new Date(2026, 4, 23, 14, 30, 0)` local anchor, removed `localDateKey` import truly unused (grep zero matches), inline comment honest. Re-ran `pnpm --filter @repo/plugin-web-pomodoro test` → 122/122 pass exit 0 (DC3+DC4 now green). Re-ran `pnpm --filter @repo/web test` → 100/100 pass, no new failures, `/app/pomodoro` integration test (AC-W6-FIX-4) green. Boundary: full DC1..DC9 + streak surface (15 tests) all green; TZ/DST analysis confirms literal is timezone-invariant and 2026-05-23 is clear of DST boundaries. Commit message format conformant. Status flipped to READY_TO_SHIP. | — | ship |
+| 2026-05-24 21:00 | claude-sonnet-4-6 | ship — verified all 3 commits (1a9ba10 fix, 235eca1 chore, 3035a85 docs) already pushed to `main` branch at `github.com:jinlong17/XAI_Desktop.git` (push confirmed: `735f233..3035a85 main -> main`). git status clean, `git log origin/main..HEAD` empty. Flipped dev_log Status Panel to SHIPPED. This is the W0 pipeline-validator row for `xai-web-console-gap-closure` roadmap — ship confirms bug-diagnose → bug-fix → bug-verify → roadmap-loop reconcile → ship pipeline is end-to-end functional. Next `xai-roadmap-loop` run will reconcile manifest row #1 from READY_TO_SHIP → SHIPPED, unlocking wave 1 (rows #2/#3/#4/#5). | 1a9ba10, 235eca1, 3035a85 + this SHIPPED-flip commit | — (workflow complete) |
