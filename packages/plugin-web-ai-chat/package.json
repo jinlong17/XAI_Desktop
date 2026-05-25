@@ -26,9 +26,12 @@
     "@repo/core": "workspace:*",
     "@repo/plugin-web-tokens": "workspace:*",
     "@repo/plugin-web-storage": "workspace:*",
+    "@repo/web-auth-device-session": "workspace:*",
     "@repo/xai-web-shell": "workspace:*"
   },
   "devDependencies": {
+    "fake-indexeddb": "^6.0.0",
+    "idb-keyval": "^6.2.1",
     "@repo/eslint-config": "workspace:*",
     "@repo/typescript-config": "workspace:*",
     "@testing-library/jest-dom": "^6.0.0",
