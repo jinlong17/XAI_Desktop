@@ -7,13 +7,13 @@
 | Workflow | FEATURE_DEV |
 | Target | xai-web-cmdk-search |
 | Title | Global Cmd+K command palette over 11 rail modules (overlay-only, in-memory index, 11 pure adapters, no third-party lib) |
-| Current Phase | FEATURE_REVIEW (complete) |
+| Current Phase | FEATURE_BUILD (P2 in progress) |
 | Status | APPROVED |
 | Suggested Next | feature-auto-build |
 | Verify Cross-vendor | yes (Codex `gpt-5.5-thinking effort=medium` primary; Cursor fallback per ADR-0009 D4 + roadmap default) |
 | Automation Mode | A-Claude (inherited from gap-closure roadmap default) |
-| Executor | Claude Opus 4.7 (1M context) — feature-review, 2026-05-25 |
-| Updated | 2026-05-25 |
+| Executor | Claude Sonnet 4.6 — feature-auto-build, 2026-05-25 |
+| Updated | 2026-05-25 14:58 |
 | Dispatched By | xai-roadmap-loop (serial mode, Wave 1, row #3 — after #2 SHIPPED commit ade513b) |
 | Roadmap Row | docs/workflow/roadmap/xai-web-console-gap-closure.md row #3 (W1 · NEW package) |
 | Parent ADR | docs/adr/0009-web-to-desktop-pivot-plan.md §D2-G3 (P0 gap-closure scope) |
@@ -239,3 +239,4 @@ network), in contrast to row #2 which amended ADR-0008.
 |---|---|---|---|---|
 | 2026-05-25 | Claude Opus 4.7 1M (feature-plan, xai-roadmap-loop serial W1 row #3 — re-dispatch after bg session 5ca506f5 abandoned) | Read seed brief + roadmap manifest row #3 + read pattern-reference row #2 design. Inspected current Topbar, EventMap, DESIGN.md §3/§6/§13. Sampled 2 module state shapes. Verified 11 module storage-key mapping. Wrote discovery review (Option A vs B/C/D, Option A chosen). Wrote design.md (20 frozen assumptions + 5-phase plan). Wrote api.md (public surface + 2 EventMap entries + adapter contract). Wrote test.md (~120 cases + 14-gate verify matrix). Wrote dev_log Status Panel + Phase Plan + 10-risk register. **No code changed in this run.** | — | feature-review |
 | 2026-05-25 | Claude Opus 4.7 1M (feature-review, xai-roadmap-loop serial W1 row #3) | Independent review of plan artifacts (discovery + design + api + test + dev_log). Verified HC1..HC10 explicitly addressed. Verified all 5 AS items covered. Verified §3+§4 architectural fit (overlay-only package in `packages/xai-web-cmdk/`, EventMap routing via `@repo/core/types/events.ts` — confirmed `WebModuleId` already includes `'search'`). Verified PLUGIN_MAP row planned for "Web Platform Shims" section (sibling pattern line 133-136). Verified 100ms budget is measurable (PB1 p95 over 100 iterations with 50 ms ceiling, leaving 50 ms for modal mount/paint). Verified XSS coverage exhaustive (12-case escapeHtml + 4-case rendered-DOM + Codex cold-read at G14). Verified 5-phase split per-phase has acceptance gates + commit messages. Verified R6 SHIPPED-test invariance accounting (46→48 xai-web-shell tests, +2 net via TP5 split + TP7 add). Verdict: **APPROVED**. Recorded 4 minor editorial observations (O1..O4) — non-blocking, can be addressed during build. dev_log Status flipped to APPROVED; Suggested Next = feature-auto-build. **No code changed in this run.** | — | feature-auto-build |
+| 2026-05-25 14:58 | Claude Sonnet 4.6 (feature-auto-build, xai-roadmap-loop serial W1 row #3) | **P1 COMPLETE.** Created full package scaffold: package.json + tsconfig.json + vitest.config.ts (globals: true) + vitest.setup.ts + eslint.config.js + manifest.json (status: In-Dev, showInRail: false). Implemented types.ts (O1 resolved: lang is optional in CommandPaletteProps). Implemented internal/registry.ts + internal/escapeHtml.ts + internal/highlightMatch.ts + internal/keyboardCombo.ts. Implemented src/index.ts (P1-stage exports; component exports commented as P3 placeholders). Extended packages/core/src/types/events.ts with web:search:invoked + web:search:jump (HC4). Tests: 34 cases all green (escapeHtml×12, highlightMatch×6, keyboardCombo×8, registry×5, index-barrel×3). lint exit 0. typecheck exit 0. core tests: 8 passed (no regressions). | 74ce9bb | P2 |
