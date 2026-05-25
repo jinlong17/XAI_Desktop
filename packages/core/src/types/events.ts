@@ -318,4 +318,30 @@ export interface EventMap {
     status?: number;
     occurredAt: string;
   };
+
+  // Cmd+K command palette events (owner: @repo/xai-web-cmdk gap-closure row #3)
+  // Declared here for typed cross-package EventMap subscription.
+  // api.md §2
+
+  /** Emitted once per palette open (first call only when isOpen===false). */
+  'web:search:invoked': {
+    /** What caused the palette to open. */
+    source: 'shortcut' | 'topbar-click' | 'programmatic';
+    /** ISO timestamp at the moment of open. */
+    openedAt: string;
+  };
+
+  /** Emitted once per Enter / result-click (jump action). */
+  'web:search:jump': {
+    /** Destination module. */
+    moduleId: WebModuleId;
+    /** Hit kind that was selected. */
+    hitKind: 'module-jump' | 'entity' | 'settings-pane';
+    /** Entity id when kind === "entity" | "settings-pane"; null for "module-jump". */
+    entityId: string | null;
+    /** Snapshot of the query text at jump time (lowercased; max 256 chars). */
+    query: string;
+    /** ISO timestamp at the moment of jump. */
+    jumpedAt: string;
+  };
 }

@@ -1,0 +1,11 @@
+{
+  "id": "xai-web-cmdk",
+  "name": "Cmd+K Command Palette",
+  "version": "0.0.0",
+  "status": "In-Dev",
+  "type": "ui-overlay",
+  "owner": "xai-web-cmdk-search gap-closure row #3",
+  "description": "Global Cmd+K command palette overlay for XAI Web Console. Searches across 11 rail modules via pure adapter functions. No rail registration — overlay only.",
+  "package": "@repo/xai-web-cmdk",
+  "showInRail": false
+}

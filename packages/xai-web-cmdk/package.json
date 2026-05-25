@@ -1,0 +1,50 @@
+{
+  "name": "@repo/xai-web-cmdk",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "description": "Global Cmd+K command palette for XAI Web Console — overlay-only, in-memory index, 11 pure adapters, no third-party lib.",
+  "sideEffects": ["./src/styles.css"],
+  "exports": {
+    ".": {
+      "types": "./src/index.ts",
+      "import": "./src/index.ts"
+    }
+  },
+  "scripts": {
+    "check-types": "tsc --noEmit",
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "test:coverage": "vitest run --coverage",
+    "lint": "eslint --max-warnings 0 ."
+  },
+  "dependencies": {
+    "@repo/core": "workspace:*",
+    "@repo/plugin-web-tokens": "workspace:*",
+    "@repo/plugin-web-storage": "workspace:*",
+    "@repo/xai-web-event-bus": "workspace:*",
+    "@repo/xai-web-shell": "workspace:*",
+    "@repo/plugin-web-settings-shell": "workspace:*"
+  },
+  "peerDependencies": {
+    "react": "^19",
+    "react-dom": "^19",
+    "react-router": "^7.15"
+  },
+  "devDependencies": {
+    "@repo/eslint-config": "workspace:*",
+    "@repo/typescript-config": "workspace:*",
+    "@testing-library/jest-dom": "^6",
+    "@testing-library/react": "^16",
+    "@testing-library/user-event": "^14",
+    "@types/react": "19.2.2",
+    "@types/react-dom": "19.2.2",
+    "jsdom": "^26",
+    "react": "^19.2.0",
+    "react-dom": "^19.2.0",
+    "react-router": "^7.15.1",
+    "typescript": "5.9.2",
+    "vitest": "^3.2.1"
+  }
+}
