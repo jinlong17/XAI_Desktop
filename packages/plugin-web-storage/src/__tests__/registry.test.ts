@@ -212,6 +212,11 @@ const OWNER_ROW_ADDITIONS = [
   "xai_pref_sticky_pin_default",
   "xai_pref_sticky_restore_size",
   "xai_pref_sticky_grid_spacing",
+  // xai-web-ai-chat-real-llm-adapter (row #2) — 4 provider/model/streaming prefs
+  "xai_ai_provider",
+  "xai_ai_base_url",
+  "xai_ai_model_default",
+  "xai_ai_streaming",
 ] as const;
 
 describe("AC-REG-8: Total entry count = 20 baseline + owner-row additions", () => {

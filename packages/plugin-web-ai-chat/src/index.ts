@@ -28,3 +28,16 @@ export type {
   AiConvoRecord,
   AiModelId,
 } from "./types.js";
+
+// ---- Extension exports (gap-closure row #2 — real LLM adapter) -------------
+
+// Streaming entrypoint (new). Returns an async iterator of token chunks.
+export { streamCompleteChat } from "./internal/claudeStreamAdapter.js";
+export type { StreamChunk, StreamRequest } from "./internal/claudeStreamAdapter.js";
+
+// Typed key-storage helper namespace (consumed by Settings → AI pane).
+export { aiKeyStorage } from "./internal/secretStore.js";
+export type { AiKeyStorage, AiProvider } from "./internal/secretStore.js";
+
+// Public error union (consumed by Settings → AI pane + ErrorBanner).
+export type { LlmError, LlmErrorKind } from "./internal/llmErrors.js";

@@ -319,3 +319,282 @@ Design says that while `thinking` is active, another send remains usable but is 
 | 2026-05-24 01:02 | claude-opus-4-7 (bug-auto-fix, bugfix-loop Cycle 1) | Implemented the FIFO `pendingSendQueueRef` + `processingRef` queue processor in `AiChatModule.tsx`. `send()` now pushes `{text, lang}` onto the queue and calls `processQueue()`; the processor drains entries one at a time via a single `await completeChat(...)` per iteration. A second `send()` while the first promise is in flight is queued behind, not raced. `thinking` stays true until the queue is fully drained. Added I17 regression test (mock-based: stubs `completeChat` with externally-resolvable promises and asserts the adapter is invoked exactly once after two synchronous `send()` calls). Added I18 (lang preservation across queued resends). Updated I15 to assert exact FIFO DOM ordering. Updated design.md state machine, api.md §1 send-flow + §11 idempotency, test.md §3 I15/I17/I18 to document the queue contract. Verified anti-race by temporarily reverting to racy impl → I17 fails (`expected 2 to be 1` at `calls.length` assertion); restored queue impl → 86/86 tests pass; lint --max-warnings 0 + typecheck clean; apps/web check-types + 100/100 tests pass. | 8ffa639 | bug-verify |
 | 2026-05-24 01:05 | claude-opus-4-7 (bug-verify, bugfix-loop Cycle 1) | Independently re-ran the original reproduction protocol (resend-while-thinking) and all 6 verify gates against HEAD `c170f96`. **PASS** verdict. Reviewed commit 8ffa639 — scope confined to this row's package + docs; commit message follows Why/What/Scope/Risk/Docs/Tests; Co-Authored-By present. I17 mock-based regression test passes with the queued impl AND fails (`calls.length` 2 vs expected 1) when the queue is temporarily replaced with a racy impl — confirms the test reliably catches the regression. Status → READY_TO_SHIP. | — | ship |
 | 2026-05-24 | claude-sonnet-4-6 (ship) | Confirmed 3 bugfix commits (8ffa639 fix / c170f96 chore / 37be4e5 chore) present on local branch, ahead of origin/main. Workflow guard: Status=READY_TO_SHIP — proceed. Flipped dev_log Status → SHIPPED, Current Phase → SHIP, Suggested Next → —. Pushed 4 commits (3 bugfix + this chore) to origin/main. Ship Report: 6-row Codex retroactive-BLOCKED batch complete: all 6 rows (#2 tokens / #3 persistence / #4 event-bus / #8 board-views / #10 dashboard-grid / #18 ai-chat) flipped to SHIPPED. Codex 2026-05-24 cross-vendor verifier flagged all 6 → all 6 resolved within ~24h. 23 commits across the batch. | (chore) | — |
+
+---
+
+## Bugfix-Extension Lineage — gap-closure row #2 (2026-05-25)
+
+> APPEND-ONLY block. The Status Panel above (`SHIPPED` 2026-05-24) records the
+> baseline row #18 state and is NOT mutated by this extension lineage. This
+> block tracks the new feature-dev cycle introduced by xai-web-console-gap-closure
+> manifest row #2 (Gap 1 — AI real-LLM adapter).
+
+### Lineage Status Panel
+
+| Field | Value |
+|---|---|
+| Workflow | FEATURE_DEV |
+| Target | xai-web-ai-chat-real-llm-adapter |
+| Title | Replace Option A no-op `completeChat` with real Anthropic Claude / OpenAI-compatible LLM adapter — streaming via SSE, IndexedDB+WebCrypto API-key storage, Settings → AI pane, typed `web:ai:rate-limited` event, CSP `connect-src` widening (amend ADR-0008 in-place) |
+| Current Phase | FEATURE_BUILD |
+| Status | APPROVED |
+| Suggested Next | feature-auto-build |
+| Verify Cross-vendor | yes (per ADR-0009 §D4 P0 + roadmap header default; primary Codex `gpt-5.5-thinking` medium, fallback Cursor) |
+| Automation Mode | A-Claude (per roadmap default inherited from xai-web-console.md 2026-05-23 user override) |
+| Executor | claude-sonnet-4-6 (feature-auto-build P2, xai-roadmap-loop SERIAL dispatch 2026-05-25) |
+| Updated | 2026-05-25 03:25 |
+| Dispatched By | xai-roadmap-loop SERIAL dispatch for row #2 of xai-web-console-gap-closure (after bg failure session 287a81aa 2026-05-25 died after spawning feature-plan + WebSearch) |
+| Roadmap Row | `docs/workflow/roadmap/xai-web-console-gap-closure.md` row #2 (W1) |
+| Parent ADR | ADR-0009 §D2-G3 (P0 gap-closure; ≥5/7 known gaps SHIPPED to unblock P1 Desktop launch) |
+| ADR Amendment | **ADR-0008 §S3 D3** to be amended in-place this row (binding precedent for wave 1+2+3 CSP rows; see discovery review §6) |
+| Concurrent Siblings | None (serial dispatch — wave 1 rows #3 (cmdk-search), #4 (calendar-week-day), #5 (dashboard-add-widget) PENDING; this row gates none of them on data, but #6 + #7 + #8 depend on this row's CSP+key-storage pattern per manifest §R4 dependency graph) |
+| Write Scope | **planning phase (this run)**: `packages/xai-web-ai-chat/docs/` + `docs/reviews/xai-web-ai-chat-real-llm-adapter/` only. **build phases (later)** extend to `packages/plugin-web-ai-chat/src/{internal/,*.tsx,*.ts}/__tests__/` + `packages/plugin-web-settings-rest/src/{panes/,internal/,__tests__/}` + `packages/plugin-web-storage/src/internal/registry.ts` (+4 entries) + `packages/core/src/types/events.ts` (+2 entries) + `apps/web/public/_headers` (+1 directive) + `apps/web/src/__tests__/csp.test.ts` (new) + `docs/adr/0008-cloudflare-deploy-target-and-csp.md` (amend §S3 D3 + add Amendments frontmatter row) + `docs/PLUGIN_MAP.md` (update plugin-web-ai-chat row note) |
+
+### Artifacts Index (this extension)
+
+- Seed brief: `docs/reviews/xai-web-ai-chat-real-llm-adapter/20260524-roadmap-seed.md`
+- Discovery review: `docs/reviews/xai-web-ai-chat-real-llm-adapter/20260525-discovery-review.md`
+- Design extension: `packages/xai-web-ai-chat/docs/design.md` §2026-05-25 Extension
+- API extension: `packages/xai-web-ai-chat/docs/api.md` §12
+- Test extension: `packages/xai-web-ai-chat/docs/test.md` §7
+
+### Decision Headline (this extension)
+
+Replace the Option A no-op `completeChat` body with a real LLM adapter (Anthropic
+Claude Messages API primary via CORS-direct browser access; OpenAI-compatible
+secondary via base-URL override). Add `streamCompleteChat` async-iterator
+sibling export for SSE streaming with non-stream fallback. Encrypt user-provided
+API key at rest via IndexedDB + WebCrypto AES-GCM-256 + PBKDF2-HMAC-SHA256 (600k
+iterations); KDF passphrase = SHIPPED `createDeviceIdentityStore` UUID. Add
+Settings → AI pane to `@repo/plugin-web-settings-rest` (paste / validate /
+rotate / delete key + provider picker + model default + streaming toggle).
+
+Three new EventMap channels (one rate-limit + one request-failed +
+declaration-only). Four new `usePref` registry entries (NONE store secrets).
+**One CSP directive widened**: `connect-src 'self' https://api.anthropic.com`.
+
+**CSP governance decision** (binding precedent for wave 1+2+3 CSP rows):
+amend ADR-0008 §S3 D3 in-place; do NOT write a new ADR-0010. Recorded in
+discovery review §6.
+
+**`completeChat` signature unchanged externally** — Option A's
+`(text: string, lang: Lang) => Promise<string>` shape preserved; downstream
+consumers (FIFO queue processor in `AiChatModule.tsx`) keep working unchanged.
+The internal body is rewritten; if no key is configured, the no-op demo line
+is preserved as the fallback (gracefully degraded UX).
+
+### Phase Plan (5 phases — per discovery review §10)
+
+> Each phase is a single `feature-build` run. After each phase, `feature-build`
+> stops for human confirmation per CLAUDE.md "feature-build does ONE phase
+> per run". Per ADR-0009 §D4 cross-vendor verify is mandatory; per roadmap
+> header BG is unreliable on this machine — use serial / emit dispatch only.
+
+#### Phase P1 — Crypto + IndexedDB key storage + error taxonomy
+
+**Scope**
+
+1. Add `fake-indexeddb` to `packages/plugin-web-ai-chat/package.json` devDeps.
+2. Add workspace dep `"@repo/web-auth-device-session": "workspace:*"` to
+   `packages/plugin-web-ai-chat/package.json` deps (re-export
+   `createIndexedDbStore`, `createDeviceIdentityStore`).
+3. Create `packages/plugin-web-ai-chat/src/internal/secretStore.ts`:
+   - `aiKeyStorage = { loadKey, saveKey, clearKey, testConnection }`
+   - WebCrypto PBKDF2 (600k iter, SHA-256) → AES-GCM-256
+   - IDB store name `"xai-web-ai-secrets"`, per-provider rows
+   - `version: 1` blob shape per api.md §12.2
+4. Create `packages/plugin-web-ai-chat/src/internal/llmErrors.ts`:
+   - `LlmError` union + `LlmErrorKind` type + `classifyError` function
+5. Tests:
+   - `secretStore.test.ts` (8 cases) — round-trip, missing, rotation, IDB-fail, WebCrypto-fail, plaintext-not-in-ciphertext, clear, version-mismatch
+   - `llmErrors.test.ts` (12 cases) — full classify matrix
+   - `no-plaintext-key.test.ts` (1 case) — AS3 invariant
+6. Update `vitest.setup.ts` — import `fake-indexeddb/auto` before tests.
+7. NO public-surface changes yet (deferred to P2).
+
+**Acceptance**
+- `pnpm --filter @repo/plugin-web-ai-chat lint` exits 0 (`--max-warnings 0`).
+- `pnpm --filter @repo/plugin-web-ai-chat typecheck` exits 0.
+- `pnpm --filter @repo/plugin-web-ai-chat test` exits 0; 86 SHIPPED + 21 new = 107 cases pass.
+- Commit: `feat(plugin-web-ai-chat): P1 crypto + IDB key storage + LlmError taxonomy (gap-closure row #2)`
+
+#### Phase P2 — Provider config + SSE parser + streaming adapter + completeChat rewrite
+
+**Scope**
+
+1. Create `packages/plugin-web-ai-chat/src/internal/llmProvider.ts`:
+   - `resolveProvider(prefSnapshot) → { url, headers, body builder, model id map }`
+   - Anthropic + OpenAI-compatible shapes
+2. Create `packages/plugin-web-ai-chat/src/internal/sseParser.ts`:
+   - `parseSseStream(response: Response): AsyncIterable<SseEvent>`
+   - Buffer accumulation across chunk boundaries
+   - Comment line skip + `[DONE]` sentinel handling
+3. Create `packages/plugin-web-ai-chat/src/internal/claudeStreamAdapter.ts`:
+   - `streamCompleteChat(req): AsyncIterable<StreamChunk>`
+   - Provider resolution + fetch + classify + parse + accumulate
+   - Streaming-unavailable fallback to `completeChat`
+   - Emit `web:ai:rate-limited` on 429
+   - Emit `web:ai:request-failed` on non-RateLimited error
+4. Rewrite `claudeAdapter.ts` `completeChat`:
+   - If no key configured → preserve demo line (Option A behaviour for first-load UX)
+   - If key configured → call `streamCompleteChat` and accumulate; return final string
+5. EventMap entries — `packages/core/src/types/events.ts` add 2 entries.
+6. Storage registry entries — `packages/plugin-web-storage/src/internal/registry.ts` add 4 entries (`xai_ai_provider`, `xai_ai_base_url`, `xai_ai_model_default`, `xai_ai_streaming`).
+7. Tests:
+   - `sseParser.test.ts` (8 cases)
+   - `llmProvider.test.ts` (6 cases)
+   - `claudeStreamAdapter.test.ts` (10 cases) — fetch stubbed
+   - `claudeAdapter.test.ts` — A1..A6 STAY (now run against fetch mock returning demo string when no key) + A7..A8 added
+   - `index-barrel.test.ts` — +B5, B6, B7
+8. NO `AiChatModule` changes yet (deferred to P3).
+9. NO `_headers` / CSP changes yet (deferred to P4).
+
+**Acceptance**
+- `pnpm --filter @repo/plugin-web-ai-chat lint` / typecheck / test all green.
+- `pnpm --filter @repo/plugin-web-storage test` still green after 4-entry addition.
+- `pnpm --filter @repo/core typecheck` still green after 2-entry EventMap addition.
+- `pnpm --filter @repo/web check-types` still green (no apps/web src edits yet).
+- Total ai-chat cases: 107 + 27 = 134.
+- Commit: `feat(plugin-web-ai-chat): P2 provider+SSE+stream adapter + registry+EventMap entries (gap-closure row #2)`
+
+#### Phase P3 — AiChatModule integration + ErrorBanner + public surface
+
+**Scope**
+
+1. Create `packages/plugin-web-ai-chat/src/ErrorBanner.tsx`:
+   - Typed banner; switches copy per `LlmError.kind`; countdown for RateLimited
+2. Modify `packages/plugin-web-ai-chat/src/AiChatModule.tsx`:
+   - Consume `streamCompleteChat` in queue processor (replaces direct `completeChat` await; preserves FIFO invariant + abort-on-unmount)
+   - Render in-progress assistant bubble (mutates in place during stream)
+   - `useWebEventListener("web:ai:rate-limited")` → set local banner state
+   - `useWebEventListener("web:ai:request-failed")` → set local banner state
+   - "Open Settings → AI" link emits `web:shell:module-change` with `moduleId:"settings"` + `detailId:"ai"`
+3. Modify `packages/plugin-web-ai-chat/src/index.ts`:
+   - Add `streamCompleteChat`, `aiKeyStorage`, `LlmError`, `LlmErrorKind`, `StreamChunk`, `StreamRequest` exports
+4. Tests:
+   - `ErrorBanner.test.tsx` (5 cases)
+   - `AiChatModule.test.tsx` — I1..I18 STAY GREEN (via `mockNoOpStream()` helper) + I19..I23 added
+5. NO Settings pane / CSP yet (deferred to P4 / P5).
+
+**Acceptance**
+- 86 + 21 (P1) + 27 (P2) + 10 (P3) = 144 ai-chat cases.
+- All 18 SHIPPED integration tests stay green (regression guard).
+- `pnpm --filter @repo/web test` still green.
+- Commit: `feat(plugin-web-ai-chat): P3 AiChatModule streaming integration + ErrorBanner + public surface (gap-closure row #2)`
+
+#### Phase P4 — Settings → AI pane + CSP + ADR-0008 amendment
+
+**Scope**
+
+1. Create `packages/plugin-web-settings-rest/src/panes/aiPane.tsx`:
+   - Provider picker (anthropic / openai-compatible)
+   - Conditional Base URL field (shown for openai-compatible only)
+   - API key paste input (password type) + Save + "Test Connection" + Delete
+   - Model default picker (Haiku / Sonnet / Opus — bilingual labels)
+   - Streaming toggle
+   - Native `<dialog>` confirm for Delete API key
+   - Reuses `aiKeyStorage` via `@repo/plugin-web-ai-chat` public surface
+2. Add workspace dep `"@repo/plugin-web-ai-chat": "workspace:*"` to `packages/plugin-web-settings-rest/package.json` deps.
+3. Modify `packages/plugin-web-settings-rest/src/index.ts` — export `aiPane`.
+4. Modify `packages/plugin-web-settings-rest/src/internal/restPanesById.ts` — `ai: aiPane` entry; widen the keyed record type.
+5. Modify `apps/web/src/routes/modules/settingsPaneComposition.ts` — insert `ai` between `appearance` and `more`.
+6. Modify `apps/web/public/_headers` — `connect-src 'self'` → `connect-src 'self' https://api.anthropic.com`.
+7. Create `apps/web/src/__tests__/csp.test.ts` — CSP1 source-text guard.
+8. Amend `docs/adr/0008-cloudflare-deploy-target-and-csp.md`:
+   - §S3 D3 CSP table — add new `connect-src` row with `https://api.anthropic.com` reference
+   - Frontmatter — add "Amendments" sub-section with 2026-05-25 entry citing this row
+   - §S6 implementation rules — update `_headers` content snippet
+9. Update `docs/PLUGIN_MAP.md`:
+   - `@repo/plugin-web-ai-chat` row note: append "(Extension 2026-05-25 — real LLM adapter + IndexedDB+WebCrypto key storage + ErrorBanner)"
+   - `@repo/plugin-web-settings-rest` row note: append "(Extension 2026-05-25 — +aiPane for AI provider/key/model config)"
+10. Tests:
+    - `aiPane.test.tsx` (12 cases) under plugin-web-settings-rest
+    - `csp.test.ts` (1 case) under apps/web
+
+**Acceptance**
+- `pnpm --filter @repo/plugin-web-settings-rest lint` / typecheck / test all green; 81 SHIPPED + 12 new = 93.
+- `pnpm --filter @repo/web check-types` + `test` + `build` all green; 100 SHIPPED + 1 new = 101.
+- Vite build emits valid `_headers` to `dist/_headers`.
+- ADR-0008 amendment lands in same commit as `_headers` edit.
+- Commit: `feat(plugin-web-settings-rest+apps/web): P4 Settings → AI pane + CSP widen + ADR-0008 amend (gap-closure row #2)`
+
+#### Phase P5 — End-to-end verify + cross-vendor smoke + acceptance signals
+
+**Scope**
+
+1. `pnpm --filter @repo/plugin-web-ai-chat test` — 144/144 cases.
+2. `pnpm --filter @repo/plugin-web-settings-rest test` — 93/93.
+3. `pnpm --filter @repo/web test` — 101/101.
+4. `pnpm --filter @repo/web build` — 0 errors; emitted `dist/_headers` contains the new CSP entry.
+5. Manual on `pnpm --filter @repo/web dev:mock-auth`:
+   - AS1 — Paste Anthropic test key (operator's own) in Settings → AI; send "hello" in /app/ai; observe SSE streaming in DevTools Network panel; observe tokens appended to bubble incrementally.
+   - AS2 — Delete key; send a message; ErrorBanner appears with "Configure your API key" copy + working link to Settings → AI.
+   - AS2 — Paste known-bad key (e.g. `sk-ant-xxxxxxxxxx`); send; "Invalid key" banner.
+   - AS2 — Simulate 429 via mitm or by spamming until natural 429; observe rate-limit countdown.
+   - AS3 — DevTools Application → Local Storage; grep for `sk-ant`; expect zero matches. DevTools Application → IndexedDB → `xai-web-ai-secrets`; observe binary ciphertext only.
+   - AS5 — DevTools Console; happy-path message send produces zero `Refused to connect` errors.
+6. Cross-vendor verify (Codex `gpt-5.5-thinking medium` primary):
+   - Cold-read `secretStore.ts` — KDF parameters correct? AES-GCM IV unique per save?
+   - Cold-read `_headers` diff + ADR-0008 amendment — does CSP widen beyond the new LLM endpoint? Does ADR amendment record the strictness delta?
+   - Cold-read `streamCompleteChat` — `AbortSignal` wired correctly? Error categorization complete?
+7. Write `docs/reviews/xai-web-ai-chat-real-llm-adapter/20260525-verify-report.md` recording PASS/FAIL per gate.
+
+**Acceptance**
+- All AS1..AS6 PASS.
+- Codex cross-vendor cold-read PASS or explicit acknowledged-non-blocking notes.
+- Status → READY_TO_SHIP.
+- Suggested Next = `ship`.
+
+### Risks (this extension)
+
+R1..R10 catalogued in `docs/reviews/xai-web-ai-chat-real-llm-adapter/20260525-discovery-review.md` §8 — Anthropic CORS regression / CSP drift / WebCrypto unavailability / IDB private-mode eviction / bad-key validation / SSE parser correctness / existing-test regression / dev vs prod CSP / OpenAI-compatible CSP gap / WebCrypto jsdom availability.
+
+Key mitigations baked into phases:
+- R2 (CSP drift): P4 ships `csp.test.ts` source-text guard.
+- R3 (WebCrypto unavailability): P1 includes feature-check banner path.
+- R4 (IDB eviction): P3 ErrorBanner copy includes private-mode-aware text.
+- R7 (existing-test regression): every phase runs the full SHIPPED test suite as part of acceptance.
+
+### Phase Progress
+
+| Phase | Status | Commit | Notes |
+|---|---|---|---|
+| P1 — Crypto + IDB + LlmError | DONE | 86403e8 | 86 SHIPPED + 21 new = 107 tests; secretStore (SC1..SC8), llmErrors (LE1..LE12), no-plaintext-key (NP1); tsconfig switched to bundler moduleResolution |
+| P2 — Provider + SSE + Stream + Registry + EventMap | DONE | (pending commit) | 136 tests (18 files); llmProvider (LP1..LP6), sseParser (SP1..SP8), claudeStreamAdapter (CS1..CS10), claudeAdapter A7/A8; lint+typecheck clean |
+| P3 — AiChatModule + ErrorBanner + public surface | PENDING | — | |
+| P4 — Settings → AI pane + CSP + ADR-0008 amend | PENDING | — | |
+| P5 — Verify + cross-vendor + acceptance | PENDING | — | |
+
+### Review Notes (2026-05-25, feature-review — claude-opus-4-7[1m])
+
+**Verdict: APPROVED.** 0 blockers, 4 non-blocking recommendations.
+
+Checklist results (8 gates):
+
+1. **Scope sanity** — pass. AS1..AS6 mapped 1:1 to verify gates in discovery §9 + test §7.4. No over-scope (RAG / tool-use / cross-device sync / `messages` persistence / telemetry all explicitly deferred). No under-scope (all 6 seed-brief acceptance items have verify mechanisms).
+2. **Hard constraint compliance (HC1..HC10)** — pass on all 10. HC1 IndexedDB+WebCrypto (PBKDF2 600k iter → AES-GCM-256, per-install salt; design FA-3 + api §12.2). HC2 Anthropic default + OpenAI-compatible (design FA-1/2 + api §12.5). HC3 SSE + non-stream fallback (api §12.1). HC4 429 → `web:ai:rate-limited` + countdown (design FA-8 + api §12.4 + EB3 test). HC5 5-kind error union with per-kind banner copy (api §12.3/§12.8). HC6 CSP amend-in-place ADR-0008 §S3 D3 with 4-point justification (discovery §6). HC7 `completeChat` signature unchanged externally (design FA-1 + api §12 preamble). HC8 Cross-vendor verify gated in P5 (Codex `gpt-5.5-thinking` primary per ADR-0009 §D4). HC9 binding-precedent recorded for wave 1+2+3 CSP rows (discovery §6 Pattern-setter note). HC10 seed brief is Step 0 input (discovery §1).
+3. **Architectural fit (SYSTEM_ARCHITECTURE §3 + §4)** — pass. All new code lives in `packages/xai-web-* / plugin-web-*` boundaries. Cross-plugin helper sharing (`aiKeyStorage` from `@repo/plugin-web-ai-chat` to settings-rest) routed through public `src/index.ts` barrel per ADR-0007 §S4. Two new typed channels go through `@repo/core/types/events.ts` + `@repo/xai-web-event-bus`. Non-secret prefs via `usePref`; secrets in IDB-only — never localStorage. No `@tauri-apps/api` imports.
+4. **PLUGIN_MAP consistency** — pass with one bookkeeping note (Rec1 below). plugin-web-ai-chat / plugin-web-settings-rest / xai-web-event-bus / plugin-web-storage all confirmed Stable in `docs/PLUGIN_MAP.md`. `@repo/web-auth-device-session` is real and SHIPPED in code (`src/index.ts` exports `createIndexedDbStore`, `createDeviceIdentityStore`) but the PLUGIN_MAP entry is missing — Rec1.
+5. **Test strategy reality check** — pass. 86 ai-chat + 81 settings-rest + 100 apps/web SHIPPED cases all preserved as regression-guard. New ~74 cases sized appropriately. `fake-indexeddb` devDep is the right choice for jsdom WebCrypto+IDB round-trip. E2E gated as P5 manual smoke per ADR-0009 §D2-G2 deferred-24h pattern.
+6. **Phase granularity** — pass. 5 phases each have explicit DoD + commit-message draft. P4 cross-package commit (Settings pane + CSP + ADR) is justified because CSP edit + ADR amendment + `_headers` change MUST land together for audit-integrity.
+7. **Risk register completeness** — pass. 10 risks (exceeds 5-min baseline). All expected categories present: R1 CORS regression, R3 WebCrypto unavailable, R4 IDB private-mode eviction, R6 SSE parser edge cases, R8 dev-vs-prod CSP, plus R2/R5/R7/R9/R10.
+8. **ADR amendment vs new ADR** — pass. discovery §6 articulates 4 reasons for in-place amendment + escalation criteria for future rows (new ADR only if `'unsafe-inline'`, Worker, or 3rd-party script source). Aligned with roadmap line 143 guidance.
+
+**Non-blocking recommendations** (planner may roll into build phases without re-review):
+
+- **Rec1 (minor — PLUGIN_MAP bookkeeping):** `@repo/web-auth-device-session` is SHIPPED in code (verified `src/index.ts`) but absent from `docs/PLUGIN_MAP.md` (neither W1 shims nor W2 modules tables). Recommend adding a row in P1 OR documenting the gap as a known parent-issue in dev_log Work Log. Bookkeeping only — does not block code.
+- **Rec2 (minor — pref-read inside non-React function):** api §12.1 says `streamCompleteChat` reads `usePref` values via "a one-shot snapshot loader". `usePref` is a hook and cannot run inside a non-React async function. Recommend P2 clarify that `llmProvider.resolveProvider()` reads `xai_*` keys via direct localStorage read (the SHIPPED reader-helper sibling pattern in `@repo/plugin-web-storage`), NOT by calling `usePref()`. Intent is clear from context but worth pinning to avoid a hooks-rules lint flag.
+- **Rec3 (minor — pin Anthropic model id strings):** design FA-1 + plan say model strings (`claude-haiku-4-5-...` etc.) "resolved at request time" / "at build time". Recommend P2 pin the exact 3 model id strings as constants in `llmProvider.ts` with a code comment citing the doc URL + freeze date. Avoids runtime "model not found" surprise.
+- **Rec4 (minor — P5 manual-smoke key hygiene):** P5 step 5 says "Paste Anthropic test key (operator's own)". Recommend the verify-report template explicitly remind the operator the test key MUST NOT be committed AND MUST be rotated/revoked after the smoke. Standard practice but worth pinning given this row is the first time the codebase touches a real LLM endpoint.
+
+### Suggested Next
+
+`feature-build` (or `feature-auto-build` for serial-loop dispatch)
+
+### Work Log (this extension)
+
+| Timestamp | Executor | Action | Commits | Next |
+|---|---|---|---|---|
+| 2026-05-25 | claude-opus-4-7[1m] (feature-plan, xai-roadmap-loop SERIAL dispatch for row #2 after bg failure 287a81aa) | Read seed brief + SHIPPED row #18 design/api/test/dev_log + ADR-0008 + ADR-0009 + plugin-web-settings-rest patterns + web-auth-device-session SHIPPED helpers + xai-web-event-bus + plugin-web-storage registry. WebSearch x2 (Anthropic CORS + WebCrypto-AES-GCM-IDB). Wrote discovery review at `docs/reviews/xai-web-ai-chat-real-llm-adapter/20260525-discovery-review.md`. Decided Option A (direct CORS + BYO key) over Option B (Worker proxy) + Option C (Edge Function). CSP governance decision: amend ADR-0008 §S3 D3 in-place (NOT new ADR-0010); binding precedent for wave 1+2+3 CSP rows. Appended "2026-05-25 Extension" sections to design.md / api.md (§12) / test.md (§7). Appended this Bugfix-Extension Lineage block. 5-phase plan (P1 crypto+IDB / P2 stream-adapter / P3 module integration / P4 pane+CSP+ADR / P5 verify+cross-vendor). 10 frozen assumptions; R1..R10 risk register. | — | feature-review |
+| 2026-05-25 | claude-opus-4-7[1m] (feature-review, xai-roadmap-loop SERIAL dispatch for row #2) | Independently reviewed plan against 8 gates (scope sanity, HC1..HC10 compliance, architectural fit, PLUGIN_MAP consistency, test reality check, phase granularity, risk completeness, ADR governance). Cross-checked PLUGIN_MAP statuses (plugin-web-ai-chat / plugin-web-settings-rest / xai-web-event-bus / plugin-web-storage all Stable). Verified `@repo/web-auth-device-session` exports `createIndexedDbStore` + `createDeviceIdentityStore` in SHIPPED code. Verified `apps/web/public/_headers` current CSP `connect-src 'self'` is the correct widening anchor. Verified `web:shell:module-change` channel exists with `detailId` field that matches I22's expected payload. **APPROVED** — 0 blockers, 4 non-blocking recs (Rec1 PLUGIN_MAP add web-auth-device-session row; Rec2 clarify pref-read uses direct localStorage not `usePref` hook inside `resolveProvider`; Rec3 pin Anthropic model id strings as P2 constants; Rec4 P5 verify-report adds key-hygiene reminder). | — | feature-build (or feature-auto-build for serial loop) |
+

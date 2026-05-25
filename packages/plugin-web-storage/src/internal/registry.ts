@@ -302,6 +302,44 @@ export const PREF_REGISTRY = {
     category: "module",
   } satisfies PrefEntry<boolean>,
 
+  // ---- AI LLM adapter prefs (xai-web-ai-chat row #18 extension 2026-05-25) ---
+  // NONE of these store API keys. Keys live exclusively in IndexedDB via secretStore.
+  xai_ai_provider: {
+    key: "xai_ai_provider",
+    codec: "json",
+    default: "anthropic" as string,
+    schemaVersion: 1,
+    owner: "xai-web-ai-chat-real-llm-adapter",
+    category: "module",
+  } satisfies PrefEntry<string>,
+
+  xai_ai_base_url: {
+    key: "xai_ai_base_url",
+    codec: "json",
+    default: "" as string,
+    schemaVersion: 1,
+    owner: "xai-web-ai-chat-real-llm-adapter",
+    category: "module",
+  } satisfies PrefEntry<string>,
+
+  xai_ai_model_default: {
+    key: "xai_ai_model_default",
+    codec: "json",
+    default: "haiku" as string,
+    schemaVersion: 1,
+    owner: "xai-web-ai-chat-real-llm-adapter",
+    category: "module",
+  } satisfies PrefEntry<string>,
+
+  xai_ai_streaming: {
+    key: "xai_ai_streaming",
+    codec: "boolean",
+    default: true as boolean,
+    schemaVersion: 1,
+    owner: "xai-web-ai-chat-real-llm-adapter",
+    category: "module",
+  } satisfies PrefEntry<boolean>,
+
   // ---- Proposed keys — ADR-0007 §S8 reservation ------------------------------
   // Owner rows (xai-web-pomodoro #14, xai-web-countdown #17) may rename these
   // in their own feature-plan. A rename triggers a one-line migration via the

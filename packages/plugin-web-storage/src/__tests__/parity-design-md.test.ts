@@ -147,6 +147,11 @@ const OWNER_ROW_EXEMPT_KEYS: ReadonlySet<string> = new Set([
   "xai_pref_sticky_pin_default",
   "xai_pref_sticky_restore_size",
   "xai_pref_sticky_grid_spacing",
+  // xai-web-ai-chat-real-llm-adapter (row #2) — 4 provider/model prefs
+  "xai_ai_provider",
+  "xai_ai_base_url",
+  "xai_ai_model_default",
+  "xai_ai_streaming",
 ]);
 
 describe("AC-PARITY-2: all PREF_REGISTRY explicit keys are in §9.2", () => {

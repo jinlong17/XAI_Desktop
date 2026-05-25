@@ -293,4 +293,29 @@ export interface EventMap {
     /** ISO timestamp of when the user clicked confirm. */
     confirmedAt: string;
   };
+
+  // AI Chat rate-limit (owner: plugin-web-ai-chat row #18 extension 2026-05-25)
+  // Emitted from plugin-web-ai-chat streaming adapter when a 429 is observed.
+  // Consumer: AiChatModule banner UI (subscribes via useWebEventListener).
+  // api.md §12.4
+  'web:ai:rate-limited': {
+    /** Provider whose endpoint returned 429. */
+    provider: 'anthropic' | 'openai-compatible';
+    /** Seconds until the user may retry. Sourced from Retry-After header; clamped 0..3600. */
+    retryAfterSec: number;
+    /** ISO timestamp of the 429 receipt. */
+    occurredAt: string;
+  };
+
+  // AI Chat request failure (owner: plugin-web-ai-chat row #18 extension 2026-05-25)
+  // Emitted from plugin-web-ai-chat streaming adapter when classifyError returns non-RateLimited LlmError.
+  // Consumer: AiChatModule banner UI (and optionally Settings → AI pane for live "key invalid" hint).
+  // api.md §12.4
+  'web:ai:request-failed': {
+    provider: 'anthropic' | 'openai-compatible';
+    kind: 'bad-key' | 'network' | 'server' | 'malformed';
+    /** HTTP status if available. 0 for network errors. */
+    status?: number;
+    occurredAt: string;
+  };
 }

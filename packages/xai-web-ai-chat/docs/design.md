@@ -110,3 +110,166 @@ R1 (animation cost), R2 (60 stars), R3 (adapter typing), R4 (SSR safety), R5 (si
 - Multi-convo message thread switching (clicking a convo row clears `messages` and sets the active id, matching the artifact's `setMessages([])`; replaying historical messages is deferred).
 
 ---
+
+## 2026-05-25 Extension: Real LLM Adapter (gap-closure row #2)
+
+### Decision header
+
+| Field | Value |
+|---|---|
+| Selected Option | **Option A** — Direct CORS to api.anthropic.com (BYO user key) + OpenAI-compatible secondary via base-URL override; streaming via SSE with non-stream fallback |
+| Review Doc | `docs/reviews/xai-web-ai-chat-real-llm-adapter/20260525-discovery-review.md` |
+| Review Date | 2026-05-25 |
+| Roadmap Row | `docs/workflow/roadmap/xai-web-console-gap-closure.md` row #2 (W1) |
+| Source brief | `docs/reviews/xai-web-ai-chat-real-llm-adapter/20260524-roadmap-seed.md` |
+| Parent ADR | ADR-0009 §D2-G3 (P0 gap-closure) |
+| ADR Amendment | **ADR-0008 §S3 D3** amended in-place this row to add `connect-src https://api.anthropic.com` (binding precedent for wave 1+2+3 CSP rows; see review §6) |
+| Target packages | `packages/plugin-web-ai-chat/src/internal/` (adapter+stream+crypto) + `packages/plugin-web-settings-rest/src/panes/aiPane.tsx` (Settings → AI) + `packages/plugin-web-storage/src/internal/registry.ts` (+4 new prefs, no edits to 3 existing) + `packages/core/src/types/events.ts` (+2 new `web:ai:*` channels) + `apps/web/public/_headers` (+1 CSP entry) + `docs/adr/0008-cloudflare-deploy-target-and-csp.md` (amendment) |
+| Last Updated | 2026-05-25 |
+
+### Frozen assumptions (this extension; lock at plan acceptance)
+
+1. **Adapter signature.** `completeChat(text, lang): Promise<string>` is **unchanged externally**. Its body is rewritten to call the real provider; if streaming is enabled, internally it accumulates chunks and returns the full string at the end. The new streaming-aware export is `streamCompleteChat(req): AsyncIterable<StreamChunk>` (sibling export), added to `src/index.ts`. Downstream consumers (`AiChatModule.tsx`) call `streamCompleteChat` by default; the FIFO queue processor changes to consume the async iterator and mutate the in-progress assistant bubble in place; if `xai_ai_streaming = false`, it falls back to awaiting `completeChat` (today's semantics).
+2. **API key storage.** IndexedDB store name `xai-web-ai-secrets`, single row keyed `"anthropic-key"` (and one per provider). Row shape: `{ ciphertext: Uint8Array, iv: Uint8Array, salt: Uint8Array, kdfIterations: 600000, algo: "AES-GCM", version: 1 }`. NEVER reaches localStorage. Encryption key derived via `PBKDF2-HMAC-SHA256(600000 iters) → AES-GCM-256` from passphrase = `createDeviceIdentityStore().ensure()` (UUID stored in `xai-web-auth/device` IDB store, already SHIPPED).
+3. **Provider list.** Two providers: `"anthropic"` (default, base URL hardcoded to `https://api.anthropic.com/v1/messages`) and `"openai-compatible"` (user-supplied base URL, e.g. `https://api.groq.com/openai/v1`). Each provider has its own key slot in the IndexedDB secret store. Model id mapping is per-provider (Anthropic Haiku 4.5 / Sonnet 4.5 / Opus 4.1 → real model strings resolved at request time).
+4. **Streaming = ON by default.** New pref `xai_ai_streaming: boolean = true`. The composer offers no toggle in this row (advanced toggle is in Settings → AI).
+5. **Error taxonomy.** `LlmError` is a discriminated union: `{kind:"BadKey",status:401|403}` | `{kind:"RateLimited",status:429,retryAfterSec:number}` | `{kind:"Network",cause:Error}` | `{kind:"Server",status:5xx,body?:string}` | `{kind:"Malformed",where:"sse-parse"|"json-parse"|"shape",detail:string}`. `LlmError` is a NEW public type exported from `@repo/plugin-web-ai-chat`.
+6. **CSP delta.** ADR-0008 §S3 D3 amended in-place. `_headers` adds `https://api.anthropic.com` to `connect-src`. OpenAI-compatible base URLs are NOT amended into the CSP (per pane copy explanation); the request will fail with a clear CSP error banner if the user picks one and the CSP blocks. **This is binding precedent** for future rows that need to widen CSP — they MUST amend ADR-0008 in the same commit.
+7. **Pane location.** New `aiPane` exported from `@repo/plugin-web-settings-rest`. Inserted into `composeSettingsPaneRegistry()` between `appearance` (row #22) and `more` (row #24). Icon `sparkle`. No edits to existing 11 panes' shapes.
+8. **Event channels.** Two new declaration-only channels in `@repo/core/types/events.ts`:
+   - `web:ai:rate-limited` — `{ provider: "anthropic" | "openai-compatible"; retryAfterSec: number; occurredAt: string }`
+   - `web:ai:request-failed` — `{ provider: "anthropic" | "openai-compatible"; kind: "bad-key"|"network"|"server"|"malformed"; status?: number; occurredAt: string }`
+   Consumer THIS row: AI Chat banner UI in `AiChatModule.tsx` subscribes via `useWebEventListener`. Settings → AI pane MAY consume to live-update the "key invalid" hint (optional in P5).
+9. **State-machine extension.** The FIFO queue + `processingRef` invariant per the SHIPPED bugfix-cycle-1 stays. The streaming path adds: each queue item produces ONE placeholder assistant bubble at start (text: "") that is mutated in place via React `setMessages` as chunks arrive. `thinking` clears once per queue drain (unchanged).
+10. **No telemetry.** Zero outbound network beyond the provider endpoint. No error report to Sentry / CSP `report-uri` (ADR-0008 §S3 D3 drops `report-uri`; we do not re-add it).
+
+### New file plan (delta over SHIPPED)
+
+```
+packages/plugin-web-ai-chat/
+├── src/
+│   ├── index.ts                            — MODIFY: + export streamCompleteChat + export LlmError type
+│   ├── AiChatModule.tsx                    — MODIFY: consume streamCompleteChat + render in-progress bubble + banner UI for LlmError + useWebEventListener for web:ai:rate-limited
+│   ├── ErrorBanner.tsx                     — NEW: typed banner that switches copy on LlmError.kind + countdown for RateLimited
+│   ├── internal/
+│   │   ├── claudeAdapter.ts                — MODIFY: completeChat body now calls llmProvider.fetch + accumulates stream OR delegates to non-stream
+│   │   ├── claudeStreamAdapter.ts          — NEW: streamCompleteChat(req) → AsyncIterable<StreamChunk>
+│   │   ├── llmProvider.ts                  — NEW: resolveProvider(prefs) → {url, headers, body builder}; one place for Anthropic vs OpenAI-compatible
+│   │   ├── secretStore.ts                  — NEW: loadKey(provider) / saveKey(provider, plaintext) / clearKey(provider); WebCrypto + idb-keyval via @repo/web-auth-device-session re-exports
+│   │   ├── sseParser.ts                    — NEW: parseSseStream(response: Response) → AsyncIterable<SseEvent>
+│   │   └── llmErrors.ts                    — NEW: LlmError union + classifyError(httpResponse | Error) → LlmError
+│   └── __tests__/
+│       ├── secretStore.test.ts             — NEW: 8 cases incl. round-trip, missing key, IDB-unavailable, WebCrypto-unavailable, key rotation, clear, malformed ciphertext, version mismatch
+│       ├── llmErrors.test.ts               — NEW: 12 cases for classifyError matrix
+│       ├── sseParser.test.ts               — NEW: 8 SSE protocol edge cases
+│       ├── llmProvider.test.ts             — NEW: 6 cases (Anthropic shape vs OpenAI-compatible shape; headers; URL composition; model mapping)
+│       ├── claudeStreamAdapter.test.ts     — NEW: 10 cases incl. happy path, mid-stream abort, malformed chunk, non-stream fallback, BadKey, RateLimited, Network, Server, Malformed, AbortSignal
+│       ├── claudeAdapter.test.ts           — MODIFY: existing 6 cases (A1..A6) for no-op shape REMAIN as fallback-path tests against fetch mock
+│       ├── ErrorBanner.test.tsx            — NEW: 5 cases (BadKey copy, RateLimited countdown, Network copy, Server copy, dismiss button)
+│       ├── AiChatModule.test.tsx           — MODIFY: 18 existing cases (I1..I18) STAY GREEN unchanged; +5 new cases (streaming bubble mutation, key-missing banner, rate-limited banner, link to Settings → AI, AbortSignal on unmount)
+│       └── no-plaintext-key.test.ts        — NEW: 1 case asserting localStorage snapshot after a saveKey contains no `sk-` substring
+
+packages/plugin-web-settings-rest/
+├── src/
+│   ├── index.ts                            — MODIFY: + export aiPane (line 19 adjacent insertion sorted alphabetically)
+│   ├── internal/restPanesById.ts           — MODIFY: + ai: aiPane (and SettingsPaneId widening)
+│   ├── panes/aiPane.tsx                    — NEW: paste key UI + provider picker + model default + streaming toggle + Test Connection button + Delete Key button (native dialog confirm reuse)
+│   └── __tests__/aiPane.test.tsx           — NEW: 12 cases (render, paste+save, validate+save, test-connection-success, test-connection-bad-key, test-connection-rate-limited, delete confirm modal, provider switch, base URL field appears for OpenAI-compatible, model default picker, streaming toggle, lang toggle)
+
+packages/plugin-web-storage/
+└── src/internal/registry.ts                — MODIFY: + 4 new entries (xai_ai_provider / xai_ai_base_url / xai_ai_model_default / xai_ai_streaming); existing xai_ai_convos / xai_ai_insights / xai_ai_voice unchanged
+
+packages/core/
+└── src/types/events.ts                     — MODIFY: + 2 new EventMap entries (web:ai:rate-limited, web:ai:request-failed)
+
+apps/web/
+├── public/_headers                         — MODIFY: connect-src 'self' → connect-src 'self' https://api.anthropic.com
+└── src/__tests__/csp.test.ts               — NEW: 1 case asserting _headers contains the Anthropic origin (R2 mitigation)
+
+docs/adr/
+└── 0008-cloudflare-deploy-target-and-csp.md — AMEND §S3 D3 + add Amendments frontmatter row
+
+docs/PLUGIN_MAP.md                          — UPDATE: row for plugin-web-ai-chat status note appends "(Extension 2026-05-25 — real LLM adapter + Settings → AI)"
+```
+
+### Component graph delta
+
+```
+AiChatModule (extended)
+├── ErrorBanner (NEW)         ← LlmError-driven copy + RateLimited countdown
+├── AiAurora (unchanged)
+├── BreathingOrb (unchanged)
+├── AiSidebar (unchanged)
+├── AiThread (unchanged shape; in-progress bubble is text-mutated, not appended)
+└── AiComposer (unchanged)
+
+claudeStreamAdapter (NEW)
+└── consumes
+    ├── llmProvider.resolveProvider(prefs)
+    ├── secretStore.loadKey(provider)
+    ├── sseParser.parseSseStream(response)
+    └── llmErrors.classifyError(response | Error)
+
+aiPane (NEW under plugin-web-settings-rest)
+└── consumes secretStore (re-exported via @repo/plugin-web-ai-chat? NO — see §Dep boundary)
+```
+
+### Dep boundary
+
+The `secretStore` lives inside `packages/plugin-web-ai-chat/src/internal/`.
+Settings → AI pane lives inside `packages/plugin-web-settings-rest/`. Plugin
+→ plugin direct internal-import is forbidden per CLAUDE.md "Code Boundaries".
+
+Resolution: `secretStore`'s save/load/clear/test functions are exported via
+`@repo/plugin-web-ai-chat/src/index.ts` as a typed helper namespace
+`aiKeyStorage: { load, save, clear, testConnection }`. The Settings → AI pane
+imports `aiKeyStorage` from the public surface. This is the same pattern
+ADR-0007 §S4 uses for cross-plugin helper sharing.
+
+### State machine update
+
+```
+       ┌─────────── send() ──────────────────────┐
+       │                                         ▼
+   [ idle ] ─ user types Enter ─► [ thinking + stream ] ──→ chunk → mutate assistant bubble
+       ▲                                  │
+       │ ┌──────────────────────────┐    │
+       └─┤ classifyError(LlmError)  │ ◄──┤   on error
+         │  • BadKey → banner       │    │
+         │  • RateLimited → emit    │    │
+         │      web:ai:rate-limited │    │
+         │  • Network → banner      │    │
+         │  • Server → banner       │    │
+         │  • Malformed → banner    │    │
+         │  REMOVE placeholder bubble│   │
+         └──────────────────────────┘    │
+                                          ▼
+                                    drain queue → [ idle ]
+```
+
+- `thinking` boolean stays true until queue is fully drained (unchanged from
+  bugfix-cycle-1).
+- On error: the placeholder assistant bubble is removed (NOT replaced with the
+  demo line — that was the no-op behaviour); `ErrorBanner` is shown until user
+  dismisses or triggers a retry.
+- On `429`: emit `web:ai:rate-limited`; the banner shows `Math.max(0, retryAfterSec)`
+  countdown; "Retry" button is disabled until 0.
+- On unmount mid-stream: `AbortController.abort()` is called on the in-flight
+  fetch; the in-progress bubble is left as-is (truncated text); queue is
+  intentionally not drained (precedent: bugfix-cycle-1).
+
+### Risks recap (this extension)
+
+R1..R10 from `docs/reviews/xai-web-ai-chat-real-llm-adapter/20260525-discovery-review.md` §8.
+
+### Out-of-scope (deferred, this extension)
+
+- RAG / tool-use / image input (Anthropic Vision API).
+- Cross-device key sync (would require server-side blob; ADR-0008 D2 path).
+- Per-user rate-limit enforcement (would require Worker).
+- Conversation `messages` persistence (still local-only).
+- CSP report-uri restoration (still deferred to ADR-0008 follow-up Worker row).
+- Telemetry / Sentry capture for LLM errors.
+
+---
+

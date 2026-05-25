@@ -196,3 +196,206 @@ V10 + V12 are manual; the rest are automated.
 - The integration test for unmount during `thinking` (I12) explicitly captures the warning that `mountedRef.current = false` prevents the stale append.
 
 ---
+
+## §7. 2026-05-25 Extension — Real LLM Adapter test strategy (gap-closure row #2)
+
+> §0..§6 above continues to apply byte-for-byte. The 84 cases described above
+> + the 2 bugfix-cycle-1 cases (I17, I18) MUST stay green. This §7 is purely
+> additive: new test files + a small number of modifications to existing test
+> files that are explicitly enumerated below.
+
+### §7.0 Test scope summary (extension)
+
+| Category | Files | Cases | Acceptance |
+|---|---|---|---|
+| Existing 86 cases (status quo) | 12 files in `packages/plugin-web-ai-chat/src/__tests__/` | 86 | All green, NO regressions allowed |
+| New unit (key storage) | `secretStore.test.ts` | 8 | green |
+| New unit (error classifier) | `llmErrors.test.ts` | 12 | green |
+| New unit (SSE parser) | `sseParser.test.ts` | 8 | green |
+| New unit (provider resolver) | `llmProvider.test.ts` | 6 | green |
+| New integration (stream adapter) | `claudeStreamAdapter.test.ts` | 10 | green |
+| New component (ErrorBanner) | `ErrorBanner.test.tsx` | 5 | green |
+| New no-plaintext-key invariant | `no-plaintext-key.test.ts` | 1 | green (AS3 acceptance signal) |
+| Modified barrel | `index-barrel.test.ts` | +3 (B5, B6, B7) | green |
+| Modified claudeAdapter | `claudeAdapter.test.ts` | A1..A6 STAY (now run against fetch mock) + 2 new fallback cases (A7, A8) | green |
+| Modified module integration | `AiChatModule.test.tsx` | I1..I18 STAY + 5 new (I19..I23) | green |
+| New Settings → AI pane | `packages/plugin-web-settings-rest/src/__tests__/aiPane.test.tsx` | 12 | green |
+| New CSP guard | `apps/web/src/__tests__/csp.test.ts` | 1 | green (R2 mitigation) |
+| Existing `plugin-web-settings-rest` 81 cases | as-is | 81 | All green, NO regressions |
+| Existing `apps/web` 100 cases | as-is | 100 | All green, NO regressions |
+
+Cumulative new cases: ~74 (50 in plugin-web-ai-chat ext + 12 pane + 1 CSP + 11 modifier-additions).
+
+### §7.1 Mock strategy (extension)
+
+- **`fetch`**: stubbed via `vi.spyOn(globalThis, "fetch").mockResolvedValue(new Response(...))` per test. Each test constructs its own `Response` with body / headers / status to drive the test.
+- **`Response.body` (ReadableStream)**: tests construct streams via `new ReadableStream({ start(controller) { controller.enqueue(new TextEncoder().encode(...)); controller.close(); } })`. Multi-chunk tests enqueue multiple times before closing.
+- **`crypto.subtle`**: jsdom 22+ ships a working WebCrypto. `vitest.setup.ts` adds a guard: if `globalThis.crypto?.subtle` is missing, throw a clear "WebCrypto not available — upgrade jsdom" error so the test author knows to update.
+- **`indexedDB`**: `fake-indexeddb` (added as devDep this row; widely used; ~30KB; no runtime impact). `vitest.setup.ts` imports `fake-indexeddb/auto` BEFORE any test runs.
+- **`createDeviceIdentityStore`**: NOT mocked. The real implementation (uses `idb-keyval`) runs against `fake-indexeddb`. Per-test cleanup wipes the IDB instance.
+- **`AbortController`**: native, used as-is.
+- **`@repo/plugin-web-storage` `usePref`**: NOT mocked. Real implementation runs against the cleared-per-test localStorage. New keys (`xai_ai_provider` etc.) are tested via real round-trip.
+- **`emitWebEvent` / `useWebEventListener`**: NOT mocked. Real bus singleton in jsdom; tests use `onWebEvent(...)` to assert emissions.
+
+### §7.2 New test file scope
+
+#### `secretStore.test.ts` (8 cases)
+
+- SC1: Save then load returns the same plaintext. (Round-trip.)
+- SC2: Load before any save returns `null`.
+- SC3: Save twice with different plaintexts: load returns the LATEST.
+- SC4: Clear after save: subsequent load returns `null`.
+- SC5: Load after device id is rotated (simulate `createDeviceIdentityStore().clear()` then `.ensure()`): returns `null` (decryption fails, row is auto-cleared).
+- SC6: Save with `crypto.subtle === undefined` throws a typed error.
+- SC7: Save with IndexedDB write failure (mock `idb-keyval.set` to throw) throws with the original cause attached.
+- SC8: Save then read raw IDB row: ciphertext is NOT the plaintext (assertion: `Uint8Array → string` decode does not contain the plaintext substring).
+
+#### `llmErrors.test.ts` (12 cases)
+
+- LE1..LE4: BadKey 401 / 403 + with/without detail body.
+- LE5..LE6: RateLimited 429 with `Retry-After: 30` → `retryAfterSec: 30`; with `Retry-After: Mon, 01 Jan 2030 00:00:00 GMT` → numeric delta from `Date.now`.
+- LE7..LE8: Server 500 / 503 with body slice + without body.
+- LE9: Malformed json-parse (response body is `"{not valid json"`) → kind `"Malformed"`, where `"json-parse"`.
+- LE10: Malformed sse-parse (chunk is `"event: foo\\nbad data:\\n"`) → kind `"Malformed"`, where `"sse-parse"`.
+- LE11: Network (Error TypeError "Failed to fetch") → kind `"Network"`, cause preserved.
+- LE12: Unknown 418 (I'm a teapot) → kind `"Server"`, status 418.
+
+#### `sseParser.test.ts` (8 cases)
+
+- SP1: Single complete event: `event: content_block_delta\ndata: {"delta":{"text":"hi"}}\n\n` → yields one event with parsed JSON.
+- SP2: Multiple events in one chunk: yields N events in order.
+- SP3: Event split across two chunks (test buffer accumulation): yields one event after second chunk.
+- SP4: Empty lines in middle: ignored.
+- SP5: Comment line `: keepalive` at start: ignored.
+- SP6: `[DONE]` sentinel (OpenAI-compatible): yields one synthetic done event.
+- SP7: Server abort (controller.error()): iterator throws.
+- SP8: Empty stream (zero bytes): iterator completes without yielding.
+
+#### `llmProvider.test.ts` (6 cases)
+
+- LP1: Anthropic provider + model "haiku" → URL `https://api.anthropic.com/v1/messages`, headers contain `anthropic-version` + `anthropic-dangerous-direct-browser-access: true` + `x-api-key`, body `{model: "claude-haiku-4-5-...", messages, stream:true, max_tokens:1024}`.
+- LP2: OpenAI-compatible provider + base URL `https://api.groq.com/openai/v1` → URL appended `/chat/completions`, headers contain `Authorization: Bearer ...`, body `{model, messages, stream:true}`.
+- LP3: OpenAI-compatible with empty base URL → throws typed config error.
+- LP4: Provider switch via `xai_ai_provider` pref → headers + URL flip accordingly.
+- LP5: Model picker override (composer chooses sonnet) → body.model is sonnet's real id.
+- LP6: Stream pref OFF → body.stream is `false`.
+
+#### `claudeStreamAdapter.test.ts` (10 cases)
+
+- CS1: Happy path Anthropic stream — yields 3 chunks then done; accumulated equals concatenation.
+- CS2: Happy path OpenAI-compatible (provider switch via pref) — yields 2 chunks then done.
+- CS3: Mid-stream abort via `AbortController.abort()` — iterator returns early; no throw.
+- CS4: Bad key 401 — throws `LlmError({kind:"BadKey"})`.
+- CS5: Rate-limited 429 with `Retry-After: 60` — throws `LlmError({kind:"RateLimited", retryAfterSec:60})` AND emits `web:ai:rate-limited` event with `retryAfterSec:60`.
+- CS6: Network reject (fetch throws TypeError) — throws `LlmError({kind:"Network"})` AND emits `web:ai:request-failed`.
+- CS7: Server 503 — throws `LlmError({kind:"Server", status:503})` AND emits `web:ai:request-failed`.
+- CS8: Malformed SSE — throws `LlmError({kind:"Malformed"})`.
+- CS9: Streaming-unavailable (Response.body is null) — falls back to non-stream `completeChat`; yields one final chunk with full text.
+- CS10: No key configured — throws `LlmError({kind:"BadKey", detail:"not-set"})`.
+
+#### `ErrorBanner.test.tsx` (5 cases)
+
+- EB1: kind="BadKey" with detail="not-set" → renders "Please configure your API key" copy + "Open Settings → AI" link.
+- EB2: kind="BadKey" without detail → renders "Your API key was rejected" copy + "Open Settings → AI" link.
+- EB3: kind="RateLimited" with retryAfterSec=30 → renders countdown "Retry in 30s"; advances 1s with fake timers → "Retry in 29s"; advances 30s → "Retry" button enabled.
+- EB4: kind="Network" → renders network copy + "Retry" enabled immediately; clicking Retry invokes onRetry prop.
+- EB5: Dismiss button hides the banner.
+
+#### `no-plaintext-key.test.ts` (1 case — AS3 acceptance signal)
+
+- NP1: After `aiKeyStorage.saveKey("anthropic", "sk-ant-test-12345")`, snapshot all keys in `localStorage` AND all values in the `xai-web-ai-secrets` IDB store. The plaintext substring `"sk-ant-test"` must NOT appear in any localStorage value OR the IDB ciphertext blob. (The IDB row contains `{ciphertext: Uint8Array, ...}` where the Uint8Array decode does not contain the substring.)
+
+### §7.3 Modified test file deltas
+
+#### `index-barrel.test.ts` — +3 cases
+
+- B5: `streamCompleteChat` is exported as a function.
+- B6: `aiKeyStorage` is exported as an object with `loadKey`, `saveKey`, `clearKey`, `testConnection` function members.
+- B7: `LlmError` type-only export compiles (`.test-d.ts` adjacency check).
+
+#### `claudeAdapter.test.ts` — A1..A6 STAY + A7..A8 added
+
+The original A1..A6 (no-op delay + bilingual string + Math.random determinism)
+continue to pass, BUT they now stub `fetch` to return a 200 response with the
+demo string in the body. The adapter's body is rewritten to: if no key
+configured → return demo string (preserves the existing UX for users who have
+not configured a key yet); if key configured → call real fetch.
+
+- A7 (new): With API key configured + Anthropic provider mock — `completeChat`
+  returns the accumulated assistant text from the streaming adapter.
+- A8 (new): With API key configured + classify throws `BadKey` — `completeChat`
+  re-throws (no longer swallows; the FIFO queue in module catches it).
+
+#### `AiChatModule.test.tsx` — I1..I18 STAY + I19..I23 added
+
+I1..I18 stay green because:
+- The integration test stubs `fetch` (or `streamCompleteChat`) such that the
+  resulting assistant bubble text matches the existing expected demo line.
+  The test helper exports `mockNoOpStream()` that makes the adapter behave as
+  the SHIPPED no-op for backward-compat assertions.
+
+New cases:
+
+- I19 (streaming bubble mutation): mock `streamCompleteChat` to yield 3 chunks
+  `["He", "llo", " world"]`. Assert the assistant bubble's DOM text grows from
+  empty → "He" → "Hello" → "Hello world" across `await vi.advanceTimersByTimeAsync(0)` flushes.
+- I20 (key-missing banner): without any key configured, type + Enter →
+  `ErrorBanner` appears with "Please configure your API key" copy + the
+  "Open Settings → AI" link is clickable and emits a
+  `web:shell:module-change` with `moduleId:"settings"`.
+- I21 (rate-limited banner): mock fetch to return 429 with `Retry-After: 5` →
+  banner appears with countdown; orb clears `.thinking`; assistant bubble is
+  NOT appended.
+- I22 (Settings link emits shell event): clicking "Open Settings → AI" in the
+  banner emits `web:shell:module-change` with `moduleId:"settings"` AND
+  `detailId:"ai"` (so the Settings module can scroll to the AI pane).
+- I23 (unmount mid-stream): mount + send + while iterator is yielding chunk 2
+  of 3, unmount → no throw; `AbortController.signal.aborted` is true on the
+  in-flight fetch (assert via the mock).
+
+#### `packages/plugin-web-settings-rest/src/__tests__/aiPane.test.tsx` — 12 NEW cases
+
+- AP1: Pane renders provider picker, key input, model picker, streaming
+  toggle.
+- AP2: Pasting a key + Save → `aiKeyStorage.saveKey` called with the
+  paste text.
+- AP3: Save shows "Saved" flash 1800 ms (matches appearance pane pattern).
+- AP4: "Test Connection" success — mock returns `{ok:true}` → green check
+  icon + "Connection OK" copy.
+- AP5: "Test Connection" failure — mock returns
+  `{ok:false, error:{kind:"BadKey", status:401}}` → red x + "Invalid key" copy.
+- AP6: "Test Connection" rate-limited — `{ok:false, error:{kind:"RateLimited", retryAfterSec:30}}` →
+  amber clock + "Rate-limited, try again in 30s" copy.
+- AP7: "Delete API key" opens native dialog; cancel closes.
+- AP8: "Delete API key" confirm calls `aiKeyStorage.clearKey` and the field
+  shows the empty-state copy.
+- AP9: Provider switch from `"anthropic"` to `"openai-compatible"` shows the
+  Base URL field (hidden when Anthropic).
+- AP10: Model default picker writes to `xai_ai_model_default` pref.
+- AP11: Streaming toggle writes to `xai_ai_streaming` pref.
+- AP12: ZH lang — all copy switches to ZH bundle.
+
+#### `apps/web/src/__tests__/csp.test.ts` — 1 NEW case (R2 mitigation)
+
+- CSP1: Read `apps/web/public/_headers`, parse CSP header; assert
+  `connect-src` directive contains both `'self'` AND `https://api.anthropic.com`;
+  assert `script-src` still equals `'self'` (no widening); assert no
+  `'unsafe-inline'` / `'unsafe-eval'` / `*` introduced.
+
+### §7.4 Acceptance gate mapping (extension)
+
+| Gate | Mechanism |
+|---|---|
+| AS1 — User sends real message → streamed tokens | Manual via `pnpm dev` (apps/web) + DevTools Network shows `text/event-stream`; tokens append to bubble |
+| AS2 — 3 error categories show appropriate banner | EB1..EB5 + I20..I22 |
+| AS3 — `xai_ai_*` does NOT contain raw key | NP1 |
+| AS4 — Existing 84 (now 86) plugin tests + 100 web tests still PASS | Vitest full run after each phase |
+| AS5 — 0 CSP violations on happy path | Manual; complemented by CSP1 source-text guard |
+| AS6 — Cross-vendor (Codex cold-read of key storage + CSP) | P5 verify gate |
+
+### §7.5 Cleanup behaviour (extension)
+
+- `afterEach`: clear `fake-indexeddb` instance (`indexedDB.deleteDatabase("xai-web-ai-secrets"); indexedDB.deleteDatabase("xai-web-auth");`); reset `fetch` spy; same `vi.useRealTimers(); vi.restoreAllMocks(); localStorage.clear();` from §6.
+- WebCrypto-derived keys are non-extractable (per design); tests rely on
+  round-trip plaintext equality rather than inspecting key material directly.
+

@@ -1,43 +1,72 @@
 /**
- * claudeAdapter — Option A no-op shim.
+ * claudeAdapter — completeChat entry point.
  *
- * Returns the bilingual demo line after a 600..1200 ms jittered delay. Never
- * touches window.* and never throws. Future Option B (real backend via
- * auth-device-session) replaces THIS function's body without changing its
- * signature or call sites.
+ * If no API key is configured → returns the bilingual demo line after a
+ * 600..1200 ms jittered delay (Option A behaviour, preserved for first-load UX).
  *
- * Design: packages/xai-web-ai-chat/docs/design.md Frozen Assumption 1
- * API contract: packages/xai-web-ai-chat/docs/api.md §4
+ * If an API key IS configured → delegates to streamCompleteChat and accumulates
+ * the full response. Re-throws LlmError if the request fails (the FIFO queue
+ * processor in AiChatModule catches it).
+ *
+ * The external signature `completeChat(text, lang): Promise<string>` is
+ * UNCHANGED per HC7 and design.md FA-1.
+ *
+ * Design: packages/xai-web-ai-chat/docs/design.md FA-1 (2026-05-25 Extension)
+ * API contract: packages/xai-web-ai-chat/docs/api.md §4 + §12 preamble
  */
 
 import type { Lang } from "@repo/plugin-web-tokens";
+import { getPref } from "@repo/plugin-web-storage";
+import { aiKeyStorage } from "./secretStore.js";
+import { streamCompleteChat } from "./claudeStreamAdapter.js";
+import { DEMO_REPLY_EN as _DEMO_EN, DEMO_REPLY_ZH as _DEMO_ZH } from "./demoReply.js";
 
 export const ADAPTER_DELAY_MIN_MS = 600;
 export const ADAPTER_DELAY_MAX_MS = 1200;
 
 /** EN demo bubble — matches the artifact's network-unavailable fallback. */
-export const DEMO_REPLY_EN =
-  "(Demo) I'd weave your tasks, focus data, and habit streaks into a tailored plan. Network unavailable right now — try again in a moment.";
+export const DEMO_REPLY_EN = _DEMO_EN;
 
 /** ZH demo bubble — matches the artifact's network-unavailable fallback. */
-export const DEMO_REPLY_ZH =
-  "（演示）我会综合你的任务、专注数据与习惯进度，给你一份贴近实际的建议。当前网络暂不可用，请稍后再试。";
+export const DEMO_REPLY_ZH = _DEMO_ZH;
 
 /**
- * Returns the bilingual demo line as a Promise, resolving after a uniformly
- * jittered delay in [ADAPTER_DELAY_MIN_MS, ADAPTER_DELAY_MAX_MS] ms.
+ * Returns the response string for a user prompt.
  *
- * Never rejects. The `text` parameter is reserved for future Option B and is
- * intentionally unused here.
+ * - No key configured → demo line after jitter delay.
+ * - Key configured → real LLM response via streamCompleteChat (accumulated).
+ *
+ * @throws LlmError if the real adapter call fails (propagated to caller).
  */
 export async function completeChat(text: string, lang: Lang): Promise<string> {
-  // text is reserved for future Option B (real backend).
-  // Reference it once to satisfy `noUnusedParameters` cleanly without an `_` rename.
-  void text;
-  const span = ADAPTER_DELAY_MAX_MS - ADAPTER_DELAY_MIN_MS;
-  const delay = Math.floor(ADAPTER_DELAY_MIN_MS + Math.random() * span);
-  await new Promise<void>((resolve) => {
-    setTimeout(resolve, delay);
-  });
-  return lang === "zh" ? DEMO_REPLY_ZH : DEMO_REPLY_EN;
+  // Check whether a real API key is configured.
+  const provider = (getPref("xai_ai_provider") as string) || "anthropic";
+  const providerKind =
+    provider === "openai-compatible" ? "openai-compatible" : "anthropic";
+  const apiKey = await aiKeyStorage.loadKey(
+    providerKind as "anthropic" | "openai-compatible",
+  );
+
+  if (!apiKey) {
+    // No key configured — preserve Option A demo behaviour.
+    void text; // reserved for future Option B
+    const span = ADAPTER_DELAY_MAX_MS - ADAPTER_DELAY_MIN_MS;
+    const delay = Math.floor(ADAPTER_DELAY_MIN_MS + Math.random() * span);
+    await new Promise<void>((resolve) => {
+      setTimeout(resolve, delay);
+    });
+    return lang === "zh" ? DEMO_REPLY_ZH : DEMO_REPLY_EN;
+  }
+
+  // Key configured — call the real streaming adapter and accumulate.
+  let accumulated = "";
+  for await (const chunk of streamCompleteChat({
+    text,
+    lang,
+    model: (getPref("xai_ai_model_default") as "haiku" | "sonnet" | "opus") ?? "haiku",
+  })) {
+    accumulated = chunk.accumulated;
+    if (chunk.done) break;
+  }
+  return accumulated || (lang === "zh" ? DEMO_REPLY_ZH : DEMO_REPLY_EN);
 }

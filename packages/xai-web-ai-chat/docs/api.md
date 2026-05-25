@@ -215,3 +215,261 @@ All three are SHIPPED non-`proposed` entries in `packages/plugin-web-storage/src
 - Resend-while-thinking serialization: the queue's `processingRef` prevents two adapter calls from running concurrently. Even with rapid successive `send()` calls, exactly one `completeChat` promise is in flight at any time; the next call begins only after the previous one resolves (or rejects). This is observable in tests by stubbing `completeChat` with externally-resolvable promises and asserting `calls.length === 1` between the two `send()`s — see `test.md` I17.
 
 ---
+
+## §12. 2026-05-25 Extension — Real LLM Adapter (gap-closure row #2)
+
+> The §0..§11 contract above continues to apply byte-for-byte.
+> This §12 ONLY adds new exports + extends existing behaviour.
+
+### §12.0 New public surface (additive)
+
+`packages/plugin-web-ai-chat/src/index.ts` adds these named exports:
+
+```ts
+// Streaming entrypoint (new). Returns an async iterator of token chunks.
+export { streamCompleteChat } from "./internal/claudeStreamAdapter.js";
+
+// Typed key-storage helper namespace (consumed by Settings → AI pane).
+export { aiKeyStorage } from "./internal/secretStore.js";
+
+// Public error union (consumed by Settings → AI pane + ErrorBanner).
+export type { LlmError, LlmErrorKind } from "./internal/llmErrors.js";
+
+// Public request/response types for stream protocol.
+export type { StreamChunk, StreamRequest } from "./internal/claudeStreamAdapter.js";
+```
+
+`completeChat` continues to be exported (unchanged signature) and is used
+internally by `streamCompleteChat` as the non-streaming fallback.
+
+### §12.1 `streamCompleteChat(req): AsyncIterable<StreamChunk>` (internal — `src/internal/claudeStreamAdapter.ts`)
+
+```ts
+export interface StreamRequest {
+  /** The user prompt text (trimmed, non-empty). */
+  text: string;
+  /** Active language; controls fallback demo string + future i18n in errors. */
+  lang: Lang;
+  /** Model id the user picked in the composer (or default). */
+  model: AiModelId;
+  /** Optional abort signal — when aborted, the underlying fetch is aborted. */
+  signal?: AbortSignal;
+}
+
+export interface StreamChunk {
+  /** The accumulated text so far (NOT the delta — caller renders this directly). */
+  accumulated: string;
+  /** True on the final chunk before the iterator returns. */
+  done: boolean;
+}
+
+export function streamCompleteChat(
+  req: StreamRequest,
+): AsyncIterable<StreamChunk>;
+```
+
+**Behaviour contract**
+
+- Resolves provider config via `llmProvider.resolveProvider()` (reads
+  `usePref` values from inside the function via a one-shot snapshot loader;
+  see `llmProvider.ts`).
+- Loads the API key via `secretStore.loadKey(provider)`. If `null`, throws
+  `LlmError({kind:"BadKey",status:401})` (caller distinguishes "no key
+  configured" via the `status === 401` AND `LlmError.detail?.includes("not-set")`).
+- Issues a single `fetch(url, {method:"POST", headers, body, signal})` with
+  `stream: true` in the JSON body.
+- On 4xx/5xx: calls `classifyError(response)` → throws `LlmError`.
+- On 200 with streaming response body: yields `{accumulated, done:false}`
+  after each text chunk parsed from SSE; emits one final `{accumulated, done:true}`
+  before completing.
+- On streaming-unavailable (Response.body is null OR SSE parse throws): falls
+  back to awaiting `completeChat(text, lang)` and yields a single `{accumulated: full, done:true}`.
+- On AbortController abort: the underlying fetch is aborted; iterator returns
+  early without throwing (consumer expected to handle the partial bubble).
+
+### §12.2 `aiKeyStorage` (internal namespace, exported via barrel — `src/internal/secretStore.ts`)
+
+```ts
+export type AiProvider = "anthropic" | "openai-compatible";
+
+export interface AiKeyStorage {
+  /** Returns the plaintext API key for the given provider, or null if not set. */
+  loadKey(provider: AiProvider): Promise<string | null>;
+  /** Persists the plaintext API key encrypted via AES-GCM. Overwrites any existing entry. */
+  saveKey(provider: AiProvider, plaintext: string): Promise<void>;
+  /** Removes the stored entry for the given provider. Idempotent. */
+  clearKey(provider: AiProvider): Promise<void>;
+  /** Issues a 1-token messages request to validate the stored key. Returns LlmError on failure. */
+  testConnection(provider: AiProvider): Promise<{ ok: true } | { ok: false; error: LlmError }>;
+}
+
+export const aiKeyStorage: AiKeyStorage;
+```
+
+**Storage shape (IndexedDB row)**
+
+```ts
+interface StoredSecretBlob {
+  /** Format version; bump on cipher / KDF changes. */
+  version: 1;
+  /** AES-GCM ciphertext. */
+  ciphertext: Uint8Array;
+  /** AES-GCM IV (12 bytes). */
+  iv: Uint8Array;
+  /** PBKDF2 salt (32 bytes random per-install). */
+  salt: Uint8Array;
+  /** PBKDF2 iterations — 600_000. */
+  kdfIterations: 600000;
+  /** Cipher algorithm identifier — "AES-GCM". */
+  algo: "AES-GCM";
+}
+```
+
+**KDF chain**
+
+1. `createDeviceIdentityStore().ensure()` → UUID (already SHIPPED; persisted
+   in IDB `xai-web-auth/device` store under key `device.id`).
+2. `crypto.subtle.importKey("raw", encode(uuid), "PBKDF2", false, ["deriveKey"])`.
+3. `crypto.subtle.deriveKey({name:"PBKDF2", salt, iterations:600000, hash:"SHA-256"}, baseKey, {name:"AES-GCM", length:256}, false, ["encrypt", "decrypt"])`.
+4. AES-GCM encrypt/decrypt with 12-byte random IV per save.
+
+**Error semantics**
+
+- `loadKey`: returns `null` (NOT throws) for missing entry or decrypt failure
+  (decrypt failure also clears the row — assume corruption / device id reset).
+- `saveKey`: throws if `crypto.subtle` is unavailable OR IDB write fails.
+- `clearKey`: idempotent — no-op if no entry exists.
+- `testConnection`: never throws; wraps errors into `{ok:false, error: LlmError}`.
+
+### §12.3 `LlmError` (public union — `src/internal/llmErrors.ts` re-exported)
+
+```ts
+export type LlmErrorKind =
+  | "BadKey"
+  | "RateLimited"
+  | "Network"
+  | "Server"
+  | "Malformed";
+
+export type LlmError =
+  | { kind: "BadKey"; status: 401 | 403; detail?: string }
+  | { kind: "RateLimited"; status: 429; retryAfterSec: number; detail?: string }
+  | { kind: "Network"; cause: Error; detail?: string }
+  | { kind: "Server"; status: number; body?: string; detail?: string }
+  | { kind: "Malformed"; where: "sse-parse" | "json-parse" | "shape"; detail: string };
+
+export function classifyError(
+  input: Response | Error,
+): Promise<LlmError>;
+```
+
+- `classifyError(Response)` reads `status` + `Retry-After` header + (best-effort)
+  response body for the `detail` field. Returns a `Promise<LlmError>` so it can
+  await `response.text()`.
+- `classifyError(Error)` maps `TypeError: Failed to fetch` → `{kind:"Network", cause}`,
+  `SyntaxError` (JSON.parse failure on stream chunk) → `{kind:"Malformed", where:"json-parse", detail}`,
+  everything else → `{kind:"Server", status:0, detail:String(err.message)}`.
+
+### §12.4 New EventMap entries (in `@repo/core/types/events.ts`)
+
+```ts
+// AI Chat rate-limit (owner: plugin-web-ai-chat row #18 extension)
+// Declaration: emitted from plugin-web-ai-chat streaming adapter when a 429 is observed.
+// Consumer: AiChatModule banner UI (subscribes via useWebEventListener).
+'web:ai:rate-limited': {
+  /** Provider whose endpoint returned 429. */
+  provider: 'anthropic' | 'openai-compatible';
+  /** Seconds until the user may retry. Sourced from Retry-After header; clamped 0..3600. */
+  retryAfterSec: number;
+  /** ISO timestamp of the 429 receipt. */
+  occurredAt: string;
+};
+
+// AI Chat request failure (owner: plugin-web-ai-chat row #18 extension)
+// Declaration: emitted from plugin-web-ai-chat streaming adapter when classifyError returns non-RateLimited LlmError.
+// Consumer: AiChatModule banner UI (and optionally Settings → AI pane for live "key invalid" hint).
+'web:ai:request-failed': {
+  provider: 'anthropic' | 'openai-compatible';
+  kind: 'bad-key' | 'network' | 'server' | 'malformed';
+  /** HTTP status if available. 0 for network errors. */
+  status?: number;
+  occurredAt: string;
+};
+```
+
+### §12.5 New `usePref` registry entries (in `@repo/plugin-web-storage`)
+
+| Key | Codec | Default | Owner |
+|---|---|---|---|
+| `xai_ai_provider` | json (string enum) | `"anthropic"` | xai-web-ai-chat row #18 ext |
+| `xai_ai_base_url` | json (string) | `""` | xai-web-ai-chat row #18 ext |
+| `xai_ai_model_default` | json (`AiModelId`) | `"haiku"` | xai-web-ai-chat row #18 ext |
+| `xai_ai_streaming` | boolean | `true` | xai-web-ai-chat row #18 ext |
+
+**None of these store API keys.** Keys live exclusively in the IndexedDB
+`xai-web-ai-secrets` store.
+
+### §12.6 Settings → AI pane props
+
+```ts
+// In packages/plugin-web-settings-rest/src/panes/aiPane.tsx:
+export const aiPane: Pane = {
+  id: "ai",
+  icon: "sparkle",
+  i18nKey: "settings.ai",
+  render: (props: PaneRenderProps) => <AiPaneContent {...props} />,
+};
+```
+
+`AiPaneContent` reads/writes the 4 new `usePref` keys + uses `aiKeyStorage` for
+the key field. Native `<dialog>` confirm-modal for "Delete API key" reuses the
+`DeleteAccountConfirmModal` typography (own copy though — not a direct reuse).
+
+### §12.7 CSP delta
+
+`apps/web/public/_headers` line 2 (the only line) `connect-src 'self'` becomes
+`connect-src 'self' https://api.anthropic.com`. This is the only line changed
+in `_headers`. ADR-0008 §S3 D3 is amended in the same commit to record the
+delta + add an "Amendments" frontmatter row.
+
+OpenAI-compatible base URLs are NOT widened into CSP. Settings → AI pane copy
+acknowledges this — see §12.8 below.
+
+### §12.8 Error semantics summary (consumer-facing)
+
+| LlmError.kind | Banner copy (EN) | Banner copy (ZH) | Actions |
+|---|---|---|---|
+| `BadKey` (status 401/403) | "Your API key was rejected. Please check Settings → AI." | "API 密钥被拒绝。请到 设置 → AI 检查。" | "Open Settings → AI" button |
+| `RateLimited` (status 429) | "Rate-limited. Retry in {N}s." | "已达速率限制，{N}s 后重试。" | "Retry" disabled until countdown 0 |
+| `Network` (fetch reject) | "Network error. Check your connection." | "网络错误，请检查连接。" | "Retry" enabled immediately |
+| `Server` (5xx) | "Provider service unavailable ({status})." | "服务暂不可用（{status}）。" | "Retry" enabled |
+| `Malformed` | "Unexpected response from provider — please try again." | "服务返回了无法解析的内容，请稍后重试。" | "Retry" enabled |
+
+"Key not configured" surfaces as a special `BadKey` with `detail:"not-set"`:
+banner copy switches to "Please configure your API key in Settings → AI to
+start chatting." (EN) / "请到 设置 → AI 配置 API 密钥后再开始对话。" (ZH).
+
+### §12.9 Idempotency / re-mount safety (extension)
+
+- `streamCompleteChat` accepts an `AbortSignal` — passed in from `AiChatModule.tsx`
+  derived from `mountedRef` via a per-request `AbortController` created at
+  `send()` time and aborted in the unmount cleanup.
+- `secretStore.saveKey` is safe to call concurrently; the new ciphertext blob
+  fully replaces the previous one (no merge / no migration in v1).
+- `aiKeyStorage.testConnection` is safe to spam — each call is an independent
+  fetch. UI debounces via button-disable-during-pending.
+
+### §12.10 Permissions / capabilities (extension)
+
+- No new Tauri capabilities (still web-only).
+- **CSP `connect-src` widened** to include `https://api.anthropic.com`.
+  ADR-0008 §S3 D3 amended (single follow-up commit).
+- No new Sentry envelope rules. No `report-uri` re-added.
+- Browser feature requirements (asserted at module load):
+  - `crypto.subtle` (WebCrypto)
+  - IndexedDB
+  - `ReadableStream` (for SSE body streaming)
+  - `AbortController`
+- All four are present in Chrome 60+ / Safari 11+ / Firefox 57+ — comfortably
+  within row #18's cross-vendor matrix (Chrome 120 / Safari 17 / Firefox 121).
+

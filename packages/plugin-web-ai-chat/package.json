@@ -27,6 +27,7 @@
     "@repo/plugin-web-tokens": "workspace:*",
     "@repo/plugin-web-storage": "workspace:*",
     "@repo/web-auth-device-session": "workspace:*",
+    "@repo/xai-web-event-bus": "workspace:*",
     "@repo/xai-web-shell": "workspace:*"
   },
   "devDependencies": {
