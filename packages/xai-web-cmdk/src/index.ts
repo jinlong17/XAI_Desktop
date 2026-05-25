@@ -7,20 +7,21 @@
  * API contract: packages/xai-web-cmdk/docs/api.md §0
  * Design snapshot: packages/xai-web-cmdk/docs/design.md
  * Roadmap row: gap-closure row #3 (xai-web-cmdk-search)
- *
- * Phase note: Components (CommandPalette, CommandPaletteProvider, PaletteInput,
- * PaletteList, PaletteResultRow) and the useCommandPalette hook are added in P3.
  */
 
-// ---- Components (added in P3) ----------------------------------------------
-// export { CommandPalette } from "./CommandPalette.js";
-// export { CommandPaletteProvider } from "./CommandPaletteProvider.js";
-// export { PaletteInput } from "./PaletteInput.js";
-// export { PaletteList } from "./PaletteList.js";
-// export { PaletteResultRow } from "./PaletteResultRow.js";
+// ---- Side effects ----------------------------------------------------------
+// CSS import (sideEffect — triggers once on first import of this barrel)
+import "./styles.css";
 
-// ---- Hook (added in P3) ----------------------------------------------------
-// export { useCommandPalette } from "./registration.js";
+// ---- Components ------------------------------------------------------------
+export { CommandPalette } from "./CommandPalette.js";
+export { CommandPaletteProvider } from "./CommandPaletteProvider.js";
+export { PaletteInput } from "./PaletteInput.js";
+export { PaletteList } from "./PaletteList.js";
+export { PaletteResultRow } from "./PaletteResultRow.js";
+
+// ---- Hook ------------------------------------------------------------------
+export { useCommandPalette } from "./registration.js";
 
 // ---- Adapter registration --------------------------------------------------
 export { registerSearchAdapter } from "./internal/registry.js";
