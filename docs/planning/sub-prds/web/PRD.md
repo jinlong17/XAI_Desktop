@@ -1,5 +1,7 @@
 # Web 子 PRD — XAI_Desktop 网页版
 
+> **SUPERSEDED-IN-PART (2026-05-24).** UI module specs are SUPERSEDED by `docs/workflow/roadmap/xai-web-console.md` (24/24 SHIPPED) + ADR-0007 build-form decision + `web design/DESIGN.md` as authoritative UI source. This PRD remains authoritative for **browser-only platform concerns**: Auth/Device/Session, Sync push/pull encrypted blob driver, IndexedDB cache, Realtime, Offline outbox, CSP/Sentry, Cloudflare deploy. Do not consume §FR-* UI specs without cross-checking the xai-web-console manifest. Full rationale: `docs/reviews/web-priority-pivot-and-repo-cleanup/20260524-brief.md`.
+
 | 字段 | 值 |
 |---|---|
 | 父 PRD | `docs/planning/2026-05-12-PRD-v1.md`(主 PRD §5.15) |

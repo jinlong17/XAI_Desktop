@@ -1,8 +1,22 @@
 # XAI_Desktop — AI Smart Desktop
 
+## Current Priority (2026-05-24)
+
+Active focus order — supersedes any conflicting prior PRD / roadmap:
+
+- **P0 — Web Console** (`apps/web/` + `packages/{xai-web-*, plugin-web-*}`): 24/24 SHIPPED per `docs/workflow/roadmap/xai-web-console.md`; deployed to Cloudflare Pages. Remaining work is known-gap closure (AI real-LLM adapter, Cmd-K search, Calendar Week+Day, Board Filter+Share+Map, Dashboard Add-Widget picker, Settings integrations, Pomodoro counters test fix). See `docs/reviews/web-priority-pivot-and-repo-cleanup/20260524-brief.md`.
+- **P1 — Desktop client** (`apps/desktop/` + `packages/plugin-{account, console, productivity, ai-cube, calendar, labels, project}`): Tauri overlay shell. Paused until P0 gap closure ships. Gating ADR pending (ADR-0009 "Web → Desktop Pivot Plan").
+- **P2 — Desktop organizer plugins & tools** (`packages/plugin-{organizer, clipboard, widgets, meditation, pet}`, sync-v1 crypto stack, G0/G1 native foundation): Paused. Resumes only after P1 is in beta.
+
+Authority basis: `docs/workflow/roadmap/xai-web-console.md` §Authority Override (2026-05-23) + `docs/adr/0007-xai-web-console-build-form.md` + `docs/adr/0008-cloudflare-deploy-target-and-csp.md`.
+
 ## Project Overview
 
-macOS transparent desktop overlay for organizing files, folders, and apps into floating Smart Containers (grids). Built with Tauri 2 + React 19 in a monorepo (Turborepo + pnpm).
+Multi-face product — single monorepo, three product surfaces:
+
+- **Web Console (P0, active)** — Vite SPA at `apps/web/`, registers 24 modules via `xai-web-shell` slot pattern. Browser-only persistence via `xai-web-persistence-contract`; typed events via `xai-web-event-bus`. Authority spec: `web design/DESIGN.md` (Claude-Artifact prototype, per ADR-0007).
+- **macOS Desktop overlay (P1, paused)** — Tauri 2 + React 19 transparent overlay for organizing files, folders, and apps into floating Smart Containers (grids). Built in this monorepo (Turborepo + pnpm).
+- **Organizer plugins & tools (P2, paused)** — Per-domain plugins under `packages/plugin-*/`.
 
 ## Architecture
 

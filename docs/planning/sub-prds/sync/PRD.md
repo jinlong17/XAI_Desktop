@@ -1,5 +1,7 @@
 # Sync 子 PRD — XAI_Desktop 同步数据通道
 
+> **PAUSED (2026-05-24, per Web P0 Priority Override).** Sync stack (account, E2E crypto, Realtime, offline queue, conflict resolution, multi-device coordination) is part of P1/P2. The SHIPPED sync-v1 crypto packages under `packages/{kdf-primitives, aes-gcm-aead-core, hpke-per-device-wrap, sync-engine-{push,pull}, ...}` are preserved as-is and remain authoritative for their domain. Do not start new sync work against this PRD until P0 Web gap-closure ships and ADR-0009 is Accepted. Authority basis: `docs/workflow/roadmap/xai-web-console.md` §Authority Override 2026-05-23. Full rationale: `docs/reviews/web-priority-pivot-and-repo-cleanup/20260524-brief.md`.
+
 | 字段 | 值 |
 |---|---|
 | 父 PRD | `docs/planning/2026-05-12-PRD-v1.md`(主 PRD §5.9) |

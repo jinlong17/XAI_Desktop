@@ -4,11 +4,26 @@
 > 只有状态为 Stable 或 Production 的 Plugin 才能被作为稳定依赖。
 > 状态为 In-Dev / Testing 的 Plugin 必须使用 Mock 数据解耦。
 >
-> 最后更新: 2026-05-21
+> 最后更新: 2026-05-24
+
+---
+
+## Current Priority (2026-05-24)
+
+| Tier | Surface | Status | Packages |
+|---|---|---|---|
+| **P0** | Web Console | **Active — gap-closure mode** | `xai-web-*` (rows 1-24) + `plugin-web-*` (npm-namespace siblings) + `apps/web/` — see "Web Modules" + "Web Platform Shims" sections below |
+| **P1** | macOS Desktop client | Paused | `plugin-account`, `plugin-console`, `plugin-productivity`, `plugin-ai-cube`, `plugin-calendar`, `plugin-labels`, `plugin-project`, `apps/desktop/` |
+| **P2** | Desktop organizer plugins & tools | Paused | `plugin-organizer`, `plugin-clipboard`, `plugin-widgets`, `plugin-meditation`, `plugin-pet`, plus sync-v1 crypto stack (W0/W1/W2/W3) and G0/G1 native foundation anchors |
+
+Authority basis: `docs/workflow/roadmap/xai-web-console.md` §Authority Override 2026-05-23 + ADR-0007 + ADR-0008.
+Per Web P0 period: do not start new dev work on P1/P2 packages. Existing SHIPPED packages remain authoritative; existing in-flight items: complete-or-park. Full rationale: `docs/reviews/web-priority-pivot-and-repo-cleanup/20260524-brief.md`.
 
 ---
 
 ## Roadmap / CI Gate Anchors
+
+> **PAUSED during Web P0 (2026-05-24).** These desktop-side roadmap anchors and sync-v1 crypto packages are part of P1/P2. Do not start new work on these rows during the Web P0 period. SHIPPED rows remain authoritative for their domains.
 
 > These are NOT plugins. They are roadmap workflow anchors (`packages/<slug>/docs/`)
 > that track supply-chain / infra rows. Code boundary: Cargo.toml / CI only.
@@ -65,6 +80,8 @@
 | @repo/core-data | packages/core-data/ | In-Dev | Sync 数据访问 + SQLite/Web Sync blob driver boundary. Surfaces `secretSet/secretGet/secretDel`, `createSqliteRepo`, `createSyncBlobRepo`, localStorage migration, mutation hook, explicit sync `pull()/pushPending()/syncState()` seams, and `@repo/core-data/testing`; real SQLCipher/browser-runtime acceptance is still deferred. Consumers mock until Stable. | 2026-05-22 |
 
 ## Plugins
+
+> **PAUSED during Web P0 (2026-05-24).** All rows below are part of P1/P2 Desktop scope. Web Modules (P0) are listed in the "Web Modules" section further down. Do not start new dev work on P1/P2 plugin packages during the Web P0 period — refer to "Current Priority" at the top of this file.
 
 | Plugin | 目录 | 状态 | PRD 章节 | 对外依赖 | 最后更新 |
 |--------|------|------|---------|---------|---------|

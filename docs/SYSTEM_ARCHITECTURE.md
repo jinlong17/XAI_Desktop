@@ -3,7 +3,9 @@
 > 本文档定义 XAI_Desktop 的架构约束与编码红线。
 > 所有开发（人类和 AI）必须遵守此文档中的规则。
 >
-> 最后更新: 2026-05-14
+> 最后更新: 2026-05-24
+
+> **Priority Note (2026-05-24):** §3-§10 below were authored for the **macOS Desktop surface (P1, currently paused per Web P0 Priority Override)**. The active P0 surface is the Web Console — see §12 below for web-side boundary, and `CLAUDE.md` "Current Priority" for the full priority order. Sections §1-§11 remain authoritative for P1/P2 Desktop work but MUST NOT be enforced verbatim against `packages/{xai-web-*, plugin-web-*}/`. Full Surface Scope Matrix to be authored in ADR-0009 (Web → Desktop Pivot Plan).
 
 ---
 
@@ -143,9 +145,35 @@ apps/desktop/src-tauri/src/
 
 ## 11. 明确排除项 (不做什么)
 
-以下明确不在项目范围内：
+以下明确不在项目范围内（**对 P1 Desktop surface 而言**；Web P0 边界见 §12）：
 
 - **不做运行时动态插件加载** — 编译时确定插件集
-- **不做 apps/web/ 和 apps/docs/ 清理** — 保留为 scaffold
 - **不做数据库迁移** — 当前用 localStorage，SQLite 是未来目标
 - **不做 CI/CD** — 暂无 GitHub Actions
+
+> **2026-05-24 删除条目：** 原 "不做 apps/web/ 和 apps/docs/ 清理 — 保留为 scaffold" 已删除——`apps/web/` 现在是 P0 active surface（24/24 SHIPPED），见 §12。
+
+## 12. Web Console Boundary (P0, 2026-05-24)
+
+Per `docs/workflow/roadmap/xai-web-console.md` §Authority Override (2026-05-23), the Web Console is the active product surface. Web boundary parallels but does NOT inherit §3-§10 verbatim — full Surface Scope Matrix is pending ADR-0009.
+
+### 12.1 Web tri-layer
+
+```
+apps/web/                  → Vite SPA shell (host registration + providers + react-router)
+packages/xai-web-*/        → 24 module packages + platform packages; registered via xai-web-shell slot pattern
+packages/plugin-web-*/     → npm-namespace siblings of xai-web-* (same code, different package name)
+```
+
+### 12.2 Web persistence + events
+
+- Persistence: `xai-web-persistence-contract` owns all `xai_*` localStorage keys (per DESIGN.md §9.2). Web packages MUST go through `usePref` / `setPref` / `removePref`.
+- Events: `xai-web-event-bus` owns all `web:*` event keys. Cross-package web behavior MUST go through `emitWebEvent` / `onWebEvent` / `useWebEventListener`.
+- Web packages MUST NOT import `@tauri-apps/api`; MUST NOT register on `core` PluginRegistry; MUST NOT depend on `apps/desktop/`.
+
+### 12.3 Which §3-§10 rules apply to Web
+
+- §3 三层边界 + §4 编码红线 #1/#2/#3/#8/#12 apply to both desktop and web (web's tri-layer being `apps/web` / `xai-web-*` / `core`).
+- §4 #4/#5/#6 apply to desktop only — web replaces with persistence-contract + event-bus + manifest-optional shim pattern.
+- §5/§6/§7/§9 are desktop-only.
+- §10 新建 Plugin 标准路径 is desktop-only; web packages use a parallel template (full spec pending ADR-0009).
