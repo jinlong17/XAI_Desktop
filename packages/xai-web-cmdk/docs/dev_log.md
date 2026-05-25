@@ -12,8 +12,8 @@
 | Suggested Next | feature-verify |
 | Verify Cross-vendor | yes (Codex `gpt-5.5-thinking effort=medium` primary; Cursor fallback per ADR-0009 D4 + roadmap default) |
 | Automation Mode | A-Claude (inherited from gap-closure roadmap default) |
-| Executor | Claude Sonnet 4.6 — feature-auto-build, 2026-05-25 |
-| Updated | 2026-05-25 15:35 |
+| Executor | Claude Sonnet 4.6 — feature-build verify-feedback patch, 2026-05-25 |
+| Updated | 2026-05-25 15:45 |
 | Dispatched By | xai-roadmap-loop (serial mode, Wave 1, row #3 — after #2 SHIPPED commit ade513b) |
 | Roadmap Row | docs/workflow/roadmap/xai-web-console-gap-closure.md row #3 (W1 · NEW package) |
 | Parent ADR | docs/adr/0009-web-to-desktop-pivot-plan.md §D2-G3 (P0 gap-closure scope) |
@@ -192,7 +192,49 @@ network), in contrast to row #2 which amended ADR-0008.
 
 ## Suggested Next
 
-`feature-auto-build`
+`feature-verify` — re-run full verify gate matrix. B1 (lint) + B2 (typecheck) blockers resolved in commit 8caad35. All other gates were already passing per prior verify report. Re-confirm G2 (lint exit 0) + G3 (check-types exit 0) then issue final verdict.
+
+## Verify Findings (2026-05-25 — feature-verify BLOCKED)
+
+**Verdict**: BLOCKED. 2 quality-gate blockers in xai-web-cmdk's own scripts; all other gates pass.
+
+**Blockers (B1 + B2):**
+
+- **B1 — lint fails** (`pnpm --filter @repo/xai-web-cmdk lint` exit 1).
+  - `src/__tests__/perfBudget.test.ts:52` — `Unused eslint-disable directive (no problems were reported from 'no-console')`
+  - `src/__tests__/perfBudget.test.ts:65` — same
+  - Fix: remove the two `// eslint-disable-next-line no-console` comments (the eslint config already permits `console.info`/`console.warn` — only `console.log` is restricted, and these lines use `console.info`).
+- **B2 — typecheck fails** (`pnpm --filter @repo/xai-web-cmdk check-types` exit 2).
+  - `src/__tests__/perfBudget.test.ts:30` — TS2322: `Type 'number | undefined' is not assignable to type 'number'`.
+  - Fix: under `noUncheckedIndexedAccess`, `sorted[Math.max(0, idx)]` is `number | undefined`. Easiest fix: `return sorted[Math.max(0, idx)] ?? 0;` (or assert non-empty: `if (sorted.length === 0) return 0;`).
+
+**Passing gates (everything else):**
+
+- G1: cmdk tests 137/137 ✓ (incl. perfBudget PB1 p95 = 0.001–0.002 ms — real measurement, verified)
+- G4: shell tests 85/85 ✓
+- G5: web tests 106/106 ✓
+- G6: web check-types ✓
+- G10: web build ✓ (no new errors)
+- G8: HC1 overlay-only — confirmed `manifest.json:showInRail=false`; no `cmdk` entry in `apps/web/src/routes/modules/shellRegistrations.tsx`; mounted in App.tsx as overlay sibling of Shell
+- G9: HC2 zero storage keys — `git diff 8563c1c..f8ef2e1 -- packages/plugin-web-storage/` is empty
+- G10/HC4: EventMap `web:search:invoked` + `web:search:jump` declared in `packages/core/src/types/events.ts:327` and `:335` with correct payload shapes
+- G11/HC5: keyboard contract — `matchesCmdK` covers Cmd+K (mac) / Ctrl+K (other), rejects INPUT/TEXTAREA/contentEditable/Alt/Shift; Cmd+Enter aliased to Enter in CommandPalette.tsx
+- G12/HC6: styles.css uses tokens only (zero hex literals); modal centered with backdrop blur; monospace input
+- G13/HC7: escapeHtml runs BEFORE `<mark>` wrap; query also escaped pre-regex; PR3/PR4 rendered-DOM assertions pass
+- HC3: 11 adapters confirmed at `packages/xai-web-cmdk/src/adapters/` (board/calendar/countdown/dashboard/habits/matrix/meditation/pomodoro/settings/statistics/tasks); pomodoro adapter audited — pure function, no side effects, never throws
+- HC8: cross-vendor checklist + Codex cold-read prompt prepared in `docs/reviews/xai-web-cmdk-search/20260525-verify-checklist.md` (G14) and `20260525-cross-vendor-smoke.md` — deferred to ship-time human verifier per ADR-0008 carve-out pattern
+- HC9: no third-party `cmdk` / `kbar` / `react-command-palette` dep in `package.json`
+- HC10: discovery review cites seed brief
+- Architectural fit: zero `@tauri-apps/api` imports in xai-web-cmdk/src/; cross-package events via `@repo/xai-web-event-bus`; `index.ts` is sole public surface
+- PLUGIN_MAP row at line 137 present, consistent with user's external edits (not reverted)
+
+**Acceptance signals (5 from seed brief):**
+
+- (a) Cmd+K opens within 100 ms — PB1 p95 = 0.001–0.002 ms (well within budget)
+- (b) Typing "tomato" finds pomodoro sessions — confirmed in pomodoro.ts ALIASES + adapter test PM2; Enter routes to `/app/pomodoro` via navigateToHit
+- (c) 11/11 adapter tests pass — confirmed
+- (d) Topbar button keyboard accessible — confirmed in Topbar.tsx conditional render + TP5b/TP7 tests
+- (e) XSS-safe highlight — confirmed via escapeHtml 12 cases + PR3/PR4 rendered-DOM assertions + escape-before-wrap pipeline
 
 ## Review Notes (2026-05-25 — feature-review APPROVED)
 
@@ -243,4 +285,6 @@ network), in contrast to row #2 which amended ADR-0008.
 | 2026-05-25 15:05 | Claude Sonnet 4.6 (feature-auto-build, continued session after context compaction) | **P2 COMPLETE.** Implemented 11 adapter pure functions (tasks, board, dashboard, calendar, matrix, pomodoro, habits, meditation, countdown, statistics, settings) + adapters/index.ts barrel for side-effect registration. Implemented internal/buildIndex.ts (sort: score desc + moduleId asc tie-break, cap 50, frozen return) + internal/readModuleStates.ts (reads via SHIPPED getPref/paneRegistry; zero new localStorage keys, HC2 compliant; board state structured as {boards, active, panels, inbox} deterministic order per O4). Fixed PM5/PM6 pomodoro: "tomato" alias match only when sessions array is present. Fixed lint warnings (unused _state params, unused describe imports). Fixed TypeScript error in buildIndex.test.ts (EMPTY_STATES cast). Tests: 11 adapter test files + buildIndex.test.ts = 58 new cases, all green. Total test count: 92+ cases. lint exit 0. typecheck exit 0. | 59d7989 | P3 |
 | 2026-05-25 15:15 | Claude Sonnet 4.6 (feature-auto-build, continued) | **P3 COMPLETE.** Implemented styles.css (DESIGN.md §6 frozen UI: .cmdk-scrim backdrop-filter blur, .cmdk-modal centered 640px max-height 480px, .cmdk-input font-mono, zero hex literals — all via CSS tokens). Implemented PaletteInput.tsx (autoFocus, role="combobox", aria-label), PaletteList.tsx (role="listbox", scrollIntoView via useEffect), PaletteResultRow.tsx (role="option", XSS-safe via dangerouslySetInnerHTML + highlightMatch after escapeHtml). Implemented CommandPaletteProvider.tsx (Context, open idempotent resets query, close). Implemented CommandPalette.tsx (global Cmd+K keydown listener via capture, stable navigate refs pattern, Esc/↑↓/Enter/Cmd+Enter, emits web:search:invoked + web:search:jump). Implemented internal/navigateToHit.ts. Implemented registration.ts (useCommandPalette re-export). Updated src/index.ts (all components + hook + registry helpers + pure helpers + types). Renamed eventEmit.test.ts → eventEmit.test.tsx (esbuild JSX fix). Fixed unused eslint-disable directives. Tests: 18 CP + 5 PI + 5 PL + 4 PR + 4 EM = 36 new cases. Total: 134 cases, all green. lint exit 0. typecheck exit 0. | 1b3efda | P4 |
 | 2026-05-25 15:25 | Claude Sonnet 4.6 (feature-auto-build, continued — P4 execution after session compaction) | **P4 COMPLETE.** Modified packages/xai-web-shell/src/types.ts (added onOpenSearch?: () => void to TopbarProps + ShellProps). Modified packages/xai-web-shell/src/Topbar.tsx (conditional rendering: onOpenSearch → button.search-box with aria-label; no prop → div.search-box + readOnly input, backwards-compat TP5a). Modified packages/xai-web-shell/src/Shell.tsx (forwarded onOpenSearch). Modified packages/xai-web-shell/src/__tests__/Topbar.test.tsx (split TP5 → TP5a/TP5b + added TP7; 85 total tests green). Added apps/web/package.json dep @repo/xai-web-cmdk: workspace:*. Rewrote apps/web/src/App.tsx: split into App (CommandPaletteProvider wrapper) + AppInner (consumes useCommandPalette; mounts CommandPalette sibling of Shell; passes onOpenSearch={() => openPalette({source: "topbar-click"})). Added apps/web/src/__tests__/cmdkIntegration.test.tsx (CI1..CI5; uses Ctrl+K for jsdom non-Mac platform; 5 tests green). Updated shell.smoke.test.tsx A1 to query by button role not placeholder. apps/web tests: 106/106 green. xai-web-shell lint exit 0. apps/web typecheck exit 0. Pre-existing lint warnings in apps/web (TokensSmokePage.tsx + worker-configuration.d.ts) are pre-existing debt — not introduced by P4. | 6575054 | P5 |
-| 2026-05-25 15:35 | Claude Sonnet 4.6 (feature-auto-build, final phase) | **P5 COMPLETE.** Updated docs/PLUGIN_MAP.md: added @repo/xai-web-cmdk row under "Web Platform Shims" (In-Dev status, HC1..HC9 summary, dep list). Updated @repo/xai-web-shell row to note P4 extension. Added src/__tests__/fixtures/realisticState.ts (REALISTIC_MODULE_STATES with 11-module realistic data). Added src/__tests__/fixtures/xssPayloads.ts (11 canonical XSS payloads). Added src/__tests__/perfBudget.test.ts (PB1/PB1b/PB1c: p95 < 50ms over 100 iterations; measured p95 = 0.001ms — well within budget). Wrote docs/reviews/xai-web-cmdk-search/20260525-cross-vendor-smoke.md (browser matrix + sections A–G + Codex cold-read prompt). Wrote docs/reviews/xai-web-cmdk-search/20260525-verify-checklist.md (G1..G14 gate matrix + HC sign-off + commit history verification + Codex audit prompt + expected output: NONE). Updated dev_log: Status = READY_FOR_VERIFY, Suggested Next = feature-verify. Tests: 3 new cases (PB1/PB1b/PB1c); total 137/137 green. | _commit pending_ | feature-verify |
+| 2026-05-25 15:35 | Claude Sonnet 4.6 (feature-auto-build, final phase) | **P5 COMPLETE.** Updated docs/PLUGIN_MAP.md: added @repo/xai-web-cmdk row under "Web Platform Shims" (In-Dev status, HC1..HC9 summary, dep list). Updated @repo/xai-web-shell row to note P4 extension. Added src/__tests__/fixtures/realisticState.ts (REALISTIC_MODULE_STATES with 11-module realistic data). Added src/__tests__/fixtures/xssPayloads.ts (11 canonical XSS payloads). Added src/__tests__/perfBudget.test.ts (PB1/PB1b/PB1c: p95 < 50ms over 100 iterations; measured p95 = 0.001ms — well within budget). Wrote docs/reviews/xai-web-cmdk-search/20260525-cross-vendor-smoke.md (browser matrix + sections A–G + Codex cold-read prompt). Wrote docs/reviews/xai-web-cmdk-search/20260525-verify-checklist.md (G1..G14 gate matrix + HC sign-off + commit history verification + Codex audit prompt + expected output: NONE). Updated dev_log: Status = READY_FOR_VERIFY, Suggested Next = feature-verify. Tests: 3 new cases (PB1/PB1b/PB1c); total 137/137 green. | f8ef2e1 | feature-verify |
+| 2026-05-25 15:40 | Claude Opus 4.7 1M (feature-verify, xai-roadmap-loop serial W1 row #3) | **VERIFY → BLOCKED.** Re-ran full verify gate matrix on 5-phase commit chain (74ce9bb → f8ef2e1). PASSING: G1/cmdk tests (137/137), G4/shell tests (85/85), G5/web tests (106/106), G6/web typecheck, G7/perf-budget PB1 (p95=0.001–0.002ms — measurement verified real, not no-op), G10/web build (exit 0), G8/HC1 overlay-only (no shellRegistrations entry; manifest showInRail:false), G9/HC2 zero new storage keys (git diff confirms no plugin-web-storage changes), G10/HC4 EventMap typed (events.ts lines 327+335), G11/HC5 keyboard contract (Cmd+K mac / Ctrl+K non-mac; rejects INPUT/TEXTAREA/contentEditable/Alt/Shift), G12/HC6 DESIGN.md §6 tokens (zero hex), G13/HC7 XSS-safe (escapeHtml runs before <mark> wrap; query also escaped pre-regex). Architectural fit confirmed: no @tauri-apps/api imports; no 3rd-party cmdk lib in package.json; pomodoro adapter audited as pure (try/catch, no side effects, no hooks, no fetch). PLUGIN_MAP row at line 137 present and consistent with user's external edits. **FAILING (blockers):** B1 — `pnpm --filter @repo/xai-web-cmdk lint` exits 1 (`eslint --max-warnings 0`): 2 unused eslint-disable directives in `src/__tests__/perfBudget.test.ts` lines 52 + 65 (`no-console` not actually triggered since `console.info` is allowed). Violates plan acceptance criteria G2 (test.md §6) + P5 acceptance ("pnpm --filter @repo/xai-web-cmdk lint exits 0"). B2 — `pnpm --filter @repo/xai-web-cmdk check-types` exits 2: TS2322 at `src/__tests__/perfBudget.test.ts:30` — `sorted[Math.max(0, idx)]` returns `number \| undefined` under `noUncheckedIndexedAccess`; assigned to declared `number` return type. Violates plan acceptance criteria G3 + P5 ("pnpm --filter @repo/xai-web-cmdk typecheck exits 0"). G14 (Codex cold-read XSS audit): prompt queued in verify-checklist.md but no Codex run yet recorded — per cross-vendor-smoke.md "TEMPLATE — deferred to feature-verify real-browser sweep" pattern; ship-time human verifier responsibility (acceptable per ADR-0008 carve-out pattern). Both code blockers are localized to one test file (perfBudget.test.ts). Status flipped to BLOCKED; Suggested Next = feature-build (fix-only patch in P5 scope). | — | feature-build |
+| 2026-05-25 15:45 | Claude Sonnet 4.6 (feature-build verify-feedback patch, xai-roadmap-loop serial W1 row #3) | **B1+B2 PATCH → READY_FOR_VERIFY.** Applied 3 line edits to `src/__tests__/perfBudget.test.ts` (one file, zero production code). B1 fix: deleted 2 dead `// eslint-disable-next-line no-console` directives at lines 52+65 (eslint config permits console.info/console.warn; directives were unused). B2 fix: changed `return sorted[Math.max(0, idx)];` to `return sorted[Math.max(0, idx)] ?? 0;` at line 30 (noUncheckedIndexedAccess requires explicit undefined guard; ?? 0 is safe — empty array never occurs in practice with 100 iterations). Re-ran: `pnpm --filter @repo/xai-web-cmdk lint` exit 0 (B1 resolved). `pnpm --filter @repo/xai-web-cmdk check-types` exit 0 (B2 resolved). `pnpm --filter @repo/xai-web-cmdk test` 137/137 pass (perf budget PB1 p95=0.002ms — unchanged, still well within 50ms ceiling). Status = READY_FOR_VERIFY; Suggested Next = feature-verify. | 8caad35 | feature-verify |
