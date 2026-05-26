@@ -7,7 +7,7 @@
 | 决策者 | Jinlong (project owner) + Claude (`feature-plan` → `feature-review`) |
 | Supersedes | none |
 | Superseded by | none |
-| Amendments | 2026-05-25 §S3 D3 + §S6 `_headers` — `connect-src` widened to include `https://api.anthropic.com` (row `xai-web-ai-chat-real-llm-adapter`, gap-closure #2) |
+| Amendments | 2026-05-25 §S3 D3 + §S6 `_headers` — `connect-src` widened to include `https://api.anthropic.com` (row `xai-web-ai-chat-real-llm-adapter`, gap-closure #2); 2026-05-25 §S3 D3 + §S6 `_headers` — `connect-src` + `img-src` widened to include `https://tile.openstreetmap.org` (row `xai-web-board-filter-share-map`, gap-closure #6, MapView OSM tiles) |
 
 ---
 
@@ -148,6 +148,27 @@ constitute a secret.
 - This delta is **security debt**. Follow-up trigger: when the AI Chat backend
   row introduces a Worker layer, revisit and restore per-request nonces via
   that Worker. At that point this ADR is superseded.
+
+**Amendment 2026-05-25 — `connect-src` + `img-src` OSM tile server extension (gap-closure row #6 MapView):**
+
+The MapView in `packages/plugin-web-board-views` fetches map tiles from OpenStreetMap's
+tile CDN. Leaflet loads tiles as `<img>` elements (img-src) and may also issue
+fetch/XHR requests (connect-src). Both directives must be widened.
+
+| Directive | Before | After |
+|---|---|---|
+| `connect-src` | `'self' https://api.anthropic.com` | `'self' https://api.anthropic.com https://tile.openstreetmap.org` |
+| `img-src` | `'self' data: blob:` | `'self' data: blob: https://tile.openstreetmap.org` |
+
+**Security posture (OSM):** `https://tile.openstreetmap.org` is the canonical
+OSM tile CDN hostname. No subdomain wildcard is introduced. Tiles are static
+PNG images served under the OSM open-data licence. No user credentials or secrets
+are transmitted in tile requests. This allowlist entry is the minimum necessary
+for Leaflet OSM tiles to load — neither `*` nor a subdomain wildcard is accepted.
+
+Same **Extension rule** applies: future rows reaching additional external tile
+servers MUST follow this pattern — amend ADR frontmatter, extend `_headers`,
+update §S6 snippet, write a csp.test.ts guard.
 
 **Runtime nonce caller audit (P2):** `requireRuntimeNonce` and
 `createNonceStyleElement` are defined in `apps/web/src/security/nonce.ts` and
@@ -309,7 +330,7 @@ Delivered at `apps/web/public/_headers` (Vite copies `public/` verbatim into
 
 ```
 /*
-  Content-Security-Policy: default-src 'self'; script-src 'self'; style-src 'self' https://fonts.googleapis.com; img-src 'self' data: blob:; connect-src 'self' https://api.anthropic.com; font-src 'self' data: https://fonts.gstatic.com; object-src 'none'; base-uri 'self'; frame-ancestors 'none'; form-action 'self'; upgrade-insecure-requests
+  Content-Security-Policy: default-src 'self'; script-src 'self'; style-src 'self' https://fonts.googleapis.com; img-src 'self' data: blob: https://tile.openstreetmap.org; connect-src 'self' https://api.anthropic.com https://tile.openstreetmap.org; font-src 'self' data: https://fonts.gstatic.com; object-src 'none'; base-uri 'self'; frame-ancestors 'none'; form-action 'self'; upgrade-insecure-requests
   Strict-Transport-Security: max-age=63072000; includeSubDomains; preload
   X-Content-Type-Options: nosniff
   X-Frame-Options: DENY
@@ -319,6 +340,9 @@ Delivered at `apps/web/public/_headers` (Vite copies `public/` verbatim into
 
 _(amended 2026-05-25: `connect-src` extended to include `https://api.anthropic.com`
 per gap-closure row #2 — see §S3 D3 Amendment above)_
+
+_(amended 2026-05-25: `connect-src` + `img-src` extended to include `https://tile.openstreetmap.org`
+per gap-closure row #6 MapView OSM tiles — see §S3 D3 Amendment above)_
 
 No `'unsafe-inline'`. No `'unsafe-eval'`. No `*` wildcard.
 
