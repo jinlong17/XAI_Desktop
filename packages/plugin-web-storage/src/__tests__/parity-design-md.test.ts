@@ -152,6 +152,8 @@ const OWNER_ROW_EXEMPT_KEYS: ReadonlySet<string> = new Set([
   "xai_ai_base_url",
   "xai_ai_model_default",
   "xai_ai_streaming",
+  // xai-web-calendar gap-closure row #4 — calendar view persistence key
+  "xai_calendar_view",
 ]);
 
 describe("AC-PARITY-2: all PREF_REGISTRY explicit keys are in §9.2", () => {

@@ -217,6 +217,8 @@ const OWNER_ROW_ADDITIONS = [
   "xai_ai_base_url",
   "xai_ai_model_default",
   "xai_ai_streaming",
+  // xai-web-calendar gap-closure row #4 — calendar view persistence
+  "xai_calendar_view",
 ] as const;
 
 describe("AC-REG-8: Total entry count = 20 baseline + owner-row additions", () => {

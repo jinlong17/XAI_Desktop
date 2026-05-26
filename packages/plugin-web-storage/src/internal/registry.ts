@@ -852,6 +852,20 @@ export const PREF_REGISTRY = {
     owner: "xai-web-settings-rest",
     category: "pref",
   } satisfies PrefEntry<string>,
+
+  // ---- Calendar view (§S8 — declared by xai-web-calendar gap-closure row #4) --
+  // Stores the last active calendar view: "month" | "week" | "day".
+  // Category "module" — NOT in the xai_pref_* chassis-reset family (same
+  // category as xai_clock_style / xai_active_board per ADR-0007 §S8).
+  // proposed: false — canonical name approved by gap-closure seed brief row #4.
+  xai_calendar_view: {
+    key: "xai_calendar_view",
+    codec: "string",
+    default: "month",
+    schemaVersion: 1,
+    owner: "xai-web-calendar",
+    category: "module",
+  } satisfies PrefEntry<string>,
 } as const;
 
 // ---------------------------------------------------------------------------
@@ -864,3 +878,7 @@ export type WebPrefKey = keyof typeof PREF_REGISTRY;
 // This is the mechanism that gives callers typed values without casts.
 export type WebPrefValue<K extends WebPrefKey> =
   (typeof PREF_REGISTRY)[K]["default"];
+
+// CalendarViewId — typed alias for the xai_calendar_view registry entry values.
+// Re-exported from @repo/plugin-web-storage for consumers (xai-web-calendar index barrel).
+export type CalendarViewId = "month" | "week" | "day";

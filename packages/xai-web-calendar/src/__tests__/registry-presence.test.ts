@@ -25,3 +25,19 @@ describe("xai_pref_week_start registry presence", () => {
     expect(entry.category).toBe("pref");
   });
 });
+
+describe("xai_calendar_view registry presence (gap-closure row #4)", () => {
+  it("AC-REGISTRY-EXT-1: PREF_REGISTRY.xai_calendar_view exists", () => {
+    expect(PREF_REGISTRY.xai_calendar_view).toBeDefined();
+  });
+
+  it("AC-REGISTRY-EXT-2: entry shape — codec string, default month, category module", () => {
+    const entry = PREF_REGISTRY.xai_calendar_view;
+    expect(entry.key).toBe("xai_calendar_view");
+    expect(entry.codec).toBe("string");
+    expect(entry.default).toBe("month");
+    expect(entry.schemaVersion).toBe(1);
+    expect(entry.owner).toBe("xai-web-calendar");
+    expect(entry.category).toBe("module");
+  });
+});

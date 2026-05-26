@@ -16,6 +16,13 @@ export interface CalEvent {
   t: { en: string; zh: string };
   /** Optional HH:MM clock string. */
   time?: string;
+  /**
+   * Optional end time "HH:MM" for multi-hour event blocks in Week/Day views.
+   * Absent → block height = 1 hour from `time`. Month view ignores this field.
+   * NOTE: controlled drift from i18n.js byte-parity — the 5 annotated events
+   * below gain endTime as a Week/Day view demo. AC-FIXTURE-EXT-1..3 assert shape.
+   */
+  endTime?: string;
 }
 
 /** Day-of-month (1..31) → events. Day 14 and day 31 are empty arrays per source. */
@@ -50,11 +57,11 @@ export const SAMPLE_EVENTS: CalEventsByDay = {
     { c: "amber", t: { en: "Topic research", zh: "选题调研" } },
   ],
   7: [
-    { c: "mint", t: { en: "Yoga class", zh: "瑜伽课" }, time: "19:00" },
+    { c: "mint", t: { en: "Yoga class", zh: "瑜伽课" }, time: "19:00", endTime: "20:00" },
     { c: "mint", t: { en: "design pictures", zh: "设计图" } },
   ],
   8: [
-    { c: "mint", t: { en: "Content marketing", zh: "内容营销" }, time: "14:15" },
+    { c: "mint", t: { en: "Content marketing", zh: "内容营销" }, time: "14:15", endTime: "15:30" },
     { c: "mint", t: { en: "Gift for Jess", zh: "给 Jess 的礼物" } },
   ],
   9: [
@@ -64,7 +71,7 @@ export const SAMPLE_EVENTS: CalEventsByDay = {
     { c: "mint", t: { en: "Trip plan", zh: "行程" } },
   ],
   10: [
-    { c: "mint", t: { en: "Wiping windows", zh: "擦窗" }, time: "14:15" },
+    { c: "mint", t: { en: "Wiping windows", zh: "擦窗" }, time: "14:15", endTime: "16:15" },
     { c: "mint", t: { en: "Buy milk", zh: "买牛奶" }, time: "18:00" },
     { c: "mint", t: { en: "Family Trip", zh: "家庭出游" } },
   ],
@@ -108,12 +115,12 @@ export const SAMPLE_EVENTS: CalEventsByDay = {
     { c: "blue", t: { en: "Sponsors", zh: "赞助" } },
   ],
   22: [
-    { c: "mint", t: { en: "Data Analysis", zh: "数据分析" }, time: "11:00" },
+    { c: "mint", t: { en: "Data Analysis", zh: "数据分析" }, time: "11:00", endTime: "13:00" },
     { c: "mint", t: { en: "Brainstorming", zh: "头脑风暴" }, time: "11:30" },
     { c: "mint", t: { en: "Meditation", zh: "冥想" } },
   ],
   23: [
-    { c: "mint", t: { en: "0–1 Product construction", zh: "0-1 产品搭建" }, time: "14:00" },
+    { c: "mint", t: { en: "0–1 Product construction", zh: "0-1 产品搭建" }, time: "14:00", endTime: "16:30" },
     { c: "mint", t: { en: "Video review", zh: "视频复盘" }, time: "14:30" },
     { c: "mint", t: { en: "New Feature Showcase", zh: "新功能展示" } },
   ],

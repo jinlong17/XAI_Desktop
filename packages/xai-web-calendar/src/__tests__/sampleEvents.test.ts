@@ -53,6 +53,47 @@ describe("SAMPLE_EVENTS fixture", () => {
     expect(yoga?.time).toBe("19:00");
   });
 
+  // --- Extension tests (gap-closure row #4) ------------------------------------
+
+  it("AC-FIXTURE-EXT-1: exactly 5 events have endTime field", () => {
+    let count = 0;
+    for (const day of Object.keys(SAMPLE_EVENTS)) {
+      const events = SAMPLE_EVENTS[Number(day)] ?? [];
+      for (const e of events) {
+        if ("endTime" in e && e.endTime !== undefined) count++;
+      }
+    }
+    expect(count).toBe(5);
+  });
+
+  it("AC-FIXTURE-EXT-2: endTime is always > time (string compare)", () => {
+    for (const day of Object.keys(SAMPLE_EVENTS)) {
+      const events = SAMPLE_EVENTS[Number(day)] ?? [];
+      for (const e of events) {
+        if ("endTime" in e && e.endTime && e.time) {
+          expect(e.endTime > e.time).toBe(true);
+        }
+      }
+    }
+  });
+
+  it("AC-FIXTURE-EXT-3: endTime absent on all other events", () => {
+    let withEndTime = 0;
+    let withoutEndTime = 0;
+    for (const day of Object.keys(SAMPLE_EVENTS)) {
+      const events = SAMPLE_EVENTS[Number(day)] ?? [];
+      for (const e of events) {
+        if ("endTime" in e && e.endTime !== undefined) {
+          withEndTime++;
+        } else {
+          withoutEndTime++;
+        }
+      }
+    }
+    expect(withEndTime).toBe(5);
+    expect(withoutEndTime).toBe(63); // 68 total - 5 = 63
+  });
+
   it("color distribution: mint > amber > blue/violet", () => {
     const counts: Record<string, number> = { mint: 0, amber: 0, blue: 0, violet: 0 };
     for (const day of Object.keys(SAMPLE_EVENTS)) {

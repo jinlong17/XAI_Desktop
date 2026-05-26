@@ -26,6 +26,8 @@ export type {
   PetPos,
   TaskColsState,
   DashWidgetId,
+  // Calendar view type (gap-closure row #4)
+  CalendarViewId,
 } from "./internal/registry.js";
 
 // ---- Registry object -------------------------------------------------------

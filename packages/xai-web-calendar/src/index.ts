@@ -33,3 +33,8 @@ export type {
 } from "./internal/sampleEvents.js";
 
 export type { MonthCellData } from "./internal/monthGridCells.js";
+
+// ---- Extension exports (gap-closure row #4) ---------------------------------
+export type { EventBlock } from "./internal/placeEventBlocks.js";
+export type { DstShift } from "./internal/timeGridMath.js";
+export type { CalendarViewId } from "@repo/plugin-web-storage";
