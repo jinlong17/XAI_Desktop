@@ -154,6 +154,10 @@ const OWNER_ROW_EXEMPT_KEYS: ReadonlySet<string> = new Set([
   "xai_ai_streaming",
   // xai-web-calendar gap-closure row #4 — calendar view persistence key
   "xai_calendar_view",
+  // xai-web-settings-rest gap-closure row #7 — 3 boolean integration OAuth stub prefs
+  "xai_pref_integrations_connected_notion",
+  "xai_pref_integrations_connected_gcal",
+  "xai_pref_integrations_connected_linear",
 ]);
 
 describe("AC-PARITY-2: all PREF_REGISTRY explicit keys are in §9.2", () => {

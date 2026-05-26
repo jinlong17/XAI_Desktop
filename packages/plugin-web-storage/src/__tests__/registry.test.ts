@@ -219,6 +219,10 @@ const OWNER_ROW_ADDITIONS = [
   "xai_ai_streaming",
   // xai-web-calendar gap-closure row #4 — calendar view persistence
   "xai_calendar_view",
+  // xai-web-settings-rest gap-closure row #7 — 3 boolean integration OAuth stub prefs
+  "xai_pref_integrations_connected_notion",
+  "xai_pref_integrations_connected_gcal",
+  "xai_pref_integrations_connected_linear",
 ] as const;
 
 describe("AC-REG-8: Total entry count = 20 baseline + owner-row additions", () => {

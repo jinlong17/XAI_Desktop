@@ -866,6 +866,37 @@ export const PREF_REGISTRY = {
     owner: "xai-web-calendar",
     category: "module",
   } satisfies PrefEntry<string>,
+
+  // ---- Integrations OAuth stub (extension 2026-05-25 — gap-closure row #7) ----
+  // 3 boolean flags marking per-provider "connected (stub)" state.
+  // MUST NOT be interpreted as "real connection" by any other code path.
+  // Caught by chassis resetAllPrefs() via key.startsWith("xai_") filter.
+  xai_pref_integrations_connected_notion: {
+    key: "xai_pref_integrations_connected_notion",
+    codec: "boolean",
+    default: false as boolean,
+    schemaVersion: 1,
+    owner: "xai-web-settings-rest",
+    category: "pref",
+  } satisfies PrefEntry<boolean>,
+
+  xai_pref_integrations_connected_gcal: {
+    key: "xai_pref_integrations_connected_gcal",
+    codec: "boolean",
+    default: false as boolean,
+    schemaVersion: 1,
+    owner: "xai-web-settings-rest",
+    category: "pref",
+  } satisfies PrefEntry<boolean>,
+
+  xai_pref_integrations_connected_linear: {
+    key: "xai_pref_integrations_connected_linear",
+    codec: "boolean",
+    default: false as boolean,
+    schemaVersion: 1,
+    owner: "xai-web-settings-rest",
+    category: "pref",
+  } satisfies PrefEntry<boolean>,
 } as const;
 
 // ---------------------------------------------------------------------------
