@@ -297,6 +297,11 @@ export interface EventMap {
   // Settings — Account delete confirm (owner: xai-web-settings-rest row #24)
   // Declaration-only: no consumer ships in this row.
   // Pattern precedent: web:pomodoro:session-finished (row #14), web:habits:checkin-recorded (row #15).
+  /**
+   * @deprecated since 2026-05-26 (gap-closure row #9); will be removed in P1 desktop pivot.
+   * Emit-site moved to Step-1-Continue (DeleteAccountConfirmModal) for one-release back-compat.
+   * No consumer exists; safe to remove with one-release warning window.
+   */
   'web:settings:rest:account-delete-confirmed': {
     /** ISO timestamp of when the user clicked confirm. */
     confirmedAt: string;

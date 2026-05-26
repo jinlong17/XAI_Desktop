@@ -110,3 +110,113 @@ Source-text guards:
 - `CSP4-FRAME-SRC-CLEAN` asserts `frame-src` is NOT present in the CSP.
 
 Authority: `docs/adr/0008-cloudflare-deploy-target-and-csp.md` §S3 D3 FOURTH amendment.
+
+---
+
+## Account-Delete Edge Function (gap-closure row #9)
+
+The account-delete flow requires a Supabase Edge Function named **`account-delete`**.
+The function is NOT shipped in this repository. It must be deployed separately to the
+project's Supabase instance before the live-auth code path (`VITE_WEB_AUTH_MODE !== "mock-authenticated"`)
+will work end-to-end. The client invokes it via `client.functions.invoke("account-delete", { method: "POST" })`.
+
+### Function name
+
+```
+account-delete
+```
+
+### Request shape
+
+```http
+POST /functions/v1/account-delete
+Authorization: Bearer <user-jwt>
+```
+
+No request body is required. The authenticated JWT determines which user to delete.
+
+### Response shape
+
+| Status | Meaning |
+|--------|---------|
+| `200 OK` | User deleted successfully. |
+| `401 Unauthorized` | Missing or invalid JWT. Client should surface `AccountDeleteError("unauthorized")`. |
+| `403 Forbidden` | JWT is valid but the user is not allowed to delete this account (e.g. service account guard). Client surfaces `AccountDeleteError("forbidden")`. |
+| `404 Not Found` | User already deleted (idempotent path). Client treats as success and proceeds to local wipe. |
+| `5xx` | Server error. Client surfaces `AccountDeleteError("server")`. Retry is user-initiated via the Retry button in the modal. |
+
+### RLS / service_role requirements
+
+- The function must run with **`service_role`** credentials (not the anon/JWT key) to call `auth.admin.deleteUser(userId)` against the Supabase Auth API.
+- The user id is extracted from the verified JWT via `supabase.auth.getUser(token)` inside the function.
+- No RLS policy change is required on data tables — `auth.admin.deleteUser` cascades to Auth table rows only; application-table row deletion is deferred (out-of-scope for v1 per FA-1).
+- The function should call `supabase.auth.admin.deleteUser(userId)` after extracting and validating the caller's identity.
+
+### Deploy gate
+
+1. Deploy the Edge Function to your Supabase project:
+   ```bash
+   supabase functions deploy account-delete --project-ref <project-ref>
+   ```
+2. Set the `service_role` key as a secret in the function's environment (via Supabase dashboard or CLI):
+   ```bash
+   supabase secrets set SUPABASE_SERVICE_ROLE_KEY=<service_role_key> --project-ref <project-ref>
+   ```
+3. Verify the function is reachable:
+   ```bash
+   curl -X POST https://<project-ref>.supabase.co/functions/v1/account-delete \
+     -H "Authorization: Bearer <valid-user-jwt>"
+   ```
+   Expected: `200 OK` (or `404` if user already deleted).
+
+**Before deploying to production, ensure the function is tested in a staging environment.**
+The mock-auth fallback (`VITE_WEB_AUTH_MODE=mock-authenticated`) is available for local development
+without any Edge Function deployed.
+
+---
+
+## Account-Delete Rollback (gap-closure row #9)
+
+If the account-delete flow must be rolled back after deployment, four paths are available
+(from discovery review §12):
+
+### Path 1 — Disable the Edge Function (fastest, recommended)
+
+Pause or delete the `account-delete` Edge Function in the Supabase dashboard.
+The client will receive a network error, which surfaces as `AccountDeleteError("network")`.
+The modal will show the error banner and offer a Retry button — but the function
+will remain unreachable until re-enabled.
+
+**Effect**: Account deletion is silently blocked server-side. Local state is NOT cleared
+(DEL-ORCH-3: no local mutation before backend success). Users see the error banner.
+
+### Path 2 — Return 403 from the Edge Function
+
+Modify the Edge Function to return `403 Forbidden` for all requests.
+Client maps this to `AccountDeleteError("forbidden")` and surfaces the error banner.
+
+**Effect**: Same as Path 1 but returns a meaningful HTTP status rather than a network error.
+Cleaner monitoring signal.
+
+### Path 3 — Feature-flag via `VITE_WEB_AUTH_MODE`
+
+Set `VITE_WEB_AUTH_MODE=mock-authenticated` in the build environment and redeploy the SPA.
+In mock-auth mode, the backend is never called. The flow skips to local-wipe + redirect directly.
+
+**Effect**: Account deletion still completes locally (localStorage + IDB wipe + redirect),
+but no real account is deleted server-side. Use only as a temporary measure in mock/staging
+environments — not appropriate for production unless the intent is to let users clear
+local data without deleting their Supabase account.
+
+### Path 4 — Revert to row #24 single-step modal (breaking change)
+
+Revert `packages/plugin-web-settings-rest/src/internal/DeleteAccountConfirmModal.tsx`
+and `packages/plugin-web-settings-rest/src/panes/accountPane.tsx` to the row #24
+single-step shape. This also requires reverting the orchestrator imports and removing
+`packages/plugin-web-settings-rest/src/internal/useAccountDeleteOrchestrator.ts`.
+
+**Effect**: Full behavioral rollback. The deprecated `web:settings:rest:account-delete-confirmed`
+event continues to be emitted (it was already emitted in row #24). Requires a code deploy.
+
+**Recommended**: Use Path 1 or Path 2 for a fast operational rollback. Path 4 should only
+be used if a code defect is discovered that cannot be patched forward.

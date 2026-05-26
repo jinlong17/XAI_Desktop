@@ -152,3 +152,50 @@ Scoped verification:
 | 2026-05-21 16:08 PDT | feature-auto-build (Codex gpt-5.3-codex inline) | Repaired verify blockers only. B1: `createAuthSessionStorage` now uses package-owned key routing so Supabase durable auth/session keys remain in IndexedDB while `${storageKey}-code-verifier` is persisted in `sessionStorage` (covered by `src/storage.test.ts` with durable/transient store assertions). B2: `signUpWithEmail` now sets same-origin `emailRedirectTo=/auth/verify?next=...`, `/auth/verify` is treated as a completion route in `WebAuthPage`, and callback handling supports verify completion without PKCE transient state while still requiring PKCE state for `/auth/callback` (covered by `src/auth-actions.test.ts`, `src/callback.test.ts`, `src/components/WebAuthPage.test.ts`). Validation run: `pnpm --filter @repo/web-auth-device-session test` (33 passed), `pnpm --filter @repo/web-auth-device-session check-types`, `pnpm --filter @repo/web check-types`. | `a2617c3` | feature-verify |
 | 2026-05-21 16:14 PDT | feature-verify (Codex gpt-5.3-codex inline) | Verification passed after reviewing phase commits `690e766`, `7186d5f`, `15a297a`, docs commits `f2816d5`, `d219bd1`, and repair commit `a2617c3`. Commit scope/body hygiene matches the convention, the package/host boundary remains correct, prior PKCE and email-verification blockers are closed in code and tests, and scoped validation is clean: `pnpm --filter @repo/web-auth-device-session test` (33 passed), `pnpm --filter @repo/web-auth-device-session check-types`, `pnpm --filter @repo/web check-types`. | `690e766`, `7186d5f`, `15a297a`, `f2816d5`, `a2617c3`, `d219bd1` | ship |
 | 2026-05-21 22:56 PDT | ship (Codex parent session) | Batch ship pass with sibling W3 crypto row: revalidated `READY_TO_SHIP`, preserved the verified feature commit chain on `main`, reconciled roadmap row #6, and marked workflow `SHIPPED`. Push scope intentionally includes the adjacent `web-browser-e2e-crypto-runtime` W3 row because both verified feature chains are already contiguous on local `main` ahead of `origin/main`. | `690e766`, `7186d5f`, `15a297a`, `f2816d5`, `a2617c3`, `d219bd1`; ship-state docs commit | workflow complete |
+| 2026-05-26 | feature-auto-build (claude-sonnet-4-6) | Extension — Account-delete helper (gap-closure row #9): added `deleteAccount(client)` + `AccountDeleteError` class + `ACCOUNT_LOCAL_WIPE_IDB_NAMES` frozen const + `wipeRegisteredIDB()` in `src/auth-actions.ts` + `src/wipe.ts`. Exported from `src/index.ts`. 9 new DAA tests in `src/auth-actions.test.ts`. 42/42 total tests pass. SHIPPED state of row #6 W3 preserved — this is additive extension only. | `72c70ee` (P2 — deleteAccount + AccountDeleteError), `5bc7417` (P3 — wipe.ts + exports) | workflow complete (extension merged into SHIPPED row) |
+
+---
+
+## Bugfix-Extension Lineage — Account-delete helper (2026-05-26 row #9)
+
+> APPEND-ONLY block. The Workflow State Panel, Phase Plan, Work Log, and
+> Residual Risks sections above record the SHIPPED row #6 (W3) baseline and
+> are NOT mutated by this extension lineage. This block tracks the additive
+> extension introduced by `xai-web-console-gap-closure` manifest row #9
+> (W2 LAST — Account Delete real wire).
+>
+> The SHIPPED Status (`Status = SHIPPED`) of this package is preserved.
+> This extension is additive (new exports only; no existing API changed).
+
+### Extension Status
+
+| Field | Value |
+|---|---|
+| Extension Target | Account-delete helper for `xai-web-settings-account-delete-wire` (gap-closure row #9) |
+| Extension Status | SHIPPED (merged into SHIPPED row #6 baseline) |
+| Dispatched By | `xai-roadmap-loop` SERIAL dispatch — wave 2 LAST row |
+| Executor | claude-sonnet-4-6 (feature-auto-build, 2026-05-26) |
+| Updated | 2026-05-26 |
+
+### Extension Scope
+
+Added to `packages/web-auth-device-session/src/`:
+
+- `src/auth-actions.ts` — added `AccountDeleteErrorKind` type, `AccountDeleteError` class, `DeleteAccountOptions` interface, `deleteAccount(client, options?)` function. HTTP status mapping: 200 OK → success (signOut best-effort); 401 → `unauthorized`; 403 → `forbidden`; 404 → `already_deleted` (idempotent, proceeds to signOut); 5xx → `server`; network throw → `network`. All other kinds → `unknown`.
+- `src/wipe.ts` (NEW) — `ACCOUNT_LOCAL_WIPE_IDB_NAMES` frozen const (`["web-encrypted-cache", "xai-web-ai-secrets", "xai-web-auth"]` — fixed at row-#9-time per DEL-IDB-LIST-1); `wipeRegisteredIDB()` parallel best-effort `Promise.allSettled` over `indexedDB.deleteDatabase()` for each name.
+- `src/index.ts` — added 5 new exports: `deleteAccount`, `AccountDeleteError`, `AccountDeleteErrorKind`, `DeleteAccountOptions`, `ACCOUNT_LOCAL_WIPE_IDB_NAMES`, `wipeRegisteredIDB`.
+- `src/auth-actions.test.ts` — added DAA-1..8 + DAA-TYPED tests (9 new tests; 42/42 total pass).
+
+### Extension Commits
+
+| Commit | Description |
+|--------|-------------|
+| `72c70ee` | feat(xai-web-settings-account-delete-wire): P2 — deleteAccount() helper + AccountDeleteError in web-auth-device-session (gap-closure row #9) |
+| `5bc7417` | feat(xai-web-settings-account-delete-wire): P3 — useAccountDeleteOrchestrator + ACCOUNT_LOCAL_WIPE_IDB_NAMES + mock-auth fallback + redirect (gap-closure row #9) |
+
+### Security Constraints Enforced
+
+- `deleteAccount()` calls the Supabase Edge Function `account-delete` via `client.functions.invoke()` — no service_role key in client bundle (NEVER).
+- `wipeRegisteredIDB()` operates on a frozen static list; list is not dynamically expanded at runtime (DEL-IDB-LIST-1).
+- `signOut()` is best-effort (non-throwing); account deletion success does not depend on signOut success (R9 risk mitigation).
+- `already_deleted` (404) is treated as idempotent success and proceeds to signOut (DEL-ORCH-4 / R3 idempotency).
