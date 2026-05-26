@@ -57,6 +57,7 @@ export function setDueRange(filter: FilterState, dueRange: FilterState["dueRange
 /**
  * Reset filter to EMPTY_FILTER. Returns reference-equal EMPTY_FILTER.
  */
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 export function clearFilter(_filter: FilterState): FilterState {
   return EMPTY_FILTER;
 }

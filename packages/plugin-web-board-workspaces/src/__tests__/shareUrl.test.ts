@@ -2,7 +2,7 @@
  * Tests for generateShareUrl — SU-1..SU-6
  * Gap-closure row #6 — board-workspaces slice
  */
-import { describe, test, expect, beforeEach, afterEach } from "vitest";
+import { describe, test, expect } from "vitest";
 import { generateShareUrl } from "../internal/shareUrl.js";
 
 const SHARE_BASE = "https://xai-web.example/share/";

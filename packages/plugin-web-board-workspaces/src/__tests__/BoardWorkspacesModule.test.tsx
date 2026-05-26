@@ -278,8 +278,8 @@ describe("BoardWorkspacesModule (BWM1..BWM18)", () => {
     // And the count badge in the header decreases (filteredLists is used)
     // We check that the filter state was lifted by verifying the count badge.
     const countBadge = screen.queryByText(/\d+ cards?/i);
-    // The count before filtering (all cards)
-    const beforeCount = countBadge?.textContent;
+    // The count before filtering (all cards) — captured for context only
+    void countBadge?.textContent;
 
     // Apply a filter for a label that doesn't exist in the seed → 0 cards
     // We can't click a non-existent label checkbox, so instead check that

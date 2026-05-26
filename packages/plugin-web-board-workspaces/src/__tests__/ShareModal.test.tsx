@@ -8,7 +8,6 @@ import {
   expect,
   vi,
   beforeEach,
-  afterEach,
 } from "vitest";
 import { render, screen, fireEvent, act, waitFor } from "@testing-library/react";
 import { ShareModal } from "../ShareModal.js";

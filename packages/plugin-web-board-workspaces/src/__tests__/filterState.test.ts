@@ -60,7 +60,7 @@ describe("setDueRange", () => {
 
 describe("EMPTY_FILTER immutability", () => {
   test("FST-7 EMPTY_FILTER reference NOT mutated by togglers", () => {
-    const _withLabel = toggleLabel(EMPTY_FILTER, "urgent");
+    toggleLabel(EMPTY_FILTER, "urgent");
     expect(EMPTY_FILTER.labels.size).toBe(0); // original unchanged
   });
 });
