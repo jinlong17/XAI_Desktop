@@ -379,3 +379,225 @@ Per manifest header: ship-time cross-vendor verify uses Codex (primary) / Cursor
 - **Touch**: iOS Safari pointerdown drag works with `touch-action: none`.
 - **Lang switch**: greeting updates on lang switch; date string locale-correct.
 - **A11y**: `aria-label` on Add-widget button matches lang.
+
+---
+
+## 2026-05-25 Extension: Add Widget Picker (gap-closure row #5)
+
+> APPEND-ONLY section. The §1..§9 above describe the SHIPPED 2026-05-23 baseline +
+> 2026-05-24 row #11 integration. This extension layer adds the Add Widget picker
+> per `docs/workflow/roadmap/xai-web-console-gap-closure.md` row #5 (W1 — LAST).
+
+### E1. Decision header (this extension)
+
+| Field | Value |
+|---|---|
+| Selected Option | **A1 + B1 + C1 + D1 + E1 + F1** — picker inside `xai-web-dashboard-grid` as `AddWidgetPicker.tsx`; native `<dialog>` + `showModal()`; hide already-added widgets; no category filter in v1; `useDashOrder` extended with `addWidget(id)`; new typed event `web:dashboard:widget-added` |
+| Review Doc | `docs/reviews/xai-web-dashboard-add-widget-picker/20260525-discovery-review.md` |
+| Review Date | 2026-05-25 |
+| Roadmap Row | `docs/workflow/roadmap/xai-web-console-gap-closure.md` row #5 (W1 · LAST) |
+| Source brief | `docs/reviews/xai-web-dashboard-add-widget-picker/20260524-roadmap-seed.md` |
+| Parent ADR | ADR-0009 §D2-G3 (P0 gap-closure; ≥5/9 SHIPPED to unblock P1 Desktop launch) |
+| Target packages | `packages/xai-web-dashboard-grid/src/{AddWidgetPicker.tsx, DashboardModule.tsx, internal/useDashOrder.ts, styles.css}` + `packages/core/src/types/events.ts` (+1 entry) + `packages/plugin-web-tokens/src/i18n.ts` (+6 keys × 2 langs) + `docs/PLUGIN_MAP.md` (note update) |
+| Last Updated | 2026-05-25 |
+
+### E2. Frozen assumptions (this extension; lock at plan acceptance)
+
+> Mirrors discovery review §11. If anything below contradicts a §1.1 baseline
+> assumption, treat the baseline as authoritative and re-open the discovery.
+
+1. **Picker location.** `packages/xai-web-dashboard-grid/src/AddWidgetPicker.tsx` — inside the grid package, NOT a new package, NOT inside row #11.
+2. **Modal mechanism.** Native `<dialog>` + `showModal()` per `DeleteAccountConfirmModal.tsx` precedent. No third-party modal library (HC10). No portal-based React modal.
+3. **Duplicate prevention.** Hide already-added widgets from the picker list (HC5 / C1). When all 10 are added, show an "All widgets are on your dashboard" bilingual empty state + Cancel button only.
+4. **Category filtering.** None in v1 — the SHIPPED catalog has no category metadata; adding one requires a row #11 co-edit + ADR amendment, out of scope for the smallest W1 row.
+5. **Persistence.** Append id to existing `xai_dash_order` via a new internal helper `useDashOrder.addWidget(id)`. NO new storage keys (HC9). `xai_dash_order` registry entry unchanged.
+6. **New event channel.** `web:dashboard:widget-added` declared in `@repo/core/types/events.ts` with payload `{ widgetId: string; source: 'picker' }`. Source is a closed union (only `'picker'` in v1) so future "drag-from-sidebar" or "AI suggestion" sources can be added without an EventMap-payload break.
+7. **Legacy event preserved.** `web:dashboard:add-widget-clicked` STAYS. The Add Widget button and Empty State CTA still emit it on click (semantics shift slightly from "intent stub" to "picker opening"). This preserves backward compat for any listener that might appear in the future.
+8. **Card content.** Per-card display has 3 visible elements: (a) inline SVG icon from a local `WIDGET_ICONS` map (10 entries), (b) bilingual title from a local `WIDGET_TITLES` map (10 × 2 entries) — DECOUPLED from `ariaLabel` to avoid R6 coupling — (c) bilingual description from a local `WIDGET_DESCRIPTIONS` map (10 × 2 entries). No live widget render preview (R3 v1 simplification).
+9. **i18n delta.** 6 new keys × 2 langs in `packages/plugin-web-tokens/src/i18n.ts` under `dashboard.picker.*`:
+   - `dashboard.picker.title` — modal heading
+   - `dashboard.picker.cancel` — Cancel button label
+   - `dashboard.picker.all_added_title` — empty state title (when all widgets added)
+   - `dashboard.picker.all_added_subtitle` — empty state subtitle
+   - `dashboard.picker.add_button` — per-card "Add" button label
+   - `dashboard.picker.aria_close` — aria-label for the close affordance
+10. **`useDashOrder` return shape.** Extends from 2-element `[order, setOrder]` to 3-element `[order, setOrder, addWidget]`. Internal-only — `internal/useDashOrder.ts` is NOT part of the public surface per §3 / api.md §S1.
+11. **No public-surface export.** `AddWidgetPicker` is NOT re-exported from `@repo/plugin-web-dashboard-grid` index.ts. Component is internal to the package; mounted only by `DashboardModule`. Keeping it internal lets us iterate on its props without stability obligations.
+12. **Phase plan.** 2 phases (collapsed P3 into P2 per dispatch brief recommendation — this is the smallest W1 row). See §E6.
+13. **Cross-vendor verify.** Ship-time deferred-24h cold-read per ADR-0008 carve-out, consistent with rows #2/#3/#4 W1 precedent. Codex `gpt-5.5-thinking medium` primary verifier; Cursor fallback. See test.md §11.
+14. **No prototype reference.** `web design/module-dashboard.jsx` has no gallery panel. Card-grid layout designed fresh; class names match existing dashboard tokens (`.btn`, `--border-1`, `--bg-panel-2`, etc.).
+15. **No analytics / telemetry.** Zero outbound network beyond the event bus. No Sentry, no fetch.
+
+### E3. Component graph (extension)
+
+```
+DashboardModule (extended)
+├── DashHeader (unchanged shape; onAddWidget callback now opens picker)
+├── DashboardGrid OR EmptyState (unchanged)
+└── AddWidgetPicker (NEW)
+    ├── <dialog ref={dialogRef} className="add-widget-picker">
+    │   ├── .awp-inner
+    │   │   ├── h2.awp-title          ← s("dashboard.picker.title")
+    │   │   ├── .awp-grid              (or .awp-empty when all added)
+    │   │   │   └── .awp-card × N      (one per missing widget)
+    │   │   │       ├── .awp-card__icon  ← inline SVG from WIDGET_ICONS[id]
+    │   │   │       ├── .awp-card__title ← WIDGET_TITLES[id][lang]
+    │   │   │       └── .awp-card__desc  ← WIDGET_DESCRIPTIONS[id][lang]
+    │   │   └── .awp-actions
+    │   │       └── button.btn.ghost    ← Cancel
+    │
+    └── useEffect([open]) → dialog.showModal() or dialog.close()
+```
+
+Data flow:
+
+```
+DashboardModule:
+  const [order, setOrder, addWidget] = useDashOrder(widgets);
+  const [pickerOpen, setPickerOpen] = useState(false);
+
+  handleAddFromHeader  = () => {
+    emitWebEvent("web:dashboard:add-widget-clicked", { source: "add-widget-button" });
+    setPickerOpen(true);
+  };
+  handleAddFromEmpty   = () => {
+    emitWebEvent("web:dashboard:add-widget-clicked", { source: "empty-state-cta" });
+    setPickerOpen(true);
+  };
+
+  return (
+    <div ...>
+      <DashHeader ... onAddWidget={handleAddFromHeader} />
+      {widgets.length === 0 ? <EmptyState .../> : <DashboardGrid .../>}
+      <AddWidgetPicker
+        open={pickerOpen}
+        lang={lang}
+        widgets={widgets}                ← full catalog
+        currentOrder={order}              ← used to filter already-added
+        onAdd={(id) => {
+          addWidget(id);
+          emitWebEvent("web:dashboard:widget-added", { widgetId: id, source: "picker" });
+          setPickerOpen(false);
+        }}
+        onClose={() => setPickerOpen(false)}
+      />
+    </div>
+  );
+
+useDashOrder hook (extended):
+  const addWidget = useCallback((id: string) => {
+    if (order.includes(id)) return;        // R1 / R7 dedupe guard
+    if (!widgets.find(w => w.id === id)) return; // unknown-id guard
+    setOrder([...order, id]);              // setPref persists synchronously
+  }, [order, setOrder, widgets]);
+
+  return [order, setOrder, addWidget] as const;
+```
+
+### E4. File layout (extension delta over §4)
+
+```
+packages/xai-web-dashboard-grid/
+└── src/
+    ├── AddWidgetPicker.tsx                       NEW — native <dialog> picker (~150 LOC)
+    ├── DashboardModule.tsx                       MODIFY — own pickerOpen state; mount picker; flip onAddWidget handlers
+    ├── internal/useDashOrder.ts                  MODIFY — tuple-extend return with addWidget(id)
+    ├── styles.css                                MODIFY — append .add-widget-picker + .awp-* rules
+    └── __tests__/
+        ├── AddWidgetPicker.test.tsx              NEW — ~15 cases
+        ├── useDashOrder.addWidget.test.tsx       NEW — ~5 cases
+        ├── DashboardModule.picker.test.tsx       NEW — ~6 cases
+        ├── useDashOrder.test.tsx                 MODIFY — assert 3-element tuple shape (1-2 cases)
+        └── DashboardModule.events.test.tsx       MODIFY — assert legacy event still emits + new event emits on Add
+
+packages/core/
+└── src/types/events.ts                           MODIFY — +1 EventMap entry web:dashboard:widget-added
+
+packages/plugin-web-tokens/
+└── src/i18n.ts                                   MODIFY — +6 keys × 2 langs under dashboard.picker.*
+
+docs/
+├── PLUGIN_MAP.md                                 MODIFY — append "(Extension 2026-05-25 — Add Widget picker)" to plugin-web-dashboard-grid row note
+└── reviews/xai-web-dashboard-add-widget-picker/
+    ├── 20260524-roadmap-seed.md                  (seed brief, already exists)
+    └── 20260525-discovery-review.md              NEW (this run)
+```
+
+### E5. Dependency overview (extension)
+
+No new workspace deps. No new external deps. The picker uses:
+
+- `react` (`useEffect`, `useRef`, `useState`) — already a peerDep.
+- `@repo/plugin-web-tokens` — `useI18n`, `Lang` — already a dep.
+- `@repo/plugin-web-dashboard-widgets` — `WidgetRegistration[]` (already imported as the catalog) — already a dep.
+- `@repo/xai-web-event-bus` — `emitWebEvent` — already a dep.
+
+No `@repo/core` value imports (only the type `WebModuleId` already imported in registration.tsx; not used in picker).
+
+### E6. Phase plan (2 phases)
+
+> Each phase is a single `feature-build` run. After each phase, `feature-build`
+> stops for human confirmation per CLAUDE.md "feature-build does ONE phase per run".
+
+#### Phase P1 — `AddWidgetPicker.tsx` + EventMap + i18n delta + CSS + unit tests
+
+**Files (new)**:
+- `packages/xai-web-dashboard-grid/src/AddWidgetPicker.tsx`
+- `packages/xai-web-dashboard-grid/src/__tests__/AddWidgetPicker.test.tsx`
+
+**Files (edited)**:
+- `packages/core/src/types/events.ts` — Edit, +1 entry `web:dashboard:widget-added`
+- `packages/plugin-web-tokens/src/i18n.ts` — Edit, +6 keys × 2 langs under `dashboard.picker.*`
+- `packages/xai-web-dashboard-grid/src/styles.css` — Edit, append `.add-widget-picker` + `.awp-*` rules
+
+**Acceptance**:
+- `pnpm --filter @repo/plugin-web-dashboard-grid lint` clean (`--max-warnings 0`)
+- `pnpm --filter @repo/plugin-web-dashboard-grid check-types` clean
+- `pnpm --filter @repo/plugin-web-dashboard-grid test` — baseline 104 + new 15 = 119 tests green
+- `pnpm --filter @repo/core check-types` clean
+- `pnpm --filter @repo/plugin-web-tokens check-types` clean
+
+**Commit**: `feat(plugin-web-dashboard-grid): P1 — AddWidgetPicker component + web:dashboard:widget-added event + i18n delta (gap-closure row #5)`
+
+#### Phase P2 — Wire-up + `useDashOrder.addWidget` + integration tests + PLUGIN_MAP note
+
+**Files (new)**:
+- `packages/xai-web-dashboard-grid/src/__tests__/useDashOrder.addWidget.test.tsx`
+- `packages/xai-web-dashboard-grid/src/__tests__/DashboardModule.picker.test.tsx`
+
+**Files (edited)**:
+- `packages/xai-web-dashboard-grid/src/DashboardModule.tsx` — Edit, own `pickerOpen` state, mount `<AddWidgetPicker />`, flip onAddWidget handlers to open picker
+- `packages/xai-web-dashboard-grid/src/internal/useDashOrder.ts` — Edit, tuple-extend return with `addWidget(id)`
+- `packages/xai-web-dashboard-grid/src/__tests__/useDashOrder.test.tsx` — Edit, extend with addWidget cases (1-2 backward-compat asserts)
+- `packages/xai-web-dashboard-grid/src/__tests__/DashboardModule.events.test.tsx` — Edit, assert legacy event still emits AND new event emits on picker add
+- `docs/PLUGIN_MAP.md` — Edit, append `(Extension 2026-05-25 — Add Widget picker)` to plugin-web-dashboard-grid row note
+- `packages/xai-web-dashboard-grid/docs/{design.md, api.md, test.md, dev_log.md}` — final sync
+
+**Acceptance**:
+- All tests green: grid 104 → ~130 (15 new picker + 5 new addWidget + 6 new picker integration); widgets 93 unchanged; web/core/tokens green
+- `pnpm -w build` clean
+- Set dev_log Status to `READY_FOR_VERIFY`
+
+**Commit**: `feat(plugin-web-dashboard-grid): P2 — DashboardModule picker wire-up + useDashOrder.addWidget + PLUGIN_MAP (gap-closure row #5)`
+
+### E7. Risks (this extension)
+
+See discovery review §6 — R1..R10 ported here verbatim. Highest-residual risks:
+
+- **R3** (100ms open budget if catalog grows): mitigated for v1 by NOT rendering live previews; v2 deferral noted.
+- **R6** (ariaLabel-as-title coupling): eliminated by inline `WIDGET_TITLES` constant decoupled from `ariaLabel`.
+- **R7** (useDashOrder return-shape extension): eliminated by tuple-at-end extension + single caller.
+
+### E8. Cross-vendor verify scope (this extension)
+
+Adds to §9 above:
+
+- **Modal open/close**: picker `<dialog>` opens via `showModal()` within 100ms of click; ESC closes; backdrop click closes; native focus-trap keeps Tab inside dialog.
+- **Keyboard**: Tab enters first card; Tab cycles cards then Cancel button then wraps; Shift+Tab cycles backward; Enter on focused card → adds + closes.
+- **Duplicate hiding**: with all 10 widgets added, picker shows "All widgets are on your dashboard" empty state.
+- **Persistence**: Add → reload → widget persists at end of grid.
+- **Event emit**: `web:dashboard:widget-added` fires once per Add with `{ widgetId: <id>, source: 'picker' }`.
+- **Legacy event still emits**: `web:dashboard:add-widget-clicked` STILL fires on Add Widget button click (now followed by picker open).
+- **Bilingual**: lang toggle switches all picker copy.
+
+Cross-vendor cold-read verifier (Codex `gpt-5.5-thinking medium` primary, Cursor fallback) inspects `AddWidgetPicker.tsx` for keyboard accessibility (Tab navigates cards, Enter selects, Esc closes). Report at `docs/reviews/xai-web-dashboard-add-widget-picker/<YYYYMMDD>-cross-vendor-verify.md`.

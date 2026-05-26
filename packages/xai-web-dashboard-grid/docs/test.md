@@ -213,3 +213,200 @@ Report file: `docs/reviews/xai-web-dashboard-grid/<YYYYMMDD>-cross-vendor-verify
 
 - Statements ≥ 90 %, branches ≥ 85 %, functions ≥ 90 %, lines ≥ 90 % (matches sibling rows #12/#13/#16).
 - Helpers (`sanitizeOrder.ts`, `greeting.ts`): 100 % branches.
+
+---
+
+## 9. 2026-05-25 Extension: Add Widget Picker (gap-closure row #5)
+
+> APPEND-ONLY section. §1..§8 above describe the SHIPPED 2026-05-23 baseline test
+> strategy + 2026-05-24 row #11 integration locks. This section adds the test
+> strategy for the Add Widget picker extension per
+> `docs/workflow/roadmap/xai-web-console-gap-closure.md` row #5.
+
+### 9.1 Strategy summary (extension)
+
+- **Unit + component tests** with `@testing-library/react` + Vitest 3 + jsdom 26 (same stack as §1).
+- **Real `<dialog>` in jsdom**: jsdom 26 implements HTMLDialogElement (`showModal`, `close`, `cancel`, `open`). No polyfill needed. Verified in `DeleteAccountConfirmModal.test.tsx` precedent in `plugin-web-settings-rest`.
+- **Real i18n bundle**: use the real `@repo/plugin-web-tokens` `useI18n` hook so missing-key gaps surface.
+- **Real `usePref` + `localStorage` reset per test** (same as §3): catches contract drift in `addWidget` write-back.
+- **Real event bus**: spy on `web:dashboard:widget-added` + `web:dashboard:add-widget-clicked` via `onWebEvent` listener.
+- **Test data fixtures** (`__fixtures__/widgets.ts`) re-used per §4 — the picker tests need 0-, 3-, 10-widget catalogs and pre-populated `xai_dash_order` for filtering scenarios.
+
+### 9.2 Test pyramid (extension)
+
+| Layer | Tool | Files | Coverage target |
+|---|---|---|---|
+| Component — picker | Vitest + RTL | `AddWidgetPicker.test.tsx` (~15 cases) | ≥ 95 % statements / ≥ 90 % branches |
+| Hook — extended useDashOrder | Vitest + RTL | `useDashOrder.addWidget.test.tsx` (~5 cases) + extend `useDashOrder.test.tsx` (1-2 cases for 3-element tuple) | 100 % addWidget paths |
+| Integration — module + picker | Vitest + RTL | `DashboardModule.picker.test.tsx` (~6 cases) | All open/close/add/cancel paths |
+| Event regression | Vitest + RTL | extend `DashboardModule.events.test.tsx` (~2 cases) | Legacy event STILL emits + new event emits |
+| Type-level — EventMap | (covered in `@repo/core` test) | EventMap delta compiles | `web:dashboard:widget-added` payload shape |
+
+### 9.3 AC matrix (extension)
+
+#### 9.3.1 AC-AWP — `<AddWidgetPicker />` component
+
+| ID | Description | Phase | File |
+|---|---|---|---|
+| AC-AWP-1 | When `open === false`, `<dialog>` is not displayed (closed) | P1 | `AddWidgetPicker.test.tsx` |
+| AC-AWP-2 | When `open === true`, `<dialog>` is open (showModal called); first focusable element is the first card | P1 | `AddWidgetPicker.test.tsx` |
+| AC-AWP-3 | Renders one card per widget NOT in `currentOrder` | P1 | `AddWidgetPicker.test.tsx` |
+| AC-AWP-4 | When all catalog ids are in `currentOrder`, renders `.awp-empty` instead of `.awp-grid` | P1 | `AddWidgetPicker.test.tsx` |
+| AC-AWP-5 | Empty state shows bilingual title + subtitle from `dashboard.picker.all_added_*` | P1 | `AddWidgetPicker.test.tsx` |
+| AC-AWP-6 | Click on a card calls `onAdd(widgetId)` with the correct id | P1 | `AddWidgetPicker.test.tsx` |
+| AC-AWP-7 | Click on a card does NOT call `onClose` (parent decides) | P1 | `AddWidgetPicker.test.tsx` |
+| AC-AWP-8 | Click on Cancel button calls `onClose` (NOT `onAdd`) | P1 | `AddWidgetPicker.test.tsx` |
+| AC-AWP-9 | Click on dialog backdrop (target === dialogRef) calls `onClose` | P1 | `AddWidgetPicker.test.tsx` |
+| AC-AWP-10 | ESC keypress fires native `cancel` event → calls `onClose` | P1 | `AddWidgetPicker.test.tsx` |
+| AC-AWP-11 | `lang="en"` renders English picker title (`Add a widget`) | P1 | `AddWidgetPicker.test.tsx` |
+| AC-AWP-12 | `lang="zh"` renders Chinese picker title (`添加组件`) | P1 | `AddWidgetPicker.test.tsx` |
+| AC-AWP-13 | Each card has bilingual title from local `WIDGET_TITLES` map (NOT `ariaLabel`) | P1 | `AddWidgetPicker.test.tsx` |
+| AC-AWP-14 | Each card has bilingual description from local `WIDGET_DESCRIPTIONS` map | P1 | `AddWidgetPicker.test.tsx` |
+| AC-AWP-15 | Each card has an inline SVG icon from local `WIDGET_ICONS` map | P1 | `AddWidgetPicker.test.tsx` |
+
+#### 9.3.2 AC-AWO — `useDashOrder.addWidget`
+
+| ID | Description | Phase | File |
+|---|---|---|---|
+| AC-AWO-1 | `useDashOrder(...)` returns a 3-element tuple `[order, setOrder, addWidget]` | P2 | `useDashOrder.test.tsx` (extend) + `useDashOrder.addWidget.test.tsx` |
+| AC-AWO-2 | `addWidget(newId)` appends `newId` to order + persists via `setPref` | P2 | `useDashOrder.addWidget.test.tsx` |
+| AC-AWO-3 | `addWidget(existingId)` is a no-op (order unchanged; no setPref call) | P2 | `useDashOrder.addWidget.test.tsx` |
+| AC-AWO-4 | `addWidget(unknownId)` (id not in `widgets[]`) is a no-op | P2 | `useDashOrder.addWidget.test.tsx` |
+| AC-AWO-5 | After `addWidget(newId)`, next render's sanitize-on-mount keeps newId (id is in registered set after the widget exists) | P2 | `useDashOrder.addWidget.test.tsx` |
+
+#### 9.3.3 AC-DMP — `DashboardModule` picker integration
+
+| ID | Description | Phase | File |
+|---|---|---|---|
+| AC-DMP-1 | `pickerOpen` starts false; picker `<dialog>` is closed on first render | P2 | `DashboardModule.picker.test.tsx` |
+| AC-DMP-2 | Click Add Widget button (from header) opens picker | P2 | `DashboardModule.picker.test.tsx` |
+| AC-DMP-3 | Click Empty State CTA (when widgets is empty registration but rendered for empty state UX) opens picker | P2 | `DashboardModule.picker.test.tsx` |
+| AC-DMP-4 | Picker card click → widget appended to order + picker closes + new event emitted | P2 | `DashboardModule.picker.test.tsx` |
+| AC-DMP-5 | Picker Cancel click → picker closes, order unchanged, no new event emitted | P2 | `DashboardModule.picker.test.tsx` |
+| AC-DMP-6 | Picker ESC → picker closes, order unchanged, no new event emitted | P2 | `DashboardModule.picker.test.tsx` |
+
+#### 9.3.4 AC-EVT-EXT — Event regression (extends §2.6 AC-EVENT-*)
+
+| ID | Description | Phase | File |
+|---|---|---|---|
+| AC-EVT-EXT-1 | Add Widget button click STILL emits `web:dashboard:add-widget-clicked` with `source: 'add-widget-button'` (legacy preserved) | P2 | `DashboardModule.events.test.tsx` (extend) |
+| AC-EVT-EXT-2 | Empty State CTA click STILL emits `web:dashboard:add-widget-clicked` with `source: 'empty-state-cta'` (legacy preserved) | P2 | `DashboardModule.events.test.tsx` (extend) |
+| AC-EVT-EXT-3 | Picker card click emits `web:dashboard:widget-added` with `{ widgetId: <id>, source: 'picker' }` | P2 | `DashboardModule.events.test.tsx` (extend) |
+| AC-EVT-EXT-4 | Picker Cancel does NOT emit `web:dashboard:widget-added` | P2 | `DashboardModule.events.test.tsx` (extend) |
+
+#### 9.3.5 AC-A11Y — Picker accessibility
+
+| ID | Description | Phase | File |
+|---|---|---|---|
+| AC-A11Y-1 | `<dialog>` has `aria-labelledby` pointing to the title id | P1 | `AddWidgetPicker.test.tsx` |
+| AC-A11Y-2 | Each card is a `<button type="button">` (auto-tabbable, Enter-activatable) | P1 | `AddWidgetPicker.test.tsx` |
+| AC-A11Y-3 | Cards have an accessible name = `WIDGET_TITLES[id][lang]` (via button text content or aria-label) | P1 | `AddWidgetPicker.test.tsx` |
+| AC-A11Y-4 | Cancel button has accessible name = `dashboard.picker.cancel` per lang | P1 | `AddWidgetPicker.test.tsx` |
+
+### 9.4 Test data fixtures (extension)
+
+```ts
+// src/__tests__/__fixtures__/widgets.ts (extend the SHIPPED fixture file)
+
+import type { WidgetRegistration } from "../../types.js";
+
+// Existing fixtures (SHIPPED): makeFixture, THREE_WIDGETS, EMPTY
+
+// New for picker tests — mirrors the row #11 SHIPPED catalog shape
+export const TEN_WIDGETS: WidgetRegistration[] = [
+  makeFixture("clock",       "w-clock"),
+  makeFixture("stat-tasks",  "w-stat"),
+  makeFixture("stat-streak", "w-stat"),
+  makeFixture("stat-pomos",  "w-stat"),
+  makeFixture("weather",     "w-weather"),
+  makeFixture("mini-cal",    "w-mini-cal"),
+  makeFixture("timezones",   "w-timezones"),
+  makeFixture("stickies",    "w-stickies"),
+  makeFixture("mail",        "w-mail"),
+  makeFixture("upcoming",    "w-upcoming"),
+];
+```
+
+### 9.5 Mock strategy (extension)
+
+| Surface | Mock | Why |
+|---|---|---|
+| `<dialog>` HTMLDialogElement | Use real jsdom 26 implementation (no polyfill) | jsdom 26 ships native support — verified via DeleteAccountConfirmModal precedent |
+| `dashboardWidgetRegistrations` | NOT used in picker unit tests — use fixture `TEN_WIDGETS` from §9.4 to keep tests independent of row #11 | Decouples picker tests from row #11 catalog shape |
+| Wrapper `<WebShellProvider>` for `useWebShell` | NOT needed by picker (it's mounted inside DashboardModule which already receives `lang` as prop) | Picker takes `lang` as a prop, not from context |
+| `emitWebEvent` | Real with `onWebEvent` listener spy | Round-trip through bus catches event-shape drift |
+| `setPref` / `usePref` | Real with `localStorage.clear()` in beforeEach | Round-trip through codec |
+
+### 9.6 Acceptance signal (this extension, from seed brief + session HC)
+
+> User clicks "Add Widget" → native `<dialog>` picker opens within 100ms.
+> Picker shows all SHIPPED widgets from xai-web-dashboard-widgets catalog (currently 10).
+> Selecting a widget + Add → widget appears in dashboard at the end; `xai_dash_order` updated; `web:dashboard:widget-added` event emitted.
+> Cancel button (or Esc) closes the picker without adding.
+> Duplicate prevention: if widget is already on the dashboard, picker hides it.
+> All 93 existing xai-web-dashboard-widgets tests + 104 xai-web-dashboard-grid tests still PASS.
+> Verify Cross-vendor: Codex cold-read confirms picker keyboard accessibility (Tab navigates cards, Enter selects, Esc closes).
+
+Coverage mapping:
+- **Picker opens** → AC-AWP-1 + AC-AWP-2 + AC-DMP-2 + AC-DMP-3
+- **Lists all SHIPPED widgets** → AC-AWP-3 (with `currentOrder=[]`)
+- **Selecting + add → appended + persist + event** → AC-AWP-6 + AC-AWO-2 + AC-DMP-4 + AC-EVT-EXT-3
+- **Cancel / Esc closes without add** → AC-AWP-8 + AC-AWP-10 + AC-DMP-5 + AC-DMP-6 + AC-EVT-EXT-4
+- **Duplicate prevention (hide)** → AC-AWP-3 (with `currentOrder` containing some ids) + AC-AWP-4 (all added)
+- **Existing tests still pass** → re-run `pnpm --filter @repo/plugin-web-dashboard-grid test` (target: 104 + 26 = 130) + `pnpm --filter @repo/plugin-web-dashboard-widgets test` (target: 93 unchanged)
+- **Cross-vendor keyboard a11y** → AC-A11Y-1..AC-A11Y-4 + manual smoke per §11
+
+### 9.7 Lint/types/build expectations (extension)
+
+- `pnpm --filter @repo/plugin-web-dashboard-grid lint` — zero warnings (`--max-warnings 0`)
+- `pnpm --filter @repo/plugin-web-dashboard-grid check-types` — clean
+- `pnpm --filter @repo/plugin-web-dashboard-grid test` — ~130 tests green
+- `pnpm --filter @repo/plugin-web-dashboard-widgets test` — 93 tests green (unchanged)
+- `pnpm --filter @repo/core check-types` — clean (EventMap addition)
+- `pnpm --filter @repo/plugin-web-tokens check-types` — clean (6 keys × 2 langs)
+- `pnpm --filter @repo/web check-types` — clean (no edits to apps/web in this row)
+- `pnpm -w build` — clean
+
+### 9.8 Coverage gates (extension)
+
+- `AddWidgetPicker.tsx`: ≥ 95 % statements / ≥ 90 % branches / 100 % functions
+- `useDashOrder.ts` (after addWidget extension): keep at 100 % branches for the addWidget path
+- `DashboardModule.tsx`: ≥ 90 % statements (overall) including the new picker wire-up
+
+### 9.9 Performance budget
+
+- Picker open: < 100ms from button click to `dialog.showModal()` call (acceptance signal). Measured via Performance API in cross-vendor manual smoke.
+- Picker render: 10 cards + 1 cancel button + 1 title = ~12 React nodes; well under 16ms (one frame) in modern browsers.
+- No JS-driven animation; CSS handles any transition.
+
+### 9.10 Regression scenarios (this extension)
+
+- **A**: User had drag-reordered widgets before this row shipped. After upgrade, sanitize-on-mount preserves the persisted order; Add Widget button now opens picker; persisted order unchanged.
+- **B**: User had 10/10 widgets on dashboard. Add Widget click → picker shows "All widgets are on your dashboard" empty state.
+- **C**: User clicks Add Widget, picker opens, user changes lang in another component, picker stays open with previous lang strings until next render (acceptable; lang flow is React state via prop, will rerender on parent rerender — but no special handling needed because `lang` flows through `DashboardModule` props to picker props).
+- **D**: User clicks Add Widget, then Esc; clicks Add Widget again — picker reopens cleanly (no stale state in `<dialog>` element).
+- **E**: User opens picker, refreshes page mid-modal — picker is closed on reload (pickerOpen is React state, not persisted). Add Widget button still works.
+
+### 9.11 Cross-vendor manual smoke (queued for ship, deferred-24h per ADR-0008 carve-out)
+
+Verifier matrix: Chrome (current) / Firefox (current) / Safari 17+ / Safari iOS — same browsers as §6.
+
+Steps (extension):
+
+1. **Picker open**: navigate `/app/dashboard` → click Add Widget. Verify modal renders within 100ms (subjective; if visible delay, run DevTools Performance to confirm < 100ms).
+2. **Picker open from empty state**: clear `xai_dash_order` in DevTools → Application → Local Storage. Reload. Empty state shows. Click CTA → picker opens.
+3. **Card click**: with at least one missing widget, click a card. Modal closes. Widget appears at end of grid. Reload page → widget persists.
+4. **Cancel**: open picker, click Cancel. Modal closes. Order unchanged.
+5. **Backdrop click**: open picker, click outside `.awp-inner` (the dialog backdrop). Modal closes. Order unchanged.
+6. **ESC**: open picker, press Esc. Modal closes. Order unchanged.
+7. **Tab navigation**: open picker. Tab key navigates first card → second card → ... → Cancel button → wraps to first card. Shift+Tab navigates backward.
+8. **Enter on focused card**: open picker, Tab to a card, press Enter. Same effect as click — adds + closes.
+9. **All-added empty state**: ensure all 10 widgets are in `xai_dash_order`. Click Add Widget → picker shows "All widgets are on your dashboard" + Cancel only.
+10. **Bilingual**: toggle lang to ZH (via Avatar menu). Open picker. All copy is Chinese. Toggle back to EN. Reopen picker. All copy is English.
+11. **Light/Dark theme**: toggle theme. Verify picker chrome (dialog background, card borders, text contrast) inverts correctly.
+12. **Event listener**: in DevTools Console, listen via `onWebEvent("web:dashboard:widget-added", e => console.log(e))`. Add a widget via picker → see one log entry with `{ widgetId: <id>, source: "picker" }`.
+13. **Legacy event still emits**: similarly listen on `web:dashboard:add-widget-clicked`. Click Add Widget button → see one log entry with `{ source: "add-widget-button" }` (modal opens too).
+
+Cross-vendor cold-read (Codex `gpt-5.5-thinking medium` primary, Cursor fallback): inspect `AddWidgetPicker.tsx` source for keyboard accessibility — verify Tab navigates cards, Enter selects, Esc closes (Tab/Enter via native `<button>` semantics; Esc via dialog `cancel` event).
+
+Report file: `docs/reviews/xai-web-dashboard-add-widget-picker/<YYYYMMDD>-cross-vendor-verify.md`.

@@ -302,3 +302,179 @@ Scope note: retroactive audit only. Status Panel remains `SHIPPED` per user inst
 - `packages/xai-web-dashboard-grid/docs/api.md` says `widgets={[]}`; `src/registration.tsx` passes `dashboardWidgetRegistrations`.
 7. Light/Dark theme inversion
 8. Storage round-trip (localStorage Application tab)
+
+---
+
+## Bugfix-Extension Lineage — gap-closure row #5 (2026-05-25)
+
+> APPEND-ONLY block. The Status Panel above (`SHIPPED` 2026-05-24) records the
+> baseline row #10 state and is NOT mutated by this extension lineage. This
+> block tracks the new feature-dev cycle introduced by
+> `xai-web-console-gap-closure` manifest row #5 (Gap 5 — Dashboard Add Widget picker).
+
+### Lineage Status Panel
+
+| Field | Value |
+|---|---|
+| Workflow | FEATURE_DEV |
+| Target | xai-web-dashboard-add-widget-picker |
+| Title | Add a native `<dialog>` picker that closes the loop on the existing `web:dashboard:add-widget-clicked` event — lists the 10 SHIPPED widgets from `dashboardWidgetRegistrations`, hides already-added, persists pick to existing `xai_dash_order`, emits new typed `web:dashboard:widget-added` event |
+| Current Phase | FEATURE_REVIEW |
+| Status | APPROVED |
+| Suggested Next | feature-auto-build |
+| Verify Cross-vendor | yes (per ADR-0009 §D4 P0 + roadmap header default; primary Codex `gpt-5.5-thinking` medium, fallback Cursor) — cold-read DEFERRED 24h per ADR-0008 carve-out (consistent with W1 precedent rows #2/#3/#4 SHIPPED 2026-05-25) |
+| Automation Mode | A-Claude (per roadmap default inherited from xai-web-console.md 2026-05-23 user override) |
+| Executor | Claude Opus 4.7 (1M context) — feature-review, 2026-05-25 |
+| Updated | 2026-05-25 |
+| Dispatched By | xai-roadmap-loop SERIAL dispatch for row #5 of xai-web-console-gap-closure (Wave 1, row #5 — LAST) — after rows #2/#3/#4 SHIPPED 2026-05-25 (commits 8b9dc2f / 612074b / 22144e0) |
+| Roadmap Row | `docs/workflow/roadmap/xai-web-console-gap-closure.md` row #5 (W1 · dashboard picker extension) |
+| Parent ADR | ADR-0009 §D2-G3 (P0 gap-closure; ≥5/9 known gaps SHIPPED to unblock P1 Desktop launch) |
+| ADR Amendment | None planned this row (no CSP / OAuth / payment governance — internal UI only) |
+| Concurrent Siblings | None (SERIAL dispatch — last row of W1; W2 rows #6/#7/#8/#9 PENDING and gated on this row's pipeline completion before W2 starts) |
+| Write Scope | **planning phase (this run)**: `packages/xai-web-dashboard-grid/docs/{design.md, api.md, test.md, dev_log.md}` (extension sections appended only) + `docs/reviews/xai-web-dashboard-add-widget-picker/20260525-discovery-review.md` (NEW). **build phases (later) extend to**: `packages/xai-web-dashboard-grid/src/{AddWidgetPicker.tsx (NEW), DashboardModule.tsx (Edit), internal/useDashOrder.ts (Edit), styles.css (Edit), __tests__/{AddWidgetPicker.test.tsx, useDashOrder.addWidget.test.tsx, DashboardModule.picker.test.tsx} (NEW + Edit useDashOrder.test.tsx + Edit DashboardModule.events.test.tsx)}` + `packages/core/src/types/events.ts` (Edit, +1 EventMap entry) + `packages/plugin-web-tokens/src/i18n.ts` (Edit, +6 keys × 2 langs) + `docs/PLUGIN_MAP.md` (Edit, append extension note) |
+
+### Artifacts Index (this extension)
+
+- Seed brief: `docs/reviews/xai-web-dashboard-add-widget-picker/20260524-roadmap-seed.md`
+- Discovery review: `docs/reviews/xai-web-dashboard-add-widget-picker/20260525-discovery-review.md`
+- Design extension: `packages/xai-web-dashboard-grid/docs/design.md` §2026-05-25 Extension
+- API extension: `packages/xai-web-dashboard-grid/docs/api.md` §S14
+- Test extension: `packages/xai-web-dashboard-grid/docs/test.md` §9
+
+### Decision Headline (this extension)
+
+Add a native `<dialog>` Add-Widget picker inside `packages/xai-web-dashboard-grid/`
+(`AddWidgetPicker.tsx`). The picker lists the 10 SHIPPED widgets from row #11's
+`dashboardWidgetRegistrations` catalog, hides those already on the dashboard,
+appends the chosen id to `xai_dash_order` via a new internal
+`useDashOrder.addWidget(id)` helper, and emits a new typed event
+`web:dashboard:widget-added`.
+
+Existing `web:dashboard:add-widget-clicked` event is PRESERVED (still fires on
+Add Widget / Empty State CTA click) for backward compat — its semantics shift
+from "intent stub" to "picker opening".
+
+NO new packages. NO new storage keys. NO new external deps. NO third-party
+modal libraries. NO category metadata (catalog has none; v1 flat grid).
+Picker UI is internal to the package (not re-exported from `index.ts`).
+
+### Phase Plan (2 phases — collapsed P3 into P2 per dispatch brief)
+
+> Each phase is a single `feature-build` run. After each phase, `feature-build`
+> stops for human confirmation per CLAUDE.md "feature-build does ONE phase per
+> run". This is the smallest W1 row — 2 phases suffice per dispatch brief.
+
+#### Phase P1 — `AddWidgetPicker.tsx` + EventMap + i18n delta + CSS + unit tests
+
+**Goal**: standalone picker component compiles, renders, and passes 15 unit tests against a fixture catalog. EventMap declaration in `@repo/core`. i18n bundle has the 6 new keys × 2 langs.
+
+**Files (new)**:
+- `packages/xai-web-dashboard-grid/src/AddWidgetPicker.tsx` (~150 LOC)
+- `packages/xai-web-dashboard-grid/src/__tests__/AddWidgetPicker.test.tsx` (~15 cases)
+
+**Files (edited)**:
+- `packages/core/src/types/events.ts` — Edit, +1 entry `web:dashboard:widget-added` with `{ widgetId: string; source: 'picker' }` payload
+- `packages/plugin-web-tokens/src/i18n.ts` — Edit, +6 keys × 2 langs under `dashboard.picker.*` (title / cancel / all_added_title / all_added_subtitle / add_button / aria_close)
+- `packages/xai-web-dashboard-grid/src/styles.css` — Edit, append `.add-widget-picker` + `.awp-*` rules (12 classes per api.md §S14.8)
+
+**Acceptance**:
+- `pnpm --filter @repo/plugin-web-dashboard-grid lint` clean (`--max-warnings 0`)
+- `pnpm --filter @repo/plugin-web-dashboard-grid check-types` clean
+- `pnpm --filter @repo/plugin-web-dashboard-grid test` — 104 baseline + 15 new = 119 tests green
+- `pnpm --filter @repo/core check-types` clean
+- `pnpm --filter @repo/plugin-web-tokens check-types` clean
+
+**Commit**: `feat(plugin-web-dashboard-grid): P1 — AddWidgetPicker component + web:dashboard:widget-added event + i18n delta (gap-closure row #5)`
+
+#### Phase P2 — Wire-up + `useDashOrder.addWidget` + integration tests + PLUGIN_MAP + final polish
+
+**Goal**: `DashboardModule` owns picker state; clicking Add Widget opens picker; clicking a card calls `addWidget` + emits new event + closes. Cancel / ESC closes without add. `useDashOrder` now returns 3-element tuple. Legacy event still emits. 11 new integration + addWidget tests green.
+
+**Files (new)**:
+- `packages/xai-web-dashboard-grid/src/__tests__/useDashOrder.addWidget.test.tsx` (~5 cases)
+- `packages/xai-web-dashboard-grid/src/__tests__/DashboardModule.picker.test.tsx` (~6 cases)
+
+**Files (edited)**:
+- `packages/xai-web-dashboard-grid/src/DashboardModule.tsx` — Edit, own `pickerOpen` state, mount `<AddWidgetPicker />`, flip `handleAddFromHeader` / `handleAddFromEmpty` to emit legacy event AND call `setPickerOpen(true)`
+- `packages/xai-web-dashboard-grid/src/internal/useDashOrder.ts` — Edit, return 3-element tuple `[order, setOrder, addWidget]` with dedupe + unknown-id guards
+- `packages/xai-web-dashboard-grid/src/__tests__/useDashOrder.test.tsx` — Edit, +1-2 cases asserting 3-element tuple shape (back-compat for `const [order, setOrder]` destructuring)
+- `packages/xai-web-dashboard-grid/src/__tests__/DashboardModule.events.test.tsx` — Edit, +2 cases (AC-EVT-EXT-3 new event emit, AC-EVT-EXT-4 cancel does not emit)
+- `docs/PLUGIN_MAP.md` — Edit, append `(Extension 2026-05-25 — Add Widget picker)` to plugin-web-dashboard-grid row note
+- `packages/xai-web-dashboard-grid/docs/{design.md, api.md, test.md, dev_log.md}` — final sync; flip dev_log Status to `READY_FOR_VERIFY`
+
+**Acceptance**:
+- `pnpm --filter @repo/plugin-web-dashboard-grid test` — ~130 tests green (104 baseline + 15 P1 + 11 P2)
+- `pnpm --filter @repo/plugin-web-dashboard-widgets test` — 93 tests green (unchanged)
+- `pnpm --filter @repo/web check-types` clean
+- `pnpm -w build` clean
+- dev_log Status flipped FEATURE_PLAN → READY_FOR_VERIFY
+
+**Commit**: `feat(plugin-web-dashboard-grid): P2 — DashboardModule picker wire-up + useDashOrder.addWidget + PLUGIN_MAP (gap-closure row #5)`
+
+### Risks Snapshot (this extension)
+
+| ID | Risk | Mitigation | Phase |
+|---|---|---|---|
+| R1 | Duplicate-prevention edge case if widget ids collide across re-renders | `useDashOrder.addWidget` dedupe guard (authoritative); picker filter is UI hint only | P2 |
+| R2 | Native `<dialog>` focus management (Tab, Esc, initial focus) | Use `showModal()` exclusively; cards are native `<button type="button">`; rely on browser focus-trap | P1 |
+| R3 | 100ms open budget if catalog grows | v1: no live preview thumbnails; render only icon + title + desc; defer thumbnail to v2 | P1 (documented), v2 (deferred) |
+| R4 | Native `<dialog>` browser compatibility | Baseline since 2022 (Chrome 37 / Edge 79 / Firefox 98 / Safari 15.4); same precedent as DeleteAccountConfirmModal SHIPPED in production | n/a (documented) |
+| R5 | Event payload schema drift if widget catalog ids change | `widgetId: string` (not union); document in api.md §S14.6 that consumers must defensively handle unknown ids | P1 |
+| R6 | ariaLabel-as-title coupling to row #11 | Decouple via inline `WIDGET_TITLES` bilingual constant in `AddWidgetPicker.tsx` | P1 |
+| R7 | `useDashOrder` return-shape extension breaks consumers | Tuple-at-end extension (non-breaking for `const [order, setOrder] = ...`); single caller (`DashboardGrid.tsx` already inside same package) | P2 |
+| R8 | Modal renders before `<dialog>` ref bound on first mount | `pickerOpen` starts false; ref is bound by the time user click flips to true | n/a (trivial) |
+| R9 | Cross-tab race on simultaneous picker add | `usePref` cross-tab BroadcastChannel handles state-sync (SHIPPED via row #3); event is fire-and-forget intent signal | n/a (documented) |
+| R10 | Sibling-row concurrency on shared anchors (`core/types/events.ts`, `plugin-web-tokens/src/i18n.ts`) | SERIAL dispatch as LAST W1 row; no parallel sibling; W2 not started; Edit (not Write) with unique anchors | P1+P2 |
+
+### Open Uncertainties (for feature-review to surface)
+
+None — all 5 §7 discovery-review Q1..Q5 are answered. No external research or third-party dependency selection in this row.
+
+### Review Notes (2026-05-25, Claude Opus 4.7 1M — feature-review)
+
+**Verdict: APPROVED** — 0 blockers, 2 minor recommendations (non-blocking, can be addressed in build).
+
+**Gate-by-gate findings:**
+
+1. **Scope sanity (PASS).** All 7 acceptance signal items from the seed brief are covered by the AC matrix: (i) modal opens on Add Widget click → AC-DMP-2; (ii) modal lists 10 widget cards → AC-AWP-3; (iii) click card → close + append to grid → AC-DMP-4 + AC-AWO-2 + AC-AWP-6/7; (iv) "Already added" feedback → C1 chosen as hide-pattern with AC-AWP-3/4 covering the filter + AC-AWP-4/5 covering empty state; (v) existing 93+104 tests stay green → §5.2 expected outcome + §9.2 pyramid; (vi) cross-vendor cold-read on no race condition → §10 + verifier checklist gate 7 explicitly tests duplicate-prevention; (vii) bilingual i18n delta → §S14.7 explicit table.
+
+2. **Hard-constraint compliance (PASS).** All 10 HCs addressed: HC1 native `<dialog>` (E2.2 + S14.2 + R4) / HC2 reuse `dashboardWidgetRegistrations` (E2.1 + S14.2 widgets prop) / HC3 replace button handler (E3 data flow `handleAddFromHeader` / `handleAddFromEmpty` flip to `setPickerOpen(true)`) / HC4 emit `web:dashboard:widget-added` (S14.6 EventMap entry + payload spec) / HC5 grid card picker (E3 component graph `.awp-grid` × `.awp-card`) / HC6 cross-vendor verify mandatory (Lineage Status Panel + §10 verifier checklist) / HC7 append-only lineage (dev_log block APPEND-ONLY explicitly; SHIPPED panel preserved verbatim above) / HC8 Step 0 input (seed brief 20260524-roadmap-seed.md referenced in §1.4 + §11 lineage) / HC9 no new storage keys (E2.5 + S14.4 explicit) / HC10 no third-party modal library (E2.2 + §2 verdict explicit).
+
+3. **Architectural fit (PASS).** Respects §3 三层边界 (no host-side business logic; picker is package-local) and §4 编码红线 (no cross-plugin direct imports — widget catalog imported from `@repo/plugin-web-dashboard-widgets` which is already a workspace dep per row #11 integration). Events flow through `@repo/xai-web-event-bus` per §S14.6. No `@tauri-apps/api` import. No new third-party modal lib. `useDashOrder` extension is internal-only (tuple-at-end, non-breaking).
+
+4. **PLUGIN_MAP consistency (PASS).** No new package row needed; row #10 (`@repo/plugin-web-dashboard-grid` Stable) and row #11 (`@repo/plugin-web-dashboard-widgets` Stable) already SHIPPED. P2 includes the targeted append `(Extension 2026-05-25 — Add Widget picker)` to row #10 note.
+
+5. **Test strategy (PASS).** 93 widgets + 104 grid existing tests stay green per §5.2 + §9.2. New tests: ~15 AddWidgetPicker + ~5 useDashOrder.addWidget + ~6 DashboardModule.picker + ~2 EventMap regression = ~28 new (total ~132 grid tests). AC families: AC-AWP (15) + AC-AWO (5) + AC-DMP (6) + AC-EVT-EXT (4) + AC-A11Y (4) cover picker UI / persistence / event emit / duplicate prevention / a11y. Real `<dialog>` in jsdom 26 (no polyfill) verified via `DeleteAccountConfirmModal.test.tsx` precedent.
+
+6. **Phase granularity (PASS).** 2-phase split is reasonable for the smallest W1 row per dispatch brief recommendation. P1 DoD = standalone picker + EventMap + i18n + CSS + 15 unit tests (~119 total) — independently verifiable before wire-up. P2 DoD = full integration + `useDashOrder.addWidget` + PLUGIN_MAP + 11 new tests (~130 total) + dev_log `READY_FOR_VERIFY`. Each phase has explicit file boundary lists in §E6 / dev_log Phase Plan.
+
+7. **Risk register completeness (PASS).** 10 risks documented (R1..R10) — exceeds the 5 baseline. Severity/likelihood explicit on each. R1 dedupe race + R7 tuple-extension non-breakage + R10 sibling-concurrency on shared anchors all have concrete mitigations. SERIAL dispatch eliminates R10 contention.
+
+8. **Duplicate prevention (PASS).** Decision frozen at C1 (hide) per §4.3 with full justification. Authoritative dedupe at hook layer (`useDashOrder.addWidget` AC-AWO-3) + UI filter at picker layer (AC-AWP-3) — two-layer defense against R1 race. Empty-state UX covered by AC-AWP-4/5 + S14.7 i18n keys.
+
+9. **Native `<dialog>` baseline (PASS).** R4 documents Baseline 2022 (Chrome 37 / Edge 79 / Firefox 98 / Safari 15.4) with no polyfill. Same in-house precedent (`DeleteAccountConfirmModal.tsx`) already SHIPPED in production per `plugin-web-settings-rest`. jsdom 26 implements HTMLDialogElement so unit tests don't need polyfill (test.md §9.1 line 229).
+
+10. **Cross-vendor verify focus (PASS).** Verifier checklist §10 gate 3 explicitly walks Tab → first card; Tab cycles; Shift+Tab cycles backward; Tab wraps via Cancel back to first card; Enter on card adds + closes; ESC closes without add. Codex `gpt-5.5-thinking medium` primary verifier listed; Cursor fallback per W1 precedent.
+
+**Minor recommendations (non-blocking — address during build, do NOT require a re-plan):**
+
+- **REC-1 (cosmetic).** §S14.6 says `web:dashboard:widget-added` is emitted "before `setPickerOpen(false)`" — verify the build's actual call order matches the spec (in §E3 data flow the order is `addWidget(id)` → `emitWebEvent(...)` → `setPickerOpen(false)`, which matches). No test asserts the relative order between emit and close — consider one assertion in AC-DMP-4 that the event fires synchronously before the dialog `close` effect runs. Not a blocker.
+
+- **REC-2 (test resilience).** AC-AWP-9 tests "backdrop click (target === dialogRef) calls onClose". In jsdom 26, simulating a true backdrop click (vs a click on the inner content with `target === dialogRef`) requires care — the existing `DeleteAccountConfirmModal` test in `plugin-web-settings-rest` is the precedent to mirror exactly. Build executor should reference that file before authoring AC-AWP-9. Not a blocker.
+
+**Sanity-cross-checks performed:**
+- Verified `dashboardWidgetRegistrations` export exists in `packages/xai-web-dashboard-widgets/src/registrations.tsx` ✓
+- Verified `DeleteAccountConfirmModal.tsx` exists at `packages/plugin-web-settings-rest/src/internal/` ✓
+- Verified §S14 exists in api.md (sections S14.1..S14.10) ✓
+- Verified §9 AC matrix exists in test.md (AC-AWP-1..15, AC-AWO-1..5, AC-DMP-1..6, AC-EVT-EXT-1..4, AC-A11Y-1..4) ✓
+- Verified §2026-05-25 Extension exists in design.md (E1..E8 sub-blocks) ✓
+- Verified `xai_dash_order` registry pre-shipped in `plugin-web-storage` (no new key per HC9) ✓
+- Verified SERIAL dispatch — no concurrent W1 siblings (rows #2/#3/#4 SHIPPED 2026-05-25; W2 not started) ✓
+
+### Work Log
+
+| Timestamp | Executor | Action | Commits | Next Step |
+|---|---|---|---|---|
+| 2026-05-25 | Claude Opus 4.7 (1M context) — feature-plan | Created discovery review at `docs/reviews/xai-web-dashboard-add-widget-picker/20260525-discovery-review.md` (12 sections, 6 decision axes, 10 risks, 15 frozen assumptions). Appended Extension sections to `design.md` (§2026-05-25 Extension), `api.md` (§S14), `test.md` (§9). Appended this Bugfix-Extension Lineage block to `dev_log.md`. Status SHIPPED preserved verbatim above; this lineage Status = NEEDS_REVIEW; Suggested Next = feature-review. 2-phase plan (P1 component + P2 wire-up; P3 collapsed per dispatch brief — smallest W1 row). No external research required (pure-internal UI). No ADR amendment planned. SERIAL dispatch as LAST row of W1 — no concurrent siblings. | — | feature-review |
+| 2026-05-25 | Claude Opus 4.7 (1M context) — feature-review | **APPROVED.** All 10 review gates passed (scope sanity, HC1..HC10 compliance, arch fit, PLUGIN_MAP consistency, test strategy, phase granularity, risk register completeness, duplicate prevention, `<dialog>` baseline, cross-vendor verify focus). 0 blockers, 2 minor recommendations (REC-1 emit/close order test, REC-2 backdrop-click test pattern mirror DeleteAccountConfirmModal) — both addressable during build, non-blocking. Sanity cross-checks confirmed all referenced artifacts/precedents exist. Status flipped NEEDS_REVIEW → APPROVED; Suggested Next → feature-auto-build (per W1 SERIAL precedent rows #2/#3/#4 which all used auto-build then loop). | — | feature-auto-build |
+| 2026-05-25 | claude-sonnet-4-6 — feature-auto-build | **P1 DONE.** AddWidgetPicker.tsx (native `<dialog>`, 10-widget card grid, backdrop-click handler mirroring DeleteAccountConfirmModal per REC-2, ESC cancel listener, WIDGET_TITLES/DESCRIPTIONS/ICONS local maps). EventMap +1 entry `web:dashboard:widget-added` (core/types/events.ts). i18n delta +6 keys × 2 langs under `dashboard.picker.*`. styles.css +12 `.awp-*` classes. `__fixtures__/widgets.ts` with TEN_WIDGETS. AddWidgetPicker.test.tsx with 23 tests (AC-AWP-1..15 + AC-A11Y-1..4 + extras). 135/135 tests green. Lint clean. check-types clean for dashboard-grid + core + plugin-web-tokens. | 4379897 | P2 (wire-up) |

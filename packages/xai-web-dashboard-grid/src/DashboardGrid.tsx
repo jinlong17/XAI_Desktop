@@ -62,7 +62,7 @@ export function DashboardGrid({ widgets, lang, now, goTo }: DashboardGridProps) 
   // Deduped widgets in their original registration order (used by sanitizeOrder).
   const dedupedWidgets = useMemo(() => Array.from(registryMap.values()), [registryMap]);
 
-  const { order, setOrder } = useDashOrder(dedupedWidgets);
+  const [order, setOrder] = useDashOrder(dedupedWidgets);
 
   const itemRefs = useRef<Record<string, HTMLDivElement | null>>({});
   const lastRects = useRef<Record<string, DOMRect>>({});
