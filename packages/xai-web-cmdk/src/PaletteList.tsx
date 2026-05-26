@@ -33,11 +33,14 @@ export function PaletteList({
 }: PaletteListProps) {
   const listRef = useRef<HTMLUListElement>(null);
 
-  // Scroll active row into view when activeIndex changes
+  // Scroll active row into view when activeIndex changes.
+  // Defensive guard: jsdom (used by vitest) does not implement
+  // Element.scrollIntoView; real browsers do. Guarding avoids throwing
+  // in unit tests while preserving identical production behavior.
   useEffect(() => {
     if (!listRef.current) return;
     const activeEl = listRef.current.querySelector(`#cmdk-row-${activeIndex}`);
-    if (activeEl) {
+    if (activeEl && typeof activeEl.scrollIntoView === "function") {
       activeEl.scrollIntoView({ block: "nearest" });
     }
   }, [activeIndex]);

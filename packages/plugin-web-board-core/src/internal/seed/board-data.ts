@@ -205,6 +205,11 @@ function makePmInitialLists(): BoardList[] {
           labels: ["pm-forms"],
           members: ["u1"],
           checklist: { done: 0, total: 3 },
+          // codex C3-CHROME-3 cycle 2 (2026-05-26): seed location for Map view.
+          // The default board for first-run users is "b-pm" (Project Management)
+          // which uses makePmInitialLists; the prior fix only seeded "b-default"
+          // (kanban) cards. Paris (France) — fits "accommodations booking" theme.
+          location: { lat: 48.8566, lng: 2.3522, label: "Paris" },
         },
         {
           id: "pmc2",
@@ -240,6 +245,9 @@ function makePmInitialLists(): BoardList[] {
           members: ["u2"],
           checklist: { done: 2, total: 5 },
           due: "5/26",
+          // codex C3-CHROME-3 cycle 2 (2026-05-26): seed pin for Map view.
+          // Sofia, Bulgaria — "BG" in the title hints at the store locale.
+          location: { lat: 42.6977, lng: 23.3219, label: "Sofia" },
         },
         {
           id: "pmc6",
@@ -258,6 +266,9 @@ function makePmInitialLists(): BoardList[] {
           title: { en: "Web-store purchasing performance issue", zh: "网店购买性能问题" },
           labels: ["pm-forms"],
           members: ["u1", "u2"],
+          // codex C3-CHROME-3 cycle 2 (2026-05-26): seed pin for Map view.
+          // Tokyo (Japan) — third continent spread for Map demo.
+          location: { lat: 35.6762, lng: 139.6503, label: "Tokyo" },
         },
       ],
     },

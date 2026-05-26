@@ -14,6 +14,7 @@
  */
 
 import * as React from "react";
+import { useNavigate, useParams, useLocation } from "react-router";
 import type { WebModuleSlotRegistration } from "@repo/xai-web-shell";
 import { useWebShell } from "@repo/xai-web-shell";
 import { SectionBlock } from "@repo/plugin-web-settings-shell";
@@ -23,11 +24,63 @@ import { composeSettingsPaneRegistry } from "./settingsPaneComposition.js";
 
 // ---- ComposedSettingsModule -------------------------------------------------
 
+/**
+ * Resolve the URL splat (e.g. "ai", "integrations", "premium", or "") to a
+ * registered pane id. Falls back to "account" when the splat is missing or
+ * doesn't match any composed pane.
+ *
+ * CODEX C3-CHROME-1 cycle 2 (2026-05-26): the prior fix landed in
+ * `packages/plugin-web-settings-shell/src/SettingsModule.tsx` but the live
+ * `apps/web` route mounts THIS component (`ComposedSettingsModule`) which
+ * had its own `useState("account")` and ignored the URL. Both layers now
+ * read the splat.
+ */
+function resolveInitialPane(
+  urlSplat: string | undefined,
+  composed: readonly Pane[],
+): SettingsPaneId {
+  if (!urlSplat) return "account";
+  const candidate = urlSplat.toLowerCase().split("/")[0] ?? "";
+  const match = composed.find((p) => p.id === candidate);
+  return match ? match.id : "account";
+}
+
 /** Same UX as settings-shell's SettingsModule but reads the composed registry. */
 function ComposedSettingsModule(): React.ReactElement {
   const { lang } = useWebShell();
   const composed = React.useMemo(() => composeSettingsPaneRegistry(), []);
-  const [active, setActive] = React.useState<SettingsPaneId>("account");
+  const params = useParams();
+  const navigate = useNavigate();
+  const location = useLocation();
+  const urlSplat = params["*"];
+
+  const [active, setActive] = React.useState<SettingsPaneId>(() =>
+    resolveInitialPane(urlSplat, composed),
+  );
+
+  // URL → state sync (browser back/forward, deep-link navigation).
+  React.useEffect(() => {
+    const next = resolveInitialPane(urlSplat, composed);
+    if (next !== active) {
+      setActive(next);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [urlSplat]);
+
+  // State → URL sync (sidebar click). Default "account" maps to clean
+  // `/app/settings` (no splat) so the landing URL stays shareable.
+  const handleSelect = React.useCallback(
+    (next: SettingsPaneId) => {
+      setActive(next);
+      const targetPath =
+        next === "account" ? "/app/settings" : `/app/settings/${next}`;
+      if (location.pathname !== targetPath) {
+        navigate(targetPath, { replace: false });
+      }
+    },
+    [location.pathname, navigate],
+  );
+
   const activePane = composed.find((p) => p.id === active) ?? composed[0]!;
   const { s } = useI18n(lang);
 
@@ -44,11 +97,11 @@ function ComposedSettingsModule(): React.ReactElement {
                 data-active={active === p.id ? "true" : "false"}
                 role="button"
                 tabIndex={0}
-                onClick={() => setActive(p.id)}
+                onClick={() => handleSelect(p.id)}
                 onKeyDown={(e) => {
                   if (e.key === "Enter" || e.key === " ") {
                     e.preventDefault();
-                    setActive(p.id);
+                    handleSelect(p.id);
                   }
                 }}
               >
