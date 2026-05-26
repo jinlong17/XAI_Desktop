@@ -27,7 +27,7 @@
  * can toggle Inbox / Planner / Switch-boards regardless of view.
  */
 
-import { useCallback, useEffect, useState } from "react";
+import { Suspense, useCallback, useEffect, useState } from "react";
 import { usePref } from "@repo/plugin-web-storage";
 import {
   BoardView,
@@ -454,7 +454,11 @@ export function BoardWorkspacesModule({ lang }: BoardWorkspacesModuleProps) {
             {activeView === "timeline" && (
               <TimelineView lists={filteredLists} lang={lang} updateCard={updateCard} />
             )}
-            {activeView === "map" && <MapView lists={filteredLists} lang={lang} />}
+            {activeView === "map" && (
+              <Suspense fallback={<div data-testid="map-suspense-fallback" aria-busy="true" />}>
+                <MapView lists={filteredLists} lang={lang} />
+              </Suspense>
+            )}
           </div>
         )}
       </div>

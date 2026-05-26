@@ -136,10 +136,10 @@ describe("BoardModule integration", () => {
     await act(async () => {
       fireEvent.click(mapBtn);
     });
+    // board-map container is present (Leaflet MapView replaced SVG placeholder in P5)
     expect(screen.getByTestId("board-map")).toBeInTheDocument();
-    // 6 SVG pins should be visible
-    const pins = screen.getAllByTestId("map-pin");
-    expect(pins.length).toBe(6);
+    // The Leaflet container div is mounted (actual map renders via useEffect)
+    expect(screen.getByTestId("map-container")).toBeInTheDocument();
   });
 
   it("BM8: Orphan viewByBoardId entry for deleted board → no crash; falls back to board", async () => {

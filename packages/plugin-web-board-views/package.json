@@ -27,13 +27,15 @@
     "@repo/plugin-web-board-core": "workspace:*",
     "@repo/plugin-web-tokens": "workspace:*",
     "@repo/plugin-web-storage": "workspace:*",
-    "@repo/xai-web-shell": "workspace:*"
+    "@repo/xai-web-shell": "workspace:*",
+    "leaflet": "^1.9.4"
   },
   "devDependencies": {
     "@repo/eslint-config": "workspace:*",
     "@repo/typescript-config": "workspace:*",
     "@testing-library/jest-dom": "^6.0.0",
     "@testing-library/react": "^16.0.0",
+    "@types/leaflet": "^1.9.14",
     "@types/react": "^19.0.0",
     "@types/react-dom": "^19.0.0",
     "jsdom": "^26.0.0",

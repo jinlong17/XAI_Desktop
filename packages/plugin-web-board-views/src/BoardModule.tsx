@@ -28,7 +28,7 @@
  * shape, so a future re-export refactor is a clean swap.
  */
 
-import { useCallback, useEffect, useState } from "react";
+import { Suspense, useCallback, useEffect, useState } from "react";
 import { usePref } from "@repo/plugin-web-storage";
 import {
   BoardView,
@@ -234,7 +234,9 @@ export function BoardModule({ lang }: BoardModuleProps) {
           />
         )}
         {activeView === "map" && (
-          <MapView lang={lang} />
+          <Suspense fallback={<div data-testid="map-suspense-fallback" aria-busy="true" />}>
+            <MapView lang={lang} lists={lists} />
+          </Suspense>
         )}
       </div>
     </div>

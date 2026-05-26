@@ -23,7 +23,11 @@ describe("index barrel", () => {
     expect(typeof M.BoardCalendarView).toBe("function");
     expect(typeof M.BoardDashboardView).toBe("function");
     expect(typeof M.TimelineView).toBe("function");
-    expect(typeof M.MapView).toBe("function");
+    // MapView is a React.LazyExoticComponent (HC5 lazy-load) — it's an object not a function
+    expect(M.MapView).toBeDefined();
+    expect(M.MapView).not.toBeNull();
+    // Lazy components carry $$typeof = REACT_LAZY_TYPE
+    expect(typeof M.MapView).toBe("object");
 
     // Registration
     expect(typeof M.boardViewsWebModuleRegistration).toBe("object");
@@ -72,20 +76,24 @@ describe("index barrel", () => {
     // "export type { ... }" the names are not present as runtime values.
     // This test verifies the component exports (which carry the prop types
     // as the function signature) are all present.
-    const componentNames: string[] = [
+    // NOTE: MapView is a React.lazy() wrapper (HC5) — it is an object, not a plain function.
+    //       All other views remain plain function components.
+    const functionComponents: string[] = [
       "BoardModule",
       "ViewPicker",
       "TableView",
       "BoardCalendarView",
       "BoardDashboardView",
       "TimelineView",
-      "MapView",
     ];
-    for (const name of componentNames) {
+    for (const name of functionComponents) {
       expect(
         typeof (M as Record<string, unknown>)[name],
         `expected ${name} to be a function`,
       ).toBe("function");
     }
+    // MapView is a LazyExoticComponent object (not a plain function)
+    expect(M.MapView).toBeDefined();
+    expect(typeof M.MapView).toBe("object");
   });
 });

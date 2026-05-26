@@ -37,8 +37,14 @@ export type { BoardDashboardViewProps } from "./BoardDashboardView.js";
 export { TimelineView } from "./TimelineView.js";
 export type { TimelineViewProps } from "./TimelineView.js";
 
-export { MapView } from "./MapView.js";
+// MapView is lazy-loaded (HC5) — React.lazy wraps the real Leaflet component.
+// Consumers MUST wrap <MapView> in <Suspense fallback={…}>.
+// The MapViewProps type is still exported for prop typing convenience.
 export type { MapViewProps } from "./MapView.js";
+import { lazy } from "react";
+export const MapView = lazy(() =>
+  import("./MapView.js").then((m) => ({ default: m.MapView })),
+);
 
 // ---- Shell slot registration -----------------------------------------------
 export { boardViewsWebModuleRegistration } from "./registration.js";
