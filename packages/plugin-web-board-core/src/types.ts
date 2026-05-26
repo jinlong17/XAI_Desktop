@@ -31,6 +31,16 @@ export interface CardChecklist {
   total: number;
 }
 
+/** Geographic location for Map view rendering (gap-closure row #6). */
+export interface CardLocation {
+  /** WGS84 latitude, -90..90. */
+  lat: number;
+  /** WGS84 longitude, -180..180. */
+  lng: number;
+  /** Optional human-readable label rendered in the pin popup. */
+  label?: string;
+}
+
 export interface BoardCard {
   id: string;
   title: BilingualText;
@@ -50,6 +60,9 @@ export interface BoardCard {
   attach?: string | number;
   /** CSS background string for an optional cover bar. */
   cover?: string;
+  /** OPTIONAL — geographic location for Map view rendering.
+   *  Cards without this field render as empty-state in Map view. */
+  location?: CardLocation;
 }
 
 export interface BoardList {

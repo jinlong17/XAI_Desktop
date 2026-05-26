@@ -118,4 +118,45 @@ describe("isBoardArray", () => {
       }),
     ).toBe(false);
   });
+
+  // BCV1..BCV4 — gap-closure row #6 (BoardCard.location? additive extension)
+  test("BCV1 isBoardCard accepts card with valid location { lat, lng, label }", () => {
+    expect(
+      isBoardCard({
+        id: "c1",
+        title: { en: "a", zh: "b" },
+        location: { lat: 40.7128, lng: -74.006, label: "New York" },
+      }),
+    ).toBe(true);
+  });
+
+  test("BCV2 isBoardCard accepts card with valid location { lat, lng } (no label)", () => {
+    expect(
+      isBoardCard({
+        id: "c1",
+        title: { en: "a", zh: "b" },
+        location: { lat: 35.6762, lng: 139.6503 },
+      }),
+    ).toBe(true);
+  });
+
+  test("BCV3 isBoardCard rejects card with NaN location.lat", () => {
+    expect(
+      isBoardCard({
+        id: "c1",
+        title: { en: "a", zh: "b" },
+        location: { lat: NaN, lng: 0 },
+      }),
+    ).toBe(false);
+  });
+
+  test("BCV4 isBoardCard rejects card with out-of-range location.lng", () => {
+    expect(
+      isBoardCard({
+        id: "c1",
+        title: { en: "a", zh: "b" },
+        location: { lat: 0, lng: 200 },
+      }),
+    ).toBe(false);
+  });
 });

@@ -16,6 +16,7 @@ import type {
   BoardListColorId,
   BoardTemplate,
   CardChecklist,
+  CardLocation,
 } from "../types.js";
 import { LIST_COLOR_IDS } from "./listColors.js";
 
@@ -35,6 +36,16 @@ function isBilingualText(value: unknown): value is BilingualText {
 function isCardChecklist(value: unknown): value is CardChecklist {
   if (!isObject(value)) return false;
   return typeof value.done === "number" && typeof value.total === "number";
+}
+
+function isCardLocation(value: unknown): value is CardLocation {
+  if (!isObject(value)) return false;
+  if (typeof value.lat !== "number" || !isFinite(value.lat)) return false;
+  if (typeof value.lng !== "number" || !isFinite(value.lng)) return false;
+  if (Math.abs(value.lat) > 90) return false;
+  if (Math.abs(value.lng) > 180) return false;
+  if (value.label !== undefined && !isString(value.label)) return false;
+  return true;
 }
 
 function isBoardListColorId(value: unknown): value is BoardListColorId {
@@ -83,6 +94,7 @@ export function isBoardCard(value: unknown): value is BoardCard {
     return false;
   }
   if (value.cover !== undefined && !isString(value.cover)) return false;
+  if (value.location !== undefined && !isCardLocation(value.location)) return false;
   return true;
 }
 

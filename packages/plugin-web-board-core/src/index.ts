@@ -29,6 +29,7 @@ export type {
   BoardWorkspace,
   BilingualText,
   CardChecklist,
+  CardLocation,
 } from "./types.js";
 
 // ---- Constants -----------------------------------------------------------
