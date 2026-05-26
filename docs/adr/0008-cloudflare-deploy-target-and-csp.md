@@ -7,7 +7,7 @@
 | 决策者 | Jinlong (project owner) + Claude (`feature-plan` → `feature-review`) |
 | Supersedes | none |
 | Superseded by | none |
-| Amendments | 2026-05-25 §S3 D3 + §S6 `_headers` — `connect-src` widened to include `https://api.anthropic.com` (row `xai-web-ai-chat-real-llm-adapter`, gap-closure #2); 2026-05-25 §S3 D3 + §S6 `_headers` — `connect-src` + `img-src` widened to include `https://tile.openstreetmap.org` (row `xai-web-board-filter-share-map`, gap-closure #6, MapView OSM tiles) |
+| Amendments | 2026-05-25 §S3 D3 + §S6 `_headers` — `connect-src` widened to include `https://api.anthropic.com` (row `xai-web-ai-chat-real-llm-adapter`, gap-closure #2); 2026-05-25 §S3 D3 + §S6 `_headers` — `connect-src` + `img-src` widened to include `https://tile.openstreetmap.org` (row `xai-web-board-filter-share-map`, gap-closure #6, MapView OSM tiles); 2026-05-25 §S3 D3 + §S6 `_headers` — `connect-src` extended with `https://api.notion.com`, `https://oauth2.googleapis.com`, `https://api.linear.app` (row `xai-web-settings-integrations-3rd-party`, gap-closure #7, OAuth token endpoints for Notion/GCal/Linear); `frame-src` NOT widened — all 3 providers set `X-Frame-Options: DENY` on authorize pages |
 
 ---
 
@@ -170,6 +170,37 @@ Same **Extension rule** applies: future rows reaching additional external tile
 servers MUST follow this pattern — amend ADR frontmatter, extend `_headers`,
 update §S6 snippet, write a csp.test.ts guard.
 
+**Amendment 2026-05-25 — `connect-src` OAuth token endpoint extension (gap-closure row #7 Integrations 3rd-party):**
+
+The Integrations pane v1 OAuth stub for Notion / Google Calendar / Linear establishes
+the PKCE authorization-code flow pattern. The `code` is received at the callback route
+and discarded; no real token exchange occurs in v1. However, the 3 token endpoint
+hostnames are added to `connect-src` now to establish the allowlist pattern for future
+real implementations and to document the intended network boundary.
+
+| Directive | Before | After |
+|---|---|---|
+| `connect-src` | `'self' https://api.anthropic.com https://tile.openstreetmap.org` | `'self' https://api.anthropic.com https://tile.openstreetmap.org https://api.notion.com https://oauth2.googleapis.com https://api.linear.app` |
+| `frame-src` | _(not explicitly declared; defaults to default-src)_ | **NOT widened** — all 3 providers set `X-Frame-Options: DENY` on their authorize pages (verified in discovery §3.3); the authorize URL is opened via `window.location.assign` (same-tab navigation), not in an iframe. |
+
+**Security posture:**
+- `https://api.notion.com` — Notion's canonical API hostname (token endpoint + API);
+  no subdomain wildcard.
+- `https://oauth2.googleapis.com` — Google's canonical OAuth 2.0 token endpoint;
+  no subdomain wildcard.
+- `https://api.linear.app` — Linear's canonical API hostname (token endpoint);
+  no subdomain wildcard.
+- Authorize URLs (`https://api.notion.com/v1/oauth/authorize`,
+  `https://accounts.google.com/o/oauth2/v2/auth`,
+  `https://linear.app/oauth/authorize`) are browser-navigation targets, NOT
+  `connect-src` entries; the browser navigates to them via `window.location.assign`.
+- `frame-src` NOT widened: all 3 providers' authorize pages set `X-Frame-Options: DENY`,
+  confirming they cannot be framed. CSP `frame-src` widening is therefore unnecessary
+  and would only expand attack surface without enabling any functionality.
+- No `*` wildcard. No `'unsafe-inline'`. No `'unsafe-eval'`.
+- Source-text guard test: `apps/web/src/__tests__/csp.test.ts` CSP3 case asserts all 3
+  token hostnames are present in `_headers`.
+
 **Runtime nonce caller audit (P2):** `requireRuntimeNonce` and
 `createNonceStyleElement` are defined in `apps/web/src/security/nonce.ts` and
 called only in test files (`nonce.test.ts`). No production caller in
@@ -330,7 +361,7 @@ Delivered at `apps/web/public/_headers` (Vite copies `public/` verbatim into
 
 ```
 /*
-  Content-Security-Policy: default-src 'self'; script-src 'self'; style-src 'self' https://fonts.googleapis.com; img-src 'self' data: blob: https://tile.openstreetmap.org; connect-src 'self' https://api.anthropic.com https://tile.openstreetmap.org; font-src 'self' data: https://fonts.gstatic.com; object-src 'none'; base-uri 'self'; frame-ancestors 'none'; form-action 'self'; upgrade-insecure-requests
+  Content-Security-Policy: default-src 'self'; script-src 'self'; style-src 'self' https://fonts.googleapis.com; img-src 'self' data: blob: https://tile.openstreetmap.org; connect-src 'self' https://api.anthropic.com https://tile.openstreetmap.org https://api.notion.com https://oauth2.googleapis.com https://api.linear.app; font-src 'self' data: https://fonts.gstatic.com; object-src 'none'; base-uri 'self'; frame-ancestors 'none'; form-action 'self'; upgrade-insecure-requests
   Strict-Transport-Security: max-age=63072000; includeSubDomains; preload
   X-Content-Type-Options: nosniff
   X-Frame-Options: DENY
@@ -343,6 +374,10 @@ per gap-closure row #2 — see §S3 D3 Amendment above)_
 
 _(amended 2026-05-25: `connect-src` + `img-src` extended to include `https://tile.openstreetmap.org`
 per gap-closure row #6 MapView OSM tiles — see §S3 D3 Amendment above)_
+
+_(amended 2026-05-25: `connect-src` extended to include `https://api.notion.com`,
+`https://oauth2.googleapis.com`, `https://api.linear.app` per gap-closure row #7
+Integrations OAuth PKCE stub — see §S3 D3 Amendment above; `frame-src` NOT widened)_
 
 No `'unsafe-inline'`. No `'unsafe-eval'`. No `*` wildcard.
 

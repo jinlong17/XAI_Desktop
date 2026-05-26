@@ -3,6 +3,7 @@
  *
  * CSP1 — `connect-src` includes https://api.anthropic.com (gap-closure #2, amended 2026-05-25)
  * CSP2 — `connect-src` + `img-src` include https://tile.openstreetmap.org (gap-closure #6 MapView, amended 2026-05-25)
+ * CSP3 — `connect-src` includes https://api.notion.com AND https://oauth2.googleapis.com AND https://api.linear.app (gap-closure #7 Integrations OAuth stub, amended 2026-05-25)
  *
  * These are the binding precedent guards for wave 1+2+3 CSP rows per
  * ADR-0008 §S3 D3. If any guard fails, the CSP was narrowed without
@@ -10,6 +11,7 @@
  *
  * Test strategy: packages/xai-web-ai-chat/docs/test.md §7.4 CSP1
  *               packages/plugin-web-board-views/docs/test.md §S15.5 CSP2
+ *               packages/plugin-web-settings-rest/docs/test.md §5.3 P5 CSP3
  */
 import { describe, it, expect } from "vitest";
 import { readFileSync } from "fs";
@@ -61,5 +63,28 @@ describe("CSP source-text guards", () => {
       imgSrcMatch?.[0],
       "img-src does not include https://tile.openstreetmap.org — Leaflet tile images are blocked; update ADR-0008 §S3 D3 + _headers",
     ).toContain("https://tile.openstreetmap.org");
+  });
+
+  it("CSP3: connect-src includes OAuth token endpoints for Notion, GCal, and Linear (gap-closure #7)", () => {
+    const content = readFileSync(HEADERS_PATH, "utf-8");
+    const cspLine = content
+      .split("\n")
+      .find((l) => l.includes("Content-Security-Policy:"));
+    expect(
+      cspLine,
+      "_headers does not contain a Content-Security-Policy directive",
+    ).toBeTruthy();
+    expect(
+      cspLine,
+      "connect-src does not include https://api.notion.com — Notion OAuth token endpoint is blocked; update ADR-0008 §S3 D3 + _headers",
+    ).toContain("https://api.notion.com");
+    expect(
+      cspLine,
+      "connect-src does not include https://oauth2.googleapis.com — Google Calendar OAuth token endpoint is blocked; update ADR-0008 §S3 D3 + _headers",
+    ).toContain("https://oauth2.googleapis.com");
+    expect(
+      cspLine,
+      "connect-src does not include https://api.linear.app — Linear OAuth token endpoint is blocked; update ADR-0008 §S3 D3 + _headers",
+    ).toContain("https://api.linear.app");
   });
 });
