@@ -68,9 +68,11 @@ function TextSamples({ lang }: { lang: Lang }) {
 }
 
 export function TokensSmokePage() {
-  if (!import.meta.env.DEV) return null;
-
+  // Hook MUST run unconditionally per react-hooks/rules-of-hooks; the
+  // DEV-only short-circuit happens AFTER all hooks are declared.
   const [hue, setHue] = useState(165);
+
+  if (!import.meta.env.DEV) return null;
 
   return (
     <div style={{ padding: 24, fontFamily: "var(--font-sans)", color: "var(--text-1)", background: "var(--bg-app)", minHeight: "100vh" }}>
