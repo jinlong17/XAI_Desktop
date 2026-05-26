@@ -37,12 +37,40 @@ const STR = {
   "deleteModal.cancel": { en: "Cancel", zh: "取消" },
   "deleteModal.confirm": { en: "Delete account", zh: "确认注销" },
 
-  // Premium pane
+  // Premium pane (row #24 baseline)
   "premium.headline_en": { en: "Unlock Premium Features", zh: "解锁高级功能" },
   "premium.body_en": {
     en: "Full calendar views, matrix, habit stats, focus sounds & unlimited countdowns.",
     zh: "完整日历视图、四象限矩阵、习惯统计、专注音效和无限倒计时。",
   },
+
+  // Premium pane Stripe Checkout stub (extension 2026-05-26 — gap-closure row #8)
+  "premium.badge.tier_stub": { en: "Premium (stub)", zh: "高级版（演示）" },
+  "premium.disclosure.banner": {
+    en: "v1 Premium is a UX preview. Real subscription enforcement requires desktop client (P1).",
+    zh: "v1 高级版仅为 UX 演示。真实订阅功能需在桌面端（P1）实现。",
+  },
+  "premium.btn.upgrade": { en: "Upgrade Now", zh: "立即升级" },
+  "premium.btn.cancel_sub": { en: "Cancel Subscription", zh: "取消订阅" },
+  "premium.btn.cancel_sub_tooltip": {
+    en: "Clearing the local subscription flag will not contact Stripe — manage payment at billing.stripe.com",
+    zh: "清除本地订阅标记不会通知 Stripe — 请前往 billing.stripe.com 管理付款",
+  },
+  "premium.upgrade_disabled_tooltip": {
+    en: "Payment Link not configured — see apps/web/deploy/README.md",
+    zh: "Payment Link 未配置 — 请参考 apps/web/deploy/README.md",
+  },
+  "premium.redirect_notice": { en: "Redirecting to Stripe…", zh: "正在跳转至 Stripe…" },
+  "premium.cb.success": { en: "Subscription activated (stub)", zh: "已激活订阅（演示）" },
+  "premium.cb.invalid": {
+    en: "Checkout completion could not be confirmed — tier unchanged",
+    zh: "无法确认结账完成 — 等级未变更",
+  },
+  "premium.cb.cancel": { en: "Checkout cancelled — tier unchanged", zh: "结账已取消 — 等级未变更" },
+  "premium.cb.redirect_notice": { en: "Returning to Premium settings…", zh: "正在返回高级版设置…" },
+  "premium.tier.free": { en: "Free", zh: "免费版" },
+  "premium.tier.premium_stub": { en: "Premium (stub)", zh: "高级版（演示）" },
+  "premium.tier.label": { en: "Current tier:", zh: "当前等级：" },
 
   // Smart Lists
   "smartLists.defaultLists": { en: "Default lists", zh: "默认清单" },
