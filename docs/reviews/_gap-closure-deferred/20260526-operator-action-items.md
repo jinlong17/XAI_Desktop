@@ -10,9 +10,30 @@
 | Category | Status | Who | When |
 |---|---|---|---|
 | 1. Pre-existing apps/web lint warnings | ✅ **DONE** 2026-05-26 commit `2b4f6b4` | Claude session | — |
-| 2. Cross-vendor Codex cold-read (9 rows) | ⏳ PENDING | Operator + Codex session | Within 24h of #9 SHIPPED (2026-05-26) |
+| 2. Cross-vendor Codex cold-read (9 rows) | ✅ **DONE** 2026-05-26 (PASS #2/#3/#5/#6; FINDINGS #4/#7/#8/#9 resolved in 5 fix commits — see Category 2 §"Results" below) | Operator (Codex audit) + Claude session (fixes) | — |
 | 3. Manual browser smoke matrix | ⏳ PENDING | Operator + real browsers | Before next `xai-web-deploy-cloudflare` ship |
 | 4. v1 documented limitations | 📋 ACKNOWLEDGED | Future P1 work | When P1 backend available |
+
+## Category 2 — Codex cross-vendor cold-read RESULTS (2026-05-26)
+
+Operator ran 4 parallel Codex agents for the 9 rows. Verdicts:
+
+| Row | Codex verdict | Disposition |
+|---|---|---|
+| #2 ai-chat-real-llm-adapter | PASS | No findings |
+| #3 cmdk-search | PASS | No findings |
+| #4 calendar-week-day-views | FINDINGS (DST bug) | ✅ Fixed in commit `8798e42` — `placeEventBlocks.startRow` now applies `hourToRow(..., shift)` for DST; 2 regression tests added (AC-PLACE-11 spring-forward; AC-PLACE-12 normal-day guard); 199/199 tests pass |
+| #5 dashboard-add-widget-picker | PASS | No findings |
+| #6 board-filter-share-map | PASS | No findings |
+| #7 settings-integrations-3rd-party | FINDINGS (OAuth URL leakage) | ✅ Fixed in commits `040216c` + `22fb91f` — `scrubOAuthQuery()` (raw `history.replaceState`) immediately scrubs `code`/`state` from URL after consume on all 4 callback branches (success/error/missing-state/invalid-state); avoids react-router 7 + jsdom + undici 6 AbortSignal interaction; 239/239 + 116/116 tests pass |
+| #8 settings-premium-stripe | FINDINGS (CSP allowlist) | ✅ Fixed in commit `2cc5d6f` — removed all 3 Stripe hostnames from `connect-src` (`js.stripe.com` / `checkout.stripe.com` / `buy.stripe.com`); pure redirect mode needs ZERO Stripe entries (page nav governed by navigate-to / form-action / default-src). CSP4 test inverted to assert ABSENCE. 116/116 web tests pass; CSP attack surface tightened. |
+| #9 settings-account-delete-wire | FINDINGS (guard scope mismatch) | ✅ Fixed in commit `062c9f8` — docstring clarified DEL-WILDCARD-GUARD scope is RUNTIME source only (excludes `__tests__/`, `vitest.setup*`, `*.test.{ts,tsx}`). Guard's INTENT was always runtime-only; test cleanup in JSDOM is canonical isolation. No code change; pure documentation. Test cleanup deemed safe by construction (sandboxed JSDOM, no real-user data risk). |
+
+**Net:** 4 PASS + 4 FINDINGS-RESOLVED → all 9 rows now have cross-vendor sign-off.
+
+**Verification:** all 5 fix commits land in commit range `1c021a1..062c9f8` on origin/main; commit messages cite the specific finding being addressed for future audit.
+
+
 
 ---
 
