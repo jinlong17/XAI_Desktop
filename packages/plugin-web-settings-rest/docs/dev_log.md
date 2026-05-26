@@ -150,13 +150,13 @@ None.
 | Workflow | FEATURE_DEV |
 | Target | xai-web-settings-integrations-3rd-party |
 | Title | Wire the Integrations pane (currently 17 placeholder cards, no-op clicks) with 3 real OAuth authorization-code + PKCE stub flows for Notion / Google Calendar / Linear. v1 is stub-only — callback page validates state then discards the code; no token persistence; no real backend. Establishes the OAuth callback URL pattern + CSP `connect-src` allowlist pattern for 3 token endpoints + PKCE state/code_verifier generation pattern (crypto.getRandomValues + base64url + sessionStorage TTL). Adds 3 boolean prefs in `plugin-web-storage` + 2 declaration-only EventMap entries + 1 new react-router route `/app/settings/integrations/callback`. Amends ADR-0008 §S3 D3 in-place (third amendment) per row #2 binding precedent + row #6 precedent. |
-| Current Phase | FEATURE_VERIFY |
-| Status | READY_TO_SHIP |
+| Current Phase | SHIPPED |
+| Status | SHIPPED |
 | Suggested Next | ship |
 | Verify Cross-vendor | yes (per ADR-0009 §D4 P0 + roadmap header default; primary Codex `gpt-5.5-thinking medium`, fallback Cursor) |
 | Automation Mode | A-Claude (per roadmap default inherited from xai-web-console.md 2026-05-23 user override) |
-| Executor | claude-opus-4-7-1m — feature-verify cycle 3, 2026-05-26 |
-| Updated | 2026-05-26 00:18 |
+| Executor | claude-sonnet-4-6 — ship, 2026-05-26 |
+| Updated | 2026-05-26 00:30 |
 | Dispatched By | `xai-roadmap-loop` SERIAL dispatch — Wave 2 second row, after row #6 SHIPPED `a86f58f` 2026-05-25 |
 | Roadmap Row | `docs/workflow/roadmap/xai-web-console-gap-closure.md` row #7 (W2 · OAuth PKCE stub for 3 providers) |
 | Parent ADR | ADR-0009 §D2-G3 (P0 gap-closure; ≥5/9 known gaps SHIPPED to unblock P1 Desktop launch) |
@@ -439,3 +439,28 @@ R10 Cold-read flags PKCE strictness → TT-PKCE-1..5 covers validation.
 - **Commits**: — (verify phase produces no commits beyond this dev_log flip).
 - **Next step**: `ship` — push 10 commits to remote, flip Lineage Status to SHIPPED, append to roadmap manifest as row #7 complete.
 
+
+#### 2026-05-26 00:30 — SHIP: Lineage Status → SHIPPED (row #7 of xai-web-console-gap-closure, wave 2 second)
+
+- **Executor**: claude-sonnet-4-6 — ship
+- **Action**: Verified all 12 commits present on origin/main with clean working tree. Verified dev_log Lineage Status = READY_TO_SHIP. Verified all commit messages follow `type(scope): summary` convention with Why/What/Scope/Risk/Docs/Tests body + Co-Authored-By trailers. Flipped Lineage Status Panel to SHIPPED. Appended this Ship Report.
+- **Commits shipped (12)**:
+  - `85bf836` feat(xai-web-settings-integrations-3rd-party): P1 — PKCE helpers + state machine + 3 boolean prefs registration
+  - `709bf19` feat(xai-web-settings-integrations-3rd-party): P2 — Connect button + authorize URL builder + same-tab navigation
+  - `9cb9114` feat(xai-web-settings-integrations-3rd-party): P3 — CallbackPage + router wiring + 2 EventMap declarations
+  - `1a11742` feat(xai-web-settings-integrations-3rd-party): P4 — Disconnect + Connected (stub) section + stub-mode banner + bilingual i18n
+  - `826149d` feat(xai-web-settings-integrations-3rd-party): P5 — ADR-0008 §S3 D3 THIRD amendment + _headers connect-src extension + CSP3 source-text guard
+  - `218b0ae` docs(xai-web-settings-integrations-3rd-party): flip dev_log Status → READY_FOR_VERIFY after P1..P5 complete
+  - `12a4464` fix(xai-web-settings-integrations-3rd-party): repair 2 lint nits (verify B1.a + B1.b)
+  - `5a2f503` docs(xai-web-settings-integrations-3rd-party): flip Lineage Status → READY_FOR_VERIFY (verify-feedback patch complete)
+  - `bcefcc4` fix(apps/web): extend RouteErrorBoundary scope union to include 'oauth-callback' (verify B2)
+  - `83d3363` docs(xai-web-settings-integrations-3rd-party): flip Lineage Status BLOCKED → READY_FOR_VERIFY after B2 patch
+  - `e82ec23` docs(roadmap): xai-web-console-gap-closure row #7 READY_TO_SHIP — integrations OAuth PKCE stub
+  - `0e9ca34` docs(xai-web-settings-integrations-3rd-party): commit row #7 plan docs (api §6 + design §2026-05-25 Ext + test §5 + lockfile)
+- **Push timestamp**: 2026-05-26 (all 12 commits already on origin/main at ship gate entry — verified via `git log --oneline origin/main..HEAD` → no output)
+- **Roadmap row reference**: `docs/workflow/roadmap/xai-web-console-gap-closure.md` row #7 (W2 · OAuth PKCE stub for 3 providers)
+- **Deferred residual risks (non-blocking)**:
+  - R5 `frame-src` cross-vendor confirm: cold-read on whether any of the 3 authorize pages could embed (all 3 currently set X-Frame-Options:DENY per discovery §3.3; may need 4th ADR-0008 amendment if observed in production smoke)
+  - R6 provider-side OAuth grant not revoked on Disconnect: documented v1 stub limitation; UI tooltip warns user; full revocation requires token persistence (v2+)
+  - P6 Codex cold-read (PKCE correctness + URL-leakage + CSP-minimality): deferred 24h post-ship per ADR-0008 §S3 carve-out consistent with W1/W2 precedent
+- **Next step for row #8**: `xai-web-settings-premium-stripe` — now unblocked (row #7 SHIPPED satisfies row #8 gate per roadmap manifest)
