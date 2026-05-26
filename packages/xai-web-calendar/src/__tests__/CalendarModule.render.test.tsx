@@ -90,6 +90,18 @@ describe("CalendarModule render", () => {
     expect(document.querySelectorAll(".cal-day").length).toBeGreaterThan(0);
   });
 
+  it("AC-TOKENS-EXT-3: .cal-coming-soon class is never rendered (ComingSoonPanel deleted in P4)", () => {
+    render(<CalendarModule lang="en" />);
+    expect(document.querySelector(".cal-coming-soon")).toBeNull();
+    const tabs = screen.getAllByRole("tab");
+    act(() => { tabs[0]?.click(); }); // Day
+    expect(document.querySelector(".cal-coming-soon")).toBeNull();
+    act(() => { tabs[1]?.click(); }); // Week
+    expect(document.querySelector(".cal-coming-soon")).toBeNull();
+    act(() => { tabs[2]?.click(); }); // Month
+    expect(document.querySelector(".cal-coming-soon")).toBeNull();
+  });
+
   it("AC-TODAY-3: DST boundary — UTC today still pinned (Mar 8 2026 spring-forward)", () => {
     // Re-mock to a DST boundary date.
     vi.setSystemTime(new Date(Date.UTC(2026, 2, 8, 12, 0, 0))); // Mar 8 2026 UTC

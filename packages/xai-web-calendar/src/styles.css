@@ -375,20 +375,6 @@
   background: var(--accent);
 }
 
-/* ---------- Coming-soon panel ---------- */
-.cal-coming-soon {
-  flex: 1;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color: var(--text-3);
-  font-size: var(--fs-md);
-  padding: var(--s-6, 24px);
-}
-.cal-coming-soon p {
-  margin: 0;
-}
-
 /* ---------- Banner ---------- */
 .cal-banner {
   display: flex;
