@@ -21,9 +21,17 @@ export {
   requestPasswordReset,
   signInWithEmail,
   signUpWithEmail,
-  startOAuthLogin
+  startOAuthLogin,
+  // Account delete (extension 2026-05-26 — gap-closure row #9)
+  deleteAccount,
+  AccountDeleteError,
 } from "./auth-actions";
-export type { StringStorage } from "./auth-actions";
+export type {
+  StringStorage,
+  // Account delete types (extension 2026-05-26 — gap-closure row #9)
+  AccountDeleteErrorKind,
+  DeleteAccountOptions,
+} from "./auth-actions";
 
 export { AuthCallbackError, handleAuthCallback } from "./callback";
 export type { HandleAuthCallbackOptions, HandleAuthCallbackResult } from "./callback";
