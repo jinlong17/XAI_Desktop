@@ -150,13 +150,13 @@ None.
 | Workflow | FEATURE_DEV |
 | Target | xai-web-settings-integrations-3rd-party |
 | Title | Wire the Integrations pane (currently 17 placeholder cards, no-op clicks) with 3 real OAuth authorization-code + PKCE stub flows for Notion / Google Calendar / Linear. v1 is stub-only — callback page validates state then discards the code; no token persistence; no real backend. Establishes the OAuth callback URL pattern + CSP `connect-src` allowlist pattern for 3 token endpoints + PKCE state/code_verifier generation pattern (crypto.getRandomValues + base64url + sessionStorage TTL). Adds 3 boolean prefs in `plugin-web-storage` + 2 declaration-only EventMap entries + 1 new react-router route `/app/settings/integrations/callback`. Amends ADR-0008 §S3 D3 in-place (third amendment) per row #2 binding precedent + row #6 precedent. |
-| Current Phase | FEATURE_VERIFY |
+| Current Phase | FEATURE_BUILD |
 | Status | READY_FOR_VERIFY |
 | Suggested Next | feature-verify |
 | Verify Cross-vendor | yes (per ADR-0009 §D4 P0 + roadmap header default; primary Codex `gpt-5.5-thinking medium`, fallback Cursor) |
 | Automation Mode | A-Claude (per roadmap default inherited from xai-web-console.md 2026-05-23 user override) |
-| Executor | claude-sonnet-4-6 — feature-build verify-feedback patch, 2026-05-26 |
-| Updated | 2026-05-26 |
+| Executor | claude-sonnet-4-6 — feature-build verify-feedback patch cycle 2, 2026-05-26 |
+| Updated | 2026-05-26 00:15 |
 | Dispatched By | `xai-roadmap-loop` SERIAL dispatch — Wave 2 second row, after row #6 SHIPPED `a86f58f` 2026-05-25 |
 | Roadmap Row | `docs/workflow/roadmap/xai-web-console-gap-closure.md` row #7 (W2 · OAuth PKCE stub for 3 providers) |
 | Parent ADR | ADR-0009 §D2-G3 (P0 gap-closure; ≥5/9 known gaps SHIPPED to unblock P1 Desktop launch) |
@@ -377,4 +377,45 @@ R10 Cold-read flags PKCE strictness → TT-PKCE-1..5 covers validation.
 - **Commits**: `12a4464` fix(xai-web-settings-integrations-3rd-party): repair 2 lint nits (verify B1.a unused pending + B1.b unused WIRED_PROVIDER_CARD_IDS)
 - **Lineage Status**: READY_FOR_VERIFY
 - **Next step**: `feature-verify` — re-run independent verification; lint --max-warnings 0 now exits 0.
+
+#### 2026-05-26 — Extension-FEATURE_VERIFY cycle 2: verdict BLOCKED (web check-types)
+
+- **Executor**: Claude Opus 4.7 (1M context) — feature-verify (re-verify cycle 2 after B1.a + B1.b patch)
+- **Action**: Re-ran the 7 gates supplied by the cycle-2 dispatch against the 8 commits (85bf836 P1, 709bf19 P2, 9cb9114 P3, 1a11742 P4, 826149d P5, 218b0ae chore, 12a4464 lint patch, 5a2f503 docs flip).
+  - **Gate 1 B1.a + B1.b re-check (lint --max-warnings 0)**: PASS. `pnpm --filter @repo/plugin-web-settings-rest lint --max-warnings 0` → exit 0, 0 warnings. `git show 12a4464` confirms exactly 2 source files touched: oauthState.test.ts (-`const pending =` + side-effect comment) + integrationsPane.tsx (-`WIRED_PROVIDER_CARD_IDS` constant). 3 lines net change, no logic drift.
+  - **Gate 2 Test re-run**: PASS. plugin-web-settings-rest 154/154; plugin-web-storage 88/88 (no regression); core 8/8; web 111/111. Total 361/361.
+  - **Gate 3 check-types**:
+    - `pnpm --filter @repo/plugin-web-settings-rest check-types` → "None of the selected packages has a check-types script" (no script defined, treated as N/A).
+    - **`pnpm --filter @repo/web check-types` → FAIL (exit 2)** with `src/routes/router.tsx(54,47): error TS2322: Type '"oauth-callback"' is not assignable to type '"module" | "app" | "auth" | "root"'.` Confirmed pre-row-7 baseline (commit a86f58f checkout of router.tsx) yields exit 0 → this is a row #7 regression introduced by Extension-P3 commit 9cb9114, not pre-existing.
+  - **Gate 4 Build**: `pnpm --filter @repo/web build` → SUCCESS (Vite/esbuild transform doesn't enforce TS strict, so the issue was masked at build time but is real for the repo-wide `turbo check-types` gate).
+  - **Gate 5 Cycle-1 PASSING gates spot-check**: All preserved.
+    - PKCE RFC 7636 §B.1 vector test (PK5) still passes inside the 154/154 result.
+    - CSP3 source-text guard passes inside web 111/111 (csp.test.ts shows 3 tests passing).
+    - no-Math.random + no-localStorage guards in no-math-random.test.ts (7 tests) pass.
+    - HC1-HC10 remain held: 3 providers, PKCE S256, stub-only, CSP minimally extended, Disconnect functional, 3 prefs registered, append-only dev_log, sessionStorage + TTL, no Math.random, no localStorage for code_verifier.
+  - **Gate 6 Patch hygiene**: 12a4464 touches exactly 2 production files + 0 dev_log; 5a2f503 touches dev_log only. Commit messages format-compliant (Why / What / Scope / Risk / Docs / Tests + Co-Authored-By). No scope creep within the patch itself.
+- **Findings — BLOCKER (1, NEW)**:
+  - **B2 (web check-types regression — INTRODUCED BY EXTENSION-P3 commit 9cb9114, MASKED IN CYCLE 1)**: `pnpm --filter @repo/web check-types` exits 2 with TS2322 at `apps/web/src/routes/router.tsx:54` — the `RouteErrorBoundary` `scope` prop is typed `"root" | "auth" | "app" | "module"` (`apps/web/src/routes/RouteErrorBoundary.tsx:6`) and Extension-P3 passed `scope="oauth-callback"` without extending the union. The pre-row-7 baseline (a86f58f checkout of router.tsx) confirms exit 0, so this is a row-#7-introduced regression, not a pre-existing condition. Cycle 1 missed it because the verify dispatch did not list web check-types as an explicit gate; cycle 2's dispatch added it (Gate 4).
+- **Fix recommendation** (for feature-build / feature-auto-build):
+  - Extend the union literal at `apps/web/src/routes/RouteErrorBoundary.tsx:6` from `"root" | "auth" | "app" | "module"` to `"root" | "auth" | "app" | "module" | "oauth-callback"` (single-line change).
+  - Optional: add an explicit boundary scope test inside `apps/web/src/__tests__/` so future strict-type regressions on this surface are caught by `pnpm test` rather than only `check-types`.
+  - Re-submit feature-verify after re-running both `pnpm --filter @repo/web check-types` (must exit 0) and the full 361/361 test suite.
+- **Tests**: as documented above — 361/361 pass, lint exit 0, web build SUCCESS, web check-types FAIL (B2).
+- **Commits**: — (verify phase produces no commits).
+- **Next step**: `feature-build` (or `feature-auto-build` in loop mode) to apply the 1-line type-union extension for B2, then re-submit feature-verify cycle 3.
+
+#### 2026-05-26 00:15 — Extension-VERIFY-FEEDBACK-PATCH cycle 2: repair TS2322 type regression → READY_FOR_VERIFY
+
+- **Executor**: claude-sonnet-4-6 — feature-build (verify-feedback patch cycle 2, `xai-roadmap-loop` SERIAL row #7)
+- **Action**: Applied 1-line additive type fix to clear the B2 blocker reported by feature-verify cycle 2:
+  - **B2** (`RouteErrorBoundary.tsx:6`): Extended `scope` prop union from `"root" | "auth" | "app" | "module"` to `"root" | "auth" | "app" | "module" | "oauth-callback"`. The component uses `scope` only for display (`<h1>Route Error ({scope})</h1>`) and as a label argument to `reportRouteError(scope, error)` — no conditional branching exists, so no branch entry was needed. Pure additive type widening; zero runtime behavior change.
+  - Root cause: Extension-P3 commit 9cb9114 added `scope="oauth-callback"` to the router.tsx RouteErrorBoundary usage without extending the interface. The regression was masked at build time (Vite/esbuild does not enforce TS strict) and by cycle-1 verify not listing `check-types` as an explicit gate; cycle-2 verify caught it.
+- **Tests**:
+  - `pnpm --filter @repo/web check-types` → exit 0 (was exit 2 with TS2322 before fix)
+  - `pnpm --filter @repo/web test` → 111/111 PASS (no regression)
+  - `pnpm --filter @repo/web build` → SUCCEEDS
+  - `pnpm --filter @repo/plugin-web-settings-rest lint --max-warnings 0` → exit 0 (no regression from cycle-1 patch)
+- **Commits**: `bcefcc4` fix(apps/web): extend RouteErrorBoundary scope union to include 'oauth-callback' (verify B2 for row #7)
+- **Lineage Status**: READY_FOR_VERIFY
+- **Next step**: `feature-verify` cycle 3 — re-run independent verification with `check-types` gate confirmed passing.
 
