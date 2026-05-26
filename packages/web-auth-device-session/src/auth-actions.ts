@@ -220,15 +220,20 @@ export async function deleteAccount(
   let status: number | undefined;
   let invokeError: unknown;
 
+  /** Typed shape of Supabase FunctionsResponse for the account-delete edge function. */
+  interface AccountDeleteInvokeResult {
+    error?: { status?: number; message?: string } | null;
+    data?: unknown;
+    status?: number;
+  }
+
   try {
-    const result = await client.functions.invoke("account-delete", {
+    const result: AccountDeleteInvokeResult = await client.functions.invoke("account-delete", {
       method: "POST",
     });
-    status = (result as { error?: { status?: number }; data?: unknown }).error?.status
-      ?? (typeof (result as Record<string, unknown>).status === "number"
-        ? (result as Record<string, unknown>).status as number
-        : undefined);
-    invokeError = (result as { error?: unknown }).error ?? null;
+    status = result.error?.status
+      ?? (typeof result.status === "number" ? result.status : undefined);
+    invokeError = result.error ?? null;
   } catch (err) {
     throw new AccountDeleteError("network", "Network error during account-delete invoke", err);
   }
