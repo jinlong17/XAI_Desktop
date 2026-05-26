@@ -12,7 +12,7 @@
  */
 
 import type { CalEvent } from "./sampleEvents.js";
-import { parseHHMM, rowsForBlock, dstHoursForDay } from "./timeGridMath.js";
+import { parseHHMM, rowsForBlock, dstHoursForDay, hourToRow } from "./timeGridMath.js";
 
 /** A positioned event block for rendering in the time grid. */
 export interface EventBlock {
@@ -62,10 +62,15 @@ export function placeEventBlocks(events: CalEvent[], dateKey: string): EventBloc
   if (timedEvents.length === 0) return result;
 
   // Sort timed events by start time.
+  // CODEX FINDING #4 (2026-05-26): startRow MUST also apply DST shift via
+  // `hourToRow(..., shift)` — previously used inline arithmetic that ignored
+  // `shift`, causing spring-forward day events at >= 03:00 to render one row
+  // too low. `rowsForBlock` already accepts `shift`, but startRow was the
+  // missing half.
   const sorted = timedEvents
     .map((ev) => {
       const parsed = parseHHMM(ev.time!);
-      const startRow = parsed ? parsed.hours + parsed.minutes / 60 : 0;
+      const startRow = parsed ? hourToRow(parsed.hours, parsed.minutes, shift) : 0;
       const rowSpan = rowsForBlock(ev.time!, (ev as CalEvent & { endTime?: string }).endTime, shift);
       return { ev, startRow, rowSpan };
     })

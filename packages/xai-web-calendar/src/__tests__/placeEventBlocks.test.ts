@@ -107,4 +107,27 @@ describe("placeEventBlocks", () => {
     expect(placeEventBlocks(null as unknown as CalEvent[], DATE)).toEqual([]);
     expect(placeEventBlocks(undefined as unknown as CalEvent[], DATE)).toEqual([]);
   });
+
+  it("AC-PLACE-11 (codex finding #4): startRow applies DST spring-forward shift — 2026-03-08 14:00 event renders at row 13 (not 14)", () => {
+    // Spring-forward in US/2026: Mar 8, 2026 02:00 → 03:00 (skipping 02:00..02:59).
+    // Per timeGridMath.hourToRow: rows >= 3 shift down by 1 on spring-forward days.
+    // A 14:00 event should render at row 13.0 (14 - 1), NOT row 14.0.
+    // Pre-fix (codex finding #4): startRow used inline `hours + minutes/60` ignoring DST,
+    // so this would have asserted 14.0 incorrectly.
+    const SPRING_FORWARD = "2026-03-08";
+    const events: CalEvent[] = [
+      { c: "mint", t: { en: "Afternoon", zh: "下午" }, time: "14:00", endTime: "15:00" },
+    ];
+    const blocks = placeEventBlocks(events, SPRING_FORWARD).filter((b) => !b.allDay);
+    expect(blocks[0]?.startRow).toBeCloseTo(13.0);
+  });
+
+  it("AC-PLACE-12 (codex finding #4): startRow on normal day unchanged — 2026-05-22 14:00 stays at row 14", () => {
+    // Regression guard: non-DST days must NOT shift.
+    const events: CalEvent[] = [
+      { c: "mint", t: { en: "Afternoon", zh: "下午" }, time: "14:00", endTime: "15:00" },
+    ];
+    const blocks = placeEventBlocks(events, DATE).filter((b) => !b.allDay);
+    expect(blocks[0]?.startRow).toBeCloseTo(14.0);
+  });
 });
