@@ -11,7 +11,7 @@
 |---|---|---|---|
 | 1. Pre-existing apps/web lint warnings | ✅ **DONE** 2026-05-26 commit `2b4f6b4` | Claude session | — |
 | 2. Cross-vendor Codex cold-read (9 rows) | ✅ **DONE** 2026-05-26 (PASS #2/#3/#5/#6; FINDINGS #4/#7/#8/#9 resolved in 5 fix commits — see Category 2 §"Results" below) | Operator (Codex audit) + Claude session (fixes) | — |
-| 3. Manual browser smoke matrix | ⏳ PENDING | Operator + real browsers | Before next `xai-web-deploy-cloudflare` ship |
+| 3. Manual browser smoke matrix | ⏳ PENDING — per-row checklist below | Operator + real browsers | Before next `xai-web-deploy-cloudflare` ship AND/OR to unblock ADR-0010 §S4 D5 → Status=Accepted |
 | 4. v1 documented limitations | 📋 ACKNOWLEDGED | Future P1 work | When P1 backend available |
 
 ## Category 2 — Codex cross-vendor cold-read RESULTS (2026-05-26)
@@ -32,6 +32,43 @@ Operator ran 4 parallel Codex agents for the 9 rows. Verdicts:
 **Net:** 4 PASS + 4 FINDINGS-RESOLVED → all 9 rows now have cross-vendor sign-off.
 
 **Verification:** all 5 fix commits land in commit range `1c021a1..062c9f8` on origin/main; commit messages cite the specific finding being addressed for future audit.
+
+---
+
+## Category 3 — Per-Row Smoke Matrix (2026-05-26)
+
+**Purpose:** unblock ADR-0009 §D2 G2 → flip ADR-0010 Status=Accepted → start P1.
+
+**Browser/OS targets:** Chrome 120+ macOS 14 · Safari 17+ macOS 14 · Firefox 121+ macOS 14 · Safari 17+ iOS 17 (mandatory) · Chrome 120+ Windows 11 (optional/future)
+
+**Acceptance:** each row must have at least PASS verdicts across all 4 mandatory targets (24-hour carve-out per ADR-0008 §S3); FAIL means file a bug-fix row.
+
+**Existing scaffolds (3 rows have files):**
+- `docs/reviews/xai-web-cmdk-search/20260525-cross-vendor-smoke.md` (row #3 gap-closure)
+- `docs/reviews/xai-web-ai-chat/20260523-cross-vendor-smoke.md` (covers row #2 extension via parent)
+- `docs/reviews/xai-web-dashboard-grid/20260524-cross-vendor-smoke.md` (covers row #5 extension via parent)
+
+**Missing scaffolds (6 rows need new files OR can be merged into the existing parent's smoke):**
+
+| # | Slug | Recommended smoke file path | Key scenarios per row |
+|---|---|---|---|
+| #1 | xai-web-pomodoro-counters-test-fix | N/A — bugfix only, no new UI | Run pomodoro feature smoke from parent `docs/reviews/xai-web-pomodoro/` (if scaffold exists) — verify today counters update after focus session |
+| #4 | xai-web-calendar-week-day-views | `docs/reviews/xai-web-calendar-week-day-views/20260526-cross-vendor-smoke.md` | (a) toggle Month↔Week↔Day on every browser; (b) DST spring-forward day (2026-03-08) render correctness (codex finding #4 was code-fixed but real-browser repro pending); (c) multi-hour event blocks render continuous; (d) active-date preservation across toggle; (e) `xai_calendar_view` persistence round-trip; (f) iOS touch interactions on hour rows |
+| #6 | xai-web-board-filter-share-map | `docs/reviews/xai-web-board-filter-share-map/20260526-cross-vendor-smoke.md` | (a) FilterPopover open/close + label/member/due filter apply across all 6 views; (b) ShareModal open + clipboard copy works (Safari has known clipboard restrictions); (c) Map view loads Leaflet lazy-chunk only on Map tab click + OSM tiles render + pins clickable; (d) Empty location → empty-state message; (e) bundle network panel shows Leaflet chunk loaded only once after first Map view |
+| #7 | xai-web-settings-integrations-3rd-party | `docs/reviews/xai-web-settings-integrations-3rd-party/20260526-cross-vendor-smoke.md` | (a) Connect Notion/GCal/Linear opens authorize URL in same tab; (b) Callback URL `?code=&state=` immediately scrubbed (codex finding #2 fix) — verify via DevTools URL bar within 100ms of route mount; (c) Banner shows success/error/invalid; (d) Disconnect clears local state; (e) sessionStorage cleared post-callback; (f) Safari ITP doesn't break sessionStorage TTL; (g) iOS in-app browser handling |
+| #8 | xai-web-settings-premium-stripe | `docs/reviews/xai-web-settings-premium-stripe/20260526-cross-vendor-smoke.md` | (a) Upgrade button navigates to `buy.stripe.com` (test mode link); (b) Browser navigation works WITHOUT CSP `connect-src` allowlist for Stripe (codex finding #3 fix — confirm no CSP violation in DevTools console); (c) Success/cancel redirect routes render; (d) Cancel Subscription clears tier; (e) Disclosure banner non-dismissible across all browsers; (f) PremiumTierBadge in Topbar via render-prop renders correctly |
+| #9 | xai-web-settings-account-delete-wire | `docs/reviews/xai-web-settings-account-delete-wire/20260526-cross-vendor-smoke.md` | (a) 2-step modal opens; (b) Type "delete" (lowercase) → submit disabled; (c) Type "DELETE" → submit enabled; (d) Mock-auth path: localStorage cleared via registry list (NOT wildcard) + IndexedDB clearAll + redirect to `/`; (e) After redirect, reload → auth state clean; (f) Real-auth path tested manually if Supabase Edge Function deployed (otherwise document as deferred to P1); (g) Network failure mid-flow → localStorage NOT cleared |
+
+**Operator workflow per row:**
+1. Open `docs/reviews/<slug>/20260526-cross-vendor-smoke.md` (create from cmdk template if missing).
+2. Walk through 4 mandatory browsers × N scenarios.
+3. Fill PASS / FAIL / N/A in each cell + add notes for FAIL cases.
+4. Commit: `docs(<slug>): cross-vendor smoke matrix evidence for row #N (G2 gate)`.
+5. After all 9 rows have evidence (PASS or filed bug), update ADR-0009 §D2 G2 row → PASS + flip ADR-0010 Status → Accepted per ADR-0010 §S4 D5.
+
+**Time budget:** ~2-4 hours total operator wall-time across all 9 rows on all 4 browsers (most scenarios are visual smoke, not deep functional). Worth doing in one sitting for context retention.
+
+**Fallback:** If FAIL on any FIX row (#4/#7/#8/#9), file a bug-fix row in the gap-closure manifest with `bug-diagnose → bug-fix → bug-verify` cycle. If FAIL on a PASS row (#2/#3/#5/#6), the row is still SHIPPED but accumulates a known-issue note in dev_log.
 
 
 
