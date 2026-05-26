@@ -66,6 +66,7 @@ import { BoardCreator } from "./BoardCreator.js";
 import { StatusOverviewBanner } from "./StatusOverviewBanner.js";
 import { InboxPanel } from "./InboxPanel.js";
 import { PlannerPanel } from "./PlannerPanel.js";
+import { FilterPopover } from "./FilterPopover.js";
 import {
   loadPanelsOrDefault,
   loadInboxOrDefault,
@@ -172,6 +173,7 @@ export function BoardWorkspacesModule({ lang }: BoardWorkspacesModuleProps) {
   const [switcherOpen, setSwitcherOpen] = useState(false);
   const [createOpen, setCreateOpen] = useState(false);
   const [overviewOpen, setOverviewOpen] = useState(false);
+  const [filterOpen, setFilterOpen] = useState(false);
 
   // ---- Kanban-view composer state ---------------------------------------
   const [draftListIdx, setDraftListIdx] = useState<number | null>(null);
@@ -352,9 +354,26 @@ export function BoardWorkspacesModule({ lang }: BoardWorkspacesModuleProps) {
         >
           {STR_HEADER.overview[lang]}
         </button>
-        <button type="button" className="board-icon-btn" disabled>
-          {STR_HEADER.filter[lang]}
-        </button>
+        <div className="filter-btn-wrap" style={{ position: "relative" }}>
+          <button
+            type="button"
+            className={"board-icon-btn" + (filterOpen ? " active" : "")}
+            data-testid="filter-btn"
+            aria-expanded={filterOpen}
+            onClick={() => setFilterOpen((o) => !o)}
+          >
+            {STR_HEADER.filter[lang]}
+          </button>
+          {filterOpen && (
+            <FilterPopover
+              lists={lists}
+              filter={filter}
+              onChange={setFilter}
+              onClose={() => setFilterOpen(false)}
+              lang={lang}
+            />
+          )}
+        </div>
         <button type="button" className="board-icon-btn primary" disabled>
           {STR_HEADER.share[lang]}
         </button>

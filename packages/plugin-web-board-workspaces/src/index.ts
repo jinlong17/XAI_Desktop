@@ -81,6 +81,11 @@ export type { InboxPanelProps } from "./InboxPanel.js";
 export { PlannerPanel, computePlannerSlots } from "./PlannerPanel.js";
 export type { PlannerPanelProps } from "./PlannerPanel.js";
 
+// ---- gap-closure row #6 additions ----------------------------------------
+export { FilterPopover } from "./FilterPopover.js";
+export type { FilterPopoverProps } from "./FilterPopover.js";
+export type { FilterState } from "@repo/plugin-web-board-views";
+
 // ---- Top-level orchestrator ----------------------------------------------
 export { BoardWorkspacesModule } from "./BoardWorkspacesModule.js";
 export type { BoardWorkspacesModuleProps } from "./BoardWorkspacesModule.js";
