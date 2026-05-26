@@ -6,11 +6,30 @@
  * - AC5: modal opens → Step 1 title visible (new: "Delete your account?")
  * - AC6: Cancel on Step 1 does NOT emit event
  * - AC7: Step 1 → Continue emits deprecated event exactly once (new emit-site)
+ *
+ * Mock strategy: useAccountDeleteOrchestrator mocked to avoid WebAuthSessionProvider
+ * context requirement (DeleteAccountConfirmModal uses the orchestrator internally).
  */
 import { describe, it, expect, vi } from "vitest";
 import { render, screen, fireEvent } from "@testing-library/react";
 import { accountPane } from "../panes/accountPane.js";
 import * as eventBus from "@repo/xai-web-event-bus";
+
+// Mock the orchestrator to avoid WebAuthSessionProvider context requirement
+vi.mock("../internal/useAccountDeleteOrchestrator.js", () => ({
+  useAccountDeleteOrchestrator: vi.fn(() => ({
+    state: "idle",
+    error: null,
+    isMockAuth: false,
+    submit: vi.fn(async () => {}),
+    reset: vi.fn(),
+  })),
+  ACCOUNT_LOCAL_WIPE_IDB_NAMES: Object.freeze([
+    "web-encrypted-cache",
+    "xai-web-ai-secrets",
+    "xai-web-auth",
+  ]),
+}));
 
 describe("accountPane", () => {
   it("AC1: render renders without error", () => {

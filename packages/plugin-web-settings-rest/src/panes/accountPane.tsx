@@ -44,12 +44,6 @@ function AccountPaneContent({ lang }: PaneRenderProps): React.ReactElement {
     // Modal itself transitions to Step 2 internally.
   }
 
-  function handleSubmit(): void {
-    // Orchestrator wiring added in P3.
-    // In P1, no-op (UI only).
-    setModalOpen(false);
-  }
-
   return (
     <div className="account-pane">
       <div className="acct-avatar">
@@ -97,7 +91,6 @@ function AccountPaneContent({ lang }: PaneRenderProps): React.ReactElement {
         lang={lang}
         onCancel={handleModalCancel}
         onStep1Continue={handleStep1Continue}
-        onSubmit={handleSubmit}
       />
     </div>
   );

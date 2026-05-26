@@ -33,6 +33,9 @@ export type {
   DeleteAccountOptions,
 } from "./auth-actions";
 
+// IDB wipe helpers (extension 2026-05-26 — gap-closure row #9)
+export { ACCOUNT_LOCAL_WIPE_IDB_NAMES, wipeRegisteredIDB } from "./wipe";
+
 export { AuthCallbackError, handleAuthCallback } from "./callback";
 export type { HandleAuthCallbackOptions, HandleAuthCallbackResult } from "./callback";
 

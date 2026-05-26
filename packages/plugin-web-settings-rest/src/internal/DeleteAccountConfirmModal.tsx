@@ -8,8 +8,9 @@
  * Step 2 — "Type DELETE to confirm": case-sensitive controlled input, no trim/no fold.
  *   Submit disabled unless input === "DELETE" (exact literal, DEL-TYPEMATCH-1..6).
  *
- * The modal accepts onSubmit called after the user types DELETE and clicks submit.
- * The outer accountPane / orchestrator is responsible for side-effects.
+ * P3 wiring: uses useAccountDeleteOrchestrator internally.
+ * isMockAuth derived from the orchestrator (not a prop) — always current.
+ * onSubmit / failureKind / isSubmitting are driven by the orchestrator state machine.
  *
  * API contract: packages/plugin-web-settings-rest/docs/api.md §8.1
  * Review security gates: DEL-TYPEMATCH-1..6, DEL-CANCEL-1..2, DEL-MOCK-BANNER-1..3
@@ -18,6 +19,7 @@
 import * as React from "react";
 import type { Lang } from "@repo/plugin-web-tokens";
 import { localI18n } from "./localI18n.js";
+import { useAccountDeleteOrchestrator } from "./useAccountDeleteOrchestrator.js";
 
 type ModalStep = "step1" | "step2" | "submitting" | "failure";
 
@@ -28,14 +30,6 @@ interface DeleteAccountConfirmModalProps {
   readonly onCancel: () => void;
   /** Called on Step 1 → Continue (emits deprecated event). */
   readonly onStep1Continue: () => void;
-  /** Called when the user completes Step 2 and submits. */
-  readonly onSubmit: () => void;
-  /** If non-null, show failure banner with this error kind. */
-  readonly failureKind?: string | null;
-  /** If true, in-flight submission (Step 2 submit spinner). */
-  readonly isSubmitting?: boolean;
-  /** Whether to render mock-auth disclosure banner (VITE_WEB_AUTH_MODE=mock-authenticated). */
-  readonly isMockAuth?: boolean;
 }
 
 const CONFIRM_LITERAL = "DELETE";
@@ -45,16 +39,29 @@ export function DeleteAccountConfirmModal({
   lang,
   onCancel,
   onStep1Continue,
-  onSubmit,
-  failureKind = null,
-  isSubmitting = false,
-  isMockAuth = false,
 }: DeleteAccountConfirmModalProps): React.ReactElement {
   const dialogRef = React.useRef<HTMLDialogElement>(null);
   const t = localI18n(lang);
 
   const [step, setStep] = React.useState<ModalStep>("step1");
   const [inputValue, setInputValue] = React.useState("");
+
+  const orchestrator = useAccountDeleteOrchestrator();
+  const { isMockAuth } = orchestrator;
+
+  // Sync orchestrator state into local modal step machine.
+  React.useEffect(() => {
+    if (orchestrator.state === "submitting" && step === "step2") {
+      setStep("submitting");
+    } else if (orchestrator.state === "wiping" && step === "submitting") {
+      // Stay in submitting visually — wiping is fast.
+    } else if (orchestrator.state === "failure" && step === "submitting") {
+      setStep("failure");
+    } else if (orchestrator.state === "success") {
+      // Success triggers redirect — nothing to show.
+      setStep("step1");
+    }
+  }, [orchestrator.state, step]);
 
   // Sync dialog open/close with the open prop.
   React.useEffect(() => {
@@ -75,23 +82,13 @@ export function DeleteAccountConfirmModal({
       // Reset step and input when closed.
       setStep("step1");
       setInputValue("");
+      orchestrator.reset();
     }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [open]);
 
-  // Sync step with external submitting / failure states.
-  React.useEffect(() => {
-    if (isSubmitting && step === "step2") {
-      setStep("submitting");
-    }
-  }, [isSubmitting, step]);
-
-  React.useEffect(() => {
-    if (failureKind && step === "submitting") {
-      setStep("failure");
-    }
-  }, [failureKind, step]);
-
   function handleCancel(): void {
+    orchestrator.reset();
     onCancel();
   }
 
@@ -102,6 +99,7 @@ export function DeleteAccountConfirmModal({
   }
 
   function handleRetry(): void {
+    orchestrator.reset();
     setStep("step2");
     setInputValue("");
   }
@@ -113,7 +111,7 @@ export function DeleteAccountConfirmModal({
   function handleDeleteSubmit(e: React.FormEvent): void {
     e.preventDefault();
     if (inputValue !== CONFIRM_LITERAL) return;
-    onSubmit();
+    void orchestrator.submit();
   }
 
   // Clicking the backdrop (dialog itself, not its children) cancels.
@@ -126,8 +124,9 @@ export function DeleteAccountConfirmModal({
     }
   }
 
-  const submitEnabled = inputValue === CONFIRM_LITERAL;
+  const submitEnabled = inputValue === CONFIRM_LITERAL && step === "step2";
 
+  const failureKind = orchestrator.error?.kind;
   const errorKey =
     failureKind === "network" ? "deleteModal.error_network"
     : failureKind === "unauthorized" ? "deleteModal.error_unauthorized"
@@ -173,7 +172,7 @@ export function DeleteAccountConfirmModal({
           </>
         )}
 
-        {/* ---- Step 2 ---- */}
+        {/* ---- Step 2 / Submitting / Failure ---- */}
         {(step === "step2" || step === "submitting" || step === "failure") && (
           <>
             {/* Mock-auth disclosure banner (DEL-MOCK-BANNER-1..3) */}
@@ -253,7 +252,7 @@ export function DeleteAccountConfirmModal({
                   className="btn danger"
                   disabled={!submitEnabled || step === "submitting"}
                   aria-disabled={!submitEnabled || step === "submitting"}
-                  title={!submitEnabled ? t("deleteModal.confirm_disabled_tooltip") : undefined}
+                  title={!submitEnabled && step !== "submitting" ? t("deleteModal.confirm_disabled_tooltip") : undefined}
                   data-testid="dam-delete-submit-btn"
                 >
                   {step === "submitting"

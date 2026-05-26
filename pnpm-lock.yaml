@@ -1132,6 +1132,9 @@ importers:
       '@repo/plugin-web-tokens':
         specifier: workspace:*
         version: link:../plugin-web-tokens
+      '@repo/web-auth-device-session':
+        specifier: workspace:*
+        version: link:../web-auth-device-session
       '@repo/xai-web-event-bus':
         specifier: workspace:*
         version: link:../xai-web-event-bus
