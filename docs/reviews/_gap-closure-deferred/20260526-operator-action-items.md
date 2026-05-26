@@ -41,6 +41,8 @@ Operator ran 4 parallel Codex agents for the 9 rows. Verdicts:
 
 **Codex session update (2026-05-26):** all 6 previously missing row-level smoke scaffold files now exist. The 3 existing scaffold files were audited; #2 and #5 now include gap-closure addenda for the extension work, and #3 now includes iOS Safari coverage. These files are still templates only; no real-browser PASS evidence has been recorded.
 
+**Chrome smoke update (2026-05-26):** local mock-auth Chrome 148 smoke evidence was collected at `docs/reviews/_gap-closure-deferred/20260526-chrome-smoke-results.md`. Result: useful partial evidence, but NOT a G2 pass. Findings include Settings pane deep-link mismatch, CmdK empty search results, Board Map with no pins, and external flows still untested.
+
 **Browser/OS targets:** Chrome 120+ macOS 14 · Safari 17+ macOS 14 · Firefox 121+ macOS 14 · Safari 17+ iOS 17 (mandatory) · Chrome 120+ Windows 11 (optional/future)
 
 **Acceptance:** each row must have at least PASS verdicts across all 4 mandatory targets (24-hour carve-out per ADR-0008 §S3); FAIL means file a bug-fix row.
