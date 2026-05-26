@@ -15,6 +15,7 @@
 - Authority Anchor: ADR-0009 §D2-G3 (P1 launch gate requires ≥5/9 SHIPPED here; ADR uses 5/7 since it was written before this manifest's Gap 6 split; the 5/9 mapping treats 6a/6b/6c as a single "Gap 6" for gate-counting purposes).
 - Interop with xai-web-console.md: all 24 rows there are SHIPPED and treated as deps. No row in this manifest re-implements anything from there.
 - Interop with web-ticktick-parity.md: platform spine rows (web-auth-device-session, web-security-csp-sentry, web-encrypted-indexeddb-cache) are REUSED as deps. PAUSED UI rows on that roadmap are not affected.
+- **🎉 9/9 SHIPPED 2026-05-26 — manifest CLOSED.** Deferred Action Items Queue captured at `docs/reviews/_gap-closure-deferred/20260526-operator-action-items.md`: (1) pre-existing apps/web lint warnings — CLOSED commit 2b4f6b4; (2) cross-vendor Codex cold-read for 9 rows — PENDING operator + Codex session within 24h; (3) manual browser smoke matrix (Chrome / Safari / Firefox / iOS Safari) — PENDING before next xai-web-deploy-cloudflare ship; (4) v1 documented limitations — ACKNOWLEDGED, defer to P1 backend work. P1 Desktop pivot is now UNBLOCKED per ADR-0009 §D2-G3.
 
 ## Features
 
