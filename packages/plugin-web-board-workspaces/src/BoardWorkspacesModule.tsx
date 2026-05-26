@@ -56,8 +56,10 @@ import {
   BoardDashboardView,
   TimelineView,
   MapView,
+  applyFilter,
 } from "@repo/plugin-web-board-views";
-import type { BoardViewId } from "@repo/plugin-web-board-views";
+import type { BoardViewId, FilterState } from "@repo/plugin-web-board-views";
+import { EMPTY_FILTER } from "@repo/plugin-web-board-views";
 
 import { BoardSwitcher } from "./BoardSwitcher.js";
 import { BoardCreator } from "./BoardCreator.js";
@@ -157,6 +159,14 @@ export function BoardWorkspacesModule({ lang }: BoardWorkspacesModuleProps) {
     },
     [boards, activeBoard.id, setRawBoards],
   );
+
+  // ---- Filter state (HC1: render-only; reset on board switch) -----------
+  const [filter, setFilter] = useState<FilterState>(EMPTY_FILTER);
+  useEffect(() => {
+    setFilter(EMPTY_FILTER);
+  }, [activeBoard.id]);
+
+  const filteredLists = applyFilter(lists, filter);
 
   // ---- Switcher / creator / overview state -------------------------------
   const [switcherOpen, setSwitcherOpen] = useState(false);
@@ -365,11 +375,11 @@ export function BoardWorkspacesModule({ lang }: BoardWorkspacesModuleProps) {
               {panels.inbox && (
                 <InboxPanel cards={inboxCards} setCards={setInbox} lang={lang} />
               )}
-              {panels.planner && <PlannerPanel lists={lists} lang={lang} />}
+              {panels.planner && <PlannerPanel lists={filteredLists} lang={lang} />}
               {panels.board && (
                 <div className="board-main-panel">
                   <BoardView
-                    lists={lists}
+                    lists={filteredLists}
                     lang={lang}
                     draftListIdx={draftListIdx}
                     setDraftListIdx={setDraftListIdx}
@@ -403,22 +413,22 @@ export function BoardWorkspacesModule({ lang }: BoardWorkspacesModuleProps) {
             data-active-view={activeView}
           >
             {activeView === "table" && (
-              <TableView lists={lists} lang={lang} updateCard={updateCard} />
+              <TableView lists={filteredLists} lang={lang} updateCard={updateCard} />
             )}
             {activeView === "calendar" && (
               <BoardCalendarView
-                lists={lists}
+                lists={filteredLists}
                 lang={lang}
                 updateCard={updateCard}
               />
             )}
             {activeView === "dashboard" && (
-              <BoardDashboardView lists={lists} lang={lang} />
+              <BoardDashboardView lists={filteredLists} lang={lang} />
             )}
             {activeView === "timeline" && (
-              <TimelineView lists={lists} lang={lang} updateCard={updateCard} />
+              <TimelineView lists={filteredLists} lang={lang} updateCard={updateCard} />
             )}
-            {activeView === "map" && <MapView lang={lang} />}
+            {activeView === "map" && <MapView lists={filteredLists} lang={lang} />}
           </div>
         )}
       </div>

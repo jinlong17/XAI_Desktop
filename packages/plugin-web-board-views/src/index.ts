@@ -42,3 +42,11 @@ export type { MapViewProps } from "./MapView.js";
 
 // ---- Shell slot registration -----------------------------------------------
 export { boardViewsWebModuleRegistration } from "./registration.js";
+
+// ---- Filter helpers (gap-closure row #6) -----------------------------------
+export { applyFilter, EMPTY_FILTER } from "./internal/filter.js";
+export type { FilterState } from "./internal/filter.js";
+
+// ---- Location guard (gap-closure row #6) -----------------------------------
+export { isValidLocation } from "./internal/location.js";
+export type { CardLocation } from "./internal/location.js";
