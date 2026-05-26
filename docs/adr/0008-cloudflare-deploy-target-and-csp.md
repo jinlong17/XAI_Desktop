@@ -7,7 +7,7 @@
 | 决策者 | Jinlong (project owner) + Claude (`feature-plan` → `feature-review`) |
 | Supersedes | none |
 | Superseded by | none |
-| Amendments | 2026-05-25 §S3 D3 + §S6 `_headers` — `connect-src` widened to include `https://api.anthropic.com` (row `xai-web-ai-chat-real-llm-adapter`, gap-closure #2); 2026-05-25 §S3 D3 + §S6 `_headers` — `connect-src` + `img-src` widened to include `https://tile.openstreetmap.org` (row `xai-web-board-filter-share-map`, gap-closure #6, MapView OSM tiles); 2026-05-25 §S3 D3 + §S6 `_headers` — `connect-src` extended with `https://api.notion.com`, `https://oauth2.googleapis.com`, `https://api.linear.app` (row `xai-web-settings-integrations-3rd-party`, gap-closure #7, OAuth token endpoints for Notion/GCal/Linear); `frame-src` NOT widened — all 3 providers set `X-Frame-Options: DENY` on authorize pages |
+| Amendments | 2026-05-25 §S3 D3 + §S6 `_headers` — `connect-src` widened to include `https://api.anthropic.com` (row `xai-web-ai-chat-real-llm-adapter`, gap-closure #2); 2026-05-25 §S3 D3 + §S6 `_headers` — `connect-src` + `img-src` widened to include `https://tile.openstreetmap.org` (row `xai-web-board-filter-share-map`, gap-closure #6, MapView OSM tiles); 2026-05-25 §S3 D3 + §S6 `_headers` — `connect-src` extended with `https://api.notion.com`, `https://oauth2.googleapis.com`, `https://api.linear.app` (row `xai-web-settings-integrations-3rd-party`, gap-closure #7, OAuth token endpoints for Notion/GCal/Linear); `frame-src` NOT widened — all 3 providers set `X-Frame-Options: DENY` on authorize pages; 2026-05-26 §S3 D3 + §S6 `_headers` — `connect-src` extended with `https://js.stripe.com`, `https://checkout.stripe.com`, `https://buy.stripe.com` (row `xai-web-settings-premium-stripe`, gap-closure #8, Stripe Payment Link same-tab redirect); `script-src` + `frame-src` NOT widened — no Stripe.js bundle, no Embedded Checkout iframe in v1 stub |
 
 ---
 
@@ -201,6 +201,40 @@ real implementations and to document the intended network boundary.
 - Source-text guard test: `apps/web/src/__tests__/csp.test.ts` CSP3 case asserts all 3
   token hostnames are present in `_headers`.
 
+**Amendment 2026-05-26 — `connect-src` Stripe Payment Link extension (gap-closure row #8 Premium Stripe stub):**
+
+The Premium pane v1 Stripe Checkout stub redirects the user to a Stripe-hosted
+Payment Link via `window.location.assign(paymentLinkUrl)`. No Stripe.js is bundled
+(enforced by `no-stripe-js-bundle.test.ts` TT-NO-STRIPE-JS source-text guard) and
+no Embedded Checkout iframe is used (no `frame-src` widening). Three Stripe hostnames
+are added to `connect-src` as a defensive allowlist for the Payment Link redirect
+flow and any check-tier network calls that Payment Links may issue.
+
+| Directive | Before | After |
+|---|---|---|
+| `connect-src` | `'self' https://api.anthropic.com https://tile.openstreetmap.org https://api.notion.com https://oauth2.googleapis.com https://api.linear.app` | `'self' https://api.anthropic.com https://tile.openstreetmap.org https://api.notion.com https://oauth2.googleapis.com https://api.linear.app https://js.stripe.com https://checkout.stripe.com https://buy.stripe.com` |
+| `script-src` | `'self'` | **NOT widened** — no Stripe.js bundle (`TT-NO-STRIPE-JS` source-text guard enforces this) |
+| `frame-src` | _(not explicitly declared)_ | **NOT widened** — no Embedded Checkout iframe in v1 stub (same-tab redirect only); `CSP4-FRAME-SRC-CLEAN` asserts `frame-src` absent |
+
+**Security posture (Stripe):**
+- `https://js.stripe.com` — Stripe's canonical script CDN + API hostname; no subdomain wildcard.
+- `https://checkout.stripe.com` — Stripe Checkout redirect endpoint; no subdomain wildcard.
+- `https://buy.stripe.com` — Stripe Payment Link buy-page hostname; no subdomain wildcard.
+- `script-src` NOT widened: Stripe.js (loaded from `https://js.stripe.com/v3/`) MUST NOT be bundled
+  in v1 (enforced by `no-stripe-js-bundle.test.ts`). The Payment Link redirect requires no JS bundle.
+- `frame-src` NOT widened: Embedded Checkout (iframe-based) is explicitly NOT used in v1.
+  `CSP4-FRAME-SRC-CLEAN` source-text guard asserts `frame-src` absent from `_headers`.
+- No `*` wildcard. No `'unsafe-inline'`. No `'unsafe-eval'`.
+- HC3 CRITICAL: No Stripe Secret Key (`sk_test_*` / `sk_live_*`) anywhere in client source.
+  Enforced by `no-stripe-secret-key.test.ts` TT-NO-SK source-text guard.
+- Source-text guard test: `apps/web/src/__tests__/csp.test.ts` CSP4 case asserts all 3 Stripe
+  hostnames are present; CSP4-SCRIPT-SRC-CLEAN + CSP4-FRAME-SRC-CLEAN assert cleanliness.
+
+Same **Extension rule** applies: future rows reaching additional Stripe endpoints MUST follow
+this pattern — amend ADR frontmatter, extend `_headers`, update §S6 snippet, write a csp.test.ts guard.
+
+Operator runbook for `VITE_STRIPE_PAYMENT_LINK_URL` env var rotation: `apps/web/deploy/README.md`.
+
 **Runtime nonce caller audit (P2):** `requireRuntimeNonce` and
 `createNonceStyleElement` are defined in `apps/web/src/security/nonce.ts` and
 called only in test files (`nonce.test.ts`). No production caller in
@@ -361,7 +395,7 @@ Delivered at `apps/web/public/_headers` (Vite copies `public/` verbatim into
 
 ```
 /*
-  Content-Security-Policy: default-src 'self'; script-src 'self'; style-src 'self' https://fonts.googleapis.com; img-src 'self' data: blob: https://tile.openstreetmap.org; connect-src 'self' https://api.anthropic.com https://tile.openstreetmap.org https://api.notion.com https://oauth2.googleapis.com https://api.linear.app; font-src 'self' data: https://fonts.gstatic.com; object-src 'none'; base-uri 'self'; frame-ancestors 'none'; form-action 'self'; upgrade-insecure-requests
+  Content-Security-Policy: default-src 'self'; script-src 'self'; style-src 'self' https://fonts.googleapis.com; img-src 'self' data: blob: https://tile.openstreetmap.org; connect-src 'self' https://api.anthropic.com https://tile.openstreetmap.org https://api.notion.com https://oauth2.googleapis.com https://api.linear.app https://js.stripe.com https://checkout.stripe.com https://buy.stripe.com; font-src 'self' data: https://fonts.gstatic.com; object-src 'none'; base-uri 'self'; frame-ancestors 'none'; form-action 'self'; upgrade-insecure-requests
   Strict-Transport-Security: max-age=63072000; includeSubDomains; preload
   X-Content-Type-Options: nosniff
   X-Frame-Options: DENY
@@ -378,6 +412,10 @@ per gap-closure row #6 MapView OSM tiles — see §S3 D3 Amendment above)_
 _(amended 2026-05-25: `connect-src` extended to include `https://api.notion.com`,
 `https://oauth2.googleapis.com`, `https://api.linear.app` per gap-closure row #7
 Integrations OAuth PKCE stub — see §S3 D3 Amendment above; `frame-src` NOT widened)_
+
+_(amended 2026-05-26: `connect-src` extended to include `https://js.stripe.com`,
+`https://checkout.stripe.com`, `https://buy.stripe.com` per gap-closure row #8
+Premium Stripe stub — see §S3 D3 FOURTH amendment above; `script-src` + `frame-src` NOT widened)_
 
 No `'unsafe-inline'`. No `'unsafe-eval'`. No `*` wildcard.
 

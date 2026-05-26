@@ -3,7 +3,7 @@
  *
  * Extension 2026-05-26 — Premium Pane Stripe Checkout Stub (gap-closure row #8)
  */
-import { describe, it, expect, vi } from "vitest";
+import { describe, it, expect } from "vitest";
 import { renderHook, act } from "@testing-library/react";
 import { usePremiumTier } from "../internal/usePremiumTier.js";
 import { PREMIUM_TIER_TTL_MS } from "../internal/premiumTier.js";

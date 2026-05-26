@@ -8,7 +8,8 @@
     "SENTRY_DEPLOY_ENV",
     "SENTRY_ORG",
     "SENTRY_PROJECT",
-    "SENTRY_RELEASE"
+    "SENTRY_RELEASE",
+    "VITE_STRIPE_PAYMENT_LINK_URL"
   ],
   "tasks": {
     "build": {

@@ -4,6 +4,9 @@
  * CSP1 — `connect-src` includes https://api.anthropic.com (gap-closure #2, amended 2026-05-25)
  * CSP2 — `connect-src` + `img-src` include https://tile.openstreetmap.org (gap-closure #6 MapView, amended 2026-05-25)
  * CSP3 — `connect-src` includes https://api.notion.com AND https://oauth2.googleapis.com AND https://api.linear.app (gap-closure #7 Integrations OAuth stub, amended 2026-05-25)
+ * CSP4 — `connect-src` includes https://js.stripe.com AND https://checkout.stripe.com AND https://buy.stripe.com (gap-closure #8 Premium Stripe stub, amended 2026-05-26)
+ * CSP4-SCRIPT-SRC-CLEAN — `script-src` does NOT include any Stripe CDN URL (no Stripe.js bundle)
+ * CSP4-FRAME-SRC-CLEAN — `frame-src` is NOT present in the CSP (no embedded Checkout iframe)
  *
  * These are the binding precedent guards for wave 1+2+3 CSP rows per
  * ADR-0008 §S3 D3. If any guard fails, the CSP was narrowed without
@@ -12,6 +15,7 @@
  * Test strategy: packages/xai-web-ai-chat/docs/test.md §7.4 CSP1
  *               packages/plugin-web-board-views/docs/test.md §S15.5 CSP2
  *               packages/plugin-web-settings-rest/docs/test.md §5.3 P5 CSP3
+ *               packages/plugin-web-settings-rest/docs/test.md §6.5 P5 CSP4
  */
 import { describe, it, expect } from "vitest";
 import { readFileSync } from "fs";
@@ -86,5 +90,61 @@ describe("CSP source-text guards", () => {
       cspLine,
       "connect-src does not include https://api.linear.app — Linear OAuth token endpoint is blocked; update ADR-0008 §S3 D3 + _headers",
     ).toContain("https://api.linear.app");
+  });
+
+  it("CSP4: connect-src includes Stripe Payment Link hostnames (gap-closure #8 Premium Stripe stub)", () => {
+    const content = readFileSync(HEADERS_PATH, "utf-8");
+    const cspLine = content
+      .split("\n")
+      .find((l) => l.includes("Content-Security-Policy:"));
+    expect(
+      cspLine,
+      "_headers does not contain a Content-Security-Policy directive",
+    ).toBeTruthy();
+    expect(
+      cspLine,
+      "connect-src does not include https://js.stripe.com — Stripe Payment Link connect endpoint is blocked; update ADR-0008 §S3 D3 FOURTH amendment + _headers",
+    ).toContain("https://js.stripe.com");
+    expect(
+      cspLine,
+      "connect-src does not include https://checkout.stripe.com — Stripe Checkout endpoint is blocked; update ADR-0008 §S3 D3 FOURTH amendment + _headers",
+    ).toContain("https://checkout.stripe.com");
+    expect(
+      cspLine,
+      "connect-src does not include https://buy.stripe.com — Stripe Payment Link buy endpoint is blocked; update ADR-0008 §S3 D3 FOURTH amendment + _headers",
+    ).toContain("https://buy.stripe.com");
+  });
+
+  it("CSP4-SCRIPT-SRC-CLEAN: script-src does NOT include any Stripe CDN URL (no Stripe.js bundle)", () => {
+    const content = readFileSync(HEADERS_PATH, "utf-8");
+    const cspLine = content
+      .split("\n")
+      .find((l) => l.includes("Content-Security-Policy:"));
+    expect(
+      cspLine,
+      "_headers does not contain a Content-Security-Policy directive",
+    ).toBeTruthy();
+    // Extract script-src segment
+    const scriptSrcMatch = cspLine?.match(/script-src[^;]*/);
+    expect(
+      scriptSrcMatch?.[0],
+      "script-src must not contain js.stripe.com — Stripe.js MUST NOT be loaded from CDN in v1 stub",
+    ).not.toContain("js.stripe.com");
+  });
+
+  it("CSP4-FRAME-SRC-CLEAN: frame-src is NOT present in the CSP (no embedded Checkout iframe)", () => {
+    const content = readFileSync(HEADERS_PATH, "utf-8");
+    const cspLine = content
+      .split("\n")
+      .find((l) => l.includes("Content-Security-Policy:"));
+    expect(
+      cspLine,
+      "_headers does not contain a Content-Security-Policy directive",
+    ).toBeTruthy();
+    // frame-src must not be present at all — same-tab redirect requires no iframe
+    expect(
+      cspLine,
+      "frame-src must NOT be present in the CSP — embedded Checkout iframe is not used in v1 stub; update ADR-0008 §S3 D3 reasoning if this changes",
+    ).not.toContain("frame-src");
   });
 });
