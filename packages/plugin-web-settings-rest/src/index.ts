@@ -37,6 +37,10 @@ export { applyRestPanesToRegistry } from "./internal/applyRestPanesToRegistry.js
 // Extension 2026-05-25 — OAuth callback page (gap-closure row #7)
 export { CallbackPage } from "./CallbackPage.js";
 
+// Extension 2026-05-26 — Premium Stripe Checkout stub pages (gap-closure row #8)
+export { CheckoutSuccessPage } from "./CheckoutSuccessPage.js";
+export { CheckoutCancelPage } from "./CheckoutCancelPage.js";
+
 // ---- Public types --------------------------------------------------------
 export type {
   SmartListId,

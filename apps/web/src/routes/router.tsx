@@ -9,7 +9,8 @@ import { RouteErrorBoundary } from "./RouteErrorBoundary";
 import { assertUniqueModuleRegistrations, resolveDefaultModulePath } from "./modules/buildModuleRoutes";
 import { webModuleRouteRegistrations } from "./modules/shellRegistrations";
 // Extension 2026-05-25 — OAuth callback page (gap-closure row #7)
-import { CallbackPage } from "@repo/plugin-web-settings-rest";
+// Extension 2026-05-26 — Premium Stripe Checkout stub callback pages (gap-closure row #8)
+import { CallbackPage, CheckoutSuccessPage, CheckoutCancelPage } from "@repo/plugin-web-settings-rest";
 
 assertUniqueModuleRegistrations(webModuleRouteRegistrations);
 const defaultModulePath = resolveDefaultModulePath(webModuleRouteRegistrations);
@@ -52,6 +53,20 @@ export const webHostRouteObjects: RouteObject[] = [
             path: "settings/integrations/callback",
             element: <CallbackPage />,
             errorElement: <RouteErrorBoundary scope="oauth-callback" />,
+          },
+          {
+            // Literal path MUST come before :moduleId/* to win the match.
+            // gap-closure row #8 — Premium Stripe Checkout success callback
+            path: "settings/premium/checkout/success",
+            element: <CheckoutSuccessPage />,
+            errorElement: <RouteErrorBoundary scope="premium-checkout" />,
+          },
+          {
+            // Literal path MUST come before :moduleId/* to win the match.
+            // gap-closure row #8 — Premium Stripe Checkout cancel callback
+            path: "settings/premium/checkout/cancel",
+            element: <CheckoutCancelPage />,
+            errorElement: <RouteErrorBoundary scope="premium-checkout" />,
           },
           {
             path: ":moduleId/*",

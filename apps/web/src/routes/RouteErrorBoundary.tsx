@@ -3,7 +3,7 @@ import { isRouteErrorResponse, useRouteError } from "react-router";
 import { reportRouteError } from "../observability/reporting";
 
 export interface RouteErrorBoundaryProps {
-  scope: "root" | "auth" | "app" | "module" | "oauth-callback";
+  scope: "root" | "auth" | "app" | "module" | "oauth-callback" | "premium-checkout";
 }
 
 function resolveErrorMessage(error: unknown): string {

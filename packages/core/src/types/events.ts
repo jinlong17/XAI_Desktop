@@ -382,4 +382,17 @@ export interface EventMap {
     /** ISO 8601 timestamp of the disconnection event. */
     disconnectedAt: string;
   };
+
+  // Premium Stripe Checkout stub (owner: xai-web-settings-rest gap-closure row #8)
+  // Declaration-only: no consumer in this row.
+  // Pattern precedent: web:settings:integration-connected/disconnected (row #7).
+  // Forward-compat hook for P1 paid-tier feature-gating rows.
+  'web:premium:tier-changed': {
+    /** Previous effective tier before this transition. */
+    previous: 'free' | 'pending' | 'premium_stub';
+    /** New effective tier after this transition. */
+    current: 'free' | 'pending' | 'premium_stub';
+    /** ISO 8601 timestamp at the moment of transition. */
+    changedAt: string;
+  };
 }

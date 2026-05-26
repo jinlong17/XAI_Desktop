@@ -140,4 +140,20 @@ describe("web host router integration", () => {
     expect(app.container).toBeTruthy();
     await unmountApp(app);
   });
+
+  // RR-PREMIUM-1 — gap-closure row #8: Checkout success route resolves
+  it("RR-PREMIUM-1: /app/settings/premium/checkout/success route resolves and renders", async () => {
+    const app = await mountRouter(["/app/settings/premium/checkout/success"]);
+    // Route resolved correctly — the container exists and is mounted.
+    expect(app.container).toBeTruthy();
+    await unmountApp(app);
+  });
+
+  // RR-PREMIUM-2 — gap-closure row #8: Checkout cancel route resolves
+  it("RR-PREMIUM-2: /app/settings/premium/checkout/cancel route resolves and renders", async () => {
+    const app = await mountRouter(["/app/settings/premium/checkout/cancel"]);
+    // Route resolved correctly — the container exists and is mounted.
+    expect(app.container).toBeTruthy();
+    await unmountApp(app);
+  });
 });
