@@ -155,8 +155,8 @@ None.
 | Suggested Next | feature-verify |
 | Verify Cross-vendor | yes (per ADR-0009 §D4 P0 + roadmap header default; primary Codex `gpt-5.5-thinking medium`, fallback Cursor) |
 | Automation Mode | A-Claude (per roadmap default inherited from xai-web-console.md 2026-05-23 user override) |
-| Executor | claude-sonnet-4-6 — feature-auto-build, 2026-05-25 |
-| Updated | 2026-05-25 |
+| Executor | claude-sonnet-4-6 — feature-build verify-feedback patch, 2026-05-26 |
+| Updated | 2026-05-26 |
 | Dispatched By | `xai-roadmap-loop` SERIAL dispatch — Wave 2 second row, after row #6 SHIPPED `a86f58f` 2026-05-25 |
 | Roadmap Row | `docs/workflow/roadmap/xai-web-console-gap-closure.md` row #7 (W2 · OAuth PKCE stub for 3 providers) |
 | Parent ADR | ADR-0009 §D2-G3 (P0 gap-closure; ≥5/9 known gaps SHIPPED to unblock P1 Desktop launch) |
@@ -344,4 +344,37 @@ R10 Cold-read flags PKCE strictness → TT-PKCE-1..5 covers validation.
 - **Tests**: review phase — no test execution
 - **Commits**: — (review phase produces docs only)
 - **Next step**: `feature-auto-build` (per Automation Mode A-Claude + dispatched by `xai-roadmap-loop` SERIAL); will execute P1..P5 sequentially with per-phase commit + stop before feature-verify per workflow contract.
+
+#### 2026-05-26 — Extension-FEATURE_VERIFY: verdict BLOCKED (lint --max-warnings 0)
+
+- **Executor**: Claude Opus 4.7 (1M context) — feature-verify
+- **Action**: Independently verified the 6 commits (85bf836 P1, 709bf19 P2, 9cb9114 P3, 1a11742 P4, 826149d P5, 218b0ae chore) against plan + 10 HCs + test.md §5.4 acceptance criteria.
+  - **Tests re-executed**: plugin-web-settings-rest 154/154 PASS; plugin-web-storage 88/88 PASS; core 8/8 PASS; web 111/111 PASS — total 361/361.
+  - **Build**: `pnpm --filter @repo/web build` SUCCEEDS; `dist/_headers` contains all 3 OAuth token endpoints in connect-src (Notion, oauth2.googleapis.com, Linear) per CSP3 source-text guard.
+  - **HC1-HC10 pass**: 3 providers only (Notion/GCal/Linear); PKCE authorization-code with code_challenge_method=S256 + 32 random bytes via crypto.getRandomValues; stub-only (fetch() never called outside comment; callback discards code); CSP extended for 3 token endpoints, frame-src unchanged with documented X-Frame-Options:DENY decision; Disconnect functional in stub (DB3); 3 boolean prefs registered in plugin-web-storage; append-only dev_log preserved verbatim SHIPPED row #24 panel; sessionStorage TTL only, no localStorage in oauthState.ts (no-localStorage source-text guard PASS); no Math.random in 6 OAuth modules (TT-PKCE-NO-MATH-RANDOM PASS).
+  - **PKCE correctness**: PK5 RFC 7636 §B.1 vector verified (verifier "dBjftJeZ4CVP-mB92K27uhbUJU1p1r_wW1gFWFOEjXk" → challenge "E9Melhoa2OwvFrEMTJguCHaoeK1t8URWbuGJSstw-cM"); code_verifier 43 chars; base64url charset; SHA-256 via crypto.subtle.digest.
+  - **ADR-0008 §S3 D3**: third amendment in-place; frontmatter Amendments row added; §S6 _headers snippet updated; binding-precedent rule preserved.
+  - **EventMap**: 2 declarations present (web:settings:integration-connected + web:settings:integration-disconnected) at packages/core/src/types/events.ts:371/379.
+  - **Router**: settings/integrations/callback child route declared at apps/web/src/routes/router.tsx:52 BEFORE :moduleId/*.
+  - **PLUGIN_MAP**: extension note appended to plugin-web-settings-rest row #126.
+- **Findings — BLOCKERS (2)**:
+  1. **B1 (lint exit 1)**: `pnpm --filter @repo/plugin-web-settings-rest lint --max-warnings 0` FAILS with 2 warnings — violates test.md §5.4 acceptance criterion #1 "lint exits 0 (--max-warnings 0)":
+     - `src/__tests__/oauthState.test.ts:68:11` — `'pending' is assigned a value but never used` (OS7 test: `const pending = await startOAuth("linear")` — pending value never asserted; should either remove the binding or assert on it).
+     - `src/panes/integrationsPane.tsx:67:7` — `'WIRED_PROVIDER_CARD_IDS' is assigned a value but never used` (the constant was declared as a defensive whitelist but the actual filterConnected predicate uses connectedMap[spec.id] directly without consulting WIRED_PROVIDER_CARD_IDS — dead code).
+- **Tests**: as documented above; no fix attempted (verify-only role).
+- **Commits**: — (verify phase produces no commits)
+- **Next step**: `feature-build` (or `feature-auto-build` in loop mode) to remove the 2 unused-vars warnings; recommended fix is the minimal one — drop the `const pending =` binding in OS7 (test still works because the next line reads sessionStorage directly), and remove the unused `WIRED_PROVIDER_CARD_IDS` constant (the filtering is already correctly implemented via connectedMap). Re-submit feature-verify after re-running lint to confirm exit 0.
+
+#### 2026-05-26 — Extension-VERIFY-FEEDBACK-PATCH: repair 2 lint nits → READY_FOR_VERIFY
+
+- **Executor**: claude-sonnet-4-6 — feature-build (verify-feedback patch, `xai-roadmap-loop` SERIAL row #7)
+- **Action**: Applied 2 targeted fixes to clear the B1.a and B1.b lint blockers reported by feature-verify:
+  - **B1.a** (`oauthState.test.ts` OS7): Dropped `const pending =` binding on line 68. OS7's intent is to verify sessionStorage is cleared even on a failed validation; the return value of `startOAuth()` was only needed for its side-effect of writing to sessionStorage. The existing assertion on line 69 reads `sessionStorage.getItem()` directly — no information lost. Added inline comment clarifying the call is for its side-effect only.
+  - **B1.b** (`integrationsPane.tsx`): Removed unused `WIRED_PROVIDER_CARD_IDS` constant (lines 65-67). The constant declared `new Set<IntegrationCardId>(["notion", "gcal", "linear"])` but `filterConnected` already uses `connectedWiredIds` derived from `PROVIDERS.filter((p) => connectedMap[p.id])` — the set constant was pure dead code; filtering logic was and remains correct.
+- **Tests**:
+  - `pnpm --filter @repo/plugin-web-settings-rest lint --max-warnings 0` → exit 0 (0 warnings)
+  - `pnpm --filter @repo/plugin-web-settings-rest test` → 154/154 PASS
+- **Commits**: `12a4464` fix(xai-web-settings-integrations-3rd-party): repair 2 lint nits (verify B1.a unused pending + B1.b unused WIRED_PROVIDER_CARD_IDS)
+- **Lineage Status**: READY_FOR_VERIFY
+- **Next step**: `feature-verify` — re-run independent verification; lint --max-warnings 0 now exits 0.
 
