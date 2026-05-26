@@ -293,3 +293,259 @@ in a future row.
 - ESM imports throughout (`.js` extension on internal imports per
   TypeScript "verbatim module syntax" requirement).
 - Bundled by Vite when consumed in `apps/web`.
+
+---
+
+## 10. 2026-05-25 Extension — Week + Day Views (gap-closure row #4)
+
+> APPEND-ONLY. §1..§9 above describe the SHIPPED v1 public surface and
+> stay byte-identical. §10 records the additive API delta introduced
+> by the `xai-web-console-gap-closure` manifest row #4.
+
+### 10.1 Public exports (additive)
+
+The barrel `src/index.ts` adds:
+
+```ts
+// NEW components (extension)
+export { WeekView } from "./WeekView.js";
+export { DayView } from "./DayView.js";
+export { TimeGrid } from "./TimeGrid.js";
+
+// NEW props types
+export type { WeekViewProps } from "./WeekView.js";
+export type { DayViewProps } from "./DayView.js";
+export type { TimeGridProps } from "./TimeGrid.js";
+
+// NEW helper types (consumed by consumers who want to integrate
+// custom event sources or test against fixed positioning)
+export type { EventBlock } from "./internal/placeEventBlocks.js";
+export type { DstShift } from "./internal/timeGridMath.js";
+
+// NEW value re-export (typed view id for usePref consumers)
+export type { CalendarViewId } from "@repo/plugin-web-storage";
+```
+
+`CalendarModule` props + `calendarSlotRegistration` shape are UNCHANGED.
+`CalEvent` adds one optional field; see §10.2.
+
+### 10.2 `CalEvent` extension (additive optional field)
+
+```ts
+export interface CalEvent {
+  c: CalEventColor;                  // unchanged
+  t: { en: string; zh: string };     // unchanged
+  time?: string;                     // unchanged: "HH:MM" start
+  /** NEW (extension): optional "HH:MM" end time. Missing → 1-hour block default. */
+  endTime?: string;
+}
+```
+
+**Backwards-compatibility contract:**
+
+- All SHIPPED consumers (Month view) ignore `endTime` — Month chip
+  rendering is unchanged.
+- Missing `endTime` is the default; ~63 of 68 SAMPLE_EVENTS entries
+  omit it.
+- 5 SAMPLE_EVENTS entries gain `endTime`: day 7 yoga (19:00 → 20:00),
+  day 8 content marketing (14:15 → 15:30), day 10 wiping windows
+  (14:15 → 16:15), day 22 data analysis (11:00 → 13:00), day 23
+  0-1 product (14:00 → 16:30). These 5 demonstrate multi-hour blocks
+  in Week + Day views.
+- Annotated as a controlled drift: the byte-parity with `i18n.js:509-541`
+  no longer holds for the `time/endTime` field family. AC-FIXTURE-EXT-1
+  asserts the new shape; AC-FIXTURE-1..6 stay as-is for the other fields.
+
+### 10.3 `<WeekView />` props
+
+```ts
+export interface WeekViewProps {
+  /** Active date (YYYY-MM-DD, UTC date key). Week is the 7-day window containing this date. */
+  activeDate: string;
+  /** 0 = Sun-first, 1 = Mon-first. Comes from usePref("xai_pref_week_start", 0). */
+  weekStart: 0 | 1;
+  lang: Lang;
+  t: I18NBundle;
+  /** Event source — defaults to SAMPLE_EVENTS internally if omitted. */
+  events: CalEventsByDay;
+  /** Optional: override "now" for tests (defaults to new Date()). */
+  nowOverride?: Date;
+}
+```
+
+Behaviour:
+- Renders a `cal-week-day-header` with 7 weekday labels (Sun-first or
+  Mon-first per `weekStart`), each labeled with date number.
+- The column containing `activeDate` gets `data-active="true"`.
+- The column containing today's local date (if any) gets the now-line
+  overlay.
+- Hour rows respect DST: spring-forward day shows 23 rows, fall-back
+  shows 25 rows, with a `(DST)` label between the affected rows.
+
+### 10.4 `<DayView />` props
+
+```ts
+export interface DayViewProps {
+  /** Active date (YYYY-MM-DD). Day view always renders this single day. */
+  activeDate: string;
+  lang: Lang;
+  t: I18NBundle;
+  events: CalEventsByDay;
+  nowOverride?: Date;
+}
+```
+
+Behaviour:
+- 1 column × 24 hour rows (or 23/25 on DST days).
+- All-day strip above the scroll area.
+- On mount: `useEffect` sets scroll position to current hour - viewport/2
+  if activeDate === today; else sets to 8 AM workday start.
+
+### 10.5 `<TimeGrid />` props (shared internal-ish; exported for tests + extensibility)
+
+```ts
+export interface TimeGridProps {
+  /** Day buckets to render — Week passes 7, Day passes 1. */
+  days: Array<{ dateKey: string; label: string; isActive: boolean; isToday: boolean }>;
+  /** Event source indexed by day-of-month integer (1..31). */
+  events: CalEventsByDay;
+  /** "now" Date for now-line + scroll-anchor. */
+  now: Date;
+  lang: Lang;
+}
+```
+
+This is the only abstraction-level coupling between Week + Day; both
+views compose it and provide their own day arrays.
+
+### 10.6 New `WebPrefRegistry` entry — `xai_calendar_view`
+
+Added to `packages/plugin-web-storage/src/internal/registry.ts` at
+file-tail:
+
+```ts
+export type CalendarViewId = "month" | "week" | "day";
+
+// ---- Calendar view preference (§S8 — first-consumer xai-web-calendar #4) ---
+// Persist user's last-selected calendar view across reloads. Default "month".
+// Owner xai-web-calendar (first-consumer pattern; matches xai_pref_week_start
+// from the SHIPPED row #12 baseline).
+// proposed: false — canonical xai_calendar_* family per ADR-0007 §S8.
+xai_calendar_view: {
+  key: "xai_calendar_view",
+  codec: "string",
+  default: "month" as CalendarViewId,
+  schemaVersion: 1,
+  owner: "xai-web-calendar",
+  category: "module",
+} satisfies PrefEntry<CalendarViewId>,
+```
+
+Re-exported from `@repo/plugin-web-storage` index barrel. Calendar
+consumes via `const [view, setView] = usePref("xai_calendar_view",
+"month");` directly in `CalendarModule.tsx`. NO new event channel; the
+in-process `usePref` bus re-renders consumers on same-tab change, and
+the standard `storage` event handles cross-tab.
+
+**Category `"module"` (NOT `"pref"`)**: this is a per-module UI state
+restoration key, not a Settings toggle. Matches `xai_clock_style` /
+`xai_active_board` precedent. The `xai_pref_*` family (chassis-reset
+filter) does NOT capture this key.
+
+### 10.7 Event channels
+
+NO new event channels. NO new emit. Listen-only contract preserved:
+
+- `useWebEventListener("web:shell:module-change", …)` — unchanged.
+- AC-EVENT-7 grep test extended to scan the 5 new component files:
+  `WeekView.tsx`, `DayView.tsx`, `TimeGrid.tsx`, `EventBlock.tsx`,
+  `TimeGridAllDayStrip.tsx`. None import `emitWebEvent`.
+
+### 10.8 Deep-link semantics (extension)
+
+When `web:shell:module-change` arrives with `focusDate`:
+
+1. Parse `focusDate` per existing v1 contract (see §2.3).
+2. `setView("month")` — forces Month view (per Frozen Assumption #9).
+3. `setActiveDate(focusDate)` — single source of truth for the date.
+4. `setFocusedFromDeepLink(focusDate)` — preserved for `.cal-day[data-focused]`
+   outline behavior in Month view.
+5. Side effect: `usePref("xai_calendar_view", "month")` writes "month"
+   (because `view` setter is bound to that storage key).
+
+Why view = "month"? The mini-cal contract at `xai-web-event-bus/docs/api.md:197-198`
+specifies "deep-link to a date" with no view hint. Month is the
+context-providing view; users clicking a date in mini-cal want to see
+where that date sits in the month, not a zoomed-in 24-hour grid. The
+extension documents this in api.md §10.8 as the contract.
+
+### 10.9 Idempotency + error semantics (extension)
+
+- **Idempotent view toggle**: clicking the active view tab is a no-op
+  (`view === next` short-circuits). No re-render of `<TimeGrid />`.
+- **Idempotent `activeDate` set**: same dateKey → no setState (React's
+  `Object.is` bail).
+- **Malformed `xai_calendar_view` value**: if localStorage contains a
+  string other than `"month" | "week" | "day"`, `usePref` returns the
+  default `"month"` (registry codec validation). No throw; no warn.
+- **`activeDate` parse error**: defensive default to
+  `MAY_2026_ANCHOR_TODAY = "2026-05-22"` if `parseDateKey` returns
+  null. (Should never happen in practice; activeDate is always set by
+  internal code, never read from external input.)
+- **DST table miss**: if the `dstHoursForDay` table has no entry for
+  a date, default to `{ hours: 24 }`. The 2026 US Pacific transitions
+  are hard-coded; future row extends to Intl.DateTimeFormat-driven
+  detection. AC-DST-1..2 only cover the 2 known 2026 dates.
+
+### 10.10 Performance contract (extension)
+
+- **View toggle**: ≤ 50 ms p95 for `<MonthGrid /> ↔ <WeekView />`
+  swap on the 68+5-event May 2026 fixture. Asserted by PB-EXT-1
+  (100 iterations, retry once if flaky).
+- **`placeEventBlocks`**: O(N log N) where N = events for that day.
+  68 events / 31 days = ~2.2 avg events/day. Worst-case packing is
+  O(N²) for full overlap; bounded by 5 events/day visible cap (from
+  Month view) and ~3 events/day max overlap in fixture.
+- **`weekWindowFor`**: O(1) — 7 string slices.
+- **`hourToRow` / `rowsForBlock`**: O(1) — table lookup + arithmetic.
+- **TimeGrid mount**: ≤ 50 ms with 24 rows × 7 cols × 5 events = 168
+  DOM nodes + event blocks. No virtualization needed.
+
+### 10.11 Accessibility contract (extension)
+
+| Element | a11y attribute |
+|---|---|
+| `<button class="seg" aria-selected={view===id}>` × 3 | unchanged — Month/Week/Day |
+| `.cal-week-day-header > div[role="columnheader"]` | accessible label includes date number |
+| `.cal-day-column[data-active="true"]` | `aria-current="date"` |
+| `.cal-event-block` | accessible name: `${time} ${endTime ?? ""} ${title}` |
+| `.cal-now-line` | `aria-hidden="true"` (decorative) |
+| `.cal-dst-label` | inline text, read as part of the row |
+
+No focus management for v1 (no keyboard arrow navigation across hour
+rows). Add in a future row.
+
+### 10.12 Stability rules (extension)
+
+- Add a new view type (e.g. "year") → extend `CalendarViewId` union →
+  registry inferred type widens automatically → consumers re-compile.
+  Storage codec is unchanged (still `"string"`).
+- Add a new `endTime` to an event → additive; no consumer changes.
+- Change `MAY_2026_ANCHOR_TODAY` constant → no API change; one-line
+  edit in `CalendarModule.tsx`. Documented as the "anchor flip"
+  follow-up when the SPA ages past May 2026.
+- Change `HOUR_HEIGHT_PX` → CSS-token only; no API change.
+- Change DST table → no API change; `dstHoursForDay` is internal.
+
+### 10.13 Side-effect surface (extension delta)
+
+- `usePref("xai_calendar_view", "month")` → one read + one write per
+  view toggle. localStorage churn negligible.
+- `useEffect` in DayView for scroll-anchor on mount — DOM mutation
+  only, no storage / network.
+- `useMemo` on `placeEventBlocks(events, activeDate)` per view-render.
+- Zero new network calls.
+- Zero new global mutations.
+- ComingSoonPanel side-effects (a CSS rule `.cal-coming-soon`) are
+  REMOVED from styles.css.
+

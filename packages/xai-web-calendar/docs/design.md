@@ -498,3 +498,317 @@ User clicks > (next month)
 - No cross-feature contract drift (MiniCal emit-side is owned by future
   dashboard row #11; this row only specifies the listen-side contract,
   which is already approved by `xai-web-event-bus/docs/api.md:197-198`).
+
+---
+
+## 2026-05-25 Extension: Week + Day Views (gap-closure row #4)
+
+> APPEND-ONLY. §1..§14 above describe the SHIPPED v1 (Month-only +
+> ComingSoonPanel) state and are NOT mutated by this extension. This
+> §15 records the design delta introduced by the
+> `xai-web-console-gap-closure` manifest row #4 (Gap 3 — real Week +
+> Day view bodies).
+>
+> Pattern reference: `packages/xai-web-ai-chat/docs/design.md` §2026-05-25
+> Extension (gap-closure row #2, also extension-of-SHIPPED).
+
+### 15.1 Decision header
+
+| Field | Value |
+|---|---|
+| Selected Option | **A1 + B1 + C1 + D + E1** per discovery review §2 |
+| Discovery review | `docs/reviews/xai-web-calendar-week-day-views/20260525-discovery-review.md` |
+| Review date | 2026-05-25 |
+| Roadmap row | `docs/workflow/roadmap/xai-web-console-gap-closure.md` row #4 (W1) |
+| Source brief | `docs/reviews/xai-web-calendar-week-day-views/20260524-roadmap-seed.md` |
+| Parent ADR | ADR-0009 §D2-G3 (P0 gap-closure) |
+| ADR amendment | None (no CSP impact, no new package) |
+| Target packages | `packages/xai-web-calendar/src/` (new components + state refactor + fixture endTime additions) + `packages/plugin-web-storage/src/internal/registry.ts` (+1 entry `xai_calendar_view`) |
+| Last updated | 2026-05-25 |
+
+### 15.2 Frozen assumptions (this extension; lock at plan acceptance)
+
+Carried from `discovery-review.md` §4 (decisions A1..E1) + planner
+recommendations Q1..Q10:
+
+1. **`CalEvent.endTime?: "HH:MM"`** — OPTIONAL ADDITIVE field. Missing
+   `endTime` → default block height = 1 hour starting at `time`. Used
+   only by Week/Day views; Month view ignores `endTime` (chip layout
+   unchanged).
+2. **Hour rows in local clock time.** Grid is 24 rows by default,
+   labeled `"00"`..`"23"` per the browser's `getHours()`. DST days have
+   23 (spring-forward) or 25 (fall-back) rows with an explicit "(DST)"
+   label between the affected rows. The 2 known 2026 transitions
+   (US Pacific): Mar 8 spring-forward (23 rows; skip 02:00 → 03:00),
+   Nov 1 fall-back (25 rows; 01:00 appears twice).
+3. **`activeDate: string` single source of truth.** Refactored
+   `CalendarModule` state: `(view, activeDate, focusedFromDeepLink)`
+   replaces `(view, displayedMonth, focusedDate)`. `displayedMonth` is
+   DERIVED via `parseDateKey(activeDate)`. `focusedFromDeepLink` is the
+   renamed `focusedDate` — still set ONLY by deep-link payload, still
+   rendered ONLY as the Month view's `.cal-day[data-focused]` outline.
+4. **External behavior preserved.** Toolbar title, weekday header,
+   today-pill, deep-link receive, week-start preference all stay
+   byte-identical. All 90 existing tests stay green. Refactor verified
+   green at every commit boundary in P1.
+5. **New persistence key `xai_calendar_view`** — codec `"string"`,
+   default `"month"`, category `"module"`, owner `"xai-web-calendar"`,
+   schemaVersion 1. Values: `"month" | "week" | "day"`. Registered as
+   the typed `CalendarViewId` alias re-exported from
+   `@repo/plugin-web-storage`. **NOT** in the `xai_pref_*` family
+   (Settings W4 chassis-resetAllPrefs does NOT touch it).
+6. **Shared `<TimeGrid />` component.** Single component used by Week
+   (`columns={7}`) and Day (`columns={1}`). Owns:
+   - 24-row scaffold (with DST overrides)
+   - Local-tz hour labels
+   - All-day strip (sticky above scrollable area)
+   - Now-line at current hour (only on today's column)
+   - Event-block positioning via `placeEventBlocks` pure helper
+7. **Pure `placeEventBlocks(events, dayKey, dst)` helper.** Returns
+   positioned `EventBlock[]` with `{ event, startRow, rowSpan, col,
+   colSpan }`. Side-by-side packing for overlapping events:
+   greedy first-fit into N columns; AC-PLACE-1..4 covers 1-3 overlapping
+   events + all-day separation.
+8. **Center-date preservation across views.** `activeDate` is preserved
+   verbatim across view toggles. The "centered" UX:
+   - Month: activeDate's month is the displayed month; activeDate's day
+     gets the today-pill IF activeDate is the real local-tz today (else
+     no special pill).
+   - Week: 7-day window contains activeDate; activeDate's column gets
+     `data-active="true"` outline.
+   - Day: trivially activeDate.
+9. **Deep-link forces Month view.** When `web:shell:module-change`
+   arrives with `focusDate`, set `view = "month"` (in addition to
+   updating `activeDate` and `focusedFromDeepLink`). User mental
+   model: "click date in mini-cal → see month context." Existing v1
+   behavior is preserved (Month was the only view, so this is implicit;
+   the extension makes it explicit).
+10. **Toggle-switch perf budget 50 ms.** PB-EXT-1 test asserts p95 of
+    100 view-toggle iterations on the 68-event May 2026 fixture
+    (+ 5 events with `endTime` for multi-hour rendering) < 50 ms. If
+    flaky on slow CI, retry once (precedent: cmdk PB1).
+11. **No new event channel.** Calendar stays listen-only. AC-EVENT-7
+    grep test extended to confirm the new `WeekView`, `DayView`,
+    `TimeGrid` files also have zero `emitWebEvent` imports.
+12. **No new ADR.** No CSP impact, no new external dep, no new event
+    channel. Extension fits inside ADR-0007 §S4 (port-map) +
+    ADR-0007 §S8 (persistence prefix family) + ADR-0009 §D2-G3
+    (P0 gap-closure).
+
+### 15.3 Out of scope (extension v1)
+
+- Drag-to-resize event blocks (Week/Day) — Future row.
+- Click-to-create event in empty hour slot — Future row.
+- Inline event editing — Future row (no editing UI at all in v1, per HC8).
+- Multi-day events (events spanning > 24 hours) — Future row.
+- Recurring event preview rendering — Future row.
+- Time-zone DISPLAY preference (user picks a tz different from browser local) — Future row.
+- Mini-cal-style Week navigation arrows separate from Month navigation
+  (Week uses the SAME `<` `>` arrows as Month — stepping ±7 days when
+  view === "week", ±1 day when view === "day", ±1 month when view ===
+  "month"). AC-NAV-EXT-1..3 cover.
+- Lazy-virtualization of the 24-row grid — 24 rows × 7 cols = 168 DOM
+  nodes max; well below virtualization threshold.
+
+### 15.4 Component composition (extension)
+
+```
+CalendarModule (extended)
+├── CalendarToolbar (unchanged — wires onPrev/onNext/onToday differently per view)
+├── view === "month"
+│   └── MonthGrid (UNCHANGED)
+├── view === "week"
+│   └── WeekView                                    NEW
+│       └── TimeGrid columns=7                      NEW (shared)
+│           ├── TimeGridAllDayStrip (sticky)        NEW
+│           ├── TimeGridHourLabels                  NEW
+│           ├── TimeGridDayColumn × N               NEW
+│           │   ├── TimeGridHourRow × {23|24|25}    NEW
+│           │   └── EventBlock × M (positioned)     NEW
+│           └── TimeGridNowLine (today's col only)  NEW
+├── view === "day"
+│   └── DayView                                     NEW
+│       └── TimeGrid columns=1                      NEW (shared)
+└── CalendarBanner (UNCHANGED)
+```
+
+`MonthGrid`, `CalendarToolbar`, `CalendarBanner`, `MonthCell`,
+`MonthRow`, `WeekdayHeader`, all `internal/*` helpers EXCEPT
+`monthGridCells.ts` stay byte-identical. `monthGridCells.ts` is unchanged
+(consumed only by MonthGrid).
+
+### 15.5 New file plan (delta over SHIPPED)
+
+```
+packages/xai-web-calendar/
+├── src/
+│   ├── CalendarModule.tsx                    — MODIFY: state refactor (activeDate + focusedFromDeepLink); add xai_calendar_view usePref; pick WeekView/DayView when view !== "month"; remove ComingSoonPanel import
+│   ├── CalendarToolbar.tsx                   — MODIFY: onPrev/onNext step amount depends on view (±1 month | ±7 day | ±1 day); "today" resets activeDate to MAY_2026_ANCHOR_TODAY
+│   ├── ComingSoonPanel.tsx                   — DELETE (replaced by real WeekView/DayView)
+│   ├── WeekView.tsx                          — NEW: wraps TimeGrid columns=7 with 7-day window from activeDate + weekStart
+│   ├── DayView.tsx                           — NEW: wraps TimeGrid columns=1 with single day from activeDate
+│   ├── TimeGrid.tsx                          — NEW: shared 24-row scaffold + positioned event blocks
+│   ├── TimeGridAllDayStrip.tsx               — NEW (internal-to-TimeGrid)
+│   ├── TimeGridHourRow.tsx                   — NEW (internal-to-TimeGrid)
+│   ├── TimeGridDayColumn.tsx                 — NEW (internal-to-TimeGrid)
+│   ├── EventBlock.tsx                        — NEW: renders one positioned event block
+│   ├── types.ts                              — MODIFY: + CalendarView already has "week" | "day"; no change. + DayBucket type for TimeGrid
+│   ├── styles.css                            — MODIFY (additive): .cal-time-grid, .cal-week-day, .cal-day-column, .cal-hour-row, .cal-hour-label, .cal-event-block, .cal-now-line, .cal-allday-strip, .cal-dst-label
+│   ├── internal/
+│   │   ├── sampleEvents.ts                   — MODIFY: + endTime field on ~5 demo events (day 7 yoga 19:00→20:00; day 8 content marketing 14:15→15:30; day 10 wiping windows 14:15→16:15; day 22 data analysis 11:00→13:00; day 23 0-1 product 14:00→16:30). Annotated as local additions (NOT byte-parity with i18n.js for endTime field).
+│   │   ├── timeGridMath.ts                   — NEW: HOUR_HEIGHT_PX, parseHHMM, hourToRow, rowsForBlock, dstHoursForDay
+│   │   ├── placeEventBlocks.ts               — NEW: pure greedy first-fit packing → EventBlock[]
+│   │   ├── weekWindow.ts                     — NEW: weekWindowFor(activeDate, weekStart) → 7 date keys
+│   │   └── parseDateKey.ts                   — NEW: "YYYY-MM-DD" → { year, month, day } strict parse
+│   └── __tests__/
+│       ├── timeGridMath.test.ts              — NEW: 12 cases (parseHHMM, hourToRow, DST hour-count for Mar 8/Nov 1 2026, midnight boundary)
+│       ├── placeEventBlocks.test.ts          — NEW: 10 cases (1-event, 2-stack overlap, 3-stack overlap, all-day separation, missing endTime → 1hr, spans midnight handling)
+│       ├── weekWindow.test.ts                — NEW: 8 cases (Sun-first week containing 2026-05-22; Mon-first week; month-rollover Apr 29 + May 1; year-rollover Dec 31)
+│       ├── parseDateKey.test.ts              — NEW: 6 cases (valid, malformed, out-of-range month, out-of-range day, leap-year Feb 29, year edge)
+│       ├── WeekView.test.tsx                 — NEW: 14 cases (renders 7 columns + 24 rows + all-day strip + multi-hour block (9-11) is single rectangle + DST Mar 8 spring-forward 23 rows + DST Nov 1 fall-back 25 rows + week-start Sun + week-start Mon + today's column has now-line + activeDate column has data-active + event titles in EN+ZH)
+│       ├── DayView.test.tsx                  — NEW: 10 cases (renders 1 column + 24 rows + all-day strip + multi-hour blocks + scroll-to-current-hour on mount when activeDate=today + scroll-to-8am otherwise + EN+ZH titles + DST + now-line)
+│       ├── TimeGrid.test.tsx                 — NEW: 8 cases (shared scaffolding tests; reused by Week + Day)
+│       ├── CalendarModule.viewtoggle.test.tsx — NEW: 12 cases (toggle Month → Week → Day → Month preserves activeDate; pill switches aria-selected; ComingSoonPanel REMOVED from DOM; persistence round-trip via xai_calendar_view; deep-link sets view=month; reload restores last view)
+│       ├── perfBudget.test.ts                — NEW: 1 case (PB-EXT-1: 100 iterations of toggle Month→Week with 68+5-event fixture, p95 < 50 ms)
+│       ├── CalendarModule.activedate.test.tsx — NEW: 8 cases (state-refactor regression: activeDate single-source-of-truth; displayedMonth derived; today reset behavior; nav arrows step ±1 month / ±7 day / ±1 day per view)
+│       ├── sampleEvents.test.ts              — MODIFY: + AC-FIXTURE-EXT-1 (assert 5 events have endTime; assert endTime > time string-compare; assert endTime missing on all other events)
+│       └── events.test.ts                    — MODIFY: extend grep to ALSO scan WeekView.tsx, DayView.tsx, TimeGrid.tsx, EventBlock.tsx — AC-EVENT-7 invariant preserved across new files
+
+packages/plugin-web-storage/
+└── src/internal/registry.ts                  — MODIFY: + 1 new entry xai_calendar_view (CalendarViewId = "month"|"week"|"day"); + export CalendarViewId type alias near line ~80 (with other type aliases)
+```
+
+### 15.6 State machine update
+
+```
+                       ┌────── view toggle ──────────────┐
+                       │                                 ▼
+                  [ activeDate stays ]              setView(next) → setPref(xai_calendar_view, next)
+                                                          │
+                                                          ▼
+                                                    re-render:
+                                                      view === "month" → <MonthGrid …/>
+                                                      view === "week"  → <WeekView activeDate={…} weekStart={…} events={…} />
+                                                      view === "day"   → <DayView activeDate={…} events={…} />
+
+   Deep-link arrives ──► parseFocusDate(focusDate) ──► setView("month") + setActiveDate(focusDate) + setFocusedFromDeepLink(focusDate)
+
+   Nav arrows: onPrev/onNext step ±1 month (view=month) | ±7 day (view=week) | ±1 day (view=day)
+   "Today" button: setActiveDate(MAY_2026_ANCHOR_TODAY) — view UNCHANGED
+```
+
+### 15.7 Pure helper signatures (new)
+
+```ts
+// internal/parseDateKey.ts
+export function parseDateKey(key: string): { year: number; month: number; day: number };
+export function formatDateKey(year: number, month: number, day: number): string;
+export function stepDateKey(key: string, deltaDays: number): string;
+export function dateKeyMonth(key: string): { year: number; month: number };
+
+// internal/weekWindow.ts
+/** Returns 7 date keys starting at the week-start day containing `activeDate`. */
+export function weekWindowFor(activeDateKey: string, weekStart: 0 | 1): string[];
+
+// internal/timeGridMath.ts
+export const HOUR_HEIGHT_PX = 48;
+/** Parse "HH:MM" → { hours, minutes }. Returns null on malformed input. */
+export function parseHHMM(s: string): { hours: number; minutes: number } | null;
+/** Returns row index 0..(N-1) where N = hours-for-day. */
+export function hourToRow(hours: number, minutes: number, dst?: DstShift): number;
+/** Returns row span (≥ 1) for an event with start+endTime. */
+export function rowsForBlock(startHHMM: string, endHHMM: string | undefined, dst?: DstShift): number;
+/** Returns 23 | 24 | 25 for the given local date key (uses 2026 US Pacific table for v1; future row may consult Intl.DateTimeFormat). */
+export function dstHoursForDay(dateKey: string): { hours: 23 | 24 | 25; shift?: DstShift };
+export interface DstShift { kind: "spring-forward" | "fall-back"; atRow: number; }
+
+// internal/placeEventBlocks.ts
+export interface EventBlock {
+  event: CalEvent;
+  /** Row 0..(N-1) where the block starts. */
+  startRow: number;
+  /** Row count, ≥ 1. */
+  rowSpan: number;
+  /** Column 0..(cols-1) for side-by-side packing. */
+  col: number;
+  /** Total cols used at this row (for CSS grid spanning). */
+  colSpan: number;
+  /** True if this is an all-day event (no `time` field) — render in strip. */
+  allDay: boolean;
+}
+export function placeEventBlocks(
+  events: CalEvent[],
+  dateKey: string,
+): EventBlock[];
+```
+
+### 15.8 Styles delta (additive — tokens-only)
+
+```css
+/* ---------- Time grid (Week + Day) ---------- */
+.cal-time-grid { display: grid; grid-template-rows: auto auto 1fr; flex: 1; overflow: hidden; }
+.cal-allday-strip { display: grid; padding: 6px; gap: 4px; border-bottom: 1px solid var(--border-1); max-height: 80px; overflow-y: auto; }
+.cal-time-scroll { overflow-y: auto; min-height: 0; }
+.cal-time-grid-body { display: grid; grid-template-columns: 48px 1fr; }
+.cal-hour-labels { display: flex; flex-direction: column; }
+.cal-hour-label { height: 48px; font-size: var(--fs-2xs); color: var(--text-3); font-family: var(--font-mono); padding: 2px 6px 0 0; text-align: right; }
+.cal-day-columns { display: grid; }
+.cal-day-column { position: relative; border-left: 1px solid var(--border-1); min-height: calc(24 * 48px); }
+.cal-week-day[data-active="true"] { background: var(--bg-selected); }
+.cal-hour-row { height: 48px; border-bottom: 1px solid var(--border-1); }
+.cal-event-block { position: absolute; left: 4px; right: 4px; border-radius: var(--r-xs); padding: 2px 6px; font-size: var(--fs-2xs); overflow: hidden; border-left: 2px solid transparent; }
+.cal-event-block .ev-title { font-weight: 500; }
+.cal-event-block .ev-time { font-family: var(--font-mono); opacity: 0.7; }
+.cal-now-line { position: absolute; left: 0; right: 0; height: 2px; background: var(--accent); pointer-events: none; }
+.cal-now-line::before { content: ""; position: absolute; left: -4px; top: -3px; width: 8px; height: 8px; border-radius: 999px; background: var(--accent); }
+.cal-dst-label { font-size: var(--fs-2xs); color: var(--text-3); font-style: italic; padding: 2px 6px; }
+.cal-week-day-header { display: grid; padding: 8px 0; border-bottom: 1px solid var(--border-1); }
+.cal-week-day-header > div { text-align: center; font-size: var(--fs-xs); color: var(--text-2); }
+
+/* Event-block colors reuse the 4 existing oklch classes from layout.css:849-852 */
+.cal-event-block.ev-mint   { background: oklch(94% 0.04 165); color: oklch(38% 0.10 165); border-left-color: oklch(58% 0.10 165); }
+.cal-event-block.ev-amber  { background: oklch(94% 0.04 70);  color: oklch(40% 0.10 60);  border-left-color: oklch(65% 0.13 70); }
+.cal-event-block.ev-blue   { background: oklch(94% 0.04 245); color: oklch(40% 0.10 245); border-left-color: oklch(60% 0.12 245); }
+.cal-event-block.ev-violet { background: oklch(94% 0.04 295); color: oklch(40% 0.10 295); border-left-color: oklch(60% 0.12 295); }
+[data-theme="dark"] .cal-event-block.ev-mint   { background: oklch(28% 0.05 165); color: oklch(85% 0.08 165); }
+[data-theme="dark"] .cal-event-block.ev-amber  { background: oklch(28% 0.05 60);  color: oklch(85% 0.08 60); }
+[data-theme="dark"] .cal-event-block.ev-blue   { background: oklch(28% 0.05 245); color: oklch(85% 0.08 245); }
+[data-theme="dark"] .cal-event-block.ev-violet { background: oklch(28% 0.05 295); color: oklch(85% 0.08 295); }
+```
+
+The `.cal-coming-soon` rule is DELETED. The 4 event-color rules in
+§9 above remain (used by Month view chips); the new `.cal-event-block.ev-*`
+selectors duplicate the oklch values for the block variant (different
+positioning context). Both selectors point at the exact same oklch
+tokens from `web design/layout.css:849-852` and `:853-856` — AC-TOKENS-EXT-1
+asserts byte-parity.
+
+### 15.9 Acceptance traceability (extension)
+
+| Seed brief signal | Mechanism | AC IDs (extension) |
+|---|---|---|
+| Week view = 7×24 grid | `<WeekView />` → `<TimeGrid columns=7 />` + `weekWindowFor` | AC-WEEK-1..6 |
+| Day view = 1×24 grid | `<DayView />` → `<TimeGrid columns=1 />` | AC-DAY-1..4 |
+| Events spanning 9-11 = continuous 2-row block | `placeEventBlocks` returns `{startRow:9, rowSpan:2}` for the 5 endTime events | AC-PLACE-1..4 |
+| Toggle Month→Week→Day→Month preserves date | `activeDate` single source of truth | AC-TOGGLE-1..3 |
+| New persistence key `xai_calendar_view` | `usePref("xai_calendar_view", "month")` | AC-PERSIST-EXT-1..3 |
+| Active-date preservation | `activeDate` carried verbatim across views | AC-ACTIVEDATE-1..4 |
+| 50ms perf budget | PB-EXT-1 perf test (100 iter p95 < 50 ms) | PB-EXT-1 |
+| Timezone consistency (no off-by-one at midnight) | Local-clock hour labels + `placeEventBlocks` never crosses day boundary | AC-TZ-1..4 |
+| DST handling | `dstHoursForDay` returns 23/24/25; explicit (DST) label | AC-DST-1..2 |
+| All 90 existing tests stay green | State refactor preserves external behavior | Verified by `pnpm --filter @repo/plugin-web-calendar test` at every commit |
+| Listen-only (no emit) | Extended AC-EVENT-7 grep to new files | AC-EVENT-7 extended |
+| Cross-vendor | XVENDOR-EXT-1..6 checklist | XVENDOR-EXT-1..6 |
+
+### 15.10 Architectural risk: none
+
+- No `packages/core/` edit (no new event channel; reuses `web:shell:module-change`).
+- No `manifest.json` routing change (still slot-pattern).
+- No new package dependency (TimeGrid is local to xai-web-calendar).
+- No CSP impact (no external HTTPS).
+- One additive entry in `@repo/plugin-web-storage` (matches the
+  `xai_pref_week_start` precedent from this very package).
+- ComingSoonPanel deletion is a private-component removal; nothing
+  external imports it (verified — `index.ts` re-export contains only
+  `CalendarModule` + `calendarSlotRegistration` + types).
+
