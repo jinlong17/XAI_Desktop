@@ -45,6 +45,8 @@ Operator ran 4 parallel Codex agents for the 9 rows. Verdicts:
 
 **Chrome re-smoke update (2026-05-26, after Claude fixes):** results captured at `docs/reviews/_gap-closure-deferred/20260526-chrome-resmoke-after-fixes.md`. C3-CHROME-2 CmdK now PASSes in real Chrome. C3-CHROME-1 Settings deep links still FAIL in the real app because `ComposedSettingsModule` remains URL-blind. C3-CHROME-3 Map pins still FAIL on the production board workspace route.
 
+**Chrome cycle-3 update (2026-05-26, after production-layer fixes):** results captured at `docs/reviews/_gap-closure-deferred/20260526-chrome-cycle3-after-layer-fixes.md`. C3-CHROME-1 and C3-CHROME-2 PASS. C3-CHROME-3 PASSes on a fresh first-run Chrome origin with 3 Leaflet markers; existing `127.0.0.1` / `localhost` local origins remain stale because they persisted pre-fix `xai_boards_v2` data.
+
 **Browser/OS targets:** Chrome 120+ macOS 14 · Safari 17+ macOS 14 · Firefox 121+ macOS 14 · Safari 17+ iOS 17 (mandatory) · Chrome 120+ Windows 11 (optional/future)
 
 **Acceptance:** each row must have at least PASS verdicts across all 4 mandatory targets (24-hour carve-out per ADR-0008 §S3); FAIL means file a bug-fix row.
