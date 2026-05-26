@@ -214,3 +214,93 @@ Q9. Type into Inbox composer + Enter → new card prepended. Refresh page → st
 Q10. Switch language EN ↔ 中文 — all visible strings flip (workspace chips, title, switcher tabs, creator labels, panel headers, bottom switcher buttons, overview banner labels).
 
 Q11. Set `localStorage.xai_boards_v2 = "garbage"` → reload → seed renders without crash. Same for `xai_board_panels` and `xai_board_inbox`.
+
+---
+
+## §6 — 2026-05-25 Extension Tests (gap-closure row #6 — Filter + Share)
+
+> APPEND-ONLY. **Canonical test catalogue lives in
+> `packages/xai-web-board-views/docs/test.md §6`.** This section documents
+> only the tests local to THIS package.
+
+### §6.1 — Baseline preservation (gate)
+
+Existing 135 tests in `packages/plugin-web-board-workspaces/src/__tests__/**` MUST continue to pass with zero edits (BoardWorkspacesModule.test.tsx is the only edited file — only ADDITIONS).
+
+### §6.2 — `__tests__/filterState.test.ts` (NEW · 8 cases)
+
+| ID | Case | Assertion |
+|---|---|---|
+| FST-1 | `EMPTY_FILTER` has empty Sets + `dueRange: 'all'` | structural |
+| FST-2 | `EMPTY_FILTER` is frozen (Object.isFrozen) | guard |
+| FST-3 | `toggleLabel` adds id when absent | Set.has |
+| FST-4 | `toggleLabel` removes id when present | Set.size delta |
+| FST-5 | `toggleMember` adds + removes | mirror |
+| FST-6 | `setDueRange('overdue')` returns new state with that value | structural |
+| FST-7 | `EMPTY_FILTER` reference NOT mutated by togglers | identity preserved |
+| FST-8 | `clearFilter` returns reference-equal `EMPTY_FILTER` | identity |
+
+### §6.3 — `__tests__/shareUrl.test.ts` (NEW · 6 cases)
+
+| ID | Case | Assertion |
+|---|---|---|
+| SU-1 | `generateShareUrl("b-default")` resolves to a string starting with `"https://xai-web.example/share/"` | URL prefix |
+| SU-2 | Same input → same output across 2 calls | determinism |
+| SU-3 | Different inputs → different outputs (statistically — verify SHA-256 hash differs in first 4 bytes for 4 sample ids) | hash distinguishability |
+| SU-4 | Hex tail is exactly 8 chars + matches `/^[0-9a-f]{8}$/` | format guard |
+| SU-5 | Unicode board id `"b-看板-1"` produces stable hash (no encoding crash) | round-trip |
+| SU-6 | `crypto.subtle === undefined` fallback path returns `"https://xai-web.example/share/" + boardId.slice(0,8)` | branch coverage |
+
+### §6.4 — `__tests__/FilterPopover.test.tsx` (NEW · 10 cases)
+
+| ID | Case | Assertion |
+|---|---|---|
+| FP-1 | Renders three facet sections | section count |
+| FP-2 | Labels facet renders deduped label list from `lists.flatMap(...)` | label count |
+| FP-3 | Click on a label checkbox calls `onChange` with that label toggled | spy call |
+| FP-4 | Click on a member checkbox calls `onChange` | spy call |
+| FP-5 | Set due range to `'overdue'` calls `onChange` | spy call |
+| FP-6 | "Clear" button calls `onChange(EMPTY_FILTER)` | reference equality |
+| FP-7 | ESC fires `onClose` | spy call |
+| FP-8 | Outside-click fires `onClose` | spy call |
+| FP-9 | Bilingual zh — facet headings switch | text content |
+| FP-10 | Empty `lists` → facet sections render empty checkbox containers; no crash | container count |
+
+### §6.5 — `__tests__/ShareModal.test.tsx` (NEW · 8 cases)
+
+| ID | Case | Assertion |
+|---|---|---|
+| SM-1 | Opens with `<dialog>` mounted + URL visible after async generation | `dialog.open === true` + URL text |
+| SM-2 | Copy button calls `navigator.clipboard.writeText(url)` | mock spy call |
+| SM-3 | "Copied!" affordance flips on success | text content |
+| SM-4 | "Copied!" reverts after 2 seconds | `vi.useFakeTimers` + `vi.advanceTimersByTime(2000)` |
+| SM-5 | Emit-before-close: `emitWebEvent` fires BEFORE `dialog.close()` on Close click | order assertion via mock call order |
+| SM-6 | Backdrop click (`event.target === dialogRef`) closes | spy call |
+| SM-7 | ESC closes (native browser behavior — `dialog.close()` event fires) | event listener |
+| SM-8 | Bilingual zh — "分享看板" + "已复制" | text content |
+
+### §6.6 — `__tests__/BoardWorkspacesModule.test.tsx` (MODIFY — +6 new cases BWM-EXT-1..6)
+
+| ID | Case | Assertion |
+|---|---|---|
+| BWM-EXT-1 | Filter button is now enabled (no longer `disabled`) | `expect(btn).not.toBeDisabled()` |
+| BWM-EXT-2 | Click Filter button opens `FilterPopover` | popover visible |
+| BWM-EXT-3 | Selecting a label in the popover narrows the visible card count in BoardView | rendered card count |
+| BWM-EXT-4 | Share button is now enabled (no longer `disabled`) | `expect(btn).not.toBeDisabled()` |
+| BWM-EXT-5 | Click Share button opens `ShareModal` | dialog visible |
+| BWM-EXT-6 | Switching active board (via BoardSwitcher pick) resets filter to `EMPTY_FILTER` | filter state reset after `setActiveBoardId(otherId)` |
+
+### §6.7 — Mock strategy additions
+
+- `navigator.clipboard.writeText` mocked via `vi.spyOn(navigator.clipboard, "writeText").mockResolvedValue(undefined)`.
+- `crypto.subtle.digest` is real in jsdom 26 (native WebCrypto); SU-6 fallback simulated via temporary `Object.defineProperty(globalThis, 'crypto', { value: {} })` inside the test.
+- `emitWebEvent` from `@repo/xai-web-event-bus` mocked at module level via `vi.mock("@repo/xai-web-event-bus", …)` returning a spy; SM-5 asserts call-order.
+
+### §6.8 — Acceptance gates (this package's slice — cross-ref §6.7 of board-views test.md for global gate matrix)
+
+| Gate | Description |
+|---|---|
+| G3 | `pnpm --filter @repo/plugin-web-board-workspaces test` → 135 baseline + 8 + 6 + 10 + 8 + 6 = 173 PASS (precise count subject to ±2) |
+| G3a | All NEW tests (38 cases) PASS individually |
+| G3b | Existing 135 tests PASS unchanged (no regression) |
+

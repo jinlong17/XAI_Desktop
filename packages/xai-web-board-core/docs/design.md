@@ -94,3 +94,29 @@
 ## Cross-vendor verify note
 
 This row is dispatched in **W2d Parallel-Agent mode** (manifest header) with concurrent siblings #10 dashboard-grid and #20 statistics. The manifest header policy queues cross-vendor verify (Codex `gpt-5.5-thinking medium` or Cursor fallback) **at ship time**, not at row-level verify. The row-level feature-verify pass is run by Claude Opus same-vendor as the planner — this is the documented same-vendor compromise per manifest header policy. feature-verify report will explicitly flag this with the standard manifest-header phrasing.
+
+---
+
+## 2026-05-25 Extension: Card schema `location?` (gap-closure row #6) — cross-ref
+
+> APPEND-ONLY cross-reference block. **Canonical extension design lives in
+> `packages/xai-web-board-views/docs/design.md` §2026-05-25 Extension.**
+>
+> Single additive change in this package:
+>
+> - `BoardCard` gains optional `location?: { lat: number; lng: number; label?: string }`
+>   in `packages/plugin-web-board-core/src/types.ts`.
+> - `isBoardCard` guard in `packages/plugin-web-board-core/src/internal/isBoardArray.ts`
+>   is widened **additively** to accept BOTH presence-of and absence-of the
+>   `location` field. Malformed `location` (NaN / out-of-range / missing keys)
+>   causes the GUARD to still pass (the field is optional); runtime view code
+>   (`isValidLocation`) is the boundary that rejects malformed coords.
+> - 4 new test cases in `__tests__/isBoardArray.test.ts` cover BCV1..BCV4
+>   (with-location / without-location / NaN-lat / out-of-range-lng).
+>
+> NO breaking change. Existing 104 board-core tests pass unchanged. NO new
+> persistence keys. NO new event-bus entries (that's added in `@repo/core`
+> by board-workspaces). NO new external deps. The Leaflet integration lives
+> entirely in `xai-web-board-views`.
+
+Review Doc: `docs/reviews/xai-web-board-filter-share-map/20260525-discovery-review.md`

@@ -244,3 +244,54 @@ Already enumerated in test.md §5 (Q1..Q11). Confirm:
 | 2026-05-23 | Claude Opus 4.7 1M | feature-auto-build P3 — BoardWorkspacesModule orchestrator + registration + apps/web shell-reg swap + apps/web dep add + PLUGIN_MAP row + 28 integration tests | fdd1521 | feature-verify |
 | 2026-05-23 | Claude Opus 4.7 1M | feature-verify — PASS (all 7 gates green; 3 documented non-blocking residuals) | — | ship |
 | 2026-05-23 18:55 | claude-sonnet-4-6 | ship — tests 135/135 confirmed; manifest.json In-Dev → Stable; dev_log SHIPPED; PLUGIN_MAP In-Dev → Stable; chore commit created + pushed | (this commit) | — |
+
+---
+
+## Bugfix-Extension Lineage — gap-closure row #6 (2026-05-25) — cross-ref
+
+> APPEND-ONLY cross-reference block. The Status Panel at the top of this file
+> (`SHIPPED` 2026-05-23 18:55) records the baseline row #9 state and is NOT
+> mutated by this extension lineage.
+>
+> **CANONICAL LINEAGE LIVES AT
+> `packages/xai-web-board-views/docs/dev_log.md` §Bugfix-Extension Lineage —
+> gap-closure row #6 (2026-05-25).**
+>
+> This package's surface in the extension:
+>
+> - Filter button (currently `disabled` per BoardWorkspacesModule.tsx:345) → enabled; opens new `FilterPopover` (NEW component in this package).
+> - Share button (currently `disabled` per BoardWorkspacesModule.tsx:348) → enabled; opens new `ShareModal` (NEW component in this package).
+> - `FilterState` lifted into BoardWorkspacesModule via `useState`; reset on `activeBoard.id` change via `useEffect`.
+> - `applyFilter(lists, filter)` (imported from `@repo/plugin-web-board-views`) wraps `lists` before passing to BoardView + each alt view (HC1 cross-view consistency).
+> - `ShareModal` emits `web:board:share-requested` event (declared in `@repo/core/types/events.ts` by canonical row).
+>
+> NEW component test files: `FilterPopover.test.tsx` (10 cases), `ShareModal.test.tsx` (8 cases), `filterState.test.ts` (8 cases), `shareUrl.test.ts` (6 cases). +6 cases (BWM-EXT-1..6) added to existing `BoardWorkspacesModule.test.tsx`.
+>
+> See canonical dev_log for full Lineage Status Panel / Phase Plan (7 phases) / Risks / Work Log.
+
+### Cross-ref Lineage Status (mirror; canonical is in board-views)
+
+| Field | Value |
+|---|---|
+| Workflow | FEATURE_DEV |
+| Target | xai-web-board-filter-share-map (canonical dev_log in `packages/xai-web-board-views/docs/dev_log.md`) |
+| Current Phase | FEATURE_VERIFY |
+| Status | READY_FOR_VERIFY |
+| Suggested Next | feature-verify |
+| Verify Cross-vendor | yes (per ADR-0009 §D4 P0) |
+| Automation Mode | A-Claude |
+| Executor | claude-sonnet-4-6 (feature-auto-build, 2026-05-25) |
+| Updated | 2026-05-25 |
+| Dispatched By | xai-roadmap-loop SERIAL dispatch (Wave 2 first row) |
+| Roadmap Row | `docs/workflow/roadmap/xai-web-console-gap-closure.md` row #6 |
+| Canonical Dev_log | `packages/xai-web-board-views/docs/dev_log.md` §Bugfix-Extension Lineage — gap-closure row #6 (2026-05-25) |
+
+### Cross-ref Work Log
+
+| Timestamp | Executor | Action | Commits | Next Step |
+|---|---|---|---|---|
+| 2026-05-25 | Claude Opus 4.7 1M (feature-plan) | Appended this cross-ref block. Canonical extension dev_log is at board-views (Map is largest sub-feature; that's the canonical home). Design.md cross-ref appended at end of this file (§2026-05-25 Extension cross-ref). API.md §S15 + test.md §6 also appended with this row's local surface (FilterPopover / ShareModal / filterState / shareUrl + 32 new test cases). | — | feature-review |
+| 2026-05-25 | claude-sonnet-4-6 (feature-auto-build P2..P4) | P2 filterState + lift into BWM; P3 FilterPopover + enabled Filter button; P4 ShareModal + shareUrl + web:board:share-requested EventMap + enabled Share button. Commits cfff4c5 (P2), ba0a2f0 (P3), f60502b (P4). 173 board-workspaces tests PASS. REC-1 verified: filterState.ts imports from `@repo/plugin-web-board-views` barrel (no circular dep). | cfff4c5, ba0a2f0, f60502b | feature-auto-build P5 |
+| 2026-05-25 | claude-sonnet-4-6 (feature-auto-build P5) | P5 Suspense wrap around MapView render in BoardWorkspacesModule. Commit 7c28d4c. 173 board-workspaces tests PASS. | 7c28d4c | feature-auto-build P6 |
+| 2026-05-25 | claude-sonnet-4-6 (feature-auto-build P7) | P7 cross-ref flip: Status → READY_FOR_VERIFY. All P1..P6 tests still pass (173 board-workspaces total). PLUGIN_MAP Notes column updated with extension note + new xai-web-event-bus dep noted. See canonical dev_log in board-views for full Work Log. | (P7 chore commit) | feature-verify |
+| 2026-05-25 | Claude Opus 4.7 1M (feature-review) | APPROVED. 0 blockers; 12 review gates PASS. See canonical dev_log (board-views) for full Review Notes + 2 non-blocking recommendations. Status flipped to APPROVED mirror; canonical is the source of truth. | — | feature-auto-build |

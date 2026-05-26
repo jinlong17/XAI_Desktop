@@ -239,3 +239,54 @@ Already enumerated in test.md §5 (Q1..Q10). Confirm:
 | 2026-05-23 | Claude Opus 4.7 1M | feature-auto-build P3 — BoardModule + registration + apps/web wire-up + PLUGIN_MAP | cc52060 | feature-verify |
 | 2026-05-23 | Claude Opus 4.7 1M | feature-verify — PASS (all 7 gates green; 3 documented non-blocking residuals) | — | ship |
 | 2026-05-23 18:43 | claude-sonnet-4-6 | ship — 104/104 tests confirmed; manifest → Stable; dev_log → SHIPPED; PLUGIN_MAP row #7 → Stable; roadmap row #7 → shipped | chore commit (ship-flip) | — (SHIPPED) |
+
+---
+
+## Bugfix-Extension Lineage — gap-closure row #6 (2026-05-25) — cross-ref
+
+> APPEND-ONLY cross-reference block. The Status Panel at the top of this file
+> (`SHIPPED` 2026-05-23 18:43) records the baseline row #7 state and is NOT
+> mutated by this extension lineage.
+>
+> **CANONICAL LINEAGE LIVES AT
+> `packages/xai-web-board-views/docs/dev_log.md` §Bugfix-Extension Lineage —
+> gap-closure row #6 (2026-05-25).**
+>
+> This package's surface in the extension is intentionally small (single
+> additive schema field):
+>
+> - `BoardCard.location?: { lat: number; lng: number; label?: string }` added in `packages/plugin-web-board-core/src/types.ts` (NEW `CardLocation` interface, additive optional field).
+> - `isBoardCard` guard in `packages/plugin-web-board-core/src/internal/isBoardArray.ts` widened additively to accept structural validity of `location` when present.
+> - 4 new test cases (BCV1..BCV4) in `__tests__/isBoardArray.test.ts`.
+>
+> NO breaking change. Existing 104 board-core tests preserved unchanged. NO
+> new persistence keys. NO new event-bus entries (that's added in `@repo/core`
+> by canonical row in board-views/board-workspaces). NO new external deps.
+>
+> See canonical dev_log for full Lineage Status Panel / Phase Plan / Risks / Work Log.
+
+### Cross-ref Lineage Status (mirror; canonical is in board-views)
+
+| Field | Value |
+|---|---|
+| Workflow | FEATURE_DEV |
+| Target | xai-web-board-filter-share-map (canonical dev_log in `packages/xai-web-board-views/docs/dev_log.md`) |
+| Current Phase | FEATURE_VERIFY |
+| Status | READY_FOR_VERIFY |
+| Suggested Next | feature-verify |
+| Verify Cross-vendor | yes (per ADR-0009 §D4 P0) |
+| Automation Mode | A-Claude |
+| Executor | claude-sonnet-4-6 (feature-auto-build, 2026-05-25) |
+| Updated | 2026-05-25 |
+| Dispatched By | xai-roadmap-loop SERIAL dispatch (Wave 2 first row) |
+| Roadmap Row | `docs/workflow/roadmap/xai-web-console-gap-closure.md` row #6 |
+| Canonical Dev_log | `packages/xai-web-board-views/docs/dev_log.md` §Bugfix-Extension Lineage — gap-closure row #6 (2026-05-25) |
+
+### Cross-ref Work Log
+
+| Timestamp | Executor | Action | Commits | Next Step |
+|---|---|---|---|---|
+| 2026-05-25 | Claude Opus 4.7 1M (feature-plan) | Appended this cross-ref block. Canonical extension dev_log is at board-views. Single additive schema change in this package: `BoardCard.location?` (Phase P1 of the 7-phase plan). Design.md cross-ref appended at end of this file; api.md §S14 + test.md §6 also appended with the 4 new BCV1..BCV4 cases. | — | feature-review |
+| 2026-05-25 | claude-sonnet-4-6 (feature-auto-build P1) | P1 implemented: `CardLocation` interface + `location?: CardLocation` on `BoardCard` + widened `isBoardCard` guard + `CardLocation` re-exported from barrel + BCV1..BCV4 tests. Commit 389ee17. 108 board-core tests PASS. | 389ee17 | feature-auto-build (canonical) |
+| 2026-05-25 | claude-sonnet-4-6 (feature-auto-build P7) | P7 cross-ref flip: Status → READY_FOR_VERIFY. All P1..P6 tests still pass (108 board-core total). PLUGIN_MAP Notes column updated. See canonical dev_log in board-views for full Work Log. | (P7 chore commit) | feature-verify |
+| 2026-05-25 | Claude Opus 4.7 1M (feature-review) | APPROVED. 0 blockers; 12 review gates PASS. See canonical dev_log (board-views) for full Review Notes. P1 (additive `BoardCard.location?` + widened `isBoardCard` guard + 4 BCV1..BCV4 cases) verified safe — backwards compat preserved (all 104 baseline tests still pass; existing seed data has `location === undefined`; guard widened structurally to accept presence-or-absence). | — | feature-auto-build |

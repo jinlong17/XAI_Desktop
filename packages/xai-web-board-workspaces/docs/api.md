@@ -415,3 +415,145 @@ Schema version 1 for this row. Owned `xai_board_panels` + `xai_board_inbox` regi
   }
 }
 ```
+
+---
+
+## §S15 — 2026-05-25 Extension API (gap-closure row #6 — Filter + Share)
+
+> APPEND-ONLY. **Canonical extension spec lives in
+> `packages/xai-web-board-views/docs/api.md §S15`.** This section documents
+> only the surface added to THIS package.
+
+### §S15.0 — Extended public surface (`src/index.ts` additions)
+
+```ts
+// ---- Existing exports (§0) preserved verbatim ---------------------------
+
+// ---- Net-new exports for gap-closure row #6 -----------------------------
+
+export { FilterPopover } from "./FilterPopover.js";
+export type { FilterPopoverProps } from "./FilterPopover.js";
+
+export { ShareModal } from "./ShareModal.js";
+export type { ShareModalProps } from "./ShareModal.js";
+
+// FilterState re-exported from board-views for ergonomic import-site usage
+export type { FilterState } from "@repo/plugin-web-board-views";
+```
+
+### §S15.1 — `FilterPopover` component API
+
+```tsx
+import type { BoardCardData, BoardListData } from "@repo/plugin-web-board-core";
+import type { FilterState } from "@repo/plugin-web-board-views";
+
+export interface FilterPopoverProps {
+  lists: readonly BoardListData[];
+  filter: FilterState;
+  onChange: (next: FilterState) => void;
+  onClose: () => void;
+  lang: "en" | "zh";
+}
+
+export function FilterPopover(props: FilterPopoverProps): JSX.Element;
+```
+
+**Behavior**
+
+- Positioned absolutely below the Filter button (parent provides anchor via CSS).
+- Three facets rendered as sections:
+  - Labels — checkboxes for each label found across `lists.flatMap(l=>l.cards).flatMap(c=>c.labels ?? [])` deduped + sorted.
+  - Members — checkboxes for each member id found across `lists.flatMap(l=>l.cards).flatMap(c=>c.members ?? [])` deduped + sorted.
+  - Due Range — radio group `all` / `overdue` / `today` / `week` bilingual.
+- "Clear" button → calls `onChange(EMPTY_FILTER)`.
+- ESC closes (handler attached to `window`).
+- Outside-click closes (refs + window mousedown).
+- `aria-expanded` on the button (managed in parent).
+- Bilingual via inline ternaries.
+
+### §S15.2 — `ShareModal` component API
+
+```tsx
+import type { Board } from "@repo/plugin-web-board-core";
+
+export interface ShareModalProps {
+  board: Board;
+  lang: "en" | "zh";
+  onClose: () => void;
+}
+
+export function ShareModal(props: ShareModalProps): JSX.Element;
+```
+
+**Behavior**
+
+- Native `<dialog>` opened with `.showModal()` on mount; closed with `.close()` on `onClose`.
+- Body: heading "Share board" / "分享看板" + read-only `<input>` with the URL + Copy button + Close button.
+- URL generated via `generateShareUrl(board.id)` (async — `SubtleCrypto.digest`). Renders `Generating…` text while pending.
+- Copy button: `navigator.clipboard.writeText(url)` → success: button text flips to `"Copied!"` / `"已复制"` for 2 seconds. Failure: silent (fallback `execCommand('copy')` attempted in legacy browsers).
+- **Emit-before-close**: when the user clicks Close (or backdrop / ESC), the modal calls `emitWebEvent('web:board:share-requested', { boardId: board.id, url, source: 'header' })` BEFORE calling `dialog.close()` and BEFORE `onClose()`.
+- Backdrop click closes when `event.target === dialogRef.current` (REC-2 of row #5).
+
+### §S15.3 — `generateShareUrl` helper
+
+```ts
+// packages/plugin-web-board-workspaces/src/internal/shareUrl.ts (NEW)
+
+/** Deterministic; non-exploitable; pure when SubtleCrypto is reachable.
+ *  Returns Promise<string> like "https://xai-web.example/share/a1b2c3d4". */
+export function generateShareUrl(boardId: string): Promise<string>;
+```
+
+**Algorithm:**
+1. Encode `boardId` as UTF-8 bytes.
+2. `crypto.subtle.digest('SHA-256', bytes)`.
+3. Take first 4 bytes → render as 8 hex chars.
+4. Compose `\`https://xai-web.example/share/${hex8}\``.
+
+**Fallback** (when `crypto.subtle` is unavailable — should not happen in jsdom 26 / modern browsers): return `\`https://xai-web.example/share/${boardId.slice(0, 8)}\`` (deterministic but reversible). Test SU-6 covers this branch.
+
+### §S15.4 — Extended `BoardWorkspacesModule` (existing component — MODIFY)
+
+The component gains:
+
+- `const [filter, setFilter] = useState<FilterState>(EMPTY_FILTER);`
+- `const [shareOpen, setShareOpen] = useState(false);`
+- `const [filterOpen, setFilterOpen] = useState(false);`
+- `useEffect(() => { setFilter(EMPTY_FILTER); }, [activeBoard.id]);`
+- Filter button: `onClick={() => setFilterOpen(o => !o)}`; `aria-expanded={filterOpen}`; `disabled` removed.
+- Share button: `onClick={() => setShareOpen(true)}`; `disabled` removed.
+- `const filteredLists = applyFilter(lists, filter);` — passed to BoardView + each alt view (in place of raw `lists`).
+- Mount `<FilterPopover />` when `filterOpen`.
+- Mount `<ShareModal />` when `shareOpen`.
+
+NO breaking change to existing 18 BoardWorkspacesModule tests (`filter` defaults to `EMPTY_FILTER` → `applyFilter` is identity).
+
+### §S15.5 — New EventMap entry (declared in `@repo/core/types/events.ts`)
+
+```ts
+// packages/core/src/types/events.ts — MODIFY (add after web:dashboard:widget-added)
+
+/** Board share URL generated (owner: xai-web-board-filter-share-map gap-closure row #6) */
+'web:board:share-requested': {
+  /** Board id whose share URL was generated. */
+  boardId: string;
+  /** Generated share URL (mock — no backend; deterministic SHA-256 hash). */
+  url: string;
+  /** Where the action originated. v1 closed union: 'header'. */
+  source: 'header';
+};
+```
+
+No consumer wired in this row (declaration-only — mirrors row #5 precedent).
+
+### §S15.6 — Error semantics (this row's deltas)
+
+| Failure mode | Behavior |
+|---|---|
+| `applyFilter` called with non-array `lists` | Returns `[]`; no throw (defensive). |
+| `FilterState.labels` contains an id not present on any card | Filter excludes everything — empty result; no crash. |
+| `generateShareUrl` invoked when `crypto.subtle === undefined` | Falls back to `boardId.slice(0,8)`; logged as `console.warn` once. |
+| `navigator.clipboard.writeText` throws (insecure context / permission) | Silently caught; Copy button does NOT flip to "Copied!"; tested. |
+| `<dialog>` not supported (legacy browsers) | Per row #5 R4 — Baseline 2022; deferred to that ADR-level analysis. |
+| Filter applied while a card is being mid-drag (Calendar DnD / Timeline DnD) | Card movement writes back to SOURCE list via `updateCard` (delegates to `updateCardInList`); filter is recomputed on next render. No orphan state. |
+

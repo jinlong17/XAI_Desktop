@@ -246,3 +246,113 @@ Q7. Switch to Map → SVG placeholder + overlay text visible.
 Q8. Switch board (when row #9 ships) → previously selected view recalled per board.
 Q9. EN ↔ 中文 toggle flips all visible strings across all 6 views.
 Q10. Set `localStorage.xai_board_view_by_id = "garbage"` → reload renders Board view without crash (orphan tolerated).
+
+---
+
+## §6 — 2026-05-25 Extension Tests (gap-closure row #6 — Filter / Share / Map)
+
+> APPEND-ONLY. Sections §1..§5 above are NOT mutated.
+
+### §6.1 — Baseline preservation (gate)
+
+Existing 90 tests in `packages/plugin-web-board-views/src/__tests__/**` MUST
+continue to pass with zero edits (only the `MapView.test.tsx` file is
+explicitly rewritten — its existing 3 cases MV1/MV2/MV3 are replaced with the
+new ~15 case suite per §6.4).
+
+### §6.2 — `__tests__/filter.test.ts` (NEW · 12 cases)
+
+| ID | Case | Assertion |
+|---|---|---|
+| FIL-1 | `applyFilter(lists, EMPTY_FILTER)` returns lists with same card count | `flatMap(l=>l.cards).length` equality |
+| FIL-2 | Label-only filter — single label match | Only cards with that label appear |
+| FIL-3 | Label-only filter — multiple labels (OR within facet) | Cards with ANY of the labels appear |
+| FIL-4 | Member-only filter — single member | Only cards with that member |
+| FIL-5 | Member + label combined (AND between facets) | Card must match BOTH facets |
+| FIL-6 | `dueRange: 'overdue'` — only cards with `dueLate === true` | filtered set count |
+| FIL-7 | `dueRange: 'today'` — matches "Today" / "今天" / today's "M/D" | matches all 3 formats |
+| FIL-8 | `dueRange: 'week'` — matches `due` parseable to [today, today+7) | range correct |
+| FIL-9 | Empty `lists` input → returns empty lists; no crash | length 0 |
+| FIL-10 | Filter that excludes ALL cards → lists preserved (empty cards arrays) | lists.length unchanged |
+| FIL-11 | `applyFilter` is pure — same input twice → identical output | deep-equality + reference inequality |
+| FIL-12 | `applyFilter` is referentially transparent — input not mutated | `Object.isFrozen`-style check |
+
+### §6.3 — `__tests__/location.test.ts` (NEW · 6 cases)
+
+| ID | Case | Assertion |
+|---|---|---|
+| LOC-1 | `isValidLocation({lat: 40.7, lng: -74})` → true | guard accepts |
+| LOC-2 | `isValidLocation({lat: NaN, lng: 0})` → false | NaN rejected |
+| LOC-3 | `isValidLocation({lat: 0, lng: NaN})` → false | NaN rejected |
+| LOC-4 | `isValidLocation({lat: 91, lng: 0})` → false | out-of-range rejected |
+| LOC-5 | `isValidLocation({lat: 0, lng: 181})` → false | out-of-range rejected |
+| LOC-6 | `isValidLocation(null) === false` AND `isValidLocation(undefined) === false` AND `isValidLocation({})` === false | non-object + missing keys rejected |
+
+### §6.4 — `__tests__/MapView.test.tsx` (REWRITE · 15 cases · replaces MV1/MV2/MV3)
+
+| ID | Case | Assertion |
+|---|---|---|
+| MAP-1 | Renders `<Suspense fallback>` text "Loading map…" on first mount | text content; `await waitFor` for chunk load |
+| MAP-2 | After lazy import resolves, renders a `<div>` container with class `leaflet-container` | DOM query after wait |
+| MAP-3 | Cards with valid `location` render one Leaflet marker each | Mock `L.marker` spy call count = valid-card count |
+| MAP-4 | Cards without `location` render NO marker | spy count unchanged when no valid locations |
+| MAP-5 | Cards with NaN `location.lat` filtered out | spy count = 0 |
+| MAP-6 | Cards with out-of-range `location.lng` filtered out | spy count = 0 |
+| MAP-7 | Empty-state overlay visible when ALL cards lack location | text "No cards have a location yet." visible |
+| MAP-8 | Empty-state bilingual flip — `lang="zh"` shows Chinese copy | text contains "没有卡片设置了位置" |
+| MAP-9 | Click on a marker calls `onSelectCard(cardId, listId)` | spy called with correct args |
+| MAP-10 | Tile layer URL matches `https://tile.openstreetmap.org/{z}/{x}/{y}.png` | Mock `L.tileLayer` first arg |
+| MAP-11 | Attribution string is `"© OpenStreetMap contributors"` | Mock `L.tileLayer` second arg `.attribution` |
+| MAP-12 | `useEffect` cleanup calls `map.remove()` on unmount | Mock spy on `.remove()` |
+| MAP-13 | `fitBounds` called when ≥1 valid pin; padding `[50, 50]` | Mock spy on `.fitBounds(...)` args |
+| MAP-14 | `setView([0,0], 2)` (world fallback) when zero pins | Mock spy on `.setView(...)` |
+| MAP-15 | Popup binding — popup text matches `card.title[lang]` + `loc.label` | Mock spy on `.bindPopup` |
+
+**Mock strategy**: Leaflet is mocked at module level via
+`vi.mock("leaflet", () => ({ map: vi.fn(()=>mockMap), tileLayer: vi.fn(()=>mockTile), marker: vi.fn(()=>mockMarker), default: { map, tileLayer, marker } }))`.
+This avoids loading Leaflet's full DOM-manipulation code in jsdom and gives
+deterministic spy assertions.
+
+### §6.5 — `__tests__/filter-view-integration.test.tsx` (NEW · 6 cases)
+
+| ID | Case | Assertion |
+|---|---|---|
+| FVI-Board | Apply filter `{labels: new Set(["urgent"])}` to Kanban Board → only urgent cards visible | render count |
+| FVI-Table | Apply same filter to TableView → row count = urgent card count | row count |
+| FVI-Calendar | Apply same filter to BoardCalendarView → only urgent cards appear in day cells | text-in-cell |
+| FVI-Dashboard | Apply same filter to BoardDashboardView → KPIs reflect filtered counts (Total = urgent count) | KPI text |
+| FVI-Timeline | Apply same filter to TimelineView → only urgent bars rendered | bar count |
+| FVI-Map | Apply same filter to MapView → only urgent cards' markers rendered (HC1 consistency) | marker count |
+
+### §6.6 — Verifier checklist additions (manual smoke for cross-vendor ship-time)
+
+Q11. Open `/app/board` → Filter button now enabled (no longer greyed); click opens popover with 3 facets.
+Q12. Tick "urgent" label → cards re-render across visible view; total count badge in header updates.
+Q13. Switch to each of the 6 views with filter active → consistent narrowing visible (HC1).
+Q14. Click Share button → native `<dialog>` opens; URL is visible + Copy button works (`navigator.clipboard.writeText` succeeds in real browser).
+Q15. Click Copy → "Copied!" affordance flips for 2 seconds; emit-before-close confirmed via DevTools Event Listeners.
+Q16. ESC closes Share modal; backdrop click closes Share modal.
+Q17. Switch active board (board switcher) → Filter resets to empty state (HC1 "reset on board switch").
+Q18. Open Map view → Leaflet tiles load from `tile.openstreetmap.org`; attribution visible in bottom-right.
+Q19. Cards without `location` in seed → Map shows empty-state overlay + blank tile background.
+Q20. Manually edit `xai_boards_v2` localStorage to add a `location: { lat: 37.7749, lng: -122.4194, label: "SF" }` to one card → reload → marker visible at San Francisco.
+Q21. Click marker → `onSelectCard` callback fires (future: highlights card; v1: console.log or no-op).
+Q22. DevTools Network tab → Leaflet bundle (`MapView-*.js` chunk + leaflet.css) loaded ONLY after clicking Map tab (NOT in initial page bundle).
+Q23. Bilingual flip EN ↔ 中文 → Filter / Share / Map UI strings switch.
+
+### §6.7 — Acceptance gates (verify-time checklist)
+
+| Gate | Description |
+|---|---|
+| G1 | `pnpm --filter @repo/plugin-web-board-core test` → 104 baseline + 4 location-guard = 108 PASS |
+| G2 | `pnpm --filter @repo/plugin-web-board-views test` → 90 baseline + 12 + 6 + 12 (MapView REWRITE delta = +12 over old 3) + 6 = 126 PASS (precise count subject to ±3 by build executor) |
+| G3 | `pnpm --filter @repo/plugin-web-board-workspaces test` → 135 baseline + 30 = 165 PASS (per workspaces test.md §6 extension) |
+| G4 | `pnpm --filter @repo/web test` → 100 baseline + 1 CSP guard + 2 build-manifest = 103 PASS |
+| G5 | `pnpm --filter @repo/web check-types` PASS |
+| G6 | `pnpm --filter @repo/web build` PASS — Vite outputs MapView lazy chunk |
+| G7 | Bundle-manifest test passes: lazy chunk exists AND < 80 KB minified |
+| G8 | CSP source-text test passes: both `connect-src` and `img-src` contain `https://tile.openstreetmap.org` |
+| G9 | `pnpm --filter @repo/core check-types` PASS (new EventMap entry compiles) |
+| G10 | `pnpm --filter @repo/xai-web-event-bus test` PASS (no regression from EventMap addition) |
+| G11 (manual) | Cross-vendor smoke per §6.6 — Codex `gpt-5.5-thinking medium` primary; queued 24h per ADR-0008 carve-out (W1 precedent) |
+

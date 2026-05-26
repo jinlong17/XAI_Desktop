@@ -390,3 +390,88 @@ No file overlap except `shellRegistrations.tsx` (each row touches a different li
   }
 }
 ```
+
+---
+
+## §S14 — 2026-05-25 Extension API (gap-closure row #6 — Card schema `location?`)
+
+> APPEND-ONLY. **Canonical extension API spec lives in
+> `packages/xai-web-board-views/docs/api.md §S15`.** This section documents
+> the single additive change made to THIS package.
+
+### §S14.1 — `BoardCard.location` field (additive)
+
+```ts
+// packages/plugin-web-board-core/src/types.ts — MODIFY (additive)
+
+export interface BoardCard {
+  // ... existing fields preserved verbatim ...
+
+  /** OPTIONAL — geographic location for Map view rendering.
+   *  Cards without this field render as empty-state in Map view. */
+  location?: CardLocation;
+}
+
+/** NEW — declared in board-core; re-exported by board-views for ergonomic import. */
+export interface CardLocation {
+  /** WGS84 latitude, -90..90 (decimal degrees). */
+  lat: number;
+  /** WGS84 longitude, -180..180 (decimal degrees). */
+  lng: number;
+  /** Optional human-readable label rendered in the Map view pin popup. */
+  label?: string;
+}
+```
+
+### §S14.2 — `isBoardCard` guard widening (additive)
+
+```ts
+// packages/plugin-web-board-core/src/internal/isBoardArray.ts — MODIFY
+
+export function isBoardCard(value: unknown): value is BoardCard {
+  // ... existing checks for id / title / etc. preserved ...
+
+  // NEW: if `location` is present, it MUST be an object with `lat` and `lng`
+  // as numbers (NaN / out-of-range allowed at the guard level — runtime
+  // narrowing via isValidLocation rejects those).
+  if ('location' in (value as object) && (value as { location?: unknown }).location !== undefined) {
+    const loc = (value as { location: unknown }).location;
+    if (typeof loc !== 'object' || loc === null) return false;
+    if (typeof (loc as { lat?: unknown }).lat !== 'number') return false;
+    if (typeof (loc as { lng?: unknown }).lng !== 'number') return false;
+    // `label` optional; if present must be string
+    if ('label' in loc && typeof (loc as { label?: unknown }).label !== 'string'
+        && (loc as { label?: unknown }).label !== undefined) return false;
+  }
+
+  return true;
+}
+```
+
+**Guard intent**: structural validation only. Range validation (`lat ∈ [-90,90]`,
+`lng ∈ [-180,180]`, `!isNaN`) is enforced at the view boundary by
+`isValidLocation` in `@repo/plugin-web-board-views`. This split lets persisted
+data round-trip through `usePref` without coercing malformed coords into
+defaults — the Map view simply omits malformed cards from its pin set.
+
+### §S14.3 — Versioning
+
+`location` is additive optional. `xai_boards_v2` registry stays at v1. No migration. No registry edit.
+
+### §S14.4 — Error semantics
+
+| Failure mode | Behavior |
+|---|---|
+| `BoardCard` without `location` field | Guard passes; card stored as-is; Map view treats as empty-state input. |
+| `BoardCard.location.lat === NaN` | Guard passes (structurally valid object); `isValidLocation` in board-views rejects → marker not rendered. |
+| `BoardCard.location.lng === 200` | Guard passes; `isValidLocation` rejects (out-of-range). |
+| `BoardCard.location = "garbage"` (string, not object) | Guard FAILS → entire card rejected by `isBoardArray` → board falls back to seed default. |
+
+### §S14.5 — Tests added (cross-ref test.md §6)
+
+4 new cases in `__tests__/isBoardArray.test.ts`:
+
+- BCV1: card with valid `location` → guard passes
+- BCV2: card without `location` → guard passes (back-compat)
+- BCV3: card with `location.lat === NaN` → guard passes (structural OK)
+- BCV4: card with `location = "garbage"` → guard fails

@@ -66,3 +66,29 @@ W2e Parallel-Agent mode runs row-level `feature-verify` in same-vendor Claude Op
 
 - **#8 `xai-web-board-views`** (planning concurrently, separate dev_log) — will REPLACE this row's central-panel view-picker no-op with a real view-picker that swaps Kanban/Table/Calendar/Dashboard/Timeline/Map. Write-scope disjoint (this row owns the workspace+switcher+creator+panel layout; #8 owns the central-panel renderer + view-picker dropdown).
 - **#11 `xai-web-dashboard-widgets`** (planning concurrently, separate dev_log) — different rail entry; no overlap.
+
+---
+
+## 2026-05-25 Extension: Filter + Share (gap-closure row #6) — cross-ref
+
+> APPEND-ONLY cross-reference block. **Canonical design lives in
+> `packages/xai-web-board-views/docs/design.md` §2026-05-25 Extension.**
+> This row gains:
+>
+> - Filter button → enabled; opens new `FilterPopover` component (NEW in this package).
+> - Share button → enabled; opens new `ShareModal` component (NEW in this package).
+> - Top-level `FilterState` lifted into `BoardWorkspacesModule` via `useState` + `useEffect` reset on `activeBoard.id` change.
+> - `applyFilter(lists, filter)` (imported from `@repo/plugin-web-board-views`) wraps the `lists` passed to BoardView + each alt view.
+> - New EventMap entry `web:board:share-requested` emitted from ShareModal via `@repo/xai-web-event-bus`.
+>
+> Files added inside `packages/plugin-web-board-workspaces/src/`:
+> `FilterPopover.tsx` · `ShareModal.tsx` · `internal/filterState.ts` · `internal/shareUrl.ts` + their `__tests__`.
+> Files edited: `BoardWorkspacesModule.tsx` (enable buttons + lift state + pass filtered lists).
+>
+> NO new persistence keys (HC1 — filter is render-only). NO new third-party
+> deps in this package (leaflet is added to board-views only).
+>
+> See canonical doc for full Frozen Assumptions / Phase Plan / Risk Register /
+> ADR amendment details.
+
+Review Doc: `docs/reviews/xai-web-board-filter-share-map/20260525-discovery-review.md`

@@ -113,3 +113,128 @@
 ## Cross-vendor verify note
 
 This row is dispatched in **W2e Parallel-Agent mode** (manifest header) with concurrent siblings #9 board-workspaces and #11 dashboard-widgets. The manifest header policy queues cross-vendor verify (Codex `gpt-5.5-thinking medium` or Cursor fallback) **at ship time**, not at row-level verify. The row-level feature-verify pass is run by Claude Opus same-vendor as the planner — this is the documented same-vendor compromise per manifest header policy. feature-verify report will explicitly flag this with the standard manifest-header phrasing.
+
+---
+
+## 2026-05-25 Extension: Filter + Share + Map (gap-closure row #6)
+
+> APPEND-ONLY extension. SHIPPED row #8 + bugfix-cycle-1 contents above are
+> NOT mutated by this block. This is the canonical extension home (Map is the
+> largest sub-feature); cross-refs in `xai-web-board-workspaces/docs/design.md`
+> and `xai-web-board-core/docs/design.md` point back here.
+
+### Decision header
+
+| Field | Value |
+|---|---|
+| Selected Option | **Composite α** — see §4 of discovery review for sub-decisions D-Map-Lib (Leaflet) / D-Tile-Provider (OSM) / D-Share-URL (SHA-256) / D-EventMap (extend) / D-Filter-State (top-level) / D-Share-Modal (`<dialog>`) / D-Schema-Extension (additive `location?`) / D-CSP-Governance (amend ADR-0008 in-place) |
+| Review Doc | `docs/reviews/xai-web-board-filter-share-map/20260525-discovery-review.md` |
+| Review Date | 2026-05-25 |
+| Roadmap Row | `docs/workflow/roadmap/xai-web-console-gap-closure.md` row #6 (W2 first) |
+| Source brief | `docs/reviews/xai-web-board-filter-share-map/20260524-roadmap-seed.md` |
+| Parent ADR | ADR-0009 §D2-G3 (P0 gap-closure) |
+| ADR Amendment | **ADR-0008 §S3 D3** amended in-place this row to add `connect-src https://tile.openstreetmap.org` AND `img-src https://tile.openstreetmap.org` (per binding precedent set by row #2 ai-chat) |
+| Target packages | `packages/plugin-web-board-core/src/types.ts` (additive `location?` on `BoardCard`) · `packages/plugin-web-board-core/src/internal/isBoardArray.ts` (guard widened additively) · `packages/plugin-web-board-views/src/{MapView.tsx (REWRITE), index.ts (Edit), internal/filter.ts (NEW), internal/leafletLoader.ts (NEW), internal/location.ts (NEW)}` · `packages/plugin-web-board-workspaces/src/{BoardWorkspacesModule.tsx (Edit), FilterPopover.tsx (NEW), ShareModal.tsx (NEW), internal/filterState.ts (NEW), internal/shareUrl.ts (NEW)}` · `packages/core/src/types/events.ts` (+1 EventMap entry) · `apps/web/public/_headers` (+1 origin to two directives) · `apps/web/src/__tests__/csp.test.ts` (Edit, +1 case) · `docs/adr/0008-cloudflare-deploy-target-and-csp.md` (amend) |
+| Last Updated | 2026-05-25 |
+
+### Frozen Assumptions (this extension; lock at plan acceptance)
+
+1. **Map library = Leaflet (vanilla)**, lazy-loaded via `React.lazy(() => import("./MapView.js"))`. ~42 KB gzipped + ~14 KB CSS. NO React-Leaflet wrapper (avoid version-coupling). Pattern: `useEffect` mounts an `L.map(containerRef.current)`, `useEffect` cleanup calls `map.remove()`.
+2. **Tile provider = OSM standard tiles** at `https://tile.openstreetmap.org/{z}/{x}/{y}.png`. Attribution `© OpenStreetMap contributors` rendered visibly in the map bottom-right (Leaflet default — MUST NOT be hidden by CSS). Browser-default User-Agent acceptable per OSM policy "best-effort" framing. Documented future-swap to CartoDB if >1 req/sec avg.
+3. **Share URL generation** uses `SubtleCrypto.digest("SHA-256", utf8(boardId))` → first 8 hex chars → `https://xai-web.example/share/<8hex>`. Deterministic, testable, non-exploitable (URL is 404 on origin). NO timestamp in URL → no fingerprinting.
+4. **Share modal** = native `<dialog>` per row #5 binding precedent. Body: heading + read-only `<input>` + Copy button + Close. Backdrop click closes; ESC closes natively; emit-before-close pattern (REC-1 of row #5).
+5. **Filter state** = top-level `useState<FilterState>` in `BoardWorkspacesModule`. Shape: `{ labels: Set<string>; members: Set<string>; dueRange: 'all' | 'overdue' | 'today' | 'week' }`. Reset on `activeBoard.id` change via `useEffect`. Applied to view input via pure `applyFilter(lists, filter): BoardListData[]` helper at the view boundary.
+6. **Card schema extension** = additive optional `location?: { lat: number; lng: number; label?: string }` on `BoardCard` in `packages/plugin-web-board-core/src/types.ts`. Guard `isBoardCard` widened additively (existing tests pass; new tests cover present + malformed paths).
+7. **CSP amendment** = ADR-0008 §S3 D3 amended in-place per row #2 binding precedent. `connect-src` extended to include `https://tile.openstreetmap.org`; `img-src` extended to include `https://tile.openstreetmap.org`. Existing `apps/web/src/__tests__/csp.test.ts` extended with a second `it()` case asserting the new origin in both directives.
+8. **EventMap extension** = ONE new entry `web:board:share-requested` with `{ boardId: string; url: string; source: 'header' }` payload. Declaration-only (no consumer in this row), mirroring row #5 `web:dashboard:widget-added` precedent.
+9. **Bundle-budget enforcement** = new test `apps/web/src/__tests__/build-manifest.test.ts` reads `apps/web/dist/.vite/manifest.json` (or scans `dist/assets/*.js`) and asserts the existence of a chunk file matching `MapView*.js` AND that its size is < 80 KB minified (Leaflet 150 KB raw + ~10 KB MapView code; sanity ceiling — exact figure TBD in P5).
+10. **Filter scope on Map view** = filtered cards only (per Q1 recommendation in discovery review §6); consistent with HC1 "across all 6 board views consistently".
+11. **No real backend** — Share never POSTs anywhere; Map never fetches anything except OSM tiles; Filter never persists.
+12. **Append-only doc discipline** — this design.md gains ONE new section (this one); api.md gains ONE new §S15 section; test.md gains ONE new §6 section; dev_log.md gains ONE new "## Bugfix-Extension Lineage — gap-closure row #6 (2026-05-25)" block. Existing SHIPPED content is preserved verbatim.
+
+### New file plan (delta over SHIPPED)
+
+```
+packages/plugin-web-board-core/
+├── src/types.ts                       — MODIFY: + optional `location?: { lat: number; lng: number; label?: string }` on BoardCard
+├── src/internal/isBoardArray.ts       — MODIFY: widen isBoardCard to accept optional `location` field (additive; existing tests pass)
+└── src/__tests__/isBoardArray.test.ts — MODIFY: +4 cases (BCV1..BCV4: with-location / without-location / NaN-lat / out-of-range-lng)
+
+packages/plugin-web-board-views/
+├── src/MapView.tsx                    — REWRITE: real Leaflet integration; lazy-loaded; props extended to accept `lists` + `onSelectCard`
+├── src/index.ts                       — MODIFY: export type FilterPredicate + isValidLocation helper (advisory; primary FilterPredicate is in workspaces)
+├── src/internal/filter.ts             — NEW: applyFilter(lists, filter) pure helper
+├── src/internal/leafletLoader.ts      — NEW: tiny module that dynamically imports leaflet + CSS (single import seam)
+├── src/internal/location.ts           — NEW: isValidLocation(loc): boolean guard (NaN + range check)
+└── src/__tests__/
+    ├── filter.test.ts                 — NEW: 12 cases (label/member/dueRange × combine × empty filter)
+    ├── location.test.ts               — NEW: 6 cases (valid / nan-lat / nan-lng / out-of-range-lat / out-of-range-lng / missing-keys)
+    ├── MapView.test.tsx               — REWRITE: now ~15 cases (lazy-load fallback, pins render, pin click, empty-state, attribution visible, malformed-location filtered)
+    └── filter-view-integration.test.tsx — NEW: 6 cases (one per view: Board / Table / Calendar / Dashboard / Timeline / Map — filter applied + count assertion)
+
+packages/plugin-web-board-workspaces/
+├── src/BoardWorkspacesModule.tsx      — MODIFY: enable Filter button (open popover) + Share button (open modal); lift FilterState; pass `applyFilter`'d lists to alt-views and BoardView; pass `onSelectCard` placeholder
+├── src/FilterPopover.tsx              — NEW: popover anchored to Filter button; 3 facets (labels / members / dueRange) with checkboxes
+├── src/ShareModal.tsx                 — NEW: native <dialog> + URL input + Copy button + emit-before-close
+├── src/internal/filterState.ts        — NEW: EMPTY_FILTER constant + FilterState type + togglers
+├── src/internal/shareUrl.ts           — NEW: generateShareUrl(boardId): Promise<string> via SubtleCrypto
+└── src/__tests__/
+    ├── filterState.test.ts            — NEW: 8 cases (toggle label / toggle member / set dueRange / reset / EMPTY_FILTER identity)
+    ├── shareUrl.test.ts               — NEW: 6 cases (deterministic same-input-same-output / different-inputs-different-outputs / hex-format / 8-char-length / boardId-unicode / fallback if SubtleCrypto unavailable)
+    ├── FilterPopover.test.tsx         — NEW: 10 cases (render facets / toggle label / toggle member / set dueRange / clear button / aria-expanded / outside-click closes / ESC closes / bilingual / disabled facets when no labels)
+    ├── ShareModal.test.tsx            — NEW: 8 cases (open with URL / copy button copies / Copied flip / 2sec revert / emit-before-close / backdrop closes / ESC closes / bilingual)
+    └── BoardWorkspacesModule.test.tsx — MODIFY: +6 new cases (BWM-EXT-1..6: Filter button enabled / opens popover / hides cards / Share button enabled / opens modal / filter resets on board switch)
+
+packages/core/
+└── src/types/events.ts                — MODIFY: + 1 EventMap entry `web:board:share-requested`
+
+apps/web/
+├── public/_headers                    — MODIFY: connect-src adds https://tile.openstreetmap.org; img-src adds https://tile.openstreetmap.org
+├── src/__tests__/csp.test.ts          — MODIFY: +1 case asserting both directives contain the OSM origin (renamed CSP1 → CSP1+CSP2)
+└── src/__tests__/build-manifest.test.ts — NEW: 2 cases asserting MapView lazy chunk exists + size < 80 KB
+
+docs/adr/
+└── 0008-cloudflare-deploy-target-and-csp.md — AMEND §S3 D3 + add Amendments frontmatter row
+
+docs/PLUGIN_MAP.md                     — UPDATE: append `(Extension 2026-05-25 — Filter + Share + Map gap-closure row #6)` to rows for plugin-web-board-{core,views,workspaces}
+
+packages/plugin-web-board-views/package.json — MODIFY: + dependency `leaflet ^1.9.4` (latest stable as of 2026-05; pin once feature-build resolves)
+packages/plugin-web-board-views/package.json — MODIFY: + devDependency `@types/leaflet ^1.9.x`
+```
+
+### Dep boundary
+
+`leaflet` is a third-party runtime dependency added to
+`packages/plugin-web-board-views/package.json` (the package that owns MapView).
+`packages/plugin-web-board-workspaces` does NOT add leaflet; it consumes MapView
+through `@repo/plugin-web-board-views`'s barrel. The lazy-import boundary
+(`React.lazy(() => import("./MapView.js"))`) is INSIDE board-views — board-workspaces
+sees a normal component import. Vite's automatic code-splitting at dynamic-import
+boundaries ensures the chunk is separated.
+
+### Phase Plan summary (full breakdown in dev_log Phase Plan §)
+
+| Phase | Scope | Files | Tests added |
+|---|---|---|---|
+| P1 | Card schema `location?` extension in board-core + guard widened + tests | 3 files | +4 |
+| P2 | Filter predicate types + lift state + `applyFilter` integration + 6 view-integration tests | 4 files | +20 |
+| P3 | Filter UI popover + visual integration | 2 files | +10 |
+| P4 | Share modal `<dialog>` + URL generator + clipboard + EventMap entry + tests | 5 files | +22 |
+| P5 | Map — Leaflet dep add + lazy MapView + tile + pins + empty-state + tests | 7 files | +33 |
+| P6 | ADR-0008 §S3 D3 amendment + `_headers` extension + CSP test + bundle-budget test | 4 files | +3 |
+| P7 | Cross-vendor verifier checklist + PLUGIN_MAP append + dev_log flip to `READY_FOR_VERIFY` | 4 doc files | 0 |
+
+**Total**: 7 phases · ~92 new tests · 0 breaking changes to existing tests · ~510 LOC delta (estimate).
+
+### Coding-red-line compliance (CLAUDE.md §Code Boundaries)
+
+| Rule | Compliance |
+|---|---|
+| Business logic in `packages/plugin-*/` not `apps/*/src/` | ✅ Filter / Share / Map logic stays inside board-views + board-workspaces. The only `apps/web/` edits are `_headers` (deployment-config) and 2 tests (CSP + bundle-manifest source-text guards). |
+| Plugin-to-plugin via `@repo/core/events`, never direct imports | ✅ Share emit via `@repo/xai-web-event-bus` `emitWebEvent`. No new direct plugin-to-plugin imports. |
+| Canonical data types in `packages/core/` (global) or local plugin `types.ts` | ✅ `web:board:share-requested` payload declared in `@repo/core/types/events.ts`; `FilterState` / `FilterPredicate` local to board-workspaces |
+| `index.ts` is plugin's only public surface | ✅ Filter helpers re-exported via board-views `index.ts`; `internal/*` not exposed |
+| UI: generic → `packages/ui/`, business → owning plugin | ✅ FilterPopover + ShareModal + MapView are business components; they stay inside the owning plugin |
+| Rust / macOS platform code | N/A — web-only |
+| `manifest.json` aligned with runtime behavior | ✅ No manifest changes needed (status stays Stable for all 3 packages; PLUGIN_MAP note updated only) |
+

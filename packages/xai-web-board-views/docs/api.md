@@ -366,3 +366,190 @@ Row #8 introduces ONE new persistence key (`xai_board_view_by_id`). No schema ve
   }
 }
 ```
+
+---
+
+## §S15 — 2026-05-25 Extension API (gap-closure row #6 — Filter / Share / Map)
+
+> APPEND-ONLY. Sections §0..§15 above describe the SHIPPED row #8 + bugfix-cycle-1
+> surface and are NOT mutated. §S15 documents the new exports + extended
+> component contracts introduced by `xai-web-board-filter-share-map`.
+
+### §S15.0 — Extended public surface (`src/index.ts` additions)
+
+```ts
+// ---- Existing exports (§0) preserved verbatim ---------------------------
+
+// ---- Net-new exports for gap-closure row #6 -----------------------------
+
+// Filter helpers (consumed by board-workspaces' BoardWorkspacesModule)
+export { applyFilter } from "./internal/filter.js";
+export type {
+  /** Predicate shape used by board-workspaces' FilterPopover. */
+  FilterState,
+} from "./internal/filter.js";
+
+// Location guard (advisory — consumers may also import inline)
+export { isValidLocation } from "./internal/location.js";
+export type { CardLocation } from "./internal/location.js";
+```
+
+`internal/*` files remain non-importable from outside the package. Only the
+2 helpers above (plus the existing MapView with its widened props) cross the
+barrel.
+
+### §S15.1 — `BoardCard.location` field (schema extension owned by `xai-web-board-core`)
+
+```ts
+// packages/plugin-web-board-core/src/types.ts — MODIFY (additive)
+export interface BoardCard {
+  // ... existing fields preserved ...
+
+  /** OPTIONAL — geographic location for Map view rendering.
+   *  Cards without this field render as empty-state in Map view. */
+  location?: CardLocation;
+}
+
+// New type (declared in board-core; re-exported by board-views for ergonomic import)
+export interface CardLocation {
+  /** WGS84 latitude, -90..90. */
+  lat: number;
+  /** WGS84 longitude, -180..180. */
+  lng: number;
+  /** Optional human-readable label rendered in the pin popup. */
+  label?: string;
+}
+```
+
+Backwards compat: existing `xai_boards_v2` data has every card with
+`location === undefined`. The widened `isBoardCard` guard accepts both shapes.
+No migration. No registry edit.
+
+### §S15.2 — `applyFilter` pure helper
+
+```ts
+// packages/plugin-web-board-views/src/internal/filter.ts (NEW)
+
+export interface FilterState {
+  /** Empty Set = no label filter (all labels pass). */
+  labels: ReadonlySet<string>;
+  /** Empty Set = no member filter (all members pass). */
+  members: ReadonlySet<string>;
+  /** 'all' = no due filter. */
+  dueRange: 'all' | 'overdue' | 'today' | 'week';
+}
+
+export const EMPTY_FILTER: FilterState = Object.freeze({
+  labels: new Set(),
+  members: new Set(),
+  dueRange: 'all',
+});
+
+/** Pure helper. Returns a new BoardListData[] where each list's cards are
+ *  filtered by the predicate. Lists are preserved (empty lists OK). */
+export function applyFilter(
+  lists: readonly BoardListData[],
+  filter: FilterState,
+): BoardListData[];
+```
+
+**Predicate semantics** (AND between facets, OR within each facet):
+
+- A card passes the `labels` facet if `filter.labels.size === 0` OR
+  `card.labels?.some(l => filter.labels.has(l))` is true.
+- A card passes the `members` facet if `filter.members.size === 0` OR
+  `card.members?.some(m => filter.members.has(m))` is true.
+- A card passes the `dueRange` facet:
+  - `'all'` — always pass
+  - `'overdue'` — `card.dueLate === true`
+  - `'today'` — `card.due === 'Today' || card.due === '今天' || card.due === \`${m}/${d}\`` (m/d = today)
+  - `'week'` — `card.due` parseable into [today, today+7) range (uses `parseDay` from existing `dateOps.ts`)
+
+Determinism: pure; no `Date.now()` inside `applyFilter` (current date is
+injected by the caller via a small `now?: Date` parameter for testability —
+default `new Date()`).
+
+### §S15.3 — `isValidLocation` guard
+
+```ts
+// packages/plugin-web-board-views/src/internal/location.ts (NEW)
+
+export function isValidLocation(loc: unknown): loc is CardLocation;
+```
+
+Rejects: `null` / `undefined` / non-object / missing `lat` / missing `lng` /
+non-finite `lat` / non-finite `lng` / `Math.abs(lat) > 90` / `Math.abs(lng) > 180`.
+Accepts: `{ lat: number; lng: number }` and `{ lat, lng, label }`.
+
+### §S15.4 — `MapView` extended props (REWRITE — was placeholder)
+
+```tsx
+import type { BoardListData, BoardCardData } from "@repo/plugin-web-board-core";
+import type { Lang } from "./internal/i18n.js";
+
+export interface MapViewProps {
+  lists: readonly BoardListData[];
+  lang: Lang;
+  /** Optional callback when a pin is clicked. Receives (cardId, listId). */
+  onSelectCard?: (cardId: string, listId: string) => void;
+}
+
+export const MapView: React.LazyExoticComponent<React.ComponentType<MapViewProps>>;
+```
+
+**Behavior**
+
+- Lazy-loaded via `React.lazy(() => import("./MapView.js"))` at the index.ts
+  re-export seam (Suspense boundary lives in the consumer — `BoardModule` and
+  `BoardWorkspacesModule`).
+- On mount: dynamically imports `leaflet` + `leaflet/dist/leaflet.css`,
+  initialises `L.map(containerRef.current)`, sets tile layer
+  `L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', { attribution: '© OpenStreetMap contributors', maxZoom: 19 })`.
+- Filters `lists.flatMap(l => l.cards.map(c => ({ card: c, listId: l.id })))`
+  through `isValidLocation(card.location)`.
+- Renders one `L.marker([loc.lat, loc.lng])` per valid card; binds a popup
+  with `card.title[lang]` + `loc.label`.
+- On marker click: calls `onSelectCard?.(card.id, listId)`.
+- `fitBounds` to all pins (with 50px padding) if ≥1; else `setView([0,0], 2)` (world view) + empty-state overlay copy.
+- Cleanup: `useEffect` return calls `map.remove()` to dispose Leaflet instance + listeners.
+- Empty-state copy bilingual:
+  - en: `"No cards have a location yet. Add a location to a card to see it on the map."`
+  - zh: `"没有卡片设置了位置。在卡片上添加位置后即可在地图上看到。"`
+
+### §S15.5 — Error semantics (Map view)
+
+| Failure mode | Behavior |
+|---|---|
+| `leaflet` dynamic import fails (network / CSP block) | Lazy `<Suspense>` catches; ErrorBoundary fallback shows bilingual "Map failed to load." text; no crash |
+| `lists` empty OR no card has valid `location` | Empty-state overlay (per §S15.4); blank map tile background still renders |
+| `card.location` is malformed (NaN / out-of-range) | Filtered out by `isValidLocation`; no error; card silently omitted from Map |
+| `card.location.lng === 180` / `lat === -90` (edge of valid range) | Accepted (inclusive bounds); marker placed at the edge |
+| Tile fetch fails (network) | Leaflet's internal retry; grey tile placeholder visible; no crash |
+| CSP blocks tile origin | Browser console error visible; tiles fail to render but map UI is intact |
+
+### §S15.6 — Concurrency
+
+Filter / Share / Map all run within a single React render tree. No new cross-window event surface. The single new `web:board:share-requested` channel is emitted in-process (board-workspaces fires; declaration-only — no consumer in this row).
+
+### §S15.7 — Versioning
+
+`BoardCard.location` is additive; bumps no schema version. `xai_boards_v2` registry stays at v1 (registry is the shape authority; no migration). MapView's lazy chunk is a separate Vite asset — version-locked to the package.
+
+### §S15.8 — Dependency additions
+
+```jsonc
+{
+  "name": "@repo/plugin-web-board-views",
+  "dependencies": {
+    // ... existing deps preserved ...
+    "leaflet":                    "^1.9.4"
+  },
+  "devDependencies": {
+    // ... existing deps preserved ...
+    "@types/leaflet":             "^1.9.x"
+  }
+}
+```
+
+Exact `^1.9.x` micro pinned by the build executor at P5 install time; current latest stable is 1.9.4 (verified 2026-05).
+

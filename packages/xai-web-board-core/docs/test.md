@@ -150,3 +150,31 @@
 | Q10 | Set `xai_boards_v2` to `"garbage"` → reload | Module renders default seed without crash |
 
 **Note**: Q1–Q10 are documented for ship-time cross-vendor verify (Codex `gpt-5.5-thinking medium` or Cursor fallback per manifest header). The row-level feature-verify runs in same-vendor Claude Opus and explicitly documents this as the same-vendor compromise.
+
+---
+
+## §6 — 2026-05-25 Extension Tests (gap-closure row #6 — Card schema `location?`)
+
+> APPEND-ONLY. **Canonical test catalogue lives in
+> `packages/xai-web-board-views/docs/test.md §6`.**
+
+### §6.1 — Baseline preservation (gate)
+
+Existing 104 tests in `packages/plugin-web-board-core/src/__tests__/**` MUST continue to pass with ZERO edits to test files except `isBoardArray.test.ts` which gains 4 new cases.
+
+### §6.2 — `__tests__/isBoardArray.test.ts` (MODIFY · +4 cases BCV1..BCV4)
+
+| ID | Case | Assertion |
+|---|---|---|
+| BCV1 | `isBoardCard({ id, title, location: { lat: 40.7, lng: -74 } })` → true | guard accepts present-and-valid |
+| BCV2 | `isBoardCard({ id, title })` (no location field) → true | back-compat preserved |
+| BCV3 | `isBoardCard({ id, title, location: { lat: NaN, lng: 0 } })` → true | structural validity OK (range enforced elsewhere) |
+| BCV4 | `isBoardCard({ id, title, location: "garbage" })` → false | non-object location rejected |
+
+### §6.3 — Acceptance gate
+
+| Gate | Description |
+|---|---|
+| G1 | `pnpm --filter @repo/plugin-web-board-core test` → 104 baseline + 4 = 108 PASS |
+| G1a | All NEW tests (BCV1..BCV4) PASS individually |
+| G1b | Existing 100 isBoardArray cases PASS unchanged |
