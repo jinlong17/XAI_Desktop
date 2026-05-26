@@ -68,7 +68,7 @@ function flipConnectedPref(
 }
 
 function CallbackPageInner(): React.ReactElement {
-  const [searchParams] = useSearchParams();
+  const [searchParams, setSearchParams] = useSearchParams();
   const navigate = useNavigate();
   const {
     setNotionConnected,
@@ -99,6 +99,8 @@ function CallbackPageInner(): React.ReactElement {
         validateAndConsumeState(stateParam);
       }
       setState({ status: "cancelled", providerId: null });
+      // CODEX FINDING #2: scrub query immediately so error/state don't linger.
+      setSearchParams({}, { replace: true });
       const timer = setTimeout(() => {
         void navigate(SETTINGS_INTEGRATIONS_PATH, { replace: true });
       }, 3000);
@@ -107,6 +109,8 @@ function CallbackPageInner(): React.ReactElement {
 
     if (!stateParam) {
       setState({ status: "invalid", providerId: null });
+      // CODEX FINDING #2: scrub query (defensive — no state but may have code).
+      setSearchParams({}, { replace: true });
       const timer = setTimeout(() => {
         void navigate(SETTINGS_INTEGRATIONS_PATH, { replace: true });
       }, 4000);
@@ -117,6 +121,8 @@ function CallbackPageInner(): React.ReactElement {
 
     if (!pending) {
       setState({ status: "invalid", providerId: null });
+      // CODEX FINDING #2: scrub query — state was malformed/expired, code still in URL.
+      setSearchParams({}, { replace: true });
       const timer = setTimeout(() => {
         void navigate(SETTINGS_INTEGRATIONS_PATH, { replace: true });
       }, 4000);
@@ -143,6 +149,15 @@ function CallbackPageInner(): React.ReactElement {
     });
 
     setState({ status: "success", providerId });
+
+    // CODEX FINDING #2 (2026-05-26): Immediately scrub `code`/`state` from
+    // the URL after consuming them. Previously the URL retained the OAuth
+    // params for the full 2s success-display window (and 3s/4s on the
+    // error/invalid branches above), leaking them into browser history,
+    // shareable URLs, screenshots, and referrer headers if the user
+    // navigated elsewhere mid-display. setSearchParams({}, replace) uses
+    // history.replaceState so no extra history entry is pushed.
+    setSearchParams({}, { replace: true });
 
     const timer = setTimeout(() => {
       void navigate(SETTINGS_INTEGRATIONS_PATH, { replace: true });
