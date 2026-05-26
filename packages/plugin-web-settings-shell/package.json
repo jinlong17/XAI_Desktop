@@ -20,7 +20,8 @@
   },
   "peerDependencies": {
     "react": "^19.0.0",
-    "react-dom": "^19.0.0"
+    "react-dom": "^19.0.0",
+    "react-router": "^7.15.1"
   },
   "dependencies": {
     "@repo/core": "workspace:*",
@@ -39,6 +40,7 @@
     "jsdom": "^26.0.0",
     "react": "^19.2.0",
     "react-dom": "^19.2.0",
+    "react-router": "^7.15.1",
     "typescript": "5.9.2",
     "vitest": "^3.2.1"
   }

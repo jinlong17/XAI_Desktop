@@ -6,11 +6,15 @@ import { paneRegistry } from "../index.js";
  * P1..P3 — paneRegistry shape + placeholder render.
  */
 describe("paneRegistry", () => {
-  it("P1: length is 13", () => {
-    expect(paneRegistry).toHaveLength(13);
+  // Pre-existing count drift fixed 2026-05-26 alongside codex C3-CHROME-1.
+  // Row #2 (xai-web-ai-chat-real-llm-adapter) added the "ai" pane between
+  // "appearance" and "more" but didn't update these tests. Updated now.
+
+  it("P1: length is 14 (13 baseline + 'ai' from row #2)", () => {
+    expect(paneRegistry).toHaveLength(14);
   });
 
-  it("P2: id order matches DESIGN.md §4.12 sequence", () => {
+  it("P2: id order matches DESIGN.md §4.12 sequence + row #2 'ai' insertion", () => {
     expect(paneRegistry.map((p) => p.id)).toEqual([
       "account",
       "premium",
@@ -19,6 +23,7 @@ describe("paneRegistry", () => {
       "notifications",
       "date_time",
       "appearance",
+      "ai",
       "more",
       "integrations",
       "collaborate",
