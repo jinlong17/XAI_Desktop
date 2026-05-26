@@ -201,6 +201,14 @@ export interface EventMap {
     source: 'add-widget-button' | 'empty-state-cta';
   };
 
+  // Dashboard widget added via picker (owner: xai-web-dashboard-grid gap-closure row #5)
+  'web:dashboard:widget-added': {
+    /** The widget id that was just appended to xai_dash_order. */
+    widgetId: string;
+    /** Where the add originated. v1 closed union: 'picker'. */
+    source: 'picker';
+  };
+
   // Pomodoro session completion (owner: xai-web-pomodoro row #14) — declaration only in W1
   'web:pomodoro:session-finished': {
     /** Mode that just finished. */
