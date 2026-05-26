@@ -150,13 +150,13 @@ None.
 | Workflow | FEATURE_DEV |
 | Target | xai-web-settings-integrations-3rd-party |
 | Title | Wire the Integrations pane (currently 17 placeholder cards, no-op clicks) with 3 real OAuth authorization-code + PKCE stub flows for Notion / Google Calendar / Linear. v1 is stub-only — callback page validates state then discards the code; no token persistence; no real backend. Establishes the OAuth callback URL pattern + CSP `connect-src` allowlist pattern for 3 token endpoints + PKCE state/code_verifier generation pattern (crypto.getRandomValues + base64url + sessionStorage TTL). Adds 3 boolean prefs in `plugin-web-storage` + 2 declaration-only EventMap entries + 1 new react-router route `/app/settings/integrations/callback`. Amends ADR-0008 §S3 D3 in-place (third amendment) per row #2 binding precedent + row #6 precedent. |
-| Current Phase | FEATURE_BUILD |
-| Status | READY_FOR_VERIFY |
-| Suggested Next | feature-verify |
+| Current Phase | FEATURE_VERIFY |
+| Status | READY_TO_SHIP |
+| Suggested Next | ship |
 | Verify Cross-vendor | yes (per ADR-0009 §D4 P0 + roadmap header default; primary Codex `gpt-5.5-thinking medium`, fallback Cursor) |
 | Automation Mode | A-Claude (per roadmap default inherited from xai-web-console.md 2026-05-23 user override) |
-| Executor | claude-sonnet-4-6 — feature-build verify-feedback patch cycle 2, 2026-05-26 |
-| Updated | 2026-05-26 00:15 |
+| Executor | claude-opus-4-7-1m — feature-verify cycle 3, 2026-05-26 |
+| Updated | 2026-05-26 00:18 |
 | Dispatched By | `xai-roadmap-loop` SERIAL dispatch — Wave 2 second row, after row #6 SHIPPED `a86f58f` 2026-05-25 |
 | Roadmap Row | `docs/workflow/roadmap/xai-web-console-gap-closure.md` row #7 (W2 · OAuth PKCE stub for 3 providers) |
 | Parent ADR | ADR-0009 §D2-G3 (P0 gap-closure; ≥5/9 known gaps SHIPPED to unblock P1 Desktop launch) |
@@ -418,4 +418,24 @@ R10 Cold-read flags PKCE strictness → TT-PKCE-1..5 covers validation.
 - **Commits**: `bcefcc4` fix(apps/web): extend RouteErrorBoundary scope union to include 'oauth-callback' (verify B2 for row #7)
 - **Lineage Status**: READY_FOR_VERIFY
 - **Next step**: `feature-verify` cycle 3 — re-run independent verification with `check-types` gate confirmed passing.
+
+#### 2026-05-26 00:18 — Extension-FEATURE_VERIFY cycle 3: verdict PASS → READY_TO_SHIP
+
+- **Executor**: Claude Opus 4.7 (1M context) — feature-verify (re-verify cycle 3 after B2 patch)
+- **Action**: Re-ran the 7 gates supplied by the cycle-3 dispatch against the 10 commits (85bf836 P1, 709bf19 P2, 9cb9114 P3, 1a11742 P4, 826149d P5, 218b0ae chore, 12a4464 lint patch, 5a2f503 docs, bcefcc4 type fix, 83d3363 docs).
+  - **Gate 1 B2 re-check (web check-types)**: PASS. `pnpm --filter @repo/web check-types` → exit 0 (was exit 2 with TS2322 in cycle 2). `git show bcefcc4` confirms 1-line additive union extension at apps/web/src/routes/RouteErrorBoundary.tsx:6 — `"root" | "auth" | "app" | "module"` → `"root" | "auth" | "app" | "module" | "oauth-callback"`. No runtime behavior change.
+  - **Gate 2 B1.a + B1.b still cleared**: PASS. `pnpm --filter @repo/plugin-web-settings-rest lint --max-warnings 0` → exit 0, 0 warnings. No regression from B2 patch (B2 only touched apps/web/, not plugin-web-settings-rest/).
+  - **Gate 3 All test suites still pass**: PASS. plugin-web-settings-rest 154/154; plugin-web-storage 88/88; core 8/8; web 111/111. Total 361/361.
+  - **Gate 4 Build**: PASS. `pnpm --filter @repo/web build` → SUCCESS in 2.69s. Confirmed `dist/_headers` includes all 3 OAuth token endpoints in connect-src (`api.notion.com`, `oauth2.googleapis.com`, `api.linear.app`); frame-src unchanged; frame-ancestors 'none' preserved.
+  - **Gate 5 PKCE / CSP / EventMap / no-Math.random / no-localStorage guards**: PASS — all still hold. B2 patch only widened a UI type union in apps/web; no impact on row #7 OAuth core. PKCE RFC 7636 §B.1 vector test (PK5) inside 154/154 PASS; no-math-random + no-localStorage source-text guards inside no-math-random.test.ts (7 tests) PASS; CSP3 source-text guard inside web 111/111 PASS; 2 EventMap declarations preserved at packages/core/src/types/events.ts:371/379.
+  - **Gate 6 No new BLOCKER candidates**: PASS. `pnpm --filter @repo/plugin-web-settings-rest check-types` → "no check-types script" (N/A per package design). `pnpm --filter @repo/plugin-web-storage check-types` → exit 0. `pnpm --filter @repo/core check-types` → exit 0.
+  - **Gate 7 Patch hygiene**: PASS. bcefcc4 is single 1-line additive type widening (RouteErrorBoundary.tsx only); 83d3363 is dev_log-only docs flip. Both commit messages format-compliant (Why / What / Scope / Risk / Docs / Tests + Co-Authored-By). No scope creep.
+- **Findings — BLOCKERS**: NONE. All 7 cycle-3 gates green.
+- **Residual risks (non-blocking, ship-eligible)**:
+  - **R5 (deferred to manual smoke)**: cross-vendor cold-read on `frame-src` could surface a 4th amendment requirement if any provider's authorize page is later observed embedding (currently all 3 set X-Frame-Options: DENY per discovery §3.3 evidence — verified at planning time, may re-confirm at ship-smoke).
+  - **R6 (documented v1 limitation)**: provider-side OAuth grant not revoked on Disconnect — UI tooltip warns user; v1 stub-only constraint per HC3.
+  - **P6 cross-vendor verify**: per test.md §5.8 + Extension-P6 [DEFERRED to feature-verify], the Codex `gpt-5.5-thinking medium` cold-read on PKCE correctness + no URL leakage + CSP minimality is recommended pre-ship; not gating per row #6 + W1/W2 precedent (deferrable up to 24h post-ship per ADR-0008 carve-out).
+- **Tests**: as documented above — 361/361 pass, lint exit 0, web check-types exit 0, web build SUCCESS, all check-types gates green.
+- **Commits**: — (verify phase produces no commits beyond this dev_log flip).
+- **Next step**: `ship` — push 10 commits to remote, flip Lineage Status to SHIPPED, append to roadmap manifest as row #7 complete.
 
