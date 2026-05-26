@@ -14,6 +14,7 @@
 | Chrome | 120+ | macOS 14 | Pending |
 | Safari | 17+ | macOS 14 | Pending |
 | Firefox | 121+ | macOS 14 | Pending |
+| Safari | 17+ | iOS 17 | Pending |
 | Chrome | 120+ | Windows 11 | Deferred (future) |
 
 ---
@@ -101,6 +102,15 @@ Actual output: _[to be filled at feature-verify]_
 | G1 | DevTools Network tab: opening palette makes 0 network requests | — |
 | G2 | `_headers` `connect-src` unchanged (xai-web-cmdk adds no new endpoints) | — |
 | G3 | No new `xai_*` localStorage keys created when palette is opened | — |
+
+## Section H — iOS Safari
+
+| ID | Check | iOS Safari |
+|---|---|---|
+| H1 | Topbar search button opens the palette because hardware Cmd+K may be unavailable. | — |
+| H2 | Typing query text filters results and keeps the input visible above the software keyboard. | — |
+| H3 | Tapping a result navigates to the selected module and closes the palette. | — |
+| H4 | Tap outside / browser back path does not leave an inert backdrop over the app. | — |
 
 ---
 

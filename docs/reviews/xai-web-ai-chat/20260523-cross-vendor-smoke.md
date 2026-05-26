@@ -68,6 +68,27 @@ Recorded on a developer machine — vehicle is `pnpm --filter @repo/web dev:mock
 - The reduced-motion guard is an additive `@media (prefers-reduced-motion: reduce) { … animation-play-state: paused; }` block at the end of `styles.css`; it does not exist in the upstream prototype and is this row's only deliberate divergence.
 - Adapter (Option A) has zero network surface; no CSP / Sentry rule changes were needed in `apps/web`.
 
+## Gap-Closure Row #2 Addendum — Real LLM Adapter
+
+> This addendum is required for ADR-0009 D2 G2 because the original checklist above primarily covers the baseline AI Chat module. Row #2 added Settings -> AI key storage and real-provider request paths.
+
+| ID | Check | Chrome | Safari | Firefox | iOS Safari | Notes |
+|---|---|---|---|---|---|---|
+| LLM-1 | `/app/settings/ai` renders provider picker, model picker, API key field, Base URL field for OpenAI-compatible mode, and streaming toggle. | Pending | Pending | Pending | Pending |  |
+| LLM-2 | Save a test API key; no plaintext key appears in localStorage. | Pending | Pending | Pending | Pending | Inspect Application/Storage where available. |
+| LLM-3 | Reload and confirm saved-key state is restored through IndexedDB/WebCrypto path. | Pending | Pending | Pending | Pending |  |
+| LLM-4 | Send a message from `/app/ai`; streamed or demo response appears without UI deadlock. | Pending | Pending | Pending | Pending | Real-provider call requires operator-owned key. |
+| LLM-5 | Invalid key / quota / network failure maps to the user-facing error banner category. | Pending | Pending | Pending | Pending |  |
+| LLM-6 | Delete saved key; reload and confirm key state is gone. | Pending | Pending | Pending | Pending |  |
+
+## iOS Safari Addendum
+
+| ID | Check | iOS Safari |
+|---|---|---|
+| IOS-1 | `/modules/ai` or `/app/ai` route renders without horizontal overflow. | Pending |
+| IOS-2 | Message composer remains usable with the software keyboard open. | Pending |
+| IOS-3 | Settings -> AI key field can save/delete without viewport or focus trap breakage. | Pending |
+
 ## Sign-off
 
 - Pending human verifier checklist completion in `feature-verify` phase.

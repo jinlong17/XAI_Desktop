@@ -131,6 +131,20 @@ Reference: `packages/xai-web-dashboard-grid/docs/dev_log.md` "Verify Report (202
 - [ ] T1 — Touch-drag a widget. The `touch-action: none` on `.widget-shell` (`src/styles.css`) prevents page scroll capture; drag pipeline runs cleanly.
 - [ ] T2 — Reload. Order survives.
 
+## Gap-Closure Row #5 Addendum — Add Widget Picker
+
+> This addendum is required for ADR-0009 D2 G2 because the original checklist above primarily covers the baseline dashboard grid. Row #5 added the native dialog picker, widget-catalog reuse, duplicate hiding, and `web:dashboard:widget-added` event ordering.
+
+| ID | Check | Chrome | Safari | Firefox | iOS Safari | Notes |
+|---|---|---|---|---|---|---|
+| AWP-1 | Click Add Widget; native `<dialog>` picker opens and traps focus. | Pending | Pending | Pending | Pending |  |
+| AWP-2 | Tab moves through widget cards and close control; Esc closes the picker. | Pending | Pending | Pending | Pending |  |
+| AWP-3 | Selecting a widget appends it to the dashboard. | Pending | Pending | Pending | Pending |  |
+| AWP-4 | `web:dashboard:widget-added` event is emitted before the dialog closes. | Pending | Pending | Pending | Optional | Console listener recommended on desktop browsers. |
+| AWP-5 | Already-added widgets are hidden from the picker; empty-picker state renders when all are added. | Pending | Pending | Pending | Pending |  |
+| AWP-6 | Backdrop click mirrors Escape behavior without leaving focus inert. | Pending | Pending | Pending | Pending |  |
+| AWP-7 | Reload preserves added widget order. | Pending | Pending | Pending | Pending |  |
+
 ---
 
 ## Doc-only mitigation rationale — SUPERSEDED 2026-05-24 post-Codex-re-review

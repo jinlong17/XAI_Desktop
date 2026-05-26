@@ -39,20 +39,22 @@ Operator ran 4 parallel Codex agents for the 9 rows. Verdicts:
 
 **Purpose:** unblock ADR-0009 §D2 G2 → flip ADR-0010 Status=Accepted → start P1.
 
+**Codex session update (2026-05-26):** all 6 previously missing row-level smoke scaffold files now exist. The 3 existing scaffold files were audited; #2 and #5 now include gap-closure addenda for the extension work, and #3 now includes iOS Safari coverage. These files are still templates only; no real-browser PASS evidence has been recorded.
+
 **Browser/OS targets:** Chrome 120+ macOS 14 · Safari 17+ macOS 14 · Firefox 121+ macOS 14 · Safari 17+ iOS 17 (mandatory) · Chrome 120+ Windows 11 (optional/future)
 
 **Acceptance:** each row must have at least PASS verdicts across all 4 mandatory targets (24-hour carve-out per ADR-0008 §S3); FAIL means file a bug-fix row.
 
-**Existing scaffolds (3 rows have files):**
-- `docs/reviews/xai-web-cmdk-search/20260525-cross-vendor-smoke.md` (row #3 gap-closure)
-- `docs/reviews/xai-web-ai-chat/20260523-cross-vendor-smoke.md` (covers row #2 extension via parent)
-- `docs/reviews/xai-web-dashboard-grid/20260524-cross-vendor-smoke.md` (covers row #5 extension via parent)
+**Existing scaffolds audited (3 rows):**
+- `docs/reviews/xai-web-cmdk-search/20260525-cross-vendor-smoke.md` (row #3 gap-closure) — complete after adding iOS Safari section.
+- `docs/reviews/xai-web-ai-chat/20260523-cross-vendor-smoke.md` (row #2 extension via parent) — complete after adding Real LLM Adapter addendum.
+- `docs/reviews/xai-web-dashboard-grid/20260524-cross-vendor-smoke.md` (row #5 extension via parent) — complete after adding Add Widget Picker addendum.
 
-**Missing scaffolds (6 rows need new files OR can be merged into the existing parent's smoke):**
+**Row-level smoke scaffold files:**
 
 | # | Slug | Recommended smoke file path | Key scenarios per row |
 |---|---|---|---|
-| #1 | xai-web-pomodoro-counters-test-fix | N/A — bugfix only, no new UI | Run pomodoro feature smoke from parent `docs/reviews/xai-web-pomodoro/` (if scaffold exists) — verify today counters update after focus session |
+| #1 | xai-web-pomodoro-counters-test-fix | `docs/reviews/xai-web-pomodoro-counters-test-fix/20260526-cross-vendor-smoke.md` | Run pomodoro feature smoke — verify today counters update after focus session |
 | #4 | xai-web-calendar-week-day-views | `docs/reviews/xai-web-calendar-week-day-views/20260526-cross-vendor-smoke.md` | (a) toggle Month↔Week↔Day on every browser; (b) DST spring-forward day (2026-03-08) render correctness (codex finding #4 was code-fixed but real-browser repro pending); (c) multi-hour event blocks render continuous; (d) active-date preservation across toggle; (e) `xai_calendar_view` persistence round-trip; (f) iOS touch interactions on hour rows |
 | #6 | xai-web-board-filter-share-map | `docs/reviews/xai-web-board-filter-share-map/20260526-cross-vendor-smoke.md` | (a) FilterPopover open/close + label/member/due filter apply across all 6 views; (b) ShareModal open + clipboard copy works (Safari has known clipboard restrictions); (c) Map view loads Leaflet lazy-chunk only on Map tab click + OSM tiles render + pins clickable; (d) Empty location → empty-state message; (e) bundle network panel shows Leaflet chunk loaded only once after first Map view |
 | #7 | xai-web-settings-integrations-3rd-party | `docs/reviews/xai-web-settings-integrations-3rd-party/20260526-cross-vendor-smoke.md` | (a) Connect Notion/GCal/Linear opens authorize URL in same tab; (b) Callback URL `?code=&state=` immediately scrubbed (codex finding #2 fix) — verify via DevTools URL bar within 100ms of route mount; (c) Banner shows success/error/invalid; (d) Disconnect clears local state; (e) sessionStorage cleared post-callback; (f) Safari ITP doesn't break sessionStorage TTL; (g) iOS in-app browser handling |
