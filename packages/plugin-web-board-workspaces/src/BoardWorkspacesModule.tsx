@@ -67,6 +67,7 @@ import { StatusOverviewBanner } from "./StatusOverviewBanner.js";
 import { InboxPanel } from "./InboxPanel.js";
 import { PlannerPanel } from "./PlannerPanel.js";
 import { FilterPopover } from "./FilterPopover.js";
+import { ShareModal } from "./ShareModal.js";
 import {
   loadPanelsOrDefault,
   loadInboxOrDefault,
@@ -174,6 +175,7 @@ export function BoardWorkspacesModule({ lang }: BoardWorkspacesModuleProps) {
   const [createOpen, setCreateOpen] = useState(false);
   const [overviewOpen, setOverviewOpen] = useState(false);
   const [filterOpen, setFilterOpen] = useState(false);
+  const [shareOpen, setShareOpen] = useState(false);
 
   // ---- Kanban-view composer state ---------------------------------------
   const [draftListIdx, setDraftListIdx] = useState<number | null>(null);
@@ -374,7 +376,12 @@ export function BoardWorkspacesModule({ lang }: BoardWorkspacesModuleProps) {
             />
           )}
         </div>
-        <button type="button" className="board-icon-btn primary" disabled>
+        <button
+          type="button"
+          className="board-icon-btn primary"
+          data-testid="share-btn"
+          onClick={() => setShareOpen(true)}
+        >
           {STR_HEADER.share[lang]}
         </button>
       </header>
@@ -513,6 +520,14 @@ export function BoardWorkspacesModule({ lang }: BoardWorkspacesModuleProps) {
           workspaces={workspaces}
           onCancel={() => setCreateOpen(false)}
           onCreate={createBoard}
+        />
+      )}
+
+      {shareOpen && (
+        <ShareModal
+          board={activeBoard}
+          lang={lang}
+          onClose={() => setShareOpen(false)}
         />
       )}
     </div>

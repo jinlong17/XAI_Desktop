@@ -84,6 +84,10 @@ export type { PlannerPanelProps } from "./PlannerPanel.js";
 // ---- gap-closure row #6 additions ----------------------------------------
 export { FilterPopover } from "./FilterPopover.js";
 export type { FilterPopoverProps } from "./FilterPopover.js";
+
+export { ShareModal } from "./ShareModal.js";
+export type { ShareModalProps } from "./ShareModal.js";
+
 export type { FilterState } from "@repo/plugin-web-board-views";
 
 // ---- Top-level orchestrator ----------------------------------------------

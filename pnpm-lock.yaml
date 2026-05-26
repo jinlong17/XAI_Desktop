@@ -964,6 +964,9 @@ importers:
       '@repo/plugin-web-tokens':
         specifier: workspace:*
         version: link:../plugin-web-tokens
+      '@repo/xai-web-event-bus':
+        specifier: workspace:*
+        version: link:../xai-web-event-bus
       '@repo/xai-web-shell':
         specifier: workspace:*
         version: link:../xai-web-shell

@@ -327,6 +327,17 @@ export interface EventMap {
     occurredAt: string;
   };
 
+  // Board share URL generated (owner: xai-web-board-filter-share-map gap-closure row #6)
+  // Declaration-only: no consumer in this row (mirrors web:dashboard:widget-added precedent from row #5).
+  'web:board:share-requested': {
+    /** Board id whose share URL was generated. */
+    boardId: string;
+    /** Generated share URL (mock — no backend; deterministic SHA-256 hash). */
+    url: string;
+    /** Where the action originated. v1 closed union: 'header'. */
+    source: 'header';
+  };
+
   // Cmd+K command palette events (owner: @repo/xai-web-cmdk gap-closure row #3)
   // Declared here for typed cross-package EventMap subscription.
   // api.md §2
