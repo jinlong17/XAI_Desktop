@@ -1,17 +1,29 @@
 /**
  * integrationsPane — Settings → Integrations & Import pane.
  *
- * 3 grouped sections × 17 placeholder cards.
- * Card click: DEV-only console.warn / PROD no-op. No event emit.
+ * SHIPPED row #24: 17 placeholder cards in 3 groups (Featured/Calendar/Integrate).
+ * Extension 2026-05-25 (gap-closure row #7): Adds "Connected providers" section
+ * above the 3 groups for the 3 wired OAuth providers (Notion / GCal / Linear).
+ *
+ * Per Note 2 from feature-review: when a provider is in "Connected" state, its
+ * placeholder card in the group grids is filtered out to avoid visual duplication.
+ * The 14 unwired placeholder cards always remain as-is.
+ *
+ * Card click for PLACEHOLDER cards: DEV-only console.warn / PROD no-op. No event emit.
  *
  * Port of web design/module-settings.jsx lines 827-873.
- * API contract: packages/xai-web-settings-rest/docs/api.md §4.7 + §2.4
+ * API contract: packages/xai-web-settings-rest/docs/api.md §4.7 + §2.4 + §6 (P4)
  */
 
 import * as React from "react";
 import type { Pane, PaneRenderProps } from "@repo/plugin-web-settings-shell";
 import { useI18n } from "@repo/plugin-web-tokens";
+import { usePref } from "@repo/plugin-web-storage";
 import { localI18n } from "../internal/localI18n.js";
+import { PROVIDERS } from "../internal/integrationProviders.js";
+import { IntegrationConnectButton } from "../internal/integrationConnectButton.js";
+import { IntegrationDisconnectButton } from "../internal/integrationDisconnectButton.js";
+import { IntegrationStubBanner } from "../internal/integrationStubBanner.js";
 import type { IntegrationCardId } from "../types.js";
 
 interface IntegrationCardSpec {
@@ -50,6 +62,10 @@ const INTEGRATE: readonly IntegrationCardSpec[] = [
   { id: "todoist", name: "Todoist (Import)", color: "oklch(55% 0.18 25)",  short: "T" },
 ] as const;
 
+// The 3 wired provider card IDs that can appear in the placeholder groups.
+// When connected, these are filtered out of their group to avoid duplication (Note 2).
+const WIRED_PROVIDER_CARD_IDS = new Set<IntegrationCardId>(["notion", "gcal", "linear"]);
+
 interface IntegrationCardProps {
   readonly spec: IntegrationCardSpec;
 }
@@ -78,26 +94,104 @@ function IntegrationsPaneContent({ lang }: PaneRenderProps): React.ReactElement 
   const { s } = useI18n(lang);
   const t = localI18n(lang);
 
+  // Per-provider connection state
+  const [notionConnected, setNotionConnected] = usePref(
+    "xai_pref_integrations_connected_notion",
+  );
+  const [gcalConnected, setGcalConnected] = usePref(
+    "xai_pref_integrations_connected_gcal",
+  );
+  const [linearConnected, setLinearConnected] = usePref(
+    "xai_pref_integrations_connected_linear",
+  );
+
+  // Map of providerId → connected state
+  const connectedMap: Record<string, boolean> = {
+    notion: notionConnected,
+    gcal: gcalConnected,
+    linear: linearConnected,
+  };
+
+  // Map of providerId → disconnect handler
+  const disconnectHandlers: Record<string, () => void> = {
+    notion: () => setNotionConnected(false),
+    gcal: () => setGcalConnected(false),
+    linear: () => setLinearConnected(false),
+  };
+
+  // Filter placeholder groups: hide wired-provider cards that are connected
+  // (they appear in the "Connected providers" section instead)
+  const connectedWiredIds = new Set<IntegrationCardId>(
+    PROVIDERS.filter((p) => connectedMap[p.id]).map((p) => p.id),
+  );
+  const filterConnected = (spec: IntegrationCardSpec): boolean =>
+    !connectedWiredIds.has(spec.id);
+
+  const visibleFeatured = FEATURED.filter(filterConnected);
+  // CALENDAR group has gcal but not the other wired providers — filter gcal when connected
+  const visibleCalendar = CALENDAR.filter(filterConnected);
+  const visibleIntegrate = INTEGRATE.filter(filterConnected);
+
   return (
     <div className="int-pane">
+      {/* Stub disclosure banner — non-dismissible (FA-12) */}
+      <IntegrationStubBanner lang={lang} />
+
+      {/* Connected providers section */}
+      <section className="int-connected-section" data-testid="int-connected-section">
+        <h4 className="int-h">{t("int.section.connected")}</h4>
+        <div className="int-connected-grid">
+          {PROVIDERS.map((provider) => {
+            const isConnected = connectedMap[provider.id] ?? false;
+            return (
+              <div key={provider.id} className="int-connected-card">
+                <span
+                  className="int-logo"
+                  style={{ background: provider.cardColor }}
+                  aria-hidden="true"
+                >
+                  {provider.cardShort}
+                </span>
+                <span className="int-name">{t(provider.nameKey)}</span>
+                {isConnected && (
+                  <span className="int-badge-connected">
+                    {t("int.badge.connected_stub")}
+                  </span>
+                )}
+                {isConnected ? (
+                  <IntegrationDisconnectButton
+                    provider={provider}
+                    lang={lang}
+                    onDisconnect={disconnectHandlers[provider.id]!}
+                  />
+                ) : (
+                  <IntegrationConnectButton provider={provider} lang={lang} />
+                )}
+              </div>
+            );
+          })}
+        </div>
+      </section>
+
+      {/* Existing 3 groups — placeholder cards (with deduplication for connected wired providers) */}
       <h4 className="int-h">{t("int.featured")}</h4>
       <div className="int-grid">
-        {FEATURED.map((spec) => (
-          <IntegrationCard key={spec.id} spec={spec} />
+        {visibleFeatured.map((spec) => (
+          <IntegrationCard key={spec.id + spec.name} spec={spec} />
         ))}
       </div>
 
       <h4 className="int-h">{t("int.calendar")}</h4>
       <div className="int-grid">
-        {CALENDAR.map((spec) => (
-          <IntegrationCard key={spec.id} spec={spec} />
+        {visibleCalendar.map((spec) => (
+          <IntegrationCard key={spec.id + spec.name} spec={spec} />
         ))}
       </div>
 
       <h4 className="int-h">{t("int.integrate")}</h4>
       <div className="int-grid">
-        {INTEGRATE.map((spec) => (
-          <IntegrationCard key={spec.id} spec={spec} />
+        {visibleIntegrate.map((spec) => (
+          <IntegrationCard key={spec.id + spec.name} spec={spec} />
         ))}
       </div>
 

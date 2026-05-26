@@ -337,6 +337,140 @@
   max-width: 64px;
 }
 
+/* ---- Integrations OAuth stub (extension 2026-05-25 — gap-closure row #7) --- */
+/* All colors OKLCH — no hex literals in this extension block.                  */
+
+.int-stub-banner {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  padding: 8px 12px;
+  margin-bottom: 12px;
+  border-radius: 6px;
+  background: oklch(97% 0.02 90);
+  border: 1px solid oklch(88% 0.05 90);
+  font-size: 0.8rem;
+  color: oklch(38% 0.06 60);
+  line-height: 1.4;
+}
+
+.int-stub-banner__text {
+  flex: 1;
+}
+
+.int-connected-section {
+  margin-bottom: 8px;
+}
+
+.int-connected-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 4px;
+}
+
+.int-connected-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 5px;
+  padding: 10px 12px;
+  border: 1px solid oklch(80% 0.08 145);
+  border-radius: 8px;
+  background: oklch(98% 0.01 145);
+  width: 96px;
+  font-size: 0;
+}
+
+.int-badge-connected {
+  font-size: 0.65rem;
+  font-weight: 600;
+  padding: 2px 6px;
+  border-radius: 10px;
+  background: oklch(85% 0.12 145);
+  color: oklch(28% 0.08 145);
+  white-space: nowrap;
+}
+
+.int-connect-btn {
+  font-size: 0.7rem;
+  font-weight: 600;
+  padding: 4px 8px;
+  border-radius: 5px;
+  border: 1px solid oklch(72% 0.14 255);
+  background: oklch(96% 0.04 255);
+  color: oklch(38% 0.14 255);
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+.int-connect-btn:hover {
+  background: oklch(90% 0.06 255);
+}
+
+.int-disconnect-btn {
+  font-size: 0.7rem;
+  font-weight: 600;
+  padding: 4px 8px;
+  border-radius: 5px;
+  border: 1px solid oklch(72% 0.04 25);
+  background: oklch(97% 0.02 25);
+  color: oklch(42% 0.10 25);
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+.int-disconnect-btn:hover {
+  background: oklch(92% 0.04 25);
+}
+
+/* ---- OAuth callback page --------------------------------------------- */
+
+.oauth-cb-page {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 48px 24px;
+  min-height: 200px;
+}
+
+.oauth-cb-banner {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  padding: 16px 24px;
+  border-radius: 8px;
+  font-size: 1rem;
+  font-weight: 500;
+  text-align: center;
+  max-width: 400px;
+}
+
+.oauth-cb-banner--success {
+  background: oklch(95% 0.06 145);
+  border: 1px solid oklch(75% 0.12 145);
+  color: oklch(30% 0.10 145);
+}
+
+.oauth-cb-banner--error {
+  background: oklch(95% 0.06 20);
+  border: 1px solid oklch(75% 0.12 20);
+  color: oklch(30% 0.12 20);
+}
+
+.oauth-cb-banner--cancelled {
+  background: oklch(95% 0.06 80);
+  border: 1px solid oklch(80% 0.10 80);
+  color: oklch(35% 0.10 60);
+}
+
+.oauth-cb-redirect {
+  font-size: 0.8rem;
+  opacity: 0.75;
+}
+
 /* ---- Collaborate pane ------------------------------------------------ */
 .collab-pane {
   padding: 16px;
