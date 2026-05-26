@@ -62,7 +62,7 @@ function extractPins(lists: readonly BoardListData[]): PinData[] {
           listId: list.id,
           lat: card.location.lat,
           lng: card.location.lng,
-          title: typeof card.title === "string" ? card.title : String(card.title),
+          title: typeof card.title === "string" ? card.title : (card.title as { en: string; zh: string }).en ?? String(card.title),
           label: card.location.label,
         });
       }

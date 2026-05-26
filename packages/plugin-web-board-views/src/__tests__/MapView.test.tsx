@@ -103,42 +103,41 @@ const mockModule = LeafletLoader as unknown as {
 
 const LIST_WITH_LOCATIONS: BoardListData = {
   id: "l-1",
-  title: "Test List",
+  key: null,
+  customName: { en: "Test List", zh: "测试列表" },
   color: null,
   cards: [
     {
       id: "c-1",
-      title: "Tokyo",
+      title: { en: "Tokyo", zh: "东京" },
       location: { lat: 35.6762, lng: 139.6503, label: "Tokyo HQ" },
       labels: [],
       members: [],
-      checklist: [],
-      dueDate: null,
+      checklist: { done: 0, total: 0 },
     },
     {
       id: "c-2",
-      title: "London",
+      title: { en: "London", zh: "伦敦" },
       location: { lat: 51.5074, lng: -0.1278 },
       labels: [],
       members: [],
-      checklist: [],
-      dueDate: null,
+      checklist: { done: 0, total: 0 },
     },
   ],
 };
 
 const LIST_WITHOUT_LOCATIONS: BoardListData = {
   id: "l-2",
-  title: "No location",
+  key: null,
+  customName: { en: "No location", zh: "无位置" },
   color: null,
   cards: [
     {
       id: "c-3",
-      title: "No location card",
+      title: { en: "No location card", zh: "无位置卡片" },
       labels: [],
       members: [],
-      checklist: [],
-      dueDate: null,
+      checklist: { done: 0, total: 0 },
     },
   ],
 };

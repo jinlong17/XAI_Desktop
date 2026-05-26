@@ -8,7 +8,7 @@
  *      State is lifted into BoardWorkspacesModule and reset on activeBoard.id change.
  */
 
-import type { BoardListData } from "@repo/plugin-web-board-core";
+import type { BoardCardData, BoardListData } from "@repo/plugin-web-board-core";
 import { parseDay } from "./dateOps.js";
 
 export interface FilterState {
@@ -61,12 +61,12 @@ export function applyFilter(
   const todayMD = `${today.getMonth() + 1}/${today.getDate()}`;
 
   return lists.map((list) => {
-    const filteredCards = list.cards.filter((card) => {
+    const filteredCards = list.cards.filter((card: BoardCardData) => {
       // --- Labels facet ---
       if (labels.size > 0) {
         const hasMatchingLabel =
           Array.isArray(card.labels) &&
-          card.labels.some((l) => labels.has(l));
+          card.labels.some((l: string) => labels.has(l));
         if (!hasMatchingLabel) return false;
       }
 
@@ -74,7 +74,7 @@ export function applyFilter(
       if (members.size > 0) {
         const hasMatchingMember =
           Array.isArray(card.members) &&
-          card.members.some((m) => members.has(m));
+          card.members.some((m: string) => members.has(m));
         if (!hasMatchingMember) return false;
       }
 
