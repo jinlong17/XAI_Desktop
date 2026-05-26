@@ -125,6 +125,10 @@ export function DeleteAccountConfirmModal({
   }
 
   const submitEnabled = inputValue === CONFIRM_LITERAL && step === "step2";
+  // Extracted as a typed boolean so TS cannot re-narrow `step` inside compound
+  // disabled expressions — prevents TS2367 "no overlap" error on
+  // `!submitEnabled || step === "submitting"` within the step2|submitting|failure block.
+  const stepIsSubmitting: boolean = step === "submitting";
 
   const failureKind = orchestrator.error?.kind;
   const errorKey =
@@ -214,7 +218,7 @@ export function DeleteAccountConfirmModal({
                 placeholder={t("deleteModal.input_placeholder")}
                 aria-label={t("deleteModal.type_prompt")}
                 autoComplete="off"
-                disabled={step === "submitting"}
+                disabled={stepIsSubmitting}
                 data-testid="dam-delete-input"
               />
               <div className="dam-actions-row">
@@ -241,7 +245,7 @@ export function DeleteAccountConfirmModal({
                     type="button"
                     className="btn ghost"
                     onClick={handleCancel}
-                    disabled={step === "submitting"}
+                    disabled={stepIsSubmitting}
                   >
                     {t("deleteModal.cancel")}
                   </button>
@@ -250,12 +254,12 @@ export function DeleteAccountConfirmModal({
                 <button
                   type="submit"
                   className="btn danger"
-                  disabled={!submitEnabled || step === "submitting"}
-                  aria-disabled={!submitEnabled || step === "submitting"}
-                  title={!submitEnabled && step !== "submitting" ? t("deleteModal.confirm_disabled_tooltip") : undefined}
+                  disabled={!submitEnabled || stepIsSubmitting}
+                  aria-disabled={!submitEnabled || stepIsSubmitting}
+                  title={!submitEnabled && !stepIsSubmitting ? t("deleteModal.confirm_disabled_tooltip") : undefined}
                   data-testid="dam-delete-submit-btn"
                 >
-                  {step === "submitting"
+                  {stepIsSubmitting
                     ? t("deleteModal.submitting")
                     : t("deleteModal.delete_now")}
                 </button>
