@@ -42,3 +42,5 @@ export { WeekView } from "./WeekView.js";
 export type { WeekViewProps } from "./WeekView.js";
 export { TimeGrid } from "./TimeGrid.js";
 export type { TimeGridProps } from "./TimeGrid.js";
+export { DayView } from "./DayView.js";
+export type { DayViewProps } from "./DayView.js";

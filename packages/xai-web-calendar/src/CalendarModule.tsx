@@ -45,6 +45,7 @@ import { SAMPLE_EVENTS } from "./internal/sampleEvents.js";
 import { utcDateKey } from "./internal/dateKeys.js";
 import { tryParseDateKey, dateKeyMonth, formatDateKey } from "./internal/parseDateKey.js";
 import { WeekView } from "./WeekView.js";
+import { DayView } from "./DayView.js";
 
 /**
  * Design-source anchor: May 22, 2026 matches the sample-event fixture and the
@@ -158,6 +159,13 @@ export function CalendarModule({ lang }: CalendarModuleProps): JSX.Element {
         <WeekView
           activeDate={activeDate}
           weekStart={weekStart}
+          events={SAMPLE_EVENTS}
+          todayKey={todayKey}
+          lang={lang}
+        />
+      ) : view === "day" ? (
+        <DayView
+          activeDate={activeDate}
           events={SAMPLE_EVENTS}
           todayKey={todayKey}
           lang={lang}
