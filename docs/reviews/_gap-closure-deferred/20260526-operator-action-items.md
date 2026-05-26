@@ -43,6 +43,8 @@ Operator ran 4 parallel Codex agents for the 9 rows. Verdicts:
 
 **Chrome smoke update (2026-05-26):** local mock-auth Chrome 148 smoke evidence was collected at `docs/reviews/_gap-closure-deferred/20260526-chrome-smoke-results.md`. Result: useful partial evidence, but NOT a G2 pass. Findings include Settings pane deep-link mismatch, CmdK empty search results, Board Map with no pins, and external flows still untested.
 
+**Chrome re-smoke update (2026-05-26, after Claude fixes):** results captured at `docs/reviews/_gap-closure-deferred/20260526-chrome-resmoke-after-fixes.md`. C3-CHROME-2 CmdK now PASSes in real Chrome. C3-CHROME-1 Settings deep links still FAIL in the real app because `ComposedSettingsModule` remains URL-blind. C3-CHROME-3 Map pins still FAIL on the production board workspace route.
+
 **Browser/OS targets:** Chrome 120+ macOS 14 · Safari 17+ macOS 14 · Firefox 121+ macOS 14 · Safari 17+ iOS 17 (mandatory) · Chrome 120+ Windows 11 (optional/future)
 
 **Acceptance:** each row must have at least PASS verdicts across all 4 mandatory targets (24-hour carve-out per ADR-0008 §S3); FAIL means file a bug-fix row.
