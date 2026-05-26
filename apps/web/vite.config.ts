@@ -36,5 +36,9 @@ export default defineConfig({
   plugins: [react(), stripCspNoncePlaceholder()],
   build: {
     sourcemap: "hidden",
+    // Enable Vite manifest so BM-BUNDLE tests can assert real chunk split.
+    // Generates dist/.vite/manifest.json after `pnpm build`.
+    // Verify B5: gap-closure row #6 bundle-budget acceptance gate.
+    manifest: true,
   },
 });

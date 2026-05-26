@@ -274,10 +274,10 @@ Already enumerated in test.md §5 (Q1..Q10). Confirm:
 | Current Phase | FEATURE_VERIFY |
 | Status | READY_FOR_VERIFY |
 | Suggested Next | feature-verify |
-| Verify Cross-vendor | yes (per ADR-0009 §D4 P0) |
+| Verify Cross-vendor | yes (per ADR-0009 §D4 P0) — decision deferred to feature-verify |
 | Automation Mode | A-Claude |
-| Executor | claude-sonnet-4-6 (feature-auto-build, 2026-05-25) |
-| Updated | 2026-05-25 |
+| Executor | claude-sonnet-4-6 (feature-build verify-feedback-patch, 2026-05-25 22:40) |
+| Updated | 2026-05-25 22:40 |
 | Dispatched By | xai-roadmap-loop SERIAL dispatch (Wave 2 first row) |
 | Roadmap Row | `docs/workflow/roadmap/xai-web-console-gap-closure.md` row #6 |
 | Canonical Dev_log | `packages/xai-web-board-views/docs/dev_log.md` §Bugfix-Extension Lineage — gap-closure row #6 (2026-05-25) |
@@ -290,3 +290,5 @@ Already enumerated in test.md §5 (Q1..Q10). Confirm:
 | 2026-05-25 | claude-sonnet-4-6 (feature-auto-build P1) | P1 implemented: `CardLocation` interface + `location?: CardLocation` on `BoardCard` + widened `isBoardCard` guard + `CardLocation` re-exported from barrel + BCV1..BCV4 tests. Commit 389ee17. 108 board-core tests PASS. | 389ee17 | feature-auto-build (canonical) |
 | 2026-05-25 | claude-sonnet-4-6 (feature-auto-build P7) | P7 cross-ref flip: Status → READY_FOR_VERIFY. All P1..P6 tests still pass (108 board-core total). PLUGIN_MAP Notes column updated. See canonical dev_log in board-views for full Work Log. | (P7 chore commit) | feature-verify |
 | 2026-05-25 | Claude Opus 4.7 1M (feature-review) | APPROVED. 0 blockers; 12 review gates PASS. See canonical dev_log (board-views) for full Review Notes. P1 (additive `BoardCard.location?` + widened `isBoardCard` guard + 4 BCV1..BCV4 cases) verified safe — backwards compat preserved (all 104 baseline tests still pass; existing seed data has `location === undefined`; guard widened structurally to accept presence-or-absence). | — | feature-auto-build |
+| 2026-05-25 22:32 | Claude Opus 4.7 1M (feature-verify) | Cross-ref flip: Status → BLOCKED. board-core itself is clean (108/108 tests PASS, typecheck PASS, lint PASS — P1 commit 389ee17 is well-contained). BLOCKED status mirrors the row-level BLOCKED verdict whose blockers all live in board-views + board-workspaces (typecheck failures + lint warnings). See canonical dev_log in board-views for the full BLOCKER list (B1..B5). | — | feature-build |
+| 2026-05-25 22:40 | claude-sonnet-4-6 (feature-build verify-feedback-patch) | Cross-ref flip: Status → READY_FOR_VERIFY. Verify-feedback patch resolved all 5 blockers (B1/B2/B3 typecheck in board-views; B4 lint in board-workspaces; B5 vite.config.ts manifest). board-core itself unchanged; 108 tests PASS. See canonical dev_log in board-views for full patch notes. | (see verify-patch commit) | feature-verify |

@@ -278,10 +278,10 @@ Already enumerated in test.md §5 (Q1..Q11). Confirm:
 | Current Phase | FEATURE_VERIFY |
 | Status | READY_FOR_VERIFY |
 | Suggested Next | feature-verify |
-| Verify Cross-vendor | yes (per ADR-0009 §D4 P0) |
+| Verify Cross-vendor | yes (per ADR-0009 §D4 P0) — decision deferred to feature-verify |
 | Automation Mode | A-Claude |
-| Executor | claude-sonnet-4-6 (feature-auto-build, 2026-05-25) |
-| Updated | 2026-05-25 |
+| Executor | claude-sonnet-4-6 (feature-build verify-feedback-patch, 2026-05-25 22:40) |
+| Updated | 2026-05-25 22:40 |
 | Dispatched By | xai-roadmap-loop SERIAL dispatch (Wave 2 first row) |
 | Roadmap Row | `docs/workflow/roadmap/xai-web-console-gap-closure.md` row #6 |
 | Canonical Dev_log | `packages/xai-web-board-views/docs/dev_log.md` §Bugfix-Extension Lineage — gap-closure row #6 (2026-05-25) |
@@ -294,4 +294,6 @@ Already enumerated in test.md §5 (Q1..Q11). Confirm:
 | 2026-05-25 | claude-sonnet-4-6 (feature-auto-build P2..P4) | P2 filterState + lift into BWM; P3 FilterPopover + enabled Filter button; P4 ShareModal + shareUrl + web:board:share-requested EventMap + enabled Share button. Commits cfff4c5 (P2), ba0a2f0 (P3), f60502b (P4). 173 board-workspaces tests PASS. REC-1 verified: filterState.ts imports from `@repo/plugin-web-board-views` barrel (no circular dep). | cfff4c5, ba0a2f0, f60502b | feature-auto-build P5 |
 | 2026-05-25 | claude-sonnet-4-6 (feature-auto-build P5) | P5 Suspense wrap around MapView render in BoardWorkspacesModule. Commit 7c28d4c. 173 board-workspaces tests PASS. | 7c28d4c | feature-auto-build P6 |
 | 2026-05-25 | claude-sonnet-4-6 (feature-auto-build P7) | P7 cross-ref flip: Status → READY_FOR_VERIFY. All P1..P6 tests still pass (173 board-workspaces total). PLUGIN_MAP Notes column updated with extension note + new xai-web-event-bus dep noted. See canonical dev_log in board-views for full Work Log. | (P7 chore commit) | feature-verify |
+| 2026-05-25 22:32 | Claude Opus 4.7 1M (feature-verify) | Cross-ref flip: Status → BLOCKED. 4 blockers across the row (3 typecheck failures cascading from board-views internal/filter.ts implicit-any + 1 lint --max-warnings 0 failure with 6 warnings in this package's filterState.ts + test files). See canonical dev_log in board-views for the full BLOCKER list (B1..B5). 173 board-workspaces tests still PASS at runtime; failure is in static analysis gates required by the plan acceptance criteria. | — | feature-build |
+| 2026-05-25 22:40 | claude-sonnet-4-6 (feature-build verify-feedback-patch) | Cross-ref flip: Status → READY_FOR_VERIFY. Verify-feedback patch resolved all 5 blockers (B1/B2/B3 typecheck; B4 lint 6 warnings; B5 BM-BUNDLE tests now real). B4 fixed in this package: filterState.ts clearFilter param wrapped with eslint-disable; BoardWorkspacesModule.test.tsx beforeCount removed; ShareModal.test.tsx afterEach import removed; filterState.test.ts _withLabel removed; shareUrl.test.ts beforeEach+afterEach imports removed. `pnpm --filter @repo/plugin-web-board-workspaces lint --max-warnings 0` exit 0; `pnpm --filter @repo/plugin-web-board-workspaces typecheck` exit 0; 173 tests PASS. See canonical dev_log in board-views for full patch notes. | (see verify-patch commit) | feature-verify |
 | 2026-05-25 | Claude Opus 4.7 1M (feature-review) | APPROVED. 0 blockers; 12 review gates PASS. See canonical dev_log (board-views) for full Review Notes + 2 non-blocking recommendations. Status flipped to APPROVED mirror; canonical is the source of truth. | — | feature-auto-build |
