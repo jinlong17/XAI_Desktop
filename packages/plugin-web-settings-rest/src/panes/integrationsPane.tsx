@@ -62,10 +62,6 @@ const INTEGRATE: readonly IntegrationCardSpec[] = [
   { id: "todoist", name: "Todoist (Import)", color: "oklch(55% 0.18 25)",  short: "T" },
 ] as const;
 
-// The 3 wired provider card IDs that can appear in the placeholder groups.
-// When connected, these are filtered out of their group to avoid duplication (Note 2).
-const WIRED_PROVIDER_CARD_IDS = new Set<IntegrationCardId>(["notion", "gcal", "linear"]);
-
 interface IntegrationCardProps {
   readonly spec: IntegrationCardSpec;
 }

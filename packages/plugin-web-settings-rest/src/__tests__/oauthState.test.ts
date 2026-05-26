@@ -64,8 +64,8 @@ describe("OAuth state machine", () => {
   });
 
   it("OS7: validateAndConsumeState clears sessionStorage entry even on failure", async () => {
-    // Write a valid entry
-    const pending = await startOAuth("linear");
+    // Write a valid entry (result not needed — called for sessionStorage side-effect)
+    await startOAuth("linear");
     expect(sessionStorage.getItem("xai_oauth_pending_linear")).not.toBeNull();
 
     // Attempt validation with wrong state (will fail)
