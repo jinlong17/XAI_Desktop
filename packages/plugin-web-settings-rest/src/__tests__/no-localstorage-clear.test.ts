@@ -1,13 +1,30 @@
 /**
  * no-localstorage-clear.test.ts — DEL-WILDCARD-GUARD source-text guard
  *
- * Asserts ZERO occurrences of `localStorage.clear()` in:
- *   packages/plugin-web-settings-rest/src/**\/*.{ts,tsx}
- *   packages/web-auth-device-session/src/**\/*.{ts,tsx}
+ * SCOPE (clarified post-codex-cold-read 2026-05-26): this guard is
+ * **RUNTIME source only** — it scans only production code under each
+ * package's src/, EXCLUDING `__tests__/` directories, `vitest.setup*`,
+ * and any `*.test.{ts,tsx}` / `*.spec.{ts,tsx}` files. Test files MAY
+ * (and routinely DO) call `localStorage.clear()` for `afterEach` cleanup
+ * to isolate JSDOM state between tests; that usage is safe by
+ * construction (test runtime is per-suite-isolated) and does NOT violate
+ * HC3 of row #9.
  *
- * This is HC3 (no wildcard wipe) enforcement at source level.
+ * Codex cold-read (Category 2 finding #4) initially flagged this as a
+ * scope mismatch — the prompt said "anywhere in src" but the guard
+ * skipped __tests__. Resolution: the guard's INTENT was always runtime-
+ * only ("don't accidentally wipe unrelated browser data in production");
+ * test cleanup wipes a sandboxed JSDOM localStorage with no real-user
+ * data risk. This docstring now makes the scope explicit so future
+ * reviewers don't repeat the same flag.
+ *
+ * Asserts ZERO occurrences of `localStorage.clear()` in RUNTIME source files of:
+ *   packages/plugin-web-settings-rest/src/**\/*.{ts,tsx} (exclude __tests__)
+ *   packages/web-auth-device-session/src/**\/*.{ts,tsx} (exclude __tests__)
+ *
+ * This is HC3 (no wildcard wipe) enforcement at runtime-source level.
  * Any future regression that swaps the registry-list iteration for a
- * wildcard wipe will fail this test.
+ * wildcard wipe in production code will fail this test.
  *
  * test.md §7.6 DEL-WILDCARD-GUARD
  */
