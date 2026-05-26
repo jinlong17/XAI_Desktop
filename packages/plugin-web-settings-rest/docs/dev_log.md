@@ -798,12 +798,12 @@ R11 Topbar badge CSS conflict → scoped CSS class + manual smoke at ship-time.
 | Workflow | FEATURE_DEV |
 | Target | xai-web-settings-account-delete-wire |
 | Title | Replace the SHIPPED row-#24 single-step Account-Delete confirm modal (currently emits `web:settings:rest:account-delete-confirmed` with no listener — a declaration-only no-op) with a real deletion flow. Modal becomes a 2-step gate (Step 1 "Are you sure?" → Step 2 "Type DELETE to confirm" with case-sensitive exact-match input). On submit, the new `useAccountDeleteOrchestrator()` hook calls a new `deleteAccount()` helper added to the SHIPPED `web-auth-device-session` platform spine (scope extension — that package's design.md explicitly carved out account-delete in v1, so this row adds the missing endpoint client). On backend 200 (or 404 idempotency), the orchestrator iterates `Object.keys(PREF_REGISTRY)` to clear all 42 registered `xai_*` localStorage keys (NEVER wildcard `localStorage.clear()`), then iterates a new `ACCOUNT_LOCAL_WIPE_IDB_NAMES` constant (also exported from web-auth-device-session) to call `indexedDB.deleteDatabase()` for each of the 3 known IDB databases (`web-encrypted-cache`, `xai-web-ai-secrets`, `xai-web-auth`), then `window.location.assign("/")`. On failure (network / 401 / 403 / 500), modal shows a bilingual error banner; localStorage and IndexedDB are NOT touched; Retry restores Step 2. Mock-auth mode (`VITE_WEB_AUTH_MODE=mock-authenticated`) skips the backend call and runs the same local wipe + redirect, with a non-dismissible amber disclosure banner shown on Step 2. The existing `web:settings:rest:account-delete-confirmed` event is annotated `@deprecated since 2026-05-26` and re-purposed to emit on Step 1 → Continue (one release of back-compat). NO new CSP amendment (`connect-src` already covers `VITE_SUPABASE_URL`). NO new EventMap entry. NO new bundled NPM dependency. This is the SMALLEST of the 6a/6b/6c sub-rows per the seed brief — 4 phases, ~36 new tests, ~498 baseline tests preserved. |
-| Current Phase | FEATURE_REVIEW (complete; APPROVED) |
-| Status | APPROVED |
-| Suggested Next | feature-auto-build |
+| Current Phase | FEATURE_VERIFY |
+| Status | READY_FOR_VERIFY |
+| Suggested Next | feature-verify |
 | Verify Cross-vendor | yes (per ADR-0009 §D4 P0 + roadmap header default; primary Codex `gpt-5.5-thinking medium`, fallback Cursor) |
 | Automation Mode | A-Claude (per roadmap default inherited from xai-web-console.md 2026-05-23 user override) |
-| Executor | Claude Opus 4.7 (1M context) — feature-review, 2026-05-26 |
+| Executor | claude-sonnet-4-6 — feature-auto-build, 2026-05-26 |
 | Updated | 2026-05-26 |
 | Dispatched By | `xai-roadmap-loop` SERIAL dispatch — Wave 2 LAST row (after row #8 SHIPPED `00580dd` 2026-05-26) |
 | Roadmap Row | `docs/workflow/roadmap/xai-web-console-gap-closure.md` row #9 (W2 LAST · Account-delete wire to web-auth-device-session) |
@@ -969,4 +969,36 @@ These already exist on disk pre-build; staging them in P1 prevents an orphan "ch
 - PREF_REGISTRY is the single source of truth for the local-clear keyset; row-#8 prefs swept by construction.
 
 **Status**: APPROVED → feature-auto-build.
+
+#### 2026-05-26 — Extension-P1: 2-step modal + type-match input + bilingual i18n (UI only)
+
+- **Executor**: claude-sonnet-4-6 (feature-auto-build)
+- **Action**: REWROTE `src/internal/DeleteAccountConfirmModal.tsx` from single-step to 2-step `useReducer` step machine (5 states: step1 / step2 / submitting / success / failure). Added `onStep1Continue` prop replacing `onConfirm`/`isSubmitting`/`failureKind`/`isMockAuth` (P3 wires orchestrator internally). Added 17 bilingual keys to `src/internal/localI18n.ts` (step1_title/body, continue, step2_title/body, type_prompt, input_placeholder, confirm_disabled_tooltip, delete_now, submitting, error_network/unauthorized/forbidden/server/unknown, retry, mock_banner). Added CSS classes to `src/styles.css` (`.dam-actions-row`, `.dam-type-prompt`, `.dam-input`, `.dam-mock-banner`, `.dam-error` — all OKLCH, no hex). Updated `src/panes/accountPane.tsx` to use `onStep1Continue` prop + emit deprecated `web:settings:rest:account-delete-confirmed` on Step 1 Continue (DEL-EVENT-DEP-1). Created `src/__tests__/DeleteAccountConfirmModal.test.tsx` (P1 section: DEL-STEP-1..3, DEL-TYPEMATCH-1..6, DEL-CANCEL-1..2, DEL-BILINGUAL-1..2). Updated `src/__tests__/accountPane.test.tsx` (AC5/AC6/AC7 adjusted + DEL-EVENT-DEP-1 added + vi.mock orchestrator to avoid WebAuthSessionProvider). Staged plan docs per REC: discovery review + design.md §Extension + api.md §8 + test.md §7 + this dev_log lineage block.
+- **Tests**: 208/208 plugin-web-settings-rest; lint --max-warnings 0 exit 0
+- **Commits**: `91e3bc6` feat(xai-web-settings-account-delete-wire): P1 — 2-step modal + type-DELETE gate + bilingual i18n (gap-closure row #9)
+- **Next step**: P2
+
+#### 2026-05-26 — Extension-P2: deleteAccount() helper + AccountDeleteError in web-auth-device-session
+
+- **Executor**: claude-sonnet-4-6 (feature-auto-build)
+- **Action**: Added `AccountDeleteErrorKind` type, `AccountDeleteError` class (extends Error with `kind` + optional `cause`), `DeleteAccountOptions` interface, and `deleteAccount(client, options?)` async function to `packages/web-auth-device-session/src/auth-actions.ts`. HTTP status mapping: 200 → success (calls `client.auth.signOut()` best-effort); 401 → unauthorized; 403 → forbidden; 404 → already_deleted (idempotent, proceeds to signOut); 5xx → server; network throw → network; other → unknown. Exported all 4 new symbols from `src/index.ts`. Added DAA-1..8 + DAA-TYPED tests to `src/auth-actions.test.ts` (9 new tests).
+- **Tests**: 217/217 plugin-web-settings-rest; 42/42 web-auth-device-session
+- **Commits**: `72c70ee` feat(xai-web-settings-account-delete-wire): P2 — deleteAccount() helper + AccountDeleteError in web-auth-device-session (gap-closure row #9)
+- **Next step**: P3
+
+#### 2026-05-26 — Extension-P3: useAccountDeleteOrchestrator + wipe + mock-auth fallback + redirect
+
+- **Executor**: claude-sonnet-4-6 (feature-auto-build)
+- **Action**: Created `packages/web-auth-device-session/src/wipe.ts` (NEW) with `ACCOUNT_LOCAL_WIPE_IDB_NAMES` frozen const (`["web-encrypted-cache","xai-web-ai-secrets","xai-web-auth"]`) + `wipeRegisteredIDB()` parallel best-effort IDB wipe via `Promise.allSettled`. Exported from `src/index.ts`. Created `packages/plugin-web-settings-rest/src/internal/useAccountDeleteOrchestrator.ts` (NEW) — `isMockAuthMode()` function reads `import.meta.env.VITE_WEB_AUTH_MODE` at call-time (not module-load) for `vi.stubEnv` testability; `submit()` with `isSubmittingRef` idempotent guard; live-auth → `deleteAccount()` → `already_deleted` idempotency; `setState("wiping")` → `Object.keys(PREF_REGISTRY)` localStorage iteration (NEVER `localStorage.clear()`) → `wipeRegisteredIDB()` → `window.location.assign("/")`; failure → `setError(err)` + `setState("failure")` (NO local mutation — DEL-ORCH-3). Added `@repo/web-auth-device-session: workspace:*` to `plugin-web-settings-rest/package.json` dependencies. Added `"VITE_WEB_AUTH_MODE"` to `turbo.json` globalEnv. Rewired `DeleteAccountConfirmModal.tsx` to use orchestrator internally (removed `onSubmit`/`isSubmitting`/`failureKind`/`isMockAuth` props). Updated `accountPane.tsx` to remove `onSubmit`. Created `useAccountDeleteOrchestrator.test.tsx` (DEL-ORCH-1..4, DEL-WIPE-1..2, DEL-IDEM-1, DEL-IDB-LIST-1) + `no-localstorage-clear.test.ts` (DEL-WILDCARD-GUARD-1..2). Extended `DeleteAccountConfirmModal.test.tsx` (P3 section: DEL-WIRE-1..3, DEL-MOCK-BANNER-1..3, DEL-IDB-LIST-1).
+- **Tests**: 239/239 plugin-web-settings-rest; 42/42 web-auth-device-session; 88/88 plugin-web-storage; 116/116 web; lint --max-warnings 0 exit 0
+- **Commits**: `5bc7417` feat(xai-web-settings-account-delete-wire): P3 — useAccountDeleteOrchestrator + ACCOUNT_LOCAL_WIPE_IDB_NAMES + mock-auth fallback + redirect (gap-closure row #9)
+- **Next step**: P4
+
+#### 2026-05-26 — Extension-P4: JSDoc @deprecated + operator runbook + PLUGIN_MAP + companion dev_log lineage close
+
+- **Executor**: claude-sonnet-4-6 (feature-auto-build)
+- **Action**: Added JSDoc `@deprecated since 2026-05-26 (gap-closure row #9); will be removed in P1 desktop pivot.` annotation to `'web:settings:rest:account-delete-confirmed'` in `packages/core/src/types/events.ts` (annotation only; payload schema unchanged). Appended `§"Account-Delete Edge Function"` (function name, request/response shape, RLS/service_role requirements, deploy gate) + `§"Account-Delete Rollback"` (4 rollback paths from discovery §12) to `apps/web/deploy/README.md`. Updated `docs/PLUGIN_MAP.md`: appended `(Extension 2026-05-26 — Account-delete wire gap-closure row #9 — W2 LAST)` note to `plugin-web-settings-rest` row; added new `@repo/web-auth-device-session` row to Web Platform Shims section with SHIPPED status + extension marker for the 4 new exports (deleteAccount/AccountDeleteError/ACCOUNT_LOCAL_WIPE_IDB_NAMES/wipeRegisteredIDB). APPENDED `Bugfix-Extension Lineage — Account-delete helper (2026-05-26 row #9)` block to `packages/web-auth-device-session/docs/dev_log.md` (preserves SHIPPED state). Updated Lineage Status Panel: `Current Phase = FEATURE_VERIFY`, `Status = READY_FOR_VERIFY`, `Suggested Next = feature-verify`. Appended this Work Log entry.
+- **Tests**: 239/239 plugin-web-settings-rest; 42/42 web-auth-device-session; 88/88 plugin-web-storage; 116/116 web; core check-types clean
+- **Commits**: `18c9134` feat(xai-web-settings-account-delete-wire): P4 — JSDoc @deprecated + apps/web/deploy/README extension + PLUGIN_MAP + companion dev_log lineage close (gap-closure row #9)
+- **Next step**: feature-verify
 
