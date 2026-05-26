@@ -58,6 +58,10 @@ function makeKanbanDefaultLists(): BoardList[] {
           attach: 1,
           cover: "linear-gradient(135deg, oklch(78% 0.10 295), oklch(62% 0.12 245))",
           members: ["u1", "u2"],
+          // codex C3-CHROME-3 (2026-05-26): seed pins for Map view demo.
+          // San Francisco, USA — SHIPPED gap-closure row #6 P1 added the
+          // optional location? field but no card populated it.
+          location: { lat: 37.7749, lng: -122.4194, label: "San Francisco" },
         },
         {
           id: "bc2",
@@ -87,6 +91,9 @@ function makeKanbanDefaultLists(): BoardList[] {
           dueEn: "Today",
           attach: 2,
           members: ["u1", "u3"],
+          // codex C3-CHROME-3 (2026-05-26): seed pin for Map view demo.
+          // New York, USA.
+          location: { lat: 40.7128, lng: -74.006, label: "New York" },
         },
         {
           id: "bc5",
@@ -116,6 +123,9 @@ function makeKanbanDefaultLists(): BoardList[] {
           checklist: { done: 3, total: 9 },
           due: "5/26",
           members: ["u2", "u3"],
+          // codex C3-CHROME-3 (2026-05-26): seed pin for Map view demo.
+          // London, UK — third pin demonstrates multi-continent placement.
+          location: { lat: 51.5074, lng: -0.1278, label: "London" },
         },
         {
           id: "bc8",
