@@ -394,3 +394,261 @@ After:  connect-src 'self' https://api.anthropic.com https://tile.openstreetmap.
 
 ADR-0008 §S3 D3 amended in-place (third amendment) per binding precedent from row #2.
 
+---
+
+## §7 Extension: Premium Pane Stripe Checkout Stub (gap-closure row #8)
+
+> APPEND-ONLY extension. §0..§6 above describe the SHIPPED row #24 surface +
+> the 2026-05-25 row #7 Integrations OAuth stub and are NOT mutated.
+> This section adds the public surface added by the 2026-05-26 Premium pane
+> Stripe Checkout stub.
+> Design home: `design.md` §"2026-05-26 Extension".
+
+### §7.1 New public exports
+
+```typescript
+// Two new page-level exports (router targets).
+export { CheckoutSuccessPage } from "./CheckoutSuccessPage.js";
+export { CheckoutCancelPage } from "./CheckoutCancelPage.js";
+
+// Topbar-integration component — consumed by @repo/xai-web-shell Topbar.
+export { PremiumTierBadge } from "./internal/PremiumTierBadge.js";
+
+// Type export — id union for the 3 tier states.
+export type PremiumTier = "free" | "pending" | "premium_stub";
+```
+
+`CheckoutSuccessPage` and `CheckoutCancelPage` are React components bound to the two new react-router routes `/app/settings/premium/checkout/success` and `/app/settings/premium/checkout/cancel`. Both have no props (read URL via `useSearchParams()`; consume `useNavigate()`).
+
+`PremiumTierBadge` has no props (reads `usePremiumTier()` internally + uses default `"en"` lang). Returns `null` when effective tier is not `"premium_stub"`.
+
+### §7.2 PremiumTier type + constants (internal)
+
+```typescript
+// File: src/internal/premiumTier.ts
+export type PremiumTier = "free" | "pending" | "premium_stub";
+
+/** 30-day TTL for premium_stub tier — exported for tests. */
+export const PREMIUM_TIER_TTL_MS = 30 * 24 * 60 * 60 * 1000;
+```
+
+### §7.3 usePremiumTier hook (internal)
+
+```typescript
+// File: src/internal/usePremiumTier.ts
+
+export interface UsePremiumTierResult {
+  /** Effective tier (after 30-day filter). */
+  readonly effectiveTier: PremiumTier;
+  /** Stored raw tier (before 30-day filter). */
+  readonly storedTier: PremiumTier;
+  /** Stored started_at (ms epoch); 0 if no upgrade yet. */
+  readonly startedAt: number;
+  /** Setter that writes both prefs atomically + emits web:premium:tier-changed. */
+  readonly setTier: (next: PremiumTier) => void;
+}
+
+/**
+ * Read-side hook returning the effective Premium tier.
+ *
+ * Effective tier =
+ *   if storedTier === "premium_stub" && Date.now() >= startedAt + PREMIUM_TIER_TTL_MS:
+ *     "free"   (30-day expiry)
+ *   else:
+ *     storedTier
+ *
+ * NEVER ticks a setInterval. NEVER fires a setTimeout. Pure call-site evaluation.
+ * SSR-safe: returns "free" + 0 if localStorage is unavailable.
+ *
+ * setTier() writes both prefs and emits typed event "web:premium:tier-changed".
+ * When `next === "premium_stub"`, also writes startedAt = Date.now().
+ * When `next === "free"`, also writes startedAt = 0.
+ */
+export function usePremiumTier(): UsePremiumTierResult;
+```
+
+### §7.4 usePremiumConfig hook (internal)
+
+```typescript
+// File: src/internal/usePremiumConfig.ts
+
+export interface UsePremiumConfigResult {
+  /** The Payment Link URL from VITE_STRIPE_PAYMENT_LINK_URL; "" if missing. */
+  readonly paymentLinkUrl: string;
+  /** True iff paymentLinkUrl is non-empty AND starts with "https://". */
+  readonly configured: boolean;
+}
+
+/**
+ * Reads import.meta.env.VITE_STRIPE_PAYMENT_LINK_URL at hook call site.
+ * Returns `configured: false` if the env var is missing or invalid (does not start with https://).
+ * Callers (notably the Upgrade button) MUST disable themselves when `configured` is false.
+ */
+export function usePremiumConfig(): UsePremiumConfigResult;
+```
+
+### §7.5 PremiumTierBadge component (exported in barrel)
+
+```typescript
+// File: src/internal/PremiumTierBadge.tsx
+
+/**
+ * Renders a "Premium (stub)" badge for the Topbar.
+ * Returns null if effective tier is not "premium_stub".
+ *
+ * Consumed by `packages/xai-web-shell/src/Topbar.tsx` (single import + JSX placement).
+ *
+ * Internally calls usePremiumTier() — no props.
+ *
+ * Output HTML when premium_stub:
+ *   <span className="premium-tier-badge" data-testid="premium-tier-badge">
+ *     Premium (stub)
+ *   </span>
+ *
+ * CSS: oklch(80% 0.16 85) gold background, oklch(25% 0.04 85) text.
+ * Defined in plugin-web-settings-rest src/styles.css.
+ */
+export function PremiumTierBadge(): React.ReactElement | null;
+```
+
+### §7.6 New i18n keys (internal `localI18n.ts`)
+
+14 new bilingual entries. Full table:
+
+| Key | EN | ZH |
+|---|---|---|
+| `premium.badge.tier_stub` | Premium (stub) | 高级版（演示） |
+| `premium.disclosure.banner` | v1 Premium is a UX preview. Real subscription enforcement requires desktop client (P1). | v1 高级版仅为 UX 演示。真实订阅功能需在桌面端（P1）实现。 |
+| `premium.btn.cancel_sub` | Cancel Subscription | 取消订阅 |
+| `premium.btn.cancel_sub_tooltip` | Clearing the local subscription flag will not contact Stripe — manage payment at billing.stripe.com | 清除本地订阅标记不会通知 Stripe — 请前往 billing.stripe.com 管理付款 |
+| `premium.upgrade_disabled_tooltip` | Payment Link not configured — see apps/web/deploy/README.md | Payment Link 未配置 — 请参考 apps/web/deploy/README.md |
+| `premium.redirect_notice` | Redirecting to Stripe… | 正在跳转至 Stripe… |
+| `premium.cb.success` | Subscription activated (stub) | 已激活订阅（演示） |
+| `premium.cb.invalid` | Checkout completion could not be confirmed — tier unchanged | 无法确认结账完成 — 等级未变更 |
+| `premium.cb.cancel` | Checkout cancelled — tier unchanged | 结账已取消 — 等级未变更 |
+| `premium.cb.redirect_notice` | Returning to Premium settings… | 正在返回高级版设置… |
+| `premium.tier.free` | Free | 免费版 |
+| `premium.tier.premium_stub` | Premium (stub) | 高级版（演示） |
+| `premium.tier.label` | Current tier: | 当前等级： |
+| `premium.activated_on` | Activated on | 激活日期 |
+
+(The existing `premium.headline_en` + `premium.body_en` from row #24 are preserved unchanged.)
+
+### §7.7 New storage prefs (registered in `packages/plugin-web-storage/src/internal/registry.ts`)
+
+| Key | Codec | Default | Category | Owner | SchemaVersion |
+|---|---|---|---|---|---|
+| `xai_pref_premium_tier` | string | `"free"` | pref | xai-web-settings-rest | 1 |
+| `xai_pref_premium_started_at` | number | `0` | pref | xai-web-settings-rest | 1 |
+
+Added in a labeled block at the tail of `registry.ts` after the row-#7 OAuth integration block:
+
+```typescript
+// ---- Premium tier stub (extension 2026-05-26 — gap-closure row #8) ----
+// `tier` value union: "free" | "pending" | "premium_stub".
+// `started_at` is ms epoch; 0 when tier is not "premium_stub".
+// MUST NOT be interpreted as "real subscription is active" by any other code path.
+// This is a UX-preview stub only; real subscription enforcement requires desktop
+// client (P1). The 30-day timer is client-clock based (R4 in discovery review)
+// and is documented in the disclosure banner.
+// Caught by chassis resetAllPrefs() via key.startsWith("xai_") filter.
+```
+
+Parity test `parity-design-md.test.ts` extended by 2 exempt keys.
+
+### §7.8 New EventMap entry (declaration-only in `packages/core/src/types/events.ts`)
+
+```typescript
+"web:premium:tier-changed": {
+  /** Previous effective tier before this transition. */
+  previous: "free" | "pending" | "premium_stub";
+  /** New effective tier after this transition. */
+  current: "free" | "pending" | "premium_stub";
+  /** ISO 8601 timestamp at the moment of transition. */
+  changedAt: string;
+};
+```
+
+No consumer in this row (declaration-only). Forward-compat hook for P1 feature-gating rows. Mirrors row #5 + row #6 + row #7 EventMap-extension precedents.
+
+### §7.9 Callback route declarations (host edit)
+
+`apps/web/src/routes/router.tsx` — adds TWO new children under `path: "app"`, BOTH BEFORE the existing `:moduleId/*` param-matched route AND siblings of the row #7 `settings/integrations/callback` child:
+
+```typescript
+{
+  // Literal path MUST come before :moduleId/* to win the match.
+  // gap-closure row #8 — Premium Stripe Checkout success callback
+  path: "settings/premium/checkout/success",
+  element: <CheckoutSuccessPage />,
+  errorElement: <RouteErrorBoundary scope="premium-checkout" />,
+},
+{
+  // gap-closure row #8 — Premium Stripe Checkout cancel callback
+  path: "settings/premium/checkout/cancel",
+  element: <CheckoutCancelPage />,
+  errorElement: <RouteErrorBoundary scope="premium-checkout" />,
+},
+```
+
+Placement: siblings of the existing `path: "settings/integrations/callback"` route. Order matters — both literal paths must come BEFORE the `:moduleId/*` param-matched route.
+
+Both routes use the same `scope="premium-checkout"` — `RouteErrorBoundary` `scope` union must be extended in `apps/web/src/routes/RouteErrorBoundary.tsx` from `"root" | "auth" | "app" | "module" | "oauth-callback"` to `"root" | "auth" | "app" | "module" | "oauth-callback" | "premium-checkout"` (single-line additive type widening). Pure additive type extension — no behavior change. Same pattern used in row #7's B2 verify-cycle patch.
+
+### §7.10 Topbar integration (cross-package edit, `@repo/xai-web-shell`)
+
+`packages/xai-web-shell/src/Topbar.tsx` — adds 1 import + 1 JSX placement:
+
+```typescript
+// NEW import — gap-closure row #8
+import { PremiumTierBadge } from "@repo/plugin-web-settings-rest";
+
+// ... existing function body up to topbar-controls div ...
+
+      <div className="topbar-controls">
+        {/* NEW: gap-closure row #8 — gold badge when xai_pref_premium_tier === "premium_stub" */}
+        <PremiumTierBadge />
+
+        <div className="seg" role="tablist">
+          {/* existing lang toggle */}
+```
+
+xai-web-shell's `package.json` gains a `peerDependencies` entry for `@repo/plugin-web-settings-rest`. Tests gain 1 case TB-PREMIUM-1.
+
+### §7.11 Error semantics (extension)
+
+- `CheckoutSuccessPage` does NOT throw on invalid/missing session_id; it renders the "invalid" banner + auto-navigates after 4000ms (same pattern as row #7 CallbackPage invalid path).
+- `CheckoutCancelPage` does NOT throw under any input; it is idempotent (always shows "Checkout cancelled — tier unchanged" banner + auto-navigates after 3000ms).
+- `usePremiumTier()` does NOT throw on missing localStorage; returns `{ effectiveTier: "free", storedTier: "free", startedAt: 0, setTier: noop }`.
+- `usePremiumConfig()` does NOT throw on missing env var; returns `{ paymentLinkUrl: "", configured: false }`.
+- `<PremiumTierBadge />` returns `null` when not `premium_stub` — no error path.
+- No `fetch()` is called anywhere in the new exports. Confirmed by cross-vendor verify item §8 #5 (discovery review).
+
+### §7.12 CSP impact (companion: `apps/web/public/_headers`)
+
+`connect-src` extended from current state (post row #2 + row #6 + row #7 amendments) by 3 hostnames:
+
+```
+Before: connect-src 'self' https://api.anthropic.com https://tile.openstreetmap.org https://api.notion.com https://oauth2.googleapis.com https://api.linear.app
+After:  connect-src 'self' https://api.anthropic.com https://tile.openstreetmap.org https://api.notion.com https://oauth2.googleapis.com https://api.linear.app https://js.stripe.com https://checkout.stripe.com https://buy.stripe.com
+```
+
+`script-src`: **NOT widened** (no Stripe.js loaded in v1). `frame-src`: **NOT widened** (no embedded Checkout in v1). `form-action` / `worker-src` / `img-src` / `font-src` / other directives: unchanged.
+
+ADR-0008 §S3 D3 amended in-place (FOURTH amendment) per binding precedent from row #2 + row #6 + row #7.
+
+### §7.13 Environment variable contract (`apps/web/deploy/README.md` — NEW doc)
+
+| Variable | Required? | Format | Where set | Notes |
+|---|---|---|---|---|
+| `VITE_STRIPE_PAYMENT_LINK_URL` | Yes (else Upgrade button is disabled) | `https://buy.stripe.com/test_xxx` (dev) or `https://buy.stripe.com/yyy` (prod) | GitHub repo Secrets → Cloudflare Pages env vars (per-environment); local dev: `apps/web/.env.local` | Test mode Payment Link for preview deploys; Live mode for production. Payment Link must have its `after_completion.redirect.url` set in Stripe Dashboard to `<base-url>/app/settings/premium/checkout/success?session_id={CHECKOUT_SESSION_ID}`. |
+
+NOT used / reserved for future:
+- `VITE_STRIPE_PUBLISHABLE_KEY` — reserved for future Buy Button or Embedded Checkout path. NOT loaded in v1.
+- `VITE_STRIPE_SECRET_KEY` — **MUST NEVER BE SET** as a `VITE_*` var (Vite inlines `VITE_*` into client bundles). Any future server-side key belongs in a Worker env binding, not a Vite env var.
+
+Documented runbook entries in the new `apps/web/deploy/README.md` (P5):
+- "Configure Payment Link" — create Payment Link in Stripe dashboard, set redirect URL, copy URL into env var.
+- "Rotate Payment Link" — invalidate old URL in Stripe dashboard, issue new, update env var, re-deploy.
+- "Switch dev → prod" — point Cloudflare Pages production env to live-mode URL; preview env stays on test-mode URL.
+

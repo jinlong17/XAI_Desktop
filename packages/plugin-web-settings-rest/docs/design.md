@@ -316,3 +316,224 @@ docs/PLUGIN_MAP.md                              — EDIT: append "(Extension 202
 R1 PKCE state collision under fast re-clicks → per-provider namespaced sessionStorage keys. R2 Callback reached without prior state → invalid-state banner + navigate. R3 Popup blocker → moot (same-tab). R4 Notion rate-limit → user-initiated only. R5 Surprise `frame-src` need → cross-vendor verify flag. R6 Provider-side grant not revoked → documented tooltip. R7 TTL too short → 10-min default + clear error path. R8 jsdom crypto stubs → confirmed adequate in row #6 precedent. R9 Other code misinterpreting flags → FA documentation. R10 Cold-read flags strictness → test suite TT-PKCE-1..5 covers validation.
 
 
+---
+
+## 2026-05-26 Extension: Premium Pane Stripe Checkout Stub (gap-closure row #8)
+
+> APPEND-ONLY extension. SHIPPED row #24 contents above (Workflow State Panel +
+> 2026-05-25 row #7 OAuth-stub block) are NOT mutated. This block adds the
+> Premium Stripe Checkout stub per
+> `docs/workflow/roadmap/xai-web-console-gap-closure.md` row #8.
+
+### Decision header
+
+| Field | Value |
+|---|---|
+| Selected Option | **Composite α** — see §5 of discovery review for sub-decisions A1 (same-tab redirect Payment Link) + B1 (connect-src +3 hostnames; no script-src/frame-src widening) + C1 (two routes `/success` + `/cancel`) + D1 (two prefs `tier` + `started_at`) + E1 (pure read-side 30-day filter) + F1 (`<PremiumTierBadge />` exported + 1-line Topbar JSX placement) |
+| Review Doc | `docs/reviews/xai-web-settings-premium-stripe/20260525-discovery-review.md` |
+| Review Date | 2026-05-26 |
+| Roadmap Row | `docs/workflow/roadmap/xai-web-console-gap-closure.md` row #8 (W2) |
+| Source brief | `docs/reviews/xai-web-settings-premium-stripe/20260524-roadmap-seed.md` |
+| Parent ADR | ADR-0009 §D2-G3 (P0 gap-closure) |
+| ADR Amendment | **ADR-0008 §S3 D3 — FOURTH in-place amendment** per row #2 + row #6 + row #7 binding precedents. Extend `connect-src` with `https://js.stripe.com`, `https://checkout.stripe.com`, `https://buy.stripe.com`. `script-src` and `frame-src` NOT widened (decision §FA-10 below — same-tab redirect, no Stripe.js bundle, no iframe embed). Update §S6 `_headers` snippet. Extend `apps/web/src/__tests__/csp.test.ts` (+1 case `CSP4`). |
+| Target packages | `packages/plugin-web-settings-rest/src/{internal/premiumTier.ts (NEW), internal/usePremiumConfig.ts (NEW), internal/usePremiumTier.ts (NEW), internal/PremiumTierBadge.tsx (NEW), internal/premiumDisclosureBanner.tsx (NEW), internal/premiumUpgradeButton.tsx (NEW), internal/premiumCancelButton.tsx (NEW), CheckoutSuccessPage.tsx (NEW), CheckoutCancelPage.tsx (NEW), panes/premiumPane.tsx (EDIT — keep PR1..3 green), internal/localI18n.ts (EDIT — +14 bilingual entries), styles.css (EDIT — +banner + badge + premium-pane CSS), index.ts (EDIT — export CheckoutSuccessPage + CheckoutCancelPage + PremiumTierBadge + PremiumTier type)}` + `packages/plugin-web-storage/src/internal/registry.ts` (+2 prefs) + `packages/plugin-web-storage/src/__tests__/parity-design-md.test.ts` (+2 exempt keys) + `packages/core/src/types/events.ts` (+1 EventMap declaration `web:premium:tier-changed`) + `packages/xai-web-shell/src/Topbar.tsx` (EDIT — 1 import + 1 JSX placement of `<PremiumTierBadge />`) + `packages/xai-web-shell/src/__tests__/Topbar.test.tsx` (EDIT — +1 case `TB-PREMIUM-1`) + `apps/web/src/routes/router.tsx` (+2 route children) + `apps/web/public/_headers` (extend connect-src) + `apps/web/src/__tests__/csp.test.ts` (+CSP4 case) + `apps/web/deploy/README.md` (NEW — env-var documentation) + `docs/adr/0008-cloudflare-deploy-target-and-csp.md` (amend §S3 D3) + `docs/PLUGIN_MAP.md` (append extension note) |
+| Dispatched by | `xai-roadmap-loop` SERIAL dispatch — Wave 2 third row (after row #7 SHIPPED `5085a03` 2026-05-26) |
+| Last Updated | 2026-05-26 |
+
+### Frozen Assumptions (this extension; lock at plan acceptance)
+
+**FA-1. Stub only.** No real subscription state in any backend. No webhook. No SK in any client code path. The only state mutation is two boolean/scalar prefs (`xai_pref_premium_tier`, `xai_pref_premium_started_at`) and one declaration-only event (`web:premium:tier-changed`). "Cancel Subscription" is local-flag-only — no Stripe API call.
+
+**FA-2. Same-tab redirect via Payment Link.** Upgrade click → `window.location.assign(VITE_STRIPE_PAYMENT_LINK_URL)`. NO `window.open(...)` (popup-blocker hostile + can't sync state across tabs without HC10-violating `localStorage`). NO Stripe.js bundle. NO embedded iframe. This is the only client-only HC3+HC4-compatible path post 2025-09-30 redirectToCheckout removal (discovery §3.1).
+
+**FA-3. Two new routes** (literal-path siblings of row #7's callback, declared before `:moduleId/*`):
+- `/app/settings/premium/checkout/success` → `<CheckoutSuccessPage />` (validates `?session_id=` presence + non-empty; flips tier; emits event; banner; navigates back in 2000ms)
+- `/app/settings/premium/checkout/cancel` → `<CheckoutCancelPage />` (idempotent; tier unchanged; banner; navigates back in 3000ms)
+
+**FA-4. Two new registry entries** in `packages/plugin-web-storage/src/internal/registry.ts` (labeled block at tail):
+
+| Key | Codec | Default | Category | Owner | SchemaVersion |
+|---|---|---|---|---|---|
+| `xai_pref_premium_tier` | string | `"free"` | pref | xai-web-settings-rest | 1 |
+| `xai_pref_premium_started_at` | number | `0` | pref | xai-web-settings-rest | 1 |
+
+`xai_pref_premium_tier` value union: `"free" | "pending" | "premium_stub"`. `"pending"` is transitional only (between Upgrade-click and success-callback arrival); the stored value flips `"free" → "pending" → "premium_stub"` (or `"free" → "pending" → "free"` on cancel). Caught by chassis `resetAllPrefs()` via `key.startsWith("xai_")`. Parity test +2 exempt.
+
+**FA-5. `usePremiumTier()` is a pure read-side filter.** Reads both prefs; if `tier === "premium_stub"` AND `started_at + 30*24*3600*1000 <= Date.now()`, returns `"free"` (effective). Optional lazy-cleanup: on first read past expiry, also writes the storage back to `"free"` + clears `started_at`. SSR-safe (returns `"free"` if no `localStorage`). NO setInterval, NO setTimeout — deterministic per call.
+
+**FA-6. Gold badge** is `<PremiumTierBadge />` exported from `plugin-web-settings-rest`. Reads `usePremiumTier()` internally; returns `null` if effective tier is not `"premium_stub"`. Otherwise renders `<span className="premium-tier-badge">{t("premium.badge.tier_stub")}</span>` (text "Premium (stub)" / "高级版（演示）"). Placed via 1-line JSX edit in `packages/xai-web-shell/src/Topbar.tsx` at the left end of `topbar-controls` (before the lang `<div className="seg">`). xai-web-shell test gains 1 case `TB-PREMIUM-1`.
+
+**FA-7. "Cancel Subscription" button** rendered only when effective tier is `"premium_stub"`. onClick:
+1. Writes `xai_pref_premium_tier = "free"`.
+2. Writes `xai_pref_premium_started_at = 0`.
+3. Emits `web:premium:tier-changed` with `{ previous: "premium_stub", current: "free", changedAt: <ISO> }`.
+4. No fetch. No Stripe API call. Documented in disclosure tooltip on the button: EN "Clearing the local subscription flag will not contact Stripe — manage payment at billing.stripe.com" / ZH "清除本地订阅标记不会通知 Stripe — 请前往 billing.stripe.com 管理付款"
+
+**FA-8. Disclosure banner** is `<PremiumDisclosureBanner />` — non-dismissible (no close button), rendered unconditionally at the top of the Premium pane in all 3 tier states, OKLCH amber/gold background (`oklch(78% 0.12 85)` background + `oklch(25% 0.04 85)` text). Text:
+- EN: "v1 Premium is a UX preview. Real subscription enforcement requires desktop client (P1)."
+- ZH: "v1 高级版仅为 UX 演示。真实订阅功能需在桌面端（P1）实现。"
+
+Distinct CSS class (`premium-disclosure-banner`) — does NOT reuse row #7's `int-stub-banner` class (different visual treatment + different rotation in test selectors).
+
+**FA-9. New EventMap entry** in `packages/core/src/types/events.ts`:
+
+```typescript
+"web:premium:tier-changed": {
+  /** Previous effective tier before this transition. */
+  previous: "free" | "pending" | "premium_stub";
+  /** New effective tier after this transition. */
+  current: "free" | "pending" | "premium_stub";
+  /** ISO 8601 timestamp at the moment of transition. */
+  changedAt: string;
+};
+```
+
+No consumer in this row (declaration-only). Mirrors row #5 + row #6 + row #7 precedent. Forward-compat hook for P1 feature-gating rows.
+
+**FA-10. CSP scope (FOURTH amendment).** `connect-src` extended with 3 Stripe hostnames:
+- `https://js.stripe.com`
+- `https://checkout.stripe.com`
+- `https://buy.stripe.com`
+
+`script-src`, `frame-src`, `form-action`, `worker-src` all UNCHANGED. Rationale (discovery §3.3): same-tab `window.location.assign` is a top-level navigation, not subject to `connect-src`; the 3 defensive entries cover any future preflight/analytics. We do NOT load Stripe.js or embed Checkout in v1, so the heavier directives stay clean. ADR-0008 §S3 D3 amended in-place (FOURTH amendment). `_headers` updated. `csp.test.ts` gains CSP4 source-text guard. **No `*` wildcard. No `'unsafe-inline'`. No subdomain wildcard.**
+
+**FA-11. Source-text guards** (added in P5):
+- `apps/web/src/__tests__/csp.test.ts` CSP4 case (asserts `_headers` connect-src contains all 3 Stripe hostnames).
+- `packages/plugin-web-settings-rest/src/__tests__/no-stripe-secret-key.test.ts` (asserts zero occurrences of `sk_test_` and `sk_live_` literals across `packages/plugin-web-settings-rest/src/**/*.{ts,tsx}`).
+- `packages/plugin-web-settings-rest/src/__tests__/no-stripe-js-bundle.test.ts` (asserts zero occurrences of `@stripe/stripe-js` import and `https://js.stripe.com/` literal in source).
+
+These three guards are the row's hard cross-vendor verify gates.
+
+**FA-12. Tier flag scope.** `xai_pref_premium_tier === "premium_stub"` MUST NOT be interpreted by any other plugin/code as a "real subscription is active" signal in v1. This is a UX-stub flag only. Enforcement: registry.ts comment block documents the constraint; api.md §7.7 documents it; PLUGIN_MAP extension note flags v1-stub semantics.
+
+**FA-13. No new package dependency.** No `@stripe/stripe-js`. No `stripe-node`. No `@stripe/react-stripe-js`. Pure same-tab redirect using existing `window.location.assign`. No new NPM dep introduced in any package.json — only `peerDependencies` declarations are added/touched.
+
+**FA-14. PR1..PR3 tests preserved verbatim** (HC9). The 3 existing `premiumPane.test.tsx` cases (Renders without error / Bilingual headline / id+icon+i18nKey correct) MUST stay green. New tests are additive — PT1..PT6 (tier transitions), PB-BANNER-1..3 (disclosure banner), CS1..CS8 (CheckoutSuccessPage), CC1..CC4 (CheckoutCancelPage), PHK1..PHK4 (usePremiumTier hook), PCB-1..2 (PremiumTierBadge), PUB-1..3 (Upgrade button), PCANCEL-1..3 (Cancel button), TB-PREMIUM-1 (xai-web-shell topbar), CSP4 + no-SK + no-stripe-js-bundle source-text guards, parity-test +2 exempt, EV3 EventMap declaration. Approx **40 new tests**.
+
+**FA-15. Append-only doc discipline.** This `design.md` gains ONE new section (this one); `api.md` gains ONE new §7 section; `test.md` gains ONE new §6 section; `dev_log.md` gains ONE new "## Bugfix-Extension Lineage — gap-closure row #8 (2026-05-26)" block. SHIPPED row #24 Workflow State Panel + row #7 Lineage block preserved verbatim.
+
+### Component graph (extension)
+
+```
+@repo/plugin-web-settings-rest (extended)
+├── src/CheckoutSuccessPage.tsx                — NEW: validates ?session_id, flips tier, emits event, banner, navigates
+├── src/CheckoutCancelPage.tsx                 — NEW: idempotent UX confirmation, navigates back
+├── src/panes/premiumPane.tsx                  — EDIT: add Upgrade button + Cancel button + disclosure banner + tier-aware copy; PR1..3 green
+├── src/internal/premiumTier.ts                — NEW: type PremiumTier + const PREMIUM_TIER_TTL_MS = 30*24*3600*1000
+├── src/internal/usePremiumTier.ts             — NEW: read-side hook returning effective tier
+├── src/internal/usePremiumConfig.ts           — NEW: read env vars (VITE_STRIPE_PAYMENT_LINK_URL) + disabled fallback
+├── src/internal/PremiumTierBadge.tsx          — NEW: exported component for xai-web-shell Topbar
+├── src/internal/premiumDisclosureBanner.tsx   — NEW: non-dismissible banner
+├── src/internal/premiumUpgradeButton.tsx      — NEW: Upgrade button (disabled if env missing)
+├── src/internal/premiumCancelButton.tsx       — NEW: Cancel Subscription button (visible only when premium_stub)
+├── src/internal/localI18n.ts                  — EDIT: +14 bilingual entries (badge, banner, button labels, callback statuses, disclaimers)
+├── src/styles.css                             — EDIT: +premium-disclosure-banner + premium-tier-badge + premium-upgrade-btn + premium-cancel-btn + premium-cb-page CSS (all OKLCH)
+├── src/index.ts                               — EDIT: + export { CheckoutSuccessPage, CheckoutCancelPage, PremiumTierBadge }; + type PremiumTier
+└── src/__tests__/
+    ├── premiumTier.test.ts                    — NEW: 4 cases (PT1..PT4 transitions)
+    ├── usePremiumTier.test.tsx                — NEW: 4 cases (PHK1..PHK4 — free, premium_stub, expired-30d, SSR-safe)
+    ├── usePremiumConfig.test.tsx              — NEW: 3 cases (env present / env empty / env invalid)
+    ├── PremiumTierBadge.test.tsx              — NEW: 2 cases (renders when premium_stub, returns null when free)
+    ├── premiumDisclosureBanner.test.tsx       — NEW: 3 cases (EN, ZH, non-dismissible)
+    ├── premiumUpgradeButton.test.tsx          — NEW: 3 cases (calls window.location.assign with env URL, disabled if env empty, bilingual)
+    ├── premiumCancelButton.test.tsx           — NEW: 3 cases (flips tier, emits event, bilingual)
+    ├── CheckoutSuccessPage.test.tsx           — NEW: 8 cases (CS1..CS8: valid session_id, missing session_id, empty session_id, flips tier, emits event, displays success banner, navigates after 2000ms, bilingual)
+    ├── CheckoutCancelPage.test.tsx            — NEW: 4 cases (CC1..CC4: renders, idempotent re tier, navigates after 3000ms, bilingual)
+    ├── premiumPane.test.tsx                   — EDIT: PR1..3 preserved + PT-EXT-1..PT-EXT-6 (Upgrade visible/clickable when free, Cancel visible when premium_stub, banner always present, tier-aware copy)
+    ├── no-stripe-secret-key.test.ts           — NEW: source-text guard (zero "sk_test_" / "sk_live_" in src/**)
+    └── no-stripe-js-bundle.test.ts            — NEW: source-text guard (zero "@stripe/stripe-js" / "https://js.stripe.com/" in src/**)
+
+packages/xai-web-shell/
+├── src/Topbar.tsx                              — EDIT: + import { PremiumTierBadge } from "@repo/plugin-web-settings-rest"; + <PremiumTierBadge /> at left end of topbar-controls (1 import + 1 line)
+└── src/__tests__/Topbar.test.tsx              — EDIT: + TB-PREMIUM-1 case
+
+apps/web/
+├── src/routes/router.tsx                      — EDIT: + 2 route children { path: "settings/premium/checkout/success", element: <CheckoutSuccessPage /> } + { path: "settings/premium/checkout/cancel", element: <CheckoutCancelPage /> } (both BEFORE :moduleId/*)
+├── public/_headers                            — EDIT: extend connect-src with 3 Stripe hostnames
+├── src/__tests__/csp.test.ts                  — EDIT: + CSP4 case
+└── deploy/README.md                           — NEW: env-var documentation (VITE_STRIPE_PAYMENT_LINK_URL setup; secret-rotation runbook for the Payment Link URL)
+
+packages/core/src/types/events.ts              — EDIT: + 1 EventMap declaration "web:premium:tier-changed"
+
+packages/plugin-web-storage/
+├── src/internal/registry.ts                   — EDIT: + 2 prefs in labeled block (tier + started_at)
+└── src/__tests__/parity-design-md.test.ts     — EDIT: + 2 exempt keys
+
+docs/adr/0008-cloudflare-deploy-target-and-csp.md — EDIT: amend §S3 D3 (FOURTH amendment row) + Amendments frontmatter row + §S6 _headers snippet update
+
+docs/PLUGIN_MAP.md                              — EDIT: append "(Extension 2026-05-26 — Premium Stripe Checkout stub gap-closure row #8)" to plugin-web-settings-rest row + add `@repo/xai-web-shell` to deps list (it was already there)
+```
+
+### State machine (premium tier)
+
+```
+                                              ┌─ Cancel Subscription click ─┐
+                                              │                              ▼
+[ free ] ─ Upgrade click ─► [ pending ]                                     [ free ]
+   ▲                          │                                              ▲
+   │                          ▼ (window.location.assign Payment Link)        │
+   │                          │                                              │
+   │                          ▼ (Stripe redirects back)                      │
+   │                  [ at /success?session_id=... ]                         │
+   │                          │                                              │
+   │              ┌─ ?session_id missing/empty ─┐    ┌─ valid ─┐             │
+   │              ▼                              ▼              ▼             │
+   │     [ invalid banner ]              [ free fall-back ] [ premium_stub ] │
+   │              │ navigate                     │ navigate     │             │
+   │              ▼                              ▼              │             │
+   └──────────────┴──────────────────────────────┘              │             │
+                              navigate(/app/settings/premium)   │             │
+                                                                ▼             │
+                                          [ after 30 days OR Cancel click ]   │
+                                                                ▼             │
+                                                              [ free ] ───────┘
+```
+
+- All transitions are pure (no race conditions): pending → premium_stub happens via React state on the new page after `window.location.assign` (full page unload).
+- "pending" is short-lived (only between Upgrade click and Stripe-page navigation start). It's stored briefly to allow the disclosure banner to show "Redirecting to Stripe…" — implementation may opt to skip the stored "pending" state and only render the redirecting UI from local component state. Decision deferred to feature-build P2; default is to store `"pending"` for ~100ms before assign.
+
+### Dependencies (extension)
+
+| Dep | Kind | Why |
+|---|---|---|
+| `@repo/plugin-web-storage` | existing peer | 2 new prefs via `usePref()` |
+| `@repo/plugin-web-tokens` | existing peer | `useI18n(lang)` for global keys + `Lang` type |
+| `@repo/xai-web-event-bus` | existing peer | `emitWebEvent("web:premium:tier-changed", ...)` |
+| `@repo/core` | indirect via tokens | type-only flow (new EventMap entry declared here) |
+| `react-router` | existing dep (row #7) | callback pages use `useSearchParams`, `useNavigate` |
+| `@repo/xai-web-shell` | NEW peer (limited surface) | Topbar imports `<PremiumTierBadge />` — 1-line JSX placement |
+| Web Crypto API | platform (browser) | NOT used in this row (no PKCE; pure redirect) |
+| env var `VITE_STRIPE_PAYMENT_LINK_URL` | runtime config | Payment Link URL (per-environment) |
+
+**No new NPM dependency.** `@repo/xai-web-shell` is added as a peer of `plugin-web-settings-rest` (verify package.json `peerDependencies`).
+
+### Bilingual i18n delta (preview — full table in `api.md` §7.6)
+
+~14 new keys under `premium.*` namespace (existing `premium.headline_en` / `premium.body_en` preserved). Examples:
+
+```
+"premium.badge.tier_stub": EN "Premium (stub)" ZH "高级版（演示）"
+"premium.disclosure.banner": EN "v1 Premium is a UX preview. Real subscription enforcement requires desktop client (P1)."
+                             ZH "v1 高级版仅为 UX 演示。真实订阅功能需在桌面端（P1）实现。"
+"premium.btn.upgrade":     EN "Upgrade Now" ZH "立即升级"  (already in row #24 — reused via global s("settings.upgrade_now"))
+"premium.btn.cancel_sub":  EN "Cancel Subscription" ZH "取消订阅"
+"premium.btn.cancel_sub_tooltip":
+  EN "Clearing the local subscription flag will not contact Stripe — manage payment at billing.stripe.com"
+  ZH "清除本地订阅标记不会通知 Stripe — 请前往 billing.stripe.com 管理付款"
+"premium.upgrade_disabled_tooltip":
+  EN "Payment Link not configured — see apps/web/deploy/README.md"
+  ZH "Payment Link 未配置 — 请参考 apps/web/deploy/README.md"
+"premium.redirect_notice":  EN "Redirecting to Stripe…" ZH "正在跳转至 Stripe…"
+"premium.cb.success":       EN "Subscription activated (stub)" ZH "已激活订阅（演示）"
+"premium.cb.invalid":       EN "Checkout completion could not be confirmed — tier unchanged" ZH "无法确认结账完成 — 等级未变更"
+"premium.cb.cancel":        EN "Checkout cancelled — tier unchanged" ZH "结账已取消 — 等级未变更"
+"premium.cb.redirect_notice": EN "Returning to Premium settings…" ZH "正在返回高级版设置…"
+"premium.tier.free":        EN "Free" ZH "免费版"
+"premium.tier.premium_stub":EN "Premium (stub)" ZH "高级版（演示）"
+"premium.tier.label":       EN "Current tier:" ZH "当前等级："
+```
+
+### Risks recap (one-liner; full table in discovery §6)
+
+R1 Payment Link env missing → disabled button with tooltip + PC-CONFIG-1 test. R2 SK leaked in source → no-stripe-secret-key.test.ts source-text guard. R3 Stripe.js accidentally bundled → no-stripe-js-bundle.test.ts source-text guard. R4 30-day client-clock bypass → documented v1 limitation + disclosure banner. R5 Direct callback URL hit without prior Upgrade → CheckoutSuccessPage validates session_id presence + invalid-state path. R6 Topbar edit breakage → additive 1-line edit + TB-PREMIUM-1. R7 Disclosure banner missed → non-dismissible + amber OKLCH + present in all 3 tier states. R8 Downstream code misreads premium_stub as real subscription → registry comment + api.md §7.7 + FA-12. R9 CSP3 accidentally narrowed when adding CSP4 → CSP3 case retained. R10 Payment Link URL revoked in Stripe dashboard → operator runbook in apps/web/deploy/README.md. R11 Topbar badge CSS conflict → scoped class + manual smoke at ship-time.
+
