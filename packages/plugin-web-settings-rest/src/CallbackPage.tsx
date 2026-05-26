@@ -28,6 +28,24 @@ import type { IntegrationProviderId } from "./internal/integrationProviders.js";
 
 const SETTINGS_INTEGRATIONS_PATH = "/app/settings/integrations";
 
+/**
+ * Scrub OAuth `code`/`state`/`error` query params from the visible URL
+ * WITHOUT involving react-router's navigation machinery. We use raw
+ * `window.history.replaceState` because react-router 7's setSearchParams
+ * triggers an internal navigate cycle that under jsdom + undici 6 produces
+ * a spurious "Expected signal to be an instance of AbortSignal" unhandled
+ * rejection (see codex finding #2 patch cycle 2 dev_log). Production
+ * behaviour is identical: the URL's query becomes empty and no new
+ * history entry is pushed.
+ */
+function scrubOAuthQuery(): void {
+  if (typeof window === "undefined" || !window.history?.replaceState) return;
+  const url = new URL(window.location.href);
+  if (url.search === "") return;
+  url.search = "";
+  window.history.replaceState(window.history.state, "", url.toString());
+}
+
 type CallbackStatus = "success" | "invalid" | "cancelled" | "pending";
 
 interface CallbackStatusState {
@@ -68,7 +86,7 @@ function flipConnectedPref(
 }
 
 function CallbackPageInner(): React.ReactElement {
-  const [searchParams, setSearchParams] = useSearchParams();
+  const [searchParams] = useSearchParams();
   const navigate = useNavigate();
   const {
     setNotionConnected,
@@ -100,7 +118,7 @@ function CallbackPageInner(): React.ReactElement {
       }
       setState({ status: "cancelled", providerId: null });
       // CODEX FINDING #2: scrub query immediately so error/state don't linger.
-      setSearchParams({}, { replace: true });
+      scrubOAuthQuery();
       const timer = setTimeout(() => {
         void navigate(SETTINGS_INTEGRATIONS_PATH, { replace: true });
       }, 3000);
@@ -110,7 +128,7 @@ function CallbackPageInner(): React.ReactElement {
     if (!stateParam) {
       setState({ status: "invalid", providerId: null });
       // CODEX FINDING #2: scrub query (defensive — no state but may have code).
-      setSearchParams({}, { replace: true });
+      scrubOAuthQuery();
       const timer = setTimeout(() => {
         void navigate(SETTINGS_INTEGRATIONS_PATH, { replace: true });
       }, 4000);
@@ -122,7 +140,7 @@ function CallbackPageInner(): React.ReactElement {
     if (!pending) {
       setState({ status: "invalid", providerId: null });
       // CODEX FINDING #2: scrub query — state was malformed/expired, code still in URL.
-      setSearchParams({}, { replace: true });
+      scrubOAuthQuery();
       const timer = setTimeout(() => {
         void navigate(SETTINGS_INTEGRATIONS_PATH, { replace: true });
       }, 4000);
@@ -155,9 +173,10 @@ function CallbackPageInner(): React.ReactElement {
     // params for the full 2s success-display window (and 3s/4s on the
     // error/invalid branches above), leaking them into browser history,
     // shareable URLs, screenshots, and referrer headers if the user
-    // navigated elsewhere mid-display. setSearchParams({}, replace) uses
-    // history.replaceState so no extra history entry is pushed.
-    setSearchParams({}, { replace: true });
+    // navigated elsewhere mid-display. Uses raw history.replaceState (NOT
+    // react-router's setSearchParams) to avoid a jsdom+undici AbortSignal
+    // unhandled rejection from react-router 7's internal navigate cycle.
+    scrubOAuthQuery();
 
     const timer = setTimeout(() => {
       void navigate(SETTINGS_INTEGRATIONS_PATH, { replace: true });
