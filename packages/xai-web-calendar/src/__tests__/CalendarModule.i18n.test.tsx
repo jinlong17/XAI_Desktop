@@ -2,7 +2,7 @@
  * Bilingual parity — AC-I18N-1..3, AC-I18N-4..5 (holiday).
  */
 import { describe, it, expect, beforeEach, afterEach, vi } from "vitest";
-import { render, screen } from "@testing-library/react";
+import { render, screen, act } from "@testing-library/react";
 import { CalendarModule } from "../CalendarModule.js";
 
 beforeEach(() => {
@@ -54,13 +54,17 @@ describe("CalendarModule i18n", () => {
     expect(may9Zh?.textContent).toBe("母亲节");
   });
 
-  it("AC-I18N-6: coming-soon panel bilingual", () => {
-    const { container, rerender } = render(<CalendarModule lang="en" />);
+  it("AC-I18N-6: week tab renders WeekView (ComingSoonPanel removed in P2+ for Week tab)", () => {
+    // After gap-closure row #4 P2, Week tab shows real WeekView, not ComingSoonPanel.
+    // ComingSoonPanel still appears for Day tab (until P3/P4).
+    const { container } = render(<CalendarModule lang="en" />);
     const tabs = screen.getAllByRole("tab");
-    tabs[1]?.click(); // Week
-    rerender(<CalendarModule lang="en" />);
-    expect(container.textContent).toContain("Week and Day views are coming soon.");
-    rerender(<CalendarModule lang="zh" />);
-    expect(container.textContent).toContain("周视图与日视图即将推出。");
+    act(() => {
+      tabs[1]?.click(); // Week
+    });
+    // Real time grid is rendered
+    expect(container.querySelector('[data-testid="cal-time-grid"]')).toBeTruthy();
+    // ComingSoonPanel "coming soon" text is NOT present for Week tab anymore
+    expect(container.textContent).not.toContain("Week and Day views are coming soon.");
   });
 });

@@ -60,3 +60,38 @@ describe("styles.css event-color tokens", () => {
     }
   });
 });
+
+// --- Extension token tests (gap-closure row #4) ----------------------------
+
+describe("styles.css event-block token parity (AC-TOKENS-EXT-1..2)", () => {
+  it("AC-TOKENS-EXT-1: cal-event-block ev-mint has same oklch values as cal-event.ev-mint", () => {
+    // Both selectors should use the same oklch values from layout.css:849-852
+    expect(css).toContain(
+      ".cal-event-block.ev-mint   { background: oklch(94% 0.04 165); color: oklch(38% 0.10 165); border-left-color: oklch(58% 0.10 165); }",
+    );
+    expect(css).toContain(
+      ".cal-event-block.ev-amber  { background: oklch(94% 0.04 70);  color: oklch(40% 0.10 60);  border-left-color: oklch(65% 0.13 70); }",
+    );
+    expect(css).toContain(
+      ".cal-event-block.ev-blue   { background: oklch(94% 0.04 245); color: oklch(40% 0.10 245); border-left-color: oklch(60% 0.12 245); }",
+    );
+    expect(css).toContain(
+      ".cal-event-block.ev-violet { background: oklch(94% 0.04 295); color: oklch(40% 0.10 295); border-left-color: oklch(60% 0.12 295); }",
+    );
+  });
+
+  it("AC-TOKENS-EXT-2: dark overrides for event-block use same oklch values as :853-856", () => {
+    expect(css).toContain(
+      `[data-theme="dark"] .cal-event-block.ev-mint   { background: oklch(28% 0.05 165); color: oklch(85% 0.08 165); }`,
+    );
+    expect(css).toContain(
+      `[data-theme="dark"] .cal-event-block.ev-amber  { background: oklch(28% 0.05 60);  color: oklch(85% 0.08 60); }`,
+    );
+    expect(css).toContain(
+      `[data-theme="dark"] .cal-event-block.ev-blue   { background: oklch(28% 0.05 245); color: oklch(85% 0.08 245); }`,
+    );
+    expect(css).toContain(
+      `[data-theme="dark"] .cal-event-block.ev-violet { background: oklch(28% 0.05 295); color: oklch(85% 0.08 295); }`,
+    );
+  });
+});

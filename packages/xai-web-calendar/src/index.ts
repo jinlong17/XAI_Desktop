@@ -38,3 +38,7 @@ export type { MonthCellData } from "./internal/monthGridCells.js";
 export type { EventBlock } from "./internal/placeEventBlocks.js";
 export type { DstShift } from "./internal/timeGridMath.js";
 export type { CalendarViewId } from "@repo/plugin-web-storage";
+export { WeekView } from "./WeekView.js";
+export type { WeekViewProps } from "./WeekView.js";
+export { TimeGrid } from "./TimeGrid.js";
+export type { TimeGridProps } from "./TimeGrid.js";

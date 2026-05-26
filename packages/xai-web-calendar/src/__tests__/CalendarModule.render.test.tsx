@@ -64,14 +64,17 @@ describe("CalendarModule render", () => {
     expect(tabs[1]?.getAttribute("aria-selected")).toBe("false");
   });
 
-  it("AC-VIEW-3: clicking Week swaps grid for ComingSoonPanel", () => {
+  it("AC-VIEW-3: clicking Week swaps Month grid for Week time-grid (P2+ behavior)", () => {
+    // After gap-closure row #4 P2, clicking Week tab renders WeekView (real grid),
+    // NOT ComingSoonPanel. ComingSoonPanel is removed in P4.
     render(<CalendarModule lang="en" />);
     const tabs = screen.getAllByRole("tab");
     act(() => {
-      tabs[1]?.click();
+      tabs[1]?.click(); // Week tab
     });
-    expect(document.querySelector('[data-testid="cal-coming-soon"]')).toBeTruthy();
+    // Month grid cells are gone; week time grid is present
     expect(document.querySelectorAll(".cal-day")).toHaveLength(0);
+    expect(document.querySelector('[data-testid="cal-time-grid"]')).toBeTruthy();
   });
 
   it("AC-VIEW-5: clicking back to Month restores the grid", () => {

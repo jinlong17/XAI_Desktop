@@ -192,6 +192,189 @@
 [data-theme="dark"] .cal-event.ev-blue   { background: oklch(28% 0.05 245); color: oklch(85% 0.08 245); }
 [data-theme="dark"] .cal-event.ev-violet { background: oklch(28% 0.05 295); color: oklch(85% 0.08 295); }
 
+/* ---------- Time grid (Week + Day views) ---------- */
+/* design.md §15.8 — tokens-only; uses existing CSS custom properties */
+
+.cal-time-grid {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  overflow: hidden;
+}
+
+/* Week-day column header row (day name + date number above the hour grid) */
+.cal-week-day-header {
+  display: grid;
+  padding: 8px 0;
+  border-bottom: 1px solid var(--border-1);
+  /* grid-template-columns set inline via style prop */
+}
+.cal-week-day-header > div {
+  text-align: center;
+  font-size: var(--fs-xs);
+  color: var(--text-2);
+  padding: 4px;
+}
+.cal-week-day-header > div[data-active="true"] {
+  color: var(--accent);
+  font-weight: 600;
+}
+
+/* All-day strip */
+.cal-allday-strip {
+  display: grid;
+  /* grid-template-columns set inline */
+  padding: 4px 0;
+  gap: 2px;
+  border-bottom: 1px solid var(--border-1);
+  max-height: 80px;
+  overflow-y: auto;
+  min-height: 28px;
+}
+.cal-allday-strip-label {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  padding-right: 8px;
+  font-size: var(--fs-2xs);
+  color: var(--text-4);
+}
+.cal-allday-cell {
+  position: relative;
+  min-height: 24px;
+}
+.cal-allday-event {
+  padding: 2px 6px;
+  border-radius: var(--r-xs);
+  font-size: var(--fs-2xs);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  border-left: 2px solid transparent;
+  cursor: default;
+}
+
+/* Scrollable hour grid */
+.cal-time-scroll {
+  flex: 1;
+  overflow-y: auto;
+  min-height: 0;
+}
+.cal-time-grid-body {
+  display: grid;
+  grid-template-columns: 48px 1fr;
+  min-height: calc(24 * 48px);
+}
+.cal-hour-labels {
+  display: flex;
+  flex-direction: column;
+  border-right: 1px solid var(--border-1);
+}
+.cal-hour-label {
+  height: 48px;
+  font-size: var(--fs-2xs);
+  color: var(--text-4);
+  font-family: var(--font-mono);
+  padding: 2px 6px 0 0;
+  text-align: right;
+  flex-shrink: 0;
+}
+.cal-hour-label.dst {
+  color: var(--amber);
+  font-style: italic;
+  height: auto;
+  padding: 2px 6px;
+}
+
+/* Day columns */
+.cal-day-columns {
+  display: grid;
+  /* grid-template-columns set inline */
+}
+.cal-day-column {
+  position: relative;
+  border-left: 1px solid var(--border-1);
+  min-height: calc(24 * 48px);
+}
+.cal-day-column[data-active="true"] {
+  background: color-mix(in oklch, var(--accent) 6%, transparent);
+}
+
+/* Hour rows (visual grid lines) */
+.cal-hour-row {
+  height: 48px;
+  border-bottom: 1px solid var(--border-1);
+  flex-shrink: 0;
+}
+.cal-hour-row.dst {
+  height: auto;
+  background: color-mix(in oklch, var(--amber) 8%, transparent);
+}
+.cal-dst-label {
+  font-size: var(--fs-2xs);
+  color: var(--amber);
+  font-style: italic;
+  padding: 2px 6px;
+}
+
+/* Event blocks (positioned absolutely within day column) */
+.cal-event-block {
+  position: absolute;
+  left: 4px;
+  right: 4px;
+  border-radius: var(--r-xs);
+  padding: 2px 6px;
+  font-size: var(--fs-2xs);
+  overflow: hidden;
+  border-left: 2px solid transparent;
+  cursor: default;
+  z-index: 1;
+}
+.cal-event-block .ev-title {
+  font-weight: 500;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.cal-event-block .ev-time {
+  font-family: var(--font-mono);
+  opacity: 0.7;
+  font-size: var(--fs-2xs);
+}
+
+/* Event block colors — same oklch values as chip colors (layout.css:849-852) */
+.cal-event-block.ev-mint   { background: oklch(94% 0.04 165); color: oklch(38% 0.10 165); border-left-color: oklch(58% 0.10 165); }
+.cal-event-block.ev-amber  { background: oklch(94% 0.04 70);  color: oklch(40% 0.10 60);  border-left-color: oklch(65% 0.13 70); }
+.cal-event-block.ev-blue   { background: oklch(94% 0.04 245); color: oklch(40% 0.10 245); border-left-color: oklch(60% 0.12 245); }
+.cal-event-block.ev-violet { background: oklch(94% 0.04 295); color: oklch(40% 0.10 295); border-left-color: oklch(60% 0.12 295); }
+
+/* Dark overrides for event blocks — same oklch values as :853-856 */
+[data-theme="dark"] .cal-event-block.ev-mint   { background: oklch(28% 0.05 165); color: oklch(85% 0.08 165); }
+[data-theme="dark"] .cal-event-block.ev-amber  { background: oklch(28% 0.05 60);  color: oklch(85% 0.08 60); }
+[data-theme="dark"] .cal-event-block.ev-blue   { background: oklch(28% 0.05 245); color: oklch(85% 0.08 245); }
+[data-theme="dark"] .cal-event-block.ev-violet { background: oklch(28% 0.05 295); color: oklch(85% 0.08 295); }
+
+/* Now-line */
+.cal-now-line {
+  position: absolute;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: var(--accent);
+  pointer-events: none;
+  z-index: 2;
+}
+.cal-now-line::before {
+  content: "";
+  position: absolute;
+  left: -4px;
+  top: -3px;
+  width: 8px;
+  height: 8px;
+  border-radius: 999px;
+  background: var(--accent);
+}
+
 /* ---------- Coming-soon panel ---------- */
 .cal-coming-soon {
   flex: 1;

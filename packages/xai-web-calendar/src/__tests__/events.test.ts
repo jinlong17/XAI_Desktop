@@ -36,4 +36,29 @@ describe("emit-only contract", () => {
     }
     expect(offenders).toEqual([]);
   });
+
+  it("AC-EVENT-7-EXT: new WeekView/DayView/TimeGrid/EventBlock files also have no emitWebEvent", () => {
+    // Explicitly verify the new gap-closure row #4 files preserve the listen-only invariant.
+    const newFiles = [
+      resolve(__dirname, "..", "WeekView.tsx"),
+      resolve(__dirname, "..", "DayView.tsx"),
+      resolve(__dirname, "..", "TimeGrid.tsx"),
+      resolve(__dirname, "..", "EventBlock.tsx"),
+      resolve(__dirname, "..", "TimeGridDayColumn.tsx"),
+      resolve(__dirname, "..", "TimeGridAllDayStrip.tsx"),
+      resolve(__dirname, "..", "TimeGridHourRow.tsx"),
+    ];
+    const offenders: string[] = [];
+    for (const f of newFiles) {
+      try {
+        const content = readFileSync(f, "utf-8");
+        if (/\bemitWebEvent\b/.test(content)) {
+          offenders.push(f);
+        }
+      } catch {
+        // File not yet created (earlier phases) — skip silently
+      }
+    }
+    expect(offenders).toEqual([]);
+  });
 });

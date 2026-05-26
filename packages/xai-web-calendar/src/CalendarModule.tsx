@@ -44,6 +44,7 @@ import { ComingSoonPanel } from "./ComingSoonPanel.js";
 import { SAMPLE_EVENTS } from "./internal/sampleEvents.js";
 import { utcDateKey } from "./internal/dateKeys.js";
 import { tryParseDateKey, dateKeyMonth, formatDateKey } from "./internal/parseDateKey.js";
+import { WeekView } from "./WeekView.js";
 
 /**
  * Design-source anchor: May 22, 2026 matches the sample-event fixture and the
@@ -152,6 +153,14 @@ export function CalendarModule({ lang }: CalendarModuleProps): JSX.Element {
           todayKey={todayKey}
           focusedDate={focusedFromDeepLink}
           events={SAMPLE_EVENTS}
+        />
+      ) : view === "week" ? (
+        <WeekView
+          activeDate={activeDate}
+          weekStart={weekStart}
+          events={SAMPLE_EVENTS}
+          todayKey={todayKey}
+          lang={lang}
         />
       ) : (
         <ComingSoonPanel t={t} />
