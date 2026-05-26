@@ -34,6 +34,9 @@ export { aiPane }            from "./panes/aiPane.js";
 export { restPanesById }            from "./internal/restPanesById.js";
 export { applyRestPanesToRegistry } from "./internal/applyRestPanesToRegistry.js";
 
+// Extension 2026-05-25 — OAuth callback page (gap-closure row #7)
+export { CallbackPage } from "./CallbackPage.js";
+
 // ---- Public types --------------------------------------------------------
 export type {
   SmartListId,
@@ -53,3 +56,6 @@ export type {
   DefaultShare,
   IntegrationCardId,
 } from "./types.js";
+
+// Extension 2026-05-25 — OAuth provider id type (gap-closure row #7)
+export type { IntegrationProviderId } from "./internal/integrationProviders.js";

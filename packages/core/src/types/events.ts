@@ -363,4 +363,23 @@ export interface EventMap {
     /** ISO timestamp at the moment of jump. */
     jumpedAt: string;
   };
+
+  // Integrations OAuth stub (owner: xai-web-settings-rest gap-closure row #7)
+  // Declaration-only: no consumer in this row.
+  // Pattern precedent: web:dashboard:widget-added (row #5) + web:board:share-requested (row #6).
+  // Forward-compat hook for P1 sync rows.
+  'web:settings:integration-connected': {
+    /** Which of the 3 wired providers was connected. */
+    providerId: 'notion' | 'gcal' | 'linear';
+    /** Always "stub" in v1 — no real token exchange. */
+    mode: 'stub';
+    /** ISO 8601 timestamp of the connection event. */
+    connectedAt: string;
+  };
+  'web:settings:integration-disconnected': {
+    /** Which of the 3 wired providers was disconnected. */
+    providerId: 'notion' | 'gcal' | 'linear';
+    /** ISO 8601 timestamp of the disconnection event. */
+    disconnectedAt: string;
+  };
 }

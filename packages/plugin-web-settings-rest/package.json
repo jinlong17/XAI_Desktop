@@ -29,7 +29,8 @@
     "@repo/plugin-web-settings-shell": "workspace:*",
     "@repo/plugin-web-ai-chat": "workspace:*",
     "@repo/xai-web-event-bus": "workspace:*",
-    "@repo/xai-web-shell": "workspace:*"
+    "@repo/xai-web-shell": "workspace:*",
+    "react-router": "^7.15.1"
   },
   "devDependencies": {
     "@repo/eslint-config": "workspace:*",

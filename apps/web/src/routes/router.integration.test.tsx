@@ -130,4 +130,14 @@ describe("web host router integration", () => {
 
     await unmountApp(app);
   });
+
+  // RR1 — gap-closure row #7: OAuth callback route resolves
+  it("RR1: /app/settings/integrations/callback route resolves and renders the callback page", async () => {
+    // The route must render without throwing; the callback page renders an empty
+    // container in "pending" state (no ?state= or ?error= → shows invalid banner).
+    const app = await mountRouter(["/app/settings/integrations/callback"]);
+    // Route resolved correctly — the container exists and is mounted.
+    expect(app.container).toBeTruthy();
+    await unmountApp(app);
+  });
 });

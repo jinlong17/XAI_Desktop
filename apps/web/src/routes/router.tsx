@@ -8,6 +8,8 @@ import { AppRouteElement, AuthRouteElement } from "./RouteGateElements";
 import { RouteErrorBoundary } from "./RouteErrorBoundary";
 import { assertUniqueModuleRegistrations, resolveDefaultModulePath } from "./modules/buildModuleRoutes";
 import { webModuleRouteRegistrations } from "./modules/shellRegistrations";
+// Extension 2026-05-25 — OAuth callback page (gap-closure row #7)
+import { CallbackPage } from "@repo/plugin-web-settings-rest";
 
 assertUniqueModuleRegistrations(webModuleRouteRegistrations);
 const defaultModulePath = resolveDefaultModulePath(webModuleRouteRegistrations);
@@ -43,6 +45,13 @@ export const webHostRouteObjects: RouteObject[] = [
           {
             index: true,
             element: <Navigate to={defaultModulePath} replace />,
+          },
+          {
+            // Literal path MUST come before :moduleId/* to win the match.
+            // gap-closure row #7 — Integrations OAuth PKCE callback
+            path: "settings/integrations/callback",
+            element: <CallbackPage />,
+            errorElement: <RouteErrorBoundary scope="oauth-callback" />,
           },
           {
             path: ":moduleId/*",
