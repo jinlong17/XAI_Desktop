@@ -1,5 +1,6 @@
 /**
  * AC-PERSIST-1..6: useDashOrder hook contract.
+ * AC-AWO-1: 3-element tuple shape (gap-closure row #5 extension).
  */
 import { describe, expect, it } from "vitest";
 import { act, renderHook } from "@testing-library/react";
@@ -14,6 +15,18 @@ function fixture(id: string): WidgetRegistration {
 }
 
 describe("useDashOrder", () => {
+  // ---- AC-AWO-1: 3-element tuple shape (gap-closure row #5) ----------------
+  it("AC-AWO-1: returns a 3-element tuple [order, setOrder, addWidget]", () => {
+    const widgets = [fixture("a"), fixture("b")];
+    const { result } = renderHook(() => useDashOrder(widgets));
+    expect(Array.isArray(result.current)).toBe(true);
+    expect(result.current).toHaveLength(3);
+    expect(typeof result.current[0]).toBe("object"); // array (order)
+    expect(typeof result.current[1]).toBe("function"); // setOrder
+    expect(typeof result.current[2]).toBe("function"); // addWidget
+  });
+
+  // --- existing tests (destructure as tuple now) ----------------------------
   it("AC-PERSIST-1: empty persisted (default first-visit) → falls back to registry default + sanitized further by widgets", () => {
     // The registry default for xai_dash_order is
     // ["clock","minicalendar","worldclocks","weather","stickies","mail","upcoming","stats"].
@@ -21,14 +34,16 @@ describe("useDashOrder", () => {
     // [a, b, c].
     const widgets = [fixture("a"), fixture("b"), fixture("c")];
     const { result } = renderHook(() => useDashOrder(widgets));
-    expect(result.current.order).toEqual(["a", "b", "c"]);
+    const [order] = result.current;
+    expect(order).toEqual(["a", "b", "c"]);
   });
 
   it("AC-PERSIST-2: persisted matches registered → returned as-is", () => {
     setPref("xai_dash_order", ["a", "b"]);
     const widgets = [fixture("a"), fixture("b")];
     const { result } = renderHook(() => useDashOrder(widgets));
-    expect(result.current.order).toEqual(["a", "b"]);
+    const [order] = result.current;
+    expect(order).toEqual(["a", "b"]);
   });
 
   it("AC-PERSIST-3: persisted contains unknown id → drop and write back", () => {
@@ -61,14 +76,15 @@ describe("useDashOrder", () => {
   it("AC-PERSIST-6: empty widgets → empty order", () => {
     setPref("xai_dash_order", ["a", "b", "c"]);
     const { result } = renderHook(() => useDashOrder([]));
-    expect(result.current.order).toEqual([]);
+    const [order] = result.current;
+    expect(order).toEqual([]);
   });
 
   it("setOrder writes through to localStorage", () => {
     const widgets = [fixture("a"), fixture("b")];
     const { result } = renderHook(() => useDashOrder(widgets));
     act(() => {
-      result.current.setOrder(["b", "a"]);
+      result.current[1](["b", "a"]); // setOrder
     });
     expect(JSON.parse(localStorage.getItem("xai_dash_order") ?? "null")).toEqual(["b", "a"]);
   });

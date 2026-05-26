@@ -360,3 +360,164 @@ No version bump beyond `0.0.0` (semver-managed by Turborepo). No public-surface 
 - `goTo("unknown-module")`: emitted with `moduleId: "unknown-module"`; the shell silently ignores unknown ids per its own contract.
 
 No thrown errors from any public API.
+
+---
+
+## S14. 2026-05-25 Extension: Add Widget Picker (gap-closure row #5)
+
+> APPEND-ONLY section. §S1..§S13 above describe the SHIPPED contract; this
+> section adds the contract delta for the Add Widget picker per
+> `docs/workflow/roadmap/xai-web-console-gap-closure.md` row #5.
+
+### S14.1 Public surface delta
+
+**No change** to `src/index.ts` exports. `AddWidgetPicker` is INTERNAL to the package, mounted only by `DashboardModule`. Per design.md §E2 frozen-assumption #11, the component is not re-exported to keep iteration flexibility.
+
+The four public type aliases (`WidgetRegistration`, `WidgetSpanClass`, `WidgetRenderContext`, `DashboardModuleProps`) are UNCHANGED.
+
+The slot registration (`dashboardGridSlotRegistration`) is UNCHANGED.
+
+### S14.2 `AddWidgetPicker` props (internal, not exported)
+
+```ts
+// packages/xai-web-dashboard-grid/src/AddWidgetPicker.tsx
+interface AddWidgetPickerProps {
+  /** Whether the modal is currently open. Controlled by DashboardModule. */
+  readonly open: boolean;
+  /** Active language for bilingual strings. */
+  readonly lang: Lang;
+  /** Full widget catalog (typically dashboardWidgetRegistrations). */
+  readonly widgets: WidgetRegistration[];
+  /** Current order — used to filter out already-added ids. */
+  readonly currentOrder: readonly string[];
+  /** Called when the user picks a widget. DashboardModule calls addWidget + emits + closes. */
+  readonly onAdd: (widgetId: string) => void;
+  /** Called when the user cancels (ESC, backdrop click, Cancel button). */
+  readonly onClose: () => void;
+}
+```
+
+Invariants:
+- `open` controls `dialog.showModal()` vs `dialog.close()` via a single `useEffect([open])`.
+- The picker filters `widgets` by `!currentOrder.includes(reg.id)` before rendering cards.
+- If the filtered list is empty, the picker renders the `.awp-empty` state instead of `.awp-grid`.
+- The picker NEVER calls `onAdd` with an id already in `currentOrder` (UI hint; the source-of-truth dedupe is in `useDashOrder.addWidget`).
+- The picker NEVER calls `onAdd` with an id not in `widgets[].id` (UI hint; same).
+
+### S14.3 `useDashOrder` return-shape extension (internal)
+
+Old shape (SHIPPED 2026-05-23):
+
+```ts
+function useDashOrder(widgets: WidgetRegistration[]): readonly [
+  DashWidgetId[],
+  (next: DashWidgetId[]) => void,
+];
+```
+
+New shape (this extension):
+
+```ts
+function useDashOrder(widgets: WidgetRegistration[]): readonly [
+  DashWidgetId[],
+  (next: DashWidgetId[]) => void,
+  (id: string) => void,   // addWidget — appends if not present + not unknown
+];
+```
+
+`addWidget(id)` semantics:
+- If `id` is already in `order`: no-op (returns silently).
+- If `id` is not in `widgets.find(w => w.id === id)`: no-op (returns silently).
+- Otherwise: calls `setOrder([...order, id])`, which triggers `setPref("xai_dash_order", ...)` synchronously.
+
+This is INTERNAL — `internal/useDashOrder.ts` is not part of the public surface (S1) and may be refactored without an ADR. The tuple extension is non-breaking for the only caller (`DashboardModule.tsx`) because tuple-at-end destructuring (`const [order, setOrder] = ...`) is forward-compatible.
+
+### S14.4 Persistence contract delta
+
+No change to §S5. The picker writes through the SAME `xai_dash_order` registry entry via the SAME `usePref` codec. The new event channel is fire-and-forget metadata, NOT a state-sync mechanism.
+
+### S14.5 Sanitize-on-mount delta
+
+No change to §S6. After Add, the next render's `useFlipReorder` captures the position of the newly appended widget; the FLIP animation slides it in from its initial layout-zero rect. (Or, depending on browser, lastRects is undefined for the new id on first frame → no animation, which is acceptable.)
+
+### S14.6 Events emitted (delta to §S8)
+
+#### `web:dashboard:widget-added` (NEW — declaration + emit in this row)
+
+```ts
+// EventMap delta in packages/core/src/types/events.ts
+'web:dashboard:widget-added': {
+  /** The widget id that was just appended to xai_dash_order. */
+  widgetId: string;
+  /** Where the add originated. Closed union; v1 has only 'picker'. */
+  source: 'picker';
+};
+```
+
+Emitted by:
+- `DashboardModule.handlePickerAdd(id)` immediately after `addWidget(id)` and before `setPickerOpen(false)`.
+
+Consumers: optional. Future rows (statistics, sync, AI suggestion engine) may listen. This row does NOT consume the event.
+
+`widgetId` is intentionally a `string` (NOT a union of the 10 SHIPPED ids) — see discovery review §6 R5. Consumers must defensively handle unknown ids.
+
+`source` is closed union with v1 value `'picker'` — leaves room for future "drag-from-sidebar" or "AI suggestion" sources without a payload-shape break.
+
+#### `web:dashboard:add-widget-clicked` (existing — semantics shift)
+
+Still emitted by the Add Widget button and Empty State CTA on click. NEW: the click now ALSO opens the picker. The event remains a fire-and-forget signal for any listener; if no listener exists, the picker open is the only observable effect.
+
+No payload change.
+
+### S14.7 i18n delta
+
+6 new keys × 2 langs under `dashboard.picker.*` added to `packages/plugin-web-tokens/src/i18n.ts`:
+
+| Key | EN | ZH |
+|---|---|---|
+| `dashboard.picker.title` | Add a widget | 添加组件 |
+| `dashboard.picker.cancel` | Cancel | 取消 |
+| `dashboard.picker.all_added_title` | All widgets are on your dashboard | 所有组件已添加 |
+| `dashboard.picker.all_added_subtitle` | Remove a widget first to add a different one. | 先移除一个组件后再添加其他组件。 |
+| `dashboard.picker.add_button` | Add | 添加 |
+| `dashboard.picker.aria_close` | Close picker | 关闭组件选择器 |
+
+> Exact wording may be polished during build; the keys + slots above are stable.
+
+### S14.8 CSS contract delta
+
+New class names declared in `src/styles.css`:
+
+| Class | Purpose |
+|---|---|
+| `.add-widget-picker` | The `<dialog>` element root |
+| `.awp-inner` | Content wrapper inside the dialog |
+| `.awp-title` | h2 heading |
+| `.awp-grid` | CSS grid of widget cards (`auto-fit, minmax(180px, 1fr)`) |
+| `.awp-card` | Per-widget card button |
+| `.awp-card__icon` | SVG icon slot |
+| `.awp-card__title` | Card title row |
+| `.awp-card__desc` | Card description paragraph |
+| `.awp-empty` | "All widgets added" empty state container |
+| `.awp-empty__title` | Empty state title |
+| `.awp-empty__subtitle` | Empty state subtitle |
+| `.awp-actions` | Cancel button row |
+
+No re-use of layout.css classes from `@repo/plugin-web-tokens` (the picker chrome is new). Side-effect CSS import order is unchanged.
+
+### S14.9 Stability promise (this extension)
+
+- `web:dashboard:widget-added` payload shape (widgetId: string, source: 'picker') is a STABLE contract. Adding new `source` literals is non-breaking; removing or renaming is breaking and requires an ADR amendment.
+- `useDashOrder` return shape (3-element tuple) is INTERNAL — may be refactored without ADR.
+- `AddWidgetPicker` props are INTERNAL — may be refactored without ADR.
+- The 6 new `dashboard.picker.*` i18n keys are STABLE once shipped — removing/renaming requires migration of all consumers.
+
+### S14.10 Error semantics (delta to §S13)
+
+- `dialog.showModal()` may throw if the dialog is already open (browser-dependent). The picker `useEffect` wraps `showModal()` in `try/catch` per DeleteAccountConfirmModal precedent — already-open is treated as a no-op.
+- `dialog.close()` is idempotent across browsers — no try/catch needed.
+- `addWidget(id)` for an unknown id: silent no-op. Documented in S14.3.
+- `addWidget(id)` for an already-present id: silent no-op. Documented in S14.3.
+- Cross-tab race: see discovery review §6 R9. Picker dedupes optimistically; addWidget hook dedupes authoritatively; `xai_dash_order` cross-tab broadcast (SHIPPED via row #3) handles eventual consistency.
+
+No thrown errors from the picker public path.
