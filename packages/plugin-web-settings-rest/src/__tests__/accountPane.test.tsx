@@ -1,5 +1,11 @@
 /**
  * AC1..AC8 — accountPane tests (test.md §3 P1)
+ * DEL-EVENT-DEP-1 — row #9 gap-closure: Step 1 Continue emits deprecated event
+ *
+ * AC5/AC6/AC7 adjusted for 2-step modal semantics (row #9):
+ * - AC5: modal opens → Step 1 title visible (new: "Delete your account?")
+ * - AC6: Cancel on Step 1 does NOT emit event
+ * - AC7: Step 1 → Continue emits deprecated event exactly once (new emit-site)
  */
 import { describe, it, expect, vi } from "vitest";
 import { render, screen, fireEvent } from "@testing-library/react";
@@ -28,7 +34,7 @@ describe("accountPane", () => {
     expect(btn).toBeInTheDocument();
   });
 
-  it("AC5: clicking Delete Account opens the dialog", () => {
+  it("AC5: clicking Delete Account opens the dialog — shows Step 1 title", () => {
     // jsdom supports showModal via HTMLDialogElement (partial) — stub it.
     HTMLDialogElement.prototype.showModal = vi.fn();
     HTMLDialogElement.prototype.close = vi.fn();
@@ -37,31 +43,32 @@ describe("accountPane", () => {
     const btn = screen.getByTestId("delete-account-btn");
     fireEvent.click(btn);
 
-    // Modal title should be visible after open.
-    expect(screen.getByText("Delete account?")).toBeInTheDocument();
+    // Step 1 title should be visible.
+    expect(screen.getByText("Delete your account?")).toBeInTheDocument();
   });
 
-  it("AC6: canceling modal does NOT emit event", () => {
+  it("AC6: Cancel on Step 1 does NOT emit event", () => {
     HTMLDialogElement.prototype.showModal = vi.fn();
     HTMLDialogElement.prototype.close = vi.fn();
     const emitSpy = vi.spyOn(eventBus, "emitWebEvent");
 
     render(accountPane.render({ lang: "en" }));
     fireEvent.click(screen.getByTestId("delete-account-btn"));
-    // Click Cancel
+    // Click Cancel on Step 1
     fireEvent.click(screen.getByText("Cancel"));
 
     expect(emitSpy).not.toHaveBeenCalled();
   });
 
-  it("AC7: confirming modal emits web:settings:rest:account-delete-confirmed exactly once", () => {
+  it("AC7: Step 1 → Continue emits web:settings:rest:account-delete-confirmed exactly once", () => {
     HTMLDialogElement.prototype.showModal = vi.fn();
     HTMLDialogElement.prototype.close = vi.fn();
     const emitSpy = vi.spyOn(eventBus, "emitWebEvent");
 
     render(accountPane.render({ lang: "en" }));
     fireEvent.click(screen.getByTestId("delete-account-btn"));
-    fireEvent.click(screen.getByText("Delete account"));
+    // New emit-site: Step 1 Continue (not the final confirm)
+    fireEvent.click(screen.getByTestId("dam-continue-btn"));
 
     expect(emitSpy).toHaveBeenCalledTimes(1);
     expect(emitSpy).toHaveBeenCalledWith(
@@ -74,5 +81,23 @@ describe("accountPane", () => {
     expect(accountPane.id).toBe("account");
     expect(accountPane.icon).toBe("sliders");
     expect(accountPane.i18nKey).toBe("settings.account");
+  });
+
+  // DEL-EVENT-DEP-1: Step 1 Continue (new emit-site, row #9)
+  it("DEL-EVENT-DEP-1: Step 1 Continue emits deprecated event with confirmedAt ISO timestamp", () => {
+    HTMLDialogElement.prototype.showModal = vi.fn();
+    HTMLDialogElement.prototype.close = vi.fn();
+    const emitSpy = vi.spyOn(eventBus, "emitWebEvent");
+
+    render(accountPane.render({ lang: "en" }));
+    fireEvent.click(screen.getByTestId("delete-account-btn"));
+    fireEvent.click(screen.getByTestId("dam-continue-btn"));
+
+    expect(emitSpy).toHaveBeenCalledWith(
+      "web:settings:rest:account-delete-confirmed",
+      expect.objectContaining({ confirmedAt: expect.any(String) }),
+    );
+    const payload = emitSpy.mock.calls[0][1] as { confirmedAt: string };
+    expect(() => new Date(payload.confirmedAt).toISOString()).not.toThrow();
   });
 });

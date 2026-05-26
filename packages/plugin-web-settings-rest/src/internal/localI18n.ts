@@ -28,7 +28,7 @@ const STR = {
   "account.delete": { en: "Delete Account", zh: "注销账号" },
   "account.edit_avatar": { en: "Edit avatar", zh: "编辑头像" },
 
-  // Delete confirm modal
+  // Delete confirm modal (row #24 baseline — preserved verbatim for backwards compat)
   "deleteModal.title": { en: "Delete account?", zh: "注销账号？" },
   "deleteModal.body": {
     en: "This action is permanent. All cloud data will be removed and the account cannot be restored.",
@@ -36,6 +36,55 @@ const STR = {
   },
   "deleteModal.cancel": { en: "Cancel", zh: "取消" },
   "deleteModal.confirm": { en: "Delete account", zh: "确认注销" },
+
+  // Delete confirm modal — 2-step extension (gap-closure row #9 — 2026-05-26)
+  "deleteModal.step1_title": { en: "Delete your account?", zh: "确定要删除账号吗？" },
+  "deleteModal.step1_body": {
+    en: "This will permanently remove your account, including all synced data and local caches.",
+    zh: "此操作将永久删除您的账号，包括所有已同步数据与本地缓存。",
+  },
+  "deleteModal.continue": { en: "Continue", zh: "继续" },
+  "deleteModal.step2_title": { en: "Type DELETE to confirm", zh: "请输入 DELETE 以确认" },
+  "deleteModal.step2_body": {
+    en: "Once you type DELETE and submit, this cannot be undone.",
+    zh: "输入 DELETE 并提交后，此操作不可撤销。",
+  },
+  "deleteModal.type_prompt": {
+    en: "Type DELETE (capital letters) to enable the destructive button.",
+    zh: "请输入大写 DELETE 以启用删除按钮。",
+  },
+  "deleteModal.input_placeholder": { en: "DELETE", zh: "DELETE" },
+  "deleteModal.confirm_disabled_tooltip": {
+    en: "Type DELETE (exact case) above to enable this button.",
+    zh: "请在上方输入精确大写 DELETE 以启用此按钮。",
+  },
+  "deleteModal.delete_now": { en: "Delete Account", zh: "删除账号" },
+  "deleteModal.submitting": { en: "Deleting account and clearing local data…", zh: "正在删除账号并清除本地数据…" },
+  "deleteModal.error_network": {
+    en: "Network error — please check your connection and try again.",
+    zh: "网络错误 — 请检查网络连接后重试。",
+  },
+  "deleteModal.error_unauthorized": {
+    en: "Session expired — please sign in again before deleting.",
+    zh: "会话已过期 — 请重新登录后再尝试删除。",
+  },
+  "deleteModal.error_forbidden": {
+    en: "Account deletion is not permitted for this account.",
+    zh: "此账号无权执行删除操作。",
+  },
+  "deleteModal.error_server": {
+    en: "Server error — please try again in a moment.",
+    zh: "服务器错误 — 请稍后重试。",
+  },
+  "deleteModal.error_unknown": {
+    en: "Something went wrong — please try again.",
+    zh: "出现未知错误 — 请重试。",
+  },
+  "deleteModal.retry": { en: "Retry", zh: "重试" },
+  "deleteModal.mock_banner": {
+    en: "Mock-auth delete (no real backend) — this will only clear local data.",
+    zh: "演示模式删除（无真实后端） — 仅清除本地数据。",
+  },
 
   // Premium pane (row #24 baseline)
   "premium.headline_en": { en: "Unlock Premium Features", zh: "解锁高级功能" },

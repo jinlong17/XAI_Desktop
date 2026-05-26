@@ -811,3 +811,67 @@ dialog.delete-account-modal::backdrop {
   font-size: 0.85rem;
   color: var(--text-2, oklch(50% 0 0));
 }
+
+/* ---- Delete Account Modal — 2-step extension (gap-closure row #9) ---- */
+/* .dam-actions-row — step-level action buttons row */
+.dam-actions-row {
+  display: flex;
+  gap: 8px;
+  justify-content: flex-end;
+  margin-top: 8px;
+}
+
+/* .dam-type-prompt — label above the type-match input */
+.dam-type-prompt {
+  margin: 0 0 6px;
+  font-size: 0.85rem;
+  color: var(--text-2, oklch(50% 0 0));
+  line-height: 1.4;
+}
+
+/* .dam-input — controlled text input for "DELETE" confirmation */
+.dam-input {
+  width: 100%;
+  box-sizing: border-box;
+  padding: 7px 10px;
+  border: 1px solid var(--border, oklch(80% 0 0));
+  border-radius: 6px;
+  font-size: 0.9rem;
+  background: var(--surface, oklch(98% 0 0));
+  color: var(--text-1, oklch(15% 0 0));
+  font-family: inherit;
+  letter-spacing: 0.04em;
+  margin-bottom: 8px;
+}
+.dam-input:focus {
+  outline: 2px solid oklch(55% 0.18 20);
+  outline-offset: 1px;
+}
+.dam-input:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+/* .dam-mock-banner — non-dismissible amber disclosure banner for mock-auth mode */
+/* Shown only when VITE_WEB_AUTH_MODE=mock-authenticated (Step 2 + Submitting + Failure) */
+.dam-mock-banner {
+  background: oklch(92% 0.09 80);
+  color: oklch(28% 0.06 80);
+  border: 1px solid oklch(78% 0.14 80);
+  border-radius: 6px;
+  padding: 8px 12px;
+  font-size: 0.83rem;
+  line-height: 1.4;
+  /* No close button — non-dismissible per DEL-MOCK-BANNER-3 */
+}
+
+/* .dam-error — bilingual error banner shown on Failure state */
+.dam-error {
+  background: oklch(92% 0.06 20);
+  color: oklch(30% 0.14 20);
+  border: 1px solid oklch(75% 0.12 20);
+  border-radius: 6px;
+  padding: 8px 12px;
+  font-size: 0.83rem;
+  line-height: 1.4;
+}

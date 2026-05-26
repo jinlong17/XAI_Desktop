@@ -537,3 +537,232 @@ docs/PLUGIN_MAP.md                              — EDIT: append "(Extension 202
 
 R1 Payment Link env missing → disabled button with tooltip + PC-CONFIG-1 test. R2 SK leaked in source → no-stripe-secret-key.test.ts source-text guard. R3 Stripe.js accidentally bundled → no-stripe-js-bundle.test.ts source-text guard. R4 30-day client-clock bypass → documented v1 limitation + disclosure banner. R5 Direct callback URL hit without prior Upgrade → CheckoutSuccessPage validates session_id presence + invalid-state path. R6 Topbar edit breakage → additive 1-line edit + TB-PREMIUM-1. R7 Disclosure banner missed → non-dismissible + amber OKLCH + present in all 3 tier states. R8 Downstream code misreads premium_stub as real subscription → registry comment + api.md §7.7 + FA-12. R9 CSP3 accidentally narrowed when adding CSP4 → CSP3 case retained. R10 Payment Link URL revoked in Stripe dashboard → operator runbook in apps/web/deploy/README.md. R11 Topbar badge CSS conflict → scoped class + manual smoke at ship-time.
 
+---
+
+## 2026-05-26 Extension: Account Delete Wire (gap-closure row #9)
+
+> APPEND-ONLY extension. SHIPPED row #24 contents + the 2026-05-25 row #7
+> Integrations OAuth Stub block + the 2026-05-26 row #8 Premium Stripe
+> Checkout Stub block above are NOT mutated. This block adds the
+> account-delete real wiring per
+> `docs/workflow/roadmap/xai-web-console-gap-closure.md` row #9 (W2 LAST).
+
+### Decision header
+
+| Field | Value |
+|---|---|
+| Selected Option | **Composite α** — see §3 of discovery review for sub-decisions A1 (single `<dialog>` step machine) + B1 (case-sensitive controlled input) + state-machine + D1 (mock-auth banner on Step 2) + E1 (`useAccountDeleteOrchestrator` internal hook) + F1 (early deprecated-event emit on Continue) + G1 (extend `web-auth-device-session` with `deleteAccount()` + `ACCOUNT_LOCAL_WIPE_IDB_NAMES` const) |
+| Review Doc | `docs/reviews/xai-web-settings-account-delete-wire/20260525-discovery-review.md` |
+| Review Date | 2026-05-26 |
+| Roadmap Row | `docs/workflow/roadmap/xai-web-console-gap-closure.md` row #9 (W2 LAST · Account-delete wire) |
+| Source brief | `docs/reviews/xai-web-settings-account-delete-wire/20260524-roadmap-seed.md` |
+| Parent ADR | ADR-0009 §D2-G3 (P0 gap-closure) |
+| ADR Amendment | **NONE.** `connect-src` already covers `VITE_SUPABASE_URL` via the SHIPPED `web-auth-device-session` package's runtime usage. No `_headers` edit. No ADR-0008 amendment. First wave-2 gap-closure row without an ADR amendment. |
+| Target packages | `packages/plugin-web-settings-rest/src/{internal/DeleteAccountConfirmModal.tsx (REWRITE — single→2-step), internal/useAccountDeleteOrchestrator.ts (NEW), internal/localI18n.ts (EDIT — +17 bilingual keys), styles.css (EDIT — +modal step CSS + mock banner + error banner — all OKLCH), panes/accountPane.tsx (EDIT — Step 1 Continue emits deprecated event)}` + `packages/web-auth-device-session/src/{auth-actions.ts (EDIT — +deleteAccount + AccountDeleteError), storage.ts (or new wipe.ts — +wipeRegisteredIDB helper), index.ts (EDIT — export deleteAccount, AccountDeleteError, AccountDeleteErrorKind, ACCOUNT_LOCAL_WIPE_IDB_NAMES)}` + `packages/web-auth-device-session/docs/{design.md, api.md, dev_log.md} (APPEND-ONLY extension sections)` + `packages/core/src/types/events.ts (EDIT — JSDoc @deprecated annotation on web:settings:rest:account-delete-confirmed)` + `apps/web/deploy/README.md (EDIT — +§Account-Delete Edge Function + §Account-Delete Rollback)` + `docs/PLUGIN_MAP.md (EDIT — extension notes on plugin-web-settings-rest + web-auth-device-session rows)` |
+| Dispatched by | `xai-roadmap-loop` SERIAL dispatch — Wave 2 fourth (LAST) row, after row #8 SHIPPED `00580dd` 2026-05-26 |
+| Last Updated | 2026-05-26 |
+
+### Frozen Assumptions (this extension; lock at plan acceptance)
+
+**FA-1. Modal is a single `<dialog>` with internal `useReducer` step state.** States: `"step1" | "step2" | "submitting" | "success" | "failure"`. The dialog opens once; transitions happen inside it. Focus management trivial (one `<dialog>` element). Backdrop click cancels from Step 1 / Step 2 / Failure; ignored during Submitting / Success.
+
+**FA-2. Type-match is case-sensitive, exact "DELETE".** No `trim()`, no case-fold, no unicode normalization. Submit button disabled until `input.value === "DELETE"`. Input is controlled (`useState`).
+
+**FA-3. Real-auth flow** (`VITE_WEB_AUTH_MODE !== "mock-authenticated"`):
+1. Step 2 submit → reducer: `step2 → submitting`.
+2. Call `deleteAccount(supabaseClient, { onProgress })` — wraps `client.functions.invoke("account-delete")`.
+3. On success (or `kind: "already_deleted"`): proceed.
+4. `client.auth.signOut()` — sign-out failure is logged but does NOT abort (account is already gone).
+5. Iterate `Object.keys(PREF_REGISTRY)` → `removePref(key)` per key (sequential).
+6. Iterate `ACCOUNT_LOCAL_WIPE_IDB_NAMES` → `indexedDB.deleteDatabase(name)` per name (parallel via `Promise.allSettled`).
+7. `window.location.assign("/")`.
+
+**FA-4. Real-auth failure** (any throw from `deleteAccount`): reducer transitions `submitting → failure`. Error banner shows bilingual text mapped by `AccountDeleteError.kind`. localStorage and IndexedDB untouched. Retry button re-enables submit (transitions `failure → step2`).
+
+**FA-5. Mock-auth flow** (`VITE_WEB_AUTH_MODE === "mock-authenticated"`):
+1. Step 2 submit → reducer: `step2 → submitting`.
+2. SKIP steps 2-4 of FA-3 (no backend call, no signOut).
+3. Run steps 5-7 of FA-3 (localStorage wipe + IDB wipe + redirect).
+4. The non-dismissible mock-auth banner is shown on Step 2 (FA-13).
+
+**FA-6. Local-clear uses registered key list.** Source of truth: `Object.keys(PREF_REGISTRY)` from `@repo/plugin-web-storage`. Current count at row-#9-time: 42 keys (20 SHIPPED + 22 row-#24 expansions + 3 row-#7 OAuth prefs + 2 row-#8 Premium prefs). NEVER `localStorage.clear()`. NEVER prefix-match wildcard. Iteration via `for (const key of Object.keys(PREF_REGISTRY)) { removePref(key as WebPrefKey); }`. Tests: DEL-WIPE-1 + DEL-WILDCARD-GUARD (source-text guard).
+
+**FA-7. IDB clear uses fixed-list constant.** `ACCOUNT_LOCAL_WIPE_IDB_NAMES` exported from `@repo/web-auth-device-session/web`. Initial value: `["web-encrypted-cache", "xai-web-ai-secrets", "xai-web-auth"]` (verified at planning time via repo grep). NOT `indexedDB.databases()` (Safari + older browsers don't implement consistently). New databases require manual extension of this constant — JSDoc on the constant states this. Tests: DEL-IDB-LIST-1 + DEL-WIPE-2.
+
+**FA-8. Redirect via `window.location.assign("/")`.** Full-page same-tab navigation forces a clean React tree on next session. NO `useNavigate()` — we want the global state reset that comes from a page reload.
+
+**FA-9. Deprecated event preserved one release.** `web:settings:rest:account-delete-confirmed` still emitted on Step 1 → Continue (NOT on actual deletion). JSDoc on the EventMap entry in `packages/core/src/types/events.ts` annotated `@deprecated since 2026-05-26 (gap-closure row #9); will be removed in P1 desktop pivot.` Payload schema unchanged: `{ confirmedAt: string }`. Semantically the timing changed (Continue click, not Delete click) — JSDoc clarifies.
+
+**FA-10. NEW function `deleteAccount(client, options?)`** added to `packages/web-auth-device-session/src/auth-actions.ts`:
+```typescript
+export interface DeleteAccountOptions {
+  readonly onProgress?: (phase: "invoking" | "signing-out") => void;
+}
+
+export type AccountDeleteErrorKind =
+  | "network"
+  | "unauthorized"
+  | "forbidden"
+  | "server"
+  | "already_deleted"
+  | "unknown";
+
+export class AccountDeleteError extends Error {
+  readonly kind: AccountDeleteErrorKind;
+  readonly cause?: unknown;
+  constructor(kind: AccountDeleteErrorKind, message: string, cause?: unknown);
+}
+
+export async function deleteAccount(
+  client: SupabaseClient,
+  options?: DeleteAccountOptions
+): Promise<void>;
+```
+Implementation: `client.functions.invoke("account-delete")` → map response/error to `AccountDeleteErrorKind` discriminator → on success or `already_deleted`, call `client.auth.signOut()` (best-effort, non-throwing). Tests: DAA-1..8 in `packages/web-auth-device-session/src/auth-actions.test.ts`.
+
+**FA-11. NEW const `ACCOUNT_LOCAL_WIPE_IDB_NAMES`** exported from `packages/web-auth-device-session/src/index.ts`:
+```typescript
+/**
+ * Known IndexedDB database names used by the web client.
+ *
+ * MUST be extended whenever a new package introduces a new IDB database.
+ * Used by the account-delete flow to clear durable encrypted local data
+ * after a successful backend deletion.
+ *
+ * NOT derived from `indexedDB.databases()` because Safari + older browsers
+ * do not implement that API consistently.
+ *
+ * @since 2026-05-26 (gap-closure row #9)
+ */
+export const ACCOUNT_LOCAL_WIPE_IDB_NAMES: readonly string[] = Object.freeze([
+  "web-encrypted-cache",
+  "xai-web-ai-secrets",
+  "xai-web-auth",
+]);
+```
+
+**FA-12. NEW hook `useAccountDeleteOrchestrator()`** internal to `plugin-web-settings-rest` (NOT exported from barrel — used only by `DeleteAccountConfirmModal.tsx`):
+```typescript
+export interface UseAccountDeleteOrchestratorResult {
+  readonly state: "idle" | "submitting" | "wiping" | "success" | "failure";
+  readonly error: AccountDeleteError | null;
+  readonly submit: () => Promise<void>;
+  readonly reset: () => void;
+}
+
+export function useAccountDeleteOrchestrator(): UseAccountDeleteOrchestratorResult;
+```
+Reads `VITE_WEB_AUTH_MODE` at hook init. Detects whether to call `deleteAccount()` (live) or skip (mock-auth). Orchestrates FA-3 (live) or FA-5 (mock) sequence. Tests: DEL-ORCH-1..4 + DEL-WIPE-1..2.
+
+**FA-13. Mock-auth banner placement (D1).** Top of Step 2 panel only, persistent on Step 2 + Submitting + Failure states. Non-dismissible (no close button). Amber OKLCH `oklch(78% 0.14 80)` background / `oklch(25% 0.04 80)` text (consistent with row #8 disclosure banner palette, lower saturation than row #7 stub banner). Bilingual text:
+- EN: "Mock-auth delete (no real backend) — this will only clear local data."
+- ZH: "演示模式删除（无真实后端） — 仅清除本地数据。"
+
+Tests: DEL-MOCK-BANNER-1 (EN), DEL-MOCK-BANNER-2 (ZH), DEL-MOCK-BANNER-3 (non-dismissible). Mirror of row #7 SB1/SB2 + row #8 PB-BANNER-1..3 banner pattern.
+
+**FA-14. NO new CSP amendment.** `connect-src` already covers `VITE_SUPABASE_URL` (covered by SHIPPED `web-auth-device-session` runtime). `_headers` UNCHANGED. ADR-0008 UNCHANGED. No `csp.test.ts` edit. First wave-2 gap-closure row without an ADR amendment.
+
+**FA-15. Append-only doc discipline.** This `design.md` gains ONE new section (this one). `api.md` gains ONE new §8 section. `test.md` gains ONE new §7 section. `dev_log.md` gains ONE new "## Bugfix-Extension Lineage — gap-closure row #9 (2026-05-26)" block. 3 prior blocks (SHIPPED row #24 Workflow State Panel + 2026-05-25 row #7 lineage + 2026-05-26 row #8 lineage) preserved verbatim. The companion `packages/web-auth-device-session/docs/{design.md, api.md, dev_log.md}` also gain APPEND-ONLY extension sections (the SHIPPED platform spine is extended, not modified).
+
+### Component graph (extension)
+
+```
+@repo/plugin-web-settings-rest (extended)
+├── src/internal/DeleteAccountConfirmModal.tsx    — REWRITE: single-step → 2-step step machine + type-match input + bilingual error banner
+├── src/internal/useAccountDeleteOrchestrator.ts  — NEW: orchestration hook (live + mock-auth paths)
+├── src/internal/localI18n.ts                     — EDIT: +17 bilingual entries (deleteModal.step1_*, step2_*, type_prompt, input_placeholder, confirm_disabled_tooltip, delete_now, submitting, error_*, retry, mock_banner)
+├── src/styles.css                                — EDIT: +modal step CSS + .dam-input + .dam-mock-banner + .dam-error + .dam-actions-row (all OKLCH, no hex)
+├── src/panes/accountPane.tsx                     — EDIT: Step 1 Continue emits deprecated event (one release)
+└── src/__tests__/
+    ├── DeleteAccountConfirmModal.test.tsx        — REWRITE: DEL-STEP-1..3 + DEL-TYPEMATCH-1..6 + DEL-CANCEL-1..2 + DEL-BILINGUAL-1..2 + DEL-WIRE-1..3 + DEL-MOCK-BANNER-1..3
+    ├── useAccountDeleteOrchestrator.test.tsx     — NEW: DEL-ORCH-1..4 + DEL-WIPE-1..2 + DEL-IDEM-1 + DEL-IDB-LIST-1
+    ├── no-localstorage-clear.test.ts             — NEW: source-text guard DEL-WILDCARD-GUARD (zero `localStorage.clear()` substrings in src)
+    └── accountPane.test.tsx                      — EDIT: AC1..AC4 + AC8 preserved; AC5/6/7 adjusted for new Step 1 / Step 2 semantics; +DEL-EVENT-DEP-1
+
+@repo/web-auth-device-session (extended — SHIPPED platform spine, scope extension)
+├── src/auth-actions.ts                           — EDIT: + deleteAccount(client, options?) + AccountDeleteError + AccountDeleteErrorKind
+├── src/storage.ts OR src/wipe.ts (NEW)           — +wipeRegisteredIDB() helper (iterates ACCOUNT_LOCAL_WIPE_IDB_NAMES + calls indexedDB.deleteDatabase)
+├── src/index.ts                                  — EDIT: + export deleteAccount, AccountDeleteError, type AccountDeleteErrorKind, ACCOUNT_LOCAL_WIPE_IDB_NAMES, wipeRegisteredIDB
+├── src/auth-actions.test.ts                      — EDIT: + DAA-1..8
+└── docs/{design.md, api.md, dev_log.md}          — APPEND-ONLY extension sections (small, ~50 lines each)
+
+@repo/core
+└── src/types/events.ts                           — EDIT: JSDoc @deprecated annotation on web:settings:rest:account-delete-confirmed
+
+apps/web
+└── deploy/README.md                              — EDIT: +§"Account-Delete Edge Function" + §"Account-Delete Rollback"
+
+docs
+└── PLUGIN_MAP.md                                 — EDIT: extension notes on plugin-web-settings-rest + web-auth-device-session rows
+```
+
+### State machine (modal)
+
+```
+                                    ┌─ Cancel / backdrop ─┐
+                                    │                      ▼
+[Closed] ─ click "Delete Account" ─► [Step1] ──── Continue ──► [Step2] ─ Cancel ─► [Closed]
+                                                                  │
+                                                                  │ submit (input === "DELETE")
+                                                                  ▼
+                                                          [Submitting]
+                                                                  │
+                                            ┌── live: deleteAccount() ──┐
+                                            │                            │
+                                          200 / 404                  net / 401 / 403 / 500
+                                            │                            │
+                                            ▼                            ▼
+                                          [Wiping]                  [Failure]
+                                            │                            │
+                                            ▼                            ├─ Retry → [Step2]
+                                  signOut → registry wipe →              │
+                                  IDB wipe → assign("/")                 └─ Cancel → [Closed]
+                                            │
+                                            ▼
+                                       [Success]
+                                  (transient; redirect kills the React tree)
+
+Mock-auth bypass: [Step2] ─ submit ─► [Submitting] ──skip backend──► [Wiping] (same as above from Wiping onward)
+```
+
+### Dependencies (extension)
+
+| Dep | Kind | Why |
+|---|---|---|
+| `@repo/plugin-web-storage` | existing peer | `Object.keys(PREF_REGISTRY)` + `removePref` for registered-key wipe |
+| `@repo/plugin-web-tokens` | existing peer | `useI18n(lang)` for global keys + `Lang` type |
+| `@repo/xai-web-event-bus` | existing peer | `emitWebEvent("web:settings:rest:account-delete-confirmed", ...)` (deprecated emit on Step 1 Continue) |
+| `@repo/web-auth-device-session` | **NEW peer** | `deleteAccount()`, `AccountDeleteError`, `ACCOUNT_LOCAL_WIPE_IDB_NAMES`, `wipeRegisteredIDB()` — declared in package.json peerDependencies |
+| `@repo/core` | indirect via tokens | type-only (EventMap @deprecated JSDoc) |
+| `@supabase/supabase-js` | platform (transitive via web-auth-device-session) | `client.functions.invoke()` + `client.auth.signOut()` |
+
+**No new NPM dependency.** No new ADR amendment. No `_headers` edit.
+
+### Bilingual i18n delta (preview — full table in `api.md` §8.4)
+
+17 new bilingual keys under `deleteModal.*` namespace. Existing `deleteModal.title / .body / .cancel / .confirm` (row #24) are PRESERVED VERBATIM for backwards compat (used as Step 1 fallback). New keys:
+
+```
+deleteModal.step1_title:           EN "Delete your account?" / ZH "确定要删除账号吗？"
+deleteModal.step1_body:            EN "This will permanently remove your account, including all synced data and local caches." / ZH "此操作将永久删除您的账号，包括所有已同步数据与本地缓存。"
+deleteModal.continue:              EN "Continue" / ZH "继续"
+deleteModal.step2_title:           EN "Type DELETE to confirm" / ZH "请输入 DELETE 以确认"
+deleteModal.step2_body:            EN "Once you type DELETE and submit, this cannot be undone." / ZH "输入 DELETE 并提交后，此操作不可撤销。"
+deleteModal.type_prompt:           EN "Type DELETE (capital letters) to enable the destructive button." / ZH "请输入大写 DELETE 以启用删除按钮。"
+deleteModal.input_placeholder:     EN "DELETE" / ZH "DELETE"
+deleteModal.confirm_disabled_tooltip: EN "Type DELETE (exact case) above to enable this button." / ZH "请在上方输入精确大写 DELETE 以启用此按钮。"
+deleteModal.delete_now:            EN "Delete Account" / ZH "删除账号"
+deleteModal.submitting:            EN "Deleting account and clearing local data…" / ZH "正在删除账号并清除本地数据…"
+deleteModal.error_network:         EN "Network error — please check your connection and try again." / ZH "网络错误 — 请检查网络连接后重试。"
+deleteModal.error_unauthorized:    EN "Session expired — please sign in again before deleting." / ZH "会话已过期 — 请重新登录后再尝试删除。"
+deleteModal.error_forbidden:       EN "Account deletion is not permitted for this account." / ZH "此账号无权执行删除操作。"
+deleteModal.error_server:          EN "Server error — please try again in a moment." / ZH "服务器错误 — 请稍后重试。"
+deleteModal.error_unknown:         EN "Something went wrong — please try again." / ZH "出现未知错误 — 请重试。"
+deleteModal.retry:                 EN "Retry" / ZH "重试"
+deleteModal.mock_banner:           EN "Mock-auth delete (no real backend) — this will only clear local data." / ZH "演示模式删除（无真实后端） — 仅清除本地数据。"
+```
+
+### Risks recap (one-liner; full table in discovery §6)
+
+R1 partial local-clear → sequence localStorage before IDB + best-effort + redirect. R2 tab-close mid-flow → next session fails auth → local stale-but-inert. R3 retry-404 idempotency → map to `already_deleted` kind, proceed to wipe. R4 wildcard wipe accident → DEL-WILDCARD-GUARD source-text test. R5 new IDB not in const → JSDoc + runbook. R6 mock banner missed → non-dismissible + amber OKLCH + DEL-MOCK-BANNER-1..3. R7 unicode lookalikes → exact `===` match. R8 Edge Function not provisioned → runbook + deploy gate. R9 signOut failure → log-only, account is gone. R10 deprecated event confusion → JSDoc @deprecated. R11 unused-var lint nits → preempt with explicit lint-clean impl.
+

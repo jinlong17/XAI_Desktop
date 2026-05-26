@@ -2,12 +2,15 @@
  * accountPane — Settings → Account pane.
  *
  * Displays mock user info (name / email / free-tier status) + Sign Out button
- * + Delete Account button that opens a native <dialog> confirm modal.
- * On confirm, emits web:settings:rest:account-delete-confirmed (declaration-only).
- * No actual account deletion — auth wiring is a future row.
+ * + Delete Account button that opens a native <dialog> 2-step confirm modal.
+ *
+ * On Step 1 Continue, emits web:settings:rest:account-delete-confirmed
+ * (deprecated since 2026-05-26, gap-closure row #9; will be removed in P1
+ * desktop pivot. Timing semantics changed from "confirm" to "continue" for
+ * one-release back-compat per FA-9 in row #9 design extension.)
  *
  * Port of web design/module-settings.jsx lines 102-131.
- * API contract: packages/xai-web-settings-rest/docs/api.md §4.1
+ * API contract: packages/plugin-web-settings-rest/docs/api.md §4.1
  */
 
 import * as React from "react";
@@ -28,10 +31,22 @@ function AccountPaneContent({ lang }: PaneRenderProps): React.ReactElement {
     setModalOpen(false);
   }
 
-  function handleModalConfirm(): void {
+  /**
+   * Step 1 → Continue:
+   * Emit deprecated event (one-release back-compat per row #9 FA-9).
+   * Timing changed from final-confirm to step1-continue.
+   * @deprecated since 2026-05-26 (gap-closure row #9); removed in P1.
+   */
+  function handleStep1Continue(): void {
     emitWebEvent("web:settings:rest:account-delete-confirmed", {
       confirmedAt: new Date().toISOString(),
     });
+    // Modal itself transitions to Step 2 internally.
+  }
+
+  function handleSubmit(): void {
+    // Orchestrator wiring added in P3.
+    // In P1, no-op (UI only).
     setModalOpen(false);
   }
 
@@ -81,7 +96,8 @@ function AccountPaneContent({ lang }: PaneRenderProps): React.ReactElement {
         open={modalOpen}
         lang={lang}
         onCancel={handleModalCancel}
-        onConfirm={handleModalConfirm}
+        onStep1Continue={handleStep1Continue}
+        onSubmit={handleSubmit}
       />
     </div>
   );

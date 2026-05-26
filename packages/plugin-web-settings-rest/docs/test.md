@@ -458,3 +458,162 @@ Manual smoke (Chrome 120 / Safari 17, deferrable 24h per ADR-0008 carve-out, con
 - Click Upgrade → cancel via back button → tier unchanged.
 - After 30 days (or via manual clock rewind for test purposes), badge disappears + pane reverts to free.
 
+---
+
+## §7 Extension: Account Delete Wire (gap-closure row #9)
+
+> APPEND-ONLY extension. §1..§6 above describe the SHIPPED row #24 baseline +
+> the 2026-05-25 row #7 Integrations OAuth stub strategy + the 2026-05-26 row #8
+> Premium Stripe Checkout stub strategy and are NOT mutated.
+> This section adds the test strategy for the 2026-05-26 row #9 account-delete
+> real-wire. Design home: `design.md` §"2026-05-26 Extension: Account Delete
+> Wire (gap-closure row #9)". API home: `api.md` §8.
+
+### §7.1 Environment (extension)
+
+Inherits the post-row-#8 env (`vitest.config.ts` jsdom + `vitest.setup.ts` clearing
+`localStorage` + `sessionStorage` `afterEach`). Additional:
+
+- **`window.location.assign`** — must be stubbed per test that exercises the orchestrator's redirect step. Use the same `Object.defineProperty(window, "location", { value: { ...window.location, assign: vi.fn() }, writable: true })` pattern as row #7 CB3 + row #8 PUB-1.
+- **`import.meta.env.VITE_WEB_AUTH_MODE`** — stubbed per test. `vi.stubEnv("VITE_WEB_AUTH_MODE", "mock-authenticated")` for mock-auth tests; `vi.stubEnv("VITE_WEB_AUTH_MODE", "live")` (or undefined) for live-auth tests. Restored via `vi.unstubAllEnvs()` in `afterEach`.
+- **`indexedDB.deleteDatabase`** — jsdom does not implement `indexedDB.deleteDatabase` consistently. Tests use `fake-indexeddb` (already a transitive dep via `idb-keyval`) OR mock at the call site. Default: mock via `vi.spyOn(indexedDB, "deleteDatabase").mockImplementation(...)` to return an IDBOpenDBRequest-like object that resolves immediately.
+- **Supabase client (`SupabaseClient`)** — fully mocked for unit tests. The orchestrator hook is tested with a minimal `{ functions: { invoke: vi.fn() }, auth: { signOut: vi.fn() } }` mock that satisfies the `deleteAccount()` contract. Real Supabase is never instantiated in tests.
+- **`useWebAuthSession()`** — mocked via `vi.mock("@repo/web-auth-device-session/web", ...)` returning a minimal context shape `{ client: mockClient, state: "authenticated", ... }`.
+
+### §7.2 Mock strategy (extension)
+
+- **`emitWebEvent`**: `vi.spyOn(@repo/xai-web-event-bus, "emitWebEvent")` per test that asserts the deprecated event emit (DEL-EVENT-DEP-1).
+- **`removePref`**: NOT mocked by default — uses real jsdom localStorage; tests pre-seed keys and assert empty after wipe.
+- **`window.location.assign`**: spied per test that exercises the redirect step (DEL-ORCH-1, DEL-ORCH-2, DEL-ORCH-4, DEL-IDEM-1).
+- **`indexedDB.deleteDatabase`**: spied per test that exercises the IDB wipe (DEL-WIPE-2, DEL-IDB-LIST-1).
+- **`SupabaseClient.functions.invoke`**: spied per test in DAA-1..8 + DEL-ORCH-1 + DEL-ORCH-3 + DEL-ORCH-4.
+- **`SupabaseClient.auth.signOut`**: spied per test in DAA-2 + DAA-8 + DEL-ORCH-1.
+- **`fetch`**: NOT mocked. The orchestrator never calls `fetch` directly — backend calls go through `client.functions.invoke()` (which itself wraps fetch but is fully mocked).
+- **Source-text guard**: `no-localstorage-clear.test.ts` walks `src/**/*.{ts,tsx}` and asserts ZERO occurrences of `localStorage.clear()` substring. Hard cross-vendor verify gate (R4).
+
+### §7.3 Test matrix (extension)
+
+#### P1 — 2-step modal + type-match input + bilingual i18n (UI only — no backend wiring)
+
+| Test ID | File | Description |
+|---|---|---|
+| **AC1..AC4, AC8** | accountPane.test.tsx | **PRESERVED VERBATIM** — must stay green (Renders without error / ZH+EN name / Delete button present / id+icon+i18nKey correct) |
+| AC5 | accountPane.test.tsx | **ADJUSTED**: Delete button opens dialog with Step 1 title visible (was: any dialog content) |
+| AC6 | accountPane.test.tsx | **ADJUSTED**: Cancel on Step 1 closes dialog AND does NOT emit deprecated event (was: cancel does not emit) |
+| AC7 | accountPane.test.tsx | **ADJUSTED**: Continue on Step 1 still emits deprecated event exactly once (was: Confirm emits exactly once) |
+| DEL-STEP-1 | DeleteAccountConfirmModal.test.tsx | Closed → click "Delete" → Step 1 panel visible |
+| DEL-STEP-2 | DeleteAccountConfirmModal.test.tsx | Step 1 → click "Continue" → Step 2 panel visible (Step 1 elements unmounted) |
+| DEL-STEP-3 | DeleteAccountConfirmModal.test.tsx | Step 2 → input "DELETE" → submit enabled → click submit → state transitions to Submitting |
+| DEL-TYPEMATCH-1 | DeleteAccountConfirmModal.test.tsx | input value `"DELETE"` → submit button enabled (NOT aria-disabled) |
+| DEL-TYPEMATCH-2 | DeleteAccountConfirmModal.test.tsx | input value `"delete"` (lowercase) → submit button disabled |
+| DEL-TYPEMATCH-3 | DeleteAccountConfirmModal.test.tsx | input value `"Delete"` (mixed case) → submit button disabled |
+| DEL-TYPEMATCH-4 | DeleteAccountConfirmModal.test.tsx | input value `""` (empty) → submit button disabled |
+| DEL-TYPEMATCH-5 | DeleteAccountConfirmModal.test.tsx | input value `"DELETEX"` (extra char) → submit button disabled |
+| DEL-TYPEMATCH-6 | DeleteAccountConfirmModal.test.tsx | input value `"DELETE "` (trailing space) → submit button disabled (no trim) |
+| DEL-CANCEL-1 | DeleteAccountConfirmModal.test.tsx | Cancel on Step 1 closes modal; onCancel called |
+| DEL-CANCEL-2 | DeleteAccountConfirmModal.test.tsx | Cancel on Step 2 closes modal; input cleared on next open |
+| DEL-BILINGUAL-1 | DeleteAccountConfirmModal.test.tsx | EN labels rendered on Step 1 + Step 2 (deleteModal.step1_title, deleteModal.step2_title, deleteModal.type_prompt) |
+| DEL-BILINGUAL-2 | DeleteAccountConfirmModal.test.tsx | ZH labels rendered on Step 1 + Step 2 |
+
+#### P2 — deleteAccount() helper in @repo/web-auth-device-session (companion package tests)
+
+| Test ID | File | Description |
+|---|---|---|
+| DAA-1 | packages/web-auth-device-session/src/auth-actions.test.ts | deleteAccount() calls `client.functions.invoke("account-delete")` exactly once with empty body |
+| DAA-2 | packages/web-auth-device-session/src/auth-actions.test.ts | On invoke 200, deleteAccount() calls `client.auth.signOut()` exactly once |
+| DAA-3 | packages/web-auth-device-session/src/auth-actions.test.ts | On invoke network throw, throws AccountDeleteError with kind="network" |
+| DAA-4 | packages/web-auth-device-session/src/auth-actions.test.ts | On invoke 401, throws AccountDeleteError with kind="unauthorized" |
+| DAA-5 | packages/web-auth-device-session/src/auth-actions.test.ts | On invoke 403, throws AccountDeleteError with kind="forbidden" |
+| DAA-6 | packages/web-auth-device-session/src/auth-actions.test.ts | On invoke 500, throws AccountDeleteError with kind="server" |
+| DAA-7 | packages/web-auth-device-session/src/auth-actions.test.ts | On invoke 404 (idempotency), throws AccountDeleteError with kind="already_deleted" |
+| DAA-8 | packages/web-auth-device-session/src/auth-actions.test.ts | If signOut throws AFTER successful invoke, deleteAccount() does NOT re-throw (logged + downgraded) |
+
+#### P3 — Orchestrator + local-clear + mock-auth fallback + redirect
+
+| Test ID | File | Description |
+|---|---|---|
+| DEL-ORCH-1 | useAccountDeleteOrchestrator.test.tsx | Live-auth happy path: submit() → deleteAccount called → signOut called → registry-list iterated → IDB list iterated → window.location.assign("/") called |
+| DEL-ORCH-2 | useAccountDeleteOrchestrator.test.tsx | Mock-auth happy path: submit() → deleteAccount NOT called → registry-list iterated → IDB list iterated → window.location.assign("/") called |
+| DEL-ORCH-3 | useAccountDeleteOrchestrator.test.tsx | Live-auth failure: deleteAccount throws kind="network" → reducer state="failure" → registry-list NOT iterated → IDB list NOT iterated → window.location.assign NOT called |
+| DEL-ORCH-4 | useAccountDeleteOrchestrator.test.tsx | 404 idempotency: deleteAccount throws kind="already_deleted" → reducer treats as success → wipe + redirect |
+| DEL-WIPE-1 | useAccountDeleteOrchestrator.test.tsx | All 42 keys from Object.keys(PREF_REGISTRY) iterated; one removePref call per key (count assert) |
+| DEL-WIPE-2 | useAccountDeleteOrchestrator.test.tsx | All 3 entries in ACCOUNT_LOCAL_WIPE_IDB_NAMES iterated; one indexedDB.deleteDatabase call per name |
+| DEL-IDEM-1 | useAccountDeleteOrchestrator.test.tsx | Calling submit() twice while state=submitting is idempotent (second call no-ops) |
+| DEL-IDB-LIST-1 | useAccountDeleteOrchestrator.test.tsx | ACCOUNT_LOCAL_WIPE_IDB_NAMES contains exactly ["web-encrypted-cache", "xai-web-ai-secrets", "xai-web-auth"] at row-#9-time |
+| DEL-WIRE-1 | DeleteAccountConfirmModal.test.tsx | Step 2 → submit (mock-auth) → orchestrator state advances through "submitting" → "wiping" → "success" |
+| DEL-WIRE-2 | DeleteAccountConfirmModal.test.tsx | Step 2 → submit (live, deleteAccount throws kind="network") → error banner rendered with bilingual copy |
+| DEL-WIRE-3 | DeleteAccountConfirmModal.test.tsx | Failure → click Retry → reducer transitions back to Step 2 → submit enabled |
+| DEL-MOCK-BANNER-1 | DeleteAccountConfirmModal.test.tsx | mock-auth mode + Step 2 rendered → mock banner EN text visible (deleteModal.mock_banner EN) |
+| DEL-MOCK-BANNER-2 | DeleteAccountConfirmModal.test.tsx | mock-auth mode + Step 2 + ZH lang → mock banner ZH text visible |
+| DEL-MOCK-BANNER-3 | DeleteAccountConfirmModal.test.tsx | Mock banner has no close button / no dismiss affordance (non-dismissible) |
+| DEL-EVENT-DEP-1 | accountPane.test.tsx | Step 1 Continue click emits web:settings:rest:account-delete-confirmed exactly once with payload `{ confirmedAt: <ISO> }` |
+| DEL-WILDCARD-GUARD | no-localstorage-clear.test.ts | Source-text guard: zero `localStorage.clear()` occurrences in `packages/plugin-web-settings-rest/src/**/*.{ts,tsx}` AND `packages/web-auth-device-session/src/**/*.{ts,tsx}` |
+
+#### P4 — Cross-vendor verify checklist + JSDoc deprecation + operator runbook + PLUGIN_MAP
+
+P4 is documentation-only — no new automated tests. The 6 cross-vendor verify items are owned by `feature-verify` (see §7.5 below).
+
+### §7.4 Mock surface area summary
+
+| What | How | Where |
+|---|---|---|
+| `window.location.assign` | `Object.defineProperty(window, "location", ...)` per test | DEL-ORCH-1, DEL-ORCH-2, DEL-ORCH-4, DEL-IDEM-1 |
+| `localStorage` | real jsdom; pre-seed keys + assert empty after wipe | DEL-WIPE-1 |
+| `sessionStorage` | real jsdom; cleared in `afterEach` (already extended in row #7) | DEL-WIPE-1 (no direct use) |
+| `indexedDB.deleteDatabase` | `vi.spyOn(indexedDB, "deleteDatabase")` returning a stub IDBOpenDBRequest | DEL-WIPE-2, DEL-IDB-LIST-1 |
+| `import.meta.env.VITE_WEB_AUTH_MODE` | `vi.stubEnv` per test | DEL-ORCH-1 (live), DEL-ORCH-2 (mock), DEL-MOCK-BANNER-1/2/3 (mock) |
+| `client.functions.invoke` | spy per test with controlled return | DAA-1..7, DEL-ORCH-1, DEL-ORCH-3, DEL-ORCH-4 |
+| `client.auth.signOut` | spy per test | DAA-2, DAA-8, DEL-ORCH-1 |
+| `emitWebEvent` | `vi.spyOn` per test asserting the deprecated event | DEL-EVENT-DEP-1 |
+| `useWebAuthSession` | `vi.mock("@repo/web-auth-device-session/web")` | DEL-ORCH-1..4, DEL-WIPE-1, DEL-WIPE-2, DEL-WIRE-1..3 |
+| `fetch` | NOT mocked (no direct fetch in row #9) | — |
+
+### §7.5 Acceptance criteria (extension)
+
+1. `pnpm --filter @repo/plugin-web-settings-rest lint --max-warnings 0` exits 0
+2. `pnpm --filter @repo/plugin-web-settings-rest typecheck` N/A (no script defined; Vitest TS path provides type-check)
+3. `pnpm --filter @repo/web-auth-device-session lint --max-warnings 0` exits 0
+4. `pnpm --filter @repo/web-auth-device-session test` exits 0 (existing baseline + 8 new DAA tests)
+5. `pnpm --filter @repo/web check-types` exits 0 (no new router changes; should remain green from row #8)
+6. All ORIGINAL 208 plugin-web-settings-rest tests pass (AC1..AC4, AC8 preserved; AC5/AC6/AC7 adjusted; row #7 + row #8 cases all preserved)
+7. NEW ~36 tests pass:
+   - P1: ~13 (DEL-STEP-1..3 + DEL-TYPEMATCH-1..6 + DEL-CANCEL-1..2 + DEL-BILINGUAL-1..2)
+   - P2: 8 (DAA-1..8)
+   - P3: ~15 (DEL-ORCH-1..4 + DEL-WIPE-1..2 + DEL-IDEM-1 + DEL-IDB-LIST-1 + DEL-WIRE-1..3 + DEL-MOCK-BANNER-1..3 + DEL-EVENT-DEP-1 + DEL-WILDCARD-GUARD)
+8. `pnpm --filter @repo/plugin-web-storage test` passes (no schema change to registry; existing 88 tests preserved)
+9. `pnpm --filter @repo/core test` passes (EventMap JSDoc @deprecated annotation; existing 8 tests preserved)
+10. `pnpm --filter @repo/web test` passes (existing 116 tests preserved — NO CSP changes, NO router changes)
+11. `pnpm --filter @repo/web build` succeeds (no new dependency)
+12. Bundle: zero new NPM dependency; no main-chunk size regression > 5KB
+13. Cross-vendor verify (Codex `gpt-5.5-thinking medium`): 6 items per §7.6 below. Cold-read deferral may apply per ADR-0008 carve-out consistent with W1/W2 + row #6/#7/#8 precedent — record decision in `feature-verify` output.
+
+Baseline test counts after row #9 (target):
+- plugin-web-settings-rest: 208 + ~28 (P1 + P3 modal/orch/event) = **~236**
+- web-auth-device-session: baseline + 8 (DAA-1..8) = **baseline+8**
+- plugin-web-storage: 88 (UNCHANGED)
+- xai-web-shell: 86 (UNCHANGED)
+- web: 116 (UNCHANGED)
+- core: 8 (UNCHANGED; only JSDoc edit)
+
+### §7.6 No-`localStorage.clear()` source-text guard
+
+A new test file `src/__tests__/no-localstorage-clear.test.ts` walks `packages/plugin-web-settings-rest/src/**/*.{ts,tsx}` AND `packages/web-auth-device-session/src/**/*.{ts,tsx}` and asserts ZERO occurrences of the literal substring `localStorage.clear()`. This is HC3 (no wildcard wipe) enforcement at the source level. Any future regression that swaps the registry-list iteration for a wildcard wipe fails the test.
+
+Implementation pattern mirrors row #7's `no-math-random.test.ts` and row #8's `no-stripe-secret-key.test.ts` source-text guards.
+
+### §7.7 Cross-vendor verify checklist (for feature-verify)
+
+Owned by `feature-verify` cycle, not by P4. Listed here for completeness:
+
+1. **No wildcard wipe** — Codex cold-read confirms `useAccountDeleteOrchestrator.ts` + `wipe.ts` (in web-auth-device-session) contain zero `localStorage.clear()` calls; iteration uses `Object.keys(PREF_REGISTRY)` exclusively. DEL-WILDCARD-GUARD source-text guard mirrors at source level.
+2. **Type-match case-sensitive** — Codex cold-read confirms `DeleteAccountConfirmModal.tsx` Step 2 input handler uses `=== "DELETE"` (strict equality with the literal "DELETE", no `toLowerCase()`, no `.trim()`). DEL-TYPEMATCH-1..6 source-test mirror.
+3. **Sequencing (live-auth)** — Codex cold-read confirms the orchestrator's live-auth path calls `deleteAccount()` FIRST, then on success calls registry-wipe + IDB-wipe + redirect. No local mutation precedes backend confirmation. DEL-ORCH-3 source-test mirror.
+4. **IDB clear comprehensive** — Codex cold-read confirms `ACCOUNT_LOCAL_WIPE_IDB_NAMES` covers all known IDB databases at the time of cold-read (current list: 3; future additions documented in JSDoc + runbook). DEL-IDB-LIST-1 source-test mirror.
+5. **Mock-auth banner unmissable** — Codex inspects `DeleteAccountConfirmModal.tsx` JSX confirming the banner is rendered unconditionally when `VITE_WEB_AUTH_MODE === "mock-authenticated"` AND state is one of step2/submitting/failure; banner has no close button; CSS uses high-contrast amber OKLCH. DEL-MOCK-BANNER-1..3 source-test mirror.
+6. **Deprecated event still emitted** — Codex confirms `accountPane.tsx` Step 1 Continue handler still calls `emitWebEvent("web:settings:rest:account-delete-confirmed", { confirmedAt: ... })` (one-release back-compat). EventMap entry in `packages/core/src/types/events.ts` carries the `@deprecated since 2026-05-26 (row #9)` JSDoc annotation. DEL-EVENT-DEP-1 source-test mirror.
+
+Manual smoke (Chrome 120 / Safari 17, deferrable 24h per ADR-0008 carve-out, consistent with row #6/#7/#8 precedent):
+- Mock-auth mode → click Delete Account → Step 1 → Continue → Step 2 → mock banner visible → type "delete" lowercase → submit stays disabled → type "DELETE" → submit enabled → click Delete Account → modal shows Submitting → page navigates to "/" → reload → localStorage `xai_*` keys gone + auth state clean.
+- Live mode → mock the backend to return 500 → click flow as above → on submit → error banner shows ZH/EN copy → localStorage NOT cleared → retry button restores Step 2 → re-submit succeeds with mocked 200 → cleanup happens → redirect.
+- Failure recovery → close tab mid-deletion → reopen → app loads in unauthenticated state (account is gone upstream; local stale data is inert without a session).
+

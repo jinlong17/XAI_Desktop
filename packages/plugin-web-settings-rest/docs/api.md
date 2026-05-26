@@ -652,3 +652,214 @@ Documented runbook entries in the new `apps/web/deploy/README.md` (P5):
 - "Rotate Payment Link" — invalidate old URL in Stripe dashboard, issue new, update env var, re-deploy.
 - "Switch dev → prod" — point Cloudflare Pages production env to live-mode URL; preview env stays on test-mode URL.
 
+---
+
+## §8 Extension: Account Delete Wire (gap-closure row #9)
+
+> APPEND-ONLY extension. §0..§7 above describe the SHIPPED row #24 surface +
+> the 2026-05-25 row #7 Integrations OAuth stub + the 2026-05-26 row #8 Premium
+> Stripe Checkout stub and are NOT mutated. This section adds the public
+> surface added by the 2026-05-26 row #9 account-delete wire.
+> Design home: `design.md` §"2026-05-26 Extension: Account Delete Wire
+> (gap-closure row #9)". Source brief:
+> `docs/reviews/xai-web-settings-account-delete-wire/20260524-roadmap-seed.md`.
+> Discovery: `docs/reviews/xai-web-settings-account-delete-wire/20260525-discovery-review.md`.
+
+### §8.1 Public exports (this row)
+
+**This row adds NO new exports from `@repo/plugin-web-settings-rest/index.ts`.** All new components and hooks are internal to the package:
+
+- `src/internal/DeleteAccountConfirmModal.tsx` — rewritten in place (already internal; not exported via barrel)
+- `src/internal/useAccountDeleteOrchestrator.ts` — new (internal; not exported)
+- `src/internal/localI18n.ts` — extended (already internal)
+
+The companion package `@repo/web-auth-device-session` (SHIPPED platform spine) GAINS these exports (declared in its own `src/index.ts`):
+
+```typescript
+// File: packages/web-auth-device-session/src/index.ts
+export { deleteAccount, AccountDeleteError } from "./auth-actions.js";
+export type { AccountDeleteErrorKind, DeleteAccountOptions } from "./auth-actions.js";
+export { ACCOUNT_LOCAL_WIPE_IDB_NAMES, wipeRegisteredIDB } from "./wipe.js";
+```
+
+See `packages/web-auth-device-session/docs/api.md` extension for full contract.
+
+### §8.2 DeleteAccountConfirmModal (internal, REWRITTEN)
+
+```typescript
+interface DeleteAccountConfirmModalProps {
+  readonly open: boolean;
+  readonly lang: Lang;
+  readonly onCancel: () => void;
+  /**
+   * Called when the user clicks "Continue" on Step 1.
+   * Emits the deprecated `web:settings:rest:account-delete-confirmed` event for
+   * one release of backwards-compat (row #24 baseline emitter location moved
+   * from Step-1-confirm to Step-1-continue; semantically the user expressed
+   * intent to delete).
+   *
+   * Does NOT mean the account was deleted — that happens later in Step 2.
+   *
+   * @deprecated The event itself is deprecated; the callback is the new
+   * interaction surface. Will be removed in P1 desktop pivot.
+   */
+  readonly onStep1Continue: () => void;
+}
+```
+
+The previous `onConfirm` prop is REMOVED; orchestration now happens inside the modal via `useAccountDeleteOrchestrator()` (FA-12). The modal owns the full step machine + submit → orchestrator wiring; the parent (`accountPane.tsx`) only provides `open` / `onCancel` / `onStep1Continue` and the `lang` context.
+
+Internal step machine (FA-1) — see `design.md` extension §"State machine (modal)" for diagram.
+
+### §8.3 useAccountDeleteOrchestrator (internal)
+
+```typescript
+// File: src/internal/useAccountDeleteOrchestrator.ts
+
+export interface UseAccountDeleteOrchestratorResult {
+  /** Current orchestration state — drives the modal step machine. */
+  readonly state: "idle" | "submitting" | "wiping" | "success" | "failure";
+  /** Set when state === "failure"; null otherwise. */
+  readonly error: AccountDeleteError | null;
+  /** Start the deletion flow. Idempotent: subsequent calls while non-idle no-op. */
+  readonly submit: () => Promise<void>;
+  /** Reset orchestrator state back to "idle". Used by the Retry / Cancel handlers. */
+  readonly reset: () => void;
+}
+
+/**
+ * Orchestrates the account-delete flow:
+ *
+ *   Live auth mode (default — `VITE_WEB_AUTH_MODE` is "live" or unset):
+ *     1. Call `deleteAccount(supabaseClient)` from @repo/web-auth-device-session.
+ *     2. On success or `kind === "already_deleted"`, proceed.
+ *     3. Iterate `Object.keys(PREF_REGISTRY)` → `removePref(key)` per key.
+ *     4. Call `wipeRegisteredIDB()` → iterates `ACCOUNT_LOCAL_WIPE_IDB_NAMES` → `indexedDB.deleteDatabase(name)` per name.
+ *     5. `window.location.assign("/")`.
+ *
+ *   Mock-auth mode (`VITE_WEB_AUTH_MODE === "mock-authenticated"`):
+ *     1. Skip backend; go directly to step 3 of the live flow.
+ *
+ * NEVER calls `localStorage.clear()` (DEL-WILDCARD-GUARD source-text guard).
+ * NEVER touches localStorage / IDB before backend confirms success in live mode.
+ *
+ * @since 2026-05-26 (gap-closure row #9)
+ */
+export function useAccountDeleteOrchestrator(): UseAccountDeleteOrchestratorResult;
+```
+
+Reads `VITE_WEB_AUTH_MODE` once at hook init (via `import.meta.env`). Acquires the Supabase client via `useWebAuthSession().client` (consuming `@repo/web-auth-device-session` context).
+
+Test ids: `DEL-ORCH-1` (live happy path), `DEL-ORCH-2` (mock-auth happy path), `DEL-ORCH-3` (live failure — no wipe), `DEL-ORCH-4` (404 idempotency — wipe + redirect), `DEL-WIPE-1` (registry list iterated), `DEL-WIPE-2` (IDB list iterated), `DEL-IDEM-1` (retry-after-success), `DEL-IDB-LIST-1` (constant has expected entries).
+
+### §8.4 New i18n keys (internal `localI18n.ts`)
+
+17 new bilingual entries — see `design.md` extension §"Bilingual i18n delta" for the full table. The existing row-#24 keys `deleteModal.title / .body / .cancel / .confirm` are PRESERVED VERBATIM (no rename; Step 1 still uses `.title` and Step 1 / Step 2 still use `.cancel`). The new keys add Step 1 specifics + Step 2 specifics + 5 error-message variants + retry + mock-auth banner.
+
+### §8.5 Deprecated EventMap entry (declaration-only annotation in `packages/core/src/types/events.ts`)
+
+```typescript
+/**
+ * Emitted when the user clicks "Continue" on Step 1 of the Delete Account
+ * confirm modal. Note: this does NOT mean the account was deleted — it means
+ * the user expressed intent to delete and entered Step 2 (type-DELETE gate).
+ *
+ * @deprecated since 2026-05-26 (gap-closure row #9). The event is preserved
+ * for one release of backwards-compat with row #24's emitter. Will be removed
+ * in P1 desktop pivot. Consumers should migrate to direct observation of the
+ * modal lifecycle (no public surface; this event has no production consumer).
+ */
+"web:settings:rest:account-delete-confirmed": {
+  confirmedAt: string; // ISO 8601 timestamp
+};
+```
+
+Payload schema UNCHANGED. Only the JSDoc + the emit-site changed (row #24 emitted on confirm; row #9 emits on Step 1 Continue).
+
+### §8.6 Error semantics (extension)
+
+- `DeleteAccountConfirmModal` does NOT throw under any input; failures route to `state: "failure"` + bilingual error banner.
+- `useAccountDeleteOrchestrator.submit()` does NOT throw — errors are captured into reducer state.
+- `deleteAccount()` (in `@repo/web-auth-device-session`) DOES throw — typed `AccountDeleteError` with `kind` discriminator. The orchestrator catches and maps to reducer state. See `packages/web-auth-device-session/docs/api.md` extension for `AccountDeleteError` contract.
+- `signOut()` failure between backend success and local-clear is logged but NOT re-thrown (R9 — the account is already gone; sign-out failure is a non-blocking degradation).
+- `wipeRegisteredIDB()` uses `Promise.allSettled` — individual `indexedDB.deleteDatabase` failures are logged but do not abort the wipe (R1 — best-effort local cleanup; the backend deletion is the source of truth).
+- `window.location.assign("/")` is the final step; if it throws (browser API failure — never observed) the modal stays in `state: "wiping"`. The user can manually navigate.
+
+### §8.7 CSP impact
+
+**NONE.** `connect-src` already covers `VITE_SUPABASE_URL` via the SHIPPED `web-auth-device-session` package's existing usage. No `_headers` edit. No ADR-0008 amendment. No `csp.test.ts` edit. First wave-2 gap-closure row without CSP changes.
+
+### §8.8 Companion package surface — `@repo/web-auth-device-session` (extension)
+
+This row adds 4 new exports to the SHIPPED `web-auth-device-session/src/index.ts`. Full contract lives in `packages/web-auth-device-session/docs/api.md` extension (NEW append-only section). Summary:
+
+```typescript
+// File: packages/web-auth-device-session/src/auth-actions.ts (EDIT)
+
+export type AccountDeleteErrorKind =
+  | "network"
+  | "unauthorized"
+  | "forbidden"
+  | "server"
+  | "already_deleted"
+  | "unknown";
+
+export class AccountDeleteError extends Error {
+  readonly kind: AccountDeleteErrorKind;
+  readonly cause?: unknown;
+  constructor(kind: AccountDeleteErrorKind, message: string, cause?: unknown);
+}
+
+export interface DeleteAccountOptions {
+  readonly onProgress?: (phase: "invoking" | "signing-out") => void;
+}
+
+/**
+ * Invoke the Supabase Edge Function `account-delete` to delete the current
+ * user's account, then sign out the local session.
+ *
+ * On success: returns void.
+ * On Edge Function failure: throws `AccountDeleteError` with appropriate kind.
+ * On signOut failure AFTER successful invoke: logged + downgraded (does NOT throw).
+ *
+ * @since 2026-05-26 (gap-closure row #9)
+ */
+export async function deleteAccount(
+  client: SupabaseClient,
+  options?: DeleteAccountOptions
+): Promise<void>;
+
+// File: packages/web-auth-device-session/src/wipe.ts (NEW)
+
+export const ACCOUNT_LOCAL_WIPE_IDB_NAMES: readonly string[];
+
+export async function wipeRegisteredIDB(): Promise<{
+  readonly attempted: readonly string[];
+  readonly succeeded: readonly string[];
+  readonly failed: readonly { name: string; cause: unknown }[];
+}>;
+```
+
+The Edge Function `account-delete` itself is NOT provisioned by this row — it is an operational prerequisite documented in `apps/web/deploy/README.md` §"Account-Delete Edge Function". Development and CI tests mock `client.functions.invoke()` to simulate the Edge Function response.
+
+### §8.9 Operator runbook (`apps/web/deploy/README.md` — extension)
+
+P4 of the phase plan adds two new sections to `apps/web/deploy/README.md`:
+
+**§"Account-Delete Edge Function"** documents:
+- Edge Function name: `account-delete`.
+- Required request: empty body; authorization via the caller's Supabase session token (RLS applied).
+- Required response: 200 (deleted) / 401 (session expired) / 403 (permission denied) / 404 (already deleted, idempotent) / 500 (server error).
+- Service-role configuration: function uses service-role internally to call `auth.admin.deleteUser(userId)` where `userId` is derived from the caller's session.
+- Deploy gate: the function MUST exist in the target Supabase project before live-mode traffic is enabled.
+
+**§"Account-Delete Rollback"** documents the 4 rollback paths from discovery review §12.
+
+### §8.10 Backwards-compatibility surface
+
+- Existing AC1..AC4, AC8 tests in `accountPane.test.tsx` — PRESERVED.
+- Existing AC5/AC6/AC7 — REWRITTEN to reflect new Step 1 → Continue semantics (modal still opens on click; "confirm-equivalent" is now Step 2 → "Delete Account" button after type-match).
+- Existing AC4 "Delete Account button present" — PRESERVED (button is unchanged in `accountPane.tsx`).
+- Existing `deleteModal.title / .body / .cancel / .confirm` i18n keys — PRESERVED VERBATIM (still used as Step 1 fallback).
+- Existing `web:settings:rest:account-delete-confirmed` EventMap entry — PRESERVED with `@deprecated` annotation; emit-site moves from Step-1-confirm to Step-1-continue.
+
