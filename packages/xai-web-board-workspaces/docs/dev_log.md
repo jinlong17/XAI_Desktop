@@ -275,13 +275,13 @@ Already enumerated in test.md §5 (Q1..Q11). Confirm:
 |---|---|
 | Workflow | FEATURE_DEV |
 | Target | xai-web-board-filter-share-map (canonical dev_log in `packages/xai-web-board-views/docs/dev_log.md`) |
-| Current Phase | FEATURE_VERIFY |
-| Status | READY_TO_SHIP |
-| Suggested Next | ship |
+| Current Phase | SHIP |
+| Status | SHIPPED |
+| Suggested Next | — (workflow complete) |
 | Verify Cross-vendor | yes (per ADR-0009 §D4 P0) — cold-read DEFERRED 24h per ADR-0008 carve-out (W1 precedent); same-vendor row-level verify cycle 2 PASS recorded in canonical dev_log |
 | Automation Mode | A-Claude |
-| Executor | Claude Opus 4.7 1M (feature-verify cycle 2, 2026-05-25 22:50) |
-| Updated | 2026-05-25 22:50 |
+| Executor | claude-sonnet-4-6 (ship, 2026-05-25 23:10) |
+| Updated | 2026-05-25 23:10 |
 | Dispatched By | xai-roadmap-loop SERIAL dispatch (Wave 2 first row) |
 | Roadmap Row | `docs/workflow/roadmap/xai-web-console-gap-closure.md` row #6 |
 | Canonical Dev_log | `packages/xai-web-board-views/docs/dev_log.md` §Bugfix-Extension Lineage — gap-closure row #6 (2026-05-25) |
@@ -298,3 +298,4 @@ Already enumerated in test.md §5 (Q1..Q11). Confirm:
 | 2026-05-25 22:40 | claude-sonnet-4-6 (feature-build verify-feedback-patch) | Cross-ref flip: Status → READY_FOR_VERIFY. Verify-feedback patch resolved all 5 blockers (B1/B2/B3 typecheck; B4 lint 6 warnings; B5 BM-BUNDLE tests now real). B4 fixed in this package: filterState.ts clearFilter param wrapped with eslint-disable; BoardWorkspacesModule.test.tsx beforeCount removed; ShareModal.test.tsx afterEach import removed; filterState.test.ts _withLabel removed; shareUrl.test.ts beforeEach+afterEach imports removed. `pnpm --filter @repo/plugin-web-board-workspaces lint --max-warnings 0` exit 0; `pnpm --filter @repo/plugin-web-board-workspaces typecheck` exit 0; 173 tests PASS. See canonical dev_log in board-views for full patch notes. | (see verify-patch commit) | feature-verify |
 | 2026-05-25 22:50 | Claude Opus 4.7 1M (feature-verify cycle 2) | Cross-ref flip: Status → READY_TO_SHIP. Re-ran focused gates: `pnpm --filter @repo/plugin-web-board-workspaces typecheck` → exit 0 (B2 transitive resolved); `lint --max-warnings 0` → exit 0 (B4 resolved); `test` → 173/173 PASS. fb5bb98 patch spot-checked: 5 file cleanups verified, no production logic changed, commit hygiene compliant. See canonical dev_log in board-views for full cycle-2 verify report. | — | ship |
 | 2026-05-25 | Claude Opus 4.7 1M (feature-review) | APPROVED. 0 blockers; 12 review gates PASS. See canonical dev_log (board-views) for full Review Notes + 2 non-blocking recommendations. Status flipped to APPROVED mirror; canonical is the source of truth. | — | feature-auto-build |
+| 2026-05-25 23:10 | claude-sonnet-4-6 (ship) | Cross-ref flip: Status → SHIPPED. All 3 lineage dev_logs flipped in this commit. Ship Report in canonical dev_log (`packages/xai-web-board-views/docs/dev_log.md`). This package's 4 build commits included in Ship Report: cfff4c5 (P2), ba0a2f0 (P3), f60502b (P4), 7c28d4c (P5 partial — Suspense wrap). Deferred residual risks acknowledged (RR-1 cross-vendor cold-read / RR-3 manual browser smoke) per canonical dev_log. | (dev_log flip commit — this) | Workflow complete |

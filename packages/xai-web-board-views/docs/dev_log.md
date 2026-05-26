@@ -371,13 +371,13 @@ The package implementation exists and tests pass, but board-views is not mounted
 | Workflow | FEATURE_DEV |
 | Target | xai-web-board-filter-share-map |
 | Title | Close 3 currently-disabled Board features: (a) Filter — by label / member / due range (in-memory render-only narrowing across all 6 views); (b) Share — native `<dialog>` modal with deterministic SHA-256 mock URL + `web:board:share-requested` event (declaration-only — no real backend); (c) Map view — replace SVG placeholder with real Leaflet integration (lazy-loaded ~42 KB gzipped chunk) over OSM standard tiles. Adds additive optional `BoardCard.location` field in `xai-web-board-core`. Amends ADR-0008 §S3 D3 in-place (binding precedent from row #2) to extend `connect-src` AND `img-src` for OSM tile origin. |
-| Current Phase | FEATURE_VERIFY |
-| Status | READY_TO_SHIP |
-| Suggested Next | ship |
+| Current Phase | SHIP |
+| Status | SHIPPED |
+| Suggested Next | — (workflow complete) |
 | Verify Cross-vendor | yes (per ADR-0009 §D4 P0 + roadmap header default; primary Codex `gpt-5.5-thinking medium`, fallback Cursor) — cold-read DEFERRED 24h per ADR-0008 carve-out (consistent with W1 precedent rows #2/#3/#4 SHIPPED 2026-05-25); same-vendor row-level verify cycle 2 PASS recorded. |
 | Automation Mode | A-Claude (per roadmap default inherited from xai-web-console.md 2026-05-23 user override) |
-| Executor | Claude Opus 4.7 1M (feature-verify cycle 2, 2026-05-25 22:50) |
-| Updated | 2026-05-25 22:50 |
+| Executor | claude-sonnet-4-6 (ship, 2026-05-25 23:10) |
+| Updated | 2026-05-25 23:10 |
 | Dispatched By | xai-roadmap-loop SERIAL dispatch — Wave 2 first row, most complex W2 row — after WAVE 1 COMPLETE (5/5 SHIPPED 2026-05-25: rows #1/#2/#3/#4/#5) |
 | Roadmap Row | `docs/workflow/roadmap/xai-web-console-gap-closure.md` row #6 (W2 · board Filter + Share + Map) |
 | Parent ADR | ADR-0009 §D2-G3 (P0 gap-closure; ≥5/9 known gaps SHIPPED to unblock P1 Desktop launch) |
@@ -668,3 +668,4 @@ All 5 have a recommendation locked into the plan; feature-review may override.
 | Share modal opens + URL generated + Copy works | Chrome / Safari | TODO |
 | Map view shows empty-state (no cards with location) | Chrome / Safari | TODO |
 | Map view shows pins for cards with location (requires seeding a card with location field in localStorage) | Chrome / Safari | TODO |
+| 2026-05-25 23:10 | claude-sonnet-4-6 (ship) | **SHIP REPORT — row #6 SHIPPED.** Verified all 11 commits already on `origin/main` (pushed during verify-feedback cycle). Lineage Status Panel flipped: `Current Phase → SHIP`, `Status → SHIPPED`, `Suggested Next → — (workflow complete)`. **Commits shipped (row #6):** 389ee17 (P1 board-core schema), cfff4c5 (P2 Filter types + applyFilter + lift FilterState), ba0a2f0 (P3 FilterPopover UI), f60502b (P4 ShareModal + shareUrl + EventMap), 7c28d4c (P5 Leaflet MapView lazy-load), e086c7c (P6 ADR-0008 §S3 D3 CSP amendment), abc138e (P7 PLUGIN_MAP + dev_log flip), 11360d9 (verify B1 fix), fb5bb98 (verify B4 fix), f9750ef (verify B5 fix), 4c4cfbd (roadmap row #6 READY_TO_SHIP). **Push timestamp:** 2026-05-25 22:55 (last push: `30e6d9d..4c4cfbd main -> origin/main`). **Roadmap:** `docs/workflow/roadmap/xai-web-console-gap-closure.md` row #6. **Deferred residual risks acknowledged:** RR-1 cross-vendor cold-read (Codex gpt-5.5-thinking medium / Cursor fallback) DEFERRED 24h per ADR-0008 carve-out — consistent with W1 precedent rows #2/#3/#4; RR-2 main bundle 1,035 KB informational pre-existing note (not caused by row #6, documented in verify report); RR-3 5-scenario manual browser smoke DEFERRED 24h per ADR-0008 carve-out. Wave 2 progress: **1/4 SHIPPED** (#7/#8/#9 pending). | (dev_log flip commit — this) | Workflow complete → row #7 next |
