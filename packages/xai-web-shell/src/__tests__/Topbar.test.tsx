@@ -116,4 +116,15 @@ describe("Topbar", () => {
     fireEvent.click(btn);
     expect(onOpenSearch).toHaveBeenCalledTimes(1);
   });
+
+  it("TB-PREMIUM-1 — premiumBadge render-prop renders in Topbar when provided", () => {
+    // Simulate the badge being passed from the app layer (avoiding circular dep)
+    const badgeNode = <span data-testid="premium-tier-badge">Premium (stub)</span>;
+    renderTopbar({ lang: "en", premiumBadge: badgeNode });
+
+    // The badge should be visible with "Premium (stub)" text
+    const badge = screen.getByTestId("premium-tier-badge");
+    expect(badge).toBeTruthy();
+    expect(badge.textContent).toContain("Premium (stub)");
+  });
 });

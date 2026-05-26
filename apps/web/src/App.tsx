@@ -50,6 +50,8 @@ import {
   CommandPalette,
   useCommandPalette,
 } from "@repo/xai-web-cmdk";
+// Extension 2026-05-26 — Premium tier badge for Topbar (gap-closure row #8 F1)
+import { PremiumTierBadge } from "@repo/plugin-web-settings-rest";
 
 // ---- AppInner — consumes CommandPaletteProvider context --------------------
 
@@ -134,6 +136,7 @@ function AppInner() {
         density={density}
         setDensity={setDensity}
         onOpenSearch={() => openPalette({ source: "topbar-click" })}
+        premiumBadge={<PremiumTierBadge lang={lang} />}
       >
         <Outlet />
       </Shell>

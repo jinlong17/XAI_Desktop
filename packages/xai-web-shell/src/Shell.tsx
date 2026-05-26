@@ -24,6 +24,7 @@ export function Shell({
   setDensity,
   onOpenSearch,
   children,
+  premiumBadge,
 }: ShellProps) {
   const { railPos, petOn, setPetOn } = useWebShell();
   const navigate = useNavigate();
@@ -76,6 +77,7 @@ export function Shell({
         setDensity={setDensity}
         onOpenSettings={onOpenSettings}
         onOpenSearch={onOpenSearch}
+        premiumBadge={premiumBadge}
       />
       <main className="app-main">
         {children ?? <Outlet />}

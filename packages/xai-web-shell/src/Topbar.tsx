@@ -18,6 +18,7 @@ export function Topbar({
   setDensity,
   onOpenSettings,
   onOpenSearch,
+  premiumBadge,
 }: TopbarProps) {
   const { s } = useI18n(lang);
 
@@ -48,6 +49,8 @@ export function Topbar({
       )}
 
       <div className="topbar-controls">
+        {/* Extension 2026-05-26 — Premium tier badge at left end of controls (F1 render-prop slot) */}
+        {premiumBadge ? premiumBadge : null}
         <div className="seg" role="tablist">
           <button
             type="button"

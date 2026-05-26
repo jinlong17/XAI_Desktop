@@ -105,6 +105,17 @@ export interface ShellProps {
   onOpenSearch?: () => void;
   /** Optional render-prop for the main pane — defaults to <Outlet/> from react-router. */
   children?: ReactNode;
+  /**
+   * Optional premium tier badge node passed from the host to the Topbar.
+   * The host (apps/web/src/App.tsx) imports <PremiumTierBadge> from
+   * @repo/plugin-web-settings-rest and passes it here. This render-prop pattern
+   * avoids the circular dependency:
+   *   plugin-web-settings-rest → plugin-web-settings-shell → xai-web-shell
+   *   (would cycle back to plugin-web-settings-rest if xai-web-shell imported it).
+   *
+   * Extension 2026-05-26 — Premium Stripe Checkout stub (gap-closure row #8 F1).
+   */
+  premiumBadge?: ReactNode;
 }
 
 export interface AppRailProps {
@@ -144,6 +155,15 @@ export interface TopbarProps {
    * xai-web-cmdk gap-closure row #3 — P4 addition.
    */
   onOpenSearch?: () => void;
+  /**
+   * Optional premium tier badge node rendered at the left end of topbar-controls.
+   * The host (apps/web) passes <PremiumTierBadge /> from @repo/plugin-web-settings-rest
+   * to avoid a circular dependency (plugin-web-settings-rest → plugin-web-settings-shell
+   * → xai-web-shell would create a cycle if xai-web-shell imported from the plugin).
+   *
+   * Extension 2026-05-26 — Premium Stripe Checkout stub (gap-closure row #8 F1).
+   */
+  premiumBadge?: ReactNode;
 }
 
 export interface AvatarMenuProps {

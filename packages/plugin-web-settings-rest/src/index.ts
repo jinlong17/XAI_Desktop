@@ -37,9 +37,10 @@ export { applyRestPanesToRegistry } from "./internal/applyRestPanesToRegistry.js
 // Extension 2026-05-25 — OAuth callback page (gap-closure row #7)
 export { CallbackPage } from "./CallbackPage.js";
 
-// Extension 2026-05-26 — Premium Stripe Checkout stub pages (gap-closure row #8)
+// Extension 2026-05-26 — Premium Stripe Checkout stub pages + badge (gap-closure row #8)
 export { CheckoutSuccessPage } from "./CheckoutSuccessPage.js";
 export { CheckoutCancelPage } from "./CheckoutCancelPage.js";
+export { PremiumTierBadge } from "./internal/PremiumTierBadge.js";
 
 // ---- Public types --------------------------------------------------------
 export type {
@@ -63,3 +64,6 @@ export type {
 
 // Extension 2026-05-25 — OAuth provider id type (gap-closure row #7)
 export type { IntegrationProviderId } from "./internal/integrationProviders.js";
+
+// Extension 2026-05-26 — Premium tier type (gap-closure row #8)
+export type { PremiumTier } from "./internal/premiumTier.js";
