@@ -92,7 +92,15 @@ describe("CSP source-text guards", () => {
     ).toContain("https://api.linear.app");
   });
 
-  it("CSP4: connect-src includes Stripe Payment Link hostnames (gap-closure #8 Premium Stripe stub)", () => {
+  it("CSP4 (codex finding #3 row #8): connect-src does NOT include Stripe hostnames — pure redirect mode needs ZERO Stripe entries (gap-closure #8 Premium Stripe stub)", () => {
+    // Original P5 _headers added 3 Stripe hostnames to connect-src. Codex
+    // cross-vendor cold-read 2026-05-26 found that wrong: pure Payment Link
+    // redirect mode only navigates the browser to `buy.stripe.com` (governed
+    // by navigate-to / form-action / default-src, NOT connect-src). No
+    // Stripe.js loaded, no fetch to api.stripe.com or any Stripe domain.
+    // Fix: remove all 3 Stripe hostnames from connect-src. If v1.1 introduces
+    // a real backend "verify subscription" fetch, that's a separate ADR-0008
+    // amendment.
     const content = readFileSync(HEADERS_PATH, "utf-8");
     const cspLine = content
       .split("\n")
@@ -103,16 +111,16 @@ describe("CSP source-text guards", () => {
     ).toBeTruthy();
     expect(
       cspLine,
-      "connect-src does not include https://js.stripe.com — Stripe Payment Link connect endpoint is blocked; update ADR-0008 §S3 D3 FOURTH amendment + _headers",
-    ).toContain("https://js.stripe.com");
+      "connect-src still contains https://js.stripe.com — redirect-only mode does NOT need Stripe.js endpoint; remove from _headers (codex finding #3 row #8)",
+    ).not.toContain("https://js.stripe.com");
     expect(
       cspLine,
-      "connect-src does not include https://checkout.stripe.com — Stripe Checkout endpoint is blocked; update ADR-0008 §S3 D3 FOURTH amendment + _headers",
-    ).toContain("https://checkout.stripe.com");
+      "connect-src still contains https://checkout.stripe.com — redirect-only mode does NOT iframe Checkout; remove from _headers (codex finding #3 row #8)",
+    ).not.toContain("https://checkout.stripe.com");
     expect(
       cspLine,
-      "connect-src does not include https://buy.stripe.com — Stripe Payment Link buy endpoint is blocked; update ADR-0008 §S3 D3 FOURTH amendment + _headers",
-    ).toContain("https://buy.stripe.com");
+      "connect-src still contains https://buy.stripe.com — Payment Link navigation is governed by navigate-to/form-action, NOT connect-src; remove from _headers (codex finding #3 row #8)",
+    ).not.toContain("https://buy.stripe.com");
   });
 
   it("CSP4-SCRIPT-SRC-CLEAN: script-src does NOT include any Stripe CDN URL (no Stripe.js bundle)", () => {
