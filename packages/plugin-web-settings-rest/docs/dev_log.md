@@ -798,13 +798,13 @@ R11 Topbar badge CSS conflict → scoped CSS class + manual smoke at ship-time.
 | Workflow | FEATURE_DEV |
 | Target | xai-web-settings-account-delete-wire |
 | Title | Replace the SHIPPED row-#24 single-step Account-Delete confirm modal (currently emits `web:settings:rest:account-delete-confirmed` with no listener — a declaration-only no-op) with a real deletion flow. Modal becomes a 2-step gate (Step 1 "Are you sure?" → Step 2 "Type DELETE to confirm" with case-sensitive exact-match input). On submit, the new `useAccountDeleteOrchestrator()` hook calls a new `deleteAccount()` helper added to the SHIPPED `web-auth-device-session` platform spine (scope extension — that package's design.md explicitly carved out account-delete in v1, so this row adds the missing endpoint client). On backend 200 (or 404 idempotency), the orchestrator iterates `Object.keys(PREF_REGISTRY)` to clear all 42 registered `xai_*` localStorage keys (NEVER wildcard `localStorage.clear()`), then iterates a new `ACCOUNT_LOCAL_WIPE_IDB_NAMES` constant (also exported from web-auth-device-session) to call `indexedDB.deleteDatabase()` for each of the 3 known IDB databases (`web-encrypted-cache`, `xai-web-ai-secrets`, `xai-web-auth`), then `window.location.assign("/")`. On failure (network / 401 / 403 / 500), modal shows a bilingual error banner; localStorage and IndexedDB are NOT touched; Retry restores Step 2. Mock-auth mode (`VITE_WEB_AUTH_MODE=mock-authenticated`) skips the backend call and runs the same local wipe + redirect, with a non-dismissible amber disclosure banner shown on Step 2. The existing `web:settings:rest:account-delete-confirmed` event is annotated `@deprecated since 2026-05-26` and re-purposed to emit on Step 1 → Continue (one release of back-compat). NO new CSP amendment (`connect-src` already covers `VITE_SUPABASE_URL`). NO new EventMap entry. NO new bundled NPM dependency. This is the SMALLEST of the 6a/6b/6c sub-rows per the seed brief — 4 phases, ~36 new tests, ~498 baseline tests preserved. |
-| Current Phase | FEATURE_VERIFY |
-| Status | READY_FOR_VERIFY |
-| Suggested Next | feature-verify |
+| Current Phase | SHIPPED |
+| Status | SHIPPED |
+| Suggested Next | — (workflow complete) |
 | Verify Cross-vendor | yes (per ADR-0009 §D4 P0 + roadmap header default; primary Codex `gpt-5.5-thinking medium`, fallback Cursor) |
 | Automation Mode | A-Claude (per roadmap default inherited from xai-web-console.md 2026-05-23 user override) |
-| Executor | claude-sonnet-4-6 — feature-build (verify-feedback patch cycle 1), 2026-05-26 |
-| Updated | 2026-05-26 02:25 |
+| Executor | claude-sonnet-4-6 — ship, 2026-05-26 |
+| Updated | 2026-05-26 02:55 |
 | Dispatched By | `xai-roadmap-loop` SERIAL dispatch — Wave 2 LAST row (after row #8 SHIPPED `00580dd` 2026-05-26) |
 | Roadmap Row | `docs/workflow/roadmap/xai-web-console-gap-closure.md` row #9 (W2 LAST · Account-delete wire to web-auth-device-session) |
 | Parent ADR | ADR-0009 §D2-G3 (P0 gap-closure; ≥5/9 known gaps SHIPPED to unblock P1 Desktop launch) |
@@ -1065,3 +1065,83 @@ These already exist on disk pre-build; staging them in P1 prevents an orphan "ch
 - **Lineage Status**: READY_FOR_VERIFY
 - **Next step**: `feature-verify` cycle 1 — re-run independent verification with both `check-types` gates confirmed passing.
 
+#### 2026-05-26 02:40 — Extension-FEATURE_VERIFY cycle 2: verdict PASS → READY_TO_SHIP
+
+- **Executor**: Claude Opus 4.7 (1M context) — feature-verify (cycle 2, `xai-roadmap-loop` SERIAL wave 2 LAST row #9 — also LAST row of 9-row gap-closure manifest)
+- **Action**: Re-ran independent verification focused on the 2 previously-BLOCKED check-types gates plus full spot-check of unchanged gates.
+  - **B1 re-check (PASS)**: `pnpm --filter @repo/web-auth-device-session check-types` → exit 0. `git show b321395` confirms typed `AccountDeleteInvokeResult` interface replaces the prior double `as Record<string, unknown>` casts (verified by `grep -c "Record<string, unknown>" auth-actions.ts` → 0 occurrences remaining). Diff is +11/-6 in `auth-actions.ts` only — scope-disciplined.
+  - **B2 re-check (PASS)**: `pnpm --filter @repo/web check-types` → exit 0. `git show 0411a63` confirms `const stepIsSubmitting: boolean = step === "submitting"` extracted at component level (line 128); inline `step === "submitting"` replaced at 4 JSX call sites (verified by `grep -c "stepIsSubmitting" DeleteAccountConfirmModal.tsx` → 7 = 1 declaration + 6 references including title fallback). Diff touches `DeleteAccountConfirmModal.tsx` (+8/-4) + dev_log (lineage flip — acceptable convention for verify-feedback patches per row #7/#8 precedent).
+  - **Full test suite (PASS)**: plugin-web-settings-rest 239/239; web-auth-device-session 42/42; plugin-web-storage 88/88; web 116/116. **Total 485/485.**
+  - **Cycle-1 PASSING gates re-confirmed**:
+    - All 10 HCs from row #9 plan (HC1 SHIPPED spine reuse / HC2 2-step + type-match / HC3 registry-list wipe NOT wildcard / HC4 mock-auth banner / HC5 redirect / HC6 deprecated event annotation / HC7 cross-vendor verify scheduled / HC8 append-only / HC9 Step 0 brief input / HC10 no localStorage.clear() — guard test `no-localstorage-clear.test.ts` present and passing).
+    - All 6 security gates: DEL-WILDCARD-GUARD (no-localstorage-clear.test.ts source-text guard) + DEL-TYPEMATCH (case-sensitive exact-match `=== "DELETE"`) + DEL-ORCH-3 (failure path no local wipe) + DEL-IDB-LIST-1 (ACCOUNT_LOCAL_WIPE_IDB_NAMES exported from web-auth-device-session) + DEL-MOCK-BANNER-3 (amber non-dismissible banner on mock-auth) + DEL-EVENT-DEP-1 (deprecated event emitted only on Step 1 Continue, not on actual deletion).
+    - 3 prior SHIPPED dev_log lineage blocks preserved verbatim: row #24 W4b SHIPPED (line 11) + row #7 OAuth PKCE stub SHIPPED (line 154) + row #8 Premium Stripe stub SHIPPED (line 494). HC8 append-only satisfied.
+  - **Build (PASS)**: `pnpm --filter @repo/web build` → SUCCESS; vite bundle size warning is pre-existing chunk-size advisory, NOT a row #9 regression.
+  - **Lint**:
+    - `pnpm --filter @repo/plugin-web-settings-rest lint --max-warnings 0` → exit 0.
+    - `pnpm --filter @repo/web-auth-device-session lint` → "no lint script" (package convention — same as cycle 1).
+    - `pnpm --filter @repo/web lint --max-warnings 0` → 3 pre-existing warnings (TokensSmokePage.tsx:71 turbo/no-undeclared-env-vars + :73 react-hooks/rules-of-hooks + worker-configuration.d.ts:3 unused-eslint-disable). Confirmed pre-existing at row #9 dispatch commit `025a454` (verified by re-running lint against `git checkout 025a454 -- TokensSmokePage.tsx`). NOT introduced by row #9 implementation or by the cycle-1 patch. Same baseline as cycle 0 and cycle 1.
+  - **Patch hygiene**: All 3 patch commits (b321395, 0411a63, 7fd7cad) format-compliant — `type(scope): summary` headline + Why/What/Scope/Risk/Docs/Tests body + Co-Authored-By trailer. Scope discipline: b321395 touches `auth-actions.ts` only (1 file, +11/-6); 0411a63 touches `DeleteAccountConfirmModal.tsx` + companion dev_log lineage entry only (2 files); 7fd7cad is docs-only (1 file). Zero behavior change confirmed via test parity (485/485 same as cycle 1 self-report).
+  - **No new BLOCKER candidates**: `@repo/plugin-web-storage check-types` exit 0; `@repo/core check-types` exit 0; `@repo/plugin-web-settings-rest` has no `check-types` script (workspace convention — relies on aggregate via apps/web which passed). Confirmed no transitive TS regression.
+- **Tests**:
+  - `pnpm --filter @repo/web-auth-device-session check-types` → exit 0
+  - `pnpm --filter @repo/web check-types` → exit 0
+  - `pnpm --filter @repo/plugin-web-storage check-types` → exit 0
+  - `pnpm --filter @repo/core check-types` → exit 0
+  - `pnpm --filter @repo/plugin-web-settings-rest test` → 239/239 PASS
+  - `pnpm --filter @repo/web-auth-device-session test` → 42/42 PASS
+  - `pnpm --filter @repo/plugin-web-storage test` → 88/88 PASS
+  - `pnpm --filter @repo/web test` → 116/116 PASS
+  - `pnpm --filter @repo/web build` → SUCCESS
+  - `pnpm --filter @repo/plugin-web-settings-rest lint --max-warnings 0` → exit 0
+- **Commits Reviewed (8 total)**:
+  - `91e3bc6` feat P1 — 2-step modal + type-DELETE gate + bilingual i18n
+  - `72c70ee` feat P2 — deleteAccount() helper + AccountDeleteError in web-auth-device-session
+  - `5bc7417` feat P3 — useAccountDeleteOrchestrator + ACCOUNT_LOCAL_WIPE_IDB_NAMES + mock-auth fallback + redirect
+  - `18c9134` feat P4 — JSDoc @deprecated + apps/web/deploy/README extension + PLUGIN_MAP + companion dev_log lineage close
+  - `9625941` docs — flip Lineage Status Panel APPROVED → READY_FOR_VERIFY + append P1..P4 Work Log entries
+  - `b321395` fix B1 — repair TS2352 check-types regression in auth-actions
+  - `0411a63` fix B2 — repair TS2367 check-types regression in DeleteAccountConfirmModal
+  - `7fd7cad` docs — record B1+B2 patch commit hashes in dev_log Work Log entry
+- **Residual risks**: None blocking ship.
+  - Pre-existing lint warnings in `apps/web/src/pages/TokensSmokePage.tsx` (2) and `apps/web/worker-configuration.d.ts` (1) — out-of-scope baseline noise, present at row #9 dispatch commit `025a454`; separate cleanup row recommended outside this manifest.
+  - Cross-vendor cold-read (Codex `gpt-5.5-thinking medium`) deferred per ADR-0009 §D4 P0 carve-out — operator action item for ship/post-ship per W1/W2 precedent.
+- **Lineage Status**: READY_TO_SHIP
+- **Next step**: `ship` — push 8 commits to remote, flip Lineage Status to SHIPPED, append Ship Report, then reconcile roadmap row #9 SHIPPED + close 9-row gap-closure manifest. **WAVE 2 COMPLETION** (rows #5/#6/#7/#8/#9 all SHIPPED) + **9-ROW GAP-CLOSURE MANIFEST COMPLETION** (rows #1..#9 all SHIPPED → unblocks P1 desktop pivot per ADR-0009 §D2-G3).
+
+#### 2026-05-26 02:55 — SHIP: Lineage Status → SHIPPED (row #9 of xai-web-console-gap-closure, WAVE 2 LAST — 9-ROW MANIFEST COMPLETE)
+
+- **Executor**: claude-sonnet-4-6 — ship, 2026-05-26
+- **Action**: Verified all 9 implementation commits + 1 roadmap commit already on origin/main with clean working tree. Verified dev_log Lineage Status = READY_TO_SHIP. Verified all commit messages follow `type(scope): summary` convention with Why/What/Scope/Risk/Docs/Tests body + Co-Authored-By trailers. Flipped Lineage Status Panel `Current Phase` to SHIPPED, `Status` to SHIPPED. Appended this Ship Report.
+- **Commits (9 row-#9 commits)**:
+  - `91e3bc6` feat(xai-web-settings-account-delete-wire): P1 — 2-step modal + type-DELETE gate + bilingual i18n (gap-closure row #9)
+  - `72c70ee` feat(xai-web-settings-account-delete-wire): P2 — deleteAccount() helper + AccountDeleteError in web-auth-device-session (gap-closure row #9)
+  - `5bc7417` feat(xai-web-settings-account-delete-wire): P3 — useAccountDeleteOrchestrator + ACCOUNT_LOCAL_WIPE_IDB_NAMES + mock-auth fallback + redirect (gap-closure row #9)
+  - `18c9134` feat(xai-web-settings-account-delete-wire): P4 — JSDoc @deprecated + apps/web/deploy/README extension + PLUGIN_MAP + companion dev_log lineage close (gap-closure row #9)
+  - `9625941` docs(xai-web-settings-account-delete-wire): flip Lineage Status Panel APPROVED → READY_FOR_VERIFY + append P1..P4 Work Log entries (gap-closure row #9)
+  - `b321395` fix(web-auth-device-session): repair TS2352 check-types regression in auth-actions (verify B1 for row #9)
+  - `0411a63` fix(plugin-web-settings-rest): repair TS2367 check-types regression in DeleteAccountConfirmModal (verify B2 for row #9)
+  - `7fd7cad` docs(xai-web-settings-account-delete-wire): record B1+B2 patch commit hashes in dev_log Work Log entry
+  - `049f7b8` docs(roadmap): xai-web-console-gap-closure row #9 READY_TO_SHIP — account-delete wire (WAVE 2 + 9-row manifest LAST)
+- **Push timestamp**: 2026-05-26 02:55 (all 9 commits + this ship commit pushed to origin/main)
+- **Roadmap row**: `docs/workflow/roadmap/xai-web-console-gap-closure.md` row #9 (W2 LAST)
+- **Residual risks (2, deferred)**:
+  - **R1 (deferred)**: Cross-vendor Codex cold-read (`gpt-5.5-thinking medium`) deferred 24h per ADR-0008 carve-out consistent with W1/W2 precedent — operator action item post-ship.
+  - **R2 (deferred)**: 3 pre-existing `apps/web` lint warnings NOT introduced by row #9 (TokensSmokePage.tsx:71 turbo/no-undeclared-env-vars + :73 react-hooks/rules-of-hooks + worker-configuration.d.ts:3 unused-eslint-disable) — confirmed pre-existing at row #9 dispatch commit `025a454`; separate hygiene PR recommended.
+
+---
+
+**WAVE 2 COMPLETION** — Rows #6 / #7 / #8 / #9 all SHIPPED (2026-05-25 → 2026-05-26).
+
+**9-ROW GAP-CLOSURE MANIFEST COMPLETION** — All 9 rows of `docs/workflow/roadmap/xai-web-console-gap-closure.md` are now SHIPPED:
+- W0: Row #1 — AI LLM real adapter (SHIPPED)
+- W1: Row #2 — Cmd-K search (SHIPPED)
+- W1: Row #3 — Calendar Week + Day views (SHIPPED)
+- W1: Row #4 — Board Filter + Share + Map (SHIPPED)
+- W1: Row #5 — Dashboard Add-Widget picker (SHIPPED)
+- W2: Row #6 — Pomodoro counters test fix (SHIPPED)
+- W2: Row #7 — Integrations OAuth PKCE stub (SHIPPED)
+- W2: Row #8 — Premium Stripe Checkout stub (SHIPPED)
+- W2: Row #9 — Settings Account-delete wire (SHIPPED) ← this row
+
+Per ADR-0009 §D2-G3: 9/9 SHIPPED unblocks the **P1 Desktop client pivot**. The roadmap can now proceed to the P1 phase. Total program: 9 features, 1 bugfix + 8 feature pipelines, 90+ commits, 485+ tests passing (as of cycle-2 verify), 4 ADR-0008 amendments, 1 new ADR-0009 (Web → Desktop Pivot Plan).
