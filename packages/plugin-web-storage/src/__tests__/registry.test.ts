@@ -223,6 +223,9 @@ const OWNER_ROW_ADDITIONS = [
   "xai_pref_integrations_connected_notion",
   "xai_pref_integrations_connected_gcal",
   "xai_pref_integrations_connected_linear",
+  // xai-web-settings-rest gap-closure row #8 — 2 Premium Stripe Checkout stub prefs
+  "xai_pref_premium_tier",
+  "xai_pref_premium_started_at",
 ] as const;
 
 describe("AC-REG-8: Total entry count = 20 baseline + owner-row additions", () => {

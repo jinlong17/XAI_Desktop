@@ -158,6 +158,9 @@ const OWNER_ROW_EXEMPT_KEYS: ReadonlySet<string> = new Set([
   "xai_pref_integrations_connected_notion",
   "xai_pref_integrations_connected_gcal",
   "xai_pref_integrations_connected_linear",
+  // xai-web-settings-rest gap-closure row #8 — 2 Premium Stripe Checkout stub prefs
+  "xai_pref_premium_tier",
+  "xai_pref_premium_started_at",
 ]);
 
 describe("AC-PARITY-2: all PREF_REGISTRY explicit keys are in §9.2", () => {

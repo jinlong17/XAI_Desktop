@@ -897,6 +897,36 @@ export const PREF_REGISTRY = {
     owner: "xai-web-settings-rest",
     category: "pref",
   } satisfies PrefEntry<boolean>,
+
+  // ---- Premium Stripe Checkout stub (extension 2026-05-26 — gap-closure row #8) ----
+  // Two scalar prefs for tier state machine + 30-day client-clock timer.
+  //
+  // FA-12 WARNING: xai_pref_premium_tier === "premium_stub" MUST NOT be interpreted
+  // as "real subscription is active" by any other plugin or code path in v1.
+  // This is a UX-stub flag only. Real subscription enforcement requires the P1
+  // desktop client or a Worker-layer entitlement check.
+  //
+  // tier value union: "free" | "pending" | "premium_stub"
+  // Caught by chassis resetAllPrefs() via key.startsWith("xai_") filter.
+  xai_pref_premium_tier: {
+    key: "xai_pref_premium_tier",
+    codec: "string",
+    default: "free" as string,
+    schemaVersion: 1,
+    owner: "xai-web-settings-rest",
+    category: "pref",
+  } satisfies PrefEntry<string>,
+
+  // Millisecond epoch timestamp when the "premium_stub" tier started.
+  // Used by usePremiumTier() 30-day filter. Default 0 = no active session.
+  xai_pref_premium_started_at: {
+    key: "xai_pref_premium_started_at",
+    codec: "number",
+    default: 0 as number,
+    schemaVersion: 1,
+    owner: "xai-web-settings-rest",
+    category: "pref",
+  } satisfies PrefEntry<number>,
 } as const;
 
 // ---------------------------------------------------------------------------
