@@ -164,6 +164,27 @@ const STR = {
   "int.integrate": { en: "Integrate", zh: "集成" },
   "int.localCal": { en: "Local Calendars", zh: "本地日历" },
 
+  // Integrations OAuth stub (extension 2026-05-25 — gap-closure row #7)
+  "int.banner.stub": {
+    en: "Integrations are in v1 stub mode — authorization flows are wired but no data sync occurs yet.",
+    zh: "集成处于 v1 演示模式 — 已接入授权流程，但暂不进行真实数据同步。",
+  },
+  "int.badge.connected_stub": { en: "Connected (stub)", zh: "已连接（演示）" },
+  "int.btn.connect": { en: "Connect", zh: "连接" },
+  "int.btn.disconnect": { en: "Disconnect", zh: "断开连接" },
+  "int.section.connected": { en: "Connected providers", zh: "已连接提供商" },
+  "int.disconnect.tooltip": {
+    en: "Disconnect clears local state only. To revoke access, visit the provider's account settings.",
+    zh: "断开仅清除本地状态。如需撤销授权，请前往提供商账号设置。",
+  },
+  "oauth.cb.success": { en: "Authorization received (stub)", zh: "已接收授权（演示）" },
+  "oauth.cb.invalid": { en: "Invalid authorization state — please try again", zh: "授权状态无效 — 请重新尝试" },
+  "oauth.cb.cancelled": { en: "Authorization cancelled", zh: "授权已取消" },
+  "oauth.cb.redirect_notice": { en: "Returning to settings…", zh: "正在返回设置…" },
+  "provider.notion": { en: "Notion", zh: "Notion" },
+  "provider.gcal": { en: "Google Calendar", zh: "Google 日历" },
+  "provider.linear": { en: "Linear", zh: "Linear" },
+
   // Collaborate pane
   "collab.showAvatars": { en: "Show collaborator avatars", zh: "显示协作者头像" },
   "collab.defaultShare": { en: "Default share permission", zh: "分享时默认权限" },
