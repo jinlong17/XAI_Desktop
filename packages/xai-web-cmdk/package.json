@@ -4,7 +4,11 @@
   "private": true,
   "type": "module",
   "description": "Global Cmd+K command palette for XAI Web Console — overlay-only, in-memory index, 11 pure adapters, no third-party lib.",
-  "sideEffects": ["./src/styles.css"],
+  "sideEffects": [
+    "./src/styles.css",
+    "./src/adapters/*.ts",
+    "./src/adapters/index.ts"
+  ],
   "exports": {
     ".": {
       "types": "./src/index.ts",
