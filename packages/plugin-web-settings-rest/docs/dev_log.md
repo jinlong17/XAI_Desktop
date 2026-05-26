@@ -1059,7 +1059,9 @@ These already exist on disk pre-build; staging them in P1 prevents an orphan "ch
   - `pnpm --filter @repo/plugin-web-settings-rest lint --max-warnings 0` → exit 0 (no regression)
   - `pnpm --filter @repo/web build` → SUCCESS
   - Total: **485/485** baseline tests still passing (397 from 42+239+116+88 in-scope packages)
-- **Commits**: (see git commit below)
+- **Commits**:
+  - `b321395` fix(web-auth-device-session): repair TS2352 check-types regression in auth-actions (verify B1 for row #9)
+  - `0411a63` fix(plugin-web-settings-rest): repair TS2367 check-types regression in DeleteAccountConfirmModal (verify B2 for row #9)
 - **Lineage Status**: READY_FOR_VERIFY
 - **Next step**: `feature-verify` cycle 1 — re-run independent verification with both `check-types` gates confirmed passing.
 
