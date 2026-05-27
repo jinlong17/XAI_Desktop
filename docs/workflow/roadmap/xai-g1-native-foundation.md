@@ -1,6 +1,6 @@
 # Roadmap Manifest — xai-g1-native-foundation
 
-> **PAUSED (2026-05-24, per Web P0 Priority Override).** Web Console (`docs/workflow/roadmap/xai-web-console.md`) is the active roadmap. Do NOT start new work on this roadmap. SHIPPED rows remain authoritative for their domain; in-flight items: complete-or-park. Resumes only after P0 Web gap-closure ships and ADR-0009 (Web → Desktop Pivot Plan) is Accepted. Full rationale: `docs/reviews/web-priority-pivot-and-repo-cleanup/20260524-brief.md`.
+> **RESUMED (2026-05-26, per ADR-0010 Accepted).** Web Console gap-closure 9/9 SHIPPED + ADR-0009 D2 G2 PASS (Chrome-only carve-out) + ADR-0010 Status flipped Accepted in commit `75655dc`. P1 desktop pivot is active per ADR-0010 §D1. G0 prerequisite met (CONDITIONAL_GO 2026-05-19; G0.1-G0.5 SHIPPED on `origin/spike/window-ground-truth`; G0.6 BLOCKED_EXTERNAL deferred non-blocking). This roadmap is the **primary P1 active work surface** going forward.
 
 - Roadmap Source: docs/planning/execution/G1-native-foundation.md
 - Init Path: execution-pack
