@@ -13,7 +13,7 @@
 | Automation Mode | D-Codex |
 | Verify Cross-vendor | yes |
 | Executor | feature-build (gpt-5.3-codex) |
-| Updated | 2026-05-27 02:11 PDT |
+| Updated | 2026-05-27 02:17 PDT |
 | Risks | Auth/offline `/app` entry is intentionally deferred to `desktop-web-auth-offline-mode`; capability narrowing must not leave hidden legacy callers; tray/status startup removal decision must stay Phase 1 only and not drift into Phase 2 scope. |
 
 ## Phase Plan
@@ -28,7 +28,7 @@ Status: DONE (2026-05-27, commit `afb8295`).
 
 ### Phase 2 — Remove Overlay Startup
 
-Status: PLANNED.
+Status: DONE (2026-05-27, commit `94df0ef`).
 
 - Stop overlay-specific `main` window configuration in `lib.rs`.
 - Stop control/grid startup and related monitor-filling assumptions.
@@ -86,3 +86,4 @@ Status: PLANNED.
 | 2026-05-27 00:58 PDT | feature-plan (gpt-5.3-codex) | Fresh plan: created Step 0 brief, discovery review, and docs quartet for the Phase 1 normal-window `apps/web` dist handoff. | — | feature-review |
 | 2026-05-27 01:42 PDT | feature-review (claude-opus-4-7) | APPROVED — 0 blockers, 3 non-blocking recommendations recorded. Cross-checked all 6 transparent-overlay fields in tauri.conf.json:22-31, lib.rs:135-198, window_ext.rs:32-75, App.tsx:1-30, default.json:4-5 against plan scope. Scope discipline holds; ADR-0011 §S6 legacy-retention respected. Phase plan is reviewable with clear file boundaries per phase. | — | feature-build |
 | 2026-05-27 02:11 PDT | feature-build (gpt-5.3-codex) | Phase 1 implemented: repointed Tauri build/dev contract to `apps/web` (`beforeDevCommand`, `devUrl`, `beforeBuildCommand`, `frontendDist`), changed `apps/desktop` scripts to web-wrapper role, and replaced legacy overlay `App.tsx` with an explicit non-overlay fallback view. Validation run: `pnpm --filter @repo/web build` failed on unresolved `@repo/xai-web-cmdk`; `pnpm --filter desktop exec tsc --noEmit` failed on existing unused-symbol TS errors; `pnpm --filter desktop tauri build --debug` failed at the same web build step. | `afb8295` | feature-build |
+| 2026-05-27 02:17 PDT | feature-build (gpt-5.3-codex) | Phase 2 implemented: removed overlay-era startup assumptions from Rust/macOS path by deleting control-window auto-start and monitor-fill logic in `lib.rs`, applying normal-window runtime chrome defaults, and replacing macOS desktop-level/click-through window configuration with standard-window behavior in `window_ext.rs`. Validation run: `cargo test --manifest-path apps/desktop/src-tauri/Cargo.toml` passed (47 tests); `pnpm --filter @repo/web build` still fails on unresolved `@repo/xai-web-cmdk`; `pnpm --filter desktop tauri build --debug` fails at the same known web build blocker. | `94df0ef` | feature-build |
