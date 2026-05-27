@@ -1,5 +1,5 @@
 /**
- * AvatarMenu tests — AV1..AV8
+ * AvatarMenu tests — AV1..AV8 + wire cases (AV7c/AV7d/AV7e)
  *
  * AC-AVM-1: Returns null when open === false
  * AC-AVM-2: Clicking Settings entry calls onOpenSettings then onClose
@@ -7,7 +7,11 @@
  * AC-AVM-4: Scrim click closes the menu
  * AC-AVM-5: Escape key closes the menu
  * AC-AVM-6: Statistics entry calls onOpenStatistics then onClose
- * AC-AVM-7: Sign Out warns once in DEV and closes when onSignOut is undefined
+ * AC-AVM-7: Sign Out button is rendered in the menu
+ * AC-AVM-7b: Clicking Sign Out with undefined onSignOut closes popover + DEV warn (no dialog)
+ * AC-AVM-7c: Clicking Sign Out with onSignOut wired opens confirmation dialog
+ * AC-AVM-7d: Confirming in dialog calls onSignOut + closes dialog
+ * AC-AVM-7e: Cancelling in dialog does NOT call onSignOut
  * AC-AVM-8: User name shows based on lang
  */
 
@@ -137,19 +141,96 @@ describe("AvatarMenu (AV1..AV8)", () => {
     expect(onClose).toHaveBeenCalledTimes(1);
   });
 
-  it("AV7 — Sign Out button is rendered", () => {
-    renderMenu();
-    expect(screen.getByText("Sign Out")).toBeTruthy();
+  it("AV7 — Sign Out menu item is rendered in the menu", () => {
+    const { container } = renderMenu();
+    // Use the class-scoped query to avoid matching the dialog confirm button
+    const menuItems = container.querySelectorAll(".avm-item");
+    const signOutItem = Array.from(menuItems).find(
+      (el) => el.textContent?.includes("Sign Out")
+    );
+    expect(signOutItem).toBeTruthy();
   });
 
-  it("AV7b — clicking Sign Out with undefined onSignOut closes and warns in DEV", () => {
+  it("AV7b — clicking Sign Out with undefined onSignOut: closes popover, warns in DEV, no dialog", () => {
     const warnSpy = vi.spyOn(console, "warn").mockImplementation(() => {});
     const onClose = vi.fn();
-    renderMenu({ onClose, onSignOut: undefined });
-    fireEvent.click(screen.getByText("Sign Out"));
-    // In DEV, should warn once; onClose should still fire
+    const { container } = renderMenu({ onClose, onSignOut: undefined });
+    const menuItems = container.querySelectorAll(".avm-item");
+    const signOutBtn = Array.from(menuItems).find(
+      (el) => el.textContent?.includes("Sign Out")
+    ) as HTMLElement | undefined;
+    if (signOutBtn) fireEvent.click(signOutBtn);
+    // onClose fires (not blocked by dialog since onSignOut is undefined)
     expect(onClose).toHaveBeenCalledTimes(1);
+    // No confirm dialog should be open (it remains closed)
+    const dialog = container.querySelector("dialog.xai-sign-out-dialog");
+    expect(dialog?.hasAttribute("open")).toBe(false);
     warnSpy.mockRestore();
+  });
+
+  it("AV7c — clicking Sign Out with onSignOut wired opens confirmation dialog", () => {
+    const onSignOut = vi.fn();
+    const { container } = renderMenu({ onSignOut });
+    const menuItems = container.querySelectorAll(".avm-item");
+    const signOutBtn = Array.from(menuItems).find(
+      (el) => el.textContent?.includes("Sign Out")
+    ) as HTMLElement | undefined;
+    // stub showModal since jsdom doesn't support it natively
+    HTMLDialogElement.prototype.showModal = function () {
+      this.setAttribute("open", "");
+    };
+    if (signOutBtn) fireEvent.click(signOutBtn);
+    // onSignOut should NOT have been called yet (awaiting confirmation)
+    expect(onSignOut).not.toHaveBeenCalled();
+    // Dialog should be open
+    const dialog = container.querySelector("dialog.xai-sign-out-dialog");
+    expect(dialog?.hasAttribute("open")).toBe(true);
+  });
+
+  it("AV7d — confirming in dialog calls onSignOut and closes dialog", () => {
+    const onSignOut = vi.fn();
+    HTMLDialogElement.prototype.showModal = function () {
+      this.setAttribute("open", "");
+    };
+    HTMLDialogElement.prototype.close = function () {
+      this.removeAttribute("open");
+    };
+    const { container } = renderMenu({ onSignOut });
+    // Open dialog
+    const menuItems = container.querySelectorAll(".avm-item");
+    const signOutBtn = Array.from(menuItems).find(
+      (el) => el.textContent?.includes("Sign Out")
+    ) as HTMLElement | undefined;
+    if (signOutBtn) fireEvent.click(signOutBtn);
+    // Click confirm in the dialog
+    const confirmBtn = container.querySelector(".xai-sign-out-dialog__btn--confirm");
+    if (confirmBtn) fireEvent.click(confirmBtn);
+    expect(onSignOut).toHaveBeenCalledTimes(1);
+    const dialog = container.querySelector("dialog.xai-sign-out-dialog");
+    expect(dialog?.hasAttribute("open")).toBe(false);
+  });
+
+  it("AV7e — cancelling in dialog does NOT call onSignOut", () => {
+    const onSignOut = vi.fn();
+    HTMLDialogElement.prototype.showModal = function () {
+      this.setAttribute("open", "");
+    };
+    HTMLDialogElement.prototype.close = function () {
+      this.removeAttribute("open");
+    };
+    const { container } = renderMenu({ onSignOut });
+    // Open dialog
+    const menuItems = container.querySelectorAll(".avm-item");
+    const signOutBtn = Array.from(menuItems).find(
+      (el) => el.textContent?.includes("Sign Out")
+    ) as HTMLElement | undefined;
+    if (signOutBtn) fireEvent.click(signOutBtn);
+    // Cancel
+    const cancelBtn = container.querySelector(".xai-sign-out-dialog__btn--cancel");
+    if (cancelBtn) fireEvent.click(cancelBtn);
+    expect(onSignOut).not.toHaveBeenCalled();
+    const dialog = container.querySelector("dialog.xai-sign-out-dialog");
+    expect(dialog?.hasAttribute("open")).toBe(false);
   });
 
   it("AV8 — user name shows 'Aki Chen' in EN", () => {
