@@ -23,6 +23,10 @@
 
 import { useEffect, useRef, useState } from "react";
 import type { BoardListData } from "@repo/plugin-web-board-core";
+import {
+  isDesktopPhase1OfflineRuntime,
+  resolveWebRuntimeProfile,
+} from "@repo/core";
 import type { Lang } from "./internal/i18n.js";
 import { isValidLocation } from "./internal/location.js";
 import { loadLeaflet } from "./internal/leafletLoader.js";
@@ -78,9 +82,19 @@ const STR = {
     zh: "为卡片添加位置字段后，它们会在地图上显示为图钉。",
   },
   loadingText: { en: "Loading map…", zh: "加载地图中…" },
+  offlineHeading: { en: "Map unavailable offline", zh: "离线模式下地图不可用" },
+  offlineBody: {
+    en: "Desktop offline mode does not load online map tiles.",
+    zh: "桌面离线模式不会加载在线地图瓦片。",
+  },
 };
 
 export function MapView({ lang, lists = [], onSelectCard }: MapViewProps) {
+  const runtimeProfile = resolveWebRuntimeProfile(
+    import.meta.env as Record<string, string | undefined>,
+  );
+  const isDesktopOfflineRuntime =
+    isDesktopPhase1OfflineRuntime(runtimeProfile);
   const containerRef = useRef<HTMLDivElement>(null);
   const mapRef = useRef<import("leaflet").Map | null>(null);
   const [loadError, setLoadError] = useState<string | null>(null);
@@ -90,6 +104,9 @@ export function MapView({ lang, lists = [], onSelectCard }: MapViewProps) {
   const hasPins = pins.length > 0;
 
   useEffect(() => {
+    if (isDesktopOfflineRuntime) {
+      return;
+    }
     let cancelled = false;
     const container = containerRef.current;
     if (!container) return;
@@ -158,7 +175,19 @@ export function MapView({ lang, lists = [], onSelectCard }: MapViewProps) {
     };
   // Only re-run if the serialised pins change or onSelectCard changes.
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [JSON.stringify(pins), onSelectCard]);
+  }, [JSON.stringify(pins), isDesktopOfflineRuntime, onSelectCard]);
+
+  if (isDesktopOfflineRuntime) {
+    return (
+      <div className="board-map panel" data-testid="board-map">
+        <div className="bm-empty-state" data-testid="map-offline-state">
+          <span className="bm-icon" aria-hidden="true">🌐</span>
+          <h3>{STR.offlineHeading[lang]}</h3>
+          <p>{STR.offlineBody[lang]}</p>
+        </div>
+      </div>
+    );
+  }
 
   if (loadError) {
     return (

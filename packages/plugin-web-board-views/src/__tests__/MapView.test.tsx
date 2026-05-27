@@ -146,6 +146,7 @@ const LIST_WITHOUT_LOCATIONS: BoardListData = {
 
 describe("MapView", () => {
   beforeEach(() => {
+    vi.unstubAllEnvs();
     vi.clearAllMocks();
     // Re-configure L mock to return fresh map/marker instances on each test
     mockModule.__L.map.mockImplementation(() => ({
@@ -185,6 +186,13 @@ describe("MapView", () => {
   });
 
   // --- Leaflet init ---
+
+  test("MAP-0: desktop offline profile renders offline fallback and skips Leaflet load", async () => {
+    vi.stubEnv("VITE_WEB_RUNTIME_PROFILE", "desktop-phase1-offline");
+    render(<MapView lang="en" />);
+    expect(screen.getByTestId("map-offline-state")).toBeInTheDocument();
+    expect(LeafletLoader.loadLeaflet).not.toHaveBeenCalled();
+  });
 
   test("MAP-4 calls L.map() on the container element", async () => {
     render(<MapView lang="en" />);

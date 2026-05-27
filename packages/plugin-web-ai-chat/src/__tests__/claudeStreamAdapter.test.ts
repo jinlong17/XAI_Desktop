@@ -28,6 +28,7 @@ function anthropicDelta(text: string) {
 
 beforeEach(async () => {
   localStorage.clear();
+  vi.unstubAllEnvs();
   // Set provider back to anthropic
   localStorage.setItem("xai_ai_provider", JSON.stringify("anthropic"));
   // Set a fake key so tests that need a key get one.
@@ -36,6 +37,20 @@ beforeEach(async () => {
 });
 
 describe("claudeStreamAdapter streamCompleteChat (CS)", () => {
+  it("CS0: desktop offline profile returns demo response without network fetch", async () => {
+    vi.stubEnv("VITE_WEB_RUNTIME_PROFILE", "desktop-phase1-offline");
+    const fetchStub = vi.spyOn(globalThis, "fetch");
+    const chunks = [];
+    for await (const chunk of streamCompleteChat({ text: "hi", lang: "en", model: "haiku" })) {
+      chunks.push(chunk);
+    }
+
+    expect(fetchStub).not.toHaveBeenCalled();
+    expect(chunks).toHaveLength(1);
+    expect(chunks[0]?.done).toBe(true);
+    expect(chunks[0]?.accumulated.length).toBeGreaterThan(0);
+  });
+
   it("CS1: happy path Anthropic stream — yields 3 chunks then done", async () => {
     const fetchStub = vi.spyOn(globalThis, "fetch").mockResolvedValue(
       new Response(

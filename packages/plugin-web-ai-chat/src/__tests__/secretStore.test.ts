@@ -15,6 +15,7 @@ import { get as idbGet, createStore as idbCreateStore } from "idb-keyval";
 // Wipe keys before each test — uses clearKey (doesn't delete the DB, so
 // idb-keyval's internal store handle remains valid across sequential tests).
 beforeEach(async () => {
+  vi.unstubAllEnvs();
   await aiKeyStorage.clearKey("anthropic");
   await aiKeyStorage.clearKey("openai-compatible");
 });
@@ -125,5 +126,20 @@ describe("secretStore (SC)", () => {
     expect(raw).not.toContain(plaintext);
     // Confirm it's a valid JSON blob (not a trivially wrong assertion).
     expect(() => JSON.parse(raw!)).not.toThrow();
+  });
+
+  it("SC9: desktop offline profile short-circuits testConnection without fetch", async () => {
+    vi.stubEnv("VITE_WEB_RUNTIME_PROFILE", "desktop-phase1-offline");
+    await aiKeyStorage.saveKey("anthropic", "sk-ant-test-roundtrip");
+    const fetchSpy = vi.spyOn(globalThis, "fetch");
+
+    const result = await aiKeyStorage.testConnection("anthropic");
+
+    expect(fetchSpy).not.toHaveBeenCalled();
+    expect(result.ok).toBe(false);
+    if (!result.ok) {
+      expect(result.error.kind).toBe("Network");
+      expect(result.error.detail).toBe("offline-runtime");
+    }
   });
 });

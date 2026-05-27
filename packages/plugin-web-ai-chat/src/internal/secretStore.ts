@@ -16,6 +16,10 @@
  */
 
 import { createIndexedDbStore, createDeviceIdentityStore } from "@repo/web-auth-device-session";
+import {
+  isDesktopPhase1OfflineRuntime,
+  resolveWebRuntimeProfile,
+} from "@repo/core";
 
 // ---- Types -----------------------------------------------------------------
 
@@ -238,6 +242,19 @@ export const aiKeyStorage: AiKeyStorage = {
 
   async testConnection(provider) {
     const { classifyError } = await import("./llmErrors.js");
+    const runtimeProfile = resolveWebRuntimeProfile(
+      import.meta.env as Record<string, string | undefined>,
+    );
+    if (isDesktopPhase1OfflineRuntime(runtimeProfile)) {
+      return {
+        ok: false,
+        error: {
+          kind: "Network",
+          cause: new Error("offline-runtime"),
+          detail: "offline-runtime",
+        },
+      };
+    }
     const plaintext = await aiKeyStorage.loadKey(provider);
     if (!plaintext) {
       const err: import("./llmErrors.js").LlmError = {

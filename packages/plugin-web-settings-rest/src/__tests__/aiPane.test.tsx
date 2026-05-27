@@ -31,6 +31,7 @@ vi.mock("@repo/plugin-web-ai-chat", () => ({
 }));
 
 beforeEach(() => {
+  vi.unstubAllEnvs();
   mockLoadKey.mockResolvedValue(null);
   mockSaveKey.mockResolvedValue(undefined);
   mockClearKey.mockResolvedValue(undefined);
@@ -153,6 +154,19 @@ describe("aiPane — Test Connection (AP9..AP10)", () => {
       fireEvent.click(testBtn);
     });
     expect(screen.getByTestId("ai-test-result")).toHaveTextContent("Connection OK");
+  });
+
+  it("AP10b: desktop offline profile disables test connection with deterministic offline copy", async () => {
+    vi.stubEnv("VITE_WEB_RUNTIME_PROFILE", "desktop-phase1-offline");
+    mockLoadKey.mockResolvedValue("sk-existing-key");
+    await act(async () => {
+      render(aiPane.render({ lang: "en" }));
+    });
+    const testBtn = screen.getByTestId<HTMLButtonElement>("ai-key-test");
+    expect(testBtn).toBeDisabled();
+    expect(screen.getByTestId("ai-test-result")).toHaveTextContent(
+      "Test connection is unavailable in desktop offline mode",
+    );
   });
 });
 

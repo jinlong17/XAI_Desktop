@@ -14,6 +14,10 @@
  */
 
 import type { Lang } from "@repo/plugin-web-tokens";
+import {
+  isDesktopPhase1OfflineRuntime,
+  resolveWebRuntimeProfile,
+} from "@repo/core";
 import { getPref } from "@repo/plugin-web-storage";
 import { emitWebEvent } from "@repo/xai-web-event-bus";
 import type { AiModelId } from "../types.js";
@@ -55,6 +59,15 @@ export async function* streamCompleteChat(
   req: StreamRequest,
 ): AsyncIterable<StreamChunk> {
   const { text, lang, model, signal } = req;
+  const runtimeProfile = resolveWebRuntimeProfile(
+    import.meta.env as Record<string, string | undefined>,
+  );
+
+  if (isDesktopPhase1OfflineRuntime(runtimeProfile)) {
+    const demoText = lang === "zh" ? DEMO_REPLY_ZH : DEMO_REPLY_EN;
+    yield { accumulated: demoText, done: true };
+    return;
+  }
 
   // 1. Load the API key.
   const provider = (getPref("xai_ai_provider") as string) || "anthropic";

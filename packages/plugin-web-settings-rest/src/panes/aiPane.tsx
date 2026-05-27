@@ -21,6 +21,10 @@ import * as React from "react";
 import { useCallback, useEffect, useRef, useState } from "react";
 import type { Pane, PaneRenderProps } from "@repo/plugin-web-settings-shell";
 import { Toggle, SettingRow, SectionBlock } from "@repo/plugin-web-settings-shell";
+import {
+  isDesktopPhase1OfflineRuntime,
+  resolveWebRuntimeProfile,
+} from "@repo/core";
 import { useI18n } from "@repo/plugin-web-tokens";
 import { usePref } from "@repo/plugin-web-storage";
 import type { WebPrefKey } from "@repo/plugin-web-storage";
@@ -40,6 +44,11 @@ type TestState =
 function AiPaneContent({ lang }: PaneRenderProps): React.ReactElement {
   const zh = lang === "zh";
   const { s } = useI18n(lang);
+  const runtimeProfile = resolveWebRuntimeProfile(
+    import.meta.env as Record<string, string | undefined>,
+  );
+  const isDesktopOfflineRuntime =
+    isDesktopPhase1OfflineRuntime(runtimeProfile);
 
   // ---- Provider pref -------------------------------------------------------
   const [provider, setProvider] = usePref(
@@ -128,7 +137,11 @@ function AiPaneContent({ lang }: PaneRenderProps): React.ReactElement {
 
   // ---- Test status copy ----------------------------------------------------
   let testCopy: string | null = null;
-  if (testState.status === "ok") {
+  if (isDesktopOfflineRuntime) {
+    testCopy = zh
+      ? "桌面离线模式暂不支持测试连接"
+      : "Test connection is unavailable in desktop offline mode";
+  } else if (testState.status === "ok") {
     testCopy = zh ? "连接成功" : "Connection OK";
   } else if (testState.status === "error") {
     const err = testState.error;
@@ -215,7 +228,7 @@ function AiPaneContent({ lang }: PaneRenderProps): React.ReactElement {
               type="button"
               className={"ai-key-test" + (testState.status === "ok" ? " ok" : testState.status === "error" ? " error" : "")}
               onClick={() => { void handleTestConnection(); }}
-              disabled={!hasSavedKey || testState.status === "testing"}
+              disabled={!hasSavedKey || testState.status === "testing" || isDesktopOfflineRuntime}
               aria-label={zh ? "测试连接" : "Test Connection"}
               data-testid="ai-key-test"
             >
