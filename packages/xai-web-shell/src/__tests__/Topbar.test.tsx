@@ -1,5 +1,5 @@
 /**
- * Topbar tests — TP1..TP6
+ * Topbar tests — TP1..TP6 + TP*-Persist
  *
  * AC-TOPBAR-1: EN/中文 segment sets lang via setLang prop
  * AC-TOPBAR-2: Light/Dark/System segment sets theme via setTheme prop
@@ -7,6 +7,11 @@
  * AC-TOPBAR-4: Settings gear icon click calls onOpenSettings()
  * AC-TOPBAR-5: Search input renders with placeholder (i18n: common.search_placeholder)
  * AC-TOPBAR-6: ⌘K kbd hint is rendered (decorative; no handler)
+ *
+ * TP*-Persist: clicking a dim toggle also writes the value to localStorage
+ *   (Bugfix Tb-02/Tb-03/Tb-04 — Topbar theme/lang/density 切换不持久)
+ * TP-Persist-Quota-Safe: localStorage.setItem failure is silently swallowed;
+ *   in-memory setter still fires.
  */
 
 import { render, screen, fireEvent } from "@testing-library/react";
@@ -126,5 +131,68 @@ describe("Topbar", () => {
     const badge = screen.getByTestId("premium-tier-badge");
     expect(badge).toBeTruthy();
     expect(badge.textContent).toContain("Premium (stub)");
+  });
+
+  // ---- Persistence tests (TP*-Persist) — Bugfix Tb-02/Tb-03/Tb-04 -----
+
+  it("TP1-Persist — clicking 中文 writes xai_pref_lang='zh' to localStorage", () => {
+    renderTopbar({ lang: "en" });
+    fireEvent.click(screen.getByText("中文"));
+    expect(localStorage.getItem("xai_pref_lang")).toBe('"zh"');
+  });
+
+  it("TP1b-Persist — clicking EN writes xai_pref_lang='en' to localStorage", () => {
+    renderTopbar({ lang: "zh" });
+    fireEvent.click(screen.getByText("EN"));
+    expect(localStorage.getItem("xai_pref_lang")).toBe('"en"');
+  });
+
+  it("TP2-Persist — clicking Dark writes xai_pref_theme='dark' to localStorage", () => {
+    renderTopbar({ theme: "light" });
+    fireEvent.click(screen.getByTitle("Dark"));
+    expect(localStorage.getItem("xai_pref_theme")).toBe('"dark"');
+  });
+
+  it("TP2b-Persist — clicking System writes xai_pref_theme='system' to localStorage", () => {
+    renderTopbar({ theme: "light" });
+    fireEvent.click(screen.getByTitle("System"));
+    expect(localStorage.getItem("xai_pref_theme")).toBe('"system"');
+  });
+
+  it("TP2c-Persist — clicking Light writes xai_pref_theme='light' to localStorage", () => {
+    renderTopbar({ theme: "dark" });
+    fireEvent.click(screen.getByTitle("Light"));
+    expect(localStorage.getItem("xai_pref_theme")).toBe('"light"');
+  });
+
+  it("TP3-Persist — clicking Compact writes xai_pref_density='compact' to localStorage", () => {
+    renderTopbar({ density: "comfortable" });
+    fireEvent.click(screen.getByText("Compact"));
+    expect(localStorage.getItem("xai_pref_density")).toBe('"compact"');
+  });
+
+  it("TP3b-Persist — clicking Comfortable writes xai_pref_density='comfortable' to localStorage", () => {
+    renderTopbar({ density: "compact" });
+    fireEvent.click(screen.getByText("Comfortable"));
+    expect(localStorage.getItem("xai_pref_density")).toBe('"comfortable"');
+  });
+
+  it("TP-Persist-Quota-Safe — localStorage.setItem throwing QuotaExceededError still calls setter and does not throw", () => {
+    const setThemeFn = vi.fn();
+    renderTopbar({ theme: "light", setTheme: setThemeFn });
+
+    // Simulate localStorage being unavailable / quota exceeded
+    const origSetItem = localStorage.setItem.bind(localStorage);
+    const spy = vi.spyOn(Storage.prototype, "setItem").mockImplementation(() => {
+      throw new DOMException("QuotaExceededError");
+    });
+
+    // Should not throw; setter must still be called
+    expect(() => fireEvent.click(screen.getByTitle("Dark"))).not.toThrow();
+    expect(setThemeFn).toHaveBeenCalledWith("dark");
+
+    spy.mockRestore();
+    // Restore original in case the mock broke other tests
+    void origSetItem;
   });
 });
