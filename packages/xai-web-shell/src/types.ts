@@ -116,6 +116,15 @@ export interface ShellProps {
    * Extension 2026-05-26 — Premium Stripe Checkout stub (gap-closure row #8 F1).
    */
   premiumBadge?: ReactNode;
+  /**
+   * Optional sign-out handler wired from the host (apps/web/src/App.tsx).
+   * When provided, AvatarMenu routes the Sign Out click to this handler
+   * (which calls client.auth.signOut + clearSessionStorage + redirect).
+   * When absent, AvatarMenu shows DEV-only console.warn (backward-compatible).
+   *
+   * Bugfix: Audit Top-10 #1 / Rail-10 — AvatarMenu Sign-out prop pipeline.
+   */
+  onSignOut?: () => void;
 }
 
 export interface AppRailProps {
@@ -136,6 +145,14 @@ export interface AppRailProps {
    * Emits web:shell:module-change with source="shortcut" then navigates.
    */
   onAvatarOpenStatistics: () => void;
+  /**
+   * Optional sign-out handler passed from Shell (which receives it from App.tsx).
+   * Forwarded to AvatarMenu — when provided, routes Sign Out click to the host handler.
+   * When absent, AvatarMenu falls back to DEV-only console.warn (backward-compatible).
+   *
+   * Bugfix: Audit Top-10 #1 / Rail-10 — AvatarMenu Sign-out prop pipeline.
+   */
+  onSignOut?: () => void;
 }
 
 export interface TopbarProps {

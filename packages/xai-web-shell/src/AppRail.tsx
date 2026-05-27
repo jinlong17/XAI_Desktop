@@ -28,7 +28,7 @@ interface BottomButton {
 
 // ---- AppRail component -----------------------------------------------------
 
-export function AppRail({ activeModuleId, onModuleClick, onPetToggle, onAvatarOpenSettings, onAvatarOpenStatistics }: AppRailProps) {
+export function AppRail({ activeModuleId, onModuleClick, onPetToggle, onAvatarOpenSettings, onAvatarOpenStatistics, onSignOut }: AppRailProps) {
   const { lang, railPos, petOn } = useWebShell();
   const { t } = useI18n(lang);
   const registryModules = useWebModuleRegistry();
@@ -138,6 +138,7 @@ export function AppRail({ activeModuleId, onModuleClick, onPetToggle, onAvatarOp
           onClose={() => setAvatarOpen(false)}
           onOpenSettings={onAvatarOpenSettings}
           onOpenStatistics={onAvatarOpenStatistics}
+          onSignOut={onSignOut}
         />
       </div>
 
