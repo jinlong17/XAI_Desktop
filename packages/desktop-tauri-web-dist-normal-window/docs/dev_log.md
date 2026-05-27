@@ -7,13 +7,13 @@
 | Workflow | FEATURE_DEV |
 | Target | desktop-tauri-web-dist-normal-window |
 | Title | Phase 1 Desktop Normal Window Loading `apps/web` Dist |
-| Current Phase | FEATURE_VERIFY |
-| Status | READY_TO_SHIP |
-| Suggested Next | ship |
+| Current Phase | SHIP |
+| Status | SHIPPED |
+| Suggested Next | workflow complete |
 | Automation Mode | D-Codex |
 | Verify Cross-vendor | yes |
-| Executor | feature-verify (Codex GPT-5 inline) |
-| Updated | 2026-05-27 10:26 PDT |
+| Executor | ship (Codex, gpt-5.3-codex) |
+| Updated | 2026-05-27 10:29 PDT |
 | Risks | Full authenticated/offline `/app` entry remains deferred to `desktop-web-auth-offline-mode`; optional font/map tile network degradation remains deferred to `web-external-runtime-offline-gates`; default DMG packaging remains deferred to `desktop-phase1-build-packaging-pipeline`; reusable legacy overlay/control/grid implementation must stay quarantined for P3+ reuse rather than deleted. |
 
 ## Phase Plan
@@ -104,3 +104,4 @@ Status: DONE (2026-05-27, commit `3a65d62`).
 | 2026-05-27 10:14 PDT | feature-verify (Codex GPT-5 inline) | Verification PASS after independently reviewing all phase and repair commits against the approved brief/discovery/design/api/test/dev_log contract, rerunning the scoped acceptance checks, and reconciling the repaired docs/evidence set. Commit intent remains phase-clean, the Status Panel and tracked docs are now consistent, `@repo/web` build + Rust tests + Tauri app bundling all pass, and the offline/app-bundle acceptance scope is explicitly closed by the tracked smoke evidence. | `afb8295`, `1121978`, `94df0ef`, `3839e40`, `3a65d62`, `997aee3`, `643d0ff`, `e4a1b05`, `795e065` | ship |
 | 2026-05-27 10:19 PDT | feature-auto-build (Codex gpt-5.4 inline fix) | Added the post-verify preservation constraint: Phase 1 removes overlay/control/grid from default launch and active capabilities but must not erase reusable future overlay assets. Quarantined reusable control-window bootstrap/state wiring in `apps/desktop/src-tauri/src/legacy_overlay.rs` and restored macOS desktop-level/click-through overlay helpers under `platform::macos::legacy_overlay`, leaving Phase 1 startup on normal-window helpers only. Updated design/api docs to make the preservation boundary explicit. | `5771b0a` | feature-verify |
 | 2026-05-27 10:26 PDT | feature-verify (Codex GPT-5 inline) | Verification PASS after independently re-reading the feature brief/discovery/docs quartet, auditing all phase and repair commits (`afb8295`, `1121978`, `94df0ef`, `3839e40`, `3a65d62`, `997aee3`, `643d0ff`, `e4a1b05`, `795e065`, `5771b0a`), and rerunning the scoped gates. Phase boundaries and commit bodies remain clean, `apps/web` build + Rust tests + Tauri app-bundle build all pass, the active launch path stays single-window/main-only, and the preservation repair keeps reusable overlay/control/grid assets quarantined under inactive `legacy_overlay` boundaries instead of reactivating or deleting them. | `afb8295`, `1121978`, `94df0ef`, `3839e40`, `3a65d62`, `997aee3`, `643d0ff`, `e4a1b05`, `795e065`, `5771b0a` | ship |
+| 2026-05-27 10:29 PDT | ship (Codex, gpt-5.3-codex) | Ship gate passed: validated READY_TO_SHIP status panel, verified commit completeness against verify handoff and local history, pushed verified commit series to `origin/dev`, and marked workflow state as SHIPPED. | `afb8295`, `1121978`, `94df0ef`, `3839e40`, `3a65d62`, `997aee3`, `643d0ff`, `e4a1b05`, `795e065`, `5771b0a`, `84dd9df` | workflow complete |
