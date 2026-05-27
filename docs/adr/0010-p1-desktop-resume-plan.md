@@ -6,12 +6,13 @@
 |---|---|
 | ADR # | 0010 |
 | Title | P1 Desktop Client Resume Plan |
-| Status | **Accepted** — 2026-05-26 (Chrome-only carve-out per ADR-0008 §S3 24h-evidence pattern; see Acceptance Note below) |
+| Status | **Accepted — Superseded-in-part by ADR-0011 (2026-05-26)** · D1 P1-surface row + D2 xai-g0/g1 unfreeze entries replaced by ADR-0011 §D1/§D2/§D3. D3 (SYSTEM_ARCHITECTURE enforcement) + D4 (operational rules) + D5 (G2 evidence protocol) remain Active. See ADR-0011 §S4 D2 for full supersession scope. Chrome-only carve-out per ADR-0008 §S3 24h-evidence pattern retained for Web P0; see Acceptance Note below. |
 | Date | 2026-05-26 |
 | Author | Claude Opus 4.7 (1M context) — drafted at operator request after 9/9 gap-closure SHIPPED |
 | Supersedes | ADR-0009 §D1 (priority order) once Accepted |
+| Superseded-in-part by | **ADR-0011** (2026-05-26) — P1 redefined as React+Tauri+Local-first hybrid app; legacy overlay/file-organizer plan demoted to P3 Future |
 | Builds on | ADR-0009 §D2 (P1 launch gating), ADR-0007 (web build form), ADR-0008 §S3 (CSP) |
-| Related | xai-g0-window-spike.md / xai-g1-native-foundation.md / xai-g2-data-security-foundation.md (PAUSED desktop roadmaps to be unfrozen by this ADR) |
+| Related | xai-g0-window-spike.md / xai-g1-native-foundation.md / xai-g2-data-security-foundation.md (PAUSED desktop roadmaps — originally unfrozen by this ADR, **subsequently SUPERSEDED-BY-ADR-0011** as active P1 work surface; PLUGIN_MAP Shipped rows retained as historical evidence) |
 
 ---
 
@@ -64,22 +65,26 @@ Flip ADR Status=Partial-Accepted: allow P1 planning work (new ADRs, new roadmap 
 
 ### D1 — New priority order (active once this ADR Status=Accepted)
 
+> **⚠ SUPERSEDED-IN-PART by ADR-0011 (2026-05-26):** The P1 row's "(Tauri overlay shell)" product definition is replaced by ADR-0011 §D1 (three-phase React+Tauri+Local-first hybrid app, normal Mac window). The P0 and P2 rows below remain accurate. ADR-0011 §D3 also demotes the legacy P2 plugins (`plugin-organizer`, `plugin-clipboard`, `plugin-widgets`, `plugin-meditation`, `plugin-pet`) to **P3 Future** — they are no longer "paused until P1 beta", they are deferred until Phase 3 local-first SHIPPED. The table below is preserved as historical evidence.
+
 | Tier | Surface | Status under this ADR |
 |---|---|---|
-| **P1** | macOS Desktop client (Tauri overlay shell) | **Active** — primary focus, new dev work permitted |
+| **P1** | ~~macOS Desktop client (Tauri overlay shell)~~ → **Active per ADR-0011 §D1** (React+Tauri+Local-first hybrid, three phases) | **Active** — primary focus, new dev work permitted |
 | **P0** | Web Console (apps/web + xai-web-* + plugin-web-*) | **Maintenance-only** — bugfix permitted; new features need explicit P0 carve-out commit citing this ADR |
-| **P2** | Desktop organizer plugins & tools (plugin-organizer, plugin-clipboard, etc.) | **Paused** — resumes when P1 enters beta |
+| **P2** | ~~Desktop organizer plugins & tools (plugin-organizer, plugin-clipboard, etc.)~~ → **Demoted to P3 Future per ADR-0011 §D3** | **Paused** — ~~resumes when P1 enters beta~~ → deferred until Phase 3 local-first SHIPPED |
 
 This **supersedes ADR-0009 §D1** (the prior `P0 active → P1 paused → P2 paused` order).
 
 ### D2 — P1 roadmap re-activation
 
+> **⚠ SUPERSEDED-IN-PART by ADR-0011 (2026-05-26):** The first two rows (`xai-g0-window-spike.md` and `xai-g1-native-foundation.md`) are no longer active P1 work surfaces — ADR-0011 §D2 demotes both to historical evidence (PLUGIN_MAP `Shipped` rows retained, ACTIVE narrative retracted). The remaining rows (xai-g2 / xai-v1.* / sync-v1.* / web-ticktick-parity) are unchanged. The table below is preserved as historical evidence.
+
 The following 19 paused roadmaps are evaluated for P1 reactivation:
 
 | Roadmap | Action under this ADR | Rationale |
 |---|---|---|
-| `xai-g0-window-spike.md` (6 anchors) | **Unfreeze** — primary P1 entry | macOS window spike + click-through + Finder DnD + Spaces/multi-monitor + MAS sandbox. All G0.1-G0.6 anchors must reach SHIPPED with real macOS evidence before G1 starts. |
-| `xai-g1-native-foundation.md` (~10 anchors) | **Unfreeze**, gated on G0 SHIPPED | Window command contract, multi-grid event scope, native DnD path-first, Tauri capability allowlist, host business residuals. |
+| ~~`xai-g0-window-spike.md` (6 anchors)~~ → **SUPERSEDED-BY-ADR-0011** | ~~**Unfreeze** — primary P1 entry~~ → Historical evidence only; not the active P1 work surface | macOS window spike + click-through + Finder DnD + Spaces/multi-monitor + MAS sandbox. All G0.1-G0.6 anchors must reach SHIPPED with real macOS evidence before G1 starts. |
+| ~~`xai-g1-native-foundation.md` (~10 anchors)~~ → **SUPERSEDED-BY-ADR-0011** | ~~**Unfreeze**, gated on G0 SHIPPED~~ → Historical evidence only; not the active P1 work surface | Window command contract, multi-grid event scope, native DnD path-first, Tauri capability allowlist, host business residuals. |
 | `xai-g2-data-security-foundation.md` (sync-v1 W0-W3) | **Stay PAUSED until G1 SHIPPED** | sync-v1 crypto stack (~50 packages) is wave 2; activate after G1. |
 | `xai-v1.md` + `xai-v1.{tasks, deferred-gates, incidents, autorun, parallel-wave-plan, track-{b,c,d,e,f}-log}.md` (10 files) | **Unfreeze with re-review** | The xai-v1 manifest predates web-pivot. Owner must re-verify each track is still in scope before resuming. |
 | `sync-v1.{md, tasks, deferred-gates, incidents, autorun}.md` (5 files) | **Stay PAUSED** — re-evaluate during G2 startup | Sync-v1 work is post-G1 per current sequencing. |
@@ -200,3 +205,42 @@ G0/G1 roadmaps.
 (D1-D5 decisions) per ADR-0008 §S3 D3 binding-precedent pattern remains
 recommended but not blocking. Queue as a Category 5 operator item if the
 project owner wants formal sign-off.
+
+---
+
+## Superseded-in-part Note — ADR-0011 (2026-05-26)
+
+Within 1 day of ADR-0010's Acceptance, the operator confirmed a product
+PIVOT during a `/workflow-router`-triggered web-completeness audit:
+
+> "Mac 软件 = React Web UI + Tauri 原生能力 + local-first 数据层 的混合
+> 桌面应用,不是单纯网页套壳,也不是全原生重写,普通窗口(非透明 click-through
+> overlay)。"
+
+**ADR-0011 (Accepted 2026-05-26)** records the new P1 definition and
+supersedes ADR-0010 in the following scope:
+
+- **§S4 D1** P1-row product definition "(Tauri overlay shell)" → replaced
+  by ADR-0011 §D1 three-phase hybrid app (Phase 1 normal window + Tauri
+  wrap of `apps/web` dist; Phase 2 native experience polish; Phase 3
+  local-first data layer).
+- **§S4 D2** entries for `xai-g0-window-spike.md` and
+  `xai-g1-native-foundation.md` ("Unfreeze ... primary P1 entry" / "gated
+  on G0 SHIPPED") → both retracted as active P1 work surfaces.
+  PLUGIN_MAP `Shipped` rows for G0.1-G0.5 / G1.1, G1.2, G1.4, G1.5, G1.6
+  remain as historical evidence; G0.6 / G1.3 stay BLOCKED_EXTERNAL.
+- **§S4 D1** P2 row legacy plugins (`plugin-organizer`, `plugin-clipboard`,
+  `plugin-widgets`, `plugin-meditation`, `plugin-pet`) → demoted from
+  "paused until P1 beta" to **P3 Future** (re-evaluated only after
+  Phase 3 local-first SHIPPED) per ADR-0011 §D3.
+
+**Still Active from ADR-0010** (NOT superseded):
+
+- §S4 D3 — SYSTEM_ARCHITECTURE.md §3-§12 enforcement on P1 work.
+- §S4 D4 — operational cross-cut rules (P1/P0 split, bugfix workflow,
+  PLUGIN_MAP discipline).
+- §S4 D5 — G2 evidence acceptance protocol for the Web P0 carve-out
+  (Chrome-only Acceptance Note above stands).
+
+**Authority order:** ADR-0011 §D1/§D2/§D3 → ADR-0010 §D3/§D4/§D5 →
+ADR-0009 (background) → ADR-0007/0008 (Web build/CSP, unchanged).

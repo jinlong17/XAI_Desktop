@@ -1,32 +1,33 @@
 # XAI_Desktop — AI Smart Desktop
 
-## Current Priority (2026-05-26 — P1 active per ADR-0010 Accepted)
+## Current Priority (2026-05-26 — P1 active per ADR-0011 Accepted, supersedes ADR-0010 §D1/§D2 in part)
 
 Active focus order — supersedes any conflicting prior PRD / roadmap:
 
-- **P1 — Desktop client (ACTIVE — G1 native foundation phase)** (`apps/desktop/` + `packages/plugin-{account, console, productivity, ai-cube, calendar, labels, project}` + G0/G1 anchors): Tauri overlay shell. G0 = CONDITIONAL_GO (G0.1-G0.5 SHIPPED 2026-05-19 on `origin/spike/window-ground-truth`; G0.6 BLOCKED_EXTERNAL pending Apple Developer signing — non-blocking). Primary work surface: `docs/workflow/roadmap/xai-g1-native-foundation.md`. Authority: `docs/adr/0010-p1-desktop-resume-plan.md` (Accepted 2026-05-26, Chrome-only G2 carve-out).
-- **P0 — Web Console (MAINTENANCE-ONLY)** (`apps/web/` + `packages/{xai-web-*, plugin-web-*}`): 24/24 + 9/9 gap-closure SHIPPED; deployed to Cloudflare Pages. Bug-fix permitted; new feature plans require P0 carve-out commit citing ADR-0010 §D4. Deferred-by-carve-out items: Safari/Firefox/iOS Safari smoke + external-provider flows.
-- **P2 — Desktop organizer plugins & tools + sync-v1 + G2** (`packages/plugin-{organizer, clipboard, widgets, meditation, pet}`, sync-v1 crypto stack, xai-g2 data-security foundation): Paused. Resumes only after G1 SHIPPED.
+- **P1 — Desktop client (ACTIVE — Phase 1: Tauri-wrap of `apps/web` dist + normal Mac window + offline UI launch)** (`apps/desktop/` + reuses `apps/web/` + `packages/{xai-web-*, plugin-web-*}`): React+Tauri+Local-first hybrid app. Phase 1 goal (1–2 weeks): shippable `.dmg` that launches the full Web shell from bundled static assets, enters `/app` without network, shows clear offline degradation for online-only panels. Phase 2: notifications + status bar + global hotkeys + auto-update + full macOS menu. Phase 3: local-first data layer (own ADR). **Branch map:** machine A = `dev` (desktop Phase 1); machine B = `web` (Web optimisation + WEB-B non-blockers). First wave (Codex audit Part 4): `desktop-tauri-web-dist-normal-window` → `desktop-web-auth-offline-mode` → `desktop-phase1-build-packaging-pipeline` → `web-external-runtime-offline-gates`. Authority: `docs/adr/0011-p1-react-tauri-local-first-hybrid.md` (Accepted 2026-05-26).
+- **P0 — Web Console (MAINTENANCE-ONLY + Phase 1 UI source)** (`apps/web/` + `packages/{xai-web-*, plugin-web-*}`): 24/24 + 9/9 gap-closure SHIPPED; deployed to Cloudflare Pages. **Also serves as the Phase 1 UI source for P1 desktop wrap.** Bug-fix permitted; new feature plans require P0 carve-out commit citing ADR-0010 §D4 (still active). Deferred-by-carve-out items: Safari/Firefox/iOS Safari smoke + external-provider flows.
+- **P3 Future — Legacy overlay / file-organizer scope** (`packages/plugin-{organizer, clipboard, widgets, meditation, pet}` + transparent-overlay Tauri scaffold + `xai-g0-window-spike.md` + `xai-g1-native-foundation.md` anchors + `sync-v1` crypto stack + `xai-g2-data-security-foundation`): **Deferred until Phase 3 local-first SHIPPED** per ADR-0011 §D3. Legacy G0.1–G0.5 / G1.1, G1.2, G1.4, G1.5, G1.6 PLUGIN_MAP `Shipped` rows are retained as historical evidence; no new active work is dispatched against these roadmaps.
 
-Authority basis: **ADR-0010 Accepted 2026-05-26** (commit `75655dc`) supersedes ADR-0009 §D1. Predecessor: ADR-0009 D2 G2 PASS (Chrome-only carve-out) + ADR-0008 §S3 24h-evidence pattern.
+Authority basis: **ADR-0011 Accepted 2026-05-26** supersedes ADR-0010 §D1 (P1 surface definition) + §D2 (xai-g0/g1 unfreeze) + §D1 P2 row (legacy plugins demoted P3). ADR-0010 §D3 (SYSTEM_ARCHITECTURE enforcement) + §D4 (operational rules) + §D5 (G2 evidence protocol for Web P0 carve-out) remain Active. Predecessor: ADR-0009 §D2 + ADR-0008 §S3.
 
 ## Project Overview
 
-Multi-face product — single monorepo, three product surfaces:
+Multi-face product — single monorepo, evolving from "Web-first + future Desktop overlay" into **"Web Console + React+Tauri+Local-first Mac desktop hybrid"** per ADR-0011 (2026-05-26):
 
-- **Web Console (P0, active)** — Vite SPA at `apps/web/`, registers 24 modules via `xai-web-shell` slot pattern. Browser-only persistence via `xai-web-persistence-contract`; typed events via `xai-web-event-bus`. Authority spec: `web design/DESIGN.md` (Claude-Artifact prototype, per ADR-0007).
-- **macOS Desktop overlay (P1, paused)** — Tauri 2 + React 19 transparent overlay for organizing files, folders, and apps into floating Smart Containers (grids). Built in this monorepo (Turborepo + pnpm).
-- **Organizer plugins & tools (P2, paused)** — Per-domain plugins under `packages/plugin-*/`.
+- **Web Console (P0, maintenance-only + Phase 1 UI source)** — Vite SPA at `apps/web/`, registers 12 modules via `xai-web-shell` slot pattern. Browser-only persistence via `xai-web-persistence-contract`; typed events via `xai-web-event-bus`. Authority spec: `web design/DESIGN.md` (Claude-Artifact prototype, per ADR-0007). Also wrapped by Tauri as the Phase 1 Mac app UI.
+- **macOS Desktop (P1, active — Phase 1 hybrid app)** — Tauri 2 + React 19, normal Mac window (not transparent overlay), wraps `apps/web` static dist. Three-phase delivery per ADR-0011 §D1. Built in this monorepo (Turborepo + pnpm).
+- **Legacy overlay / organizer (P3 Future)** — Transparent click-through main window + per-grid native windows + Smart Container file organizer + `packages/plugin-{organizer, clipboard, widgets, meditation, pet}`. Code retained as historical reference; per-plugin disposition revisited only after Phase 3 local-first SHIPPED.
 
 ## Architecture
 
-- **Host** (`apps/desktop/src/`): Tauri shell — routing + providers + window shells. Zero business logic.
+- **Host** (`apps/desktop/src/`): Tauri shell — routing + providers + window shells. Zero business logic. **Phase 1 transition:** the legacy `OrganizerLayer` / transparent overlay shell at `apps/desktop/src/App.tsx` + transparent-overlay `tauri.conf.json` will be replaced by a normal-window shell loading `apps/web` dist in the first Phase 1 feature (`desktop-tauri-web-dist-normal-window`).
 - **Core** (`packages/core/`): Shared infrastructure — types, typed events, PluginRegistry, hooks. Zero business logic.
-- **Plugins** (`packages/plugin-*/`): Feature modules as React packages. All business logic lives here.
+- **Web Plugins** (`packages/plugin-web-*/` + `packages/xai-web-*/`): Web Console business modules. **Reused by P1 desktop in Phase 1 directly** (per ADR-0011 §S5 short-term cross-surface coupling note).
+- **Legacy desktop plugins** (`packages/plugin-{organizer, clipboard, widgets, meditation, pet}/`): P3 Future; do not depend on these from new P1 work.
 - **UI Library** (`packages/ui/`): Shared components.
-- **Rust Backend** (`apps/desktop/src-tauri/`): Modular commands (`commands/`) + macOS platform adapters (`platform/`).
+- **Rust Backend** (`apps/desktop/src-tauri/`): Modular commands (`commands/`) + macOS platform adapters (`platform/`). **Phase 1 transition:** the legacy overlay setup in `lib.rs` / `platform/macos/window_ext.rs` is scoped for removal/refactor by the first Phase 1 feature.
 
-Multi-window: main (transparent click-through) + control (AI Cube) + per-grid native windows.
+Multi-window (Phase 1): single normal Mac window loading `apps/web` dist. Multi-window overlay/grid (legacy P3 Future): main (transparent click-through) + control (AI Cube) + per-grid native windows.
 Cross-window communication: Typed event layer (`@repo/core/events`) wrapping Tauri event system.
 
 ### Key Documents

@@ -8,23 +8,22 @@
 
 ---
 
-## Current Priority (2026-05-26 — P1 active per ADR-0010)
+## Current Priority (2026-05-26 — P1 active per ADR-0011, supersedes ADR-0010 §D1/§D2 in part)
 
 | Tier | Surface | Status | Packages |
 |---|---|---|---|
-| **P1** | macOS Desktop client | **Active — G1 native foundation phase** | `apps/desktop/`, `plugin-account`, `plugin-console`, `plugin-productivity`, `plugin-ai-cube`, `plugin-calendar`, `plugin-labels`, `plugin-project`, plus G0/G1 native foundation anchors (window-ground-truth / grid-window-prototype / click-through-matrix / finder-dnd-path / spaces-multimonitor-matrix all SHIPPED on spike branch) |
-| **P0** | Web Console | Maintenance-only | `xai-web-*` (rows 1-24 + 9 gap-closure) + `plugin-web-*` + `apps/web/` — all SHIPPED; bug-fix permitted; new feature plans require P0 carve-out commit citing ADR-0010 §D4 |
-| **P2** | Desktop organizer plugins & tools | Paused until P1 beta | `plugin-organizer`, `plugin-clipboard`, `plugin-widgets`, `plugin-meditation`, `plugin-pet`, plus sync-v1 crypto stack (W0/W1/W2/W3) and G2 data-security foundation (stay paused till G1 SHIPPED per ADR-0010 §D2) |
+| **P1** | macOS Desktop — React+Tauri+Local-first hybrid app | **Active — Phase 1: Tauri-wrap of `apps/web` dist + normal Mac window + offline UI launch** | `apps/desktop/` (Phase 1 scaffold rewrite scoped to first feature `desktop-tauri-web-dist-normal-window`); reuses `apps/web/` + `packages/{xai-web-*, plugin-web-*}` as Phase 1 UI source; `plugin-account` reframed to "Phase 1 local-session-only" per ADR-0011 §D4. First wave (4 features, Codex audit Part 4): `desktop-tauri-web-dist-normal-window`, `desktop-web-auth-offline-mode`, `desktop-phase1-build-packaging-pipeline`, `web-external-runtime-offline-gates`. |
+| **P0** | Web Console — maintenance-only + Phase 1 UI source | Maintenance-only | `xai-web-*` (rows 1-24 + 9 gap-closure) + `plugin-web-*` + `apps/web/` — all SHIPPED; also wrapped by Tauri as Phase 1 Mac app UI; bug-fix permitted; new feature plans require P0 carve-out commit citing ADR-0010 §D4 (still active). |
+| **P3 Future** | Legacy overlay / file-organizer scope | **Deferred until Phase 3 local-first SHIPPED** | `plugin-organizer`, `plugin-clipboard`, `plugin-widgets`, `plugin-meditation`, `plugin-pet`, plus the legacy transparent-overlay Tauri scaffold, plus sync-v1 crypto stack (W0/W1/W2/W3), plus G2 data-security foundation, plus G0.1–G0.5 / G1.1, G1.2, G1.4, G1.5, G1.6 anchors (Shipped rows retained as historical evidence, no new active work). |
 
-Authority basis: **ADR-0010 Accepted 2026-05-26** (commit `75655dc`, Chrome-only G2 carve-out) supersedes ADR-0009 §D1.
-Predecessor authority: `docs/workflow/roadmap/xai-web-console.md` §Authority Override 2026-05-23 + ADR-0007 + ADR-0008.
-Per P1 period: new work on P1/G1 native foundation permitted; P0 web is maintenance-only; P2 stays paused. Full rationale: `docs/adr/0010-p1-desktop-resume-plan.md`.
+Authority basis: **ADR-0011 Accepted 2026-05-26** (P1 redefined as React+Tauri+Local-first hybrid app; legacy overlay/file-organizer demoted P3 Future) supersedes ADR-0010 §D1 (P1 surface) + §D2 (xai-g0/g1 unfreeze) + §D1 P2 row (legacy plugins demoted P3). ADR-0010 §D3 (SYSTEM_ARCHITECTURE enforcement) + §D4 (operational rules) + §D5 (Web P0 G2 evidence protocol) remain Active. Predecessor authority: ADR-0010 Accepted 2026-05-26 (commit `75655dc`, Chrome-only G2 carve-out) → ADR-0009 §D1 → `docs/workflow/roadmap/xai-web-console.md` §Authority Override 2026-05-23 + ADR-0007 + ADR-0008.
+Per current period: new work on P1 Phase 1 (machine A = `dev`) permitted per ADR-0011 §D1; P0 Web is maintenance-only (machine B = `web` also runs WEB-B non-blockers in parallel); P3 Future scope stays deferred. Full rationale: `docs/adr/0011-p1-react-tauri-local-first-hybrid.md` + `docs/audit/2026-05-26-web-completeness-and-p1-redefinition.md`.
 
 ---
 
 ## Roadmap / CI Gate Anchors
 
-> **G0/G1 ACTIVE (2026-05-26, per ADR-0010 Accepted).** P1 desktop pivot is active. G0 (window spike, rows G0.1-G0.5) SHIPPED 2026-05-19 on `origin/spike/window-ground-truth` per `xai-g0-window-spike.md`; G0.6 BLOCKED_EXTERNAL (Apple Developer signing). G1 native foundation is the primary active work surface per `xai-g1-native-foundation.md`. Sync-v1 crypto stack + G2 data-security stay PAUSED until G1 SHIPPED per ADR-0010 §D2.
+> **G0/G1 SUPERSEDED-BY-ADR-0011 (2026-05-26).** The earlier ADR-0010 narrative ("G0/G1 ACTIVE — primary P1 active work surface") is **retracted**. ADR-0011 §D2/§D3 demotes both `xai-g0-window-spike.md` and `xai-g1-native-foundation.md` to historical evidence (Shipped rows below retained, no new active work). G0.6 (`mas-sandbox-dry-run`) and G1.3 (`native-dnd-path-first`) remain BLOCKED_EXTERNAL — their unblock is now P3 Future (revisited only after Phase 3 local-first SHIPPED, if the operator chooses to revive the overlay product). Sync-v1 crypto stack (W0/W1/W2/W3) + G2 data-security foundation also stay **P3 Future** per ADR-0011 §D3. New P1 work is the React+Tauri+Local-first hybrid app per ADR-0011 §D1 — Phase 1 first feature is `desktop-tauri-web-dist-normal-window` (see Codex audit Part 4 / `docs/audit/2026-05-26-patch-roadmap-source.md`).
 
 > These are NOT plugins. They are roadmap workflow anchors (`packages/<slug>/docs/`)
 > that track supply-chain / infra rows. Code boundary: Cargo.toml / CI only.
@@ -86,7 +85,7 @@ Per P1 period: new work on P1/G1 native foundation permitted; P0 web is maintena
 
 ## Plugins
 
-> **PAUSED during Web P0 (2026-05-24).** All rows below are part of P1/P2 Desktop scope. Web Modules (P0) are listed in the "Web Modules" section further down. Do not start new dev work on P1/P2 plugin packages during the Web P0 period — refer to "Current Priority" at the top of this file.
+> **2026-05-26 update per ADR-0011:** This section now mixes (a) **P1 Phase 1 reframed plugins** — `plugin-account` (login-state-only) + `plugin-productivity` / `plugin-project` / `plugin-calendar` / `plugin-labels` (concept-kept, Phase 1 reuses their Web counterparts under `packages/plugin-web-*`) + `plugin-console` / `plugin-ai-cube` (merge/demote per ADR-0011 §D4); and (b) **P3 Future legacy desktop plugins** — `plugin-organizer`, `plugin-clipboard`, `plugin-widgets`, `plugin-meditation`, `plugin-pet` (deferred until Phase 3 local-first SHIPPED). Do not start new dev work on the P3 Future plugin packages. New P1 Phase 1 work happens against Web reuse + the desktop scaffold rewrite, not against the legacy desktop plugin packages. Web Modules (P0, also P1 Phase 1 UI source) are listed in the "Web Modules" section further down.
 
 | Plugin | 目录 | 状态 | PRD 章节 | 对外依赖 | 最后更新 |
 |--------|------|------|---------|---------|---------|
