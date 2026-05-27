@@ -8,34 +8,35 @@
 
 ---
 
-## Current Priority (2026-05-24)
+## Current Priority (2026-05-26 — P1 active per ADR-0010)
 
 | Tier | Surface | Status | Packages |
 |---|---|---|---|
-| **P0** | Web Console | **Active — gap-closure mode** | `xai-web-*` (rows 1-24) + `plugin-web-*` (npm-namespace siblings) + `apps/web/` — see "Web Modules" + "Web Platform Shims" sections below |
-| **P1** | macOS Desktop client | Paused | `plugin-account`, `plugin-console`, `plugin-productivity`, `plugin-ai-cube`, `plugin-calendar`, `plugin-labels`, `plugin-project`, `apps/desktop/` |
-| **P2** | Desktop organizer plugins & tools | Paused | `plugin-organizer`, `plugin-clipboard`, `plugin-widgets`, `plugin-meditation`, `plugin-pet`, plus sync-v1 crypto stack (W0/W1/W2/W3) and G0/G1 native foundation anchors |
+| **P1** | macOS Desktop client | **Active — G1 native foundation phase** | `apps/desktop/`, `plugin-account`, `plugin-console`, `plugin-productivity`, `plugin-ai-cube`, `plugin-calendar`, `plugin-labels`, `plugin-project`, plus G0/G1 native foundation anchors (window-ground-truth / grid-window-prototype / click-through-matrix / finder-dnd-path / spaces-multimonitor-matrix all SHIPPED on spike branch) |
+| **P0** | Web Console | Maintenance-only | `xai-web-*` (rows 1-24 + 9 gap-closure) + `plugin-web-*` + `apps/web/` — all SHIPPED; bug-fix permitted; new feature plans require P0 carve-out commit citing ADR-0010 §D4 |
+| **P2** | Desktop organizer plugins & tools | Paused until P1 beta | `plugin-organizer`, `plugin-clipboard`, `plugin-widgets`, `plugin-meditation`, `plugin-pet`, plus sync-v1 crypto stack (W0/W1/W2/W3) and G2 data-security foundation (stay paused till G1 SHIPPED per ADR-0010 §D2) |
 
-Authority basis: `docs/workflow/roadmap/xai-web-console.md` §Authority Override 2026-05-23 + ADR-0007 + ADR-0008.
-Per Web P0 period: do not start new dev work on P1/P2 packages. Existing SHIPPED packages remain authoritative; existing in-flight items: complete-or-park. Full rationale: `docs/reviews/web-priority-pivot-and-repo-cleanup/20260524-brief.md`.
+Authority basis: **ADR-0010 Accepted 2026-05-26** (commit `75655dc`, Chrome-only G2 carve-out) supersedes ADR-0009 §D1.
+Predecessor authority: `docs/workflow/roadmap/xai-web-console.md` §Authority Override 2026-05-23 + ADR-0007 + ADR-0008.
+Per P1 period: new work on P1/G1 native foundation permitted; P0 web is maintenance-only; P2 stays paused. Full rationale: `docs/adr/0010-p1-desktop-resume-plan.md`.
 
 ---
 
 ## Roadmap / CI Gate Anchors
 
-> **PAUSED during Web P0 (2026-05-24).** These desktop-side roadmap anchors and sync-v1 crypto packages are part of P1/P2. Do not start new work on these rows during the Web P0 period. SHIPPED rows remain authoritative for their domains.
+> **G0/G1 ACTIVE (2026-05-26, per ADR-0010 Accepted).** P1 desktop pivot is active. G0 (window spike, rows G0.1-G0.5) SHIPPED 2026-05-19 on `origin/spike/window-ground-truth` per `xai-g0-window-spike.md`; G0.6 BLOCKED_EXTERNAL (Apple Developer signing). G1 native foundation is the primary active work surface per `xai-g1-native-foundation.md`. Sync-v1 crypto stack + G2 data-security stay PAUSED until G1 SHIPPED per ADR-0010 §D2.
 
 > These are NOT plugins. They are roadmap workflow anchors (`packages/<slug>/docs/`)
 > that track supply-chain / infra rows. Code boundary: Cargo.toml / CI only.
 
 | Slug | 目录 | 状态 | 说明 | 最后更新 |
 |------|------|------|------|---------|
-| window-ground-truth | packages/window-ground-truth/ | Testing | G0.1 window spike evidence anchor is READY_TO_SHIP with branch and machine/display evidence directory. No production code. Deferred gates recorded in xai-v1 deferred gates. | 2026-05-19 |
-| grid-window-prototype | packages/grid-window-prototype/ | Testing | G0.2 alpha/beta Grid window prototype is READY_TO_SHIP with fallback metadata panel and targeted scoped-event button. Runtime Tauri evidence deferred. | 2026-05-19 |
-| click-through-matrix | packages/click-through-matrix/ | Blocked | G0.3 click-through matrix safe prep complete; real macOS hit-test evidence required before G0 can pass. | 2026-05-19 |
-| finder-dnd-path | packages/finder-dnd-path/ | Blocked | G0.4 Finder path-first DnD matrix safe prep complete; real Finder drop evidence required before G0 can pass. | 2026-05-19 |
-| spaces-multimonitor-matrix | packages/spaces-multimonitor-matrix/ | Blocked | G0.5 Spaces/fullscreen/multi-display matrix safe prep complete via user override; real macOS evidence required before G0 can pass. | 2026-05-19 |
-| mas-sandbox-dry-run | packages/mas-sandbox-dry-run/ | Blocked | G0.6 MAS sandbox notes and entitlement draft complete via user override; real sandbox/private-API evidence required before G0 can pass. | 2026-05-19 |
+| window-ground-truth | packages/window-ground-truth/ | Shipped | G0.1 window spike evidence anchor SHIPPED 2026-05-19 on `origin/spike/window-ground-truth` (build commit `3b571f6`). Reconciled with G0 manifest 2026-05-26 (PLUGIN_MAP was stale at Testing). | 2026-05-26 |
+| grid-window-prototype | packages/grid-window-prototype/ | Shipped | G0.2 alpha/beta Grid window prototype SHIPPED 2026-05-19 on `origin/spike/window-ground-truth` (commits `7b7ff35`/`f65a1b5`/`a33c74d`). Reconciled 2026-05-26. | 2026-05-26 |
+| click-through-matrix | packages/click-through-matrix/ | Shipped | G0.3 click-through matrix SHIPPED 2026-05-19 on `origin/spike/window-ground-truth`. Default runtime hit-test passes; MAS fallback risk tracked under G0.6. Reconciled 2026-05-26. | 2026-05-26 |
+| finder-dnd-path | packages/finder-dnd-path/ | Shipped | G0.4 Finder path-first DnD SHIPPED 2026-05-19 on `origin/spike/window-ground-truth` (commits `58c926d`/`18b48da`). `PRESERVE_ALIAS_PATH` in ADR-0005. Reconciled 2026-05-26. | 2026-05-26 |
+| spaces-multimonitor-matrix | packages/spaces-multimonitor-matrix/ | Shipped | G0.5 Spaces/fullscreen/multi-display matrix SHIPPED 2026-05-19 on `origin/spike/window-ground-truth` per user confirmation on DELL setup. Reconciled 2026-05-26. | 2026-05-26 |
+| mas-sandbox-dry-run | packages/mas-sandbox-dry-run/ | Blocked | G0.6 BLOCKED_EXTERNAL (per G0 manifest). `mas-sandbox` compile fallback passes private-API-disabled `cargo check`; Apple Developer/signed sandbox runtime evidence deferred and decoupled from G1 DMG/private path. Not shipped — requires Apple Developer signing environment. See `xai-v1.deferred-gates.md` Entry 13. | 2026-05-19 |
 | window-command-contract | packages/window-command-contract/ | Blocked | G1.1 Window Command Contract safe prep complete via user override; production implementation blocked until G0 Go/Conditional Go. | 2026-05-19 |
 | host-business-residuals | packages/host-business-residuals/ | Testing | G1.6 Host business residual audit is READY_TO_SHIP; production cleanup remains pending later G1 implementation. | 2026-05-19 |
 | crypto-deps-lockdown | packages/crypto-deps-lockdown/ | Shipped | Wave W0 Phase 0.3: exact-pin 7 crypto deps + blocking CI gate (deny.toml + supply-chain-security.yml). | 2026-05-19 |

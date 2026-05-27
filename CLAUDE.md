@@ -1,14 +1,14 @@
 # XAI_Desktop — AI Smart Desktop
 
-## Current Priority (2026-05-24)
+## Current Priority (2026-05-26 — P1 active per ADR-0010 Accepted)
 
 Active focus order — supersedes any conflicting prior PRD / roadmap:
 
-- **P0 — Web Console** (`apps/web/` + `packages/{xai-web-*, plugin-web-*}`): 24/24 SHIPPED per `docs/workflow/roadmap/xai-web-console.md`; deployed to Cloudflare Pages. Remaining work is known-gap closure (AI real-LLM adapter, Cmd-K search, Calendar Week+Day, Board Filter+Share+Map, Dashboard Add-Widget picker, Settings integrations, Pomodoro counters test fix). See `docs/reviews/web-priority-pivot-and-repo-cleanup/20260524-brief.md`.
-- **P1 — Desktop client** (`apps/desktop/` + `packages/plugin-{account, console, productivity, ai-cube, calendar, labels, project}`): Tauri overlay shell. Paused until P0 gap closure ships. Gating ADR pending (ADR-0009 "Web → Desktop Pivot Plan").
-- **P2 — Desktop organizer plugins & tools** (`packages/plugin-{organizer, clipboard, widgets, meditation, pet}`, sync-v1 crypto stack, G0/G1 native foundation): Paused. Resumes only after P1 is in beta.
+- **P1 — Desktop client (ACTIVE — G1 native foundation phase)** (`apps/desktop/` + `packages/plugin-{account, console, productivity, ai-cube, calendar, labels, project}` + G0/G1 anchors): Tauri overlay shell. G0 = CONDITIONAL_GO (G0.1-G0.5 SHIPPED 2026-05-19 on `origin/spike/window-ground-truth`; G0.6 BLOCKED_EXTERNAL pending Apple Developer signing — non-blocking). Primary work surface: `docs/workflow/roadmap/xai-g1-native-foundation.md`. Authority: `docs/adr/0010-p1-desktop-resume-plan.md` (Accepted 2026-05-26, Chrome-only G2 carve-out).
+- **P0 — Web Console (MAINTENANCE-ONLY)** (`apps/web/` + `packages/{xai-web-*, plugin-web-*}`): 24/24 + 9/9 gap-closure SHIPPED; deployed to Cloudflare Pages. Bug-fix permitted; new feature plans require P0 carve-out commit citing ADR-0010 §D4. Deferred-by-carve-out items: Safari/Firefox/iOS Safari smoke + external-provider flows.
+- **P2 — Desktop organizer plugins & tools + sync-v1 + G2** (`packages/plugin-{organizer, clipboard, widgets, meditation, pet}`, sync-v1 crypto stack, xai-g2 data-security foundation): Paused. Resumes only after G1 SHIPPED.
 
-Authority basis: `docs/workflow/roadmap/xai-web-console.md` §Authority Override (2026-05-23) + `docs/adr/0007-xai-web-console-build-form.md` + `docs/adr/0008-cloudflare-deploy-target-and-csp.md`.
+Authority basis: **ADR-0010 Accepted 2026-05-26** (commit `75655dc`) supersedes ADR-0009 §D1. Predecessor: ADR-0009 D2 G2 PASS (Chrome-only carve-out) + ADR-0008 §S3 24h-evidence pattern.
 
 ## Project Overview
 
