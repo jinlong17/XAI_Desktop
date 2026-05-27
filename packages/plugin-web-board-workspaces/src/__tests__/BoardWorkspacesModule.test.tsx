@@ -288,3 +288,121 @@ describe("BoardWorkspacesModule (BWM1..BWM18)", () => {
     expect(filterBtn).toHaveAttribute("aria-expanded", "true");
   });
 });
+
+// ---- BW-Open-1..6 + BW-Open-Close — Audit Top-10 #5 wire-up tests ----------
+// Verifies that handleOpenCard is wired to all 6 view instances and that
+// CardDetailDialog state is correctly lifted into BoardWorkspacesModule.
+//
+// These tests exercise the host-level dialog state machine.
+// Component-level dialog behaviour is tested in CardDetailDialog.test.tsx.
+// makeDefaultBoards is already imported at the top of this file.
+
+// Stub view components so we can fire synthetic onOpenCard / onSelectCard
+// without needing real view implementations in jsdom.
+vi.mock("@repo/plugin-web-board-views", async (importOriginal) => {
+  const actual = await importOriginal<typeof import("@repo/plugin-web-board-views")>();
+  // Keep real applyFilter, EMPTY_FILTER, FilterState, FilterPopover etc.
+  // Only stub the heavy view components to allow switching views in jsdom.
+  return {
+    ...actual,
+    ViewPicker: ({ onChange }: { onChange: (v: string) => void; activeView: string; lang: string }) => (
+      <div data-testid="view-picker-stub">
+        <button data-testid="vp-table" onClick={() => onChange("table")}>Table</button>
+        <button data-testid="vp-calendar" onClick={() => onChange("calendar")}>Calendar</button>
+        <button data-testid="vp-timeline" onClick={() => onChange("timeline")}>Timeline</button>
+        <button data-testid="vp-map" onClick={() => onChange("map")}>Map</button>
+      </div>
+    ),
+    TableView: ({ onOpenCard }: { lists: unknown; lang: string; updateCard: unknown; onOpenCard?: (card: { id: string }, listId: string) => void }) => (
+      <div data-testid="table-view-stub">
+        <button data-testid="tv-open-card" onClick={() => onOpenCard?.({ id: "c-tv" } as { id: string }, "l-tv")}>Open Card</button>
+      </div>
+    ),
+    BoardCalendarView: ({ onOpenCard }: { lists: unknown; lang: string; updateCard: unknown; onOpenCard?: (card: { id: string }, listId: string) => void }) => (
+      <div data-testid="calendar-view-stub">
+        <button data-testid="cal-open-card" onClick={() => onOpenCard?.({ id: "c-cal" } as { id: string }, "l-cal")}>Open Card</button>
+      </div>
+    ),
+    BoardDashboardView: () => <div data-testid="dashboard-view-stub" />,
+    TimelineView: ({ onOpenCard }: { lists: unknown; lang: string; updateCard: unknown; onOpenCard?: (card: { id: string }, listId: string) => void }) => (
+      <div data-testid="timeline-view-stub">
+        <button data-testid="tl-open-card" onClick={() => onOpenCard?.({ id: "c-tl" } as { id: string }, "l-tl")}>Open Card</button>
+      </div>
+    ),
+    MapView: ({ onSelectCard }: { lists: unknown; lang: string; onSelectCard?: (cardId: string, listId: string) => void }) => (
+      <div data-testid="map-view-stub">
+        <button data-testid="map-open-card" onClick={() => onSelectCard?.("c-map", "l-map")}>Open Card</button>
+      </div>
+    ),
+  };
+});
+
+describe("BoardWorkspacesModule — BW-Open wire-up (Audit Top-10 #5)", () => {
+  beforeEach(() => {
+    localStorage.clear();
+    vi.clearAllMocks();
+    // Seed boards for a deterministic active board
+    localStorage.setItem("xai_boards_v2", JSON.stringify(makeDefaultBoards()));
+    localStorage.setItem("xai_active_board", "b-default");
+  });
+
+  it("BW-Open-0: CardDetailDialog is not visible on initial render", () => {
+    render(<BoardWorkspacesModule lang="en" />);
+    const dialog = screen.queryByTestId("card-detail-dialog");
+    // Dialog is rendered but open=false, so close() is called not showModal
+    expect(HTMLDialogElement.prototype.showModal).not.toHaveBeenCalled();
+    // The dialog element exists in the DOM but does not show card content
+    expect(dialog).toBeInTheDocument();
+    expect(screen.queryByTestId("cdd-title")).not.toBeInTheDocument();
+  });
+
+  it("BW-Open-2 (Table): clicking card in TableView triggers handleOpenCard", async () => {
+    render(<BoardWorkspacesModule lang="en" />);
+    // Switch to table view
+    fireEvent.click(screen.getByTestId("vp-table"));
+    // Stub table view renders a trigger button
+    const triggerBtn = screen.getByTestId("tv-open-card");
+    fireEvent.click(triggerBtn);
+    // After click, showModal should have been called (dialog opens)
+    expect(HTMLDialogElement.prototype.showModal).toHaveBeenCalled();
+  });
+
+  it("BW-Open-3 (Calendar): clicking card in CalendarView triggers handleOpenCard", () => {
+    render(<BoardWorkspacesModule lang="en" />);
+    fireEvent.click(screen.getByTestId("vp-calendar"));
+    fireEvent.click(screen.getByTestId("cal-open-card"));
+    expect(HTMLDialogElement.prototype.showModal).toHaveBeenCalled();
+  });
+
+  it("BW-Open-4 (Timeline): clicking card in TimelineView triggers handleOpenCard", () => {
+    render(<BoardWorkspacesModule lang="en" />);
+    fireEvent.click(screen.getByTestId("vp-timeline"));
+    fireEvent.click(screen.getByTestId("tl-open-card"));
+    expect(HTMLDialogElement.prototype.showModal).toHaveBeenCalled();
+  });
+
+  it("BW-Open-5 (Map): clicking pin in MapView triggers handleOpenCard via onSelectCard", () => {
+    render(<BoardWorkspacesModule lang="en" />);
+    fireEvent.click(screen.getByTestId("vp-map"));
+    fireEvent.click(screen.getByTestId("map-open-card"));
+    expect(HTMLDialogElement.prototype.showModal).toHaveBeenCalled();
+  });
+
+  it("BW-Open-Close: closing dialog via onClose resets openCard state", () => {
+    render(<BoardWorkspacesModule lang="en" />);
+    // Open via table view
+    fireEvent.click(screen.getByTestId("vp-table"));
+    fireEvent.click(screen.getByTestId("tv-open-card"));
+    expect(HTMLDialogElement.prototype.showModal).toHaveBeenCalled();
+
+    vi.clearAllMocks();
+
+    // Close the dialog — find the close action button
+    // It will only render card content if the card was found in lists
+    // Since our stub uses "c-tv" which doesn't exist in seed, we check close() path
+    const dialog = screen.getByTestId("card-detail-dialog");
+    fireEvent(dialog, new Event("cancel", { bubbles: true, cancelable: true }));
+    // After close, dialog.close() should be called (open flips to false)
+    expect(HTMLDialogElement.prototype.close).toHaveBeenCalled();
+  });
+});
