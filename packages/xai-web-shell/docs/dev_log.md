@@ -903,3 +903,350 @@ Chrome 最新版（与 audit 同环境）：
 | 2026-05-27 10:25 | claude-sonnet-4-6 — ship | **SHIPPED.** Pre-push: wrapped bug-verify dev_log state into chore commit 7e260fb. Ran all 4 gate commands: @repo/xai-web-shell test → 94/94 PASS; @repo/web test → 124/124 PASS; @repo/xai-web-shell check-types → CLEAN; @repo/web check-types → CLEAN. Verified 5-commit push batch (ab0a360 audit + b07e98e S1 + 0819c6c S2 + c238531 S3-doc + 7e260fb verify-chore). Commit hygiene: all 5 follow type(scope): summary + Why/What/Scope/Risk/Docs/Tests body + Co-Authored-By trailer. git push origin web → 898f5ba..7e260fb. Flipped Bugfix Status Panel: Current Phase = SHIP, Status = SHIPPED. ADR-0010 §D4 compliance confirmed (pure bug-fix, no P0 carve-out required). PLUGIN_MAP unchanged (xai-web-shell already Stable). | ab0a360 + b07e98e + 0819c6c + c238531 + 7e260fb | — (SHIPPED) |
 
 No code change; no regression. The 2026-05-24 12:00 Codex BLOCKED record above is preserved verbatim per V2 SOP (no history rewrite); this section is the canonical correction.
+
+---
+
+## BUGFIX — AvatarMenu "Sign out" 按钮在生产环境完全无反应
+
+### Bugfix Status Panel
+
+| Field | Value |
+|---|---|
+| Workflow | BUGFIX |
+| Target | xai-web-shell |
+| Title | AvatarMenu "Sign out" 按钮在生产环境完全无反应 — Audit Top-10 #1 / Rail-10 |
+| Current Phase | BUG_VERIFY |
+| Status | FIX_READY_FOR_VERIFY |
+| Suggested Next | bug-verify |
+| Executor | claude-sonnet-4-6 — bug-auto-fix |
+| Updated | 2026-05-27 16:05 |
+| ADR Context | ADR-0010 §D4 — Web P0 = maintenance-only; bug-fix permitted without P0 carve-out commit |
+| Audit Anchor | `docs/reviews/_web-noop-audit/20260527-button-action-inventory.md` Top-10 #1 (Rail-10) |
+| Pipeline Role | Audit Option A bug-fix batch — slot 2/5 (predecessor: Topbar persistence T10 #7 SHIPPED at 7426c41) |
+| User Override | User selected Option C (confirmation modal) instead of diagnose-recommended Option B |
+
+### Symptom
+
+Web Console 右上角 Avatar 头像点开后，下拉菜单的 "Sign out" 项目在 production
+浏览器点击后 0 反应。DEV 模式下仅有一条 `console.warn("[xai-web-shell]
+sign-out not wired")`；production build 既看不到 console 也无任何 UI 变化、
+跳转、确认 modal、storage 变化。`AvatarMenu` 组件声明了 `onSignOut?: () => void`
+prop，但**调用方 AppRail.tsx 从未传入这个 prop**，所以始终走 fallback 分支。
+
+### Expected vs Actual
+
+| 维度 | Expected | Actual |
+|---|---|---|
+| Click 反馈 | 任意一种：清 session+跳转 / disabled+tooltip / confirmation modal / toast | 0 反馈（DEV-only console.warn） |
+| Session 状态 | 清除 device session（client.auth.signOut + cleanup） | 不变 |
+| UI 状态 | 跳转到登录态 OR 显式说明不可用 | 仅关闭 popover |
+| DEV console | 可选 informational log | warn "sign-out not wired" — 暴露了缺失的 prop 连线 |
+
+### Reproduction Protocol
+
+1. 启动 `apps/web/`（任意 `VITE_WEB_AUTH_MODE` — live / mock-authenticated / mock-unauthenticated）。
+2. 打开 SPA，点击 AppRail 顶部 Avatar 圆形按钮 → AvatarMenu popover 展开。
+3. 点击底部红色的 "Sign Out" / "退出登录" 条目。
+4. **观察 production build**：popover 关闭，**仅此而已** — 无跳转、无 confirmation、无 toast、无 storage 变化、无 network request。
+5. **观察 DEV build**：DevTools console 出现一条 `[xai-web-shell] sign-out not wired` warn；其他行为同 production。
+6. DevTools → Application → Local Storage / IndexedDB → 确认所有 `xai_*` keys 和 `web-encrypted-cache` / `xai-web-ai-secrets` / `xai-web-auth` IDB 完全未触动。
+
+### Architecture Trace — 现状调查
+
+#### 1. AvatarMenu 当前的实际 onSignOut 实现
+
+`packages/xai-web-shell/src/AvatarMenu.tsx:111-134`：
+
+```tsx
+<button
+  type="button"
+  className="avm-item danger"
+  onClick={() => {
+    if (onSignOut) {
+      onSignOut();                          // 真实路径 — 但永远不命中
+    } else {
+      if (
+        typeof import.meta !== "undefined" &&
+        (import.meta as { env?: { DEV?: boolean } }).env?.DEV
+      ) {
+        console.warn("[xai-web-shell] sign-out not wired");   // 唯一可见的行为
+      }
+    }
+    onClose();                              // popover 关闭 — 仅有的副作用
+  }}
+>
+  <Icon name="download" size={16} style={{ transform: "rotate(180deg)" }} />
+  <span>{s("avatar.sign_out")}</span>
+</button>
+```
+
+prop 声明 `types.ts:169-180`：
+```ts
+export interface AvatarMenuProps {
+  open: boolean;
+  onClose: () => void;
+  onOpenSettings: () => void;
+  onOpenStatistics: () => void;
+  onSignOut?: () => void;        // 可选 — 这是 bug 的设计起点
+}
+```
+
+#### 2. 调用方 — AppRail.tsx 没传 onSignOut
+
+`packages/xai-web-shell/src/AppRail.tsx:136-141`（唯一的 AvatarMenu 实例化点）：
+
+```tsx
+<AvatarMenu
+  open={avatarOpen}
+  onClose={() => setAvatarOpen(false)}
+  onOpenSettings={onAvatarOpenSettings}
+  onOpenStatistics={onAvatarOpenStatistics}
+/>
+{/* onSignOut 完全没传 — fallback 分支永远命中 */}
+```
+
+`Shell.tsx` 同样没有 `onSignOut` 这条路径 — `ShellProps` 接口 (`types.ts:87-119`)
+里也没有 `onSignOut` 字段，host (`apps/web/src/App.tsx`) 因此根本没机会注入。
+**调用链整体缺失三层 prop**：
+1. `App.tsx → <Shell />` — `Shell` props 不含 `onSignOut`
+2. `Shell.tsx → <AppRail />` — `AppRailProps` 不含 `onSignOut`（types.ts:121-139）
+3. `AppRail.tsx → <AvatarMenu />` — 没传 `onSignOut`
+
+#### 3. web-auth-device-session 提供的可复用 API
+
+`packages/web-auth-device-session/src/index.ts` barrel 公开了：
+
+| API | 用途 | 与 sign-out 的关系 |
+|---|---|---|
+| `useWebAuthSession()` → context value | 提供 `client: SupabaseClient \| null` + `clearSessionStorage(): Promise<void>` + `state: "authenticated" \| "unauthenticated" \| ...` | **直接可用** — `client.auth.signOut()` 是 Supabase 标准 sign-out，`clearSessionStorage()` 把 React state 翻为 unauthenticated |
+| `WebAuthSessionProvider` | host-level provider，包裹整个 SPA | 已在 `apps/web/src/providers/AppProviders.tsx:269-297` 挂载，位于 `<App />` 之外 → `useWebAuthSession()` 在 `App` / `Shell` / 任意子组件都能用 |
+| `deleteAccount(client, options)` | gap-closure #9 — 删账号 Edge Function | **语义不同** — 删账号是不可逆 destruction，sign-out 只是清当前 session |
+| `wipeRegisteredIDB()` | 清 IDB（用于 delete-account 后） | sign-out 通常不需要清 IDB（用户可能想再登回） |
+| `createDeviceSessionController().handleDeviceFailure(reason)` | device-id store 清除 | sign-out 通常不清 device-id（设备身份与账号身份分离） |
+
+`session.tsx:88-91` 的 `clearSessionStorage()` 实现：
+```ts
+const clearSessionStorage = useCallback(async () => {
+  setSession(null);
+  setState(runtimeClient ? "unauthenticated" : "unconfigured");
+}, [runtimeClient]);
+```
+
+#### 4. host 现状 — WebAuthSessionProvider 已经 mount
+
+`apps/web/src/main.tsx:14-19`：
+```tsx
+<StrictMode>
+  <AppProviders>          ← WebAuthSessionProvider 在这里
+    <RouterProvider router={router} />
+  </AppProviders>
+</StrictMode>
+```
+
+`apps/web/src/providers/AppProviders.tsx:288-297` 在所有 auth-mode（live /
+mock-authenticated / mock-unauthenticated）下都包裹 `<WebAuthSessionProvider>`。
+所以 `apps/web/src/App.tsx` 调用 `useWebAuthSession()` 不需要任何 provider
+重构 — context 已经在 scope 内。
+
+#### 5. 是否有"安全清掉 device session 而不删除账号"的现成方法
+
+**YES — 标准 Supabase 流程已经全部就绪：**
+
+| 操作 | API call | 副作用 |
+|---|---|---|
+| 清后端 session（撤销 refresh token） | `client.auth.signOut()` | Supabase 服务端 revoke session；本地 storage 中的 access_token + refresh_token 自动清空（由 `xai-web-auth` IDB 持久层完成） |
+| 翻 React state 为未登录 | `clearSessionStorage()` | `setSession(null) + setState("unauthenticated")` |
+| 跳转 | `window.location.assign("/")` | 重新进入 unauthenticated guard → `<AuthRouteGate>` 重定向 |
+
+**不需要新 API** — `web-auth-device-session` barrel 已经导出了所有需要的能力。
+不需要清 IDB（账号还在，下次登录还能恢复 sync）；不需要清 device-id（device
+身份独立 — 同一设备下次以同账号登录还是用同一个 deviceId，符合 device-session
+的设计）。
+
+### Root Cause（精确到行号）
+
+**根因类别**：契约不一致（设计契约缺口）+ prop 漂移（pipeline 缺失）
+
+1. **设计契约缺口**：`AvatarMenu.onSignOut` 被声明为可选 prop，且组件内
+   置 DEV-only warn fallback。这个"可选 + fallback"的设计在 P3 阶段
+   ship 时**没有任何调用方实现 sign-out** — fallback 分支被默认接受为
+   "正确行为"，而真实业务能力（`useWebAuthSession().client.auth.signOut()`）
+   还没接入。
+2. **prop 漂移**：`packages/xai-web-shell/src/AppRail.tsx:136-141` 实例化
+   `<AvatarMenu>` 时**根本没传 `onSignOut`**。`AppRailProps` /
+   `ShellProps` 也没有承上的 prop 链路，导致 host (`apps/web/src/App.tsx`)
+   即使想接入 `useWebAuthSession()` 也没有 prop 通道。
+3. **隐性回归保护缺失**：`AvatarMenu.test.tsx` AV7b 测的是"未传 onSignOut
+   时不抛 + 关 popover"，**正是 bug 的反向断言** — 测试在 ship 当时锁定
+   了"sign-out 是 no-op"作为可接受行为，从而让 bug 在 6 个月生命周期内
+   都没被 unit test 抓到。
+
+**精确定位**：
+- 主问题代码：`packages/xai-web-shell/src/AvatarMenu.tsx:111-134`（fallback 分支）
+- prop 缺失：`packages/xai-web-shell/src/AppRail.tsx:136-141`（没传 onSignOut）
+- prop 链路缺口：`packages/xai-web-shell/src/types.ts:121-167`（ShellProps + AppRailProps 没有 onSignOut）
+- host 缺失：`apps/web/src/App.tsx:147-169`（没有调 `useWebAuthSession` + 没传 onSignOut）
+- 锁定 bug 的测试：`packages/xai-web-shell/src/__tests__/AvatarMenu.test.tsx:145-153`（AV7b）
+
+### Impact / Scope Analysis
+
+| 影响维度 | 评估 |
+|---|---|
+| Frontend / Backend / Contract / Core 边界 | Frontend + Auth 契约 — web SPA 内部，但跨 `xai-web-shell` ↔ `web-auth-device-session` 两个包；后者**只读不改**（hard constraint） |
+| 关联 feature | Direct：AvatarMenu (R-10) / Topbar Avatar 入口；Indirect：login flow（sign-out 后用户会被 auth-guards 重定向到 `/auth/*`） |
+| Route / manifest involvement | 无 route 变更；无 manifest 修改 |
+| Cross-window 影响 | 0 — Web SPA 单窗口 |
+| 是否会引起回归 | 风险极低 — 只在 AvatarMenu / AppRail / Shell / App.tsx 的 prop 链路 + 1 个新 onClick handler；不动 auth provider / device-session 内部状态机 |
+| 同类 bug | 唯一根因相关：AvatarMenu Settings/Statistics 入口此前是同样的 prop-drop 模式（已在 P3 post-verify fix 2026-05-23 修复 — 见 dev_log 上方 7da2733）。Sign-out 是**最后一个未被修复的 AvatarMenu 入口**。 |
+| Audit 重叠 | 修这一条同时关闭 Top-10 #1 / Rail-10 一行；不附带其他 audit 行 |
+
+### Fix Strategy — 三选项决策矩阵
+
+> 用户在 bug report 中明确要求"至少 3 个选项 + 推荐"。下表逐项列代价 / 用户感知 / 范围 / 回归风险 / 测试成本。
+
+#### 选项 A — DISABLE + Tooltip（最小，"诚实呈现"）
+
+实现：
+- AvatarMenu sign-out 按钮加 `disabled` 属性 + `title="Sign-out is not available in this build"`（含 i18n 中文版）。
+- 移除 DEV-only console.warn。
+- 不接入 web-auth-device-session。
+
+代价：~15 行 code + ~3 个 i18n key + 1 个 unit test。
+范围：单文件 `AvatarMenu.tsx` + i18n 字典 1 个 key 对（en/zh）。
+不动：AppRail / Shell / App.tsx / web-auth-device-session 全部。
+用户感知：visible disabled state + tooltip 解释（**诚实但消极**）；保持"没有实际 sign-out 能力"的现状但显式标注。
+回归风险：≈ 0。
+**适用场景**：当 product 决策是"Web Console 当前不暴露 sign-out 能力"时。
+
+**问题**：现状是 `web-auth-device-session` **已经 SHIPPED 了完整 auth 栈**（24/24 Web Console 模块已 GA + 9/9 gap-closure 已 SHIPPED，包括 delete-account 这个比 sign-out 更激进的能力都通了），把按钮 disable 是**逆向退化**而非"诚实呈现" — 能力客观存在，UI 不暴露才是不诚实。
+
+#### 选项 B — 接入 useWebAuthSession + client.auth.signOut（推荐，**中等**）
+
+实现（min-diff）：
+1. `packages/xai-web-shell/src/types.ts` — 在 `ShellProps` + `AppRailProps` 上加 `onSignOut?: () => void`（**仍然可选**，保持向后兼容，AvatarMenu 已有的 fallback 不动）。
+2. `packages/xai-web-shell/src/Shell.tsx` — 透传 `onSignOut` 从 `Shell` props → `<AppRail onSignOut={onSignOut} />`。
+3. `packages/xai-web-shell/src/AppRail.tsx` — 接受 `onSignOut?: () => void`，透传 `<AvatarMenu onSignOut={onSignOut} />`。
+4. `apps/web/src/App.tsx`：
+   - 顶部 import `useWebAuthSession` from `@repo/web-auth-device-session/web`。
+   - 在 `AppInner()` 内 `const { client, clearSessionStorage } = useWebAuthSession();`。
+   - 定义 `const handleSignOut = useCallback(async () => { try { if (client) await client.auth.signOut(); } catch { /* best-effort */ } await clearSessionStorage(); window.location.assign("/"); }, [client, clearSessionStorage]);`。
+   - 把 `onSignOut={handleSignOut}` 传给 `<Shell>`。
+5. 新增/更新 unit tests（详见下方 Test Strategy）。
+
+代价：~50 行 code（含 5 个 prop 链路 edits + 1 个 handler）+ ~30 行 tests = ~80 行。
+范围：`packages/xai-web-shell/src/{types.ts, Shell.tsx, AppRail.tsx}` + `apps/web/src/App.tsx` + 测试文件。
+不动：
+- `AvatarMenu.tsx`（已有 onSignOut prop + fallback 都保留 — 新流程只是"终于把 prop 接上"，DEV-only warn 自动失活，因为 onSignOut 不再是 undefined）
+- `web-auth-device-session/`（hard constraint — 全部 read-only）
+- `plugin-web-storage/` registry（hard constraint）
+- AppearancePane / SettingsFooter / event bus / core types
+- ADR / PLUGIN_MAP / roadmap manifest（hard constraint）
+用户感知：点 sign-out → Supabase 后端撤销 session → `clearSessionStorage` → `window.location.assign("/")` → SPA 重新挂载 → `<AuthRouteGate>` 重定向到 unauthenticated route。**真实 sign-out**。
+回归风险：低；新 onSignOut 是可选 prop（向后兼容），所有现有调用方不传仍走 fallback；新 handler 包了 try/catch（best-effort signOut + 必清 React state + 必跳转）。
+**Mock-auth 模式安全性**：`mockClient` 在 `AppProviders.tsx:51-62` 没有 `auth.signOut` 方法 — 必须在 handler 内做 `typeof client.auth?.signOut === "function"` 防御性 guard，或让 try/catch 包住。`clearSessionStorage()` 在 mock 模式下仍然安全（只改 React state）；`window.location.assign("/")` 在所有模式都安全。
+
+#### 选项 C — Confirmation modal + 完整 sign-out 流程（**大**）
+
+实现：
+- 选项 B 的全部 +
+- 在 `xai-web-shell` 或新建独立 module 实现 sign-out confirmation modal（i18n 双语 + 红色 confirm + cancel 按钮 + ESC/scrim 关闭）。
+- 可能需要把 modal 提到独立小包以满足 Audit 复用模式（参考 `DeleteAccountConfirmModal.tsx`）。
+- AvatarMenu 的 onClick handler 改成"打开 modal"而非直接 sign-out。
+
+代价：~200+ 行 code + 复杂的 modal state 管理 + 5+ 个 i18n key + ~10 个测试。
+范围：可能需要超出 `xai-web-shell` 的改动（modal 组件 + state 提升）。
+用户感知：sign-out 有二次确认（**最严谨**，符合 destruction 操作的 UX 惯例）；但 sign-out 与 delete-account 不同 — sign-out 是可恢复操作（重新登录即可），confirmation modal 在很多产品里是"过度防御"。
+回归风险：中 — 新 modal 组件 + 新 state 跨多个 file。
+**为什么不推荐**：用户的 hard constraint "禁止新增 npm 依赖" + "min-diff bug-fix" 与 confirmation modal 的复杂度相悖；sign-out 在主流产品（Gmail / Notion / Linear）通常**不**有 confirmation（与 delete-account 不同）；本次是 audit batch 第 2/5 个，应优先 ship 简单的修复以保持节奏。
+
+### Recommendation
+
+**推荐 选项 B（接入 useWebAuthSession + client.auth.signOut）**，理由如下：
+
+1. **诚实呈现产品状态**：`web-auth-device-session` 已经 GA + 提供了完整 sign-out 能力（client.auth.signOut + clearSessionStorage），UI 不暴露才是不诚实。选项 A 是逆向退化。
+2. **min-diff**：5 个 prop 链路 edits + 1 个 handler，~80 行 total。不引入 modal 复杂度（vs 选项 C 的 200+ 行）。
+3. **零硬约束破坏**：完全在用户允许的写范围内（`xai-web-shell/` + `apps/web/src/App.tsx`）。零改动 `web-auth-device-session` / `plugin-web-storage` / ADR / PLUGIN_MAP / roadmap manifest。
+4. **向后兼容**：`onSignOut` 仍然是可选 prop；AvatarMenu 已有的 DEV-only fallback 完整保留（测试 AV7b 应改为"测有传 onSignOut 时调用 onSignOut + 关 popover"，仍可保留"未传时关 popover"作为防御性 case）。
+5. **Forward-compatible**：将来若 product 决定加 confirmation modal，host 只需把 `handleSignOut` 替换为"打开 modal"，prop 链路 + 类型不变。
+6. **同类 bug 已有模板**：AvatarMenu Settings/Statistics 在 2026-05-23 post-verify fix（commit 7da2733）已经走过同样的 "prop 链路从 AvatarMenu → AppRail → Shell → App.tsx 全打通 + Shell 在 App.tsx 注入 handler" 模式，本 fix 是**镜像复制**该模式到 sign-out。
+
+### Test Strategy
+
+#### 选项 A（DISABLE） — 若 user 选 A
+
+- `AvatarMenu.test.tsx` 新增 AV7c：`disabled` attribute 存在；点击不触发任何 onSignOut 或 onClose；tooltip 文案 i18n 双语 assert。
+- 删除 AV7b（fallback warn 测试），改为单测试 disabled 状态。
+- 无 App.tsx / 集成测试。
+
+#### 选项 B（推荐） — 详细 test plan
+
+**Unit (Vitest @ `packages/xai-web-shell/src/__tests__/AvatarMenu.test.tsx`)**
+
+- 修改 **AV7b**：从"未传 onSignOut → fallback warn" 改为 "未传 onSignOut → 不抛 + 关 popover"（去掉 DEV warn 断言；fallback 仍存在但不再是 happy path）。
+- 新增 **AV7c**：传 `onSignOut={vi.fn()}` → 点击 sign-out → onSignOut 被调用 1 次 + onClose 被调用 1 次 + onSignOut 在 onClose 之前调用（invocationCallOrder 对比，参考 AV2 模式）。
+- 新增 **AV7d**：`onSignOut` 抛 sync Error → onClose 仍被调用（防御性测试 — 避免按钮卡死）。
+- 新增 **AV7e**：`onSignOut` 返回 unresolved Promise（async signOut 进行中）→ onClose 立即被调用（不 await — 关 popover 不等 sign-out 完成 → 用户视觉立即反馈）。
+
+**Unit (Vitest @ `packages/xai-web-shell/src/__tests__/AppRail.test.tsx`)**
+
+- 新增 **AR-SO1**：`renderRail({ onSignOut: vi.fn() })` → 打开 AvatarMenu → 点击 sign-out → 传入的 onSignOut 被调用。
+- 新增 **AR-SO2**：`renderRail()` 不传 onSignOut → AvatarMenu 正常渲染（向后兼容断言）+ 点击 sign-out 不抛。
+
+**Unit (Vitest @ `packages/xai-web-shell/src/__tests__/Shell.smoke.test.tsx`)**
+
+- 新增 **SH-SO1**：Shell 接受 `onSignOut` prop 并透传到 AppRail（structural assert — render then click sign-out, fixture 的 onSignOut spy 被命中）。
+
+**Unit (Vitest @ `apps/web/src/__tests__/App.signout.test.tsx`，新建)**
+
+- **APP-SO1 — happy path (live mock)**：mock `useWebAuthSession` 返回 `{ client: { auth: { signOut: vi.fn().mockResolvedValue({}) } }, clearSessionStorage: vi.fn().mockResolvedValue() }`；mock `window.location.assign`；render `<App>`；打开 AvatarMenu → 点击 sign-out → `await tick` → `client.auth.signOut` 被调用 1 次 + `clearSessionStorage` 被调用 1 次 + `window.location.assign("/")` 被调用 1 次。
+- **APP-SO2 — order**：sign-out 调用顺序 `client.auth.signOut` → `clearSessionStorage` → `window.location.assign`（invocationCallOrder）。
+- **APP-SO3 — signOut throw (network)**：`client.auth.signOut` reject 一个 network error → `clearSessionStorage` 仍被调用 + `window.location.assign` 仍被调用（best-effort）+ React 不抛错。
+- **APP-SO4 — null client (mock-unauthenticated)**：`useWebAuthSession` 返回 `{ client: null, ... }` → 点击 sign-out → 跳过 signOut + `clearSessionStorage` 被调用 + `window.location.assign` 被调用。
+- **APP-SO5 — missing auth.signOut method (mock client)**：`useWebAuthSession` 返回 `{ client: { auth: {} }, ... }`（mockClient 现状）→ 点击 sign-out → 跳过 signOut + `clearSessionStorage` + `window.location.assign` 仍调用。
+
+**i18n unit (Vitest @ `packages/plugin-web-tokens/src/__tests__/`，仅在选项 A 时新增；选项 B 不需要新 i18n key — `avatar.sign_out` 已有)**
+
+#### Manual smoke checklist（选项 B — Chrome 最新 + Safari 17+）
+
+1. **Cold start (live auth)**：登录 → 进入 `/app` → 打开 AvatarMenu → 点击 Sign Out → 浏览器跳转到 `/` → 自动重定向到 auth → DevTools → IndexedDB `xai-web-auth` 中 supabase session 被清空 → 重新打开 `/app` 走 unauthenticated guard 正常。
+2. **Mock-authenticated mode**：`VITE_WEB_AUTH_MODE=mock-authenticated pnpm --filter web dev` → 同样点击 Sign Out → 跳转到 `/` → 因 mock-authenticated 不会自动登出（重新挂载会立即拿到 mock session），所以 UX 上"看似无效"，但 console 应无 error；handler 路径全部执行成功（不抛）。
+3. **Mock-unauthenticated mode**：理论上不可达（用户未登录时 AvatarMenu 不应可见 — 但若 dev 强制访问 `/app`，点击 sign-out 也应不抛 + window.location.assign("/") 工作）。
+4. **Network failure simulation**：DevTools → Network → Offline → 点 Sign Out → 后端 signOut 失败 → 但 best-effort 兜底确保 `clearSessionStorage + window.location.assign` 仍跑 → 跳转回 `/` → 重新上线后用户处于已登出状态。
+5. **DEV console**：production build 应**完全无任何 console 输出**（DEV-only warn 自动失活，因 onSignOut 不再 undefined）。
+
+### Out of Scope（明确不动）
+
+- ❌ `packages/web-auth-device-session/` — 全部 read-only；不新增 API；不改 session.tsx 的 clearSessionStorage 语义。
+- ❌ `packages/plugin-web-storage/` — registry 不动；不新增 `xai_pref_*` key；不动 wipe 逻辑。
+- ❌ `packages/plugin-web-settings-rest/` — DeleteAccountConfirmModal 不复用（sign-out ≠ delete-account；confirmation modal 是选项 C 的范围，不在推荐选项内）。
+- ❌ npm 依赖 — 不新增任何包。
+- ❌ ADR / PLUGIN_MAP / roadmap manifest — 不动。
+- ❌ Confirmation modal（选项 C 才需）— 推荐选项 B 不做。
+- ❌ Account deletion path — 已在 gap-closure #9 SHIPPED；与 sign-out 完全分离。
+- ❌ Cross-tab sign-out broadcast（即一个 tab signOut 触发其他 tab 也登出）— 不实现；Supabase auth `onAuthStateChange` 已有此能力但其他 tab 是否真的会跳转取决于路由 guard 行为，超出本 fix 范围。
+- ❌ AppearancePane / Settings / event bus — 全部不动。
+- ❌ AvatarMenu 的 fallback 分支（DEV-only warn）— 保留作防御性 dead code；不删（保持向后兼容 + 避免破坏 AV7b 类测试可改不可删）。
+- ❌ 同根因的潜在 bug：`Rail-sync` / `Rail-notif` / `Rail-help` 三个 bottom 按钮 — 它们 `action` 是 `undefined`（参见 AppRail.tsx:106-108），点击是 no-op；这是 audit 其他行的范围，本 fix 不动。
+
+### Files to be Updated by bug-fix（预估，by 推荐选项 B）
+
+- `packages/xai-web-shell/src/types.ts` — ShellProps + AppRailProps 各加 1 行 `onSignOut?: () => void`
+- `packages/xai-web-shell/src/Shell.tsx` — 解构 + 透传 onSignOut
+- `packages/xai-web-shell/src/AppRail.tsx` — 解构 + 传给 AvatarMenu
+- `packages/xai-web-shell/src/__tests__/AvatarMenu.test.tsx` — 修 AV7b + 加 AV7c/d/e
+- `packages/xai-web-shell/src/__tests__/AppRail.test.tsx` — 加 AR-SO1/SO2
+- `packages/xai-web-shell/src/__tests__/Shell.smoke.test.tsx` — 加 SH-SO1
+- `apps/web/src/App.tsx` — import useWebAuthSession + handleSignOut + 传给 Shell
+- `apps/web/src/__tests__/App.signout.test.tsx`（新建）— APP-SO1/2/3/4/5
+- `packages/xai-web-shell/docs/dev_log.md` — 本节继续追加 bug-fix / bug-verify / ship 各阶段 Work Log
+
+### Files Updated by bug-diagnose
+
+- `packages/xai-web-shell/docs/dev_log.md` — appended this BUGFIX section
+
+### Work Log
+
+| Timestamp | Executor | Action | Commits | Next Step |
+|---|---|---|---|---|
+| 2026-05-27 14:50 | claude-opus-4-7[1m] | bug-diagnose — 复现 + 现状调查（AvatarMenu fallback / AppRail prop drop / web-auth-device-session API surface / WebAuthSessionProvider 已 mount）+ 根因（契约缺口 + prop 漂移）+ 3 选项决策矩阵（A DISABLE / B 推荐 useWebAuthSession+signOut / C confirmation modal）+ 推荐选项 B 的详细 prop-link 修复 + 详细 test plan + Out-of-scope 锁定 + 文件清单 | — | bug-fix（推荐选项 B；若 user 偏好 A 或 C 请回 bug-diagnose 调整 strategy） |
+| 2026-05-27 16:05 | claude-sonnet-4-6 — bug-auto-fix | **User Override Decision**: User selected Option C (confirmation modal + full sign-out wire) instead of diagnose-recommended Option B. Rationale recorded: Option C is more UX-complete (二次确认) and the user deemed the modal complexity acceptable given the existing dashboard-widget picker pattern. New component SignOutConfirmDialog.tsx is a necessary supporting artifact of this bug-fix, not a new feature surface. Implemented S1–S6 as a batch: **S1** (68645c0) — Added onSignOut?: () => void to ShellProps + AppRailProps in types.ts; Shell.tsx destructures + forwards to AppRail; AppRail.tsx forwards to AvatarMenu. 94/94 PASS (no new tests in S1 itself). **S2** (fb390de) — New SignOutConfirmDialog.tsx using native <dialog>; 2 new i18n keys in plugin-web-tokens (avatar.sign_out_confirm_title / body, EN+ZH); exported from index.ts; 8 new tests SOCD-1..8. 102/102 PASS. **S3** (aac2a5f) — AvatarMenu.tsx refactored: Sign Out onClick now setDialogOpen(true) when onSignOut wired; renders <SignOutConfirmDialog> inside popover; ESC guard skips when dialog open; dialog resets on popover close. Updated AvatarMenu.test.tsx: AV7/AV7b use scoped querySelector; new AV7c (dialog opens) / AV7d (confirm calls onSignOut) / AV7e (cancel does not call onSignOut). 105/105 PASS. **S4** (cbefa1d) — App.tsx wires handleSignOut via useWebAuthSession() (already provided by WebAuthSessionProvider in AppProviders); handleSignOut = best-effort signOut + clearSessionStorage + window.location.assign("/"); passes onSignOut={handleSignOut} to Shell. Added @repo/web-auth-device-session mock to 6 existing test files (shell.smoke, shell.theme, App.lazy-init, cmdkIntegration, router.integration, router-modules.integration). New App.signout.test.tsx: APP-SO1 (happy path) / APP-SO2 (call order) / APP-SO3 (best-effort network error) / APP-SO4 (null client). web 128/128 PASS. **S5** (339b0e2) — AppRail.test.tsx: renderRail helper gains onSignOut? override; new AR-SO1 (dialog opens, onSignOut not yet called) + AR-SO2 (backward-compatible no-onSignOut). Shell.smoke.test.tsx: new SH-SO1 (structural passthrough smoke: Shell onSignOut prop → dialog opens). 108/108 PASS. **S6** — dev_log updated (this entry), Status Panel flipped to FIX_READY_FOR_VERIFY. Final counts: xai-web-shell 108/108 (+14 vs baseline 94); web 128/128 (+4 vs baseline 124). Both TypeScript clean; xai-web-shell lint 0 warnings. | 68645c0 / fb390de / aac2a5f / cbefa1d / 339b0e2 | bug-verify |
