@@ -346,13 +346,13 @@ describe("BoardWorkspacesModule — BW-Open wire-up (Audit Top-10 #5)", () => {
     localStorage.setItem("xai_active_board", "b-default");
   });
 
-  it("BW-Open-0: CardDetailDialog is not visible on initial render", () => {
+  it("BW-Open-0: CardDetailDialog is not in DOM on initial render (conditional mount)", () => {
     render(<BoardWorkspacesModule lang="en" />);
-    const dialog = screen.queryByTestId("card-detail-dialog");
-    // Dialog is rendered but open=false, so close() is called not showModal
+    // Conditional mount: dialog only appears when openCard !== null.
+    // With no card clicked, the element must be absent entirely so jsdom's
+    // missing HTMLDialogElement.prototype.close cannot throw on mount.
     expect(HTMLDialogElement.prototype.showModal).not.toHaveBeenCalled();
-    // The dialog element exists in the DOM but does not show card content
-    expect(dialog).toBeInTheDocument();
+    expect(screen.queryByTestId("card-detail-dialog")).not.toBeInTheDocument();
     expect(screen.queryByTestId("cdd-title")).not.toBeInTheDocument();
   });
 
@@ -388,21 +388,22 @@ describe("BoardWorkspacesModule — BW-Open wire-up (Audit Top-10 #5)", () => {
     expect(HTMLDialogElement.prototype.showModal).toHaveBeenCalled();
   });
 
-  it("BW-Open-Close: closing dialog via onClose resets openCard state", () => {
+  it("BW-Open-Close: closing dialog via onClose unmounts CardDetailDialog (conditional mount)", () => {
     render(<BoardWorkspacesModule lang="en" />);
     // Open via table view
     fireEvent.click(screen.getByTestId("vp-table"));
     fireEvent.click(screen.getByTestId("tv-open-card"));
     expect(HTMLDialogElement.prototype.showModal).toHaveBeenCalled();
+    // Dialog must be present while open
+    expect(screen.getByTestId("card-detail-dialog")).toBeInTheDocument();
 
     vi.clearAllMocks();
 
-    // Close the dialog — find the close action button
-    // It will only render card content if the card was found in lists
-    // Since our stub uses "c-tv" which doesn't exist in seed, we check close() path
+    // Fire the cancel event — CardDetailDialog's onClose sets openCard to null
+    // which causes conditional-mount to remove the element from the DOM.
     const dialog = screen.getByTestId("card-detail-dialog");
     fireEvent(dialog, new Event("cancel", { bubbles: true, cancelable: true }));
-    // After close, dialog.close() should be called (open flips to false)
-    expect(HTMLDialogElement.prototype.close).toHaveBeenCalled();
+    // After close: dialog is unmounted (not just hidden) — no close() call needed
+    expect(screen.queryByTestId("card-detail-dialog")).not.toBeInTheDocument();
   });
 });

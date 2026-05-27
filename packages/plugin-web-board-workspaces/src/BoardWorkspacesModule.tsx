@@ -565,13 +565,19 @@ export function BoardWorkspacesModule({ lang }: BoardWorkspacesModuleProps) {
         />
       )}
 
-      <CardDetailDialog
-        open={!!openCard}
-        card={resolvedCard}
-        listName={resolvedListName}
-        lang={lang}
-        onClose={() => setOpenCard(null)}
-      />
+      {/* Conditional mount: matches ShareModal sibling pattern (line 560) — prevents
+          jsdom's missing HTMLDialogElement.prototype.close from throwing on initial
+          mount when no card is open. See _web-noop-audit/20260527 + dev_log
+          BLOCKED entry for context. */}
+      {openCard && (
+        <CardDetailDialog
+          open={true}
+          card={resolvedCard}
+          listName={resolvedListName}
+          lang={lang}
+          onClose={() => setOpenCard(null)}
+        />
+      )}
     </div>
   );
 }
