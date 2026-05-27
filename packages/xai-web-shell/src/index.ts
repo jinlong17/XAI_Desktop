@@ -12,6 +12,7 @@ export { Topbar }           from "./Topbar.js";
 export { AppRail }          from "./AppRail.js";
 export { AvatarMenu }       from "./AvatarMenu.js";
 export { Shell }            from "./Shell.js";
+export { SignOutConfirmDialog } from "./SignOutConfirmDialog.js";
 
 // ---- Registry (provider + hooks) -------------------------------------------
 export { WebShellProvider } from "./registry.js";
@@ -28,3 +29,4 @@ export type {
   AvatarMenuProps,
   WebShellIconName,
 } from "./types.js";
+export type { SignOutConfirmDialogProps } from "./SignOutConfirmDialog.js";
