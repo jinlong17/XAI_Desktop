@@ -77,6 +77,9 @@ async function unmountApp(app: MountedApp): Promise<void> {
 }
 
 afterEach(() => {
+  vi.unstubAllEnvs();
+  localStorage.clear();
+  sessionStorage.clear();
   document.body.innerHTML = "";
   mockDeviceFetch.mockClear();
 });
@@ -131,21 +134,32 @@ describe("web host router integration", () => {
     await unmountApp(app);
   });
 
-  // RR1 — gap-closure row #7: OAuth callback route resolves
-  it("RR1: /app/settings/integrations/callback route resolves and renders the callback page", async () => {
-    // The route must render without throwing; the callback page renders an empty
-    // container in "pending" state (no ?state= or ?error= → shows invalid banner).
-    const app = await mountRouter(["/app/settings/integrations/callback"]);
-    // Route resolved correctly — the container exists and is mounted.
-    expect(app.container).toBeTruthy();
+  // RR1 — gap-closure row #7: OAuth callback route resolves and fail-closes offline
+  it("RR1: /app/settings/integrations/callback under desktop offline profile does not mutate integration prefs", async () => {
+    vi.stubEnv("VITE_WEB_RUNTIME_PROFILE", "desktop-phase1-offline");
+    const pendingState = "notion.router-test-state";
+    sessionStorage.setItem(
+      "xai_oauth_pending_notion",
+      JSON.stringify({
+        state: pendingState,
+        codeVerifier: "router-test-code-verifier",
+        expiresAt: Date.now() + 60_000,
+      }),
+    );
+
+    const app = await mountRouter([
+      `/app/settings/integrations/callback?state=${encodeURIComponent(pendingState)}&code=fake-code`,
+    ]);
+
+    expect(localStorage.getItem("xai_pref_integrations_connected_notion")).not.toBe("true");
     await unmountApp(app);
   });
 
   // RR-PREMIUM-1 — gap-closure row #8: Checkout success route resolves
-  it("RR-PREMIUM-1: /app/settings/premium/checkout/success route resolves and renders", async () => {
-    const app = await mountRouter(["/app/settings/premium/checkout/success"]);
-    // Route resolved correctly — the container exists and is mounted.
-    expect(app.container).toBeTruthy();
+  it("RR-PREMIUM-1: /app/settings/premium/checkout/success under desktop offline profile does not mutate premium tier", async () => {
+    vi.stubEnv("VITE_WEB_RUNTIME_PROFILE", "desktop-phase1-offline");
+    const app = await mountRouter(["/app/settings/premium/checkout/success?session_id=cs_router_test"]);
+    expect(localStorage.getItem("xai_pref_premium_tier")).not.toBe("premium_stub");
     await unmountApp(app);
   });
 

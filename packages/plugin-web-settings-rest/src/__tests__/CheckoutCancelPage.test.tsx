@@ -31,6 +31,7 @@ describe("CheckoutCancelPage", () => {
   beforeEach(() => {
     vi.useFakeTimers();
     localStorage.clear();
+    vi.unstubAllEnvs();
   });
 
   it("CC1: renders without error", () => {
@@ -87,5 +88,14 @@ describe("CheckoutCancelPage", () => {
     });
     expect(fetchSpy).not.toHaveBeenCalled();
     fetchSpy.mockRestore();
+  });
+
+  it("CC5: desktop offline profile shows callback-unavailable banner copy", async () => {
+    vi.stubEnv("VITE_WEB_RUNTIME_PROFILE", "desktop-phase1-offline");
+    renderCancelPage();
+    await act(async () => {
+      vi.advanceTimersByTime(100);
+    });
+    expect(screen.getByText("Checkout callback is unavailable in desktop offline mode")).toBeTruthy();
   });
 });

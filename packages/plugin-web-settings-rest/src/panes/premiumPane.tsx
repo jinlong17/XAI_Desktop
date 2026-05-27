@@ -15,6 +15,10 @@
  */
 
 import * as React from "react";
+import {
+  isDesktopPhase1OfflineRuntime,
+  resolveWebRuntimeProfile,
+} from "@repo/core";
 import type { Pane, PaneRenderProps } from "@repo/plugin-web-settings-shell";
 import { useI18n } from "@repo/plugin-web-tokens";
 import { localI18n } from "../internal/localI18n.js";
@@ -26,6 +30,11 @@ import { PremiumCancelButton } from "../internal/premiumCancelButton.js";
 function PremiumPaneContent({ lang }: PaneRenderProps): React.ReactElement {
   const { s } = useI18n(lang);
   const t = localI18n(lang);
+  const runtimeProfile = resolveWebRuntimeProfile(
+    import.meta.env as Record<string, string | undefined>,
+  );
+  const isDesktopOfflineRuntime =
+    isDesktopPhase1OfflineRuntime(runtimeProfile);
   const { effectiveTier, startedAt } = usePremiumTier();
 
   return (
@@ -68,6 +77,13 @@ function PremiumPaneContent({ lang }: PaneRenderProps): React.ReactElement {
         {/* Upgrade button — only visible when NOT premium_stub */}
         {effectiveTier !== "premium_stub" && (
           <PremiumUpgradeButton lang={lang} />
+        )}
+        {isDesktopOfflineRuntime && (
+          <p data-testid="premium-offline-note">
+            {lang === "zh"
+              ? "桌面离线模式下支付回调不可用。"
+              : "Payment callbacks are unavailable in desktop offline mode."}
+          </p>
         )}
 
         {/* Cancel Subscription button — only visible when premium_stub */}

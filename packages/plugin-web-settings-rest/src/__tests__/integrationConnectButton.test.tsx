@@ -21,6 +21,7 @@ beforeEach(() => {
 });
 
 afterEach(() => {
+  vi.unstubAllEnvs();
   sessionStorage.clear();
   vi.restoreAllMocks();
 });
@@ -62,5 +63,17 @@ describe("IntegrationConnectButton", () => {
     });
 
     expect(localStorage.length).toBe(0);
+  });
+
+  it("CB5: desktop offline profile keeps connect disabled and prevents navigation", async () => {
+    vi.stubEnv("VITE_WEB_RUNTIME_PROFILE", "desktop-phase1-offline");
+    render(<IntegrationConnectButton provider={notionProvider} lang="en" />);
+    const btn = screen.getByRole("button", { name: /Connect/i });
+    expect(btn).toBeDisabled();
+
+    fireEvent.click(btn);
+    await waitFor(() => {
+      expect(assignMock).not.toHaveBeenCalled();
+    });
   });
 });

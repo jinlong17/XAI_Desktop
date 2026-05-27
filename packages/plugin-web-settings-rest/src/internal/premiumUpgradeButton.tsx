@@ -22,6 +22,10 @@
  */
 
 import * as React from "react";
+import {
+  isDesktopPhase1OfflineRuntime,
+  resolveWebRuntimeProfile,
+} from "@repo/core";
 import type { Lang } from "@repo/plugin-web-tokens";
 import { localI18n } from "./localI18n.js";
 import { usePremiumConfig } from "./usePremiumConfig.js";
@@ -35,12 +39,17 @@ export function PremiumUpgradeButton({
   lang,
 }: PremiumUpgradeButtonProps): React.ReactElement {
   const t = localI18n(lang);
+  const runtimeProfile = resolveWebRuntimeProfile(
+    import.meta.env as Record<string, string | undefined>,
+  );
+  const isDesktopOfflineRuntime =
+    isDesktopPhase1OfflineRuntime(runtimeProfile);
   const { paymentLinkUrl, configured } = usePremiumConfig();
   const { setTier } = usePremiumTier();
 
   const handleUpgrade = (e: React.MouseEvent<HTMLButtonElement>): void => {
     e.preventDefault();
-    if (!configured || !paymentLinkUrl) return;
+    if (!configured || !paymentLinkUrl || isDesktopOfflineRuntime) return;
 
     // Set tier to "pending" briefly before navigation (FA-3 — short-lived state).
     // This is a transitional UX state only; the actual full-page navigation
@@ -52,13 +61,19 @@ export function PremiumUpgradeButton({
     window.location.assign(paymentLinkUrl);
   };
 
-  if (!configured) {
+  if (!configured || isDesktopOfflineRuntime) {
     return (
       <button
         type="button"
         className="premium-upgrade-btn premium-upgrade-btn--disabled"
         disabled
-        title={t("premium.upgrade_disabled_tooltip")}
+        title={
+          isDesktopOfflineRuntime
+            ? (lang === "zh"
+              ? "桌面离线模式暂不支持升级"
+              : "Upgrade is unavailable in desktop offline mode")
+            : t("premium.upgrade_disabled_tooltip")
+        }
         aria-label={t("premium.btn.upgrade")}
         data-testid="premium-upgrade-btn-disabled"
       >

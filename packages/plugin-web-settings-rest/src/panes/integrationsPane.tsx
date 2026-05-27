@@ -16,6 +16,10 @@
  */
 
 import * as React from "react";
+import {
+  isDesktopPhase1OfflineRuntime,
+  resolveWebRuntimeProfile,
+} from "@repo/core";
 import type { Pane, PaneRenderProps } from "@repo/plugin-web-settings-shell";
 import { useI18n } from "@repo/plugin-web-tokens";
 import { usePref } from "@repo/plugin-web-storage";
@@ -89,6 +93,11 @@ function IntegrationCard({ spec }: IntegrationCardProps): React.ReactElement {
 function IntegrationsPaneContent({ lang }: PaneRenderProps): React.ReactElement {
   const { s } = useI18n(lang);
   const t = localI18n(lang);
+  const runtimeProfile = resolveWebRuntimeProfile(
+    import.meta.env as Record<string, string | undefined>,
+  );
+  const isDesktopOfflineRuntime =
+    isDesktopPhase1OfflineRuntime(runtimeProfile);
 
   // Per-provider connection state
   const [notionConnected, setNotionConnected] = usePref(
@@ -136,6 +145,13 @@ function IntegrationsPaneContent({ lang }: PaneRenderProps): React.ReactElement 
       {/* Connected providers section */}
       <section className="int-connected-section" data-testid="int-connected-section">
         <h4 className="int-h">{t("int.section.connected")}</h4>
+        {isDesktopOfflineRuntime && (
+          <p data-testid="int-offline-note">
+            {lang === "zh"
+              ? "桌面离线模式下连接回调已禁用。"
+              : "Connect callbacks are disabled in desktop offline mode."}
+          </p>
+        )}
         <div className="int-connected-grid">
           {PROVIDERS.map((provider) => {
             const isConnected = connectedMap[provider.id] ?? false;

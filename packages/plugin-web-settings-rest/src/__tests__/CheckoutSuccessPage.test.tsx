@@ -31,6 +31,7 @@ describe("CheckoutSuccessPage", () => {
   beforeEach(() => {
     vi.useFakeTimers();
     localStorage.clear();
+    vi.unstubAllEnvs();
   });
 
   it("CS1: renders without error (pending state initially)", () => {
@@ -125,5 +126,15 @@ describe("CheckoutSuccessPage", () => {
     });
     expect(fetchSpy).not.toHaveBeenCalled();
     fetchSpy.mockRestore();
+  });
+
+  it("CS9: desktop offline profile fail-closed — valid session_id does not mutate premium tier", async () => {
+    vi.stubEnv("VITE_WEB_RUNTIME_PROFILE", "desktop-phase1-offline");
+    renderSuccessPage("?session_id=cs_test_abc123");
+    await act(async () => {
+      vi.advanceTimersByTime(100);
+    });
+    expect(localStorage.getItem("xai_pref_premium_tier")).not.toBe("premium_stub");
+    expect(screen.queryByTestId("premium-cb-banner-offline")).toBeTruthy();
   });
 });
