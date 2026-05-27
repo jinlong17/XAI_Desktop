@@ -23,7 +23,7 @@
  * See packages/xai-web-shell/docs/dev_log.md BUGFIX §Fix Strategy Path R1.
  */
 
-import { useState, useEffect, useMemo } from "react";
+import { useState, useEffect, useMemo, useCallback } from "react";
 import { Outlet, useNavigate } from "react-router";
 import {
   applyTheme,
@@ -57,6 +57,8 @@ import {
 } from "@repo/xai-web-cmdk";
 // Extension 2026-05-26 — Premium tier badge for Topbar (gap-closure row #8 F1)
 import { PremiumTierBadge } from "@repo/plugin-web-settings-rest";
+// Bugfix: Audit Top-10 #1 / Rail-10 — sign-out handler wired from auth session
+import { useWebAuthSession } from "@repo/web-auth-device-session";
 
 // ---- readLocalPref — safe localStorage reader for lazy useState initializers --
 //
@@ -143,6 +145,23 @@ function AppInner() {
     [featurePrefs],
   );
 
+  // Bugfix: Audit Top-10 #1 / Rail-10 — sign-out handler.
+  // Reads from WebAuthSessionProvider (already mounted in AppProviders via main.tsx).
+  // Steps: 1) best-effort Supabase backend sign-out  2) clear React session state
+  //        3) hard-redirect to "/" so AuthRouteGate takes over.
+  const { client, clearSessionStorage } = useWebAuthSession();
+  const handleSignOut = useCallback(async () => {
+    try {
+      if (client && typeof client.auth?.signOut === "function") {
+        await client.auth.signOut();
+      }
+    } catch {
+      // best-effort: network error should not block the state clear + redirect
+    }
+    await clearSessionStorage();
+    window.location.assign("/");
+  }, [client, clearSessionStorage]);
+
   return (
     <WebShellProvider
       modules={modules}
@@ -164,6 +183,7 @@ function AppInner() {
         setDensity={setDensity}
         onOpenSearch={() => openPalette({ source: "topbar-click" })}
         premiumBadge={<PremiumTierBadge lang={lang} />}
+        onSignOut={handleSignOut}
       >
         <Outlet />
       </Shell>

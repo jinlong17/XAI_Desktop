@@ -27,6 +27,20 @@ vi.mock("@repo/xai-web-event-bus", () => ({
   useWebEventListener: vi.fn(),
 }));
 
+vi.mock("@repo/web-auth-device-session", () => ({
+  useWebAuthSession: () => ({
+    client: null,
+    clearSessionStorage: vi.fn().mockResolvedValue(undefined),
+    state: "authenticated",
+    session: null,
+    deviceId: null,
+    syncVersion: "2026-05",
+    refreshSession: vi.fn(),
+    ensureDeviceIdentity: vi.fn(),
+    setSession: vi.fn(),
+  }),
+}));
+
 beforeEach(() => {
   localStorage.clear();
   document.documentElement.removeAttribute("data-theme");
