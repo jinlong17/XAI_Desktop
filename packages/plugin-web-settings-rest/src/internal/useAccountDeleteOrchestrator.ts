@@ -21,6 +21,10 @@
  */
 
 import * as React from "react";
+import {
+  isDesktopPhase1OfflineRuntime,
+  resolveWebRuntimeProfile,
+} from "@repo/core";
 import { PREF_REGISTRY, removePref } from "@repo/plugin-web-storage";
 import type { WebPrefKey } from "@repo/plugin-web-storage";
 import {
@@ -47,12 +51,20 @@ function isMockAuthMode(): boolean {
   return import.meta.env.VITE_WEB_AUTH_MODE === "mock-authenticated";
 }
 
+function isDesktopOfflineRuntimeProfile(): boolean {
+  const runtimeProfile = resolveWebRuntimeProfile(
+    import.meta.env as Record<string, string | undefined>,
+  );
+  return isDesktopPhase1OfflineRuntime(runtimeProfile);
+}
+
 export function useAccountDeleteOrchestrator(): UseAccountDeleteOrchestratorResult {
   const [state, setState] = React.useState<OrchestratorState>("idle");
   const [error, setError] = React.useState<AccountDeleteError | null>(null);
   const isSubmittingRef = React.useRef(false);
 
-  const IS_MOCK_AUTH = isMockAuthMode();
+  const IS_LOCAL_ONLY_DELETE_MODE =
+    isMockAuthMode() || isDesktopOfflineRuntimeProfile();
 
   const { client: supabaseClient } = useWebAuthSession();
 
@@ -65,10 +77,11 @@ export function useAccountDeleteOrchestrator(): UseAccountDeleteOrchestratorResu
     setError(null);
 
     // Read env mode at call-time (dynamic, not captured at hook init) for testability.
-    const currentIsMockAuth = isMockAuthMode();
+    const currentIsLocalOnlyDeleteMode =
+      isMockAuthMode() || isDesktopOfflineRuntimeProfile();
 
     try {
-      if (!currentIsMockAuth) {
+      if (!currentIsLocalOnlyDeleteMode) {
         // Live-auth: call backend FIRST (DEL-ORCH-3 sequencing).
         // supabaseClient is obtained from the SHIPPED session context.
         if (!supabaseClient) {
@@ -87,7 +100,8 @@ export function useAccountDeleteOrchestrator(): UseAccountDeleteOrchestratorResu
           }
         }
       }
-      // Mock-auth: skip backend + signOut — proceed directly to local wipe.
+      // Local-only mode (mock-auth or desktop/offline runtime profile):
+      // skip backend + signOut and proceed directly to local wipe.
 
       // Local wipe (same in both paths — HC3: only reached AFTER backend success or mock skip).
       setState("wiping");
@@ -124,7 +138,7 @@ export function useAccountDeleteOrchestrator(): UseAccountDeleteOrchestratorResu
   return {
     state,
     error,
-    isMockAuth: IS_MOCK_AUTH,
+    isMockAuth: IS_LOCAL_ONLY_DELETE_MODE,
     submit,
     reset,
   };

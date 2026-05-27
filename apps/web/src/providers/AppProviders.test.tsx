@@ -48,6 +48,7 @@ describe("AppProviders desktop auth contract", () => {
     authMock.bridgeProps.length = 0;
     authMock.createTransport.mockClear();
     setEnv("VITE_WEB_AUTH_MODE", undefined);
+    setEnv("VITE_WEB_RUNTIME_PROFILE", undefined);
     setEnv("VITE_SUPABASE_URL", undefined);
     setEnv("VITE_SUPABASE_ANON_KEY", undefined);
   });
@@ -72,5 +73,21 @@ describe("AppProviders desktop auth contract", () => {
     };
     const { data } = await client.auth.getSession();
     expect(data.session?.user.role).toBe("authenticated");
+  });
+
+  it("keeps transport inactive when desktop offline runtime profile is set even in live auth mode", () => {
+    setEnv("VITE_WEB_AUTH_MODE", "live");
+    setEnv("VITE_WEB_RUNTIME_PROFILE", "desktop-phase1-offline");
+    setEnv("VITE_SUPABASE_URL", "https://example.supabase.co");
+    setEnv("VITE_SUPABASE_ANON_KEY", "anon-key");
+
+    render(
+      <AppProviders>
+        <div>child</div>
+      </AppProviders>
+    );
+
+    expect(authMock.createTransport).not.toHaveBeenCalled();
+    expect(authMock.bridgeProps).toHaveLength(0);
   });
 });

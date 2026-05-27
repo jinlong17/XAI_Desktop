@@ -138,6 +138,22 @@ describe("useAccountDeleteOrchestrator — P3 (gap-closure row #9)", () => {
     expect(assignSpy).toHaveBeenCalledWith("/");
   });
 
+  it("DEL-ORCH-2b: desktop offline runtime profile path — deleteAccount NOT called and local-only wipe still runs", async () => {
+    vi.stubEnv("VITE_WEB_AUTH_MODE", "live");
+    vi.stubEnv("VITE_WEB_RUNTIME_PROFILE", "desktop-phase1-offline");
+    mockWipeRegisteredIDB.mockResolvedValue(undefined);
+
+    const { result } = renderHook(() => useAccountDeleteOrchestrator());
+    await act(async () => {
+      await result.current.submit();
+    });
+
+    expect(mockDeleteAccount).not.toHaveBeenCalled();
+    expect(mockRemovePref).toHaveBeenCalledTimes(Object.keys(PREF_REGISTRY).length);
+    expect(mockWipeRegisteredIDB).toHaveBeenCalledTimes(1);
+    expect(assignSpy).toHaveBeenCalledWith("/");
+  });
+
   it("DEL-ORCH-3: live-auth failure — deleteAccount throws kind=network → state=failure → removePref NOT called → assign NOT called", async () => {
     mockDeleteAccount.mockRejectedValue(
       new AccountDeleteError("network", "Network error during account-delete invoke"),

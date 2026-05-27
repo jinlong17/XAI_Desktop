@@ -1,5 +1,9 @@
 import { useEffect, useMemo, type PropsWithChildren } from "react";
 import {
+  isDesktopPhase1OfflineRuntime,
+  resolveWebRuntimeProfile,
+} from "@repo/core";
+import {
   DeviceSessionBridge,
   useDeviceBoundFetch,
   useWebAuthSession,
@@ -268,6 +272,11 @@ function resolveWebSupabaseConfig() {
 
 export function AppProviders({ children }: PropsWithChildren) {
   const authMode = resolveWebAuthMode();
+  const runtimeProfile = resolveWebRuntimeProfile(
+    import.meta.env as Record<string, string | undefined>,
+  );
+  const isDesktopOfflineRuntime =
+    isDesktopPhase1OfflineRuntime(runtimeProfile);
   const config = resolveWebSupabaseConfig();
   const mockSession = authMode === "mock-authenticated" ? createMockSession() : null;
   const mockClient = useMemo<MockSupabaseLikeClient | null>(
@@ -276,12 +285,12 @@ export function AppProviders({ children }: PropsWithChildren) {
   );
   const transport = useMemo(
     () =>
-      config && authMode === "live"
+      config && authMode === "live" && !isDesktopOfflineRuntime
         ? createRestRpcDeviceTransport({
             baseUrl: config.url
           })
         : null,
-    [authMode, config]
+    [authMode, config, isDesktopOfflineRuntime]
   );
 
   return (
