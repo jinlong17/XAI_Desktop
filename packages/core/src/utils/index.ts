@@ -1,1 +1,1 @@
-// Shared utility functions — placeholder
+export * from "./runtime-profile";

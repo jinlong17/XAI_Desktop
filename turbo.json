@@ -11,7 +11,8 @@
     "SENTRY_PROJECT",
     "SENTRY_RELEASE",
     "VITE_STRIPE_PAYMENT_LINK_URL",
-    "VITE_WEB_AUTH_MODE"
+    "VITE_WEB_AUTH_MODE",
+    "VITE_WEB_RUNTIME_PROFILE"
   ],
   "tasks": {
     "build": {
