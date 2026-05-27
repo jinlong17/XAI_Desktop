@@ -72,3 +72,23 @@ export const STR_HEADER = {
 
 /** Bilingual day-name table (Mon-first localized labels). */
 export const PLANNER_WEEKDAYS_ZH: readonly string[] = ["周日", "周一", "周二", "周三", "周四", "周五", "周六"];
+
+/**
+ * STR_CARD_DETAIL — bilingual strings for CardDetailDialog.
+ *
+ * Audit Top-10 #5 fix — B-23/B-29/B-32/B-34/B-36 + Map view.
+ * Local STR pattern: no plugin-web-tokens edit.
+ */
+export const STR_CARD_DETAIL = {
+  /** Dialog heading is the card title itself; this is the dialog accessible label. */
+  dialogLabel:  { en: "Card detail",  zh: "卡片详情"  },
+  listLabel:    { en: "List",         zh: "所属列"     },
+  dueLabel:     { en: "Due",          zh: "截止日"     },
+  startLabel:   { en: "Start",        zh: "开始日"     },
+  lateLabel:    { en: "Late",         zh: "已逾期"     },
+  labelsLabel:  { en: "Labels",       zh: "标签"       },
+  membersLabel: { en: "Members",      zh: "成员"       },
+  checklistLabel: { en: "Checklist",  zh: "核对表"     },
+  attachLabel:  { en: "Attachments",  zh: "附件"       },
+  close:        { en: "Close",        zh: "关闭"       },
+} as const;
