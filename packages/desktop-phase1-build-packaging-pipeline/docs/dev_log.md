@@ -7,20 +7,20 @@
 | Workflow | FEATURE_DEV |
 | Target | desktop-phase1-build-packaging-pipeline |
 | Title | Phase 1 Desktop Build and Packaging Pipeline |
-| Current Phase | FEATURE_REVIEW |
-| Status | APPROVED |
-| Suggested Next | feature-build |
+| Current Phase | FEATURE_VERIFY |
+| Status | READY_FOR_VERIFY |
+| Suggested Next | feature-verify |
 | Automation Mode | B-Codex |
 | Verify Cross-vendor | yes |
-| Executor | feature-review (Codex, gpt-5.4 inline) |
-| Updated | 2026-05-27 15:38 PDT |
-| Risks | Local DMG creation currently stalls after `Running bundle_dmg.sh` when Tauri hands off to Finder/AppleScript tooling, so the plan must preserve `.app` bundle verification as the deterministic local substitute while recording the exact DMG blocker; `docs/release/dmg-build.md` is stale to the pre-ADR-0011 overlay surface and must be updated carefully; real macOS hardware still needs manual clean-machine install/launch evidence before ship can claim installer confidence. |
+| Executor | feature-auto-build (Codex, gpt-5.3-codex inline repair) |
+| Updated | 2026-05-27 16:07 PDT |
+| Risks | DMG packaging still stalls locally after `Running bundle_dmg.sh` (no final artifact under `target/debug/bundle/dmg/`), so clean-machine DMG mount/drag-install verification remains deferred to real macOS manual verification; `.app` artifact and Tauri-host startup path are verified locally. |
 
 ## Phase Plan
 
 ### Phase 1 — Canonical Desktop Packaging Commands
 
-Status: PLANNED.
+Status: DONE (`4684deba`).
 
 - Rework `apps/desktop/package.json` so desktop-facing commands map to the Tauri host, not directly to raw `@repo/web` scripts.
 - Preserve `apps/desktop/src-tauri/tauri.conf.json` as the owner of `apps/web` dist integration and desktop mock-auth build hooks.
@@ -28,7 +28,7 @@ Status: PLANNED.
 
 ### Phase 2 — Offline App-Bundle Smoke
 
-Status: PLANNED.
+Status: DONE (`fd0cfb93`).
 
 - Add or document a repeatable smoke path for the built `.app`.
 - Verify offline `/app` entry from bundled assets.
@@ -36,7 +36,7 @@ Status: PLANNED.
 
 ### Phase 3 — DMG Attempt and Blocker Recording
 
-Status: PLANNED.
+Status: DONE (`813135ea`).
 
 - Add an explicit desktop DMG packaging command.
 - Attempt local `.dmg` generation.
@@ -59,9 +59,24 @@ Recommendations for `feature-build`:
 - Rewrite `docs/release/dmg-build.md` to the ADR-0011 Phase 1 reality: single normal window, offline `/app` smoke, and explicit "no overlay/control/grid startup" checks. Remove the old transparent/control/account-export manual smoke language.
 - Record the DMG outcome with exact evidence from the build phase: command, artifact path, last emitted stage (`bundle_dmg.sh` / `osascript` if it stalls), and the accepted `.app`-bundle fallback for this environment.
 
+## Verification Notes
+
+Previous verification found runtime/package behavior acceptable but blocked on commit traceability. The local-only packaging commit segment was rewritten into single-intent commits:
+
+- Planning/docs seed: `34e32319`
+- Phase 1 commands/runbook: `4684deba`
+- Phase 2 app-bundle smoke evidence: `fd0cfb93`
+- Phase 3 DMG blocker evidence: `813135ea`
+
+The prior mixed-scope local commits (`430fd9e`, `42036e9`, `6aef49c`, `5edfc77`) were replaced before push and are no longer part of the active branch history.
+
 ## Work Log
 
 | Timestamp | Executor | Action | Commits | Next |
 |---|---|---|---|---|
 | 2026-05-27 15:33 PDT | feature-plan (Codex, gpt-5.4 inline) | Fresh plan: created the feature brief, discovery review, and docs quartet for the Phase 1 desktop packaging/build pipeline. Confirmed upstream dependencies (`desktop-tauri-web-dist-normal-window` SHIPPED, `desktop-web-auth-offline-mode` READY_TO_SHIP), verified current `tauri.conf.json` already points to `apps/web/dist`, and captured a local DMG baseline where `pnpm --filter desktop tauri build --debug --bundles dmg` reached `bundle_dmg.sh` then stalled under `osascript` without emitting a `.dmg`. | — | feature-review |
 | 2026-05-27 15:38 PDT | feature-review (Codex, gpt-5.4 inline) | APPROVED — validated that the plan stays narrowly on the Phase 1 packaging/operator contract, accepts `.app` bundle verification as the deterministic local substitute when DMG tooling stalls, preserves the single normal-window/no-overlay startup requirement, and includes the required offline `/app` + DMG-attempt test coverage. Recorded 3 non-blocking build recommendations. | — | feature-build |
+| 2026-05-27 15:45 PDT | feature-auto-build (Codex, gpt-5.3-codex inline) | Phase 1 complete: remapped `apps/desktop` scripts to Tauri-host contract (`dev`, `build`, `build:dmg`) with secondary web passthrough scripts, and rewrote `docs/release/dmg-build.md` to ADR-0011 Phase 1 requirements (single normal window, offline `/app` smoke, explicit no overlay/control/grid startup check, DMG blocker recording). Tests run in this phase window: `pnpm --filter @repo/web build` PASS; bounded `pnpm --filter desktop dev` probe PASS (hit `beforeDevCommand` + Rust host startup); `cargo test --manifest-path apps/desktop/src-tauri/Cargo.toml` PASS (47/47). | `4684deba` | continue Phase 2 |
+| 2026-05-27 15:46 PDT | feature-auto-build (Codex, gpt-5.3-codex inline) | Phase 2 complete: added repeatable app-bundle smoke evidence at `docs/reviews/desktop-phase1-build-packaging-pipeline/20260527-app-bundle-smoke.md`, including command outcomes, `.app` path evidence, bounded Tauri host startup proof, and explicit manual offline GUI follow-ups for `feature-verify`. Tests recorded: `pnpm --filter desktop build` PASS with output `apps/desktop/src-tauri/target/debug/bundle/macos/X Desktop.app`. | `fd0cfb93` | continue Phase 3 |
+| 2026-05-27 15:49 PDT | feature-auto-build (Codex, gpt-5.3-codex inline) | Phase 3 complete: ran explicit DMG packaging command `pnpm --filter desktop build:dmg`; observed deterministic progress to `Bundling X Desktop_1.0.0-rc.1_aarch64.dmg` and `Running bundle_dmg.sh`, then no further output for 60s across two probes; interrupted command and recorded blocker evidence plus expected artifact path and `.app` fallback in `docs/reviews/desktop-phase1-build-packaging-pipeline/20260527-dmg-attempt.md`. | `813135ea` | feature-verify |
+| 2026-05-27 16:07 PDT | feature-auto-build (Codex, gpt-5.3-codex inline repair) | Repaired the verify blocker by rewriting the local-only packaging commit segment into single-intent commits: docs seed (`34e32319`), Phase 1 (`4684deba`), Phase 2 (`fd0cfb93`), and Phase 3 (`813135ea`). Updated Status Panel back to READY_FOR_VERIFY for independent verification. | `34e32319`, `4684deba`, `fd0cfb93`, `813135ea` | feature-verify |
