@@ -6,7 +6,7 @@
 |---|---|
 | ADR # | 0010 |
 | Title | P1 Desktop Client Resume Plan |
-| Status | **DRAFT** — pending G2 (cross-vendor manual smoke) evidence from operator before Accepted |
+| Status | **Accepted** — 2026-05-26 (Chrome-only carve-out per ADR-0008 §S3 24h-evidence pattern; see Acceptance Note below) |
 | Date | 2026-05-26 |
 | Author | Claude Opus 4.7 (1M context) — drafted at operator request after 9/9 gap-closure SHIPPED |
 | Supersedes | ADR-0009 §D1 (priority order) once Accepted |
@@ -24,12 +24,12 @@ As of 2026-05-26, ADR-0009 §D2 gates evaluate:
 | Gate | Status | Evidence |
 |---|---|---|
 | **G1** — Web Console 24/24 SHIPPED in manifest + PLUGIN_MAP + every package dev_log | ✅ **PASS** | `docs/workflow/roadmap/xai-web-console.md` 24/24 + `docs/workflow/roadmap/xai-web-console-gap-closure.md` 9/9 + PLUGIN_MAP rows all Stable + every package's dev_log `Status: SHIPPED` |
-| **G2** — Cloudflare Pages deploy live + 24h cross-vendor smoke evidence | ⏳ **PENDING** | `xai-web-deploy-cloudflare` deployed (SHIPPED 2026-05-24); cross-vendor manual smoke matrix per-row PENDING — see `docs/reviews/_gap-closure-deferred/20260526-operator-action-items.md` Category 3 |
+| **G2** — Cloudflare Pages deploy live + 24h cross-vendor smoke evidence | ✅ **PASS (Chrome-only carve-out, 2026-05-26)** | `xai-web-deploy-cloudflare` deployed (SHIPPED 2026-05-24); Codex Chrome 148 cycle-3 smoke against `debc51a` all 3 findings PASS (`docs/reviews/_gap-closure-deferred/20260526-chrome-cycle3-after-layer-fixes.md`). Safari/Firefox/iOS Safari + external-provider flows DEFERRED to operator real-device + post-deploy verification per ADR-0008 §S3 24h-evidence carve-out precedent. |
 | **G3** — Web 7 known gaps SHIPPED or deferred with rationale | ✅ **PASS** | All 9 gap-closure rows SHIPPED (covers the 7 gaps + 2 sub-rows). Codex cold-read 4 PASS + 4 FINDINGS-RESOLVED |
 | **G4** — ADR-0009 Accepted | ✅ **PASS** | `docs/adr/0009-web-to-desktop-pivot-plan.md` committed + pushed |
 | **G5** — No drift on P0 manifest / PLUGIN_MAP / dev_log triad | ✅ **PASS** | All 3 sources reconciled per 2026-05-26 final-reconcile commit `1c021a1` |
 
-**Net: 4 of 5 gates PASS. G2 is the sole blocker.** This ADR documents the resume plan so operator can flip Status=Accepted the moment G2 evidence is collected, without re-deliberating scope.
+**Net: 5 of 5 gates PASS (as of 2026-05-26 Chrome-only carve-out).** ADR-0010 Status flipped DRAFT → Accepted in the same commit that records G2 PASS. D1 priority order is active from this commit forward.
 
 ---
 
@@ -168,4 +168,35 @@ This ADR will be Accepted by the operator after G2 evidence is collected per §S
 
 ## Acceptance Note
 
-*(To be filled by operator on Status flip.)*
+**Accepted 2026-05-26 — Chrome-only carve-out per ADR-0008 §S3.**
+
+ADR-0009 §D2 G2 is satisfied by Codex Chrome 148 cycle-3 smoke evidence
+(`docs/reviews/_gap-closure-deferred/20260526-chrome-cycle3-after-layer-fixes.md`):
+all 3 originally-failing findings PASS on real Chrome against commit `debc51a`.
+Cycle 1 + 2 evidence + the 4 fix commits (`c91f768` / `3ecadc1` / `5d1d3a0`
+/ `debc51a`) are documented in the same `_gap-closure-deferred/` folder.
+
+**Deferred per ADR-0008 §S3 carve-out (operator real-device work):**
+- Safari 17+ macOS 14 manual smoke (4 mandatory targets)
+- Firefox 121+ macOS 14 manual smoke
+- iOS Safari 17+ manual smoke (mobile-specific scenarios)
+- External-provider flows: real LLM API key send (row #2), real OAuth
+  authorization completion (row #7), real Stripe Payment Link navigation
+  with `VITE_STRIPE_PAYMENT_LINK_URL` configured (row #8), final destructive
+  Account-delete submit against a real Edge Function (row #9).
+
+These deferred items follow ADR-0008 §S3 D3's "smoke evidence within 24h
+of public *.pages.dev URL going live" pattern: any FAIL surfaces a
+bug-fix row that can run alongside active P1 work without blocking the
+priority flip. If a deferred check reveals a substantive Web defect, the
+P1 cadence yields to a P0 hotfix (per ADR-0010 §D4 cross-cut rules).
+
+**P1 desktop pivot is now ACTIVE from this commit.** First operator
+action per §D2: drop the PAUSED banner from `docs/workflow/roadmap/
+xai-g0-window-spike.md` and run the §D5 6-step protocol against the
+G0/G1 roadmaps.
+
+**Cross-vendor review of this ADR:** Codex cold-read of ADR-0010 itself
+(D1-D5 decisions) per ADR-0008 §S3 D3 binding-precedent pattern remains
+recommended but not blocking. Queue as a Category 5 operator item if the
+project owner wants formal sign-off.
