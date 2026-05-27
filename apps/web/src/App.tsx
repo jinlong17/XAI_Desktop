@@ -16,6 +16,11 @@
  * xai-web-cmdk P4: App is split into App (provider) + AppInner (consumer).
  * App wraps AppInner in <CommandPaletteProvider>; AppInner reads the context
  * via useCommandPalette() and passes onOpenSearch to <Shell>.
+ *
+ * Bugfix Tb-02/Tb-03/Tb-04: lang/theme/density now use lazy useState initializers
+ * that read xai_pref_lang / xai_pref_theme / xai_pref_density from localStorage,
+ * paired with Topbar.tsx's persistAndSet write path.
+ * See packages/xai-web-shell/docs/dev_log.md BUGFIX §Fix Strategy Path R1.
  */
 
 import { useState, useEffect, useMemo } from "react";
@@ -53,15 +58,37 @@ import {
 // Extension 2026-05-26 — Premium tier badge for Topbar (gap-closure row #8 F1)
 import { PremiumTierBadge } from "@repo/plugin-web-settings-rest";
 
+// ---- readLocalPref — safe localStorage reader for lazy useState initializers --
+//
+// Reads a JSON-encoded string value from localStorage with a typed fallback.
+// Used by the three appearance useState initializers below (lang/theme/density).
+// Keys: "xai_pref_lang" | "xai_pref_theme" | "xai_pref_density"
+// (raw localStorage — not in plugin-web-storage registry by design; see dev_log).
+//
+// Exported for unit tests in apps/web/src/__tests__/App.lazy-init.test.tsx.
+export function readLocalPref<T>(key: string, fallback: T): T {
+  if (typeof localStorage === "undefined") return fallback;
+  try {
+    const raw = localStorage.getItem(key);
+    if (raw === null) return fallback;
+    return JSON.parse(raw) as T;
+  } catch {
+    // JSON.parse failure (corrupt value) — use fallback silently.
+    return fallback;
+  }
+}
+
 // ---- AppInner — consumes CommandPaletteProvider context --------------------
 
 function AppInner() {
   const { open: openPalette } = useCommandPalette();
 
   // ---- useState state pieces -----------------------------------------------
-  const [lang, setLang] = useState<Lang>("en");
-  const [theme, setTheme] = useState<Theme>("light");
-  const [density, setDensity] = useState<Density>("comfortable");
+  // lang/theme/density use lazy initializers to restore from localStorage on
+  // page load (written by Topbar.tsx persistAndSet — Bugfix Tb-02/Tb-03/Tb-04).
+  const [lang, setLang]       = useState<Lang>(()    => readLocalPref("xai_pref_lang", "en" as Lang));
+  const [theme, setTheme]     = useState<Theme>(()   => readLocalPref("xai_pref_theme", "light" as Theme));
+  const [density, setDensity] = useState<Density>(() => readLocalPref("xai_pref_density", "comfortable" as Density));
   const [fontScale, setFontScale] = useState<number>(1);
   const [petOn, setPetOn] = useState<boolean>(true);
 
