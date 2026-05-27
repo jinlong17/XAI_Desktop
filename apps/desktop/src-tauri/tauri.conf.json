@@ -19,16 +19,16 @@
         "height": 720,
         "fullscreen": false,
         "maximized": false,
-        "resizable": false,
-        "transparent": true,
-        "decorations": false,
+        "resizable": true,
+        "transparent": false,
+        "decorations": true,
         "alwaysOnTop": false,
         "visible": true,
-        "shadow": false,
-        "skipTaskbar": true,
-        "hiddenTitle": true,
-        "titleBarStyle": "Overlay",
-        "dragDropEnabled": false
+        "shadow": true,
+        "skipTaskbar": false,
+        "hiddenTitle": false,
+        "titleBarStyle": "Visible",
+        "dragDropEnabled": true
       }
     ],
     "security": {
