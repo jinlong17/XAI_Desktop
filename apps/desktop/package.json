@@ -4,9 +4,11 @@
   "version": "0.1.0",
   "type": "module",
   "scripts": {
-    "dev": "pnpm --filter @repo/web dev",
-    "build": "pnpm --filter @repo/web build",
-    "preview": "pnpm --filter @repo/web preview",
+    "dev": "tauri dev",
+    "build": "tauri build --debug --bundles app",
+    "build:dmg": "tauri build --debug --bundles dmg",
+    "build:web": "pnpm --filter @repo/web build",
+    "preview:web": "pnpm --filter @repo/web preview",
     "tauri": "tauri"
   },
   "dependencies": {
