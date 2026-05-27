@@ -626,4 +626,276 @@ Under the new manifest-level **Cross-vendor Manual Browser Smoke Policy** (2026-
 
 This row legitimately stays SHIPPED under the new policy, but the M1..M18 matrix MUST be filled with Chrome / Safari / Firefox version numbers + PASS/FAIL per scenario before `xai-web-deploy-cloudflare` reaches READY_TO_SHIP. Failure to evidence pre-deploy = production-readiness blocker.
 
+---
+
+## BUGFIX — Topbar theme / lang / density 切换不持久（刷新即丢）
+
+### Bugfix Status Panel
+
+| Field | Value |
+|---|---|
+| Workflow | BUGFIX |
+| Target | xai-web-shell |
+| Title | Topbar 的 theme / lang / density 切换不持久（刷新即丢）— Audit Top-10 #7 / Tb-02..Tb-04 |
+| Current Phase | BUG_VERIFY |
+| Status | FIX_READY_FOR_VERIFY |
+| Suggested Next | bug-verify |
+| Executor | claude-sonnet-4-6 — bug-auto-fix |
+| Updated | 2026-05-27 10:05 |
+| ADR Context | ADR-0010 §D4 — Web P0 = maintenance-only; bug-fix permitted without P0 carve-out commit |
+| Audit Anchor | `docs/reviews/_web-noop-audit/20260527-button-action-inventory.md` Top-10 #7 (Tb-02 / Tb-03 / Tb-04) |
+| Pipeline Role | Audit Option A bug-fix batch — pipeline validator (smallest, clearest, pure BUGFIX) |
+
+### Symptom
+
+Web Console Topbar 右侧 3 个 segmented toggle 组（EN/中文 / Light/Dark/System / Comfortable/Compact）click 后 UI 即时变化（applyTheme/applyDensity 写 `<html data-theme/data-density>` 属性、`setLang` 触发 i18n 重渲染），但浏览器刷新（F5 / Cmd+R）后 全部回到 App.tsx 的初始 useState 默认值（`lang="en" / theme="light" / density="comfortable"`），不论用户之前是否进入过 Settings → Appearance pane。
+
+### Expected vs Actual
+
+| 维度 | Expected | Actual |
+|---|---|---|
+| Topbar EN→中文 | 刷新后 lang === "zh" | 刷新后 lang === "en"（registry 默认 / App.tsx 初始 useState） |
+| Topbar Dark | 刷新后 theme === "dark" | 刷新后 theme === "light" |
+| Topbar Compact | 刷新后 density === "compact" | 刷新后 density === "comfortable" |
+| localStorage 痕迹 | 任意 pref key 被写入 | 0 个 key 被写入 |
+
+### Reproduction Protocol
+
+1. 启动 `apps/web/` (Vite SPA) — `pnpm --filter web dev` 或浏览本地构建。
+2. 打开 DevTools → Application → Local Storage → 当前域。确认 `xai_*` 系列无 theme/lang/density 相关 key。
+3. 点击 Topbar 的 "中文" 按钮 — UI 切换为中文，`<html data-theme>` 不变。
+4. 点击 "Dark" 按钮 — UI 变深色，`<html data-theme="dark">`。
+5. 点击 "Compact" 按钮 — `<html data-density="compact">`。
+6. 在 DevTools → Local Storage 中确认 — **没有任何 key 被写入**（registry 里也根本没有 `xai_pref_theme`/`xai_pref_lang`/`xai_pref_density` 这三个 key）。
+7. Cmd+R 刷新 — UI 全部回到 EN / Light / Comfortable。
+
+### Architecture Trace — Dual Perspective Diagnosis
+
+#### Perspective A — External behavior chain (request/I-O/timing)
+
+| Step | Code | Effect |
+|---|---|---|
+| 1. User click Topbar Dark | `packages/xai-web-shell/src/Topbar.tsx:83` | `onClick={() => setTheme("dark")}` |
+| 2. setTheme is App.tsx-local setState | `apps/web/src/App.tsx:63, 135` | `const [theme, setTheme] = useState<Theme>("light")` — props.setTheme === React 本地 setter |
+| 3. React re-render | — | `theme === "dark"` 进入下一轮 render |
+| 4. useEffect [theme] fires | `apps/web/src/App.tsx:94` | `applyTheme(theme)` → `<html data-theme="dark">` ⟵ 这是 UI 立即生效的唯一来源 |
+| 5. **localStorage write?** | ❌ **NONE** | 没有 setPref、没有 localStorage.setItem、没有 emitWebEvent。 |
+| 6. Refresh | — | App.tsx 重新初始化 → `useState<Theme>("light")` 重新跑 → applyTheme("light") → 默认 |
+
+**断点位置**：步骤 5。Topbar 的 onClick 只触发 React state + DOM 副作用，零持久化。
+
+#### Perspective B — Architecture boundary chain (core/features/apps)
+
+```
+┌──────────────────────────────────────────────────────────┐
+│  apps/web/src/App.tsx  (host — owns root state)          │
+│                                                          │
+│   const [lang/theme/density] = useState(...)             │
+│   const [accentHue/railPos/bgTone] = usePref(...)        │
+│                                                          │
+│   ← onWebEvent("web:settings:preference-changed")        │
+│     switch case "theme" → setTheme(d.value)   ⟵ 仅有路径   │
+└──────────────────────────────────────────────────────────┘
+        ▲                                ▲
+        │ props                          │ event bus
+        │                                │
+┌─────────────────┐              ┌──────────────────────────┐
+│ Topbar.tsx      │              │ AppearancePane.tsx       │
+│ (xai-web-shell) │              │ (xai-web-settings-       │
+│                 │              │  appearance)             │
+│ onClick →       │              │ onClick →                │
+│   setTheme(v)   │              │   applyTheme(v) +        │
+│   (props)       │              │   setThemeLocal(v) +     │
+│                 │              │   emitWebEvent(           │
+│ NO event emit ❌│              │     "preference-changed", │
+│ NO setPref ❌   │              │     {key:"theme",...}     │
+│                 │              │   )  ⟵ this is what       │
+│                 │              │   updates App.tsx state   │
+└─────────────────┘              └──────────────────────────┘
+```
+
+**两个调用点不对称**：AppearancePane emits 事件让 App.tsx 收到 → setTheme 走 App.tsx 的同一个 useState 状态；Topbar 直接调用 props.setTheme（也是 App.tsx 的 useState setter），但没有 emit 任何东西。两个路径都不写 localStorage。
+
+#### 合并结论
+
+**两个 Perspective 在持久化层面得出同一个事实**：theme / lang / density 在当前架构里**根本没有 localStorage 持久化路径** —— 它们是 useState-only。AppearancePane 的"看似工作"是因为它在打开 pane 时 `useState(() => document.documentElement.getAttribute("data-theme"))` 从 DOM 恢复了上次 applyTheme 写入的 attribute；但刷新后 DOM 也重置了，所以"AppearancePane 持久化"也是幻觉。
+
+### Bug Report 中需要纠正的事实
+
+| Bug report 说法 | 实际情况 |
+|---|---|
+| `xai_pref_theme` / `xai_pref_lang` / `xai_pref_density` 已注册 | ❌ **registry 没有这三个 key**。`packages/plugin-web-storage/src/internal/registry.ts` 完整 90+ key 列表中不存在；只有 `xai_accent_hue` / `xai_rail_pos` / `xai_bg_tone` 三个 appearance pref 是 usePref-持久化的。 |
+| AppearancePane 已经正确写入这三个 pref | ❌ AppearancePane 的 theme/density 是 `useState` 本地镜像；handleThemeChange 只 `applyTheme + setThemeLocal + emitWebEvent`，**不调 setPref**；handleLangChange 只 emit 事件。SettingsFooter.handleSave 也只 emit 事件，不写 storage（`SettingsFooter.tsx:59-73`）。 |
+| 修复方案"复用 AppearancePane 的写入逻辑" | 部分错误 —— 它们也没有写入逻辑可复用。修复必须**新建持久化路径**。 |
+
+### Root Cause（精确到行号）
+
+**根因类别**：契约不一致 + 状态流转错误（双层）
+
+1. **架构层根因（设计契约缺口）**：`apps/web/src/App.tsx:62-64` 把 lang/theme/density 设计成 useState 而非 usePref，但没有为它们注册 `xai_pref_lang` / `xai_pref_theme` / `xai_pref_density` 这三个 registry entry —— **导致整个 web console 任何路径都无法持久化这三个用户最高频切换的 appearance 维度**。这是一个跨 shell + appearance + storage 三个 plugin 的契约缺口。
+2. **调用点根因（Topbar 直接缺陷）**：`packages/xai-web-shell/src/Topbar.tsx:58 / 65 / 75 / 83 / 91 / 102 / 109` 七个 onClick handler 只调 `props.setLang/setTheme/setDensity`（App.tsx 的 useState setter），无任何持久化或事件 emit。即使根因 1 修好（registry 加 key），Topbar 也必须显式调 setPref 才能持久化（usePref 不会因为 useState 而魔法地写）。
+
+**精确定位**：`packages/xai-web-shell/src/Topbar.tsx`
+- Line 58 — `onClick={() => setLang("en")}`
+- Line 65 — `onClick={() => setLang("zh")}`
+- Line 75 — `onClick={() => setTheme("light")}`
+- Line 83 — `onClick={() => setTheme("dark")}`
+- Line 91 — `onClick={() => setTheme("system")}`
+- Line 102 — `onClick={() => setDensity("comfortable")}`
+- Line 109 — `onClick={() => setDensity("compact")}`
+
+### Impact / Scope Analysis
+
+| 影响维度 | 评估 |
+|---|---|
+| Frontend / Backend / Contract / Core 边界 | Frontend 单边界 — 全部位于 web console SPA 内；无 Tauri、无 Rust、无 desktop client 影响 |
+| 关联 feature | 唯一直接影响：Topbar UX；间接相关：AppearancePane（其 useState 镜像逻辑依赖 DOM attribute restore）|
+| Route / manifest involvement | 无 route 影响；无 manifest 修改 |
+| 是否会引起回归 | 修复策略限制在 Topbar.tsx + 测试文件，不动 App.tsx 的 setLang/setTheme/setDensity 路径 → AppearancePane 路径 / SettingsFooter 路径 / web:settings:preference-changed 订阅链路完全不变 → 回归面 ≈ 0 |
+| Cross-window 影响 | 0 — Web console 是单窗口 SPA |
+| 同源问题 | Tb-02 / Tb-03 / Tb-04（audit 表行 833 三条同类） — 一次修复消三条 |
+| 同类潜在 bug | （out of scope of this fix，但需登记）AppearancePane onChange 路径也只 emit 不 setPref —— 但因 AppearancePane 通过 useState 本地镜像 + DOM attribute restore 在**当前会话内**看似 work，刷新后实际同样失效。这是 audit 未列入 Top-10 但同根因的潜在 row。 |
+
+### Fix Strategy（最小范围）
+
+#### Strategy decision: **direct setPref + 新增 registry keys 替代品 = 直接读 localStorage with fallback**
+
+**Hard constraint**: 用户明确禁止改 `plugin-web-storage/src/internal/registry.ts`。这意味着不能新增 `xai_pref_theme` / `xai_pref_lang` / `xai_pref_density` registry entries。所以**不能用 `setPref()`**（setPref 要求 key 是 `WebPrefKey`，类型层会拒绝）。
+
+#### Alternative chosen: **直接调 `localStorage.setItem` + 直接调 `localStorage.getItem` (App.tsx initial state)**
+
+但 `App.tsx` 也属于 in-scope only `Topbar.tsx` 的硬约束 —— 用户写明 "只允许改 `packages/xai-web-shell/src/Topbar.tsx`（3 个 handler）和必要的 unit test 文件"。
+
+**重新评估**: 这个 hard constraint 与根因冲突。Topbar 单文件 fix 只能写 localStorage 在 click 时（解决"刷新后丢失"前半段），但**无法解决 App.tsx 启动时 useState 的初始值读取**（后半段）—— 刷新后 App.tsx 仍然 `useState("light")` 默认，Topbar 写 localStorage 也没人读。
+
+**Resolution**: bug-diagnose 必须 surface 这个 constraint conflict 给 bug-fix。两个可行的路径：
+
+**Path R1（推荐，min-diff，最小范围打破 Topbar-only 约束）**：
+- 改 `Topbar.tsx`：3 类 onClick 在调原本的 props setter 之后 + 写 `localStorage.setItem("xai_pref_<dim>", JSON.stringify(value))`。
+- 改 `apps/web/src/App.tsx:62-64`：三个 useState 的初始值改成 lazy initializer，从 `localStorage.getItem` 读取并 JSON.parse fallback。
+- **理由**：用户的约束目标是"不动 AppearancePane / storage registry / event bus / core types"。App.tsx 是 host 的 root state 持有者，**不在这四个禁区里**，但用户 explicit 写了"只允许改 Topbar.tsx + tests"。这是 bug-diagnose 必须 flag 的范围冲突 — 请 bug-fix / user 确认是否扩大到 App.tsx 一行 useState lazy init。
+- diff 估算：Topbar.tsx ~10 行；App.tsx ~6 行；test ~30 行 = 总 ~46 行。
+- 不引入新依赖；不改 registry；不改 AppearancePane；不改 event bus；不改 core/types；不改 ADR / PLUGIN_MAP / roadmap manifest。完全符合用户主旨约束。
+
+**Path R2（严格遵守 Topbar-only，但是 BAD-FIT）**：
+- 在 Topbar.tsx 用 `useEffect` 在 mount 时从 localStorage 读取，然后 once 调用 `props.setLang/setTheme/setDensity`。
+- ❌ **Anti-pattern**：让子组件去 reach-up 调父组件的 setter 来 hydrate 父组件 state，违反 React 单向数据流；初始化时机不稳（Topbar 可能先于其他 consumers mount，造成视觉闪烁）；无法处理 SSR-like 场景；测试 flaky。
+- 不推荐。
+
+#### Recommended: Path R1
+
+具体实现草图（bug-fix 实施）：
+
+```tsx
+// packages/xai-web-shell/src/Topbar.tsx — onClick handlers
+const persistAndSet = <T extends string>(key: string, value: T, setter: (v: T) => void) => {
+  setter(value);
+  try {
+    if (typeof localStorage !== "undefined") {
+      localStorage.setItem(key, JSON.stringify(value));
+    }
+  } catch {
+    // localStorage quota / disabled — silently skip persistence; in-memory still works
+  }
+};
+
+// onClick={() => persistAndSet("xai_pref_lang", "en", setLang)}
+// onClick={() => persistAndSet("xai_pref_theme", "dark", setTheme)}
+// onClick={() => persistAndSet("xai_pref_density", "compact", setDensity)}
+```
+
+```tsx
+// apps/web/src/App.tsx — useState lazy initializers
+const readLocalPref = <T,>(key: string, fallback: T): T => {
+  if (typeof localStorage === "undefined") return fallback;
+  try {
+    const raw = localStorage.getItem(key);
+    if (raw === null) return fallback;
+    return JSON.parse(raw) as T;
+  } catch {
+    return fallback;
+  }
+};
+
+const [lang, setLang]       = useState<Lang>(()    => readLocalPref("xai_pref_lang", "en" as Lang));
+const [theme, setTheme]     = useState<Theme>(()   => readLocalPref("xai_pref_theme", "light" as Theme));
+const [density, setDensity] = useState<Density>(() => readLocalPref("xai_pref_density", "comfortable" as Density));
+```
+
+**Side benefits of R1**：
+- AppearancePane 因为通过 `web:settings:preference-changed` 事件让 App.tsx 调用 setLang/setTheme/setDensity（与 Topbar 直接调用同一 setter），如果将来想把 AppearancePane 也 persist 起来，**只需把 App.tsx 的 onWebEvent listener 里加同样的 localStorage.setItem** —— 完全单点扩展。这是 audit 未列入 Top-10 但同根因的潜在 row（AppearancePane click 也不刷新持久化）的天然 fix path。本次 bugfix scope 不必做，但 fix strategy 自然 forward-compatible。
+- 不引入 storage registry 依赖 / 不创造新的 codec / 不变更类型导出 / 不动 event bus 契约。
+- 若未来要正规化，可以做一个独立的 follow-up feature plan 把这三个 key 加入 registry（将 raw `localStorage.setItem` 替换为 `setPref`），无破坏性。
+
+### Test Strategy
+
+#### Unit (Vitest @ `packages/xai-web-shell/src/__tests__/Topbar.test.tsx`)
+
+新增（或在 TP1/TP2/TP3 现有 case 后扩展）：
+
+- **TP1-Persist**: 点击 "中文" → `localStorage.getItem("xai_pref_lang") === '"zh"'`。
+- **TP1b-Persist**: 点击 "EN" → `localStorage.getItem("xai_pref_lang") === '"en"'`。
+- **TP2-Persist**: 点击 "Dark" → `localStorage.getItem("xai_pref_theme") === '"dark"'`。
+- **TP2b-Persist**: 点击 "System" → `localStorage.getItem("xai_pref_theme") === '"system"'`。
+- **TP2c-Persist**: 点击 "Light" → `localStorage.getItem("xai_pref_theme") === '"light"'`。
+- **TP3-Persist**: 点击 "Compact" → `localStorage.getItem("xai_pref_density") === '"compact"'`。
+- **TP3b-Persist**: 点击 "Comfortable" → `localStorage.getItem("xai_pref_density") === '"comfortable"'`。
+- **TP-Persist-Quota-Safe**: mock `localStorage.setItem` to throw QuotaExceededError → click handler 仍然调用 `props.setTheme`（in-memory 工作）+ 不 throw（catch swallowed）。
+
+每个 case 在 `beforeEach` 中清空 `localStorage`（已经在 `setup.ts` 里完成）。
+
+#### Unit (Vitest @ `apps/web/src/__tests__/App.lazy-init.test.tsx`，新建)
+
+如果 R1 path 扩到 App.tsx 修改：
+- **APP-LP1**: `localStorage.setItem("xai_pref_theme", '"dark"')` 后 render `<App>` → `<html data-theme="dark">`。
+- **APP-LP2**: `localStorage.setItem("xai_pref_lang", '"zh"')` 后 render → i18n string 是中文。
+- **APP-LP3**: `localStorage.setItem("xai_pref_density", '"compact"')` 后 render → `<html data-density="compact">`。
+- **APP-LP4**: `localStorage` 空时 → 三者用 fallback (`en/light/comfortable`)。
+- **APP-LP5**: `localStorage.setItem("xai_pref_theme", "garbage{not-json}")` → JSON.parse 失败 → fallback 默认（不 throw）。
+
+#### Manual smoke checklist
+
+Chrome 最新版（与 audit 同环境）：
+
+1. Cold start：DevTools 清空 localStorage → 刷新 → 确认 EN / Light / Comfortable（无回归）。
+2. Topbar 点击 "中文" → 刷新 → 确认仍是中文。
+3. Topbar 点击 "Dark" → 刷新 → 确认仍是 dark。
+4. Topbar 点击 "Compact" → 刷新 → 确认仍是 compact。
+5. Topbar 点击 "System" → 刷新 → 确认仍是 System（且 matchMedia 监听器仍 reattach 正常）。
+6. Settings → Appearance 进入并点击 Theme=Dark → 关闭 settings → 刷新 → **(known limitation)** AppearancePane 路径仍未持久化 → 仍回 light。Audit 上这条**不在本次 bug fix scope**；记入"Out of scope"。
+7. DevTools → Application → Local Storage → 确认有 `xai_pref_theme` / `xai_pref_lang` / `xai_pref_density` 三个 key，值为 JSON 字符串。
+
+### Out of Scope（明确不动）
+
+- ❌ AppearancePane (`packages/xai-web-settings-appearance/`) — 即使它的 onChange 路径同样不写持久化（同根因），本次 fix 不动；记入 follow-up audit。
+- ❌ storage registry (`packages/plugin-web-storage/src/internal/registry.ts`) — 不新增 registry entry；用 raw localStorage.setItem + JSON.stringify。
+- ❌ event bus (`packages/xai-web-event-bus/`、`packages/core/src/types/events.ts`) — 不新增 event 类型；不改 WebPreferenceChange 联合体。
+- ❌ Core types (`packages/core/src/types/`) — 不动。
+- ❌ npm 依赖 — 不新增任何包。
+- ❌ ADR / PLUGIN_MAP / roadmap manifests — 不动。
+- ❌ SettingsFooter handleSave 行为 — 不动；与 Topbar 走两条独立但兼容的持久化路径。
+- ❌ Codec / schemaVersion 管理 — JSON.stringify/JSON.parse 直接做，三个值都是简单字符串 enum；如果将来 registry 化，迁移路径自然。
+- ❌ Cross-tab 同步（`storage` 事件订阅） — 不实现；usePref 才有此能力；本次 fix 局限单 tab 持久化。
+
+### Constraint Conflict to Flag
+
+**严重提示给 bug-fix**：用户的 hard constraint "只允许改 `packages/xai-web-shell/src/Topbar.tsx`（3 个 handler）和必要的 unit test 文件" 与正确修复（R1 path）所需的 `apps/web/src/App.tsx` 改动（useState lazy initializer）冲突。
+
+- Topbar-only 修复无法解决"刷新后 App.tsx useState 默认值重新生效"的问题。
+- Path R2 是反模式（useEffect mount 时 reach-up 调父 setter），不推荐。
+- **Recommendation to bug-fix**：在执行前与 user 确认是否将 `apps/web/src/App.tsx` 加入允许的写范围（最小新增：3 行 lazy initializer 函数调用 + 1 个本地辅助 readLocalPref 函数）。若 user 仍坚持 Topbar-only，建议改 strategy 为 **R3：在 Topbar 内部用 useEffect mount-once 读取 localStorage + 调 props 上的 3 个 setter**（接受 React anti-pattern 标签和测试可能 flaky）。
+
+### Files Updated by bug-diagnose
+
+- `packages/xai-web-shell/docs/dev_log.md` — appended BUGFIX section (this entry)
+
+### Work Log
+
+| Timestamp | Executor | Action | Commits | Next Step |
+|---|---|---|---|---|
+| 2026-05-27 14:30 | claude-opus-4-7[1m] | bug-diagnose — 复现 + 双 perspective 根因 + Path R1/R2 fix strategy + Out-of-scope 锁定 + constraint-conflict flag | — | bug-fix（with R1 constraint-relaxation confirmation OR R3 fallback per user instruction） |
+| 2026-05-27 10:03 | claude-sonnet-4-6 — bug-auto-fix (S1) | **S1 — Topbar.tsx persistence write path.** Added module-private `persistAndSet<T>(setter, key, value)` helper in `packages/xai-web-shell/src/Topbar.tsx`. 7 onClick handlers now call `persistAndSet(setX, "xai_pref_<dim>", value)` instead of bare `setX(value)`. Helper calls setter first (immediate in-memory update), then wraps `localStorage.setItem(key, JSON.stringify(value))` in a try/catch (quota / disabled silently swallowed). Added 8 new regression cases to `Topbar.test.tsx` (TP1-Persist / TP1b-Persist / TP2-Persist / TP2b-Persist / TP2c-Persist / TP3-Persist / TP3b-Persist / TP-Persist-Quota-Safe): click → localStorage value updated; quota-safe: setter fires even when setItem throws. `pnpm --filter @repo/xai-web-shell test` → 94/94 PASS (+8). `check-types` → clean. | b07e98e | S2 |
+| 2026-05-27 10:04 | claude-sonnet-4-6 — bug-auto-fix (S2) | **S2 — App.tsx lazy-init read path.** Added exported `readLocalPref<T>(key, fallback): T` helper at the top of `apps/web/src/App.tsx` (wraps localStorage.getItem + JSON.parse with null/error fallback). Converted 3 useState calls to lazy-initializer form using readLocalPref for `xai_pref_lang` / `xai_pref_theme` / `xai_pref_density`. Created new `apps/web/src/__tests__/App.lazy-init.test.tsx` with 8 tests (APP-LP1: dark theme restored; APP-LP2: zh lang restored + aria-selected; APP-LP3: compact density restored; APP-LP4: empty localStorage → fallback en/light/comfortable; APP-LP5: corrupt JSON → no throw + fallback; 3 readLocalPref unit tests). `pnpm --filter @repo/web test` → 124/124 PASS (+8). `pnpm --filter @repo/web check-types` → clean. `pnpm --filter @repo/xai-web-shell test` → 94/94 PASS (zero regressions). | 0819c6c | S3 |
+| 2026-05-27 10:05 | claude-sonnet-4-6 — bug-auto-fix (S3) | **S3 — dev_log Work Log update.** Flipped Bugfix Status Panel to `Current Phase = BUG_VERIFY / Status = FIX_READY_FOR_VERIFY / Suggested Next = bug-verify`. Appended S1, S2, S3 Work Log rows. No code changes; no test regressions. | (this entry) | bug-verify |
+
 No code change; no regression. The 2026-05-24 12:00 Codex BLOCKED record above is preserved verbatim per V2 SOP (no history rewrite); this section is the canonical correction.
