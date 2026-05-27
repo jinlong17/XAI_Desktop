@@ -63,6 +63,7 @@ import { EMPTY_FILTER } from "@repo/plugin-web-board-views";
 
 import { BoardSwitcher } from "./BoardSwitcher.js";
 import { BoardCreator } from "./BoardCreator.js";
+import { CardDetailDialog } from "./CardDetailDialog.js";
 import { StatusOverviewBanner } from "./StatusOverviewBanner.js";
 import { InboxPanel } from "./InboxPanel.js";
 import { PlannerPanel } from "./PlannerPanel.js";
@@ -176,6 +177,33 @@ export function BoardWorkspacesModule({ lang }: BoardWorkspacesModuleProps) {
   const [overviewOpen, setOverviewOpen] = useState(false);
   const [filterOpen, setFilterOpen] = useState(false);
   const [shareOpen, setShareOpen] = useState(false);
+
+  // ---- Card detail dialog state (Audit Top-10 #5 fix) --------------------
+  // Stores the { cardId, listId } pair to look up in `lists`.
+  // Accepts both (BoardCardData, listId) and (string, listId) call shapes
+  // without modifying any view prop signatures.
+  const [openCard, setOpenCard] = useState<{ cardId: string; listId: string } | null>(null);
+
+  const handleOpenCard = useCallback(
+    (cardOrId: BoardCardData | string, listId: string) => {
+      const cardId = typeof cardOrId === "string" ? cardOrId : cardOrId.id;
+      setOpenCard({ cardId, listId });
+    },
+    [],
+  );
+
+  // Resolve the full card object + list name for CardDetailDialog
+  const resolvedList = openCard
+    ? lists.find((l) => l.id === openCard.listId) ?? null
+    : null;
+  const resolvedCard = resolvedList
+    ? resolvedList.cards.find((c) => c.id === openCard!.cardId) ?? null
+    : null;
+  const resolvedListName = resolvedList
+    ? (resolvedList.key
+        ? resolvedList.key
+        : (resolvedList.customName?.[lang] ?? ""))
+    : "";
 
   // ---- Kanban-view composer state ---------------------------------------
   const [draftListIdx, setDraftListIdx] = useState<number | null>(null);
@@ -401,7 +429,7 @@ export function BoardWorkspacesModule({ lang }: BoardWorkspacesModuleProps) {
               {panels.inbox && (
                 <InboxPanel cards={inboxCards} setCards={setInbox} lang={lang} />
               )}
-              {panels.planner && <PlannerPanel lists={filteredLists} lang={lang} />}
+              {panels.planner && <PlannerPanel lists={filteredLists} lang={lang} onOpenCard={handleOpenCard} />}
               {panels.board && (
                 <div className="board-main-panel">
                   <BoardView
@@ -421,6 +449,7 @@ export function BoardWorkspacesModule({ lang }: BoardWorkspacesModuleProps) {
                     moveCardToList={moveCardToList}
                     listMenu={listMenu}
                     setListMenu={setListMenu}
+                    onOpenCard={handleOpenCard}
                   />
                 </div>
               )}
@@ -439,24 +468,25 @@ export function BoardWorkspacesModule({ lang }: BoardWorkspacesModuleProps) {
             data-active-view={activeView}
           >
             {activeView === "table" && (
-              <TableView lists={filteredLists} lang={lang} updateCard={updateCard} />
+              <TableView lists={filteredLists} lang={lang} updateCard={updateCard} onOpenCard={handleOpenCard} />
             )}
             {activeView === "calendar" && (
               <BoardCalendarView
                 lists={filteredLists}
                 lang={lang}
                 updateCard={updateCard}
+                onOpenCard={handleOpenCard}
               />
             )}
             {activeView === "dashboard" && (
               <BoardDashboardView lists={filteredLists} lang={lang} />
             )}
             {activeView === "timeline" && (
-              <TimelineView lists={filteredLists} lang={lang} updateCard={updateCard} />
+              <TimelineView lists={filteredLists} lang={lang} updateCard={updateCard} onOpenCard={handleOpenCard} />
             )}
             {activeView === "map" && (
               <Suspense fallback={<div data-testid="map-suspense-fallback" aria-busy="true" />}>
-                <MapView lists={filteredLists} lang={lang} />
+                <MapView lists={filteredLists} lang={lang} onSelectCard={handleOpenCard} />
               </Suspense>
             )}
           </div>
@@ -534,6 +564,14 @@ export function BoardWorkspacesModule({ lang }: BoardWorkspacesModuleProps) {
           onClose={() => setShareOpen(false)}
         />
       )}
+
+      <CardDetailDialog
+        open={!!openCard}
+        card={resolvedCard}
+        listName={resolvedListName}
+        lang={lang}
+        onClose={() => setOpenCard(null)}
+      />
     </div>
   );
 }
