@@ -37,6 +37,7 @@ function renderRail(overrides?: {
   onPetToggle?: () => void;
   onAvatarOpenSettings?: () => void;
   onAvatarOpenStatistics?: () => void;
+  onSignOut?: () => void;
 }) {
   const defaults = {
     modules: FIXTURE_MODULES,
@@ -66,6 +67,7 @@ function renderRail(overrides?: {
             onPetToggle={cfg.onPetToggle}
             onAvatarOpenSettings={cfg.onAvatarOpenSettings}
             onAvatarOpenStatistics={cfg.onAvatarOpenStatistics}
+            onSignOut={overrides?.onSignOut}
           />
         </WebShellProvider>
       </MemoryRouter>
@@ -190,6 +192,43 @@ describe("AppRail", () => {
     const { container } = renderRail({ modules: FIXTURE_MODULES });
     const taskBtn = getRailBtn(container, "Tasks");
     expect(taskBtn?.getAttribute("data-tip")).toBe("Tasks");
+  });
+});
+
+describe("AppRail sign-out passthrough (AR-SO1..SO2)", () => {
+  it("AR-SO1 — renderRail with onSignOut wired: opening AvatarMenu and clicking Sign Out opens confirmation dialog", () => {
+    // stub showModal for jsdom
+    HTMLDialogElement.prototype.showModal = function () {
+      this.setAttribute("open", "");
+    };
+    const onSignOut = vi.fn();
+    const { container } = renderRail({ onAvatarOpenSettings: vi.fn(), onAvatarOpenStatistics: vi.fn(), onSignOut });
+
+    // Open AvatarMenu
+    const avatarBtn = container.querySelector(".rail-avatar");
+    if (avatarBtn) fireEvent.click(avatarBtn);
+
+    // Click the Sign Out menu item (danger class)
+    const signOutItem = container.querySelector(".avm-item.danger");
+    if (signOutItem) fireEvent.click(signOutItem);
+
+    // onSignOut should NOT have been called yet (dialog confirmation required)
+    expect(onSignOut).not.toHaveBeenCalled();
+    // Dialog should be open
+    const dialog = container.querySelector("dialog.xai-sign-out-dialog");
+    expect(dialog?.hasAttribute("open")).toBe(true);
+  });
+
+  it("AR-SO2 — renderRail without onSignOut: AvatarMenu renders normally (backward-compatible)", () => {
+    const { container } = renderRail();
+    // Open AvatarMenu
+    const avatarBtn = container.querySelector(".rail-avatar");
+    if (avatarBtn) fireEvent.click(avatarBtn);
+    // Menu should be visible
+    expect(container.querySelector(".avatar-menu")).not.toBeNull();
+    // Sign Out item should still be rendered
+    const signOutItem = container.querySelector(".avm-item.danger");
+    expect(signOutItem).not.toBeNull();
   });
 });
 

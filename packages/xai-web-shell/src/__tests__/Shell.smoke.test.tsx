@@ -8,7 +8,7 @@
  * S4: Shell renders with empty registry (no crash)
  */
 
-import { render, screen } from "@testing-library/react";
+import { render, screen, fireEvent } from "@testing-library/react";
 import { describe, it, expect, vi } from "vitest";
 import { StrictMode } from "react";
 import { MemoryRouter } from "react-router";
@@ -95,6 +95,52 @@ describe("Shell smoke (S1..S4)", () => {
 
   it("S4 — Shell renders with empty modules (no crash)", () => {
     expect(() => renderShell({ modules: [] })).not.toThrow();
+  });
+
+  it("SH-SO1 — Shell accepts onSignOut prop and passes it to AppRail (structural smoke)", () => {
+    // stub showModal for jsdom so the dialog can open
+    HTMLDialogElement.prototype.showModal = function () {
+      this.setAttribute("open", "");
+    };
+    const onSignOut = vi.fn();
+    const { container } = render(
+      <MemoryRouter initialEntries={["/app/tasks"]}>
+        <WebShellProvider
+          modules={FIXTURE_MODULES}
+          lang="en"
+          railPos="left"
+          petOn={false}
+          setPetOn={() => {}}
+        >
+          <Shell
+            lang="en"
+            setLang={() => {}}
+            theme="light"
+            setTheme={() => {}}
+            density="comfortable"
+            setDensity={() => {}}
+            onSignOut={onSignOut}
+          >
+            <div>content</div>
+          </Shell>
+        </WebShellProvider>
+      </MemoryRouter>
+    );
+
+    // Open avatar menu
+    const avatarBtn = container.querySelector(".rail-avatar");
+    expect(avatarBtn).not.toBeNull();
+    if (avatarBtn) fireEvent.click(avatarBtn);
+
+    // Click Sign Out (should open confirmation dialog, NOT call onSignOut directly)
+    const signOutItem = container.querySelector(".avm-item.danger");
+    if (signOutItem) fireEvent.click(signOutItem);
+
+    // Dialog should be visible
+    const dialog = container.querySelector("dialog.xai-sign-out-dialog");
+    expect(dialog?.hasAttribute("open")).toBe(true);
+    // onSignOut should NOT be called yet (awaiting confirmation)
+    expect(onSignOut).not.toHaveBeenCalled();
   });
 
   it("S-StrictMode — StrictMode double-mount does not throw", () => {
