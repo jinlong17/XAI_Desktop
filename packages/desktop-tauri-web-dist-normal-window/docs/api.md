@@ -44,6 +44,10 @@ After implementation, the main window must satisfy:
 - no `grid_*` startup
 - no overlay-specific monitor resize/position behavior
 
+Reusable legacy startup pieces may remain compiled behind an explicit inactive
+boundary, such as `legacy_overlay::bootstrap_control_window` or
+`legacy_overlay::register_state`, as long as Phase 1 `run()` does not call them.
+
 ### macOS adapter contract
 
 `window_ext.rs` remains the platform seam, but Phase 1 active behavior must not set:
@@ -52,12 +56,21 @@ After implementation, the main window must satisfy:
 - `ignoresMouseEvents`
 - overlay transparency/background assumptions
 
+Legacy desktop-level, click-through, control, and grid window helpers should be
+namespaced under `platform::macos::legacy_overlay` when kept for P3+ reuse.
+Phase 1 active calls must use the normal-window helpers.
+
 ### Command surface contract
 
 Recommended Phase 1 contract:
 
 - legacy grid/control/console window lifecycle commands are not part of the active public desktop surface
 - if left compiled, they must be unregistered from the active invoke surface or clearly marked unsupported for Phase 1
+
+Preservation rule: do not delete existing transparent overlay/control/grid
+implementation unless it is demonstrably dead or trivial config-only behavior.
+Prefer moving, namespacing, or quarantining reusable pieces under a future or
+legacy overlay boundary.
 
 ## Error Semantics
 

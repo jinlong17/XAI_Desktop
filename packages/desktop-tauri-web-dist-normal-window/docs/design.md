@@ -15,6 +15,7 @@
 - `apps/web` is already the canonical UI source for Phase 1; this feature must not modify web source.
 - Offline `/app` entry policy is handled by the next feature `desktop-web-auth-offline-mode`; this feature only establishes the host/dist handoff needed for that work.
 - Legacy overlay/grid/control/runtime code is P3 Future and must not remain on the active startup path after this feature lands.
+- Legacy overlay/grid/control implementation must be preserved when it is reusable. Phase 1 may remove it from default launch and active capabilities, but should quarantine reusable overlay behavior under an explicit future/legacy boundary instead of deleting it.
 
 ## Dependency Overview
 
@@ -37,6 +38,7 @@
 - Tauri dev/build loads `apps/web` instead of the legacy `apps/desktop` Vite frontend.
 - Startup creates only the main window; no `control`, `grid_*`, or overlay click-through behavior is configured.
 - Phase 3 window lifecycle commands and capabilities are removed from the active Phase 1 surface.
+- Reusable legacy overlay behavior is namespaced under inactive future boundaries (`legacy_overlay` Rust module and `platform::macos::legacy_overlay`) for P3+ reuse.
 
 ## Implementation Phases
 
@@ -48,9 +50,10 @@
 
 ### Phase 2 — Normal Window Startup
 
-- Remove overlay-specific startup logic from `lib.rs`.
-- Stop control window creation and any full-monitor overlay sizing assumptions.
-- Replace `window_ext.rs` overlay helpers with normal-window-only behavior or no-op helpers if the file must remain as the macOS seam.
+- Remove overlay-specific startup logic from the active `lib.rs` launch path.
+- Stop default control window creation and any full-monitor overlay sizing assumptions.
+- Preserve reusable control-window bootstrap and macOS overlay-level helpers under an inactive `legacy_overlay` boundary.
+- Keep `window_ext.rs` as the normal-window macOS seam for Phase 1 while namespacing old overlay behavior for future revival.
 
 ### Phase 3 — Surface Narrowing
 

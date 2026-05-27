@@ -1,6 +1,7 @@
 mod commands;
 mod crypto;
 mod error;
+mod legacy_overlay;
 mod platform;
 
 use serde::{Deserialize, Serialize};
