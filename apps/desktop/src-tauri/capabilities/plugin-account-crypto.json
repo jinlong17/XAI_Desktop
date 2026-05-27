@@ -1,8 +1,8 @@
 {
   "$schema": "../gen/schemas/desktop-schema.json",
   "identifier": "plugin-account-crypto",
-  "description": "Scoped capability marker for Sync crypto commands. Custom invoke_handler commands also enforce the account/control window allowlist in commands/crypto.rs so non-account windows cannot call crypto_*.",
-  "windows": ["account", "control"],
+  "description": "Phase 1 parking scope: crypto capability remains defined but bound to the main window only while account/control legacy windows are inactive.",
+  "windows": ["main"],
   "permissions": [
     "core:default"
   ]

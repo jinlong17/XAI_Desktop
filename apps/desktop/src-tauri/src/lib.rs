@@ -87,25 +87,13 @@ pub fn run() {
         .plugin(tauri_plugin_opener::init())
         .manage(commands::crypto::CryptoCommandState::default())
         .manage(commands::menubar::SyncMenuBarState::default())
-        .manage(commands::bookmarks::BookmarkRegistry::default())
-        .manage(GridWindowsState::default())
-        .manage(ConsoleWindowFrameState::default());
+        .manage(commands::bookmarks::BookmarkRegistry::default());
 
     #[cfg(feature = "crypto")]
     let builder = builder.manage(commands::database::DatabaseState::default());
 
     builder
         .invoke_handler(tauri::generate_handler![
-            commands::window::create_grid_window,
-            commands::window::update_grid_window,
-            commands::window::close_grid_window,
-            commands::window::list_grid_windows,
-            commands::window::focus_grid_window,
-            commands::window::open_console_window,
-            commands::window::close_console_window,
-            commands::window::focus_console_window,
-            commands::window::get_console_window_frame,
-            commands::window::set_console_window_frame,
             commands::menubar::sync_set_menubar_status,
             commands::crypto::crypto_encrypt_for,
             commands::crypto::crypto_unwrap_dek_for_device,
