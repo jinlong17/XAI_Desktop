@@ -27,8 +27,14 @@
 ## Automated Checks
 
 - `pnpm --filter @repo/web build`
-- `pnpm --filter desktop tauri build --debug`
+- `pnpm --filter desktop tauri build --debug --bundles app`
 - `cargo test --manifest-path apps/desktop/src-tauri/Cargo.toml`
+
+Default all-bundle DMG creation (`pnpm --filter desktop tauri build --debug`
+without `--bundles app`) is intentionally outside this feature's acceptance
+gate and belongs to `desktop-phase1-build-packaging-pipeline`. This feature
+must prove the normal-window host can compile, bundle the `.app`, and load the
+`apps/web` static dist handoff; it must not require final DMG packaging.
 
 ## Manual Desktop Checks
 
@@ -40,7 +46,9 @@
 
 ## Offline Launch Checks
 
-- Build the app, disable network, then launch it.
+- Build the app bundle, then launch it with network unavailable or otherwise
+  verify that the launched app uses local `tauri://localhost` content from the
+  bundled static handoff rather than a dev server or missing-dist fallback.
 - Verify bundled static assets render without hitting a missing-dist failure.
 - Verify the window still opens offline even if `/app` auth/session policy remains pending.
 - Record whether offline launch reaches:
@@ -49,6 +57,14 @@
   - full `/app`
 
 The first two outcomes are acceptable for this feature if clearly attributed to the follow-on `desktop-web-auth-offline-mode` work; a missing bundle or startup crash is not.
+
+### 2026-05-27 App Bundle / Offline Smoke Evidence
+
+- `pnpm --filter desktop tauri build --debug --bundles app` passed and produced `apps/desktop/src-tauri/target/debug/bundle/macos/X Desktop.app`.
+- `feature-verify` launched the built app bundle and observed one standard `AI Smart Desktop` window with rendered local `tauri://localhost` content.
+- `apps/web/dist` exists and contains `index.html`, `_headers`, `sw.js`, the Vite manifest, CSS, JS, and source maps.
+- External URLs remain in the web payload for optional online content (`fonts.googleapis.com`, `fonts.gstatic.com`, OpenStreetMap tiles/attribution). Those can degrade while offline and are not a missing-dist failure for this feature.
+- Outcome for this feature: **static bundled shell launches from local Tauri content**. Full authenticated `/app` offline entry is deferred to `desktop-web-auth-offline-mode`.
 
 ## Regression Checks
 
