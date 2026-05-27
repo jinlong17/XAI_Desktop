@@ -1,42 +1,27 @@
-import { SettingsProvider } from "./context/SettingsContext";
-import { InteractiveProvider } from "./context/InteractiveContext";
-import { OrganizerLayer, GridSystemProvider } from "@repo/plugin-organizer";
-import GlobalDndProvider from "./providers/DndProvider";
-import { useSyncMenuBarStatus } from "./sync/useSyncMenuBarStatus";
 import "./App.css";
-
-declare global {
-  interface Window {
-    __TAURI__?: unknown;
-  }
-}
-
-function AppInner() {
-  useSyncMenuBarStatus();
-
-  return (
-    <GridSystemProvider>
-      <GlobalDndProvider>
-        <div className="app-shell">
-          {/* Main window is mostly non-interactive (click-through) */}
-          <div className="interactive-layer" style={{ pointerEvents: "none" }}>
-            {/* OrganizerLayer handles grid window management */}
-            {/* Note: OrganizerLayer manages its own pointerEvents for interactive elements */}
-            <OrganizerLayer />
-          </div>
-        </div>
-      </GlobalDndProvider>
-    </GridSystemProvider>
-  );
-}
 
 function App() {
   return (
-    <SettingsProvider>
-      <InteractiveProvider>
-        <AppInner />
-      </InteractiveProvider>
-    </SettingsProvider>
+    <main className="app-shell">
+      <section
+        style={{
+          margin: "40px auto",
+          maxWidth: 560,
+          padding: 24,
+          borderRadius: 16,
+          background: "rgba(15, 23, 42, 0.78)",
+          border: "1px solid rgba(148, 163, 184, 0.35)",
+          color: "#e2e8f0",
+          backdropFilter: "blur(8px)",
+        }}
+      >
+        <h1 style={{ margin: "0 0 12px", fontSize: 22 }}>Legacy Desktop Fallback</h1>
+        <p style={{ margin: 0, lineHeight: 1.6 }}>
+          The Phase 1 desktop runtime is now served from <code>apps/web</code>. This React shell is
+          intentionally kept as a non-overlay fallback only.
+        </p>
+      </section>
+    </main>
   );
 }
 

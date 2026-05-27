@@ -4,9 +4,9 @@
   "version": "0.1.0",
   "type": "module",
   "scripts": {
-    "dev": "vite",
-    "build": "tsc && vite build",
-    "preview": "vite preview",
+    "dev": "pnpm --filter @repo/web dev",
+    "build": "pnpm --filter @repo/web build",
+    "preview": "pnpm --filter @repo/web preview",
     "tauri": "tauri"
   },
   "dependencies": {
