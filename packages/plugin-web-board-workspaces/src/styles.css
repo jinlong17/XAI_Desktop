@@ -44,6 +44,16 @@
   flex: 1;
   min-width: 0;
 }
+.board-cache-state {
+  margin: 10px 0;
+  padding: 12px 14px;
+  border: 1px dashed var(--border-2);
+  border-radius: var(--r-md);
+  font-size: var(--fs-sm);
+  color: var(--text-3);
+  line-height: 1.5;
+  background: var(--bg-panel);
+}
 .panel-head {
   display: flex;
   align-items: center;

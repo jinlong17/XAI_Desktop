@@ -28,11 +28,16 @@
  */
 
 import { Suspense, useCallback, useEffect, useState } from "react";
+import {
+  isDesktopPhase1OfflineRuntime,
+  resolveWebRuntimeProfile,
+} from "@repo/core";
 import { usePref } from "@repo/plugin-web-storage";
 import {
   BoardView,
   BOARD_TEMPLATES,
   DEFAULT_WORKSPACES,
+  isBoardArray,
   loadBoardsOrDefault,
   makeDefaultBoards,
   pickActiveBoard,
@@ -60,6 +65,7 @@ import {
 } from "@repo/plugin-web-board-views";
 import type { BoardViewId, FilterState } from "@repo/plugin-web-board-views";
 import { EMPTY_FILTER } from "@repo/plugin-web-board-views";
+import { readDesktopBoardCacheStatusFromStorage } from "./desktopCache.js";
 
 import { BoardSwitcher } from "./BoardSwitcher.js";
 import { BoardCreator } from "./BoardCreator.js";
@@ -82,6 +88,7 @@ import { STR_BOTTOM_SWITCHER, STR_HEADER, type Lang } from "./internal/strings.j
 
 export interface BoardWorkspacesModuleProps {
   lang: Lang;
+  runtimeProfileOverride?: "web-live" | "desktop-phase1-offline";
 }
 
 /**
@@ -110,7 +117,16 @@ function loadViewByBoardIdOrEmpty(raw: unknown): Record<string, BoardViewId> {
   return result;
 }
 
-export function BoardWorkspacesModule({ lang }: BoardWorkspacesModuleProps) {
+export function BoardWorkspacesModule({
+  lang,
+  runtimeProfileOverride,
+}: BoardWorkspacesModuleProps) {
+  const runtimeProfile = runtimeProfileOverride ?? resolveWebRuntimeProfile(
+    import.meta.env as Record<string, string | undefined>,
+  );
+  const isDesktopOfflineRuntime =
+    isDesktopPhase1OfflineRuntime(runtimeProfile);
+
   // ---- Persisted state ---------------------------------------------------
   const [rawBoards, setRawBoards] = usePref("xai_boards_v2");
   const [activeBoardId, setActiveBoardId] = usePref("xai_active_board");
@@ -120,7 +136,46 @@ export function BoardWorkspacesModule({ lang }: BoardWorkspacesModuleProps) {
     "xai_board_view_by_id",
   );
 
-  const boards: Board[] = loadBoardsOrDefault(rawBoards);
+  const desktopBoardCacheStatus = isDesktopOfflineRuntime
+    ? readDesktopBoardCacheStatusFromStorage()
+    : "readable";
+  const boards: Board[] = isDesktopOfflineRuntime
+    ? desktopBoardCacheStatus === "readable" && isBoardArray(rawBoards)
+      ? rawBoards
+      : []
+    : loadBoardsOrDefault(rawBoards);
+
+  const showDesktopEmptyState =
+    isDesktopOfflineRuntime && boards.length === 0;
+  const showDesktopUnreadableState =
+    isDesktopOfflineRuntime && desktopBoardCacheStatus === "unreadable";
+
+  if (showDesktopEmptyState) {
+    return (
+      <div className="board-module board-workspaces-module" data-testid="board-workspaces-module">
+        <header className="board-toolbar">
+          <h1 className="module-title" data-testid="board-title-btn">
+            {lang === "zh" ? "看板" : "Board"}
+          </h1>
+        </header>
+        <div className="board-canvas">
+          <div
+            className="board-cache-state"
+            data-testid={showDesktopUnreadableState ? "board-cache-unreadable" : "board-cache-empty"}
+          >
+            {showDesktopUnreadableState
+              ? lang === "zh"
+                ? "检测到看板缓存损坏，已切换到安全空状态。"
+                : "Board cache is unreadable. Showing a safe empty state."
+              : lang === "zh"
+                ? "暂无离线看板缓存数据。"
+                : "No offline board cache is available yet."}
+          </div>
+        </div>
+      </div>
+    );
+  }
+
   const activeBoard: Board = pickActiveBoard(boards, activeBoardId);
   const lists: BoardListData[] = activeBoard.lists;
   const panels: BoardPanelStateShape = loadPanelsOrDefault(rawPanels);
@@ -137,12 +192,15 @@ export function BoardWorkspacesModule({ lang }: BoardWorkspacesModuleProps) {
 
   // ---- One-time defensive seed (Rec2 from feature-review) ----------------
   useEffect(() => {
+    if (isDesktopOfflineRuntime) {
+      return;
+    }
     if (rawBoards === null) {
       setRawBoards(makeDefaultBoards() as unknown as typeof rawBoards);
     }
     // Only fire once on initial mount with null prefs.
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [isDesktopOfflineRuntime, rawBoards, setRawBoards]);
 
   // ---- Sync active id if it has drifted ----------------------------------
   if (activeBoardId && activeBoardId !== activeBoard.id) {

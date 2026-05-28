@@ -212,6 +212,44 @@ describe("BoardWorkspacesModule (BWM1..BWM18)", () => {
     );
   });
 
+  it("BWM19: desktop offline + absent cache shows safe empty state", () => {
+    render(
+      <BoardWorkspacesModule
+        lang="en"
+        runtimeProfileOverride="desktop-phase1-offline"
+      />,
+    );
+
+    expect(screen.getByTestId("board-cache-empty")).toBeInTheDocument();
+    expect(screen.queryByTestId("board-panels")).not.toBeInTheDocument();
+  });
+
+  it("BWM20: desktop offline + malformed cache shows unreadable state", () => {
+    localStorage.setItem("xai_boards_v2", "{bad-json");
+    render(
+      <BoardWorkspacesModule
+        lang="en"
+        runtimeProfileOverride="desktop-phase1-offline"
+      />,
+    );
+
+    expect(screen.getByTestId("board-cache-unreadable")).toBeInTheDocument();
+    expect(screen.queryByTestId("board-panels")).not.toBeInTheDocument();
+  });
+
+  it("BWM21: desktop offline + empty cache array shows safe empty state", () => {
+    localStorage.setItem("xai_boards_v2", JSON.stringify([]));
+    render(
+      <BoardWorkspacesModule
+        lang="en"
+        runtimeProfileOverride="desktop-phase1-offline"
+      />,
+    );
+
+    expect(screen.getByTestId("board-cache-empty")).toBeInTheDocument();
+    expect(screen.queryByTestId("board-panels")).not.toBeInTheDocument();
+  });
+
   // ---- BWM-EXT-1..3 — gap-closure row #6 (P3 Filter) -------------------------
 
   it("BWM-EXT-1: Filter button is now enabled (no longer disabled)", () => {

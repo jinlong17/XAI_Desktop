@@ -213,6 +213,20 @@
   border-radius: var(--r-pill);
 }
 
+.tasks-cache-state {
+  margin: 0 20px 12px;
+  padding: 10px 12px;
+  border-radius: var(--r-md);
+  font-size: var(--fs-xs);
+  line-height: 1.5;
+}
+
+.tasks-cache-state-unreadable {
+  border: 1px solid color-mix(in oklch, var(--red) 45%, var(--border-1));
+  background: color-mix(in oklch, var(--red) 8%, var(--bg-panel));
+  color: var(--red);
+}
+
 /* ---- Sidebar ---- */
 .module-sidebar {
   width: var(--sidebar-w, 220px);

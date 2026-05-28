@@ -10,6 +10,10 @@
 
 import React, { useEffect, useMemo, useState } from "react";
 import type { TasksModuleProps, TaskCol, BucketId } from "./types.js";
+import {
+  isDesktopPhase1OfflineRuntime,
+  resolveWebRuntimeProfile,
+} from "@repo/core";
 import { useI18n } from "@repo/plugin-web-tokens";
 import { usePref } from "@repo/plugin-web-storage";
 import { SEED_TASK_COLS } from "./internal/seed/tasksMock.js";
@@ -17,10 +21,17 @@ import { isTaskColsArray } from "./internal/validate.js";
 import { moveCard, toggleComplete } from "./internal/tasksReducer.js";
 import { TasksSidebar } from "./TasksSidebar.js";
 import { TaskColumn } from "./TaskColumn.js";
+import { readDesktopTaskCacheStatusFromStorage } from "./desktopCache.js";
 
 export type { TasksModuleProps };
 
 const SMART_QUERY_KEY = "smart";
+const EMPTY_TASK_COLS: TaskCol[] = (SEED_TASK_COLS as TaskCol[]).map((col) => ({
+  ...col,
+  count: 0,
+  tasks: [],
+  completed: col.completed ? [] : undefined,
+}));
 
 export function readTasksSmartListFromSearch(search: string): "today" | null {
   const params = new URLSearchParams(search);
@@ -38,13 +49,30 @@ function consumeTasksSmartListInUrl(search: string): string {
   return next.length > 0 ? `?${next}` : "";
 }
 
-export function TasksModule({ lang }: TasksModuleProps) {
+export function TasksModule({ lang, runtimeProfileOverride }: TasksModuleProps) {
   const { s } = useI18n(lang);
+  const runtimeProfile = runtimeProfileOverride ?? resolveWebRuntimeProfile(
+    import.meta.env as Record<string, string | undefined>,
+  );
+  const isDesktopOfflineRuntime =
+    isDesktopPhase1OfflineRuntime(runtimeProfile);
+  const desktopCacheStatus = isDesktopOfflineRuntime
+    ? readDesktopTaskCacheStatusFromStorage()
+    : "readable";
+  const showUnreadableDesktopCache =
+    isDesktopOfflineRuntime && desktopCacheStatus === "unreadable";
 
   // ---- Persistence via usePref (boundary cast pattern — api.md §4.2) ----
   const [rawCols, setRawCols] = usePref("xai_task_cols");
 
   const taskCols = useMemo<TaskCol[]>(() => {
+    if (isDesktopOfflineRuntime) {
+      if (desktopCacheStatus === "readable" && isTaskColsArray(rawCols)) {
+        return rawCols as TaskCol[];
+      }
+      return EMPTY_TASK_COLS;
+    }
+
     if (isTaskColsArray(rawCols)) return rawCols as TaskCol[];
     if (rawCols !== null && rawCols !== undefined && !(rawCols instanceof Object && Object.keys(rawCols as object).length === 0)) {
       // Non-empty, non-array value: warn once in DEV (Rec-1 message format)
@@ -53,7 +81,7 @@ export function TasksModule({ lang }: TasksModuleProps) {
       }
     }
     return SEED_TASK_COLS as TaskCol[];
-  }, [rawCols]);
+  }, [desktopCacheStatus, isDesktopOfflineRuntime, rawCols]);
 
   // ---- In-memory completion state (not persisted in v1) ----
   const [completedIds, setCompletedIds] = useState<ReadonlySet<string>>(new Set());
@@ -172,6 +200,16 @@ export function TasksModule({ lang }: TasksModuleProps) {
             </button>
           </div>
         </header>
+        {showUnreadableDesktopCache ? (
+          <div
+            className="tasks-cache-state tasks-cache-state-unreadable"
+            data-testid="tasks-cache-unreadable"
+          >
+            {lang === "zh"
+              ? "检测到任务缓存损坏，已切换到安全空状态。"
+              : "Tasks cache is unreadable. Showing a safe empty state."}
+          </div>
+        ) : null}
         <div className="task-columns">
           {taskCols.map((col) => (
             <TaskColumn

@@ -80,4 +80,6 @@ export interface TaskCol {
 export interface TasksModuleProps {
   /** Active UI language. */
   readonly lang: Lang;
+  /** Optional runtime-profile override used by desktop-offline tests. */
+  readonly runtimeProfileOverride?: "web-live" | "desktop-phase1-offline";
 }
