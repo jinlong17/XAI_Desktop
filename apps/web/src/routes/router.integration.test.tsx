@@ -3,8 +3,15 @@
 import { afterEach, beforeAll, describe, expect, it, vi } from "vitest";
 import { createRoot, type Root } from "react-dom/client";
 import { act } from "react";
-import { RouterProvider, createMemoryRouter } from "react-router";
+import {
+  MemoryRouter,
+  Route,
+  RouterProvider,
+  Routes,
+  createMemoryRouter,
+} from "react-router";
 import type { PropsWithChildren } from "react";
+import { LandingPage } from "../pages/LandingPage";
 import { webHostRouteObjects } from "./router";
 
 const mockDeviceFetch = vi.fn(async () => new Response(JSON.stringify({ rows: [] }), { status: 200 }));
@@ -120,6 +127,32 @@ describe("web host router integration", () => {
     const landing = await mountRouter(historyEntries, 0);
     expect(landing.container.textContent).toContain("XAI Web Host");
     await unmountApp(landing);
+  });
+
+  it("redirects desktop offline root launches into the app shell", async () => {
+    vi.stubEnv("VITE_WEB_RUNTIME_PROFILE", "desktop-phase1-offline");
+    const container = document.createElement("div");
+    document.body.appendChild(container);
+    const root = createRoot(container);
+
+    await act(async () => {
+      root.render(
+        <MemoryRouter initialEntries={["/"]}>
+          <Routes>
+            <Route path="/" element={<LandingPage />} />
+            <Route path="/app" element={<main>App shell target</main>} />
+          </Routes>
+        </MemoryRouter>,
+      );
+    });
+
+    expect(container.textContent).toContain("App shell target");
+    expect(container.textContent).not.toContain("Public landing shell placeholder");
+
+    await act(async () => {
+      root.unmount();
+    });
+    container.remove();
   });
 
   it("keeps app shell stable when invoking todo module controls", async () => {

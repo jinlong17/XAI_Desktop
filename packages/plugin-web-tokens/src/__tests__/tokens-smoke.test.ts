@@ -20,8 +20,24 @@ const TOKENS_CSS_PATH = path.resolve(
   path.dirname(new URL(import.meta.url).pathname),
   "../../src/tokens.css"
 );
+const PACKAGE_JSON_PATH = path.resolve(
+  path.dirname(new URL(import.meta.url).pathname),
+  "../../package.json"
+);
 
 const cssText = fs.readFileSync(TOKENS_CSS_PATH, "utf-8");
+
+describe("Token smoke — package side effects", () => {
+  it("AC-BUNDLE-1: package entry remains side-effectful so token and layout CSS bundle", () => {
+    const packageJson = JSON.parse(fs.readFileSync(PACKAGE_JSON_PATH, "utf-8")) as {
+      sideEffects?: string[];
+    };
+
+    expect(packageJson.sideEffects).toEqual(
+      expect.arrayContaining(["./src/index.ts", "./src/tokens.css", "./src/layout.css"]),
+    );
+  });
+});
 
 describe("Token smoke — CSS file fidelity (fs-level)", () => {
   // ---- Sentinel token substring assertions (AC-T1..AC-T15) ----
