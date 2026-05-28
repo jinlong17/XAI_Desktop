@@ -94,6 +94,7 @@ pub fn run() {
         .plugin(tauri_plugin_notification::init())
         .manage(commands::crypto::CryptoCommandState::default())
         .manage(commands::menubar::SyncMenuBarState::default())
+        .manage(commands::statusbar::DesktopStatusbarState::default())
         .manage(commands::bookmarks::BookmarkRegistry::default());
 
     #[cfg(feature = "crypto")]
@@ -102,6 +103,7 @@ pub fn run() {
     builder
         .invoke_handler(tauri::generate_handler![
             commands::menubar::sync_set_menubar_status,
+            commands::statusbar::statusbar_set_snapshot,
             commands::crypto::crypto_encrypt_for,
             commands::crypto::crypto_unwrap_dek_for_device,
             commands::crypto::crypto_wrap_dek_for_devices,
@@ -131,6 +133,13 @@ pub fn run() {
             let app_handle = app.handle().clone();
             app_menu::install_native_app_menu(&app_handle)?;
             app.on_menu_event(|app_handle, event| {
+                if let Err(error) = commands::statusbar::handle_statusbar_menu_event(
+                    app_handle,
+                    event.id().as_ref(),
+                ) {
+                    eprintln!("⚠️ Status bar menu event failed: {error}");
+                    return;
+                }
                 app_menu::handle_menu_event(app_handle, event);
             });
 
@@ -148,10 +157,12 @@ pub fn run() {
             let _ = window.set_resizable(true);
             let _ = window.set_always_on_top(false);
 
+            commands::statusbar::install_statusbar(&app_handle)?;
             window.eval(DESKTOP_NOTIFICATION_ADAPTER_SCRIPT)?;
 
             let loaded_config = app_config::load_config_or_default(&app_handle)?;
-            let restored_state = app_config::apply_main_window_state(&window, &loaded_config.window.main)?;
+            let restored_state =
+                app_config::apply_main_window_state(&window, &loaded_config.window.main)?;
 
             let mut normalized_config = loaded_config;
             normalized_config.window.main = restored_state;
