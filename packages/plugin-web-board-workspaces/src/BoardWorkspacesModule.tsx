@@ -63,6 +63,7 @@ import { EMPTY_FILTER } from "@repo/plugin-web-board-views";
 
 import { BoardSwitcher } from "./BoardSwitcher.js";
 import { BoardCreator } from "./BoardCreator.js";
+import { BoardDeleteConfirmDialog } from "./BoardDeleteConfirmDialog.js";
 import { CardDetailDialog } from "./CardDetailDialog.js";
 import { StatusOverviewBanner } from "./StatusOverviewBanner.js";
 import { InboxPanel } from "./InboxPanel.js";
@@ -268,6 +269,28 @@ export function BoardWorkspacesModule({ lang }: BoardWorkspacesModuleProps) {
     [boards, activeBoard.id, setRawBoards, setActiveBoardId],
   );
 
+  // ---- Delete confirmation state (Audit Option A §5 — B-12 + B-28) --------
+  // Host owns the pending-delete target so one BoardDeleteConfirmDialog instance
+  // serves both BoardSwitcher (board delete) and InboxPanel (card delete).
+  // Declared AFTER deleteBoard + setInbox to avoid "used before assigned" errors.
+  // Conditional-mount is MANDATORY — see dev_log "Top-10 #5 cycle-2 BLOCKED"
+  // for why unconditional mount breaks AC-W8-VIEWS-FIX-LD integration tests.
+  const [pendingDelete, setPendingDelete] = useState<{
+    type: "board" | "card";
+    id: string;
+    label: string;
+  } | null>(null);
+
+  const confirmPendingDelete = useCallback(() => {
+    if (!pendingDelete) return;
+    if (pendingDelete.type === "board") {
+      deleteBoard(pendingDelete.id);
+    } else {
+      setInbox((prev) => prev.filter((c) => c.id !== pendingDelete.id));
+    }
+    setPendingDelete(null);
+  }, [pendingDelete, deleteBoard, setInbox]);
+
   // ---- Kanban-view ops ---------------------------------------------------
   const addCard = useCallback(
     (listIdx: number) => {
@@ -427,7 +450,19 @@ export function BoardWorkspacesModule({ lang }: BoardWorkspacesModuleProps) {
 
             <div className={panelsClass} data-testid="board-panels">
               {panels.inbox && (
-                <InboxPanel cards={inboxCards} setCards={setInbox} lang={lang} />
+                <InboxPanel
+                  cards={inboxCards}
+                  setCards={setInbox}
+                  lang={lang}
+                  onRequestRemove={(id) => {
+                    const card = inboxCards.find((c) => c.id === id);
+                    setPendingDelete({
+                      type: "card",
+                      id,
+                      label: card?.text[lang] ?? card?.text.en ?? id,
+                    });
+                  }}
+                />
               )}
               {panels.planner && <PlannerPanel lists={filteredLists} lang={lang} onOpenCard={handleOpenCard} />}
               {panels.board && (
@@ -543,7 +578,14 @@ export function BoardWorkspacesModule({ lang }: BoardWorkspacesModuleProps) {
             setCreateOpen(true);
             setSwitcherOpen(false);
           }}
-          onDelete={deleteBoard}
+          onRequestDelete={(id) => {
+            const board = boards.find((b) => b.id === id);
+            setPendingDelete({
+              type: "board",
+              id,
+              label: board?.name[lang] ?? id,
+            });
+          }}
           onClose={() => setSwitcherOpen(false)}
         />
       )}
@@ -576,6 +618,21 @@ export function BoardWorkspacesModule({ lang }: BoardWorkspacesModuleProps) {
           listName={resolvedListName}
           lang={lang}
           onClose={() => setOpenCard(null)}
+        />
+      )}
+
+      {/* Conditional mount (MANDATORY) — B-12 + B-28 delete confirmation gate.
+          Only mounted when pendingDelete !== null. Same conditional-mount guard
+          as CardDetailDialog above. See dev_log Audit Option A §5 BLOCKED
+          history + risk R1 for why unconditional mount breaks integration tests. */}
+      {pendingDelete && (
+        <BoardDeleteConfirmDialog
+          open={true}
+          mode={pendingDelete.type}
+          targetLabel={pendingDelete.label}
+          lang={lang}
+          onConfirm={confirmPendingDelete}
+          onCancel={() => setPendingDelete(null)}
         />
       )}
     </div>
