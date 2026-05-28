@@ -783,6 +783,7 @@ Total after this extension: **307 in `@repo/plugin-web-calendar`** + 90 in stora
 | AC-PERSIST-CREATE-1 | Create + reload → event preserved | P3 | `CalendarModule.eventcrud.test.tsx` |
 | AC-PERSIST-CREATE-2 | Edit + reload → updated event preserved | P3 | `CalendarModule.eventcrud.test.tsx` |
 | AC-PERSIST-CREATE-3 | Delete + reload → event NOT present | P3 | `CalendarModule.eventcrud.test.tsx` |
+| AC-PERSIST-CREATE-4 | Cross-tab `storage` event carrying updated `xai_calendar_events` payload re-renders hook state | P1 | `useUserCalEvents.test.tsx` |
 
 #### AC-RECUR — Recurrence rendering
 
@@ -867,7 +868,7 @@ Total after this extension: **307 in `@repo/plugin-web-calendar`** + 90 in stora
 |---|---|---|---|
 | AC-I18N-CREATE-1 | EN composer: title="New event" / fields labels all EN | P2 | `EventComposer.test.tsx` |
 | AC-I18N-CREATE-2 | ZH composer: title="新建事件" / fields labels all ZH | P2 | `EventComposer.test.tsx` |
-| AC-I18N-CREATE-3 | `STR_EVENT_COMPOSER` has both `en` and `zh` for every key (compile-time guard via assertBilingual helper) | P1 | `EventComposer.test.tsx` |
+| AC-I18N-CREATE-3 | `STR_EVENT_COMPOSER` requires both `en` + `zh` per key and helper assertions verify key coverage | P1 | `EventComposer.test.tsx` |
 
 #### AC-DOCS — Doc lift compliance
 
@@ -1075,4 +1076,3 @@ XVENDOR-CREATE-1..6 + Codex 5 cold-read items may be DEFERRED at ship-time per A
 15. Lint passes with `--max-warnings 0` across all touched workspaces.
 16. Commit hygiene: one commit per phase, Why/What/Scope/Risk/Docs/Tests.
 17. Cross-vendor XVENDOR-CREATE-1..6 + Codex 5 cold-read items recorded OR formally DEFERRED per ADR-0008 carve-out + ADR-0009 §D2-G2 precedent.
-

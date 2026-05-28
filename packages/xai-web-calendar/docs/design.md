@@ -599,7 +599,7 @@ recommendations Q1..Q10:
 
 - Drag-to-resize event blocks (Week/Day) — Future row.
 - Click-to-create event in empty hour slot — Future row.
-- Inline event editing — Future row (no editing UI at all in v1, per HC8). **[2026-05-27 — HC8 LIFT NOTE]** This constraint is lifted in v1.2 per ADR-0010 §D4 carve-out 2026-05-27 (carve-out doc: `docs/reviews/_p0-carve-outs/20260527-calendar-event-create.md`). See §16 (2026-05-27 Extension — Event CRUD) for the lift rationale, scope, and design. The original §15 body otherwise remains byte-identical to the SHIPPED extension.
+- Inline event editing — Future row (no editing UI at all in v1, per HC8). **[2026-05-27 — HC8 LIFT NOTE]** This constraint is lifted in v1.1 per ADR-0010 §D4 carve-out 2026-05-27 (carve-out doc: `docs/reviews/_p0-carve-outs/20260527-calendar-event-create.md`). See §16 (2026-05-27 Extension — Event CRUD) for the lift rationale, scope, and design. The original §15 body otherwise remains byte-identical to the SHIPPED extension.
 - Multi-day events (events spanning > 24 hours) — Future row.
 - Recurring event preview rendering — Future row.
 - Time-zone DISPLAY preference (user picks a tz different from browser local) — Future row.
@@ -894,8 +894,8 @@ Carried from `discovery-review.md` §4 (16 entries):
     one event, banner hides (it was saying "Sample data — switch to
     your account…" which becomes misleading once real events exist).
 12. **Empty state** (Q7-A). When BOTH `userEvents.length === 0` AND
-    fixture rendering is suppressed (future toggle — not in v1.2
-    scope; v1.2 always shows fixture), a bilingual hint "Click + to
+    fixture rendering is suppressed (future toggle — not in v1.1
+    scope; v1.1 always shows fixture), a bilingual hint "Click + to
     create your first event" / "点击 + 创建第一个事件" renders
     centered in the viewport (Month / Week / Day all).
 13. **Trigger map** (Q8). Composer opens on:
@@ -920,10 +920,10 @@ Carried from `discovery-review.md` §4 (16 entries):
     Per-phase same-vendor smoke from P2 onwards. XVENDOR-CREATE-1..6
     matrix in P5.
 
-### 16.3 Out of scope (extension v1.2)
+### 16.3 Out of scope (extension v1.1)
 
 - Multi-day events.
-- All-day events (no `time` field) — out of v1.2; `startISO` always carries time.
+- All-day events (no `time` field) — out of v1.1; `startISO` always carries time.
 - Timezone awareness (local clock assumed).
 - Cross-device sync (deferred to ADR-0011 / xai-g2).
 - External calendar integration (Google / iCloud / Outlook).
@@ -940,6 +940,8 @@ Carried from `discovery-review.md` §4 (16 entries):
 - Export / import.
 - Real backend (Supabase / Firebase / etc.).
 - Auth changes.
+- Dev-only fixture toggle (Q9-C) — keep as a follow-up option if operators want
+  sample-data hide/show control.
 
 ### 16.4 Component composition (extension)
 
@@ -1277,5 +1279,4 @@ exclusively — no new tokens.
   day-of-month 1..31) is preserved unchanged. The new merge layer
   `mergeEventsForMonth` is the consumer; fixture never gains a
   full-date schema.
-
 

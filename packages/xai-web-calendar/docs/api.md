@@ -142,7 +142,7 @@ cal: {
 
 No key renames; no removals. `I18NBundle = typeof I18N["en"]` derived
 type expansion is the only consumer-side effect — TypeScript will
-require ZH bundle parity (enforced at compile time).
+require ZH bundle parity at the bundle-object level.
 
 ### 2.3 Event channel listened on
 
@@ -829,7 +829,9 @@ export const SAMPLE_BADGE = {
 } as const;
 ```
 
-The TypeScript shape `Record<string, { en: string; zh: string }>` enforces EN/ZH parity at compile time.
+The `Record<string, { en: string; zh: string }>` shape ensures each declared
+string key carries both EN + ZH values; AC-I18N-CREATE-3 validates runtime key
+coverage.
 
 #### 11.6.3 No event channel changes
 
@@ -911,4 +913,3 @@ Focus management: native `<dialog>` handles focus trap. On close, focus returns 
 
 - Package bumps to `0.2.0` (minor — additive types + components).
 - `manifest.json` status STAYS `Production` (this extension does not regress; if reviewer prefers, status may be flipped to `In-Dev` during the build window and back to `Production` at ship — TBD by feature-review).
-
