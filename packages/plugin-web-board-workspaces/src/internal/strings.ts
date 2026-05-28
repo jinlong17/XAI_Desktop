@@ -74,6 +74,31 @@ export const STR_HEADER = {
 export const PLANNER_WEEKDAYS_ZH: readonly string[] = ["周日", "周一", "周二", "周三", "周四", "周五", "周六"];
 
 /**
+ * STR_DELETE_CONFIRM — bilingual strings for BoardDeleteConfirmDialog.
+ *
+ * Audit Option A §5 fix — B-12 (BoardSwitcher delete board) + B-28 (InboxPanel card delete).
+ * Local STR pattern: no plugin-web-tokens edit.
+ *
+ * Note: STR_SWITCHER.deleteConfirm is superseded for B-12 after wiring;
+ * kept for back-compat (no existing test depends on it being removed).
+ */
+export const STR_DELETE_CONFIRM = {
+  titleBoard:   { en: "Delete board?",                zh: "删除看板？"         },
+  titleCard:    { en: "Delete card?",                 zh: "删除卡片？"         },
+  descBoard: {
+    en: "Deleting this board will permanently remove all its lists and cards.",
+    zh: "删除该看板将永久移除其中所有列表和卡片。",
+  },
+  descCard: {
+    en: "Deleting this card is permanent and cannot be undone.",
+    zh: "删除该卡片后无法撤销。",
+  },
+  cancel:       { en: "Cancel",                       zh: "取消"              },
+  confirmBoard: { en: "Delete board",                 zh: "删除看板"          },
+  confirmCard:  { en: "Delete card",                  zh: "删除卡片"          },
+} as const;
+
+/**
  * STR_CARD_DETAIL — bilingual strings for CardDetailDialog.
  *
  * Audit Top-10 #5 fix — B-23/B-29/B-32/B-34/B-36 + Map view.
