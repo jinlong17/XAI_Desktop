@@ -27,6 +27,8 @@ export interface QuadrantProps {
   cards: readonly MatrixCard[];
   lang: Lang;
   onCardDropped: (cardId: string, to: QuadrantId) => void;
+  /** M-03: callback to open the composer pre-targeted to this quadrant. */
+  onAddCard?: (quadrant: QuadrantId) => void;
 }
 
 export function Quadrant({
@@ -36,6 +38,7 @@ export function Quadrant({
   cards,
   lang,
   onCardDropped,
+  onAddCard,
 }: QuadrantProps) {
   const { s } = useI18n(lang);
   const [isDragOver, setIsDragOver] = useState(false);
@@ -78,7 +81,12 @@ export function Quadrant({
           {s(titleKey as Parameters<typeof s>[0])}
         </h2>
         <span className="grow" />
-        <button type="button" className="icon-btn" aria-label={lang === "zh" ? "添加卡片" : "Add card"}>
+        <button
+          type="button"
+          className="icon-btn"
+          aria-label={lang === "zh" ? "添加卡片" : "Add card"}
+          onClick={() => onAddCard?.(id)}
+        >
           <PlusIcon size={14} />
         </button>
         <button type="button" className="icon-btn" aria-label={lang === "zh" ? "更多操作" : "More actions"}>
