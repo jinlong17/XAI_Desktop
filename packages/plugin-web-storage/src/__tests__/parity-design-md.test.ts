@@ -116,6 +116,7 @@ const OWNER_ROW_EXEMPT_KEYS: ReadonlySet<string> = new Set([
   "xai_pref_notif_push_task",
   "xai_pref_notif_push_pomo",
   "xai_pref_notif_push_habit",
+  "xai_pref_notif_push_calendar",
   "xai_pref_notif_quiet",
   "xai_pref_notif_quiet_start",
   "xai_pref_notif_quiet_end",

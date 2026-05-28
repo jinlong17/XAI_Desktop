@@ -147,6 +147,7 @@ const STR = {
   "notif.taskDue": { en: "Task due", zh: "任务到期" },
   "notif.pomoDone": { en: "Pomodoro complete", zh: "番茄钟结束" },
   "notif.habitRemind": { en: "Habit reminder", zh: "习惯提醒" },
+  "notif.calendarRemind": { en: "Calendar reminder", zh: "日历提醒" },
   "notif.soundSection": { en: "Completion sound", zh: "完成音效" },
   "notif.sound": { en: "Sound", zh: "音效" },
   "notif.soundDesc": { en: "Plays when a task is completed", zh: "任务完成时播放" },
@@ -158,6 +159,13 @@ const STR = {
   "notif.dndSection": { en: "Do not disturb", zh: "勿扰" },
   "notif.quietEnable": { en: "Enable quiet hours", zh: "启用勿扰" },
   "notif.quietHours": { en: "Quiet hours", zh: "时段" },
+  "notif.desktopStatusTitle": { en: "Desktop delivery status", zh: "桌面通知状态" },
+  "notif.desktopStatusReady": { en: "Native notifications are ready.", zh: "原生通知可用。" },
+  "notif.desktopStatusDenied": { en: "Permission denied. Enable notifications in macOS System Settings.", zh: "权限已拒绝。请在 macOS 系统设置中启用通知权限。" },
+  "notif.desktopStatusPrompt": { en: "Permission required before native reminders can be delivered.", zh: "需要授权后才可发送原生提醒。" },
+  "notif.desktopStatusUnsupported": { en: "Desktop notification bridge unavailable in this runtime.", zh: "当前运行时不支持桌面通知桥接。" },
+  "notif.desktopStatusDisabled": { en: "Notifications are disabled by master switch.", zh: "主开关已关闭通知。" },
+  "notif.desktopRequestPermission": { en: "Request permission", zh: "请求权限" },
 
   // DateTime pane
   "dt.startWeek": { en: "Start week on", zh: "周开始" },

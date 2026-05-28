@@ -574,6 +574,15 @@ export const PREF_REGISTRY = {
     category: "pref",
   } satisfies PrefEntry<boolean>,
 
+  xai_pref_notif_push_calendar: {
+    key: "xai_pref_notif_push_calendar",
+    codec: "boolean",
+    default: true as boolean,
+    schemaVersion: 1,
+    owner: "xai-web-settings-rest",
+    category: "pref",
+  } satisfies PrefEntry<boolean>,
+
   xai_pref_notif_quiet: {
     key: "xai_pref_notif_quiet",
     codec: "boolean",

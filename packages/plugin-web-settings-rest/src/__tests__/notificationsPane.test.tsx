@@ -1,10 +1,22 @@
 /**
  * NF1..NF9 — notificationsPane tests (test.md §3 P2)
  */
-import { describe, it, expect } from "vitest";
+import { describe, it, expect, vi } from "vitest";
 import { render, screen, fireEvent } from "@testing-library/react";
 import { notificationsPane } from "../panes/notificationsPane.js";
 import { getPref } from "@repo/plugin-web-storage";
+
+vi.mock("@repo/desktop-native-notifications-reminders/web", () => ({
+  requestDesktopNotificationPermission: vi.fn(),
+  useDesktopNotificationRuntimeSnapshot: () => ({
+    status: "permission-required",
+    runtimeProfile: "desktop-phase1-offline",
+    permissionState: "prompt",
+    adapterAvailable: true,
+    unsupported: { task: 0, calendar: 0 },
+    lastUpdatedAt: "2026-05-28T00:00:00.000Z",
+  }),
+}));
 
 describe("notificationsPane", () => {
   it("NF1: renders without error", () => {
@@ -73,5 +85,15 @@ describe("notificationsPane", () => {
     expect(notificationsPane.id).toBe("notifications");
     expect(notificationsPane.icon).toBe("bell");
     expect(notificationsPane.i18nKey).toBe("settings.notifications");
+  });
+
+  it("NF10: calendar toggle persists xai_pref_notif_push_calendar", () => {
+    const { container } = render(notificationsPane.render({ lang: "en" }));
+    const toggle = container.querySelector<HTMLButtonElement>(
+      'button[aria-label="Calendar reminder"]',
+    );
+    expect(getPref("xai_pref_notif_push_calendar")).toBe(true);
+    fireEvent.click(toggle!);
+    expect(getPref("xai_pref_notif_push_calendar")).toBe(false);
   });
 });
