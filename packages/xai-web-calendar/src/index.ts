@@ -31,6 +31,7 @@ export type {
   CalEventColor,
   CalEventsByDay,
 } from "./internal/sampleEvents.js";
+export { SAMPLE_EVENTS } from "./internal/sampleEvents.js";
 
 export type { MonthCellData } from "./internal/monthGridCells.js";
 
@@ -44,3 +45,11 @@ export { TimeGrid } from "./TimeGrid.js";
 export type { TimeGridProps } from "./TimeGrid.js";
 export { DayView } from "./DayView.js";
 export type { DayViewProps } from "./DayView.js";
+
+export {
+  projectDesktopCalendarReminderEntries,
+} from "./projectDesktopCalendarReminderEntries.js";
+export type {
+  DesktopCalendarReminderEntry,
+  DesktopCalendarReminderUnsupportedReason,
+} from "./projectDesktopCalendarReminderEntries.js";

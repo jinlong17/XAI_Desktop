@@ -26,3 +26,13 @@ export type {
   TaskTagId,
   TaskTitleBundle,
 } from "./types.js";
+
+export {
+  projectDesktopTaskReminderEntries,
+} from "./projectDesktopTaskReminderEntries.js";
+export type {
+  DesktopTaskReminderEntry,
+  DesktopTaskReminderUnsupportedReason,
+  TaskDefaultReminderAll,
+  TaskDefaultReminderDue,
+} from "./projectDesktopTaskReminderEntries.js";

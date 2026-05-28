@@ -86,8 +86,12 @@ impl Default for ConsoleWindowFrameState {
 
 #[cfg_attr(mobile, tauri::mobile_entry_point)]
 pub fn run() {
+    const DESKTOP_NOTIFICATION_ADAPTER_SCRIPT: &str =
+        include_str!("desktop_notification_adapter.js");
+
     let builder = tauri::Builder::default()
         .plugin(tauri_plugin_opener::init())
+        .plugin(tauri_plugin_notification::init())
         .manage(commands::crypto::CryptoCommandState::default())
         .manage(commands::menubar::SyncMenuBarState::default())
         .manage(commands::bookmarks::BookmarkRegistry::default());
@@ -143,6 +147,8 @@ pub fn run() {
             let _ = window.set_shadow(true);
             let _ = window.set_resizable(true);
             let _ = window.set_always_on_top(false);
+
+            window.eval(DESKTOP_NOTIFICATION_ADAPTER_SCRIPT)?;
 
             let loaded_config = app_config::load_config_or_default(&app_handle)?;
             let restored_state = app_config::apply_main_window_state(&window, &loaded_config.window.main)?;

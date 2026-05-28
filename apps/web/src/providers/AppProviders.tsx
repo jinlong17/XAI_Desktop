@@ -10,6 +10,7 @@ import {
   WebAuthSessionProvider,
   createRestRpcDeviceTransport
 } from "@repo/web-auth-device-session/web";
+import { DesktopNativeNotificationsBridge } from "@repo/desktop-native-notifications-reminders/web";
 
 type WebAuthMode = "live" | "mock-authenticated" | "mock-unauthenticated";
 type MockAuthSession = {
@@ -297,10 +298,14 @@ export function AppProviders({ children }: PropsWithChildren) {
     <WebAuthSessionProvider client={mockClient as never} config={authMode === "live" ? config : null}>
       {transport ? (
         <DeviceSessionBridge transport={transport}>
-          <TodoWebRuntimeBridge>{children}</TodoWebRuntimeBridge>
+          <TodoWebRuntimeBridge>
+            <DesktopNativeNotificationsBridge>{children}</DesktopNativeNotificationsBridge>
+          </TodoWebRuntimeBridge>
         </DeviceSessionBridge>
       ) : (
-        <TodoWebRuntimeBridge>{children}</TodoWebRuntimeBridge>
+        <TodoWebRuntimeBridge>
+          <DesktopNativeNotificationsBridge>{children}</DesktopNativeNotificationsBridge>
+        </TodoWebRuntimeBridge>
       )}
     </WebAuthSessionProvider>
   );

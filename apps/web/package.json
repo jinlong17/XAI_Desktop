@@ -50,6 +50,7 @@
     "@repo/plugin-web-settings-features-panel": "workspace:*",
     "@repo/plugin-web-settings-appearance": "workspace:*",
     "@repo/plugin-web-settings-rest": "workspace:*",
+    "@repo/desktop-native-notifications-reminders": "workspace:*",
     "@repo/plugin-console": "workspace:^",
     "@repo/plugin-productivity": "workspace:^",
     "@repo/web-auth-device-session": "workspace:*",
