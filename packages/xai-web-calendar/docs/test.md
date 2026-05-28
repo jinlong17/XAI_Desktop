@@ -752,6 +752,7 @@ Total after this extension: **307 in `@repo/plugin-web-calendar`** + 90 in stora
 |---|---|---|---|
 | AC-CREATE-1 | Toolbar `+` click → EventComposer opens with `mode="create"` | P3 | `CalendarModule.eventcrud.test.tsx` |
 | AC-CREATE-2 | EventComposer defaults: title="" / date=today / start="09:00" / end="10:00" / color="mint" / recurrence=null | P2 | `EventComposer.test.tsx` |
+| AC-CREATE-7 | Toolbar `+` uses today's date for create default even when `activeDate` is not today | P5 fix | `CalendarModule.eventcrud.test.tsx` |
 | AC-CREATE-3 | User fills form + clicks Save → composer closes, event appears in MonthCell, persists to localStorage | P3 | `CalendarModule.eventcrud.test.tsx` |
 | AC-CREATE-4 | Created event renders with the picked color (e.g., "rose") | P3 | `CalendarModule.eventcrud.test.tsx` |
 | AC-CREATE-5 | Two events on same day → both render in MonthCell, sorted by startISO | P3 | `CalendarModule.eventcrud.test.tsx` |

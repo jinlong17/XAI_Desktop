@@ -276,7 +276,7 @@ export function CalendarModule({ lang }: CalendarModuleProps): JSX.Element {
         mode={composer.mode}
         event={composer.editing}
         lang={lang}
-        defaultDateKey={activeDate}
+        defaultDateKey={todayKey}
         onSave={handleComposerSave}
         onDelete={handleComposerDelete}
         onClose={handleComposerClose}

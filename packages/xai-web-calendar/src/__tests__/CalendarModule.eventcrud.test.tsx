@@ -1,4 +1,4 @@
-import { describe, it, expect } from "vitest";
+import { describe, it, expect, vi } from "vitest";
 import { render, fireEvent, screen } from "@testing-library/react";
 import { setPref } from "@repo/plugin-web-storage";
 import { CalendarModule } from "../CalendarModule.js";
@@ -23,6 +23,20 @@ function userEvent(
 }
 
 describe("CalendarModule event CRUD integration (P4)", () => {
+  it("AC-CREATE-7: toolbar + opens create composer on today (not activeDate)", () => {
+    vi.useFakeTimers();
+    try {
+      vi.setSystemTime(new Date("2026-06-10T10:00:00.000Z"));
+      render(<CalendarModule lang="en" />);
+
+      fireEvent.click(screen.getByLabelText("Add event"));
+      const dateInput = document.getElementById("event-composer-date-input") as HTMLInputElement;
+      expect(dateInput.value).toBe("2026-06-10");
+    } finally {
+      vi.useRealTimers();
+    }
+  });
+
   it("AC-EDIT-4: clicking a user block in Week view opens edit composer", () => {
     setPref("xai_calendar_view", "week");
     setPref("xai_calendar_events", {
