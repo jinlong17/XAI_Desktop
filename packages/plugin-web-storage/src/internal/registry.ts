@@ -948,6 +948,22 @@ export const PREF_REGISTRY = {
     owner: "xai-web-calendar",
     category: "module",
   } satisfies PrefEntry<Record<string, unknown>>,
+
+  // ---- Dashboard stickies (extension 2026-05-28 by xai-web-dashboard-stickies-create) ----
+  // User-created sticky notes. Indexed by sticky.id (UUID).
+  // Owner xai-web-dashboard-widgets (extension to row #11 SHIPPED).
+  // Category "module" — NOT in the xai_pref_* chassis-reset family.
+  // proposed: false. Authority: ADR-0010 §D4 + docs/reviews/_p0-carve-outs/20260528-dashboard-stickies-create.md.
+  // Value shape: Record<string, UserSticky> — `UserSticky` declared in
+  // @repo/plugin-web-dashboard-widgets; not imported here (registry stays plugin-dep-free).
+  xai_dashboard_stickies: {
+    key: "xai_dashboard_stickies",
+    codec: "json",
+    default: {} as Record<string, unknown>,
+    schemaVersion: 1,
+    owner: "xai-web-dashboard-widgets",
+    category: "module",
+  } satisfies PrefEntry<Record<string, unknown>>,
 } as const;
 
 // ---------------------------------------------------------------------------

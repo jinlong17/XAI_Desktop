@@ -163,6 +163,8 @@ const OWNER_ROW_EXEMPT_KEYS: ReadonlySet<string> = new Set([
   "xai_pref_premium_started_at",
   // xai-web-calendar event-create extension 2026-05-27 — calendar events persistence
   "xai_calendar_events",
+  // xai-web-dashboard-stickies-create extension 2026-05-28 — stickies persistence
+  "xai_dashboard_stickies",
 ]);
 
 describe("AC-PARITY-2: all PREF_REGISTRY explicit keys are in §9.2", () => {

@@ -228,6 +228,8 @@ const OWNER_ROW_ADDITIONS = [
   "xai_pref_premium_started_at",
   // xai-web-calendar event-create extension 2026-05-27 — calendar events persistence
   "xai_calendar_events",
+  // xai-web-dashboard-stickies-create extension 2026-05-28 — stickies persistence
+  "xai_dashboard_stickies",
 ] as const;
 
 describe("AC-REG-8: Total entry count = 20 baseline + owner-row additions", () => {
@@ -288,6 +290,51 @@ describe("AC-REGISTRY-CREATE-2: xai_calendar_events round-trip via setPref/getPr
     localStorage.clear();
     const { getPref } = await import("../internal/storage.js");
     const read = getPref("xai_calendar_events");
+    expect(read).toEqual({});
+  });
+});
+
+// ---- xai-web-dashboard-stickies-create extension (2026-05-28) ---------------
+// AC-REGISTRY-STICKIES-1..2 — stickies persistence entry shape +
+// localStorage round-trip via setPref/getPref.
+
+describe("AC-REGISTRY-STICKIES-1: xai_dashboard_stickies entry shape", () => {
+  it("entry exists with correct codec/default/owner/category/schemaVersion", () => {
+    const entry = PREF_REGISTRY.xai_dashboard_stickies;
+    expect(entry.key).toBe("xai_dashboard_stickies");
+    expect(entry.codec).toBe("json");
+    expect(entry.default).toEqual({});
+    expect(entry.owner).toBe("xai-web-dashboard-widgets");
+    expect(entry.category).toBe("module");
+    expect(entry.schemaVersion).toBe(1);
+  });
+
+  it("entry is NOT proposed (canonical owner-row addition)", () => {
+    const entry = PREF_REGISTRY.xai_dashboard_stickies as { proposed?: true };
+    expect(entry.proposed).toBeUndefined();
+  });
+});
+
+describe("AC-REGISTRY-STICKIES-2: xai_dashboard_stickies round-trip via setPref/getPref", () => {
+  it("sticky record round-trips with no data corruption", async () => {
+    const { setPref, getPref } = await import("../internal/storage.js");
+    const fixture = {
+      "sticky-1": {
+        id: "sticky-1",
+        text: "Test note",
+        color: "sun",
+        createdAt: "2026-05-28T10:00:00.000Z",
+      },
+    };
+    setPref("xai_dashboard_stickies", fixture);
+    const read = getPref("xai_dashboard_stickies");
+    expect(read).toEqual(fixture);
+  });
+
+  it("empty {} default returns when key is absent", async () => {
+    localStorage.clear();
+    const { getPref } = await import("../internal/storage.js");
+    const read = getPref("xai_dashboard_stickies");
     expect(read).toEqual({});
   });
 });
