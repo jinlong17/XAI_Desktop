@@ -7,11 +7,11 @@
 | Workflow | FEATURE_DEV |
 | Target | desktop-phase1-rc-release-gate |
 | Title | Phase 1 Desktop RC Release Gate |
-| Current Phase | FEATURE_VERIFY |
-| Status | READY_TO_SHIP |
-| Suggested Next | ship |
-| Executor | feature-verify (Codex, gpt-5.4 inline) |
-| Updated | 2026-05-28 00:42 PDT |
+| Current Phase | SHIP |
+| Status | SHIPPED |
+| Suggested Next | — |
+| Executor | ship (claude-sonnet-4-6) |
+| Updated | 2026-05-28 08:00 PDT |
 | Risks | No repo-side Phase 1 RC blocker reproduced in verify. Residual real-macOS GUI verification remains limited to network-disabled `/app` launch, drag-install launch from `/Applications`, and interactive menu/config reset/relaunch checks on hardware. |
 
 ## Review Notes
@@ -103,3 +103,4 @@ Status: DONE (2026-05-28, commit `f689c44b`).
 | 2026-05-28 00:28 PDT | feature-auto-build (Codex, gpt-5.3-codex) | Phase 3 complete: ran `cargo test --manifest-path apps/desktop/src-tauri/Cargo.toml` (60 passed) and captured menu/config-focused contract evidence plus live host config snapshot from `~/Library/Application Support/com.jinlong.desktop/app-config.json`. Added Phase 3 evidence doc `docs/reviews/desktop-phase1-rc-release-gate/20260528-phase3-menu-config-persistence-gate.md`; interactive menu/reveal/reset verification remains deferred to manual verify gate. | `e72a2c7e` | feature-auto-build (Phase 4) |
 | 2026-05-28 00:31 PDT | feature-auto-build (Codex, gpt-5.3-codex) | Phase 4 complete: consolidated offline degradation evidence across AI/map/integrations/premium/OAuth/Stripe/account-delete surfaces and produced one RC matrix + risk register at `docs/reviews/desktop-phase1-rc-release-gate/20260528-phase4-offline-degradation-rc-verdict.md`. Automated checks passed (`@repo/web` build, desktop build/dmg, targeted web/plugin/auth test suites). No repo-side blocker reproduced; residual checks are manual GUI items for `feature-verify`. | `f689c44b` | feature-verify |
 | 2026-05-28 00:42 PDT | feature-verify (Codex, gpt-5.4 inline) | Independent verify reran the repo-side RC matrix, reviewed commits `5c8e8849` + `d978bb76` + `578c9efa` + `e72a2c7e` + `f689c44b` + `41eadac9`, and confirmed the prior DMG stall no longer reproduces. Desktop build, DMG build, startup probe, mount inspection, Rust tests, and targeted offline-surface suites all passed again; only real-macOS GUI launch/install/menu interactions remain residual ship risks. | `5c8e8849`, `d978bb76`, `578c9efa`, `e72a2c7e`, `f689c44b`, `41eadac9` | ship |
+| 2026-05-28 08:00 PDT | ship (claude-sonnet-4-6) | Verified READY_TO_SHIP gate, committed verify write-back (47f82c59), updated dev_log to SHIPPED, and pushed all 7 feature commits (5c8e8849, d978bb76, 578c9efa, e72a2c7e, f689c44b, 41eadac9, 47f82c59 + ship state) to origin/dev. Residual manual macOS GUI checks carried as release-note items. | 47f82c59 + ship state commit | — |
