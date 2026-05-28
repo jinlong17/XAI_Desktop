@@ -1,24 +1,39 @@
 /**
  * NF1..NF9 — notificationsPane tests (test.md §3 P2)
  */
-import { describe, it, expect, vi } from "vitest";
+import { beforeEach, describe, it, expect, vi } from "vitest";
 import { render, screen, fireEvent } from "@testing-library/react";
 import { notificationsPane } from "../panes/notificationsPane.js";
 import { getPref } from "@repo/plugin-web-storage";
 
-vi.mock("@repo/desktop-native-notifications-reminders/web", () => ({
-  requestDesktopNotificationPermission: vi.fn(),
-  useDesktopNotificationRuntimeSnapshot: () => ({
-    status: "permission-required",
+const state = vi.hoisted(() => ({
+  runtimeSnapshot: {
+    status: "permission-required" as const,
     runtimeProfile: "desktop-phase1-offline",
-    permissionState: "prompt",
+    permissionState: "prompt" as const,
     adapterAvailable: true,
     unsupported: { task: 0, calendar: 0 },
     lastUpdatedAt: "2026-05-28T00:00:00.000Z",
-  }),
+  },
+}));
+
+vi.mock("@repo/desktop-native-notifications-reminders/web", () => ({
+  requestDesktopNotificationPermission: vi.fn(),
+  useDesktopNotificationRuntimeSnapshot: () => state.runtimeSnapshot,
 }));
 
 describe("notificationsPane", () => {
+  beforeEach(() => {
+    state.runtimeSnapshot = {
+      status: "permission-required",
+      runtimeProfile: "desktop-phase1-offline",
+      permissionState: "prompt",
+      adapterAvailable: true,
+      unsupported: { task: 0, calendar: 0 },
+      lastUpdatedAt: "2026-05-28T00:00:00.000Z",
+    };
+  });
+
   it("NF1: renders without error", () => {
     const { container } = render(notificationsPane.render({ lang: "en" }));
     expect(container.querySelector(".notif-pane")).toBeTruthy();
@@ -95,5 +110,35 @@ describe("notificationsPane", () => {
     expect(getPref("xai_pref_notif_push_calendar")).toBe(true);
     fireEvent.click(toggle!);
     expect(getPref("xai_pref_notif_push_calendar")).toBe(false);
+  });
+
+  it("NF11: renders denied desktop-status copy", () => {
+    state.runtimeSnapshot = {
+      status: "denied",
+      runtimeProfile: "desktop-phase1-offline",
+      permissionState: "denied",
+      adapterAvailable: true,
+      unsupported: { task: 0, calendar: 0 },
+      lastUpdatedAt: "2026-05-28T00:00:00.000Z",
+    };
+    render(notificationsPane.render({ lang: "en" }));
+    expect(
+      screen.getByText("Permission denied. Enable notifications in macOS System Settings."),
+    ).toBeInTheDocument();
+  });
+
+  it("NF12: renders unsupported desktop-status copy", () => {
+    state.runtimeSnapshot = {
+      status: "unsupported",
+      runtimeProfile: "web-live",
+      permissionState: "unknown",
+      adapterAvailable: false,
+      unsupported: { task: 2, calendar: 1 },
+      lastUpdatedAt: "2026-05-28T00:00:00.000Z",
+    };
+    render(notificationsPane.render({ lang: "en" }));
+    expect(
+      screen.getByText("Desktop notification bridge unavailable in this runtime."),
+    ).toBeInTheDocument();
   });
 });

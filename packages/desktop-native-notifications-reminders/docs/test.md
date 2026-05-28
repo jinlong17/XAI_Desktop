@@ -145,3 +145,16 @@
   - `pnpm --filter desktop tauri build --debug --bundles app`
 - Environment-deferred in this checkout:
   - `pnpm --filter @repo/plugin-web-storage test -- src/__tests__/parity-design-md.test.ts` (expects `web design/DESIGN.md`, which is absent here).
+  - real macOS interactive smoke contract recorded as BLOCKED_ENVIRONMENT in `packages/desktop-native-notifications-reminders/docs/manual_smoke_evidence.md` (non-interactive shell provenance + per-scenario matrix, no PASS claims).
+
+## Repair Evidence (2026-05-28 R2)
+
+- Added denied/unsupported automated coverage required by verification contract:
+  - `pnpm --filter @repo/desktop-native-notifications-reminders test -- src/runtime.test.ts`
+    - asserts denied state via `requestDesktopNotificationPermission()`
+    - asserts unsupported states for `adapter_unavailable` and `non_desktop_runtime`
+  - `pnpm --filter @repo/plugin-web-settings-rest test -- src/__tests__/notificationsPane.test.tsx`
+    - asserts denied copy
+    - asserts unsupported copy
+- Added deterministic manual-smoke artifact for non-interactive environment:
+  - `packages/desktop-native-notifications-reminders/docs/manual_smoke_evidence.md`

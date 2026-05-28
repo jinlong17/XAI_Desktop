@@ -70,4 +70,33 @@ describe("desktop notification runtime snapshot", () => {
     expect(snapshot.status).toBe("disabled");
     expect(snapshot.unsupported).toEqual({ task: 2, calendar: 1 });
   });
+
+  it("emits denied status when permission request is denied", async () => {
+    state.requestPermission.mockResolvedValue("denied");
+    const runtime = await import("./runtime");
+
+    const snapshot = await runtime.requestDesktopNotificationPermission();
+    expect(snapshot.status).toBe("denied");
+    expect(snapshot.permissionState).toBe("denied");
+  });
+
+  it("emits unsupported status when adapter is unavailable in desktop runtime", async () => {
+    delete window.__XAI_DESKTOP_NOTIFICATION__;
+    const runtime = await import("./runtime");
+
+    const snapshot = await runtime.refreshDesktopNotificationRuntimeSnapshot();
+    expect(snapshot.status).toBe("unsupported");
+    expect(snapshot.unsupportedReason).toBe("adapter_unavailable");
+    expect(snapshot.runtimeProfile).toBe("desktop-phase1-offline");
+  });
+
+  it("emits unsupported status outside desktop runtime", async () => {
+    setEnv("VITE_WEB_RUNTIME_PROFILE", "web-live");
+    const runtime = await import("./runtime");
+
+    const snapshot = await runtime.refreshDesktopNotificationRuntimeSnapshot();
+    expect(snapshot.status).toBe("unsupported");
+    expect(snapshot.unsupportedReason).toBe("non_desktop_runtime");
+    expect(snapshot.runtimeProfile).toBe("web-live");
+  });
 });

@@ -13,8 +13,8 @@
 | Automation Mode | B-Codex |
 | Verify Cross-vendor | yes |
 | Executor | feature-auto-build (Codex, gpt-5.3-codex inline) |
-| Updated | 2026-05-28 02:27 PDT |
-| Risks | Repair pass addresses the two blocker regressions with focused bridge/runtime tests; final independent full-gate confirmation remains with feature-verify. |
+| Updated | 2026-05-28 02:41 PDT |
+| Risks | Denied/unsupported automated coverage is now explicit, and manual-smoke cases are recorded with deterministic BLOCKED_ENVIRONMENT provenance. Independent feature-verify still must confirm final gate disposition. |
 
 ## Review Notes
 
@@ -34,10 +34,10 @@
 ## Verification Result
 
 - Commit review:
-  - `d416f6c5` stays inside Phase 1 intent (desktop transport, injected adapter, browser-safe bridge, additive projector exports) and follows commit convention.
-  - `ad5bc71d` stays inside Phase 2 intent (settings/storage toggle + status wiring) and follows commit convention.
-  - `70176923` stays inside Phase 3 intent (tests + docs only) and follows commit convention.
+  - `d416f6c5`, `ad5bc71d`, `70176923`, `6f3f6ecc`, and `cca1f129` all follow the required `type(scope): summary` format with Why / What / Scope / Risk / Docs / Tests bodies where applicable.
+  - `cca1f129` is a narrow docs-only follow-up that records the R1 hash in `dev_log.md` and does not mix feature behavior changes into a documentation commit.
 - Independent checks rerun by feature-verify:
+  - `pnpm --filter @repo/desktop-native-notifications-reminders test -- src/bridge.test.tsx src/runtime.test.ts`
   - `pnpm --filter @repo/desktop-native-notifications-reminders check-types`
   - `pnpm --filter @repo/plugin-web-tasks test -- src/__tests__/projectDesktopTaskReminderEntries.test.ts`
   - `pnpm --filter @repo/plugin-web-calendar test -- src/__tests__/projectDesktopCalendarReminderEntries.test.ts`
@@ -49,9 +49,19 @@
   - `rg "@tauri-apps|__TAURI__" apps/web/dist/assets/*.js` → clean
   - `cargo test --manifest-path apps/desktop/src-tauri/Cargo.toml`
   - `pnpm --filter desktop tauri build --debug --bundles app`
+- Resolved blocker re-check:
+  - Calendar delivery is no longer short-circuited by the task toggle. The focused bridge test verifies `task=false` plus `calendar=true` still delivers the calendar reminder path.
+  - The exported `/web` runtime now emits the explicit `disabled` state when `xai_pref_notif_enabled=false`, and that state persists through unsupported-count refreshes.
 - Blocking findings:
-  - `packages/desktop-native-notifications-reminders/src/bridge.tsx` gates calendar delivery behind `shouldDeliver("task", ...)` and returns early before the calendar branch when task notifications are disabled. In the current implementation, turning off task reminders also suppresses calendar reminders even if `xai_pref_notif_push_calendar` remains enabled, which violates the per-source v1 delivery contract.
-  - `packages/desktop-native-notifications-reminders/src/runtime.ts` defines `DesktopNotificationStatus` with `disabled`, but `refreshDesktopNotificationRuntimeSnapshot`, `requestDesktopNotificationPermission`, and `updateDesktopNotificationUnsupportedCounts` never emit that state. The Settings pane works around this locally, so the exported `/web` runtime contract drifts from `api.md` instead of exposing the explicit `disabled` state promised for v1.
+  - The verification contract in `packages/desktop-native-notifications-reminders/docs/test.md` still requires explicit denied / unsupported-state evidence in the runtime/UI surface, but the current automated coverage does not exercise those cases. `notificationsPane.test.tsx` covers only the `permission-required` path, and `runtime.test.ts` covers only the `disabled` path, leaving the promised denied / unsupported-state assertions unverified.
+  - Phase 3 and `test.md` also require real macOS smoke evidence for permission granted, permission denied, disabled, task reminder, pomodoro completion, calendar reminder, and unsupported scenarios. No such smoke evidence is recorded in this feature’s docs or work log, so the feature-verify gate is still incomplete even though the automated build/test gates are green.
+- Repair R2 resolution notes:
+  - Added denied/unsupported runtime coverage in `packages/desktop-native-notifications-reminders/src/runtime.test.ts`:
+    - denied via `requestDesktopNotificationPermission()`
+    - unsupported via `adapter_unavailable`
+    - unsupported via `non_desktop_runtime`
+  - Added denied/unsupported UI copy coverage in `packages/plugin-web-settings-rest/src/__tests__/notificationsPane.test.tsx`.
+  - Recorded deterministic non-interactive manual smoke artifact at `packages/desktop-native-notifications-reminders/docs/manual_smoke_evidence.md`, classifying each required macOS smoke scenario as `BLOCKED_ENVIRONMENT` with exact shell/session provenance and no PASS claims.
 
 ## Phase Plan
 
@@ -105,3 +115,5 @@ Status: DONE (implementation-side evidence complete; real macOS prompt/smoke ret
 | 2026-05-28 02:13 PDT | feature-auto-build (Codex, gpt-5.3-codex inline) | Phase 3 — Verification evidence and tests: added projector unit coverage for task/calendar v1 subset + unsupported semantics; validated browser-safe bridge mount test; executed web build/no-tauri-leak grep, Rust tests, and debug app bundle build. `plugin-web-storage` parity test referencing `web design/DESIGN.md` remains environment-deferred because that file is absent in this checkout; targeted registry test passed. | `(this commit)` | feature-verify |
 | 2026-05-28 02:20 PDT | feature-verify (Codex, gpt-5.3-codex inline) | Verification pass: reviewed commits `d416f6c5`, `ad5bc71d`, and `70176923` against the approved discovery/design/api/test docs and reran the documented command set. Browser-safety, package tests, web build, Rust tests, and the debug app bundle all passed, but verification is blocked by two contract issues: calendar delivery is incorrectly short-circuited by the task-source gate in `packages/desktop-native-notifications-reminders/src/bridge.tsx`, and the exported `/web` runtime never emits the explicit `disabled` status promised in `api.md`. | `d416f6c5 ad5bc71d 70176923` | feature-build |
 | 2026-05-28 02:27 PDT | feature-auto-build (Codex, gpt-5.3-codex inline) | Repair pass — fixed blocked delivery/runtime contracts only: `bridge.tsx` no longer returns early on task-source gating so calendar delivery stays independently governed by `xai_pref_notif_push_calendar`; `runtime.ts` now maps `xai_pref_notif_enabled=false` to explicit `disabled` status across refresh + permission + unsupported-count updates. Added focused tests `src/bridge.test.tsx` and `src/runtime.test.ts` covering both blockers (`task off + calendar on` delivery independence and runtime disabled snapshot emission/persistence). Executed: `pnpm --filter @repo/desktop-native-notifications-reminders test -- src/bridge.test.tsx src/runtime.test.ts` and `pnpm --filter @repo/desktop-native-notifications-reminders check-types` (all pass). | `6f3f6ecc` | feature-verify |
+| 2026-05-28 02:33 PDT | feature-verify (Codex, gpt-5.3-codex inline) | Post-R1 verification pass: reviewed commits `d416f6c5`, `ad5bc71d`, `70176923`, `6f3f6ecc`, and `cca1f129`; reran the focused repair tests, package tests, browser-safety checks, `pnpm --filter @repo/web build`, `cargo test`, and `pnpm --filter desktop tauri build --debug --bundles app`. The repaired runtime blockers are fixed, but verification remains blocked because denied / unsupported-state evidence required by `test.md` is still missing from automated coverage, and the planned real macOS smoke evidence for granted / denied / disabled / task / pomodoro / calendar / unsupported cases is not recorded. | `d416f6c5 ad5bc71d 70176923 6f3f6ecc cca1f129` | feature-build |
+| 2026-05-28 02:41 PDT | feature-auto-build (Codex, gpt-5.3-codex inline) | Repair R2 — addressed remaining verify blockers without scope drift: added focused denied/unsupported runtime tests (`requestDesktopNotificationPermission` denied, desktop adapter unavailable unsupported, non-desktop runtime unsupported), added Notifications pane denied/unsupported copy assertions, and added deterministic manual-smoke evidence artifact with `BLOCKED_ENVIRONMENT` classification for all required real-macOS smoke cases because this run is non-interactive (`stdin_tty=no`, `TERM=dumb`). Executed: `pnpm --filter @repo/desktop-native-notifications-reminders test -- src/runtime.test.ts`, `pnpm --filter @repo/plugin-web-settings-rest test -- src/__tests__/notificationsPane.test.tsx`, `pnpm --filter @repo/desktop-native-notifications-reminders check-types`, `pnpm --filter desktop tauri build --debug --bundles app` (all pass). | `(this commit)` | feature-verify |
