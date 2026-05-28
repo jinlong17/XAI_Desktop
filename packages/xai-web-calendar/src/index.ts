@@ -73,4 +73,6 @@ export {
   listEvents,
 } from "./internal/eventStore/eventStore.js";
 
-// EventComposer is exported in P2 (component lands then).
+// EventComposer dialog component (P2 lands; CalendarModule wires in P3)
+export { EventComposer } from "./EventComposer.js";
+export type { EventComposerProps } from "./EventComposer.js";
