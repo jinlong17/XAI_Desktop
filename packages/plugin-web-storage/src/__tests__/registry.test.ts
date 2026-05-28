@@ -226,6 +226,8 @@ const OWNER_ROW_ADDITIONS = [
   // xai-web-settings-rest gap-closure row #8 — 2 Premium Stripe Checkout stub prefs
   "xai_pref_premium_tier",
   "xai_pref_premium_started_at",
+  // xai-web-calendar event-create extension 2026-05-27 — calendar events persistence
+  "xai_calendar_events",
 ] as const;
 
 describe("AC-REG-8: Total entry count = 20 baseline + owner-row additions", () => {
@@ -238,5 +240,54 @@ describe("AC-REG-8: Total entry count = 20 baseline + owner-row additions", () =
     for (const k of all) {
       expect(ALL_REGISTRY_KEYS).toContain(k);
     }
+  });
+});
+
+// ---- xai-web-calendar event-create extension (2026-05-27) ------------------
+// AC-REGISTRY-CREATE-1..2 — calendar events persistence entry shape +
+// localStorage round-trip via setPref/getPref.
+
+describe("AC-REGISTRY-CREATE-1: xai_calendar_events entry shape", () => {
+  it("entry exists with correct codec/default/owner/category/schemaVersion", () => {
+    const entry = PREF_REGISTRY.xai_calendar_events;
+    expect(entry.key).toBe("xai_calendar_events");
+    expect(entry.codec).toBe("json");
+    expect(entry.default).toEqual({});
+    expect(entry.owner).toBe("xai-web-calendar");
+    expect(entry.category).toBe("module");
+    expect(entry.schemaVersion).toBe(1);
+  });
+
+  it("entry is NOT proposed (canonical xai_calendar_* family)", () => {
+    const entry = PREF_REGISTRY.xai_calendar_events as { proposed?: true };
+    expect(entry.proposed).toBeUndefined();
+  });
+});
+
+describe("AC-REGISTRY-CREATE-2: xai_calendar_events round-trip via setPref/getPref", () => {
+  it("default {} round-trips with no data corruption", async () => {
+    const { setPref, getPref } = await import("../internal/storage.js");
+    const fixture = {
+      "evt-1": {
+        id: "evt-1",
+        title: "Sample",
+        startISO: "2026-05-22T09:00",
+        endISO: "2026-05-22T10:00",
+        colorPreset: "mint",
+        recurrence: null,
+        createdAt: "2026-05-22T00:00:00.000Z",
+        updatedAt: "2026-05-22T00:00:00.000Z",
+      },
+    };
+    setPref("xai_calendar_events", fixture);
+    const read = getPref("xai_calendar_events");
+    expect(read).toEqual(fixture);
+  });
+
+  it("empty {} default returns when key is absent", async () => {
+    localStorage.clear();
+    const { getPref } = await import("../internal/storage.js");
+    const read = getPref("xai_calendar_events");
+    expect(read).toEqual({});
   });
 });

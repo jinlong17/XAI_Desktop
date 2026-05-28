@@ -44,3 +44,33 @@ export { TimeGrid } from "./TimeGrid.js";
 export type { TimeGridProps } from "./TimeGrid.js";
 export { DayView } from "./DayView.js";
 export type { DayViewProps } from "./DayView.js";
+
+// ---- Event-create extension (2026-05-27 — HC8 lift) -------------------------
+// Data-layer types
+export type {
+  UserCalEvent,
+  RecurrenceRule,
+  RecurrenceKind,
+  EventColorPreset,
+} from "./internal/eventStore/types.js";
+
+// React hook (preferred consumer API)
+export { useUserCalEvents } from "./internal/eventStore/useUserCalEvents.js";
+export type { UserCalEventsApi } from "./internal/eventStore/useUserCalEvents.js";
+
+// Pure helpers (exposed for testability + future-row composition)
+export { expandRecurrence } from "./internal/eventStore/expandRecurrence.js";
+export {
+  mergeEventsForMonth,
+  mergeEventsForWindow,
+} from "./internal/eventStore/mergeEventsForViewport.js";
+export type { MergedCalEvent } from "./internal/eventStore/mergeEventsForViewport.js";
+export {
+  createEvent,
+  updateEvent,
+  deleteEvent,
+  getEvent,
+  listEvents,
+} from "./internal/eventStore/eventStore.js";
+
+// EventComposer is exported in P2 (component lands then).

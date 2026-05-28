@@ -161,6 +161,8 @@ const OWNER_ROW_EXEMPT_KEYS: ReadonlySet<string> = new Set([
   // xai-web-settings-rest gap-closure row #8 — 2 Premium Stripe Checkout stub prefs
   "xai_pref_premium_tier",
   "xai_pref_premium_started_at",
+  // xai-web-calendar event-create extension 2026-05-27 — calendar events persistence
+  "xai_calendar_events",
 ]);
 
 describe("AC-PARITY-2: all PREF_REGISTRY explicit keys are in §9.2", () => {

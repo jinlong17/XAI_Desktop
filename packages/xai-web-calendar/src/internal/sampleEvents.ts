@@ -7,7 +7,17 @@
  * understand these are not real.
  */
 
-export type CalEventColor = "mint" | "amber" | "blue" | "violet";
+/**
+ * Color band class for event chips/blocks.
+ *
+ * The 4 baseline colors (mint/amber/blue/violet) appear in the fixture
+ * `SAMPLE_EVENTS` and originate from `web design/layout.css:849-852`.
+ *
+ * `rose` was added by the 2026-05-27 event-create extension (HC8 lift) as
+ * a 5th color preset — only user-created events use it (fixture never does).
+ * The CSS rule family lives in `styles.css` alongside the other 4.
+ */
+export type CalEventColor = "mint" | "amber" | "blue" | "violet" | "rose";
 
 export interface CalEvent {
   /** Color band class. */

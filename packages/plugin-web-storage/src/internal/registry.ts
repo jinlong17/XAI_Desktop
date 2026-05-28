@@ -927,6 +927,27 @@ export const PREF_REGISTRY = {
     owner: "xai-web-settings-rest",
     category: "pref",
   } satisfies PrefEntry<number>,
+
+  // ---- Calendar events (§S8 — extension 2026-05-27 by xai-web-calendar-event-create) ----
+  // User-created calendar events. Indexed by event.id (UUID).
+  // Owner xai-web-calendar (extension to row #12 SHIPPED + gap-closure row #4 SHIPPED).
+  // Category "module" — NOT in the xai_pref_* chassis-reset family
+  // (same category as xai_calendar_view / xai_clock_style / xai_active_board per ADR-0007 §S8).
+  // proposed: false — canonical xai_calendar_* family per ADR-0007 §S8.
+  // Authority: docs/adr/0010-p1-desktop-resume-plan.md §D4 (P0 carve-out) +
+  // docs/reviews/_p0-carve-outs/20260527-calendar-event-create.md.
+  // Value shape: Record<string, UserCalEvent> — `UserCalEvent` type declared in
+  // @repo/plugin-web-calendar (internal/eventStore/types.ts); not imported here
+  // because registry stays dep-free of plugin packages. Consumer types ensure
+  // shape correctness at the call site.
+  xai_calendar_events: {
+    key: "xai_calendar_events",
+    codec: "json",
+    default: {} as Record<string, unknown>,
+    schemaVersion: 1,
+    owner: "xai-web-calendar",
+    category: "module",
+  } satisfies PrefEntry<Record<string, unknown>>,
 } as const;
 
 // ---------------------------------------------------------------------------
