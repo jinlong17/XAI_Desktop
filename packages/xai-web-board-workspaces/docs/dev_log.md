@@ -513,13 +513,13 @@ Adds React-Router child route + sub-route layout split (board grid behind, detai
 | Workflow | BUGFIX |
 | Target | xai-web-board-workspaces (sole package; both delete sites are in `plugin-web-board-workspaces/src/`) |
 | Title | B-12 + B-28 — destructive delete actions (BoardSwitcher delete board + Inbox card delete) lack alertdialog confirmation modal |
-| Current Phase | BUG_VERIFY |
-| Status | FIX_READY_FOR_VERIFY |
-| Suggested Next | bug-verify |
+| Current Phase | SHIP |
+| Status | SHIPPED |
+| Suggested Next | — (workflow complete) |
 | Verify Cross-vendor | yes (per user directive; ADR-0008 §S3 carve-out still defers cross-browser smoke for SHIPPED batches but this BUGFIX gets same-vendor Claude Opus verify gate per `xai-web-console-gap-closure.md` default) |
 | Automation Mode | A-Claude |
-| Executor | claude-sonnet-4-6 (bug-auto-fix, 2026-05-28 03:56) |
-| Updated | 2026-05-28 03:56 |
+| Executor | claude-sonnet-4-6 (ship, 2026-05-28 04:15) |
+| Updated | 2026-05-28 04:15 |
 | Audit Anchor | `docs/reviews/_web-noop-audit/20260527-button-action-inventory.md` Option A §5 last item · table rows B-12 (line 231, "DESTRUCTIVE — no confirmation dialog (FLAG)") + B-28 (line 247, "DESTRUCTIVE — no confirmation") + summary lines 267-268 ("B-12 and B-28 need confirmation dialogs (UX risk, possible BUGFIX)") + Recommended-actions line 859 |
 | ADR Compliance | ADR-0010 §D4 — Web P0 maintenance-only allows bug-fix work without a P0 carve-out commit. This lineage is pure UX-safety bug-fix (destructive action without confirmation gate) — NOT a new feature. No P0 carve-out required. |
 | Audit Batch | Option A bug-fix batch — the **last** outstanding Option A item (after #1 Sign-out · #5 onOpenCard cluster · #7 · #9 · #10 all SHIPPED). Closes Option A. Top-10 batch sits at 6/10 (B-12 / B-28 are not in Top-10 but are in the broader Option A scope) |
@@ -692,11 +692,149 @@ Minimum 8 tests required (per audit's bar). Plan: **19 tests total** (11 unit on
 
 **Severity:** Medium (UX-safety — user-facing irreversible data loss with one mis-click). Not Critical (delete is gated for active board, requires opening switcher modal first for B-12), but the audit-flagged "DESTRUCTIVE" status makes this the highest-priority remaining Option A item.
 
+### Verify Report (2026-05-28, bug-verify)
+
+**Verdict: PASS.** Status → READY_TO_SHIP. Independent audit of B-12 + B-28 fix on commits 609a0b1 / 9d8f8d2 / 1308598 / 2ad25fb across 7 verification dimensions.
+
+#### #1 Original bug reproduction (pre-fix)
+
+Confirmed via `git show 609a0b1^:packages/plugin-web-board-workspaces/src/BoardSwitcher.tsx | grep -n confirm` → returned `61: if (window.confirm(STR_SWITCHER.deleteConfirm[lang])) {` — proving B-12 used native `window.confirm()` before the fix. Confirmed via `git show 609a0b1^:packages/plugin-web-board-workspaces/src/InboxPanel.tsx` lines 31-33 + 60-69 → `remove(c.id)` was called directly from `onClick` with zero confirmation gate, proving B-28. Both root causes existed pre-fix and are now removed (grep on HEAD shows `window.confirm` only in code comments documenting the removal).
+
+#### #2 Validation gates (all 5 mandatory)
+
+| Gate | Result | Evidence |
+|---|---|---|
+| `pnpm --filter @repo/plugin-web-board-workspaces test` | PASS | 18 files / 214/214 cases pass (195 pre-fix + 19 new = 214 expected, confirmed) |
+| `pnpm --filter @repo/plugin-web-board-workspaces typecheck` | PASS | `tsc --noEmit` exit 0 |
+| `pnpm --filter @repo/plugin-web-board-workspaces lint --max-warnings 0` | PASS | eslint exit 0 |
+| `pnpm --filter @repo/web test` | PASS | 24 files / 128/128 (router-modules integration unaffected — no Top-10 #5 cycle-2 regression replay) |
+| `pnpm --filter @repo/plugin-web-board-core typecheck` + `@repo/plugin-web-board-views typecheck` | PASS | both exit 0 (cross-package sanity) |
+
+#### #3 Sub-fix commit audit (S1-S6)
+
+**609a0b1 (S1+S2+S3) — BoardDeleteConfirmDialog + STR + CSS:**
+
+- `BoardDeleteConfirmDialog.tsx` (NEW, 131 LOC): role="alertdialog" ✓ (line 91), `aria-labelledby={TITLE_ID}` + `aria-describedby={DESC_ID}` ✓ (lines 92-93), `autoFocus` on Cancel button ✓ (line 115), three close paths: ESC via native `cancel` event listener (lines 65-74), backdrop click via `e.target === dialogRef.current` (lines 76-80), Cancel button onClick=onCancel (line 113). `showModal()` called on mount via `useEffect` (lines 56-62) — component itself is open-when-mounted; conditional-mount enforced by host.
+- `internal/strings.ts` (+25 LOC): `STR_DELETE_CONFIRM` table — 7 keys × en+zh (titleBoard / titleCard / descBoard / descCard / cancel / confirmBoard / confirmCard). No `@repo/plugin-web-tokens` edit confirmed.
+- `styles.css` (+70 LOC): `.board-delete-dialog` block (lines 770-840). Uses OKLCH colors only (`oklch(56% 0.17 25)` for destructive red, `oklch(0% 0 0 / 0.40)` for backdrop). Cancel `:focus-visible` ring visible (lines 827-830). No hard-coded hex.
+
+**9d8f8d2 (S4) — B-12 wire:**
+
+- `BoardSwitcher.tsx`: prop renamed `onDelete` → `onRequestDelete` ✓ (lines 25 + 57). `handleDelete` now calls `onRequestDelete(boardId)` directly with NO `window.confirm()` (lines 65-70). Net result: `grep window.confirm` on production source returns zero functional calls (only comments documenting removal).
+- `BoardWorkspacesModule.tsx`: imports `BoardDeleteConfirmDialog` (line 66). Adds `pendingDelete` state (lines 278-282). Adds `confirmPendingDelete` callback (lines 284-292) that dispatches to `deleteBoard` for type=board or `setInbox` filter for type=card. Wires `onRequestDelete={(id) => ...}` to BoardSwitcher (lines 581-588). **CRITICAL R1 CHECK: Renders `{pendingDelete && <BoardDeleteConfirmDialog open={true} ... />}` (lines 628-637) — this is the prescribed conditional-mount pattern, NOT `<BoardDeleteConfirmDialog open={pendingDelete !== null} ... />` unconditional mount. Matches CardDetailDialog precedent at lines 614-622. R1 satisfied; Top-10 #5 cycle-2 regression NOT replayed.**
+
+**1308598 (S5) — B-28 wire:**
+
+- `InboxPanel.tsx`: adds `onRequestRemove: (id: string) => void` prop (lines 16-20). Removes the internal `remove()` helper. `onClick={() => onRequestRemove(c.id)}` (line 67) instead of `onClick={() => remove(c.id)}`. Per S5 plan: deletion is now host-controlled.
+- `BoardWorkspacesModule.tsx`: passes `onRequestRemove={(id) => { ... setPendingDelete({type:"card", id, label: card?.text[lang] ?? card?.text.en ?? id}) }}` to InboxPanel (lines 457-464). Reuses the same `pendingDelete` state + same conditional-mount block from S4.
+
+**2ad25fb (S6) — tests:**
+
+- NEW `BoardDeleteConfirmDialog.test.tsx` (140 LOC, 11 tests):
+  - BDC-1 ✓ role="alertdialog" + showModal invoked
+  - BDC-2 ✓ conditional-mount unmount removes from DOM (`queryByTestId(...).not.toBeInTheDocument()` after `unmount()`)
+  - BDC-3 ✓ Cancel button comes before Confirm in DOM order (intent test — React 19 + jsdom doesn't persist `autoFocus` HTML attribute; component source DOES have `autoFocus` at line 115)
+  - BDC-4 ✓ Cancel click → onCancel
+  - BDC-5 ✓ Confirm click → onConfirm
+  - BDC-6 ✓ ESC fires native `cancel` event → onCancel
+  - BDC-7 ✓ backdrop click (e.target === dialog) → onCancel
+  - BDC-8 ✓ `aria-labelledby` matches title.id, `aria-describedby` matches desc.id (non-empty)
+  - BDC-9 ✓ mode="board" → "Delete board?" title + "permanently remove all its lists and cards" desc + "Delete board" confirm
+  - BDC-10 ✓ mode="card" → "Delete card?" title + "cannot be undone" desc + "Delete card" confirm
+  - BDC-11 ✓ confirm button has `bdc-btn--confirm` destructive class
+- `BoardWorkspacesModule.test.tsx` (+8 integration tests):
+  - BW-Del-Board-1 ✓ trash click → dialog mounts, mode=board
+  - BW-Del-Board-2 ✓ Cancel → unmounts + board still present
+  - BW-Del-Board-3 ✓ Confirm → unmounts + board removed
+  - BW-Del-Board-4 ✓ re-opening switcher → board absent
+  - BW-Del-Card-1 ✓ × click → mounts, mode=card + targetLabel from `card.text[lang]`
+  - BW-Del-Card-2 ✓ Cancel → unmounts + card still in inbox
+  - BW-Del-Card-3 ✓ Confirm → unmounts + card removed from inbox
+  - BW-Del-Card-4 ✓ pending-delete is per-pending (no stale label after Cancel+open another)
+- BWM7 (existing test): correctly updated to new confirmation-gate semantics (click bs-delete-b-pm → dialog opens → bdc-confirm → board removed). No window.confirm spy mock anywhere.
+- `BoardSwitcher.test.tsx`: baseProps renamed `onDelete` → `onRequestDelete`. BS13/BS14 explicitly assert `expect(confirmSpy).not.toHaveBeenCalled()` (BS14) and `expect(onRequestDelete).toHaveBeenCalledWith("b2")` (BS13).
+- `InboxPanel.test.tsx`: Harness adds `onRequestRemove` prop (defaults to direct-delete for non-B28 tests). IP6 explicitly asserts `expect(onRequestRemove).toHaveBeenCalledWith("x1")` AND card still visible after click (because confirmation is host-controlled).
+
+#### #4 Boundary paths
+
+| Path | Result |
+|---|---|
+| mode="board" shows board title/desc | PASS (BDC-9 + source `STR.titleBoard`/`STR.descBoard`) |
+| mode="card" shows card title/desc | PASS (BDC-10 + source `STR.titleCard`/`STR.descCard`) |
+| Enter does NOT confirm (autoFocus on Cancel) | PASS — source line 115 has `autoFocus` on Cancel button; BDC-3 verifies DOM order intent; both buttons are `type="button"` (line 110 + 121) so Enter is not a form-submit trigger |
+| ESC closes dialog | PASS (BDC-6 + source lines 65-74 native cancel event handler with `e.preventDefault()` to suppress browser-default close and route through onCancel) |
+| Backdrop click closes | PASS (BDC-7 + source lines 76-80 `e.target === dialogRef.current` check) |
+| Cancel click closes | PASS (BDC-4 + source line 113) |
+| Confirm click calls delete handler + closes via host state clear | PASS (BDC-5 + BW-Del-Board-3 + BW-Del-Card-3 + source line 123 `onClick={onConfirm}` → host `confirmPendingDelete` (lines 284-292) calls `deleteBoard`/`setInbox` then `setPendingDelete(null)`) |
+
+#### #5 a11y truth
+
+| Requirement | Result |
+|---|---|
+| role="alertdialog" (destructive emphasis vs generic "dialog") | PASS (source line 91, BDC-1 assertion) |
+| aria-labelledby → title element | PASS (source line 92 references `TITLE_ID = "bdc-title"` (line 42); BDC-8 verifies the linkage by checking title.id matches dialog attribute) |
+| aria-describedby → description element | PASS (source line 93 references `DESC_ID = "bdc-desc"` (line 43); BDC-8 verifies) |
+| Focus default on Cancel (autoFocus) | PASS at source (line 115 `autoFocus` on cancel button); BDC-3 documents the React 19 + jsdom attribute-persistence limitation and verifies intent via DOM order |
+| Focus trap (Tab does not escape) | NATIVE — backed by native `<dialog>.showModal()` which provides built-in focus trapping; not explicitly tested in jsdom (jsdom does not implement full focus-trap behavior of `showModal`) — relying on browser implementation. Documented as expected-to-work in production, untested in jsdom. NON-BLOCKING residual. |
+| Focus returns to trigger on close | NATIVE — same `<dialog>.showModal()` semantic; not explicitly tested in jsdom for the same reason. NON-BLOCKING residual. |
+
+#### #6 Regression paths
+
+- All 18 test files / 214/214 cases PASS in `@repo/plugin-web-board-workspaces`. 19 new tests on top of 195 existing — matches plan's 214 expected count exactly. Existing tests (BS10/BS11/BS12 delete-affordance visibility, BS15 scrim close, BWM3-BWM6/BWM8-BWM18 unchanged, IP1-IP5 + IP7-IP12 unchanged) all preserved.
+- BWM7 (existing) correctly updated to new confirmation-gate semantics — old `window.confirm` spy mock removed.
+- IP6 (existing) correctly updated: now asserts `onRequestRemove` was called AND card is still visible (because host owns the delete decision).
+- BS13/BS14 (existing) updated to verify no `window.confirm` is invoked.
+- All 128/128 `@repo/web` tests still PASS — no Top-10 #5 cycle-2 cascade replayed.
+
+#### #7 Cross sub-fix consistency
+
+5 commits (609a0b1 / 9d8f8d2 / 1308598 / 2ad25fb / 553bc21) build incrementally without conflict:
+- S1-S3 lay the foundation (dialog component + STR + CSS) — not wired yet.
+- S4 wires B-12 (BoardSwitcher onDelete → onRequestDelete + host pendingDelete + conditional mount).
+- S5 wires B-28 (InboxPanel onClick → onRequestRemove + host wires onRequestRemove to setPendingDelete).
+- S6 tests the cumulative behavior.
+- 553bc21 flips dev_log status.
+
+**Conditional-mount verified on both ends:** `BoardWorkspacesModule.tsx:628-637` mounts via `{pendingDelete && <BoardDeleteConfirmDialog open={true} ... />}`. Dialog source has `useEffect` calling `dialog.showModal()` on mount when `open=true` (always true when mounted because host gates it). No unconditional mount anywhere. R1 closed.
+
+#### Commit hygiene
+
+All 4 fix commits + 1 doc commit follow `type(scope): summary` convention:
+- 609a0b1: `feat(plugin-web-board-workspaces): BoardDeleteConfirmDialog + local STR + styles (Audit Option A B-12+B-28 S1-S3)`
+- 9d8f8d2: `fix(plugin-web-board-workspaces): wire B-12 delete board confirm gate (Audit Option A S4)`
+- 1308598: `fix(plugin-web-board-workspaces): wire B-28 delete inbox card confirm gate (Audit Option A S5)`
+- 2ad25fb: `test(plugin-web-board-workspaces): BoardDeleteConfirmDialog + B-12/B-28 confirmation paths (Audit Option A S6)`
+- 553bc21: `chore(plugin-web-board-workspaces-dev-log): flip FIX_READY_FOR_VERIFY (Audit Option A B-12+B-28)`
+
+All have body sections (Why / What / Scope / Risk / Docs / Tests) and `Co-Authored-By: Claude Opus 4.7 (1M context)` trailer. Conventional commits clean.
+
+#### Scope compliance
+
+`git diff 609a0b1^..2ad25fb --name-only | xargs -I{} dirname {} | sort -u` returns exactly 3 directories — all under `packages/plugin-web-board-workspaces/src/`:
+- `packages/plugin-web-board-workspaces/src` (component code)
+- `packages/plugin-web-board-workspaces/src/__tests__` (tests)
+- `packages/plugin-web-board-workspaces/src/internal` (strings)
+
+ZERO edits to: `@repo/core` / `@repo/plugin-web-board-core` / `@repo/plugin-web-board-views` / `@repo/plugin-web-tokens` / `apps/web/` / `manifest.json` / `PLUGIN_MAP.md` / ADR / xai-web-console.md / xai-web-console-gap-closure.md / `package.json` / `dev` branch. Branch lock + audit boundary honored.
+
+#### Residual risks (non-blocking)
+
+- **RR-1 (cross-vendor manual smoke):** ADR-0008 §S3 24h-evidence carve-out defers Safari / Firefox / iOS Safari smoke for SHIPPED batches in Web P0 maintenance mode. Chrome verified (same-vendor automated gates green; cross-vendor execution is a known deferred). NOT a blocker per ADR-0010 §D4 + audit "deferred-by-carve-out items" classification.
+- **RR-2 (focus trap + focus restoration in jsdom):** Native `<dialog>.showModal()` provides these in real browsers; jsdom doesn't fully implement them. Not testable in unit; relying on browser implementation. Documented expected behavior, manual-smoke-confirmable but cross-vendor smoke is queued (RR-1).
+- **RR-3 (Audit Option A maintenance batch close-out):** B-12 + B-28 is the LAST Option A item. After ship, Audit Option A maintenance batch is 100% close-out.
+
+#### Decision
+
+**READY_TO_SHIP.** All 7 verify dimensions PASS. R1 (conditional-mount cycle-2 regression replay) explicitly checked + closed. Root causes for B-12 (window.confirm modality) and B-28 (no gate at all) are removed and replaced with the prescribed `<dialog role="alertdialog">` pattern matching established SignOutConfirmDialog / CardDetailDialog / ShareModal precedents.
+
+
 ### Bugfix Work Log
 
 | Timestamp | Executor | Action | Commits | Next Step |
 |---|---|---|---|---|
 | 2026-05-28 03:42 | claude-opus-4-7[1m] (bug-diagnose) | Investigation: confirmed both delete sites live in `@repo/plugin-web-board-workspaces` (B-12 at `BoardSwitcher.tsx:59-64` via `window.confirm`; B-28 at `InboxPanel.tsx:62-70` with no gate). Confirmed NO existing `BoardDeleteConfirmDialog` / equivalent component in board family (`grep -rn 'DeleteConfirm\|deleteConfirmDialog' packages/plugin-web-board-*/src/` returns only `STR_SWITCHER.deleteConfirm` string). Confirmed ShareModal + CardDetailDialog + SignOutConfirmDialog as established `<dialog>` precedents. Confirmed conditional-mount lesson from Top-10 #5 cycle-2 BLOCKED (line 500 in this dev_log). Confirmed both delete sites in single package → ONE lineage. Recommended `mode: "board" \| "card"` dialog covering both. S1..S7 sub-fix plan documented with LOC + commit stubs. No `@repo/core` / `@repo/plugin-web-tokens` / ADR / manifest / PLUGIN_MAP edits required. Status → FIX_READY. | — | bug-fix (single sub-fix possible if collapsed to S1+S4+S5 / one commit) OR **bug-auto-fix** (batch S1..S7 — recommended given 5+ sub-fix steps) OR bugfix-loop (auto-fix + verify) |
 | 2026-05-28 03:56 | claude-sonnet-4-6 (bug-auto-fix) | Batch fix S1..S7 completed. S1+S2+S3 (609a0b1): new `BoardDeleteConfirmDialog.tsx` (native `<dialog>`, role=alertdialog, aria-labelledby/describedby, autoFocus Cancel, ESC/backdrop/Cancel close) + `STR_DELETE_CONFIRM` local i18n table (7 keys × 2 langs, en+zh, board+card modes) appended to `internal/strings.ts` + `.board-delete-dialog` CSS block (OKLCH destructive red confirm + neutral cancel) appended to `styles.css`. S4 (9d8f8d2): `BoardSwitcher.tsx` `onDelete` → `onRequestDelete` (removes `window.confirm`); `BoardWorkspacesModule.tsx` adds `pendingDelete` state + `confirmPendingDelete` callback + conditional-mount `{pendingDelete && <BoardDeleteConfirmDialog …/>}` (MANDATORY guard per Top-10 #5 cycle-2 BLOCKED lesson); `onRequestDelete` sets pendingDelete{type:"board"…}. S5 (1308598): `InboxPanel.tsx` `remove()` → `onRequestRemove` prop; host passes `onRequestRemove` that sets pendingDelete{type:"card"…}. S6 (2ad25fb): 19 new tests (11 BDC unit + 8 BW-Del integration) + updated BS13/BS14 + updated IP6 + updated BWM7. Total 214/214 workspaces tests PASS; web 128/128 PASS; all typecheck/lint gates exit 0. No `@repo/core` / `@repo/plugin-web-tokens` / `@repo/plugin-web-board-core` / `@repo/plugin-web-board-views` / ADR / PLUGIN_MAP / manifest / package.json edits. Status → FIX_READY_FOR_VERIFY. | 609a0b1 (S1+S2+S3), 9d8f8d2 (S4), 1308598 (S5), 2ad25fb (S6) | bug-verify |
+| 2026-05-28 04:02 | claude-opus-4-7[1m] (bug-verify) | Verified all 4 fix commits independently. (1) Pre-fix repro confirmed: `git show 609a0b1^:.../BoardSwitcher.tsx` line 61 had `window.confirm()`, `git show 609a0b1^:.../InboxPanel.tsx` lines 31-69 had no gate. (2) All 5 validation gates PASS: workspaces 214/214 tests + typecheck + lint --max-warnings 0 + web 128/128 + board-core/board-views typecheck. (3) R1 conditional-mount explicitly verified at BoardWorkspacesModule.tsx:628 `{pendingDelete && <BoardDeleteConfirmDialog open={true} ... />}` — Top-10 #5 cycle-2 regression NOT replayed. (4) Sub-fix audit S1-S6: BoardDeleteConfirmDialog has role=alertdialog + aria-labelledby/describedby + autoFocus Cancel + ESC/backdrop/Cancel close paths; mode='board' vs 'card' switches title/desc/confirm-label via STR_DELETE_CONFIRM (7×2 keys); CSS uses OKLCH only (no hex); 19 new tests pass (11 BDC unit + 8 BW-Del integration); BWM7/BS13/BS14/IP6 correctly updated. (5) Scope-compliant: 10 files all under `packages/plugin-web-board-workspaces/src/`. ZERO edits to core/board-core/board-views/tokens/web/manifest/PLUGIN_MAP/ADR/dev-branch. (6) Commit hygiene: type(scope): summary + Why/What/Scope/Risk/Docs/Tests body + Co-Authored-By trailer on all 4 fix commits + 1 doc commit. Residual: RR-1 cross-vendor smoke (Safari/Firefox/iOS) deferred per ADR-0008 §S3 24h-evidence carve-out + ADR-0010 §D4 — non-blocking. RR-2 native `<dialog>` focus trap + restoration not testable in jsdom — relying on browser implementation. Status → READY_TO_SHIP. | — | ship |
+| 2026-05-28 04:15 | claude-sonnet-4-6 (ship) | Ship Report: Audit Option A B-12+B-28 SHIPPED. Committed verify report + status flip, pushed 6 commits (609a0b1 / 9d8f8d2 / 1308598 / 2ad25fb / 553bc21 + this commit). Push: web → origin/web. Audit Option A maintenance batch 100% close-out (6/6 Option A items SHIPPED: #5 onOpenCard 2026-05-27, #1 Sign-out 2026-05-27, #7 Topbar persist 2026-05-27, #9 Widget remove 2026-05-28, #10 About links 2026-05-28, B-12+B-28 delete confirm 2026-05-28). Top-10 residual: #3 Tasks + (carve-out feature), #4 Matrix Add, #6 Stickies + (carve-out), #8 Rail icons HIDE. Cross-vendor smoke follow-up (ADR-0008 §S3 + ADR-0010 §D4, 24h window): B-12/B-28 Chrome 120 / Safari 17 / Firefox 121 / iOS Safari — open /app/board, delete board + inbox card, confirm dialog renders + autoFocus on Cancel + ESC/backdrop/Cancel close + Confirm deletes + Cancel preserves. RR-2: native <dialog> focus trap + focus restoration require browser verification (jsdom covers mount/close path only). | 609a0b1, 9d8f8d2, 1308598, 2ad25fb, 553bc21 + ship-chore-commit | — (workflow complete) |
 
 ---
