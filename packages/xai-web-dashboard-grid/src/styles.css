@@ -81,6 +81,58 @@
   cursor: grabbing;
 }
 
+/* ---- Widget remove affordance (Audit Top-10 #9, D-06) ------------------- */
+
+/*
+ * The widget-shell parent needs position:relative so the absolutely-positioned
+ * remove button can be anchored to its top-right corner.
+ * (Existing `.widget-shell` rule in layout.css does not set position — we add
+ * it here, scoped to this package.)
+ */
+.widget-shell {
+  position: relative;
+}
+
+.widget-shell__remove {
+  /* Absolute positioning: top-right corner of the shell. */
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  /* Sizing. */
+  width: 24px;
+  height: 24px;
+  padding: 0;
+  /* Reset native button chrome. */
+  border: 0;
+  background: transparent;
+  border-radius: 6px;
+  cursor: pointer;
+  /* Layout. */
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  /* Hidden by default; revealed on hover / :focus-within (keyboard + iOS tap). */
+  color: var(--text-2, currentColor);
+  opacity: 0;
+  transition: opacity 120ms ease, background 120ms ease;
+  /* Ensure the button is above any widget body chrome. */
+  z-index: 10;
+}
+
+/* Reveal on hover (pointer devices) or :focus-within (keyboard + iOS tap-focus). */
+.widget-shell:hover .widget-shell__remove,
+.widget-shell:focus-within .widget-shell__remove {
+  opacity: 0.7;
+}
+
+/* Full opacity + background tint on direct focus/hover of the button itself. */
+.widget-shell__remove:hover,
+.widget-shell__remove:focus-visible {
+  opacity: 1;
+  background: var(--hover-bg, oklch(95% 0.01 250));
+  outline: none;
+}
+
 /* ---- Add Widget Picker <dialog> (gap-closure row #5) -------------------- */
 
 .add-widget-picker {
