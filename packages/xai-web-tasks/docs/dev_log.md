@@ -228,11 +228,11 @@ No blockers. All commits ready for `ship`.
 | Workflow | FEATURE_DEV |
 | Target | xai-web-tasks-card-create |
 | Title | Wire column `+` → TaskComposer → reducer create → persist (Tasks card-create, Realistic v1) |
-| Current Phase | FEATURE_VERIFY |
-| Status | READY_FOR_VERIFY |
-| Executor | Claude Sonnet (claude-sonnet-4-6) |
-| Updated | 2026-05-28 12:20 |
-| Suggested Next | feature-verify |
+| Current Phase | SHIP |
+| Status | SHIPPED |
+| Executor | Claude Sonnet (claude-sonnet-4-6) ship |
+| Updated | 2026-05-28 14:00 |
+| Suggested Next | — (workflow complete) |
 | Level | increment (extension of SHIPPED row #6) |
 | Why reopen | Audit Top-10 #3 (T-09) — Tasks has no UI create path; column `+` is a no-op. P0 carve-out `09673f8` authorizes the feature under ADR-0010 §D4. |
 | Automation Mode | A-Claude (default; pickable at feature-build dispatch) |
@@ -415,3 +415,60 @@ ambiguity — every load-bearing source claim verified against actual code.
 | 2026-05-28 12:10 | Claude Sonnet (feature-auto-build) | EP1 DONE: `internal/ids.ts` (`createTaskId()`), `internal/strings.ts` (`STR_TASK_COMPOSER` en+zh 13 keys), `types.ts` (+`NewTaskDraft`), `internal/tasksReducer.ts` (+`addCard` pure action: prepend + count+1 + referential equality + dateForCol opt-in + defensive empty-title guard), `index.ts` (+`NewTaskDraft` export). Tests: T-IDS-1..2 + T-ADD-1..8 (10 new). Rec-E3 honored: explicit `now` in T-ADD-4. SHIPPED 40 + 10 new = 50/50 pass. typecheck + lint clean. | 7ea4b32 | EP2 |
 | 2026-05-28 12:15 | Claude Sonnet (feature-auto-build) | EP2 DONE: `TaskComposer.tsx` (native `<dialog>` + showModal/close + cancel ESC + backdrop click + setTimeout(0) autofocus; title input + tag radiogroup 6 options + bucket radiogroup 4 options + date opt-in checkbox; inline title-required error; a11y: aria-modal + aria-labelledby + aria-required + aria-describedby; bilingual via STR_TASK_COMPOSER); `TaskColumn.tsx` (+`onAddCard?` prop + onClick wire); `TasksModule.tsx` (+composer state + handleAddCard + handleComposerSave via SHIPPED boundary cast + TaskComposer rendered once at module root); `styles.css` (+composer rules); `vitest.setup.ts` (HTMLDialogElement showModal/close polyfill + cleanup — mirrors calendar setup.ts). Tests: T-TC-1..7 + T-A11Y-1 + T-COL-1 + T-CR-1..3. 65/65 pass. typecheck + lint + @repo/web check-types clean. Rec-E1: composer only mounts inside TasksModule (withDisabledFallback gating inherited). Rec-E2: single boundary-cast call site preserved. | 9c3d481 | EP3 |
 | 2026-05-28 12:20 | Claude Sonnet (feature-auto-build) | EP3 DONE: `index-barrel.test.ts` extended with T-BAR-2 (a..e): asserts `NewTaskDraft` accessible, internal helpers `addCard`/`createTaskId`/`TaskComposer`/`STR_TASK_COMPOSER` NOT exported. Full suite: 70/70 tasks tests pass (10 files). @repo/web 128/128 tests pass. @repo/web build green (3.72s). typecheck + lint clean on both packages. Cross-vendor checklist (AC-E7): (i) no shared-file edits in this increment — all code inside packages/xai-web-tasks/src/; (ii) all file paths used are absolute; (iii) no template-language-specific syntax in source — fresh tsc passes. Status → READY_FOR_VERIFY. | see EP3 commit | feature-verify |
+| 2026-05-28 12:35 | Claude Opus (feature-verify) | VERIFY PASS → READY_TO_SHIP. Reran all gates (see Verify Notes extension below): tasks 70/70, web 128/128, web build green, tasks typecheck+lint clean, web check-types clean. addCard reducer verified pure/immutable (T-ADD-6 identity), round-trippable (T-ADD-8), bilingual title fills en+zh, dateForCol opt-in + nodate short-circuit. TaskComposer native `<dialog>` a11y fully wired (T-A11Y-1). Single boundary-cast preserved (Rec-E2). Acceptance anchor (carve-out §5) fully covered by T-COL-1/T-CR-1/T-CR-2/T-CR-3. Boundary守约 held: zero edits outside packages/xai-web-tasks/+docs/ (no core/events, no tokens, no storage-registry, no other plugin, no host-shell, no ADR, no SHIPPED archive, dev branch untouched). 2 non-blocking residuals (R-V1 cross-vendor smoke deferred per ADR-0008 §S3; R-V2 EP3 commit subject mislabel — body+diff correct). | — | ship |
+| 2026-05-28 14:00 | Claude Sonnet (claude-sonnet-4-6) ship | SHIPPED: Status Panel flipped to SHIPPED; ship flip commit created and pushed to origin/web. Commit lineage pushed: 09673f8 (carve-out auth) / 7ea4b32 (EP1) / 9c3d481 (EP2) / 5a1e606 (EP3) / 50de9b0 (docs-sync) / ship flip commit. Cosmetic notes: R-V1 cross-vendor smoke batch deferred to next cloudflare deploy; R-V2 EP3 subject mislabel documented (no history rewrite); R-V3 api.md §4.1 line-no drift (193-196 → 197-204) deferred to next docs-sync. Top-10 = 8/10 SHIPPED (#1 #2 #3 #5 #7 #8 #9 #10). Unlocks #4 Matrix Add. | ship flip commit | — (workflow complete) |
+
+---
+
+## Verify Notes (extension — xai-web-tasks-card-create)
+
+**Verdict**: READY_TO_SHIP (feature-verify · Claude Opus claude-opus-4-8 · 2026-05-28 12:35)
+
+Every load-bearing claim was verified against ACTUAL source + test output, not trusted from the build Work Log. Commits reviewed independently: `7ea4b32` (EP1) / `9c3d481` (EP2) / `5a1e606` (EP3) / `50de9b0` (docs-sync); carve-out authority `09673f8`.
+
+### Gate results (all pass)
+
+| # | Gate | Result |
+|---|---|---|
+| 1 | `pnpm --filter @repo/plugin-web-tasks test` | **70/70 PASS** (10 files; SHIPPED 40 + 30 new: ids 2, addCard 8, TaskComposer 11 incl. T-A11Y-1, persistence +3, TasksModule +1, barrel +5) |
+| 2 | `pnpm --filter @repo/plugin-web-tasks typecheck` | clean (`tsc --noEmit`) |
+| 3 | `pnpm --filter @repo/plugin-web-tasks lint` | clean (`eslint --max-warnings 0`) |
+| 4 | `pnpm --filter @repo/web check-types` | clean |
+| 5 | `pnpm --filter @repo/web test` | **128/128 PASS** (24 files; no regression — SHIPPED tasks + DnD T-12 path intact) |
+| 6 | `pnpm --filter @repo/web build` | green (3.79s; pre-existing chunk-size + ai-chat dynamic-import warnings unrelated) |
+| 7 | `pnpm --filter @repo/web lint` | 1 pre-existing warning at `App.tsx:61` (`no-restricted-imports`, from commit `cbefa1d` 2026-05-27 — NOT this feature; xai-web-tasks touched 0 apps/web files). Baseline noise, not a regression. |
+
+### EP1 data-layer review (commit 7ea4b32)
+
+- **addCard** (`tasksReducer.ts:121-158`) — pure; prepends new card to `targetBucket.tasks[0]`; `count+1`; untouched columns returned by reference (`return col`, L156 — T-ADD-6 asserts `.toBe()` identity on all 3 untouched cols → immutability / **RE1** held). Date opt-in: `dateForCol(targetBucket, now)` only when `withDate && targetBucket !== "nodate"` (L136-138 → nodate short-circuit, T-ADD-5). Bilingual title fills BOTH `en`+`zh` from one trimmed string (L143 — D1). Defensive empty-title guard returns `prev` unchanged (L127-129, T-ADD-7). Unknown bucket returns `prev` (L131-133). Result passes `isTaskColsArray` (T-ADD-8).
+- **createTaskId** (`ids.ts:25-34`) — `crypto.randomUUID()` modern path + `t-<base36ts>-<rnd>` fallback; structurally disjoint from seed `t1..t26`/`c1..c6` (T-IDS-2). **RE2** held.
+- **NewTaskDraft** (`types.ts:93-100`) — matches api.md §E.1 exactly (`title:string; tag?:TaskTagId; withDate:boolean`).
+- **Barrel** (`index.ts:28`) — exports `NewTaskDraft` type only; `addCard`/`createTaskId`/`TaskComposer`/`STR_TASK_COMPOSER` NOT exported (T-BAR-2b..e).
+
+### EP2 composer + wire + persist review (commit 9c3d481)
+
+- **TaskComposer** (`TaskComposer.tsx`) — native `<dialog>`; `showModal()`/`close()` driven by `open` (L89-101); `cancel` listener for ESC (L104-110); backdrop via `e.target === dialogRef.current` (L113-120); `setTimeout(0)` autofocus (L95-97). a11y: `aria-modal="true"` + `aria-labelledby` (L153-154); title input `aria-required` + conditional `aria-describedby` (L177-178, T-A11Y-1 asserts absent→present on error). Tag radiogroup with "none" default → no `tag` (L131-133, T-TC-4); bucket radiogroup retargetable (T-TC-5). Empty title → inline error, no onSave (L125-129, T-TC-2). Date checkbox conditionally rendered when `bucket !== "nodate"` (L243 — the "hidden" variant of api.md §E.4 "hidden/no-op"; `withDate` stale-true after retarget to nodate is defensively absorbed by addCard's short-circuit). Bilingual EN+ZH incl. error (T-TC-7). **RE3** (jsdom dialog) held — EventComposer pattern copied; 11/11 TaskComposer tests green.
+- **TaskColumn** (`TaskColumn.tsx:71-81`) — `col.action === "add"` button now `onClick={() => onAddCard?.(col.id)}`; keeps `aria-label={s("common.add")}`. `overdue` keeps decorative `postpone` (L62-70, **RE5** documented).
+- **TasksModule** (`TasksModule.tsx:96-113,171-177`) — composer state lifted via `useState` (no event channel — **QE/A2 rejected** honored); `handleComposerSave` → `addCard` → `setRawCols(next as unknown as ...)` reusing the SAME boundary cast as `moveCard` at L93 (**Rec-E2** single-source held). Composer rendered once at module root. **RE4** (first-create materializes seed) inherited from the SHIPPED `useMemo` seed-or-persisted resolve at L30-39.
+
+### EP3 integration / barrel / cross-vendor review (commit 5a1e606)
+
+- **T-CR-3** (refresh-survival, `persistence.test.tsx:163-191`) — creates a card, asserts localStorage non-null, `unmount()`, re-`render()` reading the same jsdom localStorage, asserts the card title is back in the DOM. Genuine round-trip integration, not a stub. **Acceptance anchor "survive a page refresh" leg verified.**
+- Diff scope: `index-barrel.test.ts` + `dev_log.md` only — stays within EP3's declared barrel + docs boundary.
+
+### Acceptance anchor (carve-out §5) — full coverage
+
+"click column `+` → type title → pick tag/bucket → save → new card in correct column → survive refresh":
+1. click `+` → T-COL-1 + T-CR-2 (opens composer for that bucket); 2. type title → T-TC-3; 3. tag/bucket pick → T-TC-3/T-TC-4/T-TC-5; 4. save → T-CR-1; 5. correct column → T-ADD-1 + T-CR-1/T-CR-2 (prepend to target); 6. refresh → T-CR-3. Every leg backed by automated test + source. **Anchor satisfied.**
+
+### Boundary守约 audit (all held)
+
+`git diff --name-only 7ea4b32~1 50de9b0` → every file under `packages/xai-web-tasks/` or `docs/`. Confirmed ZERO edits to: `packages/core/src/types/events.ts` (no new channel), `plugin-web-tokens` (local STR), `plugin-web-storage/src/internal/registry.ts` (`xai_task_cols` last touched by calendar commit `e108607`, reused at L197), other plugins (Matrix/Statistics/Dashboard), `apps/web` host shell (registration SHIPPED), ADR files, SHIPPED archives. `dev` branch untouched (commits on `web` only). Edit/Delete confirmed NOT implemented (TaskCard onClick still toggle-only — D5 deferral intact). Commit subjects follow `type(scope): summary`.
+
+### Residual risks (non-blocking)
+
+- **R-V1 (cross-vendor manual smoke deferred)**: AC-E6 (Safari/Chrome real-browser sweep) + AC-E7 vendor cold-read are DEFERRED per ADR-0008 §S3 24h-evidence carve-out (carve-out §4 explicitly authorizes this). Joins the accumulated Web smoke batch that must clear before the next `xai-web-deploy-cloudflare` ship. Tester note (Rec-E1): **Tasks must be enabled in settings** (`withDisabledFallback` gating) or the composer route renders `<DisabledFeatureFallback>`. Not ship-blocking.
+- **R-V2 (cosmetic commit-subject mislabel)**: EP3 commit `5a1e606` subject reads "EP3 column + wire + composer state lift + persist + integration tests" — that work actually landed in EP2 (`9c3d481`). The EP3 commit BODY ("Documentation + barrel boundary tests only") and its DIFF (`index-barrel.test.ts` + `dev_log.md`) are both correct and within-boundary. Subject is a copy-paste artifact, not a phase-scope violation. Cosmetic; not ship-blocking (no history rewrite recommended).
+- **R-V3 (api.md §4.1 line-no drift, inherited Rec-E4)**: api.md §4.1 cites registry "193-196"; actual source is 197-204. Cosmetic doc drift; correct at next docs-sync.
+
+No blockers. All 4 commits ready for `ship` (human-gated push to `origin/web`).
