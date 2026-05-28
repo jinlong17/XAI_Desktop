@@ -599,7 +599,7 @@ recommendations Q1..Q10:
 
 - Drag-to-resize event blocks (Week/Day) — Future row.
 - Click-to-create event in empty hour slot — Future row.
-- Inline event editing — Future row (no editing UI at all in v1, per HC8).
+- Inline event editing — Future row (no editing UI at all in v1, per HC8). **[2026-05-27 — HC8 LIFT NOTE]** This constraint is lifted in v1.2 per ADR-0010 §D4 carve-out 2026-05-27 (carve-out doc: `docs/reviews/_p0-carve-outs/20260527-calendar-event-create.md`). See §16 (2026-05-27 Extension — Event CRUD) for the lift rationale, scope, and design. The original §15 body otherwise remains byte-identical to the SHIPPED extension.
 - Multi-day events (events spanning > 24 hours) — Future row.
 - Recurring event preview rendering — Future row.
 - Time-zone DISPLAY preference (user picks a tz different from browser local) — Future row.
@@ -811,4 +811,471 @@ asserts byte-parity.
 - ComingSoonPanel deletion is a private-component removal; nothing
   external imports it (verified — `index.ts` re-export contains only
   `CalendarModule` + `calendarSlotRegistration` + types).
+
+---
+
+## 2026-05-27 Extension: Event CRUD (HC8 lift)
+
+> APPEND-ONLY. §1..§14 (SHIPPED v1 2026-05-23) and §15 (SHIPPED extension
+> 2026-05-25, gap-closure row #4) above are NOT mutated by this extension
+> except for the single inline footnote on §15.2 #8 announcing the HC8
+> lift. The §15.2 #8 body otherwise remains byte-identical. This §16
+> records the design delta introduced by the `xai-web-calendar-event-create`
+> feature (P0 carve-out per ADR-0010 §D4, see carve-out doc
+> `docs/reviews/_p0-carve-outs/20260527-calendar-event-create.md`).
+>
+> Pattern reference: §15 (extension-of-SHIPPED) and
+> `packages/xai-web-ai-chat/docs/design.md` §2026-05-25 Extension.
+
+### 16.1 Decision header
+
+| Field | Value |
+|---|---|
+| Selected combination | Q1-B + Q2-ACCEPT + Q3-B + Q4-C + Q5-A + Q6-A + Q7-A + Q8 + Q9-E + Q10-B + Q11-A + Q12 (Codex) per discovery review §6 |
+| Discovery review | `docs/reviews/xai-web-calendar-event-create/20260527-discovery-review.md` |
+| Review date | 2026-05-27 |
+| Roadmap manifest | `docs/workflow/roadmap/xai-web-calendar-event-create.md` |
+| Source brief | `docs/reviews/xai-web-calendar-event-create/20260527-feature-brief.md` |
+| Parent ADR | ADR-0010 §D4 (P0 carve-out authority) |
+| Carve-out doc | `docs/reviews/_p0-carve-outs/20260527-calendar-event-create.md` |
+| ADR amendment | None (no CSP impact, no new package, no new event channel, no auth change) |
+| Target packages | `packages/xai-web-calendar/src/` (new `internal/eventStore/`, new `EventComposer.tsx`, new `internal/strings.ts`, `CalendarToolbar`/`Module`/`MonthCell`/`WeekView`/`DayView` minor edits) + `packages/plugin-web-storage/src/internal/registry.ts` (+1 entry `xai_calendar_events`) |
+| Last updated | 2026-05-27 |
+
+### 16.2 Frozen assumptions (this extension; lock at plan acceptance)
+
+Carried from `discovery-review.md` §4 (16 entries):
+
+1. **Owning package = `@repo/plugin-web-calendar`.** NO new package.
+   `packages/xai-web-calendar/src/internal/eventStore/` is a new
+   subdirectory inside this package (Q6-A).
+2. **`UserCalEvent` schema** (Q2): `id` (uuid) / `title` (string) /
+   `startISO` ("YYYY-MM-DDTHH:MM" local-clock) / `endISO` (same shape;
+   ≥ start + 5 minutes; same day per "no multi-day" constraint) /
+   `colorPreset` ("mint"|"amber"|"blue"|"violet"|"rose") / `recurrence`
+   (`RecurrenceRule | null`) / `createdAt` (ISO) / `updatedAt` (ISO).
+3. **`RecurrenceRule` schema** (Q3): `{ kind: "daily" | "weekly" }`.
+   No `until`, no `interval`, no `byWeekday`, no `exceptions` (out of
+   scope per brief).
+4. **Recurrence expansion** = render-time pure helper
+   `expandRecurrence(event, windowStartKey, windowEndKey, maxInstances=366)`
+   returning a `UserCalEvent[]` of materialized instances inside the
+   window. Bounded by `maxInstances: 366` hard cap.
+5. **New persistence key `xai_calendar_events`** — codec `"json"`,
+   default `{}`, category `"module"`, owner `"xai-web-calendar"`,
+   schemaVersion 1. Shape: `Record<string, UserCalEvent>` (id-indexed).
+   NOT in the `xai_pref_*` chassis-reset family (Settings W4 resetAll
+   does NOT touch it).
+6. **No new event channel** (Q5-A). State lifted into `CalendarModule`;
+   prop-drilled where needed. AC-EVENT-7 invariant extended to scan
+   new files.
+7. **Composer** = native `<dialog>` mirroring `CardDetailDialog.tsx`
+   pattern. ESC = discard; backdrop click = discard; Cancel button =
+   discard; Save button = persist + close; Delete button = remove +
+   close. Open via toolbar `+` OR click-existing-user-event.
+8. **Local STR table** `STR_EVENT_COMPOSER` in new
+   `packages/xai-web-calendar/src/internal/strings.ts`. Keys cover
+   dialog title (create/edit), field labels (title/date/start/end/
+   color/recurrence), action buttons (save/delete/cancel),
+   validation error messages, empty-state hint, "Sample" badge label.
+   NO `plugin-web-tokens/i18n.ts` edit.
+9. **5 color presets** (Q4-C): mint / amber / blue / violet / rose.
+   `rose` is a new CSS rule family in `styles.css` (oklch hue 350
+   matching the existing 165/70/245/295 pattern). No `tokens.css`
+   edit; no new design token.
+10. **Fixture stays** (Q9-E). `SAMPLE_EVENTS` continues to render;
+    each fixture chip gains a small `.cal-sample-badge` text "Sample"
+    / "示例". Fixture chips are NON-EDITABLE — click opens a brief
+    informational tooltip ("Sample event — not editable") instead of
+    the composer. User events render alongside; visually
+    indistinguishable except for the badge.
+11. **Banner conditional** (Q10-B). `<CalendarBanner />` renders only
+    when `userEvents.length === 0`. When the user creates at least
+    one event, banner hides (it was saying "Sample data — switch to
+    your account…" which becomes misleading once real events exist).
+12. **Empty state** (Q7-A). When BOTH `userEvents.length === 0` AND
+    fixture rendering is suppressed (future toggle — not in v1.2
+    scope; v1.2 always shows fixture), a bilingual hint "Click + to
+    create your first event" / "点击 + 创建第一个事件" renders
+    centered in the viewport (Month / Week / Day all).
+13. **Trigger map** (Q8). Composer opens on:
+    - Toolbar `+` click → new event, today + 09:00-10:00 default.
+    - Click on a user-event chip (Month) or block (Week/Day) → edit
+      that event, dialog pre-filled.
+    - Click on a fixture chip → read-only tooltip, NOT composer.
+    - Empty-state CTA "Create event" button → same as toolbar `+`.
+    Right-click context menu DEFERRED to follow-up row.
+14. **State lifting**. `userEvents: Record<string, UserCalEvent>`
+    lives in `CalendarModule`. CRUD setters passed as props to
+    Toolbar (Add), MonthCell/EventBlock/EventComposer (Edit/Delete).
+    `useUserCalEvents()` hook encapsulates `usePref + setPref`
+    + create/update/delete API surface.
+15. **HC8 lift mechanism** (Q11-A). §15.2 #8 gets ONE inline footnote
+    sentence announcing the lift. §16 (this section) records the
+    design delta. dev_log gains an append-only "Bugfix-Extension
+    Lineage — feature row" block. Original §15 body otherwise
+    unchanged.
+16. **Cross-vendor verify** (Q12). Codex `gpt-5.5-thinking medium`
+    cold-read mandatory in P4 (recurrence wired) + P5 (final).
+    Per-phase same-vendor smoke from P2 onwards. XVENDOR-CREATE-1..6
+    matrix in P5.
+
+### 16.3 Out of scope (extension v1.2)
+
+- Multi-day events.
+- All-day events (no `time` field) — out of v1.2; `startISO` always carries time.
+- Timezone awareness (local clock assumed).
+- Cross-device sync (deferred to ADR-0011 / xai-g2).
+- External calendar integration (Google / iCloud / Outlook).
+- Drag-drop reschedule.
+- Drag-to-resize event blocks.
+- Reminders / notifications.
+- Recurrence beyond daily/weekly (no monthly, no yearly, no until-date, no exceptions).
+- Labels / categories beyond preset colors.
+- IndexedDB migration.
+- Right-click context menu on events.
+- Unsaved-changes prompt on ESC.
+- Bulk operations (multi-select + delete).
+- Search / filter / sort UI for events.
+- Export / import.
+- Real backend (Supabase / Firebase / etc.).
+- Auth changes.
+
+### 16.4 Component composition (extension)
+
+```
+CalendarModule (extended)
+├── State (added):
+│   ├── userEvents:  Record<string, UserCalEvent>  (via useUserCalEvents)
+│   ├── composer:    { open: boolean; mode: "create"|"edit"; editing: UserCalEvent|null }
+│   └── (existing)  view, activeDate, focusedFromDeepLink
+├── CalendarToolbar  (gains onAdd?: () => void; toolbar "+" wired)
+├── view === "month" → MonthGrid                         (gains userEventsByDateKey prop)
+│   └── MonthCell                                        (gains userEvents prop + onChipClick handler)
+├── view === "week"  → WeekView                          (gains userEvents prop + onBlockClick handler)
+│   └── TimeGrid columns=7 → TimeGridDayColumn → EventBlock  (gains onClick handler)
+├── view === "day"   → DayView                           (gains userEvents prop + onBlockClick handler)
+│   └── TimeGrid columns=1                                (same chain)
+├── CalendarBanner   (conditional: userEvents.length === 0 only)
+├── (NEW) EmptyStateHint                                  (when userEvents.length === 0 in viewport)
+└── (NEW) EventComposer dialog
+    ├── header: title (create / edit)
+    ├── body:
+    │   ├── TitleField (text input)
+    │   ├── DateField (date input — startISO date part)
+    │   ├── StartTimeField (time input — HH:MM)
+    │   ├── EndTimeField (time input — HH:MM)
+    │   ├── ColorPresetField (5 radio buttons / chip-style)
+    │   └── RecurrenceField (3 radio: None / Daily / Weekly)
+    └── footer:
+        ├── DeleteButton (visible in edit mode only)
+        ├── CancelButton
+        └── SaveButton
+```
+
+### 16.5 New file plan (delta over SHIPPED)
+
+```
+packages/xai-web-calendar/
+├── src/
+│   ├── CalendarModule.tsx              — MODIFY: add userEvents state via useUserCalEvents;
+│   │                                       add composer state; pass props down; wire onAdd
+│   ├── CalendarToolbar.tsx             — MODIFY: add optional `onAdd?: () => void` prop;
+│   │                                       wire "+" button onClick
+│   ├── CalendarBanner.tsx              — MODIFY: render only when userEvents.length === 0
+│   ├── MonthGrid.tsx                   — MODIFY: accept userEventsByDateKey + onUserEventClick
+│   ├── MonthCell.tsx                   — MODIFY: split chips into fixture + user; badge
+│   │                                       fixture; wire onClick on user chips only
+│   ├── WeekView.tsx                    — MODIFY: pass userEvents + onUserEventClick into TimeGrid
+│   ├── DayView.tsx                     — MODIFY: same as WeekView
+│   ├── TimeGrid.tsx                    — MODIFY: accept onUserEventClick; pass to EventBlock
+│   ├── EventBlock.tsx                  — MODIFY: differentiate fixture vs user via isUserEvent
+│   │                                       prop; wire onClick on user events only
+│   ├── EmptyStateHint.tsx              — NEW: bilingual hint when no user events in viewport
+│   ├── EventComposer.tsx               — NEW: native <dialog>, create / edit / delete
+│   ├── styles.css                      — MODIFY additive: .event-composer + 5 ev-rose +
+│   │                                       .cal-sample-badge + .cal-empty-hint + dark overrides
+│   └── internal/
+│       ├── strings.ts                  — NEW: STR_EVENT_COMPOSER + EMPTY_STATE_HINT + SAMPLE_BADGE
+│       ├── eventStore/
+│       │   ├── types.ts                — NEW: UserCalEvent, RecurrenceRule, EventColorPreset
+│       │   ├── ids.ts                  — NEW: createEventId() — crypto.randomUUID() + fallback
+│       │   ├── eventStore.ts           — NEW: pure CRUD ops on Record<string, UserCalEvent>
+│       │   ├── useUserCalEvents.ts     — NEW: hook wrapping usePref + CRUD API
+│       │   ├── expandRecurrence.ts     — NEW: rule → materialized instances in window
+│       │   ├── mergeEventsForViewport.ts — NEW: fixture + user → CalEventsByDay (Month)
+│       │   │                                              OR Record<dateKey, CalEvent[]> (Week/Day)
+│       │   └── validators.ts           — NEW: validateUserCalEvent (title non-empty;
+│       │                                        endISO > startISO; same-day invariant; HH:MM format)
+│       └── (existing)                   — UNCHANGED
+└── __tests__/                          — NEW: ~110 tests across the 5 phases
+    ├── eventStore.test.ts
+    ├── expandRecurrence.test.ts
+    ├── mergeEventsForViewport.test.ts
+    ├── validators.test.ts
+    ├── ids.test.ts
+    ├── useUserCalEvents.test.ts
+    ├── EventComposer.test.tsx
+    ├── EmptyStateHint.test.tsx
+    ├── CalendarModule.eventcrud.test.tsx
+    ├── CalendarModule.recurrence.test.tsx
+    ├── CalendarModule.dst-recurrence.test.tsx
+    ├── perfBudget.eventcrud.test.ts
+    └── (existing 28 test files)         — UNCHANGED, must stay green throughout
+
+packages/plugin-web-storage/
+└── src/internal/registry.ts            — MODIFY: + 1 new entry `xai_calendar_events`
+                                              (codec "json", default {}, category "module",
+                                              owner "xai-web-calendar", schemaVersion 1)
+```
+
+Estimated diff size:
+
+- New files: ~12 (5 store + 4 components + 2 tests + 1 strings).
+- Modified files: ~10 (4 view components + 4 wrappers + 1 styles + 1 registry).
+- Net LOC: ~1500-2000 production + ~1200 tests.
+
+### 16.6 Data flow
+
+```
+User clicks toolbar "+"
+└── CalendarToolbar.tsx → props.onAdd?.()
+    └── CalendarModule.handleAddEventClick
+        └── setComposer({ open: true, mode: "create", editing: null })
+            └── <EventComposer open={true} mode="create" event={null} onSave={...} onClose={...} />
+
+User clicks Save in composer
+└── EventComposer.tsx → validate form → buildUserCalEvent → props.onSave(event)
+    └── CalendarModule.handleSaveEvent
+        └── useUserCalEvents().createOrUpdate(event)
+            ├── store update: setPref("xai_calendar_events", { ...prev, [event.id]: event })
+            └── React re-renders (no event-bus emit)
+                └── MonthGrid / WeekView / DayView re-derive viewport events via:
+                    └── mergeEventsForViewport(SAMPLE_EVENTS, userEvents, displayedRange)
+                        └── expandRecurrence(event, windowStart, windowEnd) for each recurring event
+                        └── returns { dateKey → CalEvent[] } sorted by startISO
+
+User clicks an existing user event chip / block
+└── MonthCell / EventBlock → props.onClick(userEvent)
+    └── CalendarModule.handleEditEventClick
+        └── setComposer({ open: true, mode: "edit", editing: userEvent })
+
+User clicks Delete in composer
+└── EventComposer.tsx → confirm in-dialog → props.onDelete(event.id)
+    └── CalendarModule.handleDeleteEvent
+        └── useUserCalEvents().remove(event.id)
+            ├── store update: setPref("xai_calendar_events", { ...prev, [id]: undefined } | delete)
+            └── React re-renders → event disappears
+
+User reloads page
+└── usePref("xai_calendar_events", {}) restores from localStorage
+└── userEvents hydrated; mergeEventsForViewport recomputes; events render
+```
+
+### 16.7 Pure helper signatures (new)
+
+```ts
+// internal/eventStore/types.ts
+export type RecurrenceKind = "daily" | "weekly";
+export interface RecurrenceRule {
+  kind: RecurrenceKind;
+}
+export type EventColorPreset = "mint" | "amber" | "blue" | "violet" | "rose";
+export interface UserCalEvent {
+  id: string;
+  title: string;
+  startISO: string;       // "YYYY-MM-DDTHH:MM"
+  endISO: string;         // "YYYY-MM-DDTHH:MM"
+  colorPreset: EventColorPreset;
+  recurrence: RecurrenceRule | null;
+  createdAt: string;
+  updatedAt: string;
+}
+
+// internal/eventStore/ids.ts
+/** Crypto-strong id when available; fallback for jsdom / very old browsers. */
+export function createEventId(): string;
+
+// internal/eventStore/eventStore.ts (PURE — no React)
+export function createEvent(
+  store: Record<string, UserCalEvent>,
+  partial: Omit<UserCalEvent, "id" | "createdAt" | "updatedAt">,
+): { next: Record<string, UserCalEvent>; created: UserCalEvent };
+export function updateEvent(
+  store: Record<string, UserCalEvent>,
+  id: string,
+  patch: Partial<Omit<UserCalEvent, "id" | "createdAt">>,
+): { next: Record<string, UserCalEvent>; updated: UserCalEvent | null };
+export function deleteEvent(
+  store: Record<string, UserCalEvent>,
+  id: string,
+): Record<string, UserCalEvent>;
+export function getEvent(
+  store: Record<string, UserCalEvent>,
+  id: string,
+): UserCalEvent | null;
+export function listEvents(
+  store: Record<string, UserCalEvent>,
+): UserCalEvent[];
+
+// internal/eventStore/useUserCalEvents.ts (HOOK — wraps usePref)
+export interface UserCalEventsApi {
+  events: Record<string, UserCalEvent>;
+  list: UserCalEvent[];
+  create: (partial: Omit<UserCalEvent, "id" | "createdAt" | "updatedAt">) => UserCalEvent;
+  update: (id: string, patch: Partial<Omit<UserCalEvent, "id" | "createdAt">>) => UserCalEvent | null;
+  remove: (id: string) => void;
+  getById: (id: string) => UserCalEvent | null;
+}
+export function useUserCalEvents(): UserCalEventsApi;
+
+// internal/eventStore/expandRecurrence.ts (PURE)
+export function expandRecurrence(
+  event: UserCalEvent,
+  windowStartKey: string,    // "YYYY-MM-DD"
+  windowEndKey: string,      // inclusive
+  maxInstances?: number,     // default 366
+): UserCalEvent[];
+
+// internal/eventStore/mergeEventsForViewport.ts (PURE)
+/**
+ * Produces the byDay map consumed by MonthGrid (still indexed by day-of-month).
+ * Fixture events are merged with user events for the displayed month only.
+ * User events outside displayedMonth are filtered out at this level.
+ */
+export function mergeEventsForMonth(
+  fixture: CalEventsByDay,
+  userEvents: Record<string, UserCalEvent>,
+  displayedYear: number,
+  displayedMonth: number,
+): CalEventsByDay;
+
+/**
+ * Produces the byDateKey map consumed by Week/Day views.
+ * Recurrence is expanded inside the window. Returns "YYYY-MM-DD" indexed.
+ */
+export function mergeEventsForWindow(
+  fixture: CalEventsByDay,
+  fixtureYearMonth: { year: number; month: number },   // because fixture is day-of-month
+  userEvents: Record<string, UserCalEvent>,
+  windowStartKey: string,
+  windowEndKey: string,
+): Record<string, CalEvent[]>;
+
+// internal/eventStore/validators.ts (PURE)
+export interface ValidationError {
+  field: "title" | "date" | "startTime" | "endTime" | "color" | "recurrence";
+  code: "REQUIRED" | "INVALID_FORMAT" | "END_BEFORE_START" | "MIN_DURATION" | "MULTI_DAY";
+  message: { en: string; zh: string };
+}
+export function validateUserCalEvent(
+  draft: {
+    title: string;
+    date: string;            // "YYYY-MM-DD"
+    startTime: string;       // "HH:MM"
+    endTime: string;         // "HH:MM"
+    colorPreset: EventColorPreset;
+    recurrence: RecurrenceRule | null;
+  },
+): ValidationError[];
+```
+
+### 16.8 Styles delta (additive — tokens-only)
+
+```css
+/* ---------- Event Composer dialog ---------- */
+.event-composer { padding: 0; border: none; border-radius: var(--r-md); background: var(--bg-elev-1); color: var(--text-1); min-width: 360px; max-width: 480px; box-shadow: var(--shadow-modal); }
+.event-composer::backdrop { background: rgba(0, 0, 0, 0.4); backdrop-filter: blur(4px); }
+.event-composer__content { padding: 20px 24px; }
+.event-composer__title { font-size: var(--fs-md); font-weight: 600; margin: 0 0 16px; }
+.event-composer__field { display: flex; flex-direction: column; gap: 6px; margin-bottom: 12px; }
+.event-composer__field-label { font-size: var(--fs-xs); color: var(--text-2); }
+.event-composer__input { padding: 6px 10px; border: 1px solid var(--border-1); border-radius: var(--r-xs); background: var(--bg-input); color: var(--text-1); font-size: var(--fs-sm); }
+.event-composer__row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+.event-composer__color-row { display: flex; gap: 8px; }
+.event-composer__color-chip { width: 32px; height: 32px; border-radius: 999px; border: 2px solid transparent; cursor: pointer; }
+.event-composer__color-chip[data-selected="true"] { border-color: var(--text-1); }
+.event-composer__color-chip.ev-mint   { background: oklch(58% 0.10 165); }
+.event-composer__color-chip.ev-amber  { background: oklch(65% 0.13 70);  }
+.event-composer__color-chip.ev-blue   { background: oklch(60% 0.12 245); }
+.event-composer__color-chip.ev-violet { background: oklch(60% 0.12 295); }
+.event-composer__color-chip.ev-rose   { background: oklch(60% 0.12 350); }
+.event-composer__recurrence-row { display: flex; gap: 12px; }
+.event-composer__actions { display: flex; justify-content: space-between; align-items: center; margin-top: 20px; gap: 12px; }
+.event-composer__actions--right { display: flex; gap: 8px; }
+.event-composer__btn { padding: 6px 14px; border-radius: var(--r-xs); font-size: var(--fs-sm); border: 1px solid var(--border-1); background: var(--bg-elev-2); color: var(--text-1); cursor: pointer; }
+.event-composer__btn--primary { background: var(--accent); color: var(--accent-on); border-color: var(--accent); }
+.event-composer__btn--danger { background: transparent; color: var(--red); border-color: var(--red); }
+.event-composer__error { font-size: var(--fs-2xs); color: var(--red); margin-top: 4px; }
+
+/* ---------- New color (rose) for Month chips + TimeGrid blocks ---------- */
+.cal-event.ev-rose         { background: oklch(94% 0.04 350); color: oklch(40% 0.10 350); border-left-color: oklch(60% 0.12 350); }
+.cal-event-block.ev-rose   { background: oklch(94% 0.04 350); color: oklch(40% 0.10 350); border-left-color: oklch(60% 0.12 350); }
+[data-theme="dark"] .cal-event.ev-rose         { background: oklch(28% 0.05 350); color: oklch(85% 0.08 350); }
+[data-theme="dark"] .cal-event-block.ev-rose   { background: oklch(28% 0.05 350); color: oklch(85% 0.08 350); }
+
+/* ---------- Sample-event badge (Q9-E) ---------- */
+.cal-sample-badge { font-size: var(--fs-3xs); color: var(--text-3); margin-left: 4px; padding: 0 4px; border-radius: var(--r-xs); background: var(--bg-elev-2); }
+.cal-event[data-source="fixture"] .ev-title::after,
+.cal-event-block[data-source="fixture"] .ev-title::after { content: " ·"; opacity: 0.5; }
+.cal-event[data-source="fixture"] { cursor: default; }
+.cal-event-block[data-source="fixture"] { cursor: default; }
+
+/* ---------- Empty-state hint (Q7-A) ---------- */
+.cal-empty-hint { display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 48px 24px; gap: 12px; color: var(--text-2); font-size: var(--fs-sm); text-align: center; }
+.cal-empty-hint__arrow { width: 24px; height: 24px; opacity: 0.6; }
+```
+
+The 5 new chip+block color rules add ONE additional preset (`rose`) to
+the 4 already in §9 / §15.8. The dialog styles use existing CSS variables
+exclusively — no new tokens.
+
+### 16.9 Acceptance traceability (extension)
+
+| Brief signal | Mechanism | AC IDs (this extension) |
+|---|---|---|
+| HC1: Create event → visible immediately | `useUserCalEvents.create` → state lift → `mergeEventsForViewport` → MonthCell render | AC-CREATE-1..6 |
+| HC2: Edit event → view updates synchronously | `useUserCalEvents.update` → React re-render | AC-EDIT-1..5 |
+| HC3: Delete event → view immediately reflects removal | `useUserCalEvents.remove` → React re-render | AC-DELETE-1..4 |
+| HC4: Refresh → events preserved | `usePref("xai_calendar_events", {})` round-trip | AC-PERSIST-CREATE-1..3 |
+| HC5: Recurrence correctly expanded across views | `expandRecurrence` + `mergeEventsForWindow` | AC-RECUR-1..8 (daily/weekly × Month/Week/Day) |
+| HC6: Empty state shown when no events | `<EmptyStateHint />` rendered when viewport.events.length === 0 | AC-EMPTY-1..3 |
+| HC7: Multiple events in same time slot — side-by-side | `placeEventBlocks` greedy packing (existing) + new tests cover user events | AC-OVERLAP-1..4 |
+| HC8 LIFTED | inline footnote on §15.2 #8 + this §16 + dev_log block | AC-DOCS-1..3 |
+| No new event channel | `events.test.ts` grep extended to scan new files | AC-EVENT-7 EXTENDED |
+| No new ADR | Documented in §16.1 header | AC-ADR-CREATE-1 |
+| No new npm dependency | `package.json` unchanged | AC-DEPS-CREATE-1 |
+| Bilingual EN/ZH | `STR_EVENT_COMPOSER` typed parity check | AC-I18N-CREATE-1..3 |
+| Composer ESC + backdrop + Cancel | native `<dialog>` behavior | AC-DIALOG-1..5 |
+| Composer validates required fields | `validators.validateUserCalEvent` | AC-VALIDATE-1..7 |
+| Fixture stays + badged "Sample" | `data-source="fixture"` + `.cal-sample-badge` | AC-FIXTURE-CREATE-1..3 |
+| Fixture non-editable | onClick gates on `data-source !== "fixture"` | AC-FIXTURE-CREATE-4 |
+| Banner hides when user events exist | conditional render in `CalendarModule` | AC-BANNER-CREATE-1..2 |
+| DST × recurrence consistency | local-clock HH:MM stable across spring-forward | AC-DST-RECUR-1..2 |
+| Perf: viewport recompute ≤ 16 ms for 100 user events | memo + bounded expansion | PB-CREATE-1 |
+| Cross-vendor (Safari/Chrome/Firefox) | XVENDOR matrix | XVENDOR-CREATE-1..6 |
+| Codex cold-read (5 items) | Codex-1..5 | Codex-1..5 |
+
+### 16.10 Architectural risk: low
+
+- No `packages/core/` edit. No new `web:*` event channel.
+- No `manifest.json` routing change.
+- No new npm dependency.
+- No CSP impact (no external HTTPS).
+- One additive registry entry `xai_calendar_events` (matches the
+  `xai_calendar_view` precedent from this very package, SHIPPED
+  2026-05-25).
+- One additive CSS color family (`ev-rose`) — pure additive,
+  no tokens.css edit.
+- SHIPPED 197 calendar + 88 storage + 106 web = 391 tests stay green
+  throughout the 5-phase build.
+- HC8 lift = 1 inline footnote sentence + 1 new §16 + 1 new dev_log
+  block. The original §15 body remains byte-identical except for
+  the §15.2 #8 sentence.
+- `SAMPLE_EVENTS` byte-parity remains valid for the **non-extension**
+  fields. The fixture data structure (`CalEventsByDay` keyed by
+  day-of-month 1..31) is preserved unchanged. The new merge layer
+  `mergeEventsForMonth` is the consumer; fixture never gains a
+  full-date schema.
+
 

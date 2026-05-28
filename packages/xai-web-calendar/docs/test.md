@@ -696,3 +696,383 @@ in `dev_log.md` during `feature-verify`.
     OR formally DEFERRED per ADR-0008 carve-out + ADR-0009 §D2-G2
     precedent.
 
+---
+
+## 9. 2026-05-27 Extension — Event CRUD test strategy (HC8 lift)
+
+> APPEND-ONLY. §1..§8 above continue to apply byte-for-byte. **The 197
+> SHIPPED test cases (90 v1 + 107 v1.1 extension) MUST stay green.** §9
+> is purely additive: new test files + small modifier additions to
+> existing test files explicitly enumerated below.
+>
+> Pattern reference: `§8` above (gap-closure row #4 extension test
+> strategy) — same shape applies to this carve-out extension.
+
+### 9.0 Test scope summary (extension)
+
+| Category | Files | Cases | Acceptance |
+|---|---|---|---|
+| Existing 197 cases (status quo) | 28 files in `packages/xai-web-calendar/src/__tests__/` | 197 | All green, NO regressions allowed |
+| New unit — event store CRUD | `eventStore.test.ts` | 14 | green |
+| New unit — recurrence expansion | `expandRecurrence.test.ts` | 12 | green |
+| New unit — viewport merge | `mergeEventsForViewport.test.ts` | 10 | green |
+| New unit — validators | `validators.test.ts` | 9 | green |
+| New unit — id generator | `ids.test.ts` | 4 | green |
+| New hook — useUserCalEvents | `useUserCalEvents.test.ts` | 8 | green |
+| New component — EventComposer | `EventComposer.test.tsx` | 18 | green |
+| New component — EmptyStateHint | `EmptyStateHint.test.tsx` | 4 | green |
+| New integration — CalendarModule event CRUD (Month) | `CalendarModule.eventcrud.test.tsx` | 12 | green |
+| New integration — recurrence × view | `CalendarModule.recurrence.test.tsx` | 10 | green |
+| New integration — DST × recurrence | `CalendarModule.dst-recurrence.test.tsx` | 4 | green |
+| New perf budget | `perfBudget.eventcrud.test.ts` | 1 (PB-CREATE-1) | green |
+| Modified `events.test.ts` | extend file list | unchanged count, broader scope | green |
+| Modified `index-barrel.test.ts` | + AC-BARREL-CREATE-1..6 | +6 | green |
+| Modified `types.test-d.ts` | + AC-TYPE-CREATE-1..4 | +4 | green |
+| Modified `styles.css.tokens.test.ts` | + AC-TOKENS-CREATE-1..3 (ev-rose + composer styles) | +3 | green |
+| Modified `sampleEvents.test.ts` | + AC-FIXTURE-CREATE-1..3 (badge + non-editable) | +3 | green |
+| Storage registry test | extend `packages/plugin-web-storage/src/__tests__/registry.test.ts` (+ AC-REGISTRY-CREATE-1..2) | +2 | green |
+| `apps/web` 106 cases | as-is | 106 | All green |
+
+Cumulative new test cases: **~110** (98 new files + 18 modifier-additions).
+Total after this extension: **307 in `@repo/plugin-web-calendar`** + 90 in storage + 106 in web = **503 calendar/web/storage tests**.
+
+### 9.1 Mock strategy (extension)
+
+- **`usePref("xai_calendar_events", {})`**: NOT mocked. Real `@repo/plugin-web-storage` round-trip; HC4 persistence asserted via unmount + remount cycle.
+- **`crypto.randomUUID()`**: mocked in `ids.test.ts` to exercise the fallback path (`globalThis.crypto = undefined`).
+- **Date / time**: `vi.useFakeTimers()` + `vi.setSystemTime("2026-05-22T10:00:00")` for recurrence expansion + DST tests.
+- **Native `<dialog>`**: jsdom polyfilled in `setup.ts` (already present per gap-closure row #4 setup). `dialog.showModal()` + `dialog.close()` work; backdrop click simulated via `fireEvent.click(dialogEl)` with `target === dialogEl`.
+- **Composer form interactions**: React Testing Library `userEvent` for typing, picking, clicking.
+
+### 9.2 New AC matrix (extension)
+
+#### AC-CREATE — Event creation flow
+
+| ID | Description | Phase | File |
+|---|---|---|---|
+| AC-CREATE-1 | Toolbar `+` click → EventComposer opens with `mode="create"` | P3 | `CalendarModule.eventcrud.test.tsx` |
+| AC-CREATE-2 | EventComposer defaults: title="" / date=today / start="09:00" / end="10:00" / color="mint" / recurrence=null | P2 | `EventComposer.test.tsx` |
+| AC-CREATE-3 | User fills form + clicks Save → composer closes, event appears in MonthCell, persists to localStorage | P3 | `CalendarModule.eventcrud.test.tsx` |
+| AC-CREATE-4 | Created event renders with the picked color (e.g., "rose") | P3 | `CalendarModule.eventcrud.test.tsx` |
+| AC-CREATE-5 | Two events on same day → both render in MonthCell, sorted by startISO | P3 | `CalendarModule.eventcrud.test.tsx` |
+| AC-CREATE-6 | Empty title → Save disabled / shows error; composer stays open | P2 | `EventComposer.test.tsx` |
+
+#### AC-EDIT — Event edit flow
+
+| ID | Description | Phase | File |
+|---|---|---|---|
+| AC-EDIT-1 | Click on user event chip in Month view → EventComposer opens with `mode="edit"` pre-filled | P3 | `CalendarModule.eventcrud.test.tsx` |
+| AC-EDIT-2 | Edit title and click Save → chip updates, updatedAt bumped | P3 | `CalendarModule.eventcrud.test.tsx` |
+| AC-EDIT-3 | Cancel in edit mode → composer closes, no mutation | P2 | `EventComposer.test.tsx` |
+| AC-EDIT-4 | Click on event block in Week view → composer pre-filled | P4 | `CalendarModule.eventcrud.test.tsx` |
+| AC-EDIT-5 | Click on event block in Day view → composer pre-filled | P4 | `CalendarModule.eventcrud.test.tsx` |
+
+#### AC-DELETE — Event delete flow
+
+| ID | Description | Phase | File |
+|---|---|---|---|
+| AC-DELETE-1 | Delete button visible only in edit mode | P2 | `EventComposer.test.tsx` |
+| AC-DELETE-2 | Delete button click → composer closes, chip disappears, store entry removed | P3 | `CalendarModule.eventcrud.test.tsx` |
+| AC-DELETE-3 | Last user event deleted → banner reappears (Q10-B) | P3 | `CalendarModule.eventcrud.test.tsx` |
+| AC-DELETE-4 | Delete non-existent id → no-op, no error | P1 | `eventStore.test.ts` |
+
+#### AC-PERSIST-CREATE — Persistence round-trip
+
+| ID | Description | Phase | File |
+|---|---|---|---|
+| AC-PERSIST-CREATE-1 | Create + reload → event preserved | P3 | `CalendarModule.eventcrud.test.tsx` |
+| AC-PERSIST-CREATE-2 | Edit + reload → updated event preserved | P3 | `CalendarModule.eventcrud.test.tsx` |
+| AC-PERSIST-CREATE-3 | Delete + reload → event NOT present | P3 | `CalendarModule.eventcrud.test.tsx` |
+
+#### AC-RECUR — Recurrence rendering
+
+| ID | Description | Phase | File |
+|---|---|---|---|
+| AC-RECUR-1 | Daily recurring event over 7-day Week view → 7 blocks rendered | P4 | `CalendarModule.recurrence.test.tsx` |
+| AC-RECUR-2 | Weekly recurring event over 7-day Week view → 1 block on the start weekday | P4 | `CalendarModule.recurrence.test.tsx` |
+| AC-RECUR-3 | Daily recurring event over 30-day Month view → up to 30 chips across days | P4 | `CalendarModule.recurrence.test.tsx` |
+| AC-RECUR-4 | Weekly recurring event over 30-day Month view → ~4-5 chips on the start weekday | P4 | `CalendarModule.recurrence.test.tsx` |
+| AC-RECUR-5 | Daily recurring event over Day view → 1 block | P4 | `CalendarModule.recurrence.test.tsx` |
+| AC-RECUR-6 | Edit a recurring event → all rendered instances reflect the edit | P4 | `CalendarModule.recurrence.test.tsx` |
+| AC-RECUR-7 | Delete a recurring event → all rendered instances disappear | P4 | `CalendarModule.recurrence.test.tsx` |
+| AC-RECUR-8 | `expandRecurrence` with `maxInstances: 366` cap — daily over 2-year window returns exactly 366 | P1 | `expandRecurrence.test.ts` |
+
+#### AC-EMPTY — Empty state hint
+
+| ID | Description | Phase | File |
+|---|---|---|---|
+| AC-EMPTY-1 | When `userEvents.length === 0` AND viewport has no fixture events → EmptyStateHint rendered | P3 | `EmptyStateHint.test.tsx` |
+| AC-EMPTY-2 | Hint text bilingual: EN "Click + to create your first event" / ZH "点击 + 创建第一个事件" | P3 | `EmptyStateHint.test.tsx` |
+| AC-EMPTY-3 | Once a user event is created, EmptyStateHint disappears | P3 | `CalendarModule.eventcrud.test.tsx` |
+
+#### AC-OVERLAP — Multiple events same time slot
+
+| ID | Description | Phase | File |
+|---|---|---|---|
+| AC-OVERLAP-1 | Two user events overlapping 09:00-11:00 + 10:00-12:00 in Week view → side-by-side colSpan=2 | P4 | `CalendarModule.eventcrud.test.tsx` |
+| AC-OVERLAP-2 | Three user events overlapping → colSpan=3 (uses existing placeEventBlocks) | P4 | `CalendarModule.eventcrud.test.tsx` |
+| AC-OVERLAP-3 | User event + fixture event in same time slot → both render side-by-side | P4 | `CalendarModule.eventcrud.test.tsx` |
+| AC-OVERLAP-4 | Month view: 6 events on same day → 5 chips + "+1 more" overflow (existing behavior preserved) | P3 | `CalendarModule.eventcrud.test.tsx` |
+
+#### AC-FIXTURE-CREATE — Fixture coexistence
+
+| ID | Description | Phase | File |
+|---|---|---|---|
+| AC-FIXTURE-CREATE-1 | Fixture chips render with `data-source="fixture"` attribute | P3 | `sampleEvents.test.ts` (extend) |
+| AC-FIXTURE-CREATE-2 | `.cal-sample-badge` element present on each fixture chip with bilingual label | P3 | `sampleEvents.test.ts` (extend) |
+| AC-FIXTURE-CREATE-3 | User event chips do NOT have `data-source="fixture"` | P3 | `CalendarModule.eventcrud.test.tsx` |
+| AC-FIXTURE-CREATE-4 | Click on fixture chip does NOT open composer (no-op or tooltip only) | P3 | `CalendarModule.eventcrud.test.tsx` |
+
+#### AC-BANNER-CREATE — Banner conditional render
+
+| ID | Description | Phase | File |
+|---|---|---|---|
+| AC-BANNER-CREATE-1 | `userEvents.length === 0` → CalendarBanner is in DOM | P3 | `CalendarModule.eventcrud.test.tsx` |
+| AC-BANNER-CREATE-2 | After creating 1 user event → CalendarBanner is NOT in DOM | P3 | `CalendarModule.eventcrud.test.tsx` |
+
+#### AC-DST-RECUR — DST × recurrence interaction
+
+| ID | Description | Phase | File |
+|---|---|---|---|
+| AC-DST-RECUR-1 | Daily recurring 09:30 event on Mar 8 2026 (spring-forward day) renders on Mar 7 + Mar 8 + Mar 9 at 09:30 each | P4 | `CalendarModule.dst-recurrence.test.tsx` |
+| AC-DST-RECUR-2 | Weekly recurring 09:30 event whose anchor is Nov 1 2026 (fall-back day) renders on Nov 8 + Nov 15 at 09:30 each | P4 | `CalendarModule.dst-recurrence.test.tsx` |
+
+#### AC-DIALOG — Native dialog behavior
+
+| ID | Description | Phase | File |
+|---|---|---|---|
+| AC-DIALOG-1 | `open={true}` → dialog.showModal() called | P2 | `EventComposer.test.tsx` |
+| AC-DIALOG-2 | ESC key → onClose called (no save) | P2 | `EventComposer.test.tsx` |
+| AC-DIALOG-3 | Click on backdrop (dialog element itself) → onClose called | P2 | `EventComposer.test.tsx` |
+| AC-DIALOG-4 | Click inside dialog content → does NOT close | P2 | `EventComposer.test.tsx` |
+| AC-DIALOG-5 | `aria-modal="true"` + `aria-labelledby` present | P2 | `EventComposer.test.tsx` |
+| AC-DIALOG-6 | Focus moves into first input field on open | P2 | `EventComposer.test.tsx` |
+| AC-DIALOG-7 | Save button click stops event propagation (no parent onClick fires) | P2 | `EventComposer.test.tsx` |
+
+#### AC-VALIDATE — Form validation
+
+| ID | Description | Phase | File |
+|---|---|---|---|
+| AC-VALIDATE-1 | Empty title → error "Title is required" | P1 | `validators.test.ts` |
+| AC-VALIDATE-2 | endTime < startTime → error "End time must be after start" | P1 | `validators.test.ts` |
+| AC-VALIDATE-3 | endTime - startTime < 5 minutes → error "Event must be at least 5 minutes" | P1 | `validators.test.ts` |
+| AC-VALIDATE-4 | startTime/endTime malformed → error "INVALID_FORMAT" | P1 | `validators.test.ts` |
+| AC-VALIDATE-5 | Date in past → no error (v1 allows backdating) | P1 | `validators.test.ts` |
+| AC-VALIDATE-6 | All-day attempt (endTime "23:59" + startTime "00:00") → still single-day, no error | P1 | `validators.test.ts` |
+| AC-VALIDATE-7 | Cross-day attempt (programmatic only — composer prevents via single date field) → error "MULTI_DAY" | P1 | `validators.test.ts` |
+
+#### AC-I18N-CREATE — Bilingual STR coverage
+
+| ID | Description | Phase | File |
+|---|---|---|---|
+| AC-I18N-CREATE-1 | EN composer: title="New event" / fields labels all EN | P2 | `EventComposer.test.tsx` |
+| AC-I18N-CREATE-2 | ZH composer: title="新建事件" / fields labels all ZH | P2 | `EventComposer.test.tsx` |
+| AC-I18N-CREATE-3 | `STR_EVENT_COMPOSER` has both `en` and `zh` for every key (compile-time guard via assertBilingual helper) | P1 | `EventComposer.test.tsx` |
+
+#### AC-DOCS — Doc lift compliance
+
+| ID | Description | Phase | File |
+|---|---|---|---|
+| AC-DOCS-1 | `design.md` §15.2 #8 has HC8 lift footnote | P5 | manual doc-grep test (P5 only) |
+| AC-DOCS-2 | `design.md` §16 exists and references the carve-out doc | P5 | manual doc-grep |
+| AC-DOCS-3 | `dev_log.md` has "Bugfix-Extension Lineage — feature row" or equivalent block referencing HC8 lift | P5 | manual doc-grep |
+
+#### AC-REGISTRY-CREATE — Storage registry
+
+| ID | Description | Phase | File |
+|---|---|---|---|
+| AC-REGISTRY-CREATE-1 | `PREF_REGISTRY.xai_calendar_events` exists with `default: {}`, `codec: "json"`, `owner: "xai-web-calendar"`, `schemaVersion: 1`, `category: "module"` | P1 | `packages/plugin-web-storage/src/__tests__/registry.test.ts` |
+| AC-REGISTRY-CREATE-2 | Default value `{}` round-trips via setItem/getItem with no data corruption | P1 | `packages/plugin-web-storage/src/__tests__/registry.test.ts` |
+
+#### AC-BARREL-CREATE — index.ts public surface
+
+| ID | Description | Phase | File |
+|---|---|---|---|
+| AC-BARREL-CREATE-1 | `index.ts` exports `EventComposer` | P2 | `index-barrel.test.ts` |
+| AC-BARREL-CREATE-2 | `index.ts` exports `useUserCalEvents` + type `UserCalEventsApi` | P1 | `index-barrel.test.ts` |
+| AC-BARREL-CREATE-3 | `index.ts` exports types `UserCalEvent`, `RecurrenceRule`, `RecurrenceKind`, `EventColorPreset` | P1 | `index-barrel.test.ts` |
+| AC-BARREL-CREATE-4 | `index.ts` exports `expandRecurrence`, `mergeEventsForMonth`, `mergeEventsForWindow` | P1 | `index-barrel.test.ts` |
+| AC-BARREL-CREATE-5 | `index.ts` exports `createEvent`, `updateEvent`, `deleteEvent`, `getEvent`, `listEvents` | P1 | `index-barrel.test.ts` |
+| AC-BARREL-CREATE-6 | `EventComposerProps` exported as a type | P2 | `index-barrel.test.ts` |
+
+#### AC-TYPE-CREATE — type-level checks
+
+| ID | Description | Phase | File |
+|---|---|---|---|
+| AC-TYPE-CREATE-1 | `UserCalEvent.id` is `string` (not `number`) | P1 | `types.test-d.ts` |
+| AC-TYPE-CREATE-2 | `RecurrenceRule.kind` is exact union `"daily" \| "weekly"` | P1 | `types.test-d.ts` |
+| AC-TYPE-CREATE-3 | `EventColorPreset` is exact union `"mint" \| "amber" \| "blue" \| "violet" \| "rose"` | P1 | `types.test-d.ts` |
+| AC-TYPE-CREATE-4 | `UserCalEventsApi.create` returns `UserCalEvent` (not `void`) | P1 | `types.test-d.ts` |
+
+#### AC-TOKENS-CREATE — Style tokens
+
+| ID | Description | Phase | File |
+|---|---|---|---|
+| AC-TOKENS-CREATE-1 | `styles.css` `.cal-event.ev-rose` + `.cal-event-block.ev-rose` rules use `oklch(... 350)` (hue 350) | P2 | `styles.css.tokens.test.ts` |
+| AC-TOKENS-CREATE-2 | Dark-theme `[data-theme="dark"] .cal-event.ev-rose` + `.cal-event-block.ev-rose` overrides present | P2 | `styles.css.tokens.test.ts` |
+| AC-TOKENS-CREATE-3 | `.event-composer` rule uses only existing CSS vars (no new tokens) — assertion: grep for hex literals returns zero in composer block | P2 | `styles.css.tokens.test.ts` |
+
+#### AC-EVENT-7 (extended again) — listen-only invariant across all new files
+
+| ID | Description | Phase | File |
+|---|---|---|---|
+| AC-EVENT-7-CREATE | grep `emitWebEvent` across NEW files (`EventComposer.tsx`, `EmptyStateHint.tsx`, all `internal/eventStore/*.ts`, `internal/strings.ts`) → zero matches | P2/P3 | `events.test.ts` (extend file list again) |
+
+### 9.3 Perf budget test — PB-CREATE-1
+
+```ts
+// PB-CREATE-1: Viewport recompute ≤ 16ms p95 with 100 user events
+// across 5 recurring + 95 single. Retry once if flaky.
+import { it, expect, beforeAll } from "vitest";
+import { render, act } from "@testing-library/react";
+import { CalendarModule } from "../CalendarModule.js";
+import { setPref } from "@repo/plugin-web-storage";
+import type { UserCalEvent } from "../internal/eventStore/types.js";
+
+const ITER = 100;
+const P95_MAX_MS = 16;
+
+let durations: number[] = [];
+
+function makeFixture(): Record<string, UserCalEvent> {
+  const store: Record<string, UserCalEvent> = {};
+  for (let i = 0; i < 95; i++) {
+    const id = `evt-${i}`;
+    store[id] = {
+      id,
+      title: `Event ${i}`,
+      startISO: `2026-05-${String((i % 28) + 1).padStart(2, "0")}T09:00`,
+      endISO:   `2026-05-${String((i % 28) + 1).padStart(2, "0")}T10:00`,
+      colorPreset: "mint",
+      recurrence: null,
+      createdAt: "2026-05-22T00:00:00.000Z",
+      updatedAt: "2026-05-22T00:00:00.000Z",
+    };
+  }
+  // 5 recurring events
+  for (let i = 0; i < 5; i++) {
+    const id = `evt-rec-${i}`;
+    store[id] = {
+      id,
+      title: `Recurring ${i}`,
+      startISO: "2026-05-15T08:00",
+      endISO:   "2026-05-15T09:00",
+      colorPreset: "blue",
+      recurrence: { kind: "weekly" },
+      createdAt: "2026-05-15T00:00:00.000Z",
+      updatedAt: "2026-05-15T00:00:00.000Z",
+    };
+  }
+  return store;
+}
+
+beforeAll(async () => {
+  setPref("xai_calendar_events", makeFixture());
+  const { rerender } = render(<CalendarModule lang="en" />);
+  // Warm-up
+  for (let i = 0; i < 5; i++) {
+    await act(async () => { rerender(<CalendarModule lang="en" />); });
+  }
+  durations = [];
+  for (let i = 0; i < ITER; i++) {
+    const start = performance.now();
+    await act(async () => { rerender(<CalendarModule lang="en" />); });
+    durations.push(performance.now() - start);
+  }
+});
+
+it(`PB-CREATE-1 — viewport recompute p95 < ${P95_MAX_MS}ms over ${ITER} iterations with 100 user events`, () => {
+  const sorted = [...durations].sort((a, b) => a - b);
+  const p95 = sorted[Math.ceil(0.95 * sorted.length) - 1] ?? 0;
+  console.info(`[PB-CREATE-1] viewport p95=${p95.toFixed(3)}ms (budget: ${P95_MAX_MS}ms)`);
+  expect(p95).toBeLessThan(P95_MAX_MS);
+});
+```
+
+### 9.4 Cross-vendor manual smoke (extension — XVENDOR-CREATE-*)
+
+| ID | Browser | Steps | Expected |
+|---|---|---|---|
+| XVENDOR-CREATE-1 | Safari 17+ | Open `/app/calendar`. Click `+`. Fill title + date + times. Save. | Composer closes; event chip visible in Month view at the chosen date. |
+| XVENDOR-CREATE-2 | Chrome 120+ | Same as 1. | Same result. |
+| XVENDOR-CREATE-3 | Firefox 121+ | Same as 1. | Same result. |
+| XVENDOR-CREATE-4 | All 3 | Reload page after saving. | Event preserved across reload (HC4). |
+| XVENDOR-CREATE-5 | Chrome 120+ | Create event with `recurrence: "daily"`. Switch to Week + Day views. | Event appears on each day in the visible window. |
+| XVENDOR-CREATE-6 | All 3 | Click existing user event → composer opens pre-filled. Change title → Save. | Chip text updates. |
+
+**Codex cold-read scenarios** (5 items):
+
+1. Confirm `expandRecurrence` algorithm correctness: daily/weekly produce the expected count of instances inside the window, never exceed `maxInstances`.
+2. Confirm `mergeEventsForViewport` purity (no side-effects; same inputs → same output; never mutates inputs).
+3. Confirm persistence round-trip: `usePref<"xai_calendar_events">` correctly preserves `Record<string, UserCalEvent>` shape across reload, including the recurrence rule.
+4. Confirm DST × recurrence: a 09:30 daily event displays correctly on spring-forward day Mar 8 2026 (the event renders at 09:30 in the DST-23-row column, NOT shifted to 10:30).
+5. Confirm HC8 lift annotation completeness — `design.md` §15.2 #8 footnote + new §16 + `dev_log.md` extension block all present and cross-referenced.
+
+XVENDOR-CREATE-1..6 + Codex 5 cold-read items may be DEFERRED at ship-time per ADR-0008 §S3 24h-evidence carve-out + ADR-0009 §D2-G2 precedent (must be recorded in `dev_log.md` Verify Notes).
+
+### 9.5 Quality gates per phase (extension)
+
+#### P1 exit — data layer + types + EventStore + persistence + tests
+
+- `pnpm --filter @repo/plugin-web-calendar test` — ALL 197 SHIPPED + P1 unit tests green (~244 cases).
+- `pnpm --filter @repo/plugin-web-storage test` — green (new `xai_calendar_events` entry).
+- `pnpm --filter @repo/plugin-web-calendar check-types` — 0.
+- `pnpm --filter @repo/plugin-web-calendar lint --max-warnings 0` — 0.
+- AC-RECUR-8 + AC-DELETE-4 + AC-VALIDATE-1..7 + AC-REGISTRY-CREATE-1..2 + AC-TYPE-CREATE-1..4 + AC-BARREL-CREATE-2..5 + (events.test grep extended to internal/eventStore/*.ts) green.
+- Commit: `feat(xai-web-calendar): P1 event-create data layer + types + EventStore + persistence + tests (xai-web-calendar-event-create)`
+
+#### P2 exit — EventComposer dialog + STR + tests + styles
+
+- All P1 gates + composer tests green (~262 cases).
+- AC-DIALOG-1..7 + AC-CREATE-2 + AC-CREATE-6 + AC-EDIT-3 + AC-DELETE-1 + AC-I18N-CREATE-1..3 + AC-TOKENS-CREATE-1..3 + AC-BARREL-CREATE-1,6 green.
+- Same-vendor smoke (Chrome): composer opens / saves / cancels / deletes cleanly.
+- Commit: `feat(xai-web-calendar): P2 EventComposer dialog + bilingual STR + styles (xai-web-calendar-event-create)`
+
+#### P3 exit — Toolbar wire + Month integration + tests
+
+- All P2 gates + integration tests green (~282 cases).
+- AC-CREATE-1,3,4,5 + AC-EDIT-1,2 + AC-DELETE-2,3 + AC-PERSIST-CREATE-1..3 + AC-EMPTY-1..3 + AC-FIXTURE-CREATE-1..4 + AC-BANNER-CREATE-1..2 + AC-OVERLAP-4 green.
+- `pnpm --filter @repo/web test` — 106 green (no regressions).
+- HC1 + HC4 + HC6 land at this phase.
+- Commit: `feat(xai-web-calendar): P3 toolbar+ wire + Month integration + fixture badge + empty-state (xai-web-calendar-event-create)`
+
+#### P4 exit — Week/Day integration + recurrence + DST × recurrence + perf
+
+- All P3 gates + Week/Day + recurrence + DST tests green (~302 cases).
+- AC-EDIT-4..5 + AC-RECUR-1..7 + AC-OVERLAP-1..3 + AC-DST-RECUR-1..2 + PB-CREATE-1 green.
+- HC2 + HC3 + HC5 + HC7 land at this phase.
+- **Codex cold-read mandatory** — 5 items dispatched.
+- Commit: `feat(xai-web-calendar): P4 Week+Day integration + recurrence expansion + DST x recurrence (xai-web-calendar-event-create)`
+
+#### P5 exit — HC8 lift + docs sync + cross-vendor + final polish
+
+- All P4 gates + ~5 polish tests green (~307 cases total).
+- AC-DOCS-1..3 manual doc-grep passes.
+- design.md §15.2 #8 footnote + §16 present (P5 verifies — they were authored at feature-plan time).
+- api.md §11 + test.md §9 + dev_log appendix updated to reflect final delta.
+- `docs/PLUGIN_MAP.md` row #12 note appended: `(Extension 2026-05-27 — Event CRUD, HC8 lifted per ADR-0010 §D4 carve-out)`.
+- XVENDOR-CREATE-1..6 recorded OR formally DEFERRED.
+- Codex 5 cold-read items recorded OR DEFERRED.
+- `manifest.json` stays `Production`.
+- Commit: `docs(xai-web-calendar): P5 HC8 lift annotation + design/api/test/dev_log sync + PLUGIN_MAP (xai-web-calendar-event-create)` + ship-prep commit per CLAUDE.md.
+
+### 9.6 Verify checklist (extension — used by `feature-verify`)
+
+1. All 197 SHIPPED calendar tests still green.
+2. All 88 SHIPPED storage tests still green.
+3. All 106 SHIPPED web tests still green.
+4. All ~110 new extension tests green.
+5. PB-CREATE-1 perf budget green; retried once if flaky.
+6. AC-EVENT-7 + AC-EVENT-7-EXT + AC-EVENT-7-CREATE all confirm zero `emitWebEvent` imports across all new files.
+7. AC-TOKENS-CREATE-1..3 byte-parity with `tokens.css` family + no hex literals in composer styles.
+8. AC-RECUR-1..8 confirms recurrence semantics across daily/weekly × Month/Week/Day.
+9. AC-DST-RECUR-1..2 confirms 09:30 events stable across spring-forward / fall-back days.
+10. AC-PERSIST-CREATE-1..3 + AC-REGISTRY-CREATE-1..2 confirm storage round-trip.
+11. AC-DIALOG-1..7 confirms native `<dialog>` cross-vendor compatible behavior.
+12. AC-VALIDATE-1..7 confirms validation surfaces inline errors.
+13. AC-FIXTURE-CREATE-1..4 + AC-BANNER-CREATE-1..2 confirm Q9-E + Q10-B disposition.
+14. AC-DOCS-1..3 confirms HC8 lift documentation completeness.
+15. Lint passes with `--max-warnings 0` across all touched workspaces.
+16. Commit hygiene: one commit per phase, Why/What/Scope/Risk/Docs/Tests.
+17. Cross-vendor XVENDOR-CREATE-1..6 + Codex 5 cold-read items recorded OR formally DEFERRED per ADR-0008 carve-out + ADR-0009 §D2-G2 precedent.
+
