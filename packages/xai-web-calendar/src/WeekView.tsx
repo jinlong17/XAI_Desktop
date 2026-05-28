@@ -8,12 +8,14 @@
  * column gets data-active="true").
  */
 
+import { useMemo } from "react";
 import type { JSX } from "react";
 import type { Lang } from "@repo/plugin-web-tokens";
 import type { CalEventsByDay } from "./internal/sampleEvents.js";
 import type { UserCalEvent } from "./internal/eventStore/types.js";
 import { weekWindowFor } from "./internal/weekWindow.js";
 import { parseDateKey } from "./internal/parseDateKey.js";
+import { mergeEventsForWindow } from "./internal/eventStore/mergeEventsForViewport.js";
 import { TimeGrid } from "./TimeGrid.js";
 
 export interface WeekViewProps {
@@ -35,30 +37,52 @@ export interface WeekViewProps {
 const DOW_NAMES_EN = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"] as const;
 const DOW_NAMES_ZH = ["日", "一", "二", "三", "四", "五", "六"] as const;
 
-export function WeekView({ activeDate, weekStart, events, todayKey, lang }: WeekViewProps): JSX.Element {
-  // userEvents/onUserEventClick accepted but unused in P3; P4 wires them
-  // through the merge layer into TimeGrid/EventBlock.
+export function WeekView({
+  activeDate,
+  weekStart,
+  events,
+  todayKey,
+  lang,
+  userEvents = {},
+  onUserEventClick,
+}: WeekViewProps): JSX.Element {
   const dayKeys = weekWindowFor(activeDate, weekStart);
   const isZh = lang === "zh";
+  const activeMonth = parseDateKey(activeDate);
+  const windowStartKey = dayKeys[0] ?? activeDate;
+  const windowEndKey = dayKeys[dayKeys.length - 1] ?? activeDate;
 
   // Build column headers: e.g. "Mon 18" or "一 18"
   const dayLabels = dayKeys.map((dk) => {
-    const { day } = parseDateKey(dk);
-    const d = new Date(Date.UTC(parseDateKey(dk).year, parseDateKey(dk).month - 1, day));
+    const parsed = parseDateKey(dk);
+    const d = new Date(Date.UTC(parsed.year, parsed.month - 1, parsed.day));
     const dow = d.getUTCDay(); // 0=Sun
     const name = isZh ? DOW_NAMES_ZH[dow] : DOW_NAMES_EN[dow];
-    return `${name ?? ""} ${day}`;
+    return `${name ?? ""} ${parsed.day}`;
   });
+
+  const mergedEventsByDateKey = useMemo(
+    () =>
+      mergeEventsForWindow(
+        events,
+        { year: activeMonth.year, month: activeMonth.month },
+        userEvents,
+        windowStartKey,
+        windowEndKey,
+      ),
+    [events, activeMonth.year, activeMonth.month, userEvents, windowStartKey, windowEndKey],
+  );
 
   return (
     <TimeGrid
       columns={7}
       dayKeys={dayKeys}
       dayLabels={dayLabels}
-      events={events}
+      eventsByDateKey={mergedEventsByDateKey}
       activeDate={activeDate}
       todayKey={todayKey}
       lang={lang === "zh" ? "zh" : "en"}
+      onUserEventClick={onUserEventClick}
     />
   );
 }

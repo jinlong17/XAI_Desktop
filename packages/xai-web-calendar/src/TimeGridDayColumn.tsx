@@ -23,6 +23,7 @@ interface TimeGridDayColumnProps {
   hourLabels: HourLabel[];
   lang: "en" | "zh";
   nowLineTopPx: number | null; // null means no now-line for this column
+  onUserEventClick?: (userId: string) => void;
 }
 
 export function TimeGridDayColumn({
@@ -33,6 +34,7 @@ export function TimeGridDayColumn({
   hourLabels,
   lang,
   nowLineTopPx,
+  onUserEventClick,
 }: TimeGridDayColumnProps): JSX.Element {
   const timedBlocks = blocks.filter((b) => !b.allDay);
 
@@ -54,6 +56,7 @@ export function TimeGridDayColumn({
           key={i}
           block={block}
           lang={lang}
+          onUserEventClick={onUserEventClick}
         />
       ))}
 
