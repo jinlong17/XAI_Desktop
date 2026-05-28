@@ -7,13 +7,13 @@
 | Workflow | FEATURE_DEV |
 | Target | desktop-basic-macos-menu-config-store |
 | Title | Phase 1 Basic macOS App Menu and Local Config Store |
-| Current Phase | FEATURE_VERIFY |
-| Status | READY_TO_SHIP |
-| Suggested Next | ship |
+| Current Phase | SHIP |
+| Status | SHIPPED |
+| Suggested Next | workflow complete |
 | Automation Mode | B-Codex |
 | Verify Cross-vendor | yes |
-| Executor | feature-verify (Codex, gpt-5.4 inline) |
-| Updated | 2026-05-27 17:26 PDT |
+| Executor | ship (Codex, gpt-5.3-codex) |
+| Updated | 2026-05-27 23:43 PDT |
 | Risks | Residual manual gate: native menu interaction, `Reveal Config Folder` / `Reset Main Window State`, and relaunch behavior across real monitor topologies still need real macOS verification before ship. |
 
 ## Phase Plan
@@ -85,3 +85,4 @@ Automated verification run:
 | 2026-05-27 17:16 PDT | feature-verify (Codex, gpt-5.4 inline) | BLOCKED — reviewed commits `a7641d36`, `2f97c554`, `cfa21846`, and `92a95793`; reran the required build/test commands; confirmed native menu install and tray bootstrap removal on the Phase 1 startup path; found a restore-contract bug where physical geometry is persisted and later restored as logical geometry, plus missing config-store tests promised by `docs/test.md`. Real macOS menu/restore verification remains pending after code fixes. | `a7641d36`, `2f97c554`, `cfa21846`, `92a95793` | feature-build |
 | 2026-05-27 17:22 PDT | feature-auto-build (Codex, gpt-5.3-codex inline) | BLOCKED repair complete (Phase 2/3 contract fix): normalized geometry contract to logical-unit capture + logical restore (no physical/logical mix), made monitor work-area normalization unit-consistent, added mixed-scale conservative fallback (drop persisted x/y), and added config-store contract tests required by `docs/test.md` (missing file defaults, save/load round-trip, corrupt JSON fallback, unsupported `schemaVersion` fallback). Tests run: `cargo test --manifest-path apps/desktop/src-tauri/Cargo.toml` (58 passed), `pnpm --filter @repo/web build` (pass), `pnpm --filter desktop tauri build --debug --bundles app` (pass; `X Desktop.app` produced). | `ce026ca3` fix(desktop): repair window config geometry contract | feature-verify |
 | 2026-05-27 17:26 PDT | feature-verify (Codex, gpt-5.4 inline) | PASS — reviewed commits `a7641d36`, `2f97c554`, `cfa21846`, `92a95793`, `ce026ca3`, and `8bb5bb26`; reran the required verification commands; confirmed native menu installation on the default startup path, confirmed tray/status bootstrap remains inactive for Phase 1 startup, and verified the repaired logical-unit geometry contract plus config-store fallback coverage promised by `docs/test.md`. Residual ship gate remains real-macOS manual verification of menu interaction, reveal/reset actions, and relaunch behavior across monitor topologies. | `a7641d36`, `2f97c554`, `cfa21846`, `92a95793`, `ce026ca3`, `8bb5bb26` | ship |
+| 2026-05-27 23:43 PDT | ship (Codex, gpt-5.3-codex) | Ship gate passed: validated `READY_TO_SHIP` status, confirmed reset-window-state repair `5cc9cbfc` is present on `origin/dev`, and marked this feature as SHIPPED without touching unrelated stashes or already shipped feature states. Residual real-macOS manual checks remain documented as post-ship risk notes. | Reused: `a7641d36`, `2f97c554`, `cfa21846`, `ce026ca3`, `5cc9cbfc`; Created: ship status writeback commit | workflow complete |
