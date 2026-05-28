@@ -1,5 +1,5 @@
 use std::fs;
-use std::path::PathBuf;
+use std::path::{Path, PathBuf};
 use std::time::{SystemTime, UNIX_EPOCH};
 
 use serde::{Deserialize, Serialize};
@@ -44,6 +44,7 @@ struct MonitorBounds {
     y: f64,
     width: f64,
     height: f64,
+    scale_factor: f64,
 }
 
 pub fn default_main_window_state() -> MainWindowStateV1 {
@@ -83,6 +84,10 @@ fn config_file_path<R: Runtime>(app: &AppHandle<R>) -> AppResult<PathBuf> {
 
 pub fn load_config_or_default<R: Runtime>(app: &AppHandle<R>) -> AppResult<DesktopAppConfigV1> {
     let config_path = config_file_path(app)?;
+    load_config_from_path(&config_path)
+}
+
+fn load_config_from_path(config_path: &Path) -> AppResult<DesktopAppConfigV1> {
     if !config_path.exists() {
         return Ok(default_config());
     }
@@ -113,8 +118,12 @@ pub fn load_config_or_default<R: Runtime>(app: &AppHandle<R>) -> AppResult<Deskt
 }
 
 pub fn save_config<R: Runtime>(app: &AppHandle<R>, mut config: DesktopAppConfigV1) -> AppResult<()> {
-    config.updated_at = current_timestamp_tag();
     let config_path = config_file_path(app)?;
+    save_config_to_path(&config_path, &mut config)
+}
+
+fn save_config_to_path(config_path: &Path, config: &mut DesktopAppConfigV1) -> AppResult<()> {
+    config.updated_at = current_timestamp_tag();
     let temp_path = config_path.with_extension("json.tmp");
     let bytes = serde_json::to_vec_pretty(&config)
         .map_err(|error| AppError::Internal(format!("failed to serialize app config: {error}")))?;
@@ -207,18 +216,25 @@ pub fn attach_main_window_persistence<R: Runtime>(window: &WebviewWindow<R>, app
 }
 
 fn capture_main_window_state<R: Runtime>(window: &WebviewWindow<R>) -> AppResult<MainWindowStateV1> {
-    let size = window
+    let physical_size = window
         .outer_size()
         .map_err(|error| AppError::Internal(format!("failed to read main window size: {error}")))?;
-    let position = window.outer_position().ok();
+    let scale_factor = window
+        .scale_factor()
+        .map_err(|error| AppError::Internal(format!("failed to read main window scale factor: {error}")))?;
+    let logical_size = tauri::LogicalSize::<f64>::from_physical(physical_size, scale_factor);
+    let logical_position = window
+        .outer_position()
+        .ok()
+        .map(|point| tauri::LogicalPosition::<f64>::from_physical(point, scale_factor));
     let maximized = window.is_maximized().unwrap_or(false);
     let fullscreen = window.is_fullscreen().unwrap_or(false);
 
     Ok(MainWindowStateV1 {
-        width: size.width as f64,
-        height: size.height as f64,
-        x: position.map(|point| point.x as f64),
-        y: position.map(|point| point.y as f64),
+        width: logical_size.width,
+        height: logical_size.height,
+        x: logical_position.map(|point| point.x),
+        y: logical_position.map(|point| point.y),
         maximized,
         fullscreen,
     })
@@ -252,6 +268,17 @@ fn normalize_main_window_state(
         });
     }
 
+    if has_mixed_scale_factors(monitors) {
+        return Some(MainWindowStateV1 {
+            width,
+            height,
+            x: None,
+            y: None,
+            maximized,
+            fullscreen,
+        });
+    }
+
     let (x, y) = match (requested.x, requested.y) {
         (Some(x), Some(y)) => fit_position_into_monitors(x, y, width, height, monitors)?,
         _ => (None, None),
@@ -265,6 +292,17 @@ fn normalize_main_window_state(
         maximized,
         fullscreen,
     })
+}
+
+fn has_mixed_scale_factors(monitors: &[MonitorBounds]) -> bool {
+    if monitors.len() < 2 {
+        return false;
+    }
+    let baseline = monitors[0].scale_factor;
+    monitors
+        .iter()
+        .skip(1)
+        .any(|monitor| (monitor.scale_factor - baseline).abs() > 0.01)
 }
 
 fn fit_position_into_monitors(
@@ -306,11 +344,16 @@ fn collect_monitor_bounds<R: Runtime>(window: &WebviewWindow<R>) -> AppResult<Ve
 
     for monitor in monitors {
         let work_area = monitor.work_area();
+        let scale_factor = monitor.scale_factor();
+        let logical_position =
+            tauri::LogicalPosition::<f64>::from_physical(work_area.position, scale_factor);
+        let logical_size = tauri::LogicalSize::<f64>::from_physical(work_area.size, scale_factor);
         bounds.push(MonitorBounds {
-            x: work_area.position.x as f64,
-            y: work_area.position.y as f64,
-            width: work_area.size.width as f64 / monitor.scale_factor(),
-            height: work_area.size.height as f64 / monitor.scale_factor(),
+            x: logical_position.x,
+            y: logical_position.y,
+            width: logical_size.width,
+            height: logical_size.height,
+            scale_factor,
         });
     }
 
@@ -327,6 +370,8 @@ fn current_timestamp_tag() -> String {
 #[cfg(test)]
 mod tests {
     use super::*;
+    use std::env;
+    use std::process;
 
     fn monitor(x: f64, y: f64, width: f64, height: f64) -> MonitorBounds {
         MonitorBounds {
@@ -334,6 +379,17 @@ mod tests {
             y,
             width,
             height,
+            scale_factor: 2.0,
+        }
+    }
+
+    fn monitor_with_scale(x: f64, y: f64, width: f64, height: f64, scale_factor: f64) -> MonitorBounds {
+        MonitorBounds {
+            x,
+            y,
+            width,
+            height,
+            scale_factor,
         }
     }
 
@@ -388,5 +444,117 @@ mod tests {
         let output = normalize_main_window_state(&input, &[monitor(0.0, 0.0, 1920.0, 1080.0)]).unwrap();
         assert_eq!(output.x, None);
         assert_eq!(output.y, None);
+    }
+
+    #[test]
+    fn normalize_drops_position_on_mixed_scale_monitors() {
+        let input = MainWindowStateV1 {
+            width: 1280.0,
+            height: 720.0,
+            x: Some(640.0),
+            y: Some(360.0),
+            maximized: false,
+            fullscreen: false,
+        };
+        let output = normalize_main_window_state(
+            &input,
+            &[
+                monitor_with_scale(0.0, 0.0, 1728.0, 1117.0, 2.0),
+                monitor_with_scale(1728.0, 0.0, 1920.0, 1040.0, 1.0),
+            ],
+        )
+        .unwrap();
+        assert_eq!(output.x, None);
+        assert_eq!(output.y, None);
+    }
+
+    fn unique_test_path(test_name: &str) -> PathBuf {
+        let now = SystemTime::now()
+            .duration_since(UNIX_EPOCH)
+            .unwrap_or_default()
+            .as_nanos();
+        env::temp_dir()
+            .join(format!("xai-desktop-app-config-{test_name}-{}-{now}", process::id()))
+            .join(CONFIG_FILENAME)
+    }
+
+    #[test]
+    fn load_defaults_when_file_absent() {
+        let path = unique_test_path("missing");
+        let loaded = load_config_from_path(&path).expect("missing file should load defaults");
+        assert_eq!(loaded.schema_version, SCHEMA_VERSION_V1);
+        assert_eq!(loaded.window.main, default_main_window_state());
+    }
+
+    #[test]
+    fn save_and_load_round_trip_config() {
+        let path = unique_test_path("roundtrip");
+        let dir = path.parent().expect("config file should have parent dir");
+        fs::create_dir_all(dir).expect("test dir should be creatable");
+
+        let mut config = DesktopAppConfigV1 {
+            schema_version: SCHEMA_VERSION_V1,
+            updated_at: "unix-seconds:0".to_string(),
+            window: DesktopWindowConfigV1 {
+                main: MainWindowStateV1 {
+                    width: 1440.0,
+                    height: 900.0,
+                    x: Some(120.0),
+                    y: Some(88.0),
+                    maximized: true,
+                    fullscreen: false,
+                },
+            },
+        };
+
+        save_config_to_path(&path, &mut config).expect("save should succeed");
+        let loaded = load_config_from_path(&path).expect("load should succeed");
+        assert_eq!(loaded.schema_version, SCHEMA_VERSION_V1);
+        assert_eq!(loaded.window.main, config.window.main);
+        assert!(loaded.updated_at.starts_with("unix-seconds:"));
+
+        let _ = fs::remove_dir_all(dir);
+    }
+
+    #[test]
+    fn corrupt_json_falls_back_to_defaults() {
+        let path = unique_test_path("corrupt");
+        let dir = path.parent().expect("config file should have parent dir");
+        fs::create_dir_all(dir).expect("test dir should be creatable");
+        fs::write(&path, "{not-valid-json").expect("corrupt file should be writable");
+
+        let loaded = load_config_from_path(&path).expect("corrupt config should still resolve");
+        assert_eq!(loaded.schema_version, SCHEMA_VERSION_V1);
+        assert_eq!(loaded.window.main, default_main_window_state());
+
+        let _ = fs::remove_dir_all(dir);
+    }
+
+    #[test]
+    fn unsupported_schema_falls_back_to_defaults() {
+        let path = unique_test_path("schema");
+        let dir = path.parent().expect("config file should have parent dir");
+        fs::create_dir_all(dir).expect("test dir should be creatable");
+        let payload = r#"{
+  "schemaVersion": 999,
+  "updatedAt": "unix-seconds:0",
+  "window": {
+    "main": {
+      "width": 9999,
+      "height": 9999,
+      "x": 1,
+      "y": 1,
+      "maximized": true,
+      "fullscreen": true
+    }
+  }
+}"#;
+        fs::write(&path, payload).expect("schema test payload should be writable");
+
+        let loaded = load_config_from_path(&path).expect("unsupported schema should still resolve");
+        assert_eq!(loaded.schema_version, SCHEMA_VERSION_V1);
+        assert_eq!(loaded.window.main, default_main_window_state());
+
+        let _ = fs::remove_dir_all(dir);
     }
 }

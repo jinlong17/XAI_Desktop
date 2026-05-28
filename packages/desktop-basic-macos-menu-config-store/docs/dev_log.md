@@ -13,8 +13,8 @@
 | Automation Mode | B-Codex |
 | Verify Cross-vendor | yes |
 | Executor | feature-auto-build (Codex, gpt-5.3-codex inline) |
-| Updated | 2026-05-27 20:52 PDT |
-| Risks | Native menu behavior still needs real macOS verification; leaving `install_sync_menubar(...)` active would leak forbidden Phase 2 tray/status scope into Phase 1; persisted window coordinates need conservative validation so external-display changes do not restore unusable bounds. |
+| Updated | 2026-05-27 17:22 PDT |
+| Risks | Residual manual gate: native menu interaction, `Reveal Config Folder` / `Reset Main Window State`, and relaunch behavior across real monitor topologies still need real macOS verification before ship. |
 
 ## Phase Plan
 
@@ -56,6 +56,20 @@ Recommendations for `feature-build`:
 - Keep overlay/control/grid code on an inactive boundary only: no default startup hooks, no capability widening, and no new dependence on `control`/`grid_*` labels for menu or config behavior.
 - Record one deterministic build-time proof alongside Rust tests: `cargo test`, `pnpm --filter @repo/web build`, `pnpm --filter desktop tauri build --debug --bundles app`, plus explicit real-macOS residual checks for menu behavior and restore semantics.
 
+## Verification Notes
+
+**Verdict: BLOCKED** — 2 blockers, 1 residual manual gate.
+
+- Blocker 1 — `apps/desktop/src-tauri/src/app_config.rs` persists `outer_size()` / `outer_position()` values from Tauri, which are physical pixels, then restores them with `LogicalSize` / `LogicalPosition`. Tauri runtime types confirm `outer_position -> PhysicalPosition<i32>`, `outer_size -> PhysicalSize<u32>`, and `Monitor::work_area()` is physical. This breaks the feature's conservative restore contract on Retina or mixed-scale displays because saved physical geometry is reapplied as logical geometry.
+- Blocker 2 — `packages/desktop-basic-macos-menu-config-store/docs/test.md` requires config-store coverage for missing-file defaults, save/load round-trip, corrupt JSON fallback, and unsupported `schemaVersion` fallback, but the shipped Rust tests only cover menu top-level labels/help IDs and geometry normalization helpers. The documented verification contract therefore does not match the implementation evidence yet.
+- Residual manual gate — native menu interaction, `Reveal Config Folder` / `Reset Main Window State`, and relaunch behavior across real monitor topologies still need human verification on macOS hardware after the blockers are fixed.
+
+Automated verification run:
+
+- `cargo test --manifest-path apps/desktop/src-tauri/Cargo.toml` — pass (53/53)
+- `pnpm --filter @repo/web build` — pass
+- `pnpm --filter desktop tauri build --debug --bundles app` — pass (`X Desktop.app` produced)
+
 ## Work Log
 
 | Timestamp | Executor | Action | Commits | Next |
@@ -65,3 +79,5 @@ Recommendations for `feature-build`:
 | 2026-05-27 20:35 PDT | feature-auto-build (Codex, gpt-5.3-codex inline) | Phase 1 implementation complete: added Rust-owned native app menu (`app`, `File`, `Edit`, `View`, `Window`, `Help`) and switched startup to install this menu in setup; removed active startup dependency on `install_sync_menubar(...)` while keeping tray/status code deferred and inactive on Phase 1 path. | `a7641d36` feat(desktop): Phase 1 — native app menu foundation | feature-auto-build (Phase 2) |
 | 2026-05-27 20:42 PDT | feature-auto-build (Codex, gpt-5.3-codex inline) | Phase 2 implementation complete: added host-owned versioned JSON config store at `app_config_dir/app-config.json`, startup restore/apply for main-window state, centralized bounds normalization/clamping against monitor work areas, and lifecycle persistence hooks on move/resize/scale/close/destroy events. | `2f97c554` feat(desktop): Phase 2 — host config store persistence | feature-auto-build (Phase 3) |
 | 2026-05-27 20:52 PDT | feature-auto-build (Codex, gpt-5.3-codex inline) | Phase 3 implementation complete: added practical help actions (`Reveal Config Folder`, `Reset Main Window State`), retained scope exclusions (no tray/status rollout, no notifications/hotkeys/updater, no SQLite/sync/web-pref migration), and recorded full build evidence. Real macOS manual checks remain deferred to verify due non-interactive session. Tests run: `cargo test --manifest-path apps/desktop/src-tauri/Cargo.toml` (53 passed), `pnpm --filter @repo/web build` (pass), `pnpm --filter desktop tauri build --debug --bundles app` (pass; app bundle produced). | `cfa21846` feat(desktop): Phase 3 — menu/config integration evidence | feature-verify |
+| 2026-05-27 17:16 PDT | feature-verify (Codex, gpt-5.4 inline) | BLOCKED — reviewed commits `a7641d36`, `2f97c554`, `cfa21846`, and `92a95793`; reran the required build/test commands; confirmed native menu install and tray bootstrap removal on the Phase 1 startup path; found a restore-contract bug where physical geometry is persisted and later restored as logical geometry, plus missing config-store tests promised by `docs/test.md`. Real macOS menu/restore verification remains pending after code fixes. | `a7641d36`, `2f97c554`, `cfa21846`, `92a95793` | feature-build |
+| 2026-05-27 17:22 PDT | feature-auto-build (Codex, gpt-5.3-codex inline) | BLOCKED repair complete (Phase 2/3 contract fix): normalized geometry contract to logical-unit capture + logical restore (no physical/logical mix), made monitor work-area normalization unit-consistent, added mixed-scale conservative fallback (drop persisted x/y), and added config-store contract tests required by `docs/test.md` (missing file defaults, save/load round-trip, corrupt JSON fallback, unsupported `schemaVersion` fallback). Tests run: `cargo test --manifest-path apps/desktop/src-tauri/Cargo.toml` (58 passed), `pnpm --filter @repo/web build` (pass), `pnpm --filter desktop tauri build --debug --bundles app` (pass; `X Desktop.app` produced). | (pending) | feature-verify |
