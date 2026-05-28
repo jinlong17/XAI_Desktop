@@ -187,3 +187,131 @@ Verify before commit: `grep -E "\.widget-?(shell|content)?\s*\{" packages/xai-we
 ## §S11. Test ACs
 
 See `test.md` §2.
+
+---
+
+## §E — Extension API: Stickies create + delete (xai-web-dashboard-stickies-create, 2026-05-28)
+
+> **APPEND extension — SHIPPED §S1-§S11 contract above is unchanged.** Public surface (§S1) stays `dashboardWidgetRegistrations`-only; everything below is INTERNAL to the package (not re-exported).
+> Authority: ADR-0010 §D4 carve-out `baaf3e1`. Design: design.md §E.
+
+### §E.1 Public surface — UNCHANGED
+
+`src/index.ts` still exports ONLY `dashboardWidgetRegistrations` (§S1). `StickyComposer`, `useStickies`, `UserSticky`, `StickyColor`, `NewStickyDraft`, `STICKY_COLORS`, and the store helpers are all INTERNAL — consumed only inside `StickiesWidget`. `index-barrel.test.ts` (AC-PKG-4) MUST continue to pass with the single export. (Reviewer override OQ5: if a future consumer needs `UserSticky`, that is an additive barrel + barrel-test change — not in this v1.)
+
+### §E.2 Sticky model types (`internal/stickiesStore/types.ts`)
+
+```ts
+export type StickyColor = "sun" | "mint" | "peach" | "sky" | "lilac";
+
+export interface UserSticky {
+  id: string;          // createStickyId() — UUID or sticky-<base36ts>-<rnd>
+  text: string;        // single string (NOT bilingual) — exactly what the user typed
+  color: StickyColor;  // preset token (NOT raw hex)
+  createdAt: string;   // ISO 8601
+}
+
+export interface NewStickyDraft {
+  text: string;
+  color: StickyColor;
+}
+
+// token → hex resolved at render (dark-mode friendly); default token "sun"
+export const STICKY_COLORS: Record<StickyColor, string>;
+```
+
+### §E.3 Pure store CRUD (`internal/stickiesStore/stickiesStore.ts`)
+
+All functions are PURE — never mutate `store`; return a new snapshot. Mirrors calendar `eventStore.ts` (eventStore.ts:26-100).
+
+```ts
+// Create: generate id + createdAt; return new store + the created entity.
+createSticky(
+  store: Record<string, UserSticky>,
+  draft: NewStickyDraft,
+): { next: Record<string, UserSticky>; created: UserSticky };
+
+// Delete: remove id. No-op (SAME reference back) when id missing.
+deleteSticky(
+  store: Record<string, UserSticky>,
+  id: string,
+): Record<string, UserSticky>;
+
+// List: array view sorted by createdAt ASC, then id ASC (stable for tests).
+listStickies(
+  store: Record<string, UserSticky>,
+): UserSticky[];
+```
+
+Error/edge semantics:
+- `createSticky` always succeeds (text validation is the composer's job, not the store's).
+- `deleteSticky` of a missing id returns the same store reference (idempotent; `useStickies.remove` skips the `setPref` when ref unchanged).
+- `listStickies` on `{}` returns `[]`.
+
+### §E.4 `useStickies()` hook (`internal/stickiesStore/useStickies.ts`)
+
+```ts
+export interface UseStickiesApi {
+  stickies: Record<string, UserSticky>;   // live snapshot, reactive via usePref
+  list: UserSticky[];                      // listStickies(stickies) memoized
+  create: (draft: NewStickyDraft) => UserSticky;   // create + persist; returns new entity
+  remove: (id: string) => void;            // delete + persist; no-op when id missing
+}
+
+export function useStickies(): UseStickiesApi;
+```
+
+- Wraps `usePref("xai_dashboard_stickies")`; casts the registry default `Record<string, unknown>` to `Record<string, UserSticky>` at the single point of truth (same pattern as `useUserCalEvents`, useUserCalEvents.ts:61-62).
+- `create`/`remove` produce a new snapshot via the pure helpers and persist via the `usePref` setter; stable identities via `useCallback`. Cross-tab fan-out is transitive via `usePref`'s storage listener (no extra wiring) — same as calendar.
+
+### §E.5 `StickyComposer` props (`src/StickyComposer.tsx`)
+
+```ts
+export interface StickyComposerProps {
+  open: boolean;                              // true → showModal(), false → close()
+  lang: Lang;                                 // STR_STICKY_COMPOSER + error labels
+  onSave: (draft: NewStickyDraft) => void;    // called after validation passes
+  onClose: () => void;                        // ESC / backdrop / Cancel (discarded)
+}
+```
+
+Behaviour (mirrors `EventComposer`/`TaskComposer`):
+- On open: reset form (text `""`, color `"sun"`), `showModal()`, autofocus the `<textarea>` via `setTimeout(0)`.
+- Save runs validation: empty/whitespace-only text → inline error shown + composer stays open. Valid → `onSave({ text: text.trim(), color })`.
+- ESC fires native `cancel` → `onClose`; backdrop click (`e.target === dialogRef.current`) → `onClose`; Cancel button → `onClose`.
+- a11y: `aria-modal="true"`, `aria-labelledby="sticky-composer-title"`; color picker `role="radiogroup"` with per-chip `role="radio"` + `aria-checked`; textarea `aria-required` + `aria-describedby` when error present.
+- v1 is CREATE-only composer (no `mode`/`edit`); delete is a per-sticky `×` in `StickiesWidget`, not in the composer.
+
+### §E.6 StickiesWidget wire delta (`src/widgets/StickiesWidget.tsx`)
+
+- Header `+` button: gains `onClick={() => setComposerOpen(true)}`; keeps `data-no-drag`; `aria-label` switches from the reused title key to local STR `add_sticky` (more accurate). This wires the no-op at `StickiesWidget.tsx:24-27`.
+- Body render branch:
+  - `list.length === 0` → 3 fixture samples from `internal/fixtures.STICKIES` rendered read-only with `data-sample="true"` (no delete button) + an empty-create hint.
+  - `list.length > 0` → user stickies: `background: STICKY_COLORS[s.color]`, text `s.text` (string, NOT `[lang]`), each with a per-sticky `<button className="sticky-del" data-no-drag aria-label="Delete note: <text>">×</button>` → `remove(s.id)`.
+- `<StickyComposer open={composerOpen} lang={lang} onSave={(d) => { create(d); setComposerOpen(false); }} onClose={() => setComposerOpen(false)} />`.
+
+### §E.7 New persistence key contract (`@repo/plugin-web-storage`)
+
+```ts
+xai_dashboard_stickies: {
+  key: "xai_dashboard_stickies",
+  codec: "json",
+  default: {} as Record<string, unknown>,
+  schemaVersion: 1,
+  owner: "xai-web-dashboard-widgets",
+  category: "module",
+} satisfies PrefEntry<Record<string, unknown>>
+```
+
+- Additive (authorized by carve-out §2). Byte-parallel to `xai_calendar_events` (registry.ts:943-950).
+- MUST be added to BOTH parity arrays (`registry.test.ts:230` `OWNER_ROW_ADDITIONS` + `parity-design-md.test.ts:165` exclusion list). `AC-REG-8` count assertion auto-derives (`20 + OWNER_ROW_ADDITIONS.length`).
+- NOT added to `web design/DESIGN.md §9.2` — owner-row addition handled via the exclusion list, following the `xai_calendar_events` precedent (RS2; reviewer confirm OQ3).
+- Value shape `Record<string, UserSticky>` documented at the registry entry comment; `UserSticky` type lives in `@repo/plugin-web-dashboard-widgets` (registry stays plugin-dep-free; consumer cast at `useStickies`).
+
+### §E.8 Events — NONE
+
+This extension emits NO typed events (honors carve-out constraint). State changes go to `usePref` only; no new `web:*` channel; `packages/core/src/types/events.ts` untouched.
+
+### §E.9 i18n — local STR only
+
+`internal/strings.ts` `STR_STICKY_COMPOSER` (bilingual `{ en; zh }` record, mirroring `xai-web-calendar` strings.ts) covers: composer title, text field label, color field label, 5 color names, Save / Cancel, empty-text error, empty-state hint, add-sticky aria, delete aria. **0 new `plugin-web-tokens` keys.** Existing `dashboard.sticky_notes` REUSED for the widget header title via the existing `useI18n` import.

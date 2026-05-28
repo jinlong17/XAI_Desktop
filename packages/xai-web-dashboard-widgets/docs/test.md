@@ -190,3 +190,109 @@ Per manifest header (`Verify Cross-vendor: yes`, Codex primary / Cursor fallback
 | R6 (xai_dash_order default ids match) | AC-REG-2 (asserts the 10 ids in order) + slotIntegration |
 | R8 (sibling concurrency) | git status clean post-Edit + uniqueness check |
 | R11 (cross-package commit) | AC-HOST-1 + AC-HOST-2 |
+
+---
+
+## §E — Extension test strategy: Stickies create + delete (xai-web-dashboard-stickies-create, 2026-05-28)
+
+> **APPEND extension — SHIPPED §1-§7 strategy above unchanged.** Same runner (Vitest 3.2 / jsdom 26 / RTL 16). Same mock strategy: `usePref` NOT mocked (real jsdom-localStorage round-trip); `crypto.randomUUID` available in jsdom 26 (id fallback also tested by stubbing).
+> Authority: ADR-0010 §D4 carve-out `baaf3e1`. Design: design.md §E. API: api.md §E.
+
+### §E.1 New test files vs phase
+
+| File | Phase | ACs |
+|---|---|---|
+| `src/internal/stickiesStore/__tests__/stickiesStore.test.ts` (or `__tests__/stickiesStore.test.ts`) | SP1 | AC-STORE-1..7 |
+| `src/internal/stickiesStore/__tests__/ids.test.ts` | SP1 | AC-IDS-1..3 |
+| `packages/plugin-web-storage/src/__tests__/registry.test.ts` (EXTEND) | SP1 | AC-REGISTRY-STICKIES-1..2 + AC-REG-8 (auto) |
+| `packages/plugin-web-storage/src/__tests__/parity-design-md.test.ts` (EXTEND) | SP1 | parity exclusion-list update |
+| `src/__tests__/StickyComposer.test.tsx` | SP2 | AC-COMPOSER-1..9 |
+| `src/__tests__/useStickies.test.tsx` | SP3 | AC-HOOK-1..4 |
+| `src/__tests__/StickiesWidget.test.tsx` (EXTEND existing) | SP3 | AC-STICKIES-CREATE-1..8 (the SHIPPED AC-STICKIES-1..3 fixture tests move under the empty-store branch — see RS-NOTE) |
+| `src/__tests__/index-barrel.test.ts` (EXISTING — must stay green) | SP4 | AC-PKG-4 unchanged (single export) |
+
+**RS-NOTE (SP3 migration of SHIPPED stickies tests):** the SHIPPED `StickiesWidget.test.tsx` asserts 3 fixture notes always render (AC-STICKIES-1..3). Post-extension that is only true when the store is EMPTY. Those 3 assertions get re-homed under an "empty store → fixture samples" describe block (the empty-store branch IS the default in tests since jsdom localStorage starts empty), so they stay green; new user-sticky-branch tests clear/seed the store explicitly. The extension does NOT delete the SHIPPED ACs — it scopes them.
+
+### §E.2 Acceptance criteria — new families
+
+#### AC-STORE (pure CRUD — SP1)
+
+- AC-STORE-1: `createSticky({}, draft)` returns `{ next, created }` with `created.id` truthy, `created.text === draft.text`, `created.color === draft.color`, `created.createdAt` an ISO string; `next` has exactly one key.
+- AC-STORE-2: `createSticky` does NOT mutate the input store (input stays `{}`; `next !== input`).
+- AC-STORE-3: two sequential `createSticky` calls produce 2 distinct ids / 2 keys.
+- AC-STORE-4: `deleteSticky(store, id)` removes the key and returns a new object without it.
+- AC-STORE-5: `deleteSticky(store, "missing")` returns the SAME reference (no-op).
+- AC-STORE-6: `listStickies(store)` returns entries sorted by `createdAt` ASC, then `id` ASC (seed 3 with controlled createdAt + assert order); `listStickies({})` returns `[]`.
+- AC-STORE-7: round-trip create → list → delete → list reflects each mutation.
+
+#### AC-IDS (id generator — SP1)
+
+- AC-IDS-1: `createStickyId()` returns a non-empty string; 100 calls are all unique.
+- AC-IDS-2: when `crypto.randomUUID` present → returns a UUID-shaped string.
+- AC-IDS-3: when `crypto.randomUUID` stubbed undefined → returns a `sticky-`-prefixed fallback string.
+
+#### AC-REGISTRY-STICKIES (storage registry — SP1, in plugin-web-storage)
+
+- AC-REGISTRY-STICKIES-1: `PREF_REGISTRY.xai_dashboard_stickies` has `key === "xai_dashboard_stickies"`, `codec === "json"`, `default` deep-equals `{}`, `owner === "xai-web-dashboard-widgets"`, `category === "module"`, `schemaVersion === 1`, `proposed` undefined. (Mirror of AC-REGISTRY-CREATE-1, registry.test.ts:250-265.)
+- AC-REGISTRY-STICKIES-2: `setPref("xai_dashboard_stickies", fixture)` then `getPref` round-trips a `Record<string, UserSticky>` fixture with no corruption; absent key returns `{}`. (Mirror of AC-REGISTRY-CREATE-2.)
+- AC-REG-8 (existing, auto-derives): total count `=== 20 + OWNER_ROW_ADDITIONS.length` stays green after adding `xai_dashboard_stickies` to `OWNER_ROW_ADDITIONS` (registry.test.ts:230) + the parity exclusion list (parity-design-md.test.ts:165).
+
+#### AC-COMPOSER (StickyComposer — SP2)
+
+- AC-COMPOSER-1: `open={true}` calls `showModal()` (dialog `.open`); `open={false}` calls `close()`.
+- AC-COMPOSER-2: on open, the `<textarea>` is autofocused (after `setTimeout(0)` flush).
+- AC-COMPOSER-3: typing text + clicking a color chip + Save calls `onSave({ text, color })` with the trimmed text + chosen color.
+- AC-COMPOSER-4: Save with empty/whitespace-only text does NOT call `onSave`; shows inline error; composer stays open.
+- AC-COMPOSER-5: Cancel button calls `onClose`; ESC (native `cancel` event) calls `onClose`; backdrop click (`e.target === dialog`) calls `onClose`; clicking inside content does NOT close.
+- AC-COMPOSER-6: color picker is `role="radiogroup"`; exactly one chip `aria-checked="true"` at a time; default checked = `sun`.
+- AC-COMPOSER-7: `aria-modal="true"` + `aria-labelledby="sticky-composer-title"` present.
+- AC-COMPOSER-8: bilingual — `lang="zh"` renders zh STR for title/labels/buttons/error; `STR_STICKY_COMPOSER` every key has both `en` + `zh` (grep-assert).
+- AC-COMPOSER-9: textarea has `aria-required="true"` and gains `aria-describedby` pointing at the error node only when the error is shown.
+
+#### AC-HOOK (useStickies — SP3)
+
+- AC-HOOK-1: `create(draft)` adds a sticky to `list` + persists to `xai_dashboard_stickies` (read back via `usePref`/`getPref`); returns the created entity.
+- AC-HOOK-2: `remove(id)` removes from `list` + persists; `remove("missing")` is a no-op (no `setPref` write — list reference stable).
+- AC-HOOK-3: `list` is sorted createdAt ASC across multiple creates.
+- AC-HOOK-4: a second hook instance reading the same key sees the persisted value (storage round-trip; transitive cross-tab via usePref).
+
+#### AC-STICKIES-CREATE (widget wire + render + delete — SP3)
+
+- AC-STICKIES-CREATE-1: header `+` button has an `onClick`; clicking it opens the composer (dialog `.open`). (Regression vs the SHIPPED no-op `StickiesWidget.tsx:24-27`.)
+- AC-STICKIES-CREATE-2: empty store → renders 3 fixture samples (`data-sample="true"`) + the empty-create hint; samples have NO `.sticky-del` button (RS6).
+- AC-STICKIES-CREATE-3: after `create` (composer Save), the new user sticky appears in the body and the fixture samples disappear (G1 disposition).
+- AC-STICKIES-CREATE-4: a user sticky renders `s.text` (string) as its text and `background = STICKY_COLORS[s.color]`; does NOT crash on a string (no `[lang]` index — RS4).
+- AC-STICKIES-CREATE-5: each user sticky has a `.sticky-del` `×` button (`data-no-drag`, `aria-label` "Delete note: …"); clicking it removes that sticky (RS6 inverse).
+- AC-STICKIES-CREATE-6: create → unmount/remount widget → the sticky persists (real `usePref` round-trip; integration create→persist→refresh).
+- AC-STICKIES-CREATE-7: delete → unmount/remount → the deletion persists (integration delete→persist→refresh).
+- AC-STICKIES-CREATE-8: composer stays open across a `ctx.now` re-render (simulate grid tick by re-rendering the parent with a new `now`; assert dialog still `.open` — RS5).
+
+### §E.3 a11y coverage
+
+AC-COMPOSER-6/7/9 cover composer a11y (radiogroup, aria-modal/labelledby, aria-required/describedby). AC-STICKIES-CREATE-5 covers the delete-button accessible name. Bilingual covered by AC-COMPOSER-8 (+ each widget-branch test runs at least one zh assertion).
+
+### §E.4 Mock strategy (extension)
+
+- `usePref` / storage = real jsdom localStorage (NOT mocked) — same as SHIPPED §5; integration tests `localStorage.clear()` in `beforeEach` and seed via `setPref` when the non-empty branch is under test.
+- `createStickyId` = real for most tests; AC-IDS-3 stubs `globalThis.crypto.randomUUID` to undefined to exercise the fallback.
+- Composer dialog: jsdom supports `<dialog>` `showModal`/`close`/`cancel` (same as the SHIPPED EventComposer/TaskComposer tests rely on); reuse `setup.ts`.
+- `StickiesWidget` is rendered standalone with `lang` prop (its render fn signature is `<StickiesWidget lang={ctx.lang} />`); no grid host needed for unit/integration. The "grid tick" in AC-STICKIES-CREATE-8 is simulated by re-rendering with React's `rerender`.
+
+### §E.5 Cross-vendor manual smoke (queued — SP4, may defer per ADR-0008 §S3)
+
+`pnpm --filter @repo/web dev` in Chrome / Safari 17+ / Firefox → `/app/dashboard`:
+1. Stickies widget shows 3 sample notes on a fresh profile.
+2. Click `+` → composer opens; type a note; pick each of the 5 colors; Save → new sticky appears, samples gone.
+3. Empty-text Save → inline error, no create.
+4. ESC / backdrop / Cancel close the composer without creating.
+5. Delete a sticky via `×` → it disappears.
+6. Reload → created stickies + deletions persist (DevTools Application tab shows `xai_dashboard_stickies`).
+7. Drag-reorder the dashboard still works (composer is in the top layer, not the drag surface — RS3); the sticky body + `×` carry `data-no-drag`.
+8. Light/dark theme — preset colors legible in both.
+9. Cross-tab: open two tabs, create in one → other reflects after focus (usePref storage listener).
+
+### §E.6 Test totals (extension estimate)
+
+- New widget-pkg tests: ~35-46 (AC-STORE 7 + AC-IDS 3 + AC-COMPOSER 9 + AC-HOOK 4 + AC-STICKIES-CREATE 8 + barrel unchanged).
+- New storage-pkg tests: 2 (AC-REGISTRY-STICKIES-1/2) + 2 parity-array edits (AC-REG-8 auto-derives, AC-PARITY exclusion).
+- SHIPPED 93 widget tests stay green (AC-STICKIES-1..3 re-homed under empty-store branch per RS-NOTE). Storage suite + web suite stay green.

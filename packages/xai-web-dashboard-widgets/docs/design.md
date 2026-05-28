@@ -228,3 +228,85 @@ All edits use Edit not Write, unique anchors verified before commit, git lock re
 R1 (analog alignment), R3 (mini-cal click-vs-drag), R4 (world-clocks picker drag leak), R8 (sibling concurrency on apps/web/package.json), R11 (cross-package commit on registration.tsx).
 
 All have mitigations documented in §3 of the discovery review.
+
+---
+
+## §E — Extension: Stickies create + delete (xai-web-dashboard-stickies-create, 2026-05-28)
+
+> **APPEND extension — does NOT supersede the SHIPPED row #11 design above.** Adds a from-scratch sticky-note store + create/delete UI to `StickiesWidget`.
+> Selected Options: A1 + B1 + C1 + D1 + E1 + F1 + G1 + H1 (discovery §3).
+> Review Doc: `docs/reviews/xai-web-dashboard-stickies-create/20260528-discovery-review.md`
+> Review Date: 2026-05-28
+> Authority: ADR-0010 §D4 — carve-out `docs/reviews/_p0-carve-outs/20260528-dashboard-stickies-create.md` (commit `baaf3e1`)
+> Closest precedent: `xai-web-calendar-event-create` (store-from-scratch; commits `e108607` → `90ca6d8`)
+> Roadmap manifest: `docs/workflow/roadmap/xai-web-dashboard-stickies-create.md`
+
+### §E.1 Decision snapshot (frozen assumptions, 15)
+
+1. Owning package = `@repo/plugin-web-dashboard-widgets` (EXTENSION; no new package).
+2. New files: `src/internal/stickiesStore/{types.ts, ids.ts, stickiesStore.ts, useStickies.ts}`, `src/internal/strings.ts`, `src/StickyComposer.tsx`.
+3. New registry key `xai_dashboard_stickies` in `@repo/plugin-web-storage` (codec json, default `{}`, owner `xai-web-dashboard-widgets`, category module, schemaVersion 1, proposed false) — AUTHORIZED additive edit (carve-out §2) + 2 parity arrays + `AC-REGISTRY-STICKIES-1/2` test. Byte-parallel to `xai_calendar_events` (registry.ts:943-950).
+4. Sticky model: `UserSticky = { id: string; text: string; color: StickyColor; createdAt: string }`. `StickyColor = "sun" | "mint" | "peach" | "sky" | "lilac"`. `NewStickyDraft = { text: string; color: StickyColor }`. `STICKY_COLORS: Record<StickyColor, string>` resolves token → hex; default token `sun`.
+5. Pure CRUD (`internal/stickiesStore/stickiesStore.ts`): `createSticky(store, draft) → { next, created }`; `deleteSticky(store, id) → next` (no-op same-ref when missing); `listStickies(store) → UserSticky[]` sorted createdAt ASC, id tiebreak. NO `updateSticky` (edit deferred). Verbatim port of calendar `eventStore.ts` shape.
+6. `useStickies()` (`internal/stickiesStore/useStickies.ts`) returns `{ stickies, list, create, remove }` wrapping `usePref("xai_dashboard_stickies")`; stable identities via `useCallback`/`useMemo`.
+7. `createStickyId()` (`internal/stickiesStore/ids.ts`): `crypto.randomUUID()` when present, else `sticky-<base36ts>-<rnd>`. Verbatim port of `createEventId`.
+8. Persistence = `xai_dashboard_stickies` (default `{}`). NO new `web:*` channel; create/delete emit nothing.
+9. Composer = native `<dialog>` `StickyComposer` (B-text `<textarea>` + 5-preset color `role="radiogroup"` + Save/Cancel; ESC/backdrop/autofocus/`aria-modal`/`aria-labelledby`) per `EventComposer`/`TaskComposer`/`MatrixComposer` + local `STR_STICKY_COMPOSER`.
+10. i18n = local `internal/strings.ts` STR table; 0 new `plugin-web-tokens` keys; existing `dashboard.sticky_notes` REUSED for the widget title.
+11. Fixture disposition = sample-until-first-user-sticky (G1): empty store → 3 read-only fixture samples (`data-sample="true"`, no delete button) + create hint; non-empty → user stickies only; fixtures never persisted. `internal/fixtures.ts` `STICKIES` unchanged.
+12. Scope = CREATE + DELETE. Per-sticky `×` delete (native `<button>` + `data-no-drag`, immediate remove). Edit / reorder / pin / rich-text / reminders DEFERRED.
+13. Composer + `useStickies` state live INSIDE `StickiesWidget` (H1) — NO `WidgetRenderContext` field added, NO `packages/core/` edit, NO module, NO state lift. Widget is a stable React component across grid re-renders (like ClockWidget's `usePref`).
+14. Public surface UNCHANGED: `src/index.ts` exports `dashboardWidgetRegistrations` only; `StickyComposer`/`useStickies`/`UserSticky` stay internal; `index-barrel.test.ts` still asserts the single export.
+15. 4-phase build (SP1 data layer + registry / SP2 composer / SP3 wire+render+persist+delete / SP4 docs+barrel+verify). Cross-vendor at SP4 (Codex cold-read) or formal ADR-0008 §S3 defer.
+
+### §E.2 Architecture delta
+
+```
+StickiesWidget (src/widgets/StickiesWidget.tsx — EXTENDED, not rewritten)
+  ├─ useStickies()                       → internal/stickiesStore/useStickies.ts
+  │     └─ usePref("xai_dashboard_stickies")  → @repo/plugin-web-storage
+  │           └─ createSticky / deleteSticky / listStickies  (pure, internal/stickiesStore/stickiesStore.ts)
+  │                 └─ createStickyId()  (internal/stickiesStore/ids.ts)
+  ├─ useState(composerOpen)
+  ├─ header + button  →  onClick: open composer   (wires StickiesWidget.tsx:24-27 no-op)
+  ├─ body:
+  │     list.length === 0 → 3 FIXTURE samples (internal/fixtures.STICKIES, read-only, n.text[lang], n.color)
+  │     list.length  > 0  → user stickies (s.text string, STICKY_COLORS[s.color]) + per-sticky × delete
+  └─ <StickyComposer open lang onSave={create} onClose />   (src/StickyComposer.tsx + internal/strings.ts)
+```
+
+No edge into `packages/core/`, no edit to `registrations.tsx` render-context (the entry still calls `render: (ctx) => <StickiesWidget lang={ctx.lang} />`), no host-shell edit, no `plugin-web-tokens` edit. The only cross-package edit is the **additive** `xai_dashboard_stickies` registry key + its parity tests in `@repo/plugin-web-storage` (authorized).
+
+### §E.3 File layout delta
+
+```
+packages/xai-web-dashboard-widgets/src/
+├── StickyComposer.tsx                       # NEW (SP2) — native <dialog>
+├── widgets/StickiesWidget.tsx               # EXTENDED (SP3) — wire + + render user + delete + sample disposition
+├── styles.css                               # EXTENDED (SP2/SP3) — .sticky-composer* + .sticky-del + .sticky--sample
+└── internal/
+    ├── strings.ts                           # NEW (SP2) — STR_STICKY_COMPOSER + empty hint + delete label (local STR)
+    └── stickiesStore/                       # NEW (SP1) — verbatim port of calendar eventStore/
+        ├── types.ts                         # UserSticky, StickyColor, NewStickyDraft, STICKY_COLORS
+        ├── ids.ts                           # createStickyId()
+        ├── stickiesStore.ts                 # pure createSticky / deleteSticky / listStickies
+        └── useStickies.ts                   # useStickies() hook over usePref
+
+packages/plugin-web-storage/src/internal/registry.ts   # EXTENDED (SP1) — +xai_dashboard_stickies (additive, authorized)
+packages/plugin-web-storage/src/__tests__/registry.test.ts          # EXTENDED (SP1) — OWNER_ROW_ADDITIONS + AC-REGISTRY-STICKIES-1/2
+packages/plugin-web-storage/src/__tests__/parity-design-md.test.ts  # EXTENDED (SP1) — exclusion list +xai_dashboard_stickies
+```
+
+### §E.4 Persistence rule (new key)
+
+| Key | Owner | Default | Codec | Category | Use |
+|---|---|---|---|---|---|
+| `xai_dashboard_stickies` | `xai-web-dashboard-widgets` (this extension) | `{}` | json | module | `Record<string, UserSticky>` of user-created stickies; mutated by create/delete via `usePref`; caught by chassis `resetAllPrefs()` `xai_` filter (intended — RS7). |
+
+### §E.5 Phase plan (4 phases — store-from-scratch cadence)
+
+See `dev_log.md` §E Phase Plan for the authoritative per-phase file lists + exit criteria. Summary: SP1 data layer + registry; SP2 StickyComposer; SP3 wire `+` + render user stickies + delete + fixture-as-sample + persistence; SP4 docs + barrel + cross-vendor.
+
+### §E.6 Open risks (extension)
+
+RS1 (registry parity dual-array), RS2 (DESIGN.md §9.2 — follow calendar exclusion-list precedent), RS4 (fixture-vs-user render branch — bilingual indexer on string), RS5 (composer state survives grid tick), RS6 (no delete button on fixture samples), RS8 (CSS class collision — namespace `.sticky-composer*`/`.sticky-del`/`.sticky--sample`, keep base `.sticky`). Full table: discovery §8.
