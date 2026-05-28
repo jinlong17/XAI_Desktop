@@ -50,4 +50,6 @@ export interface HabitsModuleProps {
   lang: Lang;
   /** Week-start preference (default "sun"; Settings W4 may flip to "mon"). */
   weekStart?: WeekStart;
+  /** Optional runtime-profile override used by desktop-offline tests. */
+  runtimeProfileOverride?: "web-live" | "desktop-phase1-offline";
 }

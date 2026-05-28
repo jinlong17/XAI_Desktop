@@ -9,9 +9,25 @@
 
 .module-habits {
   display: flex;
+  flex-wrap: wrap;
   height: 100%;
   overflow: hidden;
   gap: var(--gap-md, 0.75rem);
+}
+
+.habits-cache-state {
+  width: 100%;
+  margin: 0 var(--p-md, 1rem) 0;
+  padding: 10px 12px;
+  border-radius: var(--radius-md, 0.5rem);
+  font-size: var(--fs-xs, 0.6875rem);
+  line-height: 1.5;
+}
+
+.habits-cache-state-unreadable {
+  border: 1px solid color-mix(in oklch, var(--red) 45%, var(--border-1));
+  background: color-mix(in oklch, var(--red) 8%, var(--bg-panel));
+  color: var(--red);
 }
 
 /* ---- Left pane: habits list --------------------------------------- */

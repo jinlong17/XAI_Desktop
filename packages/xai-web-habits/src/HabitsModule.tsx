@@ -18,6 +18,10 @@ import "./styles.css";
 
 import React, { useState, useEffect } from "react";
 import type { HabitsModuleProps, HabitId, DateKey, MonthKey, WeekStart } from "./types.js";
+import {
+  isDesktopPhase1OfflineRuntime,
+  resolveWebRuntimeProfile,
+} from "@repo/core";
 import { HabitList } from "./HabitList.js";
 import { HabitDetail } from "./HabitDetail.js";
 import { usePersistedHabits } from "./internal/usePersistedHabits.js";
@@ -25,9 +29,26 @@ import { toggleCheckIn } from "./internal/toggle.js";
 import { emitCheckInRecorded } from "./internal/emit.js";
 import { createId } from "./internal/createId.js";
 import { AddHabitDialog } from "./internal/AddHabitDialog.js";
+import { readDesktopHabitsCacheStatusFromStorage } from "./desktopCache.js";
 
-export function HabitsModule({ lang, weekStart = "sun" }: HabitsModuleProps) {
-  const { state, setState } = usePersistedHabits();
+export function HabitsModule({
+  lang,
+  weekStart = "sun",
+  runtimeProfileOverride,
+}: HabitsModuleProps) {
+  const runtimeProfile = runtimeProfileOverride ?? resolveWebRuntimeProfile(
+    import.meta.env as Record<string, string | undefined>,
+  );
+  const isDesktopOfflineRuntime =
+    isDesktopPhase1OfflineRuntime(runtimeProfile);
+  const desktopCacheStatus = isDesktopOfflineRuntime
+    ? readDesktopHabitsCacheStatusFromStorage()
+    : "readable";
+  const showUnreadableDesktopCache =
+    isDesktopOfflineRuntime && desktopCacheStatus === "unreadable";
+  const { state, setState } = usePersistedHabits({
+    enableSeedHydration: !isDesktopOfflineRuntime,
+  });
 
   const [selectedId, setSelectedId] = useState<HabitId>(
     () => state.habits[0]?.id ?? "",
@@ -119,6 +140,16 @@ export function HabitsModule({ lang, weekStart = "sun" }: HabitsModuleProps) {
 
   return (
     <div className="module module-habits">
+      {showUnreadableDesktopCache ? (
+        <div
+          className="habits-cache-state habits-cache-state-unreadable"
+          data-testid="habits-cache-unreadable"
+        >
+          {lang === "zh"
+            ? "检测到习惯缓存损坏，已切换到安全空状态。"
+            : "Habits cache is unreadable. Showing a safe empty state."}
+        </div>
+      ) : null}
       <HabitList
         habits={state.habits}
         checkIns={state.checkIns}
