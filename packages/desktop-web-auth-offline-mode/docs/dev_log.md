@@ -7,13 +7,13 @@
 | Workflow | FEATURE_DEV |
 | Target | desktop-web-auth-offline-mode |
 | Title | Phase 1 Desktop Offline `/app` Auth Session Policy |
-| Current Phase | FEATURE_VERIFY |
-| Status | READY_TO_SHIP |
-| Suggested Next | ship |
+| Current Phase | SHIP |
+| Status | SHIPPED |
+| Suggested Next | workflow complete |
 | Automation Mode | B-Codex |
 | Verify Cross-vendor | yes |
-| Executor | feature-verify (Codex, gpt-5.4 inline) |
-| Updated | 2026-05-27 15:28 PDT |
+| Executor | ship (Codex, gpt-5.3-codex) |
+| Updated | 2026-05-27 23:32 PDT |
 | Risks | Desktop env injection must remain canonical in `tauri.conf.json` or launches can silently fall back to live auth and redirect to `/auth/login`; `/app` entry success does not close remaining online-panel degradation, which stays deferred to `web-external-runtime-offline-gates`; real macOS hardware still needs manual network-disabled launch verification before ship closes the residual offline UI risk. |
 
 ## Phase Plan
@@ -65,3 +65,4 @@ Recommendations for `feature-build`:
 | 2026-05-27 15:22 PDT | feature-auto-build (Codex, gpt-5.3-codex inline) | **Phase 2 — Auth Contract Hardening:** added focused tests proving mock desktop mode keeps transport inactive while yielding authenticated mock session, and that live/unconfigured `/app` still redirects to `/auth/login` unchanged. Tests: `pnpm --filter @repo/web-auth-device-session test` (43/43), `pnpm --filter @repo/web test` (117/117). | `0cc0a0e` | Phase 3 |
 | 2026-05-27 15:23 PDT | feature-auto-build (Codex, gpt-5.3-codex inline) | **Phase 3 — Offline Desktop Evidence:** recorded committed feature docs + discovery artifact baseline and executed required build gates. Tests: `pnpm --filter @repo/web check-types`, `pnpm --filter @repo/web build`, `pnpm --filter desktop tauri build --debug --bundles app` (bundle output: `apps/desktop/src-tauri/target/debug/bundle/macos/X Desktop.app`; beforeBuildCommand showed mock-auth env injection). Manual network-disabled GUI smoke remains deferred to feature-verify on macOS hardware. | `60d43cd` | feature-verify |
 | 2026-05-27 15:28 PDT | feature-verify (Codex, gpt-5.4 inline) | PASS — reviewed phase commits `8f2bfc7`, `0cc0a0e`, `60d43cd`, and `d9593b4` against the discovery review and docs quartet. Re-ran `pnpm --filter @repo/web check-types`, `pnpm --filter @repo/web-auth-device-session test` (43/43), `pnpm --filter @repo/web test` (117/117), `pnpm --filter @repo/web build`, and `pnpm --filter desktop tauri build --debug --bundles app`; confirmed `tauri dev` and `tauri build` both invoke the canonical `VITE_WEB_AUTH_MODE=mock-authenticated` hooks. Exact manual blocker: this non-interactive session cannot disable network and inspect the macOS app UI, so the best local substitute was validating Tauri dev/build hook output plus successful debug bundle creation at `apps/desktop/src-tauri/target/debug/bundle/macos/X Desktop.app`. | `8f2bfc7`, `0cc0a0e`, `60d43cd`, `d9593b4` | ship |
+| 2026-05-27 23:32 PDT | ship (Codex, gpt-5.3-codex) | Ship gate passed for `desktop-web-auth-offline-mode`: committed the pending verify Status Panel/work-log writeback (`17b4fea`), verified clean tree and no sensitive-file patterns in `origin/dev..dev`, pushed branch `dev` to `origin/dev`, and marked this feature SHIPPED. | `8f2bfc7`, `0cc0a0e`, `60d43cd`, `d9593b4`, `17b4fea` | workflow complete |
