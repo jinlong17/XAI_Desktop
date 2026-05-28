@@ -13,7 +13,7 @@
 | Automation Mode | B-Codex |
 | Verify Cross-vendor | yes |
 | Executor | feature-auto-build (Codex, gpt-5.3-codex inline) |
-| Updated | 2026-05-28 01:24 PDT |
+| Updated | 2026-05-28 01:27 PDT |
 | Risks | This feature depends on real-hardware GUI evidence. Missing network/install/monitor-topology conditions must be classified as environment limits rather than misreported as repo blockers. If a repo defect reproduces, scope must stay limited to the minimal owning-surface fix and must not reopen broad Phase 1 implementation. |
 
 ## Roadmap Context
@@ -47,11 +47,13 @@ Status: DONE (`BLOCKED_ENVIRONMENT`)
 
 ### Phase 3 — Native Menu Interactions
 
-Status: PLANNED
+Status: DONE (`BLOCKED_ENVIRONMENT`)
 
 - Exercise the macOS menu bar directly on the running app.
 - Verify `Reveal Config Folder` and `Reset Main Window State`.
 - Distinguish repo failures from environment limitations.
+- Evidence: `docs/reviews/desktop-real-macos-release-smoke/20260528-phase3-native-menu-interactions.md`
+- Classification: `BLOCKED_ENVIRONMENT`
 
 ### Phase 4 — Relaunch Across Monitor Topology Changes and Final Matrix
 
@@ -84,3 +86,4 @@ Recommendations for `feature-build`:
 | 2026-05-28 01:14 PDT | feature-review (Codex, gpt-5.4 inline) | APPROVED — reviewed the brief, discovery, design, API, test, and dev_log artifacts against Workflow V2 gates and roadmap row #1 constraints. Confirmed the plan keeps `desktop-phase1-rc-release-gate` closed as the shipped baseline, limits this row to four real-macOS residual checks, preserves the normal-window plus quarantined overlay/control/grid boundary, and keeps repo blockers separate from environment limitations. Added two build-time recommendations for deterministic evidence filenames and explicit artifact/environment provenance. | — | feature-build |
 | 2026-05-28 01:22 PDT | feature-auto-build (Codex, gpt-5.3-codex inline) | Phase 1 — created deterministic evidence artifact `20260528-phase1-network-disabled-bundled-app-launch.md`, regenerated fresh desktop artifacts on `dev`, and recorded exact provenance (build/test commands, hashes, mtimes, OS context). Manual residual classification is `BLOCKED_ENVIRONMENT` because this run is non-interactive and cannot provide trustworthy network-disabled GUI route observation. No repo defect reproduced; no product code changes. | TBD (phase-1 commit) | feature-auto-build (Phase 2) |
 | 2026-05-28 01:24 PDT | feature-auto-build (Codex, gpt-5.3-codex inline) | Phase 2 — created deterministic evidence artifact `20260528-phase2-drag-install-applications-launch.md`, validated DMG mount + payload (`X Desktop.app` plus `Applications` alias), and recorded provenance including DMG hash/mtime. Residual remains `BLOCKED_ENVIRONMENT` because a true Finder drag-install + launch from `/Applications` was not directly observable in this non-interactive session. No repo defect reproduced; no product code changes. | TBD (phase-2 commit) | feature-auto-build (Phase 3) |
+| 2026-05-28 01:27 PDT | feature-auto-build (Codex, gpt-5.3-codex inline) | Phase 3 — created deterministic evidence artifact `20260528-phase3-native-menu-interactions.md`, executed targeted Rust menu/config seam tests, and captured host config provenance. Residual remains `BLOCKED_ENVIRONMENT` because direct native menu interactions were not performed in this non-interactive session. No repo defect reproduced; no product code changes. | TBD (phase-3 commit) | feature-auto-build (Phase 4) |
