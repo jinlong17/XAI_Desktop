@@ -7,12 +7,12 @@
 | Workflow | FEATURE_DEV |
 | Target | desktop-phase1-rc-release-gate |
 | Title | Phase 1 Desktop RC Release Gate |
-| Current Phase | FEATURE_BUILD |
-| Status | APPROVED |
-| Suggested Next | feature-auto-build |
+| Current Phase | FEATURE_VERIFY |
+| Status | READY_FOR_VERIFY |
+| Suggested Next | feature-verify |
 | Executor | feature-auto-build (Codex, gpt-5.3-codex) |
-| Updated | 2026-05-28 00:28 PDT |
-| Risks | DMG packaging, DMG mount payload checks, and automated menu/config contract checks succeeded in this run, but network-disabled GUI `/app` launch, drag-install launch from `/Applications`, interactive menu/reveal/reset checks, and consolidated offline degradation evidence still need closure before verify; Phase 2/3 scope creep must remain excluded. |
+| Updated | 2026-05-28 00:31 PDT |
+| Risks | Automated Phase 1 RC gates passed in this run, with residual manual verification limited to network-disabled GUI `/app` launch, drag-install launch from `/Applications`, and interactive menu/config reset/relaunch checks on real macOS hardware. |
 
 ## Review Notes
 
@@ -52,7 +52,7 @@ Status: DONE (2026-05-28, commit `578c9efa`).
 
 ### Phase 3 — Native Menu and Config Persistence Gate
 
-Status: DONE (2026-05-28, commit pending writeback).
+Status: DONE (2026-05-28, commit `e72a2c7e`).
 
 - Exercise the native menu and practical support items on the active Phase 1 app.
 - Verify host config persistence across relaunch, including reset behavior.
@@ -60,7 +60,7 @@ Status: DONE (2026-05-28, commit pending writeback).
 
 ### Phase 4 — Online-only Surface Degradation and Final RC Verdict
 
-Status: PLANNED.
+Status: DONE (2026-05-28, commit pending writeback).
 
 - Verify offline AI/map/integrations/premium/account-delete behavior in the integrated desktop app.
 - Apply only targeted blocker fixes if shipped offline gates prove incomplete.
@@ -74,4 +74,5 @@ Status: PLANNED.
 | 2026-05-28 00:18 PDT | feature-review (Claude Opus 4.7) | Reviewed brief + discovery + design + api + test + dev_log against Workflow V2 gates. Verdict APPROVED with 0 blockers and 2 non-blocking observations (N1 debug vs. release bundle path, N2 Phase Progress heading naming). Discovery options comparable; blocker-first ordering justified; ADR-0011 Phase 1 boundaries preserved; no SYSTEM_ARCHITECTURE red-line conflicts. | — | feature-build |
 | 2026-05-28 00:24 PDT | feature-auto-build (Codex, gpt-5.3-codex) | Phase 1 complete: reran `pnpm --filter desktop build:dmg`, observed bundling complete with final DMG artifact emitted, and recorded reproduction evidence at `docs/reviews/desktop-phase1-rc-release-gate/20260528-phase1-dmg-reproduction.md`. Classification updated from prior risk baseline to `PASS` for R1 in this run. | `d978bb76` | feature-auto-build (Phase 2) |
 | 2026-05-28 00:26 PDT | feature-auto-build (Codex, gpt-5.3-codex) | Phase 2 complete: validated `.app` bundling (`pnpm --filter desktop build`), mounted/inspected DMG payload (`X Desktop.app` + `Applications` link), and captured standard-window startup probe output (`Main window configured for standard app behavior`). Wrote integrated evidence at `docs/reviews/desktop-phase1-rc-release-gate/20260528-phase2-app-installer-offline-gate.md`; interactive network-disabled `/app` route check and drag-install launch are explicitly deferred to verify/manual macOS gate. | `578c9efa` | feature-auto-build (Phase 3) |
-| 2026-05-28 00:28 PDT | feature-auto-build (Codex, gpt-5.3-codex) | Phase 3 complete: ran `cargo test --manifest-path apps/desktop/src-tauri/Cargo.toml` (60 passed) and captured menu/config-focused contract evidence plus live host config snapshot from `~/Library/Application Support/com.jinlong.desktop/app-config.json`. Added Phase 3 evidence doc `docs/reviews/desktop-phase1-rc-release-gate/20260528-phase3-menu-config-persistence-gate.md`; interactive menu/reveal/reset verification remains deferred to manual verify gate. | pending writeback (this commit) | feature-auto-build (Phase 4) |
+| 2026-05-28 00:28 PDT | feature-auto-build (Codex, gpt-5.3-codex) | Phase 3 complete: ran `cargo test --manifest-path apps/desktop/src-tauri/Cargo.toml` (60 passed) and captured menu/config-focused contract evidence plus live host config snapshot from `~/Library/Application Support/com.jinlong.desktop/app-config.json`. Added Phase 3 evidence doc `docs/reviews/desktop-phase1-rc-release-gate/20260528-phase3-menu-config-persistence-gate.md`; interactive menu/reveal/reset verification remains deferred to manual verify gate. | `e72a2c7e` | feature-auto-build (Phase 4) |
+| 2026-05-28 00:31 PDT | feature-auto-build (Codex, gpt-5.3-codex) | Phase 4 complete: consolidated offline degradation evidence across AI/map/integrations/premium/OAuth/Stripe/account-delete surfaces and produced one RC matrix + risk register at `docs/reviews/desktop-phase1-rc-release-gate/20260528-phase4-offline-degradation-rc-verdict.md`. Automated checks passed (`@repo/web` build, desktop build/dmg, targeted web/plugin/auth test suites). No repo-side blocker reproduced; residual checks are manual GUI items for `feature-verify`. | pending writeback (this commit) | feature-verify |
