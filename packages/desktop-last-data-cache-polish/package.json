@@ -1,0 +1,40 @@
+{
+  "name": "@repo/desktop-last-data-cache-polish",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "description": "Desktop Phase 1 offline cached-data status seam for shell presentation.",
+  "sideEffects": ["./src/styles.css", "./src/index.ts"],
+  "exports": {
+    ".": {
+      "types": "./src/index.ts",
+      "import": "./src/index.ts"
+    },
+    "./web": {
+      "types": "./src/web.tsx",
+      "import": "./src/web.tsx"
+    }
+  },
+  "scripts": {
+    "check-types": "tsc --noEmit",
+    "test": "vitest run",
+    "test:watch": "vitest"
+  },
+  "dependencies": {
+    "@repo/core": "workspace:*",
+    "@repo/plugin-web-board-workspaces": "workspace:*",
+    "@repo/plugin-web-habits": "workspace:*",
+    "@repo/plugin-web-tasks": "workspace:*",
+    "react": "^19.2.0"
+  },
+  "devDependencies": {
+    "@repo/typescript-config": "workspace:*",
+    "@testing-library/jest-dom": "^6.0.0",
+    "@testing-library/react": "^16.0.0",
+    "@types/react": "19.2.2",
+    "@types/react-dom": "19.2.2",
+    "jsdom": "^26.0.0",
+    "typescript": "5.9.2",
+    "vitest": "^3.2.1"
+  }
+}

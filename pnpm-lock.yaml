@@ -179,6 +179,9 @@ importers:
       '@repo/desktop-global-hotkey-quick-open':
         specifier: workspace:*
         version: link:../../packages/desktop-global-hotkey-quick-open
+      '@repo/desktop-last-data-cache-polish':
+        specifier: workspace:*
+        version: link:../../packages/desktop-last-data-cache-polish
       '@repo/desktop-native-notifications-reminders':
         specifier: workspace:*
         version: link:../../packages/desktop-native-notifications-reminders
@@ -436,6 +439,49 @@ importers:
       react-dom:
         specifier: ^19.2.0
         version: 19.2.0(react@19.2.0)
+      typescript:
+        specifier: 5.9.2
+        version: 5.9.2
+      vitest:
+        specifier: ^3.2.1
+        version: 3.2.4(@types/node@24.12.4)(jsdom@26.1.0)
+
+  packages/desktop-last-data-cache-polish:
+    dependencies:
+      '@repo/core':
+        specifier: workspace:*
+        version: link:../core
+      '@repo/plugin-web-board-workspaces':
+        specifier: workspace:*
+        version: link:../plugin-web-board-workspaces
+      '@repo/plugin-web-habits':
+        specifier: workspace:*
+        version: link:../xai-web-habits
+      '@repo/plugin-web-tasks':
+        specifier: workspace:*
+        version: link:../xai-web-tasks
+      react:
+        specifier: ^19.2.0
+        version: 19.2.0
+    devDependencies:
+      '@repo/typescript-config':
+        specifier: workspace:*
+        version: link:../typescript-config
+      '@testing-library/jest-dom':
+        specifier: ^6.0.0
+        version: 6.9.1
+      '@testing-library/react':
+        specifier: ^16.0.0
+        version: 16.3.2(@testing-library/dom@10.4.1)(@types/react-dom@19.2.2(@types/react@19.2.2))(@types/react@19.2.2)(react-dom@19.2.0(react@19.2.0))(react@19.2.0)
+      '@types/react':
+        specifier: 19.2.2
+        version: 19.2.2
+      '@types/react-dom':
+        specifier: 19.2.2
+        version: 19.2.2(@types/react@19.2.2)
+      jsdom:
+        specifier: ^26.0.0
+        version: 26.1.0
       typescript:
         specifier: 5.9.2
         version: 5.9.2

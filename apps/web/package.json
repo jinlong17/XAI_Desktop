@@ -54,6 +54,7 @@
     "@repo/desktop-native-notifications-reminders": "workspace:*",
     "@repo/desktop-global-hotkey-quick-open": "workspace:*",
     "@repo/desktop-statusbar-quick-actions": "workspace:*",
+    "@repo/desktop-last-data-cache-polish": "workspace:*",
     "@repo/plugin-console": "workspace:^",
     "@repo/plugin-productivity": "workspace:^",
     "@repo/web-auth-device-session": "workspace:*",

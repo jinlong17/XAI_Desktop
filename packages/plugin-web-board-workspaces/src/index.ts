@@ -96,3 +96,11 @@ export type { BoardWorkspacesModuleProps } from "./BoardWorkspacesModule.js";
 
 // ---- Shell slot registration --------------------------------------------
 export { boardWorkspacesWebModuleRegistration } from "./registration.js";
+
+export {
+  BOARD_CACHE_STORAGE_KEY,
+  isReadableBoardCachePayload,
+  readDesktopBoardCacheStatusFromRaw,
+  readDesktopBoardCacheStatusFromStorage,
+} from "./desktopCache.js";
+export type { DesktopBoardCacheStatus } from "./desktopCache.js";

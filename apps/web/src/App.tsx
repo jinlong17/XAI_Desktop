@@ -52,6 +52,7 @@ import {
 } from "@repo/xai-web-cmdk";
 // Extension 2026-05-26 — Premium tier badge for Topbar (gap-closure row #8 F1)
 import { PremiumTierBadge } from "@repo/plugin-web-settings-rest";
+import { DesktopLastDataCacheBadge } from "@repo/desktop-last-data-cache-polish/web";
 
 // ---- AppInner — consumes CommandPaletteProvider context --------------------
 
@@ -136,7 +137,15 @@ function AppInner() {
         density={density}
         setDensity={setDensity}
         onOpenSearch={() => openPalette({ source: "topbar-click" })}
-        premiumBadge={<PremiumTierBadge lang={lang} />}
+        premiumBadge={
+          <>
+            <DesktopLastDataCacheBadge
+              lang={lang}
+              runtimeEnv={import.meta.env as Record<string, string | undefined>}
+            />
+            <PremiumTierBadge lang={lang} />
+          </>
+        }
       >
         <Outlet />
       </Shell>

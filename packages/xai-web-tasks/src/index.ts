@@ -36,3 +36,11 @@ export type {
   TaskDefaultReminderAll,
   TaskDefaultReminderDue,
 } from "./projectDesktopTaskReminderEntries.js";
+
+export {
+  TASK_CACHE_STORAGE_KEY,
+  isReadableTaskCachePayload,
+  readDesktopTaskCacheStatusFromRaw,
+  readDesktopTaskCacheStatusFromStorage,
+} from "./desktopCache.js";
+export type { DesktopTaskCacheStatus } from "./desktopCache.js";
