@@ -11,8 +11,8 @@
 | Status | APPROVED |
 | Suggested Next | feature-auto-build |
 | Executor | feature-auto-build (Codex, gpt-5.3-codex) |
-| Updated | 2026-05-28 00:24 PDT |
-| Risks | DMG packaging succeeded in this run, but integrated real-macOS offline launch verification, native menu/config persistence interaction, and consolidated offline degradation evidence still need closure before verify; Phase 2/3 scope creep must remain excluded. |
+| Updated | 2026-05-28 00:26 PDT |
+| Risks | DMG packaging and DMG mount payload checks succeeded in this run, but network-disabled GUI `/app` launch, drag-install launch from `/Applications`, native menu/config persistence interaction, and consolidated offline degradation evidence still need closure before verify; Phase 2/3 scope creep must remain excluded. |
 
 ## Review Notes
 
@@ -36,7 +36,7 @@ Non-blocking observations (do not require revision; surface during build if enco
 
 ### Phase 1 — DMG Reproduction and Blocker Classification
 
-Status: DONE (2026-05-28, commit pending writeback).
+Status: DONE (2026-05-28, commit `d978bb76`).
 
 - Re-run `pnpm --filter desktop build:dmg` as the first RC gate item.
 - If the `.dmg` failure is repo-side, fix only the minimal packaging issue required for Phase 1.
@@ -44,7 +44,7 @@ Status: DONE (2026-05-28, commit pending writeback).
 
 ### Phase 2 — Integrated App/Installer Offline Launch Gate
 
-Status: PLANNED.
+Status: DONE (2026-05-28, commit pending writeback).
 
 - Verify `.app` output remains good and launches offline into `/app`.
 - If a `.dmg` is produced, mount, drag-install, and launch once from the installed copy.
@@ -72,4 +72,5 @@ Status: PLANNED.
 |---|---|---|---|---|
 | 2026-05-28 00:01 PDT | feature-plan (Codex, gpt-5.4 inline) | Fresh plan: created the Step 0 brief, discovery review, and docs quartet for the integrated Phase 1 desktop RC gate. Anchored the plan on the five already-shipped first-wave features, made DMG reproduction/classification the first blocker item, and scoped the remaining RC work to offline launch, normal-window startup, native menu/config persistence, and offline degradation of online-only panels. | — | feature-review |
 | 2026-05-28 00:18 PDT | feature-review (Claude Opus 4.7) | Reviewed brief + discovery + design + api + test + dev_log against Workflow V2 gates. Verdict APPROVED with 0 blockers and 2 non-blocking observations (N1 debug vs. release bundle path, N2 Phase Progress heading naming). Discovery options comparable; blocker-first ordering justified; ADR-0011 Phase 1 boundaries preserved; no SYSTEM_ARCHITECTURE red-line conflicts. | — | feature-build |
-| 2026-05-28 00:24 PDT | feature-auto-build (Codex, gpt-5.3-codex) | Phase 1 complete: reran `pnpm --filter desktop build:dmg`, observed bundling complete with final DMG artifact emitted, and recorded reproduction evidence at `docs/reviews/desktop-phase1-rc-release-gate/20260528-phase1-dmg-reproduction.md`. Classification updated from prior risk baseline to `PASS` for R1 in this run. | pending writeback (this commit) | feature-auto-build (Phase 2) |
+| 2026-05-28 00:24 PDT | feature-auto-build (Codex, gpt-5.3-codex) | Phase 1 complete: reran `pnpm --filter desktop build:dmg`, observed bundling complete with final DMG artifact emitted, and recorded reproduction evidence at `docs/reviews/desktop-phase1-rc-release-gate/20260528-phase1-dmg-reproduction.md`. Classification updated from prior risk baseline to `PASS` for R1 in this run. | `d978bb76` | feature-auto-build (Phase 2) |
+| 2026-05-28 00:26 PDT | feature-auto-build (Codex, gpt-5.3-codex) | Phase 2 complete: validated `.app` bundling (`pnpm --filter desktop build`), mounted/inspected DMG payload (`X Desktop.app` + `Applications` link), and captured standard-window startup probe output (`Main window configured for standard app behavior`). Wrote integrated evidence at `docs/reviews/desktop-phase1-rc-release-gate/20260528-phase2-app-installer-offline-gate.md`; interactive network-disabled `/app` route check and drag-install launch are explicitly deferred to verify/manual macOS gate. | pending writeback (this commit) | feature-auto-build (Phase 3) |
