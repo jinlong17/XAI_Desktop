@@ -181,11 +181,47 @@ describe("AppRail", () => {
     expect(petBtn?.className).toContain("active");
   });
 
-  it("AR10 — bottom row has 4 utility buttons", () => {
+  it("AR10 — bottom row has exactly 1 button (pet only; sync/notif/help hidden)", () => {
     const { container } = renderRail();
     const railBottom = container.querySelector(".rail-bottom");
     const buttons = railBottom?.querySelectorAll("button");
-    expect(buttons?.length).toBe(4);
+    expect(buttons?.length).toBe(1);
+  });
+
+  // Rail-05/06/07 regression: sync / notif / help must NOT render
+  it("AR10a — sync icon is NOT rendered in the rail-bottom (Rail-05 fix)", () => {
+    const { container } = renderRail();
+    const syncBtn = container.querySelector(
+      '.rail-bottom button[data-tip="sync"]',
+    );
+    expect(syncBtn).toBeNull();
+  });
+
+  it("AR10b — notif icon is NOT rendered in the rail-bottom (Rail-06 fix)", () => {
+    const { container } = renderRail();
+    const notifBtn = container.querySelector(
+      '.rail-bottom button[data-tip="notif"]',
+    );
+    expect(notifBtn).toBeNull();
+  });
+
+  it("AR10c — help icon is NOT rendered in the rail-bottom (Rail-07 fix)", () => {
+    const { container } = renderRail();
+    const helpBtn = container.querySelector(
+      '.rail-bottom button[data-tip="help"]',
+    );
+    expect(helpBtn).toBeNull();
+  });
+
+  it("AR10d — pet button is still present after removing sync/notif/help", () => {
+    const { container } = renderRail();
+    const railBottom = container.querySelector(".rail-bottom");
+    const petBtn = railBottom?.querySelectorAll("button")[0];
+    // The pet button is the only remaining button; data-tip comes from t.nav["pet"] i18n label
+    expect(petBtn).toBeTruthy();
+    // data-tip is whatever the i18n label resolves to (may be "Pet" or "pet" depending on locale)
+    const tip = petBtn?.getAttribute("data-tip");
+    expect(tip?.toLowerCase()).toBe("pet");
   });
 
   it("AR11 — module button has data-tip with i18n label", () => {

@@ -95,6 +95,9 @@ export function AppRail({ activeModuleId, onModuleClick, onPetToggle, onAvatarOp
   const [avatarOpen, setAvatarOpen] = useState(false);
 
   // ---- Bottom buttons ------------------------------------------------------
+  // Rail-05/06/07 fix: sync/notif/help have no real action (onClick=undefined).
+  // HIDE them rather than render as no-op clickable buttons.
+  // Pet button is retained — it has a real onPetToggle action.
   const bottomButtons: BottomButton[] = [
     {
       id: "pet",
@@ -103,9 +106,6 @@ export function AppRail({ activeModuleId, onModuleClick, onPetToggle, onAvatarOp
         onPetToggle();
       },
     },
-    { id: "sync",  icon: "sync" },
-    { id: "notif", icon: "bell" },
-    { id: "help",  icon: "help" },
   ];
 
   const navLabels = t.nav;
