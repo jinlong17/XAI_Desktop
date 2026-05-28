@@ -7,13 +7,13 @@
 | Workflow | FEATURE_DEV |
 | Target | desktop-last-data-cache-polish |
 | Title | Phase 2 Desktop Last-known Data Cache Polish |
-| Current Phase | FEATURE_REVIEW |
-| Status | APPROVED |
-| Suggested Next | feature-build |
+| Current Phase | FEATURE_VERIFY |
+| Status | READY_FOR_VERIFY |
+| Suggested Next | feature-verify |
 | Automation Mode | B-Codex |
 | Verify Cross-vendor | yes |
-| Executor | feature-review (Codex, gpt-5.4 inline) |
-| Updated | 2026-05-28 06:27 PDT |
+| Executor | feature-auto-build (Codex, gpt-5.3-codex inline) |
+| Updated | 2026-05-28 06:46 PDT |
 | Brief | `docs/reviews/desktop-last-data-cache-polish/20260528-feature-brief.md` |
 | Discovery Review | `docs/reviews/desktop-last-data-cache-polish/20260528-discovery-review.md` |
 | Risks | The main implementation risk is over-correcting seeded demo behavior and accidentally regressing the live/browser demo path; the opposite risk is leaving any seeded desktop-offline path in place so demo data is still mistaken for last-known cache. The new unreadable-cache mode reduces the false-positive shell risk, but real macOS offline relaunch verification is still required after build. |
@@ -23,7 +23,7 @@
 
 ### Phase 1 — Shared Desktop-offline Cache Status Seam
 
-Status: PLANNED
+Status: DONE (`cfd7ad13`)
 
 - Add a browser-safe shell-level cache indicator for `desktop-phase1-offline`.
 - Use lightweight `absent | readable | unreadable` checks for tasks/boards/habits, plus existing tracked-key presence for the already-safe persisted readers.
@@ -32,7 +32,7 @@ Status: PLANNED
 
 ### Phase 2 — Tasks and Board Safe Fallback
 
-Status: PLANNED
+Status: DONE (`dea96e26`)
 
 - Replace desktop-offline seed/demo fallback with absent/corrupt-specific behavior in:
   - `@repo/plugin-web-tasks`
@@ -43,7 +43,7 @@ Status: PLANNED
 
 ### Phase 3 — Habits Seed-hydration Override
 
-Status: PLANNED
+Status: DONE (`64c413d9`)
 
 - Prevent first-launch habits seeding in desktop offline runtime when no valid cache exists.
 - Freeze: default/absent cache -> safe empty state; unreadable cache -> explicit unreadable-copy/state.
@@ -51,11 +51,18 @@ Status: PLANNED
 
 ### Phase 4 — Regression and Launch Verification
 
-Status: PLANNED
+Status: DONE
 
 - Add cached-present / cache-absent / cache-corrupt regression tests.
 - Re-run web build and desktop app-bundle build.
 - Record manual macOS offline relaunch expectations.
+
+Manual macOS offline relaunch expectations (to be independently verified by `feature-verify`):
+
+- With readable local cache keys present, `/app` launches and shell badge shows cached-local-data mode.
+- With tracked keys absent, `/app` launches and tasks/boards/habits render safe empty states.
+- With malformed tasks/boards/habits cache payloads, `/app` launches and shell/module unreadable copy is shown (no demo reseed).
+- Launch remains non-blocking and no overlay/control/grid startup path is reintroduced.
 
 ## Explicit Phase 3 Deferrals
 
@@ -91,3 +98,7 @@ Review findings:
 | 2026-05-28 06:18 PDT | feature-review (Codex, gpt-5.4 inline) | Review verdict: REVISE. The Phase 2 boundary is correct, but build should not proceed until the plan freezes the corrupt-cache user-visible contract and aligns task/habits package naming to repo truth. Current docs allow a misleading shell-level "cached" signal for malformed local data and repeatedly cite nonexistent public packages (`@repo/xai-web-tasks`, `@repo/xai-web-habits`) instead of `@repo/plugin-web-tasks` and `@repo/plugin-web-habits`. | — | feature-plan |
 | 2026-05-28 06:21 PDT | feature-plan (Codex, gpt-5.4 inline) | Revise pass: adopted a concrete Phase 2 corrupt-cache contract with shared `bannerMode = hidden | cached | empty | unreadable`, requiring lightweight unreadable detection for the three seeded targets and explicit unreadable-cache module UI for corrupt tasks/boards/habits payloads. Corrected public package naming to `@repo/plugin-web-tasks` and `@repo/plugin-web-habits`, kept filesystem paths explicit, and preserved all Phase 2 deferrals (no repository, migration, queue, sync, conflict, freshness, or SQLite drift). | — | feature-review |
 | 2026-05-28 06:27 PDT | feature-review (Codex, gpt-5.4 inline) | Review verdict: APPROVED. Confirmed the prior blockers are closed across discovery/design/api/test/dev_log, the shared unreadable-cache contract is concrete without requiring brittle cross-package internal imports, fallback rules stay Phase 2-only and preserve browser/live behavior, and the test plan covers cached/empty/unreadable plus launch non-blocking and real-macOS residual verification. | — | feature-build |
+| 2026-05-28 06:39 PDT | feature-auto-build (Codex, gpt-5.3-codex inline) | Phase 1 — Shared Desktop-offline Cache Status Seam: implemented `@repo/desktop-last-data-cache-polish/web` snapshot+badge seam, wired App topbar badge injection, exported package-owned desktop-cache predicates (`absent | readable | unreadable`) for tasks/boards/habits via public subpaths, and tracked row #7 planning/review/docs artifacts in git. | `cfd7ad13` | Phase 2 |
+| 2026-05-28 06:42 PDT | feature-auto-build (Codex, gpt-5.3-codex inline) | Phase 2 — Tasks and Board Safe Fallback: tasks now return safe empty columns in desktop offline when cache is absent/unreadable and render explicit unreadable copy for malformed payloads; board-workspaces now suppresses desktop-offline reseed/default boards and renders safe empty/unreadable states for absent/empty/corrupt cache. Browser/live fallback behavior is preserved. | `dea96e26` | Phase 3 |
+| 2026-05-28 06:44 PDT | feature-auto-build (Codex, gpt-5.3-codex inline) | Phase 3 — Habits Seed-hydration Override: habits runtime now disables seed hydration in desktop-offline mode, keeps empty state when cache is absent/default, and renders explicit unreadable copy when cached payload is malformed. Web-live seeded behavior remains unchanged. | `64c413d9` | Phase 4 |
+| 2026-05-28 06:46 PDT | feature-auto-build (Codex, gpt-5.3-codex inline) | Phase 4 — Regression and Launch Verification: completed regression coverage for absent/cached/unreadable desktop-offline paths and executed build gates: `pnpm --filter @repo/desktop-last-data-cache-polish check-types`, `pnpm --filter @repo/desktop-last-data-cache-polish test`, `pnpm --filter @repo/plugin-web-tasks test`, `pnpm --filter @repo/plugin-web-board-workspaces test`, `pnpm --filter @repo/plugin-web-habits test`, `pnpm --filter @repo/web test`, `pnpm --filter @repo/web build`, `pnpm --filter desktop tauri build --debug --bundles app` (all pass; non-blocking warnings only). | — | feature-verify |
