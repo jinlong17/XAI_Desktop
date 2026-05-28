@@ -27,7 +27,10 @@
 ## Automated Checks
 
 - `cargo test --manifest-path apps/desktop/src-tauri/Cargo.toml`
+- `pnpm --filter @repo/web test -- src/config/sourcemapPolicy.test.ts`
 - `pnpm --filter @repo/web build`
+  - must emit **no public sourcemaps** in `apps/web/dist` (`sourcemaps:assert-clean`)
+  - must pass built-artifact browser-safety scan (`browser-safety:assert-dist`) across `*.js` and `*.map`
 - `pnpm --filter desktop tauri build --debug --bundles app`
 
 ## Rust Test Coverage
@@ -56,6 +59,12 @@
   - `start-pomodoro`
   - `view-today-tasks`
 - no `@tauri-apps/*` or `window.__TAURI__` leak into the browser-safe package
+
+### Build artifact policy tests
+
+- `resolveWebBuildSourcemapPolicy` defaults to `false` for regular `@repo/web build`
+- secure flow explicitly opt-ins hidden sourcemaps via `XAI_WEB_ENABLE_HIDDEN_SOURCEMAP=1`
+- shipped dist verification must include sourcemap files (if any) rather than source-only grep
 
 ### Owning-module contract tests
 

@@ -6,8 +6,8 @@
   "scripts": {
     "dev": "vite --port 3000",
     "dev:mock-auth": "VITE_WEB_AUTH_MODE=mock-authenticated vite --port 3000",
-    "build": "vite build",
-    "build:secure": "vite build && pnpm run sourcemaps:release:create && pnpm run sourcemaps:release:set-commits && pnpm run sourcemaps:debugids:inject && pnpm run sourcemaps:upload && pnpm run sourcemaps:validate && pnpm run sourcemaps:finalize && pnpm run sourcemaps:clean && pnpm run sourcemaps:assert-clean",
+    "build": "vite build && pnpm run sourcemaps:assert-clean && pnpm run browser-safety:assert-dist",
+    "build:secure": "XAI_WEB_ENABLE_HIDDEN_SOURCEMAP=1 vite build && pnpm run sourcemaps:release:create && pnpm run sourcemaps:release:set-commits && pnpm run sourcemaps:debugids:inject && pnpm run sourcemaps:upload && pnpm run sourcemaps:validate && pnpm run sourcemaps:finalize && pnpm run sourcemaps:clean && pnpm run sourcemaps:assert-clean && pnpm run browser-safety:assert-dist",
     "build:secure:with-deploy": "pnpm run build:secure && pnpm run sourcemaps:deploy:mark",
     "lint": "eslint --max-warnings 0 .",
     "check-types": "tsc --noEmit",
@@ -22,7 +22,8 @@
     "sourcemaps:finalize": "node ./scripts/sourcemaps-finalize.mjs",
     "sourcemaps:clean": "node ./scripts/sourcemaps-clean.mjs",
     "sourcemaps:assert-clean": "node ./scripts/sourcemaps-assert-clean.mjs",
-    "sourcemaps:deploy:mark": "node ./scripts/sourcemaps-deploy-mark.mjs"
+    "sourcemaps:deploy:mark": "node ./scripts/sourcemaps-deploy-mark.mjs",
+    "browser-safety:assert-dist": "node ./scripts/browser-safety-assert-dist.mjs"
   },
   "dependencies": {
     "@sentry/react": "^10.20.0",

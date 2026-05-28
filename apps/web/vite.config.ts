@@ -1,5 +1,6 @@
 import { defineConfig } from "vite";
 import react from "@vitejs/plugin-react";
+import { resolveWebBuildSourcemapPolicy } from "./src/config/sourcemapPolicy";
 
 /**
  * Vite plugin — strips __XAI_CSP_NONCE__ placeholders from index.html at
@@ -35,7 +36,7 @@ function stripCspNoncePlaceholder() {
 export default defineConfig({
   plugins: [react(), stripCspNoncePlaceholder()],
   build: {
-    sourcemap: "hidden",
+    sourcemap: resolveWebBuildSourcemapPolicy(),
     // Enable Vite manifest so BM-BUNDLE tests can assert real chunk split.
     // Generates dist/.vite/manifest.json after `pnpm build`.
     // Verify B5: gap-closure row #6 bundle-budget acceptance gate.

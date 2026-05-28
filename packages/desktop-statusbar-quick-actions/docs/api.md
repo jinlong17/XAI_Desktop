@@ -47,6 +47,9 @@ Frozen browser-safety rule:
 - `apps/web` must not import `@tauri-apps/*`
 - `apps/web` must not reference `window.__TAURI__`
 - only the host-injected adapter implementation may touch Tauri globals
+- shipped `apps/web/dist` artifacts must enforce no-public-sourcemap policy by default
+  - regular `pnpm --filter @repo/web build` => `sourcemap: false`
+  - secure release flow may opt into hidden sourcemaps for Sentry upload, but must clean maps before final artifact checks
 
 ## Downstream Interfaces
 
