@@ -208,25 +208,27 @@ export function DesktopNativeNotificationsBridge({
         calendar: calendarUnsupported,
       });
 
-      if (!adapter || !shouldDeliver("task", prefs, snapshot, now)) {
+      if (!adapter) {
         return;
       }
 
-      for (const entry of taskEntries) {
-        if (entry.status !== "candidate") {
-          continue;
-        }
+      if (shouldDeliver("task", prefs, snapshot, now)) {
+        for (const entry of taskEntries) {
+          if (entry.status !== "candidate") {
+            continue;
+          }
 
-        await sendIfDue(
-          adapter,
-          deliveredKeys,
-          entry.occurrenceKey,
-          entry.triggerAtIso,
-          "Task reminder",
-          entry.title,
-          `task:${entry.taskId}`,
-          now,
-        );
+          await sendIfDue(
+            adapter,
+            deliveredKeys,
+            entry.occurrenceKey,
+            entry.triggerAtIso,
+            "Task reminder",
+            entry.title,
+            `task:${entry.taskId}`,
+            now,
+          );
+        }
       }
 
       if (!shouldDeliver("calendar", prefs, snapshot, now)) {

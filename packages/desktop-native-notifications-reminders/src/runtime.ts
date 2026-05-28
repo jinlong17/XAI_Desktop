@@ -2,6 +2,7 @@ import {
   isDesktopPhase1OfflineRuntime,
   resolveWebRuntimeProfile,
 } from "@repo/core";
+import { getPref } from "@repo/plugin-web-storage";
 import type { WebRuntimeProfile } from "@repo/core";
 import type {
   DesktopNotificationPermissionState,
@@ -42,6 +43,10 @@ function readAdapter(): DesktopNotificationRuntimeAdapter | null {
   return window.__XAI_DESKTOP_NOTIFICATION__ ?? null;
 }
 
+function notificationsEnabled(): boolean {
+  return Boolean(getPref("xai_pref_notif_enabled"));
+}
+
 function emitSnapshot(next: DesktopNotificationRuntimeSnapshot): void {
   currentSnapshot = next;
   for (const listener of listeners) {
@@ -76,6 +81,17 @@ function mapPromptState(
       adapterAvailable,
       unsupported: unsupportedCounts,
       unsupportedReason: "adapter_unavailable",
+      lastUpdatedAt: nowIso(),
+    };
+  }
+
+  if (!notificationsEnabled()) {
+    return {
+      status: "disabled",
+      runtimeProfile,
+      permissionState,
+      adapterAvailable,
+      unsupported: unsupportedCounts,
       lastUpdatedAt: nowIso(),
     };
   }

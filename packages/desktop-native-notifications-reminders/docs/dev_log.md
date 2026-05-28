@@ -13,8 +13,8 @@
 | Automation Mode | B-Codex |
 | Verify Cross-vendor | yes |
 | Executor | feature-auto-build (Codex, gpt-5.3-codex inline) |
-| Updated | 2026-05-28 02:13 PDT |
-| Risks | The build must preserve the browser-safety gate by keeping native notification access behind a host-injected adapter, and task/calendar reminder support must remain limited to the exact public v1 subsets documented in `api.md` rather than drifting into hidden storage or sync semantics. |
+| Updated | 2026-05-28 02:27 PDT |
+| Risks | Repair pass addresses the two blocker regressions with focused bridge/runtime tests; final independent full-gate confirmation remains with feature-verify. |
 
 ## Review Notes
 
@@ -30,6 +30,28 @@
 - Intentionally not changed:
   - the approved browser-safe `@repo/desktop-native-notifications-reminders/web` plus host-injected `window.__XAI_DESKTOP_NOTIFICATION__` seam
   - the exact frozen v1 projector support boundaries and `unsupported` semantics
+
+## Verification Result
+
+- Commit review:
+  - `d416f6c5` stays inside Phase 1 intent (desktop transport, injected adapter, browser-safe bridge, additive projector exports) and follows commit convention.
+  - `ad5bc71d` stays inside Phase 2 intent (settings/storage toggle + status wiring) and follows commit convention.
+  - `70176923` stays inside Phase 3 intent (tests + docs only) and follows commit convention.
+- Independent checks rerun by feature-verify:
+  - `pnpm --filter @repo/desktop-native-notifications-reminders check-types`
+  - `pnpm --filter @repo/plugin-web-tasks test -- src/__tests__/projectDesktopTaskReminderEntries.test.ts`
+  - `pnpm --filter @repo/plugin-web-calendar test -- src/__tests__/projectDesktopCalendarReminderEntries.test.ts`
+  - `pnpm --filter @repo/plugin-web-storage test -- src/__tests__/registry.test.ts`
+  - `pnpm --filter @repo/plugin-web-settings-rest test -- src/__tests__/notificationsPane.test.tsx`
+  - `pnpm --filter @repo/web test -- src/providers/AppProviders.test.tsx`
+  - `pnpm --filter @repo/web build`
+  - `rg "@tauri-apps|__TAURI__" apps/web/src packages/desktop-native-notifications-reminders/src` → clean
+  - `rg "@tauri-apps|__TAURI__" apps/web/dist/assets/*.js` → clean
+  - `cargo test --manifest-path apps/desktop/src-tauri/Cargo.toml`
+  - `pnpm --filter desktop tauri build --debug --bundles app`
+- Blocking findings:
+  - `packages/desktop-native-notifications-reminders/src/bridge.tsx` gates calendar delivery behind `shouldDeliver("task", ...)` and returns early before the calendar branch when task notifications are disabled. In the current implementation, turning off task reminders also suppresses calendar reminders even if `xai_pref_notif_push_calendar` remains enabled, which violates the per-source v1 delivery contract.
+  - `packages/desktop-native-notifications-reminders/src/runtime.ts` defines `DesktopNotificationStatus` with `disabled`, but `refreshDesktopNotificationRuntimeSnapshot`, `requestDesktopNotificationPermission`, and `updateDesktopNotificationUnsupportedCounts` never emit that state. The Settings pane works around this locally, so the exported `/web` runtime contract drifts from `api.md` instead of exposing the explicit `disabled` state promised for v1.
 
 ## Phase Plan
 
@@ -81,3 +103,5 @@ Status: DONE (implementation-side evidence complete; real macOS prompt/smoke ret
 | 2026-05-28 02:09 PDT | feature-auto-build (Codex, gpt-5.3-codex inline) | Phase 1 — Native transport and injected adapter: added `tauri-plugin-notification`, enabled `app.withGlobalTauri`, granted `notification:default` capability, injected `window.__XAI_DESKTOP_NOTIFICATION__` through a host-owned init script, scaffolded `@repo/desktop-native-notifications-reminders` (`./web` browser-safe surface), mounted bridge at `apps/web/src/providers/AppProviders.tsx`, and added public v1 reminder projector exports on `@repo/plugin-web-tasks` / `@repo/plugin-web-calendar`. | `d416f6c5` | Phase 2 |
 | 2026-05-28 02:10 PDT | feature-auto-build (Codex, gpt-5.3-codex inline) | Phase 2 — Reminder source integration: wired new `xai_pref_notif_push_calendar` pref + registry tests, connected Notifications pane calendar toggle and desktop permission/status copy/action to runtime snapshot, and preserved habit toggle untouched. | `ad5bc71d` | Phase 3 |
 | 2026-05-28 02:13 PDT | feature-auto-build (Codex, gpt-5.3-codex inline) | Phase 3 — Verification evidence and tests: added projector unit coverage for task/calendar v1 subset + unsupported semantics; validated browser-safe bridge mount test; executed web build/no-tauri-leak grep, Rust tests, and debug app bundle build. `plugin-web-storage` parity test referencing `web design/DESIGN.md` remains environment-deferred because that file is absent in this checkout; targeted registry test passed. | `(this commit)` | feature-verify |
+| 2026-05-28 02:20 PDT | feature-verify (Codex, gpt-5.3-codex inline) | Verification pass: reviewed commits `d416f6c5`, `ad5bc71d`, and `70176923` against the approved discovery/design/api/test docs and reran the documented command set. Browser-safety, package tests, web build, Rust tests, and the debug app bundle all passed, but verification is blocked by two contract issues: calendar delivery is incorrectly short-circuited by the task-source gate in `packages/desktop-native-notifications-reminders/src/bridge.tsx`, and the exported `/web` runtime never emits the explicit `disabled` status promised in `api.md`. | `d416f6c5 ad5bc71d 70176923` | feature-build |
+| 2026-05-28 02:27 PDT | feature-auto-build (Codex, gpt-5.3-codex inline) | Repair pass — fixed blocked delivery/runtime contracts only: `bridge.tsx` no longer returns early on task-source gating so calendar delivery stays independently governed by `xai_pref_notif_push_calendar`; `runtime.ts` now maps `xai_pref_notif_enabled=false` to explicit `disabled` status across refresh + permission + unsupported-count updates. Added focused tests `src/bridge.test.tsx` and `src/runtime.test.ts` covering both blockers (`task off + calendar on` delivery independence and runtime disabled snapshot emission/persistence). Executed: `pnpm --filter @repo/desktop-native-notifications-reminders test -- src/bridge.test.tsx src/runtime.test.ts` and `pnpm --filter @repo/desktop-native-notifications-reminders check-types` (all pass). | `(pending commit)` | feature-verify |
