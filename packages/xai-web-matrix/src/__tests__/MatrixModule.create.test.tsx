@@ -176,6 +176,34 @@ describe("MatrixModule card create", () => {
     expect(screen.getByText("First card in empty q1")).toBeTruthy();
   });
 
+  it("T-MCR-4: create → unmount → remount (simulating refresh): created card survives (EP3)", async () => {
+    const { unmount } = renderMatrix();
+    await waitForSeed();
+
+    await openComposerViaHeader(); // q1 default
+    await submitComposer("Refresh-survival card");
+
+    // Verify card is in localStorage before unmount
+    const rawBefore = localStorage.getItem("xai_matrix_state");
+    expect(rawBefore).toBeTruthy();
+    const parsedBefore = JSON.parse(rawBefore!) as { q1: Array<{ title: { en: string } }> };
+    expect(parsedBefore.q1.some((c) => c.title.en === "Refresh-survival card")).toBe(true);
+
+    // Unmount (simulate tab close / navigation)
+    unmount();
+
+    // Remount (simulate page refresh — localStorage persists)
+    renderMatrix();
+    await waitForSeed();
+
+    // Card must still be in q1
+    const q1Cards = document.querySelectorAll("[data-quadrant='q1'] .m-row");
+    const survived = Array.from(q1Cards).find(
+      (el) => el.textContent?.includes("Refresh-survival card")
+    );
+    expect(survived).toBeTruthy();
+  });
+
   it("T-MNOEMIT-1: creating a card does NOT emit web:matrix:priority-tagged (spy emitWebEvent; assert 0 calls)", async () => {
     // Spy on emitWebEvent BEFORE render
     const emitSpy = vi.spyOn(EventBus, "emitWebEvent").mockImplementation(() => {});

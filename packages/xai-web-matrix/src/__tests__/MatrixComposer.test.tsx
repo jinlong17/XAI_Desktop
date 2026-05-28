@@ -201,6 +201,55 @@ describe("MatrixComposer", () => {
     expect(onClose).toHaveBeenCalledOnce();
   });
 
+  it("T-MA11Y-1: a11y contract — aria-modal, aria-labelledby, aria-required, radiogroup/radio/aria-checked (EP3)", async () => {
+    renderComposer();
+
+    const dialog = document.querySelector("dialog");
+    expect(dialog).toBeTruthy();
+    // aria-modal
+    expect(dialog!.getAttribute("aria-modal")).toBe("true");
+    // aria-labelledby references the h2
+    const labelledById = dialog!.getAttribute("aria-labelledby");
+    expect(labelledById).toBe("matrix-composer-title");
+    const labelEl = document.getElementById(labelledById!);
+    expect(labelEl).toBeTruthy();
+    expect(labelEl?.tagName.toLowerCase()).toBe("h2");
+
+    // title input aria-required
+    const titleInput = document.getElementById("matrix-composer-title-input");
+    expect(titleInput?.getAttribute("aria-required")).toBe("true");
+
+    // aria-describedby not present when no error
+    expect(titleInput?.getAttribute("aria-describedby")).toBeNull();
+
+    // Trigger error → aria-describedby set
+    const saveBtn = document.querySelector(".matrix-composer__btn--primary") as HTMLButtonElement;
+    await act(async () => { fireEvent.click(saveBtn); });
+    expect(titleInput?.getAttribute("aria-describedby")).toBe("matrix-composer-err-title");
+
+    // Tag radiogroup
+    const tagGroup = document.querySelector(".matrix-composer [role='radiogroup'][aria-label]") as HTMLElement;
+    expect(tagGroup).toBeTruthy();
+
+    // All options in the tag group have role="radio" + aria-checked
+    const tagRadios = tagGroup.querySelectorAll("[role='radio']");
+    expect(tagRadios.length).toBeGreaterThan(0);
+    tagRadios.forEach((r) => {
+      expect(r.getAttribute("aria-checked")).toMatch(/^(true|false)$/);
+    });
+
+    // Quadrant radiogroup
+    const allGroups = document.querySelectorAll(".matrix-composer [role='radiogroup']");
+    // There are 2 radiogroups: tag + quadrant
+    expect(allGroups.length).toBe(2);
+    const quadrantGroup = allGroups[1];
+    const quadrantRadios = quadrantGroup!.querySelectorAll("[role='radio']");
+    expect(quadrantRadios.length).toBe(4); // q1/q2/q3/q4
+    quadrantRadios.forEach((r) => {
+      expect(r.getAttribute("aria-checked")).toMatch(/^(true|false)$/);
+    });
+  });
+
   it("T-MC-7: bilingual STR parity — EN labels under lang=en, ZH under lang=zh", async () => {
     // EN
     renderComposer({ lang: "en" });
