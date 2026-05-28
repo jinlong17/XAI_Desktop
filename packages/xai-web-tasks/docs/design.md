@@ -205,3 +205,77 @@ Each phase ends with feature-build STOP per Workflow V2 rule.
 - **Q1**: Is the `Postpone +` action button on the `overdue` column a functioning button in v1, or decorative? — **Provisional answer: decorative** (prototype's button has no `onClick`). Confirm at review.
 - **Q2**: When DnD moves a card *to* the `nodate` bucket, does the card lose its tag pill? — **Answer: No.** Prototype lines 195-196 say "Keep tag/inbox". Only `date`, `dateZh`, `dateLabel`, and `sub` are stripped on bucket change.
 - **Q3**: Does `tasksWebModuleRegistration` need a non-empty `defaultChildPath`? — **Answer: No.** Countdown registration uses `defaultChildPath: ""` + a single `{ path: "", render }` row plus `{ path: "*", render }` for unknown sub-paths. We mirror that.
+
+---
+
+# Extension — xai-web-tasks-card-create (2026-05-28)
+
+> APPENDED extension. The SHIPPED v1 content above (§1–§9) is unchanged.
+> Decision snapshot only — discovery detail lives in the review doc, not here.
+
+## E.0 Decision snapshot
+
+| Field | Value |
+|---|---|
+| Feature | `xai-web-tasks-card-create` (column `+` → TaskComposer → reducer create → persist) |
+| Selected Option | A1 (state lift in `TasksModule`) + B1 (`addCard` pure reducer action) + C1 (optional bucket-derived date) + D1 (single bilingual title) + E1 (native `<dialog>`) + D5 (Edit/Delete DEFERRED) |
+| Discovery / Review Doc | `docs/reviews/xai-web-tasks-card-create/20260528-discovery-review.md` |
+| Feature Brief | `docs/reviews/xai-web-tasks-card-create/20260528-feature-brief.md` |
+| Roadmap Manifest | `docs/workflow/roadmap/xai-web-tasks-card-create.md` |
+| Review Date / Version | 2026-05-28 (v1 — pending feature-review) |
+| Governing Authority | ADR-0010 §D4 P0 carve-out (`docs/reviews/_p0-carve-outs/20260528-tasks-card-create.md`, commit `09673f8`) |
+
+## E.1 Frozen assumptions (extension)
+
+Changing any of these requires re-running feature-plan, not a silent edit.
+
+1. **No new package** — all new code lands in `packages/xai-web-tasks/src/`.
+2. **New files**: `src/internal/ids.ts`, `src/internal/strings.ts`, `src/TaskComposer.tsx`.
+3. **One new reducer action** — `addCard(prev, draft, targetBucket, now?)`, pure, symmetric with `moveCard` (prepend + `count+1` + referential equality for untouched columns). `tasksReducer.ts` had ONLY `moveCard` + `toggleComplete` before this feature (confirmed in discovery §1).
+4. **New exported type** — `NewTaskDraft = { title: string; tag?: TaskTagId; withDate: boolean }` (additive in `types.ts`).
+5. **Persistence reuse** — `xai_task_cols` (registry.ts:197-204; json codec, owner `xai-web-tasks`). NO `packages/plugin-web-storage` edit. Created card flows through the SHIPPED `setRawCols(next as unknown as ...)` boundary cast.
+6. **No new event channel** — composer state lifts into `TasksModule` via `useState`; NO `packages/core/src/types/events.ts` edit (Calendar Q5-A precedent).
+7. **Composer** — native `<dialog>` + `showModal()`/`close()` + `cancel`(ESC) + backdrop-click + `setTimeout(0)` autofocus, mirroring `EventComposer.tsx`. Tag picker + bucket picker are `role="radiogroup"`.
+8. **Single bilingual title** — one input fills both `title.en` + `title.zh`; label follows active UI lang.
+9. **Local STR** — `src/internal/strings.ts` (en+zh). NO `plugin-web-tokens` edit. Existing tokens keys (`common.add`, `tag.*`, column keys) keep flowing through `useI18n`.
+10. **Date on create** — optional. If opted-in and target ≠ `nodate`, reuse `dateForCol(targetBucket, now)`. No free-form date picker in v1.
+11. **id** — `createTaskId()` (`crypto.randomUUID()` + `t-<base36ts>-<rnd>` fallback) mirroring `calendar/eventStore/ids.ts`. Disjoint from seed's `t<digit>`/`c<digit>` namespace.
+12. **Edit + Delete DEFERRED** — `TaskCard` onClick is already bound to toggle-complete (`TaskCard.tsx:49,52`), so an edit affordance collides; Edit/Delete needs `updateCard`/`deleteCard` + a 2nd dialog + a card-affordance redesign (above the low-cost bar). Pre-scoped as the next increment.
+13. **No host-shell edit** — the slot (`tasksWebModuleRegistration`, railOrder 2) already SHIPPED; create needs no registration change.
+
+## E.2 Dependency overview (extension)
+
+No new dependencies. Reuses the SHIPPED dep set (`@repo/core`, `@repo/plugin-web-tokens`, `@repo/plugin-web-storage`, `@repo/xai-web-shell`) — all `Stable`. Internal reuse: `dateForCol`, `validate.isTaskCard`/`isTaskColsArray`, `usePref("xai_task_cols")`, `useI18n`. New internal precedent borrowed from `packages/xai-web-calendar/src/internal/eventStore/ids.ts` (pattern only — not an import; no inter-plugin import per ADR-0007 §S7).
+
+## E.3 Module structure delta
+
+```
+packages/xai-web-tasks/src/
+├─ TaskComposer.tsx           ← NEW: native <dialog> create form
+├─ types.ts                   ← +NewTaskDraft (additive export)
+├─ TasksModule.tsx            ← +composer state (open/targetBucket) + addCard dispatch + onAddCard handler
+├─ TaskColumn.tsx             ← +onAddCard?(bucketId) prop; wire the +button onClick
+├─ styles.css                 ← +composer dialog rules (appended)
+└─ internal/
+   ├─ ids.ts                  ← NEW: createTaskId()
+   ├─ strings.ts              ← NEW: STR_TASK_COMPOSER (en+zh)
+   └─ tasksReducer.ts         ← +addCard pure action
+```
+
+Public surface (`src/index.ts`) gains `NewTaskDraft` type export (and may export `TaskComposer` if a consumer ever needs it — v1 keeps it internal to the module, surfaced only via `TasksModule`).
+
+## E.4 Phase plan (extension — mirrors dev_log Phase Plan)
+
+- **EP1 — Data layer**: `internal/ids.ts` (`createTaskId`), `addCard` in `tasksReducer.ts`, `NewTaskDraft` in `types.ts` + barrel export, `internal/strings.ts`. Unit tests (reducer addCard + ids shape). No UI yet. SHIPPED 40 tests stay green.
+- **EP2 — Composer + wire + persistence**: `TaskComposer.tsx` (native dialog, single title input, tag radiogroup, bucket radiogroup, optional-date opt-in, inline title-required error, ESC/backdrop/Cancel). `onAddCard` prop on `TaskColumn`; wire the `+` onClick. Composer state in `TasksModule`; save → `addCard` → `setRawCols`. RTL + persistence tests (create → localStorage round-trip; empty-bucket create).
+- **EP3 — Integration + a11y + cross-vendor**: end-to-end create→persist→refresh test; a11y tests (autofocus, ESC, backdrop); index-barrel test for new export; full tasks + web suites green; Codex cold-read (or deferred per ADR-0008 §S3); dev_log verify section; PLUGIN_MAP note at ship.
+
+Each phase ends with `feature-build` STOP per Workflow V2.
+
+## E.5 Out of scope (extension)
+
+- Edit / Delete card UI (deferred — E.1 #12).
+- Free-form date entry (bucket-derived only — C1).
+- T-10 completion persistence (different code path).
+- Event emission / Statistics / Matrix coupling.
+- Any `plugin-web-storage`, `plugin-web-tokens`, `packages/core`, or host-shell edit.

@@ -386,3 +386,163 @@ Provisional new keys we **may** need (P2 will confirm):
 - `tasks.drop_zone_empty` — empty-column placeholder. **Fallback**: same inline pattern as above.
 
 Adding either key to `@repo/plugin-web-tokens` is a one-line additive change to two language bundles — out of scope for this row unless P2 review insists otherwise.
+
+---
+
+# Extension — xai-web-tasks-card-create (2026-05-28)
+
+> APPENDED extension. The SHIPPED v1 contract above (§0–§9) is unchanged.
+> Discovery: `docs/reviews/xai-web-tasks-card-create/20260528-discovery-review.md`.
+
+## E.0 New public surface delta (`src/index.ts`)
+
+```ts
+// Public types — ADD:
+export type { NewTaskDraft } from "./types.js";
+```
+
+`TaskComposer` stays internal to the module in v1 (rendered only by `TasksModule`); it is NOT exported. `createTaskId` and `addCard` stay internal (`src/internal/**`).
+
+## E.1 New type — `NewTaskDraft`
+
+```ts
+export interface NewTaskDraft {
+  /** Raw title string typed by the user; trimmed by addCard. Fills BOTH title.en + title.zh. */
+  readonly title: string;
+  /** Optional tag preset — omitted means "no tag". */
+  readonly tag?: TaskTagId;
+  /** When true (and target ≠ "nodate"), addCard derives date via dateForCol(targetBucket, now). */
+  readonly withDate: boolean;
+}
+```
+
+## E.2 New internal helper — `createTaskId()`
+
+```ts
+// src/internal/ids.ts
+export function createTaskId(): string;
+```
+
+Returns a fresh opaque id. Modern path: `crypto.randomUUID()`. Fallback (jsdom / old runtimes): `"t-" + Date.now().toString(36) + "-" + Math.random().toString(36).slice(2,10)`. Structurally disjoint from seed ids (`t1`…`t26`, `c1`…`c6`) so a generated id can never collide with the fixture. Mirrors `packages/xai-web-calendar/src/internal/eventStore/ids.ts` (pattern only — not imported).
+
+## E.3 New reducer action — `addCard`
+
+```ts
+// src/internal/tasksReducer.ts
+export function addCard(
+  prev: TaskCol[],
+  draft: NewTaskDraft,
+  targetBucket: BucketId,
+  now?: Date,
+): TaskCol[];
+```
+
+Pure. Returns a new `TaskCol[]` where a freshly-built `TaskCard` is **prepended** to `targetBucket.tasks` (top of column = index 0, matching `moveCard`'s prepend convention). Behaviour:
+
+- Builds the card: `id = createTaskId()`; `title = { en: draft.title.trim(), zh: draft.title.trim() }`; `tag` set only when `draft.tag` is defined; `date`+`dateZh` set only when `draft.withDate === true` AND `targetBucket !== "nodate"` (via `dateForCol(targetBucket, now)`); no `sub`/`dateLabel`/`inbox` on user-created cards.
+- `targetBucket`'s `count` becomes `count + 1`.
+- All other columns pass through untouched (referential equality preserved — same discipline as `moveCard`).
+- **Guard**: if `draft.title.trim().length === 0`, returns `prev` unchanged (the composer also blocks empty titles with an inline error, so this is a defensive boundary).
+- **Guard**: if `targetBucket` is not found in `prev`, returns `prev` unchanged.
+- The result passes `isTaskColsArray` (so the persistence round-trip is valid).
+
+### Example
+
+```ts
+addCard(
+  taskCols,
+  { title: "Email the reviewers", tag: "work", withDate: true },
+  "next7",
+  new Date("2026-05-28T12:00:00"),
+);
+// → next7.tasks[0] = {
+//     id: "<uuid>", title: { en: "Email the reviewers", zh: "Email the reviewers" },
+//     tag: "work", date: "5/30", dateZh: "5 月 30 日"
+//   }
+// → next7.count incremented; other 3 columns referentially identical to input.
+```
+
+## E.4 New component — `TaskComposer` (internal)
+
+```ts
+export interface TaskComposerProps {
+  /** Controls visibility: true → showModal(), false → close(). */
+  open: boolean;
+  /** Active language for STR_TASK_COMPOSER labels + the inline error. */
+  lang: Lang;
+  /** Bucket pre-selected when the dialog opens (the column whose + was clicked). */
+  defaultBucket: BucketId;
+  /** Called after validation passes with the draft + chosen bucket. */
+  onSave: (draft: NewTaskDraft, targetBucket: BucketId) => void;
+  /** Called on ESC / backdrop click / Cancel (changes discarded). */
+  onClose: () => void;
+}
+
+export function TaskComposer(props: TaskComposerProps): ReactElement | null;
+```
+
+Behaviour (mirrors `EventComposer.tsx`):
+
+- On open: `title=""`, `bucket=defaultBucket`, `tag=undefined` ("None" radio selected), `withDate=false`. Form resets via `useEffect` keyed on `[open, defaultBucket]`.
+- Open/close imperatively: `open` → `showModal()` + autofocus title via `setTimeout(0)`; `!open` → `close()`.
+- ESC: native `cancel` event listener → `onClose`.
+- Backdrop: `onClick` where `e.target === dialogRef.current` → `onClose`.
+- Save: trims title; if empty → inline `err_title_required` shown + dialog stays open; else `onSave({ title, tag, withDate }, bucket)`.
+- Tag picker: `role="radiogroup"`; options = `["none","study","work","personal","todo","other"]`; "none" maps to `tag=undefined`.
+- Bucket picker: `role="radiogroup"` over the 4 `BucketId`s; default = `defaultBucket`.
+- Date opt-in: a single checkbox "give this a date for the bucket" → `withDate`; hidden/no-op semantics when bucket is `nodate` (date can't apply).
+
+a11y: `aria-modal="true"` + `aria-labelledby="task-composer-title"`; title input `aria-required` + `aria-describedby` when error present; each radio carries `aria-checked`.
+
+## E.5 Wiring delta — `TaskColumn` + `TasksModule`
+
+### `TaskColumn` (new optional prop)
+
+```ts
+export interface TaskColumnProps {
+  // …existing props unchanged…
+  onAddCard?: (bucketId: BucketId) => void;  // NEW
+}
+```
+
+The `col.action === "add"` button (`TaskColumn.tsx:68-74`) gains `onClick={() => onAddCard?.(col.id)}`. The `overdue` column keeps its `postpone` action (unchanged; decorative per original Q1). The button keeps its existing `aria-label={s("common.add")}`.
+
+### `TasksModule` (new state — no new event channel)
+
+```ts
+const [composer, setComposer] = useState<{ open: boolean; bucket: BucketId }>({
+  open: false, bucket: "next7",
+});
+
+function handleAddCard(bucketId: BucketId) {
+  setComposer({ open: true, bucket: bucketId });
+}
+
+function handleComposerSave(draft: NewTaskDraft, targetBucket: BucketId) {
+  const next = addCard(taskCols, draft, targetBucket);
+  setRawCols(next as unknown as Parameters<typeof setRawCols>[0]); // SHIPPED boundary cast
+  setComposer((c) => ({ ...c, open: false }));
+}
+```
+
+`<TaskComposer open={composer.open} lang={lang} defaultBucket={composer.bucket} onSave={handleComposerSave} onClose={...} />` renders once at the module root. Persistence + re-render reuse the SHIPPED `usePref` path entirely — no new channel, no `core` edit.
+
+## E.6 Persistence contract (extension)
+
+Unchanged from §4. `addCard`'s output is written via the same `setRawCols` boundary cast as `moveCard`. First create on an empty install materializes seed + new card together (the resolved `taskCols` is already seed-or-persisted via the SHIPPED `useMemo`), identical to the first DnD today. The written array passes `isTaskColsArray`.
+
+## E.7 i18n (extension)
+
+New strings live in `src/internal/strings.ts` as `STR_TASK_COMPOSER` (en+zh), mirroring `calendar/internal/strings.ts`. Shape: `Record<string, { en: string; zh: string }>`; access `STR_TASK_COMPOSER.key[lang]`. Expected keys: `title_create`, `field_title`, `field_tag`, `field_bucket`, `field_add_date`, `tag_none`, `bucket_overdue`, `bucket_next7`, `bucket_later`, `bucket_nodate`, `btn_save`, `btn_cancel`, `err_title_required`. Tag labels themselves continue via the existing tokens `tag.*` keys through `useI18n`. **No `plugin-web-tokens` edit.**
+
+## E.8 Error semantics (extension)
+
+| Boundary | Failure mode | Behaviour |
+|---|---|---|
+| Composer Save with empty/whitespace title | `title.trim().length === 0` | Inline `err_title_required`; dialog stays open; no `onSave`. |
+| `addCard` called with empty title (defensive) | `draft.title.trim().length === 0` | Returns `prev` unchanged. |
+| `addCard` with unknown `targetBucket` | bucket not found in `prev` | Returns `prev` unchanged. |
+| `withDate === true` on `nodate` target | date can't apply | No date fields written (the `dateForCol("nodate")` → null path). |
+| `setRawCols` write fails (quota) | storage layer returns false | Silent (same as SHIPPED `usePref` contract). |
+
+No error UI beyond the inline title-required message in v1.
