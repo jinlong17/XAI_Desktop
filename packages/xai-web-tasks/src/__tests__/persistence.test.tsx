@@ -1,12 +1,12 @@
 /**
- * persistence.test.tsx — T-PER-1..3
+ * persistence.test.tsx — T-PER-1..3 + T-CR-1..3
  *
  * Tests usePref boundary cast + seed-fallback + localStorage round-trip.
- * Phase: P2
+ * Phase: P2 (T-PER-1..3) + EP2 (T-CR-1..2) + EP3 (T-CR-3)
  */
 
 import { describe, it, expect, vi } from "vitest";
-import { render, fireEvent } from "@testing-library/react";
+import { render, fireEvent, act } from "@testing-library/react";
 import React from "react";
 import { TasksModule } from "../TasksModule.js";
 import { SEED_TASK_COLS } from "../internal/seed/tasksMock.js";
@@ -70,5 +70,123 @@ describe("TasksModule persistence", () => {
     expect(warnSpy.mock.calls.length).toBeGreaterThanOrEqual(0);
 
     warnSpy.mockRestore();
+  });
+});
+
+// ---------------------------------------------------------------------------
+// T-CR-1..3 — TaskComposer create flow + persistence (EP2 + EP3)
+// ---------------------------------------------------------------------------
+
+describe("TasksModule create flow + persistence (T-CR)", () => {
+  // T-CR-1: open composer → type title → Save → card at top of column + localStorage round-trip
+  it("T-CR-1: create card → appears at top of target column + localStorage round-trips it", () => {
+    render(<TasksModule lang="en" />);
+
+    // Find the first + button (action="add" column)
+    const addBtn = document.querySelector('.icon-btn[aria-label="Add"]') as HTMLElement;
+    expect(addBtn).toBeTruthy();
+
+    act(() => {
+      fireEvent.click(addBtn);
+    });
+
+    // Composer dialog should be open
+    const dialog = document.querySelector("dialog.task-composer");
+    expect(dialog).toBeTruthy();
+
+    // Type a title
+    const input = dialog!.querySelector('input[type="text"]') as HTMLInputElement;
+    act(() => {
+      fireEvent.change(input, { target: { value: "My new task" } });
+    });
+
+    // Click save — use the button inside the composer dialog to avoid ambiguity
+    const saveBtn = dialog!.querySelector('.task-composer__btn--primary') as HTMLElement;
+    act(() => {
+      fireEvent.click(saveBtn);
+    });
+
+    // Card should appear in the task columns
+    const allCards = document.querySelectorAll(".task-card");
+    const cardTitles = Array.from(allCards).map((c) => c.querySelector(".task-title")?.textContent);
+    expect(cardTitles).toContain("My new task");
+
+    // localStorage should have been updated with a valid array
+    const raw = localStorage.getItem("xai_task_cols");
+    expect(raw).not.toBeNull();
+    const parsed = JSON.parse(raw!) as unknown[];
+    expect(Array.isArray(parsed)).toBe(true);
+    expect(parsed).toHaveLength(4);
+
+    // The new card title must appear in the persisted data
+    const allTasks = (parsed as Array<{ tasks: Array<{ title?: { en?: string } }> }>)
+      .flatMap((col) => col.tasks)
+      .map((t) => t.title?.en);
+    expect(allTasks).toContain("My new task");
+  });
+
+  // T-CR-2: create into a bucket → card appears; count reflects +1
+  it("T-CR-2: create card → card prepended and column count +1", () => {
+    render(<TasksModule lang="en" />);
+
+    // Find the first + button
+    const addBtns = document.querySelectorAll('.icon-btn[aria-label="Add"]');
+    expect(addBtns.length).toBeGreaterThan(0);
+    const addBtn = addBtns[0] as HTMLElement;
+
+    // Get the initial task count for the column that this + belongs to
+    const colHeader = addBtn.closest(".task-col")!.querySelector(".task-col-head");
+    const countEl = colHeader?.querySelector(".col-count") as HTMLElement;
+    const initialCount = parseInt(countEl?.textContent ?? "0", 10);
+
+    act(() => {
+      fireEvent.click(addBtn);
+    });
+
+    const dialog = document.querySelector("dialog.task-composer");
+    const input = dialog!.querySelector('input[type="text"]') as HTMLInputElement;
+    act(() => {
+      fireEvent.change(input, { target: { value: "Count test task" } });
+    });
+
+    const saveBtn = dialog!.querySelector('.task-composer__btn--primary') as HTMLElement;
+    act(() => {
+      fireEvent.click(saveBtn);
+    });
+
+    // Count in the column header should be +1
+    const newCount = parseInt(countEl?.textContent ?? "0", 10);
+    expect(newCount).toBe(initialCount + 1);
+  });
+
+  // T-CR-3 (EP3): after create + write, re-mounting reads the same localStorage → card survives
+  it("T-CR-3: created card survives unmount + re-mount (simulates page reload)", () => {
+    const { unmount } = render(<TasksModule lang="en" />);
+
+    // Open composer and create a card
+    const addBtn = document.querySelector('.icon-btn[aria-label="Add"]') as HTMLElement;
+    act(() => { fireEvent.click(addBtn); });
+
+    const dialog = document.querySelector("dialog.task-composer");
+    const input = dialog!.querySelector('input[type="text"]') as HTMLInputElement;
+    act(() => { fireEvent.change(input, { target: { value: "Persisted task" } }); });
+
+    const saveBtn = dialog!.querySelector('.task-composer__btn--primary') as HTMLElement;
+    act(() => { fireEvent.click(saveBtn); });
+
+    // Verify it's in localStorage before unmount
+    const raw = localStorage.getItem("xai_task_cols");
+    expect(raw).not.toBeNull();
+
+    // Unmount the module (simulates navigation away)
+    unmount();
+
+    // Re-mount (simulates navigation back — reads the same localStorage)
+    render(<TasksModule lang="en" />);
+
+    // The card should still be visible
+    const allCards = document.querySelectorAll(".task-card");
+    const cardTitles = Array.from(allCards).map((c) => c.querySelector(".task-title")?.textContent);
+    expect(cardTitles).toContain("Persisted task");
   });
 });

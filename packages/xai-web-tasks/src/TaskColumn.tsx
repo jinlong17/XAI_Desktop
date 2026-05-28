@@ -27,6 +27,8 @@ export interface TaskColumnProps {
   onDragOver: (e: React.DragEvent<HTMLElement>, colId: BucketId) => void;
   onDragLeave: (colId: BucketId) => void;
   onDrop: (e: React.DragEvent<HTMLElement>, colId: BucketId) => void;
+  /** NEW (api.md §E.5): called when the + button is clicked; opens the composer for this bucket. */
+  onAddCard?: (bucketId: BucketId) => void;
 }
 
 export function TaskColumn({
@@ -41,6 +43,7 @@ export function TaskColumn({
   onDragOver,
   onDragLeave,
   onDrop,
+  onAddCard,
 }: TaskColumnProps) {
   const { s } = useI18n(lang);
   const isEmpty = col.tasks.length === 0;
@@ -66,7 +69,11 @@ export function TaskColumn({
           </button>
         )}
         {col.action === "add" && (
-          <button className="icon-btn" aria-label={s("common.add")}>
+          <button
+            className="icon-btn"
+            aria-label={s("common.add")}
+            onClick={() => onAddCard?.(col.id)}
+          >
             <svg width="14" height="14" viewBox="0 0 16 16" fill="currentColor" aria-hidden="true">
               <path d="M8 3a1 1 0 011 1v3h3a1 1 0 110 2H9v3a1 1 0 11-2 0V9H4a1 1 0 110-2h3V4a1 1 0 011-1z"/>
             </svg>

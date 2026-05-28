@@ -9,14 +9,15 @@
  */
 
 import React, { useMemo, useState } from "react";
-import type { TasksModuleProps, TaskCol, BucketId } from "./types.js";
+import type { TasksModuleProps, TaskCol, BucketId, NewTaskDraft } from "./types.js";
 import { useI18n } from "@repo/plugin-web-tokens";
 import { usePref } from "@repo/plugin-web-storage";
 import { SEED_TASK_COLS } from "./internal/seed/tasksMock.js";
 import { isTaskColsArray } from "./internal/validate.js";
-import { moveCard, toggleComplete } from "./internal/tasksReducer.js";
+import { moveCard, toggleComplete, addCard } from "./internal/tasksReducer.js";
 import { TasksSidebar } from "./TasksSidebar.js";
 import { TaskColumn } from "./TaskColumn.js";
+import { TaskComposer } from "./TaskComposer.js";
 
 export type { TasksModuleProps };
 
@@ -92,6 +93,25 @@ export function TasksModule({ lang }: TasksModuleProps) {
     setRawCols(next as unknown as Parameters<typeof setRawCols>[0]);
   }
 
+  // ---- Composer state (api.md §E.5) ----
+  const [composer, setComposer] = useState<{ open: boolean; bucket: BucketId }>({
+    open: false, bucket: "next7",
+  });
+
+  function handleAddCard(bucketId: BucketId) {
+    setComposer({ open: true, bucket: bucketId });
+  }
+
+  function handleComposerSave(draft: NewTaskDraft, targetBucket: BucketId) {
+    const next = addCard(taskCols, draft, targetBucket);
+    setRawCols(next as unknown as Parameters<typeof setRawCols>[0]); // SHIPPED boundary cast
+    setComposer((c) => ({ ...c, open: false }));
+  }
+
+  function handleComposerClose() {
+    setComposer((c) => ({ ...c, open: false }));
+  }
+
   const isDragging = dragging !== null;
 
   return (
@@ -142,10 +162,19 @@ export function TasksModule({ lang }: TasksModuleProps) {
               onDragOver={handleDragOver}
               onDragLeave={handleDragLeave}
               onDrop={handleDrop}
+              onAddCard={handleAddCard}
             />
           ))}
         </div>
       </main>
+      {/* TaskComposer — rendered once at module root (api.md §E.5) */}
+      <TaskComposer
+        open={composer.open}
+        lang={lang}
+        defaultBucket={composer.bucket}
+        onSave={handleComposerSave}
+        onClose={handleComposerClose}
+      />
     </div>
   );
 }
