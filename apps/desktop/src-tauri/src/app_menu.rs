@@ -1,6 +1,6 @@
 use std::process::Command;
 
-use tauri::menu::{Menu, MenuBuilder, MenuEvent, SubmenuBuilder};
+use tauri::menu::{Menu, MenuBuilder, MenuEvent, MenuItem, SubmenuBuilder};
 use tauri::{AppHandle, Manager, Wry};
 
 use crate::app_config;
@@ -21,10 +21,14 @@ pub fn menu_top_level_labels() -> &'static [&'static str] {
 pub fn menu_help_custom_item_ids() -> &'static [&'static str] {
     &[
         MENU_ID_HELP_REVEAL_CONFIG_FOLDER,
-        MENU_ID_HELP_RESET_MAIN_WINDOW_STATE,
         MENU_ID_HELP_DISABLE_QUICK_OPEN_SHORTCUT,
         MENU_ID_HELP_RESET_QUICK_OPEN_SHORTCUT,
     ]
+}
+
+#[cfg(test)]
+pub fn menu_window_custom_item_ids() -> &'static [&'static str] {
+    &[MENU_ID_HELP_RESET_MAIN_WINDOW_STATE]
 }
 
 pub fn install_native_app_menu(app: &AppHandle<Wry>) -> AppResult<()> {
@@ -37,6 +41,35 @@ pub fn install_native_app_menu(app: &AppHandle<Wry>) -> AppResult<()> {
 }
 
 fn build_native_app_menu(app: &AppHandle<Wry>) -> tauri::Result<Menu<Wry>> {
+    let reveal_config_folder = MenuItem::with_id(
+        app,
+        MENU_ID_HELP_REVEAL_CONFIG_FOLDER,
+        "Reveal Config Folder",
+        true,
+        None::<&str>,
+    )?;
+    let reset_main_window_state = MenuItem::with_id(
+        app,
+        MENU_ID_HELP_RESET_MAIN_WINDOW_STATE,
+        "Reset Main Window State",
+        true,
+        None::<&str>,
+    )?;
+    let disable_quick_open_shortcut = MenuItem::with_id(
+        app,
+        MENU_ID_HELP_DISABLE_QUICK_OPEN_SHORTCUT,
+        "Disable Quick Open Shortcut",
+        true,
+        None::<&str>,
+    )?;
+    let reset_quick_open_shortcut = MenuItem::with_id(
+        app,
+        MENU_ID_HELP_RESET_QUICK_OPEN_SHORTCUT,
+        "Reset Quick Open Shortcut to Default",
+        true,
+        None::<&str>,
+    )?;
+
     let app_submenu = SubmenuBuilder::with_id(app, "app", app.package_info().name.clone())
         .about(None)
         .separator()
@@ -68,22 +101,15 @@ fn build_native_app_menu(app: &AppHandle<Wry>) -> tauri::Result<Menu<Wry>> {
         .maximize()
         .separator()
         .bring_all_to_front()
+        .separator()
+        .item(&reset_main_window_state)
         .build()?;
 
     let help_submenu = SubmenuBuilder::new(app, "Help")
-        .text(MENU_ID_HELP_REVEAL_CONFIG_FOLDER, "Reveal Config Folder")
-        .text(
-            MENU_ID_HELP_RESET_MAIN_WINDOW_STATE,
-            "Reset Main Window State",
-        )
-        .text(
-            MENU_ID_HELP_DISABLE_QUICK_OPEN_SHORTCUT,
-            "Disable Quick Open Shortcut",
-        )
-        .text(
-            MENU_ID_HELP_RESET_QUICK_OPEN_SHORTCUT,
-            "Reset Quick Open Shortcut to Default",
-        )
+        .item(&reveal_config_folder)
+        .separator()
+        .item(&disable_quick_open_shortcut)
+        .item(&reset_quick_open_shortcut)
         .build()?;
 
     MenuBuilder::new(app)
@@ -164,10 +190,17 @@ mod tests {
             menu_help_custom_item_ids(),
             &[
                 MENU_ID_HELP_REVEAL_CONFIG_FOLDER,
-                MENU_ID_HELP_RESET_MAIN_WINDOW_STATE,
                 MENU_ID_HELP_DISABLE_QUICK_OPEN_SHORTCUT,
                 MENU_ID_HELP_RESET_QUICK_OPEN_SHORTCUT
             ]
+        );
+    }
+
+    #[test]
+    fn window_menu_custom_ids_are_stable() {
+        assert_eq!(
+            menu_window_custom_item_ids(),
+            &[MENU_ID_HELP_RESET_MAIN_WINDOW_STATE]
         );
     }
 }
