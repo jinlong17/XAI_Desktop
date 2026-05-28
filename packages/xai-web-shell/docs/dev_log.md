@@ -1264,13 +1264,13 @@ mock-authenticated / mock-unauthenticated）下都包裹 `<WebAuthSessionProvide
 | Workflow | BUGFIX |
 | Target | xai-web-shell |
 | Title | AppRail bottom rail icons (sync / notif / help) render clickable but have no action — deceptive no-op (Audit Top-10 #8 / Rail-05/06/07) |
-| Current Phase | BUG_VERIFY |
-| Status | FIX_READY_FOR_VERIFY |
-| Suggested Next | bug-verify |
+| Current Phase | SHIP |
+| Status | SHIPPED |
+| Suggested Next | — (workflow complete) |
 | Automation Mode | A-Claude |
-| Verify Cross-vendor | yes — but Cross-vendor Manual Browser Smoke **Deferred** per ADR-0008 §S3 (24h-evidence pattern) + manifest "Cross-vendor Manual Browser Smoke Policy". Cold-read cross-vendor sufficient for this LOW-risk visual-only fix. |
-| Executor | claude-sonnet-4-6 — bug-fix |
-| Updated | 2026-05-28 17:00 |
+| Verify Cross-vendor | yes — Cross-vendor Manual Browser Smoke **Deferred** per ADR-0008 §S3 (24h-evidence pattern) + manifest "Cross-vendor Manual Browser Smoke Policy". Cold-read cross-vendor sufficient for this LOW-risk visual-only deletion (no new CSS/event/route surface to smoke). |
+| Executor | claude-sonnet-4-6 — ship |
+| Updated | 2026-05-28 17:30 |
 | ADR Anchor | ADR-0010 §D4 (BUGFIX needs no P0 carve-out) |
 | Branch | `web` (do NOT touch `dev`) |
 | Resume-mode INTAKE | **NOT SHIPPED.** `git log --all --grep` for `Top-10 #8` / `Rail-05` / `AppRail` / `rail icon` returns only the Rail-10 sign-out lineage (68645c0…ad49472) — a DIFFERENT bug. The earlier #10-sibling diagnosis (this dev_log line ~1229) explicitly DEFERRED Rail-05/06/07 as out-of-scope ("同根因的潜在 bug…本 fix 不动"). Audit inventory line 834 still lists #8 status as "HIDE pending feature scope" (un-actioned). Therefore this is a Fresh BUGFIX. |
@@ -1343,9 +1343,36 @@ New / revised assertions:
 
 - `packages/xai-web-shell/docs/dev_log.md` — appended this BUGFIX section (Status Panel + reproduce + root cause + HIDE-vs-DISABLE recommendation + test plan + boundaries + file list).
 
+### Verify Report (2026-05-28 — bug-verify)
+
+**Verdict: PASS — READY_TO_SHIP.** Independent regression verification of the HIDE fix (Rail-05/06/07 / Audit Top-10 #8). Verifier (claude-opus-4-8[1m]) ≠ writer (claude-sonnet-4-6) per cross-vendor gate.
+
+| Gate | Result | Evidence |
+|---|---|---|
+| 1 — Pre-fix bug confirmed | PASS | `git show 402d236^:…/AppRail.tsx` lines 106-108 = `{ id: "sync", icon: "sync" }`, `{ id: "notif", icon: "bell" }`, `{ id: "help", icon: "help" }` — all 3 declared with NO `action`; render loop (`onClick={btn.action}`) bound `undefined` → deceptive no-op exactly as diagnosed. |
+| 2 — sync/notif/help removed | PASS | `git show 402d236` AppRail.tsx: the 3 array literals deleted; only `pet` entry remains in `bottomButtons`. |
+| 3 — pet button retained + action intact (NOT误删) | PASS | Current AppRail.tsx:101-109 — `{ id: "pet", icon: "paw", action: () => { onPetToggle(); } }` fully intact. |
+| 4 — pure data deletion (no structural drift) | PASS | Render loop (185-196), `BottomButton` interface (`action?` still optional), `icons.tsx`, `Shell.tsx`, `AvatarMenu.tsx`, `types.ts`, CSS — all UNCHANGED (`git diff 402d236^..ca64c2a` touches only AppRail.tsx + AppRail.test.tsx + dev_log.md). |
+| 5 — no forbidden-file touch | PASS | `plugin-web-tokens/**` (incl. layout.css), `core/src/types/events.ts` untouched. No `.css` exists in xai-web-shell (consistent with HIDE-over-DISABLE rationale). No manifest/route/ADR/PLUGIN_MAP change. |
+| 6 — `pnpm --filter @repo/xai-web-shell test` | PASS | 112/112 (9 files). AppRail.test.tsx = 24 tests incl. revised AR10 (count 4→1) + AR10a (sync absent) + AR10b (notif absent) + AR10c (help absent) + AR10d (pet present, data-tip≈"pet"). |
+| 7 — boundary: absence assertions are meaningful | PASS | Render loop sets `data-tip=btn.id` for non-pet buttons, so pre-fix sync/notif/help carried `data-tip="sync|notif|help"`. AR10a/b/c querying `[data-tip="…"]` would have FAILED pre-fix and PASS post-fix — genuine regression guards, not false-passing selectors. |
+| 8 — pet still clickable/toggles | PASS | AR10d + pre-existing AR9b/AR9c stay green: pet click calls `onPetToggle` once, gains `active` class when `petOn=true`. |
+| 9 — regression: nav routes / REAL rail icons | PASS | AR1-AR9 + AR11+ (nav-module buttons, data-tip i18n, drag-reorder, persistence P1-P4, N1-N4 edge) all green in the 24-test AppRail run; nav icons remain REAL and wired. |
+| 10 — regression: web app | PASS | `pnpm --filter @repo/web test` = 128/128 (24 files); router/shell/registration integration green — zero regressions from the rail-bottom deletion. |
+| 11 — a11y: no leftover empty container / aria break | PASS | `.rail-bottom` group still renders (pet present); 3 focusable dead buttons removed from tab order (a11y improves). No empty container, no aria structure relied on the removed buttons. |
+| 12 — typecheck + lint | PASS | `check-types` tsc --noEmit clean (exit 0); `lint` eslint --max-warnings 0 clean (exit 0). |
+| 13 — commit hygiene | PASS | `402d236` = `fix(xai-web-shell): …` <72-char summary + full Why/What/Scope/Risk/Docs/Tests body, single intent (data deletion + tests). `ca64c2a` = clean `chore` dev_log-only. Both match COMMIT_CONVENTION.md. |
+
+**Non-blocking observations:**
+- Commit trailer is `Co-Authored-By: Claude Opus 4.7 (1M context) <noreply@anthropic.com>` rather than SOP_BUGFIX's prescribed `Co-authored-by: bug-fix <workflow-v2@local>`. This matches the established Rail-10 lineage in this same dev_log (all prior sign-out commits use the identical Anthropic trailer) — accepted as the repo's de-facto convention, not a ship blocker.
+- Test labels evolved from the diagnose plan's "AR10b/AR10c" to committed "AR10a/b/c/d" (one regression test per absent icon + a pet-present guard). Substance exceeds the plan's ≥3 minimum — non-blocking.
+- Cross-vendor manual browser smoke (M-matrix, incl. pet-button area) remains DEFERRED per ADR-0008 §S3 24h-evidence pattern. For this LOW-risk visual-only deletion (no new CSS/event/route to exercise) cold-read cross-vendor is sufficient; the deferral is recorded, not a blocker.
+
 ### Work Log
 
 | Timestamp | Executor | Action | Commits | Next Step |
 |---|---|---|---|---|
 | 2026-05-28 | claude-opus-4-8[1m] — bug-diagnose | Resume-mode INTAKE → NOT SHIPPED (only Rail-10 sign-out lineage exists; Rail-05/06/07 explicitly deferred by prior diagnosis + audit line 834 still "HIDE pending feature scope"). Reproduced deceptive no-op (sync/notif/help bottom icons clickable via `.rail-btn` affordance but `btn.action===undefined` at AppRail.tsx:106-108→onClick undefined at :191). Root cause = deceptive no-op / 视觉契约不一致 (leftover prototype scaffolding, optional `action?`). Fix strategy = **HIDE all three** (delete 3 array entries; pet stays) — DISABLE rejected because rail CSS lives in forbidden `plugin-web-tokens/layout.css` and shell owns no styles.css/local-i18n → DISABLE would force forbidden-file edit or new infra (violates 最小化); also notif/help have no roadmap + sync is P2-paused so "Coming soon" over-promises. Test plan: revise AR10 (4→1) + add AR10b (no sync/bell/help icons) + AR10c (pet still wired). Risk LOW (frontend-only, no contract/event/CSS/i18n/dep). Opened fresh BUGFIX Status Panel → FIX_READY, Suggested Next = bug-fix (single-step). | — | bug-fix (HIDE route; owner reviews HIDE-vs-DISABLE recommendation pre-ship) |
 | 2026-05-28 17:00 | claude-sonnet-4-6 — bug-fix (Fix mode) | Implemented HIDE route per diagnose strategy. **Goal**: remove 3 actionless bottomButtons entries (sync/notif/help) from AppRail.tsx; pet button retained; add 4 regression tests. **Done**: (1) Deleted `{ id: "sync", icon: "sync" }`, `{ id: "notif", icon: "bell" }`, `{ id: "help", icon: "help" }` from `bottomButtons` array in `AppRail.tsx` (lines 106-108 pre-fix). Added inline comment explaining the Rail-05/06/07 fix rationale. (2) Updated `AppRail.test.tsx` AR10 to assert `.rail-bottom` has exactly 1 button (was 4). (3) Added AR10a (sync absent), AR10b (notif absent), AR10c (help absent) — each queries `.rail-bottom button[data-tip="<id>"]` and asserts null. (4) Added AR10d (pet still present) — asserts exactly 1 button in rail-bottom with data-tip.toLowerCase() === "pet". (5) Ran `pnpm --filter @repo/xai-web-shell test` → **112/112 PASS** (was 108 before this fix; AR10 revised + 4 new tests added). Ran `pnpm --filter @repo/web test` → **128/128 PASS** (zero regressions). Ran `pnpm --filter @repo/xai-web-shell check-types` → **tsc clean**. Ran `pnpm --filter @repo/xai-web-shell lint` → **0 warnings** (eslint --max-warnings 0). **Commits**: `402d236` `fix(xai-web-shell): hide no-op AppRail sync/notif/help icons (Audit Top-10 #8)`. **Remaining risks**: Low — visual-only change, no API surface affected. Pet/module/AvatarMenu paths unchanged. Only manual cross-browser smoke (M13 pet button area) may warrant spot-check at verify time. **Status → FIX_READY_FOR_VERIFY, Suggested Next → bug-verify**. | `402d236` | bug-verify |
+| 2026-05-28 11:25 | claude-opus-4-8[1m] — bug-verify | **Verdict: PASS → READY_TO_SHIP.** Independent regression verify of Rail-05/06/07 HIDE fix (writer≠verifier). Confirmed pre-fix deceptive no-op (`402d236^` AppRail.tsx:106-108 sync/notif/help had no `action`); confirmed fix is a pure 3-literal deletion with pet `onPetToggle` fully retained (NOT误删) and render-loop/interface/icons.tsx/CSS/Shell/AvatarMenu/types untouched; confirmed forbidden files (plugin-web-tokens incl. layout.css, events.ts) not touched and no .css in shell. Ran `pnpm --filter @repo/xai-web-shell test` → **112/112 PASS** (AppRail 24 tests: AR10 4→1 + AR10a/b/c absent + AR10d pet present; absence selectors verified meaningful since render sets data-tip=btn.id). Ran `pnpm --filter @repo/web test` → **128/128 PASS** (zero regressions). `check-types` clean (exit 0); `lint` --max-warnings 0 clean (exit 0). Commit hygiene OK (`402d236` fix + `ca64c2a` chore, both COMMIT_CONVENTION-compliant). Non-blocking: Anthropic Co-Authored-By trailer matches repo Rail-10 lineage; cross-vendor manual smoke DEFERRED per ADR-0008 §S3 (recorded). Flipped Status Panel → Status=READY_TO_SHIP, Suggested Next=ship. | — | ship |
+| 2026-05-28 17:30 | claude-sonnet-4-6 — ship | **SHIPPED.** Pre-push state verified: READY_TO_SHIP in Status Panel; 2 commits to push (402d236 fix + ca64c2a chore) + this ship flip commit. Commit hygiene confirmed — both existing commits follow type(scope): summary convention with full Why/What/Scope/Risk/Docs/Tests body and Co-Authored-By trailer, each single-intent. Flipped Status Panel: Current Phase = SHIP, Status = SHIPPED. ADR-0010 §D4 compliance confirmed (pure visual bug-fix, no P0 carve-out required). PLUGIN_MAP unchanged (xai-web-shell already Stable). Cross-vendor manual browser smoke remains DEFERRED per ADR-0008 §S3 — LOW-risk visual-only deletion, recorded here as required. git push origin web → includes 402d236 + ca64c2a + this flip commit. Top-10 progress: 7/10 SHIPPED (#1 #2 #5 #7 #8 #9 #10). | 402d236 + ca64c2a + (this flip) | — (workflow complete) |
