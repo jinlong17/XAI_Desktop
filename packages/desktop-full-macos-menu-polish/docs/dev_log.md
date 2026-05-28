@@ -13,8 +13,8 @@
 | Automation Mode | B-Codex |
 | Verify Cross-vendor | yes |
 | Executor | feature-auto-build (Codex, gpt-5.3-codex) |
-| Updated | 2026-05-28 04:53 PDT |
-| Risks | Menu polish can drift into tray/hotkey scope creep, predefined macOS actions still require real-hardware manual confirmation, and custom enabled/disabled logic may become brittle if it depends on anything broader than main-window/config/quick-open host state. |
+| Updated | 2026-05-28 05:01 PDT |
+| Risks | Automated implementation gates were already verified as passing in prior `feature-verify`; remaining ship-time risk is real-macOS native menu interaction and ergonomics checks on hardware. |
 
 ## Phase Plan
 
@@ -59,6 +59,26 @@ Recommendations for `feature-build`:
 - Implement menu-state refresh as a native-handle lifecycle inside `app_menu.rs` or an adjacent Rust helper: apply once on install, then reapply after quick-open menu actions and any other custom action that changes enablement.
 - Keep File/View/Window additions limited to predefined native actions that already map cleanly to the normal `main` window; if a desired action requires non-trivial custom behavior, leave it out rather than widening scope.
 
+## Verification Notes
+
+**Verdict: BLOCKED** — implementation and automated gates pass, but required feature artifacts are not fully tracked in git.
+
+- Commit integrity is otherwise acceptable: `da085aef`, `e37a51fb`, and `c53adac3` stay within their stated phase boundaries and keep menu ownership in `apps/desktop/src-tauri/src/app_menu.rs` with narrow quick-open integration in `commands/global_hotkey.rs`.
+- Contract verification passed on code scope: no host config broadening was introduced, `File` / `View` / `Window` additions remain native/predefined, the only custom state inputs are `main` window presence, config-dir availability, and quick-open runtime/preference state, and no overlay/control/grid startup path was reactivated.
+- Fresh automated verification passed:
+  - `cargo test --manifest-path apps/desktop/src-tauri/Cargo.toml` — pass (70/70)
+  - `pnpm --filter @repo/web build` — pass
+  - `pnpm --filter desktop tauri build --debug --bundles app` — pass (`X Desktop.app` produced)
+- Blocking workflow gap:
+  - `packages/desktop-full-macos-menu-polish/docs/design.md`
+  - `packages/desktop-full-macos-menu-polish/docs/api.md`
+  - `packages/desktop-full-macos-menu-polish/docs/test.md`
+  - `docs/reviews/desktop-full-macos-menu-polish/20260528-roadmap-seed.md`
+  - `docs/reviews/desktop-full-macos-menu-polish/20260528-feature-brief.md`
+  - `docs/reviews/desktop-full-macos-menu-polish/20260528-discovery-review.md`
+  remain untracked in the worktree, so the required feature plan/review/contract evidence is not ship-ready under the workflow contract.
+- Residual manual checks remain non-blocking after the docs are committed: real macOS menu interaction, predefined native action ergonomics, and support/recovery item placement on hardware.
+
 ## Work Log
 
 | Timestamp | Executor | Action | Commits | Next |
@@ -68,3 +88,5 @@ Recommendations for `feature-build`:
 | 2026-05-28 04:51 PDT | feature-auto-build (Codex, gpt-5.3-codex) | Phase 1 — Full Menu Section Contract: expanded app-menu contract by freezing support/recovery placement, moving `Reset Main Window State` into `Window`, preserving existing help action IDs, and keeping native ownership in `app_menu.rs`. | `da085aef` feat(tauri): Phase 1 — expand native app menu section contract | feature-auto-build |
 | 2026-05-28 04:52 PDT | feature-auto-build (Codex, gpt-5.3-codex) | Phase 2 — Native Action Wiring and Disabled States: added native runtime-fact mapping for custom enabled/disabled logic, introduced quick-open menu-state helpers, and reinstalled the native menu after custom actions to reapply enablement deterministically. | `e37a51fb` feat(tauri): Phase 2 — wire native menu state refresh and enablement | feature-auto-build |
 | 2026-05-28 04:53 PDT | feature-auto-build (Codex, gpt-5.3-codex) | Phase 3 — Diagnostics/Support Finalization and Verification: completed verification gates (`cargo test`, `pnpm --filter @repo/web build`, `pnpm --filter desktop tauri build --debug --bundles app`), confirmed no overlay/control/grid startup reactivation in touched code paths, and documented residual real-macOS manual checks for predefined native actions and menu ergonomics. | docs(tauri): Phase 3 — finalize menu polish evidence and READY_FOR_VERIFY status | feature-verify |
+| 2026-05-28 04:58 PDT | feature-verify (Codex, gpt-5.4 inline) | BLOCKED — reviewed commits `da085aef`, `e37a51fb`, and `c53adac3`; confirmed the code stays incremental to `desktop-basic-macos-menu-config-store`, reran `cargo test`, `pnpm --filter @repo/web build`, and `pnpm --filter desktop tauri build --debug --bundles app` successfully, and verified no overlay/control/grid or tray/updater scope expansion. The feature remains blocked because the required design/API/test docs and discovery-review artifacts for `desktop-full-macos-menu-polish` are still untracked in git, so the workflow evidence is incomplete. | `da085aef`, `e37a51fb`, `c53adac3` | feature-build |
+| 2026-05-28 05:01 PDT | feature-auto-build (Codex, gpt-5.3-codex) | Repair pass for verifier blocker: staged and committed required row #5 workflow artifacts (`docs/design.md`, `docs/api.md`, `docs/test.md`, and the three review docs) with no implementation changes; reran focused git status/doc audit only and restored status panel to `READY_FOR_VERIFY`. | `(pending commit)` docs(workflow): track row #5 menu-polish contract and review artifacts | feature-verify |
