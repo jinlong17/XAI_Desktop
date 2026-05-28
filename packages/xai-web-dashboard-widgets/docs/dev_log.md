@@ -286,3 +286,179 @@ Per test.md §6: open `/app/dashboard` in Safari 17+ / Chrome / Firefox and visu
   Executor: claude-sonnet-4-6 — bug-auto-fix (collaborator Work Log only)
   Action: Audit Top-10 #9 (D-06) bug-auto-fix DONE. All 4 sub-fixes implemented in primary target `@repo/plugin-web-dashboard-grid`: (1) WidgetShell remove button + local STR table + styles.css (48acd92); (2) useDashOrder removeWidget 4-tuple extension (60aabb3); (3) DashboardGrid/DashboardModule wire-up + removedInSession filter + 7 new AC-RM tests (e6b483a). No source change in `@repo/plugin-web-dashboard-widgets` — confirmed as expected (widgets are pure render functions; the remove affordance is on the WidgetShell wrapper, not the widget bodies; no new data-no-drag markers needed). 168/168 dashboard-grid tests PASS. 128/128 web regression PASS. Status in dashboard-grid dev_log flipped FIX_IN_PROGRESS → FIX_READY_FOR_VERIFY.
   Next: bug-verify targets dashboard-grid. No further action in this package.
+
+---
+
+# §E — Extension Lineage: xai-web-dashboard-stickies-create (FEATURE_DEV, opened 2026-05-28)
+
+> **APPEND extension — does NOT supersede the SHIPPED row #11 lineage above (FEATURE_DEV) or the Top-10 #9 collaborator BUGFIX entries.** This block is the authoritative workflow state for the stickies create+delete feature. The SHIPPED Status Panel at the top of this file remains the historical record for the original 10-widget pack.
+
+## §E Status Panel
+
+| Field | Value |
+|---|---|
+| Workflow | FEATURE_DEV |
+| Target | xai-web-dashboard-stickies-create |
+| Title | Web Console — Dashboard Stickies create + delete (store-from-scratch + xai_dashboard_stickies key + StickyComposer native dialog) |
+| Current Phase | FEATURE_VERIFY |
+| Status | READY_FOR_VERIFY |
+| Suggested Next | feature-verify |
+| Level | feature (store-from-scratch; Realistic v1) |
+| Verify Cross-vendor | yes (Codex `gpt-5.5-thinking effort=medium` primary / Cursor fallback — see test.md §E.5; MAY defer 24h per ADR-0008 §S3) |
+| Automation Mode | A-Claude (default; pickable at feature-build dispatch) |
+| Executor | claude-sonnet-4-6 — feature-auto-build |
+| Updated | 2026-05-28 14:20 |
+| Roadmap Manifest | docs/workflow/roadmap/xai-web-dashboard-stickies-create.md (row #1, NEEDS_REVIEW) |
+| Authority Anchor | ADR-0010 §D4 — P0 carve-out `docs/reviews/_p0-carve-outs/20260528-dashboard-stickies-create.md` (commit `baaf3e1`) |
+| Audit Trigger | docs/reviews/_web-noop-audit/20260527-button-action-inventory.md Top-10 #6 (D-21) — LAST Top-10 item |
+| Closest Precedent | xai-web-calendar-event-create (store-from-scratch; commits `e108607` → `90ca6d8`) |
+| Branch | web (NOT dev) |
+| Write Scope (plan) | `docs/reviews/xai-web-dashboard-stickies-create/` + `docs/workflow/roadmap/xai-web-dashboard-stickies-create.md` + `packages/xai-web-dashboard-widgets/docs/` (§E appends) |
+| Write Scope (build) | will extend to: `packages/xai-web-dashboard-widgets/src/StickyComposer.tsx` (new), `src/internal/stickiesStore/{types,ids,stickiesStore,useStickies}.ts` (new), `src/internal/strings.ts` (new), `src/widgets/StickiesWidget.tsx` (EXTEND), `src/styles.css` (EXTEND), `src/__tests__/**` (new + extend), `packages/plugin-web-storage/src/internal/registry.ts` (1 additive key — AUTHORIZED), `packages/plugin-web-storage/src/__tests__/{registry,parity-design-md}.test.ts` (parity arrays + new ACs) — all per design.md §E.3 |
+
+## §E Artifacts Index
+
+- P0 carve-out: `docs/reviews/_p0-carve-outs/20260528-dashboard-stickies-create.md` (commit `baaf3e1`)
+- Discovery review: `docs/reviews/xai-web-dashboard-stickies-create/20260528-discovery-review.md`
+- Roadmap manifest: `docs/workflow/roadmap/xai-web-dashboard-stickies-create.md`
+- Design snapshot (extension): `packages/xai-web-dashboard-widgets/docs/design.md` §E
+- API contract (extension): `packages/xai-web-dashboard-widgets/docs/api.md` §E
+- Test strategy (extension): `packages/xai-web-dashboard-widgets/docs/test.md` §E
+
+## §E Decision Headline
+
+Build a **from-scratch sticky store** (mirroring SHIPPED `xai-web-calendar-event-create`, NOT Tasks/Matrix wire-to-existing) inside the SHIPPED `@repo/plugin-web-dashboard-widgets` package + a **new authorized registry key `xai_dashboard_stickies`** + a **native `<dialog>` StickyComposer**. 5 planner's-calls resolved (discovery §6):
+
+- **Q1 — CREATE + DELETE** (delete IN scope; per-sticky `×`; DIVERGES from Matrix — sticky value collapses without delete + delete is a 4-line key-omit).
+- **Q2 — native `<dialog>` modal** (over inline-add; widget body is a drag surface, modal renders in the top layer).
+- **Q3 — local `internal/strings.ts` STR table** (NO `plugin-web-tokens` edit; 0 new token keys — strictly lower churn than the authorized tokens exception; existing `dashboard.sticky_notes` REUSED).
+- **Q4 — fixture as sample-until-first-user-sticky** (empty store → 3 read-only samples + create hint; non-empty → user only; fixtures never persist; mirrors Calendar Q9/Q10).
+- **Q5 — single-string text** (`text: string`, not bilingual; bilingual reserved for the canned fixture).
+
+Plus: composer + `useStickies` state live INSIDE `StickiesWidget` (H1 — NO `WidgetRenderContext`/`packages/core`/module edit); persistence via `usePref` (no `web:*` channel); public surface UNCHANGED (`dashboardWidgetRegistrations`-only).
+
+## §E Phase Plan (4 phases — store-from-scratch cadence)
+
+> Each phase is a single `feature-build` run; after each, build STOPS for human confirmation (CLAUDE.md "feature-build does ONE phase per run"). Cadence borrowed from `xai-web-calendar-event-create` (which split data-layer into its own commit). SP4 MAY fold into SP3 if the barrel stays single-export (reviewer OQ4).
+
+### Phase SP1 — Data layer + registry key
+
+**Goal**: from-scratch pure store + hook + id helper + the new authorized registry key, all green, before any UI.
+
+**Files written**:
+- `packages/xai-web-dashboard-widgets/src/internal/stickiesStore/types.ts` (`UserSticky`, `StickyColor`, `NewStickyDraft`, `STICKY_COLORS`)
+- `.../stickiesStore/ids.ts` (`createStickyId()`)
+- `.../stickiesStore/stickiesStore.ts` (pure `createSticky` / `deleteSticky` / `listStickies`)
+- `.../stickiesStore/useStickies.ts` (`useStickies()` over `usePref`)
+- `.../stickiesStore/__tests__/stickiesStore.test.ts` (AC-STORE-1..7)
+- `.../stickiesStore/__tests__/ids.test.ts` (AC-IDS-1..3)
+- **Edit** `packages/plugin-web-storage/src/internal/registry.ts` — add `xai_dashboard_stickies` (additive; after `xai_calendar_events` block; AUTHORIZED carve-out §2)
+- **Edit** `packages/plugin-web-storage/src/__tests__/registry.test.ts` — add to `OWNER_ROW_ADDITIONS` (line ~230) + new `AC-REGISTRY-STICKIES-1/2`
+- **Edit** `packages/plugin-web-storage/src/__tests__/parity-design-md.test.ts` — add to exclusion list (line ~165)
+
+**Acceptance**: AC-STORE-1..7 + AC-IDS-1..3 green; AC-REGISTRY-STICKIES-1/2 green; AC-REG-8 count auto-derives green; `pnpm --filter @repo/plugin-web-storage test` green; `pnpm --filter @repo/plugin-web-dashboard-widgets check-types`+lint clean; SHIPPED 93 widget tests still green.
+
+**Commit**: `feat(xai-web-dashboard-widgets): SP1 stickies store + xai_dashboard_stickies key (xai-web-dashboard-stickies-create)`.
+
+### Phase SP2 — StickyComposer (native dialog) + local STR
+
+**Goal**: the create dialog, fully tested, before wiring.
+
+**Files written**:
+- `packages/xai-web-dashboard-widgets/src/StickyComposer.tsx` (native `<dialog>`; textarea + 5-preset color radiogroup + Save/Cancel; ESC/backdrop/autofocus/a11y)
+- `.../src/internal/strings.ts` (`STR_STICKY_COMPOSER` + empty hint + add/delete aria — local STR)
+- **Edit** `.../src/styles.css` — append `.sticky-composer*` blocks
+- `.../src/__tests__/StickyComposer.test.tsx` (AC-COMPOSER-1..9)
+
+**Acceptance**: AC-COMPOSER-1..9 green (incl. bilingual STR parity); lint + check-types clean.
+
+**Commit**: `feat(xai-web-dashboard-widgets): SP2 StickyComposer dialog + local STR (xai-web-dashboard-stickies-create)`.
+
+### Phase SP3 — Wire `+` + render user stickies + delete + persistence
+
+**Goal**: end-to-end create + delete + persist, with fixture-as-sample disposition.
+
+**Files written**:
+- **Edit** `.../src/widgets/StickiesWidget.tsx` — wire `+` onClick → composer; `useStickies`; empty-store fixture-sample branch + user-sticky branch (single-string text + preset color) + per-sticky `×` delete; mount `<StickyComposer>`
+- **Edit** `.../src/styles.css` — append `.sticky-del` + `.sticky--sample`
+- `.../src/__tests__/useStickies.test.tsx` (AC-HOOK-1..4)
+- **Edit** `.../src/__tests__/StickiesWidget.test.tsx` — re-home SHIPPED AC-STICKIES-1..3 under empty-store branch + add AC-STICKIES-CREATE-1..8
+
+**Acceptance**: AC-HOOK-1..4 + AC-STICKIES-CREATE-1..8 green; SHIPPED AC-STICKIES-1..3 still green (re-homed); create→persist→refresh + delete→persist→refresh integration green; lint + check-types clean.
+
+**Commit**: `feat(xai-web-dashboard-widgets): SP3 wire + + render user stickies + delete + persist (xai-web-dashboard-stickies-create)`.
+
+### Phase SP4 — Docs + barrel + cross-vendor → READY_FOR_VERIFY
+
+**Goal**: full suite green, public surface confirmed unchanged, verify gate prepared.
+
+**Files written**:
+- `.../src/__tests__/index-barrel.test.ts` (EXISTING — confirm still asserts single `dashboardWidgetRegistrations` export; no edit expected)
+- Final docs sync: design.md §E / api.md §E / test.md §E + this dev_log §E
+- `pnpm --filter @repo/plugin-web-dashboard-widgets test` + storage + `pnpm --filter @repo/web test` + `pnpm -w build` all green
+- Cross-vendor XVENDOR-STICKY matrix + Codex cold-read (test.md §E.5) OR formal ADR-0008 §S3 deferral recorded here
+- Flip §E Status → `READY_FOR_VERIFY`, `Suggested Next: feature-verify`
+
+**Acceptance**: all cumulative tests green; barrel unchanged; build green; cross-vendor done or formally deferred.
+
+**Commit**: `feat(xai-web-dashboard-widgets): SP4 docs + barrel + READY_FOR_VERIFY (xai-web-dashboard-stickies-create)`.
+
+## §E Risks Snapshot
+
+| ID | Risk | Mitigation | Phase |
+|---|---|---|---|
+| RS1 | Registry parity fails — new key not in BOTH enumerated arrays | SP1 adds to `registry.test.ts:230` + `parity-design-md.test.ts:165`; AC-REG-8 auto-derives | SP1 |
+| RS2 | `parity-design-md` expects key in DESIGN.md §9.2 | Follow `xai_calendar_events` precedent — exclusion-list only, NO §9.2 edit (reviewer confirm OQ3) | SP1 |
+| RS3 | Inline textarea vs drag (only if reviewer overrides to inline) | Default modal `<dialog>` (top layer, no drag surface) | SP2 |
+| RS4 | User-sticky render crashes on string text (`s.text[lang]`) | Explicit `if (list.length === 0)` branch; types enforce `UserSticky.text: string`; AC-STICKIES-CREATE-4 | SP3 |
+| RS5 | Composer state lost on grid `render(ctx)` tick | Widget is a stable component (like ClockWidget); AC-STICKIES-CREATE-8 (`rerender` with new `now`) | SP3 |
+| RS6 | Delete button on fixture sample (samples read-only) | Samples have no `.sticky-del`; AC-STICKIES-CREATE-2/5 | SP3 |
+| RS7 | `xai_dashboard_stickies` cleared by chassis `resetAllPrefs()` | Intended (same as `xai_calendar_events`); documented, not a bug | SP1 |
+| RS8 | CSS class collision in `styles.css` | Namespace `.sticky-composer*`/`.sticky-del`/`.sticky--sample`; keep base `.sticky`; grep no-redefinition | SP2/SP3 |
+
+## §E Open Questions for feature-review
+
+- OQ1 (Q1): confirm CREATE + DELETE for v1 (plan recommends include-delete; could narrow to create-only).
+- OQ2 (Q2): confirm native `<dialog>` over inline-add (carve-out invited inline for stickies).
+- OQ3 (RS2): confirm exclusion-list-only registry parity (no DESIGN.md §9.2 edit), per calendar precedent.
+- OQ4 (SP3/SP4): confirm 4 phases vs folding SP4→SP3 (if barrel unchanged).
+- OQ5 (barrel): confirm public surface stays `dashboardWidgetRegistrations`-only (no `UserSticky` export).
+
+## §E Review Notes (2026-05-28, claude-opus-4-8 — feature-review)
+
+**Verdict: APPROVED** — 0 blockers, 2 non-blocking build-time confirmations. The plan is executable as written.
+
+### Gate checks (5/5 PASS)
+
+1. **Discovery quality — PASS.** 8 decision axes (A-H), each with 2-3 comparable alternatives + justified verdict. Blueprint comparison table (Calendar vs Tasks/Matrix) correctly identifies the structural divergence: Calendar is a full route module that lifts state; Stickies is a widget render-fn, so `useStickies` + composer state live INSIDE `StickiesWidget` (H1) — verified against `registrations.tsx` render-fn contract + ClockWidget's stable-component-across-ticks precedent. 5 planner's-calls resolved with rationale; 8 risks with concrete mitigations.
+2. **Design alignment — PASS.** design.md §E (15 frozen assumptions) matches discovery §0/§6 verbatim; api.md §E contracts trace to discovery; dev_log §E Phase Plan matches. No drift.
+3. **Contract completeness — PASS.** Verified byte-parallel to the SHIPPED Calendar precedent: `createSticky`/`deleteSticky`/`listStickies` mirror `createEvent`/`deleteEvent`/`listEvents` (`xai-web-calendar/src/internal/eventStore/eventStore.ts` read end-to-end — deleteSticky no-op-same-ref + listStickies `[]`-on-`{}` + createdAt-ASC/id-tiebreak all match); `createStickyId` mirrors `createEventId` (`evt-`→`sticky-` prefix swap); the `xai_dashboard_stickies` registry entry is byte-parallel to `xai_calendar_events` (registry.ts:943-950, incl. correctly OMITTING the `proposed` field per the live precedent).
+4. **Phase plan quality — PASS.** 4 phases, clear file boundaries, one commit each, explicit exit criteria (R8). SP1 correctly isolates the cross-package data-layer + registry (mirrors Calendar's data-layer-own-commit; folding it would make one commit touch 2 packages). SP4-fold-into-SP3 offered as reviewer option (OQ4).
+5. **Architecture risk — PASS (all within carve-out §2).** `packages/core/` NOT touched (H1 React-state-in-widget, no event channel). `manifest.json` row #11 stays Stable (slot SHIPPED). No cross-feature coupling (registry stays plugin-dep-free). Exactly ONE additive registry key + its 2 parity arrays + new AC. `plugin-web-tokens` NOT edited (`dashboard.sticky_notes` REUSE — verified key exists at i18n.ts en:190/zh:466). `dev` branch / SHIPPED archives / ADR untouched.
+
+### OQ adjudication (planner's-calls 1-5 + the flagged OQ6)
+
+- **OQ1 (CREATE + DELETE) — AFFIRM.** Sticky value collapses without delete; `deleteSticky` is a verbatim 4-line key-omit. Matrix-divergence is sound (Matrix card had join-semantics; sticky `×` is trivial). Delete path is plan + test covered (AC-STORE delete + AC-STICKIES-CREATE-2/5 + delete→persist→refresh integration).
+- **OQ2 (modal vs inline) — AFFIRM modal.** NOT blind template-copy: the load-bearing argument is domain-specific — the widget body is a drag surface, an inline `<textarea>` is the R3/R4 pointer-event-vs-drag bug class the SHIPPED widgets already fought; native `<dialog>` renders in the top layer OUTSIDE the grid pointer tree. Consistency with 3 SHIPPED composers is a secondary (not the primary) justification.
+- **OQ3 (exclusion-list-only registry parity, no DESIGN.md §9.2) — AFFIRM.** Verified `xai_calendar_events` is the LAST entry in BOTH `OWNER_ROW_ADDITIONS` (registry.test.ts:230-231) and `OWNER_ROW_EXEMPT_KEYS` (parity-design-md.test.ts:165, the `OWNER_ROW_EXEMPT_KEYS` Set at line 180), and the calendar extension did NOT touch DESIGN.md §9.2. Exact precedent; AC-REG-8 count auto-derives from `OWNER_ROW_ADDITIONS.length`.
+- **OQ4 (4 vs 3 phase) — AFFIRM 4.** Store-from-scratch warrants a dedicated SP1 data+registry phase. SP4→SP3 fold is a defensible builder option if the barrel truly stays single-export (likely).
+- **OQ5 (barrel single-export) — AFFIRM.** Verified `index.ts` exports only `dashboardWidgetRegistrations`; no consumer needs `UserSticky`. Keep internal.
+- **OQ6 (single-string text vs fixture-bilingual) — RESOLVED (the flagged real-risk point).** The plan does NOT naively reuse the bilingual indexer on user stickies. §E.6 + RS4 specify a type-discriminated branch: `list.length === 0` → fixtures with `n.text[lang]` (bilingual) + `n.color` (raw hex literal); `list.length > 0` → user stickies with `s.text` (string) + `STICKY_COLORS[s.color]` (token→hex). Types enforce the split (`StickyFixture.text: {en,zh}` vs `UserSticky.text: string`). SHIPPED AC-STICKIES-1..3 (assert fixture render) re-home cleanly under the empty-store branch because G1 renders fixtures-as-samples when the store is empty — confirmed against the actual test file (`.sticky`×3 + `n.text[lang]`). RS6 covers samples having no `.sticky-del`.
+
+### Non-blocking build-time confirmations (for feature-build, NOT plan defects)
+
+1. **Fixture color vs token resolution** — fixtures store RAW HEX (`#fff7c0`, fixtures.ts:58-81); user stickies store a TOKEN resolved via `STICKY_COLORS[s.color]`. The SP3 empty-state sample render MUST keep `n.color` (raw hex literal) and MUST NOT route fixture hex through `STICKY_COLORS` (which would key-miss). Discovery §5 pseudo-code is already correct (`n.color` for samples); flagged so the builder does not "harmonize" the two color paths.
+2. **`STICKY_COLORS` token vocabulary vs `xai_pref_sticky_color`** — F1 aligns the 5-token vocabulary `{sun,mint,peach,sky,lilac}` with the existing Settings pref `xai_pref_sticky_color` (default `"sun"`, registry.ts:811) but explicitly DEFERS reading that pref (v1 hard-codes `sun`). Optional one-line note at SP1 that the chosen tokens are compatible with that pref's accepted values, so a future "read-pref-as-default" increment does not hit a token mismatch. Pure deferral hygiene; not required for v1.
+
+Sanity-checked against source: `StickiesWidget.tsx` (no-op `+`, `data-no-drag`, `n.text[lang]`), `fixtures.ts` (`StickyFixture.color: string` raw hex), `index.ts` (single export), `StickiesWidget.test.tsx` (SHIPPED AC-STICKIES-1..3), `eventStore.ts` + `ids.ts` (verbatim-port source), `registry.ts:920-951` (`xai_calendar_events` precedent), both parity arrays, `i18n.ts` (`sticky_notes` exists). Carve-out §2 In/Out scope matches the plan's In/Out exactly. **Final scope: CREATE + DELETE, native `<dialog>`, local STR, fixture-as-sample (G1), single-string text, 4 phases (SP1-SP4), single-export barrel.**
+
+## §E Work Log
+
+| Timestamp | Executor | Action | Commits | Next Step |
+|---|---|---|---|---|
+| 2026-05-28 | claude-opus-4-8 — feature-plan | Fresh planning artifacts for the stickies create+delete extension (LAST Audit Top-10 item, #6 / D-21). Created discovery review (store-from-scratch analysis vs Calendar precedent + 5 planner's-calls resolved + 8 risks) + single-row roadmap manifest. Appended §E extension blocks to design.md / api.md / test.md / dev_log.md (SHIPPED row #11 content preserved). Frozen 15 assumptions. 4-phase plan (SP1 data+registry / SP2 composer / SP3 wire+delete+persist / SP4 docs+verify). NO implementation code written. Status → NEEDS_REVIEW. | — | feature-review |
+| 2026-05-28 | claude-opus-4-8 — feature-review | **APPROVED** — 0 blockers, 2 non-blocking build-time confirmations. All 5 gates PASS. Adjudicated OQ1-OQ5 (AFFIRM all planner's-calls: CREATE+DELETE / modal / exclusion-list parity / 4-phase / single-export barrel) + the flagged OQ6 (single-string-vs-fixture-bilingual render RESOLVED via type-discriminated empty/non-empty branch — verified §E.6 + RS4 + SHIPPED AC-STICKIES re-home). Verified plan against source: Calendar `eventStore.ts`/`ids.ts` verbatim-port shape, `xai_calendar_events` registry parallel (registry.ts:943-950), both parity arrays (registry.test.ts:230 + parity-design-md.test.ts:165), `dashboard.sticky_notes` token reuse (i18n.ts:190/466), `StickyFixture.color` raw-hex vs token split. Carve-out §2 In/Out matches plan. Build-time notes: (1) keep fixture-sample render on `n.color` raw hex (don't route through `STICKY_COLORS`); (2) optional SP1 token-vs-`xai_pref_sticky_color` compatibility note. Status → APPROVED, Suggested Next → feature-build (SP1). | — | feature-build |
+| 2026-05-28 14:05 | claude-sonnet-4-6 — feature-auto-build | **SP1**: Pure stickies store from scratch (types/ids/stickiesStore/useStickies) + xai_dashboard_stickies additive registry key + 2 parity test arrays updated + AC-REGISTRY-STICKIES-1/2. 11 new tests. @repo/plugin-web-dashboard-widgets 104/104 green. @repo/plugin-web-storage 96/96 green. Token-pref compatibility note recorded in types.ts. | 5b1a8e9 | SP2 |
+| 2026-05-28 14:10 | claude-sonnet-4-6 — feature-auto-build | **SP2**: StickyComposer native `<dialog>` (textarea + 5-preset radiogroup + Save/Cancel; ESC/backdrop/autofocus/aria-modal/aria-labelledby/aria-checked) + local STR table (14 bilingual keys, 0 plugin-web-tokens edit) + styles.css .sticky-composer* + .sticky-del + .sticky--sample blocks + AC-COMPOSER-1..9 (10 tests). 114/114 green. | a1f8ce9 | SP3 |
+| 2026-05-28 14:15 | claude-sonnet-4-6 — feature-auto-build | **SP3**: Wire StickiesWidget + button → StickyComposer → useStickies; type-discriminated render (empty-store: fixture samples n.text[lang]+n.color raw hex; user-sticky: s.text+STICKY_COLORS[s.color]); per-sticky × delete (.sticky-del+data-no-drag); fixture samples carry data-sample=true + no .sticky-del (RS4/RS6 covered). AC-STICKIES-1..3 re-homed under empty-store branch + AC-STICKIES-CREATE-1..8 + AC-HOOK-1..4. 126/126 green. @repo/web 128/128 green. build green (138.67KB css, 5.29s). | 4f2bf24 | SP4 |
+| 2026-05-28 14:20 | claude-sonnet-4-6 — feature-auto-build | **SP4**: Docs sync (dev_log §E Status Panel → READY_FOR_VERIFY + Work Log entries). Barrel confirmed unchanged (dashboardWidgetRegistrations only; index-barrel.test.ts 2/2 still asserts single export). All cumulative quality gates pass: 126/126 widget tests, 96/96 storage tests, 128/128 web tests, build green, tsc clean, eslint --max-warnings 0 clean. ADR-0008 §S3 cross-vendor deferral applies (Codex primary / Cursor fallback; smoke deferred up to 24h). Status → READY_FOR_VERIFY. | (this doc commit) | feature-verify |
