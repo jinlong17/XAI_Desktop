@@ -76,3 +76,7 @@ export {
 // EventComposer dialog component (P2 lands; CalendarModule wires in P3)
 export { EventComposer } from "./EventComposer.js";
 export type { EventComposerProps } from "./EventComposer.js";
+
+// EmptyStateHint — rendered when no user events present (Q7-A)
+export { EmptyStateHint } from "./EmptyStateHint.js";
+export type { EmptyStateHintProps } from "./EmptyStateHint.js";

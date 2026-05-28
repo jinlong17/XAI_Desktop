@@ -104,21 +104,9 @@ export function mergeEventsForMonth(
     }
   }
 
-  // Sort each day's bucket by start time (fixture rows with no time sort first,
-  // matching existing render order).
-  for (const day of Object.keys(out)) {
-    const k = Number(day);
-    const bucket = out[k];
-    if (!bucket) continue;
-    bucket.sort((a, b) => {
-      const ta = a.time ?? "";
-      const tb = b.time ?? "";
-      if (ta === tb) return 0;
-      if (!ta) return -1;
-      if (!tb) return 1;
-      return ta < tb ? -1 : 1;
-    });
-  }
+  // NOTE: fixture rows stay in their original index order (SHIPPED contract).
+  // User events appended AFTER fixture rows in the order they were
+  // expanded — listEvents() is sorted by createdAt ASC so this is stable.
   return out;
 }
 
@@ -185,18 +173,7 @@ export function mergeEventsForWindow(
     }
   }
 
-  // Sort each bucket by start time.
-  for (const k of Object.keys(out)) {
-    const bucket = out[k];
-    if (!bucket) continue;
-    bucket.sort((a, b) => {
-      const ta = a.time ?? "";
-      const tb = b.time ?? "";
-      if (ta === tb) return 0;
-      if (!ta) return -1;
-      if (!tb) return 1;
-      return ta < tb ? -1 : 1;
-    });
-  }
+  // NOTE: fixture rows stay in their original index order (SHIPPED contract).
+  // User events appended after fixture for that date in expansion order.
   return out;
 }

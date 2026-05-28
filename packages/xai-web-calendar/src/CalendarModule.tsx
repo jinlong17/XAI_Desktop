@@ -41,6 +41,11 @@ import { utcDateKey } from "./internal/dateKeys.js";
 import { tryParseDateKey, dateKeyMonth, formatDateKey, stepDateKey } from "./internal/parseDateKey.js";
 import { WeekView } from "./WeekView.js";
 import { DayView } from "./DayView.js";
+import { EventComposer } from "./EventComposer.js";
+import { EmptyStateHint } from "./EmptyStateHint.js";
+import { useUserCalEvents } from "./internal/eventStore/useUserCalEvents.js";
+import { mergeEventsForMonth } from "./internal/eventStore/mergeEventsForViewport.js";
+import type { UserCalEvent } from "./internal/eventStore/types.js";
 
 /**
  * Design-source anchor: May 22, 2026 matches the sample-event fixture and the
@@ -54,6 +59,14 @@ function toView(raw: string): CalendarView {
   if (raw === "week" || raw === "day") return raw;
   return "month";
 }
+
+interface ComposerState {
+  open: boolean;
+  mode: "create" | "edit";
+  editing: UserCalEvent | null;
+}
+
+const COMPOSER_CLOSED: ComposerState = { open: false, mode: "create", editing: null };
 
 export function CalendarModule({ lang }: CalendarModuleProps): JSX.Element {
   const { t } = useI18n(lang);
@@ -82,6 +95,73 @@ export function CalendarModule({ lang }: CalendarModuleProps): JSX.Element {
 
   // Today is captured once per mount per design.md §6 / Q8 = I1.
   const todayKey = useMemo(() => utcDateKey(new Date()), []);
+
+  // --- Event-create extension (2026-05-27 — HC8 lift) ----------------------
+  // User-created events stored via xai_calendar_events; CRUD via the hook.
+  const { events: userEvents, list: userEventList, create, update, remove, getById } =
+    useUserCalEvents();
+
+  const [composer, setComposer] = useState<ComposerState>(COMPOSER_CLOSED);
+
+  const handleAddClick = useCallback(() => {
+    setComposer({ open: true, mode: "create", editing: null });
+  }, []);
+
+  const handleUserEventClick = useCallback(
+    (userId: string) => {
+      const userEvent = getById(userId);
+      if (!userEvent) return;
+      setComposer({ open: true, mode: "edit", editing: userEvent });
+    },
+    [getById],
+  );
+
+  const handleComposerClose = useCallback(() => {
+    setComposer(COMPOSER_CLOSED);
+  }, []);
+
+  const handleComposerSave = useCallback(
+    (event: UserCalEvent) => {
+      if (composer.mode === "edit" && composer.editing) {
+        update(composer.editing.id, {
+          title: event.title,
+          startISO: event.startISO,
+          endISO: event.endISO,
+          colorPreset: event.colorPreset,
+          recurrence: event.recurrence,
+        });
+      } else {
+        create({
+          title: event.title,
+          startISO: event.startISO,
+          endISO: event.endISO,
+          colorPreset: event.colorPreset,
+          recurrence: event.recurrence,
+        });
+      }
+      setComposer(COMPOSER_CLOSED);
+    },
+    [composer, create, update],
+  );
+
+  const handleComposerDelete = useCallback(
+    (id: string) => {
+      remove(id);
+      // composer.onDelete already calls onClose internally; we still snap
+      // state back to ensure no edge case leaves the dialog open.
+      setComposer(COMPOSER_CLOSED);
+    },
+    [remove],
+  );
+
+  // Merge fixture + user events for the Month view.
+  const monthMergedEvents = useMemo(
+    () => mergeEventsForMonth(SAMPLE_EVENTS, userEvents, displayedMonth.year, displayedMonth.month),
+    [userEvents, displayedMonth.year, displayedMonth.month],
+  );
+
+  const hasUserEvents = userEventList.length > 0;
+  const showBanner = !hasUserEvents;
 
   // --- Navigation handlers (step depends on view) ----------------------------
 
@@ -155,6 +235,7 @@ export function CalendarModule({ lang }: CalendarModuleProps): JSX.Element {
         onPrevMonth={handlePrevMonth}
         onNextMonth={handleNextMonth}
         onResetToday={handleResetToday}
+        onAdd={handleAddClick}
       />
       {view === "month" ? (
         <MonthGrid
@@ -165,7 +246,8 @@ export function CalendarModule({ lang }: CalendarModuleProps): JSX.Element {
           t={t}
           todayKey={todayKey}
           focusedDate={focusedFromDeepLink}
-          events={SAMPLE_EVENTS}
+          events={monthMergedEvents}
+          onUserEventClick={handleUserEventClick}
         />
       ) : view === "week" ? (
         <WeekView
@@ -174,6 +256,8 @@ export function CalendarModule({ lang }: CalendarModuleProps): JSX.Element {
           events={SAMPLE_EVENTS}
           todayKey={todayKey}
           lang={lang}
+          userEvents={userEvents}
+          onUserEventClick={handleUserEventClick}
         />
       ) : (
         <DayView
@@ -181,9 +265,22 @@ export function CalendarModule({ lang }: CalendarModuleProps): JSX.Element {
           events={SAMPLE_EVENTS}
           todayKey={todayKey}
           lang={lang}
+          userEvents={userEvents}
+          onUserEventClick={handleUserEventClick}
         />
       )}
-      <CalendarBanner t={t} />
+      {!hasUserEvents ? <EmptyStateHint lang={lang} /> : null}
+      {showBanner ? <CalendarBanner t={t} /> : null}
+      <EventComposer
+        open={composer.open}
+        mode={composer.mode}
+        event={composer.editing}
+        lang={lang}
+        defaultDateKey={activeDate}
+        onSave={handleComposerSave}
+        onDelete={handleComposerDelete}
+        onClose={handleComposerClose}
+      />
     </div>
   );
 }

@@ -11,6 +11,7 @@ import type { JSX } from "react";
 import { useEffect, useRef } from "react";
 import type { Lang } from "@repo/plugin-web-tokens";
 import type { CalEventsByDay } from "./internal/sampleEvents.js";
+import type { UserCalEvent } from "./internal/eventStore/types.js";
 import { parseDateKey } from "./internal/parseDateKey.js";
 import { HOUR_HEIGHT_PX } from "./internal/timeGridMath.js";
 import { TimeGrid } from "./TimeGrid.js";
@@ -20,6 +21,13 @@ export interface DayViewProps {
   events: CalEventsByDay;
   todayKey: string;
   lang: Lang;
+  /**
+   * User-created events to merge with the fixture (event-create extension).
+   * P3: accepted but not yet wired into rendering (P4 lands integration).
+   */
+  userEvents?: Record<string, UserCalEvent>;
+  /** Click handler for user-source event blocks (wired in P4). */
+  onUserEventClick?: (userId: string) => void;
 }
 
 /** Short weekday names for the single column header. */
@@ -27,6 +35,8 @@ const DOW_NAMES_EN = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"] as const;
 const DOW_NAMES_ZH = ["日", "一", "二", "三", "四", "五", "六"] as const;
 
 export function DayView({ activeDate, events, todayKey, lang }: DayViewProps): JSX.Element {
+  // userEvents/onUserEventClick accepted but unused in P3; P4 wires them
+  // through the merge layer into TimeGrid/EventBlock.
   const containerRef = useRef<HTMLDivElement | null>(null);
 
   // Scroll-to-current-hour on mount.

@@ -65,14 +65,20 @@ describe("mergeEventsForMonth — Month view", () => {
     expect(userCount).toBe(10);
   });
 
-  it("sorts events in each day by start time (fixture first when no time)", () => {
+  it("fixture rows stay in their original index order; user events appended after", () => {
+    // SHIPPED contract: fixture render order is the array's insertion order
+    // (NOT a time-sort) — this preserves AC-EVENT-3 ordering for day 22.
     const userEvents = {
       a: userEvent({ id: "a", startISO: "2026-05-22T08:00", endISO: "2026-05-22T09:00", title: "Early" }),
     };
     const out = mergeEventsForMonth(FIXTURE, userEvents, 2026, 5);
     const day22 = out[22] ?? [];
-    expect(day22[0]?.time).toBe("08:00");
-    expect(day22[1]?.time).toBe("11:30");
+    // FIXTURE day 22 has one fixture row (Brainstorming @ 11:30) — fixture FIRST
+    expect(day22[0]?.t.en).toBe("Brainstorming");
+    expect(day22[0]?._source).toBe("fixture");
+    // User event "Early" appended after
+    expect(day22[1]?.t.en).toBe("Early");
+    expect(day22[1]?._source).toBe("user");
   });
 });
 
