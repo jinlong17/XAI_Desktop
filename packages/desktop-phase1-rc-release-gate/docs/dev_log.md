@@ -8,11 +8,11 @@
 | Target | desktop-phase1-rc-release-gate |
 | Title | Phase 1 Desktop RC Release Gate |
 | Current Phase | FEATURE_VERIFY |
-| Status | READY_FOR_VERIFY |
-| Suggested Next | feature-verify |
-| Executor | feature-auto-build (Codex, gpt-5.3-codex) |
-| Updated | 2026-05-28 00:32 PDT |
-| Risks | Automated Phase 1 RC gates passed in this run, with residual manual verification limited to network-disabled GUI `/app` launch, drag-install launch from `/Applications`, and interactive menu/config reset/relaunch checks on real macOS hardware. |
+| Status | READY_TO_SHIP |
+| Suggested Next | ship |
+| Executor | feature-verify (Codex, gpt-5.4 inline) |
+| Updated | 2026-05-28 00:42 PDT |
+| Risks | No repo-side Phase 1 RC blocker reproduced in verify. Residual real-macOS GUI verification remains limited to network-disabled `/app` launch, drag-install launch from `/Applications`, and interactive menu/config reset/relaunch checks on hardware. |
 
 ## Review Notes
 
@@ -31,6 +31,32 @@ Non-blocking observations (do not require revision; surface during build if enco
 
 - N1: `test.md` references `apps/desktop/src-tauri/target/debug/bundle/...` for both `.app` and `.dmg` outputs, mirroring the upstream packaging-pipeline evidence. If Phase 1 surfaces a need for `target/release/...` for a real RC artifact, that becomes a Phase 1 R1 sub-finding rather than a planning defect.
 - N2: The four PLANNED phases live under `## Phase Plan` rather than a dedicated `Phase Progress` heading. This satisfies the template intent; feature-build may rename the heading on first run if desired.
+
+## Verification Notes
+
+Verdict: PASS. Independent verify reran the repo-side Phase 1 RC matrix successfully and found no repo-side blocker on packaging, startup shape, config persistence contract, or offline-surface degradation.
+
+Checks rerun in this verify pass:
+
+- `pnpm --filter @repo/plugin-web-tokens test` -> PASS (51/51)
+- `pnpm --filter @repo/web test -- src/routes/router.integration.test.tsx src/providers/AppProviders.test.tsx` -> PASS (9/9)
+- `pnpm --filter @repo/web build` -> PASS
+- `cargo test --manifest-path apps/desktop/src-tauri/Cargo.toml` -> PASS (60/60)
+- `pnpm --filter desktop build` -> PASS
+- `pnpm --filter desktop build:dmg` -> PASS
+- `hdiutil attach .../X Desktop_1.0.0-rc.1_aarch64.dmg` + `ls -la /Volumes/X Desktop` -> PASS (`X Desktop.app` + `Applications` link present)
+- `apps/desktop/src-tauri/target/debug/desktop` startup probe -> PASS (`Main window configured for standard app behavior`)
+- `pnpm --filter @repo/plugin-web-ai-chat test -- src/__tests__/claudeStreamAdapter.test.ts src/__tests__/secretStore.test.ts` -> PASS (20/20)
+- `pnpm --filter @repo/plugin-web-board-views test -- src/__tests__/MapView.test.tsx` -> PASS (16/16, existing React `act(...)` warnings only)
+- `pnpm --filter @repo/plugin-web-settings-rest test -- ...` -> PASS (97/97, existing `act(async ...)` warning only)
+- `pnpm --filter @repo/web-auth-device-session test -- src/guards.test.ts src/device-transport.test.ts src/auth-actions.test.ts` -> PASS (20/20)
+
+Commit review:
+
+- `5c8e8849` was reviewed as a pre-phase implementation fix for desktop offline-root launch and token CSS side effects. Focused tests and build outputs re-passed in this verify run, so the change is consistent with Phase 1 RC scope.
+- `d978bb76`, `578c9efa`, `e72a2c7e`, `f689c44b`, and `41eadac9` stay within their declared docs/state-write intents and preserve phase ordering.
+- The previously reported DMG stall did not reproduce: this verify run emitted `apps/desktop/src-tauri/target/debug/bundle/dmg/X Desktop_1.0.0-rc.1_aarch64.dmg` and mounted it successfully.
+- Remaining manual gaps are unchanged from plan scope and are carried as residual ship risks rather than repo blockers.
 
 ## Phase Plan
 
@@ -76,3 +102,4 @@ Status: DONE (2026-05-28, commit `f689c44b`).
 | 2026-05-28 00:26 PDT | feature-auto-build (Codex, gpt-5.3-codex) | Phase 2 complete: validated `.app` bundling (`pnpm --filter desktop build`), mounted/inspected DMG payload (`X Desktop.app` + `Applications` link), and captured standard-window startup probe output (`Main window configured for standard app behavior`). Wrote integrated evidence at `docs/reviews/desktop-phase1-rc-release-gate/20260528-phase2-app-installer-offline-gate.md`; interactive network-disabled `/app` route check and drag-install launch are explicitly deferred to verify/manual macOS gate. | `578c9efa` | feature-auto-build (Phase 3) |
 | 2026-05-28 00:28 PDT | feature-auto-build (Codex, gpt-5.3-codex) | Phase 3 complete: ran `cargo test --manifest-path apps/desktop/src-tauri/Cargo.toml` (60 passed) and captured menu/config-focused contract evidence plus live host config snapshot from `~/Library/Application Support/com.jinlong.desktop/app-config.json`. Added Phase 3 evidence doc `docs/reviews/desktop-phase1-rc-release-gate/20260528-phase3-menu-config-persistence-gate.md`; interactive menu/reveal/reset verification remains deferred to manual verify gate. | `e72a2c7e` | feature-auto-build (Phase 4) |
 | 2026-05-28 00:31 PDT | feature-auto-build (Codex, gpt-5.3-codex) | Phase 4 complete: consolidated offline degradation evidence across AI/map/integrations/premium/OAuth/Stripe/account-delete surfaces and produced one RC matrix + risk register at `docs/reviews/desktop-phase1-rc-release-gate/20260528-phase4-offline-degradation-rc-verdict.md`. Automated checks passed (`@repo/web` build, desktop build/dmg, targeted web/plugin/auth test suites). No repo-side blocker reproduced; residual checks are manual GUI items for `feature-verify`. | `f689c44b` | feature-verify |
+| 2026-05-28 00:42 PDT | feature-verify (Codex, gpt-5.4 inline) | Independent verify reran the repo-side RC matrix, reviewed commits `5c8e8849` + `d978bb76` + `578c9efa` + `e72a2c7e` + `f689c44b` + `41eadac9`, and confirmed the prior DMG stall no longer reproduces. Desktop build, DMG build, startup probe, mount inspection, Rust tests, and targeted offline-surface suites all passed again; only real-macOS GUI launch/install/menu interactions remain residual ship risks. | `5c8e8849`, `d978bb76`, `578c9efa`, `e72a2c7e`, `f689c44b`, `41eadac9` | ship |
