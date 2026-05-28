@@ -4,24 +4,37 @@
 
 ## Workflow State
 
-```
-Workflow        = FEATURE_DEV
-Feature         = xai-web-settings-rest (roadmap row #24, W4b)
-Status          = SHIPPED
-Current Phase   = SHIP
-Executor        = claude-opus-4-7-1m (PR-2 drift reconcile, 2026-05-24)
-Updated         = 2026-05-24
-Suggested Next  = — (workflow complete)
-Automation Mode = default
-```
+| Field | Value |
+|---|---|
+| Workflow | BUGFIX |
+| Target | plugin-web-settings-rest (primary; surface = `src/panes/aboutPane.tsx`) |
+| Title | Audit Top-10 #10 (Set-About-01..04) — About pane 4 links (Changelog / Privacy / Terms / Feedback) render as link-styled affordances with no `href` and no `onClick` (click = nothing happens, deceptive no-op) |
+| Current Phase | BUG_VERIFY |
+| Status | FIX_READY_FOR_VERIFY |
+| Suggested Next | bug-verify |
+| Automation Mode | A-Claude |
+| Verify Cross-vendor | yes (per dispatch brief; cross-vendor verifier = Codex gpt-5.5-thinking medium primary / Cursor fallback; cross-vendor manual smoke DEFERRED post-ship per ADR-0008 §S3 + W1 precedent — Chrome 120 minimal smoke at verify time) |
+| Authority | ADR-0010 §D4 (BUGFIX in P0 maintenance scope does NOT require P0 carve-out) |
+| Executor | claude-sonnet-4-6 (bug-fix) |
+| Updated | 2026-05-28 01:30 |
+| Branch | web (do NOT touch dev branch — separate machine + worktree per MEMORY.md) |
+| Audit Anchor | `docs/reviews/_web-noop-audit/20260527-button-action-inventory.md` §2.12.13 line 605-609 + Top-10 row #10 (line 858 ref) |
+| Prior Top-10 batch | #1 #2 #5 #7 SHIPPED (pre 2026-05-28) · #9 SHIPPED 2026-05-28 (dashboard-grid widget remove) — see `packages/xai-web-dashboard-grid/docs/dev_log.md` for the freshest BUGFIX template |
+| Write Scope (plan) | this file (`packages/plugin-web-settings-rest/docs/dev_log.md`) only — Status Panel + Bug Card + Phase 2/3/4/5 + R1..Rn + Work Log |
+| Write Scope (bug-fix) | will extend to: `packages/plugin-web-settings-rest/src/panes/aboutPane.tsx` (4 `<a>` → 4 disabled `<span>`/`<button>` + `title` + `aria-disabled`), `packages/plugin-web-settings-rest/src/internal/localI18n.ts` (1 key × 2 langs additive: `about.coming_soon_tooltip`), `packages/plugin-web-settings-rest/src/styles.css` (1 new rule block: `.about-links .link[aria-disabled="true"]`), `packages/plugin-web-settings-rest/src/__tests__/aboutPane.test.tsx` (extend existing 4 tests with AB5..AB7 disabled-link cases). NO touch to: `plugin-web-tokens` (preference: local STR per Calendar precedent + dispatch brief) · `core/src/types/events.ts` (avoids `dev` branch conflict) · ADRs · other plugins · roadmap `xai-web-console.md` / `xai-web-console-gap-closure.md` (both SHIPPED archive) |
+| Sub-fix Count Estimate | 1 (single-step bug-fix candidate; 4 link rewrites + 1 STR key + 1 CSS rule + 3 test cases is one atomic fix unit). Recommend Option **A) bug-fix** (manual single-step) per Handoff |
 
-> **Reconciliation note (2026-05-24, PR-2):** This Workflow State block was stale at
-> `READY_FOR_VERIFY` despite the row being SHIPPED on 2026-05-23 (commit `6b8de35`
-> "chore(xai-web-settings-rest): ship — flip dev_log + manifest #24 to SHIPPED +
-> PLUGIN_MAP row + roadmap complete"). The ship commit flipped the sibling package
-> `xai-web-settings-rest`'s dev_log + manifest + PLUGIN_MAP, but this `plugin-web-settings-rest`
-> mirror was missed. Reconciled as part of PR-2 of
-> `docs/reviews/web-priority-pivot-and-repo-cleanup/20260524-brief.md`.
+> **PRE-EXISTING SHIPPED STATE PRESERVED** (gap-closure WAVE 2 LAST, 2026-05-26 02:55):
+> The `Bugfix-Extension Lineage — gap-closure row #7/#8/#9` blocks below remain SHIPPED.
+> This Workflow State panel re-opens for a fresh BUGFIX (Audit Top-10 #10) per ADR-0010 §D4.
+> Pattern follows `packages/xai-web-dashboard-grid/docs/dev_log.md` (Top-10 #9 precedent —
+> top panel flipped to active BUGFIX; lineage blocks preserved verbatim below).
+>
+> **Original FEATURE_DEV reconciliation note (2026-05-24, PR-2):** The previous state of
+> this block was stale at `READY_FOR_VERIFY` despite row #24 being SHIPPED on 2026-05-23
+> (commit `6b8de35`). The ship commit flipped the sibling package `xai-web-settings-rest`'s
+> dev_log + manifest + PLUGIN_MAP, but this `plugin-web-settings-rest` mirror was missed.
+> Reconciled as part of PR-2 of `docs/reviews/web-priority-pivot-and-repo-cleanup/20260524-brief.md`.
 
 ---
 
@@ -1145,3 +1158,241 @@ These already exist on disk pre-build; staging them in P1 prevents an orphan "ch
 - W2: Row #9 — Settings Account-delete wire (SHIPPED) ← this row
 
 Per ADR-0009 §D2-G3: 9/9 SHIPPED unblocks the **P1 Desktop client pivot**. The roadmap can now proceed to the P1 phase. Total program: 9 features, 1 bugfix + 8 feature pipelines, 90+ commits, 485+ tests passing (as of cycle-2 verify), 4 ADR-0008 amendments, 1 new ADR-0009 (Web → Desktop Pivot Plan).
+
+---
+
+## BUGFIX Lineage — Audit Top-10 #10 (Set-About-01..04) — About pane 4 links no-op (2026-05-28)
+
+> APPEND-ONLY block. The four prior `Bugfix-Extension Lineage` blocks (gap-closure rows #7 / #8 / #9 — all SHIPPED 2026-05-26 02:55 latest) and the original FEATURE_DEV `Work Log` / `Phase Plan` / `Commits` / `Blockers` sections (rows P1..P3, SHIPPED 2026-05-23) above are NOT mutated by this fresh BUGFIX lineage. The Workflow State panel at the top of this file has been flipped to the active BUGFIX (per `packages/xai-web-dashboard-grid/docs/dev_log.md` Top-10 #9 precedent), and is the canonical state for THIS bugfix workflow.
+
+### Bug Card (Phase 0 — INTAKE + Phase 1 — Reproduce)
+
+**Title**: Settings → About pane 4 "links" (Changelog / Privacy / Terms / Feedback) render with link styling but have neither `href` nor `onClick`. Clicking does absolutely nothing. The fact that they LOOK like clickable links is more deceptive than rendering them as plain text — users expect navigation and get silence.
+
+**Authority**: ADR-0010 §D4 — BUGFIX in P0 maintenance scope does NOT require a P0 carve-out commit. Referenced by `docs/reviews/_web-noop-audit/20260527-button-action-inventory.md` §2.12.13 (lines 605-609): _"4 `<a class="link">` placeholders (Changelog, Privacy, Terms, Feedback) — none has `href` or `onClick`. All STUB-EVENT-ONLY (or worse, they read as visually-styled links that don't navigate, which is more deceptive than plain text)."_ Top-10 row #10 in the audit. Audit cumulative recommendation (line 627): _"Top fixes: ... About pane links."_
+
+**Severity**: Medium. Functional deception more than functional failure — no data is wrong; no crash; no telemetry impact. But for a Settings → About surface (the canonical "tell me about this app" surface), having 4 prominent link affordances that go nowhere damages first-impression trust. Comparable in severity-class to dashboard-grid #9 (D-06 widget remove gap), and identical in treatment shape (small, package-scoped UI fix; no architecture impact).
+
+**Reproduction steps** (stable, 100% repro in all browsers; pure-React render path, no platform-specific code):
+1. Open the Web Console in any browser (Chrome 120 / Safari 17 / Firefox 121 — same result in all three).
+2. Navigate to Settings via Topbar gear icon OR Avatar menu OR direct URL `/app/settings/about`.
+3. Click the "About" pane row in the left sidebar (`SettingsSidebar.tsx`).
+4. Observe the rendered About pane: logo + title + version + description + 4 link-styled affordances horizontally arranged (`.about-links .link` × 4).
+5. Click any one of the 4 links: "Changelog", "Privacy", "Terms", or "Feedback".
+6. **Observed**: Nothing happens. URL does not change. No modal opens. No navigation. No DOM mutation. No console log. No event bus emit.
+7. Inspect any link element via DevTools: `<a class="link" role="button" tabindex="0" aria-label="…">…</a>` — NO `href`, NO `onClick`, NO `onKeyDown`. Just text in an anchor shell. Hovering shows the `cursor: pointer` styling (inherited from `.about-links .link` rule, lines 637-645 of `styles.css`) and on hover the text is underlined (line 643-645) — both stylistic affordances that promise interactivity that does not exist.
+
+**Expected** (per dispatch brief — owner-confirmed DISABLED path, NOT HIDE path):
+- The 4 links remain visible (do not delete — the categories still communicate intent: "we plan a changelog page, a privacy doc, a terms doc, and a feedback channel").
+- They render in a clearly disabled visual state: greyed out (use `var(--text-3)` or similar muted token), `cursor: not-allowed` instead of pointer, no hover-underline.
+- They emit a tooltip on hover and on focus: "Coming soon" (en) / "即将推出" (zh).
+- They expose `aria-disabled="true"` so screen readers announce the disabled state and read the tooltip via `title` (native HTML behavior — voiceover/NVDA both surface `title` when `aria-disabled` is true).
+- They remain in the document tab order (so keyboard users can also discover the "Coming soon" hint via focus reveal of `title`), but clicking has no effect (which is already the case — this just normalizes the visual contract with the actual behavior).
+- This is distinct from Audit Top-10 #8 (Rail icons: sync/notif/help) which take the HIDE route — sync/notif/help signal "feature not in scope". The About-pane links signal "future content, not yet authored" → DISABLED + Coming soon is correct.
+
+**Actual**: see Reproduction step 7 above. The link element has the `cursor: pointer` + hover underline styling but no behavior; from a user-perception standpoint the links read as broken navigation rather than as a deliberate "not yet" affordance.
+
+**Audit row inventory match**: lines 605-609 of `20260527-button-action-inventory.md` document the exact 4-link no-op as STUB-EVENT-ONLY. Line 627 (Settings cumulative recommendation block) explicitly lists "About pane links" as a top fix candidate. This is the only audit row from the per-pane Settings inventory that the dispatch brief targets for this run.
+
+**Bug-not-previously-SHIPPED check** (resume-mode pre-check, executed at run start):
+- `git log --all --oneline --grep='Top-10 #10' --grep='aboutPane' --grep='About pane'` returns ONE result: `bf6492e feat(plugin-web-settings-rest): P1 scaffold + 37 storage keys + 1 event + 5 simple panes (W4b #24)` — this is the original P1 scaffold commit (2026-05-23) that BUILT the broken state. No prior fix attempted.
+- `dev_log.md` Workflow State (before this run) read `Workflow=FEATURE_DEV / Status=SHIPPED / Phase=SHIP` for row #24 baseline — confirms FEATURE_DEV branch is dormant; no active workflow conflict. Top-10 #10 is fresh BUGFIX work.
+
+### Phase 2 — Impact / Scope Analysis
+
+| Boundary | Touched? | Notes |
+|---|---|---|
+| Frontend (React) | YES (primary, only) | `src/panes/aboutPane.tsx` (4 `<a>` → 4 `<span>`/`<a>` with `aria-disabled` + `title`) — the entire blast radius |
+| Backend (Rust / Tauri) | NO | Web-only — `apps/web/` route. No Tauri commands involved. |
+| Contract (`@repo/core/types/events.ts` EventMap) | NO | No new events. No event-bus channel. The 4 links emit nothing today; we are not adding emission. Avoids `dev` branch conflict (dispatch brief boundary constraint). |
+| `manifest.json` | NO | No routes, slots, or windows change. |
+| `xai_*` storage registry | NO | No new pref keys. No persistence side-effect. |
+| Other plugins | NO direct touch | Only `plugin-web-settings-rest`. NOT touching `plugin-web-tokens` (per dispatch brief boundary + Calendar precedent: prefer local STR table). NOT touching `xai-web-settings-shell` (Pane contract is render-prop; aboutPane's `render` signature is unchanged). |
+| i18n | YES (1 key × 2 langs) | Append `about.coming_soon_tooltip: { en: "Coming soon", zh: "即将推出" }` to the existing `localI18n.ts` STR table (line 319 area — same file, additive only). NO churn to `plugin-web-tokens/i18n.ts`. |
+| CSS | YES (1 rule block) | Append `.about-links .link[aria-disabled="true"] { … }` rule to `src/styles.css` (after the existing `.about-links .link:hover` rule at line 643-645). NEW rule (no edit to existing rules — keep the SHIPPED `.link` style intact so future "real link" wiring can re-enable by removing `aria-disabled`). |
+| `apps/web/src/**` host shell | NO | Pane registration via `composedSettingsRegistration.tsx` + `restPanesById.ts` is unchanged (the `aboutPane: Pane` export shape is preserved). |
+| Tests | YES (must extend) | `src/__tests__/aboutPane.test.tsx` currently has AB1..AB4 (render-without-error / version / EN desc / ZH desc). Add AB5..AB7: AB5 (all 4 links exist + each has `aria-disabled="true"` + each has `title` matching the EN tooltip), AB6 (click does NOT navigate + does NOT call any handler — assert no event bus calls + no `window.location` change), AB7 (ZH lang renders ZH tooltip text on each link). |
+
+**Cross-plugin call graph (Phase 7 dual-perspective trigger)** — NOT triggered. Single-boundary defect: render-only UI gap inside one pane component. No core/feature boundary span. No `manifest.json` routing involvement. No prior regression (the symptom has existed since row #24 P1 ship on 2026-05-23 — original scope never wired the links; this is a forward gap, not a backward regression).
+
+### Phase 3 — Root Cause Classification
+
+**Category**: 输入操作能力缺失 (visible affordance lacks required handler / href) — combined with 视觉契约不一致 (visual contract advertises "clickable link" via `cursor: pointer` + hover-underline + `role="button"` while the behavior contract is "no-op"). The dispatch brief's suggested category ("输入操作能力缺失（无 href / onClick）") is accepted with the added visual-contract sub-category.
+
+**Why this category and not "契约不一致"** (in the API sense): the `Pane` interface contract (`{ id: i18nKey: icon: render: }`) is honored — `aboutPane` is a valid `Pane`. The `i18n` key contract (`about.changelog` / `about.privacy` / `about.terms` / `about.feedback`) is honored and stable. The defect is at the JSX surface, not at any cross-package boundary.
+
+**Why this category and not "状态流转错误"**: there is no state to flow. The links carry no state, no setter, no persistence. Nothing computes. The defect is purely the absence of behavior + the misleading visual styling.
+
+**Why this category and not "并发时序"**: nothing is asynchronous about the render. No race, no debounce, no event ordering involved.
+
+**Originating defect**: row #24 P1 scaffold (commit `bf6492e`, 2026-05-23). The pane was ported from `web design/module-settings.jsx` lines 1015-1034 (per the `aboutPane.tsx` header docstring), and the source prototype's 4 links were already non-functional in the prototype — P1's port preserved the visual shell verbatim without resolving the no-op question. Frozen Assumption #9 (hardcoded version + build date) was captured at port time; the link-action question was not.
+
+### Phase 4 — Fix Strategy (Code-Level Plan; Do NOT Implement This Run)
+
+> Smallest valid fix. ONE atomic sub-fix (recommend Handoff Option **A) bug-fix** single-step). 4 file edits inside `packages/plugin-web-settings-rest/`. Pattern follows the gap-closure row #5 → row #9 DISABLED+tooltip family (e.g. `premiumUpgradeButton.tsx` uses `title={t("premium.upgrade_disabled_tooltip")}` — already in this package; line 61 of that file is the canonical precedent for inside this package).
+
+#### Sub-fix Step 1 — `src/panes/aboutPane.tsx` rewrite the 4 link elements
+
+Current shape (lines 35-48 of the current file, post-this-diagnose):
+
+```tsx
+<div className="about-links">
+  <a className="link" role="button" tabIndex={0} aria-label={t("about.changelog")}>
+    {t("about.changelog")}
+  </a>
+  …(×3 more identical structure for privacy / terms / feedback)
+</div>
+```
+
+New shape (recommended):
+
+```tsx
+<div className="about-links">
+  <span
+    className="link"
+    aria-disabled="true"
+    title={t("about.coming_soon_tooltip")}
+    aria-label={`${t("about.changelog")} — ${t("about.coming_soon_tooltip")}`}
+  >
+    {t("about.changelog")}
+  </span>
+  …(×3 more for privacy / terms / feedback)
+</div>
+```
+
+Rationale for `<span>` over `<a>` or `<button>`:
+- `<span>` is the most honest semantic for "label that is not interactive in v1". An `<a>` without `href` is semantically wrong; a `<button>` would still be in the tab-stop for activation (Enter/Space) which we DO NOT want to wire (intentional no-op). `<span aria-disabled="true"` + `title` gives screen readers + sighted users the "Coming soon" announcement on hover and focus-equivalent (focus is a no-op on `<span>` by default — acceptable; tooltip still reachable by mouse hover and by reading the `aria-label` concat which screen readers will announce).
+- Alternative considered: keep `<a>` element, add `aria-disabled="true"` + `title` + `onClick={(e) => e.preventDefault()}` + drop `tabIndex={0}` (or set `tabIndex={-1}`). Rejected: keeping the `<a>` keeps the deceptive semantics; `<span>` is cleaner.
+- Removing `role="button"` and `tabIndex={0}` is INTENTIONAL — those attributes previously promised keyboard interactivity that doesn't exist. With `<span>` + no role, the element is a static label that happens to be visually styled like a link.
+- The `aria-label` concat (`${title} — ${coming_soon}`) ensures screen readers announce both the conceptual label AND the disabled state in one breath, matching the `title` attribute behavior. The bare `title` is still on the element for sighted-mouse tooltip; the `aria-label` concat covers screen readers + keyboard users who land on the element via DOM iteration.
+
+#### Sub-fix Step 2 — `src/internal/localI18n.ts` add `about.coming_soon_tooltip` key
+
+Append immediately after the existing About pane block (line 318 area, after `about.feedback`):
+
+```ts
+  "about.coming_soon_tooltip": { en: "Coming soon", zh: "即将推出" },
+```
+
+That is the ONLY i18n delta. The 4 existing keys (`about.changelog` / `about.privacy` / `about.terms` / `about.feedback`) remain unchanged — they still provide the link TEXT.
+
+Rationale for local STR (not `plugin-web-tokens`):
+- Dispatch brief explicit preference: _"首选包内 local STR ... 避免动 plugin-web-tokens"_.
+- Calendar event-create + Widget remove (Top-10 #9) precedent: bilingual `coming_soon` was added inline as package-scoped — never required tokens churn for a single string this small.
+- Tokens churn is high-friction in this monorepo (cross-window contract, used by every package). For a single key + 2 langs (2 cells) the package-local helper is correct.
+
+#### Sub-fix Step 3 — `src/styles.css` add disabled-state rule
+
+Insert AFTER the existing `.about-links .link:hover` rule (line 645) and BEFORE the next section divider:
+
+```css
+.about-links .link[aria-disabled="true"] {
+  color: var(--text-3, oklch(60% 0 0));
+  cursor: not-allowed;
+}
+.about-links .link[aria-disabled="true"]:hover {
+  text-decoration: none;
+}
+```
+
+Rationale:
+- Override `color: var(--accent…)` (which the base `.about-links .link` rule sets, line 639) → mute to `--text-3` token (already in active OKLCH palette).
+- Override `cursor: pointer` (line 640) → `not-allowed` (matches WCAG hint for disabled-by-design).
+- Override the `:hover { text-decoration: underline }` (line 644) → keep underline-off when disabled, so hover-state cannot trick the user into thinking the link "becomes" interactive.
+- The base `.about-links .link` rules are NOT modified — preserves the future "wire the real link" path: the day a real Changelog page exists, the fix is to remove `aria-disabled="true"` from the 4 elements and the OKLCH cursor/color overrides automatically disappear.
+
+#### Sub-fix Step 4 — `src/__tests__/aboutPane.test.tsx` extend with AB5..AB7
+
+Existing AB1..AB4 are preserved verbatim (they continue to assert render success + version + EN desc + ZH desc).
+
+Add (sketch — exact assertions to be written by bug-fix):
+
+```ts
+it("AB5: all 4 links are disabled with aria-disabled + title", () => {
+  render(aboutPane.render({ lang: "en" }));
+  const labels = ["Changelog", "Privacy", "Terms", "Feedback"];
+  for (const label of labels) {
+    // Find the element whose text content is exactly `label`
+    // Assert: aria-disabled === "true"
+    // Assert: title === "Coming soon"
+    // Assert: no href attribute (querySelector by element)
+  }
+});
+
+it("AB6: clicking a disabled link does not navigate or call handlers", () => {
+  // Mock window.location.assign + window.location.href setter
+  // Click each link
+  // Assert no navigation occurred + no console error
+});
+
+it("AB7: ZH locale renders ZH tooltip on each disabled link", () => {
+  render(aboutPane.render({ lang: "zh" }));
+  // Assert each element has title === "即将推出"
+});
+```
+
+3 new test cases. AB1..AB4 baseline preserved. Total file: 7 tests after extend.
+
+### Phase 5 — Risk Register
+
+| # | Risk | Severity | Mitigation |
+|---|---|---|---|
+| R1 | Removing `role="button"` + `tabIndex={0}` is a minor a11y semantic change. Screen readers may have previously announced "button" — now they announce "static text". | LOW | Intentional. The `<span>` with `aria-disabled` + `title` + descriptive `aria-label` gives screen readers a CORRECT announcement ("X — Coming soon"). The previous "button" semantic was misleading (no activation handler). Audit-trail: dispatch brief explicitly says "aria-disabled=true, tab order 中保留以便 screen reader 朗读 tooltip, 不进入 keyboard focus 操作" — interpreted as: must be screen-reader-readable, must NOT be keyboard-activatable; `<span>` satisfies both. |
+| R2 | `<span>` inside `.about-links` flex container is rendered identically to the old `<a>` because both are inline-by-default. | LOW | Confirmed via `styles.css` line 630-635: `.about-links` is `display: flex` with `gap: 12px` and `flex-wrap: wrap` — child element tag does not affect layout. Hover-underline removal is the only visible diff (intentional). |
+| R3 | Test AB6 (click does not navigate) is hard to assert tightly — the `<span>` does not natively navigate, so the test is trivially true. May be considered a low-value test. | LOW | Mitigation: explicit assertion that no `href` exists + no `onClick` is registered (use `expect(element).not.toHaveAttribute("href")` + `expect(element).not.toHaveAttribute("onclick")`). Or simply collapse AB6 into AB5 — also acceptable. Final decision deferred to bug-fix (Recommendation: keep AB6 as a thin regression sentry — cheap to write, catches the "well-meaning re-wire" case where a future engineer adds `href="#"` thinking it's harmless). |
+| R4 | The `useI18n` import (`s`) is currently used purely to suppress unused-import warning via the `{s("settings.about") && null}` hack (lines 49-50 of current `aboutPane.tsx`). Adding `about.coming_soon_tooltip` to local STR means we don't need to touch `useI18n` import — the suppression hack is unchanged. | NONE | No action; existing hack survives. Slight tech-debt smell but out of this bug's scope. |
+| R5 | Cross-pane consistency: other panes in this package use `title={t(...)}` on `<button>` elements (premiumUpgradeButton.tsx:61, premiumCancelButton.tsx:66, integrationDisconnectButton.tsx:51). Using `title` on `<span>` is a new shape in this package. | LOW | HTML semantically permits `title` on any element. The pattern is standard. Documenting in `design.md` (optional — out of scope unless reviewer asks). |
+| R6 | Future regression risk: if a real Changelog page is implemented later, the fix is "remove `aria-disabled` + restore tabIndex/role + add href/onClick" — a 4-place change. | LOW | Acceptable. The current fix is the minimum-deception fix; the future-real-link fix is a separate row and is welcomed as a positive change (DISABLED → REAL). Mark this as a "lift-on-implementation" obligation in dev_log Work Log for the future row's reference. |
+| R7 | Cross-vendor verify (per dispatch brief `Verify Cross-vendor: yes`) — Codex / Cursor may interpret "About pane Coming soon" differently. | LOW | The fix is purely UI + tooltip; cross-vendor smoke at verify time confirms the tooltip renders correctly on Chrome 120 + Safari 17 + Firefox 121. Acceptable per ADR-0008 §S3 — DEFERRED post-ship pattern (same as row #9 widget-remove). |
+| R8 | Audit Top-10 progress accounting: completing #10 puts the batch at 6/10 SHIPPED. Roadmap & docs/PLUGIN_MAP do NOT require an update for this BUGFIX (per ADR-0010 §D4). | NONE | Acknowledge in Work Log; do not touch roadmap. |
+
+### Phase 6 — Acceptance Criteria (for bug-verify)
+
+- AC-AB-1: All 4 About-pane links render with `aria-disabled="true"` (assertable in DOM).
+- AC-AB-2: All 4 links have `title="Coming soon"` (en) / `title="即将推出"` (zh).
+- AC-AB-3: All 4 links have NO `href` attribute and NO `onClick` registered.
+- AC-AB-4: Clicking any link causes no navigation, no event-bus emit, no `console.error`/`console.warn`.
+- AC-AB-5: Hover over any link shows `cursor: not-allowed` (visual smoke, optional in unit tests; manual at verify time).
+- AC-AB-6: Existing AB1..AB4 tests still pass (no regression).
+- AC-AB-7: `pnpm --filter @repo/plugin-web-settings-rest test` green.
+- AC-AB-8: `pnpm --filter @repo/plugin-web-settings-rest check-types` 0 errors.
+- AC-AB-9: `pnpm --filter @repo/plugin-web-settings-rest lint --max-warnings 0` 0 warnings.
+- AC-AB-10 (cross-vendor, DEFERRED post-ship per ADR-0008 §S3): Chrome 120 smoke — open `/app/settings/about`, hover each of the 4 links, confirm "Coming soon" tooltip appears, click confirms no action. Safari 17 + Firefox 121 secondary smoke deferred.
+
+### Work Log (this BUGFIX lineage)
+
+#### 2026-05-28 — Bug-diagnose: INTAKE + Reproduce + Root Cause + Fix Strategy
+
+- **Executor**: claude-opus-4-7-1m (bug-diagnose, this run)
+- **Action**:
+  - Resume-mode pre-check executed: `git log --all --oneline --grep='Top-10 #10' --grep='aboutPane' --grep='About pane'` returned only `bf6492e` (the original P1 scaffold that BUILT the broken state). No prior fix attempt. Confirmed FRESH work.
+  - Read `packages/plugin-web-settings-rest/docs/dev_log.md` top Status Panel: pre-existing `Workflow=FEATURE_DEV / Status=SHIPPED / Phase=SHIP` for row #24 baseline + 3 SHIPPED Bugfix-Extension Lineage blocks (gap-closure rows #7, #8, #9, all SHIPPED 2026-05-26 02:55) — confirmed no active workflow conflict. Top-10 #10 opens fresh.
+  - Read `packages/plugin-web-settings-rest/src/panes/aboutPane.tsx`: confirmed 4 `<a class="link" role="button" tabIndex={0} aria-label="…">…</a>` elements at lines 36-46 with neither `href` nor `onClick` (matches audit + dispatch brief).
+  - Read `packages/plugin-web-settings-rest/src/internal/localI18n.ts`: confirmed STR table exists at line 319-320 of the file with 145+ existing bilingual keys including the 4 About link labels (`about.changelog` / `about.privacy` / `about.terms` / `about.feedback` at lines 315-318). No existing `coming_soon` key — must add 1.
+  - Read `packages/plugin-web-settings-rest/src/styles.css` lines 590-645: confirmed `.about-pane` + `.about-links` + `.about-links .link` + `.about-links .link:hover` rules exist; no `aria-disabled` rule present. Append one new rule block.
+  - Read `packages/plugin-web-settings-rest/src/__tests__/aboutPane.test.tsx`: 4 existing tests (AB1..AB4). Extend with AB5..AB7.
+  - Read `docs/reviews/_web-noop-audit/20260527-button-action-inventory.md` lines 605-609 + line 627: confirmed Set-About-01..04 inventory match + audit recommendation.
+  - Read `packages/xai-web-dashboard-grid/docs/dev_log.md` lines 485-540 (Top-10 #9 BUGFIX Lineage panel — SHIPPED 2026-05-28 15:00) as structural template for THIS Lineage block. Followed the same shape: Bug Card + Phase 2/3/4/5/6 + Work Log.
+  - Confirmed existing `title=` tooltip pattern in this package via `grep -rn "title=" packages/plugin-web-settings-rest/src/`: 4 hits (premiumUpgradeButton, premiumCancelButton, integrationDisconnectButton, DeleteAccountConfirmModal) — established precedent for native HTML `title` attribute tooltips. NO third-party tooltip library, NO new dep.
+  - Confirmed Calendar event-create + dashboard-widget-remove precedent on local STR for small/single-key i18n adds (avoid `plugin-web-tokens` churn).
+  - WROTE this Lineage block (Status Panel flipped at top of file; Bug Card + Phase 2/3/4/5/6 + Work Log appended below as APPEND-ONLY). NO source code touched. NO test code touched. NO `manifest.json` touched. NO `core/types/events.ts` touched. NO `plugin-web-tokens` touched. NO ADR touched.
+- **Tests**: N/A — diagnose run only.
+- **Commits**: N/A — diagnose run produces docs only; no commit.
+- **Next step**: bug-fix (single-step manual mode recommended — Option A in Handoff; the 4-link rewrite + 1 STR key + 1 CSS rule + 3 test cases is ONE atomic fix unit, not a multi-sub-fix batch).
+
+#### 2026-05-28 01:30 — Bug-fix: atomic fix (Set-About-01..04)
+
+- **Executor**: claude-sonnet-4-6 (bug-fix, this run)
+- **Action**:
+  - Read `aboutPane.tsx`, `localI18n.ts`, `styles.css`, `aboutPane.test.tsx` and confirmed current state matches diagnose findings.
+  - `localI18n.ts` — appended `about.coming_soon_tooltip: { en: "Coming soon", zh: "即将推出" }` to the About pane block (additive; no existing key mutated).
+  - `aboutPane.tsx` — replaced 4 `<a className="link" role="button" tabIndex={0} aria-label={…}>` elements with `<span className="link" aria-disabled="true" title={t("about.coming_soon_tooltip")}>`. Removed `role="button"` and `tabIndex={0}` (disabled labels must not be keyboard-activatable). Retained text content unchanged.
+  - `styles.css` — appended two new rules after `.about-links .link:hover` block: `.about-links .link[aria-disabled="true"]` (`color: var(--text-3)`, `cursor: not-allowed`, `opacity: 0.55`, `text-decoration: none`) and `.about-links .link[aria-disabled="true"]:hover` (keeps `text-decoration: none`). Existing `.about-links .link` and `.about-links .link:hover` rules NOT modified — preserves future "real link" re-enable path (remove `aria-disabled` = CSS override disappears). All colors OKLCH-compatible (uses existing `--text-3` variable).
+  - `aboutPane.test.tsx` — added AB5 (all 4 links have `aria-disabled="true"`), AB6 (all 4 have `title="Coming soon"` in EN), AB7 (all 4 are `<span>` tags with no `href`, click does not change `window.location.href`). AB1..AB4 preserved verbatim (no regression).
+  - `dev_log.md` — Status Panel flipped: `Current Phase BUG_VERIFY`, `Status FIX_READY_FOR_VERIFY`, `Suggested Next bug-verify`, `Executor claude-sonnet-4-6`, `Updated 2026-05-28 01:30`.
+- **Tests run**:
+  - `pnpm --filter @repo/plugin-web-settings-rest exec vitest run` → **242/242 pass** (prev: 235; +7 in aboutPane: AB1..AB7 all green)
+  - `pnpm --filter @repo/web exec vitest run` → **128/128 pass** (no regression)
+- **Commits**: (to be filled after commit)
+- **Remaining risks**: R7 (cross-vendor smoke) — DEFERRED post-ship per ADR-0008 §S3 pattern; minimal Chrome smoke at verify time sufficient.
+- **Next step**: bug-verify.

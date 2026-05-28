@@ -316,6 +316,7 @@ const STR = {
   "about.privacy": { en: "Privacy", zh: "隐私政策" },
   "about.terms": { en: "Terms", zh: "服务条款" },
   "about.feedback": { en: "Feedback", zh: "反馈" },
+  "about.coming_soon_tooltip": { en: "Coming soon", zh: "即将推出" },
 } as const satisfies BilingualMap;
 
 export type StrKey = keyof typeof STR;
