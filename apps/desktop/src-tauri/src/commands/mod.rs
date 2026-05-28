@@ -8,4 +8,5 @@ pub mod keychain;
 pub mod menubar;
 pub mod statusbar;
 pub mod thumbnail;
+pub mod updater;
 pub mod window;

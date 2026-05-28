@@ -91,6 +91,7 @@ pub fn run() {
     const DESKTOP_STATUSBAR_ADAPTER_SCRIPT: &str = include_str!("desktop_statusbar_adapter.js");
     const DESKTOP_GLOBAL_HOTKEY_ADAPTER_SCRIPT: &str =
         include_str!("desktop_global_hotkey_adapter.js");
+    const DESKTOP_UPDATER_ADAPTER_SCRIPT: &str = include_str!("desktop_updater_adapter.js");
 
     let builder = tauri::Builder::default()
         .plugin(tauri_plugin_opener::init())
@@ -100,10 +101,12 @@ pub fn run() {
                 .with_handler(commands::global_hotkey::handle_global_shortcut_event)
                 .build(),
         )
+        .plugin(tauri_plugin_updater::Builder::new().build())
         .manage(commands::crypto::CryptoCommandState::default())
         .manage(commands::menubar::SyncMenuBarState::default())
         .manage(commands::statusbar::DesktopStatusbarState::default())
         .manage(commands::global_hotkey::DesktopQuickOpenState::default())
+        .manage(commands::updater::DesktopUpdaterState::default())
         .manage(commands::bookmarks::BookmarkRegistry::default());
 
     #[cfg(feature = "crypto")]
@@ -115,6 +118,8 @@ pub fn run() {
             commands::statusbar::statusbar_set_snapshot,
             commands::global_hotkey::desktop_global_hotkey_get_snapshot,
             commands::global_hotkey::desktop_global_hotkey_set_preference,
+            commands::updater::desktop_updater_get_snapshot,
+            commands::updater::desktop_updater_check,
             commands::crypto::crypto_encrypt_for,
             commands::crypto::crypto_unwrap_dek_for_device,
             commands::crypto::crypto_wrap_dek_for_devices,
@@ -172,6 +177,7 @@ pub fn run() {
             window.eval(DESKTOP_NOTIFICATION_ADAPTER_SCRIPT)?;
             window.eval(DESKTOP_STATUSBAR_ADAPTER_SCRIPT)?;
             window.eval(DESKTOP_GLOBAL_HOTKEY_ADAPTER_SCRIPT)?;
+            window.eval(DESKTOP_UPDATER_ADAPTER_SCRIPT)?;
 
             let loaded_config = app_config::load_config_or_default(&app_handle)?;
             let restored_state =

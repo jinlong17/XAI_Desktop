@@ -13,6 +13,7 @@ import {
 import { DesktopNativeNotificationsBridge } from "@repo/desktop-native-notifications-reminders/web";
 import { DesktopStatusbarQuickActionsBridge } from "@repo/desktop-statusbar-quick-actions/web";
 import { DesktopGlobalHotkeyQuickOpenBridge } from "@repo/desktop-global-hotkey-quick-open/web";
+import { DesktopAutoUpdateReleaseChannelBridge } from "@repo/desktop-auto-update-release-channel/web";
 
 type WebAuthMode = "live" | "mock-authenticated" | "mock-unauthenticated";
 type MockAuthSession = {
@@ -302,18 +303,22 @@ export function AppProviders({ children }: PropsWithChildren) {
         <DeviceSessionBridge transport={transport}>
           <TodoWebRuntimeBridge>
             <DesktopNativeNotificationsBridge>
-              <DesktopGlobalHotkeyQuickOpenBridge>
-                <DesktopStatusbarQuickActionsBridge>{children}</DesktopStatusbarQuickActionsBridge>
-              </DesktopGlobalHotkeyQuickOpenBridge>
+              <DesktopAutoUpdateReleaseChannelBridge>
+                <DesktopGlobalHotkeyQuickOpenBridge>
+                  <DesktopStatusbarQuickActionsBridge>{children}</DesktopStatusbarQuickActionsBridge>
+                </DesktopGlobalHotkeyQuickOpenBridge>
+              </DesktopAutoUpdateReleaseChannelBridge>
             </DesktopNativeNotificationsBridge>
           </TodoWebRuntimeBridge>
         </DeviceSessionBridge>
       ) : (
         <TodoWebRuntimeBridge>
           <DesktopNativeNotificationsBridge>
-            <DesktopGlobalHotkeyQuickOpenBridge>
-              <DesktopStatusbarQuickActionsBridge>{children}</DesktopStatusbarQuickActionsBridge>
-            </DesktopGlobalHotkeyQuickOpenBridge>
+            <DesktopAutoUpdateReleaseChannelBridge>
+              <DesktopGlobalHotkeyQuickOpenBridge>
+                <DesktopStatusbarQuickActionsBridge>{children}</DesktopStatusbarQuickActionsBridge>
+              </DesktopGlobalHotkeyQuickOpenBridge>
+            </DesktopAutoUpdateReleaseChannelBridge>
           </DesktopNativeNotificationsBridge>
         </TodoWebRuntimeBridge>
       )}
