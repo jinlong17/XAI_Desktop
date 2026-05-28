@@ -501,3 +501,202 @@ Adds React-Router child route + sub-route layout split (board grid behind, detai
 | 2026-05-27 16:35 | claude-sonnet-4-6 (bug-fix cycle 2) | Cycle-2 1-line patch applied: `BoardWorkspacesModule.tsx` unconditional `<CardDetailDialog open={!!openCard} .../>` → conditional `{openCard && <CardDetailDialog open={true} .../>}` with comment citing ShareModal sibling pattern. Two test cases updated to match conditional-mount semantics: BW-Open-0 (dialog absent from DOM on initial render, not just hidden) + BW-Open-Close (dialog unmounts on close rather than calling `close()`). All validation gates pass: `pnpm --filter @repo/plugin-web-board-workspaces test` 195/195; `pnpm --filter @repo/web test` 128/128 (9 AC-W8-VIEWS-FIX-LD failures resolved); typecheck exit 0; lint --max-warnings 0 exit 0. Status: FIX_READY_FOR_VERIFY. | 69cc118 (fix + test update) | bug-verify |
 | 2026-05-27 16:45 | claude-opus-4-7[1m] (bug-verify cycle 2, agentId ad021c6bbb0f078e6) | Cycle-2 verify PASS — Status → READY_TO_SHIP. Independent re-validation of all 10 dimensions: (#1) `pnpm --filter @repo/web test` 128/128 PASS — all 9 AC-W8-VIEWS-FIX-LD regressions resolved; (#2) cycle-2 patch is conditional mount `{openCard && <CardDetailDialog open={true} .../>}` matching ShareModal sibling pattern at line 560 (verified via `git show 69cc118 -- BoardWorkspacesModule.tsx`); (#3) BW-Open-0 + BW-Open-Close test updates correctly assert conditional-mount semantics (queryByTestId not.toBeInTheDocument vs. close() spy); (#4) workspaces 195/195 PASS; (#5) CardDetailDialog.tsx UNCHANGED in cycle-2 (empty diff in 69cc118); (#6) dev_log honestly records cycle-1 auto-fix's incorrect 'pre-existing' claim + bug-verify's git-checkout regression discovery; (#7) commit hygiene `type(scope): summary` + Co-Authored-By trailer on both 69cc118 + c3e8724; scope-compliance clean (zero edits to board-core/board-views/core/tokens/storage/PLUGIN_MAP/ADR/manifest/package.json); (#8) all 7 validation commands exit 0 (workspaces typecheck/lint/test + board-views/board-core typecheck + web typecheck/test); (#9) original repro fixed (click → openCard truthy → CardDetailDialog mounts → showModal); (#10) ADR-0010 §D4 compliant (bug-fix workflow, no P0 carve-out). Total 6 commits for T10 #5 across cycle 1 + cycle 2. | — | ship |
 | 2026-05-27 17:00 | claude-sonnet-4-6 (ship) | Ship gate: all 7 validation commands confirmed green (workspaces 195/195 + web 128/128 + 5x typecheck/lint exit 0). Wrap chore commit ecd9eed created for dirty dev_log. Status Panel flipped READY_TO_SHIP → SHIPPED. 8 commits pushed to origin/web: c415105 (feat S1), 641f5d6 (fix S2+S3), 115d08a (test S6), 7f867ed (docs dev_log cycle-1), 69cc118 (fix cycle-2), c3e8724 (docs dev_log cycle-2), ecd9eed (chore verify-wrap) + this status flip commit. Cycle-1 (4) + cycle-2 (2) + 2 chore = 8 commits; BLOCKED → repaired → SHIPPED history complete. | c415105, 641f5d6, 115d08a, 7f867ed, 69cc118, c3e8724, ecd9eed | Workflow complete — Next: Start the bug-diagnose agent for plugin-web-calendar (Audit Top-10 #2). |
+
+---
+
+## Bugfix Lineage — Audit Option A §5 last item · B-12 + B-28 删除确认对话框 (2026-05-28)
+
+### Bugfix Status Panel
+
+| Field | Value |
+|---|---|
+| Workflow | BUGFIX |
+| Target | xai-web-board-workspaces (sole package; both delete sites are in `plugin-web-board-workspaces/src/`) |
+| Title | B-12 + B-28 — destructive delete actions (BoardSwitcher delete board + Inbox card delete) lack alertdialog confirmation modal |
+| Current Phase | BUG_VERIFY |
+| Status | FIX_READY_FOR_VERIFY |
+| Suggested Next | bug-verify |
+| Verify Cross-vendor | yes (per user directive; ADR-0008 §S3 carve-out still defers cross-browser smoke for SHIPPED batches but this BUGFIX gets same-vendor Claude Opus verify gate per `xai-web-console-gap-closure.md` default) |
+| Automation Mode | A-Claude |
+| Executor | claude-sonnet-4-6 (bug-auto-fix, 2026-05-28 03:56) |
+| Updated | 2026-05-28 03:56 |
+| Audit Anchor | `docs/reviews/_web-noop-audit/20260527-button-action-inventory.md` Option A §5 last item · table rows B-12 (line 231, "DESTRUCTIVE — no confirmation dialog (FLAG)") + B-28 (line 247, "DESTRUCTIVE — no confirmation") + summary lines 267-268 ("B-12 and B-28 need confirmation dialogs (UX risk, possible BUGFIX)") + Recommended-actions line 859 |
+| ADR Compliance | ADR-0010 §D4 — Web P0 maintenance-only allows bug-fix work without a P0 carve-out commit. This lineage is pure UX-safety bug-fix (destructive action without confirmation gate) — NOT a new feature. No P0 carve-out required. |
+| Audit Batch | Option A bug-fix batch — the **last** outstanding Option A item (after #1 Sign-out · #5 onOpenCard cluster · #7 · #9 · #10 all SHIPPED). Closes Option A. Top-10 batch sits at 6/10 (B-12 / B-28 are not in Top-10 but are in the broader Option A scope) |
+| Resume-mode INTAKE | Fresh — no prior B-12 / B-28 commit found; git log searches for B-12, B-28, "delete.confirm", "delete-board" returned only the audit-inventory doc commit + unrelated rows. No prior bugfix lineage for these two rows in any board-family dev_log. Lineage opens fresh. |
+
+### Reproduction Protocol (Phase 1)
+
+**Inputs (stable):**
+- Run `pnpm dev` in `apps/web/` and visit `http://localhost:5173/app/board`.
+- Any active board with at least 2 boards in the workspace (so the delete affordance shows — `BoardSwitcher.tsx:138` gates `showDelete = !isActive && totalFiltered > 1`).
+- Have at least one card in the Inbox panel (use the composer or rely on the seeded inbox).
+
+**Steps — B-12 (Delete board, no proper modal):**
+1. Click the bottom switcher "Switch boards" to open `<BoardSwitcher>` modal.
+2. Hover over any non-active board card → the trash icon `bs-delete-<boardId>` (line 159-167) appears.
+3. Click trash → **`window.confirm()` native browser dialog fires** (`BoardSwitcher.tsx:61`), NOT the in-app `<dialog>` alertdialog modal. Confirm → board (with all lists + cards + settings) is wiped via `deleteBoard` (`BoardWorkspacesModule.tsx:259-269` → `setRawBoards`, persisted to `xai_boards_v2`).
+
+**Expected (B-12):** A native HTML `<dialog>` alertdialog with role="alertdialog", aria-labelledby + aria-describedby, warning copy that names the destructive consequence ("Deleting this board will permanently remove all its lists and cards"), Cancel button (default focus, returns without delete) + Confirm button (destructive red), ESC closes, backdrop click closes.
+
+**Actual (B-12):** `window.confirm()` shows a browser-chrome alert. It IS a confirmation step (audit's wording "no confirmation dialog (FLAG)" reflects "no in-app `<dialog>` modal"), but:
+- Bypasses the project's native `<dialog>` precedent (#1 SignOutConfirmDialog · #5 CardDetailDialog · row #9 ShareModal).
+- No bilingual copy beyond a single-line prompt (`STR_SWITCHER.deleteConfirm`).
+- No warning about list/card content loss (the prompt is just "Delete this board?" / "删除该看板？").
+- No Cancel-default-focus / no destructive visual treatment / no a11y attributes.
+- Differs in UX shape from B-28's complete absence — visually inconsistent.
+
+**Steps — B-28 (Delete inbox card, no confirmation at all):**
+1. Open the Inbox panel from the bottom switcher (`InboxPanel` mounts when `panels.inbox === true`).
+2. Click the × button (`inbox-remove-<cardId>`, `InboxPanel.tsx:62-70`) on any inbox card.
+3. The card disappears instantly (`InboxPanel.tsx:31-33` calls `setCards((prev) => prev.filter((c) => c.id !== id))`, persisted to `xai_board_inbox`).
+
+**Expected (B-28):** Same `<dialog>` alertdialog as B-12 with copy adapted to inbox-card semantics ("Delete this card?" with description naming the content lost — text + (future) comments + attachments) + Cancel-default-focus + ESC/backdrop close + destructive Confirm.
+
+**Actual (B-28):** Delete handler fires immediately. **Zero confirmation gate.** One mis-click = silent loss.
+
+**Reproduces 100% of the time on web branch · commit HEAD (`90ca6d8`).** No race/timing involved.
+
+### Impact Analysis
+
+**Frontend:**
+- `BoardSwitcher.tsx` (workspaces): handler uses `window.confirm()` — must replace with `<dialog>` modal trigger.
+- `InboxPanel.tsx` (workspaces): handler has no gate at all — must be wired through the new dialog.
+- `BoardWorkspacesModule.tsx` (workspaces host): becomes the owner of dialog state (open + pending delete target) so the dialog can sit at the host level (mirrors how `openCard` was lifted in Top-10 #5).
+
+**Backend / contract:** None. No Tauri command. No `@repo/core` event channel touched. No new `EventMap` entry. Pure UI sink.
+
+**Routing / manifest:** None. No new shell slot. No `manifest.json` change.
+
+**Persistence:** Unchanged. `xai_boards_v2` (board delete persists via existing `setRawBoards`) and `xai_board_inbox` (inbox card delete persists via existing `setRawInbox`) — both keys already SHIPPED. Confirmation only changes WHEN the existing write fires, not WHERE.
+
+**Cross-package:** None. Both delete sites are in `@repo/plugin-web-board-workspaces`. No `@repo/plugin-web-board-core` / `@repo/plugin-web-board-views` / `@repo/plugin-web-tokens` / `@repo/core` edits. (Important boundary lock — keeps web↔dev branch divergence to zero.)
+
+**Related features (NOT touched):**
+- `@repo/plugin-web-board-core` (row #7) — unchanged.
+- `@repo/plugin-web-board-views` (row #8) — unchanged.
+- `apps/web/src/routes/modules/shellRegistrations.tsx` — unchanged.
+- `docs/PLUGIN_MAP.md` — no row delta needed (no status change; the package stays Stable).
+- `@repo/core/src/types/events.ts` — explicitly NOT touched (audit constraint + branch lock).
+- ADR — none touched.
+
+**Regression scope:** Adding a confirmation gate cannot break existing flows because the existing flows ARE the destructive flows (delete board → wipes board; delete inbox card → drops card). The only behavioral change is "destructive action now requires a second click before it commits."
+
+### Root Cause Classification
+
+**Primary: 视觉契约不一致 / UX-safety 缺失 (destructive action without confirmation modal).**
+
+Two sub-shapes of the same root cause:
+
+1. **B-12 (Partial gate, wrong modality):** A `window.confirm()` exists (`BoardSwitcher.tsx:59-64`) but bypasses the project's established in-app `<dialog>` alertdialog precedent. The prompt is single-line, lacks the warning about list+card content loss, and is visually inconsistent with the SignOutConfirmDialog / CardDetailDialog / ShareModal pattern shipped in adjacent fixes.
+
+2. **B-28 (No gate at all):** `InboxPanel.tsx:62-70` calls `onClick={() => remove(c.id)}` directly with zero confirmation. One mis-click silently loses card content (text + future comments + future attachments per audit summary).
+
+Why this slipped past earlier reviews:
+- Row #9 (board-workspaces SHIPPED 2026-05-23) ported `module-board.jsx` 1:1; the prototype JSX used `window.confirm()` for delete board and zero gate for inbox delete. The port preserved both, since "behavior parity with prototype" was a row #9 contract clause.
+- Gap-closure row #6 (board-filter-share-map) extended filter/share/map functionality but did not own destructive-action UX.
+- The 2026-05-27 audit explicitly scanned for "destructive without confirmation" and flagged both rows as FLAG / DESTRUCTIVE — adjacent to (but outside) the Top-10 cluster.
+
+**Complex Escalation:** No. Single boundary (UI layer of `@repo/plugin-web-board-workspaces`); no core/feature boundary crossing; no `manifest.json` routing involvement; no prior regression history for these specific buttons. Dual-perspective diagnosis NOT triggered.
+
+### Fix Strategy (Phase 2)
+
+**Recommended: ONE LINEAGE, ONE NEW COMPONENT, MIRROR ShareModal/CardDetailDialog precedent.**
+
+Both delete sites resolve via a single new `BoardDeleteConfirmDialog.tsx` with a `mode: "board" | "card"` prop that switches title/description/button labels via the local STR table. This matches Top-10 #5's "one CardDetailDialog covers 6 view click sites" precedent — one modal component, multiple wire points.
+
+**Why NOT abstract `ConfirmDialog` into `@repo/xai-web-shell` (cross-package):**
+- Cross-package changes invite dev-branch conflict.
+- The SignOutConfirmDialog template is in `xai-web-shell` because Sign-out is host-level; B-12 / B-28 are both board-domain → keep the component in the board domain.
+- Generalizing would force `xai-web-shell` API surface growth — out of scope for a bug-fix.
+
+**Why NOT `window.confirm()`-ish keep-it-simple fix:**
+- Audit explicitly calls out the visual contract inconsistency.
+- SignOutConfirmDialog / CardDetailDialog / ShareModal already establish the in-app `<dialog>` pattern in three adjacent SHIPPED rows.
+- a11y expectations (role="alertdialog", focus trap, aria-labelledby, ESC + backdrop) cannot be met with `window.confirm()`.
+
+**Sub-fix breakdown (5 sub-fix steps; mirror Top-10 #5's S1..S6 cadence):**
+
+| Sub | Description | Files | LOC est. | Commit message stub |
+|---|---|---|---|---|
+| S1 | **Create new `BoardDeleteConfirmDialog.tsx`** — native `<dialog>` modeled on `ShareModal.tsx` (in-package) + `SignOutConfirmDialog.tsx` (a11y attributes). Props: `{ open: boolean, mode: "board" \| "card", targetLabel: string, lang: Lang, onConfirm: () => void, onCancel: () => void }`. `useEffect` showModal/close (conditional-mount guard per Top-10 #5 cycle-2 lesson). ESC via native `cancel` event → onCancel. Backdrop click → onCancel. Cancel button has `autoFocus` (avoids Enter-confirms). Confirm button has destructive class. role="alertdialog" + aria-labelledby + aria-describedby. | NEW `BoardDeleteConfirmDialog.tsx` | ~110 LOC | `feat(board-workspaces): BoardDeleteConfirmDialog component for destructive deletes (B-12/B-28 prep)` |
+| S2 | **Extend `internal/strings.ts`** — add `STR_DELETE_CONFIRM` table with: `titleBoard / titleCard / descBoard / descCard / cancel / confirmBoard / confirmCard` keys (en + zh). Mirror `STR_CARD_DETAIL` shape (Top-10 #5 precedent). Update `STR_SWITCHER.deleteConfirm` comment to note "superseded by STR_DELETE_CONFIRM after B-12 wire" (keep key for back-compat if any test depends on it — drop only if grep confirms zero refs). | `internal/strings.ts` | ~20 LOC | (folded into S1 commit; identical scope) |
+| S3 | **Extend `styles.css`** — add `.board-delete-dialog` block: `<dialog>` sizing (~440px width), backdrop opacity, title h2 + description p typography, footer flex row, `.bdc-btn--confirm` destructive red (mirrors planned destructive-action visual contract), `.bdc-btn--cancel` neutral with autoFocus visual ring. Mirror `.card-detail-dialog` (line 634-757) + `.xai-sign-out-dialog__*` patterns. | `styles.css` | ~60 LOC | (folded into S1 commit) |
+| S4 | **Wire B-12 (BoardSwitcher delete board)** — `BoardSwitcher.tsx`: REMOVE `window.confirm` from `handleDelete`. Change `onDelete: (boardId: string) => void` semantics to "request delete" — caller lifts the confirmation gate. Two integration choices: (a) `BoardSwitcher` opens its own dialog inline; (b) `BoardSwitcher` calls a new `onRequestDelete` and host owns dialog state. **Choose (b)** for parity with Top-10 #5's host-level state lift (one dialog instance, one source of truth, easier to test). Update `BoardSwitcherProps`: rename `onDelete` → `onRequestDelete` (signature `(boardId: string) => void`), call directly without `window.confirm`. **Host (`BoardWorkspacesModule.tsx`):** add `const [pendingDelete, setPendingDelete] = useState<{ type: "board" \| "card"; id: string; label: string } \| null>(null);`, wire `<BoardSwitcher onRequestDelete={(id) => setPendingDelete({ type: "board", id, label: boards.find(b => b.id === id)?.name[lang] ?? "" })} />`. | `BoardSwitcher.tsx` + `BoardWorkspacesModule.tsx` + `__tests__/BoardSwitcher.test.tsx` | ~40 LOC code + ~30 LOC test | `fix(board-workspaces): B-12 — gate BoardSwitcher delete board with BoardDeleteConfirmDialog` |
+| S5 | **Wire B-28 (InboxPanel card delete)** — `InboxPanel.tsx`: change `onClick={() => remove(c.id)}` to `onClick={() => onRequestRemove(c.id)}`. Add `onRequestRemove: (id: string) => void` prop (semantic "request delete confirmation"). Host wires `onRequestRemove={(id) => setPendingDelete({ type: "card", id, label: inboxCards.find(c => c.id === id)?.text[lang] ?? "" })}`. Host renders **conditional-mount** `{pendingDelete && <BoardDeleteConfirmDialog open={true} mode={pendingDelete.type} targetLabel={pendingDelete.label} lang={lang} onConfirm={confirmPendingDelete} onCancel={() => setPendingDelete(null)} />}`. `confirmPendingDelete` dispatches to `deleteBoard(pendingDelete.id)` or `setInbox(prev => prev.filter(c => c.id !== pendingDelete.id))` based on `type`. **Conditional-mount guard is mandatory** — Top-10 #5 cycle-2 BLOCKED entry (line 500) proves unconditional mount triggers jsdom `HTMLDialogElement.prototype.close` failure cascade. | `InboxPanel.tsx` + `BoardWorkspacesModule.tsx` + `__tests__/InboxPanel.test.tsx` | ~35 LOC code + ~30 LOC test | `fix(board-workspaces): B-28 — gate Inbox card delete with BoardDeleteConfirmDialog` |
+| S6 | **Add test suite** — new `__tests__/BoardDeleteConfirmDialog.test.tsx`: BDC-1 render-when-open / BDC-2 absent-when-closed (conditional-mount) / BDC-3 cancel button has autoFocus / BDC-4 Cancel → onCancel / BDC-5 Confirm → onConfirm / BDC-6 ESC → onCancel (cancel event) / BDC-7 backdrop click → onCancel / BDC-8 aria-labelledby + aria-describedby attrs present / BDC-9 mode=board renders board title+description / BDC-10 mode=card renders card title+description / BDC-11 destructive Confirm button has destructive CSS class. Append `__tests__/BoardWorkspacesModule.test.tsx` integration tests: BW-Del-Board-1..4 (open switcher → click delete → modal opens → Cancel → board still present; same flow ending with Confirm → board removed); BW-Del-Card-1..4 (open inbox → click × → modal opens → Cancel → card still present; same flow ending with Confirm → card removed). **Total new tests: 11 unit + 8 integration = 19** (audit's required minimum was 8). | `__tests__/BoardDeleteConfirmDialog.test.tsx` (NEW) + append `__tests__/BoardWorkspacesModule.test.tsx` + append `__tests__/InboxPanel.test.tsx` + append `__tests__/BoardSwitcher.test.tsx` | ~340 LOC | `test(board-workspaces): BoardDeleteConfirmDialog + B-12 + B-28 wire-up tests` |
+| S7 | **Status Panel flip** — dev_log Status: FIX_READY → FIX_READY_FOR_VERIFY → READY_TO_SHIP per workflow phase order. | this dev_log | minimal | `docs(board-workspaces): bug-verify PASS — flip B-12/B-28 lineage READY_TO_SHIP` |
+
+**Minimum scope absolutely respected:**
+- **NO** edits to `@repo/plugin-web-board-core`.
+- **NO** edits to `@repo/plugin-web-board-views`.
+- **NO** edits to `@repo/plugin-web-tokens` (local `STR_DELETE_CONFIRM` table only).
+- **NO** edits to `@repo/core` (no event channel; no shared type).
+- **NO** edits to ADR / PLUGIN_MAP / manifest.json / package.json.
+- **NO** edits to `apps/web/`.
+- **NO** edits to xai-web-console-gap-closure roadmap / xai-web-console roadmap (both SHIPPED archive).
+
+### Test Coverage Plan
+
+Minimum 8 tests required (per audit's bar). Plan: **19 tests total** (11 unit on the new dialog + 8 integration on host wire-up).
+
+**Unit on `BoardDeleteConfirmDialog`:**
+- BDC-1 — renders when `open=true` + has role="alertdialog"
+- BDC-2 — does NOT render (conditional mount) when host doesn't mount it (mirrors Top-10 #5 cycle-2 fix)
+- BDC-3 — Cancel button receives focus on mount (autoFocus)
+- BDC-4 — clicking Cancel calls `onCancel`
+- BDC-5 — clicking Confirm calls `onConfirm`
+- BDC-6 — pressing ESC triggers native `cancel` event → `onCancel`
+- BDC-7 — clicking the `<dialog>` backdrop (event.target === dialog ref) calls `onCancel`
+- BDC-8 — `aria-labelledby` references the title h2 id; `aria-describedby` references description p id
+- BDC-9 — `mode="board"` renders board title + board description copy
+- BDC-10 — `mode="card"` renders card title + card description copy
+- BDC-11 — Confirm button has destructive CSS class (`.bdc-btn--confirm` or equivalent)
+
+**Integration on host (`BoardWorkspacesModule`):**
+- BW-Del-Board-1 — click trash in BoardSwitcher → BoardDeleteConfirmDialog mounts with `mode="board"` + targetLabel = board name
+- BW-Del-Board-2 — Cancel from that dialog → dialog unmounts (conditional) + board still present in `boards` state
+- BW-Del-Board-3 — Confirm from that dialog → dialog unmounts + board removed from `boards` + `xai_boards_v2` localStorage updated
+- BW-Del-Board-4 — re-opening BoardSwitcher after confirm shows board absent
+- BW-Del-Card-1 — click × in InboxPanel → BoardDeleteConfirmDialog mounts with `mode="card"` + targetLabel = card text
+- BW-Del-Card-2 — Cancel → dialog unmounts + inbox card still present
+- BW-Del-Card-3 — Confirm → dialog unmounts + inbox card removed + `xai_board_inbox` updated
+- BW-Del-Card-4 — opening dialog for card A then Cancel, then opening dialog for card B → state is per-pending-delete (no stale label)
+
+**Existing test deltas (NOT new tests — adjustments to existing):**
+- `BoardSwitcher.test.tsx` `BS10/BS11/BS12` (delete-affordance visibility tests) — unchanged: visibility gate stays.
+- Whichever existing test invokes `onDelete` directly — rename to `onRequestDelete`.
+- Any test that mocked `window.confirm` — remove the mock (no longer used).
+
+**Cross-package validation gates (parity with Top-10 #5 ship gate):**
+- `pnpm --filter @repo/plugin-web-board-workspaces typecheck` exit 0
+- `pnpm --filter @repo/plugin-web-board-workspaces lint --max-warnings 0` exit 0
+- `pnpm --filter @repo/plugin-web-board-workspaces test` — workspaces tests all pass (current 195/195 + 19 new = 214/214 expected)
+- `pnpm --filter @repo/plugin-web-board-core typecheck` exit 0 (sanity — should be unchanged)
+- `pnpm --filter @repo/plugin-web-board-views typecheck` exit 0 (sanity — should be unchanged)
+- `pnpm --filter @repo/web typecheck` exit 0 (sanity)
+- `pnpm --filter @repo/web test` exit 0 (sanity — 128/128 expected)
+
+### Risk Assessment
+
+| Risk | Likelihood | Impact | Mitigation |
+|---|---|---|---|
+| **R1 — jsdom `HTMLDialogElement.prototype.close` cascade (Top-10 #5 cycle-2 BLOCKED re-occurrence)** | High if forgotten | High (9+ web-router integration tests would fail) | S5 mandates **conditional mount** `{pendingDelete && <BoardDeleteConfirmDialog open={true} .../>}` per CardDetailDialog precedent (line 568-580). Cite the precedent in inline comment. |
+| **R2 — Renaming `onDelete` → `onRequestDelete` breaks existing tests** | Medium | Low (compile-time error catches it) | typecheck will catch; S6 explicitly updates the affected `BoardSwitcher.test.tsx` lines. |
+| **R3 — `window.confirm` mock in existing tests** | Low (grep yields no current `vi.spyOn(window, 'confirm')` in board-workspaces tests) | Low | Confirm via grep before final commit; remove if found. |
+| **R4 — Bilingual copy drift (en vs zh wording inconsistency)** | Low | Low | Single `STR_DELETE_CONFIRM` table — both langs co-located per `STR_CARD_DETAIL` precedent. |
+| **R5 — Destructive button styling clashes with existing `.btn.primary` class** | Low | Low | Use scoped `.bdc-btn--confirm` class; do not modify existing button classes. |
+| **R6 — User Enter-confirms by accident if Confirm gets default focus** | Eliminated | High if not mitigated | S1 mandates `autoFocus` on Cancel button (audit's "Cancel button focus default") + S3 visual ring confirms. |
+| **R7 — Branch divergence with dev (Desktop) branch** | Low | Medium | All edits confined to `packages/plugin-web-board-workspaces/`; no edits to `packages/core/` / `apps/desktop/` / ADR / manifest. Branch lock honored. |
+| **R8 — Audit's "deferred-by-carve-out items" interpretation drift** | Low | Low | This BUGFIX is explicitly inside Option A (last item); ADR-0010 §D4 permits bug-fix in P0 maintenance mode without a carve-out commit. |
+
+**Severity:** Medium (UX-safety — user-facing irreversible data loss with one mis-click). Not Critical (delete is gated for active board, requires opening switcher modal first for B-12), but the audit-flagged "DESTRUCTIVE" status makes this the highest-priority remaining Option A item.
+
+### Bugfix Work Log
+
+| Timestamp | Executor | Action | Commits | Next Step |
+|---|---|---|---|---|
+| 2026-05-28 03:42 | claude-opus-4-7[1m] (bug-diagnose) | Investigation: confirmed both delete sites live in `@repo/plugin-web-board-workspaces` (B-12 at `BoardSwitcher.tsx:59-64` via `window.confirm`; B-28 at `InboxPanel.tsx:62-70` with no gate). Confirmed NO existing `BoardDeleteConfirmDialog` / equivalent component in board family (`grep -rn 'DeleteConfirm\|deleteConfirmDialog' packages/plugin-web-board-*/src/` returns only `STR_SWITCHER.deleteConfirm` string). Confirmed ShareModal + CardDetailDialog + SignOutConfirmDialog as established `<dialog>` precedents. Confirmed conditional-mount lesson from Top-10 #5 cycle-2 BLOCKED (line 500 in this dev_log). Confirmed both delete sites in single package → ONE lineage. Recommended `mode: "board" \| "card"` dialog covering both. S1..S7 sub-fix plan documented with LOC + commit stubs. No `@repo/core` / `@repo/plugin-web-tokens` / ADR / manifest / PLUGIN_MAP edits required. Status → FIX_READY. | — | bug-fix (single sub-fix possible if collapsed to S1+S4+S5 / one commit) OR **bug-auto-fix** (batch S1..S7 — recommended given 5+ sub-fix steps) OR bugfix-loop (auto-fix + verify) |
+| 2026-05-28 03:56 | claude-sonnet-4-6 (bug-auto-fix) | Batch fix S1..S7 completed. S1+S2+S3 (609a0b1): new `BoardDeleteConfirmDialog.tsx` (native `<dialog>`, role=alertdialog, aria-labelledby/describedby, autoFocus Cancel, ESC/backdrop/Cancel close) + `STR_DELETE_CONFIRM` local i18n table (7 keys × 2 langs, en+zh, board+card modes) appended to `internal/strings.ts` + `.board-delete-dialog` CSS block (OKLCH destructive red confirm + neutral cancel) appended to `styles.css`. S4 (9d8f8d2): `BoardSwitcher.tsx` `onDelete` → `onRequestDelete` (removes `window.confirm`); `BoardWorkspacesModule.tsx` adds `pendingDelete` state + `confirmPendingDelete` callback + conditional-mount `{pendingDelete && <BoardDeleteConfirmDialog …/>}` (MANDATORY guard per Top-10 #5 cycle-2 BLOCKED lesson); `onRequestDelete` sets pendingDelete{type:"board"…}. S5 (1308598): `InboxPanel.tsx` `remove()` → `onRequestRemove` prop; host passes `onRequestRemove` that sets pendingDelete{type:"card"…}. S6 (2ad25fb): 19 new tests (11 BDC unit + 8 BW-Del integration) + updated BS13/BS14 + updated IP6 + updated BWM7. Total 214/214 workspaces tests PASS; web 128/128 PASS; all typecheck/lint gates exit 0. No `@repo/core` / `@repo/plugin-web-tokens` / `@repo/plugin-web-board-core` / `@repo/plugin-web-board-views` / ADR / PLUGIN_MAP / manifest / package.json edits. Status → FIX_READY_FOR_VERIFY. | 609a0b1 (S1+S2+S3), 9d8f8d2 (S4), 1308598 (S5), 2ad25fb (S6) | bug-verify |
+
+---
