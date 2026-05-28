@@ -1,3 +1,4 @@
+mod app_menu;
 mod commands;
 mod crypto;
 mod error;
@@ -122,11 +123,15 @@ pub fn run() {
             commands::database::db_put_batch,
         ])
         .setup(|app| {
+            let app_handle = app.handle().clone();
+            app_menu::install_native_app_menu(&app_handle)?;
+            app.on_menu_event(|app_handle, event| {
+                app_menu::handle_menu_event(app_handle, event);
+            });
+
             let window = app
                 .get_webview_window("main")
                 .expect("main window not found");
-
-            commands::menubar::install_sync_menubar(app.handle())?;
 
             #[cfg(target_os = "macos")]
             platform::macos::configure_main_window(&window);
