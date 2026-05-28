@@ -8,13 +8,13 @@
 | Target | desktop-phase1-build-packaging-pipeline |
 | Title | Phase 1 Desktop Build and Packaging Pipeline |
 | Current Phase | FEATURE_VERIFY |
-| Status | READY_FOR_VERIFY |
-| Suggested Next | feature-verify |
+| Status | READY_TO_SHIP |
+| Suggested Next | ship |
 | Automation Mode | B-Codex |
 | Verify Cross-vendor | yes |
-| Executor | feature-auto-build (Codex, gpt-5.3-codex inline repair) |
-| Updated | 2026-05-27 16:07 PDT |
-| Risks | DMG packaging still stalls locally after `Running bundle_dmg.sh` (no final artifact under `target/debug/bundle/dmg/`), so clean-machine DMG mount/drag-install verification remains deferred to real macOS manual verification; `.app` artifact and Tauri-host startup path are verified locally. |
+| Executor | feature-verify (Codex, gpt-5.4 inline) |
+| Updated | 2026-05-27 16:10 PDT |
+| Risks | Fresh verify reproduced the local DMG stall after `Running bundle_dmg.sh` with no final artifact under `target/debug/bundle/dmg/`; `.app` artifact generation and Tauri-host normal-window startup are verified locally, but clean-machine DMG mount/drag-install/launch and manual network-disabled GUI launch still require real macOS hardware before ship closes the residual installer risk. |
 
 ## Phase Plan
 
@@ -70,6 +70,27 @@ Previous verification found runtime/package behavior acceptable but blocked on c
 
 The prior mixed-scope local commits (`430fd9e`, `42036e9`, `6aef49c`, `5edfc77`) were replaced before push and are no longer part of the active branch history.
 
+## Verification Summary
+
+- PASS — reviewed active commits `34e32319`, `4684deba`, `fd0cfb93`, `813135ea`, and status commit `30a883a0` for single-intent phase boundaries and commit-format compliance.
+- Re-ran the required command set:
+  - `pnpm --filter @repo/web build` PASS
+  - `cargo test --manifest-path apps/desktop/src-tauri/Cargo.toml` PASS (47 passed, 0 failed)
+  - bounded `pnpm --filter desktop dev` PASS as a Tauri-host probe; observed `beforeDevCommand` mock-auth hook and `🪟 Main window configured for standard app behavior`
+  - `pnpm --filter desktop build` PASS; emitted `apps/desktop/src-tauri/target/debug/bundle/macos/X Desktop.app`
+  - bounded `pnpm --filter desktop build:dmg` reproduced the documented stall after `Running bundle_dmg.sh` with no final artifact under `apps/desktop/src-tauri/target/debug/bundle/dmg/`
+- Contract cross-checks pass:
+  - `apps/desktop/package.json` makes `dev`, `build`, and `build:dmg` Tauri-host entrypoints while raw web scripts stay secondary
+  - `apps/desktop/src-tauri/tauri.conf.json` still owns `beforeDevCommand`, `beforeBuildCommand`, and `frontendDist = ../../web/dist`
+  - `docs/release/dmg-build.md` matches ADR-0011 Phase 1 normal-window/offline `/app`/no overlay-control-grid startup expectations
+  - tracked evidence docs match the fresh local results, including the `.app` fallback and DMG blocker details
+
+## Residual Risks
+
+- This non-interactive verify run could not complete the manual GUI checks: disable network, launch the bundled `.app`, confirm bundled local `/app`, and visually confirm no overlay/control/grid startup.
+- Local DMG creation remains environment-sensitive: Tauri reaches `Bundling X Desktop_1.0.0-rc.1_aarch64.dmg` and `Running bundle_dmg.sh`, but the final DMG does not appear under `target/debug/bundle/dmg/` in this session even though temporary `rw.*.dmg` files appear under `target/debug/bundle/macos/`.
+- Human ship must still perform clean-machine DMG mount/drag-install/launch verification on real macOS hardware before treating the installer path as closed.
+
 ## Work Log
 
 | Timestamp | Executor | Action | Commits | Next |
@@ -80,3 +101,4 @@ The prior mixed-scope local commits (`430fd9e`, `42036e9`, `6aef49c`, `5edfc77`)
 | 2026-05-27 15:46 PDT | feature-auto-build (Codex, gpt-5.3-codex inline) | Phase 2 complete: added repeatable app-bundle smoke evidence at `docs/reviews/desktop-phase1-build-packaging-pipeline/20260527-app-bundle-smoke.md`, including command outcomes, `.app` path evidence, bounded Tauri host startup proof, and explicit manual offline GUI follow-ups for `feature-verify`. Tests recorded: `pnpm --filter desktop build` PASS with output `apps/desktop/src-tauri/target/debug/bundle/macos/X Desktop.app`. | `fd0cfb93` | continue Phase 3 |
 | 2026-05-27 15:49 PDT | feature-auto-build (Codex, gpt-5.3-codex inline) | Phase 3 complete: ran explicit DMG packaging command `pnpm --filter desktop build:dmg`; observed deterministic progress to `Bundling X Desktop_1.0.0-rc.1_aarch64.dmg` and `Running bundle_dmg.sh`, then no further output for 60s across two probes; interrupted command and recorded blocker evidence plus expected artifact path and `.app` fallback in `docs/reviews/desktop-phase1-build-packaging-pipeline/20260527-dmg-attempt.md`. | `813135ea` | feature-verify |
 | 2026-05-27 16:07 PDT | feature-auto-build (Codex, gpt-5.3-codex inline repair) | Repaired the verify blocker by rewriting the local-only packaging commit segment into single-intent commits: docs seed (`34e32319`), Phase 1 (`4684deba`), Phase 2 (`fd0cfb93`), and Phase 3 (`813135ea`). Updated Status Panel back to READY_FOR_VERIFY for independent verification. | `34e32319`, `4684deba`, `fd0cfb93`, `813135ea` | feature-verify |
+| 2026-05-27 16:10 PDT | feature-verify (Codex, gpt-5.4 inline) | PASS — independently reviewed commits `34e32319`, `4684deba`, `fd0cfb93`, `813135ea`, and `30a883a0` against the discovery review and docs quartet; re-ran `pnpm --filter @repo/web build`, `cargo test --manifest-path apps/desktop/src-tauri/Cargo.toml`, bounded `pnpm --filter desktop dev`, `pnpm --filter desktop build`, and bounded `pnpm --filter desktop build:dmg`; confirmed Tauri-host script ownership, `.app` artifact generation, normal-window startup signal, and accurate DMG blocker evidence with `.app` fallback. | `34e32319`, `4684deba`, `fd0cfb93`, `813135ea`, `30a883a0` | ship |

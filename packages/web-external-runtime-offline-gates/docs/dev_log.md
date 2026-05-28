@@ -8,13 +8,13 @@
 | Target | web-external-runtime-offline-gates |
 | Title | Phase 1 Desktop Offline Gates for Online-only Web Runtime Surfaces |
 | Current Phase | FEATURE_VERIFY |
-| Status | READY_FOR_VERIFY |
-| Suggested Next | feature-verify |
+| Status | READY_TO_SHIP |
+| Suggested Next | ship |
 | Automation Mode | B-Codex |
 | Verify Cross-vendor | yes |
-| Executor | feature-auto-build (Codex, gpt-5.3-codex inline repair) |
-| Updated | 2026-05-27 16:49 PDT |
-| Risks | Real network-disabled macOS manual verification is still required before ship; required suite `pnpm --filter @repo/plugin-web-board-views test` currently has a pre-existing unrelated failure (`filter-view-integration.test.tsx` FVI-Timeline expects 2 bars but receives 1), so feature verification should treat board-views full-suite pass as an external blocker outside this change scope. |
+| Executor | feature-verify (Codex, gpt-5.4 inline) |
+| Updated | 2026-05-27 16:51 PDT |
+| Risks | Real network-disabled macOS manual verification is still required before ship; unrelated suite `pnpm --filter @repo/plugin-web-board-views test` still reproduces the pre-existing `filter-view-integration.test.tsx` FVI-Timeline failure in untouched TimelineView coverage, while the feature-touched `MapView` path passes. |
 
 ## Phase Plan
 
@@ -128,3 +128,4 @@ Recommendations for `feature-build`:
 | 2026-05-27 16:35 PDT | feature-auto-build (Codex, gpt-5.3-codex inline) | Phase 3 — OAuth and Stripe Callback Security Gates: disabled connect/upgrade actions in desktop/offline profile, added callback fail-closed branches for OAuth/Stripe callback pages, and added explicit offline non-mutation assertions (including crafted callback URLs) in route/component tests. Evidence: OAuth callback under offline profile did not set `xai_pref_integrations_connected_notion`; Stripe success callback under offline profile did not set `xai_pref_premium_tier=premium_stub`. Tests: `pnpm --filter @repo/plugin-web-settings-rest test -- src/__tests__/integrationConnectButton.test.tsx src/__tests__/integrationsPane.test.tsx src/__tests__/CallbackPage.test.tsx src/__tests__/premiumUpgradeButton.test.tsx src/__tests__/premiumPane.test.tsx src/__tests__/CheckoutSuccessPage.test.tsx src/__tests__/CheckoutCancelPage.test.tsx`; `pnpm --filter @repo/web test -- src/routes/router.integration.test.tsx`. | `e1d3d4e6` | Phase 4 |
 | 2026-05-27 16:38 PDT | feature-auto-build (Codex, gpt-5.3-codex inline) | Phase 4 — Device RPC Regression, Account-delete Rewording, and Desktop Evidence: added runtime-profile-aware transport guard in `AppProviders`, made account-delete orchestrator treat desktop/offline profile as local-only mode (no live delete RPC), reworded delete modal disclosure for desktop/offline semantics, and added regression tests for no-RPC behavior. Full required matrix run: `pnpm --filter @repo/web check-types` PASS; `pnpm --filter @repo/web test` PASS; `pnpm --filter @repo/plugin-web-ai-chat test` PASS; `pnpm --filter @repo/plugin-web-settings-rest test` PASS; `pnpm --filter @repo/web-auth-device-session test` PASS; `pnpm --filter desktop tauri build --debug --bundles app` PASS; `pnpm --filter @repo/plugin-web-board-views test` FAIL (pre-existing unrelated FVI-Timeline assertion). | `78873f7c` | feature-verify |
 | 2026-05-27 16:49 PDT | feature-auto-build (Codex, gpt-5.3-codex inline repair) | Repaired the local-only runtime-gates commit segment so planning artifacts are committed before phase implementation and each approved phase remains single-intent. Updated Status Panel back to READY_FOR_VERIFY for independent verification. | `d7ec065f`, `7aeab076`, `398eaf19`, `e1d3d4e6`, `78873f7c` | feature-verify |
+| 2026-05-27 16:51 PDT | feature-verify (Codex, gpt-5.4 inline) | PASS — reviewed commit boundaries/messages for `d7ec065f`, `7aeab076`, `398eaf19`, `e1d3d4e6`, `78873f7c`, and `dbbd7f33`; confirmed `@repo/core` remains limited to runtime-profile resolution/defaulting plus generic predicate helpers; reran the requested matrix (`@repo/core` test/check-types, `@repo/web` test/check-types, `@repo/plugin-web-ai-chat` test, `@repo/plugin-web-settings-rest` test, `@repo/web-auth-device-session` test, `desktop tauri build --debug --bundles app`). Reproduced `@repo/plugin-web-board-views` suite failure in untouched `filter-view-integration.test.tsx` / TimelineView coverage and treated it as unrelated to this feature because the only board-views files changed here are `MapView.tsx` and `MapView.test.tsx`, both passing. | `d7ec065f`, `7aeab076`, `398eaf19`, `e1d3d4e6`, `78873f7c`, `dbbd7f33` | ship |

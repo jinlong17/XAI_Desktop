@@ -142,4 +142,3 @@ This is intentionally one new runtime gate, not a matrix of product-policy boole
 - Build stop:
   - no live delete RPC in desktop/offline mode
   - local-only behavior is explicit
-

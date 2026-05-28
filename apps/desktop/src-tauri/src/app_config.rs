@@ -1,9 +1,10 @@
 use std::fs;
 use std::path::{Path, PathBuf};
+use std::sync::atomic::{AtomicUsize, Ordering};
 use std::time::{SystemTime, UNIX_EPOCH};
 
 use serde::{Deserialize, Serialize};
-use tauri::{AppHandle, Manager, Runtime, WebviewWindow, WindowEvent};
+use tauri::{AppHandle, Manager, Monitor, Runtime, WebviewWindow, WindowEvent};
 
 use crate::error::{AppError, AppResult};
 
@@ -13,6 +14,7 @@ const MIN_WINDOW_WIDTH: f64 = 720.0;
 const MIN_WINDOW_HEIGHT: f64 = 480.0;
 const MAX_WINDOW_WIDTH: f64 = 8192.0;
 const MAX_WINDOW_HEIGHT: f64 = 8192.0;
+static MAIN_WINDOW_PERSISTENCE_PAUSE_COUNT: AtomicUsize = AtomicUsize::new(0);
 
 #[derive(Clone, Debug, Serialize, Deserialize, PartialEq)]
 #[serde(rename_all = "camelCase")]
@@ -47,6 +49,14 @@ struct MonitorBounds {
     scale_factor: f64,
 }
 
+struct MainWindowPersistencePauseGuard;
+
+impl Drop for MainWindowPersistencePauseGuard {
+    fn drop(&mut self) {
+        MAIN_WINDOW_PERSISTENCE_PAUSE_COUNT.fetch_sub(1, Ordering::SeqCst);
+    }
+}
+
 pub fn default_main_window_state() -> MainWindowStateV1 {
     MainWindowStateV1 {
         width: 1280.0,
@@ -69,10 +79,9 @@ pub fn default_config() -> DesktopAppConfigV1 {
 }
 
 pub fn ensure_config_dir<R: Runtime>(app: &AppHandle<R>) -> AppResult<PathBuf> {
-    let config_dir = app
-        .path()
-        .app_config_dir()
-        .map_err(|error| AppError::Internal(format!("failed to resolve app config dir: {error}")))?;
+    let config_dir = app.path().app_config_dir().map_err(|error| {
+        AppError::Internal(format!("failed to resolve app config dir: {error}"))
+    })?;
     fs::create_dir_all(&config_dir)
         .map_err(|error| AppError::Internal(format!("failed to create app config dir: {error}")))?;
     Ok(config_dir)
@@ -117,7 +126,10 @@ fn load_config_from_path(config_path: &Path) -> AppResult<DesktopAppConfigV1> {
     Ok(loaded)
 }
 
-pub fn save_config<R: Runtime>(app: &AppHandle<R>, mut config: DesktopAppConfigV1) -> AppResult<()> {
+pub fn save_config<R: Runtime>(
+    app: &AppHandle<R>,
+    mut config: DesktopAppConfigV1,
+) -> AppResult<()> {
     let config_path = config_file_path(app)?;
     save_config_to_path(&config_path, &mut config)
 }
@@ -130,8 +142,9 @@ fn save_config_to_path(config_path: &Path, config: &mut DesktopAppConfigV1) -> A
 
     fs::write(&temp_path, &bytes)
         .map_err(|error| AppError::Internal(format!("failed to write temp app config: {error}")))?;
-    fs::rename(&temp_path, &config_path)
-        .map_err(|error| AppError::Internal(format!("failed to replace app config file: {error}")))?;
+    fs::rename(&temp_path, &config_path).map_err(|error| {
+        AppError::Internal(format!("failed to replace app config file: {error}"))
+    })?;
     Ok(())
 }
 
@@ -143,6 +156,14 @@ pub fn apply_main_window_state<R: Runtime>(
     let normalized =
         normalize_main_window_state(requested, &monitors).unwrap_or_else(default_main_window_state);
 
+    apply_normalized_main_window_state(window, &normalized)?;
+    Ok(normalized)
+}
+
+fn apply_normalized_main_window_state<R: Runtime>(
+    window: &WebviewWindow<R>,
+    normalized: &MainWindowStateV1,
+) -> AppResult<()> {
     let _ = window.set_fullscreen(false);
     let _ = window.unmaximize();
 
@@ -156,20 +177,22 @@ pub fn apply_main_window_state<R: Runtime>(
     if let (Some(x), Some(y)) = (normalized.x, normalized.y) {
         window
             .set_position(tauri::Position::Logical(tauri::LogicalPosition::new(x, y)))
-            .map_err(|error| AppError::Internal(format!("failed to set main window position: {error}")))?;
+            .map_err(|error| {
+                AppError::Internal(format!("failed to set main window position: {error}"))
+            })?;
     }
 
     if normalized.fullscreen {
-        window
-            .set_fullscreen(true)
-            .map_err(|error| AppError::Internal(format!("failed to set main window fullscreen: {error}")))?;
+        window.set_fullscreen(true).map_err(|error| {
+            AppError::Internal(format!("failed to set main window fullscreen: {error}"))
+        })?;
     } else if normalized.maximized {
-        window
-            .maximize()
-            .map_err(|error| AppError::Internal(format!("failed to set main window maximized: {error}")))?;
+        window.maximize().map_err(|error| {
+            AppError::Internal(format!("failed to set main window maximized: {error}"))
+        })?;
     }
 
-    Ok(normalized)
+    Ok(())
 }
 
 pub fn persist_main_window_state<R: Runtime>(
@@ -178,8 +201,8 @@ pub fn persist_main_window_state<R: Runtime>(
 ) -> AppResult<MainWindowStateV1> {
     let current = capture_main_window_state(window)?;
     let monitors = collect_monitor_bounds(window)?;
-    let normalized = normalize_main_window_state(&current, &monitors)
-        .unwrap_or_else(default_main_window_state);
+    let normalized =
+        normalize_main_window_state(&current, &monitors).unwrap_or_else(default_main_window_state);
     let mut config = load_config_or_default(app)?;
     config.window.main = normalized.clone();
     save_config(app, config)?;
@@ -194,9 +217,26 @@ pub fn reset_main_window_state<R: Runtime>(app: &AppHandle<R>) -> AppResult<Main
     Ok(default_state)
 }
 
+pub fn reset_main_window_state_for_window<R: Runtime>(
+    app: &AppHandle<R>,
+    window: &WebviewWindow<R>,
+) -> AppResult<MainWindowStateV1> {
+    let _pause_persistence = pause_main_window_persistence();
+    let reset_state = default_main_window_reset_state(window)?;
+    apply_normalized_main_window_state(window, &reset_state)?;
+    let mut config = load_config_or_default(app)?;
+    config.window.main = reset_state.clone();
+    save_config(app, config)?;
+    Ok(reset_state)
+}
+
 pub fn attach_main_window_persistence<R: Runtime>(window: &WebviewWindow<R>, app: AppHandle<R>) {
     let main_window = window.clone();
     window.on_window_event(move |event| {
+        if is_main_window_persistence_paused() {
+            return;
+        }
+
         let should_persist = matches!(
             event,
             WindowEvent::Moved(_)
@@ -215,13 +255,44 @@ pub fn attach_main_window_persistence<R: Runtime>(window: &WebviewWindow<R>, app
     });
 }
 
-fn capture_main_window_state<R: Runtime>(window: &WebviewWindow<R>) -> AppResult<MainWindowStateV1> {
+fn pause_main_window_persistence() -> MainWindowPersistencePauseGuard {
+    MAIN_WINDOW_PERSISTENCE_PAUSE_COUNT.fetch_add(1, Ordering::SeqCst);
+    MainWindowPersistencePauseGuard
+}
+
+fn is_main_window_persistence_paused() -> bool {
+    MAIN_WINDOW_PERSISTENCE_PAUSE_COUNT.load(Ordering::SeqCst) > 0
+}
+
+fn default_main_window_reset_state<R: Runtime>(
+    window: &WebviewWindow<R>,
+) -> AppResult<MainWindowStateV1> {
+    let monitor = current_or_first_monitor_bounds(window)?;
+    Ok(center_default_main_window_state(monitor))
+}
+
+fn current_or_first_monitor_bounds<R: Runtime>(
+    window: &WebviewWindow<R>,
+) -> AppResult<Option<MonitorBounds>> {
+    if let Some(monitor) = window
+        .current_monitor()
+        .map_err(|error| AppError::Internal(format!("failed to read current monitor: {error}")))?
+    {
+        return Ok(Some(monitor_bounds(&monitor)));
+    }
+
+    Ok(collect_monitor_bounds(window)?.into_iter().next())
+}
+
+fn capture_main_window_state<R: Runtime>(
+    window: &WebviewWindow<R>,
+) -> AppResult<MainWindowStateV1> {
     let physical_size = window
         .outer_size()
         .map_err(|error| AppError::Internal(format!("failed to read main window size: {error}")))?;
-    let scale_factor = window
-        .scale_factor()
-        .map_err(|error| AppError::Internal(format!("failed to read main window scale factor: {error}")))?;
+    let scale_factor = window.scale_factor().map_err(|error| {
+        AppError::Internal(format!("failed to read main window scale factor: {error}"))
+    })?;
     let logical_size = tauri::LogicalSize::<f64>::from_physical(physical_size, scale_factor);
     let logical_position = window
         .outer_position()
@@ -255,7 +326,11 @@ fn normalize_main_window_state(
     let width = requested.width.clamp(MIN_WINDOW_WIDTH, MAX_WINDOW_WIDTH);
     let height = requested.height.clamp(MIN_WINDOW_HEIGHT, MAX_WINDOW_HEIGHT);
     let fullscreen = requested.fullscreen;
-    let maximized = if fullscreen { false } else { requested.maximized };
+    let maximized = if fullscreen {
+        false
+    } else {
+        requested.maximized
+    };
 
     if monitors.is_empty() {
         return Some(MainWindowStateV1 {
@@ -343,21 +418,38 @@ fn collect_monitor_bounds<R: Runtime>(window: &WebviewWindow<R>) -> AppResult<Ve
     let mut bounds = Vec::with_capacity(monitors.len());
 
     for monitor in monitors {
-        let work_area = monitor.work_area();
-        let scale_factor = monitor.scale_factor();
-        let logical_position =
-            tauri::LogicalPosition::<f64>::from_physical(work_area.position, scale_factor);
-        let logical_size = tauri::LogicalSize::<f64>::from_physical(work_area.size, scale_factor);
-        bounds.push(MonitorBounds {
-            x: logical_position.x,
-            y: logical_position.y,
-            width: logical_size.width,
-            height: logical_size.height,
-            scale_factor,
-        });
+        bounds.push(monitor_bounds(&monitor));
     }
 
     Ok(bounds)
+}
+
+fn monitor_bounds(monitor: &Monitor) -> MonitorBounds {
+    let work_area = monitor.work_area();
+    let scale_factor = monitor.scale_factor();
+    let logical_position =
+        tauri::LogicalPosition::<f64>::from_physical(work_area.position, scale_factor);
+    let logical_size = tauri::LogicalSize::<f64>::from_physical(work_area.size, scale_factor);
+    MonitorBounds {
+        x: logical_position.x,
+        y: logical_position.y,
+        width: logical_size.width,
+        height: logical_size.height,
+        scale_factor,
+    }
+}
+
+fn center_default_main_window_state(monitor: Option<MonitorBounds>) -> MainWindowStateV1 {
+    let mut state = default_main_window_state();
+    let Some(monitor) = monitor else {
+        return state;
+    };
+
+    state.width = state.width.min(monitor.width).max(1.0);
+    state.height = state.height.min(monitor.height).max(1.0);
+    state.x = Some(monitor.x + (monitor.width - state.width).max(0.0) / 2.0);
+    state.y = Some(monitor.y + (monitor.height - state.height).max(0.0) / 2.0);
+    state
 }
 
 fn current_timestamp_tag() -> String {
@@ -383,7 +475,13 @@ mod tests {
         }
     }
 
-    fn monitor_with_scale(x: f64, y: f64, width: f64, height: f64, scale_factor: f64) -> MonitorBounds {
+    fn monitor_with_scale(
+        x: f64,
+        y: f64,
+        width: f64,
+        height: f64,
+        scale_factor: f64,
+    ) -> MonitorBounds {
         MonitorBounds {
             x,
             y,
@@ -397,7 +495,9 @@ mod tests {
     fn normalize_rejects_invalid_dimensions() {
         let mut input = default_main_window_state();
         input.width = 0.0;
-        assert!(normalize_main_window_state(&input, &[monitor(0.0, 0.0, 1920.0, 1080.0)]).is_none());
+        assert!(
+            normalize_main_window_state(&input, &[monitor(0.0, 0.0, 1920.0, 1080.0)]).is_none()
+        );
     }
 
     #[test]
@@ -410,9 +510,16 @@ mod tests {
             maximized: false,
             fullscreen: false,
         };
-        let output = normalize_main_window_state(&input, &[monitor(0.0, 0.0, 9000.0, 9000.0)]).unwrap();
-        assert_eq!(output.width, 5000.0_f64.clamp(MIN_WINDOW_WIDTH, MAX_WINDOW_WIDTH));
-        assert_eq!(output.height, 3000.0_f64.clamp(MIN_WINDOW_HEIGHT, MAX_WINDOW_HEIGHT));
+        let output =
+            normalize_main_window_state(&input, &[monitor(0.0, 0.0, 9000.0, 9000.0)]).unwrap();
+        assert_eq!(
+            output.width,
+            5000.0_f64.clamp(MIN_WINDOW_WIDTH, MAX_WINDOW_WIDTH)
+        );
+        assert_eq!(
+            output.height,
+            3000.0_f64.clamp(MIN_WINDOW_HEIGHT, MAX_WINDOW_HEIGHT)
+        );
         assert_eq!(output.x, Some(0.0));
         assert_eq!(output.y, Some(0.0));
     }
@@ -441,7 +548,8 @@ mod tests {
             maximized: false,
             fullscreen: false,
         };
-        let output = normalize_main_window_state(&input, &[monitor(0.0, 0.0, 1920.0, 1080.0)]).unwrap();
+        let output =
+            normalize_main_window_state(&input, &[monitor(0.0, 0.0, 1920.0, 1080.0)]).unwrap();
         assert_eq!(output.x, None);
         assert_eq!(output.y, None);
     }
@@ -468,13 +576,38 @@ mod tests {
         assert_eq!(output.y, None);
     }
 
+    #[test]
+    fn reset_default_centers_on_current_monitor() {
+        let output = center_default_main_window_state(Some(monitor_with_scale(
+            -1728.0, 0.0, 1728.0, 1117.0, 2.0,
+        )));
+
+        assert_eq!(output.width, 1280.0);
+        assert_eq!(output.height, 720.0);
+        assert_eq!(output.x, Some(-1504.0));
+        assert_eq!(output.y, Some(198.5));
+        assert!(!output.maximized);
+        assert!(!output.fullscreen);
+    }
+
+    #[test]
+    fn reset_default_without_monitor_keeps_unpositioned_state() {
+        assert_eq!(
+            center_default_main_window_state(None),
+            default_main_window_state()
+        );
+    }
+
     fn unique_test_path(test_name: &str) -> PathBuf {
         let now = SystemTime::now()
             .duration_since(UNIX_EPOCH)
             .unwrap_or_default()
             .as_nanos();
         env::temp_dir()
-            .join(format!("xai-desktop-app-config-{test_name}-{}-{now}", process::id()))
+            .join(format!(
+                "xai-desktop-app-config-{test_name}-{}-{now}",
+                process::id()
+            ))
             .join(CONFIG_FILENAME)
     }
 
