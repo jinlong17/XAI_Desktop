@@ -81,3 +81,20 @@ export interface TasksModuleProps {
   /** Active UI language. */
   readonly lang: Lang;
 }
+
+// ---------------------------------------------------------------------------
+// NewTaskDraft — card-create extension (api.md §E.1)
+// ---------------------------------------------------------------------------
+
+/**
+ * The data the user enters in TaskComposer before saving.
+ * `title` fills BOTH `title.en` and `title.zh` (single-input bilingual design).
+ */
+export interface NewTaskDraft {
+  /** Raw title string typed by the user; trimmed by addCard. Fills BOTH title.en + title.zh. */
+  readonly title: string;
+  /** Optional tag preset — omitted means "no tag". */
+  readonly tag?: TaskTagId;
+  /** When true (and target ≠ "nodate"), addCard derives date via dateForCol(targetBucket, now). */
+  readonly withDate: boolean;
+}

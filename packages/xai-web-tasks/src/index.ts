@@ -25,4 +25,5 @@ export type {
   BucketId,
   TaskTagId,
   TaskTitleBundle,
+  NewTaskDraft,
 } from "./types.js";

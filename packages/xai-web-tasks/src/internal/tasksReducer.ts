@@ -3,15 +3,17 @@
  *
  * moveCard:      remove a task from fromCol, rewrite its date, prepend to toCol.
  * toggleComplete: toggle a task id in the in-memory completed set.
+ * addCard:       create a new card from a NewTaskDraft and prepend to targetBucket.
  *
- * API contract: packages/xai-web-tasks/docs/api.md §5.2 + §5.3
- * Design: packages/xai-web-tasks/docs/design.md §1 (D1 dateForCol)
+ * API contract: packages/xai-web-tasks/docs/api.md §5.2 + §5.3 + §E.3
+ * Design: packages/xai-web-tasks/docs/design.md §1 (D1 dateForCol) + §E.3
  *
  * @internal
  */
 
-import type { TaskCol, TaskCard, BucketId } from "../types.js";
+import type { TaskCol, TaskCard, BucketId, NewTaskDraft } from "../types.js";
 import { dateForCol } from "./dateForCol.js";
+import { createTaskId } from "./ids.js";
 
 /**
  * Pure move: removes task from fromColId, rewrites date per toColId, prepends to toColId.tasks.
@@ -101,4 +103,56 @@ export function toggleComplete(
     next.add(taskId);
   }
   return next;
+}
+
+/**
+ * Pure create: builds a new TaskCard from a NewTaskDraft and prepends it
+ * to targetBucket.tasks (top of column = index 0, matching moveCard's
+ * prepend convention). targetBucket.count becomes count + 1.
+ *
+ * Returns `prev` unchanged when:
+ *  - draft.title.trim().length === 0 (defensive guard; composer also blocks this)
+ *  - targetBucket not found in prev
+ *
+ * All other columns pass through untouched (referential equality preserved).
+ *
+ * API contract: packages/xai-web-tasks/docs/api.md §E.3
+ */
+export function addCard(
+  prev: TaskCol[],
+  draft: NewTaskDraft,
+  targetBucket: BucketId,
+  now?: Date,
+): TaskCol[] {
+  const trimmedTitle = draft.title.trim();
+  // Defensive guard: empty title returns prev unchanged
+  if (trimmedTitle.length === 0) return prev;
+
+  const toIdx = prev.findIndex((c) => c.id === targetBucket);
+  // targetBucket not found: return prev unchanged
+  if (toIdx < 0) return prev;
+
+  // Build the date fields if opted-in and bucket is not nodate
+  const dateResult = (draft.withDate && targetBucket !== "nodate")
+    ? dateForCol(targetBucket, now)
+    : null;
+
+  // Build the new card (no sub / dateLabel / inbox on user-created cards)
+  const newCard: TaskCard = {
+    id: createTaskId(),
+    title: { en: trimmedTitle, zh: trimmedTitle },
+    ...(draft.tag !== undefined ? { tag: draft.tag } : {}),
+    ...(dateResult ? { date: dateResult.date, dateZh: dateResult.dateZh } : {}),
+  };
+
+  return prev.map((col, i) => {
+    if (i === toIdx) {
+      return {
+        ...col,
+        tasks: [newCard, ...col.tasks],
+        count: (col.count ?? 0) + 1,
+      };
+    }
+    return col; // referential equality for untouched columns
+  });
 }
