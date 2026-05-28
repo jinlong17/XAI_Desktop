@@ -5,16 +5,16 @@
 | Field | Value |
 |---|---|
 | Workflow | BUGFIX |
-| Target | xai-web-dashboard-grid |
-| Title | Stale docs/API + missing manual smoke evidence after row #11 (`@repo/plugin-web-dashboard-widgets`) integration |
-| Current Phase | SHIP |
-| Status | SHIPPED |
-| Suggested Next | — (workflow complete) |
-| Verify Cross-vendor | yes — cold-read complete (Codex gpt-5.5-thinking medium 2026-05-24 + Claude Opus 4.7 1M 2026-05-23) reports no code-level blockers. |
-| Cross-Vendor Manual Smoke | **Deferred** (per manifest policy 2026-05-24 — "Cross-vendor Manual Browser Smoke Policy" in `docs/workflow/roadmap/xai-web-console.md`). The 2026-05-24 12:40 Work Log entry below incorrectly claimed `docs/reviews/xai-web-dashboard-grid/20260524-cross-vendor-smoke.md` closed Blocker 1 — that file is a STRUCTURED CHECKLIST (status: deferred, all browser boxes unchecked), NOT evidence. The manual matrix (Chrome 120 / Safari 17 / Firefox 121 / Safari iOS) must be run + filled in that file before xai-web-deploy-cloudflare reaches READY_TO_SHIP. Unit-test lock at `src/__tests__/DashboardSlotHost.composition.test.tsx` (a9e6328) covers the docs/code contract gap but does NOT substitute for real-browser evidence. |
-| Automation Mode | A-Claude (bugfix-loop inline) |
-| Executor | claude-sonnet-4-6 — ship |
-| Updated | 2026-05-24 14:00 |
+| Target | xai-web-dashboard-grid (primary; collaborator: xai-web-dashboard-widgets — drag-exclude markers if any new interactive children land in widget bodies) |
+| Title | Audit Top-10 #9 (D-06) — WidgetShell has no remove affordance; once a widget is added it cannot be removed via UI (user must hand-clear `xai_dash_order` from localStorage) |
+| Current Phase | BUG_VERIFY |
+| Status | FIX_READY_FOR_VERIFY |
+| Suggested Next | bug-verify |
+| Verify Cross-vendor | yes (per `xai-web-console-gap-closure.md` + ADR-0010 §D4 BUGFIX permitted; cross-vendor verifier = Codex gpt-5.5-thinking medium primary / Cursor fallback) |
+| Cross-Vendor Manual Smoke | TBD post-verify — minimal smoke target: Chrome 120 (add widget → click remove icon → confirm widget disappears from grid AND from `xai_dash_order` localStorage AND comes back as available card in AddWidgetPicker). Full matrix (Safari 17 / Firefox 121 / Safari iOS) inherits the deferred-24h carve-out used by gap-closure W1. |
+| Automation Mode | A-Claude (bug-auto-fix run 2026-05-28) |
+| Executor | claude-sonnet-4-6 — bug-auto-fix |
+| Updated | 2026-05-28 13:15 |
 | Dispatched By | xai-roadmap-loop (W2d parallel dispatch, manifest row #10) |
 | Roadmap Row | docs/workflow/roadmap/xai-web-console.md row #10 (W2 Module — Dashboard grid container) |
 | ADR Anchor | docs/adr/0007-xai-web-console-build-form.md §S4 (port map row `module-dashboard.jsx` → predeux split `plugin-web-dashboard-grid` + `plugin-web-dashboard-widgets`) + §S5 (TSX rules) + §S7 (event bus) + §S8 (`xai_dash_order` pref already in registry from row #3) |
@@ -481,3 +481,185 @@ None — all 5 §7 discovery-review Q1..Q5 are answered. No external research or
 | 2026-05-25 19:25 | claude-sonnet-4-6 — feature-auto-build | **P2 DONE.** useDashOrder extended to 3-element tuple [order, setOrder, addWidget] with dedupe guard (AC-AWO-3) + unknown-id guard (AC-AWO-4). DashboardGrid tuple-destructures [order, setOrder]. DashboardModule owns pickerOpen state; uses `usePref("xai_dash_order")` directly (not useDashOrder) for picker's currentOrder to avoid sanitize-append-all problem (HC9 — no new key). handlePickerAdd: addWidgetToOrder → emitWebEvent("web:dashboard:widget-added") → setPickerOpen(false) (REC-1 emit-before-close verified by AC-EVT-EXT-3 interactionLog pattern). New test files: useDashOrder.addWidget.test.tsx (5 tests AC-AWO-2..5), DashboardModule.picker.test.tsx (6 tests AC-DMP-1..6). Extended: useDashOrder.test.tsx (AC-AWO-1 + tuple destructure), DashboardModule.events.test.tsx (AC-EVT-EXT-1..4). PLUGIN_MAP.md + docs sync (design.md, api.md, test.md). 151/151 tests green (17 files). Lint clean. check-types clean. Status → READY_FOR_VERIFY. | be9b652 | feature-verify |
 | 2026-05-25 19:30 | Claude Opus 4.7 (1M context) — feature-verify | **PASS — READY_TO_SHIP.** All 10 verify gates clean. (1) Plan compliance: 3 commits (4379897/be9b652/57d93ad), each single-intent, full COMMIT_CONVENTION Why/What/Scope/Risk/Docs/Tests bodies. (2) HC1..HC10 all honored: native `<dialog>` no third-party (AddWidgetPicker.tsx); reuses dashboardWidgetRegistrations catalog via DashboardModule widgets prop; replaces button handler (DashboardModule.handleAddFromHeader/handleAddFromEmpty now open picker); emits `web:dashboard:widget-added` typed (events.ts +8 lines additive); grid card UI (.awp-grid × .awp-card); cross-vendor deferred-24h per ADR-0008 carve-out; append-only lineage block (baseline SHIPPED panel preserved verbatim); Step 0 brief at `docs/reviews/xai-web-dashboard-add-widget-picker/20260524-roadmap-seed.md`; NO new localStorage keys (uses existing xai_dash_order via usePref); NO third-party modal lib (no node_modules dep added). (3) REC-1: AC-EVT-EXT-3 interactionLog assertion is real (emitIdx + closeIdx index comparison, lines 260-263 of DashboardModule.events.test.tsx); REC-2: AC-AWP-9 backdrop click uses dialog click pattern mirroring DeleteAccountConfirmModal precedent. (4) All 7 seed brief acceptance signals covered. (5) Tests: dashboard-grid 151/151 PASS (17 files), dashboard-widgets 93/93 PASS, @repo/web 106/106 PASS — zero regressions. (6) `pnpm --filter @repo/web build` PASS (815 modules, 2.47s, 1029.94kB JS / 120.77kB CSS). (7) lint --max-warnings 0 PASS, check-types PASS. (8) No `@tauri-apps/api`, no `@dnd-kit/core`, events via `@repo/xai-web-event-bus`, persistence via existing xai_dash_order — all CLAUDE.md §4 red lines respected. (9) Edge case empty picker tested (AC-AWP-4: `.awp-empty` rendered when all 10 in currentOrder, AC-AWP-5/5b bilingual all_added strings). (10) Cross-vendor deferral documented in Lineage Status Panel `Verify Cross-vendor` row with ADR-0008 carve-out + W1 precedent. Residual: cross-vendor manual smoke matrix (Chrome/Firefox/Safari/iOS) deferred-24h per ADR-0008 — must be filled before xai-web-deploy-cloudflare reaches READY_TO_SHIP, consistent with rows #2/#3/#4 W1 precedent. **WAVE 1 COMPLETION READINESS: 5/5 W1 rows ready upon ship of this row.** Status flipped READY_FOR_VERIFY → READY_TO_SHIP. | — | ship |
 | 2026-05-25 19:50 | claude-sonnet-4-6 — ship | **SHIPPED (WAVE 1 FINAL — 5/5 SHIPPED).** Verified git clean (origin/main == local HEAD after 4 commits already pushed: 4379897 P1 / be9b652 P2 / 57d93ad chore-flip / 903717b docs-roadmap). Confirmed dev_log Lineage Status Panel `Status: READY_TO_SHIP` pre-flip. Verified all 4 commit messages follow `type(scope): summary` per COMMIT_CONVENTION.md (feat(xai-web-dashboard-grid) × 2, chore(xai-web-dashboard-grid) × 1, docs(roadmap) × 1) — full Why/What/Scope/Risk/Docs/Tests bodies present. No sensitive files detected. Flipped Lineage Status Panel Current Phase → SHIPPED, Status → SHIPPED, Suggested Next → — (workflow complete). Appended this Ship Report entry. Deferred residual risk acknowledged: cross-vendor manual smoke matrix (Chrome/Safari/Firefox/iOS) deferred-24h per ADR-0008 carve-out — consistent with W1 rows #2/#3/#4 precedent (commits 8b9dc2f / 612074b / 22144e0 SHIPPED 2026-05-25); MUST be completed before xai-web-deploy-cloudflare reaches READY_TO_SHIP. Roadmap row: `docs/workflow/roadmap/xai-web-console-gap-closure.md` row #5 (W1 LAST row). | reused: 4379897 be9b652 57d93ad 903717b + new SHIPPED-flip chore commit | — (workflow complete) |
+
+---
+
+## BUGFIX Lineage — Audit Top-10 #9 (D-06) — Widget Remove Affordance Missing (2026-05-28)
+
+> APPEND-ONLY block. The Lineage Status Panel above (`SHIPPED` 2026-05-25 for gap-closure row #5 Add-Widget picker) is NOT mutated by this fresh BUGFIX lineage. The Status Panel at the top of this file is the canonical state for THIS bugfix workflow and reflects this row's progression.
+
+### Bug Card (Phase 0 — INTAKE + Phase 1 — Reproduce)
+
+**Title**: WidgetShell has no remove affordance — once a widget is added via AddWidgetPicker (SHIPPED gap-closure row #5), the user cannot remove it via UI. The only escape is hand-clearing `xai_dash_order` from `localStorage`.
+
+**Authority**: ADR-0010 §D4 — BUGFIX in P0 maintenance scope does NOT require a P0 carve-out commit. This bug is referenced by `docs/reviews/_web-noop-audit/20260527-button-action-inventory.md` Top-10 row #9 (D-06 row in per-route §dashboard). The recommended next-action in the audit at row D-06 cell §11 is "BUGFIX — add per-widget remove affordance".
+
+**Severity**: Medium-high. Functional gap: a happy-path "add then remove" loop is incomplete. Not a data-corruption bug. User-facing impact: the only escape valve (localStorage edit) is effectively impossible for non-engineers, so the dashboard is one-way once configured.
+
+**Reproduction steps** (stable, 100% repro):
+1. Open `/app/dashboard` in any browser (Chrome 120 / Safari 17 / Firefox 121 — same in all three; pure-React UI, no platform-specific code involved).
+2. Open the AddWidgetPicker via either entry point — DashHeader "Add widget" button OR EmptyState CTA (both wired in `DashboardModule.tsx:67-75`).
+3. Click any unused widget card in the picker → picker closes; widget appears in grid; `xai_dash_order` in localStorage now includes the chosen id (verified via DevTools → Application → Local Storage).
+4. Observe rendered `<div class="widget-shell w-…">` (`WidgetShell.tsx:52-62`) for the newly-added widget. **Body content renders; NO remove button / icon / overflow menu / aria control exists anywhere on the shell.** Drag handle is implicit (whole-shell pointerdown), but it only reorders — it does not remove.
+5. To get rid of the widget, the user has to open DevTools → Application → Local Storage → edit `xai_dash_order` to drop the id → reload. No UI path achieves the same.
+
+**Expected**: every WidgetShell should expose an idempotent, keyboard-reachable "Remove this widget" affordance (icon-only `<button aria-label>` OR an overflow menu containing a Remove item). Clicking it removes the widget id from the working `order` AND persists the new order to `xai_dash_order`. Re-adding via the picker should be possible immediately afterwards (idempotent + undoable-via-picker because the same id reappears in the picker's `available` list — `AddWidgetPicker.tsx:204` filters by `!currentOrder.includes(w.id)`).
+
+**Actual**: `WidgetShell.tsx:41-63` renders only `<div className="widget-shell …">{children}</div>` with no chrome around the widget body. No `onRemove` prop on the component; no `removeWidget` helper from `useDashOrder`; no `web:dashboard:widget-removed` typed event; no remove i18n strings under `dashboard.picker.*`. Source confirmation: `grep -rn onRemove\|removeWidget\|widget-remove packages/xai-web-dashboard-grid/ packages/xai-web-dashboard-widgets/` returns ZERO matches in src/ (the only matches are in docs prose about `data-no-drag` exclusion, not actionable code).
+
+**Audit row inventory match**: `docs/reviews/_web-noop-audit/20260527-button-action-inventory.md` line 288 `D-06 | Widget remove (per-widget) | MISSING | (no remove button found)` confirms the symptom; line 311 + line 835 + line 858 confirm BUGFIX as the recommended treatment.
+
+**Bug-not-previously-SHIPPED check** (from invocation note + replicated here): `git log --oneline | grep -E "(Top-10|D-06|widget.remove|widget-remove)"` returns 0 commits across all branches reachable from HEAD. The orchestrator's prior INTAKE Work Log entry (2026-05-28 00:31:58, this file lines 271-274 in the dashboard-widgets dev_log, plus the Work Log mention in this file's history) is the only existing reference to this bug — no prior fix attempted.
+
+### Phase 2 — Impact / Scope Analysis
+
+| Boundary | Touched? | Notes |
+|---|---|---|
+| Frontend (React) | YES (primary) | WidgetShell.tsx + DashboardGrid.tsx + DashboardModule.tsx + useDashOrder.ts — the four files that own the shell render path + the layout-state owner + the persistence hook |
+| Backend (Rust / Tauri) | NO | Web-only — `apps/web/` route. Tauri commands not involved. |
+| Contract (`@repo/core/types/events.ts` EventMap) | OPTIONAL — boundary policy says **avoid** (R10 below). Default plan = no new event channel; remove flows entirely via callback-prop / state-lift inside `xai-web-dashboard-grid`. If a future row needs cross-window broadcast (e.g. multi-tab sync beyond what `usePref` BroadcastChannel already provides), add the event under `dashboard.widgets-removed` then. |
+| `manifest.json` | NO | No new routes, slots, or windows. |
+| `xai_dash_order` registry (`plugin-web-storage/src/internal/registry.ts`) | NO | Already SHIPPED in row #3. Read-write via `usePref("xai_dash_order")` — this row is already a write-consumer (P2 add path), so adding a remove path is symmetric (same writer, same codec, same default). |
+| Other plugins | NO direct touch | `@repo/plugin-web-dashboard-widgets` does NOT need to be edited: widgets are pure render functions taking `ctx`; the shell wraps them externally. Drag-exclude markers (`data-no-drag`) are already standard for any interactive children — the new remove button is itself a native `<button>` which `useGridDrag.NO_DRAG_SELECTOR` auto-excludes (`useGridDrag.ts:43`). |
+| i18n (`plugin-web-tokens/src/i18n.ts`) | **AVOID — local STR table** | Calendar event-create precedent (per invocation header) used per-package local STR tables to avoid tokens churn. This bug uses the same pattern: a small bilingual constant `WIDGET_SHELL_STRINGS` inside `WidgetShell.tsx` (or its sibling local helper) for `remove_label` / `remove_aria` keys (1-2 keys × 2 langs). NO tokens edit. |
+| `apps/web/src/**` host shell | NO | The shell pass-through (`shellRegistrations.tsx`) already mounts `DashboardSlotHost` which already mounts `DashboardModule widgets={dashboardWidgetRegistrations}` — adding remove is internal to the module. Zero host changes. |
+| Tests | YES (must add) | New test cases for WidgetShell.remove + useDashOrder.removeWidget + DashboardModule.remove integration + DashboardModule.remove-emit (if and only if we add an event — see R10 below). |
+
+**Cross-plugin call graph (Phase 7 dual-perspective trigger)** — NOT triggered. Single-boundary defect: render-only UI gap. No core/feature boundary spanning; no manifest routing; no regression (the symptom has existed since row #10 P1 2026-05-23 SHIP — the original spec never included a remove path, this is a forward gap not a backward regression).
+
+### Phase 3 — Root Cause Classification
+
+**Category**: 输入操作能力缺失 (missing input/control surface for an existing state mutation) — combined with 状态流转单向 (state-flow incomplete: `xai_dash_order` has add-path and reorder-path, but no remove-path on the UI side).
+
+**Why this category and not "状态流转错误"**: the state-flow code (`useDashOrder`) is correct — it round-trips an array through `usePref("xai_dash_order")` accurately. The defect is purely the absence of a UI affordance + the absence of a `removeWidget(id)` helper symmetric to the existing `addWidget(id)`. The hook already has the dedupe + unknown-id guards (`useDashOrder.ts:63-72`); a removeWidget would mirror the same structure (no-op on unknown id; no-op on id not currently in order; otherwise `setPref(current.filter(x => x !== id))`).
+
+**Why this category and not "契约不一致"**: contracts (types.ts public surface: `WidgetRegistration`, `WidgetSpanClass`, `WidgetRenderContext`, `DashboardModuleProps`) are stable and continue to hold. `WidgetShell` is internal (not re-exported from `index.ts`), so adding an optional `onRemove?: (id: string) => void` prop is a non-breaking internal extension. No external contract is widened.
+
+**Why this category and not "并发时序"**: `usePref` is synchronous on read + write within a tab (`xai-web-dashboard-grid/docs/dev_log.md:176 R4 — Persist race usePref is synchronous`). Cross-tab race is handled by `usePref`'s BroadcastChannel and is irrelevant to a UI-add (single-user, single-tab event).
+
+**Originating defect**: gap-closure row #5 (Add Widget picker, SHIPPED 2026-05-25, this file lines 308-484) closed only HALF the loop. The discovery brief (line 357: "Existing `web:dashboard:add-widget-clicked` event is PRESERVED") + the dispatch brief (per the Bugfix-Extension Lineage Status Panel "Add a native `<dialog>` Add-Widget picker" — no remove path mentioned in scope) explicitly bounded scope to the add-path only. The audit Top-10 #9 then independently surfaced the symmetric remove-path gap on 2026-05-27.
+
+### Phase 4 — Fix Strategy (Code-Level Plan; Do NOT Implement This Run)
+
+> Smallest valid fix. 4 sub-fixes, all inside `packages/xai-web-dashboard-grid/`. Symmetric to gap-closure row #5's 2-phase shape.
+
+#### (a) `WidgetShell.tsx` — add remove button + `onRemove` prop
+
+1. Extend `WidgetShellProps` (`WidgetShell.tsx:22-39`) with two additive props:
+   - `onRemove?: (id: string) => void` — called when the user clicks the remove control. Optional so existing internal callers (none external) remain backward-compatible.
+   - Either pass a small local bilingual string table via prop OR import the new co-located helper (option B below; preferred).
+2. Inside the rendered `<div className="widget-shell …">`, add a single icon-only `<button>` element positioned via CSS (top-right of the shell — see (d) styles below). Button properties:
+   - `type="button"` — prevents accidental form submission if a widget body ever ships a form.
+   - `className="widget-shell__remove"` — package-scoped, no tokens-side rule.
+   - `aria-label={STR.remove_aria[lang].replace("{title}", ariaLabel?.[lang] ?? id)}` — descriptive, e.g. "Remove Clock from dashboard" / "从工作台移除时钟".
+   - `data-no-drag` is technically not required (native `<button>` is auto-excluded by `useGridDrag.NO_DRAG_SELECTOR = "button, input, textarea, [data-no-drag]"` `useGridDrag.ts:43`), but adding it defensively is acceptable belt-and-braces — final decision deferred to bug-fix (current recommendation: rely on the native-`<button>` exclusion to stay consistent with existing AddWidget button which has no `data-no-drag`).
+   - `onClick={(e) => { e.stopPropagation(); onRemove?.(id); }}` — `stopPropagation` is harmless here (parent pointerdown already aborts on button targets), but makes intent explicit.
+   - Visible content: a 16px inline SVG "×" / close glyph (single path, hand-rolled — no icon library; matches the no-third-party-dep discipline used by `AddWidgetPicker.tsx:67-148` for widget cards).
+3. Render-conditional: only render the button when `onRemove !== undefined`. This way, any future internal use of `WidgetShell` that doesn't want remove can opt out without breakage.
+4. Keyboard a11y: native `<button>` already gives Tab focus + Enter/Space activation for free. No custom keyboard handler needed (the AddWidgetPicker pattern at `AddWidgetPicker.tsx:234-246` is the precedent — also uses native `<button type="button">` cards).
+
+#### (b) `useDashOrder.ts` — add `removeWidget` helper (extend tuple to 4 elements)
+
+1. Extend `UseDashOrderTuple` (`useDashOrder.ts:26-33`) from 3-element `[order, setOrder, addWidget]` to 4-element `[order, setOrder, addWidget, removeWidget]`.
+2. `removeWidget(id: string)` implementation (mirror lines 63-72 add path):
+   - if id is not in `sanitizedRef.current` → no-op (idempotent).
+   - else → `setPref(sanitizedRef.current.filter((x) => x !== id))`.
+   - No unknown-id guard needed because removing an unknown id from a list is already a no-op via the filter — but we can keep symmetry by checking `widgets.map(w => w.id)` if reviewer prefers strictness. Current recommendation: skip the unknown-id check on remove (tolerant by design — if a widget id was previously persisted but is no longer in the registered catalog, the user should still be able to remove it from `xai_dash_order` to clean up).
+3. Tuple-at-end extension is non-breaking (R7 precedent from gap-closure row #5 dev_log line 424): all existing destructures `const [order, setOrder, addWidget] = useDashOrder(widgets)` (currently only `DashboardGrid.tsx:65` uses 2-element, and `DashboardModule.tsx:50` uses `usePref` directly — neither cares about the new 4th slot).
+
+#### (c) `DashboardModule.tsx` — wire up onRemove callback
+
+Two options for where the remove handler lives. RECOMMENDED: **option B** for cleanest data-flow + zero `useDashOrder` refactor in `DashboardGrid`.
+
+- **Option A** (lift remove handler into `DashboardModule`, mirror addWidget): Module uses `usePref("xai_dash_order")` directly (already does, lines 50-62) — add a `removeWidgetFromOrder(id)` callback that `rawSetOrder(rawOrder.filter(x => x !== id))`. Pass this down through `DashboardGrid` via a new `onRemove?: (id: string) => void` prop on `DashboardGridProps` (`DashboardGrid.tsx:23-32`), then forward into `<WidgetShell onRemove={onRemove}>`.
+- **Option B** (preferred — extend `useDashOrder` AND pass through): use the new tuple element from (b) inside `DashboardGrid` — destructure `const [order, setOrder, _add, removeWidget] = useDashOrder(dedupedWidgets)`, then pass `onRemove={removeWidget}` directly to each `<WidgetShell>`. `DashboardModule` does NOT need to know about remove (mirrors the existing grid-owns-reorder pattern). This is the cleaner data-flow: layout state lives in the grid, picker state lives in the module — symmetric with current code.
+
+Either way, the data-flow respects the boundary constraint (no new typed event needed; pure callback-prop flow inside `xai-web-dashboard-grid`).
+
+#### (d) i18n — local STR table inside `WidgetShell.tsx` (Calendar event-create precedent)
+
+1. Add a small bilingual constant inside `WidgetShell.tsx` (or a sibling `internal/widgetShellStrings.ts`):
+   ```ts
+   const WIDGET_SHELL_STRINGS = {
+     remove_aria: {
+       en: "Remove {title} from dashboard",
+       zh: "从工作台移除 {title}",
+     },
+   } as const;
+   ```
+2. Read by language with a trivial helper or inline `WIDGET_SHELL_STRINGS.remove_aria[lang].replace("{title}", titleFromAriaLabel)`.
+3. NO edit to `packages/plugin-web-tokens/src/i18n.ts`. NO edit to `plugin-web-tokens` package — keeps tokens churn at zero and avoids cross-row anchor collisions on the `dashboard.*` block (sibling concurrency invariant from gap-closure row #5 R10 still holds because there's nothing to share).
+
+#### (e) Styles — package-scoped CSS in `xai-web-dashboard-grid/src/styles.css`
+
+1. Add a new `.widget-shell__remove` rule block in `styles.css` (after the existing `.widget-shell.dragging` block, before the `.add-widget-picker` block). Properties:
+   - `position: absolute; top: 8px; right: 8px;` (the widget-shell parent gets `position: relative` if not already — verify via grep; if not, add it under `.widget-shell` rule).
+   - `width: 24px; height: 24px;`
+   - `padding: 0; border: 0; background: transparent;`
+   - `border-radius: 6px;`
+   - `cursor: pointer;`
+   - `color: var(--text-2, currentColor); opacity: 0; transition: opacity 120ms ease, background 120ms ease;`
+   - `display: inline-flex; align-items: center; justify-content: center;`
+2. Add a hover/focus reveal: `.widget-shell:hover .widget-shell__remove, .widget-shell:focus-within .widget-shell__remove { opacity: 0.7; }` — keeps the chrome out of the way during normal use, surfaces on intent (matches the "icon-only button on hover/focus" pattern used by the prototype's other affordances).
+3. Add `.widget-shell__remove:hover, .widget-shell__remove:focus-visible { opacity: 1; background: var(--hover-bg, oklch(95% 0.01 250)); }` — completes the focus-visible chain for keyboard users.
+
+### Phase 5 — Test Coverage Plan (≥ 4 tests; 7 planned)
+
+| Test ID | File | Description |
+|---|---|---|
+| AC-RM-1 | `__tests__/WidgetShell.test.tsx` (extend existing) | Renders a `.widget-shell__remove` button when `onRemove` is provided; does NOT render it when omitted (back-compat). |
+| AC-RM-2 | `__tests__/WidgetShell.test.tsx` | Click on `.widget-shell__remove` calls `onRemove(id)` with the widget id; pointerdown on the same button does NOT trigger drag (verified indirectly — covered by existing AC-DRAG-3 native-button exclusion in `useGridDrag.test.tsx:104`, recap here via a smoke assertion that clicking the button does NOT also fire the shell's `onPointerDown`). |
+| AC-RM-3 | `__tests__/WidgetShell.test.tsx` | `aria-label` on the remove button uses the localised STR ("Remove {title} from dashboard" / "从工作台移除 {title}"); title falls back to id when `ariaLabel` is undefined. |
+| AC-RM-4 | `__tests__/useDashOrder.removeWidget.test.tsx` (NEW) | `removeWidget(id)` writes filtered order back via `usePref` when id is present; is a no-op when id is absent (idempotent). |
+| AC-RM-5 | `__tests__/useDashOrder.removeWidget.test.tsx` | Tuple shape — `useDashOrder` returns `readonly [order, setOrder, addWidget, removeWidget]` (4-element). Back-compat: existing 2-element + 3-element destructures still work (verified via runtime test + type-test-d). |
+| AC-RM-6 | `__tests__/DashboardModule.remove.test.tsx` (NEW) | End-to-end: render `DashboardModule` with 3 widgets in `xai_dash_order`, click the remove button on the second widget's shell, assert (a) the widget no longer renders, (b) `xai_dash_order` localStorage value drops that id, (c) re-rendering with the same widget catalog produces the AddWidgetPicker showing the just-removed widget as available again. |
+| AC-RM-7 | `__tests__/DashboardModule.remove.test.tsx` | Idempotency / no-event-leak: clicking remove on a widget that's mid-drag (simulated `isDragging=true` shell) still calls onRemove correctly because the button is native and stopPropagation is in place. (Stretch — defer to bug-fix if jsdom drag simulation proves brittle.) |
+
+> Total: 7 new + 0 changed tests = 7 net new. Existing test counts (151 dashboard-grid tests SHIPPED at gap-closure row #5) stay green; bug-fix should land at ~158.
+
+### Phase 6 — Impact / Risk Assessment
+
+| ID | Risk | Severity | Mitigation |
+|---|---|---|---|
+| R1 | Remove button collides visually with widget body chrome (e.g. ClockWidget's existing top-right popover trigger; WorldClocks header buttons) | Medium | Position absolute top-right of `.widget-shell`, with `pointer-events: auto` only on the button itself. The shell already wraps the body content in its own div — the remove button is a sibling of `{children}` inside the shell. If a specific widget body has its own top-right element, escalate to bug-fix to tune offset OR add a `data-no-shell-chrome` opt-out prop (defer; not needed for v1). |
+| R2 | Hover-reveal pattern hides the affordance from discoverability (user doesn't know how to remove) | Medium | Acceptable v1 — matches existing "icon button on hover" prototype patterns. Future v2 can add an overflow-menu (`···`) always-visible if telemetry shows users don't find it. Documented as known acceptable in api.md when bug-fix lands. |
+| R3 | iOS Safari has no hover — touch users won't see the button | High (a11y) | Use `:focus-within` in addition to `:hover` so a tap-focus surfaces it. Document that mobile UX is touch-tap-then-remove. Confirm via cross-vendor smoke on Safari iOS. If unsatisfactory, fall back to always-visible 0.4 opacity (small footprint, no hover required). |
+| R4 | `widget-shell__remove` CSS class name collides with future row's CSS | Low | Package-scoped + `__` BEM-ish convention + this file's existing rules use the same prefix style (`.dash-empty__title`, `.awp-card__title`). Naming is consistent. |
+| R5 | `useDashOrder` 4-element tuple breaks `DashboardSlotHost.composition.test.tsx` invariant (a9e6328 test #6) | Low | That test asserts type compatibility of 4 type aliases — none of them are the tuple shape. `useDashOrder` is internal (not in `index.ts`); the tuple is consumed inside the package only. No public surface impact. |
+| R6 | Adding remove introduces an undo-asymmetry — removed widget's instance-specific state (e.g. ClockWidget's selected timezone in `xai_clock_tz`) survives a remove + re-add | Low | Acceptable v1 design. The widget's own pref state lives in independent registry keys; remove only mutates `xai_dash_order`. If the user re-adds the same id later, they get their previous tz/style back. Document this in api.md when bug-fix lands. |
+| R7 | Drag-start race: pointerdown on the shell ALSO fires when the user clicks the remove button (because the button is nested inside the shell) | Low | Already handled by `useGridDrag.NO_DRAG_SELECTOR` which includes `button` (`useGridDrag.ts:43`). Existing AddWidget button proves the same pattern works. AC-DRAG-3 test in `useGridDrag.test.tsx:104` directly verifies it. |
+| R8 | i18n drift if we ever add a 3rd lang (currently en/zh only) | Low | Local STR table covers en/zh — same locale set used by AddWidgetPicker's local maps. When 3rd lang lands site-wide, this row gets updated in lockstep with all other local STR tables; no architecture barrier. |
+| R9 | Cross-tab broadcast — Tab A removes widget X; Tab B should also stop rendering X | Low | `usePref` already wires this via BroadcastChannel for `xai_dash_order` (SHIPPED row #3). Remove path uses the same `setPref` so cross-tab works for free. |
+| R10 | Adding a typed `web:dashboard:widget-removed` event would create cross-branch contract drift with `dev` branch | High (boundary constraint) | **DO NOT add a new event in this fix.** Plan (a-e) above keeps the remove flow as a pure intra-package callback. If a future feature needs cross-window remove visibility, file a fresh feature-plan against the `web` branch with a separate dispatch brief. |
+| R11 | Confusion with future "lock widget" or "hide widget" affordances | Low | v1 only ships remove. Document scope in api.md "Future work: lock, hide" callout when bug-fix lands. |
+
+### Files Touched (Plan)
+
+- **`packages/xai-web-dashboard-grid/src/WidgetShell.tsx`** (edit) — add `onRemove` prop + render remove button + local STR helper + a11y aria-label.
+- **`packages/xai-web-dashboard-grid/src/internal/useDashOrder.ts`** (edit) — extend tuple from 3 to 4; add `removeWidget` helper symmetric to `addWidget`.
+- **`packages/xai-web-dashboard-grid/src/DashboardGrid.tsx`** (edit) — destructure new tuple element; pass `onRemove={removeWidget}` into `<WidgetShell>`.
+- **`packages/xai-web-dashboard-grid/src/styles.css`** (edit) — append `.widget-shell__remove` block + hover/focus reveal rules.
+- **`packages/xai-web-dashboard-grid/src/__tests__/WidgetShell.test.tsx`** (edit) — add AC-RM-1..3.
+- **`packages/xai-web-dashboard-grid/src/__tests__/useDashOrder.removeWidget.test.tsx`** (NEW) — AC-RM-4..5.
+- **`packages/xai-web-dashboard-grid/src/__tests__/DashboardModule.remove.test.tsx`** (NEW) — AC-RM-6..7.
+- **`packages/xai-web-dashboard-grid/docs/{design.md, api.md, test.md}`** (edit at bug-fix time, not this run) — append BUGFIX extension section mirroring the gap-closure row #5 lineage block; document remove path semantics + the local STR pattern decision.
+- **`packages/xai-web-dashboard-grid/docs/dev_log.md`** (this run + bug-fix run) — Status Panel + this lineage block (DONE) + Work Log row on each subsequent run.
+- **`packages/xai-web-dashboard-widgets/docs/dev_log.md`** (this run) — Work Log row only (collaborator; no source change in `xai-web-dashboard-widgets/src/`).
+
+### Files Explicitly NOT Touched (Boundary Constraints from invocation header)
+
+- `docs/workflow/roadmap/xai-web-console.md` and `…/xai-web-console-gap-closure.md` (SHIPPED archives — append-only allowed only in their own ship reports; this row's roadmap reference lives in dev_log).
+- `packages/plugin-web-storage/src/internal/registry.ts` (`xai_dash_order` key already SHIPPED — no edit needed; remove writes through the existing `usePref` write path).
+- All ADRs.
+- `packages/core/src/types/events.ts` (no new EventMap entry — explicit boundary constraint).
+- `packages/plugin-web-tokens/src/i18n.ts` (local STR table inside `WidgetShell.tsx` instead — Calendar event-create precedent).
+- All other plugins (`plugin-web-tasks`, `plugin-web-board-*`, `xai-web-meditation`, etc.) — zero touch.
+
+### Work Log (this lineage)
+
+| Timestamp | Executor | Action | Commits | Next Step |
+|---|---|---|---|---|
+| 2026-05-28 | claude-opus-4-7 (1M context) — bug-diagnose | Phase 0+1+2+3+4+5+6 complete. Fresh BUGFIX Status Panel opened at top of file (Workflow=BUGFIX, Status=FIX_READY, Suggested Next=bug-fix). Bug Card written with stable repro path (open /app/dashboard → add widget → no remove affordance found). Root cause classified as input-control-surface gap + state-flow asymmetry (add path SHIPPED at gap-closure row #5; remove path never spec'd). Fix strategy = 4 sub-fixes (WidgetShell button + useDashOrder.removeWidget + DashboardGrid wire-up + styles.css) + 1 i18n decision (local STR table, NOT plugin-web-tokens, mirrors Calendar event-create precedent). 7 new tests planned (AC-RM-1..7). 11 risks documented (R1..R11). Confirmed boundary constraints: no `@repo/core/types/events.ts` edit, no `xai_dash_order` registry edit, no other-plugin edits, no roadmap/archive edits, no ADR. Primary target = `@repo/plugin-web-dashboard-grid` (owns WidgetShell + DashboardGrid layout state + xai_dash_order writes); collaborator = `@repo/plugin-web-dashboard-widgets` (dev_log Work Log row only, no source change). | — | bug-fix |
+| 2026-05-28 13:00 | claude-sonnet-4-6 — bug-auto-fix | **Sub-fix 1 (WidgetShell + styles.css) DONE.** Extended WidgetShellProps with optional onRemove prop; added native `<button class="widget-shell__remove">` with 16px inline SVG × glyph; local WIDGET_SHELL_STRINGS bilingual table (en/zh, NOT plugin-web-tokens); aria-label from STR.remove_aria with {title} placeholder (falls back to id); onClick calls e.stopPropagation() + onRemove(id); button is native `<button>` auto-excluded by NO_DRAG_SELECTOR. Added .widget-shell__remove CSS block to styles.css: position:absolute top-right, opacity:0 default, hover/:focus-within reveal, :focus-visible ring. Added `.widget-shell { position: relative }`. 6 new AC-RM-1..3 tests in WidgetShell.test.tsx. Note: styles.css committed with sub-fix 1 (button + styles are one indivisible unit). | 48acd92 | Sub-fix 2 |
+| 2026-05-28 13:05 | claude-sonnet-4-6 — bug-auto-fix | **Sub-fix 2 (useDashOrder removeWidget) DONE.** Extended UseDashOrderTuple from 3-element to 4-element by appending removeWidget: (id) => void. Implementation uses persistedRef.current (not sanitized) to avoid stale closure; idempotent no-op when id not present. Updated AC-AWO-1 test in useDashOrder.test.tsx (was "3-element" → now "4-element"). New useDashOrder.removeWidget.test.tsx (6 tests, AC-RM-4..5): idempotent no-op, no-throw on repeated calls, exposed as fn, 4-element tuple, 2-element and 3-element back-compat. Design note: hook's removeWidget only persists; rendering-level exclude is DashboardModule's removedInSession + activeWidgets filter (sub-fix 3). | 60aabb3 | Sub-fix 3 |
+| 2026-05-28 13:10 | claude-sonnet-4-6 — bug-auto-fix | **Sub-fix 3 (DashboardGrid + DashboardModule wire-up) DONE.** DashboardGrid: added optional onRemove prop; forwarded to each WidgetShell. DashboardModule: added removedInSession (ReadonlySet<string>) state to track session removals; added removeWidgetFromOrder callback (rawSetOrder filter + removedInSession update); addWidgetToOrder clears from removedInSession on re-add; added activeWidgets memo (filters widgets prop by removedInSession) before passing to DashboardGrid — prevents sanitize-on-mount F1 from re-appending removed ids; passes onRemove={removeWidgetFromOrder} to DashboardGrid. New DashboardModule.remove.test.tsx (4 tests, AC-RM-6..7): grid shell count decreases, localStorage persists filter, picker available count increases post-remove, button type="button" drag-safe. 168/168 plugin tests PASS. 128/128 web regression PASS. Lint clean (--max-warnings 0). check-types clean. Sub-fix 4 (styles.css) was committed with sub-fix 1 as an indivisible unit (button + styles boundary). All 4 sub-fixes complete. Flipping Status to FIX_READY_FOR_VERIFY. | e6b483a | bug-verify |

@@ -267,3 +267,22 @@ Per test.md §6: open `/app/dashboard` in Safari 17+ / Chrome / Firefox and visu
 ### §16 Lint exclusion footnote
 
 `pnpm --filter @repo/web lint` reports 3 PRE-EXISTING warnings in `apps/web/src/pages/TokensSmokePage.tsx` (lines 71 + 73 — turbo undeclared `DEV` env var + react-hooks/rules-of-hooks conditional `useState`). These were introduced in W1.P3 commit `6c556e6` and are NOT my changes (`git diff HEAD apps/web/src/pages/TokensSmokePage.tsx` returns empty). Row #10's verify (gate 12) documented the same status. Treating as pre-existing technical debt, NOT a row #11 blocker — would be cleaned up by a dedicated TokensSmokePage refactor commit outside this row's scope.
+
+- 
+- 2026-05-28 00:31:58
+  Executor: bugfix-full-loop
+  Action: Phase 0 INTAKE PASS — fresh-start bugfix for Audit Top-10 #9 (D-06, missing WidgetShell remove UI). Bug not previously SHIPPED (git log search returns 0 commits for Top-10 #9 / D-06 / widget remove; widgets dev_log Status=SHIPPED for prior FEATURE_DEV lineage; grid dev_log Status=SHIPPED for prior BUGFIX lineage). Automation Mode=A-Claude (provided in invocation, no picker fire). Verify Cross-vendor=yes (provided). Dispatching bug-diagnose next.
+
+- 2026-05-28 00:32:20
+  Executor: bugfix-full-loop
+  Action: STOP with BLOCKED — orchestrator cannot dispatch sub-agents from current runtime (only Read+Bash tools exposed; Agent/Task tool not available in this invocation context). User should invoke bug-diagnose / bug-fix / bug-verify directly via their CLI subagent runner, OR re-invoke bugfix-full-loop through the standard Claude Code subagent dispatcher that grants the Agent tool. No code or docs modified beyond this Work Log entry.
+
+- 2026-05-28
+  Executor: claude-opus-4-7 (1M context) — bug-diagnose
+  Action: Phase 0+1+2+3+4+5+6 of fresh BUGFIX (Audit Top-10 #9 / D-06 — Widget remove affordance missing) complete. Primary target = sibling package `@repo/plugin-web-dashboard-grid` (owns `WidgetShell.tsx` + `DashboardGrid.tsx` + `useDashOrder.ts` + `xai_dash_order` write path). This package (`@repo/plugin-web-dashboard-widgets`) is a COLLABORATOR — no source change planned because widgets are pure render functions inside `WidgetRenderContext`; the remove control lives on the shell that wraps them, not on the widget bodies themselves. Drag-exclude markers (`data-no-drag`) already documented and applied where needed inside this package (api.md §S4 + dev_log line 224 verify gate 10). No edit required to manifest.json, package.json, or src/. The fresh BUGFIX Status Panel and full diagnose narrative (Bug Card + Phases 1-6 + 11 risks + 7 new test plan) live in `packages/xai-web-dashboard-grid/docs/dev_log.md` BUGFIX Lineage block (appended 2026-05-28). Suggested Next for this package = monitor only; bug-fix will write code in dashboard-grid, not here. If bug-fix discovers a widget-body interactive child that newly requires `data-no-drag` (e.g. a remove button were ever to land on a widget body — NOT planned for v1), this dev_log gets another entry then.
+  Next: monitor — bug-fix targets dashboard-grid; no source change in dashboard-widgets.
+
+- 2026-05-28 13:15
+  Executor: claude-sonnet-4-6 — bug-auto-fix (collaborator Work Log only)
+  Action: Audit Top-10 #9 (D-06) bug-auto-fix DONE. All 4 sub-fixes implemented in primary target `@repo/plugin-web-dashboard-grid`: (1) WidgetShell remove button + local STR table + styles.css (48acd92); (2) useDashOrder removeWidget 4-tuple extension (60aabb3); (3) DashboardGrid/DashboardModule wire-up + removedInSession filter + 7 new AC-RM tests (e6b483a). No source change in `@repo/plugin-web-dashboard-widgets` — confirmed as expected (widgets are pure render functions; the remove affordance is on the WidgetShell wrapper, not the widget bodies; no new data-no-drag markers needed). 168/168 dashboard-grid tests PASS. 128/128 web regression PASS. Status in dashboard-grid dev_log flipped FIX_IN_PROGRESS → FIX_READY_FOR_VERIFY.
+  Next: bug-verify targets dashboard-grid. No further action in this package.
