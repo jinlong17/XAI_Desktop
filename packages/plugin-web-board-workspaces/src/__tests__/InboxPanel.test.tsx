@@ -11,16 +11,21 @@ import { InboxPanel } from "../InboxPanel.js";
 function Harness({
   initial,
   lang,
+  onRequestRemove,
 }: {
   initial: InboxCardShape[];
   lang: "en" | "zh";
+  onRequestRemove?: (id: string) => void;
 }) {
   const [cards, setCards] = useState<InboxCardShape[]>(initial);
+  // Default onRequestRemove directly removes the card (simulates host confirm)
+  const defaultRemove = (id: string) => setCards((prev) => prev.filter((c) => c.id !== id));
   return (
     <InboxPanel
       cards={cards}
       setCards={(updater) => setCards((prev) => updater(prev))}
       lang={lang}
+      onRequestRemove={onRequestRemove ?? defaultRemove}
     />
   );
 }
@@ -66,7 +71,8 @@ describe("InboxPanel (IP1..IP10)", () => {
     expect(screen.getByText("中文")).toBeInTheDocument();
   });
 
-  it("IP6: remove button filters out", () => {
+  it("IP6: remove button calls onRequestRemove with card id (B-28 fix — deletion gated by host)", () => {
+    const onRequestRemove = vi.fn();
     render(
       <Harness
         initial={[
@@ -74,10 +80,15 @@ describe("InboxPanel (IP1..IP10)", () => {
           { id: "x2", text: { en: "second", zh: "二" } },
         ]}
         lang="en"
+        onRequestRemove={onRequestRemove}
       />,
     );
     fireEvent.click(screen.getByTestId("inbox-remove-x1"));
-    expect(screen.queryByText("first")).not.toBeInTheDocument();
+    // B-28 fix: clicking remove no longer directly deletes — it calls onRequestRemove
+    // so the host can show a confirmation dialog before committing the deletion.
+    expect(onRequestRemove).toHaveBeenCalledWith("x1");
+    // Card is still present because onRequestRemove was only called, not committed.
+    expect(screen.getByText("first")).toBeInTheDocument();
     expect(screen.getByText("second")).toBeInTheDocument();
   });
 

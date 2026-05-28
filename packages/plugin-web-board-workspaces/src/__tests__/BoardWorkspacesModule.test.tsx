@@ -91,15 +91,20 @@ describe("BoardWorkspacesModule (BWM1..BWM18)", () => {
     expect(screen.getByTestId("board-title-btn").textContent).toContain("Project Management");
   });
 
-  it("BWM7: deleting a board removes it; deleting active falls back to remaining", () => {
+  it("BWM7: deleting a board via dialog confirm removes it (B-12 new confirmation flow)", () => {
     const seed = makeDefaultBoards();
     localStorage.setItem("xai_boards_v2", JSON.stringify(seed));
     localStorage.setItem("xai_active_board", "b-default");
-    vi.spyOn(window, "confirm").mockReturnValue(true);
     render(<BoardWorkspacesModule lang="en" />);
     fireEvent.click(screen.getByTestId("board-title-btn"));
-    // Delete a non-active board: b-pm
+    // Click trash on a non-active board (b-pm) → triggers BoardDeleteConfirmDialog
     fireEvent.click(screen.getByTestId("bs-delete-b-pm"));
+    // Dialog should be mounted now
+    expect(screen.getByTestId("board-delete-dialog")).toBeInTheDocument();
+    // Confirm the deletion
+    fireEvent.click(screen.getByTestId("bdc-confirm"));
+    // Board is removed from the switcher; dialog is unmounted
+    expect(screen.queryByTestId("board-delete-dialog")).not.toBeInTheDocument();
     expect(screen.queryByTestId("bs-card-b-pm")).not.toBeInTheDocument();
   });
 
@@ -286,6 +291,141 @@ describe("BoardWorkspacesModule (BWM1..BWM18)", () => {
     // the popover is mounted correctly and aria-expanded is set.
     const filterBtn = screen.getByTestId("filter-btn");
     expect(filterBtn).toHaveAttribute("aria-expanded", "true");
+  });
+});
+
+// ---- BW-Del-Board-1..4 + BW-Del-Card-1..4 — Audit Option A §5 (B-12 + B-28) ----
+// Verifies that BoardDeleteConfirmDialog is wired to both BoardSwitcher and InboxPanel.
+
+describe("BoardWorkspacesModule — BW-Del delete confirmation (Audit B-12 + B-28)", () => {
+  beforeEach(() => {
+    localStorage.clear();
+    vi.clearAllMocks();
+    localStorage.setItem("xai_boards_v2", JSON.stringify(makeDefaultBoards()));
+    localStorage.setItem("xai_active_board", "b-default");
+  });
+
+  it("BW-Del-Board-1: click trash in BoardSwitcher → BoardDeleteConfirmDialog mounts with mode='board'", () => {
+    render(<BoardWorkspacesModule lang="en" />);
+    // Open switcher
+    fireEvent.click(screen.getByTestId("board-title-btn"));
+    // Click trash on non-active board
+    fireEvent.click(screen.getByTestId("bs-delete-b-pm"));
+    // Dialog should mount
+    const dialog = screen.getByTestId("board-delete-dialog");
+    expect(dialog).toBeInTheDocument();
+    expect(dialog).toHaveAttribute("role", "alertdialog");
+    // Should show board title copy
+    expect(screen.getByTestId("bdc-title").textContent).toBe("Delete board?");
+  });
+
+  it("BW-Del-Board-2: Cancel from dialog → dialog unmounts + board still present", () => {
+    render(<BoardWorkspacesModule lang="en" />);
+    fireEvent.click(screen.getByTestId("board-title-btn"));
+    fireEvent.click(screen.getByTestId("bs-delete-b-pm"));
+    expect(screen.getByTestId("board-delete-dialog")).toBeInTheDocument();
+    // Cancel
+    fireEvent.click(screen.getByTestId("bdc-cancel"));
+    // Dialog unmounts (conditional mount)
+    expect(screen.queryByTestId("board-delete-dialog")).not.toBeInTheDocument();
+    // Board is still present in switcher
+    expect(screen.getByTestId("bs-card-b-pm")).toBeInTheDocument();
+  });
+
+  it("BW-Del-Board-3: Confirm from dialog → dialog unmounts + board removed", () => {
+    render(<BoardWorkspacesModule lang="en" />);
+    fireEvent.click(screen.getByTestId("board-title-btn"));
+    fireEvent.click(screen.getByTestId("bs-delete-b-pm"));
+    expect(screen.getByTestId("board-delete-dialog")).toBeInTheDocument();
+    // Confirm
+    fireEvent.click(screen.getByTestId("bdc-confirm"));
+    // Dialog unmounts
+    expect(screen.queryByTestId("board-delete-dialog")).not.toBeInTheDocument();
+    // Board is removed from switcher (re-opened)
+    expect(screen.queryByTestId("bs-card-b-pm")).not.toBeInTheDocument();
+  });
+
+  it("BW-Del-Board-4: re-opening BoardSwitcher after confirm shows board absent", () => {
+    render(<BoardWorkspacesModule lang="en" />);
+    // Delete b-pm via confirm
+    fireEvent.click(screen.getByTestId("board-title-btn"));
+    fireEvent.click(screen.getByTestId("bs-delete-b-pm"));
+    fireEvent.click(screen.getByTestId("bdc-confirm"));
+    // Close switcher (scrim click on backdrop — but dialog confirm already closed it)
+    // Re-open switcher
+    fireEvent.click(screen.getByTestId("board-title-btn"));
+    expect(screen.queryByTestId("bs-card-b-pm")).not.toBeInTheDocument();
+  });
+
+  it("BW-Del-Card-1: click × in InboxPanel → BoardDeleteConfirmDialog mounts with mode='card'", () => {
+    // Seed an inbox card
+    localStorage.setItem(
+      "xai_board_inbox",
+      JSON.stringify([{ id: "ix-test", text: { en: "Test idea", zh: "测试想法" } }]),
+    );
+    render(<BoardWorkspacesModule lang="en" />);
+    // Open inbox panel
+    fireEvent.click(screen.getByTestId("bv-inbox"));
+    // Click remove on the seeded card
+    fireEvent.click(screen.getByTestId("inbox-remove-ix-test"));
+    // Dialog should mount
+    const dialog = screen.getByTestId("board-delete-dialog");
+    expect(dialog).toBeInTheDocument();
+    // Should show card title copy
+    expect(screen.getByTestId("bdc-title").textContent).toBe("Delete card?");
+    expect(screen.getByTestId("bdc-target-label").textContent).toBe("Test idea");
+  });
+
+  it("BW-Del-Card-2: Cancel → dialog unmounts + inbox card still present", () => {
+    localStorage.setItem(
+      "xai_board_inbox",
+      JSON.stringify([{ id: "ix-test", text: { en: "Keep me", zh: "保留" } }]),
+    );
+    render(<BoardWorkspacesModule lang="en" />);
+    fireEvent.click(screen.getByTestId("bv-inbox"));
+    fireEvent.click(screen.getByTestId("inbox-remove-ix-test"));
+    expect(screen.getByTestId("board-delete-dialog")).toBeInTheDocument();
+    // Cancel
+    fireEvent.click(screen.getByTestId("bdc-cancel"));
+    expect(screen.queryByTestId("board-delete-dialog")).not.toBeInTheDocument();
+    // Card is still in the inbox
+    expect(screen.getByText("Keep me")).toBeInTheDocument();
+  });
+
+  it("BW-Del-Card-3: Confirm → dialog unmounts + inbox card removed", () => {
+    localStorage.setItem(
+      "xai_board_inbox",
+      JSON.stringify([{ id: "ix-test", text: { en: "Delete me", zh: "删掉" } }]),
+    );
+    render(<BoardWorkspacesModule lang="en" />);
+    fireEvent.click(screen.getByTestId("bv-inbox"));
+    fireEvent.click(screen.getByTestId("inbox-remove-ix-test"));
+    expect(screen.getByTestId("board-delete-dialog")).toBeInTheDocument();
+    // Confirm
+    fireEvent.click(screen.getByTestId("bdc-confirm"));
+    expect(screen.queryByTestId("board-delete-dialog")).not.toBeInTheDocument();
+    expect(screen.queryByText("Delete me")).not.toBeInTheDocument();
+  });
+
+  it("BW-Del-Card-4: Cancel for card A, then open dialog for card B → state is per-pending-delete (no stale label)", () => {
+    localStorage.setItem(
+      "xai_board_inbox",
+      JSON.stringify([
+        { id: "ix-a", text: { en: "Card A", zh: "卡片A" } },
+        { id: "ix-b", text: { en: "Card B", zh: "卡片B" } },
+      ]),
+    );
+    render(<BoardWorkspacesModule lang="en" />);
+    fireEvent.click(screen.getByTestId("bv-inbox"));
+    // Open dialog for card A
+    fireEvent.click(screen.getByTestId("inbox-remove-ix-a"));
+    expect(screen.getByTestId("bdc-target-label").textContent).toBe("Card A");
+    // Cancel
+    fireEvent.click(screen.getByTestId("bdc-cancel"));
+    // Now open dialog for card B
+    fireEvent.click(screen.getByTestId("inbox-remove-ix-b"));
+    // Label should be Card B, not stale Card A
+    expect(screen.getByTestId("bdc-target-label").textContent).toBe("Card B");
   });
 });
 
