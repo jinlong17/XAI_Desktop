@@ -1393,6 +1393,6 @@ it("AB7: ZH locale renders ZH tooltip on each disabled link", () => {
 - **Tests run**:
   - `pnpm --filter @repo/plugin-web-settings-rest exec vitest run` → **242/242 pass** (prev: 235; +7 in aboutPane: AB1..AB7 all green)
   - `pnpm --filter @repo/web exec vitest run` → **128/128 pass** (no regression)
-- **Commits**: (to be filled after commit)
+- **Commits**: `7e5e297` fix(plugin-web-settings-rest): About pane links → disabled + Coming soon tooltip (Audit Top-10 #10)
 - **Remaining risks**: R7 (cross-vendor smoke) — DEFERRED post-ship per ADR-0008 §S3 pattern; minimal Chrome smoke at verify time sufficient.
 - **Next step**: bug-verify.
