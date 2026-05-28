@@ -11,6 +11,10 @@
 import * as React from "react";
 import type { Pane, PaneRenderProps } from "@repo/plugin-web-settings-shell";
 import { useI18n } from "@repo/plugin-web-tokens";
+import {
+  useDesktopUpdaterActions,
+  useDesktopUpdaterSnapshot,
+} from "@repo/desktop-auto-update-release-channel/web";
 import { localI18n } from "../internal/localI18n.js";
 
 // Hard-coded per Frozen Assumption #9.
@@ -21,6 +25,18 @@ const BUILD_DATE = "2026.05.23";
 function AboutPaneContent({ lang }: PaneRenderProps): React.ReactElement {
   const { s } = useI18n(lang);
   const t = localI18n(lang);
+  const updaterSnapshot = useDesktopUpdaterSnapshot();
+  const { check } = useDesktopUpdaterActions();
+
+  const canCheck = updaterSnapshot.availability !== "disabled" && updaterSnapshot.availability !== "checking";
+  const statusText = t(`about.updaterAvailability.${updaterSnapshot.availability}`);
+  const reasonText = updaterSnapshot.reasonCode
+    ? t(`about.updaterReason.${updaterSnapshot.reasonCode}`)
+    : "";
+
+  const checkLabel = updaterSnapshot.availability === "checking"
+    ? t("about.updaterAction.checking")
+    : t("about.updaterAction.check");
 
   return (
     <div className="about-pane">
@@ -46,6 +62,50 @@ function AboutPaneContent({ lang }: PaneRenderProps): React.ReactElement {
           {t("about.feedback")}
         </a>
       </div>
+
+      <section className="about-updater" aria-label={t("about.updaterTitle")}>
+        <h4>{t("about.updaterTitle")}</h4>
+        <div className="about-updater-grid">
+          <div className="about-updater-row">
+            <span>{t("about.updaterStatus")}</span>
+            <strong>{statusText}</strong>
+          </div>
+          <div className="about-updater-row">
+            <span>{t("about.updaterChannel")}</span>
+            <strong>{updaterSnapshot.channel}</strong>
+          </div>
+          {reasonText ? (
+            <div className="about-updater-row">
+              <span>{t("about.updaterReason")}</span>
+              <strong>{reasonText}</strong>
+            </div>
+          ) : null}
+          {updaterSnapshot.updateVersion ? (
+            <div className="about-updater-row">
+              <span>{t("about.updaterVersion")}</span>
+              <strong>{updaterSnapshot.updateVersion}</strong>
+            </div>
+          ) : null}
+        </div>
+        <button
+          className="btn"
+          type="button"
+          disabled={!canCheck}
+          onClick={() => {
+            if (!canCheck) {
+              return;
+            }
+            void check();
+          }}
+        >
+          {canCheck ? checkLabel : t("about.updaterAction.unavailable")}
+        </button>
+        {updaterSnapshot.availability === "update-available"
+          && updaterSnapshot.reasonCode === "install_unavailable" ? (
+            <p className="about-updater-note">{t("about.installUnavailable")}</p>
+          ) : null}
+      </section>
+
       {/* Suppress unused import warning — s is used above for pane title lookup */}
       {s("settings.about") && null}
     </div>

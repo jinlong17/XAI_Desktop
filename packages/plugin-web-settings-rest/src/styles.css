@@ -726,6 +726,47 @@
   text-decoration: underline;
 }
 
+.about-updater {
+  width: min(420px, 100%);
+  margin-top: 10px;
+  padding: 12px;
+  border-radius: 10px;
+  border: 1px solid var(--border, oklch(88% 0 0));
+  background: var(--panel, #fff);
+  text-align: left;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.about-updater h4 {
+  margin: 0;
+  font-size: 0.92rem;
+}
+.about-updater-grid {
+  display: grid;
+  gap: 6px;
+}
+.about-updater-row {
+  display: grid;
+  grid-template-columns: 110px 1fr;
+  gap: 8px;
+  font-size: 0.82rem;
+}
+.about-updater-row span {
+  color: var(--text-3, oklch(60% 0 0));
+}
+.about-updater-row strong {
+  font-weight: 600;
+}
+.about-updater .btn {
+  align-self: flex-start;
+}
+.about-updater-note {
+  margin: 0;
+  font-size: 0.8rem;
+  color: var(--text-2, oklch(50% 0 0));
+}
+
 /* ---- Delete Account Modal -------------------------------------------- */
 dialog.delete-account-modal {
   position: fixed;
