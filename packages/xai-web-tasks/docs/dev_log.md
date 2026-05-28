@@ -212,3 +212,206 @@ No blockers. All commits ready for `ship`.
 | 2026-05-23 13:29 | Claude Sonnet (feature-auto-build) | P3 DONE: Added T-BAR-1 (index-barrel.test.ts) — verifies public surface exports and excludes internal helpers. Extended registration.test.tsx with T-REG-2 (TasksModuleRoute inside WebShellProvider renders EN h1 "All"). Final pass: 40/40 tests pass. @repo/plugin-web-tasks lint + typecheck clean. @repo/web check-types + 50 tests clean (no regression). Cross-vendor checklist (AC-7): (i) all edits used unique anchors (tasks placeholder L47 + @repo/plugin-web-matrix line in package.json); (ii) all file paths are absolute; (iii) no template-language-specific syntax leaked into source. Status → READY_FOR_VERIFY. | see P3 commit | feature-verify |
 | 2026-05-23 13:42 | Claude Opus (feature-verify) | VERIFY PASS. Reran all 14 gates: (1) plugin-web-tasks 40/40 tests pass (8 files: validate 7, seed 4, dateForCol 5, tasksReducer 7, registration 5, persistence 3, TasksModule 6, index-barrel 3); (2) plugin-web-tasks typecheck clean; (3) plugin-web-tasks lint clean (0 warnings); (4) @repo/web check-types clean; (5) @repo/web 50/50 tests PASS (no regression); (6) @repo/web vite build green (5.23s, no errors); (7) bucket date rewrite verified in dateForCol.ts (overdue=-3d / next7=+2d / later=+30d / nodate=null + moveCard strips date fields); (8) 8-section sidebar bilingual verified (Smart Lists / Custom Lists / Filters / Tags / Calendar Subscription / Completed / Won't Do / Trash all use useI18n + lang switch); (9) xai_task_cols persistence via usePref + isTaskColsArray + SEED_TASK_COLS fallback verified; registry entry confirmed at plugin-web-storage/src/internal/registry.ts:193-196; (10) shellRegistrations.tsx has 13 entries (matrix + tasks + countdown + pomodoro + habits + 8 placeholders incl. settings); tasks at railOrder 2 with `tasksWebModuleRegistration` (not placeholder); (11) cross-column DnD highlight (`.drop-target` on TaskColumn when overColId===col.id) + topbar `.drag-hint` (bilingual fallback) verified in TasksModule + TaskColumn source; (12) cross-vendor cold-read: registration.tsx + TasksModule.tsx + reducer + validate all compile cleanly under fresh tsc; no template-language-specific syntax; (13) AC-XVENDOR manual deferred-to-ship — checklist recorded below (Section "Verify Notes"); (14) commit hygiene: 3 commits (3c0d6bd / e5ac21b / bbaae81), each follows `type(scope): summary` + Why/What/Scope/Risk/Docs/Tests body; each commit stays within its declared phase scope (P1 = package only; P2 = package + 2 declared shared-file edits; P3 = package + PLUGIN_MAP.md). No edits to docs/workflow/roadmap/xai-web-console.md. Sibling rows #14/#15 used disjoint anchors as planned. Status → READY_TO_SHIP. | — | ship |
 | 2026-05-23 18:41 | Claude Sonnet (ship) | SHIPPED: verified 40/40 tests pass; manifest row #6 flipped to SHIPPED; dev_log Status → SHIPPED; chore commit created and pushed to origin/main. Cross-vendor note: same-vendor (Claude Opus 4.7) cold-read accepted per user override; Codex/Cursor queued. | chore(xai-web-tasks): ship — flip dev_log + manifest #6 to SHIPPED | — (SHIPPED) |
+
+---
+
+# Iteration 2 — xai-web-tasks-card-create (extension, 2026-05-28)
+
+> APPENDED iteration. The SHIPPED v1 state machine above is preserved verbatim.
+> This block is the active Status Panel + Phase Plan for the card-create carve-out.
+> Workflow rule: `dev_log.md` is the single source of truth for workflow state.
+
+## Status Panel (ACTIVE)
+
+| Field | Value |
+|---|---|
+| Workflow | FEATURE_DEV |
+| Target | xai-web-tasks-card-create |
+| Title | Wire column `+` → TaskComposer → reducer create → persist (Tasks card-create, Realistic v1) |
+| Current Phase | FEATURE_VERIFY |
+| Status | READY_FOR_VERIFY |
+| Executor | Claude Sonnet (claude-sonnet-4-6) |
+| Updated | 2026-05-28 12:20 |
+| Suggested Next | feature-verify |
+| Level | increment (extension of SHIPPED row #6) |
+| Why reopen | Audit Top-10 #3 (T-09) — Tasks has no UI create path; column `+` is a no-op. P0 carve-out `09673f8` authorizes the feature under ADR-0010 §D4. |
+| Automation Mode | A-Claude (default; pickable at feature-build dispatch) |
+| Verify Cross-vendor | yes (Codex `gpt-5.5-thinking medium` at EP3; smoke from EP2; MAY defer 24h per ADR-0008 §S3) |
+| Blockers | — |
+| Roadmap Manifest | docs/workflow/roadmap/xai-web-tasks-card-create.md |
+| Discovery Review | docs/reviews/xai-web-tasks-card-create/20260528-discovery-review.md |
+| Feature Brief | docs/reviews/xai-web-tasks-card-create/20260528-feature-brief.md |
+| Carve-out Authority | docs/reviews/_p0-carve-outs/20260528-tasks-card-create.md (commit 09673f8) |
+
+## Scope of the increment
+
+CREATE-only. Wire the no-op column `+` (`TaskColumn.tsx:68-74`) to a new `TaskComposer` native `<dialog>`; add ONE pure `addCard` reducer action + `createTaskId()` + `NewTaskDraft` type + local STR. Reuse `xai_task_cols` (no registry edit), `dateForCol`, `validate`, and the SHIPPED `usePref` boundary. State lifts into `TasksModule` (no `web:*` channel). Edit + Delete DEFERRED (discovery D5). NO new dep, NO `packages/core`/`plugin-web-tokens`/`plugin-web-storage`/host-shell edit.
+
+## Files likely affected
+
+**New** (in `packages/xai-web-tasks/src/`):
+- `internal/ids.ts` (`createTaskId`)
+- `internal/strings.ts` (`STR_TASK_COMPOSER` en+zh)
+- `TaskComposer.tsx` (native `<dialog>`)
+- `__tests__/ids.test.ts`, `__tests__/TaskComposer.test.tsx`
+
+**Edited**:
+- `internal/tasksReducer.ts` (+`addCard`)
+- `types.ts` (+`NewTaskDraft`)
+- `index.ts` (+`NewTaskDraft` export)
+- `TaskColumn.tsx` (+`onAddCard?` prop; wire `+` onClick)
+- `TasksModule.tsx` (+composer state + `addCard` dispatch)
+- `styles.css` (+composer rules)
+- `__tests__/tasksReducer.test.ts`, `__tests__/persistence.test.tsx`, `__tests__/TasksModule.test.tsx`, `__tests__/index-barrel.test.ts` (extended)
+
+**NOT edited**: `plugin-web-storage` (registry), `plugin-web-tokens`, `packages/core`, `apps/web` shell registration.
+
+## Phase Plan (extension — `feature-build` runs ONE phase per invocation, then STOPS)
+
+### EP1 — Data layer
+**Goal**: pure create primitives, no UI.
+**Files**: `internal/ids.ts`, `internal/strings.ts`; edit `internal/tasksReducer.ts` (+`addCard`), `types.ts` (+`NewTaskDraft`), `index.ts` (+export).
+**Tests**: T-IDS-1..2, T-ADD-1..8.
+**Exit**: new pure tests + SHIPPED 40 green; tasks typecheck + lint clean. No UI wired yet.
+
+### EP2 — Composer + `+` wire + persistence
+**Goal**: full create flow end-to-end in jsdom.
+**Files**: `TaskComposer.tsx`; edit `TaskColumn.tsx` (+`onAddCard`), `TasksModule.tsx` (+composer state + dispatch), `styles.css`.
+**Tests**: T-TC-1..7, T-COL-1, T-CR-1..2.
+**Exit**: composer opens from `+`, save creates + persists, empty-bucket create works; bilingual labels; all tests green; `@repo/web` check-types clean.
+
+### EP3 — Integration + a11y + cross-vendor
+**Goal**: refresh-survival + a11y + barrel + vendor cold-read.
+**Files**: extend `__tests__/persistence.test.tsx`, `__tests__/TaskComposer.test.tsx`, `__tests__/index-barrel.test.ts`.
+**Tests**: T-CR-3, T-A11Y-1, T-BAR-2.
+**Steps**: full tasks + web suites + build; Codex cold-read of new sources (or defer per ADR-0008 §S3); write verify section; PLUGIN_MAP note appended at ship.
+**Exit**: AC-E1..AC-E7 met → flip Status to `READY_FOR_VERIFY`, Suggested Next = `feature-verify`.
+
+## Risks (extension — mirrored from discovery §6)
+
+| ID | Risk | Mitigation |
+|---|---|---|
+| RE1 | `addCard` count/immutability drift vs `moveCard` | Mirror `moveCard` prepend + `count+1` + referential equality; T-ADD-6 identity check. |
+| RE2 | Generated id collides with seed id | UUID / `t-<ts>-<rnd>` namespace disjoint from seed `t<digit>`/`c<digit>`; T-IDS-2 asserts shape. |
+| RE3 | `<dialog>` ESC/backdrop/focus differs in jsdom | Copy EventComposer's tested pattern verbatim (`cancel` listener + `e.target===dialogRef.current` + `setTimeout(0)` focus); T-TC-6 + T-A11Y-1. |
+| RE4 | First create on empty install must materialize seed before insert | `addCard` runs on resolved `taskCols` (seed-or-persisted via SHIPPED `useMemo`); first write persists seed+card together; T-CR-1/T-CR-3 cover it. |
+| RE5 | Composer reachable from `overdue` only via bucket retarget (no `+` there) | Acceptable + documented (discovery D7); `overdue` keeps decorative `postpone`. |
+| RE6 | Whitespace-only title | `.trim()` reject in both composer (inline error, T-TC-2) and `addCard` (defensive, T-ADD-7). |
+| RE7 | Cross-vendor smoke not run in-session | DEFER per ADR-0008 §S3; record checklist in verify section at deferral time. |
+
+## Open questions (pending review — discovery §6)
+
+- **QE1**: Confirm Edit/Delete full deferral (D5), or fold in a cheaper delete-only slice. Planner recommends **full deferral**. → **Review: ACCEPT full deferral** (see Review Notes G2).
+- **QE2**: Optional-date UX — opt-in checkbox (planner pick) vs auto-date for non-`nodate` buckets. → **Review: ACCEPT opt-in checkbox** (G3).
+- **QE3**: Tag "None" as explicit radio (planner pick) vs toggle-off row. → **Review: ACCEPT explicit "None" radio** (matches verified EventComposer recurrence "none" precedent).
+- **QE4**: 3 phases right-sized (planner pick) vs splitting composer / wire. → **Review: ACCEPT 3 phases** (G4).
+
+## Review Notes (extension)
+
+**Verdict: APPROVED** (feature-review · Claude Opus claude-opus-4-8 · 2026-05-28 15:20)
+
+Reviewed against the 9 gates in the feature-plan Handoff. Every load-bearing discovery
+claim was VERIFIED against actual source (not trusted from the recon table).
+
+**Gates evaluated:**
+
+1. **addCard reducer shape (QE-headline)** — PASS. Verified `tasksReducer.ts` has ONLY
+   `moveCard` (L25) + `toggleComplete` (L93) — NO create action. The discovery headline is
+   correct. api.md §E.3 specifies `addCard` pure, prepend + `count+1` + referential-equality
+   for untouched columns — symmetric with the verified `moveCard` (L70-86 `prev.map` returns
+   `col` by reference for untouched). Card lands in target bucket; id via `createTaskId()`;
+   date via verified `dateForCol(targetBucket, now)` (signature `(bucketId, now=new Date())`
+   confirmed at dateForCol.ts:25-28). Result will pass `isTaskCard` (validate.ts:29 requires
+   non-empty `id` + `title.en`/`title.zh` strings; a trimmed single-string fills both) and
+   `isTaskColsArray` (length-4 + ordered ids preserved by prepend-only). T-ADD-1..8 achievable.
+
+2. **Edit/Delete full deferral (QE1)** — PASS (ACCEPT). Verified `TaskCard.tsx:49`
+   `onClick={onToggle}` + `TaskCard.tsx:52` `onKeyDown` Enter/Space → toggle-complete. The
+   edit-on-click collision is REAL, not speculative. An edit affordance would need a separate
+   trigger + `updateCard`/`deleteCard` + a 2nd confirm dialog + a card-affordance redesign —
+   genuinely above the carve-out's "only if low-cost" bar. The carve-out §2 explicitly
+   delegated this to the planner ("Planner decides"); deferral is a legitimate exercise of that
+   authority, NOT scope drift. Create-only v1 is NOT an awkward half-feature: a user can create
+   + see + persist + reschedule (existing DnD) a task — a coherent slice. Edit/Delete is
+   cleanly pre-scoped as the next increment with the verified BoardDeleteConfirmDialog precedent.
+
+3. **optional-date opt-in UX (QE2)** — PASS. C1 (opt-in checkbox; if opted-in AND target
+   ≠ `nodate`, reuse `dateForCol`) reuses the SHIPPED bucket-derived date model verbatim and is
+   consistent with what a DnD-into-that-bucket produces. api.md §E.4 documents the
+   `nodate` → no-date short-circuit. Clear and faithful.
+
+4. **3-phase split (QE4)** — PASS. EP1 (data layer: ids + addCard + NewTaskDraft + STR, ~10
+   pure tests) / EP2 (composer + `+` wire + persistence, ~13 RTL+persistence tests) / EP3
+   (integration refresh + a11y + barrel + cross-vendor). Data layer is genuinely tiny but
+   pairing it with the composer (EP2) would make one oversized phase mixing pure-logic and
+   full-UI+persistence review surfaces. 3 is right-sized, not padded; each phase has a clean
+   rollback boundary (EP1 ships pure helpers with zero UI risk). Compressing to 2 would harm
+   reviewability; 3 is not too thin because EP1 is independently testable + SHIPPED-40-safe.
+
+5. **Boundary守约 (no-registry / no-core / no-tokens / no-host / no-other-plugin /
+   no-SHIPPED-archive / no-ADR)** — PASS, all held. Verified: (a) `xai_task_cols` present at
+   registry.ts:197-204 (json codec, owner `xai-web-tasks`, default `{}`) → NO registry edit;
+   (b) state lifts into `TasksModule` via `useState` (api.md §E.5) → NO `core/events.ts` edit;
+   (c) local `internal/strings.ts` STR (en+zh) mirroring the verified calendar
+   `STR_EVENT_COMPOSER` `Record<string,{en,zh}>` pattern → NO `plugin-web-tokens` edit;
+   (d) `tasksWebModuleRegistration` already imported (shellRegistrations.tsx:23) + wired (L65)
+   → NO host-shell edit; (e) all new code inside `packages/xai-web-tasks/src/`; (f) SHIPPED v1
+   dev_log/§1-§9 preserved verbatim (extension appended); (g) carve-out USES ADR-0010, no ADR
+   edit. NOTE — the boundary cast `setRawCols(next as unknown as Parameters<typeof setRawCols>[0])`
+   is verified live at TasksModule.tsx:92; `addCard`'s output flows through the identical path.
+
+6. **Bilingual title (D1)** — PASS. Single title input fills both `title.en` + `title.zh`
+   (api.md §E.1 / §E.3). `validate.isTaskCard` (verified L35-39) requires both non-empty; a
+   single trimmed string satisfies it. Documented in design §E.1 #8. Avoids double-entry
+   friction for quick-add. Seed's curated bilingual pairs are untouched.
+
+7. **Carve-out scope alignment** — PASS. Cross-checked plan In/Out scope vs carve-out §2
+   line-for-line. In-scope maps 1:1 (Create + TaskComposer + bilingual title + `xai_task_cols`
+   reuse + empty-bucket + local STR + a11y). Out-of-scope identical (T-10 completion persist /
+   T-06/T-07 / smart-lists / Matrix / sync / IndexedDB / no new dep / no core edit). NO drift
+   in EITHER direction — the plan is a strict {carve-out In-scope} − {Edit,Delete deferred},
+   adding nothing beyond authorization.
+
+8. **Test strategy sufficiency** — PASS. Unit reducer (T-ADD-1..8 incl. immutability identity
+   T-ADD-6 + defensive empty-title guard T-ADD-7 + round-trip validity T-ADD-8) + ids
+   (T-IDS-1..2) + composer RTL (T-TC-1..7 incl. open/validate/save/tag-none/bucket-retarget/
+   ESC+backdrop+cancel/bilingual) + wire (T-COL-1) + create→persist (T-CR-1..2) +
+   refresh-survival (T-CR-3) + a11y (T-A11Y-1) + barrel (T-BAR-2, asserts internal helpers NOT
+   exported). All map to verified precedent patterns (EventComposer dialog suite proves the
+   jsdom `<dialog>`/`cancel`/backdrop/`setTimeout(0)` approach works). Coverage is complete.
+
+9. **Workflow V2 compliance** — PASS. dev_log Status Panel + Phase Plan + Risks + Work Log
+   present; SHIPPED v1 machine preserved verbatim above the Iteration-2 block; EP1/EP2/EP3
+   each declare explicit exit gates; `feature-build` runs ONE phase per invocation; cross-vendor
+   (Codex cold-read at EP3) MAY defer 24h per ADR-0008 §S3 with the (i)/(ii)/(iii) checklist.
+
+**Recommendations (non-blocking, for build-time):**
+
+- **Rec-E1 (integration nuance — IMPORTANT for EP3 sweep):** The host wraps the Tasks slot in
+  `withDisabledFallback(tasksWebModuleRegistration, "tasks")` (shellRegistrations.tsx:65) —
+  Tasks is one of the 8 user-toggleable modules. When `xai_pref_features_tasks` is OFF the route
+  renders `<DisabledFeatureFallback>`, so the column `+` / composer is only reachable when Tasks
+  is ENABLED in settings. This does NOT affect the plan (the wrapper already exists → no-host-edit
+  holds; the create flow lives inside `TasksModule` which only mounts when ON; the SHIPPED DnD path
+  has the identical gating). But the EP3 manual sweep should note "Tasks must be enabled in
+  settings" so a tester toggling features off does not file a false "composer won't open" bug.
+- **Rec-E2:** Reuse the SHIPPED DEV-warn + boundary-cast call site in `TasksModule` verbatim for
+  the `addCard` dispatch (do not add a 2nd cast site) — keeps the persistence boundary single-sourced.
+- **Rec-E3:** For T-ADD-4 date determinism, pass an explicit `now: Date` to `addCard` (the
+  signature already threads `now?` to `dateForCol`) rather than relying on `vi.useFakeTimers()`,
+  matching the SHIPPED `moveCard` date-test discipline.
+- **Rec-E4 (minor doc drift, optional):** api.md §4.1 cites the registry entry as "193-196" while
+  discovery + actual source say 197-204. Cosmetic; correct at next docs-sync, not build-blocking.
+
+**QE1-QE4 planner picks all ACCEPTED as-is.** No blockers. Plan is executable with zero blocking
+ambiguity — every load-bearing source claim verified against actual code.
+
+## Work Log (extension — append-only)
+
+| Timestamp | Executor | Action | Commits | Next step |
+|---|---|---|---|---|
+| 2026-05-28 | Claude Opus (feature-plan) | Iteration 2 plan for `xai-web-tasks-card-create` (extension of SHIPPED row #6). Recon confirmed: `tasksReducer.ts` has ONLY `moveCard`+`toggleComplete` (NO create) → adding pure `addCard`; `xai_task_cols` registry key already present (registry.ts:197-204) → NO registry edit; no id helper exists → adding `internal/ids.ts` `createTaskId()` mirroring calendar; `TaskCard.onClick` already bound to toggle-complete → Edit/Delete DEFERRED (D5). Chose A1 state-lift + B1 addCard + C1 optional bucket-date + D1 single bilingual title + E1 native `<dialog>` (EventComposer precedent). Produced: roadmap manifest, feature brief, discovery review, design §E extension, api §E extension, test §E extension, this Status Panel + 3-phase plan. NO implementation code. | — | feature-review |
+| 2026-05-28 15:20 | Claude Opus (feature-review) | APPROVED. Verified all 9 Handoff gates against ACTUAL source (not trusted recon): tasksReducer.ts has only moveCard(L25)+toggleComplete(L93) — addCard genuinely missing; TaskCard.tsx:49 onClick + :52 keydown bound to toggle (edit-collision REAL → D5 deferral accepted); registry xai_task_cols at registry.ts:197-204 (no edit); boundary cast live at TasksModule.tsx:92; dateForCol(bucketId,now=new Date()) signature confirmed; validate.isTaskCard L29-39 + isTaskColsArray L72-97 confirm addCard output is round-trippable; EventComposer.tsx confirms every dialog/a11y/radiogroup/cancel/backdrop/setTimeout-focus pattern E1 copies; calendar ids.ts confirms createTaskId fallback; calendar strings.ts confirms local-STR no-tokens-edit pattern; shellRegistrations.tsx:23+65 confirm tasksWebModuleRegistration already wired (no host edit). Carve-out scope aligned line-for-line (strict subset, no drift either direction). QE1-QE4 planner picks all accepted. 0 blockers, 4 non-blocking recs (Rec-E1: EP3 sweep must note Tasks-feature-toggle gating via withDisabledFallback; Rec-E2 single boundary-cast; Rec-E3 explicit now in T-ADD-4; Rec-E4 api.md §4.1 line-no drift). Status → APPROVED; Suggested Next = feature-build. | — | feature-build |
+| 2026-05-28 12:10 | Claude Sonnet (feature-auto-build) | EP1 DONE: `internal/ids.ts` (`createTaskId()`), `internal/strings.ts` (`STR_TASK_COMPOSER` en+zh 13 keys), `types.ts` (+`NewTaskDraft`), `internal/tasksReducer.ts` (+`addCard` pure action: prepend + count+1 + referential equality + dateForCol opt-in + defensive empty-title guard), `index.ts` (+`NewTaskDraft` export). Tests: T-IDS-1..2 + T-ADD-1..8 (10 new). Rec-E3 honored: explicit `now` in T-ADD-4. SHIPPED 40 + 10 new = 50/50 pass. typecheck + lint clean. | 7ea4b32 | EP2 |
+| 2026-05-28 12:15 | Claude Sonnet (feature-auto-build) | EP2 DONE: `TaskComposer.tsx` (native `<dialog>` + showModal/close + cancel ESC + backdrop click + setTimeout(0) autofocus; title input + tag radiogroup 6 options + bucket radiogroup 4 options + date opt-in checkbox; inline title-required error; a11y: aria-modal + aria-labelledby + aria-required + aria-describedby; bilingual via STR_TASK_COMPOSER); `TaskColumn.tsx` (+`onAddCard?` prop + onClick wire); `TasksModule.tsx` (+composer state + handleAddCard + handleComposerSave via SHIPPED boundary cast + TaskComposer rendered once at module root); `styles.css` (+composer rules); `vitest.setup.ts` (HTMLDialogElement showModal/close polyfill + cleanup — mirrors calendar setup.ts). Tests: T-TC-1..7 + T-A11Y-1 + T-COL-1 + T-CR-1..3. 65/65 pass. typecheck + lint + @repo/web check-types clean. Rec-E1: composer only mounts inside TasksModule (withDisabledFallback gating inherited). Rec-E2: single boundary-cast call site preserved. | 9c3d481 | EP3 |
+| 2026-05-28 12:20 | Claude Sonnet (feature-auto-build) | EP3 DONE: `index-barrel.test.ts` extended with T-BAR-2 (a..e): asserts `NewTaskDraft` accessible, internal helpers `addCard`/`createTaskId`/`TaskComposer`/`STR_TASK_COMPOSER` NOT exported. Full suite: 70/70 tasks tests pass (10 files). @repo/web 128/128 tests pass. @repo/web build green (3.72s). typecheck + lint clean on both packages. Cross-vendor checklist (AC-E7): (i) no shared-file edits in this increment — all code inside packages/xai-web-tasks/src/; (ii) all file paths used are absolute; (iii) no template-language-specific syntax in source — fresh tsc passes. Status → READY_FOR_VERIFY. | see EP3 commit | feature-verify |
