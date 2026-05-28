@@ -300,14 +300,14 @@ Per test.md §6: open `/app/dashboard` in Safari 17+ / Chrome / Firefox and visu
 | Workflow | FEATURE_DEV |
 | Target | xai-web-dashboard-stickies-create |
 | Title | Web Console — Dashboard Stickies create + delete (store-from-scratch + xai_dashboard_stickies key + StickyComposer native dialog) |
-| Current Phase | FEATURE_VERIFY |
-| Status | READY_FOR_VERIFY |
-| Suggested Next | feature-verify |
+| Current Phase | SHIP |
+| Status | SHIPPED |
+| Suggested Next | — (workflow complete) |
 | Level | feature (store-from-scratch; Realistic v1) |
-| Verify Cross-vendor | yes (Codex `gpt-5.5-thinking effort=medium` primary / Cursor fallback — see test.md §E.5; MAY defer 24h per ADR-0008 §S3) |
+| Verify Cross-vendor | DEFERRED per ADR-0008 §S3 (Codex `gpt-5.5-thinking effort=medium` primary / Cursor fallback — see test.md §E.5; joins accumulated Web smoke batch before next xai-web-deploy-cloudflare ship) |
 | Automation Mode | A-Claude (default; pickable at feature-build dispatch) |
-| Executor | claude-sonnet-4-6 — feature-auto-build |
-| Updated | 2026-05-28 14:20 |
+| Executor | claude-sonnet-4-6 — ship |
+| Updated | 2026-05-28 |
 | Roadmap Manifest | docs/workflow/roadmap/xai-web-dashboard-stickies-create.md (row #1, NEEDS_REVIEW) |
 | Authority Anchor | ADR-0010 §D4 — P0 carve-out `docs/reviews/_p0-carve-outs/20260528-dashboard-stickies-create.md` (commit `baaf3e1`) |
 | Audit Trigger | docs/reviews/_web-noop-audit/20260527-button-action-inventory.md Top-10 #6 (D-21) — LAST Top-10 item |
@@ -462,3 +462,51 @@ Sanity-checked against source: `StickiesWidget.tsx` (no-op `+`, `data-no-drag`, 
 | 2026-05-28 14:10 | claude-sonnet-4-6 — feature-auto-build | **SP2**: StickyComposer native `<dialog>` (textarea + 5-preset radiogroup + Save/Cancel; ESC/backdrop/autofocus/aria-modal/aria-labelledby/aria-checked) + local STR table (14 bilingual keys, 0 plugin-web-tokens edit) + styles.css .sticky-composer* + .sticky-del + .sticky--sample blocks + AC-COMPOSER-1..9 (10 tests). 114/114 green. | a1f8ce9 | SP3 |
 | 2026-05-28 14:15 | claude-sonnet-4-6 — feature-auto-build | **SP3**: Wire StickiesWidget + button → StickyComposer → useStickies; type-discriminated render (empty-store: fixture samples n.text[lang]+n.color raw hex; user-sticky: s.text+STICKY_COLORS[s.color]); per-sticky × delete (.sticky-del+data-no-drag); fixture samples carry data-sample=true + no .sticky-del (RS4/RS6 covered). AC-STICKIES-1..3 re-homed under empty-store branch + AC-STICKIES-CREATE-1..8 + AC-HOOK-1..4. 126/126 green. @repo/web 128/128 green. build green (138.67KB css, 5.29s). | 4f2bf24 | SP4 |
 | 2026-05-28 14:20 | claude-sonnet-4-6 — feature-auto-build | **SP4**: Docs sync (dev_log §E Status Panel → READY_FOR_VERIFY + Work Log entries). Barrel confirmed unchanged (dashboardWidgetRegistrations only; index-barrel.test.ts 2/2 still asserts single export). All cumulative quality gates pass: 126/126 widget tests, 96/96 storage tests, 128/128 web tests, build green, tsc clean, eslint --max-warnings 0 clean. ADR-0008 §S3 cross-vendor deferral applies (Codex primary / Cursor fallback; smoke deferred up to 24h). Status → READY_FOR_VERIFY. | (this doc commit) | feature-verify |
+| 2026-05-28 14:35 | claude-opus-4-8 — feature-verify | **PASS** — 16/16 verify gates clean. Commit lineage linear + per-phase (`baaf3e1` carve-out → `5b1a8e9` SP1 → `a1f8ce9` SP2 → `4f2bf24` SP3 → `103d06b` SP4 docs → `74e69b4` docs); NO Matrix-style detour. Tests re-run independently: widgets **126/126** (23 files), storage **96/96** (incl. 4 AC-REGISTRY-STICKIES), web **128/128**, web build green (880 modules / 138.67KB css), tsc clean (widgets+storage), eslint --max-warnings 0 clean. Carve-out §5 acceptance anchor (create+persist+delete+delete-persist) covered by AC-STICKIES-CREATE-1/2/3/4/6/7 + AC-HOOK-1..4. OQ6 type-discriminated render verified at source: fixture path `n.color` raw hex + `n.text[lang]`; user path `STICKY_COLORS[s.color]` + `s.text` single-string (explicit code comments). RS6 fixture-read-only (3 data-sample, 0 .sticky-del) + RS4 string-not-bilingual + RS5 composer-survives-tick + RS8 CSS-namespace all covered. Boundary守约: 0 packages/core, 0 plugin-web-tokens edit (local STR only), 0 other-plugin src (tasks/matrix/calendar), 0 supabase, 0 ADR/archive, 0 dev branch. Registry: exactly 1 additive key + 2 parity arrays + AC; DESIGN.md §9.2 untouched (exclusion-list-only per calendar precedent). Barrel single-export (AC-PKG-4). §S9 CSS guard 0 `.widget*` redefinition. Manifest correctly stays Stable (extension to SHIPPED row #11 slot). 4 non-blocking residuals (R-1 CREATE-7 spec-label drift / R-2 composer inline-error hard-coded / R-3 SP4 commit-msg manifest imprecision / R-4 cross-vendor deferred). Status → READY_TO_SHIP. | — | ship |
+| 2026-05-28 | claude-sonnet-4-6 — ship | **SHIPPED** — Shipping gate PASS. Status READY_TO_SHIP confirmed. Commit audit: 6 commits ahead of origin/web (`baaf3e1` carve-out + `5b1a8e9` SP1 + `a1f8ce9` SP2 + `4f2bf24` SP3 + `103d06b` SP4 + `74e69b4` docs). R-3 cosmetic (SP4 msg says "manifest + barrel"; only dev_log.md changed — manifest correctly stays Stable). Verify report (feature-verify content) committed in this ship-flip commit. git push origin web confirmed. Top-10 10/10 SHIPPED (Audit Top-10 #6 = LAST). R-4 cross-vendor smoke joins accumulated Web smoke batch. R-1 + R-2 recorded as cosmetic fast-follow candidates. dev_log §E Status → SHIPPED / Suggested Next → — (workflow complete). | this commit | — |
+
+## §E Verify Report (2026-05-28, claude-opus-4-8 — feature-verify)
+
+**Verdict**: PASS (16/16 gates) — READY_TO_SHIP. Independent re-run; commit lineage cross-checked against `git log` (linear, NOT the Matrix-style detour the brief warned about).
+
+### Gate-by-gate
+
+| # | Gate | Result | Evidence |
+|---|---|---|---|
+| 1 | Commit lineage per-phase, single intent | PASS | `baaf3e1`(carve-out) → `5b1a8e9`(SP1) → `a1f8ce9`(SP2) → `4f2bf24`(SP3) → `103d06b`(SP4 docs) → `74e69b4`(docs). Each commit's file-set matches its phase plan; no foreign content. |
+| 2 | Commit messages per COMMIT_CONVENTION.md | PASS | All carry `type(scope): summary` + Why/What/Scope/Risk/Docs/Tests. (R-3: SP4 msg mentions "manifest + barrel" but only dev_log.md changed — cosmetic, manifest correctly unchanged.) |
+| 3 | Carve-out §5 acceptance — CREATE chain | PASS | AC-STICKIES-CREATE-1: click `+` → fill textarea → Save → samples gone + user sticky with text. |
+| 4 | Carve-out §5 acceptance — persist on refresh | PASS | AC-STICKIES-CREATE-7 (create→rerender same localStorage→sticky shows) + AC-HOOK-3 (real `xai_dashboard_stickies` key written). |
+| 5 | Carve-out §5 acceptance — DELETE + delete-persist | PASS | AC-STICKIES-CREATE-3 (.sticky-del present) + CREATE-6 (delete→fixture-revert) + AC-HOOK-2/4 (remove + key reverts to `{}` via same usePref write path). |
+| 6 | OQ6 type-discriminated render (flagged risk) | PASS | StickiesWidget.tsx: `hasUserStickies` branch → `STICKY_COLORS[s.color]` + `s.text`; else branch → `n.color` raw hex (commented "NOT STICKY_COLORS") + `n.text[lang]`. AC-CREATE-4 asserts user text renders raw at `lang="zh"`. |
+| 7 | Fixture samples read-only (RS6) | PASS | AC-CREATE-2: 3 `[data-sample='true']`, 0 `.sticky-del`. |
+| 8 | Composer dialog + a11y (AC-COMPOSER-1..9) | PASS | open/close, Cancel→onClose, empty-text validation, trimmed Save, radiogroup default sun + 5 chips aria-checked toggle, aria-modal + aria-labelledby, reset-on-reopen, bilingual STR parity. |
+| 9 | SP1 store purity (AC-STORE-1..7) | PASS | createSticky immutable spread; deleteSticky same-ref on miss; listStickies createdAt-ASC + id-tiebreak + `[]` on `{}`. |
+| 10 | createStickyId (AC-IDS-1..3) | PASS | crypto.randomUUID + `sticky-` fallback; 100 unique. |
+| 11 | Registry: 1 additive key + 2 parity arrays | PASS | `xai_dashboard_stickies` byte-parallel to `xai_calendar_events` (codec json/default `{}`/owner xai-web-dashboard-widgets/category module/schemaVersion 1/no `proposed`); added to OWNER_ROW_ADDITIONS + OWNER_ROW_EXEMPT_KEYS; AC-REGISTRY-STICKIES-1/2 + AC-REG-8 auto-derive. DESIGN.md §9.2 untouched. |
+| 12 | Barrel single-export (AC-PKG-4) | PASS | `Object.keys(Barrel).sort() === ["dashboardWidgetRegistrations"]`; StickyComposer/useStickies/UserSticky stay internal. |
+| 13 | §S9 CSS guard + RS8 namespace | PASS | 0 `.widget`/`.widget-shell`/`.widget-content` redefinition; new classes namespaced `.sticky-composer*`/`.sticky--sample`/`.sticky-del`; base `.sticky`/`.sticky-stack` preserved. |
+| 14 | Boundary discipline | PASS | Full file-set grep: 0 packages/core, 0 plugin-web-tokens edit, 0 other-plugin src (tasks/matrix/calendar), 0 supabase, 0 ADR/archive, 0 dev branch. |
+| 15 | Regression — SHIPPED widgets + web | PASS | widgets 126/126 (SHIPPED 93 + AC-STICKIES re-homed under empty-store branch, no loss); web 128/128 (shellRegistrations.integration 8/8 = AC-HOST-3). |
+| 16 | Build + tsc + lint | PASS | web build green (880 modules / 138.67KB css); tsc clean widgets+storage; eslint --max-warnings 0 clean (widgets). |
+
+### Test totals (independently re-run 2026-05-28 14:21–14:23)
+
+- @repo/plugin-web-dashboard-widgets: **126 / 126** (23 test files)
+- @repo/plugin-web-storage: **96 / 96** (9 test files; incl. AC-REGISTRY-STICKIES-1/2)
+- @repo/web: **128 / 128** (24 test files)
+- @repo/web build: 880 modules, 138.67KB css, 2.63s
+- tsc: clean (widgets + storage); ESLint --max-warnings 0: clean (widgets)
+
+### Residual risks (acceptable at ship-time, non-blocking)
+
+| ID | Risk | Status |
+|---|---|---|
+| R-1 | AC-STICKIES-CREATE-7 implements create-persist; test.md §E.2 labels CREATE-7 as delete-persist. Delete-persist covered structurally (AC-HOOK-2/4 + CREATE-6 + same usePref write path) but no single delete→remount→still-deleted assertion. | Cosmetic spec-label drift; functional guarantee sound. Optional follow-up: add explicit delete-persist integration test. |
+| R-2 | Composer inline-error text ("Note cannot be empty"/"内容不能为空") hard-coded in JSX, not in STR_STICKY_COMPOSER. | Still bilingual + works; minor consistency nit. |
+| R-3 | SP4 commit `103d06b` message says "manifest + barrel"; only dev_log.md changed (manifest correctly stays Stable; barrel confirmed-unchanged, not edited). | Cosmetic commit-message imprecision. |
+| R-4 | Cross-vendor manual smoke (Chrome/Safari/Firefox) deferred per ADR-0008 §S3. | Recorded; joins accumulated Web smoke batch before next xai-web-deploy-cloudflare ship. Non-blocking. |
+
+### Security note
+
+Local-only sticky notes (text + color preset persisted to localStorage via `usePref`). No auth/payment/secrets/external-input surface; no new external dependency; no network/Supabase. `security-skills-claude-code` trigger does not apply.
