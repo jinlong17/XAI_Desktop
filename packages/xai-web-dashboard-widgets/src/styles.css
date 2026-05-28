@@ -789,3 +789,134 @@
   font-size: 10px;
   color: var(--text-3);
 }
+
+/* ---------- StickyComposer ---------- */
+.sticky-composer {
+  border: none;
+  border-radius: 12px;
+  padding: 0;
+  max-width: 360px;
+  width: 100%;
+  background: transparent;
+}
+.sticky-composer::backdrop {
+  background: rgba(0, 0, 0, 0.35);
+}
+.sticky-composer-panel {
+  background: var(--bg-panel, #fff);
+  border-radius: 12px;
+  border: 1px solid var(--border-1);
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  min-width: 300px;
+}
+.sticky-composer-title {
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--text-1);
+  margin: 0;
+}
+.sticky-composer-field {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+.sticky-composer-label {
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--text-2);
+}
+.sticky-composer-textarea {
+  resize: vertical;
+  border-radius: 8px;
+  border: 1px solid var(--border-1);
+  background: var(--bg-panel-2, var(--bg-panel));
+  color: var(--text-1);
+  font-size: 13px;
+  padding: 8px 10px;
+  font-family: inherit;
+  line-height: 1.5;
+}
+.sticky-composer-textarea:focus {
+  outline: 2px solid var(--accent, oklch(65% 0.18 250));
+  outline-offset: 1px;
+}
+.sticky-composer-error {
+  font-size: 11px;
+  color: var(--red, oklch(60% 0.18 25));
+}
+.sticky-composer-colors {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+.sticky-composer-chip {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  border: 2px solid transparent;
+  cursor: pointer;
+  padding: 0;
+  transition: border-color 0.15s;
+}
+.sticky-composer-chip.selected,
+.sticky-composer-chip[aria-checked="true"] {
+  border-color: var(--text-1);
+}
+.sticky-composer-chip:focus-visible {
+  outline: 2px solid var(--accent, oklch(65% 0.18 250));
+  outline-offset: 2px;
+}
+.sticky-composer-actions {
+  display: flex;
+  gap: 8px;
+  justify-content: flex-end;
+}
+.sticky-composer-btn {
+  padding: 6px 14px;
+  border-radius: 7px;
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+  border: 1px solid var(--border-1);
+}
+.sticky-composer-btn--cancel {
+  background: var(--bg-panel-2, transparent);
+  color: var(--text-2);
+}
+.sticky-composer-btn--save {
+  background: var(--accent, oklch(65% 0.18 250));
+  color: #fff;
+  border-color: transparent;
+}
+.sticky-composer-btn--save:hover {
+  opacity: 0.9;
+}
+
+/* ---------- User stickies (SP3 wire) ---------- */
+.sticky--sample {
+  opacity: 0.75;
+}
+.sticky-del {
+  position: absolute;
+  top: 4px;
+  right: 4px;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  border: none;
+  background: rgba(0,0,0,0.15);
+  color: var(--text-1);
+  font-size: 11px;
+  line-height: 1;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+}
+.sticky-del:hover {
+  background: rgba(0,0,0,0.3);
+}
