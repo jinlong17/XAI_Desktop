@@ -1,8 +1,8 @@
 /**
  * aboutPane — Settings → About pane.
  *
- * Static render. Logo, version (hard-coded v1 per Frozen Assumption #9), build
- * date, bilingual description, and 4 link buttons (no-op v1).
+ * Static render. Logo, runtime version, bilingual description, and 4 link
+ * buttons (no-op v1).
  *
  * Port of web design/module-settings.jsx lines 1015-1034.
  * API contract: packages/xai-web-settings-rest/docs/api.md §4.11
@@ -17,16 +17,20 @@ import {
 } from "@repo/desktop-auto-update-release-channel/web";
 import { localI18n } from "../internal/localI18n.js";
 
-// Hard-coded per Frozen Assumption #9.
-// Future row may wire via Vite define (import.meta.env.VITE_APP_VERSION).
-const APP_VERSION = "v 1.2.0";
-const BUILD_DATE = "2026.05.23";
+function formatRuntimeVersion(rawVersion: string): string {
+  const trimmed = rawVersion.trim();
+  if (trimmed.length === 0 || trimmed.toLowerCase() === "unknown") {
+    return "v unknown";
+  }
+  return trimmed.toLowerCase().startsWith("v") ? trimmed : `v ${trimmed}`;
+}
 
 function AboutPaneContent({ lang }: PaneRenderProps): React.ReactElement {
   const { s } = useI18n(lang);
   const t = localI18n(lang);
   const updaterSnapshot = useDesktopUpdaterSnapshot();
   const { check } = useDesktopUpdaterActions();
+  const runtimeVersion = formatRuntimeVersion(updaterSnapshot.currentVersion);
 
   const canCheck = updaterSnapshot.availability !== "disabled" && updaterSnapshot.availability !== "checking";
   const statusText = t(`about.updaterAvailability.${updaterSnapshot.availability}`);
@@ -44,9 +48,7 @@ function AboutPaneContent({ lang }: PaneRenderProps): React.ReactElement {
         <div className="about-mark">XAI</div>
       </div>
       <h3>{t("about.title_en")}</h3>
-      <div className="about-ver mono">
-        {APP_VERSION} · build {BUILD_DATE}
-      </div>
+      <div className="about-ver mono">{runtimeVersion}</div>
       <p className="about-desc">{t("about.desc_en")}</p>
       <div className="about-links">
         <a className="link" role="button" tabIndex={0} aria-label={t("about.changelog")}>

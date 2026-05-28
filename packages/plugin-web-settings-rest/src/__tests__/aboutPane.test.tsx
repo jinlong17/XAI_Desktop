@@ -37,10 +37,11 @@ describe("aboutPane", () => {
     expect(container.querySelector(".about-pane")).toBeTruthy();
   });
 
-  it("AB2: shows version string", () => {
+  it("AB2: renders runtime version from updater snapshot and rejects stale literals", () => {
     render(aboutPane.render({ lang: "en" }));
-    expect(screen.getByText(/v 1\.2\.0/)).toBeInTheDocument();
-    expect(screen.getByText(/2026\.05\.23/)).toBeInTheDocument();
+    expect(screen.getByText("v 1.0.0-rc.1")).toBeInTheDocument();
+    expect(screen.queryByText(/v 1\.2\.0/)).not.toBeInTheDocument();
+    expect(screen.queryByText(/2026\.05\.23/)).not.toBeInTheDocument();
   });
 
   it("AB3: bilingual — EN shows English description", () => {
