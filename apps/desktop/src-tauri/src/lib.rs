@@ -88,6 +88,8 @@ impl Default for ConsoleWindowFrameState {
 pub fn run() {
     const DESKTOP_NOTIFICATION_ADAPTER_SCRIPT: &str =
         include_str!("desktop_notification_adapter.js");
+    const DESKTOP_STATUSBAR_ADAPTER_SCRIPT: &str =
+        include_str!("desktop_statusbar_adapter.js");
 
     let builder = tauri::Builder::default()
         .plugin(tauri_plugin_opener::init())
@@ -159,6 +161,7 @@ pub fn run() {
 
             commands::statusbar::install_statusbar(&app_handle)?;
             window.eval(DESKTOP_NOTIFICATION_ADAPTER_SCRIPT)?;
+            window.eval(DESKTOP_STATUSBAR_ADAPTER_SCRIPT)?;
 
             let loaded_config = app_config::load_config_or_default(&app_handle)?;
             let restored_state =

@@ -11,6 +11,7 @@ import {
   createRestRpcDeviceTransport
 } from "@repo/web-auth-device-session/web";
 import { DesktopNativeNotificationsBridge } from "@repo/desktop-native-notifications-reminders/web";
+import { DesktopStatusbarQuickActionsBridge } from "@repo/desktop-statusbar-quick-actions/web";
 
 type WebAuthMode = "live" | "mock-authenticated" | "mock-unauthenticated";
 type MockAuthSession = {
@@ -299,12 +300,16 @@ export function AppProviders({ children }: PropsWithChildren) {
       {transport ? (
         <DeviceSessionBridge transport={transport}>
           <TodoWebRuntimeBridge>
-            <DesktopNativeNotificationsBridge>{children}</DesktopNativeNotificationsBridge>
+            <DesktopNativeNotificationsBridge>
+              <DesktopStatusbarQuickActionsBridge>{children}</DesktopStatusbarQuickActionsBridge>
+            </DesktopNativeNotificationsBridge>
           </TodoWebRuntimeBridge>
         </DeviceSessionBridge>
       ) : (
         <TodoWebRuntimeBridge>
-          <DesktopNativeNotificationsBridge>{children}</DesktopNativeNotificationsBridge>
+          <DesktopNativeNotificationsBridge>
+            <DesktopStatusbarQuickActionsBridge>{children}</DesktopStatusbarQuickActionsBridge>
+          </DesktopNativeNotificationsBridge>
         </TodoWebRuntimeBridge>
       )}
     </WebAuthSessionProvider>
