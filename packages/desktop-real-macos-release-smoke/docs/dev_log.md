@@ -8,13 +8,13 @@
 | Target | desktop-real-macos-release-smoke |
 | Title | Real macOS Release Smoke Gate |
 | Current Phase | FEATURE_BUILD |
-| Status | APPROVED |
+| Status | BLOCKED |
 | Suggested Next | feature-auto-build |
 | Automation Mode | B-Codex |
 | Verify Cross-vendor | yes |
 | Executor | feature-auto-build (Codex, gpt-5.3-codex inline) |
-| Updated | 2026-05-28 01:27 PDT |
-| Risks | This feature depends on real-hardware GUI evidence. Missing network/install/monitor-topology conditions must be classified as environment limits rather than misreported as repo blockers. If a repo defect reproduces, scope must stay limited to the minimal owning-surface fix and must not reopen broad Phase 1 implementation. |
+| Updated | 2026-05-28 01:31 PDT |
+| Risks | Blocked by environment-only residuals: this non-interactive run cannot execute or observe the required real-macOS GUI/manual checks (network-disabled launch, Finder drag-install launch from `/Applications`, native menu clicks, monitor-topology relaunch). No repo defect reproduced. |
 
 ## Roadmap Context
 
@@ -57,11 +57,13 @@ Status: DONE (`BLOCKED_ENVIRONMENT`)
 
 ### Phase 4 — Relaunch Across Monitor Topology Changes and Final Matrix
 
-Status: PLANNED
+Status: DONE (`BLOCKED_ENVIRONMENT`)
 
 - Validate relaunch behavior after a real topology change or documented equivalent hardware scenario.
 - Confirm safe restore or fallback-to-default behavior.
 - Publish the final four-row residual matrix with no unclassified items remaining.
+- Evidence: `docs/reviews/desktop-real-macos-release-smoke/20260528-phase4-monitor-topology-relaunch-and-final-matrix.md`
+- Classification: `BLOCKED_ENVIRONMENT`
 
 ## Review Notes
 
@@ -87,3 +89,4 @@ Recommendations for `feature-build`:
 | 2026-05-28 01:22 PDT | feature-auto-build (Codex, gpt-5.3-codex inline) | Phase 1 — created deterministic evidence artifact `20260528-phase1-network-disabled-bundled-app-launch.md`, regenerated fresh desktop artifacts on `dev`, and recorded exact provenance (build/test commands, hashes, mtimes, OS context). Manual residual classification is `BLOCKED_ENVIRONMENT` because this run is non-interactive and cannot provide trustworthy network-disabled GUI route observation. No repo defect reproduced; no product code changes. | TBD (phase-1 commit) | feature-auto-build (Phase 2) |
 | 2026-05-28 01:24 PDT | feature-auto-build (Codex, gpt-5.3-codex inline) | Phase 2 — created deterministic evidence artifact `20260528-phase2-drag-install-applications-launch.md`, validated DMG mount + payload (`X Desktop.app` plus `Applications` alias), and recorded provenance including DMG hash/mtime. Residual remains `BLOCKED_ENVIRONMENT` because a true Finder drag-install + launch from `/Applications` was not directly observable in this non-interactive session. No repo defect reproduced; no product code changes. | TBD (phase-2 commit) | feature-auto-build (Phase 3) |
 | 2026-05-28 01:27 PDT | feature-auto-build (Codex, gpt-5.3-codex inline) | Phase 3 — created deterministic evidence artifact `20260528-phase3-native-menu-interactions.md`, executed targeted Rust menu/config seam tests, and captured host config provenance. Residual remains `BLOCKED_ENVIRONMENT` because direct native menu interactions were not performed in this non-interactive session. No repo defect reproduced; no product code changes. | TBD (phase-3 commit) | feature-auto-build (Phase 4) |
+| 2026-05-28 01:31 PDT | feature-auto-build (Codex, gpt-5.3-codex inline) | Phase 4 — created deterministic evidence artifact `20260528-phase4-monitor-topology-relaunch-and-final-matrix.md`, ran targeted topology fallback contract tests, and published a final four-residual matrix with no unclassified items. All four residuals are `BLOCKED_ENVIRONMENT` due to missing interactive real-macOS execution conditions; no `BLOCKED_REPO` defect reproduced. | TBD (phase-4 commit) | feature-auto-build |
