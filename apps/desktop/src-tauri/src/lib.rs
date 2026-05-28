@@ -1,3 +1,4 @@
+mod app_config;
 mod app_menu;
 mod commands;
 mod crypto;
@@ -142,6 +143,14 @@ pub fn run() {
             let _ = window.set_shadow(true);
             let _ = window.set_resizable(true);
             let _ = window.set_always_on_top(false);
+
+            let loaded_config = app_config::load_config_or_default(&app_handle)?;
+            let restored_state = app_config::apply_main_window_state(&window, &loaded_config.window.main)?;
+
+            let mut normalized_config = loaded_config;
+            normalized_config.window.main = restored_state;
+            app_config::save_config(&app_handle, normalized_config)?;
+            app_config::attach_main_window_persistence(&window, app_handle);
 
             Ok(())
         })
