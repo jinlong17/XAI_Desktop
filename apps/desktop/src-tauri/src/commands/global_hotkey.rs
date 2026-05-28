@@ -97,6 +97,43 @@ fn default_snapshot() -> DesktopQuickOpenSnapshot {
     }
 }
 
+pub fn quick_open_is_default_active(snapshot: &DesktopQuickOpenSnapshot) -> bool {
+    snapshot.preference.enabled
+        && snapshot.preference.preset_id == DesktopQuickOpenPresetId::Default
+        && snapshot.preference.accelerator.as_deref() == Some(DEFAULT_ACCELERATOR)
+        && snapshot.runtime.state == DesktopQuickOpenRuntimeState::Ready
+}
+
+fn quick_open_default_active_from_config(config: &QuickOpenShortcutConfigV2) -> bool {
+    config.enabled
+        && config.preset_id == "default"
+        && config.accelerator.as_deref() == Some(DEFAULT_ACCELERATOR)
+}
+
+pub fn quick_open_menu_state_facts(app: &AppHandle<Wry>) -> (bool, bool) {
+    if let Some(state) = app.try_state::<DesktopQuickOpenState>() {
+        if let Ok(guard) = state.inner.lock() {
+            return (
+                guard.snapshot.preference.enabled,
+                quick_open_is_default_active(&guard.snapshot),
+            );
+        }
+    }
+
+    if let Ok(config) = app_config::load_quick_open_config(app) {
+        return (
+            config.enabled,
+            quick_open_default_active_from_config(&config),
+        );
+    }
+
+    let fallback = app_config::default_quick_open_config();
+    (
+        fallback.enabled,
+        quick_open_default_active_from_config(&fallback),
+    )
+}
+
 fn preference_to_config(preference: &DesktopQuickOpenPreference) -> QuickOpenShortcutConfigV2 {
     QuickOpenShortcutConfigV2 {
         preset_id: match preference.preset_id {
@@ -491,5 +528,34 @@ mod tests {
         );
         assert_eq!(snapshot.runtime.error_code.as_deref(), Some("conflict"));
         assert!(snapshot.runtime.recoverable);
+    }
+
+    #[test]
+    fn default_active_detection_requires_ready_runtime() {
+        let active = DesktopQuickOpenSnapshot {
+            preference: DesktopQuickOpenPreference {
+                preset_id: DesktopQuickOpenPresetId::Default,
+                accelerator: Some(DEFAULT_ACCELERATOR.to_string()),
+                enabled: true,
+            },
+            runtime: DesktopQuickOpenRuntime {
+                state: DesktopQuickOpenRuntimeState::Ready,
+                label: "Shortcut active".to_string(),
+                error_code: None,
+                recoverable: true,
+            },
+        };
+        assert!(quick_open_is_default_active(&active));
+
+        let conflict = DesktopQuickOpenSnapshot {
+            runtime: DesktopQuickOpenRuntime {
+                state: DesktopQuickOpenRuntimeState::Conflict,
+                label: "Shortcut unavailable (conflict)".to_string(),
+                error_code: Some("conflict".to_string()),
+                recoverable: true,
+            },
+            ..active
+        };
+        assert!(!quick_open_is_default_active(&conflict));
     }
 }
