@@ -12,6 +12,7 @@ import {
 } from "@repo/web-auth-device-session/web";
 import { DesktopNativeNotificationsBridge } from "@repo/desktop-native-notifications-reminders/web";
 import { DesktopStatusbarQuickActionsBridge } from "@repo/desktop-statusbar-quick-actions/web";
+import { DesktopGlobalHotkeyQuickOpenBridge } from "@repo/desktop-global-hotkey-quick-open/web";
 
 type WebAuthMode = "live" | "mock-authenticated" | "mock-unauthenticated";
 type MockAuthSession = {
@@ -301,14 +302,18 @@ export function AppProviders({ children }: PropsWithChildren) {
         <DeviceSessionBridge transport={transport}>
           <TodoWebRuntimeBridge>
             <DesktopNativeNotificationsBridge>
-              <DesktopStatusbarQuickActionsBridge>{children}</DesktopStatusbarQuickActionsBridge>
+              <DesktopGlobalHotkeyQuickOpenBridge>
+                <DesktopStatusbarQuickActionsBridge>{children}</DesktopStatusbarQuickActionsBridge>
+              </DesktopGlobalHotkeyQuickOpenBridge>
             </DesktopNativeNotificationsBridge>
           </TodoWebRuntimeBridge>
         </DeviceSessionBridge>
       ) : (
         <TodoWebRuntimeBridge>
           <DesktopNativeNotificationsBridge>
-            <DesktopStatusbarQuickActionsBridge>{children}</DesktopStatusbarQuickActionsBridge>
+            <DesktopGlobalHotkeyQuickOpenBridge>
+              <DesktopStatusbarQuickActionsBridge>{children}</DesktopStatusbarQuickActionsBridge>
+            </DesktopGlobalHotkeyQuickOpenBridge>
           </DesktopNativeNotificationsBridge>
         </TodoWebRuntimeBridge>
       )}

@@ -555,6 +555,88 @@
 .hotkeys-pane {
   padding: 16px;
 }
+.desktop-quick-open-section {
+  border: 1px solid var(--border, oklch(90% 0 0));
+  border-radius: 10px;
+  padding: 12px;
+  margin-bottom: 14px;
+  background: var(--panel, #fff);
+}
+.desktop-quick-open-section h4 {
+  margin: 0 0 6px;
+  font-size: 0.9rem;
+}
+.desktop-quick-open-desc {
+  margin: 0 0 10px;
+  font-size: 0.8rem;
+  color: var(--text-2, oklch(50% 0 0));
+}
+.desktop-quick-open-meta {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  margin-bottom: 8px;
+}
+.desktop-quick-open-label {
+  font-size: 0.8rem;
+  color: var(--text-2, oklch(50% 0 0));
+}
+.desktop-quick-open-status {
+  padding: 2px 8px;
+  border-radius: 999px;
+  font-size: 0.75rem;
+  border: 1px solid var(--border, oklch(82% 0 0));
+}
+.desktop-quick-open-status.ready {
+  color: oklch(50% 0.16 145);
+  background: oklch(97% 0.05 145);
+}
+.desktop-quick-open-status.disabled {
+  color: var(--text-2, oklch(50% 0 0));
+  background: oklch(97% 0 0);
+}
+.desktop-quick-open-status.error {
+  color: oklch(55% 0.18 20);
+  background: oklch(98% 0.04 20);
+}
+.desktop-quick-open-shortcut {
+  font-size: 0.78rem;
+  padding: 2px 6px;
+  border-radius: 6px;
+  background: oklch(96% 0 0);
+  border: 1px solid var(--border, oklch(88% 0 0));
+}
+.desktop-quick-open-select-wrap {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  margin-bottom: 10px;
+}
+.desktop-quick-open-select-wrap select {
+  border: 1px solid var(--border, oklch(85% 0 0));
+  border-radius: 8px;
+  padding: 7px 9px;
+  background: var(--panel, #fff);
+}
+.desktop-quick-open-actions {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 8px;
+}
+.desktop-quick-open-actions button {
+  border: 1px solid var(--border, oklch(82% 0 0));
+  border-radius: 8px;
+  padding: 6px 10px;
+  font-size: 0.78rem;
+  background: var(--panel, #fff);
+  cursor: pointer;
+}
+.desktop-quick-open-runtime-label {
+  margin: 0;
+  font-size: 0.78rem;
+  color: var(--text-2, oklch(50% 0 0));
+}
 .hk-list {
   list-style: none;
   padding: 0;

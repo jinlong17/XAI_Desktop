@@ -173,6 +173,9 @@ importers:
       '@repo/core':
         specifier: workspace:^
         version: link:../../packages/core
+      '@repo/desktop-global-hotkey-quick-open':
+        specifier: workspace:*
+        version: link:../../packages/desktop-global-hotkey-quick-open
       '@repo/desktop-native-notifications-reminders':
         specifier: workspace:*
         version: link:../../packages/desktop-native-notifications-reminders
@@ -365,6 +368,37 @@ importers:
       fake-indexeddb:
         specifier: ^6.2.5
         version: 6.2.5
+      typescript:
+        specifier: 5.9.2
+        version: 5.9.2
+      vitest:
+        specifier: ^3.2.1
+        version: 3.2.4(@types/node@24.12.4)(jsdom@26.1.0)
+
+  packages/desktop-global-hotkey-quick-open:
+    dependencies:
+      react:
+        specifier: ^19.2.0
+        version: 19.2.0
+    devDependencies:
+      '@repo/typescript-config':
+        specifier: workspace:*
+        version: link:../typescript-config
+      '@testing-library/react':
+        specifier: ^16.3.2
+        version: 16.3.2(@testing-library/dom@10.4.1)(@types/react-dom@19.2.2(@types/react@19.2.2))(@types/react@19.2.2)(react-dom@19.2.0(react@19.2.0))(react@19.2.0)
+      '@types/node':
+        specifier: ^24.10.1
+        version: 24.12.4
+      '@types/react':
+        specifier: 19.2.2
+        version: 19.2.2
+      '@types/react-dom':
+        specifier: 19.2.2
+        version: 19.2.2(@types/react@19.2.2)
+      react-dom:
+        specifier: ^19.2.0
+        version: 19.2.0(react@19.2.0)
       typescript:
         specifier: 5.9.2
         version: 5.9.2
@@ -1206,6 +1240,9 @@ importers:
       '@repo/core':
         specifier: workspace:*
         version: link:../core
+      '@repo/desktop-global-hotkey-quick-open':
+        specifier: workspace:*
+        version: link:../desktop-global-hotkey-quick-open
       '@repo/desktop-native-notifications-reminders':
         specifier: workspace:*
         version: link:../desktop-native-notifications-reminders
