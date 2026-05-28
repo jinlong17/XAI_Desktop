@@ -1252,3 +1252,100 @@ mock-authenticated / mock-unauthenticated）下都包裹 `<WebAuthSessionProvide
 | 2026-05-27 16:05 | claude-sonnet-4-6 — bug-auto-fix | **User Override Decision**: User selected Option C (confirmation modal + full sign-out wire) instead of diagnose-recommended Option B. Rationale recorded: Option C is more UX-complete (二次确认) and the user deemed the modal complexity acceptable given the existing dashboard-widget picker pattern. New component SignOutConfirmDialog.tsx is a necessary supporting artifact of this bug-fix, not a new feature surface. Implemented S1–S6 as a batch: **S1** (68645c0) — Added onSignOut?: () => void to ShellProps + AppRailProps in types.ts; Shell.tsx destructures + forwards to AppRail; AppRail.tsx forwards to AvatarMenu. 94/94 PASS (no new tests in S1 itself). **S2** (fb390de) — New SignOutConfirmDialog.tsx using native <dialog>; 2 new i18n keys in plugin-web-tokens (avatar.sign_out_confirm_title / body, EN+ZH); exported from index.ts; 8 new tests SOCD-1..8. 102/102 PASS. **S3** (aac2a5f) — AvatarMenu.tsx refactored: Sign Out onClick now setDialogOpen(true) when onSignOut wired; renders <SignOutConfirmDialog> inside popover; ESC guard skips when dialog open; dialog resets on popover close. Updated AvatarMenu.test.tsx: AV7/AV7b use scoped querySelector; new AV7c (dialog opens) / AV7d (confirm calls onSignOut) / AV7e (cancel does not call onSignOut). 105/105 PASS. **S4** (cbefa1d) — App.tsx wires handleSignOut via useWebAuthSession() (already provided by WebAuthSessionProvider in AppProviders); handleSignOut = best-effort signOut + clearSessionStorage + window.location.assign("/"); passes onSignOut={handleSignOut} to Shell. Added @repo/web-auth-device-session mock to 6 existing test files (shell.smoke, shell.theme, App.lazy-init, cmdkIntegration, router.integration, router-modules.integration). New App.signout.test.tsx: APP-SO1 (happy path) / APP-SO2 (call order) / APP-SO3 (best-effort network error) / APP-SO4 (null client). web 128/128 PASS. **S5** (339b0e2) — AppRail.test.tsx: renderRail helper gains onSignOut? override; new AR-SO1 (dialog opens, onSignOut not yet called) + AR-SO2 (backward-compatible no-onSignOut). Shell.smoke.test.tsx: new SH-SO1 (structural passthrough smoke: Shell onSignOut prop → dialog opens). 108/108 PASS. **S6** — dev_log updated (this entry), Status Panel flipped to FIX_READY_FOR_VERIFY. Final counts: xai-web-shell 108/108 (+14 vs baseline 94); web 128/128 (+4 vs baseline 124). Both TypeScript clean; xai-web-shell lint 0 warnings. | 68645c0 / fb390de / aac2a5f / cbefa1d / 339b0e2 | bug-verify |
 | 2026-05-27 15:55 | claude-opus-4-7[1m] — bug-verify | **PASS — verdict READY_TO_SHIP.** Verified 8 dimensions on commits 68645c0 / fb390de / aac2a5f / cbefa1d / 339b0e2 / ee6e150 (`web` branch). **(1) Original reproduction path**: full prop pipeline traced App.tsx:186 onSignOut={handleSignOut} → Shell.tsx:71 → AppRail.tsx:141 → AvatarMenu.tsx:42; AvatarMenu.tsx:126 `if (onSignOut) setDialogOpen(true)` opens confirm dialog (no longer DEV-warn-only); AvatarMenu.tsx:155 `onSignOut?.()` fires after dialog confirm; App.tsx:153-163 handleSignOut = best-effort signOut + clearSessionStorage + window.location.assign("/"). **(2) Regression**: Avatar Settings/Statistics paths (Shell.tsx:47-55 onAvatarOpenSettings/Statistics with source="shortcut"), 11 nav buttons in AppRail unaffected, Shell other props (lang/theme/density/onOpenSearch/premiumBadge) untouched, App.tsx other useState/lazy initializer (Tb-02/03/04 fix) preserved. **(3) Boundary**: APP-SO4 null client (mockSessionConfig.client = null) skips signOut + still clears + redirects; APP-SO3 network reject still clears + redirects (best-effort); AvatarMenu.tsx:54 ESC handler skips when dialog open; native <dialog> ESC fires `cancel` event → SignOutConfirmDialog.tsx:60 listener → onCancel; backdrop click via SignOutConfirmDialog.tsx:67 `e.target === dialogRef.current` → onCancel; SOCD-7/8 EN+ZH i18n strings verified; SSR safety via typeof localStorage guards in App.tsx readLocalPref. **(4) Cross sub-fix integration**: APP-SO1..4 + AV7c..e + AR-SO1/SO2 + SH-SO1 + SOCD-1..8 = 18 new tests collectively cover end-to-end flow App → Shell → AppRail → AvatarMenu → dialog → handleSignOut. **(5) Scope compliance**: `git diff 68645c0~..ee6e150` shows 20 files; `git diff --name-only` excludes packages/web-auth-device-session/, packages/plugin-web-storage/src/internal/registry.ts, packages/xai-web-event-bus/, packages/core/, docs/adr/, docs/PLUGIN_MAP.md, docs/workflow/roadmap/ (all empty); plugin-web-tokens i18n.ts: only 2 additive entries in EN+ZH avatar dict (sign_out_confirm_title / sign_out_confirm_body), no loader architecture change; no package.json or pnpm-lock.yaml diff = ZERO new npm deps. **(6) Test quality**: SOCD-1..8 assert open/close/confirm/cancel/ESC-cancel-event/backdrop-click/ZH-string/EN-string; AV7c/d/e assert dialog-open/confirm-calls-onSignOut/cancel-does-not-call-onSignOut; AR-SO1 asserts dialog opens via AppRail flow (onSignOut NOT yet called); SH-SO1 asserts Shell passthrough lights up the dialog; APP-SO1..4 assert end-to-end via real <App> render. Mock additions in 6 existing test files (App.lazy-init / shell.smoke / shell.theme / cmdkIntegration / router.integration / router-modules.integration) all use the identical minimal mock pattern (`client: null` + stub clearSessionStorage) — no over-mocking. **(7) Command verification**: `pnpm --filter @repo/xai-web-shell test` → **108/108 PASS** (9 files, 3.16s); `pnpm --filter @repo/web test` → **128/128 PASS** (24 files, 8.01s); `pnpm --filter @repo/plugin-web-tokens test` → **50/50 PASS** (4 files, 915ms); `pnpm --filter @repo/xai-web-shell check-types` → CLEAN; `pnpm --filter @repo/web check-types` → CLEAN; `pnpm --filter @repo/plugin-web-tokens check-types` → CLEAN; `pnpm --filter @repo/xai-web-shell lint` → 0 warnings (max-warnings 0). **(8) ADR-0010 §D4 compliance**: pure bug-fix; SignOutConfirmDialog is bug-fix supporting artifact (only consumed inside AvatarMenu — not promoted as standalone feature); no ADR/PLUGIN_MAP/roadmap change → **NO P0 carve-out commit required**. **Commit hygiene**: all 6 commits follow `type(scope): summary` format with full Why/What/Scope/Risk/Docs/Tests body + `Co-Authored-By: Claude Opus 4.7 (1M context)` trailer; each is single-intent; sequencing (types → component → wire → host → tests → docs) is correct. Status → READY_TO_SHIP, Suggested Next → ship. | — | ship |
 | 2026-05-27 16:10 | claude-sonnet-4-6 — ship | **SHIPPED.** Pre-push: wrapped bug-verify dev_log state into chore commit ad49472. Ran all 6 gate commands: @repo/xai-web-shell test → 108/108 PASS; @repo/web test → 128/128 PASS; @repo/plugin-web-tokens test → 50/50 PASS; @repo/xai-web-shell check-types → CLEAN; @repo/web check-types → CLEAN; @repo/plugin-web-tokens check-types → CLEAN. Commit hygiene: all 7 commits (68645c0 S1 + fb390de S2 + aac2a5f S3 + cbefa1d S4 + 339b0e2 S5 + ee6e150 S6-doc + ad49472 verify-chore) follow type(scope): summary + Why/What/Scope/Risk/Docs/Tests body + Co-Authored-By trailer; each is single-intent. git push origin web → 7426c41..ad49472. Flipped Bugfix Status Panel: Current Phase = SHIP, Status = SHIPPED. ADR-0010 §D4 compliance confirmed (pure bug-fix, no P0 carve-out required). PLUGIN_MAP unchanged (xai-web-shell already Stable). | 68645c0 + fb390de + aac2a5f + cbefa1d + 339b0e2 + ee6e150 + ad49472 | — (SHIPPED) |
+
+---
+
+## BUGFIX — AppRail bottom sync/notif/help 图标点击无反应（deceptive no-op，Audit Top-10 #8 / Rail-05/06/07）
+
+### Status Panel
+
+| Field | Value |
+|---|---|
+| Workflow | BUGFIX |
+| Target | xai-web-shell |
+| Title | AppRail bottom rail icons (sync / notif / help) render clickable but have no action — deceptive no-op (Audit Top-10 #8 / Rail-05/06/07) |
+| Current Phase | BUG_VERIFY |
+| Status | FIX_READY_FOR_VERIFY |
+| Suggested Next | bug-verify |
+| Automation Mode | A-Claude |
+| Verify Cross-vendor | yes — but Cross-vendor Manual Browser Smoke **Deferred** per ADR-0008 §S3 (24h-evidence pattern) + manifest "Cross-vendor Manual Browser Smoke Policy". Cold-read cross-vendor sufficient for this LOW-risk visual-only fix. |
+| Executor | claude-sonnet-4-6 — bug-fix |
+| Updated | 2026-05-28 17:00 |
+| ADR Anchor | ADR-0010 §D4 (BUGFIX needs no P0 carve-out) |
+| Branch | `web` (do NOT touch `dev`) |
+| Resume-mode INTAKE | **NOT SHIPPED.** `git log --all --grep` for `Top-10 #8` / `Rail-05` / `AppRail` / `rail icon` returns only the Rail-10 sign-out lineage (68645c0…ad49472) — a DIFFERENT bug. The earlier #10-sibling diagnosis (this dev_log line ~1229) explicitly DEFERRED Rail-05/06/07 as out-of-scope ("同根因的潜在 bug…本 fix 不动"). Audit inventory line 834 still lists #8 status as "HIDE pending feature scope" (un-actioned). Therefore this is a Fresh BUGFIX. |
+| Write Scope | `packages/xai-web-shell/src/AppRail.tsx` + `packages/xai-web-shell/src/__tests__/AppRail.test.tsx` + this dev_log section. NO other files for the recommended HIDE route. |
+
+### Reproduce
+
+1. `pnpm --filter web dev`, sign in, open any `/app/<module>` route (e.g. `/app/tasks`).
+2. Look at the bottom of the AppRail (the left vertical rail by default). Below the pet (paw) button there are three more icon buttons: a circular-arrows (sync) icon, a bell (notif) icon, and a question-mark (help) icon.
+3. Hover each → cursor becomes pointer + hover background lights up (`.rail-btn:hover` from `plugin-web-tokens/src/layout.css:69`) → they LOOK interactive.
+4. Click each (sync / notif / help) → **nothing happens.** No navigation, no event, no console output, no visual change.
+- **Expected**: a clickable-looking control either does something OR is not presented as actionable.
+- **Actual**: three controls carry full interactive affordances but are hard no-ops — deceptive.
+
+### Root Cause
+
+**Category: deceptive no-op / 视觉契约不一致 (visual-affordance ≠ behavior).**
+
+`AppRail.tsx:98-109` defines `bottomButtons: BottomButton[]`. Only `pet` (lines 100-105) has an `action`. `sync` (106), `notif` (107), `help` (108) are declared with `id` + `icon` but **no `action`** (the `action?` field in the `BottomButton` interface at line 26 is optional). The render loop at lines 185-196 binds `onClick={btn.action}` (line 191) and always applies `className="rail-btn has-tip"` (line 189). For the three actionless buttons, `onClick` receives `undefined`, so React renders a fully-styled, hoverable, focusable `<button>` whose click does nothing. There was never an intended target: sync→sync-v1 roadmap (P2 paused), notif→future feature (no backend), help→no doc target yet. These are leftover prototype scaffolding (port of `web design/shell.jsx`), not regressions.
+
+This is the same structural pattern flagged across the audit (no `href`/no `onClick` but full affordance); precedent #10 (About links) resolved its case via DISABLE + "Coming soon".
+
+### Fix Strategy — per-icon recommendation: **HIDE all three** (sync / notif / help)
+
+**Recommendation: HIDE (do NOT render the three actionless buttons). Same verdict for all three icons — no per-icon split.**
+
+Code-level (minimum scope): in `AppRail.tsx`, remove the three entries from the `bottomButtons` array so only `pet` remains (lines 106-108 deleted). The `.rail-bottom` group still renders (pet stays). No change to the render loop, the `BottomButton` interface (`action?` stays optional — harmless), icons.tsx (sync/bell/help paths can stay defined; they're just unused), types, or CSS.
+
+**Why HIDE over DISABLE (this is the load-bearing decision):**
+
+1. **DISABLE requires a CSS home this package does not own.** The DISABLE pattern from #10 needs a `cursor:not-allowed` + muted disabled-state rule. The rail's `.rail-btn` styling lives entirely in `packages/plugin-web-tokens/src/layout.css` — which is on the bug report's **do-not-touch list** (and on `dev`-conflict-risk). The shell package has **no `styles.css`** and **no local i18n module** of its own (confirmed: `find packages/xai-web-shell -name '*.css'` → none; no `localI18n`). So choosing DISABLE forces either (a) editing forbidden `plugin-web-tokens`, or (b) standing up a brand-new CSS+local-STR infra inside `xai-web-shell` just to style/label 3 dead icons — both blow the "最小化" mandate. #10 had it easy because `plugin-web-settings-rest` already shipped its own `styles.css` + `localI18n.ts`; the shell does not.
+2. **No "Coming soon" signal is warranted here.** notif/help have no roadmap commitment at all; sync maps to P2 (paused, no near-term ETA). A "Coming soon" tooltip would over-promise. About-links (#10) were plausibly-imminent legal/info pages — a different intent.
+3. **HIDE is strictly minimal & reversible.** Deleting three array literals is the smallest possible diff. Future re-introduction = add the entry back with a real `action` (and, if desired then, a DISABLE/tooltip treatment) — no infra to unwind.
+
+**Per-icon override considered & rejected:** the report allowed e.g. sync→DISABLE+ComingSoon while notif/help→HIDE. Rejected because even a single DISABLE icon still drags in the forbidden-CSS / new-infra problem in (1) for zero scope benefit, and sync has no ETA to advertise. Owner reviews this recommendation pre-ship.
+
+### Test Coverage Plan (≥3; update existing + add)
+
+Existing tests in `packages/xai-web-shell/src/__tests__/AppRail.test.tsx` that ENCODE the buggy behavior and MUST change:
+- **AR10** (line 184-189) currently asserts `.rail-bottom` has exactly **4** buttons and its header comment says "Sync/Notif/Help buttons are visible but no-op". After HIDE, update to assert exactly **1** button (pet only). Rename intent comment to "AC-RAIL-10: only the wired pet button renders in rail-bottom; actionless sync/notif/help removed".
+
+New / revised assertions:
+1. **AR10 (revised)** — `.rail-bottom` contains exactly 1 `<button>` (was 4).
+2. **AR10b (new)** — no rail-bottom button renders the `sync`, `bell`, or `help` icon (assert none of those three icon-bearing buttons exist; e.g. query `.rail-bottom button` and confirm length 1 + the single button is the pet/paw + active-toggle still wires via `onPetToggle`). Guards against the deceptive no-ops reappearing.
+3. **AR10c (new)** — the surviving pet button still works: clicking it calls `onPetToggle` once and gets `active` class when `petOn=true` (regression guard that HIDE did not break the one REAL bottom button). (Overlaps AR9b/AR9c — keep those; AR10c explicitly ties the guard to the post-HIDE single-button layout.)
+
+(AR9 line 160-166 "≥1 button" stays GREEN as-is; AR9b/AR9c pet behavior stay GREEN.)
+
+### Impact / Risk — **LOW**
+
+- **Frontend only**, single component, single package (`xai-web-shell`). No backend, no Rust, no Tauri.
+- **No contract change**: `AppRailProps` / `ShellProps` untouched; `BottomButton.action?` stays optional. No `@repo/core/events` change → zero `dev`-branch conflict surface (the report's key worry).
+- **No event bus, no persistence, no i18n, no CSS, no new files, no npm deps.**
+- **No cross-plugin / no manifest / no route / no ADR / no PLUGIN_MAP impact.** `xai-web-shell` stays Stable.
+- Visual change = three dead icons disappear from rail bottom; pet button unaffected. Accessibility improves (no more focusable dead buttons in tab order).
+- Reversible: re-add array entries with real actions later.
+
+### Boundary Constraints (locked at diagnose)
+
+- **MUST NOT touch**: `xai-web-console.md` / `xai-web-console-gap-closure.md` (SHIPPED archive); any ADR; `packages/core/src/types/events.ts`; `plugin-web-tokens` (incl. its `layout.css` + `i18n.ts`); any other plugin.
+- **MAY touch**: only `packages/xai-web-shell/src/AppRail.tsx` + `packages/xai-web-shell/src/__tests__/AppRail.test.tsx` + this dev_log Status Panel/Work Log. (HIDE route needs NO `styles.css` / NO local STR — those would only appear on a DISABLE route, which is rejected.)
+
+### Files to be Updated by bug-fix (estimate, HIDE route)
+
+- `packages/xai-web-shell/src/AppRail.tsx` — delete the 3 actionless entries (sync/notif/help) from `bottomButtons` (lines 106-108).
+- `packages/xai-web-shell/src/__tests__/AppRail.test.tsx` — revise AR10 (4→1) + add AR10b/AR10c.
+- `packages/xai-web-shell/docs/dev_log.md` — continue this BUGFIX section with bug-fix / bug-verify / ship Work Log entries; flip Status Panel.
+
+### Files Updated by bug-diagnose
+
+- `packages/xai-web-shell/docs/dev_log.md` — appended this BUGFIX section (Status Panel + reproduce + root cause + HIDE-vs-DISABLE recommendation + test plan + boundaries + file list).
+
+### Work Log
+
+| Timestamp | Executor | Action | Commits | Next Step |
+|---|---|---|---|---|
+| 2026-05-28 | claude-opus-4-8[1m] — bug-diagnose | Resume-mode INTAKE → NOT SHIPPED (only Rail-10 sign-out lineage exists; Rail-05/06/07 explicitly deferred by prior diagnosis + audit line 834 still "HIDE pending feature scope"). Reproduced deceptive no-op (sync/notif/help bottom icons clickable via `.rail-btn` affordance but `btn.action===undefined` at AppRail.tsx:106-108→onClick undefined at :191). Root cause = deceptive no-op / 视觉契约不一致 (leftover prototype scaffolding, optional `action?`). Fix strategy = **HIDE all three** (delete 3 array entries; pet stays) — DISABLE rejected because rail CSS lives in forbidden `plugin-web-tokens/layout.css` and shell owns no styles.css/local-i18n → DISABLE would force forbidden-file edit or new infra (violates 最小化); also notif/help have no roadmap + sync is P2-paused so "Coming soon" over-promises. Test plan: revise AR10 (4→1) + add AR10b (no sync/bell/help icons) + AR10c (pet still wired). Risk LOW (frontend-only, no contract/event/CSS/i18n/dep). Opened fresh BUGFIX Status Panel → FIX_READY, Suggested Next = bug-fix (single-step). | — | bug-fix (HIDE route; owner reviews HIDE-vs-DISABLE recommendation pre-ship) |
+| 2026-05-28 17:00 | claude-sonnet-4-6 — bug-fix (Fix mode) | Implemented HIDE route per diagnose strategy. **Goal**: remove 3 actionless bottomButtons entries (sync/notif/help) from AppRail.tsx; pet button retained; add 4 regression tests. **Done**: (1) Deleted `{ id: "sync", icon: "sync" }`, `{ id: "notif", icon: "bell" }`, `{ id: "help", icon: "help" }` from `bottomButtons` array in `AppRail.tsx` (lines 106-108 pre-fix). Added inline comment explaining the Rail-05/06/07 fix rationale. (2) Updated `AppRail.test.tsx` AR10 to assert `.rail-bottom` has exactly 1 button (was 4). (3) Added AR10a (sync absent), AR10b (notif absent), AR10c (help absent) — each queries `.rail-bottom button[data-tip="<id>"]` and asserts null. (4) Added AR10d (pet still present) — asserts exactly 1 button in rail-bottom with data-tip.toLowerCase() === "pet". (5) Ran `pnpm --filter @repo/xai-web-shell test` → **112/112 PASS** (was 108 before this fix; AR10 revised + 4 new tests added). Ran `pnpm --filter @repo/web test` → **128/128 PASS** (zero regressions). Ran `pnpm --filter @repo/xai-web-shell check-types` → **tsc clean**. Ran `pnpm --filter @repo/xai-web-shell lint` → **0 warnings** (eslint --max-warnings 0). **Commits**: `402d236` `fix(xai-web-shell): hide no-op AppRail sync/notif/help icons (Audit Top-10 #8)`. **Remaining risks**: Low — visual-only change, no API surface affected. Pet/module/AvatarMenu paths unchanged. Only manual cross-browser smoke (M13 pet button area) may warrant spot-check at verify time. **Status → FIX_READY_FOR_VERIFY, Suggested Next → bug-verify**. | `402d236` | bug-verify |
