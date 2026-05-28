@@ -9,7 +9,7 @@
  * API contract: packages/xai-web-pomodoro/docs/api.md §2.1
  */
 
-import React, { useMemo, useState, useRef } from "react";
+import React, { useEffect, useMemo, useState, useRef } from "react";
 import type { Lang } from "@repo/plugin-web-tokens";
 import { useI18n } from "@repo/plugin-web-tokens";
 import { usePref } from "@repo/plugin-web-storage";
@@ -30,6 +30,27 @@ import { IconChevR, IconDots, IconSound, IconSoundOff, IconPlus } from "./intern
 export interface PomodoroModuleProps {
   /** Active language. Drives useI18n bundle. */
   lang: Lang;
+}
+
+const DESKTOP_ACTION_PARAM = "desktopAction";
+const DESKTOP_ACTION_START_FOCUS = "start-focus";
+
+export function readDesktopPomodoroAction(
+  search: string,
+): "start-focus" | null {
+  const params = new URLSearchParams(search);
+  const action = params.get(DESKTOP_ACTION_PARAM);
+  if (action === DESKTOP_ACTION_START_FOCUS) {
+    return action;
+  }
+  return null;
+}
+
+function consumeDesktopPomodoroActionInUrl(search: string): string {
+  const params = new URLSearchParams(search);
+  params.delete(DESKTOP_ACTION_PARAM);
+  const next = params.toString();
+  return next.length > 0 ? `?${next}` : "";
 }
 
 export function PomodoroModule({ lang }: PomodoroModuleProps) {
@@ -246,6 +267,30 @@ export function PomodoroModule({ lang }: PomodoroModuleProps) {
       : lang === "zh"
         ? "准备开始"
         : "Ready";
+
+  useEffect(() => {
+    if (typeof window === "undefined") {
+      return;
+    }
+
+    const action = readDesktopPomodoroAction(window.location.search);
+    if (action !== DESKTOP_ACTION_START_FOCUS) {
+      return;
+    }
+
+    if (timerState.kind === "idle") {
+      start();
+    } else if (timerState.kind === "paused") {
+      resume();
+    }
+
+    const nextSearch = consumeDesktopPomodoroActionInUrl(window.location.search);
+    const currentUrl = `${window.location.pathname}${window.location.search}${window.location.hash}`;
+    const nextUrl = `${window.location.pathname}${nextSearch}${window.location.hash}`;
+    if (currentUrl !== nextUrl) {
+      window.history.replaceState({}, "", nextUrl);
+    }
+  });
 
   return (
     <div className="module module-pomo">

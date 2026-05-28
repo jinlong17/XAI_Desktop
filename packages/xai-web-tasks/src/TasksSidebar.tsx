@@ -49,11 +49,19 @@ const SMART_LISTS: Array<{ id: SmartListId; key: string; icon: string; count?: n
 
 export interface TasksSidebarProps {
   lang: Lang;
+  activeList?: string;
+  onActiveListChange?: (listId: string) => void;
 }
 
-export function TasksSidebar({ lang }: TasksSidebarProps) {
+export function TasksSidebar({
+  lang,
+  activeList: activeListProp,
+  onActiveListChange,
+}: TasksSidebarProps) {
   const { s } = useI18n(lang);
-  const [activeList, setActiveList] = useState<string>("all");
+  const [localActiveList, setLocalActiveList] = useState<string>("all");
+  const activeList = activeListProp ?? localActiveList;
+  const setActiveList = onActiveListChange ?? setLocalActiveList;
 
   return (
     <nav className="module-sidebar" aria-label={s("tasks.all")}>

@@ -8,7 +8,7 @@
  * API contract: packages/xai-web-tasks/docs/api.md §2.1
  */
 
-import React, { useMemo, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import type { TasksModuleProps, TaskCol, BucketId } from "./types.js";
 import { useI18n } from "@repo/plugin-web-tokens";
 import { usePref } from "@repo/plugin-web-storage";
@@ -19,6 +19,24 @@ import { TasksSidebar } from "./TasksSidebar.js";
 import { TaskColumn } from "./TaskColumn.js";
 
 export type { TasksModuleProps };
+
+const SMART_QUERY_KEY = "smart";
+
+export function readTasksSmartListFromSearch(search: string): "today" | null {
+  const params = new URLSearchParams(search);
+  const smart = params.get(SMART_QUERY_KEY);
+  if (smart === "today") {
+    return smart;
+  }
+  return null;
+}
+
+function consumeTasksSmartListInUrl(search: string): string {
+  const params = new URLSearchParams(search);
+  params.delete(SMART_QUERY_KEY);
+  const next = params.toString();
+  return next.length > 0 ? `?${next}` : "";
+}
 
 export function TasksModule({ lang }: TasksModuleProps) {
   const { s } = useI18n(lang);
@@ -39,6 +57,29 @@ export function TasksModule({ lang }: TasksModuleProps) {
 
   // ---- In-memory completion state (not persisted in v1) ----
   const [completedIds, setCompletedIds] = useState<ReadonlySet<string>>(new Set());
+  const [activeList, setActiveList] = useState<string>("all");
+
+  useEffect(() => {
+    if (typeof window === "undefined") {
+      return;
+    }
+
+    const smartList = readTasksSmartListFromSearch(window.location.search);
+    if (smartList === "today") {
+      setActiveList("today");
+    }
+
+    if (smartList === null) {
+      return;
+    }
+
+    const nextSearch = consumeTasksSmartListInUrl(window.location.search);
+    const currentUrl = `${window.location.pathname}${window.location.search}${window.location.hash}`;
+    const nextUrl = `${window.location.pathname}${nextSearch}${window.location.hash}`;
+    if (currentUrl !== nextUrl) {
+      window.history.replaceState({}, "", nextUrl);
+    }
+  }, []);
 
   function handleToggle(taskId: string) {
     setCompletedIds((prev) => toggleComplete(prev, taskId));
@@ -96,7 +137,11 @@ export function TasksModule({ lang }: TasksModuleProps) {
 
   return (
     <div className="module module-tasks">
-      <TasksSidebar lang={lang} />
+      <TasksSidebar
+        lang={lang}
+        activeList={activeList}
+        onActiveListChange={setActiveList}
+      />
       <main className="tasks-main">
         <header className="module-head">
           <div className="row">

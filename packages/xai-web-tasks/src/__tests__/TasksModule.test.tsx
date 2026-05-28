@@ -171,3 +171,20 @@ describe("TasksModule — T-MOD-6 drag hint while dragging", () => {
     expect(document.querySelector(".drag-hint")).toBeNull();
   });
 });
+
+describe("TasksModule desktop smart-list contract", () => {
+  it("selects today smart list when smart=today is present", () => {
+    window.history.replaceState({}, "", "/app/tasks?smart=today");
+    render(<TasksModule lang="en" />);
+
+    const todayRow = screen.getByText("Today").closest(".list-row");
+    expect(todayRow).toBeTruthy();
+    expect(todayRow?.getAttribute("data-active")).toBe("true");
+  });
+
+  it("consumes smart query token after applying today smart list", () => {
+    window.history.replaceState({}, "", "/app/tasks?smart=today");
+    render(<TasksModule lang="en" />);
+    expect(window.location.search).toBe("");
+  });
+});

@@ -211,4 +211,26 @@ describe("PomodoroModule", () => {
       }
     }
   });
+
+  it("desktopAction=start-focus starts focus when module is idle", () => {
+    window.history.replaceState({}, "", "/app/pomodoro?desktopAction=start-focus");
+    render(<PomodoroModule lang="en" />);
+    expect(screen.getByTestId("timer-state").textContent).toBe("Focusing");
+    expect(window.location.search).toBe("");
+  });
+
+  it("desktopAction=start-focus resumes focus when module is paused", () => {
+    window.history.replaceState({}, "", "/app/pomodoro");
+    const { rerender } = render(<PomodoroModule lang="en" />);
+
+    act(() => { fireEvent.click(screen.getByTestId("start-btn")); });
+    act(() => { fireEvent.click(screen.getByTestId("pause-btn")); });
+    expect(screen.getByTestId("timer-state").textContent).toBe("Paused");
+
+    window.history.replaceState({}, "", "/app/pomodoro?desktopAction=start-focus");
+    rerender(<PomodoroModule lang="en" />);
+
+    expect(screen.getByTestId("timer-state").textContent).toBe("Focusing");
+    expect(window.location.search).toBe("");
+  });
 });
