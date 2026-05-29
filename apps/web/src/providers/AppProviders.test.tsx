@@ -18,6 +18,13 @@ const storageMock = vi.hoisted(() => {
     getLastReport: vi.fn(() => null),
     reconnectPreflight: vi.fn(async () => "queue_empty"),
     runReconnect: vi.fn(async () => ({ preflight: "queue_empty", attempted: 0 })),
+    runCalendarReconnect: vi.fn(async () => ({
+      preflight: "queue_empty",
+      attemptedProviders: [],
+      reconciledProviders: [],
+      deferredProviders: [],
+      failures: [],
+    })),
   };
 });
 
@@ -52,6 +59,8 @@ vi.mock("@repo/plugin-web-storage", async (importOriginal) => {
     getDesktopLocalFirstWebDataImportReport: storageMock.getLastReport,
     getDesktopLocalFirstReconnectSyncPreflight: storageMock.reconnectPreflight,
     runDesktopLocalFirstReconnectSync: storageMock.runReconnect,
+    runDesktopLocalFirstCalendarProviderReconnect:
+      storageMock.runCalendarReconnect,
   };
 });
 
@@ -74,6 +83,7 @@ describe("AppProviders desktop auth contract", () => {
     storageMock.getLastReport.mockClear();
     storageMock.reconnectPreflight.mockClear();
     storageMock.runReconnect.mockClear();
+    storageMock.runCalendarReconnect.mockClear();
     delete (globalThis as { __XAI_DESKTOP_WEB_IMPORT__?: unknown }).__XAI_DESKTOP_WEB_IMPORT__;
     delete (globalThis as { __XAI_DESKTOP_RECONNECT_SYNC__?: unknown }).__XAI_DESKTOP_RECONNECT_SYNC__;
     setEnv("VITE_WEB_AUTH_MODE", undefined);
@@ -131,6 +141,7 @@ describe("AppProviders desktop auth contract", () => {
       __XAI_DESKTOP_RECONNECT_SYNC__?: {
         preflight: unknown;
         runOnce: unknown;
+        reconcileCalendarProviders: unknown;
       };
     };
     expect(runtime.__XAI_DESKTOP_WEB_IMPORT__).toBeTruthy();
@@ -139,5 +150,8 @@ describe("AppProviders desktop auth contract", () => {
     expect(runtime.__XAI_DESKTOP_RECONNECT_SYNC__).toBeTruthy();
     expect(runtime.__XAI_DESKTOP_RECONNECT_SYNC__?.preflight).toBe(storageMock.reconnectPreflight);
     expect(runtime.__XAI_DESKTOP_RECONNECT_SYNC__?.runOnce).toBe(storageMock.runReconnect);
+    expect(runtime.__XAI_DESKTOP_RECONNECT_SYNC__?.reconcileCalendarProviders).toBe(
+      storageMock.runCalendarReconnect,
+    );
   });
 });

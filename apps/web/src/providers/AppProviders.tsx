@@ -16,6 +16,7 @@ import { DesktopGlobalHotkeyQuickOpenBridge } from "@repo/desktop-global-hotkey-
 import { DesktopAutoUpdateReleaseChannelBridge } from "@repo/desktop-auto-update-release-channel/web";
 import {
   getDesktopLocalFirstReconnectSyncPreflight,
+  runDesktopLocalFirstCalendarProviderReconnect,
   getDesktopLocalFirstWebDataImportReport,
   mountDesktopLocalFirstRepositoryBridge,
   runDesktopLocalFirstReconnectSync,
@@ -317,6 +318,7 @@ export function AppProviders({ children }: PropsWithChildren) {
       __XAI_DESKTOP_RECONNECT_SYNC__?: {
         preflight: typeof getDesktopLocalFirstReconnectSyncPreflight;
         runOnce: typeof runDesktopLocalFirstReconnectSync;
+        reconcileCalendarProviders: typeof runDesktopLocalFirstCalendarProviderReconnect;
       };
     };
 
@@ -333,6 +335,7 @@ export function AppProviders({ children }: PropsWithChildren) {
     runtime.__XAI_DESKTOP_RECONNECT_SYNC__ = {
       preflight: getDesktopLocalFirstReconnectSyncPreflight,
       runOnce: runDesktopLocalFirstReconnectSync,
+      reconcileCalendarProviders: runDesktopLocalFirstCalendarProviderReconnect,
     };
 
     return () => {

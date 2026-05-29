@@ -43,6 +43,7 @@ export {
   patchDesktopLocalFirstCalendarProviderState,
   mountDesktopLocalFirstRepositoryBridge,
   getDesktopLocalFirstReconnectSyncPreflight,
+  runDesktopLocalFirstCalendarProviderReconnect,
   runDesktopLocalFirstWebDataImport,
   runDesktopLocalFirstReconnectSync,
   getDesktopLocalFirstWebDataImportReport,
@@ -56,6 +57,8 @@ export {
 export type {
   GetPrefAutosaveOptions,
   SetPrefAutosaveOptions,
+  DesktopCalendarProviderReconnectFailure,
+  DesktopCalendarProviderReconnectResult,
 } from "./internal/storage.js";
 export type { DesktopWebImportReport } from "./internal/desktopWebDataMigration.js";
 export type {
