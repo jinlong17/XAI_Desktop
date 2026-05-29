@@ -99,7 +99,6 @@ describe("migrateOrganizerLayoutToRepos", () => {
       unchanged: 0,
       skipped: 0,
       removedLegacy: false,
-      skipped: 0,
     });
 
     const grids = await gridRepo.list({
@@ -109,6 +108,7 @@ describe("migrateOrganizerLayoutToRepos", () => {
       expect.objectContaining({
         id: "grid-1",
         entityType: "organizer.grid",
+        syncScope: "device-local",
         title: "Today",
         viewMode: "grid",
         itemIds: ["item-1", "item-2"],
@@ -126,6 +126,7 @@ describe("migrateOrganizerLayoutToRepos", () => {
     expect(items.map((it) => it.id)).toEqual(["item-1", "item-2"]);
     expect(items[0]).toMatchObject({
       entityType: "organizer.item",
+      syncScope: "device-local",
       gridId: "grid-1",
       kind: "file",
       filepath: "/Users/me/draft.md",

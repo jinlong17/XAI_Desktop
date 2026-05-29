@@ -26,6 +26,7 @@ export function normalizeProjectEntityType(entityType: string): string {
 /** A floating Grid container ("Smart Container") on the desktop. */
 export interface GridEntity extends RepoRecord {
   entityType: "organizer.grid";
+  syncScope: "device-local";
   title: string;
   rect: {
     x: number;
@@ -43,6 +44,7 @@ export interface GridEntity extends RepoRecord {
 /** A typed item inside a Grid: file / folder / app / url. */
 export interface GridItemEntity extends RepoRecord {
   entityType: "organizer.item";
+  syncScope: "device-local";
   gridId: string;
   filename: string;
   /** Optional for non-fs items (e.g. URLs); required for file/folder/app. */

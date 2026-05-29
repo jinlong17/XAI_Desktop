@@ -2,31 +2,32 @@
   "name": "organizer",
   "version": "1.0.0",
   "displayName": "智能桌面整理",
-  "description": "Grid-based desktop file and app organization (overlay lifecycle is optional and hostMode-gated)",
+  "description": "Grid-based Smart Container file organizer mounted in the normal-window desktop runtime (overlay lifecycle is not required for row #20).",
   "author": "Jinlong",
   "enabled": true,
-  "contentTypes": ["file-grid", "app-grid", "folder-grid"],
+  "contentTypes": ["file-grid", "app-grid", "folder-grid", "normal-window-organizer"],
   "windows": {
-    "overlay": true,
-    "control": true,
-    "grid": true,
-    "console": true
+    "overlay": false,
+    "control": false,
+    "grid": false,
+    "console": false
   },
   "events": {
-    "emit": ["organizer:grid-update", "organizer:grid-close", "organizer:file-drop"],
-    "listen": ["organizer:grid-window-ready", "organizer:create-grid-request"]
+    "emit": [],
+    "listen": []
   },
   "dependencies": ["@repo/core", "@repo/ui"],
   "tauriCommands": [
-    "create_grid_window",
-    "update_grid_window",
-    "close_grid_window",
-    "list_grid_windows",
-    "focus_grid_window",
-    "open_console_window",
-    "close_console_window",
-    "focus_console_window",
-    "get_console_window_frame",
-    "set_console_window_frame"
+    "db_init",
+    "db_get",
+    "db_list",
+    "db_put",
+    "db_put_batch",
+    "db_delete",
+    "register_path_bookmark",
+    "clear_path_bookmark",
+    "reveal_in_finder",
+    "open_path",
+    "read_finder_tags"
   ]
 }

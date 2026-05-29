@@ -61,7 +61,7 @@ describe("file/folder/app factories", () => {
       schemaVersion: 1,
       createdAt: FIXED_NOW,
       updatedAt: FIXED_NOW,
-      syncScope: "account-sync",
+      syncScope: "device-local",
       gridId: "grid-1",
       filename: "report.md",
       filepath: "/Users/me/Documents/report.md",

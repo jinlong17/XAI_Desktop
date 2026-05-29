@@ -37,6 +37,7 @@ function gridFixture(id: string): GridEntity {
     ...BASE,
     id,
     entityType: "organizer.grid",
+    syncScope: "device-local",
     title: "Today",
     rect: { x: 0, y: 0, width: 240, height: 320 },
     isLocked: false,
@@ -51,6 +52,7 @@ function gridItemFixture(id: string): GridItemEntity {
     ...BASE,
     id,
     entityType: "organizer.item",
+    syncScope: "device-local",
     gridId: "grid-1",
     filename: "report.md",
     filepath: "/Users/me/Documents/report.md",
@@ -308,6 +310,28 @@ describe("Repo entities contract", () => {
     } as RepoRecord;
     expect(() => assertRepoRecord(cheating)).toThrowError(
       /E3005: calendar\.provider_state must be device-local, got "account-sync"/,
+    );
+  });
+
+  it("rejects organizer records with non-device-local syncScope at runtime", () => {
+    const badGrid: RepoRecord = {
+      ...BASE,
+      id: "grid-bad",
+      entityType: "organizer.grid",
+      syncScope: "account-sync",
+    } as RepoRecord;
+    expect(() => assertRepoRecord(badGrid)).toThrowError(
+      /E3005: organizer\.grid must be device-local, got "account-sync"/,
+    );
+
+    const badItem: RepoRecord = {
+      ...BASE,
+      id: "item-bad",
+      entityType: "organizer.item",
+      syncScope: "account-sync",
+    } as RepoRecord;
+    expect(() => assertRepoRecord(badItem)).toThrowError(
+      /E3005: organizer\.item must be device-local, got "account-sync"/,
     );
   });
 
