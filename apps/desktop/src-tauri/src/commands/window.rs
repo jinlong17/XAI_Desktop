@@ -1,3 +1,4 @@
+use crate::app_config::{self, DesktopHostMode};
 use tauri::{AppHandle, Manager, WebviewUrl, WebviewWindowBuilder};
 use crate::platform;
 
@@ -92,6 +93,35 @@ fn command_error(
         recoverable,
         details: None,
     }
+}
+
+fn host_mode_label(mode: DesktopHostMode) -> &'static str {
+    match mode {
+        DesktopHostMode::Normal => "normal",
+        DesktopHostMode::OverlayV2 => "overlay_v2",
+    }
+}
+
+fn overlay_disabled_error(active_mode: DesktopHostMode) -> CommandError {
+    CommandError {
+        code: "OVERLAY_MODE_DISABLED".to_string(),
+        message: "overlay lifecycle commands are disabled while hostMode is not overlay_v2"
+            .to_string(),
+        recoverable: true,
+        details: Some(serde_json::json!({
+            "requestedMode": "overlay_v2",
+            "activeMode": host_mode_label(active_mode),
+        })),
+    }
+}
+
+fn ensure_overlay_mode_enabled(app: &AppHandle) -> Result<(), CommandError> {
+    let mode = app_config::load_host_mode(app)
+        .map_err(|error| native_error(format!("Failed to read host mode: {error}")))?;
+    if mode == DesktopHostMode::OverlayV2 {
+        return Ok(());
+    }
+    Err(overlay_disabled_error(mode))
 }
 
 fn validate_grid_id(grid_id: &str) -> Result<(), CommandError> {
@@ -206,6 +236,7 @@ pub async fn create_grid_window(
     rect: GridWindowRect,
 ) -> Result<GridWindowSnapshot, CommandError> {
     ensure_window_command_allowed(window.label())?;
+    ensure_overlay_mode_enabled(&app)?;
     validate_grid_id(&gridId)?;
 
     println!("🪟 Creating grid window: {} at ({}, {}) size {}x{}",
@@ -274,6 +305,7 @@ pub async fn update_grid_window(
     rect: GridWindowRect,
 ) -> Result<GridWindowSnapshot, CommandError> {
     ensure_window_command_allowed(window.label())?;
+    ensure_overlay_mode_enabled(&app)?;
     update_grid_window_internal(app, gridId, rect).await
 }
 
@@ -331,6 +363,7 @@ pub async fn close_grid_window(
     gridId: String,
 ) -> Result<(), CommandError> {
     ensure_window_command_allowed(window.label())?;
+    ensure_overlay_mode_enabled(&app)?;
     validate_grid_id(&gridId)?;
 
     let label = grid_label(&gridId);
@@ -361,6 +394,7 @@ pub async fn list_grid_windows(
     app: AppHandle,
 ) -> Result<Vec<GridWindowSnapshot>, CommandError> {
     ensure_window_command_allowed(window.label())?;
+    ensure_overlay_mode_enabled(&app)?;
     let Some(state) = app.try_state::<GridWindowsState>() else {
         return Ok(Vec::new());
     };
@@ -383,6 +417,7 @@ pub async fn focus_grid_window(
     gridId: String,
 ) -> Result<GridWindowSnapshot, CommandError> {
     ensure_window_command_allowed(window.label())?;
+    ensure_overlay_mode_enabled(&app)?;
     validate_grid_id(&gridId)?;
 
     let label = grid_label(&gridId);
@@ -425,6 +460,7 @@ pub async fn open_console_window(
     app: AppHandle,
 ) -> Result<ConsoleWindowFrame, CommandError> {
     ensure_console_window_command_allowed(window.label())?;
+    ensure_overlay_mode_enabled(&app)?;
     let stored = read_console_frame(&app)?;
     validate_console_frame(&stored)?;
 
@@ -478,6 +514,7 @@ pub async fn close_console_window(
     app: AppHandle,
 ) -> Result<(), CommandError> {
     ensure_console_window_command_allowed(window.label())?;
+    ensure_overlay_mode_enabled(&app)?;
     let stored = read_console_frame(&app)?;
     if let Some(existing) = app.get_webview_window(CONSOLE_WINDOW_LABEL) {
         let live = capture_console_window_frame(&app, stored)?;
@@ -496,6 +533,7 @@ pub async fn focus_console_window(
     app: AppHandle,
 ) -> Result<ConsoleWindowFrame, CommandError> {
     ensure_console_window_command_allowed(window.label())?;
+    ensure_overlay_mode_enabled(&app)?;
     if app.get_webview_window(CONSOLE_WINDOW_LABEL).is_none() {
         return open_console_window(window, app).await;
     }
@@ -519,6 +557,7 @@ pub async fn get_console_window_frame(
     app: AppHandle,
 ) -> Result<ConsoleWindowFrame, CommandError> {
     ensure_console_window_command_allowed(window.label())?;
+    ensure_overlay_mode_enabled(&app)?;
     let stored = read_console_frame(&app)?;
     let live = capture_console_window_frame(&app, stored)?;
     write_console_frame(&app, live.clone())?;
@@ -533,6 +572,7 @@ pub async fn set_console_window_frame(
     frame: ConsoleWindowFrame,
 ) -> Result<ConsoleWindowFrame, CommandError> {
     ensure_console_window_command_allowed(window.label())?;
+    ensure_overlay_mode_enabled(&app)?;
     validate_console_frame(&frame)?;
 
     if let Some(existing) = app.get_webview_window(CONSOLE_WINDOW_LABEL) {
@@ -620,5 +660,15 @@ mod tests {
     fn console_frame_validation_accepts_default_frame() {
         let frame = default_console_frame();
         assert!(validate_console_frame(&frame).is_ok());
+    }
+
+    #[test]
+    fn overlay_disabled_error_includes_mode_details() {
+        let err = overlay_disabled_error(DesktopHostMode::Normal);
+        assert_eq!(err.code, "OVERLAY_MODE_DISABLED");
+        assert!(err.recoverable);
+        let details = err.details.expect("details should be present");
+        assert_eq!(details["requestedMode"], "overlay_v2");
+        assert_eq!(details["activeMode"], "normal");
     }
 }

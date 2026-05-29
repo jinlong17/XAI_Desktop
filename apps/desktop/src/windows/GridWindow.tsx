@@ -1,5 +1,6 @@
 import { MouseEvent as ReactMouseEvent, useCallback, useEffect, useMemo, useRef } from "react";
-import { emit, listen } from "@tauri-apps/api/event";
+import { listen } from "@tauri-apps/api/event";
+import { emitEvent } from "@repo/core/events";
 import { currentMonitor, getCurrentWindow, LogicalPosition } from "@tauri-apps/api/window";
 import { useTauriInvoke } from "@repo/core/hooks";
 import {
@@ -92,7 +93,7 @@ function GridWindowShell({ gridId }: { gridId: string }) {
     }
 
     lastEmittedRectRef.current = rect;
-    await emit(ORGANIZER_GRID_UPDATE_EVENT, {
+    await emitEvent(ORGANIZER_GRID_UPDATE_EVENT, {
       gridId,
       changes: { rect },
     });

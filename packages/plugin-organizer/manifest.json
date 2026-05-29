@@ -2,14 +2,15 @@
   "name": "organizer",
   "version": "1.0.0",
   "displayName": "智能桌面整理",
-  "description": "Grid-based desktop file and app organization",
+  "description": "Grid-based desktop file and app organization (overlay lifecycle is optional and hostMode-gated)",
   "author": "Jinlong",
   "enabled": true,
   "contentTypes": ["file-grid", "app-grid", "folder-grid"],
   "windows": {
     "overlay": true,
     "control": true,
-    "grid": true
+    "grid": true,
+    "console": true
   },
   "events": {
     "emit": ["organizer:grid-update", "organizer:grid-close", "organizer:file-drop"],
@@ -21,6 +22,11 @@
     "update_grid_window",
     "close_grid_window",
     "list_grid_windows",
-    "focus_grid_window"
+    "focus_grid_window",
+    "open_console_window",
+    "close_console_window",
+    "focus_console_window",
+    "get_console_window_frame",
+    "set_console_window_frame"
   ]
 }
