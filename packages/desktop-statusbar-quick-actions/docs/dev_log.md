@@ -7,18 +7,18 @@
 | Workflow | FEATURE_DEV |
 | Target | desktop-statusbar-quick-actions |
 | Title | Phase 2 Desktop Status Bar Quick Actions |
-| Current Phase | FEATURE_VERIFY |
-| Status | READY_FOR_VERIFY |
-| Suggested Next | feature-verify |
+| Current Phase | SHIP |
+| Status | SHIPPED |
+| Suggested Next | workflow complete |
 | Automation Mode | B-Codex |
 | Verify Cross-vendor | yes |
-| Executor | feature-auto-build (Codex, gpt-5.3-codex inline) |
-| Updated | 2026-05-28 03:28 PDT |
+| Executor | ship (Codex, gpt-5.3-codex) |
+| Updated | 2026-05-28 21:19 PDT |
 | Brief | `docs/reviews/desktop-statusbar-quick-actions/20260528-feature-brief.md` |
 | Discovery Review | `docs/reviews/desktop-statusbar-quick-actions/20260528-discovery-review.md` |
-| Risks | Real macOS hardware smoke is still required for final tray click/focus behavior and feature-toggle UX on physical hardware. |
+| Risks | Real macOS hardware smoke for tray click/focus behavior and feature-toggle UX on physical hardware remains a residual ship-time check; this verify pass covered automated gates only. |
 | Blockers | None. |
-| Review Notes | APPROVED. Discovery, design, API, and test artifacts align with current repo reality and the roadmap constraints. Keep implementation anchored to the existing browser-safe adapter pattern used by `desktop-native-notifications-reminders`, preserve `main`-window-only native scope, and treat `commands/menubar.rs` as prior art rather than the ownership boundary. |
+| Review Notes | PASS. Reviewed commits `b5469c11`, `a5e15032`, `32eb2dfb`, `a628d991`, `d1678ff5`, and `3c197ef5` against the approved design/api/test contracts and the repaired B1/B2 blockers. Automated gates passed, built `apps/web/dist` artifacts contained no public sourcemaps and no `@tauri-apps/api` / `__TAURI__` leakage, native scope stayed on the `main` window, and the quick-action route contracts were covered by tests. |
 
 ## Phase Plan
 
@@ -66,3 +66,5 @@ Status: DONE (verification gates complete; real-device manual smoke deferred to 
 | 2026-05-28 03:16 PDT | feature-auto-build (Codex, gpt-5.3-codex inline) | Phase 4 — Verification and Status Polish: executed feature verification gates (`pnpm --filter @repo/desktop-statusbar-quick-actions test`, `pnpm --filter @repo/plugin-web-pomodoro test`, `pnpm --filter @repo/plugin-web-tasks test`, `pnpm --filter @repo/web test AppProviders`, `pnpm --filter @repo/web build`, `cargo test --manifest-path apps/desktop/src-tauri/Cargo.toml`, `pnpm --filter desktop tauri build --debug --bundles app`) and browser-safety guard check (`rg -n \"@tauri-apps|__TAURI__\" apps/web/src packages/desktop-statusbar-quick-actions/src` → no matches). | — | feature-verify |
 | 2026-05-28 03:22 PDT | feature-verify (Codex, gpt-5 inline) | Verify pass BLOCKED. Reviewed commits `b5469c11`, `a5e15032`, `32eb2dfb`, and `a628d991` against the approved design/api/test contracts; re-ran package tests, `pnpm --filter @repo/web build`, `cargo test --manifest-path apps/desktop/src-tauri/Cargo.toml`, and `pnpm --filter desktop tauri build --debug --bundles app`. Main blockers: built browser artifact leak in `apps/web/dist/assets/index-D018yEHl.js.map` (`@tauri-apps/api` + `__TAURI__`) and verification/doc drift because Phase 4 only checked source-level cleanliness, not shipped sourcemaps. | `b5469c11`, `a5e15032`, `32eb2dfb`, `a628d991` | feature-build |
 | 2026-05-28 03:26 PDT | feature-auto-build (Codex, gpt-5.3-codex inline) | Repair pass for verify blockers B1/B2: enforced browser-safe shipped-artifact policy in `apps/web` build pipeline (default sourcemap disabled; secure release explicitly opts in hidden sourcemaps and still cleans them before artifact checks), added `browser-safety:assert-dist` scan over built `*.js`/`*.map`, added unit tests for sourcemap policy, and updated feature test/api docs so verification must include sourcemap-aware artifact gates rather than source-only grep. Evidence: `pnpm --filter @repo/web test -- src/config/sourcemapPolicy.test.ts` pass; `pnpm --filter @repo/web build` pass (`sourcemaps:assert-clean` + `browser-safety:assert-dist` pass); `rg -n "@tauri-apps/api|__TAURI__" apps/web/dist/assets/*.map` returns no matches because no `.map` files remain in shipped dist. | `d1678ff5` | feature-verify |
+| 2026-05-28 03:34 PDT | feature-verify (Codex, gpt-5 inline) | Verify pass PASS. Reviewed commits `b5469c11`, `a5e15032`, `32eb2dfb`, `a628d991`, `d1678ff5`, and `3c197ef5` for phase intent, commit-message convention, and contract alignment; re-ran `pnpm --filter @repo/desktop-statusbar-quick-actions test`, `pnpm --filter @repo/plugin-web-pomodoro test`, `pnpm --filter @repo/plugin-web-tasks test`, `pnpm --filter @repo/web test -- src/config/sourcemapPolicy.test.ts`, `pnpm --filter @repo/web test -- src/providers/AppProviders.test.tsx`, `pnpm --filter @repo/web build`, `pnpm --filter @repo/web run build:secure`, `cargo test --manifest-path apps/desktop/src-tauri/Cargo.toml`, and `pnpm --filter desktop tauri build --debug --bundles app`; independently confirmed no `@tauri-apps/api` / `__TAURI__` matches in `apps/web/dist` and no public `.map` files remained after both web build flows. | `b5469c11`, `a5e15032`, `32eb2dfb`, `a628d991`, `d1678ff5`, `3c197ef5` | ship |
+| 2026-05-28 21:19 PDT | ship (Codex, gpt-5.3-codex) | Ship gate passed: revalidated `READY_TO_SHIP` status and commit integrity for `b5469c11`, `a5e15032`, `32eb2dfb`, `a628d991`, `d1678ff5`, and `3c197ef5`; preserved unrelated dirty/untracked roadmap files; marked this feature and roadmap row #3 as SHIPPED; committed ship writeback; and pushed `dev` to `origin/dev`. Residual release risk remains real macOS tray click/focus behavior on physical hardware. | `b5469c11`, `a5e15032`, `32eb2dfb`, `a628d991`, `d1678ff5`, `3c197ef5` | workflow complete |
