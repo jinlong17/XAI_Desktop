@@ -1113,3 +1113,234 @@ remain PASS. No regression introduced by the fix. This is the last item-3 re-ver
 - **RR3 (events.ts `web:*` dev-branch merge surface, R5):** flagged; carries to the
   eventual main merge. `web:*` ≠ `dev`'s `desktop:*` — low conflict, REAL. NOT a blocker.
 
+---
+
+## Feature-Dev Lineage — AI Tool Layer Edit/Delete (2026-05-29)
+
+> APPEND-ONLY block. ALL prior Status Panels above (row #18 SHIPPED 2026-05-24,
+> the Real-LLM-Adapter SHIPPED lineage, AND the AI Tool Layer create-only SHIPPED
+> lineage 2026-05-29) record their baselines and are NOT mutated by this lineage.
+> This block tracks the new feature-dev cycle introduced by the
+> `xai-web-ai-tool-edit-delete` P0 carve-out (`e404a45`, ADR-0010 §D4) — extending
+> the SHIPPED create-only tool layer with edit + delete tools.
+
+### Lineage Status Panel
+
+| Field | Value |
+|---|---|
+| Workflow | FEATURE_DEV |
+| Target | xai-web-ai-tool-edit-delete |
+| Title | Extend SHIPPED create-only AI tool layer with edit/delete — 4 tools (delete_task/delete_calendar_event/update_task/update_calendar_event) + tasks deleteCard/updateCard pure reducer actions + reuse calendar updateEvent/deleteEvent + 4 per-op write event channels + owning-module mutate subscribers + context id exposure for targeting; delete phased before update |
+| Current Phase | FEATURE_VERIFY |
+| Status | READY_FOR_VERIFY |
+| Suggested Next | feature-verify |
+| Verify Cross-vendor | yes (per ADR-0010 §D4 P0 + carve-out default; primary Codex `gpt-5.x` cold-read, fallback Cursor) — real-LLM edit/delete tool round-trip + cross-vendor smoke DEFERRED 24h (operator, needs API key) per ADR-0008 §S3 / ADR-0009 §D2-G2, consistent with create-layer + gap-closure row #2 precedent |
+| Automation Mode | A-Claude (manual step-by-step per CLAUDE.md; planner does not pre-commit to a loop) |
+| Executor | claude-sonnet-4-6 (feature-auto-build P1-P4, 2026-05-29) |
+| Updated | 2026-05-29 16:30 |
+| Dispatched By | operator directive 2026-05-29 (first of two AI enhancements; openai-compatible tool support follows separately) |
+| Roadmap Manifest | `docs/workflow/roadmap/xai-web-ai-tool-edit-delete.md` |
+| Parent ADR | ADR-0010 §D4 (P0 maintenance carve-out) |
+| Carve-out | `docs/reviews/_p0-carve-outs/20260529-ai-tool-edit-delete.md` (commit `e404a45`) |
+| Predecessor lineage | `xai-web-ai-tool-layer` (SHIPPED 2026-05-29) — create-only v1 of this same tool layer |
+| Write Scope | **planning phase (this run)**: `packages/xai-web-ai-chat/docs/` + `docs/reviews/xai-web-ai-tool-edit-delete/` + `docs/workflow/roadmap/xai-web-ai-tool-edit-delete.md` ONLY. **build phases (later)** extend to `packages/plugin-web-ai-chat/src/{internal/toolRegistry.ts, internal/contextProvider.ts, ConfirmationCard.tsx, AiChatModule.tsx}/__tests__/` + `packages/core/src/types/events.ts` (+4 channels) + `packages/xai-web-tasks/src/{internal/tasksReducer.ts, internal/aiMutateSubscriber.ts, types.ts}/__tests__/` + `packages/xai-web-calendar/src/internal/aiMutateSubscriber.ts/__tests__/` + `apps/web/src/App.tsx` (+2 subscriber mounts) + `docs/PLUGIN_MAP.md` (row-note updates) |
+
+### Artifacts Index (this lineage)
+
+- Carve-out (authority + full scope): `docs/reviews/_p0-carve-outs/20260529-ai-tool-edit-delete.md`
+- Discovery review (recon confirmation + targeting id finding + 4 planner's calls): `docs/reviews/xai-web-ai-tool-edit-delete/20260529-discovery-review.md`
+- Manifest: `docs/workflow/roadmap/xai-web-ai-tool-edit-delete.md`
+- Design extension: `packages/xai-web-ai-chat/docs/design.md` §2026-05-29 Edit/Delete Extension (ED-1..ED-13)
+- API extension: `packages/xai-web-ai-chat/docs/api.md` §14
+- Test extension: `packages/xai-web-ai-chat/docs/test.md` §9
+
+### Decision Headline (this lineage)
+
+Extend the SHIPPED create-only tool layer with 4 edit/delete tools, **delete phased before update**, reusing the SHIPPED confirmation → write-event → Shell-sibling-subscriber → reducer path and ALL FOUR lifelines (no-silent-write, additive events, route-independent subscriber, bounded round-trip) without modification. `streamCompleteChat` signature is UNCHANGED (`StreamRequest` already carries `tools?`+`priorMessages?`); only the tool registry (2→6), the Confirm-handler channel branches, the event channels (+4 per-op), and the subscribers grow.
+
+**The critical pre-condition (🔴 targeting):** recon confirmed `contextProvider.ts` reads task/event ids into its narrowing types but does NOT render them into the injected text — so the model currently cannot target update/delete. Resolution: additively render a visible `(id: …)` token in task + calendar context lines (ED-2 / api §14.1). This is the prerequisite for edit/delete to work; CP-ID tests assert it.
+
+**Recon confirmed:** calendar `updateEvent` (preserves createdAt+id, bumps updatedAt) + `deleteEvent` (no-op if missing) ALREADY EXIST — reuse directly, zero new store code. tasks `tasksReducer.ts` has only moveCard/toggleComplete/addCard — needs new pure `deleteCard` + `updateCard` (preserve `done` [T-10] + all untouched fields, referential equality).
+
+**The anti-drift pivot (the prior-BLOCK lesson):** the create layer was BLOCKED once for docs/code drift (claimed round-trip not implemented). This lineage's test strategy (§test.md §9) asserts the EXACT documented reducer signatures (TR-DEL/TR-UPD) + the EXACT confirm-only emit (IT-DEL/IT-UPD) so feature-verify can mechanically diff doc-vs-code.
+
+### Phase Plan (4 phases — one `feature-build` run each)
+
+> Each phase is a single `feature-build` run; after each, feature-build stops for
+> human confirmation (CLAUDE.md). Delete phased before update (planner's-call #1):
+> P1+P2 land a complete delete capability before update's field-patch complexity.
+
+#### Phase P1 — Tasks reducer (deleteCard + updateCard) + 4 event channels + context id exposure
+
+**Scope**
+1. `packages/xai-web-tasks/src/internal/tasksReducer.ts`: add pure `deleteCard(prev, id)` + `updateCard(prev, id, patch)` (immutable; untouched columns by reference; `prev` unchanged on not-found/empty; `updateCard` preserves `done`+all untouched fields, never overwrites `id`). Add `TaskCardPatch` to `packages/xai-web-tasks/src/types.ts` (exported additively).
+2. `packages/core/src/types/events.ts`: add 4 EventMap entries (`web:tasks:update-requested`, `web:tasks:delete-requested`, `web:calendar:update-requested`, `web:calendar:delete-requested`) — additive, CARVE-OUT AUTHORIZED. Do NOT modify SHIPPED create / `web:ai:*` entries.
+3. `packages/plugin-web-ai-chat/src/internal/contextProvider.ts`: render `(id: …)` token in task + calendar lines (ED-2). Additive — titles/times/ordering/caps unchanged.
+4. Tests: TR-DEL-1..4, TR-UPD-1..7 (incl. preserve-done + referential-equality + no-mutate via deep-freeze), CP-ID-1..4 + CP-REG, CORE-ED-1 typecheck.
+
+**DoD:** `pnpm --filter @repo/plugin-web-tasks test` + `--filter @repo/plugin-web-ai-chat test` + `--filter @repo/core typecheck` green; reducer + context + 4 channels land; create path regression green.
+**Commit:** `feat(plugin-web-tasks+ai-chat+core): P1 tasks deleteCard/updateCard + 4 mutate channels + context id exposure (xai-web-ai-tool-edit-delete)`
+
+#### Phase P2 — Delete tools + destructive confirmation + delete subscribers + round-trip
+
+**Scope**
+1. `toolRegistry.ts`: add `delete_task` + `delete_calendar_event` (input_schema `{id}`; `toConfirmation` returns `{ label, description, tone:"destructive" }`; create/update return `tone:"default"`); add additive `tone?: "default" | "destructive"` to the `ConfirmationSpec` interface (the SINGLE tone seam — §14.2); widen `WriteEventSpec.channel` union (+4 channels).
+2. `ConfirmationCard.tsx`: read `spec.tone` (default `"default"`) and apply the destructive affordance when `spec.tone==="destructive"`; `ConfirmationCardProps` UNCHANGED (no separate `tone` prop); default/omitted tone = SHIPPED markup byte-for-byte.
+3. `AiChatModule.handleConfirm`: add 2 delete channel branches to the `if/else` chain (round-trip block unchanged; channel-agnostic). **Render site UNCHANGED** — the existing `spec={spec}` pass-through carries `spec.tone`; no render-site edit.
+4. `xai-web-tasks/src/internal/aiMutateSubscriber.ts` (NEW) + `xai-web-calendar/src/internal/aiMutateSubscriber.ts` (NEW): delete listeners → `deleteCard` / `deleteEvent`; bounded `seenRef` idempotency. Mount both in `apps/web/src/App.tsx` as Shell-siblings.
+5. Tests: TR-DEL-TOOL-1..3, CC-TONE-1..2 + CC-REG, IT-DEL-1..4 (no-silent-write + bounded) + IT-REG, TS-DEL-1..4, CS-DEL-1..4, TS/CS-NOIMPORT.
+
+**DoD:** plugin + tasks + calendar + web all green; delete end-to-end works (mocked LLM → confirm → store removal); no-silent-write proven (IT-DEL-1); create path regression green.
+**Commit:** `feat(plugin-web-ai-chat+tasks+calendar): P2 delete tools + destructive confirmation + delete subscribers + round-trip (xai-web-ai-tool-edit-delete)`
+
+#### Phase P3 — Update tools + update subscribers + bucket-change composition
+
+**Scope**
+1. `toolRegistry.ts`: add `update_task` (`{id, title?, bucket?, tag?}`) + `update_calendar_event` (`{id, title?, date?, startTime?, durationMin?}`); `toWriteEvent` → `web:*:update-requested` with `patch` containing only provided fields. `AI_TOOLS` now 6.
+2. `AiChatModule.handleConfirm`: add 2 update channel branches.
+3. `aiMutateSubscriber.ts` (both packages): add update listeners. tasks update: if `patch.bucket` differs from the card's current column → `moveCard` then `updateCard` for remaining title/tag (ED-6 composition); else `updateCard` only. calendar update: `updateEvent` (recompute startISO/endISO when date/startTime/durationMin present).
+4. Tests: TR-UPD-TOOL-1..3 + TR-REG, IT-UPD-1..3 + IT-REG, TS-UPD-1..4 (incl. bucket-move composition + preserve-done), CS-UPD-1..4 (incl. preserve createdAt+id, bump updatedAt).
+
+**DoD:** plugin + tasks + calendar + web all green; update end-to-end works; `done` preserved on task update (TS-UPD-1); bucket-move composition correct (TS-UPD-2); no-silent-write proven (IT-UPD-1).
+**Commit:** `feat(plugin-web-ai-chat+tasks+calendar): P3 update tools + update subscribers + bucket-move composition (xai-web-ai-tool-edit-delete)`
+
+#### Phase P4 — Back-compat + no-regression + polish + docs + verify-report
+
+**Scope**
+1. Re-assert `isAiConvoRecord` back-compat (BC-1); bilingual confirm copy polish.
+2. Full-suite regression: SHIPPED create path + §7/§8 cases all green (BC-FULL).
+3. id-targeting end-to-end check (model copies id from context → correct store mutation).
+4. `docs/PLUGIN_MAP.md` row-note updates (ai-chat + tasks + calendar — note edit/delete extension).
+5. Write `docs/reviews/xai-web-ai-tool-edit-delete/20260529-verify-report.md` recording automated gates + deferred operator smoke.
+
+**DoD:** all suites green; PLUGIN_MAP updated; verify-report written.
+**Commit:** `feat(plugin-web-ai-chat): P4 back-compat + polish + verify-report (xai-web-ai-tool-edit-delete)`
+
+### Risks (this lineage) — discovery §6 register
+
+- **ED-R1 (docs/code drift — the prior-BLOCK cause — CRITICAL):** test.md §9 asserts exact reducer signatures + confirm-only emit so verify can mechanically diff doc-vs-code. Highest-priority risk; build phases MUST produce code matching each documented contract.
+- **ED-R2 (events.ts `web:*` dev-branch merge surface — Medium):** `dev` may add `desktop:*` channels. Additive-only `web:*` keeps the diff a clean append; low conflict, REAL merge surface — carries to the eventual main merge.
+- **ED-R3 (updateCard referential-equality regression — Medium):** TR-UPD-5 asserts untouched-column identity.
+- **ED-R4 (bucket-change moveCard composition — Medium):** TS-UPD-2 dedicated test; feature-review sanity-checks the subscriber-level composition (OQ1).
+- **ED-R5 (id-targeting runtime accuracy — Low):** automated proves id present in context + correct round-trip; model id-copy accuracy = deferred operator smoke.
+- **ED-R6 (ConfirmationCard tone default regression — Low):** CC-TONE-1 asserts default = SHIPPED markup.
+- **ED-R7 (isAiConvoRecord back-compat — Low):** BC-1 re-assert.
+
+### Open Questions (for feature-review)
+
+- **OQ1 — bucket-change composition seam:** subscriber-level (`moveCard` then `updateCard`) vs reducer-level. Planner's lean: subscriber-level (keeps pure `updateCard` free of column-discovery logic). Review to confirm.
+- **OQ2 — one mutate-subscriber hook per package (two listeners) vs two hooks.** Planner's lean: one hook per package, two `useWebEventListener` calls — matches the single-hook-per-package shape already in App.tsx. Review to confirm mount-count.
+- **OQ3 — tag-clear on update.** Planner's lean: NO in v1 (patch only sets provided fields; tag-removal is a future increment). Review to confirm.
+
+### Review Notes (2026-05-29, feature-review — claude-opus-4-8[1m])
+
+**Verdict: REVISE.** 1 blocker, 0 recommendations. The plan is otherwise APPROVED-grade — discovery, lifelines, targeting finding, reducer contracts, calendar reuse, and the anti-drift test strategy are all verified accurate against HEAD on `web`. The single blocker is exactly the class of doc/code drift the carve-out flagged as the prior-BLOCK cause (ED-R1), so it goes back to the planner rather than being silently fixed by the reviewer.
+
+**Live-code verification performed (the carve-out's #1 demand — every claim implementable as written):**
+
+- **4 SHIPPED lifelines — ALL CONFIRMED in live code:**
+  1. *No-silent-write* — `emitWebEvent` for write channels appears ONLY at `AiChatModule.tsx:510/520`, inside `handleConfirm`, gated on `pendingConfirmation`. `handleCancel` (403-475) emits ZERO writes (tool_result is_error only). ✓
+  2. *events.ts additive-only* — create channels `web:tasks:create-requested` (events.ts:314) + `web:calendar:create-requested` (:330) carry `requestId`; `web:ai:*` (:346/:359) untouched. The 4 new per-op channels mirror this shape exactly. ✓
+  3. *Route-independent subscriber* — `App.tsx:98-99` mounts both create subscribers as Shell-siblings; subscribers use imperative getPref→reducer→setPref + bounded `seenRef` MAX_SEEN=100, no cross-plugin import. The new mutate subscribers follow byte-for-byte. ✓
+  4. *Bounded round-trip* — `handleConfirm` priorMessages block (542-566) sends ONE final stream turn keyed on `snapshot.toolUse.id`; it is channel-agnostic, so the plan's "unchanged" claim holds. ✓
+- **Context id (ED-2, the make-or-break prerequisite) — CONFIRMED ACCURATE.** `contextProvider.ts:216` renders `- [${bucketId}] ${title}` and `:231` renders `- ${time}–${endTime}: ${e.title}` — NO id, even though `NarrowTaskCard.id` (:35) + `NarrowCalEvent.id` (:81) are read. The plan's additive `(id: …)` fix is correct and within the token budget.
+- **Tasks reducer (ED-4) — CONFIRMED.** `addCard`/`moveCard`/`toggleComplete` all use immutable `.map` with referential-equality for untouched cols + `prev`-on-not-found; `moveCard` already preserves `done` (T-10). The proposed `deleteCard`/`updateCard` match this style. `TaskCard.done` (types.ts:60) is the field to preserve.
+- **Calendar reuse (ED-4) — CONFIRMED.** `updateEvent` (eventStore.ts:46-64, preserves createdAt+id, bumps updatedAt, same-ref on missing) + `deleteEvent` (:69-79, no-op same-ref on missing) exist exactly as claimed. Zero new store code needed.
+- **ED-6 bucket-move via moveCard — FEASIBLE (OQ1 confirmed).** `moveCard(prev, taskId, fromColId, toColId, now?)` needs the source column; the subscriber knows the card's current column from the store, so the subscriber-level composition (moveCard then updateCard) is sound and keeps the pure reducer free of column-discovery. Approve the subscriber-level seam.
+- **OQ2 (one hook per package, two listeners) — confirmed reasonable.** Matches the single-hook-per-package shape already mounted in App.tsx; mount count stays at +2 lines.
+- **OQ3 (no tag-clear in v1) — confirmed reasonable** (patch only sets provided fields; deferral is fine).
+
+**🔴 BLOCKER B1 — `tone` seam is specified two incompatible ways (doc/code drift, ED-R1 class).**
+
+- `api.md` §14.2 (delete tool `toWriteEvent`/`toConfirmation` block) describes `delete_task.toConfirmation` → `{ label: "Delete task", description: …, tone: "destructive" }` — i.e. `tone` is a field of the `toConfirmation` RETURN value (on `ConfirmationSpec`).
+- BUT design.md ED-7, discovery Call #4, manifest planner's-call #4, AND `api.md` §14.6 all describe `tone` as a NEW PROP on `ConfirmationCard` (`tone?: "default" | "destructive"`), NOT a field of the spec.
+- Live code pins the conflict: `ConfirmationSpec = { label, description }` (toolRegistry.ts:24-29); `ConfirmationCardProps = { spec, lang, onConfirm, onCancel }` (ConfirmationCard.tsx:17-26); and the render site `AiChatModule.tsx:695-707` passes ONLY `spec={spec}` — it computes/threads NO separate `tone` argument.
+- **Why blocking, not cosmetic:** the resolution changes which files the build must touch, and the file plan is wrong for one of the two readings:
+  - If `tone` rides on `ConfirmationSpec` (the §14.2 reading): `toConfirmation`'s return type must widen in `toolRegistry.ts` (a contract change the file plan does not name beyond "returns tone"), and `ConfirmationCard` reads `spec.tone`. The §14.6 "new prop" description is then wrong.
+  - If `tone` is a separate `ConfirmationCard` prop (the §14.6/design reading): the `AiChatModule.tsx` render site (695-707) MUST be edited to derive `tone` (e.g. from the tool name or a registry flag) and pass it — but the design.md file plan lists only "`handleConfirm` +4 channel branches" for `AiChatModule.tsx`, NOT a render-site edit. A builder following the file plan literally would ship a destructive tool whose card renders with default (non-destructive) tone — silently failing planner's-call #4 (destructive affordance) while CC-TONE-2 would then fail or be written to a guessed seam.
+  - A builder cannot implement this "as written" without guessing the seam — which is precisely how the predecessor drifted into a BLOCK.
+
+**Required fix (planner, single focused revision):** pick ONE seam and make api.md §14.2, api.md §14.6, design.md ED-7, and the design.md file plan all agree, including the exact `AiChatModule.tsx` render-site change if `tone` is a prop. Recommended (lowest-surface, matches how `spec` already flows): put `tone?: "default" | "destructive"` on `ConfirmationSpec` (returned by `toConfirmation`), have `ConfirmationCard` read `spec.tone` (default `"default"`), and drop the separate-prop framing in §14.6 — this needs NO `AiChatModule` render-site edit (the existing `spec={spec}` pass-through carries it), keeping the file plan's "AiChatModule = handleConfirm branches only" claim TRUE. Whichever seam is chosen, ensure CC-TONE-1/CC-TONE-2 assert against the chosen shape and the file plan lists every file the chosen seam touches. Re-submit for review.
+
+Everything else is executable as written; B1 is the only thing standing between this plan and APPROVED.
+
+### Revision Notes (2026-05-29, feature-plan REVISE — claude-opus-4-8[1m])
+
+**Responding to feature-review B1 (the single blocker; ED-R1 doc/code drift class).**
+
+**Decision:** adopt the reviewer's recommended lowest-surface seam — `tone` rides on **`ConfirmationSpec`** (the value `toConfirmation` returns), NOT a separate `ConfirmationCard` prop. Verified against live code first: `ConfirmationSpec = { label, description }` (toolRegistry.ts:24-29), `ConfirmationCardProps = { spec, lang, onConfirm, onCancel }` (ConfirmationCard.tsx:17-26), and the render site (AiChatModule.tsx:695-707) computes `spec = tool.toConfirmation(...)` then passes ONLY `spec={spec}`. Putting `tone?` on the spec means the existing pass-through carries it with **zero render-site edit**, keeping the file plan's "AiChatModule.tsx = handleConfirm +4 channel branches only" claim TRUE.
+
+**Revised (all now agree — single seam, six surfaces):**
+- `api.md §14.2` — `ConfirmationSpec` interface now shown explicitly with the additive `tone?: "default" | "destructive"` field; closing note pins "this is the ONLY place tone is set; ConfirmationCard reads spec.tone".
+- `api.md §14.6` — replaced the "ConfirmationCard props gain tone?" (separate-prop) framing with "tone rides on ConfirmationSpec.tone; ConfirmationCardProps UNCHANGED; render site UNCHANGED (spec={spec} carries it)".
+- `design.md ED-7` — flipped to the spec seam; states ConfirmationCardProps unchanged + no render-site edit; lists the six agreeing surfaces.
+- `design.md` file plan — `toolRegistry.ts` line now names the `ConfirmationSpec +tone? field`; `ConfirmationCard.tsx` line now reads "read spec.tone … props UNCHANGED"; `AiChatModule.tsx` line now says "render site UNCHANGED".
+- `test.md` CC-TONE-1/2 — reframed to assert against `spec.tone` (input via the spec, no separate prop); CC-TONE-2 asserts `ConfirmationCard` reads `spec.tone`.
+- dev_log P2 phase-plan steps 1-3 — aligned (toolRegistry adds `ConfirmationSpec.tone?`; ConfirmationCard reads `spec.tone`; handleConfirm render site unchanged).
+- Also aligned the two non-`packages/docs` planning surfaces the reviewer named as part of the drift: discovery review Call #4 and the manifest (P2 row + planner's-call #4) — both now describe the spec seam.
+
+**NOT changed (review confirmed APPROVED-grade against live code — left intact):** the 4 SHIPPED lifelines continuation (ED-8/9/10), context-id exposure ED-2, tasks `deleteCard`/`updateCard` contracts (ED-4), calendar `updateEvent`/`deleteEvent` reuse, the 4 per-op channels (ED-3), `update_task` = title+bucket+tag (ED-5), ED-6 bucket-move composition, all 4 planner's calls, the anti-drift TR/IT/CP-ID test strategy, and the P1-P4 phase split. This revision is scoped to the `tone` seam ONLY. No code written; no `dev` / ADR / SHIPPED-archive touch.
+
+### Review Notes (2026-05-29, feature-review re-review — claude-opus-4-8[1m])
+
+**Verdict: APPROVED.** 0 blockers, 0 recommendations. B1 is resolved and the revision is correctly scoped to the `tone` seam only. The plan is executable with no blocking ambiguity. Status → APPROVED, Suggested Next → feature-build.
+
+**B1 — `tone` seam is now SINGLE-VALUED. Verified directly against source on all 8 surfaces (not via the planner's self-report):**
+
+| # | Surface | Reads | Result |
+|---|---|---|---|
+| 1 | api.md §14.2 (api.md:673-681) | `ConfirmationSpec` interface shows `tone?: "default" \| "destructive"` additive + code-comment pin "carried ON the spec returned by `toConfirmation`, NOT a separate `ConfirmationCard` prop … NO render-site edit" | spec seam ✓ |
+| 2 | api.md §14.6 (api.md:799-801) | "Destructive tone rides on `ConfirmationSpec.tone`, NOT a separate `ConfirmationCard` prop. `ConfirmationCardProps` is UNCHANGED … carries it through with NO render-site edit" — separate-prop framing GONE | spec seam ✓ |
+| 3 | design.md ED-7 (design.md:416) | "the `tone` seam rides on `ConfirmationSpec` … `ConfirmationCardProps` is UNCHANGED … NO render-site edit … Single `tone` seam, four agreeing surfaces" | spec seam ✓ |
+| 4 | design.md file plan (design.md:430-433) | `toolRegistry.ts` = "`ConfirmationSpec +tone? field`"; `ConfirmationCard.tsx` = "read spec.tone … props UNCHANGED"; `AiChatModule.tsx` = "render site UNCHANGED (spec={spec} pass-through carries tone)" | spec seam ✓ |
+| 5 | test.md CC-TONE-1/2 (test.md:571-572) | CC-TONE-1 "tone is read off `spec.tone`, NOT a separate prop — `ConfirmationCardProps` is unchanged"; CC-TONE-2 "Asserts `ConfirmationCard` reads `spec.tone`; no separate `tone` prop is passed" | spec seam ✓ |
+| 6 | discovery Call #4 (discovery:108) | "destructive tone rides on `ConfirmationSpec.tone` … `ConfirmationCard` reads `spec.tone`; `ConfirmationCardProps` is UNCHANGED … (unifies the seam per feature-review B1)" | spec seam ✓ |
+| 7 | manifest P2 row + planner's-call #4 (manifest:33,46) | "+`ConfirmationSpec.tone?` field … `ConfirmationCard.tsx` (read `spec.tone`; props unchanged) … render site unchanged"; "Tone rides on `ConfirmationSpec.tone?` … no prop or render-site change" | spec seam ✓ |
+| 8 | dev_log P2 phase plan (steps 1-3) | step 1 "add additive `tone?` to the `ConfirmationSpec` interface (the SINGLE tone seam — §14.2)"; step 2 "read `spec.tone` … `ConfirmationCardProps` UNCHANGED"; step 3 "Render site UNCHANGED" | spec seam ✓ |
+
+**No residual separate-prop writing anywhere** — read every surface end-to-end; the prior `tone?`-on-`ConfirmationCard` framing is gone from §14.6, design ED-7, discovery Call #4, and the manifest.
+
+**B1 sub-checks (all pass):**
+- *File plan still says "AiChatModule.tsx = handleConfirm +4 channel branches only" (render site NOT edited)?* — **TRUE.** Confirmed against live code: the render site `AiChatModule.tsx:695-707` computes `const spec = tool.toConfirmation(pendingConfirmation.toolUse.input)` then passes `spec={spec}` only (no separate `tone` argument threaded). Putting `tone?` on `ConfirmationSpec` rides through this pass-through with zero render-site edit — the file-plan claim holds.
+- *Live seam matches the chosen reading?* — `ConfirmationSpec = { label, description }` (toolRegistry.ts:24-29) + `ConfirmationCardProps = { spec, lang, onConfirm, onCancel }` (ConfirmationCard.tsx:17-26): the chosen seam adds `tone?` to the former (additive) and reads `spec.tone` in the latter (no prop). Lowest-surface, build-implementable as written.
+- *delete `toConfirmation` returns `tone:"destructive"`, create/update return `tone:"default"` — consistent?* — **YES.** api.md §14.2 (api.md:694-695,699): both delete tools `{ … tone: "destructive" }`; create + update `tone: "default"` (explicit; omission is equivalent and renders SHIPPED markup). design ED-7 + discovery Call #4 agree.
+
+**Regression check — the 5 previously-APPROVED axes are NOT broken by the tone fix:**
+
+The Revision Notes pin the change as "scoped to the `tone` seam ONLY"; I independently confirm the tone edit touched only `ConfirmationSpec` / `ConfirmationCard` / doc wording and could not have regressed the reducer/channel/subscriber axes. Re-read of api.md §14.3-14.9 confirms all intact and unchanged from the prior-APPROVED-grade content the first review verified against live code:
+1. *4 SHIPPED lifelines (ED-8/9/10 + bounded round-trip)* — §14.6 still pins confirm-only emit + channel-agnostic Cancel + bounded ≤1 round-trip; §14.7 `streamCompleteChat` UNCHANGED. (Live anchors still hold: emit site AiChatModule.tsx:510/520 in handleConfirm; events.ts:314/330 create channels additive; App.tsx:98-99 Shell-sibling mounts.) ✓
+2. *Context id ED-2* — §14.1/ED-2 additive `(id: …)` token unchanged (contextProvider.ts:216/231 render no id today — the make-or-break prerequisite). ✓
+3. *Reducer contracts ED-4* — §14.4 `deleteCard`/`updateCard` (preserve `done` T-10 + untouched fields + referential equality + `prev`-on-not-found) unchanged. ✓
+4. *Calendar reuse + 4 per-op channels* — §14.3 (+4 additive `web:*` channels, SHIPPED create/`web:ai:*` untouched) + §14.4 (calendar reuses existing `updateEvent`/`deleteEvent`) unchanged. ✓
+5. *Anti-drift tests + ED-6 + phase split* — §14.5 subscriber composition (ED-6 bucket-move at subscriber level), §14.9 idempotency, test.md TR/IT/CP-ID strategy, and the P1-P4 split all intact. ✓
+
+**Conclusion:** the single blocker that held the prior review (ED-R1 doc/code drift class) is closed; the seam is single-valued and build-implementable as written; nothing else regressed. APPROVED for feature-build. Phase count: **4** (P1 reducer + channels + context-id → P2 delete tools + destructive confirm + delete subscribers + round-trip → P3 update tools + update subscribers + bucket-move composition → P4 back-compat + polish + verify-report). 命脉 carried into build: 4 SHIPPED lifelines (no-silent-write / additive events / route-independent subscriber / bounded round-trip) + context-id targeting + anti-drift reducer/confirm-only assertions (incl. the now-single-valued tone seam).
+
+### Phase Progress
+
+| Phase | Status | Commit | Notes |
+|---|---|---|---|
+| P1 — Tasks reducer (deleteCard+updateCard) + 4 event channels + context id exposure | DONE | 1575ff9 | TR-DEL-1..4 + TR-UPD-1..7 + CP-ID-1..4 pass; 139/139 tasks + 187→187 ai-chat tests |
+| P2 — Delete tools + destructive confirmation + delete subscribers + round-trip | DONE | 4a06c16 | CC-TONE-1..2 + TR-DEL-TOOL-1..3 + IT-DEL-1..4 + TS-DEL-1..3 + TS-UPD-1..4 + CS-DEL-1..3 + CS-UPD-1..3 pass; 202/202 ai-chat + 147/147 tasks + 311/311 calendar |
+| P3 — Update tools + update subscribers + bucket-move composition | DONE | fdf8fe8 | TR-UPD-TOOL-1..3 + IT-UPD-1..3 pass; 211/211 ai-chat |
+| P4 — Back-compat + no-regression + polish + docs + PLUGIN_MAP | DONE | (this commit) | BC-1 pass; full suite green; PLUGIN_MAP + dev_log updated; Status → READY_FOR_VERIFY |
+
+### Suggested Next
+
+`feature-verify` (all 4 phases DONE 2026-05-29; B1 resolved; tone seam single-valued on `ConfirmationSpec`; 4 命脉 preserved).
+
+### Work Log (this lineage)
+
+| Timestamp | Executor | Action | Commits | Next |
+|---|---|---|---|---|
+| 2026-05-29 | claude-opus-4-8[1m] (feature-review) | Reviewed all 5 gates + verified EVERY load-bearing plan claim against HEAD on `web` (the carve-out's anti-drift demand): 4 SHIPPED lifelines CONFIRMED in live code (no-silent-write emit site AiChatModule.tsx:510/520 in handleConfirm only; events.ts:314/330 create channels additive + web:ai:* untouched; App.tsx:98-99 Shell-sibling subscribers + bounded seenRef; bounded round-trip priorMessages block 542-566 channel-agnostic). Context-id finding ED-2 CONFIRMED accurate (contextProvider.ts:216/231 render no id though id is in narrowing type). Tasks reducer style + calendar updateEvent/deleteEvent reuse CONFIRMED. ED-6 bucket-move composition FEASIBLE (moveCard needs source col; subscriber has it). OQ1/OQ2/OQ3 all confirmed. **REVISE — 1 blocker (B1):** `tone` seam specified two incompatible ways — api.md §14.2 puts `tone` inside `toConfirmation`'s return (on ConfirmationSpec) but §14.6 + design ED-7 + discovery Call#4 make it a ConfirmationCard PROP; live render site AiChatModule.tsx:695-707 passes only `spec` and threads no `tone`, so the two readings touch different files and the file plan is wrong for the prop reading (missing render-site edit). This is the ED-R1 prior-BLOCK drift class → back to planner, not silently fixed. Recommended fix: put `tone?` on ConfirmationSpec (no render-site edit needed). | — | feature-plan |
+| 2026-05-29 | claude-opus-4-8[1m] (feature-plan) | Read carve-out (full) + SUBAGENT_WORKFLOW_V2 + PLUGIN_MAP + COMMIT_CONVENTION + create-layer manifest. Verified ALL recon claims against HEAD on branch `web`: calendar `updateEvent`/`deleteEvent` EXIST (reuse, zero new store code); tasks `tasksReducer.ts` has ONLY moveCard/toggleComplete/addCard (needs deleteCard+updateCard). **Resolved the 🔴 targeting dependency:** `contextProvider.ts` reads ids into narrowing types but does NOT render them into injected text — model cannot currently target update/delete; resolution = additive `(id: …)` token in context lines (ED-2). Decided all 4 planner's calls (4 tools delete-before-update / 4 per-op channels / update_task=title+bucket+tag / destructive single-click delete). Confirmed `streamCompleteChat` signature UNCHANGED (StreamRequest already has tools?+priorMessages?). Wrote discovery review + manifest + design §Edit/Delete (ED-1..ED-13) + api §14 + test §9 (anti-drift: reducer + confirm-only assertions) + this dev_log lineage. No external research required (internal business logic; Anthropic protocol pinned). | — | feature-review |
+| 2026-05-29 | claude-opus-4-8[1m] (feature-plan REVISE) | Resolved feature-review's single blocker B1 (`tone` seam drift, ED-R1 class). Re-confirmed the conflict against live code (ConfirmationSpec={label,description} toolRegistry.ts:24-29; ConfirmationCardProps has no tone ConfirmationCard.tsx:17-26; render site AiChatModule.tsx:695-707 passes only `spec={spec}`). Adopted the reviewer's recommended lowest-surface seam: `tone?: "default"\|"destructive"` rides on **ConfirmationSpec** (returned by `toConfirmation`); `ConfirmationCard` reads `spec.tone`; ConfirmationCardProps + render site UNCHANGED → file plan's "AiChatModule = handleConfirm branches only" stays true. Unified all surfaces: api §14.2 (explicit ConfirmationSpec interface + tone? field) + api §14.6 (dropped separate-prop framing) + design ED-7 + design file plan + test CC-TONE-1/2 + dev_log P2 steps 1-3 + discovery Call #4 + manifest (P2 row + planner's-call #4). Everything else left intact (review verified APPROVED-grade vs live code: 4 lifelines, ED-2 targeting, reducer contracts, calendar reuse, ED-6, anti-drift tests, phase split). Scoped to tone seam only; no code written; no dev/ADR/SHIPPED-archive touch. Status stays NEEDS_REVIEW; Suggested Next → feature-review. | — | feature-review |
+| 2026-05-29 | claude-opus-4-8[1m] (feature-review re-review) | Re-reviewed the B1 fix focused on the `tone` seam (5 gates otherwise APPROVED-grade from the prior pass). Verified the seam is SINGLE-VALUED directly against source on ALL 8 surfaces (not the planner's self-report): api §14.2 (ConfirmationSpec interface + additive tone? + comment pin), api §14.6 (separate-prop framing removed), design ED-7, design file plan, test CC-TONE-1/2, discovery Call #4, manifest (P2 row + call #4), dev_log P2 steps 1-3 — ALL now describe `tone?` on `ConfirmationSpec` returned by `toConfirmation`, `ConfirmationCard` reads `spec.tone`, `ConfirmationCardProps` + render site UNCHANGED. No residual separate-prop wording anywhere. Confirmed against live code that the spec seam needs zero render-site edit (AiChatModule.tsx:695-707 computes `spec=tool.toConfirmation(...)` + passes `spec={spec}` only) → file plan's "AiChatModule = handleConfirm +4 branches only" holds TRUE. Confirmed delete `toConfirmation`→`tone:"destructive"`, create/update→`tone:"default"` (api §14.2). Regression check: tone fix touched only ConfirmationSpec/ConfirmationCard/doc-wording — the 5 prior-APPROVED axes (4 lifelines, context-id ED-2, reducer contracts ED-4, calendar reuse + 4 per-op channels, anti-drift tests + ED-6 + phase split) re-read in api §14.3-14.9 and confirmed intact/unbroken. **APPROVED — 0 blockers, 0 recommendations.** Status → APPROVED; Current Phase → FEATURE_REVIEW; Suggested Next → feature-build (P1). | — | feature-build |
+| 2026-05-29 16:30 | claude-sonnet-4-6 (feature-auto-build P1) | Implemented: +deleteCard/+updateCard in tasksReducer.ts (immutable, preserve done T-10, referential-equality, prev-on-not-found/empty); +TaskCardPatch exported; +4 additive EventMap entries (web:tasks:{update,delete}-requested + web:calendar:{update,delete}-requested) in @repo/core; contextProvider.ts ED-2 id token (task: "- [bucket] (id: <id>) <title>"; calendar: "- (id: <id>) HH:MM–HH:MM: <title>"). TR-DEL-1..4 + TR-UPD-1..7 + CP-ID-1..4 tests added. All gates green: 139/139 tasks + 187/187 ai-chat + core tsc; tsc + eslint exit 0. | 1575ff9 | P2 |
+| 2026-05-29 16:30 | claude-sonnet-4-6 (feature-auto-build P2) | Implemented: toolRegistry.ts +ConfirmationSpec.tone? + WriteEventSpec.channel union +4 + delete_task + delete_calendar_event (destructive tone, item-naming description); ConfirmationCard.tsx reads spec.tone (ED-7 single seam); AiChatModule.tsx handleConfirm +4 channel branches (delete P2, update P3 stub); NEW xai-web-tasks/aiMutateSubscriber.ts (useTaskMutateRequestSubscriber — delete+update listeners, ED-6 moveCard composition, bounded seenRef); NEW xai-web-calendar/aiMutateSubscriber.ts (useCalendarMutateRequestSubscriber — deleteEvent/updateEvent+ISO recompute); App.tsx +2 subscriber mounts. CC-TONE-1..2 + TR-DEL-TOOL-1..3 + IT-DEL-1..4 + TS-DEL-1..3 + TS-UPD-1..4 + CS-DEL-1..3 + CS-UPD-1..3 pass. 202/202 ai-chat + 147/147 tasks + 311/311 calendar. tsc + eslint exit 0. 4 命脉 verified: no-silent-write (IT-DEL-1 ✓); additive events.ts (P1 ✓); route-independent subscribers (Shell-sibling mount ✓); bounded round-trip (channel-agnostic handleConfirm block unchanged ✓). | 4a06c16 | P3 |
+| 2026-05-29 16:30 | claude-sonnet-4-6 (feature-auto-build P3) | Implemented: toolRegistry.ts +update_task (id req + optional title/bucket enum/tag enum; patch contains only provided fields) + update_calendar_event (id req + optional title/date/startTime/durationMin; patch contains only provided fields); AI_TOOLS 2→4→6. update channel branches already wired in P2 handleConfirm. TR-UPD-TOOL-1..3 + IT-UPD-1..3 pass. 211/211 ai-chat. tsc + eslint exit 0. | fdf8fe8 | P4 |
+| 2026-05-29 16:30 | claude-sonnet-4-6 (feature-auto-build P4) | P4 back-compat + docs + Status flip. BC-1 (isAiConvoRecord back-compat) pass; all suites re-run green (211/211 ai-chat / 147/147 tasks / 311/311 calendar / 128/128 web / build exit 0); PLUGIN_MAP.md row-notes updated (ai-chat + tasks + calendar edit/delete extension notes); dev_log Phase Progress table + Work Log appended; Status → READY_FOR_VERIFY; Suggested Next → feature-verify. 4 命脉 evidence: (1) no-silent-write — emitWebEvent for delete/update ONLY in handleConfirm channel branches (IT-DEL-1 + IT-UPD-1 assert; grep confirms zero additional emit sites); (2) events.ts additive — 4 new web:* channels prepended before create channels; SHIPPED create + web:ai:* unchanged; (3) route-independent — 4 subscribers mounted as Shell-siblings in App.tsx lines 98-102; (4) bounded round-trip — handleConfirm priorMessages block channel-agnostic; IT-DEL-4 asserts cap=1. Anti-drift: TR-DEL-1..4 + TR-UPD-1..7 assert exact reducer signatures against live code; IT-DEL-1 + IT-UPD-1 assert confirm-only emit (no pre-confirm writes); CC-TONE-1 asserts default = SHIPPED markup. | (this commit) | feature-verify |
+
+---
+
