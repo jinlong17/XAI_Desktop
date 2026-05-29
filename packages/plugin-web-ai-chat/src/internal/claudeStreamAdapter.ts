@@ -22,6 +22,7 @@ import { resolveProvider } from "./llmProvider.js";
 import { parseSseStream } from "./sseParser.js";
 import { classifyError, type LlmError } from "./llmErrors.js";
 import { DEMO_REPLY_EN, DEMO_REPLY_ZH } from "./demoReply.js";
+import { buildTodayContext } from "./contextProvider.js";
 
 // ---- Public types ----------------------------------------------------------
 
@@ -34,6 +35,12 @@ export interface StreamRequest {
   model: AiModelId;
   /** Optional abort signal — when aborted, the underlying fetch is aborted. */
   signal?: AbortSignal;
+  /**
+   * Optional injected today context from contextProvider.buildTodayContext().
+   * When provided (and non-empty), prepended to the first user message.
+   * P1 feature: READ-ONLY context injection.
+   */
+  contextText?: string;
 }
 
 export interface StreamChunk {
@@ -74,9 +81,28 @@ export async function* streamCompleteChat(
   const streamingEnabled = getPref("xai_ai_streaming") !== false;
 
   // 3. Build request body.
+  // P1 context injection: prepend today's context snapshot to the user prompt.
+  // Reads context lazily here (not from req.contextText) so it's always fresh.
+  // contextText param is kept for override/test purposes.
+  let contextText = req.contextText;
+  if (contextText === undefined) {
+    // Only inject context when a key is configured (avoids reading prefs for no-key path).
+    try {
+      const ctx = buildTodayContext();
+      contextText = ctx.isEmpty ? "" : ctx.text;
+    } catch {
+      contextText = "";
+    }
+  }
+
+  const userContent =
+    contextText && contextText.length > 0
+      ? `${contextText}\n\n---\n\nUser question: ${text}`
+      : text;
+
   const body = config.buildBody({
     modelId,
-    messages: [{ role: "user", content: text }],
+    messages: [{ role: "user", content: userContent }],
     stream: streamingEnabled,
   });
 
