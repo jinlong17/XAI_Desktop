@@ -510,3 +510,193 @@ Sanity-checked against source: `StickiesWidget.tsx` (no-op `+`, `data-no-drag`, 
 ### Security note
 
 Local-only sticky notes (text + color preset persisted to localStorage via `usePref`). No auth/payment/secrets/external-input surface; no new external dependency; no network/Supabase. `security-skills-claude-code` trigger does not apply.
+
+---
+
+# §F — Extension Lineage: xai-web-dashboard-real-data (FEATURE_DEV, opened 2026-05-28)
+
+> **APPEND extension — does NOT supersede the SHIPPED row #11 lineage (FEATURE_DEV), the Top-10 #9 collaborator BUGFIX entries, or the SHIPPED §E stickies lineage.** This block is the authoritative workflow state for the real-data wiring feature. All earlier Status Panels remain the historical record for their respective scopes.
+
+## §F Status Panel
+
+| Field | Value |
+|---|---|
+| Workflow | FEATURE_DEV |
+| Target | xai-web-dashboard-real-data |
+| Title | Web Console — Dashboard real-data wiring (StatTasks/StatStreak/StatPomos + Upcoming + MiniCal read real local stores; honest empty states; read-only, zero new key) |
+| Current Phase | FEATURE_VERIFY |
+| Status | READY_FOR_VERIFY |
+| Suggested Next | feature-verify |
+| Level | feature (read-only cross-module wiring; Realistic v1; item-3 local cluster #2) |
+| Verify Cross-vendor | yes (Codex `gpt-5.5-thinking effort=medium` primary / Cursor fallback — see test.md §F.6; MAY DEFER 24h per ADR-0008 §S3; joins accumulated Web smoke batch before next xai-web-deploy-cloudflare ship) |
+| Automation Mode | A-Claude (default; inherited from sibling item-3 cluster `xai-web-dashboard-stickies-create`; pickable at feature-build dispatch) |
+| Executor | claude-sonnet-4-6 — feature-auto-build |
+| Updated | 2026-05-28 23:20 |
+| Roadmap Manifest | docs/workflow/roadmap/xai-web-dashboard-real-data.md (row #1, NEEDS_REVIEW) |
+| Authority Anchor | ADR-0010 §D4 — P0 carve-out `docs/reviews/_p0-carve-outs/20260528-dashboard-real-data.md` (commit `217170c`) |
+| Audit Trigger | docs/reviews/_web-noop-audit/20260528-usability-recheck.md — "7 of 11 dashboard widgets render mock fixtures" (item 3 = 3d-i + 3d-ii consolidated) |
+| Closest Precedent | cross-module read: `@repo/plugin-web-statistics` (usePref + local predicates, no plugin import); in-package real-data: §E `StickiesWidget`/`useStickies` |
+| Branch | web (NOT dev) |
+| Write Scope (plan) | `docs/reviews/xai-web-dashboard-real-data/` + `docs/workflow/roadmap/xai-web-dashboard-real-data.md` + `packages/xai-web-dashboard-widgets/docs/` (§F appends) |
+| Write Scope (build) | will extend to: `packages/xai-web-dashboard-widgets/src/internal/dataReads/**` (NEW), `src/internal/strings.ts` (EXTEND — empty-state keys), `src/widgets/{StatTasks,StatStreak,StatPomos,UpcomingWidget,MiniCalWidget}.tsx` (REWIRE), `src/styles.css` (MAYBE — additive `.mc-dot-rose`/empty-hint classes), `src/__tests__/{StatTasks,StatStreak,StatPomos,UpcomingWidget,MiniCalWidget}.test.tsx` (REWRITE) + `src/internal/dataReads/__tests__/**` (NEW). **NO `registrations.tsx`, NO `index.ts`, NO `packages/plugin-web-storage` (zero registry edit), NO `packages/core`, NO `plugin-web-tokens`, NO host, NO other plugin src.** |
+
+## §F Artifacts Index
+
+- P0 carve-out: `docs/reviews/_p0-carve-outs/20260528-dashboard-real-data.md` (commit `217170c`)
+- Discovery review: `docs/reviews/xai-web-dashboard-real-data/20260528-discovery-review.md`
+- Roadmap manifest: `docs/workflow/roadmap/xai-web-dashboard-real-data.md`
+- Design snapshot (extension): `packages/xai-web-dashboard-widgets/docs/design.md` §F
+- API contract (extension): `packages/xai-web-dashboard-widgets/docs/api.md` §F
+- Test strategy (extension): `packages/xai-web-dashboard-widgets/docs/test.md` §F
+
+## §F Decision Headline
+
+Wire 5 widgets to **real local stores READ-ONLY** via the SHIPPED `usePref` + LOCAL-narrowing-predicate law (Statistics + Cmd-K + in-package §E precedent) — **NO new registry key, NO new dep, NO external API, NO write, NO `packages/core`/`plugin-web-tokens`/host edit.** New code = a thin in-package `src/internal/dataReads/` selector module (pure, testable without RTL). 4 planner's-calls + 3 planner-added resolved (discovery §4):
+
+- **Q1 metrics:** StatTasks = all-bucket `done/total` (T-10 `done` real); StatPomos = today's completed focus (owner `countTodaysFocus` semantics); StatStreak = max per-habit strict-consecutive streak.
+- **Q2 read shape:** narrow toward owner canonical types via local predicates. **CRITICAL recon corrections:** pomodoro field = `finishedAt`+`completed` (NOT Cmd-K's stale `completedAt`); tasks cards at `col.tasks` (NOT Cmd-K's flattened read); date basis PER source (pomo=local / habits=UTC / calendar=local-clock — do NOT unify).
+- **Q3 fixtures:** KEEP `UPCOMING`/`CAL_EVENTS` exports (back-compat + `fixtures.test.ts`); live path stops importing them; remove inline `STAT_*` consts. Calendar-backed widgets get HONEST empty states, NOT stickies-style fake samples (justified divergence).
+- **Q4 abstraction:** in-package `src/internal/dataReads/` selectors (NOT inline) — mirrors Statistics' `aggregators.ts`/predicates; hazards localized + unit-testable.
+- **Q5 (added):** Upcoming = calendar events ONLY (NO task-due merge — task dates are display strings, not ISO).
+- **Q-i18n (added):** empty-state copy in the EXISTING local `internal/strings.ts` — ZERO `plugin-web-tokens` edit (consistent with §E Q3).
+- **Recurrence (added):** MINIMAL local expansion (non-recurring + daily + weekly) re-implemented in `dataReads/` (calendar's `expandRecurrence` is `internal/`, un-importable).
+
+Public surface UNCHANGED (`dashboardWidgetRegistrations`-only); the other 5 widgets (Clock/WorldClocks/Weather/Stickies/Mail) UNTOUCHED.
+
+## §F Phase Plan (3 phases — by widget group)
+
+> Each phase is a single `feature-build` run; after each, build STOPS for human confirmation (CLAUDE.md "feature-build does ONE phase per run"). Grouped by store-backed widget cluster so each phase's diff is coherent and reviewable. F3 MAY fold into F2 if empty states land inline + barrel stays single-export (reviewer OQ7).
+
+### Phase F1 — 3 Stat widgets + their selectors + local-STR empty keys
+
+**Goal**: StatTasks/StatStreak/StatPomos read real `xai_task_cols`/`xai_habits_state`/`xai_pomodoro_sessions` with honest empty states; pure selectors fully unit-tested.
+
+**Files written**:
+- `src/internal/dataReads/isTaskColsRecord.ts` + `taskStats.ts` (`countDone`)
+- `src/internal/dataReads/isPomodoroSession.ts` + `pomoStats.ts` (`countTodaysFocus`; **uses `finishedAt`+`completed`, NOT `completedAt`**)
+- `src/internal/dataReads/isHabitsState.ts` + `habitStreak.ts` (`maxStreak`; local strict-consecutive, **UTC day keys**)
+- `src/internal/dataReads/__tests__/{taskStats,pomoStats,habitStreak}.test.ts` (AC-RD-TASKS-1..5 / AC-RD-POMO-1..5 / AC-RD-HABIT-1..5)
+- **Edit** `src/internal/strings.ts` — add `stat_tasks_empty`, `stat_streak_empty` (+ any pomo empty if chosen) bilingual keys
+- **Rewrite** `src/widgets/StatTasks.tsx` — `usePref("xai_task_cols")` → `countDone` → donut; empty label when `total===0`; drop `STAT_TASKS_*` consts
+- **Rewrite** `src/widgets/StatStreak.tsx` — `usePref("xai_habits_state")` → `maxStreak`; empty when no habits; drop `STAT_STREAK_DAYS`
+- **Rewrite** `src/widgets/StatPomos.tsx` — `usePref("xai_pomodoro_sessions")` → `countTodaysFocus`; drop `STAT_POMOS_*` consts
+- **Rewrite** `src/__tests__/{StatTasks,StatStreak,StatPomos}.test.tsx` — seed-driven real + empty (AC-STATS-REAL-*); old magic-number assertions deleted (RD8)
+- (build-time) `grep` for external importers of `STAT_*` consts before removal (RD7)
+
+**Acceptance**:
+- AC-RD-TASKS/POMO/HABIT + AC-STATS-REAL-* green
+- `pnpm --filter @repo/plugin-web-dashboard-widgets test` green; SHIPPED non-Stat widget tests + §E stickies tests still green
+- `pnpm --filter @repo/plugin-web-dashboard-widgets check-types` + `eslint --max-warnings 0` clean
+- NO change to `index.ts`, `registrations.tsx`, storage registry, tokens
+
+**Commit**: `feat(xai-web-dashboard-widgets): F1 stat widgets read real stores + dataReads selectors (xai-web-dashboard-real-data)`.
+
+### Phase F2 — Upcoming + MiniCal + calendar selectors
+
+**Goal**: UpcomingWidget + MiniCalWidget read real `xai_calendar_events` (with minimal recurrence) and honest empty states; SHIPPED MiniCal nav/goTo behaviour preserved.
+
+**Files written**:
+- `src/internal/dataReads/isUserCalEventMap.ts` + `calUpcoming.ts` (`upcomingEvents`) + `calMonthDots.ts` (`monthDots`) — incl. minimal local recurrence (non-recurring + daily + weekly)
+- `src/internal/dataReads/__tests__/{calUpcoming,calMonthDots}.test.ts` (AC-RD-UPC-1..6 / AC-RD-CAL-1..5)
+- **Edit** `src/internal/strings.ts` — add `upcoming_empty` bilingual key
+- **Rewrite** `src/widgets/UpcomingWidget.tsx` — add `now` to props + thread from registration entry (additive, NOT a `WidgetRenderContext` change); `usePref("xai_calendar_events")` → `upcomingEvents(...,4)`; empty label; stop importing `UPCOMING`
+- **Rewrite** `src/widgets/MiniCalWidget.tsx` — `usePref("xai_calendar_events")` → `monthDots(view.year, view.month)` replacing `CAL_EVENTS[d]`; nav/goTo/data-no-drag UNCHANGED; stop importing `CAL_EVENTS`
+- **Edit** `src/registrations.tsx` — IF Upcoming needs `now`: pass `ctx.now` to `<UpcomingWidget now={ctx.now} .../>` (1-line; the entry already receives `ctx`). (Re-confirm at build whether this is needed; this is the ONLY registrations.tsx touch and it does not change the entry's id/span/ariaLabel.)
+- **Edit** `src/styles.css` — additive `.mc-dot-rose` (if absent) + `.upc-empty`/`.ws-empty` hint classes; NO `.widget*` redefinition (§S9 guard)
+- **Rewrite** `src/__tests__/UpcomingWidget.test.tsx` (AC-UPCOMING-REAL-1..4) + `src/__tests__/MiniCalWidget.test.tsx` (AC-MINICAL-REAL-1..5; SHIPPED nav/goTo/data-no-drag ACs re-homed unchanged)
+
+**Acceptance**:
+- AC-RD-UPC/CAL + AC-UPCOMING-REAL + AC-MINICAL-REAL green; SHIPPED MiniCal nav/goTo/data-no-drag ACs still green
+- `fixtures.test.ts` still green (exports kept, RD9)
+- `pnpm --filter @repo/plugin-web-dashboard-widgets test` green; `check-types` + lint clean
+- `grep -E "\.widget-?(shell|content)?\s*\{" src/styles.css` returns 0 (§S9)
+
+**Commit**: `feat(xai-web-dashboard-widgets): F2 upcoming + mini-cal read real calendar events (xai-web-dashboard-real-data)`.
+
+### Phase F3 — Empty-state polish + docs + barrel-unchanged confirm → READY_FOR_VERIFY
+
+**Goal**: full suite green, public surface confirmed unchanged, verify gate prepared.
+
+**Files written**:
+- empty-state visual polish (if any) on the 5 widgets + final `styles.css` review
+- `src/__tests__/index-barrel.test.ts` (EXISTING — confirm still single `dashboardWidgetRegistrations` export; no edit expected)
+- Final docs sync: design.md §F / api.md §F / test.md §F + this dev_log §F
+- `pnpm --filter @repo/plugin-web-dashboard-widgets test` + `pnpm --filter @repo/web test` + `pnpm -w build` all green
+- Cross-vendor XVENDOR matrix + Codex cold-read (test.md §F.6) OR formal ADR-0008 §S3 deferral recorded here
+- Flip §F Status → `READY_FOR_VERIFY`, `Suggested Next: feature-verify`
+
+**Acceptance**: all cumulative widget + web tests green; barrel unchanged (AC-PKG-4); `pnpm -w build` green; storage + web suites UNCHANGED (no registry/host edit); cross-vendor done or formally deferred.
+
+**Commit**: `feat(xai-web-dashboard-widgets): F3 empty-state polish + docs + READY_FOR_VERIFY (xai-web-dashboard-real-data)`.
+
+## §F Risks Snapshot
+
+| ID | Risk | Mitigation | Phase |
+|---|---|---|---|
+| RD1 | Copying Cmd-K's stale `completedAt` → always-empty pomo count | Selector uses canonical `finishedAt`+`completed`+`mode==="focus"`; AC-RD-POMO-3 asserts `completedAt`-only session NOT counted; explicit code comment | F1 |
+| RD2 | Tasks: Cmd-K flattened read vs real `col.tasks` | `isTaskColsRecord` narrows to `{tasks:[];completed?}`; reads `col.tasks`; AC-RD-TASKS-3 | F1 |
+| RD3 | Date-basis mismatch (pomo local / habits UTC / cal local-clock) | Each selector uses its source's basis + injected clock; AC-RD-POMO-4 + AC-RD-HABIT-5 | F1/F2 |
+| RD4 | `rose` colorPreset has no `.mc-dot-rose` CSS class | Build checks `styles.css`; add additive `.mc-dot-rose` if absent; AC-RD-CAL-5 + render test | F2 |
+| RD5 | Local recurrence drift vs calendar `expandRecurrence` | Local expansion = non-recurring + daily + weekly, HH:MM preserved; AC-RD-UPC-4/5 + AC-RD-CAL-4; documented as deliberate local copy | F2 |
+| RD6 | Widget loses state / mis-renders on grid 1Hz `render(ctx)` tick | Widgets stay stable components (ClockWidget + §E proof); AC-STATS-REAL-TASKS-4 | F1/F2 |
+| RD7 | Removing inline `STAT_*` consts breaks an external importer | grep before removal; tests inject via `usePref` seed; keep deprecated re-export only if an importer exists | F1 |
+| RD8 | SHIPPED Stat tests assert `14/22`/`27`/`6` | Those test files REWRITTEN (not extended) to seed real data + assert empty; no old magic-number assertion survives | F1 |
+| RD9 | `fixtures.test.ts` breaks if exports removed | KEEP `UPCOMING`/`CAL_EVENTS` exports; only live import path changes | F2/F3 |
+| RD10 | Pre-hydrate `usePref` read → flash of empty | Acceptable — empty state IS the honest default; matches §E hydrate; documented | F1/F2 |
+| RD11 | Barrel surface accidentally widened | `index-barrel.test.ts` keeps asserting single export; selectors stay `internal/` | F3 |
+| RD12 | Reading another module's key couples to its schema | Predicates DEFENSIVE — drop non-conforming, degrade to empty, never crash | All |
+
+## §F Open Questions for feature-review
+
+- **OQ1 (Q1 metrics):** StatTasks all-bucket `done/total`? StatPomos today's completed focus? StatStreak max per-habit strict-consecutive? (Reviewer may prefer StatTasks "today's done" if a completion-timestamp source exists, or StatPomos "this week".)
+- **OQ2 (Q5 task-due merge):** Upcoming = calendar events ONLY (no task-due merge — task dates are display strings)? (Reviewer may want best-effort string-date merge.)
+- **OQ3 (Q3 empty disposition):** Calendar-backed widgets get a PLAIN honest empty state, NOT a stickies-style fixture-sample? (Reviewer may want sample-parity with §E stickies.)
+- **OQ4 (Q4 abstraction):** `src/internal/dataReads/` selector module (vs inline per-widget reads)?
+- **OQ5 (Q-i18n):** Empty-state copy in the EXISTING local `internal/strings.ts` (zero `plugin-web-tokens` edit)?
+- **OQ6 (recurrence):** MINIMAL local recurrence (non-recurring + daily + weekly) acceptable vs deferring recurrence (non-recurring-only) for v1?
+- **OQ7 (phase split):** 3 phases (F1 stats / F2 upcoming+minical / F3 polish+docs), or fold F3→F2 if barrel stays single-export + empty states land inline?
+
+## §F Review Notes (2026-05-28, claude-opus-4-8 — feature-review)
+
+**Verdict: APPROVED** — 0 blockers, 3 non-blocking build-time notes. The plan is executable as written. The 3 critical recon corrections (the data-correctness lifeline) were INDEPENDENTLY VERIFIED against each owner module's canonical type — all three are correct.
+
+### The 3 critical recon corrections — independently re-read at source, all CORRECT
+
+1. **Pomodoro field = `finishedAt` + `completed` (NOT Cmd-K's stale `completedAt`).** Verified `PomodoroSession` (`plugin-web-pomodoro/src/types.ts:19-45`): has `finishedAt: string` (line 27) + `completed: boolean` (line 44); there is NO `completedAt` field. Owner `countTodaysPomos` (`internal/derivedCounters.ts:15-19`) filters `s.mode === "focus" && s.completed && localDateKey(new Date(s.finishedAt)) === todayLocal` — the plan's `countTodaysFocus` mirrors this exactly. Cross-checked `xai-web-cmdk/src/adapters/pomodoro.ts:37,63`: it DOES declare `completedAt?: string` and read `session.completedAt` — confirmed stale (always yields `date: ""` against the real type). The plan correctly tells build NOT to copy it. **AC-RD-POMO-3 explicitly asserts a `completedAt`-only session is NOT counted** — the single most important data-correctness guard exists.
+2. **Tasks cards at `col.tasks` / `col.completed` (NOT Cmd-K's flattened `Record<string,unknown[]>`).** Verified `TaskCol` (`xai-web-tasks/src/types.ts:67-80`): `tasks: ReadonlyArray<TaskCard>` (line 77) + optional `completed?: ReadonlyArray<TaskCard>` (line 79). `TaskCard.done?: boolean` (line 60) with "Absent/undefined is treated as false by all consumers." The plan's `isTaskColsRecord` narrows to `{ tasks; completed? }` and reads `col.tasks` — correct. **AC-RD-TASKS-3 guards the nested shape; AC-RD-TASKS-4 guards the T-10 `done?` absent-as-false semantics.** T-10 compatibility confirmed: StatTasks reads `done === true`, matching T-10's persisted `TaskCard.done` shape.
+3. **Date basis PER source (pomo=local / habits=UTC / calendar=local-clock — NOT unified).** Verified each: pomodoro uses `localDateKey` (`derivedCounters.ts:17`); habits `DateKey` = "UTC day key, format YYYY-MM-DD" (`xai-web-habits/src/types.ts:16-17`) and `computeStreak` uses `utcDateKey` (`internal/computeStreak.ts:29,39`); calendar `UserCalEvent.startISO` = "LOCAL CLOCK 'YYYY-MM-DDTHH:MM' with NO timezone suffix" (`xai-web-calendar/src/internal/eventStore/types.ts:11-13,46-49`). All three bases correct. **AC-RD-POMO-4 (local 23:59 boundary) + AC-RD-HABIT-5 (UTC key) pin the boundaries; §F.4 clock-injection correctly stubs local time for pomo/tasks and seeds UTC-day check-ins for streak.**
+
+### Gate checks (5/5 PASS)
+
+1. **Discovery quality — PASS.** Correctly classified as a read-shape/boundary analysis requiring NO external research (every primitive — `usePref`, the 4 keys, owner types — pre-exists in-repo). §3 reads all 4 owner canonical types + the 2 SHIPPED Statistics narrowers end-to-end. §2 establishes the cross-module-read law against 2 SHIPPED precedents (Statistics api.md §0 "usePref only"; Cmd-K adapters). 4 carve-out planner's-calls + 3 added, each with comparable alternatives + rationale. Evidence index (§8) enumerates every source file with line anchors.
+2. **Design alignment — PASS.** design.md §F.1 (14 frozen assumptions) matches discovery §0/§3/§4 verbatim. §F.2 architecture-delta diagram traces each widget → key → selector correctly. §F.7 tabulates the 4 intentional divergences from §E stickies.
+3. **Contract completeness — PASS.** api.md §F.3 gives concrete PURE signatures for all 9 selectors/predicates with the minimal narrow-toward shapes + the explicit "USES finishedAt — NOT completedAt" annotation; §F.9 documents defensive error/edge semantics (never throws, degrade to empty). Dependencies identified (read-only on 4 pre-existing foreign keys). Predicates mirror the SHIPPED Statistics `isPomodoroSession` (`{mode;durationMs;finishedAt}`) + `isHabitsStateRecord` + `EMPTY_HABITS_STATE` — verified parallel at source.
+4. **Phase plan quality — PASS.** 3 phases grouped by store-backed widget cluster; each a single commit with explicit file lists + exit gates (R8). F1 isolates the 3 highest-recon-risk Stat selectors; F2 bundles the 2 calendar widgets sharing the recurrence concern (keeps recurrence logic in one diff); F3 polish+docs+verify. Fixtures kept for back-compat (`fixtures.test.ts` stays green) = implicit rollback safety. OQ7 F3→F2-fold offered.
+5. **Architecture risk — PASS (all within carve-out §2).** NO `packages/core/` edit; NO `manifest.json` status/routing change (row #11 stays Stable); NO event channel; NO registry edit / parity-array change (read-only — the key contrast with §E); NO `plugin-web-tokens` edit; NO host edit; NO `dev` branch. Defensive predicates mean a foreign-schema drift degrades to honest-empty, never crashes (RD12). The ONE cross-widget touch — a 1-line `now`-thread to UpcomingWidget in `registrations.tsx` — is correctly bounded as additive and explicitly NOT a `WidgetRenderContext` type change (api.md §F.4 note).
+
+### OQ adjudication (OQ1-OQ7)
+
+- **OQ1 (metrics) — AFFIRM all three.** StatTasks all-bucket `done/total` is the only honest metric (verified `TaskCard` has no completion-timestamp — only a `done` boolean + display-string `date`; "today's done" is unbuildable). StatPomos today-completed-focus mirrors the owner `countTodaysPomos` exactly. StatStreak max-per-habit-strict-consecutive is the right single flame number (uses habits' today-anchored C1 — verified the plan did NOT conflate it with pomodoro's yesterday-fallback `computeStreak`).
+- **OQ2 (task-due merge) — AFFIRM calendar-only.** `TaskCard.date` is a display string (`"7/31"` / `dateZh` / `dateLabel`), NOT parseable ISO (verified types.ts:47-52). Merging would require fragile string-date parsing — correct to defer.
+- **OQ3 (honest-empty vs fixture-sample) — AFFIRM the divergence from §E.** This is the load-bearing call and the plan's reasoning is sound: a calendar/Upcoming with no events is an HONEST, non-broken view ("I have no events"), whereas a stickies board with zero notes looks broken (which is why §E chose fixture-as-sample). Showing fake sample events would re-introduce exactly the fiction this carve-out exists to remove. The divergence is domain-justified, not inconsistency.
+- **OQ4 (selectors vs inline) — AFFIRM `dataReads/`.** Mirrors Statistics' `aggregators.ts` + predicates; localizes the date-basis hazard in ONE audited place instead of smearing UTC-vs-local across 5 widgets; pure functions are unit-testable without RTL.
+- **OQ5 (local STR) — AFFIRM.** Extend the existing §E `internal/strings.ts`; 0 `plugin-web-tokens` edit; existing labels stay from `useI18n`. Consistent with §E Q3.
+- **OQ6 (recurrence scope) — AFFIRM minimal daily+weekly (do NOT narrow to non-recurring-only).** Both Upcoming + MiniCal would otherwise silently drop recurring events = partial fiction. The local re-implementation mirrors calendar's `expandRecurrence` semantics (HH:MM preserved, date prefix advances) and is tested (AC-RD-UPC-4/5, AC-RD-CAL-4). Re-implementation is forced — calendar's `expandRecurrence` is `internal/`, un-importable.
+- **OQ7 (phase split) — AFFIRM 3 phases.** Coherent diff grouping; F3→F2 fold is a defensible builder option if the barrel stays single-export + empty states land inline.
+
+### Non-blocking build-time notes (for feature-build, NOT plan defects)
+
+1. **`registrations.tsx` is touched once in F2 (overstated "NO registrations.tsx" in the §F Status-Panel Write-Scope summary).** UpcomingWidget currently renders `<UpcomingWidget lang={ctx.lang} />` with NO `now` (registrations.tsx:81-85), but `ctx.now` is already available (used by clock/mini-cal/timezones entries). The AUTHORITATIVE F2 file list (this dev_log) + api.md §F.4 + its §F.4 note all correctly specify the 1-line `now={ctx.now}` thread; only the Status-Panel one-line summary says "NO registrations.tsx." Build follows F2 — add `now` to `UpcomingWidgetProps` + thread `ctx.now`; this is additive and does NOT change the entry's id/span/ariaLabel or the `WidgetRenderContext` type (row #10's, stays frozen). Covered by AC-UPCOMING-REAL-4.
+2. **Local STR accessor shape.** The existing `internal/strings.ts` `str()` is typed against the closed `StickyComposerStrKey` and the table is named `STR_STICKY_COMPOSER` (composer vocabulary). Build should add the empty-state keys deliberately — either a SECOND table + accessor (e.g. `STR_WIDGET_EMPTY`) or a widened union — rather than blindly stuffing `stat_tasks_empty`/`upcoming_empty` into the composer table. Cosmetic organization choice; either compiles.
+3. **Calendar recurrence date-math nuance (deliberate-copy hygiene).** Calendar's `expandRecurrence` does its window math in UTC (`dateKeyToUTCDate` at noon UTC) even though `startISO` is local-clock; the date PREFIX is what advances. The plan's minimal local re-implementation should preserve this "advance the date prefix, keep HH:MM" semantics (api.md §F.3 + design §F.1.12 already say so). Flagging so build mirrors the owner's day-stepping rather than constructing local `Date` objects that could drift at DST. AC-RD-UPC-4/5 + AC-RD-CAL-4 will surface any drift.
+
+Sanity-checked against source (read end-to-end): `PomodoroSession` type + `countTodaysPomos`/`computeStreak` (`derivedCounters.ts`), `TaskCol`/`TaskCard.done` (`xai-web-tasks/types.ts`), `HabitsState`/`DateKey` + `computeStreak` (`xai-web-habits/types.ts` + `internal/computeStreak.ts`), `UserCalEvent` + `expandRecurrence` (`xai-web-calendar/internal/eventStore/{types,expandRecurrence}.ts`), Cmd-K `adapters/pomodoro.ts` (stale `completedAt` confirmed), Statistics `isPomodoroSession` + `isHabitsStateRecord` + `EMPTY_HABITS_STATE`, the 3 in-scope widget bodies (`StatTasks`/`UpcomingWidget`/`MiniCalWidget`), `fixtures.ts` (`UPCOMING`/`CAL_EVENTS` shapes), `registrations.tsx` (10-entry array; Upcoming has no `now`), `internal/strings.ts` (§E local STR). Carve-out §2 In/Out matches the plan's In/Out exactly (Weather/Mail excluded; Statistics page excluded; no write; calendar-only Upcoming). **Final scope: read-only `usePref` + local predicates, `finishedAt`+`completed` / `col.tasks` / per-source date basis, honest empty states (divergence from §E justified), calendar-only Upcoming, minimal daily+weekly recurrence, local STR, 3 phases (F1-F3), single-export barrel, zero registry/core/tokens/host/dev edit.**
+
+## §F Work Log
+
+| Timestamp | Executor | Action | Commits | Next Step |
+|---|---|---|---|---|
+| 2026-05-28 | claude-opus-4-8 — feature-plan | Fresh planning artifacts for the real-data wiring feature (item-3 local cluster #2; consolidates carve-out 3d-i + 3d-ii). Created discovery review (cross-module-read boundary confirmation + per-store read-shape recon from owner canonical types + 4 planner's-calls + 3 planner-added resolved + 12 risks; **no external/web research — pure local read-only wiring, no library decision**). Appended §F extension blocks to design.md / api.md / test.md / dev_log.md (SHIPPED row #11 + Top-10 #9 BUGFIX + §E stickies content all preserved). Created single-row roadmap manifest. Frozen 14 assumptions. 3-phase plan (F1 stats / F2 upcoming+minical / F3 polish+docs). **CRITICAL recon corrections recorded:** pomodoro field `finishedAt`+`completed` (NOT Cmd-K `completedAt`); tasks cards at `col.tasks` (NOT flattened); date basis per source (pomo local / habits UTC / cal local-clock). Zero registry edit (read-only — contrast §E which added a key). NO implementation code written. Status → NEEDS_REVIEW. | — | feature-review |
+| 2026-05-28 16:40 | claude-opus-4-8 — feature-review | **APPROVED** — 0 blockers, 3 non-blocking build-time notes. All 5 gates PASS. **Independently re-read all 4 owner canonical types at source to verify the 3 critical recon corrections (data-correctness lifeline):** (1) pomodoro `finishedAt`+`completed` confirmed in `PomodoroSession` (types.ts:27,44) + `countTodaysPomos` (derivedCounters.ts:15-19); Cmd-K's `completedAt` confirmed stale (adapters/pomodoro.ts:37,63) — AC-RD-POMO-3 guards it. (2) tasks `col.tasks`/`col.completed` confirmed in `TaskCol` (types.ts:77-79) + `done?` absent-as-false (line 60) — AC-RD-TASKS-3/4 guard it (T-10 shape compatible). (3) date basis per source confirmed: pomo local (`localDateKey`), habits UTC (`DateKey`/`utcDateKey`), calendar local-clock (`UserCalEvent.startISO` schema invariant) — AC-RD-POMO-4 + AC-RD-HABIT-5 guard it. Verified predicates mirror SHIPPED Statistics `isPomodoroSession`/`isHabitsStateRecord`/`EMPTY_HABITS_STATE`. Adjudicated OQ1-OQ7 (AFFIRM all: metrics done-total/today-focus/max-habit-streak; calendar-only Upcoming; honest-empty divergence from §E justified by domain; dataReads selectors; local STR; minimal daily+weekly recurrence; 3 phases). Carve-out §2 In/Out matches plan. 3 non-blocking notes: (N1) F2 touches registrations.tsx 1 line for Upcoming `now`-thread — Status-Panel summary overstates "NO registrations.tsx"; follow F2; additive, not a WidgetRenderContext change; (N2) add empty-state keys to a deliberate STR table, not blindly into STR_STICKY_COMPOSER; (N3) minimal recurrence must preserve owner's advance-date-prefix/keep-HH:MM day-stepping (DST hygiene). Status → APPROVED, Suggested Next → feature-build (F1). | — | feature-build |
+| 2026-05-28 23:18 | claude-sonnet-4-6 — feature-auto-build | **F1**: StatTasks/StatStreak/StatPomos rewired to real stores. NEW `src/internal/dataReads/`: isTaskColsRecord+taskStats (AC-RD-TASKS-1..5); isPomodoroSession+pomoStats (AC-RD-POMO-1..5, `finishedAt`+`completed` NOT `completedAt`); isHabitsState+habitStreak (AC-RD-HABIT-1..6, UTC day keys, C1 strict-consecutive). EXTENDED internal/strings.ts: STR_WIDGET_EMPTY+strEmpty() (N2 dedicated table). REWRITTEN StatTasks/Streak/Pomos tests: seed-driven real+empty; old magic-number assertions removed (RD8). 47 new dataReads unit tests. 185/185 green (26 files). | `aaa08c6` | F2 |
+| 2026-05-28 23:20 | claude-sonnet-4-6 — feature-auto-build | **F2**: UpcomingWidget+MiniCalWidget rewired to real `xai_calendar_events`. NEW `src/internal/dataReads/`: isUserCalEventMap+calUpcoming (upcomingEvents ≤4 sorted, now-filtered, N3 recurrence) + calMonthDots (monthDots by viewYear/viewMonth, rose CSS added RD4). EXTENDED registrations.tsx: 1-line `now={ctx.now}` to UpcomingWidget (N1 additive). EXTENDED styles.css: .mc-dot-rose + .ws-empty + .upc-empty. REWRITTEN Upcoming/MiniCal tests: real data seed; SHIPPED MiniCal AC-MINICAL-1..9 re-homed unchanged. 20 new dataReads selector tests + 15 new widget tests. 215/215 green (28 files); 128/128 web regression; build green (138.86KB css, 3.08s). F3: docs sync + barrel confirm → READY_FOR_VERIFY. | `34e2fab` | F3 (this run, docs) |
