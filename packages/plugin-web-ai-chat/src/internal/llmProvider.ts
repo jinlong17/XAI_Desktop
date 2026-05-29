@@ -14,7 +14,7 @@
 
 import { getPref } from "@repo/plugin-web-storage";
 import type { AiModelId } from "../types.js";
-import type { AnthropicToolDef, ContentBlock } from "./toolUseTypes.js";
+import type { AnthropicToolDef, ContentBlock, ToolUseBlock, ToolResultBlock } from "./toolUseTypes.js";
 import { toOpenAiTools, toOpenAiToolChoice } from "./toolUseTypes.js";
 
 // ---- Model id constants (pinned per Rec3, 2026-05-25) ----------------------
@@ -65,6 +65,81 @@ export interface ProviderConfig {
   provider: AiProviderKind;
 }
 
+// ---- OpenAI message translation --------------------------------------------
+
+/**
+ * Translates an array of messages from Anthropic content-block shape to
+ * OpenAI Chat Completions wire format.
+ *
+ * AiChatModule builds round-trip turns in Anthropic format (§2.6 finding).
+ * This translator is the single seam in the openai buildBody branch;
+ * AiChatModule, streamCompleteChat, and the Anthropic branch stay untouched.
+ *
+ * Translation rules (discovery §3.3 + api §15.3):
+ *
+ *   String content → unchanged (role: "user"|"assistant", content: string)
+ *
+ *   assistant ContentBlock[] where content[0].type === "tool_use":
+ *     → { role: "assistant", content: null, tool_calls: [
+ *          { id, type: "function", function: { name, arguments: JSON.stringify(input) } }
+ *        ] }
+ *
+ *   user ContentBlock[] where content[0].type === "tool_result":
+ *     → { role: "tool", tool_call_id: content[0].tool_use_id, content: content[0].content }
+ *
+ *   Other ContentBlock[] (e.g. text blocks) → passed through as-is (best-effort).
+ *
+ * @internal
+ */
+function _translateMessagesToOpenAi(
+  messages: Array<{ role: "user" | "assistant"; content: string | ContentBlock[] }>,
+): unknown[] {
+  const result: unknown[] = [];
+  for (const msg of messages) {
+    if (typeof msg.content === "string") {
+      // Plain string message — pass through unchanged.
+      result.push({ role: msg.role, content: msg.content });
+      continue;
+    }
+
+    const blocks = msg.content;
+
+    // Assistant turn with a tool_use block → OpenAI assistant + tool_calls array.
+    if (msg.role === "assistant" && blocks.length > 0 && blocks[0]?.type === "tool_use") {
+      const toolUseBlock = blocks[0] as ToolUseBlock;
+      result.push({
+        role: "assistant",
+        content: null,
+        tool_calls: [{
+          id: toolUseBlock.id,
+          type: "function",
+          function: {
+            name: toolUseBlock.name,
+            arguments: JSON.stringify(toolUseBlock.input),
+          },
+        }],
+      });
+      continue;
+    }
+
+    // User turn with a tool_result block → OpenAI "tool"-role message.
+    if (msg.role === "user" && blocks.length > 0 && blocks[0]?.type === "tool_result") {
+      const resultBlock = blocks[0] as ToolResultBlock;
+      // OpenAI has no is_error field; a declined/errored result is conveyed as plain content text.
+      result.push({
+        role: "tool",
+        tool_call_id: resultBlock.tool_use_id,
+        content: resultBlock.content,
+      });
+      continue;
+    }
+
+    // Other ContentBlock[] (text blocks, etc.) — pass through best-effort.
+    result.push({ role: msg.role, content: blocks });
+  }
+  return result;
+}
+
 // ---- resolveProvider -------------------------------------------------------
 
 /**
@@ -94,9 +169,14 @@ export function resolveProvider(apiKey: string): ProviderConfig {
         "authorization": `Bearer ${apiKey}`,
       },
       buildBody({ modelId, messages, stream, maxTokens, tools, toolChoice }) {
+        // Translate messages from Anthropic content-block shape to OpenAI wire format.
+        // AiChatModule builds priorMessages in Anthropic format (§2.6 finding);
+        // the adapter is the single translation seam — AiChatModule stays byte-stable.
+        const openAiMessages = _translateMessagesToOpenAi(messages);
+
         const body: Record<string, unknown> = {
           model: modelId,
-          messages,
+          messages: openAiMessages,
           stream,
         };
         if (maxTokens !== undefined) body["max_tokens"] = maxTokens;
