@@ -96,6 +96,8 @@ export type {
   OutboxRollbackSafety,
 } from "./sync-outbox";
 export {
+  OFFLINE_QUEUE_REPLAYABLE_STATUSES,
+  OFFLINE_QUEUE_UNRESOLVED_STATUSES,
   OFFLINE_QUEUEABLE_ENTITY_TYPES,
   applyOfflineMutationRollback,
   buildOfflineMutationId,
@@ -105,8 +107,10 @@ export {
   isQueuedOfflineResult,
   listOfflineQueueMutations,
   markOfflineMutationConflict,
+  markOfflineMutationReplayDeferred,
   markOfflineMutationRetryableFailure,
   markOfflineMutationRollbackPending,
+  markOfflineMutationSynced,
   outboxIdForQueuedResult,
   stageHabitOfflineEdit,
   stageOfflineEditMutation,

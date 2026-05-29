@@ -17,6 +17,7 @@ import {
   markOfflineMutationConflict,
   markOfflineMutationRetryableFailure,
   markOfflineMutationRollbackPending,
+  markOfflineMutationSynced,
   nextOutboxBatch,
   outboxIdForQueuedResult,
   stageHabitOfflineEdit,
@@ -342,6 +343,59 @@ describe("offline queue observability and rollback safety", () => {
     expect(summary.byStatus.queued).toBe(1);
     expect(summary.byStatus.retryable_failure).toBe(1);
     expect(summary.byStatus.conflict).toBe(1);
+    expect(summary.byStatus.synced).toBe(0);
+  });
+
+  it("excludes synced rows from pending list/summary by default", async () => {
+    const repo = createInMemoryRepo<RepoRecord | OutboxEntry>({
+      namespace: "row14-pending-filter",
+    });
+    const nextCommitSeq = createMockCommitSeqAuthority(0);
+    const staged = await stageTodoOfflineEdit({
+      repo,
+      entity: todoFixture("todo-synced", "2026-05-29T12:00:00.000Z"),
+      op: "put",
+      boundaryKey: "user-sync",
+      nextCommitSeq,
+    });
+
+    expect(staged.status).toBe("queued");
+    if (staged.status !== "queued") {
+      return;
+    }
+
+    const synced = await markOfflineMutationSynced({
+      repo,
+      mutationId: staged.mutationId,
+      ackedAt: "2026-05-29T12:01:00.000Z",
+      remoteRevision: 7,
+      remoteCommitSeq: "991",
+    });
+    expect(synced.ok).toBe(true);
+    if (!synced.ok) {
+      return;
+    }
+
+    expect(synced.row.queueStatus).toBe("synced");
+    expect(synced.row.ackedAt).toBe("2026-05-29T12:01:00.000Z");
+    expect(synced.row.remoteRevision).toBe(7);
+    expect(synced.row.remoteCommitSeq).toBe("991");
+
+    const pending = await listOfflineQueueMutations(repo, {
+      boundaryKey: "user-sync",
+    });
+    expect(pending).toHaveLength(0);
+
+    const summary = await getOfflineQueueSummary(repo, {
+      boundaryKey: "user-sync",
+    });
+    expect(summary.total).toBe(0);
+
+    const all = await listOfflineQueueMutations(repo, {
+      boundaryKey: "user-sync",
+      statuses: ["synced"],
+    });
+    expect(all).toHaveLength(1);
   });
 
   it("applies rollback when rollback safety checks pass", async () => {

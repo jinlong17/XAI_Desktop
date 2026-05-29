@@ -1,7 +1,6 @@
 import {
   enqueueOutboxEntry,
   nextOutboxBatch,
-  OUTBOX_QUEUE_STATUSES,
   outboxIdFor,
   type OutboxQueueStatus,
   type OutboxEntry,
@@ -29,6 +28,20 @@ export type OfflineQueueableEntityType =
 const OFFLINE_QUEUEABLE_SET: ReadonlySet<string> = new Set(
   OFFLINE_QUEUEABLE_ENTITY_TYPES,
 );
+
+export const OFFLINE_QUEUE_UNRESOLVED_STATUSES = [
+  "queued",
+  "replay_deferred",
+  "retryable_failure",
+  "conflict",
+  "rollback_pending",
+] as const satisfies readonly OutboxQueueStatus[];
+
+export const OFFLINE_QUEUE_REPLAYABLE_STATUSES = [
+  "queued",
+  "replay_deferred",
+  "retryable_failure",
+] as const satisfies readonly OutboxQueueStatus[];
 
 export type OfflineEditOperation = "put" | "delete";
 
@@ -305,7 +318,7 @@ export async function listOfflineQueueMutations(
     : null;
   const statusSet = options.statuses
     ? new Set(options.statuses)
-    : new Set<OutboxQueueStatus>(OUTBOX_QUEUE_STATUSES);
+    : new Set<OutboxQueueStatus>(OFFLINE_QUEUE_UNRESOLVED_STATUSES);
 
   return rows.filter((row) => {
     if (row.id !== outboxIdFor(row.mutationId)) {
@@ -338,6 +351,7 @@ export async function getOfflineQueueSummary(
     retryable_failure: 0,
     conflict: 0,
     rollback_pending: 0,
+    synced: 0,
     rolled_back: 0,
   };
   for (const row of rows) {
@@ -359,6 +373,10 @@ type QueueStatusUpdateResult =
 type QueueStatusUpdatePatch = {
   queueStatus: OutboxQueueStatus;
   retryCountDelta?: number;
+  lastAttemptAt?: string;
+  ackedAt?: string;
+  remoteRevision?: number;
+  remoteCommitSeq?: string;
   lastFailureCode?: string;
   lastFailureMessage?: string;
   clearFailure?: boolean;
@@ -390,6 +408,10 @@ async function updateOutboxQueueStatus(input: {
     ...row,
     queueStatus: input.patch.queueStatus,
     retryCount: row.retryCount + (input.patch.retryCountDelta ?? 0),
+    lastAttemptAt: input.patch.lastAttemptAt ?? row.lastAttemptAt,
+    ackedAt: input.patch.ackedAt ?? row.ackedAt,
+    remoteRevision: input.patch.remoteRevision ?? row.remoteRevision,
+    remoteCommitSeq: input.patch.remoteCommitSeq ?? row.remoteCommitSeq,
     statusUpdatedAt: timestamp,
     updatedAt: timestamp,
     conflictAt: input.patch.conflictAt ?? row.conflictAt,
@@ -418,15 +440,19 @@ export async function markOfflineMutationRetryableFailure(input: {
   mutationId: string;
   failureCode: string;
   message: string;
+  attemptAt?: string;
   nowIso?: () => string;
 }): Promise<QueueStatusUpdateResult> {
+  const nowIso = input.nowIso ?? (() => new Date().toISOString());
+  const attemptAt = input.attemptAt ?? nowIso();
   return updateOutboxQueueStatus({
     repo: input.repo,
     mutationId: input.mutationId,
-    nowIso: input.nowIso,
+    nowIso: () => attemptAt,
     patch: {
       queueStatus: "retryable_failure",
       retryCountDelta: 1,
+      lastAttemptAt: attemptAt,
       lastFailureCode: input.failureCode,
       lastFailureMessage: input.message,
     },
@@ -437,19 +463,70 @@ export async function markOfflineMutationConflict(input: {
   repo: Repo<RepoRecord | OutboxEntry>;
   mutationId: string;
   message: string;
+  attemptAt?: string;
   nowIso?: () => string;
 }): Promise<QueueStatusUpdateResult> {
   const nowIso = input.nowIso ?? (() => new Date().toISOString());
-  const conflictAt = nowIso();
+  const attemptAt = input.attemptAt ?? nowIso();
+  const conflictAt = attemptAt;
   return updateOutboxQueueStatus({
     repo: input.repo,
     mutationId: input.mutationId,
     nowIso: () => conflictAt,
     patch: {
       queueStatus: "conflict",
+      lastAttemptAt: attemptAt,
       conflictAt,
       lastFailureCode: "conflict",
       lastFailureMessage: input.message,
+    },
+  });
+}
+
+export async function markOfflineMutationReplayDeferred(input: {
+  repo: Repo<RepoRecord | OutboxEntry>;
+  mutationId: string;
+  failureCode: string;
+  message: string;
+  attemptAt?: string;
+  nowIso?: () => string;
+}): Promise<QueueStatusUpdateResult> {
+  const nowIso = input.nowIso ?? (() => new Date().toISOString());
+  const attemptAt = input.attemptAt ?? nowIso();
+  return updateOutboxQueueStatus({
+    repo: input.repo,
+    mutationId: input.mutationId,
+    nowIso: () => attemptAt,
+    patch: {
+      queueStatus: "replay_deferred",
+      lastAttemptAt: attemptAt,
+      lastFailureCode: input.failureCode,
+      lastFailureMessage: input.message,
+    },
+  });
+}
+
+export async function markOfflineMutationSynced(input: {
+  repo: Repo<RepoRecord | OutboxEntry>;
+  mutationId: string;
+  ackedAt?: string;
+  remoteRevision?: number;
+  remoteCommitSeq?: string;
+  nowIso?: () => string;
+}): Promise<QueueStatusUpdateResult> {
+  const nowIso = input.nowIso ?? (() => new Date().toISOString());
+  const ackedAt = input.ackedAt ?? nowIso();
+  return updateOutboxQueueStatus({
+    repo: input.repo,
+    mutationId: input.mutationId,
+    nowIso: () => ackedAt,
+    patch: {
+      queueStatus: "synced",
+      lastAttemptAt: ackedAt,
+      ackedAt,
+      remoteRevision: input.remoteRevision,
+      remoteCommitSeq: input.remoteCommitSeq,
+      clearFailure: true,
     },
   });
 }

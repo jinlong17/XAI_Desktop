@@ -63,6 +63,7 @@ export const OUTBOX_QUEUE_STATUSES = [
   "retryable_failure",
   "conflict",
   "rollback_pending",
+  "synced",
   "rolled_back",
 ] as const;
 
@@ -118,6 +119,12 @@ export interface OutboxEntry extends RepoRecord {
   lastFailureAt?: string;
   /** Conflict marker timestamp for explicit conflict visibility. */
   conflictAt?: string;
+  /** Durable remote acknowledgement timestamp (row #14). */
+  ackedAt?: string;
+  /** Optional remote revision returned on acknowledgement. */
+  remoteRevision?: number;
+  /** Optional remote commit sequence returned on acknowledgement. */
+  remoteCommitSeq?: string;
   /** Rollback audit markers. */
   rollbackRequestedAt?: string;
   rollbackReason?: string;
