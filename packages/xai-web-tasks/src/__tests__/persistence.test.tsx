@@ -1,8 +1,9 @@
 /**
- * persistence.test.tsx — T-PER-1..3 + T-CR-1..3 + T-PER-DONE-1..2
+ * persistence.test.tsx — T-PER-1..3 + T-CR-1..3 + T-PER-DONE-1..2 + T-FILT-COUNT
  *
  * Tests usePref boundary cast + seed-fallback + localStorage round-trip.
  * Phase: P2 (T-PER-1..3) + EP2 (T-CR-1..2) + EP3 (T-CR-3) + T-10-bugfix (T-PER-DONE-1..2)
+ *        FP2 (T-FILT-COUNT — headline storage-unchanged gate for smartlist-filter)
  */
 
 import { describe, it, expect, vi } from "vitest";
@@ -10,6 +11,7 @@ import { render, fireEvent, act } from "@testing-library/react";
 import React from "react";
 import { TasksModule } from "../TasksModule.js";
 import { SEED_TASK_COLS } from "../internal/seed/tasksMock.js";
+import { filterCardsByList } from "../internal/filterCardsByList.js";
 
 describe("TasksModule persistence", () => {
   // T-PER-1: initial render (empty localStorage) shows seed data
@@ -271,5 +273,67 @@ describe("TasksModule completion persistence (T-PER-DONE)", () => {
     expect(reloadedCard).toBeTruthy();
     expect(reloadedCard!.classList.contains("is-completed")).toBe(true);
     void toggledCardId; // used above for assertion
+  });
+});
+
+// ---------------------------------------------------------------------------
+// T-FILT-COUNT — HEADLINE STORAGE-UNCHANGED GATE (FP2 — smartlist-filter)
+//
+// Applying filterCardsByList with any smart-list must NOT write localStorage.
+// The filter is a pure VIEW selector; xai_task_cols must remain byte-identical.
+// This complements T-FILT-NOMUT (which checks the in-memory input object) by
+// asserting the *storage layer* is not touched.
+// ---------------------------------------------------------------------------
+
+describe("filterCardsByList — T-FILT-COUNT storage byte-identical (FP2)", () => {
+  it("T-FILT-COUNT: localStorage xai_task_cols is byte-identical before and after applying all filters", () => {
+    // Render so localStorage might have content written by usePref on first DnD
+    render(<TasksModule lang="en" />);
+
+    // Capture the localStorage state BEFORE applying filters (may be null on fresh render)
+    const snapshotBefore = localStorage.getItem("xai_task_cols");
+
+    // Apply all 6 smart-list filters in sequence via the pure selector (no DOM interaction)
+    const cols = JSON.parse(JSON.stringify(SEED_TASK_COLS)) as Parameters<typeof filterCardsByList>[0];
+    const lists = ["all", "inbox", "next7", "today", "tomorrow", "summary"] as const;
+    for (const list of lists) {
+      filterCardsByList(cols, list);
+    }
+
+    // localStorage must be byte-identical to before (the selector wrote nothing)
+    const snapshotAfter = localStorage.getItem("xai_task_cols");
+    expect(snapshotAfter).toBe(snapshotBefore);
+  });
+
+  it("T-FILT-COUNT: persisted xai_task_cols count field is not mutated after applying filters", () => {
+    // Perform a DnD to get something written to localStorage
+    render(<TasksModule lang="en" />);
+
+    const cols = document.querySelectorAll(".task-col");
+    const overdueCol = cols[0] as HTMLElement;
+    const nodateCol  = cols[3] as HTMLElement;
+    const firstCard  = overdueCol.querySelector(".task-card") as HTMLElement;
+
+    const dataTransfer = {
+      effectAllowed: "" as string,
+      dropEffect: "" as string,
+      data: {} as Record<string, string>,
+      setData(type: string, value: string) { this.data[type] = value; },
+      getData(type: string) { return this.data[type] ?? ""; },
+    };
+    fireEvent.dragStart(firstCard, { dataTransfer });
+    fireEvent.drop(nodateCol, { dataTransfer, preventDefault: () => {} });
+
+    // Capture localStorage after the DnD write
+    const rawAfterDnd = localStorage.getItem("xai_task_cols");
+    expect(rawAfterDnd).not.toBeNull();
+
+    // Apply all filters — localStorage must stay identical
+    const colsForFilter = JSON.parse(JSON.stringify(SEED_TASK_COLS)) as Parameters<typeof filterCardsByList>[0];
+    for (const list of ["all", "inbox", "next7", "today", "tomorrow", "summary"] as const) {
+      filterCardsByList(colsForFilter, list);
+    }
+
+    expect(localStorage.getItem("xai_task_cols")).toBe(rawAfterDnd);
   });
 });

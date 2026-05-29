@@ -1,11 +1,11 @@
 /**
- * index-barrel.test.ts — T-BAR-1 (P3) + T-BAR-2 (EP3)
+ * index-barrel.test.ts — T-BAR-1 (P3) + T-BAR-2 (EP3) + T-FILT-BAR (FP2)
  *
  * Verifies the public surface exports the documented identifiers.
  * Intentionally runtime-only (no tsd) — type re-exports are already
  * covered by tsconfig noEmit in the typecheck script.
  *
- * Phase: P3 (T-BAR-1) + EP3 (T-BAR-2)
+ * Phase: P3 (T-BAR-1) + EP3 (T-BAR-2) + FP2 (T-FILT-BAR)
  */
 
 import { describe, it, expect } from "vitest";
@@ -58,5 +58,26 @@ describe("@repo/plugin-web-tasks barrel (T-BAR-2 EP3)", () => {
 
   it("T-BAR-2e: STR_TASK_COMPOSER (internal) is NOT exported", () => {
     expect((api as Record<string, unknown>)["STR_TASK_COMPOSER"]).toBeUndefined();
+  });
+});
+
+// ---------------------------------------------------------------------------
+// T-FILT-BAR (FP2): filterCardsByList + SmartListId + STR_SMART_LIST_EMPTY
+// must NOT appear on the public barrel surface (kept internal per Rec-F3).
+// ---------------------------------------------------------------------------
+
+describe("@repo/plugin-web-tasks barrel (T-FILT-BAR FP2)", () => {
+  it("T-FILT-BAR-a: filterCardsByList (internal selector) is NOT exported", () => {
+    expect((api as Record<string, unknown>)["filterCardsByList"]).toBeUndefined();
+  });
+
+  it("T-FILT-BAR-b: STR_SMART_LIST_EMPTY (internal STR) is NOT exported", () => {
+    expect((api as Record<string, unknown>)["STR_SMART_LIST_EMPTY"]).toBeUndefined();
+  });
+
+  it("T-FILT-BAR-c: SmartListId (kept internal per Rec-F3) is NOT exported as a runtime value", () => {
+    // SmartListId is a TypeScript type — no runtime value expected.
+    // This ensures it was NOT accidentally turned into a runtime export (e.g. an enum or const object).
+    expect((api as Record<string, unknown>)["SmartListId"]).toBeUndefined();
   });
 });

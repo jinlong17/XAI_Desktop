@@ -16,6 +16,7 @@ import { SEED_TASK_COLS } from "./internal/seed/tasksMock.js";
 import { isTaskColsArray } from "./internal/validate.js";
 import { moveCard, toggleComplete, addCard } from "./internal/tasksReducer.js";
 import { filterCardsByList } from "./internal/filterCardsByList.js";
+import { STR_SMART_LIST_EMPTY } from "./internal/strings.js";
 import { TasksSidebar } from "./TasksSidebar.js";
 import { TaskColumn } from "./TaskColumn.js";
 import { TaskComposer } from "./TaskComposer.js";
@@ -70,6 +71,15 @@ export function TasksModule({ lang }: TasksModuleProps) {
   );
 
   const filterActive = activeList !== "all" && activeList !== "summary";
+
+  // Board-level empty state: total visible tasks (across filtered columns) = 0.
+  // Only shown when a non-trivial filter is active (not all/summary).
+  // The per-column "drop here" hint is suppressed via filterActive prop on TaskColumn.
+  const filteredTotalTasks = filteredCols.reduce(
+    (sum, col) => sum + col.tasks.length + (col.completed?.length ?? 0),
+    0,
+  );
+  const showBoardEmpty = filterActive && filteredTotalTasks === 0;
 
   // ---- DnD transient state ----
   const [dragging, setDragging] = useState<{ taskId: string; fromColId: BucketId } | null>(null);
@@ -177,6 +187,14 @@ export function TasksModule({ lang }: TasksModuleProps) {
             </button>
           </div>
         </header>
+        {/* Board-level honest empty state (D-QT + design §F.1 #8).
+            Rendered when a filter is active and yields zero total cards.
+            Wording is bucket-framed per the D-QT binding directive (no "due today/tomorrow"). */}
+        {showBoardEmpty && (
+          <div className="tasks-board-empty" role="status">
+            {STR_SMART_LIST_EMPTY[activeList][lang]}
+          </div>
+        )}
         <div className="task-columns">
           {filteredCols.map((col) => (
             <TaskColumn

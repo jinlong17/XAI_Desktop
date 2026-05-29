@@ -601,3 +601,155 @@ Every load-bearing claim verified against ACTUAL source + live test output, not 
 - **R-V1 (cross-vendor manual smoke deferred)**: `Verify Cross-vendor: yes` for this UI+persistence change is DEFERRED per ADR-0008 §S3 24h-evidence carve-out. Joins the accumulated Web smoke batch that must clear before the next `xai-web-deploy-cloudflare` ship. Tester note: Tasks must be ENABLED in settings (`withDisabledFallback` gate) or the route renders `<DisabledFeatureFallback>` and the checkbox is unreachable. Manual leg: open `/app/tasks`, toggle a card complete, hard-reload → `is-completed` must survive; drag a completed card across buckets → stays completed. Not ship-blocking.
 
 No blockers. All 4 fix commits ready for `ship` (human-gated push to `origin/web`).
+
+---
+
+# Iteration 3 — xai-web-tasks-smartlist-filter (extension, 2026-05-28)
+
+> APPENDED iteration. The SHIPPED v1 state machine, the card-create Iteration 2,
+> and the T-10 BUGFIX blocks above are preserved verbatim.
+> This block is the active Status Panel + Phase Plan for the smart-list-filter carve-out.
+> Workflow rule: `dev_log.md` is the single source of truth for workflow state.
+
+## Status Panel (ACTIVE)
+
+| Field | Value |
+|---|---|
+| Workflow | FEATURE_DEV |
+| Target | xai-web-tasks-smartlist-filter |
+| Title | Make sidebar smart-lists really filter the board (lift activeList + pure filterCardsByList view selector) |
+| Current Phase | FEATURE_VERIFY |
+| Status | READY_FOR_VERIFY |
+| Executor | Claude Sonnet (claude-sonnet-4-6) feature-auto-build |
+| Updated | 2026-05-29 00:10 |
+| Suggested Next | feature-verify |
+| Level | increment (extension of SHIPPED row #6; compatible with SHIPPED #3 card-create + T-10 done-persist + T-12 drag) |
+| Why reopen | Audit Top-10 / inventory T-01 — sidebar smart-list rows (All/Today/Tomorrow/Next7/Inbox/Summary) highlight on click but never filter the 4-bucket board; `activeList` trapped in `TasksSidebar.tsx:56` local useState, never lifted, never applied. Entire left sidebar is a cosmetic no-op. P0 carve-out `eacf1e5` authorizes the feature under ADR-0010 §D4. |
+| Automation Mode | A-Claude (default; pickable at feature-build dispatch) |
+| Verify Cross-vendor | yes (Codex cold-read of `filterCardsByList` + lift at FP2; MAY defer 24h per ADR-0008 §S3) |
+| Branch | web (does NOT touch dev) |
+| Blockers | — |
+| Roadmap Manifest | docs/workflow/roadmap/xai-web-tasks-smartlist-filter.md |
+| Discovery Review | docs/reviews/xai-web-tasks-smartlist-filter/20260528-discovery-review.md |
+| Feature Brief | docs/reviews/xai-web-tasks-smartlist-filter/20260528-feature-brief.md |
+| Carve-out Authority | docs/reviews/_p0-carve-outs/20260528-tasks-smartlist-filter.md (commit eacf1e5) |
+
+## Scope of the increment
+
+VIEW-ONLY filtering. Lift `activeList` from `TasksSidebar` (local useState, L56) into `TasksModule` via props + callback; add ONE pure `filterCardsByList(cols, list, now?)` selector that projects a filtered render shape from the bucket axis (NOT by parsing year-less `card.date` strings). Apply each smart-list predicate (all=identity / inbox=`card.inbox===true` / next7=next7-bucket / today=overdue-bucket / tomorrow=next7-bucket / summary=identity). Honest board-level empty state when a filter yields zero cards. Custom-list/tag rows DEFERRED (non-selecting). Session-only selection (NO registry key). **ABSOLUTELY NO** `tasksReducer` mutation change, **NO** mutation of stored `xai_task_cols`, **NO** `web:*` channel, **NO** `plugin-web-tokens`/`plugin-web-storage`/`packages/core`/host-shell/other-plugin/SHIPPED-archive/ADR/`dev` edit.
+
+## Files likely affected
+
+**New** (in `packages/xai-web-tasks/src/`):
+- `internal/filterCardsByList.ts` (pure view selector)
+- `__tests__/filterCardsByList.test.ts`
+- `__tests__/TasksSidebar.test.tsx` (T-LIFT-4 inert custom/tag rows)
+
+**Edited**:
+- `types.ts` (+`SmartListId` type, additive — lifted from TasksSidebar.tsx:39)
+- `TasksSidebar.tsx` (activeList/onSelectList become props; remove local useState; custom/tag rows non-selecting)
+- `TasksModule.tsx` (+activeList useState + onSelectList; filtered view via useMemo; board-level empty state; mutation handlers stay on UNFILTERED taskCols)
+- `TaskColumn.tsx` (+`filterActive?` prop to suppress per-column "drop here" hint under filter)
+- `internal/strings.ts` (+empty-state STR en+zh)
+- `index.ts` (MAY +`SmartListId` export — review decides; default keeps internal)
+- `styles.css` (+empty-state rule if needed)
+- `__tests__/TasksModule.test.tsx`, `__tests__/persistence.test.tsx`, `__tests__/index-barrel.test.ts` (extended)
+
+**NOT edited**: `internal/tasksReducer.ts` (move/toggle/create UNTOUCHED), `plugin-web-storage` registry (no new key), `plugin-web-tokens`, `packages/core/src/types/events.ts`, other plugins, `apps/web` host shell, SHIPPED archives, ADR, `dev` branch.
+
+## Phase Plan (extension — `feature-build` runs ONE phase per invocation, then STOPS)
+
+### FP1 — Lift + selector + structural lists
+**Goal**: pure selector + state lift produce visible filtering for All/Inbox/Next7/Today/Tomorrow/Summary; custom/tag rows inert. No empty-state polish yet.
+**Files**: `internal/filterCardsByList.ts`; `types.ts` (+`SmartListId`); edit `TasksSidebar.tsx` (controlled props), `TasksModule.tsx` (+activeList state + filtered useMemo).
+**Tests**: T-FILT-1..8, **T-FILT-NOMUT** (headline pure no-mutation), T-LIFT-1..4.
+**Exit**: selector + lift tests green; **T-FILT-NOMUT proves the selector mutates nothing**; SHIPPED 76 tests still green (drag/create/complete untouched); tasks typecheck + lint clean. No host edit.
+
+### FP2 — Empty state + date-predicate confirm + tests + cross-vendor
+**Goal**: honest empty state + finalize the today/tomorrow bucket approximation (Q-T); full regression + persistence-untouched proof + docs + vendor cold-read.
+**Files**: `internal/strings.ts` (+empty-state STR), edit `TaskColumn.tsx` (suppress hint under filter), `TasksModule.tsx` (board-level empty state), `styles.css` (if needed); extend `__tests__/persistence.test.tsx`, `__tests__/TasksModule.test.tsx`, `__tests__/index-barrel.test.ts`.
+**Tests**: **T-FILT-COUNT** (headline storage byte-identical after all filters), T-EMPTY-1..2, T-FILT-BAR, T-REG-NOMUT (SHIPPED suites green).
+**Steps**: full tasks + web suites + build; Codex cold-read of selector + lift (or defer per ADR-0008 §S3); write verify section; PLUGIN_MAP note appended at ship.
+**Exit**: AC-F1..AC-F8 met → flip Status to `READY_FOR_VERIFY`, Suggested Next = `feature-verify`.
+
+> Q-PHASE: 2 phases judged right-sized — the selector and the lift are co-dependent for any visible behaviour, so splitting them would create a phase with no testable user-facing outcome. Reviewer may split FP1 if preferred.
+
+## Risks (extension — mirrored from discovery §6)
+
+| ID | Risk | Mitigation |
+|---|---|---|
+| RF1 | Filtering accidentally mutates `xai_task_cols` | `filterCardsByList` pure; mutation handlers run on UNFILTERED `taskCols`; **T-FILT-NOMUT** (deep-equal after all filters) + **T-FILT-COUNT** (localStorage byte-identical) are the load-bearing gates. |
+| RF2 | `today`/`tomorrow` bucket approximation (Q-T) surprises reviewer/user | No precise per-day data exists (discovery §1.2 — `card.date` year-less, `next7` cards have no date); documented as THE reviewer-confirmable judgment; empty-until-real-due-field alternative rejected as worse UX. |
+| RF3 | Custom-list/tag rows half-wired after lift (they shared `activeList` at TasksSidebar.tsx:87) | Q1: make them explicitly non-selecting (inert); only 6 `SmartListId`s drive the filter; T-LIFT-4 asserts inert-ness. |
+| RF4 | Filtered empty column shows misleading "Drop tasks here" | D1: board-level honest empty state + `filterActive` suppresses per-column hint; T-EMPTY-1. |
+| RF5 | Derived view `count` confused with persisted `count` | View count recomputed in selector for display honesty only; storage `count` untouched; T-FILT-COUNT asserts storage unchanged. |
+| RF6 | Regression to SHIPPED drag (T-12) / create (#3) / complete (T-10) | All three reducer actions + persistence boundary UNTOUCHED; T-REG-NOMUT keeps the SHIPPED 76 suites green. |
+| RF7 | Cross-vendor smoke not run in-session | DEFER per ADR-0008 §S3; record (i)/(ii)/(iii) checklist in verify section at deferral time. |
+
+## Open questions (pending review — discovery §6)
+
+- **Q-T (date approximation, the headline):** Confirm `today→overdue` + `tomorrow→next7` bucket approximation (planner pick) vs. alternative (union, or empty-until-real-due-field). Planner recommends the documented bucket approximation — unavoidable given the SHIPPED card shape has no real per-day due dates.
+- **Q1 (custom/tag rows):** Confirm DEFER + make rows inert (planner pick) vs. route-to-all.
+- **Q2 (summary):** Confirm treat-as-all (planner pick) vs. defer-with-disabled-look.
+- **Q3 (persistence):** Confirm session-only / no new key (planner pick) vs. add `xai_pref_tasks_active_list` (would re-expand scope beyond the carve-out — needs re-authorization).
+- **Q-PHASE:** Confirm 2-phase split (planner pick) vs. splitting lift / selector.
+
+## Review Notes (extension — Iteration 3)
+
+**Verdict: APPROVED** (feature-review · Claude Opus claude-opus-4-8 · 2026-05-28) — with ONE binding build directive on Q-T (D-QT below). 0 blockers, 1 binding directive, 3 non-blocking recommendations.
+
+Every load-bearing discovery claim was VERIFIED against ACTUAL source on 2026-05-28 (not trusted from the recon table). Files read: `TasksSidebar.tsx`, `TasksModule.tsx`, `types.ts`, `internal/dateForCol.ts`, `internal/seed/tasksMock.ts`, `TaskColumn.tsx`, `internal/tasksReducer.ts`, `index.ts`, `plugin-web-storage/src/internal/registry.ts`.
+
+**Gates evaluated:**
+
+1. **Discovery quality / no-op confirmed** — PASS. Verified: `TasksSidebar.tsx:56` `const [activeList, setActiveList] = useState<string>("all")` (component-local); `:67` onClick flips `data-active` only; `TasksModule.tsx:130` renders `<TasksSidebar lang={lang} />` with NO `activeList` prop; `:162` maps `taskCols.map(...)` with NO filter — `activeList` is never referenced in `TasksModule`. The entire sidebar IS a cosmetic no-op exactly as claimed. Custom-list rows (`:88`) + tag rows (`:111`) confirmed: custom-lists share `activeList` via `setActiveList(cl.id)`, tag rows have no handler. Recon is faithful.
+
+2. **The load-bearing date finding (Q-T basis) — VERIFIED REAL** — PASS. `TaskCard.date` is a year-less display string (`types.ts:47-48`). Seed reality confirmed in `tasksMock.ts`: `overdue` 10 cards all carry arbitrary holiday `date` (`"7/31"`, `"9/10"`, `"10/24"`) NOT computed-from-today; **`next7` cards `t11`/`t12` have NO `date` field at all** (only `sub`/`dateLabel`, L40-41); `later` 13 cards use `"Mon D"` format. A precise per-calendar-day "today/tomorrow" predicate is genuinely underivable from this shape without a schema change — and the carve-out forbids that. B2 (date-string parse) / B3 (ISO `due` field) rejections are correct. **The planner did not invent this constraint; it is in the data.**
+
+3. **Bucket axis = the board's persisted date semantics** — PASS. `dateForCol.ts:25-51` confirms overdue=today−3d, next7=today+2d, later=today+30d, nodate=null. Bucket membership is deterministic, already persisted, and is what the UI visually communicates. Deriving temporal class from buckets (B1) is the only honest basis available.
+
+4. **No-mutation safety gate (THE headline constraint) — STRUCTURALLY ENFORCEABLE** — PASS. Verified `tasksReducer.ts` exports exactly `moveCard` (L30), `toggleComplete` (L108, now `TaskCol[]→TaskCol[]` post-T-10), `addCard` (L143) — all pure, all referential-equality-preserving. The ONLY write path is `setRawCols` at `TasksModule.tsx:56` (toggle), `:104` (drop), `:118` (create). A read-only `useMemo<TaskCol[]>(() => filterCardsByList(taskCols, activeList), …)` cannot reach `setRawCols`; the three mutation handlers continue to operate on the unfiltered `taskCols`. **T-FILT-NOMUT (pure deep-equal after all lists) + T-FILT-COUNT (localStorage byte-identical after UI filter clicks) are the correct, sufficient gates** — they prove the property, not just assert it. Compatible with SHIPPED T-10 `done` (now in `xai_task_cols`), #3 `addCard`, T-12 `moveCard`: the filter reads the resolved cols and never writes, so all three persist paths are untouched.
+
+5. **Contract completeness** — PASS. api.md §F.2 specifies `filterCardsByList(cols, list, now?)` PURE, always returns 4 columns (headers/empty-states render), recomputes a *derived view* `count` (storage `count` untouched), defensive identity for unknown `list`. §F.3/§F.4 specify the controlled-sidebar props (`activeList` + `onSelectList`) and the `TasksModule` `useState`+`useMemo`. §F.8 error semantics cover the zero-card and unknown-list paths. Inbox semantics verified: grep confirms exactly 17 `inbox:true` cards (10 overdue + 1 nodate-active + 6 nodate-completed) — matches §3/§F.2 exactly.
+
+6. **Phase plan quality (Q-PHASE)** — PASS. 2 phases right-sized: FP1 (selector + lift + structural lists + T-FILT-NOMUT + T-LIFT) and FP2 (empty state + Q-T finalize + T-FILT-COUNT + barrel + cross-vendor). The selector and the lift are co-dependent for any visible behaviour, so splitting them would create a phase with no testable user-facing outcome. Clean rollback boundary (FP1 is independently testable; the no-mutation gate lands in FP1). Q-PHASE planner pick ACCEPTED.
+
+7. **Architecture risk / boundary守约** — PASS, all held. Verified: (a) `xai_task_cols` at registry.ts:197-204 (json, owner `xai-web-tasks`, default `{}`) → READ-ONLY reuse, NO registry edit; (b) `xai_pref_smart_lists` at registry.ts:523-530 IS owner `xai-web-settings-rest` + `Record<string,string>` → Q3 rejection (wrong owner + wrong shape) is CORRECT; session-only `useState` adds no key; (c) state lifts via props → NO `packages/core/src/types/events.ts` edit; (d) `SmartListId` exists only as a local alias (`TasksSidebar.tsx:39`), `filterCardsByList` does not exist → no collision; (e) local `internal/strings.ts` STR → NO `plugin-web-tokens` edit; (f) slot already SHIPPED → NO host-shell edit; (g) all new code inside `packages/xai-web-tasks/src/`; SHIPPED v1/§E/T-10 blocks preserved verbatim; carve-out USES ADR-0010, no ADR edit; `dev` untouched. Strict subset of carve-out §2 In-scope minus the deferred items — no drift either direction.
+
+8. **Q1 (custom/tag rows) + Q2 (Summary)** — PASS (ACCEPT). Q1: no list/tag membership model exists (`TaskCard` has only an optional single `tag?`, and the sidebar's custom-lists are a disjoint taxonomy with no card linkage — verified `tasksMock.ts` cards carry no custom-list field). Making custom/tag rows non-selecting (inert) this iteration is the correct anti-half-wired choice; T-LIFT-4 asserts inert-ness. Q2: Summary=treat-as-all (identity) avoids a dead/decorative row the audit would re-flag and avoids overlapping Statistics #20 — honest and cheapest. Both planner picks ACCEPTED.
+
+9. **Test strategy + Workflow V2 compliance** — PASS. Inventory (§F.1) covers selector per-list (T-FILT-1..8), no-mutation (T-FILT-NOMUT pure + T-FILT-COUNT storage), lift wiring (T-LIFT-1..4), empty state bilingual (T-EMPTY-1..2), barrel (T-FILT-BAR), and SHIPPED-regression guard (T-REG-NOMUT keeps the 76 suites green). Mock strategy is sound (real `usePref`, real `useI18n`, deep-clone for no-mutation proof). dev_log Status Panel + Phase Plan + Risks + Work Log present; FP1/FP2 declare explicit exit gates; `feature-build` runs ONE phase per invocation; cross-vendor (Codex cold-read at FP2) MAY defer 24h per ADR-0008 §S3 with the (i)/(ii)/(iii) checklist.
+
+**Q-T RULING (the headline product judgment) — APPROVED AS A *BUCKET VIEW*, NOT A PRECISE DATE FILTER, with a binding honesty directive:**
+
+The planner correctly surfaced Q-T as the one unavoidable judgment. I accept the `today→overdue` + `tomorrow→next7` bucket approximation as the v1 mapping **because** (a) the stored shape genuinely cannot support a per-day filter (gate 2, verified), (b) schema change is forbidden by the carve-out, and (c) an empty-until-real-due-field "Today" reads as broken UX. Option (b) from the brief (defer all date-lists, ship only Inbox/All/Summary) is rejected: it ships a strictly less useful feature to avoid a problem that honest labelling solves.
+
+HOWEVER — `today→overdue` is semantically *wrong-leaning* if presented as a precise "due today" filter: "overdue" means past-due (today−3d), so a user clicking **Today** expecting today's items would instead see overdue items, and **Tomorrow→next7** shows a "within 7 days" bucket, not strictly tomorrow. This is acceptable ONLY if the UI is honest that these are bucket views, not calendar-day filters. The proposed empty-state copy in api.md §F.6 (`empty_today: "Nothing due today"`, `empty_tomorrow: "Nothing due tomorrow"`) **overstates precision** and would make the approximation read as an exact due-date match — the very dishonesty Q-T is meant to avoid.
+
+→ **D-QT (BINDING build directive, blocks READY_FOR_VERIFY if violated):** FP2 MUST present `today`/`tomorrow` as the bucket views they are, not as precise calendar-day filters. Concretely:
+   - The empty-state strings for `today`/`tomorrow` MUST NOT assert "due today/due tomorrow" precision. Use bucket-framed copy that matches what is actually shown, e.g. `today` → "Nothing overdue" / "没有逾期任务" (it shows the overdue bucket); `tomorrow`/`next7` → "Nothing in the next 7 days" / "最近 7 天没有任务" (both show the next7 bucket). A single parameterized `empty_filtered` keyed off the bucket label is acceptable.
+   - design §F / api §F.2 already carry the bucket-approximation note for `today`/`tomorrow`; that documentation stays. The change is ONLY the user-facing empty-state wording (and any tooltip/label the build adds), so it stays inside the local-STR scope with NO new constraint.
+   - This is a wording/honesty constraint inside the already-approved file scope (`internal/strings.ts`) — it does NOT expand scope, add a key category, or require a re-plan. feature-verify checks D-QT as part of T-EMPTY-1/2 review.
+
+**Recommendations (non-blocking, for build-time):**
+
+- **Rec-F1 (Q3 re-confirm):** Session-only is correct and adds no key. If a future increment wants persistence, `xai_pref_tasks_active_list` is a clean additive registry row but would re-expand scope beyond this carve-out and needs re-authorization — do NOT fold it in here.
+- **Rec-F2 (`filterActive` prop, api.md §F.5):** The per-column "drop here" suppression under an active filter is a good honesty touch, but keep it minimal — a single boolean prop on `TaskColumn`; if the board-level empty state alone reads cleanly, the prop may be dropped (planner already flagged this as reviewer-simplifiable). Either is fine; do not over-engineer.
+- **Rec-F3 (`SmartListId` export):** Keep it internal-to-module (default) unless a consumer materializes in this iteration — promoting to the barrel is a public-surface change that T-FILT-BAR must then assert. Default-internal is the lower-surface choice.
+
+**Q1/Q2/Q3/Q-PHASE planner picks all ACCEPTED. Q-T ACCEPTED with binding directive D-QT.** No blockers. Plan is executable with zero blocking ambiguity — every load-bearing source claim verified against actual code.
+
+## Work Log (extension — append-only)
+
+| Timestamp | Executor | Action | Commits | Next step |
+|---|---|---|---|---|
+| 2026-05-28 | Claude Opus (feature-plan) | Iteration 3 plan for `xai-web-tasks-smartlist-filter` (extension of SHIPPED row #6). Recon verified against ACTUAL source: `activeList` trapped in TasksSidebar.tsx:56 local useState, never lifted, never applied → cosmetic no-op confirmed; **THE load-bearing finding — `TaskCard.date` is a year-less display string in two formats (`"7/31"`/`"Jun 14"`) and `next7` cards carry NO `date` at all (seed t11/t12 only have sub/dateLabel), so a precise date-string predicate is impossible without a forbidden schema change** → chose B1 bucket-derived selector (the board's existing persisted `dateForCol` semantics) over B2 date-parse / B3 schema-extend. Resolved 3 planner's-calls: Q1 custom/tag DEFER (no membership model; rows inert), Q2 Summary treat-as-all (avoids overlap w/ Statistics #20 + dead row), Q3 session-only no-key (existing `xai_pref_smart_lists` is owner `xai-web-settings-rest` + `Record<string,string>` — wrong owner+shape, registry.ts:523-528). Confirmed no-mutation property is enforceable: pure selector reads, reducer writes, never cross (T-FILT-NOMUT + T-FILT-COUNT). Chose A1 state-lift (card-create Iteration-2 precedent, no `web:*` channel). Produced: feature brief, discovery review (per-list predicate table + dateForCol/TaskCard recon + 3 planner's-calls + no-mutation guarantee), design §F extension, api §F extension, test §F extension, roadmap manifest, this Status Panel + 2-phase plan. NO implementation code. | — | feature-review |
+| 2026-05-28 | Claude Opus (feature-review) | APPROVED (0 blockers, 1 binding directive D-QT, 3 non-blocking recs). Verified ALL load-bearing claims against ACTUAL source (not recon table): no-op real (TasksSidebar.tsx:56 local useState + :67 highlight-only + TasksModule.tsx:130/:162 no prop/no filter); **Q-T date finding REAL — `TaskCard.date` year-less (types.ts:47), seed `next7` t11/t12 have NO date (tasksMock.ts:40-41), overdue dates arbitrary holidays** → B1 bucket-derived correct, B2/B3 rejections sound; no-mutation STRUCTURALLY enforceable (tasksReducer exports moveCard/toggleComplete/addCard all pure+ref-equal; only write path setRawCols at TasksModule.tsx:56/104/118; read-only useMemo cannot reach it) → T-FILT-NOMUT+T-FILT-COUNT correct gates; inbox=17 cards confirmed by grep (10+1+6); registry xai_task_cols :197-204 + xai_pref_smart_lists :523-530 (owner xai-web-settings-rest, Record<string,string> — Q3 rejection correct); SmartListId local-only + filterCardsByList absent → no collision; boundary守约 all held (no registry/core-events/tokens/host/other-plugin/SHIPPED-archive/ADR/dev edit). Q1/Q2/Q3/Q-PHASE planner picks ACCEPTED. **Q-T RULING: bucket approximation ACCEPTED as a BUCKET VIEW (not precise date filter) + BINDING D-QT** — FP2 empty-state copy for today/tomorrow MUST NOT claim "due today/tomorrow" precision (today shows overdue bucket, tomorrow shows next7); use bucket-framed wording inside the local-STR scope (no scope expansion); verify checks D-QT via T-EMPTY-1/2. Status → APPROVED; Suggested Next = feature-build. | — | feature-build |
+| 2026-05-29 00:05 | Claude Sonnet (claude-sonnet-4-6) feature-auto-build | FP1 DONE: `SmartListId` type added to `types.ts` (lifted from TasksSidebar.tsx:39, kept internal per Rec-F3). `internal/filterCardsByList.ts` new pure view selector (B1 bucket-derived predicates: all/summary=identity; inbox=card.inbox===true across all buckets incl. nodate.completed; next7=next7-bucket; today=overdue-bucket Q-T; tomorrow=next7-bucket Q-T; unknown=identity; always 4 cols). `TasksSidebar.tsx` made controlled component (`activeList`+`onSelectList` props; local useState removed; custom-list+tag rows made INERT per Q1: tabIndex=-1, aria-hidden=true, no onClick). `TasksModule.tsx` lifts `activeList` useState (default "all", session-only Q3); `filteredCols = useMemo(filterCardsByList(taskCols, activeList))`; mutation handlers (handleToggle/handleDrop/handleComposerSave) operate on UNFILTERED taskCols; `filterActive` prop added to TaskColumn. `TaskColumn.tsx` +`filterActive?` prop suppresses "Drop tasks here" hint when filter active. Tests: 26 new filterCardsByList (T-FILT-1..8 per-list + T-FILT-NOMUT headline pure no-mutation 8 sub-tests) + 11 new TasksSidebar (T-LIFT-1..4). SHIPPED 76 + 37 new = 113/113 pass. tsc --noEmit exit 0. eslint --max-warnings 0 exit 0. | cdfb2a2 | FP2 |
+| 2026-05-29 00:10 | Claude Sonnet (claude-sonnet-4-6) feature-auto-build | FP2 DONE: `internal/strings.ts` +`STR_SMART_LIST_EMPTY` (D-QT COMPLIANT: today→"No overdue tasks"/"没有逾期任务" bucket-framed; tomorrow/next7→"Nothing in the next 7 days"/"最近 7 天没有任务"; inbox/all/summary similarly honest). `TasksModule.tsx` +`filteredTotalTasks` derived count + `showBoardEmpty` flag + board-level `<div class="tasks-board-empty" role="status">` rendering when filter active and 0 total visible cards. `STR_SMART_LIST_EMPTY` imported from `internal/strings.ts`. Tests: T-FILT-COUNT (2 new — localStorage byte-identical after all filters applied; also after DnD write), T-EMPTY-1 (3 new — EN board-level empty state with D-QT compliant copy for next7, today/overdue, all-noop), T-EMPTY-2 (2 new — ZH bilingual D-QT wording), T-FILT-BAR (3 new — filterCardsByList/STR_SMART_LIST_EMPTY/SmartListId NOT exported). 123/123 pass (37 more than FP1 baseline). @repo/web 128/128 pass, build green (4.18s). tsc exit 0. eslint --max-warnings 0 exit 0. D-QT verified via T-EMPTY-1/2: copy is bucket-framed, no "due today/tomorrow" precision. Cross-vendor (i) no shared-file edits; (ii) all paths absolute; (iii) no template-language-specific syntax — fresh tsc passes. Status → READY_FOR_VERIFY. | see FP2 commit | feature-verify |
+
+---
+
+## Notes for feature-review (Iteration 3)
+
+The single decision needing reviewer sign-off is **Q-T** (today→overdue, tomorrow→next7 bucket approximation). It is unavoidable: the SHIPPED `xai_task_cols` card shape has no real per-day due dates (discovery §1.2), and the carve-out forbids a schema change. Everything else (state lift, pure selector, no-mutation property, session-only, defer custom/tag, Summary-as-all) follows precedent and the carve-out line-for-line. The load-bearing safety gates are T-FILT-NOMUT (pure deep-equal) + T-FILT-COUNT (localStorage byte-identical) — both must be green for the no-mutation constraint to be proven, not just asserted.

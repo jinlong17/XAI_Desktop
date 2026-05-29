@@ -1,9 +1,10 @@
 /**
- * TasksModule.test.tsx — T-MOD-1..T-MOD-6 + T-COL-1
+ * TasksModule.test.tsx — T-MOD-1..T-MOD-6 + T-COL-1 + T-EMPTY-1..2
  *
  * P1 tests: T-MOD-1, T-MOD-2 (column header render in EN and ZH)
  * P2 tests: T-MOD-3..T-MOD-6 (checkbox toggle, DnD happy path, highlight, drag hint)
  * EP2 test: T-COL-1 (+ button opens composer with that bucket pre-selected)
+ * FP2 tests: T-EMPTY-1, T-EMPTY-2 (board-level honest empty state — EN + ZH, D-QT bucket wording)
  *
  * Clock is set to 2026-05-23 14:30 by vitest.setup.ts (vi.useFakeTimers).
  */
@@ -208,6 +209,153 @@ describe("TasksModule — T-COL-1 + button opens composer", () => {
              group?.textContent?.toLowerCase().includes("no date");
     });
     expect(bucketGroupRadios.length).toBeGreaterThan(0);
+  });
+});
+
+// ---------------------------------------------------------------------------
+// T-EMPTY-1 — board-level honest empty state in EN (D-QT bucket wording)
+// ---------------------------------------------------------------------------
+
+describe("TasksModule — T-EMPTY-1 board-level empty state EN (D-QT)", () => {
+  it("T-EMPTY-1a: clicking 'Next 7 Days' when next7 bucket is empty shows bucket-framed EN empty state", () => {
+    // Pre-seed localStorage with cols where next7 has NO tasks
+    const emptyCols = JSON.parse(JSON.stringify(
+      [
+        { id: "overdue", key: "overdue",     count: 0, action: "postpone", tasks: [] },
+        { id: "next7",   key: "next_7_days", count: 0, action: "add",      tasks: [] },
+        { id: "later",   key: "later",       count: 0, action: "add",      tasks: [] },
+        { id: "nodate",  key: "no_date",     count: 0, action: "add",      tasks: [] },
+      ]
+    ));
+    localStorage.setItem("xai_task_cols", JSON.stringify(emptyCols));
+
+    render(<TasksModule lang="en" />);
+
+    // Click "Next 7 Days" in the sidebar nav (not the column header h2 which has the same text)
+    const nav = document.querySelector(".module-sidebar");
+    const next7Row = Array.from(nav?.querySelectorAll(".list-row span.grow") ?? []).find(
+      (el) => el.textContent === "Next 7 Days",
+    ) as HTMLElement;
+    expect(next7Row).toBeTruthy();
+    fireEvent.click(next7Row!);
+
+    // Board-level empty state should appear with bucket-framed wording (D-QT compliant)
+    const emptyEl = document.querySelector(".tasks-board-empty");
+    expect(emptyEl).toBeTruthy();
+    expect(emptyEl!.textContent).toBe("Nothing in the next 7 days");
+
+    // The copy must NOT claim precise calendar-day precision (D-QT)
+    expect(emptyEl!.textContent).not.toContain("due today");
+    expect(emptyEl!.textContent).not.toContain("due tomorrow");
+  });
+
+  it("T-EMPTY-1b: clicking 'Today' (overdue bucket) when overdue is empty shows 'No overdue tasks' (D-QT)", () => {
+    // Pre-seed localStorage with cols where overdue has NO tasks
+    const emptyCols = JSON.parse(JSON.stringify(
+      [
+        { id: "overdue", key: "overdue",     count: 0, action: "postpone", tasks: [] },
+        { id: "next7",   key: "next_7_days", count: 2, action: "add",      tasks: [
+          { id: "t11", title: { en: "Memorial Day", zh: "阵亡将士纪念日" } },
+          { id: "t12", title: { en: "Eid al-Adha",  zh: "古尔邦节" } },
+        ] },
+        { id: "later",   key: "later",       count: 0, action: "add",      tasks: [] },
+        { id: "nodate",  key: "no_date",     count: 0, action: "add",      tasks: [] },
+      ]
+    ));
+    localStorage.setItem("xai_task_cols", JSON.stringify(emptyCols));
+
+    render(<TasksModule lang="en" />);
+
+    // Click "Today" in the sidebar nav
+    const navEl = document.querySelector(".module-sidebar");
+    const todayRow = Array.from(navEl?.querySelectorAll(".list-row span.grow") ?? []).find(
+      (el) => el.textContent === "Today",
+    ) as HTMLElement;
+    expect(todayRow).toBeTruthy();
+    fireEvent.click(todayRow!);
+
+    const emptyEl = document.querySelector(".tasks-board-empty");
+    expect(emptyEl).toBeTruthy();
+    // D-QT compliant: shows overdue bucket label, not "due today" precision
+    expect(emptyEl!.textContent).toBe("No overdue tasks");
+    expect(emptyEl!.textContent).not.toContain("due today");
+  });
+
+  it("T-EMPTY-1c: when 'All' is selected, board-level empty state does NOT appear even with empty board", () => {
+    const emptyCols = JSON.parse(JSON.stringify(
+      [
+        { id: "overdue", key: "overdue",     count: 0, action: "postpone", tasks: [] },
+        { id: "next7",   key: "next_7_days", count: 0, action: "add",      tasks: [] },
+        { id: "later",   key: "later",       count: 0, action: "add",      tasks: [] },
+        { id: "nodate",  key: "no_date",     count: 0, action: "add",      tasks: [] },
+      ]
+    ));
+    localStorage.setItem("xai_task_cols", JSON.stringify(emptyCols));
+
+    render(<TasksModule lang="en" />);
+
+    // Default is "all" — board-level empty state must NOT be shown
+    expect(document.querySelector(".tasks-board-empty")).toBeNull();
+  });
+});
+
+// ---------------------------------------------------------------------------
+// T-EMPTY-2 — board-level honest empty state in ZH (D-QT bucket wording bilingual)
+// ---------------------------------------------------------------------------
+
+describe("TasksModule — T-EMPTY-2 board-level empty state ZH (D-QT)", () => {
+  it("T-EMPTY-2a: ZH lang + next7 filter + empty next7 bucket → ZH bucket-framed empty state", () => {
+    const emptyCols = JSON.parse(JSON.stringify(
+      [
+        { id: "overdue", key: "overdue",     count: 0, action: "postpone", tasks: [] },
+        { id: "next7",   key: "next_7_days", count: 0, action: "add",      tasks: [] },
+        { id: "later",   key: "later",       count: 0, action: "add",      tasks: [] },
+        { id: "nodate",  key: "no_date",     count: 0, action: "add",      tasks: [] },
+      ]
+    ));
+    localStorage.setItem("xai_task_cols", JSON.stringify(emptyCols));
+
+    render(<TasksModule lang="zh" />);
+
+    // Click "最近 7 天" in the sidebar nav (not the column header h2)
+    const nav = document.querySelector(".module-sidebar");
+    const next7Row = Array.from(nav?.querySelectorAll(".list-row span.grow") ?? []).find(
+      (el) => el.textContent === "最近 7 天",
+    ) as HTMLElement;
+    expect(next7Row).toBeTruthy();
+    fireEvent.click(next7Row!);
+
+    const emptyEl = document.querySelector(".tasks-board-empty");
+    expect(emptyEl).toBeTruthy();
+    // D-QT compliant ZH: "最近 7 天没有任务"
+    expect(emptyEl!.textContent).toBe("最近 7 天没有任务");
+  });
+
+  it("T-EMPTY-2b: ZH lang + today filter + empty overdue bucket → ZH 'No overdue tasks' (D-QT)", () => {
+    const emptyCols = JSON.parse(JSON.stringify(
+      [
+        { id: "overdue", key: "overdue",     count: 0, action: "postpone", tasks: [] },
+        { id: "next7",   key: "next_7_days", count: 0, action: "add",      tasks: [] },
+        { id: "later",   key: "later",       count: 0, action: "add",      tasks: [] },
+        { id: "nodate",  key: "no_date",     count: 0, action: "add",      tasks: [] },
+      ]
+    ));
+    localStorage.setItem("xai_task_cols", JSON.stringify(emptyCols));
+
+    render(<TasksModule lang="zh" />);
+
+    // Click "今天" in the sidebar nav
+    const navZh = document.querySelector(".module-sidebar");
+    const todayRowZh = Array.from(navZh?.querySelectorAll(".list-row span.grow") ?? []).find(
+      (el) => el.textContent === "今天",
+    ) as HTMLElement;
+    expect(todayRowZh).toBeTruthy();
+    fireEvent.click(todayRowZh!);
+
+    const emptyEl = document.querySelector(".tasks-board-empty");
+    expect(emptyEl).toBeTruthy();
+    // D-QT compliant: bucket-framed ZH wording
+    expect(emptyEl!.textContent).toBe("没有逾期任务");
   });
 });
 
