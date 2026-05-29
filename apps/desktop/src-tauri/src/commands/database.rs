@@ -14,8 +14,9 @@
 //! Wire commands (all gated to `main`,`control`,`grid_*`,`account` via
 //! `capabilities/default.json`):
 //!
-//! - `db_init { namespace }` → idempotent. Creates the shared table
-//!   `core_data_records (namespace, id, json, updated_at_ms)`.
+//! - `db_init { namespace }` → idempotent bootstrap. Resolves the
+//!   canonical live DB path under `app_data_dir()`, runs host-owned
+//!   migration registry steps, and returns bootstrap metadata.
 //! - `db_put { namespace, id, json, updatedAtMs }` → upsert.
 //! - `db_get { namespace, id }` → returns `json | null`.
 //! - `db_list { namespace }` → returns rows sorted by `id`.
@@ -33,13 +34,13 @@
 use std::path::PathBuf;
 use std::sync::Mutex;
 
-use rusqlite::{params, Connection, OpenFlags};
+use rusqlite::{params, Connection};
 use serde::{Deserialize, Serialize};
-use tauri::Manager;
 
+use crate::commands::database_runtime::{
+    open_and_bootstrap, resolve_db_path, DatabaseBootstrapMetadata, DatabaseBootstrapMigration,
+};
 use crate::error::{AppError, AppResult};
-
-const DB_FILE_NAME: &str = "xai-repo-v0.db";
 
 /// Windows allowed to invoke `db_*` commands. Mirrors
 /// `capabilities/plugin-data-database.json`. `grid_*` matches the
@@ -64,13 +65,6 @@ fn ensure_database_window_allowed(label: &str) -> AppResult<()> {
     )))
 }
 
-const CREATE_RECORDS_SQL: &str = "CREATE TABLE IF NOT EXISTS core_data_records (\
-    namespace TEXT NOT NULL, \
-    id TEXT NOT NULL, \
-    json TEXT NOT NULL, \
-    updated_at_ms INTEGER NOT NULL, \
-    PRIMARY KEY (namespace, id))";
-
 const UPSERT_RECORD_SQL: &str = "INSERT INTO core_data_records (namespace, id, json, updated_at_ms) \
     VALUES (?1, ?2, ?3, ?4) \
     ON CONFLICT(namespace, id) DO UPDATE SET \
@@ -94,34 +88,25 @@ pub struct DatabaseState {
 
 struct DatabaseInner {
     conn: Connection,
+    bootstrap: DatabaseBootstrapMetadata,
 }
 
 impl DatabaseState {
-    fn open_at(&self, path: &PathBuf) -> AppResult<()> {
+    fn open_at(&self, path: &PathBuf) -> AppResult<DatabaseBootstrapMetadata> {
         let mut guard = self.inner.lock().map_err(|err| {
             AppError::DatabaseBackend(format!("state lock poisoned: {err}"))
         })?;
 
-        if guard.is_some() {
-            return Ok(());
+        if let Some(inner) = guard.as_ref() {
+            return Ok(inner.bootstrap.clone());
         }
 
-        if let Some(parent) = path.parent() {
-            std::fs::create_dir_all(parent)
-                .map_err(|err| AppError::DatabaseBackend(err.to_string()))?;
-        }
-
-        let conn = Connection::open_with_flags(
-            path,
-            OpenFlags::SQLITE_OPEN_READ_WRITE | OpenFlags::SQLITE_OPEN_CREATE,
-        )
-        .map_err(|err| AppError::DatabaseBackend(err.to_string()))?;
-
-        conn.execute_batch(CREATE_RECORDS_SQL)
-            .map_err(|err| AppError::DatabaseBackend(err.to_string()))?;
-
-        *guard = Some(DatabaseInner { conn });
-        Ok(())
+        let (conn, bootstrap) = open_and_bootstrap(path)?;
+        *guard = Some(DatabaseInner {
+            conn,
+            bootstrap: bootstrap.clone(),
+        });
+        Ok(bootstrap)
     }
 
     fn with_conn<F, T>(&self, f: F) -> AppResult<T>
@@ -151,18 +136,39 @@ impl DatabaseState {
     }
 }
 
-fn resolve_db_path(app: &tauri::AppHandle) -> AppResult<PathBuf> {
-    let dir = app
-        .path()
-        .app_data_dir()
-        .map_err(|err| AppError::DatabaseBackend(format!("app_data_dir: {err}")))?;
-    Ok(dir.join(DB_FILE_NAME))
+#[derive(Debug, Clone, Serialize, Deserialize)]
+#[serde(rename_all = "camelCase")]
+pub struct DbInitMigration {
+    pub id: String,
+    pub from_version: i64,
+    pub to_version: i64,
+    pub started_at_ms: i64,
+    pub completed_at_ms: i64,
+    pub applied: bool,
 }
 
-#[derive(Debug, Serialize, Deserialize)]
+#[derive(Debug, Clone, Serialize, Deserialize)]
+#[serde(rename_all = "camelCase")]
 pub struct DbInitOutput {
     pub namespace: String,
     pub path: String,
+    pub schema_version: i64,
+    pub migration_version: i64,
+    pub migrations: Vec<DbInitMigration>,
+    pub applied_migrations: Vec<DbInitMigration>,
+}
+
+impl From<DatabaseBootstrapMigration> for DbInitMigration {
+    fn from(value: DatabaseBootstrapMigration) -> Self {
+        Self {
+            id: value.id,
+            from_version: value.from_version,
+            to_version: value.to_version,
+            started_at_ms: value.started_at_ms,
+            completed_at_ms: value.completed_at_ms,
+            applied: value.applied,
+        }
+    }
 }
 
 /// Initialize the repo database. Creates the parent directory and the
@@ -177,10 +183,22 @@ pub async fn db_init(
     ensure_database_window_allowed(window.label())?;
     validate_namespace(&namespace)?;
     let path = resolve_db_path(&app)?;
-    state.open_at(&path)?;
+    let bootstrap = state.open_at(&path)?;
     Ok(DbInitOutput {
         namespace,
-        path: path.to_string_lossy().into_owned(),
+        path: bootstrap.path.to_string_lossy().into_owned(),
+        schema_version: bootstrap.schema_version,
+        migration_version: bootstrap.migration_version,
+        migrations: bootstrap
+            .migrations
+            .into_iter()
+            .map(DbInitMigration::from)
+            .collect(),
+        applied_migrations: bootstrap
+            .applied_in_this_bootstrap
+            .into_iter()
+            .map(DbInitMigration::from)
+            .collect(),
     })
 }
 

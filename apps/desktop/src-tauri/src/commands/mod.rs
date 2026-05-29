@@ -2,6 +2,8 @@ pub mod bookmarks;
 pub mod crypto;
 #[cfg(feature = "crypto")]
 pub mod database;
+#[cfg(feature = "crypto")]
+pub(crate) mod database_runtime;
 pub mod finder;
 pub mod global_hotkey;
 pub mod keychain;
