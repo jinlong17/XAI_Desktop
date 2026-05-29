@@ -17,6 +17,13 @@ import {
   type WebPrefValue,
 } from "./registry.js";
 import { encode, decode } from "./codec.js";
+import {
+  mountDesktopRepoBridge,
+  readDesktopRepoError,
+  readDesktopRepoValue,
+  unmountDesktopRepoBridge,
+  writeDesktopRepoValue,
+} from "./desktopRepoBridge.js";
 
 // ---------------------------------------------------------------------------
 // Same-tab pub/sub bus
@@ -110,6 +117,12 @@ export function getPref<K extends WebPrefKey>(key: K): WebPrefValue<K> {
   if (typeof window === "undefined") {
     return entry.default as WebPrefValue<K>;
   }
+
+  const repoValue = readDesktopRepoValue(key);
+  if (repoValue.hasValue) {
+    return repoValue.value as WebPrefValue<K>;
+  }
+
   let raw: string | null = null;
   try {
     raw = localStorage.getItem(key);
@@ -194,6 +207,7 @@ export function setPref<K extends WebPrefKey>(
 
   // Publish to same-tab subscribers
   publishSameTab(key, value);
+  void writeDesktopRepoValue(key, value);
   return true;
 }
 
@@ -211,6 +225,7 @@ export function removePref<K extends WebPrefKey>(key: K): void {
   const entry = PREF_REGISTRY[key];
   // Notify same-tab subscribers that the value is back to default
   publishSameTab(key, entry.default);
+  void writeDesktopRepoValue(key, entry.default);
 }
 
 // Suppress unused variable warning for guardStorage
@@ -287,6 +302,11 @@ export function getPrefAutosave<T>(
   }
 
   const key = `xai_pref_${suffix}`;
+  const repoValue = readDesktopRepoValue(key);
+  if (repoValue.hasValue) {
+    return repoValue.value as T;
+  }
+
   let raw: string | null = null;
   try {
     raw = localStorage.getItem(key);
@@ -390,6 +410,7 @@ export function setPrefAutosave<T>(
   }
 
   publishSameTab(key, value);
+  void writeDesktopRepoValue(key, value);
   return true;
 }
 
@@ -410,4 +431,24 @@ export function removePrefAutosave(suffix: string): void {
     return;
   }
   publishSameTab(key, undefined);
+  void writeDesktopRepoValue(key, null);
+}
+
+export function mountDesktopLocalFirstRepositoryBridge(enabled: boolean): void {
+  if (!enabled) {
+    unmountDesktopRepoBridge();
+    return;
+  }
+
+  mountDesktopRepoBridge({
+    enabled,
+    publish: publishSameTab,
+  });
+
+  const bridgeError = readDesktopRepoError("bridge");
+  if (bridgeError) {
+    console.warn(
+      `[plugin-web-storage] desktop repository bridge degraded: ${bridgeError.kind} (${bridgeError.message})`,
+    );
+  }
 }

@@ -38,6 +38,7 @@ export {
   getPref,
   setPref,
   removePref,
+  mountDesktopLocalFirstRepositoryBridge,
   isPrefKey,
   // Open-ended xai_pref_* family — typed read/write/remove (mirrors usePrefAutosave).
   getPrefAutosave,

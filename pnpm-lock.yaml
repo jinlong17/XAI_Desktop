@@ -1497,6 +1497,9 @@ importers:
 
   packages/plugin-web-storage:
     dependencies:
+      '@repo/core-data':
+        specifier: workspace:*
+        version: link:../core-data
       react:
         specifier: ^19.2.0
         version: 19.2.0
