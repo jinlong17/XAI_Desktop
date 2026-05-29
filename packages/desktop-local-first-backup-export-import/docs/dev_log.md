@@ -7,16 +7,16 @@
 | Workflow | FEATURE_DEV |
 | Target | desktop-local-first-backup-export-import |
 | Title | Desktop Local-First Backup Export Import |
-| Current Phase | FEATURE_VERIFY |
-| Status | READY_FOR_VERIFY |
-| Suggested Next | feature-verify |
+| Current Phase | SHIP |
+| Status | SHIPPED |
+| Suggested Next | — |
 | Automation Mode | B-Codex |
 | Verify Cross-vendor | yes |
-| Executor | feature-auto-build (Codex, gpt-5.3-codex inline fallback) |
-| Updated | 2026-05-29 05:30 PDT |
+| Executor | ship (Codex, gpt-5.3-codex inline) |
+| Updated | 2026-05-29 05:37 PDT |
 | Brief | `docs/reviews/desktop-local-first-backup-export-import/20260529-feature-brief.md` |
 | Discovery Review | `docs/reviews/desktop-local-first-backup-export-import/20260529-discovery-review.md` |
-| Risks | Repo-side build gates passed for native/core-data/web/runtime surfaces. Residual risk is limited to independent feature-verify review plus manual real-device restore UX smoke outside this build phase. |
+| Risks | Repo-side verification passed for commit integrity, core-data/runtime/native/web gates, and desktop debug app bundling. Residual risk is limited to manual real-macOS restore UX smoke on actual user data outside this repo-side verify pass. |
 | Blockers | — |
 | Review Notes | Approved. The partial-restore strategy is conservative enough for this row: restore only representative canonical local-first records, keep `sync.outbox` plus `desktop.web_import_*` as explicit audit/partial metadata, and keep raw DB swap/cloud backup/queue-rewrite/notes/overlay scope out. Export may remain available when unresolved queue or import-audit state exists because blocking backup exactly when the repo is dirty weakens recovery; however, build must surface that state during export/verify and must refuse restore-apply into a live repo that still has unresolved target `sync.outbox` rows, so restored canonical records cannot drift away from pending queued mutations. |
 
@@ -119,3 +119,5 @@ Exit gates:
 | 2026-05-29 05:25 PDT | feature-auto-build (Codex, gpt-5.3-codex inline fallback) | Completed Phase 2 by adding native backup-safe command surface in Tauri: managed backup path under `app_data_dir()/backups`, bundle write/read/verify commands, absolute-path validation, managed-path detection, and helper tests in `database_runtime.rs` + `database.rs`; kept raw DB replacement out of scope. | `889f080a` | `cargo test --manifest-path apps/desktop/src-tauri/Cargo.toml` PASS | feature-auto-build |
 | 2026-05-29 05:27 PDT | feature-auto-build (Codex, gpt-5.3-codex inline fallback) | Completed Phase 3 by wiring desktop backup runtime bridge in `@repo/plugin-web-storage` with verify-before-apply and busy lock, exposing create/verify/import + report access via storage exports and `AppProviders` desktop globals, and enforcing restore refusal when target unresolved `sync.outbox` rows exist. | `d586ca96` | `pnpm --filter @repo/plugin-web-storage test` PASS; `pnpm --filter @repo/plugin-web-storage check-types` PASS; `pnpm --filter @repo/web test` PASS; `pnpm --filter @repo/web check-types` PASS | feature-auto-build |
 | 2026-05-29 05:30 PDT | feature-auto-build (Codex, gpt-5.3-codex inline fallback) | Completed Phase 4 cross-stack verification and scope audit. Re-ran native/core-data/plugin/web/desktop gates, confirmed export remains allowed with explicit partial metadata, confirmed restore-apply refusal on unresolved target outbox, and confirmed no raw DB swap/cloud backup/row `#13/#14` rewrite/notes/overlay leakage. | — | `cargo test --manifest-path apps/desktop/src-tauri/Cargo.toml` PASS; `pnpm --filter @repo/core-data test` PASS; `pnpm --filter @repo/core-data check-types` PASS; `pnpm --filter @repo/plugin-web-storage test` PASS; `pnpm --filter @repo/plugin-web-storage check-types` PASS; `pnpm --filter @repo/web test` PASS; `pnpm --filter @repo/web check-types` PASS; `pnpm --filter @repo/web build` PASS; `pnpm --filter desktop tauri build --debug --bundles app` PASS | feature-verify |
+| 2026-05-29 05:35 PDT | feature-verify (Codex, gpt-5 inline fallback) | Verification pass completed. Reviewed build commits `82441369`, `889f080a`, `d586ca96`, and `552bf0ff` for single-intent phase boundaries and commit-format compliance; audited implementation against design/api/test contracts; confirmed representative canonical local-first records export/verify/restore through repo-managed flows while `sync.outbox` plus `desktop.web_import_*` stay excluded/audit-only with explicit partial semantics; confirmed restore-apply refusal when the target repo still has unresolved `sync.outbox` rows; and confirmed no raw DB swap, cloud backup, queue rewrite, notes persistence, or overlay/organizer drift. | `82441369`, `889f080a`, `d586ca96`, `552bf0ff` | `cargo test --manifest-path apps/desktop/src-tauri/Cargo.toml` PASS; `pnpm --filter @repo/core-data test` PASS; `pnpm --filter @repo/core-data check-types` PASS; `pnpm --filter @repo/plugin-web-storage test` PASS; `pnpm --filter @repo/plugin-web-storage check-types` PASS; `pnpm --filter @repo/web test` PASS; `pnpm --filter @repo/web check-types` PASS; `pnpm --filter @repo/web build` PASS; `pnpm --filter desktop tauri build --debug --bundles app` PASS | ship |
+| 2026-05-29 05:37 PDT | ship (Codex, gpt-5.3-codex inline) | Shipping pass completed for row `#17`: validated commit integrity/scope from baseline `117a166b` through `82441369`, `889f080a`, `d586ca96`, and `552bf0ff`; wrote SHIPPED state and roadmap reconciliation; staged only row `#17` artifacts; and pushed `dev` to `origin/dev`. | `82441369`, `889f080a`, `d586ca96`, `552bf0ff`, `(ship writeback commit)` | Not run (ship/docs writeback + push only) | — |
