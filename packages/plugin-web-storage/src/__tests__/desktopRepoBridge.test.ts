@@ -98,6 +98,7 @@ describe("desktopRepoBridge canonical record mapping", () => {
     const legacyHabitBlob = await currentRepo.list({
       entityType: "productivity.habits_state",
     });
+    const outboxRows = await currentRepo.list({ entityType: "sync.outbox" });
 
     expect(todos.length).toBe(2);
     expect(todos.map((row) => row.entityType)).toEqual([
@@ -108,6 +109,13 @@ describe("desktopRepoBridge canonical record mapping", () => {
     expect(habits[0]?.entityType).toBe("productivity.habit");
     expect(legacyTaskBlob).toEqual([]);
     expect(legacyHabitBlob).toEqual([]);
+    expect(outboxRows.length).toBe(3);
+    expect(
+      outboxRows.every((row) => {
+        const typed = row as RepoRecord & { queueStatus?: unknown };
+        return typed.queueStatus === "queued";
+      }),
+    ).toBe(true);
   });
 
   it("normalizes xai_boards_v2 into canonical project.board and project.card", async () => {
@@ -152,6 +160,7 @@ describe("desktopRepoBridge canonical record mapping", () => {
     const workspaceRows = await currentRepo.list({
       entityType: "project.workspace_state",
     });
+    const outboxRows = await currentRepo.list({ entityType: "sync.outbox" });
 
     expect(boards.length).toBe(1);
     expect(boards[0]?.entityType).toBe("project.board");
@@ -167,5 +176,6 @@ describe("desktopRepoBridge canonical record mapping", () => {
 
     expect(workspaceKeys).toContain("xai_active_board");
     expect(workspaceKeys).not.toContain("xai_boards_v2");
+    expect(outboxRows.length).toBe(3);
   });
 });

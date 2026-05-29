@@ -1,5 +1,6 @@
 import {
   enqueueOutboxEntry,
+  nextOutboxBatch,
   OUTBOX_QUEUE_STATUSES,
   outboxIdFor,
   type OutboxQueueStatus,
@@ -295,11 +296,10 @@ export async function listOfflineQueueMutations(
   repo: Repo<RepoRecord | OutboxEntry>,
   options: OfflineQueueListOptions = {},
 ): Promise<OutboxEntry[]> {
-  const rows = (await repo.list({
-    entityType: "sync.outbox",
-    orderBy: { field: "commitSeq", direction: "asc" },
-    limit: options.limit,
-  })) as OutboxEntry[];
+  const rows = await nextOutboxBatch(
+    repo as unknown as Repo<OutboxEntry>,
+    options.limit ? { limit: options.limit } : {},
+  );
   const normalizedBoundaryKey = options.boundaryKey
     ? normalizeBoundaryKey(options.boundaryKey)
     : null;
@@ -347,8 +347,8 @@ export async function getOfflineQueueSummary(
   return {
     total: rows.length,
     byStatus,
-    oldestCommitSeq: rows.length > 0 ? rows[0].commitSeq : null,
-    newestCommitSeq: rows.length > 0 ? rows[rows.length - 1].commitSeq : null,
+    oldestCommitSeq: rows.at(0)?.commitSeq ?? null,
+    newestCommitSeq: rows.at(-1)?.commitSeq ?? null,
   };
 }
 

@@ -1,10 +1,14 @@
 import {
+  createMockCommitSeqAuthority,
   createTauriRepo,
+  isOfflineQueueableEntity,
   NOTES_UNSUPPORTED_ERROR,
+  stageOfflineEditMutation,
   type CardEntity,
   type DesktopBridgeError,
   type DesktopBridgeWriteResult,
   type HabitEntity,
+  type OutboxEntry,
   type PetStateEntity,
   type PomodoroSessionsEntity,
   type ProjectEntity,
@@ -63,6 +67,7 @@ type TauriInternals = {
 type BridgeState = {
   status: BridgeStatus;
   repo: Repo<RepoRecord> | null;
+  nextQueueCommitSeq: (() => number) | null;
   cache: Map<string, BridgedValue>;
   errors: Map<string, DesktopBridgeError>;
   hydratePromise: Promise<void> | null;
@@ -130,6 +135,7 @@ type BoardLike = {
 const state: BridgeState = {
   status: "disabled",
   repo: null,
+  nextQueueCommitSeq: null,
   cache: new Map<string, BridgedValue>(),
   errors: new Map<string, DesktopBridgeError>(),
   hydratePromise: null,
@@ -169,6 +175,7 @@ export function mountDesktopRepoBridge(options: {
     namespace: DESKTOP_REPO_NAMESPACE,
     schemaVersion: 1,
   });
+  state.nextQueueCommitSeq = createMockCommitSeqAuthority();
   state.publish = publish;
   state.errors.clear();
   state.hydratePromise = hydrateCacheFromRepo();
@@ -286,6 +293,7 @@ async function hydrateCacheFromRepo(): Promise<void> {
   try {
     const rows = await state.repo.list();
 
+    hydrateQueueCommitSeq(rows);
     hydrateCanonicalTasks(rows);
     hydrateCanonicalHabits(rows);
     hydrateCanonicalBoards(rows);
@@ -320,6 +328,7 @@ async function hydrateCacheFromRepo(): Promise<void> {
 function resetBridgeState(): void {
   state.status = "disabled";
   state.repo = null;
+  state.nextQueueCommitSeq = null;
   state.cache.clear();
   state.errors.clear();
   state.hydratePromise = null;
@@ -459,20 +468,71 @@ async function replaceEntityFamily(
   for (const record of nextRecords) {
     nextIds.add(record.id);
     const prev = existingById.get(record.id);
-    await repo.put({
+    const nextRecord: RepoRecord = {
       ...record,
       entityType,
       schemaVersion: 1,
       createdAt: prev?.createdAt ?? record.createdAt ?? nowIso,
       updatedAt: nowIso,
-    });
+    };
+    if (isOfflineQueueableEntity(entityType)) {
+      const queued = await stageOfflineEditMutation({
+        repo: repo as Repo<RepoRecord | OutboxEntry>,
+        entity: nextRecord,
+        op: "put",
+        boundaryKey: resolveQueueBoundaryKey(),
+        nextCommitSeq: getQueueCommitSeqAllocator(),
+      });
+      if (queued.status !== "queued") {
+        throw new Error(
+          `queue put failed for ${entityType}/${nextRecord.id}: ${queued.status === "failed" ? queued.reason : queued.reason}`,
+        );
+      }
+      continue;
+    }
+    await repo.put(nextRecord);
   }
 
   for (const stale of existing) {
     if (!nextIds.has(stale.id)) {
+      if (isOfflineQueueableEntity(entityType)) {
+        const queued = await stageOfflineEditMutation({
+          repo: repo as Repo<RepoRecord | OutboxEntry>,
+          entity: stale,
+          op: "delete",
+          boundaryKey: resolveQueueBoundaryKey(),
+          nextCommitSeq: getQueueCommitSeqAllocator(),
+        });
+        if (queued.status !== "queued") {
+          throw new Error(
+            `queue delete failed for ${entityType}/${stale.id}: ${queued.status === "failed" ? queued.reason : queued.reason}`,
+          );
+        }
+        continue;
+      }
       await repo.delete(stale.id);
     }
   }
+}
+
+function getQueueCommitSeqAllocator(): () => number {
+  if (!state.nextQueueCommitSeq) {
+    state.nextQueueCommitSeq = createMockCommitSeqAuthority();
+  }
+  return state.nextQueueCommitSeq;
+}
+
+function resolveQueueBoundaryKey(): string {
+  const runtime = globalThis as typeof globalThis & {
+    __XAI_WEB_TODO_SESSION__?: {
+      accountId?: string;
+    };
+  };
+  const accountId = runtime.__XAI_WEB_TODO_SESSION__?.accountId;
+  if (typeof accountId === "string" && accountId.trim().length > 0) {
+    return accountId.trim();
+  }
+  return "local-session";
 }
 
 export function buildTodoEntities(value: unknown): TodoEntity[] {
@@ -801,6 +861,24 @@ function hydrateCanonicalBoards(rows: RepoRecord[]): void {
   }
 
   publishBridgeValue(BOARDS_STORAGE_KEY, hydratedBoards);
+}
+
+function hydrateQueueCommitSeq(rows: RepoRecord[]): void {
+  const outboxRows = rows.filter(
+    (row): row is OutboxEntry =>
+      row.entityType === "sync.outbox" &&
+      typeof (row as OutboxEntry).commitSeq === "number" &&
+      Number.isInteger((row as OutboxEntry).commitSeq),
+  );
+  if (outboxRows.length === 0) {
+    state.nextQueueCommitSeq = createMockCommitSeqAuthority();
+    return;
+  }
+  const maxCommitSeq = outboxRows.reduce(
+    (max, row) => Math.max(max, row.commitSeq),
+    0,
+  );
+  state.nextQueueCommitSeq = createMockCommitSeqAuthority(maxCommitSeq);
 }
 
 function createEmptyTaskColumn(bucketId: string): TaskColShape {
