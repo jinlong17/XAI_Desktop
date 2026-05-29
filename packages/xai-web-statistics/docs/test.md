@@ -289,3 +289,108 @@ The W3 manifest header schedules a cross-vendor smoke run on Chrome 120 / Safari
 Output: `docs/reviews/xai-web-statistics/<YYYYMMDD>-cross-vendor-smoke.md` (template mirrors ai-chat's). Executed by the ship-time vendor; NOT a build-phase gate.
 
 ---
+
+## §SRA — Extension Test Strategy: Real Tasks-Completed Aggregation
+
+> **APPEND-ONLY extension** of the row #20 test plan. Authority: ADR-0010 §D4
+> carve-out `1ba5902`. Mirrors the SHIPPED dashboard `AC-RD-TASKS-1..5`
+> (`packages/xai-web-dashboard-widgets/src/internal/dataReads/__tests__/taskStats.test.ts`).
+
+### SRA.1 Strategy delta
+
+| Layer | Tool | Scope | Files |
+|---|---|---|---|
+| **Unit (pure) — NEW** | vitest | `narrowTaskCols` predicate + `countDoneTasks` aggregator | `src/__tests__/narrowTaskCols.test.ts`, `src/__tests__/countDoneTasks.test.ts` |
+| **Unit (pure) — UPDATED** | vitest | `aggregateRange` tasks-KPI swap (A14 replaced) + `tasksTrend="—"` + no-mutation | `src/__tests__/aggregators.test.ts` |
+| **Component — UPDATED (KPI cell)** | vitest + jsdom + RTL | NEW K5 — `KpiCard.subLabel` renders only when passed (Path 1) | `src/__tests__/KpiCard.test.tsx` |
+| **Component — UPDATED (module)** | vitest + jsdom + RTL | real `done`-count KPI + honest zero + **user-visible "current board" marker on KPI + BarChart panel (Path 1 / REC-1)** | `src/__tests__/StatisticsModule.test.tsx` |
+| **Barrel — UNCHANGED** | vitest | export set unchanged (predicate + aggregator + `strings.ts` all stay internal) | `src/__tests__/index-barrel.test.ts` |
+
+Lint `--max-warnings 0`; no `any`; new predicate takes `unknown`.
+
+### SRA.2 Mock strategy (extension)
+
+- **`xai_task_cols` seed:** same direct-seed pattern (§2.1) — seed `localStorage` via `setPref("xai_task_cols", <Record<BucketId,TaskCol>>)`; `usePref` reads real `localStorage` in jsdom. Do NOT mock `usePref`.
+- **Clock:** the tasks metric is range-invariant + timestamp-less, so it needs no clock — but the surrounding `aggregateRange` still takes `now`; reuse the existing `new Date("2026-05-23T10:30:00Z")` fixture.
+- **No-mutation harness:** seed `xai_task_cols`, snapshot the raw value (deep-clone), run `aggregateRange(...)` (and render the module), then assert the stored value is deep-equal to the snapshot (RA3). Plus a static gate: grep the package `src/` for `setPref(.*xai_task_cols` → MUST be 0 hits.
+
+### SRA.3 New test inventory
+
+#### `narrowTaskCols.test.ts` — AC-SRA-NARROW-1..6 (mirror AC-RD-TASKS-1)
+
+- NARROW-1: rejects `null` / `undefined` / `"str"` / `42`.
+- NARROW-2: rejects object with non-object column value (`{ overdue: "bad" }`, `{ overdue: 42 }`).
+- NARROW-3: rejects col without a `tasks` array (`{ overdue: { cards: [] } }`, `{ overdue: { tasks: "nope" } }`).
+- NARROW-4: accepts empty object `{}` (no buckets).
+- NARROW-5: accepts valid `{ overdue: { tasks: [] }, next7: { tasks: [{ done: true }] } }`.
+- NARROW-6: accepts optional `completed` array; rejects `completed` that is non-array.
+
+#### `countDoneTasks.test.ts` — AC-SRA-TASKS-1..7 (mirror AC-RD-TASKS-2..5)
+
+- TASKS-1: invalid store (`null`/`[]`/`{}`) → `0`.
+- TASKS-2: cards counted from `col.tasks`, NOT col directly — `{ overdue: { tasks: [{done:true},{done:false}] } }` → `1` (RD2 guard).
+- TASKS-3: counts across multiple buckets — overdue 2 done + next7 0 + nodate 1 done → `3`.
+- TASKS-4: absent `done` → not counted (`{ next7: { tasks: [{id:"t1"},{id:"t2",done:true}] } }` → `1`).
+- TASKS-5: `done: undefined` → not counted.
+- TASKS-6: optional `completed[]` also counted (`tasks:[{done:false}], completed:[{done:true},{done:true}]` → `2`).
+- TASKS-7: pure — same input twice → same number; input object not mutated.
+
+#### `aggregators.test.ts` — UPDATED (tasks-KPI swap)
+
+- **A14 REPLACED:** old "`tasksTotal === focusBuckets sessions count`" is DELETED. New A14: `kpis.tasksTotal === countDoneTasks(taskCols)` (real `done` count), INDEPENDENT of how many focus sessions exist.
+- **A2/A3 tasks-trend UPDATED:** assertions that derived `tasksTrend` from prior-window focus sessions are removed; new assertion `kpis.tasksTrend === "—"` regardless of inputs.
+- **NEW A21 (range-invariance):** for a fixed `taskCols`, `aggregateRange("week"|"month"|"all", …).kpis.tasksTotal` are all EQUAL.
+- **NEW A22 (no-mutation):** `aggregateRange` does not mutate the passed `taskCols` (deep-equal snapshot before/after).
+- **NEW A23 (pomodoro/habits untouched):** for a fixture with both sessions + taskCols, `focusMinutesTotal` / `dailyAvgMinutes` / `peakHour` / `habitsKeptStr` / `focusTrend` match the SHIPPED expected values (regression guard RA4).
+- A1 (empty) UPDATED: empty sessions + empty taskCols → `tasksTotal === 0`, `tasksTrend === "—"` (honest zero).
+
+#### `KpiCard.test.tsx` — UPDATED (Path 1 marker prop)
+
+- **NEW K5 (`subLabel`):** `<KpiCard … subLabel="current board" />` renders the sub-label text; `<KpiCard … />` (no `subLabel`) renders NO sub-label node (assert absence). Confirms the prop is additive and the 3 non-tasks cells stay byte-identical.
+- K1..K4 (SHIPPED) stay green unchanged.
+
+#### `StatisticsModule.test.tsx` — UPDATED
+
+- **S2 REPLACED:** seed `xai_task_cols` with 3 done + 2 not-done cards → the "Tasks completed" KPI renders `3` (real count), NOT a focus-session count. Seeding focus sessions does NOT change the tasks KPI.
+- **NEW S11 (honest zero):** no `xai_task_cols` seed (or all `done:false`) → tasks KPI renders `0`; no fabricated number; other panels still render.
+- **NEW S12 (live update):** `act(() => setPref("xai_task_cols", <+1 done>))` → tasks KPI increments (proves the `usePref` dep wiring).
+- **NEW S13 (read-only):** after render + a range-tab click, the stored `xai_task_cols` value is deep-equal to the seeded value (RA3).
+- **NEW S14 (Path 1 / B1 — KPI marker):** the tasks KPI renders the user-visible "current board" / "当前看板" sub-label (lang='en' → "current board"; lang='zh' → "当前看板"). The focus/habits/daily-avg KPIs do NOT render it.
+- **NEW S15 (REC-1 — BarChart panel marker):** the Tasks BarChart panel header renders the SAME "current board" marker. (If OQ-B fallback = KPI-only were chosen, S15 instead asserts the panel's honest empty/marker state — but the selected path keeps the BarChart-with-marker.)
+- S3/S4 (range tabs) UPDATED: switching tabs does NOT change the tasks KPI value (range-invariant), the marker STILL renders on every tab, while focus/habit panels still recompute.
+
+#### `index-barrel.test.ts` — UNCHANGED
+
+- IB1/IB2 still assert the SAME export set (no `narrowTaskCols` / `countDoneTasks` / `strStats` / `STR_STATS_TASKS` leak). This is itself the public-surface-unchanged gate.
+
+### SRA.4 Acceptance criteria → test mapping (extension)
+
+| Acceptance (carve-out §5 anchor) | Test refs |
+|---|---|
+| Completing tasks (`done:true`) makes the KPI reflect the REAL count (not a pomodoro proxy) | S2, S12, A14, TASKS-1..7 |
+| Honest zero when nothing is done | S11, A1, TASKS-1 |
+| Range-invariant (no fabricated per-window completion) | A21, S3/S4 |
+| **Range-invariant number is HONESTLY FRAMED to the user (B1 / Path 1)** — KPI + BarChart panel show a user-visible "current board" / "当前看板" marker, on every range tab | **S14, S15, K5, S3/S4** |
+| pomodoro/habits stats still correct (no regression) | A23, existing A/H/I families green |
+| **3 non-tasks KPI cells render byte-identically (no marker)** | K5, S14 |
+| `xai_task_cols` NEVER mutated | A22, S13, no-mutation harness + grep gate (0 hits of `setPref(.*xai_task_cols`) |
+| Read-shape correct (`col.tasks`, not flattened) | TASKS-2, NARROW-3/5 |
+| Public surface unchanged (predicate + aggregator + `strings.ts` stay internal) | IB1/IB2 |
+| **No `plugin-web-tokens` edit (copy via LOCAL `internal/strings.ts`)** | manual diff gate (build): `git diff --stat` shows NO `packages/plugin-web-tokens/` change; `strStats`/`STR_STATS_TASKS` live only in `src/internal/strings.ts` |
+| Lint clean | `pnpm --filter @repo/plugin-web-statistics lint --max-warnings 0` exits 0 |
+
+### SRA.5 Gates (extension — same commands as §6)
+
+```bash
+pnpm --filter @repo/plugin-web-statistics lint        # --max-warnings 0
+pnpm --filter @repo/plugin-web-statistics typecheck
+pnpm --filter @repo/plugin-web-statistics test        # full vitest run (new + updated + SHIPPED green)
+# static read-only gate (P1 + P2):  grep -r "setPref(.*xai_task_cols" packages/plugin-web-statistics/src  → expect 0
+```
+
+### SRA.6 Cross-vendor (extension)
+
+**DEFERRED 24h per ADR-0008 §S3** — no new visual surface (number swap + honest
+empty-state on already-SHIPPED KPI/BarChart components). Same-vendor Vitest +
+barrel + lint + typecheck are the build-phase gate. An optional Codex/Cursor
+cold-read may be queued at ship (recorded in `dev_log.md` §SRA verify section).

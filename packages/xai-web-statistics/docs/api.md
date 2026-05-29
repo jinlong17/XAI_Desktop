@@ -419,3 +419,260 @@ This is row #20's initial release (v1). No migrations. Future increments may:
 Any of those require a feature-plan increment block per the SOP, NOT in-place edits.
 
 ---
+
+## §SRA — Extension API: Real Tasks-Completed Aggregation
+
+> **APPEND-ONLY extension** of the row #20 contract. Authority: ADR-0010 §D4
+> carve-out `1ba5902`. This section **supersedes** §0 "Known Limitations" bullet
+> 1 (tasks-source proxy) and §5.2/§5.3's tasks-via-sessions semantics. The
+> public surface (§0) is **UNCHANGED** — no new export.
+
+### SRA.0 Public surface — UNCHANGED
+
+`src/index.ts` exports the same set as §0. `narrowTaskCols` and `countDoneTasks`
+are `internal/` and MUST NOT be exported (red-line: `index.ts` is the only public
+surface). `index-barrel.test.ts` asserts the export set is unchanged.
+
+### SRA.1 New read key
+
+`StatisticsModule` adds a fourth read — never write — `@repo/plugin-web-storage` key:
+
+| Key | Codec | Default | Owner | Access |
+|---|---|---|---|---|
+| `xai_task_cols` | `json` (object) | `{}` | `xai-web-tasks` | **READ-ONLY** |
+
+Read via `usePref("xai_task_cols")`; the component auto-rerenders on
+`web:settings:preference-changed`. **NO `setPref("xai_task_cols", …)` call exists
+anywhere in this package** — Statistics never writes tasks.
+
+### SRA.2 New boundary predicate — `narrowTaskCols`
+
+```ts
+// src/internal/narrowTaskCols.ts  (@internal — NOT exported from index.ts)
+
+/** Minimal card shape — only `done` is read; absent/undefined === false. */
+export interface TaskCardDoneMinimal {
+  done?: boolean;
+}
+
+/** A single bucket column. Cards live at `tasks` (+ optional `completed`). */
+export interface TaskColDoneMinimal {
+  tasks: TaskCardDoneMinimal[];
+  completed?: TaskCardDoneMinimal[];
+}
+
+/**
+ * Narrows `unknown` from usePref("xai_task_cols") into
+ * Record<BucketId, TaskColDoneMinimal>. Cards are at `col.tasks`, NOT the
+ * column value directly (RD2 guard — do NOT copy Cmd-K's flattened read).
+ * Non-conforming entries → predicate returns false (caller treats as `{}`).
+ * Mirrors the SHIPPED dashboard `isTaskColsRecord`.
+ */
+export function narrowTaskCols(
+  v: unknown,
+): v is Record<string, TaskColDoneMinimal>;
+```
+
+Semantics (frozen): rejects non-objects; rejects a column whose `tasks` is not an
+array; tolerates unknown bucket ids; `completed` optional but must be an array if
+present; absent `done` === `false`.
+
+### SRA.3 New pure aggregator — `countDoneTasks`
+
+```ts
+// src/internal/countDoneTasks.ts  (or folded into aggregators.ts; @internal)
+
+/**
+ * Counts `done === true` cards across ALL buckets' `tasks` + optional
+ * `completed` arrays. CURRENT-board count — RANGE-INVARIANT (TaskCard has no
+ * completion timestamp; this is NOT a time-windowed metric). Identical
+ * semantics to the SHIPPED dashboard `countDone().done`.
+ *
+ * @param taskCols  the narrowed Record<BucketId, TaskColDoneMinimal> (or the
+ *                   raw unknown — implementation narrows defensively first).
+ * @returns the integer count of done cards; 0 when the store is empty/invalid.
+ */
+export function countDoneTasks(taskCols: unknown): number;
+```
+
+- Empty / invalid store → `0` (honest zero).
+- Absent `done` → not counted (treated as `false`).
+- Pure: no I/O, no clock, no `Math.random`. Deterministic given input.
+
+### SRA.4 `aggregateRange` signature delta
+
+The SHIPPED `aggregateRange(range, rawSessions, habits, weekStart, now, lang)`
+gains a `taskCols` input (OQ-D: appended param vs separate composed fn — reviewer
+call; recommended appended param so a single `useMemo` covers it):
+
+```ts
+export function aggregateRange(
+  range: RangeId,
+  rawSessions: PomodoroSessionRecord[],
+  habits: HabitsStateRecord,
+  weekStart: WeekStart,
+  now: Date,
+  lang: Lang,
+  taskCols: unknown,          // NEW — raw usePref("xai_task_cols") value
+): RangeAggregate;
+```
+
+**Behavioural delta inside `aggregateRange`:**
+
+- **RETIRED:** the per-session `taskBuckets[idx] += 1` increment (old L118) and the
+  `priorTasksTotal` per-session count (old L128-130). Pomodoro sessions no longer
+  contribute to ANY tasks metric.
+- `kpis.tasksTotal = countDoneTasks(taskCols)` — the real `done` count.
+- `kpis.tasksTrend = "—"` — no honest prior-window baseline (timestamp-less
+  current-state count). This is a constant, NOT a `trendPercent(...)` call.
+- `taskBuckets` — an HONEST representation (NOT a fabricated time split). Per
+  Q3/OQ-B/OQ-C: either (a) all zeros except the current/last bucket carrying the
+  real total, or (b) the Tasks BarChart panel is reduced to an honest single
+  total. The exact shape is a P2 build call; the array length still matches
+  `labels.length` so the BarChart component is not rewritten. A JSDoc states the
+  array is a current-state total, not a time series.
+- **UNCHANGED:** `focusBuckets`, `focusMinutesTotal`, `dailyAvgMinutes`,
+  `focusTrend`, `avgTrend`, `peakHour`, `hourDistribution`, `tagDistribution`,
+  `habitRanking`, `habitsKeptStr`, `habitsKeptTrend` — all still derived from real
+  `xai_pomodoro_sessions` / `xai_habits_state`.
+
+`RangeAggregate` and `StatisticsKpis` **type shapes are unchanged** (§1); only the
+values feeding `tasksTotal`/`tasksTrend`/`taskBuckets` change.
+
+**REC-2 (post-review — dual JSDoc sync; build MUST do BOTH):** the
+`StatisticsKpis.tasksTotal` JSDoc is updated to drop "proxy for tasks completed"
+and state "real count of `done` cards in `xai_task_cols` (current board,
+range-invariant)". This edit lands in TWO places that currently both carry the
+stale "proxy" wording — the build must update BOTH, not only this prose:
+1. the live source `packages/plugin-web-statistics/src/types.ts:23`, and
+2. the §1 contract line in THIS doc (`StatisticsKpis.tasksTotal` — line ~51).
+
+### SRA.5 `StatisticsModule` wiring delta
+
+```ts
+const [rawTaskCols] = usePref("xai_task_cols");          // NEW read (read-only)
+// existing: rawSessions, rawHabits, rawWeekStart
+const agg = useMemo(
+  () => aggregateRange(range, sessions, habits, weekStart, now, lang, rawTaskCols),
+  [range, sessions, habits, weekStart, now, lang, rawTaskCols],  // + rawTaskCols dep
+);
+
+const boardLang = lang === "zh" ? "zh" : "en";
+const currentBoardLabel = strStats("current_board", boardLang);  // Path 1 marker
+```
+
+The Tasks KPI card now renders the real values **plus a user-visible "current
+board" sub-label** (Path 1 / B1):
+
+```tsx
+<KpiCard
+  cellId="tasks"
+  label={s("statistics.tasks_completed")}
+  value={agg.kpis.tasksTotal}
+  trend={agg.kpis.tasksTrend}
+  subLabel={currentBoardLabel}   /* NEW — see SRA.10 */
+  /* …existing props… */
+/>
+```
+
+The Tasks BarChart panel (`data={agg.taskBuckets}` + header `{agg.kpis.tasksTotal}`)
+renders the same honest values **plus the SAME "current board" marker in its panel
+header** (`sc-head`), e.g. a muted span next to the `sc-totals`:
+
+```tsx
+<div className="sc-head">
+  <h3>{s("statistics.tasks_completed")}</h3>
+  <div className="sc-totals mono">{agg.kpis.tasksTotal}</div>
+  <span className="muted" style={{ fontSize: "11px" }}>{currentBoardLabel}</span>
+</div>
+```
+
+**REVISION (post-review B1 / Path 1):** this SUPERSEDES the earlier "same JSX, no
+new prop, no CSS change" wording. The KPI gains ONE optional `subLabel` prop
+(SRA.10) and the BarChart panel `<div>` gains a muted marker span. The `BarChart`
+leaf component **body** is still NOT touched (the marker is in the panel, not the
+chart). An optional `.kpi-sublabel` CSS rule may be added (or reuse `.muted`); no
+new design token. No new top-level component.
+
+### SRA.6 Events — UNCHANGED
+
+NONE listened, NONE emitted. Statistics remains a read-only sink. `usePref`
+handles live updates; completing a task in the Tasks module writes
+`xai_task_cols`, which fires `web:settings:preference-changed`, which re-renders
+Statistics with the new count — with ZERO direct coupling between the packages.
+
+### SRA.7 i18n / copy — `plugin-web-tokens` UNCHANGED; ≤2 LOCAL STR added (post-review B1 / Path 1)
+
+`statistics.tasks_completed` ("Tasks completed" / "完成任务") already exists (§6) and
+is reused unchanged for the KPI + BarChart-panel label. The metric VALUE is numeric.
+**ZERO `@repo/plugin-web-tokens` edit.**
+
+Path 1 (B1 fix) adds a user-visible "current board" marker, whose ≤2 bilingual
+strings live in a NEW LOCAL `src/internal/strings.ts` — NOT the i18n bundle:
+
+```ts
+// src/internal/strings.ts  (@internal — NOT exported from index.ts)
+// Mirrors the SHIPPED dashboard packages/xai-web-dashboard-widgets/src/internal/strings.ts
+// (STR_WIDGET_EMPTY `stat_tasks_empty` + strEmpty) — the project local-STR convention.
+export const STR_STATS_TASKS = {
+  current_board: { en: "current board", zh: "当前看板" },
+} as const;
+export type StatsTasksStrKey = keyof typeof STR_STATS_TASKS;
+export function strStats(key: StatsTasksStrKey, lang: "en" | "zh"): string {
+  return STR_STATS_TASKS[key][lang];
+}
+```
+
+A single `current_board` key covers both surfaces (KPI sub-label + BarChart panel
+marker). A second key is permitted ONLY if a slightly different BarChart-panel
+phrasing is wanted — ≤2 keys total. `STR_STATS_TASKS` / `strStats` stay `internal/`
+and are NOT exported from `index.ts` (SRA.0 public surface unchanged;
+`index-barrel.test.ts` enforces this).
+
+### SRA.8 Error semantics (extension)
+
+- Invalid/empty `xai_task_cols` → `narrowTaskCols` false → `countDoneTasks` returns
+  `0` → KPI shows `0` (honest zero). Never throws.
+- The new code adds no `any`; predicate takes `unknown`. Lint `--max-warnings 0`.
+
+### SRA.10 `KpiCard` prop delta — optional `subLabel` (post-review B1 / Path 1)
+
+The SHIPPED `KpiCardProps` (§7) is `{ cellId, colorVar, icon, label, value, unit?, trend }`.
+Path 1 adds ONE optional prop:
+
+```ts
+export interface KpiCardProps {
+  cellId: KpiCellId;
+  colorVar: string;
+  icon: "check" | "timer" | "pin" | "flame";
+  label: string;
+  value: string | number;
+  unit?: string;
+  trend: string;
+  /** NEW — optional user-visible honesty sub-label (e.g. "current board" /
+   *  "当前看板"). Rendered as a small muted line under the value. Omitted by the
+   *  focus / habits / daily-avg KPIs (they render identically to before); only
+   *  the tasks KPI passes it (Path 1 / B1). */
+  subLabel?: string;
+}
+```
+
+- **Additive, NOT a rewrite.** `subLabel` is optional; the 3 existing non-tasks
+  call sites omit it and render byte-identically. A KPI cell is not a chart, so this
+  does not breach the carve-out's "no chart-component rewrite" rule (the
+  BarChart/LineChart/RingChart/Heatmap bodies stay untouched).
+- **Render shape (build call):** a `<span className="kpi-sublabel muted">{subLabel}</span>`
+  inside `.kpi-head` (under `.kpi-label`) or below `.kpi-row-val`. Optional
+  `.kpi-sublabel` CSS rule (or reuse `.muted`); no new design token.
+- **Test:** new K5 — `subLabel` renders only when passed; K1..K4 unchanged.
+- This is the ONLY public-component prop the extension adds. `index.ts` exports
+  (SRA.0) are still UNCHANGED — `KpiCardProps` is not part of the package's public
+  barrel; `KpiCard` is an internal-to-the-module component, exercised via tests.
+
+### SRA.9 Versioning
+
+This extension supersedes §0 Known Limitation 1 (tasks proxy) and Frozen
+Assumption #2. A future row may add `web:tasks:completed` + a timestamped
+completion log to enable honest per-window completion (would relax SRA.4's
+range-invariance + `tasksTrend = "—"`); that requires its own feature-plan
+increment, NOT in-place edits here.
