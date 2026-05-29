@@ -6,6 +6,7 @@ pub mod database;
 pub(crate) mod database_runtime;
 pub mod finder;
 pub mod global_hotkey;
+pub mod host_mode;
 pub mod keychain;
 pub mod menubar;
 pub mod statusbar;

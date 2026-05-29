@@ -107,7 +107,9 @@ pub fn run() {
         .manage(commands::statusbar::DesktopStatusbarState::default())
         .manage(commands::global_hotkey::DesktopQuickOpenState::default())
         .manage(commands::updater::DesktopUpdaterState::default())
-        .manage(commands::bookmarks::BookmarkRegistry::default());
+        .manage(commands::bookmarks::BookmarkRegistry::default())
+        .manage(GridWindowsState::default())
+        .manage(ConsoleWindowFrameState::default());
 
     #[cfg(feature = "crypto")]
     let builder = builder.manage(commands::database::DatabaseState::default());
@@ -118,6 +120,8 @@ pub fn run() {
             commands::statusbar::statusbar_set_snapshot,
             commands::global_hotkey::desktop_global_hotkey_get_snapshot,
             commands::global_hotkey::desktop_global_hotkey_set_preference,
+            commands::host_mode::desktop_host_mode_get,
+            commands::host_mode::desktop_host_mode_set,
             commands::updater::desktop_updater_get_snapshot,
             commands::updater::desktop_updater_check,
             commands::crypto::crypto_encrypt_for,
@@ -132,6 +136,16 @@ pub fn run() {
             commands::bookmarks::register_path_bookmark,
             commands::bookmarks::clear_path_bookmark,
             commands::thumbnail::generate_file_thumbnail,
+            commands::window::create_grid_window,
+            commands::window::update_grid_window,
+            commands::window::close_grid_window,
+            commands::window::list_grid_windows,
+            commands::window::focus_grid_window,
+            commands::window::open_console_window,
+            commands::window::close_console_window,
+            commands::window::focus_console_window,
+            commands::window::get_console_window_frame,
+            commands::window::set_console_window_frame,
             #[cfg(feature = "crypto")]
             commands::database::db_init,
             #[cfg(feature = "crypto")]
@@ -169,15 +183,31 @@ pub fn run() {
                 .get_webview_window("main")
                 .expect("main window not found");
 
-            #[cfg(target_os = "macos")]
-            platform::macos::configure_main_window(&window);
+            let loaded_config = app_config::load_config_or_default(&app_handle)?;
+            let host_mode = loaded_config.host_mode;
 
-            // Force normal-window runtime behavior even if legacy overlay
-            // config remains in tauri.conf during the migration phases.
-            let _ = window.set_decorations(true);
-            let _ = window.set_shadow(true);
-            let _ = window.set_resizable(true);
-            let _ = window.set_always_on_top(false);
+            match host_mode {
+                app_config::DesktopHostMode::Normal => {
+                    #[cfg(target_os = "macos")]
+                    platform::macos::configure_main_window(&window);
+
+                    // Keep normal-window runtime as default.
+                    let _ = window.set_decorations(true);
+                    let _ = window.set_shadow(true);
+                    let _ = window.set_resizable(true);
+                    let _ = window.set_always_on_top(false);
+                }
+                app_config::DesktopHostMode::OverlayV2 => {
+                    #[cfg(target_os = "macos")]
+                    platform::macos::legacy_overlay::configure_main_overlay_window(&window);
+
+                    // Overlay mode is explicit and opt-in.
+                    let _ = window.set_decorations(false);
+                    let _ = window.set_shadow(false);
+                    let _ = window.set_resizable(true);
+                    let _ = window.set_always_on_top(false);
+                }
+            }
 
             commands::statusbar::install_statusbar(&app_handle)?;
             window.eval(DESKTOP_NOTIFICATION_ADAPTER_SCRIPT)?;
@@ -185,7 +215,6 @@ pub fn run() {
             window.eval(DESKTOP_GLOBAL_HOTKEY_ADAPTER_SCRIPT)?;
             window.eval(DESKTOP_UPDATER_ADAPTER_SCRIPT)?;
 
-            let loaded_config = app_config::load_config_or_default(&app_handle)?;
             let restored_state =
                 app_config::apply_main_window_state(&window, &loaded_config.window.main)?;
 
@@ -198,7 +227,11 @@ pub fn run() {
             let mut normalized_config = loaded_config;
             normalized_config.window.main = restored_state;
             app_config::save_config(&app_handle, normalized_config)?;
-            app_config::attach_main_window_persistence(&window, app_handle);
+            app_config::attach_main_window_persistence(&window, app_handle.clone());
+
+            if host_mode == app_config::DesktopHostMode::OverlayV2 {
+                legacy_overlay::bootstrap_control_window(&app_handle);
+            }
 
             Ok(())
         })

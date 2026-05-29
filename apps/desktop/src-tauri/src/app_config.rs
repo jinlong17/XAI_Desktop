@@ -11,6 +11,7 @@ use crate::error::{AppError, AppResult};
 const CONFIG_FILENAME: &str = "app-config.json";
 const SCHEMA_VERSION_V1: u32 = 1;
 const SCHEMA_VERSION_V2: u32 = 2;
+const SCHEMA_VERSION_V3: u32 = 3;
 const MIN_WINDOW_WIDTH: f64 = 720.0;
 const MIN_WINDOW_HEIGHT: f64 = 480.0;
 const MAX_WINDOW_WIDTH: f64 = 8192.0;
@@ -24,6 +25,14 @@ pub struct DesktopAppConfig {
     pub updated_at: String,
     pub window: DesktopWindowConfigV1,
     pub quick_open: QuickOpenShortcutConfigV2,
+    pub host_mode: DesktopHostMode,
+}
+
+#[derive(Clone, Copy, Debug, Serialize, Deserialize, PartialEq, Eq)]
+#[serde(rename_all = "snake_case")]
+pub enum DesktopHostMode {
+    Normal,
+    OverlayV2,
 }
 
 #[derive(Clone, Debug, Serialize, Deserialize, PartialEq)]
@@ -56,6 +65,15 @@ struct DesktopAppConfigV1Legacy {
     pub schema_version: u32,
     pub updated_at: String,
     pub window: DesktopWindowConfigV1,
+}
+
+#[derive(Clone, Debug, Serialize, Deserialize, PartialEq)]
+#[serde(rename_all = "camelCase")]
+struct DesktopAppConfigV2Legacy {
+    pub schema_version: u32,
+    pub updated_at: String,
+    pub window: DesktopWindowConfigV1,
+    pub quick_open: QuickOpenShortcutConfigV2,
 }
 
 #[derive(Clone, Copy, Debug)]
@@ -94,14 +112,19 @@ pub fn default_quick_open_config() -> QuickOpenShortcutConfigV2 {
     }
 }
 
+pub fn default_host_mode() -> DesktopHostMode {
+    DesktopHostMode::Normal
+}
+
 pub fn default_config() -> DesktopAppConfig {
     DesktopAppConfig {
-        schema_version: SCHEMA_VERSION_V2,
+        schema_version: SCHEMA_VERSION_V3,
         updated_at: current_timestamp_tag(),
         window: DesktopWindowConfigV1 {
             main: default_main_window_state(),
         },
         quick_open: default_quick_open_config(),
+        host_mode: default_host_mode(),
     }
 }
 
@@ -132,18 +155,31 @@ fn load_config_from_path(config_path: &Path) -> AppResult<DesktopAppConfig> {
         .map_err(|error| AppError::Internal(format!("failed to read app config: {error}")))?;
 
     if let Ok(config) = serde_json::from_str::<DesktopAppConfig>(&raw) {
-        if config.schema_version == SCHEMA_VERSION_V2 {
+        if config.schema_version == SCHEMA_VERSION_V3 {
             return Ok(config);
+        }
+    }
+
+    if let Ok(legacy) = serde_json::from_str::<DesktopAppConfigV2Legacy>(&raw) {
+        if legacy.schema_version == SCHEMA_VERSION_V2 {
+            return Ok(DesktopAppConfig {
+                schema_version: SCHEMA_VERSION_V3,
+                updated_at: legacy.updated_at,
+                window: legacy.window,
+                quick_open: legacy.quick_open,
+                host_mode: default_host_mode(),
+            });
         }
     }
 
     if let Ok(legacy) = serde_json::from_str::<DesktopAppConfigV1Legacy>(&raw) {
         if legacy.schema_version == SCHEMA_VERSION_V1 {
             return Ok(DesktopAppConfig {
-                schema_version: SCHEMA_VERSION_V2,
+                schema_version: SCHEMA_VERSION_V3,
                 updated_at: legacy.updated_at,
                 window: legacy.window,
                 quick_open: default_quick_open_config(),
+                host_mode: default_host_mode(),
             });
         }
     }
@@ -161,7 +197,7 @@ pub fn save_config<R: Runtime>(app: &AppHandle<R>, mut config: DesktopAppConfig)
 }
 
 fn save_config_to_path(config_path: &Path, config: &mut DesktopAppConfig) -> AppResult<()> {
-    config.schema_version = SCHEMA_VERSION_V2;
+    config.schema_version = SCHEMA_VERSION_V3;
     config.updated_at = current_timestamp_tag();
     let temp_path = config_path.with_extension("json.tmp");
     let bytes = serde_json::to_vec_pretty(&config)
@@ -257,6 +293,17 @@ pub fn save_quick_open_config<R: Runtime>(
 ) -> AppResult<()> {
     let mut config = load_config_or_default(app)?;
     config.quick_open = quick_open;
+    save_config(app, config)
+}
+
+pub fn load_host_mode<R: Runtime>(app: &AppHandle<R>) -> AppResult<DesktopHostMode> {
+    let config = load_config_or_default(app)?;
+    Ok(config.host_mode)
+}
+
+pub fn save_host_mode<R: Runtime>(app: &AppHandle<R>, host_mode: DesktopHostMode) -> AppResult<()> {
+    let mut config = load_config_or_default(app)?;
+    config.host_mode = host_mode;
     save_config(app, config)
 }
 
@@ -658,9 +705,10 @@ mod tests {
     fn load_defaults_when_file_absent() {
         let path = unique_test_path("missing");
         let loaded = load_config_from_path(&path).expect("missing file should load defaults");
-        assert_eq!(loaded.schema_version, SCHEMA_VERSION_V2);
+        assert_eq!(loaded.schema_version, SCHEMA_VERSION_V3);
         assert_eq!(loaded.window.main, default_main_window_state());
         assert_eq!(loaded.quick_open, default_quick_open_config());
+        assert_eq!(loaded.host_mode, default_host_mode());
     }
 
     #[test]
@@ -670,7 +718,7 @@ mod tests {
         fs::create_dir_all(dir).expect("test dir should be creatable");
 
         let mut config = DesktopAppConfig {
-            schema_version: SCHEMA_VERSION_V2,
+            schema_version: SCHEMA_VERSION_V3,
             updated_at: "unix-seconds:0".to_string(),
             window: DesktopWindowConfigV1 {
                 main: MainWindowStateV1 {
@@ -687,13 +735,15 @@ mod tests {
                 accelerator: Some("CommandOrControl+Shift+O".to_string()),
                 enabled: true,
             },
+            host_mode: DesktopHostMode::OverlayV2,
         };
 
         save_config_to_path(&path, &mut config).expect("save should succeed");
         let loaded = load_config_from_path(&path).expect("load should succeed");
-        assert_eq!(loaded.schema_version, SCHEMA_VERSION_V2);
+        assert_eq!(loaded.schema_version, SCHEMA_VERSION_V3);
         assert_eq!(loaded.window.main, config.window.main);
         assert_eq!(loaded.quick_open, config.quick_open);
+        assert_eq!(loaded.host_mode, config.host_mode);
         assert!(loaded.updated_at.starts_with("unix-seconds:"));
 
         let _ = fs::remove_dir_all(dir);
@@ -707,15 +757,16 @@ mod tests {
         fs::write(&path, "{not-valid-json").expect("corrupt file should be writable");
 
         let loaded = load_config_from_path(&path).expect("corrupt config should still resolve");
-        assert_eq!(loaded.schema_version, SCHEMA_VERSION_V2);
+        assert_eq!(loaded.schema_version, SCHEMA_VERSION_V3);
         assert_eq!(loaded.window.main, default_main_window_state());
         assert_eq!(loaded.quick_open, default_quick_open_config());
+        assert_eq!(loaded.host_mode, default_host_mode());
 
         let _ = fs::remove_dir_all(dir);
     }
 
     #[test]
-    fn v1_schema_migrates_forward_to_v2_with_default_quick_open() {
+    fn v1_schema_migrates_forward_to_v3_with_default_quick_open_and_host_mode() {
         let path = unique_test_path("v1-migrate");
         let dir = path.parent().expect("config file should have parent dir");
         fs::create_dir_all(dir).expect("test dir should be creatable");
@@ -736,10 +787,47 @@ mod tests {
         fs::write(&path, payload).expect("v1 payload should be writable");
 
         let loaded = load_config_from_path(&path).expect("v1 config should migrate");
-        assert_eq!(loaded.schema_version, SCHEMA_VERSION_V2);
+        assert_eq!(loaded.schema_version, SCHEMA_VERSION_V3);
         assert_eq!(loaded.window.main.width, 1400.0);
         assert_eq!(loaded.window.main.height, 900.0);
         assert_eq!(loaded.quick_open, default_quick_open_config());
+        assert_eq!(loaded.host_mode, default_host_mode());
+
+        let _ = fs::remove_dir_all(dir);
+    }
+
+    #[test]
+    fn v2_schema_migrates_forward_to_v3_with_default_host_mode() {
+        let path = unique_test_path("v2-migrate");
+        let dir = path.parent().expect("config file should have parent dir");
+        fs::create_dir_all(dir).expect("test dir should be creatable");
+        let payload = r#"{
+  "schemaVersion": 2,
+  "updatedAt": "unix-seconds:9",
+  "window": {
+    "main": {
+      "width": 1366,
+      "height": 768,
+      "x": null,
+      "y": null,
+      "maximized": false,
+      "fullscreen": false
+    }
+  },
+  "quickOpen": {
+    "presetId": "default",
+    "accelerator": "CommandOrControl+Shift+Space",
+    "enabled": true
+  }
+}"#;
+        fs::write(&path, payload).expect("v2 payload should be writable");
+
+        let loaded = load_config_from_path(&path).expect("v2 config should migrate");
+        assert_eq!(loaded.schema_version, SCHEMA_VERSION_V3);
+        assert_eq!(loaded.window.main.width, 1366.0);
+        assert_eq!(loaded.window.main.height, 768.0);
+        assert_eq!(loaded.quick_open.preset_id, "default");
+        assert_eq!(loaded.host_mode, default_host_mode());
 
         let _ = fs::remove_dir_all(dir);
     }
@@ -766,9 +854,10 @@ mod tests {
         fs::write(&path, payload).expect("schema test payload should be writable");
 
         let loaded = load_config_from_path(&path).expect("unsupported schema should still resolve");
-        assert_eq!(loaded.schema_version, SCHEMA_VERSION_V2);
+        assert_eq!(loaded.schema_version, SCHEMA_VERSION_V3);
         assert_eq!(loaded.window.main, default_main_window_state());
         assert_eq!(loaded.quick_open, default_quick_open_config());
+        assert_eq!(loaded.host_mode, default_host_mode());
 
         let _ = fs::remove_dir_all(dir);
     }
