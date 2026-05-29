@@ -334,11 +334,15 @@ describe("TU-6: string content messages stay unchanged (backward compat)", () =>
   });
 });
 
-// ---- TU-7: OpenAI-compatible — tools NOT sent ----
-describe("TU-7: OpenAI-compatible provider — tools param NOT included in body", () => {
-  it("omits tools on OpenAI-compatible buildBody", () => {
-    // Test the resolveProvider directly — tools are not passed to openai-compatible buildBody
-    // because the openai-compatible branch ignores tools (planner's-call #3).
+// ---- TU-7: OpenAI-compatible — tools NOW sent in OpenAI function format (deferral lifted) ----
+//
+// REWRITE: The deferral (planner's-call #3 from xai-web-ai-tool-layer) is now lifted by
+// xai-web-ai-tool-openai-compatible P1. The openai buildBody now serializes tools in
+// OpenAI function-calling format ({type:"function", function:{name,description,parameters}}).
+// This test now asserts the lifted behavior — keeping it as `toBeUndefined()` would contradict
+// the live code. See OAI-NODRIFT-1 in openAiAntiDrift.test.ts for source-text guard.
+describe("TU-7: OpenAI-compatible provider — tools NOW serialized in OpenAI function format", () => {
+  it("includes tools in OpenAI function format on openai-compatible buildBody", () => {
     mockGetPref.mockImplementation((key: string) => {
       if (key === "xai_ai_provider") return "openai-compatible";
       if (key === "xai_ai_base_url") return "https://api.groq.com/openai/v1";
@@ -354,9 +358,30 @@ describe("TU-7: OpenAI-compatible provider — tools param NOT included in body"
       stream: true,
       tools: [ANTHROPIC_TOOL],
     });
-    // openai-compatible buildBody MUST NOT pass tools (handled inside the function itself)
-    // The OpenAI tools format is different — Anthropic-first: tools field is NOT added
-    // because the openai-compatible buildBody ignores the tools param.
+    // openai-compatible buildBody NOW serializes tools in OpenAI function format.
+    // The deferral comment at llmProvider.ts:96 has been deleted.
+    expect(body["tools"]).toBeDefined();
+    const tools = body["tools"] as Array<{ type: string; function: { name: string } }>;
+    expect(tools).toHaveLength(1);
+    expect(tools[0]!.type).toBe("function");
+    expect(tools[0]!.function.name).toBe("create_task");
+  });
+
+  it("no-tools call: tools still absent from body (backward compat preserved)", () => {
+    mockGetPref.mockImplementation((key: string) => {
+      if (key === "xai_ai_provider") return "openai-compatible";
+      if (key === "xai_ai_base_url") return "https://api.groq.com/openai/v1";
+      return null;
+    });
+
+    const config = resolveProvider("sk-groq-test");
+
+    const body = config.buildBody({
+      modelId: "llama3-8b",
+      messages: [{ role: "user", content: "hello" }],
+      stream: true,
+      // tools: not provided
+    });
     expect(body["tools"]).toBeUndefined();
   });
 });

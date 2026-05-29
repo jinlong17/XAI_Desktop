@@ -15,6 +15,7 @@
 import { getPref } from "@repo/plugin-web-storage";
 import type { AiModelId } from "../types.js";
 import type { AnthropicToolDef, ContentBlock } from "./toolUseTypes.js";
+import { toOpenAiTools, toOpenAiToolChoice } from "./toolUseTypes.js";
 
 // ---- Model id constants (pinned per Rec3, 2026-05-25) ----------------------
 // Exact Anthropic model id strings — pinned to known-good versions.
@@ -53,7 +54,7 @@ export interface ProviderConfig {
     messages: Array<{ role: "user" | "assistant"; content: string | ContentBlock[] }>;
     stream: boolean;
     maxTokens?: number;
-    /** Optional: Anthropic tool definitions (not sent for openai-compatible). */
+    /** Optional: tool definitions. Anthropic branch passes verbatim; openai branch serializes via toOpenAiTools. */
     tools?: AnthropicToolDef[];
     /** Optional: tool_choice override (default "auto" when tools present). */
     toolChoice?: { type: "auto" | "any" | "none" } | { type: "tool"; name: string };
@@ -92,14 +93,22 @@ export function resolveProvider(apiKey: string): ProviderConfig {
         "content-type": "application/json",
         "authorization": `Bearer ${apiKey}`,
       },
-      buildBody({ modelId, messages, stream, maxTokens }) {
-        // OpenAI-compatible: tools are NOT sent (deferred per planner's-call #3).
+      buildBody({ modelId, messages, stream, maxTokens, tools, toolChoice }) {
         const body: Record<string, unknown> = {
           model: modelId,
           messages,
           stream,
         };
         if (maxTokens !== undefined) body["max_tokens"] = maxTokens;
+        // Serialize tools in OpenAI function-calling format when provided.
+        if (tools && tools.length > 0) {
+          body["tools"] = toOpenAiTools(tools);
+          const oaiChoice = toOpenAiToolChoice(toolChoice);
+          if (oaiChoice !== undefined) {
+            body["tool_choice"] = oaiChoice;
+          }
+          // Default tool_choice is "auto" (omitted = OpenAI default).
+        }
         return body;
       },
       resolveModelId(model) {
