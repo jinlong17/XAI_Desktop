@@ -23,6 +23,7 @@ import { parseSseStream } from "./sseParser.js";
 import { classifyError, type LlmError } from "./llmErrors.js";
 import { DEMO_REPLY_EN, DEMO_REPLY_ZH } from "./demoReply.js";
 import { buildTodayContext } from "./contextProvider.js";
+import type { AnthropicToolDef, ContentBlock, ToolUseResult } from "./toolUseTypes.js";
 
 // ---- Public types ----------------------------------------------------------
 
@@ -41,6 +42,18 @@ export interface StreamRequest {
    * P1 feature: READ-ONLY context injection.
    */
   contextText?: string;
+  /**
+   * P2: Optional Anthropic tool definitions to include in the request.
+   * Only sent on the Anthropic provider branch when a key is configured.
+   * Omitted for openai-compatible (planner's-call #3 — deferred).
+   */
+  tools?: AnthropicToolDef[];
+  /**
+   * P2: Optional history of prior messages for tool round-trip (tool_result turn).
+   * Content may be string or ContentBlock[]. Replaces the single-user-turn
+   * messages build when provided.
+   */
+  priorMessages?: Array<{ role: "user" | "assistant"; content: string | unknown[] }>;
 }
 
 export interface StreamChunk {
@@ -48,6 +61,12 @@ export interface StreamChunk {
   accumulated: string;
   /** True on the final chunk before the iterator returns. */
   done: boolean;
+  /**
+   * P2 additive (Rec1 from feature-review): if the model's turn ended with a tool call,
+   * this field carries the fully-parsed ToolUseResult. Undefined for normal text-only chunks.
+   * Text-only consumers stay byte-for-byte unaffected (R1 backward compat).
+   */
+  toolUse?: ToolUseResult;
 }
 
 // ---- streamCompleteChat ----------------------------------------------------
@@ -100,10 +119,19 @@ export async function* streamCompleteChat(
       ? `${contextText}\n\n---\n\nUser question: ${text}`
       : text;
 
+  // Build messages: use priorMessages if provided (tool round-trip), else single user turn.
+  const messages = req.priorMessages
+    ? (req.priorMessages as Array<{ role: "user" | "assistant"; content: string | unknown[] }>)
+    : [{ role: "user" as const, content: userContent }];
+
+  // Only send tools on Anthropic provider (planner's-call #3).
+  const tools = config.provider === "anthropic" ? req.tools : undefined;
+
   const body = config.buildBody({
     modelId,
-    messages: [{ role: "user", content: userContent }],
+    messages: messages as Array<{ role: "user" | "assistant"; content: string | ContentBlock[] }>,
     stream: streamingEnabled,
+    tools,
   });
 
   // 4. Issue the fetch.
@@ -153,7 +181,19 @@ export async function* streamCompleteChat(
   }
 
   // 7. Parse SSE stream.
+  // P2: loop-local state for tool_use block accumulation (Rec2 from feature-review).
+  // Per-block-index partial_json concatenator; JSON.parse ONCE at content_block_stop.
+  // Avoids widening the pure extractDelta helper.
   let accumulated = "";
+  let stopReason: string | undefined;
+
+  // Tool use accumulator: maps content-block index → { id, name, partialJson }
+  interface ToolAccumEntry { id: string; name: string; partialJson: string }
+  const toolAccum: Record<number, ToolAccumEntry> = {};
+
+  // Final parsed tool use result (if any).
+  let toolUseResult: ToolUseResult | undefined;
+
   try {
     for await (const sseEvent of parseSseStream(response)) {
       if (signal?.aborted) {
@@ -166,16 +206,91 @@ export async function* streamCompleteChat(
         break;
       }
 
-      // Parse the delta from the SSE event data.
-      let delta = "";
+      // Parse the raw SSE data.
+      let parsed: Record<string, unknown>;
       try {
-        const parsed = JSON.parse(sseEvent.data) as Record<string, unknown>;
-        delta = extractDelta(parsed, providerKind);
+        parsed = JSON.parse(sseEvent.data) as Record<string, unknown>;
       } catch {
-        // Malformed JSON in a chunk — skip silently (partial accumulation).
+        // Malformed JSON in a chunk — skip silently.
         continue;
       }
 
+      // Determine event type: prefer JSON data "type" field, fall back to SSE event field.
+      // Rationale: the Anthropic API includes "type" in the JSON data body. The SHIPPED
+      // tests use the SSE event: line for backward compat (both are valid).
+      const eventType = (parsed["type"] as string | undefined) ?? sseEvent.event;
+
+      // ---- Anthropic streaming event handling ----
+      if (providerKind === "anthropic") {
+        if (eventType === "content_block_start") {
+          // A new content block has started. If it's a tool_use block, record it.
+          const idx = parsed["index"] as number | undefined;
+          const block = parsed["content_block"] as Record<string, unknown> | undefined;
+          if (typeof idx === "number" && block && block["type"] === "tool_use") {
+            const id = block["id"] as string ?? "";
+            const name = block["name"] as string ?? "";
+            toolAccum[idx] = { id, name, partialJson: "" };
+          }
+          continue;
+        }
+
+        if (eventType === "content_block_delta") {
+          const idx = parsed["index"] as number | undefined;
+          const delta = parsed["delta"] as Record<string, unknown> | undefined;
+          if (!delta) continue;
+
+          if (delta["type"] === "text_delta" && typeof delta["text"] === "string") {
+            // Normal text delta.
+            accumulated += delta["text"] as string;
+            yield { accumulated, done: false };
+          } else if (delta["type"] === "input_json_delta" && typeof idx === "number") {
+            // Tool use partial JSON — accumulate per block index; DO NOT parse here.
+            const partial = delta["partial_json"] as string ?? "";
+            if (toolAccum[idx]) {
+              toolAccum[idx]!.partialJson += partial;
+            }
+          }
+          continue;
+        }
+
+        if (eventType === "content_block_stop") {
+          // A block has ended. If it was a tool_use block, parse its JSON now (ONCE).
+          const idx = parsed["index"] as number | undefined;
+          if (typeof idx === "number" && toolAccum[idx]) {
+            const entry = toolAccum[idx]!;
+            try {
+              const parsedInput = JSON.parse(
+                entry.partialJson || "{}",
+              ) as Record<string, unknown>;
+              // Keep the LAST tool use result (in practice there is only one per v1).
+              toolUseResult = { id: entry.id, name: entry.name, input: parsedInput };
+            } catch {
+              // Malformed input JSON — skip tool use (graceful degradation).
+            }
+          }
+          continue;
+        }
+
+        if (eventType === "message_delta") {
+          // message_delta carries stop_reason for the turn (e.g. "tool_use" or "end_turn").
+          const delta = parsed["delta"] as Record<string, unknown> | undefined;
+          if (delta && typeof delta["stop_reason"] === "string") {
+            stopReason = delta["stop_reason"] as string;
+          }
+          continue;
+        }
+
+        if (eventType === "message_stop") {
+          // End of the streaming message. Break the loop.
+          break;
+        }
+
+        // Other event types (e.g. message_start, ping) — skip.
+        continue;
+      }
+
+      // ---- OpenAI-compatible streaming (original path) ----
+      const delta = extractDeltaOpenAI(parsed);
       if (delta) {
         accumulated += delta;
         yield { accumulated, done: false };
@@ -188,8 +303,12 @@ export async function* streamCompleteChat(
     throw llmErr;
   }
 
-  // Emit the final chunk.
-  yield { accumulated, done: true };
+  // Emit the final chunk, including tool_use result if stop_reason was "tool_use".
+  if (stopReason === "tool_use" && toolUseResult) {
+    yield { accumulated, done: true, toolUse: toolUseResult };
+  } else {
+    yield { accumulated, done: true };
+  }
 }
 
 // ---- Helpers ---------------------------------------------------------------
@@ -220,27 +339,15 @@ function _emitError(err: LlmError, provider: "anthropic" | "openai-compatible"):
 }
 
 /**
- * Extracts the text delta from a parsed SSE data chunk based on provider format.
- *
- * Anthropic format:
- *   content_block_delta: { delta: { type: "text_delta", text: "..." } }
+ * Extracts the text delta from a parsed SSE data chunk for OpenAI-compatible providers.
  *
  * OpenAI-compatible format:
  *   choices[0].delta.content: "..."
+ *
+ * NOTE: For Anthropic providers, tool_use parsing is handled inline in the
+ * streaming loop above (loop-local accumulator per Rec2; not a pure function).
  */
-function extractDelta(
-  parsed: Record<string, unknown>,
-  provider: "anthropic" | "openai-compatible",
-): string {
-  if (provider === "anthropic") {
-    const delta = parsed["delta"] as Record<string, unknown> | undefined;
-    if (delta && typeof delta["text"] === "string") {
-      return delta["text"];
-    }
-    return "";
-  }
-
-  // OpenAI-compatible
+function extractDeltaOpenAI(parsed: Record<string, unknown>): string {
   const choices = parsed["choices"] as Array<Record<string, unknown>> | undefined;
   if (Array.isArray(choices) && choices.length > 0) {
     const delta = choices[0]?.["delta"] as Record<string, unknown> | undefined;

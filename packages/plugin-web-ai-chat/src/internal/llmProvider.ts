@@ -14,6 +14,7 @@
 
 import { getPref } from "@repo/plugin-web-storage";
 import type { AiModelId } from "../types.js";
+import type { AnthropicToolDef, ContentBlock } from "./toolUseTypes.js";
 
 // ---- Model id constants (pinned per Rec3, 2026-05-25) ----------------------
 // Exact Anthropic model id strings — pinned to known-good versions.
@@ -38,12 +39,24 @@ export interface ProviderConfig {
   url: string;
   /** HTTP headers to include in every request. */
   headers: Record<string, string>;
-  /** Builds the JSON request body. */
+  /**
+   * Builds the JSON request body.
+   *
+   * P2 widening (additive, backward-compatible):
+   * - messages[].content widened from string → string | ContentBlock[]
+   *   so tool round-trip turns can carry assistant tool_use + user tool_result.
+   * - Optional tools array (Anthropic branch only) for tool-use requests.
+   * - Optional toolChoice (Anthropic branch only). Default: omitted → "auto".
+   */
   buildBody(opts: {
     modelId: string;
-    messages: Array<{ role: "user" | "assistant"; content: string }>;
+    messages: Array<{ role: "user" | "assistant"; content: string | ContentBlock[] }>;
     stream: boolean;
     maxTokens?: number;
+    /** Optional: Anthropic tool definitions (not sent for openai-compatible). */
+    tools?: AnthropicToolDef[];
+    /** Optional: tool_choice override (default "auto" when tools present). */
+    toolChoice?: { type: "auto" | "any" | "none" } | { type: "tool"; name: string };
   }): Record<string, unknown>;
   /** The real provider-specific model id for the given AiModelId. */
   resolveModelId(model: AiModelId): string;
@@ -80,6 +93,7 @@ export function resolveProvider(apiKey: string): ProviderConfig {
         "authorization": `Bearer ${apiKey}`,
       },
       buildBody({ modelId, messages, stream, maxTokens }) {
+        // OpenAI-compatible: tools are NOT sent (deferred per planner's-call #3).
         const body: Record<string, unknown> = {
           model: modelId,
           messages,
@@ -107,13 +121,22 @@ export function resolveProvider(apiKey: string): ProviderConfig {
       // Required for direct browser access (CORS).
       "anthropic-dangerous-direct-browser-access": "true",
     },
-    buildBody({ modelId, messages, stream, maxTokens }) {
-      return {
+    buildBody({ modelId, messages, stream, maxTokens, tools, toolChoice }) {
+      const body: Record<string, unknown> = {
         model: modelId,
         messages,
         stream,
         max_tokens: maxTokens ?? 1024,
       };
+      // Emit tools + tool_choice only when tools are provided (Anthropic branch).
+      if (tools && tools.length > 0) {
+        body["tools"] = tools;
+        if (toolChoice !== undefined) {
+          body["tool_choice"] = toolChoice;
+        }
+        // Default tool_choice is "auto" (omitted = Anthropic default).
+      }
+      return body;
     },
     resolveModelId(model) {
       return ANTHROPIC_MODEL_IDS[model] ?? ANTHROPIC_MODEL_IDS["haiku"];
