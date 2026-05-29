@@ -22,14 +22,21 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import type { Pane, PaneRenderProps } from "@repo/plugin-web-settings-shell";
 import { Toggle, SettingRow, SectionBlock } from "@repo/plugin-web-settings-shell";
 import {
-  isDesktopPhase1OfflineRuntime,
   resolveWebRuntimeProfile,
 } from "@repo/core";
 import { useI18n } from "@repo/plugin-web-tokens";
 import { usePref } from "@repo/plugin-web-storage";
 import type { WebPrefKey } from "@repo/plugin-web-storage";
-import { aiKeyStorage } from "@repo/plugin-web-ai-chat";
-import type { AiProvider, LlmError } from "@repo/plugin-web-ai-chat";
+import {
+  aiKeyStorage,
+  readBrowserOnlineState,
+  resolveAiProviderPolicy,
+} from "@repo/plugin-web-ai-chat";
+import type {
+  AiProvider,
+  LlmError,
+  AiProviderPolicySnapshot,
+} from "@repo/plugin-web-ai-chat";
 
 // ---- Internal types ---------------------------------------------------------
 
@@ -47,8 +54,6 @@ function AiPaneContent({ lang }: PaneRenderProps): React.ReactElement {
   const runtimeProfile = resolveWebRuntimeProfile(
     import.meta.env as Record<string, string | undefined>,
   );
-  const isDesktopOfflineRuntime =
-    isDesktopPhase1OfflineRuntime(runtimeProfile);
 
   // ---- Provider pref -------------------------------------------------------
   const [provider, setProvider] = usePref(
@@ -75,37 +80,44 @@ function AiPaneContent({ lang }: PaneRenderProps): React.ReactElement {
   const [testState, setTestState] = useState<TestState>({ status: "idle" });
   const deleteDialogRef = useRef<HTMLDialogElement | null>(null);
 
-  // Load current key presence on mount.
+  const resolvedProvider = (provider || "anthropic") as AiProvider;
+
+  // Load current key presence when provider changes.
   useEffect(() => {
-    const prov = (provider || "anthropic") as AiProvider;
-    void aiKeyStorage.loadKey(prov).then((k) => {
+    void aiKeyStorage.loadKey(resolvedProvider).then((k) => {
       setHasSavedKey(k != null);
+      setTestState({ status: "idle" });
     });
     return () => {
       if (savedTimer.current != null) clearTimeout(savedTimer.current);
     };
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [resolvedProvider]);
+
+  const policy: AiProviderPolicySnapshot = resolveAiProviderPolicy({
+    provider: resolvedProvider,
+    baseUrl: baseUrl || "",
+    hasSavedKey,
+    runtimeProfile,
+    isOnline: readBrowserOnlineState(),
+  });
 
   // ---- Handlers ------------------------------------------------------------
 
   const handleSaveKey = useCallback(async () => {
     const trimmed = keyInput.trim();
     if (!trimmed) return;
-    const prov = (provider || "anthropic") as AiProvider;
-    await aiKeyStorage.saveKey(prov, trimmed);
+    await aiKeyStorage.saveKey(resolvedProvider, trimmed);
     setHasSavedKey(true);
     setKeyInput("");
     setSavedFlash(true);
     if (savedTimer.current != null) clearTimeout(savedTimer.current);
     savedTimer.current = setTimeout(() => setSavedFlash(false), 1800);
-  }, [keyInput, provider]);
+  }, [keyInput, resolvedProvider]);
 
   const handleTestConnection = useCallback(async () => {
     setTestState({ status: "testing" });
-    const prov = (provider || "anthropic") as AiProvider;
     try {
-      const result = await aiKeyStorage.testConnection(prov);
+      const result = await aiKeyStorage.testConnection(resolvedProvider);
       if (result.ok) {
         setTestState({ status: "ok" });
       } else {
@@ -114,20 +126,19 @@ function AiPaneContent({ lang }: PaneRenderProps): React.ReactElement {
     } catch {
       setTestState({ status: "error", error: { kind: "Network", cause: new Error("test failed") } });
     }
-  }, [provider]);
+  }, [resolvedProvider]);
 
   const handleDeleteOpen = useCallback(() => {
     deleteDialogRef.current?.showModal();
   }, []);
 
   const handleDeleteConfirm = useCallback(async () => {
-    const prov = (provider || "anthropic") as AiProvider;
-    await aiKeyStorage.clearKey(prov);
+    await aiKeyStorage.clearKey(resolvedProvider);
     setHasSavedKey(false);
     setKeyInput("");
     setTestState({ status: "idle" });
     deleteDialogRef.current?.close();
-  }, [provider]);
+  }, [resolvedProvider]);
 
   const handleDeleteCancel = useCallback(() => {
     deleteDialogRef.current?.close();
@@ -137,10 +148,18 @@ function AiPaneContent({ lang }: PaneRenderProps): React.ReactElement {
 
   // ---- Test status copy ----------------------------------------------------
   let testCopy: string | null = null;
-  if (isDesktopOfflineRuntime) {
+  if (policy.state === "network_required") {
+    testCopy = policy.reason === "offline_runtime"
+      ? (zh ? "桌面离线模式下需要联网环境" : "Desktop offline runtime requires network-enabled mode")
+      : (zh ? "当前网络离线，无法测试连接" : "Browser is offline; network is required");
+  } else if (policy.state === "key_required") {
+    testCopy = zh ? "请先保存 API 密钥" : "Save an API key to enable send/test";
+  } else if (policy.state === "base_url_required") {
+    testCopy = zh ? "请先填写 OpenAI 兼容 Base URL" : "Base URL is required for OpenAI-compatible provider";
+  } else if (policy.state === "local_provider_not_enabled") {
     testCopy = zh
-      ? "桌面离线模式暂不支持测试连接"
-      : "Test connection is unavailable in desktop offline mode";
+      ? "本行功能未启用本地/回环地址 Provider（已延期）"
+      : "Local/loopback provider execution is deferred and not enabled in this row";
   } else if (testState.status === "ok") {
     testCopy = zh ? "连接成功" : "Connection OK";
   } else if (testState.status === "error") {
@@ -228,7 +247,7 @@ function AiPaneContent({ lang }: PaneRenderProps): React.ReactElement {
               type="button"
               className={"ai-key-test" + (testState.status === "ok" ? " ok" : testState.status === "error" ? " error" : "")}
               onClick={() => { void handleTestConnection(); }}
-              disabled={!hasSavedKey || testState.status === "testing" || isDesktopOfflineRuntime}
+              disabled={!policy.testEnabled || testState.status === "testing"}
               aria-label={zh ? "测试连接" : "Test Connection"}
               data-testid="ai-key-test"
             >

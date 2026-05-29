@@ -21,14 +21,20 @@ const { mockLoadKey, mockSaveKey, mockClearKey, mockTestConnection } =
     mockTestConnection: vi.fn<() => Promise<{ ok: boolean; error?: unknown }>>(),
   }));
 
-vi.mock("@repo/plugin-web-ai-chat", () => ({
-  aiKeyStorage: {
-    loadKey: mockLoadKey,
-    saveKey: mockSaveKey,
-    clearKey: mockClearKey,
-    testConnection: mockTestConnection,
-  },
-}));
+vi.mock("@repo/plugin-web-ai-chat", async () => {
+  const actual = await vi.importActual<typeof import("@repo/plugin-web-ai-chat")>(
+    "@repo/plugin-web-ai-chat",
+  );
+  return {
+    ...actual,
+    aiKeyStorage: {
+      loadKey: mockLoadKey,
+      saveKey: mockSaveKey,
+      clearKey: mockClearKey,
+      testConnection: mockTestConnection,
+    },
+  };
+});
 
 beforeEach(() => {
   vi.unstubAllEnvs();
@@ -165,7 +171,21 @@ describe("aiPane — Test Connection (AP9..AP10)", () => {
     const testBtn = screen.getByTestId<HTMLButtonElement>("ai-key-test");
     expect(testBtn).toBeDisabled();
     expect(screen.getByTestId("ai-test-result")).toHaveTextContent(
-      "Test connection is unavailable in desktop offline mode",
+      "Desktop offline runtime requires network-enabled mode",
+    );
+  });
+
+  it("AP10c: openai-compatible loopback URL shows deferred local-provider copy", async () => {
+    localStorage.setItem("xai_ai_provider", JSON.stringify("openai-compatible"));
+    localStorage.setItem("xai_ai_base_url", JSON.stringify("http://localhost:11434/v1"));
+    mockLoadKey.mockResolvedValue("sk-existing-key");
+    await act(async () => {
+      render(aiPane.render({ lang: "en" }));
+    });
+    const testBtn = screen.getByTestId<HTMLButtonElement>("ai-key-test");
+    expect(testBtn).toBeDisabled();
+    expect(screen.getByTestId("ai-test-result")).toHaveTextContent(
+      "Local/loopback provider execution is deferred and not enabled in this row",
     );
   });
 });

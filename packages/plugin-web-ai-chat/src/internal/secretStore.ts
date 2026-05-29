@@ -247,9 +247,17 @@ export const aiKeyStorage: AiKeyStorage = {
 
   async testConnection(provider) {
     const { classifyError } = await import("./llmErrors.js");
-    const runtimeProfile = resolveWebRuntimeProfile(
-      (import.meta as unknown as { env?: Record<string, string | undefined> }).env,
-    );
+    const importEnv =
+      (import.meta as unknown as { env?: Record<string, string | undefined> }).env ??
+      {};
+    const processEnv =
+      typeof process !== "undefined"
+        ? (process.env as Record<string, string | undefined>)
+        : {};
+    const runtimeProfile = resolveWebRuntimeProfile({
+      ...importEnv,
+      ...processEnv,
+    });
     const baseUrl = provider === "openai-compatible"
       ? ((getPref("xai_ai_base_url") as string) || "")
       : "";

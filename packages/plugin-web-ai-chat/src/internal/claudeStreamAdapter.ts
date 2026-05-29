@@ -62,9 +62,17 @@ export async function* streamCompleteChat(
   req: StreamRequest,
 ): AsyncIterable<StreamChunk> {
   const { text, model, signal } = req;
-  const runtimeProfile = resolveWebRuntimeProfile(
-    (import.meta as unknown as { env?: Record<string, string | undefined> }).env,
-  );
+  const importEnv =
+    (import.meta as unknown as { env?: Record<string, string | undefined> }).env ??
+    {};
+  const processEnv =
+    typeof process !== "undefined"
+      ? (process.env as Record<string, string | undefined>)
+      : {};
+  const runtimeProfile = resolveWebRuntimeProfile({
+    ...importEnv,
+    ...processEnv,
+  });
 
   const provider = (getPref("xai_ai_provider") as string) || "anthropic";
   const providerKind = (provider === "openai-compatible" ? "openai-compatible" : "anthropic") as
