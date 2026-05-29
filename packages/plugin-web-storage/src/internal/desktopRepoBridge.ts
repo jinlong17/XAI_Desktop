@@ -4,7 +4,9 @@ import {
   type DesktopBridgeError,
   type DesktopBridgeWriteResult,
   type HabitsStateEntity,
+  type PetStateEntity,
   type PomodoroSessionsEntity,
+  type ProjectWorkspaceStateEntity,
   type Repo,
   type RepoRecord,
   type TasksStateEntity,
@@ -14,15 +16,29 @@ type BridgedValue = unknown;
 
 const DESKTOP_REPO_NAMESPACE = "xai-web-desktop-local-first-bridge";
 
+const BOARD_WORKSPACE_KEYS = new Set([
+  "xai_boards_v2",
+  "xai_active_board",
+  "xai_board_panels",
+  "xai_board_inbox",
+  "xai_board_view_by_id",
+]);
+
+const PET_KEYS = new Set(["xai_pet_id", "xai_pet_pos"]);
+
 type BridgedSurface =
   | "tasks"
   | "habits"
-  | "pomodoro";
+  | "pomodoro"
+  | "board-workspace"
+  | "pet";
 
 type BridgeRecord =
   | TasksStateEntity
   | HabitsStateEntity
-  | PomodoroSessionsEntity;
+  | PomodoroSessionsEntity
+  | ProjectWorkspaceStateEntity
+  | PetStateEntity;
 
 type BridgeStatus = "disabled" | "active";
 
@@ -223,26 +239,38 @@ function isBridgedKey(key: string): boolean {
   return (
     key === "xai_task_cols" ||
     key === "xai_habits_state" ||
-    key === "xai_pomodoro_sessions"
+    key === "xai_pomodoro_sessions" ||
+    BOARD_WORKSPACE_KEYS.has(key) ||
+    PET_KEYS.has(key)
   );
 }
 
 function entityTypeForKey(key: string): BridgeRecord["entityType"] {
   if (key === "xai_task_cols") return "productivity.tasks_state";
   if (key === "xai_habits_state") return "productivity.habits_state";
-  return "productivity.pomodoro_sessions";
+  if (key === "xai_pomodoro_sessions") return "productivity.pomodoro_sessions";
+  if (BOARD_WORKSPACE_KEYS.has(key)) return "project.workspace_state";
+  return "pet.state";
 }
 
 function surfaceForKey(key: string): BridgedSurface {
   if (key === "xai_task_cols") return "tasks";
   if (key === "xai_habits_state") return "habits";
-  return "pomodoro";
+  if (key === "xai_pomodoro_sessions") return "pomodoro";
+  if (BOARD_WORKSPACE_KEYS.has(key)) return "board-workspace";
+  return "pet";
 }
 
 function toBridgeRecord(
   key: string,
   value: unknown,
-  base: Pick<RepoRecord, "id" | "schemaVersion" | "createdAt" | "updatedAt" | "syncScope">,
+  base: {
+    id: string;
+    schemaVersion: number;
+    createdAt: string;
+    updatedAt: string;
+    syncScope: "device-local";
+  },
 ): BridgeRecord {
   const entityType = entityTypeForKey(key);
 
@@ -273,11 +301,20 @@ function toBridgeRecord(
     };
   }
 
+  if (entityType === "project.workspace_state") {
+    return {
+      ...base,
+      entityType: "project.workspace_state",
+      storageKey: key as ProjectWorkspaceStateEntity["storageKey"],
+      value,
+    };
+  }
+
   return {
     ...base,
-    entityType: "productivity.pomodoro_sessions",
-    storageKey: "xai_pomodoro_sessions",
-    sessions: Array.isArray(value) ? value : [],
+    entityType: "pet.state",
+    storageKey: key as PetStateEntity["storageKey"],
+    value,
   };
 }
 
