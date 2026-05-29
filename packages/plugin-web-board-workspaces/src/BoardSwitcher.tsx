@@ -143,24 +143,25 @@ export function BoardSwitcher({
                     const isActive = b.id === activeBoardId;
                     const showDelete = !isActive && totalFiltered > 1;
                     return (
-                      <button
-                        key={b.id}
-                        type="button"
-                        className={"bs-card" + (isActive ? " active" : "")}
-                        onClick={() => onPick(b.id)}
-                        data-testid={`bs-card-${b.id}`}
-                      >
-                        <div className="bs-cover" style={{ background: b.cover }}>
-                          <span className="bs-cover-icon" aria-hidden="true">
-                            {b.template === "pm" ? "▤" : "▦"}
-                          </span>
-                        </div>
-                        <div className="bs-info">
-                          <div className="bs-name">{b.name[lang]}</div>
-                          <div className="bs-meta mono">
-                            {cardCount} {STR_SWITCHER.cards[lang]}
+                      <div key={b.id} className="bs-card-wrap">
+                        <button
+                          type="button"
+                          className={"bs-card" + (isActive ? " active" : "")}
+                          onClick={() => onPick(b.id)}
+                          data-testid={`bs-card-${b.id}`}
+                        >
+                          <div className="bs-cover" style={{ background: b.cover }}>
+                            <span className="bs-cover-icon" aria-hidden="true">
+                              {b.template === "pm" ? "▤" : "▦"}
+                            </span>
                           </div>
-                        </div>
+                          <div className="bs-info">
+                            <div className="bs-name">{b.name[lang]}</div>
+                            <div className="bs-meta mono">
+                              {cardCount} {STR_SWITCHER.cards[lang]}
+                            </div>
+                          </div>
+                        </button>
                         {showDelete && (
                           <button
                             type="button"
@@ -172,7 +173,7 @@ export function BoardSwitcher({
                             🗑
                           </button>
                         )}
-                      </button>
+                      </div>
                     );
                   })}
                 </div>

@@ -154,4 +154,13 @@ describe("BoardSwitcher (BS1..BS15)", () => {
     fireEvent.click(screen.getByTestId("bs-scrim"));
     expect(onClose).toHaveBeenCalled();
   });
+
+  it("BS16: delete affordance is a sibling of the pick-card button", () => {
+    render(<BoardSwitcher lang="en" {...baseProps} activeBoardId="b1" />);
+    const card = screen.getByTestId("bs-card-b2");
+    const deleteButton = screen.getByTestId("bs-delete-b2");
+
+    expect(card.querySelector("button")).toBeNull();
+    expect(deleteButton.closest("[data-testid='bs-card-b2']")).toBeNull();
+  });
 });

@@ -217,6 +217,40 @@ describe("BoardWorkspacesModule (BWM1..BWM18)", () => {
     );
   });
 
+  it("BWM19: Inbox toggles on immediately while an alternate board view is active", () => {
+    render(<BoardWorkspacesModule lang="en" />);
+    fireEvent.click(screen.getByTestId("vp-table"));
+
+    expect(screen.getByTestId("table-view-stub")).toBeInTheDocument();
+    expect(screen.queryByTestId("board-views-alt-canvas")).not.toBeInTheDocument();
+
+    fireEvent.click(screen.getByTestId("bv-inbox"));
+
+    expect(screen.getByTestId("inbox-panel")).toBeInTheDocument();
+    expect(screen.getByTestId("table-view-stub")).toBeInTheDocument();
+    expect(screen.getByTestId("board-panels").className).toContain("board-panels-multi");
+  });
+
+  it("BWM20: Board bottom button controls the Board panel, not the active top view", () => {
+    render(<BoardWorkspacesModule lang="en" />);
+    fireEvent.click(screen.getByTestId("vp-table"));
+    fireEvent.click(screen.getByTestId("bv-inbox"));
+
+    expect(screen.getByTestId("table-view-stub")).toBeInTheDocument();
+
+    fireEvent.click(screen.getByTestId("bv-board"));
+
+    expect(screen.queryByTestId("table-view-stub")).not.toBeInTheDocument();
+    expect(screen.getByTestId("inbox-panel")).toBeInTheDocument();
+    expect(screen.getByTestId("board-panels").className).toContain("board-panels-single");
+
+    fireEvent.click(screen.getByTestId("bv-board"));
+
+    expect(screen.getByTestId("table-view-stub")).toBeInTheDocument();
+    expect(screen.getByTestId("inbox-panel")).toBeInTheDocument();
+    expect(screen.getByTestId("board-panels").className).toContain("board-panels-multi");
+  });
+
   // ---- BWM-EXT-1..3 — gap-closure row #6 (P3 Filter) -------------------------
 
   it("BWM-EXT-1: Filter button is now enabled (no longer disabled)", () => {

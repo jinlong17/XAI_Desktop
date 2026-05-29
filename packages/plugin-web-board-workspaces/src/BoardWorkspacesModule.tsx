@@ -20,11 +20,9 @@
  * now renders one of 6 views (Board / Table / Calendar / Dashboard /
  * Timeline / Map) based on the per-board active view id. The workspace
  * chip, switcher modal, creator modal, status-overview banner, side
- * panels (Inbox / Planner), and 4-button bottom switcher are preserved
- * when `activeView === "board"`. When `activeView !== "board"`, the
- * side-panel layout is bypassed so the alt view occupies the central
- * canvas full-width — the bottom switcher remains available so the user
- * can toggle Inbox / Planner / Switch-boards regardless of view.
+ * panels (Inbox / Planner), and 4-button bottom switcher are preserved.
+ * The bottom switcher controls panel visibility across every top view;
+ * the top view only determines what the Board panel renders.
  */
 
 import { Suspense, useCallback, useEffect, useState } from "react";
@@ -438,94 +436,95 @@ export function BoardWorkspacesModule({ lang }: BoardWorkspacesModuleProps) {
       </header>
 
       <div className="board-canvas">
-        {activeView === "board" ? (
-          <>
-            {isPM && overviewOpen && panels.board && (
-              <StatusOverviewBanner
-                lists={lists}
-                lang={lang}
-                onClose={() => setOverviewOpen(false)}
-              />
-            )}
+        {isPM && activeView === "board" && overviewOpen && panels.board && (
+          <StatusOverviewBanner
+            lists={lists}
+            lang={lang}
+            onClose={() => setOverviewOpen(false)}
+          />
+        )}
 
-            <div className={panelsClass} data-testid="board-panels">
-              {panels.inbox && (
-                <InboxPanel
-                  cards={inboxCards}
-                  setCards={setInbox}
+        <div className={panelsClass} data-testid="board-panels">
+          {panels.inbox && (
+            <InboxPanel
+              cards={inboxCards}
+              setCards={setInbox}
+              lang={lang}
+              onRequestRemove={(id) => {
+                const card = inboxCards.find((c) => c.id === id);
+                setPendingDelete({
+                  type: "card",
+                  id,
+                  label: card?.text[lang] ?? card?.text.en ?? id,
+                });
+              }}
+            />
+          )}
+          {panels.planner && (
+            <PlannerPanel
+              lists={filteredLists}
+              lang={lang}
+              onOpenCard={handleOpenCard}
+            />
+          )}
+          {panels.board && (
+            <div className="board-main-panel">
+              {activeView === "board" && (
+                <BoardView
+                  lists={filteredLists}
                   lang={lang}
-                  onRequestRemove={(id) => {
-                    const card = inboxCards.find((c) => c.id === id);
-                    setPendingDelete({
-                      type: "card",
-                      id,
-                      label: card?.text[lang] ?? card?.text.en ?? id,
-                    });
-                  }}
+                  draftListIdx={draftListIdx}
+                  setDraftListIdx={setDraftListIdx}
+                  composerText={composerText}
+                  setComposerText={setComposerText}
+                  showListComposer={showListComposer}
+                  setShowListComposer={setShowListComposer}
+                  newListName={newListName}
+                  setNewListName={setNewListName}
+                  addCard={addCard}
+                  addList={addList}
+                  setListColor={setListColor}
+                  moveCardToList={moveCardToList}
+                  listMenu={listMenu}
+                  setListMenu={setListMenu}
+                  onOpenCard={handleOpenCard}
                 />
               )}
-              {panels.planner && <PlannerPanel lists={filteredLists} lang={lang} onOpenCard={handleOpenCard} />}
-              {panels.board && (
-                <div className="board-main-panel">
-                  <BoardView
-                    lists={filteredLists}
-                    lang={lang}
-                    draftListIdx={draftListIdx}
-                    setDraftListIdx={setDraftListIdx}
-                    composerText={composerText}
-                    setComposerText={setComposerText}
-                    showListComposer={showListComposer}
-                    setShowListComposer={setShowListComposer}
-                    newListName={newListName}
-                    setNewListName={setNewListName}
-                    addCard={addCard}
-                    addList={addList}
-                    setListColor={setListColor}
-                    moveCardToList={moveCardToList}
-                    listMenu={listMenu}
-                    setListMenu={setListMenu}
-                    onOpenCard={handleOpenCard}
-                  />
-                </div>
+              {activeView === "table" && (
+                <TableView
+                  lists={filteredLists}
+                  lang={lang}
+                  updateCard={updateCard}
+                  onOpenCard={handleOpenCard}
+                />
+              )}
+              {activeView === "calendar" && (
+                <BoardCalendarView
+                  lists={filteredLists}
+                  lang={lang}
+                  updateCard={updateCard}
+                  onOpenCard={handleOpenCard}
+                />
+              )}
+              {activeView === "dashboard" && (
+                <BoardDashboardView lists={filteredLists} lang={lang} />
+              )}
+              {activeView === "timeline" && (
+                <TimelineView
+                  lists={filteredLists}
+                  lang={lang}
+                  updateCard={updateCard}
+                  onOpenCard={handleOpenCard}
+                />
+              )}
+              {activeView === "map" && (
+                <Suspense fallback={<div data-testid="map-suspense-fallback" aria-busy="true" />}>
+                  <MapView lists={filteredLists} lang={lang} onSelectCard={handleOpenCard} />
+                </Suspense>
               )}
             </div>
-          </>
-        ) : (
-          // Alternate views (Table / Calendar / Dashboard / Timeline / Map)
-          // get the full central canvas. Side panels (Inbox / Planner) are
-          // suspended in alt-view mode because their layout assumes the
-          // Kanban column grid. The bottom switcher still lets the user
-          // toggle Inbox / Planner — those will appear after switching back
-          // to the Board view.
-          <div
-            className="board-views-alt-canvas"
-            data-testid="board-views-alt-canvas"
-            data-active-view={activeView}
-          >
-            {activeView === "table" && (
-              <TableView lists={filteredLists} lang={lang} updateCard={updateCard} onOpenCard={handleOpenCard} />
-            )}
-            {activeView === "calendar" && (
-              <BoardCalendarView
-                lists={filteredLists}
-                lang={lang}
-                updateCard={updateCard}
-                onOpenCard={handleOpenCard}
-              />
-            )}
-            {activeView === "dashboard" && (
-              <BoardDashboardView lists={filteredLists} lang={lang} />
-            )}
-            {activeView === "timeline" && (
-              <TimelineView lists={filteredLists} lang={lang} updateCard={updateCard} onOpenCard={handleOpenCard} />
-            )}
-            {activeView === "map" && (
-              <Suspense fallback={<div data-testid="map-suspense-fallback" aria-busy="true" />}>
-                <MapView lists={filteredLists} lang={lang} onSelectCard={handleOpenCard} />
-              </Suspense>
-            )}
-          </div>
-        )}
+          )}
+        </div>
       </div>
 
       <div className="board-view-switcher" data-testid="bottom-switcher">
