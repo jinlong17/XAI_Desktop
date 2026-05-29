@@ -7,18 +7,19 @@
 | Workflow | FEATURE_DEV |
 | Target | desktop-local-first-sqlite-foundation |
 | Title | Desktop Local-First SQLite Foundation |
-| Current Phase | FEATURE_VERIFY |
-| Status | READY_FOR_VERIFY |
-| Suggested Next | feature-verify |
+| Current Phase | SHIP |
+| Status | SHIPPED |
+| Suggested Next | workflow-complete |
 | Automation Mode | B-Codex |
 | Verify Cross-vendor | yes |
-| Executor | feature-auto-build (Codex, gpt-5.3-codex inline) |
-| Updated | 2026-05-29 00:15 PDT |
+| Executor | ship (Codex, gpt-5.3-codex inline) |
+| Updated | 2026-05-29 00:23 PDT |
 | Brief | `docs/reviews/desktop-local-first-sqlite-foundation/20260528-feature-brief.md` |
 | Discovery Review | `docs/reviews/desktop-local-first-sqlite-foundation/20260528-discovery-review.md` |
-| Risks | Residual risk is mostly future-row integration: downstream entity-bridge/import/queue rows must keep using the typed seam and must not bypass host-owned bootstrap contracts. Current foundation gates are passing. |
+| Verification Notes | PASS. Commit chain `2585cd67` `5b6e9638` `e4eaccb2` `f291f599` `84adc502` `96e29e46` `feeb5705` remained single-intent and convention-compliant; implementation stayed foundation-only under ADR-0012 with host-owned bootstrap/runtime and `@repo/core-data` seam ownership. |
+| Risks | Residual risk is downstream integration only: later entity-bridge/import/queue rows must keep using the typed seam and must not bypass host-owned bootstrap contracts. Verify also observed existing non-blocking warnings outside this row's scope: one duplicate-key test warning in `packages/core-data/tests/organizer-layout-migration.test.ts` and existing Rust dead-code warnings during desktop builds. |
 | Blockers | — |
-| Review Notes | Approved. The plan follows ADR-0012, keeps `@repo/core-data` plus the host `db_*` seam as the foundation, preserves browser-safe boundaries, and keeps downstream rows deferred. During Phase 1, keep `E1300` versus `E1302` semantics explicit so bootstrap-contract failures and backend/open-migration failures do not blur. |
+| Review Notes | PASS. Reviewed commits `2585cd67`, `5b6e9638`, `e4eaccb2`, `f291f599`, `84adc502`, `96e29e46`, and `feeb5705` against ADR-0012 plus the approved design/api/test contracts. Re-ran Rust, TypeScript, Web build, and desktop bundle gates; scope stayed foundation-only, host ownership stayed generic bootstrap/runtime only, browser-safe boundaries held, and `E1300` versus `E1302` semantics remained aligned between docs and runtime. |
 
 ## Roadmap Context
 
@@ -116,3 +117,5 @@ Exit gates:
 | 2026-05-29 00:11 PDT | feature-auto-build (Codex, gpt-5.3-codex inline) | Phase 3 complete. Extended desktop fake-invoke fixture tests with malformed JSON/record negatives, bootstrap migration metadata expectations, and migration contract paths (`skip`, `E1300 unsupported`, `E3006 mismatch`). Rust fixture coverage for temp DB, old-schema upgrade, idempotent reopen, and contract mismatch is in `database_runtime` tests. | `e4eaccb2` `test(core-data): Phase 3 — desktop fixture and contract negatives` | `pnpm --filter @repo/core-data test` PASS | Phase 4 |
 | 2026-05-29 00:13 PDT | feature-auto-build (Codex, gpt-5.3-codex inline) | Phase 4 complete. Ran full cross-stack verification gates, aligned design/api/test docs to landed runtime and export behavior, and advanced Status Panel to `READY_FOR_VERIFY` with `Suggested Next = feature-verify`. Evidence confirms foundation-only scope with no entity bridge/import/queue/sync/backup UI expansion. | `f291f599` `docs(desktop): Phase 4 — verify gates and READY_FOR_VERIFY` | `cargo test --manifest-path apps/desktop/src-tauri/Cargo.toml` PASS; `pnpm --filter @repo/core-data test` PASS; `pnpm --filter @repo/core-data check-types` PASS; `pnpm --filter @repo/web build` PASS; `pnpm --filter desktop tauri build --debug --bundles app` PASS | feature-verify |
 | 2026-05-29 00:15 PDT | feature-auto-build (Codex, gpt-5.3-codex inline) | Post-phase log normalization. Recorded the Phase 4 commit hash in Work Log and refreshed Status Panel residual-risk wording to match landed state without changing runtime/code scope. | `84adc502` `docs(desktop): record Phase 4 evidence hash`; `96e29e46` `docs(desktop): refresh residual risk note` | Not run (docs/state-only follow-up) | feature-verify |
+| 2026-05-29 00:20 PDT | feature-verify (Codex, gpt-5 inline) | Verification PASS. Reviewed all build-phase commits for single-intent boundaries and commit-body convention, confirmed the implementation stays within ADR-0012 foundation scope, and re-ran the required verification gates. Verified host ownership remains generic DB bootstrap/runtime only, `@repo/core-data` remains the typed seam owner, browser-safe builds stay clean, and docs/runtime alignment for `E1300` versus `E1302` is intact. | `2585cd67`, `5b6e9638`, `e4eaccb2`, `f291f599`, `84adc502`, `96e29e46`, `feeb5705` | `cargo test --manifest-path apps/desktop/src-tauri/Cargo.toml` PASS; `pnpm --filter @repo/core-data test` PASS; `pnpm --filter @repo/core-data check-types` PASS; `pnpm --filter @repo/web build` PASS; `pnpm --filter desktop tauri build --debug --bundles app` PASS | ship |
+| 2026-05-29 00:23 PDT | ship (Codex, gpt-5.3-codex inline) | Shipping pass: confirmed `READY_TO_SHIP`, validated commit integrity for `2585cd67`, `5b6e9638`, `e4eaccb2`, `f291f599`, `84adc502`, `96e29e46`, and `feeb5705`, reconfirmed ADR-0012 foundation-only scope, and wrote SHIPPED status + roadmap row reconciliation. | `2585cd67`, `5b6e9638`, `e4eaccb2`, `f291f599`, `84adc502`, `96e29e46`, `feeb5705` | Not run (shipping/docs state writeback only) | roadmap row #11 can proceed |
