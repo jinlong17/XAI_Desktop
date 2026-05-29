@@ -52,9 +52,11 @@ describe("upcomingEvents — non-recurring (AC-RD-UPC-2)", () => {
     const store = { [ev.id]: ev };
     const result = upcomingEvents(store, NOW);
     expect(result).toHaveLength(1);
-    expect(result[0].title).toBe("Test Event");
-    expect(result[0].dateKey).toBe("2026-05-29");
-    expect(result[0].timeStr).toBe("10:00");
+    const first = result[0];
+    expect(first).toBeDefined();
+    expect(first?.title).toBe("Test Event");
+    expect(first?.dateKey).toBe("2026-05-29");
+    expect(first?.timeStr).toBe("10:00");
   });
 
   it("excludes a past non-recurring event", () => {
@@ -150,7 +152,7 @@ describe("upcomingEvents — defensive (AC-RD-UPC-6)", () => {
     };
     const result = upcomingEvents(store, NOW);
     expect(result).toHaveLength(1);
-    expect(result[0].title).toBe("Test Event");
+    expect(result[0]?.title).toBe("Test Event");
   });
 });
 
@@ -165,7 +167,7 @@ describe("listValidCalEvents", () => {
     };
     const list = listValidCalEvents(store);
     expect(list).toHaveLength(1);
-    expect(list[0].id).toBe("e1");
+    expect(list[0]?.id).toBe("e1");
   });
 
   it("returns [] for non-object store", () => {

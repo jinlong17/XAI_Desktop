@@ -53,7 +53,7 @@ export function UpcomingWidget({ lang, now }: UpcomingWidgetProps) {
       ) : (
         <ul className="upc-list">
           {items.map((item) => {
-            const [yearStr, monthStr, dayStr] = item.dateKey.split("-");
+            const [, monthStr, dayStr] = item.dateKey.split("-");
             const monthIdx = parseInt(monthStr ?? "1", 10) - 1;
             const monthLabel = MONTH_NAMES[lang][monthIdx] ?? item.dateKey;
             const dayNum = dayStr ?? "";
