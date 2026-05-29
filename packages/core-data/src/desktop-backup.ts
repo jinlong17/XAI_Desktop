@@ -9,6 +9,8 @@ export const DESKTOP_BACKUP_BRIDGE_NAMESPACE =
   "xai-web-desktop-local-first-bridge" as const;
 
 export const DESKTOP_BACKUP_RESTORABLE_ENTITY_TYPES = [
+  "organizer.grid",
+  "organizer.item",
   "productivity.todo",
   "productivity.habit",
   "project.board",

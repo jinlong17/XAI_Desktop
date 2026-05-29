@@ -53,6 +53,37 @@ function habitRecord(id: string, title: string): RepoRecord {
   } as RepoRecord;
 }
 
+function organizerGridRecord(id: string): RepoRecord {
+  return {
+    ...baseRecord({
+      id,
+      entityType: "organizer.grid",
+      syncScope: "device-local",
+    }),
+    title: "Inbox",
+    rect: { x: 0, y: 0, width: 280, height: 340 },
+    isLocked: false,
+    isFolded: false,
+    viewMode: "grid",
+    itemIds: ["item:1"],
+  } as RepoRecord;
+}
+
+function organizerItemRecord(id: string): RepoRecord {
+  return {
+    ...baseRecord({
+      id,
+      entityType: "organizer.item",
+      syncScope: "device-local",
+    }),
+    gridId: "grid:1",
+    filename: "notes.md",
+    filepath: "/Users/me/notes.md",
+    kind: "file",
+    icon: "doc.text",
+  } as RepoRecord;
+}
+
 function outboxRecord(input: {
   id: string;
   mutationId: string;
@@ -173,7 +204,7 @@ describe("desktop backup bundle contract", () => {
         excludedRecordCount: 0,
         restorableFingerprint: "fnv1a64:unknown",
       },
-      restorableRecords: [baseRecord({ id: "bad:1", entityType: "organizer.grid" })],
+      restorableRecords: [baseRecord({ id: "bad:1", entityType: "unknown.entity" })],
       audit: {
         excludedQueueCount: 0,
         excludedImportLedgerCount: 0,
@@ -186,6 +217,20 @@ describe("desktop backup bundle contract", () => {
     const verified = verifyDesktopBackupBundleJson(JSON.stringify(incompatible));
     expect(verified.status).toBe("incompatible");
     expect(verified.reason).toContain("not allowed");
+  });
+
+  it("accepts organizer records as restorable device-local entities", () => {
+    const bundle = createDesktopBackupBundle({
+      records: [organizerGridRecord("grid:1"), organizerItemRecord("item:1")],
+    });
+
+    expect(bundle.manifest.restorableRecordCount).toBe(2);
+    expect(
+      bundle.restorableRecords.map((row) => row.entityType).sort(),
+    ).toEqual(["organizer.grid", "organizer.item"]);
+
+    const verified = verifyDesktopBackupBundleJson(JSON.stringify(bundle));
+    expect(verified.status).toBe("verified_full");
   });
 
   it("refuses apply when target repo still has unresolved sync.outbox rows", async () => {

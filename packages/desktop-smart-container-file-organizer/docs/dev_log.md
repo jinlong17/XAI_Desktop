@@ -7,13 +7,13 @@
 | Workflow | FEATURE_DEV |
 | Target | desktop-smart-container-file-organizer |
 | Title | Desktop Smart Container File Organizer |
-| Current Phase | FEATURE_BUILD |
-| Status | APPROVED |
-| Suggested Next | feature-auto-build |
+| Current Phase | FEATURE_VERIFY |
+| Status | READY_FOR_VERIFY |
+| Suggested Next | feature-verify |
 | Automation Mode | B-Codex |
 | Verify Cross-vendor | yes |
 | Executor | feature-auto-build (Codex, gpt-5.3-codex) |
-| Updated | 2026-05-29 07:25 PDT |
+| Updated | 2026-05-29 07:31 PDT |
 | Brief | `docs/reviews/desktop-smart-container-file-organizer/20260529-feature-brief.md` |
 | Discovery Review | `docs/reviews/desktop-smart-container-file-organizer/20260529-discovery-review.md` |
 | Risks | The row has one deliberate product constraint and one honest runtime limitation. Product-wise, a correct row-`#20` slice must stay normal-window-first and avoid turning optional overlay-v2 into an implicit dependency or silently absorbing row `#21` organizer/plugin restoration scope. Runtime-wise, the current bookmark registry is session-memory only, so persisted organizer items may outlive authorization for Finder/open actions after relaunch; the first slice must surface that explicitly instead of faking persistent access. |
@@ -61,7 +61,7 @@ Status: COMPLETED
 
 ### Phase 4 - Verification and shared backup adoption
 
-Status: PENDING
+Status: COMPLETED
 
 - extend organizer record families into the shared desktop backup contract if the slice is durable
 - run core-data, organizer, web, rust, and desktop bundle gates
@@ -91,4 +91,5 @@ Status: PENDING
 | 2026-05-29 07:10 PDT | feature-review (Codex, gpt-5 inline) | Review pass complete. Re-read the workflow/SOP/roadmap authority plus the feature brief, discovery review, docs quartet, organizer/core-data source seams, desktop host/web runtime seams, and bookmark/finder command truth. Approved the narrow row-`#20` plan because it keeps normal-window host as primary, preserves row `#21` as a separate restoration decision, uses real package/test commands, and stays honest about `device-local` organizer data plus session-only path authorization. | — | feature-auto-build |
 | 2026-05-29 07:19 PDT | feature-auto-build (Codex, gpt-5.3-codex) | Phase 1 complete (Contract and asset normalization). Normalized organizer persistence semantics to `device-local` across core-data entities, runtime validation, migration adapters, layout store adapters, and item factories; updated organizer manifest metadata to align with row-`#20` normal-window-first runtime boundary instead of overlay-era command/window assumptions. | `e73ab00a` | Phase 2 |
 | 2026-05-29 07:21 PDT | feature-auto-build (Codex, gpt-5.3-codex) | Phase 2 complete (Local-first persistence cutover). Added `createOrganizerDesktopLayoutStore(...)` as the organizer-owned repo bootstrap seam: it creates Tauri repos, runs `migrateOrganizerLayoutToRepos(...)` before first load/save, keeps legacy `xai-desktop-layout` (`removeLegacy: false`), and falls back to local store when Tauri runtime is unavailable. | `9c9a258e` | Phase 3 |
-| 2026-05-29 07:25 PDT | feature-auto-build (Codex, gpt-5.3-codex) | Phase 3 complete (Normal-window Smart Container workspace). Added plugin-owned `OrganizerWorkspaceModule` for the desktop normal-window runtime, wired `apps/web` organizer mount files explicitly (`smartContainerOrganizerRegistration.tsx` + shell/App registration path), used native Tauri drag-drop path ingestion (no basename fallback), and surfaced explicit in-item re-authorization/path-failure states for Finder actions. | pending (recorded next phase) | Phase 4 |
+| 2026-05-29 07:25 PDT | feature-auto-build (Codex, gpt-5.3-codex) | Phase 3 complete (Normal-window Smart Container workspace). Added plugin-owned `OrganizerWorkspaceModule` for the desktop normal-window runtime, wired `apps/web` organizer mount files explicitly (`smartContainerOrganizerRegistration.tsx` + shell/App registration path), used native Tauri drag-drop path ingestion (no basename fallback), and surfaced explicit in-item re-authorization/path-failure states for Finder actions. | `db279493` | Phase 4 |
+| 2026-05-29 07:31 PDT | feature-auto-build (Codex, gpt-5.3-codex) | Phase 4 complete (Verification and shared backup adoption). Added `organizer.grid` + `organizer.item` to `DESKTOP_BACKUP_RESTORABLE_ENTITY_TYPES`, added backup tests that assert organizer records are accepted as restorable device-local entities, and executed all planned repo-side gates (core-data/organizer/web/rust/desktop bundle). Manual drag-drop/relaunch/re-authorization verification remains explicit follow-up for `feature-verify` on a human-driven desktop session. | pending (recorded in follow-up writeback) | feature-verify |
