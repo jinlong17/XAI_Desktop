@@ -8,9 +8,15 @@ import type {
   TodoEntity,
 } from "../src";
 import {
+  applyOfflineMutationRollback,
   buildOfflineMutationId,
   createMockCommitSeqAuthority,
   createInMemoryRepo,
+  getOfflineQueueSummary,
+  listOfflineQueueMutations,
+  markOfflineMutationConflict,
+  markOfflineMutationRetryableFailure,
+  markOfflineMutationRollbackPending,
   nextOutboxBatch,
   outboxIdForQueuedResult,
   stageHabitOfflineEdit,
@@ -268,5 +274,162 @@ describe("offline edit queue staging", () => {
     if (queued.status === "queued") {
       expect(outboxIdForQueuedResult(queued)).toBe(queued.outboxId);
     }
+  });
+});
+
+describe("offline queue observability and rollback safety", () => {
+  it("lists queue entries by commit order and summarizes by status", async () => {
+    const repo = createInMemoryRepo<RepoRecord | OutboxEntry>({
+      namespace: "row13-phase3-list",
+    });
+    const nextCommitSeq = createMockCommitSeqAuthority(0);
+
+    const todo = await stageTodoOfflineEdit({
+      repo,
+      entity: todoFixture("todo-order-1", "2026-05-29T11:00:00.000Z"),
+      op: "put",
+      boundaryKey: "user-z",
+      nextCommitSeq,
+    });
+    const board = await stageProjectBoardOfflineEdit({
+      repo,
+      entity: boardFixture("board-order-2", "2026-05-29T11:01:00.000Z"),
+      op: "put",
+      boundaryKey: "user-z",
+      nextCommitSeq,
+    });
+    const card = await stageProjectCardOfflineEdit({
+      repo,
+      entity: cardFixture("card-order-3", "2026-05-29T11:02:00.000Z"),
+      op: "put",
+      boundaryKey: "user-z",
+      nextCommitSeq,
+    });
+
+    expect(todo.status).toBe("queued");
+    expect(board.status).toBe("queued");
+    expect(card.status).toBe("queued");
+    if (todo.status !== "queued" || board.status !== "queued" || card.status !== "queued") {
+      return;
+    }
+
+    await markOfflineMutationRetryableFailure({
+      repo,
+      mutationId: board.mutationId,
+      failureCode: "network_timeout",
+      message: "retry later",
+      nowIso: () => "2026-05-29T11:03:00.000Z",
+    });
+    await markOfflineMutationConflict({
+      repo,
+      mutationId: card.mutationId,
+      message: "local conflict marker",
+      nowIso: () => "2026-05-29T11:04:00.000Z",
+    });
+
+    const ordered = await listOfflineQueueMutations(repo, { boundaryKey: "user-z" });
+    expect(ordered.map((row) => row.commitSeq)).toEqual([1, 2, 3]);
+    expect(ordered.map((row) => row.queueStatus)).toEqual([
+      "queued",
+      "retryable_failure",
+      "conflict",
+    ]);
+
+    const summary = await getOfflineQueueSummary(repo, { boundaryKey: "user-z" });
+    expect(summary.total).toBe(3);
+    expect(summary.oldestCommitSeq).toBe(1);
+    expect(summary.newestCommitSeq).toBe(3);
+    expect(summary.byStatus.queued).toBe(1);
+    expect(summary.byStatus.retryable_failure).toBe(1);
+    expect(summary.byStatus.conflict).toBe(1);
+  });
+
+  it("applies rollback when rollback safety checks pass", async () => {
+    const repo = createInMemoryRepo<RepoRecord | OutboxEntry>({
+      namespace: "row13-phase3-rollback-ok",
+    });
+    const nextCommitSeq = createMockCommitSeqAuthority(10);
+    const current = todoFixture("todo-rb-ok", "2026-05-29T11:10:00.000Z");
+    await repo.put(current);
+
+    const staged = await stageTodoOfflineEdit({
+      repo,
+      entity: {
+        ...current,
+        title: "edited title",
+      },
+      op: "put",
+      boundaryKey: "user-rb",
+      nextCommitSeq,
+    });
+    expect(staged.status).toBe("queued");
+    if (staged.status !== "queued") {
+      return;
+    }
+
+    await markOfflineMutationRollbackPending({
+      repo,
+      mutationId: staged.mutationId,
+      reason: "user-requested",
+      nowIso: () => "2026-05-29T11:11:00.000Z",
+    });
+
+    const rollback = await applyOfflineMutationRollback({
+      repo,
+      mutationId: staged.mutationId,
+      reason: "manual-revert",
+      nowIso: () => "2026-05-29T11:12:00.000Z",
+    });
+    expect(rollback.status).toBe("rolled_back");
+
+    const restored = (await repo.get(current.id)) as TodoEntity | undefined;
+    expect(restored?.title).toBe(current.title);
+
+    const outbox = (await repo.get(staged.outboxId)) as OutboxEntry | undefined;
+    expect(outbox?.queueStatus).toBe("rolled_back");
+    expect(outbox?.rollbackAppliedAt).toBe("2026-05-29T11:12:00.000Z");
+  });
+
+  it("refuses rollback when entity revision diverged and marks conflict", async () => {
+    const repo = createInMemoryRepo<RepoRecord | OutboxEntry>({
+      namespace: "row13-phase3-rollback-conflict",
+    });
+    const nextCommitSeq = createMockCommitSeqAuthority(20);
+    const current = todoFixture("todo-rb-conflict", "2026-05-29T11:20:00.000Z");
+    await repo.put(current);
+
+    const staged = await stageTodoOfflineEdit({
+      repo,
+      entity: {
+        ...current,
+        title: "staged update",
+      },
+      op: "put",
+      boundaryKey: "user-rb2",
+      nextCommitSeq,
+    });
+    expect(staged.status).toBe("queued");
+    if (staged.status !== "queued") {
+      return;
+    }
+
+    await repo.put({
+      ...current,
+      title: "newer local edit",
+      updatedAt: "2026-05-29T11:25:00.000Z",
+    });
+
+    const rollback = await applyOfflineMutationRollback({
+      repo,
+      mutationId: staged.mutationId,
+      reason: "manual-revert",
+      nowIso: () => "2026-05-29T11:26:00.000Z",
+    });
+    expect(rollback.status).toBe("conflict");
+
+    const outbox = (await repo.get(staged.outboxId)) as OutboxEntry | undefined;
+    expect(outbox?.queueStatus).toBe("conflict");
+    expect(outbox?.lastFailureCode).toBe("conflict");
+    expect(outbox?.conflictAt).toBe("2026-05-29T11:26:00.000Z");
   });
 });

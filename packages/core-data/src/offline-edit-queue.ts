@@ -1,6 +1,8 @@
 import {
   enqueueOutboxEntry,
+  OUTBOX_QUEUE_STATUSES,
   outboxIdFor,
+  type OutboxQueueStatus,
   type OutboxEntry,
   type OutboxRollbackSafety,
 } from "./sync-outbox";
@@ -281,4 +283,330 @@ export function outboxIdForQueuedResult(
   result: Extract<OfflineEditQueueResult, { status: "queued" }>,
 ): string {
   return outboxIdFor(result.mutationId);
+}
+
+export interface OfflineQueueListOptions {
+  boundaryKey?: string;
+  statuses?: readonly OutboxQueueStatus[];
+  limit?: number;
+}
+
+export async function listOfflineQueueMutations(
+  repo: Repo<RepoRecord | OutboxEntry>,
+  options: OfflineQueueListOptions = {},
+): Promise<OutboxEntry[]> {
+  const rows = (await repo.list({
+    entityType: "sync.outbox",
+    orderBy: { field: "commitSeq", direction: "asc" },
+    limit: options.limit,
+  })) as OutboxEntry[];
+  const normalizedBoundaryKey = options.boundaryKey
+    ? normalizeBoundaryKey(options.boundaryKey)
+    : null;
+  const statusSet = options.statuses
+    ? new Set(options.statuses)
+    : new Set<OutboxQueueStatus>(OUTBOX_QUEUE_STATUSES);
+
+  return rows.filter((row) => {
+    if (row.id !== outboxIdFor(row.mutationId)) {
+      return false;
+    }
+    if (normalizedBoundaryKey && row.boundaryKey !== normalizedBoundaryKey) {
+      return false;
+    }
+    return statusSet.has(row.queueStatus);
+  });
+}
+
+export interface OfflineQueueSummary {
+  total: number;
+  byStatus: Record<OutboxQueueStatus, number>;
+  oldestCommitSeq: number | null;
+  newestCommitSeq: number | null;
+}
+
+export async function getOfflineQueueSummary(
+  repo: Repo<RepoRecord | OutboxEntry>,
+  options: Pick<OfflineQueueListOptions, "boundaryKey"> = {},
+): Promise<OfflineQueueSummary> {
+  const rows = await listOfflineQueueMutations(repo, {
+    boundaryKey: options.boundaryKey,
+  });
+  const byStatus: Record<OutboxQueueStatus, number> = {
+    queued: 0,
+    replay_deferred: 0,
+    retryable_failure: 0,
+    conflict: 0,
+    rollback_pending: 0,
+    rolled_back: 0,
+  };
+  for (const row of rows) {
+    byStatus[row.queueStatus] += 1;
+  }
+
+  return {
+    total: rows.length,
+    byStatus,
+    oldestCommitSeq: rows.length > 0 ? rows[0].commitSeq : null,
+    newestCommitSeq: rows.length > 0 ? rows[rows.length - 1].commitSeq : null,
+  };
+}
+
+type QueueStatusUpdateResult =
+  | { ok: true; row: OutboxEntry }
+  | { ok: false; reason: "not_found"; message: string };
+
+type QueueStatusUpdatePatch = {
+  queueStatus: OutboxQueueStatus;
+  retryCountDelta?: number;
+  lastFailureCode?: string;
+  lastFailureMessage?: string;
+  clearFailure?: boolean;
+  conflictAt?: string;
+  rollbackRequestedAt?: string;
+  rollbackReason?: string;
+  rollbackAppliedAt?: string;
+};
+
+async function updateOutboxQueueStatus(input: {
+  repo: Repo<RepoRecord | OutboxEntry>;
+  mutationId: string;
+  patch: QueueStatusUpdatePatch;
+  nowIso?: () => string;
+}): Promise<QueueStatusUpdateResult> {
+  const nowIso = input.nowIso ?? (() => new Date().toISOString());
+  const id = outboxIdFor(input.mutationId);
+  const row = (await input.repo.get(id)) as OutboxEntry | undefined;
+  if (!row || row.entityType !== "sync.outbox") {
+    return {
+      ok: false,
+      reason: "not_found",
+      message: `Outbox mutation "${input.mutationId}" not found`,
+    };
+  }
+
+  const timestamp = nowIso();
+  const next: OutboxEntry = {
+    ...row,
+    queueStatus: input.patch.queueStatus,
+    retryCount: row.retryCount + (input.patch.retryCountDelta ?? 0),
+    statusUpdatedAt: timestamp,
+    updatedAt: timestamp,
+    conflictAt: input.patch.conflictAt ?? row.conflictAt,
+    rollbackRequestedAt: input.patch.rollbackRequestedAt ?? row.rollbackRequestedAt,
+    rollbackReason: input.patch.rollbackReason ?? row.rollbackReason,
+    rollbackAppliedAt: input.patch.rollbackAppliedAt ?? row.rollbackAppliedAt,
+  };
+
+  if (input.patch.clearFailure) {
+    next.lastFailureCode = undefined;
+    next.lastFailureMessage = undefined;
+    next.lastFailureAt = undefined;
+  } else if (input.patch.lastFailureCode || input.patch.lastFailureMessage) {
+    next.lastFailureCode = input.patch.lastFailureCode ?? row.lastFailureCode;
+    next.lastFailureMessage =
+      input.patch.lastFailureMessage ?? row.lastFailureMessage;
+    next.lastFailureAt = timestamp;
+  }
+
+  await input.repo.put(next);
+  return { ok: true, row: next };
+}
+
+export async function markOfflineMutationRetryableFailure(input: {
+  repo: Repo<RepoRecord | OutboxEntry>;
+  mutationId: string;
+  failureCode: string;
+  message: string;
+  nowIso?: () => string;
+}): Promise<QueueStatusUpdateResult> {
+  return updateOutboxQueueStatus({
+    repo: input.repo,
+    mutationId: input.mutationId,
+    nowIso: input.nowIso,
+    patch: {
+      queueStatus: "retryable_failure",
+      retryCountDelta: 1,
+      lastFailureCode: input.failureCode,
+      lastFailureMessage: input.message,
+    },
+  });
+}
+
+export async function markOfflineMutationConflict(input: {
+  repo: Repo<RepoRecord | OutboxEntry>;
+  mutationId: string;
+  message: string;
+  nowIso?: () => string;
+}): Promise<QueueStatusUpdateResult> {
+  const nowIso = input.nowIso ?? (() => new Date().toISOString());
+  const conflictAt = nowIso();
+  return updateOutboxQueueStatus({
+    repo: input.repo,
+    mutationId: input.mutationId,
+    nowIso: () => conflictAt,
+    patch: {
+      queueStatus: "conflict",
+      conflictAt,
+      lastFailureCode: "conflict",
+      lastFailureMessage: input.message,
+    },
+  });
+}
+
+export async function markOfflineMutationRollbackPending(input: {
+  repo: Repo<RepoRecord | OutboxEntry>;
+  mutationId: string;
+  reason: string;
+  nowIso?: () => string;
+}): Promise<QueueStatusUpdateResult> {
+  const nowIso = input.nowIso ?? (() => new Date().toISOString());
+  const requestedAt = nowIso();
+  return updateOutboxQueueStatus({
+    repo: input.repo,
+    mutationId: input.mutationId,
+    nowIso: () => requestedAt,
+    patch: {
+      queueStatus: "rollback_pending",
+      rollbackRequestedAt: requestedAt,
+      rollbackReason: input.reason,
+    },
+  });
+}
+
+export type OfflineRollbackResult =
+  | {
+      status: "rolled_back";
+      mutationId: string;
+      outboxId: string;
+    }
+  | {
+      status: "conflict";
+      mutationId: string;
+      outboxId: string;
+      reason: "rollback_not_safe";
+      message: string;
+    }
+  | {
+      status: "failed";
+      mutationId: string;
+      reason: "not_found" | "invalid_snapshot" | "write_failed";
+      message: string;
+    };
+
+export async function applyOfflineMutationRollback(input: {
+  repo: Repo<RepoRecord | OutboxEntry>;
+  mutationId: string;
+  reason: string;
+  nowIso?: () => string;
+}): Promise<OfflineRollbackResult> {
+  const nowIso = input.nowIso ?? (() => new Date().toISOString());
+  const rowId = outboxIdFor(input.mutationId);
+  const row = (await input.repo.get(rowId)) as OutboxEntry | undefined;
+  if (!row || row.entityType !== "sync.outbox") {
+    return {
+      status: "failed",
+      mutationId: input.mutationId,
+      reason: "not_found",
+      message: `Outbox mutation "${input.mutationId}" not found`,
+    };
+  }
+  if (!row.rollbackSafety) {
+    return {
+      status: "failed",
+      mutationId: input.mutationId,
+      reason: "invalid_snapshot",
+      message: "Rollback safety metadata is missing",
+    };
+  }
+
+  const current = await input.repo.get(row.targetEntityId);
+  if (
+    current &&
+    current.updatedAt !== row.rollbackSafety.expectedEntityUpdatedAt
+  ) {
+    const conflictMessage =
+      "Rollback refused because current entity revision diverged from expected local revision";
+    await markOfflineMutationConflict({
+      repo: input.repo,
+      mutationId: input.mutationId,
+      message: conflictMessage,
+      nowIso,
+    });
+    return {
+      status: "conflict",
+      mutationId: input.mutationId,
+      outboxId: rowId,
+      reason: "rollback_not_safe",
+      message: conflictMessage,
+    };
+  }
+
+  const rollbackTarget = deserializeRollbackSnapshot(
+    row.rollbackSafety.previousEntityPayload,
+  );
+  if (row.rollbackSafety.previousEntityExisted && !rollbackTarget) {
+    return {
+      status: "failed",
+      mutationId: input.mutationId,
+      reason: "invalid_snapshot",
+      message: "Rollback snapshot is required but missing/invalid",
+    };
+  }
+
+  const appliedAt = nowIso();
+
+  try {
+    await input.repo.transaction(async (tx) => {
+      if (rollbackTarget) {
+        await tx.put(rollbackTarget);
+      } else {
+        await tx.delete(row.targetEntityId);
+      }
+
+      const updatedRow: OutboxEntry = {
+        ...row,
+        queueStatus: "rolled_back",
+        rollbackAppliedAt: appliedAt,
+        rollbackReason: input.reason,
+        statusUpdatedAt: appliedAt,
+        updatedAt: appliedAt,
+      };
+      await tx.put(updatedRow);
+    });
+  } catch (error) {
+    return {
+      status: "failed",
+      mutationId: input.mutationId,
+      reason: "write_failed",
+      message: error instanceof Error ? error.message : String(error),
+    };
+  }
+
+  return {
+    status: "rolled_back",
+    mutationId: input.mutationId,
+    outboxId: rowId,
+  };
+}
+
+function deserializeRollbackSnapshot(payload: string | undefined): RepoRecord | null {
+  if (!payload) {
+    return null;
+  }
+  try {
+    const parsed = JSON.parse(payload) as RepoRecord;
+    if (
+      parsed &&
+      typeof parsed.id === "string" &&
+      typeof parsed.entityType === "string" &&
+      typeof parsed.createdAt === "string" &&
+      typeof parsed.updatedAt === "string"
+    ) {
+      return parsed;
+    }
+    return null;
+  } catch {
+    return null;
+  }
 }

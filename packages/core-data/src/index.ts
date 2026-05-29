@@ -97,10 +97,16 @@ export type {
 } from "./sync-outbox";
 export {
   OFFLINE_QUEUEABLE_ENTITY_TYPES,
+  applyOfflineMutationRollback,
   buildOfflineMutationId,
+  getOfflineQueueSummary,
   isDeviceLocalRepoEntityType,
   isOfflineQueueableEntity,
   isQueuedOfflineResult,
+  listOfflineQueueMutations,
+  markOfflineMutationConflict,
+  markOfflineMutationRetryableFailure,
+  markOfflineMutationRollbackPending,
   outboxIdForQueuedResult,
   stageHabitOfflineEdit,
   stageOfflineEditMutation,
@@ -113,7 +119,10 @@ export type {
   OfflineEditQueueRequest,
   OfflineEditQueueResult,
   OfflineEditQueueStatus,
+  OfflineQueueListOptions,
   OfflineQueueableEntityType,
+  OfflineQueueSummary,
+  OfflineRollbackResult,
 } from "./offline-edit-queue";
 export {
   SYNC_BLOB_ACCEPT_VERSION,
