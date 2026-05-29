@@ -15,7 +15,6 @@
 
 import type { Lang } from "@repo/plugin-web-tokens";
 import {
-  isDesktopPhase1OfflineRuntime,
   resolveWebRuntimeProfile,
 } from "@repo/core";
 import { getPref } from "@repo/plugin-web-storage";
@@ -25,7 +24,11 @@ import { aiKeyStorage } from "./secretStore.js";
 import { resolveProvider } from "./llmProvider.js";
 import { parseSseStream } from "./sseParser.js";
 import { classifyError, type LlmError } from "./llmErrors.js";
-import { DEMO_REPLY_EN, DEMO_REPLY_ZH } from "./demoReply.js";
+import {
+  policySnapshotToLlmError,
+  readBrowserOnlineState,
+  resolveAiProviderPolicy,
+} from "./providerPolicy.js";
 
 // ---- Public types ----------------------------------------------------------
 
@@ -53,32 +56,36 @@ export interface StreamChunk {
  * Streams a completion from the configured LLM provider.
  *
  * If no API key is configured, throws LlmError({kind:"BadKey",detail:"not-set"}).
- * On streaming-unavailable, falls back to completeChat and yields one final chunk.
+ * On non-streaming responses, parses provider-specific JSON and yields one final chunk.
  */
 export async function* streamCompleteChat(
   req: StreamRequest,
 ): AsyncIterable<StreamChunk> {
-  const { text, lang, model, signal } = req;
+  const { text, model, signal } = req;
   const runtimeProfile = resolveWebRuntimeProfile(
-    import.meta.env as Record<string, string | undefined>,
+    (import.meta as unknown as { env?: Record<string, string | undefined> }).env,
   );
 
-  if (isDesktopPhase1OfflineRuntime(runtimeProfile)) {
-    const demoText = lang === "zh" ? DEMO_REPLY_ZH : DEMO_REPLY_EN;
-    yield { accumulated: demoText, done: true };
-    return;
-  }
-
-  // 1. Load the API key.
   const provider = (getPref("xai_ai_provider") as string) || "anthropic";
   const providerKind = (provider === "openai-compatible" ? "openai-compatible" : "anthropic") as
     | "anthropic"
     | "openai-compatible";
+  const baseUrl = (getPref("xai_ai_base_url") as string) || "";
   const apiKey = await aiKeyStorage.loadKey(providerKind);
+  const policy = resolveAiProviderPolicy({
+    provider: providerKind,
+    baseUrl,
+    hasSavedKey: !!apiKey,
+    runtimeProfile,
+    isOnline: readBrowserOnlineState(),
+  });
+  if (policy.state !== "ready") {
+    throw policySnapshotToLlmError(policy);
+  }
 
+  // Policy-ready implies key exists, but keep an explicit guard for defensive safety.
   if (!apiKey) {
-    const err: LlmError = { kind: "BadKey", status: 401, detail: "not-set" };
-    throw err;
+    throw { kind: "BadKey", status: 401, detail: "not-set" } as LlmError;
   }
 
   // 2. Resolve provider config.
@@ -130,12 +137,8 @@ export async function* streamCompleteChat(
   // 6. Handle streaming response.
   if (!response.body || !streamingEnabled) {
     // Fallback: no streaming body available or streaming disabled.
-    // Return the demo string as a single final chunk (avoids circular call
-    // back into completeChat which would loop back to streamCompleteChat).
-    // Consumers should use the full non-streaming text/event-stream for
-    // production; this path is only exercised when body is null (uncommon).
-    const demoText = lang === "zh" ? DEMO_REPLY_ZH : DEMO_REPLY_EN;
-    yield { accumulated: demoText, done: true };
+    const textOut = await extractNonStreamingText(response, providerKind);
+    yield { accumulated: textOut, done: true };
     return;
   }
 
@@ -177,6 +180,66 @@ export async function* streamCompleteChat(
 
   // Emit the final chunk.
   yield { accumulated, done: true };
+}
+
+async function extractNonStreamingText(
+  response: Response,
+  provider: "anthropic" | "openai-compatible",
+): Promise<string> {
+  const text = await response.text();
+  if (!text.trim()) {
+    throw {
+      kind: "Malformed",
+      where: "shape",
+      detail: "empty non-streaming response body",
+    } as LlmError;
+  }
+
+  let parsed: unknown;
+  try {
+    parsed = JSON.parse(text);
+  } catch {
+    throw {
+      kind: "Malformed",
+      where: "json-parse",
+      detail: "non-streaming response is not valid JSON",
+    } as LlmError;
+  }
+
+  if (provider === "anthropic") {
+    const content = (parsed as Record<string, unknown>)["content"];
+    if (Array.isArray(content)) {
+      for (const item of content) {
+        if (
+          item &&
+          typeof item === "object" &&
+          (item as Record<string, unknown>)["type"] === "text" &&
+          typeof (item as Record<string, unknown>)["text"] === "string"
+        ) {
+          return (item as Record<string, unknown>)["text"] as string;
+        }
+      }
+    }
+    throw {
+      kind: "Malformed",
+      where: "shape",
+      detail: "anthropic non-streaming response missing text content",
+    } as LlmError;
+  }
+
+  const choices = (parsed as Record<string, unknown>)["choices"];
+  if (Array.isArray(choices) && choices.length > 0) {
+    const first = choices[0] as Record<string, unknown>;
+    const message = first?.["message"] as Record<string, unknown> | undefined;
+    const content = message?.["content"];
+    if (typeof content === "string") return content;
+  }
+
+  throw {
+    kind: "Malformed",
+    where: "shape",
+    detail: "openai-compatible non-streaming response missing message content",
+  } as LlmError;
 }
 
 // ---- Helpers ---------------------------------------------------------------

@@ -41,5 +41,18 @@ export type { StreamChunk, StreamRequest } from "./internal/claudeStreamAdapter.
 export { aiKeyStorage } from "./internal/secretStore.js";
 export type { AiKeyStorage, AiProvider } from "./internal/secretStore.js";
 
+// Shared provider-policy resolver (owner: @repo/plugin-web-ai-chat).
+export {
+  readBrowserOnlineState,
+  resolveAiProviderPolicy,
+} from "./internal/providerPolicy.js";
+export type {
+  AiProviderPolicyState,
+  AiProviderPolicyReason,
+  AiProviderPolicySnapshot,
+  ResolveAiProviderPolicyInput,
+  AiConfiguredProvider,
+} from "./internal/providerPolicy.js";
+
 // Public error union (consumed by Settings → AI pane + ErrorBanner).
 export type { LlmError, LlmErrorKind } from "./internal/llmErrors.js";

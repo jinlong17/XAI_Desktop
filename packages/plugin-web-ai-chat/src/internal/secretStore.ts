@@ -17,9 +17,14 @@
 
 import { createIndexedDbStore, createDeviceIdentityStore } from "@repo/web-auth-device-session";
 import {
-  isDesktopPhase1OfflineRuntime,
   resolveWebRuntimeProfile,
 } from "@repo/core";
+import { getPref } from "@repo/plugin-web-storage";
+import {
+  policySnapshotToLlmError,
+  readBrowserOnlineState,
+  resolveAiProviderPolicy,
+} from "./providerPolicy.js";
 
 // ---- Types -----------------------------------------------------------------
 
@@ -243,54 +248,57 @@ export const aiKeyStorage: AiKeyStorage = {
   async testConnection(provider) {
     const { classifyError } = await import("./llmErrors.js");
     const runtimeProfile = resolveWebRuntimeProfile(
-      import.meta.env as Record<string, string | undefined>,
+      (import.meta as unknown as { env?: Record<string, string | undefined> }).env,
     );
-    if (isDesktopPhase1OfflineRuntime(runtimeProfile)) {
-      return {
-        ok: false,
-        error: {
-          kind: "Network",
-          cause: new Error("offline-runtime"),
-          detail: "offline-runtime",
-        },
-      };
-    }
+    const baseUrl = provider === "openai-compatible"
+      ? ((getPref("xai_ai_base_url") as string) || "")
+      : "";
     const plaintext = await aiKeyStorage.loadKey(provider);
-    if (!plaintext) {
-      const err: import("./llmErrors.js").LlmError = {
-        kind: "BadKey",
-        status: 401,
-        detail: "not-set",
-      };
-      return { ok: false, error: err };
+    const policy = resolveAiProviderPolicy({
+      provider,
+      baseUrl,
+      hasSavedKey: !!plaintext,
+      runtimeProfile,
+      isOnline: readBrowserOnlineState(),
+    });
+    if (policy.state !== "ready") {
+      return { ok: false, error: policySnapshotToLlmError(policy) };
     }
+
+    // Policy-ready implies key presence.
+    if (!plaintext) return { ok: false, error: { kind: "BadKey", status: 401, detail: "not-set" } };
+
     try {
       // A minimal 1-token validation request — provider-specific.
-      const url =
-        provider === "anthropic"
-          ? "https://api.anthropic.com/v1/messages"
-          : null;
-      if (!url) {
-        const err: import("./llmErrors.js").LlmError = {
-          kind: "BadKey",
-          status: 401,
-          detail: "no-url-configured",
-        };
-        return { ok: false, error: err };
-      }
+      const url = provider === "anthropic"
+        ? "https://api.anthropic.com/v1/messages"
+        : `${baseUrl.replace(/\/$/, "")}/chat/completions`;
+      const headers: Record<string, string> = provider === "anthropic"
+        ? {
+            "x-api-key": plaintext,
+            "anthropic-version": "2023-06-01",
+            "anthropic-dangerous-direct-browser-access": "true",
+            "content-type": "application/json",
+          }
+        : {
+            "authorization": `Bearer ${plaintext}`,
+            "content-type": "application/json",
+          };
+      const body = provider === "anthropic"
+        ? {
+            model: "claude-haiku-4-5-20251101",
+            max_tokens: 1,
+            messages: [{ role: "user", content: "hi" }],
+          }
+        : {
+            model: "haiku",
+            max_tokens: 1,
+            messages: [{ role: "user", content: "hi" }],
+          };
       const res = await fetch(url, {
         method: "POST",
-        headers: {
-          "x-api-key": plaintext,
-          "anthropic-version": "2023-06-01",
-          "anthropic-dangerous-direct-browser-access": "true",
-          "content-type": "application/json",
-        },
-        body: JSON.stringify({
-          model: "claude-haiku-4-5-20251101",
-          max_tokens: 1,
-          messages: [{ role: "user", content: "hi" }],
-        }),
+        headers,
+        body: JSON.stringify(body),
       });
       if (!res.ok) {
         const err = await classifyError(res);

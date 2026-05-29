@@ -139,7 +139,25 @@ describe("secretStore (SC)", () => {
     expect(result.ok).toBe(false);
     if (!result.ok) {
       expect(result.error.kind).toBe("Network");
-      expect(result.error.detail).toBe("offline-runtime");
+      expect(result.error.detail).toBe("offline_runtime");
+    }
+  });
+
+  it("SC10: openai-compatible loopback URL returns explicit not-enabled policy error", async () => {
+    localStorage.setItem("xai_ai_base_url", JSON.stringify("http://127.0.0.1:11434/v1"));
+    await aiKeyStorage.saveKey("openai-compatible", "oai-key");
+    const fetchSpy = vi.spyOn(globalThis, "fetch");
+
+    const result = await aiKeyStorage.testConnection("openai-compatible");
+
+    expect(fetchSpy).not.toHaveBeenCalled();
+    expect(result.ok).toBe(false);
+    if (!result.ok) {
+      expect(result.error).toMatchObject({
+        kind: "BadKey",
+        status: 403,
+        detail: "local-provider-not-enabled",
+      });
     }
   });
 });
