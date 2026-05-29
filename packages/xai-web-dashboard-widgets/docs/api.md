@@ -430,3 +430,233 @@ Additive only, namespaced, no `.widget*` redefinition (§S9 guard still holds �
 ### §F.10 Test ACs
 
 See `test.md` §F.
+
+---
+
+## §G — Extension API: Weather manual-entry + Mail → Notifications digest (xai-web-dashboard-weather-mail, 2026-05-29)
+
+> **APPEND extension — SHIPPED §S1-§S11 contract, §E stickies contract, and §F real-data contract above are unchanged.** Public surface (§S1) stays `dashboardWidgetRegistrations`-only; everything below is INTERNAL to the package (not re-exported).
+> **Phase A (Weather):** WRITE — adds ONE authorized registry key `xai_dashboard_weather`. **Phase B (Mail):** READ-ONLY — NO new key, NO new event, NO write to any store.
+> Authority: ADR-0010 §D4 carve-out `43ba6f8`. Design: design.md §G. Discovery: `docs/reviews/xai-web-dashboard-weather-mail/20260529-discovery-review.md`.
+
+### §G.1 Public surface — UNCHANGED
+
+`src/index.ts` still exports ONLY `dashboardWidgetRegistrations` (§S1). The new `internal/weatherStore/*` (store + hook), `WeatherEditor`, `internal/dataReads/notifications.ts`, and the extended `internal/strings.ts` are all INTERNAL — consumed only inside the 2 transformed widgets. `index-barrel.test.ts` (AC-PKG-4) MUST continue to pass with the single export. (RG2.)
+
+### §G.2 WidgetRegistration entries — shapes UNCHANGED (ids/spans frozen)
+
+The 10-entry array (§S3) stays byte-stable on ids + spans. The `weather` entry render is unchanged signature (`render: (ctx) => <WeatherWidget lang={ctx.lang} />`). The `mail` entry gains a 1-line additive `now={ctx.now}` thread (`render: (ctx) => <MailWidget lang={ctx.lang} now={ctx.now} />`) and MAY shift its `ariaLabel` from `Inbox`/`收件箱` to `Notifications`/`通知` (additive label change — **NOT an id change**; the id stays `"mail"` per §S2 frozen-ids). The render-context contract (`ctx = { lang, now, goTo }`) is honored as-is (`now` already passed to clock/mini-cal/timezones/upcoming). **NO `WidgetRenderContext` change.**
+
+### §G.3 Phase A — Weather store contracts
+
+#### §G.3.1 Weather model types (`internal/weatherStore/types.ts`)
+
+```ts
+export type WeatherCondition = "sunny" | "cloudy" | "rainy";
+
+export interface UserWeather {
+  city: string;                 // user-typed; trimmed before persist
+  temp: number;                 // current temperature (°, integer or one-decimal)
+  condition: WeatherCondition;  // preset (NOT free text)
+  hi?: number;                  // optional today-high
+  lo?: number;                  // optional today-low
+  updatedAt: string;            // ISO 8601 (new Date().toISOString())
+}
+
+export interface NewWeatherDraft {
+  city: string;
+  temp: number;
+  condition: WeatherCondition;
+  hi?: number;
+  lo?: number;
+}
+
+// preset → existing Icon glyph (compile-time exhaustive; NO Icon.tsx edit)
+export const CONDITION_ICON: Record<WeatherCondition, IconName>;
+//   sunny → "sun" ; cloudy → "cloud" ; rainy → "rain"
+```
+
+#### §G.3.2 Pure store (`internal/weatherStore/weatherStore.ts`) — SINGLETON (not a record)
+
+```ts
+// Read: narrow the registry-default unknown/null → UserWeather | null (defensive).
+getWeather(store: unknown): UserWeather | null;
+//   returns null on null/malformed; otherwise a validated UserWeather.
+
+// Set: produce the new singleton snapshot from a draft (stamps updatedAt).
+setWeather(draft: NewWeatherDraft): UserWeather;
+//   trims city; carries temp/condition/hi?/lo?; updatedAt = now ISO.
+
+// Clear: the unset state.
+clearWeather(): null;
+```
+
+Error/edge semantics:
+- `getWeather(null)` / `getWeather(<malformed>)` → `null` (honest empty; never throws — RG3).
+- `setWeather` always succeeds (field validation is the editor's job).
+- Contrast §E `stickiesStore` (a `Record<id, UserSticky>` of many) — Weather is a SINGLE object (RW1).
+
+#### §G.3.3 `useWeather()` hook (`internal/weatherStore/useWeather.ts`)
+
+```ts
+export interface UseWeatherApi {
+  weather: UserWeather | null;            // live snapshot, reactive via usePref
+  set: (draft: NewWeatherDraft) => void;  // persist a new singleton
+  clear: () => void;                      // persist null (unset)
+}
+export function useWeather(): UseWeatherApi;
+```
+
+- Wraps `usePref("xai_dashboard_weather")`; narrows the registry default (`null`) to `UserWeather | null` via `getWeather` at the single point of truth (same pattern as §E `useStickies`).
+- `set`/`clear` persist via the `usePref` setter; stable identities via `useCallback`. Cross-tab fan-out transitive via `usePref`'s storage listener.
+
+#### §G.3.4 `WeatherEditor` props (`src/WeatherEditor.tsx`)
+
+```ts
+export interface WeatherEditorProps {
+  open: boolean;                            // true → showModal(), false → close()
+  lang: Lang;                               // STR_WEATHER + condition labels
+  initial: UserWeather | null;              // pre-fill when editing an existing entry
+  onSave: (draft: NewWeatherDraft) => void; // after validation passes
+  onClose: () => void;                      // ESC / backdrop / Cancel (discarded)
+}
+```
+
+Behaviour (mirrors `StickyComposer`/`EventComposer`):
+- On open: seed form from `initial` (or blanks: city `""`, temp `0`/empty, condition `"sunny"`), `showModal()`, autofocus the city `<input>` via `setTimeout(0)`.
+- Save validation: empty/whitespace city OR non-numeric temp → inline error, stays open. Valid → `onSave({ city: city.trim(), temp, condition, hi?, lo? })` (hi/lo omitted when blank).
+- ESC fires native `cancel` → `onClose`; backdrop click (`e.target === dialogRef.current`) → `onClose`; Cancel → `onClose`.
+- a11y: `aria-modal="true"`, `aria-labelledby="weather-editor-title"`; condition picker `role="radiogroup"` with per-chip `role="radio"` + `aria-checked`; city/temp inputs `aria-required` + `aria-describedby` when error present.
+- v1 is SET-only (no delete in the editor; re-opening pre-fills + overwrites the singleton on Save).
+
+#### §G.3.5 WeatherWidget wire delta (`src/widgets/WeatherWidget.tsx`)
+
+- Header: keep `s("dashboard.weather")` title (existing token) + city suffix from `weather.city` (not the fixture).
+- `useWeather()` + `useState(editorOpen)`.
+- Body render branch:
+  - `weather === null` → honest empty state: `STR_WEATHER.empty` ("Set your weather" / "设置你的天气") + an Edit button (`data-no-drag`) that opens the editor.
+  - `weather != null` → `{weather.temp}°` + `<Icon name={CONDITION_ICON[weather.condition]} />` + condition label (`STR_WEATHER[condition]`) + optional `{hi}° / {lo}°` (the `.ww-hilo` row only when BOTH present) + an Edit button (`data-no-drag`).
+- 5-day forecast block REMOVED on the live path (the `.ww-forecast` markup no longer renders). `WEATHER` fixture export kept (RW4).
+- `<WeatherEditor open={editorOpen} lang={lang} initial={weather} onSave={(d) => { set(d); setEditorOpen(false); }} onClose={() => setEditorOpen(false)} />`.
+
+#### §G.3.6 New persistence key contract (`@repo/plugin-web-storage`)
+
+```ts
+xai_dashboard_weather: {
+  key: "xai_dashboard_weather",
+  codec: "json",
+  default: null as UserWeather | null,   // singleton, "unset"
+  schemaVersion: 1,
+  owner: "xai-web-dashboard-widgets",
+  category: "module",
+} satisfies PrefEntry<UserWeather | null>
+```
+
+- Additive (authorized by carve-out §2). Byte-parallel to `xai_dashboard_stickies` (registry.ts:959) EXCEPT `default: null` (singleton) vs `{}` (record).
+- MUST be added to BOTH parity arrays (`registry.test.ts` `OWNER_ROW_ADDITIONS` + `parity-design-md.test.ts` exclusion list). `AC-REG-8` count assertion auto-derives (`20 + OWNER_ROW_ADDITIONS.length`).
+- NOT added to `web design/DESIGN.md §9.2` — owner-row addition via the exclusion list (the `xai_calendar_events`/`xai_dashboard_stickies` precedent).
+- Value shape `UserWeather | null` documented at the registry comment; `UserWeather` type lives in `@repo/plugin-web-dashboard-widgets` (registry stays plugin-dep-free; consumer cast at `useWeather`).
+
+### §G.4 Phase B — Mail notifications contracts (READ-ONLY)
+
+#### §G.4.1 Signal type (`internal/dataReads/notifications.ts`)
+
+```ts
+export type NotificationSourceType = "task-overdue" | "calendar-today";
+
+export interface NotificationSignal {
+  id: string;                          // "task:<cardId>" | "event:<eventId>|<startISO>"
+  sourceType: NotificationSourceType;
+  label: string;                       // task title[lang] | event title
+  time?: string;                       // event "HH:MM"; overdue may carry card.date string or omit
+  sortKey: string;                     // deterministic order (overdue-first, then today by time)
+}
+```
+
+Source-additive: a future `"countdown-expiring"` member slots in without reshaping the row (Q-Mail-countdown deferred — OQ-Mail-2).
+
+#### §G.4.2 Read-selector contracts (PURE, DEFENSIVE, injected clock)
+
+```ts
+// --- overdue tasks (xai_task_cols, read-only) ---
+// Reads the OVERDUE bucket specifically (NOT §F's all-bucket countDone flatten).
+// Card-narrow widens §F's TaskCardMinimal to include the bilingual title.
+function overdueTasks(store: unknown, lang: "en" | "zh"): NotificationSignal[];
+//   = store["overdue"].tasks (+ .completed?) with done !== true → { sourceType:"task-overdue", label: title[lang] }
+//   on {}/malformed/no-overdue-bucket → [] (defensive, never throws).
+
+// --- today's calendar events (xai_calendar_events, read-only) ---
+// REUSES §F listValidCalEvents + the proven recurrence/local-date helpers.
+function todaysEvents(store: unknown, now: Date): NotificationSignal[];
+//   = events whose startISO date-prefix === localDateKey(now), INCLUDING recurring instances landing today;
+//     sorted by HH:MM → { sourceType:"calendar-today", label: title, time: "HH:MM" }
+//   on {} → [] (defensive). Local-clock date basis (NOT UTC) — RM3.
+
+// --- combined (the widget calls this) ---
+function buildNotifications(taskStore: unknown, calStore: unknown, now: Date, lang: "en"|"zh", max = 6): NotificationSignal[];
+//   = [...overdueTasks(taskStore,lang), ...todaysEvents(calStore,now)] capped at `max` (overdue-first, then today-by-time).
+```
+
+> **`todaysEvents` recurrence reuse (RM3 / N-build):** §F's recurrence math (`expandRecurrenceLocal`/`expandForMonth`, "advance-date-prefix, keep-HH:MM, UTC-noon window") lives as file-LOCAL helpers in `calUpcoming.ts`/`calMonthDots.ts` (not exported). Build either (i) calls `upcomingEvents(calStore, startOfToday, 1, large)` and filters instances to today's date-prefix, OR (ii) adds a small `eventsOnDay(store, dayKey)` mirroring `calMonthDots`'s single-day expansion. **No NEW recurrence math is invented** — it reuses the §F-proven semantics. (`listValidCalEvents` IS reused directly from `isUserCalEventMap.ts`.)
+
+#### §G.4.3 MailWidget wire delta (`src/widgets/MailWidget.tsx`)
+
+| Prop | Before | After |
+|---|---|---|
+| `MailWidgetProps` | `{ lang }` | `{ lang; now }` (additive — threaded from `registrations.tsx`; NOT a `WidgetRenderContext` change) |
+
+- `const [taskStore] = usePref("xai_task_cols"); const [calStore] = usePref("xai_calendar_events");` — both read-only (setter never called).
+- `const signals = buildNotifications(taskStore, calStore, now, lang, 6);`
+- Title: keep `s("dashboard.mail")` OR shift to `STR_NOTIFICATIONS.title` (OQ-Mail-1; either way no token edit). Badge `.mail-badge` shows `signals.length` (replaces fixture `unreadCount`).
+- Body branch:
+  - `signals.length === 0` → honest "All clear" / "暂无通知" via `STR_NOTIFICATIONS.empty` (NOT a fixture row — RM6).
+  - `signals.length > 0` → a `.mail-row` per signal (REUSE the SHIPPED `.mail-*` CSS): a `sourceType`-driven dot/icon + `label` (`.mail-subj`/`.mail-from` slot) + `time` (`.mail-time`).
+- Stop importing `MAILS` on the live path; `MAILS` export kept (back-compat + `fixtures.test.ts` — RW4 analog).
+
+#### §G.4.4 Persistence semantics — READ-ONLY (NO new key, NO setter)
+
+2 pre-existing keys read via `usePref(<key>)` for reactivity; the `setValue` tuple member is NEVER called:
+
+| Key | Codec | Default | Read by | Written here |
+|---|---|---|---|---|
+| `xai_task_cols` | json | `{}` | `overdueTasks` | **NO** |
+| `xai_calendar_events` | json | `{}` | `todaysEvents` | **NO** |
+
+**NO registry edit, NO parity-array edit for Phase B** (contrast Phase A which adds a key; same read-only contrast as §F vs §E). Owning-module writes fan out via `usePref`'s storage event → Mail re-renders. SSR/pre-hydrate read → registry default → honest empty state.
+
+### §G.5 Events — NONE
+
+Neither phase emits typed events nor adds an event channel. `packages/core/src/types/events.ts` untouched. Weather is a local store write; Mail is a local read. (Carve-out constraint honored.)
+
+### §G.6 i18n — local STR only (2 new dedicated tables)
+
+`internal/strings.ts` gains 2 NEW tables (NOT stuffed into `STR_STICKY_COMPOSER`/`STR_WIDGET_EMPTY` — §F N2):
+- `STR_WEATHER` (bilingual): editor title, city/temp/condition/hi/lo field labels, 3 condition names (Sunny/Cloudy/Rainy ↔ 晴/多云/雨), Save/Cancel, empty-state "Set your weather", edit aria, validation errors.
+- `STR_NOTIFICATIONS` (bilingual): the (optional) "Notifications"/"通知" title, source-type labels (Overdue/Today ↔ 逾期/今天), the honest "All clear"/"暂无通知" empty state.
+
+**0 new `plugin-web-tokens` keys.** Existing `dashboard.weather` + `dashboard.mail` titles stay sourced from `useI18n`.
+
+### §G.7 Imports
+
+| From | To | Allowed |
+|---|---|---|
+| `src/widgets/WeatherWidget.tsx` | `../internal/weatherStore/*`, `../WeatherEditor.js`, `../internal/Icon.js`, `../internal/strings.js`, `@repo/plugin-web-tokens`, `@repo/plugin-web-storage` | yes |
+| `src/widgets/MailWidget.tsx` | `../internal/dataReads/notifications.js`, `../internal/Icon.js`, `../internal/strings.js`, `@repo/plugin-web-tokens`, `@repo/plugin-web-storage` | yes |
+| `internal/dataReads/notifications.ts` | `./isUserCalEventMap.js` (REUSE §F), local task-narrow | yes |
+| any `src/*` | `@repo/xai-web-event-bus`, `@repo/core/events`, another plugin package (`@repo/plugin-web-tasks` / `@repo/plugin-web-calendar` / `@repo/plugin-web-countdown`) | **NO** (read via `usePref` + key string) |
+| any `src/*` | the `usePref` SETTER for `xai_task_cols` / `xai_calendar_events` | **NO** (Mail is read-only) |
+
+### §G.8 Error / edge semantics
+
+- Weather: `getWeather` of `null`/malformed → `null` → honest "Set your weather" empty state (never throws — RG3). Editor validation gates city/temp before `onSave`.
+- Mail: malformed/missing task or calendar store → predicate returns its empty value (`[]`) → "All clear" empty state. Recurrence: unknown `recurrence.kind` → treated non-recurring or dropped (mirrors §F's defensive `expandRecurrence`). Date basis = LOCAL clock (calendar) — NOT UTC (RM3). NEVER throws (degrade to empty, like §F + Statistics).
+
+### §G.9 CSS contract delta
+
+Additive only, namespaced, NO `.widget*` redefinition (§S9 guard still holds — `grep -E "\.widget-?(shell|content)?\s*\{"` returns 0):
+- Phase A: `.ww-empty` (honest-empty hint) + `.weather-editor*` (dialog) + reuse existing `.ww-head/.ww-now/.ww-temp/.ww-info/.ww-cond/.ww-hilo`. The `.ww-forecast`/`.wwf-*` classes stay defined (fixture-test/back-compat) but are no longer rendered on the live path.
+- Phase B: reuse the SHIPPED `.mail-*` classes; add `.notif-empty` (honest "all clear") + a small `sourceType` source-dot/icon style if needed.
+
+### §G.10 Test ACs
+
+See `test.md` §G.

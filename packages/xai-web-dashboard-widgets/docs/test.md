@@ -452,3 +452,168 @@ AC-COMPOSER-6/7/9 cover composer a11y (radiogroup, aria-modal/labelledby, aria-r
 - Rewritten widget tests: ~24 (4 per Stat × 3 + 4 Upcoming + 5 MiniCal-real; SHIPPED MiniCal nav/goTo ACs re-homed).
 - NET widget-pkg count: SHIPPED 93 + §E additions (→126) + §F net delta (selectors added; Stat/Upcoming/MiniCal test files rewritten, not multiplied). No SHIPPED non-Stat test regresses.
 - Storage suite: UNCHANGED (NO registry edit — contrast §E). Web suite: UNCHANGED (no host edit). `pnpm -w build` green.
+
+---
+
+## §G — Extension test strategy: Weather manual-entry + Mail → Notifications digest (xai-web-dashboard-weather-mail, 2026-05-29)
+
+> **APPEND extension — SHIPPED §1-§7, §E, and §F strategies above unchanged.** Same runner (Vitest 3.2 / jsdom 26 / RTL 16). Same core mock strategy: `usePref` / storage = real jsdom localStorage (NOT mocked). Phase A tests SET via the `useWeather` setter / editor Save and assert round-trip; Phase B tests SEED `xai_task_cols` + `xai_calendar_events` via `setPref` and assert the rendered signals + an explicit no-seed honest-empty test + a no-write assertion.
+> Authority: ADR-0010 §D4 carve-out `43ba6f8`. Design: design.md §G. API: api.md §G. Discovery: `docs/reviews/xai-web-dashboard-weather-mail/20260529-discovery-review.md`.
+
+### §G.1 Strategy summary (extension)
+
+- **Phase A (Weather, WRITE):** (1) pure store unit tests (`weatherStore.test.ts`) — `getWeather`/`setWeather`/`clearWeather` with literal inputs, no RTL; (2) editor component tests (`WeatherEditor.test.tsx`) — dialog open/close + validation + radiogroup + a11y; (3) hook tests (`useWeather.test.tsx`) — set/clear round-trip via `usePref`; (4) widget tests (`WeatherWidget.test.tsx`, REWRITTEN) — honest-empty when null, real values when set, Edit→editor→Save→persist→refresh integration, condition→icon, optional hi/lo; (5) registry tests in `@repo/plugin-web-storage` (`AC-REGISTRY-WEATHER-1/2` + `AC-REG-8` auto + parity exclusion).
+- **Phase B (Mail, READ-ONLY):** (1) pure selector unit tests (`notifications.test.ts`) — seed literal task/calendar stores + a fixed clock, assert `NotificationSignal[]` (overdue bucket only, today's events incl. recurrence, cap, order, defensive empties); (2) widget tests (`MailWidget.test.tsx`, REWRITTEN) — real signals when seeded, honest "all clear" when empty, badge=count, **read-only no-mutation assertion**, `now`-threaded "today" determinism.
+- **Clock injection:** Phase B selector + widget tests pin a fixed `now` (e.g. `new Date(2026, 4, 29, 10, 0)` local) so "today"/"overdue" boundaries are deterministic; restore with `vi.useRealTimers()` where the system clock is stubbed.
+- **SHIPPED Weather/Mail fixture tests get REWRITTEN, not extended** (the §F RD8 precedent): SHIPPED `WeatherWidget.test.tsx` (AC-WEATHER-1..3 assert the `WEATHER` fixture temp/city/condition/forecast) + `MailWidget.test.tsx` (AC-MAIL-1..3 assert the `MAILS` fixture rows) are replaced by seed/set-driven assertions. `fixtures.test.ts` STAYS green (exports kept — RW4).
+
+### §G.2 New / rewritten test files vs phase
+
+| File | Phase | Status | ACs |
+|---|---|---|---|
+| `src/internal/weatherStore/__tests__/weatherStore.test.ts` | A | NEW | AC-WSTORE-1..6 |
+| `src/__tests__/WeatherEditor.test.tsx` | A | NEW | AC-WEDITOR-1..9 |
+| `src/__tests__/useWeather.test.tsx` | A | NEW | AC-WHOOK-1..4 |
+| `src/__tests__/WeatherWidget.test.tsx` | A | **REWRITTEN** | AC-WEATHER-REAL-1..8 (SHIPPED AC-WEATHER-1..3 fixture assertions removed) |
+| `packages/plugin-web-storage/src/__tests__/registry.test.ts` (EXTEND) | A | NEW ACs | AC-REGISTRY-WEATHER-1..2 + AC-REG-8 (auto) |
+| `packages/plugin-web-storage/src/__tests__/parity-design-md.test.ts` (EXTEND) | A | parity | exclusion-list +`xai_dashboard_weather` |
+| `src/internal/dataReads/__tests__/notifications.test.ts` | B | NEW | AC-RD-OVERDUE-1..5 + AC-RD-TODAY-1..6 + AC-RD-COMBINE-1..3 |
+| `src/__tests__/MailWidget.test.tsx` | B | **REWRITTEN** | AC-MAIL-REAL-1..4 + AC-MAIL-EMPTY-1 + AC-MAIL-READONLY-1 (SHIPPED AC-MAIL-1..3 fixture assertions removed) |
+| `src/__tests__/fixtures.test.ts` (EXISTING) | A/B | UNCHANGED | AC-FIXTURES-1..5 stay green (WEATHER/MAILS exports kept) |
+| `src/__tests__/index-barrel.test.ts` (EXISTING) | A/B | UNCHANGED | AC-PKG-4 single export |
+| `src/__tests__/registrations.test.tsx` (EXISTING) | B | UNCHANGED/RE-HOMED | AC-REG-1..5 stay green (ids/spans unchanged; `mail` id preserved) |
+
+### §G.3 Acceptance criteria — new families
+
+#### AC-WSTORE (weatherStore pure — A)
+
+- AC-WSTORE-1: `getWeather(null)` → `null`; `getWeather(<malformed: {} / [] / {city:1}>)` → `null` (defensive, never throws — RG3).
+- AC-WSTORE-2: `getWeather(<valid UserWeather>)` → the same validated object.
+- AC-WSTORE-3: `setWeather({city:"  Shanghai ", temp:22, condition:"cloudy"})` → `{city:"Shanghai", temp:22, condition:"cloudy", updatedAt:<ISO>}` (city trimmed; `updatedAt` an ISO string; hi/lo absent when not provided).
+- AC-WSTORE-4: `setWeather` with hi/lo → carries `hi`/`lo`; without → `hi`/`lo` undefined.
+- AC-WSTORE-5: `clearWeather()` → `null`.
+- AC-WSTORE-6: singleton not record — `setWeather` returns ONE object (not a keyed map); two `setWeather` calls do NOT accumulate (the 2nd overwrites — RW1).
+
+#### AC-WEDITOR (WeatherEditor — A)
+
+- AC-WEDITOR-1: `open={true}` calls `showModal()` (dialog `.open`); `open={false}` calls `close()`.
+- AC-WEDITOR-2: on open, the city `<input>` is autofocused (after `setTimeout(0)` flush).
+- AC-WEDITOR-3: `initial={<UserWeather>}` pre-fills city/temp/condition/hi/lo; `initial={null}` shows blanks + default condition `"sunny"`.
+- AC-WEDITOR-4: typing valid city + temp + choosing a condition + Save calls `onSave({city, temp, condition, ...})` (city trimmed; hi/lo included only when entered).
+- AC-WEDITOR-5: Save with empty/whitespace city → no `onSave`, inline error, stays open. Save with non-numeric/empty temp → no `onSave`, inline error.
+- AC-WEDITOR-6: condition picker is `role="radiogroup"`; exactly one chip `aria-checked="true"`; default checked = `"sunny"` (or `initial.condition`).
+- AC-WEDITOR-7: Cancel → `onClose`; ESC (native `cancel`) → `onClose`; backdrop click (`e.target === dialog`) → `onClose`; clicking inside content does NOT close.
+- AC-WEDITOR-8: `aria-modal="true"` + `aria-labelledby="weather-editor-title"` present; city/temp `aria-required`; `aria-describedby` → error node only when error shown.
+- AC-WEDITOR-9: bilingual — `lang="zh"` renders zh STR for title/labels/buttons/condition names/errors; `STR_WEATHER` every key has both `en` + `zh` (grep-assert).
+
+#### AC-WHOOK (useWeather — A)
+
+- AC-WHOOK-1: `set(draft)` persists to `xai_dashboard_weather` (read back via `usePref`/`getPref`) and `weather` reflects it.
+- AC-WHOOK-2: `clear()` persists `null`; `weather` becomes `null`.
+- AC-WHOOK-3: default (unset) → `weather === null`.
+- AC-WHOOK-4: a second hook instance reading the same key sees the persisted value (storage round-trip).
+
+#### AC-WEATHER-REAL (WeatherWidget — A)
+
+- AC-WEATHER-REAL-1: store `null` (no seed) → honest empty state `STR_WEATHER.empty` ("Set your weather"); NO fixture temp/city; an Edit button present (`data-no-drag`).
+- AC-WEATHER-REAL-2: clicking Edit opens the editor (dialog `.open`).
+- AC-WEATHER-REAL-3: seed a `UserWeather` (city/temp/condition) → renders `{temp}°` + city + condition label + `<svg data-icon=...>` matching `CONDITION_ICON[condition]`.
+- AC-WEATHER-REAL-4: each of the 3 conditions renders its mapped icon (`sunny→sun`, `cloudy→cloud`, `rainy→rain`) — RW3.
+- AC-WEATHER-REAL-5: optional hi/lo — present → `.ww-hilo` shows `{hi}° / {lo}°`; absent → no `.ww-hilo` row (no "—/—" fiction).
+- AC-WEATHER-REAL-6: integration — Edit → fill editor → Save → widget shows new values → unmount/remount → values persist (real `usePref` round-trip).
+- AC-WEATHER-REAL-7: 5-day forecast NOT rendered on the live path (no `.wwf-day` in the DOM, even with a seeded entry).
+- AC-WEATHER-REAL-8: bilingual — empty label + condition labels render in en + zh; the title still flows from `dashboard.weather` (en/zh).
+
+#### AC-REGISTRY-WEATHER (storage registry — A, in plugin-web-storage)
+
+- AC-REGISTRY-WEATHER-1: `PREF_REGISTRY.xai_dashboard_weather` has `key === "xai_dashboard_weather"`, `codec === "json"`, `default === null`, `owner === "xai-web-dashboard-widgets"`, `category === "module"`, `schemaVersion === 1`, `proposed` undefined. (Mirror of AC-REGISTRY-STICKIES-1 but `default` is `null` not `{}`.)
+- AC-REGISTRY-WEATHER-2: `setPref("xai_dashboard_weather", fixture)` then `getPref` round-trips a `UserWeather` fixture; absent key returns `null`.
+- AC-REG-8 (existing, auto-derives): total count `=== 20 + OWNER_ROW_ADDITIONS.length` stays green after adding `xai_dashboard_weather` to `OWNER_ROW_ADDITIONS` + the parity exclusion list.
+
+#### AC-RD-OVERDUE (notifications.overdueTasks — B, pure)
+
+- AC-RD-OVERDUE-1: `overdueTasks({}, "en")` → `[]`; malformed (`null`/array/`{overdue:42}`) → `[]` (defensive, never throws — RG3).
+- AC-RD-OVERDUE-2: reads the **overdue bucket specifically** — a store with cards in `next7`/`later`/`nodate` but an empty `overdue` → `[]` (RM2; NOT §F's all-bucket flatten).
+- AC-RD-OVERDUE-3: `overdue` bucket cards with `done !== true` → one signal each, `sourceType:"task-overdue"`, `label === card.title[lang]`; `done === true` cards excluded (OQ-Mail-4).
+- AC-RD-OVERDUE-4: includes the `overdue` bucket's `completed?` array (if present) under the same `done !== true` filter.
+- AC-RD-OVERDUE-5: bilingual — `lang:"zh"` labels use `title.zh`.
+
+#### AC-RD-TODAY (notifications.todaysEvents — B, pure)
+
+- AC-RD-TODAY-1: `todaysEvents({}, now)` → `[]`; malformed → `[]`.
+- AC-RD-TODAY-2: an event with `startISO` date-prefix === `localDateKey(now)` → one signal `sourceType:"calendar-today"`, `label === title`, `time === "HH:MM"`; an event on a DIFFERENT day excluded.
+- AC-RD-TODAY-3: multiple today-events sorted by `HH:MM` ascending.
+- AC-RD-TODAY-4: a DAILY-recurring event whose anchor is in the past → still produces a today instance (recurrence reuse — RM3).
+- AC-RD-TODAY-5: a WEEKLY-recurring event landing on today → produces a today instance; on a non-matching weekday → excluded.
+- AC-RD-TODAY-6: LOCAL date basis — an event at `2026-05-29T23:30` with `now` on 2026-05-29 local IS today; date parsed local-clock, not UTC (RM3 boundary).
+
+#### AC-RD-COMBINE (buildNotifications — B, pure)
+
+- AC-RD-COMBINE-1: combines overdue + today; overdue signals ordered before today signals.
+- AC-RD-COMBINE-2: capped at `max` (6) even when more qualify.
+- AC-RD-COMBINE-3: both sources empty → `[]`.
+
+#### AC-MAIL-REAL / EMPTY / READONLY (MailWidget — B)
+
+- AC-MAIL-REAL-1: seed `xai_task_cols` with 2 overdue (`done!==true`) + `xai_calendar_events` with 1 today event → 3 `.mail-row`s; badge shows `3`.
+- AC-MAIL-REAL-2: each row shows its `label` (+ `time` for events); source-type visually distinguished (a `sourceType`-keyed dot/icon present).
+- AC-MAIL-REAL-3: `now`-threaded determinism — a fixed `now` makes "today"/"overdue" deterministic; AC uses `render(<MailWidget lang="en" now={fixed} />)`.
+- AC-MAIL-REAL-4: bilingual — overdue labels in zh use `title.zh`; the title + source labels render en/zh.
+- AC-MAIL-EMPTY-1: both stores empty (no seed) → honest "All clear" / "暂无通知" (`STR_NOTIFICATIONS.empty`); NO `.mail-row`; badge shows `0`. (NOT a fixture row — RM6.)
+- AC-MAIL-READONLY-1: seed `xai_task_cols` + `xai_calendar_events`; render `MailWidget` (and any interaction); assert BOTH `getPref("xai_task_cols")` + `getPref("xai_calendar_events")` are byte-unchanged after render (no `setValue` ever called — RM1). The single most important Phase-B guard.
+
+### §G.4 Mock strategy (extension)
+
+- `usePref` / storage = real jsdom localStorage (NOT mocked). `beforeEach` does `localStorage.clear()`; seed-driven Phase-B tests then `setPref("xai_task_cols", …)` + `setPref("xai_calendar_events", …)` before render.
+- Pure selector tests (`weatherStore.test.ts`, `notifications.test.ts`) need NO storage + NO RTL — call with literal store objects + a fixed `Date`/`lang`.
+- Editor dialog: jsdom supports `<dialog>` `showModal`/`close`/`cancel` (the SHIPPED §E `StickyComposer` + calendar `EventComposer` tests rely on it); reuse `setup.ts`.
+- Clocks: Phase-B widget tests pass a fixed `now` prop; `notifications.todaysEvents`/`overdueTasks` tests pass a literal clock.
+- Fixtures (`WEATHER`/`MAILS`/...) remain exercised by the UNCHANGED `fixtures.test.ts`; the rewired widgets no longer import them on the live path.
+- `createStickyId`-style id: weather is a singleton (no id needed); notification `id` is derived (`"task:<cardId>"` / `"event:<eventId>|<startISO>"`) — deterministic, no UUID.
+
+### §G.5 a11y coverage
+
+AC-WEDITOR-6/8/9 cover the editor (radiogroup, aria-modal/labelledby, aria-required/describedby, bilingual). Mail rows are read-only (no interactive children → no `data-no-drag`, no focus traps); AC-MAIL-REAL-2 covers the source-type accessible distinction. Bilingual covered by AC-WEATHER-REAL-8 + AC-MAIL-REAL-4 (+ each new STR table grep-asserted for en+zh).
+
+### §G.6 Risk-to-test mapping (extension)
+
+| Risk | Test |
+|---|---|
+| RW1 (weather singleton not record) | AC-WSTORE-6 (no accumulation) + AC-WHOOK round-trip of one object |
+| RW2 (editor drag-surface) | AC-WEDITOR-1/7 (dialog open/close) + Edit button `data-no-drag` asserted in AC-WEATHER-REAL-1 |
+| RW3 (condition→icon map) | AC-WEATHER-REAL-4 (each preset → its `data-icon`) + typed `Record<WeatherCondition,IconName>` compile guard |
+| RW4 (forecast drop vs fixtures.test.ts) | AC-WEATHER-REAL-7 (no `.wwf-day` live) + AC-FIXTURES-1 stays green (export kept) |
+| RW5 (registry parity dual-array) | AC-REGISTRY-WEATHER-1/2 + AC-REG-8 auto + parity exclusion |
+| RW6 (editor state survives grid tick) | AC-WEATHER-REAL re-render with new `now` keeps editor open (analog to §E AC-STICKIES-CREATE-8) |
+| RM1 (Mail read-only) | **AC-MAIL-READONLY-1** (both stores byte-unchanged after render) |
+| RM2 (overdue bucket-specific + title) | AC-RD-OVERDUE-2/3 (overdue bucket only; title surfaced) |
+| RM3 (today recurrence + local date) | AC-RD-TODAY-4/5/6 (daily/weekly/local-boundary) |
+| RM4 (keep `mail` id) | AC-REG-1..5 stay green (ids unchanged); registrations.test.tsx asserts `mail` id/span |
+| RM5 (`now` thread not a context change) | AC-MAIL-REAL-3 (fixed `now` prop; `WidgetRenderContext` untouched) |
+| RM6 (honest "all clear") | AC-MAIL-EMPTY-1 (empty label, not a fixture row) |
+| RG1 (dedicated STR tables) | AC-WEDITOR-9 + AC-MAIL-REAL-4 grep-assert `STR_WEATHER`/`STR_NOTIFICATIONS` en+zh |
+| RG2 (barrel single-export) | AC-PKG-4 unchanged |
+| RG3 (defensive foreign read) | AC-WSTORE-1 + AC-RD-OVERDUE-1 + AC-RD-TODAY-1 (malformed → empty, never throws) |
+
+### §G.7 Cross-vendor manual smoke (queued — Phase B, may defer per ADR-0008 §S3)
+
+`pnpm --filter @repo/web dev` in Chrome / Safari 17+ / Firefox → `/app/dashboard`:
+1. Weather widget on a fresh profile shows "Set your weather" + Edit button (no fiction).
+2. Click Edit → editor opens; type a city + temp; pick each of the 3 conditions; (optionally) hi/lo; Save → widget shows the values + the right condition icon.
+3. Empty city / non-numeric temp Save → inline error, no save.
+4. ESC / backdrop / Cancel close the editor without saving.
+5. Reload → weather persists (DevTools Application tab shows `xai_dashboard_weather`).
+6. No 5-day forecast strip renders.
+7. Mail/Notifications widget on a fresh profile shows "All clear / 暂无通知" (no fake mail rows), badge `0`.
+8. Create an overdue task (in Tasks) + a today event (in Calendar) → reload → Mail shows them as notification rows; badge reflects the count; overdue-first.
+9. **Read-only check:** the notification rows do NOT mutate Tasks/Calendar — open Tasks/Calendar after viewing Mail; the overdue task + today event are unchanged.
+10. Cross-tab: set weather / add a today event in one tab → the other tab's widget reflects after focus (usePref storage listener).
+11. Light/dark theme — Weather + Notifications legible in both; the other 8 widgets visually unchanged.
+
+### §G.8 Test totals (extension estimate)
+
+- New pure tests: ~20-25 (AC-WSTORE 6 + AC-RD-OVERDUE 5 + AC-RD-TODAY 6 + AC-RD-COMBINE 3).
+- New component/hook tests: ~20-25 (AC-WEDITOR 9 + AC-WHOOK 4 + AC-WEATHER-REAL 8 + AC-MAIL-REAL/EMPTY/READONLY 6).
+- New storage-pkg tests: 2 (AC-REGISTRY-WEATHER-1/2) + 2 parity-array edits (AC-REG-8 auto, AC-PARITY exclusion).
+- REWRITTEN: SHIPPED `WeatherWidget.test.tsx` (AC-WEATHER-1..3 fixture → AC-WEATHER-REAL) + `MailWidget.test.tsx` (AC-MAIL-1..3 fixture → AC-MAIL-REAL/EMPTY/READONLY) — old fixture assertions deleted, not multiplied (RW4/§F-RD8 precedent).
+- SHIPPED non-Weather/Mail widget tests + §E stickies + §F real-data + `fixtures.test.ts` + `index-barrel.test.ts` + `registrations.test.tsx` stay green. Web suite UNCHANGED (no host edit). `pnpm -w build` green.

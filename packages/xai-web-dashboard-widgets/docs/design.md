@@ -420,3 +420,141 @@ RD1 (pomodoro `finishedAt` not `completedAt`), RD2 (tasks `col.tasks` not flatte
 | Direction | create/delete (write) | **read-only** | Widgets are views of other modules' data |
 | Fixture-empty | fixture-as-sample (G1) | **honest empty state** (no fake samples) for calendar widgets | Calendar-empty is an honest view; fake events re-introduce the fiction this carve-out removes |
 | New files | store + composer + key | **`dataReads/` selectors only** | No data-layer ownership; just projection |
+
+---
+
+## §G — Extension: Weather manual-entry + Mail → Notifications digest (xai-web-dashboard-weather-mail, 2026-05-29)
+
+> **APPEND extension — does NOT supersede the SHIPPED row #11 design (§1-§9), the SHIPPED §E stickies design, or the SHIPPED §F real-data design.** Two independent widget transforms: **Phase A** rewires `WeatherWidget` from the `WEATHER` fixture to a user-managed manual-entry store (WRITE — adds ONE authorized registry key + an editor); **Phase B** rewires `MailWidget` from the `MAILS` fixture to a read-only local **notifications digest** (READ-ONLY aggregation of overdue tasks + today's calendar events — NO new key, NO write, keeps the `mail` widget id).
+> Selected Options: Q1 native-`<dialog>`-editor + current-conditions-only(+optional hi/lo) · Q2 3-preset condition enum → existing icons · Q3 local-STR · Q4 unified `NotificationSignal` · Q-Mail-rename keep-`mail`-id · Q-Mail-source reuse-§F-calendar + new-overdue-reader · Q-Mail-countdown DEFER (discovery §4).
+> Review Doc: `docs/reviews/xai-web-dashboard-weather-mail/20260529-discovery-review.md`
+> Review Date: 2026-05-29
+> Authority: ADR-0010 §D4 — carve-out `docs/reviews/_p0-carve-outs/20260529-dashboard-weather-mail.md` (commit `43ba6f8`)
+> Closest precedents: Weather store ≈ §E stickies (`internal/stickiesStore/` + `useStickies` + `StickyComposer`, singleton-ified); Mail aggregation ≈ §F real-data (`internal/dataReads/` over `usePref` keys, read-only, honest empty).
+> Roadmap manifest: `docs/workflow/roadmap/xai-web-dashboard-weather-mail.md`
+
+### §G.1 Decision snapshot (frozen assumptions, 16)
+
+1. Owning package = `@repo/plugin-web-dashboard-widgets` (EXTENSION; no new package). Manifest stays `status: Stable`.
+2. Two independent widget transforms → **2 phases** (Phase A Weather manual-entry / Phase B Mail notifications digest).
+3. **Phase A — Weather** is a WRITE feature on its OWN new key; **Phase B — Mail** is a READ-ONLY aggregation of 2 foreign keys (NO new key for Mail).
+4. **New authorized registry key `xai_dashboard_weather`** (codec json, default `null`, owner `xai-web-dashboard-widgets`, category module, schemaVersion 1, proposed false) — byte-parallel to §E `xai_dashboard_stickies` (registry.ts:959). + `OWNER_ROW_ADDITIONS` entry + parity exclusion-list entry + `AC-REGISTRY-WEATHER-1/2`. **Mail adds NO key.**
+5. Weather store = a SINGLETON object (`UserWeather | null`), NOT a record (contrast stickies' `Record<id, …>`). `null` = honest empty state.
+6. Weather model: `UserWeather = { city: string; temp: number; condition: WeatherCondition; hi?: number; lo?: number; updatedAt: string }`. `WeatherCondition = "sunny" | "cloudy" | "rainy"`. `NewWeatherDraft = { city; temp; condition; hi?; lo? }`.
+7. `WeatherCondition` → existing `Icon` name map: `sunny→"sun"`, `cloudy→"cloud"`, `rainy→"rain"`. **No `Icon.tsx` edit** (3 presets, 3 existing glyphs). Typed `Record<WeatherCondition, IconName>` makes a bad map a compile error.
+8. Weather editor = native `<dialog>` `WeatherEditor` (city `<input>` + temp number `<input>` + condition `role="radiogroup"` 3 chips + optional hi/lo number `<input>`s + Save/Cancel; ESC/backdrop/autofocus/`aria-modal`/`aria-labelledby`) per §E `StickyComposer`. WRITE-only (no edit-mode/delete in v1; Save overwrites the singleton; the body Edit button re-opens it pre-filled).
+9. `WeatherWidget` renders current conditions ONLY (city + temp + condition icon/label + optional hi/lo). 5-day forecast DROPPED on the live path; `WEATHER` fixture export KEPT (back-compat + `fixtures.test.ts` green — §F RD9 precedent). Honest empty state ("Set your weather" + edit affordance) when the store is `null`.
+10. **Mail keeps widget id `mail`** (frozen per api.md §S2; persisted in `xai_dash_order`) — NO rename, NO ADR amendment, NO layout migration. Only the body data source + `ariaLabel` + title label change. Reuses `.mail-*` CSS.
+11. Mail signal shape: `NotificationSignal = { id; sourceType: "task-overdue" | "calendar-today"; label; time?; sortKey }`. Badge = `signals.length`. Source-additive (future `"countdown-expiring"` slots in without reshape).
+12. Mail sources (v1): (a) overdue tasks = `xai_task_cols["overdue"].tasks`(+`.completed?`) with `done !== true`, label `title[lang]`; (b) today's events = `xai_calendar_events` filtered to today's LOCAL date-prefix WITH recurrence expansion. **Max 6 rows** (overdue-first, then today-by-time). **Countdowns DEFERRED** (Q-Mail-countdown; OQ-Mail-2).
+13. Mail read pattern = `usePref(<key>)` + LOCAL predicate, NEVER a plugin import, NEVER the `usePref` setter. **READ-ONLY — never writes `xai_task_cols`/`xai_calendar_events`.** Reuses §F's `listValidCalEvents`; adds a new `overdueTasks` task reader (widens §F's card-narrow to include `title`).
+14. Mail entry threads `now`: `registrations.tsx` `mail` entry gains `now={ctx.now}` (1-line additive, like §F's Upcoming) so "today"/"overdue" compute against `ctx.now`. NOT a `WidgetRenderContext` change (row #10's type stays frozen).
+15. i18n = LOCAL STR only. 2 new dedicated tables in `internal/strings.ts`: `STR_WEATHER` + `STR_NOTIFICATIONS` (NOT stuffed into `STR_STICKY_COMPOSER`/`STR_WIDGET_EMPTY` — §F N2). Titles reuse existing `dashboard.weather`/`dashboard.mail` token keys via `useI18n`. **0 `plugin-web-tokens` keys.**
+16. Public surface UNCHANGED — `src/index.ts` exports `dashboardWidgetRegistrations` only; store/editor/selectors stay `internal/`; `index-barrel.test.ts` (AC-PKG-4) stays green. NO `packages/core` edit, NO `packages/core/src/types/events.ts` event channel, NO host edit, NO `dev` branch, NO SHIPPED-archive/ADR edit.
+
+### §G.2 Architecture delta
+
+```
+DashboardModule (row #10) — render(ctx={lang,now,goTo}) — UNCHANGED
+   │
+   ▼  (2 of 10 widgets transformed; other 8 untouched)
+
+── Phase A: Weather (WRITE — new key, like §E stickies but SINGLETON) ──────────
+WeatherWidget(lang)
+  ├─ useWeather()                          → internal/weatherStore/useWeather.ts
+  │     └─ usePref("xai_dashboard_weather")    → @repo/plugin-web-storage  (NEW key)
+  │           └─ getWeather / setWeather / clearWeather  (pure, internal/weatherStore/weatherStore.ts)
+  ├─ useState(editorOpen)
+  ├─ body:
+  │     weather === null → honest "Set your weather" empty state + Edit button (data-no-drag)
+  │     weather != null  → city + {temp}° + <Icon name={CONDITION_ICON[condition]}/> + condition label + optional {hi}°/{lo}°  + Edit button
+  └─ <WeatherEditor open lang initial={weather} onSave={set} onClose />   (src/WeatherEditor.tsx + STR_WEATHER)
+
+── Phase B: Mail → Notifications (READ-ONLY aggregation, like §F real-data) ────
+MailWidget(lang, now)   ← now threaded from registrations.tsx (1-line additive)
+  ├─ usePref("xai_task_cols")        → dataReads/notifications.overdueTasks(store, lang)     → NotificationSignal[]  (READ-ONLY)
+  ├─ usePref("xai_calendar_events")  → dataReads/notifications.todaysEvents(store, now)       → NotificationSignal[]  (READ-ONLY; REUSES §F listValidCalEvents + recurrence)
+  ├─ signals = [...overdue, ...today]  (overdue-first, then today-by-time, cap 6)
+  ├─ badge = signals.length            (replaces fixture unreadCount)
+  └─ body:
+        signals.length === 0 → honest "All clear / 暂无通知" (STR_NOTIFICATIONS)
+        signals.length  > 0  → .mail-row per signal (source dot/icon + label + time)   [.mail-* CSS reused]
+
+   src/internal/weatherStore/   (NEW — Phase A; mirrors §E stickiesStore, singleton-ified)
+     ├─ types.ts          # UserWeather, WeatherCondition, NewWeatherDraft, CONDITION_ICON: Record<WeatherCondition, IconName>
+     ├─ weatherStore.ts   # pure getWeather / setWeather / clearWeather  (singleton, not record)
+     └─ useWeather.ts     # useWeather() over usePref("xai_dashboard_weather")
+   src/WeatherEditor.tsx  (NEW — Phase A; native <dialog>, like StickyComposer)
+
+   src/internal/dataReads/notifications.ts  (NEW — Phase B; pure; REUSES isUserCalEventMap/listValidCalEvents)
+   src/internal/strings.ts  (EXTENDED — +STR_WEATHER (A) +STR_NOTIFICATIONS (B); new dedicated tables)
+```
+
+No edge into `packages/core/`; no `WidgetRenderContext` change (Mail's `now` is an additive WIDGET prop threaded from existing `ctx.now`); no host-shell edit; no `plugin-web-tokens` edit. Phase A's ONLY cross-package edit is the **additive** `xai_dashboard_weather` registry key + its parity tests in `@repo/plugin-web-storage` (authorized). Phase B has **NO** cross-package edit (read-only on pre-existing keys — the key contrast with Phase A; same as §F vs §E).
+
+### §G.3 File layout delta
+
+```
+packages/xai-web-dashboard-widgets/src/
+├── WeatherEditor.tsx                        # NEW (A) — native <dialog>
+├── widgets/WeatherWidget.tsx                # REWIRED (A) — useWeather + editor + honest empty + Edit btn; drop forecast on live path
+├── widgets/MailWidget.tsx                   # REWIRED (B) — usePref ×2 + notifications selector + honest "all clear"; add `now` prop
+├── registrations.tsx                        # EDITED (B) — 1-line `now={ctx.now}` to the `mail` entry (additive; id/span/ariaLabel-label stay; ariaLabel may shift Inbox→Notifications)
+├── styles.css                               # MAYBE EXTENDED — additive only (.ww-empty / .weather-editor* (A); .notif-* / source-dot (B) if needed); NO .widget* redefinition (§S9 guard)
+└── internal/
+    ├── strings.ts                           # EXTENDED (A/B) — +STR_WEATHER +STR_NOTIFICATIONS (new dedicated tables + accessors)
+    ├── fixtures.ts                          # UNCHANGED exports kept (WEATHER/MAILS stay for back-compat + fixtures.test.ts); live path no longer imports them
+    ├── weatherStore/                        # NEW (A) — singleton store
+    │   ├── types.ts                         # UserWeather, WeatherCondition, NewWeatherDraft, CONDITION_ICON
+    │   ├── weatherStore.ts                  # pure getWeather / setWeather / clearWeather
+    │   └── useWeather.ts                    # useWeather() hook over usePref
+    └── dataReads/
+        └── notifications.ts                 # NEW (B) — overdueTasks + todaysEvents → NotificationSignal[] (REUSES isUserCalEventMap)
+
+packages/plugin-web-storage/src/internal/registry.ts                 # EXTENDED (A) — +xai_dashboard_weather (additive, authorized)
+packages/plugin-web-storage/src/__tests__/registry.test.ts           # EXTENDED (A) — OWNER_ROW_ADDITIONS + AC-REGISTRY-WEATHER-1/2 (+ AC-REG-8 auto)
+packages/plugin-web-storage/src/__tests__/parity-design-md.test.ts   # EXTENDED (A) — exclusion list +xai_dashboard_weather
+```
+
+**Names are indicative.** **No file is deleted.** `index.ts` UNCHANGED (barrel single-export). The Mail `overdueTasks` reader may widen §F's `isTaskColsRecord` card-narrow (to include `title`) in a NEW file rather than editing the §F file (build's call — additive either way).
+
+### §G.4 Persistence rules
+
+**Phase A — NEW key (WRITE, owned by this package):**
+
+| Key | Owner | Default | Codec | Category | Use |
+|---|---|---|---|---|---|
+| `xai_dashboard_weather` | `xai-web-dashboard-widgets` (this extension) | `null` | json | module | `UserWeather \| null` singleton; mutated by `setWeather`/`clearWeather` via `usePref`; caught by chassis `resetAllPrefs()` `xai_` filter (intended). |
+
+Additive (authorized by carve-out §2). Byte-parallel to `xai_dashboard_stickies` (registry.ts:959) EXCEPT default is `null` (singleton, "unset") vs stickies' `{}` (empty record). MUST be added to BOTH parity arrays (`registry.test.ts` `OWNER_ROW_ADDITIONS` + `parity-design-md.test.ts` exclusion list); `AC-REG-8` count auto-derives. Value shape `UserWeather | null` documented at the registry comment; `UserWeather` type lives in `@repo/plugin-web-dashboard-widgets` (registry stays plugin-dep-free; consumer cast at `useWeather`).
+
+**Phase B — READ-ONLY on 2 pre-existing keys (NO new key, NO setter):**
+
+| Key | Owner (foreign) | Read shape narrowed toward | Written here? |
+|---|---|---|---|
+| `xai_task_cols` | `xai-web-tasks` | `Record<BucketId,{tasks:TaskCard[];completed?:TaskCard[]}>` (overdue bucket + `title` + `done`) | **NO** (read-only) |
+| `xai_calendar_events` | `xai-web-calendar` | `Record<id,UserCalEvent>` (today's local date-prefix + recurrence) | **NO** (read-only) |
+
+`usePref` is used for its REACTIVITY (owning module writes → Mail re-reads + re-renders). The `setValue` tuple member is NEVER called. **NO registry edit, NO parity-array change for Phase B** (contrast Phase A which adds a key).
+
+### §G.5 Phase plan (2 phases — 2 independent widget transforms)
+
+See `dev_log.md` §G Phase Plan for the authoritative per-phase file lists + exit criteria. Summary:
+- **Phase A — Weather manual-entry:** `xai_dashboard_weather` registry key + parity + AC-REGISTRY-WEATHER; `internal/weatherStore/` (singleton store + `useWeather`); `WeatherEditor` native `<dialog>`; `STR_WEATHER` local STR; rewire `WeatherWidget` (user values + honest empty + Edit button; drop forecast on live path); additive CSS; AC-WSTORE + AC-WEDITOR + AC-WEATHER-REAL tests; SHIPPED non-Weather + §E + §F tests + `fixtures.test.ts` stay green.
+- **Phase B — Mail → Notifications digest:** `internal/dataReads/notifications.ts` (overdueTasks + todaysEvents → `NotificationSignal[]`, REUSE §F `listValidCalEvents`); `STR_NOTIFICATIONS` local STR; rewire `MailWidget` (read-only signals + honest "all clear" + badge=count; add `now` prop); 1-line `now` thread + ariaLabel/label shift in `registrations.tsx` (keep `mail` id); additive CSS; AC-RD-OVERDUE + AC-RD-TODAY + AC-MAIL-REAL + AC-MAIL-EMPTY + AC-MAIL-READONLY tests; docs sync (this §G across the four-pack) + barrel-unchanged confirm + cross-vendor (or formal ADR-0008 §S3 defer) → READY_FOR_VERIFY.
+
+### §G.6 Open risks (extension)
+
+RW1 (weather singleton not record), RW2 (editor drag-surface), RW3 (condition→icon map), RW4 (forecast drop vs fixtures.test.ts), RW5 (registry parity dual-array), RW6 (editor state survives grid tick); RM1 (Mail read-only never mutates), RM2 (overdue bucket-specific + title), RM3 (today's events recurrence + local date), RM4 (keep `mail` id), RM5 (`now` thread not a context change), RM6 (honest "all clear"); RG1 (dedicated STR tables), RG2 (barrel single-export), RG3 (defensive foreign read). Full table: discovery §7.
+
+### §G.7 Divergences from §E stickies + §F real-data (intentional)
+
+| Topic | §E stickies | §F real-data | §G-A Weather | §G-B Mail |
+|---|---|---|---|---|
+| Registry | added `xai_dashboard_stickies` ({}) | NO new key | **added `xai_dashboard_weather` (null)** | **NO new key** |
+| Store shape | `Record<id, UserSticky>` (many) | n/a (read-only) | **singleton `UserWeather \| null`** | n/a (read-only) |
+| Direction | write (create/delete) | read-only | **write (set/clear)** | **read-only aggregation** |
+| Empty state | fixture-as-sample (G1) | honest empty (no samples) | **honest "Set your weather"** | **honest "All clear"** (no fake rows) |
+| New UI | composer `<dialog>` | none | **editor `<dialog>`** | none (renders signals) |
+| Cross-module read | none | `usePref` + predicate | none | **`usePref` ×2 + predicate (REUSE §F calendar layer)** |
+| Widget id | `stickies` (unchanged) | 5 ids unchanged | `weather` (unchanged) | **`mail` KEPT** (no rename — frozen id) |
