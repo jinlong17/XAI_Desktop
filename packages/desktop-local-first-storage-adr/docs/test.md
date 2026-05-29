@@ -23,6 +23,8 @@ The future ADR build must be reviewable against these checks:
 - browser import boundary is explicit
 - sync-log and conflict semantics are explicit
 - repository contract ownership is explicit
+- required seam references are explicit (`Repo`, `RepoRecord`, `SyncScope`, `sync-outbox`)
+- snapshot scope decision is explicit (deferred to `desktop-local-first-backup-export-import`)
 - later-row unlock rules are explicit
 
 ## 3. Downstream Contract Coverage

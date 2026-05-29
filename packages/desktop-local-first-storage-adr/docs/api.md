@@ -59,9 +59,9 @@ This row does not add runtime APIs yet. It freezes the contract assumptions that
 - Queue state, retry state, and conflict state must survive relaunch
 - Conflict and rollback must remain explicit; successful sync must not be inferred from a queued write alone
 
-## Planned ADR Artifact Contract
+## Accepted ADR Contract
 
-The future build-phase ADR at `docs/adr/0012-phase3-local-first-storage.md` must specify:
+`docs/adr/0012-phase3-local-first-storage.md` (Accepted, 2026-05-28) specifies:
 
 - selected primary store and rejected alternatives
 - live DB filename/path policy
@@ -70,6 +70,8 @@ The future build-phase ADR at `docs/adr/0012-phase3-local-first-storage.md` must
 - conflict ownership model
 - queue/sync-log invariants
 - which later rows may assume those decisions
+- explicit seam inheritance: `Repo`, `RepoRecord`, `SyncScope`, and `sync-outbox`
+- explicit snapshot decision: app-managed snapshot policy deferred to `desktop-local-first-backup-export-import`
 
 ## Error Semantics To Freeze
 

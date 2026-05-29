@@ -8,7 +8,7 @@
 | Review Doc Path | `docs/reviews/desktop-local-first-storage-adr/20260528-discovery-review.md` |
 | Review Date/Version | 2026-05-28 |
 | Feature Type | P1 Phase 3 architecture gate / ADR authoring row |
-| Planned ADR Artifact | `docs/adr/0012-phase3-local-first-storage.md` |
+| ADR Artifact | `docs/adr/0012-phase3-local-first-storage.md` (Accepted, 2026-05-28) |
 
 ## Frozen Assumptions
 
@@ -48,4 +48,6 @@ The build-phase ADR must freeze:
 - one-way browser-to-desktop import boundary
 - append-only durable sync-log direction and explicit conflict semantics
 - `@repo/core-data` as the shared repository contract owner
+- explicit seam inheritance: `Repo`, `RepoRecord`, `SyncScope`, and `sync-outbox` precedent
+- explicit snapshot decision: app-managed snapshot strategy deferred to `desktop-local-first-backup-export-import`
 - explicit unlock rules for later Phase 3 rows
