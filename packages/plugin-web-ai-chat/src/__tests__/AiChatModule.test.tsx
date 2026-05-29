@@ -1213,6 +1213,156 @@ describe("AiChatModule integration (I)", () => {
     vi.restoreAllMocks();
   });
 
+  // ---- IT-UPD: update tool integration tests (xai-web-ai-tool-edit-delete P3) ----
+
+  it("IT-UPD-1: NO-SILENT-WRITE — update_task pending-not-confirmed → 0 web:tasks:update-requested events", async () => {
+    vi.useRealTimers();
+    vi.restoreAllMocks();
+    const streamMod = await import("../internal/claudeStreamAdapter.js");
+    vi.spyOn(streamMod, "streamCompleteChat").mockImplementation(
+      async function* () {
+        yield {
+          accumulated: "I'll update that task.",
+          done: true,
+          toolUse: { id: "toolu_upd_001", name: "update_task", input: { id: "t-upd-test", title: "New title" } },
+        };
+      },
+    );
+
+    const emitted: string[] = [];
+    const eventBus = await import("@repo/xai-web-event-bus");
+    const origEmit = eventBus.emitWebEvent;
+    vi.spyOn(eventBus, "emitWebEvent").mockImplementation((channel, ...args) => {
+      emitted.push(channel as string);
+      return origEmit(channel as Parameters<typeof origEmit>[0], ...args as [Parameters<typeof origEmit>[1]]);
+    });
+
+    const { container } = render(<AiChatModule lang="en" />);
+    const inp = container.querySelector<HTMLInputElement>(".ai-input")!;
+    act(() => { fireEvent.change(inp, { target: { value: "rename that task" } }); });
+    act(() => { fireEvent.keyDown(inp, { key: "Enter", shiftKey: false }); });
+
+    // Wait for ConfirmationCard (default tone for update)
+    await waitFor(() => {
+      expect(container.querySelector(".ai-confirmation-card")).not.toBeNull();
+    });
+
+    // NOT clicking Confirm → no update event
+    expect(emitted).not.toContain("web:tasks:update-requested");
+
+    vi.restoreAllMocks();
+  });
+
+  it("IT-UPD-2: Confirm update → web:tasks:update-requested emitted ONCE with patch + requestId", async () => {
+    vi.useRealTimers();
+    vi.restoreAllMocks();
+    const streamMod = await import("../internal/claudeStreamAdapter.js");
+    let callCount = 0;
+    vi.spyOn(streamMod, "streamCompleteChat").mockImplementation(
+      async function* () {
+        callCount += 1;
+        if (callCount === 1) {
+          yield {
+            accumulated: "I'll update that task.",
+            done: true,
+            toolUse: { id: "toolu_upd_002", name: "update_task", input: { id: "t-upd-emit", title: "New title", bucket: "later" } },
+          };
+        } else {
+          yield { accumulated: "Task updated successfully.", done: true };
+        }
+      },
+    );
+
+    const emittedPayloads: Array<{ channel: string; payload?: unknown }> = [];
+    const eventBus = await import("@repo/xai-web-event-bus");
+    vi.spyOn(eventBus, "emitWebEvent").mockImplementation((channel, payload) => {
+      emittedPayloads.push({ channel: channel as string, payload });
+    });
+
+    const { container } = render(<AiChatModule lang="en" />);
+    const inp = container.querySelector<HTMLInputElement>(".ai-input")!;
+    act(() => { fireEvent.change(inp, { target: { value: "rename and move task" } }); });
+    act(() => { fireEvent.keyDown(inp, { key: "Enter", shiftKey: false }); });
+
+    await waitFor(() => {
+      expect(container.querySelector(".ai-confirmation-card")).not.toBeNull();
+    });
+
+    // update card should NOT have destructive class (tone:"default")
+    expect(container.querySelector(".ai-confirmation-card--destructive")).toBeNull();
+
+    const confirmBtn = container.querySelector<HTMLButtonElement>(".ai-confirmation-confirm")!;
+    act(() => { fireEvent.click(confirmBtn); });
+
+    await waitFor(() => {
+      const updateEvents = emittedPayloads.filter((e) => e.channel === "web:tasks:update-requested");
+      expect(updateEvents).toHaveLength(1);
+      const ev = updateEvents[0]!;
+      expect((ev.payload as { requestId?: string }).requestId).toBe("toolu_upd_002");
+      expect((ev.payload as { id?: string }).id).toBe("t-upd-emit");
+      const patch = (ev.payload as { patch?: Record<string, unknown> }).patch!;
+      expect(patch["title"]).toBe("New title");
+      expect(patch["bucket"]).toBe("later");
+    });
+
+    vi.restoreAllMocks();
+  });
+
+  it("IT-UPD-3: calendar update + delete → web:calendar:{update,delete}-requested emit confirm-only", async () => {
+    vi.useRealTimers();
+    vi.restoreAllMocks();
+    const streamMod = await import("../internal/claudeStreamAdapter.js");
+
+    // Test both update_calendar_event and delete_calendar_event in one pass.
+    // Cycle 1: update calendar event.
+    let callCount = 0;
+    vi.spyOn(streamMod, "streamCompleteChat").mockImplementation(
+      async function* () {
+        callCount += 1;
+        if (callCount === 1) {
+          yield {
+            accumulated: "Updating event.",
+            done: true,
+            toolUse: { id: "toolu_cal_upd_003", name: "update_calendar_event", input: { id: "ev-cal-test", title: "Updated event" } },
+          };
+        } else {
+          yield { accumulated: "Done.", done: true };
+        }
+      },
+    );
+
+    const emittedPayloads: Array<{ channel: string; payload?: unknown }> = [];
+    const eventBus = await import("@repo/xai-web-event-bus");
+    vi.spyOn(eventBus, "emitWebEvent").mockImplementation((channel, payload) => {
+      emittedPayloads.push({ channel: channel as string, payload });
+    });
+
+    const { container } = render(<AiChatModule lang="en" />);
+    const inp = container.querySelector<HTMLInputElement>(".ai-input")!;
+    act(() => { fireEvent.change(inp, { target: { value: "update the calendar event" } }); });
+    act(() => { fireEvent.keyDown(inp, { key: "Enter", shiftKey: false }); });
+
+    await waitFor(() => {
+      expect(container.querySelector(".ai-confirmation-card")).not.toBeNull();
+    });
+
+    // Default tone (not destructive)
+    expect(container.querySelector(".ai-confirmation-card--destructive")).toBeNull();
+
+    act(() => {
+      const confirmBtn = container.querySelector<HTMLButtonElement>(".ai-confirmation-confirm")!;
+      fireEvent.click(confirmBtn);
+    });
+
+    await waitFor(() => {
+      const calUpdateEvents = emittedPayloads.filter((e) => e.channel === "web:calendar:update-requested");
+      expect(calUpdateEvents).toHaveLength(1);
+      expect((calUpdateEvents[0]!.payload as { id?: string }).id).toBe("ev-cal-test");
+    });
+
+    vi.restoreAllMocks();
+  });
+
   it("IT-6: context-injection-on-send — AiChatModule passes user text to streamCompleteChat; adapter builds context from today prefs when key is set", async () => {
     // This test verifies the send-path handoff from AiChatModule → streamCompleteChat.
     // Context building is tested at the adapter level (contextProvider.test.ts + claudeStreamAdapter.test.ts).

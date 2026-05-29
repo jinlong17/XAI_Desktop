@@ -9,14 +9,16 @@
 import { describe, it, expect } from "vitest";
 import { AI_TOOLS, findTool } from "../internal/toolRegistry.js";
 
-describe("TR-1: registry contains exactly 2 create tools (SHIPPED) + 2 delete tools (P2)", () => {
-  it("AI_TOOLS has create_task, create_calendar_event, delete_task, delete_calendar_event", () => {
-    expect(AI_TOOLS).toHaveLength(4);
+describe("TR-1: registry contains 6 tools (P3 — create + delete + update)", () => {
+  it("AI_TOOLS has all 6 tools", () => {
+    expect(AI_TOOLS).toHaveLength(6);
     const names = AI_TOOLS.map((t) => t.name);
     expect(names).toContain("create_task");
     expect(names).toContain("create_calendar_event");
     expect(names).toContain("delete_task");
     expect(names).toContain("delete_calendar_event");
+    expect(names).toContain("update_task");
+    expect(names).toContain("update_calendar_event");
   });
 });
 
@@ -158,5 +160,96 @@ describe("TR-DEL-TOOL-3: delete tool toConfirmation returns destructive tone + i
     const tool = findTool("create_task")!;
     const spec = tool.toConfirmation({ title: "Buy milk", bucket: "next7" });
     expect(spec.tone).not.toBe("destructive");
+  });
+});
+
+// ---------------------------------------------------------------------------
+// TR-UPD-TOOL tests (xai-web-ai-tool-edit-delete P3)
+// ---------------------------------------------------------------------------
+
+describe("TR-UPD-TOOL-1: update tools exist with correct schema (P3)", () => {
+  it("TR-UPD-TOOL-1: update_task + update_calendar_event exist; each requires id; optional fields correct", () => {
+    const updTask = findTool("update_task")!;
+    const updCal = findTool("update_calendar_event")!;
+    expect(updTask).toBeDefined();
+    expect(updCal).toBeDefined();
+
+    const nameRegex = /^[a-zA-Z0-9_-]{1,64}$/;
+    expect(updTask.name).toMatch(nameRegex);
+    expect(updCal.name).toMatch(nameRegex);
+
+    // Both require id
+    expect(updTask.input_schema.required).toContain("id");
+    expect(updCal.input_schema.required).toContain("id");
+
+    // update_task has optional title + bucket + tag
+    const updTaskProps = updTask.input_schema.properties as Record<string, { enum?: string[] }>;
+    expect(updTaskProps["title"]).toBeDefined();
+    expect(updTaskProps["bucket"]?.enum).toContain("overdue");
+    expect(updTaskProps["bucket"]?.enum).toContain("next7");
+    expect(updTaskProps["tag"]?.enum).toContain("work");
+
+    // update_calendar_event has optional title + date + startTime + durationMin
+    const updCalProps = updCal.input_schema.properties as Record<string, unknown>;
+    expect(updCalProps["title"]).toBeDefined();
+    expect(updCalProps["date"]).toBeDefined();
+    expect(updCalProps["startTime"]).toBeDefined();
+    expect(updCalProps["durationMin"]).toBeDefined();
+  });
+});
+
+describe("TR-UPD-TOOL-2: update_task toWriteEvent — only provided fields in patch", () => {
+  it("title-only input → patch contains only title", () => {
+    const tool = findTool("update_task")!;
+    const result = tool.toWriteEvent({ id: "t-abc", title: "New name" }, "toolu_upd_1");
+    expect(result.channel).toBe("web:tasks:update-requested");
+    expect(result.payload["requestId"]).toBe("toolu_upd_1");
+    expect(result.payload["id"]).toBe("t-abc");
+    const patch = result.payload["patch"] as Record<string, unknown>;
+    expect(patch["title"]).toBe("New name");
+    expect(patch["bucket"]).toBeUndefined();
+    expect(patch["tag"]).toBeUndefined();
+    expect(typeof result.payload["requestedAt"]).toBe("string");
+  });
+
+  it("bucket-only input → patch contains only bucket", () => {
+    const tool = findTool("update_task")!;
+    const result = tool.toWriteEvent({ id: "t-abc", bucket: "later" }, "toolu_upd_2");
+    const patch = result.payload["patch"] as Record<string, unknown>;
+    expect(patch["bucket"]).toBe("later");
+    expect(patch["title"]).toBeUndefined();
+    expect(patch["tag"]).toBeUndefined();
+  });
+
+  it("all three fields → patch contains all three", () => {
+    const tool = findTool("update_task")!;
+    const result = tool.toWriteEvent({ id: "t-abc", title: "Full update", bucket: "next7", tag: "work" }, "toolu_upd_3");
+    const patch = result.payload["patch"] as Record<string, unknown>;
+    expect(patch["title"]).toBe("Full update");
+    expect(patch["bucket"]).toBe("next7");
+    expect(patch["tag"]).toBe("work");
+  });
+});
+
+describe("TR-UPD-TOOL-3: update_calendar_event toWriteEvent — only provided fields in patch", () => {
+  it("title-only → patch has title only", () => {
+    const tool = findTool("update_calendar_event")!;
+    const result = tool.toWriteEvent({ id: "ev-xyz", title: "New title" }, "toolu_upd_cal_1");
+    expect(result.channel).toBe("web:calendar:update-requested");
+    const patch = result.payload["patch"] as Record<string, unknown>;
+    expect(patch["title"]).toBe("New title");
+    expect(patch["date"]).toBeUndefined();
+    expect(patch["startTime"]).toBeUndefined();
+    expect(patch["durationMin"]).toBeUndefined();
+  });
+
+  it("date + startTime → patch has date + startTime; no title or durationMin", () => {
+    const tool = findTool("update_calendar_event")!;
+    const result = tool.toWriteEvent({ id: "ev-xyz", date: "2026-06-01", startTime: "14:00" }, "toolu_upd_cal_2");
+    const patch = result.payload["patch"] as Record<string, unknown>;
+    expect(patch["date"]).toBe("2026-06-01");
+    expect(patch["startTime"]).toBe("14:00");
+    expect(patch["title"]).toBeUndefined();
+    expect(patch["durationMin"]).toBeUndefined();
   });
 });

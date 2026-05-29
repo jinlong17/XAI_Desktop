@@ -326,6 +326,177 @@ const deleteCalendarEventTool: AiToolDef = {
   },
 };
 
+// ---- update_task tool -------------------------------------------------------
+
+const updateTaskTool: AiToolDef = {
+  name: "update_task",
+  description: [
+    "Update an existing task in the user's task list.",
+    "Use this tool when the user asks to rename, retag, or move (reschedule) an existing task.",
+    "You MUST provide the exact task id from the context (shown as '(id: ...)' in the task list).",
+    "Provide the id plus AT LEAST one of: title, bucket, or tag. All other fields are optional.",
+    "Omitting a field means it will NOT be changed.",
+    "Bucket values: 'overdue', 'next7', 'later', 'nodate'.",
+    "Tag values: 'study', 'work', 'personal', 'todo', 'other'.",
+  ].join(" "),
+  input_schema: {
+    type: "object",
+    properties: {
+      id: {
+        type: "string",
+        description: "The exact task id from the context (shown as '(id: ...)' in the task list). Required.",
+      },
+      title: {
+        type: "string",
+        description: "New task title (optional; fills both EN and ZH titles).",
+      },
+      bucket: {
+        type: "string",
+        enum: ["overdue", "next7", "later", "nodate"],
+        description: "Target time bucket (optional).",
+      },
+      tag: {
+        type: "string",
+        enum: ["study", "work", "personal", "todo", "other"],
+        description: "Tag category (optional).",
+      },
+    },
+    required: ["id"],
+  },
+  input_examples: [
+    { id: "t-abc-123", title: "Updated task name" },
+    { id: "t-abc-123", bucket: "later" },
+    { id: "t-abc-123", title: "Renamed + moved", bucket: "next7", tag: "work" },
+  ],
+
+  toConfirmation(input) {
+    const id = safeString(input["id"] as unknown, "(unknown)");
+    const parts: string[] = [];
+    if (input["title"]) parts.push(`title: "${input["title"]}"`);
+    if (input["bucket"]) parts.push(`bucket: ${input["bucket"]}`);
+    if (input["tag"]) parts.push(`tag: ${input["tag"]}`);
+    const detail = parts.length > 0 ? ` — ${parts.join(", ")}` : "";
+    return {
+      label: "Update task",
+      description: `Update task (id: ${id})${detail}`,
+      tone: "default",
+    };
+  },
+
+  toWriteEvent(input, toolUseId) {
+    const id = safeString(input["id"] as unknown, "");
+    const validBuckets = ["overdue", "next7", "later", "nodate"];
+    const validTags = ["study", "work", "personal", "todo", "other"];
+
+    const patch: Record<string, unknown> = {};
+    if (typeof input["title"] === "string" && input["title"].trim()) {
+      patch["title"] = input["title"].trim();
+    }
+    if (validBuckets.includes(input["bucket"] as string)) {
+      patch["bucket"] = input["bucket"];
+    }
+    if (validTags.includes(input["tag"] as string)) {
+      patch["tag"] = input["tag"];
+    }
+
+    return {
+      channel: "web:tasks:update-requested",
+      payload: {
+        requestId: toolUseId,
+        id,
+        patch,
+        requestedAt: new Date().toISOString(),
+      },
+    };
+  },
+};
+
+// ---- update_calendar_event tool ---------------------------------------------
+
+const updateCalendarEventTool: AiToolDef = {
+  name: "update_calendar_event",
+  description: [
+    "Update an existing calendar event.",
+    "Use this tool when the user asks to rename, reschedule, or change the duration of an existing event.",
+    "You MUST provide the exact event id from the context (shown as '(id: ...)' in the calendar section).",
+    "Provide the id plus AT LEAST one of: title, date, startTime, or durationMin.",
+    "Omitting a field means it will NOT be changed.",
+  ].join(" "),
+  input_schema: {
+    type: "object",
+    properties: {
+      id: {
+        type: "string",
+        description: "The exact event id from the context. Required.",
+      },
+      title: {
+        type: "string",
+        description: "New event title (optional).",
+      },
+      date: {
+        type: "string",
+        description: "New date in 'YYYY-MM-DD' format (optional).",
+      },
+      startTime: {
+        type: "string",
+        description: "New start time in 'HH:MM' 24h format (optional).",
+      },
+      durationMin: {
+        type: "number",
+        description: "New duration in minutes (positive integer, optional).",
+      },
+    },
+    required: ["id"],
+  },
+  input_examples: [
+    { id: "ev-xyz-789", title: "Updated meeting name" },
+    { id: "ev-xyz-789", date: "2026-06-02", startTime: "15:00" },
+    { id: "ev-xyz-789", durationMin: 90 },
+  ],
+
+  toConfirmation(input) {
+    const id = safeString(input["id"] as unknown, "(unknown)");
+    const parts: string[] = [];
+    if (input["title"]) parts.push(`title: "${input["title"]}"`);
+    if (input["date"]) parts.push(`date: ${input["date"]}`);
+    if (input["startTime"]) parts.push(`at: ${input["startTime"]}`);
+    if (input["durationMin"]) parts.push(`${input["durationMin"]} min`);
+    const detail = parts.length > 0 ? ` — ${parts.join(", ")}` : "";
+    return {
+      label: "Update event",
+      description: `Update event (id: ${id})${detail}`,
+      tone: "default",
+    };
+  },
+
+  toWriteEvent(input, toolUseId) {
+    const id = safeString(input["id"] as unknown, "");
+    const patch: Record<string, unknown> = {};
+    if (typeof input["title"] === "string" && input["title"].trim()) {
+      patch["title"] = input["title"].trim();
+    }
+    if (typeof input["date"] === "string" && /^\d{4}-\d{2}-\d{2}$/.test(input["date"])) {
+      patch["date"] = input["date"];
+    }
+    if (typeof input["startTime"] === "string" && /^\d{2}:\d{2}$/.test(input["startTime"])) {
+      patch["startTime"] = input["startTime"];
+    }
+    if (typeof input["durationMin"] === "number" && input["durationMin"] > 0) {
+      patch["durationMin"] = Math.round(input["durationMin"]);
+    }
+
+    return {
+      channel: "web:calendar:update-requested",
+      payload: {
+        requestId: toolUseId,
+        id,
+        patch,
+        requestedAt: new Date().toISOString(),
+      },
+    };
+  },
+};
+
 // ---- Registry ---------------------------------------------------------------
 
 /**
@@ -339,6 +510,8 @@ export const AI_TOOLS: AiToolDef[] = [
   createCalendarEventTool,
   deleteTaskTool,
   deleteCalendarEventTool,
+  updateTaskTool,
+  updateCalendarEventTool,
 ];
 
 /** Look up a tool by name. Returns undefined if not found. */
