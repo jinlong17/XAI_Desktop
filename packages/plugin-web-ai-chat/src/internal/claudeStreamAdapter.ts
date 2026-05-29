@@ -124,8 +124,9 @@ export async function* streamCompleteChat(
     ? (req.priorMessages as Array<{ role: "user" | "assistant"; content: string | unknown[] }>)
     : [{ role: "user" as const, content: userContent }];
 
-  // Only send tools on Anthropic provider (planner's-call #3).
-  const tools = config.provider === "anthropic" ? req.tools : undefined;
+  // Both providers now receive the tools array; each buildBody branch serializes
+  // appropriately (Anthropic: verbatim AnthropicToolDef; openai: toOpenAiTools format).
+  const tools = req.tools;
 
   const body = config.buildBody({
     modelId,
@@ -187,9 +188,14 @@ export async function* streamCompleteChat(
   let accumulated = "";
   let stopReason: string | undefined;
 
-  // Tool use accumulator: maps content-block index → { id, name, partialJson }
+  // Anthropic tool use accumulator: maps content-block index → { id, name, partialJson }
   interface ToolAccumEntry { id: string; name: string; partialJson: string }
   const toolAccum: Record<number, ToolAccumEntry> = {};
+
+  // OpenAI tool_calls accumulator: maps tool_calls[].index → { id, name, argsJson }
+  // index-keyed per discovery §2.3: first delta carries id+name, subsequent deltas carry argsJson only.
+  interface OpenAiToolAccumEntry { id: string; name: string; argsJson: string }
+  const openAiToolAccum: Record<number, OpenAiToolAccumEntry> = {};
 
   // Final parsed tool use result (if any).
   let toolUseResult: ToolUseResult | undefined;
@@ -289,11 +295,63 @@ export async function* streamCompleteChat(
         continue;
       }
 
-      // ---- OpenAI-compatible streaming (original path) ----
-      const delta = extractDeltaOpenAI(parsed);
-      if (delta) {
-        accumulated += delta;
-        yield { accumulated, done: false };
+      // ---- OpenAI-compatible streaming ----
+      // Read finish_reason (may be "tool_calls" if the model called a tool).
+      const choices = parsed["choices"] as Array<Record<string, unknown>> | undefined;
+      if (Array.isArray(choices) && choices.length > 0) {
+        const choice = choices[0]!;
+        const finishReason = choice["finish_reason"] as string | null | undefined;
+
+        // Accumulate tool_calls fragments if present in this delta.
+        const oaiDelta = choice["delta"] as Record<string, unknown> | undefined;
+        if (oaiDelta) {
+          const toolCallsArr = oaiDelta["tool_calls"] as Array<Record<string, unknown>> | undefined;
+          if (Array.isArray(toolCallsArr)) {
+            for (const tc of toolCallsArr) {
+              const idx = tc["index"] as number | undefined;
+              if (typeof idx !== "number") continue;
+
+              // First delta of a tool call carries id and function.name.
+              const fn = tc["function"] as Record<string, unknown> | undefined;
+              if (!openAiToolAccum[idx]) {
+                const id = (tc["id"] as string | undefined) ?? "";
+                const name = (fn?.["name"] as string | undefined) ?? "";
+                openAiToolAccum[idx] = { id, name, argsJson: "" };
+              }
+              // Always accumulate function.arguments (may be "" on first delta).
+              if (fn && typeof fn["arguments"] === "string") {
+                openAiToolAccum[idx]!.argsJson += fn["arguments"] as string;
+              }
+            }
+          }
+
+          // Normal text delta (when no tool_calls present).
+          if (!toolCallsArr && typeof oaiDelta["content"] === "string") {
+            accumulated += oaiDelta["content"] as string;
+            yield { accumulated, done: false };
+          } else if (!toolCallsArr) {
+            // content may be null when tool is being called; skip.
+          }
+        }
+
+        // finish_reason:"tool_calls" signals a tool turn.
+        // Defensive: also surface if any tool calls accumulated by stream-end
+        // (some openai-compatible servers mis-set finish_reason to "stop").
+        if (finishReason === "tool_calls") {
+          // Parse the lowest-index accumulated entry (single-tool v1 parity with Anthropic).
+          const indices = Object.keys(openAiToolAccum).map(Number).sort((a, b) => a - b);
+          if (indices.length > 0) {
+            const firstIdx = indices[0]!;
+            const entry = openAiToolAccum[firstIdx]!;
+            try {
+              const parsedInput = JSON.parse(entry.argsJson || "{}") as Record<string, unknown>;
+              toolUseResult = { id: entry.id, name: entry.name, input: parsedInput };
+            } catch {
+              // Malformed arguments JSON — graceful degradation (no toolUse surfaced).
+            }
+          }
+          break;
+        }
       }
     }
   } catch (err) {
@@ -303,8 +361,29 @@ export async function* streamCompleteChat(
     throw llmErr;
   }
 
-  // Emit the final chunk, including tool_use result if stop_reason was "tool_use".
-  if (stopReason === "tool_use" && toolUseResult) {
+  // Emit the final chunk, including tool_use result when either:
+  // - Anthropic: stop_reason was "tool_use" AND toolUseResult was accumulated.
+  // - OpenAI: toolUseResult was set from delta.tool_calls accumulation.
+  // Defensive: also surface openai toolUseResult when accumulated by stream-end
+  // even if finish_reason was not exactly "tool_calls" (compat-server robustness).
+  const openAiToolDetected =
+    providerKind === "openai-compatible" &&
+    toolUseResult === undefined &&
+    Object.keys(openAiToolAccum).length > 0;
+  if (openAiToolDetected) {
+    // Defensive fallback: server returned tools but didn't set finish_reason:"tool_calls".
+    const indices = Object.keys(openAiToolAccum).map(Number).sort((a, b) => a - b);
+    const firstIdx = indices[0]!;
+    const entry = openAiToolAccum[firstIdx]!;
+    try {
+      const parsedInput = JSON.parse(entry.argsJson || "{}") as Record<string, unknown>;
+      toolUseResult = { id: entry.id, name: entry.name, input: parsedInput };
+    } catch {
+      // Malformed — no toolUse.
+    }
+  }
+
+  if ((stopReason === "tool_use" || toolUseResult !== undefined) && toolUseResult) {
     yield { accumulated, done: true, toolUse: toolUseResult };
   } else {
     yield { accumulated, done: true };
@@ -338,22 +417,3 @@ function _emitError(err: LlmError, provider: "anthropic" | "openai-compatible"):
   });
 }
 
-/**
- * Extracts the text delta from a parsed SSE data chunk for OpenAI-compatible providers.
- *
- * OpenAI-compatible format:
- *   choices[0].delta.content: "..."
- *
- * NOTE: For Anthropic providers, tool_use parsing is handled inline in the
- * streaming loop above (loop-local accumulator per Rec2; not a pure function).
- */
-function extractDeltaOpenAI(parsed: Record<string, unknown>): string {
-  const choices = parsed["choices"] as Array<Record<string, unknown>> | undefined;
-  if (Array.isArray(choices) && choices.length > 0) {
-    const delta = choices[0]?.["delta"] as Record<string, unknown> | undefined;
-    if (delta && typeof delta["content"] === "string") {
-      return delta["content"];
-    }
-  }
-  return "";
-}
