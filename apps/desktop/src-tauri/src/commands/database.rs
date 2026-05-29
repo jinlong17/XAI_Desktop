@@ -26,6 +26,13 @@
 //!   `op` is `"put"` or `"delete"`. On any per-entry failure the whole
 //!   batch rolls back. Required for the Repository v0 sync outbox so the
 //!   entity row and its outbox row commit together (G2.6 P0 fix).
+//! - `db_backup_write_bundle { destinationPath?, json }` → writes one
+//!   validated backup bundle JSON payload either to a managed app-data
+//!   backup path (`app_data_dir()/backups/`) or to an explicit absolute
+//!   destination path for user export.
+//! - `db_backup_read_bundle { path }` → reads one backup bundle JSON file.
+//! - `db_backup_verify_bundle { path }` → non-mutating JSON parse check for
+//!   one backup bundle file; returns byte count plus managed-path flag.
 //!
 //! Errors map to the `E13xx` family in `error.rs`.
 
@@ -38,7 +45,8 @@ use rusqlite::{params, Connection};
 use serde::{Deserialize, Serialize};
 
 use crate::commands::database_runtime::{
-    open_and_bootstrap, resolve_db_path, DatabaseBootstrapMetadata, DatabaseBootstrapMigration,
+    open_and_bootstrap, resolve_backup_dir, resolve_db_path, resolve_managed_backup_path,
+    DatabaseBootstrapMetadata, DatabaseBootstrapMigration,
 };
 use crate::error::{AppError, AppResult};
 
@@ -420,6 +428,168 @@ fn apply_put_batch(state: &DatabaseState, input: &DbPutBatchInput) -> AppResult<
     })
 }
 
+#[derive(Debug, Deserialize)]
+#[serde(rename_all = "camelCase")]
+pub struct DbBackupWriteInput {
+    pub destination_path: Option<String>,
+    pub json: String,
+}
+
+#[derive(Debug, Clone, Serialize, Deserialize)]
+#[serde(rename_all = "camelCase")]
+pub struct DbBackupWriteOutput {
+    pub path: String,
+    pub bytes: u64,
+    pub managed_path: bool,
+}
+
+#[tauri::command]
+pub async fn db_backup_write_bundle(
+    app: tauri::AppHandle,
+    window: tauri::WebviewWindow,
+    input: DbBackupWriteInput,
+) -> AppResult<DbBackupWriteOutput> {
+    ensure_database_window_allowed(window.label())?;
+    if serde_json::from_str::<serde_json::Value>(&input.json).is_err() {
+        return Err(AppError::DatabaseInvalidInput(
+            "backup bundle payload must be valid JSON".to_string(),
+        ));
+    }
+
+    let (target_path, managed_path) = match sanitize_optional_path(input.destination_path)? {
+        Some(path) => (path, false),
+        None => {
+            let managed = resolve_managed_backup_path(&app, now_ms())?;
+            (managed, true)
+        }
+    };
+
+    let parent = target_path.parent().ok_or_else(|| {
+        AppError::DatabaseInvalidInput(
+            "backup destination path must include a parent directory".to_string(),
+        )
+    })?;
+    std::fs::create_dir_all(parent)
+        .map_err(|err| AppError::DatabaseBackend(format!("create backup dir failed: {err}")))?;
+
+    let temp_path = target_path.with_extension(format!(
+        "{}.tmp",
+        now_ms()
+    ));
+    std::fs::write(&temp_path, input.json.as_bytes())
+        .map_err(|err| AppError::DatabaseBackend(format!("write backup temp file failed: {err}")))?;
+    std::fs::rename(&temp_path, &target_path)
+        .map_err(|err| AppError::DatabaseBackend(format!("persist backup file failed: {err}")))?;
+
+    Ok(DbBackupWriteOutput {
+        path: target_path.to_string_lossy().into_owned(),
+        bytes: input.json.as_bytes().len() as u64,
+        managed_path,
+    })
+}
+
+#[derive(Debug, Deserialize)]
+#[serde(rename_all = "camelCase")]
+pub struct DbBackupReadInput {
+    pub path: String,
+}
+
+#[derive(Debug, Clone, Serialize, Deserialize)]
+#[serde(rename_all = "camelCase")]
+pub struct DbBackupReadOutput {
+    pub path: String,
+    pub json: String,
+    pub bytes: u64,
+}
+
+#[tauri::command]
+pub async fn db_backup_read_bundle(
+    window: tauri::WebviewWindow,
+    input: DbBackupReadInput,
+) -> AppResult<DbBackupReadOutput> {
+    ensure_database_window_allowed(window.label())?;
+    let path = sanitize_required_path(&input.path)?;
+    let json = std::fs::read_to_string(&path)
+        .map_err(|err| AppError::DatabaseBackend(format!("read backup bundle failed: {err}")))?;
+    Ok(DbBackupReadOutput {
+        path: path.to_string_lossy().into_owned(),
+        bytes: json.as_bytes().len() as u64,
+        json,
+    })
+}
+
+#[derive(Debug, Deserialize)]
+#[serde(rename_all = "camelCase")]
+pub struct DbBackupVerifyInput {
+    pub path: String,
+}
+
+#[derive(Debug, Clone, Serialize, Deserialize)]
+#[serde(rename_all = "camelCase")]
+pub struct DbBackupVerifyOutput {
+    pub path: String,
+    pub bytes: u64,
+    pub valid_json: bool,
+    pub managed_path: bool,
+}
+
+#[tauri::command]
+pub async fn db_backup_verify_bundle(
+    app: tauri::AppHandle,
+    window: tauri::WebviewWindow,
+    input: DbBackupVerifyInput,
+) -> AppResult<DbBackupVerifyOutput> {
+    ensure_database_window_allowed(window.label())?;
+    let path = sanitize_required_path(&input.path)?;
+    let raw = std::fs::read_to_string(&path)
+        .map_err(|err| AppError::DatabaseBackend(format!("read backup bundle failed: {err}")))?;
+
+    let backup_dir = resolve_backup_dir(&app)?;
+    let managed_path = path.starts_with(&backup_dir);
+
+    Ok(DbBackupVerifyOutput {
+        path: path.to_string_lossy().into_owned(),
+        bytes: raw.as_bytes().len() as u64,
+        valid_json: serde_json::from_str::<serde_json::Value>(&raw).is_ok(),
+        managed_path,
+    })
+}
+
+fn sanitize_optional_path(path: Option<String>) -> AppResult<Option<PathBuf>> {
+    let Some(raw) = path else {
+        return Ok(None);
+    };
+    let trimmed = raw.trim();
+    if trimmed.is_empty() {
+        return Ok(None);
+    }
+    sanitize_required_path(trimmed).map(Some)
+}
+
+fn sanitize_required_path(path: &str) -> AppResult<PathBuf> {
+    let trimmed = path.trim();
+    if trimmed.is_empty() {
+        return Err(AppError::DatabaseInvalidInput(
+            "backup bundle path must not be empty".to_string(),
+        ));
+    }
+    let parsed = PathBuf::from(trimmed);
+    if !parsed.is_absolute() {
+        return Err(AppError::DatabaseInvalidInput(
+            "backup bundle path must be absolute".to_string(),
+        ));
+    }
+    Ok(parsed)
+}
+
+fn now_ms() -> i64 {
+    use std::time::{SystemTime, UNIX_EPOCH};
+    let duration = SystemTime::now()
+        .duration_since(UNIX_EPOCH)
+        .unwrap_or_default();
+    duration.as_millis() as i64
+}
+
 fn validate_namespace(value: &str) -> AppResult<()> {
     if value.is_empty() || value.len() > 128 {
         return Err(AppError::DatabaseInvalidInput(format!(
@@ -601,6 +771,23 @@ mod tests {
         assert!(validate_id("").is_err());
         assert!(validate_id(&"a".repeat(257)).is_err());
         assert!(validate_id("abc-123").is_ok());
+    }
+
+    #[test]
+    fn backup_path_validation_requires_absolute_paths() {
+        assert!(sanitize_required_path("").is_err());
+        assert!(sanitize_required_path("relative/path.json").is_err());
+        assert!(sanitize_required_path("/tmp/xai-backup.json").is_ok());
+    }
+
+    #[test]
+    fn optional_backup_path_allows_empty_and_trims_whitespace() {
+        assert!(sanitize_optional_path(None).unwrap().is_none());
+        assert!(sanitize_optional_path(Some("   ".to_string())).unwrap().is_none());
+        let parsed = sanitize_optional_path(Some("  /tmp/backup.json  ".to_string()))
+            .unwrap()
+            .unwrap();
+        assert_eq!(parsed, PathBuf::from("/tmp/backup.json"));
     }
 
     #[test]

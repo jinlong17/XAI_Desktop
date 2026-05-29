@@ -10,6 +10,7 @@ use crate::error::{AppError, AppResult};
 
 pub const DB_FILE_NAME: &str = "xai-repo-v0.db";
 pub const RUNTIME_SCHEMA_VERSION: i64 = 1;
+pub const BACKUP_DIR_NAME: &str = "backups";
 
 const CREATE_BOOTSTRAP_META_SQL: &str = "CREATE TABLE IF NOT EXISTS core_data_bootstrap_meta (\
     singleton_key INTEGER PRIMARY KEY CHECK (singleton_key = 1), \
@@ -98,6 +99,26 @@ pub fn resolve_db_path(app: &tauri::AppHandle) -> AppResult<PathBuf> {
         .app_data_dir()
         .map_err(|err| AppError::DatabaseBackend(format!("app_data_dir: {err}")))?;
     Ok(dir.join(DB_FILE_NAME))
+}
+
+pub fn resolve_backup_dir(app: &tauri::AppHandle) -> AppResult<PathBuf> {
+    let app_data_dir = app
+        .path()
+        .app_data_dir()
+        .map_err(|err| AppError::DatabaseBackend(format!("app_data_dir: {err}")))?;
+    Ok(resolve_backup_dir_from_app_data_dir(&app_data_dir))
+}
+
+pub fn resolve_backup_dir_from_app_data_dir(app_data_dir: &Path) -> PathBuf {
+    app_data_dir.join(BACKUP_DIR_NAME)
+}
+
+pub fn managed_backup_file_name(now_ms: i64) -> String {
+    format!("xai-backup-{now_ms}.json")
+}
+
+pub fn resolve_managed_backup_path(app: &tauri::AppHandle, now_ms: i64) -> AppResult<PathBuf> {
+    Ok(resolve_backup_dir(app)?.join(managed_backup_file_name(now_ms)))
 }
 
 pub fn open_and_bootstrap(path: &Path) -> AppResult<(Connection, DatabaseBootstrapMetadata)> {
@@ -339,5 +360,19 @@ mod tests {
         let err = open_and_bootstrap(&path).unwrap_err();
         assert!(matches!(err, AppError::DatabaseBootstrapContract(_)));
         let _ = std::fs::remove_file(path);
+    }
+
+    #[test]
+    fn backup_dir_is_app_data_sibling_under_backups() {
+        let app_data = PathBuf::from("/tmp/xai-app-data");
+        let backup_dir = resolve_backup_dir_from_app_data_dir(&app_data);
+        assert_eq!(backup_dir, PathBuf::from("/tmp/xai-app-data/backups"));
+    }
+
+    #[test]
+    fn managed_backup_filename_is_stable_and_json_suffixed() {
+        let name = managed_backup_file_name(1234567890);
+        assert_eq!(name, "xai-backup-1234567890.json");
+        assert!(name.ends_with(".json"));
     }
 }

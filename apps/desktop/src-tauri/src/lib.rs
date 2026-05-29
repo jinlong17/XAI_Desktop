@@ -144,6 +144,12 @@ pub fn run() {
             commands::database::db_delete,
             #[cfg(feature = "crypto")]
             commands::database::db_put_batch,
+            #[cfg(feature = "crypto")]
+            commands::database::db_backup_write_bundle,
+            #[cfg(feature = "crypto")]
+            commands::database::db_backup_read_bundle,
+            #[cfg(feature = "crypto")]
+            commands::database::db_backup_verify_bundle,
         ])
         .setup(|app| {
             let app_handle = app.handle().clone();
