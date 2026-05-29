@@ -7,16 +7,16 @@
 | Workflow | FEATURE_DEV |
 | Target | desktop-local-first-offline-edit-queue |
 | Title | Desktop Local-First Offline Edit Queue |
-| Current Phase | FEATURE_VERIFY |
-| Status | READY_FOR_VERIFY |
-| Suggested Next | feature-verify |
+| Current Phase | SHIP |
+| Status | SHIPPED |
+| Suggested Next | — |
 | Automation Mode | B-Codex |
 | Verify Cross-vendor | yes |
-| Executor | feature-auto-build (Codex, gpt-5.3-codex inline fallback) |
-| Updated | 2026-05-29 02:58 PDT |
+| Executor | ship (Codex, gpt-5.3-codex inline) |
+| Updated | 2026-05-29 03:05 PDT |
 | Brief | `docs/reviews/desktop-local-first-offline-edit-queue/20260529-feature-brief.md` |
 | Discovery Review | `docs/reviews/desktop-local-first-offline-edit-queue/20260529-discovery-review.md` |
-| Risks | The main planning risk is boundary discipline: row `#13` must extend the existing `@repo/core-data` sync-outbox seam without creating a parallel queue contract, must refuse device-local queueing, and must not implement row `#14` reconnect/cloud replay or remote acknowledgement. |
+| Risks | Residual verify risk is limited to pre-existing non-blocking build/test warnings outside row `#13` ownership (Vitest `act(...)` noise in `@repo/plugin-web-storage`, Vite chunk-size warnings in `@repo/web`, and Rust dead-code warnings during desktop bundling). Manual real-macOS queue/relaunch smoke remains a future release-gate concern, not a blocker for this row verify pass. |
 | Blockers | — |
 | Review Notes | APPROVED. Keep `@repo/core-data` `sync.outbox` as the canonical row `#13` seam; a separate `sync.queue_state` record is not required by plan and is acceptable only as a `core-data`-owned compatibility escape hatch if status metadata cannot be extended safely in-place. Preserve explicit non-queueable handling for all device-local surfaces, require durable rollback-safety metadata before any destructive rollback, never imply remote acknowledgement/success in this row, and use only package-local executable verification commands for touched packages. |
 
@@ -124,3 +124,5 @@ Exit gates:
 | 2026-05-29 02:52 PDT | feature-auto-build (Codex, gpt-5.3-codex inline fallback) | Completed Phase 2 representative staging helpers in `@repo/core-data`: added deterministic row #13 mutation-id staging APIs for todo/habit/project-board/project-card plus explicit non-queueable result semantics for device-local and unsupported surfaces. Confirmed row #12 import tests remain green. | `0ffd22da` | `pnpm --filter @repo/core-data test` PASS; `pnpm --filter @repo/plugin-web-storage test` PASS | feature-auto-build |
 | 2026-05-29 02:54 PDT | feature-auto-build (Codex, gpt-5.3-codex inline fallback) | Completed Phase 3 local observability APIs: ordered queue listing, queue summary, retryable-failure/conflict/rollback-pending markers, and rollback apply with divergence guard (`rollback_not_safe` -> conflict). No remote replay/ack paths added. | `0a6ace15` | `pnpm --filter @repo/core-data test` PASS; `pnpm --filter @repo/plugin-web-storage test` PASS; `pnpm --filter @repo/web test` PASS | feature-auto-build |
 | 2026-05-29 02:58 PDT | feature-auto-build (Codex, gpt-5.3-codex inline fallback) | Completed Phase 4 desktop wiring: bridged account-sync write families (`productivity.todo`, `productivity.habit`, `project.board`, `project.card`) to row #13 staging helpers in desktop runtime only, kept browser import path and device-local records non-queueable, and reran full cross-stack/build gates. Scope audit confirmed no row #14/#16/#17 or overlay/control/grid/hidden-note leakage. | `a55c4567` | `pnpm --filter @repo/core-data test` PASS; `pnpm --filter @repo/core-data check-types` PASS; `pnpm --filter @repo/plugin-web-storage test` PASS; `pnpm --filter @repo/plugin-web-storage check-types` PASS; `pnpm --filter @repo/web test` PASS; `pnpm --filter @repo/web check-types` PASS; `pnpm --filter @repo/web build` PASS; `pnpm --filter desktop tauri build --debug --bundles app` PASS | feature-verify |
+| 2026-05-29 03:03 PDT | feature-verify (Codex, gpt-5.4 inline fallback) | Verified commits `836a4616`, `0ffd22da`, `0a6ace15`, `a55c4567`, and `249fe138` against the row `#13` design/api/test contracts and the requested scope. Confirmed `@repo/core-data` `sync.outbox` remains the only durable queue seam, account-sync staging is limited to todo/habit/project board/card, device-local settings/pet/pomodoro/board workspace writes stay non-queueable, rollback refuses destructive overwrite on divergence, and no row `#14`/`#16`/`#17` or overlay/control/grid/browser-import scope leaked into the implementation. | `836a4616`, `0ffd22da`, `0a6ace15`, `a55c4567`, `249fe138` | `pnpm --filter @repo/core-data test` PASS; `pnpm --filter @repo/core-data check-types` PASS; `pnpm --filter @repo/plugin-web-storage test` PASS; `pnpm --filter @repo/plugin-web-storage check-types` PASS; `pnpm --filter @repo/web test` PASS; `pnpm --filter @repo/web check-types` PASS; `pnpm --filter @repo/web build` PASS; `pnpm --filter desktop tauri build --debug --bundles app` PASS | ship |
+| 2026-05-29 03:05 PDT | ship (Codex, gpt-5.3-codex inline) | Ship gate complete. Revalidated commit integrity/scope for `836a4616`, `0ffd22da`, `0a6ace15`, `a55c4567`, and `249fe138` over `c8b5cd4e..HEAD`, confirmed no sensitive-file leakage, pushed row `#13` commits to `origin/dev`, and updated dev-log + roadmap row `#13` to `SHIPPED` with row `#14` dependency-unblocked semantics. | `836a4616`, `0ffd22da`, `0a6ace15`, `a55c4567`, `249fe138` | Reused feature-verify PASS evidence (no code changes) | workflow complete |
