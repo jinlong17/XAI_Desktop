@@ -21,9 +21,11 @@ Primary contracts:
 - `apps/desktop/src-tauri/src/app_config.rs`
   - host-owned config seam under `app_config_dir()/app-config.json`
 - `apps/desktop/src-tauri/src/commands/mod.rs`
-  - compiles `commands::window`, but does not expose it by itself
+  - exports `commands::window` and `commands::host_mode` for runtime registration
 - `apps/desktop/src-tauri/capabilities/default.json`
   - default runtime capability scope
+- `apps/desktop/src-tauri/capabilities/overlay-v2.json`
+  - overlay-only capability scope for `control` / `console` / `grid_*`
 
 ### Overlay bootstrap and macOS behavior
 
@@ -48,19 +50,21 @@ Primary contracts:
 
 ## Current Source Truth
 
-### Dormant window commands
+### Registered but mode-gated window commands
 
 - `apps/desktop/src-tauri/src/commands/window.rs`
   - defines `create_grid_window`, `update_grid_window`, `close_grid_window`, `list_grid_windows`, `focus_grid_window`, and console-window lifecycle/frame handlers
 - `apps/desktop/src-tauri/src/lib.rs`
-  - does not register any `commands::window::*` handler in `invoke_handler`
-  - does not `manage(GridWindowsState::default())`
-  - does not `manage(ConsoleWindowFrameState::default())`
+  - registers all `commands::window::*` handlers in `invoke_handler`
+  - manages `GridWindowsState::default()`
+  - manages `ConsoleWindowFrameState::default()`
+  - branches startup on persisted `hostMode`
 
 Current effect:
 
-- grid/console lifecycle commands are dormant source code rather than a callable runtime API
-- `ControlWindow.tsx` and `useGridWindow.ts` describe the future overlay path, not an active normal-host contract
+- grid/console lifecycle commands are callable only when the runtime is `overlay_v2`
+- normal mode returns recoverable `OVERLAY_MODE_DISABLED` for overlay lifecycle commands
+- `ControlWindow.tsx` and `useGridWindow.ts` remain overlay-oriented callers and now depend on explicit mode activation
 
 ### OrganizerLayer boundary
 
@@ -71,7 +75,7 @@ Current effect:
   - control-window grid-create listeners
 - row `#19` does not treat that full surface as a host API; at most it may extract a thinner orchestration seam from it
 
-## Recommended New Host Contract
+## Implemented Host Contract
 
 ### Host mode
 
@@ -90,12 +94,27 @@ Recommended behavior:
 
 ### Window command activation model
 
-Recommended build contract:
+Implemented build contract:
 
-- feature-build re-registers `commands::window::*` inside `lib.rs` `invoke_handler`
-- the same change restores `GridWindowsState` and `ConsoleWindowFrameState` management in the Tauri builder
+- feature-build re-registered `commands::window::*` inside `lib.rs` `invoke_handler`
+- the same change restored `GridWindowsState` and `ConsoleWindowFrameState` management in the Tauri builder
 - despite registration, commands fail closed with `OVERLAY_MODE_DISABLED` unless the persisted `hostMode` is `"overlay_v2"`
 - normal mode remains the default boot path and does not silently create overlay/control/grid/console windows
+
+### Host-mode IPC
+
+Added commands:
+
+- `desktop_host_mode_get`
+- `desktop_host_mode_set`
+
+Semantics:
+
+- allowed caller window label: `main`
+- payload:
+  - `DesktopHostModeSetInput { hostMode: "normal" | "overlay_v2" }`
+- return:
+  - `DesktopHostModeSnapshot { hostMode, requiresRestart: true }`
 
 ### Overlay-specific window command semantics
 

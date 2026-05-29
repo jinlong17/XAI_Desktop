@@ -4,7 +4,7 @@
 
 - confirm overlay-v2 can be introduced without changing the default host
 - confirm legacy asset reuse is bounded to audited keep/refactor decisions
-- confirm the docs and future build treat `commands/window.rs` as dormant today, then re-register it explicitly rather than assuming it is already live
+- confirm `commands/window.rs` is registered intentionally and still fail-closed in normal mode
 - confirm overlay-specific commands and capabilities stay disabled in normal mode
 - confirm `OrganizerLayer.tsx` is not reused as-is for row `#19` and that any extracted seam stays separate from rows `#20` and `#21`
 - confirm host config remains host-owned and does not absorb organizer/local-first data
@@ -18,8 +18,8 @@
   - normal startup remains unchanged unless overlay mode is explicitly enabled
   - if row `#19` activates window commands, the same change also registers the related state managers
 - `apps/desktop/src-tauri/src/commands/window.rs`
-  - current source truth is dormant until `lib.rs` re-registers it
-  - after row `#19` activation, overlay commands fail closed in normal mode and succeed only in overlay mode
+  - registered in `lib.rs` with explicit `hostMode` checks
+  - overlay commands fail closed in normal mode and succeed only in overlay mode
 - `apps/desktop/src-tauri/capabilities/*.json`
   - default runtime stays `main`-only unless overlay mode is active
 - `packages/plugin-organizer/manifest.json`
@@ -107,3 +107,24 @@ If overlay-v2 introduces new host-only tests, they should stay narrowly scoped t
 - the plan and future build explicitly agree on when `commands/window.rs` changes from dormant source to registered runtime surface
 - `OrganizerLayer.tsx` has an explicit refactor/defer boundary that keeps row `#19` separate from rows `#20` and `#21`
 - real-macOS residuals for transparent/focus/multi-monitor behavior are explicitly recorded before ship
+
+## Implementation Evidence (2026-05-29)
+
+Automated gates executed:
+
+- `cargo test --manifest-path apps/desktop/src-tauri/Cargo.toml` — PASS (80 tests)
+- `pnpm --filter @repo/plugin-organizer test` — PASS (13 files, 73 tests)
+- `pnpm --filter @repo/plugin-organizer check-types` — PASS
+- `pnpm --filter desktop build` — PASS (`tauri build --debug --bundles app`)
+
+Coverage highlights from this run:
+
+- app config schema migration now validates v1->v3 and v2->v3 host-mode defaults
+- window command unit tests now validate `OVERLAY_MODE_DISABLED` details payload
+- runtime build confirms registered command surface + overlay capability file compile in desktop bundle
+
+Residual manual checks (deferred to real macOS interactive verify):
+
+- overlay-v2 startup/focus/click-through behavior
+- control/grid window usability under overlay mode
+- multi-monitor placement + monitor-change recovery

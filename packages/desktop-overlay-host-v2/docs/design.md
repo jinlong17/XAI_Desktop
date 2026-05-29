@@ -14,7 +14,7 @@
 - The normal app window remains the default and primary host after this row is implemented.
 - Overlay-v2 is a host concern first; organizer/business expansion is deferred to later rows.
 - Reuse is allowed only for audited assets. Quarantined code is not automatically approved for reactivation.
-- `apps/desktop/src-tauri/src/commands/window.rs` exists today as dormant source only; no runtime command surface exists until `lib.rs` re-registers it and restores related state management.
+- `apps/desktop/src-tauri/src/commands/window.rs` is now registered in runtime, but every overlay lifecycle command must remain fail-closed unless `hostMode = overlay_v2`.
 - Host config stays host-owned and must not become a second persistence plane for organizer or local-first entity data.
 - Existing desktop-level/window-level constants are treated as preserved reference behavior; any changes require real macOS validation before ship.
 - Overlay-specific capabilities and commands must stay disabled in normal mode.
@@ -52,15 +52,28 @@
   - `normal`
   - `overlay_v2`
 - current source truth:
-  - `commands::window::*` is not registered in `lib.rs`
-  - `GridWindowsState` / `ConsoleWindowFrameState` are not managed in the active runtime
+  - `commands::window::*` is registered in `lib.rs` and guarded by `hostMode`
+  - `GridWindowsState` / `ConsoleWindowFrameState` are managed in the active runtime
 - startup behavior:
   - `normal` preserves the current wrapped `apps/web` main-window runtime
   - `overlay_v2` opt-in activates overlay bootstrap and overlay-only shells
 - command/capability behavior:
-  - feature-build re-registers `commands::window::*` and related state in `lib.rs`
+  - feature-build re-registers `commands::window::*` and related state in `lib.rs` (done)
   - overlay-only window lifecycle commands must fail closed in `normal`
   - overlay-specific capabilities must not be granted to default runtime windows
+
+## Implementation Snapshot (2026-05-29)
+
+- `app_config.rs` migrated to schema v3 with persisted `hostMode` (`normal` default, `overlay_v2` opt-in) and v1/v2 migration fallbacks.
+- `lib.rs` now:
+  - registers `commands::window::*`
+  - manages `GridWindowsState` / `ConsoleWindowFrameState`
+  - branches startup by `hostMode`
+  - calls `legacy_overlay::bootstrap_control_window` only in `overlay_v2`
+- `commands/window.rs` enforces `OVERLAY_MODE_DISABLED` for all grid/console lifecycle commands when mode is not `overlay_v2`.
+- capability split now includes:
+  - `default.json` main-only (unchanged)
+  - `overlay-v2.json` scoped to `control`, `console`, and `grid_*`.
 
 ## Asset Disposition Summary
 
