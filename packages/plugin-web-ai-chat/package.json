@@ -3,7 +3,7 @@
   "version": "0.0.0",
   "private": true,
   "type": "module",
-  "description": "AI Chat module for XAI Web Console — collapsible conversation sidebar + 5-layer aurora + breathing orb + composer + starter prompts. Adapter Option A: typed no-op claudeAdapter returning bilingual demo line after 600..1200 ms jitter (Option B reserved for a future row).",
+  "description": "AI Chat module for XAI Web Console — collapsible conversation sidebar + 5-layer aurora + breathing orb + composer + starter prompts. Uses fail-closed provider policy semantics for chat send/test paths; no demo-success adapter fallback.",
   "sideEffects": ["./src/styles.css", "./src/index.ts"],
   "exports": {
     ".": {

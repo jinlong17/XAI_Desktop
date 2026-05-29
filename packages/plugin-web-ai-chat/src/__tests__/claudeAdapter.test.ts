@@ -1,121 +1,64 @@
 /**
- * claudeAdapter — completeChat tests (A1..A8).
+ * claudeAdapter — completeChat tests (A1..A7).
  *
- * A1..A6: no-op demo path (no key configured).
- * A7: key configured → returns real adapter response.
- * A8: key configured + adapter throws BadKey → re-throws.
- *
- * Design: packages/xai-web-ai-chat/docs/test.md §3 (A) + §7.3 (A7/A8)
+ * Verifies fail-closed behavior: no demo-success fallback on missing key,
+ * unsupported local provider URL, or empty accumulated response.
  */
 
 import { describe, it, expect, vi, beforeEach, afterEach } from "vitest";
-import {
-  completeChat,
-  DEMO_REPLY_EN,
-  DEMO_REPLY_ZH,
-  ADAPTER_DELAY_MIN_MS,
-  ADAPTER_DELAY_MAX_MS,
-} from "../internal/claudeAdapter.js";
+import { completeChat } from "../internal/claudeAdapter.js";
 import { aiKeyStorage } from "../internal/secretStore.js";
 
 describe("claudeAdapter (A)", () => {
   beforeEach(async () => {
-    // Clear keys with real timers first (IDB is async).
     await aiKeyStorage.clearKey("anthropic");
     await aiKeyStorage.clearKey("openai-compatible");
     localStorage.clear();
-    // Only fake setTimeout — do NOT fake queueMicrotask/Promise/setImmediate
-    // so that idb-keyval's internal IDB event dispatch still works.
-    vi.useFakeTimers({ toFake: ["setTimeout", "clearTimeout"] });
   });
   afterEach(() => {
-    vi.useRealTimers();
     vi.restoreAllMocks();
+    vi.unstubAllEnvs();
   });
 
-  // NOTE: A1..A6 test the no-key (demo) path. completeChat now calls
-  // aiKeyStorage.loadKey() as the FIRST operation (before the timer delay).
-  // With fake timers active, we need to advance the timer by 0 first to let
-  // the IDB promise (microtask-based) settle, then advance by the actual delay.
-
-  it("A1: resolves with the EN demo line when lang=en", async () => {
-    vi.spyOn(Math, "random").mockReturnValue(0);
-    const promise = completeChat("hi", "en");
-    // Let the IDB promise (loadKey) settle via microtask flush.
-    await vi.advanceTimersByTimeAsync(0);
-    await vi.advanceTimersByTimeAsync(ADAPTER_DELAY_MIN_MS);
-    await expect(promise).resolves.toBe(DEMO_REPLY_EN);
-  });
-
-  it("A2: resolves with the ZH demo line when lang=zh", async () => {
-    vi.spyOn(Math, "random").mockReturnValue(0);
-    const promise = completeChat("你好", "zh");
-    await vi.advanceTimersByTimeAsync(0);
-    await vi.advanceTimersByTimeAsync(ADAPTER_DELAY_MIN_MS);
-    await expect(promise).resolves.toBe(DEMO_REPLY_ZH);
-  });
-
-  it("A3: with Math.random=0, delay equals ADAPTER_DELAY_MIN_MS exactly", async () => {
-    vi.spyOn(Math, "random").mockReturnValue(0);
-    const promise = completeChat("x", "en");
-    let resolved = false;
-    promise.then(() => {
-      resolved = true;
+  it("A1: missing key fails closed with BadKey not-set", async () => {
+    const fetchStub = vi.spyOn(globalThis, "fetch");
+    await expect(completeChat("hi", "en")).rejects.toMatchObject({
+      kind: "BadKey",
+      status: 401,
+      detail: "not-set",
     });
-    // Flush IDB microtask first.
-    await vi.advanceTimersByTimeAsync(0);
-    // 1 ms shy of the minimum — not yet resolved.
-    await vi.advanceTimersByTimeAsync(ADAPTER_DELAY_MIN_MS - 1);
-    expect(resolved).toBe(false);
-    await vi.advanceTimersByTimeAsync(1);
-    await promise;
-    expect(resolved).toBe(true);
+    expect(fetchStub).not.toHaveBeenCalled();
   });
 
-  it("A4: with Math.random ~1, delay is < ADAPTER_DELAY_MAX_MS but ≥ MIN", async () => {
-    vi.spyOn(Math, "random").mockReturnValue(0.999999);
-    const promise = completeChat("x", "en");
-    let resolved = false;
-    promise.then(() => {
-      resolved = true;
+  it("A2: openai-compatible without base URL fails before fetch", async () => {
+    localStorage.setItem("xai_ai_provider", JSON.stringify("openai-compatible"));
+    await aiKeyStorage.saveKey("openai-compatible", "sk-a2");
+    const fetchStub = vi.spyOn(globalThis, "fetch");
+
+    await expect(completeChat("hi", "en")).rejects.toMatchObject({
+      kind: "BadKey",
+      status: 401,
+      detail: "no-url-configured",
     });
-    // Flush IDB microtask first.
-    await vi.advanceTimersByTimeAsync(0);
-    // floor(0.999999 * span) → span - 1; so delay = MIN + span - 1 = MAX - 1
-    await vi.advanceTimersByTimeAsync(ADAPTER_DELAY_MAX_MS - 2);
-    expect(resolved).toBe(false);
-    await vi.advanceTimersByTimeAsync(1);
-    await promise;
-    expect(resolved).toBe(true);
+    expect(fetchStub).not.toHaveBeenCalled();
   });
 
-  it("A5: empty text input does not throw and resolves with demo line", async () => {
-    vi.spyOn(Math, "random").mockReturnValue(0);
-    const promise = completeChat("", "en");
-    await vi.advanceTimersByTimeAsync(0);
-    await vi.advanceTimersByTimeAsync(ADAPTER_DELAY_MIN_MS);
-    await expect(promise).resolves.toBe(DEMO_REPLY_EN);
+  it("A3: loopback local URL is deferred and fails closed", async () => {
+    localStorage.setItem("xai_ai_provider", JSON.stringify("openai-compatible"));
+    localStorage.setItem("xai_ai_base_url", JSON.stringify("http://localhost:11434/v1"));
+    await aiKeyStorage.saveKey("openai-compatible", "sk-a3");
+    const fetchStub = vi.spyOn(globalThis, "fetch");
+
+    await expect(completeChat("hi", "en")).rejects.toMatchObject({
+      kind: "BadKey",
+      status: 403,
+      detail: "local-provider-not-enabled",
+    });
+    expect(fetchStub).not.toHaveBeenCalled();
   });
 
-  it("A6: adapter does not read or write window.claude", async () => {
-    // Snapshot any "claude" descriptor before and after.
-    const w = globalThis as unknown as Record<string, unknown>;
-    const before = "claude" in w ? w["claude"] : undefined;
-
-    vi.spyOn(Math, "random").mockReturnValue(0);
-    const promise = completeChat("ping", "en");
-    await vi.advanceTimersByTimeAsync(0);
-    await vi.advanceTimersByTimeAsync(ADAPTER_DELAY_MIN_MS);
-    await promise;
-
-    const after = "claude" in w ? w["claude"] : undefined;
-    expect(after).toBe(before);
-  });
-
-  it("A7: with API key configured + mock stream → returns accumulated assistant text", async () => {
-    vi.useRealTimers(); // Real timers needed for async fetch stubs.
-    await aiKeyStorage.saveKey("anthropic", "sk-ant-a7");
-
+  it("A4: key configured + streaming response returns accumulated text", async () => {
+    await aiKeyStorage.saveKey("anthropic", "sk-ant-a4");
     const enc = new TextEncoder();
     vi.spyOn(globalThis, "fetch").mockResolvedValue(
       new Response(
@@ -129,14 +72,11 @@ describe("claudeAdapter (A)", () => {
       ),
     );
 
-    const result = await completeChat("hello", "en");
-    expect(result).toBe("Hi!");
+    await expect(completeChat("hello", "en")).resolves.toBe("Hi!");
   });
 
-  it("A8: with API key + mock returns 401 → re-throws LlmError BadKey", async () => {
-    vi.useRealTimers();
-    await aiKeyStorage.saveKey("anthropic", "sk-ant-a8");
-
+  it("A5: key configured + provider returns 401 re-throws BadKey", async () => {
+    await aiKeyStorage.saveKey("anthropic", "sk-ant-a5");
     vi.spyOn(globalThis, "fetch").mockResolvedValue(
       new Response('{"error":"Invalid key"}', { status: 401 }),
     );
@@ -145,5 +85,42 @@ describe("claudeAdapter (A)", () => {
       kind: "BadKey",
       status: 401,
     });
+  });
+
+  it("A6: empty accumulated response throws Malformed instead of demo text", async () => {
+    await aiKeyStorage.saveKey("anthropic", "sk-ant-a6");
+    const enc = new TextEncoder();
+    vi.spyOn(globalThis, "fetch").mockResolvedValue(
+      new Response(
+        new ReadableStream({
+          start(c) {
+            c.enqueue(enc.encode("event: message_start\ndata: {}\n\n"));
+            c.close();
+          },
+        }),
+        { status: 200, headers: { "content-type": "text/event-stream" } },
+      ),
+    );
+
+    await expect(completeChat("hello", "en")).rejects.toMatchObject({
+      kind: "Malformed",
+      where: "shape",
+      detail: "empty accumulated assistant response",
+    });
+  });
+
+  it("A7: adapter does not read or write window.claude", async () => {
+    const w = globalThis as unknown as Record<string, unknown>;
+    const before = "claude" in w ? w["claude"] : undefined;
+
+    const fetchStub = vi.spyOn(globalThis, "fetch");
+    await expect(completeChat("ping", "en")).rejects.toMatchObject({
+      kind: "BadKey",
+      status: 401,
+    });
+    expect(fetchStub).not.toHaveBeenCalled();
+
+    const after = "claude" in w ? w["claude"] : undefined;
+    expect(after).toBe(before);
   });
 });
