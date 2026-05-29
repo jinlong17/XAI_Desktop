@@ -37,6 +37,7 @@ import { dashboardGridSlotRegistration } from "@repo/plugin-web-dashboard-grid";
 import { boardWorkspacesWebModuleRegistration } from "@repo/plugin-web-board-workspaces";
 // xai-web-statistics row #20
 import { statisticsWebModuleRegistration } from "@repo/plugin-web-statistics";
+import { organizerWebModuleRegistration } from "./smartContainerOrganizerRegistration";
 // xai-web-settings-shell row #21 (W4a · chassis · showInRail:false)
 // row #23 (xai-web-settings-features-panel) replaces this registration with a
 // composed variant that mounts the substituted paneRegistry — kept imported
@@ -72,6 +73,7 @@ export const webShellModuleRegistrations: WebModuleSlotRegistration[] = [
   withDisabledFallback(meditationSlotRegistration, "meditation"),  // row #16
   countdownWebModuleRegistration,  // not toggleable
   statisticsWebModuleRegistration,  // row #20 — not toggleable
+  organizerWebModuleRegistration,  // desktop-smart-container-file-organizer row #20
   // Settings — not in rail (showInRail: false). Chassis from xai-web-settings-shell row #21;
   // row #23 (xai-web-settings-features-panel) replaces the registration with
   // composedSettingsRegistration which mounts the composed paneRegistry. Sibling

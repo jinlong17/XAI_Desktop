@@ -1,5 +1,5 @@
 /**
- * AC-SHELL-3: webShellModuleRegistrations has 12 entries with
+ * AC-SHELL-3: webShellModuleRegistrations has 13 entries with
  * moduleId="matrix" at index 5 (railOrder 6).
  *
  * Verifies that the matrix placeholder was swapped for the real registration.
@@ -8,8 +8,8 @@ import { describe, it, expect } from "vitest";
 import { webShellModuleRegistrations } from "../shellRegistrations.js";
 
 describe("shellRegistrations integration", () => {
-  it("AC-SHELL-3: has exactly 12 entries", () => {
-    expect(webShellModuleRegistrations).toHaveLength(12);
+  it("AC-SHELL-3: has exactly 13 entries", () => {
+    expect(webShellModuleRegistrations).toHaveLength(13);
   });
 
   it("AC-SHELL-3: matrix registration is at index 5 with moduleId='matrix'", () => {
@@ -25,11 +25,19 @@ describe("shellRegistrations integration", () => {
     expect(matrixReg.children[0]!.render.name).not.toBe("ModuleRoutePlaceholderPage");
   });
 
-  it("AC-SHELL-3: all 12 entries have a moduleId", () => {
+  it("AC-SHELL-3: all 13 entries have a moduleId", () => {
     for (const reg of webShellModuleRegistrations) {
       expect(typeof reg.moduleId).toBe("string");
       expect(reg.moduleId.length).toBeGreaterThan(0);
     }
+  });
+
+  it("AC-SHELL-3 organizer row #20: organizer registration exists with nav key and rail order", () => {
+    const organizer = webShellModuleRegistrations.find((r) => r.moduleId === "organizer");
+    expect(organizer).toBeDefined();
+    expect(organizer!.i18nKey).toBe("nav.organizer");
+    expect(organizer!.railOrder).toBe(12);
+    expect(organizer!.showInRail).toBe(true);
   });
 
   it("AC-SHELL-2 (meditation row #16): meditation slot is swapped (not a placeholder)", () => {

@@ -53,12 +53,14 @@ function legacyLayout(): PersistedLayout {
 }
 
 describe("createOrganizerDesktopLayoutStore", () => {
+  const stubInvoke = async <T>() => undefined as T;
+
   it("falls back to the provided local store when Tauri repo runtime is unavailable", async () => {
     const localStore: LayoutStore = {
       load: vi.fn(async () => null),
       save: vi.fn(async () => undefined),
     };
-    const store = createOrganizerDesktopLayoutStore(async () => undefined, {
+    const store = createOrganizerDesktopLayoutStore(stubInvoke, {
       canUseTauriRepo: () => false,
       localStore,
     });
@@ -76,7 +78,7 @@ describe("createOrganizerDesktopLayoutStore", () => {
     const itemRepo = createInMemoryRepo<GridItemEntity>({ namespace: "items" });
     const onMigrationResult = vi.fn();
 
-    const store = createOrganizerDesktopLayoutStore(async () => undefined, {
+    const store = createOrganizerDesktopLayoutStore(stubInvoke, {
       canUseTauriRepo: () => true,
       createGridRepo: () => gridRepo,
       createItemRepo: () => itemRepo,
@@ -95,4 +97,3 @@ describe("createOrganizerDesktopLayoutStore", () => {
     await expect(itemRepo.list()).resolves.toHaveLength(0);
   });
 });
-

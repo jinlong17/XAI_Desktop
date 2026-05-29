@@ -13,7 +13,7 @@
 | Automation Mode | B-Codex |
 | Verify Cross-vendor | yes |
 | Executor | feature-auto-build (Codex, gpt-5.3-codex) |
-| Updated | 2026-05-29 07:21 PDT |
+| Updated | 2026-05-29 07:25 PDT |
 | Brief | `docs/reviews/desktop-smart-container-file-organizer/20260529-feature-brief.md` |
 | Discovery Review | `docs/reviews/desktop-smart-container-file-organizer/20260529-discovery-review.md` |
 | Risks | The row has one deliberate product constraint and one honest runtime limitation. Product-wise, a correct row-`#20` slice must stay normal-window-first and avoid turning optional overlay-v2 into an implicit dependency or silently absorbing row `#21` organizer/plugin restoration scope. Runtime-wise, the current bookmark registry is session-memory only, so persisted organizer items may outlive authorization for Finder/open actions after relaunch; the first slice must surface that explicitly instead of faking persistent access. |
@@ -52,7 +52,7 @@ Status: COMPLETED
 
 ### Phase 3 - Normal-window Smart Container workspace
 
-Status: PENDING
+Status: COMPLETED
 
 - embed Smart Container in the normal-window desktop product
 - reuse native path-first drag/drop in the interactive organizer surface
@@ -90,4 +90,5 @@ Status: PENDING
 | 2026-05-29 07:01 PDT | feature-plan (Codex, gpt-5 inline) | Fresh planning pass. Read the roadmap row/seed, workflow and ADR authority, shipped Phase 3 / optional overlay docs, `PLUGIN_MAP`, current organizer package docs, core-data organizer entities/migration/backup seams, and live host/bookmark/finder source. Produced the feature brief, discovery review, and docs quartet with a clear recommendation: keep the organizer domain and repo migration seams, refactor persistence/contracts to `device-local`, ship a normal-window Smart Container slice first, and defer overlay-era multi-window/plugin restoration to later rows. | — | feature-review |
 | 2026-05-29 07:10 PDT | feature-review (Codex, gpt-5 inline) | Review pass complete. Re-read the workflow/SOP/roadmap authority plus the feature brief, discovery review, docs quartet, organizer/core-data source seams, desktop host/web runtime seams, and bookmark/finder command truth. Approved the narrow row-`#20` plan because it keeps normal-window host as primary, preserves row `#21` as a separate restoration decision, uses real package/test commands, and stays honest about `device-local` organizer data plus session-only path authorization. | — | feature-auto-build |
 | 2026-05-29 07:19 PDT | feature-auto-build (Codex, gpt-5.3-codex) | Phase 1 complete (Contract and asset normalization). Normalized organizer persistence semantics to `device-local` across core-data entities, runtime validation, migration adapters, layout store adapters, and item factories; updated organizer manifest metadata to align with row-`#20` normal-window-first runtime boundary instead of overlay-era command/window assumptions. | `e73ab00a` | Phase 2 |
-| 2026-05-29 07:21 PDT | feature-auto-build (Codex, gpt-5.3-codex) | Phase 2 complete (Local-first persistence cutover). Added `createOrganizerDesktopLayoutStore(...)` as the organizer-owned repo bootstrap seam: it creates Tauri repos, runs `migrateOrganizerLayoutToRepos(...)` before first load/save, keeps legacy `xai-desktop-layout` (`removeLegacy: false`), and falls back to local store when Tauri runtime is unavailable. | pending (recorded next phase) | Phase 3 |
+| 2026-05-29 07:21 PDT | feature-auto-build (Codex, gpt-5.3-codex) | Phase 2 complete (Local-first persistence cutover). Added `createOrganizerDesktopLayoutStore(...)` as the organizer-owned repo bootstrap seam: it creates Tauri repos, runs `migrateOrganizerLayoutToRepos(...)` before first load/save, keeps legacy `xai-desktop-layout` (`removeLegacy: false`), and falls back to local store when Tauri runtime is unavailable. | `9c9a258e` | Phase 3 |
+| 2026-05-29 07:25 PDT | feature-auto-build (Codex, gpt-5.3-codex) | Phase 3 complete (Normal-window Smart Container workspace). Added plugin-owned `OrganizerWorkspaceModule` for the desktop normal-window runtime, wired `apps/web` organizer mount files explicitly (`smartContainerOrganizerRegistration.tsx` + shell/App registration path), used native Tauri drag-drop path ingestion (no basename fallback), and surfaced explicit in-item re-authorization/path-failure states for Finder actions. | pending (recorded next phase) | Phase 4 |

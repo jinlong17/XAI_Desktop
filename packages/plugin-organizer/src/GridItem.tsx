@@ -9,6 +9,7 @@ import { TagPicker } from "./TagPicker";
 import { getFileThumbnail, isThumbnailCandidate } from "./thumbnailCache";
 
 type ItemVariant = "grid" | "list";
+type ItemActionHealth = "authorization-required" | "path-missing" | "unknown";
 
 interface GridItemProps {
   item: DesktopItem;
@@ -57,6 +58,7 @@ export function GridItem({ item, variant = "grid", onUpdate, onCreateTask, onRem
   const [tagsOpen, setTagsOpen] = useState(false);
   const [itemMenu, setItemMenu] = useState<ItemMenuState>(null);
   const [thumbnailSrc, setThumbnailSrc] = useState<string | null>(null);
+  const [actionHealth, setActionHealth] = useState<ItemActionHealth | null>(null);
   const tags = item.finderTags ?? [];
 
   useEffect(() => {
@@ -142,13 +144,23 @@ export function GridItem({ item, variant = "grid", onUpdate, onCreateTask, onRem
       return;
     }
     if (item.filepath.startsWith("/")) {
-      void finderClient.openPath(item.filepath).catch(() => undefined);
+      void finderClient
+        .openPath(item.filepath)
+        .then(() => setActionHealth(null))
+        .catch((error) => {
+          setActionHealth(classifyFinderActionError(error));
+        });
     }
   };
 
   const handleReveal = () => {
     if (item.filepath.startsWith("/")) {
-      void finderClient.revealInFinder(item.filepath).catch(() => undefined);
+      void finderClient
+        .revealInFinder(item.filepath)
+        .then(() => setActionHealth(null))
+        .catch((error) => {
+          setActionHealth(classifyFinderActionError(error));
+        });
     }
   };
 
@@ -237,6 +249,18 @@ export function GridItem({ item, variant = "grid", onUpdate, onCreateTask, onRem
             <TagPicker tags={tags} onChange={updateTags} readOnly />
           </div>
         ) : null}
+        {actionHealth ? (
+          <div
+            style={{
+              marginTop: 6,
+              fontSize: 10,
+              color: actionHealth === "authorization-required" ? "#b45309" : "#b91c1c",
+              fontWeight: 600,
+            }}
+          >
+            {renderHealthCopy(actionHealth)}
+          </div>
+        ) : null}
       </div>
       {itemMenu ? (
         <div
@@ -315,6 +339,31 @@ const miniButtonStyle: CSSProperties = {
   padding: "2px 6px",
   fontFamily: typographyTokens.fontFamilySans,
 };
+
+function classifyFinderActionError(error: unknown): ItemActionHealth {
+  const message = String(error ?? "").toLowerCase();
+  if (
+    message.includes("e3004") &&
+    (message.includes("bookmark") || message.includes("authorized"))
+  ) {
+    return "authorization-required";
+  }
+  if (message.includes("e3005") || message.includes("path")) {
+    return "path-missing";
+  }
+  return "unknown";
+}
+
+function renderHealthCopy(status: ItemActionHealth): string {
+  switch (status) {
+    case "authorization-required":
+      return "Re-authorization needed: drag this path again to restore Finder access.";
+    case "path-missing":
+      return "Path unavailable: verify the file still exists or remove this item.";
+    default:
+      return "Action failed. Retry after checking this item's path access.";
+  }
+}
 
 function resolveIconName(item: DesktopItem) {
   const direct = iconAliasMap[item.icon.toLowerCase() as keyof typeof iconAliasMap];

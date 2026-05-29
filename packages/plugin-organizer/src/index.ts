@@ -16,6 +16,7 @@ export * from "./hooks/useMultiWindowGrids";
 export { OrganizerLayer } from "./OrganizerLayer";
 export { OrganizerGridContent } from "./OrganizerGridContent";
 export type { OrganizerGridContentProps } from "./OrganizerGridContent";
+export { OrganizerWorkspaceModule } from "./OrganizerWorkspaceModule";
 export * from "./gridEvents";
 export {
   ORGANIZER_LAYOUT_STORAGE_KEY,

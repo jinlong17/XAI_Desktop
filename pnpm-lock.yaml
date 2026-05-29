@@ -191,6 +191,9 @@ importers:
       '@repo/plugin-console':
         specifier: workspace:^
         version: link:../../packages/plugin-console
+      '@repo/plugin-organizer':
+        specifier: workspace:*
+        version: link:../../packages/plugin-organizer
       '@repo/plugin-productivity':
         specifier: workspace:^
         version: link:../../packages/plugin-productivity

@@ -28,6 +28,10 @@ import {
   applyBgTone,
   applyRailPos,
 } from "@repo/plugin-web-tokens";
+import {
+  isDesktopPhase1OfflineRuntime,
+  resolveWebRuntimeProfile,
+} from "@repo/core";
 import { usePref } from "@repo/plugin-web-storage";
 import { emitWebEvent, onWebEvent } from "@repo/xai-web-event-bus";
 import {
@@ -112,9 +116,16 @@ function AppInner() {
   // The full registrations array is stable; the filter result re-derives only when
   // one of the 8 xai_pref_features_* booleans changes.
   const featurePrefs = useFeaturePrefs();
+  const runtimeProfile = resolveWebRuntimeProfile(
+    import.meta.env as Record<string, string | undefined>,
+  );
+  const showDesktopOnlyModules = isDesktopPhase1OfflineRuntime(runtimeProfile);
   const modules = useMemo<WebModuleSlotRegistration[]>(
-    () => filterModulesByFeaturePrefs(webShellModuleRegistrations, featurePrefs),
-    [featurePrefs],
+    () =>
+      filterModulesByFeaturePrefs(webShellModuleRegistrations, featurePrefs).filter((module) =>
+        showDesktopOnlyModules ? true : module.moduleId !== "organizer",
+      ),
+    [featurePrefs, showDesktopOnlyModules],
   );
 
   return (
