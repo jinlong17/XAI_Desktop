@@ -2,8 +2,11 @@
  * tasksReducer.ts — pure state-transition helpers.
  *
  * moveCard:      remove a task from fromCol, rewrite its date, prepend to toCol.
- * toggleComplete: toggle a task id in the in-memory completed set.
+ * toggleComplete: flip the `done` field on a card in TaskCol[] — persisted via setRawCols.
  * addCard:       create a new card from a NewTaskDraft and prepend to targetBucket.
+ *
+ * T-10 fix: toggleComplete now operates on TaskCol[] (not Set<string>) so completion
+ * is stored in xai_task_cols and survives page refresh.
  *
  * API contract: packages/xai-web-tasks/docs/api.md §5.2 + §5.3 + §E.3
  * Design: packages/xai-web-tasks/docs/design.md §1 (D1 dateForCol) + §E.3
@@ -44,24 +47,27 @@ export function moveCard(
   // Rewrite date fields — strip date/dateZh/dateLabel/sub regardless of destination,
   // then re-add date fields for dated buckets (api.md §5.2).
   const newDateResult = dateForCol(toColId, now);
-  const { id, title, tag, inbox } = task;
+  // T-10 sub-fix 4: preserve `done` across bucket moves (prevents drag clearing completion)
+  const { id, title, tag, inbox, done } = task;
 
   const moved: TaskCard = (() => {
     if (toColId === "nodate") {
-      // Strip date + dateZh + dateLabel + sub; keep tag + inbox (api.md §5.2)
+      // Strip date + dateZh + dateLabel + sub; keep tag + inbox + done (api.md §5.2)
       return {
         id,
         title,
         ...(tag !== undefined    ? { tag }    : {}),
         ...(inbox !== undefined  ? { inbox }  : {}),
+        ...(done !== undefined   ? { done }   : {}),
       };
     }
-    // Non-nodate: set date + dateZh from dateForCol; strip dateLabel + sub
+    // Non-nodate: set date + dateZh from dateForCol; strip dateLabel + sub; keep done
     const base = {
       id,
       title,
       ...(tag !== undefined   ? { tag }   : {}),
       ...(inbox !== undefined ? { inbox } : {}),
+      ...(done !== undefined  ? { done }  : {}),
     };
     if (newDateResult) {
       return { ...base, date: newDateResult.date, dateZh: newDateResult.dateZh };
@@ -89,20 +95,36 @@ export function moveCard(
 }
 
 /**
- * Pure toggle: add taskId if absent, remove if present.
- * Returns a new Set — original is not mutated.
+ * Pure toggle: flips the `done` field on the matching card in TaskCol[].
+ *
+ * T-10 fix: result is a new TaskCol[] that can be passed to setRawCols for
+ * persistence — completion now survives page refresh.
+ *
+ * Returns `prev` unchanged when taskId is not found in any column.
+ * Columns that do not contain the card are returned by reference (referential equality).
+ *
+ * API contract: packages/xai-web-tasks/docs/api.md §5.3 (T-10 update)
  */
 export function toggleComplete(
-  prev: ReadonlySet<string>,
+  prev: TaskCol[],
   taskId: string,
-): Set<string> {
-  const next = new Set(prev);
-  if (next.has(taskId)) {
-    next.delete(taskId);
-  } else {
-    next.add(taskId);
-  }
-  return next;
+): TaskCol[] {
+  let found = false;
+  const next = prev.map((col) => {
+    const taskIdx = col.tasks.findIndex((t) => t.id === taskId);
+    if (taskIdx < 0) return col; // referential equality for untouched columns
+
+    found = true;
+    const task = col.tasks[taskIdx]!;
+    const updatedTask: TaskCard = { ...task, done: !task.done };
+    const updatedTasks = [
+      ...col.tasks.slice(0, taskIdx),
+      updatedTask,
+      ...col.tasks.slice(taskIdx + 1),
+    ];
+    return { ...col, tasks: updatedTasks };
+  });
+  return found ? next : prev;
 }
 
 /**
