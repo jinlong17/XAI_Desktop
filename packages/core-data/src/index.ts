@@ -43,18 +43,41 @@ export {
 } from "./keychain";
 export type { KeychainErrorCode, KeychainClient } from "./keychain";
 export type {
+  BoardWorkspaceStorageKey,
   CardEntity,
   ClipboardEntryEntity,
   GridEntity,
   GridItemEntity,
   HabitEntity,
+  HabitsStateEntity,
   LabelEntity,
+  PetStateEntity,
+  PetStorageKey,
+  PomodoroSessionsEntity,
   ProjectEntity,
+  ProjectWorkspaceStateEntity,
   RepoEntity,
   RepoEntityType,
   RepoEntityTypeMap,
+  SettingsPrefEntity,
+  TasksStateEntity,
   TodoEntity,
 } from "./entities";
+export {
+  LEGACY_PROJECT_ENTITY_TYPE,
+  normalizeProjectEntityType,
+  PROJECT_ENTITY_TYPE,
+} from "./entities";
+export type {
+  DesktopBridgeError,
+  DesktopBridgeErrorKind,
+  DesktopBridgeReadResult,
+  DesktopBridgeReadSource,
+  DesktopBridgeSurface,
+  DesktopBridgeWriteResult,
+  DesktopBridgeWriteStatus,
+} from "./desktop-bridge";
+export { NOTES_UNSUPPORTED_ERROR } from "./desktop-bridge";
 export { createTauriRepo, dbInit } from "./tauri-sqlite";
 export type { CreateTauriRepoOptions, DbInitOutput } from "./tauri-sqlite";
 export {
