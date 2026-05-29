@@ -168,6 +168,29 @@ export interface SettingsPrefEntity extends RepoRecord {
   value: unknown;
 }
 
+export type CalendarProviderId = "gcal";
+export type CalendarProviderSyncMode = "online-only";
+export type CalendarProviderConnectionState = "connected" | "disconnected";
+export type CalendarProviderAvailability =
+  | "ready"
+  | "offline"
+  | "auth-required"
+  | "transport-unavailable";
+
+export interface CalendarProviderStateEntity extends RepoRecord {
+  entityType: "calendar.provider_state";
+  syncScope: "device-local";
+  providerId: CalendarProviderId;
+  syncMode: CalendarProviderSyncMode;
+  connectionState: CalendarProviderConnectionState;
+  availability: CalendarProviderAvailability;
+  lastAttemptAt?: string;
+  lastSuccessAt?: string;
+  lastFailureCode?: string;
+  lastFailureMessage?: string;
+  needsReconnectRefresh: boolean;
+}
+
 /** Discriminated union of all Repository v0 entity types. */
 export type RepoEntity =
   | GridEntity
@@ -183,7 +206,8 @@ export type RepoEntity =
   | PomodoroSessionsEntity
   | ProjectWorkspaceStateEntity
   | PetStateEntity
-  | SettingsPrefEntity;
+  | SettingsPrefEntity
+  | CalendarProviderStateEntity;
 
 /** Map from `entityType` string to its concrete record shape. */
 export interface RepoEntityTypeMap {
@@ -201,6 +225,7 @@ export interface RepoEntityTypeMap {
   "project.card": CardEntity;
   "pet.state": PetStateEntity;
   "settings.pref": SettingsPrefEntity;
+  "calendar.provider_state": CalendarProviderStateEntity;
 }
 
 export type RepoEntityType = keyof RepoEntityTypeMap;

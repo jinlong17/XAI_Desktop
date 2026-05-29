@@ -5,6 +5,7 @@ export type DesktopBridgeSurface =
   | "board-workspace"
   | "pet"
   | "settings"
+  | "calendar-provider"
   | "notes";
 
 export type DesktopBridgeErrorKind =

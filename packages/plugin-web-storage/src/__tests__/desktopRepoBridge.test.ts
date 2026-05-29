@@ -19,6 +19,8 @@ vi.mock("@repo/core-data", async () => {
 
 import {
   mountDesktopRepoBridge,
+  patchCalendarProviderState,
+  readCalendarProviderState,
   unmountDesktopRepoBridge,
   writeDesktopRepoValue,
 } from "../internal/desktopRepoBridge.js";
@@ -177,5 +179,37 @@ describe("desktopRepoBridge canonical record mapping", () => {
     expect(workspaceKeys).toContain("xai_active_board");
     expect(workspaceKeys).not.toContain("xai_boards_v2");
     expect(outboxRows.length).toBe(3);
+  });
+
+  it("writes calendar provider state as calendar.provider_state device-local records", async () => {
+    const created = await patchCalendarProviderState("gcal", {
+      connectionState: "connected",
+      availability: "offline",
+      needsReconnectRefresh: true,
+      lastFailureCode: "network_unavailable",
+      lastFailureMessage: "Offline mode",
+    });
+
+    expect(created).toBeTruthy();
+    expect(created?.entityType).toBe("calendar.provider_state");
+    expect(created?.syncScope).toBe("device-local");
+    expect(created?.providerId).toBe("gcal");
+    expect(created?.syncMode).toBe("online-only");
+    expect(created?.needsReconnectRefresh).toBe(true);
+
+    const rows = await currentRepo.list({ entityType: "calendar.provider_state" });
+    expect(rows).toHaveLength(1);
+    const record = rows[0] as RepoRecord & {
+      providerId?: unknown;
+      availability?: unknown;
+      storageKey?: unknown;
+    };
+    expect(record.providerId).toBe("gcal");
+    expect(record.availability).toBe("offline");
+    expect(record.storageKey).toBeUndefined();
+
+    const cached = readCalendarProviderState("gcal");
+    expect(cached?.lastFailureCode).toBe("network_unavailable");
+    expect(cached?.lastFailureMessage).toBe("Offline mode");
   });
 });

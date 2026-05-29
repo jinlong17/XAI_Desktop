@@ -238,6 +238,7 @@ export function isDeviceLocalRepoEntityType(entityType: RepoEntityType): boolean
     entityType === "project.workspace_state" ||
     entityType === "pet.state" ||
     entityType === "settings.pref" ||
+    entityType === "calendar.provider_state" ||
     entityType === "clipboard.item"
   );
 }

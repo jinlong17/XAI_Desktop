@@ -1,4 +1,8 @@
 import {
+  type CalendarProviderAvailability,
+  type CalendarProviderConnectionState,
+  type CalendarProviderId,
+  type CalendarProviderStateEntity,
   createMockCommitSeqAuthority,
   createTauriRepo,
   isOfflineQueueableEntity,
@@ -36,6 +40,8 @@ export const BOARD_AUX_KEYS = new Set([
 ]);
 
 export const PET_KEYS = new Set(["xai_pet_id", "xai_pet_pos"]);
+export const CALENDAR_PROVIDER_STATE_ENTITY_TYPE = "calendar.provider_state" as const;
+export const CALENDAR_PROVIDER_STATE_ID_PREFIX = "calendar.provider_state:" as const;
 
 const TASK_BUCKET_IDS = ["overdue", "next7", "later", "nodate"] as const;
 
@@ -50,13 +56,25 @@ export type BridgedSurface =
   | "pomodoro"
   | "board-workspace"
   | "pet"
-  | "settings";
+  | "settings"
+  | "calendar-provider";
 
 type BridgeRecord =
   | PomodoroSessionsEntity
   | ProjectWorkspaceStateEntity
   | PetStateEntity
-  | SettingsPrefEntity;
+  | SettingsPrefEntity
+  | CalendarProviderStateEntity;
+
+export interface CalendarProviderStatePatch {
+  connectionState?: CalendarProviderConnectionState;
+  availability?: CalendarProviderAvailability;
+  lastAttemptAt?: string;
+  lastSuccessAt?: string;
+  lastFailureCode?: string;
+  lastFailureMessage?: string;
+  needsReconnectRefresh?: boolean;
+}
 
 type BridgeStatus = "disabled" | "active";
 
@@ -214,6 +232,78 @@ export function readDesktopRepoBridgeRepo():
   return state.repo as Repo<RepoRecord | OutboxEntry>;
 }
 
+export function calendarProviderStateRecordId(
+  providerId: CalendarProviderId,
+): string {
+  return `${CALENDAR_PROVIDER_STATE_ID_PREFIX}${providerId}`;
+}
+
+export function readCalendarProviderState(
+  providerId: CalendarProviderId,
+): CalendarProviderStateEntity | null {
+  if (state.status !== "active") {
+    return null;
+  }
+
+  const id = calendarProviderStateRecordId(providerId);
+  const cached = state.cache.get(id);
+  if (!cached || typeof cached !== "object") {
+    return null;
+  }
+
+  const parsed = asCalendarProviderStateRecord(cached as RepoRecord);
+  if (!parsed) {
+    return null;
+  }
+  return parsed;
+}
+
+export async function patchCalendarProviderState(
+  providerId: CalendarProviderId,
+  patch: CalendarProviderStatePatch,
+): Promise<CalendarProviderStateEntity | null> {
+  if (state.status !== "active" || !state.repo) {
+    return null;
+  }
+
+  const id = calendarProviderStateRecordId(providerId);
+  const nowIso = new Date().toISOString();
+  const existingRaw = await state.repo.get(id);
+  if (
+    existingRaw &&
+    existingRaw.entityType !== CALENDAR_PROVIDER_STATE_ENTITY_TYPE
+  ) {
+    const mismatch: DesktopBridgeError = {
+      kind: "contract_mismatch",
+      surface: "calendar-provider",
+      message: `Expected "${CALENDAR_PROVIDER_STATE_ENTITY_TYPE}" for "${id}" but got "${existingRaw.entityType}".`,
+    };
+    state.errors.set(id, mismatch);
+    return null;
+  }
+
+  const existingRecord = existingRaw
+    ? asCalendarProviderStateRecord(existingRaw)
+    : null;
+  const nextRecord: CalendarProviderStateEntity = {
+    ...(existingRecord ?? createDefaultCalendarProviderState(providerId, nowIso)),
+    ...patch,
+    id,
+    entityType: CALENDAR_PROVIDER_STATE_ENTITY_TYPE,
+    schemaVersion: 1,
+    syncScope: "device-local",
+    providerId,
+    syncMode: "online-only",
+    updatedAt: nowIso,
+  };
+
+  await state.repo.put(nextRecord as RepoRecord);
+  state.cache.set(id, nextRecord);
+  state.publish?.(id, nextRecord);
+  state.errors.delete(id);
+  return nextRecord;
+}
+
 export async function writeDesktopRepoValue(
   key: string,
   value: unknown,
@@ -306,6 +396,7 @@ async function hydrateCacheFromRepo(): Promise<void> {
     hydrateCanonicalTasks(rows);
     hydrateCanonicalHabits(rows);
     hydrateCanonicalBoards(rows);
+    hydrateCalendarProviderStates(rows);
 
     for (const row of rows) {
       const key = row.id;
@@ -434,6 +525,9 @@ export function toBridgeRecord(
 function readBridgeRecordValue(record: BridgeRecord): unknown {
   if (record.entityType === "productivity.pomodoro_sessions") {
     return record.sessions;
+  }
+  if (record.entityType === CALENDAR_PROVIDER_STATE_ENTITY_TYPE) {
+    return record;
   }
   return record.value;
 }
@@ -872,6 +966,24 @@ function hydrateCanonicalBoards(rows: RepoRecord[]): void {
   publishBridgeValue(BOARDS_STORAGE_KEY, hydratedBoards);
 }
 
+function hydrateCalendarProviderStates(rows: RepoRecord[]): void {
+  const providerRows = rows.filter(
+    (row) => row.entityType === CALENDAR_PROVIDER_STATE_ENTITY_TYPE,
+  );
+  if (providerRows.length === 0) {
+    return;
+  }
+
+  for (const row of providerRows) {
+    const parsed = asCalendarProviderStateRecord(row);
+    if (!parsed) {
+      continue;
+    }
+    state.cache.set(parsed.id, parsed);
+    state.publish?.(parsed.id, parsed);
+  }
+}
+
 function hydrateQueueCommitSeq(rows: RepoRecord[]): void {
   const outboxRows = rows.filter(
     (row): row is OutboxEntry =>
@@ -1201,6 +1313,61 @@ function stripPrefix(value: string, prefix: string): string {
     return value.slice(prefix.length);
   }
   return value;
+}
+
+function createDefaultCalendarProviderState(
+  providerId: CalendarProviderId,
+  nowIso: string,
+): CalendarProviderStateEntity {
+  return {
+    id: calendarProviderStateRecordId(providerId),
+    entityType: CALENDAR_PROVIDER_STATE_ENTITY_TYPE,
+    schemaVersion: 1,
+    createdAt: nowIso,
+    updatedAt: nowIso,
+    syncScope: "device-local",
+    providerId,
+    syncMode: "online-only",
+    connectionState: "disconnected",
+    availability: "ready",
+    needsReconnectRefresh: false,
+  };
+}
+
+function asCalendarProviderStateRecord(
+  value: RepoRecord,
+): CalendarProviderStateEntity | null {
+  if (value.entityType !== CALENDAR_PROVIDER_STATE_ENTITY_TYPE) {
+    return null;
+  }
+  const typed = value as CalendarProviderStateEntity;
+  if (typed.syncScope !== "device-local") {
+    return null;
+  }
+  if (typed.providerId !== "gcal") {
+    return null;
+  }
+  if (typed.syncMode !== "online-only") {
+    return null;
+  }
+  if (
+    typed.connectionState !== "connected" &&
+    typed.connectionState !== "disconnected"
+  ) {
+    return null;
+  }
+  if (
+    typed.availability !== "ready" &&
+    typed.availability !== "offline" &&
+    typed.availability !== "auth-required" &&
+    typed.availability !== "transport-unavailable"
+  ) {
+    return null;
+  }
+  if (typeof typed.needsReconnectRefresh !== "boolean") {
+    return null;
+  }
+  return typed;
 }
 
 function stringifyJson(value: unknown): string | undefined {

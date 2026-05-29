@@ -43,6 +43,11 @@ export {
 } from "./keychain";
 export type { KeychainErrorCode, KeychainClient } from "./keychain";
 export type {
+  CalendarProviderAvailability,
+  CalendarProviderConnectionState,
+  CalendarProviderId,
+  CalendarProviderStateEntity,
+  CalendarProviderSyncMode,
   BoardWorkspaceStorageKey,
   CardEntity,
   ClipboardEntryEntity,

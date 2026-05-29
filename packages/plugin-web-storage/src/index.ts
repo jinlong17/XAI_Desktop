@@ -38,6 +38,9 @@ export {
   getPref,
   setPref,
   removePref,
+  getDesktopLocalFirstCalendarProviderState,
+  getDesktopLocalFirstCalendarProviderStateKey,
+  patchDesktopLocalFirstCalendarProviderState,
   mountDesktopLocalFirstRepositoryBridge,
   getDesktopLocalFirstReconnectSyncPreflight,
   runDesktopLocalFirstWebDataImport,
@@ -55,6 +58,10 @@ export type {
   SetPrefAutosaveOptions,
 } from "./internal/storage.js";
 export type { DesktopWebImportReport } from "./internal/desktopWebDataMigration.js";
+export type {
+  CalendarProviderId,
+  CalendarProviderStateEntity,
+} from "@repo/core-data";
 
 // ---- usePref hook ----------------------------------------------------------
 export { usePref } from "./internal/usePref.js";

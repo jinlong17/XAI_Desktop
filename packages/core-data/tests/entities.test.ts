@@ -3,6 +3,7 @@ import { describe, expect, it } from "vitest";
 import { assertRepoRecord } from "../src/repo-utils";
 import { createInMemoryRepo } from "../src/testing";
 import type {
+  CalendarProviderStateEntity,
   BoardWorkspaceStorageKey,
   CardEntity,
   ClipboardEntryEntity,
@@ -194,6 +195,20 @@ function settingsFixture(id: string): SettingsPrefEntity {
   };
 }
 
+function calendarProviderStateFixture(id: string): CalendarProviderStateEntity {
+  return {
+    ...BASE,
+    id,
+    entityType: "calendar.provider_state",
+    syncScope: "device-local",
+    providerId: "gcal",
+    syncMode: "online-only",
+    connectionState: "connected",
+    availability: "ready",
+    needsReconnectRefresh: false,
+  };
+}
+
 describe("Repo entities contract", () => {
   it("round-trips every entity type through the in-memory repo", async () => {
     const repo = createInMemoryRepo<RepoEntity>({ namespace: "entities" });
@@ -213,6 +228,7 @@ describe("Repo entities contract", () => {
       workspaceFixture("xai_board_panels", "xai_board_panels"),
       petFixture("xai_pet_pos"),
       settingsFixture("xai_pref_week_start"),
+      calendarProviderStateFixture("calendar.provider_state:gcal"),
     ];
 
     for (const record of fixtures) {
@@ -280,6 +296,18 @@ describe("Repo entities contract", () => {
     } as RepoRecord;
     expect(() => assertRepoRecord(cheating)).toThrowError(
       /E3005: clipboard\.item must be device-local, got "account-sync"/,
+    );
+  });
+
+  it("rejects calendar.provider_state records with non-device-local syncScope at runtime", () => {
+    const cheating: RepoRecord = {
+      ...BASE,
+      id: "calendar.provider_state:gcal",
+      entityType: "calendar.provider_state",
+      syncScope: "account-sync",
+    } as RepoRecord;
+    expect(() => assertRepoRecord(cheating)).toThrowError(
+      /E3005: calendar\.provider_state must be device-local, got "account-sync"/,
     );
   });
 

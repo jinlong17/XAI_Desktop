@@ -18,7 +18,10 @@ import {
 } from "./registry.js";
 import { encode, decode } from "./codec.js";
 import {
+  calendarProviderStateRecordId,
   mountDesktopRepoBridge,
+  patchCalendarProviderState,
+  readCalendarProviderState,
   readDesktopRepoError,
   readDesktopRepoValue,
   unmountDesktopRepoBridge,
@@ -37,6 +40,8 @@ import {
   type DesktopWebImportReport,
 } from "./desktopWebDataMigration.js";
 import type {
+  CalendarProviderId,
+  CalendarProviderStateEntity,
   DesktopWebImportSurface,
   ReconnectSyncPreflightStatus,
   ReconnectSyncReplayResult,
@@ -449,6 +454,33 @@ export function removePrefAutosave(suffix: string): void {
   }
   publishSameTab(key, undefined);
   void writeDesktopRepoValue(key, null);
+}
+
+export function getDesktopLocalFirstCalendarProviderStateKey(
+  providerId: CalendarProviderId,
+): string {
+  return calendarProviderStateRecordId(providerId);
+}
+
+export function getDesktopLocalFirstCalendarProviderState(
+  providerId: CalendarProviderId,
+): CalendarProviderStateEntity | null {
+  return readCalendarProviderState(providerId);
+}
+
+export function patchDesktopLocalFirstCalendarProviderState(
+  providerId: CalendarProviderId,
+  patch: {
+    connectionState?: CalendarProviderStateEntity["connectionState"];
+    availability?: CalendarProviderStateEntity["availability"];
+    lastAttemptAt?: string;
+    lastSuccessAt?: string;
+    lastFailureCode?: string;
+    lastFailureMessage?: string;
+    needsReconnectRefresh?: boolean;
+  },
+): Promise<CalendarProviderStateEntity | null> {
+  return patchCalendarProviderState(providerId, patch);
 }
 
 const DESKTOP_WEB_IMPORT_REPORT_EVENT = "xai:web:desktop-import-report";
