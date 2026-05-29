@@ -92,7 +92,29 @@ export type {
   EnqueueOutboxInput,
   OutboxBatchOptions,
   OutboxEntry,
+  OutboxQueueStatus,
+  OutboxRollbackSafety,
 } from "./sync-outbox";
+export {
+  OFFLINE_QUEUEABLE_ENTITY_TYPES,
+  buildOfflineMutationId,
+  isDeviceLocalRepoEntityType,
+  isOfflineQueueableEntity,
+  isQueuedOfflineResult,
+  outboxIdForQueuedResult,
+  stageHabitOfflineEdit,
+  stageOfflineEditMutation,
+  stageProjectBoardOfflineEdit,
+  stageProjectCardOfflineEdit,
+  stageTodoOfflineEdit,
+} from "./offline-edit-queue";
+export type {
+  OfflineEditOperation,
+  OfflineEditQueueRequest,
+  OfflineEditQueueResult,
+  OfflineEditQueueStatus,
+  OfflineQueueableEntityType,
+} from "./offline-edit-queue";
 export {
   SYNC_BLOB_ACCEPT_VERSION,
   SYNC_PROTOCOL_HEADER,
