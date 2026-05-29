@@ -59,6 +59,11 @@ import {
 import { PremiumTierBadge } from "@repo/plugin-web-settings-rest";
 // Bugfix: Audit Top-10 #1 / Rail-10 — sign-out handler wired from auth session
 import { useWebAuthSession } from "@repo/web-auth-device-session";
+// AI tool layer — always-on write subscribers (P4 xai-web-ai-tool-layer).
+// Mounted as Shell-siblings (route-independent liveness per OQ2 resolution).
+// Per DesktopPet / CommandPalette precedent (ADR-0007 §S6 Option B).
+import { useTaskCreateRequestSubscriber } from "@repo/plugin-web-tasks";
+import { useCalendarCreateRequestSubscriber } from "@repo/plugin-web-calendar";
 
 // ---- readLocalPref — safe localStorage reader for lazy useState initializers --
 //
@@ -84,6 +89,14 @@ export function readLocalPref<T>(key: string, fallback: T): T {
 
 function AppInner() {
   const { open: openPalette } = useCommandPalette();
+
+  // ---- AI tool layer: always-on write subscribers (P4 xai-web-ai-tool-layer) --
+  // Zero-UI hooks — mounted here as Shell-siblings so they are live regardless of
+  // the active route (R4 mitigation: even when user is on /app/ai, the tasks and
+  // calendar modules may not be mounted, so writes would be lost without these).
+  // Precedent: DesktopPet (L191) + CommandPalette (L197) Shell-siblings.
+  useTaskCreateRequestSubscriber();
+  useCalendarCreateRequestSubscriber();
 
   // ---- useState state pieces -----------------------------------------------
   // lang/theme/density use lazy initializers to restore from localStorage on

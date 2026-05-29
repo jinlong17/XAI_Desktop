@@ -807,4 +807,60 @@ describe("AiChatModule integration (I)", () => {
     // Thinking should be cleared
     expect(container.querySelector(".ai-stage")?.className).not.toContain("thinking");
   });
+
+  it("IT-4: Confirm → emits write event exactly once with mapped payload", async () => {
+    vi.useRealTimers();
+    vi.restoreAllMocks();
+    const streamMod = await import("../internal/claudeStreamAdapter.js");
+    vi.spyOn(streamMod, "streamCompleteChat").mockImplementation(
+      async function* () {
+        yield {
+          accumulated: "Creating the task for you.",
+          done: true,
+          toolUse: { id: "toolu_emit_test", name: "create_task", input: { title: "Test emit", bucket: "next7" } },
+        };
+      },
+    );
+
+    // Spy on emitWebEvent to capture the write event.
+    const { onWebEvent } = await import("@repo/xai-web-event-bus");
+    const emittedEvents: unknown[] = [];
+    const unsub = onWebEvent("web:tasks:create-requested", (e) => emittedEvents.push(e));
+
+    try {
+      const { container } = render(<AiChatModule lang="en" />);
+      const inp = container.querySelector<HTMLInputElement>(".ai-input")!;
+      act(() => {
+        fireEvent.change(inp, { target: { value: "create a test task" } });
+      });
+      act(() => {
+        fireEvent.keyDown(inp, { key: "Enter", shiftKey: false });
+      });
+
+      // Wait for ConfirmationCard
+      await waitFor(() => {
+        expect(container.querySelector(".ai-confirmation-card")).not.toBeNull();
+      });
+
+      // Click Confirm
+      const confirmBtn = container.querySelector<HTMLButtonElement>(".ai-confirmation-confirm");
+      act(() => {
+        fireEvent.click(confirmBtn!);
+      });
+
+      // Wait for card to be dismissed
+      await waitFor(() => {
+        expect(container.querySelector(".ai-confirmation-card")).toBeNull();
+      });
+
+      // KEY ASSERTION: exactly ONE write event emitted
+      expect(emittedEvents).toHaveLength(1);
+      const ev = emittedEvents[0] as { requestId: string; title: string; bucket: string };
+      expect(ev.requestId).toBe("toolu_emit_test");
+      expect(ev.title).toBe("Test emit");
+      expect(ev.bucket).toBe("next7");
+    } finally {
+      unsub();
+    }
+  });
 });

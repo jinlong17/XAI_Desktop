@@ -407,15 +407,49 @@ export function AiChatModule({ lang }: AiChatModuleProps) {
   }, []);
 
   /**
-   * P3: handleConfirm — user explicitly approved the proposed action.
-   * This is the ONLY place the write event should be emitted (P4 wires the real emit).
-   * P3 stub: clears pendingConfirmation + advances queue + sets idle.
-   * P4 will: emit the typed write event + send tool_result turn + final stream.
+   * P4: handleConfirm — user explicitly approved the proposed action.
+   * This is the ONLY place the write event is emitted (no-silent-write invariant).
+   * Emits the typed write event → owning-module subscriber executes via reducer + setPref.
+   * Then advances the queue and sets idle (bounded single round-trip — P4 scope).
+   * (Full tool_result round-trip + final stream is a future enhancement beyond P4 scope.)
    */
   const handleConfirm = useCallback(() => {
     if (!pendingConfirmation) return;
-    // P4 will emit the write event here using pendingConfirmation.toolUse.
-    // For now: clear the confirmation and advance the queue.
+
+    // Find the tool and compute the write event spec.
+    const tool = findTool(pendingConfirmation.toolUse.name);
+    if (tool) {
+      const writeEvent = tool.toWriteEvent(
+        pendingConfirmation.toolUse.input,
+        pendingConfirmation.toolUse.id,
+      );
+
+      // CRITICAL: emit the write event EXACTLY ONCE, ONLY here (no-silent-write invariant).
+      // The owning-module subscriber (mounted in App.tsx) consumes this event
+      // and executes via its own pure reducer + setPref.
+      if (writeEvent.channel === "web:tasks:create-requested") {
+        const p = writeEvent.payload as {
+          requestId: string;
+          title: string;
+          bucket: "overdue" | "next7" | "later" | "nodate";
+          tag?: "study" | "work" | "personal" | "todo" | "other";
+          requestedAt: string;
+        };
+        emitWebEvent("web:tasks:create-requested", p);
+      } else if (writeEvent.channel === "web:calendar:create-requested") {
+        const p = writeEvent.payload as {
+          requestId: string;
+          title: string;
+          date: string;
+          startTime: string;
+          durationMin: number;
+          requestedAt: string;
+        };
+        emitWebEvent("web:calendar:create-requested", p);
+      }
+    }
+
+    // Clear the confirmation card and advance the queue.
     setPendingConfirmation(null);
     pendingSendQueueRef.current.shift();
     setThinking(false);

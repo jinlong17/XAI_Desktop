@@ -80,3 +80,6 @@ export type { EventComposerProps } from "./EventComposer.js";
 // EmptyStateHint — rendered when no user events present (Q7-A)
 export { EmptyStateHint } from "./EmptyStateHint.js";
 export type { EmptyStateHintProps } from "./EmptyStateHint.js";
+
+// ---- AI tool layer subscriber (additive — P4 xai-web-ai-tool-layer) ----------
+export { useCalendarCreateRequestSubscriber } from "./internal/aiCreateSubscriber.js";
