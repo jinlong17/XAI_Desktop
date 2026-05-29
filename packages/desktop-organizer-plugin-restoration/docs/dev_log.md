@@ -7,13 +7,13 @@
 | Workflow | FEATURE_DEV |
 | Target | desktop-organizer-plugin-restoration |
 | Title | Desktop Organizer Plugin Restoration |
-| Current Phase | FEATURE_BUILD |
-| Status | APPROVED |
-| Suggested Next | feature-auto-build |
+| Current Phase | FEATURE_VERIFY |
+| Status | READY_FOR_VERIFY |
+| Suggested Next | feature-verify |
 | Automation Mode | (default) |
 | Verify Cross-vendor | yes |
 | Executor | feature-auto-build (Codex, gpt-5.3-codex inline) |
-| Updated | 2026-05-29 08:00 PDT |
+| Updated | 2026-05-29 08:01 PDT |
 | Brief | `docs/reviews/desktop-organizer-plugin-restoration/20260529-feature-brief.md` |
 | Discovery Review | `docs/reviews/desktop-organizer-plugin-restoration/20260529-discovery-review.md` |
 | Risks | The main planning risk is false equivalence across the legacy family: organizer is already restored, meditation is already replaced, and clipboard/widgets/pet are not all in the same lifecycle state. Cleanup risk also remains around compatibility residue in `plugin-calendar` and `plugin-console`, which can block widget/clipboard follow-through if treated as docs-only work. |
@@ -49,7 +49,7 @@ Status: COMPLETED
 
 ### Phase 3 - Define follow-through boundaries for build
 
-Status: PLANNED
+Status: COMPLETED
 
 - preserve organizer’s restored path
 - keep deferred packages disabled and unregistered until their blockers are resolved
@@ -69,4 +69,5 @@ Status: PLANNED
 |---|---|---|---|---|
 | 2026-05-29 07:50 PDT | feature-plan (Codex, gpt-5 inline) | Fresh planning pass. Read the roadmap row and seed, workflow/docs authority, shipped row `#20` organizer docs, current `PLUGIN_MAP.md`, desktop/web runtime registrations, and the actual legacy package layout. Verified package-level checks for organizer, clipboard, widgets, and pet; confirmed `plugin-meditation` is missing from `packages/`. Produced the feature brief, discovery review, and docs quartet with a mixed disposition recommendation: organizer `restore`, clipboard `defer`, widgets `merge`, meditation `retire`, pet `merge`. | — | feature-review |
 | 2026-05-29 07:56 PDT | feature-review (Codex, gpt-5 inline) | Review pass complete. Re-read workflow/SOP/roadmap authority, the feature brief, discovery review, docs quartet, row `#20` shipped organizer state, runtime registrations, compatibility seams, package manifests/scripts, and executable package checks. Approved the plan because it is repo-truthful, keeps row `#20` scope intact, preserves useful legacy code pending reviewed quarantine/merge work, and gives `feature-auto-build` concrete doc/compatibility/quarantine phases. | — | feature-auto-build |
-| 2026-05-29 08:00 PDT | feature-auto-build (Codex, gpt-5.3-codex inline) | Completed Phase 2 authority alignment. Updated `docs/PLUGIN_MAP.md` to encode the approved mixed disposition matrix (organizer restore, clipboard defer, widgets merge-migrating, meditation retired/absent, pet merge-migrating), and clarified that `plugin-calendar`/`plugin-console` compatibility seams still gate cleanup. Ran source-truth checks over roadmap row #21, PLUGIN_MAP plugin rows, desktop registration set, web organizer/pet/meditation registrations, and filesystem confirmation for missing `packages/plugin-meditation`. | (to be filled after commit) | feature-auto-build (Phase 3) |
+| 2026-05-29 08:00 PDT | feature-auto-build (Codex, gpt-5.3-codex inline) | Completed Phase 2 authority alignment. Updated `docs/PLUGIN_MAP.md` to encode the approved mixed disposition matrix (organizer restore, clipboard defer, widgets merge-migrating, meditation retired/absent, pet merge-migrating), and clarified that `plugin-calendar`/`plugin-console` compatibility seams still gate cleanup. Ran source-truth checks over roadmap row #21, PLUGIN_MAP plugin rows, desktop registration set, web organizer/pet/meditation registrations, and filesystem confirmation for missing `packages/plugin-meditation`. | 72106282 (`docs(workflow): Phase 2 — align organizer restoration authority`) | feature-auto-build (Phase 3) |
+| 2026-05-29 08:01 PDT | feature-auto-build (Codex, gpt-5.3-codex inline) | Completed Phase 3 follow-through boundary definition across row #21 docs: preserved organizer canonical restored path, locked clipboard/widgets/pet non-registration + `enabled:false` guardrails, codified meditation desktop retirement (absent package), and documented merge/quarantine constraints for widgets/pet pending compatibility cleanup. Executed boundary assertions and type checks for organizer/clipboard/widgets/pet/calendar/console. | (to be filled after commit) | feature-verify |

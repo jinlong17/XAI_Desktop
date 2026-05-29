@@ -80,3 +80,30 @@ Acceptance:
 - `plugin-widgets` merge plan includes compatibility cleanup before retirement/quarantine.
 - `plugin-meditation` retirement plan is documentation cleanup, not package resurrection.
 - `plugin-pet` merge plan points to the already-live `@repo/plugin-web-pet` surface.
+
+## Phase 3 Boundary Verification Gates
+
+### Registration and package-state assertions
+
+- desktop host registration still excludes clipboard/widgets/pet:
+  - `rg -n "register.*Plugin" apps/desktop/src/main.tsx`
+- legacy package manifests remain disabled:
+  - `rg -n "\"enabled\": false" packages/plugin-clipboard/manifest.json packages/plugin-widgets/manifest.json packages/plugin-pet/manifest.json`
+- desktop meditation package remains absent:
+  - `test -d packages/plugin-meditation || echo "packages/plugin-meditation missing"`
+
+### Compatibility seam assertions
+
+- calendar seam remains explicitly visible until rehome row lands:
+  - `rg -n "@repo/plugin-widgets|WidgetManifestRegistration" packages/plugin-calendar`
+- console placeholders remain explicit compatibility residue, not live activation:
+  - `rg -n "clipboard|widgets" packages/plugin-console/manifest.json packages/plugin-console/src/registry/PluginSlotRegistry.ts`
+
+### Regression checks for touched compatibility packages
+
+- `pnpm --filter @repo/plugin-organizer check-types`
+- `pnpm --filter @repo/plugin-clipboard check-types`
+- `pnpm --filter @repo/plugin-widgets check-types`
+- `pnpm --filter @repo/plugin-pet check-types`
+- `pnpm --filter @repo/plugin-calendar check-types`
+- `pnpm --filter @repo/plugin-console check-types`

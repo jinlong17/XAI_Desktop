@@ -48,5 +48,39 @@ Adopt a mixed disposition strategy for the legacy organizer-adjacent desktop pac
 | Phase | Primary outcome |
 |---|---|
 | P1 | docs and PLUGIN_MAP authority aligned to the mixed dispositions |
-| P2 | compatibility seams cleaned (`plugin-calendar`, `plugin-console`, manifests/docs) |
-| P3 | reviewed quarantine / merge / retirement follow-through for inactive legacy packages |
+| P2 | compatibility seams explicitly inventoried and documented (`plugin-calendar`, `plugin-console`) |
+| P3 | build-frozen follow-through boundaries defined for preserve/defer/merge/retire without reviving inactive packages |
+
+## Phase 3 Follow-Through Boundaries (Build-Frozen)
+
+### Organizer (restore, preserve)
+
+- Canonical path stays `apps/web/src/routes/modules/smartContainerOrganizerRegistration.tsx` -> `@repo/plugin-organizer`.
+- Do not re-open overlay-era blanket package revival through row `#21`.
+- Any organizer legacy leftovers must remain under explicit legacy/future boundaries unless a new reviewed row replaces row `#20` authority.
+
+### Clipboard (defer, disabled)
+
+- Keep `packages/plugin-clipboard/manifest.json` with `enabled: false`.
+- Do not add `registerClipboardPlugin()` or equivalent host registration in `apps/desktop/src/main.tsx`.
+- Defer until native clipboard capture/write ownership and capability contracts are approved.
+
+### Widgets (merge, compatibility-first)
+
+- Keep `packages/plugin-widgets/` inactive while `plugin-calendar` still imports widget contracts from it.
+- Merge target remains the shipped dashboard stack:
+  - `@repo/plugin-web-dashboard-grid`
+  - `@repo/plugin-web-dashboard-widgets`
+- Quarantine/removal is blocked until compatibility seams are rehomed and reviewed.
+
+### Meditation (retire desktop package drift)
+
+- `packages/plugin-meditation/` remains absent by design.
+- Canonical runtime ownership is `@repo/plugin-web-meditation`.
+- Follow-through is documentation cleanup plus stale-reference removal only.
+
+### Pet (merge, preserve useful legacy assets)
+
+- Canonical runtime ownership remains `@repo/plugin-web-pet` (mounted in `apps/web/src/App.tsx`).
+- Keep legacy `packages/plugin-pet/` disabled/unregistered while compatibility audit decides reusable assets.
+- Do not delete legacy assets prematurely before reviewed quarantine criteria are accepted.
