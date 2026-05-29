@@ -153,3 +153,19 @@ export type {
   OrganizerLayoutMigrationOptions,
   OrganizerLayoutMigrationResult,
 } from "./organizer-layout-migration";
+export {
+  DESKTOP_WEB_IMPORT_SURFACES,
+  buildDesktopWebImportLedgerId,
+  buildDesktopWebImportRunRecordId,
+  createDesktopWebImportFingerprint,
+  normalizeImportBoundaryKey,
+} from "./desktop-web-import";
+export type {
+  DesktopWebImportLedgerRecord,
+  DesktopWebImportRunRecord,
+  DesktopWebImportSkippedReason,
+  DesktopWebImportSurface,
+  DesktopWebImportSurfaceResult,
+  DesktopWebImportSurfaceStatus,
+  DesktopWebImportTrigger,
+} from "./desktop-web-import";
