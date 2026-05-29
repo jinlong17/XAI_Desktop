@@ -487,3 +487,124 @@ ED-R1 (docs/code drift — the prior-BLOCK cause — **CRITICAL**: test.md asser
 
 ---
 
+## 2026-05-29 Extension: AI Tool Layer — OpenAI-Compatible (xai-web-ai-tool-openai-compatible)
+
+> APPEND-ONLY. The §0 baseline (row #18), the 2026-05-25 Real-LLM-Adapter extension, the 2026-05-29
+> AI-Tool-Layer (create-only) extension, AND the 2026-05-29 Edit/Delete extension all continue to apply
+> byte-for-byte. This block lifts the openai-compatible tool deferral so the SHIPPED 6 tools work on
+> openai-compatible providers via the same provider-agnostic confirmation→event→reducer path.
+> This is the **2nd of two AI enhancements** (the final one).
+
+### Decision header
+
+| Field | Value |
+|---|---|
+| Selected Option | **Normalize at the adapter boundary onto the existing `ToolUseResult` shape** (planner's-call #1). Add the OpenAI Chat Completions function-calling wire format on both directions of the adapter (`buildBody` openai branch + `streamCompleteChat` openai `delta.tool_calls` parse), translating the Anthropic-shaped `priorMessages` round-trip turns into OpenAI `tool_calls`/`tool`-role messages inside the openai `buildBody`. Everything above the adapter is unchanged. |
+| Review Doc Path | `docs/reviews/xai-web-ai-tool-openai-compatible/20260529-discovery-review.md` |
+| Review Date | 2026-05-29 |
+| Carve-out | `docs/reviews/_p0-carve-outs/20260529-ai-tool-openai-compatible.md` (commit `dd1519b`) |
+| Authority | ADR-0010 §D4 (P0 maintenance carve-out) |
+| Branch | `web` (does NOT touch `dev`) |
+| Predecessor | `xai-web-ai-tool-edit-delete` (SHIPPED 2026-05-29) — 6-tool create/edit/delete, Anthropic-first |
+| Boundary | **Self-contained to `plugin-web-ai-chat/src/internal/`** (`llmProvider.ts` + `claudeStreamAdapter.ts` + `toolUseTypes.ts`) + tests + docs. NO `events.ts`, NO cross-plugin, NO `apps/web`, NO new channel/dep/CSP/pref. |
+
+### Frozen assumptions (this extension; lock at plan acceptance)
+
+1. **`ToolUseResult` IS `NormalizedToolUse`** (planner's-call #1). The SHIPPED internal shape `{id, name,
+   input}` (`toolUseTypes.ts:82`), surfaced via `StreamChunk.toolUse` and consumed provider-agnostically
+   by `AiChatModule`, is the convergence point for BOTH providers. **No new public type; `index.ts`
+   surface byte-stable.**
+2. **Tool defs: single source of truth, two serializers.** `toolRegistry.AI_TOOLS` (6 Anthropic-shaped
+   defs) is unchanged. A new pure `toOpenAiTools(defs)` maps `{name, description, input_schema}` →
+   `{type:"function", function:{name, description, parameters: input_schema}}` (drops Anthropic-only
+   `input_examples`). Anthropic serialization = the existing identity pass-through.
+3. **OpenAI request protocol (pinned, discovery §2.1–§2.2):** `tools:[{type:"function",function:{name,
+   description,parameters}}]` + `tool_choice` (`auto`/`none`/`required`/`{type:"function",function:{name}}`).
+   `toOpenAiToolChoice` maps the SHIPPED Anthropic `toolChoice`. v1 omits `toolChoice` (→ `auto` default);
+   the mapping is implemented + tested for correctness, not as a comment (anti-drift).
+4. **OpenAI streaming parse (pinned, discovery §2.3):** accumulate `choices[0].delta.tool_calls[k]` **by
+   `index`** (`id`/`type`/`function.name` appear only on the FIRST delta; later deltas carry only
+   `function.arguments` fragments + `index`); concatenate `function.arguments` per index; `JSON.parse`
+   **ONCE** after the stream; `finish_reason:"tool_calls"` (defensively: any accumulated `tool_calls` by
+   stream-end) signals the tool turn → set `toolUseResult`. The openai analogue of the SHIPPED Anthropic
+   `input_json_delta` per-block-index accumulation.
+5. **OpenAI round-trip (pinned, discovery §2.5):** the assistant turn carries top-level
+   `tool_calls:[{id,type:"function",function:{name,arguments:JSON.stringify(input)}}]`; the result is a
+   `{role:"tool", tool_call_id, content}` message (no `is_error` field — a declined tool's `is_error`
+   becomes plain content text). The openai `buildBody` translates the incoming Anthropic-shaped
+   `priorMessages` content blocks (`tool_use`/`tool_result`) into this shape (discovery §2.6 + §3.3).
+   `AiChatModule` keeps emitting Anthropic-shaped content blocks — byte-stable.
+6. **Streaming default (planner's-call #3).** The openai tool path uses streaming (matches SHIPPED
+   Anthropic + SHIPPED openai text path). Non-streaming `tool_calls` shape documented (discovery §2.4) but
+   not the primary path; the non-streaming `completeChat` fallback is unchanged (demo string).
+7. **Anthropic byte-stable.** The Anthropic `buildBody` branch, the Anthropic streaming event handling
+   (`content_block_*`/`message_delta`/`input_json_delta`), `toolRegistry`'s 6 defs +
+   `toConfirmation`/`toWriteEvent`, `StreamChunk`/`StreamRequest`/`ToolUseResult`, `AiChatModule`,
+   `ConfirmationCard`, `contextProvider`, `events.ts`, the 2 subscribers — ALL unchanged. Only the openai
+   branch + the line-128 gate generalization change.
+8. **Anti-drift (4th same-class feature — discovery §5):** the two deferral comments
+   (`claudeStreamAdapter.ts:127-128` + `llmProvider.ts:96`) are DELETED and replaced with real code; a
+   grep gate asserts they are gone. The SHIPPED `TU-7` test (which asserts openai `tools` undefined) is
+   rewritten/superseded to assert the new openai serialization. **Code matches docs.**
+9. **4 SHIPPED lifelines unchanged.** no-silent-write / additive events / route-independent subscriber /
+   bounded round-trip all operate ABOVE the adapter and are untouched; this carve-out only adds openai
+   wire translation BELOW them.
+10. **`sseParser` unchanged.** The `[DONE]` sentinel already covers openai streams; the tool_calls parse
+    lives in `claudeStreamAdapter`, not `sseParser`.
+
+### File plan (delta over the SHIPPED 6-tool layer)
+
+```
+packages/plugin-web-ai-chat/src/internal/
+  toolUseTypes.ts          — ADD: OpenAiToolDef type + toOpenAiTools(defs) + toOpenAiToolChoice(choice) pure serializers (OQ1: co-located here). @internal.
+  llmProvider.ts           — MODIFY openai branch ONLY: lift "tools NOT sent"; serialize tools via toOpenAiTools + tool_choice via toOpenAiToolChoice; translate ContentBlock[] round-trip turns → tool_calls/tool-role messages (discovery §3.3). DELETE the :96 deferral comment. Anthropic branch UNTOUCHED.
+  claudeStreamAdapter.ts   — MODIFY: line-128 gate `provider==="anthropic"?req.tools:undefined` → `req.tools` (both providers). Extend the openai streaming else-branch with a loop-local tool_calls accumulator (index-keyed) + read finish_reason → toolUseResult. DELETE the :127-128 deferral comment. Anthropic event handling + final-chunk emit UNTOUCHED (generalized to "tool turn from either provider").
+  sseParser.ts             — UNCHANGED.
+  toolRegistry.ts          — UNCHANGED (registry is the single source of truth; only consumed by the new serializer).
+  __tests__/
+    openAiToolFormat.test.ts (NEW)  — OAI-FMT: toOpenAiTools shape + input_examples dropped; toOpenAiToolChoice mapping table.
+    openAiToolProtocol.test.ts (NEW) — OAI-STREAM golden (delta.tool_calls multi-fragment accumulation + finish_reason) + OAI-RT round-trip body shape + OAI-PARITY provider-parity.
+    toolUseProtocol.test.ts (MODIFY) — rewrite TU-7 to assert openai tools NOW serialized (was: undefined). Anti-drift.
+
+NO edits: events.ts, AiChatModule.tsx, ConfirmationCard.tsx, contextProvider.ts, index.ts, apps/web/*, xai-web-tasks/*, xai-web-calendar/*, plugin-web-tokens, storage registry, ADR, dev.
+```
+
+### State machine — UNCHANGED
+
+The streaming → pendingConfirmation → Confirm/Cancel → bounded round-trip machine is provider-agnostic
+and unchanged. The openai path produces the SAME `StreamChunk.toolUse` that drives it. The only
+divergence is the wire format inside the adapter (request serialization + stream parse + round-trip body
+translation) — invisible to the state machine.
+
+### Component graph delta
+
+- `toolUseTypes.ts` gains `OpenAiToolDef` + `toOpenAiTools` + `toOpenAiToolChoice` (pure, `@internal`).
+- `llmProvider.ts` openai `buildBody` calls the two serializers + the `priorMessages` content-block
+  translator.
+- `claudeStreamAdapter.ts` openai branch gains a loop-local `openAiToolAccum` (index → `{id, name,
+  argsJson}`) + `finish_reason` read; the line-128 gate is generalized.
+- No other component changes.
+
+### Dep boundary
+
+No new dependency. `toolUseTypes.ts`, `llmProvider.ts`, `claudeStreamAdapter.ts` already import from each
+other + `@repo/plugin-web-storage` + `@repo/xai-web-event-bus`; no new import edges leave the package.
+
+### Risks recap (this extension)
+
+OAI-R1..OAI-R8 from `docs/reviews/xai-web-ai-tool-openai-compatible/20260529-discovery-review.md` §7.
+OAI-R1 (docs/code drift — the repeat-BLOCK cause) is CRITICAL and mitigated by the §5 anti-drift
+commitments (delete comments + grep gate + rewrite TU-7 + provider-parity is a real test).
+
+### Out-of-scope (deferred, this extension)
+
+- New providers beyond anthropic + openai-compatible. New tools (the 6 already SHIPPED; this adds none).
+- Responses API (this integrates the Chat Completions API, the endpoint already in use).
+- Multi-tool agentic loops (v1 single-tool-per-turn parity with the SHIPPED Anthropic path — OQ3).
+- Provider auto-detection / model-capability probing.
+- `events.ts` / cross-plugin / `apps/web` / new channel / new dep / new CSP origin / new storage key.
+- Real openai-compatible-key smoke + cross-vendor cold-read (operator work; deferred per ADR-0008 §S3 /
+  ADR-0009 §D2-G2 — consistent with the create + edit/delete lineages).
+
+---
+

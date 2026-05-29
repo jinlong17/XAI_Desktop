@@ -817,3 +817,143 @@ export function useCalendarMutateRequestSubscriber(): void;
 - `deleteCard`/`updateCard`/`updateEvent`/`deleteEvent` all no-op (return same reference) on missing id — a stale/wrong id from the model mutates nothing (silent safe no-op, not an error).
 - SHIPPED FIFO queue + `processingRef` + `pendingConfirmation` pause + abort-on-unmount all preserved.
 
+---
+
+## §15. 2026-05-29 Extension — AI Tool Layer OpenAI-Compatible (xai-web-ai-tool-openai-compatible)
+
+> APPEND-ONLY. §0..§14 continue to apply byte-for-byte. This block adds the OpenAI Chat Completions
+> function-calling wire format to the adapter so the SHIPPED 6 tools (§14) work on openai-compatible
+> providers via the SAME provider-agnostic confirmation→event→reducer path. Self-contained to
+> `plugin-web-ai-chat/src/internal/` (`llmProvider.ts` + `claudeStreamAdapter.ts` + `toolUseTypes.ts`).
+> Design: §design.md 2026-05-29 Extension (OpenAI-Compatible). Discovery: §2 protocol research.
+
+### §15.0 OpenAI Chat Completions tool-calling wire protocol (PINNED — the contract this layer integrates)
+
+Endpoint: `${baseUrl}/chat/completions` (already built by `resolveProvider` openai branch). Pinned
+2026-05-29 (discovery §2; sources discovery §9).
+
+**Request `tools[]` element:**
+```jsonc
+{ "type": "function", "function": { "name": string, "description": string,
+  "parameters": { "type": "object", "properties": {...}, "required": [...] } } }
+```
+**Request `tool_choice`:** `"auto"` | `"none"` | `"required"` | `{ "type":"function", "function":{"name":string} }`.
+
+**Streaming response — `choices[0].delta.tool_calls[]` element:**
+```jsonc
+{ "index": number,            // keys the tool call across deltas
+  "id": string?,              // FIRST delta only
+  "type": "function"?,        // FIRST delta only
+  "function": { "name": string?,        // FIRST delta only
+                "arguments": string? } } // fragment, concatenated per index
+```
+Final chunk: `choices[0].finish_reason === "tool_calls"`. Stream terminator: `data: [DONE]`.
+
+**Non-streaming response (documented; not v1's path):**
+`choices[0].message.tool_calls[] = [{id, type:"function", function:{name, arguments:<JSON string>}}]`,
+`choices[0].finish_reason === "tool_calls"`.
+
+**Round-trip turns:**
+```jsonc
+// assistant turn that initiated the call:
+{ "role":"assistant", "content":null, "tool_calls":[ {"id":string,"type":"function",
+  "function":{"name":string,"arguments":"<JSON string of input>"}} ] }
+// result turn (correlated by tool_call_id; no is_error field):
+{ "role":"tool", "tool_call_id":string, "content":string }
+```
+
+### §15.1 `toOpenAiTools` (internal — `toolUseTypes.ts`; pure; NEW)
+
+```ts
+export interface OpenAiToolDef {
+  type: "function";
+  function: {
+    name: string;
+    description: string;
+    parameters: { type: "object"; properties: Record<string, unknown>; required?: string[] };
+  };
+}
+
+/** Map Anthropic-shaped tool defs → OpenAI function format. Drops input_examples (no OpenAI field). */
+export function toOpenAiTools(defs: AnthropicToolDef[]): OpenAiToolDef[];
+```
+
+- `name` → `function.name`; `description` → `function.description`; `input_schema` → `function.parameters`
+  (identical JSON-Schema object). `input_examples` is **dropped**. `@internal` — NOT exported from
+  `index.ts`. The `AI_TOOLS` registry (§14.2) is the single source of truth; this is the OpenAI
+  serializer (the Anthropic serializer is the existing identity pass-through).
+
+### §15.2 `toOpenAiToolChoice` (internal — `toolUseTypes.ts`; pure; NEW)
+
+```ts
+export function toOpenAiToolChoice(
+  choice: { type: "auto" | "any" | "none" } | { type: "tool"; name: string },
+): "auto" | "none" | "required" | { type: "function"; function: { name: string } };
+```
+
+Mapping (discovery §2.2): `auto→"auto"`, `any→"required"`, `none→"none"`, `tool→{type:"function",
+function:{name}}`. v1 callers never set `toolChoice` (→ openai default `auto`); the function is
+implemented + unit-tested for correctness (anti-drift — real code, not a comment).
+
+### §15.3 `llmProvider.buildBody` openai branch (MODIFIED — lift the deferral)
+
+The openai-compatible `buildBody` (today `llmProvider.ts:95-104`, which serializes only
+`{model, messages, stream, max_tokens}` and ignores `tools`):
+
+- When `tools?.length`: `body["tools"] = toOpenAiTools(tools)`.
+- When `toolChoice !== undefined`: `body["tool_choice"] = toOpenAiToolChoice(toolChoice)` (else omitted →
+  `auto`).
+- **Message translation** (discovery §3.3): for each message whose `content` is a `ContentBlock[]`:
+  - assistant turn with `[{type:"tool_use", id, name, input}]` →
+    `{role:"assistant", content:null, tool_calls:[{id, type:"function", function:{name, arguments: JSON.stringify(input)}}]}`.
+  - user turn with `[{type:"tool_result", tool_use_id, content, is_error?}]` →
+    `{role:"tool", tool_call_id: tool_use_id, content}` (the `is_error` flag is folded into `content`
+    text upstream; OpenAI has no `is_error` field).
+  - string-content turns pass through unchanged.
+- **DELETE** the `// OpenAI-compatible: tools are NOT sent (deferred per planner's-call #3).` comment
+  (line 96). Anthropic branch UNCHANGED.
+
+### §15.4 `claudeStreamAdapter` openai streaming parse (MODIFIED — lift the gate)
+
+- **Line-128 gate** `const tools = config.provider === "anthropic" ? req.tools : undefined;` →
+  `const tools = req.tools;` (both providers receive tools; each `buildBody` branch serializes
+  appropriately). **DELETE** the `// Only send tools on Anthropic provider (planner's-call #3).` comment
+  (lines 127-128).
+- **openai streaming else-branch** (today `claudeStreamAdapter.ts:292-297`, only `delta.content` text):
+  add a loop-local accumulator `openAiToolAccum: Record<number, {id, name, argsJson}>`:
+  - for each `choices[0].delta.tool_calls[k]`: if `id`/`function.name` present (first delta), record at
+    its `index`; always append `function.arguments` to `argsJson[index]`.
+  - read `choices[0].finish_reason`; on `"tool_calls"` (defensively: any accumulated entries by
+    stream-end) — `JSON.parse` the lowest-index `argsJson` **ONCE** → `toolUseResult = {id, name, input}`
+    (single-tool v1, OQ3); break.
+  - `"stop"`/`"length"`/`null` → unchanged text path.
+- The final-chunk emit generalizes: a tool turn is signalled by Anthropic `stop_reason:"tool_use"` OR
+  openai accumulated `toolUseResult` → `yield {accumulated, done:true, toolUse: toolUseResult}`. Anthropic
+  event handling + `StreamChunk` shape UNCHANGED.
+
+### §15.5 `StreamChunk` / `StreamRequest` / `ToolUseResult` — UNCHANGED
+
+No new public type. `ToolUseResult {id, name, input}` (§13 lineage) is the normalized shape BOTH providers
+converge on (planner's-call #1). `index.ts` public surface byte-stable. `AiChatModule` consumes
+`chunk.toolUse` provider-agnostically (no change).
+
+### §15.6 Error semantics
+
+Unchanged from §12.8 / §9. openai 4xx/5xx → `LlmError` + `web:ai:request-failed`; 429 →
+`web:ai:rate-limited`. Malformed `tool_calls` arguments JSON → graceful no tool-use (text only), same as
+the Anthropic malformed-input degradation (`claudeStreamAdapter.ts:267`).
+
+### §15.7 Persistence / permissions / boundaries
+
+- No new storage key, no new EventMap channel, no new CSP origin (openai-compatible endpoint already
+  allowed), no new npm dep, no new provider, no model-id change, no Tauri capability.
+- NO `events.ts` / cross-plugin / `apps/web` / `index.ts` / `plugin-web-tokens` / storage-registry / ADR
+  / `dev` edits. The 4 SHIPPED lifelines (§13/§14) are untouched — this layer operates entirely below
+  them.
+
+### §15.8 Idempotency / re-mount safety
+
+Unchanged — the openai path produces the SAME `StreamChunk.toolUse` that drives the SHIPPED
+provider-agnostic state machine (FIFO queue + `pendingConfirmation` + bounded cap=1 round-trip +
+per-`requestId` subscriber idempotency). No new idempotency surface.
+

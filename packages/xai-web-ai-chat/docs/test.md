@@ -444,9 +444,9 @@ New cases:
 - TU-2: `input_json_delta` fragments accumulated per content-block INDEX; `JSON.parse` once at `content_block_stop` (a per-delta parse would throw — assert it does NOT).
 - TU-3: interleaved text block (index 0) + tool_use block (index 1) → BOTH surfaced (preamble text + tool use).
 - TU-4: non-stream JSON response with tool_use block + `stop_reason:"tool_use"` → same result shape.
-- TU-5: `buildBody` emits `tools` + omits `tool_choice` (→auto) on Anthropic branch when key present; openai-compatible branch OMITS `tools`.
+- TU-5: `buildBody` emits `tools` + omits `tool_choice` (→auto) on Anthropic branch when key present; openai-compatible branch OMITS `tools`. *(Note — Rec1 reconciliation 2026-05-29: this §8 prose describes the ORIGINAL deferral behavior. The actual `toolUseProtocol.test.ts` TU-5 at HEAD is the content-block round-trip body test (see §10 TU-7 rewrite note). Use `toolUseProtocol.test.ts` as the source of truth for TU numbering.)*
 - TU-6: `buildBody` with `content: ContentBlock[]` (assistant tool_use turn + user tool_result turn) produces a valid Anthropic body; `content: string` path byte-for-byte unchanged (regression).
-- TU-7: tool_result round-trip body — `messages` carries assistant tool_use turn THEN user `tool_result{tool_use_id,content,is_error?}`.
+- TU-7: tool_result round-trip body — `messages` carries assistant tool_use turn THEN user `tool_result{tool_use_id,content,is_error?}`. *(Note — Rec1 reconciliation 2026-05-29: this §8 prose describes the OLD TU-7 (before the xai-web-ai-tool-openai-compatible lift). The actual `toolUseProtocol.test.ts` TU-7 at HEAD is REWRITTEN to assert that openai-compatible buildBody NOW serializes tools in OpenAI function format. This §8 description is superseded by §10.2 TU-7 rewrite. Use `toolUseProtocol.test.ts` as the source of truth.)*
 - TU-REG: ALL SHIPPED `claudeStreamAdapter`/`sseParser`/`llmProvider`/`claudeAdapter` cases (§7.2) STAY GREEN (text-only path untouched).
 
 #### `toolRegistry.test.ts` (P3)
@@ -626,4 +626,123 @@ New cases:
 
 - Same as §8.4. `afterEach` clears `localStorage` (resets `xai_task_cols`/`xai_calendar_events`), resets fetch SSE mock, unsubscribes the 4 new channels' listeners, restores timers/mocks.
 - Reducer tests use deep-frozen fixtures to catch accidental mutation.
+
+---
+
+## §10. 2026-05-29 Extension — AI Tool Layer OpenAI-Compatible test strategy (xai-web-ai-tool-openai-compatible)
+
+> §0..§9 continue to apply. This extension adds tests for the OpenAI Chat Completions function-calling
+> wire format. All tests are additive except the rewrite of the SHIPPED `TU-7` (anti-drift — it currently
+> asserts the now-removed deferral). Design: §design.md 2026-05-29 Extension (OpenAI-Compatible).
+> Contract: §api.md §15. Discovery: §2 protocol research + §4 planner's calls + §5 anti-drift.
+
+### §10.0 Scope summary (extension)
+
+Three test surfaces, mirroring the SHIPPED Anthropic tool tests (§8 `toolUseProtocol.test.ts`) but for the
+openai branch:
+1. **Pure serializers** (`openAiToolFormat.test.ts`) — `toOpenAiTools` shape + `input_examples` drop;
+   `toOpenAiToolChoice` mapping table.
+2. **Streaming + round-trip golden** (`openAiToolProtocol.test.ts`) — openai `delta.tool_calls`
+   accumulation golden + round-trip body translation + provider-parity.
+3. **Anti-drift** — rewrite the SHIPPED `TU-7` (in `toolUseProtocol.test.ts`); a grep gate asserts the two
+   deferral comments are gone; full Anthropic suite stays green.
+
+### §10.1 Mock strategy (extension)
+
+- Reuse the SHIPPED helpers from `toolUseProtocol.test.ts`: `makeStream(...chunks)` (ReadableStream from
+  SSE strings), an openai-format SSE chunk builder (data-only lines — openai uses `data:` without an
+  `event:` line, so a `dataChunk(json)` helper emits `data: ${json}\n\n`), `collectChunks(gen)`.
+- `vi.mock` `@repo/plugin-web-storage` (`getPref` returns `xai_ai_provider:"openai-compatible"` +
+  `xai_ai_base_url:"https://api.groq.com/openai/v1"` + `xai_ai_streaming:true`), `@repo/xai-web-event-bus`
+  (`emitWebEvent` spy), `secretStore.aiKeyStorage.loadKey → "sk-oai-test"`, `contextProvider` (empty).
+- `vi.spyOn(globalThis,"fetch")` returns a `Response(makeStream(openaiGoldenSse), {status:200})`.
+- Real `JSON.parse` (no mock) — the accumulation correctness is the point.
+
+### §10.2 New test cases
+
+#### Pure serializers — `openAiToolFormat.test.ts`
+- **OAI-FMT-1:** `toOpenAiTools([createTaskTool])` → `[{type:"function", function:{name:"create_task",
+  description:<same>, parameters:<same input_schema object>}}]`. Deep-equal the parameters object to the
+  source `input_schema`.
+- **OAI-FMT-2:** `input_examples` is **absent** from every serialized tool (the create tools carry
+  `input_examples`; assert no `function.input_examples` and no top-level `input_examples`).
+- **OAI-FMT-3:** all 6 `AI_TOOLS` serialize to valid `{type:"function", function:{name, description,
+  parameters}}` with `name` matching `^[a-zA-Z0-9_-]{1,64}$`.
+- **OAI-CHOICE-1..4:** `toOpenAiToolChoice` mapping — `{type:"auto"}→"auto"`, `{type:"any"}→"required"`,
+  `{type:"none"}→"none"`, `{type:"tool",name:"create_task"}→{type:"function",function:{name:"create_task"}}`.
+
+#### Streaming + round-trip golden — `openAiToolProtocol.test.ts`
+- **OAI-STREAM-1 (the §2.3 golden — critical-correctness):** a multi-chunk openai SSE stream where the
+  FIRST `delta.tool_calls[0]` carries `{index:0, id:"call_x", type:"function", function:{name:"create_task",
+  arguments:""}}`, subsequent chunks carry `{index:0, function:{arguments:'{"title":'}}` then
+  `{index:0, function:{arguments:'"Buy milk"}'}}`, final chunk `finish_reason:"tool_calls"`, then
+  `data: [DONE]`. Assert the final `StreamChunk.toolUse` deep-equals `{id:"call_x", name:"create_task",
+  input:{title:"Buy milk"}}`. **Asserts index-keyed accumulation + JSON.parse-once + finish_reason read.**
+- **OAI-STREAM-2 (id/name first-delta-only):** later chunks omit `id`/`name` (only `index` +
+  `function.arguments`); assert the id/name from the first delta are retained (NOT lost). (OAI-R2 guard.)
+- **OAI-STREAM-3 (text turn):** a normal text stream (`delta.content` fragments, `finish_reason:"stop"`,
+  `[DONE]`) → `StreamChunk.accumulated` text, `toolUse` undefined. (No false-positive tool turn.)
+- **OAI-STREAM-4 (finish_reason absent / "stop" but tool_calls present — defensive, discovery §9 note):**
+  a compat-server stream that accumulated `tool_calls` but sets `finish_reason:"stop"`; assert `toolUse`
+  is still surfaced (defensive fallback). (OAI-R6.)
+- **OAI-RT-1 (round-trip body — assistant tool_calls):** `buildBody` (openai) with `priorMessages`
+  containing an assistant turn `content:[{type:"tool_use", id:"call_x", name:"create_task", input:{title:"Buy milk"}}]`
+  → serialized message is `{role:"assistant", content:null, tool_calls:[{id:"call_x", type:"function",
+  function:{name:"create_task", arguments:'{"title":"Buy milk"}'}}]}`. (`arguments` is `JSON.stringify(input)`.)
+- **OAI-RT-2 (round-trip body — tool-role result):** a user turn `content:[{type:"tool_result",
+  tool_use_id:"call_x", content:"Tool 'create_task' executed successfully."}]` → `{role:"tool",
+  tool_call_id:"call_x", content:"Tool 'create_task' executed successfully."}`.
+- **OAI-RT-3 (string content unchanged):** string-content turns pass through unchanged on the openai
+  branch (backward compat with the SHIPPED openai text path).
+- **OAI-TOOLS-1 (buildBody serializes tools):** openai `buildBody` with `tools:[createTaskTool,...]`
+  emits `body["tools"]` in OpenAI function format (supersedes the deferral). With no tools, `body["tools"]`
+  is undefined (backward compat).
+- **OAI-PARITY-1 (provider-parity — the load-bearing carve-out claim):** drive `streamCompleteChat` once
+  with an **Anthropic** tool-use golden and once with the **equivalent openai** `delta.tool_calls` golden
+  for the SAME tool input (`create_task {title:"Buy milk", bucket:"next7"}`); assert BOTH produce the
+  IDENTICAL `StreamChunk.toolUse` normalized shape `{name:"create_task", input:{title:"Buy milk",
+  bucket:"next7"}}`. (Proves both providers converge on the same normalized shape that feeds the
+  provider-agnostic confirmation→event path.)
+- **OAI-PARITY-2 (write-event parity):** feed the openai-parsed `toolUse.input` through
+  `findTool("create_task").toWriteEvent(input, toolUse.id)` and assert the SAME
+  `web:tasks:create-requested` payload (channel + title + bucket + requestId=id) as the Anthropic path
+  produces — i.e. the confirmation→event path is byte-identical regardless of provider. (No emit here;
+  this asserts the registry mapping is provider-agnostic, reinforcing the no-silent-write boundary.)
+
+#### Anti-drift (the repeat-risk focus — OAI-R1)
+- **TU-7 (REWRITE, in `toolUseProtocol.test.ts`):** the SHIPPED TU-7 asserts openai `body["tools"]` is
+  undefined (encodes the deferral). REWRITE it to assert the openai branch now serializes `tools` in
+  OpenAI function format when tools are present (deferral lifted). Keep the no-tools→undefined backward-
+  compat assertion. **This test must change — leaving it as-is is a contradiction (code matches docs).**
+- **OAI-NODRIFT-1 (deferral comments gone):** a source-text assertion (read `llmProvider.ts` +
+  `claudeStreamAdapter.ts`) that the substrings `"tools are NOT sent"` and `"Only send tools on
+  Anthropic provider"` are ABSENT. (Mirrors the SHIPPED `no-plaintext-key.test.ts` source-guard pattern.)
+  Alternatively the verify-report runs this as a grep gate; the test makes it mechanical.
+
+#### Anthropic-unchanged regression
+- **OAI-REG (Anthropic byte-stable):** the full SHIPPED Anthropic tool suite stays green —
+  `toolUseProtocol.test.ts` TU-1..TU-6 (TU-7 rewritten), `AiChatModule.test.tsx` IT-* + I1..I23,
+  `toolRegistry.test.ts`, `ConfirmationCard.test.tsx`, plus tasks (TS-*) + calendar (CS-*) suites.
+  Asserted by running the full suites at each phase DoD.
+
+### §10.3 Acceptance gate mapping (extension)
+
+| Acceptance anchor (carve-out §5) | Mechanism |
+|---|---|
+| openai-compatible provider configured → AI offers the same 6 tools | OAI-FMT-1/3 + OAI-TOOLS-1 (tools serialized on openai branch) |
+| Tools route through the SAME confirmation→event→reducer path (provider-agnostic) | **OAI-PARITY-1** (same normalized `toolUse`) + **OAI-PARITY-2** (same write-event payload) |
+| openai tool_calls correctly parsed from streaming | OAI-STREAM-1 (golden accumulation) + OAI-STREAM-2 (first-delta-only id/name) + OAI-STREAM-4 (defensive finish_reason) |
+| Round-trip works on openai (tool-role result) | OAI-RT-1 (assistant tool_calls) + OAI-RT-2 (tool-role result) |
+| `tool_choice` mapping correct | OAI-CHOICE-1..4 |
+| **Anthropic path stays byte-stable** | **OAI-REG** (full Anthropic suite green) + Anthropic branch untouched in source |
+| Deferral comments gone (code matches docs — anti-drift OAI-R1) | **TU-7 rewrite** + **OAI-NODRIFT-1** (source-text guard) |
+| No new channel / no silent write / lifelines preserved | OAI-PARITY-2 (registry provider-agnostic) + no `events.ts`/emit-site edit (boundary grep in verify-report) |
+| Real openai-compatible-key tool round-trip + cross-vendor cold-read | DEFERRED operator smoke (ADR-0008 §S3 / ADR-0009 §D2-G2) — verify-report records deferral |
+
+### §10.4 Cleanup behaviour (extension)
+
+- `afterEach` resets the fetch SSE mock + `vi.clearAllMocks()`; no localStorage writes in these tests
+  (serializer + parse tests are read-only on prefs). The provider-parity test that touches `toWriteEvent`
+  does not emit (asserts the spec only), so no event-bus cleanup beyond the standard mock reset.
+- Golden SSE fixtures are inline string literals (deterministic; no network).
 

@@ -1474,3 +1474,285 @@ hold, anti-drift passes, every automated gate passes, no regression. One non-blo
 
 ---
 
+## Feature-Dev Lineage — AI Tool Layer OpenAI-Compatible (2026-05-29)
+
+> APPEND-ONLY block. ALL prior Status Panels above (row #18 SHIPPED 2026-05-24, the Real-LLM-Adapter
+> SHIPPED lineage, the AI Tool Layer create-only SHIPPED lineage 2026-05-29, AND the AI Tool Layer
+> Edit/Delete SHIPPED lineage 2026-05-29) record their baselines and are NOT mutated by this lineage.
+> This block tracks the new feature-dev cycle introduced by the `xai-web-ai-tool-openai-compatible` P0
+> carve-out (`dd1519b`, ADR-0010 §D4) — lifting the openai-compatible tool deferral so the SHIPPED 6
+> tools work on openai-compatible providers. **2nd of two AI enhancements (the final one).**
+
+### Lineage Status Panel
+
+| Field | Value |
+|---|---|
+| Workflow | FEATURE_DEV |
+| Target | xai-web-ai-tool-openai-compatible |
+| Title | Lift the openai-compatible tool deferral — implement the OpenAI Chat Completions function-calling wire format (request tools/tool_choice + streaming delta.tool_calls accumulation + tool-role result round-trip) on the adapter so the SHIPPED 6 create/edit/delete tools work on openai-compatible providers via the SAME provider-agnostic confirmation→event→owning-reducer path; Anthropic path byte-stable; deferral comments deleted (code matches docs) |
+| Current Phase | FEATURE_VERIFY |
+| Status | READY_FOR_VERIFY |
+| Suggested Next | feature-verify |
+| Verify Cross-vendor | yes (per ADR-0010 §D4 P0 + carve-out default; primary Codex `gpt-5.x` cold-read of the openai tool_calls parse + provider-parity + Anthropic-byte-stable + deferral-comment removal) — real openai-compatible-key tool round-trip + cross-vendor browser smoke DEFERRED 24h (operator, needs a Groq/openai-compatible key) per ADR-0008 §S3 / ADR-0009 §D2-G2, consistent with the create-layer + edit/delete + gap-closure row #2 precedent |
+| Automation Mode | A-Claude |
+| Executor | claude-sonnet-4-6 (feature-auto-build P1-P4, 2026-05-29) |
+| Updated | 2026-05-29 22:00 |
+| Dispatched By | operator directive 2026-05-29 (second of two AI enhancements; edit/delete SHIPPED first — `xai-web-ai-tool-edit-delete`) |
+| Roadmap Manifest | `docs/workflow/roadmap/xai-web-ai-tool-openai-compatible.md` |
+| Parent ADR | ADR-0010 §D4 (P0 maintenance carve-out) |
+| Carve-out | `docs/reviews/_p0-carve-outs/20260529-ai-tool-openai-compatible.md` (commit `dd1519b`) |
+| Predecessor lineage | `xai-web-ai-tool-edit-delete` (SHIPPED 2026-05-29) — 6-tool create/edit/delete, Anthropic-first |
+| Branch | `web` (does NOT touch `dev`) |
+| Write Scope | **planning phase (this run)**: `packages/xai-web-ai-chat/docs/` + `docs/reviews/xai-web-ai-tool-openai-compatible/` + `docs/workflow/roadmap/xai-web-ai-tool-openai-compatible.md` ONLY. **build phases (later)** extend to `packages/plugin-web-ai-chat/src/internal/{toolUseTypes.ts, llmProvider.ts, claudeStreamAdapter.ts}/__tests__/` ONLY. NO `events.ts`, NO cross-plugin (`xai-web-tasks`/`xai-web-calendar`), NO `apps/web`, NO `index.ts`, NO `sseParser.ts`, NO `toolRegistry.ts` edits. `docs/PLUGIN_MAP.md` row-note update (ai-chat openai-compatible extension) at ship. |
+
+### Artifacts Index (this lineage)
+
+- Carve-out (authority + full scope): `docs/reviews/_p0-carve-outs/20260529-ai-tool-openai-compatible.md`
+- Discovery review (OpenAI protocol research + NormalizedToolUse + 2-serializer design + tool_choice mapping + streaming accumulation + tool-role round-trip + 4 planner's calls + Anthropic byte-stable + anti-drift): `docs/reviews/xai-web-ai-tool-openai-compatible/20260529-discovery-review.md`
+- Manifest: `docs/workflow/roadmap/xai-web-ai-tool-openai-compatible.md`
+- Design extension: `packages/xai-web-ai-chat/docs/design.md` §2026-05-29 Extension (OpenAI-Compatible) — FA-1..FA-10
+- API extension: `packages/xai-web-ai-chat/docs/api.md` §15
+- Test extension: `packages/xai-web-ai-chat/docs/test.md` §10
+
+### Decision Headline (this lineage)
+
+Lift the openai-compatible tool deferral by implementing the **OpenAI Chat Completions function-calling
+wire format** (pinned 2026-05-29: request `tools:[{type:"function",function:{name,description,parameters}}]`
++ `tool_choice`; streaming `choices[].delta.tool_calls` index-keyed `function.arguments` accumulation +
+`finish_reason:"tool_calls"`; tool result = `{role:"tool", tool_call_id, content}` — discovery §2). Both
+providers **converge on the SHIPPED internal `ToolUseResult {id, name, input}`** at the adapter boundary
+(planner's-call #1 — `ToolUseResult` IS `NormalizedToolUse`; NO new public type). The tool registry stays
+the single source of truth; a pure `toOpenAiTools` serializer (+ `toOpenAiToolChoice`) produces the OpenAI
+format (the Anthropic serializer is the existing identity pass-through). The Anthropic-shaped round-trip
+`priorMessages` (built unchanged by `AiChatModule`) are translated to openai `tool_calls`/`tool`-role
+messages **inside the openai `buildBody`** (discovery §2.6 + §3.3), keeping ALL provider divergence below
+the adapter. Everything above the adapter (`StreamChunk`, `AiChatModule`, `toolRegistry` mappings,
+confirmation card, event emit, subscribers, bounded round-trip) is **byte-stable**; the Anthropic path is
+**byte-stable**. **Self-contained to 3 adapter files** (`toolUseTypes.ts` + `llmProvider.ts` +
+`claudeStreamAdapter.ts`); NO `events.ts`, NO cross-plugin, NO `apps/web`, NO new channel/dep/CSP/pref.
+The 4 SHIPPED lifelines are untouched (this layer operates entirely below them). **Anti-drift (4th
+same-class feature):** the two deferral comments are DELETED + a source-text guard asserts they are gone;
+the SHIPPED `TU-7` (which asserts openai `tools` undefined) is REWRITTEN to assert the new serialization —
+code matches docs.
+
+### Phase Plan (4 phases — one `feature-build` run each)
+
+> Each phase = one `feature-build` run; after each, feature-build stops for human confirmation
+> (CLAUDE.md). Serializers + buildBody first (P1), then streaming parse (P2), then round-trip + gate-lift
+> (P3), then anti-drift tests + docs + verify-report (P4). Per discovery §3 file plan + §4 planner's calls.
+
+#### Phase P1 — Tool-def OpenAI serializers + buildBody openai branch (request direction)
+
+**Scope**
+1. `toolUseTypes.ts`: ADD `OpenAiToolDef` type + pure `toOpenAiTools(defs: AnthropicToolDef[]):
+   OpenAiToolDef[]` (maps `{name, description, input_schema}` → `{type:"function", function:{name,
+   description, parameters: input_schema}}`; drops `input_examples`) + pure `toOpenAiToolChoice(choice)`
+   (§2.2 mapping). `@internal` — NOT exported from `index.ts`.
+2. `llmProvider.ts` openai branch ONLY: serialize `body["tools"] = toOpenAiTools(tools)` when present +
+   `body["tool_choice"] = toOpenAiToolChoice(toolChoice)` when provided. DELETE the `:96` deferral
+   comment. Anthropic branch UNTOUCHED.
+3. Tests: `openAiToolFormat.test.ts` (OAI-FMT-1..3 + OAI-CHOICE-1..4); OAI-TOOLS-1 (buildBody serializes
+   tools on openai branch + no-tools→undefined backward compat).
+
+**DoD:** `pnpm --filter @repo/plugin-web-ai-chat test` + lint `--max-warnings 0` + `tsc --noEmit` green;
+serializers land; openai buildBody emits tools in OpenAI function format; Anthropic regression green.
+**Commit:** `feat(plugin-web-ai-chat): P1 openai tool-def serializers + buildBody tools branch (xai-web-ai-tool-openai-compatible)`
+
+#### Phase P2 — Streaming delta.tool_calls parse + finish_reason + gate-lift
+
+**Scope**
+1. `claudeStreamAdapter.ts`: lift the line-128 gate `provider==="anthropic"?req.tools:undefined` →
+   `req.tools` (both providers receive tools). DELETE the `:127-128` deferral comment.
+2. Extend the openai streaming else-branch with a loop-local `openAiToolAccum: Record<number, {id, name,
+   argsJson}>`: accumulate `delta.tool_calls[k]` by `index` (id/name first-delta-only), concatenate
+   `function.arguments`, read `choices[0].finish_reason`; on `"tool_calls"` (defensively: any accumulated
+   entries by stream-end) `JSON.parse` the lowest-index args ONCE → `toolUseResult = {id, name, input}`
+   (single-tool v1, OQ3). Generalize the final-chunk emit (tool turn from Anthropic `stop_reason` OR
+   openai accumulator). Anthropic event handling UNTOUCHED.
+3. Tests: `openAiToolProtocol.test.ts` OAI-STREAM-1 (golden accumulation) + OAI-STREAM-2 (first-delta-only
+   id/name) + OAI-STREAM-3 (text turn, no false tool) + OAI-STREAM-4 (defensive finish_reason).
+
+**DoD:** plugin test + lint + tsc green; openai streaming surfaces `StreamChunk.toolUse` from a golden
+SSE; gate lifted; Anthropic regression green (TU-1..TU-6 + IT-*).
+**Commit:** `feat(plugin-web-ai-chat): P2 openai streaming tool_calls parse + finish_reason + gate-lift (xai-web-ai-tool-openai-compatible)`
+
+#### Phase P3 — Tool-role result round-trip (response direction) + provider-parity
+
+**Scope**
+1. `llmProvider.ts` openai branch: translate `priorMessages` `ContentBlock[]` content (discovery §3.3) —
+   assistant `[{type:"tool_use",...}]` → `{role:"assistant", content:null, tool_calls:[{id, type:"function",
+   function:{name, arguments: JSON.stringify(input)}}]}`; user `[{type:"tool_result", tool_use_id,
+   content, is_error?}]` → `{role:"tool", tool_call_id, content}`; string content unchanged.
+2. Tests: OAI-RT-1 (assistant tool_calls body) + OAI-RT-2 (tool-role result body) + OAI-RT-3 (string
+   content unchanged) + **OAI-PARITY-1** (Anthropic golden vs openai golden → IDENTICAL normalized
+   `toolUse`) + **OAI-PARITY-2** (same `toWriteEvent` payload regardless of provider — provider-agnostic
+   confirmation→event path proven).
+
+**DoD:** plugin test + lint + tsc green; openai round-trip body shape correct; provider-parity proven
+(the load-bearing carve-out claim is a test); Anthropic regression green.
+**Commit:** `feat(plugin-web-ai-chat): P3 openai tool-role round-trip body + provider-parity (xai-web-ai-tool-openai-compatible)`
+
+#### Phase P4 — Anti-drift (rewrite TU-7 + deferral-comment guard) + docs + verify-report
+
+**Scope**
+1. REWRITE the SHIPPED `TU-7` in `toolUseProtocol.test.ts` to assert openai `tools` NOW serialized (was:
+   undefined) — the deferral is lifted; leaving it as-is is a contradiction.
+2. ADD `OAI-NODRIFT-1` source-text guard (assert `"tools are NOT sent"` + `"Only send tools on Anthropic
+   provider"` substrings ABSENT from `llmProvider.ts` + `claudeStreamAdapter.ts`).
+3. Full-suite regression: OAI-REG (Anthropic byte-stable — full `toolUseProtocol` + `AiChatModule` + tasks
+   + calendar suites green) + BC-1 re-assert (`isAiConvoRecord` unchanged).
+4. `docs/PLUGIN_MAP.md` row-note update (ai-chat — note openai-compatible tool extension).
+5. Write `docs/reviews/xai-web-ai-tool-openai-compatible/20260529-verify-report.md` recording automated
+   gates + boundary grep (no `events.ts`/cross-plugin/`apps/web`/`index.ts` edits) + deferred operator
+   smoke.
+
+**DoD:** all suites green; deferral comments gone (TU-7 + OAI-NODRIFT-1 enforce); PLUGIN_MAP updated;
+verify-report written; Status → READY_FOR_VERIFY; Suggested Next = `feature-verify`.
+**Commit:** `feat(plugin-web-ai-chat): P4 anti-drift TU-7 rewrite + deferral-comment guard + docs + verify-report (xai-web-ai-tool-openai-compatible)`
+
+### Risks (this lineage) — discovery §7 register
+
+| ID | Risk | Severity | Mitigation |
+|----|------|----------|------------|
+| OAI-R1 | docs/code drift — the repeat-BLOCK cause (deferral comments left in / claimed-but-absent) | **CRITICAL** | Delete both comments + OAI-NODRIFT-1 source guard + TU-7 rewrite; provider-parity + Anthropic-regression are real tests (P3/P4). |
+| OAI-R2 | openai `delta.tool_calls` accumulation bug (parse per-fragment / re-read id on later chunks) | High | §2.3 pinned rules: index-keyed, id/name first-delta-only, JSON.parse ONCE; OAI-STREAM-1/2 golden (P2). |
+| OAI-R3 | Anthropic path regresses (gate generalization) | High | Anthropic branch byte-stable; only openai else-branch + line-128 gate change; OAI-REG every DoD. |
+| OAI-R4 | round-trip translation wrong (content-block → tool_calls/tool-role) | High | §3.3 translator at openai buildBody; OAI-RT-1/2 golden body tests (P3). |
+| OAI-R5 | `tool_choice` mapping wrong | Medium | §2.2 table; `toOpenAiToolChoice` + OAI-CHOICE-1..4 (P1); v1 only exercises omitted→auto. |
+| OAI-R6 | `finish_reason` not read / compat-server sets "stop" with tool_calls | Medium | §3.4 read finish_reason + defensive accumulated-by-stream-end fallback; OAI-STREAM-4 (P2). |
+| OAI-R7 | `input_examples` leaks into openai schema | Low | `toOpenAiTools` drops it; OAI-FMT-2 (P1). |
+| OAI-R8 | real openai-key behavior differs from mocked golden | Low | Deferred operator smoke (ADR-0008 §S3); automated proves wire-shape; real-key exercises live endpoint only. |
+
+### Open Questions (for feature-review)
+
+- **OQ1 — serializer file location:** `toolUseTypes.ts` (planner's lean — co-located wire-protocol types)
+  vs a new `internal/openAiToolFormat.ts`. Review to confirm.
+- **OQ2 — `priorMessages` translation seam:** inside the openai `buildBody` (planner's lean — pure,
+  co-located) vs a separate pre-adapter normalizer. Review to confirm `buildBody` is the right seam.
+- **OQ3 — multi-tool-call in one openai turn:** match SHIPPED (accumulate all indices, surface only the
+  first/lowest as single-tool v1) — a multi-tool agentic loop is a future increment. Review to confirm
+  single-tool parity is acceptable for v1.
+
+### Open Questions — review dispositions (2026-05-29, feature-review)
+
+- **OQ1 (serializer file location) → CONFIRMED `toolUseTypes.ts`.** It already holds `AnthropicToolDef`
+  + `ContentBlock` + `ToolUseResult` (verified `toolUseTypes.ts:20-89`); co-locating `OpenAiToolDef` +
+  the two pure serializers keeps all wire-protocol types in one `@internal` file and avoids a new module
+  for ~2 pure functions. Note (P1 builder): the file header docstring currently says "Anthropic tool-use
+  wire protocol type definitions" — widen that one-line description to cover the OpenAI serialization too
+  so the file's purpose stays self-describing.
+- **OQ2 (`priorMessages` translation seam) → CONFIRMED `buildBody` (openai branch).** Source-checked: the
+  Anthropic-shaped round-trip turns are built at `AiChatModule.tsx:577-591` (confirm) + `:421-433`
+  (cancel) and passed verbatim through `streamCompleteChat` into `config.buildBody({messages})`
+  (`claudeStreamAdapter.ts:123-135`). `buildBody` is the single seam every `messages` array flows
+  through, it is pure/testable, and translating there keeps `AiChatModule` + `streamCompleteChat`
+  byte-stable. A separate pre-adapter normalizer would add a seam for no benefit. Confirmed.
+- **OQ3 (multi-tool-call in one turn) → CONFIRMED single-tool v1 parity.** The SHIPPED Anthropic path
+  keeps the last/only tool (`claudeStreamAdapter.ts:265-266`) and the bounded round-trip is cap=1
+  (`AiChatModule.tsx:618`), so surfacing only the lowest-index `tool_calls` entry is exact parity with
+  SHIPPED behavior. Accept. **Builder note:** P2 §15.4 still says "accumulate all indices, parse the
+  lowest"; keep accumulating every index (don't early-discard) so a future multi-tool increment only
+  changes the surface step, not the accumulator — and so OAI-STREAM-1 can assert the accumulator is
+  index-keyed rather than single-slot.
+
+### Review Notes (2026-05-29, feature-review)
+
+**Verdict: APPROVED.** 0 blockers, 3 non-blocking recommendations. This is the cleanest of the 4
+same-class AI carve-outs and the load-bearing claims were independently verified against HEAD source on
+`web` (not taken on the plan's word) — every pin is accurate.
+
+**Source-verified load-bearing claims (all accurate — the plan did NOT pin wrong locations):**
+
+1. **Both deferral markers exist at the EXACT cited locations.** `llmProvider.ts:96`
+   = `// OpenAI-compatible: tools are NOT sent (deferred per planner's-call #3).` (the openai `buildBody`
+   serializes only `{model, messages, stream, max_tokens}` — `:95-104`). `claudeStreamAdapter.ts:127-128`
+   = `// Only send tools on Anthropic provider (planner's-call #3).` + `const tools = config.provider ===
+   "anthropic" ? req.tools : undefined;`. The anti-drift "delete these 2 comments" commitment targets
+   real text at real lines.
+2. **`ToolUseResult {id, name, input}` IS the normalized shape** (`toolUseTypes.ts:82-89`), surfaced via
+   `StreamChunk.toolUse` and consumed provider-agnostically (`AiChatModule` `chunk.toolUse`). Planner's-
+   call #1 (converge both providers onto it, NO new public type) is correct — `index.ts` stays byte-stable.
+3. **The §2.6 finding is exactly right.** `priorMessages` are built in Anthropic content-block shape at
+   `AiChatModule.tsx:577-591` (confirm) + `:421-433` (cancel) and passed verbatim into `buildBody`.
+   Therefore the openai translator MUST live in the adapter, and `AiChatModule` stays untouched. Confirmed.
+4. **TU-7 is the real rewrite target.** `toolUseProtocol.test.ts:337-362` (TU-7) asserts
+   `expect(body["tools"]).toBeUndefined()` for openai-compatible — that assertion encodes the deferral and
+   would contradict the lifted code. The plan's "rewrite TU-7" is accurate and necessary.
+5. **`sseParser` is correctly out of scope** — it already yields the openai `[DONE]` → `__done__`
+   synthetic event generically (`sseParser.ts:91-93`); the tool_calls parse lands in the adapter. The
+   carve-out's "sseParser OR adapter parse path" candidate is correctly resolved to the adapter.
+6. **`AnthropicToolDef` confirms the §2.1 mapping + `input_examples` drop** (`toolUseTypes.ts:20-30`); the
+   `is_error` → folded-into-content handling matches the SHIPPED cancel path (`content: "user declined"`,
+   `AiChatModule.tsx:433`), and OpenAI has no `is_error` field — api §15.3 handles this correctly.
+
+**Five-gate checklist:**
+
+1. **Discovery quality — pass.** §2 protocol research pins the full OpenAI Chat Completions function-
+   calling wire format (request `tools`/`tool_choice`, streaming `delta.tool_calls` index-keyed
+   accumulation, `finish_reason:"tool_calls"`, `tool`-role round-trip) with 6 sources + a defensive note
+   (compat servers mis-setting `finish_reason` → OAI-STREAM-4 fallback). platform.openai.com is 403 to
+   automated fetch; the shapes are corroborated from the OpenAI Cookbook + API Reference + community/SDK
+   sources — an honest and adequate posture. No "which library" decision exists (pure protocol work).
+2. **Design snapshot alignment — pass.** design §2026-05-29 Extension (FA-1..10) matches the discovery
+   report; the 4 planner's calls are recorded identically in discovery §4, the manifest, and the lineage
+   block. No drift between artifacts on the decisions.
+3. **Contract completeness — pass.** api §15 is implementation-ready: §15.3 gives the exact `priorMessages`
+   content-block → openai message transforms (the highest-risk surface), §15.4 gives the index-keyed
+   accumulator rules + defensive finish_reason fallback + final-chunk generalization, §15.5 confirms no
+   public-type change, §15.6 documents malformed-args graceful degradation parity. The `tool_choice`
+   mapping table is real code (`toOpenAiToolChoice`) + tested, not a comment.
+4. **Phase plan quality — pass.** 4 phases split by direction: P1 request serializers + buildBody tools
+   (delete `:96` comment), P2 streaming parse + gate-lift (delete `:127-128` comment), P3 round-trip +
+   provider-parity, P4 anti-drift (TU-7 rewrite + OAI-NODRIFT-1 + OAI-REG) + docs + verify-report. Each
+   phase is independently buildable/testable with explicit file scope, DoD, commit message, and test IDs.
+   The anti-drift work is correctly back-loaded to P4 so TU-7 is rewritten only after the lift is complete.
+5. **Architecture risk — pass.** Self-contained to 3 `src/internal/` files + tests + docs. **NO
+   `events.ts` edit** (no new channel — unlike the edit/delete carve-out, this one adds none), **NO
+   cross-plugin edit** (tasks/calendar subscribers consume the SAME normalized events), **NO `apps/web`**,
+   **NO `index.ts`** (no new public export), **NO `sseParser.ts`/`toolRegistry.ts`**. Write Scope, manifest,
+   carve-out, api §15.7, and design §Extension boundaries are all mutually consistent. The 4 SHIPPED
+   lifelines (no-silent-write / additive-events / route-independent-subscriber / bounded-round-trip) sit
+   ABOVE the seam and are untouched. The one shared-code touch — generalizing the line-128 gate — is
+   correctly identified and guarded by OAI-REG (full Anthropic suite green at every DoD) + the Anthropic
+   branch being byte-stable in source.
+
+**Non-blocking recommendations** (builder may roll into the relevant phase without re-review):
+
+- **Rec1 (P4 doc hygiene — TU-7 numbering ambiguity in `test.md`).** `test.md` carries TWO different
+  "TU-7" descriptions: the older §8 block (`test.md:447-449`) labels TU-5 = "openai-compatible branch
+  OMITS tools" and TU-7 = "tool_result round-trip body", whereas the actual SHIPPED `toolUseProtocol.test.ts`
+  TU-7 (`:337`) is "OpenAI-compatible: tools NOT sent". The plan correctly targets the SHIPPED test file
+  (what the builder reads), so this is NOT a blocker — but when P4 rewrites TU-7, also reconcile the stale
+  `test.md` §8 TU-5/TU-7 prose (or add a one-line pointer in §10.2) so a future reader isn't misled by the
+  two TU-7 labels. Pin to the real test file as the source of truth.
+- **Rec2 (P4 — OAI-NODRIFT-1 guard style).** The plan cites `no-plaintext-key.test.ts` as the precedent,
+  but that test is a runtime IDB/localStorage value check, not a source-text grep. OAI-NODRIFT-1 wants a
+  source-text substring assertion (read the two `.ts` files, assert the deferral substrings are absent).
+  Both are valid "guard test" styles — just make the implementation a literal file-read + `not.toContain`
+  on the two comment substrings (the plan already describes this at test.md §10.2), and ensure the assert
+  reads the on-disk source (e.g. via `fs.readFileSync` of the internal file), not a re-exported string.
+- **Rec3 (P1 — file header docstring).** Per OQ1 disposition: widen the `toolUseTypes.ts` header docstring
+  (currently "Anthropic tool-use wire protocol type definitions") to also cover the OpenAI serialization
+  now living there, so the file stays self-describing after `OpenAiToolDef` + `toOpenAiTools` +
+  `toOpenAiToolChoice` land.
+
+### Phase Progress (xai-web-ai-tool-openai-compatible)
+
+| Phase | Status | Commit | Notes |
+|---|---|---|---|
+| P1 — Tool-def OpenAI serializers + buildBody openai branch | DONE | 96d279b | OpenAiToolDef + toOpenAiTools + toOpenAiToolChoice in toolUseTypes.ts; openai buildBody now calls toOpenAiTools(tools); deferral comment at :96 deleted; TU-7 rewritten; 15 OAI-FMT/CHOICE/TOOLS tests; 227/227 total pass |
+| P2 — Streaming delta.tool_calls parse + finish_reason + gate-lift | DONE | e1e2cf6 | Line-128 gate lifted (both providers get tools); openAiToolAccum index-keyed accumulator; finish_reason:"tool_calls" parse; defensive compat-server fallback; extractDeltaOpenAI replaced; 4 OAI-STREAM tests; 231/231 total pass |
+| P3 — Tool-role round-trip + provider-parity | DONE | cf7cfd7 | _translateMessagesToOpenAi() in openai buildBody (assistant tool_use→tool_calls; user tool_result→tool-role); Anthropic branch byte-stable; 5 OAI-RT/PARITY tests; 237/237 total pass |
+| P4 — Anti-drift + docs + verify-report | DONE | (this commit) | OAI-NODRIFT-1 source-text guard (fs.readFileSync + not.toContain); PLUGIN_MAP.md ai-chat row updated; verify-report at docs/reviews/xai-web-ai-tool-openai-compatible/20260529-verify-report.md; 241/241 total pass; Status → READY_FOR_VERIFY |
+
+### Work Log
+
+| Timestamp | Executor | Action | Commits | Next |
+|---|---|---|---|---|
+| 2026-05-29 | claude-opus-4-8[1m] (feature-plan) | Researched + pinned the current OpenAI Chat Completions function-calling protocol (request tools/tool_choice §2.1-2.2; streaming delta.tool_calls index-keyed accumulation + finish_reason §2.3; tool-role result round-trip §2.5) via WebSearch + WebFetch (OpenAI Cookbook + API Reference; platform docs 403-blocked, corroborated). Ground-checked the 4 adapter files against HEAD on `web`: confirmed the 2 deferral markers (claudeStreamAdapter.ts:128 gate + llmProvider.ts:96 comment), the openai buildBody serializes only model/messages/stream/max_tokens, the openai streaming else-branch handles only delta.content text, and the round-trip priorMessages are built in Anthropic content-block shape at AiChatModule.tsx:577-591 (the §2.6 load-bearing finding → openai translation must live in the adapter). Decided 4 planner's calls: (#1) normalize onto the SHIPPED ToolUseResult shape at the adapter boundary — NO new public type; (#2) tool_choice mapping table (auto→auto/any→required/none→none/tool→{type:function}); (#3) streaming default; (#4) mocked openai-format SSE golden + provider-parity tests. Wrote discovery review, design §Extension (FA-1..10), api §15, test §10 (OAI-FMT/CHOICE/STREAM/RT/PARITY/NODRIFT/REG), manifest, and this lineage block. Anti-drift commitments locked (delete 2 deferral comments + source guard + rewrite SHIPPED TU-7). 4 phases planned (serializers+buildBody / streaming parse+gate-lift / round-trip+parity / anti-drift+docs+verify). Status → NEEDS_REVIEW. | — | feature-review |
+| 2026-05-29 | claude-opus-4-8[1m] (feature-review) | Reviewed all 5 gates against the planning artifacts AND independently verified every load-bearing claim against HEAD source on `web` (did not take the plan on its word — this is the 4th same-class feature and 2 of the prior 3 BLOCKED on drift). Source-confirmed: (a) both deferral markers exist at the EXACT cited lines — llmProvider.ts:96 comment + openai buildBody serializing only {model,messages,stream,max_tokens}; claudeStreamAdapter.ts:127-128 comment + the `provider==="anthropic"?req.tools:undefined` gate; (b) ToolUseResult{id,name,input} IS the normalized shape (toolUseTypes.ts:82-89) → planner's-call #1 NO-new-public-type is correct; (c) the §2.6 finding holds — priorMessages built in Anthropic content-block shape at AiChatModule.tsx:577-591 + :421-433, passed verbatim into buildBody, so the openai translator must live in the adapter and AiChatModule stays byte-stable; (d) TU-7 (toolUseProtocol.test.ts:337-362) really asserts openai body["tools"] undefined — the rewrite target is accurate; (e) sseParser already handles [DONE]→__done__ generically (sseParser.ts:91-93) so its "unchanged" status is correct; (f) AnthropicToolDef confirms the §2.1 mapping + input_examples drop, and is_error→content-text matches the SHIPPED cancel path. Boundary命脉 verified: NO events.ts / NO cross-plugin / NO apps/web / NO index.ts / NO sseParser.ts / NO toolRegistry.ts edits — Write Scope + manifest + carve-out + api §15.7 all consistent; 4 SHIPPED lifelines sit above the seam untouched; the one shared-code touch (line-128 gate generalization) is guarded by OAI-REG. Anti-drift命脉 verified: delete-2-comments + OAI-NODRIFT-1 source guard + TU-7 rewrite + OAI-PARITY-1/2 are all real tests grounded in real files, not prose. Resolved OQ1 (toolUseTypes.ts — confirmed), OQ2 (buildBody seam — confirmed via source), OQ3 (single-tool v1 parity — confirmed exact match to SHIPPED last-tool + cap=1). **Verdict: APPROVED, 0 blockers, 3 non-blocking recs** (reconcile stale test.md §8 TU-5/TU-7 labels at P4; OAI-NODRIFT-1 should be a literal source-text fs read+not.toContain; widen toolUseTypes.ts header docstring at P1). Status → APPROVED; Suggested Next → feature-build. | — | feature-build |
+| 2026-05-29 22:00 | claude-sonnet-4-6 (feature-auto-build P1, xai-web-ai-tool-openai-compatible) | P1: toolUseTypes.ts header widened (Rec3 — now covers OpenAI protocol); added OpenAiToolDef type + toOpenAiTools() + toOpenAiToolChoice() pure serializers; llmProvider.ts openai buildBody updated to call toOpenAiTools(tools) + toOpenAiToolChoice(toolChoice); deleted :96 deferral comment; TU-7 rewritten from toBeUndefined() to asserting OpenAI function format (deferral lifted); openAiToolFormat.test.ts added (OAI-FMT-1..3 + OAI-CHOICE-1..4 + OAI-TOOLS-1 = 15 tests). 227/227 total pass; tsc exit 0; eslint --max-warnings 0 exit 0. | 96d279b | feature-auto-build P2 |
+| 2026-05-29 22:05 | claude-sonnet-4-6 (feature-auto-build P2, xai-web-ai-tool-openai-compatible) | P2: claudeStreamAdapter.ts: deleted :127-128 deferral comment; const tools = req.tools (gate lifted — both providers receive tools); extended openai else-branch with openAiToolAccum index-keyed accumulator (id/name first-delta-only per discovery §2.3; argsJson concatenation per index; finish_reason:"tool_calls" → JSON.parse lowest-index once → toolUseResult); defensive compat-server fallback (accumulated by stream-end even if finish_reason != "tool_calls"); removed dead extractDeltaOpenAI; generalized final-chunk emit to cover both providers. openAiToolProtocol.test.ts added (OAI-STREAM-1..4 = 4 tests). 231/231 total pass; tsc exit 0; eslint exit 0. | e1e2cf6 | feature-auto-build P3 |
+| 2026-05-29 22:10 | claude-sonnet-4-6 (feature-auto-build P3, xai-web-ai-tool-openai-compatible) | P3: llmProvider.ts openai buildBody: added _translateMessagesToOpenAi() pure helper; openai buildBody calls it to translate Anthropic content-block messages → OpenAI wire format (assistant tool_use → tool_calls array; user tool_result → tool-role message; string → unchanged; other ContentBlock[] best-effort pass-through). Anthropic buildBody byte-for-byte unchanged. openAiRoundTrip.test.ts added (OAI-RT-1..3 + OAI-PARITY-1..2 = 5 tests). PARITY-1: both providers' golden SSEs produce identical toolUse {id,name,input}. PARITY-2: same normalized input → same toWriteEvent payload (provider-agnostic path proven as test). 237/237 total pass; tsc exit 0; eslint exit 0. | cf7cfd7 | feature-auto-build P4 |
+| 2026-05-29 22:15 | claude-sonnet-4-6 (feature-auto-build P4, xai-web-ai-tool-openai-compatible) | P4: openAiAntiDrift.test.ts (OAI-NODRIFT-1 = 4 tests): fs.readFileSync on llmProvider.ts + claudeStreamAdapter.ts; asserts deferral comment substrings ABSENT + toOpenAiTools() present + provider gate removed. Rec1: test.md §8 stale TU-5/TU-7 labels reconciled (note pointing to toolUseProtocol.test.ts as source of truth). PLUGIN_MAP.md ai-chat row updated (openai-compatible tool extension note). Verify report at docs/reviews/xai-web-ai-tool-openai-compatible/20260529-verify-report.md. Full OAI-REG: 241/241 ai-chat + 147/147 tasks + 311/311 calendar + 128/128 web + build exit 0. Lifelines: (1) no-silent-write — adapter emits only web:ai:*; no tasks/calendar setPref in ai-chat src (untouched); (2) events.ts additive — NOT modified; no new channel; (3) route-independent subscribers — unchanged; (4) bounded round-trip — handleConfirm cap=1 unchanged. Anti-drift: OAI-NODRIFT-1 source guard + TU-7 rewrite confirm deferral is truly gone (code matches docs). Status → READY_FOR_VERIFY. | (this commit) | feature-verify |
+
