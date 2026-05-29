@@ -13,7 +13,7 @@
 | Automation Mode | B-Codex |
 | Verify Cross-vendor | yes |
 | Executor | feature-auto-build (Codex, gpt-5.3-codex inline) |
-| Updated | 2026-05-29 05:57 PDT |
+| Updated | 2026-05-29 05:59 PDT |
 | Brief | `docs/reviews/desktop-phase3-integrated-rc-gate/20260529-feature-brief.md` |
 | Discovery Review | `docs/reviews/desktop-phase3-integrated-rc-gate/20260529-discovery-review.md` |
 | Risks | Integrated repo-side evidence is straightforward, but the row has two non-trivial residuals that must stay explicit: notes is still upstream-contract unsupported, and real desktop offline/relaunch/reconnect/backup smoke may require manual macOS execution that this environment cannot honestly claim. A narrow helper may be justified only if the existing runtime globals cannot produce deterministic evidence artifacts. |
@@ -43,7 +43,7 @@ Status: DONE
 
 ### Phase 2 - Offline local-first surface matrix
 
-Status: PENDING
+Status: DONE
 
 - classify offline create/edit/relaunch behavior for:
   - tasks
@@ -101,4 +101,5 @@ Status: PENDING
 |---|---|---|---|---|
 | 2026-05-29 05:42 PDT | feature-plan (Codex, gpt-5 inline) | Fresh planning pass. Normalized the roadmap seed into a canonical feature brief, read the workflow/manifest/Phase 2 RC pattern plus shipped Phase 3 row docs, audited the active desktop runtime seams in `AppProviders` and `@repo/plugin-web-storage`, and created discovery/design/api/test/dev_log artifacts for one integrated Phase 3 RC gate. The plan freezes row `#18` as a report-producing evidence pass over local-first, reconnect, backup, AI, and calendar behavior; uses real package names and executable gates; and makes the notes contradiction explicit as an unsupported-contract classification rather than hidden implementation scope. | — | feature-review |
 | 2026-05-29 05:50 PDT | feature-review (Codex, gpt-5.3-codex inline) | Review pass approved. Re-read the roadmap manifest row, brief/discovery/design/api/test/dev_log artifacts, Phase 2 integrated RC precedent, active runtime sources (`AppProviders`, `App.tsx`, `@repo/plugin-web-storage`, `@repo/core-data`), and shipped Phase 3 dependency logs. Confirmed the row remains a deterministic integrated RC evidence/report gate rather than new implementation work, the referenced package filters/scripts exist in this workspace, notes stays truthfully unsupported by upstream contract, and manual real-macOS residuals remain structurally separate from repo-side readiness. Added two build-time recommendations only: cite `NOTES_UNSUPPORTED_ERROR` directly in the final notes classification and use `apps/web/src/App.tsx` as pet mount truth for the integrated matrix. | — | feature-auto-build |
-| 2026-05-29 05:57 PDT | feature-auto-build (Codex, gpt-5.3-codex inline) | Completed Phase 1 (Integrated repo-side baseline and dependency ledger). Generated deterministic artifact `20260529-phase1-integrated-repo-baseline.md`, captured dependency ledger for rows `#10`-`#17`, and executed the approved baseline command suite with exact exit-code and duration evidence (`25/25` commands returned `rc=0`). | pending (phase-1 commit in progress) | feature-auto-build (Phase 2) |
+| 2026-05-29 05:57 PDT | feature-auto-build (Codex, gpt-5.3-codex inline) | Completed Phase 1 (Integrated repo-side baseline and dependency ledger). Generated deterministic artifact `20260529-phase1-integrated-repo-baseline.md`, captured dependency ledger for rows `#10`-`#17`, and executed the approved baseline command suite with exact exit-code and duration evidence (`25/25` commands returned `rc=0`). | `1c8a1e4d` | feature-auto-build (Phase 2) |
+| 2026-05-29 05:59 PDT | feature-auto-build (Codex, gpt-5.3-codex inline) | Completed Phase 2 (Offline local-first surface matrix). Published `20260529-phase2-offline-local-first-matrix.md` with deterministic classifications for tasks/board/habits/pomodoro/pet/settings and explicit notes unsupported-contract classification via `NOTES_UNSUPPORTED_ERROR`; manual real-macOS offline/relaunch checks remain explicit environment residuals. | pending (phase-2 commit in progress) | feature-auto-build (Phase 3) |
