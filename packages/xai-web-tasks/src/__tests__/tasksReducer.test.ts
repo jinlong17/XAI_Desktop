@@ -7,7 +7,7 @@
  */
 
 import { describe, it, expect } from "vitest";
-import { moveCard, toggleComplete, addCard } from "../internal/tasksReducer.js";
+import { moveCard, toggleComplete, addCard, deleteCard, updateCard } from "../internal/tasksReducer.js";
 import { SEED_TASK_COLS } from "../internal/seed/tasksMock.js";
 import { isTaskColsArray } from "../internal/validate.js";
 import type { TaskCol, NewTaskDraft } from "../types.js";
@@ -256,5 +256,165 @@ describe("tasksReducer.addCard", () => {
     const draft: NewTaskDraft = { title: "Valid task", tag: "personal", withDate: true };
     const result = addCard(cols, draft, "next7", NOW_ADD);
     expect(isTaskColsArray(result)).toBe(true);
+  });
+});
+
+// ---------------------------------------------------------------------------
+// TR-DEL — deleteCard (xai-web-ai-tool-edit-delete P1)
+// ---------------------------------------------------------------------------
+
+describe("tasksReducer.deleteCard (TR-DEL)", () => {
+  // TR-DEL-1: removes the matching card; count decremented
+  it("TR-DEL-1: removes matching card; column count decremented by 1", () => {
+    const cols = cloneSeed();
+    const overdueCol = cols.find((c) => c.id === "overdue")!;
+    const firstId = overdueCol.tasks[0]!.id;
+    const prevCount = overdueCol.count;
+
+    const result = deleteCard(cols, firstId);
+    const after = result.find((c) => c.id === "overdue")!;
+    expect(after.tasks.find((t) => t.id === firstId)).toBeUndefined();
+    expect(after.count).toBe(Math.max(0, prevCount - 1));
+  });
+
+  // TR-DEL-2: untouched columns returned by REFERENCE
+  it("TR-DEL-2: untouched columns returned by reference (referential equality)", () => {
+    const cols = cloneSeed();
+    const targetId = cols.find((c) => c.id === "overdue")!.tasks[0]!.id;
+    const result = deleteCard(cols, targetId);
+    // next7, later, nodate untouched → referentially equal
+    expect(result.find((c) => c.id === "next7")).toBe(cols.find((c) => c.id === "next7"));
+    expect(result.find((c) => c.id === "later")).toBe(cols.find((c) => c.id === "later"));
+    expect(result.find((c) => c.id === "nodate")).toBe(cols.find((c) => c.id === "nodate"));
+  });
+
+  // TR-DEL-3: id in no column returns prev UNCHANGED (same reference)
+  it("TR-DEL-3: id in no column returns prev unchanged (same reference)", () => {
+    const cols = cloneSeed();
+    const result = deleteCard(cols, "DOES_NOT_EXIST_ANYWHERE");
+    expect(result).toBe(cols);
+  });
+
+  // TR-DEL-4: does not mutate prev (deep-freeze fixture)
+  it("TR-DEL-4: does not mutate prev (deep-freeze guard)", () => {
+    const cols = cloneSeed();
+    // Deep-freeze
+    Object.freeze(cols);
+    cols.forEach((col) => {
+      Object.freeze(col);
+      Object.freeze(col.tasks);
+      col.tasks.forEach((t) => Object.freeze(t));
+    });
+    const targetId = cols.find((c) => c.id === "overdue")!.tasks[0]!.id;
+    // Should not throw even though cols is frozen (immutable impl returns a new array)
+    expect(() => deleteCard(cols as TaskCol[], targetId)).not.toThrow();
+    // prev content unchanged (no mutation)
+    expect(cols.find((c) => c.id === "overdue")!.tasks.find((t) => t.id === targetId)).toBeDefined();
+  });
+});
+
+// ---------------------------------------------------------------------------
+// TR-UPD — updateCard (xai-web-ai-tool-edit-delete P1)
+// ---------------------------------------------------------------------------
+
+describe("tasksReducer.updateCard (TR-UPD)", () => {
+  // TR-UPD-1: patch {title} rewrites BOTH title.en + title.zh; other fields untouched
+  it("TR-UPD-1: title patch rewrites both title.en and title.zh; other fields untouched", () => {
+    const cols = cloneSeed();
+    const overdueCol = cols.find((c) => c.id === "overdue")!;
+    const card = overdueCol.tasks[0]!;
+    const cardId = card.id;
+    const origTag = card.tag;
+
+    const result = updateCard(cols, cardId, { title: "Updated title" });
+    const after = result.find((c) => c.id === "overdue")!;
+    const updated = after.tasks.find((t) => t.id === cardId)!;
+    expect(updated.title.en).toBe("Updated title");
+    expect(updated.title.zh).toBe("Updated title");
+    // Other fields untouched
+    expect(updated.tag).toBe(origTag);
+    expect(updated.id).toBe(cardId);
+  });
+
+  // TR-UPD-2 (preserve-done — T-10 lifeline): updateCard on done:true card keeps done:true
+  it("TR-UPD-2: updateCard preserves done:true (T-10 lifeline)", () => {
+    const cols = cloneSeed() as TaskCol[];
+    const overdueIdx = cols.findIndex((c) => c.id === "overdue");
+    const t1Idx = cols[overdueIdx]!.tasks.findIndex((t) => t.id === "t1");
+    const tasksWithDone = [...cols[overdueIdx]!.tasks];
+    tasksWithDone[t1Idx] = { ...tasksWithDone[t1Idx]!, done: true };
+    cols[overdueIdx] = { ...cols[overdueIdx]!, tasks: tasksWithDone };
+
+    const result = updateCard(cols, "t1", { title: "New title for done card" });
+    const updated = result.find((c) => c.id === "overdue")!.tasks.find((t) => t.id === "t1")!;
+    expect(updated.done).toBe(true); // preserved!
+    expect(updated.title.en).toBe("New title for done card");
+  });
+
+  // TR-UPD-3: preserves tag/date/dateZh/inbox when not in patch; sets tag when in patch
+  it("TR-UPD-3: preserves tag/date/dateZh/inbox when not in patch; sets tag when included", () => {
+    const cols = cloneSeed();
+    const card = cols.find((c) => c.id === "overdue")!.tasks.find((t) => t.id === "t1")!;
+    const origDate = card.date;
+    const origInbox = card.inbox;
+
+    // Title-only patch → tag/date/inbox preserved
+    const r1 = updateCard(cols, "t1", { title: "New title only" });
+    const c1 = r1.find((c) => c.id === "overdue")!.tasks.find((t) => t.id === "t1")!;
+    expect(c1.tag).toBe(card.tag);
+    expect(c1.date).toBe(origDate);
+    expect(c1.inbox).toBe(origInbox);
+
+    // Tag patch → tag updated; other fields preserved
+    const r2 = updateCard(cols, "t1", { tag: "work" });
+    const c2 = r2.find((c) => c.id === "overdue")!.tasks.find((t) => t.id === "t1")!;
+    expect(c2.tag).toBe("work");
+    expect(c2.date).toBe(origDate);
+  });
+
+  // TR-UPD-4: NEVER overwrites id
+  it("TR-UPD-4: id cannot be overwritten by patch (re-pins card.id)", () => {
+    const cols = cloneSeed();
+    // TypeScript won't allow passing id in patch (not in interface), but test the runtime guard
+    const cardId = cols.find((c) => c.id === "overdue")!.tasks[0]!.id;
+    // Cast to any to simulate a malformed patch that tries to override id
+    const result = updateCard(cols, cardId, { title: "Title" } as unknown as import("../internal/tasksReducer.js").TaskCardPatch);
+    const updated = result.find((c) => c.id === "overdue")!.tasks.find((t) => t.id === cardId)!;
+    expect(updated.id).toBe(cardId); // id unchanged
+  });
+
+  // TR-UPD-5: untouched columns returned by REFERENCE
+  it("TR-UPD-5: untouched columns returned by reference (referential equality)", () => {
+    const cols = cloneSeed();
+    const cardId = cols.find((c) => c.id === "overdue")!.tasks[0]!.id;
+    const result = updateCard(cols, cardId, { title: "Updated" });
+    expect(result.find((c) => c.id === "next7")).toBe(cols.find((c) => c.id === "next7"));
+    expect(result.find((c) => c.id === "later")).toBe(cols.find((c) => c.id === "later"));
+    expect(result.find((c) => c.id === "nodate")).toBe(cols.find((c) => c.id === "nodate"));
+  });
+
+  // TR-UPD-6: id in no column OR empty patch returns prev UNCHANGED
+  it("TR-UPD-6: id not found returns prev unchanged; empty patch returns prev unchanged", () => {
+    const cols = cloneSeed();
+    // Unknown id
+    expect(updateCard(cols, "DOES_NOT_EXIST", { title: "Something" })).toBe(cols);
+    // Empty patch (no keys)
+    expect(updateCard(cols, "t1", {})).toBe(cols);
+  });
+
+  // TR-UPD-7: does not mutate prev (deep-freeze fixture)
+  it("TR-UPD-7: does not mutate prev (deep-freeze guard)", () => {
+    const cols = cloneSeed();
+    Object.freeze(cols);
+    cols.forEach((col) => {
+      Object.freeze(col);
+      Object.freeze(col.tasks);
+      col.tasks.forEach((t) => Object.freeze(t));
+    });
+    const cardId = (cols as TaskCol[]).find((c) => c.id === "overdue")!.tasks[0]!.id;
+    expect(() => updateCard(cols as TaskCol[], cardId, { title: "Frozen test" })).not.toThrow();
+    // Original title unchanged
+    const origCard = (cols as TaskCol[]).find((c) => c.id === "overdue")!.tasks.find((t) => t.id === cardId)!;
+    expect(origCard.title.en).not.toBe("Frozen test");
   });
 });

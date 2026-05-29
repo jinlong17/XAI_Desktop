@@ -14,7 +14,7 @@
  * @internal
  */
 
-import type { TaskCol, TaskCard, BucketId, NewTaskDraft } from "../types.js";
+import type { TaskCol, TaskCard, TaskTagId, BucketId, NewTaskDraft } from "../types.js";
 import { dateForCol } from "./dateForCol.js";
 import { createTaskId } from "./ids.js";
 
@@ -121,6 +121,101 @@ export function toggleComplete(
       ...col.tasks.slice(0, taskIdx),
       updatedTask,
       ...col.tasks.slice(taskIdx + 1),
+    ];
+    return { ...col, tasks: updatedTasks };
+  });
+  return found ? next : prev;
+}
+
+// ---- TaskCardPatch — patch shape for updateCard --------------------------------
+
+/**
+ * Patch fields accepted by updateCard. Only provided (non-undefined) fields
+ * are merged into the card. `bucket` change is handled at subscriber level
+ * via moveCard composition (ED-6) — NOT here; updateCard stays pure of
+ * column-discovery logic (keeps referential-equality assertions honest).
+ *
+ * API contract: packages/xai-web-ai-chat/docs/api.md §14.3
+ */
+export interface TaskCardPatch {
+  /**
+   * Fills BOTH title.en + title.zh (single-input bilingual, mirrors addCard).
+   */
+  title?: string;
+  tag?: TaskTagId;
+  // bucket change handled via moveCard composition in the subscriber (ED-6), NOT here.
+}
+
+// ---- deleteCard ---------------------------------------------------------------
+
+/**
+ * Pure delete: removes the card with the given id across all columns.
+ * The matching column's count is decremented by 1.
+ * Untouched columns are returned BY REFERENCE (referential equality preserved).
+ * Returns `prev` UNCHANGED (same reference) if no column contains the id.
+ *
+ * API contract: packages/xai-web-ai-chat/docs/api.md §14.3
+ */
+export function deleteCard(prev: TaskCol[], id: string): TaskCol[] {
+  let found = false;
+  const next = prev.map((col) => {
+    const idx = col.tasks.findIndex((t) => t.id === id);
+    if (idx < 0) return col; // referential equality for untouched columns
+    found = true;
+    return {
+      ...col,
+      tasks: col.tasks.filter((t) => t.id !== id),
+      count: Math.max(0, (col.count ?? 0) - 1),
+    };
+  });
+  return found ? next : prev;
+}
+
+// ---- updateCard ---------------------------------------------------------------
+
+/**
+ * Pure update: merges `patch` over the matching card.
+ *
+ * Rules:
+ * - Preserves ALL untouched fields including `done` (T-10 lifeline), `tag`, `date`,
+ *   `dateZh`, `inbox`.
+ * - Re-pins `id: card.id` (patch cannot overwrite id).
+ * - When `patch.title` is provided: fills BOTH `title.en` + `title.zh` (single-input
+ *   bilingual, mirrors addCard).
+ * - Untouched columns are returned BY REFERENCE.
+ * - Returns `prev` UNCHANGED when id not found OR patch is effectively empty.
+ *
+ * API contract: packages/xai-web-ai-chat/docs/api.md §14.3
+ */
+export function updateCard(prev: TaskCol[], id: string, patch: TaskCardPatch): TaskCol[] {
+  // Empty patch → no-op
+  const hasTitle = patch.title !== undefined;
+  const hasTag   = patch.tag   !== undefined;
+  if (!hasTitle && !hasTag) return prev;
+
+  let found = false;
+  const next = prev.map((col) => {
+    const idx = col.tasks.findIndex((t) => t.id === id);
+    if (idx < 0) return col; // referential equality for untouched columns
+
+    found = true;
+    const card = col.tasks[idx]!;
+
+    // Build updated card — preserve ALL untouched fields; re-pin id.
+    const updatedCard: TaskCard = {
+      ...card,
+      ...(hasTitle
+        ? { title: { en: patch.title!, zh: patch.title! } }
+        : {}),
+      ...(hasTag ? { tag: patch.tag } : {}),
+      // Explicitly re-pin id so a stray id-like field in patch cannot overwrite it.
+      id: card.id,
+    };
+
+    const updatedTasks = [
+      ...col.tasks.slice(0, idx),
+      updatedCard,
+      ...col.tasks.slice(idx + 1),
     ];
     return { ...col, tasks: updatedTasks };
   });

@@ -233,3 +233,130 @@ describe("CP-8: deterministic output — same inputs produce same text", () => {
     expect(r1.isEmpty).toBe(r2.isEmpty);
   });
 });
+
+// ---------------------------------------------------------------------------
+// CP-ID — context id exposure (xai-web-ai-tool-edit-delete ED-2 P1)
+// ---------------------------------------------------------------------------
+
+describe("CP-ID-1: task lines include (id: <card.id>) token", () => {
+  it("CP-ID-1: each open task line contains (id: <card.id>) token", () => {
+    mockGetPref.mockImplementation((key: string) => {
+      if (key === "xai_task_cols") {
+        return [
+          {
+            id: "next7",
+            key: "next7",
+            count: 2,
+            tasks: [
+              { id: "task-abc-123", title: { en: "Buy groceries", zh: "Buy groceries" }, done: false },
+              { id: "task-def-456", title: { en: "Write report", zh: "Write report" }, done: false },
+            ],
+          },
+        ];
+      }
+      return null;
+    });
+
+    const result = buildTodayContext(TODAY);
+    expect(result.text).toContain("(id: task-abc-123)");
+    expect(result.text).toContain("(id: task-def-456)");
+  });
+});
+
+describe("CP-ID-2: calendar event lines include (id: <event.id>) token", () => {
+  it("CP-ID-2: each today calendar event line contains (id: <event.id>) token", () => {
+    mockGetPref.mockImplementation((key: string) => {
+      if (key === "xai_calendar_events") {
+        return {
+          "ev-xyz-789": {
+            id: "ev-xyz-789",
+            title: "Team standup",
+            startISO: `${TODAY_KEY}T09:00`,
+            endISO: `${TODAY_KEY}T09:30`,
+          },
+        };
+      }
+      return null;
+    });
+
+    const result = buildTodayContext(TODAY);
+    expect(result.text).toContain("(id: ev-xyz-789)");
+    expect(result.text).toContain("Team standup");
+  });
+});
+
+describe("CP-ID-3: title/time/bucket-label content unchanged (additive regression)", () => {
+  it("CP-ID-3: task lines still contain bucket label and title (id token is additive)", () => {
+    mockGetPref.mockImplementation((key: string) => {
+      if (key === "xai_task_cols") {
+        return [
+          {
+            id: "overdue",
+            key: "overdue",
+            count: 1,
+            tasks: [{ id: "t-reg", title: { en: "Regression check", zh: "Regression check" }, done: false }],
+          },
+        ];
+      }
+      return null;
+    });
+
+    const result = buildTodayContext(TODAY);
+    expect(result.text).toContain("[overdue]");         // bucket label preserved
+    expect(result.text).toContain("Regression check");  // title preserved
+    expect(result.text).toContain("(id: t-reg)");       // id token additive
+  });
+
+  it("CP-ID-3b: calendar lines still contain time range and title (id token is additive)", () => {
+    mockGetPref.mockImplementation((key: string) => {
+      if (key === "xai_calendar_events") {
+        return {
+          "ev-reg": {
+            id: "ev-reg",
+            title: "Daily sync",
+            startISO: `${TODAY_KEY}T10:00`,
+            endISO: `${TODAY_KEY}T10:30`,
+          },
+        };
+      }
+      return null;
+    });
+
+    const result = buildTodayContext(TODAY);
+    expect(result.text).toContain("10:00");      // time preserved
+    expect(result.text).toContain("10:30");      // end time preserved
+    expect(result.text).toContain("Daily sync"); // title preserved
+    expect(result.text).toContain("(id: ev-reg)"); // id token additive
+  });
+});
+
+describe("CP-ID-4: token budget still ≤ ~600 tokens with large fixture + ids", () => {
+  it("CP-ID-4: 20-task + 5-event fixture with ids stays within budget", () => {
+    const tasks = Array.from({ length: 20 }, (_, i) => ({
+      id: `task-cap-${i}`,
+      title: { en: `Task number ${i}`, zh: `Task number ${i}` },
+      done: false,
+    }));
+    const events = Array.from({ length: 5 }, (_, i) => ({
+      id: `ev-cap-${i}`,
+      title: `Event ${i}`,
+      startISO: `${TODAY_KEY}T${String(9 + i).padStart(2, "0")}:00`,
+      endISO: `${TODAY_KEY}T${String(10 + i).padStart(2, "0")}:00`,
+    }));
+    const evStore: Record<string, unknown> = {};
+    events.forEach((e) => { evStore[e.id] = e; });
+
+    mockGetPref.mockImplementation((key: string) => {
+      if (key === "xai_task_cols") {
+        return [{ id: "next7", key: "next7", count: 20, tasks }];
+      }
+      if (key === "xai_calendar_events") return evStore;
+      return null;
+    });
+
+    const result = buildTodayContext(TODAY);
+    // Rough token estimate: each char ≈ 0.25 tokens; 600 tokens ≈ 2400 chars
+    // Budget target is ≤~600 tokens (~2400 chars); allow generous headroom at 3000 chars.
+    expect(result.text.length).toBeLessThan(3000);
+  });
+});

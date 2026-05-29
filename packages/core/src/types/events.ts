@@ -307,6 +307,53 @@ export interface EventMap {
     confirmedAt: string;
   };
 
+  // AI tool layer — task/calendar mutate requests (edit/delete; xai-web-ai-tool-edit-delete)
+  // Carve-out AUTHORIZED: docs/reviews/_p0-carve-outs/20260529-ai-tool-edit-delete.md (ADR-0010 §D4).
+  // Per-op channels mirror the create-channel precedent (not a consolidated mutate channel).
+  // dev merge note: web:* namespace only; desktop:* not touched — clean additive append.
+  'web:tasks:update-requested': {
+    /** Correlation id = Anthropic tool_use.id for tool_result round-trip. */
+    requestId: string;
+    /** Card id to update. */
+    id: string;
+    /** Patch: only provided fields are included (title / bucket / tag — all optional). */
+    patch: {
+      title?: string;
+      bucket?: 'overdue' | 'next7' | 'later' | 'nodate';
+      tag?: 'study' | 'work' | 'personal' | 'todo' | 'other';
+    };
+    /** ISO timestamp at confirm. */
+    requestedAt: string;
+  };
+  'web:tasks:delete-requested': {
+    requestId: string;
+    /** Card id to delete. */
+    id: string;
+    requestedAt: string;
+  };
+  'web:calendar:update-requested': {
+    requestId: string;
+    /** Event id to update. */
+    id: string;
+    /** Patch: only provided fields included (title / date / startTime / durationMin). */
+    patch: {
+      title?: string;
+      /** "YYYY-MM-DD" local date. */
+      date?: string;
+      /** "HH:MM" 24h local start. */
+      startTime?: string;
+      /** Duration in minutes; positive integer. */
+      durationMin?: number;
+    };
+    requestedAt: string;
+  };
+  'web:calendar:delete-requested': {
+    requestId: string;
+    /** Event id to delete. */
+    id: string;
+    requestedAt: string;
+  };
+
   // AI tool layer — task create request (owner: plugin-web-ai-chat Confirm handler; consumer: xai-web-tasks subscriber)
   // Carve-out AUTHORIZED: docs/reviews/_p0-carve-outs/20260529-ai-tool-layer.md (ADR-0010 §D4).
   // requestId = Anthropic tool_use.id for tool_result round-trip correlation.

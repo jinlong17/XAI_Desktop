@@ -213,7 +213,9 @@ export function buildTodayContext(now: Date = new Date()): TodayContext {
       if (taskLines.length >= TASK_CAP) break;
       const title = getTaskTitle(card);
       if (title) {
-        taskLines.push(`- [${bucketId}] ${title}`);
+        // ED-2: render (id: …) token so the model can target update/delete.
+        // Format: "- [bucket] (id: <id>) <title>" — additive; titles/ordering/caps unchanged.
+        taskLines.push(`- [${bucketId}] (id: ${card.id}) ${title}`);
       }
     }
     if (taskLines.length >= TASK_CAP) break;
@@ -228,7 +230,9 @@ export function buildTodayContext(now: Date = new Date()): TodayContext {
   const calLines: string[] = todayEvents.map((e) => {
     const time = e.startISO.slice(11, 16); // "HH:MM"
     const endTime = e.endISO.slice(11, 16);
-    return `- ${time}–${endTime}: ${e.title}`;
+    // ED-2: render (id: …) token so the model can target update/delete.
+    // Format: "- (id: <id>) HH:MM–HH:MM: <title>" — additive; times/titles unchanged.
+    return `- (id: ${e.id}) ${time}–${endTime}: ${e.title}`;
   });
 
   // ---- 3. Pomodoro focus today ----

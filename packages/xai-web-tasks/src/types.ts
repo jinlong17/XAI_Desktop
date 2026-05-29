@@ -96,6 +96,13 @@ export interface TasksModuleProps {
 export type SmartListId = "all" | "today" | "tomorrow" | "next7" | "inbox" | "summary";
 
 // ---------------------------------------------------------------------------
+// TaskCardPatch — patch shape for updateCard (api.md §14.3 / xai-web-ai-tool-edit-delete)
+// Re-exported from internal so consumers can type-check the AI event payloads.
+// ---------------------------------------------------------------------------
+
+export type { TaskCardPatch } from "./internal/tasksReducer.js";
+
+// ---------------------------------------------------------------------------
 // NewTaskDraft — card-create extension (api.md §E.1)
 // ---------------------------------------------------------------------------
 
