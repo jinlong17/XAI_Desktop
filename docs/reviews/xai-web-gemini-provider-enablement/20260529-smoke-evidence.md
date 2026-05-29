@@ -72,7 +72,9 @@ Test coverage: **`OAI-STREAM-4`** (`openAiToolProtocol.test.ts`) is the exact re
 
 ## 3. Conclusion
 
-**Gemini's OpenAI-compatible function-calling is fully compatible with the SHIPPED `openai-compatible` tool path — NO adapter change required.** Both non-streaming and streaming wire formats match the adapter's expectations exactly (id/type/function.name/function.arguments-as-JSON-string + `finish_reason:"tool_calls"` + `data:`/`[DONE]` SSE).
+> **⚠️ CORRECTED by §7 (in-app smoke, 2026-05-29).** This §3 conclusion + the §2.4 "No adapter change required" line were based on the direct-API probe using `gemini-2.5-flash` (single-chunk, `finish_reason:"tool_calls"`), which did work unchanged. The later IN-APP smoke with the operator's actual model `gemini-3.1-flash-lite` exposed **2 real bugs that DID require fixes** (no-`index` tool_call dropped + AI-create on an unseeded store dropped). See §7. The wire format is compatible in shape, but two code paths needed hardening — verified end-to-end PASS after the fixes.
+
+**Gemini's OpenAI-compatible function-calling is shape-compatible with the SHIPPED `openai-compatible` tool path** (id/type/function.name/function.arguments-as-JSON-string + `finish_reason` + `data:`/`[DONE]` SSE). Two real-world divergences required adapter/subscriber fixes — see §7.
 
 The app-level flow above the adapter (confirmation card → `web:*:create-requested` event → owning-module reducer → task created) is **provider-agnostic and already SHIPPED + mocked-SSE tested** (`OAI-PARITY-1/2` prove both providers produce identical `toolUse` + write-event payloads). So a real Gemini chat that proposes `create_task` will route through the same confirmation → create path verified for the mocked openai golden.
 
@@ -83,3 +85,32 @@ Carve-out §5 acceptance anchor is met: CSP allowlists the host (commit `c0ffaac
 - **Model choice**: operator chose "3.1 flash" → use **`gemini-3.1-flash-lite`** (no plain `gemini-3.1-flash` exists; the rest of the 3.1-flash family is image/tts/live). Verified working with function-calling via the defensive `finish_reason:"stop"` fallback (§2.5). Alternatives also verified: `gemini-2.5-flash` / `gemini-flash-latest` / `gemini-3.5-flash`. Avoid `gemini-2.0-flash` (free-tier quota 0 on this key; enable billing if needed).
 - **Optional belt-and-suspenders**: a literal in-app browser smoke (Settings → AI configure Gemini → chat → confirm → task appears) can be run by the operator; the wire-format + provider-agnostic SHIPPED path already cover the core risk.
 - **Production**: CSP change ships with the next `xai-web-deploy-cloudflare`; the operator real-key round-trip on the live `*.pages.dev` URL remains the standard post-deploy smoke.
+
+---
+
+## 7. In-app end-to-end browser smoke (2026-05-29) — PASS (after 2 fixes)
+
+Ran the full in-app flow via Claude Preview MCP (dev server `pnpm --filter @repo/web dev:mock-auth`, port 3002): `/app/ai` → typed "创建一个任务：明天买牛奶" → Send → Gemini tool_call → confirmation card → Confirm → task persisted → `/app/tasks` renders the card.
+
+### Result: PASS — "买牛奶" card appears in the "Next 7 Days" column.
+- dev-seed bridge auto-configured the app from `.env.local`: provider=openai-compatible, model=gemini-3.1-flash-lite, key seeded into secretStore (console: `[dev] AI config seeded ... key length=39`).
+- `POST https://generativelanguage.googleapis.com/v1beta/openai/chat/completions → 200` (CSP host allowlisted; key from secretStore).
+- Gemini returned a real `create_task` tool_call: `{"title":"买牛奶","bucket":"next7"}`.
+- Confirmation card rendered: `✦ Create task "买牛奶" in Next 7 Days [Confirm] [Cancel]`.
+- Confirm → `web:tasks:create-requested` → subscriber → task persisted to `xai_task_cols` next7 bucket (id generated).
+- `/app/tasks` board renders "买牛奶" in Next 7 Days.
+
+### 2 real bugs the live smoke caught (mocked tests missed both):
+
+**BUG-1 — adapter dropped Gemini's tool_call (no `index` field).**
+`claudeStreamAdapter.ts` accumulated openai `delta.tool_calls` keyed by `tc.index` and did `if (typeof idx !== "number") continue;`. Gemini's tool_call delta has NO `index` field (OpenAI proper always includes it; the mocked tests OAI-STREAM-1..4 all used explicit `index:0`). Result: the whole tool_call was skipped → no toolUse → NO confirmation card.
+Fix: default a missing index to 0 (single-tool v1). Regression test **OAI-STREAM-5** (real Gemini shape: no `index` + `extra_content.google.thought_signature` + finish_reason:"stop").
+
+**BUG-2 — AI-created task dropped on an unseeded task store.**
+`aiCreateSubscriber.ts` read `xai_task_cols` (registry default `{}`; or `[]`) and did `Array.isArray(raw) ? raw : []`, then `addCard([], ...)`. With no bucket columns present (a profile that never opened/persisted the Tasks board), addCard no-ops → task DROPPED, and writing `[]` back poisons TasksModule's seed fallback (`isTaskColsArray([])===true` → no seed → empty board).
+Fix: when the store is not a non-empty `TaskCol[]`, seed the base from the SAME `SEED_TASK_COLS` TasksModule uses (the 4 buckets exist → addCard lands the task). Regression tests **TS-5** (default `{}` + poison `[]` cases).
+
+### Notes
+- Both bugs were in the SHIPPED openai-compatible / AI-tool-layer code; the mocked-SSE tests passed because they used OpenAI-proper-shaped fixtures. The live Gemini endpoint exercised the real divergences. This is exactly the value of the operator real-key smoke.
+- Anthropic path unaffected by both fixes (index default only changes the missing-index branch; seed fallback only triggers on empty stores).
+- Bounded round-trip after Confirm: a `tool_result` is sent back to Gemini for a final ack (provider-agnostic; unchanged).

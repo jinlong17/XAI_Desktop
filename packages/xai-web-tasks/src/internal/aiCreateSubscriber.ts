@@ -23,6 +23,7 @@ import { useRef } from "react";
 import { useWebEventListener } from "@repo/xai-web-event-bus";
 import { getPref, setPref } from "@repo/plugin-web-storage";
 import { addCard } from "./tasksReducer.js";
+import { SEED_TASK_COLS } from "./seed/tasksMock.js";
 import type { TaskCol, BucketId, TaskTagId } from "../types.js";
 
 // ---- Type guards -----------------------------------------------------------
@@ -77,8 +78,20 @@ export function useTaskCreateRequestSubscriber(): void {
     // Read the current store imperatively (not via usePref hook).
     // Cast through unknown: the registry type (TaskColsState = Record<string, boolean>)
     // is a legacy placeholder; the real runtime value is TaskCol[].
+    //
+    // Bucket columns must exist for addCard to land the card. A fresh / never-
+    // persisted store is `{}` (registry default) or `[]` (no columns) — addCard
+    // into a missing bucket would no-op and silently DROP the task, and writing
+    // `[]` back would poison TasksModule's seed fallback. So when the stored
+    // value is not a non-empty TaskCol[], seed from the SAME SEED_TASK_COLS that
+    // TasksModule uses, guaranteeing the 4 buckets are present.
+    // VERIFIED via the 2026-05-29 live Gemini in-app smoke (task was dropped on a
+    // never-opened-Tasks profile before this fix).
     const rawCols = getPref("xai_task_cols") as unknown;
-    const cols = Array.isArray(rawCols) ? (rawCols as TaskCol[]) : [];
+    const cols =
+      Array.isArray(rawCols) && rawCols.length > 0
+        ? (rawCols as TaskCol[])
+        : (SEED_TASK_COLS as TaskCol[]);
 
     // Execute via the INTERNAL pure reducer.
     const next = addCard(cols, { title, tag, withDate }, bucket);

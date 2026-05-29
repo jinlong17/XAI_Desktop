@@ -300,3 +300,55 @@ describe("OAI-STREAM-4: defensive finish_reason — tool_calls accumulated by st
     });
   });
 });
+
+// ---- OAI-STREAM-5: tool_call delta with NO `index` field (Gemini real shape) --
+
+describe("OAI-STREAM-5: tool_call delta omitting `index` + extra_content (Gemini real-world shape)", () => {
+  it("surfaces toolUse when the tool_call delta has no `index` field and finish_reason is 'stop'", async () => {
+    // VERIFIED against the live Gemini endpoint (gemini-3.1-flash-lite, 2026-05-29
+    // in-app smoke): the streamed tool_call delta carries NO `index` field (OpenAI
+    // proper always does) and an extra `extra_content.google.thought_signature`,
+    // then a separate chunk with finish_reason:"stop" (NOT "tool_calls"). The
+    // original `if (typeof idx !== "number") continue;` dropped the whole tool_call
+    // → no card rendered. The adapter now defaults a missing index to 0.
+    const sseSequence = [
+      sseData({
+        choices: [{
+          index: 0,
+          delta: {
+            role: "assistant",
+            tool_calls: [{
+              // NO `index` field here — the exact Gemini shape.
+              extra_content: { google: { thought_signature: "EjQKMgEMOdb..." } },
+              id: "GeecqNgN",
+              type: "function",
+              function: { name: "create_task", arguments: '{"title":"买牛奶","bucket":"next7"}' },
+            }],
+          },
+          // NO finish_reason on the tool_call chunk.
+        }],
+      }),
+      sseData({
+        choices: [{ index: 0, delta: { role: "assistant" }, finish_reason: "stop" }],
+      }),
+      "data: [DONE]\n\n",
+    ].join("");
+
+    vi.spyOn(globalThis, "fetch").mockResolvedValueOnce(
+      new Response(makeStream(sseSequence), { status: 200 }),
+    );
+
+    const chunks = await collectChunks(
+      streamCompleteChat({ text: "创建一个任务：明天买牛奶", lang: "en", model: "haiku" }),
+    );
+
+    const final = chunks[chunks.length - 1]!;
+    expect(final.done).toBe(true);
+    expect(final.toolUse).toBeDefined();
+    expect(final.toolUse).toMatchObject({
+      id: "GeecqNgN",
+      name: "create_task",
+      input: { title: "买牛奶", bucket: "next7" },
+    });
+  });
+});

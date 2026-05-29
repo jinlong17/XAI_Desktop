@@ -310,8 +310,13 @@ export async function* streamCompleteChat(
           const toolCallsArr = oaiDelta["tool_calls"] as Array<Record<string, unknown>> | undefined;
           if (Array.isArray(toolCallsArr)) {
             for (const tc of toolCallsArr) {
-              const idx = tc["index"] as number | undefined;
-              if (typeof idx !== "number") continue;
+              // OpenAI proper sends `index` on every tool_call delta. Some
+              // openai-compatible servers OMIT it for a single tool call —
+              // VERIFIED with Gemini (gemini-3.1-flash-lite) 2026-05-29 live
+              // smoke: the tool_call delta has no `index` field. Default a
+              // missing index to 0 (single-tool v1 parity) instead of skipping
+              // the call entirely (which dropped the whole tool_use → no card).
+              const idx = typeof tc["index"] === "number" ? (tc["index"] as number) : 0;
 
               // First delta of a tool call carries id and function.name.
               const fn = tc["function"] as Record<string, unknown> | undefined;
