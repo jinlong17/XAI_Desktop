@@ -7,16 +7,16 @@
 | Workflow | FEATURE_DEV |
 | Target | desktop-last-data-cache-polish |
 | Title | Phase 2 Desktop Last-known Data Cache Polish |
-| Current Phase | FEATURE_VERIFY |
-| Status | READY_FOR_VERIFY |
-| Suggested Next | feature-verify |
+| Current Phase | SHIP |
+| Status | SHIPPED |
+| Suggested Next | workflow-complete |
 | Automation Mode | B-Codex |
 | Verify Cross-vendor | yes |
-| Executor | feature-auto-build (Codex, gpt-5.3-codex inline) |
-| Updated | 2026-05-28 06:46 PDT |
+| Executor | ship (Codex, gpt-5.3-codex inline) |
+| Updated | 2026-05-28 21:33 PDT |
 | Brief | `docs/reviews/desktop-last-data-cache-polish/20260528-feature-brief.md` |
 | Discovery Review | `docs/reviews/desktop-last-data-cache-polish/20260528-discovery-review.md` |
-| Risks | The main implementation risk is over-correcting seeded demo behavior and accidentally regressing the live/browser demo path; the opposite risk is leaving any seeded desktop-offline path in place so demo data is still mistaken for last-known cache. The new unreadable-cache mode reduces the false-positive shell risk, but real macOS offline relaunch verification is still required after build. |
+| Risks | Feature is shipped on `dev`; residual external-release risk remains real macOS offline relaunch cache-state smoke on hardware (readable/absent/malformed), including confirmation that shell/module unreadable states render correctly and overlay/control/grid startup paths do not reappear. |
 | Blockers | — |
 
 ## Phase Plan
@@ -51,7 +51,7 @@ Status: DONE (`64c413d9`)
 
 ### Phase 4 — Regression and Launch Verification
 
-Status: DONE
+Status: DONE (`fe8c4742`)
 
 - Add cached-present / cache-absent / cache-corrupt regression tests.
 - Re-run web build and desktop app-bundle build.
@@ -90,6 +90,33 @@ Review findings:
 - Phase 2 boundary remains intact: no repository, migration/import, edit queue, sync, conflict, freshness timestamp, SQLite, or storage-engine drift is introduced by the plan.
 - Build caution: keep unreadable detection behind package-owned/public predicates rather than cross-package internal imports; real macOS offline relaunch remains a required verify-stage check.
 
+## Verification Notes
+
+Verdict: PASS.
+
+Verification findings:
+
+- Commit integrity is acceptable across all reviewed commits: `cfd7ad13`, `dea96e26`, `64c413d9`, and `fe8c4742` stay within their stated phase boundaries and their commit messages follow the required `type(scope): summary` format with Why / What / Scope / Risk / Docs / Tests bodies.
+- Shared cache-status seam matches the approved contract: `readDesktopLastDataCacheSnapshot(...)` exposes `bannerMode = hidden | cached | empty | unreadable`, keeps the badge hidden in `web-live`, and gives `unreadable` precedence over `cached` when tasks/boards/habits payloads are malformed.
+- Tasks desktop-offline behavior is correct: readable `xai_task_cols` renders persisted task columns, absent cache renders a safe empty state, malformed cache renders explicit unreadable-copy/state, and `web-live` still falls back to seeded demo data.
+- Board-workspaces desktop-offline behavior is correct: readable `xai_boards_v2` renders persisted boards, absent or empty cache renders a safe empty state, malformed cache renders explicit unreadable-copy/state, and browser/live default board behavior remains unchanged outside the desktop-offline runtime gate.
+- Habits desktop-offline behavior is correct: seed hydration is disabled in desktop-offline runtime, absent/default cache stays empty, malformed cache renders explicit unreadable-copy/state, and the live Web seeded first-launch path remains intact.
+- Scope and browser-safety boundaries hold: no new repository/migration/import/edit-queue/sync/conflict/freshness/SQLite implementation was introduced in the touched sources; no `@tauri-apps/*` or `__TAURI__` matches were found in the relevant source paths or `apps/web/dist`; and no new native permission surface was required.
+- Independent verification reruns passed in the current repo state:
+  - `pnpm --filter @repo/desktop-last-data-cache-polish check-types`
+  - `pnpm --filter @repo/desktop-last-data-cache-polish test` (5/5)
+  - `pnpm --filter @repo/plugin-web-tasks test` (49/49)
+  - `pnpm --filter @repo/plugin-web-board-workspaces test` (176/176)
+  - `pnpm --filter @repo/plugin-web-habits test` (121/121)
+  - `pnpm --filter @repo/web test` (122/122)
+  - `pnpm --filter @repo/web build` plus `sourcemaps:assert-clean` and `browser-safety:assert-dist`
+  - `pnpm --filter desktop tauri build --debug --bundles app` (`X Desktop.app` produced)
+- Traceability repair is clerical, not blocking: this verify pass records `fe8c4742` in the Phase 4 status line and the existing Phase 4 work-log row so the READY_TO_SHIP state references the actual verification-metadata commit honestly.
+
+Residual manual check:
+
+- Real macOS offline relaunch remains a ship-time smoke requirement: verify readable/absent/malformed cache relaunches on hardware and confirm no overlay/control/grid startup path reappears.
+
 ## Work Log
 
 | Timestamp | Executor | Action | Commits | Next |
@@ -101,4 +128,6 @@ Review findings:
 | 2026-05-28 06:39 PDT | feature-auto-build (Codex, gpt-5.3-codex inline) | Phase 1 — Shared Desktop-offline Cache Status Seam: implemented `@repo/desktop-last-data-cache-polish/web` snapshot+badge seam, wired App topbar badge injection, exported package-owned desktop-cache predicates (`absent | readable | unreadable`) for tasks/boards/habits via public subpaths, and tracked row #7 planning/review/docs artifacts in git. | `cfd7ad13` | Phase 2 |
 | 2026-05-28 06:42 PDT | feature-auto-build (Codex, gpt-5.3-codex inline) | Phase 2 — Tasks and Board Safe Fallback: tasks now return safe empty columns in desktop offline when cache is absent/unreadable and render explicit unreadable copy for malformed payloads; board-workspaces now suppresses desktop-offline reseed/default boards and renders safe empty/unreadable states for absent/empty/corrupt cache. Browser/live fallback behavior is preserved. | `dea96e26` | Phase 3 |
 | 2026-05-28 06:44 PDT | feature-auto-build (Codex, gpt-5.3-codex inline) | Phase 3 — Habits Seed-hydration Override: habits runtime now disables seed hydration in desktop-offline mode, keeps empty state when cache is absent/default, and renders explicit unreadable copy when cached payload is malformed. Web-live seeded behavior remains unchanged. | `64c413d9` | Phase 4 |
-| 2026-05-28 06:46 PDT | feature-auto-build (Codex, gpt-5.3-codex inline) | Phase 4 — Regression and Launch Verification: completed regression coverage for absent/cached/unreadable desktop-offline paths and executed build gates: `pnpm --filter @repo/desktop-last-data-cache-polish check-types`, `pnpm --filter @repo/desktop-last-data-cache-polish test`, `pnpm --filter @repo/plugin-web-tasks test`, `pnpm --filter @repo/plugin-web-board-workspaces test`, `pnpm --filter @repo/plugin-web-habits test`, `pnpm --filter @repo/web test`, `pnpm --filter @repo/web build`, `pnpm --filter desktop tauri build --debug --bundles app` (all pass; non-blocking warnings only). | — | feature-verify |
+| 2026-05-28 06:46 PDT | feature-auto-build (Codex, gpt-5.3-codex inline) | Phase 4 — Regression and Launch Verification: completed regression coverage for absent/cached/unreadable desktop-offline paths and executed build gates: `pnpm --filter @repo/desktop-last-data-cache-polish check-types`, `pnpm --filter @repo/desktop-last-data-cache-polish test`, `pnpm --filter @repo/plugin-web-tasks test`, `pnpm --filter @repo/plugin-web-board-workspaces test`, `pnpm --filter @repo/plugin-web-habits test`, `pnpm --filter @repo/web test`, `pnpm --filter @repo/web build`, `pnpm --filter desktop tauri build --debug --bundles app` (all pass; non-blocking warnings only). | `fe8c4742` | feature-verify |
+| 2026-05-28 06:51 PDT | feature-verify (Codex, gpt-5.4 inline) | PASS — reviewed commits `cfd7ad13`, `dea96e26`, `64c413d9`, and `fe8c4742` against the approved roadmap seed, brief, discovery/design/api/test/dev_log contract; confirmed the shared cache badge and targeted tasks/boards/habits desktop-offline fallbacks implement cached/empty/unreadable semantics without Phase 3 storage drift; reran package, web, browser-safety, and desktop app-bundle gates successfully; and recorded the actual Phase 4 metadata commit for traceability. Real macOS offline relaunch remains the only residual manual ship-time check. | `cfd7ad13`, `dea96e26`, `64c413d9`, `fe8c4742` | ship |
+| 2026-05-28 21:33 PDT | ship (Codex, gpt-5.3-codex inline) | Shipping pass: confirmed `READY_TO_SHIP` from this dev log, re-validated commit integrity for `cfd7ad13`, `dea96e26`, `64c413d9`, and `fe8c4742`, ran lightweight ship gates (`git status`, `git log`, branch/remote parity), and wrote SHIPPED state plus roadmap row #7 bookkeeping. Residual manual risk remains real macOS offline relaunch cache-state smoke on hardware. | `cfd7ad13`, `dea96e26`, `64c413d9`, `fe8c4742` | roadmap row #7 ship |
