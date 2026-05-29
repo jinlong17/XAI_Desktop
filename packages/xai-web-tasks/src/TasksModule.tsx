@@ -8,7 +8,7 @@
  * API contract: packages/xai-web-tasks/docs/api.md §2.1
  */
 
-import React, { useMemo, useState } from "react";
+import React, { useMemo, useState, useCallback } from "react";
 import type { TasksModuleProps, TaskCol, BucketId, NewTaskDraft } from "./types.js";
 import { useI18n } from "@repo/plugin-web-tokens";
 import { usePref } from "@repo/plugin-web-storage";
@@ -38,12 +38,23 @@ export function TasksModule({ lang }: TasksModuleProps) {
     return SEED_TASK_COLS as TaskCol[];
   }, [rawCols]);
 
-  // ---- In-memory completion state (not persisted in v1) ----
-  const [completedIds, setCompletedIds] = useState<ReadonlySet<string>>(new Set());
+  // ---- Completion state — derived from persisted `done` field in taskCols (T-10 fix) ----
+  // Minimal-diff shape: keep completedIds as ReadonlySet<string> so TaskColumn/TaskCard/
+  // CompletedGroup signatures are unchanged. The set is rebuilt from taskCols on every render.
+  const completedIds = useMemo<ReadonlySet<string>>(() => {
+    const ids = new Set<string>();
+    for (const col of taskCols) {
+      for (const task of col.tasks) {
+        if (task.done === true) ids.add(task.id);
+      }
+    }
+    return ids;
+  }, [taskCols]);
 
-  function handleToggle(taskId: string) {
-    setCompletedIds((prev) => toggleComplete(prev, taskId));
-  }
+  const handleToggle = useCallback((taskId: string) => {
+    const next = toggleComplete(taskCols, taskId);
+    setRawCols(next as unknown as Parameters<typeof setRawCols>[0]);
+  }, [taskCols, setRawCols]);
 
   // ---- DnD transient state ----
   const [dragging, setDragging] = useState<{ taskId: string; fromColId: BucketId } | null>(null);
