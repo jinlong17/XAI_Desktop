@@ -173,3 +173,69 @@ The extension's `READY_FOR_VERIFY` gate requires ALL of:
 - Free-form date entry (bucket-derived only).
 - Event emission (no channel added).
 - Touch/pointer interactions on the dialog (mouse + keyboard only).
+
+---
+
+# Extension — xai-web-tasks-smartlist-filter (2026-05-28)
+
+> APPENDED extension (Iteration 3). The SHIPPED v1 test plan (§1–§6) and the
+> card-create extension (§E.1–§E.4) above are unchanged.
+> Discovery: `docs/reviews/xai-web-tasks-smartlist-filter/20260528-discovery-review.md`.
+> Phase IDs use the FP1/FP2 labels from the extension Phase Plan.
+
+## F.1 New test inventory
+
+| ID | Layer | File | Asserts | Phase |
+|---|---|---|---|---|
+| **T-FILT-1** | pure | `__tests__/filterCardsByList.test.ts` | `filterCardsByList(cols, "all")` returns `cols` referentially unchanged (identity). | FP1 |
+| **T-FILT-2** | pure | `__tests__/filterCardsByList.test.ts` | `"inbox"` keeps only `inbox===true` cards across ALL columns incl. `nodate.completed`; seed → 10 (overdue) + 1 active + 6 completed (nodate); next7/later → `tasks:[]`. | FP1 |
+| **T-FILT-3** | pure | `__tests__/filterCardsByList.test.ts` | `"next7"` keeps `next7` bucket cards; overdue/later/nodate → `tasks:[]` + `completed:[]`. | FP1 |
+| **T-FILT-4** | pure | `__tests__/filterCardsByList.test.ts` | `"today"` keeps `overdue` bucket cards; all other columns → `tasks:[]` (bucket approximation Q-T). | FP1 |
+| **T-FILT-5** | pure | `__tests__/filterCardsByList.test.ts` | `"tomorrow"` keeps `next7` bucket cards; all other columns → `tasks:[]` (bucket approximation Q-T). | FP1 |
+| **T-FILT-6** | pure | `__tests__/filterCardsByList.test.ts` | `"summary"` returns `cols` unchanged (identity / treat-as-all Q2). | FP1 |
+| **T-FILT-7** | pure | `__tests__/filterCardsByList.test.ts` | Returns all 4 columns in order for EVERY list (never drops a column); each returned `count` equals its filtered `tasks.length`. | FP1 |
+| **T-FILT-8** | pure | `__tests__/filterCardsByList.test.ts` | Defensive: unknown `list` value → returns `cols` unchanged (never throws, never empties). | FP1 |
+| **T-FILT-NOMUT** | pure | `__tests__/filterCardsByList.test.ts` | **HEADLINE:** deep-clone `cols`; apply every `SmartListId` in turn; assert the original `cols` is deep-equal to its clone afterwards (selector mutates nothing). | FP1 |
+| **T-FILT-COUNT** | integration | `__tests__/persistence.test.tsx` | **HEADLINE:** render `TasksModule`, click each smart-list in turn; after each, `localStorage.getItem("xai_task_cols")` is byte-identical to the pre-filter snapshot (or stays absent if it started absent). Filtering writes NOTHING. | FP2 |
+| **T-LIFT-1** | RTL | `__tests__/TasksModule.test.tsx` | Clicking a smart-list row (e.g. "Inbox") filters the rendered board: only `inbox` cards remain; non-matching cards are gone from the DOM. | FP1 |
+| **T-LIFT-2** | RTL | `__tests__/TasksModule.test.tsx` | `activeList` highlight (`data-active`) stays in sync after the lift: clicking "Today" sets `data-active` on the Today row, clears it on the previously-active row. | FP1 |
+| **T-LIFT-3** | RTL | `__tests__/TasksModule.test.tsx` | "All" restores the full board after a filter (click Inbox → fewer cards; click All → all 26 active cards back). | FP1 |
+| **T-LIFT-4** | RTL | `__tests__/TasksSidebar.test.tsx` | Custom-list + tag rows are non-selecting (Q1): clicking a custom-list row does NOT change the filtered board / does not call `onSelectList` with a `SmartListId` (inert). | FP1 |
+| **T-EMPTY-1** | RTL | `__tests__/TasksModule.test.tsx` | A filter that yields zero cards board-wide renders the board-level honest empty state ("Nothing in …"); the per-column "drop here" hint is suppressed while filtering. | FP2 |
+| **T-EMPTY-2** | RTL | `__tests__/TasksModule.test.tsx` | Bilingual empty state: `lang="zh"` renders the ZH empty-state STR; `lang="en"` renders EN. | FP2 |
+| **T-FILT-BAR** | barrel | `__tests__/index-barrel.test.ts` | If `SmartListId` is exported (review decision), it is on the public surface; `filterCardsByList` is NOT exported (internal). If not exported, assert `filterCardsByList` + `SmartListId` both absent from the barrel. | FP2 |
+| **T-REG-NOMUT** (regression) | suite | (existing suites) | All SHIPPED suites stay green with ZERO edits to their code paths: T-RD-1..7 (move), T-ADD-1..8 (create), T-MOD-3..6 (toggle/DnD), T-PER-1..3 + T-CR-1..3 (persistence). Confirms drag/create/complete unaffected. | FP1+FP2 |
+
+## F.2 Mock strategy (extension)
+
+- **No clock needed for v1 predicates** — they are bucket-based (discovery §3), so `filterCardsByList` tests pass plain `cols` fixtures (the SHIPPED `SEED_TASK_COLS` or hand-built `TaskCol[]`). `now` is accepted but ignored in v1; a placeholder `now` may be passed for signature coverage.
+- **No-mutation proof** — T-FILT-NOMUT deep-clones the input (`structuredClone` or `JSON.parse(JSON.stringify(...))`) and asserts deep-equality after applying all lists. T-FILT-COUNT snapshots `localStorage` raw string before/after UI filter clicks.
+- **Storage** — jsdom `localStorage` direct; `usePref` NOT mocked (tests the real read path + proves the filter never writes).
+- **i18n** — real `useI18n` for existing labels; new empty-state STR is a plain const table asserted directly for en+zh parity (same as `STR_TASK_COMPOSER`).
+- **No DnD/composer changes** — the SHIPPED DnD + composer suites are untouched; this extension neither edits nor re-mocks them.
+
+## F.3 Acceptance criteria (extension)
+
+The extension's `READY_FOR_VERIFY` gate requires ALL of:
+
+- [AC-F1] `pnpm --filter @repo/plugin-web-tasks lint` — zero warnings.
+- [AC-F2] `pnpm --filter @repo/plugin-web-tasks typecheck` — clean.
+- [AC-F3] `pnpm --filter @repo/plugin-web-tasks test` — all new T-FILT/T-LIFT/T-EMPTY tests pass AND all SHIPPED tests (70 from v1 + card-create) still pass (no regression).
+- [AC-F4] `pnpm --filter @repo/web check-types` — clean.
+- [AC-F5] `pnpm --filter @repo/web test` + `build` — green (no regression).
+- [AC-F6] **No-mutation proof green**: T-FILT-NOMUT (pure) + T-FILT-COUNT (storage byte-identical) both pass — the load-bearing safety gate.
+- [AC-F7] **Manual real-browser sweep** (macOS Safari + Chrome) — MAY be deferred per ADR-0008 §S3, recorded in dev_log verify section. Tasks must be ENABLED in Settings (Features pane) for the module to mount (discovery §1.6):
+  - Click each smart-list (All / Today / Tomorrow / Next 7 / Inbox / Summary) → board filters per the predicate table.
+  - A filter with no matches → honest empty state appears.
+  - Click All → full board restored.
+  - Drag a card, create a card, toggle complete → all still work; hard-reload → `xai_task_cols` unchanged by filtering (state survives exactly as before this feature).
+  - Switch lang EN ↔ 中文 → smart-list labels + empty-state flip.
+- [AC-F8] **Cross-vendor (FP2)**: Codex cold-read of `filterCardsByList` + the lift OR formally deferred per ADR-0008 §S3 with the (i) unique-anchors / (ii) absolute-paths / (iii) no-template-syntax checklist recorded in dev_log.
+
+## F.4 Out-of-scope tests (extension)
+
+- Custom-list / tag membership filtering (Q1 deferred — rows are non-selecting; only the inert-ness is asserted in T-LIFT-4).
+- A real Summary dashboard (Q2 treat-as-all — only identity behaviour tested).
+- Persistence of the active-list selection (Q3 session-only — no persistence test for `activeList`; the relevant test is T-FILT-COUNT proving `xai_task_cols` is NOT written).
+- Date-string parsing (B2/B3 rejected — no test for parsing `card.date`).
+- Reducer mutation behaviour (already covered by SHIPPED T-RD/T-ADD suites; this extension only guards them against regression via T-REG-NOMUT).

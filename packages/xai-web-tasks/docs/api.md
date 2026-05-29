@@ -546,3 +546,137 @@ New strings live in `src/internal/strings.ts` as `STR_TASK_COMPOSER` (en+zh), mi
 | `setRawCols` write fails (quota) | storage layer returns false | Silent (same as SHIPPED `usePref` contract). |
 
 No error UI beyond the inline title-required message in v1.
+
+---
+
+# Extension — xai-web-tasks-smartlist-filter (2026-05-28)
+
+> APPENDED extension (Iteration 3). The SHIPPED v1 contract (§0–§9) and the
+> card-create extension (§E.0–§E.8) above are unchanged.
+> Discovery: `docs/reviews/xai-web-tasks-smartlist-filter/20260528-discovery-review.md`.
+
+## F.0 Public surface delta (`src/index.ts`)
+
+```ts
+// Public types — MAY add (review decides; v1 default keeps it internal):
+// export type { SmartListId } from "./types.js";
+```
+
+`filterCardsByList` stays internal (`src/internal/**`). `SmartListId` export is optional (the type is currently a local alias in `TasksSidebar.tsx:39`); promote to the barrel only if a consumer needs it. Default v1 = internal-to-module.
+
+## F.1 New type — `SmartListId`
+
+```ts
+// src/types.ts (additive; lifted from TasksSidebar.tsx:39)
+export type SmartListId = "all" | "today" | "tomorrow" | "next7" | "inbox" | "summary";
+```
+
+Closed set — the 6 smart-list rows. Custom-list ids (`research`/`personal`/`career`/`reminders`) and tag ids are NOT `SmartListId`s and do NOT drive the filter (discovery Q1 defer).
+
+## F.2 New internal helper — `filterCardsByList`
+
+```ts
+// src/internal/filterCardsByList.ts
+export function filterCardsByList(
+  cols: TaskCol[],
+  list: SmartListId,
+  now?: Date,
+): TaskCol[];
+```
+
+**PURE** — returns a new `TaskCol[]` view shape. NEVER mutates `cols`; NEVER writes `localStorage`; NEVER calls `moveCard`/`toggleComplete`/`addCard`. Always returns all 4 columns (so headers + empty states render); only each column's `tasks` (and `completed`) arrays are filtered, and each returned column's `count` is recomputed to match its filtered `tasks.length` (a *derived display value* — the persisted `count` in `xai_task_cols` is untouched).
+
+Per-list behaviour (discovery §3):
+
+| `list` | Returned cols |
+|---|---|
+| `all` | `cols` unchanged (identity; columns returned by reference). |
+| `inbox` | every column: `tasks.filter(t => t.inbox === true)`; `completed?.filter(t => t.inbox === true)`. |
+| `next7` | column `next7` keeps its cards; every other column → `tasks: []`, `completed: []`. |
+| `today` | column `overdue` keeps its cards; every other column → `tasks: []`, `completed: []`. **(bucket approximation — see note)** |
+| `tomorrow` | column `next7` keeps its cards; every other column → `tasks: []`, `completed: []`. **(bucket approximation — see note)** |
+| `summary` | `cols` unchanged (identity, v1 treat-as-all — discovery Q2). |
+
+> **Bucket-approximation note (Q-T):** `TaskCard.date` is a year-less display string in two formats and `next7` cards carry no `date` at all (discovery §1.2), so a precise per-calendar-day "today"/"tomorrow" predicate is not derivable from the stored shape without a forbidden schema change. `today`→`overdue` and `tomorrow`→`next7` are *bucket approximations* of those labels, derived from the board's existing persisted date semantics (`dateForCol`: overdue=today−3d, next7=today+2d). This is the single reviewer-confirmable design judgment (Q-T).
+
+`now` is threaded for testability + future-proofing (a real `due` field would make `today`/`tomorrow` clock-dependent); v1 predicates are bucket-based and do not yet read `now`.
+
+### Example
+
+```ts
+filterCardsByList(taskCols, "inbox");
+// → every column with only inbox:true cards retained;
+//   overdue keeps its 10 inbox cards; nodate keeps t26 + 6 completed; next7/later → tasks:[].
+filterCardsByList(taskCols, "all");      // → taskCols (referentially identical)
+filterCardsByList(taskCols, "next7");    // → only next7 column has cards
+```
+
+## F.3 Component contract delta — `TasksSidebar` (controlled)
+
+```ts
+export interface TasksSidebarProps {
+  lang: Lang;
+  activeList: SmartListId;                 // NEW — controlled value (was local useState)
+  onSelectList: (id: SmartListId) => void; // NEW — selection callback to TasksModule
+}
+```
+
+- The local `const [activeList, setActiveList] = useState("all")` (TasksSidebar.tsx:56) is REMOVED; the value + setter now flow from `TasksModule`.
+- Smart-list rows call `onSelectList(item.id)` (item.id is a `SmartListId`).
+- Custom-list rows + tag rows become **non-selecting** (Q1 defer): they keep their decorative look but do NOT call `onSelectList` (or call it with no effect). Only the 6 smart-list ids drive the filter. `data-active` highlight stays in sync for the smart-list rows.
+
+## F.4 Component contract delta — `TasksModule`
+
+```ts
+const [activeList, setActiveList] = useState<SmartListId>("all"); // session-only (Q3)
+
+const viewCols = useMemo<TaskCol[]>(
+  () => filterCardsByList(taskCols, activeList),
+  [taskCols, activeList],
+);
+```
+
+- Renders `viewCols` (the filtered shape) in the column map.
+- Passes `activeList` + `setActiveList` to `<TasksSidebar>`.
+- **CRITICAL:** every mutation handler (`handleDrop`, `handleToggle`, `handleComposerSave`) continues to operate on the UNFILTERED `taskCols` and writes via the SHIPPED `setRawCols` boundary cast. The filter is read-only and never participates in a write.
+- When `activeList !== "all"` and `viewCols` yields zero cards board-wide, render a board-level honest empty state (F.6 STR).
+
+## F.5 Component contract delta — `TaskColumn`
+
+```ts
+export interface TaskColumnProps {
+  // …existing props unchanged…
+  filterActive?: boolean; // NEW — when true, suppress the per-column "drop here" hint
+}
+```
+
+The `isEmpty` placeholder ("Drop tasks here", TaskColumn.tsx:97-102) is suppressed when `filterActive` is true (a "drop here" prompt is misleading under a read-only filter). Reviewer may simplify to a board-level empty state only and drop this prop.
+
+## F.6 i18n (extension)
+
+New empty-state strings append to `src/internal/strings.ts` (en+zh), mirroring the SHIPPED `STR_TASK_COMPOSER` pattern. Proposed keys (final wording at build):
+
+| Key | en | zh |
+|---|---|---|
+| `empty_filtered` | "Nothing in {list}" | "{list} 里没有任务" |
+| `empty_today` | "Nothing due today" | "今天没有到期任务" |
+| `empty_tomorrow` | "Nothing due tomorrow" | "明天没有到期任务" |
+| `empty_next7` | "Nothing in the next 7 days" | "最近 7 天没有任务" |
+| `empty_inbox` | "Inbox is empty" | "收件箱是空的" |
+
+(Exact key set finalized at build; may collapse to one parameterized `empty_filtered` + a per-list label.) **No `plugin-web-tokens` edit.** Existing tokens keys (`common.*`, smart-list labels) keep flowing through `useI18n`.
+
+## F.7 Persistence contract (extension)
+
+**Read-only.** This feature does NOT write `xai_task_cols` and adds NO registry key. `activeList` is `useState` (session-only — discovery Q3). The selector reads the resolved `taskCols` (seed-or-persisted via the SHIPPED `useMemo`) and projects a view; the SHIPPED write path (`setRawCols` boundary cast) is untouched and reachable only from the mutation handlers operating on the unfiltered board.
+
+## F.8 Error semantics (extension)
+
+| Boundary | Failure mode | Behaviour |
+|---|---|---|
+| `filterCardsByList` with unknown `list` value | not a `SmartListId` | Defensive: return `cols` unchanged (identity) — never throws, never empties the board. |
+| Filter yields zero cards | every column empty after filter | Board-level honest empty state (F.6); NO write; All restores full board. |
+| `now` omitted | default | v1 predicates are bucket-based and ignore `now`; no clock dependency. |
+| Any filter applied | always | `localStorage.getItem("xai_task_cols")` is byte-identical before/after (T-FILT-NOMUT). The filter writes nothing. |
+
+No error UI beyond the honest empty state.

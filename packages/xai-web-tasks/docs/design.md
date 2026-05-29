@@ -279,3 +279,80 @@ Each phase ends with `feature-build` STOP per Workflow V2.
 - T-10 completion persistence (different code path).
 - Event emission / Statistics / Matrix coupling.
 - Any `plugin-web-storage`, `plugin-web-tokens`, `packages/core`, or host-shell edit.
+
+---
+
+# Extension — xai-web-tasks-smartlist-filter (2026-05-28)
+
+> APPENDED extension (Iteration 3). The SHIPPED v1 content (§1–§9) and the
+> card-create extension (§E.0–§E.5) above are unchanged.
+> Decision snapshot only — discovery detail lives in the review doc, not here.
+
+## F.0 Decision snapshot
+
+| Field | Value |
+|---|---|
+| Feature | `xai-web-tasks-smartlist-filter` (lift `activeList` to `TasksModule` + pure `filterCardsByList` view selector) |
+| Selected Option | **A1** (state lift into `TasksModule`, props down to sidebar) + **B1** (bucket-derived pure selector — NOT date-string parsing) + **session-only** (Q3, no registry key) + **DEFER** custom-list/tag filtering (Q1) + **Summary-as-all** (Q2) + **D1** board-level honest empty state |
+| Discovery / Review Doc | `docs/reviews/xai-web-tasks-smartlist-filter/20260528-discovery-review.md` |
+| Feature Brief | `docs/reviews/xai-web-tasks-smartlist-filter/20260528-feature-brief.md` |
+| Roadmap Manifest | `docs/workflow/roadmap/xai-web-tasks-smartlist-filter.md` |
+| Review Date / Version | 2026-05-28 (v1 — pending feature-review) |
+| Governing Authority | ADR-0010 §D4 P0 carve-out (`docs/reviews/_p0-carve-outs/20260528-tasks-smartlist-filter.md`, commit `eacf1e5`) |
+
+## F.1 Frozen assumptions (extension)
+
+Changing any of these requires re-running feature-plan, not a silent edit.
+
+1. **No new package** — all new code lands in `packages/xai-web-tasks/src/`.
+2. **Filtering is a VIEW concept** — a pure `filterCardsByList(cols, list, now?)` selector produces a *filtered render shape*; it NEVER writes storage, NEVER calls `moveCard`/`toggleComplete`/`addCard`. The stored `xai_task_cols` is never mutated by the filter.
+3. **`activeList` lifts into `TasksModule`** via `useState` (default `"all"`); `TasksSidebar` becomes a controlled component receiving `activeList` + `onSelectList` props. NO `packages/core/src/types/events.ts` edit (props lift only — card-create Iteration-2 / Calendar Q5-A precedent).
+4. **Bucket-derived predicates (B1), NOT date-string parsing (B2/B3 rejected).** `TaskCard.date` is a year-less display string in two formats (`"7/31"` / `"Jun 14"`) and `next7` cards have no `date` at all (discovery §1.2). Temporal class is derived from **bucket membership** (the board's existing persisted date semantics via `dateForCol`), not by parsing strings. No `TaskCard` schema change.
+5. **Per-list predicates** (discovery §3): `all`→identity; `inbox`→`card.inbox===true` across all buckets incl. `nodate.completed`; `next7`→`next7` bucket cards; `today`→`overdue` bucket cards (bucket approximation — Q-T); `tomorrow`→`next7` bucket cards (bucket approximation — Q-T); `summary`→identity (Q2 treat-as-all).
+6. **Session-only selection** — NO new registry key, NO `plugin-web-storage` edit. The existing `xai_pref_smart_lists` (owner `xai-web-settings-rest`, `Record<string,string>`) is NOT reused (wrong owner + wrong shape — discovery §1.5).
+7. **Custom-list + tag rows DEFERRED** (Q1) — no list/tag membership model exists; those rows become explicitly non-selecting (inert) this iteration. Only the 6 `SmartListId`s drive the filter.
+8. **Honest empty state (D1)** — when a filter is active and the board yields zero cards, render a board-level "Nothing in {list}" message from a NEW local STR entry; suppress the per-column "drop here" hint while filtering. NO `plugin-web-tokens` edit.
+9. **Local STR only** — new empty-state strings append to `src/internal/strings.ts` (en+zh). NO `plugin-web-tokens` edit.
+10. **No host-shell edit** — slot `tasksWebModuleRegistration` (railOrder 2) already SHIPPED; filtering needs no registration change.
+11. **SHIPPED behaviour preserved** — drag (T-12/moveCard), create (`addCard`), complete (T-10/`toggleComplete`), and persistence boundary are untouched; their existing test suites must stay green.
+
+## F.2 Dependency overview (extension)
+
+No new dependencies. Reuses the SHIPPED dep set (`@repo/core`, `@repo/plugin-web-tokens`, `@repo/plugin-web-storage`, `@repo/xai-web-shell`) — all `Stable`. Internal reuse: `usePref("xai_task_cols")` (read only), `BucketId`/`TaskCol`/`TaskCard` types, `useI18n` (existing keys), the SHIPPED `setRawCols` boundary cast (untouched). New internal: `filterCardsByList` selector + a `SmartListId` type export decision (F.3).
+
+## F.3 Module structure delta
+
+```
+packages/xai-web-tasks/src/
+├─ internal/
+│  └─ filterCardsByList.ts   ← NEW: pure view selector (cols, list, now?) → cols
+├─ types.ts                  ← +SmartListId type (additive; shared by sidebar + selector)
+├─ TasksSidebar.tsx          ← activeList/onSelectList become props (remove local useState);
+│                               custom-list/tag rows made non-selecting (Q1)
+├─ TasksModule.tsx           ← +activeList useState + onSelectList; filtered view via useMemo;
+│                               board-level empty state; mutation handlers stay on UNFILTERED taskCols
+├─ TaskColumn.tsx            ← suppress per-column "drop here" hint when a filter is active (small prop)
+├─ internal/strings.ts       ← +empty-state STR entries (en+zh)
+└─ styles.css                ← +empty-state rule (appended, if needed)
+```
+
+Public surface (`src/index.ts`): `SmartListId` MAY be exported if a consumer needs it; v1 keeps it internal-to-module unless review prefers exporting (the type is currently a local alias in `TasksSidebar.tsx:39`). `filterCardsByList` stays internal (`src/internal/**`).
+
+## F.4 Phase plan (extension — mirrors dev_log Phase Plan)
+
+- **FP1 — Lift + selector + structural lists**: `internal/filterCardsByList.ts` (pure: `all`/`inbox`/`next7`/`today`/`tomorrow`/`summary` predicates); `SmartListId` in `types.ts`; lift `activeList` into `TasksModule` + pass props to `TasksSidebar` (controlled); apply the filter via `useMemo` to the rendered columns; make custom-list/tag rows non-selecting. Unit tests for the selector (each list + no-mutation identity) + the lift wiring. **Critical: T-FILT-NOMUT + T-FILT-COUNT prove storage is untouched.** SHIPPED suites stay green.
+- **FP2 — Date predicates polish + empty state + docs + cross-vendor**: confirm/finalize the `today`/`tomorrow` bucket approximation (Q-T); board-level honest empty state + suppress per-column "drop here" hint under filter; local STR additions; RTL tests (click each smart-list → board filters; empty state shows; All restores); full tasks + web suites + build; Codex cold-read of the new selector (or defer per ADR-0008 §S3); verify section; PLUGIN_MAP note at ship.
+
+Each phase ends with `feature-build` STOP per Workflow V2.
+
+> If `feature-review` prefers, FP1 may be split (lift vs. selector) — planner judges 2 phases right-sized because the selector and the lift are co-dependent for any visible behaviour (Q-PHASE).
+
+## F.5 Out of scope (extension)
+
+- Custom-list / tag membership filtering (Q1 defer — no membership model).
+- A real Summary dashboard/KPI view (Q2 — treat-as-all; overlaps Statistics #20).
+- Persisting the active-list selection across reload (Q3 — session-only).
+- Any `TaskCard` schema change / real ISO due-date field (B3 rejected).
+- Any reducer mutation change (`moveCard`/`toggleComplete`/`addCard` untouched).
+- Any `plugin-web-storage` registry, `plugin-web-tokens`, `packages/core`, host-shell, other-plugin, SHIPPED-archive, ADR, or `dev`-branch edit.
+- Header "Filters"/"More" buttons (T-06/T-07 — separate).
