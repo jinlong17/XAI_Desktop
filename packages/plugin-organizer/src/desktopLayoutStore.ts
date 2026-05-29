@@ -105,4 +105,3 @@ function resolveMigrationStorage(
   if (typeof localStorage === "undefined") return null;
   return localStorage as unknown as StorageLike;
 }
-
