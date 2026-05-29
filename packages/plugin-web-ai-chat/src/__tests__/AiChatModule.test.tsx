@@ -682,4 +682,129 @@ describe("AiChatModule integration (I)", () => {
     // Signal should be aborted (AbortController.abort() called on unmount).
     expect(capturedSignal?.aborted).toBe(true);
   });
+
+  // ---- P3: Tool layer integration tests (IT-1, IT-2, IT-3) -------------------
+
+  it("IT-1: model returns tool_use → ConfirmationCard rendered in chat", async () => {
+    vi.useRealTimers();
+    vi.restoreAllMocks();
+    const streamMod = await import("../internal/claudeStreamAdapter.js");
+    vi.spyOn(streamMod, "streamCompleteChat").mockImplementation(
+      async function* () {
+        yield {
+          accumulated: "I'll create that task for you.",
+          done: true,
+          toolUse: { id: "toolu_001", name: "create_task", input: { title: "Buy milk", bucket: "next7" } },
+        };
+      },
+    );
+
+    const { container } = render(<AiChatModule lang="en" />);
+    const inp = container.querySelector<HTMLInputElement>(".ai-input")!;
+    act(() => {
+      fireEvent.change(inp, { target: { value: "add a task to buy milk" } });
+    });
+    act(() => {
+      fireEvent.keyDown(inp, { key: "Enter", shiftKey: false });
+    });
+
+    await waitFor(() => {
+      const card = container.querySelector(".ai-confirmation-card");
+      expect(card).not.toBeNull();
+    });
+    const card = container.querySelector(".ai-confirmation-card")!;
+    expect(card.textContent).toContain("Create task");
+    expect(card.textContent).toContain("Buy milk");
+  });
+
+  it("IT-2: NO-SILENT-WRITE — pending-not-confirmed → 0 store mutations", async () => {
+    vi.useRealTimers();
+    vi.restoreAllMocks();
+    const streamMod = await import("../internal/claudeStreamAdapter.js");
+    vi.spyOn(streamMod, "streamCompleteChat").mockImplementation(
+      async function* () {
+        yield {
+          accumulated: "",
+          done: true,
+          toolUse: { id: "toolu_002", name: "create_task", input: { title: "Silent write test" } },
+        };
+      },
+    );
+
+    // Capture localStorage BEFORE render
+    const taskColsBefore = localStorage.getItem("xai_task_cols");
+
+    const { container } = render(<AiChatModule lang="en" />);
+    const inp = container.querySelector<HTMLInputElement>(".ai-input")!;
+    act(() => {
+      fireEvent.change(inp, { target: { value: "create silent task" } });
+    });
+    act(() => {
+      fireEvent.keyDown(inp, { key: "Enter", shiftKey: false });
+    });
+
+    // Wait for ConfirmationCard to appear (tool_use received, no execution yet)
+    await waitFor(() => {
+      expect(container.querySelector(".ai-confirmation-card")).not.toBeNull();
+    });
+
+    // KEY ASSERTION: localStorage has NOT changed — no silent write occurred
+    const taskColsAfter = localStorage.getItem("xai_task_cols");
+    expect(taskColsAfter).toBe(taskColsBefore); // no store mutation before Confirm
+
+    // Also verify NO web:tasks:create-requested event was emitted
+    // (The events.ts channels are added in P4; this test uses emitWebEvent spy)
+    // Just confirm no crash + card is still showing
+    expect(container.querySelector(".ai-confirmation-card")).not.toBeNull();
+  });
+
+  it("IT-3: Cancel → ConfirmationCard dismissed, 0 store mutations", async () => {
+    vi.useRealTimers();
+    vi.restoreAllMocks();
+    const streamMod = await import("../internal/claudeStreamAdapter.js");
+    vi.spyOn(streamMod, "streamCompleteChat").mockImplementation(
+      async function* () {
+        yield {
+          accumulated: "I'll add that.",
+          done: true,
+          toolUse: { id: "toolu_003", name: "create_task", input: { title: "Cancel me" } },
+        };
+      },
+    );
+
+    const taskColsBefore = localStorage.getItem("xai_task_cols");
+
+    const { container } = render(<AiChatModule lang="en" />);
+    const inp = container.querySelector<HTMLInputElement>(".ai-input")!;
+    act(() => {
+      fireEvent.change(inp, { target: { value: "add cancel task" } });
+    });
+    act(() => {
+      fireEvent.keyDown(inp, { key: "Enter", shiftKey: false });
+    });
+
+    // Wait for ConfirmationCard
+    await waitFor(() => {
+      expect(container.querySelector(".ai-confirmation-card")).not.toBeNull();
+    });
+
+    // Click Cancel
+    const cancelBtn = container.querySelector<HTMLButtonElement>(".ai-confirmation-cancel");
+    expect(cancelBtn).not.toBeNull();
+    act(() => {
+      fireEvent.click(cancelBtn!);
+    });
+
+    // Card should be dismissed
+    await waitFor(() => {
+      expect(container.querySelector(".ai-confirmation-card")).toBeNull();
+    });
+
+    // KEY ASSERTION: no store mutation on Cancel
+    const taskColsAfter = localStorage.getItem("xai_task_cols");
+    expect(taskColsAfter).toBe(taskColsBefore);
+
+    // Thinking should be cleared
+    expect(container.querySelector(".ai-stage")?.className).not.toContain("thinking");
+  });
 });

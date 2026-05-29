@@ -44,11 +44,14 @@ import { AiSidebar } from "./AiSidebar.js";
 import { AiComposer } from "./AiComposer.js";
 import { AiThread } from "./AiThread.js";
 import { ErrorBanner } from "./ErrorBanner.js";
+import { ConfirmationCard } from "./ConfirmationCard.js";
 import { IconList, IconPlus, IconSparkle } from "./internal/icons.js";
 import { streamCompleteChat } from "./internal/claudeStreamAdapter.js";
 import { isAiConvoRecord } from "./internal/isAiConvoRecord.js";
 import { makeConvoFromUserText } from "./internal/makeConvoFromUserText.js";
 import type { LlmError } from "./internal/llmErrors.js";
+import { AI_TOOLS, findTool } from "./internal/toolRegistry.js";
+import type { ToolUseResult } from "./internal/toolUseTypes.js";
 import { getPref } from "@repo/plugin-web-storage";
 import type {
   AiAttachment,
@@ -97,6 +100,20 @@ export function AiChatModule({ lang }: AiChatModuleProps) {
   const [model, setModel] = useState<AiModelId>("haiku");
   /** Non-null when there is an active LlmError to display. */
   const [bannerError, setBannerError] = useState<LlmError | null>(null);
+
+  /**
+   * P3: pendingConfirmation — non-null when the model responded with a tool_use block.
+   * The ConfirmationCard is rendered while this is set. The queue processor is PAUSED
+   * until the user clicks Confirm or Cancel.
+   * CRITICAL: no write event is emitted until the user explicitly clicks Confirm.
+   */
+  const [pendingConfirmation, setPendingConfirmation] = useState<{
+    toolUse: ToolUseResult;
+    /** The placeholder bubble id to update with the preamble text. */
+    preambleId: string;
+    /** Text accumulated before the tool_use block (may be empty). */
+    preambleText: string;
+  } | null>(null);
 
   // ---- Refs ---------------------------------------------------------------
   const endRef = useRef<HTMLDivElement | null>(null);
@@ -200,6 +217,7 @@ export function AiChatModule({ lang }: AiChatModuleProps) {
 
         let accumulated = "";
         let streamError: LlmError | null = null;
+        let toolUseResult: ToolUseResult | undefined;
 
         try {
           for await (const chunk of streamCompleteChat({
@@ -207,6 +225,8 @@ export function AiChatModule({ lang }: AiChatModuleProps) {
             lang: next.lang,
             model: modelPref,
             signal: ctrl.signal,
+            // P3: send tool definitions on the Anthropic provider.
+            tools: AI_TOOLS,
           })) {
             if (!mountedRef.current) return;
             accumulated = chunk.accumulated;
@@ -231,7 +251,10 @@ export function AiChatModule({ lang }: AiChatModuleProps) {
               );
             }
 
-            if (chunk.done) break;
+            if (chunk.done) {
+              toolUseResult = chunk.toolUse;
+              break;
+            }
           }
         } catch (err) {
           // streamCompleteChat throws LlmError on 4xx/5xx/network failure.
@@ -261,6 +284,19 @@ export function AiChatModule({ lang }: AiChatModuleProps) {
               m.filter((msg) => (msg as AiMessage & { _id?: string })._id !== placeholderId),
             );
           }
+          return;
+        }
+
+        // P3: If the model responded with a tool_use block, enter pendingConfirmation.
+        // The queue is NOT advanced — the entry stays until Confirm/Cancel resolves it.
+        if (toolUseResult) {
+          setPendingConfirmation({
+            toolUse: toolUseResult,
+            preambleId: placeholderId,
+            preambleText: accumulated,
+          });
+          // Exit processQueue — it will be re-kicked by handleConfirm or handleCancel in P4.
+          // processingRef is reset in the finally block below.
           return;
         }
 
@@ -357,6 +393,34 @@ export function AiChatModule({ lang }: AiChatModuleProps) {
     });
   }, []);
 
+  /**
+   * P3: handleCancel — user declined the proposed action.
+   * Clears pendingConfirmation, advances the queue, sets idle.
+   * INVARIANT: No write event emitted (IT-3 assertion).
+   * P4 will add a tool_result(is_error:true) round-trip before clearing.
+   */
+  const handleCancel = useCallback(() => {
+    setPendingConfirmation(null);
+    // Advance the queue past this entry.
+    pendingSendQueueRef.current.shift();
+    setThinking(false);
+  }, []);
+
+  /**
+   * P3: handleConfirm — user explicitly approved the proposed action.
+   * This is the ONLY place the write event should be emitted (P4 wires the real emit).
+   * P3 stub: clears pendingConfirmation + advances queue + sets idle.
+   * P4 will: emit the typed write event + send tool_result turn + final stream.
+   */
+  const handleConfirm = useCallback(() => {
+    if (!pendingConfirmation) return;
+    // P4 will emit the write event here using pendingConfirmation.toolUse.
+    // For now: clear the confirmation and advance the queue.
+    setPendingConfirmation(null);
+    pendingSendQueueRef.current.shift();
+    setThinking(false);
+  }, [pendingConfirmation]);
+
   const stageClass =
     "ai-stage" + (thinking ? " thinking" : "") + (messages.length === 0 ? " empty" : " chatting");
   const mainClass = "ai-main" + (sidebarOpen ? " with-side" : "");
@@ -451,6 +515,23 @@ export function AiChatModule({ lang }: AiChatModuleProps) {
             onOpenSettings={handleOpenSettings}
           />
         )}
+
+        {/* P3: ConfirmationCard — shown when model returns a tool_use block.
+            CRITICAL: rendering this card does NOT execute any write.
+            Write event emitted ONLY on explicit Confirm click (P4). */}
+        {pendingConfirmation != null && (() => {
+          const tool = findTool(pendingConfirmation.toolUse.name);
+          if (!tool) return null;
+          const spec = tool.toConfirmation(pendingConfirmation.toolUse.input);
+          return (
+            <ConfirmationCard
+              spec={spec}
+              lang={lang}
+              onConfirm={handleConfirm}
+              onCancel={handleCancel}
+            />
+          );
+        })()}
 
         <AiComposer
           input={input}
