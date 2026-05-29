@@ -394,34 +394,106 @@ export function AiChatModule({ lang }: AiChatModuleProps) {
   }, []);
 
   /**
-   * P3: handleCancel — user declined the proposed action.
-   * Clears pendingConfirmation, advances the queue, sets idle.
+   * handleCancel — user declined the proposed action.
+   * Clears pendingConfirmation, sends tool_result(is_error:true) back to LLM
+   * for a bounded final acknowledgement stream, then sets idle.
    * INVARIANT: No write event emitted (IT-3 assertion).
-   * P4 will add a tool_result(is_error:true) round-trip before clearing.
+   * The tool_result is conversational feedback to LLM only — NOT a write path.
    */
   const handleCancel = useCallback(() => {
+    if (!pendingConfirmation) return;
+
+    const snapshot = pendingConfirmation;
     setPendingConfirmation(null);
-    // Advance the queue past this entry.
     pendingSendQueueRef.current.shift();
-    setThinking(false);
-  }, []);
+
+    // Send tool_result(is_error:true) to LLM for a bounded final acknowledgement.
+    // This is LLM conversation only — does NOT trigger any store write.
+    const queuedItem = { text: snapshot.preambleText || "(cancelled)", lang };
+    void (async () => {
+      if (!mountedRef.current) return;
+      setThinking(true);
+
+      const ctrl = new AbortController();
+      abortCtrlRef.current = ctrl;
+      const modelPref = (getPref("xai_ai_model_default") as "haiku" | "sonnet" | "opus") ?? model;
+
+      // Build Anthropic message history: user turn → assistant tool_use turn → user tool_result turn.
+      const priorMessages = [
+        { role: "user" as const, content: queuedItem.text },
+        {
+          role: "assistant" as const,
+          content: [
+            { type: "tool_use" as const, id: snapshot.toolUse.id, name: snapshot.toolUse.name, input: snapshot.toolUse.input },
+          ],
+        },
+        {
+          role: "user" as const,
+          content: [
+            { type: "tool_result" as const, tool_use_id: snapshot.toolUse.id, content: "user declined", is_error: true },
+          ],
+        },
+      ];
+
+      const cancelFinalId = `cancel-final-${Date.now()}`;
+      let inserted = false;
+      try {
+        for await (const chunk of streamCompleteChat({
+          text: queuedItem.text,
+          lang: queuedItem.lang,
+          model: modelPref,
+          signal: ctrl.signal,
+          priorMessages,
+        })) {
+          if (!mountedRef.current) return;
+          if (!inserted) {
+            inserted = true;
+            setMessages((m) => [
+              ...m,
+              { role: "assistant", text: chunk.accumulated, attachments: null, _id: cancelFinalId } as AiMessage & { _id: string },
+            ]);
+          } else {
+            setMessages((m) =>
+              m.map((msg) => {
+                const msgWithId = msg as AiMessage & { _id?: string };
+                return msgWithId._id === cancelFinalId ? { ...msg, text: chunk.accumulated } : msg;
+              }),
+            );
+          }
+          if (chunk.done) break; // Bounded: stop after first final turn (ignore further tool_use).
+        }
+      } catch {
+        // Cancel acknowledgement stream failed — tolerated (no UI impact; thinking clears below).
+        if (inserted) {
+          setMessages((m) => m.filter((msg) => (msg as AiMessage & { _id?: string })._id !== cancelFinalId));
+        }
+      }
+
+      if (mountedRef.current) setThinking(false);
+      abortCtrlRef.current = null;
+    })();
+  }, [pendingConfirmation, lang, model]);
 
   /**
-   * P4: handleConfirm — user explicitly approved the proposed action.
+   * handleConfirm — user explicitly approved the proposed action.
    * This is the ONLY place the write event is emitted (no-silent-write invariant).
    * Emits the typed write event → owning-module subscriber executes via reducer + setPref.
-   * Then advances the queue and sets idle (bounded single round-trip — P4 scope).
-   * (Full tool_result round-trip + final stream is a future enhancement beyond P4 scope.)
+   * Then sends tool_result(content:"success") back to LLM for a bounded single
+   * final acknowledgement stream (one round-trip, counter cap=1). If the final
+   * turn again contains a tool_use, it is displayed as text but NOT executed
+   * (no second round-trip — bounded invariant enforced).
    */
   const handleConfirm = useCallback(() => {
     if (!pendingConfirmation) return;
 
+    const snapshot = pendingConfirmation;
+
     // Find the tool and compute the write event spec.
-    const tool = findTool(pendingConfirmation.toolUse.name);
+    const tool = findTool(snapshot.toolUse.name);
     if (tool) {
       const writeEvent = tool.toWriteEvent(
-        pendingConfirmation.toolUse.input,
-        pendingConfirmation.toolUse.id,
+        snapshot.toolUse.input,
+        snapshot.toolUse.id,
       );
 
       // CRITICAL: emit the write event EXACTLY ONCE, ONLY here (no-silent-write invariant).
@@ -452,8 +524,75 @@ export function AiChatModule({ lang }: AiChatModuleProps) {
     // Clear the confirmation card and advance the queue.
     setPendingConfirmation(null);
     pendingSendQueueRef.current.shift();
-    setThinking(false);
-  }, [pendingConfirmation]);
+
+    // Bounded single round-trip: send tool_result(success) back to LLM and
+    // stream the final acknowledgement (e.g. "Created task 'X' for you.").
+    // Counter cap = 1 — if the final turn again yields tool_use, we display
+    // text only (no second execution, no second round-trip).
+    const queuedItem = { text: snapshot.preambleText || snapshot.toolUse.name, lang };
+    void (async () => {
+      if (!mountedRef.current) return;
+      setThinking(true);
+
+      const ctrl = new AbortController();
+      abortCtrlRef.current = ctrl;
+      const modelPref = (getPref("xai_ai_model_default") as "haiku" | "sonnet" | "opus") ?? model;
+
+      // Build Anthropic message history: user turn → assistant tool_use turn → user tool_result turn.
+      const priorMessages = [
+        { role: "user" as const, content: queuedItem.text },
+        {
+          role: "assistant" as const,
+          content: [
+            { type: "tool_use" as const, id: snapshot.toolUse.id, name: snapshot.toolUse.name, input: snapshot.toolUse.input },
+          ],
+        },
+        {
+          role: "user" as const,
+          content: [
+            { type: "tool_result" as const, tool_use_id: snapshot.toolUse.id, content: `Tool '${snapshot.toolUse.name}' executed successfully.` },
+          ],
+        },
+      ];
+
+      const finalBubbleId = `confirm-final-${Date.now()}`;
+      let inserted = false;
+      try {
+        for await (const chunk of streamCompleteChat({
+          text: queuedItem.text,
+          lang: queuedItem.lang,
+          model: modelPref,
+          signal: ctrl.signal,
+          priorMessages,
+        })) {
+          if (!mountedRef.current) return;
+          if (!inserted) {
+            inserted = true;
+            setMessages((m) => [
+              ...m,
+              { role: "assistant", text: chunk.accumulated, attachments: null, _id: finalBubbleId } as AiMessage & { _id: string },
+            ]);
+          } else {
+            setMessages((m) =>
+              m.map((msg) => {
+                const msgWithId = msg as AiMessage & { _id?: string };
+                return msgWithId._id === finalBubbleId ? { ...msg, text: chunk.accumulated } : msg;
+              }),
+            );
+          }
+          if (chunk.done) break; // Bounded: counter cap=1 — stop after one final turn.
+        }
+      } catch {
+        // Final acknowledgement stream failed — tolerated (write event already emitted).
+        if (inserted) {
+          setMessages((m) => m.filter((msg) => (msg as AiMessage & { _id?: string })._id !== finalBubbleId));
+        }
+      }
+
+      if (mountedRef.current) setThinking(false);
+      abortCtrlRef.current = null;
+    })();
+  }, [pendingConfirmation, lang, model]);
 
   const stageClass =
     "ai-stage" + (thinking ? " thinking" : "") + (messages.length === 0 ? " empty" : " chatting");

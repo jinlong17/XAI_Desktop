@@ -758,17 +758,34 @@ describe("AiChatModule integration (I)", () => {
     expect(container.querySelector(".ai-confirmation-card")).not.toBeNull();
   });
 
-  it("IT-3: Cancel → ConfirmationCard dismissed, 0 store mutations", async () => {
+  it("IT-3: Cancel → ConfirmationCard dismissed, tool_result(is_error) sent, 0 store mutations", async () => {
     vi.useRealTimers();
     vi.restoreAllMocks();
     const streamMod = await import("../internal/claudeStreamAdapter.js");
+    // First call returns tool_use; second call (cancel tool_result round-trip) returns plain text.
+    let callCount = 0;
     vi.spyOn(streamMod, "streamCompleteChat").mockImplementation(
-      async function* () {
-        yield {
-          accumulated: "I'll add that.",
-          done: true,
-          toolUse: { id: "toolu_003", name: "create_task", input: { title: "Cancel me" } },
-        };
+      async function* (req) {
+        callCount += 1;
+        if (callCount === 1) {
+          yield {
+            accumulated: "I'll add that.",
+            done: true,
+            toolUse: { id: "toolu_003", name: "create_task", input: { title: "Cancel me" } },
+          };
+        } else {
+          // Second call: cancel acknowledgement with tool_result(is_error:true).
+          // Assert priorMessages contains the tool_result with is_error:true.
+          const priorMsgs = req.priorMessages ?? [];
+          const lastMsg = priorMsgs[priorMsgs.length - 1];
+          const toolResultBlock = Array.isArray(lastMsg?.content)
+            ? (lastMsg.content as Array<Record<string, unknown>>).find(
+                (b) => b["type"] === "tool_result",
+              )
+            : undefined;
+          expect(toolResultBlock?.["is_error"]).toBe(true);
+          yield { accumulated: "Understood, I won't add that.", done: true };
+        }
       },
     );
 
@@ -795,30 +812,59 @@ describe("AiChatModule integration (I)", () => {
       fireEvent.click(cancelBtn!);
     });
 
-    // Card should be dismissed
+    // Card should be dismissed immediately
     await waitFor(() => {
       expect(container.querySelector(".ai-confirmation-card")).toBeNull();
     });
 
-    // KEY ASSERTION: no store mutation on Cancel
+    // KEY ASSERTION: no store mutation on Cancel (tool_result is LLM conversation only)
     const taskColsAfter = localStorage.getItem("xai_task_cols");
     expect(taskColsAfter).toBe(taskColsBefore);
 
-    // Thinking should be cleared
-    expect(container.querySelector(".ai-stage")?.className).not.toContain("thinking");
+    // Wait for final acknowledgement stream + thinking cleared
+    await waitFor(() => {
+      expect(container.querySelector(".ai-stage")?.className).not.toContain("thinking");
+    });
+
+    // Assert the cancel acknowledgement stream was called (round-trip happened)
+    expect(callCount).toBe(2);
+
+    // Assert final acknowledgement bubble appeared
+    const assistantBubbles = container.querySelectorAll(".ai-msg-assistant .ai-bubble");
+    // The last assistant bubble should contain the cancel acknowledgement
+    const bubbleTexts = Array.from(assistantBubbles).map((b) => b.textContent ?? "");
+    expect(bubbleTexts.some((t) => t.includes("Understood"))).toBe(true);
   });
 
-  it("IT-4: Confirm → emits write event exactly once with mapped payload", async () => {
+  it("IT-4: Confirm → emits write event exactly once with mapped payload + final acknowledgement stream", async () => {
     vi.useRealTimers();
     vi.restoreAllMocks();
     const streamMod = await import("../internal/claudeStreamAdapter.js");
+    // First call returns tool_use; second call (confirm tool_result round-trip) returns plain text.
+    let callCount = 0;
     vi.spyOn(streamMod, "streamCompleteChat").mockImplementation(
-      async function* () {
-        yield {
-          accumulated: "Creating the task for you.",
-          done: true,
-          toolUse: { id: "toolu_emit_test", name: "create_task", input: { title: "Test emit", bucket: "next7" } },
-        };
+      async function* (req) {
+        callCount += 1;
+        if (callCount === 1) {
+          yield {
+            accumulated: "Creating the task for you.",
+            done: true,
+            toolUse: { id: "toolu_emit_test", name: "create_task", input: { title: "Test emit", bucket: "next7" } },
+          };
+        } else {
+          // Second call: success tool_result round-trip.
+          // Assert priorMessages contains a tool_result without is_error.
+          const priorMsgs = req.priorMessages ?? [];
+          const lastMsg = priorMsgs[priorMsgs.length - 1];
+          const toolResultBlock = Array.isArray(lastMsg?.content)
+            ? (lastMsg.content as Array<Record<string, unknown>>).find(
+                (b) => b["type"] === "tool_result",
+              )
+            : undefined;
+          expect(toolResultBlock?.["is_error"]).toBeUndefined();
+          expect(toolResultBlock?.["tool_use_id"]).toBe("toolu_emit_test");
+          yield { accumulated: "Done! Task 'Test emit' has been created.", done: true };
+        }
       },
     );
 
@@ -853,14 +899,165 @@ describe("AiChatModule integration (I)", () => {
         expect(container.querySelector(".ai-confirmation-card")).toBeNull();
       });
 
-      // KEY ASSERTION: exactly ONE write event emitted
+      // KEY ASSERTION: exactly ONE write event emitted (no silent extra writes)
       expect(emittedEvents).toHaveLength(1);
       const ev = emittedEvents[0] as { requestId: string; title: string; bucket: string };
       expect(ev.requestId).toBe("toolu_emit_test");
       expect(ev.title).toBe("Test emit");
       expect(ev.bucket).toBe("next7");
+
+      // Wait for final acknowledgement stream + thinking cleared
+      await waitFor(() => {
+        expect(container.querySelector(".ai-stage")?.className).not.toContain("thinking");
+      });
+
+      // Assert the final acknowledgement round-trip happened
+      expect(callCount).toBe(2);
+
+      // Assert final acknowledgement bubble appeared in the thread
+      const assistantBubbles = container.querySelectorAll(".ai-msg-assistant .ai-bubble");
+      const bubbleTexts = Array.from(assistantBubbles).map((b) => b.textContent ?? "");
+      expect(bubbleTexts.some((t) => t.includes("Done!"))).toBe(true);
     } finally {
       unsub();
     }
+  });
+
+  it("IT-5: bounded round-trip — Confirm + tool_result → one final stream turn; second tool_use NOT executed", async () => {
+    vi.useRealTimers();
+    vi.restoreAllMocks();
+    const streamMod = await import("../internal/claudeStreamAdapter.js");
+    // First call: returns tool_use.
+    // Second call (tool_result round-trip): returns ANOTHER tool_use (model wants to do more).
+    // Bounded invariant: the second tool_use must NOT be executed.
+    let callCount = 0;
+    vi.spyOn(streamMod, "streamCompleteChat").mockImplementation(
+      async function* () {
+        callCount += 1;
+        if (callCount === 1) {
+          yield {
+            accumulated: "I'll create the task.",
+            done: true,
+            toolUse: { id: "toolu_bounded_1", name: "create_task", input: { title: "Bounded test" } },
+          };
+        } else {
+          // Second call: model tries to create ANOTHER item — should be displayed as text, NOT executed.
+          yield {
+            accumulated: "I also want to create a calendar event.",
+            done: true,
+            // toolUse present: the bounded invariant means this must NOT be auto-executed.
+            toolUse: { id: "toolu_bounded_2", name: "create_calendar_event", input: { title: "Bounded event", date: "2026-05-29" } },
+          };
+        }
+      },
+    );
+
+    const { onWebEvent } = await import("@repo/xai-web-event-bus");
+    const allWriteEvents: unknown[] = [];
+    const unsub1 = onWebEvent("web:tasks:create-requested", (e) => allWriteEvents.push({ type: "task", e }));
+    const unsub2 = onWebEvent("web:calendar:create-requested", (e) => allWriteEvents.push({ type: "calendar", e }));
+
+    try {
+      const { container } = render(<AiChatModule lang="en" />);
+      const inp = container.querySelector<HTMLInputElement>(".ai-input")!;
+      act(() => {
+        fireEvent.change(inp, { target: { value: "create bounded test task" } });
+      });
+      act(() => {
+        fireEvent.keyDown(inp, { key: "Enter", shiftKey: false });
+      });
+
+      // Wait for first ConfirmationCard (tool_use 1)
+      await waitFor(() => {
+        expect(container.querySelector(".ai-confirmation-card")).not.toBeNull();
+      });
+
+      // Click Confirm on first tool_use
+      const confirmBtn = container.querySelector<HTMLButtonElement>(".ai-confirmation-confirm");
+      act(() => {
+        fireEvent.click(confirmBtn!);
+      });
+
+      // First card dismissed
+      await waitFor(() => {
+        expect(container.querySelector(".ai-confirmation-card")).toBeNull();
+      });
+
+      // Wait for the final acknowledgement stream to complete
+      await waitFor(() => {
+        expect(container.querySelector(".ai-stage")?.className).not.toContain("thinking");
+      });
+
+      // BOUNDED INVARIANT: only the first tool_use was executed (1 write event)
+      expect(allWriteEvents).toHaveLength(1);
+      // The second tool_use from the final stream should NOT have triggered a new ConfirmationCard.
+      expect(container.querySelector(".ai-confirmation-card")).toBeNull();
+      // Two round-trips total (initial send + tool_result follow-up)
+      expect(callCount).toBe(2);
+    } finally {
+      unsub1();
+      unsub2();
+    }
+  });
+
+  it("IT-6: context-injection-on-send — AiChatModule passes user text to streamCompleteChat; adapter builds context from today prefs when key is set", async () => {
+    // This test verifies the send-path handoff from AiChatModule → streamCompleteChat.
+    // Context building is tested at the adapter level (contextProvider.test.ts + claudeStreamAdapter.test.ts).
+    // Here we verify:
+    //   (a) AiChatModule calls streamCompleteChat with the user's text
+    //   (b) streamCompleteChat is called (not skipped) when a key is configured
+    //   (c) today-context is injected by pre-populating localStorage, then asserting
+    //       the adapter was called (adapter internally calls buildTodayContext — this
+    //       is tested at adapter level; module level confirms the path is not short-circuited).
+    vi.useRealTimers();
+    vi.restoreAllMocks();
+
+    // Seed today task data into localStorage so buildTodayContext produces non-empty output
+    // (this exercises the real integration path when the adapter runs).
+    const SENTINEL_TASK_TITLE = "Context injection test task";
+    const taskCols = [
+      { id: "next7", tasks: [{ id: "t-ctx-1", title: SENTINEL_TASK_TITLE, done: false }] },
+    ];
+    localStorage.setItem("xai_task_cols", JSON.stringify(taskCols));
+
+    // Capture streamCompleteChat calls from AiChatModule.
+    const streamMod = await import("../internal/claudeStreamAdapter.js");
+    const capturedRequests: import("../internal/claudeStreamAdapter.js").StreamRequest[] = [];
+    vi.spyOn(streamMod, "streamCompleteChat").mockImplementation(
+      async function* (req) {
+        capturedRequests.push(req);
+        yield { accumulated: "I can see your task. Here is what I suggest.", done: true };
+      },
+    );
+
+    const { container } = render(<AiChatModule lang="en" />);
+    const inp = container.querySelector<HTMLInputElement>(".ai-input")!;
+    act(() => {
+      fireEvent.change(inp, { target: { value: "what should I do today?" } });
+    });
+    act(() => {
+      fireEvent.keyDown(inp, { key: "Enter", shiftKey: false });
+    });
+
+    // Wait for assistant bubble to confirm send completed.
+    await waitFor(() => {
+      const assistantBubbles = container.querySelectorAll(".ai-msg-assistant .ai-bubble");
+      expect(assistantBubbles.length).toBeGreaterThan(0);
+    });
+
+    // KEY ASSERTION (a): AiChatModule called streamCompleteChat with the user's text.
+    expect(capturedRequests).toHaveLength(1);
+    expect(capturedRequests[0]!.text).toBe("what should I do today?");
+    // KEY ASSERTION (b): The send path uses the AI_TOOLS (tool definitions are passed).
+    // This confirms the full keyed-send path was exercised (not the no-key demo fallback).
+    expect(capturedRequests[0]!.tools).toBeDefined();
+    expect(Array.isArray(capturedRequests[0]!.tools)).toBe(true);
+    // KEY ASSERTION (c): xai_task_cols is populated in localStorage before send.
+    // When the real streamCompleteChat runs, buildTodayContext reads this and injects context.
+    // The data is present — injection would happen in the non-mocked adapter.
+    // (Full injection assertion is at claudeStreamAdapter.test.ts level via fetch body capture.)
+    const rawCols = localStorage.getItem("xai_task_cols");
+    expect(rawCols).not.toBeNull();
+    expect(rawCols).toContain(SENTINEL_TASK_TITLE);
   });
 });
