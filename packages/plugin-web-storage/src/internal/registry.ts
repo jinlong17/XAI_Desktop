@@ -964,6 +964,19 @@ export const PREF_REGISTRY = {
     owner: "xai-web-dashboard-widgets",
     category: "module",
   } satisfies PrefEntry<Record<string, unknown>>,
+  // Category "module" — NOT in the xai_pref_* chassis-reset family.
+  // proposed: false. Authority: ADR-0010 §D4 + docs/reviews/_p0-carve-outs/20260529-dashboard-weather-mail.md.
+  // Value shape: UserWeather | null (SINGLETON) — `UserWeather` declared in
+  // @repo/plugin-web-dashboard-widgets; not imported here (registry stays plugin-dep-free).
+  // default: null (unset; contrast xai_dashboard_stickies whose default is {}).
+  xai_dashboard_weather: {
+    key: "xai_dashboard_weather",
+    codec: "json",
+    default: null as null,
+    schemaVersion: 1,
+    owner: "xai-web-dashboard-widgets",
+    category: "module",
+  } satisfies PrefEntry<null>,
 } as const;
 
 // ---------------------------------------------------------------------------

@@ -75,3 +75,74 @@ export type WidgetEmptyStrKey = keyof typeof STR_WIDGET_EMPTY;
 export function strEmpty(key: WidgetEmptyStrKey, lang: "en" | "zh"): string {
   return STR_WIDGET_EMPTY[key][lang];
 }
+
+// ---------------------------------------------------------------------------
+// §G-A — Weather editor strings (weather manual-entry, 2026-05-29)
+// ---------------------------------------------------------------------------
+
+/**
+ * Local bilingual strings for WeatherEditor and WeatherWidget empty state.
+ *
+ * Per §G design: NO `plugin-web-tokens` edit. Dedicated table (NOT stuffed
+ * into STR_STICKY_COMPOSER or STR_WIDGET_EMPTY — §F N2 / §G.6 note).
+ * The widget header "Weather" label continues from `dashboard.weather` token.
+ *
+ * Design:  packages/xai-web-dashboard-widgets/docs/design.md §G
+ * API:     packages/xai-web-dashboard-widgets/docs/api.md §G.6
+ */
+export const STR_WEATHER = {
+  editor_title:   { en: "Set weather",         zh: "设置天气" },
+  field_city:     { en: "City",                 zh: "城市" },
+  field_temp:     { en: "Temperature (°)",      zh: "温度 (°)" },
+  field_condition:{ en: "Condition",            zh: "天气状况" },
+  field_hi:       { en: "Today high (°)",       zh: "今日最高 (°)" },
+  field_lo:       { en: "Today low (°)",        zh: "今日最低 (°)" },
+  cond_sunny:     { en: "Sunny",                zh: "晴" },
+  cond_cloudy:    { en: "Cloudy",               zh: "多云" },
+  cond_rainy:     { en: "Rainy",                zh: "雨" },
+  btn_save:       { en: "Save",                 zh: "保存" },
+  btn_cancel:     { en: "Cancel",               zh: "取消" },
+  empty:          { en: "Set your weather",     zh: "设置你的天气" },
+  edit_aria:      { en: "Edit weather",         zh: "编辑天气" },
+  err_city:       { en: "City cannot be empty", zh: "城市不能为空" },
+  err_temp:       { en: "Enter a valid temperature", zh: "请输入有效温度" },
+} as const;
+
+/** Typed key for STR_WEATHER. */
+export type WeatherStrKey = keyof typeof STR_WEATHER;
+
+/** Convenience accessor for weather strings: `strWeather(key, lang)`. */
+export function strWeather(key: WeatherStrKey, lang: "en" | "zh"): string {
+  return STR_WEATHER[key][lang];
+}
+
+// ---------------------------------------------------------------------------
+// §G-B — Notifications strings (Mail → Notifications digest, 2026-05-29)
+// ---------------------------------------------------------------------------
+
+/**
+ * Local bilingual strings for MailWidget (Notifications digest) empty state
+ * and source-type labels.
+ *
+ * Per §G design: NO `plugin-web-tokens` edit. Dedicated table (NOT stuffed
+ * into STR_STICKY_COMPOSER or STR_WIDGET_EMPTY — §F N2 / §G.6 note).
+ * The widget title may use `STR_NOTIFICATIONS.title` (local copy) instead of
+ * the existing `dashboard.mail` token — OQ-Mail-1 resolution.
+ *
+ * Design:  packages/xai-web-dashboard-widgets/docs/design.md §G
+ * API:     packages/xai-web-dashboard-widgets/docs/api.md §G.6
+ */
+export const STR_NOTIFICATIONS = {
+  title:          { en: "Notifications",        zh: "通知" },
+  src_overdue:    { en: "Overdue",              zh: "逾期" },
+  src_today:      { en: "Today",                zh: "今天" },
+  empty:          { en: "All clear",            zh: "暂无通知" },
+} as const;
+
+/** Typed key for STR_NOTIFICATIONS. */
+export type NotificationStrKey = keyof typeof STR_NOTIFICATIONS;
+
+/** Convenience accessor for notifications strings: `strNotif(key, lang)`. */
+export function strNotif(key: NotificationStrKey, lang: "en" | "zh"): string {
+  return STR_NOTIFICATIONS[key][lang];
+}

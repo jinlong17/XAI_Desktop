@@ -230,6 +230,8 @@ const OWNER_ROW_ADDITIONS = [
   "xai_calendar_events",
   // xai-web-dashboard-stickies-create extension 2026-05-28 — stickies persistence
   "xai_dashboard_stickies",
+  // xai-web-dashboard-weather-mail extension 2026-05-29 — weather manual-entry persistence
+  "xai_dashboard_weather",
 ] as const;
 
 describe("AC-REG-8: Total entry count = 20 baseline + owner-row additions", () => {
@@ -336,5 +338,55 @@ describe("AC-REGISTRY-STICKIES-2: xai_dashboard_stickies round-trip via setPref/
     const { getPref } = await import("../internal/storage.js");
     const read = getPref("xai_dashboard_stickies");
     expect(read).toEqual({});
+  });
+});
+
+// ---- xai-web-dashboard-weather-mail extension (2026-05-29) ------------------
+// AC-REGISTRY-WEATHER-1..2 — weather persistence entry shape +
+// localStorage round-trip via setPref/getPref.
+
+describe("AC-REGISTRY-WEATHER-1: xai_dashboard_weather entry shape", () => {
+  it("entry exists with correct codec/default/owner/category/schemaVersion", () => {
+    const entry = PREF_REGISTRY.xai_dashboard_weather;
+    expect(entry.key).toBe("xai_dashboard_weather");
+    expect(entry.codec).toBe("json");
+    expect(entry.default).toBeNull();
+    expect(entry.owner).toBe("xai-web-dashboard-widgets");
+    expect(entry.category).toBe("module");
+    expect(entry.schemaVersion).toBe(1);
+  });
+
+  it("entry is NOT proposed (canonical owner-row addition)", () => {
+    const entry = PREF_REGISTRY.xai_dashboard_weather as { proposed?: true };
+    expect(entry.proposed).toBeUndefined();
+  });
+
+  it("default is null (singleton unset), NOT {} (unlike xai_dashboard_stickies)", () => {
+    expect(PREF_REGISTRY.xai_dashboard_weather.default).toBeNull();
+    expect(PREF_REGISTRY.xai_dashboard_stickies.default).toEqual({});
+  });
+});
+
+describe("AC-REGISTRY-WEATHER-2: xai_dashboard_weather round-trip via setPref/getPref", () => {
+  it("UserWeather fixture round-trips with no data corruption", async () => {
+    const { setPref, getPref } = await import("../internal/storage.js");
+    const fixture = {
+      city: "Beijing",
+      temp: 28,
+      condition: "sunny",
+      hi: 32,
+      lo: 22,
+      updatedAt: "2026-05-29T10:00:00.000Z",
+    };
+    setPref("xai_dashboard_weather", fixture as unknown as null);
+    const read = getPref("xai_dashboard_weather");
+    expect(read).toEqual(fixture);
+  });
+
+  it("null default returns when key is absent", async () => {
+    localStorage.clear();
+    const { getPref } = await import("../internal/storage.js");
+    const read = getPref("xai_dashboard_weather");
+    expect(read).toBeNull();
   });
 });
