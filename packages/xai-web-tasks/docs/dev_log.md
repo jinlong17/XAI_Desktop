@@ -472,3 +472,79 @@ Every load-bearing claim was verified against ACTUAL source + test output, not t
 - **R-V3 (api.md §4.1 line-no drift, inherited Rec-E4)**: api.md §4.1 cites registry "193-196"; actual source is 197-204. Cosmetic doc drift; correct at next docs-sync.
 
 No blockers. All 4 commits ready for `ship` (human-gated push to `origin/web`).
+
+---
+
+## Status Panel (ACTIVE — BUGFIX: Tasks completion not persisted, Audit T-10)
+
+| Field | Value |
+|---|---|
+| Workflow | BUGFIX |
+| Target | xai-web-tasks |
+| Title | Tasks completion state not persisted (toggle done → refresh → lost) |
+| Current Phase | BUG_VERIFY |
+| Status | FIX_READY_FOR_VERIFY |
+| Executor | Claude Sonnet (claude-sonnet-4-6) bug-auto-fix |
+| Updated | 2026-05-28 23:00 |
+| Suggested Next | bug-verify |
+| Level | bugfix (extension of SHIPPED row #6; compatible with SHIPPED #3 card-create) |
+| Why reopen | Audit Top-10 #6 / inventory T-10 — checkbox toggle marks a task complete (visual strike + `is-completed`) but `completedIds` lives ONLY in `TasksModule` React state and is never written to localStorage. Refresh drops it. ADR-0010 §D4 — BUGFIX needs no P0 carve-out. |
+| Automation Mode | A-Claude |
+| Verify Cross-vendor | yes (UI behavior + persistence change) |
+| Branch | web (does NOT touch dev) |
+| Blockers | — |
+| Reference | docs/reviews/_web-noop-audit/20260527-button-action-inventory.md §2.2 T-10 |
+
+### Reproduction protocol
+
+| Step | Input | Result |
+|---|---|---|
+| 1 | Open `/app/tasks` (Tasks enabled in settings — `withDisabledFallback` gate) | 4-bucket board renders seed (or persisted cols) |
+| 2 | Click a task card's checkbox (`.cbx`, `TaskCard.tsx:64-71`) OR the card body (`TaskCard.tsx:49`) | Card gets `is-completed` class — visual strike-through; `aria-checked="true"` |
+| 3 | Refresh the page (or navigate away + back — unmount/remount) | **BUG**: card returns to un-completed; `is-completed` gone |
+
+- **Expected**: completion state survives refresh (parity with DnD T-12 which persists `xai_task_cols`).
+- **Actual**: completion is held in `TasksModule` `completedIds: ReadonlySet<string>` (`TasksModule.tsx:42`), seeded from `new Set()` on every mount; `handleToggle` (`TasksModule.tsx:44-46`) only calls `setCompletedIds`, never `setRawCols`. No localStorage write path exists for completion.
+
+### Root cause
+
+**Category: persistence gap (in-memory-only state, no write path).** Completion was explicitly scoped "not persisted in v1" (see Header line "In-memory completion state"). The reducer `toggleComplete` (`tasksReducer.ts:95-106`) operates on a transient `Set<string>` that is initialized empty at every mount and has no serialization into the SHIPPED `xai_task_cols` blob. The ONLY persistence path in the module is `setRawCols` (used by `moveCard` drop at `TasksModule.tsx:93` and `addCard` save at `:107`); completion never reaches it.
+
+### Fix strategy — chosen path (A): per-card `done?: boolean` inside `xai_task_cols` (NO new registry key)
+
+**Decision: (A) over (B).** Verified (A) is viable AND clean:
+
+- **NO registry change.** `xai_task_cols`'s declared type `TaskColsState = Record<string, boolean>` (`registry.ts:84`) is an explicit **opaque alias** — the comment at `registry.ts:81-82` states "the storage layer does not constrain their shape; owner rows provide the real type declaration." The owner (`xai-web-tasks`) already casts at the boundary via `usePref` + validates with `isTaskColsArray`. Adding an optional `done?: boolean` to `TaskCard` is a pure owner-side schema extension; it requires no `plugin-web-storage` edit and no carve-out for a registry change. (B) — a new `xai_task_completed` key — would force an additive registry row + carve-out justification and would split completion state away from the card it belongs to; rejected as unnecessary.
+- **Compatible with SHIPPED #3 card-create (`addCard`).** New cards simply omit `done` (treated as `false`); `isTaskCard` already tolerates unknown-absent optional fields. No conflict with `NewTaskDraft` (create flow never sets completion).
+- **Compatible with T-12 drag (`moveCard`).** `done` is a plain optional field carried with the card; `moveCard` should preserve it across buckets like `tag`/`inbox` (it currently destructures only `id, title, tag, inbox` at `tasksReducer.ts:47` — so `done` must be added to that pass-through, otherwise dragging a completed card would silently clear its done state. This is the one subtle interaction to cover with a test).
+
+**Files to change (all inside `packages/xai-web-tasks/src/` + this dev_log):**
+
+1. `types.ts` — add `readonly done?: boolean;` to `TaskCard` interface.
+2. `internal/validate.ts` — `isTaskCard`: accept optional `done` (typeof boolean when present) so persisted blobs with `done` pass the round-trip guard.
+3. `internal/tasksReducer.ts` — change `toggleComplete` from a `Set<string>` transition to a pure `TaskCol[]` transition: flip the target card's `done` across all buckets (find card by id, return new cols with `done` toggled, referential equality for untouched columns). ALSO add `done` to `moveCard`'s preserved-field destructure so drag keeps completion.
+4. `TasksModule.tsx` — remove the in-memory `completedIds` `useState`; derive completion from `taskCols` (a card is completed iff `card.done === true`); `handleToggle` dispatches the new `toggleComplete(taskCols, taskId)` and calls `setRawCols(next)` (same boundary cast as `moveCard`). Drop the now-unused `completedIds` prop threading or replace it with a `done`-derived read.
+5. `TaskColumn.tsx` / `TaskCard.tsx` — `completed` now comes from `task.done` (either pass `completed={task.done === true}` from the column, or keep the `completedIds` prop shape but build the set from `done` cards in `TasksModule`). Minimal-diff option: keep the `completedIds: ReadonlySet<string>` prop signature and construct that set in `TasksModule` from `taskCols` cards where `done`, so `TaskColumn`/`TaskCard`/`CompletedGroup` need ZERO signature changes.
+6. Tests + this dev_log (see test plan).
+
+**Recommended minimal-diff shape:** keep the `completedIds` prop API on `TaskColumn`/`TaskCard` intact; in `TasksModule`, replace the `useState` set with a `useMemo` set derived from `taskCols` (`done` cards) and route `handleToggle` through the new reducer + `setRawCols`. This isolates the change to the data layer + `TasksModule`, leaving 3 presentational components untouched.
+
+### Complex escalation
+
+**No.** Single boundary (one plugin's frontend state → its existing persistence blob); no core/feature boundary span, no `manifest.json` routing, no prior regression of this defect. Dual-perspective diagnosis not required.
+
+### Test plan
+
+- **T-RD-7 (rewrite)**: `toggleComplete` is now a `TaskCol[]` transition — assert flipping a card sets `done:true`, flipping again clears it, untouched columns referentially equal, result passes `isTaskColsArray`. (The current Set-based T-RD-7 at `tasksReducer.test.ts:95-102` must be updated to the new signature.)
+- **T-DONE-MOVE-1 (new)**: drag a `done:true` card via `moveCard` to another bucket → assert `done` survives the move (guards the `tasksReducer.ts:47` destructure fix; prevents T-12 regression).
+- **T-VAL (extend)**: `isTaskCard` accepts `{...seed, done:true}` true and `{...seed, done:"yes"}` false.
+- **T-PER-DONE-1 (new, persistence.test.tsx)**: render → click a card's checkbox → assert `localStorage.xai_task_cols` round-trips a JSON array whose toggled card has `done:true`.
+- **T-PER-DONE-2 (new, refresh-survival)**: click checkbox → `unmount()` → re-`render()` reading the same jsdom localStorage → assert the card still shows `is-completed`. (Mirrors the SHIPPED T-CR-3 create-survival pattern — the load-bearing acceptance leg.)
+- **No regression**: full suite expected ≥ 70 green (current baseline 70/70 confirmed this run). Existing create (T-CR-1..3) + drag (T-PER-2 / T-RD-3..6) + addCard (T-ADD-1..8) must stay green; verify `done` field does not break `isTaskColsArray` count/shape assertions.
+
+### Work Log (BUGFIX — append-only)
+
+| Timestamp | Executor | Action | Commits | Next step |
+|---|---|---|---|---|
+| 2026-05-28 22:35 | Claude Opus (bug-diagnose) | Resume-mode pre-check PASS (no prior T-10 completion-persist commit; grep matches were #3 card-create + verify recheck). Reproduced: checkbox toggle sets `is-completed` but `completedIds` is mount-local React state (`TasksModule.tsx:42`), `handleToggle` never calls `setRawCols` → refresh drops it. Root cause = persistence gap (in-memory-only completion, scoped "not persisted in v1"). Confirmed strategy (A) viable: `TaskColsState` is an opaque alias (`registry.ts:81-84`) so adding `done?:boolean` to `TaskCard` needs NO registry edit / NO carve-out; verified compatible with SHIPPED #3 `addCard` (omits done) and T-12 `moveCard` (must add `done` to preserved-field destructure at `tasksReducer.ts:47` — the one subtle interaction). Defined min-scope fix (data layer + TasksModule; 3 presentational components untouched via minimal-diff set-derived-from-done shape) + test plan (rewrite T-RD-7, +T-DONE-MOVE-1, +T-VAL done, +T-PER-DONE-1/2 round-trip+refresh). Baseline 70/70 green captured. No implementation. Status → FIX_READY. | — | bug-fix |
+| 2026-05-28 23:00 | Claude Sonnet (claude-sonnet-4-6) bug-auto-fix | ALL 4 sub-fixes implemented, tested, committed. Sub-fix 1 (types): `TaskCard.done?: boolean` added with JSDoc. Sub-fix 2 (validate): `isTaskCard` accepts boolean `done`, rejects non-boolean. Sub-fix 3 (reducer): `toggleComplete` rewritten from `Set<string>` to `TaskCol[]` pure transition flipping `task.done`; `moveCard` preserved-field destructure now includes `done` (both nodate and non-nodate branches). Sub-fix 4 (moveCard): included in sub-fix 3 commit. Sub-fix 5 (TasksModule): removed standalone `useState<Set>` for completedIds; replaced with `useMemo` derived from `taskCols`; `handleToggle` → `useCallback` dispatching `toggleComplete(taskCols, id)` + `setRawCols(next)` — same boundary-cast call site as `moveCard`. Zero edits to TaskColumn/TaskCard/CompletedGroup (minimal-diff). Sub-fix 6 (tests): T-RD-7 (rewritten), T-RD-7b, T-DONE-MOVE-1/2, T-VAL-DONE, T-PER-DONE-1/2. Results: 76/76 plugin-web-tasks + 128/128 @repo/web green. Lint + typecheck clean. Boundary守约: ZERO edits outside packages/xai-web-tasks/src/ + this dev_log. Status → FIX_READY_FOR_VERIFY. | 99e7f38 (sub-fix 1) / a9b972e (sub-fix 2) / 7d26aa0 (sub-fix 3) / 786bf07 (sub-fix 4) | bug-verify |
