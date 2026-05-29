@@ -68,6 +68,10 @@ import { useCalendarCreateRequestSubscriber } from "@repo/plugin-web-calendar";
 // Same Shell-sibling pattern; delete + update channels.
 import { useTaskMutateRequestSubscriber } from "@repo/plugin-web-tasks";
 import { useCalendarMutateRequestSubscriber } from "@repo/plugin-web-calendar";
+// DEV-only: seed AI provider config + key from gitignored .env.local into the
+// runtime stores (single local source of truth). Tree-shaken out of prod builds
+// (import.meta.env.DEV gate). Carve-out: 20260529-gemini-provider-enablement §6.
+import { useDevAiConfigSeed } from "./dev/seedAiConfigFromEnv.js";
 
 // ---- readLocalPref — safe localStorage reader for lazy useState initializers --
 //
@@ -104,6 +108,8 @@ function AppInner() {
   // P2 xai-web-ai-tool-edit-delete: mutate (delete + update) subscribers.
   useTaskMutateRequestSubscriber();
   useCalendarMutateRequestSubscriber();
+  // DEV-only: seed AI config + key from .env.local (no-op in production).
+  useDevAiConfigSeed();
 
   // ---- useState state pieces -----------------------------------------------
   // lang/theme/density use lazy initializers to restore from localStorage on
