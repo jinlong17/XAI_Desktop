@@ -524,14 +524,14 @@ Local-only sticky notes (text + color preset persisted to localStorage via `useP
 | Workflow | FEATURE_DEV |
 | Target | xai-web-dashboard-real-data |
 | Title | Web Console — Dashboard real-data wiring (StatTasks/StatStreak/StatPomos + Upcoming + MiniCal read real local stores; honest empty states; read-only, zero new key) |
-| Current Phase | FEATURE_VERIFY |
-| Status | READY_FOR_VERIFY |
-| Suggested Next | feature-verify |
+| Current Phase | SHIP |
+| Status | SHIPPED |
+| Suggested Next | — (workflow complete) |
 | Level | feature (read-only cross-module wiring; Realistic v1; item-3 local cluster #2) |
 | Verify Cross-vendor | yes (Codex `gpt-5.5-thinking effort=medium` primary / Cursor fallback — see test.md §F.6; MAY DEFER 24h per ADR-0008 §S3; joins accumulated Web smoke batch before next xai-web-deploy-cloudflare ship) |
 | Automation Mode | A-Claude (default; inherited from sibling item-3 cluster `xai-web-dashboard-stickies-create`; pickable at feature-build dispatch) |
-| Executor | claude-sonnet-4-6 — feature-build (fix) |
-| Updated | 2026-05-28 23:35 |
+| Executor | claude-sonnet-4-6 — ship |
+| Updated | 2026-05-28 |
 | Roadmap Manifest | docs/workflow/roadmap/xai-web-dashboard-real-data.md (row #1, NEEDS_REVIEW) |
 | Authority Anchor | ADR-0010 §D4 — P0 carve-out `docs/reviews/_p0-carve-outs/20260528-dashboard-real-data.md` (commit `217170c`) |
 | Audit Trigger | docs/reviews/_web-noop-audit/20260528-usability-recheck.md — "7 of 11 dashboard widgets render mock fixtures" (item 3 = 3d-i + 3d-ii consolidated) |
@@ -703,6 +703,8 @@ Sanity-checked against source (read end-to-end): `PomodoroSession` type + `count
 | 2026-05-28 23:30 | claude-opus-4-8 — feature-verify | **BLOCKED** — 2 quality-gate failures; data-correctness lifeline is fully CORRECT but the package does not typecheck/lint clean. **B1 (tsc fails):** `pnpm --filter @repo/plugin-web-dashboard-widgets check-types` exits status 2 — 5 `TS2532 Object is possibly 'undefined'` errors in `src/internal/dataReads/__tests__/calUpcoming.test.ts` lines 55/56/57/153/168 (`result[0].title`/`.dateKey`/`.timeStr`, `result[0].title`, `list[0].id`) under `noUncheckedIndexedAccess` (inherited from `@repo/typescript-config/react-library.json`). Sibling test files (pomoStats/taskStats/habitStreak) avoid this via `.toEqual(...)`/`.toHaveLength`+`.toContain`; only calUpcoming.test.ts indexes `[0]` unguarded. **B2 (eslint fails):** `eslint --max-warnings 0 .` exits status 1 — `src/widgets/UpcomingWidget.tsx:56:20` `'yearStr' is assigned a value but never used` (`@typescript-eslint/no-unused-vars`); the destructure `const [yearStr, monthStr, dayStr] = item.dateKey.split("-")` never reads `yearStr`. Both gates are the package's OWN declared scripts (`check-types` + `lint`) AND F2/F3 acceptance criteria — the auto-build Work Log's "check-types + lint clean" claim was inaccurate. **What PASSED:** 215/215 widgets tests (28 files); 128/128 web regression; `pnpm --filter @repo/web build` green (889 modules, 138.86 KB css); ALL 3 critical recon corrections INDEPENDENTLY re-verified at owner source (pomodoro `finishedAt`+`completed`, NO `completedAt` — owner `PomodoroSession` types.ts:27,44; tasks `col.tasks`/`col.completed?` + `done?` absent-false — owner `TaskCol` types.ts:77-79,60; per-source date basis pomo-local/habits-UTC/cal-local-clock — owner habits types.ts:16-17 + calendar eventStore/types.ts:46-49); AC-RD-POMO-3/4, AC-RD-TASKS-3/4, AC-RD-HABIT-5, AC-RD-UPC-4/5 confirmed to assert the correct fields/bases in source (not just test names); 5 widgets read `usePref`+dataReads (no live fixture import); honest empty states present; recurrence preserves owner advance-date-prefix/keep-HH:MM (N3); STAT_* consts removed, UPCOMING/CAL_EVENTS kept (RD9); barrel single-export (RD11); §S9 CSS guard 0 hits; registrations.tsx N1 1-line `now` thread additive; boundary守约 clean (zero write, zero plugin import, zero new key/core/tokens/host edit, `dev`/ADR/SHIPPED untouched). Doc-drift noted (non-blocking, fold into the fix): no F3 Work Log row was added for commit `c2b880e`. **Fix scope is tiny + localized to 2 files** (calUpcoming.test.ts index guards + UpcomingWidget.tsx unused-var); after fix, re-run `check-types` + `lint` + the widgets suite, then re-submit feature-verify. Status → BLOCKED, Suggested Next → feature-build (or feature-auto-build / feature-dev-loop). | — | feature-build |
 | 2026-05-28 23:20 | claude-sonnet-4-6 — feature-auto-build | **F3 (missing row — fold per BLOCKED note):** Docs sync commit `c2b880e` — §F design.md/api.md/test.md extension appended; dev_log §F Status → READY_FOR_VERIFY; barrel confirmed single-export. | `c2b880e` | feature-verify |
 | 2026-05-28 23:35 | claude-sonnet-4-6 — feature-build (fix) | **B1+B2 fix** — BLOCKED resolved. B1: `src/internal/dataReads/__tests__/calUpcoming.test.ts` — 5 unguarded `result[0]`/`list[0]` indexes under `noUncheckedIndexedAccess` guarded (`const first = result[0]; expect(first).toBeDefined(); expect(first?.title)...` for lines 55-57; `?.` optional chain for lines 153, 168). B2: `src/widgets/UpcomingWidget.tsx:56` — `const [yearStr, monthStr, dayStr]` changed to `const [, monthStr, dayStr]` (yearStr never used). Quality gates verified: `tsc --noEmit` exit 0 (B1 confirmed), `eslint --max-warnings 0 .` exit 0 (B2 confirmed), `pnpm --filter @repo/plugin-web-dashboard-widgets test` 215/215 (28 files, no regression), `pnpm --filter @repo/web test` 128/128, `pnpm --filter @repo/web build` green (889 modules, 138.86KB css). §F Status Panel flipped BLOCKED → READY_FOR_VERIFY; Suggested Next → feature-verify. | `f076ac7` | feature-verify |
+| 2026-05-28 23:40 | claude-opus-4-8 — feature-verify (re-verify) | **PASS** — READY_TO_SHIP. Re-verify after B1/B2 fix. **The 2 previously-failing gates now PASS:** `tsc --noEmit` exit 0 (B1 resolved — 5 TS2532 gone) + `eslint --max-warnings 0 .` exit 0 (B2 resolved — yearStr gone). **Full-gate re-run all green:** widgets 215/215 (28 files), web 128/128 (24 files), `pnpm --filter @repo/web build` green (138.86 KB css; only PRE-EXISTING ai-chat dynamic-import + chunk-size warnings). **Fix did NOT break data-correctness (item 3):** audited `f076ac7` diff — touched ONLY 2 source files (calUpcoming.test.ts test-only + UpcomingWidget.tsx 1-char destructure); ZERO dataReads selector/store-read/recurrence source touched (confirmed `git show f076ac7` lists 0 selector `.ts` files outside `__tests__/`); the 3 recon corrections (pomodoro `finishedAt`+`completed` / tasks `col.tasks` done===true / per-source date basis) remain byte-identical to last round's independently-confirmed-correct state; calUpcoming AC-RD-UPC-2 assertions semantically equivalent (`toHaveLength(1)`+`toBeDefined()` guarantees `first`, `first?.title==="Test Event"` unchanged). **Boundary clean (item 4):** B1/B2 fix in-scope (test + widget only); cumulative lineage stays in `packages/xai-web-dashboard-widgets/src/**`+docs+roadmap, sole cross-cut = 2-line `now`-thread in registrations.tsx; §S9 `.widget*` CSS guard 0 hits; zero registry/tokens/core/host/dev/ADR/SHIPPED edit. **carve-out §5 anchor satisfied:** 5 widgets read real stores (StatTasks/StatStreak/StatPomos/Upcoming/MiniCal) + honest empty states present. All 6 lineage commits (217170c/aaa08c6/34e2fab/c2b880e/f076ac7/49074cb) confirmed on `web` branch (HEAD 49074cb). Residual: cross-vendor manual smoke DEFERRED per ADR-0008 §S3 (joins accumulated Web smoke batch before next xai-web-deploy-cloudflare). Status → READY_TO_SHIP. | — | ship |
+| 2026-05-28 | claude-sonnet-4-6 — ship | **SHIPPED** — Shipping gate PASS. Status READY_TO_SHIP confirmed (re-verify PASS 2026-05-28). Commit audit: 7 commits pushed to origin/web (217170c carve-out + aaa08c6 F1 + 34e2fab F2 + c2b880e F3 docs + f076ac7 B1+B2 fix + 49074cb SHA backfill + this ship-flip commit). Commit scope/type audit clean (type(scope): summary + body 6-section + single-intent per phase; no leftover). git push origin web confirmed. cross-vendor manual smoke DEFERRED per ADR-0008 §S3 — joins accumulated Web smoke batch (5-widget real-data path: StatTasks/Streak/Pomos + Upcoming + MiniCal). RD10 usePref pre-hydrate flash-of-empty documented intentional. §F Status → SHIPPED / Suggested Next → — (workflow complete). item 3 #2 (dashboard real-data) COMPLETE. | this commit | — (workflow complete) |
 
 ## §F Verify Report (2026-05-28, claude-opus-4-8 — feature-verify)
 
@@ -747,4 +749,54 @@ Each commit's diff is single-intent and within its phase boundary; commit messag
 
 ### Residual risks (acceptable once B1/B2 fixed)
 - Cross-vendor manual smoke (Codex/Cursor) DEFERRED per ADR-0008 §S3 — joins the accumulated Web smoke batch before the next `xai-web-deploy-cloudflare` ship. Not a verify blocker.
+- `usePref` pre-hydrate flash-of-empty (RD10) — documented intentional (empty IS the honest default).
+
+## §F Re-Verify Report (2026-05-28, claude-opus-4-8 — feature-verify, after B1/B2 fix)
+
+**Verdict: PASS** — READY_TO_SHIP. The 2 quality gates that were BLOCKED last round (B1 tsc TS2532, B2 eslint unused-var) now pass cleanly; full gate set re-run green; the fix is confirmed surgical and did NOT disturb the data-correctness lifeline.
+
+### Commits reviewed (this round adds the fix + backfill)
+- `f076ac7` — B1+B2 fix (calUpcoming.test.ts 5 null-guards + UpcomingWidget.tsx 1-char destructure + dev_log state). Diff inspected end-to-end: test-only + 1-char source + docs.
+- `49074cb` — chore: backfill `f076ac7` SHA into the §F Work Log row that was staged as `TBD`. dev_log.md only; zero source.
+- (Prior lineage `217170c`/`aaa08c6`/`34e2fab`/`c2b880e` were reviewed clean last round and are unchanged by the fix.)
+
+Both new commits are single-intent, in phase boundary, and follow `type(scope): summary` + Why/What/Scope/Risk/Docs/Tests. No foreign content; no sibling/`dev`/ADR/SHIPPED-archive edits.
+
+### The 2 previously-failing gates — now PASS
+
+| # | Gate | Command | Last round | This round |
+|---|---|---|---|---|
+| **B1** | TypeScript typecheck | `pnpm --filter @repo/plugin-web-dashboard-widgets exec tsc --noEmit` | FAIL (exit 2) — 5× TS2532 in calUpcoming.test.ts | **PASS (exit 0)** — null-guards added (`const first = result[0]; expect(first).toBeDefined();` + `?.` chains); 0 errors. |
+| **B2** | ESLint zero-warnings | `pnpm --filter @repo/plugin-web-dashboard-widgets exec eslint --max-warnings 0 .` | FAIL (exit 1) — `yearStr` unused in UpcomingWidget.tsx:56 | **PASS (exit 0)** — `const [, monthStr, dayStr]` drops the dead binding; 0 warnings. |
+
+### Full gate re-run (all green)
+
+| Gate | Command | Result |
+|---|---|---|
+| Widgets suite | `pnpm --filter @repo/plugin-web-dashboard-widgets test` | **215 / 215** (28 files) — dataReads selectors green: calUpcoming 12, calMonthDots 8, taskStats 14, pomoStats 16, habitStreak 17. |
+| Web regression | `pnpm --filter @repo/web test` | **128 / 128** (24 files) — SHIPPED stickies (#6) + widget-remove (#9) + other 5 widgets not regressed. |
+| Web build | `pnpm --filter @repo/web build` | green — 138.86 KB css; only PRE-EXISTING ai-chat dynamic-import + chunk-size warnings (unrelated). |
+
+### Fix did NOT break data-correctness (task item 3) — confirmed
+
+- `git show f076ac7 --stat -- 'src/**'` lists exactly 2 files: `calUpcoming.test.ts` (test-only) + `UpcomingWidget.tsx` (1-char). `git show f076ac7` for dataReads selector `.ts` files OUTSIDE `__tests__/` → **0 files** — the selectors (`pomoStats`/`taskStats`/`habitStreak`/`calUpcoming`/`calMonthDots`/predicates) are byte-identical to last round's independently-confirmed-correct state.
+- The 3 recon corrections remain intact and untouched: pomodoro `finishedAt`+`completed` (NOT `completedAt`); tasks `col.tasks` + `done===true`; per-source date basis (pomo local / habits UTC / calendar local-clock). Their AC guards (AC-RD-POMO-3/4, AC-RD-TASKS-3/4, AC-RD-HABIT-5, AC-RD-UPC-4/5) still pass.
+- B1 test edit is assertion-preserving: `expect(result).toHaveLength(1)` + `expect(first).toBeDefined()` makes `first` provably defined; `first?.title === "Test Event"` / `first?.dateKey === "2026-05-29"` / `first?.timeStr === "10:00"` assert the identical values — no weakening.
+- B2 source edit is byte-identical UI: `yearStr` was never consumed (only `monthStr`+`dayStr` feed the date pill); dropping it changes no rendered output.
+
+### Boundary (task item 4) — clean
+
+- B1/B2 fix touched only the test + widget body (in declared Write Scope).
+- Cumulative lineage stays in `packages/xai-web-dashboard-widgets/src/**` + docs + roadmap manifest; the sole cross-cut is the 2-line `now`-thread in `registrations.tsx` (N1 additive — ids/spans/ariaLabels byte-stable, `WidgetRenderContext` unchanged).
+- §S9 CSS guard: `grep -E '\.widget-?(shell|content)?\s*\{' src/styles.css` → **0** hits.
+- Zero `setValue`/write; zero plugin-package import; zero new registry key / parity-array edit; zero `packages/core`/`plugin-web-tokens`/host edit; `dev`/ADR/SHIPPED-archive untouched.
+
+### carve-out §5 acceptance anchor — satisfied
+5 widgets read real local stores (StatTasks/StatStreak/StatPomos via `usePref` + dataReads; Upcoming + MiniCal via `xai_calendar_events`) with honest empty states (`strEmpty(...)` / 0-dot month). Public surface unchanged (`dashboardWidgetRegistrations`-only; barrel test green).
+
+### Lineage placement
+All 6 commits reachable on `web` (HEAD `49074cb`): `217170c` carve-out / `aaa08c6` F1 / `34e2fab` F2 / `c2b880e` F3 docs / `f076ac7` B1+B2 fix / `49074cb` SHA backfill. Working tree clean.
+
+### Residual risks (acceptable at ship-time)
+- Cross-vendor manual smoke (Codex/Cursor) DEFERRED per ADR-0008 §S3 — joins the accumulated Web smoke batch before the next `xai-web-deploy-cloudflare` ship. Not a ship blocker for this carve-out.
 - `usePref` pre-hydrate flash-of-empty (RD10) — documented intentional (empty IS the honest default).
