@@ -81,6 +81,6 @@ export const dashboardWidgetRegistrations: WidgetRegistration[] = [
     id: "upcoming",
     span: "w-upcoming",
     ariaLabel: { en: "Upcoming events", zh: "近期事件" },
-    render: (ctx) => <UpcomingWidget lang={ctx.lang} />,
+    render: (ctx) => <UpcomingWidget lang={ctx.lang} now={ctx.now} />,
   },
 ];
