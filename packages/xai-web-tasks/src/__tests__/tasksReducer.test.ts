@@ -1,9 +1,9 @@
 /**
- * tasksReducer.test.ts — T-RD-1..7 + T-ADD-1..8
+ * tasksReducer.test.ts — T-RD-1..7 + T-ADD-1..8 + T-DONE-MOVE-1
  *
  * Pure reducer tests — no React, no storage, deterministic.
  * Clock is pinned to 2026-05-23 14:30 by vitest.setup.ts.
- * Phase: P2 (T-RD-1..7) + EP1 (T-ADD-1..8)
+ * Phase: P2 (T-RD-1..7) + EP1 (T-ADD-1..8) + T-10-bugfix (T-DONE-MOVE-1)
  */
 
 import { describe, it, expect } from "vitest";
@@ -91,14 +91,71 @@ describe("tasksReducer.moveCard", () => {
     expect(moved.sub).toBeUndefined();
   });
 
-  // T-RD-7: toggleComplete toggles set membership
-  it("T-RD-7: toggleComplete adds then removes a taskId", () => {
-    const s1 = toggleComplete(new Set<string>(), "t1");
-    expect(s1.has("t1")).toBe(true);
-    const s2 = toggleComplete(s1, "t1");
-    expect(s2.has("t1")).toBe(false);
-    // Original set unchanged
-    expect(s1.has("t1")).toBe(true);
+  // T-RD-7 (T-10 rewrite): toggleComplete flips done in TaskCol[] (persisted path)
+  it("T-RD-7: toggleComplete flips done:true on first toggle, clears on second; untouched cols referentially equal", () => {
+    const cols = cloneSeed();
+    // First toggle — t1 should get done:true
+    const r1 = toggleComplete(cols, "t1");
+    const overdue1 = r1.find((c) => c.id === "overdue")!;
+    expect(overdue1.tasks.find((t) => t.id === "t1")!.done).toBe(true);
+    // Untouched columns must be referentially equal
+    expect(r1.find((c) => c.id === "next7")).toBe(cols.find((c) => c.id === "next7"));
+    expect(r1.find((c) => c.id === "later")).toBe(cols.find((c) => c.id === "later"));
+    expect(r1.find((c) => c.id === "nodate")).toBe(cols.find((c) => c.id === "nodate"));
+    // Second toggle — done should be cleared (falsy)
+    const r2 = toggleComplete(r1, "t1");
+    const overdue2 = r2.find((c) => c.id === "overdue")!;
+    expect(overdue2.tasks.find((t) => t.id === "t1")!.done).toBe(false);
+    // result passes isTaskColsArray (persistence round-trip valid)
+    expect(isTaskColsArray(r1)).toBe(true);
+    expect(isTaskColsArray(r2)).toBe(true);
+  });
+
+  // T-RD-7b: toggleComplete returns prev unchanged when taskId not found
+  it("T-RD-7b: toggleComplete returns prev unchanged when taskId not found", () => {
+    const cols = cloneSeed();
+    const result = toggleComplete(cols, "DOES_NOT_EXIST");
+    expect(result).toBe(cols);
+  });
+});
+
+// ---------------------------------------------------------------------------
+// T-DONE-MOVE-1 — moveCard preserves done field (T-10 sub-fix 4)
+// ---------------------------------------------------------------------------
+
+describe("tasksReducer.moveCard preserves done (T-DONE-MOVE-1)", () => {
+  // T-DONE-MOVE-1: drag a done:true card to another bucket → done survives
+  it("T-DONE-MOVE-1: done:true card dragged to another bucket retains done:true", () => {
+    const cols = cloneSeed() as import("../types.js").TaskCol[];
+    // Manually set t1 (in overdue) to done:true to simulate a completed card
+    const overdueIdx = cols.findIndex((c) => c.id === "overdue");
+    const t1Idx = cols[overdueIdx]!.tasks.findIndex((t) => t.id === "t1");
+    const tasksWithDone = [...cols[overdueIdx]!.tasks];
+    tasksWithDone[t1Idx] = { ...tasksWithDone[t1Idx]!, done: true };
+    cols[overdueIdx] = { ...cols[overdueIdx]!, tasks: tasksWithDone };
+
+    // Move t1 from overdue → next7
+    const result = moveCard(cols, "t1", "overdue", "next7", NOW);
+    const next7 = result.find((c) => c.id === "next7")!;
+    const movedCard = next7.tasks[0]!; // prepended to front
+    expect(movedCard.id).toBe("t1");
+    expect(movedCard.done).toBe(true); // done preserved
+  });
+
+  // T-DONE-MOVE-2: drag done:true card to nodate → done preserved (nodate branch)
+  it("T-DONE-MOVE-2: done:true card dragged to nodate retains done:true", () => {
+    const cols = cloneSeed() as import("../types.js").TaskCol[];
+    const overdueIdx = cols.findIndex((c) => c.id === "overdue");
+    const t1Idx = cols[overdueIdx]!.tasks.findIndex((t) => t.id === "t1");
+    const tasksWithDone = [...cols[overdueIdx]!.tasks];
+    tasksWithDone[t1Idx] = { ...tasksWithDone[t1Idx]!, done: true };
+    cols[overdueIdx] = { ...cols[overdueIdx]!, tasks: tasksWithDone };
+
+    const result = moveCard(cols, "t1", "overdue", "nodate", NOW);
+    const nodate = result.find((c) => c.id === "nodate")!;
+    const movedCard = nodate.tasks[0]!;
+    expect(movedCard.id).toBe("t1");
+    expect(movedCard.done).toBe(true); // done preserved across nodate branch
   });
 });
 

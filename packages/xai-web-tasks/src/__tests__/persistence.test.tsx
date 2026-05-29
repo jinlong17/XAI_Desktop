@@ -1,8 +1,8 @@
 /**
- * persistence.test.tsx — T-PER-1..3 + T-CR-1..3
+ * persistence.test.tsx — T-PER-1..3 + T-CR-1..3 + T-PER-DONE-1..2
  *
  * Tests usePref boundary cast + seed-fallback + localStorage round-trip.
- * Phase: P2 (T-PER-1..3) + EP2 (T-CR-1..2) + EP3 (T-CR-3)
+ * Phase: P2 (T-PER-1..3) + EP2 (T-CR-1..2) + EP3 (T-CR-3) + T-10-bugfix (T-PER-DONE-1..2)
  */
 
 import { describe, it, expect, vi } from "vitest";
@@ -160,7 +160,7 @@ describe("TasksModule create flow + persistence (T-CR)", () => {
   });
 
   // T-CR-3 (EP3): after create + write, re-mounting reads the same localStorage → card survives
-  it("T-CR-3: created card survives unmount + re-mount (simulates page reload)", () => {
+  it("T-CR-3: created card survives unmount + re-mount (simulates page reload)", async () => {
     const { unmount } = render(<TasksModule lang="en" />);
 
     // Open composer and create a card
@@ -188,5 +188,88 @@ describe("TasksModule create flow + persistence (T-CR)", () => {
     const allCards = document.querySelectorAll(".task-card");
     const cardTitles = Array.from(allCards).map((c) => c.querySelector(".task-title")?.textContent);
     expect(cardTitles).toContain("Persisted task");
+  });
+});
+
+// ---------------------------------------------------------------------------
+// T-PER-DONE-1..2 — Completion persistence round-trip (T-10 bugfix)
+// ---------------------------------------------------------------------------
+
+describe("TasksModule completion persistence (T-PER-DONE)", () => {
+  // T-PER-DONE-1: toggle a card's checkbox → localStorage xai_task_cols round-trips done:true
+  it("T-PER-DONE-1: click checkbox → localStorage round-trips with done:true for that card", () => {
+    render(<TasksModule lang="en" />);
+
+    // Find the first task card checkbox in the overdue column
+    const cols = document.querySelectorAll(".task-col");
+    const overdueCol = cols[0] as HTMLElement;
+    const firstCard = overdueCol.querySelector(".task-card") as HTMLElement;
+    expect(firstCard).toBeTruthy();
+
+    // Find the task id from the seed — overdue col[0].tasks[0] is t1
+    const checkbox = firstCard.querySelector(".cbx") as HTMLElement;
+    expect(checkbox).toBeTruthy();
+
+    act(() => {
+      fireEvent.click(checkbox);
+    });
+
+    // Card should have is-completed class after toggle
+    expect(firstCard.classList.contains("is-completed")).toBe(true);
+
+    // localStorage must now contain done:true for that card
+    const raw = localStorage.getItem("xai_task_cols");
+    expect(raw).not.toBeNull();
+    const parsed = JSON.parse(raw!) as Array<{ id: string; tasks: Array<{ id: string; done?: boolean }> }>;
+    expect(Array.isArray(parsed)).toBe(true);
+    const overdueParsed = parsed.find((c) => c.id === "overdue");
+    expect(overdueParsed).toBeTruthy();
+    // The first card in overdue should have done:true
+    const toggledCard = overdueParsed!.tasks[0];
+    expect(toggledCard).toBeTruthy();
+    expect(toggledCard!.done).toBe(true);
+  });
+
+  // T-PER-DONE-2: toggle → unmount → re-mount → card still shows is-completed (refresh-survival)
+  it("T-PER-DONE-2: toggled card shows is-completed after unmount + re-mount (simulates page reload)", () => {
+    const { unmount } = render(<TasksModule lang="en" />);
+
+    // Toggle the first card in the overdue column
+    const cols = document.querySelectorAll(".task-col");
+    const overdueCol = cols[0] as HTMLElement;
+    const firstCard = overdueCol.querySelector(".task-card") as HTMLElement;
+    const checkbox = firstCard.querySelector(".cbx") as HTMLElement;
+
+    act(() => {
+      fireEvent.click(checkbox);
+    });
+
+    // Verify written to localStorage before unmount
+    const raw = localStorage.getItem("xai_task_cols");
+    expect(raw).not.toBeNull();
+    const parsed = JSON.parse(raw!) as Array<{ id: string; tasks: Array<{ id: string; done?: boolean }> }>;
+    const toggledCardId = parsed.find((c) => c.id === "overdue")!.tasks[0]!.id;
+    expect(parsed.find((c) => c.id === "overdue")!.tasks[0]!.done).toBe(true);
+
+    // Unmount (simulate navigate away)
+    unmount();
+
+    // Re-mount (simulate navigate back — reads same jsdom localStorage)
+    render(<TasksModule lang="en" />);
+
+    // The same card must now show is-completed
+    const allCards = document.querySelectorAll(".task-card");
+    const reloadedCard = Array.from(allCards).find((el) => {
+      // Find the card element that corresponds to our toggled card id
+      // We check via the overdue column first card
+      const col = el.closest(".task-col");
+      const isOverdue = col?.querySelector("h2")?.textContent?.toLowerCase().includes("overdue") ||
+                         col?.querySelector("h2")?.textContent?.toLowerCase().includes("逾期");
+      return isOverdue && col?.querySelector(".task-card") === el;
+    }) ?? document.querySelectorAll(".task-col")[0]!.querySelector(".task-card");
+
+    expect(reloadedCard).toBeTruthy();
+    expect(reloadedCard!.classList.contains("is-completed")).toBe(true);
+    void toggledCardId; // used above for assertion
   });
 });
