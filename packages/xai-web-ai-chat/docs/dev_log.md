@@ -683,11 +683,11 @@ Checklist results (8 gates):
 | Target | xai-web-ai-tool-layer |
 | Title | AI Tool Layer — READ real app context (context injection) + WRITE via Anthropic tool-use (create_task + create_calendar_event) with MANDATORY in-chat confirmation (no silent writes), bounded single round-trip, per-module write event channels executed by owning-module subscribers via pure reducer + setPref |
 | Current Phase | FEATURE_VERIFY |
-| Status | READY_FOR_VERIFY |
-| Suggested Next | feature-verify |
-| Executor | claude-sonnet-4-6 (feature-build fix, 2026-05-29) |
-| Updated | 2026-05-29 |
-| Blockers | (cleared — B1 + B2 resolved by commit 03438af) |
+| Status | READY_TO_SHIP |
+| Suggested Next | ship |
+| Executor | claude-opus-4-8[1m] (feature-verify re-verify, 2026-05-29) |
+| Updated | 2026-05-29 03:05 |
+| Blockers | (cleared — B1 + B2 resolved by commit 03438af; re-verify PASS 2026-05-29) |
 | Verify Cross-vendor | yes — primary Codex `gpt-5.x` cold-read of tool-use parse + no-silent-write + context provider; real-LLM tool round-trip + cross-vendor browser smoke DEFERRED 24h (operator, needs API key) per ADR-0008 §S3 / ADR-0009 §D2-G2 (gap-closure row #2 precedent). |
 | Automation Mode | A-Claude (manual step-by-step; planner does not pre-commit a loop — 5 phases, each stops for human confirmation) |
 | Executor | claude-opus-4-8[1m] (feature-review, 2026-05-29) |
@@ -926,6 +926,7 @@ Shell-sibling in App.tsx (R4/OQ2); (5) all SHIPPED tests green every phase
 | 2026-05-29 02:30 | claude-sonnet-4-6 (feature-auto-build P5) | isAiConvoRecord back-compat verified (predicate tolerates old + new record shapes); BC-1..BC-4 regression guard added in backCompat.test.ts. PLUGIN_MAP.md updated (ai-chat + tasks + calendar row notes). Verify-report at docs/reviews/xai-web-ai-tool-layer/20260529-verify-report.md. Full suite: ai-chat 180/180 (24 files) + tasks 128/128 + calendar 305/305 + apps/web 128/128 + build green. Three lifelines confirmed: (1) no-silent-write IT-2/IT-3/IT-4; (2) events.ts additive-only CORE-1; (3) subscriber route-independent TS-3/CS-3. Status → READY_FOR_VERIFY. | (this commit) | feature-verify |
 | 2026-05-29 16:40 | claude-opus-4-8[1m] (feature-verify) | Independently verified HEAD `630622d` against design §2026-05-29 / api §13 / test §8 + carve-out. **VERDICT: BLOCKED** (2 blockers — see report below). The 3 命脉 lifelines + Anthropic protocol + ALL gates PASS (ai-chat 180/180, tasks 128/128, calendar 305/305, core 8/8, web 128/128; lint --max-warnings 0 clean ai-chat/tasks/calendar; tsc clean ai-chat/tasks/calendar/core/web; web build green; working tree clean; no tokens/dep/ADR/dev/tauri touched). No-silent-write HOLDS structurally (adapter/claudeAdapter/toolRegistry zero setPref/emit-create; write emit single-producer in handleConfirm guarded by !pendingConfirmation; IT-2/IT-3/IT-4 genuine). events.ts +2 additive-only (existing web:ai:* untouched). Subscribers route-independent (AppInner L98-99 Shell-siblings; TS-3/CS-3). input_json_delta per-index accumulate + parse-once at content_block_stop (TU-2 golden). **BUT:** B1 — the `tool_result` round-trip + final-acknowledgement stream (api.md §13.6 + design §state + P4 commit subject + P4 Work Log all claim it DONE) is UNIMPLEMENTED; handleConfirm just emits+idles, handleCancel emits no `tool_result(is_error)` — code comments admit "future enhancement beyond P4 scope". Doc/commit drift misrepresents shipped behavior + degraded UX (no post-Confirm acknowledgement message). B2 — acceptance tests IT-5 (bounded round-trip) + IT-6 (context-injection-on-send) per test.md §8.2/§8.3 are MISSING; IT-3/IT-4 weakened to match impl. Return to feature-build: implement the round-trip (preferred) OR formally re-scope api.md §13.6 / design §state / P4 records as v1-deferral + add IT-5/IT-6. | — | feature-build |
 | 2026-05-29 | claude-sonnet-4-6 (feature-build fix, verify B1+B2) | **B1 resolved (Path 1 — implement, not deferral):** handleConfirm: after emitting the write event (single producer unchanged), builds Anthropic priorMessages=[user]+[assistant tool_use]+[user tool_result(success)] and calls streamCompleteChat for ONE bounded final acknowledgement stream (break-on-done, counter cap=1; if final turn yields another tool_use it is displayed as text, NOT executed). handleCancel: sends tool_result(is_error:true, "user declined") for a bounded final ack stream; zero write events, zero store mutations. Removed "future enhancement beyond P4 scope" comments. **B2 resolved:** IT-5 (bounded round-trip: Confirm+tool_result → 1 final stream; second tool_use in final turn NOT executed — only 1 write event total), IT-6 (context-on-send: streamCompleteChat called with user text + tools; today data seeded in localStorage; adapter context building at adapter level), IT-3 (restored callCount=2 assertion + cancel ack bubble), IT-4 (restored callCount=2 + final ack bubble assertions). **Three 命脉 still intact:** no-silent-write (emitWebEvent only in handleConfirm, 2 emit sites), events.ts not touched (additive-only preserved), App.tsx not touched (subscriber mount unchanged). All gates: 182/182 ai-chat (24 files) + 128/128 tasks + 305/305 calendar + 8/8 core + 128/128 apps/web + build green + lint --max-warnings 0 + tsc clean. Status → READY_FOR_VERIFY. | 03438af | feature-verify |
+| 2026-05-29 03:05 | claude-opus-4-8[1m] (feature-verify re-verify) | Independently re-verified HEAD `d40ac19` (fix `03438af` + flip `d40ac19`) against the 2 prior blockers. **VERDICT: PASS → READY_TO_SHIP.** **B1 RESOLVED + bounded-correct:** handleConfirm emits write (single producer L510/L520) then ONE bounded tool_result(success) round-trip (priorMessages user→assistant tool_use→user tool_result; break on chunk.done L583); handleCancel sends tool_result(is_error:true) bounded ack with ZERO write/store mutation. Bounded TRULY enforced (no unbounded loop): round-trip passes NO tools + adapter always emits one done:true chunk (L307-311) + consumer ignores chunk.toolUse + IIFE never re-calls processQueue. IT-5 genuinely asserts it (mock returns 2nd tool_use on round-trip → allWriteEvents.length===1, no new card, callCount===2 stops). "future enhancement beyond P4 scope" drift comments DELETED (grep zero). api.md §13.6 / design §state (L354-366) / dev_log now consistent — drift gone. **B2 RESOLVED:** IT-5+IT-6 exist (grep IT-1..IT-6 = 6); IT-3/IT-4 restored callCount===2 + ack bubble + is_error true/undefined + tool_use_id match. **3 命脉 re-confirmed:** no-silent-write (2 emit sites both in handleConfirm; no setPref in ai-chat src); events.ts not touched by fix (last P4 55d5ee6); App.tsx not touched by fix. **Gates:** ai-chat 182/182 (24 files), tasks 128/128, calendar 305/305, core 8/8, web 128/128; lint exit 0 ×3; tsc exit 0 ×4; web build 4.08s 0 err; working tree clean. **Boundaries:** full lineage (75ed966..d40ac19) no tokens/src-tauri/adr/archive; on web branch, dev untouched. **No regression** (TU-REG + I1..I23 IT-REG + gap-closure #2 adapter + addCard + createEvent + BC-1..BC-4 green). Residual (non-blocking): RR1 stale auto-build verify-report.md (predates IT-5/IT-6; authoritative docs current); RR2 real-key+cross-vendor cold-read deferred 24h (operator); RR3 events.ts dev-merge surface. Status → READY_TO_SHIP. | — | ship |
 
 ### Verify Report (2026-05-29 16:40 — claude-opus-4-8[1m] / feature-verify)
 
@@ -993,4 +994,121 @@ tests are missing.
 - The auto-build verify-report (`docs/reviews/xai-web-ai-tool-layer/20260529-verify-report.md`) is honest about gates + lifelines but its Phase Test Coverage table lists IT-1..IT-4 as complete without flagging the missing IT-5/IT-6 — update alongside the B2 fix.
 - R5 dev-branch merge surface (events.ts `web:*`) correctly flagged; carries forward to the eventual main merge.
 - Cross-vendor + real-key tool round-trip smoke correctly deferred to operator (ADR-0008 §S3 / ADR-0009 §D2-G2) — NOT a blocker.
+
+### Re-verify Report (2026-05-29 03:05 — claude-opus-4-8[1m] / feature-verify, after B1+B2 fix)
+
+**Verdict: PASS.** Status → READY_TO_SHIP; Current Phase → FEATURE_VERIFY; Suggested Next → `ship`.
+
+Re-verified HEAD `d40ac19` (fix `03438af` + flip `d40ac19`) against the two prior
+blockers (B1 round-trip + doc drift; B2 missing IT-5/IT-6). Both are RESOLVED and
+correct. The 3 命脉 lifelines, the Anthropic protocol, and every automated gate
+remain PASS. No regression introduced by the fix. This is the last item-3 re-verify
+— the audit-driven Web work concludes here.
+
+#### B1 — `tool_result` round-trip + final-ack stream — RESOLVED + bounded-correct
+
+- **handleConfirm** (`AiChatModule.tsx` L486-595): emits the write event (single
+  producer, L510/L520) → builds `priorMessages = [user] + [assistant tool_use] +
+  [user tool_result(success, tool_use_id match)]` → calls `streamCompleteChat` for
+  ONE final acknowledgement stream, breaking on `chunk.done` (L583). Final ack
+  bubble appended; `thinking` clears.
+- **handleCancel** (L403-475): sends `tool_result(is_error:true, "user declined")`
+  for a bounded ack stream (break-on-done L463); emits NO write event; ZERO store
+  mutation. (IT-3 source-asserts `is_error===true` in the round-trip priorMessages.)
+- **Bounded — TRULY bounded (no unbounded loop), triple-enforced:** (a) the
+  round-trip `streamCompleteChat` call passes NO `tools`, so the model is not
+  offered tools in the final turn; (b) `streamCompleteChat` always terminates with
+  exactly one `done:true` chunk (adapter L307-311) and the consumer breaks on it
+  while IGNORING `chunk.toolUse`; (c) the final-stream IIFE never re-calls
+  `processQueue` (queue already `shift()`-ed) — no re-entry. **IT-5 genuinely
+  asserts this:** the mock returns a SECOND `tool_use` (calendar) on the round-trip;
+  the test asserts `allWriteEvents.length === 1` (second tool_use NOT executed),
+  no new ConfirmationCard, and `callCount === 2` (stops — no third call). This is a
+  real bounded-loop assertion, not a hollow pass.
+- **Drift eliminated:** the L400/L414 "future enhancement beyond P4 scope" comments
+  are DELETED (grep: zero matches for "future enhancement"/"beyond P4"/"P4 will
+  add"). api.md §13.6 (round-trip + Cancel `tool_result(is_error:true)` + bounded
+  counter), design §state (L354-366: Confirm→emit+tool_result bounded ≤1;
+  Cancel→tool_result(is_error)+0 writes), and the dev_log Work Log are now all
+  consistent with the implementation. Doc/code drift gone.
+
+#### B2 — acceptance tests — RESOLVED
+
+- IT-5 (bounded round-trip) and IT-6 (context-on-send) now EXIST with meaningful
+  assertions (`grep 'it("IT-'` → IT-1..IT-6, count 6). IT-3 restored
+  `callCount===2` + cancel-ack bubble + `is_error===true`; IT-4 restored
+  `callCount===2` + final-ack bubble + exactly-1 write event + `is_error===undefined`
+  + `tool_use_id` match. IT-6 asserts `streamCompleteChat` called with the user's
+  text + `tools` defined (keyed-send path, not no-key demo fallback) + today data
+  seeded; injection itself is asserted at adapter level (CP-1..CP-8) — honestly
+  scoped in the test comment.
+
+#### Three 命脉 lifelines — independently re-confirmed at HEAD `d40ac19`
+
+1. **No-silent-write (CRITICAL) — HOLDS.** Grep: exactly TWO
+   `emitWebEvent("web:*:create-requested")` sites, both inside `handleConfirm`
+   (L510/L520), early-returning on `!pendingConfirmation`. `handleCancel` emits no
+   write. No `setPref` for task/calendar store anywhere in ai-chat `src` (the only
+   `setPref` matches are JSDoc comments + test mocks). One producer, one mutation
+   path (owning-module subscriber). IT-2 (pending→0 mutation) + IT-3 (Cancel→0
+   mutation) + IT-4 (Confirm→exactly 1 event) genuine & pass. **PASS.**
+2. **events.ts additive-only — HOLDS.** The fix touched ONLY `AiChatModule.tsx` +
+   its test (`git diff --name-only 630622d 03438af`). `packages/core/src/types/events.ts`
+   last touched by P4 `55d5ee6` (the additive +2). NOT re-touched. core tsc clean. **PASS.**
+3. **Subscriber route-independent — HOLDS.** App.tsx not touched by the fix (last
+   P4 `55d5ee6`); subscriber mount unchanged. TS-1..TS-4 + CS-1..CS-4 present
+   (store mutation, idempotency per requestId, route-independent without owning
+   module mounted, no-cross-plugin-import source guard). **PASS.**
+
+#### Automated gates (independently re-run at HEAD `d40ac19`)
+
+| Gate | Result | Evidence |
+|---|---|---|
+| `pnpm --filter @repo/plugin-web-ai-chat test` | PASS | 24 files, 182/182 |
+| `pnpm --filter @repo/plugin-web-tasks test` | PASS | 13 files, 128/128 |
+| `pnpm --filter @repo/plugin-web-calendar test` | PASS | 40 files, 305/305 |
+| `pnpm --filter @repo/core test` | PASS | 2 files, 8/8 |
+| `pnpm --filter @repo/web test` | PASS | 24 files, 128/128 |
+| ai-chat / tasks / calendar lint (`--max-warnings 0`) | PASS | all exit 0 |
+| ai-chat / tasks / calendar / core `tsc --noEmit` | PASS | all exit 0 |
+| `pnpm --filter @repo/web build` | PASS | vite built in 4.08s, 0 errors |
+| working tree | CLEAN | (this dev_log edit only) |
+
+#### Back-compat + boundaries — CLEAN
+
+- BC-1..BC-4 (`backCompat.test.ts`): `isAiConvoRecord` accepts SHIPPED-shape
+  `{id,title,time}` AND extended records (optional tool-call fields); rejects
+  malformed; empty title/time (V7). **PASS.**
+- Full-lineage boundary grep (`75ed966..d40ac19`): NO `plugin-web-tokens`,
+  `src-tauri`, `docs/adr/`, `/archive/`, or SHIPPED-archive edits. `apps/web/src/App.tsx`
+  edit is the P4 Shell-sibling mount (review-authorized, OQ2). On `web` branch;
+  `dev` untouched. **PASS.**
+- SHIPPED regression: TU-REG + I1..I23 (IT-REG via `mockNoOpStream`) + tasks/calendar
+  SHIPPED suites all green. The gap-closure #2 adapter (CS/SC/LE/SP/LP/EB), tasks
+  `addCard`, and calendar `createEvent` paths do NOT regress. **PASS.**
+
+#### Commit-attribution review
+
+- `03438af` (fix): scope confined to `AiChatModule.tsx` + `AiChatModule.test.tsx`
+  (2 files). Commit message follows Why/What/Scope/Risk/Docs/Tests + Co-Authored-By;
+  accurately describes the round-trip + IT-5/IT-6 + the drift-comment removal. The
+  prior P4 `55d5ee6` "tool_result round-trip" overclaim is now made TRUE by this
+  commit (the behavior the subject described exists at HEAD). PASS.
+- `d40ac19` (flip): dev_log-only (1 file, +73/-4). Doc-only chore. PASS.
+
+#### Residual risks (non-blocking)
+
+- **RR1 (stale auto-build verify-report):** `docs/reviews/xai-web-ai-tool-layer/20260529-verify-report.md`
+  (last touched P5 `630622d`, pre-fix) still does not list IT-5/IT-6 and its Phase
+  Test Coverage table predates the round-trip. This is a stale ARTIFACT only — the
+  authoritative dev_log Work Log + this Re-verify Report + api.md §13.6 / design
+  §state are current and correct. Ship or a follow-up doc commit may refresh it.
+  NOT a blocker (same item the prior verifier flagged; the contract docs that gate
+  behavior are consistent).
+- **RR2 (real-key tool round-trip + cross-vendor cold-read):** operator work,
+  deferred 24h per ADR-0008 §S3 / ADR-0009 §D2-G2 (gap-closure row #2 precedent).
+  The round-trip is fully unit-verified (IT-3/IT-4/IT-5 with mocked SSE); real-key
+  exercises the live Anthropic endpoint only. NOT a blocker.
+- **RR3 (events.ts `web:*` dev-branch merge surface, R5):** flagged; carries to the
+  eventual main merge. `web:*` ≠ `dev`'s `desktop:*` — low conflict, REAL. NOT a blocker.
 
