@@ -7,9 +7,9 @@
 | Workflow | BUGFIX |
 | Target | xai-web-meditation (primary) + plugin-web-board-views (sibling RED-2, cross-referenced) |
 | Title | post-recheck test-suite brittleness — 2 RED tests are wall-clock TIME BOMBS (not assertion/leak brittleness as the audit hypothesized) |
-| Current Phase | BUG_FIX |
-| Status | FIX_READY |
-| Suggested Next | bug-auto-fix (RED-2 board-views FVI-Timeline remaining) |
+| Current Phase | BUG_VERIFY |
+| Status | FIX_READY_FOR_VERIFY |
+| Suggested Next | bug-verify |
 | Verify Cross-vendor | no (test-only fix; no product `.tsx`/`.ts` render-logic change; no UI/browser surface change — cross-vendor smoke N/A per bug report) |
 | Severity | low-product / high-CI-noise (probabilistic green/red flips block clean suite; both feature behaviours are CORRECT) |
 | Root Cause | test brittleness — both RED tests read the REAL system clock through a live render path; assertions collide with / drift past wall-clock-derived DOM. RED-1 ≠ audit's "preview-meta {duration} min" hypothesis (disproven by probe). |
