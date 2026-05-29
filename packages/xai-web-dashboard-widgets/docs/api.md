@@ -315,3 +315,118 @@ This extension emits NO typed events (honors carve-out constraint). State change
 ### §E.9 i18n — local STR only
 
 `internal/strings.ts` `STR_STICKY_COMPOSER` (bilingual `{ en; zh }` record, mirroring `xai-web-calendar` strings.ts) covers: composer title, text field label, color field label, 5 color names, Save / Cancel, empty-text error, empty-state hint, add-sticky aria, delete aria. **0 new `plugin-web-tokens` keys.** Existing `dashboard.sticky_notes` REUSED for the widget header title via the existing `useI18n` import.
+
+---
+
+## §F — Extension API: Real-data wiring for 5 widgets (xai-web-dashboard-real-data, 2026-05-28)
+
+> **APPEND extension — SHIPPED §S1-§S11 contract and §E stickies contract above are unchanged.** Public surface (§S1) stays `dashboardWidgetRegistrations`-only; everything below is INTERNAL to the package (not re-exported). **Read-only: NO new registry key, NO new event, NO write to any store.**
+> Authority: ADR-0010 §D4 carve-out `217170c`. Design: design.md §F. Discovery: `docs/reviews/xai-web-dashboard-real-data/20260528-discovery-review.md`.
+
+### §F.1 Public surface — UNCHANGED
+
+`src/index.ts` still exports ONLY `dashboardWidgetRegistrations` (§S1). The new `internal/dataReads/*` selectors + predicates + the extended `internal/strings.ts` are all INTERNAL — consumed only inside the 5 rewired widgets. `index-barrel.test.ts` (AC-PKG-4) MUST continue to pass with the single export. (RD11.)
+
+### §F.2 WidgetRegistration entries — shapes UNCHANGED
+
+The 10-entry array (§S3) is byte-stable: ids, spans, ariaLabels, and the `render: (ctx) => <Widget .../>` wiring are all unchanged. Only the BODY of 5 widget components changes (hardcoded → real read). `registrations.tsx` is NOT edited. The render-context contract (§4 design, `ctx = { lang, now, goTo }`) is honored as-is — `now`/`goTo` are already passed to Upcoming/MiniCal.
+
+### §F.3 Read-selector contracts (`src/internal/dataReads/*`)
+
+All selectors are PURE (no I/O, no `Date.now()` — `now`/`todayKey` injected) and DEFENSIVE (narrow `unknown` → minimal shape; drop non-conforming entries silently; never throw). Names indicative; build may merge a predicate+selector into one file per store.
+
+```ts
+// --- tasks (xai_task_cols) ---
+// Minimal local shape the predicate narrows toward (NOT the registry's opaque Record<string,boolean>):
+interface TaskColMin { tasks: TaskCardMin[]; completed?: TaskCardMin[]; }
+interface TaskCardMin { id: string; done?: boolean; }
+function isTaskColsRecord(v: unknown): v is Record<string, TaskColMin>;
+function countDone(store: unknown): { done: number; total: number };
+//   done  = count of cards with done === true across every bucket's tasks (+ completed?)
+//   total = count of all cards across every bucket's tasks (+ completed?)
+//   on {} or malformed → { done: 0, total: 0 }
+
+// --- pomodoro (xai_pomodoro_sessions) ---
+interface PomodoroSessionMin { mode: "focus"|"short-break"|"long-break"; finishedAt: string; completed: boolean; }
+function isPomodoroSession(v: unknown): v is PomodoroSessionMin;   // mirrors Statistics' predicate
+function countTodaysFocus(sessions: unknown, todayLocalKey: string): number;
+//   counts s.mode==="focus" && s.completed && localDateKey(new Date(s.finishedAt)) === todayLocalKey
+//   USES finishedAt (canonical) — NOT completedAt (Cmd-K's stale field). On [] → 0.
+
+// --- habits (xai_habits_state) ---
+interface HabitMin { id: string; }
+interface HabitsStateMin { habits: HabitMin[]; checkIns: Record<string, Record<string, true>>; }
+function isHabitsState(v: unknown): v is HabitsStateMin;            // mirrors Statistics' isHabitsStateRecord
+function maxStreak(state: unknown, todayUtc: Date): number;
+//   per-habit strict-consecutive (C1): from today's UTC dateKey walk back while checked; 0 if today unchecked.
+//   returns max over all habits. On no habits / malformed → 0.
+
+// --- calendar (xai_calendar_events) ---
+interface UserCalEventMin {
+  id: string; title: string;
+  startISO: string;          // "YYYY-MM-DDTHH:MM" local-clock
+  endISO: string;
+  colorPreset: "mint"|"amber"|"blue"|"violet"|"rose";
+  recurrence: { kind: "daily"|"weekly" } | null;
+}
+function isUserCalEventMap(v: unknown): v is Record<string, UserCalEventMin>;
+
+interface UpcomingItem { id: string; startISO: string; title: string; colorPreset: UserCalEventMin["colorPreset"]; }
+function upcomingEvents(map: unknown, now: Date, windowDays: number, max: number): UpcomingItem[];
+//   expand recurrence over [now, now+windowDays]; keep instances with startISO >= now; sort ascending; take `max` (4).
+//   NON-recurring + daily + weekly handled (minimal local expansion). On {} → [].
+
+type MiniCalDotColor = "mint"|"amber"|"blue"|"violet"|"rose";
+function monthDots(map: unknown, viewYear: number, viewMonth0: number): Record<number, MiniCalDotColor[]>;
+//   expand recurrence over the viewed month; bucket by day-of-month (1..lastDay); each event → its colorPreset.
+//   MiniCalWidget slices to first 3 dots per day (existing render cap). On {} → {}.
+```
+
+### §F.4 Widget body deltas (props UNCHANGED)
+
+| Widget | Props (unchanged) | Body delta |
+|---|---|---|
+| `StatTasks` | `{ lang }` | `const [cols] = usePref("xai_task_cols"); const { done, total } = countDone(cols);` → render donut `value=done/total`; when `total === 0` render local-STR empty label instead of donut. Drop `STAT_TASKS_DONE`/`STAT_TASKS_TOTAL` consts. |
+| `StatStreak` | `{ lang }` | `const [hs] = usePref("xai_habits_state"); const streak = maxStreak(hs, new Date());` → render number + flame; when no habits render local-STR empty label; streak 0 with habits present renders `0` (honest). Drop `STAT_STREAK_DAYS`. |
+| `StatPomos` | `{ lang }` | `const [sessions] = usePref("xai_pomodoro_sessions"); const n = countTodaysFocus(sessions, localDateKey(new Date()));` → render `n` + 8-dot grid (`PomoDots count={n} total={8}`). Drop `STAT_POMOS_DONE`/`STAT_POMOS_TOTAL`. `0` is an honest empty (no special copy). |
+| `UpcomingWidget` | `{ lang, now }` *(now already in ctx; add to props if not present)* | `const [evMap] = usePref("xai_calendar_events"); const items = upcomingEvents(evMap, now ?? new Date(), 60, 4);` → render list from `items` (date/month/time derived from `startISO`); when `items.length === 0` render local-STR "no upcoming events". Stop importing `UPCOMING` on the live path. |
+| `MiniCalWidget` | `{ lang, now, goTo }` (unchanged) | `const [evMap] = usePref("xai_calendar_events"); const dots = monthDots(evMap, view.getFullYear(), view.getMonth());` → render `dots[d]?.slice(0,3)` per cell (replaces `CAL_EVENTS[d]`). Empty month = no dots (honest). `goTo`/nav/`data-no-drag` UNCHANGED. Stop importing `CAL_EVENTS` on the live path. |
+
+> **Note on `UpcomingWidget` `now`:** the SHIPPED `UpcomingWidgetProps` is `{ lang }` only (it never used `now`). To read "upcoming relative to now," the registration entry passes `now` (already in `ctx`). Build adds `now` to `UpcomingWidgetProps` and threads it in `registrations.tsx`'s `render` for the `upcoming` entry — a 1-prop additive change, NOT a render-context (`WidgetRenderContext`) change (that type is row #10's and stays frozen). Covered by an AC.
+
+### §F.5 Persistence semantics — READ-ONLY (NO new key, NO setter)
+
+4 pre-existing keys read via `usePref(<key>)` for reactivity; the `setValue` tuple member is NEVER called:
+
+| Key | Codec | Default | Read by | Written here |
+|---|---|---|---|---|
+| `xai_task_cols` | json | `{}` | StatTasks | NO |
+| `xai_pomodoro_sessions` | json | `[]` | StatPomos | NO |
+| `xai_habits_state` | json | `{schemaVersion:1,habits:[],checkIns:{},diaries:{}}` | StatStreak | NO |
+| `xai_calendar_events` | json | `{}` | Upcoming + MiniCal | NO |
+
+**NO registry edit. NO parity-array edit.** (Contrast §E.7 which added a key.) Reactivity: owning-module writes fan out via `usePref`'s `storage` event (cross-tab) + same-tab bus → our widgets re-render. SSR/pre-hydrate read returns the registry default → honest empty state (RD10).
+
+### §F.6 Events — NONE
+
+This extension emits NO typed events and adds NO event channel. `packages/core/src/types/events.ts` untouched. MiniCal's existing `ctx.goTo("calendar")` path (§S7) is unchanged.
+
+### §F.7 i18n — local STR only (extend existing `internal/strings.ts`)
+
+New empty-state keys are added to the EXISTING local `internal/strings.ts` (created by §E), e.g. `stat_tasks_empty`, `stat_streak_empty`, `upcoming_empty` (bilingual `{ en; zh }`). **0 new `plugin-web-tokens` keys.** Existing labels `dashboard.tasks_done` / `dashboard.streak` / `dashboard.pomos` / `dashboard.upcoming` stay sourced from `useI18n` (already imported in each widget). (Q-i18n; reviewer OQ5.)
+
+### §F.8 CSS contract delta
+
+Additive only, namespaced, no `.widget*` redefinition (§S9 guard still holds — `grep -E "\.widget-?(shell|content)?\s*\{"` returns 0):
+- `.mc-dot-rose` — 5th MiniCal dot color, IF `colorPreset:"rose"` events exist and the class is absent (RD4). Additive to the existing `.mc-dot-mint/amber/blue/violet`.
+- empty-state hint classes (e.g. `.ws-empty`, `.upc-empty`) — small additive text styles for the honest empty labels.
+
+### §F.9 Error / edge semantics
+
+- Malformed / missing store value → predicate returns `false` → selector returns its empty value (`{done:0,total:0}` / `0` / `[]` / `{}`) → widget renders its honest empty state. NEVER throws (defensive, like Statistics + Cmd-K).
+- Date-basis correctness is the selector's responsibility (pomo=local, habits=UTC, calendar=local-clock; §F.3 + RD3). Each selector takes an injected clock for deterministic tests.
+- Recurrence: unknown `recurrence.kind` → treated as non-recurring (returns the single anchor instance if in window) or dropped — matches calendar's defensive `expandRecurrence`; documented in `calUpcoming`/`calMonthDots`.
+
+### §F.10 Test ACs
+
+See `test.md` §F.

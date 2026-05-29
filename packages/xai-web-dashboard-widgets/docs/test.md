@@ -296,3 +296,159 @@ AC-COMPOSER-6/7/9 cover composer a11y (radiogroup, aria-modal/labelledby, aria-r
 - New widget-pkg tests: ~35-46 (AC-STORE 7 + AC-IDS 3 + AC-COMPOSER 9 + AC-HOOK 4 + AC-STICKIES-CREATE 8 + barrel unchanged).
 - New storage-pkg tests: 2 (AC-REGISTRY-STICKIES-1/2) + 2 parity-array edits (AC-REG-8 auto-derives, AC-PARITY exclusion).
 - SHIPPED 93 widget tests stay green (AC-STICKIES-1..3 re-homed under empty-store branch per RS-NOTE). Storage suite + web suite stay green.
+
+---
+
+## §F — Extension test strategy: Real-data wiring for 5 widgets (xai-web-dashboard-real-data, 2026-05-28)
+
+> **APPEND extension — SHIPPED §1-§7 and §E strategies above unchanged.** Same runner (Vitest 3.2 / jsdom 26 / RTL 16). Same core mock strategy: `usePref` / storage = real jsdom localStorage (NOT mocked); tests SEED the store via `setPref(<key>, fixture)` (or `localStorage.setItem`) in `beforeEach` to drive each widget, then assert the rendered real value; an explicit no-seed test asserts the honest empty state.
+> Authority: ADR-0010 §D4 carve-out `217170c`. Design: design.md §F. API: api.md §F. Discovery: `docs/reviews/xai-web-dashboard-real-data/20260528-discovery-review.md`.
+
+### §F.1 Strategy summary (extension)
+
+- **Two test layers per store:** (1) PURE selector unit tests (`dataReads/*.test.ts`) — inject a raw store object + a fixed clock, assert the number/array out, NO RTL render; (2) widget component tests — seed `usePref` storage + render the widget, assert real render AND honest empty render.
+- **Pure selectors carry the date-basis + recurrence hazards** (RD3, RD5), so the heaviest coverage is at the selector layer (cheap, deterministic). Widget tests are thin: "seeded → shows real; empty → shows honest empty; survives a `now` tick."
+- **SHIPPED Stat tests get REWRITTEN, not extended.** The SHIPPED `StatTasks/StatStreak/StatPomos.test.tsx` assert the magic numbers (`14/22`, `27`, `6`) + import the now-removed `STAT_*` consts. They are replaced by seed-driven assertions (RD8). No assertion may keep expecting the old constants. This is the one place SHIPPED tests are rewritten rather than re-homed (contrast §E's RS-NOTE re-home).
+- **Fixture tests (`fixtures.test.ts`) stay green** — `UPCOMING`/`CAL_EVENTS` exports are KEPT (RD9); only the live import path changes.
+- **Clock injection:** every selector + widget test pins a fixed clock (e.g. `new Date(2026, 4, 22, 10, 30)` local; for habits a fixed UTC `Date.UTC(2026,4,22)` anchor) so today/this-month/upcoming boundaries are deterministic.
+
+### §F.2 New / rewritten test files vs phase
+
+| File | Phase | Status | ACs |
+|---|---|---|---|
+| `src/internal/dataReads/__tests__/taskStats.test.ts` (+ predicate) | F1 | NEW | AC-RD-TASKS-1..5 |
+| `src/internal/dataReads/__tests__/pomoStats.test.ts` (+ predicate) | F1 | NEW | AC-RD-POMO-1..5 |
+| `src/internal/dataReads/__tests__/habitStreak.test.ts` (+ predicate) | F1 | NEW | AC-RD-HABIT-1..5 |
+| `src/__tests__/StatTasks.test.tsx` | F1 | **REWRITTEN** | AC-STATS-REAL-TASKS-1..4 |
+| `src/__tests__/StatStreak.test.tsx` | F1 | **REWRITTEN** | AC-STATS-REAL-STREAK-1..4 |
+| `src/__tests__/StatPomos.test.tsx` | F1 | **REWRITTEN** | AC-STATS-REAL-POMO-1..4 |
+| `src/internal/dataReads/__tests__/calUpcoming.test.ts` (+ predicate) | F2 | NEW | AC-RD-UPC-1..6 |
+| `src/internal/dataReads/__tests__/calMonthDots.test.ts` | F2 | NEW | AC-RD-CAL-1..5 |
+| `src/__tests__/UpcomingWidget.test.tsx` | F2 | **REWRITTEN** | AC-UPCOMING-REAL-1..4 |
+| `src/__tests__/MiniCalWidget.test.tsx` | F2 | **REWRITTEN** | AC-MINICAL-REAL-1..5 (SHIPPED nav/goTo/data-no-drag ACs RE-HOMED, unchanged) |
+| `src/__tests__/fixtures.test.ts` (EXISTING) | F2/F3 | UNCHANGED | AC-FIXTURES-1..5 stay green (exports kept) |
+| `src/__tests__/index-barrel.test.ts` (EXISTING) | F3 | UNCHANGED | AC-PKG-4 single export |
+
+**MINICAL RE-HOME NOTE:** the SHIPPED `MiniCalWidget.test.tsx` ACs for navigation (AC-MINICAL-5), `goTo` (AC-MINICAL-6/7/8), and `data-no-drag` (AC-MINICAL-9) are UNCHANGED behaviour — they stay green as-is (they don't depend on the dot source). Only AC-MINICAL-4 (dots from `CAL_EVENTS`) is replaced by AC-MINICAL-REAL-* (dots from `xai_calendar_events`). The month-label/weekday-header ACs (1/2/3) also stay.
+
+### §F.3 Acceptance criteria — new families
+
+#### AC-RD-TASKS (taskStats selector — F1, pure)
+
+- AC-RD-TASKS-1: `countDone({})` → `{ done: 0, total: 0 }`.
+- AC-RD-TASKS-2: on a real `Record<BucketId, TaskCol>` with cards across buckets → `total` = sum of all `tasks` (+ `completed?`); `done` = count of `done === true`.
+- AC-RD-TASKS-3: reads cards at `col.tasks` (+ `col.completed`), NOT a flattened array — a `{ overdue: { tasks: [{id,done:true}] } }` fixture yields `{done:1,total:1}` (RD2 guard).
+- AC-RD-TASKS-4: cards with absent `done` count toward `total` but NOT `done`.
+- AC-RD-TASKS-5: malformed value (`null`, array, `{overdue:42}`) → `{done:0,total:0}` (defensive, never throws).
+
+#### AC-RD-POMO (pomoStats selector — F1, pure)
+
+- AC-RD-POMO-1: `countTodaysFocus([], todayKey)` → `0`.
+- AC-RD-POMO-2: counts only `mode==="focus" && completed===true && localDateKey(finishedAt)===todayKey`.
+- AC-RD-POMO-3: uses `finishedAt` (a session with `completedAt` but no `finishedAt` is NOT counted — RD1 guard, explicit).
+- AC-RD-POMO-4: a focus session finished YESTERDAY (local) is not counted today; one at 23:59 local today IS counted (date-basis boundary, RD3).
+- AC-RD-POMO-5: malformed entries dropped silently; non-array → `0`.
+
+#### AC-RD-HABIT (habitStreak selector — F1, pure)
+
+- AC-RD-HABIT-1: `maxStreak({habits:[],checkIns:{}}, anyDate)` → `0`; malformed → `0`.
+- AC-RD-HABIT-2: single habit checked today + yesterday + day-before (UTC keys) → streak 3.
+- AC-RD-HABIT-3: today UNCHECKED → that habit's streak is 0 (C1 strict-consecutive; today-anchored).
+- AC-RD-HABIT-4: two habits (streak 2 and streak 5) → `maxStreak` returns 5.
+- AC-RD-HABIT-5: uses UTC day keys (a check-in keyed `2026-05-22` with a `todayUtc` of `Date.UTC(2026,4,22)` counts; date-basis RD3).
+
+#### AC-STATS-REAL-TASKS (StatTasks widget — F1)
+
+- AC-STATS-REAL-TASKS-1: seed `xai_task_cols` with 3 done / 7 total → renders `3` + `/7` + donut `data-value ≈ 3/7`.
+- AC-STATS-REAL-TASKS-2: no seed (empty store) → renders the honest empty label (local STR `stat_tasks_empty`), NOT `0/0`, NOT `14/22`.
+- AC-STATS-REAL-TASKS-3: bilingual — empty label + `dashboard.tasks_done` render in en + zh.
+- AC-STATS-REAL-TASKS-4: re-render with a new `now` (grid tick) does not crash / does not reset the read (RD6).
+
+#### AC-STATS-REAL-STREAK (StatStreak widget — F1)
+
+- AC-STATS-REAL-STREAK-1: seed `xai_habits_state` with a 4-day streak habit → renders `4` + flame.
+- AC-STATS-REAL-STREAK-2: no habits → honest empty label (`stat_streak_empty`), NOT `27`.
+- AC-STATS-REAL-STREAK-3: habits present but streak 0 → renders `0` (honest, distinct from "no habits").
+- AC-STATS-REAL-STREAK-4: bilingual label.
+
+#### AC-STATS-REAL-POMO (StatPomos widget — F1)
+
+- AC-STATS-REAL-POMO-1: seed `xai_pomodoro_sessions` with 2 completed focus sessions finished today → renders `2` + 2 dots "on".
+- AC-STATS-REAL-POMO-2: no sessions → renders `0` + 0 dots on (honest; no special copy).
+- AC-STATS-REAL-POMO-3: 10 completed focus today → number shows `10`; dot grid saturates at 8 (existing `PomoDots total=8`).
+- AC-STATS-REAL-POMO-4: bilingual label.
+
+#### AC-RD-UPC (calUpcoming selector — F2, pure)
+
+- AC-RD-UPC-1: `upcomingEvents({}, now, 60, 4)` → `[]`.
+- AC-RD-UPC-2: events with `startISO >= now` returned sorted ascending; events before `now` excluded.
+- AC-RD-UPC-3: capped at `max` (4) even when more qualify.
+- AC-RD-UPC-4: a daily-recurring event yields one instance per day inside the window (minimal recurrence, RD5).
+- AC-RD-UPC-5: a weekly-recurring event yields 7-day-stepped instances inside the window.
+- AC-RD-UPC-6: malformed map / unknown `recurrence.kind` → defensive (drop or treat as non-recurring; never throws).
+
+#### AC-RD-CAL (calMonthDots selector — F2, pure)
+
+- AC-RD-CAL-1: `monthDots({}, 2026, 4)` → `{}`.
+- AC-RD-CAL-2: an event on `2026-05-22T...` → `dots[22]` contains its `colorPreset`.
+- AC-RD-CAL-3: events in a DIFFERENT month are excluded from the viewed month's dots.
+- AC-RD-CAL-4: a daily-recurring event populates every day of the viewed month it spans.
+- AC-RD-CAL-5: `colorPreset:"rose"` flows through as a `rose` dot color (RD4 — render test confirms a `.mc-dot-rose` class exists/added).
+
+#### AC-UPCOMING-REAL (UpcomingWidget — F2)
+
+- AC-UPCOMING-REAL-1: seed `xai_calendar_events` with 2 future events → renders 2 rows with title + time from `startISO`.
+- AC-UPCOMING-REAL-2: empty store → honest empty label (`upcoming_empty`), NOT the `UPCOMING` fixture rows.
+- AC-UPCOMING-REAL-3: more than 4 future events → only 4 rendered (cap).
+- AC-UPCOMING-REAL-4: bilingual (`dashboard.upcoming` header + empty label en/zh); widget consumes `now` (passed from the registration entry) — a fixed `now` makes "future" deterministic.
+
+#### AC-MINICAL-REAL (MiniCalWidget dots — F2)
+
+- AC-MINICAL-REAL-1: seed `xai_calendar_events` with an event on day 22 of the viewed month → `.mc-cell[data-day="22"]` shows a `.mc-dot` with the event's color.
+- AC-MINICAL-REAL-2: empty store → NO `.mc-dot` anywhere (honest empty month; grid still renders).
+- AC-MINICAL-REAL-3: per-day dot cap of 3 preserved (5 events on one day → 3 dots).
+- AC-MINICAL-REAL-4: navigating prev/next month re-buckets dots for the newly-viewed month (offset honored).
+- AC-MINICAL-REAL-5: SHIPPED nav/goTo/data-no-drag ACs (AC-MINICAL-5/6/7/8/9) RE-HOMED unchanged → still green.
+
+### §F.4 Mock strategy (extension)
+
+- `usePref` / storage = real jsdom localStorage (NOT mocked). `beforeEach` does `localStorage.clear()`; seed-driven tests then `setPref(<key>, fixture)` (imported from `@repo/plugin-web-storage`) before render.
+- Pure selector tests need NO storage + NO RTL — call the selector with a literal store object + a fixed `Date`/`todayKey`.
+- Clocks injected: widget tests pass a fixed `now` (Upcoming/MiniCal); Stat widgets compute "today" internally, so their tests stub the system clock via `vi.setSystemTime(new Date(2026, 4, 22, 10, 30))` (local) and, for StatStreak's UTC basis, seed check-ins keyed to the UTC day of that instant. Restore with `vi.useRealTimers()` in `afterEach`.
+- Fixtures (`UPCOMING`/`CAL_EVENTS`/`WEATHER`/...) remain exercised by the UNCHANGED `fixtures.test.ts`; the rewired widgets no longer import them on the live path.
+
+### §F.5 Risk-to-test mapping (extension)
+
+| Risk | Test |
+|---|---|
+| RD1 (pomo `finishedAt` not `completedAt`) | AC-RD-POMO-3 (explicit `completedAt`-only session not counted) |
+| RD2 (tasks `col.tasks` not flattened) | AC-RD-TASKS-3 (nested `col.tasks` fixture) |
+| RD3 (date basis per source) | AC-RD-POMO-4 (local boundary) + AC-RD-HABIT-5 (UTC key) |
+| RD4 (`.mc-dot-rose` CSS) | AC-RD-CAL-5 + AC-MINICAL-REAL render asserting the rose dot class |
+| RD5 (local recurrence) | AC-RD-UPC-4/5 + AC-RD-CAL-4 (daily/weekly) |
+| RD6 (survives grid tick) | AC-STATS-REAL-TASKS-4 (+ analogous for others) |
+| RD7 (removing `STAT_*` consts) | build-time grep for importers + rewritten Stat tests no longer import the consts |
+| RD8 (SHIPPED Stat tests assert magic numbers) | §F.2 rewrite — old assertions deleted, replaced by seed-driven ACs |
+| RD9 (fixture exports kept) | AC-FIXTURES-1..5 stay green |
+| RD10 (hydrate flash = honest empty) | AC-*-REAL empty-store tests assert the empty state IS the default |
+| RD11 (barrel single-export) | AC-PKG-4 unchanged |
+| RD12 (defensive predicates) | AC-RD-*-1/5 malformed-input cases (return empty, never throw) |
+
+### §F.6 Cross-vendor manual smoke (queued — F3, may defer per ADR-0008 §S3)
+
+`pnpm --filter @repo/web dev` in Chrome / Safari 17+ / Firefox → `/app/dashboard`, on a profile WITH real data (complete a task, log a pomodoro, check a habit, create a calendar event in the owning modules), then:
+1. StatTasks donut reflects the real done/total from the Tasks board (not 14/22).
+2. StatPomos shows today's real completed-focus count (not 6); complete another pomodoro → reload → count increments.
+3. StatStreak shows the real best habit streak (not 27); check a habit → reload → streak reflects it.
+4. UpcomingWidget lists real future calendar events (not the fixture); none scheduled → "no upcoming events".
+5. MiniCal shows dots on days with real events (not `CAL_EVENTS`); empty month → no dots.
+6. Empty profile (fresh): all 5 widgets show honest empty states, NO fiction.
+7. Cross-tab: create an event in one tab → MiniCal/Upcoming in another tab reflect after focus (usePref storage listener).
+8. The other 5 widgets (Clock/WorldClocks/Weather/Stickies/Mail) are visually unchanged.
+
+### §F.7 Test totals (extension estimate)
+
+- New pure selector tests: ~26-31 (AC-RD-TASKS 5 + AC-RD-POMO 5 + AC-RD-HABIT 5 + AC-RD-UPC 6 + AC-RD-CAL 5).
+- Rewritten widget tests: ~24 (4 per Stat × 3 + 4 Upcoming + 5 MiniCal-real; SHIPPED MiniCal nav/goTo ACs re-homed).
+- NET widget-pkg count: SHIPPED 93 + §E additions (→126) + §F net delta (selectors added; Stat/Upcoming/MiniCal test files rewritten, not multiplied). No SHIPPED non-Stat test regresses.
+- Storage suite: UNCHANGED (NO registry edit — contrast §E). Web suite: UNCHANGED (no host edit). `pnpm -w build` green.
