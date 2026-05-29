@@ -16,7 +16,7 @@
 | Updated | 2026-05-29 00:14 PDT |
 | Brief | `docs/reviews/desktop-local-first-sqlite-foundation/20260528-feature-brief.md` |
 | Discovery Review | `docs/reviews/desktop-local-first-sqlite-foundation/20260528-discovery-review.md` |
-| Risks | Existing desktop SQLite evidence is real but incomplete: the TS desktop repo seam is still not fully migration-honest, the native runtime still lacks a Phase 3 migration/bootstrap owner, and browser-safe boundaries could regress if desktop helpers remain too loosely exposed. |
+| Risks | Residual risk is mostly future-row integration: downstream entity-bridge/import/queue rows must keep using the typed seam and must not bypass host-owned bootstrap contracts. Current foundation gates are passing. |
 | Blockers | — |
 | Review Notes | Approved. The plan follows ADR-0012, keeps `@repo/core-data` plus the host `db_*` seam as the foundation, preserves browser-safe boundaries, and keeps downstream rows deferred. During Phase 1, keep `E1300` versus `E1302` semantics explicit so bootstrap-contract failures and backend/open-migration failures do not blur. |
 
