@@ -1490,13 +1490,13 @@ hold, anti-drift passes, every automated gate passes, no regression. One non-blo
 | Workflow | FEATURE_DEV |
 | Target | xai-web-ai-tool-openai-compatible |
 | Title | Lift the openai-compatible tool deferral — implement the OpenAI Chat Completions function-calling wire format (request tools/tool_choice + streaming delta.tool_calls accumulation + tool-role result round-trip) on the adapter so the SHIPPED 6 create/edit/delete tools work on openai-compatible providers via the SAME provider-agnostic confirmation→event→owning-reducer path; Anthropic path byte-stable; deferral comments deleted (code matches docs) |
-| Current Phase | FEATURE_VERIFY |
-| Status | READY_TO_SHIP |
-| Suggested Next | ship |
+| Current Phase | SHIP |
+| Status | SHIPPED |
+| Suggested Next | — (workflow complete) |
 | Verify Cross-vendor | yes (per ADR-0010 §D4 P0 + carve-out default; primary Codex `gpt-5.x` cold-read of the openai tool_calls parse + provider-parity + Anthropic-byte-stable + deferral-comment removal) — real openai-compatible-key tool round-trip + cross-vendor browser smoke DEFERRED 24h (operator, needs a Groq/openai-compatible key) per ADR-0008 §S3 / ADR-0009 §D2-G2, consistent with the create-layer + edit/delete + gap-closure row #2 precedent |
 | Automation Mode | A-Claude |
-| Executor | claude-opus-4-8[1m] (feature-verify B1 re-verify, 2026-05-29) |
-| Updated | 2026-05-29 23:45 |
+| Executor | claude-sonnet-4-6 (ship, 2026-05-29) |
+| Updated | 2026-05-29 23:55 |
 | Dispatched By | operator directive 2026-05-29 (second of two AI enhancements; edit/delete SHIPPED first — `xai-web-ai-tool-edit-delete`) |
 | Roadmap Manifest | `docs/workflow/roadmap/xai-web-ai-tool-openai-compatible.md` |
 | Parent ADR | ADR-0010 §D4 (P0 maintenance carve-out) |
@@ -1844,4 +1844,5 @@ Scope is comment-text + one test file — no production-logic change, no boundar
 - RR2 — `apps/web/src/App.tsx:61` 1 pre-existing lint warning (`no-restricted-imports` on `@repo/web-auth-device-session`): introduced by commit `cbefa1db` (2026-05-27), predates this feature's first commit `96d279b`; this feature touched ZERO apps/web files. Out of scope; tracked in apps/web parent (same R2 residual as all prior verify reports for this package).
 
 | 2026-05-29 23:45 | claude-opus-4-8[1m] (feature-verify B1 re-verify, xai-web-ai-tool-openai-compatible) | **Verdict: PASS — B1 fully closed.** Independently re-verified against HEAD `e95a2ef`. (1) Full grep of both source files for 8 deferral-variant patterns → ZERO hits; each of the 6 EXACT phrases the prior BLOCKED quoted re-grepped individually → ALL absent. (2) The 3 flagged docstrings (claudeStreamAdapter.ts:45-51 + llmProvider.ts:43-53) now state tools sent on BOTH providers, internally consistent with the :60 field doc. (3) OAI-NODRIFT-1 grew 4→6 cases, fs-read + not.toContain, now guards ALL 5 deferral-phrase variants (verified each genuinely asserted) + retains 2 positive lift-is-real assertions; focused run 6/6. (4) Docs: api.md §13.1/§13.8 + design FA-3/FA-5 carry no live deferral claim; the remaining "deferred"/"planner's-call #3" strings in api §15.3 + design file-plan are header-labeled `MODIFIED — lift the deferral` migration instructions (completed-migration historical spec), not drift. (5) Regression-safe: B1 commit 1d3dab5 changed ONLY JSDoc comment lines in the 2 prod .ts files (non-comment diff empty); did NOT touch sseParser/toolUseTypes/AiChatModule; no boundary hit. Gates: ai-chat 243/243 (28 files) + tasks 147/147 + calendar 311/311 + web 128/128 + tsc 0 + eslint --max-warnings 0 = 0 + web build green; working tree clean. Commit attribution: 1d3dab5 (docstring/test/docs only, zero prod logic) + e95a2ef (dev_log only) both follow convention. Residual: RR1 real openai-key + cross-vendor smoke DEFERRED 24h (operator); RR2 apps/web App.tsx:61 pre-existing lint warning (cbefa1db, predates feature) out of scope. Status → READY_TO_SHIP; Suggested Next → ship. | — | ship |
+| 2026-05-29 23:55 | claude-sonnet-4-6 (ship, xai-web-ai-tool-openai-compatible) | **SHIPPED.** Workflow guard: Status=READY_TO_SHIP — proceed. Committed supplementary doc flip  (B1 re-verify report + Status Panel READY_TO_SHIP, minor omission from verify session end). Updated dev_log OpenAI-compatible lineage Status Panel → SHIPPED / Current Phase → SHIP / Suggested Next → — (workflow complete). Pushed all 9 commits (dd1519b carve-out / 96d279b P1 / e1e2cf6 P2 / cf7cfd7 P3 / 6d8bc9f P4 / 1d3dab5 B1 fix / e95a2ef B1 work log / 3fc9e72 READY_TO_SHIP flip / this ship chore) to origin/web. Ship Report: AI 增强 2/2 完成 + 整个 audit-driven Web 工作收官. Residuals: RR1 real openai-compatible-key tool round-trip + cross-vendor cold-read = operator work (defer per ADR-0008 §S3); RR2 apps/web/src/App.tsx:61 pre-existing lint warning (commit cbefa1db, predates this feature, out of scope). | (ship chore) | — (workflow complete) |
 
