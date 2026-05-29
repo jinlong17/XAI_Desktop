@@ -1,6 +1,6 @@
 import { PluginRegistry } from "@repo/core/registry";
 import type { ConsoleWindowFrame } from "@repo/core/types";
-import { ConsoleLayout } from "../../../../packages/plugin-console/src";
+import { ConsoleLayout } from "@repo/plugin-console";
 import { invoke } from "@tauri-apps/api/core";
 import { getCurrentWindow, LogicalPosition, LogicalSize } from "@tauri-apps/api/window";
 import { useEffect } from "react";

@@ -7,9 +7,9 @@ import { ConsoleWindow } from "./windows/ConsoleWindow";
 import "./index.css";
 import { registerAccountPlugin } from "@repo/plugin-account";
 import { registerAiCubePlugin } from "@repo/plugin-ai-cube";
-import { registerConsolePlugin } from "../../../packages/plugin-console/src";
-import { registerLabelsPlugin } from "../../../packages/plugin-labels/src";
-import { registerProductivityPlugin } from "../../../packages/plugin-productivity/src";
+import { registerConsolePlugin } from "@repo/plugin-console";
+import { registerLabelsPlugin } from "@repo/plugin-labels";
+import { registerProductivityPlugin } from "@repo/plugin-productivity";
 
 /**
  * Simple hash router for multi-window architecture.
