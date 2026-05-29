@@ -7,18 +7,18 @@
 | Workflow | FEATURE_DEV |
 | Target | desktop-ai-offline-provider-policy |
 | Title | Desktop AI Offline Provider Policy |
-| Current Phase | FEATURE_VERIFY |
-| Status | READY_FOR_VERIFY |
-| Suggested Next | feature-verify |
+| Current Phase | SHIP |
+| Status | SHIPPED |
+| Suggested Next | — |
 | Automation Mode | B-Codex |
 | Verify Cross-vendor | yes |
-| Executor | feature-auto-build (Codex, gpt-5.3-codex inline fallback) |
-| Updated | 2026-05-29 04:16 PDT |
+| Executor | ship (Codex, gpt-5.3-codex inline fallback) |
+| Updated | 2026-05-29 04:22 PDT |
 | Brief | `docs/reviews/desktop-ai-offline-provider-policy/20260529-feature-brief.md` |
 | Discovery Review | `docs/reviews/desktop-ai-offline-provider-policy/20260529-discovery-review.md` |
-| Risks | Repo-side gates pass and the remaining blocker contract drift in `claudeAdapter` is repaired. Manual real-macOS offline/online toggle smoke remains an external release follow-up at verify/ship time. |
+| Risks | Repo-side verification is clean. Manual real-macOS offline/online toggle smoke remains an external release follow-up at ship/release time, and existing non-fatal React `act(...)` warnings plus web/Tauri build warnings remain out-of-scope follow-ups. |
 | Blockers | — |
-| Review Notes | Repair scope only: removed `completeChat(...)` demo-success fallback for missing key and empty accumulation, aligned tests/metadata with fail-closed policy semantics, and kept local-LLM/Tauri-native bridge/bundled-model scope unchanged. |
+| Review Notes | Verification passed: shared policy ownership stays in `@repo/plugin-web-ai-chat`, Settings consumes the shared resolver without divergent policy, legacy `completeChat(...)` demo-success fallback is removed, loopback/local URLs fail closed as deferred/not-enabled, and no local-LLM/Tauri-native bridge/bundled-model scope leak was introduced. |
 
 ## Naming Rationale
 
@@ -104,3 +104,5 @@ Exit gates:
 | 2026-05-29 04:05 PDT | feature-auto-build (Codex, gpt-5.3-codex inline fallback) | Phase 3 complete. Re-ran integration gates and audited scope boundaries. Web production build and desktop debug app bundle build both pass. Confirmed no hidden Ollama/local runtime dependency, no new native/Tauri AI command bridge, and no spill into calendar/sync/backup or overlay/control/grid roadmap rows. Manual real-macOS offline/online smoke remains for feature-verify/ship. | — | `pnpm --filter @repo/web build` PASS; `pnpm --filter desktop tauri build --debug --bundles app` PASS | feature-verify |
 | 2026-05-29 04:10 PDT | feature-verify (Codex, gpt-5.4 inline fallback) | Verification blocked after commit audit and gate reruns. Reviewed `e00c6a1b`, `8b497698`, and `fd267fa6` against the brief/design/api/test contracts. Confirmed the active chat send path (`streamCompleteChat`) and Settings AI test path fail closed with explicit policy states, loopback/local URLs classify as deferred/not-enabled, `@repo/plugin-web-settings-rest` consumes the shared resolver, and no local-runtime/Tauri bridge/scope-leak changes were introduced. Blocked because the retained internal `claudeAdapter.completeChat(...)` still preserves demo-success behavior for missing-key and empty-accumulation cases, while `package.json` and `claudeAdapter.test.ts` still describe and assert that legacy behavior, contradicting this row's API contract and verify claims. | `e00c6a1b`, `8b497698`, `fd267fa6` | `pnpm --filter @repo/plugin-web-ai-chat test` PASS; `pnpm --filter @repo/plugin-web-ai-chat typecheck` PASS; `pnpm --filter @repo/plugin-web-settings-rest test` PASS; `pnpm --filter @repo/plugin-web-settings-rest typecheck` PASS; `pnpm --filter @repo/web test` PASS; `pnpm --filter @repo/web build` PASS; `pnpm --filter desktop tauri build --debug --bundles app` PASS | feature-build |
 | 2026-05-29 04:16 PDT | feature-auto-build (Codex, gpt-5.3-codex inline fallback) | Repair pass for verify blocker only. Removed `completeChat(...)` demo-success fallback path: missing-key and policy-not-ready now fail closed through existing policy/LlmError flow; empty accumulation now throws `Malformed` instead of returning demo text. Updated package metadata wording and rewrote `claudeAdapter` tests to assert fail-closed semantics. No local LLM/Ollama dependency, no native/Tauri AI bridge, and no bundled model/installer changes were introduced. | `fix(plugin-web-ai-chat): remove demo-success fallback from completeChat` | `pnpm --filter @repo/plugin-web-ai-chat test` PASS; `pnpm --filter @repo/plugin-web-ai-chat typecheck` PASS | feature-verify |
+| 2026-05-29 04:20 PDT | feature-verify (Codex, gpt-5.4 inline fallback) | Verification pass complete after repair commit audit and full gate rerun. Reviewed `e00c6a1b`, `8b497698`, `fd267fa6`, and `269f944d` against the brief/design/api/test contracts and current source. Confirmed there is no hidden local LLM/Ollama dependency, no native/Tauri AI bridge, no bundled model/installer, no policy divergence in `@repo/plugin-web-settings-rest`, no legacy offline/demo-success behavior in `completeChat(...)`, and no scope leak into calendar/sync/backup/repository or overlay/control/grid rows. | `e00c6a1b`, `8b497698`, `fd267fa6`, `269f944d` | `pnpm --filter @repo/plugin-web-ai-chat test` PASS; `pnpm --filter @repo/plugin-web-ai-chat typecheck` PASS; `pnpm --filter @repo/plugin-web-settings-rest test` PASS; `pnpm --filter @repo/plugin-web-settings-rest typecheck` PASS; `pnpm --filter @repo/web test` PASS; `pnpm --filter @repo/web build` PASS; `pnpm --filter desktop tauri build --debug --bundles app` PASS | ship |
+| 2026-05-29 04:22 PDT | ship (Codex, gpt-5.3-codex inline fallback) | Ship gate passed. Audited row #15 commit integrity from baseline `f98f4488` through HEAD and confirmed only `e00c6a1b`, `8b497698`, `fd267fa6`, and `269f944d` are in scope. Updated SHIPPED writeback for this row and reconciled roadmap manifest row #15 to `SHIPPED`; row `#18` remains pending because rows `#16` and `#17` are not shipped yet. | `e00c6a1b`, `8b497698`, `fd267fa6`, `269f944d` | Reused verify evidence; no additional test reruns in ship step | — |
