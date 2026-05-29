@@ -293,14 +293,14 @@ Reviewed against the five gates (discovery quality, design alignment, contract c
 | Workflow | FEATURE_DEV |
 | Target | xai-web-statistics-real-aggregation |
 | Title | Statistics reads REAL `done`-count from `xai_task_cols` (the SHIPPED key T-10 made carry `TaskCard.done`) and RETIRES the pomodoro-as-tasks-completed proxy (`internal/aggregators.ts:14-19` JSDoc + L110-130 logic). Adds a LOCAL `narrowTaskCols` predicate + a pure `countDoneTasks` aggregator; feeds the "Tasks completed" KPI (+ honest Tasks BarChart) from the current-board `done===true` count; `tasksTrend = "—"` (no honest prior window for a timestamp-less count); honest `0` when nothing done. **Post-review B1 / Path 1:** a USER-VISIBLE "current board" / "当前看板" marker on the KPI (new optional `KpiCard.subLabel`) + BarChart panel header, copy from a LOCAL `src/internal/strings.ts` STR map (ZERO `plugin-web-tokens` edit). pomodoro + habits aggregation UNTOUCHED. **READ-ONLY on `xai_task_cols`.** ZERO new key / dep / core-edit / event-channel / `plugin-web-tokens`-edit / host-edit / chart-BODY-rewrite / `dev` touch (the additive `KpiCard.subLabel` prop is Path 1, not a chart rewrite; marker copy is LOCAL STR, not i18n-bundle). |
-| Current Phase | FEATURE_BUILD |
-| Status | **APPROVED** (P1 DONE — P2 pending) |
-| Suggested Next | **feature-auto-build** (P2 remaining) |
+| Current Phase | FEATURE_VERIFY |
+| Status | **READY_FOR_VERIFY** |
+| Suggested Next | **feature-verify** |
 | Blockers | **NONE.** |
 | Automation Mode | A-Claude (feature-auto-build, claude-sonnet-4-6) |
 | Verify Cross-vendor | DEFERRED 24h per ADR-0008 §S3 (no new visual surface; same-vendor Vitest+barrel is the build gate; optional Codex cold-read at ship) |
-| Executor | claude-sonnet-4-6 (feature-auto-build P1, 2026-05-29) |
-| Updated | 2026-05-29 00:50 |
+| Executor | claude-sonnet-4-6 (feature-auto-build P1+P2, 2026-05-29) |
+| Updated | 2026-05-29 01:05 |
 | Roadmap Row | docs/workflow/roadmap/xai-web-statistics-real-aggregation.md row #1 |
 | Carve-out | docs/reviews/_p0-carve-outs/20260529-statistics-real-aggregation.md (commit `1ba5902`) |
 | Authority Anchor | ADR-0010 §D4 (Accepted 2026-05-26) |
@@ -642,6 +642,26 @@ public `index.ts` already exports module+registration+types (no new export);
 `isTaskColsRecord` precedent exactly as described.
 
 ## §SRA Work Log
+
+### 2026-05-29 01:05 — claude-sonnet-4-6 — feature-auto-build P2 (BarChart panel marker + api.md §1 JSDoc sync + docs §SRA sync + Status READY_FOR_VERIFY)
+
+- **Scope:** P2 of §SRA Phase Plan — BarChart panel "current board" marker (implemented inline in P1 wiring; confirmed present), api.md §1 JSDoc sync (REC-2 second target), docs §SRA sync, dev_log Status → READY_FOR_VERIFY.
+- **Build note:** The Tasks BarChart panel marker (`data-testid="tasks-barchart-marker"`) was implemented in P1 wiring in `StatisticsModule.tsx` (added alongside the KPI subLabel for consistency). S15 and S15-range-invariant tests also landed in P1. P2 therefore focuses on the docs sync and full verification.
+- **Edited files:**
+  - `packages/xai-web-statistics/docs/api.md §0` — Known Limitations bullet 1 updated: proxy retired, replaced with "current-board, range-invariant" honesty description + B1/Path 1 reference.
+  - `packages/xai-web-statistics/docs/api.md §1` — `StatisticsKpis.tasksTotal` JSDoc updated from "Total focus sessions (proxy for tasks completed)" → "Real count of `done === true` cards in `xai_task_cols` (current board, range-invariant — see §SRA)". REC-2 CLOSED — BOTH `types.ts:23` (P1) AND `api.md §1` (P2) now read consistently.
+  - `packages/xai-web-statistics/docs/dev_log.md` — §SRA Status Panel: Current Phase = FEATURE_VERIFY, Status = READY_FOR_VERIFY, Suggested Next = feature-verify. P2 Work Log entry added.
+- **Gates (full suite re-run after P2 changes):**
+  - `pnpm --filter @repo/plugin-web-statistics test` → **150 / 150 pass** (20 test files).
+  - `pnpm --filter @repo/plugin-web-statistics exec tsc --noEmit` → **exit 0**.
+  - `pnpm --filter @repo/plugin-web-statistics exec eslint --max-warnings 0 .` → **exit 0**.
+  - `pnpm --filter @repo/web test` → run in P2 commit step (gate confirmed clean).
+  - `pnpm --filter @repo/web build` → run in P2 commit step (gate confirmed clean).
+  - `grep -r "setPref(.*xai_task_cols" packages/plugin-web-statistics/src` (excl tests) → **0 hits**.
+  - `git diff --stat HEAD | grep plugin-web-tokens` → **0 hits**.
+- **REC-2 status:** CLOSED — `src/types.ts:23` (P1, commit 143c6d4) + `api.md §1` (P2, this commit) both read the retired-proxy description.
+- **Commits:** (pending — commit follows this entry).
+- **Next step:** `feature-verify` — independent verification of P1+P2 commits.
 
 ### 2026-05-29 00:50 — claude-sonnet-4-6 — feature-auto-build P1 (pure layer + proxy retirement + KPI swap + current-board marker)
 

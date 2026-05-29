@@ -25,7 +25,7 @@ NO export of: aggregator functions, predicates, heatmap helper, insight copy fun
 
 ### Known Limitations
 
-- **Tasks completion data source is the focus session log.** Until a `web:tasks:completed` event channel + a `xai_tasks_completed_log` storage key are introduced in a future row, "Tasks completed" KPI + the tasks bar chart are derived from `xai_pomodoro_sessions.filter(s => s.mode === 'focus')`. Documented on the aggregator JSDoc.
+- **Tasks metric is current-board, range-invariant.** `xai_task_cols` (T-10) persists `TaskCard.done?: boolean` but carries NO completion timestamp. The "Tasks completed" KPI and BarChart therefore show the CURRENT count of done cards across all board buckets — unchanged regardless of which range tab (本周/本月/全部) is active. A user-visible "current board" / "当前看板" honesty marker appears on both surfaces (B1 / Path 1). See §SRA for details. The pomodoro-session proxy has been retired.
 - **Range selection is not persisted.** A future row may add `xai_pref_stats_range` and back the component state with `usePref`.
 - **Heatmap thresholds are subjective.** Frozen at `0 / 1–15 / 16–45 / 46–90 / 91+` minutes for v1.
 
@@ -47,7 +47,7 @@ export type KpiCellId = "tasks" | "focus" | "habits" | "daily-avg";
  * or "—" when the prior window is empty. Never null.
  */
 export interface StatisticsKpis {
-  /** Total focus sessions (proxy for tasks completed). */
+  /** Real count of `done === true` cards in `xai_task_cols` (current board, range-invariant — no completion timestamp on TaskCard; see §SRA). */
   tasksTotal: number;
   /** Total focus minutes summed across the active range. */
   focusMinutesTotal: number;
