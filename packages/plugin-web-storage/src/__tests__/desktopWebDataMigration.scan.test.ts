@@ -12,7 +12,7 @@ beforeEach(() => {
 });
 
 describe("desktop web data import eligibility scan", () => {
-  it("keeps scan read-only and reports skipped browser-owned indexeddb stores", () => {
+  it("keeps scan read-only and reports skipped browser-owned indexeddb stores", async () => {
     localStorage.setItem(
       "xai_task_cols",
       JSON.stringify([
@@ -27,7 +27,7 @@ describe("desktop web data import eligibility scan", () => {
     const before = localStorage.getItem("xai_task_cols");
 
     setDesktopWebImportRuntimeEnabled(true);
-    const report = scanDesktopWebImportEligibility({
+    const report = await scanDesktopWebImportEligibility({
       boundaryKey: "user-1",
       trigger: "first-run-scan",
     });
@@ -50,11 +50,11 @@ describe("desktop web data import eligibility scan", () => {
     ]);
   });
 
-  it("marks unreadable json surfaces as corrupt", () => {
+  it("marks unreadable json surfaces as corrupt", async () => {
     localStorage.setItem("xai_task_cols", "{bad json");
 
     setDesktopWebImportRuntimeEnabled(true);
-    const report = scanDesktopWebImportEligibility();
+    const report = await scanDesktopWebImportEligibility();
     const tasks = report.results.find((entry) => entry.surface === "tasks");
 
     expect(tasks?.status).toBe("corrupt");
@@ -62,13 +62,13 @@ describe("desktop web data import eligibility scan", () => {
     expect(report.counts.corrupt).toBeGreaterThan(0);
   });
 
-  it("stays inactive when desktop runtime is not enabled", () => {
+  it("stays inactive when desktop runtime is not enabled", async () => {
     localStorage.setItem(
       "xai_task_cols",
       JSON.stringify([{ id: "overdue", tasks: [{ id: "t1" }] }]),
     );
 
-    const report = scanDesktopWebImportEligibility();
+    const report = await scanDesktopWebImportEligibility();
     expect(report.results.every((entry) => entry.status === "skipped")).toBe(
       true,
     );

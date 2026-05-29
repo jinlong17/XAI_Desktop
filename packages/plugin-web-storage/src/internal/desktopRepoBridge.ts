@@ -17,20 +17,20 @@ import {
 
 type BridgedValue = unknown;
 
-const DESKTOP_REPO_NAMESPACE = "xai-web-desktop-local-first-bridge";
+export const DESKTOP_REPO_NAMESPACE = "xai-web-desktop-local-first-bridge";
 
-const TASKS_STORAGE_KEY = "xai_task_cols" as const;
-const HABITS_STORAGE_KEY = "xai_habits_state" as const;
-const BOARDS_STORAGE_KEY = "xai_boards_v2" as const;
+export const TASKS_STORAGE_KEY = "xai_task_cols" as const;
+export const HABITS_STORAGE_KEY = "xai_habits_state" as const;
+export const BOARDS_STORAGE_KEY = "xai_boards_v2" as const;
 
-const BOARD_AUX_KEYS = new Set([
+export const BOARD_AUX_KEYS = new Set([
   "xai_active_board",
   "xai_board_panels",
   "xai_board_inbox",
   "xai_board_view_by_id",
 ]);
 
-const PET_KEYS = new Set(["xai_pet_id", "xai_pet_pos"]);
+export const PET_KEYS = new Set(["xai_pet_id", "xai_pet_pos"]);
 
 const TASK_BUCKET_IDS = ["overdue", "next7", "later", "nodate"] as const;
 
@@ -39,7 +39,7 @@ const HABIT_ENTITY_PREFIX = "habit:";
 const BOARD_ENTITY_PREFIX = "board:";
 const CARD_ENTITY_PREFIX = "card:";
 
-type BridgedSurface =
+export type BridgedSurface =
   | "tasks"
   | "habits"
   | "pomodoro"
@@ -337,7 +337,7 @@ function isBridgedKey(key: string): boolean {
   );
 }
 
-function isSingleRecordBridgedKey(key: string): boolean {
+export function isSingleRecordBridgedKey(key: string): boolean {
   return (
     key === "xai_pomodoro_sessions" ||
     BOARD_AUX_KEYS.has(key) ||
@@ -346,14 +346,16 @@ function isSingleRecordBridgedKey(key: string): boolean {
   );
 }
 
-function entityTypeForSingleRecordKey(key: string): BridgeRecord["entityType"] {
+export function entityTypeForSingleRecordKey(
+  key: string,
+): BridgeRecord["entityType"] {
   if (key === "xai_pomodoro_sessions") return "productivity.pomodoro_sessions";
   if (BOARD_AUX_KEYS.has(key)) return "project.workspace_state";
   if (PET_KEYS.has(key)) return "pet.state";
   return "settings.pref";
 }
 
-function surfaceForKey(key: string): BridgedSurface {
+export function surfaceForKey(key: string): BridgedSurface {
   if (key === TASKS_STORAGE_KEY) return "tasks";
   if (key === HABITS_STORAGE_KEY) return "habits";
   if (key === "xai_pomodoro_sessions") return "pomodoro";
@@ -362,7 +364,7 @@ function surfaceForKey(key: string): BridgedSurface {
   return "settings";
 }
 
-function toBridgeRecord(
+export function toBridgeRecord(
   key: string,
   value: unknown,
   base: {
@@ -472,7 +474,7 @@ async function replaceEntityFamily(
   }
 }
 
-function buildTodoEntities(value: unknown): TodoEntity[] {
+export function buildTodoEntities(value: unknown): TodoEntity[] {
   const nowIso = new Date().toISOString();
   const columns = parseTaskColumns(value);
   const records: TodoEntity[] = [];
@@ -546,7 +548,7 @@ function buildTodosFromCards(input: {
   return rows;
 }
 
-function buildHabitEntities(value: unknown): HabitEntity[] {
+export function buildHabitEntities(value: unknown): HabitEntity[] {
   const nowIso = new Date().toISOString();
   const stateBlob = asObject(value);
   const habits = Array.isArray(stateBlob?.habits) ? stateBlob.habits : [];
@@ -596,7 +598,7 @@ function buildHabitEntities(value: unknown): HabitEntity[] {
   return rows;
 }
 
-function buildBoardEntities(value: unknown): ProjectEntity[] {
+export function buildBoardEntities(value: unknown): ProjectEntity[] {
   const nowIso = new Date().toISOString();
   const boards = parseBoardArray(value);
   return boards.map((board) => {
@@ -621,7 +623,7 @@ function buildBoardEntities(value: unknown): ProjectEntity[] {
   });
 }
 
-function buildCardEntities(value: unknown): CardEntity[] {
+export function buildCardEntities(value: unknown): CardEntity[] {
   const nowIso = new Date().toISOString();
   const boards = parseBoardArray(value);
   const cards: CardEntity[] = [];
