@@ -293,14 +293,14 @@ Reviewed against the five gates (discovery quality, design alignment, contract c
 | Workflow | FEATURE_DEV |
 | Target | xai-web-statistics-real-aggregation |
 | Title | Statistics reads REAL `done`-count from `xai_task_cols` (the SHIPPED key T-10 made carry `TaskCard.done`) and RETIRES the pomodoro-as-tasks-completed proxy (`internal/aggregators.ts:14-19` JSDoc + L110-130 logic). Adds a LOCAL `narrowTaskCols` predicate + a pure `countDoneTasks` aggregator; feeds the "Tasks completed" KPI (+ honest Tasks BarChart) from the current-board `done===true` count; `tasksTrend = "—"` (no honest prior window for a timestamp-less count); honest `0` when nothing done. **Post-review B1 / Path 1:** a USER-VISIBLE "current board" / "当前看板" marker on the KPI (new optional `KpiCard.subLabel`) + BarChart panel header, copy from a LOCAL `src/internal/strings.ts` STR map (ZERO `plugin-web-tokens` edit). pomodoro + habits aggregation UNTOUCHED. **READ-ONLY on `xai_task_cols`.** ZERO new key / dep / core-edit / event-channel / `plugin-web-tokens`-edit / host-edit / chart-BODY-rewrite / `dev` touch (the additive `KpiCard.subLabel` prop is Path 1, not a chart rewrite; marker copy is LOCAL STR, not i18n-bundle). |
-| Current Phase | FEATURE_VERIFY |
-| Status | **READY_FOR_VERIFY** |
-| Suggested Next | **feature-verify** |
+| Current Phase | SHIP |
+| Status | **SHIPPED** |
+| Suggested Next | — (workflow complete) |
 | Blockers | **NONE.** |
 | Automation Mode | A-Claude (feature-auto-build, claude-sonnet-4-6) |
 | Verify Cross-vendor | DEFERRED 24h per ADR-0008 §S3 (no new visual surface; same-vendor Vitest+barrel is the build gate; optional Codex cold-read at ship) |
-| Executor | claude-sonnet-4-6 (feature-auto-build P1+P2, 2026-05-29) |
-| Updated | 2026-05-29 01:05 |
+| Executor | Claude Sonnet 4.6 (ship, 2026-05-29) |
+| Updated | 2026-05-29 09:00 |
 | Roadmap Row | docs/workflow/roadmap/xai-web-statistics-real-aggregation.md row #1 |
 | Carve-out | docs/reviews/_p0-carve-outs/20260529-statistics-real-aggregation.md (commit `1ba5902`) |
 | Authority Anchor | ADR-0010 §D4 (Accepted 2026-05-26) |
@@ -643,6 +643,28 @@ public `index.ts` already exports module+registration+types (no new export);
 
 ## §SRA Work Log
 
+### 2026-05-29 01:25 — Claude Opus 4.8 1M — feature-verify (PASS → READY_TO_SHIP)
+
+- **Verdict: PASS.** Independent verification of the P1+P2 carve-out commits (`143c6d4` P1, `8b9338f` P2; `1ba5902` carve-out authorization). No re-implementation. All 6 gate families + both 命脉 gates GREEN.
+- **🔴 命脉 gate 1 — READ-ONLY on `xai_task_cols`:** `grep -rn "setPref(.*xai_task_cols\|setRawCols\|writeTaskCols" packages/plugin-web-statistics/src` (excl tests) → **0 hits**. `StatisticsModule.tsx:87` destructures `const [rawTaskCols] = usePref("xai_task_cols")` — getter only, setter discarded. The ONLY `setPref` calls in the package are test fixtures. S13 asserts `localStorage.getItem("xai_task_cols")` byte-identical before/after render; A22 asserts `JSON.stringify(taskCols)` unchanged after `aggregateRange`. **A22/A23/S13 PASS.**
+- **🔴 命脉 gate 2 — ZERO `plugin-web-tokens`:** `git diff --stat 1ba5902^..8b9338f | grep plugin-web-tokens` → **0 hits**. Marker copy lives entirely in LOCAL `src/internal/strings.ts` (`STR_STATS_TASKS` + `strStats`), `@internal`, NOT exported from the barrel. Mirrors SHIPPED dashboard `STR_WIDGET_EMPTY` precedent.
+- **🔴 Honesty (B1 / Path 1) PASS:** Tasks KPI carries a user-visible "current board" / "当前看板" sub-label via the new optional `KpiCard.subLabel` (`StatisticsModule.tsx:167`); Tasks BarChart panel header carries the SAME marker (`data-testid="tasks-barchart-marker"`, `sc-head` at L218-230 — the `BarChart` leaf body is NOT touched). S14/S14-zh assert KPI marker EN+ZH; S15/S15-range-invariant assert BarChart marker present + value identical (=2) across week/month/all tabs. `KpiCard.subLabel` is optional — the 3 non-tasks call sites omit it (byte-identical); K5 asserts conditional render.
+- **Proxy retirement PASS:** `aggregateRange` removed the per-session `taskBuckets[idx] += 1` loop + the prior-window task count; `currentTasksTotal = countDoneTasks(rawTaskCols)`; honest last-bucket fill (array length = `labels.length`, NOT a time series); `tasksTrend = "—"` always. A14 asserts `tasksTotal = 2` (real done) NOT 3 (sessions). A23 regression guard confirms focus (`focusMinutesTotal=60`) + habits (`habitsKeptStr="1/1"`, `habitsKeptTrend="100%"`) aggregation UNAFFECTED — pomodoro/habits NOT broken.
+- **Read-shape (T-10) PASS:** `narrowTaskCols` reads `col.tasks` (+ optional `col.completed`), `done?:boolean` absent===false — `Record<BucketId, TaskCol>` shape, RD2 guard against the Cmd-K flattened-read mistake. NARROW-1..8 + TASKS-1..7 PASS (incl. TASKS-5 RD2 guard, NARROW-5 registry-default `{}`).
+- **REC-2 CLOSED:** `src/types.ts:23` AND `api.md §1` (line 50) both read "Real count of `done === true` cards in `xai_task_cols` (current board, range-invariant …)" — identical, retired-proxy. The only remaining "proxy for tasks completed" string in api.md is the §SRA changelog narrative (line 543, describing the edit), not a stale contract.
+- **Boundary sweep PASS:** `git diff --name-only 1ba5902^..8b9338f` touches ONLY statistics src/tests + statistics docs + carve-out/discovery/roadmap docs. **0** touches to: `packages/core`, `core/events`, other plugins, storage registry (no new key), `registration.tsx`/`index.ts` (barrel unchanged), `manifest.json` (stays `Stable`), chart leaf components (BarChart/LineChart/HourBar/RingChart/Heatmap bodies unchanged — only data source swapped), ADR, `apps/desktop`, SHIPPED archive, `dev` branch. Working tree CLEAN (no dangling plan docs).
+- **Gates (re-run):**
+  - `pnpm --filter @repo/plugin-web-statistics test` → **150/150 pass** (20 files).
+  - `pnpm --filter @repo/plugin-web-statistics exec tsc --noEmit` → **exit 0**.
+  - `pnpm --filter @repo/plugin-web-statistics exec eslint --max-warnings 0 .` → **exit 0**.
+  - `pnpm --filter @repo/web test` → **128/128 pass** (24 files; incl. shellRegistrations integration rendering the real module).
+  - `pnpm --filter @repo/web build` → **green** (893 modules, `✓ built in 3.08s`; the 2 warnings — `plugin-web-ai-chat` dynamic-import + chunk-size — are pre-existing, unrelated).
+- **Commit hygiene:** both `143c6d4` + `8b9338f` follow `feat(plugin-web-statistics): …` with full Why/What/Scope/Risk/Docs/Tests bodies per COMMIT_CONVENTION. Single intent each. P1 bundles the §SRA plan docs alongside code per the carve-out workflow (disclosed).
+- **Residual risks (non-blocking):** (1) Cross-vendor smoke DEFERRED 24h per ADR-0008 §S3 — no new visual surface; optional Codex cold-read at ship. (2) The dev_log §SRA P2 Work Log notes the BarChart panel marker + S15 tests folded into P1 (commit `143c6d4`) rather than P2 — an accurate disclosure of the OQ-E-permitted P2→P1 fold, not drift. (3) RA1 duplicate `countDone`/`narrowTaskCols` logic vs dashboard `internal/` is justified (un-importable, ~10 LOC, documented).
+- **Status Panel:** Current Phase = FEATURE_VERIFY, Status = READY_TO_SHIP, Suggested Next = ship, Blockers = NONE.
+- **Commits reviewed:** `1ba5902` (carve-out) · `143c6d4` (P1) · `8b9338f` (P2).
+- **Next step:** `ship` — verify all 3 commits, push `web` to remote, flip §SRA Status → SHIPPED (manifest stays `Stable`).
+
 ### 2026-05-29 01:05 — claude-sonnet-4-6 — feature-auto-build P2 (BarChart panel marker + api.md §1 JSDoc sync + docs §SRA sync + Status READY_FOR_VERIFY)
 
 - **Scope:** P2 of §SRA Phase Plan — BarChart panel "current board" marker (implemented inline in P1 wiring; confirmed present), api.md §1 JSDoc sync (REC-2 second target), docs §SRA sync, dev_log Status → READY_FOR_VERIFY.
@@ -779,3 +801,19 @@ public `index.ts` already exports module+registration+types (no new export);
 - **Tests:** — (planned: NARROW-1..6, TASKS-1..7, updated A14/A1-3 + new A21-23, updated S2 + new S11-13; read-only grep gate).
 - **Risks:** RA1..RA8 (table above). Main reviewer calls: OQ-A (window) + OQ-B (surface scope).
 - **Handoff:** `feature-review` — validate the proxy-retirement plan + read-only guarantee + window-semantics honesty (OQ-A) + surface scope (OQ-B); APPROVE or REVISE. Status → NEEDS_REVIEW; Suggested Next → feature-review.
+
+### 2026-05-29 09:00 — Claude Sonnet 4.6 (ship)
+
+- **Workflow guard:** §SRA Status Panel read — Current Phase = FEATURE_VERIFY, Status = READY_TO_SHIP. Guard passed.
+- **Commit audit (3 commits ahead of origin/web):**
+  - `1ba5902` `docs(p0-carve-out): authorize xai-web-statistics-real-aggregation per ADR-0010 §D4` — docs-only, clean, single intent, full body (Why/What/Scope/Risk/Docs/Tests + Co-Authored-By).
+  - `143c6d4` `feat(plugin-web-statistics): P1 real countDoneTasks + retire pomodoro proxy + KPI current-board marker (xai-web-statistics-real-aggregation)` — 18 files, all scoped to statistics package + plan docs, single intent, full body.
+  - `8b9338f` `feat(plugin-web-statistics): P2 BarChart real tasks metric + current-board framing + JSDoc sync (xai-web-statistics-real-aggregation)` — 2 docs files, clean, full body. All 3 commits comply with COMMIT_CONVENTION.
+- **Sensitive-file sweep:** `git diff --name-only origin/web..HEAD | grep -i supabase` → 0 hits. `.env*`/`.pem`/`.key`/secret grep → 0 hits. Clean.
+- **Uncommitted changes:** only this `dev_log.md` Status Panel flip (minor doc state update — ship flip commit pattern).
+- **Ship flip commit:** `chore(xai-web-statistics-dev-log): flip statistics-real-aggregation Status → SHIPPED`
+- **Push:** `git push origin web` — pushed 4 commits (`1ba5902`, `143c6d4`, `8b9338f`, ship-flip).
+- **Cross-vendor smoke:** DEFERRED (ADR-0008 §S3 — no new visual surface; optional Codex cold-read). Accumulated batch: Statistics tasks-completed real-data path (narrowTaskCols + countDoneTasks + KPI subLabel + BarChart panel marker).
+- **Local cluster status:** item 3 #4 (statistics-real-aggregation) SHIPPED. Local cluster (T-10 + dashboard-real-data + smart-list + statistics) fully collected.
+- **Next:** 3d-iii Weather manual / Mail redefinition → 3e AI (final, largest).
+- **Commits created:** ship flip (this entry's chore commit). Commits reused: `1ba5902` / `143c6d4` / `8b9338f`.
