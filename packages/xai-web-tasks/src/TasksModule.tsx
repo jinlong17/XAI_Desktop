@@ -9,12 +9,13 @@
  */
 
 import React, { useMemo, useState, useCallback } from "react";
-import type { TasksModuleProps, TaskCol, BucketId, NewTaskDraft } from "./types.js";
+import type { TasksModuleProps, TaskCol, BucketId, NewTaskDraft, SmartListId } from "./types.js";
 import { useI18n } from "@repo/plugin-web-tokens";
 import { usePref } from "@repo/plugin-web-storage";
 import { SEED_TASK_COLS } from "./internal/seed/tasksMock.js";
 import { isTaskColsArray } from "./internal/validate.js";
 import { moveCard, toggleComplete, addCard } from "./internal/tasksReducer.js";
+import { filterCardsByList } from "./internal/filterCardsByList.js";
 import { TasksSidebar } from "./TasksSidebar.js";
 import { TaskColumn } from "./TaskColumn.js";
 import { TaskComposer } from "./TaskComposer.js";
@@ -55,6 +56,20 @@ export function TasksModule({ lang }: TasksModuleProps) {
     const next = toggleComplete(taskCols, taskId);
     setRawCols(next as unknown as Parameters<typeof setRawCols>[0]);
   }, [taskCols, setRawCols]);
+
+  // ---- Smart-list filter state (FP1 — lifted from TasksSidebar) ----
+  // Session-only (Q3): resets to "all" on reload — no registry key (design §F.1 #6).
+  const [activeList, setActiveList] = useState<SmartListId>("all");
+
+  // Filtered view — PURE read-only projection for rendering only.
+  // Mutation handlers (handleToggle, handleDrop, handleComposerSave) operate on the
+  // UNFILTERED taskCols so drag/create/complete always see the full board (design §F.1 #2).
+  const filteredCols = useMemo<TaskCol[]>(
+    () => filterCardsByList(taskCols, activeList),
+    [taskCols, activeList],
+  );
+
+  const filterActive = activeList !== "all" && activeList !== "summary";
 
   // ---- DnD transient state ----
   const [dragging, setDragging] = useState<{ taskId: string; fromColId: BucketId } | null>(null);
@@ -127,7 +142,11 @@ export function TasksModule({ lang }: TasksModuleProps) {
 
   return (
     <div className="module module-tasks">
-      <TasksSidebar lang={lang} />
+      <TasksSidebar
+        lang={lang}
+        activeList={activeList}
+        onSelectList={setActiveList}
+      />
       <main className="tasks-main">
         <header className="module-head">
           <div className="row">
@@ -159,7 +178,7 @@ export function TasksModule({ lang }: TasksModuleProps) {
           </div>
         </header>
         <div className="task-columns">
-          {taskCols.map((col) => (
+          {filteredCols.map((col) => (
             <TaskColumn
               key={col.id}
               col={col}
@@ -167,6 +186,7 @@ export function TasksModule({ lang }: TasksModuleProps) {
               draggingTaskId={dragging?.taskId ?? null}
               isDropTarget={overColId === col.id}
               completedIds={completedIds}
+              filterActive={filterActive}
               onToggle={handleToggle}
               onDragStart={handleDragStart}
               onDragEnd={handleDragEnd}

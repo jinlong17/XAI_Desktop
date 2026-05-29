@@ -89,6 +89,13 @@ export interface TasksModuleProps {
 }
 
 // ---------------------------------------------------------------------------
+// SmartListId — closed set of sidebar smart-list ids (smartlist-filter, design §F.1)
+// Kept internal-to-module in v1 per Rec-F3 (not promoted to barrel unless a consumer emerges).
+// ---------------------------------------------------------------------------
+
+export type SmartListId = "all" | "today" | "tomorrow" | "next7" | "inbox" | "summary";
+
+// ---------------------------------------------------------------------------
 // NewTaskDraft — card-create extension (api.md §E.1)
 // ---------------------------------------------------------------------------
 
