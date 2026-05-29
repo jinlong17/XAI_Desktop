@@ -45,6 +45,11 @@ export {
   getDesktopLocalFirstReconnectSyncPreflight,
   runDesktopLocalFirstCalendarProviderReconnect,
   runDesktopLocalFirstWebDataImport,
+  createDesktopLocalFirstBackupArtifact,
+  verifyDesktopLocalFirstBackupArtifact,
+  importDesktopLocalFirstBackupArtifact,
+  getDesktopLocalFirstBackupReport,
+  getDesktopLocalFirstBackupReportEventName,
   runDesktopLocalFirstReconnectSync,
   getDesktopLocalFirstWebDataImportReport,
   getDesktopLocalFirstWebDataImportReportEventName,
@@ -61,6 +66,7 @@ export type {
   DesktopCalendarProviderReconnectResult,
 } from "./internal/storage.js";
 export type { DesktopWebImportReport } from "./internal/desktopWebDataMigration.js";
+export type { DesktopBackupReport } from "./internal/desktopBackup.js";
 export type {
   CalendarProviderId,
   CalendarProviderStateEntity,

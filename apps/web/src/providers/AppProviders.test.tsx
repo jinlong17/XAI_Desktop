@@ -16,6 +16,10 @@ const storageMock = vi.hoisted(() => {
     mountBridge: vi.fn(),
     runImport: vi.fn(async () => ({ status: "ok" })),
     getLastReport: vi.fn(() => null),
+    createBackup: vi.fn(async () => ({ status: "verified_full" })),
+    verifyBackup: vi.fn(async () => ({ status: "verified_full" })),
+    importBackup: vi.fn(async () => ({ status: "restored" })),
+    getBackupReport: vi.fn(() => null),
     reconnectPreflight: vi.fn(async () => "queue_empty"),
     runReconnect: vi.fn(async () => ({ preflight: "queue_empty", attempted: 0 })),
     runCalendarReconnect: vi.fn(async () => ({
@@ -57,6 +61,10 @@ vi.mock("@repo/plugin-web-storage", async (importOriginal) => {
     mountDesktopLocalFirstRepositoryBridge: storageMock.mountBridge,
     runDesktopLocalFirstWebDataImport: storageMock.runImport,
     getDesktopLocalFirstWebDataImportReport: storageMock.getLastReport,
+    createDesktopLocalFirstBackupArtifact: storageMock.createBackup,
+    verifyDesktopLocalFirstBackupArtifact: storageMock.verifyBackup,
+    importDesktopLocalFirstBackupArtifact: storageMock.importBackup,
+    getDesktopLocalFirstBackupReport: storageMock.getBackupReport,
     getDesktopLocalFirstReconnectSyncPreflight: storageMock.reconnectPreflight,
     runDesktopLocalFirstReconnectSync: storageMock.runReconnect,
     runDesktopLocalFirstCalendarProviderReconnect:
@@ -81,11 +89,16 @@ describe("AppProviders desktop auth contract", () => {
     storageMock.mountBridge.mockClear();
     storageMock.runImport.mockClear();
     storageMock.getLastReport.mockClear();
+    storageMock.createBackup.mockClear();
+    storageMock.verifyBackup.mockClear();
+    storageMock.importBackup.mockClear();
+    storageMock.getBackupReport.mockClear();
     storageMock.reconnectPreflight.mockClear();
     storageMock.runReconnect.mockClear();
     storageMock.runCalendarReconnect.mockClear();
     delete (globalThis as { __XAI_DESKTOP_WEB_IMPORT__?: unknown }).__XAI_DESKTOP_WEB_IMPORT__;
     delete (globalThis as { __XAI_DESKTOP_RECONNECT_SYNC__?: unknown }).__XAI_DESKTOP_RECONNECT_SYNC__;
+    delete (globalThis as { __XAI_DESKTOP_BACKUP__?: unknown }).__XAI_DESKTOP_BACKUP__;
     setEnv("VITE_WEB_AUTH_MODE", undefined);
     setEnv("VITE_WEB_RUNTIME_PROFILE", undefined);
     setEnv("VITE_SUPABASE_URL", undefined);
@@ -106,6 +119,7 @@ describe("AppProviders desktop auth contract", () => {
     expect(storageMock.mountBridge).toHaveBeenCalledWith(false);
     expect((globalThis as { __XAI_DESKTOP_WEB_IMPORT__?: unknown }).__XAI_DESKTOP_WEB_IMPORT__).toBeUndefined();
     expect((globalThis as { __XAI_DESKTOP_RECONNECT_SYNC__?: unknown }).__XAI_DESKTOP_RECONNECT_SYNC__).toBeUndefined();
+    expect((globalThis as { __XAI_DESKTOP_BACKUP__?: unknown }).__XAI_DESKTOP_BACKUP__).toBeUndefined();
     expect(authMock.providerProps).toHaveLength(1);
     expect(authMock.providerProps[0]?.config).toBeNull();
     expect(authMock.providerProps[0]?.client).toBeTruthy();
@@ -143,6 +157,12 @@ describe("AppProviders desktop auth contract", () => {
         runOnce: unknown;
         reconcileCalendarProviders: unknown;
       };
+      __XAI_DESKTOP_BACKUP__?: {
+        create: unknown;
+        verify: unknown;
+        importBundle: unknown;
+        getLastReport: unknown;
+      };
     };
     expect(runtime.__XAI_DESKTOP_WEB_IMPORT__).toBeTruthy();
     expect(runtime.__XAI_DESKTOP_WEB_IMPORT__?.run).toBe(storageMock.runImport);
@@ -153,5 +173,10 @@ describe("AppProviders desktop auth contract", () => {
     expect(runtime.__XAI_DESKTOP_RECONNECT_SYNC__?.reconcileCalendarProviders).toBe(
       storageMock.runCalendarReconnect,
     );
+    expect(runtime.__XAI_DESKTOP_BACKUP__).toBeTruthy();
+    expect(runtime.__XAI_DESKTOP_BACKUP__?.create).toBe(storageMock.createBackup);
+    expect(runtime.__XAI_DESKTOP_BACKUP__?.verify).toBe(storageMock.verifyBackup);
+    expect(runtime.__XAI_DESKTOP_BACKUP__?.importBundle).toBe(storageMock.importBackup);
+    expect(runtime.__XAI_DESKTOP_BACKUP__?.getLastReport).toBe(storageMock.getBackupReport);
   });
 });

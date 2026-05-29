@@ -39,6 +39,14 @@ import {
   setDesktopWebImportRuntimeEnabled,
   type DesktopWebImportReport,
 } from "./desktopWebDataMigration.js";
+import {
+  createDesktopBackupArtifact,
+  getLastDesktopBackupReport,
+  importDesktopBackupArtifact,
+  setDesktopBackupRuntimeEnabled,
+  verifyDesktopBackupArtifact,
+  type DesktopBackupReport,
+} from "./desktopBackup.js";
 import type {
   CalendarProviderId,
   CalendarProviderStateEntity,
@@ -551,6 +559,7 @@ function resolveCalendarReconnectTransport():
 }
 
 const DESKTOP_WEB_IMPORT_REPORT_EVENT = "xai:web:desktop-import-report";
+const DESKTOP_BACKUP_REPORT_EVENT = "xai:web:desktop-backup-report";
 
 function publishDesktopWebImportReport(report: DesktopWebImportReport): void {
   if (typeof window === "undefined") {
@@ -563,9 +572,21 @@ function publishDesktopWebImportReport(report: DesktopWebImportReport): void {
   );
 }
 
+function publishDesktopBackupReport(report: DesktopBackupReport): void {
+  if (typeof window === "undefined") {
+    return;
+  }
+  window.dispatchEvent(
+    new CustomEvent(DESKTOP_BACKUP_REPORT_EVENT, {
+      detail: report,
+    }),
+  );
+}
+
 export function mountDesktopLocalFirstRepositoryBridge(enabled: boolean): void {
   setDesktopWebImportRuntimeEnabled(enabled);
   setDesktopReconnectSyncRuntimeEnabled(enabled);
+  setDesktopBackupRuntimeEnabled(enabled);
   if (!enabled) {
     unmountDesktopRepoBridge();
     return;
@@ -606,6 +627,39 @@ export function getDesktopLocalFirstWebDataImportReport():
 
 export function getDesktopLocalFirstWebDataImportReportEventName(): string {
   return DESKTOP_WEB_IMPORT_REPORT_EVENT;
+}
+
+export async function createDesktopLocalFirstBackupArtifact(input?: {
+  destinationPath?: string;
+}): Promise<DesktopBackupReport> {
+  const report = await createDesktopBackupArtifact(input);
+  publishDesktopBackupReport(report);
+  return report;
+}
+
+export async function verifyDesktopLocalFirstBackupArtifact(input: {
+  path: string;
+}): Promise<DesktopBackupReport> {
+  const report = await verifyDesktopBackupArtifact(input);
+  publishDesktopBackupReport(report);
+  return report;
+}
+
+export async function importDesktopLocalFirstBackupArtifact(input: {
+  path: string;
+  apply?: boolean;
+}): Promise<DesktopBackupReport> {
+  const report = await importDesktopBackupArtifact(input);
+  publishDesktopBackupReport(report);
+  return report;
+}
+
+export function getDesktopLocalFirstBackupReport(): DesktopBackupReport | null {
+  return getLastDesktopBackupReport();
+}
+
+export function getDesktopLocalFirstBackupReportEventName(): string {
+  return DESKTOP_BACKUP_REPORT_EVENT;
 }
 
 export function getDesktopLocalFirstReconnectSyncPreflight():

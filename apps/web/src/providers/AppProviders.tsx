@@ -15,11 +15,15 @@ import { DesktopStatusbarQuickActionsBridge } from "@repo/desktop-statusbar-quic
 import { DesktopGlobalHotkeyQuickOpenBridge } from "@repo/desktop-global-hotkey-quick-open/web";
 import { DesktopAutoUpdateReleaseChannelBridge } from "@repo/desktop-auto-update-release-channel/web";
 import {
+  createDesktopLocalFirstBackupArtifact,
+  getDesktopLocalFirstBackupReport,
   getDesktopLocalFirstReconnectSyncPreflight,
   runDesktopLocalFirstCalendarProviderReconnect,
   getDesktopLocalFirstWebDataImportReport,
+  importDesktopLocalFirstBackupArtifact,
   mountDesktopLocalFirstRepositoryBridge,
   runDesktopLocalFirstReconnectSync,
+  verifyDesktopLocalFirstBackupArtifact,
   runDesktopLocalFirstWebDataImport,
 } from "@repo/plugin-web-storage";
 
@@ -320,11 +324,18 @@ export function AppProviders({ children }: PropsWithChildren) {
         runOnce: typeof runDesktopLocalFirstReconnectSync;
         reconcileCalendarProviders: typeof runDesktopLocalFirstCalendarProviderReconnect;
       };
+      __XAI_DESKTOP_BACKUP__?: {
+        create: typeof createDesktopLocalFirstBackupArtifact;
+        verify: typeof verifyDesktopLocalFirstBackupArtifact;
+        importBundle: typeof importDesktopLocalFirstBackupArtifact;
+        getLastReport: typeof getDesktopLocalFirstBackupReport;
+      };
     };
 
     if (!isDesktopOfflineRuntime) {
       delete runtime.__XAI_DESKTOP_WEB_IMPORT__;
       delete runtime.__XAI_DESKTOP_RECONNECT_SYNC__;
+      delete runtime.__XAI_DESKTOP_BACKUP__;
       return;
     }
 
@@ -337,10 +348,17 @@ export function AppProviders({ children }: PropsWithChildren) {
       runOnce: runDesktopLocalFirstReconnectSync,
       reconcileCalendarProviders: runDesktopLocalFirstCalendarProviderReconnect,
     };
+    runtime.__XAI_DESKTOP_BACKUP__ = {
+      create: createDesktopLocalFirstBackupArtifact,
+      verify: verifyDesktopLocalFirstBackupArtifact,
+      importBundle: importDesktopLocalFirstBackupArtifact,
+      getLastReport: getDesktopLocalFirstBackupReport,
+    };
 
     return () => {
       delete runtime.__XAI_DESKTOP_WEB_IMPORT__;
       delete runtime.__XAI_DESKTOP_RECONNECT_SYNC__;
+      delete runtime.__XAI_DESKTOP_BACKUP__;
     };
   }, [isDesktopOfflineRuntime]);
 
