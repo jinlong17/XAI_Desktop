@@ -235,6 +235,38 @@ this pattern — amend ADR frontmatter, extend `_headers`, update §S6 snippet, 
 
 Operator runbook for `VITE_STRIPE_PAYMENT_LINK_URL` env var rotation: `apps/web/deploy/README.md`.
 
+**Amendment 2026-05-29 — `connect-src` Gemini (openai-compatible) extension (carve-out `xai-web-gemini-provider-enablement`):**
+
+The SHIPPED AI tool layer supports an `openai-compatible` provider. Gemini is
+reachable through that path via its OpenAI-compatible endpoint
+(`https://generativelanguage.googleapis.com/v1beta/openai/`); the adapter
+issues `fetch`/streaming requests (connect-src) to that host. The host is added
+to `connect-src` so production (where Cloudflare Pages enforces `_headers`)
+does not block Gemini requests. This is NOT a new provider kind — Gemini stays
+under the generic `openai-compatible` umbrella (base URL + model string are
+user-configured in Settings → AI).
+
+| Directive | Before | After |
+|---|---|---|
+| `connect-src` | `'self' https://api.anthropic.com https://tile.openstreetmap.org https://api.notion.com https://oauth2.googleapis.com https://api.linear.app` | `'self' https://api.anthropic.com https://tile.openstreetmap.org https://api.notion.com https://oauth2.googleapis.com https://api.linear.app https://generativelanguage.googleapis.com` |
+
+**Security posture (Gemini):**
+- `https://generativelanguage.googleapis.com` — Google's canonical Generative
+  Language API host (Gemini's OpenAI-compatible endpoint lives at
+  `/v1beta/openai/` on this host); no subdomain wildcard.
+- `script-src` / `frame-src` NOT widened — Gemini is a `connect-src` fetch
+  target only (no SDK bundle, no iframe).
+- No `*` wildcard. No `'unsafe-inline'`. No `'unsafe-eval'`.
+- The API key is stored client-side in the existing `secretStore` (same as the
+  Anthropic key); it is NEVER committed to source. (The operator's smoke key
+  was pasted in a session transcript → operator rotates it post-smoke.)
+- Source-text guard test: `apps/web/src/__tests__/csp.test.ts` CSP5 case asserts
+  `https://generativelanguage.googleapis.com` is present in `_headers`.
+
+Same **Extension rule** applies: future rows reaching additional
+openai-compatible provider hosts MUST follow this pattern — amend ADR
+frontmatter, extend `_headers`, update this §S6 snippet, write a csp.test.ts guard.
+
 **Runtime nonce caller audit (P2):** `requireRuntimeNonce` and
 `createNonceStyleElement` are defined in `apps/web/src/security/nonce.ts` and
 called only in test files (`nonce.test.ts`). No production caller in
