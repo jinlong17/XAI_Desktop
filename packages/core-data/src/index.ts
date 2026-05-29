@@ -219,3 +219,29 @@ export type {
   DesktopWebImportSurfaceStatus,
   DesktopWebImportTrigger,
 } from "./desktop-web-import";
+export {
+  DESKTOP_BACKUP_BRIDGE_NAMESPACE,
+  DESKTOP_BACKUP_BUNDLE_VERSION,
+  DESKTOP_BACKUP_EXCLUDED_ENTITY_TYPES,
+  DESKTOP_BACKUP_RESTORABLE_ENTITY_TYPES,
+  DESKTOP_BACKUP_SOURCE_APP,
+  applyDesktopBackupBundle,
+  countUnresolvedOutboxRows,
+  createDesktopBackupBundle,
+  createDesktopBackupFingerprint,
+  verifyDesktopBackupApply,
+  verifyDesktopBackupBundle,
+  verifyDesktopBackupBundleJson,
+} from "./desktop-backup";
+export type {
+  DesktopBackupApplyResult,
+  DesktopBackupBundle,
+  DesktopBackupBundleAudit,
+  DesktopBackupBundleManifest,
+  DesktopBackupExcludedEntityType,
+  DesktopBackupLiveVerifyResult,
+  DesktopBackupRestorableEntityType,
+  DesktopBackupRestoreStatus,
+  DesktopBackupVerifyResult,
+  DesktopBackupVerifyStatus,
+} from "./desktop-backup";
