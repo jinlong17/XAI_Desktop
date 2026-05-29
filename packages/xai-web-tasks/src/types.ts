@@ -52,6 +52,12 @@ export interface TaskCard {
   readonly dateLabel?: TaskTitleBundle;
   /** When true, renders the inbox-source icon in the meta row. */
   readonly inbox?: boolean;
+  /**
+   * When true, the card is marked as completed.
+   * Persisted inside xai_task_cols so completion survives page refresh (T-10 fix).
+   * Absent/undefined is treated as false by all consumers.
+   */
+  readonly done?: boolean;
 }
 
 // ---------------------------------------------------------------------------
