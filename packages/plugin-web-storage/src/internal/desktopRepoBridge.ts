@@ -205,6 +205,15 @@ export function readDesktopRepoError(key: string): DesktopBridgeError | null {
   return state.errors.get(key) ?? null;
 }
 
+export function readDesktopRepoBridgeRepo():
+  | Repo<RepoRecord | OutboxEntry>
+  | null {
+  if (state.status !== "active" || !state.repo) {
+    return null;
+  }
+  return state.repo as Repo<RepoRecord | OutboxEntry>;
+}
+
 export async function writeDesktopRepoValue(
   key: string,
   value: unknown,

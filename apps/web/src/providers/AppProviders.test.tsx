@@ -16,6 +16,8 @@ const storageMock = vi.hoisted(() => {
     mountBridge: vi.fn(),
     runImport: vi.fn(async () => ({ status: "ok" })),
     getLastReport: vi.fn(() => null),
+    reconnectPreflight: vi.fn(async () => "queue_empty"),
+    runReconnect: vi.fn(async () => ({ preflight: "queue_empty", attempted: 0 })),
   };
 });
 
@@ -48,6 +50,8 @@ vi.mock("@repo/plugin-web-storage", async (importOriginal) => {
     mountDesktopLocalFirstRepositoryBridge: storageMock.mountBridge,
     runDesktopLocalFirstWebDataImport: storageMock.runImport,
     getDesktopLocalFirstWebDataImportReport: storageMock.getLastReport,
+    getDesktopLocalFirstReconnectSyncPreflight: storageMock.reconnectPreflight,
+    runDesktopLocalFirstReconnectSync: storageMock.runReconnect,
   };
 });
 
@@ -68,7 +72,10 @@ describe("AppProviders desktop auth contract", () => {
     storageMock.mountBridge.mockClear();
     storageMock.runImport.mockClear();
     storageMock.getLastReport.mockClear();
+    storageMock.reconnectPreflight.mockClear();
+    storageMock.runReconnect.mockClear();
     delete (globalThis as { __XAI_DESKTOP_WEB_IMPORT__?: unknown }).__XAI_DESKTOP_WEB_IMPORT__;
+    delete (globalThis as { __XAI_DESKTOP_RECONNECT_SYNC__?: unknown }).__XAI_DESKTOP_RECONNECT_SYNC__;
     setEnv("VITE_WEB_AUTH_MODE", undefined);
     setEnv("VITE_WEB_RUNTIME_PROFILE", undefined);
     setEnv("VITE_SUPABASE_URL", undefined);
@@ -88,6 +95,7 @@ describe("AppProviders desktop auth contract", () => {
     expect(authMock.bridgeProps).toHaveLength(0);
     expect(storageMock.mountBridge).toHaveBeenCalledWith(false);
     expect((globalThis as { __XAI_DESKTOP_WEB_IMPORT__?: unknown }).__XAI_DESKTOP_WEB_IMPORT__).toBeUndefined();
+    expect((globalThis as { __XAI_DESKTOP_RECONNECT_SYNC__?: unknown }).__XAI_DESKTOP_RECONNECT_SYNC__).toBeUndefined();
     expect(authMock.providerProps).toHaveLength(1);
     expect(authMock.providerProps[0]?.config).toBeNull();
     expect(authMock.providerProps[0]?.client).toBeTruthy();
@@ -120,9 +128,16 @@ describe("AppProviders desktop auth contract", () => {
         run: unknown;
         getLastReport: unknown;
       };
+      __XAI_DESKTOP_RECONNECT_SYNC__?: {
+        preflight: unknown;
+        runOnce: unknown;
+      };
     };
     expect(runtime.__XAI_DESKTOP_WEB_IMPORT__).toBeTruthy();
     expect(runtime.__XAI_DESKTOP_WEB_IMPORT__?.run).toBe(storageMock.runImport);
     expect(runtime.__XAI_DESKTOP_WEB_IMPORT__?.getLastReport).toBe(storageMock.getLastReport);
+    expect(runtime.__XAI_DESKTOP_RECONNECT_SYNC__).toBeTruthy();
+    expect(runtime.__XAI_DESKTOP_RECONNECT_SYNC__?.preflight).toBe(storageMock.reconnectPreflight);
+    expect(runtime.__XAI_DESKTOP_RECONNECT_SYNC__?.runOnce).toBe(storageMock.runReconnect);
   });
 });

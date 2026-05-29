@@ -25,13 +25,22 @@ import {
   writeDesktopRepoValue,
 } from "./desktopRepoBridge.js";
 import {
+  preflightDesktopReconnectSync,
+  runDesktopReconnectSyncOnce,
+  setDesktopReconnectSyncRuntimeEnabled,
+} from "./desktopReconnectSync.js";
+import {
   getLastDesktopWebImportReport,
   runDesktopWebDataImport,
   scanDesktopWebImportEligibility,
   setDesktopWebImportRuntimeEnabled,
   type DesktopWebImportReport,
 } from "./desktopWebDataMigration.js";
-import type { DesktopWebImportSurface } from "@repo/core-data";
+import type {
+  DesktopWebImportSurface,
+  ReconnectSyncPreflightStatus,
+  ReconnectSyncReplayResult,
+} from "@repo/core-data";
 
 // ---------------------------------------------------------------------------
 // Same-tab pub/sub bus
@@ -457,6 +466,7 @@ function publishDesktopWebImportReport(report: DesktopWebImportReport): void {
 
 export function mountDesktopLocalFirstRepositoryBridge(enabled: boolean): void {
   setDesktopWebImportRuntimeEnabled(enabled);
+  setDesktopReconnectSyncRuntimeEnabled(enabled);
   if (!enabled) {
     unmountDesktopRepoBridge();
     return;
@@ -497,4 +507,15 @@ export function getDesktopLocalFirstWebDataImportReport():
 
 export function getDesktopLocalFirstWebDataImportReportEventName(): string {
   return DESKTOP_WEB_IMPORT_REPORT_EVENT;
+}
+
+export function getDesktopLocalFirstReconnectSyncPreflight():
+  Promise<ReconnectSyncPreflightStatus> {
+  return preflightDesktopReconnectSync();
+}
+
+export function runDesktopLocalFirstReconnectSync(input?: {
+  limit?: number;
+}): Promise<ReconnectSyncReplayResult> {
+  return runDesktopReconnectSyncOnce(input);
 }

@@ -15,8 +15,10 @@ import { DesktopStatusbarQuickActionsBridge } from "@repo/desktop-statusbar-quic
 import { DesktopGlobalHotkeyQuickOpenBridge } from "@repo/desktop-global-hotkey-quick-open/web";
 import { DesktopAutoUpdateReleaseChannelBridge } from "@repo/desktop-auto-update-release-channel/web";
 import {
+  getDesktopLocalFirstReconnectSyncPreflight,
   getDesktopLocalFirstWebDataImportReport,
   mountDesktopLocalFirstRepositoryBridge,
+  runDesktopLocalFirstReconnectSync,
   runDesktopLocalFirstWebDataImport,
 } from "@repo/plugin-web-storage";
 
@@ -312,10 +314,15 @@ export function AppProviders({ children }: PropsWithChildren) {
         run: typeof runDesktopLocalFirstWebDataImport;
         getLastReport: typeof getDesktopLocalFirstWebDataImportReport;
       };
+      __XAI_DESKTOP_RECONNECT_SYNC__?: {
+        preflight: typeof getDesktopLocalFirstReconnectSyncPreflight;
+        runOnce: typeof runDesktopLocalFirstReconnectSync;
+      };
     };
 
     if (!isDesktopOfflineRuntime) {
       delete runtime.__XAI_DESKTOP_WEB_IMPORT__;
+      delete runtime.__XAI_DESKTOP_RECONNECT_SYNC__;
       return;
     }
 
@@ -323,9 +330,14 @@ export function AppProviders({ children }: PropsWithChildren) {
       run: runDesktopLocalFirstWebDataImport,
       getLastReport: getDesktopLocalFirstWebDataImportReport,
     };
+    runtime.__XAI_DESKTOP_RECONNECT_SYNC__ = {
+      preflight: getDesktopLocalFirstReconnectSyncPreflight,
+      runOnce: runDesktopLocalFirstReconnectSync,
+    };
 
     return () => {
       delete runtime.__XAI_DESKTOP_WEB_IMPORT__;
+      delete runtime.__XAI_DESKTOP_RECONNECT_SYNC__;
     };
   }, [isDesktopOfflineRuntime]);
 
