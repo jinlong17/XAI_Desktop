@@ -482,11 +482,11 @@ No blockers. All 4 commits ready for `ship` (human-gated push to `origin/web`).
 | Workflow | BUGFIX |
 | Target | xai-web-tasks |
 | Title | Tasks completion state not persisted (toggle done → refresh → lost) |
-| Current Phase | BUG_VERIFY |
-| Status | FIX_READY_FOR_VERIFY |
-| Executor | Claude Sonnet (claude-sonnet-4-6) bug-auto-fix |
-| Updated | 2026-05-28 23:00 |
-| Suggested Next | bug-verify |
+| Current Phase | SHIP |
+| Status | SHIPPED |
+| Executor | Claude Sonnet (claude-sonnet-4-6) ship |
+| Updated | 2026-05-28 |
+| Suggested Next | — (workflow complete) |
 | Level | bugfix (extension of SHIPPED row #6; compatible with SHIPPED #3 card-create) |
 | Why reopen | Audit Top-10 #6 / inventory T-10 — checkbox toggle marks a task complete (visual strike + `is-completed`) but `completedIds` lives ONLY in `TasksModule` React state and is never written to localStorage. Refresh drops it. ADR-0010 §D4 — BUGFIX needs no P0 carve-out. |
 | Automation Mode | A-Claude |
@@ -548,3 +548,56 @@ No blockers. All 4 commits ready for `ship` (human-gated push to `origin/web`).
 |---|---|---|---|---|
 | 2026-05-28 22:35 | Claude Opus (bug-diagnose) | Resume-mode pre-check PASS (no prior T-10 completion-persist commit; grep matches were #3 card-create + verify recheck). Reproduced: checkbox toggle sets `is-completed` but `completedIds` is mount-local React state (`TasksModule.tsx:42`), `handleToggle` never calls `setRawCols` → refresh drops it. Root cause = persistence gap (in-memory-only completion, scoped "not persisted in v1"). Confirmed strategy (A) viable: `TaskColsState` is an opaque alias (`registry.ts:81-84`) so adding `done?:boolean` to `TaskCard` needs NO registry edit / NO carve-out; verified compatible with SHIPPED #3 `addCard` (omits done) and T-12 `moveCard` (must add `done` to preserved-field destructure at `tasksReducer.ts:47` — the one subtle interaction). Defined min-scope fix (data layer + TasksModule; 3 presentational components untouched via minimal-diff set-derived-from-done shape) + test plan (rewrite T-RD-7, +T-DONE-MOVE-1, +T-VAL done, +T-PER-DONE-1/2 round-trip+refresh). Baseline 70/70 green captured. No implementation. Status → FIX_READY. | — | bug-fix |
 | 2026-05-28 23:00 | Claude Sonnet (claude-sonnet-4-6) bug-auto-fix | ALL 4 sub-fixes implemented, tested, committed. Sub-fix 1 (types): `TaskCard.done?: boolean` added with JSDoc. Sub-fix 2 (validate): `isTaskCard` accepts boolean `done`, rejects non-boolean. Sub-fix 3 (reducer): `toggleComplete` rewritten from `Set<string>` to `TaskCol[]` pure transition flipping `task.done`; `moveCard` preserved-field destructure now includes `done` (both nodate and non-nodate branches). Sub-fix 4 (moveCard): included in sub-fix 3 commit. Sub-fix 5 (TasksModule): removed standalone `useState<Set>` for completedIds; replaced with `useMemo` derived from `taskCols`; `handleToggle` → `useCallback` dispatching `toggleComplete(taskCols, id)` + `setRawCols(next)` — same boundary-cast call site as `moveCard`. Zero edits to TaskColumn/TaskCard/CompletedGroup (minimal-diff). Sub-fix 6 (tests): T-RD-7 (rewritten), T-RD-7b, T-DONE-MOVE-1/2, T-VAL-DONE, T-PER-DONE-1/2. Results: 76/76 plugin-web-tasks + 128/128 @repo/web green. Lint + typecheck clean. Boundary守约: ZERO edits outside packages/xai-web-tasks/src/ + this dev_log. Status → FIX_READY_FOR_VERIFY. | 99e7f38 (sub-fix 1) / a9b972e (sub-fix 2) / 7d26aa0 (sub-fix 3) / 786bf07 (sub-fix 4) | bug-verify |
+| 2026-05-28 23:40 | Claude Opus (claude-opus-4-8) bug-verify | VERIFY PASS → READY_TO_SHIP. Reran every gate against ACTUAL source + test output (not trusted from fix Work Log). Pre-fix bug confirmed (`git show 99e7f38^`): `completedIds = useState<ReadonlySet<string>>(new Set())` at TasksModule.tsx:42, `handleToggle` called only `setCompletedIds`, never `setRawCols` → no persist path. Fix diff confined to 7 files under packages/xai-web-tasks/src/ + this dev_log (zero out-of-boundary). Source review: (1) TaskCard.done?:boolean added w/ JSDoc; (2) isTaskCard accepts boolean done, rejects non-boolean (T-VAL-DONE: done:true/false→true, "yes"/1→false); (3) toggleComplete rewritten to pure TaskCol[]→TaskCol[] (flips done, untouched cols by reference, prev unchanged when not found); (4) **moveCard preserves done in BOTH nodate + non-nodate branches via `...(done!==undefined?{done}:{})` — T-12 drag-compat key VERIFIED, covered by T-DONE-MOVE-1 (→next7) + T-DONE-MOVE-2 (→nodate)**; (5) TasksModule completedIds now useMemo-derived from taskCols(done===true), handleToggle→useCallback through toggleComplete+setRawCols using the SAME boundary cast as moveCard/addCard (single-source). 3 presentational components (TaskColumn/TaskCard/CompletedGroup) untouched (minimal-diff held). #3 addCard compat: new cards never set done (L165-166 sets only id/title/optional tag) → default false, isTaskCard tolerates absent. Acceptance anchors: T-PER-DONE-1 (toggle→localStorage round-trips done:true) + T-PER-DONE-2 (toggle→unmount→remount→is-completed survives — genuine round-trip, not stub). Gates: tasks 76/76 (10 files), @repo/web 128/128 (no regression), tasks typecheck+lint(0 warn) clean, @repo/web check-types clean, @repo/web build green (2.92s; pre-existing chunk-size warning = baseline noise). Commit hygiene: all 4 fix commits + flip follow type(scope): summary + Why/What/Scope/Risk/Docs/Tests + Co-Authored-By trailer; fix stayed within recorded strategy (A), no unrelated changes. Boundary守约: zero registry/core-events/tokens/other-plugin/host-shell/ADR/SHIPPED-archive edits; branch=web (dev untouched). Residual R-V1 cross-vendor manual smoke DEFERRED per ADR-0008 §S3 (joins accumulated Web smoke batch; non-blocking). Status → READY_TO_SHIP. | — | ship |
+| 2026-05-28 | Claude Sonnet (claude-sonnet-4-6) ship | SHIPPED: Status Panel flipped to SHIPPED; verify notes commit + ship flip commit pushed to origin/web. Commit lineage pushed: 99e7f38 (sub-fix 1) / a9b972e (sub-fix 2) / 7d26aa0 (sub-fix 3) / 786bf07 (sub-fix 4) / 61d4634 (flip FIX_READY_FOR_VERIFY) / ship flip commit. Cross-vendor manual smoke batch accumulated (R-V1, joins Web smoke batch per ADR-0008 §S3). item 3 cluster #1 (T-10) SHIPPED. Downstream unblocked: 3d-i stat widgets (real completedIds available). | ship flip commit | — (workflow complete) |
+
+---
+
+## Verify Notes (BUGFIX — T-10 completion persistence)
+
+**Verdict**: READY_TO_SHIP (bug-verify · Claude Opus claude-opus-4-8 · 2026-05-28 23:40)
+
+Every load-bearing claim verified against ACTUAL source + live test output, not trusted from the fix Work Log. Commits reviewed independently: `99e7f38` (sub-fix 1) / `a9b972e` (sub-fix 2) / `7d26aa0` (sub-fix 3) / `786bf07` (sub-fix 4); flip `61d4634`.
+
+### Pre-fix bug reproduction (confirmed)
+
+`git show 99e7f38^:packages/xai-web-tasks/src/TasksModule.tsx` →
+`const [completedIds, setCompletedIds] = useState<ReadonlySet<string>>(new Set());` (L42, mount-local, seeded empty every mount) + `handleToggle` (L44-46) calls ONLY `setCompletedIds`, never `setRawCols`. No localStorage write path for completion existed. Bug is real and matches the diagnosis.
+
+### Gate results (all pass)
+
+| # | Gate | Result |
+|---|---|---|
+| 1 | `pnpm --filter @repo/plugin-web-tasks test` | **76/76 PASS** (10 files; baseline 70 + 6 new: T-RD-7 rewrite + T-RD-7b + T-DONE-MOVE-1/2 + T-VAL-DONE + T-PER-DONE-1/2) |
+| 2 | `pnpm --filter @repo/plugin-web-tasks typecheck` | clean (`tsc --noEmit`) |
+| 3 | `pnpm --filter @repo/plugin-web-tasks lint` | clean (`eslint --max-warnings 0`) |
+| 4 | `pnpm --filter @repo/web check-types` | clean |
+| 5 | `pnpm --filter @repo/web test` | **128/128 PASS** (24 files; no regression — SHIPPED tasks + DnD T-12 + #3 card-create intact) |
+| 6 | `pnpm --filter @repo/web build` | green (2.92s; pre-existing chunk-size + leaflet warnings unrelated — baseline noise) |
+
+### Critical-path source review
+
+- **Sub-fix 1 (types.ts:55)** — `readonly done?: boolean` added to `TaskCard` w/ JSDoc ("Persisted inside xai_task_cols … Absent/undefined is treated as false"). Additive optional; existing blobs unaffected.
+- **Sub-fix 2 (validate.ts isTaskCard)** — `if ("done" in v && v["done"] !== undefined)` accepts `boolean`, rejects other types. T-VAL-DONE asserts `done:true`→true, `done:false`→true, `done:"yes"`→false, `done:1`→false.
+- **Sub-fix 3 reducer toggleComplete** — rewritten from `(Set<string>) → Set<string>` to pure `(TaskCol[]) → TaskCol[]`: finds card by id, `{...task, done: !task.done}`, untouched columns `return col` (referential equality), `return prev` unchanged when not found. Result passes `isTaskColsArray` (T-RD-7 + T-RD-7b).
+- **⚠️ moveCard done-preservation (T-12 compat key)** — VERIFIED: `const { id, title, tag, inbox, done } = task;` (L50); `done` re-spread conditionally in BOTH the `nodate` branch AND the non-nodate branch via `...(done !== undefined ? { done } : {})`. Covered by T-DONE-MOVE-1 (done:true card overdue→next7 retains done) + T-DONE-MOVE-2 (overdue→nodate stripping branch retains done). Dragging a completed card no longer clears completion.
+- **Sub-fix 3 TasksModule** — old `useState<ReadonlySet<string>>(new Set())` + `setCompletedIds` REMOVED (grep confirms). `completedIds` now `useMemo<ReadonlySet<string>>` derived from `taskCols` cards where `task.done === true` (L44-52). `handleToggle` → `useCallback` dispatching `toggleComplete(taskCols, taskId)` + `setRawCols(next as unknown as ...)` — IDENTICAL boundary-cast call site as `moveCard` (L104) and `addCard` (L118) → single-source persistence boundary (Rec-E2 held). The `completedIds: ReadonlySet<string>` prop shape on `TaskColumn`/`TaskCard`/`CompletedGroup` is unchanged → those 3 presentational components have ZERO edits (minimal-diff held).
+
+### #3 card-create (addCard) compatibility — confirmed
+
+`addCard` (tasksReducer.ts:145-166) constructs the new card with only `id`, `title`, optional `tag` — NEVER sets `done`. New tasks default to `done: undefined` (treated false); `isTaskCard` tolerates absent optional `done`. No conflict with `NewTaskDraft`. The two recently-SHIPPED adjacent changes (#3 create + T-12 drag) both remain green.
+
+### Acceptance anchors (T-10) — full coverage
+
+- **T-PER-DONE-1** (`persistence.test.tsx:200`): click `.cbx` → card gets `is-completed` → `localStorage.xai_task_cols` parsed → toggled card has `done === true`. Round-trip leg satisfied.
+- **T-PER-DONE-2** (`persistence.test.tsx:234`): toggle → assert written to localStorage → `unmount()` → re-`render()` reading same jsdom localStorage → same card shows `is-completed`. Refresh-survival (the load-bearing leg, mirrors SHIPPED T-CR-3 create-survival). Genuine round-trip integration, not a stub.
+
+### Boundary守约 audit (all held)
+
+`git diff --name-only 99e7f38^..61d4634` → every file under `packages/xai-web-tasks/` (3 source + 4 test) or this `dev_log.md`. ZERO edits to: `plugin-web-storage/src/internal/registry.ts` (no new key — reuses `xai_task_cols` opaque-alias), `packages/core` events (no new channel), `plugin-web-tokens`, other plugins (Matrix/Statistics/Dashboard), `apps/web` host shell, ADR files, SHIPPED archives. Branch = `web`; `dev` untouched. Fix stayed within recorded strategy (path A). Commit subjects follow `type(scope): summary` + Why/What/Scope/Risk/Docs/Tests body + `Co-Authored-By` trailer.
+
+### Residual risks (non-blocking)
+
+- **R-V1 (cross-vendor manual smoke deferred)**: `Verify Cross-vendor: yes` for this UI+persistence change is DEFERRED per ADR-0008 §S3 24h-evidence carve-out. Joins the accumulated Web smoke batch that must clear before the next `xai-web-deploy-cloudflare` ship. Tester note: Tasks must be ENABLED in settings (`withDisabledFallback` gate) or the route renders `<DisabledFeatureFallback>` and the checkbox is unreachable. Manual leg: open `/app/tasks`, toggle a card complete, hard-reload → `is-completed` must survive; drag a completed card across buckets → stays completed. Not ship-blocking.
+
+No blockers. All 4 fix commits ready for `ship` (human-gated push to `origin/web`).
