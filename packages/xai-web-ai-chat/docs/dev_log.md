@@ -1131,13 +1131,13 @@ remain PASS. No regression introduced by the fix. This is the last item-3 re-ver
 | Workflow | FEATURE_DEV |
 | Target | xai-web-ai-tool-edit-delete |
 | Title | Extend SHIPPED create-only AI tool layer with edit/delete — 4 tools (delete_task/delete_calendar_event/update_task/update_calendar_event) + tasks deleteCard/updateCard pure reducer actions + reuse calendar updateEvent/deleteEvent + 4 per-op write event channels + owning-module mutate subscribers + context id exposure for targeting; delete phased before update |
-| Current Phase | FEATURE_VERIFY |
-| Status | READY_FOR_VERIFY |
-| Suggested Next | feature-verify |
+| Current Phase | SHIP |
+| Status | SHIPPED |
+| Suggested Next | — (workflow complete) |
 | Verify Cross-vendor | yes (per ADR-0010 §D4 P0 + carve-out default; primary Codex `gpt-5.x` cold-read, fallback Cursor) — real-LLM edit/delete tool round-trip + cross-vendor smoke DEFERRED 24h (operator, needs API key) per ADR-0008 §S3 / ADR-0009 §D2-G2, consistent with create-layer + gap-closure row #2 precedent |
 | Automation Mode | A-Claude (manual step-by-step per CLAUDE.md; planner does not pre-commit to a loop) |
-| Executor | claude-sonnet-4-6 (feature-auto-build P1-P4, 2026-05-29) |
-| Updated | 2026-05-29 16:30 |
+| Executor | claude-sonnet-4-6 (ship, 2026-05-29) |
+| Updated | 2026-05-29 |
 | Dispatched By | operator directive 2026-05-29 (first of two AI enhancements; openai-compatible tool support follows separately) |
 | Roadmap Manifest | `docs/workflow/roadmap/xai-web-ai-tool-edit-delete.md` |
 | Parent ADR | ADR-0010 §D4 (P0 maintenance carve-out) |
@@ -1327,7 +1327,7 @@ The Revision Notes pin the change as "scoped to the `tone` seam ONLY"; I indepen
 
 ### Suggested Next
 
-`feature-verify` (all 4 phases DONE 2026-05-29; B1 resolved; tone seam single-valued on `ConfirmationSpec`; 4 命脉 preserved).
+— (workflow complete; SHIPPED 2026-05-29).
 
 ### Work Log (this lineage)
 
@@ -1341,6 +1341,136 @@ The Revision Notes pin the change as "scoped to the `tone` seam ONLY"; I indepen
 | 2026-05-29 16:30 | claude-sonnet-4-6 (feature-auto-build P2) | Implemented: toolRegistry.ts +ConfirmationSpec.tone? + WriteEventSpec.channel union +4 + delete_task + delete_calendar_event (destructive tone, item-naming description); ConfirmationCard.tsx reads spec.tone (ED-7 single seam); AiChatModule.tsx handleConfirm +4 channel branches (delete P2, update P3 stub); NEW xai-web-tasks/aiMutateSubscriber.ts (useTaskMutateRequestSubscriber — delete+update listeners, ED-6 moveCard composition, bounded seenRef); NEW xai-web-calendar/aiMutateSubscriber.ts (useCalendarMutateRequestSubscriber — deleteEvent/updateEvent+ISO recompute); App.tsx +2 subscriber mounts. CC-TONE-1..2 + TR-DEL-TOOL-1..3 + IT-DEL-1..4 + TS-DEL-1..3 + TS-UPD-1..4 + CS-DEL-1..3 + CS-UPD-1..3 pass. 202/202 ai-chat + 147/147 tasks + 311/311 calendar. tsc + eslint exit 0. 4 命脉 verified: no-silent-write (IT-DEL-1 ✓); additive events.ts (P1 ✓); route-independent subscribers (Shell-sibling mount ✓); bounded round-trip (channel-agnostic handleConfirm block unchanged ✓). | 4a06c16 | P3 |
 | 2026-05-29 16:30 | claude-sonnet-4-6 (feature-auto-build P3) | Implemented: toolRegistry.ts +update_task (id req + optional title/bucket enum/tag enum; patch contains only provided fields) + update_calendar_event (id req + optional title/date/startTime/durationMin; patch contains only provided fields); AI_TOOLS 2→4→6. update channel branches already wired in P2 handleConfirm. TR-UPD-TOOL-1..3 + IT-UPD-1..3 pass. 211/211 ai-chat. tsc + eslint exit 0. | fdf8fe8 | P4 |
 | 2026-05-29 16:30 | claude-sonnet-4-6 (feature-auto-build P4) | P4 back-compat + docs + Status flip. BC-1 (isAiConvoRecord back-compat) pass; all suites re-run green (211/211 ai-chat / 147/147 tasks / 311/311 calendar / 128/128 web / build exit 0); PLUGIN_MAP.md row-notes updated (ai-chat + tasks + calendar edit/delete extension notes); dev_log Phase Progress table + Work Log appended; Status → READY_FOR_VERIFY; Suggested Next → feature-verify. 4 命脉 evidence: (1) no-silent-write — emitWebEvent for delete/update ONLY in handleConfirm channel branches (IT-DEL-1 + IT-UPD-1 assert; grep confirms zero additional emit sites); (2) events.ts additive — 4 new web:* channels prepended before create channels; SHIPPED create + web:ai:* unchanged; (3) route-independent — 4 subscribers mounted as Shell-siblings in App.tsx lines 98-102; (4) bounded round-trip — handleConfirm priorMessages block channel-agnostic; IT-DEL-4 asserts cap=1. Anti-drift: TR-DEL-1..4 + TR-UPD-1..7 assert exact reducer signatures against live code; IT-DEL-1 + IT-UPD-1 assert confirm-only emit (no pre-confirm writes); CC-TONE-1 asserts default = SHIPPED markup. | (this commit) | feature-verify |
+| 2026-05-29 04:25 | claude-opus-4-8[1m] (feature-verify) | Independently verified HEAD `7070f99` against design §ED / api §14 / test §9 + carve-out. **VERDICT: PASS → READY_TO_SHIP.** All 4 命脉 lifelines source-confirmed; anti-drift (the prior-BLOCK risk) PASS — docs match code, all asserted tests are genuine (not hollow). **Lifelines:** (1) no-silent-write — 6 write emits ALL in handleConfirm (AiChatModule.tsx:511-555), gated on !pendingConfirmation; adapter emits only web:ai:* ; zero setPref for task/calendar in ai-chat src; handleCancel emits zero writes; IT-DEL-1/IT-UPD-1 (pre-confirm 0 writes) + IT-DEL-3 (cancel→tool_result is_error:true + 0 writes) + IT-DEL-2 (Confirm→exactly 1 event w/ id+requestId) all genuine. (2) events.ts additive — git show 1575ff9 = pure +4 prepend (web:tasks/calendar:{update,delete}-requested); full-lineage grep confirms SHIPPED create + web:ai:* UNTOUCHED; payloads match api §14.3. (3) route-independent subscribers — useTaskMutateRequestSubscriber + useCalendarMutateRequestSubscriber mounted at App.tsx:105-106 top of AppInner as Shell-siblings; imperative getPref→reducer→setPref; bounded seenRef MAX_SEEN=100 per channel; NO cross-plugin import; TS-UPD-2 bucket-move composition genuine. (4) bounded round-trip — handleConfirm priorMessages block channel-agnostic, break on chunk.done; IT-DEL-4 genuinely asserts cap=1 (2nd tool_use in final stream NOT executed → 1 event, no 2nd card). **Anti-drift:** ZERO "future enhancement"/stub/TODO comments in edit-delete src (the marker that flagged the predecessor B1); tone seam single-valued on ConfirmationSpec.tone (toolRegistry.ts:45) — delete tools return tone:"destructive", create/update tone:"default"; ConfirmationCard.tsx:34 reads spec.tone (no separate prop); render site AiChatModule.tsx:733-741 passes spec={spec} only (file plan "AiChatModule=handleConfirm branches only" holds TRUE); deleteCard/updateCard match api §14.4 byte-for-byte (immutable, referential-equality untouched cols, prev-on-not-found/empty, updateCard preserves done T-10 + re-pins id — TR-UPD-2/TR-UPD-4 genuine); ED-2 context id rendered (contextProvider.ts:218/235); calendar reuses SHIPPED updateEvent/deleteEvent (zero new store code). **Gates (independently re-run):** ai-chat 211/211 (24 files), tasks 147/147 (14 files), calendar 311/311 (41 files), core 8/8, web 128/128 (24 files); lint --max-warnings 0 exit 0 ×3 (ai-chat/tasks/calendar); tsc --noEmit exit 0 ×5 (ai-chat/tasks/calendar/core/web); web build exit 0 (3.48s); working tree CLEAN. **Boundaries:** full-lineage (e404a45^..HEAD) NO plugin-web-tokens / src-tauri / docs/adr / /archive/ / package.json / storage-registry edits; no new pref key; no new npm dep; index.ts +2 additive hook exports only; on web branch, dev untouched. **No regression:** SHIPPED create path + TU-REG + I1..I23 + BC-1 all green. Residual (non-blocking): RR1 — plan P4 DoD names docs/reviews/xai-web-ai-tool-edit-delete/20260529-verify-report.md (not written; actual P4 records honest — Phase Progress + Work Log + commit subject do NOT claim it; no behavioral/contract drift; this dev_log report is authoritative — same RR1 treatment as predecessor lineage); RR2 — real-key + cross-vendor cold-read deferred 24h (operator); RR3 — events.ts web:* dev-merge surface. | — | ship |
+| 2026-05-29 | claude-sonnet-4-6 (ship) | **Ship Report — xai-web-ai-tool-edit-delete (AI 增强第 1 个).** Workflow guard: Status=READY_TO_SHIP — proceed. Verified git state: 6 feature commits ahead of origin/web (e404a45 carve-out / 1575ff9 P1 / 4a06c16 P2 / fdf8fe8 P3 / 28e09f8 P4 / 7070f99 plan-docs); working tree had only dev_log.md uncommitted (verify report + Status flip, minor omission — committed as ship chore). No supabase/ or sensitive files in push set. Commit convention spot-check: all 6 commits follow type(scope): summary format + Why/What/Scope/Risk/Docs/Tests + Co-Authored-By (verified). Flipped Lineage Status Panel: Current Phase → SHIP, Status → SHIPPED, Suggested Next → — (workflow complete), Executor → claude-sonnet-4-6 (ship, 2026-05-29), Updated → 2026-05-29. Pushed 7 commits to origin/web. **Ship Summary:** AI 增强第 1 个 (edit/delete) SHIPPED — AI can now create/update/delete tasks and calendar events via full confirmation + bounded round-trip. 4 命脉 preserved: no-silent-write + additive events.ts + route-independent subscribers + bounded cap=1 round-trip. Deferred residual risks: RR2 real-key + cross-vendor tool round-trip (operator, needs API key — add to pre-deploy smoke batch: delete/update via live endpoint round-trip); RR3 events.ts web:* dev-branch merge surface (low conflict, flag for main merge). **Next:** openai-compatible tool support (AI 增强第 2 个，最后). | (this chore commit) + push | — |
+
+
+### Verify Report (2026-05-29 04:25 — claude-opus-4-8[1m] / feature-verify)
+
+**Verdict: PASS.** Status → READY_TO_SHIP; Current Phase → FEATURE_VERIFY; Suggested Next → `ship`.
+
+Independently verified HEAD `7070f99` (implementation lineage `e404a45`..`7070f99`) against
+design §ED / api §14 / test §9 + the carve-out. This is the 3rd same-class feature; the prior
+two BLOCKED on doc/code drift, so every load-bearing claim was diffed doc-vs-code and every
+asserted test was read to confirm it is genuine (not a hollow pass). All 4 SHIPPED lifelines
+hold, anti-drift passes, every automated gate passes, no regression. One non-blocking residual.
+
+#### Automated gates (independently re-run at HEAD `7070f99`)
+
+| Gate | Result | Evidence |
+|---|---|---|
+| `pnpm --filter @repo/plugin-web-ai-chat test` | PASS | 24 files, 211/211 |
+| `pnpm --filter @repo/plugin-web-tasks test` | PASS | 14 files, 147/147 |
+| `pnpm --filter @repo/plugin-web-calendar test` | PASS | 41 files, 311/311 |
+| `pnpm --filter @repo/core test` | PASS | 2 files, 8/8 |
+| `pnpm --filter @repo/web test` | PASS | 24 files, 128/128 |
+| ai-chat / tasks / calendar lint (`--max-warnings 0`) | PASS | all exit 0 |
+| ai-chat / tasks / calendar / core / web `tsc --noEmit` | PASS | all exit 0 |
+| `pnpm --filter @repo/web build` | PASS | vite built in 3.48s, 0 errors |
+| working tree | CLEAN | (this dev_log edit only) |
+
+#### Four 命脉 lifelines — independently source-confirmed
+
+1. **No-silent-write (CRITICAL) — HOLDS.** Grepped all `emitWebEvent` in ai-chat src: the 6
+   write-channel emits live ONLY in `AiChatModule.handleConfirm` (L511/521/529/537/546/555),
+   which early-returns on `!pendingConfirmation`; the adapter emits only `web:ai:rate-limited` +
+   `web:ai:request-failed`; `toolRegistry` is a pure descriptor; zero `setPref` for task/calendar
+   stores anywhere in ai-chat src (only JSDoc). `handleCancel` emits NO write (only
+   `tool_result(is_error:true)`). One producer, one mutation path (owning-module subscriber).
+   IT-DEL-1 + IT-UPD-1 (pending→0 events + localStorage unchanged) + IT-DEL-3 (Cancel→
+   `tool_result.is_error===true`, `tool_use_id` match, 0 delete events) + IT-DEL-2 (Confirm→
+   exactly 1 event, `id` + `requestId` match) are all genuine with real assertions. **PASS.**
+2. **events.ts additive-only — HOLDS.** `git show 1575ff9 -- events.ts` = pure +4 prepend
+   (`web:tasks:update-requested` / `web:tasks:delete-requested` / `web:calendar:update-requested`
+   / `web:calendar:delete-requested`) before the SHIPPED create channels. Full-lineage diff grep
+   for `web:ai:` / `create-requested` = ZERO changed lines → SHIPPED create + `web:ai:*`
+   untouched. Payloads match api §14.3 exactly (requestId + id + patch with documented optional
+   fields). core tsc clean. **PASS.**
+3. **Route-independent subscribers — HOLDS.** `useTaskMutateRequestSubscriber()` +
+   `useCalendarMutateRequestSubscriber()` called at the top of `AppInner` (App.tsx:105-106),
+   Shell-siblings beside `<DesktopPet>` + `<CommandPalette>` and the SHIPPED create subscribers.
+   Both execute IMPERATIVELY via `getPref`→reducer→`setPref` (tasks internal `deleteCard`/
+   `updateCard`/`moveCard`; calendar SHIPPED `updateEvent`/`deleteEvent`); bounded `seenRef`
+   (MAX_SEEN=100) per channel; NO cross-plugin import (only `@repo/xai-web-event-bus` +
+   `@repo/plugin-web-storage` + local reducer). ED-6 bucket-move composition (moveCard then
+   updateCard) is at the subscriber level as designed. TS-UPD-2 (bucket-move) genuine. **PASS.**
+4. **Bounded single round-trip — HOLDS.** `handleConfirm`/`handleCancel` build
+   `priorMessages = [user] + [assistant tool_use] + [user tool_result]` and stream ONE final
+   turn, breaking on `chunk.done`; the block is channel-agnostic (identical for all 6 channels),
+   so the plan's "round-trip unchanged" claim holds. IT-DEL-4 genuinely asserts cap=1: the mock
+   returns a SECOND `delete_task` tool_use on the round-trip → test asserts exactly 1
+   `web:tasks:delete-requested` event AND no second ConfirmationCard. Real bounded-loop
+   assertion. **PASS.**
+
+#### Anti-drift (the repeat-risk focus) — PASS
+
+- **Zero stub/deferral comments.** Grep for `future enhancement` / `beyond P# scope` / `TODO` /
+  `FIXME` / `will add` / `stub` across the 5 edit-delete source files = ZERO. (This exact comment
+  pattern is what exposed the predecessor B1 BLOCK; clean here.)
+- **`tone` seam single-valued.** `ConfirmationSpec.tone?` (toolRegistry.ts:45) is the only seam;
+  both delete tools return `tone:"destructive"`, create + update return `tone:"default"`;
+  `ConfirmationCard.tsx:34` reads `spec.tone`; the render site (AiChatModule.tsx:733-741) passes
+  `spec={spec}` only — NO separate `tone` prop, NO render-site edit → the file plan's
+  "AiChatModule = handleConfirm +4 branches only" claim is TRUE. CC-TONE-1a/1b (omitted/default →
+  no destructive class, "Confirm" label) + CC-TONE-2a (destructive → `ai-confirmation-card--
+  destructive` + `--destructive` confirm button + "Delete" label) assert against the real markup.
+- **Reducer contracts byte-match docs.** `deleteCard(prev, id)` + `updateCard(prev, id, patch)`
+  match api §14.4: immutable `.map`, referential equality for untouched columns, `prev` on
+  not-found/empty-patch, `updateCard` preserves `done` (T-10) + all untouched fields and re-pins
+  `id`. TR-DEL-1..4 (incl. deep-freeze no-mutate + same-ref on no-op) + TR-UPD-1..7 (incl.
+  preserve-done, id-re-pin, referential equality, empty/not-found no-op) are genuine.
+- **Context id (ED-2, the prerequisite).** contextProvider.ts:218 renders
+  `- [<bucket>] (id: <id>) <title>` and :235 renders `- (id: <id>) HH:MM–HH:MM: <title>` —
+  additive, matches api §14.1. CP-ID-1..4 assert the id token + that titles/times/budget are
+  unaffected.
+- **Calendar reuse.** Subscriber reuses SHIPPED `updateEvent(store, id, patch)→{next}` +
+  `deleteEvent(store, id)` — zero new store code, matches api §14.4 + design ED-4.
+
+#### Commit-attribution review
+
+- `e404a45` (carve-out) — `docs(p0-carve-out):`; doc-only; Co-Authored-By present. PASS.
+- `1575ff9` P1 — `feat(plugin-web-tasks+ai-chat+core):`; reducer + 4 channels + context id; single
+  coherent intent; Why/What/Scope/Risk/Docs/Tests + Co-Authored-By. PASS.
+- `4a06c16` P2 — `feat(plugin-web-ai-chat+tasks+calendar):`; delete tools + destructive tone +
+  delete subscribers + round-trip branches; convention-complete. PASS.
+- `fdf8fe8` P3 — `feat(plugin-web-ai-chat+tasks+calendar):`; update tools + update subscribers +
+  bucket-move; convention-complete. PASS.
+- `28e09f8` P4 — `feat(plugin-web-ai-chat): P4 anti-drift tests + docs sync`; touched
+  PLUGIN_MAP.md + dev_log.md (subject renamed from the plan's "back-compat + polish +
+  verify-report" — honest about what it did; see RR1). Why/What/Scope/Risk/Docs + Co-Authored-By.
+  PASS (no overclaim).
+- `7070f99` — `chore(...)`; plan docs (api/design/test + discovery + manifest). PASS.
+
+#### Back-compat + boundaries — CLEAN
+
+- `isAiConvoRecord` NOT modified this lineage; BC-1 still present + green (back-compat preserved
+  by no-change). **PASS.**
+- Full-lineage boundary grep (`e404a45^..HEAD`): NO `plugin-web-tokens` / `src-tauri` /
+  `docs/adr/` / `/archive/` / `package.json` / storage-registry edits; no new `xai_*` pref key;
+  no new npm dep; `index.ts` adds only the 2 new hook exports (additive public surface);
+  `apps/web/src/App.tsx` edit = the review-authorized +2 Shell-sibling mounts. On `web` branch;
+  `dev` untouched. **PASS.**
+- SHIPPED regression: create path + TU-REG + I1..I23 (IT-REG) + tasks/calendar SHIPPED suites all
+  green. No regression. **PASS.**
+
+#### Residual risks (non-blocking)
+
+- **RR1 (P4 verify-report artifact not written):** the plan's P4 DoD (dev_log L1214/1216/1217)
+  names `docs/reviews/xai-web-ai-tool-edit-delete/20260529-verify-report.md`, which does not
+  exist (only the discovery review is in that directory) and the P4 commit `28e09f8` did not write
+  it. CRITICAL distinction from the predecessor B1: the actual completion records are HONEST — the
+  P4 Phase Progress row, the P4 Work Log entry, and the commit subject ("anti-drift tests + docs
+  sync") do NOT claim a verify-report was written, so there is NO "claimed-DONE-but-absent"
+  behavioral/contract drift. This is a process-artifact deviation only; this dev_log Verify Report
+  is the authoritative verification record (identical treatment to the predecessor lineage's RR1,
+  which the prior verifier also ruled non-blocking). Ship or a follow-up doc commit may add the
+  artifact. NOT a blocker.
+- **RR2 (real-key tool round-trip + cross-vendor cold-read):** operator work, deferred 24h per
+  ADR-0008 §S3 / ADR-0009 §D2-G2 (create-layer + gap-closure row #2 precedent). The edit/delete
+  round-trip is fully unit-verified (IT-DEL-2/3/4 + IT-UPD-2/3 with mocked SSE); real-key exercises
+  the live Anthropic endpoint only. NOT a blocker.
+- **RR3 (events.ts `web:*` dev-branch merge surface, ED-R2):** flagged; carries to the eventual
+  main merge. `web:*` ≠ `dev`'s `desktop:*` — low conflict, REAL. NOT a blocker.
 
 ---
 
