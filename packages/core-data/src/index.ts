@@ -128,6 +128,16 @@ export type {
   OfflineQueueSummary,
   OfflineRollbackResult,
 } from "./offline-edit-queue";
+export { runReconnectSyncReplay } from "./reconnect-sync";
+export type {
+  ReconnectSyncContext,
+  ReconnectSyncMutationOutcome,
+  ReconnectSyncPreflightStatus,
+  ReconnectSyncReplayInput,
+  ReconnectSyncReplayResult,
+  ReconnectSyncTransport,
+  ReconnectSyncTransportResult,
+} from "./reconnect-sync";
 export {
   SYNC_BLOB_ACCEPT_VERSION,
   SYNC_PROTOCOL_HEADER,
