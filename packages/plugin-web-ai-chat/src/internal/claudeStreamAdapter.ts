@@ -43,9 +43,11 @@ export interface StreamRequest {
    */
   contextText?: string;
   /**
-   * P2: Optional Anthropic tool definitions to include in the request.
-   * Only sent on the Anthropic provider branch when a key is configured.
-   * Omitted for openai-compatible (planner's-call #3 — deferred).
+   * P2: Optional tool definitions to include in the request.
+   * Sent on BOTH providers when a key is configured: Anthropic receives the
+   * verbatim AnthropicToolDef format (input_schema); openai-compatible receives
+   * the translated OpenAI function format (via toOpenAiTools). Each buildBody
+   * branch serializes appropriately.
    */
   tools?: AnthropicToolDef[];
   /**

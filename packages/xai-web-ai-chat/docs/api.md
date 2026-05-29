@@ -531,7 +531,7 @@ buildBody(opts: {
 }): Record<string, unknown>;
 ```
 - **Backward-compat:** `content: string` and absent `tools` reproduce the SHIPPED body byte-for-byte. `ContentBlock = { type:"text"; text:string } | { type:"tool_use"; id; name; input } | ToolResultBlock`.
-- openai-compatible branch IGNORES `tools` in v1 (planner's-call #3).
+- Both providers serialize `tools` when present: Anthropic passes the verbatim `AnthropicToolDef` array (input_schema); openai-compatible converts via `toOpenAiTools()` into the OpenAI function format. (Supersedes planner's-call #3 deferral — lifted in xai-web-ai-tool-openai-compatible §15.3.)
 
 ### §13.2 `contextProvider` (internal — `contextProvider.ts`; READ, pure)
 
@@ -629,7 +629,7 @@ export function useAiCreateRequestSubscriber(): void;
 ### §13.8 Permissions / capabilities (extension)
 
 - No new Tauri capabilities (web-only). **No new CSP origin** — Anthropic already allow-listed (§12.7). No new npm dep, no new provider, no model-id change.
-- Tool use requires the Anthropic provider + a configured key; openai-compatible omits `tools` in v1 (read context still injected). No-key → existing `BadKey(detail:"not-set")` path; demo fallback unchanged.
+- Tool use requires a configured key; both Anthropic and openai-compatible providers now send `tools` (lifted in §15). Read context is always injected (provider-agnostic). No-key → existing `BadKey(detail:"not-set")` path; demo fallback unchanged.
 
 ### §13.9 Idempotency / re-mount safety (extension)
 

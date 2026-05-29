@@ -46,8 +46,11 @@ export interface ProviderConfig {
    * P2 widening (additive, backward-compatible):
    * - messages[].content widened from string → string | ContentBlock[]
    *   so tool round-trip turns can carry assistant tool_use + user tool_result.
-   * - Optional tools array (Anthropic branch only) for tool-use requests.
-   * - Optional toolChoice (Anthropic branch only). Default: omitted → "auto".
+   * - Optional tools array: sent on BOTH providers. Anthropic branch passes
+   *   verbatim AnthropicToolDef (input_schema); openai branch serializes via
+   *   toOpenAiTools() into the OpenAI function format (parameters field).
+   * - Optional toolChoice: sent on BOTH providers. Anthropic passes verbatim;
+   *   openai serializes via toOpenAiToolChoice(). Default: omitted → "auto".
    */
   buildBody(opts: {
     modelId: string;
