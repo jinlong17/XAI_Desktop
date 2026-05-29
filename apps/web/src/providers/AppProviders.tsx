@@ -14,6 +14,7 @@ import { DesktopNativeNotificationsBridge } from "@repo/desktop-native-notificat
 import { DesktopStatusbarQuickActionsBridge } from "@repo/desktop-statusbar-quick-actions/web";
 import { DesktopGlobalHotkeyQuickOpenBridge } from "@repo/desktop-global-hotkey-quick-open/web";
 import { DesktopAutoUpdateReleaseChannelBridge } from "@repo/desktop-auto-update-release-channel/web";
+import { mountDesktopLocalFirstRepositoryBridge } from "@repo/plugin-web-storage";
 
 type WebAuthMode = "live" | "mock-authenticated" | "mock-unauthenticated";
 type MockAuthSession = {
@@ -296,6 +297,10 @@ export function AppProviders({ children }: PropsWithChildren) {
         : null,
     [authMode, config, isDesktopOfflineRuntime]
   );
+
+  useEffect(() => {
+    mountDesktopLocalFirstRepositoryBridge(isDesktopOfflineRuntime);
+  }, [isDesktopOfflineRuntime]);
 
   return (
     <WebAuthSessionProvider client={mockClient as never} config={authMode === "live" ? config : null}>

@@ -9,6 +9,7 @@ import {
   type ProjectWorkspaceStateEntity,
   type Repo,
   type RepoRecord,
+  type SettingsPrefEntity,
   type TasksStateEntity,
 } from "@repo/core-data";
 
@@ -31,14 +32,16 @@ type BridgedSurface =
   | "habits"
   | "pomodoro"
   | "board-workspace"
-  | "pet";
+  | "pet"
+  | "settings";
 
 type BridgeRecord =
   | TasksStateEntity
   | HabitsStateEntity
   | PomodoroSessionsEntity
   | ProjectWorkspaceStateEntity
-  | PetStateEntity;
+  | PetStateEntity
+  | SettingsPrefEntity;
 
 type BridgeStatus = "disabled" | "active";
 
@@ -130,15 +133,15 @@ export async function writeDesktopRepoValue(
   key: string,
   value: unknown,
 ): Promise<DesktopBridgeWriteResult> {
-  if (state.status !== "active" || !isBridgedKey(key)) {
-    return { status: "ok" };
-  }
   if (key.startsWith("xai_note_")) {
     state.errors.set(key, NOTES_UNSUPPORTED_ERROR);
     return {
       status: "degraded",
       error: NOTES_UNSUPPORTED_ERROR,
     };
+  }
+  if (state.status !== "active" || !isBridgedKey(key)) {
+    return { status: "ok" };
   }
   if (!state.repo) {
     const error: DesktopBridgeError = {
@@ -241,7 +244,8 @@ function isBridgedKey(key: string): boolean {
     key === "xai_habits_state" ||
     key === "xai_pomodoro_sessions" ||
     BOARD_WORKSPACE_KEYS.has(key) ||
-    PET_KEYS.has(key)
+    PET_KEYS.has(key) ||
+    /^xai_pref_/.test(key)
   );
 }
 
@@ -250,7 +254,8 @@ function entityTypeForKey(key: string): BridgeRecord["entityType"] {
   if (key === "xai_habits_state") return "productivity.habits_state";
   if (key === "xai_pomodoro_sessions") return "productivity.pomodoro_sessions";
   if (BOARD_WORKSPACE_KEYS.has(key)) return "project.workspace_state";
-  return "pet.state";
+  if (PET_KEYS.has(key)) return "pet.state";
+  return "settings.pref";
 }
 
 function surfaceForKey(key: string): BridgedSurface {
@@ -258,7 +263,8 @@ function surfaceForKey(key: string): BridgedSurface {
   if (key === "xai_habits_state") return "habits";
   if (key === "xai_pomodoro_sessions") return "pomodoro";
   if (BOARD_WORKSPACE_KEYS.has(key)) return "board-workspace";
-  return "pet";
+  if (PET_KEYS.has(key)) return "pet";
+  return "settings";
 }
 
 function toBridgeRecord(
@@ -310,10 +316,19 @@ function toBridgeRecord(
     };
   }
 
+  if (entityType === "pet.state") {
+    return {
+      ...base,
+      entityType: "pet.state",
+      storageKey: key as PetStateEntity["storageKey"],
+      value,
+    };
+  }
+
   return {
     ...base,
-    entityType: "pet.state",
-    storageKey: key as PetStateEntity["storageKey"],
+    entityType: "settings.pref",
+    storageKey: key as SettingsPrefEntity["storageKey"],
     value,
   };
 }
