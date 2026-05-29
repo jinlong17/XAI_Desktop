@@ -4,7 +4,7 @@
 > 只有状态为 Stable 或 Production 的 Plugin 才能被作为稳定依赖。
 > 状态为 In-Dev / Testing 的 Plugin 必须使用 Mock 数据解耦。
 >
-> 最后更新: 2026-05-26
+> 最后更新: 2026-05-29
 
 ---
 
@@ -85,7 +85,8 @@ Per current period: new work on P1 Phase 1 (machine A = `dev`) permitted per ADR
 
 ## Plugins
 
-> **2026-05-26 update per ADR-0011:** This section now mixes (a) **P1 Phase 1 reframed plugins** — `plugin-account` (login-state-only) + `plugin-productivity` / `plugin-project` / `plugin-calendar` / `plugin-labels` (concept-kept, Phase 1 reuses their Web counterparts under `packages/plugin-web-*`) + `plugin-console` / `plugin-ai-cube` (merge/demote per ADR-0011 §D4); and (b) **P3 Future legacy desktop plugins** — `plugin-organizer`, `plugin-clipboard`, `plugin-widgets`, `plugin-meditation`, `plugin-pet` (deferred until Phase 3 local-first SHIPPED). Do not start new dev work on the P3 Future plugin packages. New P1 Phase 1 work happens against Web reuse + the desktop scaffold rewrite, not against the legacy desktop plugin packages. Web Modules (P0, also P1 Phase 1 UI source) are listed in the "Web Modules" section further down.
+> **2026-05-29 update (row #21 `desktop-organizer-plugin-restoration`)**:
+> Legacy organizer-family ownership is now explicitly split by disposition instead of one shared "revive later" bucket: `plugin-organizer` stays restored (row #20), `plugin-clipboard` is deferred (keep disabled/unregistered), `plugin-widgets` is merge-migrating to the shipped dashboard widget stack, `plugin-meditation` desktop package is retired as stale drift (package absent; canonical runtime owner is `@repo/plugin-web-meditation`), and `plugin-pet` is merge-migrating to `@repo/plugin-web-pet` while preserving reusable legacy assets. Compatibility seams in `plugin-calendar` and `plugin-console` remain tracked and must be cleaned before any legacy package quarantine/removal.
 
 | Plugin | 目录 | 状态 | PRD 章节 | 对外依赖 | 最后更新 |
 |--------|------|------|---------|---------|---------|
@@ -95,10 +96,11 @@ Per current period: new work on P1 Phase 1 (machine A = `dev`) permitted per ADR
 | productivity | packages/plugin-productivity/ | In-Dev | productivity/PRD | @repo/core, @repo/core-data (canonical package for Todo/Pomodoro/Habits; package-local `READY_FOR_VERIFY` does not promote this row beyond non-stable dependency authority) | 2026-05-21 |
 | labels | packages/plugin-labels/ | In-Dev | labels/PRD | @repo/core, @repo/core-data (Console/Project/Web consumers remain mock-first outside scoped integration while this row is non-stable) | 2026-05-21 |
 | project | packages/plugin-project/ | In-Dev | project/PRD | @repo/core, @repo/core-data (real package exists; package-local `READY_FOR_VERIFY` does not change global dependency authority) | 2026-05-21 |
-| calendar | packages/plugin-calendar/ | In-Dev | calendar/PRD | @repo/core, @repo/core-data, @repo/plugin-widgets (peer/runtime seam; no current Web manifest declaration) | 2026-05-21 |
-| clipboard | packages/plugin-clipboard/ | Planned | §5.5 | @repo/core | — |
-| widgets | packages/plugin-widgets/ | Planned | §5.6 | @repo/core | — |
-| meditation | packages/plugin-meditation/ | Planned | §5.7 | @repo/core | — |
+| calendar | packages/plugin-calendar/ | In-Dev | calendar/PRD | @repo/core, @repo/core-data, @repo/plugin-widgets (legacy compatibility seam pending row #21 cleanup; no current Web manifest declaration) | 2026-05-29 |
+| clipboard | packages/plugin-clipboard/ | Planned (Deferred) | §5.5 | @repo/core (inactive scaffold; `enabled:false`; no desktop host registration) | 2026-05-29 |
+| widgets | packages/plugin-widgets/ | Migrating (Merge Target: Web Dashboard) | §5.6 | @repo/core, @repo/core-data (legacy package inactive; canonical runtime widgets live in `@repo/plugin-web-dashboard-grid` + `@repo/plugin-web-dashboard-widgets`) | 2026-05-29 |
+| meditation | packages/plugin-meditation/ (absent) | Deprecated (Retired) | §5.7 | @repo/plugin-web-meditation (canonical runtime owner) | 2026-05-29 |
+| pet | packages/plugin-pet/ | Migrating (Merge Target: `@repo/plugin-web-pet`) | §5.9 | @repo/core, @repo/core-data (legacy package inactive; preserve reusable assets until quarantine decision lands) | 2026-05-29 |
 | ai-cube | packages/plugin-ai-cube/ | In-Dev | §5.8 | @repo/core, @repo/core-data, @repo/ui | 2026-05-21 |
 | settings | packages/plugin-settings/ | Planned | — | @repo/core, @repo/ui | — |
 
