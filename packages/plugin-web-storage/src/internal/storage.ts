@@ -24,6 +24,14 @@ import {
   unmountDesktopRepoBridge,
   writeDesktopRepoValue,
 } from "./desktopRepoBridge.js";
+import {
+  getLastDesktopWebImportReport,
+  runDesktopWebDataImport,
+  scanDesktopWebImportEligibility,
+  setDesktopWebImportRuntimeEnabled,
+  type DesktopWebImportReport,
+} from "./desktopWebDataMigration.js";
+import type { DesktopWebImportSurface } from "@repo/core-data";
 
 // ---------------------------------------------------------------------------
 // Same-tab pub/sub bus
@@ -434,7 +442,21 @@ export function removePrefAutosave(suffix: string): void {
   void writeDesktopRepoValue(key, null);
 }
 
+const DESKTOP_WEB_IMPORT_REPORT_EVENT = "xai:web:desktop-import-report";
+
+function publishDesktopWebImportReport(report: DesktopWebImportReport): void {
+  if (typeof window === "undefined") {
+    return;
+  }
+  window.dispatchEvent(
+    new CustomEvent(DESKTOP_WEB_IMPORT_REPORT_EVENT, {
+      detail: report,
+    }),
+  );
+}
+
 export function mountDesktopLocalFirstRepositoryBridge(enabled: boolean): void {
+  setDesktopWebImportRuntimeEnabled(enabled);
   if (!enabled) {
     unmountDesktopRepoBridge();
     return;
@@ -451,4 +473,28 @@ export function mountDesktopLocalFirstRepositoryBridge(enabled: boolean): void {
       `[plugin-web-storage] desktop repository bridge degraded: ${bridgeError.kind} (${bridgeError.message})`,
     );
   }
+
+  void scanDesktopWebImportEligibility().then((report) => {
+    publishDesktopWebImportReport(report);
+  });
+}
+
+export async function runDesktopLocalFirstWebDataImport(input?: {
+  boundaryKey?: string;
+  surfaces?: readonly DesktopWebImportSurface[];
+  allowBoundaryOverride?: boolean;
+}): Promise<DesktopWebImportReport> {
+  const report = await runDesktopWebDataImport(input);
+  publishDesktopWebImportReport(report);
+  return report;
+}
+
+export function getDesktopLocalFirstWebDataImportReport():
+  | DesktopWebImportReport
+  | null {
+  return getLastDesktopWebImportReport();
+}
+
+export function getDesktopLocalFirstWebDataImportReportEventName(): string {
+  return DESKTOP_WEB_IMPORT_REPORT_EVENT;
 }

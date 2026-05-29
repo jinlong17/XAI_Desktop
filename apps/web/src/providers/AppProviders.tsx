@@ -14,7 +14,11 @@ import { DesktopNativeNotificationsBridge } from "@repo/desktop-native-notificat
 import { DesktopStatusbarQuickActionsBridge } from "@repo/desktop-statusbar-quick-actions/web";
 import { DesktopGlobalHotkeyQuickOpenBridge } from "@repo/desktop-global-hotkey-quick-open/web";
 import { DesktopAutoUpdateReleaseChannelBridge } from "@repo/desktop-auto-update-release-channel/web";
-import { mountDesktopLocalFirstRepositoryBridge } from "@repo/plugin-web-storage";
+import {
+  getDesktopLocalFirstWebDataImportReport,
+  mountDesktopLocalFirstRepositoryBridge,
+  runDesktopLocalFirstWebDataImport,
+} from "@repo/plugin-web-storage";
 
 type WebAuthMode = "live" | "mock-authenticated" | "mock-unauthenticated";
 type MockAuthSession = {
@@ -300,6 +304,29 @@ export function AppProviders({ children }: PropsWithChildren) {
 
   useEffect(() => {
     mountDesktopLocalFirstRepositoryBridge(isDesktopOfflineRuntime);
+  }, [isDesktopOfflineRuntime]);
+
+  useEffect(() => {
+    const runtime = globalThis as typeof globalThis & {
+      __XAI_DESKTOP_WEB_IMPORT__?: {
+        run: typeof runDesktopLocalFirstWebDataImport;
+        getLastReport: typeof getDesktopLocalFirstWebDataImportReport;
+      };
+    };
+
+    if (!isDesktopOfflineRuntime) {
+      delete runtime.__XAI_DESKTOP_WEB_IMPORT__;
+      return;
+    }
+
+    runtime.__XAI_DESKTOP_WEB_IMPORT__ = {
+      run: runDesktopLocalFirstWebDataImport,
+      getLastReport: getDesktopLocalFirstWebDataImportReport,
+    };
+
+    return () => {
+      delete runtime.__XAI_DESKTOP_WEB_IMPORT__;
+    };
   }, [isDesktopOfflineRuntime]);
 
   return (

@@ -39,6 +39,9 @@ export {
   setPref,
   removePref,
   mountDesktopLocalFirstRepositoryBridge,
+  runDesktopLocalFirstWebDataImport,
+  getDesktopLocalFirstWebDataImportReport,
+  getDesktopLocalFirstWebDataImportReportEventName,
   isPrefKey,
   // Open-ended xai_pref_* family — typed read/write/remove (mirrors usePrefAutosave).
   getPrefAutosave,
@@ -49,6 +52,7 @@ export type {
   GetPrefAutosaveOptions,
   SetPrefAutosaveOptions,
 } from "./internal/storage.js";
+export type { DesktopWebImportReport } from "./internal/desktopWebDataMigration.js";
 
 // ---- usePref hook ----------------------------------------------------------
 export { usePref } from "./internal/usePref.js";

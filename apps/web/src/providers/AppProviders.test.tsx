@@ -11,6 +11,14 @@ const authMock = vi.hoisted(() => {
   };
 });
 
+const storageMock = vi.hoisted(() => {
+  return {
+    mountBridge: vi.fn(),
+    runImport: vi.fn(async () => ({ status: "ok" })),
+    getLastReport: vi.fn(() => null),
+  };
+});
+
 vi.mock("@repo/web-auth-device-session/web", () => ({
   createRestRpcDeviceTransport: authMock.createTransport,
   WebAuthSessionProvider: ({ children, client, config }: PropsWithChildren<{ client: unknown; config: unknown }>) => {
@@ -33,6 +41,16 @@ vi.mock("@repo/web-auth-device-session/web", () => ({
   }),
 }));
 
+vi.mock("@repo/plugin-web-storage", async (importOriginal) => {
+  const actual = await importOriginal<typeof import("@repo/plugin-web-storage")>();
+  return {
+    ...actual,
+    mountDesktopLocalFirstRepositoryBridge: storageMock.mountBridge,
+    runDesktopLocalFirstWebDataImport: storageMock.runImport,
+    getDesktopLocalFirstWebDataImportReport: storageMock.getLastReport,
+  };
+});
+
 function setEnv(key: string, value: string | undefined): void {
   const env = import.meta.env as Record<string, string | undefined>;
   if (value === undefined) {
@@ -47,6 +65,10 @@ describe("AppProviders desktop auth contract", () => {
     authMock.providerProps.length = 0;
     authMock.bridgeProps.length = 0;
     authMock.createTransport.mockClear();
+    storageMock.mountBridge.mockClear();
+    storageMock.runImport.mockClear();
+    storageMock.getLastReport.mockClear();
+    delete (globalThis as { __XAI_DESKTOP_WEB_IMPORT__?: unknown }).__XAI_DESKTOP_WEB_IMPORT__;
     setEnv("VITE_WEB_AUTH_MODE", undefined);
     setEnv("VITE_WEB_RUNTIME_PROFILE", undefined);
     setEnv("VITE_SUPABASE_URL", undefined);
@@ -64,6 +86,8 @@ describe("AppProviders desktop auth contract", () => {
 
     expect(authMock.createTransport).not.toHaveBeenCalled();
     expect(authMock.bridgeProps).toHaveLength(0);
+    expect(storageMock.mountBridge).toHaveBeenCalledWith(false);
+    expect((globalThis as { __XAI_DESKTOP_WEB_IMPORT__?: unknown }).__XAI_DESKTOP_WEB_IMPORT__).toBeUndefined();
     expect(authMock.providerProps).toHaveLength(1);
     expect(authMock.providerProps[0]?.config).toBeNull();
     expect(authMock.providerProps[0]?.client).toBeTruthy();
@@ -89,5 +113,16 @@ describe("AppProviders desktop auth contract", () => {
 
     expect(authMock.createTransport).not.toHaveBeenCalled();
     expect(authMock.bridgeProps).toHaveLength(0);
+    expect(storageMock.mountBridge).toHaveBeenCalledWith(true);
+
+    const runtime = globalThis as {
+      __XAI_DESKTOP_WEB_IMPORT__?: {
+        run: unknown;
+        getLastReport: unknown;
+      };
+    };
+    expect(runtime.__XAI_DESKTOP_WEB_IMPORT__).toBeTruthy();
+    expect(runtime.__XAI_DESKTOP_WEB_IMPORT__?.run).toBe(storageMock.runImport);
+    expect(runtime.__XAI_DESKTOP_WEB_IMPORT__?.getLastReport).toBe(storageMock.getLastReport);
   });
 });
