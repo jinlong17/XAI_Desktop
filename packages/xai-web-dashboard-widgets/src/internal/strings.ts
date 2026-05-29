@@ -40,3 +40,38 @@ export type StickyComposerStrKey = keyof typeof STR_STICKY_COMPOSER;
 export function str(key: StickyComposerStrKey, lang: "en" | "zh"): string {
   return STR_STICKY_COMPOSER[key][lang];
 }
+
+// ---------------------------------------------------------------------------
+// §F — Widget empty-state strings (real-data wiring, 2026-05-28)
+// ---------------------------------------------------------------------------
+
+/**
+ * Local bilingual strings for the 5 real-data widgets' empty states.
+ *
+ * Per §F design: NO `plugin-web-tokens` edit. Empty-state copy lives here,
+ * extending the EXISTING local STR table (added alongside STR_STICKY_COMPOSER
+ * by §E). The existing widget LABELS (`dashboard.tasks_done`, `streak`,
+ * `pomos`, `upcoming`) continue flowing through `useI18n` / `plugin-web-tokens`.
+ *
+ * N2 build note: empty-state keys go in THIS dedicated table (STR_WIDGET_EMPTY),
+ * NOT blindly into STR_STICKY_COMPOSER.
+ *
+ * Design:  packages/xai-web-dashboard-widgets/docs/design.md §F.1 #13
+ * API:     packages/xai-web-dashboard-widgets/docs/api.md §F
+ */
+export const STR_WIDGET_EMPTY = {
+  /** StatTasks: no tasks at all (total === 0). */
+  stat_tasks_empty:   { en: "No tasks yet",    zh: "暂无任务" },
+  /** StatStreak: habits exist but 0-streak today (and no habit at all). */
+  stat_streak_empty:  { en: "No habits yet",   zh: "暂无习惯" },
+  /** UpcomingWidget: calendar store is empty or no upcoming events. */
+  upcoming_empty:     { en: "No upcoming events", zh: "暂无近期事件" },
+} as const;
+
+/** Typed key for STR_WIDGET_EMPTY. */
+export type WidgetEmptyStrKey = keyof typeof STR_WIDGET_EMPTY;
+
+/** Convenience accessor for empty-state strings: `strEmpty(key, lang)`. */
+export function strEmpty(key: WidgetEmptyStrKey, lang: "en" | "zh"): string {
+  return STR_WIDGET_EMPTY[key][lang];
+}
