@@ -663,3 +663,265 @@ Checklist results (8 gates):
 - **R4 (Vite dev CSP gap):** `pnpm dev` does NOT apply `_headers`; only `pnpm build && wrangler pages dev` exercises the deployed CSP. CSP1 source-text guard mitigates at unit-test level; manual smoke AS5 confirms at runtime (deferred 24h).
 - **R5 (OpenAI-compatible base-URL not in CSP):** Documented in aiPane.tsx desc; user-blocked scenario only. Follow-up row if needed.
 
+---
+
+## Feature-Dev Lineage — AI Tool Layer (2026-05-29)
+
+> APPEND-ONLY block. The Status Panel at the TOP of this file (`SHIPPED`
+> 2026-05-24, row #18 baseline) and the 2026-05-25 Real-LLM-Adapter lineage
+> block above are NOT mutated by this lineage. This block tracks the NEW
+> feature-dev cycle introduced by the `xai-web-ai-tool-layer` P0 carve-out
+> (commit `e101bc6`, ADR-0010 §D4). Docs live in `xai-web-ai-chat/docs/`;
+> code lives in `plugin-web-ai-chat/` (+ additive subscribers in
+> `xai-web-tasks/` & `xai-web-calendar/`, +2 channels in `@repo/core`).
+
+### Lineage Status Panel
+
+| Field | Value |
+|---|---|
+| Workflow | FEATURE_DEV |
+| Target | xai-web-ai-tool-layer |
+| Title | AI Tool Layer — READ real app context (context injection) + WRITE via Anthropic tool-use (create_task + create_calendar_event) with MANDATORY in-chat confirmation (no silent writes), bounded single round-trip, per-module write event channels executed by owning-module subscribers via pure reducer + setPref |
+| Current Phase | FEATURE_VERIFY |
+| Status | **READY_FOR_VERIFY** |
+| Suggested Next | **feature-verify** |
+| Executor | claude-sonnet-4-6 (feature-auto-build P1-P5, 2026-05-29) |
+| Updated | 2026-05-29 |
+| Blockers | None. NOTE (not a blocker): P4 edits `packages/core/src/types/events.ts` (+2 `web:*` channels) — carve-out-AUTHORIZED; flagged as a `dev`-branch merge surface (R5, low conflict — different namespace from `dev`'s `desktop:*`). |
+| Verify Cross-vendor | yes — primary Codex `gpt-5.x` cold-read of tool-use parse + no-silent-write + context provider; real-LLM tool round-trip + cross-vendor browser smoke DEFERRED 24h (operator, needs API key) per ADR-0008 §S3 / ADR-0009 §D2-G2 (gap-closure row #2 precedent). |
+| Automation Mode | A-Claude (manual step-by-step; planner does not pre-commit a loop — 5 phases, each stops for human confirmation) |
+| Executor | claude-opus-4-8[1m] (feature-review, 2026-05-29) |
+| Updated | 2026-05-29 |
+| Authority | ADR-0010 §D4 (P0 maintenance carve-out) + carve-out commit `e101bc6` |
+| Carve-out | `docs/reviews/_p0-carve-outs/20260529-ai-tool-layer.md` |
+| Manifest | `docs/workflow/roadmap/xai-web-ai-tool-layer.md` |
+| Branch | `web` (does NOT touch `dev`) |
+| Write Scope | **planning phase (this run)**: `packages/xai-web-ai-chat/docs/` + `docs/reviews/xai-web-ai-tool-layer/` + `docs/workflow/roadmap/xai-web-ai-tool-layer.md` only. **build phases (later)** extend to: P1 `plugin-web-ai-chat/src/internal/contextProvider.ts` + send path + tests · P2 `plugin-web-ai-chat/src/internal/{llmProvider,claudeStreamAdapter,toolUseTypes}.ts` + tests · P3 `plugin-web-ai-chat/src/{toolRegistry(internal),ConfirmationCard.tsx,AiChatModule.tsx}` + tests · P4 `packages/core/src/types/events.ts` (+2 entries) + `xai-web-tasks/src/internal/aiCreateSubscriber.ts` + `xai-web-calendar/src/internal/aiCreateSubscriber.ts` + **subscriber mount in `apps/web/src/App.tsx` as a Shell-sibling (resolved at review per the SHIPPED `<DesktopPet>`/`<CommandPalette>` precedent — OQ2) + the 2 owning-module workspace deps in `apps/web/package.json` if not already present** + tests · P5 `isAiConvoRecord` back-compat + `docs/PLUGIN_MAP.md` (ai-chat + tasks + calendar row notes) + verify-report. |
+
+### Artifacts Index (this lineage)
+
+- Carve-out (authority + full scope): `docs/reviews/_p0-carve-outs/20260529-ai-tool-layer.md`
+- Discovery review (protocol research + 5 planner's calls): `docs/reviews/xai-web-ai-tool-layer/20260529-discovery-review.md`
+- Manifest: `docs/workflow/roadmap/xai-web-ai-tool-layer.md`
+- Design extension: `packages/xai-web-ai-chat/docs/design.md` §2026-05-29 Extension
+- API extension: `packages/xai-web-ai-chat/docs/api.md` §13
+- Test extension: `packages/xai-web-ai-chat/docs/test.md` §8
+
+### Decision Headline (this lineage)
+
+Give the SHIPPED-but-blind-and-inert AI (a) READ access to real app state via **context injection** (a pure `contextProvider.buildTodayContext` reusing the `dataReads`/`narrowTaskCols` selector precedent — NO cross-plugin import) and (b) WRITE via the **Anthropic Messages API tool-use protocol** (pinned 2026-05-29: `tools` param + `tool_use` content blocks + `input_json_delta` streaming + `stop_reason:"tool_use"` + `tool_result` round-trip — discovery §2).
+
+v1 tools = `create_task` + `create_calendar_event` ONLY. Reads are context injection, not tools. Anthropic-first (openai-compatible tool writes deferred; read context still injected). Per-module write channels (`web:tasks:create-requested` / `web:calendar:create-requested`). Bounded single round-trip (no agentic loop). Every write goes through a MANDATORY in-chat confirmation card — the write event is emitted ONLY on explicit Confirm (no silent writes — acceptance anchor). The owning module (tasks/calendar) consumes the typed event and executes via its OWN pure reducer (`addCard`/`createEvent`) over `getPref`/`setPref` in an always-on, route-independent subscriber. `buildBody` is widened additively (tools + `content: string | ContentBlock[]`); all SHIPPED non-tool behaviour stays byte-for-byte. `isAiConvoRecord` stays backward-compatible. No new npm dep, no new provider, no new CSP origin, no `plugin-web-tokens`/`dev`/SHIPPED-archive/ADR edits. The ONE boundary expansion (`events.ts` +2 channels) is carve-out-authorized.
+
+### Phase Plan (5 phases — per discovery §8)
+
+> Each phase = one `feature-build` run; stops for human confirmation after.
+
+#### Phase P1 — Context provider (read-only)
+**Scope:** `plugin-web-ai-chat/src/internal/contextProvider.ts` (`buildTodayContext(now)` + 4 LOCAL narrowing predicates copied from dataReads/narrowTaskCols precedent — no cross-plugin import); inject the snapshot into the send path (first user turn / system) when a key is set; honest empty-state line; token budget ≤~600.
+**Tests:** CP-1..CP-8 (per-source narrowing, today-filter, empty, budget, deterministic).
+**No tools, no events, no UI changes yet.** All SHIPPED ai-chat tests stay green.
+**DoD:** plugin lint `--max-warnings 0` + typecheck + test green; commit `feat(plugin-web-ai-chat): P1 context provider read-only (xai-web-ai-tool-layer)`.
+
+#### Phase P2 — Adapter tool-use protocol
+**Scope:** widen `llmProvider.buildBody` (optional `tools`/`toolChoice` on Anthropic branch; `messages[].content` → `string | ContentBlock[]`); extend `claudeStreamAdapter`/`extractDelta` to surface a `tool_use` result via per-index `input_json_delta` accumulation + `JSON.parse` at `content_block_stop`, and detect `stop_reason:"tool_use"`; new `internal/toolUseTypes.ts`. Reuse `sseParser` unchanged.
+**Tests:** TU-1..TU-7 (§2.5 streaming golden, non-stream tool_use, interleaved text+tool, content-block body, round-trip body) + TU-REG (ALL SHIPPED adapter/sse/provider tests green).
+**No UI/registry/events yet.**
+**DoD:** plugin lint+typecheck+test green; commit `feat(plugin-web-ai-chat): P2 adapter tool-use protocol (buildBody + stream parse) (xai-web-ai-tool-layer)`.
+
+#### Phase P3 — Tool registry + confirmation UI
+**Scope:** `internal/toolRegistry.ts` (`AI_TOOLS` = create_task + create_calendar_event: schema + `toConfirmation` + `toWriteEvent`); `ConfirmationCard.tsx`; extend `AiChatModule` state machine (streaming → pendingConfirmation → Confirm/Cancel) per design §state. Context injection from P1 active on send.
+**Tests:** TR-1..TR-5, CC-1..CC-3, IT-1 (card rendered), **IT-2 (NO-SILENT-WRITE: pending-not-confirmed → 0 writes + 0 store mutations)**, IT-3 (Cancel → tool_result is_error + 0 writes). IT-REG (I1..I23 green via mockNoOpStream).
+**Events not wired yet (Confirm handler stubs the emit until P4) OR P4 lands the channel first — build order flexible; planner suggests P3 renders+gates confirmation, P4 wires the real emit+subscriber+round-trip.**
+**DoD:** plugin lint+typecheck+test green; commit `feat(plugin-web-ai-chat): P3 tool registry + confirmation card + state machine (xai-web-ai-tool-layer)`.
+
+#### Phase P4 — Write event channel + owning-module subscribers
+**Scope:** add 2 EventMap entries to `packages/core/src/types/events.ts` (`web:tasks:create-requested`, `web:calendar:create-requested` — CARVE-OUT AUTHORIZED); Confirm handler emits the typed write event (ONLY here) with `requestId`=tool_use.id; new always-on subscribers `xai-web-tasks/src/internal/aiCreateSubscriber.ts` (→ `addCard` + `setPref("xai_task_cols")`) + `xai-web-calendar/src/internal/aiCreateSubscriber.ts` (→ `createEvent` + `setPref("xai_calendar_events")`), mounted route-independently (mount site confirmed at review, OQ2); after execute, send ONE `tool_result` turn + final stream (bounded round-trip, counter cap = 1).
+**Tests:** IT-4 (Confirm → emit once + mapped payload + requestId match + final stream), IT-5 (bounded — second tool_use not executed), TS-1..TS-4 (tasks subscriber: store mutation, idempotent per requestId, route-independent, no cross-plugin import), CS-1..CS-4 (calendar subscriber), CORE-1 (`@repo/core` typecheck with new entries).
+**DoD:** plugin + tasks + calendar + core all green; commit `feat(plugin-web-ai-chat+tasks+calendar+core): P4 write event channel + owning-module subscribers + tool_result round-trip (xai-web-ai-tool-layer)`.
+
+#### Phase P5 — Persistence back-compat + polish + docs + verify
+**Scope:** `isAiConvoRecord` back-compat (optional tool-call fields; v1 messages MAY stay in-memory per SHIPPED FA-7 — OQ1); no-key honesty copy; bilingual confirmation/thread copy; `docs/PLUGIN_MAP.md` row-note updates (ai-chat + tasks + calendar); full-suite green; write `docs/reviews/xai-web-ai-tool-layer/20260529-verify-report.md` (or dated) recording automated gates + deferred operator smoke.
+**Tests:** BC-1 (isAiConvoRecord accepts old + new), BC-2 (full suites: plugin-web-ai-chat + plugin-web-tasks + plugin-web-calendar + core typecheck + apps/web test+build).
+**DoD:** all gates green; cross-vendor + real-key smoke deferred 24h (operator); Status → READY_TO_SHIP; Suggested Next = `ship`.
+**Commit:** `feat(plugin-web-ai-chat): P5 isAiConvoRecord back-compat + polish + verify-report (xai-web-ai-tool-layer)`.
+
+### Risks (this lineage) — discovery §7 register
+
+| ID | Risk | Severity | Mitigation |
+|---|---|---|---|
+| R1 | buildBody content widening regresses SHIPPED non-tool path | High | Additive union; string default preserved; SHIPPED adapter suite green as P2 DoD (TU-REG). |
+| R2 | input_json_delta accumulation bug (per-delta parse) | High | Pin §2.5: accumulate per content-block index, JSON.parse once at content_block_stop; TU-2 golden. |
+| R3 | Silent write (write without explicit Confirm) | **CRITICAL** | Emit only in Confirm handler; IT-2/IT-3 enforce 0 writes when not confirmed / on cancel. |
+| R4 | Subscriber not mounted on /app/ai → write lost | High | Imperative getPref/setPref in always-on (route-independent) subscriber; TS-3/CS-3; mount site confirmed at review (OQ2). |
+| R5 | `events.ts` `dev`-branch merge surface | Medium | `web:*` namespace ≠ `dev` `desktop:*`; low conflict but REAL — flagged for eventual main merge (carve-out dev-branch note). |
+| R6 | Context token bloat / stale snapshot | Medium | ≤~600 token budget + capped lists; point-in-time snapshot acceptable v1. |
+| R7 | isAiConvoRecord back-compat break | Medium | Optional fields only; BC-1 regression test. |
+| R8 | addCard internal vs createEvent public asymmetry | Low | tasks subscriber uses its OWN internal addCard (no export); calendar reuses public createEvent; both within-package. |
+| R9 | openai-compatible user expects tool writes | Low | v1 copy: writes require Anthropic; read context still works. |
+
+Open questions (for review): OQ1 persist full message history now vs defer (default defer); OQ2 exact always-on subscriber mount site (route-independent liveness constraint).
+
+### Phase Progress (xai-web-ai-tool-layer)
+
+| Phase | Status | Commit | Notes |
+|---|---|---|---|
+| P1 — Context provider (read-only) | DONE | 2fc0a53 | contextProvider.ts + claudeStreamAdapter context injection; 9 CP tests; 155/155 total |
+| P2 — Adapter tool-use protocol | DONE | 67e8ea8 | toolUseTypes.ts + buildBody widening + claudeStreamAdapter tool_use parse (per-index accumulator + stop_reason); 7 TU tests; 162/162 total |
+| P3 — Tool registry + confirmation UI | DONE | 758adfa | toolRegistry.ts + ConfirmationCard.tsx + AiChatModule state machine (pendingConfirmation); IT-1/IT-2/IT-3 no-silent-write tests; 175/175 total |
+| P4 — Write event channel + owning-module subscribers | DONE | 55d5ee6 | core/events.ts +2 + aiCreateSubscriber (tasks+calendar) + App.tsx Shell-sibling mount + AiChatModule.handleConfirm real emit + TS-1..4/CS-1..4/IT-4 tests; 176/176 ai-chat + 128/128 tasks + 305/305 calendar |
+| P5 — Persistence back-compat + polish + docs | DONE | (this commit) | BC-1..BC-4 back-compat tests; PLUGIN_MAP updates; verify-report at docs/reviews/xai-web-ai-tool-layer/20260529-verify-report.md; 180/180 ai-chat tests |
+
+### Review Notes (2026-05-29, feature-review — claude-opus-4-8[1m])
+
+**Verdict: APPROVED.** 0 blockers, 4 non-blocking recommendations. The plan is
+executable as written. Every load-bearing claim was ground-checked against real
+source (not taken on faith). The three lifelines all hold.
+
+**Lifeline verdicts:**
+
+1. **No-silent-write (R3 — CRITICAL) — HOLDS, structurally + test-locked.**
+   Verified there is NO architectural backdoor: `claudeStreamAdapter.ts`
+   (the AI's only network surface) has no `setPref` and emits only
+   `web:ai:rate-limited`/`request-failed` — it physically cannot write app
+   state or emit a create event. `AiChatModule.tsx` today emits only
+   `web:shell:module-change` (no `web:*:create-requested`, no task/calendar
+   `setPref`). After the feature lands, the write event has **exactly one
+   producer** (the Confirm handler, added P4) and the store has **exactly one
+   mutation path** (the owning-module subscriber consuming that event). A write
+   cannot occur unless the user clicks Confirm. IT-2 (pending-not-confirmed →
+   0 writes + 0 store mutations) + IT-3 (Cancel → tool_result(is_error) +
+   0 writes) lock the invariant. PASS.
+
+2. **Anthropic tool-use protocol (§2) — PINNED CORRECTLY.** §2.1 tool def
+   (`name` `^[a-zA-Z0-9_-]{1,64}$` + `description` + `input_schema` +
+   optional `input_examples`), §2.2 `tool_choice` `auto` default / `any`+`tool`
+   suppress preamble + extended-thinking-incompatible, §2.3 `stop_reason:
+   "tool_use"` + optional leading `text` block + `tool_use{id,name,input}`,
+   §2.4 `user` `tool_result{tool_use_id,content,is_error?}` round-trip,
+   §2.5 streaming `content_block_start(tool_use,input:{})` →
+   `input_json_delta.partial_json` (per-block-index concat, `JSON.parse` ONCE
+   at `content_block_stop`) → `message_delta.stop_reason:"tool_use"`, §2.6
+   `content: string | ContentBlock[]` widening — all match the real Messages
+   API. The R2 "accumulate per index, parse once at stop" pin is the correct
+   critical-correctness detail. Planner did NOT pin it wrong. PASS.
+
+3. **events.ts clean additive expansion + dev-merge flag (R5) — HOLDS.**
+   `packages/core/src/types/events.ts` is a single flat per-owner interface;
+   confirmed NO existing `web:tasks:*` or `web:calendar:*` keys (grep) — the
+   two new entries are purely additive, identical in form to the SHIPPED
+   `web:ai:*`/`web:shell:*` precedents (no collision, no change to existing
+   channels). The dominant per-owner/per-domain convention (pomodoro/habits/
+   matrix/dashboard/board/ai) strongly supports planner's-call #4 (per-module
+   channels over a generic `web:ai:action-confirmed`). dev-branch merge surface
+   flagged in Status Panel Blockers + R5 + carve-out (`web:*` ≠ `dev`'s
+   `desktop:*`; low conflict, REAL). PASS.
+
+**Other gates:**
+
+- **Reducer anchors verified against source.** `addCard(prev: TaskCol[],
+  draft: NewTaskDraft, targetBucket: BucketId, now?)` is INTERNAL (not in tasks
+  `index.ts`) — so the tasks subscriber (also internal) reaches it with no new
+  export (R8 resolved). `createEvent(store, partial: Omit<UserCalEvent,
+  "id"|"createdAt"|"updatedAt">) → {next, created}` is PUBLIC in calendar
+  `index.ts` (line 69). Both signatures match the discovery §3 anchors and the
+  api §13.5 subscriber bodies exactly. The `create_task`/`create_calendar_event`
+  schema→reducer mappings are feasible (see Rec3).
+- **Context provider read-only.** Reuses the verified `dataReads/*`
+  (`isTaskColsRecord`, `isPomodoroSession`, `isHabitsState`, `isUserCalEventMap`,
+  `calUpcoming`) + `narrowTaskCols` local-predicate precedent — no cross-plugin
+  import, malformed-drop-silently. ≤~600-token budget + honest empty-state.
+  Pure read, no new storage key. PASS.
+- **5 planner's calls** — all justified and grounded: #1 create-only minimum,
+  #2 read=context-injection (lower latency, provider-agnostic, cleaner
+  no-silent-action story), #3 Anthropic-first/openai-compatible-deferred
+  (different wire shape), #4 per-module channels (convention-matched), #5
+  bounded single round-trip (counter cap = 1, no agentic loop). All sound.
+- **Backward compat** — `buildBody` content-string default preserved
+  byte-for-byte (TU-6 + TU-REG); `isAiConvoRecord` optional-field extension
+  (BC-1); SHIPPED I1..I23 stay green via `mockNoOpStream()` (IT-REG). PASS.
+- **Phase split** — 5 phases each buildable + testable + independently
+  committable, with a clean dependency order (P1 context independent; P2 adapter
+  protocol; P3 registry+confirmation UI gates the write; P4 wires the real
+  emit+subscriber+round-trip depending on P2+P3; P5 back-compat+polish+verify).
+  No phase mixes unrelated concerns. PASS.
+- **Test strategy** — mocked LLM tool-use (canned SSE golden + non-stream JSON),
+  real in-process event bus + real `getPref`/`setPref`, injected `now`,
+  no-silent-write + bounded-round-trip + context-injection + BC all covered.
+  Real-key + cross-vendor smoke correctly deferred to operator (ADR-0008 §S3 /
+  ADR-0009 §D2-G2, gap-closure row #2 precedent). PASS.
+- **Boundaries** — no `plugin-web-tokens` edit, no new dep, no new provider, no
+  new CSP origin (Anthropic already allow-listed), no `dev`/SHIPPED-archive/ADR
+  edits. The ONE expansion (events.ts +2) is carve-out-authorized. PASS.
+
+**OQ2 (subscriber mount site) — RESOLVED at review (was the one item the planner
+delegated to me).** Concrete resolution: each owning module exports a zero-UI
+`useAiCreateRequestSubscriber()` hook (or `<…CreateRequestSubscriber />` zero-render
+component); `apps/web/src/App.tsx` mounts BOTH as **siblings of `<Shell>`**,
+alongside the SHIPPED `<DesktopPet>` (App.tsx line 190-191) and `<CommandPalette>`
+(line 193) — both already route-independent "floats over all routes; not a routed
+module" siblings (ADR-0007 §S6 Option B). This guarantees the route-independent
+liveness constraint (R4) with an established precedent. **P4 write-scope updated**
+above to include `apps/web/src/App.tsx` (mount) + `apps/web/package.json` (the 2
+owning-module workspace deps if not already present). This is the only edit to
+`apps/web/src` in the feature and it is a sibling-mount, not business logic.
+
+**OQ1 (full message-history persistence)** — endorse the planner's default
+(DEFER; v1 keeps messages in-memory per SHIPPED FA-7). The hard requirement
+(`isAiConvoRecord` back-compat, BC-1) is mandatory and retained. Not elevated to
+in-scope — keeps P5 tight.
+
+**Non-blocking recommendations** (planner/builder may roll into the named phase
+without re-review):
+
+- **Rec1 (P2 — `StreamChunk` is a public type; widen additively):** the adapter
+  must surface a `tool_use` result, but the SHIPPED public `StreamChunk`
+  (`{accumulated, done}`) is consumed by `AiChatModule` I19..I23. Add the
+  tool-use surfacing as an OPTIONAL additive field (e.g. `toolUse?: {...}`) so
+  the text-only consumers stay byte-for-byte unaffected (reinforces TU-REG /
+  R1). Note this explicitly in P2 so it's a non-breaking type change.
+- **Rec2 (P2 — `input_json_delta` accumulation is stateful, not a pure
+  `extractDelta`):** today `extractDelta(parsed, provider)` is stateless/
+  per-event. Per-block-index `partial_json` accumulation requires STATE carried
+  across the `for await` loop in `streamCompleteChat` (a per-index buffer map,
+  `JSON.parse` at `content_block_stop`), plus reading `message_delta.stop_reason`
+  (the loop currently only breaks on the openai `__done__` sentinel). Pin this
+  in P2 as a loop-local accumulator (not a widened pure `extractDelta`) so the
+  R2 golden (TU-2) is implemented at the right seam.
+- **Rec3 (P4 — `create_task` → `NewTaskDraft.withDate` derivation):** the
+  `create_task` schema exposes `title`/`bucket`/`tag` but `NewTaskDraft` is
+  `{title, tag?, withDate}` (no `bucket`, has `withDate`). The tasks subscriber
+  must map `bucket → targetBucket` and derive `withDate` (e.g. `bucket !==
+  "nodate"`) when calling `addCard(getPref(...), {title, tag, withDate},
+  bucket)`. Pin this mapping in P4 (TS-1 already asserts the card lands in the
+  mapped bucket; make `withDate` derivation explicit).
+- **Rec4 (P4 — bound the idempotency seen-set):** §13.9 says subscribers are
+  idempotent per `requestId` (StrictMode double-emit guard). Implement the
+  seen-set as a bounded/module-instance-scoped ref (e.g. a `Set` capped or
+  cleared on unmount) so it does not grow unbounded across a long session.
+  TS-2/CS-2 assert the dedupe; just keep the structure bounded.
+
+### Suggested Next
+
+`feature-build` — implement Phase P1 (context provider, read-only). Manual
+step-by-step per Automation Mode (A-Claude); `feature-build` does ONE phase per
+run then stops for human confirmation. The 5 lifelines to keep intact across the
+build: (1) no-silent-write — emit ONLY in Confirm handler (IT-2/IT-3); (2)
+Anthropic protocol — per-block `input_json_delta` accumulate + parse once at
+`content_block_stop` (TU-2); (3) events.ts additive-only (+2 entries, never
+touch existing `web:ai:*`); (4) subscriber mounted route-independently as a
+Shell-sibling in App.tsx (R4/OQ2); (5) all SHIPPED tests green every phase
+(TU-REG / IT-REG / BC).
+
+### Work Log (this lineage)
+
+| Timestamp | Executor | Action | Commits | Next |
+|---|---|---|---|---|
+| 2026-05-29 | claude-opus-4-8[1m] (feature-plan) | Read carve-out IN FULL + ADR-0010 + SOP + SHIPPED row #18 + gap-closure row #2 design/api/test/dev_log lineage + `events.ts` (full) + SHIPPED adapter stack (`llmProvider.buildBody`, `claudeStreamAdapter`/`extractDelta`, `sseParser`) + tasks `addCard`/`NewTaskDraft`/`TasksModule` + calendar `createEvent`/`useUserCalEvents`/`UserCalEvent`/public barrel + read-selector precedents (`dataReads/calUpcoming` + `isUserCalEventMap` + `narrowTaskCols`) + PLUGIN_MAP statuses (ai-chat/tasks/calendar all Stable). **RESEARCH:** WebSearch ×2 + WebFetch ×3 → pinned the current Anthropic Messages API tool-use protocol (tools param + tool_use block + input_json_delta streaming + stop_reason + tool_result round-trip; literal §2.5 streaming golden) into discovery §2 + design FA-5/6 + api §13.0. Decided Option A (context injection for read + Anthropic tool-use for write + bounded single round-trip + per-module write channels + owning-module subscribers via reducer+setPref). Resolved all 5 planner's calls (discovery §6). Wrote discovery review (`docs/reviews/xai-web-ai-tool-layer/20260529-discovery-review.md`) + manifest (`docs/workflow/roadmap/xai-web-ai-tool-layer.md`). Appended design §2026-05-29 Extension (13 frozen assumptions + file plan + state machine), api §13 (protocol + buildBody + contextProvider + toolRegistry + 2 EventMap entries + subscribers + confirmation), test §8 (CP/TU/TR/CC/IT/TS/CS/CORE/BC cases + no-silent-write acceptance mapping). 5-phase plan. R1..R9 + OQ1/OQ2. NO implementation code. Status → NEEDS_REVIEW. | — | feature-review |
+| 2026-05-29 | claude-opus-4-8[1m] (feature-review) | Reviewed discovery + design §2026-05-29 / api §13 / test §8 + manifest against all 5 gates + the 3 lifelines + 5 planner's calls. **Ground-checked every load-bearing claim against real source** (not on faith): `claudeStreamAdapter.streamCompleteChat` (line 79 content-string seam + line 132-157 stateless `extractDelta` parse loop — confirms R2 extension point); `AiChatModule.tsx` (only emits `web:shell:module-change`, no task/calendar `setPref` — no-silent-write backdoor verified absent); `tasksReducer.addCard(prev,draft,targetBucket,now?)` INTERNAL + `NewTaskDraft={title,tag?,withDate}`; `eventStore.createEvent(store,partial)→{next,created}` PUBLIC; `core/types/events.ts` single flat per-owner interface with NO existing `web:tasks:*`/`web:calendar:*` (grep — additive confirmed); `dataReads/*` + `narrowTaskCols` read-selector precedent exists; `apps/web/src/App.tsx` Shell-sibling mount precedent (`<DesktopPet>` L190-191 + `<CommandPalette>` L193). Anthropic protocol §2.1-§2.6 verified accurate to the real Messages API (input_json_delta per-block accumulate+parse-once pin correct). **Resolved OQ2** (subscriber mount = Shell-sibling in App.tsx per pet/cmdk precedent) and updated P4 write-scope to include `apps/web/src/App.tsx` + workspace deps. **APPROVED** — 0 blockers, 4 non-blocking recs (Rec1 widen public `StreamChunk` with optional `toolUse?`; Rec2 implement `input_json_delta` accumulation as a loop-local stateful accumulator + read `message_delta.stop_reason`, not a pure `extractDelta`; Rec3 pin `create_task`→`NewTaskDraft.withDate` derivation in the tasks subscriber; Rec4 bound the idempotency seen-set). Status → APPROVED, Suggested Next → feature-build. | — | feature-build |
+| 2026-05-29 02:10 | claude-sonnet-4-6 (feature-auto-build P1) | Implemented contextProvider.ts (buildTodayContext — 4 local narrowing predicates, ≤~600 token budget, honest empty-state). Extended claudeStreamAdapter to inject context lazily into the first user message when API key is configured (contextText optional override for tests). Added contextProvider.test.ts (CP-1..CP-8: task narrowing, done-exclusion, calendar today-filter, pomodoro aggregation, habits count, empty-state, malformed-drop, deterministic). All gates green: 155/155 tests; lint --max-warnings 0; tsc --noEmit. | 2fc0a53 | P2 |
+| 2026-05-29 02:12 | claude-sonnet-4-6 (feature-auto-build P2) | Implemented toolUseTypes.ts (AnthropicToolDef, ContentBlock, ToolUseBlock, ToolResultBlock, MessageWithBlocks, ToolUseResult — pinned from Anthropic docs 2026-05-29). Widened llmProvider.buildBody (tools + toolChoice on Anthropic branch; content: string|ContentBlock[]). Extended claudeStreamAdapter SSE parse loop with full Anthropic event-type dispatch (content_block_start/delta/stop + message_delta/stop — Rec2 loop-local accumulator). ToolUseResult surfaced as StreamChunk.toolUse optional additive field (Rec1). Added toolUseProtocol.test.ts (TU-1..TU-7 including §2.5 streaming golden). All gates green: 162/162; lint; typecheck. | 67e8ea8 | P3 |
+| 2026-05-29 02:19 | claude-sonnet-4-6 (feature-auto-build P3) | Implemented toolRegistry.ts (AI_TOOLS: create_task + create_calendar_event with JSON-schema, toConfirmation, toWriteEvent; findTool helper). ConfirmationCard.tsx (proposed-action label + Confirm/Cancel; zero write execution). Extended AiChatModule processQueue to detect chunk.toolUse → pendingConfirmation state → ConfirmationCard render. handleCancel (clears card, advances queue, 0 writes). handleConfirm (P3 stub — clears card; P4 wires real emit). Added toolRegistry.test.ts (TR-1..TR-5), ConfirmationCard.test.tsx (CC-1..CC-3), AiChatModule IT-1..IT-3 (no-silent-write: IT-2 pending-not-confirmed → 0 store mutations, IT-3 Cancel → 0 writes). 175/175; lint; typecheck. | 758adfa | P4 |
+| 2026-05-29 02:24 | claude-sonnet-4-6 (feature-auto-build P4) | Added +2 EventMap entries to core/types/events.ts (web:tasks:create-requested + web:calendar:create-requested — carve-out authorized, additive). Created xai-web-tasks/src/internal/aiCreateSubscriber.ts (useTaskCreateRequestSubscriber: getPref + addCard + setPref, bounded seen-set per Rec4, Rec3 withDate derivation). Created xai-web-calendar/src/internal/aiCreateSubscriber.ts (useCalendarCreateRequestSubscriber: getPref + createEvent + setPref, buildISOTimes helper). Exported both hooks from owning packages' index.ts. Moved @repo/xai-web-event-bus to tasks dependencies. Mounted both in apps/web/src/App.tsx as Shell-siblings (per DesktopPet/CommandPalette precedent). Wired real emit in AiChatModule.handleConfirm (ONLY producer). Added TS-1..TS-4 + CS-1..CS-4 + IT-4. All gates: 176/176 ai-chat + 128/128 tasks + 305/305 calendar + 128/128 apps/web + build 0 errors. | 55d5ee6 | P5 |
+| 2026-05-29 02:30 | claude-sonnet-4-6 (feature-auto-build P5) | isAiConvoRecord back-compat verified (predicate tolerates old + new record shapes); BC-1..BC-4 regression guard added in backCompat.test.ts. PLUGIN_MAP.md updated (ai-chat + tasks + calendar row notes). Verify-report at docs/reviews/xai-web-ai-tool-layer/20260529-verify-report.md. Full suite: ai-chat 180/180 (24 files) + tasks 128/128 + calendar 305/305 + apps/web 128/128 + build green. Three lifelines confirmed: (1) no-silent-write IT-2/IT-3/IT-4; (2) events.ts additive-only CORE-1; (3) subscriber route-independent TS-3/CS-3. Status → READY_FOR_VERIFY. | (this commit) | feature-verify |
+

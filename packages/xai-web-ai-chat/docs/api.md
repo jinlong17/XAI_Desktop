@@ -473,3 +473,166 @@ start chatting." (EN) / "请到 设置 → AI 配置 API 密钥后再开始对�
 - All four are present in Chrome 60+ / Safari 11+ / Firefox 57+ — comfortably
   within row #18's cross-vendor matrix (Chrome 120 / Safari 17 / Firefox 121).
 
+---
+
+## §13. 2026-05-29 Extension — AI Tool Layer (xai-web-ai-tool-layer)
+
+> §0..§12 continue to apply byte-for-byte. This §13 adds the READ context
+> provider + WRITE tool layer contracts. Protocol shapes pinned from
+> `docs/reviews/xai-web-ai-tool-layer/20260529-discovery-review.md` §2.
+> Carve-out: `docs/reviews/_p0-carve-outs/20260529-ai-tool-layer.md`.
+
+### §13.0 Anthropic tool-use wire protocol (PINNED — the contract this layer integrates)
+
+**Tool definition (request `tools[]` entry):**
+```ts
+interface AnthropicToolDef {
+  /** ^[a-zA-Z0-9_-]{1,64}$ */
+  name: string;
+  /** ≥3-4 sentence plaintext: what / when / params / caveats. */
+  description: string;
+  /** JSON Schema object. */
+  input_schema: { type: "object"; properties: Record<string, unknown>; required?: string[] };
+  /** Optional schema-valid example inputs (improves date/time call quality). */
+  input_examples?: Array<Record<string, unknown>>;
+}
+```
+**Request:** `tools: AnthropicToolDef[]` + `tool_choice` omitted (→ `auto`). Sent ONLY on the Anthropic branch when a key is configured.
+
+**Assistant tool-call turn:** `stop_reason: "tool_use"`, `content` may include a `text` block AND `{ type:"tool_use", id:"toolu_...", name, input:{...} }`.
+
+**Follow-up user `tool_result` turn:**
+```ts
+interface ToolResultBlock {
+  type: "tool_result";
+  tool_use_id: string;   // === the assistant tool_use.id
+  content: string;       // human-readable result (string form for v1)
+  is_error?: boolean;    // true on failure / user-cancel
+}
+```
+**Message sequence:** `user(prompt+context)` → `assistant(text? + tool_use)` → `user(tool_result)` → `assistant(final text)`.
+
+**Streaming tool_use SSE (per content-block index):**
+`content_block_start{content_block:{type:"tool_use",id,name,input:{}}}` → N× `content_block_delta{delta:{type:"input_json_delta",partial_json:"…"}}` → `content_block_stop` → `message_delta{delta:{stop_reason:"tool_use"}}`. **Accumulate `partial_json` per index; `JSON.parse` once at `content_block_stop`** (fragments are not individually valid JSON).
+
+### §13.1 `buildBody` extension (internal — `llmProvider.ts`; additive)
+
+```ts
+buildBody(opts: {
+  modelId: string;
+  /** WIDENED: content may now be a string (default) OR a content-block array (tool round-trip turns). */
+  messages: Array<{ role: "user" | "assistant"; content: string | ContentBlock[] }>;
+  stream: boolean;
+  maxTokens?: number;
+  /** NEW: emitted on the Anthropic branch when present. */
+  tools?: AnthropicToolDef[];
+  /** NEW: defaults to omitted (auto). */
+  toolChoice?: { type: "auto" | "any" | "none" } | { type: "tool"; name: string };
+}): Record<string, unknown>;
+```
+- **Backward-compat:** `content: string` and absent `tools` reproduce the SHIPPED body byte-for-byte. `ContentBlock = { type:"text"; text:string } | { type:"tool_use"; id; name; input } | ToolResultBlock`.
+- openai-compatible branch IGNORES `tools` in v1 (planner's-call #3).
+
+### §13.2 `contextProvider` (internal — `contextProvider.ts`; READ, pure)
+
+```ts
+/** Compact, deterministic snapshot of today's app state for model injection. */
+export function buildTodayContext(now: Date): { text: string; isEmpty: boolean };
+```
+- Reads (via `getPref`) + locally narrows: `xai_task_cols` (today/overdue open tasks, ≤20), `xai_calendar_events` (today's events, recurrence expanded for today), `xai_pomodoro_sessions` (today focus min + count), `xai_habits_state` (today checked/total).
+- Local boundary predicates copied from the `dataReads`/`narrowTaskCols` precedent — NO cross-plugin import; malformed entries dropped silently.
+- Token budget ≤ ~600; English labels (model localizes reply to chat `lang`). `isEmpty:true` → honest "no data yet today" line.
+- Prepended to the first user turn (or `system`) on every keyed send. PURE READ — no write, no new storage key.
+
+### §13.3 `toolRegistry` (internal — `toolRegistry.ts`; WRITE)
+
+```ts
+export interface AiToolDef {
+  def: AnthropicToolDef;                                  // name + description + input_schema (+ input_examples)
+  /** Human-readable confirmation spec from validated input. */
+  toConfirmation(input: Record<string, unknown>, lang: Lang): { titleLine: string };
+  /** Maps validated input → the typed write event to emit on Confirm. */
+  toWriteEvent(input: Record<string, unknown>, requestId: string):
+    | { channel: "web:tasks:create-requested"; payload: WebTasksCreateRequested }
+    | { channel: "web:calendar:create-requested"; payload: WebCalendarCreateRequested };
+}
+export const AI_TOOLS: readonly AiToolDef[]; // v1: create_task + create_calendar_event
+```
+- **`create_task`** `input_schema`: `{ title: string (req), bucket?: "overdue"|"next7"|"later"|"nodate" (default "next7"), tag?: "study"|"work"|"personal"|"todo"|"other" }`. Maps to `NewTaskDraft`+`BucketId`.
+- **`create_calendar_event`** `input_schema`: `{ title: string (req), date: string "YYYY-MM-DD" (req), startTime?: "HH:MM" (default "09:00"), durationMin?: number (default 60, clamped ≥5) }`. Maps to `UserCalEvent` (compute local-clock same-day `startISO`/`endISO`; `colorPreset:"mint"`, `recurrence:null`). `input_examples` provided.
+- NO `summarize_today` tool (read = context injection).
+
+### §13.4 New EventMap entries (in `@repo/core/types/events.ts`) — CARVE-OUT AUTHORIZED
+
+```ts
+// AI tool layer — task create request
+// Producer: plugin-web-ai-chat tool handler (emitted ONLY on user Confirm).
+// Consumer: xai-web-tasks always-on AI-create subscriber.
+'web:tasks:create-requested': {
+  /** Correlation id = Anthropic tool_use.id (round-trip match for tool_result). */
+  requestId: string;
+  /** Trimmed, non-empty title. */
+  title: string;
+  /** Target bucket (producer applies default "next7"). */
+  bucket: 'overdue' | 'next7' | 'later' | 'nodate';
+  /** Optional tag preset. */
+  tag?: 'study' | 'work' | 'personal' | 'todo' | 'other';
+  /** ISO timestamp at confirm. */
+  requestedAt: string;
+};
+// AI tool layer — calendar event create request
+// Producer: plugin-web-ai-chat (Confirm-only). Consumer: xai-web-calendar subscriber.
+'web:calendar:create-requested': {
+  requestId: string;
+  title: string;
+  /** "YYYY-MM-DD" local date. */
+  date: string;
+  /** "HH:MM" local start (producer default "09:00"). */
+  startTime: string;
+  /** Minutes; producer clamps ≥5 (default 60). */
+  durationMin: number;
+  requestedAt: string;
+};
+```
+- Existing `web:ai:rate-limited` / `web:ai:request-failed` (§12.4) are NOT modified — only added alongside.
+- Type aliases `WebTasksCreateRequested` / `WebCalendarCreateRequested` = the payload types above (referenced by the registry).
+
+### §13.5 Owning-module AI-create subscribers (additive, within each package)
+
+`xai-web-tasks/src/internal/aiCreateSubscriber.ts`:
+```ts
+/** Always-on (route-independent) subscriber. On web:tasks:create-requested:
+ *  setPref("xai_task_cols", addCard(getPref("xai_task_cols"), draft, bucket)). */
+export function useAiCreateRequestSubscriber(): void; // or subscribeTaskCreateRequests(): () => void
+```
+`xai-web-calendar/src/internal/aiCreateSubscriber.ts`:
+```ts
+/** On web:calendar:create-requested:
+ *  setPref("xai_calendar_events", createEvent(getPref(...), partial).next). */
+export function useAiCreateRequestSubscriber(): void;
+```
+- Execute IMPERATIVELY via the pure reducer + `getPref`/`setPref` (NOT a route-scoped component) so a write requested while on `/app/ai` is not lost. Mounted `TasksModule`/`CalendarModule` update reactively via `usePref` storage-event fan-out.
+- tasks uses its INTERNAL `addCard` (no new export); calendar reuses its ALREADY-PUBLIC `createEvent`.
+- **No cross-plugin import** in either direction — coupling is only the typed event name + payload in `@repo/core`.
+- Mount site (route-independent liveness) confirmed at feature-review (OQ2). Optional `web:*:create-result` ack channel deferred.
+
+### §13.6 Confirmation contract (no silent writes — acceptance anchor)
+
+- `ConfirmationCard` props: `{ titleLine: string; lang: Lang; onConfirm(): void; onCancel(): void }`.
+- The write event (`web:*:create-requested`) is emitted **exclusively** inside the Confirm handler. Cancel emits a `tool_result(is_error:true, "user declined")` and returns to idle with ZERO store mutation. (Test-enforced — §test.md §8.)
+- Bounded single round-trip: at most ONE `tool_result` turn per send (counter-enforced).
+
+### §13.7 Persistence / back-compat
+
+- Any tool-call/confirmation recording uses OPTIONAL message fields; `isAiConvoRecord` MUST accept both SHIPPED-shape and extended records (regression test). v1 MAY keep messages in-memory (SHIPPED FA-7) — full message-history persistence is OPTIONAL (OQ1).
+
+### §13.8 Permissions / capabilities (extension)
+
+- No new Tauri capabilities (web-only). **No new CSP origin** — Anthropic already allow-listed (§12.7). No new npm dep, no new provider, no model-id change.
+- Tool use requires the Anthropic provider + a configured key; openai-compatible omits `tools` in v1 (read context still injected). No-key → existing `BadKey(detail:"not-set")` path; demo fallback unchanged.
+
+### §13.9 Idempotency / re-mount safety (extension)
+
+- The SHIPPED FIFO queue + `processingRef` + abort-on-unmount invariants are preserved; `pendingConfirmation` pauses the queue until Confirm/Cancel.
+- Subscribers are idempotent per `requestId`: a duplicate `web:*:create-requested` with the same `requestId` is a no-op (guard against StrictMode double-emit). Each create runs through the owning module's pure reducer (referential-equality semantics preserved).
+
