@@ -82,6 +82,13 @@ export type {
   NativeWindowRect,
 } from "./nativeGridSnap";
 export {
+  ORGANIZER_GRID_REPO_NAMESPACE,
+  ORGANIZER_ITEM_REPO_NAMESPACE,
+  canUseOrganizerTauriRepoRuntime,
+  createOrganizerDesktopLayoutStore,
+} from "./desktopLayoutStore";
+export type { OrganizerDesktopLayoutStoreOptions } from "./desktopLayoutStore";
+export {
   defaultEmptyStateActions,
   evaluateItemHealth,
 } from "./itemHealth";
