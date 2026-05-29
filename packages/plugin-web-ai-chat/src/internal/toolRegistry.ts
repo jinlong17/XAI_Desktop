@@ -20,19 +20,42 @@ import type { AnthropicToolDef } from "./toolUseTypes.js";
 
 // ---- ConfirmationSpec -------------------------------------------------------
 
-/** Human-readable description of the proposed action, shown in ConfirmationCard. */
+/**
+ * Human-readable description of the proposed action, shown in ConfirmationCard.
+ *
+ * `tone` is the SINGLE seam for destructive styling (ED-7). It rides on
+ * ConfirmationSpec (the value returned by toConfirmation), NOT on a separate
+ * ConfirmationCard prop. ConfirmationCardProps is UNCHANGED.
+ *
+ * Omitted / "default" tone = byte-for-byte SHIPPED rendering (CC-TONE-1 asserts).
+ * "destructive" tone = distinct confirm styling/label (CC-TONE-2 asserts).
+ */
 export interface ConfirmationSpec {
   /** Short tool label, e.g. "Create task". */
   label: string;
   /** Human-readable description of the proposed action. */
   description: string;
+  /**
+   * NEW (additive, ED-7): visual + affordance tone.
+   * Omitted / "default" = byte-for-byte SHIPPED rendering (create/update).
+   * "destructive" = distinct confirm styling/label (delete tools only).
+   *
+   * api.md §14.2 — SINGLE tone seam; ConfirmationCardProps unchanged.
+   */
+  tone?: "default" | "destructive";
 }
 
 // ---- WriteEvent spec --------------------------------------------------------
 
 /** The write event payload produced by a Confirm action. */
 export interface WriteEventSpec {
-  channel: "web:tasks:create-requested" | "web:calendar:create-requested";
+  channel:
+    | "web:tasks:create-requested"
+    | "web:calendar:create-requested"
+    | "web:tasks:delete-requested"
+    | "web:calendar:delete-requested"
+    | "web:tasks:update-requested"
+    | "web:calendar:update-requested";
   payload: Record<string, unknown>;
 }
 
@@ -211,10 +234,112 @@ const createCalendarEventTool: AiToolDef = {
   },
 };
 
+// ---- delete_task tool -------------------------------------------------------
+
+const deleteTaskTool: AiToolDef = {
+  name: "delete_task",
+  description: [
+    "Delete an existing task from the user's task list.",
+    "Use this tool ONLY when the user explicitly asks to delete, remove, or discard an existing task.",
+    "You MUST provide the exact task id from the context (shown as '(id: ...)' in the task list).",
+    "Do NOT delete tasks the user did not explicitly ask to remove.",
+  ].join(" "),
+  input_schema: {
+    type: "object",
+    properties: {
+      id: {
+        type: "string",
+        description: "The exact task id from the context (shown as '(id: ...)' in the task list). Required.",
+      },
+    },
+    required: ["id"],
+  },
+  input_examples: [
+    { id: "t-abc-123" },
+  ],
+
+  toConfirmation(input) {
+    const id = safeString(input["id"] as unknown, "(unknown)");
+    return {
+      label: "Delete task",
+      description: `Delete task (id: ${id})?`,
+      tone: "destructive",
+    };
+  },
+
+  toWriteEvent(input, toolUseId) {
+    const id = safeString(input["id"] as unknown, "");
+    return {
+      channel: "web:tasks:delete-requested",
+      payload: {
+        requestId: toolUseId,
+        id,
+        requestedAt: new Date().toISOString(),
+      },
+    };
+  },
+};
+
+// ---- delete_calendar_event tool ---------------------------------------------
+
+const deleteCalendarEventTool: AiToolDef = {
+  name: "delete_calendar_event",
+  description: [
+    "Delete an existing calendar event.",
+    "Use this tool ONLY when the user explicitly asks to delete, remove, or cancel an existing event.",
+    "You MUST provide the exact event id from the context (shown as '(id: ...)' in the calendar section).",
+    "Do NOT delete events the user did not explicitly ask to remove.",
+  ].join(" "),
+  input_schema: {
+    type: "object",
+    properties: {
+      id: {
+        type: "string",
+        description: "The exact event id from the context (shown as '(id: ...)' in the calendar section). Required.",
+      },
+    },
+    required: ["id"],
+  },
+  input_examples: [
+    { id: "ev-xyz-789" },
+  ],
+
+  toConfirmation(input) {
+    const id = safeString(input["id"] as unknown, "(unknown)");
+    return {
+      label: "Delete event",
+      description: `Delete calendar event (id: ${id})?`,
+      tone: "destructive",
+    };
+  },
+
+  toWriteEvent(input, toolUseId) {
+    const id = safeString(input["id"] as unknown, "");
+    return {
+      channel: "web:calendar:delete-requested",
+      payload: {
+        requestId: toolUseId,
+        id,
+        requestedAt: new Date().toISOString(),
+      },
+    };
+  },
+};
+
 // ---- Registry ---------------------------------------------------------------
 
-/** v1 tool registry — create_task + create_calendar_event. */
-export const AI_TOOLS: AiToolDef[] = [createTaskTool, createCalendarEventTool];
+/**
+ * v1 tool registry.
+ * P1: create_task + create_calendar_event (SHIPPED).
+ * P2 (xai-web-ai-tool-edit-delete): +delete_task + delete_calendar_event.
+ * P3 (xai-web-ai-tool-edit-delete): +update_task + update_calendar_event.
+ */
+export const AI_TOOLS: AiToolDef[] = [
+  createTaskTool,
+  createCalendarEventTool,
+  deleteTaskTool,
+  deleteCalendarEventTool,
+];
 
 /** Look up a tool by name. Returns undefined if not found. */
 export function findTool(name: string): AiToolDef | undefined {

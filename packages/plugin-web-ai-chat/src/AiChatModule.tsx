@@ -499,6 +499,7 @@ export function AiChatModule({ lang }: AiChatModuleProps) {
       // CRITICAL: emit the write event EXACTLY ONCE, ONLY here (no-silent-write invariant).
       // The owning-module subscriber (mounted in App.tsx) consumes this event
       // and executes via its own pure reducer + setPref.
+      // ED-8: 4 new delete/update channels follow the SAME single-emit-site pattern.
       if (writeEvent.channel === "web:tasks:create-requested") {
         const p = writeEvent.payload as {
           requestId: string;
@@ -518,6 +519,40 @@ export function AiChatModule({ lang }: AiChatModuleProps) {
           requestedAt: string;
         };
         emitWebEvent("web:calendar:create-requested", p);
+      } else if (writeEvent.channel === "web:tasks:delete-requested") {
+        // P2 (xai-web-ai-tool-edit-delete): delete task branch
+        const p = writeEvent.payload as {
+          requestId: string;
+          id: string;
+          requestedAt: string;
+        };
+        emitWebEvent("web:tasks:delete-requested", p);
+      } else if (writeEvent.channel === "web:calendar:delete-requested") {
+        // P2 (xai-web-ai-tool-edit-delete): delete calendar event branch
+        const p = writeEvent.payload as {
+          requestId: string;
+          id: string;
+          requestedAt: string;
+        };
+        emitWebEvent("web:calendar:delete-requested", p);
+      } else if (writeEvent.channel === "web:tasks:update-requested") {
+        // P3 (xai-web-ai-tool-edit-delete): update task branch
+        const p = writeEvent.payload as {
+          requestId: string;
+          id: string;
+          patch: { title?: string; bucket?: "overdue" | "next7" | "later" | "nodate"; tag?: "study" | "work" | "personal" | "todo" | "other" };
+          requestedAt: string;
+        };
+        emitWebEvent("web:tasks:update-requested", p);
+      } else if (writeEvent.channel === "web:calendar:update-requested") {
+        // P3 (xai-web-ai-tool-edit-delete): update calendar event branch
+        const p = writeEvent.payload as {
+          requestId: string;
+          id: string;
+          patch: { title?: string; date?: string; startTime?: string; durationMin?: number };
+          requestedAt: string;
+        };
+        emitWebEvent("web:calendar:update-requested", p);
       }
     }
 

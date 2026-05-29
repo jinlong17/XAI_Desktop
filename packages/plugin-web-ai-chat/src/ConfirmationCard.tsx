@@ -27,9 +27,18 @@ export interface ConfirmationCardProps {
 
 export function ConfirmationCard({ spec, lang, onConfirm, onCancel }: ConfirmationCardProps) {
   const zh = lang === "zh";
+  // ED-7: read spec.tone (the SINGLE seam for destructive styling).
+  // ConfirmationCardProps is UNCHANGED — tone is carried on the spec, not a prop.
+  // Omitted / "default" → SHIPPED markup byte-for-byte (CC-TONE-1).
+  // "destructive" → distinct confirm styling + copy (CC-TONE-2).
+  const isDestructive = spec.tone === "destructive";
 
   return (
-    <div className="ai-confirmation-card" role="dialog" aria-label={spec.label}>
+    <div
+      className={`ai-confirmation-card${isDestructive ? " ai-confirmation-card--destructive" : ""}`}
+      role="dialog"
+      aria-label={spec.label}
+    >
       <div className="ai-confirmation-header">
         <span className="ai-confirmation-icon">✦</span>
         <span className="ai-confirmation-label">{spec.label}</span>
@@ -38,11 +47,11 @@ export function ConfirmationCard({ spec, lang, onConfirm, onCancel }: Confirmati
       <div className="ai-confirmation-actions">
         <button
           type="button"
-          className="ai-confirmation-confirm"
+          className={`ai-confirmation-confirm${isDestructive ? " ai-confirmation-confirm--destructive" : ""}`}
           onClick={onConfirm}
-          aria-label={zh ? "确认" : "Confirm"}
+          aria-label={isDestructive ? (zh ? "删除" : "Delete") : (zh ? "确认" : "Confirm")}
         >
-          {zh ? "确认" : "Confirm"}
+          {isDestructive ? (zh ? "删除" : "Delete") : (zh ? "确认" : "Confirm")}
         </button>
         <button
           type="button"

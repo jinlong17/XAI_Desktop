@@ -67,3 +67,81 @@ describe("CC-3: Cancel button calls onCancel", () => {
     expect(onConfirm).not.toHaveBeenCalled();
   });
 });
+
+// ---------------------------------------------------------------------------
+// CC-TONE tests (xai-web-ai-tool-edit-delete P2 — ED-7 tone seam)
+// ---------------------------------------------------------------------------
+
+describe("CC-TONE-1: default/omitted tone preserves SHIPPED markup (no destructive class)", () => {
+  it("CC-TONE-1a: spec with no tone → no destructive class/button; Confirm label = 'Confirm'", () => {
+    const { container } = render(
+      <ConfirmationCard
+        spec={{ label: "Create task", description: '"Buy groceries" in Next 7 Days' }}
+        lang="en"
+        onConfirm={vi.fn()}
+        onCancel={vi.fn()}
+      />,
+    );
+    const card = container.firstElementChild!;
+    expect(card.classList.contains("ai-confirmation-card--destructive")).toBe(false);
+    const confirmBtn = screen.getByRole("button", { name: /confirm/i });
+    expect(confirmBtn.textContent).toBe("Confirm");
+    expect(confirmBtn.classList.contains("ai-confirmation-confirm--destructive")).toBe(false);
+  });
+
+  it("CC-TONE-1b: spec with tone:'default' → same as omitted (no destructive styling)", () => {
+    const { container } = render(
+      <ConfirmationCard
+        spec={{ label: "Create task", description: "Something", tone: "default" }}
+        lang="en"
+        onConfirm={vi.fn()}
+        onCancel={vi.fn()}
+      />,
+    );
+    const card = container.firstElementChild!;
+    expect(card.classList.contains("ai-confirmation-card--destructive")).toBe(false);
+    expect(screen.getByRole("button", { name: /confirm/i }).textContent).toBe("Confirm");
+  });
+});
+
+describe("CC-TONE-2: destructive tone applies distinct styling and button label", () => {
+  it("CC-TONE-2a: spec.tone:'destructive' → destructive class on card + confirm button + label 'Delete'", () => {
+    const { container } = render(
+      <ConfirmationCard
+        spec={{ label: "Delete task", description: 'Delete task (id: t-123)?', tone: "destructive" }}
+        lang="en"
+        onConfirm={vi.fn()}
+        onCancel={vi.fn()}
+      />,
+    );
+    const card = container.firstElementChild!;
+    expect(card.classList.contains("ai-confirmation-card--destructive")).toBe(true);
+    const confirmBtn = screen.getByRole("button", { name: /delete/i });
+    expect(confirmBtn.textContent).toBe("Delete");
+    expect(confirmBtn.classList.contains("ai-confirmation-confirm--destructive")).toBe(true);
+  });
+
+  it("CC-TONE-2b: destructive spec shows item-naming description", () => {
+    render(
+      <ConfirmationCard
+        spec={{ label: "Delete event", description: 'Delete calendar event (id: ev-xyz-789)?', tone: "destructive" }}
+        lang="en"
+        onConfirm={vi.fn()}
+        onCancel={vi.fn()}
+      />,
+    );
+    expect(screen.getByText('Delete calendar event (id: ev-xyz-789)?')).toBeDefined();
+  });
+
+  it("CC-TONE-2c: destructive cancel button still shows 'Cancel' (unchanged)", () => {
+    render(
+      <ConfirmationCard
+        spec={{ label: "Delete task", description: "desc", tone: "destructive" }}
+        lang="en"
+        onConfirm={vi.fn()}
+        onCancel={vi.fn()}
+      />,
+    );
+    expect(screen.getByRole("button", { name: /cancel/i }).textContent).toBe("Cancel");
+  });
+});

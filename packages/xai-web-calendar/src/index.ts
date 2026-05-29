@@ -83,3 +83,6 @@ export type { EmptyStateHintProps } from "./EmptyStateHint.js";
 
 // ---- AI tool layer subscriber (additive — P4 xai-web-ai-tool-layer) ----------
 export { useCalendarCreateRequestSubscriber } from "./internal/aiCreateSubscriber.js";
+
+// ---- AI tool layer mutate subscriber (additive — P2 xai-web-ai-tool-edit-delete) ----------
+export { useCalendarMutateRequestSubscriber } from "./internal/aiMutateSubscriber.js";

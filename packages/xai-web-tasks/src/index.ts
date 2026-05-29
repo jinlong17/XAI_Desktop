@@ -30,3 +30,6 @@ export type {
 
 // ---- AI tool layer subscriber (additive — P4 xai-web-ai-tool-layer) ----------
 export { useTaskCreateRequestSubscriber } from "./internal/aiCreateSubscriber.js";
+
+// ---- AI tool layer mutate subscriber (additive — P2 xai-web-ai-tool-edit-delete) ----------
+export { useTaskMutateRequestSubscriber } from "./internal/aiMutateSubscriber.js";

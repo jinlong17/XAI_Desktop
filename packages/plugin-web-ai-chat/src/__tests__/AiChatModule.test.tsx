@@ -1000,6 +1000,219 @@ describe("AiChatModule integration (I)", () => {
     }
   });
 
+  // ---- IT-DEL: delete tool integration tests (xai-web-ai-tool-edit-delete P2) ----
+
+  it("IT-DEL-1: NO-SILENT-WRITE — delete_task pending-not-confirmed → 0 web:tasks:delete-requested events", async () => {
+    vi.useRealTimers();
+    vi.restoreAllMocks();
+    const streamMod = await import("../internal/claudeStreamAdapter.js");
+    vi.spyOn(streamMod, "streamCompleteChat").mockImplementation(
+      async function* () {
+        yield {
+          accumulated: "I'll delete that task.",
+          done: true,
+          toolUse: { id: "toolu_del_001", name: "delete_task", input: { id: "t-abc-123" } },
+        };
+      },
+    );
+
+    const emitted: string[] = [];
+    const eventBus = await import("@repo/xai-web-event-bus");
+    const origEmit = eventBus.emitWebEvent;
+    vi.spyOn(eventBus, "emitWebEvent").mockImplementation((channel, ...args) => {
+      emitted.push(channel as string);
+      return origEmit(channel as Parameters<typeof origEmit>[0], ...args as [Parameters<typeof origEmit>[1]]);
+    });
+
+    const taskColsBefore = localStorage.getItem("xai_task_cols");
+
+    const { container } = render(<AiChatModule lang="en" />);
+    const inp = container.querySelector<HTMLInputElement>(".ai-input")!;
+    act(() => { fireEvent.change(inp, { target: { value: "delete task t-abc-123" } }); });
+    act(() => { fireEvent.keyDown(inp, { key: "Enter", shiftKey: false }); });
+
+    // Wait for ConfirmationCard with destructive tone
+    await waitFor(() => {
+      expect(container.querySelector(".ai-confirmation-card--destructive")).not.toBeNull();
+    });
+
+    // NOT clicking Confirm → no write event
+    expect(emitted).not.toContain("web:tasks:delete-requested");
+    // localStorage unchanged
+    expect(localStorage.getItem("xai_task_cols")).toBe(taskColsBefore);
+
+    vi.restoreAllMocks();
+  });
+
+  it("IT-DEL-2: Confirm delete → web:tasks:delete-requested emitted ONCE with id + requestId", async () => {
+    vi.useRealTimers();
+    vi.restoreAllMocks();
+    const streamMod = await import("../internal/claudeStreamAdapter.js");
+    let callCount = 0;
+    vi.spyOn(streamMod, "streamCompleteChat").mockImplementation(
+      async function* () {
+        callCount += 1;
+        if (callCount === 1) {
+          yield {
+            accumulated: "I'll delete that task.",
+            done: true,
+            toolUse: { id: "toolu_del_002", name: "delete_task", input: { id: "t-del-test" } },
+          };
+        } else {
+          yield { accumulated: "Task deleted successfully.", done: true };
+        }
+      },
+    );
+
+    const emittedPayloads: Array<{ channel: string; payload?: unknown }> = [];
+    const eventBus = await import("@repo/xai-web-event-bus");
+    vi.spyOn(eventBus, "emitWebEvent").mockImplementation((channel, payload) => {
+      emittedPayloads.push({ channel: channel as string, payload });
+    });
+
+    const { container } = render(<AiChatModule lang="en" />);
+    const inp = container.querySelector<HTMLInputElement>(".ai-input")!;
+    act(() => { fireEvent.change(inp, { target: { value: "remove t-del-test" } }); });
+    act(() => { fireEvent.keyDown(inp, { key: "Enter", shiftKey: false }); });
+
+    await waitFor(() => {
+      expect(container.querySelector(".ai-confirmation-card--destructive")).not.toBeNull();
+    });
+
+    // Click Confirm
+    const confirmBtn = container.querySelector<HTMLButtonElement>(".ai-confirmation-confirm--destructive")!;
+    act(() => { fireEvent.click(confirmBtn); });
+
+    // Exactly 1 delete event emitted
+    await waitFor(() => {
+      const deleteEvents = emittedPayloads.filter((e) => e.channel === "web:tasks:delete-requested");
+      expect(deleteEvents).toHaveLength(1);
+      expect((deleteEvents[0]!.payload as { id?: string }).id).toBe("t-del-test");
+      expect((deleteEvents[0]!.payload as { requestId?: string }).requestId).toBe("toolu_del_002");
+    });
+
+    vi.restoreAllMocks();
+  });
+
+  it("IT-DEL-3: Cancel delete → tool_result(is_error:true) round-trip + ZERO writes", async () => {
+    vi.useRealTimers();
+    vi.restoreAllMocks();
+    const streamMod = await import("../internal/claudeStreamAdapter.js");
+    let callCount = 0;
+    vi.spyOn(streamMod, "streamCompleteChat").mockImplementation(
+      async function* (req) {
+        callCount += 1;
+        if (callCount === 1) {
+          yield {
+            accumulated: "I'll delete that.",
+            done: true,
+            toolUse: { id: "toolu_del_003", name: "delete_task", input: { id: "t-cancel-test" } },
+          };
+        } else {
+          // Cancel tool_result round-trip; assert is_error:true
+          const priorMsgs = req.priorMessages ?? [];
+          const toolResultMsg = priorMsgs.find(
+            (m) => Array.isArray(m.content) && m.content.some((b) => (b as { type?: string }).type === "tool_result"),
+          );
+          const toolResultBlock = (toolResultMsg?.content as Array<{ type?: string; is_error?: boolean; tool_use_id?: string }> | undefined)?.find(
+            (b) => b.type === "tool_result",
+          );
+          expect(toolResultBlock?.is_error).toBe(true);
+          expect(toolResultBlock?.tool_use_id).toBe("toolu_del_003");
+          yield { accumulated: "Ok, I won't delete that.", done: true };
+        }
+      },
+    );
+
+    const emittedChannels: string[] = [];
+    const eventBus = await import("@repo/xai-web-event-bus");
+    vi.spyOn(eventBus, "emitWebEvent").mockImplementation((channel) => {
+      emittedChannels.push(channel as string);
+    });
+
+    const { container } = render(<AiChatModule lang="en" />);
+    const inp = container.querySelector<HTMLInputElement>(".ai-input")!;
+    act(() => { fireEvent.change(inp, { target: { value: "delete t-cancel-test" } }); });
+    act(() => { fireEvent.keyDown(inp, { key: "Enter", shiftKey: false }); });
+
+    await waitFor(() => {
+      expect(container.querySelector(".ai-confirmation-card--destructive")).not.toBeNull();
+    });
+
+    act(() => {
+      const cancelBtn = container.querySelector<HTMLButtonElement>(".ai-confirmation-cancel")!;
+      fireEvent.click(cancelBtn);
+    });
+
+    await waitFor(() => {
+      expect(container.querySelector(".ai-confirmation-card--destructive")).toBeNull();
+    });
+
+    // ZERO delete-requested events — cancel = no write
+    expect(emittedChannels).not.toContain("web:tasks:delete-requested");
+    expect(emittedChannels).not.toContain("web:calendar:delete-requested");
+
+    vi.restoreAllMocks();
+  });
+
+  it("IT-DEL-4: bounded — after Confirm+tool_result, second tool_use NOT executed (cap=1)", async () => {
+    vi.useRealTimers();
+    vi.restoreAllMocks();
+    const streamMod = await import("../internal/claudeStreamAdapter.js");
+    let callCount = 0;
+    vi.spyOn(streamMod, "streamCompleteChat").mockImplementation(
+      async function* () {
+        callCount += 1;
+        if (callCount === 1) {
+          yield {
+            accumulated: "I'll delete that task.",
+            done: true,
+            toolUse: { id: "toolu_del_04", name: "delete_task", input: { id: "t-bounded" } },
+          };
+        } else {
+          // Final stream returns ANOTHER tool_use — should NOT be executed (bounded cap=1).
+          yield {
+            accumulated: "Also removing this...",
+            done: true,
+            toolUse: { id: "toolu_del_04b", name: "delete_task", input: { id: "t-bounded-2" } },
+          };
+        }
+      },
+    );
+
+    const emittedPayloads: Array<{ channel: string; payload?: unknown }> = [];
+    const eventBus = await import("@repo/xai-web-event-bus");
+    vi.spyOn(eventBus, "emitWebEvent").mockImplementation((channel, payload) => {
+      emittedPayloads.push({ channel: channel as string, payload });
+    });
+
+    const { container } = render(<AiChatModule lang="en" />);
+    const inp = container.querySelector<HTMLInputElement>(".ai-input")!;
+    act(() => { fireEvent.change(inp, { target: { value: "delete t-bounded" } }); });
+    act(() => { fireEvent.keyDown(inp, { key: "Enter", shiftKey: false }); });
+
+    await waitFor(() => {
+      expect(container.querySelector(".ai-confirmation-card--destructive")).not.toBeNull();
+    });
+
+    const confirmBtn = container.querySelector<HTMLButtonElement>(".ai-confirmation-confirm--destructive")!;
+    act(() => { fireEvent.click(confirmBtn); });
+
+    await waitFor(() => {
+      const deleteEvents = emittedPayloads.filter((e) => e.channel === "web:tasks:delete-requested");
+      expect(deleteEvents).toHaveLength(1);
+    });
+
+    // Wait a bit and confirm no second tool_use execution
+    await new Promise((r) => setTimeout(r, 100));
+    const deleteEvents = emittedPayloads.filter((e) => e.channel === "web:tasks:delete-requested");
+    expect(deleteEvents).toHaveLength(1); // bounded: only 1 delete despite 2nd tool_use in final stream
+    // Second tool_use should NOT have triggered another ConfirmationCard
+    expect(container.querySelector(".ai-confirmation-card")).toBeNull();
+
+    vi.restoreAllMocks();
+  });
+
   it("IT-6: context-injection-on-send — AiChatModule passes user text to streamCompleteChat; adapter builds context from today prefs when key is set", async () => {
     // This test verifies the send-path handoff from AiChatModule → streamCompleteChat.
     // Context building is tested at the adapter level (contextProvider.test.ts + claudeStreamAdapter.test.ts).

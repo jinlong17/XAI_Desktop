@@ -64,6 +64,10 @@ import { useWebAuthSession } from "@repo/web-auth-device-session";
 // Per DesktopPet / CommandPalette precedent (ADR-0007 §S6 Option B).
 import { useTaskCreateRequestSubscriber } from "@repo/plugin-web-tasks";
 import { useCalendarCreateRequestSubscriber } from "@repo/plugin-web-calendar";
+// AI tool layer mutate subscribers (P2 xai-web-ai-tool-edit-delete).
+// Same Shell-sibling pattern; delete + update channels.
+import { useTaskMutateRequestSubscriber } from "@repo/plugin-web-tasks";
+import { useCalendarMutateRequestSubscriber } from "@repo/plugin-web-calendar";
 
 // ---- readLocalPref — safe localStorage reader for lazy useState initializers --
 //
@@ -97,6 +101,9 @@ function AppInner() {
   // Precedent: DesktopPet (L191) + CommandPalette (L197) Shell-siblings.
   useTaskCreateRequestSubscriber();
   useCalendarCreateRequestSubscriber();
+  // P2 xai-web-ai-tool-edit-delete: mutate (delete + update) subscribers.
+  useTaskMutateRequestSubscriber();
+  useCalendarMutateRequestSubscriber();
 
   // ---- useState state pieces -----------------------------------------------
   // lang/theme/density use lazy initializers to restore from localStorage on
