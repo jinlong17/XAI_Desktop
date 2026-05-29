@@ -21,6 +21,7 @@ export const DESKTOP_REPO_NAMESPACE = "xai-web-desktop-local-first-bridge";
 
 export const TASKS_STORAGE_KEY = "xai_task_cols" as const;
 export const HABITS_STORAGE_KEY = "xai_habits_state" as const;
+export const POMODORO_STORAGE_KEY = "xai_pomodoro_sessions" as const;
 export const BOARDS_STORAGE_KEY = "xai_boards_v2" as const;
 
 export const BOARD_AUX_KEYS = new Set([
@@ -329,7 +330,7 @@ function isBridgedKey(key: string): boolean {
   return (
     key === TASKS_STORAGE_KEY ||
     key === HABITS_STORAGE_KEY ||
-    key === "xai_pomodoro_sessions" ||
+    key === POMODORO_STORAGE_KEY ||
     key === BOARDS_STORAGE_KEY ||
     BOARD_AUX_KEYS.has(key) ||
     PET_KEYS.has(key) ||
@@ -339,7 +340,7 @@ function isBridgedKey(key: string): boolean {
 
 export function isSingleRecordBridgedKey(key: string): boolean {
   return (
-    key === "xai_pomodoro_sessions" ||
+    key === POMODORO_STORAGE_KEY ||
     BOARD_AUX_KEYS.has(key) ||
     PET_KEYS.has(key) ||
     /^xai_pref_/.test(key)
@@ -349,7 +350,7 @@ export function isSingleRecordBridgedKey(key: string): boolean {
 export function entityTypeForSingleRecordKey(
   key: string,
 ): BridgeRecord["entityType"] {
-  if (key === "xai_pomodoro_sessions") return "productivity.pomodoro_sessions";
+  if (key === POMODORO_STORAGE_KEY) return "productivity.pomodoro_sessions";
   if (BOARD_AUX_KEYS.has(key)) return "project.workspace_state";
   if (PET_KEYS.has(key)) return "pet.state";
   return "settings.pref";
@@ -358,7 +359,7 @@ export function entityTypeForSingleRecordKey(
 export function surfaceForKey(key: string): BridgedSurface {
   if (key === TASKS_STORAGE_KEY) return "tasks";
   if (key === HABITS_STORAGE_KEY) return "habits";
-  if (key === "xai_pomodoro_sessions") return "pomodoro";
+  if (key === POMODORO_STORAGE_KEY) return "pomodoro";
   if (key === BOARDS_STORAGE_KEY || BOARD_AUX_KEYS.has(key)) return "board-workspace";
   if (PET_KEYS.has(key)) return "pet";
   return "settings";
@@ -381,7 +382,7 @@ export function toBridgeRecord(
     return {
       ...base,
       entityType,
-      storageKey: "xai_pomodoro_sessions",
+      storageKey: POMODORO_STORAGE_KEY,
       sessions: Array.isArray(value) ? value : [],
     };
   }
