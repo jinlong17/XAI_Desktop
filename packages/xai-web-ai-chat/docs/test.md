@@ -506,3 +506,124 @@ New cases:
 - `afterEach`: `localStorage.clear()` (resets `xai_task_cols`/`xai_calendar_events`/context source keys); reset `fetch` SSE mock; unsubscribe any event listeners registered in the test; `vi.useRealTimers(); vi.restoreAllMocks();` per §6/§7.5.
 - Injected `now` Dates only (no real-clock dependence in context/subscriber tests).
 
+## §9. 2026-05-29 Extension — AI Tool Layer Edit/Delete test strategy (xai-web-ai-tool-edit-delete)
+
+> §0..§8 continue to apply. ALL SHIPPED ai-chat cases (incl. §7 + §8 tool-layer
+> cases: CP-1..CP-8, TU-*, TR-1..TR-5, CC-1..CC-3, IT-1..IT-6, TS-1..TS-4,
+> CS-1..CS-4, CORE-1, BC-1, plus I1..I23/I17/I18) MUST stay green as a
+> regression guard in every phase — **the create path must not regress**.
+> This §9 is purely additive. Design: §design.md 2026-05-29 Edit/Delete
+> Extension (ED-1..ED-13). Contract: §api.md §14. Carve-out:
+> `docs/reviews/_p0-carve-outs/20260529-ai-tool-edit-delete.md`.
+
+### §9.0 Scope summary (extension)
+
+> Delete phased before update (manifest P2 < P3). The drift-prevention pivot:
+> reducer unit tests assert the EXACT documented signatures, and IT tests assert
+> the EXACT confirm-only emit — so verify can mechanically diff doc-vs-code
+> (ED-R1, the prior-BLOCK cause).
+
+| Phase | New test files / deltas | Focus |
+|---|---|---|
+| P1 | `xai-web-tasks/tasksReducer.test.ts` (+TR-DEL/+TR-UPD), `contextProvider.test.ts` (+CP-ID), `@repo/core` typecheck | reducer purity + preserve-done + referential-equality + id exposure + 4 channels typecheck |
+| P2 | `toolRegistry.test.ts` (+TR-DEL-TOOL), `ConfirmationCard.test.tsx` (+CC-TONE), `AiChatModule.test.tsx` (+IT-DEL no-silent-write/bounded), tasks/calendar mutate-subscriber tests (+TS-DEL/+CS-DEL) | delete tools + destructive confirmation + delete round-trip + delete subscribers |
+| P3 | `toolRegistry.test.ts` (+TR-UPD-TOOL), `AiChatModule.test.tsx` (+IT-UPD), tasks/calendar mutate-subscriber tests (+TS-UPD/+CS-UPD incl. bucket-move composition + preserve-done) | update tools + update round-trip + update subscribers |
+| P4 | back-compat (BC-1 re-assert) + full-suite green + id-targeting end-to-end | persistence back-compat + polish + create-path no-regression |
+
+### §9.1 Mock strategy (extension)
+
+- Reuse §8.1 entirely. LLM tool-use responses MOCKED via canned SSE/JSON with a `tool_use` block whose `input` carries an `id` copied from a seeded context fixture (proves id-targeting round-trips end to end).
+- Real `emitWebEvent`/`useWebEventListener` (in-process) for the 4 new channels; real `getPref`/`setPref`/`usePref` over `localStorage` (cleared `afterEach`); injected `now`.
+- Reducer tests are PURE (no mocks) — direct `deleteCard`/`updateCard` calls with frozen `TaskCol[]` fixtures.
+
+### §9.2 New test cases
+
+#### `xai-web-tasks/tasksReducer.test.ts` (P1) — reducer purity (the anti-drift core)
+- **TR-DEL-1:** `deleteCard(prev, id)` removes the matching card; that column's `count` decremented by 1.
+- **TR-DEL-2:** untouched columns returned by REFERENCE — assert `result[i] === prev[i]` for every column not holding the card.
+- **TR-DEL-3:** `deleteCard` with an id in NO column returns `prev` UNCHANGED (same reference).
+- **TR-DEL-4:** `deleteCard` does not mutate `prev` (deep-freeze fixture → no throw; `prev` identical after call).
+- **TR-UPD-1:** `updateCard(prev, id, {title})` rewrites BOTH `title.en` + `title.zh`; all other fields untouched.
+- **TR-UPD-2 (preserve-done — T-10 lifeline):** `updateCard` on a card with `done:true` and a `{title}` patch → result card STILL has `done:true`. Assert explicitly.
+- **TR-UPD-3:** `updateCard` preserves `tag`/`date`/`dateZh`/`inbox` when not in the patch; sets `tag` when in the patch.
+- **TR-UPD-4:** `updateCard` NEVER overwrites `id` (patch with a stray `id`-like field cannot change the card id; merge re-pins `id: card.id`).
+- **TR-UPD-5:** untouched columns returned by REFERENCE (`result[i] === prev[i]`).
+- **TR-UPD-6:** `updateCard` with id in no column OR an empty patch returns `prev` UNCHANGED (same reference).
+- **TR-UPD-7:** `updateCard` does not mutate `prev` (deep-freeze fixture).
+
+#### `contextProvider.test.ts` (P1) — id exposure
+- **CP-ID-1:** rendered task line includes `(id: <card.id>)` for each open task (assert the exact id token present in `text`).
+- **CP-ID-2:** rendered calendar line includes `(id: <event.id>)` for each today event.
+- **CP-ID-3:** title/time/bucket-label content unchanged vs SHIPPED §8 CP-1/CP-3 (regression — id is additive, not a replacement).
+- **CP-ID-4:** token budget still ≤ ~600 with a large fixture + ids (TASK_CAP=20 + today-only calendar bound the count).
+- **CP-REG:** CP-1..CP-8 (SHIPPED §8) stay green.
+
+#### `toolRegistry.test.ts` deltas
+- **TR-DEL-TOOL-1 (P2):** `AI_TOOLS` grows to include `delete_task` + `delete_calendar_event`; names match `^[a-zA-Z0-9_-]{1,64}$`; each `input_schema` requires `id`.
+- **TR-DEL-TOOL-2 (P2):** `delete_task.toWriteEvent(input, toolUseId)` → `{ channel:"web:tasks:delete-requested", payload:{ requestId:toolUseId, id, requestedAt } }`; calendar analog → `web:calendar:delete-requested`.
+- **TR-DEL-TOOL-3 (P2):** `delete_task.toConfirmation` returns `tone:"destructive"` + description naming the item.
+- **TR-UPD-TOOL-1 (P3):** `AI_TOOLS` grows to 6 total (`update_task` + `update_calendar_event` added); `update_task.input_schema` requires `id`, has optional title/bucket(enum)/tag(enum); `update_calendar_event` requires `id`, optional title/date/startTime/durationMin.
+- **TR-UPD-TOOL-2 (P3):** `update_task.toWriteEvent` → `web:tasks:update-requested` with `patch` containing ONLY provided fields (a title-only input → `patch:{title}`, no bucket/tag keys).
+- **TR-UPD-TOOL-3 (P3):** `update_calendar_event.toWriteEvent` → `web:calendar:update-requested` with `patch` containing only provided fields.
+- **TR-REG:** TR-1..TR-5 (SHIPPED create-tool cases) stay green; `WriteEventSpec.channel` union widening does not break create mappings.
+
+#### `ConfirmationCard.test.tsx` deltas
+- **CC-TONE-1 (P2):** render with a `spec` whose `tone` is omitted or `"default"` (tone is read off `spec.tone`, NOT a separate prop — `ConfirmationCardProps` is unchanged) → byte-for-byte the SHIPPED markup (assert no destructive class/attribute) — protects create/update visuals.
+- **CC-TONE-2 (P2):** render with a `spec` of `{ label, description, tone:"destructive" }` → the destructive affordance (distinct confirm styling/label) + the item-naming description. (Asserts `ConfirmationCard` reads `spec.tone`; no separate `tone` prop is passed.)
+- **CC-REG:** CC-1..CC-3 stay green.
+
+#### `AiChatModule.test.tsx` tool-flow deltas
+- **IT-DEL-1 (P2, NO-SILENT-WRITE):** mock a `delete_task` tool_use (input.id from a seeded context) → ConfirmationCard rendered (destructive); do NOT click Confirm → ZERO `web:tasks:delete-requested` emitted + `xai_task_cols` UNCHANGED.
+- **IT-DEL-2 (P2):** Confirm → `web:tasks:delete-requested` emitted EXACTLY once with `id` from the tool input + `requestId === tool_use.id`; then ONE final stream turn (bounded).
+- **IT-DEL-3 (P2):** Cancel → `tool_result(is_error:true)` round-trip + idle + ZERO writes.
+- **IT-DEL-4 (P2, bounded):** after Confirm+tool_result, a second tool_use in the final turn is NOT executed (counter cap=1).
+- **IT-UPD-1 (P3, NO-SILENT-WRITE):** mock an `update_task` tool_use → confirmation rendered; not-confirmed → ZERO `web:tasks:update-requested` + store unchanged.
+- **IT-UPD-2 (P3):** Confirm → `web:tasks:update-requested` emitted once with the mapped `patch` + `requestId` correlation; bounded final turn.
+- **IT-UPD-3 (P3):** calendar update + delete analogs (`web:calendar:{update,delete}-requested`) emit confirm-only.
+- **IT-REG:** IT-1..IT-6 (SHIPPED create flow) stay green — create path unaffected by the new channel branches.
+
+#### Owning-module mutate-subscriber tests
+- `xai-web-tasks/aiMutateSubscriber.test.ts`:
+  - **TS-DEL-1 (P2):** on `web:tasks:delete-requested`, the targeted card is removed from `xai_task_cols` (via `deleteCard`); count decremented.
+  - **TS-DEL-2 (P2):** idempotent per `requestId` (duplicate emit → single delete).
+  - **TS-DEL-3 (P2):** route-independent — executes without `TasksModule` mounted.
+  - **TS-DEL-4 (P2):** stale/unknown id → store UNCHANGED (deleteCard no-op), no throw.
+  - **TS-UPD-1 (P3):** on `web:tasks:update-requested` with a same-column `{title}` patch → card title rewritten, `done` PRESERVED (assert), other fields intact.
+  - **TS-UPD-2 (P3, bucket-move composition — ED-6):** patch with a DIFFERENT `bucket` → card relocated to the target column (via `moveCard`), date fields rewritten for the new bucket, both columns' counts adjusted, title/tag from patch applied, `done` preserved.
+  - **TS-UPD-3 (P3):** idempotent per `requestId`.
+  - **TS-UPD-4 (P3):** stale/unknown id → store UNCHANGED, no throw.
+  - **TS-NOIMPORT:** no cross-plugin import guard (ai-chat not imported in either subscriber).
+- `xai-web-calendar/aiMutateSubscriber.test.ts`:
+  - **CS-DEL-1 (P2):** on `web:calendar:delete-requested`, the event is removed from `xai_calendar_events` (via `deleteEvent`).
+  - **CS-DEL-2 (P2):** idempotent per `requestId`; **CS-DEL-3:** route-independent; **CS-DEL-4:** stale id → no-op (deleteEvent same-reference), no throw.
+  - **CS-UPD-1 (P3):** on `web:calendar:update-requested`, the event is patched via `updateEvent` — `createdAt` + `id` PRESERVED, `updatedAt` bumped (assert), provided fields applied; startISO/endISO recomputed when date/startTime/durationMin present (same-day, ≥+5min).
+  - **CS-UPD-2 (P3):** idempotent per `requestId`; **CS-UPD-3:** route-independent; **CS-UPD-4:** stale id → `updateEvent` returns `updated:null` + store unchanged, no throw.
+  - **CS-NOIMPORT:** no cross-plugin import guard.
+
+#### `@repo/core` typecheck
+- **CORE-ED-1 (P1):** `pnpm --filter @repo/core typecheck` green with the 4 new EventMap entries; SHIPPED create + `web:ai:*` entries unchanged.
+
+#### Back-compat + full suite
+- **BC-1 (re-assert, P4):** `isAiConvoRecord` still accepts SHIPPED-shape + extended records.
+- **BC-FULL (P4):** full suites green: `pnpm --filter @repo/plugin-web-ai-chat test`, `--filter @repo/plugin-web-tasks test`, `--filter @repo/plugin-web-calendar test`, `--filter @repo/core typecheck`, `--filter @repo/web test`+`build`.
+
+### §9.3 Acceptance gate mapping (extension)
+
+| Acceptance anchor (carve-out §5) | Mechanism |
+|---|---|
+| AI deletes an existing item (referenced by id) → confirmation → Confirm → real removal via owning reducer (verified in store) | IT-DEL-2 + TS-DEL-1 / CS-DEL-1 (store mutation) |
+| AI edits an existing item → confirmation → Confirm → real update via owning reducer; `done`/other fields preserved | IT-UPD-2 + TS-UPD-1 (preserve-done) / CS-UPD-1 (preserve createdAt+id, bump updatedAt) |
+| Targeting works (model references item by id from context) | CP-ID-1/CP-ID-2 (id in context) + IT-DEL-2/IT-UPD-2 (input.id round-trips to the correct store mutation) |
+| NO silent writes / nothing without explicit confirm (delete + update) | **IT-DEL-1 + IT-UPD-1** (pending-not-confirmed → 0 writes) + IT-DEL-3 (cancel → 0 writes) + confirm-handler-only emit |
+| Delete never executes without explicit confirmation | IT-DEL-1 + destructive-tone CC-TONE-2 + confirm-only emit |
+| Bounded round-trip (no agentic loop) | IT-DEL-4 / IT-UPD bounded (counter cap=1) |
+| Untouched task fields + referential equality preserved | TR-UPD-2/TR-UPD-3/TR-UPD-5 + TR-DEL-2 |
+| No regression in SHIPPED create behaviour | TR-REG + CC-REG + IT-REG + CP-REG + full SHIPPED suite green every phase |
+| Docs/code parity (anti-drift, ED-R1) | reducer unit tests (TR-DEL/TR-UPD) assert documented signatures; IT tests assert documented confirm-only emit — verify diffs doc-vs-code |
+| Cross-vendor + real-LLM edit/delete round-trip | DEFERRED operator smoke (ADR-0008 §S3 / ADR-0009 §D2-G2) — verify-report records deferral |
+
+### §9.4 Cleanup behaviour (extension)
+
+- Same as §8.4. `afterEach` clears `localStorage` (resets `xai_task_cols`/`xai_calendar_events`), resets fetch SSE mock, unsubscribes the 4 new channels' listeners, restores timers/mocks.
+- Reducer tests use deep-frozen fixtures to catch accidental mutation.
+

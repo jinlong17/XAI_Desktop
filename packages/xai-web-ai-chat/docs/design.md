@@ -381,3 +381,109 @@ R1 (buildBody content widening regresses SHIPPED path — High), R2 (input_json_
 
 ---
 
+## 2026-05-29 Extension: AI Tool Layer — Edit/Delete (xai-web-ai-tool-edit-delete)
+
+> APPEND-ONLY. The §0 baseline (row #18), the 2026-05-25 Real-LLM-Adapter
+> extension, AND the 2026-05-29 create-only tool-layer extension all continue
+> to apply byte-for-byte. This block extends the create-only tool layer with
+> **edit + delete** tools. It does NOT mutate any SHIPPED create tool, channel,
+> subscriber, or the round-trip plumbing — it extends them additively.
+
+### Decision header
+
+| Field | Value |
+|---|---|
+| Selected Option | **4 tools** (`delete_task` + `delete_calendar_event` + `update_task` + `update_calendar_event`), **delete phased before update**, **4 per-op write event channels**, `update_task` = title+bucket+tag, destructive-tone single-click delete confirmation, additive `(id: …)` context exposure for targeting. Reuses the SHIPPED confirmation → write-event → Shell-sibling-subscriber → reducer path + all 4 lifelines unchanged. |
+| Review Doc | `docs/reviews/xai-web-ai-tool-edit-delete/20260529-discovery-review.md` |
+| Review Date | 2026-05-29 (pending feature-review) |
+| Carve-out | `docs/reviews/_p0-carve-outs/20260529-ai-tool-edit-delete.md` (commit `e404a45`) |
+| Manifest | `docs/workflow/roadmap/xai-web-ai-tool-edit-delete.md` |
+| Parent ADR | ADR-0010 §D4 (P0 maintenance carve-out) |
+| Branch | `web` (does NOT touch `dev`) |
+| Target packages | `packages/plugin-web-ai-chat/src/{internal/toolRegistry.ts, internal/contextProvider.ts, ConfirmationCard.tsx, AiChatModule.tsx}` + `packages/core/src/types/events.ts` (+4 per-module update/delete channels — carve-out-AUTHORIZED) + `packages/xai-web-tasks/src/internal/{tasksReducer.ts (+deleteCard/+updateCard), aiMutateSubscriber.ts}` + `packages/xai-web-calendar/src/internal/aiMutateSubscriber.ts` (reuse existing `updateEvent`/`deleteEvent`) + `apps/web/src/App.tsx` (mount new subscribers) + respective `docs/` |
+| Last Updated | 2026-05-29 |
+
+### Frozen assumptions (this extension; lock at plan acceptance)
+
+> ED-prefixed to disambiguate from the create-layer's FA-1..FA-13.
+
+1. **ED-1 — Tool set = 4 tools; delete phased before update** (planner's-call #1). `delete_task` + `delete_calendar_event` land in P2; `update_task` + `update_calendar_event` in P3. All four ship in this single feature. Tool ids satisfy Anthropic `^[a-zA-Z0-9_-]{1,64}$`.
+2. **ED-2 — Targeting via visible `(id: …)` context token** (the prerequisite). `buildTodayContext` rendered lines gain a short id token (`- [bucket] (id: <id>) <title>` for tasks; `- (id: <id>) HH:MM–HH:MM: <title>` for calendar). Tool descriptions instruct the model to copy the exact id for edit/delete. ADDITIVE — titles/times unchanged; ≤~600-token budget preserved (TASK_CAP=20 + today-only calendar filter bound the count; ids add ~10 tokens/item). NO new storage key, NO new read source.
+3. **ED-3 — 4 per-op event channels** (planner's-call #2): `web:tasks:update-requested`, `web:tasks:delete-requested`, `web:calendar:update-requested`, `web:calendar:delete-requested` in `@repo/core/types/events.ts` (carve-out-authorized; `web:*` namespace; each payload carries `requestId` = `tool_use.id`). NOT a consolidated `mutate {op}` channel — follows the SHIPPED per-op create-channel precedent. SHIPPED create + `web:ai:*` channels are NOT modified (only added alongside).
+4. **ED-4 — Tasks reducer gains 2 pure actions** (`deleteCard`, `updateCard`); calendar REUSES existing `updateEvent`/`deleteEvent` (zero new store code). `deleteCard(prev, id)`: filter the card across columns, decrement that column's count, untouched columns by reference, `prev` unchanged on not-found. `updateCard(prev, id, patch)`: merge `patch` over the card preserving ALL untouched fields incl. **`done` (T-10)** + `tag`/`date`/`dateZh`/`inbox`; never overwrite `id`; untouched columns by reference; `prev` unchanged on not-found / empty patch.
+5. **ED-5 — `update_task` fields = title + bucket + tag** (planner's-call #3; all optional, ≥1 required). `update_calendar_event` = title + date + startTime + durationMin (all optional, ≥1 required → `eventStore.updateEvent` patch). `done` always preserved on task update regardless of patch contents.
+6. **ED-6 — Bucket change delegates to `moveCard`** (OQ1). When `update_task.patch.bucket` differs from the card's current column, the tasks update SUBSCRIBER calls `moveCard` (which rewrites date fields + adjusts both columns' counts) then `updateCard` for any remaining title/tag fields; otherwise `updateCard` only. The pure `updateCard` stays free of column-discovery logic (keeps referential-equality honest). Subscriber-level composition, NOT reducer-level. Feature-review to confirm.
+7. **ED-7 — Destructive delete confirmation, single-click** (planner's-call #4). The `tone` seam rides on **`ConfirmationSpec`** (the value `toConfirmation` returns), NOT on a separate `ConfirmationCard` prop: `ConfirmationSpec` gains an additive `tone?: "default" | "destructive"` field (default/omitted = byte-for-byte SHIPPED rendering for create/update); `ConfirmationCard` reads `spec.tone` and `ConfirmationCardProps` is UNCHANGED. Delete tools' `toConfirmation` returns `tone: "destructive"` + copy naming the exact item (`Delete task "Buy groceries"?`); create/update return `tone: "default"`. Because `tone` is part of the spec, the existing render site (`AiChatModule.tsx`, `spec={spec}` pass-through) carries it with **NO render-site edit** — `AiChatModule.tsx`'s only change is the `handleConfirm` channel branches (see file plan). NO type-DELETE gate (reserved for account-delete). Single `tone` seam, four agreeing surfaces: api §14.2 (ConfirmationSpec interface), api §14.6, this ED-7, file plan, and test CC-TONE-1/2.
+8. **ED-8 — No-silent-write preserved (acceptance anchor)** (lifeline 1). The 4 new write events are emitted EXCLUSIVELY inside `AiChatModule.handleConfirm` — the same single emit site as create. The handler's channel `if/else` chain gains 4 branches. Cancel → `tool_result(is_error:true)` + ZERO store mutation, channel-agnostic, unchanged.
+9. **ED-9 — Bounded round-trip preserved** (lifeline 4). ≤1 `tool_result` turn per send; counter cap=1; on Confirm one success ack, on Cancel one is_error turn. `handleConfirm`/`handleCancel` `priorMessages` round-trip block is UNCHANGED (channel-agnostic).
+10. **ED-10 — Route-independent subscribers preserved** (lifeline 3). New tasks + calendar mutate-subscribers execute IMPERATIVELY via `getPref`→reducer→`setPref`, bounded `seenRef` idempotency per `requestId` (MAX_SEEN=100), mounted as App.tsx Shell-siblings beside the SHIPPED create subscribers. NO cross-plugin import in either direction.
+11. **ED-11 — `streamCompleteChat` signature UNCHANGED.** `StreamRequest` already carries `tools?` + `priorMessages?` (SHIPPED). Only the tool REGISTRY grows (2→6), the Confirm-handler channel branches grow, the event channels grow, the subscribers grow. The hardest SHIPPED plumbing (SSE tool_use accumulation, bounded round-trip) is untouched — a deliberate de-risk.
+12. **ED-12 — `isAiConvoRecord` back-compat preserved** (lifeline; create-layer FA-11 continued). No new persisted message shape required in v1; predicate accepts SHIPPED-shape records; BC regression test confirms no regression.
+13. **ED-13 — No new npm dep, no new provider, no new CSP origin, no new storage key, no `plugin-web-tokens`/`dev`/SHIPPED-archive/ADR edits.** Anthropic origin already allow-listed. `WriteEventSpec.channel` union widening (to include the 4 new channels) is the only type-surface change in `toolRegistry.ts`.
+
+### File plan (delta over the SHIPPED create-only tool layer)
+
+```
+packages/plugin-web-ai-chat/
+├── src/
+│   ├── internal/
+│   │   ├── toolRegistry.ts        — MODIFY: +delete_task/+delete_calendar_event (P2), +update_task/+update_calendar_event (P3); ConfirmationSpec +tone? field (P2); WriteEventSpec.channel union +4; AI_TOOLS 2→6
+│   │   └── contextProvider.ts     — MODIFY: render (id: …) token in task + calendar lines (P1)
+│   ├── ConfirmationCard.tsx       — MODIFY: read spec.tone (default "default"), apply destructive affordance when spec.tone==="destructive"; ConfirmationCardProps UNCHANGED; default preserves SHIPPED markup (P2)
+│   ├── AiChatModule.tsx           — MODIFY: handleConfirm +4 channel branches (delete P2, update P3) ONLY; render site UNCHANGED (spec={spec} pass-through carries tone); round-trip block unchanged
+│   └── __tests__/                 — NEW cases: TR-DEL/TR-UPD tool tests, CC-TONE, IT-DEL/IT-UPD (no-silent-write + bounded + preserve-done), CP-ID targeting
+
+packages/core/
+└── src/types/events.ts            — MODIFY: +4 EventMap entries (web:tasks:{update,delete}-requested, web:calendar:{update,delete}-requested) — carve-out AUTHORIZED (P1)
+
+packages/xai-web-tasks/
+├── src/internal/tasksReducer.ts   — MODIFY: +deleteCard(prev,id) + updateCard(prev,id,patch) + TaskCardPatch type (P1)
+├── src/internal/aiMutateSubscriber.ts — NEW: useTaskMutateRequestSubscriber (update→moveCard?+updateCard / delete→deleteCard) (P2 delete, P3 update) + tests
+└── src/types.ts                   — MODIFY (additive): export TaskCardPatch
+
+packages/xai-web-calendar/
+└── src/internal/aiMutateSubscriber.ts — NEW: useCalendarMutateRequestSubscriber (update→updateEvent / delete→deleteEvent — REUSE existing store CRUD) (P2 delete, P3 update) + tests
+
+apps/web/
+└── src/App.tsx                    — MODIFY (additive): mount useTaskMutateRequestSubscriber + useCalendarMutateRequestSubscriber as Shell-siblings (P2)
+
+docs/
+├── workflow/roadmap/xai-web-ai-tool-edit-delete.md  — NEW manifest
+└── reviews/xai-web-ai-tool-edit-delete/20260529-discovery-review.md  — NEW
+docs/PLUGIN_MAP.md                 — UPDATE: ai-chat + tasks + calendar row notes (P4)
+```
+
+### State machine (UNCHANGED from create layer — delete/update reuse the same flow)
+
+The create-layer state machine (idle → streaming+context → tool_use → pendingConfirmation → Confirm emits write event (ONLY here) + bounded round-trip / Cancel → is_error + idle) applies IDENTICALLY to delete/update. The ONLY differences are: (a) the emitted channel (4 new ones, branched in `handleConfirm`), (b) the confirmation tone for deletes, (c) the subscriber reducer called. No new states, no new transitions.
+
+### Tasks reducer contract (NEW pure actions)
+
+```ts
+export interface TaskCardPatch {
+  /** Fills BOTH title.en + title.zh (single-input bilingual, mirrors addCard). */
+  title?: string;
+  tag?: TaskTagId;
+  // bucket change handled via moveCard composition in the subscriber (ED-6), NOT here.
+}
+export function deleteCard(prev: TaskCol[], id: string): TaskCol[];
+export function updateCard(prev: TaskCol[], id: string, patch: TaskCardPatch): TaskCol[];
+```
+- Immutable; untouched columns by reference (TR test asserts `result[i] === prev[i]`); `prev` unchanged on not-found / empty patch.
+- `updateCard` preserves `done` + every untouched field; re-pins `id: card.id`.
+
+### Risks recap (this extension)
+
+ED-R1 (docs/code drift — the prior-BLOCK cause — **CRITICAL**: test.md asserts exact reducer signatures + confirm-only emit so verify can mechanically diff), ED-R2 (events.ts dev-merge surface — Medium), ED-R3 (updateCard referential-equality regression — Medium: TR test asserts untouched-column identity), ED-R4 (bucket-change moveCard composition — Medium: dedicated subscriber test), ED-R5 (id-targeting runtime accuracy — Low: automated proves id present + correct round-trip; model id-copy accuracy = deferred operator smoke), ED-R6 (ConfirmationCard tone default regression — Low: CC test asserts default = SHIPPED markup), ED-R7 (isAiConvoRecord back-compat — Low). Full register + open questions (OQ1 bucket composition seam, OQ2 one-hook-vs-two, OQ3 tag-clear) in discovery §6.
+
+### Out-of-scope (deferred, this extension)
+
+- Bulk operations (delete-all / multi-select). Undo.
+- Tag-removal on update (OQ3 — patch only sets provided fields in v1).
+- openai-compatible tool WRITE support (separate next carve-out — read context still works there).
+- Unbounded agentic loops / multi-step autonomous execution.
+- New providers / npm deps / CSP origins / model-id bumps / new storage keys.
+- Real-LLM edit/delete round-trip smoke + cross-vendor cold-read (operator work; deferred per ADR-0008 §S3 / ADR-0009 §D2-G2).
+
+---
+

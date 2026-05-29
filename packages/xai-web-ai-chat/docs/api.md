@@ -636,3 +636,184 @@ export function useAiCreateRequestSubscriber(): void;
 - The SHIPPED FIFO queue + `processingRef` + abort-on-unmount invariants are preserved; `pendingConfirmation` pauses the queue until Confirm/Cancel.
 - Subscribers are idempotent per `requestId`: a duplicate `web:*:create-requested` with the same `requestId` is a no-op (guard against StrictMode double-emit). Each create runs through the owning module's pure reducer (referential-equality semantics preserved).
 
+## §14. 2026-05-29 Extension — AI Tool Layer Edit/Delete (xai-web-ai-tool-edit-delete)
+
+> §0..§13 continue to apply byte-for-byte. This §14 adds the EDIT + DELETE
+> tool contracts. Extends §13 additively — does NOT modify the SHIPPED create
+> tools, channels, subscribers, or round-trip plumbing.
+> Carve-out: `docs/reviews/_p0-carve-outs/20260529-ai-tool-edit-delete.md` (commit `e404a45`).
+> Discovery: `docs/reviews/xai-web-ai-tool-edit-delete/20260529-discovery-review.md`.
+
+### §14.1 `contextProvider` id exposure (internal — `contextProvider.ts`; READ, additive)
+
+The rendered context lines from §13.2's `buildTodayContext` gain a visible id token so the model can target update/delete:
+
+```text
+## Open tasks (top 20):
+- [next7] (id: t1) Buy groceries
+- [overdue] (id: c3) Submit report
+
+## Calendar events today:
+- (id: 6f3a-…) 09:30–10:00: Team standup
+```
+- ADDITIVE string-shape change ONLY. Titles, times, bucket labels, ordering, TASK_CAP=20, today-only calendar filter — all unchanged from §13.2.
+- Token budget ≤ ~600 preserved (ids add ~10 tokens/item; bounded counts keep total in budget).
+- NO new storage key, NO new read source, NO write. Tool descriptions reference the `(id: …)` token: "to edit or delete an existing item, copy the exact id shown as `(id: …)` in the context."
+- CP-ID tests assert the id appears in the rendered text for both tasks and calendar events.
+
+### §14.2 `toolRegistry` extension (internal — `toolRegistry.ts`; WRITE; 2 → 6 tools)
+
+`AI_TOOLS` grows from 2 (create_task, create_calendar_event) to 6. Two type surfaces widen — `ConfirmationSpec` gains an additive `tone?` field (the SINGLE seam for destructive styling — see §14.6), and `WriteEventSpec.channel` widens to include the 4 new channels:
+
+```ts
+// ConfirmationSpec — SHIPPED { label, description } gains an additive optional tone.
+// tone is carried ON the spec returned by toConfirmation, NOT as a separate
+// ConfirmationCard prop. The existing `spec={spec}` render-site pass-through
+// (AiChatModule.tsx:695-707) carries it unchanged — NO render-site edit.
+export interface ConfirmationSpec {
+  /** Short tool label, e.g. "Create task" / "Delete task". */
+  label: string;
+  /** Human-readable description of the proposed action. */
+  description: string;
+  /** NEW (additive): visual + affordance tone. Omitted / "default" = byte-for-byte
+   *  SHIPPED rendering (create + update). "destructive" = delete affordance. */
+  tone?: "default" | "destructive";
+}
+
+export interface WriteEventSpec {
+  channel:
+    | "web:tasks:create-requested" | "web:calendar:create-requested"   // SHIPPED
+    | "web:tasks:update-requested" | "web:tasks:delete-requested"      // NEW
+    | "web:calendar:update-requested" | "web:calendar:delete-requested"; // NEW
+  payload: Record<string, unknown>;
+}
+```
+
+**New tools** (each implements `toConfirmation(input)` + `toWriteEvent(input, toolUseId)` from §13.3's `AiToolDef`):
+
+- **`delete_task`** — `input_schema`: `{ id: string (req) }`. `toConfirmation` → `{ label: "Delete task", description: \`Delete task "<title-or-id>"?\` , tone: "destructive" }`. `toWriteEvent` → `{ channel: "web:tasks:delete-requested", payload: { requestId: toolUseId, id, requestedAt } }`.
+- **`delete_calendar_event`** — `input_schema`: `{ id: string (req) }`. Destructive tone. → `web:calendar:delete-requested` `{ requestId, id, requestedAt }`.
+- **`update_task`** — `input_schema`: `{ id: string (req), title?: string, bucket?: "overdue"|"next7"|"later"|"nodate", tag?: "study"|"work"|"personal"|"todo"|"other" }` (description: "provide id + at least one of title/bucket/tag"). `toWriteEvent` → `web:tasks:update-requested` `{ requestId, id, patch: { title?, bucket?, tag? }, requestedAt }` (only provided fields included in `patch`).
+- **`update_calendar_event`** — `input_schema`: `{ id: string (req), title?: string, date?: "YYYY-MM-DD", startTime?: "HH:MM", durationMin?: number }` (description: "provide id + at least one changed field"). `toWriteEvent` → `web:calendar:update-requested` `{ requestId, id, patch: { title?, date?, startTime?, durationMin? }, requestedAt }`.
+
+`toConfirmation` for the two delete tools returns `{ label, description, tone: "destructive" }`; create + update return `tone: "default"` (explicit, for clarity — omitting it is equivalent and also renders SHIPPED markup). This is the ONLY place `tone` is set; `ConfirmationCard` reads `spec.tone` (§14.6). `findTool(name)` unchanged (array lookup).
+
+### §14.3 New EventMap entries (in `@repo/core/types/events.ts`) — CARVE-OUT AUTHORIZED
+
+```ts
+// AI tool layer edit/delete — task update request
+// Producer: plugin-web-ai-chat Confirm handler (emitted ONLY on user Confirm).
+// Consumer: xai-web-tasks always-on AI-mutate subscriber.
+'web:tasks:update-requested': {
+  /** Correlation id = Anthropic tool_use.id (round-trip match for tool_result). */
+  requestId: string;
+  /** Stable task card id, copied by the model from the injected context. */
+  id: string;
+  /** Only provided fields present. Empty patch is a no-op at the reducer. */
+  patch: {
+    /** Fills BOTH title.en + title.zh. */
+    title?: string;
+    /** Bucket change → subscriber composes moveCard (ED-6). */
+    bucket?: 'overdue' | 'next7' | 'later' | 'nodate';
+    tag?: 'study' | 'work' | 'personal' | 'todo' | 'other';
+  };
+  requestedAt: string;
+};
+// AI tool layer edit/delete — task delete request
+'web:tasks:delete-requested': {
+  requestId: string;
+  id: string;
+  requestedAt: string;
+};
+// AI tool layer edit/delete — calendar event update request
+'web:calendar:update-requested': {
+  requestId: string;
+  id: string;
+  patch: {
+    title?: string;
+    /** "YYYY-MM-DD" local date. */
+    date?: string;
+    /** "HH:MM" local start. */
+    startTime?: string;
+    /** Minutes; subscriber clamps ≥5. */
+    durationMin?: number;
+  };
+  requestedAt: string;
+};
+// AI tool layer edit/delete — calendar event delete request
+'web:calendar:delete-requested': {
+  requestId: string;
+  id: string;
+  requestedAt: string;
+};
+```
+- ADDITIVE: the SHIPPED `web:*:create-requested` + `web:ai:*` channels are NOT modified.
+- Per-op channels (planner's-call #2), NOT a consolidated `mutate {op}`.
+- `dev`-branch merge surface flagged in dev_log Risks (`web:*` ≠ `desktop:*`, low conflict).
+
+### §14.4 Tasks reducer additions (`xai-web-tasks/src/internal/tasksReducer.ts`; pure)
+
+```ts
+export interface TaskCardPatch {
+  title?: string;      // fills BOTH title.en + title.zh (mirrors addCard's single-input bilingual)
+  tag?: TaskTagId;
+  // bucket change handled via moveCard composition in the subscriber (§14.5), NOT in this patch.
+}
+/** Pure: remove the card with `id` from whichever column holds it; decrement that
+ *  column's count. Untouched columns returned by reference. `prev` unchanged if id
+ *  is in no column. */
+export function deleteCard(prev: TaskCol[], id: string): TaskCol[];
+/** Pure: merge `patch` over the matching card, preserving ALL untouched fields
+ *  including `done` (T-10), tag, date, dateZh, inbox. Never overwrites `id`.
+ *  Untouched columns returned by reference. `prev` unchanged if id is in no column
+ *  OR patch is empty/no-op. */
+export function updateCard(prev: TaskCol[], id: string, patch: TaskCardPatch): TaskCol[];
+```
+- `TaskCardPatch` exported additively from `xai-web-tasks/src/types.ts`.
+- Calendar adds NO reducer code — reuses the ALREADY-EXISTING `updateEvent(store, id, patch)` (preserves createdAt + id, bumps updatedAt) + `deleteEvent(store, id)` (no-op if missing) from `eventStore/eventStore.ts`.
+
+### §14.5 Owning-module AI-mutate subscribers (additive, within each package)
+
+`xai-web-tasks/src/internal/aiMutateSubscriber.ts`:
+```ts
+/** Always-on (route-independent) subscriber for BOTH update + delete task channels.
+ *  On web:tasks:delete-requested: setPref("xai_task_cols", deleteCard(getPref(...), id)).
+ *  On web:tasks:update-requested: if patch.bucket differs from the card's current
+ *    column → moveCard(cols, id, fromCol, patch.bucket) THEN updateCard for remaining
+ *    title/tag (ED-6 composition); else updateCard only. Then setPref. */
+export function useTaskMutateRequestSubscriber(): void;
+```
+`xai-web-calendar/src/internal/aiMutateSubscriber.ts`:
+```ts
+/** Always-on subscriber for BOTH update + delete calendar channels.
+ *  On web:calendar:delete-requested: setPref("xai_calendar_events", deleteEvent(getPref(...), id)).
+ *  On web:calendar:update-requested: setPref(..., updateEvent(getPref(...), id, patch).next)
+ *    (compute startISO/endISO from date/startTime/durationMin when those fields present). */
+export function useCalendarMutateRequestSubscriber(): void;
+```
+- Execute IMPERATIVELY via the pure reducer + `getPref`/`setPref` (route-independent — a mutate requested while on `/app/ai` is not lost). Mounted `TasksModule`/`CalendarModule` update reactively via `usePref` storage-event fan-out.
+- tasks uses its INTERNAL `deleteCard`/`updateCard`/`moveCard`; calendar reuses its existing `updateEvent`/`deleteEvent`.
+- **No cross-plugin import** in either direction — coupling is only the typed event name + payload in `@repo/core`.
+- Mounted as new Shell-sibling lines in `apps/web/src/App.tsx` beside the SHIPPED create subscribers (§13.5). One hook per package, two `useWebEventListener` calls inside (OQ2 — review to confirm).
+
+### §14.6 Confirmation contract (destructive tone; no silent writes preserved)
+
+- **Destructive tone rides on `ConfirmationSpec.tone`, NOT a separate `ConfirmationCard` prop.** `ConfirmationCardProps` is UNCHANGED (`{ spec, lang, onConfirm, onCancel }`); `ConfirmationCard` reads `spec.tone` (defaulting to `"default"`) and applies the destructive affordance (distinct confirm styling/label) when `spec.tone === "destructive"`. Because `tone` is part of the spec, the existing render site (`AiChatModule.tsx:695-707`, which computes `spec = tool.toConfirmation(...)` then passes `spec={spec}`) carries it through with **NO render-site edit** — `AiChatModule.tsx`'s only build change stays "`handleConfirm` +4 channel branches". Default/omitted tone reproduces SHIPPED markup byte-for-byte (CC-TONE-1 asserts this). Delete tools set `tone: "destructive"` in `toConfirmation` + copy naming the exact item (CC-TONE-2 asserts the destructive affordance).
+- The 4 new write events are emitted **exclusively** inside `AiChatModule.handleConfirm` — the SAME single emit site as create. The handler's channel `if/else` chain gains 4 branches (delete in P2, update in P3). Cancel emits `tool_result(is_error:true)` + ZERO store mutation, channel-agnostic, unchanged (IT-DEL/IT-UPD enforce confirm-only emit).
+- Bounded single round-trip preserved: at most ONE `tool_result` turn per send; the `priorMessages` round-trip block in `handleConfirm`/`handleCancel` is UNCHANGED (channel-agnostic).
+
+### §14.7 `streamCompleteChat` — UNCHANGED
+
+`StreamRequest` already carries `tools?` + `priorMessages?` (SHIPPED §13.1 lineage). Edit/delete require NO adapter signature change — only the tool registry (2→6), the Confirm-handler channel branches, the event channels, and the subscribers grow.
+
+### §14.8 Persistence / back-compat / permissions
+
+- `isAiConvoRecord` unchanged; no new persisted message shape in v1; BC regression test confirms no regression.
+- No new storage key (reuses `xai_task_cols` / `xai_calendar_events`). No new CSP origin (Anthropic allow-listed). No new npm dep, no new provider, no model-id change, no Tauri capability.
+
+### §14.9 Idempotency / re-mount safety
+
+- New subscribers idempotent per `requestId` (bounded `seenRef`, MAX_SEEN=100) — a duplicate `web:*:{update,delete}-requested` with the same `requestId` is a no-op (StrictMode double-emit guard).
+- `deleteCard`/`updateCard`/`updateEvent`/`deleteEvent` all no-op (return same reference) on missing id — a stale/wrong id from the model mutates nothing (silent safe no-op, not an error).
+- SHIPPED FIFO queue + `processingRef` + `pendingConfirmation` pause + abort-on-unmount all preserved.
+
