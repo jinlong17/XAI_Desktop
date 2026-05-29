@@ -66,6 +66,7 @@ export type {
 // ---- usePref hook ----------------------------------------------------------
 export { usePref } from "./internal/usePref.js";
 export type { PrefMeta } from "./internal/usePref.js";
+export { useDesktopLocalFirstCalendarProviderState } from "./internal/useDesktopLocalFirstCalendarProviderState.js";
 
 // ---- usePrefAutosave hook --------------------------------------------------
 export { usePrefAutosave } from "./internal/usePrefAutosave.js";

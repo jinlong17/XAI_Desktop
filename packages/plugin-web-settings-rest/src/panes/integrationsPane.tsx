@@ -22,7 +22,10 @@ import {
 } from "@repo/core";
 import type { Pane, PaneRenderProps } from "@repo/plugin-web-settings-shell";
 import { useI18n } from "@repo/plugin-web-tokens";
-import { usePref } from "@repo/plugin-web-storage";
+import {
+  useDesktopLocalFirstCalendarProviderState,
+  usePref,
+} from "@repo/plugin-web-storage";
 import { localI18n } from "../internal/localI18n.js";
 import { PROVIDERS } from "../internal/integrationProviders.js";
 import { IntegrationConnectButton } from "../internal/integrationConnectButton.js";
@@ -109,6 +112,8 @@ function IntegrationsPaneContent({ lang }: PaneRenderProps): React.ReactElement 
   const [linearConnected, setLinearConnected] = usePref(
     "xai_pref_integrations_connected_linear",
   );
+  const [gcalProviderState, patchGcalProviderState] =
+    useDesktopLocalFirstCalendarProviderState("gcal");
 
   // Map of providerId → connected state
   const connectedMap: Record<string, boolean> = {
@@ -120,9 +125,78 @@ function IntegrationsPaneContent({ lang }: PaneRenderProps): React.ReactElement 
   // Map of providerId → disconnect handler
   const disconnectHandlers: Record<string, () => void> = {
     notion: () => setNotionConnected(false),
-    gcal: () => setGcalConnected(false),
+    gcal: () => {
+      setGcalConnected(false);
+      void patchGcalProviderState({
+        connectionState: "disconnected",
+        availability: "ready",
+        needsReconnectRefresh: false,
+        lastFailureCode: undefined,
+        lastFailureMessage: undefined,
+      });
+    },
     linear: () => setLinearConnected(false),
   };
+
+  React.useEffect(() => {
+    if (!gcalConnected || gcalProviderState) {
+      return;
+    }
+    void patchGcalProviderState({
+      connectionState: "connected",
+      availability: isDesktopOfflineRuntime ? "offline" : "ready",
+      needsReconnectRefresh: false,
+    });
+  }, [
+    gcalConnected,
+    gcalProviderState,
+    isDesktopOfflineRuntime,
+    patchGcalProviderState,
+  ]);
+
+  const gcalConnectionState =
+    gcalProviderState?.connectionState ??
+    (gcalConnected ? "connected" : "disconnected");
+  const gcalAvailability =
+    gcalProviderState?.availability ??
+    (isDesktopOfflineRuntime ? "offline" : "ready");
+
+  const gcalSyncable =
+    gcalConnected &&
+    !isDesktopOfflineRuntime &&
+    gcalConnectionState === "connected" &&
+    gcalAvailability === "ready" &&
+    !gcalProviderState?.needsReconnectRefresh;
+
+  function gcalStatusCopy(): string {
+    if (!gcalConnected) {
+      return lang === "zh" ? "未连接" : "Not connected";
+    }
+    if (gcalProviderState?.needsReconnectRefresh) {
+      return lang === "zh" ? "需重连后刷新" : "Reconnect required";
+    }
+    if (isDesktopOfflineRuntime || gcalAvailability === "offline") {
+      return lang === "zh"
+        ? "已连接，离线不可同步"
+        : "Connected, offline sync unavailable";
+    }
+    if (gcalAvailability === "auth-required") {
+      return lang === "zh"
+        ? "已连接，需要重新授权"
+        : "Connected, re-auth required";
+    }
+    if (gcalAvailability === "transport-unavailable") {
+      return lang === "zh"
+        ? "已连接，同步通道不可用"
+        : "Connected, sync transport unavailable";
+    }
+    if (gcalProviderState?.lastFailureCode) {
+      return lang === "zh"
+        ? "已连接，上次同步失败"
+        : "Connected, last sync failed";
+    }
+    return lang === "zh" ? "已连接，可同步" : "Connected, syncable";
+  }
 
   // Filter placeholder groups: hide wired-provider cards that are connected
   // (they appear in the "Connected providers" section instead)
@@ -170,6 +244,15 @@ function IntegrationsPaneContent({ lang }: PaneRenderProps): React.ReactElement 
                     {t("int.badge.connected_stub")}
                   </span>
                 )}
+                {provider.id === "gcal" && (
+                  <span
+                    className="int-provider-sync-state"
+                    data-testid="int-gcal-sync-state"
+                    data-syncable={gcalSyncable ? "true" : "false"}
+                  >
+                    {gcalStatusCopy()}
+                  </span>
+                )}
                 {isConnected ? (
                   <IntegrationDisconnectButton
                     provider={provider}
@@ -177,7 +260,27 @@ function IntegrationsPaneContent({ lang }: PaneRenderProps): React.ReactElement 
                     onDisconnect={disconnectHandlers[provider.id]!}
                   />
                 ) : (
-                  <IntegrationConnectButton provider={provider} lang={lang} />
+                  <IntegrationConnectButton
+                    provider={provider}
+                    lang={lang}
+                    onOfflineBlocked={
+                      provider.id === "gcal"
+                        ? () => {
+                            void patchGcalProviderState({
+                              connectionState: gcalConnected
+                                ? "connected"
+                                : "disconnected",
+                              availability: "offline",
+                              lastAttemptAt: new Date().toISOString(),
+                              lastFailureCode: "offline_connect_blocked",
+                              lastFailureMessage:
+                                "Calendar provider sync requires reconnect.",
+                              needsReconnectRefresh: true,
+                            });
+                          }
+                        : undefined
+                    }
+                  />
                 )}
               </div>
             );

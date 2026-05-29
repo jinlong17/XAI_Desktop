@@ -30,7 +30,10 @@ import "./styles.css";
 import type { JSX } from "react";
 import { useMemo, useState, useCallback } from "react";
 import { useI18n } from "@repo/plugin-web-tokens";
-import { usePref } from "@repo/plugin-web-storage";
+import {
+  useDesktopLocalFirstCalendarProviderState,
+  usePref,
+} from "@repo/plugin-web-storage";
 import { useWebEventListener } from "@repo/xai-web-event-bus";
 import type { CalendarModuleProps, CalendarView, DisplayedMonth } from "./types.js";
 import { CalendarToolbar } from "./CalendarToolbar.js";
@@ -41,6 +44,7 @@ import { utcDateKey } from "./internal/dateKeys.js";
 import { tryParseDateKey, dateKeyMonth, formatDateKey, stepDateKey } from "./internal/parseDateKey.js";
 import { WeekView } from "./WeekView.js";
 import { DayView } from "./DayView.js";
+import { resolveCalendarProviderSyncStatus } from "./internal/providerSyncStatus.js";
 
 /**
  * Design-source anchor: May 22, 2026 matches the sample-event fixture and the
@@ -58,6 +62,14 @@ function toView(raw: string): CalendarView {
 export function CalendarModule({ lang }: CalendarModuleProps): JSX.Element {
   const { t } = useI18n(lang);
   const [weekStartRaw] = usePref("xai_pref_week_start", 0);
+  const [gcalConnected] = usePref("xai_pref_integrations_connected_gcal", false);
+  const [gcalProviderState] =
+    useDesktopLocalFirstCalendarProviderState("gcal");
+  const providerSyncStatus = resolveCalendarProviderSyncStatus({
+    providerConnected: Boolean(gcalConnected),
+    desktopOfflineRuntime: gcalProviderState?.availability === "offline",
+    providerState: gcalProviderState,
+  });
   const weekStart: 0 | 1 = (weekStartRaw as unknown as number) === 1 ? 1 : 0;
 
   // P4: view is now persisted via xai_calendar_view.
@@ -183,7 +195,11 @@ export function CalendarModule({ lang }: CalendarModuleProps): JSX.Element {
           lang={lang}
         />
       )}
-      <CalendarBanner t={t} />
+      <CalendarBanner
+        t={t}
+        lang={lang}
+        providerStatus={providerSyncStatus}
+      />
     </div>
   );
 }

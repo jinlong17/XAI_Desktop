@@ -30,11 +30,13 @@ import { buildAuthorizeUrl } from "./buildAuthorizeUrl.js";
 interface IntegrationConnectButtonProps {
   readonly provider: IntegrationProvider;
   readonly lang: Lang;
+  readonly onOfflineBlocked?: () => void;
 }
 
 export function IntegrationConnectButton({
   provider,
   lang,
+  onOfflineBlocked,
 }: IntegrationConnectButtonProps): React.ReactElement {
   const t = localI18n(lang);
   const runtimeProfile = resolveWebRuntimeProfile(
@@ -48,6 +50,7 @@ export function IntegrationConnectButton({
   ): Promise<void> => {
     e.preventDefault();
     if (isDesktopOfflineRuntime) {
+      onOfflineBlocked?.();
       return;
     }
     try {

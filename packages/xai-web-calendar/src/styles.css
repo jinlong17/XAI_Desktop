@@ -395,6 +395,11 @@
   color: var(--accent);
   font-weight: 600;
 }
+.cal-banner .cal-provider-status {
+  font-size: var(--fs-xs);
+  color: var(--text-3);
+  margin-left: 6px;
+}
 .cal-banner svg {
   color: var(--amber);
 }

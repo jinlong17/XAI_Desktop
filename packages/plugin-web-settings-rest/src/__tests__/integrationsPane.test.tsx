@@ -197,4 +197,16 @@ describe("integrationsPane — Extension tests (IN-EXT-1..IN-EXT-12)", () => {
     expect(connectBtns.length).toBe(3);
     connectBtns.forEach((btn) => expect(btn).toBeDisabled());
   });
+
+  it("IN-EXT-14: gcal card shows syncability state separate from connected badge", () => {
+    localStorage.setItem("xai_pref_integrations_connected_gcal", "true");
+    render(integrationsPane.render({ lang: "en" }));
+    expect(screen.getByTestId("int-gcal-sync-state")).toHaveTextContent(
+      "Connected, syncable",
+    );
+    expect(screen.getByTestId("int-gcal-sync-state")).toHaveAttribute(
+      "data-syncable",
+      "true",
+    );
+  });
 });

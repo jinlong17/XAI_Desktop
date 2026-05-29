@@ -392,6 +392,13 @@
   white-space: nowrap;
 }
 
+.int-provider-sync-state {
+  font-size: 0.62rem;
+  line-height: 1.3;
+  text-align: center;
+  color: oklch(42% 0.05 245);
+}
+
 .int-connect-btn {
   font-size: 0.7rem;
   font-weight: 600;
