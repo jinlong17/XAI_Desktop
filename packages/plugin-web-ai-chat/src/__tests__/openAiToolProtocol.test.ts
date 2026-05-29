@@ -248,6 +248,11 @@ describe("OAI-STREAM-4: defensive finish_reason — tool_calls accumulated by st
   it("surfaces toolUse when tool_calls accumulated but finish_reason is 'stop' (compat-server robustness)", async () => {
     // Some openai-compatible servers (vLLM, older Groq) set finish_reason:"stop"
     // even when tool_calls were streamed (open-webui #21768 — discovery §2.3 note).
+    // REAL-WORLD INSTANCE (2026-05-29 Gemini smoke): gemini-3.1-flash-lite streams
+    // the tool_call in an early chunk with finish_reason:null, then a final chunk
+    // with finish_reason:"stop" (NOT "tool_calls"). This defensive fallback is the
+    // load-bearing path for that model. Evidence:
+    // docs/reviews/xai-web-gemini-provider-enablement/20260529-smoke-evidence.md §2.5.
     // The adapter must still surface toolUse from the accumulated entries.
     const sseSequence = [
       // Tool call delta (finish_reason will be "stop", not "tool_calls")
