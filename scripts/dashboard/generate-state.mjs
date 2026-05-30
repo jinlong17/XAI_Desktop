@@ -16,6 +16,7 @@ const releaseLogPath = resolve(repoRoot, "docs/workflow/project/release-log.md")
 const pluginMapPath = resolve(repoRoot, "docs/PLUGIN_MAP.md");
 const roadmapDir = resolve(repoRoot, "docs/workflow/roadmap");
 const skillDir = resolve(repoRoot, ".teams/skills");
+const agentDir = resolve(repoRoot, ".codex/agents");
 const outputPath = resolve(repoRoot, "docs/prototypes/dev-dashboard/state.generated.js");
 const roadmapAllowlist = [
   "sync-v1.md",
@@ -54,20 +55,79 @@ function readText(path) {
   return readFileSync(path, "utf8");
 }
 
+function parseFrontmatter(text) {
+  const match = text.match(/^---\n([\s\S]*?)\n---/);
+  if (!match) return {};
+  return match[1].split(/\r?\n/).reduce((meta, line) => {
+    const parts = line.match(/^([A-Za-z0-9_-]+):\s*(.*)$/);
+    if (parts) meta[parts[1]] = parts[2].trim();
+    return meta;
+  }, {});
+}
+
+function extractTriggers(text, description) {
+  const explicit = text.match(/## Triggers\s+([\s\S]*?)(?:\n## |\n# |$)/);
+  if (explicit) {
+    return explicit[1]
+      .split(/\r?\n/)
+      .map(line => line.replace(/^[-*]\s*/, "").trim())
+      .filter(Boolean)
+      .slice(0, 6);
+  }
+  const descTriggers = String(description || "").match(/Triggers?\s+[—-]\s+(.+)$/i);
+  if (!descTriggers) {
+    const useWhen = String(description || "").match(/Use when\s+(.+?)(?:\.|$)/i);
+    return useWhen ? [useWhen[1].trim()] : [];
+  }
+  return descTriggers[1]
+    .split(/[·,，、]/)
+    .map(item => item.trim())
+    .filter(Boolean)
+    .slice(0, 6);
+}
+
 function listSkills() {
   if (!existsSync(skillDir)) return [];
   return readdirSync(skillDir, { withFileTypes: true })
     .filter(entry => entry.isDirectory())
     .map(entry => {
       const skillPath = resolve(skillDir, entry.name, "SKILL.md");
+      const text = existsSync(skillPath) ? readText(skillPath) : "";
+      const meta = parseFrontmatter(text);
       return {
-        name: entry.name,
+        name: meta.name || entry.name,
+        description: meta.description || "",
+        triggers: extractTriggers(text, meta.description),
         path: relative(repoRoot, skillPath),
         present: existsSync(skillPath),
         tracked: Boolean(git(["ls-files", "--", relative(repoRoot, skillPath)]))
       };
     })
     .filter(skill => skill.present)
+    .sort((a, b) => a.name.localeCompare(b.name));
+}
+
+function parseTomlString(text, key) {
+  const match = text.match(new RegExp(`^${key}\\s*=\\s*\"([^\"]*)\"`, "m"));
+  return match ? match[1] : "";
+}
+
+function listAgents() {
+  if (!existsSync(agentDir)) return [];
+  return readdirSync(agentDir, { withFileTypes: true })
+    .filter(entry => entry.isFile() && entry.name.endsWith(".toml"))
+    .map(entry => {
+      const agentPath = resolve(agentDir, entry.name);
+      const relPath = relative(repoRoot, agentPath);
+      const text = readText(agentPath);
+      return {
+        name: parseTomlString(text, "name") || entry.name.replace(/\.toml$/, ""),
+        description: parseTomlString(text, "description"),
+        triggers: [],
+        path: relPath,
+        tracked: Boolean(git(["ls-files", "--", relPath]))
+      };
+    })
     .sort((a, b) => a.name.localeCompare(b.name));
 }
 
@@ -358,6 +418,7 @@ const latestCommit = git(["log", "-1", "--format=%h %s"]);
 const divergenceRaw = git(["rev-list", "--left-right", "--count", "origin/web...origin/dev"]);
 const [webOnly = "0", devOnly = "0"] = divergenceRaw.split(/\s+/);
 const skillsFound = listSkills();
+const agentsFound = listAgents();
 const pluginMap = parsePluginMap();
 const roadmapManifests = listRoadmapManifests();
 
@@ -373,6 +434,11 @@ const snapshot = {
     }
   },
   skills_found: skillsFound,
+  agents_found: agentsFound,
+  registry: {
+    skills: skillsFound,
+    agents: agentsFound
+  },
   plugin_map: pluginMap,
   roadmap_manifests: roadmapManifests,
   product_lines: buildProductLines(source.product_lines || [], roadmapManifests, pluginMap),
