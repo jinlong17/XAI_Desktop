@@ -625,11 +625,25 @@ function readBranchPolicy(divergence) {
   try {
     if (!existsSync(branchPolicyPath)) return null;
     const policy = readJson(branchPolicyPath);
+    const webLast = git(["log", "-1", "--format=%cs", "origin/web"]) || git(["log", "-1", "--format=%cs", "web"]);
+    const devLast = git(["log", "-1", "--format=%cs", "origin/dev"]) || git(["log", "-1", "--format=%cs", "dev"]);
+    const mergeBase = git(["merge-base", "origin/web", "origin/dev"]);
+    const sharedBase = mergeBase ? git(["log", "-1", "--format=%cs", mergeBase]) : "";
+    const lastTag = git(["for-each-ref", "--sort=-creatordate", "--count=1", "--format=%(refname:short) · %(creatordate:short)", "refs/tags"]);
     const current = {
       web_only: divergence.web_only,
       dev_only: divergence.dev_only,
       drift_status: "符合预期",
-      drift_note: "commit 数不是异常判据；只检查该共享的变化是否已有 D3 分类或 defer 记录。"
+      drift_note: "commit 数不是异常判据；只检查该共享的变化是否已有 D3 分类或 defer 记录。",
+      gate_timeline: {
+        web_last_commit: webLast || "未知",
+        dev_last_commit: devLast || "未知",
+        shared_base: sharedBase || "未知",
+        last_release_tag: lastTag || "（暂无 tag）",
+        web_ahead: divergence.web_only,
+        dev_ahead: divergence.dev_only,
+        reminder: `web 较共同基线领先 ${divergence.web_only} 个提交、dev 领先 ${divergence.dev_only} 个；属预期分叉，只需为“该共享的改动”补一次 D3 分类或 defer。`
+      }
     };
     return {
       ...policy,

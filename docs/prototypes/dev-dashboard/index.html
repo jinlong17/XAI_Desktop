@@ -435,6 +435,11 @@
   .task-main b{display:block;font-size:13px}
   .task-main span{display:block;color:var(--muted);font-size:12px;margin-top:2px;overflow-wrap:anywhere}
   .task-open{color:var(--blue);font-size:12px;font-weight:700;white-space:nowrap}
+  .gate-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;margin-top:10px}
+  .gate-cell{padding:8px 9px;border:1px solid var(--line);border-radius:8px;background:#fff}
+  .gate-cell b{display:block;font-size:11px;color:var(--muted);font-weight:700}
+  .gate-cell span{display:block;font-size:12.5px;font-weight:800;margin-top:2px}
+  @media (max-width:620px){.gate-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
   @media (max-width:620px){
     .task-row{grid-template-columns:auto minmax(0,1fr)}
     .task-open{display:none}
@@ -1512,11 +1517,20 @@ function renderBranches(){
   if(policy?.long_lived_branches?.length){
     const gate = policy.current_gate_status || {};
     const current = policy.current || {};
+    const tl = current.gate_timeline || {};
     document.getElementById("branchGrid").innerHTML = `
       <div class="flow-note">
-        <b>D3 / merge / release</b>
+        <b>D3 / merge / release 门控</b>
         <p style="margin-top:8px">D3: ${h(gate.d3 || "manual")} · merge: ${h(gate.merge || "operator-gated")} · release: ${h(gate.release || "operator-gated")}</p>
-        <p style="margin-top:8px">web/dev: ${h(current.web_only ?? 0)}/${h(current.dev_only ?? 0)} · ${h(current.drift_status || "符合预期")} · ${h(current.drift_note || policy.drift_model)}</p>
+        <div class="gate-grid">
+          <div class="gate-cell"><b>web 最近提交</b><span>${h(tl.web_last_commit || "未知")}</span></div>
+          <div class="gate-cell"><b>dev 最近提交</b><span>${h(tl.dev_last_commit || "未知")}</span></div>
+          <div class="gate-cell"><b>共同基线</b><span>${h(tl.shared_base || "未知")}</span></div>
+          <div class="gate-cell"><b>最近 release tag</b><span>${h(tl.last_release_tag || "（暂无）")}</span></div>
+          <div class="gate-cell"><b>web 领先</b><span>${h(String(tl.web_ahead ?? current.web_only ?? 0))} commits</span></div>
+          <div class="gate-cell"><b>dev 领先</b><span>${h(String(tl.dev_ahead ?? current.dev_only ?? 0))} commits</span></div>
+        </div>
+        <p style="margin-top:10px"><span class="badge b-green">${h(current.drift_status || "符合预期")}</span> ${h(tl.reminder || current.drift_note || policy.drift_model)}</p>
       </div>
       ${policy.long_lived_branches.map(item => `
         <div class="branch-row">
