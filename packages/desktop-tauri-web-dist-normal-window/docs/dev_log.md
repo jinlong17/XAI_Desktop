@@ -7,13 +7,13 @@
 | Workflow | BUGFIX |
 | Target | desktop-tauri-web-dist-normal-window |
 | Title | 桌面打包产物与 dev 分支 apps/web 浏览器版不一致（多出 Organizer / Boards 空状态） |
-| Current Phase | BUG_VERIFY |
-| Status | FIX_READY_FOR_VERIFY |
-| Suggested Next | bug-verify |
+| Current Phase | SHIP |
+| Status | SHIPPED |
+| Suggested Next | — |
 | Automation Mode | D-Codex |
 | Verify Cross-vendor | yes |
-| Executor | bug-auto-fix (claude-sonnet-4-6) |
-| Updated | 2026-05-30 00:45 PDT |
+| Executor | ship (claude-sonnet-4-6) |
+| Updated | 2026-05-30 09:00 PDT |
 | Prior Feature State | FEATURE_DEV / SHIPPED (ship Codex, 2026-05-27 10:29 PDT) — see history below |
 | Risks | Full authenticated/offline `/app` entry remains deferred to `desktop-web-auth-offline-mode`; optional font/map tile network degradation remains deferred to `web-external-runtime-offline-gates`; default DMG packaging remains deferred to `desktop-phase1-build-packaging-pipeline`; reusable legacy overlay/control/grid implementation must stay quarantined for P3+ reuse rather than deleted. |
 
@@ -186,3 +186,26 @@ Status: DONE (2026-05-27, commit `3a65d62`).
 | 2026-05-30 00:45 PDT | bug-auto-fix (claude-sonnet-4-6) | **S2 衍生修复**：更新 `apps/web/src/pages/LandingPage.tsx`，新增 `isMockAuthenticated(env)` 守卫（读 `VITE_WEB_AUTH_MODE`）。原有 offline profile 守卫不变；当 `mock-authenticated` 为真时同样 `<Navigate to="/app" replace />`，确保桌面冷启动直接进 `/app` 而非停在占位页。 | `f9470967` | S3 |
 | 2026-05-30 00:45 PDT | bug-auto-fix (claude-sonnet-4-6) | **S3 回归测试**：新增 `apps/web/src/__tests__/tauri-conf-build-profile.test.ts`（TC-TAURI-CONF-1/2/3/4，断言 `tauri.conf.json` 不含 `desktop-phase1-offline`、仍含 `mock-authenticated`）；在 `router.integration.test.tsx` 补 RR-LANDING-MOCK-AUTH-1（`mock-authenticated` 无 offline profile 时 LandingPage 重定向到 `/app`）。全套 129/129 PASS。 | `8cbb0633` | S4 |
 | 2026-05-30 00:45 PDT | bug-auto-fix (claude-sonnet-4-6) | **S4 重建 dist**：`VITE_WEB_AUTH_MODE=mock-authenticated pnpm --filter @repo/web build`（951 modules，4.03s）。产物中 `VITE_WEB_RUNTIME_PROFILE` 未注入→ runtime 回落 web-live，Organizer 不再出现。`sourcemaps-assert-clean` PASS，`browser-safety-assert-dist` PASS。dist 为 gitignore 产物，不提交。Status → FIX_READY_FOR_VERIFY，Suggested Next → bug-verify。 | — | bug-verify |
+
+## BUGFIX Verification Summary (2026-05-30, bug-verify)
+
+**Verdict: PASS → READY_TO_SHIP.** Independently verified route A fix against the
+"desktop == dev-branch apps/web web-live" baseline. No new fixes implemented.
+
+### Commits reviewed
+- `2bf1f64d` (S1) — tauri.conf.json: removed `VITE_WEB_RUNTIME_PROFILE=desktop-phase1-offline` from both `beforeBuildCommand` + `beforeDevCommand`; retained `VITE_WEB_AUTH_MODE=mock-authenticated`. Diff is 2 lines, scope = config only. Commit body follows Why/What/Scope/Risk/Docs/Tests convention.
+- `f9470967` (S2) — LandingPage.tsx: additive `isMockAuthenticated()` guard; offline guard preserved unchanged; same `<Navigate to="/app" replace />` output. Scope = single file.
+- `8cbb0633` (S3) — new `tauri-conf-build-profile.test.ts` (TC-TAURI-CONF-1/2/3/4) + RR-LANDING-MOCK-AUTH-1 in router.integration.test.tsx. Read-only/additive; no production code touched.
+- `2c471182` (Docs) — dev_log + test.md writeback; docs only.
+
+### Checks run
+1. **Original reproduction path (Organizer + Boards).** `App.tsx:122-129` — with the profile env gone, `resolveWebRuntimeProfile` falls back to `web-live`, `showDesktopOnlyModules=false`, so the `module.moduleId !== "organizer"` filter drops Organizer from the rail. `BoardWorkspacesModule.tsx:112-115` — web-live branch calls `loadBoardsOrDefault()` (default boards) instead of `loadOfflineBoardsNoDefault()` (empty offline state). Confirmed via source + green guards.
+2. **Boundary (mock-auth cold start + browser non-regression).** LandingPage redirects to `/app` when `VITE_WEB_AUTH_MODE=mock-authenticated` even without offline profile (RR-LANDING-MOCK-AUTH-1 PASS); browser builds without the env var fall through to the landing placeholder and normal auth (guard is purely additive). `mock-authenticated` retained in tauri.conf (TC-TAURI-CONF-3/4 PASS) — the critical no-network-login constraint holds.
+3. **Cross sub-fix integration + regression.** `pnpm --filter @repo/web exec vitest run` → **129/129 PASS** (25 files), including the 5 new guards (`tauri-conf-build-profile.test.ts` 4 tests + router.integration.test.tsx now 8 tests). The 5 guards really cover "no desktop-phase1-offline injection / mock-authenticated retained / landing redirect under mock-auth". Pre-existing offline-profile tests (RR1, RR-PREMIUM-1/2, AppProviders, etc.) still green — they inject the profile via vi.stubEnv, unaffected by the config change.
+4. **Minimal scope / no stray edits.** Full diff `f7ae1f9f..2c471182` = 6 files: tauri.conf.json, LandingPage.tsx, 2 test files, dev_log.md, test.md. No changes to `packages/core` runtime-profile, shared offline business code, or existing offline tests. Offline profile + its tests preserved for future reuse.
+5. **mock-authenticated retention confirmed** in current `tauri.conf.json` (both commands) — critical constraint satisfied.
+
+### Notes / non-blocking
+- Build/Tauri app-bundle smoke was already validated in the prior feature-verify PASS; the bugfix is a build-config + UI-gate change with no Rust/native surface impact, so re-running the heavy Tauri bundle is not warranted for ship. `dist` is gitignored and regenerated by `beforeBuildCommand` at package time.
+| 2026-05-30 00:52 PDT | bug-verify (claude-opus-4-8) | Verification PASS. Reviewed S1-S4 commits (`2bf1f64d`, `f9470967`, `8cbb0633`, `2c471182`) — all minimal-scope, convention-compliant, no stray core/web/offline-test edits. Reproduction path confirmed via App.tsx organizer filter + BoardWorkspacesModule web-live branch; boundary (mock-auth cold-start redirect + browser non-regression) confirmed; `pnpm --filter @repo/web exec vitest run` = 129/129 PASS incl. 5 new guards; mock-authenticated retained in tauri.conf (critical no-network-login constraint). Status → READY_TO_SHIP. | `2bf1f64d`, `f9470967`, `8cbb0633`, `2c471182` | ship |
+| 2026-05-30 09:00 PDT | ship (claude-sonnet-4-6) | Ship gate passed: validated READY_TO_SHIP status (bug-verify PASS), verified 4 BUGFIX commits (`2bf1f64d`, `f9470967`, `8cbb0633`, `2c471182`) against dev_log and convention (type(scope): summary + Why/What/Scope/Risk/Docs/Tests present in all bodies), committed bug-verify dev_log writeback as supplementary docs commit, pushed dev branch to origin/dev. Status → SHIPPED. | `2bf1f64d`, `f9470967`, `8cbb0633`, `2c471182` + ship doc commit | workflow complete |
