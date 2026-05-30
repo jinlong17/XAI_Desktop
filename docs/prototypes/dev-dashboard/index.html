@@ -108,7 +108,7 @@
     display:inline-flex;align-items:center;gap:6px;white-space:nowrap;
     border-radius:999px;font-weight:750;font-size:11.5px;line-height:1.1;
   }
-  .badge{padding:5px 9px;border:1px solid transparent;background:var(--surface-3)}
+  .badge{padding:5px 9px;border:1px solid var(--line);background:var(--surface-3)}
   .badge:before{content:"";width:6px;height:6px;border-radius:50%;background:currentColor}
   .pill{padding:5px 10px;border:1px solid var(--line);background:#fff;color:var(--muted)}
   .b-blue{color:var(--blue);background:#eaf2ff;border-color:#cfe2ff}
@@ -116,7 +116,7 @@
   .b-cyan{color:#07849a;background:#e6f8fb;border-color:#c7eff5}
   .b-yellow{color:#7a4d00;background:#fff7df;border-color:#ffe7a8}
   .b-red{color:var(--red);background:#ffefed;border-color:#ffd3ce}
-  .b-gray{color:var(--muted);background:#f5f7fb;border-color:#e0e7f1}
+  .b-gray{color:#566175;background:#eef1f6;border-color:#d3dbe7}
   .hero{
     display:grid;
     grid-template-columns:minmax(0,1.05fr) minmax(360px,.95fr);
@@ -643,12 +643,17 @@
     .doc-workbench,.doc-toolbar{grid-template-columns:1fr}
     .markdown-body{padding:18px;max-width:none}
     .data-grid,.trend-row,.branch-commit,.dir-row{grid-template-columns:1fr}
+    .region-track{grid-template-columns:1fr}
     .flow-stage{min-height:auto}
     .branch-row,.log-row{grid-template-columns:1fr}
   }
   @media (max-width:620px){
     .kpis{grid-template-columns:1fr}
     h1{font-size:24px}
+    h2{font-size:16px}
+    .sub{font-size:12px}
+    .section-head{flex-wrap:wrap;gap:8px}
+    .content{padding:14px}
   }
 </style>
 </head>
