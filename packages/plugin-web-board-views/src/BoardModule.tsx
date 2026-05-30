@@ -28,7 +28,7 @@
  * shape, so a future re-export refactor is a clean swap.
  */
 
-import { Suspense, useCallback, useEffect, useState } from "react";
+import { lazy, Suspense, useCallback, useEffect, useState } from "react";
 import { usePref } from "@repo/plugin-web-storage";
 import {
   BoardView,
@@ -53,10 +53,13 @@ import { TableView } from "./TableView.js";
 import { BoardCalendarView } from "./BoardCalendarView.js";
 import { BoardDashboardView } from "./BoardDashboardView.js";
 import { TimelineView } from "./TimelineView.js";
-import { MapView } from "./MapView.js";
 import type { BoardViewId } from "./types.js";
 import type { Lang } from "./internal/i18n.js";
 import { loadViewByBoardIdOrEmpty } from "./internal/persistence.js";
+
+const LazyMapView = lazy(() =>
+  import("./MapView.js").then((m) => ({ default: m.MapView })),
+);
 
 export interface BoardModuleProps {
   /** Bilingual language toggle.
@@ -235,7 +238,7 @@ export function BoardModule({ lang }: BoardModuleProps) {
         )}
         {activeView === "map" && (
           <Suspense fallback={<div data-testid="map-suspense-fallback" aria-busy="true" />}>
-            <MapView lang={lang} lists={lists} />
+            <LazyMapView lang={lang} lists={lists} />
           </Suspense>
         )}
       </div>
