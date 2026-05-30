@@ -165,21 +165,21 @@
       linear-gradient(180deg,rgba(255,255,255,.92),rgba(247,251,255,.92)),
       repeating-linear-gradient(90deg,rgba(26,115,232,.04) 0 1px,transparent 1px 72px);
   }
-  .flow-lines{position:absolute;inset:0;width:100%;height:100%;pointer-events:none}
-  .flow-lines path{
-    fill:none;stroke:var(--line-strong);stroke-width:2.4;stroke-linecap:round;
-    stroke-dasharray:7 8;transition:stroke .25s ease,stroke-width .25s ease,opacity .25s ease;
+  .module-track{
+    display:grid;
+    grid-template-columns:repeat(3,minmax(0,1fr));
+    gap:10px;
+    align-items:stretch;
+    margin-top:16px;
   }
-  .flow-lines path.is-hot{
-    stroke:var(--blue);stroke-width:3.2;animation:dash 1.2s linear infinite;
-  }
-  @keyframes dash{to{stroke-dashoffset:-30}}
-  .product-node{
-    position:absolute;
-    width:178px;
-    min-height:96px;
+  .module-card{
+    position:relative;
+    min-height:218px;
+    display:grid;
+    grid-template-rows:auto auto minmax(0,1fr) auto;
+    gap:10px;
+    padding:14px;
     text-align:left;
-    padding:12px;
     border:1px solid var(--line);
     border-radius:8px;
     background:#fff;
@@ -187,25 +187,71 @@
     box-shadow:var(--shadow-soft);
     transition:transform .22s ease,border-color .22s ease,box-shadow .22s ease,background .22s ease;
   }
-  .product-node:hover{transform:translateY(-2px);border-color:var(--line-strong)}
-  .product-node.is-active{
-    border-color:rgba(26,115,232,.55);
-    box-shadow:0 18px 40px rgba(26,115,232,.18);
+  .module-card:not(:last-child):after{
+    content:"";
+    display:none;
+    position:absolute;
+    top:35px;
+    right:-10px;
+    width:10px;
+    height:2px;
+    background:var(--line-strong);
+  }
+  .module-card:hover{transform:translateY(-2px);border-color:var(--line-strong)}
+  .module-card.is-active{
+    border-color:rgba(26,115,232,.58);
     background:linear-gradient(180deg,#fff,#f3f8ff);
+    box-shadow:0 20px 42px rgba(26,115,232,.18);
   }
-  .product-node.is-active:after{
-    content:"";position:absolute;inset:-5px;border:2px solid rgba(26,115,232,.20);
-    border-radius:10px;animation:pulse 1.35s ease-out infinite;
+  .module-card.is-active:before{
+    content:"";
+    position:absolute;
+    inset:0;
+    border:2px solid rgba(26,115,232,.16);
+    border-radius:10px;
+    animation:pulse 1.35s ease-out infinite;
   }
+  .module-top{display:flex;align-items:center;justify-content:space-between;gap:8px}
+  .module-index{
+    width:30px;
+    height:30px;
+    display:grid;
+    place-items:center;
+    border-radius:8px;
+    background:var(--surface-3);
+    color:var(--blue);
+    font-weight:850;
+  }
+  .module-card h3{font-size:15px}
+  .module-card p{color:var(--muted);font-size:12px}
+  .module-card .pill{white-space:normal;align-items:flex-start}
+  .module-meta{display:grid;gap:7px;margin-top:2px}
+  .module-meta span{
+    display:block;
+    padding:7px 8px;
+    border:1px solid var(--line);
+    border-radius:8px;
+    background:var(--surface-2);
+    color:var(--muted);
+    font-size:11.5px;
+  }
+  .module-meta b{color:var(--text);font-size:11.5px}
+  .module-rhythm{
+    display:grid;
+    grid-template-columns:repeat(auto-fit,minmax(150px,1fr));
+    gap:10px;
+    margin-top:12px;
+  }
+  .rhythm-chip{
+    min-height:68px;
+    padding:10px;
+    border:1px solid #cfe2ff;
+    border-radius:8px;
+    background:#f2f7ff;
+  }
+  .rhythm-chip b{display:block;font-size:12px}
+  .rhythm-chip span{display:block;color:var(--muted);font-size:11.5px;margin-top:3px}
   @keyframes pulse{0%{opacity:.9;transform:scale(.98)}100%{opacity:0;transform:scale(1.08)}}
-  .product-node b{display:block;font-size:14px}
-  .product-node span{display:block;color:var(--muted);font-size:12px;margin-top:4px}
-  .node-web{left:5%;top:95px}
-  .node-app{left:40%;top:95px}
-  .node-plugin{right:5%;top:95px}
-  .node-sync{left:31%;top:260px;width:238px}
-  .node-site{left:14%;bottom:45px}
-  .node-admin{right:14%;bottom:45px}
   .detail{
     display:grid;gap:12px;align-content:start;
     background:#fff;
@@ -216,6 +262,10 @@
   .detail-list div{padding:10px;border-left:3px solid var(--blue);background:var(--surface-2);border-radius:0 8px 8px 0}
   .detail-list b{display:block;font-size:12px}
   .detail-list span{display:block;color:var(--muted);font-size:12px;margin-top:2px}
+  .detail-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
+  .detail-metric{padding:10px;border:1px solid var(--line);border-radius:8px;background:var(--surface-2)}
+  .detail-metric b{display:block;font-size:11.5px;color:var(--muted)}
+  .detail-metric span{display:block;font-size:12.5px;font-weight:800;margin-top:3px;overflow-wrap:anywhere}
   .split{display:grid;grid-template-columns:minmax(0,1fr) minmax(360px,.75fr);gap:14px}
   .reader-shell{display:grid;grid-template-columns:220px minmax(0,1fr);gap:14px}
   .doc-list{display:grid;gap:7px;align-content:start}
@@ -286,6 +336,8 @@
   @media (max-width:1180px){
     .hero,.flow-grid,.split{grid-template-columns:1fr}
     .kpis{grid-template-columns:repeat(2,minmax(0,1fr))}
+    .module-track,.module-rhythm{grid-template-columns:1fr}
+    .module-card:not(:last-child):after{display:none}
   }
   @media (max-width:860px){
     .layout{grid-template-columns:1fr}
@@ -295,8 +347,6 @@
     .quick-grid{grid-template-columns:1fr}
     .reader-shell{grid-template-columns:1fr}
     .flow-stage{min-height:760px}
-    .flow-lines{display:none}
-    .product-node{position:relative;left:auto;right:auto;top:auto;bottom:auto;width:100%;margin-bottom:10px}
     .branch-row,.log-row{grid-template-columns:1fr}
   }
   @media (max-width:620px){
@@ -349,7 +399,7 @@
           <h1 style="margin-top:14px">一个人也能看懂、执行、复盘的 XAI 开发工作台</h1>
           <p class="sub">这里把产品线、分支流水线、Workflow V2、固定 skill、发布记录放到同一个入口。它是导航和看板，不代替 ADR、手册和真实 roadmap。</p>
           <div class="quick-grid">
-            <div class="quick"><b>先看产品</b><span>确认这次改动属于 web、桌面 App、插件、同步、官网还是 admin。</span></div>
+            <div class="quick"><b>先看产品</b><span>确认这次改动属于 web、桌面 App、插件、账号同步还是官方网页。</span></div>
             <div class="quick"><b>再选 branch</b><span>branch 跟集成风险走，不跟产品线一一绑定。</span></div>
             <div class="quick"><b>最后跑 skill</b><span>用 feature loop、roadmap loop、D3 sync 或 release log 收口。</span></div>
           </div>
@@ -363,7 +413,7 @@
       </section>
 
       <section class="section kpis">
-        <div class="surface kpi"><div class="label"><span>产品线</span><span class="pill">结构</span></div><div class="num">6</div><div class="note">Web / App / Plugin / Sync / Site / Admin</div></div>
+        <div class="surface kpi"><div class="label"><span>产品线</span><span class="pill">顺序模块</span></div><div class="num">5</div><div class="note">Web / App / Plugin / Sync / Official Site</div></div>
         <div class="surface kpi"><div class="label"><span>长期分支</span><span class="pill">治理</span></div><div class="num">4+</div><div class="note">web, desktop-next, plugin-next, dev, release/*</div></div>
         <div class="surface kpi"><div class="label"><span>固定 skill</span><span class="pill">入口</span></div><div class="num">5</div><div class="note">feature, roadmap, web-to-desktop, release log</div></div>
         <div class="surface kpi"><div class="label"><span>新手路径</span><span class="pill">节奏</span></div><div class="num">3</div><div class="note">选产品线 -> 选 branch -> 选 skill</div></div>
@@ -373,26 +423,19 @@
         <div class="surface pad flow-stage">
           <div class="section-head">
             <div>
-              <h2>产品结构流程图</h2>
-              <p class="sub">点击节点查看它的定位、当前权限和推荐 branch。蓝色虚线会标出它和其他产品线的关系。</p>
+          <h2>产品线顺序和独立模块跟踪</h2>
+          <p class="sub">这 5 条是主产品线顺序。每一条都单独跟踪状态、branch、依赖和下一步；点击卡片在右侧看详细说明。</p>
             </div>
-            <span class="pill">click nodes</span>
+            <span class="pill">click module</span>
           </div>
-          <svg class="flow-lines" viewBox="0 0 900 560" preserveAspectRatio="none" aria-hidden="true">
-            <path data-edge="web-app" d="M178 143 C260 143 300 143 364 143"></path>
-            <path data-edge="app-plugin" d="M540 143 C610 143 660 143 722 143"></path>
-            <path data-edge="web-sync" d="M180 178 C260 220 320 245 382 303"></path>
-            <path data-edge="app-sync" d="M455 190 C455 225 455 250 455 292"></path>
-            <path data-edge="sync-site" d="M410 352 C330 392 260 435 220 500"></path>
-            <path data-edge="sync-admin" d="M505 352 C610 392 680 435 730 500"></path>
-            <path data-edge="app-site" d="M420 190 C320 275 250 355 220 490"></path>
-          </svg>
-          <button class="product-node node-web is-active" data-product="web" type="button"><b>1. Web</b><span>功能最全的产品和 UI 源头</span></button>
-          <button class="product-node node-app" data-product="app" type="button"><b>2. Mac 桌面 App</b><span>基于 Web 能力下沉到 Tauri</span></button>
-          <button class="product-node node-plugin" data-product="plugin" type="button"><b>3. 桌面插件 / Widget</b><span>桌面整理和小组件生态</span></button>
-          <button class="product-node node-sync" data-product="sync" type="button"><b>4. 账号云同步层</b><span>Web 和 App 都同步到同一账号云</span></button>
-          <button class="product-node node-site" data-product="site" type="button"><b>5. 官方网页</b><span>下载、更新、营销和发布入口</span></button>
-          <button class="product-node node-admin" data-product="admin" type="button"><b>6. Admin Dashboard</b><span>运营、权限、用量和配置后台</span></button>
+          <div class="module-track" id="moduleTrack"></div>
+          <div class="module-rhythm">
+            <div class="rhythm-chip"><b>1. Web 先完整</b><span>最全功能产品，也是 App UI 来源。</span></div>
+            <div class="rhythm-chip"><b>2. App 再下沉</b><span>把 Web 能力接入 macOS/Tauri。</span></div>
+            <div class="rhythm-chip"><b>3. 插件再扩展</b><span>桌面整理和 widget 依赖 App 平台。</span></div>
+            <div class="rhythm-chip"><b>4. 同步打通</b><span>Web/App/Plugin 进入同一账号云。</span></div>
+            <div class="rhythm-chip"><b>5. 官网承接</b><span>下载、更新、发布记录和对外入口。</span></div>
+          </div>
         </div>
         <aside class="surface pad detail" id="productDetail" aria-live="polite"></aside>
       </section>
@@ -454,7 +497,7 @@
           </div>
           <div class="flow-note" style="margin-top:10px">
             <b>这样分的好处：</b>
-            <p style="margin-top:8px">不会因为“有 6 个产品线”就制造 6 条长期分支。长期 branch 只保留给会影响集成、发布、冻结的阶段。</p>
+            <p style="margin-top:8px">不会因为“有 5 个产品线”就制造 5 条长期分支。长期 branch 只保留给会影响集成、发布、冻结的阶段。</p>
           </div>
         </aside>
       </section>
@@ -484,68 +527,93 @@
 </div>
 
 <script>
-const products = {
-  web: {
+const products = [
+  {
+    key: "web",
+    order: 1,
     title: "Web",
+    subtitle: "项目最全的功能产品",
     badge: "P0 · maintenance",
-    edges: ["web-app","web-sync"],
+    status: "维护主线",
+    branch: "web / codex/web/<feature>",
+    dependency: "App UI 源头",
+    next: "只做 bugfix；新功能需要 P0 carve-out。",
+    tracker: "功能完整度、Web 发布、共享 UI 合同、D3 影响。",
     points: [
-      ["定位", "功能最全的主产品，也是桌面 App 的 UI 源头。"],
-      ["当前权限", "维护和 bugfix 为主；新功能需要明确 P0 carve-out。"],
-      ["推荐 branch", "`codex/web/<feature>` -> `web`，进入桌面前跑 D3 gate。"]
+      ["定位", "这是功能最全的产品面，也是后续 mac 桌面 App 的 UI 和交互源头。"],
+      ["独立跟踪", "Web 自己跟踪功能完整度、Web 发布、共享包变化和是否影响桌面。"],
+      ["和下一层关系", "App 基于 Web 下沉；Web 变化进入 App 前必须通过 D3 分类。"]
     ]
   },
-  app: {
-    title: "Mac 桌面 App",
+  {
+    key: "app",
+    order: 2,
+    title: "Mac 桌面版 App",
+    subtitle: "基于 Web 开发的桌面产品",
     badge: "P1 · active",
-    edges: ["web-app","app-plugin","app-sync","app-site"],
+    status: "当前主开发",
+    branch: "desktop-next -> dev",
+    dependency: "依赖 Web + Tauri native",
+    next: "G1 native foundation 优先。",
+    tracker: "离线、本机能力、窗口、Tauri 权限、App RC。",
     points: [
-      ["定位", "把 Web 能力变成可离线、可调用本机能力的 Tauri App。"],
-      ["当前权限", "当前主开发焦点：G1 native foundation。"],
-      ["推荐 branch", "`desktop-next` 集成，稳定后再进入 `dev`。"]
+      ["定位", "把 Web 的能力变成 macOS 桌面 App，补上离线、本机文件、窗口和系统能力。"],
+      ["独立跟踪", "App 自己跟踪 G1 native foundation、Tauri build、离线 profile 和 RC 状态。"],
+      ["和下一层关系", "插件和 widget 要等 App 插件平台稳定；App 稳定线是 `dev`。"]
     ]
   },
-  plugin: {
-    title: "桌面插件 / Widget",
+  {
+    key: "plugin",
+    order: 3,
+    title: "桌面整理插件 / Widget",
+    subtitle: "类似 MacBook widget 的桌面扩展",
     badge: "P2 · paused",
-    edges: ["app-plugin"],
+    status: "等待 App 平台",
+    branch: "desktop-plugin-next",
+    dependency: "依赖桌面 App 插件平台",
+    next: "G1 稳定后恢复。",
+    tracker: "插件 SDK、widget host、单插件功能、平台兼容。",
     points: [
-      ["定位", "类似桌面整理插件和小组件生态，依赖 App 插件平台。"],
-      ["当前权限", "G1 稳定前先暂停，只做必要修复和设计记录。"],
-      ["推荐 branch", "插件平台级变更走 `desktop-plugin-next`；单插件用短分支。"]
+      ["定位", "围绕桌面整理、widget、小工具和插件生态展开，属于 App 之上的扩展层。"],
+      ["独立跟踪", "插件平台、SDK、widget host、单插件功能要分开记录，不和 App RC 混在一起。"],
+      ["和下一层关系", "插件数据如果需要跨设备，就进入账号云同步层；不需要则保持 device-local。"]
     ]
   },
-  sync: {
+  {
+    key: "sync",
+    order: 4,
     title: "账号云同步层",
+    subtitle: "前三者同步到同一个账号云",
     badge: "P2 · paused",
-    edges: ["web-sync","app-sync","sync-site","sync-admin"],
+    status: "基建合同",
+    branch: "sync-v1 roadmap wave",
+    dependency: "连接 Web / App / Plugin",
+    next: "Post-G1 恢复同步开发。",
+    tracker: "syncScope、push/pull、冲突、两设备 smoke。",
     points: [
-      ["定位", "Web IndexedDB 和 App SQLite 不互相同步，都同步到同一账号云。"],
-      ["当前权限", "Post-G1 恢复；现在只保留治理合同和接口约束。"],
-      ["推荐 branch", "sync-v1 恢复后按 roadmap wave 跑，不单独抢 App 主线。"]
+      ["定位", "Web、桌面 App、插件/Widget 不互相直连同步，而是同步到同一个账号云端层。"],
+      ["独立跟踪", "账号同步单独跟踪 entity、schema、push/pull、conflict、Web test、App test 和两设备 smoke。"],
+      ["和下一层关系", "官网可以承接账号登录、下载、release notes 和用户状态说明，但不替代同步协议。"]
     ]
   },
-  site: {
+  {
+    key: "site",
+    order: 5,
     title: "官方网页",
+    subtitle: "官网和发布入口同步开发",
     badge: "proposed",
-    edges: ["sync-site","app-site"],
+    status: "拟定",
+    branch: "codex/site/<feature>",
+    dependency: "承接 Web/App/Sync 发布信息",
+    next: "确认 package 和启动时机。",
+    tracker: "下载页、更新说明、release notes、账号入口、Cloudflare 发布。",
     points: [
-      ["定位", "下载、自动更新、营销说明、release notes 的对外入口。"],
-      ["当前权限", "还没有独立 package；启动时机由 operator 确认。"],
-      ["推荐 branch", "先用 `codex/site/<feature>`，有发布节奏后再升长期线。"]
-    ]
-  },
-  admin: {
-    title: "Admin Dashboard",
-    badge: "proposed",
-    edges: ["sync-admin"],
-    points: [
-      ["定位", "运营、AI 配置、权限、用量、审计日志后台。"],
-      ["当前权限", "当前是 prototype，不应抢主产品资源。"],
-      ["推荐 branch", "先用 `codex/admin/<feature>`；等真实后端合同稳定再升格。"]
+      ["定位", "官方网页不是 Web App 本体，而是对外承接下载、更新、营销说明和 release notes。"],
+      ["独立跟踪", "官网单独跟踪下载入口、版本说明、更新元数据、账号入口和 Cloudflare 发布状态。"],
+      ["和前四层关系", "官网需要同步展示 Web/App/Plugin/账号同步的状态，但不应该直接承载产品内部开发。"]
     ]
   }
-};
+];
 
 const docs = [
   {
@@ -554,7 +622,7 @@ const docs = [
     href: "../../workflow/project/handbook.md",
     pages: [
       {title:"工作手册是什么", body:["它是单人开发导航层：告诉你权威文件在哪里、产品线怎么分、branch 怎么走、skill 怎么选。","它不替代 ADR、usage-guide 或 roadmap，只把入口整理成一张地图。"]},
-      {title:"新手三步", body:["先选产品线：这次改的是 Web、App、插件、同步、官网还是 admin。","再选 branch：看它影响的是 Web、桌面集成、插件平台还是 release。","最后选 workflow：小修走手动；单功能走 full-loop；多功能走 roadmap-loop。"]}
+      {title:"新手三步", body:["先选产品线：这次改的是 Web、App、插件、账号同步还是官方网页。","再选 branch：看它影响的是 Web、桌面集成、插件平台、同步基建还是 release。","最后选 workflow：小修走手动；单功能走 full-loop；多功能走 roadmap-loop。"]}
     ]
   },
   {
@@ -603,6 +671,7 @@ const branches = [
 ];
 
 const releaseRows = [
+  ["2026-05-30", "看板结构", "产品区改为 5 条顺序模块 tracking card，点击后显示模块状态、branch、依赖、跟踪字段和详细关系。", "docs"],
   ["2026-05-30", "项目系统层", "新增中文个人开发看板、产品结构流程图、文档分页阅读器和 release log skill。", "docs"],
   ["2026-05-30", "分支治理", "明确产品线不等于长期 branch；两台电脑并行通过 D3 gate 对齐。", "governance"],
   ["2026-05-30", "Skill", "新增 `xai-release-log`：把日期、功能增量、验证和风险写入项目发布记录。", "skill"]
@@ -617,19 +686,55 @@ function badgeClass(value){
   return "b-gray";
 }
 
+function h(value){
+  return String(value)
+    .replaceAll("&", "&amp;")
+    .replaceAll("<", "&lt;")
+    .replaceAll(">", "&gt;")
+    .replaceAll('"', "&quot;")
+    .replaceAll("'", "&#39;");
+}
+
+function renderModules(){
+  document.getElementById("moduleTrack").innerHTML = products.map(item => `
+    <button class="module-card ${item.key === "web" ? "is-active" : ""}" data-product="${item.key}" type="button">
+      <div class="module-top">
+        <span class="module-index">${item.order}</span>
+        <span class="badge ${badgeClass(item.badge)}">${h(item.badge)}</span>
+      </div>
+      <div>
+        <h3>${h(item.title)}</h3>
+        <p>${h(item.subtitle)}</p>
+      </div>
+      <div class="module-meta">
+        <span><b>状态</b> ${h(item.status)}</span>
+        <span><b>Branch</b> ${h(item.branch)}</span>
+        <span><b>依赖</b> ${h(item.dependency)}</span>
+      </div>
+      <span class="pill">${h(item.next)}</span>
+    </button>
+  `).join("");
+  document.querySelectorAll(".module-card").forEach(node => node.addEventListener("click", () => setProduct(node.dataset.product)));
+}
+
 function setProduct(key){
-  const item = products[key];
-  document.querySelectorAll(".product-node").forEach(node => node.classList.toggle("is-active", node.dataset.product === key));
-  document.querySelectorAll(".flow-lines path").forEach(path => path.classList.toggle("is-hot", item.edges.includes(path.dataset.edge)));
+  const item = products.find(product => product.key === key);
+  document.querySelectorAll(".module-card").forEach(node => node.classList.toggle("is-active", node.dataset.product === key));
   document.getElementById("productDetail").innerHTML = `
     <div class="detail-title">
       <div>
-        <span class="badge ${badgeClass(item.badge)}">${item.badge}</span>
-        <h3 style="margin-top:10px">${item.title}</h3>
+        <span class="badge ${badgeClass(item.badge)}">${h(item.badge)}</span>
+        <h3 style="margin-top:10px">${item.order}. ${h(item.title)}</h3>
       </div>
     </div>
+    <div class="detail-grid">
+      <div class="detail-metric"><b>模块状态</b><span>${h(item.status)}</span></div>
+      <div class="detail-metric"><b>推荐 branch</b><span>${h(item.branch)}</span></div>
+      <div class="detail-metric"><b>关键依赖</b><span>${h(item.dependency)}</span></div>
+      <div class="detail-metric"><b>跟踪字段</b><span>${h(item.tracker)}</span></div>
+    </div>
     <div class="detail-list">
-      ${item.points.map(([title,desc]) => `<div><b>${title}</b><span>${desc}</span></div>`).join("")}
+      ${item.points.map(([title,desc]) => `<div><b>${h(title)}</b><span>${h(desc)}</span></div>`).join("")}
     </div>
   `;
 }
@@ -695,13 +800,13 @@ function renderReleaseRows(){
   `).join("");
 }
 
-document.querySelectorAll(".product-node").forEach(node => node.addEventListener("click", () => setProduct(node.dataset.product)));
 document.getElementById("prevPage").addEventListener("click", () => { if(pageIndex > 0){ pageIndex -= 1; renderReader(); } });
 document.getElementById("nextPage").addEventListener("click", () => {
   const doc = docs[docIndex];
   if(pageIndex < doc.pages.length - 1){ pageIndex += 1; renderReader(); }
 });
 
+renderModules();
 setProduct("web");
 renderReader();
 renderSkills();
