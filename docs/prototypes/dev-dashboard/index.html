@@ -507,6 +507,26 @@
   }
   .registry-row b{display:block;font-size:13px}
   .registry-row span{display:block;color:var(--muted);font-size:12px;margin-top:2px}
+  .data-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}
+  .data-card{padding:13px;border:1px solid var(--line);border-radius:8px;background:#fff}
+  .data-card b{display:block;color:var(--muted);font-size:12px}
+  .data-card strong{display:block;font-size:24px;line-height:1.15;margin-top:6px}
+  .data-card span{display:block;color:var(--faint);font-size:12px;margin-top:4px;overflow-wrap:anywhere}
+  .trend-list,.branch-list,.dir-list{display:grid;gap:8px}
+  .trend-row,.branch-commit,.dir-row{
+    display:grid;
+    grid-template-columns:96px minmax(0,1fr) auto;
+    gap:10px;
+    align-items:center;
+    padding:9px 10px;
+    border:1px solid var(--line);
+    border-radius:8px;
+    background:#fff;
+  }
+  .trend-bar{height:10px;border-radius:999px;background:#dbeafe;overflow:hidden}
+  .trend-bar span{display:block;height:100%;border-radius:inherit;background:linear-gradient(90deg,var(--blue),var(--cyan))}
+  .branch-commit{grid-template-columns:minmax(120px,.3fr) minmax(0,1fr) auto}
+  .branch-commit span,.dir-row span,.trend-row span{color:var(--muted);font-size:12px;overflow-wrap:anywhere}
   .skill-grid,.branch-grid{display:grid;gap:8px}
   .skill-row,.branch-row,.log-row{
     display:grid;grid-template-columns:minmax(0,1fr) auto;gap:10px;align-items:center;
@@ -550,6 +570,7 @@
     .ops-grid{grid-template-columns:1fr}
     .reader-shell{grid-template-columns:1fr}
     .doc-workbench,.doc-toolbar{grid-template-columns:1fr}
+    .data-grid,.trend-row,.branch-commit,.dir-row{grid-template-columns:1fr}
     .flow-stage{min-height:760px}
     .branch-row,.log-row{grid-template-columns:1fr}
   }
@@ -574,6 +595,7 @@
       <a href="#overview" data-page="overview">总览 <small>分页</small></a>
       <a href="#product-flow" data-page="product-flow">产品结构图 <small>模块</small></a>
       <a href="#docs" data-page="docs">文档库 <small>搜索</small></a>
+      <a href="#dev-data" data-page="dev-data">开发数据 <small>git</small></a>
       <a href="#branches" data-page="branches">分支管理 <small>分支</small></a>
       <a href="#release-log" data-page="release-log">发布 log <small>日志</small></a>
     </nav>
@@ -685,6 +707,42 @@
         </aside>
       </section>
 
+      <section class="section split page-section" id="dev-data" data-page-section="dev-data">
+        <div class="surface pad">
+          <div class="section-head">
+            <div>
+              <h2>开发数据</h2>
+              <p class="sub">纯 git 读数：commit、numstat、目录桶、dirty 文件和 branch 最近提交。</p>
+            </div>
+            <span class="pill">all refs</span>
+          </div>
+          <div class="data-grid" id="devDataCards"></div>
+          <div class="section-head" style="margin-top:16px">
+            <div>
+              <h2>7 日趋势</h2>
+              <p class="sub">按自然日统计 commit 数。</p>
+            </div>
+          </div>
+          <div class="trend-list" id="trendList"></div>
+          <div class="section-head" style="margin-top:16px">
+            <div>
+              <h2>今日目录改动</h2>
+              <p class="sub">来自 `git log --since=midnight --numstat --all`。</p>
+            </div>
+          </div>
+          <div class="dir-list" id="dirList"></div>
+        </div>
+        <aside class="surface pad">
+          <div class="section-head">
+            <div>
+              <h2>Branch 最近提交</h2>
+              <p class="sub">local + origin refs，按 committerdate 排序。</p>
+            </div>
+          </div>
+          <div class="branch-list" id="branchCommitList"></div>
+        </aside>
+      </section>
+
       <section class="section split page-section" id="branches" data-page-section="branches">
         <div class="surface pad">
           <div class="section-head">
@@ -739,6 +797,7 @@ const products = [...(dashboardState.product_lines || [])].sort((a,b) => Number(
 const overviewRows = dashboardState.status_rows || [];
 const cockpit = dashboardState.cockpit || [];
 const kpis = dashboardState.signals || dashboardState.kpis || [];
+const devData = dashboardState.development_data || {};
 const productLinks = dashboardState.product_links || [
   ["web", "app", "main"],
   ["app", "plugin", "main"],
@@ -1296,7 +1355,55 @@ function renderReleaseRows(){
   `).join("");
 }
 
-const pageIds = ["overview", "product-flow", "docs", "branches", "release-log"];
+function renderDevData(){
+  const numstat = devData.today_numstat || {};
+  const docCode = devData.doc_vs_code || {};
+  const cards = [
+    ["今日 commit", devData.today_commits ?? 0, "git log --all --since=midnight"],
+    ["7 日 commit", devData.seven_day_commits ?? 0, "git log --all --since='7 days ago'"],
+    ["今日增删行", `+${numstat.added || 0} / -${numstat.deleted || 0}`, `${numstat.files || 0} files`],
+    ["未提交文件", devData.uncommitted_files ?? 0, "git status --short"],
+    ["文档/代码比", docCode.ratio ?? "n/a", `${docCode.docs_lines || 0} docs lines / ${docCode.code_lines || 0} code lines`],
+    ["skill 变更", devData.skill_change_commits ?? 0, "近 7 日 skill/agent commit"]
+  ];
+  document.getElementById("devDataCards").innerHTML = cards.map(([label, value, note]) => `
+    <div class="data-card"><b>${h(label)}</b><strong>${h(value)}</strong><span>${h(note)}</span></div>
+  `).join("");
+
+  const trend = devData.seven_day_trend || [];
+  const max = Math.max(1, ...trend.map(item => Number(item.commits) || 0));
+  document.getElementById("trendList").innerHTML = trend.map(item => `
+    <div class="trend-row">
+      <span>${h(item.date)}</span>
+      <div class="trend-bar"><span style="width:${Math.max(3, Math.round(((Number(item.commits) || 0) / max) * 100))}%"></span></div>
+      <b>${h(item.commits || 0)}</b>
+    </div>
+  `).join("");
+
+  const dirs = devData.directory_changes || {};
+  const dirOrder = ["docs", "apps/web", "apps/desktop", ".teams/skills", "other"];
+  document.getElementById("dirList").innerHTML = dirOrder.map(key => {
+    const item = dirs[key] || {added:0, deleted:0, files:0};
+    return `
+      <div class="dir-row">
+        <b>${h(key)}</b>
+        <span>+${h(item.added)} / -${h(item.deleted)}</span>
+        <span>${h(item.files)} files</span>
+      </div>
+    `;
+  }).join("");
+
+  const branches = devData.branch_recent_commits || [];
+  document.getElementById("branchCommitList").innerHTML = branches.map(item => `
+    <div class="branch-commit">
+      <b>${h(item.name)}</b>
+      <span>${h(item.subject)}</span>
+      <span>${h(item.commit)} · ${h(item.date)}</span>
+    </div>
+  `).join("");
+}
+
+const pageIds = ["overview", "product-flow", "docs", "dev-data", "branches", "release-log"];
 
 function setPage(page, updateHash = true){
   const nextPage = pageIds.includes(page) ? page : "overview";
@@ -1332,6 +1439,7 @@ renderBranchFlow();
 renderModules();
 setProduct(products[0]?.key);
 initDocLibrary();
+renderDevData();
 renderBranches();
 renderReleaseRows();
 setPage(location.hash.slice(1), false);

@@ -47,6 +47,11 @@ function git(args) {
   }
 }
 
+function gitLines(args) {
+  const output = git(args);
+  return output ? output.split(/\r?\n/).filter(Boolean) : [];
+}
+
 function readJson(path) {
   return JSON.parse(readFileSync(path, "utf8"));
 }
@@ -412,6 +417,130 @@ function buildCockpit(snapshot) {
   ];
 }
 
+function localDate(offsetDays = 0) {
+  const date = new Date();
+  date.setDate(date.getDate() + offsetDays);
+  const year = date.getFullYear();
+  const month = String(date.getMonth() + 1).padStart(2, "0");
+  const day = String(date.getDate()).padStart(2, "0");
+  return `${year}-${month}-${day}`;
+}
+
+function countCommits(args) {
+  const commits = new Set(gitLines(["log", "--format=%H", ...args]));
+  return commits.size;
+}
+
+function parseNumstat(args) {
+  const rows = gitLines(["log", "--numstat", "--format=", ...args])
+    .map(line => line.split(/\t/))
+    .filter(parts => parts.length >= 3);
+  return rows.reduce((summary, [added, deleted, file]) => {
+    const add = Number(added);
+    const del = Number(deleted);
+    const safeAdd = Number.isFinite(add) ? add : 0;
+    const safeDel = Number.isFinite(del) ? del : 0;
+    summary.added += safeAdd;
+    summary.deleted += safeDel;
+    summary.files.add(file);
+    const bucket = directoryBucket(file);
+    if (!summary.by_directory[bucket]) {
+      summary.by_directory[bucket] = { added: 0, deleted: 0, files: 0 };
+    }
+    summary.by_directory[bucket].added += safeAdd;
+    summary.by_directory[bucket].deleted += safeDel;
+    summary.by_directory[bucket].files += 1;
+    if (isDocPath(file)) summary.docs_lines += safeAdd + safeDel;
+    if (isCodePath(file)) summary.code_lines += safeAdd + safeDel;
+    return summary;
+  }, { added: 0, deleted: 0, files: new Set(), by_directory: {}, docs_lines: 0, code_lines: 0 });
+}
+
+function directoryBucket(file) {
+  if (file.startsWith("docs/")) return "docs";
+  if (file.startsWith("apps/web/")) return "apps/web";
+  if (file.startsWith("apps/desktop/")) return "apps/desktop";
+  if (file.startsWith(".teams/skills/")) return ".teams/skills";
+  return "other";
+}
+
+function isDocPath(file) {
+  return file.startsWith("docs/") || /\.(md|mdc|txt)$/i.test(file);
+}
+
+function isCodePath(file) {
+  return /\.(js|jsx|ts|tsx|mjs|cjs|rs|css|html|json|toml|sql|py|sh)$/i.test(file);
+}
+
+function buildSevenDayTrend() {
+  return Array.from({ length: 7 }, (_, index) => {
+    const offset = index - 6;
+    const date = localDate(offset);
+    return {
+      date,
+      commits: countCommits(["--all", `--since=${date} 00:00`, `--until=${date} 23:59:59`])
+    };
+  });
+}
+
+function listRecentBranchCommits() {
+  return gitLines([
+    "for-each-ref",
+    "--sort=-committerdate",
+    "--format=%(refname:short)|%(committerdate:iso8601)|%(objectname:short)|%(subject)",
+    "refs/heads",
+    "refs/remotes/origin"
+  ])
+    .filter(line => !line.startsWith("origin/HEAD|"))
+    .slice(0, 14)
+    .map(line => {
+      const [name, date, commit, ...subjectParts] = line.split("|");
+      return { name, date, commit, subject: subjectParts.join("|") };
+    });
+}
+
+function buildDevelopmentData(branch) {
+  const todayArgs = ["--all", "--since=midnight"];
+  const sevenDayArgs = ["--all", "--since=7 days ago"];
+  const todayNumstat = parseNumstat(todayArgs);
+  const sevenDayNumstat = parseNumstat(sevenDayArgs);
+  const statusLines = gitLines(["status", "--short"]);
+  const originBranch = branch ? `origin/${branch}` : "";
+  const recentPushTime = originBranch ? git(["log", "-1", "--format=%cI", originBranch]) : "";
+  const skillChangeCommits = new Set(gitLines([
+    "log",
+    "--all",
+    "--since=7 days ago",
+    "--format=%H",
+    "--",
+    ".teams/skills",
+    ".codex/skills",
+    ".codex/agents"
+  ])).size;
+  return {
+    source: "git",
+    scope: "all refs unless noted",
+    today_commits: countCommits(todayArgs),
+    seven_day_commits: countCommits(sevenDayArgs),
+    seven_day_trend: buildSevenDayTrend(),
+    today_numstat: {
+      added: todayNumstat.added,
+      deleted: todayNumstat.deleted,
+      files: todayNumstat.files.size
+    },
+    directory_changes: todayNumstat.by_directory,
+    branch_recent_commits: listRecentBranchCommits(),
+    uncommitted_files: statusLines.length,
+    doc_vs_code: {
+      docs_lines: sevenDayNumstat.docs_lines,
+      code_lines: sevenDayNumstat.code_lines,
+      ratio: sevenDayNumstat.code_lines ? Number((sevenDayNumstat.docs_lines / sevenDayNumstat.code_lines).toFixed(2)) : null
+    },
+    recent_push_time: recentPushTime,
+    skill_change_commits: skillChangeCommits
+  };
+}
+
 const source = readJson(sourcePath);
 const branch = git(["branch", "--show-current"]);
 const latestCommit = git(["log", "-1", "--format=%h %s"]);
@@ -445,7 +574,8 @@ const snapshot = {
   release_log: {
     source: relative(repoRoot, releaseLogPath),
     latest_entry: latestReleaseEntry()
-  }
+  },
+  development_data: buildDevelopmentData(branch)
 };
 snapshot.signals = buildSignals(snapshot);
 snapshot.cockpit = buildCockpit(snapshot);
