@@ -188,6 +188,10 @@ function normalizeStatus(value) {
     .replace(/\*\*/g, "")
     .replace(/`/g, "")
     .trim()
+    // Drop human annotations like "NEEDS_REVIEW (B1 revised -> re-review)" so
+    // they fold into the base enum instead of leaking a pseudo-status into the UI.
+    .replace(/\s*[（(\[].*$/s, "")
+    .trim()
     .toUpperCase()
     .replace(/\s+/g, "_");
 }
@@ -374,7 +378,7 @@ function buildSignals(snapshot) {
       label: "Roadmap rows",
       badge: "真实计数",
       value: String(totalFromCounts(allCounts)),
-      note: formatCounts(allCounts)
+      note: `${allCounts.SHIPPED || 0} 已发布 · ${allCounts.NEEDS_REVIEW || 0} 待评审 · ${allCounts.PENDING || 0} 待办`
     },
     {
       label: "Project skills",
@@ -398,7 +402,9 @@ function buildCockpit(snapshot) {
     {
       question: "现在做什么",
       answer: "继续 Web 主线；Desktop 走独立 App lane",
-      detail: web?.status || "读取 Web roadmap / PLUGIN_MAP 状态"
+      detail: web
+        ? `${totalFromCounts(web.status_counts)} 行 · ${web.status_counts.NEEDS_REVIEW || 0} 待评审 · ${web.status_counts.READY_FOR_VERIFY || 0} 待验证`
+        : "读取 Web roadmap / PLUGIN_MAP 状态"
     },
     {
       question: "在哪条线",
