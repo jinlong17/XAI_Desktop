@@ -48,7 +48,7 @@ codex/web/<feature>
 
 Rules to remember:
 
-- `web` ahead of `dev` is expected steady state, not drift.
+- `web` and `dev` are two independent focus branches; their divergence is normal, not drift (do not force them equal).
 - Web changes reach Desktop through D3 classification and a parity receipt
   before `web -> desktop-next`.
 - `dev` advances through `desktop-next -> dev` promotion or release hotfix
