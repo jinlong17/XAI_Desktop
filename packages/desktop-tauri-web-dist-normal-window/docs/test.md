@@ -73,6 +73,21 @@ The first two outcomes are acceptable for this feature if clearly attributed to 
 - No accidental dependency on the legacy desktop Vite bundle.
 - No tray/status-bar requirement introduced as part of this Phase 1 feature.
 
+### BUGFIX S3 — Build Profile + Landing Redirect Guards (2026-05-30)
+
+Added as part of the desktop/web UI divergence bugfix (S3, commit `8cbb0633`):
+
+- **TC-TAURI-CONF-1**: `beforeBuildCommand` must NOT inject `desktop-phase1-offline`
+  (`apps/web/src/__tests__/tauri-conf-build-profile.test.ts`)
+- **TC-TAURI-CONF-2**: `beforeDevCommand` must NOT inject `desktop-phase1-offline`
+- **TC-TAURI-CONF-3**: `beforeBuildCommand` MUST retain `VITE_WEB_AUTH_MODE=mock-authenticated`
+- **TC-TAURI-CONF-4**: `beforeDevCommand` MUST retain `VITE_WEB_AUTH_MODE=mock-authenticated`
+- **RR-LANDING-MOCK-AUTH-1**: `LandingPage` redirects to `/app` under `mock-authenticated`
+  web-live profile (no offline profile required)
+  (`apps/web/src/routes/router.integration.test.tsx`)
+
+All 5 guards run in `pnpm --filter @repo/web exec vitest run` (no build artifact required).
+
 ## Mock Strategy
 
 - No new mocks are required for feature-plan.

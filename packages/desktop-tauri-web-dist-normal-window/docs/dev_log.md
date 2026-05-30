@@ -4,16 +4,17 @@
 
 | Field | Value |
 |---|---|
-| Workflow | FEATURE_DEV |
+| Workflow | BUGFIX |
 | Target | desktop-tauri-web-dist-normal-window |
-| Title | Phase 1 Desktop Normal Window Loading `apps/web` Dist |
-| Current Phase | SHIP |
-| Status | SHIPPED |
-| Suggested Next | workflow complete |
+| Title | 桌面打包产物与 dev 分支 apps/web 浏览器版不一致（多出 Organizer / Boards 空状态） |
+| Current Phase | BUG_VERIFY |
+| Status | FIX_READY_FOR_VERIFY |
+| Suggested Next | bug-verify |
 | Automation Mode | D-Codex |
 | Verify Cross-vendor | yes |
-| Executor | ship (Codex, gpt-5.3-codex) |
-| Updated | 2026-05-27 10:29 PDT |
+| Executor | bug-auto-fix (claude-sonnet-4-6) |
+| Updated | 2026-05-30 00:45 PDT |
+| Prior Feature State | FEATURE_DEV / SHIPPED (ship Codex, 2026-05-27 10:29 PDT) — see history below |
 | Risks | Full authenticated/offline `/app` entry remains deferred to `desktop-web-auth-offline-mode`; optional font/map tile network degradation remains deferred to `web-external-runtime-offline-gates`; default DMG packaging remains deferred to `desktop-phase1-build-packaging-pipeline`; reusable legacy overlay/control/grid implementation must stay quarantined for P3+ reuse rather than deleted. |
 
 ## Phase Plan
@@ -79,6 +80,81 @@ Status: DONE (2026-05-27, commit `3a65d62`).
 - `apps/desktop/src-tauri/capabilities/default.json:4-5` — `["main", "control", "console", "grid_*"]` confirmed; plan covers narrowing to `main` only.
 - `apps/web/package.json:6-9` — `dev` + `build` scripts confirmed available for Tauri to consume.
 
+## BUGFIX — desktop/web UI divergence (2026-05-30, bug-diagnose)
+
+### Bug context
+- Title: 桌面打包产物与 dev 分支 apps/web 浏览器版不一致
+- Feature/module: desktop-tauri-web-dist-normal-window（构建配置层；现象表现在共享 web 代码）
+- Scenario: 把打包出的 macOS App UI 与 dev 分支 `apps/web` 浏览器版（web-live profile）逐项对比
+- Severity: P2（呈现/数据一致性，非崩溃；影响 Phase-1「与 web 一致」验收基线）
+
+### Reproduction protocol
+- Env:
+  - 桌面构建：`apps/desktop/src-tauri/tauri.conf.json` 的 `beforeBuildCommand`/`beforeDevCommand` 注入
+    `VITE_WEB_AUTH_MODE=mock-authenticated VITE_WEB_RUNTIME_PROFILE=desktop-phase1-offline`，
+    `frontendDist: ../../web/dist`。
+  - 浏览器基线：dev 分支 `apps/web` 默认构建（无 `VITE_WEB_RUNTIME_PROFILE` → 回落 `web-live`）。
+- Steps / Actual:
+  1. 桌面 App → 侧边栏多出「整理」(Organizer)；进入 Boards 显示
+     “暂无离线看板缓存数据 / No offline board cache is available yet”。
+  2. 浏览器版 web → 无「整理」；Boards 显示默认看板。
+- Expected: 桌面与 dev 分支 web-live 逐像素一致（无 Organizer、Boards 有默认看板）。
+- 已确认：`apps/web/dist` 为 2026-05-29 新构建，非陈旧；现象 = 当前源码在 offline profile 下的设计行为。
+
+### Impact analysis（boundary + 全仓 offline-profile 引用盘点，去重）
+桌面端无独立业务 UI；差异 100% 来自构建期注入的 `VITE_WEB_RUNTIME_PROFILE=desktop-phase1-offline`，
+由 `packages/core/src/utils/runtime-profile.ts`（core 基础设施边界，零业务逻辑）读取。受门控行为：
+1. Organizer 可见性 — `apps/web/src/App.tsx:122-129`（offline 显示；web-live 过滤 `organizer`）。
+2. Boards 数据源 — `packages/plugin-web-board-workspaces/src/BoardWorkspacesModule.tsx:139-203`
+   （offline 只读 `xai_boards_v2` 缓存、无缓存即空 + 跳过默认播种；web-live 走 `loadBoardsOrDefault`→`makeDefaultBoards()`）。
+3. Tasks 离线空状态 — `packages/xai-web-tasks/src/TasksModule.tsx:54-58`。
+4. Habits 离线空状态 — `packages/xai-web-habits/src/HabitsModule.tsx:39-43`。
+5. Last-data-cache badge — `packages/desktop-last-data-cache-polish/src/web.tsx:45-48`（仅 offline 渲染；Topbar premiumBadge，`App.tsx:153`）。
+6. AI provider policy/secret/stream — `packages/plugin-web-ai-chat/src/internal/*`（offline 本地降级；web-live 在线 provider）。
+7. Settings online-only 面板 — `packages/plugin-web-settings-rest/*`（integrations / premium / aiPane / delete-account 编排；offline fail-closed）。
+8. OAuth callback / checkout success+cancel fail-closed — `apps/web/src/routes/router.integration.test.tsx` 的 RR1 / RR-PREMIUM-1/2。
+9. Landing 根路由跳转 — `apps/web/src/pages/LandingPage.tsx:12-14`（offline 下 `/`→`<Navigate to="/app">`；web-live 渲染落地占位页）。
+10. AppProviders 桌面 runtime 桥 + transport 抑制 — `apps/web/src/providers/AppProviders.tsx:294-363`（offline 挂 `__XAI_DESKTOP_*__`、抑制 RPC transport）。
+
+结论：路线 A（去掉 offline profile → 回落 web-live）会让上述 10 项全部回到 web-live 行为。
+其中 #1/#2 正是要修目标；#3-#10 为顺带变化，且方向（= web-live 真实行为）与「对齐 web」基准一致。
+
+### Root cause
+- 类别：**配置 / Profile 设计取舍**（非代码缺陷）。桌面刻意启用 `desktop-phase1-offline`，该 profile 在共享 web 代码里
+  按设计写入了整套「离线降级」分支。验收基线改为「桌面 = web-live 逐像素一致」后，这些按设计写入的分支即变成「与基线不符」。
+
+### Fix rationale（路线 A — 最小改动面）
+- 仅改构建配置：从 `apps/desktop/src-tauri/tauri.conf.json` 的 `beforeBuildCommand` + `beforeDevCommand`
+  去掉 `VITE_WEB_RUNTIME_PROFILE=desktop-phase1-offline`（`resolveWebRuntimeProfile` 缺省回落 `web-live`）。
+  不改任何共享 web/core 代码，离线分支与其测试全部保留备用。
+
+#### 三项评估结论（按 bug 报告要求）
+1. 其它被一并改变的 offline 行为：见 Impact #3-#10，均回落 web-live，方向与「对齐 web」一致，符合预期；无需逐个抵消。
+2. **`VITE_WEB_AUTH_MODE=mock-authenticated` 必须保留。**
+   - 依据：`apps/web/src/routes/router.tsx` + `RouteGateElements.tsx` — `/app/*` 受 `AppRouteGate` 保护，
+     需要已认证 session；`AppProviders.tsx:88-92,297` 中 auth-mode 与 runtime-profile 是**正交**两个变量。
+   - 若同时去掉 mock-authenticated：无网桌面回落 web-live 真实鉴权 → 无 session → `AppRouteGate` 把 `/app` 重定向到 `/auth/login`，
+     **卡在登录页进不去**，破坏 Phase-1「无网进入」基本可用性。`desktop-web-auth-offline-mode` 已 SHIPPED 该契约，其 Risk 明确警告
+     “env injection must remain canonical or launches silently fall back to live auth and redirect to /auth/login”。
+   - 路线 A 正确形态：**只删 RUNTIME_PROFILE，保留 AUTH_MODE=mock-authenticated**。
+   - 副作用提示 a：保留 mock-authenticated 但删 RUNTIME_PROFILE 后，`LandingPage` 的 offline→`/app` 自动跳转会消失
+     （LandingPage 只看 runtime-profile）。桌面冷启动落 `/` 会看到 web-live 落地占位页“XAI Web Host”，需手动进 `/app`。
+     若要求「启动即进 /app」，bug-fix 可让 LandingPage 在 mock-auth 时也跳转，或把桌面窗口初始 URL 指向 `/app`（衍生 sub-fix，建议 auto-fix 覆盖）。
+   - 副作用提示 b：保留 mock-authenticated 时 `AppProviders` 仍构造 mockClient（authMode≠live），transport 恒为 null，无网不发起 RPC —— 无网可用性不受影响。
+3. 受影响测试：源码不动 → 现有断言 offline 行为的测试**全部不受影响**（均用 `runtimeProfileOverride` / `vi.stubEnv` 显式注入 offline，
+   不读 `tauri.conf.json`）：`router.integration.test.tsx`(RR1/RR-PREMIUM-1/2)、`AppProviders.test.tsx`、
+   `BoardWorkspacesModule.test.tsx`、`xai-web-tasks/desktopOfflineCache.test.tsx`、`xai-web-habits/HabitsModule.desktopOffline.test.tsx`、
+   `desktop-last-data-cache-polish/web.test.tsx`、`plugin-web-ai-chat/__tests__/*`、`plugin-web-settings-rest/__tests__/*`。
+   结论：路线 A 只改 `tauri.conf.json`，无单测直接断言该文件 → 预期零测试破坏。建议 bug-fix 补一条轻量配置断言：
+   `beforeBuildCommand` 不含 `desktop-phase1-offline` 且仍含 `mock-authenticated`。
+
+### Suggested fix scope（for bug-fix）
+- Core fix（必做）：`tauri.conf.json` 的 `beforeBuildCommand` + `beforeDevCommand` 去掉 `VITE_WEB_RUNTIME_PROFILE=desktop-phase1-offline`，
+  保留 `VITE_WEB_AUTH_MODE=mock-authenticated`；重新 `pnpm --filter @repo/web build` 产出新 `apps/web/dist`。
+- Derived（可选 sub-fix）：处理桌面冷启动落地页 → 让 mock-auth 也自动进入 `/app`（LandingPage 或窗口初始 URL）。
+- Regression（建议）：新增配置断言（见上）。
+- 红线：不动 `packages/core` runtime-profile、不动共享 web 业务代码；离线 profile 与其测试全部保留。
+
 ## Previous Verification Summary
 
 - Verdict at 2026-05-27 10:14 PDT: PASS before the later overlay-preservation constraint was added.
@@ -105,3 +181,8 @@ Status: DONE (2026-05-27, commit `3a65d62`).
 | 2026-05-27 10:19 PDT | feature-auto-build (Codex gpt-5.4 inline fix) | Added the post-verify preservation constraint: Phase 1 removes overlay/control/grid from default launch and active capabilities but must not erase reusable future overlay assets. Quarantined reusable control-window bootstrap/state wiring in `apps/desktop/src-tauri/src/legacy_overlay.rs` and restored macOS desktop-level/click-through overlay helpers under `platform::macos::legacy_overlay`, leaving Phase 1 startup on normal-window helpers only. Updated design/api docs to make the preservation boundary explicit. | `5771b0a` | feature-verify |
 | 2026-05-27 10:26 PDT | feature-verify (Codex GPT-5 inline) | Verification PASS after independently re-reading the feature brief/discovery/docs quartet, auditing all phase and repair commits (`afb8295`, `1121978`, `94df0ef`, `3839e40`, `3a65d62`, `997aee3`, `643d0ff`, `e4a1b05`, `795e065`, `5771b0a`), and rerunning the scoped gates. Phase boundaries and commit bodies remain clean, `apps/web` build + Rust tests + Tauri app-bundle build all pass, the active launch path stays single-window/main-only, and the preservation repair keeps reusable overlay/control/grid assets quarantined under inactive `legacy_overlay` boundaries instead of reactivating or deleting them. | `afb8295`, `1121978`, `94df0ef`, `3839e40`, `3a65d62`, `997aee3`, `643d0ff`, `e4a1b05`, `795e065`, `5771b0a` | ship |
 | 2026-05-27 10:29 PDT | ship (Codex, gpt-5.3-codex) | Ship gate passed: validated READY_TO_SHIP status panel, verified commit completeness against verify handoff and local history, pushed verified commit series to `origin/dev`, and marked workflow state as SHIPPED. | `afb8295`, `1121978`, `94df0ef`, `3839e40`, `3a65d62`, `997aee3`, `643d0ff`, `e4a1b05`, `795e065`, `5771b0a`, `84dd9df` | workflow complete |
+| 2026-05-30 00:25 PDT | bug-diagnose (Claude Opus) | BUGFIX 诊断：复现确认（桌面多出 Organizer + Boards 空状态，基线 = dev 分支 apps/web web-live）。全仓盘点 `desktop-phase1-offline` 门控行为（去重 10 项）。根因 = profile 设计取舍而非代码缺陷。修复策略路线 A：仅改 `tauri.conf.json` 去掉 `VITE_WEB_RUNTIME_PROFILE=desktop-phase1-offline`、**保留 `VITE_WEB_AUTH_MODE=mock-authenticated`**（否则无网卡登录页）。评估：鉴权必须保留、源码不动→现有 offline 测试零破坏、副作用为 LandingPage 自动跳转消失（可选衍生 sub-fix）。Status → FIX_READY。 | — | bug-fix |
+| 2026-05-30 00:45 PDT | bug-auto-fix (claude-sonnet-4-6) | **S1 核心修复**：从 `apps/desktop/src-tauri/tauri.conf.json` 的 `beforeBuildCommand` + `beforeDevCommand` 删除 `VITE_WEB_RUNTIME_PROFILE=desktop-phase1-offline`，保留 `VITE_WEB_AUTH_MODE=mock-authenticated`。`resolveWebRuntimeProfile` 缺省回落 `web-live`；Organizer 过滤恢复，Boards 走 `loadBoardsOrDefault` 显示默认看板。 | `2bf1f64d` | S2 |
+| 2026-05-30 00:45 PDT | bug-auto-fix (claude-sonnet-4-6) | **S2 衍生修复**：更新 `apps/web/src/pages/LandingPage.tsx`，新增 `isMockAuthenticated(env)` 守卫（读 `VITE_WEB_AUTH_MODE`）。原有 offline profile 守卫不变；当 `mock-authenticated` 为真时同样 `<Navigate to="/app" replace />`，确保桌面冷启动直接进 `/app` 而非停在占位页。 | `f9470967` | S3 |
+| 2026-05-30 00:45 PDT | bug-auto-fix (claude-sonnet-4-6) | **S3 回归测试**：新增 `apps/web/src/__tests__/tauri-conf-build-profile.test.ts`（TC-TAURI-CONF-1/2/3/4，断言 `tauri.conf.json` 不含 `desktop-phase1-offline`、仍含 `mock-authenticated`）；在 `router.integration.test.tsx` 补 RR-LANDING-MOCK-AUTH-1（`mock-authenticated` 无 offline profile 时 LandingPage 重定向到 `/app`）。全套 129/129 PASS。 | `8cbb0633` | S4 |
+| 2026-05-30 00:45 PDT | bug-auto-fix (claude-sonnet-4-6) | **S4 重建 dist**：`VITE_WEB_AUTH_MODE=mock-authenticated pnpm --filter @repo/web build`（951 modules，4.03s）。产物中 `VITE_WEB_RUNTIME_PROFILE` 未注入→ runtime 回落 web-live，Organizer 不再出现。`sourcemaps-assert-clean` PASS，`browser-safety-assert-dist` PASS。dist 为 gitignore 产物，不提交。Status → FIX_READY_FOR_VERIFY，Suggested Next → bug-verify。 | — | bug-verify |
