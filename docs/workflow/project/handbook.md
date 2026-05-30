@@ -12,6 +12,7 @@
 | Current P0/P1/P2 active-focus order | `CLAUDE.md` "Current Priority" + Branch & sync governance |
 | Repository layout and branch map entrypoint | `developer.md` §3 and §3.5 |
 | Workflow entrypoints and branch/sync usage notes | `docs/workflow/project/usage-guide.md` §16 and §17 |
+| Release log / changelog | `docs/workflow/project/release-log.md` |
 | Admin-dashboard visual reference | `docs/prototypes/admin-dashboard/index.html` |
 
 ## Product-Line Map
@@ -74,6 +75,7 @@ Project-layer workflow skills:
 | `xai-feature-full-loop` | `.teams/skills/xai-feature-full-loop/SKILL.md` | landed |
 | `xai-roadmap-loop` | `.teams/skills/xai-roadmap-loop/SKILL.md` | landed |
 | `xai-web-to-desktop-sync` | `.teams/skills/xai-web-to-desktop-sync/SKILL.md` | landed (ADR-0013 §D3 gate) |
+| `xai-release-log` | `.teams/skills/xai-release-log/SKILL.md` | landed (dated release / project-system log) |
 
 Portable public skills mirrored for this repo:
 
@@ -113,7 +115,9 @@ before shipping unless the operator explicitly starts `ship`.
    to `dev` only after the integration cycle is green.
 5. Treat `dev` lag as a normal health indicator. Do not "catch it up" by
    force-merging around the D3 gate.
-6. Before finishing workflow/agent/skill changes, audit project-level untracked
+6. After a shipped feature or project-system change, append a dated entry to
+   `docs/workflow/project/release-log.md` through `xai-release-log`.
+7. Before finishing workflow/agent/skill changes, audit project-level untracked
    files exactly as `AGENTS.md` requires.
 
 ## Prototype Entry

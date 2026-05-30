@@ -3,165 +3,329 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>XAI Dev Dashboard</title>
+<title>XAI 个人开发看板</title>
 <style>
   :root{
-    --bg:#08090c;
-    --rail:#0d1016;
-    --panel:#12161f;
-    --panel-2:#171d28;
-    --line:rgba(255,255,255,.09);
-    --line-strong:rgba(255,255,255,.16);
-    --text:#f4f7fb;
-    --muted:#a7b0bf;
-    --faint:#6f7b8d;
-    --green:#36d399;
-    --green-soft:rgba(54,211,153,.13);
-    --cyan:#67e8f9;
-    --cyan-soft:rgba(103,232,249,.12);
-    --amber:#f6c85f;
-    --amber-soft:rgba(246,200,95,.13);
-    --red:#f97070;
-    --red-soft:rgba(249,112,112,.13);
-    --blue:#8ab4ff;
-    --blue-soft:rgba(138,180,255,.13);
-    --ink:#0a0d12;
+    --bg:#f5f9ff;
+    --bg-2:#eef6ff;
+    --surface:#ffffff;
+    --surface-2:#f8fbff;
+    --surface-3:#edf5ff;
+    --line:#dbe7f6;
+    --line-strong:#b9d3f4;
+    --text:#142033;
+    --muted:#5a6980;
+    --faint:#8794a8;
+    --blue:#1a73e8;
+    --blue-2:#4285f4;
+    --cyan:#12b5cb;
+    --green:#34a853;
+    --yellow:#fbbc04;
+    --red:#ea4335;
+    --purple:#7c4dff;
+    --shadow:0 20px 50px rgba(49,87,149,.12);
+    --shadow-soft:0 10px 28px rgba(49,87,149,.10);
     --radius:8px;
-    --shadow:0 20px 60px rgba(0,0,0,.34);
   }
   *{box-sizing:border-box}
-  html,body{margin:0;min-height:100%;background:var(--bg);color:var(--text)}
+  html{scroll-behavior:smooth}
   body{
+    margin:0;
+    min-height:100vh;
+    color:var(--text);
+    background:
+      linear-gradient(135deg,rgba(66,133,244,.16) 0%,rgba(255,255,255,0) 38%),
+      linear-gradient(180deg,var(--bg) 0%,#fff 42%,#f7fbff 100%);
     font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Inter,"PingFang SC","Microsoft YaHei",sans-serif;
-    font-size:14px;line-height:1.5;-webkit-font-smoothing:antialiased;
+    font-size:14px;
+    line-height:1.5;
+    -webkit-font-smoothing:antialiased;
   }
+  button,input,select{font:inherit}
+  button{cursor:pointer}
   a{color:inherit;text-decoration:none}
-  .shell{display:grid;grid-template-columns:244px minmax(0,1fr);min-height:100vh}
+  .layout{display:grid;grid-template-columns:248px minmax(0,1fr);min-height:100vh}
   .rail{
-    background:linear-gradient(180deg,#0e141c 0%,#090b10 100%);
-    border-right:1px solid var(--line);padding:18px 14px;position:sticky;top:0;height:100vh;overflow:auto;
+    position:sticky;
+    top:0;
+    height:100vh;
+    padding:18px 14px;
+    background:rgba(255,255,255,.76);
+    border-right:1px solid var(--line);
+    backdrop-filter:blur(18px);
+    overflow:auto;
   }
-  .brand{display:flex;align-items:center;gap:10px;padding:4px 6px 18px}
-  .mark{width:32px;height:32px;border-radius:8px;background:linear-gradient(135deg,var(--green),var(--cyan));color:var(--ink);font-weight:850;display:grid;place-items:center}
+  .brand{display:flex;align-items:center;gap:10px;padding:6px 8px 18px}
+  .mark{
+    width:34px;height:34px;border-radius:8px;display:grid;place-items:center;
+    color:#fff;font-weight:850;letter-spacing:0;
+    background:linear-gradient(135deg,var(--blue),var(--cyan) 58%,var(--green));
+    box-shadow:0 10px 22px rgba(26,115,232,.22);
+  }
   .brand b{display:block;font-size:15px}
-  .brand span{display:block;color:var(--faint);font-size:11px;margin-top:-1px}
-  .nav-title{font-size:11px;color:var(--faint);font-weight:700;letter-spacing:.08em;text-transform:uppercase;margin:16px 8px 7px}
-  .nav a{display:flex;align-items:center;justify-content:space-between;gap:10px;color:var(--muted);padding:8px 9px;border-radius:8px;margin-bottom:3px}
-  .nav a:hover{background:rgba(255,255,255,.05);color:var(--text)}
+  .brand span{display:block;color:var(--muted);font-size:11px;margin-top:-1px}
+  .nav-title{margin:14px 8px 7px;color:var(--faint);font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:.08em}
+  .nav a{
+    display:flex;align-items:center;justify-content:space-between;gap:12px;
+    padding:9px 10px;margin:3px 0;border-radius:8px;color:var(--muted);
+    border:1px solid transparent;
+  }
+  .nav a:hover{background:var(--surface-3);border-color:var(--line);color:var(--text)}
   .nav small{color:var(--faint);font-size:11px}
-  .rail-card{margin-top:18px;border:1px solid var(--line);background:rgba(255,255,255,.04);border-radius:8px;padding:12px}
-  .rail-card b{display:block;font-size:12px;margin-bottom:4px}
-  .rail-card p{margin:0;color:var(--muted);font-size:12px}
+  .rail-note{
+    margin:18px 6px 0;padding:12px;border:1px solid var(--line);
+    background:var(--surface);border-radius:8px;box-shadow:var(--shadow-soft);
+  }
+  .rail-note b{display:block;font-size:12px;margin-bottom:4px}
+  .rail-note p{margin:0;color:var(--muted);font-size:12px}
   .main{min-width:0}
   .topbar{
-    min-height:64px;border-bottom:1px solid var(--line);background:rgba(8,9,12,.78);backdrop-filter:blur(12px);
-    position:sticky;top:0;z-index:5;display:flex;align-items:center;justify-content:space-between;gap:18px;padding:0 28px;
+    min-height:68px;position:sticky;top:0;z-index:20;
+    display:flex;align-items:center;justify-content:space-between;gap:16px;
+    padding:0 28px;background:rgba(255,255,255,.72);border-bottom:1px solid var(--line);
+    backdrop-filter:blur(18px);
   }
-  .crumb{color:var(--faint);font-size:12px}
-  .crumb b{display:block;color:var(--text);font-size:17px;margin-top:1px}
-  .status-line{display:flex;gap:8px;align-items:center;flex-wrap:wrap;justify-content:flex-end}
-  .content{padding:24px 28px 44px;max-width:1480px;margin:0 auto}
+  .crumb{color:var(--muted);font-size:12px}
+  .crumb b{display:block;color:var(--text);font-size:18px;margin-top:1px}
+  .toolbar{display:flex;align-items:center;gap:8px;flex-wrap:wrap;justify-content:flex-end}
+  .content{max-width:1480px;margin:0 auto;padding:26px 28px 56px}
   .section{margin-bottom:18px}
-  .section-head{display:flex;align-items:end;justify-content:space-between;gap:16px;margin:0 0 12px}
+  .section-head{display:flex;align-items:flex-end;justify-content:space-between;gap:16px;margin-bottom:12px}
   h1,h2,h3,p{margin:0}
-  h1{font-size:25px;letter-spacing:0}
-  h2{font-size:15px;letter-spacing:0}
-  .sub{color:var(--faint);font-size:12.5px;margin-top:3px}
-  .grid-kpi{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px}
-  .grid-2{display:grid;grid-template-columns:minmax(0,1.15fr) minmax(340px,.85fr);gap:12px}
-  .grid-3{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}
-  .panel{background:var(--panel);border:1px solid var(--line);border-radius:8px;box-shadow:var(--shadow)}
-  .panel-pad{padding:16px}
-  .kpi{padding:15px}
-  .kpi .label{display:flex;justify-content:space-between;gap:10px;color:var(--muted);font-size:12px}
-  .kpi .num{font-size:28px;font-weight:780;margin-top:7px;letter-spacing:0}
-  .kpi .note{color:var(--faint);font-size:12px;margin-top:2px}
-  .badge{display:inline-flex;align-items:center;gap:6px;border-radius:999px;border:1px solid transparent;padding:3px 9px;font-weight:700;font-size:11px;line-height:1.15;white-space:nowrap}
-  .badge:before{content:"";width:6px;height:6px;border-radius:50%;background:currentColor}
-  .b-active{color:var(--green);background:var(--green-soft);border-color:rgba(54,211,153,.22)}
-  .b-maint{color:var(--blue);background:var(--blue-soft);border-color:rgba(138,180,255,.22)}
-  .b-paused{color:var(--amber);background:var(--amber-soft);border-color:rgba(246,200,95,.22)}
-  .b-proposed{color:var(--faint);background:rgba(255,255,255,.05);border-color:var(--line)}
-  .b-ready{color:var(--cyan);background:var(--cyan-soft);border-color:rgba(103,232,249,.2)}
-  .b-blocked{color:var(--red);background:var(--red-soft);border-color:rgba(249,112,112,.2)}
-  .b-done{color:var(--green);background:var(--green-soft);border-color:rgba(54,211,153,.22)}
-  .b-info{color:var(--blue);background:var(--blue-soft);border-color:rgba(138,180,255,.22)}
-  .pill{display:inline-flex;align-items:center;border:1px solid var(--line);background:var(--panel-2);border-radius:999px;padding:4px 9px;color:var(--muted);font-size:12px;font-weight:700;white-space:nowrap}
-  table{width:100%;border-collapse:collapse}
-  th,td{padding:11px 13px;border-bottom:1px solid var(--line);text-align:left;vertical-align:middle}
-  th{font-size:11px;color:var(--faint);text-transform:uppercase;letter-spacing:.05em;background:rgba(255,255,255,.025);font-weight:800}
-  tr:last-child td{border-bottom:0}
-  td strong{display:block;font-size:13px;color:var(--text)}
-  td small{display:block;color:var(--faint);font-size:11.5px;margin-top:2px}
-  .numcell{font-variant-numeric:tabular-nums;color:var(--muted);font-weight:700}
-  .pipeline{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:10px;align-items:stretch}
-  .lane{border:1px solid var(--line);background:var(--panel-2);border-radius:8px;padding:13px;position:relative;min-height:132px}
-  .lane:not(:last-child):after{content:"";position:absolute;right:-10px;top:50%;width:10px;height:1px;background:var(--line-strong)}
-  .lane h3{font-size:14px;margin-bottom:5px}
-  .lane p{color:var(--muted);font-size:12px}
-  .lane .meta{position:absolute;left:13px;right:13px;bottom:12px;display:flex;gap:6px;flex-wrap:wrap}
-  .gate-grid{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:8px;margin-top:12px}
-  .gate{border:1px solid var(--line);border-radius:8px;padding:10px;background:rgba(255,255,255,.03)}
-  .gate b{display:block;font-size:12px}
-  .gate span{display:block;color:var(--faint);font-size:11.5px;margin-top:3px}
-  .skills{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
-  .skill{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:8px;align-items:center;border:1px solid var(--line);border-radius:8px;background:rgba(255,255,255,.03);padding:9px 10px}
-  .skill b{font-size:12.5px}
-  .skill small{display:block;color:var(--faint);font-size:11px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-  .roadmap-toolbar{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:10px}
-  .tabs{display:flex;gap:6px;flex-wrap:wrap}
-  .tab{border:1px solid var(--line);background:var(--panel-2);color:var(--muted);border-radius:999px;padding:6px 10px;font-size:12px;font-weight:800;cursor:pointer}
-  .tab.is-on{color:var(--ink);background:var(--cyan);border-color:var(--cyan)}
-  .roadmap-list{max-height:422px;overflow:auto;border:1px solid var(--line);border-radius:8px}
-  .roadmap-row{display:grid;grid-template-columns:minmax(220px,1fr) 86px minmax(240px,1.2fr) 118px;gap:10px;align-items:center;padding:10px 12px;border-bottom:1px solid var(--line)}
-  .roadmap-row:last-child{border-bottom:0}
-  .roadmap-row .file{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:12px;color:var(--text);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-  .roadmap-row .status{color:var(--muted);font-size:12px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-  .rh{color:var(--faint);font-size:11px;text-transform:uppercase;letter-spacing:.05em;background:rgba(255,255,255,.025);font-weight:800;position:sticky;top:0}
-  .rh .file,.rh .status{color:var(--faint);font-family:inherit}
-  .cadence{display:grid;gap:8px}
-  .step{display:grid;grid-template-columns:32px minmax(0,1fr);gap:10px;border:1px solid var(--line);border-radius:8px;padding:10px;background:rgba(255,255,255,.03)}
-  .step .n{width:32px;height:32px;border-radius:8px;background:var(--green-soft);color:var(--green);display:grid;place-items:center;font-weight:850}
-  .step b{display:block;font-size:12.5px}
-  .step span{display:block;color:var(--muted);font-size:12px;margin-top:2px}
-  .notice{border:1px solid rgba(103,232,249,.18);background:linear-gradient(135deg,rgba(103,232,249,.11),rgba(54,211,153,.08));border-radius:8px;padding:13px;color:var(--muted)}
-  .notice b{color:var(--text)}
-  @media (max-width:1100px){
-    .shell{grid-template-columns:1fr}
-    .rail{display:none}
-    .grid-kpi,.grid-3{grid-template-columns:repeat(2,minmax(0,1fr))}
-    .grid-2{grid-template-columns:1fr}
-    .pipeline,.gate-grid{grid-template-columns:1fr}
-    .lane:after{display:none}
+  h1{font-size:30px;line-height:1.18;letter-spacing:0}
+  h2{font-size:18px;letter-spacing:0}
+  h3{font-size:14px;letter-spacing:0}
+  .sub{margin-top:5px;color:var(--muted);font-size:13px;max-width:840px}
+  .surface{
+    background:rgba(255,255,255,.88);
+    border:1px solid var(--line);
+    border-radius:8px;
+    box-shadow:var(--shadow);
   }
-  @media (max-width:720px){
-    .topbar{align-items:flex-start;flex-direction:column;padding:14px 18px}
+  .pad{padding:18px}
+  .badge,.pill{
+    display:inline-flex;align-items:center;gap:6px;white-space:nowrap;
+    border-radius:999px;font-weight:750;font-size:11.5px;line-height:1.1;
+  }
+  .badge{padding:5px 9px;border:1px solid transparent;background:var(--surface-3)}
+  .badge:before{content:"";width:6px;height:6px;border-radius:50%;background:currentColor}
+  .pill{padding:5px 10px;border:1px solid var(--line);background:#fff;color:var(--muted)}
+  .b-blue{color:var(--blue);background:#eaf2ff;border-color:#cfe2ff}
+  .b-green{color:var(--green);background:#eaf7ee;border-color:#cbead5}
+  .b-cyan{color:#07849a;background:#e6f8fb;border-color:#c7eff5}
+  .b-yellow{color:#9a6a00;background:#fff7df;border-color:#ffe7a8}
+  .b-red{color:var(--red);background:#ffefed;border-color:#ffd3ce}
+  .b-gray{color:var(--muted);background:#f5f7fb;border-color:#e0e7f1}
+  .hero{
+    display:grid;
+    grid-template-columns:minmax(0,1.05fr) minmax(360px,.95fr);
+    gap:18px;
+    align-items:stretch;
+  }
+  .hero-copy{
+    min-height:260px;
+    padding:26px;
+    background:
+      linear-gradient(120deg,rgba(26,115,232,.12),rgba(18,181,203,.10) 46%,rgba(52,168,83,.08)),
+      rgba(255,255,255,.86);
+  }
+  .hero-copy h1{max-width:720px}
+  .quick-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;margin-top:22px}
+  .quick{
+    min-height:92px;padding:12px;border:1px solid var(--line);border-radius:8px;background:#fff;
+  }
+  .quick b{display:block;font-size:13px;margin-bottom:4px}
+  .quick span{display:block;color:var(--muted);font-size:12px}
+  .focus-box{display:grid;gap:10px;align-content:start}
+  .focus-row{
+    display:grid;grid-template-columns:34px minmax(0,1fr);gap:10px;align-items:start;
+    padding:11px;border:1px solid var(--line);border-radius:8px;background:#fff;
+  }
+  .focus-row .num{
+    width:34px;height:34px;display:grid;place-items:center;border-radius:8px;
+    background:var(--surface-3);color:var(--blue);font-weight:850;
+  }
+  .focus-row b{display:block;font-size:13px}
+  .focus-row span{display:block;color:var(--muted);font-size:12px;margin-top:2px}
+  .kpis{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px}
+  .kpi{padding:16px;background:#fff}
+  .kpi .label{display:flex;justify-content:space-between;gap:10px;color:var(--muted);font-size:12px}
+  .kpi .num{font-size:28px;font-weight:850;margin-top:8px}
+  .kpi .note{color:var(--faint);font-size:12px}
+  .flow-grid{
+    display:grid;
+    grid-template-columns:minmax(0,1.25fr) minmax(320px,.75fr);
+    gap:14px;
+  }
+  .flow-stage{
+    position:relative;
+    min-height:560px;
+    overflow:hidden;
+    background:
+      linear-gradient(180deg,rgba(255,255,255,.92),rgba(247,251,255,.92)),
+      repeating-linear-gradient(90deg,rgba(26,115,232,.04) 0 1px,transparent 1px 72px);
+  }
+  .flow-lines{position:absolute;inset:0;width:100%;height:100%;pointer-events:none}
+  .flow-lines path{
+    fill:none;stroke:var(--line-strong);stroke-width:2.4;stroke-linecap:round;
+    stroke-dasharray:7 8;transition:stroke .25s ease,stroke-width .25s ease,opacity .25s ease;
+  }
+  .flow-lines path.is-hot{
+    stroke:var(--blue);stroke-width:3.2;animation:dash 1.2s linear infinite;
+  }
+  @keyframes dash{to{stroke-dashoffset:-30}}
+  .product-node{
+    position:absolute;
+    width:178px;
+    min-height:96px;
+    text-align:left;
+    padding:12px;
+    border:1px solid var(--line);
+    border-radius:8px;
+    background:#fff;
+    color:var(--text);
+    box-shadow:var(--shadow-soft);
+    transition:transform .22s ease,border-color .22s ease,box-shadow .22s ease,background .22s ease;
+  }
+  .product-node:hover{transform:translateY(-2px);border-color:var(--line-strong)}
+  .product-node.is-active{
+    border-color:rgba(26,115,232,.55);
+    box-shadow:0 18px 40px rgba(26,115,232,.18);
+    background:linear-gradient(180deg,#fff,#f3f8ff);
+  }
+  .product-node.is-active:after{
+    content:"";position:absolute;inset:-5px;border:2px solid rgba(26,115,232,.20);
+    border-radius:10px;animation:pulse 1.35s ease-out infinite;
+  }
+  @keyframes pulse{0%{opacity:.9;transform:scale(.98)}100%{opacity:0;transform:scale(1.08)}}
+  .product-node b{display:block;font-size:14px}
+  .product-node span{display:block;color:var(--muted);font-size:12px;margin-top:4px}
+  .node-web{left:5%;top:95px}
+  .node-app{left:40%;top:95px}
+  .node-plugin{right:5%;top:95px}
+  .node-sync{left:31%;top:260px;width:238px}
+  .node-site{left:14%;bottom:45px}
+  .node-admin{right:14%;bottom:45px}
+  .detail{
+    display:grid;gap:12px;align-content:start;
+    background:#fff;
+  }
+  .detail-title{display:flex;align-items:center;justify-content:space-between;gap:12px}
+  .detail h3{font-size:20px}
+  .detail-list{display:grid;gap:8px}
+  .detail-list div{padding:10px;border-left:3px solid var(--blue);background:var(--surface-2);border-radius:0 8px 8px 0}
+  .detail-list b{display:block;font-size:12px}
+  .detail-list span{display:block;color:var(--muted);font-size:12px;margin-top:2px}
+  .split{display:grid;grid-template-columns:minmax(0,1fr) minmax(360px,.75fr);gap:14px}
+  .reader-shell{display:grid;grid-template-columns:220px minmax(0,1fr);gap:14px}
+  .doc-list{display:grid;gap:7px;align-content:start}
+  .doc-tab{
+    border:1px solid var(--line);
+    background:#fff;
+    color:var(--muted);
+    border-radius:8px;
+    padding:10px 11px;
+    text-align:left;
+    font-weight:750;
+  }
+  .doc-tab small{display:block;font-size:11px;color:var(--faint);font-weight:650;margin-top:2px}
+  .doc-tab.is-on{color:var(--blue);border-color:#bfd8ff;background:#f2f7ff}
+  .reader{
+    display:grid;
+    grid-template-rows:auto minmax(230px,1fr) auto;
+    min-height:420px;
+    border:1px solid var(--line);
+    border-radius:8px;
+    background:#fff;
+    overflow:hidden;
+  }
+  .reader-head,.reader-foot{padding:13px 15px;background:var(--surface-2);border-bottom:1px solid var(--line)}
+  .reader-foot{border-top:1px solid var(--line);border-bottom:0;display:flex;align-items:center;justify-content:space-between;gap:10px}
+  .reader-title{display:flex;align-items:flex-start;justify-content:space-between;gap:14px}
+  .reader-title b{display:block;font-size:16px}
+  .reader-title span{display:block;color:var(--muted);font-size:12px;margin-top:2px}
+  .reader-body{padding:16px;overflow:auto}
+  .reader-body ul{margin:12px 0 0;padding-left:18px;color:var(--muted)}
+  .reader-body li{margin:7px 0}
+  .reader-body code{background:#edf5ff;border:1px solid var(--line);border-radius:6px;padding:1px 5px;color:#0f4d9a}
+  .reader-btn{
+    border:1px solid var(--line);
+    background:#fff;
+    color:var(--text);
+    border-radius:8px;
+    padding:8px 10px;
+    font-weight:800;
+  }
+  .reader-btn:hover{border-color:var(--line-strong);background:var(--surface-3)}
+  .skill-grid,.branch-grid{display:grid;gap:8px}
+  .skill-row,.branch-row,.log-row{
+    display:grid;grid-template-columns:minmax(0,1fr) auto;gap:10px;align-items:center;
+    padding:11px;border:1px solid var(--line);border-radius:8px;background:#fff;
+  }
+  .skill-row b,.branch-row b,.log-row b{display:block;font-size:13px}
+  .skill-row span,.branch-row span,.log-row span{display:block;color:var(--muted);font-size:12px;margin-top:2px}
+  .branch-row{grid-template-columns:minmax(112px,.24fr) minmax(0,1fr) auto}
+  .branch-row > *{min-width:0}
+  .branch-row .branch-name{
+    font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
+    font-weight:850;
+    color:#0f4d9a;
+    overflow-wrap:anywhere;
+  }
+  .log-list{display:grid;gap:8px}
+  .log-row{grid-template-columns:118px minmax(0,1fr) auto}
+  .log-date{font-weight:850;color:#0f4d9a}
+  .flow-note{
+    padding:14px;
+    border:1px solid #cfe2ff;
+    background:#f2f7ff;
+    border-radius:8px;
+    color:var(--muted);
+  }
+  .flow-note b{color:var(--text)}
+  @media (max-width:1180px){
+    .hero,.flow-grid,.split{grid-template-columns:1fr}
+    .kpis{grid-template-columns:repeat(2,minmax(0,1fr))}
+  }
+  @media (max-width:860px){
+    .layout{grid-template-columns:1fr}
+    .rail{display:none}
+    .topbar{position:relative;align-items:flex-start;flex-direction:column;padding:14px 18px}
     .content{padding:18px}
-    .grid-kpi,.grid-3{grid-template-columns:1fr}
-    .skills{grid-template-columns:1fr}
-    .roadmap-row{grid-template-columns:1fr;gap:5px}
-    th:nth-child(3),td:nth-child(3){display:none}
+    .quick-grid{grid-template-columns:1fr}
+    .reader-shell{grid-template-columns:1fr}
+    .flow-stage{min-height:760px}
+    .flow-lines{display:none}
+    .product-node{position:relative;left:auto;right:auto;top:auto;bottom:auto;width:100%;margin-bottom:10px}
+    .branch-row,.log-row{grid-template-columns:1fr}
+  }
+  @media (max-width:620px){
+    .kpis{grid-template-columns:1fr}
+    h1{font-size:24px}
   }
 </style>
 </head>
 <body>
-<div class="shell">
+<div class="layout">
   <aside class="rail">
     <div class="brand">
-      <div class="mark">XD</div>
-      <div><b>XAI Dev Dashboard</b><span>ADR-0013 snapshot</span></div>
+      <div class="mark">X</div>
+      <div>
+        <b>XAI 个人开发看板</b>
+        <span>产品 · 分支 · skill · release log</span>
+      </div>
     </div>
-    <div class="nav">
-      <div class="nav-title">Panels</div>
-      <a href="#products">产品线 <small>6</small></a>
-      <a href="#branches">分支流水线 <small>D2/D3</small></a>
-      <a href="#skills">Skill 目录 <small>14</small></a>
-      <a href="#roadmaps">Roadmap <small id="navRoadmapCount">0</small></a>
-      <a href="#cadence">开发节奏 <small>solo</small></a>
-    </div>
-    <div class="rail-card">
-      <b>Normal signal</b>
-      <p>`dev` intentionally lags `web`; dashboard treats lag as health context, not an alert.</p>
+    <nav class="nav" aria-label="主导航">
+      <div class="nav-title">导航</div>
+      <a href="#overview">总览 <small>today</small></a>
+      <a href="#product-flow">产品结构图 <small>click</small></a>
+      <a href="#docs">手册和 skill <small>reader</small></a>
+      <a href="#branches">分支管理 <small>solo</small></a>
+      <a href="#release-log">发布 log <small>new</small></a>
+    </nav>
+    <div class="rail-note">
+      <b>核心规则</b>
+      <p>产品线说明“做什么”，branch 说明“在哪里集成和发布”。两者不要一一绑定。</p>
     </div>
   </aside>
 
@@ -169,314 +333,380 @@
     <header class="topbar">
       <div class="crumb">
         docs/prototypes/dev-dashboard/index.html
-        <b>单人开发者导航看板</b>
+        <b>中文优先的单人开发控制台</b>
       </div>
-      <div class="status-line">
-        <span class="badge b-info">ADR-0013 Proposed</span>
-        <span class="badge b-active">P1 Desktop active</span>
-        <span class="badge b-maint">P0 Web maintenance</span>
+      <div class="toolbar">
+        <span class="badge b-blue">Gemini 风格蓝白底</span>
+        <span class="badge b-green">P1 Desktop active</span>
+        <span class="badge b-yellow">Web maintenance</span>
       </div>
     </header>
 
     <div class="content">
-      <section class="section">
-        <div class="section-head">
-          <div>
-            <h1>Branch, workflow, and roadmap control surface</h1>
-            <p class="sub">Static internal snapshot from ADR-0013, CLAUDE.md, developer.md, usage-guide §16/§17, and docs/workflow/roadmap/*.md.</p>
+      <section class="section hero" id="overview">
+        <div class="surface hero-copy">
+          <span class="badge b-blue">项目系统层 v0</span>
+          <h1 style="margin-top:14px">一个人也能看懂、执行、复盘的 XAI 开发工作台</h1>
+          <p class="sub">这里把产品线、分支流水线、Workflow V2、固定 skill、发布记录放到同一个入口。它是导航和看板，不代替 ADR、手册和真实 roadmap。</p>
+          <div class="quick-grid">
+            <div class="quick"><b>先看产品</b><span>确认这次改动属于 web、桌面 App、插件、同步、官网还是 admin。</span></div>
+            <div class="quick"><b>再选 branch</b><span>branch 跟集成风险走，不跟产品线一一绑定。</span></div>
+            <div class="quick"><b>最后跑 skill</b><span>用 feature loop、roadmap loop、D3 sync 或 release log 收口。</span></div>
           </div>
-          <span class="pill">Zero build · single HTML</span>
         </div>
-        <div class="grid-kpi" id="kpis"></div>
-      </section>
-
-      <section class="section grid-2" id="products">
-        <div class="panel">
-          <div class="section-head panel-pad" style="padding-bottom:8px">
-            <div>
-              <h2>产品线状态</h2>
-              <p class="sub">Product importance is separate from current dev permission.</p>
-            </div>
-          </div>
-          <table>
-            <thead><tr><th>#</th><th>Line</th><th>Priority</th><th>Status</th><th>Current rule</th></tr></thead>
-            <tbody id="productRows"></tbody>
-          </table>
-        </div>
-        <div class="panel panel-pad">
-          <h2>Account cloud-sync contract</h2>
-          <p class="sub">ADR-0013 D4 builds on `data-repository-v0` syncScope; it does not redefine the model.</p>
-          <div class="notice" style="margin-top:12px">
-            <b>Topology:</b> Web IndexedDB and App SQLite do not sync to each other. Both sync through `/sync/push` and `/sync/pull` to one account cloud of encrypted blobs.
-          </div>
-          <div class="gate-grid" style="grid-template-columns:1fr;margin-top:12px">
-            <div class="gate"><b>Only account-sync travels</b><span>`syncScope: account-sync` enters remote sync; `device-local` never enters outbox.</span></div>
-            <div class="gate"><b>Completeness checklist</b><span>New account-sync features need entity, schema, store mapping, push, pull, conflict, Web test, App test, and two-device smoke.</span></div>
-          </div>
+        <div class="surface pad focus-box">
+          <div class="focus-row"><div class="num">1</div><div><b>当前主线</b><span>P1 mac desktop App / G1 native foundation。</span></div></div>
+          <div class="focus-row"><div class="num">2</div><div><b>Web 的位置</b><span>功能最全、仍是 UI 源头，但新功能需要 P0 carve-out。</span></div></div>
+          <div class="focus-row"><div class="num">3</div><div><b>两台电脑并行</b><span>这台偏 `web`，另一台偏 `dev`；通过 D3 gate 对齐。</span></div></div>
+          <div class="focus-row"><div class="num">4</div><div><b>发布记录</b><span>每次系统层或产品层增量都写进 release log。</span></div></div>
         </div>
       </section>
 
-      <section class="section panel panel-pad" id="branches">
-        <div class="section-head">
-          <div>
-            <h2>分支流水线</h2>
-            <p class="sub">Defined by ADR-0013 D2. New lanes are not created by this dashboard.</p>
-          </div>
-          <span class="badge b-info">`web` leads · `dev` lags normally</span>
-        </div>
-        <div class="pipeline" id="pipeline"></div>
-        <div class="gate-grid" id="gateGrid"></div>
+      <section class="section kpis">
+        <div class="surface kpi"><div class="label"><span>产品线</span><span class="pill">结构</span></div><div class="num">6</div><div class="note">Web / App / Plugin / Sync / Site / Admin</div></div>
+        <div class="surface kpi"><div class="label"><span>长期分支</span><span class="pill">治理</span></div><div class="num">4+</div><div class="note">web, desktop-next, plugin-next, dev, release/*</div></div>
+        <div class="surface kpi"><div class="label"><span>固定 skill</span><span class="pill">入口</span></div><div class="num">5</div><div class="note">feature, roadmap, web-to-desktop, release log</div></div>
+        <div class="surface kpi"><div class="label"><span>新手路径</span><span class="pill">节奏</span></div><div class="num">3</div><div class="note">选产品线 -> 选 branch -> 选 skill</div></div>
       </section>
 
-      <section class="section grid-2" id="skills">
-        <div class="panel panel-pad">
+      <section class="section flow-grid" id="product-flow">
+        <div class="surface pad flow-stage">
           <div class="section-head">
             <div>
-              <h2>固定 skill 目录</h2>
-              <p class="sub">Project-layer workflow skills plus future D3 sync skill.</p>
+              <h2>产品结构流程图</h2>
+              <p class="sub">点击节点查看它的定位、当前权限和推荐 branch。蓝色虚线会标出它和其他产品线的关系。</p>
             </div>
+            <span class="pill">click nodes</span>
           </div>
-          <div class="skills" id="projectSkills"></div>
+          <svg class="flow-lines" viewBox="0 0 900 560" preserveAspectRatio="none" aria-hidden="true">
+            <path data-edge="web-app" d="M178 143 C260 143 300 143 364 143"></path>
+            <path data-edge="app-plugin" d="M540 143 C610 143 660 143 722 143"></path>
+            <path data-edge="web-sync" d="M180 178 C260 220 320 245 382 303"></path>
+            <path data-edge="app-sync" d="M455 190 C455 225 455 250 455 292"></path>
+            <path data-edge="sync-site" d="M410 352 C330 392 260 435 220 500"></path>
+            <path data-edge="sync-admin" d="M505 352 C610 392 680 435 730 500"></path>
+            <path data-edge="app-site" d="M420 190 C320 275 250 355 220 490"></path>
+          </svg>
+          <button class="product-node node-web is-active" data-product="web" type="button"><b>1. Web</b><span>功能最全的产品和 UI 源头</span></button>
+          <button class="product-node node-app" data-product="app" type="button"><b>2. Mac 桌面 App</b><span>基于 Web 能力下沉到 Tauri</span></button>
+          <button class="product-node node-plugin" data-product="plugin" type="button"><b>3. 桌面插件 / Widget</b><span>桌面整理和小组件生态</span></button>
+          <button class="product-node node-sync" data-product="sync" type="button"><b>4. 账号云同步层</b><span>Web 和 App 都同步到同一账号云</span></button>
+          <button class="product-node node-site" data-product="site" type="button"><b>5. 官方网页</b><span>下载、更新、营销和发布入口</span></button>
+          <button class="product-node node-admin" data-product="admin" type="button"><b>6. Admin Dashboard</b><span>运营、权限、用量和配置后台</span></button>
         </div>
-        <div class="panel panel-pad">
+        <aside class="surface pad detail" id="productDetail" aria-live="polite"></aside>
+      </section>
+
+      <section class="section split" id="docs">
+        <div class="surface pad">
           <div class="section-head">
             <div>
-              <h2>Portable skills</h2>
-              <p class="sub">10 mirrored public skills under `.codex/skills/`.</p>
+              <h2>手册和 skill 分页阅读器</h2>
+              <p class="sub">不用先记住所有文件名。先从这里读摘要，再打开真实文档继续深挖。</p>
+            </div>
+            <span class="pill" id="pageCount">1 / 1</span>
+          </div>
+          <div class="reader-shell">
+            <div class="doc-list" id="docTabs"></div>
+            <article class="reader">
+              <div class="reader-head">
+                <div class="reader-title">
+                  <div><b id="readerTitle"></b><span id="readerSource"></span></div>
+                  <a class="reader-btn" id="readerLink" href="#" target="_blank" rel="noreferrer">打开文件</a>
+                </div>
+              </div>
+              <div class="reader-body" id="readerBody"></div>
+              <div class="reader-foot">
+                <button class="reader-btn" id="prevPage" type="button">上一页</button>
+                <span class="pill" id="readerMeta"></span>
+                <button class="reader-btn" id="nextPage" type="button">下一页</button>
+              </div>
+            </article>
+          </div>
+        </div>
+
+        <aside class="surface pad">
+          <div class="section-head">
+            <div>
+              <h2>固定 skill 说明</h2>
+              <p class="sub">这些是日常工作流入口，不是普通文档。</p>
             </div>
           </div>
-          <div class="skills" id="portableSkills"></div>
-        </div>
+          <div class="skill-grid" id="skillGrid"></div>
+        </aside>
       </section>
 
-      <section class="section panel panel-pad" id="roadmaps">
-        <div class="roadmap-toolbar">
-          <div>
-            <h2>在飞 roadmap snapshot</h2>
-            <p class="sub">Filename + current status snapshot from `docs/workflow/roadmap/*.md`.</p>
+      <section class="section split" id="branches">
+        <div class="surface pad">
+          <div class="section-head">
+            <div>
+              <h2>Branch 为什么不等于产品线</h2>
+              <p class="sub">对一个人、两台电脑并行开发来说，branch 先服务“稳定性和集成节奏”。产品线是地图，branch 是交通规则。</p>
+            </div>
+            <span class="badge b-blue">管理原则</span>
           </div>
-          <div class="tabs" role="tablist" aria-label="Roadmap filters">
-            <button class="tab is-on" data-filter="active" type="button">Active</button>
-            <button class="tab" data-filter="manifest" type="button">Manifests</button>
-            <button class="tab" data-filter="support" type="button">Support docs</button>
-            <button class="tab" data-filter="all" type="button">All</button>
-          </div>
+          <div class="branch-grid" id="branchGrid"></div>
         </div>
-        <div class="roadmap-list" id="roadmapRows"></div>
+        <aside class="surface pad">
+          <div class="flow-note">
+            <b>两台电脑的默认分工：</b>
+            <p style="margin-top:8px">这台电脑可以继续作为 `web` 主线和系统治理线；另一台电脑作为 `dev` / Desktop RC 线。Web 改动先进入 D3 gate，再决定是记录、合入 `desktop-next`，还是派发桌面补丁。</p>
+          </div>
+          <div class="flow-note" style="margin-top:10px">
+            <b>这样分的好处：</b>
+            <p style="margin-top:8px">不会因为“有 6 个产品线”就制造 6 条长期分支。长期 branch 只保留给会影响集成、发布、冻结的阶段。</p>
+          </div>
+        </aside>
       </section>
 
-      <section class="section grid-3" id="cadence">
-        <div class="panel panel-pad">
-          <h2>Workflow levels</h2>
-          <div class="cadence" id="workflowLevels" style="margin-top:12px"></div>
+      <section class="section split" id="release-log">
+        <div class="surface pad">
+          <div class="section-head">
+            <div>
+              <h2>发布 log</h2>
+              <p class="sub">像 GitHub release notes 一样记录日期、产品线、用户可见变化、验证和后续风险。</p>
+            </div>
+            <a class="reader-btn" href="../../workflow/project/release-log.md" target="_blank" rel="noreferrer">打开 release-log.md</a>
+          </div>
+          <div class="log-list" id="releaseRows"></div>
         </div>
-        <div class="panel panel-pad">
-          <h2>开发节奏</h2>
-          <div class="cadence" id="rhythm" style="margin-top:12px"></div>
-        </div>
-        <div class="panel panel-pad">
-          <h2>Stop rules</h2>
-          <div class="cadence" id="stopRules" style="margin-top:12px"></div>
-        </div>
+        <aside class="surface pad">
+          <h2>xai-release-log skill</h2>
+          <p class="sub">用于每次 ship、系统文档增量、跨机器治理变更之后补齐更新日志。</p>
+          <div class="flow-note" style="margin-top:12px">
+            <b>触发语：</b>
+            <p style="margin-top:8px">发布 log、更新日志、release notes、今天改了什么、把这次提交写进 changelog。</p>
+          </div>
+        </aside>
       </section>
     </div>
   </main>
 </div>
 
 <script>
-const products = [
-  {n:1,line:"web",where:"apps/web/",priority:"P0",status:"maintenance",rule:"Bug-fix only; new work needs P0 carve-out citing ADR-0010 D4."},
-  {n:2,line:"mac desktop App",where:"apps/desktop/",priority:"P1",status:"active",rule:"Primary focus: G1 native foundation."},
-  {n:3,line:"desktop organizer plugins / widgets",where:"apps/desktop/ plugin slots",priority:"P2",status:"paused",rule:"Resume after G1 ships."},
-  {n:4,line:"account cloud-sync layer",where:"sync-v1 stack + server",priority:"P2",status:"paused",rule:"Post-G1; governed by ADR-0013 D4."},
-  {n:5,line:"official website",where:"not yet a package",priority:"PROPOSED",status:"proposed",rule:"Distribution/download/updater host; operator-confirmed trigger."},
-  {n:6,line:"admin-dashboard",where:"docs/prototypes/admin-dashboard/index.html",priority:"PROPOSED",status:"proposed",rule:"Prototype only; no package or roadmap yet."}
+const products = {
+  web: {
+    title: "Web",
+    badge: "P0 · maintenance",
+    edges: ["web-app","web-sync"],
+    points: [
+      ["定位", "功能最全的主产品，也是桌面 App 的 UI 源头。"],
+      ["当前权限", "维护和 bugfix 为主；新功能需要明确 P0 carve-out。"],
+      ["推荐 branch", "`codex/web/<feature>` -> `web`，进入桌面前跑 D3 gate。"]
+    ]
+  },
+  app: {
+    title: "Mac 桌面 App",
+    badge: "P1 · active",
+    edges: ["web-app","app-plugin","app-sync","app-site"],
+    points: [
+      ["定位", "把 Web 能力变成可离线、可调用本机能力的 Tauri App。"],
+      ["当前权限", "当前主开发焦点：G1 native foundation。"],
+      ["推荐 branch", "`desktop-next` 集成，稳定后再进入 `dev`。"]
+    ]
+  },
+  plugin: {
+    title: "桌面插件 / Widget",
+    badge: "P2 · paused",
+    edges: ["app-plugin"],
+    points: [
+      ["定位", "类似桌面整理插件和小组件生态，依赖 App 插件平台。"],
+      ["当前权限", "G1 稳定前先暂停，只做必要修复和设计记录。"],
+      ["推荐 branch", "插件平台级变更走 `desktop-plugin-next`；单插件用短分支。"]
+    ]
+  },
+  sync: {
+    title: "账号云同步层",
+    badge: "P2 · paused",
+    edges: ["web-sync","app-sync","sync-site","sync-admin"],
+    points: [
+      ["定位", "Web IndexedDB 和 App SQLite 不互相同步，都同步到同一账号云。"],
+      ["当前权限", "Post-G1 恢复；现在只保留治理合同和接口约束。"],
+      ["推荐 branch", "sync-v1 恢复后按 roadmap wave 跑，不单独抢 App 主线。"]
+    ]
+  },
+  site: {
+    title: "官方网页",
+    badge: "proposed",
+    edges: ["sync-site","app-site"],
+    points: [
+      ["定位", "下载、自动更新、营销说明、release notes 的对外入口。"],
+      ["当前权限", "还没有独立 package；启动时机由 operator 确认。"],
+      ["推荐 branch", "先用 `codex/site/<feature>`，有发布节奏后再升长期线。"]
+    ]
+  },
+  admin: {
+    title: "Admin Dashboard",
+    badge: "proposed",
+    edges: ["sync-admin"],
+    points: [
+      ["定位", "运营、AI 配置、权限、用量、审计日志后台。"],
+      ["当前权限", "当前是 prototype，不应抢主产品资源。"],
+      ["推荐 branch", "先用 `codex/admin/<feature>`；等真实后端合同稳定再升格。"]
+    ]
+  }
+};
+
+const docs = [
+  {
+    label: "工作手册",
+    source: "docs/workflow/project/handbook.md",
+    href: "../../workflow/project/handbook.md",
+    pages: [
+      {title:"工作手册是什么", body:["它是单人开发导航层：告诉你权威文件在哪里、产品线怎么分、branch 怎么走、skill 怎么选。","它不替代 ADR、usage-guide 或 roadmap，只把入口整理成一张地图。"]},
+      {title:"新手三步", body:["先选产品线：这次改的是 Web、App、插件、同步、官网还是 admin。","再选 branch：看它影响的是 Web、桌面集成、插件平台还是 release。","最后选 workflow：小修走手动；单功能走 full-loop；多功能走 roadmap-loop。"]}
+    ]
+  },
+  {
+    label: "分支治理",
+    source: "docs/adr/0013-branch-sync-governance.md",
+    href: "../../adr/0013-branch-sync-governance.md",
+    pages: [
+      {title:"核心结论", body:["`web` 领先 `dev` 是设计，不是 drift。","Web 改动进入桌面前，需要先通过 D3 gate 分类 W0-W4。","`desktop-next` 是集成线，`dev` 是 App RC 稳定线。"]},
+      {title:"不要把产品线等同 branch", body:["产品线回答“我们做什么产品”。","branch 回答“这批变化在哪个稳定阶段集成、验证、发布”。","长期 branch 只给长期集成节奏，不给每个产品线都开一条。"]}
+    ]
+  },
+  {
+    label: "Workflow V2",
+    source: "docs/workflow/project/usage-guide.md",
+    href: "../../workflow/project/usage-guide.md",
+    pages: [
+      {title:"三档工作流", body:["Level 1：手动 subagent，适合排障或恢复。","Level 2：`/xai-feature-full-loop`，适合一个功能从 brief 到 verify。","Level 3：`/xai-roadmap-loop`，适合一批 roadmap wave。"]},
+      {title:"收口原则", body:["ship 是人触发的门，普通 loop 不自动发布。","每次结束要有证据：测试、截图、parity receipt、release log 或明确 blocked gate。"]}
+    ]
+  },
+  {
+    label: "Release Log",
+    source: "docs/workflow/project/release-log.md",
+    href: "../../workflow/project/release-log.md",
+    pages: [
+      {title:"记录什么", body:["日期、产品线、branch、用户可见变化、开发者增量、验证结果、风险和下一步。","不要写营销空话；没有验证就写“未运行”。"]},
+      {title:"什么时候写", body:["ship 后必须写。","系统层治理文档、skill、branch 规则变化也要写。","两台电脑并行时，release log 是跨机器同步前的低成本对账单。"]}
+    ]
+  }
 ];
 
-const pipeline = [
-  {name:"web",role:"Web mainline / Web release source",status:"exists",note:"Most-current dev line"},
-  {name:"desktop-next",role:"Web to App sync integration",status:"defined",note:"D3 gate runs here"},
-  {name:"desktop-plugin-next",role:"Plugin platform / SDK lane",status:"defined",note:"Isolates platform churn"},
-  {name:"dev",role:"Desktop stable / App RC",status:"exists",note:"Intentional lag"},
-  {name:"release/desktop/<version>",role:"Freeze-only release branch",status:"ephemeral",note:"Sign, notarize, dmg, updater"}
+const skills = [
+  ["xai-feature-brief", "把粗需求变成 feature brief，适合新功能立项前。", ".teams/skills/xai-feature-brief/SKILL.md", "landed"],
+  ["xai-feature-full-loop", "单功能自动跑 plan/review/build/verify，ship 前停住。", ".teams/skills/xai-feature-full-loop/SKILL.md", "landed"],
+  ["xai-roadmap-loop", "把 roadmap manifest 按 wave 推进。", ".teams/skills/xai-roadmap-loop/SKILL.md", "landed"],
+  ["xai-web-to-desktop-sync", "Web 变更进入桌面前跑 D3 分类和 parity receipt。", ".teams/skills/xai-web-to-desktop-sync/SKILL.md", "landed"],
+  ["xai-release-log", "把日期、功能增量、验证和风险写进发布记录。", ".teams/skills/xai-release-log/SKILL.md", "new"]
 ];
 
-const gateTiers = [
-  ["W0","web-only","Record only; no Desktop merge required."],
-  ["W1","shared-ui-safe","Merge to desktop-next; Web build + tauri build."],
-  ["W2","desktop-runtime-affected","Add offline/runtime/profile checks."],
-  ["W3","native-bridge-needed","Route delta via /xai-feature-full-loop."],
-  ["W4","release-risk","RC/release gate plus manual macOS smoke."]
+const branches = [
+  ["web", "Web 主线和 Web release source。适合 Web 产品、共享 UI 源头和系统治理文档。", "exists"],
+  ["desktop-next", "Web 到 App 的集成线。D3 gate 通过后，桌面差异在这里补齐。", "defined"],
+  ["desktop-plugin-next", "插件平台和 SDK 隔离线，避免插件平台震荡影响 App RC。", "defined"],
+  ["dev", "桌面 App 稳定线 / RC。它故意落后于 web，不应被直接追平。", "exists"],
+  ["release/desktop/<version>", "冻结分支，只做版本、签名、公证、dmg、updater 和 release-blocker 修复。", "ephemeral"]
 ];
 
-const projectSkills = [
-  ["xai-feature-brief",".teams/skills/xai-feature-brief/SKILL.md","landed"],
-  ["xai-feature-full-loop",".teams/skills/xai-feature-full-loop/SKILL.md","landed"],
-  ["xai-roadmap-loop",".teams/skills/xai-roadmap-loop/SKILL.md","landed"],
-  ["xai-web-to-desktop-sync","planned future skill from ADR-0013 D3","PLANNED"]
-];
-
-const portableSkills = [
-  "agent-behavioral-guidelines","codebase-explorer","composition-patterns","frontend-dev","gh-fix-ci",
-  "planning-with-files","security-skills-claude-code","skill-creator","superpowers","workflow-router"
-].map(name => [name, `.codex/skills/${name}/SKILL.md`, "mirrored"]);
-
-const roadmaps = [
-  {file:"sync-v1.autorun-20260519.md",rows:0,status:"autorun log",kind:"support"},
-  {file:"sync-v1.deferred-gates.md",rows:0,status:"deferred gates ledger",kind:"support"},
-  {file:"sync-v1.incidents.md",rows:0,status:"incidents ledger",kind:"support"},
-  {file:"sync-v1.md",rows:56,status:"SHIPPED:34, PENDING:19, BLOCKED_EXTERNAL:2, BLOCKED:1",kind:"active"},
-  {file:"sync-v1.tasks.md",rows:0,status:"task plan",kind:"support"},
-  {file:"web-ticktick-parity.md",rows:25,status:"SHIPPED:10, PENDING:10, BLOCKED_EXTERNAL:5",kind:"active"},
-  {file:"xai-g0-window-spike.md",rows:6,status:"SHIPPED:5, BLOCKED_EXTERNAL:1",kind:"manifest"},
-  {file:"xai-g1-native-foundation.md",rows:6,status:"SHIPPED:5, BLOCKED_EXTERNAL:1",kind:"active"},
-  {file:"xai-g2-data-security-foundation.md",rows:8,status:"SHIPPED:6, RECONCILE_AFTER_G2.1:1, BLOCKED_EXTERNAL:1",kind:"manifest"},
-  {file:"xai-v1.autorun-20260519.md",rows:0,status:"autorun log",kind:"support"},
-  {file:"xai-v1.deferred-gates.md",rows:0,status:"deferred gates ledger",kind:"support"},
-  {file:"xai-v1.incidents.md",rows:0,status:"incidents ledger",kind:"support"},
-  {file:"xai-v1.next-phase-targets.md",rows:0,status:"next phase targets",kind:"support"},
-  {file:"xai-v1.parallel-wave-plan.md",rows:0,status:"wave plan",kind:"support"},
-  {file:"xai-v1.track-b-log.md",rows:0,status:"track log",kind:"support"},
-  {file:"xai-v1.track-c-log.md",rows:0,status:"track log",kind:"support"},
-  {file:"xai-v1.track-d-log.md",rows:0,status:"track log",kind:"support"},
-  {file:"xai-v1.track-e-log.md",rows:0,status:"track log",kind:"support"},
-  {file:"xai-v1.track-f-log.md",rows:0,status:"track log",kind:"support"},
-  {file:"xai-web-ai-tool-edit-delete.md",rows:0,status:"support doc",kind:"support"},
-  {file:"xai-web-ai-tool-layer.md",rows:0,status:"support doc",kind:"support"},
-  {file:"xai-web-ai-tool-openai-compatible.md",rows:0,status:"support doc",kind:"support"},
-  {file:"xai-web-calendar-event-create.md",rows:1,status:"NEEDS_REVIEW:1",kind:"active"},
-  {file:"xai-web-console-gap-closure.md",rows:9,status:"SHIPPED:9",kind:"manifest"},
-  {file:"xai-web-console.md",rows:24,status:"SHIPPED:24",kind:"manifest"},
-  {file:"xai-web-dashboard-real-data.md",rows:1,status:"NEEDS_REVIEW:1",kind:"active"},
-  {file:"xai-web-dashboard-stickies-create.md",rows:1,status:"NEEDS_REVIEW:1",kind:"active"},
-  {file:"xai-web-dashboard-weather-mail.md",rows:1,status:"NEEDS_REVIEW:1",kind:"active"},
-  {file:"xai-web-matrix-card-create.md",rows:1,status:"READY_FOR_VERIFY:1",kind:"active"},
-  {file:"xai-web-statistics-real-aggregation.md",rows:1,status:"NEEDS_REVIEW (B1 revised -> re-review):1",kind:"active"},
-  {file:"xai-web-tasks-card-create.md",rows:1,status:"APPROVED:1",kind:"active"},
-  {file:"xai-web-tasks-smartlist-filter.md",rows:1,status:"NEEDS_REVIEW:1",kind:"active"}
-];
-
-const workflowLevels = [
-  ["1","Manual subagent workflow","Use SOP_NEW_FEATURE or SOP_BUGFIX when you need full control or recovery."],
-  ["2","Single-feature parent recipe","Use /xai-feature-full-loop for one normal feature or bugfix, stopping before ship."],
-  ["3","Roadmap orchestration","Use /xai-roadmap-loop for reviewed manifests and wave dispatch."]
-];
-
-const rhythm = [
-  ["1","Pick product line","Confirm P1 active, P0 maintenance-only, P2 paused, or proposed."],
-  ["2","Choose workflow level","Manual for recovery, full-loop for one feature, roadmap-loop for waves."],
-  ["3","Gate Web to Desktop","Classify W0-W4 and emit a parity receipt before web reaches desktop-next."],
-  ["4","Promote deliberately","desktop-next promotes to dev only after integration is green."]
-];
-
-const stopRules = [
-  ["A","No branch ops here","This dashboard does not create desktop-next, desktop-plugin-next, release/*, or touch dev."],
-  ["B","No auto ship","ship remains human-triggered; loops stop before shipping."],
-  ["C","Lag is normal","web ahead of dev is a managed state, not a red alert."],
-  ["D","Docs-only prototype","Static snapshot, not a product package."]
+const releaseRows = [
+  ["2026-05-30", "项目系统层", "新增中文个人开发看板、产品结构流程图、文档分页阅读器和 release log skill。", "docs"],
+  ["2026-05-30", "分支治理", "明确产品线不等于长期 branch；两台电脑并行通过 D3 gate 对齐。", "governance"],
+  ["2026-05-30", "Skill", "新增 `xai-release-log`：把日期、功能增量、验证和风险写入项目发布记录。", "skill"]
 ];
 
 function badgeClass(value){
   const v = String(value).toLowerCase();
-  if(v.includes("active") || v.includes("exists")) return "b-active";
-  if(v.includes("maintenance") || v.includes("defined") || v.includes("ephemeral")) return "b-maint";
-  if(v.includes("paused") || v.includes("pending") || v.includes("approved") || v.includes("needs_review")) return "b-paused";
-  if(v.includes("blocked")) return "b-blocked";
-  if(v.includes("shipped")) return "b-done";
-  if(v.includes("ready") || v.includes("planned")) return "b-ready";
-  return "b-proposed";
+  if(v.includes("active") || v.includes("exists") || v.includes("landed")) return "b-green";
+  if(v.includes("maintenance") || v.includes("defined") || v.includes("docs")) return "b-blue";
+  if(v.includes("paused") || v.includes("ephemeral") || v.includes("governance")) return "b-yellow";
+  if(v.includes("new") || v.includes("skill")) return "b-cyan";
+  return "b-gray";
 }
 
-function el(tag, className, html){
-  const node = document.createElement(tag);
-  if(className) node.className = className;
-  if(html !== undefined) node.innerHTML = html;
-  return node;
+function setProduct(key){
+  const item = products[key];
+  document.querySelectorAll(".product-node").forEach(node => node.classList.toggle("is-active", node.dataset.product === key));
+  document.querySelectorAll(".flow-lines path").forEach(path => path.classList.toggle("is-hot", item.edges.includes(path.dataset.edge)));
+  document.getElementById("productDetail").innerHTML = `
+    <div class="detail-title">
+      <div>
+        <span class="badge ${badgeClass(item.badge)}">${item.badge}</span>
+        <h3 style="margin-top:10px">${item.title}</h3>
+      </div>
+    </div>
+    <div class="detail-list">
+      ${item.points.map(([title,desc]) => `<div><b>${title}</b><span>${desc}</span></div>`).join("")}
+    </div>
+  `;
 }
 
-function renderKpis(){
-  const activeRoadmaps = roadmaps.filter(r => r.kind === "active").length;
-  const cards = [
-    ["Product lines", products.length, "6-line ADR-0013 map"],
-    ["Active focus", "P1", "Desktop G1 native foundation"],
-    ["Branch model", "web -> dev", "via D3 gate and downstream lanes"],
-    ["Roadmap files", roadmaps.length, `${activeRoadmaps} active snapshots`]
-  ];
-  const root = document.getElementById("kpis");
-  cards.forEach(([label,num,note]) => {
-    root.appendChild(el("div","panel kpi",`<div class="label"><span>${label}</span><span class="pill">snapshot</span></div><div class="num">${num}</div><div class="note">${note}</div>`));
-  });
-  document.getElementById("navRoadmapCount").textContent = roadmaps.length;
-}
-
-function renderProducts(){
-  const body = document.getElementById("productRows");
-  products.forEach(p => {
-    body.appendChild(el("tr","",`<td class="numcell">${p.n}</td><td><strong>${p.line}</strong><small>${p.where}</small></td><td><span class="pill">${p.priority}</span></td><td><span class="badge ${badgeClass(p.status)}">${p.status}</span></td><td>${p.rule}</td>`));
-  });
-}
-
-function renderPipeline(){
-  const root = document.getElementById("pipeline");
-  pipeline.forEach(l => {
-    root.appendChild(el("div","lane",`<h3>${l.name}</h3><p>${l.role}</p><div class="meta"><span class="badge ${badgeClass(l.status)}">${l.status}</span><span class="pill">${l.note}</span></div>`));
-  });
-  const gate = document.getElementById("gateGrid");
-  gateTiers.forEach(([tier,name,action]) => {
-    gate.appendChild(el("div","gate",`<b>${tier} · ${name}</b><span>${action}</span>`));
-  });
-}
-
-function renderSkills(list, id){
-  const root = document.getElementById(id);
-  list.forEach(([name,path,status]) => {
-    root.appendChild(el("div","skill",`<div><b>${name}</b><small>${path}</small></div><span class="badge ${badgeClass(status)}">${status}</span>`));
-  });
-}
-
-function rowKindBadge(kind){
-  if(kind === "active") return `<span class="badge b-ready">active</span>`;
-  if(kind === "manifest") return `<span class="badge b-info">manifest</span>`;
-  return `<span class="badge b-proposed">support</span>`;
-}
-
-function renderRoadmaps(filter="active"){
-  const root = document.getElementById("roadmapRows");
-  root.innerHTML = "";
-  root.appendChild(el("div","roadmap-row rh",`<div class="file">File</div><div>Rows</div><div class="status">Status</div><div>Kind</div>`));
-  const filtered = roadmaps.filter(r => filter === "all" || r.kind === filter || (filter === "manifest" && (r.kind === "manifest" || r.kind === "active")));
-  filtered.forEach(r => {
-    root.appendChild(el("div","roadmap-row",`<div class="file" title="${r.file}">${r.file}</div><div class="numcell">${r.rows}</div><div class="status" title="${r.status}">${r.status}</div><div>${rowKindBadge(r.kind)}</div>`));
-  });
-}
-
-function renderSteps(list,id){
-  const root = document.getElementById(id);
-  list.forEach(([n,title,desc]) => {
-    root.appendChild(el("div","step",`<div class="n">${n}</div><div><b>${title}</b><span>${desc}</span></div>`));
-  });
-}
-
-function wireTabs(){
-  document.querySelectorAll(".tab").forEach(btn => {
+let docIndex = 0;
+let pageIndex = 0;
+function renderDocTabs(){
+  const root = document.getElementById("docTabs");
+  root.innerHTML = docs.map((doc, i) => `
+    <button class="doc-tab ${i === docIndex ? "is-on" : ""}" data-doc="${i}" type="button">
+      ${doc.label}<small>${doc.source}</small>
+    </button>
+  `).join("");
+  root.querySelectorAll(".doc-tab").forEach(btn => {
     btn.addEventListener("click", () => {
-      document.querySelectorAll(".tab").forEach(b => b.classList.remove("is-on"));
-      btn.classList.add("is-on");
-      renderRoadmaps(btn.dataset.filter);
+      docIndex = Number(btn.dataset.doc);
+      pageIndex = 0;
+      renderReader();
     });
   });
 }
 
-renderKpis();
-renderProducts();
-renderPipeline();
-renderSkills(projectSkills,"projectSkills");
-renderSkills(portableSkills,"portableSkills");
-renderRoadmaps("active");
-renderSteps(workflowLevels,"workflowLevels");
-renderSteps(rhythm,"rhythm");
-renderSteps(stopRules,"stopRules");
-wireTabs();
+function renderReader(){
+  const doc = docs[docIndex];
+  const page = doc.pages[pageIndex];
+  document.getElementById("readerTitle").textContent = page.title;
+  document.getElementById("readerSource").textContent = doc.source;
+  document.getElementById("readerLink").href = doc.href;
+  document.getElementById("readerBody").innerHTML = `<ul>${page.body.map(item => `<li>${item}</li>`).join("")}</ul>`;
+  document.getElementById("readerMeta").textContent = `${doc.label} · ${pageIndex + 1} / ${doc.pages.length}`;
+  document.getElementById("pageCount").textContent = `${pageIndex + 1} / ${doc.pages.length}`;
+  document.getElementById("prevPage").disabled = pageIndex === 0;
+  document.getElementById("nextPage").disabled = pageIndex === doc.pages.length - 1;
+  renderDocTabs();
+}
+
+function renderSkills(){
+  document.getElementById("skillGrid").innerHTML = skills.map(([name,desc,path,status]) => `
+    <div class="skill-row">
+      <div><b>${name}</b><span>${desc}</span><span>${path}</span></div>
+      <span class="badge ${badgeClass(status)}">${status}</span>
+    </div>
+  `).join("");
+}
+
+function renderBranches(){
+  document.getElementById("branchGrid").innerHTML = branches.map(([name,desc,status]) => `
+    <div class="branch-row">
+      <div class="branch-name">${name}</div>
+      <div><b>${desc.split("。")[0]}。</b><span>${desc.split("。").slice(1).join("。")}</span></div>
+      <span class="badge ${badgeClass(status)}">${status}</span>
+    </div>
+  `).join("");
+}
+
+function renderReleaseRows(){
+  document.getElementById("releaseRows").innerHTML = releaseRows.map(([date,line,desc,type]) => `
+    <div class="log-row">
+      <div class="log-date">${date}</div>
+      <div><b>${line}</b><span>${desc}</span></div>
+      <span class="badge ${badgeClass(type)}">${type}</span>
+    </div>
+  `).join("");
+}
+
+document.querySelectorAll(".product-node").forEach(node => node.addEventListener("click", () => setProduct(node.dataset.product)));
+document.getElementById("prevPage").addEventListener("click", () => { if(pageIndex > 0){ pageIndex -= 1; renderReader(); } });
+document.getElementById("nextPage").addEventListener("click", () => {
+  const doc = docs[docIndex];
+  if(pageIndex < doc.pages.length - 1){ pageIndex += 1; renderReader(); }
+});
+
+setProduct("web");
+renderReader();
+renderSkills();
+renderBranches();
+renderReleaseRows();
 </script>
 </body>
 </html>
