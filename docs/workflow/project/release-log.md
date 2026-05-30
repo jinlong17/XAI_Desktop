@@ -6,6 +6,15 @@
 
 ## 2026-05-30
 
+### 看板移除内部说明头部
+
+- Product line: project-system
+- Branch / commit: `web` / local working tree
+- User-visible change: 移除看板顶部的文件路径、中文优先说明、Gemini 风格说明和 P1/Web 状态标签，让页面只保留导航和当前分页内容。
+- Developer/system delta: 删除 `topbar` / `crumb` / `toolbar` 结构及样式，避免把实现说明暴露在操作界面。
+- Verification: Chrome/Playwright smoke passed: topbar removed, internal top text absent, `#release-log` page still works, product page switch still works, and 390px mobile overflow check passed.
+- Risk / follow-up: 无。
+
 ### 看板分页导航
 
 - Product line: project-system

@@ -80,15 +80,6 @@
   .rail-note b{display:block;font-size:12px;margin-bottom:4px}
   .rail-note p{margin:0;color:var(--muted);font-size:12px}
   .main{min-width:0}
-  .topbar{
-    min-height:68px;position:sticky;top:0;z-index:20;
-    display:flex;align-items:center;justify-content:space-between;gap:16px;
-    padding:0 28px;background:rgba(255,255,255,.72);border-bottom:1px solid var(--line);
-    backdrop-filter:blur(18px);
-  }
-  .crumb{color:var(--muted);font-size:12px}
-  .crumb b{display:block;color:var(--text);font-size:18px;margin-top:1px}
-  .toolbar{display:flex;align-items:center;gap:8px;flex-wrap:wrap;justify-content:flex-end}
   .content{max-width:1480px;margin:0 auto;padding:26px 28px 56px}
   .section{margin-bottom:18px}
   .page-section{display:none}
@@ -350,7 +341,6 @@
   @media (max-width:860px){
     .layout{grid-template-columns:1fr}
     .rail{display:none}
-    .topbar{position:relative;align-items:flex-start;flex-direction:column;padding:14px 18px}
     .content{padding:18px}
     .quick-grid{grid-template-columns:1fr}
     .reader-shell{grid-template-columns:1fr}
@@ -388,18 +378,6 @@
   </aside>
 
   <main class="main">
-    <header class="topbar">
-      <div class="crumb">
-        docs/prototypes/dev-dashboard/index.html
-        <b>中文优先的单人开发控制台</b>
-      </div>
-      <div class="toolbar">
-        <span class="badge b-blue">Gemini 风格蓝白底</span>
-        <span class="badge b-green">P1 Desktop active</span>
-        <span class="badge b-yellow">Web maintenance</span>
-      </div>
-    </header>
-
     <div class="content">
       <section class="section hero page-section is-active" id="overview" data-page-section="overview">
         <div class="surface hero-copy">
