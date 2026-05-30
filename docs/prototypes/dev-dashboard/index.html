@@ -262,7 +262,7 @@
   .branch-flow-head span{color:var(--muted);font-size:11.5px}
   .branch-flow{
     display:grid;
-    grid-template-columns:repeat(6,minmax(0,1fr));
+    grid-template-columns:repeat(3,minmax(0,1fr));
     gap:8px;
   }
   .branch-step{
@@ -306,14 +306,16 @@
   .region-label b{font-size:12px}
   .region-label span{color:var(--muted);font-size:11.5px}
   .region-track{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;align-items:stretch}
-  .module-region[data-region="主产品链"] .region-track{grid-template-columns:repeat(4,minmax(0,1fr))}
+  .module-region[data-region="主产品链"] .region-track{
+    grid-template-columns:repeat(2,minmax(220px,1fr));
+  }
   .module-card{
     position:relative;
-    min-height:218px;
+    min-height:190px;
     display:grid;
     grid-template-rows:auto auto minmax(0,1fr) auto;
-    gap:10px;
-    padding:14px;
+    gap:9px;
+    padding:12px;
     text-align:left;
     border:1px solid var(--line);
     border-radius:8px;
@@ -357,9 +359,28 @@
     color:var(--blue);
     font-weight:800;
   }
-  .module-card h3{font-size:15px}
-  .module-card p{color:var(--muted);font-size:12px}
-  .module-card .pill{white-space:normal;align-items:flex-start}
+  .module-card h3{
+    display:-webkit-box;
+    -webkit-line-clamp:2;
+    -webkit-box-orient:vertical;
+    overflow:hidden;
+    font-size:15px;
+    line-height:1.28;
+  }
+  .module-card p{
+    display:-webkit-box;
+    -webkit-line-clamp:2;
+    -webkit-box-orient:vertical;
+    overflow:hidden;
+    color:var(--muted);
+    font-size:12px;
+  }
+  .module-card .pill{
+    min-height:30px;
+    white-space:normal;
+    align-items:flex-start;
+    overflow-wrap:anywhere;
+  }
   .module-meta{display:grid;gap:7px;margin-top:2px}
   .module-meta span{
     display:block;
@@ -369,6 +390,7 @@
     background:var(--surface-2);
     color:var(--muted);
     font-size:11.5px;
+    overflow-wrap:anywhere;
   }
   .module-meta b{color:var(--text);font-size:11.5px}
   .module-rhythm{
@@ -628,14 +650,17 @@
     .rail{
       position:sticky;top:0;z-index:30;
       height:auto;
+      width:100%;
+      max-width:100vw;
       padding:8px 12px;
       border-right:0;border-bottom:1px solid var(--line);
-      overflow:visible;
+      overflow:hidden;
     }
     .rail .brand{padding:2px 4px 8px}
     .rail .nav-title,.rail .rail-note,.nav small{display:none}
-    .nav{display:flex;gap:6px;overflow-x:auto;-webkit-overflow-scrolling:touch;padding-bottom:2px}
+    .nav{display:flex;gap:6px;max-width:100%;overflow-x:auto;-webkit-overflow-scrolling:touch;padding-bottom:2px}
     .nav a{flex:0 0 auto;justify-content:center;margin:0;white-space:nowrap;padding:8px 12px}
+    .main,.content{min-width:0;max-width:100vw}
     .content{padding:18px}
     .ops-head{flex-wrap:wrap}
     .ops-grid{grid-template-columns:1fr}
