@@ -922,14 +922,7 @@ const branches = [
   ["release/desktop/<version>", "冻结分支，只做版本、签名、公证、dmg、updater 和 release-blocker 修复。", "ephemeral"]
 ];
 
-const releaseRows = dashboardState.release_rows || [
-  ["2026-05-30", "结构流程图", "产品结构图补回可点击流程图和 branch 开发到发布工作流，节点点击有选中动画。", "docs"],
-  ["2026-05-30", "看板操作化", "总览改成工作流控制台，补齐 6 条产品线，并接入生成快照作为自动跟踪 v0。", "docs"],
-  ["2026-05-30", "看板结构", "产品区改为顺序模块 tracking card，点击后显示模块状态、branch、依赖、跟踪字段和详细关系。", "docs"],
-  ["2026-05-30", "项目系统层", "新增中文个人开发看板、产品结构流程图、文档分页阅读器和 release log skill。", "docs"],
-  ["2026-05-30", "分支治理", "明确产品线不等于长期 branch；两台电脑并行通过 D3 gate 对齐。", "governance"],
-  ["2026-05-30", "Skill", "新增 `xai-release-log`：把日期、功能增量、验证和风险写入项目发布记录。", "skill"]
-];
+const releaseRows = dashboardState.release_rows || [];
 
 function badgeClass(value){
   const v = String(value).toLowerCase();
@@ -1478,13 +1471,13 @@ function renderBranches(){
 }
 
 function renderReleaseRows(){
-  document.getElementById("releaseRows").innerHTML = releaseRows.map(([date,line,desc,type]) => `
+  document.getElementById("releaseRows").innerHTML = releaseRows.length ? releaseRows.map(([date,line,desc,type]) => `
     <div class="log-row">
-      <div class="log-date">${date}</div>
-      <div><b>${line}</b><span>${desc}</span></div>
-      <span class="badge ${badgeClass(type)}">${type}</span>
+      <div class="log-date">${h(date)}</div>
+      <div><b>${h(line)}</b><span>${h(desc)}</span></div>
+      <span class="badge ${badgeClass(type)}">${h(type)}</span>
     </div>
-  `).join("");
+  `).join("") : `<div class="flow-note"><b>暂无发布记录</b><p style="margin-top:8px">运行 <code>node scripts/dashboard/generate-state.mjs</code> 从 release-log.md 生成。</p></div>`;
 }
 
 function renderDevData(){

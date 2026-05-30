@@ -144,6 +144,47 @@ function latestReleaseEntry() {
   return match ? match[1].trim() : "";
 }
 
+function classifyReleaseType(title) {
+  const t = String(title).toLowerCase();
+  if (/skill|发布日志/.test(t)) return "skill";
+  if (/规则|治理|governance|adr|分支|branch/.test(t)) return "governance";
+  return "docs";
+}
+
+// Derive release rows from the real release-log.md (## <date> -> ### <title>
+// -> "- User-visible change:" bullet) instead of a hand-maintained placeholder.
+function parseReleaseRows(limit = 8) {
+  if (!existsSync(releaseLogPath)) return [];
+  const lines = readFileSync(releaseLogPath, "utf8").split(/\r?\n/);
+  const rows = [];
+  let currentDate = "";
+  let title = "";
+  let summary = "";
+  const flush = () => {
+    if (title) {
+      const desc = summary || title;
+      rows.push([
+        currentDate,
+        title,
+        desc.length > 96 ? `${desc.slice(0, 96)}…` : desc,
+        classifyReleaseType(title)
+      ]);
+    }
+    title = "";
+    summary = "";
+  };
+  for (const line of lines) {
+    const dateMatch = line.match(/^##\s+(\d{4}-\d{2}-\d{2})\s*$/);
+    if (dateMatch) { flush(); currentDate = dateMatch[1]; continue; }
+    const titleMatch = line.match(/^###\s+(.+?)\s*$/);
+    if (titleMatch) { flush(); title = titleMatch[1]; continue; }
+    const uvMatch = line.match(/^[-*]\s*User-visible change:\s*(.+)$/i);
+    if (uvMatch && title && !summary) { summary = uvMatch[1].trim(); continue; }
+  }
+  flush();
+  return rows.slice(0, limit);
+}
+
 function splitMarkdownRow(line) {
   return line
     .trim()
@@ -599,6 +640,7 @@ const snapshot = {
   plugin_map: pluginMap,
   roadmap_manifests: roadmapManifests,
   product_lines: buildProductLines(source.product_lines || [], roadmapManifests, pluginMap),
+  release_rows: parseReleaseRows(),
   release_log: {
     source: relative(repoRoot, releaseLogPath),
     latest_entry: latestReleaseEntry()
