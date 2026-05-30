@@ -9,6 +9,7 @@ mod platform;
 use serde::{Deserialize, Serialize};
 use std::collections::HashMap;
 use std::sync::Mutex;
+use tauri::webview::PageLoadEvent;
 use tauri::Manager;
 
 /// Grid window position and size data.
@@ -92,6 +93,15 @@ pub fn run() {
     const DESKTOP_GLOBAL_HOTKEY_ADAPTER_SCRIPT: &str =
         include_str!("desktop_global_hotkey_adapter.js");
     const DESKTOP_UPDATER_ADAPTER_SCRIPT: &str = include_str!("desktop_updater_adapter.js");
+    let desktop_adapter_script = [
+        DESKTOP_NOTIFICATION_ADAPTER_SCRIPT,
+        DESKTOP_STATUSBAR_ADAPTER_SCRIPT,
+        DESKTOP_GLOBAL_HOTKEY_ADAPTER_SCRIPT,
+        DESKTOP_UPDATER_ADAPTER_SCRIPT,
+        "globalThis.dispatchEvent(new Event('xai:desktop-host-adapters-ready'));",
+    ]
+    .join("\n");
+    let page_load_adapter_script = desktop_adapter_script.clone();
 
     let builder = tauri::Builder::default()
         .plugin(tauri_plugin_opener::init())
@@ -102,6 +112,12 @@ pub fn run() {
                 .build(),
         )
         .plugin(tauri_plugin_updater::Builder::new().build())
+        .plugin(
+            tauri::plugin::Builder::<tauri::Wry, ()>::new("xai-desktop-adapters")
+                .js_init_script(desktop_adapter_script)
+                .build(),
+        )
+        .append_invoke_initialization_script(&page_load_adapter_script)
         .manage(commands::crypto::CryptoCommandState::default())
         .manage(commands::menubar::SyncMenuBarState::default())
         .manage(commands::statusbar::DesktopStatusbarState::default())
@@ -109,7 +125,12 @@ pub fn run() {
         .manage(commands::updater::DesktopUpdaterState::default())
         .manage(commands::bookmarks::BookmarkRegistry::default())
         .manage(GridWindowsState::default())
-        .manage(ConsoleWindowFrameState::default());
+        .manage(ConsoleWindowFrameState::default())
+        .on_page_load(move |webview, payload| {
+            if webview.label() == "main" && payload.event() == PageLoadEvent::Finished {
+                let _ = webview.eval(&page_load_adapter_script);
+            }
+        });
 
     #[cfg(feature = "crypto")]
     let builder = builder.manage(commands::database::DatabaseState::default());
@@ -210,10 +231,6 @@ pub fn run() {
             }
 
             commands::statusbar::install_statusbar(&app_handle)?;
-            window.eval(DESKTOP_NOTIFICATION_ADAPTER_SCRIPT)?;
-            window.eval(DESKTOP_STATUSBAR_ADAPTER_SCRIPT)?;
-            window.eval(DESKTOP_GLOBAL_HOTKEY_ADAPTER_SCRIPT)?;
-            window.eval(DESKTOP_UPDATER_ADAPTER_SCRIPT)?;
 
             let restored_state =
                 app_config::apply_main_window_state(&window, &loaded_config.window.main)?;

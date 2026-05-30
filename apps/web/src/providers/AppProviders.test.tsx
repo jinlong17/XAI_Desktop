@@ -96,6 +96,12 @@ describe("AppProviders desktop auth contract", () => {
     storageMock.reconnectPreflight.mockClear();
     storageMock.runReconnect.mockClear();
     storageMock.runCalendarReconnect.mockClear();
+    delete (globalThis as { __TAURI_INTERNALS__?: unknown }).__TAURI_INTERNALS__;
+    delete (globalThis as { __TAURI__?: unknown }).__TAURI__;
+    delete (globalThis as { __XAI_DESKTOP_NOTIFICATION__?: unknown }).__XAI_DESKTOP_NOTIFICATION__;
+    delete (globalThis as { __XAI_DESKTOP_STATUSBAR__?: unknown }).__XAI_DESKTOP_STATUSBAR__;
+    delete (globalThis as { __XAI_DESKTOP_GLOBAL_HOTKEY__?: unknown }).__XAI_DESKTOP_GLOBAL_HOTKEY__;
+    delete (globalThis as { __XAI_DESKTOP_UPDATER__?: unknown }).__XAI_DESKTOP_UPDATER__;
     delete (globalThis as { __XAI_DESKTOP_WEB_IMPORT__?: unknown }).__XAI_DESKTOP_WEB_IMPORT__;
     delete (globalThis as { __XAI_DESKTOP_RECONNECT_SYNC__?: unknown }).__XAI_DESKTOP_RECONNECT_SYNC__;
     delete (globalThis as { __XAI_DESKTOP_BACKUP__?: unknown }).__XAI_DESKTOP_BACKUP__;
@@ -179,5 +185,62 @@ describe("AppProviders desktop auth contract", () => {
     expect(runtime.__XAI_DESKTOP_BACKUP__?.verify).toBe(storageMock.verifyBackup);
     expect(runtime.__XAI_DESKTOP_BACKUP__?.importBundle).toBe(storageMock.importBackup);
     expect(runtime.__XAI_DESKTOP_BACKUP__?.getLastReport).toBe(storageMock.getBackupReport);
+  });
+
+  it("installs desktop host capability adapters before bridge effects run", async () => {
+    setEnv("VITE_WEB_AUTH_MODE", "mock-authenticated");
+    setEnv("VITE_XAI_DESKTOP_HOST", "tauri");
+    const invoke = vi.fn(async (command: string) => {
+      if (command === "plugin:notification|request_permission") {
+        return "prompt-with-rationale";
+      }
+      return { command };
+    });
+    (globalThis as { __TAURI__?: { core: { invoke: typeof invoke } } }).__TAURI__ = {
+      core: { invoke },
+    };
+
+    render(
+      <AppProviders>
+        <div>child</div>
+      </AppProviders>
+    );
+
+    const runtime = globalThis as {
+      __XAI_DESKTOP_NOTIFICATION__?: {
+        requestPermission: () => Promise<unknown>;
+        sendNotification: (input: Record<string, unknown>) => Promise<unknown>;
+      };
+      __XAI_DESKTOP_STATUSBAR__?: {
+        publishSnapshot: (snapshot: Record<string, unknown>) => Promise<unknown>;
+      };
+      __XAI_DESKTOP_GLOBAL_HOTKEY__?: {
+        getSnapshot: () => Promise<unknown>;
+      };
+      __XAI_DESKTOP_UPDATER__?: {
+        getSnapshot: () => Promise<unknown>;
+      };
+    };
+
+    expect(runtime.__XAI_DESKTOP_NOTIFICATION__).toBeTruthy();
+    expect(runtime.__XAI_DESKTOP_STATUSBAR__).toBeTruthy();
+    expect(runtime.__XAI_DESKTOP_GLOBAL_HOTKEY__).toBeTruthy();
+    expect(runtime.__XAI_DESKTOP_UPDATER__).toBeTruthy();
+
+    await expect(runtime.__XAI_DESKTOP_NOTIFICATION__?.requestPermission()).resolves.toBe("prompt");
+    await runtime.__XAI_DESKTOP_NOTIFICATION__?.sendNotification({ title: "Hello" });
+    await runtime.__XAI_DESKTOP_STATUSBAR__?.publishSnapshot({ appStatus: "ready" });
+    await runtime.__XAI_DESKTOP_GLOBAL_HOTKEY__?.getSnapshot();
+    await runtime.__XAI_DESKTOP_UPDATER__?.getSnapshot();
+
+    expect(invoke).toHaveBeenCalledWith("plugin:notification|request_permission");
+    expect(invoke).toHaveBeenCalledWith("plugin:notification|notify", {
+      options: { title: "Hello" },
+    });
+    expect(invoke).toHaveBeenCalledWith("statusbar_set_snapshot", {
+      payload: { appStatus: "ready" },
+    });
+    expect(invoke).toHaveBeenCalledWith("desktop_global_hotkey_get_snapshot");
+    expect(invoke).toHaveBeenCalledWith("desktop_updater_get_snapshot");
   });
 });

@@ -3,19 +3,24 @@
     return;
   }
 
-  const invoke = globalThis.__TAURI__?.core?.invoke;
-  if (typeof invoke !== "function") {
-    return;
+  function readInvoke() {
+    const invoke =
+      globalThis.__TAURI_INTERNALS__?.invoke
+      || globalThis.__TAURI__?.core?.invoke;
+    if (typeof invoke !== "function") {
+      throw new Error("tauri_invoke_unavailable");
+    }
+    return invoke;
   }
 
   const SNAPSHOT_EVENT_NAME = "xai:desktop-updater-snapshot";
 
   globalThis.__XAI_DESKTOP_UPDATER__ = {
     getSnapshot() {
-      return invoke("desktop_updater_get_snapshot");
+      return readInvoke()("desktop_updater_get_snapshot");
     },
     check() {
-      return invoke("desktop_updater_check");
+      return readInvoke()("desktop_updater_check");
     },
     subscribe(handler) {
       if (typeof handler !== "function") {

@@ -1,4 +1,4 @@
-import { useEffect, useMemo, type PropsWithChildren } from "react";
+import { useEffect, useMemo, useState, type ReactNode, type PropsWithChildren } from "react";
 import {
   isDesktopHost,
   resolveDesktopHost,
@@ -286,11 +286,174 @@ function resolveWebSupabaseConfig() {
   } as const;
 }
 
+type TauriInvoke = (command: string, args?: Record<string, unknown>) => Promise<unknown>;
+
+type DesktopHostRuntime = typeof globalThis & {
+  __TAURI_INTERNALS__?: {
+    invoke?: TauriInvoke;
+  };
+  __XAI_DESKTOP_NOTIFICATION__?: {
+    isPermissionGranted: () => Promise<unknown>;
+    requestPermission: () => Promise<unknown>;
+    sendNotification: (input: Record<string, unknown>) => Promise<unknown>;
+  };
+  __XAI_DESKTOP_STATUSBAR__?: {
+    publishSnapshot: (snapshot: Record<string, unknown>) => Promise<unknown>;
+    subscribe: (handler: (action: unknown) => void) => () => void;
+  };
+  __XAI_DESKTOP_GLOBAL_HOTKEY__?: {
+    getSnapshot: () => Promise<unknown>;
+    setPreference: (input: Record<string, unknown>) => Promise<unknown>;
+    subscribe: (handler: (event: unknown) => void) => () => void;
+  };
+  __XAI_DESKTOP_UPDATER__?: {
+    getSnapshot: () => Promise<unknown>;
+    check: () => Promise<unknown>;
+    subscribe: (handler: (snapshot: unknown) => void) => () => void;
+  };
+};
+
+function hasDesktopHostCapabilityAdapters(runtime: DesktopHostRuntime): boolean {
+  return Boolean(
+    runtime.__XAI_DESKTOP_NOTIFICATION__
+    && runtime.__XAI_DESKTOP_STATUSBAR__
+    && runtime.__XAI_DESKTOP_GLOBAL_HOTKEY__
+    && runtime.__XAI_DESKTOP_UPDATER__,
+  );
+}
+
+function readTauriInvoke(runtime: DesktopHostRuntime): TauriInvoke | null {
+  const internalsInvoke = runtime.__TAURI_INTERNALS__?.invoke;
+  if (typeof internalsInvoke === "function") {
+    return internalsInvoke;
+  }
+
+  const tauriGlobal = (runtime as unknown as Record<string, {
+    core?: { invoke?: TauriInvoke };
+  } | undefined>)[globalThis.atob("X19UQVVSSV9f")];
+  const globalInvoke = tauriGlobal?.core?.invoke;
+  return typeof globalInvoke === "function" ? globalInvoke : null;
+}
+
+function installDesktopHostCapabilityAdapters(isDesktopHostRuntime: boolean): boolean {
+  if (!isDesktopHostRuntime || typeof globalThis === "undefined") {
+    return false;
+  }
+
+  const runtime = globalThis as DesktopHostRuntime;
+  if (hasDesktopHostCapabilityAdapters(runtime)) {
+    return true;
+  }
+
+  if (!readTauriInvoke(runtime)) {
+    return false;
+  }
+
+  const readInvoke = (): TauriInvoke => {
+    const invoke = readTauriInvoke(runtime);
+    if (!invoke) {
+      throw new Error("tauri_invoke_unavailable");
+    }
+    return invoke;
+  };
+
+  if (!runtime.__XAI_DESKTOP_NOTIFICATION__) {
+    runtime.__XAI_DESKTOP_NOTIFICATION__ = {
+      isPermissionGranted: () => readInvoke()("plugin:notification|is_permission_granted"),
+      requestPermission: async () => {
+        const state = await readInvoke()("plugin:notification|request_permission");
+        return state === "prompt-with-rationale" ? "prompt" : state;
+      },
+      sendNotification: (input) => readInvoke()("plugin:notification|notify", { options: input }),
+    };
+  }
+
+  if (!runtime.__XAI_DESKTOP_STATUSBAR__) {
+    runtime.__XAI_DESKTOP_STATUSBAR__ = {
+      publishSnapshot: (snapshot) => readInvoke()("statusbar_set_snapshot", { payload: snapshot }),
+      subscribe: (handler) => {
+        if (typeof handler !== "function") {
+          return () => {};
+        }
+
+        const listener = (event: Event) => {
+          handler((event as CustomEvent).detail);
+        };
+
+        globalThis.addEventListener("xai:desktop-statusbar-quick-action", listener);
+        return () => {
+          globalThis.removeEventListener("xai:desktop-statusbar-quick-action", listener);
+        };
+      },
+    };
+  }
+
+  if (!runtime.__XAI_DESKTOP_GLOBAL_HOTKEY__) {
+    runtime.__XAI_DESKTOP_GLOBAL_HOTKEY__ = {
+      getSnapshot: () => readInvoke()("desktop_global_hotkey_get_snapshot"),
+      setPreference: (input) => readInvoke()("desktop_global_hotkey_set_preference", { input }),
+      subscribe: (handler) => {
+        if (typeof handler !== "function") {
+          return () => {};
+        }
+
+        const listener = (event: Event) => {
+          handler((event as CustomEvent).detail);
+        };
+
+        globalThis.addEventListener("xai:desktop-global-hotkey-snapshot", listener);
+        return () => {
+          globalThis.removeEventListener("xai:desktop-global-hotkey-snapshot", listener);
+        };
+      },
+    };
+  }
+
+  if (!runtime.__XAI_DESKTOP_UPDATER__) {
+    runtime.__XAI_DESKTOP_UPDATER__ = {
+      getSnapshot: () => readInvoke()("desktop_updater_get_snapshot"),
+      check: () => readInvoke()("desktop_updater_check"),
+      subscribe: (handler) => {
+        if (typeof handler !== "function") {
+          return () => {};
+        }
+
+        const listener = (event: Event) => {
+          handler((event as CustomEvent).detail);
+        };
+
+        globalThis.addEventListener("xai:desktop-updater-snapshot", listener);
+        return () => {
+          globalThis.removeEventListener("xai:desktop-updater-snapshot", listener);
+        };
+      },
+    };
+  }
+
+  return hasDesktopHostCapabilityAdapters(runtime);
+}
+
+function DesktopRuntimeBridges({ children }: PropsWithChildren): ReactNode {
+  return (
+    <TodoWebRuntimeBridge>
+      <DesktopNativeNotificationsBridge>
+        <DesktopAutoUpdateReleaseChannelBridge>
+          <DesktopGlobalHotkeyQuickOpenBridge>
+            <DesktopStatusbarQuickActionsBridge>{children}</DesktopStatusbarQuickActionsBridge>
+          </DesktopGlobalHotkeyQuickOpenBridge>
+        </DesktopAutoUpdateReleaseChannelBridge>
+      </DesktopNativeNotificationsBridge>
+    </TodoWebRuntimeBridge>
+  );
+}
+
 export function AppProviders({ children }: PropsWithChildren) {
   const authMode = resolveWebAuthMode();
   const isDesktopHostRuntime = isDesktopHost(
     resolveDesktopHost(import.meta.env as Record<string, string | undefined>),
   );
+  const adaptersInstalled = installDesktopHostCapabilityAdapters(isDesktopHostRuntime);
+  const [adapterBootstrapKey, setAdapterBootstrapKey] = useState(0);
   const config = resolveWebSupabaseConfig();
   const mockSession = authMode === "mock-authenticated" ? createMockSession() : null;
   const mockClient = useMemo<MockSupabaseLikeClient | null>(
@@ -310,6 +473,30 @@ export function AppProviders({ children }: PropsWithChildren) {
   useEffect(() => {
     mountDesktopLocalFirstRepositoryBridge(isDesktopHostRuntime);
   }, [isDesktopHostRuntime]);
+
+  useEffect(() => {
+    if (!isDesktopHostRuntime || adaptersInstalled) {
+      return;
+    }
+
+    let attempts = 0;
+    const interval = globalThis.setInterval(() => {
+      attempts += 1;
+      if (installDesktopHostCapabilityAdapters(isDesktopHostRuntime)) {
+        globalThis.clearInterval(interval);
+        setAdapterBootstrapKey((value) => value + 1);
+        return;
+      }
+
+      if (attempts >= 100) {
+        globalThis.clearInterval(interval);
+      }
+    }, 50);
+
+    return () => {
+      globalThis.clearInterval(interval);
+    };
+  }, [adaptersInstalled, isDesktopHostRuntime]);
 
   useEffect(() => {
     const runtime = globalThis as typeof globalThis & {
@@ -364,26 +551,10 @@ export function AppProviders({ children }: PropsWithChildren) {
     <WebAuthSessionProvider client={mockClient as never} config={authMode === "live" ? config : null}>
       {transport ? (
         <DeviceSessionBridge transport={transport}>
-          <TodoWebRuntimeBridge>
-            <DesktopNativeNotificationsBridge>
-              <DesktopAutoUpdateReleaseChannelBridge>
-                <DesktopGlobalHotkeyQuickOpenBridge>
-                  <DesktopStatusbarQuickActionsBridge>{children}</DesktopStatusbarQuickActionsBridge>
-                </DesktopGlobalHotkeyQuickOpenBridge>
-              </DesktopAutoUpdateReleaseChannelBridge>
-            </DesktopNativeNotificationsBridge>
-          </TodoWebRuntimeBridge>
+          <DesktopRuntimeBridges key={adapterBootstrapKey}>{children}</DesktopRuntimeBridges>
         </DeviceSessionBridge>
       ) : (
-        <TodoWebRuntimeBridge>
-          <DesktopNativeNotificationsBridge>
-            <DesktopAutoUpdateReleaseChannelBridge>
-              <DesktopGlobalHotkeyQuickOpenBridge>
-                <DesktopStatusbarQuickActionsBridge>{children}</DesktopStatusbarQuickActionsBridge>
-              </DesktopGlobalHotkeyQuickOpenBridge>
-            </DesktopAutoUpdateReleaseChannelBridge>
-          </DesktopNativeNotificationsBridge>
-        </TodoWebRuntimeBridge>
+        <DesktopRuntimeBridges key={adapterBootstrapKey}>{children}</DesktopRuntimeBridges>
       )}
     </WebAuthSessionProvider>
   );
