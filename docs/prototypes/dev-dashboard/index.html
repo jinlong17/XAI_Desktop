@@ -616,14 +616,26 @@
   }
   @media (max-width:860px){
     .layout{grid-template-columns:1fr}
-    .rail{display:none}
+    /* rail becomes a sticky top nav bar instead of disappearing (mobile nav) */
+    .rail{
+      position:sticky;top:0;z-index:30;
+      height:auto;
+      padding:8px 12px;
+      border-right:0;border-bottom:1px solid var(--line);
+      overflow:visible;
+    }
+    .rail .brand{padding:2px 4px 8px}
+    .rail .nav-title,.rail .rail-note,.nav small{display:none}
+    .nav{display:flex;gap:6px;overflow-x:auto;-webkit-overflow-scrolling:touch;padding-bottom:2px}
+    .nav a{flex:0 0 auto;justify-content:center;margin:0;white-space:nowrap;padding:8px 12px}
     .content{padding:18px}
+    .ops-head{flex-wrap:wrap}
     .ops-grid{grid-template-columns:1fr}
     .reader-shell{grid-template-columns:1fr}
     .doc-workbench,.doc-toolbar{grid-template-columns:1fr}
     .markdown-body{padding:18px;max-width:none}
     .data-grid,.trend-row,.branch-commit,.dir-row{grid-template-columns:1fr}
-    .flow-stage{min-height:760px}
+    .flow-stage{min-height:auto}
     .branch-row,.log-row{grid-template-columns:1fr}
   }
   @media (max-width:620px){
