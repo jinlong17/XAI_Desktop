@@ -121,20 +121,34 @@
     gap:18px;
     align-items:stretch;
   }
-  .hero-copy{
+  .ops-board{
     min-height:260px;
     padding:26px;
     background:
       linear-gradient(120deg,rgba(26,115,232,.12),rgba(18,181,203,.10) 46%,rgba(52,168,83,.08)),
       rgba(255,255,255,.86);
   }
-  .hero-copy h1{max-width:720px}
-  .quick-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;margin-top:22px}
-  .quick{
-    min-height:92px;padding:12px;border:1px solid var(--line);border-radius:8px;background:#fff;
+  .ops-head{display:flex;align-items:flex-start;justify-content:space-between;gap:14px;margin-bottom:16px}
+  .ops-title b{display:block;font-size:18px}
+  .ops-title span{display:block;color:var(--muted);font-size:12px;margin-top:2px}
+  .ops-badges{display:flex;flex-wrap:wrap;gap:7px;margin-top:8px}
+  .ops-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}
+  .ops-card{
+    min-height:118px;
+    padding:13px;
+    text-align:left;
+    border:1px solid var(--line);
+    border-radius:8px;
+    background:#fff;
+    color:var(--text);
+    box-shadow:var(--shadow-soft);
+    transition:transform .22s ease,border-color .22s ease,background .22s ease;
   }
-  .quick b{display:block;font-size:13px;margin-bottom:4px}
-  .quick span{display:block;color:var(--muted);font-size:12px}
+  .ops-card:hover{transform:translateY(-2px);border-color:var(--line-strong);background:#f7fbff}
+  .ops-card b{display:block;font-size:12px;color:var(--muted)}
+  .ops-card strong{display:block;font-size:26px;line-height:1.05;margin:8px 0 6px}
+  .ops-card span{display:block;color:var(--muted);font-size:12px}
+  .ops-note{margin-top:12px}
   .focus-box{display:grid;gap:10px;align-content:start}
   .focus-row{
     display:grid;grid-template-columns:34px minmax(0,1fr);gap:10px;align-items:start;
@@ -342,7 +356,7 @@
     .layout{grid-template-columns:1fr}
     .rail{display:none}
     .content{padding:18px}
-    .quick-grid{grid-template-columns:1fr}
+    .ops-grid{grid-template-columns:1fr}
     .reader-shell{grid-template-columns:1fr}
     .flow-stage{min-height:760px}
     .branch-row,.log-row{grid-template-columns:1fr}
@@ -365,11 +379,11 @@
     </div>
     <nav class="nav" aria-label="主导航">
       <div class="nav-title">导航</div>
-      <a href="#overview" data-page="overview">总览 <small>page</small></a>
-      <a href="#product-flow" data-page="product-flow">产品结构图 <small>page</small></a>
-      <a href="#docs" data-page="docs">手册和 skill <small>page</small></a>
-      <a href="#branches" data-page="branches">分支管理 <small>page</small></a>
-      <a href="#release-log" data-page="release-log">发布 log <small>page</small></a>
+      <a href="#overview" data-page="overview">总览 <small>分页</small></a>
+      <a href="#product-flow" data-page="product-flow">产品结构图 <small>模块</small></a>
+      <a href="#docs" data-page="docs">手册和 skill <small>阅读</small></a>
+      <a href="#branches" data-page="branches">分支管理 <small>分支</small></a>
+      <a href="#release-log" data-page="release-log">发布 log <small>日志</small></a>
     </nav>
     <div class="rail-note">
       <b>核心规则</b>
@@ -380,39 +394,42 @@
   <main class="main">
     <div class="content">
       <section class="section hero page-section is-active" id="overview" data-page-section="overview">
-        <div class="surface hero-copy">
-          <span class="badge b-blue">项目系统层 v0</span>
-          <h1 style="margin-top:14px">一个人也能看懂、执行、复盘的 XAI 开发工作台</h1>
-          <p class="sub">这里把产品线、分支流水线、Workflow V2、固定 skill、发布记录放到同一个入口。它是导航和看板，不代替 ADR、手册和真实 roadmap。</p>
-          <div class="quick-grid">
-            <div class="quick"><b>先看产品</b><span>确认这次改动属于 web、桌面 App、插件、账号同步还是官方网页。</span></div>
-            <div class="quick"><b>再选 branch</b><span>branch 跟集成风险走，不跟产品线一一绑定。</span></div>
-            <div class="quick"><b>最后跑 skill</b><span>用 feature loop、roadmap loop、D3 sync 或 release log 收口。</span></div>
+        <div class="surface ops-board">
+          <div class="ops-head">
+            <div class="ops-title">
+              <b>今日控制台</b>
+              <span id="snapshotMeta">state snapshot</span>
+              <div class="ops-badges">
+                <span class="badge b-green">P1 Desktop active</span>
+                <span class="badge b-blue">Web maintenance</span>
+                <span class="badge b-cyan">auto snapshot v0</span>
+              </div>
+            </div>
+            <button class="reader-btn" data-page-jump="product-flow" type="button">产品线</button>
+          </div>
+          <div class="ops-grid">
+            <button class="ops-card" data-page-jump="product-flow" type="button"><b>产品模块</b><strong>6</strong><span>主产品链 5 条 + Admin 控制面。</span></button>
+            <button class="ops-card" data-page-jump="branches" type="button"><b>Branch 原则</b><strong>风险优先</strong><span>branch 跟集成节奏，不跟产品线一一绑定。</span></button>
+            <button class="ops-card" data-page-jump="release-log" type="button"><b>发布记录</b><strong>必写</strong><span>系统层、产品层、跨机器治理变更都进 release log。</span></button>
+          </div>
+          <div class="flow-note ops-note">
+            <b>自动跟踪 v0：</b>
+            <p style="margin-top:8px">看板读取生成快照；git、skill、release log 属于自动事实，优先级、是否开 branch、是否发布仍由你确认。</p>
           </div>
         </div>
-        <div class="surface pad focus-box">
-          <div class="focus-row"><div class="num">1</div><div><b>当前主线</b><span>P1 mac desktop App / G1 native foundation。</span></div></div>
-          <div class="focus-row"><div class="num">2</div><div><b>Web 的位置</b><span>功能最全、仍是 UI 源头，但新功能需要 P0 carve-out。</span></div></div>
-          <div class="focus-row"><div class="num">3</div><div><b>两台电脑并行</b><span>这台偏 `web`，另一台偏 `dev`；通过 D3 gate 对齐。</span></div></div>
-          <div class="focus-row"><div class="num">4</div><div><b>发布记录</b><span>每次系统层或产品层增量都写进 release log。</span></div></div>
-        </div>
+        <div class="surface pad focus-box" id="overviewFocus"></div>
       </section>
 
-      <section class="section kpis page-section is-active" data-page-section="overview">
-        <div class="surface kpi"><div class="label"><span>产品线</span><span class="pill">顺序模块</span></div><div class="num">5</div><div class="note">Web / App / Plugin / Sync / Official Site</div></div>
-        <div class="surface kpi"><div class="label"><span>长期分支</span><span class="pill">治理</span></div><div class="num">4+</div><div class="note">web, desktop-next, plugin-next, dev, release/*</div></div>
-        <div class="surface kpi"><div class="label"><span>固定 skill</span><span class="pill">入口</span></div><div class="num">5</div><div class="note">feature, roadmap, web-to-desktop, release log</div></div>
-        <div class="surface kpi"><div class="label"><span>新手路径</span><span class="pill">节奏</span></div><div class="num">3</div><div class="note">选产品线 -> 选 branch -> 选 skill</div></div>
-      </section>
+      <section class="section kpis page-section is-active" data-page-section="overview" id="kpiGrid"></section>
 
       <section class="section flow-grid page-section" id="product-flow" data-page-section="product-flow">
         <div class="surface pad flow-stage">
           <div class="section-head">
             <div>
           <h2>产品线顺序和独立模块跟踪</h2>
-          <p class="sub">这 5 条是主产品线顺序。每一条都单独跟踪状态、branch、依赖和下一步；点击卡片在右侧看详细说明。</p>
+          <p class="sub">主产品链按顺序推进，Admin Dashboard 作为控制面单独跟踪。每个模块有自己的状态、branch、依赖和下一步。</p>
             </div>
-            <span class="pill">click module</span>
+            <span class="pill">点击模块</span>
           </div>
           <div class="module-track" id="moduleTrack"></div>
           <div class="module-rhythm">
@@ -421,6 +438,7 @@
             <div class="rhythm-chip"><b>3. 插件再扩展</b><span>桌面整理和 widget 依赖 App 平台。</span></div>
             <div class="rhythm-chip"><b>4. 同步打通</b><span>Web/App/Plugin 进入同一账号云。</span></div>
             <div class="rhythm-chip"><b>5. 官网承接</b><span>下载、更新、发布记录和对外入口。</span></div>
+            <div class="rhythm-chip"><b>6. Admin 控制</b><span>运营、AI 配置、权限、用量和审计后台。</span></div>
           </div>
         </div>
         <aside class="surface pad detail" id="productDetail" aria-live="polite"></aside>
@@ -483,7 +501,7 @@
           </div>
           <div class="flow-note" style="margin-top:10px">
             <b>这样分的好处：</b>
-            <p style="margin-top:8px">不会因为“有 5 个产品线”就制造 5 条长期分支。长期 branch 只保留给会影响集成、发布、冻结的阶段。</p>
+            <p style="margin-top:8px">不会因为“有 6 个产品线”就制造 6 条长期分支。长期 branch 只保留给会影响集成、发布、冻结的阶段。</p>
           </div>
         </aside>
       </section>
@@ -512,94 +530,12 @@
   </main>
 </div>
 
+<script src="./state.generated.js"></script>
 <script>
-const products = [
-  {
-    key: "web",
-    order: 1,
-    title: "Web",
-    subtitle: "项目最全的功能产品",
-    badge: "P0 · maintenance",
-    status: "维护主线",
-    branch: "web / codex/web/<feature>",
-    dependency: "App UI 源头",
-    next: "只做 bugfix；新功能需要 P0 carve-out。",
-    tracker: "功能完整度、Web 发布、共享 UI 合同、D3 影响。",
-    points: [
-      ["定位", "这是功能最全的产品面，也是后续 mac 桌面 App 的 UI 和交互源头。"],
-      ["独立跟踪", "Web 自己跟踪功能完整度、Web 发布、共享包变化和是否影响桌面。"],
-      ["和下一层关系", "App 基于 Web 下沉；Web 变化进入 App 前必须通过 D3 分类。"]
-    ]
-  },
-  {
-    key: "app",
-    order: 2,
-    title: "Mac 桌面版 App",
-    subtitle: "基于 Web 开发的桌面产品",
-    badge: "P1 · active",
-    status: "当前主开发",
-    branch: "desktop-next -> dev",
-    dependency: "依赖 Web + Tauri native",
-    next: "G1 native foundation 优先。",
-    tracker: "离线、本机能力、窗口、Tauri 权限、App RC。",
-    points: [
-      ["定位", "把 Web 的能力变成 macOS 桌面 App，补上离线、本机文件、窗口和系统能力。"],
-      ["独立跟踪", "App 自己跟踪 G1 native foundation、Tauri build、离线 profile 和 RC 状态。"],
-      ["和下一层关系", "插件和 widget 要等 App 插件平台稳定；App 稳定线是 `dev`。"]
-    ]
-  },
-  {
-    key: "plugin",
-    order: 3,
-    title: "桌面整理插件 / Widget",
-    subtitle: "类似 MacBook widget 的桌面扩展",
-    badge: "P2 · paused",
-    status: "等待 App 平台",
-    branch: "desktop-plugin-next",
-    dependency: "依赖桌面 App 插件平台",
-    next: "G1 稳定后恢复。",
-    tracker: "插件 SDK、widget host、单插件功能、平台兼容。",
-    points: [
-      ["定位", "围绕桌面整理、widget、小工具和插件生态展开，属于 App 之上的扩展层。"],
-      ["独立跟踪", "插件平台、SDK、widget host、单插件功能要分开记录，不和 App RC 混在一起。"],
-      ["和下一层关系", "插件数据如果需要跨设备，就进入账号云同步层；不需要则保持 device-local。"]
-    ]
-  },
-  {
-    key: "sync",
-    order: 4,
-    title: "账号云同步层",
-    subtitle: "前三者同步到同一个账号云",
-    badge: "P2 · paused",
-    status: "基建合同",
-    branch: "sync-v1 roadmap wave",
-    dependency: "连接 Web / App / Plugin",
-    next: "Post-G1 恢复同步开发。",
-    tracker: "syncScope、push/pull、冲突、两设备 smoke。",
-    points: [
-      ["定位", "Web、桌面 App、插件/Widget 不互相直连同步，而是同步到同一个账号云端层。"],
-      ["独立跟踪", "账号同步单独跟踪 entity、schema、push/pull、conflict、Web test、App test 和两设备 smoke。"],
-      ["和下一层关系", "官网可以承接账号登录、下载、release notes 和用户状态说明，但不替代同步协议。"]
-    ]
-  },
-  {
-    key: "site",
-    order: 5,
-    title: "官方网页",
-    subtitle: "官网和发布入口同步开发",
-    badge: "proposed",
-    status: "拟定",
-    branch: "codex/site/<feature>",
-    dependency: "承接 Web/App/Sync 发布信息",
-    next: "确认 package 和启动时机。",
-    tracker: "下载页、更新说明、release notes、账号入口、Cloudflare 发布。",
-    points: [
-      ["定位", "官方网页不是 Web App 本体，而是对外承接下载、更新、营销说明和 release notes。"],
-      ["独立跟踪", "官网单独跟踪下载入口、版本说明、更新元数据、账号入口和 Cloudflare 发布状态。"],
-      ["和前四层关系", "官网需要同步展示 Web/App/Plugin/账号同步的状态，但不应该直接承载产品内部开发。"]
-    ]
-  }
-];
+const dashboardState = window.XAI_DASHBOARD_STATE || {};
+const products = [...(dashboardState.product_lines || [])].sort((a,b) => Number(a.order) - Number(b.order));
+const overviewRows = dashboardState.status_rows || [];
+const kpis = dashboardState.kpis || [];
 
 const docs = [
   {
@@ -608,7 +544,7 @@ const docs = [
     href: "../../workflow/project/handbook.md",
     pages: [
       {title:"工作手册是什么", body:["它是单人开发导航层：告诉你权威文件在哪里、产品线怎么分、branch 怎么走、skill 怎么选。","它不替代 ADR、usage-guide 或 roadmap，只把入口整理成一张地图。"]},
-      {title:"新手三步", body:["先选产品线：这次改的是 Web、App、插件、账号同步还是官方网页。","再选 branch：看它影响的是 Web、桌面集成、插件平台、同步基建还是 release。","最后选 workflow：小修走手动；单功能走 full-loop；多功能走 roadmap-loop。"]}
+      {title:"新手三步", body:["先选产品线：这次改的是 Web、App、插件、账号同步、官方网页还是 Admin 控制面。","再选 branch：看它影响的是 Web、桌面集成、插件平台、同步基建、官网发布还是后台配置。","最后选 workflow：小修走手动；单功能走 full-loop；多功能走 roadmap-loop。"]}
     ]
   },
   {
@@ -656,8 +592,9 @@ const branches = [
   ["release/desktop/<version>", "冻结分支，只做版本、签名、公证、dmg、updater 和 release-blocker 修复。", "ephemeral"]
 ];
 
-const releaseRows = [
-  ["2026-05-30", "看板结构", "产品区改为 5 条顺序模块 tracking card，点击后显示模块状态、branch、依赖、跟踪字段和详细关系。", "docs"],
+const releaseRows = dashboardState.release_rows || [
+  ["2026-05-30", "看板操作化", "总览改成工作流控制台，补齐 6 条产品线，并接入生成快照作为自动跟踪 v0。", "docs"],
+  ["2026-05-30", "看板结构", "产品区改为顺序模块 tracking card，点击后显示模块状态、branch、依赖、跟踪字段和详细关系。", "docs"],
   ["2026-05-30", "项目系统层", "新增中文个人开发看板、产品结构流程图、文档分页阅读器和 release log skill。", "docs"],
   ["2026-05-30", "分支治理", "明确产品线不等于长期 branch；两台电脑并行通过 D3 gate 对齐。", "governance"],
   ["2026-05-30", "Skill", "新增 `xai-release-log`：把日期、功能增量、验证和风险写入项目发布记录。", "skill"]
@@ -681,9 +618,49 @@ function h(value){
     .replaceAll("'", "&#39;");
 }
 
+function renderOverview(){
+  const meta = [];
+  if(dashboardState.generated_at) {
+    meta.push(`快照 ${new Date(dashboardState.generated_at).toLocaleString("zh-CN", { dateStyle: "medium", timeStyle: "short" })}`);
+  }
+  if(dashboardState.git?.branch) meta.push(`branch ${dashboardState.git.branch}`);
+  document.getElementById("snapshotMeta").textContent = meta.join(" · ") || "state snapshot";
+
+  const rows = overviewRows.length ? overviewRows : [
+    {label:"当前主线", value:"P1 Mac Desktop App / G1 native foundation"},
+    {label:"自动跟踪", value:"生成快照未加载；请运行 node scripts/dashboard/generate-state.mjs。"}
+  ];
+  document.getElementById("overviewFocus").innerHTML = rows.map((item, index) => `
+    <div class="focus-row">
+      <div class="num">${index + 1}</div>
+      <div><b>${h(item.label)}</b><span>${h(item.value)}</span></div>
+    </div>
+  `).join("");
+}
+
+function renderKpis(){
+  const fallback = [
+    {label:"产品线", badge:"顺序模块", value:"6", note:"Web / App / Plugin / Sync / Site / Admin"},
+    {label:"长期分支", badge:"治理", value:"4+", note:"web, desktop-next, plugin-next, dev, release/*"},
+    {label:"固定 skill", badge:"入口", value:"5", note:"feature, roadmap, web-to-desktop, release log"},
+    {label:"自动跟踪", badge:"v0", value:"1", note:"dashboard-state.json -> state.generated.js"}
+  ];
+  document.getElementById("kpiGrid").innerHTML = (kpis.length ? kpis : fallback).map(item => `
+    <div class="surface kpi">
+      <div class="label"><span>${h(item.label)}</span><span class="pill">${h(item.badge)}</span></div>
+      <div class="num">${h(item.value)}</div>
+      <div class="note">${h(item.note)}</div>
+    </div>
+  `).join("");
+}
+
 function renderModules(){
+  if(!products.length){
+    document.getElementById("moduleTrack").innerHTML = `<div class="flow-note"><b>产品状态未加载</b><p style="margin-top:8px">请运行 <code>node scripts/dashboard/generate-state.mjs</code> 刷新快照。</p></div>`;
+    return;
+  }
   document.getElementById("moduleTrack").innerHTML = products.map(item => `
-    <button class="module-card ${item.key === "web" ? "is-active" : ""}" data-product="${item.key}" type="button">
+    <button class="module-card ${item.key === products[0].key ? "is-active" : ""}" data-product="${item.key}" type="button">
       <div class="module-top">
         <span class="module-index">${item.order}</span>
         <span class="badge ${badgeClass(item.badge)}">${h(item.badge)}</span>
@@ -705,6 +682,7 @@ function renderModules(){
 
 function setProduct(key){
   const item = products.find(product => product.key === key);
+  if(!item) return;
   document.querySelectorAll(".module-card").forEach(node => node.classList.toggle("is-active", node.dataset.product === key));
   document.getElementById("productDetail").innerHTML = `
     <div class="detail-title">
@@ -809,6 +787,10 @@ document.querySelectorAll(".nav a[data-page]").forEach(link => {
   });
 });
 
+document.querySelectorAll("[data-page-jump]").forEach(button => {
+  button.addEventListener("click", () => setPage(button.dataset.pageJump));
+});
+
 window.addEventListener("hashchange", () => setPage(location.hash.slice(1), false));
 document.getElementById("prevPage").addEventListener("click", () => { if(pageIndex > 0){ pageIndex -= 1; renderReader(); } });
 document.getElementById("nextPage").addEventListener("click", () => {
@@ -816,8 +798,10 @@ document.getElementById("nextPage").addEventListener("click", () => {
   if(pageIndex < doc.pages.length - 1){ pageIndex += 1; renderReader(); }
 });
 
+renderOverview();
+renderKpis();
 renderModules();
-setProduct("web");
+setProduct(products[0]?.key);
 renderReader();
 renderSkills();
 renderBranches();

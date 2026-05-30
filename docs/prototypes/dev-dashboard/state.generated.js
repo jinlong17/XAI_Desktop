@@ -1,0 +1,296 @@
+window.XAI_DASHBOARD_STATE = {
+  "schema_version": 1,
+  "state_owner": "project-system",
+  "tracking": {
+    "mode": "generated-static-snapshot",
+    "refresh_command": "node scripts/dashboard/generate-state.mjs",
+    "auto_fields": [
+      "current git branch",
+      "latest git commit",
+      "project skill presence",
+      "latest release-log entry"
+    ],
+    "manual_fields": [
+      "product priority",
+      "branch creation",
+      "release gate decision",
+      "risk acceptance",
+      "roadmap authorization"
+    ],
+    "sources": [
+      "docs/workflow/project/dashboard-state.json",
+      "docs/workflow/project/release-log.md",
+      ".teams/skills/*/SKILL.md",
+      "git status",
+      "git log -1"
+    ]
+  },
+  "status_rows": [
+    {
+      "label": "当前主线",
+      "value": "P1 Mac 桌面版 App / G1 native foundation。"
+    },
+    {
+      "label": "Web 的位置",
+      "value": "功能最全、仍是 UI 源头；新功能需要 P0 carve-out。"
+    },
+    {
+      "label": "两台电脑并行",
+      "value": "这台偏 web 主线和系统治理；另一台偏 dev / Desktop RC；通过 D3 gate 对齐。"
+    },
+    {
+      "label": "自动跟踪",
+      "value": "脚本刷新 git、skill 和 release-log 事实；优先级、开 branch 和 ship 仍由人确认。"
+    },
+    {
+      "label": "发布记录",
+      "value": "每次系统层或产品层增量都写进 release log。"
+    }
+  ],
+  "kpis": [
+    {
+      "label": "产品线",
+      "badge": "顺序模块",
+      "value": "6",
+      "note": "Web / App / Plugin / Sync / Site / Admin"
+    },
+    {
+      "label": "长期分支",
+      "badge": "治理",
+      "value": "4+",
+      "note": "web, desktop-next, plugin-next, dev, release/*"
+    },
+    {
+      "label": "固定 skill",
+      "badge": "入口",
+      "value": "5",
+      "note": "feature, roadmap, web-to-desktop, release log"
+    },
+    {
+      "label": "自动跟踪",
+      "badge": "v0",
+      "value": "1",
+      "note": "dashboard-state.json -> state.generated.js"
+    }
+  ],
+  "product_lines": [
+    {
+      "key": "web",
+      "order": 1,
+      "title": "Web",
+      "subtitle": "项目最全的功能产品",
+      "badge": "P0 · maintenance",
+      "status": "维护主线",
+      "branch": "web / codex/web/<feature>",
+      "dependency": "App UI 源头",
+      "next": "只做 bugfix；新功能需要 P0 carve-out。",
+      "tracker": "功能完整度、Web 发布、共享 UI 合同、D3 影响。",
+      "points": [
+        [
+          "定位",
+          "这是功能最全的产品面，也是后续 mac 桌面 App 的 UI 和交互源头。"
+        ],
+        [
+          "独立跟踪",
+          "Web 自己跟踪功能完整度、Web 发布、共享包变化和是否影响桌面。"
+        ],
+        [
+          "和下一层关系",
+          "App 基于 Web 下沉；Web 变化进入 App 前必须通过 D3 分类。"
+        ]
+      ]
+    },
+    {
+      "key": "app",
+      "order": 2,
+      "title": "Mac 桌面版 App",
+      "subtitle": "基于 Web 开发的桌面产品",
+      "badge": "P1 · active",
+      "status": "当前主开发",
+      "branch": "desktop-next -> dev",
+      "dependency": "依赖 Web + Tauri native",
+      "next": "G1 native foundation 优先。",
+      "tracker": "离线、本机能力、窗口、Tauri 权限、App RC。",
+      "points": [
+        [
+          "定位",
+          "把 Web 的能力变成 macOS 桌面 App，补上离线、本机文件、窗口和系统能力。"
+        ],
+        [
+          "独立跟踪",
+          "App 自己跟踪 G1 native foundation、Tauri build、离线 profile 和 RC 状态。"
+        ],
+        [
+          "和下一层关系",
+          "插件和 widget 要等 App 插件平台稳定；App 稳定线是 `dev`。"
+        ]
+      ]
+    },
+    {
+      "key": "plugin",
+      "order": 3,
+      "title": "桌面整理插件 / Widget",
+      "subtitle": "类似 MacBook widget 的桌面扩展",
+      "badge": "P2 · paused",
+      "status": "等待 App 平台",
+      "branch": "desktop-plugin-next",
+      "dependency": "依赖桌面 App 插件平台",
+      "next": "G1 稳定后恢复。",
+      "tracker": "插件 SDK、widget host、单插件功能、平台兼容。",
+      "points": [
+        [
+          "定位",
+          "围绕桌面整理、widget、小工具和插件生态展开，属于 App 之上的扩展层。"
+        ],
+        [
+          "独立跟踪",
+          "插件平台、SDK、widget host、单插件功能要分开记录，不和 App RC 混在一起。"
+        ],
+        [
+          "和下一层关系",
+          "插件数据如果需要跨设备，就进入账号云同步层；不需要则保持 device-local。"
+        ]
+      ]
+    },
+    {
+      "key": "sync",
+      "order": 4,
+      "title": "账号云同步层",
+      "subtitle": "前三者同步到同一个账号云",
+      "badge": "P2 · paused",
+      "status": "基建合同",
+      "branch": "sync-v1 roadmap wave",
+      "dependency": "连接 Web / App / Plugin",
+      "next": "Post-G1 恢复同步开发。",
+      "tracker": "syncScope、push/pull、冲突、两设备 smoke。",
+      "points": [
+        [
+          "定位",
+          "Web、桌面 App、插件/Widget 不互相直连同步，而是同步到同一个账号云端层。"
+        ],
+        [
+          "独立跟踪",
+          "账号同步单独跟踪 entity、schema、push/pull、conflict、Web test、App test 和两设备 smoke。"
+        ],
+        [
+          "和下一层关系",
+          "官网可以承接账号登录、下载、release notes 和用户状态说明，但不替代同步协议。"
+        ]
+      ]
+    },
+    {
+      "key": "site",
+      "order": 5,
+      "title": "官方网页",
+      "subtitle": "官网和发布入口同步开发",
+      "badge": "proposed",
+      "status": "拟定",
+      "branch": "codex/site/<feature>",
+      "dependency": "承接 Web/App/Sync 发布信息",
+      "next": "确认 package 和启动时机。",
+      "tracker": "下载页、更新说明、release notes、账号入口、Cloudflare 发布。",
+      "points": [
+        [
+          "定位",
+          "官方网页不是 Web App 本体，而是对外承接下载、更新、营销说明和 release notes。"
+        ],
+        [
+          "独立跟踪",
+          "官网单独跟踪下载入口、版本说明、更新元数据、账号入口和 Cloudflare 发布状态。"
+        ],
+        [
+          "和前四层关系",
+          "官网需要同步展示 Web/App/Plugin/账号同步的状态，但不应该直接承载产品内部开发。"
+        ]
+      ]
+    },
+    {
+      "key": "admin",
+      "order": 6,
+      "title": "Admin Dashboard",
+      "subtitle": "运营、AI 配置、权限和用量后台",
+      "badge": "proposed",
+      "status": "控制面候选",
+      "branch": "codex/admin/<feature>",
+      "dependency": "依赖账号、权限、计量和审计合同",
+      "next": "先保留 prototype；等真实后台合同稳定后再开线。",
+      "tracker": "AI 配置、权限、用量、审计日志、运营入口。",
+      "points": [
+        [
+          "定位",
+          "Admin Dashboard 是控制面，不应该抢占 Web/App 主产品资源。"
+        ],
+        [
+          "独立跟踪",
+          "后台配置、权限、用量、审计日志和运营入口需要单独跟踪，不和官方网页混在一起。"
+        ],
+        [
+          "和主产品链关系",
+          "它服务产品运营和系统配置；只有在合同稳定后才进入正式开发分支。"
+        ]
+      ]
+    }
+  ],
+  "release_rows": [
+    [
+      "2026-05-30",
+      "看板操作化",
+      "总览改成工作流控制台，补齐 6 条产品线，并接入生成快照作为自动跟踪 v0。",
+      "docs"
+    ],
+    [
+      "2026-05-30",
+      "看板结构",
+      "产品区改为顺序模块 tracking card，点击后显示模块状态、branch、依赖、跟踪字段和详细关系。",
+      "docs"
+    ],
+    [
+      "2026-05-30",
+      "分支治理",
+      "明确产品线不等于长期 branch；两台电脑并行通过 D3 gate 对齐。",
+      "governance"
+    ],
+    [
+      "2026-05-30",
+      "Skill",
+      "新增 `xai-release-log`：把日期、功能增量、验证和风险写入项目发布记录。",
+      "skill"
+    ]
+  ],
+  "generated_at": "2026-05-30T10:21:00.024Z",
+  "git": {
+    "branch": "web",
+    "latest_commit": "f2fa778 docs(dashboard): remove internal topbar labels"
+  },
+  "skills_found": [
+    {
+      "name": "xai-feature-brief",
+      "path": ".teams/skills/xai-feature-brief/SKILL.md",
+      "present": true
+    },
+    {
+      "name": "xai-feature-full-loop",
+      "path": ".teams/skills/xai-feature-full-loop/SKILL.md",
+      "present": true
+    },
+    {
+      "name": "xai-release-log",
+      "path": ".teams/skills/xai-release-log/SKILL.md",
+      "present": true
+    },
+    {
+      "name": "xai-roadmap-loop",
+      "path": ".teams/skills/xai-roadmap-loop/SKILL.md",
+      "present": true
+    },
+    {
+      "name": "xai-web-to-desktop-sync",
+      "path": ".teams/skills/xai-web-to-desktop-sync/SKILL.md",
+      "present": true
+    }
+  ],
+  "release_log": {
+    "source": "docs/workflow/project/release-log.md",
+    "latest_entry": "看板操作化和自动跟踪 v0"
+  }
+};

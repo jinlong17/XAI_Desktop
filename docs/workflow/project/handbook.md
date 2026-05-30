@@ -13,6 +13,7 @@
 | Repository layout and branch map entrypoint | `developer.md` §3 and §3.5 |
 | Workflow entrypoints and branch/sync usage notes | `docs/workflow/project/usage-guide.md` §16 and §17 |
 | Release log / changelog | `docs/workflow/project/release-log.md` |
+| Developer dashboard generated state | `docs/workflow/project/dashboard-state.json` + `scripts/dashboard/generate-state.mjs` |
 | Admin-dashboard visual reference | `docs/prototypes/admin-dashboard/index.html` |
 
 ## Product-Line Map
@@ -128,5 +129,20 @@ The single-file internal dashboard for this handbook is:
 docs/prototypes/dev-dashboard/index.html
 ```
 
-It is a static snapshot and an operator navigation aid, not a shipped product
-surface.
+It is an operator navigation aid, not a shipped product surface. Refresh its
+file-safe generated state before reviewing or committing dashboard changes:
+
+```bash
+node scripts/dashboard/generate-state.mjs
+```
+
+The generator writes:
+
+```text
+docs/prototypes/dev-dashboard/state.generated.js
+```
+
+The state model intentionally separates automatically refreshed facts from
+manual decisions. Git status, latest commit, project skill presence, and latest
+release-log entry can be generated; priority, branch creation, risk acceptance,
+and release gates remain operator decisions.
