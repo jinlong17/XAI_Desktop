@@ -1450,10 +1450,10 @@ function renderBranches(){
           <div class="branch-name">${h(item.name)}</div>
           <div>
             <b>${h(item.target)}</b>
-            <span>允许：${h((item.allowed_changes || []).join(" / "))}</span>
-            <span>禁止：${h((item.forbidden_changes || []).join(" / "))}</span>
-            <span>上游：${h((item.upstream || []).join(", "))} · 下游：${h((item.downstream || []).join(", "))}</span>
-            <span>drift：${h(item.drift_criterion || item.expected_drift)}</span>
+            <span>Allowed: ${h((item.allowed_changes || []).join(" / "))}</span>
+            <span>Forbidden: ${h((item.forbidden_changes || []).join(" / "))}</span>
+            <span>Upstream: ${h((item.upstream || []).join(", "))} · Downstream: ${h((item.downstream || []).join(", "))}</span>
+            <span>Drift: ${h(item.drift_criterion || item.expected_drift)}</span>
           </div>
           <span class="badge b-blue">policy</span>
         </div>
