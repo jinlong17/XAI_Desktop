@@ -74,8 +74,10 @@ function rootTree() {
     .map(path => resolve(repoRoot, path))
     .filter(path => existsSync(path))
     .map(path => treeEntry(path));
-  const packageDocs = packageDocRoots().map(path => treeEntry(path));
-  return [...fixed, ...packageDocs].sort(sortEntries);
+  const packages = packageDocRoots().length
+    ? [{ name: "packages/*/docs", path: "packages", type: "dir", virtual: true }]
+    : [];
+  return [...fixed, ...packages].sort(sortEntries);
 }
 
 function sortEntries(a, b) {
@@ -94,6 +96,9 @@ function treeEntry(absPath) {
 
 function listTree(rawDir) {
   if (!rawDir) return { path: "", children: rootTree() };
+  if (rawDir === "packages") {
+    return { path: "packages", children: packageDocRoots().map(path => treeEntry(path)).sort(sortEntries) };
+  }
   const absDir = assertAllowed(rawDir);
   if (!existsSync(absDir) || !statSync(absDir).isDirectory()) {
     throw Object.assign(new Error("Directory not found"), { status: 404 });

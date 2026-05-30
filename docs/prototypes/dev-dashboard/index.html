@@ -88,6 +88,7 @@
   .page-section.is-active.hero,
   .page-section.is-active.kpis,
   .page-section.is-active.flow-grid,
+  .page-section.is-active.docs-layout,
   .page-section.is-active.split{display:grid}
   .section-head{display:flex;align-items:flex-end;justify-content:space-between;gap:16px;margin-bottom:12px}
   h1,h2,h3,p{margin:0}
@@ -427,7 +428,7 @@
   .reader-title{display:flex;align-items:flex-start;justify-content:space-between;gap:14px}
   .reader-title b{display:block;font-size:16px}
   .reader-title span{display:block;color:var(--muted);font-size:12px;margin-top:2px}
-  .reader-body{padding:16px;overflow:auto}
+  .reader-body{padding:16px;overflow:auto;min-width:0;max-width:100%}
   .reader-body ul{margin:12px 0 0;padding-left:18px;color:var(--muted)}
   .reader-body li{margin:7px 0}
   .reader-body code{background:#edf5ff;border:1px solid var(--line);border-radius:6px;padding:1px 5px;color:#0f4d9a}
@@ -440,6 +441,9 @@
     font-weight:800;
   }
   .reader-btn:hover{border-color:var(--line-strong);background:var(--surface-3)}
+  .docs-layout{grid-template-columns:minmax(900px,1fr) 260px;gap:14px;align-items:start}
+  .docs-main{min-width:0}
+  .docs-side{position:sticky;top:18px;max-height:calc(100vh - 36px);overflow:auto}
   .doc-toolbar{display:grid;grid-template-columns:minmax(0,1fr) auto auto;gap:8px;margin-bottom:12px}
   .doc-toolbar input{
     width:100%;
@@ -449,10 +453,22 @@
     padding:9px 10px;
     color:var(--text);
   }
-  .doc-workbench{display:grid;grid-template-columns:260px minmax(0,1fr);gap:12px;min-height:560px}
+  .doc-workbench{display:grid;grid-template-columns:190px minmax(0,1fr);gap:12px;min-height:680px}
+  .doc-pathbar{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:10px;
+    margin-bottom:10px;
+    padding:8px 10px;
+    border:1px solid var(--line);
+    border-radius:8px;
+    background:#fff;
+  }
+  .doc-pathbar span{color:var(--muted);font-size:12px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
   .doc-tree{
-    min-height:560px;
-    max-height:72vh;
+    min-height:680px;
+    max-height:78vh;
     overflow:auto;
     border:1px solid var(--line);
     border-radius:8px;
@@ -473,28 +489,55 @@
   }
   .tree-row:hover,.tree-row.is-on{border-color:var(--line);background:var(--surface-3)}
   .tree-row span:last-child{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-  .doc-reader{min-height:560px}
+  .doc-reader{min-height:680px;min-width:0}
   .doc-actions{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
   .branch-docs{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:12px}
   .markdown-body{
     color:var(--text);
-    font-size:13px;
-    line-height:1.62;
+    font-size:14.5px;
+    line-height:1.72;
+    width:100%;
+    max-width:820px;
+    margin:0 auto;
+    padding:26px 34px;
+    overflow-wrap:anywhere;
   }
-  .markdown-body h1,.markdown-body h2,.markdown-body h3{margin:18px 0 8px;line-height:1.25}
-  .markdown-body h1{font-size:22px}
-  .markdown-body h2{font-size:18px}
-  .markdown-body h3{font-size:15px}
-  .markdown-body p{margin:8px 0}
-  .markdown-body ul{margin:8px 0 8px 18px;padding:0;color:var(--text)}
-  .markdown-body pre{overflow:auto;padding:12px;border-radius:8px;background:#101828;color:#f8fbff}
+  .markdown-body p,.markdown-body li,.markdown-body td,.markdown-body th{overflow-wrap:anywhere}
+  .markdown-body h1,.markdown-body h2,.markdown-body h3{margin:24px 0 10px;line-height:1.28}
+  .markdown-body h1{font-size:28px;margin-top:0}
+  .markdown-body h2{font-size:20px;padding-bottom:7px;border-bottom:1px solid var(--line)}
+  .markdown-body h3{font-size:16px}
+  .markdown-body p{margin:10px 0}
+  .markdown-body ul{margin:10px 0 14px 22px;padding:0;color:var(--text)}
+  .markdown-body li{margin:6px 0}
+  .markdown-body blockquote{margin:14px 0;padding:10px 12px;border-left:3px solid var(--line-strong);background:var(--surface-2);color:var(--muted)}
+  .markdown-body hr{border:0;border-top:1px solid var(--line);margin:20px 0}
+  .markdown-body pre{overflow:auto;padding:14px;border-radius:8px;background:#101828;color:#f8fbff;font-size:12.5px}
   .markdown-body code{background:#edf5ff;border:1px solid var(--line);border-radius:6px;padding:1px 5px;color:#0f4d9a}
   .markdown-body pre code{background:transparent;border:0;color:inherit;padding:0}
-  .markdown-body table{width:100%;border-collapse:collapse;margin:10px 0;font-size:12px}
-  .markdown-body th,.markdown-body td{border:1px solid var(--line);padding:6px 7px;text-align:left;vertical-align:top}
+  .markdown-body table{display:block;width:100%;overflow-x:auto;border-collapse:collapse;margin:14px 0;font-size:12px}
+  .markdown-body th,.markdown-body td{border:1px solid var(--line);padding:7px 8px;text-align:left;vertical-align:top}
   .markdown-body th{background:var(--surface-3)}
-  .search-results{display:grid;gap:8px;margin-top:12px}
-  .registry-grid{display:grid;gap:8px}
+  .search-results{display:none;gap:8px;margin:0 0 12px}
+  .search-results.is-on{display:grid}
+  .search-row{grid-template-columns:54px minmax(0,1fr)}
+  .search-row mark{background:#fff3bf;border-radius:4px;padding:0 2px}
+  .outline-box{margin-bottom:12px}
+  .outline-list{display:grid;gap:5px;margin-top:10px}
+  .outline-row{
+    border:1px solid transparent;
+    background:transparent;
+    border-radius:8px;
+    padding:7px 8px;
+    color:var(--muted);
+    text-align:left;
+    font-size:12px;
+  }
+  .outline-row:hover{border-color:var(--line);background:var(--surface-3);color:var(--text)}
+  .outline-row[data-level="1"]{font-weight:850;color:var(--text)}
+  .outline-row[data-level="2"]{padding-left:16px}
+  .outline-row[data-level="3"]{padding-left:28px}
+  .registry-grid{display:grid;gap:7px}
   .registry-row{
     display:grid;
     grid-template-columns:minmax(0,1fr) auto;
@@ -507,6 +550,13 @@
   }
   .registry-row b{display:block;font-size:13px}
   .registry-row span{display:block;color:var(--muted);font-size:12px;margin-top:2px}
+  .registry-row .registry-desc{
+    display:-webkit-box;
+    -webkit-line-clamp:2;
+    -webkit-box-orient:vertical;
+    overflow:hidden;
+  }
+  .registry-row .registry-trigger{font-size:11.5px;color:var(--faint)}
   .data-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}
   .data-card{padding:13px;border:1px solid var(--line);border-radius:8px;background:#fff}
   .data-card b{display:block;color:var(--muted);font-size:12px}
@@ -554,7 +604,8 @@
   }
   .flow-note b{color:var(--text)}
   @media (max-width:1180px){
-    .hero,.flow-grid,.split{grid-template-columns:1fr}
+    .hero,.flow-grid,.split,.docs-layout{grid-template-columns:1fr}
+    .docs-side{position:static;max-height:none}
     .kpis{grid-template-columns:repeat(2,minmax(0,1fr))}
     .module-track,.module-rhythm,.branch-flow,.module-region[data-region="主产品链"] .region-track{grid-template-columns:1fr}
     .module-card:not(:last-child):after{display:none}
@@ -570,6 +621,7 @@
     .ops-grid{grid-template-columns:1fr}
     .reader-shell{grid-template-columns:1fr}
     .doc-workbench,.doc-toolbar{grid-template-columns:1fr}
+    .markdown-body{padding:18px;max-width:none}
     .data-grid,.trend-row,.branch-commit,.dir-row{grid-template-columns:1fr}
     .flow-stage{min-height:760px}
     .branch-row,.log-row{grid-template-columns:1fr}
@@ -662,8 +714,8 @@
         <aside class="surface pad detail" id="productDetail" aria-live="polite"></aside>
       </section>
 
-      <section class="section split page-section" id="docs" data-page-section="docs">
-        <div class="surface pad">
+      <section class="section docs-layout page-section" id="docs" data-page-section="docs">
+        <div class="surface pad docs-main">
           <div class="section-head">
             <div>
               <h2>文档库</h2>
@@ -677,6 +729,11 @@
             <button class="reader-btn" id="docRefreshButton" type="button">刷新</button>
           </div>
           <div class="branch-docs" id="branchDocs"></div>
+          <div class="search-results" id="searchResults"></div>
+          <div class="doc-pathbar">
+            <span id="treePathLabel">文档根目录</span>
+            <button class="reader-btn" id="treeUpButton" type="button">上级</button>
+          </div>
           <div class="doc-workbench">
             <aside class="doc-tree" id="docTree"></aside>
             <article class="reader doc-reader">
@@ -693,14 +750,20 @@
               <div class="reader-body markdown-body" id="markdownBody"></div>
             </article>
           </div>
-          <div class="search-results" id="searchResults"></div>
         </div>
 
-        <aside class="surface pad">
+        <aside class="surface pad docs-side">
           <div class="section-head">
             <div>
-              <h2>Skill / Agent 注册表</h2>
-              <p class="sub">trigger、用途、路径、tracked 状态来自本地文件。</p>
+              <h2>本文目录</h2>
+              <p class="sub">读取当前 Markdown 标题。</p>
+            </div>
+          </div>
+          <div class="outline-box" id="docOutline"></div>
+          <div class="section-head" style="margin-top:14px">
+            <div>
+              <h2>Skill / Agent</h2>
+              <p class="sub">本地注册表，紧凑展示。</p>
             </div>
           </div>
           <div class="registry-grid" id="registryGrid"></div>
@@ -1094,6 +1157,7 @@ function setProduct(key){
 
 const serveMode = location.protocol === "http:" || location.protocol === "https:";
 let currentDocPath = "";
+let currentTreeDir = "";
 
 function branchDocSeeds(){
   const branch = dashboardState.git?.branch || "";
@@ -1133,7 +1197,7 @@ function renderTree(children){
   document.getElementById("docTree").innerHTML = children.map(item => `
     <button class="tree-row ${item.path === currentDocPath ? "is-on" : ""}" data-tree-type="${h(item.type)}" data-tree-path="${h(item.path)}" type="button">
       <span>${item.type === "dir" ? "›" : "·"}</span>
-      <span>${h(item.path)}</span>
+      <span>${h(item.virtual ? item.name : item.path.replace(/\/docs$/, "/docs"))}</span>
     </button>
   `).join("");
   document.querySelectorAll("[data-tree-path]").forEach(button => {
@@ -1147,7 +1211,17 @@ function renderTree(children){
 async function loadTree(dir = ""){
   if(!serveMode) return;
   const data = await fetchJson(`/api/tree?dir=${encodeURIComponent(dir)}`);
+  currentTreeDir = data.path || "";
+  document.getElementById("treePathLabel").textContent = currentTreeDir || "文档根目录";
+  document.getElementById("treeUpButton").disabled = !currentTreeDir;
   renderTree(data.children || []);
+}
+
+function parentDir(path){
+  if(!path) return "";
+  const parts = path.split("/").filter(Boolean);
+  parts.pop();
+  return parts.join("/");
 }
 
 function renderInlineMarkdown(text){
@@ -1156,12 +1230,38 @@ function renderInlineMarkdown(text){
     .replace(/\[([^\]]+)\]\(([^)]+)\)/g, '<a href="$2" target="_blank" rel="noreferrer">$1</a>');
 }
 
+function headingId(text, index){
+  const slug = String(text)
+    .toLowerCase()
+    .replace(/`/g, "")
+    .replace(/[^a-z0-9\u4e00-\u9fff]+/g, "-")
+    .replace(/^-+|-+$/g, "")
+    .slice(0, 42);
+  return `section-${index}-${slug || "heading"}`;
+}
+
+function collectHeadings(markdown){
+  const headings = [];
+  String(markdown || "").split(/\r?\n/).forEach(line => {
+    const match = line.match(/^(#{1,3})\s+(.+)$/);
+    if(match){
+      headings.push({
+        level: match[1].length,
+        text: match[2].replace(/`/g, "").trim(),
+        id: headingId(match[2], headings.length)
+      });
+    }
+  });
+  return headings;
+}
+
 function renderMarkdown(markdown){
   const lines = String(markdown || "").split(/\r?\n/);
   const html = [];
   let inCode = false;
   let inList = false;
   let tableRows = [];
+  let headingIndex = 0;
   function closeList(){
     if(inList){ html.push("</ul>"); inList = false; }
   }
@@ -1202,7 +1302,19 @@ function renderMarkdown(markdown){
     const heading = line.match(/^(#{1,3})\s+(.+)$/);
     if(heading){
       closeList();
-      html.push(`<h${heading[1].length}>${renderInlineMarkdown(heading[2])}</h${heading[1].length}>`);
+      const id = headingId(heading[2], headingIndex);
+      headingIndex += 1;
+      html.push(`<h${heading[1].length} id="${h(id)}">${renderInlineMarkdown(heading[2])}</h${heading[1].length}>`);
+      return;
+    }
+    if(line.startsWith(">")){
+      closeList();
+      html.push(`<blockquote>${renderInlineMarkdown(line.replace(/^>\s?/, ""))}</blockquote>`);
+      return;
+    }
+    if(/^---+$/.test(line.trim())){
+      closeList();
+      html.push("<hr>");
       return;
     }
     const bullet = line.match(/^\s*[-*]\s+(.+)$/);
@@ -1220,6 +1332,23 @@ function renderMarkdown(markdown){
   return html.join("");
 }
 
+function renderOutline(markdown){
+  const headings = collectHeadings(markdown).slice(0, 24);
+  document.getElementById("docOutline").innerHTML = headings.length ? `
+    <div class="outline-list">
+      ${headings.map(heading => `
+        <button class="outline-row" data-outline-id="${h(heading.id)}" data-level="${h(heading.level)}" type="button">${h(heading.text)}</button>
+      `).join("")}
+    </div>
+  ` : `<div class="flow-note"><b>无标题</b><p style="margin-top:8px">当前文件没有 Markdown 标题。</p></div>`;
+  document.querySelectorAll("[data-outline-id]").forEach(button => {
+    button.addEventListener("click", () => {
+      const target = document.getElementById(button.dataset.outlineId);
+      if(target) target.scrollIntoView({block:"start", behavior:"smooth"});
+    });
+  });
+}
+
 async function openDoc(path){
   if(!serveMode) return;
   const doc = await fetchJson(`/api/file?path=${encodeURIComponent(path)}`);
@@ -1227,17 +1356,31 @@ async function openDoc(path){
   document.getElementById("docTitle").textContent = doc.name;
   document.getElementById("docSource").textContent = doc.path;
   document.getElementById("markdownBody").innerHTML = renderMarkdown(doc.content);
+  renderOutline(doc.content);
   document.querySelectorAll("[data-tree-path]").forEach(button => button.classList.toggle("is-on", button.dataset.treePath === currentDocPath));
+}
+
+function escapeRegExp(value){
+  return String(value).replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+}
+
+function highlight(value, query){
+  const html = h(value);
+  if(!query) return html;
+  const escapedQuery = h(query);
+  return html.replace(new RegExp(escapeRegExp(escapedQuery), "ig"), match => `<mark>${match}</mark>`);
 }
 
 async function searchDocs(){
   if(!serveMode) return;
   const q = document.getElementById("docSearch").value.trim();
   const data = await fetchJson(`/api/search?q=${encodeURIComponent(q)}`);
-  document.getElementById("searchResults").innerHTML = (data.results || []).map(result => `
-    <button class="tree-row" data-search-path="${h(result.path)}" type="button">
+  const root = document.getElementById("searchResults");
+  root.classList.toggle("is-on", Boolean(q));
+  root.innerHTML = (data.results || []).map(result => `
+    <button class="tree-row search-row" data-search-path="${h(result.path)}" type="button">
       <span>${h(result.line)}</span>
-      <span><b>${h(result.path)}</b> ${h(result.text)}</span>
+      <span><b>${h(result.path)}</b> ${highlight(result.text, q)}</span>
     </button>
   `).join("") || `<div class="flow-note"><b>无结果</b></div>`;
   document.querySelectorAll("[data-search-path]").forEach(button => {
@@ -1254,8 +1397,8 @@ function renderRegistry(){
     <div class="registry-row">
       <div>
         <b>${h(item.kind)} · ${h(item.name)}</b>
-        <span>${h(item.desc)}</span>
-        <span>${h((item.triggers || []).join(" · ") || "trigger: template / direct dispatch")}</span>
+        <span class="registry-desc">${h(item.desc)}</span>
+        <span class="registry-trigger">${h((item.triggers || []).join(" · ") || "trigger: template / direct dispatch")}</span>
         <span>${h(item.path)}</span>
       </div>
       <span class="badge ${badgeClass(item.status)}">${h(item.status)}</span>
@@ -1279,6 +1422,7 @@ function initDocLibrary(){
   const searchInput = document.getElementById("docSearch");
   document.getElementById("docSearchButton").addEventListener("click", searchDocs);
   searchInput.addEventListener("keydown", event => { if(event.key === "Enter") searchDocs(); });
+  document.getElementById("treeUpButton").addEventListener("click", () => loadTree(parentDir(currentTreeDir)));
   document.getElementById("docRefreshButton").addEventListener("click", async () => {
     await fetchJson("/api/refresh");
     location.reload();
