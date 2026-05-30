@@ -22,9 +22,12 @@ informally and now needs a stable authority anchor for:
 
 1. A **product-line map** (six lines) reconciled with the existing P0/P1/P2
    model, separating *product-line importance* from *current active dev focus*.
-2. A **branch topology** that codifies the already-observed `web ⊇ dev`
-   ("Web leads, Desktop follows") reality as an intentional design rule, with
-   structured catch-up lanes and a release branch pattern.
+2. A **branch topology** that codifies the **two-branch focus split** as an
+   intentional design rule: `web` focuses on Web, `dev` focuses on the App; each
+   line evolves independently and **divergence between them is the normal, healthy
+   state — not drift**. `main` is the on-demand reconciliation point; shared
+   changes move by deliberate, need-based cherry-pick/merge, not by keeping one a
+   subset of the other.
 3. A **Web→Desktop sync gate** + **account cloud-sync per-feature contract**,
    both built on top of `data-repository-v0`'s `syncScope` model (not a
    redefinition of it).
@@ -37,7 +40,7 @@ Five sub-decisions:
 | **D2** — Branch topology + promotion / hotfix paths | `web` / `desktop-next` / `desktop-plugin-next` / `dev` + ephemeral `release/desktop/<version>` |
 | **D3** — Web→Desktop sync GATE (spec for the future `xai-web-to-desktop-sync` skill) | W0–W4 classification + parity-receipt output contract |
 | **D4** — Account cloud-sync model (build on `syncScope`) | Web ⇄ account cloud ⇄ App; per-feature `account-sync` completeness checklist |
-| **D5** — `web`-leads / `dev`-lags codified as a design rule | The lag is managed via D2 lanes + D3 gate, NOT drift to be eliminated |
+| **D5** — Two independent focus branches (`web`=Web, `dev`=App) | Divergence is the normal state, not drift; shared changes move on-demand; `main` reconciles |
 
 ---
 
@@ -61,15 +64,18 @@ focus over time*. They did **not** govern:
 
 ### Confirmed ground-truth facts (used as given, not re-litigated)
 
-- **`web ⊇ dev` is BY DESIGN.** `git rev-list --left-right --count
-  origin/web...origin/dev` on 2026-05-30 reads **`134  0`** (web ahead 134,
-  dev ahead 0). This is the **intended steady state**: `web` is the
-  primary/most-current dev line (Web-first); `dev` is the desktop/App candidate
-  line that intentionally lags and receives Web work through a gate. This is
-  NOT drift or a migration/cleanup problem.
+- **`web` and `dev` are two independent, differently-focused lines — divergence
+  is BY DESIGN.** `web` focuses on the Web product; `dev` focuses on the macOS
+  App. Each advances in its own direction, so **each carries commits the other
+  does not** — this is the normal, healthy state, NOT drift, NOT a subset
+  relationship, and NOT something to "catch up" or force-merge. `git rev-list
+  --left-right --count origin/web...origin/dev` on 2026-05-30 reads **`147  184`**
+  (147 web-only, 184 dev-only; common ancestor `898f5ba`, 2026-05-26): both lines
+  have moved on their own focus. They reconcile only at `main`, or by deliberate
+  need-based sharing of a specific change (see D5).
 - **Two machines, two independent branch lines.** Development runs on **two
   physical computers** that work **independently**: this machine drives `web`
-  (Web-first, leading); the other machine drives `dev` (Desktop/App, lagging).
+  (Web-focused); the other machine drives `dev` (App-focused).
   Each authors its own commits, branch docs, and ADRs on its own line; the two
   reconcile only when work flows `web → … → dev` (forward, per D2/D5) or at a
   `main` merge. This is already borne out: a `git fetch` on 2026-05-30 shows
@@ -121,7 +127,7 @@ account cloud-sync per-feature rule on top of `syncScope`.
 **Pros:**
 - One authority anchor for "how do branches relate" / "how does a Web change
   reach the App" / "what makes an account-sync feature complete".
-- Codifies the `web ⊇ dev` reality so future readers stop treating it as drift.
+- Codifies the **two independent focus branches** so future readers stop treating their divergence as drift.
 - Extends — does not contradict — ADR-0009 / ADR-0010 / `data-repository-v0`.
 - Defining the topology on paper is zero-risk; actually creating branches is a
   separate, operator-gated step.
@@ -134,15 +140,16 @@ account cloud-sync per-feature rule on top of `syncScope`.
 
 ### Option B — Leave topology + sync flow as informal convention
 
-Keep relying on tribal knowledge ("web leads, dev lags", "merge web into dev
+Keep relying on tribal knowledge ("web and dev are just two branches", "merge web into dev
 when ready") without an anchor.
 
 **Pros:** zero ADR overhead; maximum flexibility.
 
 **Cons:** every new contributor / AI session re-derives (or mis-derives) the
-`web ⊇ dev` relationship and the Web→App flow; the next person who sees
-`web` 134 ahead of `dev` "fixes" it by force-merging dev forward, destroying the
-intended lag. No contract for what an account-sync feature must ship.
+the two-focus-branch model and the on-demand sharing flow; the next person who
+sees `web` and `dev` diverged "fixes" it by force-merging one onto the other,
+destroying both lines' independent focus. No contract for what an account-sync
+feature must ship.
 
 ### Option C — Create the new branches now as part of this ADR
 
@@ -203,7 +210,7 @@ below).
 | `web` | Web mainline / Web release source. Most-current dev line (Web-first). | Web release (Cloudflare Pages per ADR-0008); and `desktop-next` via the D3 sync gate | `codex/web/<feature>` short-lived feature branches; release/web hotfix cherry-picks |
 | `desktop-next` | Web→App sync **integration** branch + Desktop next-step work. Where the D3 gate runs and App deltas are added. | `dev` (App RC), once an integration cycle is green | `web` (through the D3 gate); `desktop-plugin-next` (when a plugin-platform cycle is READY); short-lived single-plugin branches |
 | `desktop-plugin-next` | App **plugin platform / SDK** line. Separate so plugin-platform churn cannot destabilize the App release candidate. | `desktop-next` (merge back when READY) | `desktop-next` (rebases onto it); plugin-platform feature branches |
-| `dev` | Desktop **stable mainline / App release candidate (RC)**. Intentionally **lags** `web`. | `release/desktop/<version>` (freeze) | `desktop-next` (promoted integration cycles); `release/*` hotfix back-merge |
+| `dev` | **App-focused** stable mainline / App release candidate (RC). Evolves independently of `web` (App focus), not a subset of it. | `release/desktop/<version>` (freeze) | `desktop-next` (promoted integration cycles); `release/*` hotfix back-merge |
 | `release/desktop/<version>` (ephemeral) | **Freeze-only** branch: version bump, changelog, signing/notarization, `.dmg`, updater metadata, download-page artifacts, and **release-blocker hotfix only**. No feature work. | tag `vX.Y.Z`; back-merge to `dev` | `dev` (cut from it at freeze) |
 
 **Promotion paths (forward flow):**
@@ -238,8 +245,12 @@ should also decide each new branch's base commit (expected: branch
 ### D3 — Web→Desktop sync GATE
 
 D3 is the **specification** that the future `xai-web-to-desktop-sync` skill
-(PLANNED — does not exist yet) implements. Every Web change, **before** it flows
-`web → desktop-next`, is classified into exactly one tier:
+(PLANNED — does not exist yet) implements. It is the **tool for need-based
+sharing between the two focus branches** (per D5) — not a mandatory one-way pipe
+that keeps `dev` a subset of `web`. **When a specific change needs to be shared
+between the lines** (most commonly `web → dev`, but the same classification
+applies either direction), it is classified into exactly one tier before it is
+ported:
 
 | Tier | Name | Meaning | Required action |
 |---|---|---|---|
@@ -325,28 +336,34 @@ feature** is **incomplete** unless it defines all of:
 A feature that defines `syncScope: "device-local"` is exempt from items 4–6 and
 8–9 (it must NOT sync) but still defines items 1–3 and 7.
 
-### D5 — `web`-leads / `dev`-lags codified as a design rule
+### D5 — Two independent, differently-focused branches (divergence is by design)
 
-**`web ⊇ dev` is the intended steady state of "Web first, App follows."** The
-lag between `web` and `dev` is **not drift to be eliminated**; it is the natural
-consequence of Web being the primary dev line and the App being a downstream
-candidate that ingests Web work deliberately. The lag is **managed**, not
-removed, via:
+**`web` and `dev` are two long-lived lines with different focus, not a
+leader/follower pair.** `web` focuses on the Web product; `dev` focuses on the
+macOS App. Each advances in its own direction, so **each will carry commits the
+other does not** (2026-05-30: `147` web-only, `184` dev-only). This divergence
+is the **normal, healthy state** — it is NOT drift, NOT a subset/superset
+relationship, and NOT something to "catch up", force-merge, or rebase away.
 
-- the **D2 catch-up lanes** (`web → desktop-next → dev`, with
-  `desktop-plugin-next` isolating plugin-platform churn), and
-- the **D3 sync gate** (every Web change classified W0–W4 before it flows
-  forward, with a parity receipt).
+How the two lines relate:
 
-Operational corollaries:
+- **Independent by default.** Neither line is expected to be a subset of the
+  other; a growing commit-count difference is just both lines doing their own
+  work and does not need "fixing".
+- **`main` is the reconciliation point.** The two focuses come together at
+  `main` on the owner's schedule — not by one branch chasing the other.
+- **Shared changes move on-demand, per change.** When a specific change genuinely
+  needs to exist on both lines, it is shared deliberately (cherry-pick or a
+  scoped merge of *that* change) and classified through the D3 sync gate (W0–W4
+  + parity receipt). D3 is the **tool for need-based sharing**, not a mandatory
+  one-way pipe that keeps `dev` a subset of `web`.
 
-- Seeing `web` ahead of `dev` (e.g. `134  0` on 2026-05-30) is **expected** and
-  must **not** be "fixed" by force-merging `dev` forward or by rebasing `web`
-  onto `dev`.
-- `dev` advances **only** through D2 promotion (`desktop-next → dev`) or D2
-  hotfix back-merge — never by an ad-hoc `web → dev` merge that skips the gate.
-- A future "catch-up" effort is a **sequence of D3 gate runs through
-  `desktop-next`**, not a single big merge.
+Anti-patterns (do **not** do these):
+
+- Do **not** force-merge or rebase one branch onto the other to "make them
+  equal" — they are not supposed to be equal.
+- Do **not** treat a large `web`↔`dev` divergence number as a problem to resolve;
+  read it as "both lines are active in their own focus".
 
 ---
 
@@ -355,9 +372,11 @@ Operational corollaries:
 ### Positive
 
 - **Single anchor for branch + sync governance.** Future contributors/AI cite
-  ADR-0013 instead of re-deriving the `web ⊇ dev` model or the Web→App flow.
-- **Protects the intended lag.** D5 explicitly prevents the "web is 134 ahead,
-  let me fix that" failure mode that would destroy the App RC's stability.
+  ADR-0013 instead of re-deriving the two-focus-branch model or the on-demand
+  sharing flow.
+- **Prevents false "fix-the-divergence" churn.** D5 explicitly stops the "web and
+  dev diverged, let me force them equal" failure mode that would destroy each
+  line's independent focus.
 - **The future sync skill has a spec.** D3 is a ready-made contract for
   `xai-web-to-desktop-sync`; the parity receipt is its output format.
 - **Account-sync features become checkable.** D4's 9-item rule turns "is this
