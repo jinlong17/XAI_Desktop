@@ -5,11 +5,11 @@
 - **Workflow**: FEATURE_DEV
 - **Target**: desktop-host-capability-profile-split
 - **Title**: Desktop Host / Capability Signal Split
-- **Current Phase**: FEATURE_BUILD
-- **Executor**: gpt-5.3-codex
-- **Updated**: 2026-05-30 02:28
-- **Status**: READY_FOR_VERIFY
-- **Suggested Next**: feature-verify
+- **Current Phase**: SHIP
+- **Executor**: claude-sonnet-4-6
+- **Updated**: 2026-05-30 10:00
+- **Status**: SHIPPED
+- **Suggested Next**: —
 - **Blockers**: none
 
 ## Phase Plan
@@ -179,3 +179,44 @@ caller-supplied.)
 - **Risks**: Real macOS interactive smoke (`R-UI-1..3`, `R-CAP-1..4`, `R-WEB-1`)
   is still required in `feature-verify`/manual gate; not fully automatable here.
 - **Handoff**: Start feature-verify for desktop-host-capability-profile-split.
+
+### Round 6 — 2026-05-30 02:31 PDT — feature-verify (gpt-5-codex)
+- **Goal**: Verify phase commit boundaries, contract adherence, docs alignment,
+  and repo-side automated checks for desktop host/capability signal split.
+- **Done**: Reviewed commits `13f8787a`, `3c38ec55`, `8ddc869a`, and `aa2bde85`
+  against the approved discovery/design/api/test/dev_log contract. Confirmed the
+  canonical host signal remains `VITE_XAI_DESKTOP_HOST=tauri`, the optional
+  `__TAURI_INTERNALS__` fallback exists only inside the pure core resolver and
+  only when env is absent, `desktop-last-data-cache-polish` and other KEEP
+  callsites remain on `runtimeProfile`, the MOVE set is limited to `AppProviders`
+  plus notifications/statusbar/updater runtimes, `plugin-web-storage` stays a
+  caller-supplied enable seam, and no direct `desktop-phase1-offline` widening
+  was introduced. Revalidated organizer-hidden / boards default-board /
+  mock-auth `/app` protections by boundary audit: Phase 2 touched none of the
+  KEEP UI gate files.
+- **Commits**: `13f8787a`, `3c38ec55`, `8ddc869a`, `aa2bde85`
+- **Tests**:
+  - `git diff --check 13f8787a^..aa2bde85`
+  - `pnpm --filter @repo/core test`
+  - `pnpm --filter @repo/desktop-native-notifications-reminders test`
+  - `pnpm --filter @repo/desktop-statusbar-quick-actions test`
+  - `pnpm --filter @repo/desktop-auto-update-release-channel test`
+  - `pnpm --filter @repo/web test -- src/providers/AppProviders.test.tsx`
+  - `pnpm --filter @repo/web build`
+  - `VITE_XAI_DESKTOP_HOST=tauri VITE_WEB_AUTH_MODE=mock-authenticated pnpm --filter @repo/web build`
+  - `cargo test --manifest-path apps/desktop/src-tauri/Cargo.toml`
+- **Risks**: Manual real-macOS smoke remains external residual evidence:
+  `R-UI-1..3`, `R-CAP-1..4`, and `R-WEB-1` were not executed interactively in
+  this non-UI session.
+- **Handoff**: Start ship for desktop-host-capability-profile-split.
+
+### Round 7 — 2026-05-30 10:00 PDT — ship (claude-sonnet-4-6)
+- **Goal**: Verify READY_TO_SHIP gate, commit verify writeback, push 5 commits to origin/dev, and mark SHIPPED.
+- **Done**: Confirmed feature-verify evidence in Round 6 (all automated checks listed). Validated hard
+  constraints: Organizer KEEP callsite intact (`App.tsx:122`), `AppProviders` fully migrated to
+  `isDesktopHost`, `tauri.conf.json` injects `VITE_XAI_DESKTOP_HOST=tauri` without `desktop-phase1-offline`.
+  Committed verify writeback + SHIPPED state write; pushed 5 commits to origin/dev.
+- **Commits**: `13f8787a` (Phase 1), `3c38ec55` (Phase 2), `8ddc869a` (Phase 3), `aa2bde85` (docs), ship-writeback commit
+- **Tests**: All feature-verify checks reconfirmed; dist gitignored (no binary artifacts in push).
+- **Risks**: Manual macOS smoke (`R-UI-1..3`, `R-CAP-1..4`, `R-WEB-1`) remains external residual evidence per feature-verify.
+- **Handoff**: Workflow complete.
