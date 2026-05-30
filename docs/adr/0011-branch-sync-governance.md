@@ -67,6 +67,16 @@ focus over time*. They did **not** govern:
   primary/most-current dev line (Web-first); `dev` is the desktop/App candidate
   line that intentionally lags and receives Web work through a gate. This is
   NOT drift or a migration/cleanup problem.
+- **Two machines, two independent branch lines.** Development runs on **two
+  physical computers** that work **independently**: this machine drives `web`
+  (Web-first, leading); the other machine drives `dev` (Desktop/App, lagging).
+  Each authors its own commits, branch docs, and ADRs on its own line; the two
+  reconcile only when work flows `web → … → dev` (forward, per D2/D5) or at a
+  `main` merge. This is why an external `ADR-0012` reference and a
+  `/Users/jinlong/...` path appear in pasted context — they are the **other
+  machine's** local/clone state, not this branch's. Consequence: anything
+  numbered or named independently on both machines (ADR numbers, roadmap files,
+  shared docs) can **collide** and needs a cross-machine convention (§S7 #1).
 - **Active-focus order is unchanged from ADR-0010** (Accepted 2026-05-26): P1
   Desktop client ACTIVE (G1 native foundation, `apps/desktop/`); P0 Web Console
   MAINTENANCE-ONLY (`apps/web/`); P2 organizer plugins + sync-v1 + G2 paused
@@ -395,26 +405,42 @@ Operational corollaries:
 
 ## S7 — Open Questions (needs dev-clone / operator confirmation)
 
-1. **ADR-0012 numbering from another machine.** On THIS branch (`web`) the ADRs
-   top out at 0010 and the next number is 0011 (this ADR). A `0012` /
-   "local-first-storage" ADR reference seen on a different clone (the `dev`
-   machine) is **not present here** — and the only `0012` mentions on `web` are
-   an abandoned CSP-governance numbering suggestion in
+1. **Cross-machine ADR / doc numbering convention (the real workflow item).**
+   Root cause is structural, not a one-off: the **two machines author
+   independently** (§S2), so both compute the same "next ADR number" and collide.
+   Current reality — `origin/web` and `origin/dev` both top out at 0010; `web`
+   just claimed **0011** (this ADR); the other machine has referenced **0012**
+   for a `local-first-storage` decision in its own clone (not present on `web`;
+   the only `0012` mentions here are an abandoned CSP-numbering idea in
    `docs/workflow/roadmap/xai-web-console-gap-closure.md` L144 +
    `docs/reviews/xai-web-ai-chat-real-llm-adapter/20260525-discovery-review.md`
-   L240 (proposing ADRs 0010/0011/0012/0013 for CSP widening, never executed).
-   **Open:** does a real ADR-0012 exist on the `dev` clone? If so, reconcile
-   numbering before this ADR is Accepted (this ADR may need to claim a different
-   number, or the dev-clone ADR may need renumbering). Per task constraints,
-   `dev` was **not** inspected here.
-2. **Official-website priority + start trigger (line 5).** Priority slot is
-   marked PROPOSED. It gates App distribution (download + auto-update host) and
-   should tie to `release/desktop/<version>` (D2) + the ADR-0008 Cloudflare
-   deploy target. **Open:** confirm its priority relative to lines 3–4 and the
-   trigger (likely "first signed App release readiness").
-3. **Admin-dashboard priority (line 6).** Prototype exists at
-   `docs/prototypes/admin-dashboard/index.html`; marked lowest of the six,
-   PROPOSED. **Open:** confirm whether/when it becomes a real package + roadmap.
+   L240). **Decision needed (operator, who controls both machines):** adopt a
+   numbering convention so independent ADRs/docs never collide at `main` merge.
+   Candidate conventions:
+   - **(A) web owns the sequential block; dev reserves a high block.** `web`
+     (leading line) keeps 0011/0012/… sequential; the `dev` machine takes
+     desktop-only ADRs from a reserved block (e.g. `0090+` "desktop-local") or a
+     `-dev` working suffix, renumbered into the main sequence at `main` merge.
+     Consistent with the web-leads model; zero real-time coordination.
+   - **(B) single reservation index on `main`.** Maintain `docs/adr/INDEX.md` on
+     `main`; either machine claims a number there (pull `main` first) before
+     authoring. One source of truth; needs both machines to touch `main`.
+   - **(C) reconcile at merge.** Both number sequentially on their own branch;
+     whoever collides renumbers at `main` merge. Lowest overhead; breaks
+     cross-references and needs merge discipline.
+   Until a convention is chosen: `web` = 0011 (this ADR), the `dev` machine keeps
+   `0012` for its `local-first-storage` ADR — they do **not** collide today, but
+   the convention should be locked before the next ADR is authored on either side.
+   Per task constraints, `dev` was **not** inspected here.
+2. **Official-website priority + start trigger (line 5).** **Owner-deferred —
+   out of scope for this governance round; stays PROPOSED; does NOT block
+   ADR-0011 Acceptance.** It gates App distribution (download + auto-update host)
+   and should tie to `release/desktop/<version>` (D2) + the ADR-0008 Cloudflare
+   deploy target. Revisit its priority slot + start trigger in a later round.
+3. **Admin-dashboard priority (line 6).** **Owner-deferred — out of scope for
+   this governance round; stays PROPOSED (lowest of the six); does NOT block
+   ADR-0011 Acceptance.** Prototype at `docs/prototypes/admin-dashboard/index.html`;
+   revisit whether/when it becomes a real package + roadmap in a later round.
 4. **When to actually create `desktop-next` / `desktop-plugin-next` /
    `release/*`.** D2 defines them but creates none. **Open:** operator confirms
    the creation step, each branch's base commit, and the first D3 gate run
@@ -431,9 +457,19 @@ Operational corollaries:
 
 - **Proposed by:** Claude Opus 4.8 (1M context) on 2026-05-30 at operator
   (Jinlong) request.
-- **Status:** **Proposed.** The operator flips to **Accepted** after resolving
-  the §S7 open questions (at minimum #1 numbering and #2–#3 PROPOSED priorities)
-  and confirming the D2 topology.
+- **Status:** **Proposed.** Acceptance is gated only on §S7 **#1** (the
+  cross-machine ADR/doc numbering convention) **+ the operator's final
+  confirmation of this governance round**. §S7 **#2–#3** (official-website /
+  admin-dashboard priorities) are **intentionally owner-deferred and do NOT
+  block** Acceptance — they stay PROPOSED for a later round. §S7 **#4–#5**
+  (branch creation, runtime-profile authority) are deferred follow-ups, not
+  Acceptance blockers.
+- **Two-machine note:** because `web` and `dev` are authored on independent
+  machines (§S2), this ADR lives on the `web` line; its decisions reach `dev`
+  through the D2 lanes like any other Web work. The numbering convention (#1)
+  should be relayed to the `dev` machine once chosen.
 - **Does not change** any ADR-0010 active-focus decision; it is additive
-  governance. When Accepted, the branch-creation step (D2) remains separately
-  operator-gated.
+  governance. Creating the D2 branches (`desktop-next` / `desktop-plugin-next` /
+  `release/*`) happens **only after the operator confirms the full governance
+  round is final**, as a separate operator-gated step — anything touching `dev`
+  needs explicit authorization.
