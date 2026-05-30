@@ -58,13 +58,19 @@ function latestReleaseEntry() {
 const source = readJson(sourcePath);
 const branch = git(["branch", "--show-current"]);
 const latestCommit = git(["log", "-1", "--format=%h %s"]);
+const divergenceRaw = git(["rev-list", "--left-right", "--count", "origin/web...origin/dev"]);
+const [webOnly = "0", devOnly = "0"] = divergenceRaw.split(/\s+/);
 
 const snapshot = {
   ...source,
   generated_at: new Date().toISOString(),
   git: {
     branch,
-    latest_commit: latestCommit
+    latest_commit: latestCommit,
+    divergence: {
+      web_only: Number(webOnly) || 0,
+      dev_only: Number(devOnly) || 0
+    }
   },
   skills_found: listSkills(),
   release_log: {
