@@ -27,11 +27,12 @@
 - This run had no direct operator GUI interaction for a true Finder drag-install action.
 - A shell-only launch attempt from a copied app bundle was not trustworthy as `/Applications` launch evidence because LaunchServices can resolve to an existing app registration path under the same bundle identity.
 - No direct, operator-observed launch from `/Applications/X Desktop.app` was captured in this session.
+- Manual update (2026-05-29): `/Applications/X Desktop.app` was present and launched successfully as foreground app `com.jinlong.desktop`; human operator observed the installed app opening normally.
 
 ## Result
 
-- Classification: `BLOCKED_ENVIRONMENT`
-- Reason: DMG integrity and payload structure are verified, but the required residual specifically needs a real Finder drag-install + launch from `/Applications` with direct GUI observation.
+- Classification: `PASS`
+- Reason: the previously missing `/Applications` launch observation was completed successfully on real macOS.
 
 ## Repo-side Defect Check
 

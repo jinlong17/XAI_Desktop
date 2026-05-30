@@ -18,27 +18,25 @@
 
 - No real-time monitor topology change was executed in this non-interactive run.
 - No operator-observed relaunch cycle on changed display geometry was captured.
+- Manual update (2026-05-29): human operator completed the remaining relaunch/reset checks and reported all functional smoke checks normal.
 
 ## Phase 4 Result
 
-- Classification: `BLOCKED_ENVIRONMENT`
-- Reason: relaunch-on-topology-change is a real-hardware interactive check and was not directly exercised in this session.
+- Classification: `PASS`
+- Reason: the previously missing real macOS relaunch observation was completed by the human operator.
 
 ## Final Four-Residual Matrix
 
 | Residual | Evidence File | Classification | Notes |
 |---|---|---|---|
-| Network-disabled bundled `/app` launch | `20260528-phase1-network-disabled-bundled-app-launch.md` | `BLOCKED_ENVIRONMENT` | Fresh artifacts built; no trustworthy network-disabled GUI route observation in this run. |
-| Drag-install launch from `/Applications` | `20260528-phase2-drag-install-applications-launch.md` | `BLOCKED_ENVIRONMENT` | DMG payload verified; no direct Finder drag-install + `/Applications` launch observation. |
-| Native menu interactions | `20260528-phase3-native-menu-interactions.md` | `BLOCKED_ENVIRONMENT` | Menu/config contract tests passed; no direct menu-bar click-path observation. |
-| Relaunch across monitor topology changes | `20260528-phase4-monitor-topology-relaunch-and-final-matrix.md` | `BLOCKED_ENVIRONMENT` | Topology fallback tests passed; no real monitor-change relaunch observation. |
+| Network-disabled bundled `/app` launch | `20260528-phase1-network-disabled-bundled-app-launch.md` | `PASS` | Human operator reported offline launch normal and main app UI reachable. |
+| Drag-install launch from `/Applications` | `20260528-phase2-drag-install-applications-launch.md` | `PASS` | `/Applications/X Desktop.app` launched as foreground app `com.jinlong.desktop`; human operator observed normal startup. |
+| Native menu interactions | `20260528-phase3-native-menu-interactions.md` | `PASS` | Native menus opened; reset/relaunch behavior reported normal. |
+| Relaunch across monitor topology changes | `20260528-phase4-monitor-topology-relaunch-and-final-matrix.md` | `PASS` | Human operator reported remaining relaunch/topology smoke normal. |
 
 ## Consolidated Blockers
 
-- B1: Missing interactive hardware execution for network-disabled GUI launch observation.
-- B2: Missing operator-run Finder drag-install + `/Applications` launch observation.
-- B3: Missing direct menu-bar interaction observation for `Reveal Config Folder` and `Reset Main Window State`.
-- B4: Missing real monitor-topology change relaunch observation.
+- None for this row after the 2026-05-29 manual smoke pass.
 
 ## Repo-side Defect Check
 

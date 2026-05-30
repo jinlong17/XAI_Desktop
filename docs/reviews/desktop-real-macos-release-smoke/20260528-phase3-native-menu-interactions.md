@@ -24,11 +24,12 @@
 
 - This run did not include direct macOS menu-bar interaction by a human operator.
 - No trustworthy visual confirmation of live menu click behavior (including Finder reveal and reset action UX outcome) was captured.
+- Manual update (2026-05-29): human operator opened native `X Desktop`, `File`, and `Window` menus; `Window -> Reset Main Window State` and relaunch behavior were reported normal, with no overlay/control/grid auto-start.
 
 ## Result
 
-- Classification: `BLOCKED_ENVIRONMENT`
-- Reason: contract-level tests pass, but the residual requires interactive menu usage evidence on real macOS GUI, which was not available in this non-interactive run.
+- Classification: `PASS`
+- Reason: direct human interaction supplied the required real macOS menu evidence.
 
 ## Repo-side Defect Check
 

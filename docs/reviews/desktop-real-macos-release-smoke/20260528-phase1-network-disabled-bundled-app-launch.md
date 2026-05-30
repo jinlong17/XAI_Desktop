@@ -30,11 +30,12 @@
 - Execution context was a non-interactive CLI automation run.
 - No trustworthy GUI route observation (`/app` vs `/auth/login`) could be captured in this session.
 - No controlled network-disable/enable hardware step was executed by this run.
+- Manual update (2026-05-29): human operator later executed the real macOS launch check and reported the network-disabled launch path normal, with the app reaching the main desktop UI rather than login/blank state.
 
 ## Result
 
-- Classification: `BLOCKED_ENVIRONMENT`
-- Reason: the residual requires an operator-observed real-macOS GUI launch while network is disabled; this session could produce fresh artifacts but could not execute and verify the required interactive launch condition.
+- Classification: `PASS`
+- Reason: manual real-macOS observation supplied the previously missing network-disabled GUI launch evidence.
 
 ## Repo-side Defect Check
 

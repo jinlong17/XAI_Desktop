@@ -4,16 +4,16 @@
 
 **Verdict: CONDITIONAL_RELEASE.**
 
-Repo-side release-candidate preparation is now a **GO** after the repair pass: the local-first SQLite blocker was fixed, `desktop` dev/build/DMG scripts now compile the crypto/SQLCipher command surface, the DMG-launched app created `app-config.json` plus encrypted `xai-repo-v0.db`, and the real macOS Keychain KEK smoke passes (`apps/desktop/package.json:6-10`, `apps/desktop/src-tauri/src/commands/database.rs:8-12`, `apps/desktop/src-tauri/src/commands/database_runtime.rs:123-139`, `packages/desktop-local-first-sqlite-foundation/docs/dev_log.md:19-22`, `packages/desktop-local-first-sqlite-foundation/docs/dev_log.md:122`).
+Repo-side release-candidate preparation is now a **GO** after the repair pass and 2026-05-29 manual smoke closure: the local-first SQLite blocker was fixed, `desktop` dev/build/DMG scripts now compile the crypto/SQLCipher command surface, the DMG-launched app created `app-config.json` plus encrypted `xai-repo-v0.db`, the real macOS Keychain KEK smoke passes, and the human operator reported the remaining `desktop-real-macos-release-smoke` checks normal (`apps/desktop/package.json:6-10`, `apps/desktop/src-tauri/src/commands/database.rs:8-12`, `apps/desktop/src-tauri/src/commands/database_runtime.rs:123-139`, `packages/desktop-local-first-sqlite-foundation/docs/dev_log.md:19-22`, `packages/desktop-local-first-sqlite-foundation/docs/dev_log.md:122`, `packages/desktop-real-macos-release-smoke/docs/dev_log.md:10-17`).
 
-This is **not** a notarized/public external release GO yet. The roadmap still records `desktop-real-macos-release-smoke` as `BLOCKED`, the updater still uses placeholder endpoint/key material, and the DMG is unsigned/rejected by Gatekeeper command evidence (`docs/workflow/roadmap/xai-desktop-remaining-p2-p3-future.md:23`, `apps/desktop/src-tauri/tauri.conf.json:51-55`, `docs/workflow/roadmap/xai-desktop-remaining-p2-p3-future.md:120-122`).
+This is **not** a notarized/public external release GO yet. The updater still uses placeholder endpoint/key material, and the DMG is unsigned/rejected by Gatekeeper command evidence (`apps/desktop/src-tauri/tauri.conf.json:51-55`, `docs/workflow/roadmap/xai-desktop-remaining-p2-p3-future.md:120-122`).
 
 ## 2. Status Matrix
 
 | Feature slug | dev_log status | Evidence path:line | Review verdict |
 | --- | --- | --- | --- |
 | Phase 1 baseline rows | SHIPPED | `docs/workflow/roadmap/xai-desktop-remaining-p2-p3-future.md:16` | Accepted; normal-window desktop baseline remains intact. |
-| desktop-real-macos-release-smoke | BLOCKED | `docs/workflow/roadmap/xai-desktop-remaining-p2-p3-future.md:23`, `packages/desktop-real-macos-release-smoke/docs/dev_log.md:10-17` | Still incomplete as workflow row; repaired run covers DMG launch/data smoke only, not all human menu/topology checks. |
+| desktop-real-macos-release-smoke | SHIPPED | `docs/workflow/roadmap/xai-desktop-remaining-p2-p3-future.md:23`, `packages/desktop-real-macos-release-smoke/docs/dev_log.md:10-17` | Closed by 2026-05-29 human manual smoke; public-release signing/updater gates remain separate. |
 | desktop-native-notifications-reminders | SHIPPED | `docs/workflow/roadmap/xai-desktop-remaining-p2-p3-future.md:24` | Repo-side accepted; Notification Center UX remains manual release smoke. |
 | desktop-statusbar-quick-actions | SHIPPED | `docs/workflow/roadmap/xai-desktop-remaining-p2-p3-future.md:25` | Repo-side accepted; status bar click/focus remains manual release smoke. |
 | desktop-global-hotkey-quick-open | SHIPPED | `docs/workflow/roadmap/xai-desktop-remaining-p2-p3-future.md:26` | Repo-side accepted; conflict/focus behavior remains manual release smoke. |
@@ -61,11 +61,11 @@ The updater config still carries placeholder pubkey and endpoint values (`apps/d
 
 Impact: prepare an internal/repo-side RC, but do not publish as a public notarized macOS release.
 
-### P1 - Real macOS release-smoke workflow row remains BLOCKED
+### P1 - Real macOS release-smoke workflow row closed after manual pass
 
-The manifest and dev_log still mark `desktop-real-macos-release-smoke` blocked for network-disabled launch, Finder drag-install from `/Applications`, native menu clicks, and monitor topology relaunch (`docs/workflow/roadmap/xai-desktop-remaining-p2-p3-future.md:23`, `packages/desktop-real-macos-release-smoke/docs/dev_log.md:28-66`). This repair pass proved DMG launch, Foreground LS app registration, config creation, and encrypted DB creation, but did not edit the manifest or complete every manual row.
+The manifest and dev_log now mark `desktop-real-macos-release-smoke` shipped after the human operator completed the missing real-macOS checks: network-disabled launch, `/Applications` launch, native menu interactions, reset/relaunch behavior, normal-window startup, and no overlay/control/grid auto-start (`docs/workflow/roadmap/xai-desktop-remaining-p2-p3-future.md:23`, `packages/desktop-real-macos-release-smoke/docs/dev_log.md:28-66`). This closes the row as a functional manual smoke gate.
 
-Impact: run `feature-verify` for that smoke row before any external release claim.
+Impact: functional manual smoke is no longer a row-scoped blocker. Public release still requires signing/notarization and real updater credentials.
 
 ### P1 - Keychain signed ACL is deferred, not failed-open silently
 
@@ -88,8 +88,8 @@ Rust builds pass with existing dead-code warnings around future command surfaces
 | Gate | Status | Evidence |
 | --- | --- | --- |
 | Packaging | PASS for debug RC artifact | `pnpm --filter desktop build` and `build:dmg` passed; package scripts enable crypto (`apps/desktop/package.json:6-10`, `packages/desktop-local-first-sqlite-foundation/docs/dev_log.md:122`). |
-| Offline launch | CONDITIONAL | Bundled app launched from DMG and wrote local state, but true network-disabled human smoke row remains blocked (`packages/desktop-real-macos-release-smoke/docs/dev_log.md:28-36`). |
-| Real macOS hardware | PARTIAL PASS | DMG app registered as `Foreground` LS app and wrote app data; AppleScript window probe was blocked by assistive-access permission, so direct window/menu checks remain manual (`packages/desktop-real-macos-release-smoke/docs/dev_log.md:48-66`). |
+| Offline launch | PASS functional smoke | Human operator reported network-disabled launch normal; bundled app also wrote local state (`packages/desktop-real-macos-release-smoke/docs/dev_log.md:28-36`). |
+| Real macOS hardware | PASS functional smoke | `/Applications/X Desktop.app` launched as foreground app and human operator reported menu/reset/relaunch/topology checks normal (`packages/desktop-real-macos-release-smoke/docs/dev_log.md:48-66`). |
 | Permissions/capabilities | CONDITIONAL | Main-only default and DB capability are constrained, overlay is opt-in; opener/updater/notification/CSP hardening remains (`apps/desktop/src-tauri/capabilities/default.json:1-13`, `apps/desktop/src-tauri/capabilities/plugin-data-database.json:1-9`, `apps/desktop/src-tauri/capabilities/overlay-v2.json:1-10`). |
 | Local-first data | PASS repo-side | SQLCipher keying before bootstrap; DMG-created DB rejects plain sqlite3 reads (`apps/desktop/src-tauri/src/commands/database_runtime.rs:123-139`, `packages/desktop-local-first-sqlite-foundation/docs/dev_log.md:122`). |
 | Online degraded modes | CONDITIONAL | Accepted as shipped only if release messaging preserves online-only/degraded behavior (`docs/workflow/roadmap/xai-desktop-remaining-p2-p3-future.md:37-38`). |
@@ -113,7 +113,7 @@ Commands run in this repair/re-review pass:
 
 Manual-only gates still open:
 
-- Finder drag-install launch from `/Applications`, native menu clicks, monitor-topology relaunch, direct window assertion when assistive access is unavailable, real notification/statusbar/hotkey interactions, real updater endpoint/signing, and notarized first launch (`packages/desktop-real-macos-release-smoke/docs/dev_log.md:28-66`, `docs/workflow/roadmap/xai-desktop-remaining-p2-p3-future.md:120-122`).
+- Real notification/statusbar/hotkey spot checks if desired for release confidence, real updater endpoint/signing, and notarized first launch (`docs/workflow/roadmap/xai-desktop-remaining-p2-p3-future.md:120-122`).
 
 ## 7. Required Fix Roadmap
 
@@ -127,12 +127,12 @@ Manual-only gates still open:
 
 ## 8. Final Recommendation
 
-**Exact next action: prepare a repo-side release candidate and run the release-smoke verifier, not ship.**
+**Exact next action: prepare the internal release candidate; do not claim public release until signing/notarization/updater gates close.**
 
 Exact recommended next Workflow V2 command:
 
 ```text
-Start the feature-verify agent for desktop-real-macos-release-smoke, with docs/audit/2026-05-29-desktop-roadmap-release-readiness-repair-review.md as required context.
+Run the public-release signing/notarization/updater gate for the internal RC artifact.
 ```
 
-After that verifier records the remaining human macOS gates, the next human-triggered action can be `ship`. Public release still requires the signing/notarization/updater gate.
+After signing/notarization/updater evidence is recorded, the next human-triggered action can be `ship` for a public release candidate.

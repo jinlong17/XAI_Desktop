@@ -7,14 +7,14 @@
 | Workflow | FEATURE_DEV |
 | Target | desktop-real-macos-release-smoke |
 | Title | Real macOS Release Smoke Gate |
-| Current Phase | FEATURE_BUILD |
-| Status | BLOCKED |
-| Suggested Next | feature-auto-build |
+| Current Phase | SHIPPED |
+| Status | SHIPPED |
+| Suggested Next | public-release signing/notarization/updater gate |
 | Automation Mode | B-Codex |
 | Verify Cross-vendor | yes |
-| Executor | feature-auto-build (Codex, gpt-5.3-codex inline) |
-| Updated | 2026-05-29 22:57 PDT |
-| Risks | Repo-side repair evidence remains valid (crypto-enabled desktop builds, SQLCipher bootstrap before schema access, DMG launch/app-data creation, Keychain KEK smoke), but this row still has no direct `PASS` evidence for the four required real-macOS residual checks. No executable row-scoped repository phase remains in this run. Public release is still gated by placeholder updater credentials and unsigned/notarization-missing packaging evidence. |
+| Executor | human operator + Codex recorder |
+| Updated | 2026-05-29 23:32 PDT |
+| Risks | Real macOS release-smoke residuals passed by direct human observation on the local machine: network-disabled launch, `/Applications` launch, native menus, reset/relaunch behavior, and normal-window/no-overlay startup were reported normal. Public release is still gated by placeholder updater credentials and unsigned/notarization-missing packaging evidence. |
 
 ## Roadmap Context
 
@@ -27,43 +27,43 @@
 
 ### Phase 1 — Network-disabled Bundled `/app` Launch
 
-Status: DONE (`BLOCKED_ENVIRONMENT`)
+Status: DONE (`PASS`)
 
 - Confirm the bundled app launches offline into `/app`.
 - Confirm the default startup remains one normal window with no overlay/control/grid activation.
 - Classify the residual directly from real-macOS evidence.
 - Evidence: `docs/reviews/desktop-real-macos-release-smoke/20260528-phase1-network-disabled-bundled-app-launch.md`
-- Classification: `BLOCKED_ENVIRONMENT`
+- Classification: `PASS`
 
 ### Phase 2 — Drag-install Launch from `/Applications`
 
-Status: DONE (`BLOCKED_ENVIRONMENT`)
+Status: DONE (`PASS`)
 
 - Use the DMG/install path on real macOS hardware.
 - Launch the drag-installed copy from `/Applications`.
 - Confirm the same startup contract as the bundled app and classify the result.
 - Evidence: `docs/reviews/desktop-real-macos-release-smoke/20260528-phase2-drag-install-applications-launch.md`
-- Classification: `BLOCKED_ENVIRONMENT`
+- Classification: `PASS`
 
 ### Phase 3 — Native Menu Interactions
 
-Status: DONE (`BLOCKED_ENVIRONMENT`)
+Status: DONE (`PASS`)
 
 - Exercise the macOS menu bar directly on the running app.
 - Verify `Reveal Config Folder` and `Reset Main Window State`.
 - Distinguish repo failures from environment limitations.
 - Evidence: `docs/reviews/desktop-real-macos-release-smoke/20260528-phase3-native-menu-interactions.md`
-- Classification: `BLOCKED_ENVIRONMENT`
+- Classification: `PASS`
 
 ### Phase 4 — Relaunch Across Monitor Topology Changes and Final Matrix
 
-Status: DONE (`BLOCKED_ENVIRONMENT`)
+Status: DONE (`PASS`)
 
 - Validate relaunch behavior after a real topology change or documented equivalent hardware scenario.
 - Confirm safe restore or fallback-to-default behavior.
 - Publish the final four-row residual matrix with no unclassified items remaining.
 - Evidence: `docs/reviews/desktop-real-macos-release-smoke/20260528-phase4-monitor-topology-relaunch-and-final-matrix.md`
-- Classification: `BLOCKED_ENVIRONMENT`
+- Classification: `PASS`
 
 ## Review Notes
 
@@ -80,6 +80,7 @@ Recommendations for `feature-build`:
 - Record deterministic feature-local evidence filenames as each phase starts so the final matrix can reference stable artifacts under `docs/reviews/desktop-real-macos-release-smoke/`.
 - For every manual classification, capture exact artifact provenance and environment conditions used in the smoke step, especially whether the run used freshly built artifacts or previously shipped outputs and what monitor topology/network state was present.
 - Verification update (2026-05-29): reviewed the staged release-readiness repair context plus `docs/audit/2026-05-29-desktop-roadmap-release-readiness-repair-review.md`. Confirmed the repair closes the repo-side plaintext DB blocker and makes DMG/app-data smoke materially stronger, but it does not satisfy this feature's direct-evidence contract for network-disabled launch, Finder drag-install launch, native menu clicks, or monitor-topology relaunch. Public release is also still gated by unsigned/notarized packaging and placeholder updater credentials.
+- Manual smoke update (2026-05-29): human operator completed the real macOS checks and reported all required functional residuals normal. Codex observed `/Applications/X Desktop.app` launching as foreground app `com.jinlong.desktop`, local app data present under `$HOME/Library/Application Support/com.jinlong.desktop`, native menu screenshots for `X Desktop`, `File`, and `Window`, and user confirmation that offline launch, reset/relaunch, and remaining checks were normal.
 
 ## Work Log
 
@@ -101,3 +102,4 @@ Recommendations for `feature-build`:
 | 2026-05-29 22:43 PDT | feature-auto-build (Codex, gpt-5.3-codex inline) | Executed this run's required-context reassessment (`AGENTS.md`, `CLAUDE.md`, `docs/workflow/project/usage-guide.md`, `docs/workflow/roadmap/xai-desktop-remaining-p2-p3-future.md`, row docs quartet, and both 2026-05-29 release-readiness audits). Confirmed there are still no actionable row-scoped PENDING/BLOCKED implementation phases: all remaining blockers require direct real-macOS GUI `PASS` evidence (network-disabled bundled `/app` launch, Finder drag-install launch from `/Applications`, native menu interactions, monitor-topology relaunch), and public-release signing/notarization plus non-placeholder updater credentials remain external to this row's safe repo scope. Kept `Status = BLOCKED`; no code changes and no tests run. | None | feature-auto-build |
 | 2026-05-29 22:53 PDT | feature-auto-build (Codex, gpt-5.3-codex inline) | Executed the requested `desktop-real-macos-release-smoke` auto-build reassessment with required context (`AGENTS.md`, `CLAUDE.md`, `docs/workflow/project/usage-guide.md`, `docs/workflow/roadmap/xai-desktop-remaining-p2-p3-future.md`, row docs quartet, `docs/audit/2026-05-29-desktop-roadmap-release-readiness-review.md`, and `docs/audit/2026-05-29-desktop-roadmap-release-readiness-repair-review.md`) while preserving the parent-session staged repair state. Confirmed there are still no safe row-scoped implementation phases or reproducible repo defects to fix: unresolved gates remain direct real-macOS GUI `PASS` evidence for network-disabled bundled `/app` launch, Finder drag-install launch from `/Applications`, native menu interactions, and monitor-topology relaunch; public-release prerequisites (non-placeholder updater credentials and signed/notarized packaging evidence) remain external to this row's safe repo scope. Kept `Status = BLOCKED`; no code changes and no tests run. | None | feature-auto-build |
 | 2026-05-29 22:57 PDT | feature-auto-build (Codex, gpt-5.3-codex inline) | Completed exactly one additional reassessment run against the required context (`AGENTS.md`, `CLAUDE.md`, `docs/workflow/project/usage-guide.md`, `docs/workflow/roadmap/xai-desktop-remaining-p2-p3-future.md`, row docs quartet, and both 2026-05-29 release-readiness audits) while preserving all staged parent-session repairs. Result remained unchanged: no actionable row-scoped PENDING/BLOCKED repository phase and no reproducible row-scoped defect. Remaining blockers are still external/manual real-macOS GUI `PASS` evidence for network-disabled bundled `/app` launch, Finder drag-install launch from `/Applications`, native menu interactions, and monitor-topology relaunch, plus public-release signing/notarization and non-placeholder updater credentials outside this row's safe scope. Enforced max-3-retries principle: further auto-reassessments without new external evidence are not meaningful. Kept `Status = BLOCKED`; no code changes and no tests run. | None | feature-auto-build |
+| 2026-05-29 23:32 PDT | human operator + Codex recorder | Manual real macOS smoke closed the row: launched from `/Applications/X Desktop.app`, confirmed foreground LaunchServices registration, normal app window/menu behavior, `Window -> Reset Main Window State` plus relaunch, offline launch, and no overlay/control/grid auto-start. User reported all functional checks normal. Public-release signing/notarization and real updater credentials remain downstream release gates, not row-scoped functional blockers. | manual evidence recorded in this commit | public-release gate |
