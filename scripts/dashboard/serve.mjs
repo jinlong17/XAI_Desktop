@@ -49,8 +49,17 @@ function allowedRoots() {
     resolve(repoRoot, "docs"),
     resolve(repoRoot, ".teams/skills"),
     resolve(repoRoot, ".codex/agents"),
+    resolve(repoRoot, "web design"),
     ...packageDocRoots()
-  ];
+  ].filter(existsSync);
+}
+
+// Specific repo-root files allowed for reading even though their parent (the
+// repo root) is not a browsable directory.
+function allowedFiles() {
+  return ["CLAUDE.md", "AGENTS.md", "README.md"]
+    .map(name => resolve(repoRoot, name))
+    .filter(existsSync);
 }
 
 function resolveRepoPath(rawPath) {
@@ -63,6 +72,9 @@ function assertAllowed(rawPath) {
   if (!pathInside(absPath, repoRoot)) {
     throw Object.assign(new Error("Path traversal rejected"), { status: 403 });
   }
+  if (allowedFiles().includes(absPath)) {
+    return absPath;
+  }
   if (!allowedRoots().some(root => pathInside(absPath, root))) {
     throw Object.assign(new Error("Path is outside the dashboard document whitelist"), { status: 403 });
   }
@@ -70,14 +82,15 @@ function assertAllowed(rawPath) {
 }
 
 function rootTree() {
-  const fixed = ["docs", "docs/adr", "docs/workflow", ".teams/skills", ".codex/agents"]
+  const fixed = ["docs", "docs/adr", "docs/workflow", ".teams/skills", ".codex/agents", "web design"]
     .map(path => resolve(repoRoot, path))
     .filter(path => existsSync(path))
     .map(path => treeEntry(path));
+  const files = allowedFiles().map(path => treeEntry(path));
   const packages = packageDocRoots().length
     ? [{ name: "packages/*/docs", path: "packages", type: "dir", virtual: true }]
     : [];
-  return [...fixed, ...packages].sort(sortEntries);
+  return [...fixed, ...files, ...packages].sort(sortEntries);
 }
 
 function sortEntries(a, b) {
