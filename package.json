@@ -3,6 +3,7 @@
   "private": true,
   "scripts": {
     "build": "turbo run build",
+    "dashboard": "node scripts/dashboard/generate-state.mjs",
     "dev": "turbo run dev",
     "lint": "turbo run lint",
     "typecheck": "pnpm check-types",

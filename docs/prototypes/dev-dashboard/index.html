@@ -132,7 +132,7 @@
   .ops-title b{display:block;font-size:18px}
   .ops-title span{display:block;color:var(--muted);font-size:12px;margin-top:2px}
   .ops-badges{display:flex;flex-wrap:wrap;gap:7px;margin-top:8px}
-  .ops-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}
+  .ops-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
   .ops-card{
     min-height:118px;
     padding:13px;
@@ -146,7 +146,7 @@
   }
   .ops-card:hover{transform:translateY(-2px);border-color:var(--line-strong);background:#f7fbff}
   .ops-card b{display:block;font-size:12px;color:var(--muted)}
-  .ops-card strong{display:block;font-size:26px;line-height:1.05;margin:8px 0 6px}
+  .ops-card strong{display:block;font-size:18px;line-height:1.2;margin:8px 0 6px}
   .ops-card span{display:block;color:var(--muted);font-size:12px}
   .ops-note{margin-top:12px}
   .focus-box{display:grid;gap:10px;align-content:start}
@@ -297,13 +297,13 @@
     overflow-wrap:anywhere;
     word-break:break-word;
   }
-  .module-track{
-    display:grid;
-    grid-template-columns:repeat(3,minmax(0,1fr));
-    gap:10px;
-    align-items:stretch;
-    margin-top:16px;
-  }
+  .module-track{display:grid;gap:12px;margin-top:16px}
+  .module-region{padding:12px;border:1px solid var(--line);border-radius:8px;background:rgba(255,255,255,.72)}
+  .region-label{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:10px}
+  .region-label b{font-size:12px}
+  .region-label span{color:var(--muted);font-size:11.5px}
+  .region-track{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;align-items:stretch}
+  .module-region[data-region="主产品链"] .region-track{grid-template-columns:repeat(4,minmax(0,1fr))}
   .module-card{
     position:relative;
     min-height:218px;
@@ -469,7 +469,7 @@
   @media (max-width:1180px){
     .hero,.flow-grid,.split{grid-template-columns:1fr}
     .kpis{grid-template-columns:repeat(2,minmax(0,1fr))}
-    .module-track,.module-rhythm,.branch-flow{grid-template-columns:1fr}
+    .module-track,.module-rhythm,.branch-flow,.module-region[data-region="主产品链"] .region-track{grid-template-columns:1fr}
     .module-card:not(:last-child):after{display:none}
     .branch-step:not(:last-child):after{display:none}
     .structure-map{display:grid;gap:10px;min-height:auto;padding:12px}
@@ -498,7 +498,7 @@
       <div class="mark">X</div>
       <div>
         <b>XAI 个人开发看板</b>
-        <span>产品 · 分支 · skill · release log</span>
+        <span>本地项目控制台</span>
       </div>
     </div>
     <nav class="nav" aria-label="主导航">
@@ -524,21 +524,17 @@
               <b>今日控制台</b>
               <span id="snapshotMeta">state snapshot</span>
               <div class="ops-badges">
-                <span class="badge b-green">P1 Desktop active</span>
-                <span class="badge b-blue">Web maintenance</span>
-                <span class="badge b-cyan">auto snapshot v0</span>
+                <span class="badge b-green">读取+提醒</span>
+                <span class="badge b-blue">localhost only</span>
+                <span class="badge b-cyan" id="freshnessBadge">snapshot</span>
               </div>
             </div>
             <button class="reader-btn" data-page-jump="product-flow" type="button">产品线</button>
           </div>
-          <div class="ops-grid">
-            <button class="ops-card" data-page-jump="product-flow" type="button"><b>产品模块</b><strong>6</strong><span>主产品链 5 条 + Admin 控制面。</span></button>
-            <button class="ops-card" data-page-jump="branches" type="button"><b>Branch 原则</b><strong>风险优先</strong><span>branch 跟集成节奏，不跟产品线一一绑定。</span></button>
-            <button class="ops-card" data-page-jump="release-log" type="button"><b>发布记录</b><strong>必写</strong><span>系统层、产品层、跨机器治理变更都进 release log。</span></button>
-          </div>
+          <div class="ops-grid" id="cockpitGrid"></div>
           <div class="flow-note ops-note">
-            <b>自动跟踪 v0：</b>
-            <p style="margin-top:8px">看板读取生成快照；git、skill、release log 属于自动事实，优先级、是否开 branch、是否发布仍由你确认。</p>
+            <b>控制边界：</b>
+            <p style="margin-top:8px">自动化只读本地文件和 git 状态，只提醒；roadmap、merge、发布判断都由 operator 决定。</p>
           </div>
         </div>
         <div class="surface pad focus-box" id="overviewFocus"></div>
@@ -667,7 +663,8 @@
 const dashboardState = window.XAI_DASHBOARD_STATE || {};
 const products = [...(dashboardState.product_lines || [])].sort((a,b) => Number(a.order) - Number(b.order));
 const overviewRows = dashboardState.status_rows || [];
-const kpis = dashboardState.kpis || [];
+const cockpit = dashboardState.cockpit || [];
+const kpis = dashboardState.signals || dashboardState.kpis || [];
 const productLinks = dashboardState.product_links || [
   ["web", "app", "main"],
   ["app", "plugin", "main"],
@@ -725,13 +722,12 @@ const docs = [
   }
 ];
 
-const skills = [
-  ["xai-feature-brief", "把粗需求变成 feature brief，适合新功能立项前。", ".teams/skills/xai-feature-brief/SKILL.md", "landed"],
-  ["xai-feature-full-loop", "单功能自动跑 plan/review/build/verify，ship 前停住。", ".teams/skills/xai-feature-full-loop/SKILL.md", "landed"],
-  ["xai-roadmap-loop", "把 roadmap manifest 按 wave 推进。", ".teams/skills/xai-roadmap-loop/SKILL.md", "landed"],
-  ["xai-web-to-desktop-sync", "Web 变更进入桌面前跑 D3 分类和 parity receipt。", ".teams/skills/xai-web-to-desktop-sync/SKILL.md", "landed"],
-  ["xai-release-log", "把日期、功能增量、验证和风险写进发布记录。", ".teams/skills/xai-release-log/SKILL.md", "new"]
-];
+const skills = (dashboardState.skills_found || []).map(skill => ({
+  name: skill.name,
+  desc: skill.tracked ? "tracked project skill" : "local skill file",
+  path: skill.path,
+  status: skill.tracked ? "tracked" : "local-only"
+}));
 
 const branches = [
   ["web", "Web 主线和 Web release source。适合 Web 产品、共享 UI 源头和系统治理文档。", "exists"],
@@ -753,9 +749,10 @@ const releaseRows = dashboardState.release_rows || [
 function badgeClass(value){
   const v = String(value).toLowerCase();
   if(v.includes("active") || v.includes("exists") || v.includes("landed")) return "b-green";
-  if(v.includes("maintenance") || v.includes("defined") || v.includes("docs")) return "b-blue";
+  if(v.includes("maintenance") || v.includes("defined") || v.includes("docs") || v.includes("tracked") || v.includes("正常")) return "b-blue";
   if(v.includes("paused") || v.includes("ephemeral") || v.includes("governance")) return "b-yellow";
   if(v.includes("new") || v.includes("skill")) return "b-cyan";
+  if(v.includes("local-only")) return "b-yellow";
   return "b-gray";
 }
 
@@ -768,6 +765,16 @@ function h(value){
     .replaceAll("'", "&#39;");
 }
 
+function snapshotFreshness(){
+  const ts = Date.parse(dashboardState.generated_at || "");
+  if(!Number.isFinite(ts)) return {label:"未生成", badge:"b-yellow"};
+  const minutes = Math.max(0, Math.round((Date.now() - ts) / 60000));
+  if(minutes < 30) return {label:`${minutes}m fresh`, badge:"b-green"};
+  if(minutes < 180) return {label:`${minutes}m old`, badge:"b-blue"};
+  const hours = Math.round(minutes / 60);
+  return {label:`${hours}h old`, badge:"b-yellow"};
+}
+
 function renderOverview(){
   const meta = [];
   if(dashboardState.generated_at) {
@@ -775,6 +782,24 @@ function renderOverview(){
   }
   if(dashboardState.git?.branch) meta.push(`branch ${dashboardState.git.branch}`);
   document.getElementById("snapshotMeta").textContent = meta.join(" · ") || "state snapshot";
+  const freshness = snapshotFreshness();
+  const freshnessNode = document.getElementById("freshnessBadge");
+  freshnessNode.textContent = freshness.label;
+  freshnessNode.className = `badge ${freshness.badge}`;
+
+  const cockpitRows = cockpit.length ? cockpit : [
+    {question:"现在做什么", answer:"运行 dashboard 生成快照", detail:"node scripts/dashboard/generate-state.mjs"},
+    {question:"在哪条线", answer:dashboardState.git?.branch || "unknown", detail:"读取当前 git branch"},
+    {question:"用哪个 workflow · skill", answer:"xai-feature-full-loop", detail:"需要推进功能时使用"},
+    {question:"什么状态", answer:"只读快照", detail:"不会自动改 roadmap/merge/发布判断"}
+  ];
+  document.getElementById("cockpitGrid").innerHTML = cockpitRows.map(item => `
+    <button class="ops-card" data-page-jump="${item.question.includes("线") ? "branches" : item.question.includes("workflow") ? "docs" : "product-flow"}" type="button">
+      <b>${h(item.question)}</b>
+      <strong>${h(item.answer)}</strong>
+      <span>${h(item.detail)}</span>
+    </button>
+  `).join("");
 
   const rows = overviewRows.length ? overviewRows : [
     {label:"当前主线", value:"P1 Mac Desktop App / G1 native foundation"},
@@ -790,10 +815,10 @@ function renderOverview(){
 
 function renderKpis(){
   const fallback = [
-    {label:"产品线", badge:"顺序模块", value:"6", note:"Web / App / Plugin / Sync / Site / Admin"},
-    {label:"长期分支", badge:"治理", value:"4+", note:"web, desktop-next, plugin-next, dev, release/*"},
-    {label:"固定 skill", badge:"入口", value:"5", note:"feature, roadmap, web-to-desktop, release log"},
-    {label:"自动跟踪", badge:"v0", value:"1", note:"dashboard-state.json -> state.generated.js"}
+    {label:"web↔dev 分叉", badge:"正常差异", value:`${dashboardState.git?.divergence?.web_only || 0}/${dashboardState.git?.divergence?.dev_only || 0}`, note:"两条独立专注线，差异正常"},
+    {label:"Roadmap rows", badge:"真实计数", value:String((dashboardState.roadmap_manifests || []).reduce((sum,item) => sum + (item.total || 0), 0)), note:"来自 manifest Status 表"},
+    {label:"Project skills", badge:"tracked", value:String(skills.length), note:".teams/skills/*/SKILL.md"},
+    {label:"Snapshot", badge:"manual refresh", value:"local", note:"读取+提醒"}
   ];
   document.getElementById("kpiGrid").innerHTML = (kpis.length ? kpis : fallback).map(item => `
     <div class="surface kpi">
@@ -865,7 +890,19 @@ function renderModules(){
     document.getElementById("moduleTrack").innerHTML = `<div class="flow-note"><b>产品状态未加载</b><p style="margin-top:8px">请运行 <code>node scripts/dashboard/generate-state.mjs</code> 刷新快照。</p></div>`;
     return;
   }
-  document.getElementById("moduleTrack").innerHTML = products.map(item => `
+  const regionMeta = [
+    ["主产品链", "Web → Desktop → Plugin → Sync"],
+    ["Control Plane", "Admin"],
+    ["项目系统区", "Site / release / workflow"]
+  ];
+  document.getElementById("moduleTrack").innerHTML = regionMeta.map(([region, note]) => {
+    const items = products.filter(item => (item.region || "项目系统区") === region);
+    if(!items.length) return "";
+    return `
+      <section class="module-region" data-region="${h(region)}">
+        <div class="region-label"><b>${h(region)}</b><span>${h(note)}</span></div>
+        <div class="region-track">
+          ${items.map(item => `
     <button class="module-card ${item.key === products[0].key ? "is-active" : ""}" data-product="${item.key}" type="button">
       <div class="module-top">
         <span class="module-index">${item.order}</span>
@@ -882,7 +919,11 @@ function renderModules(){
       </div>
       <span class="pill">${h(item.next)}</span>
     </button>
-  `).join("");
+          `).join("")}
+        </div>
+      </section>
+    `;
+  }).join("");
   document.querySelectorAll(".module-card").forEach(node => node.addEventListener("click", () => setProduct(node.dataset.product)));
 }
 
@@ -902,7 +943,7 @@ function setProduct(key){
       <div class="detail-metric"><b>模块状态</b><span>${h(item.status)}</span></div>
       <div class="detail-metric"><b>推荐 branch</b><span>${h(item.branch)}</span></div>
       <div class="detail-metric"><b>关键依赖</b><span>${h(item.dependency)}</span></div>
-      <div class="detail-metric"><b>跟踪字段</b><span>${h(item.tracker)}</span></div>
+      <div class="detail-metric"><b>真实计数</b><span>${h(item.status_summary || "no rows")}</span></div>
     </div>
     <div class="detail-list">
       ${item.points.map(([title,desc]) => `<div><b>${h(title)}</b><span>${h(desc)}</span></div>`).join("")}
@@ -943,10 +984,10 @@ function renderReader(){
 }
 
 function renderSkills(){
-  document.getElementById("skillGrid").innerHTML = skills.map(([name,desc,path,status]) => `
+  document.getElementById("skillGrid").innerHTML = (skills.length ? skills : [{name:"未发现", desc:"运行 dashboard 生成快照", path:".teams/skills", status:"local-only"}]).map(skill => `
     <div class="skill-row">
-      <div><b>${name}</b><span>${desc}</span><span>${path}</span></div>
-      <span class="badge ${badgeClass(status)}">${status}</span>
+      <div><b>${h(skill.name)}</b><span>${h(skill.desc)}</span><span>${h(skill.path)}</span></div>
+      <span class="badge ${badgeClass(skill.status)}">${h(skill.status)}</span>
     </div>
   `).join("");
 }
