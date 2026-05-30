@@ -20,16 +20,16 @@ describe("desktop statusbar runtime snapshot", () => {
   beforeEach(() => {
     publishSnapshot.mockReset();
     delete window.__XAI_DESKTOP_STATUSBAR__;
-    setEnv("VITE_WEB_RUNTIME_PROFILE", "desktop-phase1-offline");
+    setEnv("VITE_XAI_DESKTOP_HOST", "tauri");
   });
 
   afterEach(() => {
     delete window.__XAI_DESKTOP_STATUSBAR__;
-    setEnv("VITE_WEB_RUNTIME_PROFILE", undefined);
+    setEnv("VITE_XAI_DESKTOP_HOST", undefined);
   });
 
-  it("returns unsupported runtime reasons when profile is web-live", () => {
-    setEnv("VITE_WEB_RUNTIME_PROFILE", "web-live");
+  it("returns unsupported runtime reasons when desktop host signal is absent", () => {
+    setEnv("VITE_XAI_DESKTOP_HOST", undefined);
 
     const snapshot = createDesktopStatusbarSnapshot({
       tasksFeatureEnabled: true,

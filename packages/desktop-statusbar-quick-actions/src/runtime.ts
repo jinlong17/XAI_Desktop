@@ -1,6 +1,6 @@
 import {
-  isDesktopPhase1OfflineRuntime,
-  resolveWebRuntimeProfile,
+  isDesktopHost,
+  resolveDesktopHost,
 } from "@repo/core";
 import type {
   DesktopStatusbarAvailabilityReason,
@@ -146,8 +146,7 @@ function normalizeReason(reason: DesktopStatusbarAvailabilityReason): DesktopSta
 export function createDesktopStatusbarSnapshot(
   input: RefreshDesktopStatusbarSnapshotInput,
 ): DesktopStatusbarSnapshot {
-  const runtimeProfile = resolveWebRuntimeProfile(runtimeEnv());
-  const runtimeSupported = isDesktopPhase1OfflineRuntime(runtimeProfile);
+  const runtimeSupported = isDesktopHost(resolveDesktopHost(runtimeEnv()));
   const adapterAvailable = readAdapter() !== null;
 
   const startPomodoro = quickActionState(

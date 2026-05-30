@@ -32,7 +32,7 @@ function Probe() {
 
 describe("DesktopAutoUpdateReleaseChannelBridge", () => {
   it("hydrates and subscribes once", async () => {
-    setEnv("VITE_WEB_RUNTIME_PROFILE", "desktop-phase1-offline");
+    setEnv("VITE_XAI_DESKTOP_HOST", "tauri");
 
     const getSnapshot = vi.fn(async () => ({
       channel: "internal-rc" as const,
@@ -64,6 +64,6 @@ describe("DesktopAutoUpdateReleaseChannelBridge", () => {
       expect(getByTestId("availability").textContent).toBe("ready");
     });
 
-    setEnv("VITE_WEB_RUNTIME_PROFILE", undefined);
+    setEnv("VITE_XAI_DESKTOP_HOST", undefined);
   });
 });

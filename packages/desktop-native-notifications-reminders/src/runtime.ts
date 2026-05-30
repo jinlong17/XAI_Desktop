@@ -1,5 +1,7 @@
 import {
-  isDesktopPhase1OfflineRuntime,
+  isDesktopHost,
+  resolveDesktopHost,
+  type DesktopHost,
   resolveWebRuntimeProfile,
 } from "@repo/core";
 import { getPref } from "@repo/plugin-web-storage";
@@ -56,12 +58,13 @@ function emitSnapshot(next: DesktopNotificationRuntimeSnapshot): void {
 
 function mapPromptState(
   runtimeProfile: WebRuntimeProfile,
+  host: DesktopHost,
   adapterAvailable: boolean,
   permissionState: DesktopNotificationPermissionState | "unknown",
   unsupported?: { task: number; calendar: number },
 ): DesktopNotificationRuntimeSnapshot {
   const unsupportedCounts = unsupported ?? { task: 0, calendar: 0 };
-  if (!isDesktopPhase1OfflineRuntime(runtimeProfile)) {
+  if (!isDesktopHost(host)) {
     return {
       status: "unsupported",
       runtimeProfile,
@@ -129,21 +132,21 @@ function mapPromptState(
 }
 
 export async function refreshDesktopNotificationRuntimeSnapshot(): Promise<DesktopNotificationRuntimeSnapshot> {
-  const runtimeProfile = resolveWebRuntimeProfile(
-    runtimeEnv(),
-  );
+  const env = runtimeEnv();
+  const runtimeProfile = resolveWebRuntimeProfile(env);
+  const host = resolveDesktopHost(env);
 
   const adapter = readAdapter();
   const adapterAvailable = adapter !== null;
 
-  if (!isDesktopPhase1OfflineRuntime(runtimeProfile)) {
-    const snapshot = mapPromptState(runtimeProfile, adapterAvailable, "unknown");
+  if (!isDesktopHost(host)) {
+    const snapshot = mapPromptState(runtimeProfile, host, adapterAvailable, "unknown");
     emitSnapshot(snapshot);
     return snapshot;
   }
 
   if (!adapter) {
-    const snapshot = mapPromptState(runtimeProfile, false, "unknown");
+    const snapshot = mapPromptState(runtimeProfile, host, false, "unknown");
     emitSnapshot(snapshot);
     return snapshot;
   }
@@ -153,7 +156,7 @@ export async function refreshDesktopNotificationRuntimeSnapshot(): Promise<Deskt
     ? "granted"
     : "prompt";
 
-  const snapshot = mapPromptState(runtimeProfile, true, permissionState);
+  const snapshot = mapPromptState(runtimeProfile, host, true, permissionState);
   emitSnapshot(snapshot);
   return snapshot;
 }
@@ -172,17 +175,17 @@ export function subscribeDesktopNotificationRuntimeSnapshot(
 }
 
 export async function requestDesktopNotificationPermission(): Promise<DesktopNotificationRuntimeSnapshot> {
-  const runtimeProfile = resolveWebRuntimeProfile(
-    runtimeEnv(),
-  );
+  const env = runtimeEnv();
+  const runtimeProfile = resolveWebRuntimeProfile(env);
+  const host = resolveDesktopHost(env);
 
   const adapter = readAdapter();
-  if (!adapter || !isDesktopPhase1OfflineRuntime(runtimeProfile)) {
+  if (!adapter || !isDesktopHost(host)) {
     return refreshDesktopNotificationRuntimeSnapshot();
   }
 
   const permissionState = await adapter.requestPermission();
-  const snapshot = mapPromptState(runtimeProfile, true, permissionState);
+  const snapshot = mapPromptState(runtimeProfile, host, true, permissionState);
   emitSnapshot(snapshot);
   return snapshot;
 }
@@ -190,9 +193,12 @@ export async function requestDesktopNotificationPermission(): Promise<DesktopNot
 export function updateDesktopNotificationUnsupportedCounts(
   unsupported: { task: number; calendar: number },
 ): DesktopNotificationRuntimeSnapshot {
-  const runtimeProfile = resolveWebRuntimeProfile(runtimeEnv());
+  const env = runtimeEnv();
+  const runtimeProfile = resolveWebRuntimeProfile(env);
+  const host = resolveDesktopHost(env);
   const snapshot = mapPromptState(
     runtimeProfile,
+    host,
     currentSnapshot.adapterAvailable,
     currentSnapshot.permissionState,
     unsupported,

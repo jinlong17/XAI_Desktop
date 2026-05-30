@@ -101,6 +101,7 @@ describe("AppProviders desktop auth contract", () => {
     delete (globalThis as { __XAI_DESKTOP_BACKUP__?: unknown }).__XAI_DESKTOP_BACKUP__;
     setEnv("VITE_WEB_AUTH_MODE", undefined);
     setEnv("VITE_WEB_RUNTIME_PROFILE", undefined);
+    setEnv("VITE_XAI_DESKTOP_HOST", undefined);
     setEnv("VITE_SUPABASE_URL", undefined);
     setEnv("VITE_SUPABASE_ANON_KEY", undefined);
   });
@@ -131,9 +132,9 @@ describe("AppProviders desktop auth contract", () => {
     expect(data.session?.user.role).toBe("authenticated");
   });
 
-  it("keeps transport inactive when desktop offline runtime profile is set even in live auth mode", () => {
+  it("keeps transport inactive when desktop host signal is present even in live auth mode", () => {
     setEnv("VITE_WEB_AUTH_MODE", "live");
-    setEnv("VITE_WEB_RUNTIME_PROFILE", "desktop-phase1-offline");
+    setEnv("VITE_XAI_DESKTOP_HOST", "tauri");
     setEnv("VITE_SUPABASE_URL", "https://example.supabase.co");
     setEnv("VITE_SUPABASE_ANON_KEY", "anon-key");
 

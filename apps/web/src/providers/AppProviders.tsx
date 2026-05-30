@@ -1,7 +1,7 @@
 import { useEffect, useMemo, type PropsWithChildren } from "react";
 import {
-  isDesktopPhase1OfflineRuntime,
-  resolveWebRuntimeProfile,
+  isDesktopHost,
+  resolveDesktopHost,
 } from "@repo/core";
 import {
   DeviceSessionBridge,
@@ -288,11 +288,9 @@ function resolveWebSupabaseConfig() {
 
 export function AppProviders({ children }: PropsWithChildren) {
   const authMode = resolveWebAuthMode();
-  const runtimeProfile = resolveWebRuntimeProfile(
-    import.meta.env as Record<string, string | undefined>,
+  const isDesktopHostRuntime = isDesktopHost(
+    resolveDesktopHost(import.meta.env as Record<string, string | undefined>),
   );
-  const isDesktopOfflineRuntime =
-    isDesktopPhase1OfflineRuntime(runtimeProfile);
   const config = resolveWebSupabaseConfig();
   const mockSession = authMode === "mock-authenticated" ? createMockSession() : null;
   const mockClient = useMemo<MockSupabaseLikeClient | null>(
@@ -301,17 +299,17 @@ export function AppProviders({ children }: PropsWithChildren) {
   );
   const transport = useMemo(
     () =>
-      config && authMode === "live" && !isDesktopOfflineRuntime
+      config && authMode === "live" && !isDesktopHostRuntime
         ? createRestRpcDeviceTransport({
             baseUrl: config.url
           })
         : null,
-    [authMode, config, isDesktopOfflineRuntime]
+    [authMode, config, isDesktopHostRuntime]
   );
 
   useEffect(() => {
-    mountDesktopLocalFirstRepositoryBridge(isDesktopOfflineRuntime);
-  }, [isDesktopOfflineRuntime]);
+    mountDesktopLocalFirstRepositoryBridge(isDesktopHostRuntime);
+  }, [isDesktopHostRuntime]);
 
   useEffect(() => {
     const runtime = globalThis as typeof globalThis & {
@@ -332,7 +330,7 @@ export function AppProviders({ children }: PropsWithChildren) {
       };
     };
 
-    if (!isDesktopOfflineRuntime) {
+    if (!isDesktopHostRuntime) {
       delete runtime.__XAI_DESKTOP_WEB_IMPORT__;
       delete runtime.__XAI_DESKTOP_RECONNECT_SYNC__;
       delete runtime.__XAI_DESKTOP_BACKUP__;
@@ -360,7 +358,7 @@ export function AppProviders({ children }: PropsWithChildren) {
       delete runtime.__XAI_DESKTOP_RECONNECT_SYNC__;
       delete runtime.__XAI_DESKTOP_BACKUP__;
     };
-  }, [isDesktopOfflineRuntime]);
+  }, [isDesktopHostRuntime]);
 
   return (
     <WebAuthSessionProvider client={mockClient as never} config={authMode === "live" ? config : null}>

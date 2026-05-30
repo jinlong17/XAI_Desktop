@@ -35,6 +35,7 @@ describe("desktop notification runtime snapshot", () => {
     state.requestPermission.mockResolvedValue("granted");
 
     setEnv("VITE_WEB_RUNTIME_PROFILE", "desktop-phase1-offline");
+    setEnv("VITE_XAI_DESKTOP_HOST", "tauri");
     window.__XAI_DESKTOP_NOTIFICATION__ = {
       isPermissionGranted: state.isPermissionGranted,
       requestPermission: state.requestPermission,
@@ -45,6 +46,7 @@ describe("desktop notification runtime snapshot", () => {
   afterEach(() => {
     delete window.__XAI_DESKTOP_NOTIFICATION__;
     setEnv("VITE_WEB_RUNTIME_PROFILE", undefined);
+    setEnv("VITE_XAI_DESKTOP_HOST", undefined);
   });
 
   it("emits disabled status when master notification pref is off", async () => {
@@ -91,6 +93,7 @@ describe("desktop notification runtime snapshot", () => {
   });
 
   it("emits unsupported status outside desktop runtime", async () => {
+    setEnv("VITE_XAI_DESKTOP_HOST", undefined);
     setEnv("VITE_WEB_RUNTIME_PROFILE", "web-live");
     const runtime = await import("./runtime");
 

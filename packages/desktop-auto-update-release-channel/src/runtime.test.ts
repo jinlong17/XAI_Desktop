@@ -30,12 +30,12 @@ function readySnapshot(): DesktopUpdaterSnapshot {
 describe("desktop updater runtime", () => {
   beforeEach(() => {
     delete (window as Window & { __XAI_DESKTOP_UPDATER__?: DesktopUpdaterRuntimeAdapter }).__XAI_DESKTOP_UPDATER__;
-    setEnv("VITE_WEB_RUNTIME_PROFILE", "desktop-phase1-offline");
+    setEnv("VITE_XAI_DESKTOP_HOST", "tauri");
   });
 
   afterEach(() => {
     delete (window as Window & { __XAI_DESKTOP_UPDATER__?: DesktopUpdaterRuntimeAdapter }).__XAI_DESKTOP_UPDATER__;
-    setEnv("VITE_WEB_RUNTIME_PROFILE", undefined);
+    setEnv("VITE_XAI_DESKTOP_HOST", undefined);
   });
 
   it("falls back when adapter is missing", async () => {
@@ -92,7 +92,7 @@ describe("desktop updater runtime", () => {
   });
 
   it("reports unsupported runtime as not configured", async () => {
-    setEnv("VITE_WEB_RUNTIME_PROFILE", "web-live");
+    setEnv("VITE_XAI_DESKTOP_HOST", undefined);
 
     const snapshot = await refreshDesktopUpdaterSnapshot();
     expect(snapshot.availability).toBe("disabled");

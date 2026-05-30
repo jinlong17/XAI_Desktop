@@ -1,6 +1,6 @@
 import {
-  isDesktopPhase1OfflineRuntime,
-  resolveWebRuntimeProfile,
+  isDesktopHost,
+  resolveDesktopHost,
 } from "@repo/core";
 import type {
   DesktopUpdaterAvailability,
@@ -121,8 +121,7 @@ export function subscribeDesktopUpdaterSnapshot(
 }
 
 export async function refreshDesktopUpdaterSnapshot(): Promise<DesktopUpdaterSnapshot> {
-  const runtimeProfile = resolveWebRuntimeProfile(runtimeEnv());
-  if (!isDesktopPhase1OfflineRuntime(runtimeProfile)) {
+  if (!isDesktopHost(resolveDesktopHost(runtimeEnv()))) {
     return emitSnapshot(fallbackSnapshot("updater_not_configured"));
   }
 
@@ -143,8 +142,7 @@ export async function refreshDesktopUpdaterSnapshot(): Promise<DesktopUpdaterSna
 }
 
 export async function checkDesktopForUpdates(): Promise<DesktopUpdaterSnapshot> {
-  const runtimeProfile = resolveWebRuntimeProfile(runtimeEnv());
-  if (!isDesktopPhase1OfflineRuntime(runtimeProfile)) {
+  if (!isDesktopHost(resolveDesktopHost(runtimeEnv()))) {
     return emitSnapshot(fallbackSnapshot("updater_not_configured"));
   }
 
