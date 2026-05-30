@@ -42,7 +42,7 @@ codex/web/<feature>
   -> web                         Web mainline / Web release source
   -> desktop-next                Web to App sync integration, D3 gate runs here
       <-> desktop-plugin-next    App plugin platform / SDK isolation lane
-  -> dev                         Desktop stable mainline / App RC, intentionally lags web
+  -> dev                         App-focused stable mainline / App RC (independent focus, not a web subset)
   -> release/desktop/<version>   freeze-only branch, tag vX.Y.Z
 ```
 
@@ -114,8 +114,9 @@ before shipping unless the operator explicitly starts `ship`.
    Web to Desktop movement, run the D3 gate before it reaches `desktop-next`.
 4. Keep Desktop candidate work on the downstream lane: `desktop-next` promotes
    to `dev` only after the integration cycle is green.
-5. Treat `dev` lag as a normal health indicator. Do not "catch it up" by
-   force-merging around the D3 gate.
+5. Treat `web`/`dev` divergence as the normal state of two focus branches. Do
+   not force-merge or rebase one onto the other to make them equal; share specific
+   changes on-demand via the D3 gate, and reconcile at `main`.
 6. After a shipped feature or project-system change, append a dated entry to
    `docs/workflow/project/release-log.md` through `xai-release-log`.
 7. Before finishing workflow/agent/skill changes, audit project-level untracked
