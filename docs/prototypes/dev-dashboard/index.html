@@ -1,0 +1,482 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>XAI Dev Dashboard</title>
+<style>
+  :root{
+    --bg:#08090c;
+    --rail:#0d1016;
+    --panel:#12161f;
+    --panel-2:#171d28;
+    --line:rgba(255,255,255,.09);
+    --line-strong:rgba(255,255,255,.16);
+    --text:#f4f7fb;
+    --muted:#a7b0bf;
+    --faint:#6f7b8d;
+    --green:#36d399;
+    --green-soft:rgba(54,211,153,.13);
+    --cyan:#67e8f9;
+    --cyan-soft:rgba(103,232,249,.12);
+    --amber:#f6c85f;
+    --amber-soft:rgba(246,200,95,.13);
+    --red:#f97070;
+    --red-soft:rgba(249,112,112,.13);
+    --blue:#8ab4ff;
+    --blue-soft:rgba(138,180,255,.13);
+    --ink:#0a0d12;
+    --radius:8px;
+    --shadow:0 20px 60px rgba(0,0,0,.34);
+  }
+  *{box-sizing:border-box}
+  html,body{margin:0;min-height:100%;background:var(--bg);color:var(--text)}
+  body{
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Inter,"PingFang SC","Microsoft YaHei",sans-serif;
+    font-size:14px;line-height:1.5;-webkit-font-smoothing:antialiased;
+  }
+  a{color:inherit;text-decoration:none}
+  .shell{display:grid;grid-template-columns:244px minmax(0,1fr);min-height:100vh}
+  .rail{
+    background:linear-gradient(180deg,#0e141c 0%,#090b10 100%);
+    border-right:1px solid var(--line);padding:18px 14px;position:sticky;top:0;height:100vh;overflow:auto;
+  }
+  .brand{display:flex;align-items:center;gap:10px;padding:4px 6px 18px}
+  .mark{width:32px;height:32px;border-radius:8px;background:linear-gradient(135deg,var(--green),var(--cyan));color:var(--ink);font-weight:850;display:grid;place-items:center}
+  .brand b{display:block;font-size:15px}
+  .brand span{display:block;color:var(--faint);font-size:11px;margin-top:-1px}
+  .nav-title{font-size:11px;color:var(--faint);font-weight:700;letter-spacing:.08em;text-transform:uppercase;margin:16px 8px 7px}
+  .nav a{display:flex;align-items:center;justify-content:space-between;gap:10px;color:var(--muted);padding:8px 9px;border-radius:8px;margin-bottom:3px}
+  .nav a:hover{background:rgba(255,255,255,.05);color:var(--text)}
+  .nav small{color:var(--faint);font-size:11px}
+  .rail-card{margin-top:18px;border:1px solid var(--line);background:rgba(255,255,255,.04);border-radius:8px;padding:12px}
+  .rail-card b{display:block;font-size:12px;margin-bottom:4px}
+  .rail-card p{margin:0;color:var(--muted);font-size:12px}
+  .main{min-width:0}
+  .topbar{
+    min-height:64px;border-bottom:1px solid var(--line);background:rgba(8,9,12,.78);backdrop-filter:blur(12px);
+    position:sticky;top:0;z-index:5;display:flex;align-items:center;justify-content:space-between;gap:18px;padding:0 28px;
+  }
+  .crumb{color:var(--faint);font-size:12px}
+  .crumb b{display:block;color:var(--text);font-size:17px;margin-top:1px}
+  .status-line{display:flex;gap:8px;align-items:center;flex-wrap:wrap;justify-content:flex-end}
+  .content{padding:24px 28px 44px;max-width:1480px;margin:0 auto}
+  .section{margin-bottom:18px}
+  .section-head{display:flex;align-items:end;justify-content:space-between;gap:16px;margin:0 0 12px}
+  h1,h2,h3,p{margin:0}
+  h1{font-size:25px;letter-spacing:0}
+  h2{font-size:15px;letter-spacing:0}
+  .sub{color:var(--faint);font-size:12.5px;margin-top:3px}
+  .grid-kpi{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px}
+  .grid-2{display:grid;grid-template-columns:minmax(0,1.15fr) minmax(340px,.85fr);gap:12px}
+  .grid-3{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}
+  .panel{background:var(--panel);border:1px solid var(--line);border-radius:8px;box-shadow:var(--shadow)}
+  .panel-pad{padding:16px}
+  .kpi{padding:15px}
+  .kpi .label{display:flex;justify-content:space-between;gap:10px;color:var(--muted);font-size:12px}
+  .kpi .num{font-size:28px;font-weight:780;margin-top:7px;letter-spacing:0}
+  .kpi .note{color:var(--faint);font-size:12px;margin-top:2px}
+  .badge{display:inline-flex;align-items:center;gap:6px;border-radius:999px;border:1px solid transparent;padding:3px 9px;font-weight:700;font-size:11px;line-height:1.15;white-space:nowrap}
+  .badge:before{content:"";width:6px;height:6px;border-radius:50%;background:currentColor}
+  .b-active{color:var(--green);background:var(--green-soft);border-color:rgba(54,211,153,.22)}
+  .b-maint{color:var(--blue);background:var(--blue-soft);border-color:rgba(138,180,255,.22)}
+  .b-paused{color:var(--amber);background:var(--amber-soft);border-color:rgba(246,200,95,.22)}
+  .b-proposed{color:var(--faint);background:rgba(255,255,255,.05);border-color:var(--line)}
+  .b-ready{color:var(--cyan);background:var(--cyan-soft);border-color:rgba(103,232,249,.2)}
+  .b-blocked{color:var(--red);background:var(--red-soft);border-color:rgba(249,112,112,.2)}
+  .b-done{color:var(--green);background:var(--green-soft);border-color:rgba(54,211,153,.22)}
+  .b-info{color:var(--blue);background:var(--blue-soft);border-color:rgba(138,180,255,.22)}
+  .pill{display:inline-flex;align-items:center;border:1px solid var(--line);background:var(--panel-2);border-radius:999px;padding:4px 9px;color:var(--muted);font-size:12px;font-weight:700;white-space:nowrap}
+  table{width:100%;border-collapse:collapse}
+  th,td{padding:11px 13px;border-bottom:1px solid var(--line);text-align:left;vertical-align:middle}
+  th{font-size:11px;color:var(--faint);text-transform:uppercase;letter-spacing:.05em;background:rgba(255,255,255,.025);font-weight:800}
+  tr:last-child td{border-bottom:0}
+  td strong{display:block;font-size:13px;color:var(--text)}
+  td small{display:block;color:var(--faint);font-size:11.5px;margin-top:2px}
+  .numcell{font-variant-numeric:tabular-nums;color:var(--muted);font-weight:700}
+  .pipeline{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:10px;align-items:stretch}
+  .lane{border:1px solid var(--line);background:var(--panel-2);border-radius:8px;padding:13px;position:relative;min-height:132px}
+  .lane:not(:last-child):after{content:"";position:absolute;right:-10px;top:50%;width:10px;height:1px;background:var(--line-strong)}
+  .lane h3{font-size:14px;margin-bottom:5px}
+  .lane p{color:var(--muted);font-size:12px}
+  .lane .meta{position:absolute;left:13px;right:13px;bottom:12px;display:flex;gap:6px;flex-wrap:wrap}
+  .gate-grid{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:8px;margin-top:12px}
+  .gate{border:1px solid var(--line);border-radius:8px;padding:10px;background:rgba(255,255,255,.03)}
+  .gate b{display:block;font-size:12px}
+  .gate span{display:block;color:var(--faint);font-size:11.5px;margin-top:3px}
+  .skills{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
+  .skill{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:8px;align-items:center;border:1px solid var(--line);border-radius:8px;background:rgba(255,255,255,.03);padding:9px 10px}
+  .skill b{font-size:12.5px}
+  .skill small{display:block;color:var(--faint);font-size:11px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  .roadmap-toolbar{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:10px}
+  .tabs{display:flex;gap:6px;flex-wrap:wrap}
+  .tab{border:1px solid var(--line);background:var(--panel-2);color:var(--muted);border-radius:999px;padding:6px 10px;font-size:12px;font-weight:800;cursor:pointer}
+  .tab.is-on{color:var(--ink);background:var(--cyan);border-color:var(--cyan)}
+  .roadmap-list{max-height:422px;overflow:auto;border:1px solid var(--line);border-radius:8px}
+  .roadmap-row{display:grid;grid-template-columns:minmax(220px,1fr) 86px minmax(240px,1.2fr) 118px;gap:10px;align-items:center;padding:10px 12px;border-bottom:1px solid var(--line)}
+  .roadmap-row:last-child{border-bottom:0}
+  .roadmap-row .file{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:12px;color:var(--text);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  .roadmap-row .status{color:var(--muted);font-size:12px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  .rh{color:var(--faint);font-size:11px;text-transform:uppercase;letter-spacing:.05em;background:rgba(255,255,255,.025);font-weight:800;position:sticky;top:0}
+  .rh .file,.rh .status{color:var(--faint);font-family:inherit}
+  .cadence{display:grid;gap:8px}
+  .step{display:grid;grid-template-columns:32px minmax(0,1fr);gap:10px;border:1px solid var(--line);border-radius:8px;padding:10px;background:rgba(255,255,255,.03)}
+  .step .n{width:32px;height:32px;border-radius:8px;background:var(--green-soft);color:var(--green);display:grid;place-items:center;font-weight:850}
+  .step b{display:block;font-size:12.5px}
+  .step span{display:block;color:var(--muted);font-size:12px;margin-top:2px}
+  .notice{border:1px solid rgba(103,232,249,.18);background:linear-gradient(135deg,rgba(103,232,249,.11),rgba(54,211,153,.08));border-radius:8px;padding:13px;color:var(--muted)}
+  .notice b{color:var(--text)}
+  @media (max-width:1100px){
+    .shell{grid-template-columns:1fr}
+    .rail{display:none}
+    .grid-kpi,.grid-3{grid-template-columns:repeat(2,minmax(0,1fr))}
+    .grid-2{grid-template-columns:1fr}
+    .pipeline,.gate-grid{grid-template-columns:1fr}
+    .lane:after{display:none}
+  }
+  @media (max-width:720px){
+    .topbar{align-items:flex-start;flex-direction:column;padding:14px 18px}
+    .content{padding:18px}
+    .grid-kpi,.grid-3{grid-template-columns:1fr}
+    .skills{grid-template-columns:1fr}
+    .roadmap-row{grid-template-columns:1fr;gap:5px}
+    th:nth-child(3),td:nth-child(3){display:none}
+  }
+</style>
+</head>
+<body>
+<div class="shell">
+  <aside class="rail">
+    <div class="brand">
+      <div class="mark">XD</div>
+      <div><b>XAI Dev Dashboard</b><span>ADR-0011 snapshot</span></div>
+    </div>
+    <div class="nav">
+      <div class="nav-title">Panels</div>
+      <a href="#products">产品线 <small>6</small></a>
+      <a href="#branches">分支流水线 <small>D2/D3</small></a>
+      <a href="#skills">Skill 目录 <small>14</small></a>
+      <a href="#roadmaps">Roadmap <small id="navRoadmapCount">0</small></a>
+      <a href="#cadence">开发节奏 <small>solo</small></a>
+    </div>
+    <div class="rail-card">
+      <b>Normal signal</b>
+      <p>`dev` intentionally lags `web`; dashboard treats lag as health context, not an alert.</p>
+    </div>
+  </aside>
+
+  <main class="main">
+    <header class="topbar">
+      <div class="crumb">
+        docs/prototypes/dev-dashboard/index.html
+        <b>单人开发者导航看板</b>
+      </div>
+      <div class="status-line">
+        <span class="badge b-info">ADR-0011 Proposed</span>
+        <span class="badge b-active">P1 Desktop active</span>
+        <span class="badge b-maint">P0 Web maintenance</span>
+      </div>
+    </header>
+
+    <div class="content">
+      <section class="section">
+        <div class="section-head">
+          <div>
+            <h1>Branch, workflow, and roadmap control surface</h1>
+            <p class="sub">Static internal snapshot from ADR-0011, CLAUDE.md, developer.md, usage-guide §16/§17, and docs/workflow/roadmap/*.md.</p>
+          </div>
+          <span class="pill">Zero build · single HTML</span>
+        </div>
+        <div class="grid-kpi" id="kpis"></div>
+      </section>
+
+      <section class="section grid-2" id="products">
+        <div class="panel">
+          <div class="section-head panel-pad" style="padding-bottom:8px">
+            <div>
+              <h2>产品线状态</h2>
+              <p class="sub">Product importance is separate from current dev permission.</p>
+            </div>
+          </div>
+          <table>
+            <thead><tr><th>#</th><th>Line</th><th>Priority</th><th>Status</th><th>Current rule</th></tr></thead>
+            <tbody id="productRows"></tbody>
+          </table>
+        </div>
+        <div class="panel panel-pad">
+          <h2>Account cloud-sync contract</h2>
+          <p class="sub">ADR-0011 D4 builds on `data-repository-v0` syncScope; it does not redefine the model.</p>
+          <div class="notice" style="margin-top:12px">
+            <b>Topology:</b> Web IndexedDB and App SQLite do not sync to each other. Both sync through `/sync/push` and `/sync/pull` to one account cloud of encrypted blobs.
+          </div>
+          <div class="gate-grid" style="grid-template-columns:1fr;margin-top:12px">
+            <div class="gate"><b>Only account-sync travels</b><span>`syncScope: account-sync` enters remote sync; `device-local` never enters outbox.</span></div>
+            <div class="gate"><b>Completeness checklist</b><span>New account-sync features need entity, schema, store mapping, push, pull, conflict, Web test, App test, and two-device smoke.</span></div>
+          </div>
+        </div>
+      </section>
+
+      <section class="section panel panel-pad" id="branches">
+        <div class="section-head">
+          <div>
+            <h2>分支流水线</h2>
+            <p class="sub">Defined by ADR-0011 D2. New lanes are not created by this dashboard.</p>
+          </div>
+          <span class="badge b-info">`web` leads · `dev` lags normally</span>
+        </div>
+        <div class="pipeline" id="pipeline"></div>
+        <div class="gate-grid" id="gateGrid"></div>
+      </section>
+
+      <section class="section grid-2" id="skills">
+        <div class="panel panel-pad">
+          <div class="section-head">
+            <div>
+              <h2>固定 skill 目录</h2>
+              <p class="sub">Project-layer workflow skills plus future D3 sync skill.</p>
+            </div>
+          </div>
+          <div class="skills" id="projectSkills"></div>
+        </div>
+        <div class="panel panel-pad">
+          <div class="section-head">
+            <div>
+              <h2>Portable skills</h2>
+              <p class="sub">10 mirrored public skills under `.codex/skills/`.</p>
+            </div>
+          </div>
+          <div class="skills" id="portableSkills"></div>
+        </div>
+      </section>
+
+      <section class="section panel panel-pad" id="roadmaps">
+        <div class="roadmap-toolbar">
+          <div>
+            <h2>在飞 roadmap snapshot</h2>
+            <p class="sub">Filename + current status snapshot from `docs/workflow/roadmap/*.md`.</p>
+          </div>
+          <div class="tabs" role="tablist" aria-label="Roadmap filters">
+            <button class="tab is-on" data-filter="active" type="button">Active</button>
+            <button class="tab" data-filter="manifest" type="button">Manifests</button>
+            <button class="tab" data-filter="support" type="button">Support docs</button>
+            <button class="tab" data-filter="all" type="button">All</button>
+          </div>
+        </div>
+        <div class="roadmap-list" id="roadmapRows"></div>
+      </section>
+
+      <section class="section grid-3" id="cadence">
+        <div class="panel panel-pad">
+          <h2>Workflow levels</h2>
+          <div class="cadence" id="workflowLevels" style="margin-top:12px"></div>
+        </div>
+        <div class="panel panel-pad">
+          <h2>开发节奏</h2>
+          <div class="cadence" id="rhythm" style="margin-top:12px"></div>
+        </div>
+        <div class="panel panel-pad">
+          <h2>Stop rules</h2>
+          <div class="cadence" id="stopRules" style="margin-top:12px"></div>
+        </div>
+      </section>
+    </div>
+  </main>
+</div>
+
+<script>
+const products = [
+  {n:1,line:"web",where:"apps/web/",priority:"P0",status:"maintenance",rule:"Bug-fix only; new work needs P0 carve-out citing ADR-0010 D4."},
+  {n:2,line:"mac desktop App",where:"apps/desktop/",priority:"P1",status:"active",rule:"Primary focus: G1 native foundation."},
+  {n:3,line:"desktop organizer plugins / widgets",where:"apps/desktop/ plugin slots",priority:"P2",status:"paused",rule:"Resume after G1 ships."},
+  {n:4,line:"account cloud-sync layer",where:"sync-v1 stack + server",priority:"P2",status:"paused",rule:"Post-G1; governed by ADR-0011 D4."},
+  {n:5,line:"official website",where:"not yet a package",priority:"PROPOSED",status:"proposed",rule:"Distribution/download/updater host; operator-confirmed trigger."},
+  {n:6,line:"admin-dashboard",where:"docs/prototypes/admin-dashboard/index.html",priority:"PROPOSED",status:"proposed",rule:"Prototype only; no package or roadmap yet."}
+];
+
+const pipeline = [
+  {name:"web",role:"Web mainline / Web release source",status:"exists",note:"Most-current dev line"},
+  {name:"desktop-next",role:"Web to App sync integration",status:"defined",note:"D3 gate runs here"},
+  {name:"desktop-plugin-next",role:"Plugin platform / SDK lane",status:"defined",note:"Isolates platform churn"},
+  {name:"dev",role:"Desktop stable / App RC",status:"exists",note:"Intentional lag"},
+  {name:"release/desktop/<version>",role:"Freeze-only release branch",status:"ephemeral",note:"Sign, notarize, dmg, updater"}
+];
+
+const gateTiers = [
+  ["W0","web-only","Record only; no Desktop merge required."],
+  ["W1","shared-ui-safe","Merge to desktop-next; Web build + tauri build."],
+  ["W2","desktop-runtime-affected","Add offline/runtime/profile checks."],
+  ["W3","native-bridge-needed","Route delta via /xai-feature-full-loop."],
+  ["W4","release-risk","RC/release gate plus manual macOS smoke."]
+];
+
+const projectSkills = [
+  ["xai-feature-brief",".teams/skills/xai-feature-brief/SKILL.md","landed"],
+  ["xai-feature-full-loop",".teams/skills/xai-feature-full-loop/SKILL.md","landed"],
+  ["xai-roadmap-loop",".teams/skills/xai-roadmap-loop/SKILL.md","landed"],
+  ["xai-web-to-desktop-sync","planned future skill from ADR-0011 D3","PLANNED"]
+];
+
+const portableSkills = [
+  "agent-behavioral-guidelines","codebase-explorer","composition-patterns","frontend-dev","gh-fix-ci",
+  "planning-with-files","security-skills-claude-code","skill-creator","superpowers","workflow-router"
+].map(name => [name, `.codex/skills/${name}/SKILL.md`, "mirrored"]);
+
+const roadmaps = [
+  {file:"sync-v1.autorun-20260519.md",rows:0,status:"autorun log",kind:"support"},
+  {file:"sync-v1.deferred-gates.md",rows:0,status:"deferred gates ledger",kind:"support"},
+  {file:"sync-v1.incidents.md",rows:0,status:"incidents ledger",kind:"support"},
+  {file:"sync-v1.md",rows:56,status:"SHIPPED:34, PENDING:19, BLOCKED_EXTERNAL:2, BLOCKED:1",kind:"active"},
+  {file:"sync-v1.tasks.md",rows:0,status:"task plan",kind:"support"},
+  {file:"web-ticktick-parity.md",rows:25,status:"SHIPPED:10, PENDING:10, BLOCKED_EXTERNAL:5",kind:"active"},
+  {file:"xai-g0-window-spike.md",rows:6,status:"SHIPPED:5, BLOCKED_EXTERNAL:1",kind:"manifest"},
+  {file:"xai-g1-native-foundation.md",rows:6,status:"SHIPPED:5, BLOCKED_EXTERNAL:1",kind:"active"},
+  {file:"xai-g2-data-security-foundation.md",rows:8,status:"SHIPPED:6, RECONCILE_AFTER_G2.1:1, BLOCKED_EXTERNAL:1",kind:"manifest"},
+  {file:"xai-v1.autorun-20260519.md",rows:0,status:"autorun log",kind:"support"},
+  {file:"xai-v1.deferred-gates.md",rows:0,status:"deferred gates ledger",kind:"support"},
+  {file:"xai-v1.incidents.md",rows:0,status:"incidents ledger",kind:"support"},
+  {file:"xai-v1.next-phase-targets.md",rows:0,status:"next phase targets",kind:"support"},
+  {file:"xai-v1.parallel-wave-plan.md",rows:0,status:"wave plan",kind:"support"},
+  {file:"xai-v1.track-b-log.md",rows:0,status:"track log",kind:"support"},
+  {file:"xai-v1.track-c-log.md",rows:0,status:"track log",kind:"support"},
+  {file:"xai-v1.track-d-log.md",rows:0,status:"track log",kind:"support"},
+  {file:"xai-v1.track-e-log.md",rows:0,status:"track log",kind:"support"},
+  {file:"xai-v1.track-f-log.md",rows:0,status:"track log",kind:"support"},
+  {file:"xai-web-ai-tool-edit-delete.md",rows:0,status:"support doc",kind:"support"},
+  {file:"xai-web-ai-tool-layer.md",rows:0,status:"support doc",kind:"support"},
+  {file:"xai-web-ai-tool-openai-compatible.md",rows:0,status:"support doc",kind:"support"},
+  {file:"xai-web-calendar-event-create.md",rows:1,status:"NEEDS_REVIEW:1",kind:"active"},
+  {file:"xai-web-console-gap-closure.md",rows:9,status:"SHIPPED:9",kind:"manifest"},
+  {file:"xai-web-console.md",rows:24,status:"SHIPPED:24",kind:"manifest"},
+  {file:"xai-web-dashboard-real-data.md",rows:1,status:"NEEDS_REVIEW:1",kind:"active"},
+  {file:"xai-web-dashboard-stickies-create.md",rows:1,status:"NEEDS_REVIEW:1",kind:"active"},
+  {file:"xai-web-dashboard-weather-mail.md",rows:1,status:"NEEDS_REVIEW:1",kind:"active"},
+  {file:"xai-web-matrix-card-create.md",rows:1,status:"READY_FOR_VERIFY:1",kind:"active"},
+  {file:"xai-web-statistics-real-aggregation.md",rows:1,status:"NEEDS_REVIEW (B1 revised -> re-review):1",kind:"active"},
+  {file:"xai-web-tasks-card-create.md",rows:1,status:"APPROVED:1",kind:"active"},
+  {file:"xai-web-tasks-smartlist-filter.md",rows:1,status:"NEEDS_REVIEW:1",kind:"active"}
+];
+
+const workflowLevels = [
+  ["1","Manual subagent workflow","Use SOP_NEW_FEATURE or SOP_BUGFIX when you need full control or recovery."],
+  ["2","Single-feature parent recipe","Use /xai-feature-full-loop for one normal feature or bugfix, stopping before ship."],
+  ["3","Roadmap orchestration","Use /xai-roadmap-loop for reviewed manifests and wave dispatch."]
+];
+
+const rhythm = [
+  ["1","Pick product line","Confirm P1 active, P0 maintenance-only, P2 paused, or proposed."],
+  ["2","Choose workflow level","Manual for recovery, full-loop for one feature, roadmap-loop for waves."],
+  ["3","Gate Web to Desktop","Classify W0-W4 and emit a parity receipt before web reaches desktop-next."],
+  ["4","Promote deliberately","desktop-next promotes to dev only after integration is green."]
+];
+
+const stopRules = [
+  ["A","No branch ops here","This dashboard does not create desktop-next, desktop-plugin-next, release/*, or touch dev."],
+  ["B","No auto ship","ship remains human-triggered; loops stop before shipping."],
+  ["C","Lag is normal","web ahead of dev is a managed state, not a red alert."],
+  ["D","Docs-only prototype","Static snapshot, not a product package."]
+];
+
+function badgeClass(value){
+  const v = String(value).toLowerCase();
+  if(v.includes("active") || v.includes("exists")) return "b-active";
+  if(v.includes("maintenance") || v.includes("defined") || v.includes("ephemeral")) return "b-maint";
+  if(v.includes("paused") || v.includes("pending") || v.includes("approved") || v.includes("needs_review")) return "b-paused";
+  if(v.includes("blocked")) return "b-blocked";
+  if(v.includes("shipped")) return "b-done";
+  if(v.includes("ready") || v.includes("planned")) return "b-ready";
+  return "b-proposed";
+}
+
+function el(tag, className, html){
+  const node = document.createElement(tag);
+  if(className) node.className = className;
+  if(html !== undefined) node.innerHTML = html;
+  return node;
+}
+
+function renderKpis(){
+  const activeRoadmaps = roadmaps.filter(r => r.kind === "active").length;
+  const cards = [
+    ["Product lines", products.length, "6-line ADR-0011 map"],
+    ["Active focus", "P1", "Desktop G1 native foundation"],
+    ["Branch model", "web -> dev", "via D3 gate and downstream lanes"],
+    ["Roadmap files", roadmaps.length, `${activeRoadmaps} active snapshots`]
+  ];
+  const root = document.getElementById("kpis");
+  cards.forEach(([label,num,note]) => {
+    root.appendChild(el("div","panel kpi",`<div class="label"><span>${label}</span><span class="pill">snapshot</span></div><div class="num">${num}</div><div class="note">${note}</div>`));
+  });
+  document.getElementById("navRoadmapCount").textContent = roadmaps.length;
+}
+
+function renderProducts(){
+  const body = document.getElementById("productRows");
+  products.forEach(p => {
+    body.appendChild(el("tr","",`<td class="numcell">${p.n}</td><td><strong>${p.line}</strong><small>${p.where}</small></td><td><span class="pill">${p.priority}</span></td><td><span class="badge ${badgeClass(p.status)}">${p.status}</span></td><td>${p.rule}</td>`));
+  });
+}
+
+function renderPipeline(){
+  const root = document.getElementById("pipeline");
+  pipeline.forEach(l => {
+    root.appendChild(el("div","lane",`<h3>${l.name}</h3><p>${l.role}</p><div class="meta"><span class="badge ${badgeClass(l.status)}">${l.status}</span><span class="pill">${l.note}</span></div>`));
+  });
+  const gate = document.getElementById("gateGrid");
+  gateTiers.forEach(([tier,name,action]) => {
+    gate.appendChild(el("div","gate",`<b>${tier} · ${name}</b><span>${action}</span>`));
+  });
+}
+
+function renderSkills(list, id){
+  const root = document.getElementById(id);
+  list.forEach(([name,path,status]) => {
+    root.appendChild(el("div","skill",`<div><b>${name}</b><small>${path}</small></div><span class="badge ${badgeClass(status)}">${status}</span>`));
+  });
+}
+
+function rowKindBadge(kind){
+  if(kind === "active") return `<span class="badge b-ready">active</span>`;
+  if(kind === "manifest") return `<span class="badge b-info">manifest</span>`;
+  return `<span class="badge b-proposed">support</span>`;
+}
+
+function renderRoadmaps(filter="active"){
+  const root = document.getElementById("roadmapRows");
+  root.innerHTML = "";
+  root.appendChild(el("div","roadmap-row rh",`<div class="file">File</div><div>Rows</div><div class="status">Status</div><div>Kind</div>`));
+  const filtered = roadmaps.filter(r => filter === "all" || r.kind === filter || (filter === "manifest" && (r.kind === "manifest" || r.kind === "active")));
+  filtered.forEach(r => {
+    root.appendChild(el("div","roadmap-row",`<div class="file" title="${r.file}">${r.file}</div><div class="numcell">${r.rows}</div><div class="status" title="${r.status}">${r.status}</div><div>${rowKindBadge(r.kind)}</div>`));
+  });
+}
+
+function renderSteps(list,id){
+  const root = document.getElementById(id);
+  list.forEach(([n,title,desc]) => {
+    root.appendChild(el("div","step",`<div class="n">${n}</div><div><b>${title}</b><span>${desc}</span></div>`));
+  });
+}
+
+function wireTabs(){
+  document.querySelectorAll(".tab").forEach(btn => {
+    btn.addEventListener("click", () => {
+      document.querySelectorAll(".tab").forEach(b => b.classList.remove("is-on"));
+      btn.classList.add("is-on");
+      renderRoadmaps(btn.dataset.filter);
+    });
+  });
+}
+
+renderKpis();
+renderProducts();
+renderPipeline();
+renderSkills(projectSkills,"projectSkills");
+renderSkills(portableSkills,"portableSkills");
+renderRoadmaps("active");
+renderSteps(workflowLevels,"workflowLevels");
+renderSteps(rhythm,"rhythm");
+renderSteps(stopRules,"stopRules");
+wireTabs();
+</script>
+</body>
+</html>
