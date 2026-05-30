@@ -879,45 +879,6 @@ const branchWorkflow = dashboardState.branch_workflow || [
   ["release", "冻结发布", "release/desktop/*", "只放版本、签名、公证、dmg 和 blocker。"]
 ];
 
-const docs = [
-  {
-    label: "工作手册",
-    source: "docs/workflow/project/handbook.md",
-    href: "../../workflow/project/handbook.md",
-    pages: [
-      {title:"工作手册是什么", body:["它是单人开发导航层：告诉你权威文件在哪里、产品线怎么分、branch 怎么走、skill 怎么选。","它不替代 ADR、usage-guide 或 roadmap，只把入口整理成一张地图。"]},
-      {title:"新手三步", body:["先选产品线：这次改的是 Web、App、插件、账号同步、官方网页还是 Admin 控制面。","再选 branch：看它影响的是 Web、桌面集成、插件平台、同步基建、官网发布还是后台配置。","最后选 workflow：小修走手动；单功能走 full-loop；多功能走 roadmap-loop。"]}
-    ]
-  },
-  {
-    label: "分支治理",
-    source: "docs/adr/0013-branch-sync-governance.md",
-    href: "../../adr/0013-branch-sync-governance.md",
-    pages: [
-      {title:"核心结论", body:["`web` 领先 `dev` 是设计，不是 drift。","Web 改动进入桌面前，需要先通过 D3 gate 分类 W0-W4。","`desktop-next` 是集成线，`dev` 是 App RC 稳定线。"]},
-      {title:"不要把产品线等同 branch", body:["产品线回答“我们做什么产品”。","branch 回答“这批变化在哪个稳定阶段集成、验证、发布”。","长期 branch 只给长期集成节奏，不给每个产品线都开一条。"]}
-    ]
-  },
-  {
-    label: "Workflow V2",
-    source: "docs/workflow/project/usage-guide.md",
-    href: "../../workflow/project/usage-guide.md",
-    pages: [
-      {title:"三档工作流", body:["Level 1：手动 subagent，适合排障或恢复。","Level 2：`/xai-feature-full-loop`，适合一个功能从 brief 到 verify。","Level 3：`/xai-roadmap-loop`，适合一批 roadmap wave。"]},
-      {title:"收口原则", body:["ship 是人触发的门，普通 loop 不自动发布。","每次结束要有证据：测试、截图、parity receipt、release log 或明确 blocked gate。"]}
-    ]
-  },
-  {
-    label: "Release Log",
-    source: "docs/workflow/project/release-log.md",
-    href: "../../workflow/project/release-log.md",
-    pages: [
-      {title:"记录什么", body:["日期、产品线、branch、用户可见变化、开发者增量、验证结果、风险和下一步。","不要写营销空话；没有验证就写“未运行”。"]},
-      {title:"什么时候写", body:["ship 后必须写。","系统层治理文档、skill、branch 规则变化也要写。","两台电脑并行时，release log 是跨机器同步前的低成本对账单。"]}
-    ]
-  }
-];
-
 const skills = (dashboardState.skills_found || []).map(skill => ({
   name: skill.name,
   desc: skill.description || (skill.tracked ? "tracked project skill" : "local skill file"),
@@ -1436,47 +1397,6 @@ function initDocLibrary(){
   document.getElementById("docRevealButton").addEventListener("click", async () => {
     if(currentDocPath) await fetchJson(`/api/reveal?path=${encodeURIComponent(currentDocPath)}`);
   });
-}
-
-let docIndex = 0;
-let pageIndex = 0;
-function renderDocTabs(){
-  const root = document.getElementById("docTabs");
-  root.innerHTML = docs.map((doc, i) => `
-    <button class="doc-tab ${i === docIndex ? "is-on" : ""}" data-doc="${i}" type="button">
-      ${doc.label}<small>${doc.source}</small>
-    </button>
-  `).join("");
-  root.querySelectorAll(".doc-tab").forEach(btn => {
-    btn.addEventListener("click", () => {
-      docIndex = Number(btn.dataset.doc);
-      pageIndex = 0;
-      renderReader();
-    });
-  });
-}
-
-function renderReader(){
-  const doc = docs[docIndex];
-  const page = doc.pages[pageIndex];
-  document.getElementById("readerTitle").textContent = page.title;
-  document.getElementById("readerSource").textContent = doc.source;
-  document.getElementById("readerLink").href = doc.href;
-  document.getElementById("readerBody").innerHTML = `<ul>${page.body.map(item => `<li>${item}</li>`).join("")}</ul>`;
-  document.getElementById("readerMeta").textContent = `${doc.label} · ${pageIndex + 1} / ${doc.pages.length}`;
-  document.getElementById("pageCount").textContent = `${pageIndex + 1} / ${doc.pages.length}`;
-  document.getElementById("prevPage").disabled = pageIndex === 0;
-  document.getElementById("nextPage").disabled = pageIndex === doc.pages.length - 1;
-  renderDocTabs();
-}
-
-function renderSkills(){
-  document.getElementById("skillGrid").innerHTML = (skills.length ? skills : [{name:"未发现", desc:"运行 dashboard 生成快照", path:".teams/skills", status:"local-only"}]).map(skill => `
-    <div class="skill-row">
-      <div><b>${h(skill.name)}</b><span>${h(skill.desc)}</span><span>${h(skill.path)}</span></div>
-      <span class="badge ${badgeClass(skill.status)}">${h(skill.status)}</span>
-    </div>
-  `).join("");
 }
 
 function renderBranches(){
