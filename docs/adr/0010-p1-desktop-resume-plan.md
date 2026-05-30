@@ -6,12 +6,12 @@
 |---|---|
 | ADR # | 0010 |
 | Title | P1 Desktop Client Resume Plan |
-| Status | **Accepted** — 2026-05-26 (Chrome-only carve-out per ADR-0008 §S3 24h-evidence pattern; see Acceptance Note below) |
+| Status | **Accepted** — 2026-05-26; **Amended** — 2026-05-30 (Web mainline new-work permission restored; see 2026-05-30 Amendment Note) |
 | Date | 2026-05-26 |
 | Author | Claude Opus 4.7 (1M context) — drafted at operator request after 9/9 gap-closure SHIPPED |
 | Supersedes | ADR-0009 §D1 (priority order) once Accepted |
 | Builds on | ADR-0009 §D2 (P1 launch gating), ADR-0007 (web build form), ADR-0008 §S3 (CSP) |
-| Related | xai-g0-window-spike.md / xai-g1-native-foundation.md / xai-g2-data-security-foundation.md (PAUSED desktop roadmaps to be unfrozen by this ADR) |
+| Related | xai-g0-window-spike.md / xai-g1-native-foundation.md / xai-g2-data-security-foundation.md (PAUSED desktop roadmaps to be unfrozen by this ADR); ADR-0013 branch topology + D3 Web to Desktop gate |
 
 ---
 
@@ -29,7 +29,7 @@ As of 2026-05-26, ADR-0009 §D2 gates evaluate:
 | **G4** — ADR-0009 Accepted | ✅ **PASS** | `docs/adr/0009-web-to-desktop-pivot-plan.md` committed + pushed |
 | **G5** — No drift on P0 manifest / PLUGIN_MAP / dev_log triad | ✅ **PASS** | All 3 sources reconciled per 2026-05-26 final-reconcile commit `1c021a1` |
 
-**Net: 5 of 5 gates PASS (as of 2026-05-26 Chrome-only carve-out).** ADR-0010 Status flipped DRAFT → Accepted in the same commit that records G2 PASS. D1 priority order is active from this commit forward.
+**Net: 5 of 5 gates PASS (as of 2026-05-26 Chrome-only carve-out).** ADR-0010 Status flipped DRAFT → Accepted in the same commit that records G2 PASS. The original D1 priority order was active from that commit until the 2026-05-30 amendment below restored Web mainline new-work permission.
 
 ---
 
@@ -62,15 +62,15 @@ Flip ADR Status=Partial-Accepted: allow P1 planning work (new ADRs, new roadmap 
 
 ## S4 — Decisions
 
-### D1 — New priority order (active once this ADR Status=Accepted)
+### D1 — Priority order (amended 2026-05-30)
 
 | Tier | Surface | Status under this ADR |
 |---|---|---|
-| **P1** | macOS Desktop client (Tauri overlay shell) | **Active** — primary focus, new dev work permitted |
-| **P0** | Web Console (apps/web + xai-web-* + plugin-web-*) | **Maintenance-only** — bugfix permitted; new features need explicit P0 carve-out commit citing this ADR |
+| **P0** | Web Console (apps/web + xai-web-* + plugin-web-*) | **Active Web mainline** — new feature and bug-fix work are permitted on `web` / `codex/web/<feature>` without a P0 carve-out; Desktop-impacting changes require ADR-0013 D3 classification before promotion |
+| **P1** | macOS Desktop client (Tauri overlay shell) | **Active App lane** — G1 native foundation and App-specific work remain permitted on the independent Desktop lane |
 | **P2** | Desktop organizer plugins & tools (plugin-organizer, plugin-clipboard, etc.) | **Paused** — resumes when P1 enters beta |
 
-This **supersedes ADR-0009 §D1** (the prior `P0 active → P1 paused → P2 paused` order).
+This **amends the 2026-05-26 version of ADR-0010**. The Desktop lane stays active, but the prior "P0 Web maintenance-only / new features need P0 carve-out" reading is no longer project policy.
 
 ### D2 — P1 roadmap re-activation
 
@@ -83,7 +83,7 @@ The following 19 paused roadmaps are evaluated for P1 reactivation:
 | `xai-g2-data-security-foundation.md` (sync-v1 W0-W3) | **Stay PAUSED until G1 SHIPPED** | sync-v1 crypto stack (~50 packages) is wave 2; activate after G1. |
 | `xai-v1.md` + `xai-v1.{tasks, deferred-gates, incidents, autorun, parallel-wave-plan, track-{b,c,d,e,f}-log}.md` (10 files) | **Unfreeze with re-review** | The xai-v1 manifest predates web-pivot. Owner must re-verify each track is still in scope before resuming. |
 | `sync-v1.{md, tasks, deferred-gates, incidents, autorun}.md` (5 files) | **Stay PAUSED** — re-evaluate during G2 startup | Sync-v1 work is post-G1 per current sequencing. |
-| `web-ticktick-parity.md` | **Stay SUPERSEDED-IN-PART** | Per ADR-0007: 4 rows superseded by xai-web-console; rest deferred. P0 maintenance only. |
+| `web-ticktick-parity.md` | **Stay SUPERSEDED-IN-PART** | Per ADR-0007: 4 rows superseded by xai-web-console; rest deferred. New Web work should use the current Web Console package/roadmap form, not revive superseded rows. |
 
 ### D3 — Re-emphasize SYSTEM_ARCHITECTURE.md §3-§10 as P1-active rules
 
@@ -102,16 +102,16 @@ ADR-0009 §D3 Surface Scope Matrix marked many SYSTEM_ARCHITECTURE.md rules as "
 
 Per ADR-0009 §D3 matrix: any future ambiguity that affects both surfaces lands as a new matrix row or new ADR.
 
-### D4 — Operational rules during P1 period
+### D4 — Operational rules during active Web + App lanes
 
-- **New work on P1:** **permitted** — new feature plans, new dev_logs, new packages, new ADRs scoped to desktop/sync/organizer.
-- **New work on P0 web:** **maintenance-only** — bug-fix workflow permitted; new feature plans require an explicit P0 carve-out commit citing this ADR's D1.
-- **In-flight items on P0/P1 from gap-closure period:** complete normally; ship commits no longer need to cite ADR-0009 P0 carve-out.
-- **Bug-fix on P0 web SHIPPED rows:** permitted under bug-fix workflow without ADR citation (P0 is now maintenance-only, bug-fix is expected).
-- **Cross-cut changes (e.g., `@repo/core`):** P1 motivation may dominate the commit Why block; P0 side-effects documented but not the driver.
+- **New work on P0 Web:** **permitted** — use normal feature/bugfix workflow from `web` or `codex/web/<feature>`; no P0 carve-out commit is required. If the change may affect Desktop, run ADR-0013 D3 classification before promotion toward `desktop-next` / `dev`.
+- **New work on P1 App:** **permitted** — new feature plans, new dev_logs, new packages, new ADRs scoped to desktop/sync/organizer remain valid on the App lane.
+- **Historical P0 carve-outs:** remain valid audit records for work started under the 2026-05-26 policy, but they are no longer required for new Web features after the 2026-05-30 amendment.
+- **Bug-fix on P0 web SHIPPED rows:** permitted under bug-fix workflow without ADR citation.
+- **Cross-cut changes (e.g., `@repo/core`):** cite the driver honestly; Web side-effects and Desktop side-effects both need D3-aware documentation when relevant.
 - **PLUGIN_MAP discipline:** Update the "Current Priority" table at top of PLUGIN_MAP.md (added 2026-05-24 PR-2) to reflect new D1 order. The 19 paused roadmap banners are updated per D2 per-roadmap action.
 - **Roadmap discipline:**
-  - `xai-web-console.md` + `xai-web-console-gap-closure.md`: keep as SHIPPED archive; no new rows go here.
+  - `xai-web-console.md` + `xai-web-console-gap-closure.md`: keep as SHIPPED archive; new Web features use feature-specific roadmap/dev_log artifacts instead of reopening the closed manifests.
   - `xai-g0-window-spike.md` + `xai-g1-native-foundation.md` + `xai-v1.*`: unfreeze (drop PAUSED banner) and refresh the dev_log Status Panels of in-flight packages.
 
 ### D5 — G2 evidence acceptance protocol
@@ -160,7 +160,7 @@ To flip this ADR Status from DRAFT to Accepted, the operator must:
 
 ## S7 — Acceptance / Review
 
-This ADR will be Accepted by the operator after G2 evidence is collected per §S4 D5. Until then, Status=DRAFT and D1 priority flip is NOT in effect.
+This ADR was Accepted by the operator after G2 evidence was collected per §S4 D5, then amended on 2026-05-30 to restore Web mainline new-work permission.
 
 **Cross-vendor review:** N/A while DRAFT. Once Status=Accepted, Codex cold-read this ADR's D1-D5 decisions per ADR-0008 §S3 D3 binding-precedent pattern.
 
@@ -200,3 +200,19 @@ G0/G1 roadmaps.
 (D1-D5 decisions) per ADR-0008 §S3 D3 binding-precedent pattern remains
 recommended but not blocking. Queue as a Category 5 operator item if the
 project owner wants formal sign-off.
+
+## 2026-05-30 Amendment Note
+
+Operator correction: the `web` branch has remained the Web product mainline.
+The 2026-05-26 maintenance-only language was too broad and caused agents to
+misclassify legitimate Web feature work as requiring a P0 carve-out.
+
+Effective immediately:
+
+- P0 Web Console is the active Web mainline.
+- New Web features and bugfixes are permitted through normal workflow on
+  `web` / `codex/web/<feature>`.
+- P0 carve-out commits are no longer required for new Web feature work.
+- P1 Desktop work remains active on its independent App lane.
+- ADR-0013 D3 remains the required gate when a Web change should move toward
+  Desktop.

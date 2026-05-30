@@ -802,7 +802,7 @@ function renderOverview(){
   `).join("");
 
   const rows = overviewRows.length ? overviewRows : [
-    {label:"当前主线", value:"P1 Mac Desktop App / G1 native foundation"},
+    {label:"当前主线", value:"Web mainline / independent App lane"},
     {label:"自动跟踪", value:"生成快照未加载；请运行 node scripts/dashboard/generate-state.mjs。"}
   ];
   document.getElementById("overviewFocus").innerHTML = rows.map((item, index) => `

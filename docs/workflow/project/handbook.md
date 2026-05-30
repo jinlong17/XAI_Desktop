@@ -18,14 +18,14 @@
 
 ## Product-Line Map
 
-Product priority and current development permission are separate. ADR-0013 keeps
-both columns visible so Web can be the most complete product while Desktop stays
-the active development focus.
+Product priority and development lanes are separate. ADR-0013 keeps both
+columns visible so Web can remain the active product mainline while Desktop
+continues on its independent App lane.
 
 | # | Product line | Where | Priority | Current status | Work rule |
 |---|---|---|---|---|---|
-| 1 | web | `apps/web/` | P0 | maintenance | Bug-fix only. New work needs a P0 carve-out citing ADR-0010 §D4. |
-| 2 | mac desktop App | `apps/desktop/` | P1 | active | Primary focus: G1 native foundation. |
+| 1 | web | `apps/web/` | P0 | active mainline | Feature and bug-fix work are permitted on `web`; run D3 before Desktop promotion. |
+| 2 | mac desktop App | `apps/desktop/` | P1 | active App lane | G1 native foundation continues independently. |
 | 3 | desktop organizer plugins / widgets | `apps/desktop/` plugin slots | P2 | paused | Resume after G1 ships. |
 | 4 | account cloud-sync layer | sync-v1 stack + server | P2 | paused | Resume after G1. Governed by ADR-0013 §D4. |
 | 5 | official website | not yet a package | PROPOSED | proposed | Distribution/download/updater host; start trigger still operator-confirmed. |
@@ -106,8 +106,9 @@ before shipping unless the operator explicitly starts `ship`.
 
 ## Solo Development Rhythm
 
-1. Pick the product line and confirm the current work rule: P1 Desktop active,
-   P0 Web maintenance-only, P2 lines paused, proposed lines not authorized yet.
+1. Pick the product line and confirm the current work rule: P0 Web active
+   mainline, P1 Desktop active App lane, P2 lines paused, proposed lines not
+   authorized yet.
 2. Pick the workflow level. Use Level 1 for recovery, Level 2 for one feature,
    and Level 3 for roadmap waves.
 3. For Web work, branch from `web` using a short-lived feature branch. For any

@@ -28,11 +28,11 @@
   "status_rows": [
     {
       "label": "当前主线",
-      "value": "P1 Mac 桌面版 App / G1 native foundation。"
+      "value": "Web 主线（web 分支）+ Mac App 独立开发线。"
     },
     {
       "label": "Web 的位置",
-      "value": "功能最全、仍是 UI 源头；新功能需要 P0 carve-out。"
+      "value": "功能最全、当前 Web 产品主线；新功能走普通 feature workflow，进 Desktop 前过 D3 gate。"
     },
     {
       "label": "两台电脑并行",
@@ -154,11 +154,11 @@
       "order": 1,
       "title": "Web",
       "subtitle": "项目最全的功能产品",
-      "badge": "P0 · maintenance",
-      "status": "维护主线",
+      "badge": "P0 · active",
+      "status": "Web 主线",
       "branch": "web / codex/web/<feature>",
       "dependency": "App UI 源头",
-      "next": "只做 bugfix；新功能需要 P0 carve-out。",
+      "next": "新功能和 bugfix 都走 Web 正常 workflow；影响 Desktop 时先过 D3 gate。",
       "tracker": "功能完整度、Web 发布、共享 UI 合同、D3 影响。",
       "points": [
         [
@@ -180,8 +180,8 @@
       "order": 2,
       "title": "Mac 桌面版 App",
       "subtitle": "基于 Web 开发的桌面产品",
-      "badge": "P1 · active",
-      "status": "当前主开发",
+      "badge": "P1 · active app lane",
+      "status": "独立桌面开发线",
       "branch": "desktop-next -> dev",
       "dependency": "依赖 Web + Tauri native",
       "next": "G1 native foundation 优先。",

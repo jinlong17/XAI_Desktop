@@ -1,20 +1,20 @@
 # XAI_Desktop — AI Smart Desktop
 
-## Current Priority (2026-05-26 — P1 active per ADR-0010 Accepted)
+## Current Priority (2026-05-30 — Web mainline active; ADR-0010 amended)
 
 Active focus order — supersedes any conflicting prior PRD / roadmap:
 
-- **P1 — Desktop client (ACTIVE — G1 native foundation phase)** (`apps/desktop/` + `packages/plugin-{account, console, productivity, ai-cube, calendar, labels, project}` + G0/G1 anchors): Tauri overlay shell. G0 = CONDITIONAL_GO (G0.1-G0.5 SHIPPED 2026-05-19 on `origin/spike/window-ground-truth`; G0.6 BLOCKED_EXTERNAL pending Apple Developer signing — non-blocking). Primary work surface: `docs/workflow/roadmap/xai-g1-native-foundation.md`. Authority: `docs/adr/0010-p1-desktop-resume-plan.md` (Accepted 2026-05-26, Chrome-only G2 carve-out).
-- **P0 — Web Console (MAINTENANCE-ONLY)** (`apps/web/` + `packages/{xai-web-*, plugin-web-*}`): 24/24 + 9/9 gap-closure SHIPPED; deployed to Cloudflare Pages. Bug-fix permitted; new feature plans require P0 carve-out commit citing ADR-0010 §D4. Deferred-by-carve-out items: Safari/Firefox/iOS Safari smoke + external-provider flows.
+- **P0 — Web Console (ACTIVE WEB MAINLINE)** (`apps/web/` + `packages/{xai-web-*, plugin-web-*}`): `web` is the Web product mainline and the most complete product surface. New Web feature and bug-fix work are permitted on `web` / `codex/web/<feature>` without a P0 carve-out. Web changes that may affect Desktop still require ADR-0013 D3 classification before promotion toward `desktop-next` / `dev`.
+- **P1 — Desktop client (ACTIVE APP LANE)** (`apps/desktop/` + `packages/plugin-{account, console, productivity, ai-cube, calendar, labels, project}` + G0/G1 anchors): Tauri overlay shell. G0 = CONDITIONAL_GO (G0.1-G0.5 SHIPPED 2026-05-19 on `origin/spike/window-ground-truth`; G0.6 BLOCKED_EXTERNAL pending Apple Developer signing — non-blocking). G1 native foundation remains permitted on the independent App lane; it no longer freezes Web new work. Authority: `docs/adr/0010-p1-desktop-resume-plan.md` (Accepted 2026-05-26, amended 2026-05-30).
 - **P2 — Desktop organizer plugins & tools + sync-v1 + G2** (`packages/plugin-{organizer, clipboard, widgets, meditation, pet}`, sync-v1 crypto stack, xai-g2 data-security foundation): Paused. Resumes only after G1 SHIPPED.
 
-Authority basis: **ADR-0010 Accepted 2026-05-26** (commit `75655dc`) supersedes ADR-0009 §D1. Predecessor: ADR-0009 D2 G2 PASS (Chrome-only carve-out) + ADR-0008 §S3 24h-evidence pattern.
+Authority basis: **ADR-0010 Accepted 2026-05-26, amended 2026-05-30** supersedes the old "P0 Web maintenance-only / P0 carve-out required" reading. ADR-0013 governs branch topology and the Web to Desktop D3 gate.
 
 ### Branch & sync governance (ADR-0013, Proposed)
 
 `docs/adr/0013-branch-sync-governance.md` is the authority for branch topology,
 the Web→Desktop sync gate, and the account cloud-sync per-feature contract. It is
-**additive governance** — it does NOT change the ADR-0010 active-focus order
+**additive governance** — it does NOT change the amended ADR-0010 active-focus order
 above. Key rules (do not contradict; cite ADR-0013 §D-N):
 
 - **`web` and `dev` are two independent focus branches** (ADR-0013 §D5): `web`

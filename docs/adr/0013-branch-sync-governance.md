@@ -10,18 +10,18 @@
 | 日期 / Date | 2026-05-30 |
 | 决策者 / Author | Claude Opus 4.8 (1M context) — drafted at operator (Jinlong) request |
 | Supersedes | none |
-| Builds on / Extends | ADR-0009 §D1–§D4 (priority order + surface scope matrix), ADR-0010 §D1/§D4 (P0/P1/P2 model + P0 carve-out rule), `docs/contracts/data-repository-v0.md` (syncScope model), `docs/workflow/roadmap/sync-v1.md` (account-sync roadmap) |
+| Builds on / Extends | ADR-0009 §D1–§D4 (priority order + surface scope matrix), ADR-0010 §D1/§D4 (amended active Web + App lane model), `docs/contracts/data-repository-v0.md` (syncScope model), `docs/workflow/roadmap/sync-v1.md` (account-sync roadmap) |
 | Related | ADR-0003 (three-faces architecture), ADR-0006 (web-face hybrid reuse boundary), ADR-0007 (xai-web-console build form), ADR-0008 (cloudflare deploy + CSP), `docs/TECHNICAL_REQUIREMENTS.md` (sync protocol), `docs/PLUGIN_SDK.md` |
 
 ---
 
-This ADR is **governance-layer**, not a priority pivot. It does **not** change the
-P0/P1/P2 active-focus order set by ADR-0010 (P1 Desktop ACTIVE; P0 Web
-MAINTENANCE-ONLY; P2 paused). It adds three things the project has been running
+This ADR is **governance-layer**, not a priority pivot. It follows the amended
+P0/P1/P2 active-focus order in ADR-0010 (P0 Web ACTIVE mainline; P1 Desktop
+ACTIVE App lane; P2 paused). It adds three things the project has been running
 informally and now needs a stable authority anchor for:
 
 1. A **product-line map** (six lines) reconciled with the existing P0/P1/P2
-   model, separating *product-line importance* from *current active dev focus*.
+   model, separating *product-line importance* from *branch/lane focus*.
 2. A **branch topology** that codifies the **two-branch focus split** as an
    intentional design rule: `web` focuses on Web, `dev` focuses on the App; each
    line evolves independently and **divergence between them is the normal, healthy
@@ -55,9 +55,7 @@ prototype. ADR-0009 and ADR-0010 governed *which surface is the active dev
 focus over time*. They did **not** govern:
 
 - how the six product lines relate to each other as **products** (importance)
-  vs. as **current work** (active focus) — these two orderings genuinely differ
-  (Web is the most complete product, but Desktop is the currently ACTIVE focus
-  per ADR-0010);
+  vs. as **branch/lane work** (Web and App both active, but on different lines);
 - how the long-lived **branches** relate, and how a Web change is supposed to
   flow into the Desktop App;
 - how Web and App **share an account cloud** without syncing to each other.
@@ -85,9 +83,9 @@ focus over time*. They did **not** govern:
   (this is what the external `ADR-0012` reference + `/Users/jinlong/...` path in
   pasted context pointed at). Consequence: ADR numbers (and roadmap/shared docs)
   must be a **repo-wide reserved space**, never per-branch — see §S7 #1.
-- **Active-focus order is unchanged from ADR-0010** (Accepted 2026-05-26): P1
-  Desktop client ACTIVE (G1 native foundation, `apps/desktop/`); P0 Web Console
-  MAINTENANCE-ONLY (`apps/web/`); P2 organizer plugins + sync-v1 + G2 paused
+- **Active-focus order follows amended ADR-0010**: P0 Web Console ACTIVE
+  mainline (`apps/web/`); P1 Desktop client ACTIVE App lane (G1 native
+  foundation, `apps/desktop/`); P2 organizer plugins + sync-v1 + G2 paused
   until G1 ships.
 - The `syncScope: "device-local" | "account-sync"` model already exists in
   `docs/contracts/data-repository-v0.md` §2 + §6 and must be **built on**, not
@@ -174,15 +172,15 @@ operator-confirmed step.
 ### D1 — Six product lines + priority, reconciled with P0/P1/P2
 
 The operator defines six product lines in rough product-importance order.
-**Product-line importance ≠ current active dev focus.** Web is the most complete
-*product* (line 1), but per ADR-0010 the currently ACTIVE *dev focus* is the P1
-Desktop client (line 2). Both statements are true simultaneously; the table
-below keeps them in separate columns so they never get conflated again.
+**Product-line importance ≠ branch/lane focus.** Web is the most complete
+product and the active Web mainline (line 1); the Desktop App is also active on
+its independent App lane (line 2). The table keeps those statements separate so
+they never get conflated again.
 
 | # | Product line | Surface / where | Packages (representative) | Product-priority | Current dev-status (per ADR-0010) |
 |---|---|---|---|---|---|
-| 1 | **web** — most complete feature product | `apps/web/` (Vite SPA) | `packages/xai-web-*`, `packages/plugin-web-*` | P0 | **maintenance** — bug-fix only; new features need a P0 carve-out commit citing ADR-0010 §D4. It is also the **primary UI source** the App is built from. |
-| 2 | **mac desktop App** (built on web) | `apps/desktop/` (Tauri 2 + React 19) | `packages/plugin-{account, console, productivity, ai-cube, calendar, labels, project}` + G0/G1 anchors | P1 | **active** — G1 native foundation (`docs/workflow/roadmap/xai-g1-native-foundation.md`). |
+| 1 | **web** — most complete feature product | `apps/web/` (Vite SPA) | `packages/xai-web-*`, `packages/plugin-web-*` | P0 | **active mainline** — feature and bug-fix work are permitted on `web`; it is also the **primary UI source** the App is built from. Desktop-impacting changes run D3 before promotion. |
+| 2 | **mac desktop App** (built on web) | `apps/desktop/` (Tauri 2 + React 19) | `packages/plugin-{account, console, productivity, ai-cube, calendar, labels, project}` + G0/G1 anchors | P1 | **active App lane** — G1 native foundation (`docs/workflow/roadmap/xai-g1-native-foundation.md`) continues independently. |
 | 3 | **desktop organizer plugins / widgets** | `apps/desktop/` plugin slots | `packages/plugin-{organizer, clipboard, widgets, meditation, pet}` | P2 | **paused** — resumes when G1 ships (ADR-0010 §D2). |
 | 4 | **account cloud-sync layer** (3 surfaces → one account) | sync-v1 stack + server | sync-v1 crypto stack (~50 pkgs), `@repo/core-data` `syncScope`, `plugin-account` push/pull engines | P2 | **paused** — post-G1 per ADR-0010 §D2 (sync-v1 stays PAUSED until G1 SHIPPED). Contract governed by D4 below. |
 | 5 | **official website** (marketing + download + auto-update host) | NEW line — not yet a package | proposed: reuse P0 Cloudflare deploy infra (`apps/web/deploy/*`, `wrangler.toml`) + a `release/*`-fed download/updater surface | **PROPOSED** (gates App distribution) | **proposed** — see Open Questions §S7; tie to `release/desktop/<version>` (D2) + ADR-0008 deploy target. |
@@ -190,14 +188,14 @@ below keeps them in separate columns so they never get conflated again.
 
 Rules attached to D1:
 
-- Lines 1–4 inherit their dev-status from ADR-0010 verbatim; this ADR does
-  **not** change any active-focus decision.
+- Lines 1–4 inherit their dev-status from amended ADR-0010; this ADR governs
+  how active lines move changes between branches.
 - Lines 5 and 6 are **PROPOSED**: their exact priority slot and start trigger
   require operator confirmation (Open Questions §S7). Until confirmed they
   carry no active-focus claim and no new-work authorization.
 - "Product-priority" answers *how important is this product*; "current
-  dev-status" answers *are we allowed to do new work on it right now*. Cite the
-  right column for the right question.
+  dev-status" answers *which branch/lane owns work right now*. Cite the right
+  column for the right question.
 
 ### D2 — Branch topology
 
@@ -409,8 +407,8 @@ Anti-patterns (do **not** do these):
 
 - `docs/adr/0009-web-to-desktop-pivot-plan.md` — priority order + surface scope
   matrix (D1–D4) that this ADR extends.
-- `docs/adr/0010-p1-desktop-resume-plan.md` — P0/P1/P2 model + §D4 P0 carve-out
-  rule that this ADR reconciles the six product lines against.
+- `docs/adr/0010-p1-desktop-resume-plan.md` — amended P0/P1/P2 model that this
+  ADR reconciles the six product lines against.
 - `docs/contracts/data-repository-v0.md` — `syncScope: device-local |
   account-sync` record model that D4 builds on.
 - `docs/workflow/roadmap/sync-v1.md` — account-sync roadmap (push/pull engines,

@@ -327,12 +327,12 @@ function buildSignals(snapshot) {
 
 function buildCockpit(snapshot) {
   const branch = snapshot.git.branch || "unknown";
-  const app = snapshot.product_lines.find(line => line.key === "app");
+  const web = snapshot.product_lines.find(line => line.key === "web");
   return [
     {
       question: "现在做什么",
-      answer: "继续 P1 Desktop / G1 native foundation",
-      detail: app?.status || "读取 xai-g1-native-foundation manifest"
+      answer: "继续 Web 主线；Desktop 走独立 App lane",
+      detail: web?.status || "读取 Web roadmap / PLUGIN_MAP 状态"
     },
     {
       question: "在哪条线",

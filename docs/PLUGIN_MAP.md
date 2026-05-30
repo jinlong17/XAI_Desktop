@@ -8,23 +8,23 @@
 
 ---
 
-## Current Priority (2026-05-26 — P1 active per ADR-0010)
+## Current Priority (2026-05-30 — Web mainline active; ADR-0010 amended)
 
 | Tier | Surface | Status | Packages |
 |---|---|---|---|
-| **P1** | macOS Desktop client | **Active — G1 native foundation phase** | `apps/desktop/`, `plugin-account`, `plugin-console`, `plugin-productivity`, `plugin-ai-cube`, `plugin-calendar`, `plugin-labels`, `plugin-project`, plus G0/G1 native foundation anchors (window-ground-truth / grid-window-prototype / click-through-matrix / finder-dnd-path / spaces-multimonitor-matrix all SHIPPED on spike branch) |
-| **P0** | Web Console | Maintenance-only | `xai-web-*` (rows 1-24 + 9 gap-closure) + `plugin-web-*` + `apps/web/` — all SHIPPED; bug-fix permitted; new feature plans require P0 carve-out commit citing ADR-0010 §D4 |
+| **P0** | Web Console | **Active Web mainline** | `apps/web/` + `xai-web-*` + `plugin-web-*` — `web` is the Web product mainline; new feature and bug-fix work are permitted without a P0 carve-out. Changes that may affect Desktop require ADR-0013 D3 classification before promotion toward `desktop-next` / `dev`. |
+| **P1** | macOS Desktop client | **Active App lane — G1 native foundation phase** | `apps/desktop/`, `plugin-account`, `plugin-console`, `plugin-productivity`, `plugin-ai-cube`, `plugin-calendar`, `plugin-labels`, `plugin-project`, plus G0/G1 native foundation anchors (window-ground-truth / grid-window-prototype / click-through-matrix / finder-dnd-path / spaces-multimonitor-matrix all SHIPPED on spike branch) |
 | **P2** | Desktop organizer plugins & tools | Paused until P1 beta | `plugin-organizer`, `plugin-clipboard`, `plugin-widgets`, `plugin-meditation`, `plugin-pet`, plus sync-v1 crypto stack (W0/W1/W2/W3) and G2 data-security foundation (stay paused till G1 SHIPPED per ADR-0010 §D2) |
 
-Authority basis: **ADR-0010 Accepted 2026-05-26** (commit `75655dc`, Chrome-only G2 carve-out) supersedes ADR-0009 §D1.
+Authority basis: **ADR-0010 Accepted 2026-05-26, amended 2026-05-30** supersedes the old maintenance-only reading for Web while preserving the independent P1 App lane.
 Predecessor authority: `docs/workflow/roadmap/xai-web-console.md` §Authority Override 2026-05-23 + ADR-0007 + ADR-0008.
-Per P1 period: new work on P1/G1 native foundation permitted; P0 web is maintenance-only; P2 stays paused. Full rationale: `docs/adr/0010-p1-desktop-resume-plan.md`.
+Current rule: Web new work is permitted on the `web` line; P1/G1 native foundation work is permitted on the App lane; P2 stays paused. Full rationale: `docs/adr/0010-p1-desktop-resume-plan.md` + ADR-0013 D3 branch gate.
 
 ---
 
 ## Roadmap / CI Gate Anchors
 
-> **G0/G1 ACTIVE (2026-05-26, per ADR-0010 Accepted).** P1 desktop pivot is active. G0 (window spike, rows G0.1-G0.5) SHIPPED 2026-05-19 on `origin/spike/window-ground-truth` per `xai-g0-window-spike.md`; G0.6 BLOCKED_EXTERNAL (Apple Developer signing). G1 native foundation is the primary active work surface per `xai-g1-native-foundation.md`. Sync-v1 crypto stack + G2 data-security stay PAUSED until G1 SHIPPED per ADR-0010 §D2.
+> **P0 WEB + G0/G1 APP LANES ACTIVE (2026-05-30, per ADR-0010 amendment).** `web` remains the Web product mainline. P1 desktop foundation work also remains active on the App lane. G0 (window spike, rows G0.1-G0.5) SHIPPED 2026-05-19 on `origin/spike/window-ground-truth` per `xai-g0-window-spike.md`; G0.6 BLOCKED_EXTERNAL (Apple Developer signing). Sync-v1 crypto stack + G2 data-security stay PAUSED until G1 SHIPPED per ADR-0010 §D2.
 
 > These are NOT plugins. They are roadmap workflow anchors (`packages/<slug>/docs/`)
 > that track supply-chain / infra rows. Code boundary: Cargo.toml / CI only.
