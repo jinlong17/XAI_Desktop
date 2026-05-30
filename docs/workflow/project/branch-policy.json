@@ -1,0 +1,99 @@
+{
+  "schema_version": 1,
+  "source": "docs/adr/0013-branch-sync-governance.md#d2--branch-topology",
+  "adr_status": "Proposed",
+  "drift_model": "Drift is evaluated by whether share-required changes are parked without D3 classification, not by commit-count size.",
+  "current_gate_status": {
+    "d3": "manual receipt required before any cross-line promotion",
+    "merge": "operator-gated; no automatic merge",
+    "release": "operator-gated; no automatic release judgment"
+  },
+  "long_lived_branches": [
+    {
+      "name": "main",
+      "target": "Owner-scheduled reconciliation point for web and dev focus lines.",
+      "allowed_changes": ["deliberate reconciliation merges", "repo-wide release anchors", "operator-approved shared history cleanup"],
+      "forbidden_changes": ["feature development", "automatic catch-up merges", "force-aligning web and dev"],
+      "upstream": ["web", "dev"],
+      "downstream": ["release tags when explicitly cut"],
+      "expected_drift": "May lag both focus lines until the operator schedules reconciliation.",
+      "drift_criterion": "Unexpected only when a change required by both focus lines is left without a D3 receipt or explicit defer note."
+    },
+    {
+      "name": "web",
+      "target": "Web product mainline and Web release source.",
+      "allowed_changes": ["Web bugfixes", "Web maintenance", "shared UI/source changes after P0 carve-out", "workflow and governance docs for the web line"],
+      "forbidden_changes": ["desktop native implementation", "App RC stabilization", "signing/notarization/package work", "automatic dev catch-up"],
+      "upstream": ["codex/web/<feature>", "release/web hotfix cherry-picks"],
+      "downstream": ["Cloudflare Web release", "desktop-next via D3 when sharing is required"],
+      "expected_drift": "Expected to carry web-only commits that dev does not need.",
+      "drift_criterion": "Unexpected only when a shared change needs Desktop impact review but has no D3 W0-W4 classification."
+    },
+    {
+      "name": "desktop-next",
+      "target": "Web to Desktop integration branch and next-cycle App delta staging.",
+      "allowed_changes": ["D3-classified web-to-desktop integrations", "desktop runtime adaptation", "offline/profile validation fixes", "native delta preparation"],
+      "forbidden_changes": ["unclassified bulk merge from web", "release freeze changes", "plugin platform churn unrelated to the current integration"],
+      "upstream": ["web via D3", "codex/desktop/<feature>", "desktop-plugin-next when plugin platform is READY"],
+      "downstream": ["dev after integration cycle is green"],
+      "expected_drift": "Expected to differ from both web and dev during an active integration cycle.",
+      "drift_criterion": "Unexpected only when an integration delta stays here without verification status or promotion/defer note."
+    },
+    {
+      "name": "desktop-plugin-next",
+      "target": "Desktop plugin platform and SDK isolation line.",
+      "allowed_changes": ["plugin SDK changes", "widget host changes", "single-plugin branches merged after review", "platform compatibility fixes"],
+      "forbidden_changes": ["App RC release freeze work", "web-only UI work", "account-sync protocol changes outside plugin platform scope"],
+      "upstream": ["desktop-next", "codex/plugin/<feature>"],
+      "downstream": ["desktop-next when plugin platform cycle is READY"],
+      "expected_drift": "Expected to drift while plugin platform work is isolated from App RC.",
+      "drift_criterion": "Unexpected only when SDK/shared plugin changes needed by App are parked without an integration plan."
+    },
+    {
+      "name": "dev",
+      "target": "macOS App stable mainline and App RC candidate.",
+      "allowed_changes": ["Tauri/native runtime work", "offline/local-first storage", "signing/notarization/package fixes", "App RC blockers", "desktop docs"],
+      "forbidden_changes": ["unclassified Web feature merges", "Cloudflare-only work", "bulk branch equalization", "P0 Web feature work without carve-out"],
+      "upstream": ["desktop-next", "release/desktop/<version> hotfix back-merge", "codex/desktop/<feature>"],
+      "downstream": ["release/desktop/<version>"],
+      "expected_drift": "dev may have more commits than web because Tauri, native runtime, signing, packaging, and RC work are expected here.",
+      "drift_criterion": "Unexpected only when shared Web/App changes are missing D3 classification or when App-only changes leak back to web without need."
+    },
+    {
+      "name": "release/desktop/<version>",
+      "target": "Freeze-only Desktop release branch.",
+      "allowed_changes": ["version bump", "changelog", "signing", "notarization", "DMG/updater metadata", "release-blocker hotfixes"],
+      "forbidden_changes": ["feature work", "roadmap expansion", "SDK churn", "unrelated refactors"],
+      "upstream": ["dev at freeze"],
+      "downstream": ["tag vX.Y.Z", "dev hotfix back-merge"],
+      "expected_drift": "Short-lived by design; should exist only during a release freeze.",
+      "drift_criterion": "Unexpected if it remains open after release without tag/back-merge status."
+    }
+  ],
+  "short_branch_conventions": [
+    {
+      "pattern": "codex/web/<feature>",
+      "target": "Web maintenance or P0 carve-out work"
+    },
+    {
+      "pattern": "codex/desktop/<feature>",
+      "target": "Desktop App and native/runtime work"
+    },
+    {
+      "pattern": "codex/plugin/<feature>",
+      "target": "Desktop plugin, widget, or SDK work"
+    },
+    {
+      "pattern": "codex/sync/<feature>",
+      "target": "Account cloud-sync and data protocol work"
+    },
+    {
+      "pattern": "codex/site/<feature>",
+      "target": "Official website, download, updater, and release-site work"
+    },
+    {
+      "pattern": "codex/admin/<feature>",
+      "target": "Admin Control Plane work"
+    }
+  ]
+}

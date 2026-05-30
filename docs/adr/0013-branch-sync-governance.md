@@ -184,7 +184,7 @@ they never get conflated again.
 | 3 | **desktop organizer plugins / widgets** | `apps/desktop/` plugin slots | `packages/plugin-{organizer, clipboard, widgets, meditation, pet}` | P2 | **paused** — resumes when G1 ships (ADR-0010 §D2). |
 | 4 | **account cloud-sync layer** (3 surfaces → one account) | sync-v1 stack + server | sync-v1 crypto stack (~50 pkgs), `@repo/core-data` `syncScope`, `plugin-account` push/pull engines | P2 | **paused** — post-G1 per ADR-0010 §D2 (sync-v1 stays PAUSED until G1 SHIPPED). Contract governed by D4 below. |
 | 5 | **official website** (marketing + download + auto-update host) | NEW line — not yet a package | proposed: reuse P0 Cloudflare deploy infra (`apps/web/deploy/*`, `wrangler.toml`) + a `release/*`-fed download/updater surface | **PROPOSED** (gates App distribution) | **proposed** — see Open Questions §S7; tie to `release/desktop/<version>` (D2) + ADR-0008 deploy target. |
-| 6 | **admin-dashboard** | NEW line — prototype only | prototype at `docs/prototypes/admin-dashboard/index.html` | **PROPOSED** (lowest of the six) | **proposed** — no package, no roadmap yet. |
+| 6 | **admin-dashboard / Control Plane** | NEW line — prototype only | prototype at `docs/prototypes/admin-dashboard/index.html` | **PROPOSED** (lowest of the six) | **proposed** — Admin Control Plane for AI config, usage, permissions, audit, and operational controls; no package, no roadmap yet. |
 
 Rules attached to D1:
 
@@ -210,6 +210,35 @@ below).
 | `desktop-plugin-next` | App **plugin platform / SDK** line. Separate so plugin-platform churn cannot destabilize the App release candidate. | `desktop-next` (merge back when READY) | `desktop-next` (rebases onto it); plugin-platform feature branches |
 | `dev` | **App-focused** stable mainline / App release candidate (RC). Evolves independently of `web` (App focus), not a subset of it. | `release/desktop/<version>` (freeze) | `desktop-next` (promoted integration cycles); `release/*` hotfix back-merge |
 | `release/desktop/<version>` (ephemeral) | **Freeze-only** branch: version bump, changelog, signing/notarization, `.dmg`, updater metadata, download-page artifacts, and **release-blocker hotfix only**. No feature work. | tag `vX.Y.Z`; back-merge to `dev` | `dev` (cut from it at freeze) |
+
+Machine-readable mirror: `docs/workflow/project/branch-policy.json`. The JSON is
+for the local dashboard and other read-only tooling; this ADR remains the human
+authority while Status is **Proposed**.
+
+**Per-branch policy details.** Drift is judged by whether a change that should
+be shared is parked without classification or an explicit defer note, **not** by
+which branch has more commits.
+
+| Branch | Target | Allowed change types | Forbidden change types | Upstream | Downstream | Expected drift criterion |
+|---|---|---|---|---|---|---|
+| `main` | Owner-scheduled reconciliation point for `web` and `dev`. | Deliberate reconciliation merges; repo-wide release anchors; operator-approved shared history cleanup. | Feature development; automatic catch-up merges; force-aligning `web` and `dev`. | `web`, `dev` | release tags when explicitly cut | Unexpected only when a change required by both focus lines is left without a D3 receipt or explicit defer note. |
+| `web` | Web product mainline and Web release source. | Web bugfixes; Web maintenance; shared UI/source changes after P0 carve-out; workflow/governance docs for the web line. | Desktop native implementation; App RC stabilization; signing/notarization/package work; automatic `dev` catch-up. | `codex/web/<feature>`, release/web hotfix cherry-picks | Cloudflare Web release; `desktop-next` via D3 when sharing is required | Expected to carry web-only commits. Unexpected only when a shared change needs Desktop impact review but has no D3 W0-W4 classification. |
+| `desktop-next` | Web→Desktop integration and next-cycle App delta staging. | D3-classified integrations; desktop runtime adaptation; offline/profile validation fixes; native delta preparation. | Unclassified bulk merge from `web`; release freeze changes; plugin platform churn unrelated to the current integration. | `web` via D3, `codex/desktop/<feature>`, `desktop-plugin-next` when READY | `dev` after integration cycle is green | Expected to differ from both `web` and `dev` during integration. Unexpected only when an integration delta lacks verification status or promotion/defer note. |
+| `desktop-plugin-next` | Desktop plugin platform and SDK isolation line. | Plugin SDK changes; widget host changes; single-plugin branches merged after review; platform compatibility fixes. | App RC release freeze work; web-only UI work; account-sync protocol changes outside plugin platform scope. | `desktop-next`, `codex/plugin/<feature>` | `desktop-next` when plugin platform cycle is READY | Expected to drift while plugin platform work is isolated. Unexpected only when SDK/shared plugin changes needed by App are parked without an integration plan. |
+| `dev` | macOS App stable mainline and App RC candidate. | Tauri/native runtime work; offline/local-first storage; signing/notarization/package fixes; App RC blockers; desktop docs. | Unclassified Web feature merges; Cloudflare-only work; bulk branch equalization; P0 Web feature work without carve-out. | `desktop-next`, `release/desktop/<version>` hotfix back-merge, `codex/desktop/<feature>` | `release/desktop/<version>` | `dev` may have more commits than `web` because Tauri, native runtime, signing, packaging, and RC work are expected here. Unexpected only when shared Web/App changes are missing D3 classification or App-only changes leak back to `web` without need. |
+| `release/desktop/<version>` | Freeze-only Desktop release branch. | Version bump; changelog; signing; notarization; DMG/updater metadata; release-blocker hotfixes. | Feature work; roadmap expansion; SDK churn; unrelated refactors. | `dev` at freeze | tag `vX.Y.Z`, `dev` hotfix back-merge | Short-lived by design; unexpected if it remains open after release without tag/back-merge status. |
+
+**Short branch convention.** Short branches are scoped by product area, not by
+long-lived release lane:
+
+| Pattern | Target |
+|---|---|
+| `codex/web/<feature>` | Web maintenance or P0 carve-out work |
+| `codex/desktop/<feature>` | Desktop App and native/runtime work |
+| `codex/plugin/<feature>` | Desktop plugin, widget, or SDK work |
+| `codex/sync/<feature>` | Account cloud-sync and data protocol work |
+| `codex/site/<feature>` | Official website, download, updater, and release-site work |
+| `codex/admin/<feature>` | Admin Control Plane work |
 
 **Promotion paths (forward flow):**
 

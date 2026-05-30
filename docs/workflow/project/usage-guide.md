@@ -447,7 +447,51 @@ Project-layer skills:
 
 ---
 
-## 11. Event-driven automation / hooks
+## 11. Dev dashboard / local project console
+
+本地项目控制台在 `docs/prototypes/dev-dashboard/index.html`。它只做
+**读取 + 提醒**: 读取 git、roadmap manifest、PLUGIN_MAP、skill/agent 注册表和
+白名单文档;不自动改 roadmap、不 merge、不判断发布。
+
+刷新一次静态快照:
+
+```bash
+pnpm dashboard
+```
+
+启动本地文档库和 API:
+
+```bash
+pnpm dashboard:serve
+```
+
+serve 只绑定 `127.0.0.1`。默认地址:
+
+```text
+http://127.0.0.1:4177
+```
+
+如果 4177 被占用,脚本会自动顺延端口。serve 启动时会先运行
+`scripts/dashboard/generate-state.mjs`;看板里的刷新按钮也只会重跑这个生成脚本。
+
+可读 API:
+
+| Route | 用途 |
+|---|---|
+| `GET /` | dev-dashboard HTML |
+| `GET /api/tree?dir=<path>` | 白名单目录树 |
+| `GET /api/file?path=<path>` | 读取白名单内文本/Markdown |
+| `GET /api/search?q=<term>` | `rg` 搜索;无 `rg` 时降级 `grep` |
+| `GET /api/refresh` | 重跑 dashboard snapshot |
+
+白名单: `docs/`, `docs/adr`, `docs/workflow`, `.teams/skills`,
+`.codex/agents`, `packages/*/docs`。路径穿越会被拒绝。
+
+当前不启用 dashboard git hook。443/周这类 commit 频率下,post-commit 刷新噪音
+高;serve 启动刷新 + 手动刷新按钮已经足够。若以后要加 hook,必须避免覆盖
+`scripts/cowork/git-post-commit`,并按 `.githooks/` 链式迁移。
+
+## 12. Event-driven automation / hooks
 
 XAI 已带 `scripts/cowork/` 事件驱动脚本和 `git-post-commit` hook 渲染版本。
 
@@ -493,7 +537,7 @@ rg -n "Start the feature-full-loop agent|/xai-feature-full-loop Feature" scripts
 
 ---
 
-## 12. Resync / portable 更新后的检查
+## 13. Resync / portable 更新后的检查
 
 当源仓库 Any2Knowledge 的 portable workflow 更新后,XAI 用 resync 吃更新。通常在源项目里跑:
 

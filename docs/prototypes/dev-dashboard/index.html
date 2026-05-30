@@ -1336,6 +1336,32 @@ function renderSkills(){
 }
 
 function renderBranches(){
+  const policy = dashboardState.branch_policy;
+  if(policy?.long_lived_branches?.length){
+    const gate = policy.current_gate_status || {};
+    const current = policy.current || {};
+    document.getElementById("branchGrid").innerHTML = `
+      <div class="flow-note">
+        <b>D3 / merge / release</b>
+        <p style="margin-top:8px">D3: ${h(gate.d3 || "manual")} · merge: ${h(gate.merge || "operator-gated")} · release: ${h(gate.release || "operator-gated")}</p>
+        <p style="margin-top:8px">web/dev: ${h(current.web_only ?? 0)}/${h(current.dev_only ?? 0)} · ${h(current.drift_status || "符合预期")} · ${h(current.drift_note || policy.drift_model)}</p>
+      </div>
+      ${policy.long_lived_branches.map(item => `
+        <div class="branch-row">
+          <div class="branch-name">${h(item.name)}</div>
+          <div>
+            <b>${h(item.target)}</b>
+            <span>允许：${h((item.allowed_changes || []).join(" / "))}</span>
+            <span>禁止：${h((item.forbidden_changes || []).join(" / "))}</span>
+            <span>上游：${h((item.upstream || []).join(", "))} · 下游：${h((item.downstream || []).join(", "))}</span>
+            <span>drift：${h(item.drift_criterion || item.expected_drift)}</span>
+          </div>
+          <span class="badge b-blue">policy</span>
+        </div>
+      `).join("")}
+    `;
+    return;
+  }
   document.getElementById("branchGrid").innerHTML = branches.map(([name,desc,status]) => `
     <div class="branch-row">
       <div class="branch-name">${name}</div>

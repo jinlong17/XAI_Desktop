@@ -13,6 +13,7 @@ const scriptDir = dirname(fileURLToPath(import.meta.url));
 const repoRoot = resolve(scriptDir, "../..");
 const sourcePath = resolve(repoRoot, "docs/workflow/project/dashboard-state.json");
 const releaseLogPath = resolve(repoRoot, "docs/workflow/project/release-log.md");
+const branchPolicyPath = resolve(repoRoot, "docs/workflow/project/branch-policy.json");
 const pluginMapPath = resolve(repoRoot, "docs/PLUGIN_MAP.md");
 const roadmapDir = resolve(repoRoot, "docs/workflow/roadmap");
 const skillDir = resolve(repoRoot, ".teams/skills");
@@ -541,11 +542,35 @@ function buildDevelopmentData(branch) {
   };
 }
 
+function readBranchPolicy(divergence) {
+  try {
+    if (!existsSync(branchPolicyPath)) return null;
+    const policy = readJson(branchPolicyPath);
+    const current = {
+      web_only: divergence.web_only,
+      dev_only: divergence.dev_only,
+      drift_status: "符合预期",
+      drift_note: "commit 数不是异常判据；只检查该共享的变化是否已有 D3 分类或 defer 记录。"
+    };
+    return {
+      ...policy,
+      source: relative(repoRoot, branchPolicyPath),
+      current
+    };
+  } catch {
+    return null;
+  }
+}
+
 const source = readJson(sourcePath);
 const branch = git(["branch", "--show-current"]);
 const latestCommit = git(["log", "-1", "--format=%h %s"]);
 const divergenceRaw = git(["rev-list", "--left-right", "--count", "origin/web...origin/dev"]);
 const [webOnly = "0", devOnly = "0"] = divergenceRaw.split(/\s+/);
+const divergence = {
+  web_only: Number(webOnly) || 0,
+  dev_only: Number(devOnly) || 0
+};
 const skillsFound = listSkills();
 const agentsFound = listAgents();
 const pluginMap = parsePluginMap();
@@ -557,10 +582,7 @@ const snapshot = {
   git: {
     branch,
     latest_commit: latestCommit,
-    divergence: {
-      web_only: Number(webOnly) || 0,
-      dev_only: Number(devOnly) || 0
-    }
+    divergence
   },
   skills_found: skillsFound,
   agents_found: agentsFound,
@@ -575,6 +597,7 @@ const snapshot = {
     source: relative(repoRoot, releaseLogPath),
     latest_entry: latestReleaseEntry()
   },
+  branch_policy: readBranchPolicy(divergence),
   development_data: buildDevelopmentData(branch)
 };
 snapshot.signals = buildSignals(snapshot);
