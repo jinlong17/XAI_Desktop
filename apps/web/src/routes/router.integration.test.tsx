@@ -155,6 +155,39 @@ describe("web host router integration", () => {
     container.remove();
   });
 
+  // RR-LANDING-MOCK-AUTH-1 — S2 regression guard (desktop/web UI divergence bug 2026-05-30)
+  // Verifies that LandingPage redirects to /app when VITE_WEB_AUTH_MODE=mock-authenticated
+  // even without the offline runtime profile. This covers the Phase-1 web-live desktop path:
+  // after S1 removes desktop-phase1-offline, the desktop uses web-live profile with
+  // mock-authenticated auth, and the landing page must still jump straight to /app.
+  it("RR-LANDING-MOCK-AUTH-1: redirects mock-authenticated desktop root launch into the app shell", async () => {
+    vi.stubEnv("VITE_WEB_AUTH_MODE", "mock-authenticated");
+    // Explicitly confirm runtime profile is NOT offline (web-live is the default)
+    const container = document.createElement("div");
+    document.body.appendChild(container);
+    const root = createRoot(container);
+
+    await act(async () => {
+      root.render(
+        <MemoryRouter initialEntries={["/"]}>
+          <Routes>
+            <Route path="/" element={<LandingPage />} />
+            <Route path="/app" element={<main>App shell target</main>} />
+          </Routes>
+        </MemoryRouter>,
+      );
+    });
+
+    expect(container.textContent).toContain("App shell target");
+    expect(container.textContent).not.toContain("Public landing shell placeholder");
+    expect(container.textContent).not.toContain("XAI Web Host");
+
+    await act(async () => {
+      root.unmount();
+    });
+    container.remove();
+  });
+
   it("keeps app shell stable when invoking todo module controls", async () => {
     const app = await mountRouter(["/app/todos/smart:inbox"]);
 
