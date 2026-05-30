@@ -1,10 +1,10 @@
-# ADR-0011 — Branch Topology, Web→Desktop Sync Gate & Account Cloud-Sync Governance
+# ADR-0013 — Branch Topology, Web→Desktop Sync Gate & Account Cloud-Sync Governance
 
 ## S1 — 概述 / Header
 
 | 字段 / Field | 值 / Value |
 |---|---|
-| ADR # | 0011 |
+| ADR # | 0013 |
 | Title | Branch Topology, Web→Desktop Sync Gate & Account Cloud-Sync Governance |
 | 状态 / Status | **Proposed** — 2026-05-30 (operator will flip to Accepted) |
 | 日期 / Date | 2026-05-30 |
@@ -72,11 +72,13 @@ focus over time*. They did **not** govern:
   (Web-first, leading); the other machine drives `dev` (Desktop/App, lagging).
   Each authors its own commits, branch docs, and ADRs on its own line; the two
   reconcile only when work flows `web → … → dev` (forward, per D2/D5) or at a
-  `main` merge. This is why an external `ADR-0012` reference and a
-  `/Users/jinlong/...` path appear in pasted context — they are the **other
-  machine's** local/clone state, not this branch's. Consequence: anything
-  numbered or named independently on both machines (ADR numbers, roadmap files,
-  shared docs) can **collide** and needs a cross-machine convention (§S7 #1).
+  `main` merge. This is already borne out: a `git fetch` on 2026-05-30 shows
+  `origin/dev` has **committed** `ADR-0011` (P1 React+Tauri+Local-first) and
+  `ADR-0012` (Phase-3 local-first storage), which `web` had **not** synced — so
+  the independently-authored numbers **0011 and 0012 are already taken on `dev`**
+  (this is what the external `ADR-0012` reference + `/Users/jinlong/...` path in
+  pasted context pointed at). Consequence: ADR numbers (and roadmap/shared docs)
+  must be a **repo-wide reserved space**, never per-branch — see §S7 #1.
 - **Active-focus order is unchanged from ADR-0010** (Accepted 2026-05-26): P1
   Desktop client ACTIVE (G1 native foundation, `apps/desktop/`); P0 Web Console
   MAINTENANCE-ONLY (`apps/web/`); P2 organizer plugins + sync-v1 + G2 paused
@@ -93,9 +95,11 @@ focus over time*. They did **not** govern:
 
 ### Codebase context (read 2026-05-30 on branch `web`)
 
-- ADRs top out at **0010** on both `web` and `dev`; the next number is **0011**
-  (this ADR). No `ADR-0012` / `local-first-storage` ADR exists on this branch
-  (see Open Questions §S7).
+- On `web`, ADRs *appeared* to top out at 0010, but a 2026-05-30 `git fetch`
+  shows `origin/dev` has **committed `0011` + `0012`**
+  (`0011-p1-react-tauri-local-first-hybrid.md`,
+  `0012-phase3-local-first-storage.md`) that `web` has not synced. The next free
+  **repo-wide** number is therefore **0013** — this ADR (see §S7 #1).
 - Branches present: `web` (current), `dev`, `main`, plus `origin/{web,dev,main}`
   and historical `origin/spike/window-ground-truth`. No `desktop-next`,
   `desktop-plugin-next`, or `release/*` branch exists yet.
@@ -351,7 +355,7 @@ Operational corollaries:
 ### Positive
 
 - **Single anchor for branch + sync governance.** Future contributors/AI cite
-  ADR-0011 instead of re-deriving the `web ⊇ dev` model or the Web→App flow.
+  ADR-0013 instead of re-deriving the `web ⊇ dev` model or the Web→App flow.
 - **Protects the intended lag.** D5 explicitly prevents the "web is 134 ahead,
   let me fix that" failure mode that would destroy the App RC's stability.
 - **The future sync skill has a spec.** D3 is a ready-made contract for
@@ -405,40 +409,43 @@ Operational corollaries:
 
 ## S7 — Open Questions (operator-tracked)
 
-1. **Cross-machine ADR / doc numbering convention — RESOLVED 2026-05-30:
-   Convention A selected.** Root cause is structural: the **two machines author
-   independently** (§S2), so both compute the same "next ADR number" and collide.
-   Current reality — `origin/web` and `origin/dev` both top out at 0010; `web`
-   claimed **0011** (this ADR); the other machine referenced **0012** for a
-   `local-first-storage` decision in its own clone.
+1. **Cross-machine ADR / doc numbering — RESOLVED 2026-05-30: repo-wide reserved
+   numbers (no per-branch reuse).** Root cause is structural: the **two machines
+   author independently** (§S2), so both compute the same "next number" and
+   collide. **Verified** (`git fetch`, 2026-05-30): `origin/dev` has already
+   **committed** `0011-p1-react-tauri-local-first-hybrid.md` and
+   `0012-phase3-local-first-storage.md`; `origin/web` has neither. So `0011` and
+   `0012` are **taken**. This governance ADR was first drafted as `0011` (a live
+   collision) and has been **renumbered to `0013`** — the next free repo-wide
+   number.
 
-   **DECISION — Convention A (web owns the sequential block; dev reserves a high
-   block).** `web` (the leading line) keeps the sequential ADR block
-   (0011, 0012, 0013, …). The `dev` machine authors **desktop-only** ADRs in a
-   **reserved high block — `0090+` ("desktop-local")** — and renumbers them into
-   the main sequence at `main` merge if/when they become cross-surface. Chosen
-   because it matches the web-leads model (§D5) and needs **zero real-time
-   coordination** between the two machines. (Rejected: **B** single
-   `docs/adr/INDEX.md` on `main` — forces both machines to touch `main` before
-   every ADR; **C** reconcile-at-merge — breaks cross-references.)
+   **DECISION — one repo-wide reserved number space.** Never reuse a number on
+   another branch, even for an unrelated topic. Next ADR on either machine =
+   **0014**. (The earlier "Convention A — dev reserves a `0090+` block" is
+   **void**: dev already authored 0011/0012 in the main sequence.)
 
-   **Immediate consequence (relay to the `dev` machine).** Because `web` owns the
-   sequential block, `web`'s next ADR after 0011 is **0012**. The `dev` machine's
-   `local-first-storage` ADR (currently drafted as 0012 there) must be
-   **renumbered into the reserved `0090+` block** (e.g. `0090-local-first-storage`)
-   so it does not collide with `web`'s 0012. Until that relay happens the two
-   numbers technically clash on paper; on-disk they live on separate machines, so
-   there is no live conflict, but the dev-side renumber should happen before that
-   ADR is merged toward `main`. Per task constraints, `dev` was **not** inspected
-   or modified from here — this is a relay item for the operator.
+   **Recommended sync (operator).** Bring dev's two ADR **files** onto `web` so
+   refs resolve. Do **not** `git cherry-pick` — verified `5af1f786` also edits
+   `CLAUDE.md`/`docs/PLUGIN_MAP.md`/`0010` (diverged on `web` → conflicts) and
+   `a83c3d7c` touches `packages/desktop-local-first-storage-adr/` (absent on
+   `web` → fails). Use **file-only** checkout:
+   `git checkout origin/dev -- docs/adr/0011-p1-react-tauri-local-first-hybrid.md docs/adr/0012-phase3-local-first-storage.md`
+   then commit on `web`. (Tracked as §S7 #6.)
+
+   **Content-supersession flag (NOT resolved here).** dev's `ADR-0011` =
+   *"P1 Desktop Redefined as React+Tauri+Local-first; demote overlay/file-organizer
+   to **P3 Future**"* (2026-05-27, **after** ADR-0010). That **partially
+   supersedes ADR-0010 §D1**, which **this ADR's D1 table still cites**
+   (organizer = P2; P1 = "mac desktop App"). Reconciling D1 is a **separate
+   round** (§S7 #7); it does not block this numbering fix.
 2. **Official-website priority + start trigger (line 5).** **Owner-deferred —
    out of scope for this governance round; stays PROPOSED; does NOT block
-   ADR-0011 Acceptance.** It gates App distribution (download + auto-update host)
+   ADR-0013 Acceptance.** It gates App distribution (download + auto-update host)
    and should tie to `release/desktop/<version>` (D2) + the ADR-0008 Cloudflare
    deploy target. Revisit its priority slot + start trigger in a later round.
 3. **Admin-dashboard priority (line 6).** **Owner-deferred — out of scope for
    this governance round; stays PROPOSED (lowest of the six); does NOT block
-   ADR-0011 Acceptance.** Prototype at `docs/prototypes/admin-dashboard/index.html`;
+   ADR-0013 Acceptance.** Prototype at `docs/prototypes/admin-dashboard/index.html`;
    revisit whether/when it becomes a real package + roadmap in a later round.
 4. **When to actually create `desktop-next` / `desktop-plugin-next` /
    `release/*`.** D2 defines them but creates none. **Open:** operator confirms
@@ -449,6 +456,13 @@ Operational corollaries:
    mechanism. **Open:** confirm the canonical doc/config that owns this profile
    string so D3 W2 can link it precisely (it was not found in `docs/*.md` on
    this branch).
+6. **Sync dev's ADR files onto `web`.** File-only checkout of
+   `0011-p1-react-tauri-local-first-hybrid.md` + `0012-phase3-local-first-storage.md`
+   from `origin/dev` (command in §S7 #1). Operator-gated; not done by this ADR.
+7. **Reconcile D1 against dev's ADR-0011 (P1 redefinition / organizer→P3).**
+   dev's ADR-0011 partially supersedes ADR-0010 §D1; this ADR's D1 table predates
+   that knowledge. A later round updates D1 (+ handbook / dev-dashboard product-line
+   map). Out of scope for the numbering fix.
 
 ---
 
@@ -456,13 +470,12 @@ Operational corollaries:
 
 - **Proposed by:** Claude Opus 4.8 (1M context) on 2026-05-30 at operator
   (Jinlong) request.
-- **Status:** **Proposed.** Acceptance is gated only on §S7 **#1** (the
-  cross-machine ADR/doc numbering convention) **+ the operator's final
-  confirmation of this governance round**. §S7 **#2–#3** (official-website /
-  admin-dashboard priorities) are **intentionally owner-deferred and do NOT
-  block** Acceptance — they stay PROPOSED for a later round. §S7 **#4–#5**
-  (branch creation, runtime-profile authority) are deferred follow-ups, not
-  Acceptance blockers.
+- **Status:** **Proposed.** §S7 **#1** (numbering) is **RESOLVED** — renumbered
+  **0013**, convention = "repo-wide reserved numbers". Remaining gate = **operator
+  final confirmation of this governance round**. §S7 **#2–#3** (official-website /
+  admin-dashboard), **#4** (branch creation), **#5** (runtime-profile authority),
+  **#6** (sync dev's ADR files), **#7** (reconcile D1 vs dev's ADR-0011) are all
+  **deferred follow-ups, NOT Acceptance blockers**.
 - **Two-machine note:** because `web` and `dev` are authored on independent
   machines (§S2), this ADR lives on the `web` line; its decisions reach `dev`
   through the D2 lanes like any other Web work. The numbering convention (#1)

@@ -149,7 +149,7 @@
   <aside class="rail">
     <div class="brand">
       <div class="mark">XD</div>
-      <div><b>XAI Dev Dashboard</b><span>ADR-0011 snapshot</span></div>
+      <div><b>XAI Dev Dashboard</b><span>ADR-0013 snapshot</span></div>
     </div>
     <div class="nav">
       <div class="nav-title">Panels</div>
@@ -172,7 +172,7 @@
         <b>单人开发者导航看板</b>
       </div>
       <div class="status-line">
-        <span class="badge b-info">ADR-0011 Proposed</span>
+        <span class="badge b-info">ADR-0013 Proposed</span>
         <span class="badge b-active">P1 Desktop active</span>
         <span class="badge b-maint">P0 Web maintenance</span>
       </div>
@@ -183,7 +183,7 @@
         <div class="section-head">
           <div>
             <h1>Branch, workflow, and roadmap control surface</h1>
-            <p class="sub">Static internal snapshot from ADR-0011, CLAUDE.md, developer.md, usage-guide §16/§17, and docs/workflow/roadmap/*.md.</p>
+            <p class="sub">Static internal snapshot from ADR-0013, CLAUDE.md, developer.md, usage-guide §16/§17, and docs/workflow/roadmap/*.md.</p>
           </div>
           <span class="pill">Zero build · single HTML</span>
         </div>
@@ -205,7 +205,7 @@
         </div>
         <div class="panel panel-pad">
           <h2>Account cloud-sync contract</h2>
-          <p class="sub">ADR-0011 D4 builds on `data-repository-v0` syncScope; it does not redefine the model.</p>
+          <p class="sub">ADR-0013 D4 builds on `data-repository-v0` syncScope; it does not redefine the model.</p>
           <div class="notice" style="margin-top:12px">
             <b>Topology:</b> Web IndexedDB and App SQLite do not sync to each other. Both sync through `/sync/push` and `/sync/pull` to one account cloud of encrypted blobs.
           </div>
@@ -220,7 +220,7 @@
         <div class="section-head">
           <div>
             <h2>分支流水线</h2>
-            <p class="sub">Defined by ADR-0011 D2. New lanes are not created by this dashboard.</p>
+            <p class="sub">Defined by ADR-0013 D2. New lanes are not created by this dashboard.</p>
           </div>
           <span class="badge b-info">`web` leads · `dev` lags normally</span>
         </div>
@@ -288,7 +288,7 @@ const products = [
   {n:1,line:"web",where:"apps/web/",priority:"P0",status:"maintenance",rule:"Bug-fix only; new work needs P0 carve-out citing ADR-0010 D4."},
   {n:2,line:"mac desktop App",where:"apps/desktop/",priority:"P1",status:"active",rule:"Primary focus: G1 native foundation."},
   {n:3,line:"desktop organizer plugins / widgets",where:"apps/desktop/ plugin slots",priority:"P2",status:"paused",rule:"Resume after G1 ships."},
-  {n:4,line:"account cloud-sync layer",where:"sync-v1 stack + server",priority:"P2",status:"paused",rule:"Post-G1; governed by ADR-0011 D4."},
+  {n:4,line:"account cloud-sync layer",where:"sync-v1 stack + server",priority:"P2",status:"paused",rule:"Post-G1; governed by ADR-0013 D4."},
   {n:5,line:"official website",where:"not yet a package",priority:"PROPOSED",status:"proposed",rule:"Distribution/download/updater host; operator-confirmed trigger."},
   {n:6,line:"admin-dashboard",where:"docs/prototypes/admin-dashboard/index.html",priority:"PROPOSED",status:"proposed",rule:"Prototype only; no package or roadmap yet."}
 ];
@@ -313,7 +313,7 @@ const projectSkills = [
   ["xai-feature-brief",".teams/skills/xai-feature-brief/SKILL.md","landed"],
   ["xai-feature-full-loop",".teams/skills/xai-feature-full-loop/SKILL.md","landed"],
   ["xai-roadmap-loop",".teams/skills/xai-roadmap-loop/SKILL.md","landed"],
-  ["xai-web-to-desktop-sync","planned future skill from ADR-0011 D3","PLANNED"]
+  ["xai-web-to-desktop-sync","planned future skill from ADR-0013 D3","PLANNED"]
 ];
 
 const portableSkills = [
@@ -397,7 +397,7 @@ function el(tag, className, html){
 function renderKpis(){
   const activeRoadmaps = roadmaps.filter(r => r.kind === "active").length;
   const cards = [
-    ["Product lines", products.length, "6-line ADR-0011 map"],
+    ["Product lines", products.length, "6-line ADR-0013 map"],
     ["Active focus", "P1", "Desktop G1 native foundation"],
     ["Branch model", "web -> dev", "via D3 gate and downstream lanes"],
     ["Roadmap files", roadmaps.length, `${activeRoadmaps} active snapshots`]

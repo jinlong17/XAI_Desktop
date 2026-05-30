@@ -1,11 +1,11 @@
 ---
 name: xai-web-to-desktop-sync
-description: Classify XAI Web changes before web to desktop-next promotion using ADR-0011 D3. Use for Web to Desktop sync gates, desktop parity receipts, recent web commit impact review, W0-W4 branch-sync classification, and handoff routing to record-only, merge-to-desktop-next, xai-feature-full-loop, or RC release gates.
+description: Classify XAI Web changes before web to desktop-next promotion using ADR-0013 D3. Use for Web to Desktop sync gates, desktop parity receipts, recent web commit impact review, W0-W4 branch-sync classification, and handoff routing to record-only, merge-to-desktop-next, xai-feature-full-loop, or RC release gates.
 ---
 
 # xai-web-to-desktop-sync
 
-Project-layer gate for ADR-0011 D3. Use this skill to classify a Web delta before it flows from
+Project-layer gate for ADR-0013 D3. Use this skill to classify a Web delta before it flows from
 `web` to `desktop-next`, then emit the D3 parity receipt.
 
 This skill is a classifier and handoff orchestrator. It does not merge branches, create D2 topology
@@ -13,7 +13,7 @@ branches, run `ship`, promote to `dev`, or bypass `feature-verify` / `bug-verify
 
 ## Read First
 
-- `docs/adr/0011-branch-sync-governance.md` D2 and D3
+- `docs/adr/0013-branch-sync-governance.md` D2 and D3
 - `CLAUDE.md` Agent / Skill Tracking Contract when changing this skill or its mirrored surfaces
 - `AGENTS.md` Workflow V2 Handoff Display rules when this gate is executed by a spawned agent
 - `docs/workflow/project/usage-guide.md` for current XAI workflow conventions
@@ -35,7 +35,7 @@ or the user's named files. If evidence is ambiguous, stop with `Verdict: BLOCKED
 
 1. Stay off `dev`. Do not create, checkout, merge into, or promote through `dev` without explicit
    operator confirmation outside this skill.
-2. Do not create `desktop-next`, `desktop-plugin-next`, or `release/desktop/<version>`; ADR-0011 D2
+2. Do not create `desktop-next`, `desktop-plugin-next`, or `release/desktop/<version>`; ADR-0013 D2
    says branch creation is a separate operator-confirmed step.
 3. Do not run `ship` or trigger a release. W4 emits an RC/release gate handoff only.
 4. Do not implement App deltas inline from this gate. W3 native/runtime work routes to

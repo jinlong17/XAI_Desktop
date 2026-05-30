@@ -443,7 +443,7 @@ Project-layer skills:
 | `xai-feature-brief` | Step 0 需求规范化 |
 | `xai-feature-full-loop` | 单 feature parent-session 全流程 |
 | `xai-roadmap-loop` | 多 feature roadmap orchestration |
-| `xai-web-to-desktop-sync` | ADR-0011 D3 Web→Desktop 同步门 / parity receipt |
+| `xai-web-to-desktop-sync` | ADR-0013 D3 Web→Desktop 同步门 / parity receipt |
 
 ---
 
@@ -677,13 +677,13 @@ rg -n "Start the feature-full-loop agent|/xai-feature-full-loop Feature" scripts
 | 查 mode picker | `docs/workflow/_portable/07-automation-mode-picker.md` |
 | 查 XAI 架构红线 | `docs/SYSTEM_ARCHITECTURE.md` |
 | 查 plugin 状态 | `docs/PLUGIN_MAP.md` |
-| 查分支拓扑 / Web→Desktop 同步治理 / 账号云同步契约 | `docs/adr/0011-branch-sync-governance.md` |
+| 查分支拓扑 / Web→Desktop 同步治理 / 账号云同步契约 | `docs/adr/0013-branch-sync-governance.md` |
 
 ---
 
-## 17. 分支与同步治理 (ADR-0011)
+## 17. 分支与同步治理 (ADR-0013)
 
-`docs/adr/0011-branch-sync-governance.md`(Proposed)是分支拓扑、Web→Desktop 同步门、
+`docs/adr/0013-branch-sync-governance.md`(Proposed)是分支拓扑、Web→Desktop 同步门、
 账号云同步 per-feature 契约的权威。它是**附加治理**,不改变 ADR-0010 的 P0/P1/P2 active-focus
 顺序。跑 workflow 时相关的几条:
 

@@ -10,18 +10,18 @@ Active focus order — supersedes any conflicting prior PRD / roadmap:
 
 Authority basis: **ADR-0010 Accepted 2026-05-26** (commit `75655dc`) supersedes ADR-0009 §D1. Predecessor: ADR-0009 D2 G2 PASS (Chrome-only carve-out) + ADR-0008 §S3 24h-evidence pattern.
 
-### Branch & sync governance (ADR-0011, Proposed)
+### Branch & sync governance (ADR-0013, Proposed)
 
-`docs/adr/0011-branch-sync-governance.md` is the authority for branch topology,
+`docs/adr/0013-branch-sync-governance.md` is the authority for branch topology,
 the Web→Desktop sync gate, and the account cloud-sync per-feature contract. It is
 **additive governance** — it does NOT change the ADR-0010 active-focus order
-above. Key rules (do not contradict; cite ADR-0011 §D-N):
+above. Key rules (do not contradict; cite ADR-0013 §D-N):
 
-- **`web ⊇ dev` is BY DESIGN** (ADR-0011 §D5): `web` is the primary/most-current
+- **`web ⊇ dev` is BY DESIGN** (ADR-0013 §D5): `web` is the primary/most-current
   dev line (Web-first); `dev` is the desktop/App candidate line that
   intentionally **lags**. `web` ahead of `dev` (e.g. `134  0` on 2026-05-30) is
   the expected steady state — do NOT "fix" it by force-merging `dev` forward.
-- **Branch topology** (ADR-0011 §D2, DEFINED not yet created): long-term `web`
+- **Branch topology** (ADR-0013 §D2, DEFINED not yet created): long-term `web`
   (Web mainline) → `desktop-next` (Web→App sync integration) ↔
   `desktop-plugin-next` (App plugin platform/SDK) → `dev` (Desktop stable / App
   RC); ephemeral `release/desktop/<version>` (freeze-only). Forward flow:
@@ -29,11 +29,11 @@ above. Key rules (do not contradict; cite ADR-0011 §D-N):
   `release/desktop/<version>` → tag. Creating `desktop-next` /
   `desktop-plugin-next` / `release/*` is a SEPARATE operator-confirmed step
   (anything touching `dev` needs explicit confirmation); none exist yet.
-- **Web→Desktop sync gate** (ADR-0011 §D3): every Web change is classified
+- **Web→Desktop sync gate** (ADR-0013 §D3): every Web change is classified
   W0–W4 before flowing `web → desktop-next`, emitting a parity receipt. The
   `xai-web-to-desktop-sync` skill that implements this is **PLANNED** (does not
   exist yet).
-- **Account cloud-sync** (ADR-0011 §D4, builds on `data-repository-v0` syncScope
+- **Account cloud-sync** (ADR-0013 §D4, builds on `data-repository-v0` syncScope
   + sync-v1): Web and App do NOT sync to each other; both sync to one account
   cloud (Web IndexedDB ⇄ `/sync/push`,`/sync/pull` ⇄ server encrypted blobs ⇄
   App SQLite). Only `syncScope: account-sync` entities sync; `device-local`

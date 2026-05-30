@@ -136,9 +136,9 @@ XAI_Desktop/
 
 ---
 
-## 3.5 Branch Map (ADR-0011, Proposed)
+## 3.5 Branch Map (ADR-0013, Proposed)
 
-> Added 2026-05-30. Branch topology + Web→Desktop sync flow. Authority: `docs/adr/0011-branch-sync-governance.md`.
+> Added 2026-05-30. Branch topology + Web→Desktop sync flow. Authority: `docs/adr/0013-branch-sync-governance.md`.
 
 `web` leads, `dev` lags — **by design** (Web first, App follows). The lag is managed by
 the catch-up lanes + the D3 sync gate, not "fixed" by force-merging `dev` forward:
@@ -156,7 +156,7 @@ dev                        Desktop stable / App release candidate (intentionally
 release/desktop/<version>  ephemeral, freeze-only (sign / notarize / dmg / updater metadata)
 ```
 
-**Product lines** (ADR-0011 §D1) — importance ≠ current dev-focus: web (P0·maintenance) ·
+**Product lines** (ADR-0013 §D1) — importance ≠ current dev-focus: web (P0·maintenance) ·
 mac App (P1·**active**) · organizer plugins (P2·paused) · account cloud-sync (P2·paused) ·
 official website (PROPOSED) · admin-dashboard (PROPOSED).
 

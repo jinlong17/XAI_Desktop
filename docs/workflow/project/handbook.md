@@ -2,13 +2,13 @@
 
 > Thin navigation layer for solo development. This page links the existing
 > authority docs; it does not replace `developer.md`,
-> `docs/workflow/project/usage-guide.md`, or ADR-0011.
+> `docs/workflow/project/usage-guide.md`, or ADR-0013.
 
 ## Authority Anchors
 
 | Topic | Authority |
 |---|---|
-| Branch topology, product lines, Web to Desktop gate, account cloud-sync contract | `docs/adr/0011-branch-sync-governance.md` |
+| Branch topology, product lines, Web to Desktop gate, account cloud-sync contract | `docs/adr/0013-branch-sync-governance.md` |
 | Current P0/P1/P2 active-focus order | `CLAUDE.md` "Current Priority" + Branch & sync governance |
 | Repository layout and branch map entrypoint | `developer.md` §3 and §3.5 |
 | Workflow entrypoints and branch/sync usage notes | `docs/workflow/project/usage-guide.md` §16 and §17 |
@@ -16,7 +16,7 @@
 
 ## Product-Line Map
 
-Product priority and current development permission are separate. ADR-0011 keeps
+Product priority and current development permission are separate. ADR-0013 keeps
 both columns visible so Web can be the most complete product while Desktop stays
 the active development focus.
 
@@ -25,13 +25,13 @@ the active development focus.
 | 1 | web | `apps/web/` | P0 | maintenance | Bug-fix only. New work needs a P0 carve-out citing ADR-0010 §D4. |
 | 2 | mac desktop App | `apps/desktop/` | P1 | active | Primary focus: G1 native foundation. |
 | 3 | desktop organizer plugins / widgets | `apps/desktop/` plugin slots | P2 | paused | Resume after G1 ships. |
-| 4 | account cloud-sync layer | sync-v1 stack + server | P2 | paused | Resume after G1. Governed by ADR-0011 §D4. |
+| 4 | account cloud-sync layer | sync-v1 stack + server | P2 | paused | Resume after G1. Governed by ADR-0013 §D4. |
 | 5 | official website | not yet a package | PROPOSED | proposed | Distribution/download/updater host; start trigger still operator-confirmed. |
 | 6 | admin-dashboard | `docs/prototypes/admin-dashboard/index.html` | PROPOSED | proposed | Prototype only; no package or roadmap yet. |
 
 ## Branch Topology
 
-ADR-0011 defines the model but does not create new branches. Creating
+ADR-0013 defines the model but does not create new branches. Creating
 `desktop-next`, `desktop-plugin-next`, or any `release/*` branch remains a
 separate operator-confirmed action, especially anything touching `dev`.
 
@@ -73,7 +73,7 @@ Project-layer workflow skills:
 | `xai-feature-brief` | `.teams/skills/xai-feature-brief/SKILL.md` | landed |
 | `xai-feature-full-loop` | `.teams/skills/xai-feature-full-loop/SKILL.md` | landed |
 | `xai-roadmap-loop` | `.teams/skills/xai-roadmap-loop/SKILL.md` | landed |
-| `xai-web-to-desktop-sync` | `.teams/skills/xai-web-to-desktop-sync/SKILL.md` | landed (ADR-0011 §D3 gate) |
+| `xai-web-to-desktop-sync` | `.teams/skills/xai-web-to-desktop-sync/SKILL.md` | landed (ADR-0013 §D3 gate) |
 
 Portable public skills mirrored for this repo:
 
