@@ -403,35 +403,34 @@ Operational corollaries:
 
 ---
 
-## S7 — Open Questions (needs dev-clone / operator confirmation)
+## S7 — Open Questions (operator-tracked)
 
-1. **Cross-machine ADR / doc numbering convention (the real workflow item).**
-   Root cause is structural, not a one-off: the **two machines author
+1. **Cross-machine ADR / doc numbering convention — RESOLVED 2026-05-30:
+   Convention A selected.** Root cause is structural: the **two machines author
    independently** (§S2), so both compute the same "next ADR number" and collide.
    Current reality — `origin/web` and `origin/dev` both top out at 0010; `web`
-   just claimed **0011** (this ADR); the other machine has referenced **0012**
-   for a `local-first-storage` decision in its own clone (not present on `web`;
-   the only `0012` mentions here are an abandoned CSP-numbering idea in
-   `docs/workflow/roadmap/xai-web-console-gap-closure.md` L144 +
-   `docs/reviews/xai-web-ai-chat-real-llm-adapter/20260525-discovery-review.md`
-   L240). **Decision needed (operator, who controls both machines):** adopt a
-   numbering convention so independent ADRs/docs never collide at `main` merge.
-   Candidate conventions:
-   - **(A) web owns the sequential block; dev reserves a high block.** `web`
-     (leading line) keeps 0011/0012/… sequential; the `dev` machine takes
-     desktop-only ADRs from a reserved block (e.g. `0090+` "desktop-local") or a
-     `-dev` working suffix, renumbered into the main sequence at `main` merge.
-     Consistent with the web-leads model; zero real-time coordination.
-   - **(B) single reservation index on `main`.** Maintain `docs/adr/INDEX.md` on
-     `main`; either machine claims a number there (pull `main` first) before
-     authoring. One source of truth; needs both machines to touch `main`.
-   - **(C) reconcile at merge.** Both number sequentially on their own branch;
-     whoever collides renumbers at `main` merge. Lowest overhead; breaks
-     cross-references and needs merge discipline.
-   Until a convention is chosen: `web` = 0011 (this ADR), the `dev` machine keeps
-   `0012` for its `local-first-storage` ADR — they do **not** collide today, but
-   the convention should be locked before the next ADR is authored on either side.
-   Per task constraints, `dev` was **not** inspected here.
+   claimed **0011** (this ADR); the other machine referenced **0012** for a
+   `local-first-storage` decision in its own clone.
+
+   **DECISION — Convention A (web owns the sequential block; dev reserves a high
+   block).** `web` (the leading line) keeps the sequential ADR block
+   (0011, 0012, 0013, …). The `dev` machine authors **desktop-only** ADRs in a
+   **reserved high block — `0090+` ("desktop-local")** — and renumbers them into
+   the main sequence at `main` merge if/when they become cross-surface. Chosen
+   because it matches the web-leads model (§D5) and needs **zero real-time
+   coordination** between the two machines. (Rejected: **B** single
+   `docs/adr/INDEX.md` on `main` — forces both machines to touch `main` before
+   every ADR; **C** reconcile-at-merge — breaks cross-references.)
+
+   **Immediate consequence (relay to the `dev` machine).** Because `web` owns the
+   sequential block, `web`'s next ADR after 0011 is **0012**. The `dev` machine's
+   `local-first-storage` ADR (currently drafted as 0012 there) must be
+   **renumbered into the reserved `0090+` block** (e.g. `0090-local-first-storage`)
+   so it does not collide with `web`'s 0012. Until that relay happens the two
+   numbers technically clash on paper; on-disk they live on separate machines, so
+   there is no live conflict, but the dev-side renumber should happen before that
+   ADR is merged toward `main`. Per task constraints, `dev` was **not** inspected
+   or modified from here — this is a relay item for the operator.
 2. **Official-website priority + start trigger (line 5).** **Owner-deferred —
    out of scope for this governance round; stays PROPOSED; does NOT block
    ADR-0011 Acceptance.** It gates App distribution (download + auto-update host)
