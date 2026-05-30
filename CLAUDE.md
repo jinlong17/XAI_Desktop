@@ -17,10 +17,12 @@ the Web→Desktop sync gate, and the account cloud-sync per-feature contract. It
 **additive governance** — it does NOT change the ADR-0010 active-focus order
 above. Key rules (do not contradict; cite ADR-0013 §D-N):
 
-- **`web ⊇ dev` is BY DESIGN** (ADR-0013 §D5): `web` is the primary/most-current
-  dev line (Web-first); `dev` is the desktop/App candidate line that
-  intentionally **lags**. `web` ahead of `dev` (e.g. `134  0` on 2026-05-30) is
-  the expected steady state — do NOT "fix" it by force-merging `dev` forward.
+- **`web` and `dev` are two independent focus branches** (ADR-0013 §D5): `web`
+  focuses on the Web product, `dev` focuses on the macOS App. Each evolves in its
+  own direction, so **divergence between them is the normal, healthy state**
+  (2026-05-30: 147 web-only / 184 dev-only) — NOT drift, NOT a subset/superset.
+  Do NOT force-merge or rebase one onto the other to "make them equal"; they
+  reconcile at `main`, and specific changes are shared on-demand via the D3 gate.
 - **Branch topology** (ADR-0013 §D2, DEFINED not yet created): long-term `web`
   (Web mainline) → `desktop-next` (Web→App sync integration) ↔
   `desktop-plugin-next` (App plugin platform/SDK) → `dev` (Desktop stable / App
