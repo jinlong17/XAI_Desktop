@@ -429,6 +429,16 @@
   .chip-empty{color:var(--faint);font-size:12px}
   .detail-docs{margin-top:4px}
   .detail-docs-label{display:block;font-size:11.5px;color:var(--muted);margin-bottom:6px}
+  .task-list{display:grid;gap:8px;margin-top:14px}
+  .task-row{display:grid;grid-template-columns:auto minmax(0,1fr) auto;gap:12px;align-items:center;width:100%;text-align:left;padding:11px;border:1px solid var(--line);border-radius:8px;background:#fff}
+  .task-row:hover{border-color:var(--line-strong);background:var(--surface-3)}
+  .task-main b{display:block;font-size:13px}
+  .task-main span{display:block;color:var(--muted);font-size:12px;margin-top:2px;overflow-wrap:anywhere}
+  .task-open{color:var(--blue);font-size:12px;font-weight:700;white-space:nowrap}
+  @media (max-width:620px){
+    .task-row{grid-template-columns:auto minmax(0,1fr)}
+    .task-open{display:none}
+  }
   .split{display:grid;grid-template-columns:minmax(0,1fr) minmax(280px,.55fr);gap:14px;align-items:start}
   .reader-shell{display:grid;grid-template-columns:220px minmax(0,1fr);gap:14px}
   .doc-list{display:grid;gap:7px;align-content:start}
@@ -697,6 +707,7 @@
     <nav class="nav" aria-label="主导航">
       <div class="nav-title">导航</div>
       <a href="#overview" data-page="overview">总览</a>
+      <a href="#tasks" data-page="tasks">任务进度</a>
       <a href="#dev-data" data-page="dev-data">开发数据</a>
       <a href="#branches" data-page="branches">分支管理</a>
       <a href="#product-flow" data-page="product-flow">产品结构图</a>
@@ -858,6 +869,20 @@
         </aside>
       </section>
 
+      <section class="section page-section" id="tasks" data-page-section="tasks">
+        <div class="surface pad">
+          <div class="section-head">
+            <div>
+              <h2>任务进度</h2>
+              <p class="sub">聚合各 packages/*/docs/dev_log.md 的 Status Panel；只读提醒，不修改状态。优先显示需要关注的任务。</p>
+            </div>
+            <span class="pill" id="taskCountPill">tasks</span>
+          </div>
+          <div class="chip-row" id="taskCounts"></div>
+          <div class="task-list" id="taskList"></div>
+        </div>
+      </section>
+
       <section class="section split page-section" id="branches" data-page-section="branches">
         <div class="surface pad">
           <div class="section-head">
@@ -969,14 +994,16 @@ function badgeClass(value){
 const STATUS_LABELS = {
   SHIPPED:"已发布", READY_TO_SHIP:"待发布", READY_FOR_VERIFY:"待验证",
   NEEDS_REVIEW:"待评审", PENDING:"待办", BLOCKED_EXTERNAL:"外部阻塞",
-  BLOCKED:"阻塞", PAUSED:"暂停", APPROVED:"已批准"
+  BLOCKED:"阻塞", PAUSED:"暂停", APPROVED:"已批准",
+  FIX_READY:"待修复", IN_PROGRESS:"进行中", OTHER:"其它"
 };
 const STATUS_TONE = {
   SHIPPED:"b-green", READY_TO_SHIP:"b-green", APPROVED:"b-green",
   READY_FOR_VERIFY:"b-cyan", NEEDS_REVIEW:"b-yellow", PENDING:"b-gray",
-  BLOCKED_EXTERNAL:"b-red", BLOCKED:"b-red", PAUSED:"b-yellow"
+  BLOCKED_EXTERNAL:"b-red", BLOCKED:"b-red", PAUSED:"b-yellow",
+  FIX_READY:"b-yellow", IN_PROGRESS:"b-cyan", OTHER:"b-gray"
 };
-const STATUS_ORDER = ["SHIPPED","READY_TO_SHIP","READY_FOR_VERIFY","NEEDS_REVIEW","PENDING","BLOCKED_EXTERNAL","BLOCKED","PAUSED","APPROVED"];
+const STATUS_ORDER = ["BLOCKED","BLOCKED_EXTERNAL","FIX_READY","NEEDS_REVIEW","READY_FOR_VERIFY","READY_TO_SHIP","APPROVED","IN_PROGRESS","PENDING","PAUSED","SHIPPED","OTHER"];
 function statusChips(counts){
   const c = counts || {};
   const keys = [...STATUS_ORDER.filter(k => c[k]), ...Object.keys(c).filter(k => !STATUS_ORDER.includes(k)).sort()];
@@ -1574,7 +1601,28 @@ function renderDevData(){
   `).join("");
 }
 
-const pageIds = ["overview", "product-flow", "docs", "dev-data", "branches", "release-log"];
+const pageIds = ["overview", "tasks", "product-flow", "docs", "dev-data", "branches", "release-log"];
+
+function renderTaskProgress(){
+  const tp = dashboardState.task_progress || {items:[], counts:{}, source_count:0, shipped:0};
+  document.getElementById("taskCountPill").textContent = `${tp.source_count} dev_log`;
+  document.getElementById("taskCounts").innerHTML = statusChips(tp.counts);
+  const items = tp.items || [];
+  const active = items.filter(item => item.status !== "SHIPPED");
+  const shipped = items.length - active.length;
+  const rows = active.map(item => `
+    <button class="task-row" data-task-doc="${h(item.path)}" type="button">
+      <span class="badge ${STATUS_TONE[item.status] || "b-gray"}">${h(STATUS_LABELS[item.status] || item.status)}</span>
+      <div class="task-main"><b>${h(item.feature)}</b><span>${h(item.package)}${item.updated ? " · " + h(item.updated) : ""}</span></div>
+      <span class="task-open">打开 dev_log →</span>
+    </button>
+  `).join("");
+  document.getElementById("taskList").innerHTML =
+    (rows || `<div class="flow-note"><b>没有待处理任务</b><p style="margin-top:6px">所有 dev_log 都在已发布/归档状态。</p></div>`) +
+    `<div class="flow-note" style="margin-top:10px"><b>${h(String(shipped))} 个已发布 / 归档</b><p style="margin-top:6px">已隐藏，避免淹没需要关注的任务。</p></div>`;
+  document.querySelectorAll("#taskList [data-task-doc]").forEach(btn =>
+    btn.addEventListener("click", () => openDocInLibrary(btn.dataset.taskDoc)));
+}
 
 function setPage(page, updateHash = true){
   const nextPage = pageIds.includes(page) ? page : "overview";
@@ -1611,6 +1659,7 @@ renderModules();
 setProduct(products[0]?.key);
 initDocLibrary();
 renderDevData();
+renderTaskProgress();
 renderBranches();
 renderReleaseRows();
 setPage(location.hash.slice(1), false);

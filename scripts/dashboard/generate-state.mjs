@@ -641,6 +641,69 @@ function readBranchPolicy(divergence) {
   }
 }
 
+function parseStatusPanel(text) {
+  const tables = parseMarkdownTables(text);
+  const panel = tables.find(table =>
+    table.headers.map(header => header.toLowerCase()).includes("field") &&
+    table.headers.map(header => header.toLowerCase()).includes("value")
+  ) || tables[0];
+  if (!panel) return {};
+  const map = {};
+  panel.rows.forEach(row => {
+    const cells = Object.values(row);
+    const key = (row.Field || row.field || cells[0] || "").trim();
+    const value = (row.Value || row.value || cells[1] || "").trim();
+    if (key) map[key.toLowerCase()] = value;
+  });
+  return map;
+}
+
+function classifyDevStatus(raw) {
+  const s = String(raw || "").toLowerCase();
+  if (/block/.test(s)) return "BLOCKED";
+  if (/fix.?ready/.test(s)) return "FIX_READY";
+  if (/ready.?to.?ship/.test(s)) return "READY_TO_SHIP";
+  if (/verify/.test(s)) return "READY_FOR_VERIFY";
+  if (/review/.test(s)) return "NEEDS_REVIEW";
+  if (/approv/.test(s)) return "APPROVED";
+  if (/ship|shipped|done|complete|archiv/.test(s)) return "SHIPPED";
+  if (/progress|building|in.?dev|wip|active/.test(s)) return "IN_PROGRESS";
+  if (/plan|brief|backlog|pending|todo|queued/.test(s)) return "PENDING";
+  return "OTHER";
+}
+
+// Aggregate the per-package dev_log.md Status Panels into one task/progress view.
+function scanDevLogs() {
+  const dir = resolve(repoRoot, "packages");
+  if (!existsSync(dir)) return { items: [], counts: {}, source_count: 0, shipped: 0 };
+  const items = readdirSync(dir, { withFileTypes: true })
+    .filter(entry => entry.isDirectory())
+    .map(entry => resolve(dir, entry.name, "docs/dev_log.md"))
+    .filter(existsSync)
+    .map(path => {
+      const panel = parseStatusPanel(readText(path));
+      const rawStatus = panel.status || "";
+      const pkg = relative(repoRoot, path).split("/")[1];
+      return {
+        package: pkg,
+        feature: (panel.feature || pkg).replace(/`/g, "").trim(),
+        status: classifyDevStatus(rawStatus),
+        raw_status: rawStatus,
+        updated: panel.updated || "",
+        next: panel["suggested next"] || panel.workflow || "",
+        path: relative(repoRoot, path)
+      };
+    })
+    .filter(item => item.raw_status);
+  const counts = items.reduce((acc, item) => {
+    acc[item.status] = (acc[item.status] || 0) + 1;
+    return acc;
+  }, {});
+  const order = ["BLOCKED", "FIX_READY", "NEEDS_REVIEW", "READY_FOR_VERIFY", "READY_TO_SHIP", "APPROVED", "IN_PROGRESS", "PENDING", "OTHER", "SHIPPED"];
+  items.sort((a, b) => (order.indexOf(a.status) - order.indexOf(b.status)) || a.package.localeCompare(b.package));
+  return { items, counts, source_count: items.length, shipped: counts.SHIPPED || 0 };
+}
+
 const source = readJson(sourcePath);
 const branch = git(["branch", "--show-current"]);
 const latestCommit = git(["log", "-1", "--format=%h %s"]);
@@ -678,7 +741,8 @@ const snapshot = {
     latest_entry: latestReleaseEntry()
   },
   branch_policy: readBranchPolicy(divergence),
-  development_data: buildDevelopmentData(branch)
+  development_data: buildDevelopmentData(branch),
+  task_progress: scanDevLogs()
 };
 snapshot.signals = buildSignals(snapshot);
 snapshot.cockpit = buildCockpit(snapshot);
