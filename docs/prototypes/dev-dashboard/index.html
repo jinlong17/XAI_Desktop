@@ -427,6 +427,8 @@
   .detail-metric.is-wide{grid-column:1 / -1}
   .chip-row{display:flex;flex-wrap:wrap;gap:6px;margin-top:6px}
   .chip-empty{color:var(--faint);font-size:12px}
+  .detail-docs{margin-top:4px}
+  .detail-docs-label{display:block;font-size:11.5px;color:var(--muted);margin-bottom:6px}
   .split{display:grid;grid-template-columns:minmax(0,1fr) minmax(280px,.55fr);gap:14px;align-items:start}
   .reader-shell{display:grid;grid-template-columns:220px minmax(0,1fr);gap:14px}
   .doc-list{display:grid;gap:7px;align-content:start}
@@ -1178,7 +1180,21 @@ function setProduct(key){
     <div class="detail-list">
       ${item.points.map(([title,desc]) => `<div><b>${h(title)}</b><span>${h(desc)}</span></div>`).join("")}
     </div>
+    <div class="detail-docs">
+      <b class="detail-docs-label">相关文档（PRD / 治理）</b>
+      <div class="doc-actions" id="detailDocLinks">
+        ${(item.related_docs || []).map(d => `<button class="reader-btn" data-detail-doc="${h(d.path)}" type="button">${h(d.label)}</button>`).join("") || '<span class="chip-empty">无关联文档</span>'}
+      </div>
+    </div>
   `;
+  document.querySelectorAll("#detailDocLinks [data-detail-doc]").forEach(btn => {
+    btn.addEventListener("click", () => openDocInLibrary(btn.dataset.detailDoc));
+  });
+}
+
+function openDocInLibrary(path){
+  setPage("docs");
+  if(serveMode) openDoc(path);
 }
 
 const serveMode = location.protocol === "http:" || location.protocol === "https:";

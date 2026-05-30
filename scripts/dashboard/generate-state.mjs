@@ -358,25 +358,57 @@ function buildProductLines(sourceProducts, roadmapManifests, pluginMap) {
   const get = names => names.map(name => byName.get(name)).filter(Boolean);
   const pluginEntries = pluginMap.entries.filter(entry => /plugin-(organizer|clipboard|widgets|meditation|pet|account|console|productivity|ai-cube|calendar|labels|project|settings)\b/.test(entry.path));
   const pluginCounts = countByStatus(pluginEntries);
-  const lineCounts = {
-    web: mergeCounts(get([
+  const lineManifestNames = {
+    web: [
+      "xai-web-console.md",
+      "xai-web-console-gap-closure.md",
+      "xai-web-dashboard-real-data.md",
       "web-ticktick-parity.md",
       "xai-web-calendar-event-create.md",
-      "xai-web-console-gap-closure.md",
-      "xai-web-console.md",
-      "xai-web-dashboard-real-data.md",
+      "xai-web-matrix-card-create.md",
+      "xai-web-tasks-card-create.md",
+      "xai-web-tasks-smartlist-filter.md",
       "xai-web-dashboard-stickies-create.md",
       "xai-web-dashboard-weather-mail.md",
-      "xai-web-matrix-card-create.md",
-      "xai-web-statistics-real-aggregation.md",
-      "xai-web-tasks-card-create.md",
-      "xai-web-tasks-smartlist-filter.md"
-    ])),
-    app: mergeCounts(get(["xai-g0-window-spike.md", "xai-g1-native-foundation.md"])),
+      "xai-web-statistics-real-aggregation.md"
+    ],
+    app: ["xai-g0-window-spike.md", "xai-g1-native-foundation.md"],
+    plugin: [],
+    sync: ["sync-v1.md"],
+    site: ["web-ticktick-parity.md"],
+    admin: []
+  };
+  const lineCounts = {
+    web: mergeCounts(get(lineManifestNames.web)),
+    app: mergeCounts(get(lineManifestNames.app)),
     plugin: pluginCounts,
-    sync: mergeCounts(get(["sync-v1.md"])),
-    site: mergeCounts(get(["web-ticktick-parity.md"])),
+    sync: mergeCounts(get(lineManifestNames.sync)),
+    site: mergeCounts(get(lineManifestNames.site)),
     admin: {}
+  };
+  // Curated entry-point docs per line (PRD/spec/governance), filtered to ones
+  // that actually exist so dead links never reach the dashboard.
+  const anchorDocs = {
+    web: [["Web Spec", "web design/DESIGN.md"], ["ADR-0013 分支治理", "docs/adr/0013-branch-sync-governance.md"]],
+    app: [["ADR-0010 P1 计划", "docs/adr/0010-p1-desktop-resume-plan.md"]],
+    plugin: [["PLUGIN_MAP", "docs/PLUGIN_MAP.md"]],
+    sync: [["ADR-0013 同步", "docs/adr/0013-branch-sync-governance.md"]],
+    site: [],
+    admin: []
+  };
+  const relatedDocsFor = key => {
+    const seen = new Set();
+    const fromAnchors = (anchorDocs[key] || [])
+      .filter(([, path]) => existsSync(resolve(repoRoot, path)))
+      .map(([label, path]) => ({ label, path }));
+    const fromManifests = get(lineManifestNames[key] || [])
+      .slice(0, 5)
+      .map(manifest => ({ label: manifest.filename.replace(/\.md$/, ""), path: manifest.source }));
+    return [...fromAnchors, ...fromManifests].filter(doc => {
+      if (seen.has(doc.path)) return false;
+      seen.add(doc.path);
+      return true;
+    });
   };
   const regions = {
     web: "主产品链",
@@ -398,7 +430,8 @@ function buildProductLines(sourceProducts, roadmapManifests, pluginMap) {
         region: regions[product.key] || "项目系统区",
         tracking_badge: badgeForCounts(counts),
         status_counts: counts,
-        status_summary: summarizeProductStatus(counts, emptyLabel)
+        status_summary: summarizeProductStatus(counts, emptyLabel),
+        related_docs: relatedDocsFor(product.key)
       };
     });
 }
