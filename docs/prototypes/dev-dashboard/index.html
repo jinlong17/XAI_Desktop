@@ -71,6 +71,7 @@
     border:1px solid transparent;
   }
   .nav a:hover{background:var(--surface-3);border-color:var(--line);color:var(--text)}
+  .nav a.is-active{background:#eaf2ff;border-color:#cfe2ff;color:var(--blue);font-weight:800}
   .nav small{color:var(--faint);font-size:11px}
   .rail-note{
     margin:18px 6px 0;padding:12px;border:1px solid var(--line);
@@ -90,6 +91,13 @@
   .toolbar{display:flex;align-items:center;gap:8px;flex-wrap:wrap;justify-content:flex-end}
   .content{max-width:1480px;margin:0 auto;padding:26px 28px 56px}
   .section{margin-bottom:18px}
+  .page-section{display:none}
+  .page-section:not(.is-active){display:none !important}
+  .page-section.is-active{display:block}
+  .page-section.is-active.hero,
+  .page-section.is-active.kpis,
+  .page-section.is-active.flow-grid,
+  .page-section.is-active.split{display:grid}
   .section-head{display:flex;align-items:flex-end;justify-content:space-between;gap:16px;margin-bottom:12px}
   h1,h2,h3,p{margin:0}
   h1{font-size:30px;line-height:1.18;letter-spacing:0}
@@ -367,11 +375,11 @@
     </div>
     <nav class="nav" aria-label="主导航">
       <div class="nav-title">导航</div>
-      <a href="#overview">总览 <small>today</small></a>
-      <a href="#product-flow">产品结构图 <small>click</small></a>
-      <a href="#docs">手册和 skill <small>reader</small></a>
-      <a href="#branches">分支管理 <small>solo</small></a>
-      <a href="#release-log">发布 log <small>new</small></a>
+      <a href="#overview" data-page="overview">总览 <small>page</small></a>
+      <a href="#product-flow" data-page="product-flow">产品结构图 <small>page</small></a>
+      <a href="#docs" data-page="docs">手册和 skill <small>page</small></a>
+      <a href="#branches" data-page="branches">分支管理 <small>page</small></a>
+      <a href="#release-log" data-page="release-log">发布 log <small>page</small></a>
     </nav>
     <div class="rail-note">
       <b>核心规则</b>
@@ -393,7 +401,7 @@
     </header>
 
     <div class="content">
-      <section class="section hero" id="overview">
+      <section class="section hero page-section is-active" id="overview" data-page-section="overview">
         <div class="surface hero-copy">
           <span class="badge b-blue">项目系统层 v0</span>
           <h1 style="margin-top:14px">一个人也能看懂、执行、复盘的 XAI 开发工作台</h1>
@@ -412,14 +420,14 @@
         </div>
       </section>
 
-      <section class="section kpis">
+      <section class="section kpis page-section is-active" data-page-section="overview">
         <div class="surface kpi"><div class="label"><span>产品线</span><span class="pill">顺序模块</span></div><div class="num">5</div><div class="note">Web / App / Plugin / Sync / Official Site</div></div>
         <div class="surface kpi"><div class="label"><span>长期分支</span><span class="pill">治理</span></div><div class="num">4+</div><div class="note">web, desktop-next, plugin-next, dev, release/*</div></div>
         <div class="surface kpi"><div class="label"><span>固定 skill</span><span class="pill">入口</span></div><div class="num">5</div><div class="note">feature, roadmap, web-to-desktop, release log</div></div>
         <div class="surface kpi"><div class="label"><span>新手路径</span><span class="pill">节奏</span></div><div class="num">3</div><div class="note">选产品线 -> 选 branch -> 选 skill</div></div>
       </section>
 
-      <section class="section flow-grid" id="product-flow">
+      <section class="section flow-grid page-section" id="product-flow" data-page-section="product-flow">
         <div class="surface pad flow-stage">
           <div class="section-head">
             <div>
@@ -440,7 +448,7 @@
         <aside class="surface pad detail" id="productDetail" aria-live="polite"></aside>
       </section>
 
-      <section class="section split" id="docs">
+      <section class="section split page-section" id="docs" data-page-section="docs">
         <div class="surface pad">
           <div class="section-head">
             <div>
@@ -479,7 +487,7 @@
         </aside>
       </section>
 
-      <section class="section split" id="branches">
+      <section class="section split page-section" id="branches" data-page-section="branches">
         <div class="surface pad">
           <div class="section-head">
             <div>
@@ -502,7 +510,7 @@
         </aside>
       </section>
 
-      <section class="section split" id="release-log">
+      <section class="section split page-section" id="release-log" data-page-section="release-log">
         <div class="surface pad">
           <div class="section-head">
             <div>
@@ -800,6 +808,30 @@ function renderReleaseRows(){
   `).join("");
 }
 
+const pageIds = ["overview", "product-flow", "docs", "branches", "release-log"];
+
+function setPage(page, updateHash = true){
+  const nextPage = pageIds.includes(page) ? page : "overview";
+  document.querySelectorAll("[data-page-section]").forEach(section => {
+    section.classList.toggle("is-active", section.dataset.pageSection === nextPage);
+  });
+  document.querySelectorAll(".nav a[data-page]").forEach(link => {
+    link.classList.toggle("is-active", link.dataset.page === nextPage);
+  });
+  if(updateHash && location.hash !== `#${nextPage}`){
+    history.pushState(null, "", `#${nextPage}`);
+  }
+  window.scrollTo(0, 0);
+}
+
+document.querySelectorAll(".nav a[data-page]").forEach(link => {
+  link.addEventListener("click", event => {
+    event.preventDefault();
+    setPage(link.dataset.page);
+  });
+});
+
+window.addEventListener("hashchange", () => setPage(location.hash.slice(1), false));
 document.getElementById("prevPage").addEventListener("click", () => { if(pageIndex > 0){ pageIndex -= 1; renderReader(); } });
 document.getElementById("nextPage").addEventListener("click", () => {
   const doc = docs[docIndex];
@@ -812,6 +844,7 @@ renderReader();
 renderSkills();
 renderBranches();
 renderReleaseRows();
+setPage(location.hash.slice(1), false);
 </script>
 </body>
 </html>
