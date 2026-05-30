@@ -478,8 +478,8 @@ Operational corollaries:
   **deferred follow-ups, NOT Acceptance blockers**.
 - **Two-machine note:** because `web` and `dev` are authored on independent
   machines (§S2), this ADR lives on the `web` line; its decisions reach `dev`
-  through the D2 lanes like any other Web work. The numbering convention (#1)
-  should be relayed to the `dev` machine once chosen.
+  through the D2 lanes like any other Web work. Relay items for the `dev`
+  machine: the repo-wide numbering rule (§S7 #1) and the ADR-file sync (§S7 #6).
 - **Does not change** any ADR-0010 active-focus decision; it is additive
   governance. Creating the D2 branches (`desktop-next` / `desktop-plugin-next` /
   `release/*`) happens **only after the operator confirms the full governance
