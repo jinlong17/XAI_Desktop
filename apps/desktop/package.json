@@ -4,9 +4,9 @@
   "version": "0.1.0",
   "type": "module",
   "scripts": {
-    "dev": "tauri dev",
-    "build": "tauri build --debug --bundles app",
-    "build:dmg": "tauri build --debug --bundles dmg",
+    "dev": "tauri dev --features crypto",
+    "build": "tauri build --debug --features crypto --bundles app",
+    "build:dmg": "tauri build --debug --features crypto --bundles dmg",
     "build:web": "pnpm --filter @repo/web build",
     "preview:web": "pnpm --filter @repo/web preview",
     "tauri": "tauri"

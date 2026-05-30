@@ -58,28 +58,34 @@ packages/ui/          → 共享 UI (无业务逻辑的纯 UI 组件)
 
 ## 5. 多窗口架构
 
+> **ADR-0011 update (2026-05-29):** The normal Phase 1 desktop product is a
+> dock-visible, decorated Tauri app window. The transparent overlay/control/grid
+> topology below is retained as historical/P3+ future-mode architecture only.
+> Runtime overlay commands are opt-in behind `hostMode=overlay_v2` and fail
+> closed in the default `normal` host mode.
+
 ### 5.1 窗口分类
 
 | 类型 | Label 模式 | 用途 | 交互模式 |
 |------|-----------|------|---------|
-| main | `main` | 全屏透明 overlay | 默认点击穿透 (`ignoresMouseEvents: YES`) |
-| control | `control` | AI Cube 控制台 (360x360) | 始终可交互 |
-| grid_\<id\> | `grid_xxx` | 独立 Grid 窗口 | 始终可交互 |
+| main | `main` | 正常桌面应用窗口；overlay_v2 时可作为透明 overlay | normal 模式可交互；overlay_v2 才启用点击穿透 |
+| control | `control` | AI Cube 控制台 (P3+ overlay_v2) | overlay_v2 opt-in |
+| grid_\<id\> | `grid_xxx` | 独立 Grid 窗口 (P3+ overlay_v2) | overlay_v2 opt-in |
 | widget_\<id\> | `widget_xxx` | Widget 窗口 | 始终可交互 (未来) |
 
 ### 5.2 macOS 窗口层级
 
-所有窗口使用 `CGWindowLevelForKey(DesktopIconWindow)` 作为基准:
+overlay_v2 使用 `CGWindowLevelForKey(DesktopIconWindow)` 作为基准:
 
-- **main 窗口:** `desktop_icon_level + 1`，始终 click-through
+- **main 窗口:** normal 模式使用普通 decorated app window；overlay_v2 才使用 `desktop_icon_level + 1` 和 click-through
 - **control 窗口:** `desktop_icon_level + 1`，可交互
 - **grid 窗口:** `desktop_icon_level + 3`，可交互，置于 icon 之上
 
-所有窗口加入 `NSWindowCollectionBehavior`: canJoinAllSpaces + stationary + ignoresCycle。
+overlay_v2 窗口加入 `NSWindowCollectionBehavior`: canJoinAllSpaces + stationary + ignoresCycle。
 
 ### 5.3 Pointer-Events 策略
 
-- 根容器 `pointer-events: none` 实现桌面点击穿透
+- overlay_v2 根容器 `pointer-events: none` 实现桌面点击穿透
 - 交互元素 (SmartContainer, AiCube, SettingsPanel) 显式设置 `pointer-events: auto`
 - 每个 Grid 独立原生窗口，不受主窗口 pointer-events 限制
 

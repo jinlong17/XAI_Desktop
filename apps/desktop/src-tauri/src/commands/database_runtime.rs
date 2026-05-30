@@ -6,6 +6,8 @@ use std::time::{SystemTime, UNIX_EPOCH};
 use rusqlite::{params, Connection, OpenFlags};
 use tauri::Manager;
 
+use crate::crypto::kdf::KEY_BYTES;
+use crate::crypto::sqlcipher::apply_sqlcipher_key;
 use crate::error::{AppError, AppResult};
 
 pub const DB_FILE_NAME: &str = "xai-repo-v0.db";
@@ -49,7 +51,8 @@ const INSERT_MIGRATION_LOG_SQL: &str = "INSERT INTO core_data_migration_log \
     VALUES (?1, ?2, ?3, ?4, ?5, 1) \
     ON CONFLICT(id) DO NOTHING";
 
-const SELECT_MIGRATION_LOG_SQL: &str = "SELECT id, from_version, to_version, started_at_ms, completed_at_ms, applied \
+const SELECT_MIGRATION_LOG_SQL: &str =
+    "SELECT id, from_version, to_version, started_at_ms, completed_at_ms, applied \
     FROM core_data_migration_log ORDER BY to_version ASC, id ASC";
 
 #[derive(Clone, Debug)]
@@ -86,11 +89,7 @@ const MIGRATIONS: &[MigrationDef] = &[MigrationDef {
 }];
 
 fn max_known_migration_version() -> i64 {
-    MIGRATIONS
-        .iter()
-        .map(|m| m.to_version)
-        .max()
-        .unwrap_or(0)
+    MIGRATIONS.iter().map(|m| m.to_version).max().unwrap_or(0)
 }
 
 pub fn resolve_db_path(app: &tauri::AppHandle) -> AppResult<PathBuf> {
@@ -121,7 +120,10 @@ pub fn resolve_managed_backup_path(app: &tauri::AppHandle, now_ms: i64) -> AppRe
     Ok(resolve_backup_dir(app)?.join(managed_backup_file_name(now_ms)))
 }
 
-pub fn open_and_bootstrap(path: &Path) -> AppResult<(Connection, DatabaseBootstrapMetadata)> {
+pub fn open_and_bootstrap(
+    path: &Path,
+    db_key: &[u8; KEY_BYTES],
+) -> AppResult<(Connection, DatabaseBootstrapMetadata)> {
     if let Some(parent) = path.parent() {
         std::fs::create_dir_all(parent)
             .map_err(|err| AppError::DatabaseBackend(err.to_string()))?;
@@ -133,6 +135,8 @@ pub fn open_and_bootstrap(path: &Path) -> AppResult<(Connection, DatabaseBootstr
     )
     .map_err(|err| AppError::DatabaseBackend(err.to_string()))?;
 
+    apply_sqlcipher_key(&conn, db_key).map_err(|err| AppError::DatabaseBackend(err.to_string()))?;
+
     conn.execute_batch(CREATE_BOOTSTRAP_META_SQL)
         .map_err(|err| AppError::DatabaseBackend(err.to_string()))?;
     conn.execute_batch(CREATE_MIGRATION_LOG_SQL)
@@ -142,11 +146,10 @@ pub fn open_and_bootstrap(path: &Path) -> AppResult<(Connection, DatabaseBootstr
     let mut schema_version = 0;
     let mut migration_version = 0;
 
-    let existing: Result<(i64, i64), rusqlite::Error> = conn.query_row(
-        SELECT_BOOTSTRAP_META_SQL,
-        [],
-        |row| Ok((row.get(0)?, row.get(1)?)),
-    );
+    let existing: Result<(i64, i64), rusqlite::Error> =
+        conn.query_row(SELECT_BOOTSTRAP_META_SQL, [], |row| {
+            Ok((row.get(0)?, row.get(1)?))
+        });
 
     match existing {
         Ok((schema, migration)) => {
@@ -286,6 +289,16 @@ fn now_ms() -> i64 {
 mod tests {
     use super::*;
 
+    fn test_db_key() -> [u8; KEY_BYTES] {
+        [0x42; KEY_BYTES]
+    }
+
+    fn open_test_connection(path: &Path) -> Connection {
+        let conn = Connection::open(path).unwrap();
+        apply_sqlcipher_key(&conn, &test_db_key()).unwrap();
+        conn
+    }
+
     fn temp_db_path(name: &str) -> PathBuf {
         let nanos = SystemTime::now()
             .duration_since(UNIX_EPOCH)
@@ -300,7 +313,7 @@ mod tests {
     #[test]
     fn bootstraps_new_database_with_v1_metadata() {
         let path = temp_db_path("new");
-        let (_conn, meta) = open_and_bootstrap(&path).unwrap();
+        let (_conn, meta) = open_and_bootstrap(&path, &test_db_key()).unwrap();
         assert_eq!(meta.schema_version, RUNTIME_SCHEMA_VERSION);
         assert_eq!(meta.migration_version, 1);
         assert_eq!(meta.applied_in_this_bootstrap.len(), 1);
@@ -312,8 +325,8 @@ mod tests {
     #[test]
     fn second_bootstrap_is_idempotent_and_does_not_reapply() {
         let path = temp_db_path("idempotent");
-        open_and_bootstrap(&path).unwrap();
-        let (_conn, second) = open_and_bootstrap(&path).unwrap();
+        open_and_bootstrap(&path, &test_db_key()).unwrap();
+        let (_conn, second) = open_and_bootstrap(&path, &test_db_key()).unwrap();
         assert_eq!(second.schema_version, RUNTIME_SCHEMA_VERSION);
         assert_eq!(second.migration_version, 1);
         assert!(second.applied_in_this_bootstrap.is_empty());
@@ -326,17 +339,14 @@ mod tests {
         let path = temp_db_path("old-fixture");
 
         {
-            let conn = Connection::open(&path).unwrap();
+            let conn = open_test_connection(&path);
             conn.execute_batch(CREATE_BOOTSTRAP_META_SQL).unwrap();
             conn.execute_batch(CREATE_MIGRATION_LOG_SQL).unwrap();
-            conn.execute(
-                UPSERT_BOOTSTRAP_META_SQL,
-                params![0_i64, 0_i64, now_ms()],
-            )
-            .unwrap();
+            conn.execute(UPSERT_BOOTSTRAP_META_SQL, params![0_i64, 0_i64, now_ms()])
+                .unwrap();
         }
 
-        let (_conn, meta) = open_and_bootstrap(&path).unwrap();
+        let (_conn, meta) = open_and_bootstrap(&path, &test_db_key()).unwrap();
         assert_eq!(meta.migration_version, 1);
         assert_eq!(meta.applied_in_this_bootstrap.len(), 1);
         let _ = std::fs::remove_file(path);
@@ -347,7 +357,7 @@ mod tests {
         let path = temp_db_path("contract-mismatch");
 
         {
-            let conn = Connection::open(&path).unwrap();
+            let conn = open_test_connection(&path);
             conn.execute_batch(CREATE_BOOTSTRAP_META_SQL).unwrap();
             conn.execute_batch(CREATE_MIGRATION_LOG_SQL).unwrap();
             conn.execute(
@@ -357,8 +367,26 @@ mod tests {
             .unwrap();
         }
 
-        let err = open_and_bootstrap(&path).unwrap_err();
+        let err = open_and_bootstrap(&path, &test_db_key()).unwrap_err();
         assert!(matches!(err, AppError::DatabaseBootstrapContract(_)));
+        let _ = std::fs::remove_file(path);
+    }
+
+    #[test]
+    fn encrypted_database_rejects_plain_or_wrong_key_reads() {
+        let path = temp_db_path("encrypted");
+        let good_key = test_db_key();
+        let wrong_key = [0x24; KEY_BYTES];
+
+        open_and_bootstrap(&path, &good_key).unwrap();
+
+        let plain = Connection::open(&path).unwrap();
+        let plain_read = plain.query_row("SELECT count(*) FROM sqlite_master;", [], |_row| Ok(()));
+        assert!(plain_read.is_err());
+
+        let wrong_key_open = open_and_bootstrap(&path, &wrong_key);
+        assert!(wrong_key_open.is_err());
+
         let _ = std::fs::remove_file(path);
     }
 

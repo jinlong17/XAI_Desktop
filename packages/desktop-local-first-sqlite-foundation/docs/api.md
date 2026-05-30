@@ -34,7 +34,10 @@ The current `db_*` family remains the likely host boundary. Build must keep comm
 - behavior:
   - idempotent bootstrap
   - resolves the live DB path under `app_data_dir()`
-  - creates/opens the DB
+  - creates/opens the SQLCipher DB
+  - loads or creates the device-local database KEK in macOS Keychain
+  - derives the DB key with the `xai.sqlite.v1` KDF domain separator
+  - applies SQLCipher key material before any schema read/write
   - applies required schema bootstrap/migrations
 - expected output shape:
   - `namespace: string`
@@ -76,6 +79,7 @@ The desktop TS client/driver should remain in `@repo/core-data`.
 | `E1300` | database bootstrap contract/initialization failure (`db_init` missing, migration registry mismatch, or unsupported custom migrate plan on tauri client) | caller treats as setup/runtime contract failure, not recoverable business validation |
 | `E1301` | invalid namespace/id/input payload | caller bug or malformed input; fail fast |
 | `E1302` | backend FS/SQLite/open/migration error | surface diagnostically; do not mask as success |
+| `E3011` | database key generation/derivation or invalid stored KEK material | surface as sync crypto failure; do not fall back to plaintext |
 
 Build may refine the exact wording, but the docs/runtime surface must stay aligned.
 
@@ -88,5 +92,6 @@ Build may refine the exact wording, but the docs/runtime surface must stay align
 ## Idempotency Notes
 
 - bootstrap/init must be idempotent
+- bootstrap/init must fail closed if the Keychain KEK is unavailable or malformed
 - migration execution must be safe to re-run at startup when already up to date
 - fixture/bootstrap helpers must make it easy to prove repeat-open and repeat-migrate behavior in tests

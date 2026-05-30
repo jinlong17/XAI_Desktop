@@ -46,6 +46,10 @@
 ## Required Runtime Outcome
 
 - The native bootstrap path must resolve and own the live DB under `app_data_dir()`.
+- The live DB must be SQLCipher-encrypted before any bootstrap/schema access:
+  - database KEK lives in macOS Keychain as device-local secret material
+  - DB key is HKDF-derived with the `xai.sqlite.v1` domain separator
+  - JS never receives raw key bytes or key handles for this bootstrap path
 - Migration execution must happen deterministically during bootstrap and surface migration metadata honestly.
 - The TypeScript desktop repo/client must be contract-honest:
   - no fake `migrate()` surface
@@ -60,6 +64,7 @@
 ### Phase 1 - Native bootstrap and migration runtime
 
 - live DB path/filename policy under `app_data_dir()`
+- SQLCipher `PRAGMA key` applied from a Keychain-backed device-local KEK
 - migration registry/bootstrap execution in the host runtime
 - thin `db_*` command wrappers over the runtime
 - honest bootstrap metadata returned to TS

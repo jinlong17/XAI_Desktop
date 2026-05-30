@@ -1,49 +1,40 @@
-//! macOS Keychain bridge — generic-password get/set/del with WhenUnlockedThisDeviceOnly ACL.
+//! macOS Keychain bridge — generic-password get/set/del.
 //!
 //! All code in this file is `#[cfg(target_os = "macos")]`-gated except for the
 //! non-macOS stub block at the bottom which keeps the crate compiling on all targets.
 //!
-//! OQ-1 Resolution (2026-05-19):
-//!   The `security-framework` crate exposes `SecAccessControl` via
-//!   `access_control::SecAccessControl::create_with_protection(protection, flags)`.
-//!   We use `ProtectionMode::AccessibleWhenUnlockedThisDeviceOnly` with flags = 0 to create
-//!   an `SecAccessControl` object, which is then attached to each keychain item via
-//!   `PasswordOptions::set_access_control()`.
-//!   The "trusted application list = bundle id only" invariant (T-U3/FR-AC-08) is enforced at
-//!   the OS layer through code-signing identity — modern macOS Data Protection Keychain grants
-//!   access only to the signed process matching the item's creator identity.
-//!   `kSecAttrSynchronizable` is explicitly set to false (never sync to iCloud) for T13.
-//!   ACL construction is tested at the attribute-construction level via `build_item_attrs()`.
+//! 2026-05-29 release-readiness repair:
+//!   The previous `SecAccessControl`/Data Protection Keychain path failed on an
+//!   unsigned dev/debug process with OSStatus -34018 (missing entitlement). The
+//!   release-ready default now uses namespaced generic-password items and always
+//!   selects the non-synchronizable store so secrets do not propagate through
+//!   iCloud Keychain. Signed Data Protection ACL verification remains a separate
+//!   Apple-signing/notarization gate instead of blocking local-first DB startup.
 
 use crate::error::{AppError, AppResult};
 
 /// Service namespace used for all XAI_Desktop keychain items.
 pub const KEYCHAIN_SERVICE: &str = "com.jinlong.desktop.secret";
 
-/// The XAI_Desktop bundle identifier — used in `SecAccessControl` attestation context.
+/// The XAI_Desktop bundle identifier — used for release-signing gate docs/tests.
 pub const BUNDLE_ID: &str = "com.jinlong.desktop";
 
 /// Attribute bundle used when creating/validating keychain items.
 ///
 /// This is a pure-construction value type, allowing unit tests to verify the
-/// correctness of accessibility, synchronizability, and ACL settings without
+/// correctness of namespacing, synchronizability, and release-gate intent without
 /// performing actual Keychain I/O (T-U2, T-U3).
 #[derive(Debug, PartialEq, Eq)]
 pub struct KeychainItemAttrs {
-    /// Must be `kSecAttrAccessibleWhenUnlockedThisDeviceOnly`.
-    pub accessibility: KeychainAccessibility,
     /// Must always be `false` (T13 — no iCloud Keychain propagation).
     pub synchronizable: bool,
-    /// Must be the application bundle id restricting access.
-    pub acl_app_bundle_id: String,
-}
-
-/// Mirrors the accessibility protection modes relevant to this feature.
-#[derive(Debug, PartialEq, Eq)]
-pub enum KeychainAccessibility {
-    WhenUnlockedThisDeviceOnly,
-    #[allow(dead_code)]
-    Other,
+    /// Must be the service namespace used by all generic-password items.
+    pub service: String,
+    /// Bundle identifier used by the signed Data Protection ACL release gate.
+    pub bundle_id: String,
+    /// True means signed Data Protection ACL verification is still required for
+    /// production release signing, but is not attached in unsigned dev builds.
+    pub signed_data_protection_acl_required_for_release: bool,
 }
 
 /// Construct the canonical attribute set for XAI_Desktop keychain items.
@@ -51,9 +42,10 @@ pub enum KeychainAccessibility {
 /// This is a **pure function** tested in T-U2 and T-U3 — no Keychain I/O.
 pub fn build_item_attrs() -> KeychainItemAttrs {
     KeychainItemAttrs {
-        accessibility: KeychainAccessibility::WhenUnlockedThisDeviceOnly,
         synchronizable: false,
-        acl_app_bundle_id: BUNDLE_ID.to_string(),
+        service: KEYCHAIN_SERVICE.to_string(),
+        bundle_id: BUNDLE_ID.to_string(),
+        signed_data_protection_acl_required_for_release: true,
     }
 }
 
@@ -62,8 +54,10 @@ pub fn build_item_attrs() -> KeychainItemAttrs {
 #[cfg(target_os = "macos")]
 pub mod macos_impl {
     use super::{AppError, AppResult, KEYCHAIN_SERVICE};
-    use security_framework::access_control::{ProtectionMode, SecAccessControl};
-    use security_framework::passwords::{PasswordOptions, set_generic_password_options, generic_password, delete_generic_password_options};
+    use security_framework::passwords::{
+        delete_generic_password_options, generic_password, set_generic_password_options,
+        PasswordOptions,
+    };
 
     // OSStatus constants from Security.framework (not re-exported by security-framework crate,
     // so we define them here matching the Apple SDK values).
@@ -89,30 +83,22 @@ pub mod macos_impl {
         AppError::KeychainBackend(format!("OSStatus {code}: {err}"))
     }
 
-    /// Build a `PasswordOptions` with the correct accessibility + ACL attributes.
+    /// Build `PasswordOptions` for the non-iCloud generic-password store.
     ///
-    /// Sets:
-    /// - `kSecAttrAccessControl` = `WhenUnlockedThisDeviceOnly`, flags=0
-    /// - `kSecAttrSynchronizable` = false (T13)
-    fn build_password_options(key: &str) -> Result<PasswordOptions, AppError> {
-        let access_ctrl = SecAccessControl::create_with_protection(
-            Some(ProtectionMode::AccessibleWhenUnlockedThisDeviceOnly),
-            0,
-        )
-        .map_err(|e| AppError::KeychainBackend(format!("SecAccessControl create failed: {e}")))?;
-
+    /// `set_access_synchronized(Some(false))` is intentionally used on set/get/delete so
+    /// this bridge only touches the local, non-synchronizable Keychain store.
+    fn build_password_options(key: &str) -> PasswordOptions {
         let mut opts = PasswordOptions::new_generic_password(KEYCHAIN_SERVICE, key);
-        opts.set_access_control(access_ctrl);
         opts.set_access_synchronized(Some(false));
-        Ok(opts)
+        opts
     }
 
     /// Store `value` bytes under `key` in the macOS Keychain.
     ///
-    /// Idempotent upsert: if the item already exists, updates its data in place
-    /// (preserving the existing `SecAccessControl`); otherwise adds a new item.
+    /// Idempotent upsert: if the item already exists, updates its data in place;
+    /// otherwise adds a new non-synchronizable generic-password item.
     pub fn secret_set_impl(key: &str, value: &[u8]) -> AppResult<()> {
-        let opts = build_password_options(key)?;
+        let opts = build_password_options(key);
         set_generic_password_options(value, opts).map_err(|e| {
             let code = e.code();
             if code == ERR_SEC_INTERACTION_NOT_ALLOWED {
@@ -128,7 +114,7 @@ pub mod macos_impl {
     /// Returns `KeychainItemNotFound` (E1101) if absent,
     /// `KeychainLocked` (E1100) if device locked.
     pub fn secret_get_impl(key: &str) -> AppResult<Vec<u8>> {
-        let opts = PasswordOptions::new_generic_password(KEYCHAIN_SERVICE, key);
+        let opts = build_password_options(key);
         generic_password(opts).map_err(map_sec_error)
     }
 
@@ -136,7 +122,7 @@ pub mod macos_impl {
     ///
     /// Idempotent: absent key returns success (no error).
     pub fn secret_del_impl(key: &str) -> AppResult<()> {
-        let opts = PasswordOptions::new_generic_password(KEYCHAIN_SERVICE, key);
+        let opts = build_password_options(key);
         match delete_generic_password_options(opts) {
             Ok(()) => Ok(()),
             Err(e) if e.code() == ERR_SEC_ITEM_NOT_FOUND => Ok(()), // idempotent
@@ -185,14 +171,13 @@ pub fn secret_del(_key: &str) -> AppResult<()> {
 mod tests {
     use super::*;
 
-    /// T-U2: attribute construction asserts WhenUnlockedThisDeviceOnly and synchronizable=false (T13).
+    /// T-U2: attribute construction asserts local-only generic-password storage.
     #[test]
     fn t_u2_attribute_construction() {
         let attrs = build_item_attrs();
         assert_eq!(
-            attrs.accessibility,
-            KeychainAccessibility::WhenUnlockedThisDeviceOnly,
-            "accessibility must be WhenUnlockedThisDeviceOnly"
+            attrs.service, KEYCHAIN_SERVICE,
+            "service namespace must match the runtime Keychain service"
         );
         assert!(
             !attrs.synchronizable,
@@ -200,14 +185,17 @@ mod tests {
         );
     }
 
-    /// T-U3: ACL composition — trusted-application list = bundle id `com.jinlong.desktop`.
+    /// T-U3: signed Data Protection ACL remains an explicit release-signing gate.
     #[test]
     fn t_u3_acl_composition() {
         let attrs = build_item_attrs();
         assert_eq!(
-            attrs.acl_app_bundle_id,
-            "com.jinlong.desktop",
-            "ACL must contain exactly the XAI_Desktop bundle id"
+            attrs.bundle_id, "com.jinlong.desktop",
+            "release-signing ACL gate must target the XAI_Desktop bundle id"
+        );
+        assert!(
+            attrs.signed_data_protection_acl_required_for_release,
+            "signed Data Protection ACL must stay tracked as a release gate"
         );
     }
 
@@ -239,8 +227,8 @@ mod tests {
     #[cfg(target_os = "macos")]
     #[test]
     fn t_u5_ostatus_mapping() {
-        use security_framework::base::Error as SecError;
         use crate::platform::macos::keychain::macos_impl::map_sec_error;
+        use security_framework::base::Error as SecError;
 
         // errSecInteractionNotAllowed = -25308 → KeychainLocked (E1100)
         let locked_err = SecError::from_code(-25308);

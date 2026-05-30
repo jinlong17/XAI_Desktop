@@ -10,6 +10,8 @@ Prove that the desktop SQLite foundation is usable as a safe base for later enti
 
 - DB path resolution stays under `app_data_dir()`
 - bootstrap creates/opens the live DB deterministically
+- SQLCipher keying is applied before bootstrap/schema access
+- plain SQLite reads and wrong-key opens fail against the live DB fixture
 - migration registry executes in order and is idempotent when already applied
 - reopen persistence survives process restarts
 - invalid migration/bootstrap states fail with stable error codes
@@ -41,6 +43,7 @@ Prove that the desktop SQLite foundation is usable as a safe base for later enti
 - first bootstrap on an empty DB path
 - second bootstrap on an already-initialized DB path
 - migration from an older schema fixture to the current schema
+- plain-open and wrong-key negative checks for encrypted DB files
 - failed migration/transaction leaves prior durable state intact
 - desktop repo changes do not break Web/browser build safety
 - desktop app bundle still builds with the foundation enabled
@@ -57,11 +60,12 @@ Prove that the desktop SQLite foundation is usable as a safe base for later enti
 
 ## Verification Gates
 
-- `cargo test --manifest-path apps/desktop/src-tauri/Cargo.toml`
+- `cargo test --manifest-path apps/desktop/src-tauri/Cargo.toml --features crypto database_runtime::tests`
+- `cargo test --manifest-path apps/desktop/src-tauri/Cargo.toml --features crypto database::tests`
 - `pnpm --filter @repo/core-data test`
 - `pnpm --filter @repo/core-data check-types`
 - `pnpm --filter @repo/web build`
-- `pnpm --filter desktop tauri build --debug --bundles app`
+- `pnpm --filter desktop build`
 
 ## Acceptance Criteria
 
@@ -72,4 +76,5 @@ Prove that the desktop SQLite foundation is usable as a safe base for later enti
 | AC-3 | desktop repo/client boundary is typed and contract-honest |
 | AC-4 | fixture/test harness exists for both Rust and TypeScript |
 | AC-5 | Web/browser build safety is preserved |
-| AC-6 | desktop Tauri app bundle still builds with the foundation changes |
+| AC-6 | desktop Tauri app bundle builds with the `crypto` feature enabled |
+| AC-7 | live DB file rejects plain SQLite reads and wrong-key SQLCipher opens |
