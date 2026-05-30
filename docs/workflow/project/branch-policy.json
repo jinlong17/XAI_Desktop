@@ -22,7 +22,7 @@
     {
       "name": "web",
       "target": "Web product mainline and Web release source.",
-      "allowed_changes": ["Web bugfixes", "Web maintenance", "shared UI/source changes after P0 carve-out", "workflow and governance docs for the web line"],
+      "allowed_changes": ["Web features", "Web bugfixes", "Web maintenance", "shared UI/source changes with D3 classification when Desktop-impacting", "workflow and governance docs for the web line"],
       "forbidden_changes": ["desktop native implementation", "App RC stabilization", "signing/notarization/package work", "automatic dev catch-up"],
       "upstream": ["codex/web/<feature>", "release/web hotfix cherry-picks"],
       "downstream": ["Cloudflare Web release", "desktop-next via D3 when sharing is required"],
@@ -53,7 +53,7 @@
       "name": "dev",
       "target": "macOS App stable mainline and App RC candidate.",
       "allowed_changes": ["Tauri/native runtime work", "offline/local-first storage", "signing/notarization/package fixes", "App RC blockers", "desktop docs"],
-      "forbidden_changes": ["unclassified Web feature merges", "Cloudflare-only work", "bulk branch equalization", "P0 Web feature work without carve-out"],
+      "forbidden_changes": ["unclassified Web-to-Desktop feature merges", "Cloudflare-only work", "bulk branch equalization", "Web feature work that bypasses D3 when Desktop-impacting"],
       "upstream": ["desktop-next", "release/desktop/<version> hotfix back-merge", "codex/desktop/<feature>"],
       "downstream": ["release/desktop/<version>"],
       "expected_drift": "dev may have more commits than web because Tauri, native runtime, signing, packaging, and RC work are expected here.",
@@ -73,7 +73,7 @@
   "short_branch_conventions": [
     {
       "pattern": "codex/web/<feature>",
-      "target": "Web maintenance or P0 carve-out work"
+      "target": "Web feature and bugfix work"
     },
     {
       "pattern": "codex/desktop/<feature>",

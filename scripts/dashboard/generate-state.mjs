@@ -396,10 +396,9 @@ function buildProductLines(sourceProducts, roadmapManifests, pluginMap) {
         ...product,
         order: chainOrder[product.key] || product.order,
         region: regions[product.key] || "项目系统区",
-        badge: badgeForCounts(counts),
-        status: summarizeProductStatus(counts, emptyLabel),
+        tracking_badge: badgeForCounts(counts),
         status_counts: counts,
-        status_summary: formatCounts(counts)
+        status_summary: summarizeProductStatus(counts, emptyLabel)
       };
     });
 }
