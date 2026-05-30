@@ -172,11 +172,130 @@
   }
   .flow-stage{
     position:relative;
-    min-height:560px;
+    min-height:760px;
     overflow:hidden;
     background:
       linear-gradient(180deg,rgba(255,255,255,.92),rgba(247,251,255,.92)),
       repeating-linear-gradient(90deg,rgba(26,115,232,.04) 0 1px,transparent 1px 72px);
+  }
+  .structure-map{
+    position:relative;
+    min-height:430px;
+    margin-top:14px;
+    border:1px solid var(--line);
+    border-radius:8px;
+    background:
+      linear-gradient(180deg,rgba(255,255,255,.94),rgba(242,247,255,.88)),
+      repeating-linear-gradient(0deg,rgba(26,115,232,.035) 0 1px,transparent 1px 54px);
+    overflow:hidden;
+  }
+  .map-svg{position:absolute;inset:0;width:100%;height:100%;pointer-events:none}
+  .map-edge{
+    fill:none;
+    stroke:rgba(26,115,232,.42);
+    stroke-width:2.5;
+    stroke-linecap:round;
+    stroke-dasharray:7 9;
+    animation:dash-flow 1.25s linear infinite;
+  }
+  .map-edge.is-soft{stroke:rgba(18,181,203,.38)}
+  .map-edge.is-control{stroke:rgba(52,168,83,.44)}
+  .map-node{
+    position:absolute;
+    width:174px;
+    min-height:86px;
+    padding:12px;
+    border:1px solid var(--line);
+    border-radius:8px;
+    background:#fff;
+    color:var(--text);
+    text-align:left;
+    box-shadow:0 14px 32px rgba(49,87,149,.13);
+    transition:transform .22s ease,border-color .22s ease,box-shadow .22s ease,background .22s ease;
+  }
+  .map-node:hover{transform:translateY(-3px);border-color:var(--line-strong);background:#f7fbff}
+  .map-node.is-active{
+    border-color:rgba(26,115,232,.72);
+    background:linear-gradient(180deg,#fff,#f0f6ff);
+    box-shadow:0 20px 42px rgba(26,115,232,.20);
+  }
+  .map-node.is-active:after{
+    content:"";
+    position:absolute;
+    inset:-6px;
+    border:1px solid rgba(26,115,232,.22);
+    border-radius:12px;
+    animation:pulse 1.35s ease-out infinite;
+    pointer-events:none;
+  }
+  .map-node b{display:block;font-size:13px}
+  .map-node span{display:block;color:var(--muted);font-size:11.5px;margin-top:3px}
+  .map-node .map-index{
+    display:inline-grid;
+    place-items:center;
+    width:24px;
+    height:24px;
+    margin-bottom:7px;
+    border-radius:8px;
+    background:var(--surface-3);
+    color:var(--blue);
+    font-weight:850;
+  }
+  .map-node[data-product="web"]{left:6%;top:42px}
+  .map-node[data-product="app"]{left:38%;top:42px}
+  .map-node[data-product="plugin"]{right:6%;top:42px}
+  .map-node[data-product="sync"]{left:38%;top:176px}
+  .map-node[data-product="site"]{left:14%;bottom:34px}
+  .map-node[data-product="admin"]{right:12%;bottom:34px}
+  .branch-workflow{
+    margin-top:12px;
+    padding:13px;
+    border:1px solid #cfe2ff;
+    border-radius:8px;
+    background:#f2f7ff;
+  }
+  .branch-flow-head{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:10px}
+  .branch-flow-head b{font-size:13px}
+  .branch-flow-head span{color:var(--muted);font-size:11.5px}
+  .branch-flow{
+    display:grid;
+    grid-template-columns:repeat(6,minmax(0,1fr));
+    gap:8px;
+  }
+  .branch-step{
+    position:relative;
+    min-height:104px;
+    padding:10px;
+    border:1px solid #cfe2ff;
+    border-radius:8px;
+    background:#fff;
+    color:var(--text);
+    text-align:left;
+    transition:transform .22s ease,border-color .22s ease,box-shadow .22s ease;
+  }
+  .branch-step:not(:last-child):after{
+    content:"";
+    position:absolute;
+    top:50%;
+    right:-9px;
+    width:9px;
+    height:2px;
+    background:var(--line-strong);
+  }
+  .branch-step:hover,.branch-step.is-active{
+    transform:translateY(-2px);
+    border-color:rgba(26,115,232,.58);
+    box-shadow:0 14px 28px rgba(26,115,232,.12);
+  }
+  .branch-step b{display:block;font-size:12.5px}
+  .branch-step span{display:block;color:var(--muted);font-size:11.5px;margin-top:4px}
+  .branch-step code{display:inline-block;margin-top:8px;color:#0f4d9a;font-weight:800;font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace}
+  .branch-step code{
+    max-width:100%;
+    font-size:12px;
+    line-height:1.35;
+    overflow-wrap:anywhere;
+    word-break:break-word;
   }
   .module-track{
     display:grid;
@@ -264,6 +383,7 @@
   }
   .rhythm-chip b{display:block;font-size:12px}
   .rhythm-chip span{display:block;color:var(--muted);font-size:11.5px;margin-top:3px}
+  @keyframes dash-flow{to{stroke-dashoffset:-16}}
   @keyframes pulse{0%{opacity:.9;transform:scale(.98)}100%{opacity:0;transform:scale(1.08)}}
   .detail{
     display:grid;gap:12px;align-content:start;
@@ -349,8 +469,12 @@
   @media (max-width:1180px){
     .hero,.flow-grid,.split{grid-template-columns:1fr}
     .kpis{grid-template-columns:repeat(2,minmax(0,1fr))}
-    .module-track,.module-rhythm{grid-template-columns:1fr}
+    .module-track,.module-rhythm,.branch-flow{grid-template-columns:1fr}
     .module-card:not(:last-child):after{display:none}
+    .branch-step:not(:last-child):after{display:none}
+    .structure-map{display:grid;gap:10px;min-height:auto;padding:12px}
+    .map-svg{display:none}
+    .map-node{position:relative;inset:auto !important;width:100%;min-height:74px}
   }
   @media (max-width:860px){
     .layout{grid-template-columns:1fr}
@@ -430,6 +554,14 @@
           <p class="sub">主产品链按顺序推进，Admin Dashboard 作为控制面单独跟踪。每个模块有自己的状态、branch、依赖和下一步。</p>
             </div>
             <span class="pill">点击模块</span>
+          </div>
+          <div class="structure-map" id="structureMap" aria-label="产品结构流程图"></div>
+          <div class="branch-workflow">
+            <div class="branch-flow-head">
+              <b>Branch 开发到发布工作流</b>
+              <span id="branchFlowMeta">从短分支进入主线，再经过 D3、RC、release gate</span>
+            </div>
+            <div class="branch-flow" id="branchFlow"></div>
           </div>
           <div class="module-track" id="moduleTrack"></div>
           <div class="module-rhythm">
@@ -536,6 +668,23 @@ const dashboardState = window.XAI_DASHBOARD_STATE || {};
 const products = [...(dashboardState.product_lines || [])].sort((a,b) => Number(a.order) - Number(b.order));
 const overviewRows = dashboardState.status_rows || [];
 const kpis = dashboardState.kpis || [];
+const productLinks = dashboardState.product_links || [
+  ["web", "app", "main"],
+  ["app", "plugin", "main"],
+  ["web", "sync", "soft"],
+  ["app", "sync", "soft"],
+  ["plugin", "sync", "soft"],
+  ["sync", "site", "main"],
+  ["sync", "admin", "control"]
+];
+const branchWorkflow = dashboardState.branch_workflow || [
+  ["idea", "需求进入", "brief / roadmap", "先归类产品线和风险。"],
+  ["feature", "短功能分支", "codex/<area>/<feature>", "一个功能一个短分支。"],
+  ["web", "Web 主线", "web", "Web 先作为完整产品和 UI 源头。"],
+  ["gate", "D3 分类", "W0-W4", "判断是否影响桌面、同步或发布。"],
+  ["desktop", "桌面集成", "desktop-next -> dev", "通过后再进入 App RC 稳定线。"],
+  ["release", "冻结发布", "release/desktop/*", "只放版本、签名、公证、dmg 和 blocker。"]
+];
 
 const docs = [
   {
@@ -593,6 +742,7 @@ const branches = [
 ];
 
 const releaseRows = dashboardState.release_rows || [
+  ["2026-05-30", "结构流程图", "产品结构图补回可点击流程图和 branch 开发到发布工作流，节点点击有选中动画。", "docs"],
   ["2026-05-30", "看板操作化", "总览改成工作流控制台，补齐 6 条产品线，并接入生成快照作为自动跟踪 v0。", "docs"],
   ["2026-05-30", "看板结构", "产品区改为顺序模块 tracking card，点击后显示模块状态、branch、依赖、跟踪字段和详细关系。", "docs"],
   ["2026-05-30", "项目系统层", "新增中文个人开发看板、产品结构流程图、文档分页阅读器和 release log skill。", "docs"],
@@ -654,6 +804,62 @@ function renderKpis(){
   `).join("");
 }
 
+function renderStructureMap(){
+  if(!products.length) return;
+  const nodes = products.map(item => `
+    <button class="map-node ${item.key === products[0].key ? "is-active" : ""}" data-product="${h(item.key)}" type="button">
+      <span class="map-index">${h(item.order)}</span>
+      <b>${h(item.title)}</b>
+      <span>${h(item.subtitle)}</span>
+    </button>
+  `).join("");
+  const paths = productLinks.map(([from, to, tone]) => {
+    const d = mapPath(from, to);
+    return d ? `<path class="map-edge ${tone === "soft" ? "is-soft" : tone === "control" ? "is-control" : ""}" d="${d}"></path>` : "";
+  }).join("");
+  document.getElementById("structureMap").innerHTML = `
+    <svg class="map-svg" viewBox="0 0 1000 430" preserveAspectRatio="none" aria-hidden="true">
+      ${paths}
+    </svg>
+    ${nodes}
+  `;
+  document.querySelectorAll(".map-node").forEach(node => node.addEventListener("click", () => setProduct(node.dataset.product)));
+}
+
+function mapPath(from, to){
+  const anchors = {
+    web:{x:190,y:84},
+    app:{x:500,y:84},
+    plugin:{x:810,y:84},
+    sync:{x:500,y:218},
+    site:{x:268,y:356},
+    admin:{x:750,y:356}
+  };
+  const a = anchors[from];
+  const b = anchors[to];
+  if(!a || !b) return "";
+  const midY = Math.max(a.y, b.y) - 10;
+  if(a.y === b.y) return `M ${a.x} ${a.y} C ${(a.x + b.x) / 2} ${a.y - 34}, ${(a.x + b.x) / 2} ${b.y - 34}, ${b.x} ${b.y}`;
+  return `M ${a.x} ${a.y} C ${a.x} ${midY}, ${b.x} ${midY}, ${b.x} ${b.y}`;
+}
+
+function renderBranchFlow(){
+  document.getElementById("branchFlow").innerHTML = branchWorkflow.map(([key,title,branch,desc], index) => `
+    <button class="branch-step ${index === 0 ? "is-active" : ""}" data-branch-step="${h(key)}" type="button">
+      <b>${h(index + 1)}. ${h(title)}</b>
+      <code>${h(branch)}</code>
+      <span>${h(desc)}</span>
+    </button>
+  `).join("");
+  document.querySelectorAll(".branch-step").forEach(node => {
+    node.addEventListener("click", () => {
+      document.querySelectorAll(".branch-step").forEach(step => step.classList.toggle("is-active", step === node));
+      const item = branchWorkflow.find(([key]) => key === node.dataset.branchStep);
+      if(item) document.getElementById("branchFlowMeta").textContent = item[3];
+    });
+  });
+}
+
 function renderModules(){
   if(!products.length){
     document.getElementById("moduleTrack").innerHTML = `<div class="flow-note"><b>产品状态未加载</b><p style="margin-top:8px">请运行 <code>node scripts/dashboard/generate-state.mjs</code> 刷新快照。</p></div>`;
@@ -684,6 +890,7 @@ function setProduct(key){
   const item = products.find(product => product.key === key);
   if(!item) return;
   document.querySelectorAll(".module-card").forEach(node => node.classList.toggle("is-active", node.dataset.product === key));
+  document.querySelectorAll(".map-node").forEach(node => node.classList.toggle("is-active", node.dataset.product === key));
   document.getElementById("productDetail").innerHTML = `
     <div class="detail-title">
       <div>
@@ -800,6 +1007,8 @@ document.getElementById("nextPage").addEventListener("click", () => {
 
 renderOverview();
 renderKpis();
+renderStructureMap();
+renderBranchFlow();
 renderModules();
 setProduct(products[0]?.key);
 renderReader();

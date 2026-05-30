@@ -73,6 +73,81 @@ window.XAI_DASHBOARD_STATE = {
       "note": "dashboard-state.json -> state.generated.js"
     }
   ],
+  "product_links": [
+    [
+      "web",
+      "app",
+      "main"
+    ],
+    [
+      "app",
+      "plugin",
+      "main"
+    ],
+    [
+      "web",
+      "sync",
+      "soft"
+    ],
+    [
+      "app",
+      "sync",
+      "soft"
+    ],
+    [
+      "plugin",
+      "sync",
+      "soft"
+    ],
+    [
+      "sync",
+      "site",
+      "main"
+    ],
+    [
+      "sync",
+      "admin",
+      "control"
+    ]
+  ],
+  "branch_workflow": [
+    [
+      "idea",
+      "需求进入",
+      "brief / roadmap",
+      "先归类产品线和风险。"
+    ],
+    [
+      "feature",
+      "短功能分支",
+      "codex/<area>/<feature>",
+      "一个功能一个短分支。"
+    ],
+    [
+      "web",
+      "Web 主线",
+      "web",
+      "Web 先作为完整产品和 UI 源头。"
+    ],
+    [
+      "gate",
+      "D3 分类",
+      "W0-W4",
+      "判断是否影响桌面、同步或发布。"
+    ],
+    [
+      "desktop",
+      "桌面集成",
+      "desktop-next -> dev",
+      "通过后再进入 App RC 稳定线。"
+    ],
+    [
+      "release",
+      "冻结发布",
+      "release/desktop/*",
+      "只放版本、签名、公证、dmg 和 blocker。"
+    ]
+  ],
   "product_lines": [
     {
       "key": "web",
@@ -234,6 +309,12 @@ window.XAI_DASHBOARD_STATE = {
   "release_rows": [
     [
       "2026-05-30",
+      "结构流程图",
+      "产品结构图补回可点击流程图和 branch 开发到发布工作流，节点点击有选中动画。",
+      "docs"
+    ],
+    [
+      "2026-05-30",
       "看板操作化",
       "总览改成工作流控制台，补齐 6 条产品线，并接入生成快照作为自动跟踪 v0。",
       "docs"
@@ -257,10 +338,10 @@ window.XAI_DASHBOARD_STATE = {
       "skill"
     ]
   ],
-  "generated_at": "2026-05-30T10:21:00.024Z",
+  "generated_at": "2026-05-30T10:29:11.881Z",
   "git": {
     "branch": "web",
-    "latest_commit": "f2fa778 docs(dashboard): remove internal topbar labels"
+    "latest_commit": "ccab641 docs(dashboard): operationalize solo dev cockpit"
   },
   "skills_found": [
     {
@@ -291,6 +372,6 @@ window.XAI_DASHBOARD_STATE = {
   ],
   "release_log": {
     "source": "docs/workflow/project/release-log.md",
-    "latest_entry": "看板操作化和自动跟踪 v0"
+    "latest_entry": "看板产品结构图和 branch 工作流动画"
   }
 };
