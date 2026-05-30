@@ -12,6 +12,12 @@
       "runtimeExecutable": "python3",
       "runtimeArgs": ["-m", "http.server", "4178", "-d", "docs/prototypes/admin-dashboard"],
       "port": 4178
+    },
+    {
+      "name": "dev-dashboard",
+      "runtimeExecutable": "node",
+      "runtimeArgs": ["scripts/dashboard/serve.mjs"],
+      "port": 4177
     }
   ]
 }
