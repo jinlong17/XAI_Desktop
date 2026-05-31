@@ -214,7 +214,8 @@ Status: APPROVED (after Step 0)
       │     resolve plan executor: grep "- Plan Executor:" then FALL BACK to the
       │       rolling "- Executor:" line (no dedicated Plan Executor field exists)
       │     determine OTHER vendor (cross-vendor §16.3 #3 — STRICT);
-      │       vendor_dispatchable() sends MANUAL_CLAUDE/UNKNOWN to a clean notify
+      │       vendor_dispatchable() accepts codex/cursor/opt-in claude dispatchers;
+      │       MANUAL_CLAUDE/UNKNOWN still cleanly notify
       │     render review prompt to <orchestrator_marker_dir>/<feature>-review-<ts>.txt
       │     write awaiting_review marker
       │     dispatch_<other_vendor>.sh <feature> <prompt_file> feature-review
@@ -246,10 +247,12 @@ Status: APPROVED (after Step 0)
   hook greps the named field for back-compat, then **falls back to the rolling `- Executor:`
   line** (at the NEEDS_REVIEW commit that line IS the plan executor; at READY_FOR_VERIFY it IS
   the build executor — the just-committed value is correct by construction).
-- `vendor_dispatchable()` gates the result: only `codex` / `cursor` reach `dispatch_*.sh`; the
-  sentinels `MANUAL_CLAUDE` (cross-vendor peer is Claude, no headless) and `UNKNOWN` short-circuit
-  to a clean notify (a bare `[ -z ]` guard previously let them fall through to a bogus
-  `dispatch_UNKNOWN.sh` / `dispatch_MANUAL_CLAUDE.sh`).
+- `vendor_dispatchable()` gates the result: only vendors with an executable dispatcher reach
+  `dispatch_*.sh` (`codex`, `cursor`, and optional `claude`). By default Codex -> Claude still
+  returns `MANUAL_CLAUDE`; opt into Claude bg launch only after a machine-local smoke test with
+  `CW_ENABLE_CLAUDE_BG=1` or `git config cowork.claudeBg true`. The sentinels `MANUAL_CLAUDE` and
+  `UNKNOWN` short-circuit to a clean notify (a bare `[ -z ]` guard previously let them fall through
+  to a bogus `dispatch_UNKNOWN.sh` / `dispatch_MANUAL_CLAUDE.sh`).
 - "OTHER vendor" relative to a given step = any vendor in the project's executor pool except the
   one resolved from the rolling `- Executor:` line for that step.
 - 2-vendor projects (Claude + Codex): trivially the other.
@@ -273,7 +276,8 @@ Status: APPROVED (after Step 0)
   next).
 
 **Reference scripts:** `_portable/scripts/dispatch_codex.sh`, `dispatch_cursor.sh`,
-`git-post-commit`. All take an `<agent_name>` 3rd parameter (NEW 2026-05-16). See
+`dispatch_claude.sh`, `git-post-commit`. All dispatch scripts take an `<agent_name>` 3rd parameter.
+See
 `_portable/scripts/README.md`.
 
 - **B-Cursor** is the cleaner B variant — `cursor-agent --print` runs headless from a shell, with a
@@ -284,6 +288,11 @@ Status: APPROVED (after Step 0)
   process" path on macOS (`open -a "Codex"` / `codex app DIR` only open the workspace); the pbcopy
   + manual-`Cmd+V` route is a documented degraded fallback for teams that insist on the desktop
   app, not the automated path.
+- **Claude bg dispatch is optional:** `dispatch_claude.sh` uses `claude --bg --name ... "PROMPT"`
+  to start an Agent View session and then exits. It is launch-only, not a headless PASS contract:
+  if Claude fails to start, starts idle without consuming the prompt, or later produces no dev_log
+  / receipt evidence, the workflow remains at the previous `NEEDS_REVIEW` / `READY_FOR_VERIFY` /
+  `BLOCKED` state for human recovery.
 - **Extra interactions:** +0 in happy path (review / build / verify all auto-dispatch). User
   intervention only on REVISE or BLOCKED (or RTS → ship).
 

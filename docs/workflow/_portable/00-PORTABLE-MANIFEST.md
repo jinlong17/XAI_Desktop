@@ -426,7 +426,9 @@ checklist. STOP.
    `source <cowork_scripts_dir>/lib_hook_helpers.sh` and exec `<cowork_scripts_dir>/git-post-commit`.
    Prereqs: `gtimeout` (`brew install coreutils`); `flock` (`brew install util-linux` — keg-only on
    macOS, NOT on PATH; scripts probe `/opt/homebrew/opt/util-linux/bin/flock`); authenticated
-   `codex` CLI; `cursor-agent login`. Skip this whole step for synchronous variants (`A-Claude` /
+   `codex` CLI; `cursor-agent login`; optional `claude --bg` smoke test plus `CW_ENABLE_CLAUDE_BG=1`
+   or `git config cowork.claudeBg true` if this project wants hook-launched Claude review/verify.
+   Skip this whole step for synchronous variants (`A-Claude` /
    `A-Codex` / `D-*`) — see `04-automation-loop.md` §3.
 6b. **Render project-prefixed workflow skills with portable sources.** Extract
    `<skill_prefix>feature-full-loop` from `_portable/04-automation-loop.md` Appendix and

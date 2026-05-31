@@ -155,7 +155,10 @@ Codex-specific reminders:
   an external executor.
 - `claude --bg` and Agent View are Claude Code paths, not Codex background
   automation. In Codex, prefer roadmap `emit` or `serial` unless the CLI hook
-  path is explicitly being tested.
+  path is explicitly being tested. The post-commit hook may launch Claude review
+  / verify only through opt-in `scripts/cowork/dispatch_claude.sh`
+  (`CW_ENABLE_CLAUDE_BG=1` or `git config cowork.claudeBg true`); the hook never
+  treats launch success as a cross-vendor PASS.
 - If agent-spawn depth is unavailable, execute the subagent instructions inline.
   In that case, the current session is the subagent and its final response must
   be only the `## Handoff` block.
