@@ -625,17 +625,33 @@
       repeating-linear-gradient(0deg,rgba(26,115,232,.035) 0 1px,transparent 1px 54px);
     overflow:hidden;
   }
+  /* Unified product-module color language — the 产品结构图 resolves the SAME module color
+     as the 总览 cards, keyed by data-product (web=blue · app=green · plugin=purple ·
+     sync=cyan · site=yellow · admin=red). One fixed color per module across every page. */
+  [data-product="web"]{--tone:var(--module-blue);--tone-bg:var(--module-blue-bg)}
+  [data-product="app"]{--tone:var(--module-green);--tone-bg:var(--module-green-bg)}
+  [data-product="plugin"]{--tone:var(--module-purple);--tone-bg:var(--module-purple-bg)}
+  [data-product="sync"]{--tone:var(--module-cyan);--tone-bg:var(--module-cyan-bg)}
+  [data-product="site"]{--tone:var(--module-yellow);--tone-bg:var(--module-yellow-bg)}
+  [data-product="admin"]{--tone:var(--module-red);--tone-bg:var(--module-red-bg)}
   .map-svg{position:absolute;inset:0;width:100%;height:100%;pointer-events:none}
   .map-edge{
     fill:none;
-    stroke:rgba(26,115,232,.42);
+    stroke:color-mix(in srgb,var(--module-blue) 52%,transparent);
     stroke-width:2.5;
     stroke-linecap:round;
     stroke-dasharray:7 9;
     animation:dash-flow 1.25s linear infinite;
   }
-  .map-edge.is-soft{stroke:rgba(18,181,203,.38)}
-  .map-edge.is-control{stroke:rgba(52,168,83,.44)}
+  /* Connection lines inherit the SOURCE module's color */
+  .map-edge[data-from="web"]{stroke:color-mix(in srgb,var(--module-blue) 60%,transparent)}
+  .map-edge[data-from="app"]{stroke:color-mix(in srgb,var(--module-green) 62%,transparent)}
+  .map-edge[data-from="plugin"]{stroke:color-mix(in srgb,var(--module-purple) 60%,transparent)}
+  .map-edge[data-from="sync"]{stroke:color-mix(in srgb,var(--module-cyan) 62%,transparent)}
+  .map-edge[data-from="site"]{stroke:color-mix(in srgb,var(--module-yellow) 64%,transparent)}
+  .map-edge[data-from="admin"]{stroke:color-mix(in srgb,var(--module-red) 62%,transparent)}
+  .map-edge.is-soft{opacity:.6;stroke-dasharray:4 9}
+  .map-edge.is-control{opacity:.72;stroke-dasharray:2 7}
   .map-node{
     position:absolute;
     width:174px;
@@ -651,15 +667,15 @@
   }
   .map-node:hover{transform:translateY(-3px);border-color:var(--line-strong);background:#f7fbff}
   .map-node.is-active{
-    border-color:rgba(26,115,232,.72);
-    background:linear-gradient(180deg,#fff,#f0f6ff);
-    box-shadow:0 20px 42px rgba(26,115,232,.20);
+    border-color:color-mix(in srgb,var(--tone,var(--module-blue)) 70%,transparent);
+    background:linear-gradient(180deg,var(--surface),color-mix(in srgb,var(--tone,var(--module-blue)) 22%,var(--surface)));
+    box-shadow:0 20px 42px color-mix(in srgb,var(--tone,var(--module-blue)) 26%,transparent);
   }
   .map-node.is-active:after{
     content:"";
     position:absolute;
     inset:-6px;
-    border:1px solid rgba(26,115,232,.22);
+    border:1px solid color-mix(in srgb,var(--tone,var(--module-blue)) 30%,transparent);
     border-radius:12px;
     animation:pulse 1.35s ease-out infinite;
     pointer-events:none;
@@ -673,8 +689,8 @@
     height:24px;
     margin-bottom:7px;
     border-radius:8px;
-    background:var(--surface-3);
-    color:var(--blue);
+    background:var(--tone-bg,var(--surface-3));
+    color:var(--tone,var(--blue));
     font-weight:800;
   }
   .map-node[data-product="web"]{left:6%;top:42px}
@@ -769,15 +785,15 @@
   }
   .module-card:hover{transform:translateY(-2px);border-color:var(--line-strong)}
   .module-card.is-active{
-    border-color:rgba(26,115,232,.58);
-    background:linear-gradient(180deg,#fff,#f3f8ff);
-    box-shadow:0 20px 42px rgba(26,115,232,.18);
+    border-color:color-mix(in srgb,var(--tone,var(--module-blue)) 58%,transparent);
+    background:linear-gradient(180deg,var(--surface),color-mix(in srgb,var(--tone,var(--module-blue)) 18%,var(--surface)));
+    box-shadow:0 20px 42px color-mix(in srgb,var(--tone,var(--module-blue)) 22%,transparent);
   }
   .module-card.is-active:before{
     content:"";
     position:absolute;
     inset:0;
-    border:2px solid rgba(26,115,232,.16);
+    border:2px solid color-mix(in srgb,var(--tone,var(--module-blue)) 20%,transparent);
     border-radius:10px;
     animation:pulse 1.35s ease-out infinite;
   }
@@ -788,8 +804,8 @@
     display:grid;
     place-items:center;
     border-radius:8px;
-    background:var(--surface-3);
-    color:var(--blue);
+    background:var(--tone-bg,var(--surface-3));
+    color:var(--tone,var(--blue));
     font-weight:800;
   }
   .module-card h3{
@@ -880,7 +896,7 @@
   .nav-fold-body{display:grid;gap:8px;margin-top:8px}
   .nav-label{display:flex;align-items:center;gap:8px;font-size:11.5px;color:var(--muted);font-weight:800}
   .nav-label .pill{font-weight:700;font-size:10.5px;padding:2px 7px}
-  .goal-line{padding:11px 12px;border:1px solid #bfd8ff;background:#f2f7ff;border-radius:8px;font-weight:800;font-size:13px;color:#0f4d9a;overflow-wrap:anywhere}
+  .goal-line{padding:11px 12px;border:1px solid color-mix(in srgb,var(--tone,var(--module-blue)) 38%,var(--line));background:var(--tone-bg,#f2f7ff);border-radius:8px;font-weight:800;font-size:13px;color:var(--tone,#0f4d9a);overflow-wrap:anywhere}
   .signal-chips{display:flex;flex-wrap:wrap;gap:6px}
   .signal-chip{font-size:11.5px;padding:4px 9px;border:1px solid var(--line);border-radius:999px;background:var(--surface-2);color:var(--muted)}
   .skill-row{display:grid;grid-template-columns:auto minmax(0,1fr);gap:10px;align-items:start;padding:9px 10px;border:1px solid var(--line);border-radius:8px;background:#fff}
@@ -894,13 +910,25 @@
   .prompt-card pre{margin:0;padding:10px;font-size:11.5px;line-height:1.55;white-space:pre-wrap;overflow-wrap:anywhere;font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;color:var(--text);max-height:220px;overflow:auto}
   .wf-steps{display:grid;gap:6px;counter-reset:wf}
   .wf-step{position:relative;padding:8px 10px 8px 32px;border:1px solid var(--line);border-radius:8px;background:#fff;font-size:12px;color:var(--text);overflow-wrap:anywhere}
-  .wf-step:before{counter-increment:wf;content:counter(wf);position:absolute;left:8px;top:7px;width:17px;height:17px;border-radius:50%;background:var(--blue);color:#fff;font-size:10px;font-weight:800;display:flex;align-items:center;justify-content:center}
-  .transition-card{display:grid;gap:4px;padding:10px;border:1px solid var(--line);border-left:3px solid var(--green);border-radius:0 8px 8px 0;background:var(--surface-2)}
+  .wf-step:before{counter-increment:wf;content:counter(wf);position:absolute;left:8px;top:7px;width:17px;height:17px;border-radius:50%;background:var(--tone,var(--blue));color:#fff;font-size:10px;font-weight:800;display:flex;align-items:center;justify-content:center}
+  .transition-card{display:grid;gap:4px;padding:10px;border:1px solid var(--line);border-left:3px solid var(--line-strong);border-radius:0 8px 8px 0;background:var(--surface-2)}
+  .transition-card[data-to="web"]{border-left-color:var(--module-blue)}
+  .transition-card[data-to="app"]{border-left-color:var(--module-green)}
+  .transition-card[data-to="plugin"]{border-left-color:var(--module-purple)}
+  .transition-card[data-to="sync"]{border-left-color:var(--module-cyan)}
+  .transition-card[data-to="site"]{border-left-color:var(--module-yellow)}
+  .transition-card[data-to="admin"]{border-left-color:var(--module-red)}
   .transition-card .t-to{font-weight:800;font-size:12.5px}
   .transition-card .t-trigger{color:var(--text);font-size:12px}
   .transition-card .t-meta{display:flex;flex-wrap:wrap;gap:6px;margin-top:2px}
   .transition-card .t-note{color:var(--muted);font-size:11.5px}
-  .impact-row{padding:9px 10px;border:1px solid var(--line);border-left:3px solid var(--yellow);border-radius:0 8px 8px 0;background:#fff}
+  .impact-row{padding:9px 10px;border:1px solid var(--line);border-left:3px solid var(--line-strong);border-radius:0 8px 8px 0;background:var(--surface)}
+  .impact-row[data-module="web"]{border-left-color:var(--module-blue)}
+  .impact-row[data-module="app"]{border-left-color:var(--module-green)}
+  .impact-row[data-module="plugin"]{border-left-color:var(--module-purple)}
+  .impact-row[data-module="sync"]{border-left-color:var(--module-cyan)}
+  .impact-row[data-module="site"]{border-left-color:var(--module-yellow)}
+  .impact-row[data-module="admin"]{border-left-color:var(--module-red)}
   .impact-row b{display:block;font-size:12px}
   .impact-row span{display:block;color:var(--muted);font-size:11.5px;margin-top:2px}
   .task-list{display:grid;gap:8px;margin-top:14px}
@@ -3242,7 +3270,7 @@ function renderStructureMap(){
   `).join("");
   const paths = productLinks.map(([from, to, tone]) => {
     const d = mapPath(from, to);
-    return d ? `<path class="map-edge ${tone === "soft" ? "is-soft" : tone === "control" ? "is-control" : ""}" d="${d}"></path>` : "";
+    return d ? `<path class="map-edge ${tone === "soft" ? "is-soft" : tone === "control" ? "is-control" : ""}" data-from="${h(from)}" d="${d}"></path>` : "";
   }).join("");
   document.getElementById("structureMap").innerHTML = `
     <svg class="map-svg" viewBox="0 0 1000 430" preserveAspectRatio="none" aria-hidden="true">
@@ -3399,7 +3427,7 @@ function renderWorkflowSteps(list){
 function renderTransitions(list){
   if(!(list && list.length)) return "";
   return list.map(t => `
-    <div class="transition-card">
+    <div class="transition-card" data-to="${h(t.to)}">
       <div class="t-to">→ ${h(productTitleFor(t.to))}</div>
       <div class="t-trigger"><b>触发条件：</b>${h(t.trigger)}</div>
       <div class="t-meta">
@@ -3412,7 +3440,7 @@ function renderTransitions(list){
 
 function renderImpacts(list){
   if(!(list && list.length)) return "";
-  return list.map(im => `<div class="impact-row"><b>${h(productTitleFor(im.module))} · ${h(im.when)}</b><span>${h(im.action)}</span></div>`).join("");
+  return list.map(im => `<div class="impact-row" data-module="${h(im.module)}"><b>${h(productTitleFor(im.module))} · ${h(im.when)}</b><span>${h(im.action)}</span></div>`).join("");
 }
 
 function setProduct(key){
@@ -3421,7 +3449,9 @@ function setProduct(key){
   const productTarget = overviewTargetFor(item.key, item.key === "admin" ? "打开 Admin 原型" : "打开入口");
   document.querySelectorAll(".module-card").forEach(node => node.classList.toggle("is-active", node.dataset.product === key));
   document.querySelectorAll(".map-node").forEach(node => node.classList.toggle("is-active", node.dataset.product === key));
-  document.getElementById("productDetail").innerHTML = `
+  const detailPanel = document.getElementById("productDetail");
+  detailPanel.setAttribute("data-product", key);
+  detailPanel.innerHTML = `
     <div class="detail-title">
       <div>
         <span class="badge ${badgeClass(item.badge)}">${h(item.badge)}</span>
