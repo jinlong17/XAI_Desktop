@@ -73,6 +73,238 @@
       "note": "dashboard-state.json -> state.generated.js"
     }
   ],
+  "deployment": {
+    "summary": {
+      "current_online_version": "未登记线上版本",
+      "latest_deployed_at": "未登记",
+      "overall_status": "部署登记已建立，云端上线状态待确认",
+      "default_environment": "production / preview",
+      "source": "manual deployment registry"
+    },
+    "flow": {
+      "title": "Web / Cloudflare 部署流程",
+      "summary": "当前已经有 Cloudflare Pages、GitHub Actions、CSP / service worker 和部署安全库等部署相关开发；这里把上线链路、目标环境和涉及文件集中到一个流程卡。",
+      "targets": [
+        {
+          "label": "Preview",
+          "destination": "Cloudflare Pages preview",
+          "trigger": "pull_request",
+          "branch": "github.head_ref",
+          "output": "Preview URL"
+        },
+        {
+          "label": "Production",
+          "destination": "Cloudflare Pages project xai-web-console",
+          "trigger": "push to main",
+          "branch": "main",
+          "output": "Production URL"
+        }
+      ],
+      "steps": [
+        {
+          "label": "触发",
+          "detail": "PR 生成 preview；push main 走 production deploy。",
+          "owner": ".github/workflows/deploy-web.yml"
+        },
+        {
+          "label": "构建",
+          "detail": "安装依赖后执行 pnpm --filter @repo/web build；PR 使用 mock-authenticated，生产使用 live auth。",
+          "owner": "@repo/web build"
+        },
+        {
+          "label": "发布",
+          "detail": "Cloudflare wrangler-action 在 apps/web 下执行 pages deploy ./dist，project-name=xai-web-console。",
+          "owner": "apps/web/wrangler.toml"
+        },
+        {
+          "label": "安全头与离线壳",
+          "detail": "_headers 提供 CSP / HSTS / frame policy；sw.js 缓存 app shell 并处理离线导航。",
+          "owner": "apps/web/public/_headers / sw.js"
+        },
+        {
+          "label": "观测与记录",
+          "detail": "GitHub step summary 输出 deployment id / URL / branch / commit；Sentry deploy mark 可登记 release 环境。",
+          "owner": "Deployment summary / sourcemaps-deploy-mark"
+        },
+        {
+          "label": "上线验证",
+          "detail": "部署成功后仍需补真实 URL、版本标签、手动浏览器 smoke 和回滚记录。",
+          "owner": "operator gate"
+        }
+      ],
+      "assets": [
+        {
+          "label": "GitHub Actions",
+          "path": ".github/workflows/deploy-web.yml",
+          "note": "构建、Cloudflare Pages deploy、部署 summary。"
+        },
+        {
+          "label": "Cloudflare config",
+          "path": "apps/web/wrangler.toml",
+          "note": "project name 和 Pages output 目录。"
+        },
+        {
+          "label": "安全库",
+          "path": "apps/web/deploy/security/",
+          "note": "CSP / RUM endpoint 等未来 Worker 层安全函数。"
+        },
+        {
+          "label": "静态安全头",
+          "path": "apps/web/public/_headers",
+          "note": "Cloudflare Pages 静态响应头和 CSP。"
+        },
+        {
+          "label": "Service Worker",
+          "path": "apps/web/public/sw.js",
+          "note": "app shell 缓存、离线导航 fallback。"
+        },
+        {
+          "label": "Sentry deploy mark",
+          "path": "apps/web/scripts/sourcemaps-deploy-mark.mjs",
+          "note": "将 release/environment 登记到 Sentry deploys。"
+        }
+      ],
+      "gates": [
+        "Cloudflare secrets: CLOUDFLARE_API_TOKEN / CLOUDFLARE_ACCOUNT_ID",
+        "Production auth env: VITE_SUPABASE_URL / VITE_SUPABASE_ANON_KEY",
+        "Web build green: pnpm --filter @repo/web build",
+        "CSP / security tests remain green",
+        "部署后登记 URL、deployment id、版本、commit、smoke 结果",
+        "失败时登记 rollback / failed 状态和处理人"
+      ]
+    },
+    "modules": [
+      {
+        "key": "site",
+        "title": "官方网页",
+        "status": "not_deployed",
+        "progress": 15,
+        "environment": "production",
+        "last_deployed_at": "",
+        "version": "未创建",
+        "platform": "Cloudflare Pages",
+        "target": "下载页 / release notes / auto-update host",
+        "branch": "codex/site/<feature>",
+        "next": "确认 site 线解冻、Cloudflare 项目和首个下载页版本",
+        "issues": [
+          {
+            "severity": "pending",
+            "text": "site 线仍为 PROPOSED / owner-deferred，尚未授权云端部署。"
+          }
+        ]
+      },
+      {
+        "key": "web",
+        "title": "Web 版本",
+        "status": "ready",
+        "progress": 62,
+        "environment": "production / preview",
+        "last_deployed_at": "",
+        "version": "未登记",
+        "platform": "Cloudflare Pages / GitHub Actions",
+        "target": "apps/web SPA",
+        "branch": "web",
+        "next": "补齐线上 URL、最近 deploy id、版本标签和 smoke 结果",
+        "issues": [
+          {
+            "severity": "pending",
+            "text": "仓库已有 Web 部署设施，但看板尚未登记最近一次真实线上部署。"
+          }
+        ]
+      },
+      {
+        "key": "app",
+        "title": "Mac 桌面版本",
+        "status": "not_deployed",
+        "progress": 24,
+        "environment": "release / desktop",
+        "last_deployed_at": "",
+        "version": "未冻结",
+        "platform": "Tauri / DMG / updater",
+        "target": "macOS 桌面安装包",
+        "branch": "desktop-next -> dev -> release/desktop/<version>",
+        "next": "完成 G1 native foundation、RC smoke、签名/公证和 updater 元数据",
+        "issues": [
+          {
+            "severity": "pending",
+            "text": "release/desktop/<version> 冻结分支尚未进入实际发布。"
+          }
+        ]
+      },
+      {
+        "key": "plugin",
+        "title": "桌面插件",
+        "status": "not_deployed",
+        "progress": 18,
+        "environment": "desktop-plugin-next",
+        "last_deployed_at": "",
+        "version": "未登记",
+        "platform": "Desktop plugin host",
+        "target": "插件 / widget 随 App 分发",
+        "branch": "codex/plugin/<feature>",
+        "next": "等待 App 插件平台恢复排期，再登记插件包版本与宿主版本",
+        "issues": [
+          {
+            "severity": "pending",
+            "text": "插件平台暂停，当前没有独立云端部署目标。"
+          }
+        ]
+      },
+      {
+        "key": "sync",
+        "title": "账号云同步层",
+        "status": "not_deployed",
+        "progress": 20,
+        "environment": "account-sync",
+        "last_deployed_at": "",
+        "version": "未登记",
+        "platform": "Cloud sync backend",
+        "target": "账号、设备会话、push/pull、冲突处理",
+        "branch": "codex/sync/<feature>",
+        "next": "确认 syncScope、后端部署目标、迁移和两设备 smoke gate",
+        "issues": [
+          {
+            "severity": "pending",
+            "text": "sync 线暂停，只允许 account-sync 范围登记。"
+          }
+        ]
+      },
+      {
+        "key": "admin",
+        "title": "管理者 Dashboard",
+        "status": "not_deployed",
+        "progress": 22,
+        "environment": "admin-control-plane",
+        "last_deployed_at": "",
+        "version": "prototype",
+        "platform": "Admin prototype / future app target",
+        "target": "控制面、用量、审计、AI 配置",
+        "branch": "codex/admin/<feature>",
+        "next": "确认 admin 线优先级、package/deploy 目标和 RBAC 契约",
+        "issues": [
+          {
+            "severity": "pending",
+            "text": "admin 线为 PROPOSED，仅原型存在，尚未确认部署目标。"
+          }
+        ]
+      }
+    ],
+    "records": [
+      {
+        "id": "2026-05-31-dev-dashboard-deployment-registry",
+        "date": "2026-05-31",
+        "module": "admin",
+        "module_title": "管理者 Dashboard",
+        "status": "success",
+        "environment": "local",
+        "platform": "docs/prototypes/dev-dashboard",
+        "version": "deployment-board-v0",
+        "target": "个人开发看板",
+        "summary": "新增部署看板与部署状态登记结构；这是本地看板能力记录，不代表云端产品已上线。",
+        "commit": ""
+      }
+    ]
+  },
   "product_links": [
     [
       "web",

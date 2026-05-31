@@ -25,6 +25,7 @@
         <a href="#dev-data" data-page="dev-data">开发数据</a>
         <a href="#branches" data-page="branches">分支管理</a>
         <a href="#product-flow" data-page="product-flow">产品结构图</a>
+        <a href="#deployment" data-page="deployment">部署</a>
         <a href="#docs" data-page="docs">文档库</a>
         <a href="#skill-agent" data-page="skill-agent">Skill 和 Agent</a>
         <a href="#release-log" data-page="release-log">发布记录</a>
@@ -109,6 +110,10 @@
 
       <section class="section overview-module-grid page-section is-active" data-page-section="overview" id="overviewModuleGrid"></section>
 
+      <section class="section page-section is-active" data-page-section="overview">
+        <div class="surface pad deployment-overview-card" id="overviewDeployment"></div>
+      </section>
+
       <section class="section flow-grid page-section" id="product-flow" data-page-section="product-flow">
         <div class="surface pad flow-stage">
           <div class="section-head">
@@ -137,6 +142,62 @@
           </div>
         </div>
         <aside class="surface pad detail" id="productDetail" aria-live="polite"></aside>
+      </section>
+
+      <section class="section deployment-dashboard page-section" id="deployment" data-page-section="deployment">
+        <div class="deployment-main">
+          <div class="surface pad">
+            <div class="section-head">
+              <div>
+                <h2>部署总览</h2>
+                <p class="sub">按产品模块集中查看云端部署状态、部署环境、版本、平台和最近部署时间。</p>
+              </div>
+              <span class="pill" id="deploymentOverallPill">deployment</span>
+            </div>
+            <div class="deployment-summary-grid" id="deploymentSummaryGrid"></div>
+          </div>
+
+          <div class="surface pad">
+            <div class="section-head">
+              <div>
+                <h2>部署流程看板</h2>
+                <p class="sub">把当前已有的部署开发、部署到哪里、触发方式、涉及配置和上线前检查放在一张流程卡里。</p>
+              </div>
+              <span class="pill">flow</span>
+            </div>
+            <div class="deployment-flow-board" id="deploymentFlowBoard"></div>
+          </div>
+
+          <div class="surface pad">
+            <div class="section-head">
+              <div>
+                <h2>模块部署卡片</h2>
+                <p class="sub">官方网页、Web、Mac 桌面版、桌面插件、账号云同步层和管理者 Dashboard 独立登记。</p>
+              </div>
+              <span class="pill">按模块</span>
+            </div>
+            <div class="deployment-module-grid" id="deploymentModuleGrid"></div>
+          </div>
+
+          <div class="surface pad">
+            <div class="section-head">
+              <div>
+                <h2>部署记录</h2>
+                <p class="sub">保留每次部署的模块、时间、环境、平台、版本、结果和说明。</p>
+              </div>
+              <span class="pill" id="deploymentRecordCount">history</span>
+            </div>
+            <div class="deployment-record-list" id="deploymentRecordList"></div>
+          </div>
+        </div>
+        <aside class="surface pad deployment-side">
+          <div>
+            <h2>环境与问题</h2>
+            <p class="sub">聚合部署环境、平台和失败 / 待处理项，作为下一次上线前检查入口。</p>
+          </div>
+          <div class="deployment-env-list" id="deploymentEnvironmentList"></div>
+          <div class="deployment-issue-list" id="deploymentIssueList"></div>
+        </aside>
       </section>
 
       <section class="section page-section" id="docs" data-page-section="docs">
@@ -390,6 +451,7 @@
 <script src="./js/theme.js"></script>
 <script src="./js/overview.js"></script>
 <script src="./js/product-flow.js"></script>
+<script src="./js/deployment.js"></script>
 <script src="./js/docs-library.js"></script>
 <script src="./js/skill-agent.js"></script>
 <script src="./js/ops-panels.js"></script>

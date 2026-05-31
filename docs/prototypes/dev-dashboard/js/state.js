@@ -4,6 +4,7 @@ const overviewRows = dashboardState.status_rows || [];
 const cockpit = dashboardState.cockpit || [];
 const kpis = dashboardState.signals || dashboardState.kpis || [];
 const overviewModules = dashboardState.overview_modules || [];
+const deploymentState = dashboardState.deployment || {summary:{}, modules:[], records:[]};
 const devData = dashboardState.development_data || {};
 const productLinks = dashboardState.product_links || [
   ["web", "app", "main"],
