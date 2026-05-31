@@ -8,13 +8,13 @@
 | Target | account-sync-workflow-state-contract |
 | Title | Account Sync workflow state contract |
 | Roadmap | `docs/workflow/roadmap/account-cloud-sync-foundation.md` row #9 |
-| Status | READY_FOR_VERIFY |
+| Status | READY_TO_SHIP |
 | Current Phase | FEATURE_VERIFY |
-| Suggested Next | feature-verify |
+| Suggested Next | ship |
 | Automation Mode | A-Codex |
 | Verify Cross-vendor | yes |
-| Executor | feature-auto-build (A-Codex inline) |
-| Updated | 2026-05-31 07:46 PDT |
+| Executor | feature-verify (A-Codex inline) |
+| Updated | 2026-05-31 07:48 PDT |
 | Blockers | — |
 
 ## Feature Normalization
@@ -111,15 +111,29 @@ sync-health hook points deferred and read-only.
 
 ## Verification Summary
 
-Pending `feature-verify`.
+- Reviewed build commit `d4b53fe` for scope, patch contents, and commit message
+  quality; the change stays single-intent and docs-only.
+- Confirmed the shipped contract keeps roadmap manifests, `dev_log.md`, release
+  logs, ADRs, verification receipts, and committed dashboard snapshots as
+  repository truth and forbids workflow artifact entry into
+  `RepoRecord`/`syncScope`/outbox/blob flows.
+- Confirmed the contract includes an explicit source/cadence/authority/scope
+  declaration schema for mixed workflow plus account/sync dashboards and a
+  strict forbidden-data list covering secrets, raw logs, private payloads,
+  encrypted payload plaintext, provider raw secrets, and service-role
+  credentials.
+- Saved cross-vendor verification evidence at
+  `docs/reviews/account-sync-workflow-state-contract/20260531-cross-vendor-verify.md`
+  after a Cursor Agent pass returned PASS and READY_TO_SHIP.
 
 ## Residual Risks
 
 - Later runtime rows still need to prove how mixed-domain dashboards render the
   source/cadence/authority schema without inventing a second mutable workflow
   store.
-- This row is governance-only; no runtime or UI implementation proof exists
-  yet.
+- This row is governance-only; no runtime, unit, or manual sync verification
+  exists because `sync-v1` remains paused and no implementation lane was
+  activated.
 
 ## Work Log
 
@@ -127,4 +141,6 @@ Pending `feature-verify`.
 |---|---|---|---|---|
 | 2026-05-31 07:40 PDT | feature-plan (A-Codex inline) | Produced the docs-only planning pack for roadmap row #9: wrote discovery review, design, api, test, and dev_log under `docs/reviews/account-sync-workflow-state-contract/`; selected `docs/contracts/account-sync-workflow-state-contract.md` as the canonical build target; defined repository-truth preservation rules, workflow-state classification, separation rules, allowed derived exposures, cross-domain dashboard declaration requirements, deferred hook-point registry, and exclusion list; advanced workflow state to `NEEDS_REVIEW`. | — | feature-review |
 | 2026-05-31 07:44 PDT | feature-review (A-Codex inline) | Reviewed the discovery pack against the shipped account-sync contracts, `data-repository-v0`, `TECHNICAL_REQUIREMENTS`, paused `sync-v1`, and ADR-0013 D4; approved one docs-only build phase with review focus on repository-truth preservation, derived-only workflow snapshots, source/cadence/authority declarations, and forbidden workflow artifact reclassification. | — | feature-build |
-| 2026-05-31 07:46 PDT | feature-auto-build (A-Codex inline) | Completed Phase 1 docs-only build: added canonical contract `docs/contracts/account-sync-workflow-state-contract.md`, registered it in `docs/contracts/README.md`, updated the review artifact state, and advanced workflow to `READY_FOR_VERIFY`. Verification command evidence: `git diff --check -- docs/contracts/account-sync-workflow-state-contract.md docs/contracts/README.md docs/reviews/account-sync-workflow-state-contract`; scope check via `git diff --stat -- docs/contracts/account-sync-workflow-state-contract.md docs/contracts/README.md docs/reviews/account-sync-workflow-state-contract`. | pending commit | feature-verify |
+| 2026-05-31 07:46 PDT | feature-auto-build (A-Codex inline) | Completed Phase 1 docs-only build: added canonical contract `docs/contracts/account-sync-workflow-state-contract.md`, registered it in `docs/contracts/README.md`, updated the review artifact state, and advanced workflow to `READY_FOR_VERIFY`. Verification command evidence: `git diff --check -- docs/contracts/account-sync-workflow-state-contract.md docs/contracts/README.md docs/reviews/account-sync-workflow-state-contract`; scope check via `git diff --stat -- docs/contracts/account-sync-workflow-state-contract.md docs/contracts/README.md docs/reviews/account-sync-workflow-state-contract`. | `d4b53fe` | feature-verify |
+| 2026-05-31 07:47 PDT | cross-vendor verify (Cursor Agent / `agent --plan -p --trust`) | PASS across all required gates. Verified docs-only single-intent scope, repository-truth preservation, explicit prohibition on workflow artifact entry into `RepoRecord`/`syncScope`/outbox/blob flows, source/cadence/authority/scope declarations for mixed-domain dashboards, forbidden-data coverage, no protocol/crypto/device-identity drift, and no implied activation of paused runtime lanes. | `d4b53fe` | feature-verify |
+| 2026-05-31 07:48 PDT | feature-verify (A-Codex inline) | Recorded the cross-vendor verification receipt, confirmed the feature is `READY_TO_SHIP`, and intentionally left roadmap row #9 untouched pending the separate ship gate. Verification evidence: `git show --stat --summary --format=fuller d4b53fe`; `git show --patch --stat --format=medium d4b53fe -- docs/contracts/account-sync-workflow-state-contract.md docs/contracts/README.md docs/reviews/account-sync-workflow-state-contract/dev_log.md`; `git diff --check -- docs/contracts/account-sync-workflow-state-contract.md docs/contracts/README.md docs/reviews/account-sync-workflow-state-contract`; `rg -n "RepoRecord|syncScope|repository truth|outbox|encrypted blob|source|cadence|authority|service-role|provider raw|raw logs|private user payload|sync-v1|plugin|admin|site" docs/contracts/account-sync-workflow-state-contract.md docs/reviews/account-sync-workflow-state-contract/{design.md,api.md,test.md,20260531-discovery-review.md}`; and the saved Cursor Agent receipt. | `d4b53fe` | ship |
