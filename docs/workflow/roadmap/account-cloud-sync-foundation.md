@@ -3,7 +3,7 @@
 - Roadmap Source: user prompt 2026-05-31, "Design Account Cloud Sync as shared account and sync infrastructure"
 - Init Path: decompose
 - Generated: 2026-05-31
-- Default Automation Mode: A-Claude # normalized from user prompt `A-Codex`; `A-Codex` is not a legal Workflow V2 mode in this repo
+- Default Automation Mode: A-Codex
 - Default Dependency Semantics: shipped
 - Default Verify Cross-vendor: yes
 - Wave Concurrency Cap: 3
@@ -36,9 +36,9 @@ This roadmap is classified as the `sync` product module because the requirement 
 - `docs/TECHNICAL_REQUIREMENTS.md` and sync-v1 own the cryptographic protocol. This roadmap must not redefine them.
 - `docs/workflow/roadmap/sync-v1.md` is paused. This init output is an architecture and review manifest, not permission to start runtime sync implementation.
 
-### R2. Automation mode normalization
+### R2. Automation mode
 
-The user invocation supplied `Automation Mode: A-Codex`. Current repo-local Workflow V2 specs list the legal variants as `A-Claude`, `B-Codex`, `B-Cursor`, `C-Codex`, `C-Cursor`, `D-Codex`, `D-Cursor`, and `D-Codex+Cursor`. To keep the manifest runnable, the default was normalized to `A-Claude`, the legal single-IDE mode closest to the requested A-class behavior. `Verify Cross-vendor: yes` was preserved exactly as supplied.
+The user invocation supplied `Automation Mode: A-Codex`. Current repo-local Workflow V2 specs now treat `A-Codex` as a first-class lead-runtime mode: the current Codex session leads planning, build orchestration, and verification, spawning workers when possible and falling back to inline worker-contract execution when spawn depth is unavailable. `Verify Cross-vendor: yes` was preserved exactly as supplied.
 
 ### R3. Architecture-first decomposition
 
@@ -166,7 +166,7 @@ Minimum gates expected from this roadmap:
 ### R10. Assumptions and open questions
 
 - Assumption: this roadmap is allowed as architecture/planning work even though sync-v1 runtime development is paused.
-- Assumption: `A-Codex` in the invocation intended the A-class single-IDE workflow; it was normalized to legal `A-Claude`.
+- Assumption: `A-Codex` is the intended Codex lead-runtime default for this roadmap.
 - Assumption: Admin Dashboard will consume server-side read models, not the encrypted blob payload path.
 - Open question: whether `account.device` should become a first-class `RepoRecord` entity or stay server/auth metadata only for v1.
 - Open question: whether official Site account entry should be a separate `site` implementation or reuse an auth page under Web deployment infrastructure.
@@ -174,12 +174,12 @@ Minimum gates expected from this roadmap:
 
 ## Review Gate
 
-This init run stops here. The manifest and seed briefs are Step 0 input, not approved feature briefs. A human should review the feature boundaries, dependency graph, entity/local-first matrices, and the `A-Claude` normalization before any `run` execution.
+This init run stops here. The manifest and seed briefs are Step 0 input, not approved feature briefs. A human should review the feature boundaries, dependency graph, entity/local-first matrices, and the `A-Codex` default before any `run` execution.
 
 ## Next Step
 
 ```text
 /xai-roadmap-loop mode: run
 manifest: docs/workflow/roadmap/account-cloud-sync-foundation.md
-dispatch: emit
+dispatch: serial
 ```
