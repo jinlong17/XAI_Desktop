@@ -8,13 +8,13 @@
 | Target | account-sync-protocol-surface-contract |
 | Title | Account Sync protocol surface contract |
 | Roadmap | `docs/workflow/roadmap/account-cloud-sync-foundation.md` row #5 |
-| Status | READY_TO_SHIP |
-| Current Phase | VERIFY |
-| Suggested Next | ship |
+| Status | SHIPPED |
+| Current Phase | SHIP |
+| Suggested Next | — |
 | Automation Mode | A-Codex |
 | Verify Cross-vendor | yes |
-| Executor | feature-verify (A-Codex inline) |
-| Updated | 2026-05-31 06:11 PDT |
+| Executor | ship (gpt-5.3-codex) |
+| Updated | 2026-05-31 06:15 PDT |
 | Blockers | — |
 
 ## Feature Normalization
@@ -105,3 +105,4 @@ without unpausing runtime work.
 | 2026-05-31 06:08 PDT | feature-auto-build (A-Codex inline) | Added the canonical protocol-surface contract at `docs/contracts/account-sync-protocol-surface-contract.md`, registered it in `docs/contracts/README.md`, and committed the scoped docs-only build. Verification command evidence: `git diff --check -- docs/contracts/README.md docs/contracts/account-sync-protocol-surface-contract.md docs/reviews/account-sync-protocol-surface-contract/20260531-discovery-review.md`. | `df37e5b` | feature-verify |
 | 2026-05-31 06:10 PDT | cross-vendor verify (Cursor Agent / `agent --plan -p`) | PASS across all seven gates. Verified docs-only scope, explicit write/push/pull/apply sequencing, invariant preservation, deterministic conflict routing, retry/dead-letter/manual-sync behavior, cadence triggers, repository-only plugin access, and docs-only commit scope. | `df37e5b` | feature-verify |
 | 2026-05-31 06:11 PDT | feature-verify (A-Codex inline) | Recorded the cross-vendor verification receipt, confirmed the feature is `READY_TO_SHIP`, and intentionally left roadmap row #5 in `IN_PROGRESS` pending the separate ship gate. Verification evidence: `git show --stat --summary --format=fuller df37e5b`, contract/review artifact readback, and the saved read-only agent receipt. | `df37e5b`, `this commit` | ship |
+| 2026-05-31 06:15 PDT | ship (gpt-5.3-codex) | Completed ship gate checks for roadmap row #5: confirmed `READY_TO_SHIP` workflow guard in `dev_log.md`, validated cross-vendor evidence at `docs/reviews/account-sync-protocol-surface-contract/20260531-cross-vendor-verify.md`, reviewed commits `df37e5b` and `baab759`, verified in-scope docs with `git diff --check`, and flipped both `dev_log.md` and roadmap row #5 to `SHIPPED` without touching row #6+ or unrelated dirty files. | this commit + reused `df37e5b`, `baab759` | workflow complete |
