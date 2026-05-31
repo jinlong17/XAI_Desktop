@@ -64,15 +64,47 @@
   }
   .brand b{display:block;font-size:15px}
   .brand span{display:block;color:var(--muted);font-size:11px;margin-top:-1px}
-  .nav-title{margin:14px 8px 7px;color:var(--faint);font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:.08em}
+  .nav-title{display:flex;align-items:center;justify-content:space-between;gap:8px;margin:14px 8px 7px;color:var(--faint);font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:.08em}
+  .nav-title span{min-width:0}
+  .nav-title button{
+    width:24px;height:24px;display:grid;place-items:center;border:1px solid transparent;
+    border-radius:7px;background:transparent;color:var(--faint);font-size:14px;line-height:1;
+  }
+  .nav-title button:hover:not(:disabled){border-color:var(--line);background:var(--surface-3);color:var(--text)}
+  .nav-title button:disabled{opacity:.3;cursor:not-allowed}
+  .nav-list{display:grid;gap:4px}
+  .nav-item{position:relative;display:grid;grid-template-columns:minmax(0,1fr) 28px;gap:5px;align-items:center;margin:3px 0;border-radius:8px}
+  .nav-item.is-dragging{opacity:.44}
+  .nav-item.is-drop-before:before,
+  .nav-item.is-drop-after:after{
+    content:"";
+    position:absolute;
+    left:4px;
+    right:4px;
+    height:2px;
+    border-radius:999px;
+    background:var(--blue);
+    box-shadow:0 0 0 4px rgba(26,115,232,.12);
+  }
+  .nav-item.is-drop-before:before{top:-4px}
+  .nav-item.is-drop-after:after{bottom:-4px}
   .nav a{
     display:flex;align-items:center;justify-content:space-between;gap:12px;
-    padding:9px 10px;margin:3px 0;border-radius:8px;color:var(--muted);
+    min-width:0;padding:9px 10px;margin:0;border-radius:8px;color:var(--muted);
     border:1px solid transparent;
   }
+  .nav-link span{min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
   .nav a:hover{background:var(--surface-3);border-color:var(--line);color:var(--text)}
   .nav a.is-active{background:#eaf2ff;border-color:#cfe2ff;color:var(--blue);font-weight:800}
   .nav small{color:var(--faint);font-size:11px}
+  .nav-drag-handle{
+    width:28px;height:32px;display:grid;place-items:center;border:1px solid transparent;border-radius:7px;
+    background:transparent;color:var(--faint);font-size:16px;line-height:1;cursor:grab;user-select:none;touch-action:none;
+    opacity:.42;transition:opacity .18s ease,background .18s ease,border-color .18s ease,color .18s ease;
+  }
+  .nav-drag-handle:active{cursor:grabbing}
+  .nav-item:hover .nav-drag-handle,.nav-item:focus-within .nav-drag-handle{opacity:1}
+  .nav-drag-handle:hover,.nav-drag-handle:focus{border-color:#cfe2ff;background:#eef6ff;color:var(--blue);outline:none}
   .rail-note{
     margin:18px 6px 0;padding:12px;border:1px solid var(--line);
     background:var(--surface);border-radius:8px;box-shadow:var(--shadow-soft);
@@ -87,6 +119,7 @@
   .page-section.is-active{display:block}
   .page-section.is-active.hero,
   .page-section.is-active.kpis,
+  .page-section.is-active.overview-flow-section,
   .page-section.is-active.overview-module-grid,
   .page-section.is-active.flow-grid,
   .page-section.is-active.docs-layout,
@@ -222,6 +255,205 @@
   }
   .overview-module-footer{display:flex;align-items:center;justify-content:space-between;gap:10px;color:var(--tone);font-size:12px;font-weight:900}
   .overview-module-footer span:last-child{font-size:16px;line-height:1}
+  .overview-flow-section{display:grid;grid-template-columns:minmax(0,1fr) 260px;gap:14px;align-items:stretch}
+  .overview-flow-board{
+    position:relative;
+    min-height:464px;
+    padding:18px;
+    overflow:hidden;
+    background:
+      linear-gradient(135deg,rgba(255,255,255,.95),rgba(240,247,255,.92)),
+      repeating-linear-gradient(90deg,rgba(26,115,232,.035) 0 1px,transparent 1px 64px);
+  }
+  .overview-flow-board:before{
+    content:"";
+    position:absolute;
+    inset:18px;
+    border:1px solid rgba(185,211,244,.45);
+    border-radius:8px;
+    pointer-events:none;
+  }
+  .overview-flow-head{display:flex;align-items:flex-start;justify-content:space-between;gap:14px;position:relative;z-index:2;margin-bottom:10px}
+  .overview-flow-head h2{font-size:18px}
+  .overview-flow-actions{display:flex;align-items:flex-start;justify-content:flex-end;gap:8px;flex-wrap:wrap;max-width:430px}
+  .overview-flow-switch{display:flex;gap:4px;padding:4px;border:1px solid #cfe2ff;border-radius:8px;background:rgba(255,255,255,.78)}
+  .overview-flow-switch button{
+    min-height:28px;padding:0 9px;border:1px solid transparent;border-radius:6px;background:transparent;
+    color:var(--muted);font-size:12px;font-weight:850;white-space:nowrap;
+  }
+  .overview-flow-switch button:hover{background:#f2f7ff;color:var(--text)}
+  .overview-flow-switch button.is-active{background:#eaf2ff;border-color:#c8dcff;color:var(--blue);box-shadow:0 6px 16px rgba(26,115,232,.12)}
+  .overview-flow-canvas{position:relative;min-height:360px;margin-top:8px}
+  .overview-flow-svg{position:absolute;inset:0;width:100%;height:100%;pointer-events:none}
+  .overview-flow-edge{
+    fill:none;
+    stroke-width:3;
+    stroke-linecap:round;
+    stroke-dasharray:12 10;
+    filter:drop-shadow(0 5px 8px rgba(49,87,149,.14));
+    animation:overview-flow-dash 1.45s linear infinite;
+  }
+  .overview-flow-edge[data-tone="main"]{stroke:rgba(26,115,232,.66)}
+  .overview-flow-edge[data-tone="soft"]{stroke:rgba(18,181,203,.58)}
+  .overview-flow-edge[data-tone="control"]{stroke:rgba(234,67,53,.62)}
+  .overview-flow-edge[data-tone="blue"],
+  .overview-flow-edge[data-tone="webline"]{stroke:rgba(26,115,232,.7)}
+  .overview-flow-edge[data-tone="green"],
+  .overview-flow-edge[data-tone="desktopline"]{stroke:rgba(52,168,83,.72)}
+  .overview-flow-edge[data-tone="purple"]{stroke:rgba(124,77,255,.7)}
+  .overview-flow-edge[data-tone="cyan"]{stroke:rgba(18,181,203,.7)}
+  .overview-flow-edge[data-tone="yellow"]{stroke:rgba(181,111,0,.7)}
+  .overview-flow-edge[data-tone="red"],
+  .overview-flow-edge[data-tone="adminline"]{stroke:rgba(234,67,53,.7)}
+  .overview-flow-canvas[data-flow-view="metro"] .overview-flow-edge{stroke-width:5;stroke-dasharray:16 12}
+  .overview-flow-canvas[data-flow-view="radial"] .overview-flow-edge{stroke-width:2.5;stroke-dasharray:8 10}
+  .overview-flow-extra{position:absolute;z-index:1;pointer-events:none}
+  .overview-flow-band{
+    left:20px;right:20px;height:78px;padding:10px 12px;border:1px solid #d5e4f6;border-radius:8px;
+    background:linear-gradient(90deg,rgba(255,255,255,.72),rgba(242,247,255,.46));
+    color:var(--faint);font-size:11px;font-weight:900;letter-spacing:.02em;
+  }
+  .overview-flow-band strong{color:var(--text);font-size:12px;margin-right:8px}
+  .overview-flow-line-label{
+    left:22px;padding:4px 8px;border:1px solid #d5e4f6;border-radius:999px;background:#fff;
+    color:var(--muted);font-size:11px;font-weight:900;box-shadow:0 8px 18px rgba(49,87,149,.1);
+  }
+  .overview-flow-line-label[data-tone="webline"]{border-color:#c8dcff;color:#1a73e8}
+  .overview-flow-line-label[data-tone="desktopline"]{border-color:#ccebd5;color:#25763d}
+  .overview-flow-line-label[data-tone="adminline"]{border-color:#ffc5bf;color:#a6281d}
+  .overview-flow-center-ring{
+    width:220px;height:220px;border-radius:50%;border:1px dashed rgba(18,181,203,.42);
+    background:radial-gradient(circle,rgba(18,181,203,.12),rgba(255,255,255,0) 64%);
+  }
+  .overview-flow-node{
+    --tone:#1a73e8;
+    --tone-bg:#eaf2ff;
+    position:absolute;
+    width:clamp(132px,23%,168px);
+    min-height:88px;
+    display:grid;
+    grid-template-columns:34px minmax(0,1fr);
+    gap:9px;
+    align-items:start;
+    padding:11px;
+    border:1px solid color-mix(in srgb,var(--tone) 34%,var(--line));
+    border-top:4px solid var(--tone);
+    border-radius:8px;
+    background:linear-gradient(180deg,color-mix(in srgb,var(--tone-bg) 76%,#fff),#fff);
+    color:var(--text);
+    text-align:left;
+    box-shadow:0 14px 30px rgba(49,87,149,.13);
+    transform:translate(-50%,-50%);
+    transition:transform .22s ease,border-color .22s ease,box-shadow .22s ease;
+    z-index:2;
+  }
+  .overview-flow-node:hover{transform:translate(-50%,calc(-50% - 3px));border-color:var(--tone);box-shadow:0 20px 42px color-mix(in srgb,var(--tone) 18%,transparent)}
+  .overview-flow-node[data-tone="blue"]{--tone:#1a73e8;--tone-bg:#eaf2ff}
+  .overview-flow-node[data-tone="green"]{--tone:#34a853;--tone-bg:#eaf7ee}
+  .overview-flow-node[data-tone="purple"]{--tone:#7c4dff;--tone-bg:#f1edff}
+  .overview-flow-node[data-tone="cyan"]{--tone:#12b5cb;--tone-bg:#e6f8fb}
+  .overview-flow-node[data-tone="yellow"]{--tone:#b56f00;--tone-bg:#fff7df}
+  .overview-flow-node[data-tone="red"]{--tone:#ea4335;--tone-bg:#ffefed}
+  .overview-flow-node[data-stage="not-started"]{opacity:.84;filter:saturate(.82)}
+  .overview-flow-node[data-stage="active"],
+  .overview-flow-node[data-stage="risk"]{animation:overview-node-pulse 1.9s ease-in-out infinite}
+  .overview-flow-node[data-stage="done"]{box-shadow:0 18px 36px color-mix(in srgb,var(--tone) 24%,transparent)}
+  .overview-flow-node[data-stage="done"] .overview-flow-dot:after{content:"✓";font-size:13px}
+  .overview-flow-node[data-stage="risk"]:after{
+    content:"";
+    position:absolute;
+    top:9px;
+    right:9px;
+    width:9px;
+    height:9px;
+    border-radius:50%;
+    background:var(--red);
+    box-shadow:0 0 0 5px rgba(234,67,53,.12);
+  }
+  .overview-flow-node[data-stage="risk"] .overview-flow-copy span{color:#a6281d}
+  .overview-flow-dot{
+    width:34px;
+    height:34px;
+    display:grid;
+    place-items:center;
+    border-radius:8px;
+    background:var(--tone);
+    color:#fff;
+    font-weight:900;
+  }
+  .overview-flow-copy{min-width:0}
+  .overview-flow-copy b{display:-webkit-box;font-size:13px;line-height:1.2;overflow:hidden;text-overflow:ellipsis;white-space:normal;-webkit-line-clamp:2;-webkit-box-orient:vertical}
+  .overview-flow-copy span{display:block;color:var(--muted);font-size:11px;margin-top:3px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  .overview-flow-progress{display:block;height:6px;margin-top:9px;border-radius:999px;background:#e5edf8;overflow:hidden;grid-column:1 / -1}
+  .overview-flow-progress span{display:block;height:100%;border-radius:inherit;background:linear-gradient(90deg,var(--tone),color-mix(in srgb,var(--tone) 55%,#fff))}
+  .overview-flow-node[data-key]{right:auto;bottom:auto}
+  .overview-flow-side{padding:16px;background:linear-gradient(180deg,#fff,#f4f9ff)}
+  .overview-flow-side h3{font-size:15px}
+  .overview-flow-view-meta{display:grid;gap:5px;margin-bottom:13px;padding:10px;border:1px solid #d3e1f3;border-radius:8px;background:#fff}
+  .overview-flow-view-meta b{font-size:13px}
+  .overview-flow-view-meta span{color:var(--muted);font-size:12px;line-height:1.45}
+  .overview-flow-legend{display:grid;gap:9px;margin-top:12px}
+  .overview-flow-legend div{display:grid;grid-template-columns:12px minmax(0,1fr);gap:8px;align-items:center;color:var(--muted);font-size:12px}
+  .legend-dot{width:12px;height:12px;border-radius:50%;background:#bcd1ec}
+  .legend-dot.is-new{background:#8ab4f8}
+  .legend-dot.is-active{background:#34a853;box-shadow:0 0 0 5px rgba(52,168,83,.12)}
+  .legend-dot.is-risk{background:#ea4335;box-shadow:0 0 0 5px rgba(234,67,53,.12)}
+  .legend-dot.is-done{background:#1a73e8}
+  .overview-flow-summary{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;margin-top:14px}
+  .overview-flow-summary div{padding:9px;border:1px solid var(--line);border-radius:8px;background:#fff}
+  .overview-flow-summary b{display:block;font-size:18px}
+  .overview-flow-summary span{display:block;color:var(--muted);font-size:11px}
+  @keyframes overview-flow-dash{to{stroke-dashoffset:-22}}
+  @keyframes overview-node-pulse{0%,100%{box-shadow:0 14px 30px rgba(49,87,149,.13)}50%{box-shadow:0 22px 46px color-mix(in srgb,var(--tone) 26%,transparent)}}
+  .module-drawer-overlay{
+    position:fixed;
+    inset:0;
+    z-index:72;
+    display:none;
+    background:rgba(12,24,42,.42);
+    backdrop-filter:blur(8px);
+  }
+  .module-drawer-overlay.is-open{display:block}
+  .module-drawer{
+    position:fixed;
+    top:0;
+    right:0;
+    width:min(520px,100vw);
+    height:100vh;
+    z-index:73;
+    display:grid;
+    grid-template-rows:auto minmax(0,1fr) auto;
+    background:linear-gradient(180deg,#fbfdff,#eef5ff);
+    border-left:1px solid #c8d8ee;
+    box-shadow:-26px 0 70px rgba(9,27,52,.24);
+    transform:translateX(104%);
+    transition:transform .26s ease;
+  }
+  .module-drawer.is-open{transform:translateX(0)}
+  .module-drawer-head{
+    display:flex;
+    align-items:flex-start;
+    justify-content:space-between;
+    gap:14px;
+    padding:18px;
+    border-bottom:1px solid #d3e1f3;
+    background:#fff;
+  }
+  .module-drawer-head h2{font-size:20px;margin-top:8px}
+  .drawer-close{width:34px;height:34px;border:1px solid var(--line);border-radius:8px;background:#fff;color:var(--text);font-size:20px;line-height:1}
+  .drawer-body{min-width:0;overflow:auto;padding:16px;display:grid;gap:12px}
+  .drawer-panel{padding:12px;border:1px solid #d3e1f3;border-radius:8px;background:#fff}
+  .drawer-panel h3{font-size:14px;margin-bottom:8px}
+  .drawer-summary{color:var(--muted);font-size:13px}
+  .drawer-metric-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}
+  .drawer-metric{padding:9px;border:1px solid var(--line);border-radius:8px;background:var(--surface-2)}
+  .drawer-metric b{display:block;color:var(--muted);font-size:11px}
+  .drawer-metric span{display:block;font-size:13px;font-weight:850;margin-top:2px;overflow-wrap:anywhere}
+  .drawer-feature-list{display:grid;gap:7px}
+  .drawer-feature{display:grid;grid-template-columns:82px minmax(0,1fr);gap:8px;align-items:start;padding:8px;border:1px solid var(--line);border-radius:8px;background:var(--surface-2)}
+  .drawer-feature b{font-size:11px}
+  .drawer-feature span{font-size:12px;color:var(--muted);overflow-wrap:anywhere}
+  .drawer-foot{display:flex;gap:8px;justify-content:flex-end;padding:14px 16px;border-top:1px solid #d3e1f3;background:#fff}
   .focus-box{display:grid;gap:10px;align-content:start}
   .focus-row{
     display:grid;grid-template-columns:34px minmax(0,1fr);gap:10px;align-items:start;
@@ -583,6 +815,7 @@
   .reader-title{display:flex;align-items:flex-start;justify-content:space-between;gap:14px}
   .reader-title b{display:block;font-size:16px}
   .reader-title span{display:block;color:var(--muted);font-size:12px;margin-top:2px}
+  .reader-title-actions{display:flex;align-items:center;gap:8px;flex:0 0 auto}
   .reader-body{padding:16px;overflow:auto;min-width:0;max-width:100%}
   .reader-body ul{margin:12px 0 0;padding-left:18px;color:var(--muted)}
   .reader-body li{margin:7px 0}
@@ -596,6 +829,7 @@
     font-weight:800;
   }
   .reader-btn:hover{border-color:var(--line-strong);background:var(--surface-3)}
+  .reader-btn:disabled{cursor:not-allowed;opacity:.52;background:#f4f7fb;color:var(--faint)}
   .docs-layout{grid-template-columns:minmax(900px,1fr) 260px;gap:14px;align-items:start}
   .docs-main{min-width:0}
   .docs-side{position:sticky;top:18px;max-height:calc(100vh - 36px);overflow:auto}
@@ -622,73 +856,188 @@
     gap:10px;
     margin-bottom:12px;
   }
+  .doc-rec-card,.doc-rec-link,.doc-root-button,.doc-item-row,.doc-inspector-title{
+    --doc-tone:#566175;
+    --doc-bg:#eef1f6;
+    --doc-border:#d3dbe7;
+    --doc-ink:var(--muted);
+  }
+  .doc-rec-card[data-importance="必读"],
+  .doc-rec-link[data-importance="必读"],
+  .doc-root-button[data-importance="必读"],
+  .doc-item-row[data-importance="必读"],
+  .doc-inspector-title[data-importance="必读"]{
+    --doc-tone:var(--red);
+    --doc-bg:#ffefed;
+    --doc-border:#ffc5bf;
+    --doc-ink:#a6281d;
+  }
+  .doc-rec-card[data-importance="必要"],
+  .doc-rec-link[data-importance="必要"],
+  .doc-root-button[data-importance="必要"],
+  .doc-item-row[data-importance="必要"],
+  .doc-inspector-title[data-importance="必要"]{
+    --doc-tone:var(--blue);
+    --doc-bg:#eaf2ff;
+    --doc-border:#bdd7ff;
+    --doc-ink:#0f4d9a;
+  }
+  .doc-rec-card[data-importance="系统级"],
+  .doc-rec-link[data-importance="系统级"],
+  .doc-root-button[data-importance="系统级"],
+  .doc-item-row[data-importance="系统级"],
+  .doc-inspector-title[data-importance="系统级"]{
+    --doc-tone:#07849a;
+    --doc-bg:#e6f8fb;
+    --doc-border:#b8eaf1;
+    --doc-ink:#066a7c;
+  }
+  .doc-rec-card[data-doc-family="skill"],
+  .doc-rec-link[data-doc-family="skill"],
+  .doc-item-row[data-doc-family="skill"],
+  .doc-inspector-title[data-doc-family="skill"]{
+    --doc-tone:var(--purple);
+    --doc-bg:#f1edff;
+    --doc-border:#d9cffd;
+    --doc-ink:#5733c7;
+  }
+  .doc-rec-card[data-doc-family="workflow"],
+  .doc-rec-link[data-doc-family="workflow"],
+  .doc-item-row[data-doc-family="workflow"],
+  .doc-inspector-title[data-doc-family="workflow"]{
+    --doc-tone:#b56f00;
+    --doc-bg:#fff7df;
+    --doc-border:#ffe2a3;
+    --doc-ink:#7a4d00;
+  }
+  .doc-rec-card[data-doc-family="rules"],
+  .doc-rec-link[data-doc-family="rules"],
+  .doc-item-row[data-doc-family="rules"],
+  .doc-inspector-title[data-doc-family="rules"]{
+    --doc-tone:#ea4335;
+    --doc-bg:#fff0ed;
+    --doc-border:#ffc9c1;
+    --doc-ink:#a6281d;
+  }
+  .doc-rec-card[data-importance="必读"],
+  .doc-item-row[data-importance="必读"],
+  .doc-inspector-title[data-importance="必读"]{
+    box-shadow:inset 4px 0 0 var(--red),0 10px 24px rgba(49,87,149,.07);
+  }
   .doc-rec-card{
+    position:relative;
     min-height:142px;
     padding:12px;
-    border:1px solid var(--line);
+    border:1px solid var(--doc-border);
+    border-top:4px solid var(--doc-tone);
     border-radius:8px;
-    background:linear-gradient(180deg,#fff,var(--surface-2));
+    background:
+      linear-gradient(135deg,color-mix(in srgb,var(--doc-bg) 72%,#fff),#fff 58%),
+      linear-gradient(180deg,#fff,var(--surface-2));
+    box-shadow:0 10px 24px rgba(49,87,149,.07);
+    overflow:hidden;
   }
-  .doc-rec-card b{display:block;font-size:13px}
+  .doc-rec-card:after{
+    content:"";
+    position:absolute;
+    inset:auto 10px 0 10px;
+    height:2px;
+    background:linear-gradient(90deg,var(--doc-tone),transparent);
+    opacity:.36;
+  }
+  .doc-rec-card b{display:block;font-size:13px;color:var(--doc-ink)}
   .doc-rec-card span{display:block;color:var(--muted);font-size:11.5px;margin-top:3px}
+  .doc-rec-meta{display:flex;align-items:center;gap:6px;flex-wrap:wrap;margin-top:8px}
   .doc-rec-links{display:grid;gap:6px;margin-top:10px}
   .doc-rec-link{
     display:grid;
     grid-template-columns:minmax(0,1fr) auto;
     gap:8px;
     align-items:center;
-    border:1px solid var(--line);
+    border:1px solid color-mix(in srgb,var(--doc-border) 76%,var(--line));
     border-radius:8px;
-    background:#fff;
+    background:rgba(255,255,255,.78);
     color:var(--text);
     padding:7px 8px;
     text-align:left;
     font-size:12px;
     font-weight:800;
   }
-  .doc-rec-link:hover{border-color:var(--line-strong);background:var(--surface-3)}
+  .doc-rec-link:hover{border-color:var(--doc-tone);background:color-mix(in srgb,var(--doc-bg) 56%,#fff)}
   .doc-rec-link span{margin:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;color:inherit}
-  .doc-rec-link small{color:var(--faint);font-weight:750}
+  .doc-rec-link small{color:var(--doc-ink);font-weight:850}
   .doc-file-manager{
     display:grid;
-    grid-template-columns:230px minmax(0,1fr) 270px;
-    gap:12px;
-    align-items:start;
-  }
-  .doc-pane{
-    border:1px solid var(--line);
+    grid-template-columns:250px minmax(460px,1fr) 300px;
+    gap:0;
+    min-height:680px;
+    max-height:calc(100vh - 190px);
+    border:1px solid #c6d8f0;
     border-radius:8px;
-    background:#fff;
+    background:
+      linear-gradient(90deg,#f5f9ff 0,#f5f9ff 250px,#fff 250px,#fff calc(100% - 300px),#f7fbff calc(100% - 300px)),
+      linear-gradient(180deg,#fbfdff,#f2f7ff);
+    box-shadow:0 18px 42px rgba(49,87,149,.10);
     overflow:hidden;
   }
+  .doc-pane{
+    min-height:0;
+    border:0;
+    border-radius:0;
+    background:transparent;
+    overflow:hidden;
+  }
+  .doc-folder-pane,
+  .doc-folder-browser,
+  .doc-inspector{display:grid;grid-template-rows:auto minmax(0,1fr)}
+  .doc-folder-pane{grid-template-rows:auto auto auto minmax(0,1fr);border-right:1px solid #c6d8f0}
+  .doc-folder-browser{grid-template-rows:auto auto minmax(0,1fr);background:rgba(255,255,255,.74);border-right:1px solid #c6d8f0}
+  .doc-inspector{background:linear-gradient(180deg,#f8fbff,#eef5ff)}
   .doc-pane-head{
-    padding:11px 12px;
+    padding:12px 14px;
     border-bottom:1px solid var(--line);
-    background:var(--surface-2);
+    background:linear-gradient(180deg,rgba(255,255,255,.88),rgba(238,246,255,.74));
   }
   .doc-pane-head b{display:block;font-size:13px}
   .doc-pane-head span{display:block;color:var(--muted);font-size:11.5px;margin-top:2px}
-  .doc-root-list,.doc-folder-list,.doc-inspector-body{display:grid;gap:7px;padding:10px}
-  .doc-root-list{border-bottom:1px solid var(--line)}
+  .doc-root-list,.doc-folder-list,.doc-inspector-body{display:grid;gap:8px;padding:12px}
+  .doc-root-list{
+    align-content:start;
+    max-height:285px;
+    overflow:auto;
+    border-bottom:1px solid var(--line);
+  }
   .doc-root-button{
-    border:1px solid var(--line);
+    border:1px solid color-mix(in srgb,var(--doc-border) 70%,var(--line));
     border-radius:8px;
-    background:#fff;
+    background:linear-gradient(180deg,rgba(255,255,255,.9),color-mix(in srgb,var(--doc-bg) 42%,#fff));
     color:var(--text);
     padding:8px 9px;
     text-align:left;
     font-weight:800;
   }
-  .doc-root-button:hover,.doc-root-button.is-on{border-color:#bfd8ff;background:#f2f7ff;color:var(--blue)}
+  .doc-root-button:hover,.doc-root-button.is-on{
+    border-color:var(--doc-tone);
+    background:color-mix(in srgb,var(--doc-bg) 74%,#fff);
+    color:var(--doc-ink);
+  }
   .doc-root-button span{display:block;color:var(--muted);font-size:11px;font-weight:650;margin-top:2px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  .doc-tree-title{
+    padding:10px 12px 0;
+    color:var(--faint);
+    font-size:11px;
+    font-weight:850;
+    text-transform:uppercase;
+    letter-spacing:.08em;
+  }
   .doc-folder-toolbar{
     display:flex;
     justify-content:space-between;
     align-items:center;
     gap:10px;
-    padding:10px;
+    padding:10px 12px;
     border-bottom:1px solid var(--line);
-    background:#fff;
+    background:rgba(255,255,255,.72);
   }
   .doc-folder-toolbar span{
     color:var(--muted);
@@ -698,37 +1047,86 @@
     white-space:nowrap;
   }
   .doc-folder-list{
-    max-height:360px;
+    align-content:start;
+    min-height:0;
+    max-height:none;
     overflow:auto;
+    gap:0;
+    padding:0;
+    background:
+      linear-gradient(180deg,rgba(255,255,255,.92),rgba(246,250,255,.94)),
+      repeating-linear-gradient(0deg,transparent 0 52px,rgba(205,221,242,.22) 52px 53px);
   }
-  .doc-item-row{
+  .doc-folder-list-head{
+    position:sticky;
+    top:0;
+    z-index:2;
     display:grid;
-    grid-template-columns:34px minmax(0,1fr) auto;
+    grid-template-columns:34px minmax(0,1fr) 164px;
     gap:10px;
     align-items:center;
-    border:1px solid var(--line);
-    border-radius:8px;
-    background:#fff;
+    padding:9px 12px;
+    border-bottom:1px solid #d8e4f3;
+    background:rgba(248,251,255,.96);
+    color:var(--faint);
+    font-size:11px;
+    font-weight:850;
+    text-transform:uppercase;
+    letter-spacing:.06em;
+  }
+  .doc-item-row{
+    position:relative;
+    display:grid;
+    grid-template-columns:34px minmax(0,1fr) 164px;
+    gap:10px;
+    align-items:center;
+    border:0;
+    border-bottom:1px solid #e0e8f5;
+    border-radius:0;
+    background:rgba(255,255,255,.50);
     color:var(--text);
-    padding:9px;
+    padding:10px 12px;
     text-align:left;
   }
-  .doc-item-row:hover,.doc-item-row.is-on{border-color:#bfd8ff;background:#f2f7ff}
+  .doc-folder-list .doc-item-row[data-importance="必读"]{box-shadow:none}
+  .doc-item-row:before{
+    content:"";
+    position:absolute;
+    left:0;
+    top:10px;
+    bottom:10px;
+    width:3px;
+    border-radius:0 999px 999px 0;
+    background:var(--doc-tone);
+    opacity:.42;
+  }
+  .doc-item-row:hover,.doc-item-row.is-on{
+    background:color-mix(in srgb,var(--doc-bg) 58%,#fff);
+  }
+  .doc-item-row:hover:before,.doc-item-row.is-on:before{opacity:1}
   .doc-icon{
     width:34px;
     height:34px;
     border-radius:8px;
     display:grid;
     place-items:center;
-    background:var(--surface-3);
-    color:var(--blue);
+    background:color-mix(in srgb,var(--doc-bg) 74%,#fff);
+    color:var(--doc-tone);
+    border:1px solid color-mix(in srgb,var(--doc-border) 82%,#fff);
     font-weight:900;
     font-size:13px;
   }
   .doc-item-main{min-width:0}
   .doc-item-main b{display:block;font-size:13px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
   .doc-item-main span{display:block;color:var(--muted);font-size:11.5px;margin-top:2px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-  .doc-item-meta{display:flex;gap:6px;align-items:center;justify-content:flex-end;flex-wrap:wrap}
+  .doc-item-meta{
+    display:grid;
+    grid-template-columns:60px 82px;
+    gap:6px;
+    align-items:center;
+    justify-content:end;
+  }
+  .doc-item-meta .importance-pill,.doc-item-meta .pill{justify-content:center;min-width:0}
   .importance-pill{
     display:inline-flex;
     border:1px solid var(--line);
@@ -747,22 +1145,50 @@
   .doc-inspector-title{
     display:grid;
     gap:8px;
-    padding:12px;
-    border-bottom:1px solid var(--line);
-    background:linear-gradient(180deg,#fff,var(--surface-2));
+    padding:14px;
+    border-bottom:1px solid var(--doc-border);
+    background:
+      linear-gradient(135deg,color-mix(in srgb,var(--doc-bg) 74%,#fff),#fff 68%),
+      linear-gradient(180deg,#fff,var(--surface-2));
   }
   .doc-inspector-title b{font-size:15px;overflow-wrap:anywhere}
   .doc-inspector-title span{color:var(--muted);font-size:12px;overflow-wrap:anywhere}
-  .doc-meta-grid{display:grid;gap:7px}
-  .doc-meta-grid div{padding:8px;border:1px solid var(--line);border-radius:8px;background:var(--surface-2)}
+  .doc-inspector-body{
+    align-content:start;
+    min-height:0;
+    overflow:auto;
+  }
+  .doc-meta-grid{
+    display:grid;
+    gap:0;
+    border:1px solid #d5e0ee;
+    border-radius:8px;
+    background:rgba(255,255,255,.72);
+    overflow:hidden;
+  }
+  .doc-meta-grid div{
+    display:grid;
+    grid-template-columns:58px minmax(0,1fr);
+    gap:10px;
+    padding:9px 10px;
+    border:0;
+    border-bottom:1px solid #e0e8f5;
+    border-radius:0;
+    background:transparent;
+  }
+  .doc-meta-grid div:last-child{border-bottom:0}
   .doc-meta-grid b{display:block;color:var(--muted);font-size:11px}
-  .doc-meta-grid span{display:block;font-size:12px;font-weight:800;margin-top:2px;overflow-wrap:anywhere}
+  .doc-meta-grid span{display:block;font-size:12px;font-weight:800;overflow-wrap:anywhere}
   .doc-inspector-actions{display:grid;grid-template-columns:1fr 1fr;gap:8px}
   .doc-inspector-actions .reader-btn{width:100%;font-size:12px}
   .doc-preview{
     margin-top:12px;
-    min-height:520px;
+    min-height:0;
+    display:none;
+    background:linear-gradient(180deg,#fbfdff,#eef5ff);
+    border-color:#c8d8ee;
   }
+  .doc-preview.is-visible{display:grid;min-height:360px}
   .doc-preview .reader-body{max-height:680px}
   .doc-library-top{
     display:grid;
@@ -910,13 +1336,13 @@
   }
   .doc-pathbar span{color:var(--muted);font-size:12px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
   .doc-tree{
-    min-height:680px;
-    max-height:78vh;
+    min-height:0;
+    max-height:none;
     overflow:auto;
-    border:1px solid var(--line);
-    border-radius:8px;
-    background:#fff;
-    padding:8px;
+    border:0;
+    border-radius:0;
+    background:transparent;
+    padding:8px 10px 12px;
   }
   .tree-row{
     width:100%;
@@ -930,7 +1356,7 @@
     padding:7px 8px;
     text-align:left;
   }
-  .tree-row:hover,.tree-row.is-on{border-color:var(--line);background:var(--surface-3)}
+  .tree-row:hover,.tree-row.is-on{border-color:#d5e3f5;background:rgba(255,255,255,.78)}
   .tree-row span:last-child{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
   .doc-reader{min-height:680px;min-width:0}
   .doc-actions{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
@@ -961,11 +1387,87 @@
   .markdown-body table{display:block;width:100%;overflow-x:auto;border-collapse:collapse;margin:14px 0;font-size:12px}
   .markdown-body th,.markdown-body td{border:1px solid var(--line);padding:7px 8px;text-align:left;vertical-align:top}
   .markdown-body th{background:var(--surface-3)}
+  body.doc-fullscreen-active{overflow:hidden}
+  .doc-fullscreen-overlay{
+    position:fixed;
+    inset:0 0 0 248px;
+    z-index:100;
+    display:none;
+    padding:0;
+    background:linear-gradient(180deg,#f8fbff,#eef5ff);
+    overflow:hidden;
+  }
+  .doc-fullscreen-overlay.is-open{display:grid}
+  .doc-fullscreen-shell{
+    width:calc(100vw - 248px);
+    height:100vh;
+    min-height:100vh;
+    display:grid;
+    grid-template-rows:auto minmax(0,1fr);
+    border:0;
+    border-radius:0;
+    background:linear-gradient(180deg,#f8fbff,#eef5ff);
+    box-shadow:none;
+    overflow:hidden;
+  }
+  .doc-fullscreen-head{
+    display:grid;
+    grid-template-columns:4px minmax(0,1fr) auto;
+    align-items:start;
+    gap:18px;
+    min-height:72px;
+    padding:16px clamp(18px,3vw,44px);
+    border-bottom:1px solid #c8d8ee;
+    border-left:0;
+    background:
+      linear-gradient(90deg,color-mix(in srgb,var(--doc-fullscreen-bg,#eaf2ff) 72%,#fff),#fff 46%),
+      #fff;
+    box-shadow:0 8px 24px rgba(49,87,149,.08);
+  }
+  .doc-fullscreen-head:before{
+    content:"";
+    width:4px;
+    min-height:44px;
+    align-self:stretch;
+    border-radius:999px;
+    background:var(--doc-fullscreen-tone,var(--blue));
+  }
+  .doc-fullscreen-head > div{min-width:0}
+  .doc-fullscreen-head > div:not(.doc-fullscreen-tools){grid-column:2}
+  .doc-fullscreen-head b{display:block;font-size:16px;overflow-wrap:anywhere}
+  .doc-fullscreen-head span{display:block;color:var(--muted);font-size:12px;margin-top:3px;overflow-wrap:anywhere}
+  .doc-fullscreen-tools{grid-column:3;display:flex;gap:8px;align-items:center}
+  .doc-fullscreen-body{
+    width:100%;
+    max-width:none;
+    height:100%;
+    margin:0;
+    padding:44px clamp(24px,8vw,128px) 72px;
+    overflow:auto;
+    background:
+      linear-gradient(90deg,rgba(239,246,255,.76),rgba(255,255,255,.94) 18%,rgba(255,255,255,.94) 82%,rgba(239,246,255,.76)),
+      linear-gradient(180deg,#fff,#f2f7ff);
+  }
+  .doc-fullscreen-body > *{
+    max-width:920px;
+    margin-left:auto;
+    margin-right:auto;
+  }
+  .doc-fullscreen-body h1{font-size:34px}
+  .doc-fullscreen-body p,.doc-fullscreen-body li{font-size:15.5px}
+  .doc-fullscreen-body pre,.doc-fullscreen-body table{max-width:1040px}
   .search-results{display:none;gap:8px;margin:0 0 12px}
   .search-results.is-on{display:grid}
   .search-row{grid-template-columns:54px minmax(0,1fr)}
   .search-row mark{background:#fff3bf;border-radius:4px;padding:0 2px}
-  .outline-box{margin-bottom:12px}
+  .outline-box{
+    margin-bottom:12px;
+    padding:10px;
+    border:1px solid #d5e0ee;
+    border-radius:8px;
+    background:rgba(255,255,255,.58);
+  }
+  .outline-title{color:var(--faint);font-size:11px;font-weight:850;text-transform:uppercase;letter-spacing:.08em}
   .outline-list{display:grid;gap:5px;margin-top:10px}
   .outline-row{
     border:1px solid transparent;
@@ -1168,10 +1670,14 @@
   }
   .flow-note b{color:var(--text)}
   @media (max-width:1180px){
-    .hero,.flow-grid,.split,.docs-layout,.release-dashboard{grid-template-columns:1fr}
+    .hero,.flow-grid,.split,.docs-layout,.release-dashboard,.overview-flow-section{grid-template-columns:1fr}
     .docs-side,.release-side,.detail{position:static;max-height:none;overflow:visible}
-    .doc-file-manager{grid-template-columns:210px minmax(0,1fr)}
-    .doc-inspector{grid-column:1 / -1}
+    .doc-file-manager{
+      grid-template-columns:220px minmax(0,1fr);
+      max-height:none;
+      background:linear-gradient(180deg,#fbfdff,#f2f7ff);
+    }
+    .doc-inspector{grid-column:1 / -1;border-top:1px solid #c6d8f0}
     .doc-recommendation-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
     .doc-category-panel,.capability-matrix{grid-template-columns:1fr}
     .doc-card-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
@@ -1184,6 +1690,9 @@
     .structure-map{display:grid;gap:10px;min-height:auto;padding:12px}
     .map-svg{display:none}
     .map-node{position:relative;inset:auto !important;width:100%;min-height:74px}
+    .overview-flow-canvas{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;min-height:auto}
+    .overview-flow-svg,.overview-flow-extra{display:none}
+    .overview-flow-node{position:relative;inset:auto !important;width:100%;min-height:88px;transform:none !important}
   }
   @media (max-width:860px){
     .layout{grid-template-columns:1fr}
@@ -1198,8 +1707,10 @@
       overflow:hidden;
     }
     .rail .brand{padding:2px 4px 8px}
-    .rail .nav-title,.rail .rail-note,.nav small{display:none}
-    .nav{display:flex;gap:6px;max-width:100%;overflow-x:auto;-webkit-overflow-scrolling:touch;padding-bottom:2px}
+    .rail .nav-title,.rail .rail-note,.nav small,.nav-drag-handle{display:none}
+    .nav{display:block;max-width:100%;overflow:hidden;padding-bottom:2px}
+    .nav-list{display:flex;gap:6px;max-width:100%;overflow-x:auto;-webkit-overflow-scrolling:touch;padding-bottom:2px}
+    .nav-item{display:flex;flex:0 0 auto;margin:0}
     .nav a{flex:0 0 auto;justify-content:center;margin:0;white-space:nowrap;padding:8px 12px}
     [data-page-section]{scroll-margin-top:116px}
     .main,.content{min-width:0;max-width:100vw}
@@ -1207,14 +1718,32 @@
     .ops-head{flex-wrap:wrap}
     .ops-grid{grid-template-columns:1fr}
     .overview-signal-grid,.overview-module-grid{grid-template-columns:1fr}
+    .overview-flow-canvas,.drawer-metric-grid{grid-template-columns:1fr}
+    .overview-flow-head,.overview-flow-actions{display:grid;justify-content:stretch;max-width:none}
+    .overview-flow-switch{overflow-x:auto}
+    .module-drawer{width:100vw}
     .reader-shell{grid-template-columns:1fr}
     .doc-workbench,.doc-toolbar{grid-template-columns:1fr}
-    .doc-file-manager{grid-template-columns:1fr}
+    .doc-file-manager{grid-template-columns:1fr;min-height:auto;max-height:none}
+    .doc-folder-browser{order:1}
+    .doc-inspector{order:2}
+    .doc-folder-pane{order:3}
+    .doc-folder-pane,.doc-folder-browser{border-right:0;border-bottom:1px solid #c6d8f0}
+    .doc-root-list{max-height:none}
+    .doc-tree{max-height:280px}
     .doc-recommendation-grid{display:flex;overflow-x:auto;gap:10px;padding-bottom:2px}
     .doc-rec-card{flex:0 0 310px}
     .doc-folder-list{max-height:none}
     .skill-group-grid,.agent-family-grid{grid-template-columns:1fr}
     .markdown-body{padding:18px;max-width:none}
+    .doc-fullscreen-overlay{inset:104px 0 0 0;padding:0}
+    .doc-fullscreen-shell{width:100vw;height:calc(100vh - 104px);min-height:calc(100vh - 104px)}
+    .doc-fullscreen-head{grid-template-columns:1fr;gap:10px}
+    .doc-fullscreen-head:before{width:100%;min-height:4px;height:4px;align-self:stretch}
+    .doc-fullscreen-head > div:not(.doc-fullscreen-tools),
+    .doc-fullscreen-tools{grid-column:1}
+    .doc-fullscreen-tools{width:100%;justify-content:flex-end}
+    .doc-fullscreen-body{padding:24px 16px 54px}
     .data-grid,.trend-row,.branch-commit,.dir-row{grid-template-columns:1fr}
     .release-module-grid,.release-entry-row,.release-extra-row{grid-template-columns:1fr}
     .region-track{grid-template-columns:1fr}
@@ -1229,6 +1758,8 @@
     .section-head{flex-wrap:wrap;gap:8px}
     .content{padding:14px}
     .doc-card-grid{grid-template-columns:1fr}
+    .drawer-feature{grid-template-columns:1fr}
+    .doc-folder-list-head{display:none}
     .doc-item-row{grid-template-columns:30px minmax(0,1fr)}
     .doc-item-meta{grid-column:2}
   }
@@ -1244,15 +1775,17 @@
         <span>本地项目控制台</span>
       </div>
     </div>
-    <nav class="nav" aria-label="主导航">
-      <div class="nav-title">导航</div>
-      <a href="#overview" data-page="overview">总览</a>
-      <a href="#tasks" data-page="tasks">任务进度</a>
-      <a href="#dev-data" data-page="dev-data">开发数据</a>
-      <a href="#branches" data-page="branches">分支管理</a>
-      <a href="#product-flow" data-page="product-flow">产品结构图</a>
-      <a href="#docs" data-page="docs">文档库</a>
-      <a href="#release-log" data-page="release-log">发布记录</a>
+    <nav class="nav" id="primaryNav" aria-label="主导航">
+      <div class="nav-title"><span>导航</span><button id="navOrderReset" type="button" aria-label="恢复默认导航顺序" title="恢复默认顺序">↺</button></div>
+      <div class="nav-list" id="primaryNavList">
+        <a href="#overview" data-page="overview">总览</a>
+        <a href="#tasks" data-page="tasks">任务进度</a>
+        <a href="#dev-data" data-page="dev-data">开发数据</a>
+        <a href="#branches" data-page="branches">分支管理</a>
+        <a href="#product-flow" data-page="product-flow">产品结构图</a>
+        <a href="#docs" data-page="docs">文档库</a>
+        <a href="#release-log" data-page="release-log">发布记录</a>
+      </div>
     </nav>
     <div class="rail-note">
       <b>核心规则</b>
@@ -1283,6 +1816,33 @@
           </div>
         </div>
         <div class="surface pad focus-box" id="overviewFocus"></div>
+      </section>
+
+      <section class="section overview-flow-section page-section is-active" data-page-section="overview">
+        <div class="surface overview-flow-board" id="overviewFlowBoard">
+          <div class="overview-flow-head">
+            <div>
+              <h2>产品流程图</h2>
+              <p class="sub" id="overviewFlowDescription">用简化链路展示 Web、桌面、插件、同步、官网和管理控制面的当前进展。</p>
+            </div>
+            <div class="overview-flow-actions">
+              <div class="overview-flow-switch" id="overviewFlowSwitch" role="tablist" aria-label="产品流程图视图"></div>
+              <span class="pill">点击模块查看详情</span>
+            </div>
+          </div>
+          <div class="overview-flow-canvas" id="overviewFlowCanvas" aria-label="总览产品流程图"></div>
+        </div>
+        <aside class="surface overview-flow-side">
+          <div class="overview-flow-view-meta" id="overviewFlowViewMeta"></div>
+          <h3>状态图例</h3>
+          <div class="overview-flow-legend">
+            <div><span class="legend-dot is-new"></span><span>未开发 / 待启动</span></div>
+            <div><span class="legend-dot is-active"></span><span>开发中 / 正在推进</span></div>
+            <div><span class="legend-dot is-risk"></span><span>开发中但存在阻塞</span></div>
+            <div><span class="legend-dot is-done"></span><span>已完成 / 稳定运行</span></div>
+          </div>
+          <div class="overview-flow-summary" id="overviewFlowSummary"></div>
+        </aside>
       </section>
 
       <section class="section overview-module-grid page-section is-active" data-page-section="overview" id="overviewModuleGrid"></section>
@@ -1341,6 +1901,7 @@
                 <span>真实目录入口</span>
               </div>
               <div class="doc-root-list" id="docRootList"></div>
+              <div class="doc-tree-title">目录树</div>
               <div class="doc-tree" id="docTree"></div>
             </aside>
 
@@ -1365,7 +1926,7 @@
               <div class="doc-inspector-body">
                 <div class="doc-meta-grid" id="docMetaGrid"></div>
                 <div class="doc-inspector-actions">
-                  <button class="reader-btn" id="docOpenButton" type="button">查看</button>
+                  <button class="reader-btn" id="docOpenButton" type="button">全屏查看</button>
                   <button class="reader-btn" id="docCopyButton" type="button">复制路径</button>
                   <button class="reader-btn" id="docRevealButton" type="button">Finder</button>
                   <button class="reader-btn" id="docRefreshFolderButton" type="button">刷新目录</button>
@@ -1379,6 +1940,9 @@
             <div class="reader-head">
               <div class="reader-title">
                 <div><b>文档内容</b><span id="docPreviewSource">选择 Markdown / TOML / JSON 文档后在这里预览。</span></div>
+                <div class="reader-title-actions">
+                  <button class="reader-btn" id="docFullscreenButton" type="button" disabled>全屏浏览</button>
+                </div>
               </div>
             </div>
             <div class="reader-body markdown-body" id="markdownBody"></div>
@@ -1511,6 +2075,37 @@
       </section>
     </div>
   </main>
+
+  <div class="doc-fullscreen-overlay" id="docFullscreenOverlay" aria-hidden="true">
+    <section class="doc-fullscreen-shell" role="dialog" aria-modal="true" aria-labelledby="docFullscreenTitle">
+      <div class="doc-fullscreen-head" id="docFullscreenHead">
+        <div>
+          <b id="docFullscreenTitle">文档阅读</b>
+          <span id="docFullscreenSource">选择文档后进入全屏浏览。</span>
+        </div>
+        <div class="doc-fullscreen-tools">
+          <button class="reader-btn" id="docFullscreenCopyButton" type="button">复制路径</button>
+          <button class="reader-btn" id="docExitFullscreenButton" type="button">返回文档库</button>
+        </div>
+      </div>
+      <div class="doc-fullscreen-body markdown-body" id="docFullscreenBody"></div>
+    </section>
+  </div>
+  <div class="module-drawer-overlay" id="moduleDrawerOverlay" aria-hidden="true"></div>
+  <aside class="module-drawer" id="moduleDrawer" role="dialog" aria-modal="true" aria-labelledby="moduleDrawerTitle" aria-hidden="true">
+    <div class="module-drawer-head">
+      <div>
+        <span class="badge b-blue" id="moduleDrawerBadge">module</span>
+        <h2 id="moduleDrawerTitle">模块详情</h2>
+      </div>
+      <button class="drawer-close" id="moduleDrawerClose" type="button" aria-label="关闭模块详情">×</button>
+    </div>
+    <div class="drawer-body" id="moduleDrawerBody"></div>
+    <div class="drawer-foot">
+      <button class="reader-btn" id="moduleDrawerLocate" type="button">定位结构图</button>
+      <button class="reader-btn" id="moduleDrawerPrimary" type="button">打开入口</button>
+    </div>
+  </aside>
 </div>
 
 <script src="./state.generated.js"></script>
@@ -1531,6 +2126,97 @@ const productLinks = dashboardState.product_links || [
   ["sync", "site", "main"],
   ["sync", "admin", "control"]
 ];
+const OVERVIEW_FLOW_VIEWBOX = {width:1000, height:360};
+const OVERVIEW_FLOW_STORAGE_KEY = "xai-dev-dashboard.overviewFlowView.v1";
+const FLOW_VIEW_OPTIONS = [
+  {key:"topology", label:"架构拓扑", title:"Option A · 产品架构拓扑图", description:"突出模块依赖关系，官网和 Web、桌面和插件分别汇入账号云同步，再进入 Admin Dashboard。"},
+  {key:"layers", label:"能力分层", title:"Option B · 三层产品能力图", description:"按用户入口层、核心能力层、运营管理层展示，适合看产品能力边界和层级。"},
+  {key:"metro", label:"地铁线路", title:"Option C · 地铁线路图风格", description:"按 Web Line、Desktop Line、Admin Line 展示不同产品线，强调多条工作流汇入同步层。"},
+  {key:"radial", label:"中心辐射", title:"Option D · 中心辐射监控图", description:"以账号云同步为中心展示所有核心模块，适合做控制台式健康监控入口。"}
+];
+const FLOW_VIEW_CONFIG = {
+  topology:{
+    mode:"smooth",
+    nodeOrder:["site","web","app","plugin","sync","admin"],
+    positions:{
+      site:{x:150,y:88}, web:{x:430,y:88}, app:{x:150,y:258},
+      plugin:{x:430,y:258}, sync:{x:705,y:174}, admin:{x:870,y:292}
+    },
+    edges:[
+      {from:"site", to:"web", tone:"yellow"},
+      {from:"web", to:"sync", tone:"blue"},
+      {from:"app", to:"plugin", tone:"green"},
+      {from:"plugin", to:"sync", tone:"purple"},
+      {from:"sync", to:"admin", tone:"cyan"}
+    ],
+    extras:[
+      {type:"label", text:"用户入口", x:64, y:36},
+      {type:"label", text:"桌面能力", x:64, y:300},
+      {type:"label", text:"同步 / 控制面", x:570, y:300}
+    ]
+  },
+  layers:{
+    mode:"orthogonal",
+    nodeOrder:["site","web","app","sync","plugin","admin"],
+    positions:{
+      site:{x:160,y:78}, web:{x:500,y:78}, app:{x:840,y:78},
+      sync:{x:330,y:185}, plugin:{x:670,y:185}, admin:{x:500,y:304}
+    },
+    edges:[
+      {from:"site", to:"web", tone:"yellow"},
+      {from:"web", to:"sync", tone:"blue"},
+      {from:"app", to:"sync", tone:"green"},
+      {from:"app", to:"plugin", tone:"green"},
+      {from:"plugin", to:"sync", tone:"purple"},
+      {from:"sync", to:"admin", tone:"red"}
+    ],
+    extras:[
+      {type:"band", title:"用户入口层", text:"官网 / Web / Desktop", y:42},
+      {type:"band", title:"核心能力层", text:"云同步 / 插件能力", y:138},
+      {type:"band", title:"运营管理层", text:"Admin Dashboard", y:258}
+    ]
+  },
+  metro:{
+    mode:"polyline",
+    nodeOrder:["site","web","app","plugin","sync","admin"],
+    positions:{
+      site:{x:150,y:90}, web:{x:430,y:90}, app:{x:150,y:255},
+      plugin:{x:430,y:255}, sync:{x:660,y:172}, admin:{x:885,y:172}
+    },
+    edges:[
+      {from:"site", to:"web", tone:"webline"},
+      {from:"web", to:"sync", tone:"webline", via:[{x:535,y:90}]},
+      {from:"app", to:"plugin", tone:"desktopline"},
+      {from:"plugin", to:"sync", tone:"desktopline", via:[{x:535,y:255}]},
+      {from:"admin", to:"sync", tone:"adminline"}
+    ],
+    extras:[
+      {type:"line", text:"Web Line", y:70, tone:"webline"},
+      {type:"line", text:"Desktop Line", y:235, tone:"desktopline"},
+      {type:"line", text:"Admin Line", y:152, tone:"adminline"}
+    ]
+  },
+  radial:{
+    mode:"straight",
+    nodeOrder:["sync","web","site","app","plugin","admin"],
+    positions:{
+      sync:{x:500,y:180}, web:{x:500,y:54}, site:{x:160,y:112},
+      app:{x:500,y:304}, plugin:{x:160,y:248}, admin:{x:840,y:180}
+    },
+    edges:[
+      {from:"sync", to:"web", tone:"blue"},
+      {from:"sync", to:"site", tone:"yellow"},
+      {from:"sync", to:"app", tone:"green"},
+      {from:"sync", to:"plugin", tone:"purple"},
+      {from:"sync", to:"admin", tone:"red"}
+    ],
+    extras:[
+      {type:"ring", x:500, y:180},
+      {type:"label", text:"账号云同步作为中心能力", x:386, y:302}
+    ]
+  }
+};
+let activeOverviewFlowView = readOverviewFlowView();
 const branchWorkflow = dashboardState.branch_workflow || [
   ["idea", "需求进入", "brief / roadmap", "先归类产品线和风险。"],
   ["feature", "短功能分支", "codex/<area>/<feature>", "一个功能一个短分支。"],
@@ -1681,7 +2367,7 @@ function buildOverviewModulesFallback(lines){
     plugin:["桌面插件","purple","平台等待","等待 App 平台","打开 PLUGIN_MAP"],
     sync:["账号云同步","cyan","合同沉淀","暂停中","打开 sync-v1"],
     site:["官方网页","yellow","发布入口候选","本地站点待启动","打开官网本地页"],
-    admin:["开发者 / 管理者 Dashboard","red","控制面原型","原型可打开","打开 Admin 原型"]
+    admin:["Admin Dashboard","red","控制面原型","原型可打开","打开 Admin 原型"]
   };
   return (lines.length ? lines : [
     {key:"web",title:"Web",subtitle:"项目最全功能面",status:"Web 主线",next:"D3 gate 后同步 Desktop"},
@@ -1721,16 +2407,278 @@ function overviewTargetFor(key, label){
   return targets[key] || {type:"page",page:"product-flow",product_key:key,label};
 }
 
+function moduleDisplayTitle(item){
+  return item?.key === "admin" ? "Admin Dashboard" : (item?.title || "");
+}
+
+function productLineFor(key){
+  return products.find(product => product.key === key) || {};
+}
+
+function overviewModuleForKey(key){
+  return (overviewModules.length ? overviewModules : buildOverviewModulesFallback(products)).find(item => item.key === key);
+}
+
+function moduleStage(item){
+  const progress = Number(item?.progress) || 0;
+  const text = `${item?.todo || ""} ${item?.status || ""}`;
+  if(/阻塞|风险|blocked/i.test(text)) return "risk";
+  if(progress >= 88) return "done";
+  if(progress < 25) return "not-started";
+  return "active";
+}
+
+function moduleStageLabel(stage){
+  return {
+    "not-started":"未开发",
+    active:"开发中",
+    risk:"开发中 · 有阻塞",
+    done:"已完成"
+  }[stage] || "跟踪中";
+}
+
+function flowViewOption(key){
+  return FLOW_VIEW_OPTIONS.find(item => item.key === key) || FLOW_VIEW_OPTIONS[0];
+}
+
+function readOverviewFlowView(){
+  try{
+    const saved = localStorage.getItem(OVERVIEW_FLOW_STORAGE_KEY);
+    return FLOW_VIEW_CONFIG[saved] ? saved : "topology";
+  }catch{
+    return "topology";
+  }
+}
+
+function saveOverviewFlowView(key){
+  try{
+    localStorage.setItem(OVERVIEW_FLOW_STORAGE_KEY, key);
+  }catch{}
+}
+
+function setOverviewFlowView(key){
+  if(!FLOW_VIEW_CONFIG[key]) return;
+  activeOverviewFlowView = key;
+  saveOverviewFlowView(key);
+  renderOverviewFlow();
+}
+
+function renderOverviewFlowSwitch(activeKey){
+  const switchNode = document.getElementById("overviewFlowSwitch");
+  if(!switchNode) return;
+  switchNode.innerHTML = FLOW_VIEW_OPTIONS.map(option => `
+    <button class="${option.key === activeKey ? "is-active" : ""}" data-overview-flow-view="${h(option.key)}" type="button" role="tab" aria-selected="${option.key === activeKey ? "true" : "false"}">${h(option.label)}</button>
+  `).join("");
+  switchNode.querySelectorAll("[data-overview-flow-view]").forEach(button => {
+    button.addEventListener("click", () => setOverviewFlowView(button.dataset.overviewFlowView));
+  });
+}
+
+function flowPoint(value, positions){
+  if(typeof value === "string") return positions[value];
+  return value;
+}
+
+function flowNodeStyle(position){
+  const x = Math.max(0, Math.min(OVERVIEW_FLOW_VIEWBOX.width, Number(position?.x) || 0));
+  const y = Math.max(0, Math.min(OVERVIEW_FLOW_VIEWBOX.height, Number(position?.y) || 0));
+  return `left:${(x / OVERVIEW_FLOW_VIEWBOX.width) * 100}%;top:${(y / OVERVIEW_FLOW_VIEWBOX.height) * 100}%`;
+}
+
+function flowEdgePath(edge, positions, mode){
+  const points = [edge.from, ...(edge.via || []), edge.to].map(point => flowPoint(point, positions)).filter(Boolean);
+  if(points.length < 2) return "";
+  if(points.length > 2 || mode === "polyline"){
+    return points.map((point, index) => `${index ? "L" : "M"} ${point.x} ${point.y}`).join(" ");
+  }
+  const [a, b] = points;
+  if(mode === "straight" || Math.abs(a.y - b.y) < 8){
+    return `M ${a.x} ${a.y} L ${b.x} ${b.y}`;
+  }
+  if(mode === "orthogonal"){
+    const midY = (a.y + b.y) / 2;
+    return `M ${a.x} ${a.y} C ${a.x} ${midY}, ${b.x} ${midY}, ${b.x} ${b.y}`;
+  }
+  const control = Math.max(70, Math.abs(a.x - b.x) * .42);
+  return `M ${a.x} ${a.y} C ${a.x + control} ${a.y}, ${b.x - control} ${b.y}, ${b.x} ${b.y}`;
+}
+
+function renderOverviewFlowExtras(layout){
+  return (layout.extras || []).map(extra => {
+    if(extra.type === "band"){
+      return `<div class="overview-flow-extra overview-flow-band" style="top:${h(extra.y)}px"><strong>${h(extra.title)}</strong>${h(extra.text)}</div>`;
+    }
+    if(extra.type === "line"){
+      return `<div class="overview-flow-extra overview-flow-line-label" data-tone="${h(extra.tone || "main")}" style="top:${h(extra.y)}px">${h(extra.text)}</div>`;
+    }
+    if(extra.type === "ring"){
+      return `<div class="overview-flow-extra overview-flow-center-ring" style="left:calc(${(extra.x / OVERVIEW_FLOW_VIEWBOX.width) * 100}% - 110px);top:calc(${(extra.y / OVERVIEW_FLOW_VIEWBOX.height) * 100}% - 110px)"></div>`;
+    }
+    return `<div class="overview-flow-extra overview-flow-line-label" style="left:${h(extra.x)}px;top:${h(extra.y)}px">${h(extra.text)}</div>`;
+  }).join("");
+}
+
+function renderOverviewFlow(){
+  const modules = overviewModules.length ? overviewModules : buildOverviewModulesFallback(products);
+  const moduleByKey = new Map(modules.map(item => [item.key, item]));
+  const view = flowViewOption(activeOverviewFlowView);
+  const layout = FLOW_VIEW_CONFIG[view.key] || FLOW_VIEW_CONFIG.topology;
+  const board = document.getElementById("overviewFlowBoard");
+  const description = document.getElementById("overviewFlowDescription");
+  const meta = document.getElementById("overviewFlowViewMeta");
+  if(board) board.dataset.flowView = view.key;
+  if(description) description.textContent = view.description;
+  if(meta) meta.innerHTML = `<b>${h(view.title)}</b><span>${h(view.description)}</span>`;
+  renderOverviewFlowSwitch(view.key);
+  const edges = (layout.edges || []).map(edge => {
+    const d = flowEdgePath(edge, layout.positions || {}, layout.mode);
+    return d ? `<path class="overview-flow-edge" data-tone="${h(edge.tone || "main")}" d="${d}"></path>` : "";
+  }).join("");
+  const nodeOrder = layout.nodeOrder || ["web","app","plugin","sync","site","admin"];
+  const nodes = nodeOrder
+    .map(key => moduleByKey.get(key))
+    .filter(Boolean)
+    .map(item => {
+      const stage = moduleStage(item);
+      const displayTitle = moduleDisplayTitle(item);
+      const position = (layout.positions || {})[item.key] || {x:500, y:180};
+      return `
+        <button class="overview-flow-node" data-overview-flow="${h(item.key)}" data-key="${h(item.key)}" data-tone="${h(item.tone || "blue")}" data-stage="${h(stage)}" style="${flowNodeStyle(position)}" type="button">
+          <span class="overview-flow-dot">${h(stage === "done" ? "" : (item.icon || displayTitle.slice(0,1)))}</span>
+          <span class="overview-flow-copy"><b>${h(displayTitle)}</b><span>${h(moduleStageLabel(stage))} · ${h(item.progress || 0)}%</span></span>
+          <span class="overview-flow-progress"><span style="width:${Math.max(0, Math.min(100, Number(item.progress) || 0))}%"></span></span>
+        </button>
+      `;
+    }).join("");
+  document.getElementById("overviewFlowCanvas").innerHTML = `
+    <svg class="overview-flow-svg" viewBox="0 0 ${OVERVIEW_FLOW_VIEWBOX.width} ${OVERVIEW_FLOW_VIEWBOX.height}" preserveAspectRatio="none" aria-hidden="true">${edges}</svg>
+    ${renderOverviewFlowExtras(layout)}
+    ${nodes}
+  `;
+  document.getElementById("overviewFlowCanvas").dataset.flowView = view.key;
+  const summary = modules.reduce((acc, item) => {
+    acc[moduleStage(item)] += 1;
+    return acc;
+  }, {"not-started":0, active:0, risk:0, done:0});
+  document.getElementById("overviewFlowSummary").innerHTML = `
+    <div><b>${summary.active + summary.risk}</b><span>开发中</span></div>
+    <div><b>${summary.done}</b><span>已完成</span></div>
+    <div><b>${summary["not-started"]}</b><span>未开发</span></div>
+    <div><b>${modules.length}</b><span>核心模块</span></div>
+  `;
+  document.querySelectorAll("[data-overview-flow]").forEach(button => {
+    button.addEventListener("click", () => openModuleDrawer(moduleByKey.get(button.dataset.overviewFlow)));
+  });
+}
+
+function moduleFeatureGroups(key){
+  const groups = {
+    web: {
+      done:["任务、看板、Dashboard 网格、日历、矩阵、番茄、习惯、冥想、倒计时、统计等 Web 模块已经形成主产品面。","设置、AI 对话、命令面板、Dashboard widget host 已接入主导航和插件注册。"],
+      active:["继续补齐 Dashboard 真实数据、Web Console gap closure、AI provider 和跨模块事件联动。","Web 改动进入 Desktop 前需要 D3 分类，避免直接把主线差异带入 App。"],
+      next:["Cloudflare 发布、CSP/Sentry、service worker 和设备会话继续作为发布稳定性重点。"]
+    },
+    app: {
+      done:["桌面版以 Web 为 UI 源，已明确 main/control/grid 多窗口和 Tauri native foundation 路线。","G0/G1 相关窗口、离线 profile 和原生能力已在路线图中拆分。"],
+      active:["推进 Tauri command、窗口能力、离线本地存储和 App RC 稳定线。","从 Web 来的共享改动必须先经过 D3 gate。"],
+      next:["补齐 macOS 手动 smoke、签名、公证、DMG、updater 和 release/desktop 冻结流程。"]
+    },
+    plugin: {
+      done:["插件和 widget 被定义为 App 之上的扩展层，和 App RC 分开跟踪。","PLUGIN_MAP 已覆盖插件包状态，是当前插件面板的主要事实来源。"],
+      active:["等待 App 平台稳定后恢复插件 SDK、widget host 和桌面整理插件开发。"],
+      next:["插件需要跨设备时进入账号云同步；device-local 插件状态不进入同步协议。"]
+    },
+    sync: {
+      done:["账号云同步被定义为 Web、App、Plugin 的共同同步层，而不是模块之间互相直连。","sync-v1 roadmap 已作为协议和实现恢复入口。"],
+      active:["继续沉淀 entity、schema、push/pull、冲突策略、Web IndexedDB 和 App SQLite 测试。"],
+      next:["需要补齐两设备 smoke 和 account-sync / device-local 作用域边界。"]
+    },
+    site: {
+      done:["官网被定义为下载、更新说明、账号入口和 release notes 的对外承接面。","release-site archive 保留了官网和账号相关页面基础。"],
+      active:["本地官网入口仍待启动，Cloudflare 发布节奏和 package 归属需要确认。"],
+      next:["桌面版 release 产生 DMG/updater 后，官网需要同步下载页和更新说明。"]
+    },
+    admin: {
+      done:["Admin Dashboard 已保持为独立控制面原型，不塞进个人开发看板本体。","原型覆盖用户、功能、用量、审计、AI 配置等管理中台方向。"],
+      active:["正式接入仍依赖账号、权限、计量和审计合同稳定。"],
+      next:["后续需要独立 apps/admin 或等价 surface，和用户端 Web Console 隔离权限与部署。"]
+    }
+  };
+  return groups[key] || {done:[], active:[], next:[]};
+}
+
+let activeDrawerModule = null;
+
+function renderDrawerFeatureList(items, label){
+  if(!items?.length) return "";
+  return items.map(text => `<div class="drawer-feature"><b>${h(label)}</b><span>${h(text)}</span></div>`).join("");
+}
+
+function openModuleDrawer(item){
+  if(!item) return;
+  const line = productLineFor(item.key);
+  const stage = moduleStage(item);
+  const features = moduleFeatureGroups(item.key);
+  activeDrawerModule = {
+    item,
+    target: item.target || overviewTargetFor(item.key, "打开入口")
+  };
+  const badge = document.getElementById("moduleDrawerBadge");
+  badge.textContent = moduleStageLabel(stage);
+  badge.className = `badge ${stage === "risk" ? "b-red" : stage === "done" ? "b-green" : stage === "active" ? "b-cyan" : "b-blue"}`;
+  document.getElementById("moduleDrawerTitle").textContent = moduleDisplayTitle(item);
+  document.getElementById("moduleDrawerBody").innerHTML = `
+    <section class="drawer-panel">
+      <h3>模块介绍</h3>
+      <p class="drawer-summary">${h(line.goal || item.subtitle || line.subtitle || "该模块已纳入产品结构图和总览监控。")}</p>
+    </section>
+    <section class="drawer-panel">
+      <h3>当前状态</h3>
+      <div class="drawer-metric-grid">
+        <div class="drawer-metric"><b>阶段</b><span>${h(item.phase || line.status || "跟踪中")}</span></div>
+        <div class="drawer-metric"><b>完成度</b><span>${h(item.progress || 0)}%</span></div>
+        <div class="drawer-metric"><b>运行状态</b><span>${h(item.running || "待确认")}</span></div>
+      </div>
+      <div class="chip-row" style="margin-top:10px">${statusChips(item.status_counts || line.status_counts)}</div>
+    </section>
+    <section class="drawer-panel">
+      <h3>功能进展</h3>
+      <div class="drawer-feature-list">
+        ${renderDrawerFeatureList(features.done, "已有")}
+        ${renderDrawerFeatureList(features.active, "进行中")}
+        ${renderDrawerFeatureList(features.next, "待完善")}
+      </div>
+    </section>
+    <section class="drawer-panel">
+      <h3>最近更新 / 待处理</h3>
+      <div class="drawer-feature-list">
+        <div class="drawer-feature"><b>最近</b><span>${h(item.recent_update || line.status_summary || "等待快照刷新")}</span></div>
+        <div class="drawer-feature"><b>待处理</b><span>${h(item.todo || line.next || "暂无")}</span></div>
+      </div>
+    </section>
+  `;
+  document.getElementById("moduleDrawerPrimary").textContent = activeDrawerModule.target.label || "打开入口";
+  document.getElementById("moduleDrawerOverlay").classList.add("is-open");
+  document.getElementById("moduleDrawer").classList.add("is-open");
+  document.getElementById("moduleDrawer").setAttribute("aria-hidden", "false");
+}
+
+function closeModuleDrawer(){
+  document.getElementById("moduleDrawerOverlay").classList.remove("is-open");
+  document.getElementById("moduleDrawer").classList.remove("is-open");
+  document.getElementById("moduleDrawer").setAttribute("aria-hidden", "true");
+}
+
 function renderOverviewModules(){
   const modules = overviewModules.length ? overviewModules : buildOverviewModulesFallback([]);
   document.getElementById("overviewModuleGrid").innerHTML = modules.map((item, index) => `
     <button class="overview-module-card" data-overview-module="${index}" data-tone="${h(item.tone || "blue")}" type="button">
       <div class="overview-module-top">
-        <div class="overview-module-mark">${h(item.icon || item.title.slice(0,1))}</div>
+        <div class="overview-module-mark">${h(item.icon || moduleDisplayTitle(item).slice(0,1))}</div>
         <span class="overview-module-state">${h(item.running || "待确认")}</span>
       </div>
       <div class="overview-module-title">
-        <h3>${h(item.title)}</h3>
+        <h3>${h(moduleDisplayTitle(item))}</h3>
         <p>${h(item.subtitle || item.status || "")}</p>
       </div>
       <div class="overview-progress">
@@ -1747,13 +2695,12 @@ function renderOverviewModules(){
     </button>
   `).join("");
   document.querySelectorAll("[data-overview-module]").forEach(button => {
-    button.addEventListener("click", () => openOverviewModule(modules[Number(button.dataset.overviewModule)]));
+    button.addEventListener("click", () => openModuleDrawer(modules[Number(button.dataset.overviewModule)]));
   });
 }
 
 function openOverviewModule(item){
-  const target = item?.target || overviewTargetFor(item?.key || "", "查看详情");
-  openProductTarget(target);
+  openModuleDrawer(item);
 }
 
 function openProductTarget(target){
@@ -2008,7 +2955,7 @@ function setProduct(key){
 
 function openDocInLibrary(path){
   setPage("docs");
-  if(serveMode) openDoc(path);
+  if(serveMode) openDoc(path, {fullscreen:true});
 }
 
 const serveMode = location.protocol === "http:" || location.protocol === "https:";
@@ -2084,7 +3031,7 @@ function docMetaFor(entry = {}){
     summary: hubMeta.summary || entry.summary || (entry.type === "dir" ? "本地文件夹，点击进入查看子文档。" : "本地项目文档，内容来自仓库实时文件。"),
     type: hubMeta.type || entry.type || "file",
     kind: hubMeta.kind || docKindFor(entry),
-    importance: hubMeta.importance || inferredImportance(path, entry.type),
+    importance: hubMeta.importance || entry.importance || inferredImportance(path, entry.type),
     tags: hubMeta.tags || entry.tags || [],
     updated_at: entry.modified || hubMeta.updated_at || "",
     size_bytes: entry.size || hubMeta.size_bytes || 0
@@ -2115,22 +3062,78 @@ function fileIcon(entry){
   return "TXT";
 }
 
+function docFamilyFor(entry = {}){
+  const path = String(entry.path || "").toLowerCase();
+  const value = `${path} ${entry.kind || ""} ${(entry.tags || []).join(" ")}`.toLowerCase();
+  if(/(^|\/)(agents|claude)\.md$|\.cursor\/rules\/handoff|项目规则|规则文档/.test(value)) return "rules";
+  if(/skill|agent toml|\.agents\/|\.codex\/agents|\.claude\/agents|\.claude\/agents-v2|\.teams\/skills|\.cursor\/agents/.test(value)) return "skill";
+  if(/workflow|dev_log|sop_|usage-guide|roadmap|release-log|工作流|流程/.test(value)) return "workflow";
+  if(/adr|contracts|portable|plugin_map|branch-policy|系统/.test(value)) return "system";
+  return "reference";
+}
+
+function docCategoryLabel(entry = {}){
+  const family = docFamilyFor(entry);
+  if(family === "rules") return "项目规则文档";
+  if(family === "skill") return "Skill / Agent 文档";
+  if(family === "workflow") return "核心开发流程";
+  if(entry.importance === "必读") return "必读文档";
+  if(entry.importance === "系统级" || family === "system") return "系统性文档";
+  return "普通参考文档";
+}
+
+function docTheme(entry = {}){
+  const family = docFamilyFor(entry);
+  if(family === "rules") return {tone:"#ea4335", bg:"#fff0ed"};
+  if(family === "skill") return {tone:"#7c4dff", bg:"#f1edff"};
+  if(family === "workflow") return {tone:"#b56f00", bg:"#fff7df"};
+  if(entry.importance === "必读") return {tone:"#ea4335", bg:"#ffefed"};
+  if(entry.importance === "必要") return {tone:"#1a73e8", bg:"#eaf2ff"};
+  if(entry.importance === "系统级") return {tone:"#07849a", bg:"#e6f8fb"};
+  return {tone:"#566175", bg:"#eef1f6"};
+}
+
+function docGroupImportance(group = {}){
+  const value = `${group.key || ""} ${group.title || ""}`.toLowerCase();
+  if(/must|必读|rule|规则/.test(value)) return "必读";
+  if(/workflow|工作流|流程|roadmap|release/.test(value)) return "必要";
+  if(/system|系统|adr|contract|portable/.test(value)) return "系统级";
+  if(/skill|agent/.test(value)) return "必要";
+  return group.importance || "参考";
+}
+
 function renderDocRecommendations(){
   const groups = docHub.groups || [];
-  document.getElementById("docRecommendationGroups").innerHTML = groups.map(group => `
-    <section class="doc-rec-card">
+  document.getElementById("docRecommendationGroups").innerHTML = groups.map(group => {
+    const groupMeta = docMetaFor({
+      path: group.key || group.title,
+      label: group.title,
+      summary: group.summary,
+      importance: docGroupImportance(group)
+    });
+    const groupFamily = docFamilyFor({...groupMeta, path: `${group.key || ""} ${group.title || ""}`});
+    return `
+    <section class="doc-rec-card" data-importance="${h(groupMeta.importance)}" data-doc-family="${h(groupFamily)}">
       <b>${h(group.title)}</b>
       <span>${h(group.summary)}</span>
+      <div class="doc-rec-meta">
+        <span class="importance-pill" data-importance="${h(groupMeta.importance)}">${h(groupMeta.importance)}</span>
+        <span class="pill">${h(docCategoryLabel({...groupMeta, path: `${group.key || ""} ${group.title || ""}`}))}</span>
+      </div>
       <div class="doc-rec-links">
-        ${(group.entries || []).slice(0, 4).map(entry => `
-          <button class="doc-rec-link" data-library-path="${h(entry.path)}" data-library-type="${h(entry.type || "file")}" type="button">
-            <span>${h(entry.label)}</span>
-            <small>${h(entry.importance || group.importance || "参考")}</small>
+        ${(group.entries || []).slice(0, 4).map(entry => {
+          const meta = docMetaFor(entry);
+          return `
+          <button class="doc-rec-link" data-importance="${h(meta.importance)}" data-doc-family="${h(docFamilyFor(meta))}" data-library-path="${h(meta.path)}" data-library-type="${h(meta.type || "file")}" type="button">
+            <span>${h(meta.label)}</span>
+            <small>${h(docCategoryLabel(meta))}</small>
           </button>
-        `).join("")}
+        `;
+        }).join("")}
       </div>
     </section>
-  `).join("");
+  `;
+  }).join("");
   document.querySelectorAll("#docRecommendationGroups [data-library-path]").forEach(button => {
     button.addEventListener("click", () => openLibraryEntry(button.dataset.libraryPath, button.dataset.libraryType));
   });
@@ -2142,12 +3145,15 @@ function renderDocRoots(){
     {label:".teams/skills", path:".teams/skills", summary:"项目级 skills", type:"dir", importance:"必要"},
     {label:".codex/agents", path:".codex/agents", summary:"Codex agents", type:"dir", importance:"必要"}
   ];
-  document.getElementById("docRootList").innerHTML = roots.map(root => `
-    <button class="doc-root-button ${currentTreeDir === root.path || currentTreeDir.startsWith(`${root.path}/`) ? "is-on" : ""}" data-root-path="${h(root.path)}" type="button">
-      ${h(root.label)}
-      <span>${h(root.path)}</span>
+  document.getElementById("docRootList").innerHTML = roots.map(root => {
+    const meta = docMetaFor(root);
+    return `
+    <button class="doc-root-button ${currentTreeDir === meta.path || currentTreeDir.startsWith(`${meta.path}/`) ? "is-on" : ""}" data-importance="${h(meta.importance)}" data-doc-family="${h(docFamilyFor(meta))}" data-root-path="${h(meta.path)}" type="button">
+      ${h(meta.label)}
+      <span>${h(docCategoryLabel(meta))} · ${h(meta.path)}</span>
     </button>
-  `).join("");
+  `;
+  }).join("");
   document.querySelectorAll("[data-root-path]").forEach(button => {
     button.addEventListener("click", () => openLibraryEntry(button.dataset.rootPath, "dir"));
   });
@@ -2158,7 +3164,7 @@ function renderBranchDocs(){
     <button class="reader-btn" data-doc-path="${h(path)}" type="button">${h(label)}</button>
   `).join("");
   document.querySelectorAll("[data-doc-path]").forEach(button => {
-    button.addEventListener("click", () => openDoc(button.dataset.docPath));
+    button.addEventListener("click", () => openDoc(button.dataset.docPath, {fullscreen:true}));
   });
 }
 
@@ -2168,7 +3174,7 @@ function openLibraryEntry(path, type = "file"){
     return;
   }
   if(type === "dir") loadTree(path);
-  else openDoc(path);
+  else openDoc(path, {fullscreen:true});
 }
 
 function renderDocCollections(){
@@ -2310,21 +3316,30 @@ function renderInspector(entry = currentDocEntry){
   const title = meta.path ? meta.label : "未选择文档";
   const source = meta.path || "选择左侧文件夹或中间文件";
   const importance = meta.importance || "参考";
+  const category = docCategoryLabel(meta);
+  const family = docFamilyFor(meta);
+  const titleShell = document.querySelector(".doc-inspector-title");
+  if(titleShell){
+    titleShell.dataset.importance = importance;
+    titleShell.dataset.docFamily = family;
+  }
   const importanceNode = document.getElementById("docImportancePill");
   importanceNode.textContent = importance;
   importanceNode.dataset.importance = importance;
   document.getElementById("docTitle").textContent = title;
   document.getElementById("docSource").textContent = source;
-  document.getElementById("docPreviewSource").textContent = meta.path ? `${meta.kind} · ${meta.path}` : "选择 Markdown / TOML / JSON 文档后在这里预览。";
+  document.getElementById("docPreviewSource").textContent = meta.path ? `${category} · ${meta.kind} · ${meta.path}` : "选择 Markdown / TOML / JSON 文档后在这里预览。";
   document.getElementById("docMetaGrid").innerHTML = meta.path ? `
     <div><b>类型</b><span>${h(meta.kind)}</span></div>
     <div><b>重要性</b><span>${h(importance)}</span></div>
+    <div><b>分类</b><span>${h(category)}</span></div>
     <div><b>路径</b><span>${h(meta.path)}</span></div>
     <div><b>更新</b><span>${h(formatDate(meta.updated_at))}</span></div>
     <div><b>大小</b><span>${h(formatBytes(meta.size_bytes))}</span></div>
     <div><b>标签</b><span>${h((meta.tags || []).join(" / ") || "—")}</span></div>
     <div><b>说明</b><span>${h(meta.summary)}</span></div>
   ` : `<div><b>状态</b><span>请选择一个文档或文件夹</span></div>`;
+  updateFullscreenButton();
 }
 
 function renderFolderList(children = currentTreeChildren){
@@ -2337,14 +3352,14 @@ function renderFolderList(children = currentTreeChildren){
   const dirs = filtered.filter(item => item.type === "dir").length;
   const files = filtered.filter(item => item.type !== "dir").length;
   document.getElementById("folderSummary").textContent = `${dirs} 个文件夹 · ${files} 个文档`;
-  document.getElementById("docFolderList").innerHTML = filtered.map(item => {
+  const rows = filtered.map(item => {
     const meta = docMetaFor(item);
     return `
-      <button class="doc-item-row ${meta.path === currentDocPath ? "is-on" : ""}" data-folder-type="${h(meta.type)}" data-folder-path="${h(meta.path)}" type="button">
+      <button class="doc-item-row ${meta.path === currentDocPath ? "is-on" : ""}" data-importance="${h(meta.importance)}" data-doc-family="${h(docFamilyFor(meta))}" data-folder-type="${h(meta.type)}" data-folder-path="${h(meta.path)}" type="button">
         <span class="doc-icon">${h(fileIcon(meta))}</span>
         <span class="doc-item-main">
           <b>${h(meta.label)}</b>
-          <span>${h(meta.path)}</span>
+          <span>${h(docCategoryLabel(meta))} · ${h(meta.path)}</span>
         </span>
         <span class="doc-item-meta">
           <span class="importance-pill" data-importance="${h(meta.importance)}">${h(meta.importance)}</span>
@@ -2352,7 +3367,11 @@ function renderFolderList(children = currentTreeChildren){
         </span>
       </button>
     `;
-  }).join("") || `<div class="flow-note"><b>当前筛选无结果</b><p style="margin-top:6px">清空搜索或返回上级目录。</p></div>`;
+  }).join("");
+  document.getElementById("docFolderList").innerHTML = rows ? `
+    <div class="doc-folder-list-head"><span></span><span>名称 / 路径</span><span>级别 / 类型</span></div>
+    ${rows}
+  ` : `<div class="flow-note" style="margin:12px"><b>当前筛选无结果</b><p style="margin-top:6px">清空搜索或返回上级目录。</p></div>`;
   document.querySelectorAll("[data-folder-path]").forEach(button => {
     button.addEventListener("click", () => {
       if(button.dataset.folderType === "dir") openLibraryEntry(button.dataset.folderPath, "dir");
@@ -2374,7 +3393,7 @@ function renderTree(children){
   document.querySelectorAll("[data-tree-path]").forEach(button => {
     button.addEventListener("click", () => {
       if(button.dataset.treeType === "dir") loadTree(button.dataset.treePath);
-      else openDoc(button.dataset.treePath);
+      else openDoc(button.dataset.treePath, {fullscreen:true});
     });
   });
 }
@@ -2514,6 +3533,7 @@ function renderMarkdown(markdown){
 function renderOutline(markdown){
   const headings = collectHeadings(markdown).slice(0, 24);
   document.getElementById("docOutline").innerHTML = headings.length ? `
+    <div class="outline-title">文档目录</div>
     <div class="outline-list">
       ${headings.map(heading => `
         <button class="outline-row" data-outline-id="${h(heading.id)}" data-level="${h(heading.level)}" type="button">${h(heading.text)}</button>
@@ -2528,7 +3548,48 @@ function renderOutline(markdown){
   });
 }
 
-async function openDoc(path){
+function updateFullscreenButton(){
+  const button = document.getElementById("docFullscreenButton");
+  if(!button) return;
+  const canRead = Boolean(serveMode && currentDocPath && currentDocEntry?.type !== "dir");
+  button.disabled = !canRead;
+  button.textContent = canRead ? "全屏浏览" : "选择文档";
+}
+
+function renderFullscreenReader(){
+  if(!currentDocPath || currentDocEntry?.type === "dir") return;
+  const meta = docMetaFor(currentDocEntry);
+  const theme = docTheme(meta);
+  const category = docCategoryLabel(meta);
+  const head = document.getElementById("docFullscreenHead");
+  if(head){
+    head.style.setProperty("--doc-fullscreen-bg", theme.bg);
+    head.style.setProperty("--doc-fullscreen-tone", theme.tone);
+  }
+  document.getElementById("docFullscreenTitle").textContent = meta.label || basename(currentDocPath);
+  document.getElementById("docFullscreenSource").textContent = `${category} · ${meta.importance} · ${meta.kind} · ${meta.path}`;
+  document.getElementById("docFullscreenBody").innerHTML = renderMarkdown(currentDocContent);
+}
+
+function openFullscreenReader(){
+  if(!serveMode || !currentDocPath || currentDocEntry?.type === "dir") return;
+  renderFullscreenReader();
+  const overlay = document.getElementById("docFullscreenOverlay");
+  overlay.classList.add("is-open");
+  overlay.setAttribute("aria-hidden", "false");
+  document.body.classList.add("doc-fullscreen-active");
+  document.getElementById("docExitFullscreenButton").focus();
+}
+
+function closeFullscreenReader(){
+  const overlay = document.getElementById("docFullscreenOverlay");
+  overlay.classList.remove("is-open");
+  overlay.setAttribute("aria-hidden", "true");
+  document.body.classList.remove("doc-fullscreen-active");
+  document.getElementById("docFullscreenButton")?.focus();
+}
+
+async function openDoc(path, options = {}){
   if(!serveMode) return;
   const doc = await fetchJson(`/api/file?path=${encodeURIComponent(path)}`);
   currentDocPath = doc.path;
@@ -2544,6 +3605,11 @@ async function openDoc(path){
   renderInspector(currentDocEntry);
   document.getElementById("markdownBody").innerHTML = renderMarkdown(doc.content);
   renderOutline(doc.content);
+  if(document.getElementById("docFullscreenOverlay")?.classList.contains("is-open")){
+    renderFullscreenReader();
+  } else if(options.fullscreen){
+    openFullscreenReader();
+  }
   document.querySelectorAll("[data-tree-path]").forEach(button => button.classList.toggle("is-on", button.dataset.treePath === currentDocPath));
   document.querySelectorAll("[data-folder-path]").forEach(button => button.classList.toggle("is-on", button.dataset.folderPath === currentDocPath));
 }
@@ -2572,7 +3638,7 @@ async function searchDocs(){
     </button>
   `).join("") || `<div class="flow-note"><b>无结果</b></div>`;
   document.querySelectorAll("[data-search-path]").forEach(button => {
-    button.addEventListener("click", () => openDoc(button.dataset.searchPath));
+    button.addEventListener("click", () => openDoc(button.dataset.searchPath, {fullscreen:true}));
   });
 }
 
@@ -2598,6 +3664,7 @@ function initDocLibrary(){
   const modePill = document.getElementById("docModePill");
   modePill.textContent = serveMode ? "serve" : "file";
   modePill.className = `pill ${serveMode ? "b-green" : "b-yellow"}`;
+  document.querySelector(".doc-preview")?.classList.toggle("is-visible", !serveMode);
   renderDocRecommendations();
   renderDocRoots();
   renderInspector();
@@ -2619,11 +3686,25 @@ function initDocLibrary(){
   });
   document.getElementById("docOpenButton").addEventListener("click", () => {
     if(currentDocEntry?.type === "dir") loadTree(currentDocEntry.path);
-    else if(currentDocPath) openDoc(currentDocPath);
+    else if(currentDocPath) openFullscreenReader();
+  });
+  document.getElementById("docFullscreenButton").addEventListener("click", openFullscreenReader);
+  document.getElementById("docExitFullscreenButton").addEventListener("click", closeFullscreenReader);
+  document.getElementById("docFullscreenCopyButton").addEventListener("click", () => {
+    const path = currentDocEntry?.type === "dir" ? "" : currentDocPath;
+    if(path) copyText(path, document.getElementById("docFullscreenCopyButton"));
+  });
+  document.getElementById("docFullscreenOverlay").addEventListener("click", event => {
+    if(event.target.id === "docFullscreenOverlay") closeFullscreenReader();
+  });
+  window.addEventListener("keydown", event => {
+    if(event.key === "Escape" && document.getElementById("docFullscreenOverlay")?.classList.contains("is-open")){
+      closeFullscreenReader();
+    }
   });
   document.getElementById("docCopyButton").addEventListener("click", async () => {
     const path = currentDocEntry?.path || currentDocPath;
-    if(path) await navigator.clipboard.writeText(path);
+    if(path) copyText(path, document.getElementById("docCopyButton"));
   });
   document.getElementById("docRevealButton").addEventListener("click", async () => {
     const path = currentDocEntry?.path || currentDocPath;
@@ -2840,7 +3921,220 @@ function renderDevData(){
   `).join("");
 }
 
-const pageIds = ["overview", "tasks", "product-flow", "docs", "dev-data", "branches", "release-log"];
+const DEFAULT_NAV_ITEMS = [
+  {page:"overview", label:"总览"},
+  {page:"tasks", label:"任务进度"},
+  {page:"dev-data", label:"开发数据"},
+  {page:"branches", label:"分支管理"},
+  {page:"product-flow", label:"产品结构图"},
+  {page:"docs", label:"文档库"},
+  {page:"release-log", label:"发布记录"}
+];
+const pageIds = DEFAULT_NAV_ITEMS.map(item => item.page);
+const navItemByPage = new Map(DEFAULT_NAV_ITEMS.map(item => [item.page, item]));
+const NAV_ORDER_STORAGE_KEY = "xai-dev-dashboard.navOrder.v1";
+let currentPage = "overview";
+let navOrder = readNavOrder();
+let navDragState = null;
+let navDropPlacement = null;
+
+function sameOrder(a, b){
+  return a.length === b.length && a.every((value, index) => value === b[index]);
+}
+
+function sanitizeNavOrder(order){
+  const seen = new Set();
+  const next = [];
+  (Array.isArray(order) ? order : []).forEach(page => {
+    if(pageIds.includes(page) && !seen.has(page)){
+      seen.add(page);
+      next.push(page);
+    }
+  });
+  pageIds.forEach(page => {
+    if(!seen.has(page)) next.push(page);
+  });
+  return next;
+}
+
+function readNavOrder(){
+  try{
+    const raw = localStorage.getItem(NAV_ORDER_STORAGE_KEY);
+    return sanitizeNavOrder(raw ? JSON.parse(raw) : pageIds);
+  }catch{
+    return [...pageIds];
+  }
+}
+
+function saveNavOrder(){
+  try{
+    if(sameOrder(navOrder, pageIds)){
+      localStorage.removeItem(NAV_ORDER_STORAGE_KEY);
+      return;
+    }
+    localStorage.setItem(NAV_ORDER_STORAGE_KEY, JSON.stringify(navOrder));
+  }catch{}
+}
+
+function syncNavActive(page = currentPage){
+  document.querySelectorAll(".nav a[data-page]").forEach(link => {
+    link.classList.toggle("is-active", link.dataset.page === page);
+  });
+}
+
+function moveNavPage(page, direction){
+  const index = navOrder.indexOf(page);
+  const nextIndex = direction === "up" ? index - 1 : index + 1;
+  if(index < 0 || nextIndex < 0 || nextIndex >= navOrder.length) return;
+  [navOrder[index], navOrder[nextIndex]] = [navOrder[nextIndex], navOrder[index]];
+  saveNavOrder();
+  renderPrimaryNav();
+}
+
+function clearNavDropIndicators(){
+  document.querySelectorAll("#primaryNavList .nav-item").forEach(item => {
+    item.classList.remove("is-drop-before", "is-drop-after");
+  });
+}
+
+function showNavDropPlacement(placement){
+  clearNavDropIndicators();
+  navDropPlacement = placement;
+  if(!placement) return;
+  const target = document.querySelector(`#primaryNavList [data-nav-item="${placement.targetPage}"]`);
+  target?.classList.add(placement.position === "after" ? "is-drop-after" : "is-drop-before");
+}
+
+function navPlacementFromCoordinates(clientX, clientY){
+  const list = document.getElementById("primaryNavList");
+  if(!list || !navDragState) return null;
+  const items = [...list.querySelectorAll(".nav-item")]
+    .filter(item => item.dataset.navItem !== navDragState.page);
+  if(!items.length) return null;
+  const isHorizontal = getComputedStyle(list).display === "flex";
+  const ordered = items.sort((a, b) => {
+    const ar = a.getBoundingClientRect();
+    const br = b.getBoundingClientRect();
+    return isHorizontal ? ar.left - br.left : ar.top - br.top;
+  });
+  for(const item of ordered){
+    const rect = item.getBoundingClientRect();
+    const midpoint = isHorizontal ? rect.left + rect.width / 2 : rect.top + rect.height / 2;
+    const pointer = isHorizontal ? clientX : clientY;
+    if(pointer < midpoint){
+      return {targetPage:item.dataset.navItem, position:"before"};
+    }
+  }
+  return {targetPage:ordered[ordered.length - 1].dataset.navItem, position:"after"};
+}
+
+function reorderNavPage(page, placement){
+  if(!page || !placement) return;
+  const withoutDragged = navOrder.filter(item => item !== page);
+  const anchorIndex = withoutDragged.indexOf(placement.targetPage);
+  if(anchorIndex < 0) return;
+  const insertIndex = placement.position === "after" ? anchorIndex + 1 : anchorIndex;
+  const nextOrder = [
+    ...withoutDragged.slice(0, insertIndex),
+    page,
+    ...withoutDragged.slice(insertIndex)
+  ];
+  if(sameOrder(nextOrder, navOrder)) return;
+  navOrder = sanitizeNavOrder(nextOrder);
+  saveNavOrder();
+  renderPrimaryNav();
+}
+
+function cleanupNavDrag(){
+  window.removeEventListener("pointermove", handleNavDragMove);
+  window.removeEventListener("pointerup", finishNavDrag);
+  document.body.classList.remove("is-nav-dragging");
+  document.querySelectorAll("#primaryNavList .nav-item").forEach(item => {
+    item.classList.remove("is-dragging", "is-drop-before", "is-drop-after");
+  });
+  navDragState = null;
+  navDropPlacement = null;
+}
+
+function handleNavDragMove(event){
+  if(!navDragState) return;
+  const dx = event.clientX - navDragState.startX;
+  const dy = event.clientY - navDragState.startY;
+  if(!navDragState.active && Math.hypot(dx, dy) < 4) return;
+  event.preventDefault();
+  navDragState.active = true;
+  showNavDropPlacement(navPlacementFromCoordinates(event.clientX, event.clientY));
+}
+
+function finishNavDrag(event){
+  if(!navDragState) return;
+  const page = navDragState.page;
+  const placement = navDropPlacement || (navDragState.active ? navPlacementFromCoordinates(event.clientX, event.clientY) : null);
+  const shouldReorder = navDragState.active && placement;
+  cleanupNavDrag();
+  if(shouldReorder) reorderNavPage(page, placement);
+}
+
+function startNavDrag(event, page){
+  if(event.button !== undefined && event.button !== 0) return;
+  const item = event.currentTarget.closest(".nav-item");
+  if(!item) return;
+  event.preventDefault();
+  navDragState = {
+    page,
+    startX:event.clientX,
+    startY:event.clientY,
+    active:false
+  };
+  item.classList.add("is-dragging");
+  document.body.classList.add("is-nav-dragging");
+  window.addEventListener("pointermove", handleNavDragMove, {passive:false});
+  window.addEventListener("pointerup", finishNavDrag);
+}
+
+function renderPrimaryNav(){
+  const list = document.getElementById("primaryNavList");
+  if(!list) return;
+  list.innerHTML = navOrder.map((page, index) => {
+    const item = navItemByPage.get(page);
+    if(!item) return "";
+    return `
+      <div class="nav-item" data-nav-item="${h(item.page)}">
+        <a class="nav-link" href="#${h(item.page)}" data-page="${h(item.page)}" draggable="false"><span>${h(item.label)}</span></a>
+        <span class="nav-drag-handle" data-nav-drag-page="${h(item.page)}" role="button" tabindex="0" aria-label="拖拽移动 ${h(item.label)}" title="拖拽排序">⋮⋮</span>
+      </div>
+    `;
+  }).join("");
+  list.querySelectorAll("a[data-page]").forEach(link => {
+    link.addEventListener("click", event => {
+      event.preventDefault();
+      setPage(link.dataset.page);
+    });
+  });
+  list.querySelectorAll("[data-nav-drag-page]").forEach(handle => {
+    handle.addEventListener("pointerdown", event => startNavDrag(event, handle.dataset.navDragPage));
+    handle.addEventListener("keydown", event => {
+      if(event.key === "ArrowUp" || event.key === "ArrowLeft"){
+        event.preventDefault();
+        moveNavPage(handle.dataset.navDragPage, "up");
+      }
+      if(event.key === "ArrowDown" || event.key === "ArrowRight"){
+        event.preventDefault();
+        moveNavPage(handle.dataset.navDragPage, "down");
+      }
+    });
+  });
+  const resetButton = document.getElementById("navOrderReset");
+  if(resetButton){
+    resetButton.disabled = sameOrder(navOrder, pageIds);
+    resetButton.onclick = () => {
+      navOrder = [...pageIds];
+      saveNavOrder();
+      renderPrimaryNav();
+    };
+  }
+  syncNavActive();
+}
 
 function renderTaskProgress(){
   const tp = dashboardState.task_progress || {items:[], counts:{}, source_count:0, shipped:0};
@@ -2865,12 +4159,11 @@ function renderTaskProgress(){
 
 function setPage(page, updateHash = true){
   const nextPage = pageIds.includes(page) ? page : "overview";
+  currentPage = nextPage;
   document.querySelectorAll("[data-page-section]").forEach(section => {
     section.classList.toggle("is-active", section.dataset.pageSection === nextPage);
   });
-  document.querySelectorAll(".nav a[data-page]").forEach(link => {
-    link.classList.toggle("is-active", link.dataset.page === nextPage);
-  });
+  syncNavActive(nextPage);
   if(updateHash && location.hash !== `#${nextPage}`){
     history.pushState(null, "", `#${nextPage}`);
   }
@@ -2880,21 +4173,36 @@ function setPage(page, updateHash = true){
   });
 }
 
-document.querySelectorAll(".nav a[data-page]").forEach(link => {
-  link.addEventListener("click", event => {
-    event.preventDefault();
-    setPage(link.dataset.page);
-  });
-});
+renderPrimaryNav();
 
 document.querySelectorAll("[data-page-jump]").forEach(button => {
   button.addEventListener("click", () => setPage(button.dataset.pageJump));
+});
+
+document.getElementById("moduleDrawerClose").addEventListener("click", closeModuleDrawer);
+document.getElementById("moduleDrawerOverlay").addEventListener("click", closeModuleDrawer);
+document.getElementById("moduleDrawerPrimary").addEventListener("click", () => {
+  if(!activeDrawerModule) return;
+  openProductTarget(activeDrawerModule.target);
+  closeModuleDrawer();
+});
+document.getElementById("moduleDrawerLocate").addEventListener("click", () => {
+  if(!activeDrawerModule) return;
+  setPage("product-flow");
+  setProduct(activeDrawerModule.item.key);
+  closeModuleDrawer();
+});
+window.addEventListener("keydown", event => {
+  if(event.key === "Escape" && document.getElementById("moduleDrawer")?.classList.contains("is-open")){
+    closeModuleDrawer();
+  }
 });
 
 window.addEventListener("hashchange", () => setPage(location.hash.slice(1), false));
 
 renderOverview();
 renderKpis();
+renderOverviewFlow();
 renderOverviewModules();
 renderStructureMap();
 renderBranchFlow();
