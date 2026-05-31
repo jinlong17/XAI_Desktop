@@ -13,6 +13,7 @@
 | `account-device-identity-contract.md` | Shared account, device, session, admin-claim, and lifecycle contract for Account Cloud Sync surfaces |
 | `account-sync-local-first-boundaries.md` | Repository-driver ownership, local-first exclusions, and per-surface store mapping contract for Account Cloud Sync |
 | `account-sync-protocol-surface-contract.md` | Repository mutation to outbox/push/pull/conflict/retry cadence contract for Account Cloud Sync |
+| `account-sync-surface-adapters.md` | Web/App/Plugin surface-adapter responsibilities and consumption boundaries for Account Cloud Sync |
 | `tauri-commands-v0.md` | Tauri command、window label、capability allowlist contract |
 | `plugin-organizer-public-api-v0.md` | Host 与 `@repo/plugin-organizer` 的 public import / Grid content contract |
 
