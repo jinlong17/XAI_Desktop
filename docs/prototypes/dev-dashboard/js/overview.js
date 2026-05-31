@@ -196,10 +196,15 @@ function flowEdgePath(edge, positions, mode){
 function renderOverviewFlowExtras(layout){
   return (layout.extras || []).map(extra => {
     if(extra.type === "band"){
-      return `<div class="overview-flow-extra overview-flow-band" style="top:${h(extra.y)}px"><strong>${h(extra.title)}</strong>${h(extra.text)}</div>`;
+      return `
+        <div class="overview-flow-extra overview-flow-band" style="top:${h(extra.y)}px">
+          <span class="overview-flow-band-label" title="${h(extra.text)}"><strong>${h(extra.title)}</strong></span>
+        </div>
+      `;
     }
     if(extra.type === "line"){
-      return `<div class="overview-flow-extra overview-flow-line-label" data-tone="${h(extra.tone || "main")}" style="top:${h(extra.y)}px">${h(extra.text)}</div>`;
+      const x = Number.isFinite(Number(extra.x)) ? Number(extra.x) : 22;
+      return `<div class="overview-flow-extra overview-flow-line-label" data-tone="${h(extra.tone || "main")}" style="left:${h(x)}px;top:${h(extra.y)}px">${h(extra.text)}</div>`;
     }
     if(extra.type === "ring"){
       return `<div class="overview-flow-extra overview-flow-center-ring" style="left:calc(${(extra.x / OVERVIEW_FLOW_VIEWBOX.width) * 100}% - 110px);top:calc(${(extra.y / OVERVIEW_FLOW_VIEWBOX.height) * 100}% - 110px)"></div>`;

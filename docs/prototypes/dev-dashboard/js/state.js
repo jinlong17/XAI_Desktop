@@ -38,9 +38,9 @@ const FLOW_VIEW_CONFIG = {
       {from:"sync", to:"admin", tone:"cyan"}
     ],
     extras:[
-      {type:"label", text:"用户入口", x:64, y:36},
-      {type:"label", text:"桌面能力", x:64, y:300},
-      {type:"label", text:"同步 / 控制面", x:570, y:300}
+      {type:"label", text:"用户入口", x:0, y:0},
+      {type:"label", text:"桌面能力", x:0, y:328},
+      {type:"label", text:"同步 / 控制面", x:470, y:328}
     ]
   },
   layers:{
@@ -79,9 +79,9 @@ const FLOW_VIEW_CONFIG = {
       {from:"admin", to:"sync", tone:"adminline"}
     ],
     extras:[
-      {type:"line", text:"Web Line", y:70, tone:"webline"},
-      {type:"line", text:"Desktop Line", y:235, tone:"desktopline"},
-      {type:"line", text:"Admin Line", y:152, tone:"adminline"}
+      {type:"line", text:"Web Line", x:-8, y:0, tone:"webline"},
+      {type:"line", text:"Desktop Line", x:-8, y:318, tone:"desktopline"},
+      {type:"line", text:"Admin Line", x:-8, y:152, tone:"adminline"}
     ]
   },
   radial:{
@@ -100,7 +100,7 @@ const FLOW_VIEW_CONFIG = {
     ],
     extras:[
       {type:"ring", x:500, y:180},
-      {type:"label", text:"账号云同步作为中心能力", x:386, y:302}
+      {type:"label", text:"账号云同步作为中心能力", x:592, y:322}
     ]
   }
 };
