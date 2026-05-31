@@ -8,13 +8,13 @@
 | Target | account-sync-workflow-state-contract |
 | Title | Account Sync workflow state contract |
 | Roadmap | `docs/workflow/roadmap/account-cloud-sync-foundation.md` row #9 |
-| Status | READY_TO_SHIP |
-| Current Phase | FEATURE_VERIFY |
-| Suggested Next | ship |
+| Status | SHIPPED |
+| Current Phase | SHIP |
+| Suggested Next | — |
 | Automation Mode | A-Codex |
 | Verify Cross-vendor | yes |
-| Executor | feature-verify (A-Codex inline) |
-| Updated | 2026-05-31 07:48 PDT |
+| Executor | ship (gpt-5.3-codex) |
+| Updated | 2026-05-31 07:51 PDT |
 | Blockers | — |
 
 ## Feature Normalization
@@ -144,3 +144,4 @@ sync-health hook points deferred and read-only.
 | 2026-05-31 07:46 PDT | feature-auto-build (A-Codex inline) | Completed Phase 1 docs-only build: added canonical contract `docs/contracts/account-sync-workflow-state-contract.md`, registered it in `docs/contracts/README.md`, updated the review artifact state, and advanced workflow to `READY_FOR_VERIFY`. Verification command evidence: `git diff --check -- docs/contracts/account-sync-workflow-state-contract.md docs/contracts/README.md docs/reviews/account-sync-workflow-state-contract`; scope check via `git diff --stat -- docs/contracts/account-sync-workflow-state-contract.md docs/contracts/README.md docs/reviews/account-sync-workflow-state-contract`. | `d4b53fe` | feature-verify |
 | 2026-05-31 07:47 PDT | cross-vendor verify (Cursor Agent / `agent --plan -p --trust`) | PASS across all required gates. Verified docs-only single-intent scope, repository-truth preservation, explicit prohibition on workflow artifact entry into `RepoRecord`/`syncScope`/outbox/blob flows, source/cadence/authority/scope declarations for mixed-domain dashboards, forbidden-data coverage, no protocol/crypto/device-identity drift, and no implied activation of paused runtime lanes. | `d4b53fe` | feature-verify |
 | 2026-05-31 07:48 PDT | feature-verify (A-Codex inline) | Recorded the cross-vendor verification receipt, confirmed the feature is `READY_TO_SHIP`, and intentionally left roadmap row #9 untouched pending the separate ship gate. Verification evidence: `git show --stat --summary --format=fuller d4b53fe`; `git show --patch --stat --format=medium d4b53fe -- docs/contracts/account-sync-workflow-state-contract.md docs/contracts/README.md docs/reviews/account-sync-workflow-state-contract/dev_log.md`; `git diff --check -- docs/contracts/account-sync-workflow-state-contract.md docs/contracts/README.md docs/reviews/account-sync-workflow-state-contract`; `rg -n "RepoRecord|syncScope|repository truth|outbox|encrypted blob|source|cadence|authority|service-role|provider raw|raw logs|private user payload|sync-v1|plugin|admin|site" docs/contracts/account-sync-workflow-state-contract.md docs/reviews/account-sync-workflow-state-contract/{design.md,api.md,test.md,20260531-discovery-review.md}`; and the saved Cursor Agent receipt. | `d4b53fe` | ship |
+| 2026-05-31 07:51 PDT | ship (gpt-5.3-codex) | Executed ship gate for roadmap row #9: validated `Status = READY_TO_SHIP`, confirmed cross-vendor evidence file `docs/reviews/account-sync-workflow-state-contract/20260531-cross-vendor-verify.md` is tracked, reviewed required commits `d4b53fe` and `58047bd`, ran scoped `git diff --check`, and flipped both feature state and roadmap row #9 to `SHIPPED` without touching row #10. | `d4b53fe`, `58047bd`, this commit | done |
