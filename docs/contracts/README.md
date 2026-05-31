@@ -15,6 +15,7 @@
 | `account-sync-protocol-surface-contract.md` | Repository mutation to outbox/push/pull/conflict/retry cadence contract for Account Cloud Sync |
 | `account-sync-surface-adapters.md` | Web/App/Plugin surface-adapter responsibilities and consumption boundaries for Account Cloud Sync |
 | `account-sync-admin-read-models.md` | Admin control-plane read-model catalog, mutation guardrails, and workflow-truth boundaries for Account Cloud Sync |
+| `account-sync-verification-gates.md` | Master verification, observability, and ship-readiness gate matrix for Account Cloud Sync runtime rows |
 | `account-sync-workflow-state-contract.md` | Workflow-state governance rules for repository-truth artifacts, mixed workflow/account-sync dashboards, and derived-only workflow snapshot exposure |
 | `account-sync-site-entry-contract.md` | Public-boundary rules for the official Site surface: allowed/forbidden data tables, account-entry handoff, release/download/updater-metadata linking, sync/security claim sources, and Site PROPOSED gate |
 | `tauri-commands-v0.md` | Tauri command、window label、capability allowlist contract |
