@@ -8,13 +8,13 @@
 | Target | account-sync-admin-read-models |
 | Title | Account Sync admin read models |
 | Roadmap | `docs/workflow/roadmap/account-cloud-sync-foundation.md` row #7 |
-| Status | READY_TO_SHIP |
-| Current Phase | FEATURE_VERIFY |
-| Suggested Next | ship |
+| Status | SHIPPED |
+| Current Phase | SHIP |
+| Suggested Next | — |
 | Automation Mode | A-Codex |
 | Verify Cross-vendor | yes |
-| Executor | feature-verify (A-Codex inline) |
-| Updated | 2026-05-31 07:00 PDT |
+| Executor | ship (gpt-5.3-codex) |
+| Updated | 2026-05-31 07:03 PDT |
 | Blockers | — |
 
 ## Feature Normalization
@@ -131,3 +131,4 @@ repository truth rather than cloud truth.
 | 2026-05-31 06:54 PDT | feature-auto-build (A-Codex inline) | Completed Phase 1 docs-only build: added canonical contract `docs/contracts/account-sync-admin-read-models.md`, registered it in `docs/contracts/README.md`, and advanced workflow to `READY_FOR_VERIFY`. Verification command evidence: `git diff --check -- docs/contracts/account-sync-admin-read-models.md docs/contracts/README.md docs/reviews/account-sync-admin-read-models`; commit scope confirmation checked via `git show --name-only --stat --oneline HEAD` after commit and limited to this feature. | `29b1a27` | feature-verify |
 | 2026-05-31 07:00 PDT | cross-vendor verify (Cursor Agent / `agent --plan -p`) | PASS across all required gates. Verified docs-only scope, full read-model catalog coverage, source/deferred-domain separation, browser-secret prohibitions, admin-audit separation, mutation guardrails, repository-truth workflow handling, and no contract drift into `RepoRecord`/`syncScope`/crypto/device identity/runtime `sync-v1`. | `29b1a27` | feature-verify |
 | 2026-05-31 07:00 PDT | feature-verify (A-Codex inline) | Recorded the cross-vendor verification receipt, confirmed the feature is `READY_TO_SHIP`, and intentionally left roadmap row #7 untouched pending the separate ship gate. Verification evidence: `git show --stat --summary --format=fuller 29b1a27`; contract/review artifact readback; and the saved Cursor Agent receipt. | this commit | ship |
+| 2026-05-31 07:03 PDT | ship (gpt-5.3-codex) | Executed the ship gate for roadmap row #7: confirmed `Status = READY_TO_SHIP`, validated commits `29b1a27` and `f8fc43b`, verified referenced cross-vendor evidence is tracked, and flipped the feature and manifest row #7 to `SHIPPED` without touching row #8+. | `29b1a27`, `f8fc43b`, this commit | done |
