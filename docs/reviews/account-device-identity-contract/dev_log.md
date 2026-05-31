@@ -8,13 +8,13 @@
 | Target | account-device-identity-contract |
 | Title | Account device identity contract |
 | Roadmap | `docs/workflow/roadmap/account-cloud-sync-foundation.md` row #3 |
-| Status | READY_TO_SHIP |
-| Current Phase | FEATURE_VERIFY |
-| Suggested Next | ship |
+| Status | SHIPPED |
+| Current Phase | SHIP |
+| Suggested Next | workflow complete |
 | Automation Mode | A-Codex |
 | Verify Cross-vendor | yes |
-| Executor | feature-verify (gpt-5.3-codex) |
-| Updated | 2026-05-31 05:31 PDT |
+| Executor | ship (gpt-5.3-codex) |
+| Updated | 2026-05-31 05:34 PDT |
 | Blockers | — |
 
 ## Brief / Review Docs
@@ -105,3 +105,4 @@ feature-verify (A-Codex lead + Cursor cross-vendor read-only verify),
 | 2026-05-31 05:26 PDT | feature-review (gpt-5.3-codex) | Approved the docs-only identity contract plan with no structural revisions required. | — | feature-build |
 | 2026-05-31 05:26 PDT | feature-auto-build (gpt-5.3-codex) | Built the canonical identity contract, registered it in `docs/contracts/README.md`, and advanced the docs-only feature to `READY_FOR_VERIFY`. | `9fd1cb7` | feature-verify |
 | 2026-05-31 05:31 PDT | feature-verify (gpt-5.3-codex) | Recorded Cursor Agent cross-vendor verify evidence, confirmed all 10 gates PASS, and advanced the feature to `READY_TO_SHIP`. | `this commit` | ship |
+| 2026-05-31 05:34 PDT | ship (gpt-5.3-codex) | Verified ship gate readiness, flipped roadmap row #3 and feature dev_log to `SHIPPED`, and pushed the branch. | `this commit` | workflow complete |
