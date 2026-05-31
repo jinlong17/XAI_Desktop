@@ -58,4 +58,6 @@ python3 -m http.server 4178 -d docs/prototypes/admin-dashboard
 
 - 这是**设计原型**,仅存放于 `docs/prototypes/`,不参与构建 / CI,不影响 Web / Desktop 产品。
 - 真实落地:建议作为独立 `apps/admin/` surface(与用户端 `apps/web/` 隔离权限与部署),技术栈 shadcn/ui + TanStack Table + Tremor。
-- **治理**:管理中台是新 surface,实际实现需依 **ADR-0010 §D4** 提交 P0 carve-out;原型阶段(本目录)无需。
+- 系统接入计划: [`INTEGRATION_PLAN.md`](./INTEGRATION_PLAN.md) 梳理页面审查、数据/功能模块矩阵、系统边界和开发阶段。
+- Roadmap manifest: [`docs/workflow/roadmap/xai-admin-dashboard-system-integration.md`](../../workflow/roadmap/xai-admin-dashboard-system-integration.md) 是正式接入的 Workflow V2 入口。
+- **治理**:管理中台是 ADR-0013 D1 的 Proposed Control Plane;实际实现前需先确认 admin line 的优先级、package/deploy target,再按 Workflow V2 roadmap 执行。原型阶段(本目录)无需。

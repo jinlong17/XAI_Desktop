@@ -1027,7 +1027,7 @@ function buildProductLines(sourceProducts, roadmapManifests, pluginMap) {
     plugin: [["PLUGIN_MAP", "docs/PLUGIN_MAP.md"]],
     sync: [["ADR-0013 同步", "docs/adr/0013-branch-sync-governance.md"]],
     site: [],
-    admin: [["Admin 原型", "docs/prototypes/admin-dashboard/README.md"], ["接入计划", "docs/prototypes/admin-dashboard/INTEGRATION_PLAN.md"], ["ADR-0013 控制面", "docs/adr/0013-branch-sync-governance.md"]]
+    admin: [["Admin README", "docs/prototypes/admin-dashboard/README.md"], ["接入计划", "docs/prototypes/admin-dashboard/INTEGRATION_PLAN.md"], ["ADR-0013 控制面", "docs/adr/0013-branch-sync-governance.md"]]
   };
   const relatedDocsFor = key => {
     const seen = new Set();
