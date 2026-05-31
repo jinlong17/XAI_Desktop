@@ -8,13 +8,13 @@
 | Target | account-sync-entity-scope-matrix |
 | Title | Account Cloud Sync entity scope matrix |
 | Roadmap | `docs/workflow/roadmap/account-cloud-sync-foundation.md` row #2 |
-| Status | READY_FOR_VERIFY |
+| Status | READY_TO_SHIP |
 | Current Phase | FEATURE_VERIFY |
-| Suggested Next | feature-verify |
+| Suggested Next | ship |
 | Automation Mode | A-Codex |
 | Verify Cross-vendor | yes |
-| Executor | feature-auto-build (gpt-5.3-codex) |
-| Updated | 2026-05-31 05:16 PDT |
+| Executor | feature-verify (gpt-5.3-codex) |
+| Updated | 2026-05-31 05:19 PDT |
 | Blockers | — |
 
 ## Brief / Review Docs
@@ -22,7 +22,7 @@
 - Seed brief: `docs/reviews/account-sync-entity-scope-matrix/20260531-roadmap-seed.md`
 - Discovery review: `docs/reviews/account-sync-entity-scope-matrix/20260531-discovery-review.md`
 - Canonical contract: `docs/contracts/account-sync-entity-scope-matrix.md`
-- Cross-vendor verify: `(pending)`
+- Cross-vendor verify: `docs/reviews/account-sync-entity-scope-matrix/20260531-cross-vendor-verify.md`
 
 ## Phase Plan
 
@@ -61,11 +61,26 @@ feature-review (A-Codex inline), 2026-05-31 05:14 PDT. Verdict: APPROVED.
 
 ## Verification Notes
 
-Pending feature-verify.
+feature-verify (A-Codex lead + Cursor cross-vendor read-only verify),
+2026-05-31 05:19 PDT. Verdict: PASS - READY_TO_SHIP.
+
+- Gate 1 PASS: the matrix preserves Account Cloud Sync as shared infrastructure,
+  not a standalone product.
+- Gate 2 PASS: current and planned authority entities are fully classified.
+- Gate 3 PASS: product-surface read/write boundaries are explicit by class.
+- Gate 4 PASS: `device-local` never enters the remote outbox.
+- Gate 5 PASS: admin/control-plane read models remain separate from user
+  payloads and user sync audit.
+- Gate 6 PASS: clipboard, widget state, native window state, Keychain material,
+  and runtime caches remain local-first.
+- Gate 7 PASS: the contract does not redefine `RepoRecord`, `syncScope`, or
+  sync-v1 crypto.
+- Gate 8 PASS: build commit `c5ad0d8` is docs-only and reviewable.
+- Gate 9 PASS: runtime sync-v1 remains paused.
 
 ## Deferred Gates
 
-- Cross-vendor verify is required before `READY_TO_SHIP`.
+- Cross-vendor verify completed via Cursor Agent / Claude Sonnet read-only pass.
 
 ## Work Log
 
@@ -73,4 +88,5 @@ Pending feature-verify.
 |---|---|---|---|---|
 | 2026-05-31 05:12 PDT | feature-plan (gpt-5.3-codex) | Produced docs-only discovery review and phase plan for the entity scope matrix contract. | — | feature-review |
 | 2026-05-31 05:14 PDT | feature-review (gpt-5.3-codex) | Approved the docs-only entity scope matrix plan with no structural revisions required. | — | feature-build |
-| 2026-05-31 05:16 PDT | feature-auto-build (gpt-5.3-codex) | Built the canonical entity scope matrix contract, registered it in `docs/contracts/README.md`, and advanced the docs-only feature to `READY_FOR_VERIFY`. | `(pending commit)` | feature-verify |
+| 2026-05-31 05:16 PDT | feature-auto-build (gpt-5.3-codex) | Built the canonical entity scope matrix contract, registered it in `docs/contracts/README.md`, and advanced the docs-only feature to `READY_FOR_VERIFY`. | `c5ad0d8` | feature-verify |
+| 2026-05-31 05:19 PDT | feature-verify (gpt-5.3-codex) | Recorded Cursor/Claude cross-vendor verify evidence, confirmed all 9 gates PASS, and advanced the feature to `READY_TO_SHIP`. | `this commit` | ship |
