@@ -8,13 +8,13 @@
 | Target | account-sync-surface-adapters |
 | Title | Account Cloud Sync surface adapters |
 | Roadmap | `docs/workflow/roadmap/account-cloud-sync-foundation.md` row #6 |
-| Status | READY_FOR_VERIFY |
-| Current Phase | FEATURE_VERIFY |
-| Suggested Next | feature-verify |
+| Status | SHIPPED |
+| Current Phase | SHIP |
+| Suggested Next | — |
 | Automation Mode | A-Codex |
 | Verify Cross-vendor | yes |
-| Executor | feature-auto-build (gpt-5.3-codex) |
-| Updated | 2026-05-31 06:32 PDT |
+| Executor | ship (gpt-5.3-codex) |
+| Updated | 2026-05-31 06:42 PDT |
 | Blockers | — |
 
 ## Feature Normalization
@@ -37,6 +37,8 @@
   - `docs/reviews/account-sync-surface-adapters/design.md`
   - `docs/reviews/account-sync-surface-adapters/api.md`
   - `docs/reviews/account-sync-surface-adapters/test.md`
+- Cross-vendor verify:
+  `docs/reviews/account-sync-surface-adapters/20260531-cross-vendor-verify.md`
 
 ## Phase Plan
 
@@ -99,6 +101,33 @@ references at class level except where existing authorities already freeze the
 `organizer.item` field split, and keep all plugin and `sync-v1` runtime work
 explicitly paused.
 
+## Verification Summary
+
+- Reviewed build commit `aeade97` for scope, patch contents, and commit message
+  quality; the change stays single-intent and limited to the contract, contract
+  index, and workflow artifact.
+- Confirmed the shipped contract remains docs-only, does not redefine
+  `RepoRecord`, `syncScope`, crypto, protocol, or device identity, and does not
+  unpause plugin runtime or `sync-v1` runtime work.
+- Confirmed Web/App/Plugin adapter boundaries are explicit and consistent with
+  the shipped account-sync authorities plus ADR-0013 D3/D4, including Web ->
+  account cloud -> App topology, D3 routing for Desktop-impacting Web changes,
+  and repository-only plugin access.
+- Confirmed `docs/contracts/README.md` registers
+  `docs/contracts/account-sync-surface-adapters.md` correctly in the contracts
+  index.
+- Saved cross-vendor verification evidence at
+  `docs/reviews/account-sync-surface-adapters/20260531-cross-vendor-verify.md`
+  after a read-only `agent --plan -p` pass returned `READY_TO_SHIP`.
+
+## Residual Risks
+
+- `organizer.item` remains intentionally field-split by upstream authorities;
+  later runtime rows still need to prove the exact sync-safe versus local-only
+  boundary without inferring beyond rows #2 and #4.
+- No runtime/unit/manual sync tests were run because this feature is
+  documentation-only and intentionally keeps `sync-v1` paused.
+
 ## Work Log
 
 | Timestamp | Executor | Action | Commits | Next |
@@ -108,3 +137,7 @@ explicitly paused.
 | 2026-05-31 06:29 PDT | feature-review (gpt-5.3-codex) | Reviewed the discovery pack against the shipped account-sync contracts, ADR-0013 D3/D4, `data-repository-v0`, `TECHNICAL_REQUIREMENTS`, and paused `sync-v1`; approved one docs-only build phase with clarified review notes for sync-state vocabulary and entity-scope handling. | — | feature-build |
 | 2026-05-31 06:30 PDT | feature-full-loop | Child Handoff lacked `### State Verification`; performed manual fallback check against on-disk `docs/reviews/account-sync-surface-adapters/dev_log.md` and confirmed `Status = APPROVED`, `Suggested Next = feature-build`, `Automation Mode = A-Codex`, `Verify Cross-vendor = yes`. | — | feature-auto-build |
 | 2026-05-31 06:32 PDT | feature-auto-build (gpt-5.3-codex) | Completed Phase 1 docs-only build: added canonical contract `docs/contracts/account-sync-surface-adapters.md`, registered it in `docs/contracts/README.md`, and advanced workflow to `READY_FOR_VERIFY`. Verification evidence: `git diff --check -- docs/contracts/account-sync-surface-adapters.md docs/contracts/README.md docs/reviews/account-sync-surface-adapters/dev_log.md`; commit scope confirmation checked via `git show --name-only --stat --oneline HEAD` after commit, limited to contract + contracts index + review artifact update. | this commit | feature-verify |
+| 2026-05-31 06:34 PDT | feature-full-loop | Child Handoff lacked `### State Verification`; performed manual fallback check against on-disk `docs/reviews/account-sync-surface-adapters/dev_log.md`, read commit `aeade97`, and confirmed `Status = READY_FOR_VERIFY`, `Suggested Next = feature-verify`, `Automation Mode = A-Codex`, `Verify Cross-vendor = yes`. | `aeade97` | feature-verify |
+| 2026-05-31 06:38 PDT | feature-verify (gpt-5-codex) | Verified the docs-only surface-adapter contract against the discovery pack, planning docs, shipped account-sync authorities, ADR-0013 D3/D4, and roadmap row #6; reviewed commit `aeade97` as a single-intent docs-only change; saved cross-vendor verification evidence at `docs/reviews/account-sync-surface-adapters/20260531-cross-vendor-verify.md`; and advanced the feature to `READY_TO_SHIP`. Verification evidence: `git show --stat --summary --format=fuller aeade97`; `git show --patch --stat --format=medium aeade97 -- docs/contracts/account-sync-surface-adapters.md docs/contracts/README.md docs/reviews/account-sync-surface-adapters/dev_log.md`; `git diff --check -- docs/contracts/README.md docs/contracts/account-sync-surface-adapters.md docs/reviews/account-sync-surface-adapters`; `rg -n "RepoRecord|syncScope|crypto|device identity|Web->Desktop|D3|D4|plugin runtime|sync-v1|direct Web->App|SQLite|SQLCipher|Keychain|Tauri|IndexedDB|Supabase|organizer\\.item|unpause|paused" docs/contracts/account-sync-surface-adapters.md docs/reviews/account-sync-surface-adapters/{design.md,api.md,test.md,20260531-discovery-review.md}`; and `agent --plan -p` returned `READY_TO_SHIP`. | `aeade97` | ship |
+| 2026-05-31 06:40 PDT | feature-full-loop | Child Handoff lacked `### State Verification`; performed manual fallback check against on-disk `docs/reviews/account-sync-surface-adapters/dev_log.md`, confirmed `Status = READY_TO_SHIP`, `Suggested Next = ship`, and verified saved evidence at `docs/reviews/account-sync-surface-adapters/20260531-cross-vendor-verify.md`. | `aeade97` | ship |
+| 2026-05-31 06:42 PDT | ship (gpt-5.3-codex) | Executed ship gate for roadmap row #6: confirmed `Status = READY_TO_SHIP`, validated commit `aeade97`, ensured referenced review evidence files are present and staged, flipped feature status to `SHIPPED`, and set roadmap row #6 to `SHIPPED` without touching row #7+. | `aeade97`, `this commit` | done |
