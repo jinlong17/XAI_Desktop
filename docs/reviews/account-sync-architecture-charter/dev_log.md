@@ -8,13 +8,13 @@
 | Target | account-sync-architecture-charter |
 | Title | Account Cloud Sync architecture charter |
 | Roadmap | `docs/workflow/roadmap/account-cloud-sync-foundation.md` row #1 |
-| Status | READY_TO_SHIP |
-| Current Phase | FEATURE_VERIFY |
-| Suggested Next | ship |
+| Status | SHIPPED |
+| Current Phase | SHIP |
+| Suggested Next | roadmap row #2 / feature-plan |
 | Automation Mode | A-Codex |
 | Verify Cross-vendor | yes |
-| Executor | A-Codex inline + Cursor/Sonnet cross-vendor verify |
-| Updated | 2026-05-31 04:52 PDT |
+| Executor | ship (gpt-5.3-codex) |
+| Updated | 2026-05-31 04:58 PDT |
 | Blockers | — |
 
 ## Brief / Review Docs
@@ -113,3 +113,4 @@ cross-vendor verify (Cursor Agent / `claude-4.6-sonnet-medium`), 2026-05-31
 | 2026-05-31 04:45 PDT | feature-verify (Codex worker) | BLOCKED on missing build commit and missing cross-vendor evidence; content gates passed. | — | feature-build follow-up |
 | 2026-05-31 04:47 PDT | feature-build (A-Codex inline) | Committed docs-only build as `22de0e6`, resolving commit-integrity blocker. | `22de0e6` | cross-vendor verify |
 | 2026-05-31 04:52 PDT | cross-vendor verify (Cursor Agent / Claude Sonnet) | PASS across all 10 gates. Status -> READY_TO_SHIP. | — | ship |
+| 2026-05-31 04:58 PDT | ship (gpt-5.3-codex) | Verified READY_TO_SHIP guard, roadmap row #1, cross-vendor evidence, and commit integrity; marked feature as SHIPPED and prepared push. | `22de0e6`, `15d71f5` | roadmap row #2 / feature-plan |

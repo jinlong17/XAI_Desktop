@@ -13,7 +13,7 @@
 
 | # | Slug | Source | Depends On | Dep Semantics | Status | Automation Mode | Verify Cross-vendor | Last Run | Note |
 |---|------|--------|------------|---------------|--------|-----------------|---------------------|----------|------|
-| 1 | account-sync-architecture-charter | docs/reviews/account-sync-architecture-charter/20260531-roadmap-seed.md | - | - | READY_TO_SHIP | (default) | (default) | 2026-05-31T04:52:47-0700 | A-Codex serial; build `22de0e6`; cross-vendor PASS via Cursor/Sonnet; dev_log=docs/reviews/account-sync-architecture-charter/dev_log.md |
+| 1 | account-sync-architecture-charter | docs/reviews/account-sync-architecture-charter/20260531-roadmap-seed.md | - | - | SHIPPED | (default) | (default) | 2026-05-31T04:58:00-0700 | A-Codex serial; build `22de0e6`; verify/status `15d71f5`; shipped via ship gate; dev_log=docs/reviews/account-sync-architecture-charter/dev_log.md |
 | 2 | account-sync-entity-scope-matrix | docs/reviews/account-sync-entity-scope-matrix/20260531-roadmap-seed.md | account-sync-architecture-charter | shipped | PENDING | (default) | (default) | - | Entity sync matrix and local-first matrix over `syncScope`. |
 | 3 | account-device-identity-contract | docs/reviews/account-device-identity-contract/20260531-roadmap-seed.md | account-sync-architecture-charter | shipped | PENDING | (default) | (default) | - | Shared account/device/session/admin-claim contract. |
 | 4 | account-sync-local-first-boundaries | docs/reviews/account-sync-local-first-boundaries/20260531-roadmap-seed.md | account-sync-entity-scope-matrix, account-device-identity-contract | shipped | PENDING | (default) | (default) | - | Repository-driver and local-first boundary plan for Web/App/Plugin. |
