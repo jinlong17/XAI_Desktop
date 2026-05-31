@@ -8,13 +8,13 @@
 | Target | account-sync-entity-scope-matrix |
 | Title | Account Cloud Sync entity scope matrix |
 | Roadmap | `docs/workflow/roadmap/account-cloud-sync-foundation.md` row #2 |
-| Status | READY_TO_SHIP |
-| Current Phase | FEATURE_VERIFY |
-| Suggested Next | ship |
+| Status | SHIPPED |
+| Current Phase | SHIP |
+| Suggested Next | roadmap row #3 |
 | Automation Mode | A-Codex |
 | Verify Cross-vendor | yes |
-| Executor | feature-verify (gpt-5.3-codex) |
-| Updated | 2026-05-31 05:19 PDT |
+| Executor | ship (gpt-5.3-codex) |
+| Updated | 2026-05-31 05:21 PDT |
 | Blockers | — |
 
 ## Brief / Review Docs
@@ -90,3 +90,4 @@ feature-verify (A-Codex lead + Cursor cross-vendor read-only verify),
 | 2026-05-31 05:14 PDT | feature-review (gpt-5.3-codex) | Approved the docs-only entity scope matrix plan with no structural revisions required. | — | feature-build |
 | 2026-05-31 05:16 PDT | feature-auto-build (gpt-5.3-codex) | Built the canonical entity scope matrix contract, registered it in `docs/contracts/README.md`, and advanced the docs-only feature to `READY_FOR_VERIFY`. | `c5ad0d8` | feature-verify |
 | 2026-05-31 05:19 PDT | feature-verify (gpt-5.3-codex) | Recorded Cursor/Claude cross-vendor verify evidence, confirmed all 9 gates PASS, and advanced the feature to `READY_TO_SHIP`. | `this commit` | ship |
+| 2026-05-31 05:21 PDT | ship (gpt-5.3-codex) | Completed ship gate checks, flipped roadmap/dev-log row #2 to `SHIPPED`, and pushed the docs-only ship commit on `codex/sync/account-cloud-sync-foundation`. | `this commit` | roadmap row #3 |
