@@ -117,6 +117,9 @@ bug-diagnose → bug-fix → bug-verify → ship
 - Every workflow write must maintain: Workflow, Executor, Updated, Suggested Next, Work Log
 - `feature-build` does ONE phase per run, then stops for human confirmation
 - `ship` requires READY_TO_SHIP status and human confirmation to push
+- Codex + Claude Code parallel-use rules live in
+  `docs/workflow/project/workflow.md`; use that file for cross-tool ownership,
+  branch, commit, review, and `A-Codex` normalization rules.
 
 ### Documentation Contract
 - `packages/plugin-*/docs/design.md` — Decision snapshot
@@ -268,6 +271,7 @@ Track and keep synchronized at minimum:
 - `.cursor/agents/`, `.cursor/rules/`
 - `.teams/skills/`
 - `docs/workflow/_portable/`
+- `docs/workflow/project/workflow.md`
 - `CLAUDE.md`, `AGENTS.md`, `.cursor/rules/handoff.mdc`
 
 Rules:
@@ -277,7 +281,7 @@ Rules:
 - Prefer changing `.agents/templates/` and `docs/workflow/_portable/` first,
   then regenerate platform outputs when applicable.
 - Before finishing an agent/skill change, run a tracking audit such as:
-  `git ls-files -o --exclude-standard .agents .claude .codex .cursor .teams docs/workflow/_portable AGENTS.md CLAUDE.md`
+  `git ls-files -o --exclude-standard .agents .claude .codex .cursor .teams docs/workflow/_portable docs/workflow/project AGENTS.md CLAUDE.md`
   and resolve any project-level untracked files intentionally.
 - After committing, push the branch when the change is meant to be available on
   another machine.
