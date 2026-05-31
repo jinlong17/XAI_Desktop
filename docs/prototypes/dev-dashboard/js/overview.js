@@ -213,6 +213,56 @@ function renderOverviewFlowExtras(layout){
   }).join("");
 }
 
+let overviewFlowObservedCanvas = null;
+let overviewFlowResizeObserver = null;
+let overviewFlowCollisionFrame = null;
+
+function overviewFlowRectsIntersect(a, b, padding = 6){
+  return !(
+    a.right <= b.left + padding ||
+    b.right <= a.left + padding ||
+    a.bottom <= b.top + padding ||
+    b.bottom <= a.top + padding
+  );
+}
+
+function resolveOverviewFlowLabelCollisions(){
+  const canvas = document.getElementById("overviewFlowCanvas");
+  if(!canvas) return;
+  const labels = [...canvas.querySelectorAll(".overview-flow-line-label,.overview-flow-band-label")];
+  labels.forEach(label => {
+    label.classList.remove("is-colliding");
+    label.removeAttribute("aria-hidden");
+  });
+  const nodeRects = [...canvas.querySelectorAll(".overview-flow-node")]
+    .map(node => node.getBoundingClientRect());
+  labels.forEach(label => {
+    const labelRect = label.getBoundingClientRect();
+    const collides = nodeRects.some(nodeRect => overviewFlowRectsIntersect(labelRect, nodeRect));
+    label.classList.toggle("is-colliding", collides);
+    if(collides) label.setAttribute("aria-hidden", "true");
+  });
+}
+
+function scheduleOverviewFlowCollisionCheck(){
+  if(overviewFlowCollisionFrame) cancelAnimationFrame(overviewFlowCollisionFrame);
+  overviewFlowCollisionFrame = requestAnimationFrame(() => {
+    overviewFlowCollisionFrame = null;
+    resolveOverviewFlowLabelCollisions();
+  });
+}
+
+function observeOverviewFlowCanvas(){
+  const canvas = document.getElementById("overviewFlowCanvas");
+  if(!canvas || canvas === overviewFlowObservedCanvas) return;
+  overviewFlowResizeObserver?.disconnect();
+  overviewFlowObservedCanvas = canvas;
+  if("ResizeObserver" in window){
+    overviewFlowResizeObserver = new ResizeObserver(scheduleOverviewFlowCollisionCheck);
+    overviewFlowResizeObserver.observe(canvas);
+  }
+}
+
 function renderOverviewFlow(){
   const modules = overviewModules.length ? overviewModules : buildOverviewModulesFallback(products);
   const moduleByKey = new Map(modules.map(item => [item.key, item]));
@@ -251,6 +301,8 @@ function renderOverviewFlow(){
     ${nodes}
   `;
   document.getElementById("overviewFlowCanvas").dataset.flowView = view.key;
+  observeOverviewFlowCanvas();
+  scheduleOverviewFlowCollisionCheck();
   const summary = modules.reduce((acc, item) => {
     acc[moduleStage(item)] += 1;
     return acc;

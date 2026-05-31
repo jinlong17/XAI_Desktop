@@ -437,7 +437,10 @@
     white-space:nowrap;
     overflow:hidden;
     text-overflow:ellipsis;
+    transition:opacity .16s ease,visibility .16s ease;
   }
+  .overview-flow-line-label.is-colliding,
+  .overview-flow-band-label.is-colliding{opacity:0;visibility:hidden}
   .overview-flow-line-label[data-tone="webline"]{border-color:var(--accent-border);color:var(--module-blue)}
   .overview-flow-line-label[data-tone="desktopline"]{border-color:color-mix(in srgb,var(--module-green) 28%,var(--line));color:var(--module-green)}
   .overview-flow-line-label[data-tone="adminline"]{border-color:color-mix(in srgb,var(--module-red) 28%,var(--line));color:var(--module-red)}
@@ -2238,6 +2241,11 @@
     --doc-bg:var(--module-yellow-bg);
     --doc-border:color-mix(in srgb,var(--module-yellow) 38%,var(--line));
     --doc-ink:var(--module-yellow);
+  }
+  @media (max-width:1460px){
+    .overview-flow-canvas{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;min-height:auto}
+    .overview-flow-svg,.overview-flow-extra{display:none}
+    .overview-flow-node{position:relative;inset:auto !important;width:100%;min-height:88px;transform:none !important}
   }
   @media (max-width:1180px){
     .hero,.flow-grid,.split,.docs-layout,.release-dashboard,.overview-flow-section{grid-template-columns:1fr}

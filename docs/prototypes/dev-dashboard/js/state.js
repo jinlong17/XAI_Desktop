@@ -69,7 +69,7 @@ const FLOW_VIEW_CONFIG = {
     nodeOrder:["site","web","app","plugin","sync","admin"],
     positions:{
       site:{x:150,y:90}, web:{x:430,y:90}, app:{x:150,y:255},
-      plugin:{x:430,y:255}, sync:{x:660,y:172}, admin:{x:885,y:172}
+      plugin:{x:430,y:255}, sync:{x:620,y:172}, admin:{x:875,y:172}
     },
     edges:[
       {from:"site", to:"web", tone:"webline"},
