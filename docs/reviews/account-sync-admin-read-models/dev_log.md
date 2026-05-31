@@ -8,13 +8,13 @@
 | Target | account-sync-admin-read-models |
 | Title | Account Sync admin read models |
 | Roadmap | `docs/workflow/roadmap/account-cloud-sync-foundation.md` row #7 |
-| Status | READY_FOR_VERIFY |
+| Status | READY_TO_SHIP |
 | Current Phase | FEATURE_VERIFY |
-| Suggested Next | feature-verify |
+| Suggested Next | ship |
 | Automation Mode | A-Codex |
 | Verify Cross-vendor | yes |
-| Executor | feature-auto-build (A-Codex inline) |
-| Updated | 2026-05-31 06:54 PDT |
+| Executor | feature-verify (A-Codex inline) |
+| Updated | 2026-05-31 07:00 PDT |
 | Blockers | — |
 
 ## Feature Normalization
@@ -36,6 +36,8 @@
   - `docs/reviews/account-sync-admin-read-models/design.md`
   - `docs/reviews/account-sync-admin-read-models/api.md`
   - `docs/reviews/account-sync-admin-read-models/test.md`
+- Cross-vendor verify:
+  `docs/reviews/account-sync-admin-read-models/20260531-cross-vendor-verify.md`
 
 ## Phase Plan
 
@@ -101,7 +103,24 @@ repository truth rather than cloud truth.
 
 ## Verification Summary
 
-- Pending feature-verify.
+- Reviewed build commit `29b1a27` for scope, patch contents, and commit message
+  quality; the change stays single-intent and docs-only.
+- Confirmed the shipped contract remains a control-plane boundary document,
+  keeps Admin PROPOSED and isolated, and does not redefine `RepoRecord`,
+  `syncScope`, crypto, device identity, or runtime `sync-v1`.
+- Confirmed the contract includes the full read-model catalog, source-system
+  separation, deferred-domain rules, browser-secret prohibitions, admin-audit
+  separation, mutation guardrails, and workflow-source-of-truth rules.
+- Saved cross-vendor verification evidence at
+  `docs/reviews/account-sync-admin-read-models/20260531-cross-vendor-verify.md`
+  after a read-only Cursor Agent pass returned PASS across all required gates.
+
+## Residual Risks
+
+- Provider-status and billing details still depend on future upstream approvals
+  before any runtime admin activation.
+- No runtime/unit/manual tests were run because this feature is documentation-
+  only and intentionally keeps `admin` and `sync-v1` runtime work out of scope.
 
 ## Work Log
 
@@ -109,4 +128,6 @@ repository truth rather than cloud truth.
 |---|---|---|---|---|
 | 2026-05-31 06:52 PDT | feature-plan (A-Codex inline) | Produced the docs-only planning pack for roadmap row #7, selected `docs/contracts/account-sync-admin-read-models.md` as the canonical build target, and advanced workflow state to `NEEDS_REVIEW`. | — | feature-review |
 | 2026-05-31 06:54 PDT | feature-review (A-Codex inline) | Reviewed the discovery pack against the shipped account-sync contracts, ADR-0013 D4, `data-repository-v0`, `TECHNICAL_REQUIREMENTS`, and paused `sync-v1`; approved one docs-only build phase with clarified review notes for metadata-only admin read models, audit separation, and workflow-source-of-truth handling. | — | feature-build |
-| 2026-05-31 06:54 PDT | feature-auto-build (A-Codex inline) | Completed Phase 1 docs-only build: added canonical contract `docs/contracts/account-sync-admin-read-models.md`, registered it in `docs/contracts/README.md`, and advanced workflow to `READY_FOR_VERIFY`. Verification command evidence: `git diff --check -- docs/contracts/account-sync-admin-read-models.md docs/contracts/README.md docs/reviews/account-sync-admin-read-models`; commit scope confirmation checked via `git show --name-only --stat --oneline HEAD` after commit and limited to this feature. | this commit | feature-verify |
+| 2026-05-31 06:54 PDT | feature-auto-build (A-Codex inline) | Completed Phase 1 docs-only build: added canonical contract `docs/contracts/account-sync-admin-read-models.md`, registered it in `docs/contracts/README.md`, and advanced workflow to `READY_FOR_VERIFY`. Verification command evidence: `git diff --check -- docs/contracts/account-sync-admin-read-models.md docs/contracts/README.md docs/reviews/account-sync-admin-read-models`; commit scope confirmation checked via `git show --name-only --stat --oneline HEAD` after commit and limited to this feature. | `29b1a27` | feature-verify |
+| 2026-05-31 07:00 PDT | cross-vendor verify (Cursor Agent / `agent --plan -p`) | PASS across all required gates. Verified docs-only scope, full read-model catalog coverage, source/deferred-domain separation, browser-secret prohibitions, admin-audit separation, mutation guardrails, repository-truth workflow handling, and no contract drift into `RepoRecord`/`syncScope`/crypto/device identity/runtime `sync-v1`. | `29b1a27` | feature-verify |
+| 2026-05-31 07:00 PDT | feature-verify (A-Codex inline) | Recorded the cross-vendor verification receipt, confirmed the feature is `READY_TO_SHIP`, and intentionally left roadmap row #7 untouched pending the separate ship gate. Verification evidence: `git show --stat --summary --format=fuller 29b1a27`; contract/review artifact readback; and the saved Cursor Agent receipt. | this commit | ship |
