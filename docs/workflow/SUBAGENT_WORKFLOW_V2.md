@@ -25,10 +25,10 @@ bug-diagnose → bug-fix → bug-verify → ship
 
 resync 后本项目已具备完整 V2 portable 层:`feature-full-loop` / `bugfix-full-loop` meta-orchestrator 的 **Phase 0 是 3 字段**——① Requirement/Bug 缺失=硬 BLOCKED(free-text 装不进 picker,绝不问)② Automation Mode picker Q1 ③ Verify Cross-vendor picker Q2(同一次 AskUserQuestion;host 不能问时默认 `yes`)。事件驱动 `B-Codex`/`B-Cursor`(headless `codex exec` / `cursor-agent --print --force`)+ `C-*` 经 `.git/hooks/post-commit` 链式 wrapper 自动跨厂商派发 review/verify。完整规格见 `docs/workflow/_portable/07-automation-mode-picker.md` §1A/§2.6 + `04-automation-loop.md` §3.4。前置:`codex` 已认证、`cursor-agent login`、`brew install coreutils util-linux`。
 
-合法 Automation Mode 只有 8 个:`A-Claude` / `B-Codex` / `B-Cursor` / `C-Codex` /
-`C-Cursor` / `D-Codex` / `D-Cursor` / `D-Codex+Cursor`。没有 `A-Codex`。
-当前 Codex session 要自己跑单工具流程时,按 Level 1 手动顺序 inline 执行;不要把它编码成
-Automation Mode。
+合法 Automation Mode 有 9 个:`A-Claude` / `A-Codex` / `B-Codex` / `B-Cursor` /
+`C-Codex` / `C-Cursor` / `D-Codex` / `D-Cursor` / `D-Codex+Cursor`。
+`A-Codex` 是 Codex-primary 单工具长跑模式:当前 Codex session 作为 lead 推进 V2 状态机;
+spawn 深度不够时按 Level 1 手动顺序 inline 执行 worker contract。
 
 ### Level 3 — Roadmap Orchestration（可选,跨多 feature 编排）
 

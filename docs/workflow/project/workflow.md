@@ -15,8 +15,9 @@ still read as Claude Code-first:
 
 1. The default examples say "Start the ... agent" and assume Claude Code's Task
    tool is the lead runtime.
-2. `A-Claude` is the only legal single-IDE Automation Mode. There is no
-   `A-Codex` variant in the portable matrix.
+2. The original portable matrix only had `A-Claude` as the single-IDE mode,
+   which left long-running Codex-primary development without a first-class
+   Automation Mode.
 3. `claude --bg`, Agent View, and Claude background sessions are Claude Code
    features. Codex should not treat them as Codex automation.
 4. `feature-dev-loop`, `bugfix-loop`, and full-loop meta-orchestrators can hit
@@ -26,9 +27,9 @@ still read as Claude Code-first:
    It must be explicit: one writer owns a file set at a time, and reviewers do
    not silently repair the writer's work inside the same phase.
 
-The fix is not to rename the whole workflow around Codex. The fix is to keep
-the portable V2 state machine and add clear tool-specific entry points plus a
-shared concurrency contract.
+The fix is to keep the portable V2 state machine, add `A-Codex` as a first-class
+single-IDE/lead mode, and keep `D-Codex` reserved for "another lead delegates
+implementation to Codex".
 
 ---
 
@@ -57,6 +58,7 @@ Legal Workflow V2 Automation Modes are:
 
 ```text
 A-Claude
+A-Codex
 B-Codex
 B-Cursor
 C-Codex
@@ -70,12 +72,12 @@ Rules:
 
 - `A-Claude` means the full loop runs inside Claude Code. It is not a generic
   "single tool" placeholder.
-- `A-Codex` is invalid. If a prompt contains `Automation Mode: A-Codex`,
-  normalize it before execution:
-  - use `A-Claude` only when the intended owner is Claude Code single-IDE mode;
-  - use `D-Codex` when Codex should be the external build executor;
-  - use "Codex Level 1 inline" when the current Codex session should run the
-    manual V2 sequence itself.
+- `A-Codex` means the full loop runs under Codex as the lead runtime. In a
+  long-running Codex session, this is the normal "stay in Codex and drive the
+  V2 state machine" mode.
+- `D-Codex` means a non-Codex lead delegates implementation phases to Codex
+  through the external executor path. Do not use `D-Codex` as a substitute for
+  Codex-primary long-running development.
 - `B-Codex` and `C-Codex` require the event-driven hook/CLI path to be verified.
   Prefer `D-Codex` for normal Codex delegation.
 - `Verify Cross-vendor: yes` remains the default for meaningful implementation
@@ -85,12 +87,35 @@ Rules:
 
 ## 4. Codex Workflow
 
-Codex has two supported paths.
+Codex has three supported paths.
 
-### 4.1 Codex Level 1 Inline
+### 4.1 A-Codex — Codex Lead Long-Run
 
-Use this when the user is already in a Codex session and wants the work done
-here, or when nested agent spawn is unavailable.
+Use this when the user is already in Codex and wants the roadmap or feature to
+continue here for a long time.
+
+```text
+Automation Mode: A-Codex
+Verify Cross-vendor: yes
+```
+
+Semantics:
+
+- Codex is the lead runtime for intake, plan, review-loop, build/fix, verify,
+  and the pre-ship handoff.
+- No `codex exec` delegation is required; the current Codex session may spawn
+  Codex subagents when available.
+- If agent-spawn depth is unavailable, the current Codex parent session executes
+  the next V2 role inline while preserving that role's output contract.
+- The pipeline still stops before `ship`; ship remains a separate human-triggered
+  gate.
+- In roadmap-loop, pair `A-Codex` with `dispatch: serial` for current-session
+  execution or `dispatch: emit` when you want pasteable feature blocks.
+
+### 4.2 Codex Level 1 Inline
+
+This is the fallback execution technique inside `A-Codex` when the current Codex
+session cannot spawn the next worker cleanly.
 
 ```text
 1. Classify the product module.
@@ -105,9 +130,10 @@ here, or when nested agent spawn is unavailable.
    response is only the `## Handoff` block.
 ```
 
-Use this path instead of inventing `A-Codex`.
+Use this path to implement the `A-Codex` contract without requiring a nested
+meta-orchestrator.
 
-### 4.2 Codex as External Executor
+### 4.3 Codex as External Executor
 
 Use this when Claude Code or roadmap-loop remains the lead coordinator and
 Codex is delegated implementation work.
@@ -242,13 +268,13 @@ Use these defaults unless the user says otherwise:
 
 | Situation | Recommended path |
 |---|---|
-| Small repo/doc fix in current Codex session | Codex Level 1 inline + focused verification. |
+| Small repo/doc fix in current Codex session | `A-Codex` or Codex Level 1 inline + focused verification. |
 | High-risk architecture/security/native work | `A-Claude` plan/review plus cross-vendor verify. |
 | Broad TypeScript implementation with clear plan | Claude Code lead + `D-Codex` build + Claude verify. |
 | Roadmap decomposition | `/xai-roadmap-loop mode: init`, review manifest, then `emit` or `serial`. |
 | Roadmap parallel execution in Claude Agent View | `/xai-roadmap-loop` run with `bg` after preflight. |
-| Current-session Codex roadmap execution | Use `emit` or `serial`; do not request `claude --bg`. |
-| User provides `A-Codex` | Correct it before run; choose `D-Codex` or Codex Level 1 inline. |
+| Current-session Codex roadmap execution | `Automation Mode: A-Codex` + `dispatch: serial`; use `emit` when you want pasteable feature blocks. |
+| Non-Codex lead wants Codex implementation | `D-Codex` with `Verify Cross-vendor: yes`. |
 
 ---
 

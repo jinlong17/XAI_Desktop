@@ -134,6 +134,8 @@ class ProjectConfig:
     feature_root: str
     review_root: str
     project_workflow_doc: str
+    feature_sop_doc: str
+    bugfix_sop_doc: str
     feature_map_doc: str
     refactor_plan_doc: str
     onboarding_doc: str
@@ -154,6 +156,8 @@ class ProjectConfig:
             ("<onboarding_doc>", self.onboarding_doc),
             ("<review_root>", self.review_root),
             ("<project_workflow_doc>", self.project_workflow_doc),
+            ("<your_feature_sop>", self.feature_sop_doc),
+            ("<your_bugfix_sop>", self.bugfix_sop_doc),
             ("<roadmap_manifest_dir>", self.roadmap_manifest_dir),
             ("<feature_root>", self.feature_root),
             ("<orchestrator_marker_dir>", self.orchestrator_marker_dir),
@@ -236,6 +240,16 @@ def infer_project_config(root: Path) -> ProjectConfig:
             root,
             ("docs/workflow/project/SUBAGENT_WORKFLOW_V2.md", "docs/workflow/SUBAGENT_WORKFLOW_V2.md"),
             "docs/workflow/project/SUBAGENT_WORKFLOW_V2.md",
+        ),
+        feature_sop_doc=_first_existing(
+            root,
+            ("docs/workflow/SOP_NEW_FEATURE.md", "docs/workflow/project/SOP_NEW_FEATURE.md"),
+            "docs/workflow/project/SOP_NEW_FEATURE.md",
+        ),
+        bugfix_sop_doc=_first_existing(
+            root,
+            ("docs/workflow/SOP_BUGFIX.md", "docs/workflow/project/SOP_BUGFIX.md"),
+            "docs/workflow/project/SOP_BUGFIX.md",
         ),
         feature_map_doc=_first_existing(root, ("docs/FEATURE_MAP.md", "docs/PLUGIN_MAP.md"), "docs/FEATURE_MAP.md"),
         refactor_plan_doc=_first_existing(

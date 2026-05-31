@@ -8,15 +8,13 @@ description: Parent-session feature orchestration recipe for running the full Wo
 Parent-session runtime entry for one feature's Workflow V2 pipeline.
 
 Use this skill instead of spawning the `feature-full-loop` subagent when the host tool withholds
-recursive `Task` / agent-spawn from spawned subagents (Claude Code's default behaviour, see
-SUBAGENT_WORKFLOW_V2.md's Claude Code runtime constraint note). The old `feature-full-loop` agent
-remains a portable contract / compatibility wrapper; this skill is the recommended executable path.
+recursive `Task` / agent-spawn from spawned subagents. The old `feature-full-loop` agent remains a
+portable contract / compatibility wrapper; this skill is the recommended executable path.
 
 ## Read First
 
 - `docs/workflow/SUBAGENT_WORKFLOW_V2.md`
 - `docs/workflow/SOP_NEW_FEATURE.md`
-- `docs/workflow/_portable/usage-guide.md` §5
 - `docs/workflow/_portable/04-automation-loop.md`
 - `docs/workflow/_portable/07-automation-mode-picker.md`
 
@@ -34,18 +32,17 @@ remains a portable contract / compatibility wrapper; this skill is the recommend
      independently.
    - `Verify Cross-vendor: no` → `feature-dev-loop` is allowed only on hosts where it can actually
      spawn; otherwise use `feature-auto-build` + `feature-verify` anyway.
-5. **Between every worker, read `packages/<feature>/docs/dev_log.md`.** Do not trust a child Handoff
-   without verifying the real Status Panel. XAI plugin slices live at `packages/plugin-<name>/`, so
-   `<feature>` resolves to the full `plugin-<name>` slug.
-6. **Background/worktree safe.** This skill may be launched by `xai-roadmap-loop dispatch: bg`
-   inside a Claude Code background session and its isolated worktree. In that case, keep all
-   reads/writes in the current checkout, do not clean up the background session/worktree, and
-   preserve any `Roadmap Manifest:`, `Background Session:`, or `Worktree:` fields passed in the
+5. **Between every worker, read `packages/<feature>/docs/dev_log.md`.** Do not trust a child
+   Handoff without verifying the real Status Panel. If project convention maps feature slugs to a
+   prefixed package/path, resolve `<feature>` to the concrete directory before reading.
+6. **Background/worktree safe.** This skill may be launched by `xai-roadmap-loop
+   dispatch: bg` inside a Claude Code background session and its isolated worktree. In that case,
+   keep all reads/writes in the current checkout, do not clean up the background session/worktree,
+   and preserve any `Roadmap Manifest:`, `Background Session:`, or `Worktree:` fields passed in the
    prompt so the final Next Step can hand `ship` the right worktree context.
-7. **Multi-window / macOS real-hardware gate.** If the feature touches multi-window behaviour,
-   `packages/core/src/events/` typed events, Tauri command signatures, or macOS native APIs
-   (NSWindow level / focus / DnD), record in the final Handoff that real-hardware verification is
-   required before the human ship gate. See SOP_NEW_FEATURE.md Phase 6.
+7. **Native / real-hardware gate.** If the feature touches multi-window behaviour, typed event
+   contracts, host-app command signatures, or native OS APIs, record in the final Handoff that
+   real-hardware verification is required before the human ship gate.
 
 ## Inputs
 
@@ -54,7 +51,7 @@ Fresh start:
 ```text
 /xai-feature-full-loop
 Requirement: <freeform requirement or roadmap source excerpt>
-Automation Mode: <A-Claude | B-Codex | B-Cursor | C-Codex | C-Cursor | D-Codex | D-Cursor | D-Codex+Cursor>
+Automation Mode: <A-Claude | A-Codex | B-Codex | B-Cursor | C-Codex | C-Cursor | D-Codex | D-Cursor | D-Codex+Cursor>
 Verify Cross-vendor: <yes|no>  # default yes when omitted and no picker is available
 ```
 
@@ -62,7 +59,7 @@ Resume:
 
 ```text
 /xai-feature-full-loop
-Feature: <canonical-feature-slug>             # e.g. plugin-organizer
+Feature: <canonical-feature-slug>
 Roadmap Manifest: <optional manifest path>
 Background Session: <optional bg session id/name>
 Worktree: <optional absolute worktree path>
@@ -81,12 +78,14 @@ Worktree: <optional absolute worktree path>
    with the review notes. Stop as BLOCKED after `Max Revise` attempts (default 3). Continue only
    when `dev_log` says `Status: APPROVED`.
 5. **Build.**
+   - If `Automation Mode: A-Codex` and worker spawn is unavailable, execute the
+     next worker contract inline in the current Codex parent session.
    - If `Verify Cross-vendor: yes`: dispatch `feature-auto-build`; continue only when `dev_log`
      says `Status: READY_FOR_VERIFY`.
    - If `Verify Cross-vendor: no` and the host supports the loop worker: dispatch
      `feature-dev-loop`; continue only when `dev_log` says `READY_TO_SHIP` or stop on `BLOCKED`.
-   - If the loop worker is unavailable or blocked by Task recursion (the documented Claude Code
-     constraint), fall back to `feature-auto-build`.
+   - If the loop worker is unavailable or blocked by Task recursion, fall back to
+     `feature-auto-build`.
 6. **Verify.** If `dev_log` is `READY_FOR_VERIFY`, dispatch `feature-verify` independently. Continue
    only when `dev_log` says `READY_TO_SHIP`; stop on `BLOCKED`.
 7. **Human ship gate.** Stop. Output the current Status Panel and the literal next command:
@@ -98,11 +97,10 @@ Worktree: <optional absolute worktree path>
 
 End with a compact Handoff-style block containing:
 
-- Feature / slug (typically `plugin-<name>`)
-- Current `dev_log` Status Panel values actually read from disk (`packages/<feature>/docs/dev_log.md`)
+- Feature / slug
+- Current `dev_log` Status Panel values actually read from disk
 - Workers dispatched
-- Blockers, if any (incl. "real-hardware verification still required" when applicable per
-  constraint #7)
+- Blockers, if any, including real-hardware verification still required when applicable
 - Next Step
 
 Do not append a conversational "continue?" prompt after the Next Step.

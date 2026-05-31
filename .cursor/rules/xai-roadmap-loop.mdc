@@ -60,7 +60,7 @@ behaviour and the hard constraints below.
 14. **`bg` must protect worktrees and quota.** Before launching bg sessions, satisfy the clean-tree /
     `worktree.baseRef=head` / inline-content visibility gate, respect `Wave Concurrency Cap` (default
     `3`), queue overflow rows with `QUEUED_BG`, and make ship instructions point to the background
-    session worktree. Agent View PR dots are never the A2K truth source.
+    session worktree. Agent View PR dots are never the project truth source.
 15. **Dispatch confirmation is mandatory, in Chinese, on every `run`.** After resolving the candidate
     dispatch mode but before emitting prompt blocks, marking rows `IN_PROGRESS`, launching bg
     sessions, or dispatching any worker, present a Chinese AskUserQuestion-style confirmation that
@@ -135,7 +135,7 @@ Propose a decomposition; the shared-tail review gate is where the author confirm
 
 - For each row drafted, fire the per-feature Automation Mode picker per
   `_portable/07-automation-mode-picker.md` §5 (smart inheritance shortcut on by default):
-  - **Row #1:** full 4-option picker → answer becomes header `Default Automation Mode`; row #1's
+  - **Row #1:** full 5-option picker → answer becomes header `Default Automation Mode`; row #1's
     Mode cell written as `(default)`.
   - **Row #2..N:** AskUserQuestion with 2 options — "Same as Default (<Mode_1>)" → write
     `(default)`; "Pick a different Mode" → fire full picker → write explicit variant.
@@ -224,7 +224,7 @@ row per the 5-layer fallback in `_portable/07-automation-mode-picker.md` §4. Su
 If layer 4 fires the picker and the host tool does not support AskUserQuestion, STOP with Handoff:
 Status `BLOCKED`, Blocker "Manifest header 'Default Automation Mode' missing or invalid; cannot
 ask interactively in this tool.", Next Step "Edit `docs/workflow/roadmap/<roadmap_name>.md` header
-`Default Automation Mode:` to one of the 8 legal variants (see `_portable/04-automation-loop.md`
+`Default Automation Mode:` to one of the 9 legal variants (see `_portable/04-automation-loop.md`
 §3), then re-run."
 
 Record the resolution outcome in a per-session log line (not in the manifest):
@@ -422,7 +422,7 @@ After launching the wave, STOP. Output:
 - `claude agents --cwd /path/to/repo`
 - `Worktree: pending until first file edit`; check with `git worktree list | grep SESSION_ID`
 - bg-aware ship prompt blocks for every READY_TO_SHIP row
-- warning: Agent View PR dots are not A2K truth; `dev_log` Status Panel + reconcile are truth
+- warning: Agent View PR dots are not project truth; `dev_log` Status Panel + reconcile are truth
 - the fallback emit blocks for any row that failed to launch
 - Next Step: monitor Agent View; after rows reach READY_TO_SHIP and are shipped, re-run
   `xai-roadmap-loop manifest: docs/workflow/roadmap/<roadmap_name>.md`
@@ -447,8 +447,8 @@ that `Worktree:` line. Do not tell the user to `claude rm SESSION_ID` until afte
 commits were pushed and the dev_log was marked `SHIPPED`; removing the background session can remove
 the worktree.
 
-Agent View is a monitor, not the A2K source of truth. Its "Ready for review" / PR indicators only
-reflect Claude Code PR state when a PR exists. A2K shippability is determined by
+Agent View is a monitor, not the project source of truth. Its "Ready for review" / PR indicators only
+reflect Claude Code PR state when a PR exists. Project shippability is determined by
 `packages/<slug>/docs/dev_log.md` `Status: READY_TO_SHIP` plus the next roadmap reconcile.
 
 ### 3.5 serial-dispatch (one transcript, no parallelism)

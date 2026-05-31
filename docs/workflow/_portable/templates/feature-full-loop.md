@@ -56,18 +56,18 @@ If input contains both `Requirement` and a canonical feature name in title, pref
 
 ### Phase 0 — INTAKE
 
-**STEP 0 of Phase 0 — Requirement presence gate (before Automation Mode acquisition)**: if this is a fresh start (no existing dev_log / resume target) and the invocation prompt has no `Requirement:` line, or it is empty/whitespace, **STOP IMMEDIATELY** with Handoff `Status: BLOCKED`, Blocker `Requirement missing — a free-text requirement cannot be acquired via a picker.`, Next Step `Re-run with: /<skill_prefix>feature-full-loop. Requirement: <1-3 sentences: motivation + who uses it + what to solve>. Automation Mode: <one of the 8 legal variants — see _portable/04-automation-loop.md §3>`. Do **not** fire the Automation Mode picker, do **not** investigate the codebase — a picker cannot capture free text, so this is a hard stop, never a question. Resume invocations (a dev_log Status Panel already exists) are exempt: Requirement was captured at first plan write. See `_portable/07-automation-mode-picker.md` §1A.
+**STEP 0 of Phase 0 — Requirement presence gate (before Automation Mode acquisition)**: if this is a fresh start (no existing dev_log / resume target) and the invocation prompt has no `Requirement:` line, or it is empty/whitespace, **STOP IMMEDIATELY** with Handoff `Status: BLOCKED`, Blocker `Requirement missing — a free-text requirement cannot be acquired via a picker.`, Next Step `Re-run with: /<skill_prefix>feature-full-loop. Requirement: <1-3 sentences: motivation + who uses it + what to solve>. Automation Mode: <one of the 9 legal variants — see _portable/04-automation-loop.md §3>`. Do **not** fire the Automation Mode picker, do **not** investigate the codebase — a picker cannot capture free text, so this is a hard stop, never a question. Resume invocations (a dev_log Status Panel already exists) are exempt: Requirement was captured at first plan write. See `_portable/07-automation-mode-picker.md` §1A.
 
-**STEP 1 of Phase 0 — Automation Mode Acquisition (after STEP 0 passes, before any other INTAKE work)**: check whether the invocation prompt contains an `Automation Mode:` line with one of the 8 legal variants (`A-Claude` / `B-Codex` / `B-Cursor` / `C-Codex` / `C-Cursor` / `D-Codex` / `D-Cursor` / `D-Codex+Cursor`).
+**STEP 1 of Phase 0 — Automation Mode Acquisition (after STEP 0 passes, before any other INTAKE work)**: check whether the invocation prompt contains an `Automation Mode:` line with one of the 9 legal variants (`A-Claude` / `A-Codex` / `B-Codex` / `B-Cursor` / `C-Codex` / `C-Cursor` / `D-Codex` / `D-Cursor` / `D-Codex+Cursor`).
 
 - If YES and value is legal: record the Mode and proceed to the next INTAKE step.
 - If NO and this is fresh-start (no existing dev_log): you MUST fire AskUserQuestion now — see `_portable/07-automation-mode-picker.md` §2 — BEFORE any further investigation. Do not skip this step. Do not proceed to investigate the codebase / decide branch / etc. until Mode is acquired.
 - If NO and this is resume: read Mode from dev_log Status Panel and proceed.
-- If AskUserQuestion is not in your `allowed_tools` (i.e. the host tool doesn't grant it to subagents): STOP immediately with Handoff `Status: BLOCKED`, Blocker `Automation Mode missing and AskUserQuestion not available in this subagent context.`, Next Step `Re-run with: /<skill_prefix>feature-full-loop. Requirement: <text>. Automation Mode: <one of the 8 legal variants — see _portable/04-automation-loop.md §3>`.
+- If AskUserQuestion is not in your `allowed_tools` (i.e. the host tool doesn't grant it to subagents): STOP immediately with Handoff `Status: BLOCKED`, Blocker `Automation Mode missing and AskUserQuestion not available in this subagent context.`, Next Step `Re-run with: /<skill_prefix>feature-full-loop. Requirement: <text>. Automation Mode: <one of the 9 legal variants — see _portable/04-automation-loop.md §3>`.
 
 Operational details once Mode is acquired (per `_portable/07-automation-mode-picker.md` §2):
 
-1. Single AskUserQuestion with 4 options: A-Claude / D-Codex+Cursor / D-Codex / D-Cursor. B/C variants — see picker §2.3 — are reachable only by explicit `Automation Mode:` line on the start prompt; the picker text points users there. **If the prompt also has no `Verify Cross-vendor:` line, this SAME AskUserQuestion call carries a second question (Q2, 2 options) per `_portable/07-automation-mode-picker.md` §2.6** — one call, two questions, never two sequential pickers. Record both answers.
+1. Single AskUserQuestion with 5 options: A-Codex / A-Claude / D-Codex+Cursor / D-Codex / D-Cursor. B/C variants — see picker §2.3 — are reachable only by explicit `Automation Mode:` line on the start prompt; the picker text points users there. **If the prompt also has no `Verify Cross-vendor:` line, this SAME AskUserQuestion call carries a second question (Q2, 2 options) per `_portable/07-automation-mode-picker.md` §2.6** — one call, two questions, never two sequential pickers. Record both answers.
 2. After resolution, **append** a Work Log line to dev_log via Bash:
    ```
    [<ts>] Automation Mode acquired
@@ -191,7 +191,8 @@ Read `Automation Mode` from the dev_log Status Panel. Branch (the variant taxono
 **Single-IDE / lead-and-delegate variants (synchronous)**:
 ```
 Task spawn feature-dev-loop
-  (worker reads dev_log Automation Mode and routes the external executor or self-implements; no CLI flags needed)
+  (worker reads dev_log Automation Mode; A-Claude/A-Codex self-implement in the lead runtime,
+   D-* routes the external executor; no CLI flags needed)
 After return: Read dev_log
 expect Status == READY_TO_SHIP (verify auto-ran inside dev-loop) or BLOCKED
 on BLOCKED → STOP
