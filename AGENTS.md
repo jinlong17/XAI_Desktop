@@ -149,9 +149,10 @@ tools in this repo.
 
 Codex-specific reminders:
 
-- `A-Codex` is not a legal Automation Mode. Use `D-Codex` when Codex is the
-  external executor, or run the Level 1 V2 sequence inline in the current Codex
-  session.
+- `A-Codex` is the Codex-primary long-running Automation Mode. Use it when the
+  current Codex session is the lead runtime for plan/build/verify. Use
+  `D-Codex` only when another lead delegates implementation phases to Codex as
+  an external executor.
 - `claude --bg` and Agent View are Claude Code paths, not Codex background
   automation. In Codex, prefer roadmap `emit` or `serial` unless the CLI hook
   path is explicitly being tested.

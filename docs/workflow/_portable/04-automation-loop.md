@@ -1,12 +1,12 @@
 # 04 — Automation Loop: Variant Matrix, Per-Variant Contracts & Degradation Rules (Portable)
 
-> **Portable layer.** Project-agnostic. Defines the parent-session orchestration concept, the **8-variant
-> automation matrix (named: A-Claude / B-Codex / B-Cursor / C-Codex / C-Cursor / D-Codex / D-Cursor /
-> D-Codex+Cursor)**, the per-variant contracts and the real CLI invocation syntax, the
+> **Portable layer.** Project-agnostic. Defines the parent-session orchestration concept, the **9-variant
+> automation matrix (named: A-Claude / A-Codex / B-Codex / B-Cursor / C-Codex / C-Cursor /
+> D-Codex / D-Cursor / D-Codex+Cursor)**, the per-variant contracts and the real CLI invocation syntax, the
 > quota-fallback chain, and the "Status Panel must not drift" degradation rule.
-> **Codex and Cursor are the paradigm's two external executors** — they are *not* project-specific
-> placeholders. The reference shell plumbing ships in `_portable/scripts/` (dispatch / hook /
-> wrappers / `lib_phase_verdict.sh`).
+> **Codex can be either a lead runtime (`A-Codex`) or an external executor (`B/C/D-Codex`);
+> Cursor is an external executor.** These are *not* project-specific placeholders. The reference
+> shell plumbing ships in `_portable/scripts/` (dispatch / hook / wrappers / `lib_phase_verdict.sh`).
 > What still belongs in the project layer is only: the *concrete values* of the scratch-path
 > placeholders, the project's exact `<cowork_scripts_dir>` install path and `.codex/config.toml`
 > wiring, and project incident history — see §10.
@@ -21,8 +21,9 @@ orchestrators run, **full-pipeline automation** still needs three things:
 
 1. The automation Modes (A/B/C/D) must have explicit, selectable execution paths.
 2. The "external executor" of the cross-tool Modes can be swapped between two external tools
-   (e.g. Codex ↔ Cursor). With 1 single-IDE mode + 3 cross-tool modes × 2 external tools =
-   **8 named workflow modes**.
+   (e.g. Codex ↔ Cursor). With 2 single-IDE modes + hook relay (2 variants) +
+   phase-granularity (2 variants) + lead-and-delegate (3 variants) =
+   **9 named workflow modes**.
 3. Any variant, on quota exhaustion / tool unavailability / hook failure, must **degrade gracefully**
    to the single-IDE mode — **without letting the Status Panel drift**.
 
@@ -49,19 +50,19 @@ The single user-facing entry point:
 ```text
 /<skill_prefix>feature-full-loop
 Requirement: <a freeform requirement; the orchestrator derives the canonical name>
-Automation Mode: <one of the 8 variant identifiers>
+Automation Mode: <one of the 9 variant identifiers>
 ```
 
 `<skill_prefix>feature-full-loop` auto-completes Step 0 → plan → review (with REVISE return) → build → verify, and
 **only stops before ship for human confirmation** (ship is the one mandatory human push gate).
 
-The 8 variants differ only inside `<skill_prefix>feature-full-loop`'s **Phase 4 (build + verify)** — how it
+The 9 variants differ only inside `<skill_prefix>feature-full-loop`'s **Phase 4 (build + verify)** — how it
 delegates the external executor. The other 4 phases (intake / plan / review-loop / human-gate) behave
 identically across all variants.
 
-The 8 variants, by name (the `Automation Mode:` enum — see §3): **A-Claude** (single-IDE);
-**B-Codex / B-Cursor** (hook-relay); **C-Codex / C-Cursor** (phase-granularity); **D-Codex /
-D-Cursor** (lead-and-delegate), with **D-Codex+Cursor** as D's strongest external-executor
+The 9 variants, by name (the `Automation Mode:` enum — see §3): **A-Claude / A-Codex**
+(single-IDE); **B-Codex / B-Cursor** (hook-relay); **C-Codex / C-Cursor** (phase-granularity);
+**D-Codex / D-Cursor** (lead-and-delegate), with **D-Codex+Cursor** as D's strongest external-executor
 fallback-chain combo. Per-variant contracts are in §3.3–§3.7.
 
 **Ideal-path interaction count:** the whole pipeline has only 2 user interactions — ① start
@@ -126,29 +127,30 @@ headless mode**. Desktop-app "wake up" paths are experimental; CLI sync paths ar
 
 ---
 
-## 3. The 8-variant matrix
+## 3. The 9-variant matrix
 
-> **How a Mode is chosen at runtime:** this section defines *what* the 8 variants are. The runtime
+> **How a Mode is chosen at runtime:** this section defines *what* the 9 variants are. The runtime
 > picker (at meta-orchestrator Phase 0 INTAKE / per-row at roadmap-loop init / run preflight
 > fallback) is specified in `_portable/07-automation-mode-picker.md`. Phase 0 INTAKE is **3-field**,
 > not Mode-only: Requirement/Bug missing → hard BLOCKED before any picker (`07` §1A); Mode → the
 > 4-option Q1; Verify Cross-vendor → Q2 in the *same* AskUserQuestion (`07` §2.6). The 4-option
-> Mode layout is A-Claude / D-Codex+Cursor / D-Codex / D-Cursor; B/C variants are reachable only by
+> Mode layout is A-Codex / A-Claude / D-Codex+Cursor / D-Codex / D-Cursor; B/C variants are reachable only by
 > explicit `Automation Mode: <variant>` invocation (see `07` §2.3).
 
-The paradigm has three tools: **Claude Code** is the lead IDE; **Codex** and **Cursor** are the two
-external executors. Mode A (single-IDE) has no external-executor swap; the 3 cross-tool Modes each
-have a Codex variant and a Cursor variant. `1 + 3 × 2 = 7`.
+The paradigm has three tools: **Claude Code** and **Codex** can both be lead IDEs; **Codex** and
+**Cursor** can be external executors in cross-tool modes. Mode A (single-IDE) has one variant per
+lead IDE; B/C use Codex or Cursor as external executors; D has Codex, Cursor, and Codex+Cursor
+fallback-chain variants.
 
 | Mode | Skeleton | Variants |
 |------|----------|----------|
-| **A — single-IDE loop** | Step 0 → plan → review → dev-loop → ship all inside Claude Code | **A-Claude** — one variant; everything in one IDE, native Task-spawn orchestrator |
+| **A — single-IDE loop** | Step 0 → plan → review → dev-loop → ship all inside one lead IDE/session | **A-Claude** / **A-Codex** — one lead runtime owns the full loop; no hook/external delegation |
 | **B — hook relay to external executor** | The lead runs plan/review/verify/ship; after review APPROVED a hook auto-wakes the external executor for build; after it finishes a hook auto-returns to the lead for verify | **B-Codex** (headless `codex exec` — see §3.4) / **B-Cursor** (`cursor-agent` CLI) |
 | **C — phase-granularity alternating dual executor** | Each phase = 1 external build + 1 lead `feature-phase-review` | **C-Codex** / **C-Cursor** — one external build per phase |
 | **D — lead + delegation** | The lead's `feature-auto-build` worker delegates every implementation phase to an external CLI; if the configured external executors fail, the worker parks the phase as BLOCKED instead of self-implementing | **D-Codex** (`codex exec`) / **D-Cursor** (`cursor-agent`) / **D-Codex+Cursor** — external chain Codex → Cursor → BLOCKED |
 
 > Naming convention: in `dev_log.md`'s Status Panel mark the variant as the all-caps hyphenated
-> `Automation Mode:` field (one of the 8 names above), so hooks can route on it and logs can be
+> `Automation Mode:` field (one of the 9 names above), so hooks can route on it and logs can be
 > searched. Per-variant contracts: §3.3 (A) / §3.4 (B) / §3.5 (C) / §3.6 (D) / §3.7 (Cursor specifics).
 
 ### 3.1 Selection guidance (by situation)
@@ -156,33 +158,41 @@ have a Codex variant and a Cursor variant. `1 + 3 × 2 = 7`.
 | Situation | Recommended | Why |
 |-----------|-------------|-----|
 | Temporary hotfix, single-step solvable | `A-Claude` | Most stable, avoids cross-tool overhead |
+| Long-running current Codex session | `A-Codex` | Codex is the lead runtime and can inline worker contracts when spawn depth is unavailable |
 | Mid-size feature, plan APPROVED, phases ≥ 3 | `D-Codex` or `D-Cursor` | Sync path, CLI call is most direct |
 | Large phase needing a big-context model | `D-Cursor` (`gpt-5.5-high` large context) | Headless CLI + large context window |
 | High-risk change (touches core / manifest / cross-module) | `C-Codex` or `C-Cursor` | Per-phase dual-executor mandatory cross-check |
 | Primary external tool hit its cap, task is large | `D-Codex+Cursor` | Codex → Cursor; if both fail, park BLOCKED with evidence |
-| Both external tools exhausted | write `BLOCKED` + a Blocker; a human switches to `A-Claude` | Auto-degradation would cross the Status Panel write-authority boundary, so a human takes over |
+| Both external tools exhausted | write `BLOCKED` + a Blocker; a human switches to `A-Claude` or `A-Codex` | Auto-degradation would cross the Status Panel write-authority boundary, so a human takes over |
 
 ### 3.2 Cross-tool complexity ranking
 
-Low to high (lower is easier to maintain): A-Claude < D-class < B-class < C-class. The
+Low to high (lower is easier to maintain): A-Claude/A-Codex < D-class < B-class < C-class. The
 phase-granularity (C) variants are highest because their "per-phase relay" must go through CLI +
 post-commit hook — high call frequency, many concurrency guardrails.
 
-**New-team recommendation:** first get the meta-orchestrator working with **A-Claude**, then one
-D-class variant (**D-Codex** or **D-Cursor**) — those are the stable entry points. The B-class and
+**New-team recommendation:** first get the meta-orchestrator working with the team's lead runtime
+(**A-Claude** for Claude Code-primary, **A-Codex** for Codex-primary), then one
+D-class variant (**D-Codex** or **D-Cursor**) when external delegation is needed. The B-class and
 C-class variants are experimental paths; enable them only when the team genuinely needs the
 event-driven model and accepts the ops burden.
 
-### 3.3 Mode A — single-IDE (`A-Claude`)
+### 3.3 Mode A — single-IDE (`A-Claude` / `A-Codex`)
 
-The whole `step 0 → plan → review → dev-loop → ship` chain runs inside Claude Code; no cross-tool
-hook fires. The orchestrator spawns workers natively via the Task tool. This is the most stable
-variant and the recommended first feature.
+The whole `step 0 → plan → review → dev-loop → ship` chain runs inside one lead runtime; no
+cross-tool hook fires and no external executor is required.
 
-- **Phase 4 behaviour:** `feature-full-loop` Task-spawns `feature-dev-loop`, synchronous, waits for
-  return. All workers are Claude.
-- **Quota fallback:** Opus cap hit → workers drop to Sonnet (reviewer/verify keep Opus); Sonnet also
-  capped → write a Blocker, a human switches to a B/D variant so Codex/Cursor can take over.
+- **A-Claude:** the lead runtime is Claude Code. The orchestrator Task-spawns workers natively when
+  the host grants Task depth.
+- **A-Codex:** the lead runtime is Codex. The current Codex session should spawn Codex workers when
+  available; when `max_depth` or host policy withholds worker spawn, the Codex parent session
+  executes the next worker contract inline and still writes the normal Handoff.
+- **Phase 4 behaviour:** synchronous build/verify. If `Verify Cross-vendor: no`, the lead may run
+  `feature-dev-loop`/`bugfix-loop` where supported. If `Verify Cross-vendor: yes`, the lead uses
+  `feature-auto-build`/`bug-auto-fix` followed by the verify worker; in A-Codex this may be inline
+  when spawn depth is exhausted.
+- **Quota fallback:** lead runtime quota cap → write a Blocker with evidence. A human may switch to a
+  D/B/C variant so another executor can take over; do not silently rewrite the persisted Mode.
 - **Extra interactions:** 0 — the only 2 user touches are the start command and the human `ship`.
 
 ### 3.4 Mode B — hook relay (`B-Codex` / `B-Cursor`)
@@ -404,7 +414,8 @@ Layer 1: the current variant's primary executor — Codex CLI (codex exec) or cu
 Layer 2: the other external executor (Codex ↔ Cursor)
          (D-class variants may degrade directly; B/C-class need a human marker first)
    ↓
-Layer 3: if an A-Claude run is explicitly selected, the lead Claude worker may self-implement.
+Layer 3: if an A-Claude or A-Codex run is explicitly selected, the lead worker may self-implement
+inside that selected runtime.
 For D-Codex / D-Cursor / D-Codex+Cursor, Layer 3 is `BLOCKED` with recorded CLI failure evidence;
 the D worker must not silently degrade to Claude implementation.
    ↓
@@ -556,7 +567,7 @@ Phase 4: BUILD + VERIFY  ── variant-specific; the only phase that branches. 
   ── synchronous path (single-IDE / lead-and-delegate variants) ──
       Task spawn the loop orchestrator (feature-dev-loop / bugfix-loop), synchronous, wait for return.
       The worker reads dev_log Automation Mode and routes the external CLI.
-      A-Claude may self-implement; D-* parks BLOCKED if the configured external executors fail.
+      A-Claude/A-Codex may self-implement; D-* parks BLOCKED if the configured external executors fail.
       After return: Read dev_log.
         Status indicates verify passed (READY_TO_SHIP) → Phase 5.
         BLOCKED → STOP.
@@ -810,7 +821,7 @@ lists it in its Handoff Findings and leaves the decision to the orchestrator on 
 
 The automation layer is a **complete tri-tool implementation** — Claude Code + Codex + Cursor — and
 it lives entirely in the portable layer. `04` (this file) carries the variant matrix, the named
-8-variant enum, the per-variant contracts, the real CLI invocation syntax, the degradation rule, the
+9-variant enum, the per-variant contracts, the real CLI invocation syntax, the degradation rule, the
 5-phase state machine, the marker-file schema, the reader protocol, and the Phase Verdict format.
 `_portable/scripts/` carries the actual reference shell scripts. `_portable/templates/` carries the
 placeholder-form meta-orchestrator prompts.
@@ -861,6 +872,7 @@ portable contract / compatibility wrapper; this skill is the recommended executa
 ## Read First
 
 - `<project_workflow_doc>`
+- `<your_feature_sop>`
 - `docs/workflow/_portable/04-automation-loop.md`
 - `docs/workflow/_portable/07-automation-mode-picker.md`
 
@@ -879,12 +891,16 @@ portable contract / compatibility wrapper; this skill is the recommended executa
    - `Verify Cross-vendor: no` → `feature-dev-loop` is allowed only on hosts where it can actually
      spawn; otherwise use `feature-auto-build` + `feature-verify` anyway.
 5. **Between every worker, read `<feature_root>/<feature>/docs/dev_log.md`.** Do not trust a child
-   Handoff without verifying the real Status Panel.
+   Handoff without verifying the real Status Panel. If project convention maps feature slugs to a
+   prefixed package/path, resolve `<feature>` to the concrete directory before reading.
 6. **Background/worktree safe.** This skill may be launched by `<skill_prefix>roadmap-loop
    dispatch: bg` inside a Claude Code background session and its isolated worktree. In that case,
    keep all reads/writes in the current checkout, do not clean up the background session/worktree,
    and preserve any `Roadmap Manifest:`, `Background Session:`, or `Worktree:` fields passed in the
    prompt so the final Next Step can hand `ship` the right worktree context.
+7. **Native / real-hardware gate.** If the feature touches multi-window behaviour, typed event
+   contracts, host-app command signatures, or native OS APIs, record in the final Handoff that
+   real-hardware verification is required before the human ship gate.
 
 ## Inputs
 
@@ -893,7 +909,7 @@ Fresh start:
 ```text
 /<skill_prefix>feature-full-loop
 Requirement: <freeform requirement or roadmap source excerpt>
-Automation Mode: <A-Claude | B-Codex | B-Cursor | C-Codex | C-Cursor | D-Codex | D-Cursor | D-Codex+Cursor>
+Automation Mode: <A-Claude | A-Codex | B-Codex | B-Cursor | C-Codex | C-Cursor | D-Codex | D-Cursor | D-Codex+Cursor>
 Verify Cross-vendor: <yes|no>  # default yes when omitted and no picker is available
 ```
 
@@ -920,6 +936,8 @@ Worktree: <optional absolute worktree path>
    with the review notes. Stop as BLOCKED after `Max Revise` attempts (default 3). Continue only
    when `dev_log` says `Status: APPROVED`.
 5. **Build.**
+   - If `Automation Mode: A-Codex` and worker spawn is unavailable, execute the
+     next worker contract inline in the current Codex parent session.
    - If `Verify Cross-vendor: yes`: dispatch `feature-auto-build`; continue only when `dev_log`
      says `Status: READY_FOR_VERIFY`.
    - If `Verify Cross-vendor: no` and the host supports the loop worker: dispatch
@@ -940,7 +958,7 @@ End with a compact Handoff-style block containing:
 - Feature / slug
 - Current `dev_log` Status Panel values actually read from disk
 - Workers dispatched
-- Blockers, if any
+- Blockers, if any, including real-hardware verification still required when applicable
 - Next Step
 
 Do not append a conversational "continue?" prompt after the Next Step.

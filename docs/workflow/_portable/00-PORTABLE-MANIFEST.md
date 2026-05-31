@@ -151,7 +151,7 @@ has a complete registry — there is nothing to search-and-replace for these at 
 | `<dev_log_abs_path>` | the absolute dev_log path argument in the `read_phase_verdict_from_path` skeleton (`scripts/README.md`) |
 | `<prompt_file>` | the dispatch-prompt file argument in the `dispatch_<executor>.sh` skeleton (`scripts/README.md`) |
 | `<text>` | the free-text requirement body slot in an invocation-prompt example (`07-automation-mode-picker.md`) |
-| `<variant>` | the Automation Mode variant value slot — one of the 8 legal variants enumerated in `04-automation-loop.md` §3 — used in picker / invocation examples (`07-automation-mode-picker.md`) |
+| `<variant>` | the Automation Mode variant value slot — one of the 9 legal variants enumerated in `04-automation-loop.md` §3 — used in picker / invocation examples (`07-automation-mode-picker.md`) |
 | `<i>` | the feature-row index slot in a roadmap-loop `init` per-row question (`07-automation-mode-picker.md` §5.1) |
 | `<vendor>` | the generic vendor-name slot in shell-script invocation examples (`07-automation-mode-picker.md` / `04-automation-loop.md` §3.4 multi-state hook) — one of `codex` / `cursor` / `claude` |
 | `<other_vendor>` | the cross-vendor-routing slot (the vendor that is NOT the one named by the just-committed step's `* Executor:` field) used in `04-automation-loop.md` §3.4 hook state machine |
@@ -230,7 +230,7 @@ per-project rewrite.
    coreutils`); `flock` (`brew install util-linux` — **keg-only on macOS, NOT on PATH**; the
    dispatch scripts probe `/opt/homebrew/opt/util-linux/bin/flock`); an authenticated `codex` CLI;
    `cursor-agent login` (cursor-agent runs `--force` on default model `gpt-5.5-high`, override via
-   `CW_CURSOR_MODEL`). Skip this entire step for synchronous variants (`A-Claude` / `D-*`).
+   `CW_CURSOR_MODEL`). Skip this entire step for synchronous variants (`A-Claude` / `A-Codex` / `D-*`).
 7a. **Render portable-sourced project workflow skills.** Extract
    `<skill_prefix>feature-full-loop` from `04-automation-loop.md` Appendix and
    `<skill_prefix>roadmap-loop` from `06-roadmap-orchestration.md` Appendix, apply the target
@@ -427,7 +427,7 @@ checklist. STOP.
    Prereqs: `gtimeout` (`brew install coreutils`); `flock` (`brew install util-linux` — keg-only on
    macOS, NOT on PATH; scripts probe `/opt/homebrew/opt/util-linux/bin/flock`); authenticated
    `codex` CLI; `cursor-agent login`. Skip this whole step for synchronous variants (`A-Claude` /
-   `D-*`) — see `04-automation-loop.md` §3.
+   `A-Codex` / `D-*`) — see `04-automation-loop.md` §3.
 6b. **Render project-prefixed workflow skills with portable sources.** Extract
    `<skill_prefix>feature-full-loop` from `_portable/04-automation-loop.md` Appendix and
    `<skill_prefix>roadmap-loop` from `_portable/06-roadmap-orchestration.md` Appendix, replace the

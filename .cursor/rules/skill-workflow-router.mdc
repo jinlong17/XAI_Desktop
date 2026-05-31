@@ -142,8 +142,8 @@ instead of asking another question.
   ambiguous. Use `Suggested Feature Slug: <slug>` until the feature slug is
   confirmed by a feature map, dev_log, existing docs, or explicit user input.
 - `Automation Mode:` must be one of the legal Workflow V2 variants:
-  `A-Claude`, `B-Codex`, `B-Cursor`, `C-Codex`, `C-Cursor`, `D-Codex`,
-  `D-Cursor`, or `D-Codex+Cursor`. Never write natural-language values such as
+  `A-Claude`, `A-Codex`, `B-Codex`, `B-Cursor`, `C-Codex`, `C-Cursor`,
+  `D-Codex`, `D-Cursor`, or `D-Codex+Cursor`. Never write natural-language values such as
   `feature full loop`.
 - If the project has a parent-session feature full-loop skill, prefer that entry
   over `Start the feature-full-loop agent.` for normal end-to-end feature work.
@@ -183,7 +183,7 @@ Recommended goal prompt shape:
 <workflow entry>
 Requirement: <1-3 concise sentences>
 Suggested Feature Slug: <candidate slug, only if unconfirmed>
-Automation Mode: <one of A-Claude | B-Codex | B-Cursor | C-Codex | C-Cursor | D-Codex | D-Cursor | D-Codex+Cursor>
+Automation Mode: <one of A-Claude | A-Codex | B-Codex | B-Cursor | C-Codex | C-Cursor | D-Codex | D-Cursor | D-Codex+Cursor>
 Verify Cross-vendor: yes
 Context:
 - Read the project workflow usage guide.

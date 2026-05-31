@@ -155,8 +155,7 @@ docs/reviews/<feature>/<YYYYMMDD>-discovery-review.md
 ## 4. Level 1 — 手动 feature workflow
 
 手动模式适合你想逐步掌控、review 每个阶段,或从 BLOCKED 恢复。
-Codex 当前会话也可以按这个 Level 1 顺序 inline 执行,这不是 `Automation Mode: A-Codex`;
-`A-Codex` 不是合法枚举。
+Codex 当前会话也可以按这个 Level 1 顺序 inline 执行;这正是 `A-Codex` 在 spawn 深度不够时的落地方式。
 
 标准 feature 流程:
 
@@ -203,7 +202,7 @@ Start the feature-auto-build agent for <feature>.
 ```text
 /xai-feature-full-loop
 Requirement: <1-3 句:为什么做、谁用、解决什么>
-Automation Mode: <A-Claude | B-Codex | B-Cursor | C-Codex | C-Cursor | D-Codex | D-Cursor | D-Codex+Cursor>
+Automation Mode: <A-Claude | A-Codex | B-Codex | B-Cursor | C-Codex | C-Cursor | D-Codex | D-Cursor | D-Codex+Cursor>
 Verify Cross-vendor: yes
 ```
 
@@ -245,26 +244,27 @@ Worktree: <absolute_worktree_path>
 ## 6. Automation Mode 怎么选
 
 `Automation Mode` 控制 build / review / verify 怎么分配给 Claude、Codex、Cursor。
-合法枚举只有 portable 规格中的 8 个:
+合法枚举是 portable 规格中的 9 个:
 
 | Mode | 适合 |
 |---|---|
 | `A-Claude` | 高风险架构、密码学、macOS native、多窗口行为;优先稳 |
+| `A-Codex` | 长时间在当前 Codex session 里连续开发;Codex 作为 lead,不把实现外包给 `codex exec` |
 | `B-Codex` / `B-Cursor` | 事件驱动 hook 链路,适合外部 CLI 已稳定登录时 |
 | `C-Codex` / `C-Cursor` | phase 级外部 build + phase review |
 | `D-Codex` / `D-Cursor` | 外部 executor 一次性跑 build,本会话收 verify |
 | `D-Codex+Cursor` | UI-heavy / 多文件常规开发,希望吃两边 quota |
 
-没有 `A-Codex`。如果 prompt 里出现 `Automation Mode: A-Codex`,先纠正:
+`A-Codex` 和 `D-Codex` 的区别:
 
-- 想让 Claude Code 单 IDE 跑全链路:改成 `A-Claude`。
-- 想让 Codex 做外部实现 executor:改成 `D-Codex`。
-- 想让当前 Codex session 直接做:使用 Level 1 inline,不填写 Automation Mode。
+- `A-Codex`:Codex 是 lead。当前 Codex session 负责 plan / build / verify 的编排;spawn 深度不够时 inline 执行 worker contract。
+- `D-Codex`:另一个 lead 把 build phase 委派给 Codex external executor。它不是 Codex 长跑主模式。
 
 XAI 默认建议:
 
 - 密码学 / Sync / Rust security: `A-Claude`, `Verify Cross-vendor: yes`
-- UI-heavy / Console / Web: `D-Codex+Cursor`, `Verify Cross-vendor: yes`
+- 长时间在 Codex 里推进: `A-Codex`, `Verify Cross-vendor: yes`
+- UI-heavy / Console / Web 且由 Claude lead 调度外部执行: `D-Codex+Cursor`, `Verify Cross-vendor: yes`
 - 小修小补:可以用 `agent-behavioral-guidelines` + Level 1,避免过度编排
 
 `Verify Cross-vendor: yes` 是默认推荐。它要求 build 和 verify 不由同一执行者自证正确。
@@ -318,8 +318,9 @@ manifest: docs/workflow/roadmap/<roadmap_name>.md
 | `serial` | 当前会话逐个 feature 串行执行 parent-session recipe | 想要单 transcript、不并行 |
 | `spawn` | legacy nested spawn `feature-full-loop` | 日常不要用;需要 >=4 层 nested agent |
 
-Codex 当前会话推进 roadmap 时优先选 `emit` 或 `serial`。`bg` 是 Claude Code / Agent View
-路径,不要把它当成 Codex background automation。
+Codex 当前会话推进 roadmap 时优先选 `serial` 并配合 `Default Automation Mode: A-Codex`;
+如果想开多个新 Codex 会话粘贴执行,选 `emit`。`bg` 是 Claude Code / Agent View 路径,
+不要把它当成 Codex background automation。
 
 `emit` 输出 block 类似:
 
@@ -610,8 +611,8 @@ git status --short
 - manifest rows 是否有 `BLOCKED` / `BLOCKED_EXTERNAL`。
 - 依赖 row 是否已 `SHIPPED` 或允许 `READY_TO_SHIP`。
 - 对应 feature 的 `packages/<feature>/docs/dev_log.md` 是否真实存在。
-- `Automation Mode` 是否是合法 8 变体之一。
-  - `A-Codex` 非法;按 §6 改成 `D-Codex`、`A-Claude` 或 Codex Level 1 inline。
+- `Automation Mode` 是否是合法 9 变体之一。
+  - 当前合法值含 `A-Codex`;如果旧 manifest 因为 `A-Codex` 被标 BLOCKED,人工改回 `PENDING` 后重跑。
 
 ### 13.3 bg session 启动后找不到 worktree
 

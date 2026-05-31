@@ -54,7 +54,7 @@ Fresh start:
 ```text
 /xai-feature-full-loop
 Requirement: <freeform requirement or roadmap source excerpt>
-Automation Mode: <A-Claude | B-Codex | B-Cursor | C-Codex | C-Cursor | D-Codex | D-Cursor | D-Codex+Cursor>
+Automation Mode: <A-Claude | A-Codex | B-Codex | B-Cursor | C-Codex | C-Cursor | D-Codex | D-Cursor | D-Codex+Cursor>
 Verify Cross-vendor: <yes|no>  # default yes when omitted and no picker is available
 ```
 
@@ -81,6 +81,8 @@ Worktree: <optional absolute worktree path>
    with the review notes. Stop as BLOCKED after `Max Revise` attempts (default 3). Continue only
    when `dev_log` says `Status: APPROVED`.
 5. **Build.**
+   - If `Automation Mode: A-Codex` and worker spawn is unavailable, execute the
+     next worker contract inline in the current Codex parent session.
    - If `Verify Cross-vendor: yes`: dispatch `feature-auto-build`; continue only when `dev_log`
      says `Status: READY_FOR_VERIFY`.
    - If `Verify Cross-vendor: no` and the host supports the loop worker: dispatch

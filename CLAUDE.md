@@ -119,7 +119,7 @@ bug-diagnose → bug-fix → bug-verify → ship
 - `ship` requires READY_TO_SHIP status and human confirmation to push
 - Codex + Claude Code parallel-use rules live in
   `docs/workflow/project/workflow.md`; use that file for cross-tool ownership,
-  branch, commit, review, and `A-Codex` normalization rules.
+  branch, commit, review, and `A-Codex` / `D-Codex` semantics.
 
 ### Documentation Contract
 - `packages/plugin-*/docs/design.md` — Decision snapshot
