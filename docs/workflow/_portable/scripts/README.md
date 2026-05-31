@@ -10,9 +10,9 @@ This folder holds two things, **both shipped as real, runnable files** — the p
    verbatim, then adjust the four constants its header marks `# >>> ADJUST`. The "What the script
    does" spec below stays as the contract documentation.
 2. **Real reference shell scripts for the event-driven automation variants** —
-   `lib_phase_verdict.sh`, `dispatch_codex.sh`, `dispatch_cursor.sh`, `git-post-commit`,
-   `codex_wrapper.sh`, `cursor_wrapper.sh`. These use `<...>` placeholder tokens and are copied into
-   a project's `<cowork_scripts_dir>` (see the section near the end).
+   `lib_phase_verdict.sh`, `dispatch_codex.sh`, `dispatch_cursor.sh`, `dispatch_claude.sh`,
+   `git-post-commit`, `codex_wrapper.sh`, `cursor_wrapper.sh`. These use `<...>` placeholder tokens
+   and are copied into a project's `<cowork_scripts_dir>` (see the section near the end).
 
 ## Migrating the generation script to a new project
 
@@ -74,7 +74,7 @@ scripts in this folder:**
 | File | Role |
 |------|------|
 | `lib_phase_verdict.sh` | the shared `read_phase_verdict()` four-state reader (sourced by every reader) |
-| `dispatch_codex.sh` / `dispatch_cursor.sh` | fire-and-forget dispatch of one workflow-step prompt to Codex / Cursor |
+| `dispatch_codex.sh` / `dispatch_cursor.sh` / `dispatch_claude.sh` | fire-and-forget dispatch of one workflow-step prompt to Codex / Cursor / Claude bg |
 | `git-post-commit` | the neutral cross-tool relay trigger (chained wrapper at `.git/hooks/post-commit`, NOT a symlink) |
 | `lib_hook_helpers.sh` | project-layer helpers `git-post-commit` HARD-DEPENDS on (`determine_other_vendor` / `determine_lead_from_variant` / `render_*_prompt`); ships here as a working reference — copy + de-placeholder like the others |
 | `codex_wrapper.sh` / `cursor_wrapper.sh` | thin quota-aware wrappers that detect executor exhaustion |
@@ -82,9 +82,10 @@ scripts in this folder:**
 They use `<...>` placeholder tokens for project-specific paths (`<feature_root>`,
 `<orchestrator_marker_dir>`, `<quota_state_dir>`, `<cowork_scripts_dir>`) — replace them per
 `../00-PORTABLE-MANIFEST.md` §3, then copy the scripts into your project's `<cowork_scripts_dir>`.
-The Codex / Cursor CLI invocations in them are **literal and portable** — Codex and Cursor are the
-two external executors of the paradigm (see `../04-automation-loop.md` §3). The subsections below
-document each script's contract: its inputs, outputs, and exit-code contract.
+The Codex / Cursor CLI invocations in them are **literal and portable**. Claude bg dispatch is
+optional and machine-gated because `claude --bg` is a Claude Code Agent View capability, not a
+portable headless completion contract. The subsections below document each script's contract: its
+inputs, outputs, and exit-code contract.
 
 > The synchronous variants (single-IDE, lead-and-delegate) need **none** of the dispatch / hook
 > plumbing — they run entirely inside one IDE session via native sub-agent spawn. (`lib_phase_verdict.sh`
@@ -106,10 +107,11 @@ check) **sources this one file** rather than re-deriving the logic.
   `PASS`, `1` otherwise.
 - Recommended: ship a `bats` test file alongside it covering the four states.
 
-### `dispatch_codex.sh` / `dispatch_cursor.sh` — external-executor dispatch scripts
+### `dispatch_codex.sh` / `dispatch_cursor.sh` / `dispatch_claude.sh` — external-executor dispatch scripts
 
-One per external executor (Codex, Cursor). Fire-and-forget: it hands a prompt to an external tool
-and returns immediately; it does **not** wait for the external work to finish.
+One per external executor (Codex, Cursor, and optional Claude bg). Fire-and-forget: it hands a
+prompt to an external tool and returns immediately; it does **not** wait for the external work to
+finish.
 
 - **Inputs:**
   - `$1 = <feature>`
@@ -120,16 +122,23 @@ and returns immediately; it does **not** wait for the external work to finish.
     `feature-review` / `feature-build` / `feature-auto-build` / `feature-verify` /
     `bug-diagnose` / `bug-fix` / `bug-auto-fix` / `bug-verify`. Any other value → exit code 2.
     `feature-build` is required for C-* per-phase dispatch; do not remove it from the whitelist.
-- **Outputs (side effects):** starts the external executor (headless CLI is the reliable path — see
-  `../04-automation-loop.md` §2.6 + §3.4); writes a run log somewhere the user can `tail` (log
-  filename includes `<agent_name>` so multi-step runs don't clobber each other).
+- **Outputs (side effects):** starts the external executor (headless CLI is the reliable path for
+  Codex / Cursor — see `../04-automation-loop.md` §2.6 + §3.4; Claude bg starts an Agent View
+  session); writes a run log somewhere the user can `tail` (log filename includes `<agent_name>` so
+  multi-step runs don't clobber each other).
 - **Exit code:** `0` if the external executor was successfully launched; non-zero if it could not be
   launched (binary missing, unknown agent_name, etc.) — the orchestrator uses this to decide whether
   to fall through the quota fallback chain.
+- **Claude bg opt-in:** Codex -> Claude routing still resolves to `MANUAL_CLAUDE` by default.
+  Enable automated launch only after a local smoke test by setting `CW_ENABLE_CLAUDE_BG=1` in the
+  hook environment or `git config cowork.claudeBg true` for this checkout. If launch fails, or the
+  session starts idle without consuming the prompt, `dispatch_claude.sh` exits non-zero and the hook
+  falls back to a manual notification. The hook never marks cross-vendor PASS; only the Claude
+  worker's dev_log / receipt evidence can advance state.
 - **Cross-vendor identity routing:** these scripts are **vendor-pure** — they do not decide "which
   vendor should run this step". The caller (orchestrator or post-commit hook) reads `Plan Executor:`
   / `Build Executor:` from the dev_log Status Panel and chooses `dispatch_codex.sh` vs
-  `dispatch_cursor.sh` accordingly. See `git-post-commit` below.
+  `dispatch_cursor.sh` vs `dispatch_claude.sh` accordingly. See `git-post-commit` below.
 - Must **not** write the dev_log Status Panel. The dispatched agent itself writes the Status Panel
   per the §16.3 / §2.6 write-authority matrix.
 
@@ -161,7 +170,7 @@ just-committed dev_log, it routes:
 
 | Status | Action |
 |---|---|
-| `NEEDS_REVIEW` | dispatch `feature-review` to the OTHER vendor (§16.3 #3 STRICT). Resolves the executor from the rolling `- Executor:` Status Panel line (it greps `- Plan Executor:` then falls back to `- Executor:`; **there is no dedicated Plan/Build Executor field** in the schema). `vendor_dispatchable()` short-circuits the sentinels `MANUAL_CLAUDE` / `UNKNOWN` to a clean notify (never a bogus `dispatch_UNKNOWN.sh` / `dispatch_MANUAL_CLAUDE.sh`). |
+| `NEEDS_REVIEW` | dispatch `feature-review` to the OTHER vendor (§16.3 #3 STRICT). Resolves the executor from the rolling `- Executor:` Status Panel line (it greps `- Plan Executor:` then falls back to `- Executor:`; **there is no dedicated Plan/Build Executor field** in the schema). `vendor_dispatchable()` accepts only real executable dispatchers (`codex` / `cursor` / opt-in `claude`); sentinels `MANUAL_CLAUDE` / `UNKNOWN` cleanly notify instead of calling bogus dispatch scripts. |
 | `APPROVED` (B-* only) | dispatch `feature-auto-build` to the lead vendor named by the variant. |
 | `READY_FOR_VERIFY` | if `Verify Cross-vendor: yes`: resolve via the rolling `- Executor:` line (greps `- Build Executor:` then falls back) → dispatch `feature-verify` to OTHER vendor. If `no`: notify only (lead-handled or direct-ship). |
 | `REVISE` | notify user (manual: feed REVISE back to `feature-plan`, re-loop). |
@@ -176,7 +185,7 @@ just-committed dev_log, it routes:
 - **Project-layer helpers** — ship as `lib_hook_helpers.sh` in this dir (a working reference; copy
   it into `<cowork_scripts_dir>/lib_hook_helpers.sh` and replace placeholders, same as the other
   scripts). Defines:
-  - `determine_other_vendor <executor>` → echoes `codex` / `cursor` / `MANUAL_CLAUDE` / `UNKNOWN`
+  - `determine_other_vendor <executor>` → echoes `codex` / `cursor` / opt-in `claude` / `MANUAL_CLAUDE` / `UNKNOWN`
   - `determine_lead_from_variant <variant>` → echoes the lead vendor for `B-Codex` / `B-Cursor` / etc.
   - `render_review_prompt <feature>` / `render_build_prompt <feature>` / `render_verify_prompt <feature>` → stdout = prompt body for that step
   If `lib_hook_helpers.sh` is absent the multi-state branches degrade to notify-only — so a

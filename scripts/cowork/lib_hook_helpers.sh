@@ -18,11 +18,18 @@ set -uo pipefail
 # ----- 1. determine_other_vendor <executor> ------------------
 # Input : executor identity (read from the rolling "- Executor:" Status Panel
 #         line — there is NO dedicated Plan/Build Executor field).
-# Output: a vendor name dispatch_<x>.sh can consume (codex|cursor), OR the
-#         sentinel "MANUAL_CLAUDE" (cross-vendor step lands on Claude, which has
-#         no headless exec → notify the user) OR "UNKNOWN" (unresolvable).
+# Output: a vendor name dispatch_<x>.sh can consume (codex|cursor|claude), OR
+#         the sentinel "MANUAL_CLAUDE" (cross-vendor step lands on Claude but
+#         bg dispatch is not enabled on this machine -> notify the user) OR
+#         "UNKNOWN" (unresolvable).
 # git-post-commit's vendor_dispatchable() treats MANUAL_CLAUDE / UNKNOWN as
 # non-dispatchable → clean notify, never a bogus dispatch_<sentinel>.sh call.
+claude_bg_dispatch_enabled() {
+  [ "${CW_ENABLE_CLAUDE_BG:-0}" = "1" ] && return 0
+  [ "$(git config --bool cowork.claudeBg 2>/dev/null || true)" = "true" ] && return 0
+  return 1
+}
+
 determine_other_vendor() {
   local executor="$1"
   case "$executor" in
@@ -31,9 +38,13 @@ determine_other_vendor() {
       echo "codex"
       ;;
     Codex*|codex*|GPT*|gpt*)
-      # Was Codex → cross-vendor peer is Claude; Claude has no headless exec
-      # → tell the user to run it manually
-      echo "MANUAL_CLAUDE"
+      # Was Codex -> cross-vendor peer is Claude. Keep the old manual behavior
+      # unless this workstation explicitly opted into Claude bg dispatch.
+      if claude_bg_dispatch_enabled; then
+        echo "claude"
+      else
+        echo "MANUAL_CLAUDE"
+      fi
       ;;
     Cursor*|cursor*)
       echo "codex"

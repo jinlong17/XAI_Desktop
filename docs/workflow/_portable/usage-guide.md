@@ -248,6 +248,7 @@ executor** — they do not change Layer 1 or the phase structure.
 | `feature-phase-review` is landed | only the phase-granularity Level 2 variants | `ls .claude/agents/feature-phase-review.md` |
 | the `<skill_prefix>roadmap-loop` skill is in place | Level 3 | `ls <skill_root>/<skill_prefix>roadmap-loop/SKILL.md` |
 | Claude Code Agent View / background sessions | Level 3 `dispatch: bg` | `claude --version` is new enough for Agent View, `claude agents` opens, and `claude --bg --name test "..."` can start a background session |
+| Claude bg hook dispatch | optional B/C cross-vendor Claude peer | after the smoke test above, set `CW_ENABLE_CLAUDE_BG=1` or `git config cowork.claudeBg true`; launch success is not a PASS until dev_log / receipt evidence appears |
 | the State Verification lint is wired | only when the project enforces State Verification mechanically (it is optional, project-level — `02` §4) | the project's State Verification lint script exists |
 | `<project_workflow_doc>` has every role registered in its write-authority matrix | all levels | check its Status Panel write-authority matrix |
 

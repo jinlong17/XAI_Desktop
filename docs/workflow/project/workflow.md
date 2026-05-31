@@ -165,6 +165,9 @@ Use Claude Code for:
 
 - `A-Claude` single-IDE loops.
 - `claude --bg` / Agent View roadmap background sessions.
+- Optional hook-launched cross-vendor review/verify via
+  `scripts/cowork/dispatch_claude.sh`, only after `CW_ENABLE_CLAUDE_BG=1` or
+  `git config cowork.claudeBg true` is set for the checkout.
 - Native Task-spawn orchestration when depth is sufficient.
 - Cross-vendor review/verify when Codex wrote the implementation.
 
@@ -172,6 +175,8 @@ Claude Code constraints:
 
 - Do not assume spawned meta-orchestrators can spawn more workers. If Task depth
   blocks a loop, return to the parent session and dispatch workers manually.
+- Do not treat `claude --bg` launch success as review/verify success. The
+  session must write the normal `dev_log.md` verdict and receipt evidence.
 - Do not paraphrase subagent Handoff blocks.
 - Do not run `ship` until the feature or bugfix is `READY_TO_SHIP` and the
   human intentionally starts ship.

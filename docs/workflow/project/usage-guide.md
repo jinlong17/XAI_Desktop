@@ -518,6 +518,7 @@ XAI 已带 `scripts/cowork/` 事件驱动脚本和 `git-post-commit` hook 渲染
 scripts/cowork/git-post-commit
 scripts/cowork/dispatch_codex.sh
 scripts/cowork/dispatch_cursor.sh
+scripts/cowork/dispatch_claude.sh
 scripts/cowork/codex_wrapper.sh
 scripts/cowork/cursor_wrapper.sh
 scripts/cowork/lib_hook_helpers.sh
@@ -531,7 +532,20 @@ brew install coreutils util-linux
 codex --version
 cursor-agent --version
 cursor-agent login
+claude --version
 ```
+
+Claude bg dispatch is opt-in. The hook keeps Codex -> Claude cross-vendor review/verify as
+`MANUAL_CLAUDE` until this checkout explicitly enables it:
+
+```bash
+claude --bg --name cowork-smoke "Reply with: cowork bg smoke ok"
+claude agents --cwd /Users/lijinlong/Desktop/AI_Desktop/XAI_Desktop
+git config cowork.claudeBg true
+```
+
+`dispatch_claude.sh` only proves launch. It does not mark cross-vendor PASS; the Claude session must
+write the normal `dev_log.md` Status Panel update and any review/receipt artifact.
 
 hook 通知 resume 格式应是 skill-first:
 

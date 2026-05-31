@@ -119,6 +119,7 @@ COWORK_SCRIPT_FILES = (
     "git-post-commit",
     "dispatch_codex.sh",
     "dispatch_cursor.sh",
+    "dispatch_claude.sh",
     "codex_wrapper.sh",
     "cursor_wrapper.sh",
     "lib_phase_verdict.sh",
