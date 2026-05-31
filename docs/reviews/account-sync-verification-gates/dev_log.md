@@ -8,13 +8,13 @@
 | Target | account-sync-verification-gates |
 | Title | Account Sync verification gates |
 | Roadmap | `docs/workflow/roadmap/account-cloud-sync-foundation.md` row #10 |
-| Status | READY_TO_SHIP |
-| Current Phase | FEATURE_VERIFY |
-| Suggested Next | ship |
+| Status | SHIPPED |
+| Current Phase | SHIP |
+| Suggested Next | — |
 | Automation Mode | A-Codex |
 | Verify Cross-vendor | yes |
-| Executor | feature-verify (A-Codex inline fallback) |
-| Updated | 2026-05-31 08:10 PDT |
+| Executor | ship (gpt-5.3-codex) |
+| Updated | 2026-05-31 08:14 PDT |
 | Blockers | — |
 
 ## Feature Normalization
@@ -140,3 +140,4 @@ telemetry privacy, and preserve all shipped account-sync authorities unchanged.
 | 2026-05-31 08:03 PDT | feature-auto-build (A-Codex inline fallback) | Completed Phase 1 docs-only build: added canonical contract `docs/contracts/account-sync-verification-gates.md`, registered it in `docs/contracts/README.md`, updated the review pack, and advanced workflow to `READY_FOR_VERIFY`. Verification command evidence: `git diff --check -- docs/contracts/account-sync-verification-gates.md docs/contracts/README.md docs/reviews/account-sync-verification-gates`; scoped diff check limited to the feature contract, contracts index, and review-pack files. | `b5f1b4b` | feature-verify |
 | 2026-05-31 08:09 PDT | cross-vendor verify (Cursor CLI attempted, Codex read-only fallback) | Attempted external verification via `agent --plan -p --trust` and `cursor-agent -p --output-format text --mode ask --trust`; both timed out without verifier output. Recorded the timeout evidence, completed a scoped read-only fallback pass against commit `b5f1b4b`, and saved the receipt at `docs/reviews/account-sync-verification-gates/20260531-cross-vendor-verify.md`. | `b5f1b4b` | feature-verify |
 | 2026-05-31 08:10 PDT | feature-verify (A-Codex inline fallback) | Verification PASS. Reviewed commit `b5f1b4b`, the contract/review artifacts, and the saved verification receipt. Confirmed the row is `READY_TO_SHIP`, documented the cross-vendor timeout limitation as a residual risk, and intentionally left roadmap row #10 untouched pending the separate ship gate. | `b5f1b4b`, this commit | ship |
+| 2026-05-31 08:14 PDT | ship (gpt-5.3-codex) | Executed the ship gate for roadmap row #10: validated `Status = READY_TO_SHIP`, confirmed verify receipt `docs/reviews/account-sync-verification-gates/20260531-cross-vendor-verify.md` is tracked, reviewed required commits `b5f1b4b` and `c3b3c1f`, ran scoped `git diff --check`, and flipped feature state and roadmap row #10 to `SHIPPED` without touching other rows. | `b5f1b4b`, `c3b3c1f`, this commit | done |
