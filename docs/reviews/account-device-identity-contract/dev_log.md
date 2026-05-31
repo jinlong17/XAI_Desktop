@@ -8,13 +8,13 @@
 | Target | account-device-identity-contract |
 | Title | Account device identity contract |
 | Roadmap | `docs/workflow/roadmap/account-cloud-sync-foundation.md` row #3 |
-| Status | READY_FOR_VERIFY |
+| Status | READY_TO_SHIP |
 | Current Phase | FEATURE_VERIFY |
-| Suggested Next | feature-verify |
+| Suggested Next | ship |
 | Automation Mode | A-Codex |
 | Verify Cross-vendor | yes |
-| Executor | feature-auto-build (gpt-5.3-codex) |
-| Updated | 2026-05-31 05:26 PDT |
+| Executor | feature-verify (gpt-5.3-codex) |
+| Updated | 2026-05-31 05:31 PDT |
 | Blockers | — |
 
 ## Brief / Review Docs
@@ -22,7 +22,7 @@
 - Seed brief: `docs/reviews/account-device-identity-contract/20260531-roadmap-seed.md`
 - Discovery review: `docs/reviews/account-device-identity-contract/20260531-discovery-review.md`
 - Canonical contract: `docs/contracts/account-device-identity-contract.md`
-- Cross-vendor verify: `(pending)`
+- Cross-vendor verify: `docs/reviews/account-device-identity-contract/20260531-cross-vendor-verify.md`
 
 ## Phase Plan
 
@@ -67,11 +67,34 @@ feature-review (A-Codex inline), 2026-05-31 05:26 PDT. Verdict: APPROVED.
 
 ## Verification Notes
 
-Pending feature-verify.
+feature-verify (A-Codex lead + Cursor cross-vendor read-only verify),
+2026-05-31 05:31 PDT. Verdict: PASS - READY_TO_SHIP.
+
+- Gate 1 PASS: Account Cloud Sync remains shared infrastructure rather than a
+  standalone product surface.
+- Gate 2 PASS: `account.device` is resolved as server-authoritative metadata in
+  v1 without redefining `RepoRecord` or `syncScope`.
+- Gate 3 PASS: the contract preserves the current device model: client
+  `device_id`, server `encryption_device_id`, per-device keypair, per-device
+  DEK wrap, active/revoked status, and device-bound headers.
+- Gate 4 PASS: Web and Mac Desktop keep surface-local session ownership under
+  one shared account authority.
+- Gate 5 PASS: admin claims remain separated from ordinary product sessions and
+  are routed through future admin APIs.
+- Gate 6 PASS: Site remains limited to account entry/status semantics and cannot
+  bypass auth/device/admin checks.
+- Gate 7 PASS: browser-visible secret leakage is explicitly forbidden for
+  service-role credentials, provider secrets, master password, secret key,
+  KEK/DEK material, and device private key.
+- Gate 8 PASS: the seam map correctly records current gaps between
+  `@repo/web-auth-device-session`, `@repo/plugin-account`, sync-v1 authorities,
+  and future Admin APIs.
+- Gate 9 PASS: build commit `9fd1cb7` is docs-only, reviewable, and scoped.
+- Gate 10 PASS: runtime sync-v1 remains paused.
 
 ## Deferred Gates
 
-- Cross-vendor verify is required before `READY_TO_SHIP`.
+- Cross-vendor verify completed via Cursor Agent read-only pass.
 
 ## Work Log
 
@@ -80,4 +103,5 @@ Pending feature-verify.
 | 2026-05-31 05:23 PDT | xai-roadmap-loop (A-Codex serial) | Marked roadmap row #3 IN_PROGRESS. | — | feature-plan |
 | 2026-05-31 05:26 PDT | feature-plan (gpt-5.3-codex) | Produced docs-only discovery review and phase plan for the account/device identity contract. | — | feature-review |
 | 2026-05-31 05:26 PDT | feature-review (gpt-5.3-codex) | Approved the docs-only identity contract plan with no structural revisions required. | — | feature-build |
-| 2026-05-31 05:26 PDT | feature-auto-build (gpt-5.3-codex) | Built the canonical identity contract, registered it in `docs/contracts/README.md`, and advanced the docs-only feature to `READY_FOR_VERIFY`. | `(pending commit)` | feature-verify |
+| 2026-05-31 05:26 PDT | feature-auto-build (gpt-5.3-codex) | Built the canonical identity contract, registered it in `docs/contracts/README.md`, and advanced the docs-only feature to `READY_FOR_VERIFY`. | `9fd1cb7` | feature-verify |
+| 2026-05-31 05:31 PDT | feature-verify (gpt-5.3-codex) | Recorded Cursor Agent cross-vendor verify evidence, confirmed all 10 gates PASS, and advanced the feature to `READY_TO_SHIP`. | `this commit` | ship |
