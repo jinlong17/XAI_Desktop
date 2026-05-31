@@ -14,6 +14,7 @@
 | `account-sync-local-first-boundaries.md` | Repository-driver ownership, local-first exclusions, and per-surface store mapping contract for Account Cloud Sync |
 | `account-sync-protocol-surface-contract.md` | Repository mutation to outbox/push/pull/conflict/retry cadence contract for Account Cloud Sync |
 | `account-sync-surface-adapters.md` | Web/App/Plugin surface-adapter responsibilities and consumption boundaries for Account Cloud Sync |
+| `account-sync-admin-read-models.md` | Admin control-plane read-model catalog, mutation guardrails, and workflow-truth boundaries for Account Cloud Sync |
 | `tauri-commands-v0.md` | Tauri command、window label、capability allowlist contract |
 | `plugin-organizer-public-api-v0.md` | Host 与 `@repo/plugin-organizer` 的 public import / Grid content contract |
 
