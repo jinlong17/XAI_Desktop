@@ -16,6 +16,7 @@ XAI_Desktop 的 workflow 分两层:
 |---|---|---|---|
 | Portable spec | `docs/workflow/_portable/` | 跨项目 Workflow V2 规格、agent templates、public skills、hook scripts | 不建议在目标项目手改;通过 resync 从源仓库同步 |
 | Project layer | `docs/workflow/`, `.teams/skills/`, 本文件 | XAI 的路径、plugin 约定、macOS 真机门、项目 SOP | 可以按 XAI 需要维护 |
+| Cross-tool policy | `docs/workflow/project/workflow.md` | Codex + Claude Code 并行开发的分工、branch、commit、review、防冲突规则 | 可以按 XAI 需要维护 |
 
 本文件只补项目层说明。它不会改变 canonical manifest 路径:
 
@@ -24,6 +25,9 @@ docs/workflow/roadmap/<roadmap_name>.md
 ```
 
 `docs/workflow/project/` 是项目层教程和 playbook 目录,不是 roadmap manifest 目录。
+
+如果问题是"这次应该用 Codex 还是 Claude Code,以及两者如何接力",先读
+`docs/workflow/project/workflow.md`;再按本文件选择具体命令。
 
 ---
 
@@ -151,6 +155,8 @@ docs/reviews/<feature>/<YYYYMMDD>-discovery-review.md
 ## 4. Level 1 — 手动 feature workflow
 
 手动模式适合你想逐步掌控、review 每个阶段,或从 BLOCKED 恢复。
+Codex 当前会话也可以按这个 Level 1 顺序 inline 执行,这不是 `Automation Mode: A-Codex`;
+`A-Codex` 不是合法枚举。
 
 标准 feature 流程:
 
@@ -239,6 +245,7 @@ Worktree: <absolute_worktree_path>
 ## 6. Automation Mode 怎么选
 
 `Automation Mode` 控制 build / review / verify 怎么分配给 Claude、Codex、Cursor。
+合法枚举只有 portable 规格中的 8 个:
 
 | Mode | 适合 |
 |---|---|
@@ -247,6 +254,12 @@ Worktree: <absolute_worktree_path>
 | `C-Codex` / `C-Cursor` | phase 级外部 build + phase review |
 | `D-Codex` / `D-Cursor` | 外部 executor 一次性跑 build,本会话收 verify |
 | `D-Codex+Cursor` | UI-heavy / 多文件常规开发,希望吃两边 quota |
+
+没有 `A-Codex`。如果 prompt 里出现 `Automation Mode: A-Codex`,先纠正:
+
+- 想让 Claude Code 单 IDE 跑全链路:改成 `A-Claude`。
+- 想让 Codex 做外部实现 executor:改成 `D-Codex`。
+- 想让当前 Codex session 直接做:使用 Level 1 inline,不填写 Automation Mode。
 
 XAI 默认建议:
 
@@ -304,6 +317,9 @@ manifest: docs/workflow/roadmap/<roadmap_name>.md
 | `bg` | `claude --bg --name ...` 启后台 session,Agent View 监控 | Claude Code 推荐并行路径 |
 | `serial` | 当前会话逐个 feature 串行执行 parent-session recipe | 想要单 transcript、不并行 |
 | `spawn` | legacy nested spawn `feature-full-loop` | 日常不要用;需要 >=4 层 nested agent |
+
+Codex 当前会话推进 roadmap 时优先选 `emit` 或 `serial`。`bg` 是 Claude Code / Agent View
+路径,不要把它当成 Codex background automation。
 
 `emit` 输出 block 类似:
 
@@ -561,6 +577,7 @@ git status --short
 - `docs/workflow/SOP_NEW_FEATURE.md`
 - `docs/workflow/SOP_BUGFIX.md`
 - `docs/workflow/project/usage-guide.md`
+- `docs/workflow/project/workflow.md`
 - `docs/planning/sub-prds/roadmap-prompts.md`
 - `developer.md`
 - `CLAUDE.md` / `AGENTS.md` / `.cursor/rules/handoff.mdc` 的 handoff display rule
@@ -594,6 +611,7 @@ git status --short
 - 依赖 row 是否已 `SHIPPED` 或允许 `READY_TO_SHIP`。
 - 对应 feature 的 `packages/<feature>/docs/dev_log.md` 是否真实存在。
 - `Automation Mode` 是否是合法 8 变体之一。
+  - `A-Codex` 非法;按 §6 改成 `D-Codex`、`A-Claude` 或 Codex Level 1 inline。
 
 ### 13.3 bg session 启动后找不到 worktree
 

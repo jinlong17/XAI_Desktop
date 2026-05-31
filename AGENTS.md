@@ -5,6 +5,9 @@
 >
 > For shared project rules (architecture, code boundaries, conventions, testing),
 > see `CLAUDE.md` — those apply to all platforms and are not duplicated here.
+>
+> For Codex + Claude Code parallel development rules, see
+> `docs/workflow/project/workflow.md`.
 
 ---
 
@@ -85,13 +88,14 @@ The tracked sync surface includes at least:
 - `.cursor/agents/`, `.cursor/rules/`
 - `.teams/skills/`
 - `docs/workflow/_portable/`
+- `docs/workflow/project/workflow.md`
 - `CLAUDE.md`, `AGENTS.md`, `.cursor/rules/handoff.mdc`
 
 Before finishing a workflow/agent/skill change, audit for project-level
 untracked files:
 
 ```bash
-git ls-files -o --exclude-standard .agents .claude .codex .cursor .teams docs/workflow/_portable AGENTS.md CLAUDE.md
+git ls-files -o --exclude-standard .agents .claude .codex .cursor .teams docs/workflow/_portable docs/workflow/project AGENTS.md CLAUDE.md
 ```
 
 If the change is intended to apply on another computer, push it after commit.
@@ -135,3 +139,24 @@ without operator confirmation.
 Module-routing rules are shared too: `CLAUDE.md` §"Product module map & task
 routing" (authority) ↔ `AGENTS.md` §3 (this file) ↔
 `.cursor/rules/product-module-routing.mdc` ↔ `docs/PRODUCT_MODULE_MAP.md`.
+
+---
+
+## 5. Codex + Claude Code Parallel Use
+
+Use `docs/workflow/project/workflow.md` as the shared policy for running both
+tools in this repo.
+
+Codex-specific reminders:
+
+- `A-Codex` is not a legal Automation Mode. Use `D-Codex` when Codex is the
+  external executor, or run the Level 1 V2 sequence inline in the current Codex
+  session.
+- `claude --bg` and Agent View are Claude Code paths, not Codex background
+  automation. In Codex, prefer roadmap `emit` or `serial` unless the CLI hook
+  path is explicitly being tested.
+- If agent-spawn depth is unavailable, execute the subagent instructions inline.
+  In that case, the current session is the subagent and its final response must
+  be only the `## Handoff` block.
+- Before editing in a shared worktree, check `git status --short` and avoid
+  files that another tool already has dirty. Stage exact files only.
