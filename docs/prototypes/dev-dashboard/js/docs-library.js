@@ -1,14 +1,30 @@
 function openDocInLibrary(path){
   setPage("docs");
-  if(serveMode) openDoc(path, {fullscreen:true});
+  if(serveMode){
+    openDoc(path, {fullscreen:true});
+    return;
+  }
+  if(httpMode){
+    maybeActivateDocServeMode().then(() => {
+      if(serveMode) openDoc(path, {fullscreen:true});
+      else renderStaticDocLibraryNotice("打开文档", path);
+    });
+    return;
+  }
+  renderStaticDocLibraryNotice("打开文档", path);
 }
 
-const serveMode = location.protocol === "http:" || location.protocol === "https:";
+const httpMode = location.protocol === "http:" || location.protocol === "https:";
+let serveMode = false;
 let currentDocPath = "";
 let currentTreeDir = "";
 let currentTreeChildren = [];
 let currentDocEntry = null;
 let currentDocContent = "";
+let docApiCheckStarted = false;
+let docApiCheckPromise = null;
+let docLiveHandlersAttached = false;
+let docStaticHandlersAttached = false;
 
 function branchDocSeeds(){
   const branch = dashboardState.git?.branch || "";
@@ -29,10 +45,42 @@ function branchDocSeeds(){
 }
 
 async function fetchJson(url){
-  const response = await fetch(url, {cache:"no-store"});
-  const body = await response.json();
+  const response = await fetch(url, {cache:"no-store", headers:{Accept:"application/json"}});
+  const text = await response.text();
+  let body = {};
+  try {
+    body = text ? JSON.parse(text) : {};
+  } catch (error) {
+    throw new Error(`Expected JSON from ${url}; got HTTP ${response.status}`);
+  }
   if(!response.ok) throw new Error(body.error || `HTTP ${response.status}`);
   return body;
+}
+
+async function detectDashboardApi(){
+  if(!httpMode) return null;
+  try {
+    return await fetchJson("/api/tree?dir=");
+  } catch (error) {
+    return null;
+  }
+}
+
+function setDocServeMode(enabled){
+  serveMode = Boolean(enabled);
+  const modePill = document.getElementById("docModePill");
+  const modeLabel = serveMode ? "serve" : httpMode ? "static" : "file";
+  if(modePill){
+    modePill.textContent = modeLabel;
+    modePill.className = `pill ${serveMode ? "b-green" : "b-yellow"}`;
+  }
+  document.querySelector(".doc-preview")?.classList.toggle("is-visible", !serveMode);
+  const notice = document.getElementById("serveNotice");
+  if(notice){
+    notice.textContent = serveMode
+      ? "serve 模式 · 真实文件夹导航 · 本地路径实时读取"
+      : "静态预览 · 启动 pnpm dashboard:serve 后可读取真实文件";
+  }
 }
 
 function basename(path){
@@ -223,10 +271,12 @@ function openLibraryEntry(path, type = "file"){
 }
 
 function localServiceHint(action = "浏览真实目录", path = ""){
+  const currentMode = httpMode ? "普通 HTTP 静态预览" : "file:// 静态预览";
+  const reason = httpMode ? "当前 HTTP 服务未提供 Dashboard API（/api/tree、/api/file）。" : "浏览器不能直接读取仓库目录 API。";
   return `
     <div class="flow-note" style="margin:12px">
       <b>${h(action)}需要本地服务</b>
-      <p style="margin-top:8px">当前页面是 <code>file://</code> 静态预览，不能直接读取仓库目录 API。</p>
+      <p style="margin-top:8px">当前页面是 <code>${h(currentMode)}</code>，${h(reason)}</p>
       <p style="margin-top:8px">运行 <code>pnpm dashboard:serve</code> 后打开 <code>http://127.0.0.1:4177/#docs</code>，即可点击文件夹、上级、刷新和文档进入实时浏览。</p>
       ${path ? `<p style="margin-top:8px">目标路径：<code>${h(path)}</code></p>` : ""}
     </div>
@@ -243,24 +293,27 @@ function renderStaticDocLibraryNotice(action = "浏览真实目录", path = ""){
 }
 
 function initStaticDocLibrary(){
+  if(docStaticHandlersAttached) return;
+  docStaticHandlersAttached = true;
   document.getElementById("serveNotice").textContent = "静态预览 · 目录点击需要本地服务";
   document.getElementById("treeUpButton").disabled = false;
   document.getElementById("docRefreshFolderButton").disabled = false;
   document.getElementById("docRefreshButton").disabled = false;
   document.getElementById("docOpenButton").disabled = false;
   document.getElementById("docFullscreenButton").disabled = true;
-  document.getElementById("treeUpButton").addEventListener("click", () => renderStaticDocLibraryNotice("返回上级目录"));
-  document.getElementById("docRefreshFolderButton").addEventListener("click", () => renderStaticDocLibraryNotice("刷新目录"));
-  document.getElementById("docRefreshButton").addEventListener("click", () => renderStaticDocLibraryNotice("刷新文档库"));
-  document.getElementById("docOpenButton").addEventListener("click", () => renderStaticDocLibraryNotice("查看文档"));
-  document.getElementById("docCopyButton").addEventListener("click", () => renderStaticDocLibraryNotice("复制路径"));
-  document.getElementById("docRevealButton").addEventListener("click", () => renderStaticDocLibraryNotice("在 Finder 显示"));
-  document.getElementById("docSearchButton").addEventListener("click", () => renderStaticDocLibraryNotice("搜索文档"));
+  const staticAction = action => { if(!serveMode) renderStaticDocLibraryNotice(action); };
+  document.getElementById("treeUpButton").addEventListener("click", () => staticAction("返回上级目录"));
+  document.getElementById("docRefreshFolderButton").addEventListener("click", () => staticAction("刷新目录"));
+  document.getElementById("docRefreshButton").addEventListener("click", () => staticAction("刷新文档库"));
+  document.getElementById("docOpenButton").addEventListener("click", () => staticAction("查看文档"));
+  document.getElementById("docCopyButton").addEventListener("click", () => staticAction("复制路径"));
+  document.getElementById("docRevealButton").addEventListener("click", () => staticAction("在 Finder 显示"));
+  document.getElementById("docSearchButton").addEventListener("click", () => staticAction("搜索文档"));
   document.querySelector(".doc-folder-toolbar")?.addEventListener("click", event => {
-    if(event.target.id !== "treeUpButton") renderStaticDocLibraryNotice("浏览当前文件夹");
+    if(event.target.id !== "treeUpButton") staticAction("浏览当前文件夹");
   });
   document.getElementById("docSearch").addEventListener("keydown", event => {
-    if(event.key === "Enter") renderStaticDocLibraryNotice("搜索文档");
+    if(event.key === "Enter") staticAction("搜索文档");
   });
 }
 
@@ -399,14 +452,14 @@ function renderTree(children){
   });
 }
 
-async function loadTree(dir = ""){
+async function loadTree(dir = "", prefetchedData = null){
   if(!serveMode) return;
-  let data;
+  let data = prefetchedData;
   try {
-    data = await fetchJson(`/api/tree?dir=${encodeURIComponent(dir)}`);
+    if(!data) data = await fetchJson(`/api/tree?dir=${encodeURIComponent(dir)}`);
   } catch (error) {
     renderTreeError(error, dir);
-    return;
+    return false;
   }
   currentTreeDir = data.path || "";
   currentTreeChildren = data.children || [];
@@ -420,6 +473,7 @@ async function loadTree(dir = ""){
     document.getElementById("markdownBody").innerHTML = `<div class="flow-note"><b>${h(currentTreeDir || "文档根目录")}</b><p style="margin-top:8px">从中间列表选择文档后预览内容；文件夹内容已实时从本地目录读取。</p></div>`;
     renderOutline("");
   }
+  return true;
 }
 
 function parentDir(path){
@@ -638,8 +692,22 @@ function closeFullscreenReader(){
 }
 
 async function openDoc(path, options = {}){
-  if(!serveMode) return;
-  const doc = await fetchJson(`/api/file?path=${encodeURIComponent(path)}`);
+  if(!serveMode){
+    renderStaticDocLibraryNotice("打开文档", path);
+    return;
+  }
+  let doc;
+  try {
+    doc = await fetchJson(`/api/file?path=${encodeURIComponent(path)}`);
+  } catch (error) {
+    currentDocPath = path;
+    currentDocContent = "";
+    currentDocEntry = docMetaFor({path, type:"file", name:basename(path)});
+    renderInspector(currentDocEntry);
+    document.getElementById("markdownBody").innerHTML = `<div class="flow-note"><b>文档读取失败</b><p style="margin-top:8px">${h(error.message)}</p></div>`;
+    renderOutline("");
+    return;
+  }
   currentDocPath = doc.path;
   currentDocContent = doc.content || "";
   currentDocEntry = docMetaFor({
@@ -708,21 +776,9 @@ function renderRegistry(){
   `).join("");
 }
 
-function initDocLibrary(){
-  const modePill = document.getElementById("docModePill");
-  modePill.textContent = serveMode ? "serve" : "file";
-  modePill.className = `pill ${serveMode ? "b-green" : "b-yellow"}`;
-  document.querySelector(".doc-preview")?.classList.toggle("is-visible", !serveMode);
-  renderDocRecommendations();
-  renderDocRoots();
-  renderInspector();
-  if(!serveMode){
-    renderStaticDocLibraryNotice();
-    initStaticDocLibrary();
-    return;
-  }
-  document.getElementById("serveNotice").textContent = "serve 模式 · 真实文件夹导航 · 本地路径实时读取";
-  loadTree().then(() => openDoc("AGENTS.md"));
+function attachLiveDocHandlers(){
+  if(docLiveHandlersAttached) return;
+  docLiveHandlersAttached = true;
   const searchInput = document.getElementById("docSearch");
   document.getElementById("docSearchButton").addEventListener("click", searchDocs);
   searchInput.addEventListener("keydown", event => { if(event.key === "Enter") searchDocs(); });
@@ -759,4 +815,33 @@ function initDocLibrary(){
     const path = currentDocEntry?.path || currentDocPath;
     if(path) await fetchJson(`/api/reveal?path=${encodeURIComponent(path)}`);
   });
+}
+
+async function maybeActivateDocServeMode(){
+  if(serveMode || !httpMode) return serveMode;
+  if(docApiCheckStarted && docApiCheckPromise) return docApiCheckPromise;
+  docApiCheckStarted = true;
+  docApiCheckPromise = (async () => {
+    const initialTree = await detectDashboardApi();
+    setDocServeMode(Boolean(initialTree));
+    if(!serveMode){
+      renderStaticDocLibraryNotice();
+      return false;
+    }
+    attachLiveDocHandlers();
+    const ok = await loadTree("", initialTree);
+    if(ok && !currentDocPath) openDoc("AGENTS.md");
+    return serveMode;
+  })();
+  return docApiCheckPromise;
+}
+
+function initDocLibrary(){
+  setDocServeMode(false);
+  renderDocRecommendations();
+  renderDocRoots();
+  renderInspector();
+  renderStaticDocLibraryNotice();
+  initStaticDocLibrary();
+  if(location.hash === "#docs") maybeActivateDocServeMode();
 }

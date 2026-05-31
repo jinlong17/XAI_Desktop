@@ -764,14 +764,15 @@ rg -n "Start the feature-full-loop agent|/xai-feature-full-loop Feature" scripts
 账号云同步 per-feature 契约的权威。它是**附加治理**,不改变 ADR-0010 的 P0/P1/P2 active-focus
 顺序。跑 workflow 时相关的几条:
 
-- **`web ⊇ dev` 是设计如此**(§D5):`web` 是主线 / 最新开发线(Web-first);`dev` 是有意
-  滞后的 Desktop/App 候选线。`web` 领先 `dev` 是稳态,**不要**靠把 `dev` 强行往前 merge 来"追平"。
+- **`web` 与 `dev` 是独立 focus branches**(§D5):`web` 聚焦 Web 产品,`dev` 聚焦
+  Desktop/App。二者各自前进,分叉是正常状态,不是 subset/superset,也不是需要靠强行 merge 来"追平"的 drift。
 - **分支拓扑**(§D2,已定义未创建):`codex/web/<feature>` → `web` → (同步门) →
   `desktop-next` ↔ `desktop-plugin-next` → `dev`(App RC) → `release/desktop/<version>` → tag。
   创建 `desktop-next` / `desktop-plugin-next` / `release/*` 是单独的、需 operator 确认的步骤
   (任何触及 `dev` 的操作都要显式确认),目前只有 `web` / `dev` / `main`。
 - **Web→Desktop 同步门**(§D3):每个 Web 改动在流入 `desktop-next` 前先分类 W0–W4,产出 parity
-  receipt。实现这个门的 `xai-web-to-desktop-sync` skill **尚未存在(PLANNED)**;现阶段按 §D3 手动执行。
+  receipt。实现这个门的 `xai-web-to-desktop-sync` skill 已落地;若当前 runtime 无法加载该 skill,才按 §D3 手动 fallback,
+  但仍必须产出同一份 parity receipt。
 - **账号云同步**(§D4,基于 `data-repository-v0` 的 syncScope + sync-v1):Web 与 App **不互相**同步,
   二者都同步到同一个账号云(Web IndexedDB ⇄ `/sync/push`,`/sync/pull` ⇄ server encrypted blobs ⇄
   App SQLite)。只有 `syncScope: account-sync` 实体会同步;`device-local` 永不进 outbox。新增

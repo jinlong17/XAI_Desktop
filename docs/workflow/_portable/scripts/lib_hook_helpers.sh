@@ -79,10 +79,11 @@ render_review_prompt() {
 Start the feature-review agent for $feature.
 
 ## Cross-vendor context
-feature-plan ran on the lead vendor (Claude). You are the mandatory cross-vendor
-reviewer (<project_workflow_doc> §16.3 #3). Do NOT rewrite the plan — issue
-APPROVED or REVISE and write the verdict to the dev_log Status Panel (you are
-the authorized writer for the review verdict per §20.4).
+feature-plan ran on the lead vendor recorded in the dev_log rolling - Executor:
+line. You are the mandatory cross-vendor reviewer
+(<project_workflow_doc> §16.3 #3). Do NOT rewrite the plan — issue APPROVED or
+REVISE and write the verdict to the dev_log Status Panel (you are the authorized
+writer for the review verdict per §20.4).
 
 ## Read
 - $feature_dir/docs/dev_log.md  (Status Panel — verify NEEDS_REVIEW first, §20.4)
@@ -93,7 +94,7 @@ $([ -n "$brief" ] && echo "- $brief")
 
 ## Verify
 - §9.4 single-file LOC ceiling
-- §16.3 cross-vendor identity correct (plan executor != you)
+- §16.3 cross-vendor identity correct (plan executor from - Executor: != you)
 - §20.4 Handoff schema + State Verification fields present
 - Plan completeness (design/api/test/plan quartet)
 - Any NEEDS_REVIEW special focus (read from dev_log Suggested Next)

@@ -33,8 +33,8 @@ above. Key rules (do not contradict; cite ADR-0013 §D-N):
   (anything touching `dev` needs explicit confirmation); none exist yet.
 - **Web→Desktop sync gate** (ADR-0013 §D3): every Web change is classified
   W0–W4 before flowing `web → desktop-next`, emitting a parity receipt. The
-  `xai-web-to-desktop-sync` skill that implements this is **PLANNED** (does not
-  exist yet).
+  `xai-web-to-desktop-sync` skill implements this gate; use manual D3 fallback
+  only if the skill is unavailable in the current runtime.
 - **Account cloud-sync** (ADR-0013 §D4, builds on `data-repository-v0` syncScope
   + sync-v1): Web and App do NOT sync to each other; both sync to one account
   cloud (Web IndexedDB ⇄ `/sync/push`,`/sync/pull` ⇄ server encrypted blobs ⇄

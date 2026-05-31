@@ -38,7 +38,7 @@ Five sub-decisions:
 |---|---|
 | **D1** — Six product lines + priority reconciled with P0/P1/P2 | Product-line importance ≠ current active dev focus; mapped in one table |
 | **D2** — Branch topology + promotion / hotfix paths | `web` / `desktop-next` / `desktop-plugin-next` / `dev` + ephemeral `release/desktop/<version>` |
-| **D3** — Web→Desktop sync GATE (spec for the future `xai-web-to-desktop-sync` skill) | W0–W4 classification + parity-receipt output contract |
+| **D3** — Web→Desktop sync GATE (implemented by the `xai-web-to-desktop-sync` skill) | W0–W4 classification + parity-receipt output contract |
 | **D4** — Account cloud-sync model (build on `syncScope`) | Web ⇄ account cloud ⇄ App; per-feature `account-sync` completeness checklist |
 | **D5** — Two independent focus branches (`web`=Web, `dev`=App) | Divergence is the normal state, not drift; shared changes move on-demand; `main` reconciles |
 
@@ -107,8 +107,9 @@ focus over time*. They did **not** govern:
 - Branches present: `web` (current), `dev`, `main`, plus `origin/{web,dev,main}`
   and historical `origin/spike/window-ground-truth`. No `desktop-next`,
   `desktop-plugin-next`, or `release/*` branch exists yet.
-- No `xai-web-to-desktop-sync` skill exists yet — D3 is its **spec**, marked
-  PLANNED.
+- The project-level `xai-web-to-desktop-sync` skill exists and uses D3 as its
+  governance contract. If a runtime cannot load the skill, run D3 manually and
+  still emit the same parity receipt.
 - admin-dashboard prototype exists at `docs/prototypes/admin-dashboard/index.html`.
 
 ---
@@ -271,8 +272,8 @@ should also decide each new branch's base commit (expected: branch
 
 ### D3 — Web→Desktop sync GATE
 
-D3 is the **specification** that the future `xai-web-to-desktop-sync` skill
-(PLANNED — does not exist yet) implements. It is the **tool for need-based
+D3 is the **governance contract** implemented by the project-level
+`xai-web-to-desktop-sync` skill. It is the **tool for need-based
 sharing between the two focus branches** (per D5) — not a mandatory one-way pipe
 that keeps `dev` a subset of `web`. **When a specific change needs to be shared
 between the lines** (most commonly `web → dev`, but the same classification
@@ -287,9 +288,9 @@ ported:
 | **W3** | native-bridge-needed | Needs a Tauri/Rust delta (new command, capability, NSWindow/native behavior). | Route the native delta to **`/xai-feature-full-loop`** (full Workflow V2 on `desktop-next` / `desktop-plugin-next`); the App delta is real new work, not a merge. |
 | **W4** | release-risk | RC/release-gating change (touches signing, updater, versioned distribution, or otherwise needs sign-off before an App release). | RC / release gate **including manual macOS smoke** before promotion to `dev` and before `release/desktop/<version>`. |
 
-**Parity receipt — output contract.** Every run of the gate (manual or, later,
-the `xai-web-to-desktop-sync` skill) emits a **parity receipt** with exactly
-these fields:
+**Parity receipt — output contract.** Every run of the gate (via the
+`xai-web-to-desktop-sync` skill or a manual D3 fallback) emits a **parity
+receipt** with exactly these fields:
 
 ```
 Parity Receipt

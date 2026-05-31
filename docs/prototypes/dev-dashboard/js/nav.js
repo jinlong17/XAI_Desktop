@@ -220,6 +220,9 @@ function setPage(page, updateHash = true){
   document.querySelectorAll("[data-page-section]").forEach(section => {
     section.classList.toggle("is-active", section.dataset.pageSection === nextPage);
   });
+  if(nextPage === "docs" && typeof maybeActivateDocServeMode === "function"){
+    maybeActivateDocServeMode();
+  }
   syncNavActive(nextPage);
   if(updateHash && location.hash !== `#${nextPage}`){
     history.pushState(null, "", `#${nextPage}`);
