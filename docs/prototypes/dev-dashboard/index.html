@@ -481,6 +481,10 @@
   @keyframes dash-flow{to{stroke-dashoffset:-16}}
   @keyframes pulse{0%{opacity:.9;transform:scale(.98)}100%{opacity:0;transform:scale(1.08)}}
   .detail{
+    position:sticky;
+    top:18px;
+    max-height:calc(100vh - 36px);
+    overflow:auto;
     display:grid;gap:12px;align-content:start;
     background:#fff;
   }
@@ -500,6 +504,17 @@
   .detail-docs{margin-top:4px}
   .detail-docs-label{display:block;font-size:11.5px;color:var(--muted);margin-bottom:6px}
   .nav-block{display:grid;gap:6px}
+  .nav-fold{
+    border:1px solid var(--line);
+    border-radius:8px;
+    background:var(--surface-2);
+    padding:8px 10px;
+  }
+  .nav-fold summary{cursor:pointer;list-style:none}
+  .nav-fold summary::-webkit-details-marker{display:none}
+  .nav-fold summary:after{content:"›";margin-left:auto;color:var(--muted);font-size:16px;line-height:1;transition:transform .18s ease}
+  .nav-fold[open] summary:after{transform:rotate(90deg)}
+  .nav-fold-body{display:grid;gap:8px;margin-top:8px}
   .nav-label{display:flex;align-items:center;gap:8px;font-size:11.5px;color:var(--muted);font-weight:800}
   .nav-label .pill{font-weight:700;font-size:10.5px;padding:2px 7px}
   .goal-line{padding:11px 12px;border:1px solid #bfd8ff;background:#f2f7ff;border-radius:8px;font-weight:800;font-size:13px;color:#0f4d9a;overflow-wrap:anywhere}
@@ -1033,24 +1048,25 @@
   }
   .release-main{display:grid;gap:14px;min-width:0}
   .release-side{display:grid;gap:12px;position:sticky;top:18px}
-  .release-card-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+  .release-card-grid{display:grid;grid-template-columns:1fr;gap:10px}
   .release-overall-card{
-    min-height:236px;
+    min-height:0;
     display:grid;
-    grid-template-rows:auto auto minmax(0,1fr) auto;
     gap:10px;
     padding:14px;
     border:1px solid var(--line);
     border-left:4px solid var(--blue);
     border-radius:8px;
     background:linear-gradient(180deg,#fff,#f7fbff);
+    min-width:0;
   }
   .release-card-head{display:flex;align-items:flex-start;justify-content:space-between;gap:10px}
+  .release-card-head > div{min-width:0}
   .release-card-head b{display:block;font-size:15px}
   .release-card-head span{display:block;color:var(--muted);font-size:12px;margin-top:2px}
   .release-summary{color:var(--muted);font-size:12.5px;overflow-wrap:anywhere}
-  .release-note-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
-  .release-note{min-height:72px;padding:9px;border:1px solid var(--line);border-radius:8px;background:#fff}
+  .release-note-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:8px}
+  .release-note{min-width:0;min-height:72px;padding:9px;border:1px solid var(--line);border-radius:8px;background:#fff}
   .release-note b{display:block;color:var(--faint);font-size:11px;margin-bottom:4px}
   .release-note ul{margin:0;padding-left:16px;color:var(--muted);font-size:11.5px}
   .release-note li{margin:2px 0;overflow-wrap:anywhere}
@@ -1067,6 +1083,7 @@
     border-top:4px solid var(--tone);
     border-radius:8px;
     background:linear-gradient(180deg,color-mix(in srgb,var(--tone-bg) 64%,#fff),#fff 62%);
+    min-width:0;
   }
   .release-module-card[data-tone="blue"]{--tone:#1a73e8;--tone-bg:#eaf2ff}
   .release-module-card[data-tone="green"]{--tone:#34a853;--tone-bg:#eaf7ee}
@@ -1075,6 +1092,7 @@
   .release-module-card[data-tone="yellow"]{--tone:#b56f00;--tone-bg:#fff7df}
   .release-module-card[data-tone="red"]{--tone:#ea4335;--tone-bg:#ffefed}
   .release-module-head{display:flex;align-items:flex-start;justify-content:space-between;gap:10px}
+  .release-module-head > div{min-width:0}
   .release-module-head b{display:block;font-size:13px}
   .release-module-head span{display:block;color:var(--muted);font-size:11.5px;margin-top:2px}
   .release-module-count{color:var(--tone);font-weight:900;font-size:12px}
@@ -1102,17 +1120,44 @@
   .release-entry-grid{display:grid;gap:9px}
   .release-entry-row{
     display:grid;
-    grid-template-columns:116px minmax(0,1fr) auto;
+    grid-template-columns:104px minmax(0,1fr) minmax(92px,auto);
     gap:10px;
     align-items:start;
     padding:12px;
     border:1px solid var(--line);
     border-radius:8px;
     background:#fff;
+    min-width:0;
   }
+  .release-entry-row > div{min-width:0}
   .release-entry-row b{display:block;font-size:13px}
   .release-entry-row span{display:block;color:var(--muted);font-size:12px;margin-top:2px;overflow-wrap:anywhere}
   .release-entry-meta{display:flex;gap:6px;flex-wrap:wrap;margin-top:7px}
+  .release-entry-meta .pill{
+    max-width:100%;
+    white-space:normal;
+    overflow-wrap:anywhere;
+    line-height:1.35;
+  }
+  .release-entry-extra{display:grid;gap:5px;margin-top:8px}
+  .release-extra-row{
+    display:grid;
+    grid-template-columns:72px minmax(0,1fr);
+    gap:8px;
+    padding:6px 8px;
+    border:1px solid var(--line);
+    border-radius:8px;
+    background:var(--surface-2);
+  }
+  .release-extra-row b{font-size:11px;color:var(--faint)}
+  .release-extra-row span{
+    display:-webkit-box;
+    -webkit-line-clamp:2;
+    -webkit-box-orient:vertical;
+    overflow:hidden;
+    font-size:11.5px;
+  }
+  .release-entry-row > .badge{justify-self:start}
   .release-side .flow-note{background:#fff}
   .flow-note{
     padding:14px;
@@ -1124,7 +1169,7 @@
   .flow-note b{color:var(--text)}
   @media (max-width:1180px){
     .hero,.flow-grid,.split,.docs-layout,.release-dashboard{grid-template-columns:1fr}
-    .docs-side,.release-side{position:static;max-height:none}
+    .docs-side,.release-side,.detail{position:static;max-height:none;overflow:visible}
     .doc-file-manager{grid-template-columns:210px minmax(0,1fr)}
     .doc-inspector{grid-column:1 / -1}
     .doc-recommendation-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
@@ -1132,7 +1177,7 @@
     .doc-card-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
     .kpis{grid-template-columns:repeat(2,minmax(0,1fr))}
     .overview-module-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
-    .release-module-grid,.release-card-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
+    .release-module-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
     .module-track,.module-rhythm,.branch-flow,.module-region[data-region="主产品链"] .region-track{grid-template-columns:1fr}
     .module-card:not(:last-child):after{display:none}
     .branch-step:not(:last-child):after{display:none}
@@ -1156,6 +1201,7 @@
     .rail .nav-title,.rail .rail-note,.nav small{display:none}
     .nav{display:flex;gap:6px;max-width:100%;overflow-x:auto;-webkit-overflow-scrolling:touch;padding-bottom:2px}
     .nav a{flex:0 0 auto;justify-content:center;margin:0;white-space:nowrap;padding:8px 12px}
+    [data-page-section]{scroll-margin-top:116px}
     .main,.content{min-width:0;max-width:100vw}
     .content{padding:18px}
     .ops-head{flex-wrap:wrap}
@@ -1163,12 +1209,14 @@
     .overview-signal-grid,.overview-module-grid{grid-template-columns:1fr}
     .reader-shell{grid-template-columns:1fr}
     .doc-workbench,.doc-toolbar{grid-template-columns:1fr}
-    .doc-file-manager,.doc-recommendation-grid{grid-template-columns:1fr}
+    .doc-file-manager{grid-template-columns:1fr}
+    .doc-recommendation-grid{display:flex;overflow-x:auto;gap:10px;padding-bottom:2px}
+    .doc-rec-card{flex:0 0 310px}
     .doc-folder-list{max-height:none}
     .skill-group-grid,.agent-family-grid{grid-template-columns:1fr}
     .markdown-body{padding:18px;max-width:none}
     .data-grid,.trend-row,.branch-commit,.dir-row{grid-template-columns:1fr}
-    .release-module-grid,.release-card-grid,.release-entry-row{grid-template-columns:1fr}
+    .release-module-grid,.release-entry-row,.release-extra-row{grid-template-columns:1fr}
     .region-track{grid-template-columns:1fr}
     .flow-stage{min-height:auto}
     .branch-row,.log-row{grid-template-columns:1fr}
@@ -1430,7 +1478,7 @@
                 <h2>模块发布卡片</h2>
                 <p class="sub">按 Web、Mac 桌面版、插件、同步、官网和管理者 / 开发者 Dashboard 分开看最近更新。</p>
               </div>
-              <span class="pill">module notes</span>
+              <span class="pill">模块记录</span>
             </div>
             <div class="release-module-grid" id="releaseModuleCards"></div>
           </div>
@@ -1441,7 +1489,7 @@
                 <h2>详细发布记录</h2>
                 <p class="sub">保留时间顺序，但每条记录会标出模块、影响范围、验证和后续风险。</p>
               </div>
-              <span class="pill">newest first</span>
+              <span class="pill">最新优先</span>
             </div>
             <div class="release-entry-grid" id="releaseRows"></div>
           </div>
@@ -1824,6 +1872,92 @@ function renderModules(){
   document.querySelectorAll(".module-card").forEach(node => node.addEventListener("click", () => setProduct(node.dataset.product)));
 }
 
+function productTitleFor(key){
+  const found = products.find(product => product.key === key);
+  if(found) return found.title;
+  const labels = {
+    web:"Web 版本", app:"Mac 桌面版 App", plugin:"桌面整理插件 / Widget",
+    sync:"账号云同步层", site:"官方网页", admin:"Admin Dashboard / 控制面",
+    release:"发布冻结线 release/desktop/*", main:"main 汇合点", dev:"dev (App RC)"
+  };
+  return labels[key] || key;
+}
+
+function fallbackCopy(text, done){
+  const ta = document.createElement("textarea");
+  ta.value = text;
+  ta.style.position = "fixed";
+  ta.style.opacity = "0";
+  document.body.appendChild(ta);
+  ta.focus();
+  ta.select();
+  try { document.execCommand("copy"); } catch (err) { /* ignore */ }
+  document.body.removeChild(ta);
+  if(done) done();
+}
+
+function copyText(text, btn){
+  const done = () => {
+    if(!btn) return;
+    const old = btn.textContent;
+    btn.textContent = "已复制";
+    setTimeout(() => { btn.textContent = old; }, 1400);
+  };
+  if(navigator.clipboard && navigator.clipboard.writeText){
+    navigator.clipboard.writeText(text).then(done, () => fallbackCopy(text, done));
+  } else {
+    fallbackCopy(text, done);
+  }
+}
+
+function navBlock(label, pill, inner){
+  if(!inner) return "";
+  return `<details class="nav-fold"><summary class="nav-label"><span>${h(label)}</span>${pill ? `<span class="pill">${h(pill)}</span>` : ""}</summary><div class="nav-fold-body">${inner}</div></details>`;
+}
+
+function renderSignals(list){
+  if(!(list && list.length)) return "";
+  return `<div class="signal-chips">${list.map(s => `<span class="signal-chip">${h(s)}</span>`).join("")}</div>`;
+}
+
+function renderSkills(list){
+  if(!(list && list.length)) return "";
+  return list.map(s => `<div class="skill-row"><code>${h(s.name)}</code><span>${h(s.when)}</span></div>`).join("");
+}
+
+function renderPrompts(list){
+  if(!(list && list.length)) return "";
+  return list.map((p, index) => `
+    <div class="prompt-card">
+      <div class="prompt-head"><b>${h(p.label)}</b><button class="prompt-copy" data-prompt-index="${index}" type="button">复制</button></div>
+      <pre>${h(p.text)}</pre>
+    </div>`).join("");
+}
+
+function renderWorkflowSteps(list){
+  if(!(list && list.length)) return "";
+  return `<div class="wf-steps">${list.map(step => `<div class="wf-step">${h(step)}</div>`).join("")}</div>`;
+}
+
+function renderTransitions(list){
+  if(!(list && list.length)) return "";
+  return list.map(t => `
+    <div class="transition-card">
+      <div class="t-to">→ ${h(productTitleFor(t.to))}</div>
+      <div class="t-trigger"><b>触发条件：</b>${h(t.trigger)}</div>
+      <div class="t-meta">
+        <span class="badge b-blue">branch ${h(t.branch)}</span>
+        <span class="badge b-cyan">skill ${h(t.skill)}</span>
+      </div>
+      ${t.note ? `<div class="t-note">${h(t.note)}</div>` : ""}
+    </div>`).join("");
+}
+
+function renderImpacts(list){
+  if(!(list && list.length)) return "";
+  return list.map(im => `<div class="impact-row"><b>${h(productTitleFor(im.module))} · ${h(im.when)}</b><span>${h(im.action)}</span></div>`).join("");
+}
+
 function setProduct(key){
   const item = products.find(product => product.key === key);
   if(!item) return;
@@ -1838,15 +1972,22 @@ function setProduct(key){
       </div>
       <button class="reader-btn" id="productTargetButton" type="button">${h(productTarget.label)}</button>
     </div>
+    ${item.goal ? `<div class="nav-block"><div class="nav-label"><span>开发目标</span></div><div class="goal-line">${h(item.goal)}</div></div>` : ""}
     <div class="detail-grid">
       <div class="detail-metric"><b>模块状态</b><span>${h(String(item.status).split(" · ")[0])}</span></div>
       <div class="detail-metric"><b>推荐 branch</b><span>${h(item.branch)}</span></div>
       <div class="detail-metric"><b>关键依赖</b><span>${h(item.dependency)}</span></div>
       <div class="detail-metric is-wide"><b>真实计数</b><div class="chip-row">${statusChips(item.status_counts)}</div></div>
     </div>
+    ${navBlock("任务归属信号", "Codex 判断依据", renderSignals(item.routing))}
     <div class="detail-list">
       ${item.points.map(([title,desc]) => `<div><b>${h(title)}</b><span>${h(desc)}</span></div>`).join("")}
     </div>
+    ${navBlock("推荐 skill / agent", "", renderSkills(item.skills))}
+    ${navBlock("常用 prompt", "点击复制", renderPrompts(item.prompts))}
+    ${navBlock("开发 workflow", "", renderWorkflowSteps(item.workflow))}
+    ${navBlock("进入下一模块", "触发条件 · branch · skill", renderTransitions(item.transitions))}
+    ${navBlock("影响 / 需同步更新", "", renderImpacts(item.impacts))}
     <div class="detail-docs">
       <b class="detail-docs-label">相关文档（PRD / 治理）</b>
       <div class="doc-actions" id="detailDocLinks">
@@ -1859,6 +2000,9 @@ function setProduct(key){
   });
   document.querySelectorAll("#detailDocLinks [data-detail-doc]").forEach(btn => {
     btn.addEventListener("click", () => openDocInLibrary(btn.dataset.detailDoc));
+  });
+  document.querySelectorAll("#productDetail .prompt-copy").forEach(btn => {
+    btn.addEventListener("click", () => copyText((item.prompts || [])[Number(btn.dataset.promptIndex)]?.text || "", btn));
   });
 }
 
@@ -1942,8 +2086,8 @@ function docMetaFor(entry = {}){
     kind: hubMeta.kind || docKindFor(entry),
     importance: hubMeta.importance || inferredImportance(path, entry.type),
     tags: hubMeta.tags || entry.tags || [],
-    updated_at: hubMeta.updated_at || entry.modified || "",
-    size_bytes: hubMeta.size_bytes || entry.size || 0
+    updated_at: entry.modified || hubMeta.updated_at || "",
+    size_bytes: entry.size || hubMeta.size_bytes || 0
   };
 }
 
@@ -1999,7 +2143,7 @@ function renderDocRoots(){
     {label:".codex/agents", path:".codex/agents", summary:"Codex agents", type:"dir", importance:"必要"}
   ];
   document.getElementById("docRootList").innerHTML = roots.map(root => `
-    <button class="doc-root-button ${root.path === currentTreeDir ? "is-on" : ""}" data-root-path="${h(root.path)}" type="button">
+    <button class="doc-root-button ${currentTreeDir === root.path || currentTreeDir.startsWith(`${root.path}/`) ? "is-on" : ""}" data-root-path="${h(root.path)}" type="button">
       ${h(root.label)}
       <span>${h(root.path)}</span>
     </button>
@@ -2454,33 +2598,36 @@ function initDocLibrary(){
   const modePill = document.getElementById("docModePill");
   modePill.textContent = serveMode ? "serve" : "file";
   modePill.className = `pill ${serveMode ? "b-green" : "b-yellow"}`;
-  renderDocCollections();
-  renderSkillGroups();
-  renderAgentFamilies();
-  renderBranchDocs();
+  renderDocRecommendations();
+  renderDocRoots();
+  renderInspector();
   if(!serveMode){
     document.getElementById("markdownBody").innerHTML = `<div class="flow-note"><b>需要本地服务</b><p style="margin-top:8px">运行 <code>pnpm dashboard:serve</code> 后打开 <code>http://127.0.0.1:4177</code>。</p></div>`;
     return;
   }
-  document.getElementById("serveNotice").textContent = "serve 模式 · 真实文件读取 · rg 搜索";
-  loadTree();
-  openDoc(branchDocSeeds()[0][1]);
+  document.getElementById("serveNotice").textContent = "serve 模式 · 真实文件夹导航 · 本地路径实时读取";
+  loadTree().then(() => openDoc("AGENTS.md"));
   const searchInput = document.getElementById("docSearch");
   document.getElementById("docSearchButton").addEventListener("click", searchDocs);
   searchInput.addEventListener("keydown", event => { if(event.key === "Enter") searchDocs(); });
+  searchInput.addEventListener("input", () => renderFolderList());
   document.getElementById("treeUpButton").addEventListener("click", () => loadTree(parentDir(currentTreeDir)));
+  document.getElementById("docRefreshFolderButton").addEventListener("click", () => loadTree(currentTreeDir));
   document.getElementById("docRefreshButton").addEventListener("click", async () => {
     await fetchJson("/api/refresh");
     location.reload();
   });
   document.getElementById("docOpenButton").addEventListener("click", () => {
-    if(currentDocPath) window.open(`/api/file?path=${encodeURIComponent(currentDocPath)}`, "_blank", "noreferrer");
+    if(currentDocEntry?.type === "dir") loadTree(currentDocEntry.path);
+    else if(currentDocPath) openDoc(currentDocPath);
   });
   document.getElementById("docCopyButton").addEventListener("click", async () => {
-    if(currentDocPath) await navigator.clipboard.writeText(currentDocPath);
+    const path = currentDocEntry?.path || currentDocPath;
+    if(path) await navigator.clipboard.writeText(path);
   });
   document.getElementById("docRevealButton").addEventListener("click", async () => {
-    if(currentDocPath) await fetchJson(`/api/reveal?path=${encodeURIComponent(currentDocPath)}`);
+    const path = currentDocEntry?.path || currentDocPath;
+    if(path) await fetchJson(`/api/reveal?path=${encodeURIComponent(path)}`);
   });
 }
 
@@ -2550,6 +2697,12 @@ function moduleBadges(keys){
   return values.map(key => `<span class="badge ${badgeClass(key)}">${h(releaseModuleLabels[key] || key)}</span>`).join("");
 }
 
+function compactReleaseText(value, max = 130){
+  const text = String(value || "").replace(/\s+/g, " ").trim();
+  if(text.length <= max) return text;
+  return `${text.slice(0, max)}...`;
+}
+
 function renderOverallReleases(){
   const target = document.getElementById("overallReleaseCards");
   const items = overallReleases.length ? overallReleases : [];
@@ -2616,10 +2769,14 @@ function renderReleaseRows(){
         <span>${h(entry.summary || entry.user_visible || "")}</span>
         <div class="release-entry-meta">
           <span class="pill">${h(entry.version_label || "version pending")}</span>
-          ${entry.impact ? `<span class="pill">${h(entry.impact)}</span>` : ""}
-          ${entry.verification ? `<span class="pill">${h(entry.verification)}</span>` : ""}
-          ${entry.risk_followup ? `<span class="pill">${h(entry.risk_followup)}</span>` : ""}
+          ${entry.impact ? `<span class="pill">影响：${h(compactReleaseText(entry.impact, 90))}</span>` : ""}
         </div>
+        ${(entry.verification || entry.risk_followup) ? `
+          <div class="release-entry-extra">
+            ${entry.verification ? `<div class="release-extra-row"><b>验证</b><span>${h(compactReleaseText(entry.verification, 180))}</span></div>` : ""}
+            ${entry.risk_followup ? `<div class="release-extra-row"><b>后续</b><span>${h(compactReleaseText(entry.risk_followup, 180))}</span></div>` : ""}
+          </div>
+        ` : ""}
       </div>
       <span class="badge ${badgeClass(entry.module || entry.type)}">${h(releaseModuleLabels[entry.module] || entry.type || "release")}</span>
     </article>
@@ -2717,7 +2874,10 @@ function setPage(page, updateHash = true){
   if(updateHash && location.hash !== `#${nextPage}`){
     history.pushState(null, "", `#${nextPage}`);
   }
-  window.scrollTo(0, 0);
+  requestAnimationFrame(() => {
+    window.scrollTo(0, 0);
+    setTimeout(() => window.scrollTo(0, 0), 0);
+  });
 }
 
 document.querySelectorAll(".nav a[data-page]").forEach(link => {
