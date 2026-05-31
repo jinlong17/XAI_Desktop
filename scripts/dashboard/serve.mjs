@@ -13,6 +13,7 @@ import { fileURLToPath } from "node:url";
 const scriptDir = dirname(fileURLToPath(import.meta.url));
 const repoRoot = resolve(scriptDir, "../..");
 const dashboardDir = resolve(repoRoot, "docs/prototypes/dev-dashboard");
+const adminDashboardDir = resolve(repoRoot, "docs/prototypes/admin-dashboard");
 const generatorPath = resolve(scriptDir, "generate-state.mjs");
 const host = "127.0.0.1";
 const requestedPort = Number(process.env.DASHBOARD_PORT || process.env.PORT || 4177);
@@ -47,8 +48,15 @@ function packageDocRoots() {
 function allowedRoots() {
   return [
     resolve(repoRoot, "docs"),
+    resolve(repoRoot, ".agents/templates"),
+    resolve(repoRoot, ".agents/skills"),
     resolve(repoRoot, ".teams/skills"),
     resolve(repoRoot, ".codex/agents"),
+    resolve(repoRoot, ".codex/skills"),
+    resolve(repoRoot, ".claude/agents"),
+    resolve(repoRoot, ".claude/skills"),
+    resolve(repoRoot, ".cursor/agents"),
+    resolve(repoRoot, ".cursor/rules"),
     resolve(repoRoot, "web design"),
     ...packageDocRoots()
   ].filter(existsSync);
@@ -82,7 +90,7 @@ function assertAllowed(rawPath) {
 }
 
 function rootTree() {
-  const fixed = ["docs", "docs/adr", "docs/workflow", ".teams/skills", ".codex/agents", "web design"]
+  const fixed = ["docs", "docs/adr", "docs/workflow", ".teams/skills", ".codex/skills", ".agents/templates", ".codex/agents", ".claude/agents", ".cursor/agents", "web design"]
     .map(path => resolve(repoRoot, path))
     .filter(path => existsSync(path))
     .map(path => treeEntry(path));
@@ -100,10 +108,14 @@ function sortEntries(a, b) {
 
 function treeEntry(absPath) {
   const stat = statSync(absPath);
+  const relPath = repoRelative(absPath);
   return {
     name: basename(absPath),
-    path: repoRelative(absPath),
-    type: stat.isDirectory() ? "dir" : "file"
+    path: relPath,
+    type: stat.isDirectory() ? "dir" : "file",
+    ext: stat.isDirectory() ? "" : extname(absPath).replace(/^\./, ""),
+    size: stat.isFile() ? stat.size : 0,
+    modified: stat.mtime.toISOString()
   };
 }
 
@@ -140,8 +152,19 @@ function readAllowedFile(rawPath) {
   return {
     path: repoRelative(absPath),
     name: basename(absPath),
+    ext: extname(absPath).replace(/^\./, ""),
+    size: stat.size,
+    modified: stat.mtime.toISOString(),
     content: readFileSync(absPath, "utf8")
   };
+}
+
+function readAllowedRawFile(rawPath) {
+  const file = readAllowedFile(rawPath);
+  const type = file.ext === "md" || file.ext === "mdc"
+    ? "text/markdown; charset=utf-8"
+    : "text/plain; charset=utf-8";
+  return { ...file, type };
 }
 
 function parseSearchOutput(output) {
@@ -233,6 +256,11 @@ function handleApi(url, res) {
     sendJson(res, 200, readAllowedFile(url.searchParams.get("path") || ""));
     return true;
   }
+  if (url.pathname === "/api/raw") {
+    const file = readAllowedRawFile(url.searchParams.get("path") || "");
+    send(res, 200, file.content, file.type);
+    return true;
+  }
   if (url.pathname === "/api/search") {
     sendJson(res, 200, { query: url.searchParams.get("q") || "", results: searchDocs(url.searchParams.get("q")) });
     return true;
@@ -265,6 +293,14 @@ const server = createServer((req, res) => {
     }
     if (url.pathname === "/state.generated.js") {
       send(res, 200, readFileSync(resolve(dashboardDir, "state.generated.js"), "utf8"), "application/javascript; charset=utf-8");
+      return;
+    }
+    if (url.pathname === "/admin-dashboard" || url.pathname === "/admin-dashboard/") {
+      send(res, 200, readFileSync(resolve(adminDashboardDir, "index.html"), "utf8"), "text/html; charset=utf-8");
+      return;
+    }
+    if (url.pathname === "/admin-dashboard/index.html") {
+      send(res, 200, readFileSync(resolve(adminDashboardDir, "index.html"), "utf8"), "text/html; charset=utf-8");
       return;
     }
     sendJson(res, 404, { error: "Not found" });

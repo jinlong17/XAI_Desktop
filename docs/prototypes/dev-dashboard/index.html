@@ -87,8 +87,10 @@
   .page-section.is-active{display:block}
   .page-section.is-active.hero,
   .page-section.is-active.kpis,
+  .page-section.is-active.overview-module-grid,
   .page-section.is-active.flow-grid,
   .page-section.is-active.docs-layout,
+  .page-section.is-active.release-dashboard,
   .page-section.is-active.split{display:grid}
   .section-head{display:flex;align-items:flex-end;justify-content:space-between;gap:16px;margin-bottom:12px}
   h1,h2,h3,p{margin:0}
@@ -116,6 +118,7 @@
   .b-cyan{color:#07849a;background:#e6f8fb;border-color:#c7eff5}
   .b-yellow{color:#7a4d00;background:#fff7df;border-color:#ffe7a8}
   .b-red{color:var(--red);background:#ffefed;border-color:#ffd3ce}
+  .b-purple{color:var(--purple);background:#f1edff;border-color:#ded2ff}
   .b-gray{color:#566175;background:#eef1f6;border-color:#d3dbe7}
   .hero{
     display:grid;
@@ -152,6 +155,73 @@
   .ops-card strong{display:block;font-size:18px;line-height:1.2;margin:8px 0 6px}
   .ops-card span{display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;color:var(--muted);font-size:12px}
   .ops-note{margin-top:12px}
+  .overview-signal-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;margin-top:16px}
+  .overview-signal-grid .kpi{padding:13px;box-shadow:none}
+  .overview-signal-grid .kpi .num{font-size:22px}
+  .overview-module-grid{grid-template-columns:repeat(3,minmax(0,1fr));gap:14px;align-items:stretch}
+  .overview-module-card{
+    --tone:#1a73e8;
+    --tone-bg:#eaf2ff;
+    position:relative;
+    min-height:274px;
+    display:grid;
+    grid-template-rows:auto auto auto 1fr auto;
+    gap:11px;
+    padding:16px;
+    border:1px solid color-mix(in srgb,var(--tone) 34%,var(--line));
+    border-top:4px solid var(--tone);
+    border-radius:8px;
+    background:
+      linear-gradient(180deg,color-mix(in srgb,var(--tone-bg) 58%,#fff),#fff 58%),
+      #fff;
+    color:var(--text);
+    text-align:left;
+    box-shadow:var(--shadow-soft);
+    transition:transform .22s ease,border-color .22s ease,box-shadow .22s ease;
+  }
+  .overview-module-card:hover{transform:translateY(-3px);border-color:var(--tone);box-shadow:0 22px 42px color-mix(in srgb,var(--tone) 18%,transparent)}
+  .overview-module-card[data-tone="blue"]{--tone:#1a73e8;--tone-bg:#eaf2ff}
+  .overview-module-card[data-tone="green"]{--tone:#34a853;--tone-bg:#eaf7ee}
+  .overview-module-card[data-tone="purple"]{--tone:#7c4dff;--tone-bg:#f1edff}
+  .overview-module-card[data-tone="cyan"]{--tone:#12b5cb;--tone-bg:#e6f8fb}
+  .overview-module-card[data-tone="yellow"]{--tone:#b56f00;--tone-bg:#fff7df}
+  .overview-module-card[data-tone="red"]{--tone:#ea4335;--tone-bg:#ffefed}
+  .overview-module-top{display:flex;align-items:flex-start;justify-content:space-between;gap:10px}
+  .overview-module-mark{
+    width:36px;height:36px;display:grid;place-items:center;border-radius:8px;
+    background:var(--tone);color:#fff;font-weight:900;
+  }
+  .overview-module-state{display:inline-flex;align-items:center;gap:6px;color:var(--muted);font-size:11.5px;font-weight:800}
+  .overview-module-state:before{content:"";width:8px;height:8px;border-radius:50%;background:var(--tone)}
+  .overview-module-title h3{font-size:17px;line-height:1.25}
+  .overview-module-title p{
+    display:-webkit-box;
+    -webkit-line-clamp:2;
+    -webkit-box-orient:vertical;
+    overflow:hidden;
+    color:var(--muted);
+    font-size:12px;
+    margin-top:4px;
+  }
+  .overview-progress{display:grid;gap:6px}
+  .overview-progress-label{display:flex;justify-content:space-between;gap:10px;color:var(--muted);font-size:11.5px;font-weight:800}
+  .overview-progress-track{height:9px;border-radius:999px;background:#e5edf8;overflow:hidden}
+  .overview-progress-track span{display:block;height:100%;border-radius:inherit;background:linear-gradient(90deg,var(--tone),color-mix(in srgb,var(--tone) 64%,#fff))}
+  .overview-module-meta{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
+  .overview-module-meta div{min-height:58px;padding:8px;border:1px solid var(--line);border-radius:8px;background:rgba(255,255,255,.76)}
+  .overview-module-meta b{display:block;color:var(--faint);font-size:11px}
+  .overview-module-meta span{
+    display:-webkit-box;
+    -webkit-line-clamp:2;
+    -webkit-box-orient:vertical;
+    overflow:hidden;
+    color:var(--text);
+    font-size:12px;
+    margin-top:3px;
+    overflow-wrap:anywhere;
+  }
+  .overview-module-footer{display:flex;align-items:center;justify-content:space-between;gap:10px;color:var(--tone);font-size:12px;font-weight:900}
+  .overview-module-footer span:last-child{font-size:16px;line-height:1}
   .focus-box{display:grid;gap:10px;align-content:start}
   .focus-row{
     display:grid;grid-template-columns:34px minmax(0,1fr);gap:10px;align-items:start;
@@ -429,6 +499,32 @@
   .chip-empty{color:var(--faint);font-size:12px}
   .detail-docs{margin-top:4px}
   .detail-docs-label{display:block;font-size:11.5px;color:var(--muted);margin-bottom:6px}
+  .nav-block{display:grid;gap:6px}
+  .nav-label{display:flex;align-items:center;gap:8px;font-size:11.5px;color:var(--muted);font-weight:800}
+  .nav-label .pill{font-weight:700;font-size:10.5px;padding:2px 7px}
+  .goal-line{padding:11px 12px;border:1px solid #bfd8ff;background:#f2f7ff;border-radius:8px;font-weight:800;font-size:13px;color:#0f4d9a;overflow-wrap:anywhere}
+  .signal-chips{display:flex;flex-wrap:wrap;gap:6px}
+  .signal-chip{font-size:11.5px;padding:4px 9px;border:1px solid var(--line);border-radius:999px;background:var(--surface-2);color:var(--muted)}
+  .skill-row{display:grid;grid-template-columns:auto minmax(0,1fr);gap:10px;align-items:start;padding:9px 10px;border:1px solid var(--line);border-radius:8px;background:#fff}
+  .skill-row code{color:#0f4d9a;font-weight:800;font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;white-space:nowrap;font-size:12px}
+  .skill-row span{color:var(--muted);font-size:12px}
+  .prompt-card{border:1px solid var(--line);border-radius:8px;background:var(--surface-2);overflow:hidden}
+  .prompt-head{display:flex;align-items:center;justify-content:space-between;gap:8px;padding:7px 10px;border-bottom:1px solid var(--line);background:#fff}
+  .prompt-head b{font-size:12px}
+  .prompt-copy{border:1px solid var(--line);background:#fff;border-radius:6px;padding:3px 9px;font-size:11.5px;font-weight:800;color:var(--blue);cursor:pointer}
+  .prompt-copy:hover{border-color:var(--line-strong);background:var(--surface-3)}
+  .prompt-card pre{margin:0;padding:10px;font-size:11.5px;line-height:1.55;white-space:pre-wrap;overflow-wrap:anywhere;font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;color:var(--text);max-height:220px;overflow:auto}
+  .wf-steps{display:grid;gap:6px;counter-reset:wf}
+  .wf-step{position:relative;padding:8px 10px 8px 32px;border:1px solid var(--line);border-radius:8px;background:#fff;font-size:12px;color:var(--text);overflow-wrap:anywhere}
+  .wf-step:before{counter-increment:wf;content:counter(wf);position:absolute;left:8px;top:7px;width:17px;height:17px;border-radius:50%;background:var(--blue);color:#fff;font-size:10px;font-weight:800;display:flex;align-items:center;justify-content:center}
+  .transition-card{display:grid;gap:4px;padding:10px;border:1px solid var(--line);border-left:3px solid var(--green);border-radius:0 8px 8px 0;background:var(--surface-2)}
+  .transition-card .t-to{font-weight:800;font-size:12.5px}
+  .transition-card .t-trigger{color:var(--text);font-size:12px}
+  .transition-card .t-meta{display:flex;flex-wrap:wrap;gap:6px;margin-top:2px}
+  .transition-card .t-note{color:var(--muted);font-size:11.5px}
+  .impact-row{padding:9px 10px;border:1px solid var(--line);border-left:3px solid var(--yellow);border-radius:0 8px 8px 0;background:#fff}
+  .impact-row b{display:block;font-size:12px}
+  .impact-row span{display:block;color:var(--muted);font-size:11.5px;margin-top:2px}
   .task-list{display:grid;gap:8px;margin-top:14px}
   .task-row{display:grid;grid-template-columns:auto minmax(0,1fr) auto;gap:12px;align-items:center;width:100%;text-align:left;padding:11px;border:1px solid var(--line);border-radius:8px;background:#fff}
   .task-row:hover{border-color:var(--line-strong);background:var(--surface-3)}
@@ -497,6 +593,294 @@
     padding:9px 10px;
     color:var(--text);
   }
+  .doc-manager-head{
+    display:flex;
+    align-items:flex-end;
+    justify-content:space-between;
+    gap:12px;
+    margin-bottom:12px;
+  }
+  .doc-manager-head p{color:var(--muted);font-size:12px;margin-top:4px}
+  .doc-recommendation-grid{
+    display:grid;
+    grid-template-columns:repeat(3,minmax(0,1fr));
+    gap:10px;
+    margin-bottom:12px;
+  }
+  .doc-rec-card{
+    min-height:142px;
+    padding:12px;
+    border:1px solid var(--line);
+    border-radius:8px;
+    background:linear-gradient(180deg,#fff,var(--surface-2));
+  }
+  .doc-rec-card b{display:block;font-size:13px}
+  .doc-rec-card span{display:block;color:var(--muted);font-size:11.5px;margin-top:3px}
+  .doc-rec-links{display:grid;gap:6px;margin-top:10px}
+  .doc-rec-link{
+    display:grid;
+    grid-template-columns:minmax(0,1fr) auto;
+    gap:8px;
+    align-items:center;
+    border:1px solid var(--line);
+    border-radius:8px;
+    background:#fff;
+    color:var(--text);
+    padding:7px 8px;
+    text-align:left;
+    font-size:12px;
+    font-weight:800;
+  }
+  .doc-rec-link:hover{border-color:var(--line-strong);background:var(--surface-3)}
+  .doc-rec-link span{margin:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;color:inherit}
+  .doc-rec-link small{color:var(--faint);font-weight:750}
+  .doc-file-manager{
+    display:grid;
+    grid-template-columns:230px minmax(0,1fr) 270px;
+    gap:12px;
+    align-items:start;
+  }
+  .doc-pane{
+    border:1px solid var(--line);
+    border-radius:8px;
+    background:#fff;
+    overflow:hidden;
+  }
+  .doc-pane-head{
+    padding:11px 12px;
+    border-bottom:1px solid var(--line);
+    background:var(--surface-2);
+  }
+  .doc-pane-head b{display:block;font-size:13px}
+  .doc-pane-head span{display:block;color:var(--muted);font-size:11.5px;margin-top:2px}
+  .doc-root-list,.doc-folder-list,.doc-inspector-body{display:grid;gap:7px;padding:10px}
+  .doc-root-list{border-bottom:1px solid var(--line)}
+  .doc-root-button{
+    border:1px solid var(--line);
+    border-radius:8px;
+    background:#fff;
+    color:var(--text);
+    padding:8px 9px;
+    text-align:left;
+    font-weight:800;
+  }
+  .doc-root-button:hover,.doc-root-button.is-on{border-color:#bfd8ff;background:#f2f7ff;color:var(--blue)}
+  .doc-root-button span{display:block;color:var(--muted);font-size:11px;font-weight:650;margin-top:2px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  .doc-folder-toolbar{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    gap:10px;
+    padding:10px;
+    border-bottom:1px solid var(--line);
+    background:#fff;
+  }
+  .doc-folder-toolbar span{
+    color:var(--muted);
+    font-size:12px;
+    overflow:hidden;
+    text-overflow:ellipsis;
+    white-space:nowrap;
+  }
+  .doc-folder-list{
+    max-height:360px;
+    overflow:auto;
+  }
+  .doc-item-row{
+    display:grid;
+    grid-template-columns:34px minmax(0,1fr) auto;
+    gap:10px;
+    align-items:center;
+    border:1px solid var(--line);
+    border-radius:8px;
+    background:#fff;
+    color:var(--text);
+    padding:9px;
+    text-align:left;
+  }
+  .doc-item-row:hover,.doc-item-row.is-on{border-color:#bfd8ff;background:#f2f7ff}
+  .doc-icon{
+    width:34px;
+    height:34px;
+    border-radius:8px;
+    display:grid;
+    place-items:center;
+    background:var(--surface-3);
+    color:var(--blue);
+    font-weight:900;
+    font-size:13px;
+  }
+  .doc-item-main{min-width:0}
+  .doc-item-main b{display:block;font-size:13px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  .doc-item-main span{display:block;color:var(--muted);font-size:11.5px;margin-top:2px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  .doc-item-meta{display:flex;gap:6px;align-items:center;justify-content:flex-end;flex-wrap:wrap}
+  .importance-pill{
+    display:inline-flex;
+    border:1px solid var(--line);
+    border-radius:999px;
+    padding:4px 8px;
+    background:#fff;
+    color:var(--muted);
+    font-size:11px;
+    font-weight:850;
+    white-space:nowrap;
+  }
+  .importance-pill[data-importance="必读"]{color:var(--red);border-color:#ffd3ce;background:#ffefed}
+  .importance-pill[data-importance="必要"]{color:var(--blue);border-color:#cfe2ff;background:#eaf2ff}
+  .importance-pill[data-importance="系统级"]{color:#07849a;border-color:#c7eff5;background:#e6f8fb}
+  .importance-pill[data-importance="参考"]{color:#566175;border-color:#d3dbe7;background:#eef1f6}
+  .doc-inspector-title{
+    display:grid;
+    gap:8px;
+    padding:12px;
+    border-bottom:1px solid var(--line);
+    background:linear-gradient(180deg,#fff,var(--surface-2));
+  }
+  .doc-inspector-title b{font-size:15px;overflow-wrap:anywhere}
+  .doc-inspector-title span{color:var(--muted);font-size:12px;overflow-wrap:anywhere}
+  .doc-meta-grid{display:grid;gap:7px}
+  .doc-meta-grid div{padding:8px;border:1px solid var(--line);border-radius:8px;background:var(--surface-2)}
+  .doc-meta-grid b{display:block;color:var(--muted);font-size:11px}
+  .doc-meta-grid span{display:block;font-size:12px;font-weight:800;margin-top:2px;overflow-wrap:anywhere}
+  .doc-inspector-actions{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+  .doc-inspector-actions .reader-btn{width:100%;font-size:12px}
+  .doc-preview{
+    margin-top:12px;
+    min-height:520px;
+  }
+  .doc-preview .reader-body{max-height:680px}
+  .doc-library-top{
+    display:grid;
+    gap:12px;
+    margin-bottom:12px;
+  }
+  .doc-category-tabs{
+    display:flex;
+    gap:8px;
+    overflow:auto;
+    padding-bottom:2px;
+  }
+  .doc-cat-tab{
+    min-width:132px;
+    border:1px solid var(--line);
+    border-radius:8px;
+    background:#fff;
+    color:var(--muted);
+    padding:9px 10px;
+    text-align:left;
+    font-weight:800;
+  }
+  .doc-cat-tab small{display:block;color:var(--faint);font-size:11px;font-weight:650;margin-top:2px}
+  .doc-cat-tab.is-on{color:var(--blue);border-color:#bfd8ff;background:#f2f7ff}
+  .doc-category-panel{
+    display:grid;
+    grid-template-columns:minmax(240px,.42fr) minmax(0,1fr);
+    gap:12px;
+    padding:12px;
+    border:1px solid var(--line);
+    border-radius:8px;
+    background:linear-gradient(180deg,#fff,var(--surface-2));
+  }
+  .doc-cat-summary{display:grid;align-content:start;gap:9px}
+  .doc-cat-summary b{font-size:15px}
+  .doc-cat-summary span{color:var(--muted);font-size:12px}
+  .doc-card-grid{
+    display:grid;
+    grid-template-columns:repeat(3,minmax(0,1fr));
+    gap:8px;
+  }
+  .doc-card{
+    min-height:118px;
+    padding:10px;
+    border:1px solid var(--line);
+    border-radius:8px;
+    background:#fff;
+    text-align:left;
+    color:var(--text);
+  }
+  .doc-card:hover{border-color:var(--line-strong);background:var(--surface-3)}
+  .doc-card b{
+    display:-webkit-box;
+    -webkit-line-clamp:2;
+    -webkit-box-orient:vertical;
+    overflow:hidden;
+    font-size:12.5px;
+  }
+  .doc-card span{
+    display:-webkit-box;
+    -webkit-line-clamp:2;
+    -webkit-box-orient:vertical;
+    overflow:hidden;
+    color:var(--muted);
+    font-size:11.5px;
+    margin-top:5px;
+  }
+  .doc-card code{
+    display:block;
+    margin-top:8px;
+    color:#0f4d9a;
+    font-size:11px;
+    overflow:hidden;
+    text-overflow:ellipsis;
+    white-space:nowrap;
+  }
+  .capability-matrix{
+    display:grid;
+    grid-template-columns:minmax(0,.9fr) minmax(0,1.1fr);
+    gap:12px;
+    margin:12px 0;
+  }
+  .capability-panel{
+    padding:12px;
+    border:1px solid var(--line);
+    border-radius:8px;
+    background:#fff;
+  }
+  .capability-head{display:flex;align-items:flex-start;justify-content:space-between;gap:10px;margin-bottom:10px}
+  .capability-head b{font-size:14px}
+  .capability-head span{display:block;color:var(--muted);font-size:12px;margin-top:2px}
+  .skill-group-grid,.agent-family-grid{display:grid;gap:8px}
+  .skill-group-grid{grid-template-columns:repeat(3,minmax(0,1fr))}
+  .agent-family-grid{grid-template-columns:repeat(2,minmax(0,1fr));max-height:252px;overflow:auto;padding-right:2px}
+  .skill-group,.agent-family{
+    border:1px solid var(--line);
+    border-radius:8px;
+    background:var(--surface-2);
+    padding:10px;
+    text-align:left;
+  }
+  .skill-group b,.agent-family b{display:block;font-size:12.5px}
+  .skill-group span,.agent-family span{
+    display:-webkit-box;
+    -webkit-line-clamp:2;
+    -webkit-box-orient:vertical;
+    overflow:hidden;
+    color:var(--muted);
+    font-size:11.5px;
+    margin-top:4px;
+  }
+  .agent-family.is-on{border-color:#bfd8ff;background:#f2f7ff;color:var(--blue)}
+  .agent-version-panel{
+    margin-top:10px;
+    padding:10px;
+    border:1px solid #cfe2ff;
+    border-radius:8px;
+    background:#f7fbff;
+  }
+  .agent-version-head{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:8px}
+  .version-switch{display:flex;flex-wrap:wrap;gap:6px}
+  .version-chip{
+    border:1px solid var(--line);
+    border-radius:999px;
+    background:#fff;
+    color:var(--muted);
+    padding:6px 9px;
+    font-size:11.5px;
+    font-weight:800;
+  }
+  .version-chip.is-on{color:var(--blue);border-color:#bfd8ff;background:#eaf2ff}
+  .agent-version-detail{display:grid;gap:6px;color:var(--muted);font-size:12px}
+  .agent-version-detail b{color:var(--text);font-size:13px}
   .doc-workbench{display:grid;grid-template-columns:190px minmax(0,1fr);gap:12px;min-height:680px}
   .doc-pathbar{
     display:flex;
@@ -642,6 +1026,94 @@
   .log-list{display:grid;gap:8px}
   .log-row{grid-template-columns:118px minmax(0,1fr) auto}
   .log-date{font-weight:800;color:#0f4d9a}
+  .release-dashboard{
+    grid-template-columns:minmax(0,1fr) minmax(300px,.36fr);
+    gap:14px;
+    align-items:start;
+  }
+  .release-main{display:grid;gap:14px;min-width:0}
+  .release-side{display:grid;gap:12px;position:sticky;top:18px}
+  .release-card-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+  .release-overall-card{
+    min-height:236px;
+    display:grid;
+    grid-template-rows:auto auto minmax(0,1fr) auto;
+    gap:10px;
+    padding:14px;
+    border:1px solid var(--line);
+    border-left:4px solid var(--blue);
+    border-radius:8px;
+    background:linear-gradient(180deg,#fff,#f7fbff);
+  }
+  .release-card-head{display:flex;align-items:flex-start;justify-content:space-between;gap:10px}
+  .release-card-head b{display:block;font-size:15px}
+  .release-card-head span{display:block;color:var(--muted);font-size:12px;margin-top:2px}
+  .release-summary{color:var(--muted);font-size:12.5px;overflow-wrap:anywhere}
+  .release-note-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
+  .release-note{min-height:72px;padding:9px;border:1px solid var(--line);border-radius:8px;background:#fff}
+  .release-note b{display:block;color:var(--faint);font-size:11px;margin-bottom:4px}
+  .release-note ul{margin:0;padding-left:16px;color:var(--muted);font-size:11.5px}
+  .release-note li{margin:2px 0;overflow-wrap:anywhere}
+  .release-module-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}
+  .release-module-card{
+    --tone:#1a73e8;
+    --tone-bg:#eaf2ff;
+    min-height:190px;
+    display:grid;
+    grid-template-rows:auto auto minmax(0,1fr) auto;
+    gap:9px;
+    padding:12px;
+    border:1px solid color-mix(in srgb,var(--tone) 34%,var(--line));
+    border-top:4px solid var(--tone);
+    border-radius:8px;
+    background:linear-gradient(180deg,color-mix(in srgb,var(--tone-bg) 64%,#fff),#fff 62%);
+  }
+  .release-module-card[data-tone="blue"]{--tone:#1a73e8;--tone-bg:#eaf2ff}
+  .release-module-card[data-tone="green"]{--tone:#34a853;--tone-bg:#eaf7ee}
+  .release-module-card[data-tone="purple"]{--tone:#7c4dff;--tone-bg:#f1edff}
+  .release-module-card[data-tone="cyan"]{--tone:#12b5cb;--tone-bg:#e6f8fb}
+  .release-module-card[data-tone="yellow"]{--tone:#b56f00;--tone-bg:#fff7df}
+  .release-module-card[data-tone="red"]{--tone:#ea4335;--tone-bg:#ffefed}
+  .release-module-head{display:flex;align-items:flex-start;justify-content:space-between;gap:10px}
+  .release-module-head b{display:block;font-size:13px}
+  .release-module-head span{display:block;color:var(--muted);font-size:11.5px;margin-top:2px}
+  .release-module-count{color:var(--tone);font-weight:900;font-size:12px}
+  .release-module-card p{
+    display:-webkit-box;
+    -webkit-line-clamp:3;
+    -webkit-box-orient:vertical;
+    overflow:hidden;
+    color:var(--muted);
+    font-size:12px;
+  }
+  .release-mini-list{display:grid;gap:5px}
+  .release-mini-list span{
+    display:block;
+    padding:6px 7px;
+    border:1px solid var(--line);
+    border-radius:8px;
+    background:rgba(255,255,255,.72);
+    color:var(--muted);
+    font-size:11.5px;
+    overflow:hidden;
+    text-overflow:ellipsis;
+    white-space:nowrap;
+  }
+  .release-entry-grid{display:grid;gap:9px}
+  .release-entry-row{
+    display:grid;
+    grid-template-columns:116px minmax(0,1fr) auto;
+    gap:10px;
+    align-items:start;
+    padding:12px;
+    border:1px solid var(--line);
+    border-radius:8px;
+    background:#fff;
+  }
+  .release-entry-row b{display:block;font-size:13px}
+  .release-entry-row span{display:block;color:var(--muted);font-size:12px;margin-top:2px;overflow-wrap:anywhere}
+  .release-entry-meta{display:flex;gap:6px;flex-wrap:wrap;margin-top:7px}
+  .release-side .flow-note{background:#fff}
   .flow-note{
     padding:14px;
     border:1px solid #cfe2ff;
@@ -651,9 +1123,16 @@
   }
   .flow-note b{color:var(--text)}
   @media (max-width:1180px){
-    .hero,.flow-grid,.split,.docs-layout{grid-template-columns:1fr}
-    .docs-side{position:static;max-height:none}
+    .hero,.flow-grid,.split,.docs-layout,.release-dashboard{grid-template-columns:1fr}
+    .docs-side,.release-side{position:static;max-height:none}
+    .doc-file-manager{grid-template-columns:210px minmax(0,1fr)}
+    .doc-inspector{grid-column:1 / -1}
+    .doc-recommendation-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
+    .doc-category-panel,.capability-matrix{grid-template-columns:1fr}
+    .doc-card-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
     .kpis{grid-template-columns:repeat(2,minmax(0,1fr))}
+    .overview-module-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
+    .release-module-grid,.release-card-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
     .module-track,.module-rhythm,.branch-flow,.module-region[data-region="主产品链"] .region-track{grid-template-columns:1fr}
     .module-card:not(:last-child):after{display:none}
     .branch-step:not(:last-child):after{display:none}
@@ -681,10 +1160,15 @@
     .content{padding:18px}
     .ops-head{flex-wrap:wrap}
     .ops-grid{grid-template-columns:1fr}
+    .overview-signal-grid,.overview-module-grid{grid-template-columns:1fr}
     .reader-shell{grid-template-columns:1fr}
     .doc-workbench,.doc-toolbar{grid-template-columns:1fr}
+    .doc-file-manager,.doc-recommendation-grid{grid-template-columns:1fr}
+    .doc-folder-list{max-height:none}
+    .skill-group-grid,.agent-family-grid{grid-template-columns:1fr}
     .markdown-body{padding:18px;max-width:none}
     .data-grid,.trend-row,.branch-commit,.dir-row{grid-template-columns:1fr}
+    .release-module-grid,.release-card-grid,.release-entry-row{grid-template-columns:1fr}
     .region-track{grid-template-columns:1fr}
     .flow-stage{min-height:auto}
     .branch-row,.log-row{grid-template-columns:1fr}
@@ -696,6 +1180,9 @@
     .sub{font-size:12px}
     .section-head{flex-wrap:wrap;gap:8px}
     .content{padding:14px}
+    .doc-card-grid{grid-template-columns:1fr}
+    .doc-item-row{grid-template-columns:30px minmax(0,1fr)}
+    .doc-item-meta{grid-column:2}
   }
 </style>
 </head>
@@ -731,7 +1218,7 @@
         <div class="surface ops-board">
           <div class="ops-head">
             <div class="ops-title">
-              <b>今日控制台</b>
+              <b>产品功能监控总览</b>
               <span id="snapshotMeta">state snapshot</span>
               <div class="ops-badges">
                 <span class="badge b-green">读取+提醒</span>
@@ -741,25 +1228,25 @@
             </div>
             <button class="reader-btn" data-page-jump="product-flow" type="button">产品线</button>
           </div>
-          <div class="ops-grid" id="cockpitGrid"></div>
+          <div class="overview-signal-grid" id="overviewSignalGrid"></div>
           <div class="flow-note ops-note">
             <b>控制边界：</b>
-            <p style="margin-top:8px">自动化只读本地文件和 git 状态，只提醒；roadmap、merge、发布判断都由 operator 决定。</p>
+            <p style="margin-top:8px">总览只汇总产品模块状态和入口；roadmap、merge、发布判断仍由 operator 决定。</p>
           </div>
         </div>
         <div class="surface pad focus-box" id="overviewFocus"></div>
       </section>
 
-      <section class="section kpis page-section is-active" data-page-section="overview" id="kpiGrid"></section>
+      <section class="section overview-module-grid page-section is-active" data-page-section="overview" id="overviewModuleGrid"></section>
 
       <section class="section flow-grid page-section" id="product-flow" data-page-section="product-flow">
         <div class="surface pad flow-stage">
           <div class="section-head">
             <div>
-          <h2>产品线顺序和独立模块跟踪</h2>
-          <p class="sub">主产品链按顺序推进，Admin Dashboard 作为控制面单独跟踪。每个模块有自己的状态、branch、依赖和下一步。</p>
+          <h2>产品结构 · 开发导航</h2>
+          <p class="sub">点击任一模块查看：开发目标、任务归属信号、绑定 branch / skill / prompt、开发 workflow，以及进入下一模块的触发条件与需同步更新的模块。完整规则见 docs/PRODUCT_MODULE_MAP.md。</p>
             </div>
-            <span class="pill">点击模块</span>
+            <span class="pill">点击 = 开发导航</span>
           </div>
           <div class="structure-map" id="structureMap" aria-label="产品结构流程图"></div>
           <div class="branch-workflow">
@@ -782,60 +1269,73 @@
         <aside class="surface pad detail" id="productDetail" aria-live="polite"></aside>
       </section>
 
-      <section class="section docs-layout page-section" id="docs" data-page-section="docs">
+      <section class="section page-section" id="docs" data-page-section="docs">
         <div class="surface pad docs-main">
-          <div class="section-head">
+          <div class="doc-manager-head">
             <div>
               <h2>文档库</h2>
-              <p class="sub" id="serveNotice">serve 模式读取真实文件；file:// 下请运行 pnpm dashboard:serve。</p>
+              <p id="serveNotice">像浏览本地文件夹一样查看项目文档；入口全部关联真实仓库路径。</p>
             </div>
             <span class="pill" id="docModePill">file</span>
           </div>
           <div class="doc-toolbar">
-            <input id="docSearch" type="search" placeholder="rg 搜索 docs / skills / agents / package docs">
+            <input id="docSearch" type="search" placeholder="可选：在当前文档库中搜索关键字">
             <button class="reader-btn" id="docSearchButton" type="button">搜索</button>
             <button class="reader-btn" id="docRefreshButton" type="button">刷新</button>
           </div>
-          <div class="branch-docs" id="branchDocs"></div>
+          <div class="doc-recommendation-grid" id="docRecommendationGroups"></div>
           <div class="search-results" id="searchResults"></div>
-          <div class="doc-pathbar">
-            <span id="treePathLabel">文档根目录</span>
-            <button class="reader-btn" id="treeUpButton" type="button">上级</button>
-          </div>
-          <div class="doc-workbench">
-            <aside class="doc-tree" id="docTree"></aside>
-            <article class="reader doc-reader">
-              <div class="reader-head">
-                <div class="reader-title">
-                  <div><b id="docTitle">未选择文档</b><span id="docSource">选择左侧文件或分支关联文档</span></div>
-                  <div class="doc-actions">
-                    <button class="reader-btn" id="docOpenButton" type="button">打开</button>
-                    <button class="reader-btn" id="docCopyButton" type="button">复制路径</button>
-                    <button class="reader-btn" id="docRevealButton" type="button">Finder</button>
-                  </div>
-                </div>
-              </div>
-              <div class="reader-body markdown-body" id="markdownBody"></div>
-            </article>
-          </div>
-        </div>
 
-        <aside class="surface pad docs-side">
-          <div class="section-head">
-            <div>
-              <h2>本文目录</h2>
-              <p class="sub">读取当前 Markdown 标题。</p>
-            </div>
+          <div class="doc-file-manager">
+            <aside class="doc-pane doc-folder-pane">
+              <div class="doc-pane-head">
+                <b>文件夹</b>
+                <span>真实目录入口</span>
+              </div>
+              <div class="doc-root-list" id="docRootList"></div>
+              <div class="doc-tree" id="docTree"></div>
+            </aside>
+
+            <section class="doc-pane doc-folder-browser">
+              <div class="doc-pane-head">
+                <b>当前文件夹</b>
+                <span id="treePathLabel">文档根目录</span>
+              </div>
+              <div class="doc-folder-toolbar">
+                <span id="folderSummary">选择一个文件夹查看内容</span>
+                <button class="reader-btn" id="treeUpButton" type="button">上级</button>
+              </div>
+              <div class="doc-folder-list" id="docFolderList"></div>
+            </section>
+
+            <aside class="doc-pane doc-inspector">
+              <div class="doc-inspector-title">
+                <span class="importance-pill" id="docImportancePill" data-importance="参考">参考</span>
+                <b id="docTitle">未选择文档</b>
+                <span id="docSource">选择左侧文件夹或中间文件</span>
+              </div>
+              <div class="doc-inspector-body">
+                <div class="doc-meta-grid" id="docMetaGrid"></div>
+                <div class="doc-inspector-actions">
+                  <button class="reader-btn" id="docOpenButton" type="button">查看</button>
+                  <button class="reader-btn" id="docCopyButton" type="button">复制路径</button>
+                  <button class="reader-btn" id="docRevealButton" type="button">Finder</button>
+                  <button class="reader-btn" id="docRefreshFolderButton" type="button">刷新目录</button>
+                </div>
+                <div class="outline-box" id="docOutline"></div>
+              </div>
+            </aside>
           </div>
-          <div class="outline-box" id="docOutline"></div>
-          <div class="section-head" style="margin-top:14px">
-            <div>
-              <h2>Skill / Agent</h2>
-              <p class="sub">本地注册表，紧凑展示。</p>
+
+          <article class="reader doc-reader doc-preview">
+            <div class="reader-head">
+              <div class="reader-title">
+                <div><b>文档内容</b><span id="docPreviewSource">选择 Markdown / TOML / JSON 文档后在这里预览。</span></div>
+              </div>
             </div>
-          </div>
-          <div class="registry-grid" id="registryGrid"></div>
-        </aside>
+            <div class="reader-body markdown-body" id="markdownBody"></div>
+          </article>
+        </div>
       </section>
 
       <section class="section split page-section" id="dev-data" data-page-section="dev-data">
@@ -911,21 +1411,51 @@
         </aside>
       </section>
 
-      <section class="section split page-section" id="release-log" data-page-section="release-log">
-        <div class="surface pad">
-          <div class="section-head">
-            <div>
-              <h2>发布记录</h2>
-              <p class="sub">像 GitHub release notes 一样记录日期、产品线、用户可见变化、验证和后续风险。</p>
+      <section class="section release-dashboard page-section" id="release-log" data-page-section="release-log">
+        <div class="release-main">
+          <div class="surface pad">
+            <div class="section-head">
+              <div>
+                <h2>整体发布记录</h2>
+                <p class="sub">按阶段总结新增功能、体验优化、修复问题和影响范围，先读这里就能理解一次发布的主线。</p>
+              </div>
+              <a class="reader-btn" id="releaseLogOpenLink" href="../../workflow/project/release-log.md" data-release-log-path="docs/workflow/project/release-log.md" target="_blank" rel="noreferrer">打开 release-log.md</a>
             </div>
-            <a class="reader-btn" href="../../workflow/project/release-log.md" target="_blank" rel="noreferrer">打开 release-log.md</a>
+            <div class="release-card-grid" id="overallReleaseCards"></div>
           </div>
-          <div class="log-list" id="releaseRows"></div>
+
+          <div class="surface pad">
+            <div class="section-head">
+              <div>
+                <h2>模块发布卡片</h2>
+                <p class="sub">按 Web、Mac 桌面版、插件、同步、官网和管理者 / 开发者 Dashboard 分开看最近更新。</p>
+              </div>
+              <span class="pill">module notes</span>
+            </div>
+            <div class="release-module-grid" id="releaseModuleCards"></div>
+          </div>
+
+          <div class="surface pad">
+            <div class="section-head">
+              <div>
+                <h2>详细发布记录</h2>
+                <p class="sub">保留时间顺序，但每条记录会标出模块、影响范围、验证和后续风险。</p>
+              </div>
+              <span class="pill">newest first</span>
+            </div>
+            <div class="release-entry-grid" id="releaseRows"></div>
+          </div>
         </div>
-        <aside class="surface pad">
-          <h2>xai-release-log skill</h2>
-          <p class="sub">用于每次 ship、系统文档增量、跨机器治理变更之后补齐更新日志。</p>
-          <div class="flow-note" style="margin-top:12px">
+        <aside class="surface pad release-side">
+          <div>
+            <h2>xai-release-log skill</h2>
+            <p class="sub">用于每次 ship、系统文档增量、跨机器治理变更之后补齐更新日志。</p>
+          </div>
+          <div class="flow-note">
+            <b>推荐字段：</b>
+            <p style="margin-top:8px">Version / Added / Improved / Fixed / Impact / Audience note，加上 User-visible change 和 Verification。</p>
+          </div>
+          <div class="flow-note">
             <b>触发语：</b>
             <p style="margin-top:8px">发布 log、更新日志、release notes、今天改了什么、把这次提交写进 changelog。</p>
           </div>
@@ -942,6 +1472,7 @@ const products = [...(dashboardState.product_lines || [])].sort((a,b) => Number(
 const overviewRows = dashboardState.status_rows || [];
 const cockpit = dashboardState.cockpit || [];
 const kpis = dashboardState.signals || dashboardState.kpis || [];
+const overviewModules = dashboardState.overview_modules || buildOverviewModulesFallback(products);
 const devData = dashboardState.development_data || {};
 const productLinks = dashboardState.product_links || [
   ["web", "app", "main"],
@@ -975,6 +1506,13 @@ const agents = (dashboardState.agents_found || []).map(agent => ({
   path: agent.path,
   status: agent.tracked ? "tracked" : "local-only"
 }));
+const skillGroups = dashboardState.skill_groups || [];
+const agentFamilies = dashboardState.agent_families || [];
+const docCollections = dashboardState.doc_collections || [];
+const docHub = dashboardState.doc_hub || {roots:[], groups:[], by_path:{}};
+let currentDocCollection = docCollections[0]?.key || "";
+let currentAgentFamily = agentFamilies[0]?.slug || "";
+let currentAgentPlatform = "";
 
 const branches = [
   ["web", "Web 主线和 Web release source。适合 Web 产品、共享 UI 源头和系统治理文档。", "exists"],
@@ -985,9 +1523,18 @@ const branches = [
 ];
 
 const releaseRows = dashboardState.release_rows || [];
+const releaseEntries = dashboardState.release_entries || [];
+const releaseModules = dashboardState.release_modules || [];
+const overallReleases = dashboardState.overall_releases || [];
 
 function badgeClass(value){
   const v = String(value).toLowerCase();
+  if(v === "web" || v.includes("web 分支")) return "b-blue";
+  if(v === "app" || v.includes("mac") || v.includes("desktop")) return "b-green";
+  if(v === "plugin" || v.includes("插件")) return "b-purple";
+  if(v === "sync" || v.includes("同步")) return "b-cyan";
+  if(v === "site" || v.includes("官网")) return "b-yellow";
+  if(v === "admin" || v.includes("dashboard")) return "b-red";
   if(v.includes("blocked")) return "b-red";
   if(v.includes("attention") || v.includes("pending") || v.includes("review") || v.includes("local-only")) return "b-yellow";
   if(v.includes("shipped") || v.includes("active") || v.includes("exists") || v.includes("landed") || v.includes("approved")) return "b-green";
@@ -1051,20 +1598,6 @@ function renderOverview(){
   freshnessNode.textContent = freshness.label;
   freshnessNode.className = `badge ${freshness.badge}`;
 
-  const cockpitRows = cockpit.length ? cockpit : [
-    {question:"现在做什么", answer:"运行 dashboard 生成快照", detail:"node scripts/dashboard/generate-state.mjs"},
-    {question:"在哪条线", answer:dashboardState.git?.branch || "unknown", detail:"读取当前 git branch"},
-    {question:"用哪个 workflow · skill", answer:"xai-feature-full-loop", detail:"需要推进功能时使用"},
-    {question:"什么状态", answer:"只读快照", detail:"不会自动改 roadmap/merge/发布判断"}
-  ];
-  document.getElementById("cockpitGrid").innerHTML = cockpitRows.map(item => `
-    <button class="ops-card" data-page-jump="${item.question.includes("线") ? "branches" : item.question.includes("workflow") ? "docs" : "product-flow"}" type="button">
-      <b>${h(item.question)}</b>
-      <strong>${h(item.answer)}</strong>
-      <span>${h(item.detail)}</span>
-    </button>
-  `).join("");
-
   const rows = overviewRows.length ? overviewRows : [
     {label:"当前主线", value:"Web mainline / independent App lane"},
     {label:"自动跟踪", value:"生成快照未加载；请运行 node scripts/dashboard/generate-state.mjs。"}
@@ -1084,13 +1617,113 @@ function renderKpis(){
     {label:"Project skills", badge:"tracked", value:String(skills.length), note:".teams/skills/*/SKILL.md"},
     {label:"Snapshot", badge:"manual refresh", value:"local", note:"读取+提醒"}
   ];
-  document.getElementById("kpiGrid").innerHTML = (kpis.length ? kpis : fallback).map(item => `
+  document.getElementById("overviewSignalGrid").innerHTML = (kpis.length ? kpis : fallback).map(item => `
     <div class="surface kpi">
       <div class="label"><span>${h(item.label)}</span><span class="pill">${h(item.badge)}</span></div>
       <div class="num">${h(item.value)}</div>
       <div class="note">${h(item.note)}</div>
     </div>
   `).join("");
+}
+
+function buildOverviewModulesFallback(lines){
+  const fallbackMeta = {
+    web:["Web 版本","blue","主线开发","正常运行","打开 /app/dashboard"],
+    app:["桌面版本","green","Native foundation","开发线正常","查看桌面详情"],
+    plugin:["桌面插件","purple","平台等待","等待 App 平台","打开 PLUGIN_MAP"],
+    sync:["账号云同步","cyan","合同沉淀","暂停中","打开 sync-v1"],
+    site:["官方网页","yellow","发布入口候选","本地站点待启动","打开官网本地页"],
+    admin:["开发者 / 管理者 Dashboard","red","控制面原型","原型可打开","打开 Admin 原型"]
+  };
+  return (lines.length ? lines : [
+    {key:"web",title:"Web",subtitle:"项目最全功能面",status:"Web 主线",next:"D3 gate 后同步 Desktop"},
+    {key:"app",title:"Desktop",subtitle:"macOS 桌面产品",status:"独立桌面开发线",next:"G1 native foundation"},
+    {key:"plugin",title:"Plugin",subtitle:"桌面插件和 widget",status:"等待 App 平台",next:"插件 SDK / Widget host"},
+    {key:"sync",title:"Sync",subtitle:"账号云同步",status:"基建合同",next:"push/pull 和冲突处理"},
+    {key:"site",title:"Site",subtitle:"官网和发布入口",status:"拟定",next:"确认 package 和启动时机"},
+    {key:"admin",title:"Admin",subtitle:"运营和管理后台",status:"控制面候选",next:"接入真实后台合同"}
+  ]).map(item => {
+    const meta = fallbackMeta[item.key] || [item.title,"blue",item.status,"待确认","查看详情"];
+    return {
+      key:item.key,
+      title:meta[0],
+      subtitle:item.subtitle,
+      tone:meta[1],
+      icon:meta[0].slice(0,1).toUpperCase(),
+      phase:meta[2],
+      status:item.status,
+      progress:item.key === "web" ? 78 : item.key === "app" ? 42 : item.key === "plugin" ? 24 : item.key === "sync" ? 28 : item.key === "site" ? 18 : 22,
+      running:meta[3],
+      recent_update:item.status_summary || item.tracker || item.status,
+      todo:item.next,
+      target:overviewTargetFor(item.key, meta[4])
+    };
+  });
+}
+
+function overviewTargetFor(key, label){
+  const targets = {
+    web:{type:"url",href:"http://localhost:5173/app/dashboard",label},
+    app:{type:"page",page:"product-flow",product_key:"app",label},
+    plugin:{type:"doc",path:"docs/PLUGIN_MAP.md",label},
+    sync:{type:"doc",path:"docs/workflow/roadmap/sync-v1.md",label},
+    site:{type:"url",href:"http://localhost:3000",label},
+    admin:{type:"file",href:"../admin-dashboard/index.html",label}
+  };
+  return targets[key] || {type:"page",page:"product-flow",product_key:key,label};
+}
+
+function renderOverviewModules(){
+  const modules = overviewModules.length ? overviewModules : buildOverviewModulesFallback([]);
+  document.getElementById("overviewModuleGrid").innerHTML = modules.map((item, index) => `
+    <button class="overview-module-card" data-overview-module="${index}" data-tone="${h(item.tone || "blue")}" type="button">
+      <div class="overview-module-top">
+        <div class="overview-module-mark">${h(item.icon || item.title.slice(0,1))}</div>
+        <span class="overview-module-state">${h(item.running || "待确认")}</span>
+      </div>
+      <div class="overview-module-title">
+        <h3>${h(item.title)}</h3>
+        <p>${h(item.subtitle || item.status || "")}</p>
+      </div>
+      <div class="overview-progress">
+        <div class="overview-progress-label"><span>${h(item.phase || item.status || "当前阶段")}</span><span>${h(item.progress || 0)}%</span></div>
+        <div class="overview-progress-track"><span style="width:${Math.max(0, Math.min(100, Number(item.progress) || 0))}%"></span></div>
+      </div>
+      <div class="overview-module-meta">
+        <div><b>最近更新</b><span>${h(item.recent_update || "等待快照刷新")}</span></div>
+        <div><b>待处理</b><span>${h(item.todo || "暂无")}</span></div>
+        <div><b>当前状态</b><span>${h(item.status || item.phase || "tracked")}</span></div>
+        <div><b>入口</b><span>${h(item.target?.label || "查看详情")}</span></div>
+      </div>
+      <div class="overview-module-footer"><span>${h(item.target?.label || "进入模块")}</span><span>›</span></div>
+    </button>
+  `).join("");
+  document.querySelectorAll("[data-overview-module]").forEach(button => {
+    button.addEventListener("click", () => openOverviewModule(modules[Number(button.dataset.overviewModule)]));
+  });
+}
+
+function openOverviewModule(item){
+  const target = item?.target || overviewTargetFor(item?.key || "", "查看详情");
+  openProductTarget(target);
+}
+
+function openProductTarget(target){
+  if(target.type === "url" && target.href){
+    window.open(target.href, "_blank", "noreferrer");
+    return;
+  }
+  if(target.type === "file" && target.href){
+    window.open(target.href, "_blank", "noreferrer");
+    return;
+  }
+  if(target.type === "doc" && target.path){
+    openDocInLibrary(target.path);
+    return;
+  }
+  const page = target.page || "product-flow";
+  setPage(page);
+  if(target.product_key) setProduct(target.product_key);
 }
 
 function renderStructureMap(){
@@ -1194,6 +1827,7 @@ function renderModules(){
 function setProduct(key){
   const item = products.find(product => product.key === key);
   if(!item) return;
+  const productTarget = overviewTargetFor(item.key, item.key === "admin" ? "打开 Admin 原型" : "打开入口");
   document.querySelectorAll(".module-card").forEach(node => node.classList.toggle("is-active", node.dataset.product === key));
   document.querySelectorAll(".map-node").forEach(node => node.classList.toggle("is-active", node.dataset.product === key));
   document.getElementById("productDetail").innerHTML = `
@@ -1202,6 +1836,7 @@ function setProduct(key){
         <span class="badge ${badgeClass(item.badge)}">${h(item.badge)}</span>
         <h3 style="margin-top:10px">${item.order}. ${h(item.title)}</h3>
       </div>
+      <button class="reader-btn" id="productTargetButton" type="button">${h(productTarget.label)}</button>
     </div>
     <div class="detail-grid">
       <div class="detail-metric"><b>模块状态</b><span>${h(String(item.status).split(" · ")[0])}</span></div>
@@ -1219,6 +1854,9 @@ function setProduct(key){
       </div>
     </div>
   `;
+  document.getElementById("productTargetButton").addEventListener("click", () => {
+    openProductTarget(productTarget);
+  });
   document.querySelectorAll("#detailDocLinks [data-detail-doc]").forEach(btn => {
     btn.addEventListener("click", () => openDocInLibrary(btn.dataset.detailDoc));
   });
@@ -1232,6 +1870,9 @@ function openDocInLibrary(path){
 const serveMode = location.protocol === "http:" || location.protocol === "https:";
 let currentDocPath = "";
 let currentTreeDir = "";
+let currentTreeChildren = [];
+let currentDocEntry = null;
+let currentDocContent = "";
 
 function branchDocSeeds(){
   const branch = dashboardState.git?.branch || "";
@@ -1258,6 +1899,116 @@ async function fetchJson(url){
   return body;
 }
 
+function basename(path){
+  return String(path || "").split("/").filter(Boolean).pop() || path || "文档根目录";
+}
+
+function dirname(path){
+  const parts = String(path || "").split("/").filter(Boolean);
+  parts.pop();
+  return parts.join("/");
+}
+
+function docKindFor(entry){
+  if(entry?.kind) return entry.kind;
+  if(entry?.type === "dir") return "Folder";
+  const ext = String(entry?.ext || entry?.path?.split(".").pop() || "").toLowerCase();
+  if(ext === "md") return "Markdown";
+  if(ext === "mdc") return "Cursor Rule";
+  if(ext === "toml") return "Agent TOML";
+  if(ext === "json") return "JSON";
+  if(ext === "txt") return "Text";
+  return entry?.type === "file" ? "File" : "Folder";
+}
+
+function inferredImportance(path, type = "file"){
+  const value = String(path || "").toLowerCase();
+  if(/claude\.md|agents\.md|usage-guide|handbook|plugin_map|adr-0013|subagent_workflow|sop_new_feature|sop_bugfix/.test(value)) return "必读";
+  if(/dev_log|design\.md|api\.md|test\.md|roadmap|workflow|skill|agent/.test(value)) return "必要";
+  if(/adr|contracts|portable|release-log|branch-policy/.test(value)) return "系统级";
+  return type === "dir" ? "参考" : "参考";
+}
+
+function docMetaFor(entry = {}){
+  const hubMeta = docHub.by_path?.[entry.path] || {};
+  const path = entry.path || hubMeta.path || "";
+  return {
+    ...entry,
+    ...hubMeta,
+    path,
+    label: hubMeta.label || entry.label || entry.name || basename(path),
+    summary: hubMeta.summary || entry.summary || (entry.type === "dir" ? "本地文件夹，点击进入查看子文档。" : "本地项目文档，内容来自仓库实时文件。"),
+    type: hubMeta.type || entry.type || "file",
+    kind: hubMeta.kind || docKindFor(entry),
+    importance: hubMeta.importance || inferredImportance(path, entry.type),
+    tags: hubMeta.tags || entry.tags || [],
+    updated_at: hubMeta.updated_at || entry.modified || "",
+    size_bytes: hubMeta.size_bytes || entry.size || 0
+  };
+}
+
+function formatBytes(bytes){
+  const n = Number(bytes) || 0;
+  if(!n) return "—";
+  if(n < 1024) return `${n} B`;
+  if(n < 1024 * 1024) return `${Math.round(n / 1024)} KB`;
+  return `${(n / 1024 / 1024).toFixed(1)} MB`;
+}
+
+function formatDate(value){
+  const ts = Date.parse(value || "");
+  if(!Number.isFinite(ts)) return "—";
+  return new Date(ts).toLocaleString("zh-CN", {dateStyle:"medium", timeStyle:"short"});
+}
+
+function fileIcon(entry){
+  if(entry.type === "dir") return "DIR";
+  const kind = docKindFor(entry);
+  if(kind === "Markdown") return "MD";
+  if(kind === "Agent TOML") return "TOML";
+  if(kind === "JSON") return "JSON";
+  if(kind === "Cursor Rule") return "MDC";
+  return "TXT";
+}
+
+function renderDocRecommendations(){
+  const groups = docHub.groups || [];
+  document.getElementById("docRecommendationGroups").innerHTML = groups.map(group => `
+    <section class="doc-rec-card">
+      <b>${h(group.title)}</b>
+      <span>${h(group.summary)}</span>
+      <div class="doc-rec-links">
+        ${(group.entries || []).slice(0, 4).map(entry => `
+          <button class="doc-rec-link" data-library-path="${h(entry.path)}" data-library-type="${h(entry.type || "file")}" type="button">
+            <span>${h(entry.label)}</span>
+            <small>${h(entry.importance || group.importance || "参考")}</small>
+          </button>
+        `).join("")}
+      </div>
+    </section>
+  `).join("");
+  document.querySelectorAll("#docRecommendationGroups [data-library-path]").forEach(button => {
+    button.addEventListener("click", () => openLibraryEntry(button.dataset.libraryPath, button.dataset.libraryType));
+  });
+}
+
+function renderDocRoots(){
+  const roots = docHub.roots?.length ? docHub.roots : [
+    {label:"docs", path:"docs", summary:"项目文档根目录", type:"dir", importance:"必读"},
+    {label:".teams/skills", path:".teams/skills", summary:"项目级 skills", type:"dir", importance:"必要"},
+    {label:".codex/agents", path:".codex/agents", summary:"Codex agents", type:"dir", importance:"必要"}
+  ];
+  document.getElementById("docRootList").innerHTML = roots.map(root => `
+    <button class="doc-root-button ${root.path === currentTreeDir ? "is-on" : ""}" data-root-path="${h(root.path)}" type="button">
+      ${h(root.label)}
+      <span>${h(root.path)}</span>
+    </button>
+  `).join("");
+  document.querySelectorAll("[data-root-path]").forEach(button => {
+    button.addEventListener("click", () => openLibraryEntry(button.dataset.rootPath, "dir"));
+  });
+}
+
 function renderBranchDocs(){
   document.getElementById("branchDocs").innerHTML = branchDocSeeds().map(([label, path]) => `
     <button class="reader-btn" data-doc-path="${h(path)}" type="button">${h(label)}</button>
@@ -1267,13 +2018,215 @@ function renderBranchDocs(){
   });
 }
 
-function renderTree(children){
-  document.getElementById("docTree").innerHTML = children.map(item => `
-    <button class="tree-row ${item.path === currentDocPath ? "is-on" : ""}" data-tree-type="${h(item.type)}" data-tree-path="${h(item.path)}" type="button">
-      <span>${item.type === "dir" ? "›" : "·"}</span>
-      <span>${h(item.virtual ? item.name : item.path.replace(/\/docs$/, "/docs"))}</span>
+function openLibraryEntry(path, type = "file"){
+  if(!serveMode){
+    document.getElementById("markdownBody").innerHTML = `<div class="flow-note"><b>需要本地服务</b><p style="margin-top:8px">运行 <code>pnpm dashboard:serve</code> 后打开 <code>http://127.0.0.1:4177</code>。</p></div>`;
+    return;
+  }
+  if(type === "dir") loadTree(path);
+  else openDoc(path);
+}
+
+function renderDocCollections(){
+  const tabs = document.getElementById("docCategoryTabs");
+  const panel = document.getElementById("docCategoryPanel");
+  if(!docCollections.length){
+    tabs.innerHTML = "";
+    panel.innerHTML = `<div class="flow-note"><b>文档分类未生成</b><p style="margin-top:8px">运行 <code>node scripts/dashboard/generate-state.mjs</code> 刷新快照。</p></div>`;
+    return;
+  }
+  if(!docCollections.some(item => item.key === currentDocCollection)){
+    currentDocCollection = docCollections[0].key;
+  }
+  tabs.innerHTML = docCollections.map(item => `
+    <button class="doc-cat-tab ${item.key === currentDocCollection ? "is-on" : ""}" data-doc-category="${h(item.key)}" type="button">
+      ${h(item.title)}
+      <small>${h(String(item.count || 0))} entries</small>
     </button>
   `).join("");
+  const selected = docCollections.find(item => item.key === currentDocCollection) || docCollections[0];
+  const entries = selected.entries || [];
+  panel.innerHTML = `
+    <div class="doc-cat-summary">
+      <b>${h(selected.title)}</b>
+      <span>${h(selected.summary)}</span>
+      <div class="chip-row">${(selected.tags || []).map(tag => `<span class="pill">${h(tag)}</span>`).join("")}</div>
+    </div>
+    <div class="doc-card-grid">
+      ${entries.map(entry => `
+        <button class="doc-card" data-library-path="${h(entry.path)}" data-library-type="${h(entry.type || "file")}" type="button">
+          <b>${h(entry.label)}</b>
+          <span>${h(entry.summary || "")}</span>
+          <div class="chip-row">${(entry.tags || []).slice(0,2).map(tag => `<span class="pill">${h(tag)}</span>`).join("")}</div>
+          <code>${h(entry.path)}</code>
+        </button>
+      `).join("") || `<div class="flow-note"><b>暂无条目</b></div>`}
+    </div>
+  `;
+  document.querySelectorAll("[data-doc-category]").forEach(button => {
+    button.addEventListener("click", () => {
+      currentDocCollection = button.dataset.docCategory;
+      renderDocCollections();
+    });
+  });
+  document.querySelectorAll("[data-library-path]").forEach(button => {
+    button.addEventListener("click", () => openLibraryEntry(button.dataset.libraryPath, button.dataset.libraryType));
+  });
+}
+
+function renderSkillGroups(){
+  const count = skillGroups.reduce((sum, group) => sum + Number(group.count || 0), 0);
+  document.getElementById("skillGroupCount").textContent = `${count} skills`;
+  document.getElementById("skillGroupGrid").innerHTML = skillGroups.map(group => {
+    const first = (group.items || [])[0];
+    return `
+      <button class="skill-group" data-skill-path="${h(first?.path || "")}" type="button">
+        <b>${h(group.label)}</b>
+        <span>${h(group.summary)}</span>
+        <div class="chip-row"><span class="badge b-blue">${h(String(group.count || 0))}</span><span class="pill">${h(first?.name || "open")}</span></div>
+      </button>
+    `;
+  }).join("") || `<div class="flow-note"><b>未发现 skill</b></div>`;
+  document.querySelectorAll("[data-skill-path]").forEach(button => {
+    button.addEventListener("click", () => {
+      if(button.dataset.skillPath) openLibraryEntry(button.dataset.skillPath);
+    });
+  });
+}
+
+function renderAgentFamilies(){
+  document.getElementById("agentFamilyCount").textContent = `${agentFamilies.length} groups`;
+  if(!agentFamilies.length){
+    document.getElementById("agentFamilyGrid").innerHTML = `<div class="flow-note"><b>未发现 agent</b></div>`;
+    document.getElementById("agentVersionPanel").innerHTML = "";
+    return;
+  }
+  if(!agentFamilies.some(item => item.slug === currentAgentFamily)){
+    currentAgentFamily = agentFamilies[0].slug;
+  }
+  document.getElementById("agentFamilyGrid").innerHTML = agentFamilies.map(family => `
+    <button class="agent-family ${family.slug === currentAgentFamily ? "is-on" : ""}" data-agent-family="${h(family.slug)}" type="button">
+      <b>${h(family.title)}</b>
+      <span>${h(family.summary)}</span>
+      <div class="chip-row"><span class="pill">${h(family.group)}</span><span class="badge b-cyan">${h(String((family.variants || []).length))}</span></div>
+    </button>
+  `).join("");
+  document.querySelectorAll("[data-agent-family]").forEach(button => {
+    button.addEventListener("click", () => {
+      currentAgentFamily = button.dataset.agentFamily;
+      currentAgentPlatform = "";
+      renderAgentFamilies();
+    });
+  });
+  renderAgentVersionPanel();
+}
+
+function renderAgentVersionPanel(){
+  const family = agentFamilies.find(item => item.slug === currentAgentFamily) || agentFamilies[0];
+  if(!family){
+    document.getElementById("agentVersionPanel").innerHTML = "";
+    return;
+  }
+  const variants = family.variants || [];
+  const selected = variants.find(item => item.platform === currentAgentPlatform) ||
+    variants.find(item => item.platform === "Codex") ||
+    variants[0];
+  currentAgentPlatform = selected?.platform || "";
+  document.getElementById("agentVersionPanel").innerHTML = `
+    <div class="agent-version-head">
+      <b>${h(family.title)}</b>
+      <div class="version-switch">
+        ${variants.map(variant => `
+          <button class="version-chip ${variant.platform === currentAgentPlatform ? "is-on" : ""}" data-agent-platform="${h(variant.platform)}" type="button">${h(variant.platform)}</button>
+        `).join("")}
+      </div>
+    </div>
+    <div class="agent-version-detail">
+      <b>${h(selected?.name || family.title)}</b>
+      <span>${h(selected?.description || family.summary)}</span>
+      <button class="reader-btn" data-agent-doc="${h(selected?.path || "")}" type="button">${h(selected?.path || "打开文档")}</button>
+    </div>
+  `;
+  document.querySelectorAll("[data-agent-platform]").forEach(button => {
+    button.addEventListener("click", () => {
+      currentAgentPlatform = button.dataset.agentPlatform;
+      renderAgentVersionPanel();
+    });
+  });
+  document.querySelectorAll("[data-agent-doc]").forEach(button => {
+    button.addEventListener("click", () => {
+      if(button.dataset.agentDoc) openLibraryEntry(button.dataset.agentDoc);
+    });
+  });
+}
+
+function renderInspector(entry = currentDocEntry){
+  const meta = docMetaFor(entry || {});
+  currentDocEntry = meta.path ? meta : currentDocEntry;
+  const title = meta.path ? meta.label : "未选择文档";
+  const source = meta.path || "选择左侧文件夹或中间文件";
+  const importance = meta.importance || "参考";
+  const importanceNode = document.getElementById("docImportancePill");
+  importanceNode.textContent = importance;
+  importanceNode.dataset.importance = importance;
+  document.getElementById("docTitle").textContent = title;
+  document.getElementById("docSource").textContent = source;
+  document.getElementById("docPreviewSource").textContent = meta.path ? `${meta.kind} · ${meta.path}` : "选择 Markdown / TOML / JSON 文档后在这里预览。";
+  document.getElementById("docMetaGrid").innerHTML = meta.path ? `
+    <div><b>类型</b><span>${h(meta.kind)}</span></div>
+    <div><b>重要性</b><span>${h(importance)}</span></div>
+    <div><b>路径</b><span>${h(meta.path)}</span></div>
+    <div><b>更新</b><span>${h(formatDate(meta.updated_at))}</span></div>
+    <div><b>大小</b><span>${h(formatBytes(meta.size_bytes))}</span></div>
+    <div><b>标签</b><span>${h((meta.tags || []).join(" / ") || "—")}</span></div>
+    <div><b>说明</b><span>${h(meta.summary)}</span></div>
+  ` : `<div><b>状态</b><span>请选择一个文档或文件夹</span></div>`;
+}
+
+function renderFolderList(children = currentTreeChildren){
+  const q = document.getElementById("docSearch")?.value.trim().toLowerCase() || "";
+  const filtered = (children || []).filter(item => {
+    if(!q) return true;
+    const meta = docMetaFor(item);
+    return `${meta.label} ${meta.path} ${meta.summary} ${(meta.tags || []).join(" ")}`.toLowerCase().includes(q);
+  });
+  const dirs = filtered.filter(item => item.type === "dir").length;
+  const files = filtered.filter(item => item.type !== "dir").length;
+  document.getElementById("folderSummary").textContent = `${dirs} 个文件夹 · ${files} 个文档`;
+  document.getElementById("docFolderList").innerHTML = filtered.map(item => {
+    const meta = docMetaFor(item);
+    return `
+      <button class="doc-item-row ${meta.path === currentDocPath ? "is-on" : ""}" data-folder-type="${h(meta.type)}" data-folder-path="${h(meta.path)}" type="button">
+        <span class="doc-icon">${h(fileIcon(meta))}</span>
+        <span class="doc-item-main">
+          <b>${h(meta.label)}</b>
+          <span>${h(meta.path)}</span>
+        </span>
+        <span class="doc-item-meta">
+          <span class="importance-pill" data-importance="${h(meta.importance)}">${h(meta.importance)}</span>
+          <span class="pill">${h(meta.kind)}</span>
+        </span>
+      </button>
+    `;
+  }).join("") || `<div class="flow-note"><b>当前筛选无结果</b><p style="margin-top:6px">清空搜索或返回上级目录。</p></div>`;
+  document.querySelectorAll("[data-folder-path]").forEach(button => {
+    button.addEventListener("click", () => {
+      if(button.dataset.folderType === "dir") openLibraryEntry(button.dataset.folderPath, "dir");
+      else openLibraryEntry(button.dataset.folderPath, "file");
+    });
+  });
+}
+
+function renderTree(children){
+  document.getElementById("docTree").innerHTML = children.map(item => {
+    const meta = docMetaFor(item);
+    return `
+    <button class="tree-row ${meta.path === currentDocPath || meta.path === currentTreeDir ? "is-on" : ""}" data-tree-type="${h(meta.type)}" data-tree-path="${h(meta.path)}" type="button">
+      <span>${meta.type === "dir" ? "›" : "·"}</span>
+      <span>${h(item.virtual ? item.name : meta.label)}</span>
+    </button>
+  `;
+  }).join("");
   document.querySelectorAll("[data-tree-path]").forEach(button => {
     button.addEventListener("click", () => {
       if(button.dataset.treeType === "dir") loadTree(button.dataset.treePath);
@@ -1286,9 +2239,17 @@ async function loadTree(dir = ""){
   if(!serveMode) return;
   const data = await fetchJson(`/api/tree?dir=${encodeURIComponent(dir)}`);
   currentTreeDir = data.path || "";
+  currentTreeChildren = data.children || [];
   document.getElementById("treePathLabel").textContent = currentTreeDir || "文档根目录";
   document.getElementById("treeUpButton").disabled = !currentTreeDir;
-  renderTree(data.children || []);
+  renderDocRoots();
+  renderTree(currentTreeChildren);
+  renderFolderList(currentTreeChildren);
+  renderInspector(docMetaFor({path: currentTreeDir, type: "dir", name: basename(currentTreeDir)}));
+  if(!currentDocPath || currentDocPath.startsWith(currentTreeDir)){
+    document.getElementById("markdownBody").innerHTML = `<div class="flow-note"><b>${h(currentTreeDir || "文档根目录")}</b><p style="margin-top:8px">从中间列表选择文档后预览内容；文件夹内容已实时从本地目录读取。</p></div>`;
+    renderOutline("");
+  }
 }
 
 function parentDir(path){
@@ -1427,11 +2388,20 @@ async function openDoc(path){
   if(!serveMode) return;
   const doc = await fetchJson(`/api/file?path=${encodeURIComponent(path)}`);
   currentDocPath = doc.path;
-  document.getElementById("docTitle").textContent = doc.name;
-  document.getElementById("docSource").textContent = doc.path;
+  currentDocContent = doc.content || "";
+  currentDocEntry = docMetaFor({
+    name: doc.name,
+    path: doc.path,
+    type: "file",
+    ext: doc.ext,
+    size: doc.size,
+    modified: doc.modified
+  });
+  renderInspector(currentDocEntry);
   document.getElementById("markdownBody").innerHTML = renderMarkdown(doc.content);
   renderOutline(doc.content);
   document.querySelectorAll("[data-tree-path]").forEach(button => button.classList.toggle("is-on", button.dataset.treePath === currentDocPath));
+  document.querySelectorAll("[data-folder-path]").forEach(button => button.classList.toggle("is-on", button.dataset.folderPath === currentDocPath));
 }
 
 function escapeRegExp(value){
@@ -1484,8 +2454,10 @@ function initDocLibrary(){
   const modePill = document.getElementById("docModePill");
   modePill.textContent = serveMode ? "serve" : "file";
   modePill.className = `pill ${serveMode ? "b-green" : "b-yellow"}`;
+  renderDocCollections();
+  renderSkillGroups();
+  renderAgentFamilies();
   renderBranchDocs();
-  renderRegistry();
   if(!serveMode){
     document.getElementById("markdownBody").innerHTML = `<div class="flow-note"><b>需要本地服务</b><p style="margin-top:8px">运行 <code>pnpm dashboard:serve</code> 后打开 <code>http://127.0.0.1:4177</code>。</p></div>`;
     return;
@@ -1557,14 +2529,110 @@ function renderBranches(){
   `).join("");
 }
 
+const releaseModuleLabels = {
+  web:"Web 分支",
+  app:"App / Mac",
+  plugin:"桌面插件",
+  sync:"账号云同步",
+  site:"官网",
+  admin:"Dashboard"
+};
+
+function listItems(items, fallback){
+  const values = (items || []).filter(Boolean);
+  if(!values.length) return `<ul><li>${h(fallback)}</li></ul>`;
+  return `<ul>${values.map(item => `<li>${h(item)}</li>`).join("")}</ul>`;
+}
+
+function moduleBadges(keys){
+  const values = (keys || []).filter(Boolean);
+  if(!values.length) return `<span class="badge b-gray">全项目</span>`;
+  return values.map(key => `<span class="badge ${badgeClass(key)}">${h(releaseModuleLabels[key] || key)}</span>`).join("");
+}
+
+function renderOverallReleases(){
+  const target = document.getElementById("overallReleaseCards");
+  const items = overallReleases.length ? overallReleases : [];
+  target.innerHTML = items.length ? items.map(item => `
+    <article class="release-overall-card">
+      <div class="release-card-head">
+        <div>
+          <b>${h(item.title || "项目阶段更新")}</b>
+          <span>${h(item.date || "")} · ${h(item.version_label || "version pending")}</span>
+        </div>
+        <span class="badge b-blue">release</span>
+      </div>
+      <p class="release-summary">${h(item.summary || "等待 release-log.md 写入发布摘要。")}</p>
+      <div class="release-note-grid">
+        <div class="release-note"><b>新增功能</b>${listItems(item.added, "本次未标记新增项")}</div>
+        <div class="release-note"><b>优化内容</b>${listItems(item.improved, "本次未标记优化项")}</div>
+        <div class="release-note"><b>修复问题</b>${listItems(item.fixed, "本次未标记修复项")}</div>
+        <div class="release-note"><b>影响范围</b>${listItems(item.impact, "影响范围待补充")}</div>
+      </div>
+      <div class="release-entry-meta">${moduleBadges(item.modules)}${item.audience_note ? `<span class="pill">${h(item.audience_note)}</span>` : ""}</div>
+    </article>
+  `).join("") : `<div class="flow-note"><b>暂无整体发布记录</b><p style="margin-top:8px">运行 <code>node scripts/dashboard/generate-state.mjs</code> 从 release-log.md 生成。</p></div>`;
+}
+
+function renderReleaseModules(){
+  const target = document.getElementById("releaseModuleCards");
+  target.innerHTML = releaseModules.length ? releaseModules.map(item => `
+    <article class="release-module-card" data-tone="${h(item.tone || "blue")}">
+      <div class="release-module-head">
+        <div>
+          <b>${h(item.title)}</b>
+          <span>${h(item.latest_date || "暂无日期")}</span>
+        </div>
+        <span class="release-module-count">${h(item.count || 0)} 条</span>
+      </div>
+      <div>
+        <b>${h(item.latest_title || "暂无模块发布")}</b>
+        <p>${h(item.latest_summary || "等待 release-log.md 写入该模块的发布说明。")}</p>
+      </div>
+      <div class="release-mini-list">
+        ${(item.entries || []).slice(0, 3).map(entry => `<span>${h(entry.date)} · ${h(entry.title)}</span>`).join("") || "<span>暂无相关记录</span>"}
+      </div>
+      <span class="pill">${h(releaseModuleLabels[item.key] || item.key)}</span>
+    </article>
+  `).join("") : `<div class="flow-note"><b>暂无模块发布卡片</b><p style="margin-top:8px">运行 <code>node scripts/dashboard/generate-state.mjs</code> 生成结构化发布数据。</p></div>`;
+}
+
 function renderReleaseRows(){
-  document.getElementById("releaseRows").innerHTML = releaseRows.length ? releaseRows.map(([date,line,desc,type]) => `
-    <div class="log-row">
-      <div class="log-date">${h(date)}</div>
-      <div><b>${h(line)}</b><span>${h(desc)}</span></div>
-      <span class="badge ${badgeClass(type)}">${h(type)}</span>
-    </div>
+  const target = document.getElementById("releaseRows");
+  const entries = releaseEntries.length ? releaseEntries : releaseRows.map(([date,title,summary,type]) => ({
+    date,
+    title,
+    summary,
+    type,
+    module:"admin",
+    related_modules:["admin"],
+    version_label:`snapshot ${date}`
+  }));
+  target.innerHTML = entries.length ? entries.map(entry => `
+    <article class="release-entry-row">
+      <div class="log-date">${h(entry.date)}</div>
+      <div>
+        <b>${h(entry.title)}</b>
+        <span>${h(entry.summary || entry.user_visible || "")}</span>
+        <div class="release-entry-meta">
+          <span class="pill">${h(entry.version_label || "version pending")}</span>
+          ${entry.impact ? `<span class="pill">${h(entry.impact)}</span>` : ""}
+          ${entry.verification ? `<span class="pill">${h(entry.verification)}</span>` : ""}
+          ${entry.risk_followup ? `<span class="pill">${h(entry.risk_followup)}</span>` : ""}
+        </div>
+      </div>
+      <span class="badge ${badgeClass(entry.module || entry.type)}">${h(releaseModuleLabels[entry.module] || entry.type || "release")}</span>
+    </article>
   `).join("") : `<div class="flow-note"><b>暂无发布记录</b><p style="margin-top:8px">运行 <code>node scripts/dashboard/generate-state.mjs</code> 从 release-log.md 生成。</p></div>`;
+}
+
+function initReleaseLinks(){
+  const link = document.getElementById("releaseLogOpenLink");
+  if(!link) return;
+  const path = link.dataset.releaseLogPath || "docs/workflow/project/release-log.md";
+  if(serveMode){
+    link.href = `/api/raw?path=${encodeURIComponent(path)}`;
+  }
 }
 
 function renderDevData(){
@@ -1667,6 +2735,7 @@ window.addEventListener("hashchange", () => setPage(location.hash.slice(1), fals
 
 renderOverview();
 renderKpis();
+renderOverviewModules();
 renderStructureMap();
 renderBranchFlow();
 renderModules();
@@ -1675,6 +2744,9 @@ initDocLibrary();
 renderDevData();
 renderTaskProgress();
 renderBranches();
+initReleaseLinks();
+renderOverallReleases();
+renderReleaseModules();
 renderReleaseRows();
 setPage(location.hash.slice(1), false);
 </script>

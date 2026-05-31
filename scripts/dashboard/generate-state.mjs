@@ -4,6 +4,7 @@ import {
   existsSync,
   readFileSync,
   readdirSync,
+  statSync,
   writeFileSync
 } from "node:fs";
 import { dirname, relative, resolve } from "node:path";
@@ -17,11 +18,16 @@ const branchPolicyPath = resolve(repoRoot, "docs/workflow/project/branch-policy.
 const pluginMapPath = resolve(repoRoot, "docs/PLUGIN_MAP.md");
 const roadmapDir = resolve(repoRoot, "docs/workflow/roadmap");
 const skillDir = resolve(repoRoot, ".teams/skills");
+const codexSkillDir = resolve(repoRoot, ".codex/skills");
 const agentDir = resolve(repoRoot, ".codex/agents");
+const agentTemplateDir = resolve(repoRoot, ".agents/templates");
+const claudeAgentDir = resolve(repoRoot, ".claude/agents");
+const cursorAgentDir = resolve(repoRoot, ".cursor/agents");
 const outputPath = resolve(repoRoot, "docs/prototypes/dev-dashboard/state.generated.js");
 const roadmapAllowlist = [
   "sync-v1.md",
   "web-ticktick-parity.md",
+  "xai-admin-dashboard-system-integration.md",
   "xai-g0-window-spike.md",
   "xai-g1-native-foundation.md",
   "xai-web-calendar-event-create.md",
@@ -113,6 +119,36 @@ function listSkills() {
     .sort((a, b) => a.name.localeCompare(b.name));
 }
 
+function listSkillSet(dir, label, summary) {
+  if (!existsSync(dir)) return { label, summary, count: 0, items: [] };
+  const items = readdirSync(dir, { withFileTypes: true })
+    .filter(entry => entry.isDirectory())
+    .map(entry => {
+      const skillPath = resolve(dir, entry.name, "SKILL.md");
+      const relPath = relative(repoRoot, skillPath);
+      const text = existsSync(skillPath) ? readText(skillPath) : "";
+      const meta = parseFrontmatter(text);
+      return {
+        name: meta.name || entry.name,
+        description: meta.description || "",
+        triggers: extractTriggers(text, meta.description),
+        path: relPath,
+        tracked: Boolean(git(["ls-files", "--", relPath]))
+      };
+    })
+    .filter(item => item.path && existsSync(resolve(repoRoot, item.path)))
+    .sort((a, b) => a.name.localeCompare(b.name));
+  return { label, summary, count: items.length, items };
+}
+
+function buildSkillGroups() {
+  return [
+    listSkillSet(skillDir, "XAI Workflow Skills", "项目级 feature / roadmap / release / web-to-desktop 能力。"),
+    listSkillSet(codexSkillDir, "Codex Public Skills", "Codex 本地可复用开发技能，覆盖前端、CI、规划和安全。"),
+    listSkillSet(resolve(repoRoot, "docs/workflow/_portable/skills"), "Portable Skills", "可迁移到其它工具链的 skill 文档副本。")
+  ].filter(group => group.count);
+}
+
 function parseTomlString(text, key) {
   const match = text.match(new RegExp(`^${key}\\s*=\\s*\"([^\"]*)\"`, "m"));
   return match ? match[1] : "";
@@ -137,6 +173,320 @@ function listAgents() {
     .sort((a, b) => a.name.localeCompare(b.name));
 }
 
+function parseAgentFile(path, fallbackName) {
+  const text = existsSync(path) ? readText(path) : "";
+  const ext = path.endsWith(".toml") ? "toml" : "md";
+  if (ext === "toml") {
+    return {
+      name: parseTomlString(text, "name") || fallbackName,
+      description: parseTomlString(text, "description")
+    };
+  }
+  const meta = parseFrontmatter(text);
+  const title = text.match(/^#\s+(.+)$/m);
+  return {
+    name: meta.name || fallbackName,
+    description: meta.description || (title ? title[1].trim() : "")
+  };
+}
+
+function agentGroupLabel(name) {
+  if (name === "ship") return "Ship";
+  if (name.startsWith("feature-")) return "Feature Workflow";
+  if (name.startsWith("bug") || name.startsWith("bugfix-")) return "Bugfix Workflow";
+  if (name.startsWith("skill-")) return "Skill Helper";
+  return "Workflow";
+}
+
+function agentSummary(name) {
+  if (name === "feature-plan") return "需求进入后产出 discovery review、设计/API/test 策略和阶段计划。";
+  if (name === "feature-review") return "冷读计划与合同，给出 APPROVE / REVISE / REJECT。";
+  if (name === "feature-build") return "按已批准计划实现功能，维护 dev_log 和验证证据。";
+  if (name === "feature-verify") return "只读验证功能、测试、文档和 Handoff 是否满足发布门槛。";
+  if (name === "feature-dev-loop") return "串联 plan/review/build/verify 的循环入口。";
+  if (name === "feature-full-loop") return "端到端 feature 自动化入口。";
+  if (name === "ship") return "收口验证、提交、推送和发布记录。";
+  if (name.startsWith("bug")) return "诊断、修复或验证 bugfix 工作流。";
+  if (name.startsWith("skill-")) return "把 skill 文档转成对应平台可调用 Agent。";
+  return "Workflow V2 Agent 模板的一个版本。";
+}
+
+function listAgentVariants(dir, platform, ext) {
+  if (!existsSync(dir)) return [];
+  return readdirSync(dir, { withFileTypes: true })
+    .filter(entry => entry.isFile() && entry.name.endsWith(ext))
+    .filter(entry => entry.name !== "README.md")
+    .map(entry => {
+      const path = resolve(dir, entry.name);
+      const relPath = relative(repoRoot, path);
+      const slug = entry.name.replace(new RegExp(`${ext.replace(".", "\\.")}$`), "");
+      const meta = parseAgentFile(path, slug);
+      return {
+        slug,
+        platform,
+        name: meta.name || slug,
+        description: meta.description || agentSummary(slug),
+        path: relPath,
+        tracked: Boolean(git(["ls-files", "--", relPath]))
+      };
+    });
+}
+
+function buildAgentFamilies() {
+  const variants = [
+    ...listAgentVariants(agentTemplateDir, "Canonical", ".md"),
+    ...listAgentVariants(agentDir, "Codex", ".toml"),
+    ...listAgentVariants(claudeAgentDir, "Cloud", ".md"),
+    ...listAgentVariants(cursorAgentDir, "Cursor", ".md")
+  ];
+  const grouped = new Map();
+  variants.forEach(variant => {
+    if (!grouped.has(variant.slug)) {
+      grouped.set(variant.slug, {
+        slug: variant.slug,
+        title: variant.name,
+        group: agentGroupLabel(variant.slug),
+        summary: agentSummary(variant.slug),
+        variants: []
+      });
+    }
+    grouped.get(variant.slug).variants.push(variant);
+  });
+  const platformOrder = ["Canonical", "Codex", "Cloud", "Cursor"];
+  return [...grouped.values()]
+    .map(family => ({
+      ...family,
+      variants: family.variants.sort((a, b) => platformOrder.indexOf(a.platform) - platformOrder.indexOf(b.platform))
+    }))
+    .sort((a, b) => {
+      const order = ["Feature Workflow", "Bugfix Workflow", "Ship", "Skill Helper", "Workflow"];
+      return (order.indexOf(a.group) - order.indexOf(b.group)) || a.slug.localeCompare(b.slug);
+    });
+}
+
+function classifyDocImportance(path, tags = [], label = "") {
+  const value = `${path} ${label} ${tags.join(" ")}`.toLowerCase();
+  if (/claude\.md|agents\.md|usage-guide|handbook|plugin_map|adr-0013|subagent_workflow|sop_new_feature|sop_bugfix/.test(value)) {
+    return "必读";
+  }
+  if (/dev_log|design\.md|api\.md|test\.md|roadmap|workflow|skill|agent/.test(value)) {
+    return "必要";
+  }
+  if (/adr|contracts|portable|release-log|branch-policy/.test(value)) {
+    return "系统级";
+  }
+  return "参考";
+}
+
+function docKind(path) {
+  if (path.endsWith(".toml")) return "Agent TOML";
+  if (path.endsWith(".mdc")) return "Cursor Rule";
+  if (path.endsWith(".json")) return "JSON";
+  if (path.endsWith(".md")) return "Markdown";
+  if (path.endsWith(".txt")) return "Text";
+  return path.includes(".") ? "File" : "Folder";
+}
+
+function docEntry(label, path, summary, tags = [], importance = "") {
+  const abs = resolve(repoRoot, path);
+  if (!existsSync(abs)) return null;
+  const stat = statSyncSafe(abs);
+  return {
+    label,
+    path,
+    summary,
+    tags,
+    type: stat?.isDirectory() ? "dir" : "file",
+    kind: stat?.isDirectory() ? "Folder" : docKind(path),
+    importance: importance || classifyDocImportance(path, tags, label),
+    updated_at: stat ? stat.mtime.toISOString() : "",
+    size_bytes: stat?.isFile() ? stat.size : 0,
+    tracked: Boolean(git(["ls-files", "--", path]))
+  };
+}
+
+function statSyncSafe(path) {
+  try {
+    return existsSync(path) ? statSync(path) : null;
+  } catch {
+    return null;
+  }
+}
+
+function buildDocCollections(skillGroups, agentFamilies) {
+  const collections = [
+    {
+      key: "workflow",
+      title: "工作流文档",
+      summary: "Workflow V2、SOP、handoff、portable 迁移和自动化入口。",
+      tags: ["Workflow V2", "SOP", "Handoff", "Portable"],
+      entries: [
+        docEntry("使用手册", "docs/workflow/project/usage-guide.md", "个人开发看板和 Workflow V2 的日常入口。", ["guide"]),
+        docEntry("项目手册", "docs/workflow/project/handbook.md", "当前主线、操作原则和人工确认边界。", ["handbook"]),
+        docEntry("Subagent Workflow V2", "docs/workflow/SUBAGENT_WORKFLOW_V2.md", "feature / bugfix / ship agent 链路。", ["agent"]),
+        docEntry("新功能 SOP", "docs/workflow/SOP_NEW_FEATURE.md", "Feature 从 brief 到 ship 的标准路径。", ["feature"]),
+        docEntry("Bugfix SOP", "docs/workflow/SOP_BUGFIX.md", "Bug 诊断、修复、验证的标准路径。", ["bugfix"]),
+        docEntry("Portable Manifest", "docs/workflow/_portable/00-PORTABLE-MANIFEST.md", "跨平台同步 surface 与生成规则。", ["portable"])
+      ].filter(Boolean)
+    },
+    {
+      key: "development",
+      title: "开发文档",
+      summary: "项目边界、ADR、插件地图、包级 design/api/test/dev_log 和运行治理。",
+      tags: ["Architecture", "ADR", "Package docs", "Governance"],
+      entries: [
+        docEntry("CLAUDE.md", "CLAUDE.md", "跨平台共享项目规则和工程边界。", ["rules"]),
+        docEntry("AGENTS.md", "AGENTS.md", "Codex 会话规则和 handoff 展示约束。", ["rules"]),
+        docEntry("PLUGIN_MAP", "docs/PLUGIN_MAP.md", "全局插件/包状态地图。", ["map"]),
+        docEntry("ADR-0013 分支同步治理", "docs/adr/0013-branch-sync-governance.md", "Web / Desktop / Sync 的 D3 gate 和分支拓扑。", ["adr"]),
+        docEntry("ADR-0007 Web Console", "docs/adr/0007-xai-web-console-build-form.md", "Web Console 拆包、持久化键和路线图来源。", ["adr"]),
+        docEntry("Contracts", "docs/contracts/README.md", "跨包合同和验证入口。", ["contracts"]),
+        docEntry("Package docs", "packages", "packages/*/docs 下的 design/api/test/dev_log。", ["package"])
+      ].filter(Boolean)
+    },
+    {
+      key: "roadmap",
+      title: "路线图 / 评审",
+      summary: "产品路线图、roadmap-loop 输入、评审证据和 release log。",
+      tags: ["Roadmap", "Review", "Release"],
+      entries: [
+        docEntry("Web Console Roadmap", "docs/workflow/roadmap/xai-web-console.md", "Web 产品主线 manifest。", ["web"]),
+        docEntry("G1 Native Foundation", "docs/workflow/roadmap/xai-g1-native-foundation.md", "Desktop native foundation 路线图。", ["desktop"]),
+        docEntry("Sync V1", "docs/workflow/roadmap/sync-v1.md", "账号云同步路线图。", ["sync"]),
+        docEntry("Release Log", "docs/workflow/project/release-log.md", "系统层和产品层可见变化记录。", ["release"]),
+        docEntry("Roadmap reviews", "docs/workflow/roadmap/codex-reviews", "Codex review 输出与复核记录。", ["review"])
+      ].filter(Boolean)
+    },
+    {
+      key: "skills",
+      title: "Skill 文档",
+      summary: `${skillGroups.reduce((sum, group) => sum + group.count, 0)} 个 skill，按项目级、Codex、本地 portable 分层。`,
+      tags: ["Skill", "Project", "Codex", "Portable"],
+      entries: skillGroups.flatMap(group => group.items.slice(0, 4).map(item =>
+        docEntry(item.name, item.path, item.description || group.summary, [group.label])
+      )).filter(Boolean)
+    },
+    {
+      key: "agents",
+      title: "Agent 文档",
+      summary: `${agentFamilies.length} 组 Workflow Agent；Codex / Cloud / Cursor 作为同一能力的版本切换。`,
+      tags: ["Agent", "Codex", "Cloud", "Cursor"],
+      entries: agentFamilies.slice(0, 10).flatMap(family => {
+        const preferred = family.variants.find(variant => variant.platform === "Codex") || family.variants[0];
+        return preferred ? [docEntry(family.title, preferred.path, family.summary, [family.group])] : [];
+      }).filter(Boolean)
+    }
+  ];
+  return collections.map(collection => ({
+    ...collection,
+    count: collection.entries.length
+  }));
+}
+
+function buildDocHub(skillGroups, agentFamilies) {
+  const groups = [
+    {
+      key: "must-read",
+      title: "必读文档",
+      summary: "进入项目和执行 Workflow 前必须先理解的规则、手册和边界。",
+      importance: "必读",
+      entries: [
+        docEntry("AGENTS.md", "AGENTS.md", "Codex 会话规则、handoff 展示和 agent/skill tracking 边界。", ["rules", "codex"], "必读"),
+        docEntry("CLAUDE.md", "CLAUDE.md", "跨平台共享工程规则、架构边界和测试要求。", ["rules", "architecture"], "必读"),
+        docEntry("项目使用手册", "docs/workflow/project/usage-guide.md", "个人开发看板与 Workflow V2 的日常入口。", ["guide", "workflow"], "必读"),
+        docEntry("项目手册", "docs/workflow/project/handbook.md", "当前主线、人工确认边界和操作节奏。", ["handbook"], "必读"),
+        docEntry("PLUGIN_MAP", "docs/PLUGIN_MAP.md", "插件/包状态地图和依赖准入状态。", ["map", "status"], "必读")
+      ].filter(Boolean)
+    },
+    {
+      key: "core-flow",
+      title: "核心开发流程",
+      summary: "新功能、bugfix、验证、ship 和 release log 的主路径。",
+      importance: "必要",
+      entries: [
+        docEntry("Subagent Workflow V2", "docs/workflow/SUBAGENT_WORKFLOW_V2.md", "feature / bugfix / ship agent 链路。", ["workflow", "agent"], "必要"),
+        docEntry("新功能 SOP", "docs/workflow/SOP_NEW_FEATURE.md", "Feature 从 brief 到 ship 的标准路径。", ["feature"], "必要"),
+        docEntry("Bugfix SOP", "docs/workflow/SOP_BUGFIX.md", "Bug 诊断、修复、验证的标准路径。", ["bugfix"], "必要"),
+        docEntry("Release Log", "docs/workflow/project/release-log.md", "系统层和产品层可见变化记录。", ["release"], "必要"),
+        docEntry("xai-release-log skill", ".teams/skills/xai-release-log/SKILL.md", "发布记录写入和变更摘要约束。", ["skill", "release"], "必要")
+      ].filter(Boolean)
+    },
+    {
+      key: "system-docs",
+      title: "系统性文档",
+      summary: "ADR、合同、分支治理、portable 同步和系统设计。",
+      importance: "系统级",
+      entries: [
+        docEntry("ADR-0013 分支同步治理", "docs/adr/0013-branch-sync-governance.md", "Web / Desktop / Sync 的 D3 gate 和分支拓扑。", ["adr", "branch"], "系统级"),
+        docEntry("ADR-0007 Web Console", "docs/adr/0007-xai-web-console-build-form.md", "Web Console 拆包、持久化键和路线图来源。", ["adr", "web"], "系统级"),
+        docEntry("Contracts", "docs/contracts/README.md", "跨包合同和验证入口。", ["contracts"], "系统级"),
+        docEntry("Portable Manifest", "docs/workflow/_portable/00-PORTABLE-MANIFEST.md", "跨平台同步 surface 与生成规则。", ["portable"], "系统级"),
+        docEntry("Branch Policy", "docs/workflow/project/branch-policy.json", "长期分支和 D3 gate 的机器可读策略。", ["branch", "json"], "系统级")
+      ].filter(Boolean)
+    },
+    {
+      key: "skill-agent",
+      title: "Skill / Agent 文档",
+      summary: "项目 skill、Codex skill、Workflow Agent 多平台版本。",
+      importance: "必要",
+      entries: [
+        ...skillGroups.flatMap(group => group.items.slice(0, 3).map(item =>
+          docEntry(item.name, item.path, item.description || group.summary, ["skill", group.label], "必要")
+        )),
+        ...agentFamilies.slice(0, 8).map(family => {
+          const preferred = family.variants.find(variant => variant.platform === "Codex") || family.variants[0];
+          return preferred ? docEntry(family.title, preferred.path, family.summary, ["agent", family.group], "必要") : null;
+        })
+      ].filter(Boolean)
+    },
+    {
+      key: "workflow-docs",
+      title: "工作流文档",
+      summary: "portable 工作流、roadmap loop、feature full loop 和 web-to-desktop gate。",
+      importance: "必要",
+      entries: [
+        docEntry("xai-feature-full-loop", ".teams/skills/xai-feature-full-loop/SKILL.md", "端到端 feature pipeline 编排。", ["skill", "feature"], "必要"),
+        docEntry("xai-roadmap-loop", ".teams/skills/xai-roadmap-loop/SKILL.md", "Roadmap manifest 分波推进。", ["skill", "roadmap"], "必要"),
+        docEntry("xai-web-to-desktop-sync", ".teams/skills/xai-web-to-desktop-sync/SKILL.md", "Web 变更进入 Desktop 前的 D3 分类。", ["skill", "sync"], "必要"),
+        docEntry("Portable usage guide", "docs/workflow/_portable/usage-guide.md", "可迁移 workflow 使用说明。", ["portable", "workflow"], "必要")
+      ].filter(Boolean)
+    },
+    {
+      key: "project-rules",
+      title: "项目规则文档",
+      summary: "工具链规则、handoff 规则、Cursor rule 和平台同步约束。",
+      importance: "必读",
+      entries: [
+        docEntry("AGENTS.md", "AGENTS.md", "Codex 会话规则。", ["codex"], "必读"),
+        docEntry("CLAUDE.md", "CLAUDE.md", "共享项目规则。", ["claude"], "必读"),
+        docEntry("Cursor handoff rule", ".cursor/rules/handoff.mdc", "Cursor 侧 handoff 展示规则。", ["cursor"], "必读"),
+        docEntry("Codex config", ".codex/config.toml", "Codex agent depth 和配置。", ["codex", "config"], "系统级")
+      ].filter(Boolean)
+    }
+  ];
+  const roots = [
+    docEntry("docs", "docs", "项目文档根目录：ADR、workflow、reviews、planning、prototype。", ["root"], "必读"),
+    docEntry("docs/workflow", "docs/workflow", "Workflow、roadmap、project handbook、portable 文档。", ["workflow"], "必要"),
+    docEntry("docs/adr", "docs/adr", "架构决策记录。", ["adr"], "系统级"),
+    docEntry("packages/*/docs", "packages", "各 package 的 design/api/test/dev_log 文档入口。", ["package"], "必要"),
+    docEntry(".teams/skills", ".teams/skills", "XAI 项目级 workflow skills。", ["skill"], "必要"),
+    docEntry(".codex/skills", ".codex/skills", "Codex 本地 skill 文档。", ["skill", "codex"], "参考"),
+    docEntry(".codex/agents", ".codex/agents", "Codex Workflow Agent TOML。", ["agent", "codex"], "必要"),
+    docEntry(".agents/templates", ".agents/templates", "跨平台 Agent 模板源。", ["agent", "template"], "系统级"),
+    docEntry(".claude/agents", ".claude/agents", "Claude/Cloud Agent 版本。", ["agent", "cloud"], "参考"),
+    docEntry(".cursor/agents", ".cursor/agents", "Cursor Agent 版本。", ["agent", "cursor"], "参考")
+  ].filter(Boolean);
+  const byPath = new Map();
+  [...roots, ...groups.flatMap(group => group.entries)].forEach(entry => {
+    if (!byPath.has(entry.path)) byPath.set(entry.path, entry);
+  });
+  return {
+    roots,
+    groups: groups.map(group => ({ ...group, count: group.entries.length })),
+    by_path: Object.fromEntries(byPath)
+  };
+}
+
 function latestReleaseEntry() {
   if (!existsSync(releaseLogPath)) return "";
   const text = readFileSync(releaseLogPath, "utf8");
@@ -151,38 +501,209 @@ function classifyReleaseType(title) {
   return "docs";
 }
 
-// Derive release rows from the real release-log.md (## <date> -> ### <title>
-// -> "- User-visible change:" bullet) instead of a hand-maintained placeholder.
-function parseReleaseRows(limit = 8) {
+const releaseModuleMeta = {
+  web: {
+    title: "Web 分支",
+    tone: "blue",
+    aliases: ["web", "xai-web", "web-console", "calendar", "tasks", "matrix", "statistics", "board"]
+  },
+  app: {
+    title: "App / Mac 桌面版本",
+    tone: "green",
+    aliases: ["app", "mac", "desktop", "tauri", "native", "dmg", "mas"]
+  },
+  plugin: {
+    title: "桌面插件",
+    tone: "purple",
+    aliases: ["plugin", "widget", "clipboard", "organizer", "ai-cube"]
+  },
+  sync: {
+    title: "账号云同步",
+    tone: "cyan",
+    aliases: ["sync", "cloud", "account", "auth", "device-session"]
+  },
+  site: {
+    title: "官网",
+    tone: "yellow",
+    aliases: ["site", "official", "release-site", "cloudflare", "website", "官网"]
+  },
+  admin: {
+    title: "管理者 / 开发者 Dashboard",
+    tone: "red",
+    aliases: ["admin", "dashboard", "control plane", "dev-dashboard", "project-system"]
+  }
+};
+
+function cleanReleaseValue(value) {
+  return String(value || "").replace(/\s+/g, " ").trim();
+}
+
+function releaseSummary(entry) {
+  return cleanReleaseValue(
+    entry.user_visible ||
+    entry.added ||
+    entry.improved ||
+    entry.fixed ||
+    entry.developer_delta ||
+    entry.title
+  );
+}
+
+function versionLabel(entry) {
+  return cleanReleaseValue(entry.version || entry.version_change || `snapshot ${entry.date}`);
+}
+
+function releaseEntryModule(entry) {
+  const fields = [
+    entry.product_line,
+    entry.branch_commit,
+    entry.title,
+    entry.user_visible,
+    entry.developer_delta,
+    entry.impact
+  ].join(" ").toLowerCase();
+  if (/\b(admin-dashboard|admin|dev-dashboard|control plane)\b/.test(fields) || /看板/.test(fields)) return "admin";
+  if (/\b(sync|cloud|account|auth|device-session)\b/.test(fields)) return "sync";
+  if (/\b(plugin|widget|clipboard|organizer|ai-cube)\b/.test(fields)) return "plugin";
+  if (/\b(site|official|release-site|cloudflare|website|官网)\b/.test(fields)) return "site";
+  if (/\b(app|mac|desktop|tauri|native|dmg|mas)\b/.test(fields)) return "app";
+  if (/\b(web|xai-web|calendar|tasks|matrix|statistics|board)\b/.test(fields)) return "web";
+  return "admin";
+}
+
+function splitReleaseModules(value) {
+  const raw = cleanReleaseValue(value).toLowerCase();
+  if (!raw) return [];
+  return Object.entries(releaseModuleMeta)
+    .filter(([, meta]) => meta.aliases.some(alias => raw.includes(alias)))
+    .map(([key]) => key);
+}
+
+function normalizeReleaseField(label) {
+  const key = String(label || "").trim().toLowerCase();
+  if (key === "product line" || key === "product-line") return "product_line";
+  if (key === "branch / commit" || key === "branch/commit") return "branch_commit";
+  if (key === "user-visible change" || key === "user visible change") return "user_visible";
+  if (key === "developer/system delta" || key === "developer system delta") return "developer_delta";
+  if (key === "risk / follow-up" || key === "risk/follow-up") return "risk_followup";
+  if (key === "version" || key === "version change" || key === "version_change") return "version";
+  if (key === "added" || key === "新增功能") return "added";
+  if (key === "improved" || key === "optimized" || key === "优化内容") return "improved";
+  if (key === "fixed" || key === "fixes" || key === "修复问题") return "fixed";
+  if (key === "impact" || key === "影响范围") return "impact";
+  if (key === "audience note" || key === "notes" || key === "说明") return "audience_note";
+  if (key === "verification") return "verification";
+  return key.replace(/[^a-z0-9]+/g, "_").replace(/^_+|_+$/g, "");
+}
+
+// Derive structured release entries from the real release-log.md (## <date>
+// -> ### <title> -> typed bullets). Older rows without explicit release-note
+// fields degrade to a summary instead of disappearing.
+function parseReleaseEntries(limit = 16) {
   if (!existsSync(releaseLogPath)) return [];
   const lines = readFileSync(releaseLogPath, "utf8").split(/\r?\n/);
-  const rows = [];
+  const entries = [];
   let currentDate = "";
-  let title = "";
-  let summary = "";
+  let current = null;
   const flush = () => {
-    if (title) {
-      const desc = summary || title;
-      rows.push([
-        currentDate,
-        title,
-        desc.length > 96 ? `${desc.slice(0, 96)}…` : desc,
-        classifyReleaseType(title)
-      ]);
+    if (current?.title) {
+      const summary = releaseSummary(current);
+      const moduleKey = current.module || releaseEntryModule(current);
+      const relatedModules = [...new Set([
+        moduleKey,
+        ...splitReleaseModules(current.product_line),
+        ...splitReleaseModules(current.impact)
+      ])].filter(Boolean);
+      entries.push({
+        ...current,
+        id: `${current.date}-${current.title}`.toLowerCase().replace(/[^a-z0-9\u4e00-\u9fa5]+/g, "-"),
+        module: moduleKey,
+        related_modules: relatedModules,
+        type: classifyReleaseType(current.title),
+        version_label: versionLabel(current),
+        summary: summary.length > 148 ? `${summary.slice(0, 148)}…` : summary
+      });
     }
-    title = "";
-    summary = "";
+    current = null;
   };
   for (const line of lines) {
     const dateMatch = line.match(/^##\s+(\d{4}-\d{2}-\d{2})\s*$/);
-    if (dateMatch) { flush(); currentDate = dateMatch[1]; continue; }
+    if (dateMatch) {
+      flush();
+      currentDate = dateMatch[1];
+      continue;
+    }
     const titleMatch = line.match(/^###\s+(.+?)\s*$/);
-    if (titleMatch) { flush(); title = titleMatch[1]; continue; }
-    const uvMatch = line.match(/^[-*]\s*User-visible change:\s*(.+)$/i);
-    if (uvMatch && title && !summary) { summary = uvMatch[1].trim(); continue; }
+    if (titleMatch) {
+      flush();
+      current = { date: currentDate, title: titleMatch[1] };
+      continue;
+    }
+    const fieldMatch = line.match(/^[-*]\s*([^:：]+)[:：]\s*(.+)$/);
+    if (fieldMatch && current) {
+      current[normalizeReleaseField(fieldMatch[1])] = cleanReleaseValue(fieldMatch[2]);
+    }
   }
   flush();
-  return rows.slice(0, limit);
+  return entries.slice(0, limit);
+}
+
+function parseReleaseRows(limit = 8) {
+  return parseReleaseEntries(limit).map(entry => [
+    entry.date,
+    entry.title,
+    entry.summary,
+    entry.type
+  ]);
+}
+
+function buildReleaseModules(entries) {
+  return Object.entries(releaseModuleMeta).map(([key, meta]) => {
+    const items = entries.filter(entry => entry.related_modules.includes(key));
+    const latest = items[0] || null;
+    return {
+      key,
+      title: meta.title,
+      tone: meta.tone,
+      count: items.length,
+      latest_date: latest?.date || "",
+      latest_title: latest?.title || "暂无模块发布",
+      latest_summary: latest?.summary || "等待 release-log.md 写入该模块的发布说明。",
+      entries: items.slice(0, 4)
+    };
+  });
+}
+
+function buildOverallReleases(entries, limit = 5) {
+  const byDate = new Map();
+  entries.forEach(entry => {
+    if (!byDate.has(entry.date)) byDate.set(entry.date, []);
+    byDate.get(entry.date).push(entry);
+  });
+  return [...byDate.entries()].slice(0, limit).map(([date, items]) => {
+    const modules = [...new Set(items.flatMap(item => item.related_modules))];
+    const added = items.map(item => item.added || item.user_visible).filter(Boolean).slice(0, 3);
+    const improved = items.map(item => item.improved || item.developer_delta).filter(Boolean).slice(0, 3);
+    const fixed = items.map(item => item.fixed).filter(Boolean).slice(0, 3);
+    const impacts = items.map(item => item.impact || item.product_line).filter(Boolean).slice(0, 4);
+    return {
+      date,
+      version_label: items.find(item => item.version)?.version_label || `project snapshot ${date}`,
+      title: items[0]?.title || "项目阶段更新",
+      summary: items.map(item => item.summary).filter(Boolean).slice(0, 2).join(" / "),
+      modules,
+      added,
+      improved,
+      fixed,
+      impact: impacts,
+      audience_note: items.find(item => item.audience_note)?.audience_note || "",
+      entries: items.slice(0, 6).map(item => ({
+        title: item.title,
+        module: item.module,
+        summary: item.summary
+      }))
+    };
+  });
 }
 
 function splitMarkdownRow(line) {
@@ -345,6 +866,118 @@ function summarizeProductStatus(counts, emptyLabel = "无 manifest 行") {
   return `${total} rows · ${formatCounts(counts)}`;
 }
 
+function progressFromCounts(counts, fallback) {
+  const total = totalFromCounts(counts);
+  if (!total) return fallback;
+  const weighted =
+    (counts.SHIPPED || 0) +
+    (counts.READY_TO_SHIP || 0) * 0.9 +
+    (counts.APPROVED || 0) * 0.75 +
+    (counts.READY_FOR_VERIFY || 0) * 0.65 +
+    (counts.NEEDS_REVIEW || 0) * 0.5 +
+    (counts.IN_PROGRESS || 0) * 0.45 +
+    (counts.PENDING || 0) * 0.15;
+  return Math.max(5, Math.min(100, Math.round((weighted / total) * 100)));
+}
+
+function pendingSummary(counts, fallback) {
+  if (counts.BLOCKED || counts.BLOCKED_EXTERNAL) return `${(counts.BLOCKED || 0) + (counts.BLOCKED_EXTERNAL || 0)} 个阻塞需处理`;
+  if (counts.NEEDS_REVIEW) return `${counts.NEEDS_REVIEW} 个待评审`;
+  if (counts.READY_FOR_VERIFY) return `${counts.READY_FOR_VERIFY} 个待验证`;
+  if (counts.PENDING) return `${counts.PENDING} 个待排期`;
+  return fallback;
+}
+
+function buildOverviewModules(productLines) {
+  const meta = {
+    web: {
+      title: "Web 版本",
+      tone: "blue",
+      icon: "W",
+      phase: "主线开发",
+      fallback_progress: 78,
+      running: "正常运行",
+      recent_update: "Web Console / Dashboard rows 接入真实 roadmap 计数",
+      todo_fallback: "D3 gate 后再同步到 Desktop",
+      target: { type: "url", href: "http://localhost:5173/app/dashboard", label: "打开 /app/dashboard" }
+    },
+    app: {
+      title: "桌面版本",
+      tone: "green",
+      icon: "D",
+      phase: "Native foundation",
+      fallback_progress: 42,
+      running: "开发线正常",
+      recent_update: "G1 native foundation 作为桌面主线入口",
+      todo_fallback: "Tauri / 本机能力 / RC gate",
+      target: { type: "page", page: "product-flow", product_key: "app", label: "查看桌面详情" }
+    },
+    plugin: {
+      title: "桌面插件",
+      tone: "purple",
+      icon: "P",
+      phase: "平台等待",
+      fallback_progress: 24,
+      running: "等待 App 平台",
+      recent_update: "插件状态来自 PLUGIN_MAP",
+      todo_fallback: "插件 SDK / Widget host 恢复排期",
+      target: { type: "doc", path: "docs/PLUGIN_MAP.md", label: "打开 PLUGIN_MAP" }
+    },
+    sync: {
+      title: "账号云同步",
+      tone: "cyan",
+      icon: "S",
+      phase: "合同沉淀",
+      fallback_progress: 28,
+      running: "暂停中",
+      recent_update: "sync-v1 roadmap 作为恢复入口",
+      todo_fallback: "push/pull、冲突、两设备 smoke",
+      target: { type: "doc", path: "docs/workflow/roadmap/sync-v1.md", label: "打开 sync-v1" }
+    },
+    site: {
+      title: "官方网页",
+      tone: "yellow",
+      icon: "O",
+      phase: "发布入口候选",
+      fallback_progress: 18,
+      running: "本地站点待启动",
+      recent_update: "release-site archive 保留官网/账号入口",
+      todo_fallback: "确认 package 和 Cloudflare 发布节奏",
+      target: { type: "url", href: "http://localhost:3000", label: "打开官网本地页" }
+    },
+    admin: {
+      title: "开发者 / 管理者 Dashboard",
+      tone: "red",
+      icon: "A",
+      phase: "控制面原型",
+      fallback_progress: 22,
+      running: "原型可打开",
+      recent_update: "Dev Dashboard 与 Admin prototype 分离",
+      todo_fallback: "权限、用量、审计、AI 配置接入计划",
+      target: { type: "file", href: "../admin-dashboard/index.html", label: "打开 Admin 原型" }
+    }
+  };
+  return productLines.map(product => {
+    const m = meta[product.key] || {};
+    const counts = product.status_counts || {};
+    return {
+      key: product.key,
+      title: m.title || product.title,
+      subtitle: product.subtitle,
+      tone: m.tone || "blue",
+      icon: m.icon || String(product.title || "?").slice(0, 1),
+      phase: m.phase || product.status,
+      status: product.status,
+      progress: progressFromCounts(counts, m.fallback_progress || 10),
+      running: m.running || "待确认",
+      recent_update: m.recent_update || product.status_summary || product.tracker,
+      todo: pendingSummary(counts, m.todo_fallback || product.next),
+      target: m.target || { type: "page", page: "product-flow", product_key: product.key, label: "查看详情" },
+      status_counts: counts
+    };
+  });
+}
+
 function badgeForCounts(counts) {
   if (counts.BLOCKED || counts.BLOCKED_EXTERNAL) return "needs attention";
   if (counts.NEEDS_REVIEW || counts.READY_FOR_VERIFY || counts.READY_TO_SHIP) return "review gate";
@@ -376,7 +1009,7 @@ function buildProductLines(sourceProducts, roadmapManifests, pluginMap) {
     plugin: [],
     sync: ["sync-v1.md"],
     site: ["web-ticktick-parity.md"],
-    admin: []
+    admin: ["xai-admin-dashboard-system-integration.md"]
   };
   const lineCounts = {
     web: mergeCounts(get(lineManifestNames.web)),
@@ -384,7 +1017,7 @@ function buildProductLines(sourceProducts, roadmapManifests, pluginMap) {
     plugin: pluginCounts,
     sync: mergeCounts(get(lineManifestNames.sync)),
     site: mergeCounts(get(lineManifestNames.site)),
-    admin: {}
+    admin: mergeCounts(get(lineManifestNames.admin))
   };
   // Curated entry-point docs per line (PRD/spec/governance), filtered to ones
   // that actually exist so dead links never reach the dashboard.
@@ -394,7 +1027,7 @@ function buildProductLines(sourceProducts, roadmapManifests, pluginMap) {
     plugin: [["PLUGIN_MAP", "docs/PLUGIN_MAP.md"]],
     sync: [["ADR-0013 同步", "docs/adr/0013-branch-sync-governance.md"]],
     site: [],
-    admin: []
+    admin: [["Admin 原型", "docs/prototypes/admin-dashboard/README.md"], ["接入计划", "docs/prototypes/admin-dashboard/INTEGRATION_PLAN.md"], ["ADR-0013 控制面", "docs/adr/0013-branch-sync-governance.md"]]
   };
   const relatedDocsFor = key => {
     const seen = new Set();
@@ -729,8 +1362,11 @@ const divergence = {
 };
 const skillsFound = listSkills();
 const agentsFound = listAgents();
+const skillGroups = buildSkillGroups();
+const agentFamilies = buildAgentFamilies();
 const pluginMap = parsePluginMap();
 const roadmapManifests = listRoadmapManifests();
+const releaseEntries = parseReleaseEntries();
 
 const snapshot = {
   ...source,
@@ -742,6 +1378,10 @@ const snapshot = {
   },
   skills_found: skillsFound,
   agents_found: agentsFound,
+  skill_groups: skillGroups,
+  agent_families: agentFamilies,
+  doc_collections: buildDocCollections(skillGroups, agentFamilies),
+  doc_hub: buildDocHub(skillGroups, agentFamilies),
   registry: {
     skills: skillsFound,
     agents: agentsFound
@@ -749,7 +1389,15 @@ const snapshot = {
   plugin_map: pluginMap,
   roadmap_manifests: roadmapManifests,
   product_lines: buildProductLines(source.product_lines || [], roadmapManifests, pluginMap),
-  release_rows: parseReleaseRows(),
+  release_rows: releaseEntries.slice(0, 8).map(entry => [
+    entry.date,
+    entry.title,
+    entry.summary,
+    entry.type
+  ]),
+  release_entries: releaseEntries,
+  release_modules: buildReleaseModules(releaseEntries),
+  overall_releases: buildOverallReleases(releaseEntries),
   release_log: {
     source: relative(repoRoot, releaseLogPath),
     latest_entry: latestReleaseEntry()
@@ -760,6 +1408,7 @@ const snapshot = {
 };
 snapshot.signals = buildSignals(snapshot);
 snapshot.cockpit = buildCockpit(snapshot);
+snapshot.overview_modules = buildOverviewModules(snapshot.product_lines);
 
 const body = `window.XAI_DASHBOARD_STATE = ${JSON.stringify(snapshot, null, 2)};\n`;
 writeFileSync(outputPath, body);
