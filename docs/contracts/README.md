@@ -10,6 +10,7 @@
 | `data-repository-v0.md` | `@repo/core-data` Repository / migration / driver contract |
 | `account-cloud-sync-architecture.md` | Account Cloud Sync positioning, topology, module boundaries, and read-model contract |
 | `account-sync-entity-scope-matrix.md` | Account Cloud Sync entity classes, surface access boundaries, and local-first exclusions |
+| `account-device-identity-contract.md` | Shared account, device, session, admin-claim, and lifecycle contract for Account Cloud Sync surfaces |
 | `tauri-commands-v0.md` | Tauri command、window label、capability allowlist contract |
 | `plugin-organizer-public-api-v0.md` | Host 与 `@repo/plugin-organizer` 的 public import / Grid content contract |
 
