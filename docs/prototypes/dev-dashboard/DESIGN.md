@@ -54,7 +54,9 @@ The one disagreement — number of long-lived branches — was decided by the op
 | `scripts/dashboard/generate-state.mjs` | Reads git + skills + release-log + `dashboard-state.json` → writes `state.generated.js`. Pure Node stdlib, zero deps. | ~79 |
 | `docs/workflow/project/dashboard-state.json` | **Manual overrides base** (priority, branch creation, release-gate, risk — the human-judgment fields). 9 top-level keys. | ~341 |
 | `docs/prototypes/dev-dashboard/state.generated.js` | `window.XAI_DASHBOARD_STATE = {…}` — the global the HTML reads. | generated |
-| `docs/prototypes/dev-dashboard/index.html` | Renders the board; reads the global; every section has a `|| [fallback]`. | ~1021 |
+| `docs/prototypes/dev-dashboard/index.html` | Page skeleton only; loads generated state, stylesheet, and ordered plain scripts. | ~399 |
+| `docs/prototypes/dev-dashboard/styles.css` | Dashboard visual system and responsive layout. | ~2319 |
+| `docs/prototypes/dev-dashboard/js/*.js` | Vanilla browser scripts split by surface (`state`, `theme`, `overview`, `product-flow`, `docs-library`, `skill-agent`, `ops-panels`, `nav`, `main`). No build step. | ~2521 |
 
 ### `file://` constraint (already solved — keep it)
 
@@ -63,6 +65,8 @@ state via `<script src="./state.generated.js">` which **assigns a global**, not 
 runtime JSON fetch. Any future change must keep emitting a JS sidecar (or inline into the
 HTML) — **never** read a sibling `.json` at runtime. The local server (§5 Phase 2) is what
 unlocks fetch-based features (tree / md / search), and only when served from `127.0.0.1`.
+The hand-authored CSS and JS files are plain relative static assets, so both `file://`
+preview and `dashboard:serve` must keep serving them without a bundler or module loader.
 
 ### Data sources → board sections (auto / semi / manual)
 

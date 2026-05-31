@@ -19,6 +19,10 @@ const host = "127.0.0.1";
 const requestedPort = Number(process.env.DASHBOARD_PORT || process.env.PORT || 4177);
 const portLocked = Boolean(process.env.DASHBOARD_PORT || process.env.PORT);
 const textExtensions = new Set([".md", ".mdc", ".toml", ".json", ".txt"]);
+const dashboardAssetTypes = new Map([
+  [".css", "text/css; charset=utf-8"],
+  [".js", "application/javascript; charset=utf-8"]
+]);
 
 function runGenerate() {
   execFileSync(process.execPath, [generatorPath], {
@@ -247,6 +251,24 @@ function sendJson(res, status, value) {
   send(res, status, JSON.stringify(value, null, 2), "application/json; charset=utf-8");
 }
 
+function sendDashboardAsset(pathname, res) {
+  if (pathname !== "/styles.css" && !pathname.startsWith("/js/")) return false;
+  const relPath = decodeURIComponent(pathname).replace(/^\/+/, "");
+  const absPath = resolve(dashboardDir, relPath);
+  if (!pathInside(absPath, dashboardDir)) {
+    throw Object.assign(new Error("Dashboard asset path traversal rejected"), { status: 403 });
+  }
+  if (!existsSync(absPath) || !statSync(absPath).isFile()) {
+    throw Object.assign(new Error("Dashboard asset not found"), { status: 404 });
+  }
+  const type = dashboardAssetTypes.get(extname(absPath));
+  if (!type) {
+    throw Object.assign(new Error("Dashboard asset type is not supported"), { status: 415 });
+  }
+  send(res, 200, readFileSync(absPath, "utf8"), type);
+  return true;
+}
+
 function handleApi(url, res) {
   if (url.pathname === "/api/tree") {
     sendJson(res, 200, listTree(url.searchParams.get("dir") || ""));
@@ -291,6 +313,7 @@ const server = createServer((req, res) => {
       send(res, 204, "");
       return;
     }
+    if (sendDashboardAsset(url.pathname, res)) return;
     if (url.pathname === "/state.generated.js") {
       send(res, 200, readFileSync(resolve(dashboardDir, "state.generated.js"), "utf8"), "application/javascript; charset=utf-8");
       return;

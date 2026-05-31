@@ -1,0 +1,46 @@
+renderPrimaryNav();
+
+document.querySelectorAll("[data-page-jump]").forEach(button => {
+  button.addEventListener("click", () => setPage(button.dataset.pageJump));
+});
+
+document.getElementById("moduleDrawerClose").addEventListener("click", closeModuleDrawer);
+document.getElementById("moduleDrawerOverlay").addEventListener("click", closeModuleDrawer);
+document.getElementById("moduleDrawerPrimary").addEventListener("click", () => {
+  if(!activeDrawerModule) return;
+  openProductTarget(activeDrawerModule.target);
+  closeModuleDrawer();
+});
+document.getElementById("moduleDrawerLocate").addEventListener("click", () => {
+  if(!activeDrawerModule) return;
+  setPage("product-flow");
+  setProduct(activeDrawerModule.item.key);
+  closeModuleDrawer();
+});
+window.addEventListener("keydown", event => {
+  if(event.key === "Escape" && document.getElementById("moduleDrawer")?.classList.contains("is-open")){
+    closeModuleDrawer();
+  }
+});
+
+window.addEventListener("hashchange", () => setPage(location.hash.slice(1), false));
+
+initThemeSettings();
+renderOverview();
+renderKpis();
+renderOverviewFlow();
+renderOverviewModules();
+renderStructureMap();
+renderBranchFlow();
+renderModules();
+setProduct(products[0]?.key);
+renderSkillAgentCatalog();
+initDocLibrary();
+renderDevData();
+renderTaskProgress();
+renderBranches();
+initReleaseLinks();
+renderOverallReleases();
+renderReleaseModules();
+renderReleaseRows();
+setPage(location.hash.slice(1), false);
