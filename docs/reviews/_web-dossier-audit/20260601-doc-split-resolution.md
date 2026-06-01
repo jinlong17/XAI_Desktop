@@ -1,7 +1,7 @@
 # Web 文档分裂归属决议 — Doc Split Resolution
 
 > 配套：`20260601-traceability-audit.md` §1（分裂发现）
-> 状态：**提案 / 策略**（canonical 决策待操作者最终签字；本文件不执行 `git mv` 或合并）
+> 状态：**已签字决议**（canonical 规则 + PRD 粒度 2026-06-01 操作者确认；仅 `git mv` 执行时机待定。本文件不执行迁移/合并）
 > 决策来源：codex 复核 + 操作者 2026-06-01 指令
 
 ## 1. 背景
@@ -10,7 +10,7 @@
 但运行态文档（design/api/test/dev_log）大多遗留在 `xai-web-*`，其中 `pomodoro` /
 `settings-rest` 的 `dev_log` 分叉成两份。按单一包名无法完成"源码→需求→测试"追溯。
 
-## 2. Canonical 规则（采纳，待签字）
+## 2. Canonical 规则（已签字 2026-06-01）
 
 | 资产 | Canonical 落点 | 现状 | 动作 |
 |---|---|---|---|
@@ -78,9 +78,23 @@
 4. 动作 C 的 2 个基础设施包：按需补 `design/api/test`，不建 PRD。
 5. 完成后再跑 `xai-feature-dossier-sync Mode: draft`，分裂功能此时已有稳定 canonical 包。
 
-## 6. 待操作者确认
+## 6. 决议记录与待确认
 
-1. **canonical 规则签字**：运行文档统一到 `plugin-web-*/docs/`，PRD 统一到 `docs/product/<feature>/`？
-2. **看板 / 设置的 PRD 粒度**：看板 3 包合 1 个 `docs/product/board/prd.md`？设置多包合
-   `docs/product/settings/prd.md` 还是按子模块拆？
-3. 动作 A 用 `git mv`（保留历史、改动 import 无关因为只动 docs）是否可接受现在执行。
+### 已确认（2026-06-01 操作者签字）
+
+1. **Canonical 规则**：运行态四件套统一到 `packages/plugin-web-*/docs/`（跟源码）；
+   产品 PRD 统一到 `docs/product/<feature>/`（按功能，不按 npm 包）。
+2. **PRD 粒度**：
+   - **看板**：合 1 个 `docs/product/board/prd.md`；`board-core` / `board-views` /
+     `board-workspaces` 列为 Owning packages（用户只感知一个看板）。
+   - **设置**：**1 主 + 按需子** —— `docs/product/settings/prd.md` 覆盖 13-pane 外壳
+     与简单开关型 pane；对有独立风险/流程的 pane 各开子 PRD：`account.md`、`premium.md`、
+     `notifications.md`、`appearance.md`、`integrations.md`。
+   - **单一功能**（tasks / calendar / pomodoro / countdown / statistics / ai-chat）：
+     一功能一 PRD。
+   - **判断尺**：一个子模块/pane 是否独立成 PRD = 它是否有独立的"为什么 / 验收 / 边界 /
+     风险"。纯开关 → 并入主 PRD 一节；有独立流程、数据模型、外部依赖或不可逆风险 → 拆子 PRD。
+
+### 待确认
+
+3. 动作 A（单份遗留）的 `git mv`（仅移动 docs、保留 git 历史、不动源码 import）是否现在执行。
