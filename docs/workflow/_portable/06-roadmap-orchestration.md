@@ -238,7 +238,7 @@ The file has two parts: **header metadata** + a **feature table**.
 - Roadmap Source: <roadmap_source_doc>
 - Init Path: parse | decompose
 - Generated: <YYYY-MM-DD>
-- Default Automation Mode: D-Codex+Cursor    # one of the 8 named variants — see 04 §3
+- Default Automation Mode: A-Codex    # one of the 9 named variants — see 04 §3
 - Default Dependency Semantics: shipped
 - Default Verify Cross-vendor: yes            # 2026-05-16 — see <project_workflow_doc> §16.3 #5 / #7
 - Wave Concurrency Cap: 3                     # bg dispatch default; override deliberately for quota pressure
@@ -268,7 +268,7 @@ seed-brief path (`<roadmap_seed_brief>`) when `Init Path: decompose` — see A6.
 | `Depends On` | upstream feature slugs | comma-separated; `—` = no dependency |
 | `Dep Semantics` | dependency-satisfaction semantics | `shipped` (default) / `ready_to_ship`; see A4.5 |
 | `Status` | current status | see A6.4 |
-| `Automation Mode` | the variant passed to `<skill_prefix>feature-full-loop` — one of the 8 named variants (`A-Claude` / `B-Codex` / `B-Cursor` / `C-Codex` / `C-Cursor` / `D-Codex` / `D-Cursor` / `D-Codex+Cursor`, see `04` §3). Acquisition: see `_portable/07-automation-mode-picker.md` §5 (init per-row picker) and Appendix SKILL.md §3.1.5 (run preflight). Layer 3.5 never emits a block with `(default)` — preflight always resolves to a concrete variant first. | `(default)` falls back to the header Default |
+| `Automation Mode` | the variant passed to `<skill_prefix>feature-full-loop` — one of the 9 named variants (`A-Claude` / `A-Codex` / `B-Codex` / `B-Cursor` / `C-Codex` / `C-Cursor` / `D-Codex` / `D-Cursor` / `D-Codex+Cursor`, see `04` §3). Acquisition: see `_portable/07-automation-mode-picker.md` §5 (init per-row picker) and Appendix SKILL.md §3.1.5 (run preflight). Layer 3.5 never emits a block with `(default)` — preflight always resolves to a concrete variant first. | `(default)` falls back to the header Default |
 | `Verify Cross-vendor` | per-row opt-out for the cross-vendor verify gate (`<project_workflow_doc>` §16.3 #5 / #7). `(default)` inherits header `Default Verify Cross-vendor`. Set to `no` only when the feature is low-risk and you accept the echo-chamber trade-off — `<skill_prefix>feature-full-loop` will then be allowed to use `feature-dev-loop` (build + verify same lineage) on hosts where that loop can spawn. When `yes`, the recipe must use `feature-auto-build` + a separate cross-vendor `feature-verify`. `<skill_prefix>feature-full-loop` reads this and passes it through; `feature-plan` writes the resolved value into the dev_log Status Panel `Verify Cross-vendor:` field for audit. | `(default)` falls back to the header Default; explicit `yes` / `no` overrides |
 | `Last Run` | timestamp this row was last driven | written by the skill |
 | `Note` | human-readable note | risk level, external dependency, special pacing, background session id, `QUEUED_BG cap=N`, etc. |
@@ -603,7 +603,7 @@ STOP after launching the wave. Output:
     the Agent View command (for example `claude agents --cwd /path/to/repo`)
     Worktree: pending until first file edit; check with `git worktree list | grep SESSION_ID`
     bg-aware ship prompt blocks for every READY_TO_SHIP row
-    warning: Agent View PR dots are not A2K truth; dev_log Status Panel + reconcile are truth
+    warning: Agent View PR dots are not project truth; dev_log Status Panel + reconcile are truth
     fallback emit blocks for any launch failure
     Next Step: monitor Agent View; after READY_TO_SHIP rows are shipped, re-run roadmap-loop
 ```
@@ -629,8 +629,8 @@ that `Worktree:` line. Do not tell the user to `claude rm SESSION_ID` until afte
 commits were pushed and the dev_log was marked `SHIPPED`; removing the background session can remove
 the worktree.
 
-Agent View is a monitor, not the A2K source of truth. Its "Ready for review" / PR indicators only
-reflect Claude Code PR state when a PR exists. A2K shippability is determined by
+Agent View is a monitor, not the project source of truth. Its "Ready for review" / PR indicators only
+reflect Claude Code PR state when a PR exists. Project shippability is determined by
 `<feature_root>/<slug>/docs/dev_log.md` `Status: READY_TO_SHIP` plus the next roadmap reconcile.
 
 #### A7.3.3 `dispatch: serial` — one transcript, no parallelism
@@ -739,7 +739,7 @@ These go verbatim into the `SKILL.md` (see Appendix):
 - **`bg` must protect worktrees and quota.** Before launching bg sessions, satisfy the clean-tree /
   `worktree.baseRef=head` / inline-content visibility gate, respect `Wave Concurrency Cap` (default
   `3`), queue overflow rows with `QUEUED_BG`, and make ship instructions point to the background
-  session worktree. Agent View PR dots are never the A2K truth source.
+  session worktree. Agent View PR dots are never the project truth source.
 
 ### A7.6 The skill satisfies the Universal Next Step Contract
 
@@ -1122,7 +1122,7 @@ Layer 3.5 roadmap orchestration skill. Full spec: `docs/workflow/_portable/06-ro
 14. **`bg` must protect worktrees and quota.** Before launching bg sessions, satisfy the clean-tree /
     `worktree.baseRef=head` / inline-content visibility gate, respect `Wave Concurrency Cap` (default
     `3`), queue overflow rows with `QUEUED_BG`, and make ship instructions point to the background
-    session worktree. Agent View PR dots are never the A2K truth source.
+    session worktree. Agent View PR dots are never the project truth source.
 15. **Dispatch confirmation is mandatory, in Chinese, on every `run`.** After resolving the candidate
     dispatch mode but before emitting prompt blocks, marking rows `IN_PROGRESS`, launching bg
     sessions, or dispatching any worker, present a Chinese AskUserQuestion-style confirmation that
@@ -1169,13 +1169,15 @@ Propose a decomposition; the shared-tail review gate is where the author confirm
 
 1. Read the project's structural context — `<feature_map_doc>`, `<refactor_plan_doc>`,
    `<onboarding_doc>`, the `<feature_root>` layout — so features land on real module boundaries.
+   If the project uses package-prefixed feature slugs, record the canonical full slug in the
+   manifest.
 2. Partition the PRD into the smallest independent candidate units that each make sense as one
    `<skill_prefix>feature-full-loop` run; prefer existing project boundaries. This step MAY spawn parallel
    analysis subagents (e.g. one per subsystem named in the PRD), then synthesise their results —
    this keeps init's own context small (spec §A3 principle 3).
 3. Analyse inter-feature relationships first, then infer the dependency graph from them: shared
-   modules/files (concurrent-edit conflict risk), contract/data dependencies, sequencing/foundation,
-   true independence (do not invent edges). Set `depends_on` + `Dep Semantics` (default `shipped`;
+   modules/files (concurrent-edit conflict risk), shared core/ui areas, contract/data dependencies,
+   sequencing/foundation, true independence (do not invent edges). Set `depends_on` + `Dep Semantics` (default `shipped`;
    relax to `ready_to_ship` only where the PRD clearly allows). Assign a canonical `Slug` per feature.
 4. Clarify genuine ambiguity with the user — do NOT silently guess. When a decision is genuinely
    ambiguous AND materially changes the manifest (one feature or two? real dependency or
@@ -1195,7 +1197,7 @@ Propose a decomposition; the shared-tail review gate is where the author confirm
 
 - For each row drafted, fire the per-feature Automation Mode picker per
   `_portable/07-automation-mode-picker.md` §5 (smart inheritance shortcut on by default):
-  - **Row #1:** full 4-option picker → answer becomes header `Default Automation Mode`; row #1's
+  - **Row #1:** full 5-option picker → answer becomes header `Default Automation Mode`; row #1's
     Mode cell written as `(default)`.
   - **Row #2..N:** AskUserQuestion with 2 options — "Same as Default (<Mode_1>)" → write
     `(default)`; "Pick a different Mode" → fire full picker → write explicit variant.
@@ -1283,7 +1285,7 @@ row per the 5-layer fallback in `_portable/07-automation-mode-picker.md` §4. Su
 If layer 4 fires the picker and the host tool does not support AskUserQuestion, STOP with Handoff:
 Status `BLOCKED`, Blocker "Manifest header 'Default Automation Mode' missing or invalid; cannot
 ask interactively in this tool.", Next Step "Edit `<roadmap_manifest_dir>/<roadmap_name>.md` header
-`Default Automation Mode:` to one of the 8 legal variants (see `_portable/04-automation-loop.md`
+`Default Automation Mode:` to one of the 9 legal variants (see `_portable/04-automation-loop.md`
 §3), then re-run."
 
 Record the resolution outcome in a per-session log line (not in the manifest):
@@ -1481,7 +1483,7 @@ After launching the wave, STOP. Output:
 - `claude agents --cwd /path/to/repo`
 - `Worktree: pending until first file edit`; check with `git worktree list | grep SESSION_ID`
 - bg-aware ship prompt blocks for every READY_TO_SHIP row
-- warning: Agent View PR dots are not A2K truth; `dev_log` Status Panel + reconcile are truth
+- warning: Agent View PR dots are not project truth; `dev_log` Status Panel + reconcile are truth
 - the fallback emit blocks for any row that failed to launch
 - Next Step: monitor Agent View; after rows reach READY_TO_SHIP and are shipped, re-run
   `<skill_prefix>roadmap-loop manifest: <roadmap_manifest_dir>/<roadmap_name>.md`
@@ -1506,8 +1508,8 @@ that `Worktree:` line. Do not tell the user to `claude rm SESSION_ID` until afte
 commits were pushed and the dev_log was marked `SHIPPED`; removing the background session can remove
 the worktree.
 
-Agent View is a monitor, not the A2K source of truth. Its "Ready for review" / PR indicators only
-reflect Claude Code PR state when a PR exists. A2K shippability is determined by
+Agent View is a monitor, not the project source of truth. Its "Ready for review" / PR indicators only
+reflect Claude Code PR state when a PR exists. Project shippability is determined by
 `<feature_root>/<slug>/docs/dev_log.md` `Status: READY_TO_SHIP` plus the next roadmap reconcile.
 
 ### 3.5 serial-dispatch (one transcript, no parallelism)

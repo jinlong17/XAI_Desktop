@@ -1,0 +1,1416 @@
+#!/usr/bin/env node
+import { execFileSync } from "node:child_process";
+import {
+  existsSync,
+  readFileSync,
+  readdirSync,
+  statSync,
+  writeFileSync
+} from "node:fs";
+import { dirname, relative, resolve } from "node:path";
+import { fileURLToPath } from "node:url";
+
+const scriptDir = dirname(fileURLToPath(import.meta.url));
+const repoRoot = resolve(scriptDir, "../..");
+const sourcePath = resolve(repoRoot, "docs/workflow/project/dashboard-state.json");
+const releaseLogPath = resolve(repoRoot, "docs/workflow/project/release-log.md");
+const branchPolicyPath = resolve(repoRoot, "docs/workflow/project/branch-policy.json");
+const pluginMapPath = resolve(repoRoot, "docs/PLUGIN_MAP.md");
+const roadmapDir = resolve(repoRoot, "docs/workflow/roadmap");
+const skillDir = resolve(repoRoot, ".teams/skills");
+const codexSkillDir = resolve(repoRoot, ".codex/skills");
+const agentDir = resolve(repoRoot, ".codex/agents");
+const agentTemplateDir = resolve(repoRoot, ".agents/templates");
+const claudeAgentDir = resolve(repoRoot, ".claude/agents");
+const cursorAgentDir = resolve(repoRoot, ".cursor/agents");
+const outputPath = resolve(repoRoot, "docs/prototypes/dev-dashboard/state.generated.js");
+const roadmapAllowlist = [
+  "sync-v1.md",
+  "web-ticktick-parity.md",
+  "xai-admin-dashboard-system-integration.md",
+  "xai-g0-window-spike.md",
+  "xai-g1-native-foundation.md",
+  "xai-web-calendar-event-create.md",
+  "xai-web-console-gap-closure.md",
+  "xai-web-console.md",
+  "xai-web-dashboard-real-data.md",
+  "xai-web-dashboard-stickies-create.md",
+  "xai-web-dashboard-weather-mail.md",
+  "xai-web-matrix-card-create.md",
+  "xai-web-statistics-real-aggregation.md",
+  "xai-web-tasks-card-create.md",
+  "xai-web-tasks-smartlist-filter.md"
+];
+
+function git(args) {
+  try {
+    return execFileSync("git", args, {
+      cwd: repoRoot,
+      encoding: "utf8",
+      stdio: ["ignore", "pipe", "ignore"]
+    }).trim();
+  } catch {
+    return "";
+  }
+}
+
+function gitLines(args) {
+  const output = git(args);
+  return output ? output.split(/\r?\n/).filter(Boolean) : [];
+}
+
+function readJson(path) {
+  return JSON.parse(readFileSync(path, "utf8"));
+}
+
+function readText(path) {
+  return readFileSync(path, "utf8");
+}
+
+function parseFrontmatter(text) {
+  const match = text.match(/^---\n([\s\S]*?)\n---/);
+  if (!match) return {};
+  return match[1].split(/\r?\n/).reduce((meta, line) => {
+    const parts = line.match(/^([A-Za-z0-9_-]+):\s*(.*)$/);
+    if (parts) meta[parts[1]] = parts[2].trim();
+    return meta;
+  }, {});
+}
+
+function extractTriggers(text, description) {
+  const explicit = text.match(/## Triggers\s+([\s\S]*?)(?:\n## |\n# |$)/);
+  if (explicit) {
+    return explicit[1]
+      .split(/\r?\n/)
+      .map(line => line.replace(/^[-*]\s*/, "").trim())
+      .filter(Boolean)
+      .slice(0, 6);
+  }
+  const descTriggers = String(description || "").match(/Triggers?\s+[—-]\s+(.+)$/i);
+  if (!descTriggers) {
+    const useWhen = String(description || "").match(/Use when\s+(.+?)(?:\.|$)/i);
+    return useWhen ? [useWhen[1].trim()] : [];
+  }
+  return descTriggers[1]
+    .split(/[·,，、]/)
+    .map(item => item.trim())
+    .filter(Boolean)
+    .slice(0, 6);
+}
+
+function listSkills() {
+  if (!existsSync(skillDir)) return [];
+  return readdirSync(skillDir, { withFileTypes: true })
+    .filter(entry => entry.isDirectory())
+    .map(entry => {
+      const skillPath = resolve(skillDir, entry.name, "SKILL.md");
+      const text = existsSync(skillPath) ? readText(skillPath) : "";
+      const meta = parseFrontmatter(text);
+      return {
+        name: meta.name || entry.name,
+        description: meta.description || "",
+        triggers: extractTriggers(text, meta.description),
+        path: relative(repoRoot, skillPath),
+        present: existsSync(skillPath),
+        tracked: Boolean(git(["ls-files", "--", relative(repoRoot, skillPath)]))
+      };
+    })
+    .filter(skill => skill.present)
+    .sort((a, b) => a.name.localeCompare(b.name));
+}
+
+function listSkillSet(dir, label, summary) {
+  if (!existsSync(dir)) return { label, summary, count: 0, items: [] };
+  const items = readdirSync(dir, { withFileTypes: true })
+    .filter(entry => entry.isDirectory())
+    .map(entry => {
+      const skillPath = resolve(dir, entry.name, "SKILL.md");
+      const relPath = relative(repoRoot, skillPath);
+      const text = existsSync(skillPath) ? readText(skillPath) : "";
+      const meta = parseFrontmatter(text);
+      return {
+        name: meta.name || entry.name,
+        description: meta.description || "",
+        triggers: extractTriggers(text, meta.description),
+        path: relPath,
+        tracked: Boolean(git(["ls-files", "--", relPath]))
+      };
+    })
+    .filter(item => item.path && existsSync(resolve(repoRoot, item.path)))
+    .sort((a, b) => a.name.localeCompare(b.name));
+  return { label, summary, count: items.length, items };
+}
+
+function buildSkillGroups() {
+  return [
+    listSkillSet(skillDir, "XAI Workflow Skills", "项目级 feature / roadmap / release / web-to-desktop 能力。"),
+    listSkillSet(codexSkillDir, "Codex Public Skills", "Codex 本地可复用开发技能，覆盖前端、CI、规划和安全。"),
+    listSkillSet(resolve(repoRoot, "docs/workflow/_portable/skills"), "Portable Skills", "可迁移到其它工具链的 skill 文档副本。")
+  ].filter(group => group.count);
+}
+
+function parseTomlString(text, key) {
+  const match = text.match(new RegExp(`^${key}\\s*=\\s*\"([^\"]*)\"`, "m"));
+  return match ? match[1] : "";
+}
+
+function listAgents() {
+  if (!existsSync(agentDir)) return [];
+  return readdirSync(agentDir, { withFileTypes: true })
+    .filter(entry => entry.isFile() && entry.name.endsWith(".toml"))
+    .map(entry => {
+      const agentPath = resolve(agentDir, entry.name);
+      const relPath = relative(repoRoot, agentPath);
+      const text = readText(agentPath);
+      return {
+        name: parseTomlString(text, "name") || entry.name.replace(/\.toml$/, ""),
+        description: parseTomlString(text, "description"),
+        triggers: [],
+        path: relPath,
+        tracked: Boolean(git(["ls-files", "--", relPath]))
+      };
+    })
+    .sort((a, b) => a.name.localeCompare(b.name));
+}
+
+function parseAgentFile(path, fallbackName) {
+  const text = existsSync(path) ? readText(path) : "";
+  const ext = path.endsWith(".toml") ? "toml" : "md";
+  if (ext === "toml") {
+    return {
+      name: parseTomlString(text, "name") || fallbackName,
+      description: parseTomlString(text, "description")
+    };
+  }
+  const meta = parseFrontmatter(text);
+  const title = text.match(/^#\s+(.+)$/m);
+  return {
+    name: meta.name || fallbackName,
+    description: meta.description || (title ? title[1].trim() : "")
+  };
+}
+
+function agentGroupLabel(name) {
+  if (name === "ship") return "Ship";
+  if (name.startsWith("feature-")) return "Feature Workflow";
+  if (name.startsWith("bug") || name.startsWith("bugfix-")) return "Bugfix Workflow";
+  if (name.startsWith("skill-")) return "Skill Helper";
+  return "Workflow";
+}
+
+function agentSummary(name) {
+  if (name === "feature-plan") return "需求进入后产出 discovery review、设计/API/test 策略和阶段计划。";
+  if (name === "feature-review") return "冷读计划与合同，给出 APPROVE / REVISE / REJECT。";
+  if (name === "feature-build") return "按已批准计划实现功能，维护 dev_log 和验证证据。";
+  if (name === "feature-verify") return "只读验证功能、测试、文档和 Handoff 是否满足发布门槛。";
+  if (name === "feature-dev-loop") return "串联 plan/review/build/verify 的循环入口。";
+  if (name === "feature-full-loop") return "端到端 feature 自动化入口。";
+  if (name === "ship") return "收口验证、提交、推送和发布记录。";
+  if (name.startsWith("bug")) return "诊断、修复或验证 bugfix 工作流。";
+  if (name.startsWith("skill-")) return "把 skill 文档转成对应平台可调用 Agent。";
+  return "Workflow V2 Agent 模板的一个版本。";
+}
+
+function listAgentVariants(dir, platform, ext) {
+  if (!existsSync(dir)) return [];
+  return readdirSync(dir, { withFileTypes: true })
+    .filter(entry => entry.isFile() && entry.name.endsWith(ext))
+    .filter(entry => entry.name !== "README.md")
+    .map(entry => {
+      const path = resolve(dir, entry.name);
+      const relPath = relative(repoRoot, path);
+      const slug = entry.name.replace(new RegExp(`${ext.replace(".", "\\.")}$`), "");
+      const meta = parseAgentFile(path, slug);
+      return {
+        slug,
+        platform,
+        name: meta.name || slug,
+        description: meta.description || agentSummary(slug),
+        path: relPath,
+        tracked: Boolean(git(["ls-files", "--", relPath]))
+      };
+    });
+}
+
+function buildAgentFamilies() {
+  const variants = [
+    ...listAgentVariants(agentTemplateDir, "Canonical", ".md"),
+    ...listAgentVariants(agentDir, "Codex", ".toml"),
+    ...listAgentVariants(claudeAgentDir, "Cloud", ".md"),
+    ...listAgentVariants(cursorAgentDir, "Cursor", ".md")
+  ];
+  const grouped = new Map();
+  variants.forEach(variant => {
+    if (!grouped.has(variant.slug)) {
+      grouped.set(variant.slug, {
+        slug: variant.slug,
+        title: variant.name,
+        group: agentGroupLabel(variant.slug),
+        summary: agentSummary(variant.slug),
+        variants: []
+      });
+    }
+    grouped.get(variant.slug).variants.push(variant);
+  });
+  const platformOrder = ["Canonical", "Codex", "Cloud", "Cursor"];
+  return [...grouped.values()]
+    .map(family => ({
+      ...family,
+      variants: family.variants.sort((a, b) => platformOrder.indexOf(a.platform) - platformOrder.indexOf(b.platform))
+    }))
+    .sort((a, b) => {
+      const order = ["Feature Workflow", "Bugfix Workflow", "Ship", "Skill Helper", "Workflow"];
+      return (order.indexOf(a.group) - order.indexOf(b.group)) || a.slug.localeCompare(b.slug);
+    });
+}
+
+function classifyDocImportance(path, tags = [], label = "") {
+  const value = `${path} ${label} ${tags.join(" ")}`.toLowerCase();
+  if (/claude\.md|agents\.md|usage-guide|handbook|plugin_map|adr-0013|subagent_workflow|sop_new_feature|sop_bugfix/.test(value)) {
+    return "必读";
+  }
+  if (/dev_log|design\.md|api\.md|test\.md|roadmap|workflow|skill|agent/.test(value)) {
+    return "必要";
+  }
+  if (/adr|contracts|portable|release-log|branch-policy/.test(value)) {
+    return "系统级";
+  }
+  return "参考";
+}
+
+function docKind(path) {
+  if (path.endsWith(".toml")) return "Agent TOML";
+  if (path.endsWith(".mdc")) return "Cursor Rule";
+  if (path.endsWith(".json")) return "JSON";
+  if (path.endsWith(".md")) return "Markdown";
+  if (path.endsWith(".txt")) return "Text";
+  return path.includes(".") ? "File" : "Folder";
+}
+
+function docEntry(label, path, summary, tags = [], importance = "") {
+  const abs = resolve(repoRoot, path);
+  if (!existsSync(abs)) return null;
+  const stat = statSyncSafe(abs);
+  return {
+    label,
+    path,
+    summary,
+    tags,
+    type: stat?.isDirectory() ? "dir" : "file",
+    kind: stat?.isDirectory() ? "Folder" : docKind(path),
+    importance: importance || classifyDocImportance(path, tags, label),
+    updated_at: stat ? stat.mtime.toISOString() : "",
+    size_bytes: stat?.isFile() ? stat.size : 0,
+    tracked: Boolean(git(["ls-files", "--", path]))
+  };
+}
+
+function statSyncSafe(path) {
+  try {
+    return existsSync(path) ? statSync(path) : null;
+  } catch {
+    return null;
+  }
+}
+
+function buildDocCollections(skillGroups, agentFamilies) {
+  const collections = [
+    {
+      key: "workflow",
+      title: "工作流文档",
+      summary: "Workflow V2、SOP、handoff、portable 迁移和自动化入口。",
+      tags: ["Workflow V2", "SOP", "Handoff", "Portable"],
+      entries: [
+        docEntry("使用手册", "docs/workflow/project/usage-guide.md", "个人开发看板和 Workflow V2 的日常入口。", ["guide"]),
+        docEntry("项目手册", "docs/workflow/project/handbook.md", "当前主线、操作原则和人工确认边界。", ["handbook"]),
+        docEntry("Subagent Workflow V2", "docs/workflow/SUBAGENT_WORKFLOW_V2.md", "feature / bugfix / ship agent 链路。", ["agent"]),
+        docEntry("新功能 SOP", "docs/workflow/SOP_NEW_FEATURE.md", "Feature 从 brief 到 ship 的标准路径。", ["feature"]),
+        docEntry("Bugfix SOP", "docs/workflow/SOP_BUGFIX.md", "Bug 诊断、修复、验证的标准路径。", ["bugfix"]),
+        docEntry("Portable Manifest", "docs/workflow/_portable/00-PORTABLE-MANIFEST.md", "跨平台同步 surface 与生成规则。", ["portable"])
+      ].filter(Boolean)
+    },
+    {
+      key: "development",
+      title: "开发文档",
+      summary: "项目边界、ADR、插件地图、包级 design/api/test/dev_log 和运行治理。",
+      tags: ["Architecture", "ADR", "Package docs", "Governance"],
+      entries: [
+        docEntry("CLAUDE.md", "CLAUDE.md", "跨平台共享项目规则和工程边界。", ["rules"]),
+        docEntry("AGENTS.md", "AGENTS.md", "Codex 会话规则和 handoff 展示约束。", ["rules"]),
+        docEntry("PLUGIN_MAP", "docs/PLUGIN_MAP.md", "全局插件/包状态地图。", ["map"]),
+        docEntry("ADR-0013 分支同步治理", "docs/adr/0013-branch-sync-governance.md", "Web / Desktop / Sync 的 D3 gate 和分支拓扑。", ["adr"]),
+        docEntry("ADR-0007 Web Console", "docs/adr/0007-xai-web-console-build-form.md", "Web Console 拆包、持久化键和路线图来源。", ["adr"]),
+        docEntry("Contracts", "docs/contracts/README.md", "跨包合同和验证入口。", ["contracts"]),
+        docEntry("Package docs", "packages", "packages/*/docs 下的 design/api/test/dev_log。", ["package"])
+      ].filter(Boolean)
+    },
+    {
+      key: "roadmap",
+      title: "路线图 / 评审",
+      summary: "产品路线图、roadmap-loop 输入、评审证据和 release log。",
+      tags: ["Roadmap", "Review", "Release"],
+      entries: [
+        docEntry("Web Console Roadmap", "docs/workflow/roadmap/xai-web-console.md", "Web 产品主线 manifest。", ["web"]),
+        docEntry("G1 Native Foundation", "docs/workflow/roadmap/xai-g1-native-foundation.md", "Desktop native foundation 路线图。", ["desktop"]),
+        docEntry("Sync V1", "docs/workflow/roadmap/sync-v1.md", "账号云同步路线图。", ["sync"]),
+        docEntry("Release Log", "docs/workflow/project/release-log.md", "系统层和产品层可见变化记录。", ["release"]),
+        docEntry("Roadmap reviews", "docs/workflow/roadmap/codex-reviews", "Codex review 输出与复核记录。", ["review"])
+      ].filter(Boolean)
+    },
+    {
+      key: "skills",
+      title: "Skill 文档",
+      summary: `${skillGroups.reduce((sum, group) => sum + group.count, 0)} 个 skill，按项目级、Codex、本地 portable 分层。`,
+      tags: ["Skill", "Project", "Codex", "Portable"],
+      entries: skillGroups.flatMap(group => group.items.slice(0, 4).map(item =>
+        docEntry(item.name, item.path, item.description || group.summary, [group.label])
+      )).filter(Boolean)
+    },
+    {
+      key: "agents",
+      title: "Agent 文档",
+      summary: `${agentFamilies.length} 组 Workflow Agent；Codex / Cloud / Cursor 作为同一能力的版本切换。`,
+      tags: ["Agent", "Codex", "Cloud", "Cursor"],
+      entries: agentFamilies.slice(0, 10).flatMap(family => {
+        const preferred = family.variants.find(variant => variant.platform === "Codex") || family.variants[0];
+        return preferred ? [docEntry(family.title, preferred.path, family.summary, [family.group])] : [];
+      }).filter(Boolean)
+    }
+  ];
+  return collections.map(collection => ({
+    ...collection,
+    count: collection.entries.length
+  }));
+}
+
+function buildDocHub(skillGroups, agentFamilies) {
+  const groups = [
+    {
+      key: "must-read",
+      title: "必读文档",
+      summary: "进入项目和执行 Workflow 前必须先理解的规则、手册和边界。",
+      importance: "必读",
+      entries: [
+        docEntry("AGENTS.md", "AGENTS.md", "Codex 会话规则、handoff 展示和 agent/skill tracking 边界。", ["rules", "codex"], "必读"),
+        docEntry("CLAUDE.md", "CLAUDE.md", "跨平台共享工程规则、架构边界和测试要求。", ["rules", "architecture"], "必读"),
+        docEntry("项目使用手册", "docs/workflow/project/usage-guide.md", "个人开发看板与 Workflow V2 的日常入口。", ["guide", "workflow"], "必读"),
+        docEntry("项目手册", "docs/workflow/project/handbook.md", "当前主线、人工确认边界和操作节奏。", ["handbook"], "必读"),
+        docEntry("PLUGIN_MAP", "docs/PLUGIN_MAP.md", "插件/包状态地图和依赖准入状态。", ["map", "status"], "必读")
+      ].filter(Boolean)
+    },
+    {
+      key: "core-flow",
+      title: "核心开发流程",
+      summary: "新功能、bugfix、验证、ship 和 release log 的主路径。",
+      importance: "必要",
+      entries: [
+        docEntry("Subagent Workflow V2", "docs/workflow/SUBAGENT_WORKFLOW_V2.md", "feature / bugfix / ship agent 链路。", ["workflow", "agent"], "必要"),
+        docEntry("新功能 SOP", "docs/workflow/SOP_NEW_FEATURE.md", "Feature 从 brief 到 ship 的标准路径。", ["feature"], "必要"),
+        docEntry("Bugfix SOP", "docs/workflow/SOP_BUGFIX.md", "Bug 诊断、修复、验证的标准路径。", ["bugfix"], "必要"),
+        docEntry("Release Log", "docs/workflow/project/release-log.md", "系统层和产品层可见变化记录。", ["release"], "必要"),
+        docEntry("xai-release-log skill", ".teams/skills/xai-release-log/SKILL.md", "发布记录写入和变更摘要约束。", ["skill", "release"], "必要")
+      ].filter(Boolean)
+    },
+    {
+      key: "system-docs",
+      title: "系统性文档",
+      summary: "ADR、合同、分支治理、portable 同步和系统设计。",
+      importance: "系统级",
+      entries: [
+        docEntry("ADR-0013 分支同步治理", "docs/adr/0013-branch-sync-governance.md", "Web / Desktop / Sync 的 D3 gate 和分支拓扑。", ["adr", "branch"], "系统级"),
+        docEntry("ADR-0007 Web Console", "docs/adr/0007-xai-web-console-build-form.md", "Web Console 拆包、持久化键和路线图来源。", ["adr", "web"], "系统级"),
+        docEntry("Contracts", "docs/contracts/README.md", "跨包合同和验证入口。", ["contracts"], "系统级"),
+        docEntry("Portable Manifest", "docs/workflow/_portable/00-PORTABLE-MANIFEST.md", "跨平台同步 surface 与生成规则。", ["portable"], "系统级"),
+        docEntry("Branch Policy", "docs/workflow/project/branch-policy.json", "长期分支和 D3 gate 的机器可读策略。", ["branch", "json"], "系统级")
+      ].filter(Boolean)
+    },
+    {
+      key: "skill-agent",
+      title: "Skill / Agent 文档",
+      summary: "项目 skill、Codex skill、Workflow Agent 多平台版本。",
+      importance: "必要",
+      entries: [
+        ...skillGroups.flatMap(group => group.items.slice(0, 3).map(item =>
+          docEntry(item.name, item.path, item.description || group.summary, ["skill", group.label], "必要")
+        )),
+        ...agentFamilies.slice(0, 8).map(family => {
+          const preferred = family.variants.find(variant => variant.platform === "Codex") || family.variants[0];
+          return preferred ? docEntry(family.title, preferred.path, family.summary, ["agent", family.group], "必要") : null;
+        })
+      ].filter(Boolean)
+    },
+    {
+      key: "workflow-docs",
+      title: "工作流文档",
+      summary: "portable 工作流、roadmap loop、feature full loop 和 web-to-desktop gate。",
+      importance: "必要",
+      entries: [
+        docEntry("xai-feature-full-loop", ".teams/skills/xai-feature-full-loop/SKILL.md", "端到端 feature pipeline 编排。", ["skill", "feature"], "必要"),
+        docEntry("xai-roadmap-loop", ".teams/skills/xai-roadmap-loop/SKILL.md", "Roadmap manifest 分波推进。", ["skill", "roadmap"], "必要"),
+        docEntry("xai-web-to-desktop-sync", ".teams/skills/xai-web-to-desktop-sync/SKILL.md", "Web 变更进入 Desktop 前的 D3 分类。", ["skill", "sync"], "必要"),
+        docEntry("Portable usage guide", "docs/workflow/_portable/usage-guide.md", "可迁移 workflow 使用说明。", ["portable", "workflow"], "必要")
+      ].filter(Boolean)
+    },
+    {
+      key: "project-rules",
+      title: "项目规则文档",
+      summary: "工具链规则、handoff 规则、Cursor rule 和平台同步约束。",
+      importance: "必读",
+      entries: [
+        docEntry("AGENTS.md", "AGENTS.md", "Codex 会话规则。", ["codex"], "必读"),
+        docEntry("CLAUDE.md", "CLAUDE.md", "共享项目规则。", ["claude"], "必读"),
+        docEntry("Cursor handoff rule", ".cursor/rules/handoff.mdc", "Cursor 侧 handoff 展示规则。", ["cursor"], "必读"),
+        docEntry("Codex config", ".codex/config.toml", "Codex agent depth 和配置。", ["codex", "config"], "系统级")
+      ].filter(Boolean)
+    }
+  ];
+  const roots = [
+    docEntry("docs", "docs", "项目文档根目录：ADR、workflow、reviews、planning、prototype。", ["root"], "必读"),
+    docEntry("docs/workflow", "docs/workflow", "Workflow、roadmap、project handbook、portable 文档。", ["workflow"], "必要"),
+    docEntry("docs/adr", "docs/adr", "架构决策记录。", ["adr"], "系统级"),
+    docEntry("packages/*/docs", "packages", "各 package 的 design/api/test/dev_log 文档入口。", ["package"], "必要"),
+    docEntry(".teams/skills", ".teams/skills", "XAI 项目级 workflow skills。", ["skill"], "必要"),
+    docEntry(".codex/skills", ".codex/skills", "Codex 本地 skill 文档。", ["skill", "codex"], "参考"),
+    docEntry(".codex/agents", ".codex/agents", "Codex Workflow Agent TOML。", ["agent", "codex"], "必要"),
+    docEntry(".agents/templates", ".agents/templates", "跨平台 Agent 模板源。", ["agent", "template"], "系统级"),
+    docEntry(".claude/agents", ".claude/agents", "Claude/Cloud Agent 版本。", ["agent", "cloud"], "参考"),
+    docEntry(".cursor/agents", ".cursor/agents", "Cursor Agent 版本。", ["agent", "cursor"], "参考")
+  ].filter(Boolean);
+  const byPath = new Map();
+  [...roots, ...groups.flatMap(group => group.entries)].forEach(entry => {
+    if (!byPath.has(entry.path)) byPath.set(entry.path, entry);
+  });
+  return {
+    roots,
+    groups: groups.map(group => ({ ...group, count: group.entries.length })),
+    by_path: Object.fromEntries(byPath)
+  };
+}
+
+function latestReleaseEntry() {
+  if (!existsSync(releaseLogPath)) return "";
+  const text = readFileSync(releaseLogPath, "utf8");
+  const match = text.match(/^###\s+(.+)$/m);
+  return match ? match[1].trim() : "";
+}
+
+function classifyReleaseType(title) {
+  const t = String(title).toLowerCase();
+  if (/skill|发布日志/.test(t)) return "skill";
+  if (/规则|治理|governance|adr|分支|branch/.test(t)) return "governance";
+  return "docs";
+}
+
+const releaseModuleMeta = {
+  web: {
+    title: "Web 分支",
+    tone: "blue",
+    aliases: ["web", "xai-web", "web-console", "calendar", "tasks", "matrix", "statistics", "board"]
+  },
+  app: {
+    title: "App / Mac 桌面版本",
+    tone: "green",
+    aliases: ["app", "mac", "desktop", "tauri", "native", "dmg", "mas"]
+  },
+  plugin: {
+    title: "桌面插件",
+    tone: "purple",
+    aliases: ["plugin", "widget", "clipboard", "organizer", "ai-cube"]
+  },
+  sync: {
+    title: "账号云同步",
+    tone: "cyan",
+    aliases: ["sync", "cloud", "account", "auth", "device-session"]
+  },
+  site: {
+    title: "官网",
+    tone: "yellow",
+    aliases: ["site", "official", "release-site", "cloudflare", "website", "官网"]
+  },
+  admin: {
+    title: "管理者 / 开发者 Dashboard",
+    tone: "red",
+    aliases: ["admin", "dashboard", "control plane", "dev-dashboard", "project-system"]
+  }
+};
+
+function cleanReleaseValue(value) {
+  return String(value || "").replace(/\s+/g, " ").trim();
+}
+
+function releaseSummary(entry) {
+  return cleanReleaseValue(
+    entry.user_visible ||
+    entry.added ||
+    entry.improved ||
+    entry.fixed ||
+    entry.developer_delta ||
+    entry.title
+  );
+}
+
+function versionLabel(entry) {
+  return cleanReleaseValue(entry.version || entry.version_change || `snapshot ${entry.date}`);
+}
+
+function releaseEntryModule(entry) {
+  const fields = [
+    entry.product_line,
+    entry.branch_commit,
+    entry.title,
+    entry.user_visible,
+    entry.developer_delta,
+    entry.impact
+  ].join(" ").toLowerCase();
+  if (/\b(admin-dashboard|admin|dev-dashboard|control plane)\b/.test(fields) || /看板/.test(fields)) return "admin";
+  if (/\b(sync|cloud|account|auth|device-session)\b/.test(fields)) return "sync";
+  if (/\b(plugin|widget|clipboard|organizer|ai-cube)\b/.test(fields)) return "plugin";
+  if (/\b(site|official|release-site|cloudflare|website|官网)\b/.test(fields)) return "site";
+  if (/\b(app|mac|desktop|tauri|native|dmg|mas)\b/.test(fields)) return "app";
+  if (/\b(web|xai-web|calendar|tasks|matrix|statistics|board)\b/.test(fields)) return "web";
+  return "admin";
+}
+
+function splitReleaseModules(value) {
+  const raw = cleanReleaseValue(value).toLowerCase();
+  if (!raw) return [];
+  return Object.entries(releaseModuleMeta)
+    .filter(([, meta]) => meta.aliases.some(alias => raw.includes(alias)))
+    .map(([key]) => key);
+}
+
+function normalizeReleaseField(label) {
+  const key = String(label || "").trim().toLowerCase();
+  if (key === "product line" || key === "product-line") return "product_line";
+  if (key === "branch / commit" || key === "branch/commit") return "branch_commit";
+  if (key === "user-visible change" || key === "user visible change") return "user_visible";
+  if (key === "developer/system delta" || key === "developer system delta") return "developer_delta";
+  if (key === "risk / follow-up" || key === "risk/follow-up") return "risk_followup";
+  if (key === "version" || key === "version change" || key === "version_change") return "version";
+  if (key === "added" || key === "新增功能") return "added";
+  if (key === "improved" || key === "optimized" || key === "优化内容") return "improved";
+  if (key === "fixed" || key === "fixes" || key === "修复问题") return "fixed";
+  if (key === "impact" || key === "影响范围") return "impact";
+  if (key === "audience note" || key === "notes" || key === "说明") return "audience_note";
+  if (key === "verification") return "verification";
+  return key.replace(/[^a-z0-9]+/g, "_").replace(/^_+|_+$/g, "");
+}
+
+// Derive structured release entries from the real release-log.md (## <date>
+// -> ### <title> -> typed bullets). Older rows without explicit release-note
+// fields degrade to a summary instead of disappearing.
+function parseReleaseEntries(limit = 16) {
+  if (!existsSync(releaseLogPath)) return [];
+  const lines = readFileSync(releaseLogPath, "utf8").split(/\r?\n/);
+  const entries = [];
+  let currentDate = "";
+  let current = null;
+  const flush = () => {
+    if (current?.title) {
+      const summary = releaseSummary(current);
+      const moduleKey = current.module || releaseEntryModule(current);
+      const relatedModules = [...new Set([
+        moduleKey,
+        ...splitReleaseModules(current.product_line),
+        ...splitReleaseModules(current.impact)
+      ])].filter(Boolean);
+      entries.push({
+        ...current,
+        id: `${current.date}-${current.title}`.toLowerCase().replace(/[^a-z0-9\u4e00-\u9fa5]+/g, "-"),
+        module: moduleKey,
+        related_modules: relatedModules,
+        type: classifyReleaseType(current.title),
+        version_label: versionLabel(current),
+        summary: summary.length > 148 ? `${summary.slice(0, 148)}…` : summary
+      });
+    }
+    current = null;
+  };
+  for (const line of lines) {
+    const dateMatch = line.match(/^##\s+(\d{4}-\d{2}-\d{2})\s*$/);
+    if (dateMatch) {
+      flush();
+      currentDate = dateMatch[1];
+      continue;
+    }
+    const titleMatch = line.match(/^###\s+(.+?)\s*$/);
+    if (titleMatch) {
+      flush();
+      current = { date: currentDate, title: titleMatch[1] };
+      continue;
+    }
+    const fieldMatch = line.match(/^[-*]\s*([^:：]+)[:：]\s*(.+)$/);
+    if (fieldMatch && current) {
+      current[normalizeReleaseField(fieldMatch[1])] = cleanReleaseValue(fieldMatch[2]);
+    }
+  }
+  flush();
+  return entries.slice(0, limit);
+}
+
+function parseReleaseRows(limit = 8) {
+  return parseReleaseEntries(limit).map(entry => [
+    entry.date,
+    entry.title,
+    entry.summary,
+    entry.type
+  ]);
+}
+
+function buildReleaseModules(entries) {
+  return Object.entries(releaseModuleMeta).map(([key, meta]) => {
+    const items = entries.filter(entry => entry.related_modules.includes(key));
+    const latest = items[0] || null;
+    return {
+      key,
+      title: meta.title,
+      tone: meta.tone,
+      count: items.length,
+      latest_date: latest?.date || "",
+      latest_title: latest?.title || "暂无模块发布",
+      latest_summary: latest?.summary || "等待 release-log.md 写入该模块的发布说明。",
+      entries: items.slice(0, 4)
+    };
+  });
+}
+
+function buildOverallReleases(entries, limit = 5) {
+  const byDate = new Map();
+  entries.forEach(entry => {
+    if (!byDate.has(entry.date)) byDate.set(entry.date, []);
+    byDate.get(entry.date).push(entry);
+  });
+  return [...byDate.entries()].slice(0, limit).map(([date, items]) => {
+    const modules = [...new Set(items.flatMap(item => item.related_modules))];
+    const added = items.map(item => item.added || item.user_visible).filter(Boolean).slice(0, 3);
+    const improved = items.map(item => item.improved || item.developer_delta).filter(Boolean).slice(0, 3);
+    const fixed = items.map(item => item.fixed).filter(Boolean).slice(0, 3);
+    const impacts = items.map(item => item.impact || item.product_line).filter(Boolean).slice(0, 4);
+    return {
+      date,
+      version_label: items.find(item => item.version)?.version_label || `project snapshot ${date}`,
+      title: items[0]?.title || "项目阶段更新",
+      summary: items.map(item => item.summary).filter(Boolean).slice(0, 2).join(" / "),
+      modules,
+      added,
+      improved,
+      fixed,
+      impact: impacts,
+      audience_note: items.find(item => item.audience_note)?.audience_note || "",
+      entries: items.slice(0, 6).map(item => ({
+        title: item.title,
+        module: item.module,
+        summary: item.summary
+      }))
+    };
+  });
+}
+
+function splitMarkdownRow(line) {
+  return line
+    .trim()
+    .replace(/^\|/, "")
+    .replace(/\|$/, "")
+    .split("|")
+    .map(cell => cell.trim());
+}
+
+function isSeparatorRow(line) {
+  return /^\|\s*:?-{3,}:?\s*(\|\s*:?-{3,}:?\s*)+\|?$/.test(line.trim());
+}
+
+function parseMarkdownTables(text) {
+  const lines = text.split(/\r?\n/);
+  const tables = [];
+  for (let i = 0; i < lines.length - 1; i += 1) {
+    if (!lines[i].trim().startsWith("|") || !isSeparatorRow(lines[i + 1])) {
+      continue;
+    }
+    const headers = splitMarkdownRow(lines[i]);
+    const rows = [];
+    i += 2;
+    while (i < lines.length && lines[i].trim().startsWith("|")) {
+      const cells = splitMarkdownRow(lines[i]);
+      if (cells.length >= headers.length) {
+        const row = {};
+        headers.forEach((header, index) => {
+          row[header] = cells[index] || "";
+        });
+        rows.push(row);
+      }
+      i += 1;
+    }
+    tables.push({ headers, rows });
+  }
+  return tables;
+}
+
+function normalizeStatus(value) {
+  return String(value || "")
+    .replace(/\*\*/g, "")
+    .replace(/`/g, "")
+    .trim()
+    // Drop human annotations like "NEEDS_REVIEW (B1 revised -> re-review)" so
+    // they fold into the base enum instead of leaking a pseudo-status into the UI.
+    .replace(/\s*[（(\[].*$/s, "")
+    .trim()
+    .toUpperCase()
+    .replace(/\s+/g, "_");
+}
+
+function countByStatus(rows) {
+  return rows.reduce((counts, row) => {
+    const status = normalizeStatus(row.status);
+    if (!status) return counts;
+    counts[status] = (counts[status] || 0) + 1;
+    return counts;
+  }, {});
+}
+
+function totalFromCounts(counts) {
+  return Object.values(counts).reduce((sum, count) => sum + count, 0);
+}
+
+function parsePluginMap() {
+  try {
+    if (!existsSync(pluginMapPath)) return { source: relative(repoRoot, pluginMapPath), entries: [], status_counts: {} };
+    const entries = parseMarkdownTables(readText(pluginMapPath))
+      .filter(table => table.headers.some(header => header.toLowerCase() === "状态" || header.toLowerCase() === "status"))
+      .flatMap(table => table.rows.map(row => {
+        const name = row.Plugin || row.Package || row.Slug || row.Tier || row.Surface || "";
+        const path = row["目录"] || row["Packages"] || row["Packages (representative)"] || "";
+        const status = row["状态"] || row.Status || row["Current dev-status (per ADR-0010)"] || "";
+        return {
+          name,
+          path,
+          status: normalizeStatus(status),
+          raw_status: status
+        };
+      }))
+      .filter(entry => entry.name && entry.status);
+    return {
+      source: relative(repoRoot, pluginMapPath),
+      entries,
+      status_counts: countByStatus(entries)
+    };
+  } catch {
+    return { source: relative(repoRoot, pluginMapPath), entries: [], status_counts: {} };
+  }
+}
+
+function parseRoadmapManifest(filename) {
+  try {
+    const path = resolve(roadmapDir, filename);
+    if (!existsSync(path)) return null;
+    const table = parseMarkdownTables(readText(path)).find(candidate => {
+      const headers = candidate.headers.map(header => header.toLowerCase());
+      return headers.includes("#") && headers.includes("slug") && headers.includes("status");
+    });
+    if (!table) return null;
+    const rows = table.rows
+      .map(row => ({
+        number: row["#"],
+        slug: row.Slug,
+        status: normalizeStatus(row.Status),
+        last_run: row["Last Run"] || ""
+      }))
+      .filter(row => row.slug && row.status);
+    return {
+      filename,
+      source: relative(repoRoot, path),
+      rows,
+      status_counts: countByStatus(rows),
+      total: rows.length
+    };
+  } catch {
+    return null;
+  }
+}
+
+function listRoadmapManifests() {
+  try {
+    if (!existsSync(roadmapDir)) return [];
+    return roadmapAllowlist
+      .map(parseRoadmapManifest)
+      .filter(Boolean)
+      .sort((a, b) => a.filename.localeCompare(b.filename));
+  } catch {
+    return [];
+  }
+}
+
+function mergeCounts(manifests) {
+  return manifests.reduce((merged, manifest) => {
+    Object.entries(manifest.status_counts).forEach(([status, count]) => {
+      merged[status] = (merged[status] || 0) + count;
+    });
+    return merged;
+  }, {});
+}
+
+function formatCounts(counts) {
+  const ordered = ["SHIPPED", "READY_TO_SHIP", "READY_FOR_VERIFY", "NEEDS_REVIEW", "PENDING", "BLOCKED_EXTERNAL", "BLOCKED", "PAUSED"];
+  const parts = ordered
+    .filter(status => counts[status])
+    .map(status => `${status}:${counts[status]}`);
+  Object.keys(counts)
+    .filter(status => !ordered.includes(status))
+    .sort()
+    .forEach(status => parts.push(`${status}:${counts[status]}`));
+  return parts.join(" · ") || "no rows";
+}
+
+function summarizeProductStatus(counts, emptyLabel = "无 manifest 行") {
+  const total = totalFromCounts(counts);
+  if (!total) return emptyLabel;
+  return `${total} rows · ${formatCounts(counts)}`;
+}
+
+function progressFromCounts(counts, fallback) {
+  const total = totalFromCounts(counts);
+  if (!total) return fallback;
+  const weighted =
+    (counts.SHIPPED || 0) +
+    (counts.READY_TO_SHIP || 0) * 0.9 +
+    (counts.APPROVED || 0) * 0.75 +
+    (counts.READY_FOR_VERIFY || 0) * 0.65 +
+    (counts.NEEDS_REVIEW || 0) * 0.5 +
+    (counts.IN_PROGRESS || 0) * 0.45 +
+    (counts.PENDING || 0) * 0.15;
+  return Math.max(5, Math.min(100, Math.round((weighted / total) * 100)));
+}
+
+function pendingSummary(counts, fallback) {
+  if (counts.BLOCKED || counts.BLOCKED_EXTERNAL) return `${(counts.BLOCKED || 0) + (counts.BLOCKED_EXTERNAL || 0)} 个阻塞需处理`;
+  if (counts.NEEDS_REVIEW) return `${counts.NEEDS_REVIEW} 个待评审`;
+  if (counts.READY_FOR_VERIFY) return `${counts.READY_FOR_VERIFY} 个待验证`;
+  if (counts.PENDING) return `${counts.PENDING} 个待排期`;
+  return fallback;
+}
+
+function buildOverviewModules(productLines) {
+  const meta = {
+    web: {
+      title: "Web 版本",
+      tone: "blue",
+      icon: "W",
+      phase: "主线开发",
+      fallback_progress: 78,
+      running: "正常运行",
+      recent_update: "Web Console / Dashboard rows 接入真实 roadmap 计数",
+      todo_fallback: "D3 gate 后再同步到 Desktop",
+      target: { type: "url", href: "http://localhost:5173/app/dashboard", label: "打开 /app/dashboard" }
+    },
+    app: {
+      title: "桌面版本",
+      tone: "green",
+      icon: "D",
+      phase: "Native foundation",
+      fallback_progress: 42,
+      running: "开发线正常",
+      recent_update: "G1 native foundation 作为桌面主线入口",
+      todo_fallback: "Tauri / 本机能力 / RC gate",
+      target: { type: "page", page: "product-flow", product_key: "app", label: "查看桌面详情" }
+    },
+    plugin: {
+      title: "桌面插件",
+      tone: "purple",
+      icon: "P",
+      phase: "平台等待",
+      fallback_progress: 24,
+      running: "等待 App 平台",
+      recent_update: "插件状态来自 PLUGIN_MAP",
+      todo_fallback: "插件 SDK / Widget host 恢复排期",
+      target: { type: "doc", path: "docs/PLUGIN_MAP.md", label: "打开 PLUGIN_MAP" }
+    },
+    sync: {
+      title: "账号云同步",
+      tone: "cyan",
+      icon: "S",
+      phase: "合同沉淀",
+      fallback_progress: 28,
+      running: "暂停中",
+      recent_update: "sync-v1 roadmap 作为恢复入口",
+      todo_fallback: "push/pull、冲突、两设备 smoke",
+      target: { type: "doc", path: "docs/workflow/roadmap/sync-v1.md", label: "打开 sync-v1" }
+    },
+    site: {
+      title: "官方网页",
+      tone: "yellow",
+      icon: "O",
+      phase: "发布入口候选",
+      fallback_progress: 18,
+      running: "本地站点待启动",
+      recent_update: "release-site archive 保留官网/账号入口",
+      todo_fallback: "确认 package 和 Cloudflare 发布节奏",
+      target: { type: "url", href: "http://localhost:3000", label: "打开官网本地页" }
+    },
+    admin: {
+      title: "开发者 / 管理者 Dashboard",
+      tone: "red",
+      icon: "A",
+      phase: "控制面原型",
+      fallback_progress: 22,
+      running: "原型可打开",
+      recent_update: "Dev Dashboard 与 Admin prototype 分离",
+      todo_fallback: "权限、用量、审计、AI 配置接入计划",
+      target: { type: "file", href: "../admin-dashboard/index.html", label: "打开 Admin 原型" }
+    }
+  };
+  return productLines.map(product => {
+    const m = meta[product.key] || {};
+    const counts = product.status_counts || {};
+    return {
+      key: product.key,
+      title: m.title || product.title,
+      subtitle: product.subtitle,
+      tone: m.tone || "blue",
+      icon: m.icon || String(product.title || "?").slice(0, 1),
+      phase: m.phase || product.status,
+      status: product.status,
+      progress: progressFromCounts(counts, m.fallback_progress || 10),
+      running: m.running || "待确认",
+      recent_update: m.recent_update || product.status_summary || product.tracker,
+      todo: pendingSummary(counts, m.todo_fallback || product.next),
+      target: m.target || { type: "page", page: "product-flow", product_key: product.key, label: "查看详情" },
+      status_counts: counts
+    };
+  });
+}
+
+function badgeForCounts(counts) {
+  if (counts.BLOCKED || counts.BLOCKED_EXTERNAL) return "needs attention";
+  if (counts.NEEDS_REVIEW || counts.READY_FOR_VERIFY || counts.READY_TO_SHIP) return "review gate";
+  if (counts.PENDING || counts.PAUSED) return "work queued";
+  if (counts.SHIPPED) return "verified archive";
+  return "tracked";
+}
+
+function buildProductLines(sourceProducts, roadmapManifests, pluginMap) {
+  const byName = new Map(roadmapManifests.map(manifest => [manifest.filename, manifest]));
+  const get = names => names.map(name => byName.get(name)).filter(Boolean);
+  const pluginEntries = pluginMap.entries.filter(entry => /plugin-(organizer|clipboard|widgets|meditation|pet|account|console|productivity|ai-cube|calendar|labels|project|settings)\b/.test(entry.path));
+  const pluginCounts = countByStatus(pluginEntries);
+  const lineManifestNames = {
+    web: [
+      "xai-web-console.md",
+      "xai-web-console-gap-closure.md",
+      "xai-web-dashboard-real-data.md",
+      "web-ticktick-parity.md",
+      "xai-web-calendar-event-create.md",
+      "xai-web-matrix-card-create.md",
+      "xai-web-tasks-card-create.md",
+      "xai-web-tasks-smartlist-filter.md",
+      "xai-web-dashboard-stickies-create.md",
+      "xai-web-dashboard-weather-mail.md",
+      "xai-web-statistics-real-aggregation.md"
+    ],
+    app: ["xai-g0-window-spike.md", "xai-g1-native-foundation.md"],
+    plugin: [],
+    sync: ["sync-v1.md"],
+    site: ["web-ticktick-parity.md"],
+    admin: ["xai-admin-dashboard-system-integration.md"]
+  };
+  const lineCounts = {
+    web: mergeCounts(get(lineManifestNames.web)),
+    app: mergeCounts(get(lineManifestNames.app)),
+    plugin: pluginCounts,
+    sync: mergeCounts(get(lineManifestNames.sync)),
+    site: mergeCounts(get(lineManifestNames.site)),
+    admin: mergeCounts(get(lineManifestNames.admin))
+  };
+  // Curated entry-point docs per line (PRD/spec/governance), filtered to ones
+  // that actually exist so dead links never reach the dashboard.
+  const anchorDocs = {
+    web: [["Web Spec", "web design/DESIGN.md"], ["ADR-0013 分支治理", "docs/adr/0013-branch-sync-governance.md"]],
+    app: [["ADR-0010 P1 计划", "docs/adr/0010-p1-desktop-resume-plan.md"]],
+    plugin: [["PLUGIN_MAP", "docs/PLUGIN_MAP.md"]],
+    sync: [["ADR-0013 同步", "docs/adr/0013-branch-sync-governance.md"]],
+    site: [],
+    admin: [["Admin README", "docs/prototypes/admin-dashboard/README.md"], ["接入计划", "docs/prototypes/admin-dashboard/INTEGRATION_PLAN.md"], ["ADR-0013 控制面", "docs/adr/0013-branch-sync-governance.md"]]
+  };
+  const relatedDocsFor = key => {
+    const seen = new Set();
+    const fromAnchors = (anchorDocs[key] || [])
+      .filter(([, path]) => existsSync(resolve(repoRoot, path)))
+      .map(([label, path]) => ({ label, path }));
+    const fromManifests = get(lineManifestNames[key] || [])
+      .slice(0, 5)
+      .map(manifest => ({ label: manifest.filename.replace(/\.md$/, ""), path: manifest.source }));
+    return [...fromAnchors, ...fromManifests].filter(doc => {
+      if (seen.has(doc.path)) return false;
+      seen.add(doc.path);
+      return true;
+    });
+  };
+  const regions = {
+    web: "主产品链",
+    app: "主产品链",
+    plugin: "主产品链",
+    sync: "主产品链",
+    admin: "Control Plane",
+    site: "项目系统区"
+  };
+  const chainOrder = { web: 1, app: 2, plugin: 3, sync: 4, admin: 5, site: 6 };
+  return [...sourceProducts]
+    .sort((a, b) => Number(a.order) - Number(b.order))
+    .map(product => {
+      const counts = lineCounts[product.key] || {};
+      const emptyLabel = product.key === "admin" ? "0 manifest rows · prototype only" : "0 manifest rows";
+      return {
+        ...product,
+        order: chainOrder[product.key] || product.order,
+        region: regions[product.key] || "项目系统区",
+        tracking_badge: badgeForCounts(counts),
+        status_counts: counts,
+        status_summary: summarizeProductStatus(counts, emptyLabel),
+        related_docs: relatedDocsFor(product.key)
+      };
+    });
+}
+
+function buildSignals(snapshot) {
+  const divergence = snapshot.git.divergence;
+  const manifests = snapshot.roadmap_manifests || [];
+  const allCounts = mergeCounts(manifests);
+  return [
+    {
+      label: "web↔dev 分叉",
+      badge: "正常差异",
+      value: `${divergence.web_only}/${divergence.dev_only}`,
+      note: "两条独立专注线，差异正常"
+    },
+    {
+      label: "Roadmap rows",
+      badge: "真实计数",
+      value: String(totalFromCounts(allCounts)),
+      note: `${allCounts.SHIPPED || 0} 已发布 · ${allCounts.NEEDS_REVIEW || 0} 待评审 · ${allCounts.PENDING || 0} 待办`
+    },
+    {
+      label: "Project skills",
+      badge: "tracked",
+      value: String(snapshot.skills_found.length),
+      note: ".teams/skills/*/SKILL.md"
+    },
+    {
+      label: "Snapshot",
+      badge: "manual refresh",
+      value: "local",
+      note: "读取+提醒；不自动改 roadmap/merge/发布判断"
+    }
+  ];
+}
+
+function buildCockpit(snapshot) {
+  const branch = snapshot.git.branch || "unknown";
+  const web = snapshot.product_lines.find(line => line.key === "web");
+  return [
+    {
+      question: "现在做什么",
+      answer: "继续 Web 主线；Desktop 走独立 App lane",
+      detail: web
+        ? `${totalFromCounts(web.status_counts)} 行 · ${web.status_counts.NEEDS_REVIEW || 0} 待评审 · ${web.status_counts.READY_FOR_VERIFY || 0} 待验证`
+        : "读取 Web roadmap / PLUGIN_MAP 状态"
+    },
+    {
+      question: "在哪条线",
+      answer: branch,
+      detail: "当前仓库线；web 与 dev 独立推进"
+    },
+    {
+      question: "用哪个 workflow · skill",
+      answer: "xai-feature-full-loop / xai-web-to-desktop-sync",
+      detail: "功能推进用 full-loop；跨线同步先跑 D3 分类"
+    },
+    {
+      question: "什么状态",
+      answer: "读取+提醒",
+      detail: "自动化不改 roadmap、不 merge、不判断发布"
+    }
+  ];
+}
+
+function localDate(offsetDays = 0) {
+  const date = new Date();
+  date.setDate(date.getDate() + offsetDays);
+  const year = date.getFullYear();
+  const month = String(date.getMonth() + 1).padStart(2, "0");
+  const day = String(date.getDate()).padStart(2, "0");
+  return `${year}-${month}-${day}`;
+}
+
+function countCommits(args) {
+  const commits = new Set(gitLines(["log", "--format=%H", ...args]));
+  return commits.size;
+}
+
+function parseNumstat(args) {
+  const rows = gitLines(["log", "--numstat", "--format=", ...args])
+    .map(line => line.split(/\t/))
+    .filter(parts => parts.length >= 3);
+  return rows.reduce((summary, [added, deleted, file]) => {
+    const add = Number(added);
+    const del = Number(deleted);
+    const safeAdd = Number.isFinite(add) ? add : 0;
+    const safeDel = Number.isFinite(del) ? del : 0;
+    summary.added += safeAdd;
+    summary.deleted += safeDel;
+    summary.files.add(file);
+    const bucket = directoryBucket(file);
+    if (!summary.by_directory[bucket]) {
+      summary.by_directory[bucket] = { added: 0, deleted: 0, files: 0 };
+    }
+    summary.by_directory[bucket].added += safeAdd;
+    summary.by_directory[bucket].deleted += safeDel;
+    summary.by_directory[bucket].files += 1;
+    if (isDocPath(file)) summary.docs_lines += safeAdd + safeDel;
+    if (isCodePath(file)) summary.code_lines += safeAdd + safeDel;
+    return summary;
+  }, { added: 0, deleted: 0, files: new Set(), by_directory: {}, docs_lines: 0, code_lines: 0 });
+}
+
+function directoryBucket(file) {
+  if (file.startsWith("docs/")) return "docs";
+  if (file.startsWith("apps/web/")) return "apps/web";
+  if (file.startsWith("apps/desktop/")) return "apps/desktop";
+  if (file.startsWith(".teams/skills/")) return ".teams/skills";
+  return "other";
+}
+
+function isDocPath(file) {
+  return file.startsWith("docs/") || /\.(md|mdc|txt)$/i.test(file);
+}
+
+function isCodePath(file) {
+  return /\.(js|jsx|ts|tsx|mjs|cjs|rs|css|html|json|toml|sql|py|sh)$/i.test(file);
+}
+
+function buildSevenDayTrend() {
+  return Array.from({ length: 7 }, (_, index) => {
+    const offset = index - 6;
+    const date = localDate(offset);
+    return {
+      date,
+      commits: countCommits(["--all", `--since=${date} 00:00`, `--until=${date} 23:59:59`])
+    };
+  });
+}
+
+function listRecentBranchCommits() {
+  return gitLines([
+    "for-each-ref",
+    "--sort=-committerdate",
+    "--format=%(refname:short)|%(committerdate:iso8601)|%(objectname:short)|%(subject)",
+    "refs/heads",
+    "refs/remotes/origin"
+  ])
+    .filter(line => !line.startsWith("origin/HEAD|"))
+    .slice(0, 14)
+    .map(line => {
+      const [name, date, commit, ...subjectParts] = line.split("|");
+      return { name, date, commit, subject: subjectParts.join("|") };
+    });
+}
+
+function buildDevelopmentData(branch) {
+  const todayArgs = ["--all", "--since=midnight"];
+  const sevenDayArgs = ["--all", "--since=7 days ago"];
+  const todayNumstat = parseNumstat(todayArgs);
+  const sevenDayNumstat = parseNumstat(sevenDayArgs);
+  const statusLines = gitLines(["status", "--short"]);
+  const originBranch = branch ? `origin/${branch}` : "";
+  const recentPushTime = originBranch ? git(["log", "-1", "--format=%cI", originBranch]) : "";
+  const skillChangeCommits = new Set(gitLines([
+    "log",
+    "--all",
+    "--since=7 days ago",
+    "--format=%H",
+    "--",
+    ".teams/skills",
+    ".codex/skills",
+    ".codex/agents"
+  ])).size;
+  return {
+    source: "git",
+    scope: "all refs unless noted",
+    today_commits: countCommits(todayArgs),
+    seven_day_commits: countCommits(sevenDayArgs),
+    seven_day_trend: buildSevenDayTrend(),
+    today_numstat: {
+      added: todayNumstat.added,
+      deleted: todayNumstat.deleted,
+      files: todayNumstat.files.size
+    },
+    directory_changes: todayNumstat.by_directory,
+    branch_recent_commits: listRecentBranchCommits(),
+    uncommitted_files: statusLines.length,
+    doc_vs_code: {
+      docs_lines: sevenDayNumstat.docs_lines,
+      code_lines: sevenDayNumstat.code_lines,
+      ratio: sevenDayNumstat.code_lines ? Number((sevenDayNumstat.docs_lines / sevenDayNumstat.code_lines).toFixed(2)) : null
+    },
+    recent_push_time: recentPushTime,
+    skill_change_commits: skillChangeCommits
+  };
+}
+
+function readBranchPolicy(divergence) {
+  try {
+    if (!existsSync(branchPolicyPath)) return null;
+    const policy = readJson(branchPolicyPath);
+    const webLast = git(["log", "-1", "--format=%cs", "origin/web"]) || git(["log", "-1", "--format=%cs", "web"]);
+    const devLast = git(["log", "-1", "--format=%cs", "origin/dev"]) || git(["log", "-1", "--format=%cs", "dev"]);
+    const mergeBase = git(["merge-base", "origin/web", "origin/dev"]);
+    const sharedBase = mergeBase ? git(["log", "-1", "--format=%cs", mergeBase]) : "";
+    const lastTag = git(["for-each-ref", "--sort=-creatordate", "--count=1", "--format=%(refname:short) · %(creatordate:short)", "refs/tags"]);
+    const current = {
+      web_only: divergence.web_only,
+      dev_only: divergence.dev_only,
+      drift_status: "符合预期",
+      drift_note: "commit 数不是异常判据；只检查该共享的变化是否已有 D3 分类或 defer 记录。",
+      gate_timeline: {
+        web_last_commit: webLast || "未知",
+        dev_last_commit: devLast || "未知",
+        shared_base: sharedBase || "未知",
+        last_release_tag: lastTag || "（暂无 tag）",
+        web_ahead: divergence.web_only,
+        dev_ahead: divergence.dev_only,
+        reminder: `web 较共同基线领先 ${divergence.web_only} 个提交、dev 领先 ${divergence.dev_only} 个；属预期分叉，只需为“该共享的改动”补一次 D3 分类或 defer。`
+      }
+    };
+    return {
+      ...policy,
+      source: relative(repoRoot, branchPolicyPath),
+      current
+    };
+  } catch {
+    return null;
+  }
+}
+
+function parseStatusPanel(text) {
+  const tables = parseMarkdownTables(text);
+  const panel = tables.find(table =>
+    table.headers.map(header => header.toLowerCase()).includes("field") &&
+    table.headers.map(header => header.toLowerCase()).includes("value")
+  ) || tables[0];
+  if (!panel) return {};
+  const map = {};
+  panel.rows.forEach(row => {
+    const cells = Object.values(row);
+    const key = (row.Field || row.field || cells[0] || "").trim();
+    const value = (row.Value || row.value || cells[1] || "").trim();
+    if (key) map[key.toLowerCase()] = value;
+  });
+  return map;
+}
+
+function classifyDevStatus(raw) {
+  const s = String(raw || "").toLowerCase();
+  if (/block/.test(s)) return "BLOCKED";
+  if (/fix.?ready/.test(s)) return "FIX_READY";
+  if (/ready.?to.?ship/.test(s)) return "READY_TO_SHIP";
+  if (/verify/.test(s)) return "READY_FOR_VERIFY";
+  if (/review/.test(s)) return "NEEDS_REVIEW";
+  if (/approv/.test(s)) return "APPROVED";
+  if (/ship|shipped|done|complete|archiv/.test(s)) return "SHIPPED";
+  if (/progress|building|in.?dev|wip|active/.test(s)) return "IN_PROGRESS";
+  if (/plan|brief|backlog|pending|todo|queued/.test(s)) return "PENDING";
+  return "OTHER";
+}
+
+// Aggregate the per-package dev_log.md Status Panels into one task/progress view.
+function scanDevLogs() {
+  const dir = resolve(repoRoot, "packages");
+  if (!existsSync(dir)) return { items: [], counts: {}, source_count: 0, shipped: 0 };
+  const items = readdirSync(dir, { withFileTypes: true })
+    .filter(entry => entry.isDirectory())
+    .map(entry => resolve(dir, entry.name, "docs/dev_log.md"))
+    .filter(existsSync)
+    .map(path => {
+      const panel = parseStatusPanel(readText(path));
+      const rawStatus = panel.status || "";
+      const pkg = relative(repoRoot, path).split("/")[1];
+      return {
+        package: pkg,
+        feature: (panel.feature || pkg).replace(/`/g, "").trim(),
+        status: classifyDevStatus(rawStatus),
+        raw_status: rawStatus,
+        updated: panel.updated || "",
+        next: panel["suggested next"] || panel.workflow || "",
+        path: relative(repoRoot, path)
+      };
+    })
+    .filter(item => item.raw_status);
+  const counts = items.reduce((acc, item) => {
+    acc[item.status] = (acc[item.status] || 0) + 1;
+    return acc;
+  }, {});
+  const order = ["BLOCKED", "FIX_READY", "NEEDS_REVIEW", "READY_FOR_VERIFY", "READY_TO_SHIP", "APPROVED", "IN_PROGRESS", "PENDING", "OTHER", "SHIPPED"];
+  items.sort((a, b) => (order.indexOf(a.status) - order.indexOf(b.status)) || a.package.localeCompare(b.package));
+  return { items, counts, source_count: items.length, shipped: counts.SHIPPED || 0 };
+}
+
+const source = readJson(sourcePath);
+const branch = git(["branch", "--show-current"]);
+const latestCommit = git(["log", "-1", "--format=%h %s"]);
+const divergenceRaw = git(["rev-list", "--left-right", "--count", "origin/web...origin/dev"]);
+const [webOnly = "0", devOnly = "0"] = divergenceRaw.split(/\s+/);
+const divergence = {
+  web_only: Number(webOnly) || 0,
+  dev_only: Number(devOnly) || 0
+};
+const skillsFound = listSkills();
+const agentsFound = listAgents();
+const skillGroups = buildSkillGroups();
+const agentFamilies = buildAgentFamilies();
+const pluginMap = parsePluginMap();
+const roadmapManifests = listRoadmapManifests();
+const releaseEntries = parseReleaseEntries();
+
+const snapshot = {
+  ...source,
+  generated_at: new Date().toISOString(),
+  git: {
+    branch,
+    latest_commit: latestCommit,
+    divergence
+  },
+  skills_found: skillsFound,
+  agents_found: agentsFound,
+  skill_groups: skillGroups,
+  agent_families: agentFamilies,
+  doc_collections: buildDocCollections(skillGroups, agentFamilies),
+  doc_hub: buildDocHub(skillGroups, agentFamilies),
+  registry: {
+    skills: skillsFound,
+    agents: agentsFound
+  },
+  plugin_map: pluginMap,
+  roadmap_manifests: roadmapManifests,
+  product_lines: buildProductLines(source.product_lines || [], roadmapManifests, pluginMap),
+  release_rows: releaseEntries.slice(0, 8).map(entry => [
+    entry.date,
+    entry.title,
+    entry.summary,
+    entry.type
+  ]),
+  release_entries: releaseEntries,
+  release_modules: buildReleaseModules(releaseEntries),
+  overall_releases: buildOverallReleases(releaseEntries),
+  release_log: {
+    source: relative(repoRoot, releaseLogPath),
+    latest_entry: latestReleaseEntry()
+  },
+  branch_policy: readBranchPolicy(divergence),
+  development_data: buildDevelopmentData(branch),
+  task_progress: scanDevLogs()
+};
+snapshot.signals = buildSignals(snapshot);
+snapshot.cockpit = buildCockpit(snapshot);
+snapshot.overview_modules = buildOverviewModules(snapshot.product_lines);
+
+const body = `window.XAI_DASHBOARD_STATE = ${JSON.stringify(snapshot, null, 2)};\n`;
+writeFileSync(outputPath, body);
+
+console.log(`wrote ${relative(repoRoot, outputPath)}`);

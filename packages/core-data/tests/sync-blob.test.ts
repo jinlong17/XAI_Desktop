@@ -28,6 +28,7 @@ runRepositoryContractTests("createSyncBlobRepo contract", () =>
     newMutationId: createMutationIdFactory(),
     nowMs: () => 123,
   }),
+  { allowDeviceLocalRecords: false },
 );
 
 describe("createSyncBlobRepo", () => {
@@ -106,10 +107,49 @@ describe("createSyncBlobRepo", () => {
     expect(pushHeaders[0]?.get("X-Device-Id")).toBe(DEVICE_ID);
 
     const records = pushes[0]?.records as Array<Record<string, unknown>>;
+    expect(pushes[0]?.accountId).toBe("acct-1");
     expect(Array.isArray(records)).toBe(true);
     expect(records[0]?.entity_id).toBe("todo-1");
+    expect(records[0]?.originator_device_id).toBe(DEVICE_ID);
     expect(typeof records[0]?.blob).toBe("string");
     expect(records[0]?.hard_delete).toBe(false);
+  });
+
+  it("rejects device-local records before creating a remote mutation", async () => {
+    let pushAttempts = 0;
+    const fetchSync = createDeviceBoundFetchMock((url) => {
+      if (url.includes("/sync/push")) {
+        pushAttempts += 1;
+        return new Response(JSON.stringify({ accepted: true }), { status: 200 });
+      }
+      return new Response(JSON.stringify({ records: [], next_commit_seq: "0" }), {
+        status: 200,
+      });
+    });
+
+    const repo = createSyncBlobRepo<ContractRecord>({
+      namespace: "todos",
+      accountId: "acct-1",
+      deviceId: DEVICE_ID,
+      fetchSync,
+      crypto: createMockCrypto<ContractRecord>(),
+      newMutationId: createMutationIdFactory(),
+    });
+
+    await expect(
+      repo.put(
+        makeRecord("clip-local", {
+          entityType: "clipboard.item",
+          syncScope: "device-local",
+        }),
+      ),
+    ).rejects.toThrow(/only accepts account-sync/);
+
+    expect(pushAttempts).toBe(0);
+    expect(repo.syncState()).toMatchObject({
+      pendingMutationCount: 0,
+      mirroredRecordCount: 0,
+    });
   });
 
   it("maps /sync/push 401 responses to E_SYNC_BLOB_AUTH without retry", async () => {

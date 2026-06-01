@@ -18,4 +18,4 @@ export { matrixSlotRegistration } from "./registration.js";
 export { MATRIX_STORAGE_KEY } from "./constants.js";
 
 // ---- Types (re-exported for downstream tests + future xai-web-tasks join) -----
-export type { MatrixCard, MatrixState, Quadrant, MatrixModuleProps } from "./types.js";
+export type { MatrixCard, MatrixState, Quadrant, MatrixModuleProps, NewMatrixCardDraft } from "./types.js";

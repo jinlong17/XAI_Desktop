@@ -33,18 +33,18 @@ function AboutPaneContent({ lang }: PaneRenderProps): React.ReactElement {
       </div>
       <p className="about-desc">{t("about.desc_en")}</p>
       <div className="about-links">
-        <a className="link" role="button" tabIndex={0} aria-label={t("about.changelog")}>
+        <span className="link" aria-disabled="true" title={t("about.coming_soon_tooltip")}>
           {t("about.changelog")}
-        </a>
-        <a className="link" role="button" tabIndex={0} aria-label={t("about.privacy")}>
+        </span>
+        <span className="link" aria-disabled="true" title={t("about.coming_soon_tooltip")}>
           {t("about.privacy")}
-        </a>
-        <a className="link" role="button" tabIndex={0} aria-label={t("about.terms")}>
+        </span>
+        <span className="link" aria-disabled="true" title={t("about.coming_soon_tooltip")}>
           {t("about.terms")}
-        </a>
-        <a className="link" role="button" tabIndex={0} aria-label={t("about.feedback")}>
+        </span>
+        <span className="link" aria-disabled="true" title={t("about.coming_soon_tooltip")}>
           {t("about.feedback")}
-        </a>
+        </span>
       </div>
       {/* Suppress unused import warning — s is used above for pane title lookup */}
       {s("settings.about") && null}

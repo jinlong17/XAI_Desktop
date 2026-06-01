@@ -27,6 +27,14 @@ export interface TaskColumnProps {
   onDragOver: (e: React.DragEvent<HTMLElement>, colId: BucketId) => void;
   onDragLeave: (colId: BucketId) => void;
   onDrop: (e: React.DragEvent<HTMLElement>, colId: BucketId) => void;
+  /** NEW (api.md §E.5): called when the + button is clicked; opens the composer for this bucket. */
+  onAddCard?: (bucketId: BucketId) => void;
+  /**
+   * FP1 (smartlist-filter, api.md §F.5): When true, suppresses the per-column
+   * "Drop tasks here" hint (which is misleading when the user is viewing a
+   * read-only filtered list — you can't drop FROM a filter view into a subset).
+   */
+  filterActive?: boolean;
 }
 
 export function TaskColumn({
@@ -35,12 +43,14 @@ export function TaskColumn({
   draggingTaskId,
   isDropTarget,
   completedIds,
+  filterActive,
   onToggle,
   onDragStart,
   onDragEnd,
   onDragOver,
   onDragLeave,
   onDrop,
+  onAddCard,
 }: TaskColumnProps) {
   const { s } = useI18n(lang);
   const isEmpty = col.tasks.length === 0;
@@ -66,7 +76,11 @@ export function TaskColumn({
           </button>
         )}
         {col.action === "add" && (
-          <button className="icon-btn" aria-label={s("common.add")}>
+          <button
+            className="icon-btn"
+            aria-label={s("common.add")}
+            onClick={() => onAddCard?.(col.id)}
+          >
             <svg width="14" height="14" viewBox="0 0 16 16" fill="currentColor" aria-hidden="true">
               <path d="M8 3a1 1 0 011 1v3h3a1 1 0 110 2H9v3a1 1 0 11-2 0V9H4a1 1 0 110-2h3V4a1 1 0 011-1z"/>
             </svg>
@@ -87,7 +101,7 @@ export function TaskColumn({
             onDragEnd={onDragEnd}
           />
         ))}
-        {isEmpty && (
+        {isEmpty && !filterActive && (
           <div className="task-col-empty">
             {/* TODO(xai-web-tasks i18n): use tasks.drop_zone_empty when tokens row adds it */}
             {lang === "zh" ? "拖任务到这里" : "Drop tasks here"}

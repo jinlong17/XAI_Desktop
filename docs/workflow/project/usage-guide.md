@@ -16,6 +16,7 @@ XAI_Desktop 的 workflow 分两层:
 |---|---|---|---|
 | Portable spec | `docs/workflow/_portable/` | 跨项目 Workflow V2 规格、agent templates、public skills、hook scripts | 不建议在目标项目手改;通过 resync 从源仓库同步 |
 | Project layer | `docs/workflow/`, `.teams/skills/`, 本文件 | XAI 的路径、plugin 约定、macOS 真机门、项目 SOP | 可以按 XAI 需要维护 |
+| Cross-tool policy | `docs/workflow/project/workflow.md` | Codex + Claude Code 并行开发的分工、branch、commit、review、防冲突规则 | 可以按 XAI 需要维护 |
 
 本文件只补项目层说明。它不会改变 canonical manifest 路径:
 
@@ -24,6 +25,9 @@ docs/workflow/roadmap/<roadmap_name>.md
 ```
 
 `docs/workflow/project/` 是项目层教程和 playbook 目录,不是 roadmap manifest 目录。
+
+如果问题是"这次应该用 Codex 还是 Claude Code,以及两者如何接力",先读
+`docs/workflow/project/workflow.md`;再按本文件选择具体命令。
 
 ---
 
@@ -68,9 +72,13 @@ ls .cursor/rules/skill-workflow-router.mdc
 ls .teams/skills/xai-feature-brief/SKILL.md
 ls .teams/skills/xai-feature-full-loop/SKILL.md
 ls .teams/skills/xai-roadmap-loop/SKILL.md
+ls .teams/skills/xai-web-to-desktop-sync/SKILL.md
 ls .claude/skills/xai-feature-brief/SKILL.md
 ls .claude/skills/xai-feature-full-loop/SKILL.md
 ls .claude/skills/xai-roadmap-loop/SKILL.md
+ls .claude/skills/xai-web-to-desktop-sync/SKILL.md
+ls .codex/skills/xai-web-to-desktop-sync/SKILL.md
+ls .cursor/rules/xai-web-to-desktop-sync.mdc
 ```
 
 当前 XAI 约定:
@@ -78,11 +86,13 @@ ls .claude/skills/xai-roadmap-loop/SKILL.md
 - 15 个 Workflow V2 agent 三端生成: Claude / Codex / Cursor。
 - 10 个 portable public skills 三端生成,包含 `agent-behavioral-guidelines` 和
   `workflow-router`。
-- 3 个 XAI project-layer skills:
+- 4 个 XAI project-layer skills:
   - `xai-feature-brief`
   - `xai-feature-full-loop`
   - `xai-roadmap-loop`
-- `.claude/skills/xai-*` 是指向 `.teams/skills/xai-*` 的 symlink。
+  - `xai-web-to-desktop-sync`
+- `.claude/skills/xai-*` / `.codex/skills/xai-*` 是指向 `.teams/skills/xai-*` 的 symlink。
+- `.cursor/rules/xai-*.mdc` 是 XAI project-layer skill 的 Cursor surface。
 
 如果改过 `.agents/templates/`、`.agents/project_background.md` 或 portable public skills,重生成:
 
@@ -145,6 +155,7 @@ docs/reviews/<feature>/<YYYYMMDD>-discovery-review.md
 ## 4. Level 1 — 手动 feature workflow
 
 手动模式适合你想逐步掌控、review 每个阶段,或从 BLOCKED 恢复。
+Codex 当前会话也可以按这个 Level 1 顺序 inline 执行;这正是 `A-Codex` 在 spawn 深度不够时的落地方式。
 
 标准 feature 流程:
 
@@ -191,7 +202,7 @@ Start the feature-auto-build agent for <feature>.
 ```text
 /xai-feature-full-loop
 Requirement: <1-3 句:为什么做、谁用、解决什么>
-Automation Mode: <A-Claude | B-Codex | B-Cursor | C-Codex | C-Cursor | D-Codex | D-Cursor | D-Codex+Cursor>
+Automation Mode: <A-Claude | A-Codex | B-Codex | B-Cursor | C-Codex | C-Cursor | D-Codex | D-Cursor | D-Codex+Cursor>
 Verify Cross-vendor: yes
 ```
 
@@ -233,19 +244,27 @@ Worktree: <absolute_worktree_path>
 ## 6. Automation Mode 怎么选
 
 `Automation Mode` 控制 build / review / verify 怎么分配给 Claude、Codex、Cursor。
+合法枚举是 portable 规格中的 9 个:
 
 | Mode | 适合 |
 |---|---|
 | `A-Claude` | 高风险架构、密码学、macOS native、多窗口行为;优先稳 |
+| `A-Codex` | 长时间在当前 Codex session 里连续开发;Codex 作为 lead,不把实现外包给 `codex exec` |
 | `B-Codex` / `B-Cursor` | 事件驱动 hook 链路,适合外部 CLI 已稳定登录时 |
 | `C-Codex` / `C-Cursor` | phase 级外部 build + phase review |
 | `D-Codex` / `D-Cursor` | 外部 executor 一次性跑 build,本会话收 verify |
 | `D-Codex+Cursor` | UI-heavy / 多文件常规开发,希望吃两边 quota |
 
+`A-Codex` 和 `D-Codex` 的区别:
+
+- `A-Codex`:Codex 是 lead。当前 Codex session 负责 plan / build / verify 的编排;spawn 深度不够时 inline 执行 worker contract。
+- `D-Codex`:另一个 lead 把 build phase 委派给 Codex external executor。它不是 Codex 长跑主模式。
+
 XAI 默认建议:
 
 - 密码学 / Sync / Rust security: `A-Claude`, `Verify Cross-vendor: yes`
-- UI-heavy / Console / Web: `D-Codex+Cursor`, `Verify Cross-vendor: yes`
+- 长时间在 Codex 里推进: `A-Codex`, `Verify Cross-vendor: yes`
+- UI-heavy / Console / Web 且由 Claude lead 调度外部执行: `D-Codex+Cursor`, `Verify Cross-vendor: yes`
 - 小修小补:可以用 `agent-behavioral-guidelines` + Level 1,避免过度编排
 
 `Verify Cross-vendor: yes` 是默认推荐。它要求 build 和 verify 不由同一执行者自证正确。
@@ -298,6 +317,10 @@ manifest: docs/workflow/roadmap/<roadmap_name>.md
 | `bg` | `claude --bg --name ...` 启后台 session,Agent View 监控 | Claude Code 推荐并行路径 |
 | `serial` | 当前会话逐个 feature 串行执行 parent-session recipe | 想要单 transcript、不并行 |
 | `spawn` | legacy nested spawn `feature-full-loop` | 日常不要用;需要 >=4 层 nested agent |
+
+Codex 当前会话推进 roadmap 时优先选 `serial` 并配合 `Default Automation Mode: A-Codex`;
+如果想开多个新 Codex 会话粘贴执行,选 `emit`。`bg` 是 Claude Code / Agent View 路径,
+不要把它当成 Codex background automation。
 
 `emit` 输出 block 类似:
 
@@ -437,10 +460,55 @@ Project-layer skills:
 | `xai-feature-brief` | Step 0 需求规范化 |
 | `xai-feature-full-loop` | 单 feature parent-session 全流程 |
 | `xai-roadmap-loop` | 多 feature roadmap orchestration |
+| `xai-web-to-desktop-sync` | ADR-0013 D3 Web→Desktop 同步门 / parity receipt |
 
 ---
 
-## 11. Event-driven automation / hooks
+## 11. Dev dashboard / local project console
+
+本地项目控制台在 `docs/prototypes/dev-dashboard/index.html`。它只做
+**读取 + 提醒**: 读取 git、roadmap manifest、PLUGIN_MAP、skill/agent 注册表和
+白名单文档;不自动改 roadmap、不 merge、不判断发布。
+
+刷新一次静态快照:
+
+```bash
+pnpm dashboard
+```
+
+启动本地文档库和 API:
+
+```bash
+pnpm dashboard:serve
+```
+
+serve 只绑定 `127.0.0.1`。默认地址:
+
+```text
+http://127.0.0.1:4177
+```
+
+如果 4177 被占用,脚本会自动顺延端口。serve 启动时会先运行
+`scripts/dashboard/generate-state.mjs`;看板里的刷新按钮也只会重跑这个生成脚本。
+
+可读 API:
+
+| Route | 用途 |
+|---|---|
+| `GET /` | dev-dashboard HTML |
+| `GET /api/tree?dir=<path>` | 白名单目录树 |
+| `GET /api/file?path=<path>` | 读取白名单内文本/Markdown |
+| `GET /api/search?q=<term>` | `rg` 搜索;无 `rg` 时降级 `grep` |
+| `GET /api/refresh` | 重跑 dashboard snapshot |
+
+白名单: `docs/`, `docs/adr`, `docs/workflow`, `.teams/skills`,
+`.codex/agents`, `packages/*/docs`。路径穿越会被拒绝。
+
+当前不启用 dashboard git hook。443/周这类 commit 频率下,post-commit 刷新噪音
+高;serve 启动刷新 + 手动刷新按钮已经足够。若以后要加 hook,必须避免覆盖
+`scripts/cowork/git-post-commit`,并按 `.githooks/` 链式迁移。
+
+## 12. Event-driven automation / hooks
 
 XAI 已带 `scripts/cowork/` 事件驱动脚本和 `git-post-commit` hook 渲染版本。
 
@@ -450,6 +518,7 @@ XAI 已带 `scripts/cowork/` 事件驱动脚本和 `git-post-commit` hook 渲染
 scripts/cowork/git-post-commit
 scripts/cowork/dispatch_codex.sh
 scripts/cowork/dispatch_cursor.sh
+scripts/cowork/dispatch_claude.sh
 scripts/cowork/codex_wrapper.sh
 scripts/cowork/cursor_wrapper.sh
 scripts/cowork/lib_hook_helpers.sh
@@ -463,7 +532,20 @@ brew install coreutils util-linux
 codex --version
 cursor-agent --version
 cursor-agent login
+claude --version
 ```
+
+Claude bg dispatch is opt-in. The hook keeps Codex -> Claude cross-vendor review/verify as
+`MANUAL_CLAUDE` until this checkout explicitly enables it:
+
+```bash
+claude --bg --name cowork-smoke "Reply with: cowork bg smoke ok"
+claude agents --cwd /Users/lijinlong/Desktop/AI_Desktop/XAI_Desktop
+git config cowork.claudeBg true
+```
+
+`dispatch_claude.sh` only proves launch. It does not mark cross-vendor PASS; the Claude session must
+write the normal `dev_log.md` Status Panel update and any review/receipt artifact.
 
 hook 通知 resume 格式应是 skill-first:
 
@@ -486,7 +568,7 @@ rg -n "Start the feature-full-loop agent|/xai-feature-full-loop Feature" scripts
 
 ---
 
-## 12. Resync / portable 更新后的检查
+## 13. Resync / portable 更新后的检查
 
 当源仓库 Any2Knowledge 的 portable workflow 更新后,XAI 用 resync 吃更新。通常在源项目里跑:
 
@@ -510,6 +592,7 @@ git status --short
 - `docs/workflow/SOP_NEW_FEATURE.md`
 - `docs/workflow/SOP_BUGFIX.md`
 - `docs/workflow/project/usage-guide.md`
+- `docs/workflow/project/workflow.md`
 - `docs/planning/sub-prds/roadmap-prompts.md`
 - `developer.md`
 - `CLAUDE.md` / `AGENTS.md` / `.cursor/rules/handoff.mdc` 的 handoff display rule
@@ -542,7 +625,8 @@ git status --short
 - manifest rows 是否有 `BLOCKED` / `BLOCKED_EXTERNAL`。
 - 依赖 row 是否已 `SHIPPED` 或允许 `READY_TO_SHIP`。
 - 对应 feature 的 `packages/<feature>/docs/dev_log.md` 是否真实存在。
-- `Automation Mode` 是否是合法 8 变体之一。
+- `Automation Mode` 是否是合法 9 变体之一。
+  - 当前合法值含 `A-Codex`;如果旧 manifest 因为 `A-Codex` 被标 BLOCKED,人工改回 `PENDING` 后重跑。
 
 ### 13.3 bg session 启动后找不到 worktree
 
@@ -670,3 +754,26 @@ rg -n "Start the feature-full-loop agent|/xai-feature-full-loop Feature" scripts
 | 查 mode picker | `docs/workflow/_portable/07-automation-mode-picker.md` |
 | 查 XAI 架构红线 | `docs/SYSTEM_ARCHITECTURE.md` |
 | 查 plugin 状态 | `docs/PLUGIN_MAP.md` |
+| 查分支拓扑 / Web→Desktop 同步治理 / 账号云同步契约 | `docs/adr/0013-branch-sync-governance.md` |
+
+---
+
+## 17. 分支与同步治理 (ADR-0013)
+
+`docs/adr/0013-branch-sync-governance.md`(Proposed)是分支拓扑、Web→Desktop 同步门、
+账号云同步 per-feature 契约的权威。它是**附加治理**,不改变 ADR-0010 的 P0/P1/P2 active-focus
+顺序。跑 workflow 时相关的几条:
+
+- **`web` 与 `dev` 是独立 focus branches**(§D5):`web` 聚焦 Web 产品,`dev` 聚焦
+  Desktop/App。二者各自前进,分叉是正常状态,不是 subset/superset,也不是需要靠强行 merge 来"追平"的 drift。
+- **分支拓扑**(§D2,已定义未创建):`codex/web/<feature>` → `web` → (同步门) →
+  `desktop-next` ↔ `desktop-plugin-next` → `dev`(App RC) → `release/desktop/<version>` → tag。
+  创建 `desktop-next` / `desktop-plugin-next` / `release/*` 是单独的、需 operator 确认的步骤
+  (任何触及 `dev` 的操作都要显式确认),目前只有 `web` / `dev` / `main`。
+- **Web→Desktop 同步门**(§D3):每个 Web 改动在流入 `desktop-next` 前先分类 W0–W4,产出 parity
+  receipt。实现这个门的 `xai-web-to-desktop-sync` skill 已落地;若当前 runtime 无法加载该 skill,才按 §D3 手动 fallback,
+  但仍必须产出同一份 parity receipt。
+- **账号云同步**(§D4,基于 `data-repository-v0` 的 syncScope + sync-v1):Web 与 App **不互相**同步,
+  二者都同步到同一个账号云(Web IndexedDB ⇄ `/sync/push`,`/sync/pull` ⇄ server encrypted blobs ⇄
+  App SQLite)。只有 `syncScope: account-sync` 实体会同步;`device-local` 永不进 outbox。新增
+  account-sync feature 必须满足 §D4 的 9 项完成度清单。

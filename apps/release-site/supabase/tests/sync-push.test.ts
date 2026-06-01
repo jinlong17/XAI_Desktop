@@ -1,6 +1,10 @@
+import { readFileSync } from 'node:fs';
+import path from 'node:path';
+import { fileURLToPath } from 'node:url';
 import { describe, expect, it } from 'vitest';
 
 import {
+  normalizePushBatchRequest,
   parseEnvelope,
   processPushBatch,
   type ConflictShadowInput,
@@ -9,6 +13,9 @@ import {
   type PushRecordResult,
   type StoredBlob,
 } from '../functions/sync-push/handler';
+import { handleSyncPush } from '../functions/sync-push/index';
+
+const testDir = path.dirname(fileURLToPath(import.meta.url));
 
 describe('sync-push Edge Function core', () => {
   it('applies ok records, stores dedup result, and returns duplicate without new revision', async () => {
@@ -22,7 +29,7 @@ describe('sync-push Edge Function core', () => {
       status: 207,
       results: [{ status: 'ok', appliedRevision: '1', commitSeq: '1' }],
     });
-    expect(db.blobs.get('todos:todo-1')).toMatchObject({ revision: 1n, commitSeq: 1n });
+    expect(db.blobs.get('productivity.todo:todo-1')).toMatchObject({ revision: 1n, commitSeq: 1n });
 
     const duplicate = await processPushBatch(db, {
       accountId: 'account-1',
@@ -109,11 +116,150 @@ describe('sync-push Edge Function core', () => {
       counter: 9n,
     });
   });
+
+  it('normalizes sync-blob snake_case push payloads into the server contract', async () => {
+    const request = normalizePushBatchRequest(
+      {
+        accountId: 'account-1',
+        records: [
+          {
+            entity_type: 'productivity.todo',
+            entity_id: 'todo-1',
+            mutation_id: 'mut-sync-blob',
+            base_revision: null,
+            proposed_revision: '1',
+            client_updated_at: 10,
+            originator_device_id: 'device-1',
+            blob: base64Envelope(envelope({ counter: 11 })),
+          },
+        ],
+      },
+    );
+
+    expect(request.records[0]).toMatchObject({
+      entityType: 'productivity.todo',
+      entityId: 'todo-1',
+      mutationId: 'mut-sync-blob',
+      originatorDeviceId: 'device-1',
+    });
+    expect(parseEnvelope(request.records[0]!.envelope).counter).toBe(11n);
+  });
+
+  it('binds HTTP account and device context for sync-blob push requests', async () => {
+    const db = createPushDb();
+    const response = await handleSyncPush(
+      new Request('https://xai.local/sync/push', {
+        method: 'POST',
+        headers: {
+          'x-account-id': 'account-1',
+          'x-device-id': 'device-1',
+        },
+        body: JSON.stringify({
+          accountId: 'spoofed-body',
+          records: [
+            {
+              entity_type: 'productivity.todo',
+              entity_id: 'todo-1',
+              mutation_id: 'mut-http-sync-blob',
+              base_revision: null,
+              proposed_revision: '1',
+              client_updated_at: 20,
+              blob: base64Envelope(envelope({ counter: 12 })),
+            },
+          ],
+        }),
+      }),
+      db,
+    );
+
+    expect(response.status).toBe(207);
+    await expect(response.json()).resolves.toMatchObject({
+      results: [{ status: 'ok', appliedRevision: '1' }],
+    });
+    expect(db.blobs.get('productivity.todo:todo-1')).toMatchObject({
+      accountId: 'account-1',
+      originatorDeviceId: 'device-1',
+      counter: 12n,
+    });
+  });
+
+  it('prefers the Authorization JWT subject over a spoofed account header', async () => {
+    const db = createPushDb();
+    const response = await handleSyncPush(
+      new Request('https://xai.local/sync/push', {
+        method: 'POST',
+        headers: {
+          authorization: bearerForSubject('account-from-jwt'),
+          'x-account-id': 'spoofed-account',
+          'x-device-id': 'device-1',
+        },
+        body: JSON.stringify({
+          records: [
+            {
+              entity_type: 'productivity.todo',
+              entity_id: 'todo-jwt-bound',
+              mutation_id: 'mut-jwt-bound',
+              base_revision: null,
+              proposed_revision: '1',
+              client_updated_at: 20,
+              blob: base64Envelope(envelope({ counter: 14 })),
+            },
+          ],
+        }),
+      }),
+      db,
+    );
+
+    expect(response.status).toBe(207);
+    expect(db.blobs.get('productivity.todo:todo-jwt-bound')).toMatchObject({
+      accountId: 'account-from-jwt',
+    });
+  });
+
+  it('rejects HTTP push requests without account/device binding', async () => {
+    const db = createPushDb();
+    const response = await handleSyncPush(
+      new Request('https://xai.local/sync/push', {
+        method: 'POST',
+        body: JSON.stringify({
+          records: [
+            {
+              entity_type: 'productivity.todo',
+              entity_id: 'todo-1',
+              mutation_id: 'mut-missing-context',
+              base_revision: null,
+              proposed_revision: '1',
+              client_updated_at: 20,
+              blob: base64Envelope(envelope({ counter: 13 })),
+            },
+          ],
+        }),
+      }),
+      db,
+    );
+
+    expect(response.status).toBe(400);
+    await expect(response.json()).resolves.toMatchObject({
+      error: 'invalid_sync_push_request',
+    });
+  });
+
+  it('keeps core-data dotted entity types in the Supabase enum bridge migration', () => {
+    const sql = readFileSync(
+      path.join(testDir, '../migrations/20260519000011_core_data_entity_type_bridge.sql'),
+      'utf8',
+    );
+
+    expect(sql).toContain("'productivity.todo'");
+    expect(sql).toContain("'productivity.habit'");
+    expect(sql).toContain("'organizer.grid'");
+    expect(sql).toContain("'project.card'");
+  });
 });
 
 function record(overrides: Partial<PushRecordRequest> = {}): PushRecordRequest {
   return {
-    entityType: 'todos',
+    entityType: 'productivity.todo',
     entityId: 'todo-1',
     mutationId: 'mut-1',
     baseRevision: null,
@@ -128,7 +274,7 @@ function record(overrides: Partial<PushRecordRequest> = {}): PushRecordRequest {
 function stored(overrides: Partial<StoredBlob> = {}): StoredBlob {
   return {
     accountId: 'account-1',
-    entityType: 'todos',
+    entityType: 'productivity.todo',
     entityId: 'todo-1',
     revision: 1n,
     keyId: 1,
@@ -140,6 +286,7 @@ function stored(overrides: Partial<StoredBlob> = {}): StoredBlob {
     originatorDeviceId: 'device-1',
     mutationId: 'existing-mut',
     blobSize: envelope().length,
+    hardDeleted: false,
     ...overrides,
   };
 }
@@ -164,6 +311,22 @@ function envelope(options: {
     9,
     ...Array.from({ length: 16 }, () => 7),
   ];
+}
+
+function base64Envelope(bytes: number[]): string {
+  return Buffer.from(bytes).toString('base64');
+}
+
+function bearerForSubject(subject: string): string {
+  return `Bearer ${base64Url({ alg: 'none' })}.${base64Url({ sub: subject })}.sig`;
+}
+
+function base64Url(input: Record<string, unknown>): string {
+  return Buffer.from(JSON.stringify(input))
+    .toString('base64')
+    .replaceAll('+', '-')
+    .replaceAll('/', '_')
+    .replace(/=+$/u, '');
 }
 
 function u32Le(value: number): number[] {

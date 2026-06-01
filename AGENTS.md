@@ -5,6 +5,9 @@
 >
 > For shared project rules (architecture, code boundaries, conventions, testing),
 > see `CLAUDE.md` — those apply to all platforms and are not duplicated here.
+>
+> For Codex + Claude Code parallel development rules, see
+> `docs/workflow/project/workflow.md`.
 
 ---
 
@@ -85,20 +88,45 @@ The tracked sync surface includes at least:
 - `.cursor/agents/`, `.cursor/rules/`
 - `.teams/skills/`
 - `docs/workflow/_portable/`
+- `docs/workflow/project/workflow.md`
 - `CLAUDE.md`, `AGENTS.md`, `.cursor/rules/handoff.mdc`
 
 Before finishing a workflow/agent/skill change, audit for project-level
 untracked files:
 
 ```bash
-git ls-files -o --exclude-standard .agents .claude .codex .cursor .teams docs/workflow/_portable AGENTS.md CLAUDE.md
+git ls-files -o --exclude-standard .agents .claude .codex .cursor .teams docs/workflow/_portable docs/workflow/project AGENTS.md CLAUDE.md
 ```
 
 If the change is intended to apply on another computer, push it after commit.
 
 ---
 
-## 3. Cross-Platform Rule Sync
+## 3. Product Module Routing (classify every task first)
+
+Before starting any dev task, classify it into exactly one of the six product
+modules, then use that module's branch + skill + workflow. The authoritative
+router (the six-module table with task-attribution signals, plus the
+`web→app` D3 gate / `syncScope` / PROPOSED-line rules) is **`CLAUDE.md`
+§"Product module map & task routing"**, and the full per-module navigation
+(开发目标 / 绑定 skill / prompt 模板 / 开发 workflow / 进入下一模块的触发条件 /
+影响的模块) is **`docs/PRODUCT_MODULE_MAP.md`** (mirrored in the dev-dashboard
+产品结构图). Quick reference:
+
+- `web` → `apps/web/`, branch `codex/web/<feature>`→`web`.
+- `app` → `apps/desktop/` (Tauri), branch `codex/desktop/<feature>`→`desktop-next`→`dev`.
+- `plugin` → desktop plugin/widget slots, branch `codex/plugin/<feature>`→`desktop-plugin-next` (paused).
+- `sync` → account cloud-sync, branch `codex/sync/<feature>` (paused; only `syncScope: account-sync`).
+- `site` → official website (Cloudflare), branch `codex/site/<feature>` (PROPOSED — needs operator OK).
+- `admin` → Admin/Control Plane prototype, branch `codex/admin/<feature>` (PROPOSED — needs operator OK).
+
+`web→app` only flows through the D3 gate (`xai-web-to-desktop-sync`); never merge
+Web changes straight into `dev`. Do not open new work branches for `site`/`admin`
+without operator confirmation.
+
+---
+
+## 4. Cross-Platform Rule Sync
 
 | File | Platform | Handoff display rule |
 |------|----------|---------------------|
@@ -107,3 +135,32 @@ If the change is intended to apply on another computer, push it after commit.
 | `.cursor/rules/handoff.mdc` V2.x | Cursor | Inline execution — final response must be Handoff block |
 
 **Any change to Handoff display rules must be synced across all three files.**
+
+Module-routing rules are shared too: `CLAUDE.md` §"Product module map & task
+routing" (authority) ↔ `AGENTS.md` §3 (this file) ↔
+`.cursor/rules/product-module-routing.mdc` ↔ `docs/PRODUCT_MODULE_MAP.md`.
+
+---
+
+## 5. Codex + Claude Code Parallel Use
+
+Use `docs/workflow/project/workflow.md` as the shared policy for running both
+tools in this repo.
+
+Codex-specific reminders:
+
+- `A-Codex` is the Codex-primary long-running Automation Mode. Use it when the
+  current Codex session is the lead runtime for plan/build/verify. Use
+  `D-Codex` only when another lead delegates implementation phases to Codex as
+  an external executor.
+- `claude --bg` and Agent View are Claude Code paths, not Codex background
+  automation. In Codex, prefer roadmap `emit` or `serial` unless the CLI hook
+  path is explicitly being tested. The post-commit hook may launch Claude review
+  / verify only through opt-in `scripts/cowork/dispatch_claude.sh`
+  (`CW_ENABLE_CLAUDE_BG=1` or `git config cowork.claudeBg true`); the hook never
+  treats launch success as a cross-vendor PASS.
+- If agent-spawn depth is unavailable, execute the subagent instructions inline.
+  In that case, the current session is the subagent and its final response must
+  be only the `## Handoff` block.
+- Before editing in a shared worktree, check `git status --short` and avoid
+  files that another tool already has dirty. Stage exact files only.

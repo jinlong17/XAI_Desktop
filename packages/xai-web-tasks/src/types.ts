@@ -52,6 +52,12 @@ export interface TaskCard {
   readonly dateLabel?: TaskTitleBundle;
   /** When true, renders the inbox-source icon in the meta row. */
   readonly inbox?: boolean;
+  /**
+   * When true, the card is marked as completed.
+   * Persisted inside xai_task_cols so completion survives page refresh (T-10 fix).
+   * Absent/undefined is treated as false by all consumers.
+   */
+  readonly done?: boolean;
 }
 
 // ---------------------------------------------------------------------------
@@ -80,4 +86,35 @@ export interface TaskCol {
 export interface TasksModuleProps {
   /** Active UI language. */
   readonly lang: Lang;
+}
+
+// ---------------------------------------------------------------------------
+// SmartListId — closed set of sidebar smart-list ids (smartlist-filter, design §F.1)
+// Kept internal-to-module in v1 per Rec-F3 (not promoted to barrel unless a consumer emerges).
+// ---------------------------------------------------------------------------
+
+export type SmartListId = "all" | "today" | "tomorrow" | "next7" | "inbox" | "summary";
+
+// ---------------------------------------------------------------------------
+// TaskCardPatch — patch shape for updateCard (api.md §14.3 / xai-web-ai-tool-edit-delete)
+// Re-exported from internal so consumers can type-check the AI event payloads.
+// ---------------------------------------------------------------------------
+
+export type { TaskCardPatch } from "./internal/tasksReducer.js";
+
+// ---------------------------------------------------------------------------
+// NewTaskDraft — card-create extension (api.md §E.1)
+// ---------------------------------------------------------------------------
+
+/**
+ * The data the user enters in TaskComposer before saving.
+ * `title` fills BOTH `title.en` and `title.zh` (single-input bilingual design).
+ */
+export interface NewTaskDraft {
+  /** Raw title string typed by the user; trimmed by addCard. Fills BOTH title.en + title.zh. */
+  readonly title: string;
+  /** Optional tag preset — omitted means "no tag". */
+  readonly tag?: TaskTagId;
+  /** When true (and target ≠ "nodate"), addCard derives date via dateForCol(targetBucket, now). */
+  readonly withDate: boolean;
 }

@@ -1,14 +1,74 @@
 # XAI_Desktop — AI Smart Desktop
 
-## Current Priority (2026-05-26 — P1 active per ADR-0010 Accepted)
+## Current Priority (2026-05-30 — Web mainline active; ADR-0010 amended)
 
 Active focus order — supersedes any conflicting prior PRD / roadmap:
 
-- **P1 — Desktop client (ACTIVE — G1 native foundation phase)** (`apps/desktop/` + `packages/plugin-{account, console, productivity, ai-cube, calendar, labels, project}` + G0/G1 anchors): Tauri overlay shell. G0 = CONDITIONAL_GO (G0.1-G0.5 SHIPPED 2026-05-19 on `origin/spike/window-ground-truth`; G0.6 BLOCKED_EXTERNAL pending Apple Developer signing — non-blocking). Primary work surface: `docs/workflow/roadmap/xai-g1-native-foundation.md`. Authority: `docs/adr/0010-p1-desktop-resume-plan.md` (Accepted 2026-05-26, Chrome-only G2 carve-out).
-- **P0 — Web Console (MAINTENANCE-ONLY)** (`apps/web/` + `packages/{xai-web-*, plugin-web-*}`): 24/24 + 9/9 gap-closure SHIPPED; deployed to Cloudflare Pages. Bug-fix permitted; new feature plans require P0 carve-out commit citing ADR-0010 §D4. Deferred-by-carve-out items: Safari/Firefox/iOS Safari smoke + external-provider flows.
+- **P0 — Web Console (ACTIVE WEB MAINLINE)** (`apps/web/` + `packages/{xai-web-*, plugin-web-*}`): `web` is the Web product mainline and the most complete product surface. New Web feature and bug-fix work are permitted on `web` / `codex/web/<feature>` without a P0 carve-out. Web changes that may affect Desktop still require ADR-0013 D3 classification before promotion toward `desktop-next` / `dev`.
+- **P1 — Desktop client (ACTIVE APP LANE)** (`apps/desktop/` + `packages/plugin-{account, console, productivity, ai-cube, calendar, labels, project}` + G0/G1 anchors): Tauri overlay shell. G0 = CONDITIONAL_GO (G0.1-G0.5 SHIPPED 2026-05-19 on `origin/spike/window-ground-truth`; G0.6 BLOCKED_EXTERNAL pending Apple Developer signing — non-blocking). G1 native foundation remains permitted on the independent App lane; it no longer freezes Web new work. Authority: `docs/adr/0010-p1-desktop-resume-plan.md` (Accepted 2026-05-26, amended 2026-05-30).
 - **P2 — Desktop organizer plugins & tools + sync-v1 + G2** (`packages/plugin-{organizer, clipboard, widgets, meditation, pet}`, sync-v1 crypto stack, xai-g2 data-security foundation): Paused. Resumes only after G1 SHIPPED.
 
-Authority basis: **ADR-0010 Accepted 2026-05-26** (commit `75655dc`) supersedes ADR-0009 §D1. Predecessor: ADR-0009 D2 G2 PASS (Chrome-only carve-out) + ADR-0008 §S3 24h-evidence pattern.
+Authority basis: **ADR-0010 Accepted 2026-05-26, amended 2026-05-30** supersedes the old "P0 Web maintenance-only / P0 carve-out required" reading. ADR-0013 governs branch topology and the Web to Desktop D3 gate.
+
+### Branch & sync governance (ADR-0013, Proposed)
+
+`docs/adr/0013-branch-sync-governance.md` is the authority for branch topology,
+the Web→Desktop sync gate, and the account cloud-sync per-feature contract. It is
+**additive governance** — it does NOT change the amended ADR-0010 active-focus order
+above. Key rules (do not contradict; cite ADR-0013 §D-N):
+
+- **`web` and `dev` are two independent focus branches** (ADR-0013 §D5): `web`
+  focuses on the Web product, `dev` focuses on the macOS App. Each evolves in its
+  own direction, so **divergence between them is the normal, healthy state**
+  (2026-05-30: 147 web-only / 184 dev-only) — NOT drift, NOT a subset/superset.
+  Do NOT force-merge or rebase one onto the other to "make them equal"; they
+  reconcile at `main`, and specific changes are shared on-demand via the D3 gate.
+- **Branch topology** (ADR-0013 §D2, DEFINED not yet created): long-term `web`
+  (Web mainline) → `desktop-next` (Web→App sync integration) ↔
+  `desktop-plugin-next` (App plugin platform/SDK) → `dev` (Desktop stable / App
+  RC); ephemeral `release/desktop/<version>` (freeze-only). Forward flow:
+  `codex/web/<feature>` → `web` → (D3 gate) → `desktop-next` → `dev` →
+  `release/desktop/<version>` → tag. Creating `desktop-next` /
+  `desktop-plugin-next` / `release/*` is a SEPARATE operator-confirmed step
+  (anything touching `dev` needs explicit confirmation); none exist yet.
+- **Web→Desktop sync gate** (ADR-0013 §D3): every Web change is classified
+  W0–W4 before flowing `web → desktop-next`, emitting a parity receipt. The
+  `xai-web-to-desktop-sync` skill implements this gate; use manual D3 fallback
+  only if the skill is unavailable in the current runtime.
+- **Account cloud-sync** (ADR-0013 §D4, builds on `data-repository-v0` syncScope
+  + sync-v1): Web and App do NOT sync to each other; both sync to one account
+  cloud (Web IndexedDB ⇄ `/sync/push`,`/sync/pull` ⇄ server encrypted blobs ⇄
+  App SQLite). Only `syncScope: account-sync` entities sync; `device-local`
+  never does.
+
+### Product module map & task routing (READ FIRST when a task arrives)
+
+**Before starting ANY dev task, classify it into exactly one of the six product
+modules below, then use that module's branch + skill + workflow.** This is the
+single source for "which module does this requirement belong to". Full per-module
+navigation (开发目标 / 绑定 skill / prompt 模板 / 开发 workflow / 进入下一模块的触发条件 /
+影响的模块) lives in **`docs/PRODUCT_MODULE_MAP.md`** and is mirrored in the
+dev-dashboard 产品结构图 (`docs/prototypes/dev-dashboard/`). Authority: ADR-0013 §D1/§D2.
+
+| # | 模块 | key | Surface | 主 / 短分支 | 任务归属信号（命中即归该模块） | 状态 |
+|---|---|---|---|---|---|---|
+| 1 | Web 版本 | `web` | `apps/web/`, `packages/xai-web-*`, `plugin-web-*` | `web` / `codex/web/<feature>` | Web 页面·组件、Vite SPA、浏览器持久化、共享 UI、`/app/*` 路由、Cloudflare Pages | P0 active |
+| 2 | Mac 桌面版 App | `app` | `apps/desktop/` (Tauri 2 + React 19) | `desktop-next`→`dev` / `codex/desktop/<feature>` | Tauri、Rust command、原生窗口、离线、本机文件、G1 native foundation | P1 active lane |
+| 3 | 桌面整理插件 / Widget | `plugin` | `apps/desktop/` 插件槽 | `desktop-plugin-next` / `codex/plugin/<feature>` | 插件 SDK、widget host、桌面整理、单插件功能、平台兼容 | P2 paused |
+| 4 | 账号云同步层 | `sync` | sync-v1 stack + server | (paused) / `codex/sync/<feature>` | `syncScope`、push/pull、冲突、跨设备、账号云、加密 blob | P2 paused |
+| 5 | 官方网页 | `site` | Cloudflare deploy infra (无独立 package) | (proposed) / `codex/site/<feature>` | 下载页、自动更新、release notes、营销说明、对外/账号入口 | PROPOSED |
+| 6 | Admin Dashboard / 控制面 | `admin` | prototype `docs/prototypes/admin-dashboard/` | (proposed) / `codex/admin/<feature>` | AI 配置、权限、用量、审计日志、运营后台 | PROPOSED |
+
+Routing rules (do not violate):
+
+- **跨模块归属**：先按"任务归属信号"命中主模块；若改动会牵动其它模块，主模块照常开发，再按
+  `PRODUCT_MODULE_MAP.md` 的 transitions / impacts 决定联动（例如功能改了下载产物 → 同步更新 `site`）。
+- **`web` → `app` 只能走 D3 gate**（`xai-web-to-desktop-sync`，W0–W4 + parity receipt）；**禁止**把 Web 改动
+  直接合进 `dev`。
+- **`sync` 只搬 `syncScope: account-sync` 的实体**；`device-local` 永不上云（ADR-0013 §D4）。
+- **`site` / `admin` 是 PROPOSED**：未经 operator 确认，不得开新工作分支、不得当作 active 开发线。
+- `desktop-next` / `desktop-plugin-next` / `release/desktop/<version>` 目前**已定义但尚未创建**，创建是
+  独立的 operator 确认步骤（任何触及 `dev` 的操作都需显式确认）。
 
 ## Project Overview
 
@@ -57,6 +117,9 @@ bug-diagnose → bug-fix → bug-verify → ship
 - Every workflow write must maintain: Workflow, Executor, Updated, Suggested Next, Work Log
 - `feature-build` does ONE phase per run, then stops for human confirmation
 - `ship` requires READY_TO_SHIP status and human confirmation to push
+- Codex + Claude Code parallel-use rules live in
+  `docs/workflow/project/workflow.md`; use that file for cross-tool ownership,
+  branch, commit, review, and `A-Codex` / `D-Codex` semantics.
 
 ### Documentation Contract
 - `packages/plugin-*/docs/design.md` — Decision snapshot
@@ -208,6 +271,7 @@ Track and keep synchronized at minimum:
 - `.cursor/agents/`, `.cursor/rules/`
 - `.teams/skills/`
 - `docs/workflow/_portable/`
+- `docs/workflow/project/workflow.md`
 - `CLAUDE.md`, `AGENTS.md`, `.cursor/rules/handoff.mdc`
 
 Rules:
@@ -217,7 +281,7 @@ Rules:
 - Prefer changing `.agents/templates/` and `docs/workflow/_portable/` first,
   then regenerate platform outputs when applicable.
 - Before finishing an agent/skill change, run a tracking audit such as:
-  `git ls-files -o --exclude-standard .agents .claude .codex .cursor .teams docs/workflow/_portable AGENTS.md CLAUDE.md`
+  `git ls-files -o --exclude-standard .agents .claude .codex .cursor .teams docs/workflow/_portable docs/workflow/project AGENTS.md CLAUDE.md`
   and resolve any project-level untracked files intentionally.
 - After committing, push the branch when the change is meant to be available on
   another machine.

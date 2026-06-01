@@ -44,3 +44,45 @@ export { TimeGrid } from "./TimeGrid.js";
 export type { TimeGridProps } from "./TimeGrid.js";
 export { DayView } from "./DayView.js";
 export type { DayViewProps } from "./DayView.js";
+
+// ---- Event-create extension (2026-05-27 — HC8 lift) -------------------------
+// Data-layer types
+export type {
+  UserCalEvent,
+  RecurrenceRule,
+  RecurrenceKind,
+  EventColorPreset,
+} from "./internal/eventStore/types.js";
+
+// React hook (preferred consumer API)
+export { useUserCalEvents } from "./internal/eventStore/useUserCalEvents.js";
+export type { UserCalEventsApi } from "./internal/eventStore/useUserCalEvents.js";
+
+// Pure helpers (exposed for testability + future-row composition)
+export { expandRecurrence } from "./internal/eventStore/expandRecurrence.js";
+export {
+  mergeEventsForMonth,
+  mergeEventsForWindow,
+} from "./internal/eventStore/mergeEventsForViewport.js";
+export type { MergedCalEvent } from "./internal/eventStore/mergeEventsForViewport.js";
+export {
+  createEvent,
+  updateEvent,
+  deleteEvent,
+  getEvent,
+  listEvents,
+} from "./internal/eventStore/eventStore.js";
+
+// EventComposer dialog component (P2 lands; CalendarModule wires in P3)
+export { EventComposer } from "./EventComposer.js";
+export type { EventComposerProps } from "./EventComposer.js";
+
+// EmptyStateHint — rendered when no user events present (Q7-A)
+export { EmptyStateHint } from "./EmptyStateHint.js";
+export type { EmptyStateHintProps } from "./EmptyStateHint.js";
+
+// ---- AI tool layer subscriber (additive — P4 xai-web-ai-tool-layer) ----------
+export { useCalendarCreateRequestSubscriber } from "./internal/aiCreateSubscriber.js";
+
+// ---- AI tool layer mutate subscriber (additive — P2 xai-web-ai-tool-edit-delete) ----------
+export { useCalendarMutateRequestSubscriber } from "./internal/aiMutateSubscriber.js";

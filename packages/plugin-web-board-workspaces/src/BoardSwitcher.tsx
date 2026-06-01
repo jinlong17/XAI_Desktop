@@ -16,7 +16,13 @@ export interface BoardSwitcherProps {
   activeBoardId: string;
   onPick: (boardId: string) => void;
   onCreate: () => void;
-  onDelete: (boardId: string) => void;
+  /**
+   * Called when user clicks the trash icon on a board card.
+   * Semantics: "request delete confirmation" — the HOST owns the confirmation
+   * gate (BoardDeleteConfirmDialog), matching the host-level state-lift pattern
+   * used for CardDetailDialog (Audit Top-10 #5). No window.confirm() here.
+   */
+  onRequestDelete: (boardId: string) => void;
   onClose: () => void;
 }
 
@@ -48,7 +54,7 @@ export function BoardSwitcher({
   activeBoardId,
   onPick,
   onCreate,
-  onDelete,
+  onRequestDelete,
   onClose,
 }: BoardSwitcherProps) {
   const [filter, setFilter] = useState("");
@@ -56,11 +62,11 @@ export function BoardSwitcher({
   const { filtered, groupedByWs } = applyFilter(boards, workspaces, filter, scope, lang);
   const totalFiltered = groupedByWs.reduce((n, g) => n + g.boards.length, 0);
 
+  // B-12 fix: request confirmation from host instead of using window.confirm().
+  // Host owns the BoardDeleteConfirmDialog state (pendingDelete).
   const handleDelete = (e: React.MouseEvent, boardId: string) => {
     e.stopPropagation();
-    if (window.confirm(STR_SWITCHER.deleteConfirm[lang])) {
-      onDelete(boardId);
-    }
+    onRequestDelete(boardId);
   };
 
   return (
@@ -137,24 +143,25 @@ export function BoardSwitcher({
                     const isActive = b.id === activeBoardId;
                     const showDelete = !isActive && totalFiltered > 1;
                     return (
-                      <button
-                        key={b.id}
-                        type="button"
-                        className={"bs-card" + (isActive ? " active" : "")}
-                        onClick={() => onPick(b.id)}
-                        data-testid={`bs-card-${b.id}`}
-                      >
-                        <div className="bs-cover" style={{ background: b.cover }}>
-                          <span className="bs-cover-icon" aria-hidden="true">
-                            {b.template === "pm" ? "▤" : "▦"}
-                          </span>
-                        </div>
-                        <div className="bs-info">
-                          <div className="bs-name">{b.name[lang]}</div>
-                          <div className="bs-meta mono">
-                            {cardCount} {STR_SWITCHER.cards[lang]}
+                      <div key={b.id} className="bs-card-wrap">
+                        <button
+                          type="button"
+                          className={"bs-card" + (isActive ? " active" : "")}
+                          onClick={() => onPick(b.id)}
+                          data-testid={`bs-card-${b.id}`}
+                        >
+                          <div className="bs-cover" style={{ background: b.cover }}>
+                            <span className="bs-cover-icon" aria-hidden="true">
+                              {b.template === "pm" ? "▤" : "▦"}
+                            </span>
                           </div>
-                        </div>
+                          <div className="bs-info">
+                            <div className="bs-name">{b.name[lang]}</div>
+                            <div className="bs-meta mono">
+                              {cardCount} {STR_SWITCHER.cards[lang]}
+                            </div>
+                          </div>
+                        </button>
                         {showDelete && (
                           <button
                             type="button"
@@ -166,7 +173,7 @@ export function BoardSwitcher({
                             🗑
                           </button>
                         )}
-                      </button>
+                      </div>
                     );
                   })}
                 </div>

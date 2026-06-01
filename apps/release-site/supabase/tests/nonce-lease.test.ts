@@ -8,7 +8,7 @@ import { InMemoryNonceLeaseServer } from '../../../../packages/nonce-lease-serve
 
 const testDir = path.dirname(fileURLToPath(import.meta.url));
 const repoRoot = path.resolve(testDir, '../../../..');
-const migrationsDir = path.join(repoRoot, 'apps/web/supabase/migrations');
+const migrationsDir = path.join(repoRoot, 'apps/release-site/supabase/migrations');
 
 describe('[smoke] sync-v1 nonce lease server mock', () => {
   it('issues strictly monotone non-overlapping leases for the active JWT device', () => {
@@ -73,7 +73,7 @@ function seededServer(): InMemoryNonceLeaseServer {
 describe.skipIf(!process.env.SUPABASE_INTEGRATION_TESTS)('[integration] sync-v1 nonce lease server', () => {
   const testDir = path.dirname(fileURLToPath(import.meta.url));
   const repoRoot = path.resolve(testDir, '../../../..');
-  const migrationsDir = path.join(repoRoot, 'apps/web/supabase/migrations');
+  const migrationsDir = path.join(repoRoot, 'apps/release-site/supabase/migrations');
   const containerName = `xai-sync-nonce-${process.pid}`;
 
   const accountA = '33333333-3333-4333-8333-333333333333';

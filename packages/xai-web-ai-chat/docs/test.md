@@ -399,3 +399,350 @@ New cases:
 - WebCrypto-derived keys are non-extractable (per design); tests rely on
   round-trip plaintext equality rather than inspecting key material directly.
 
+---
+
+## §8. 2026-05-29 Extension — AI Tool Layer test strategy (xai-web-ai-tool-layer)
+
+> §0..§7 continue to apply. All SHIPPED ai-chat cases (incl. the §7 real-LLM
+> adapter cases, I1..I23, EB/SC/LE/SP/LP/CS, and the bugfix-cycle-1 I17/I18)
+> MUST stay green as a regression guard in every phase. This §8 is purely
+> additive. Design: §design.md 2026-05-29 Extension. Contract: §api.md §13.
+> Carve-out: `docs/reviews/_p0-carve-outs/20260529-ai-tool-layer.md`.
+
+### §8.0 Scope summary (extension)
+
+| Phase | New test files / deltas | Focus |
+|---|---|---|
+| P1 | `contextProvider.test.ts` | read-selector narrowing + today-filter + empty + token-budget + injection |
+| P2 | `toolUse-stream.test.ts`, `llmProvider.test.ts` (+cases), `claudeStreamAdapter.test.ts` (+cases), `claudeAdapter`/SHIPPED-adapter regression | tool-use wire protocol on the adapter |
+| P3 | `toolRegistry.test.ts`, `ConfirmationCard.test.tsx`, `AiChatModule.test.tsx` (+tool-flow cases incl. NO-SILENT-WRITE) | registry + confirmation state machine |
+| P4 | `xai-web-tasks/.../aiCreateSubscriber.test.ts`, `xai-web-calendar/.../aiCreateSubscriber.test.ts`, `AiChatModule` round-trip cases, `@repo/core` typecheck | write event round-trip + bounded single round-trip |
+| P5 | `isAiConvoRecord` back-compat case + full-suite green | persistence back-compat + polish |
+
+### §8.1 Mock strategy (extension)
+
+- **LLM tool-use responses MOCKED.** `fetch` stubbed to return either (a) a canned SSE `ReadableStream` containing the §2.5 tool_use golden (`content_block_start` tool_use → `input_json_delta` fragments → `content_block_stop` → `message_delta{stop_reason:"tool_use"}`), or (b) a non-stream JSON body with a `tool_use` content block + `stop_reason:"tool_use"`. NO real network.
+- **Event bus:** real `emitWebEvent`/`useWebEventListener` (in-process); assert emissions + subscriber effects.
+- **Store:** real `getPref`/`setPref`/`usePref` over `localStorage` (cleared `afterEach`); subscribers tested against real store mutation.
+- **`now`:** injected `Date` into `buildTodayContext` + subscribers (deterministic today-filter).
+- Reuse §1/§7.1 mocks (timers, Math.random, fake-indexeddb).
+
+### §8.2 New test cases
+
+#### `contextProvider.test.ts` (P1)
+- CP-1: `xai_task_cols` narrowed; today + overdue OPEN tasks included with title+bucket; `done:true` excluded from "to do" framing.
+- CP-2: malformed `xai_task_cols` entry dropped silently (no throw) — mirrors `narrowTaskCols`.
+- CP-3: `xai_calendar_events` today-only filter (event tomorrow excluded; recurring daily event included for today); local-clock `startISO` basis (no TZ shift).
+- CP-4: `xai_pomodoro_sessions` today focus-minute sum + count correct; non-today sessions excluded.
+- CP-5: `xai_habits_state` today checked/total correct.
+- CP-6: all-empty → `isEmpty:true` + honest "no data" line; never throws on absent keys.
+- CP-7: token budget — output length ≤ budget (cap list lengths) with a large fixture.
+- CP-8: pure + deterministic — same `now`+store → identical text (no entropy).
+
+#### `toolUse-stream.test.ts` + adapter deltas (P2)
+- TU-1: SSE stream with the §2.5 tool_use golden → adapter surfaces a `tool_use` result `{ id, name:"create_task", input:{title,...} }` with `stop_reason:"tool_use"`.
+- TU-2: `input_json_delta` fragments accumulated per content-block INDEX; `JSON.parse` once at `content_block_stop` (a per-delta parse would throw — assert it does NOT).
+- TU-3: interleaved text block (index 0) + tool_use block (index 1) → BOTH surfaced (preamble text + tool use).
+- TU-4: non-stream JSON response with tool_use block + `stop_reason:"tool_use"` → same result shape.
+- TU-5: `buildBody` emits `tools` + omits `tool_choice` (→auto) on Anthropic branch when key present; openai-compatible branch OMITS `tools`. *(Note — Rec1 reconciliation 2026-05-29: this §8 prose describes the ORIGINAL deferral behavior. The actual `toolUseProtocol.test.ts` TU-5 at HEAD is the content-block round-trip body test (see §10 TU-7 rewrite note). Use `toolUseProtocol.test.ts` as the source of truth for TU numbering.)*
+- TU-6: `buildBody` with `content: ContentBlock[]` (assistant tool_use turn + user tool_result turn) produces a valid Anthropic body; `content: string` path byte-for-byte unchanged (regression).
+- TU-7: tool_result round-trip body — `messages` carries assistant tool_use turn THEN user `tool_result{tool_use_id,content,is_error?}`. *(Note — Rec1 reconciliation 2026-05-29: this §8 prose describes the OLD TU-7 (before the xai-web-ai-tool-openai-compatible lift). The actual `toolUseProtocol.test.ts` TU-7 at HEAD is REWRITTEN to assert that openai-compatible buildBody NOW serializes tools in OpenAI function format. This §8 description is superseded by §10.2 TU-7 rewrite. Use `toolUseProtocol.test.ts` as the source of truth.)*
+- TU-REG: ALL SHIPPED `claudeStreamAdapter`/`sseParser`/`llmProvider`/`claudeAdapter` cases (§7.2) STAY GREEN (text-only path untouched).
+
+#### `toolRegistry.test.ts` (P3)
+- TR-1: `AI_TOOLS` has exactly 2 entries (`create_task`, `create_calendar_event`); names match `^[a-zA-Z0-9_-]{1,64}$`.
+- TR-2: `create_task` input_schema requires `title`; bucket enum closed; tag enum closed.
+- TR-3: `create_calendar_event` input_schema requires `title`+`date`; defaults documented; `input_examples` schema-valid.
+- TR-4: `toConfirmation` renders human line bilingually.
+- TR-5: `toWriteEvent` maps validated input → correct channel + payload (bucket default "next7"; durationMin clamp ≥5; date/time passthrough; requestId propagated).
+
+#### `ConfirmationCard.test.tsx` (P3)
+- CC-1: renders proposed-action line + Confirm + Cancel.
+- CC-2: Confirm fires `onConfirm` once; Cancel fires `onCancel` once.
+- CC-3: bilingual copy (en/zh).
+
+#### `AiChatModule.test.tsx` tool-flow cases (P3/P4)
+- IT-1: tool_use stream → ConfirmationCard rendered; queue paused.
+- IT-2 (**NO-SILENT-WRITE — acceptance anchor**): reach pendingConfirmation, do NOT click Confirm → ZERO write events emitted + ZERO store-key mutations (`xai_task_cols`/`xai_calendar_events` unchanged).
+- IT-3: Cancel → `tool_result(is_error:true)` round-trip + idle + still zero writes.
+- IT-4: Confirm → `web:tasks:create-requested` emitted EXACTLY once with mapped payload + requestId === tool_use.id; then ONE final stream turn.
+- IT-5 (**bounded single round-trip**): after Confirm+tool_result, the model's final turn is plain text (no second tool turn executed even if the mock returns another tool_use — counter cap = 1).
+- IT-6: context injected on send (assert `buildBody` messages include the context text when a key is set).
+- IT-REG: I1..I23 (SHIPPED) STAY GREEN via the existing `mockNoOpStream()` helper (no tool_use → no confirmation path).
+
+#### Owning-module subscriber tests (P4)
+- `xai-web-tasks/aiCreateSubscriber.test.ts`:
+  - TS-1: on `web:tasks:create-requested`, `xai_task_cols` gains the new card via `addCard` (title+bucket+tag mapped); count incremented.
+  - TS-2: idempotent per `requestId` (duplicate emit → single card).
+  - TS-3: route-independent — subscriber executes without `TasksModule` mounted (imperative `getPref`/`setPref`).
+  - TS-4: no cross-plugin import (source-text/dep guard — ai-chat not imported).
+- `xai-web-calendar/aiCreateSubscriber.test.ts`:
+  - CS-1: on `web:calendar:create-requested`, `xai_calendar_events` gains a `UserCalEvent` via `createEvent` (local-clock same-day startISO/endISO, ≥+5min, colorPreset mint, recurrence null).
+  - CS-2: idempotent per `requestId`.
+  - CS-3: route-independent.
+  - CS-4: no cross-plugin import guard.
+
+#### `@repo/core` typecheck (P4)
+- CORE-1: `pnpm --filter @repo/core typecheck` green with the 2 new EventMap entries; existing `web:ai:*` entries unchanged.
+
+#### Back-compat + persistence (P5)
+- BC-1: `isAiConvoRecord` accepts a SHIPPED-shape record AND an extended record (optional tool-call fields) — no rejection of either.
+- BC-2: full suites green: `pnpm --filter @repo/plugin-web-ai-chat test`, `--filter @repo/plugin-web-tasks test`, `--filter @repo/plugin-web-calendar test`, `--filter @repo/core typecheck`, `--filter @repo/web test`+`build`.
+
+### §8.3 Acceptance gate mapping (extension)
+
+| Acceptance anchor (carve-out §5) | Mechanism |
+|---|---|
+| AI answers "what's on today?" grounded in real state | CP-1..CP-8 (context correctness) + IT-6 (injection present); runtime grounded answer = operator real-key smoke (deferred) |
+| AI proposes create → confirmation card → Confirm → real item created via owning reducer (verified in owner store) | IT-1/IT-4 + TS-1/CS-1 (store mutation) |
+| NO silent writes / nothing without explicit confirm | **IT-2** (pending-not-confirmed → 0 writes) + IT-3 (cancel → 0 writes) + confirm-handler-only emit |
+| Bounded round-trip (no agentic loop) | IT-5 (counter cap = 1) |
+| `isAiConvoRecord` backward-compatible | BC-1 |
+| No regression in SHIPPED behaviour | TU-REG + IT-REG + full SHIPPED suite green every phase |
+| Cross-vendor + real-LLM tool round-trip | DEFERRED operator smoke (ADR-0008 §S3 / ADR-0009 §D2-G2) — verify-report records deferral |
+
+### §8.4 Cleanup behaviour (extension)
+
+- `afterEach`: `localStorage.clear()` (resets `xai_task_cols`/`xai_calendar_events`/context source keys); reset `fetch` SSE mock; unsubscribe any event listeners registered in the test; `vi.useRealTimers(); vi.restoreAllMocks();` per §6/§7.5.
+- Injected `now` Dates only (no real-clock dependence in context/subscriber tests).
+
+## §9. 2026-05-29 Extension — AI Tool Layer Edit/Delete test strategy (xai-web-ai-tool-edit-delete)
+
+> §0..§8 continue to apply. ALL SHIPPED ai-chat cases (incl. §7 + §8 tool-layer
+> cases: CP-1..CP-8, TU-*, TR-1..TR-5, CC-1..CC-3, IT-1..IT-6, TS-1..TS-4,
+> CS-1..CS-4, CORE-1, BC-1, plus I1..I23/I17/I18) MUST stay green as a
+> regression guard in every phase — **the create path must not regress**.
+> This §9 is purely additive. Design: §design.md 2026-05-29 Edit/Delete
+> Extension (ED-1..ED-13). Contract: §api.md §14. Carve-out:
+> `docs/reviews/_p0-carve-outs/20260529-ai-tool-edit-delete.md`.
+
+### §9.0 Scope summary (extension)
+
+> Delete phased before update (manifest P2 < P3). The drift-prevention pivot:
+> reducer unit tests assert the EXACT documented signatures, and IT tests assert
+> the EXACT confirm-only emit — so verify can mechanically diff doc-vs-code
+> (ED-R1, the prior-BLOCK cause).
+
+| Phase | New test files / deltas | Focus |
+|---|---|---|
+| P1 | `xai-web-tasks/tasksReducer.test.ts` (+TR-DEL/+TR-UPD), `contextProvider.test.ts` (+CP-ID), `@repo/core` typecheck | reducer purity + preserve-done + referential-equality + id exposure + 4 channels typecheck |
+| P2 | `toolRegistry.test.ts` (+TR-DEL-TOOL), `ConfirmationCard.test.tsx` (+CC-TONE), `AiChatModule.test.tsx` (+IT-DEL no-silent-write/bounded), tasks/calendar mutate-subscriber tests (+TS-DEL/+CS-DEL) | delete tools + destructive confirmation + delete round-trip + delete subscribers |
+| P3 | `toolRegistry.test.ts` (+TR-UPD-TOOL), `AiChatModule.test.tsx` (+IT-UPD), tasks/calendar mutate-subscriber tests (+TS-UPD/+CS-UPD incl. bucket-move composition + preserve-done) | update tools + update round-trip + update subscribers |
+| P4 | back-compat (BC-1 re-assert) + full-suite green + id-targeting end-to-end | persistence back-compat + polish + create-path no-regression |
+
+### §9.1 Mock strategy (extension)
+
+- Reuse §8.1 entirely. LLM tool-use responses MOCKED via canned SSE/JSON with a `tool_use` block whose `input` carries an `id` copied from a seeded context fixture (proves id-targeting round-trips end to end).
+- Real `emitWebEvent`/`useWebEventListener` (in-process) for the 4 new channels; real `getPref`/`setPref`/`usePref` over `localStorage` (cleared `afterEach`); injected `now`.
+- Reducer tests are PURE (no mocks) — direct `deleteCard`/`updateCard` calls with frozen `TaskCol[]` fixtures.
+
+### §9.2 New test cases
+
+#### `xai-web-tasks/tasksReducer.test.ts` (P1) — reducer purity (the anti-drift core)
+- **TR-DEL-1:** `deleteCard(prev, id)` removes the matching card; that column's `count` decremented by 1.
+- **TR-DEL-2:** untouched columns returned by REFERENCE — assert `result[i] === prev[i]` for every column not holding the card.
+- **TR-DEL-3:** `deleteCard` with an id in NO column returns `prev` UNCHANGED (same reference).
+- **TR-DEL-4:** `deleteCard` does not mutate `prev` (deep-freeze fixture → no throw; `prev` identical after call).
+- **TR-UPD-1:** `updateCard(prev, id, {title})` rewrites BOTH `title.en` + `title.zh`; all other fields untouched.
+- **TR-UPD-2 (preserve-done — T-10 lifeline):** `updateCard` on a card with `done:true` and a `{title}` patch → result card STILL has `done:true`. Assert explicitly.
+- **TR-UPD-3:** `updateCard` preserves `tag`/`date`/`dateZh`/`inbox` when not in the patch; sets `tag` when in the patch.
+- **TR-UPD-4:** `updateCard` NEVER overwrites `id` (patch with a stray `id`-like field cannot change the card id; merge re-pins `id: card.id`).
+- **TR-UPD-5:** untouched columns returned by REFERENCE (`result[i] === prev[i]`).
+- **TR-UPD-6:** `updateCard` with id in no column OR an empty patch returns `prev` UNCHANGED (same reference).
+- **TR-UPD-7:** `updateCard` does not mutate `prev` (deep-freeze fixture).
+
+#### `contextProvider.test.ts` (P1) — id exposure
+- **CP-ID-1:** rendered task line includes `(id: <card.id>)` for each open task (assert the exact id token present in `text`).
+- **CP-ID-2:** rendered calendar line includes `(id: <event.id>)` for each today event.
+- **CP-ID-3:** title/time/bucket-label content unchanged vs SHIPPED §8 CP-1/CP-3 (regression — id is additive, not a replacement).
+- **CP-ID-4:** token budget still ≤ ~600 with a large fixture + ids (TASK_CAP=20 + today-only calendar bound the count).
+- **CP-REG:** CP-1..CP-8 (SHIPPED §8) stay green.
+
+#### `toolRegistry.test.ts` deltas
+- **TR-DEL-TOOL-1 (P2):** `AI_TOOLS` grows to include `delete_task` + `delete_calendar_event`; names match `^[a-zA-Z0-9_-]{1,64}$`; each `input_schema` requires `id`.
+- **TR-DEL-TOOL-2 (P2):** `delete_task.toWriteEvent(input, toolUseId)` → `{ channel:"web:tasks:delete-requested", payload:{ requestId:toolUseId, id, requestedAt } }`; calendar analog → `web:calendar:delete-requested`.
+- **TR-DEL-TOOL-3 (P2):** `delete_task.toConfirmation` returns `tone:"destructive"` + description naming the item.
+- **TR-UPD-TOOL-1 (P3):** `AI_TOOLS` grows to 6 total (`update_task` + `update_calendar_event` added); `update_task.input_schema` requires `id`, has optional title/bucket(enum)/tag(enum); `update_calendar_event` requires `id`, optional title/date/startTime/durationMin.
+- **TR-UPD-TOOL-2 (P3):** `update_task.toWriteEvent` → `web:tasks:update-requested` with `patch` containing ONLY provided fields (a title-only input → `patch:{title}`, no bucket/tag keys).
+- **TR-UPD-TOOL-3 (P3):** `update_calendar_event.toWriteEvent` → `web:calendar:update-requested` with `patch` containing only provided fields.
+- **TR-REG:** TR-1..TR-5 (SHIPPED create-tool cases) stay green; `WriteEventSpec.channel` union widening does not break create mappings.
+
+#### `ConfirmationCard.test.tsx` deltas
+- **CC-TONE-1 (P2):** render with a `spec` whose `tone` is omitted or `"default"` (tone is read off `spec.tone`, NOT a separate prop — `ConfirmationCardProps` is unchanged) → byte-for-byte the SHIPPED markup (assert no destructive class/attribute) — protects create/update visuals.
+- **CC-TONE-2 (P2):** render with a `spec` of `{ label, description, tone:"destructive" }` → the destructive affordance (distinct confirm styling/label) + the item-naming description. (Asserts `ConfirmationCard` reads `spec.tone`; no separate `tone` prop is passed.)
+- **CC-REG:** CC-1..CC-3 stay green.
+
+#### `AiChatModule.test.tsx` tool-flow deltas
+- **IT-DEL-1 (P2, NO-SILENT-WRITE):** mock a `delete_task` tool_use (input.id from a seeded context) → ConfirmationCard rendered (destructive); do NOT click Confirm → ZERO `web:tasks:delete-requested` emitted + `xai_task_cols` UNCHANGED.
+- **IT-DEL-2 (P2):** Confirm → `web:tasks:delete-requested` emitted EXACTLY once with `id` from the tool input + `requestId === tool_use.id`; then ONE final stream turn (bounded).
+- **IT-DEL-3 (P2):** Cancel → `tool_result(is_error:true)` round-trip + idle + ZERO writes.
+- **IT-DEL-4 (P2, bounded):** after Confirm+tool_result, a second tool_use in the final turn is NOT executed (counter cap=1).
+- **IT-UPD-1 (P3, NO-SILENT-WRITE):** mock an `update_task` tool_use → confirmation rendered; not-confirmed → ZERO `web:tasks:update-requested` + store unchanged.
+- **IT-UPD-2 (P3):** Confirm → `web:tasks:update-requested` emitted once with the mapped `patch` + `requestId` correlation; bounded final turn.
+- **IT-UPD-3 (P3):** calendar update + delete analogs (`web:calendar:{update,delete}-requested`) emit confirm-only.
+- **IT-REG:** IT-1..IT-6 (SHIPPED create flow) stay green — create path unaffected by the new channel branches.
+
+#### Owning-module mutate-subscriber tests
+- `xai-web-tasks/aiMutateSubscriber.test.ts`:
+  - **TS-DEL-1 (P2):** on `web:tasks:delete-requested`, the targeted card is removed from `xai_task_cols` (via `deleteCard`); count decremented.
+  - **TS-DEL-2 (P2):** idempotent per `requestId` (duplicate emit → single delete).
+  - **TS-DEL-3 (P2):** route-independent — executes without `TasksModule` mounted.
+  - **TS-DEL-4 (P2):** stale/unknown id → store UNCHANGED (deleteCard no-op), no throw.
+  - **TS-UPD-1 (P3):** on `web:tasks:update-requested` with a same-column `{title}` patch → card title rewritten, `done` PRESERVED (assert), other fields intact.
+  - **TS-UPD-2 (P3, bucket-move composition — ED-6):** patch with a DIFFERENT `bucket` → card relocated to the target column (via `moveCard`), date fields rewritten for the new bucket, both columns' counts adjusted, title/tag from patch applied, `done` preserved.
+  - **TS-UPD-3 (P3):** idempotent per `requestId`.
+  - **TS-UPD-4 (P3):** stale/unknown id → store UNCHANGED, no throw.
+  - **TS-NOIMPORT:** no cross-plugin import guard (ai-chat not imported in either subscriber).
+- `xai-web-calendar/aiMutateSubscriber.test.ts`:
+  - **CS-DEL-1 (P2):** on `web:calendar:delete-requested`, the event is removed from `xai_calendar_events` (via `deleteEvent`).
+  - **CS-DEL-2 (P2):** idempotent per `requestId`; **CS-DEL-3:** route-independent; **CS-DEL-4:** stale id → no-op (deleteEvent same-reference), no throw.
+  - **CS-UPD-1 (P3):** on `web:calendar:update-requested`, the event is patched via `updateEvent` — `createdAt` + `id` PRESERVED, `updatedAt` bumped (assert), provided fields applied; startISO/endISO recomputed when date/startTime/durationMin present (same-day, ≥+5min).
+  - **CS-UPD-2 (P3):** idempotent per `requestId`; **CS-UPD-3:** route-independent; **CS-UPD-4:** stale id → `updateEvent` returns `updated:null` + store unchanged, no throw.
+  - **CS-NOIMPORT:** no cross-plugin import guard.
+
+#### `@repo/core` typecheck
+- **CORE-ED-1 (P1):** `pnpm --filter @repo/core typecheck` green with the 4 new EventMap entries; SHIPPED create + `web:ai:*` entries unchanged.
+
+#### Back-compat + full suite
+- **BC-1 (re-assert, P4):** `isAiConvoRecord` still accepts SHIPPED-shape + extended records.
+- **BC-FULL (P4):** full suites green: `pnpm --filter @repo/plugin-web-ai-chat test`, `--filter @repo/plugin-web-tasks test`, `--filter @repo/plugin-web-calendar test`, `--filter @repo/core typecheck`, `--filter @repo/web test`+`build`.
+
+### §9.3 Acceptance gate mapping (extension)
+
+| Acceptance anchor (carve-out §5) | Mechanism |
+|---|---|
+| AI deletes an existing item (referenced by id) → confirmation → Confirm → real removal via owning reducer (verified in store) | IT-DEL-2 + TS-DEL-1 / CS-DEL-1 (store mutation) |
+| AI edits an existing item → confirmation → Confirm → real update via owning reducer; `done`/other fields preserved | IT-UPD-2 + TS-UPD-1 (preserve-done) / CS-UPD-1 (preserve createdAt+id, bump updatedAt) |
+| Targeting works (model references item by id from context) | CP-ID-1/CP-ID-2 (id in context) + IT-DEL-2/IT-UPD-2 (input.id round-trips to the correct store mutation) |
+| NO silent writes / nothing without explicit confirm (delete + update) | **IT-DEL-1 + IT-UPD-1** (pending-not-confirmed → 0 writes) + IT-DEL-3 (cancel → 0 writes) + confirm-handler-only emit |
+| Delete never executes without explicit confirmation | IT-DEL-1 + destructive-tone CC-TONE-2 + confirm-only emit |
+| Bounded round-trip (no agentic loop) | IT-DEL-4 / IT-UPD bounded (counter cap=1) |
+| Untouched task fields + referential equality preserved | TR-UPD-2/TR-UPD-3/TR-UPD-5 + TR-DEL-2 |
+| No regression in SHIPPED create behaviour | TR-REG + CC-REG + IT-REG + CP-REG + full SHIPPED suite green every phase |
+| Docs/code parity (anti-drift, ED-R1) | reducer unit tests (TR-DEL/TR-UPD) assert documented signatures; IT tests assert documented confirm-only emit — verify diffs doc-vs-code |
+| Cross-vendor + real-LLM edit/delete round-trip | DEFERRED operator smoke (ADR-0008 §S3 / ADR-0009 §D2-G2) — verify-report records deferral |
+
+### §9.4 Cleanup behaviour (extension)
+
+- Same as §8.4. `afterEach` clears `localStorage` (resets `xai_task_cols`/`xai_calendar_events`), resets fetch SSE mock, unsubscribes the 4 new channels' listeners, restores timers/mocks.
+- Reducer tests use deep-frozen fixtures to catch accidental mutation.
+
+---
+
+## §10. 2026-05-29 Extension — AI Tool Layer OpenAI-Compatible test strategy (xai-web-ai-tool-openai-compatible)
+
+> §0..§9 continue to apply. This extension adds tests for the OpenAI Chat Completions function-calling
+> wire format. All tests are additive except the rewrite of the SHIPPED `TU-7` (anti-drift — it currently
+> asserts the now-removed deferral). Design: §design.md 2026-05-29 Extension (OpenAI-Compatible).
+> Contract: §api.md §15. Discovery: §2 protocol research + §4 planner's calls + §5 anti-drift.
+
+### §10.0 Scope summary (extension)
+
+Three test surfaces, mirroring the SHIPPED Anthropic tool tests (§8 `toolUseProtocol.test.ts`) but for the
+openai branch:
+1. **Pure serializers** (`openAiToolFormat.test.ts`) — `toOpenAiTools` shape + `input_examples` drop;
+   `toOpenAiToolChoice` mapping table.
+2. **Streaming + round-trip golden** (`openAiToolProtocol.test.ts`) — openai `delta.tool_calls`
+   accumulation golden + round-trip body translation + provider-parity.
+3. **Anti-drift** — rewrite the SHIPPED `TU-7` (in `toolUseProtocol.test.ts`); a grep gate asserts the two
+   deferral comments are gone; full Anthropic suite stays green.
+
+### §10.1 Mock strategy (extension)
+
+- Reuse the SHIPPED helpers from `toolUseProtocol.test.ts`: `makeStream(...chunks)` (ReadableStream from
+  SSE strings), an openai-format SSE chunk builder (data-only lines — openai uses `data:` without an
+  `event:` line, so a `dataChunk(json)` helper emits `data: ${json}\n\n`), `collectChunks(gen)`.
+- `vi.mock` `@repo/plugin-web-storage` (`getPref` returns `xai_ai_provider:"openai-compatible"` +
+  `xai_ai_base_url:"https://api.groq.com/openai/v1"` + `xai_ai_streaming:true`), `@repo/xai-web-event-bus`
+  (`emitWebEvent` spy), `secretStore.aiKeyStorage.loadKey → "sk-oai-test"`, `contextProvider` (empty).
+- `vi.spyOn(globalThis,"fetch")` returns a `Response(makeStream(openaiGoldenSse), {status:200})`.
+- Real `JSON.parse` (no mock) — the accumulation correctness is the point.
+
+### §10.2 New test cases
+
+#### Pure serializers — `openAiToolFormat.test.ts`
+- **OAI-FMT-1:** `toOpenAiTools([createTaskTool])` → `[{type:"function", function:{name:"create_task",
+  description:<same>, parameters:<same input_schema object>}}]`. Deep-equal the parameters object to the
+  source `input_schema`.
+- **OAI-FMT-2:** `input_examples` is **absent** from every serialized tool (the create tools carry
+  `input_examples`; assert no `function.input_examples` and no top-level `input_examples`).
+- **OAI-FMT-3:** all 6 `AI_TOOLS` serialize to valid `{type:"function", function:{name, description,
+  parameters}}` with `name` matching `^[a-zA-Z0-9_-]{1,64}$`.
+- **OAI-CHOICE-1..4:** `toOpenAiToolChoice` mapping — `{type:"auto"}→"auto"`, `{type:"any"}→"required"`,
+  `{type:"none"}→"none"`, `{type:"tool",name:"create_task"}→{type:"function",function:{name:"create_task"}}`.
+
+#### Streaming + round-trip golden — `openAiToolProtocol.test.ts`
+- **OAI-STREAM-1 (the §2.3 golden — critical-correctness):** a multi-chunk openai SSE stream where the
+  FIRST `delta.tool_calls[0]` carries `{index:0, id:"call_x", type:"function", function:{name:"create_task",
+  arguments:""}}`, subsequent chunks carry `{index:0, function:{arguments:'{"title":'}}` then
+  `{index:0, function:{arguments:'"Buy milk"}'}}`, final chunk `finish_reason:"tool_calls"`, then
+  `data: [DONE]`. Assert the final `StreamChunk.toolUse` deep-equals `{id:"call_x", name:"create_task",
+  input:{title:"Buy milk"}}`. **Asserts index-keyed accumulation + JSON.parse-once + finish_reason read.**
+- **OAI-STREAM-2 (id/name first-delta-only):** later chunks omit `id`/`name` (only `index` +
+  `function.arguments`); assert the id/name from the first delta are retained (NOT lost). (OAI-R2 guard.)
+- **OAI-STREAM-3 (text turn):** a normal text stream (`delta.content` fragments, `finish_reason:"stop"`,
+  `[DONE]`) → `StreamChunk.accumulated` text, `toolUse` undefined. (No false-positive tool turn.)
+- **OAI-STREAM-4 (finish_reason absent / "stop" but tool_calls present — defensive, discovery §9 note):**
+  a compat-server stream that accumulated `tool_calls` but sets `finish_reason:"stop"`; assert `toolUse`
+  is still surfaced (defensive fallback). (OAI-R6.)
+- **OAI-RT-1 (round-trip body — assistant tool_calls):** `buildBody` (openai) with `priorMessages`
+  containing an assistant turn `content:[{type:"tool_use", id:"call_x", name:"create_task", input:{title:"Buy milk"}}]`
+  → serialized message is `{role:"assistant", content:null, tool_calls:[{id:"call_x", type:"function",
+  function:{name:"create_task", arguments:'{"title":"Buy milk"}'}}]}`. (`arguments` is `JSON.stringify(input)`.)
+- **OAI-RT-2 (round-trip body — tool-role result):** a user turn `content:[{type:"tool_result",
+  tool_use_id:"call_x", content:"Tool 'create_task' executed successfully."}]` → `{role:"tool",
+  tool_call_id:"call_x", content:"Tool 'create_task' executed successfully."}`.
+- **OAI-RT-3 (string content unchanged):** string-content turns pass through unchanged on the openai
+  branch (backward compat with the SHIPPED openai text path).
+- **OAI-TOOLS-1 (buildBody serializes tools):** openai `buildBody` with `tools:[createTaskTool,...]`
+  emits `body["tools"]` in OpenAI function format (supersedes the deferral). With no tools, `body["tools"]`
+  is undefined (backward compat).
+- **OAI-PARITY-1 (provider-parity — the load-bearing carve-out claim):** drive `streamCompleteChat` once
+  with an **Anthropic** tool-use golden and once with the **equivalent openai** `delta.tool_calls` golden
+  for the SAME tool input (`create_task {title:"Buy milk", bucket:"next7"}`); assert BOTH produce the
+  IDENTICAL `StreamChunk.toolUse` normalized shape `{name:"create_task", input:{title:"Buy milk",
+  bucket:"next7"}}`. (Proves both providers converge on the same normalized shape that feeds the
+  provider-agnostic confirmation→event path.)
+- **OAI-PARITY-2 (write-event parity):** feed the openai-parsed `toolUse.input` through
+  `findTool("create_task").toWriteEvent(input, toolUse.id)` and assert the SAME
+  `web:tasks:create-requested` payload (channel + title + bucket + requestId=id) as the Anthropic path
+  produces — i.e. the confirmation→event path is byte-identical regardless of provider. (No emit here;
+  this asserts the registry mapping is provider-agnostic, reinforcing the no-silent-write boundary.)
+
+#### Anti-drift (the repeat-risk focus — OAI-R1)
+- **TU-7 (REWRITE, in `toolUseProtocol.test.ts`):** the SHIPPED TU-7 asserts openai `body["tools"]` is
+  undefined (encodes the deferral). REWRITE it to assert the openai branch now serializes `tools` in
+  OpenAI function format when tools are present (deferral lifted). Keep the no-tools→undefined backward-
+  compat assertion. **This test must change — leaving it as-is is a contradiction (code matches docs).**
+- **OAI-NODRIFT-1 (deferral comments gone):** a source-text assertion (read `llmProvider.ts` +
+  `claudeStreamAdapter.ts`) that the substrings `"tools are NOT sent"` and `"Only send tools on
+  Anthropic provider"` are ABSENT. (Mirrors the SHIPPED `no-plaintext-key.test.ts` source-guard pattern.)
+  Alternatively the verify-report runs this as a grep gate; the test makes it mechanical.
+
+#### Anthropic-unchanged regression
+- **OAI-REG (Anthropic byte-stable):** the full SHIPPED Anthropic tool suite stays green —
+  `toolUseProtocol.test.ts` TU-1..TU-6 (TU-7 rewritten), `AiChatModule.test.tsx` IT-* + I1..I23,
+  `toolRegistry.test.ts`, `ConfirmationCard.test.tsx`, plus tasks (TS-*) + calendar (CS-*) suites.
+  Asserted by running the full suites at each phase DoD.
+
+### §10.3 Acceptance gate mapping (extension)
+
+| Acceptance anchor (carve-out §5) | Mechanism |
+|---|---|
+| openai-compatible provider configured → AI offers the same 6 tools | OAI-FMT-1/3 + OAI-TOOLS-1 (tools serialized on openai branch) |
+| Tools route through the SAME confirmation→event→reducer path (provider-agnostic) | **OAI-PARITY-1** (same normalized `toolUse`) + **OAI-PARITY-2** (same write-event payload) |
+| openai tool_calls correctly parsed from streaming | OAI-STREAM-1 (golden accumulation) + OAI-STREAM-2 (first-delta-only id/name) + OAI-STREAM-4 (defensive finish_reason) |
+| Round-trip works on openai (tool-role result) | OAI-RT-1 (assistant tool_calls) + OAI-RT-2 (tool-role result) |
+| `tool_choice` mapping correct | OAI-CHOICE-1..4 |
+| **Anthropic path stays byte-stable** | **OAI-REG** (full Anthropic suite green) + Anthropic branch untouched in source |
+| Deferral comments gone (code matches docs — anti-drift OAI-R1) | **TU-7 rewrite** + **OAI-NODRIFT-1** (source-text guard) |
+| No new channel / no silent write / lifelines preserved | OAI-PARITY-2 (registry provider-agnostic) + no `events.ts`/emit-site edit (boundary grep in verify-report) |
+| Real openai-compatible-key tool round-trip + cross-vendor cold-read | DEFERRED operator smoke (ADR-0008 §S3 / ADR-0009 §D2-G2) — verify-report records deferral |
+
+### §10.4 Cleanup behaviour (extension)
+
+- `afterEach` resets the fetch SSE mock + `vi.clearAllMocks()`; no localStorage writes in these tests
+  (serializer + parse tests are read-only on prefs). The provider-parity test that touches `toWriteEvent`
+  does not emit (asserts the spec only), so no event-bus cleanup beyond the standard mock reset.
+- Golden SSE fixtures are inline string literals (deterministic; no network).
+

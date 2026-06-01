@@ -1,0 +1,35 @@
+/**
+ * @internal — Sticky ID generator.
+ *
+ * Uses crypto.randomUUID() when available (modern browsers + Node 19+).
+ * Falls back to a non-cryptographic pseudo-random string for jsdom or
+ * very old runtimes (still unique enough at v1 scale).
+ *
+ * Verbatim port of xai-web-calendar/src/internal/eventStore/ids.ts with
+ * "evt-" prefix swapped to "sticky-".
+ *
+ * Design: packages/xai-web-dashboard-widgets/docs/design.md §E.3
+ * API:    packages/xai-web-dashboard-widgets/docs/api.md §E
+ */
+
+/**
+ * Returns a fresh, opaque sticky ID.
+ *
+ * - Modern path: `crypto.randomUUID()` (RFC 4122 v4 UUID).
+ * - Fallback: `"sticky-" + Date.now().toString(36) + "-" + Math.random()`
+ *   — keeps tests deterministic across `vi.useFakeTimers()` if needed.
+ *
+ * The function is pure relative to its return value (different calls
+ * return different IDs by construction).
+ */
+export function createStickyId(): string {
+  // Prefer the crypto API when present
+  const c = (globalThis as { crypto?: { randomUUID?: () => string } }).crypto;
+  if (c && typeof c.randomUUID === "function") {
+    return c.randomUUID();
+  }
+  // Fallback: timestamp-base36 + random suffix; sufficient at v1 scale.
+  const ts = Date.now().toString(36);
+  const rnd = Math.random().toString(36).slice(2, 10);
+  return `sticky-${ts}-${rnd}`;
+}

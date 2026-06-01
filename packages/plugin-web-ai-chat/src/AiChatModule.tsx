@@ -44,11 +44,14 @@ import { AiSidebar } from "./AiSidebar.js";
 import { AiComposer } from "./AiComposer.js";
 import { AiThread } from "./AiThread.js";
 import { ErrorBanner } from "./ErrorBanner.js";
+import { ConfirmationCard } from "./ConfirmationCard.js";
 import { IconList, IconPlus, IconSparkle } from "./internal/icons.js";
 import { streamCompleteChat } from "./internal/claudeStreamAdapter.js";
 import { isAiConvoRecord } from "./internal/isAiConvoRecord.js";
 import { makeConvoFromUserText } from "./internal/makeConvoFromUserText.js";
 import type { LlmError } from "./internal/llmErrors.js";
+import { AI_TOOLS, findTool } from "./internal/toolRegistry.js";
+import type { ToolUseResult } from "./internal/toolUseTypes.js";
 import { getPref } from "@repo/plugin-web-storage";
 import type {
   AiAttachment,
@@ -97,6 +100,20 @@ export function AiChatModule({ lang }: AiChatModuleProps) {
   const [model, setModel] = useState<AiModelId>("haiku");
   /** Non-null when there is an active LlmError to display. */
   const [bannerError, setBannerError] = useState<LlmError | null>(null);
+
+  /**
+   * P3: pendingConfirmation — non-null when the model responded with a tool_use block.
+   * The ConfirmationCard is rendered while this is set. The queue processor is PAUSED
+   * until the user clicks Confirm or Cancel.
+   * CRITICAL: no write event is emitted until the user explicitly clicks Confirm.
+   */
+  const [pendingConfirmation, setPendingConfirmation] = useState<{
+    toolUse: ToolUseResult;
+    /** The placeholder bubble id to update with the preamble text. */
+    preambleId: string;
+    /** Text accumulated before the tool_use block (may be empty). */
+    preambleText: string;
+  } | null>(null);
 
   // ---- Refs ---------------------------------------------------------------
   const endRef = useRef<HTMLDivElement | null>(null);
@@ -200,6 +217,7 @@ export function AiChatModule({ lang }: AiChatModuleProps) {
 
         let accumulated = "";
         let streamError: LlmError | null = null;
+        let toolUseResult: ToolUseResult | undefined;
 
         try {
           for await (const chunk of streamCompleteChat({
@@ -207,6 +225,8 @@ export function AiChatModule({ lang }: AiChatModuleProps) {
             lang: next.lang,
             model: modelPref,
             signal: ctrl.signal,
+            // P3: send tool definitions on the Anthropic provider.
+            tools: AI_TOOLS,
           })) {
             if (!mountedRef.current) return;
             accumulated = chunk.accumulated;
@@ -231,7 +251,10 @@ export function AiChatModule({ lang }: AiChatModuleProps) {
               );
             }
 
-            if (chunk.done) break;
+            if (chunk.done) {
+              toolUseResult = chunk.toolUse;
+              break;
+            }
           }
         } catch (err) {
           // streamCompleteChat throws LlmError on 4xx/5xx/network failure.
@@ -261,6 +284,19 @@ export function AiChatModule({ lang }: AiChatModuleProps) {
               m.filter((msg) => (msg as AiMessage & { _id?: string })._id !== placeholderId),
             );
           }
+          return;
+        }
+
+        // P3: If the model responded with a tool_use block, enter pendingConfirmation.
+        // The queue is NOT advanced — the entry stays until Confirm/Cancel resolves it.
+        if (toolUseResult) {
+          setPendingConfirmation({
+            toolUse: toolUseResult,
+            preambleId: placeholderId,
+            preambleText: accumulated,
+          });
+          // Exit processQueue — it will be re-kicked by handleConfirm or handleCancel in P4.
+          // processingRef is reset in the finally block below.
           return;
         }
 
@@ -357,6 +393,242 @@ export function AiChatModule({ lang }: AiChatModuleProps) {
     });
   }, []);
 
+  /**
+   * handleCancel — user declined the proposed action.
+   * Clears pendingConfirmation, sends tool_result(is_error:true) back to LLM
+   * for a bounded final acknowledgement stream, then sets idle.
+   * INVARIANT: No write event emitted (IT-3 assertion).
+   * The tool_result is conversational feedback to LLM only — NOT a write path.
+   */
+  const handleCancel = useCallback(() => {
+    if (!pendingConfirmation) return;
+
+    const snapshot = pendingConfirmation;
+    setPendingConfirmation(null);
+    pendingSendQueueRef.current.shift();
+
+    // Send tool_result(is_error:true) to LLM for a bounded final acknowledgement.
+    // This is LLM conversation only — does NOT trigger any store write.
+    const queuedItem = { text: snapshot.preambleText || "(cancelled)", lang };
+    void (async () => {
+      if (!mountedRef.current) return;
+      setThinking(true);
+
+      const ctrl = new AbortController();
+      abortCtrlRef.current = ctrl;
+      const modelPref = (getPref("xai_ai_model_default") as "haiku" | "sonnet" | "opus") ?? model;
+
+      // Build Anthropic message history: user turn → assistant tool_use turn → user tool_result turn.
+      const priorMessages = [
+        { role: "user" as const, content: queuedItem.text },
+        {
+          role: "assistant" as const,
+          content: [
+            { type: "tool_use" as const, id: snapshot.toolUse.id, name: snapshot.toolUse.name, input: snapshot.toolUse.input },
+          ],
+        },
+        {
+          role: "user" as const,
+          content: [
+            { type: "tool_result" as const, tool_use_id: snapshot.toolUse.id, content: "user declined", is_error: true },
+          ],
+        },
+      ];
+
+      const cancelFinalId = `cancel-final-${Date.now()}`;
+      let inserted = false;
+      try {
+        for await (const chunk of streamCompleteChat({
+          text: queuedItem.text,
+          lang: queuedItem.lang,
+          model: modelPref,
+          signal: ctrl.signal,
+          priorMessages,
+        })) {
+          if (!mountedRef.current) return;
+          if (!inserted) {
+            inserted = true;
+            setMessages((m) => [
+              ...m,
+              { role: "assistant", text: chunk.accumulated, attachments: null, _id: cancelFinalId } as AiMessage & { _id: string },
+            ]);
+          } else {
+            setMessages((m) =>
+              m.map((msg) => {
+                const msgWithId = msg as AiMessage & { _id?: string };
+                return msgWithId._id === cancelFinalId ? { ...msg, text: chunk.accumulated } : msg;
+              }),
+            );
+          }
+          if (chunk.done) break; // Bounded: stop after first final turn (ignore further tool_use).
+        }
+      } catch {
+        // Cancel acknowledgement stream failed — tolerated (no UI impact; thinking clears below).
+        if (inserted) {
+          setMessages((m) => m.filter((msg) => (msg as AiMessage & { _id?: string })._id !== cancelFinalId));
+        }
+      }
+
+      if (mountedRef.current) setThinking(false);
+      abortCtrlRef.current = null;
+    })();
+  }, [pendingConfirmation, lang, model]);
+
+  /**
+   * handleConfirm — user explicitly approved the proposed action.
+   * This is the ONLY place the write event is emitted (no-silent-write invariant).
+   * Emits the typed write event → owning-module subscriber executes via reducer + setPref.
+   * Then sends tool_result(content:"success") back to LLM for a bounded single
+   * final acknowledgement stream (one round-trip, counter cap=1). If the final
+   * turn again contains a tool_use, it is displayed as text but NOT executed
+   * (no second round-trip — bounded invariant enforced).
+   */
+  const handleConfirm = useCallback(() => {
+    if (!pendingConfirmation) return;
+
+    const snapshot = pendingConfirmation;
+
+    // Find the tool and compute the write event spec.
+    const tool = findTool(snapshot.toolUse.name);
+    if (tool) {
+      const writeEvent = tool.toWriteEvent(
+        snapshot.toolUse.input,
+        snapshot.toolUse.id,
+      );
+
+      // CRITICAL: emit the write event EXACTLY ONCE, ONLY here (no-silent-write invariant).
+      // The owning-module subscriber (mounted in App.tsx) consumes this event
+      // and executes via its own pure reducer + setPref.
+      // ED-8: 4 new delete/update channels follow the SAME single-emit-site pattern.
+      if (writeEvent.channel === "web:tasks:create-requested") {
+        const p = writeEvent.payload as {
+          requestId: string;
+          title: string;
+          bucket: "overdue" | "next7" | "later" | "nodate";
+          tag?: "study" | "work" | "personal" | "todo" | "other";
+          requestedAt: string;
+        };
+        emitWebEvent("web:tasks:create-requested", p);
+      } else if (writeEvent.channel === "web:calendar:create-requested") {
+        const p = writeEvent.payload as {
+          requestId: string;
+          title: string;
+          date: string;
+          startTime: string;
+          durationMin: number;
+          requestedAt: string;
+        };
+        emitWebEvent("web:calendar:create-requested", p);
+      } else if (writeEvent.channel === "web:tasks:delete-requested") {
+        // P2 (xai-web-ai-tool-edit-delete): delete task branch
+        const p = writeEvent.payload as {
+          requestId: string;
+          id: string;
+          requestedAt: string;
+        };
+        emitWebEvent("web:tasks:delete-requested", p);
+      } else if (writeEvent.channel === "web:calendar:delete-requested") {
+        // P2 (xai-web-ai-tool-edit-delete): delete calendar event branch
+        const p = writeEvent.payload as {
+          requestId: string;
+          id: string;
+          requestedAt: string;
+        };
+        emitWebEvent("web:calendar:delete-requested", p);
+      } else if (writeEvent.channel === "web:tasks:update-requested") {
+        // P3 (xai-web-ai-tool-edit-delete): update task branch
+        const p = writeEvent.payload as {
+          requestId: string;
+          id: string;
+          patch: { title?: string; bucket?: "overdue" | "next7" | "later" | "nodate"; tag?: "study" | "work" | "personal" | "todo" | "other" };
+          requestedAt: string;
+        };
+        emitWebEvent("web:tasks:update-requested", p);
+      } else if (writeEvent.channel === "web:calendar:update-requested") {
+        // P3 (xai-web-ai-tool-edit-delete): update calendar event branch
+        const p = writeEvent.payload as {
+          requestId: string;
+          id: string;
+          patch: { title?: string; date?: string; startTime?: string; durationMin?: number };
+          requestedAt: string;
+        };
+        emitWebEvent("web:calendar:update-requested", p);
+      }
+    }
+
+    // Clear the confirmation card and advance the queue.
+    setPendingConfirmation(null);
+    pendingSendQueueRef.current.shift();
+
+    // Bounded single round-trip: send tool_result(success) back to LLM and
+    // stream the final acknowledgement (e.g. "Created task 'X' for you.").
+    // Counter cap = 1 — if the final turn again yields tool_use, we display
+    // text only (no second execution, no second round-trip).
+    const queuedItem = { text: snapshot.preambleText || snapshot.toolUse.name, lang };
+    void (async () => {
+      if (!mountedRef.current) return;
+      setThinking(true);
+
+      const ctrl = new AbortController();
+      abortCtrlRef.current = ctrl;
+      const modelPref = (getPref("xai_ai_model_default") as "haiku" | "sonnet" | "opus") ?? model;
+
+      // Build Anthropic message history: user turn → assistant tool_use turn → user tool_result turn.
+      const priorMessages = [
+        { role: "user" as const, content: queuedItem.text },
+        {
+          role: "assistant" as const,
+          content: [
+            { type: "tool_use" as const, id: snapshot.toolUse.id, name: snapshot.toolUse.name, input: snapshot.toolUse.input },
+          ],
+        },
+        {
+          role: "user" as const,
+          content: [
+            { type: "tool_result" as const, tool_use_id: snapshot.toolUse.id, content: `Tool '${snapshot.toolUse.name}' executed successfully.` },
+          ],
+        },
+      ];
+
+      const finalBubbleId = `confirm-final-${Date.now()}`;
+      let inserted = false;
+      try {
+        for await (const chunk of streamCompleteChat({
+          text: queuedItem.text,
+          lang: queuedItem.lang,
+          model: modelPref,
+          signal: ctrl.signal,
+          priorMessages,
+        })) {
+          if (!mountedRef.current) return;
+          if (!inserted) {
+            inserted = true;
+            setMessages((m) => [
+              ...m,
+              { role: "assistant", text: chunk.accumulated, attachments: null, _id: finalBubbleId } as AiMessage & { _id: string },
+            ]);
+          } else {
+            setMessages((m) =>
+              m.map((msg) => {
+                const msgWithId = msg as AiMessage & { _id?: string };
+                return msgWithId._id === finalBubbleId ? { ...msg, text: chunk.accumulated } : msg;
+              }),
+            );
+          }
+          if (chunk.done) break; // Bounded: counter cap=1 — stop after one final turn.
+        }
+      } catch {
+        // Final acknowledgement stream failed — tolerated (write event already emitted).
+        if (inserted) {
+          setMessages((m) => m.filter((msg) => (msg as AiMessage & { _id?: string })._id !== finalBubbleId));
+        }
+      }
+
+      if (mountedRef.current) setThinking(false);
+      abortCtrlRef.current = null;
+    })();
+  }, [pendingConfirmation, lang, model]);
+
   const stageClass =
     "ai-stage" + (thinking ? " thinking" : "") + (messages.length === 0 ? " empty" : " chatting");
   const mainClass = "ai-main" + (sidebarOpen ? " with-side" : "");
@@ -451,6 +723,23 @@ export function AiChatModule({ lang }: AiChatModuleProps) {
             onOpenSettings={handleOpenSettings}
           />
         )}
+
+        {/* P3: ConfirmationCard — shown when model returns a tool_use block.
+            CRITICAL: rendering this card does NOT execute any write.
+            Write event emitted ONLY on explicit Confirm click (P4). */}
+        {pendingConfirmation != null && (() => {
+          const tool = findTool(pendingConfirmation.toolUse.name);
+          if (!tool) return null;
+          const spec = tool.toConfirmation(pendingConfirmation.toolUse.input);
+          return (
+            <ConfirmationCard
+              spec={spec}
+              lang={lang}
+              onConfirm={handleConfirm}
+              onCancel={handleCancel}
+            />
+          );
+        })()}
 
         <AiComposer
           input={input}

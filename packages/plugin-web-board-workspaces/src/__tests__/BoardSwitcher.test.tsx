@@ -34,7 +34,7 @@ const baseProps = {
   activeBoardId: "b1",
   onPick: vi.fn(),
   onCreate: vi.fn(),
-  onDelete: vi.fn(),
+  onRequestDelete: vi.fn(),
   onClose: vi.fn(),
 } as const;
 
@@ -128,20 +128,24 @@ describe("BoardSwitcher (BS1..BS15)", () => {
     expect(screen.getByTestId("bs-delete-b3")).toBeInTheDocument();
   });
 
-  it("BS13: confirm true triggers onDelete with id", () => {
-    const onDelete = vi.fn();
-    vi.spyOn(window, "confirm").mockReturnValue(true);
-    render(<BoardSwitcher lang="en" {...baseProps} onDelete={onDelete} />);
+  it("BS13: clicking trash calls onRequestDelete with boardId (B-12 fix — no window.confirm)", () => {
+    const onRequestDelete = vi.fn();
+    render(<BoardSwitcher lang="en" {...baseProps} onRequestDelete={onRequestDelete} />);
     fireEvent.click(screen.getByTestId("bs-delete-b2"));
-    expect(onDelete).toHaveBeenCalledWith("b2");
+    // B-12 fix: BoardSwitcher no longer calls window.confirm() — it delegates
+    // confirmation to the host (BoardDeleteConfirmDialog). Clicking trash
+    // immediately calls onRequestDelete.
+    expect(onRequestDelete).toHaveBeenCalledWith("b2");
   });
 
-  it("BS14: confirm false suppresses onDelete", () => {
-    const onDelete = vi.fn();
-    vi.spyOn(window, "confirm").mockReturnValue(false);
-    render(<BoardSwitcher lang="en" {...baseProps} onDelete={onDelete} />);
+  it("BS14: onRequestDelete is called without any window.confirm gate", () => {
+    const onRequestDelete = vi.fn();
+    const confirmSpy = vi.spyOn(window, "confirm");
+    render(<BoardSwitcher lang="en" {...baseProps} onRequestDelete={onRequestDelete} />);
     fireEvent.click(screen.getByTestId("bs-delete-b2"));
-    expect(onDelete).not.toHaveBeenCalled();
+    // Confirm that window.confirm is NOT called (fix for audit B-12)
+    expect(confirmSpy).not.toHaveBeenCalled();
+    expect(onRequestDelete).toHaveBeenCalledWith("b2");
   });
 
   it("BS15: clicking scrim closes (onClose)", () => {
@@ -149,5 +153,14 @@ describe("BoardSwitcher (BS1..BS15)", () => {
     render(<BoardSwitcher lang="en" {...baseProps} onClose={onClose} />);
     fireEvent.click(screen.getByTestId("bs-scrim"));
     expect(onClose).toHaveBeenCalled();
+  });
+
+  it("BS16: delete affordance is a sibling of the pick-card button", () => {
+    render(<BoardSwitcher lang="en" {...baseProps} activeBoardId="b1" />);
+    const card = screen.getByTestId("bs-card-b2");
+    const deleteButton = screen.getByTestId("bs-delete-b2");
+
+    expect(card.querySelector("button")).toBeNull();
+    expect(deleteButton.closest("[data-testid='bs-card-b2']")).toBeNull();
   });
 });

@@ -1,6 +1,7 @@
 # Subagent Workflow V2 — XAI_Desktop
 
 > 本项目采用 V2 Subagent 工作流。详细规范参见源文档。
+> Codex + Claude Code 并行协作规则见 `docs/workflow/project/workflow.md`。
 
 ## Pipeline
 
@@ -22,7 +23,12 @@ bug-diagnose → bug-fix → bug-verify → ship
 
 ### Phase 0 INTAKE & 事件驱动变体（resync 引入,见 `docs/workflow/_portable/`）
 
-resync 后本项目已具备完整 V2 portable 层:`feature-full-loop` / `bugfix-full-loop` meta-orchestrator 的 **Phase 0 是 3 字段**——① Requirement/Bug 缺失=硬 BLOCKED(free-text 装不进 picker,绝不问)② Automation Mode picker Q1 ③ Verify Cross-vendor picker Q2(同一次 AskUserQuestion;host 不能问时默认 `yes`)。事件驱动 `B-Codex`/`B-Cursor`(headless `codex exec` / `cursor-agent --print --force`)+ `C-*` 经 `.git/hooks/post-commit` 链式 wrapper 自动跨厂商派发 review/verify。完整规格见 `docs/workflow/_portable/07-automation-mode-picker.md` §1A/§2.6 + `04-automation-loop.md` §3.4。前置:`codex` 已认证、`cursor-agent login`、`brew install coreutils util-linux`。
+resync 后本项目已具备完整 V2 portable 层:`feature-full-loop` / `bugfix-full-loop` meta-orchestrator 的 **Phase 0 是 3 字段**——① Requirement/Bug 缺失=硬 BLOCKED(free-text 装不进 picker,绝不问)② Automation Mode picker Q1 ③ Verify Cross-vendor picker Q2(同一次 AskUserQuestion;host 不能问时默认 `yes`)。事件驱动 `B-Codex`/`B-Cursor`(headless `codex exec` / `cursor-agent --print --force`)+ `C-*` 经 `.git/hooks/post-commit` 链式 wrapper 自动跨厂商派发 review/verify；Codex→Claude 的 hook 派发需显式开启 `dispatch_claude.sh` (`CW_ENABLE_CLAUDE_BG=1` 或 `git config cowork.claudeBg true`),且只代表启动 Claude bg session,不代表 PASS。完整规格见 `docs/workflow/_portable/07-automation-mode-picker.md` §1A/§2.6 + `04-automation-loop.md` §3.4。前置:`codex` 已认证、`cursor-agent login`、`claude --version`、`brew install coreutils util-linux`。
+
+合法 Automation Mode 有 9 个:`A-Claude` / `A-Codex` / `B-Codex` / `B-Cursor` /
+`C-Codex` / `C-Cursor` / `D-Codex` / `D-Cursor` / `D-Codex+Cursor`。
+`A-Codex` 是 Codex-primary 单工具长跑模式:当前 Codex session 作为 lead 推进 V2 状态机;
+spawn 深度不够时按 Level 1 手动顺序 inline 执行 worker contract。
 
 ### Level 3 — Roadmap Orchestration（可选,跨多 feature 编排）
 
@@ -86,6 +92,9 @@ Start the feature-build agent for <feature>.
 Start the feature-dev-loop agent for <feature>.
 Start the ship agent for <feature>.
 ```
+
+Codex 中如果没有可用的 agent-spawn 深度,父 session 可以按同一角色契约 inline 执行下一步。
+此时当前 session 就是该 subagent:final response 必须仍然只输出对应的 `## Handoff` block。
 
 ## dev_log.md → 下一步映射
 

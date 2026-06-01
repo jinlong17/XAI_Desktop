@@ -37,6 +37,7 @@ function renderRail(overrides?: {
   onPetToggle?: () => void;
   onAvatarOpenSettings?: () => void;
   onAvatarOpenStatistics?: () => void;
+  onSignOut?: () => void;
 }) {
   const defaults = {
     modules: FIXTURE_MODULES,
@@ -66,6 +67,7 @@ function renderRail(overrides?: {
             onPetToggle={cfg.onPetToggle}
             onAvatarOpenSettings={cfg.onAvatarOpenSettings}
             onAvatarOpenStatistics={cfg.onAvatarOpenStatistics}
+            onSignOut={overrides?.onSignOut}
           />
         </WebShellProvider>
       </MemoryRouter>
@@ -179,17 +181,90 @@ describe("AppRail", () => {
     expect(petBtn?.className).toContain("active");
   });
 
-  it("AR10 — bottom row has 4 utility buttons", () => {
+  it("AR10 — bottom row has exactly 1 button (pet only; sync/notif/help hidden)", () => {
     const { container } = renderRail();
     const railBottom = container.querySelector(".rail-bottom");
     const buttons = railBottom?.querySelectorAll("button");
-    expect(buttons?.length).toBe(4);
+    expect(buttons?.length).toBe(1);
+  });
+
+  // Rail-05/06/07 regression: sync / notif / help must NOT render
+  it("AR10a — sync icon is NOT rendered in the rail-bottom (Rail-05 fix)", () => {
+    const { container } = renderRail();
+    const syncBtn = container.querySelector(
+      '.rail-bottom button[data-tip="sync"]',
+    );
+    expect(syncBtn).toBeNull();
+  });
+
+  it("AR10b — notif icon is NOT rendered in the rail-bottom (Rail-06 fix)", () => {
+    const { container } = renderRail();
+    const notifBtn = container.querySelector(
+      '.rail-bottom button[data-tip="notif"]',
+    );
+    expect(notifBtn).toBeNull();
+  });
+
+  it("AR10c — help icon is NOT rendered in the rail-bottom (Rail-07 fix)", () => {
+    const { container } = renderRail();
+    const helpBtn = container.querySelector(
+      '.rail-bottom button[data-tip="help"]',
+    );
+    expect(helpBtn).toBeNull();
+  });
+
+  it("AR10d — pet button is still present after removing sync/notif/help", () => {
+    const { container } = renderRail();
+    const railBottom = container.querySelector(".rail-bottom");
+    const petBtn = railBottom?.querySelectorAll("button")[0];
+    // The pet button is the only remaining button; data-tip comes from t.nav["pet"] i18n label
+    expect(petBtn).toBeTruthy();
+    // data-tip is whatever the i18n label resolves to (may be "Pet" or "pet" depending on locale)
+    const tip = petBtn?.getAttribute("data-tip");
+    expect(tip?.toLowerCase()).toBe("pet");
   });
 
   it("AR11 — module button has data-tip with i18n label", () => {
     const { container } = renderRail({ modules: FIXTURE_MODULES });
     const taskBtn = getRailBtn(container, "Tasks");
     expect(taskBtn?.getAttribute("data-tip")).toBe("Tasks");
+  });
+});
+
+describe("AppRail sign-out passthrough (AR-SO1..SO2)", () => {
+  it("AR-SO1 — renderRail with onSignOut wired: opening AvatarMenu and clicking Sign Out opens confirmation dialog", () => {
+    // stub showModal for jsdom
+    HTMLDialogElement.prototype.showModal = function () {
+      this.setAttribute("open", "");
+    };
+    const onSignOut = vi.fn();
+    const { container } = renderRail({ onAvatarOpenSettings: vi.fn(), onAvatarOpenStatistics: vi.fn(), onSignOut });
+
+    // Open AvatarMenu
+    const avatarBtn = container.querySelector(".rail-avatar");
+    if (avatarBtn) fireEvent.click(avatarBtn);
+
+    // Click the Sign Out menu item (danger class)
+    const signOutItem = container.querySelector(".avm-item.danger");
+    if (signOutItem) fireEvent.click(signOutItem);
+
+    // onSignOut should NOT have been called yet (dialog confirmation required)
+    expect(onSignOut).not.toHaveBeenCalled();
+    // Dialog should be open
+    const dialog = container.querySelector("dialog.xai-sign-out-dialog");
+    expect(dialog?.hasAttribute("open")).toBe(true);
+  });
+
+  it("AR-SO2 — renderRail without onSignOut: AvatarMenu renders normally (backward-compatible)", () => {
+    const { container } = renderRail();
+    // Open AvatarMenu
+    const avatarBtn = container.querySelector(".rail-avatar");
+    if (avatarBtn) fireEvent.click(avatarBtn);
+    // Menu should be visible
+    expect(container.querySelector(".avatar-menu")).not.toBeNull();
+    // Sign Out item should still be rendered
+    const signOutItem = container.querySelector(".avm-item.danger");
+    expect(signOutItem).not.toBeNull();
   });
 });
 

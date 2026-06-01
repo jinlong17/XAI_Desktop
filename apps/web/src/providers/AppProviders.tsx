@@ -46,6 +46,8 @@ type TodoCryptoRuntimeSnapshot = {
   dekBase64: string;
   keyId: number;
   encryptionDeviceId?: string;
+  nextCounter?: number;
+  leaseEnd?: number;
 };
 
 type MockSupabaseLikeClient = {
@@ -87,7 +89,9 @@ function createMockSession(): MockAuthSession {
     user_metadata: {
       xai_todo_dek_base64: MOCK_TODO_DEK_BASE64,
       xai_todo_key_id: 1,
-      xai_todo_encryption_device_id: "mock-user",
+      xai_todo_encryption_device_id: "1001",
+      xai_todo_next_counter: 0,
+      xai_todo_lease_end: 63,
     },
     identities: [],
     created_at: now,
@@ -150,6 +154,38 @@ function readPositiveInt(source: Record<string, unknown>, keys: string[]): numbe
   return null;
 }
 
+function readNumericText(source: Record<string, unknown>, keys: string[]): string | null {
+  for (const key of keys) {
+    const value = source[key];
+    if (typeof value === "string" && /^(0|[1-9]\d*)$/.test(value)) {
+      return value;
+    }
+    if (typeof value === "number" && Number.isSafeInteger(value) && value >= 0) {
+      return String(value);
+    }
+    if (typeof value === "bigint" && value >= 0n) {
+      return value.toString();
+    }
+  }
+  return null;
+}
+
+function readNonNegativeInt(source: Record<string, unknown>, keys: string[]): number | null {
+  for (const key of keys) {
+    const value = source[key];
+    if (typeof value === "number" && Number.isSafeInteger(value) && value >= 0) {
+      return value;
+    }
+    if (typeof value === "string") {
+      const parsed = Number.parseInt(value, 10);
+      if (Number.isSafeInteger(parsed) && parsed >= 0) {
+        return parsed;
+      }
+    }
+  }
+  return null;
+}
+
 function readTodoCryptoRuntimeSnapshot(
   session: {
     user?: {
@@ -185,6 +221,12 @@ function readTodoCryptoRuntimeSnapshot(
         readText(source, ["xai_todo_encryption_device_id", "todo_encryption_device_id", "todoEncryptionDeviceId"])
         ?? fallbackDeviceId
         ?? undefined,
+      nextCounter:
+        readNonNegativeInt(source, ["xai_todo_next_counter", "todo_next_counter", "todoNextCounter"])
+        ?? undefined,
+      leaseEnd:
+        readNonNegativeInt(source, ["xai_todo_lease_end", "todo_lease_end", "todoLeaseEnd"])
+        ?? undefined,
     };
   }
 
@@ -201,13 +243,103 @@ function createSessionBoundFetch(accessToken: string, deviceId: string, syncVers
   };
 }
 
+function createTodoScopedFetch(
+  fetchSync: (input: RequestInfo | URL, init?: RequestInit) => Promise<Response>,
+  scope: { accountId?: string; supabaseUrl?: string; supabaseAnonKey?: string }
+) {
+  return async (input: RequestInfo | URL, init?: RequestInit): Promise<Response> => {
+    const headers = new Headers(init?.headers);
+    if (scope.accountId) {
+      headers.set("X-Account-Id", scope.accountId);
+    }
+    if (scope.supabaseAnonKey && isSupabaseRequest(input, scope.supabaseUrl)) {
+      headers.set("apikey", scope.supabaseAnonKey);
+    }
+    return fetchSync(input, { ...init, headers });
+  };
+}
+
+function isSupabaseRequest(input: RequestInfo | URL, supabaseUrl?: string): boolean {
+  if (!supabaseUrl) {
+    return false;
+  }
+
+  const raw =
+    input instanceof URL
+      ? input.toString()
+      : typeof input === "string"
+        ? input
+        : input.url;
+  try {
+    return new URL(raw).origin === new URL(supabaseUrl).origin;
+  } catch {
+    return false;
+  }
+}
+
 function emitTodoRuntimeUpdated(): void {
   if (typeof window !== "undefined") {
     window.dispatchEvent(new Event(TODO_RUNTIME_EVENT));
   }
 }
 
-function TodoWebRuntimeBridge({ children }: PropsWithChildren) {
+function hasTodoNonceLease(snapshot: TodoCryptoRuntimeSnapshot): boolean {
+  return typeof snapshot.encryptionDeviceId === "string" &&
+    /^(0|[1-9]\d*)$/.test(snapshot.encryptionDeviceId) &&
+    typeof snapshot.nextCounter === "number" &&
+    Number.isSafeInteger(snapshot.nextCounter) &&
+    typeof snapshot.leaseEnd === "number" &&
+    Number.isSafeInteger(snapshot.leaseEnd) &&
+    snapshot.nextCounter <= snapshot.leaseEnd;
+}
+
+async function requestTodoNonceLease(input: {
+  supabaseUrl: string;
+  fetchSync: (input: RequestInfo | URL, init?: RequestInit) => Promise<Response>;
+  accountId: string;
+  keyId: number;
+  count?: number;
+}): Promise<Pick<TodoCryptoRuntimeSnapshot, "encryptionDeviceId" | "nextCounter" | "leaseEnd">> {
+  const response = await input.fetchSync(`${input.supabaseUrl}/rest/v1/rpc/fn_grant_nonce_lease`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json"
+    },
+    body: JSON.stringify({
+      p_account_id: input.accountId,
+      p_key_id: input.keyId,
+      p_count: input.count ?? 128
+    })
+  });
+
+  if (!response.ok) {
+    throw new Error(`todo_nonce_lease_failed:${response.status}`);
+  }
+
+  const payload = await response.json() as unknown;
+  const row = Array.isArray(payload) ? payload[0] : payload;
+  if (!isObject(row)) {
+    throw new Error("todo_nonce_lease_invalid");
+  }
+  const encryptionDeviceId = readNumericText(row, ["encryption_device_id"]);
+  const nextCounter = readNonNegativeInt(row, ["lease_start"]);
+  const leaseEnd = readNonNegativeInt(row, ["lease_end"]);
+  if (!encryptionDeviceId || nextCounter === null || leaseEnd === null) {
+    throw new Error("todo_nonce_lease_invalid");
+  }
+
+  return {
+    encryptionDeviceId,
+    nextCounter,
+    leaseEnd
+  };
+}
+
+function TodoWebRuntimeBridge({
+  children,
+  supabaseAnonKey,
+  supabaseUrl
+}: PropsWithChildren<{ supabaseAnonKey?: string; supabaseUrl?: string }>) {
   const { state, session, deviceId, syncVersion } = useWebAuthSession();
   const deviceBoundFetch = useDeviceBoundFetch();
 
@@ -220,13 +352,17 @@ function TodoWebRuntimeBridge({ children }: PropsWithChildren) {
   }, [deviceId, session?.access_token, syncVersion]);
 
   useEffect(() => {
+    let active = true;
     const runtime = globalThis as unknown as {
       __XAI_WEB_TODO_SESSION__?: TodoSessionRuntimeSnapshot;
       __XAI_WEB_TODO_CRYPTO__?: TodoCryptoRuntimeSnapshot;
     };
 
     const accountId = typeof session?.user?.id === "string" ? session.user.id : undefined;
-    const fetchSync = deviceBoundFetch ?? sessionFetch ?? undefined;
+    const baseFetchSync = deviceBoundFetch ?? sessionFetch ?? undefined;
+    const fetchSync = baseFetchSync
+      ? createTodoScopedFetch(baseFetchSync, { accountId, supabaseAnonKey, supabaseUrl })
+      : undefined;
 
     runtime.__XAI_WEB_TODO_SESSION__ = {
       authState: state,
@@ -238,12 +374,34 @@ function TodoWebRuntimeBridge({ children }: PropsWithChildren) {
     const cryptoSnapshot = readTodoCryptoRuntimeSnapshot(session, deviceId);
     if (cryptoSnapshot) {
       runtime.__XAI_WEB_TODO_CRYPTO__ = cryptoSnapshot;
+      if (!hasTodoNonceLease(cryptoSnapshot) && supabaseUrl && accountId && fetchSync) {
+        void requestTodoNonceLease({
+          supabaseUrl,
+          fetchSync,
+          accountId,
+          keyId: cryptoSnapshot.keyId
+        })
+          .then((lease) => {
+            if (!active) {
+              return;
+            }
+            runtime.__XAI_WEB_TODO_CRYPTO__ = {
+              ...cryptoSnapshot,
+              ...lease
+            };
+            emitTodoRuntimeUpdated();
+          })
+          .catch(() => undefined);
+      }
     } else {
       delete runtime.__XAI_WEB_TODO_CRYPTO__;
     }
 
     emitTodoRuntimeUpdated();
-  }, [deviceBoundFetch, deviceId, session, sessionFetch, state]);
+    return () => {
+      active = false;
+    };
+  }, [deviceBoundFetch, deviceId, session, sessionFetch, state, supabaseAnonKey, supabaseUrl]);
 
   return children;
 }
@@ -288,10 +446,14 @@ export function AppProviders({ children }: PropsWithChildren) {
     <WebAuthSessionProvider client={mockClient as never} config={authMode === "live" ? config : null}>
       {transport ? (
         <DeviceSessionBridge transport={transport}>
-          <TodoWebRuntimeBridge>{children}</TodoWebRuntimeBridge>
+          <TodoWebRuntimeBridge supabaseAnonKey={config?.anonKey} supabaseUrl={config?.url}>
+            {children}
+          </TodoWebRuntimeBridge>
         </DeviceSessionBridge>
       ) : (
-        <TodoWebRuntimeBridge>{children}</TodoWebRuntimeBridge>
+        <TodoWebRuntimeBridge supabaseAnonKey={config?.anonKey} supabaseUrl={config?.url}>
+          {children}
+        </TodoWebRuntimeBridge>
       )}
     </WebAuthSessionProvider>
   );

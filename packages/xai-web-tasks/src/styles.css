@@ -230,3 +230,124 @@
   .task-columns { grid-template-columns: 1fr; padding: 0 12px 12px; }
   .module-sidebar { display: none; }
 }
+
+/* ============================================================
+   TaskComposer dialog (api.md §E.4)
+   Appended for xai-web-tasks-card-create extension.
+   ============================================================ */
+
+/* Backdrop */
+.task-composer::backdrop {
+  background: rgba(0, 0, 0, 0.45);
+}
+
+.task-composer {
+  width: 420px;
+  max-width: 92vw;
+  border: 1px solid var(--border-1);
+  border-radius: var(--r-lg);
+  background: var(--bg-panel);
+  padding: 0;
+  box-shadow: var(--shadow-2, 0 8px 32px rgba(0,0,0,0.18));
+  color: var(--text-1);
+}
+
+.task-composer__content {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  padding: 20px 20px 16px;
+}
+
+.task-composer__title {
+  margin: 0;
+  font-size: var(--fs-lg);
+  font-weight: 700;
+}
+
+.task-composer__field {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.task-composer__field--inline {
+  flex-direction: row;
+  align-items: center;
+  gap: 8px;
+}
+
+.task-composer__label {
+  font-size: var(--fs-sm);
+  font-weight: 600;
+  color: var(--text-2);
+}
+
+.task-composer__input {
+  padding: 7px 10px;
+  border: 1px solid var(--border-1);
+  border-radius: var(--r-sm);
+  background: var(--bg-input, var(--bg-app));
+  font-size: var(--fs-md);
+  color: var(--text-1);
+  outline: none;
+  transition: border-color var(--dur-fast) var(--ease-out);
+}
+.task-composer__input:focus {
+  border-color: var(--accent);
+}
+.task-composer__input--error {
+  border-color: var(--danger, #e53e3e);
+}
+
+.task-composer__error {
+  font-size: var(--fs-xs);
+  color: var(--danger, #e53e3e);
+}
+
+/* Radio groups (tag + bucket pickers) */
+.task-composer__radio-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.task-composer__btn {
+  padding: 4px 12px;
+  font-size: var(--fs-xs);
+  font-weight: 600;
+  border: 1px solid var(--border-1);
+  border-radius: var(--r-sm);
+  background: transparent;
+  color: var(--text-2);
+  cursor: pointer;
+  transition: border-color var(--dur-fast) var(--ease-out),
+              background var(--dur-fast) var(--ease-out),
+              color var(--dur-fast) var(--ease-out);
+}
+.task-composer__btn:hover {
+  border-color: var(--border-strong);
+  color: var(--text-1);
+}
+.task-composer__btn--selected,
+.task-composer__btn[aria-checked="true"] {
+  border-color: var(--accent);
+  background: var(--accent-soft);
+  color: var(--accent-ink);
+}
+.task-composer__btn--primary {
+  background: var(--accent);
+  color: var(--accent-contrast, #fff);
+  border-color: var(--accent);
+}
+.task-composer__btn--primary:hover {
+  opacity: 0.88;
+}
+
+.task-composer__actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+  padding-top: 4px;
+  border-top: 1px solid var(--border-1);
+}

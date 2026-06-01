@@ -3,23 +3,30 @@
  *
  * Sections (design.md §1 frozen assumption 2):
  *   1. Smart Lists (智能清单)   — all/today/tomorrow/next7/inbox/summary
- *   2. Custom Lists (自定义清单) — decorative placeholder rows
+ *   2. Custom Lists (自定义清单) — decorative placeholder rows (INERT — Q1 defer)
  *   3. Filters (筛选器)          — decorative hint block
- *   4. Tags (标签)               — decorative tag rows
+ *   4. Tags (标签)               — decorative tag rows (INERT — Q1 defer)
  *   5. Calendar Subscription (订阅日历) — decorative
  *   6. Completed (已完成)        — sidebar footer
  *   7. Won't Do (不做了)         — sidebar footer
  *   8. Trash (回收站)            — sidebar footer
  *
- * API contract: packages/xai-web-tasks/docs/api.md §9
- * Design: packages/xai-web-tasks/docs/design.md §4
+ * FP1 change (smartlist-filter): `activeList` + `onSelectList` are now PROPS
+ * (controlled component). The local useState has been removed. Custom-list and
+ * tag rows are INERT (non-selecting) — they highlight nothing and do not drive
+ * the board filter (Q1 defer — no list/tag membership model exists on TaskCard).
+ *
+ * API contract: packages/xai-web-tasks/docs/api.md §9 + §F.3
+ * Design: packages/xai-web-tasks/docs/design.md §4 + §F.3
  */
 
-import React, { useState } from "react";
+import React from "react";
 import type { Lang } from "@repo/plugin-web-tokens";
 import { useI18n } from "@repo/plugin-web-tokens";
+import type { SmartListId } from "./types.js";
 
 // Decorative custom lists matching prototype MOCK.customLists
+// INERT in v1 — no membership model on TaskCard; Q1 deferred.
 const CUSTOM_LISTS = [
   { id: "research", en: "Research Papers",  zh: "科研论文",  color: "var(--tag-study)" },
   { id: "personal", en: "Personal Life",    zh: "个人生活",  color: "var(--tag-personal)" },
@@ -28,6 +35,7 @@ const CUSTOM_LISTS = [
 ];
 
 // Decorative tags matching prototype MOCK.tags
+// INERT in v1 — no tag membership model; Q1 deferred.
 const TAGS = [
   { id: "1", en: "1.Study",     zh: "1.学习",  cls: "study",    count: 5 },
   { id: "2", en: "2.Work",      zh: "2.工作",  cls: "work",     count: 1 },
@@ -35,8 +43,6 @@ const TAGS = [
   { id: "4", en: "4.TO-DO",     zh: "4.待办",  cls: "todo",     count: 1 },
   { id: "5", en: "5.OtherTask", zh: "5.其他",  cls: "other",    count: 1 },
 ];
-
-type SmartListId = "all" | "today" | "tomorrow" | "next7" | "inbox" | "summary";
 
 const SMART_LISTS: Array<{ id: SmartListId; key: string; icon: string; count?: number }> = [
   { id: "all",     key: "tasks.all",          icon: "all",     count: undefined },
@@ -49,11 +55,14 @@ const SMART_LISTS: Array<{ id: SmartListId; key: string; icon: string; count?: n
 
 export interface TasksSidebarProps {
   lang: Lang;
+  /** Active smart-list id — controlled by TasksModule (lifted state). */
+  activeList: SmartListId;
+  /** Called when the user clicks a smart-list row. */
+  onSelectList: (id: SmartListId) => void;
 }
 
-export function TasksSidebar({ lang }: TasksSidebarProps) {
+export function TasksSidebar({ lang, activeList, onSelectList }: TasksSidebarProps) {
   const { s } = useI18n(lang);
-  const [activeList, setActiveList] = useState<string>("all");
 
   return (
     <nav className="module-sidebar" aria-label={s("tasks.all")}>
@@ -64,10 +73,10 @@ export function TasksSidebar({ lang }: TasksSidebarProps) {
             key={item.id}
             className="list-row"
             data-active={activeList === item.id}
-            onClick={() => setActiveList(item.id)}
+            onClick={() => onSelectList(item.id)}
             role="button"
             tabIndex={0}
-            onKeyDown={(e) => { if (e.key === "Enter") setActiveList(item.id); }}
+            onKeyDown={(e) => { if (e.key === "Enter") onSelectList(item.id); }}
           >
             {/* icon placeholder — inline SVG slot */}
             <SmartListIcon id={item.id} />
@@ -77,18 +86,19 @@ export function TasksSidebar({ lang }: TasksSidebarProps) {
         ))}
       </div>
 
-      {/* 2 — Custom Lists (自定义清单) */}
+      {/* 2 — Custom Lists (自定义清单) — INERT (Q1 defer) */}
       <div className="sec-label">{s("common.lists")}</div>
       <div className="sidebar-section">
         {CUSTOM_LISTS.map((cl) => (
           <div
             key={cl.id}
             className="list-row"
-            data-active={activeList === cl.id}
-            onClick={() => setActiveList(cl.id)}
-            role="button"
-            tabIndex={0}
-            onKeyDown={(e) => { if (e.key === "Enter") setActiveList(cl.id); }}
+            // INERT: no onClick, no data-active, no keyboard handler.
+            // Custom-list rows are decorative fixtures; no membership model exists on TaskCard.
+            // Making them non-selecting prevents a half-wired "click → board unchanged" bug.
+            // Pre-scoped as a future increment ("tasks-list-membership"). See Q1 + design §F.1 #7.
+            tabIndex={-1}
+            aria-hidden="true"
           >
             <span className="dot" style={{ color: cl.color }} />
             <span className="grow">{lang === "zh" ? cl.zh : cl.en}</span>
@@ -104,11 +114,17 @@ export function TasksSidebar({ lang }: TasksSidebarProps) {
           : "Display tasks filtered by list, date, priority, tag, and more."}
       </div>
 
-      {/* 4 — Tags (标签) */}
+      {/* 4 — Tags (标签) — INERT (Q1 defer) */}
       <div className="sec-label">{s("common.tags")}</div>
       <div className="sidebar-section">
         {TAGS.map((tag) => (
-          <div key={tag.id} className="list-row">
+          <div
+            key={tag.id}
+            className="list-row"
+            // INERT: tag rows are decorative; no tag membership model on TaskCard.
+            tabIndex={-1}
+            aria-hidden="true"
+          >
             <span className={"dot tag " + tag.cls} />
             <span className="grow">{lang === "zh" ? tag.zh : tag.en}</span>
             <span className="count">{tag.count}</span>

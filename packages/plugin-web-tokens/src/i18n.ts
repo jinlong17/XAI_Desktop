@@ -148,7 +148,7 @@ export const I18N = {
       reset_confirm: "Reset Appearance settings to defaults? Language is not affected.",
     },
     tag: { study: "Study", work: "Work", personal: "Personal", todo: "TO-DO", other: "OtherTask" },
-    avatar: { settings: "Settings", statistics: "Statistics", sign_out: "Sign Out", premium: "Premium" },
+    avatar: { settings: "Settings", statistics: "Statistics", sign_out: "Sign Out", premium: "Premium", sign_out_confirm_title: "Sign out?", sign_out_confirm_body: "You'll be signed out of this browser. Any unsaved local data will remain." },
     board: {
       title: "Boards",
       my_board: "My Project Board",
@@ -424,7 +424,7 @@ export const I18N = {
       reset_confirm: "确定恢复外观设置为默认值？语言不会被影响。",
     },
     tag: { study: "学习", work: "工作", personal: "个人", todo: "待办", other: "其他" },
-    avatar: { settings: "设置", statistics: "统计", sign_out: "退出登录", premium: "会员" },
+    avatar: { settings: "设置", statistics: "统计", sign_out: "退出登录", premium: "会员", sign_out_confirm_title: "退出登录？", sign_out_confirm_body: "你将从此浏览器退出登录。本地未保存的数据会保留。" },
     board: {
       title: "项目板",
       my_board: "我的项目板",

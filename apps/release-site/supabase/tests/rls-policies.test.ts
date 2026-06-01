@@ -8,7 +8,7 @@ import { assertUserFilter, canMutateDirectly, canSelect } from '../../../../pack
 
 const testDir = path.dirname(fileURLToPath(import.meta.url));
 const repoRoot = path.resolve(testDir, '../../../..');
-const migrationsDir = path.join(repoRoot, 'apps/web/supabase/migrations');
+const migrationsDir = path.join(repoRoot, 'apps/release-site/supabase/migrations');
 
 describe('[smoke] sync-v1 RLS policy mock', () => {
   it('allows an active device to read only its account blobs and own DEK wrap', () => {
@@ -61,7 +61,7 @@ describe('[smoke] sync-v1 RLS policy mock', () => {
 describe.skipIf(!process.env.SUPABASE_INTEGRATION_TESTS)('[integration] sync-v1 RLS policies', () => {
   const testDir = path.dirname(fileURLToPath(import.meta.url));
   const repoRoot = path.resolve(testDir, '../../../..');
-  const migrationsDir = path.join(repoRoot, 'apps/web/supabase/migrations');
+  const migrationsDir = path.join(repoRoot, 'apps/release-site/supabase/migrations');
   const containerName = `xai-sync-rls-${process.pid}`;
 
   const accountA = '11111111-1111-4111-8111-111111111111';

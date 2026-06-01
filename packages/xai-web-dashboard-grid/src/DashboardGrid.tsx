@@ -29,6 +29,12 @@ export interface DashboardGridProps {
   now: Date;
   /** Optional deep-link callback. */
   goTo: (moduleId: string) => void;
+  /**
+   * Optional remove callback — forwarded to each WidgetShell as onRemove.
+   * When provided, each shell renders a remove button.
+   * Owned by DashboardModule (uses rawSetOrder directly to bypass sanitize).
+   */
+  onRemove?: (id: string) => void;
 }
 
 /**
@@ -56,7 +62,7 @@ function useRegistryMap(widgets: WidgetRegistration[]): Map<string, WidgetRegist
   }, [widgets]);
 }
 
-export function DashboardGrid({ widgets, lang, now, goTo }: DashboardGridProps) {
+export function DashboardGrid({ widgets, lang, now, goTo, onRemove }: DashboardGridProps) {
   const registryMap = useRegistryMap(widgets);
 
   // Deduped widgets in their original registration order (used by sanitizeOrder).
@@ -92,6 +98,7 @@ export function DashboardGrid({ widgets, lang, now, goTo }: DashboardGridProps) 
                 itemRefs.current[rid] = el;
               }}
               onPointerDown={startDrag}
+              onRemove={onRemove}
             >
               {reg.render(ctx)}
             </WidgetShell>

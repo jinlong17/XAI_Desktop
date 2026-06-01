@@ -23,10 +23,16 @@ interface CalendarToolbarProps {
   onPrevMonth: () => void;
   onNextMonth: () => void;
   onResetToday: () => void;
+  /**
+   * Optional click handler for the `+` button. Added by the 2026-05-27
+   * event-create extension (ADR-0010 §D4 carve-out). When absent, the
+   * button renders as a no-op (preserves SHIPPED-baseline behavior).
+   */
+  onAdd?: () => void;
 }
 
 export function CalendarToolbar(props: CalendarToolbarProps): JSX.Element {
-  const { lang, t, view, onViewChange, displayedMonth, onPrevMonth, onNextMonth, onResetToday } =
+  const { lang, t, view, onViewChange, displayedMonth, onPrevMonth, onNextMonth, onResetToday, onAdd } =
     props;
   const title = formatMonthTitle(displayedMonth.year, displayedMonth.month, lang, t);
   return (
@@ -36,7 +42,13 @@ export function CalendarToolbar(props: CalendarToolbarProps): JSX.Element {
       </button>
       <h1 className="module-title">{title}</h1>
       <span className="grow"></span>
-      <button type="button" className="icon-btn" data-testid="cal-add">
+      <button
+        type="button"
+        className="icon-btn"
+        data-testid="cal-add"
+        onClick={onAdd}
+        aria-label="Add event"
+      >
         <CalIcon name="plus" size={16} />
       </button>
       <div className="seg" role="tablist" aria-label="calendar-view-switcher">

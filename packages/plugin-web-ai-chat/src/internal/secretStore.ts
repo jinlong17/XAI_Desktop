@@ -16,6 +16,7 @@
  */
 
 import { createIndexedDbStore, createDeviceIdentityStore } from "@repo/web-auth-device-session";
+import { classifyError, type LlmError } from "./llmErrors.js";
 
 // ---- Types -----------------------------------------------------------------
 
@@ -38,7 +39,7 @@ export interface AiKeyStorage {
   /** Removes the stored entry for the given provider. Idempotent. */
   clearKey(provider: AiProvider): Promise<void>;
   /** Issues a 1-token messages request to validate the stored key. Returns LlmError on failure. */
-  testConnection(provider: AiProvider): Promise<{ ok: true } | { ok: false; error: import("./llmErrors.js").LlmError }>;
+  testConnection(provider: AiProvider): Promise<{ ok: true } | { ok: false; error: LlmError }>;
 }
 
 // ---- IDB store -------------------------------------------------------------
@@ -237,10 +238,9 @@ export const aiKeyStorage: AiKeyStorage = {
   },
 
   async testConnection(provider) {
-    const { classifyError } = await import("./llmErrors.js");
     const plaintext = await aiKeyStorage.loadKey(provider);
     if (!plaintext) {
-      const err: import("./llmErrors.js").LlmError = {
+      const err: LlmError = {
         kind: "BadKey",
         status: 401,
         detail: "not-set",
@@ -254,7 +254,7 @@ export const aiKeyStorage: AiKeyStorage = {
           ? "https://api.anthropic.com/v1/messages"
           : null;
       if (!url) {
-        const err: import("./llmErrors.js").LlmError = {
+        const err: LlmError = {
           kind: "BadKey",
           status: 401,
           detail: "no-url-configured",

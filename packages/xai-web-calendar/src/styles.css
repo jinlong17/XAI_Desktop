@@ -398,3 +398,144 @@
 .cal-banner svg {
   color: var(--amber);
 }
+
+/* ============================================================================
+ * Event-create extension (2026-05-27 — HC8 lift) — additive styles only.
+ * Authority: docs/adr/0010-p1-desktop-resume-plan.md §D4 P0 carve-out.
+ * Design:    docs/design.md §16.8
+ * ========================================================================== */
+
+/* ---------- Event Composer dialog ----------------------------------------- */
+.event-composer {
+  padding: 0;
+  border: none;
+  border-radius: var(--r-md);
+  background: var(--bg-panel-2);
+  color: var(--text-1);
+  min-width: 360px;
+  max-width: 480px;
+  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.2);
+}
+.event-composer::backdrop {
+  background: rgba(0, 0, 0, 0.4);
+  backdrop-filter: blur(4px);
+}
+.event-composer__content { padding: 20px 24px; }
+.event-composer__title {
+  font-size: var(--fs-md, 16px);
+  font-weight: 600;
+  margin: 0 0 16px;
+}
+.event-composer__field {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin-bottom: 12px;
+}
+.event-composer__field-label {
+  font-size: var(--fs-xs, 12px);
+  color: var(--text-2);
+}
+.event-composer__input {
+  padding: 6px 10px;
+  border: 1px solid var(--border-1);
+  border-radius: var(--r-xs, 4px);
+  background: var(--bg-panel-1, var(--bg-panel-2));
+  color: var(--text-1);
+  font-size: var(--fs-sm, 14px);
+  font-family: inherit;
+}
+.event-composer__row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+.event-composer__color-row { display: flex; gap: 8px; }
+.event-composer__color-chip {
+  width: 32px;
+  height: 32px;
+  border-radius: 999px;
+  border: 2px solid transparent;
+  cursor: pointer;
+  padding: 0;
+}
+.event-composer__color-chip[data-selected="true"] {
+  border-color: var(--text-1);
+}
+.event-composer__color-chip.ev-mint   { background: oklch(58% 0.10 165); }
+.event-composer__color-chip.ev-amber  { background: oklch(65% 0.13 70);  }
+.event-composer__color-chip.ev-blue   { background: oklch(60% 0.12 245); }
+.event-composer__color-chip.ev-violet { background: oklch(60% 0.12 295); }
+.event-composer__color-chip.ev-rose   { background: oklch(60% 0.12 350); }
+.event-composer__recurrence-row { display: flex; gap: 12px; }
+.event-composer__actions {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 20px;
+  gap: 12px;
+}
+.event-composer__actions--right { display: flex; gap: 8px; }
+.event-composer__btn {
+  padding: 6px 14px;
+  border-radius: var(--r-xs, 4px);
+  font-size: var(--fs-sm, 14px);
+  border: 1px solid var(--border-1);
+  background: var(--bg-panel-2);
+  color: var(--text-1);
+  cursor: pointer;
+  font-family: inherit;
+}
+.event-composer__btn[data-selected="true"] {
+  background: var(--accent, oklch(60% 0.12 245));
+  color: white;
+  border-color: var(--accent, oklch(60% 0.12 245));
+}
+.event-composer__btn--primary {
+  background: var(--accent, oklch(60% 0.12 245));
+  color: white;
+  border-color: var(--accent, oklch(60% 0.12 245));
+}
+.event-composer__btn--danger {
+  background: transparent;
+  color: oklch(60% 0.18 25);
+  border-color: oklch(60% 0.18 25);
+}
+.event-composer__error {
+  font-size: var(--fs-xs, 12px);
+  color: oklch(60% 0.18 25);
+  margin-top: 4px;
+}
+
+/* ---------- New color (rose) — for Month chips + TimeGrid blocks ---------- */
+.cal-event.ev-rose         { background: oklch(94% 0.04 350); color: oklch(40% 0.10 350); border-left-color: oklch(60% 0.12 350); }
+.cal-event-block.ev-rose   { background: oklch(94% 0.04 350); color: oklch(40% 0.10 350); border-left-color: oklch(60% 0.12 350); }
+[data-theme="dark"] .cal-event.ev-rose         { background: oklch(28% 0.05 350); color: oklch(85% 0.08 350); }
+[data-theme="dark"] .cal-event-block.ev-rose   { background: oklch(28% 0.05 350); color: oklch(85% 0.08 350); }
+
+/* ---------- Sample-event badge (Q9-E) ------------------------------------ */
+.cal-sample-badge {
+  font-size: var(--fs-2xs, 10px);
+  color: var(--text-3, var(--text-2));
+  margin-left: 4px;
+  padding: 0 4px;
+  border-radius: var(--r-xs, 4px);
+  background: var(--bg-panel-2);
+}
+.cal-event[data-source="fixture"] { cursor: default; }
+.cal-event-block[data-source="fixture"] { cursor: default; }
+.cal-event[data-source="user"] { cursor: pointer; }
+.cal-event-block[data-source="user"] { cursor: pointer; }
+
+/* ---------- Empty-state hint (Q7-A) -------------------------------------- */
+.cal-empty-hint {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 48px 24px;
+  gap: 12px;
+  color: var(--text-2);
+  font-size: var(--fs-sm, 14px);
+  text-align: center;
+}

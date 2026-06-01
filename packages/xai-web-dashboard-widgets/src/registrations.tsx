@@ -74,13 +74,13 @@ export const dashboardWidgetRegistrations: WidgetRegistration[] = [
   {
     id: "mail",
     span: "w-mail",
-    ariaLabel: { en: "Inbox", zh: "收件箱" },
-    render: (ctx) => <MailWidget lang={ctx.lang} />,
+    ariaLabel: { en: "Notifications", zh: "通知" },
+    render: (ctx) => <MailWidget lang={ctx.lang} now={ctx.now} />,
   },
   {
     id: "upcoming",
     span: "w-upcoming",
     ariaLabel: { en: "Upcoming events", zh: "近期事件" },
-    render: (ctx) => <UpcomingWidget lang={ctx.lang} />,
+    render: (ctx) => <UpcomingWidget lang={ctx.lang} now={ctx.now} />,
   },
 ];

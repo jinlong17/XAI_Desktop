@@ -284,6 +284,47 @@ class TransitionSource implements WebCacheRuntimeTransitionSource {
 }
 
 describe("createIndexedDbSyncBlobRepo", () => {
+  it("rejects device-local records before persisting a remote mutation", async () => {
+    const dbName = makeDbName("reject-device-local");
+    await deleteDatabase(dbName);
+    let pushAttempts = 0;
+
+    const repo = createIndexedDbSyncBlobRepo<ContractRecord>({
+      namespace: "todos",
+      accountId: ACCOUNT_ID,
+      deviceId: DEVICE_ID,
+      syncStateDatabaseName: dbName,
+      fetchSync: createDeviceBoundFetchMock((url) => {
+        if (url.includes("/sync/push")) {
+          pushAttempts += 1;
+          return new Response(JSON.stringify({ accepted: true }), { status: 200 });
+        }
+        return new Response(JSON.stringify({ records: [], next_commit_seq: "0" }), {
+          status: 200,
+        });
+      }),
+      crypto: createMockCrypto(),
+      initiallyLocked: false,
+    });
+
+    await expect(
+      repo.put(
+        makeRecord("clip-local", {
+          entityType: "clipboard.item",
+          syncScope: "device-local",
+        }),
+      ),
+    ).rejects.toThrow(/only accepts account-sync/);
+
+    expect(pushAttempts).toBe(0);
+    await expect(
+      readStore<PendingMutationRow>(dbName, "pending_mutations"),
+    ).resolves.toEqual([]);
+    await expect(
+      readStore<EntityIndexRow>(dbName, "entity_index"),
+    ).resolves.toEqual([]);
+  });
+
   it("persists encrypted blobs and encrypted sort payloads while keeping plaintext out of durable rows", async () => {
     const dbName = makeDbName("cipher-text");
     await deleteDatabase(dbName);

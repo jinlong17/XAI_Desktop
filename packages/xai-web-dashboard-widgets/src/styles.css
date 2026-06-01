@@ -208,6 +208,12 @@
   justify-content: space-between;
   gap: 8px;
 }
+/* §F empty-state for stat widgets */
+.ws-empty {
+  font-size: 0.8rem;
+  color: var(--text-2, oklch(55% 0 0));
+  padding: 4px 0;
+}
 .ws-val {
   font-size: 32px;
   font-weight: 700;
@@ -336,6 +342,144 @@
   font-weight: 400;
 }
 
+/* ---------- Weather §G-A additions (additive; no .widget* redefinition — §S9) ---------- */
+.ww-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 4px;
+}
+.ww-edit-btn {
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 2px 4px;
+  color: var(--text-3);
+  border-radius: 4px;
+  display: flex;
+  align-items: center;
+  flex-shrink: 0;
+}
+.ww-edit-btn:hover {
+  color: var(--text-1);
+  background: var(--bg-2, rgba(0,0,0,0.05));
+}
+.ww-empty {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex: 1;
+  padding: 12px;
+  font-size: 12px;
+  color: var(--text-3);
+  text-align: center;
+}
+
+/* WeatherEditor dialog (§G-A; additive, no .widget* redefinition) */
+.weather-editor {
+  border: none;
+  border-radius: 12px;
+  padding: 0;
+  background: var(--bg-1, white);
+  box-shadow: 0 8px 32px rgba(0,0,0,0.18);
+  min-width: 280px;
+  max-width: 340px;
+  width: 90vw;
+}
+.weather-editor::backdrop {
+  background: rgba(0,0,0,0.35);
+}
+.weather-editor-panel {
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+.weather-editor-title {
+  margin: 0;
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--text-1);
+}
+.weather-editor-field {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+.weather-editor-field--half {
+  flex: 1;
+}
+.weather-editor-hilo-row {
+  display: flex;
+  gap: 10px;
+}
+.weather-editor-label {
+  font-size: 12px;
+  color: var(--text-2);
+  font-weight: 500;
+}
+.weather-editor-input {
+  border: 1px solid var(--border-1, #e0e0e0);
+  border-radius: 6px;
+  padding: 6px 10px;
+  font-size: 13px;
+  color: var(--text-1);
+  background: var(--bg-app, white);
+  outline: none;
+}
+.weather-editor-input:focus {
+  border-color: var(--accent, oklch(60% 0.15 250));
+}
+.weather-editor-error {
+  font-size: 11px;
+  color: var(--red, oklch(60% 0.18 25));
+}
+.weather-editor-conditions {
+  display: flex;
+  gap: 8px;
+}
+.weather-editor-cond-chip {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  padding: 8px 12px;
+  border: 1.5px solid var(--border-1, #e0e0e0);
+  border-radius: 8px;
+  background: var(--bg-app, white);
+  cursor: pointer;
+  font-size: 11px;
+  color: var(--text-2);
+  flex: 1;
+}
+.weather-editor-cond-chip.selected {
+  border-color: var(--accent, oklch(60% 0.15 250));
+  background: var(--accent-light, oklch(97% 0.03 250));
+  color: var(--text-1);
+  font-weight: 600;
+}
+.weather-editor-actions {
+  display: flex;
+  gap: 8px;
+  justify-content: flex-end;
+}
+.weather-editor-btn {
+  padding: 7px 16px;
+  border-radius: 7px;
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+  border: none;
+}
+.weather-editor-btn--cancel {
+  background: var(--bg-2, #f5f5f5);
+  color: var(--text-2);
+}
+.weather-editor-btn--save {
+  background: var(--accent, oklch(60% 0.15 250));
+  color: var(--bg-app, white);
+}
+
 /* ---------- Stickies ---------- */
 .w-stickies-body {
   display: flex;
@@ -458,6 +602,16 @@
 }
 .mc-dot-violet {
   background: oklch(70% 0.14 290);
+}
+/* §F RD4: rose colorPreset added for xai_calendar_events UserCalEvent */
+.mc-dot-rose {
+  background: oklch(70% 0.15 10);
+}
+/* §F empty-state hint classes */
+.upc-empty {
+  font-size: 0.8rem;
+  color: var(--text-2, oklch(55% 0 0));
+  padding: 8px 0;
 }
 .mc-foot {
   display: flex;
@@ -735,6 +889,43 @@
   flex-shrink: 0;
 }
 
+/* ---------- Mail §G-B additions (additive; reuse .mail-* base; no .widget* redefinition — §S9) ---------- */
+.notif-empty {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex: 1;
+  padding: 12px;
+  font-size: 12px;
+  color: var(--text-3);
+  text-align: center;
+}
+/* Source-type dot — a colored 6px circle before each notification row */
+.notif-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+.notif-dot--task-overdue {
+  background: var(--red, oklch(60% 0.18 25));
+}
+.notif-dot--calendar-today {
+  background: var(--mint, oklch(70% 0.12 160));
+}
+/* Accessible sr-only utility (if not already defined elsewhere) */
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
 /* ---------- Upcoming ---------- */
 .w-upcoming-body {
   display: flex;
@@ -788,4 +979,135 @@
 .upc-time {
   font-size: 10px;
   color: var(--text-3);
+}
+
+/* ---------- StickyComposer ---------- */
+.sticky-composer {
+  border: none;
+  border-radius: 12px;
+  padding: 0;
+  max-width: 360px;
+  width: 100%;
+  background: transparent;
+}
+.sticky-composer::backdrop {
+  background: rgba(0, 0, 0, 0.35);
+}
+.sticky-composer-panel {
+  background: var(--bg-panel, #fff);
+  border-radius: 12px;
+  border: 1px solid var(--border-1);
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  min-width: 300px;
+}
+.sticky-composer-title {
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--text-1);
+  margin: 0;
+}
+.sticky-composer-field {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+.sticky-composer-label {
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--text-2);
+}
+.sticky-composer-textarea {
+  resize: vertical;
+  border-radius: 8px;
+  border: 1px solid var(--border-1);
+  background: var(--bg-panel-2, var(--bg-panel));
+  color: var(--text-1);
+  font-size: 13px;
+  padding: 8px 10px;
+  font-family: inherit;
+  line-height: 1.5;
+}
+.sticky-composer-textarea:focus {
+  outline: 2px solid var(--accent, oklch(65% 0.18 250));
+  outline-offset: 1px;
+}
+.sticky-composer-error {
+  font-size: 11px;
+  color: var(--red, oklch(60% 0.18 25));
+}
+.sticky-composer-colors {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+.sticky-composer-chip {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  border: 2px solid transparent;
+  cursor: pointer;
+  padding: 0;
+  transition: border-color 0.15s;
+}
+.sticky-composer-chip.selected,
+.sticky-composer-chip[aria-checked="true"] {
+  border-color: var(--text-1);
+}
+.sticky-composer-chip:focus-visible {
+  outline: 2px solid var(--accent, oklch(65% 0.18 250));
+  outline-offset: 2px;
+}
+.sticky-composer-actions {
+  display: flex;
+  gap: 8px;
+  justify-content: flex-end;
+}
+.sticky-composer-btn {
+  padding: 6px 14px;
+  border-radius: 7px;
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+  border: 1px solid var(--border-1);
+}
+.sticky-composer-btn--cancel {
+  background: var(--bg-panel-2, transparent);
+  color: var(--text-2);
+}
+.sticky-composer-btn--save {
+  background: var(--accent, oklch(65% 0.18 250));
+  color: #fff;
+  border-color: transparent;
+}
+.sticky-composer-btn--save:hover {
+  opacity: 0.9;
+}
+
+/* ---------- User stickies (SP3 wire) ---------- */
+.sticky--sample {
+  opacity: 0.75;
+}
+.sticky-del {
+  position: absolute;
+  top: 4px;
+  right: 4px;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  border: none;
+  background: rgba(0,0,0,0.15);
+  color: var(--text-1);
+  font-size: 11px;
+  line-height: 1;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+}
+.sticky-del:hover {
+  background: rgba(0,0,0,0.3);
 }

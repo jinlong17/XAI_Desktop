@@ -13,12 +13,19 @@ export interface PushRecordRequest {
   proposedRevision: string;
   clientUpdatedAtMs: number;
   originatorDeviceId: string;
+  softDelete?: boolean;
+  hardDelete?: boolean;
   envelope: number[];
 }
 
 export interface PushBatchRequest {
   accountId: string;
   records: PushRecordRequest[];
+}
+
+export interface PushRequestContext {
+  accountId?: string;
+  deviceId?: string;
 }
 
 export interface PushRecordResult {
@@ -50,6 +57,7 @@ export interface StoredBlob {
   originatorDeviceId: string;
   mutationId: string;
   blobSize: number;
+  hardDeleted: boolean;
 }
 
 export interface ConflictShadowInput {
@@ -82,6 +90,69 @@ export async function processPushBatch(
     results.push(await db.transaction(() => processPushRecord(db, request.accountId, record)));
   }
   return { status: 207, results };
+}
+
+export function normalizePushBatchRequest(
+  input: unknown,
+  context: PushRequestContext = {},
+): PushBatchRequest {
+  const payload = asRecord(input, 'request');
+  const accountId = context.accountId ??
+    optionalString(payload.accountId) ??
+    optionalString(payload.account_id) ??
+    undefined;
+  if (!accountId) {
+    throw new Error('E3005: accountId is required');
+  }
+  if (!Array.isArray(payload.records)) {
+    throw new Error('E3005: records must be an array');
+  }
+
+  return {
+    accountId,
+    records: payload.records.map((record, index) =>
+      normalizePushRecord(record, context, index),
+    ),
+  };
+}
+
+function normalizePushRecord(
+  input: unknown,
+  context: PushRequestContext,
+  index: number,
+): PushRecordRequest {
+  const record = asRecord(input, `records[${index}]`);
+  const originatorDeviceId = optionalString(record.originatorDeviceId) ??
+    optionalString(record.originator_device_id) ??
+    context.deviceId;
+  if (!originatorDeviceId) {
+    throw new Error(`E3005: records[${index}].originatorDeviceId is required`);
+  }
+
+  const envelope =
+    Array.isArray(record.envelope)
+      ? normalizeByteArray(record.envelope, `records[${index}].envelope`)
+      : typeof record.blob === 'string'
+        ? decodeBase64Bytes(record.blob)
+        : Array.isArray(record.blob)
+          ? normalizeByteArray(record.blob, `records[${index}].blob`)
+          : undefined;
+  if (!envelope) {
+    throw new Error(`E3005: records[${index}].envelope is required`);
+  }
+
+  return {
+    entityType: requiredString(record.entityType ?? record.entity_type, `records[${index}].entityType`),
+    entityId: requiredString(record.entityId ?? record.entity_id, `records[${index}].entityId`),
+    mutationId: requiredString(record.mutationId ?? record.mutation_id, `records[${index}].mutationId`),
+    baseRevision: normalizeBaseRevision(record.baseRevision ?? record.base_revision, index),
+    proposedRevision: requiredString(record.proposedRevision ?? record.proposed_revision, `records[${index}].proposedRevision`),
+    clientUpdatedAtMs: requiredNumber(record.clientUpdatedAtMs ?? record.client_updated_at, `records[${index}].clientUpdatedAtMs`),
+    originatorDeviceId,
+    softDelete: Boolean(record.softDelete ?? record.soft_delete),
+    hardDelete: Boolean(record.hardDelete ?? record.hard_delete),
+    envelope,
+  };
 }
 
 async function processPushRecord(
@@ -171,6 +242,7 @@ function storedBlobFromRequest(
     originatorDeviceId: record.originatorDeviceId,
     mutationId: record.mutationId,
     blobSize: record.envelope.length,
+    hardDeleted: Boolean(record.hardDelete),
   };
 }
 
@@ -198,6 +270,61 @@ function parseBigIntString(value: string, field: string): bigint {
     throw new Error(`E3005: ${field} must be a non-negative BIGINT string`);
   }
   return BigInt(value);
+}
+
+function asRecord(input: unknown, field: string): Record<string, unknown> {
+  if (typeof input !== 'object' || input === null || Array.isArray(input)) {
+    throw new Error(`E3005: ${field} must be an object`);
+  }
+  return input as Record<string, unknown>;
+}
+
+function optionalString(input: unknown): string | undefined {
+  return typeof input === 'string' && input.length > 0 ? input : undefined;
+}
+
+function requiredString(input: unknown, field: string): string {
+  const value = optionalString(input);
+  if (!value) {
+    throw new Error(`E3005: ${field} is required`);
+  }
+  return value;
+}
+
+function requiredNumber(input: unknown, field: string): number {
+  if (typeof input !== 'number' || !Number.isFinite(input)) {
+    throw new Error(`E3005: ${field} must be a finite number`);
+  }
+  return input;
+}
+
+function normalizeBaseRevision(input: unknown, index: number): string | null {
+  if (input === null || input === undefined) {
+    return null;
+  }
+  return requiredString(input, `records[${index}].baseRevision`);
+}
+
+function normalizeByteArray(input: readonly unknown[], field: string): number[] {
+  const bytes: number[] = [];
+  for (let index = 0; index < input.length; index += 1) {
+    const value = input[index];
+    if (
+      typeof value !== 'number' ||
+      !Number.isInteger(value) ||
+      value < 0 ||
+      value > 255
+    ) {
+      throw new Error(`E3005: ${field}[${index}] must be a byte`);
+    }
+    bytes.push(value);
+  }
+  return bytes;
+}
+
+function decodeBase64Bytes(input: string): number[] {
+  const binary = globalThis.atob(input);
+  return Array.from(binary, (char) => char.charCodeAt(0));
 }
 
 function readU32Le(bytes: readonly number[], offset: number): number {

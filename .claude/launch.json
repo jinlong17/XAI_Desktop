@@ -1,0 +1,23 @@
+{
+  "version": "0.0.1",
+  "configurations": [
+    {
+      "name": "web-mock-auth",
+      "runtimeExecutable": "pnpm",
+      "runtimeArgs": ["--filter", "@repo/web", "dev:mock-auth"],
+      "port": 3000
+    },
+    {
+      "name": "admin-prototype",
+      "runtimeExecutable": "python3",
+      "runtimeArgs": ["-m", "http.server", "4178", "-d", "docs/prototypes/admin-dashboard"],
+      "port": 4178
+    },
+    {
+      "name": "dev-dashboard",
+      "runtimeExecutable": "node",
+      "runtimeArgs": ["scripts/dashboard/serve.mjs"],
+      "port": 4177
+    }
+  ]
+}

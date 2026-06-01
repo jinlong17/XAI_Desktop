@@ -60,12 +60,19 @@ describe("MeditationModule render", () => {
   });
 
   it("AC-PICK-6: 5 duration chips render", () => {
-    render(<MeditationModule lang="en" />);
-    expect(screen.getByText("5")).toBeInTheDocument();
-    expect(screen.getByText("10")).toBeInTheDocument();
-    expect(screen.getByText("15")).toBeInTheDocument();
-    expect(screen.getByText("25")).toBeInTheDocument();
-    expect(screen.getByText("45")).toBeInTheDocument();
+    // Scope queries to .dur-row to avoid collision with live ClockDisplay spans.
+    // ClockDisplay (no staticMode) emits bare <span>{hh}</span><span>{mm}</span><span>{ss}</span>
+    // from new Date(); when wall-clock digits equal a chip value (e.g. hh=15, mm=15, ss=15)
+    // getByText("15") would throw getMultipleElementsFoundError (time-bomb).
+    // within(.dur-row) restricts the query scope to the duration picker container only.
+    const { container } = render(<MeditationModule lang="en" />);
+    const durRow = container.querySelector(".dur-row") as HTMLElement;
+    expect(durRow).not.toBeNull();
+    expect(within(durRow).getByText("5")).toBeInTheDocument();
+    expect(within(durRow).getByText("10")).toBeInTheDocument();
+    expect(within(durRow).getByText("15")).toBeInTheDocument();
+    expect(within(durRow).getByText("25")).toBeInTheDocument();
+    expect(within(durRow).getByText("45")).toBeInTheDocument();
   });
 
   it("AC-I18N-6: duration unit suffix 'min' (EN) appears", () => {

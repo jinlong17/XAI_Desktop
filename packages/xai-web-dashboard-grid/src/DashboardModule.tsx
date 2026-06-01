@@ -13,6 +13,9 @@
  * typed; no `useState<any>` and no `defaultProps`.
  *
  * gap-closure row #5: Add Widget picker wired here (api.md §S14, design.md §E3).
+ * Audit Top-10 #9 (D-06): Widget remove wired here via removeWidgetFromOrder +
+ *   removedInSession set. The session set prevents useDashOrder's sanitize-on-mount
+ *   from re-adding removed ids within the same mount cycle.
  */
 import { useCallback, useEffect, useMemo, useState } from "react";
 
@@ -49,6 +52,17 @@ export function DashboardModule({ lang, widgets, goTo }: DashboardModuleProps) {
   // the user has a partial order stored, the picker shows the missing ones.
   const [rawOrder, rawSetOrder] = usePref("xai_dash_order");
 
+  // Session-remove set (Audit Top-10 #9, D-06):
+  // Tracks ids explicitly removed in this session. Used to filter the widgets
+  // prop passed to DashboardGrid so that useDashOrder's sanitize-on-mount (F1)
+  // does not re-append the removed id (sanitize appends any registered widget
+  // that's missing from persisted — by also removing it from the widgets catalog
+  // we pass to DashboardGrid, sanitize never sees it as "registered but missing").
+  // Cleared when the user re-adds the same id via the picker.
+  const [removedInSession, setRemovedInSession] = useState<ReadonlySet<string>>(
+    () => new Set<string>(),
+  );
+
   // addWidget helper: appends id to the raw persisted order if not already
   // present and if the id exists in the registered widgets catalog.
   const addWidgetToOrder = useCallback(
@@ -57,8 +71,33 @@ export function DashboardModule({ lang, widgets, goTo }: DashboardModuleProps) {
       if (!knownIds.has(id)) return;
       if (rawOrder.includes(id)) return;
       rawSetOrder([...rawOrder, id]);
+      // Clear from session-remove set so the widget re-appears in the grid.
+      setRemovedInSession((prev) => {
+        if (!prev.has(id)) return prev;
+        const next = new Set(prev);
+        next.delete(id);
+        return next;
+      });
     },
     [widgets, rawOrder, rawSetOrder],
+  );
+
+  // removeWidget helper (Audit Top-10 #9, D-06):
+  // 1. Writes the filtered array to rawOrder (persisted storage).
+  // 2. Adds the id to removedInSession so activeWidgets filters it from the
+  //    widgets prop passed to DashboardGrid — preventing sanitize from re-adding it.
+  const removeWidgetFromOrder = useCallback(
+    (id: string) => {
+      if (!rawOrder.includes(id)) return; // idempotent no-op
+      rawSetOrder(rawOrder.filter((x) => x !== id));
+      setRemovedInSession((prev) => {
+        if (prev.has(id)) return prev;
+        const next = new Set(prev);
+        next.add(id);
+        return next;
+      });
+    },
+    [rawOrder, rawSetOrder],
   );
 
   // Emit web:dashboard:add-widget-clicked on every Add-widget interaction;
@@ -102,13 +141,29 @@ export function DashboardModule({ lang, widgets, goTo }: DashboardModuleProps) {
   // eslint-disable-next-line react-hooks/exhaustive-deps
   const stableCurrentOrder = useMemo(() => rawOrder, [rawOrder.join(",")]);
 
+  // activeWidgets: exclude session-removed ids from the catalog passed to DashboardGrid.
+  // This prevents useDashOrder's sanitize-on-mount from re-appending removed ids.
+  const activeWidgets = useMemo(
+    () =>
+      removedInSession.size === 0
+        ? widgets
+        : widgets.filter((w) => !removedInSession.has(w.id)),
+    [widgets, removedInSession],
+  );
+
   return (
     <div className="module module-dashboard">
       <DashHeader lang={lang} now={now} onAddWidget={handleAddFromHeader} />
       {widgets.length === 0 ? (
         <EmptyState lang={lang} onAddWidget={handleAddFromEmpty} />
       ) : (
-        <DashboardGrid widgets={widgets} lang={lang} now={now} goTo={goToCb} />
+        <DashboardGrid
+          widgets={activeWidgets}
+          lang={lang}
+          now={now}
+          goTo={goToCb}
+          onRemove={removeWidgetFromOrder}
+        />
       )}
       <AddWidgetPicker
         open={pickerOpen}

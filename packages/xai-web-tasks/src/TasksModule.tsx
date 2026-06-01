@@ -8,15 +8,18 @@
  * API contract: packages/xai-web-tasks/docs/api.md §2.1
  */
 
-import React, { useMemo, useState } from "react";
-import type { TasksModuleProps, TaskCol, BucketId } from "./types.js";
+import React, { useMemo, useState, useCallback } from "react";
+import type { TasksModuleProps, TaskCol, BucketId, NewTaskDraft, SmartListId } from "./types.js";
 import { useI18n } from "@repo/plugin-web-tokens";
 import { usePref } from "@repo/plugin-web-storage";
 import { SEED_TASK_COLS } from "./internal/seed/tasksMock.js";
 import { isTaskColsArray } from "./internal/validate.js";
-import { moveCard, toggleComplete } from "./internal/tasksReducer.js";
+import { moveCard, toggleComplete, addCard } from "./internal/tasksReducer.js";
+import { filterCardsByList } from "./internal/filterCardsByList.js";
+import { STR_SMART_LIST_EMPTY } from "./internal/strings.js";
 import { TasksSidebar } from "./TasksSidebar.js";
 import { TaskColumn } from "./TaskColumn.js";
+import { TaskComposer } from "./TaskComposer.js";
 
 export type { TasksModuleProps };
 
@@ -37,12 +40,46 @@ export function TasksModule({ lang }: TasksModuleProps) {
     return SEED_TASK_COLS as TaskCol[];
   }, [rawCols]);
 
-  // ---- In-memory completion state (not persisted in v1) ----
-  const [completedIds, setCompletedIds] = useState<ReadonlySet<string>>(new Set());
+  // ---- Completion state — derived from persisted `done` field in taskCols (T-10 fix) ----
+  // Minimal-diff shape: keep completedIds as ReadonlySet<string> so TaskColumn/TaskCard/
+  // CompletedGroup signatures are unchanged. The set is rebuilt from taskCols on every render.
+  const completedIds = useMemo<ReadonlySet<string>>(() => {
+    const ids = new Set<string>();
+    for (const col of taskCols) {
+      for (const task of col.tasks) {
+        if (task.done === true) ids.add(task.id);
+      }
+    }
+    return ids;
+  }, [taskCols]);
 
-  function handleToggle(taskId: string) {
-    setCompletedIds((prev) => toggleComplete(prev, taskId));
-  }
+  const handleToggle = useCallback((taskId: string) => {
+    const next = toggleComplete(taskCols, taskId);
+    setRawCols(next as unknown as Parameters<typeof setRawCols>[0]);
+  }, [taskCols, setRawCols]);
+
+  // ---- Smart-list filter state (FP1 — lifted from TasksSidebar) ----
+  // Session-only (Q3): resets to "all" on reload — no registry key (design §F.1 #6).
+  const [activeList, setActiveList] = useState<SmartListId>("all");
+
+  // Filtered view — PURE read-only projection for rendering only.
+  // Mutation handlers (handleToggle, handleDrop, handleComposerSave) operate on the
+  // UNFILTERED taskCols so drag/create/complete always see the full board (design §F.1 #2).
+  const filteredCols = useMemo<TaskCol[]>(
+    () => filterCardsByList(taskCols, activeList),
+    [taskCols, activeList],
+  );
+
+  const filterActive = activeList !== "all" && activeList !== "summary";
+
+  // Board-level empty state: total visible tasks (across filtered columns) = 0.
+  // Only shown when a non-trivial filter is active (not all/summary).
+  // The per-column "drop here" hint is suppressed via filterActive prop on TaskColumn.
+  const filteredTotalTasks = filteredCols.reduce(
+    (sum, col) => sum + col.tasks.length + (col.completed?.length ?? 0),
+    0,
+  );
+  const showBoardEmpty = filterActive && filteredTotalTasks === 0;
 
   // ---- DnD transient state ----
   const [dragging, setDragging] = useState<{ taskId: string; fromColId: BucketId } | null>(null);
@@ -92,11 +129,34 @@ export function TasksModule({ lang }: TasksModuleProps) {
     setRawCols(next as unknown as Parameters<typeof setRawCols>[0]);
   }
 
+  // ---- Composer state (api.md §E.5) ----
+  const [composer, setComposer] = useState<{ open: boolean; bucket: BucketId }>({
+    open: false, bucket: "next7",
+  });
+
+  function handleAddCard(bucketId: BucketId) {
+    setComposer({ open: true, bucket: bucketId });
+  }
+
+  function handleComposerSave(draft: NewTaskDraft, targetBucket: BucketId) {
+    const next = addCard(taskCols, draft, targetBucket);
+    setRawCols(next as unknown as Parameters<typeof setRawCols>[0]); // SHIPPED boundary cast
+    setComposer((c) => ({ ...c, open: false }));
+  }
+
+  function handleComposerClose() {
+    setComposer((c) => ({ ...c, open: false }));
+  }
+
   const isDragging = dragging !== null;
 
   return (
     <div className="module module-tasks">
-      <TasksSidebar lang={lang} />
+      <TasksSidebar
+        lang={lang}
+        activeList={activeList}
+        onSelectList={setActiveList}
+      />
       <main className="tasks-main">
         <header className="module-head">
           <div className="row">
@@ -127,8 +187,16 @@ export function TasksModule({ lang }: TasksModuleProps) {
             </button>
           </div>
         </header>
+        {/* Board-level honest empty state (D-QT + design §F.1 #8).
+            Rendered when a filter is active and yields zero total cards.
+            Wording is bucket-framed per the D-QT binding directive (no "due today/tomorrow"). */}
+        {showBoardEmpty && (
+          <div className="tasks-board-empty" role="status">
+            {STR_SMART_LIST_EMPTY[activeList][lang]}
+          </div>
+        )}
         <div className="task-columns">
-          {taskCols.map((col) => (
+          {filteredCols.map((col) => (
             <TaskColumn
               key={col.id}
               col={col}
@@ -136,16 +204,26 @@ export function TasksModule({ lang }: TasksModuleProps) {
               draggingTaskId={dragging?.taskId ?? null}
               isDropTarget={overColId === col.id}
               completedIds={completedIds}
+              filterActive={filterActive}
               onToggle={handleToggle}
               onDragStart={handleDragStart}
               onDragEnd={handleDragEnd}
               onDragOver={handleDragOver}
               onDragLeave={handleDragLeave}
               onDrop={handleDrop}
+              onAddCard={handleAddCard}
             />
           ))}
         </div>
       </main>
+      {/* TaskComposer — rendered once at module root (api.md §E.5) */}
+      <TaskComposer
+        open={composer.open}
+        lang={lang}
+        defaultBucket={composer.bucket}
+        onSave={handleComposerSave}
+        onClose={handleComposerClose}
+      />
     </div>
   );
 }

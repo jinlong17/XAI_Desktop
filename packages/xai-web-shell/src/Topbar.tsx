@@ -9,6 +9,32 @@ import { useI18n } from "@repo/plugin-web-tokens";
 import { Icon } from "./icons.js";
 import type { TopbarProps } from "./types.js";
 
+/**
+ * persistAndSet — calls setter first (immediate UI update), then writes the
+ * value to localStorage so App.tsx lazy initializers can restore it on reload.
+ *
+ * Keys used: "xai_pref_lang" | "xai_pref_theme" | "xai_pref_density"
+ * These are NOT registered in plugin-web-storage's registry (by design —
+ * kept minimal to avoid adding a formal pref codec for three plain string enums).
+ * Raw localStorage.setItem/JSON.stringify is intentional (see dev_log fix-strategy).
+ *
+ * localStorage quota / disabled: silently skipped; in-memory state still works.
+ */
+function persistAndSet<T extends string>(
+  setter: (v: T) => void,
+  key: string,
+  value: T,
+): void {
+  setter(value);
+  try {
+    if (typeof localStorage !== "undefined") {
+      localStorage.setItem(key, JSON.stringify(value));
+    }
+  } catch {
+    // localStorage quota exceeded or access disabled — in-memory update still applied above.
+  }
+}
+
 export function Topbar({
   lang,
   setLang,
@@ -55,14 +81,14 @@ export function Topbar({
           <button
             type="button"
             aria-selected={lang === "en"}
-            onClick={() => setLang("en")}
+            onClick={() => persistAndSet(setLang, "xai_pref_lang", "en")}
           >
             EN
           </button>
           <button
             type="button"
             aria-selected={lang === "zh"}
-            onClick={() => setLang("zh")}
+            onClick={() => persistAndSet(setLang, "xai_pref_lang", "zh")}
           >
             中文
           </button>
@@ -72,7 +98,7 @@ export function Topbar({
           <button
             type="button"
             aria-selected={theme === "light"}
-            onClick={() => setTheme("light")}
+            onClick={() => persistAndSet(setTheme, "xai_pref_theme", "light")}
             title="Light"
           >
             <Icon name="sun" size={14} />
@@ -80,7 +106,7 @@ export function Topbar({
           <button
             type="button"
             aria-selected={theme === "dark"}
-            onClick={() => setTheme("dark")}
+            onClick={() => persistAndSet(setTheme, "xai_pref_theme", "dark")}
             title="Dark"
           >
             <Icon name="moon" size={14} />
@@ -88,7 +114,7 @@ export function Topbar({
           <button
             type="button"
             aria-selected={theme === "system"}
-            onClick={() => setTheme("system")}
+            onClick={() => persistAndSet(setTheme, "xai_pref_theme", "system")}
             title="System"
           >
             <Icon name="monitor" size={14} />
@@ -99,14 +125,14 @@ export function Topbar({
           <button
             type="button"
             aria-selected={density === "comfortable"}
-            onClick={() => setDensity("comfortable")}
+            onClick={() => persistAndSet(setDensity, "xai_pref_density", "comfortable")}
           >
             {s("settings.comfortable")}
           </button>
           <button
             type="button"
             aria-selected={density === "compact"}
-            onClick={() => setDensity("compact")}
+            onClick={() => persistAndSet(setDensity, "xai_pref_density", "compact")}
           >
             {s("settings.compact")}
           </button>

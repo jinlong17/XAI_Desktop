@@ -1,0 +1,18 @@
+#!/usr/bin/env bash
+# Chained post-commit for core.hooksPath=.githooks mode.
+#
+# IMPORTANT: setting core.hooksPath=.githooks makes git ignore .git/hooks,
+# which is where the cowork workflow dispatcher post-commit lives. This script
+# preserves it by delegating to scripts/cowork/git-post-commit so feature-
+# review/build/verify dispatch on dev_log Status changes keeps working.
+#
+# It intentionally does NOT regenerate the dashboard: at this repo's commit
+# cadence a per-commit refresh is noise. Dashboard refresh happens on
+# post-merge / post-checkout (the events that actually change branch state).
+cd "$(git rev-parse --show-toplevel)" 2>/dev/null || exit 0
+if [ -f scripts/cowork/lib_hook_helpers.sh ] && [ -f scripts/cowork/git-post-commit ]; then
+  # shellcheck disable=SC1091
+  source scripts/cowork/lib_hook_helpers.sh
+  bash scripts/cowork/git-post-commit "$@" || true
+fi
+exit 0

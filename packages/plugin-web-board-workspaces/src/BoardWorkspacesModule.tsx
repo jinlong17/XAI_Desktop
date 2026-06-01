@@ -20,11 +20,9 @@
  * now renders one of 6 views (Board / Table / Calendar / Dashboard /
  * Timeline / Map) based on the per-board active view id. The workspace
  * chip, switcher modal, creator modal, status-overview banner, side
- * panels (Inbox / Planner), and 4-button bottom switcher are preserved
- * when `activeView === "board"`. When `activeView !== "board"`, the
- * side-panel layout is bypassed so the alt view occupies the central
- * canvas full-width — the bottom switcher remains available so the user
- * can toggle Inbox / Planner / Switch-boards regardless of view.
+ * panels (Inbox / Planner), and 4-button bottom switcher are preserved.
+ * The bottom switcher controls panel visibility across every top view;
+ * the top view only determines what the Board panel renders.
  */
 
 import { Suspense, useCallback, useEffect, useState } from "react";
@@ -63,6 +61,8 @@ import { EMPTY_FILTER } from "@repo/plugin-web-board-views";
 
 import { BoardSwitcher } from "./BoardSwitcher.js";
 import { BoardCreator } from "./BoardCreator.js";
+import { BoardDeleteConfirmDialog } from "./BoardDeleteConfirmDialog.js";
+import { CardDetailDialog } from "./CardDetailDialog.js";
 import { StatusOverviewBanner } from "./StatusOverviewBanner.js";
 import { InboxPanel } from "./InboxPanel.js";
 import { PlannerPanel } from "./PlannerPanel.js";
@@ -177,6 +177,33 @@ export function BoardWorkspacesModule({ lang }: BoardWorkspacesModuleProps) {
   const [filterOpen, setFilterOpen] = useState(false);
   const [shareOpen, setShareOpen] = useState(false);
 
+  // ---- Card detail dialog state (Audit Top-10 #5 fix) --------------------
+  // Stores the { cardId, listId } pair to look up in `lists`.
+  // Accepts both (BoardCardData, listId) and (string, listId) call shapes
+  // without modifying any view prop signatures.
+  const [openCard, setOpenCard] = useState<{ cardId: string; listId: string } | null>(null);
+
+  const handleOpenCard = useCallback(
+    (cardOrId: BoardCardData | string, listId: string) => {
+      const cardId = typeof cardOrId === "string" ? cardOrId : cardOrId.id;
+      setOpenCard({ cardId, listId });
+    },
+    [],
+  );
+
+  // Resolve the full card object + list name for CardDetailDialog
+  const resolvedList = openCard
+    ? lists.find((l) => l.id === openCard.listId) ?? null
+    : null;
+  const resolvedCard = resolvedList
+    ? resolvedList.cards.find((c) => c.id === openCard!.cardId) ?? null
+    : null;
+  const resolvedListName = resolvedList
+    ? (resolvedList.key
+        ? resolvedList.key
+        : (resolvedList.customName?.[lang] ?? ""))
+    : "";
+
   // ---- Kanban-view composer state ---------------------------------------
   const [draftListIdx, setDraftListIdx] = useState<number | null>(null);
   const [composerText, setComposerText] = useState<string>("");
@@ -239,6 +266,28 @@ export function BoardWorkspacesModule({ lang }: BoardWorkspacesModuleProps) {
     },
     [boards, activeBoard.id, setRawBoards, setActiveBoardId],
   );
+
+  // ---- Delete confirmation state (Audit Option A §5 — B-12 + B-28) --------
+  // Host owns the pending-delete target so one BoardDeleteConfirmDialog instance
+  // serves both BoardSwitcher (board delete) and InboxPanel (card delete).
+  // Declared AFTER deleteBoard + setInbox to avoid "used before assigned" errors.
+  // Conditional-mount is MANDATORY — see dev_log "Top-10 #5 cycle-2 BLOCKED"
+  // for why unconditional mount breaks AC-W8-VIEWS-FIX-LD integration tests.
+  const [pendingDelete, setPendingDelete] = useState<{
+    type: "board" | "card";
+    id: string;
+    label: string;
+  } | null>(null);
+
+  const confirmPendingDelete = useCallback(() => {
+    if (!pendingDelete) return;
+    if (pendingDelete.type === "board") {
+      deleteBoard(pendingDelete.id);
+    } else {
+      setInbox((prev) => prev.filter((c) => c.id !== pendingDelete.id));
+    }
+    setPendingDelete(null);
+  }, [pendingDelete, deleteBoard, setInbox]);
 
   // ---- Kanban-view ops ---------------------------------------------------
   const addCard = useCallback(
@@ -387,80 +436,95 @@ export function BoardWorkspacesModule({ lang }: BoardWorkspacesModuleProps) {
       </header>
 
       <div className="board-canvas">
-        {activeView === "board" ? (
-          <>
-            {isPM && overviewOpen && panels.board && (
-              <StatusOverviewBanner
-                lists={lists}
-                lang={lang}
-                onClose={() => setOverviewOpen(false)}
-              />
-            )}
+        {isPM && activeView === "board" && overviewOpen && panels.board && (
+          <StatusOverviewBanner
+            lists={lists}
+            lang={lang}
+            onClose={() => setOverviewOpen(false)}
+          />
+        )}
 
-            <div className={panelsClass} data-testid="board-panels">
-              {panels.inbox && (
-                <InboxPanel cards={inboxCards} setCards={setInbox} lang={lang} />
+        <div className={panelsClass} data-testid="board-panels">
+          {panels.inbox && (
+            <InboxPanel
+              cards={inboxCards}
+              setCards={setInbox}
+              lang={lang}
+              onRequestRemove={(id) => {
+                const card = inboxCards.find((c) => c.id === id);
+                setPendingDelete({
+                  type: "card",
+                  id,
+                  label: card?.text[lang] ?? card?.text.en ?? id,
+                });
+              }}
+            />
+          )}
+          {panels.planner && (
+            <PlannerPanel
+              lists={filteredLists}
+              lang={lang}
+              onOpenCard={handleOpenCard}
+            />
+          )}
+          {panels.board && (
+            <div className="board-main-panel">
+              {activeView === "board" && (
+                <BoardView
+                  lists={filteredLists}
+                  lang={lang}
+                  draftListIdx={draftListIdx}
+                  setDraftListIdx={setDraftListIdx}
+                  composerText={composerText}
+                  setComposerText={setComposerText}
+                  showListComposer={showListComposer}
+                  setShowListComposer={setShowListComposer}
+                  newListName={newListName}
+                  setNewListName={setNewListName}
+                  addCard={addCard}
+                  addList={addList}
+                  setListColor={setListColor}
+                  moveCardToList={moveCardToList}
+                  listMenu={listMenu}
+                  setListMenu={setListMenu}
+                  onOpenCard={handleOpenCard}
+                />
               )}
-              {panels.planner && <PlannerPanel lists={filteredLists} lang={lang} />}
-              {panels.board && (
-                <div className="board-main-panel">
-                  <BoardView
-                    lists={filteredLists}
-                    lang={lang}
-                    draftListIdx={draftListIdx}
-                    setDraftListIdx={setDraftListIdx}
-                    composerText={composerText}
-                    setComposerText={setComposerText}
-                    showListComposer={showListComposer}
-                    setShowListComposer={setShowListComposer}
-                    newListName={newListName}
-                    setNewListName={setNewListName}
-                    addCard={addCard}
-                    addList={addList}
-                    setListColor={setListColor}
-                    moveCardToList={moveCardToList}
-                    listMenu={listMenu}
-                    setListMenu={setListMenu}
-                  />
-                </div>
+              {activeView === "table" && (
+                <TableView
+                  lists={filteredLists}
+                  lang={lang}
+                  updateCard={updateCard}
+                  onOpenCard={handleOpenCard}
+                />
+              )}
+              {activeView === "calendar" && (
+                <BoardCalendarView
+                  lists={filteredLists}
+                  lang={lang}
+                  updateCard={updateCard}
+                  onOpenCard={handleOpenCard}
+                />
+              )}
+              {activeView === "dashboard" && (
+                <BoardDashboardView lists={filteredLists} lang={lang} />
+              )}
+              {activeView === "timeline" && (
+                <TimelineView
+                  lists={filteredLists}
+                  lang={lang}
+                  updateCard={updateCard}
+                  onOpenCard={handleOpenCard}
+                />
+              )}
+              {activeView === "map" && (
+                <Suspense fallback={<div data-testid="map-suspense-fallback" aria-busy="true" />}>
+                  <MapView lists={filteredLists} lang={lang} onSelectCard={handleOpenCard} />
+                </Suspense>
               )}
             </div>
-          </>
-        ) : (
-          // Alternate views (Table / Calendar / Dashboard / Timeline / Map)
-          // get the full central canvas. Side panels (Inbox / Planner) are
-          // suspended in alt-view mode because their layout assumes the
-          // Kanban column grid. The bottom switcher still lets the user
-          // toggle Inbox / Planner — those will appear after switching back
-          // to the Board view.
-          <div
-            className="board-views-alt-canvas"
-            data-testid="board-views-alt-canvas"
-            data-active-view={activeView}
-          >
-            {activeView === "table" && (
-              <TableView lists={filteredLists} lang={lang} updateCard={updateCard} />
-            )}
-            {activeView === "calendar" && (
-              <BoardCalendarView
-                lists={filteredLists}
-                lang={lang}
-                updateCard={updateCard}
-              />
-            )}
-            {activeView === "dashboard" && (
-              <BoardDashboardView lists={filteredLists} lang={lang} />
-            )}
-            {activeView === "timeline" && (
-              <TimelineView lists={filteredLists} lang={lang} updateCard={updateCard} />
-            )}
-            {activeView === "map" && (
-              <Suspense fallback={<div data-testid="map-suspense-fallback" aria-busy="true" />}>
-                <MapView lists={filteredLists} lang={lang} />
-              </Suspense>
-            )}
-          </div>
-        )}
+          )}
+        </div>
       </div>
 
       <div className="board-view-switcher" data-testid="bottom-switcher">
@@ -513,7 +577,14 @@ export function BoardWorkspacesModule({ lang }: BoardWorkspacesModuleProps) {
             setCreateOpen(true);
             setSwitcherOpen(false);
           }}
-          onDelete={deleteBoard}
+          onRequestDelete={(id) => {
+            const board = boards.find((b) => b.id === id);
+            setPendingDelete({
+              type: "board",
+              id,
+              label: board?.name[lang] ?? id,
+            });
+          }}
           onClose={() => setSwitcherOpen(false)}
         />
       )}
@@ -532,6 +603,35 @@ export function BoardWorkspacesModule({ lang }: BoardWorkspacesModuleProps) {
           board={activeBoard}
           lang={lang}
           onClose={() => setShareOpen(false)}
+        />
+      )}
+
+      {/* Conditional mount: matches ShareModal sibling pattern (line 560) — prevents
+          jsdom's missing HTMLDialogElement.prototype.close from throwing on initial
+          mount when no card is open. See _web-noop-audit/20260527 + dev_log
+          BLOCKED entry for context. */}
+      {openCard && (
+        <CardDetailDialog
+          open={true}
+          card={resolvedCard}
+          listName={resolvedListName}
+          lang={lang}
+          onClose={() => setOpenCard(null)}
+        />
+      )}
+
+      {/* Conditional mount (MANDATORY) — B-12 + B-28 delete confirmation gate.
+          Only mounted when pendingDelete !== null. Same conditional-mount guard
+          as CardDetailDialog above. See dev_log Audit Option A §5 BLOCKED
+          history + risk R1 for why unconditional mount breaks integration tests. */}
+      {pendingDelete && (
+        <BoardDeleteConfirmDialog
+          open={true}
+          mode={pendingDelete.type}
+          targetLabel={pendingDelete.label}
+          lang={lang}
+          onConfirm={confirmPendingDelete}
+          onCancel={() => setPendingDelete(null)}
         />
       )}
     </div>

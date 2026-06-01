@@ -16,9 +16,14 @@
  * xai-web-cmdk P4: App is split into App (provider) + AppInner (consumer).
  * App wraps AppInner in <CommandPaletteProvider>; AppInner reads the context
  * via useCommandPalette() and passes onOpenSearch to <Shell>.
+ *
+ * Bugfix Tb-02/Tb-03/Tb-04: lang/theme/density now use lazy useState initializers
+ * that read xai_pref_lang / xai_pref_theme / xai_pref_density from localStorage,
+ * paired with Topbar.tsx's persistAndSet write path.
+ * See packages/xai-web-shell/docs/dev_log.md BUGFIX §Fix Strategy Path R1.
  */
 
-import { useState, useEffect, useMemo } from "react";
+import { useState, useEffect, useMemo, useCallback } from "react";
 import { Outlet, useNavigate } from "react-router";
 import {
   applyTheme,
@@ -52,16 +57,66 @@ import {
 } from "@repo/xai-web-cmdk";
 // Extension 2026-05-26 — Premium tier badge for Topbar (gap-closure row #8 F1)
 import { PremiumTierBadge } from "@repo/plugin-web-settings-rest";
+// Bugfix: Audit Top-10 #1 / Rail-10 — sign-out handler wired from auth session
+import { useWebAuthSession } from "@repo/web-auth-device-session";
+// AI tool layer — always-on write subscribers (P4 xai-web-ai-tool-layer).
+// Mounted as Shell-siblings (route-independent liveness per OQ2 resolution).
+// Per DesktopPet / CommandPalette precedent (ADR-0007 §S6 Option B).
+import { useTaskCreateRequestSubscriber } from "@repo/plugin-web-tasks";
+import { useCalendarCreateRequestSubscriber } from "@repo/plugin-web-calendar";
+// AI tool layer mutate subscribers (P2 xai-web-ai-tool-edit-delete).
+// Same Shell-sibling pattern; delete + update channels.
+import { useTaskMutateRequestSubscriber } from "@repo/plugin-web-tasks";
+import { useCalendarMutateRequestSubscriber } from "@repo/plugin-web-calendar";
+// DEV-only: seed AI provider config + key from gitignored .env.local into the
+// runtime stores (single local source of truth). Tree-shaken out of prod builds
+// (import.meta.env.DEV gate). Carve-out: 20260529-gemini-provider-enablement §6.
+import { useDevAiConfigSeed } from "./dev/seedAiConfigFromEnv.js";
+
+// ---- readLocalPref — safe localStorage reader for lazy useState initializers --
+//
+// Reads a JSON-encoded string value from localStorage with a typed fallback.
+// Used by the three appearance useState initializers below (lang/theme/density).
+// Keys: "xai_pref_lang" | "xai_pref_theme" | "xai_pref_density"
+// (raw localStorage — not in plugin-web-storage registry by design; see dev_log).
+//
+// Exported for unit tests in apps/web/src/__tests__/App.lazy-init.test.tsx.
+export function readLocalPref<T>(key: string, fallback: T): T {
+  if (typeof localStorage === "undefined") return fallback;
+  try {
+    const raw = localStorage.getItem(key);
+    if (raw === null) return fallback;
+    return JSON.parse(raw) as T;
+  } catch {
+    // JSON.parse failure (corrupt value) — use fallback silently.
+    return fallback;
+  }
+}
 
 // ---- AppInner — consumes CommandPaletteProvider context --------------------
 
 function AppInner() {
   const { open: openPalette } = useCommandPalette();
 
+  // ---- AI tool layer: always-on write subscribers (P4 xai-web-ai-tool-layer) --
+  // Zero-UI hooks — mounted here as Shell-siblings so they are live regardless of
+  // the active route (R4 mitigation: even when user is on /app/ai, the tasks and
+  // calendar modules may not be mounted, so writes would be lost without these).
+  // Precedent: DesktopPet (L191) + CommandPalette (L197) Shell-siblings.
+  useTaskCreateRequestSubscriber();
+  useCalendarCreateRequestSubscriber();
+  // P2 xai-web-ai-tool-edit-delete: mutate (delete + update) subscribers.
+  useTaskMutateRequestSubscriber();
+  useCalendarMutateRequestSubscriber();
+  // DEV-only: seed AI config + key from .env.local (no-op in production).
+  useDevAiConfigSeed();
+
   // ---- useState state pieces -----------------------------------------------
-  const [lang, setLang] = useState<Lang>("en");
-  const [theme, setTheme] = useState<Theme>("light");
-  const [density, setDensity] = useState<Density>("comfortable");
+  // lang/theme/density use lazy initializers to restore from localStorage on
+  // page load (written by Topbar.tsx persistAndSet — Bugfix Tb-02/Tb-03/Tb-04).
+  const [lang, setLang]       = useState<Lang>(()    => readLocalPref("xai_pref_lang", "en" as Lang));
+  const [theme, setTheme]     = useState<Theme>(()   => readLocalPref("xai_pref_theme", "light" as Theme));
+  const [density, setDensity] = useState<Density>(() => readLocalPref("xai_pref_density", "comfortable" as Density));
   const [fontScale, setFontScale] = useState<number>(1);
   const [petOn, setPetOn] = useState<boolean>(true);
 
@@ -116,6 +171,23 @@ function AppInner() {
     [featurePrefs],
   );
 
+  // Bugfix: Audit Top-10 #1 / Rail-10 — sign-out handler.
+  // Reads from WebAuthSessionProvider (already mounted in AppProviders via main.tsx).
+  // Steps: 1) best-effort Supabase backend sign-out  2) clear React session state
+  //        3) hard-redirect to "/" so AuthRouteGate takes over.
+  const { client, clearSessionStorage } = useWebAuthSession();
+  const handleSignOut = useCallback(async () => {
+    try {
+      if (client && typeof client.auth?.signOut === "function") {
+        await client.auth.signOut();
+      }
+    } catch {
+      // best-effort: network error should not block the state clear + redirect
+    }
+    await clearSessionStorage();
+    window.location.assign("/");
+  }, [client, clearSessionStorage]);
+
   return (
     <WebShellProvider
       modules={modules}
@@ -137,6 +209,7 @@ function AppInner() {
         setDensity={setDensity}
         onOpenSearch={() => openPalette({ source: "topbar-click" })}
         premiumBadge={<PremiumTierBadge lang={lang} />}
+        onSignOut={handleSignOut}
       >
         <Outlet />
       </Shell>

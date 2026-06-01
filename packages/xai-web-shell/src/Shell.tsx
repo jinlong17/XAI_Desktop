@@ -25,6 +25,7 @@ export function Shell({
   onOpenSearch,
   children,
   premiumBadge,
+  onSignOut,
 }: ShellProps) {
   const { railPos, petOn, setPetOn } = useWebShell();
   const navigate = useNavigate();
@@ -67,6 +68,7 @@ export function Shell({
         onPetToggle={onPetToggle}
         onAvatarOpenSettings={onAvatarOpenSettings}
         onAvatarOpenStatistics={onAvatarOpenStatistics}
+        onSignOut={onSignOut}
       />
       <Topbar
         lang={lang}

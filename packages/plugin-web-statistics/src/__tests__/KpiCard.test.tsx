@@ -64,4 +64,34 @@ describe("KpiCard", () => {
     );
     expect(screen.getByLabelText("KPI habits")).toBeInTheDocument();
   });
+
+  it("K5: subLabel renders only when passed (optional — 3 non-tasks cells omit it)", () => {
+    // Without subLabel — no kpi-sublabel element
+    const { rerender } = render(
+      <KpiCard
+        cellId="focus"
+        colorVar="var(--blue)"
+        icon="timer"
+        label="Focus"
+        value="3"
+        trend="—"
+      />,
+    );
+    expect(screen.queryByTestId("kpi-sublabel")).toBeNull();
+
+    // With subLabel (tasks KPI) — kpi-sublabel element is present
+    rerender(
+      <KpiCard
+        cellId="tasks"
+        colorVar="var(--accent)"
+        icon="check"
+        label="Tasks completed"
+        value={5}
+        trend="—"
+        subLabel="current board"
+      />,
+    );
+    expect(screen.getByTestId("kpi-sublabel")).toBeInTheDocument();
+    expect(screen.getByTestId("kpi-sublabel").textContent).toBe("current board");
+  });
 });

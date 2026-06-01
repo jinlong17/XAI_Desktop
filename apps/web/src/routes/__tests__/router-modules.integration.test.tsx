@@ -58,6 +58,21 @@ import { resolveModuleRouteMatch } from "../modules/buildModuleRoutes";
 
 const mockDeviceFetch = vi.fn(async () => new Response(JSON.stringify({ rows: [] }), { status: 200 }));
 
+// Mock the bare package path (used by App.tsx for useWebAuthSession)
+vi.mock("@repo/web-auth-device-session", () => ({
+  useWebAuthSession: () => ({
+    client: null,
+    clearSessionStorage: vi.fn().mockResolvedValue(undefined),
+    state: "authenticated",
+    session: null,
+    deviceId: null,
+    syncVersion: "2026-05",
+    refreshSession: vi.fn(),
+    ensureDeviceIdentity: vi.fn(),
+    setSession: vi.fn(),
+  }),
+}));
+
 vi.mock("@repo/web-auth-device-session/web", async () => {
   const actual = await vi.importActual<typeof import("@repo/web-auth-device-session/web")>(
     "@repo/web-auth-device-session/web"

@@ -328,6 +328,16 @@ function cloneSyncBlobError(error: Error): Error {
   return error;
 }
 
+function assertAccountSyncRecord(record: RepoRecord): void {
+  if (record.syncScope === "account-sync") {
+    return;
+  }
+  throw new SyncBlobError(
+    "E_SYNC_BLOB_PROTOCOL",
+    `sync-blob repo only accepts account-sync records; ${record.entityType}/${record.id} has syncScope ${record.syncScope}`,
+  );
+}
+
 function mergeSortPayload(
   payload: string | undefined,
 ): string | undefined {
@@ -1079,6 +1089,7 @@ export function createIndexedDbSyncBlobRepo<T extends RepoRecord>(
           );
         }
         assertRepoRecord(decrypted);
+        assertAccountSyncRecord(decrypted);
         const existingIndex = indexRows.get(recordKey);
         if (existingIndex) {
           existingIndex.syncScope = decrypted.syncScope;
@@ -1122,6 +1133,7 @@ export function createIndexedDbSyncBlobRepo<T extends RepoRecord>(
     record: T,
     stateView: Map<string, MirrorState> = mirrorState,
   ): Promise<PendingMutation<T>> {
+    assertAccountSyncRecord(record);
     const current = stateView.get(record.id);
     const proposedRevision = nextRevision(current?.revision ?? null);
     const keyId = options.crypto.getCurrentKeyId();
@@ -1166,6 +1178,7 @@ export function createIndexedDbSyncBlobRepo<T extends RepoRecord>(
     record: T,
     stateView: Map<string, MirrorState> = mirrorState,
   ): Promise<PendingMutation<T>> {
+    assertAccountSyncRecord(record);
     const current = stateView.get(record.id);
     const proposedRevision = nextRevision(current?.revision ?? null);
     const keyId = options.crypto.getCurrentKeyId();
@@ -1217,7 +1230,10 @@ export function createIndexedDbSyncBlobRepo<T extends RepoRecord>(
             "Content-Type": "application/json",
           }),
           body: JSON.stringify({
-            records: batch.map(toPushRecord),
+            accountId: options.accountId,
+            records: batch.map((mutation) =>
+              toPushRecord(mutation, options.deviceId),
+            ),
           }),
         },
       );
@@ -2067,12 +2083,14 @@ function normalizePullRecord(raw: unknown): {
 
 function toPushRecord<T extends RepoRecord>(
   mutation: PendingMutation<T>,
+  deviceId: string,
 ): {
   entity_type: string;
   entity_id: string;
   mutation_id: string;
   base_revision: string | null;
   proposed_revision: string;
+  originator_device_id: string;
   blob: string;
   client_updated_at: number;
   soft_delete: boolean;
@@ -2084,6 +2102,7 @@ function toPushRecord<T extends RepoRecord>(
     mutation_id: mutation.mutationId,
     base_revision: mutation.baseRevision,
     proposed_revision: mutation.proposedRevision,
+    originator_device_id: deviceId,
     blob: mutation.blobBase64,
     client_updated_at: mutation.clientUpdatedAt,
     soft_delete: mutation.softDelete,
