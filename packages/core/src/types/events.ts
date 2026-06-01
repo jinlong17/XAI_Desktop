@@ -6,7 +6,7 @@ import type { DesktopItem, GridBox, Rect } from './grid';
 export type WebModuleId =
   | 'tasks' | 'habits' | 'pomodoro' | 'calendar' | 'matrix'
   | 'countdown' | 'settings' | 'board' | 'dashboard' | 'meditation'
-  | 'statistics' | 'ai' | 'search';
+  | 'statistics' | 'timetrack' | 'ai' | 'search';
 
 /** Discriminated key for all user-configurable preferences. */
 export type WebPreferenceKey =

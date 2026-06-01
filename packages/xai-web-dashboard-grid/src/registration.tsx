@@ -30,6 +30,7 @@ const KNOWN_MODULE_IDS: ReadonlySet<WebModuleId> = new Set<WebModuleId>([
   "calendar",
   "matrix",
   "countdown",
+  "timetrack",
   "settings",
   "board",
   "dashboard",
@@ -39,7 +40,7 @@ const KNOWN_MODULE_IDS: ReadonlySet<WebModuleId> = new Set<WebModuleId>([
   "search",
 ]);
 
-// Row #11 (xai-web-dashboard-widgets) supplies the full 10-entry registrations
+// Row #11 (xai-web-dashboard-widgets) supplies the full widget registrations
 // array. EMPTY_WIDGETS is no longer used directly but kept as a typed const for
 // any future fallback path; current host always passes dashboardWidgetRegistrations.
 const EMPTY_WIDGETS: WidgetRegistration[] = [];
@@ -55,6 +56,10 @@ export function DashboardSlotHost() {
       moduleId: moduleId as WebModuleId,
       source: "mini-cal",
     });
+    if (typeof window !== "undefined") {
+      window.history.pushState(null, "", `/app/${moduleId}`);
+      window.dispatchEvent(new PopStateEvent("popstate"));
+    }
   }, []);
 
   return <DashboardModule lang={lang} widgets={dashboardWidgetRegistrations} goTo={goTo} />;

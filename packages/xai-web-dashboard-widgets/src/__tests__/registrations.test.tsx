@@ -6,8 +6,8 @@ import { describe, it, expect } from "vitest";
 import { dashboardWidgetRegistrations } from "../registrations.js";
 
 describe("AC-REG: dashboardWidgetRegistrations shape", () => {
-  it("AC-REG-1: length is 10", () => {
-    expect(dashboardWidgetRegistrations).toHaveLength(10);
+  it("AC-REG-1: length is 11", () => {
+    expect(dashboardWidgetRegistrations).toHaveLength(11);
   });
 
   it("AC-REG-2: ids match the prototype WIDGETS_CONFIG order", () => {
@@ -16,6 +16,7 @@ describe("AC-REG: dashboardWidgetRegistrations shape", () => {
       "stat-tasks",
       "stat-streak",
       "stat-pomos",
+      "timetrack",
       "weather",
       "mini-cal",
       "timezones",
@@ -31,6 +32,7 @@ describe("AC-REG: dashboardWidgetRegistrations shape", () => {
       "w-stat",
       "w-stat",
       "w-stat",
+      "w-timetrack",
       "w-weather",
       "w-mini-cal",
       "w-timezones",

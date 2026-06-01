@@ -3075,6 +3075,7 @@
 .pd-dot.on { background: var(--accent); }
 
 .w-weather { grid-column: span 6; }
+.w-timetrack { grid-column: span 4; min-height: 160px; }
 .ww-head { font-size: var(--fs-xs); color: var(--text-3); font-weight: 600; text-transform: uppercase; letter-spacing: .04em; }
 .ww-now {
   display: flex; align-items: center; gap: 18px;
@@ -3432,6 +3433,7 @@
   .w-clock { grid-column: span 12; }
   .w-stat { grid-column: span 4; }
   .w-weather { grid-column: span 12; }
+  .w-timetrack { grid-column: span 6; }
   .w-timezones { grid-column: span 6; }
   .w-stickies { grid-column: span 6; }
   .w-mail { grid-column: span 6; }
