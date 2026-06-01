@@ -8,6 +8,7 @@ Updated: 2026-06-01
 
 - Implemented parent-session Time Tracker from Claude Design source.
 - Added the design-alignment slice for date/history navigation, category CRUD, subcategories, active/record editing, category detail modal, and configurable Insights board.
+- Added richer Insights details: hover/focus metadata, range summary, category mosaic, 24-hour rhythm, and recent-session detail cards.
 
 ## Verification
 

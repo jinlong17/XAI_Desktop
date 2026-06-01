@@ -147,6 +147,70 @@
   cursor: not-allowed;
 }
 
+.tt-tip {
+  position: relative;
+}
+
+.tt-tip::after {
+  position: absolute;
+  z-index: 40;
+  right: 0;
+  bottom: calc(100% + 8px);
+  width: max-content;
+  max-width: min(280px, 72vw);
+  padding: 8px 10px;
+  border: 1px solid var(--border-1);
+  border-radius: 8px;
+  background: color-mix(in oklch, var(--bg-panel) 96%, black);
+  box-shadow: var(--shadow-2);
+  color: var(--text-1);
+  content: attr(data-tip);
+  font-size: 12px;
+  font-weight: 500;
+  line-height: 1.45;
+  opacity: 0;
+  pointer-events: none;
+  text-align: left;
+  transform: translateY(4px);
+  transition: opacity .12s ease, transform .12s ease;
+  visibility: hidden;
+  white-space: pre-line;
+}
+
+.tt-tip::before {
+  position: absolute;
+  z-index: 41;
+  right: 14px;
+  bottom: calc(100% + 3px);
+  width: 9px;
+  height: 9px;
+  border-right: 1px solid var(--border-1);
+  border-bottom: 1px solid var(--border-1);
+  background: color-mix(in oklch, var(--bg-panel) 96%, black);
+  content: "";
+  opacity: 0;
+  pointer-events: none;
+  transform: rotate(45deg) translateY(4px);
+  transition: opacity .12s ease, transform .12s ease;
+  visibility: hidden;
+}
+
+.tt-tip:hover::after,
+.tt-tip:hover::before,
+.tt-tip:focus-visible::after,
+.tt-tip:focus-visible::before {
+  opacity: 1;
+  transform: translateY(0);
+  visibility: visible;
+}
+
+.tt-tip.no-tip::after,
+.tt-tip.no-tip::before,
+.tt-tip:not([data-tip])::after,
+.tt-tip:not([data-tip])::before {
+  display: none;
+}
+
 .tt-layout {
   display: grid;
   grid-template-columns: minmax(0, 1fr) minmax(280px, 340px);
@@ -1093,11 +1157,13 @@
 }
 
 .tt-ins-card {
+  position: relative;
   display: grid;
   grid-template-rows: auto minmax(120px, 1fr);
   gap: 10px;
   min-height: 176px;
   padding: 12px;
+  overflow: visible;
 }
 
 .tt-ins-span-3 { grid-column: span 3; }
@@ -1138,6 +1204,11 @@
   align-content: end;
   height: 100%;
   gap: 8px;
+  min-height: 120px;
+  padding: 10px;
+  border: 1px solid color-mix(in oklch, var(--accent) 14%, var(--border-1));
+  border-radius: 8px;
+  background: linear-gradient(135deg, color-mix(in oklch, var(--accent) 10%, transparent), transparent 62%);
 }
 
 .tt-ins-num strong {
@@ -1156,11 +1227,62 @@
   font-size: 12px;
 }
 
+.tt-summary-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 8px;
+}
+
+.tt-metric {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 4px 8px;
+  min-width: 0;
+  min-height: 72px;
+  padding: 10px;
+  border: 1px solid var(--border-1);
+  border-radius: 8px;
+  background: var(--bg-panel-2);
+}
+
+.tt-metric svg {
+  grid-row: span 2;
+  align-self: start;
+  color: var(--accent);
+}
+
+.tt-metric span {
+  overflow: hidden;
+  color: var(--text-3);
+  font-size: 11px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.tt-metric strong {
+  overflow: hidden;
+  color: var(--text-1);
+  font-size: 13px;
+  line-height: 1.2;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
 .tt-ins-donut {
   display: grid;
   grid-template-columns: auto minmax(0, 1fr);
   gap: 12px;
   align-items: center;
+}
+
+.tt-hbars em {
+  flex: 0 0 auto;
+  min-width: 34px;
+  color: var(--text-4);
+  font-family: var(--font-mono);
+  font-size: 12px;
+  font-style: normal;
+  text-align: right;
 }
 
 .compact-list {
@@ -1213,6 +1335,30 @@
   height: 138px;
 }
 
+.tt-line-points {
+  position: absolute;
+  inset: 0 0 18px;
+}
+
+.tt-line-points > span {
+  position: absolute;
+  display: grid;
+  width: 18px;
+  height: 18px;
+  place-items: center;
+  transform: translate(-50%, -50%);
+}
+
+.tt-line-points i {
+  display: block;
+  width: 8px;
+  height: 8px;
+  border: 2px solid var(--bg-panel);
+  border-radius: 50%;
+  background: var(--accent);
+  box-shadow: 0 0 0 2px color-mix(in oklch, var(--accent) 18%, transparent);
+}
+
 .tt-line div {
   position: relative;
   height: 18px;
@@ -1245,6 +1391,144 @@
 .tt-heatmap .heat-2 { background: color-mix(in oklch, var(--accent) 42%, var(--bg-panel-2)); }
 .tt-heatmap .heat-3 { background: color-mix(in oklch, var(--accent) 62%, var(--bg-panel-2)); }
 .tt-heatmap .heat-4 { background: var(--accent); }
+
+.tt-mosaic {
+  display: grid;
+  grid-template-columns: repeat(8, minmax(0, 1fr));
+  grid-auto-rows: minmax(74px, auto);
+  gap: 8px;
+}
+
+.tt-mosaic-tile {
+  --tt-accent: var(--accent);
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  gap: 4px 7px;
+  min-width: 0;
+  padding: 10px;
+  border: 1px solid color-mix(in oklch, var(--tt-accent) 30%, var(--border-1));
+  border-radius: 8px;
+  background: color-mix(in oklch, var(--tt-accent) 12%, var(--bg-panel-2));
+}
+
+.tt-mosaic-tile svg {
+  color: var(--tt-accent);
+}
+
+.tt-mosaic-tile strong {
+  overflow: hidden;
+  color: var(--text-1);
+  font-size: 13px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.tt-mosaic-tile span,
+.tt-mosaic-tile b {
+  color: var(--text-3);
+  font-family: var(--font-mono);
+  font-size: 12px;
+}
+
+.tt-mosaic-tile b {
+  grid-column: 2 / -1;
+}
+
+.tt-rhythm {
+  display: grid;
+  grid-template-columns: repeat(24, minmax(0, 1fr));
+  gap: 3px;
+  min-height: 142px;
+}
+
+.tt-rhythm > span {
+  --tt-accent: var(--accent);
+  --rhythm-height: 8%;
+  display: grid;
+  grid-template-rows: 1fr auto;
+  gap: 5px;
+  min-width: 0;
+}
+
+.tt-rhythm i {
+  align-self: end;
+  display: block;
+  height: var(--rhythm-height);
+  min-height: 5px;
+  border-radius: 7px 7px 2px 2px;
+  background: linear-gradient(180deg, var(--tt-accent), color-mix(in oklch, var(--tt-accent) 46%, var(--bg-panel-2)));
+}
+
+.tt-rhythm em {
+  overflow: hidden;
+  color: var(--text-4);
+  font-family: var(--font-mono);
+  font-size: 10px;
+  font-style: normal;
+  text-align: center;
+}
+
+.tt-session-list {
+  display: grid;
+  gap: 8px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.tt-session-list li {
+  --tt-accent: var(--accent);
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  gap: 9px;
+  align-items: center;
+  min-width: 0;
+  padding: 8px;
+  border: 1px solid color-mix(in oklch, var(--tt-accent) 20%, var(--border-1));
+  border-radius: 8px;
+  background: color-mix(in oklch, var(--tt-accent) 7%, var(--bg-panel-2));
+}
+
+.tt-session-list li > span {
+  display: grid;
+  width: 28px;
+  height: 28px;
+  place-items: center;
+  border-radius: 8px;
+  color: var(--tt-accent);
+  background: color-mix(in oklch, var(--tt-accent) 14%, var(--bg-panel));
+}
+
+.tt-session-list div {
+  display: grid;
+  gap: 2px;
+  min-width: 0;
+}
+
+.tt-session-list strong,
+.tt-session-list small {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.tt-session-list strong {
+  color: var(--text-1);
+  font-size: 13px;
+}
+
+.tt-session-list em,
+.tt-session-list small {
+  color: var(--text-3);
+  font-size: 11px;
+  font-style: normal;
+}
+
+.tt-session-list b {
+  color: var(--text-1);
+  font-family: var(--font-mono);
+  font-size: 12px;
+}
 
 @media (max-width: 980px) {
   .tt-layout {

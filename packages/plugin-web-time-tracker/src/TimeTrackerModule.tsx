@@ -96,7 +96,11 @@ type InsightType =
   | "trend-7d"
   | "by-hour"
   | "trend-30d"
-  | "heatmap";
+  | "heatmap"
+  | "range-summary"
+  | "category-mosaic"
+  | "focus-rhythm"
+  | "recent-sessions";
 
 interface InsightCard {
   readonly iid: string;
@@ -123,6 +127,10 @@ const INSIGHT_DEFS: ReadonlyArray<{ readonly type: InsightType; readonly span: 3
   { type: "by-hour", span: 8, icon: "chart" },
   { type: "trend-30d", span: 8, icon: "chartUp" },
   { type: "heatmap", span: 8, icon: "grid" },
+  { type: "range-summary", span: 4, icon: "target" },
+  { type: "category-mosaic", span: 6, icon: "grid" },
+  { type: "focus-rhythm", span: 8, icon: "timer" },
+  { type: "recent-sessions", span: 6, icon: "list" },
 ];
 
 const INSIGHT_TITLES: Record<InsightType, CopyKey> = {
@@ -142,6 +150,10 @@ const INSIGHT_TITLES: Record<InsightType, CopyKey> = {
   "by-hour": "byHour",
   "trend-30d": "thirtyDays",
   heatmap: "heatmap",
+  "range-summary": "rangeSummary",
+  "category-mosaic": "categoryMosaic",
+  "focus-rhythm": "focusRhythm",
+  "recent-sessions": "recentSessions",
 };
 
 const DEFAULT_INSIGHTS: readonly InsightType[] = [
@@ -154,7 +166,13 @@ const DEFAULT_INSIGHTS: readonly InsightType[] = [
   "by-hour",
   "goal-progress",
   "by-weekday",
+  "range-summary",
+  "category-mosaic",
+  "focus-rhythm",
+  "recent-sessions",
 ];
+
+const DESIGN_ALIGNMENT_INSIGHTS: readonly InsightType[] = ["range-summary", "category-mosaic", "focus-rhythm", "recent-sessions"];
 
 const ICON_OPTIONS = [
   "study",
@@ -206,7 +224,15 @@ function readInsightBoard(): InsightCard[] {
           allowed.has(item.type as InsightType)
         );
       });
-      if (cards.length > 0) return cards.map((card) => ({ iid: card.iid, type: card.type, catId: card.catId ?? null }));
+      if (cards.length > 0) {
+        const normalized = cards.map((card) => ({ iid: card.iid, type: card.type, catId: card.catId ?? null }));
+        const hasNewInsightForm = normalized.some((card) => DESIGN_ALIGNMENT_INSIGHTS.includes(card.type));
+        if (hasNewInsightForm) return normalized;
+        return [
+          ...normalized,
+          ...DESIGN_ALIGNMENT_INSIGHTS.map((type) => ({ iid: uid("w"), type, catId: null })),
+        ];
+      }
     }
   } catch {
     // fall through to defaults
@@ -613,10 +639,86 @@ function totalByCategory(entries: readonly TimeTrackerEntry[], nowMs: number): M
   return totals;
 }
 
+type InsightBarRow = {
+  readonly key: string;
+  readonly value: number;
+  readonly label: string;
+  readonly selected?: boolean;
+  readonly title?: string;
+  readonly detail?: string;
+};
+
+type CategorySummary = {
+  readonly categoryId: string;
+  readonly name: string;
+  readonly icon: string;
+  readonly color: string;
+  readonly value: number;
+  readonly count: number;
+  readonly percent: number;
+};
+
+function entryCountText(count: number, lang: Lang): string {
+  return `${count} ${count === 1 ? ttCopy(lang, "entryOne") : ttCopy(lang, "entries")}`;
+}
+
+function percentText(value: number, total: number): string {
+  if (total <= 0) return "0%";
+  return `${Math.round(value / total * 100)}%`;
+}
+
+function detailText(lines: readonly string[]): string {
+  return lines.filter(Boolean).join("\n");
+}
+
+function categorySummaries(
+  list: readonly TimeTrackerEntry[],
+  nowMs: number,
+  categoryMap: ReadonlyMap<string, TimeTrackerCategory>,
+  lang: Lang,
+): CategorySummary[] {
+  const buckets = new Map<string, { value: number; count: number }>();
+  for (const entry of list) {
+    const current = buckets.get(entry.categoryId) ?? { value: 0, count: 0 };
+    buckets.set(entry.categoryId, { value: current.value + entryDuration(entry, nowMs), count: current.count + 1 });
+  }
+  const total = Array.from(buckets.values()).reduce((sum, bucket) => sum + bucket.value, 0);
+  return Array.from(buckets.entries())
+    .map(([categoryId, bucket]) => {
+      const category = categoryMap.get(categoryId);
+      return {
+        categoryId,
+        name: textName(category?.name, lang),
+        icon: category?.icon ?? "timer",
+        color: category?.color ?? "var(--accent)",
+        value: bucket.value,
+        count: bucket.count,
+        percent: total > 0 ? bucket.value / total : 0,
+      };
+    })
+    .sort((a, b) => b.value - a.value);
+}
+
+function subcategoryLabel(entry: TimeTrackerEntry, category: TimeTrackerCategory | undefined, lang: Lang): string {
+  const sub = category?.subs.find((item) => item.id === entry.subId);
+  return sub !== undefined ? textName(sub.name, lang) : ttCopy(lang, "whole");
+}
+
+function entryDetail(entry: TimeTrackerEntry, category: TimeTrackerCategory | undefined, nowMs: number, lang: Lang): string {
+  const note = entry.note[lang] || entry.note.en;
+  return detailText([
+    `${textName(category?.name, lang)} · ${subcategoryLabel(entry, category, lang)}`,
+    `${formatClock(entryStart(entry))} - ${formatClock(entryLastEnd(entry, nowMs))}`,
+    `${ttCopy(lang, "duration")}: ${formatDuration(entryDuration(entry, nowMs))}`,
+    note !== "" ? `${ttCopy(lang, "note")}: ${note}` : "",
+  ]);
+}
+
 function buildDayTrend(entries: readonly TimeTrackerEntry[], nowMs: number, lang: Lang, selectedKey: string) {
   return Array.from({ length: 7 }, (_, index) => {
     const start = startOfDay(nowMs - (6 - index) * DAY_MS);
     const key = dayKey(start);
+    const dayEntries = entries.filter((entry) => dayKey(entryStart(entry)) === key);
     const value = entries
       .filter((entry) => dayKey(entryStart(entry)) === key)
       .reduce((sum, entry) => sum + entryDuration(entry, nowMs), 0);
@@ -626,6 +728,7 @@ function buildDayTrend(entries: readonly TimeTrackerEntry[], nowMs: number, lang
       label: shortWeekdayLabel(start, lang),
       selected: key === selectedKey,
       title: formatDuration(value),
+      detail: detailText([formatDayKeyLabel(key, lang), formatDuration(value), entryCountText(dayEntries.length, lang)]),
     };
   });
 }
@@ -947,11 +1050,11 @@ function Donut({
   centerSub,
   size = 168,
   stroke = 11,
-}: {
-  readonly segments: ReadonlyArray<{ readonly value: number; readonly color: string }>;
-  readonly total: number;
-  readonly centerTop: ReactNode;
-  readonly centerSub?: ReactNode;
+	}: {
+	  readonly segments: ReadonlyArray<{ readonly value: number; readonly color: string; readonly detail?: string }>;
+	  readonly total: number;
+	  readonly centerTop: ReactNode;
+	  readonly centerSub?: ReactNode;
   readonly size?: number;
   readonly stroke?: number;
 }) {
@@ -977,11 +1080,13 @@ function Donut({
               strokeWidth={stroke}
               strokeDasharray={`${Math.max(0, len - 1.5)} ${circumference - Math.max(0, len - 1.5)}`}
               strokeDashoffset={offset}
-              strokeLinecap="round"
-              transform={`rotate(-90 ${size / 2} ${size / 2})`}
-            />
-          );
-        })}
+	              strokeLinecap="round"
+	              transform={`rotate(-90 ${size / 2} ${size / 2})`}
+	            >
+	              {segment.detail !== undefined && <title>{segment.detail}</title>}
+	            </circle>
+	          );
+	        })}
       </svg>
       <div className="tt-donut-center">
         <strong>{centerTop}</strong>
@@ -994,18 +1099,25 @@ function Donut({
 function MiniBars({
   rows,
   onPick,
-}: {
-  readonly rows: ReadonlyArray<{ readonly key: string; readonly value: number; readonly label: string; readonly selected?: boolean; readonly title?: string }>;
-  readonly onPick?: (key: string) => void;
-}) {
-  const max = Math.max(...rows.map((row) => row.value), 1);
-  return (
-    <div className="tt-mini-bars">
-      {rows.map((row) => (
-        <button type="button" key={row.key} className={row.selected === true ? "is-selected" : ""} title={row.title} onClick={() => onPick?.(row.key)}>
-          <span><i style={{ height: `${Math.max(3, row.value / max * 100)}%` }} /></span>
-          <em>{row.label}</em>
-        </button>
+	}: {
+	  readonly rows: readonly InsightBarRow[];
+	  readonly onPick?: (key: string) => void;
+	}) {
+	  const max = Math.max(...rows.map((row) => row.value), 1);
+	  return (
+	    <div className="tt-mini-bars">
+	      {rows.map((row) => (
+	        <button
+	          type="button"
+	          key={row.key}
+	          className={`tt-tip${row.selected === true ? " is-selected" : ""}`}
+	          title={row.title}
+	          data-tip={row.detail ?? row.title}
+	          onClick={() => onPick?.(row.key)}
+	        >
+	          <span><i style={{ height: `${Math.max(3, row.value / max * 100)}%` }} /></span>
+	          <em>{row.label}</em>
+	        </button>
       ))}
     </div>
   );
@@ -1461,25 +1573,45 @@ function InsightContent({
   const sum = (items: readonly TimeTrackerEntry[]) => items.reduce((total, entry) => total + entryDuration(entry, nowMs), 0);
   if (card.type === "today-total") {
     const todayRows = entries.filter((entry) => dayKey(entryStart(entry)) === today);
-    return <InsightNumber value={formatDuration(sum(todayRows))} sub={`${todayRows.length} ${ttCopy(lang, "entries")}`} />;
+    const total = sum(todayRows);
+    return (
+      <InsightNumber
+        value={formatDuration(total)}
+        sub={entryCountText(todayRows.length, lang)}
+        detail={detailText([ttCopy(lang, "todayTotal"), formatDuration(total), entryCountText(todayRows.length, lang)])}
+      />
+    );
   }
   if (card.type === "current") {
     const running = entries.filter(isRunningEntry);
-    return <InsightNumber value={running.length > 0 ? formatTimer(sum(running)) : "—"} sub={`${ttCopy(lang, "runningCount")} × ${running.length}`} live={running.length > 0} />;
+    const runningTotal = sum(running);
+    return (
+      <InsightNumber
+        value={running.length > 0 ? formatTimer(runningTotal) : "—"}
+        sub={`${ttCopy(lang, "runningCount")} × ${running.length}`}
+        live={running.length > 0}
+        detail={detailText([ttCopy(lang, "currentRunning"), formatDuration(runningTotal), entryCountText(running.length, lang)])}
+      />
+    );
   }
   if (card.type === "week-total") {
-    return <InsightNumber value={formatDuration(sum(entries.filter((entry) => entryStart(entry) >= startOfWeek(nowMs))))} sub={ttCopy(lang, "week")} />;
+    const rows = entries.filter((entry) => entryStart(entry) >= startOfWeek(nowMs));
+    const total = sum(rows);
+    return <InsightNumber value={formatDuration(total)} sub={ttCopy(lang, "week")} detail={detailText([ttCopy(lang, "week"), formatDuration(total), entryCountText(rows.length, lang)])} />;
   }
   if (card.type === "month-total") {
-    return <InsightNumber value={formatDuration(sum(entries.filter((entry) => entryStart(entry) >= startOfMonth(nowMs))))} sub={ttCopy(lang, "month")} />;
+    const rows = entries.filter((entry) => entryStart(entry) >= startOfMonth(nowMs));
+    const total = sum(rows);
+    return <InsightNumber value={formatDuration(total)} sub={ttCopy(lang, "month")} detail={detailText([ttCopy(lang, "month"), formatDuration(total), entryCountText(rows.length, lang)])} />;
   }
   if (card.type === "avg-day") {
     const days = new Set(inRange.map((entry) => dayKey(entryStart(entry)))).size || 1;
-    return <InsightNumber value={formatDuration(sum(inRange) / days)} sub={ttCopy(lang, "avgPerDay")} />;
+    const total = sum(inRange);
+    return <InsightNumber value={formatDuration(total / days)} sub={ttCopy(lang, "avgPerDay")} detail={detailText([`${days} ${ttCopy(lang, "daysTracked")}`, `${ttCopy(lang, "duration")}: ${formatDuration(total)}`])} />;
   }
   if (card.type === "days-tracked") {
     const days = new Set(inRange.map((entry) => dayKey(entryStart(entry)))).size;
-    return <InsightNumber value={String(days)} sub={ttCopy(lang, "daysTracked")} />;
+    return <InsightNumber value={String(days)} sub={ttCopy(lang, "daysTracked")} detail={detailText([ttCopy(lang, "daysTracked"), `${days}`, entryCountText(inRange.length, lang)])} />;
   }
   if (card.type === "donut-today" || card.type === "donut-range") {
     const list = card.type === "donut-today" ? entries.filter((entry) => dayKey(entryStart(entry)) === today) : inRange;
@@ -1498,19 +1630,29 @@ function InsightContent({
   }
   if (card.type === "by-weekday") {
     const buckets = [0, 0, 0, 0, 0, 0, 0];
+    const counts = [0, 0, 0, 0, 0, 0, 0];
     for (const entry of inRange) {
       const bucket = (new Date(entryStart(entry)).getDay() + 6) % 7;
       buckets[bucket] = (buckets[bucket] ?? 0) + entryDuration(entry, nowMs);
+      counts[bucket] = (counts[bucket] ?? 0) + 1;
     }
     const labels = lang === "zh" ? ["一", "二", "三", "四", "五", "六", "日"] : ["M", "T", "W", "T", "F", "S", "S"];
-    return <MiniBars rows={buckets.map((value, index) => ({ key: String(index), value, label: labels[index] ?? "", title: formatDuration(value) }))} />;
+    return <MiniBars rows={buckets.map((value, index) => ({ key: String(index), value, label: labels[index] ?? "", title: formatDuration(value), detail: detailText([labels[index] ?? "", formatDuration(value), entryCountText(counts[index] ?? 0, lang)]) }))} />;
   }
   if (card.type === "trend-7d" || card.type === "trend-30d") {
     const count = card.type === "trend-7d" ? 7 : 30;
     const rows = Array.from({ length: count }, (_, index) => {
       const start = startOfDay(nowMs - (count - 1 - index) * DAY_MS);
-      const value = entries.filter((entry) => dayKey(entryStart(entry)) === dayKey(start)).reduce((total, entry) => total + entryDuration(entry, nowMs), 0);
-      return { key: dayKey(start), value, label: count === 7 ? shortWeekdayLabel(start, lang) : index % 5 === 0 ? formatDayLabel(start, lang) : "", title: formatDuration(value) };
+      const key = dayKey(start);
+      const dayEntries = entries.filter((entry) => dayKey(entryStart(entry)) === key);
+      const value = dayEntries.reduce((total, entry) => total + entryDuration(entry, nowMs), 0);
+      return {
+        key,
+        value,
+        label: count === 7 ? shortWeekdayLabel(start, lang) : index % 5 === 0 ? formatDayLabel(start, lang) : "",
+        title: formatDuration(value),
+        detail: detailText([formatDayKeyLabel(key, lang), formatDuration(value), entryCountText(dayEntries.length, lang)]),
+      };
     });
     return count === 7 ? <MiniBars rows={rows} /> : <LineChart rows={rows} />;
   }
@@ -1522,17 +1664,39 @@ function InsightContent({
         buckets[bucket] = (buckets[bucket] ?? 0) + Math.max(0, (segment.end ?? nowMs) - segment.start);
       }
     }
-    return <HourChart values={buckets} />;
+    return <HourChart values={buckets} lang={lang} />;
   }
   if (card.type === "heatmap") {
-    return <Heatmap entries={entries} nowMs={nowMs} />;
+    return <Heatmap entries={entries} nowMs={nowMs} lang={lang} />;
+  }
+  if (card.type === "range-summary") {
+    return <RangeSummaryInsight list={inRange} nowMs={nowMs} lang={lang} categoryMap={categoryMap} />;
+  }
+  if (card.type === "category-mosaic") {
+    return <CategoryMosaicInsight list={inRange} nowMs={nowMs} lang={lang} categoryMap={categoryMap} />;
+  }
+  if (card.type === "focus-rhythm") {
+    return <FocusRhythmInsight list={inRange} nowMs={nowMs} lang={lang} categoryMap={categoryMap} />;
+  }
+  if (card.type === "recent-sessions") {
+    return <RecentSessionsInsight list={entries} nowMs={nowMs} lang={lang} categoryMap={categoryMap} />;
   }
   return null;
 }
 
-function InsightNumber({ value, sub, live }: { readonly value: ReactNode; readonly sub: ReactNode; readonly live?: boolean }) {
+function InsightNumber({
+  value,
+  sub,
+  live,
+  detail,
+}: {
+  readonly value: ReactNode;
+  readonly sub: ReactNode;
+  readonly live?: boolean;
+  readonly detail?: string;
+}) {
   return (
-    <div className="tt-ins-num">
+    <div className={`tt-ins-num${detail !== undefined ? " tt-tip" : ""}`} data-tip={detail} tabIndex={detail !== undefined ? 0 : undefined}>
       <strong className={live === true ? "is-live" : ""}>{value}</strong>
       <span>{sub}</span>
     </div>
@@ -1554,21 +1718,34 @@ function DistributionInsight({
   readonly lang: Lang;
   readonly categoryMap: ReadonlyMap<string, TimeTrackerCategory>;
 }) {
-  const totals = totalByCategory(list, nowMs);
-  const total = Array.from(totals.values()).reduce((sum, value) => sum + value, 0);
+  const segments = categorySummaries(list, nowMs, categoryMap, lang);
+  const total = segments.reduce((sum, segment) => sum + segment.value, 0);
   if (total <= 0) return <NoData lang={lang} />;
-  const segments = Array.from(totals.entries())
-    .sort((a, b) => b[1] - a[1])
-    .map(([categoryId, value]) => ({ categoryId, value, color: categoryMap.get(categoryId)?.color ?? "var(--text-4)" }));
   return (
     <div className="tt-ins-donut">
-      <Donut segments={segments.map((segment) => ({ value: segment.value, color: segment.color }))} total={total} centerTop={formatDuration(total)} centerSub={segments.length} size={132} />
+      <Donut
+        segments={segments.map((segment) => ({
+          value: segment.value,
+          color: segment.color,
+          detail: detailText([segment.name, formatDuration(segment.value), percentText(segment.value, total), entryCountText(segment.count, lang)]),
+        }))}
+        total={total}
+        centerTop={formatDuration(total)}
+        centerSub={segments.length}
+        size={132}
+      />
       <ul className="tt-legend compact-list">
         {segments.slice(0, 6).map((segment) => (
-          <li key={segment.categoryId}>
+          <li
+            key={segment.categoryId}
+            className="tt-tip"
+            data-tip={detailText([segment.name, formatDuration(segment.value), percentText(segment.value, total), entryCountText(segment.count, lang)])}
+            tabIndex={0}
+          >
             <span style={{ background: segment.color }} />
-            <strong>{textName(categoryMap.get(segment.categoryId)?.name, lang)}</strong>
-            <b>{Math.round(segment.value / total * 100)}%</b>
+            <strong>{segment.name}</strong>
+            <b>{percentText(segment.value, total)}</b>
+            <em>{formatDuration(segment.value)}</em>
           </li>
         ))}
       </ul>
@@ -1587,22 +1764,25 @@ function RankingInsight({
   readonly lang: Lang;
   readonly categoryMap: ReadonlyMap<string, TimeTrackerCategory>;
 }) {
-  const rows = Array.from(totalByCategory(list, nowMs).entries()).sort((a, b) => b[1] - a[1]);
+  const rows = categorySummaries(list, nowMs, categoryMap, lang);
   if (rows.length === 0) return <NoData lang={lang} />;
-  const max = Math.max(...rows.map((row) => row[1]), 1);
+  const max = Math.max(...rows.map((row) => row.value), 1);
   return (
     <ul className="tt-hbars">
-      {rows.map(([categoryId, ms]) => {
-        const category = categoryMap.get(categoryId);
-        return (
-          <li key={categoryId}>
-            <IconGlyph name={category?.icon ?? "timer"} size={14} />
-            <strong>{textName(category?.name, lang)}</strong>
-            <span><i style={{ width: `${ms / max * 100}%`, background: category?.color }} /></span>
-            <b>{formatHours(ms)}</b>
-          </li>
-        );
-      })}
+      {rows.map((row) => (
+        <li
+          key={row.categoryId}
+          className="tt-tip"
+          data-tip={detailText([row.name, formatDuration(row.value), `${Math.round(row.percent * 100)}%`, entryCountText(row.count, lang)])}
+          tabIndex={0}
+        >
+          <IconGlyph name={row.icon} size={14} />
+          <strong>{row.name}</strong>
+          <span><i style={{ width: `${row.value / max * 100}%`, background: row.color }} /></span>
+          <b>{formatHours(row.value)}</b>
+          <em>{Math.round(row.percent * 100)}%</em>
+        </li>
+      ))}
     </ul>
   );
 }
@@ -1617,7 +1797,12 @@ function GoalInsight({ categories, list, nowMs, lang }: { readonly categories: r
         const ms = totals.get(category.id) ?? 0;
         const pct = Math.min(100, Math.round(ms / 60_000 / category.goalMin * 100));
         return (
-          <li key={category.id}>
+          <li
+            key={category.id}
+            className="tt-tip"
+            data-tip={detailText([textName(category.name, lang), `${formatDuration(ms)} / ${category.goalMin}m`, `${pct}%`])}
+            tabIndex={0}
+          >
             <IconGlyph name={category.icon} size={14} />
             <strong>{textName(category.name, lang)}</strong>
             <span><i style={{ width: `${pct}%`, background: category.color }} /></span>
@@ -1641,7 +1826,7 @@ function SubSplitInsight({ category, list, nowMs, lang }: { readonly category: T
   return (
     <ul className="tt-hbars">
       {rows.map((row) => (
-        <li key={row.id}>
+        <li key={row.id} className="tt-tip" data-tip={detailText([row.name, formatDuration(row.value)])} tabIndex={0}>
           <strong>{row.name}</strong>
           <span><i style={{ width: `${row.value / max * 100}%`, background: category.color }} /></span>
           <b>{formatDuration(row.value)}</b>
@@ -1651,13 +1836,19 @@ function SubSplitInsight({ category, list, nowMs, lang }: { readonly category: T
   );
 }
 
-function HourChart({ values }: { readonly values: readonly number[] }) {
+function HourChart({ values, lang }: { readonly values: readonly number[]; readonly lang: Lang }) {
   const max = Math.max(...values, 1);
   const peak = values.indexOf(Math.max(...values));
   return (
     <div className="tt-hours">
       {values.map((value, index) => (
-        <span key={index} className={index === peak && value > 0 ? "is-peak" : ""} title={`${index}:00 · ${formatDuration(value)}`}>
+        <span
+          key={index}
+          className={`tt-tip${index === peak && value > 0 ? " is-peak" : ""}`}
+          title={`${index}:00 · ${formatDuration(value)}`}
+          data-tip={detailText([`${String(index).padStart(2, "0")}:00-${String((index + 1) % 24).padStart(2, "0")}:00`, formatDuration(value), index === peak && value > 0 ? ttCopy(lang, "peakHour") : ""])}
+          tabIndex={0}
+        >
           <i style={{ height: `${Math.max(2, value / max * 100)}%` }} />
           {index % 3 === 0 && <em>{String(index).padStart(2, "0")}</em>}
         </span>
@@ -1666,7 +1857,7 @@ function HourChart({ values }: { readonly values: readonly number[] }) {
   );
 }
 
-function LineChart({ rows }: { readonly rows: ReadonlyArray<{ readonly value: number; readonly label: string }> }) {
+function LineChart({ rows }: { readonly rows: readonly InsightBarRow[] }) {
   const w = 600;
   const h = 160;
   const pad = 24;
@@ -1681,31 +1872,262 @@ function LineChart({ rows }: { readonly rows: ReadonlyArray<{ readonly value: nu
         <path d={area} fill="color-mix(in oklch, var(--accent) 18%, transparent)" />
         <path d={path} fill="none" stroke="var(--accent)" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round" />
       </svg>
+      <div className="tt-line-points">
+        {rows.map((row, index) => (
+          <span
+            key={row.key}
+            className="tt-tip"
+            data-tip={row.detail ?? row.title}
+            style={{ left: `${x(index) / w * 100}%`, top: `${y(row.value) / h * 100}%` }}
+            tabIndex={0}
+          >
+            <i />
+          </span>
+        ))}
+      </div>
       <div>{rows.map((row, index) => row.label !== "" ? <span key={index} style={{ left: `${x(index) / w * 100}%` }}>{row.label}</span> : null)}</div>
     </div>
   );
 }
 
-function Heatmap({ entries, nowMs }: { readonly entries: readonly TimeTrackerEntry[]; readonly nowMs: number }) {
+function Heatmap({ entries, nowMs, lang }: { readonly entries: readonly TimeTrackerEntry[]; readonly nowMs: number; readonly lang: Lang }) {
   const weeks = 15;
-  const cells: Array<{ readonly key: string; readonly value: number }> = [];
+  const cells: Array<{ readonly key: string; readonly value: number; readonly count: number }> = [];
   let max = 1;
   const today = startOfDay(nowMs);
   const start = today - (weeks * 7 - 1) * DAY_MS;
   for (let index = 0; index < weeks * 7; index += 1) {
     const ts = start + index * DAY_MS;
     const key = dayKey(ts);
-    const value = entries.filter((entry) => dayKey(entryStart(entry)) === key).reduce((total, entry) => total + entryDuration(entry, nowMs), 0);
+    const rows = entries.filter((entry) => dayKey(entryStart(entry)) === key);
+    const value = rows.reduce((total, entry) => total + entryDuration(entry, nowMs), 0);
     max = Math.max(max, value);
-    cells.push({ key, value });
+    cells.push({ key, value, count: rows.length });
   }
   return (
     <div className="tt-heatmap">
       {cells.map((cell) => {
         const level = cell.value === 0 ? 0 : cell.value < max * 0.25 ? 1 : cell.value < max * 0.5 ? 2 : cell.value < max * 0.75 ? 3 : 4;
-        return <span key={cell.key} className={`heat-${level}`} title={formatDuration(cell.value)} />;
+        return (
+          <span
+            key={cell.key}
+            className={`tt-tip heat-${level}`}
+            title={formatDuration(cell.value)}
+            data-tip={detailText([formatDayKeyLabel(cell.key, lang), formatDuration(cell.value), entryCountText(cell.count, lang)])}
+            tabIndex={0}
+          />
+        );
       })}
     </div>
+  );
+}
+
+function RangeSummaryInsight({
+  list,
+  nowMs,
+  lang,
+  categoryMap,
+}: {
+  readonly list: readonly TimeTrackerEntry[];
+  readonly nowMs: number;
+  readonly lang: Lang;
+  readonly categoryMap: ReadonlyMap<string, TimeTrackerCategory>;
+}) {
+  const total = list.reduce((sum, entry) => sum + entryDuration(entry, nowMs), 0);
+  if (total <= 0) return <NoData lang={lang} />;
+  const dayTotals = new Map<string, { value: number; count: number }>();
+  const hourTotals = Array.from({ length: 24 }, () => 0);
+  let longest: TimeTrackerEntry | undefined;
+  for (const entry of list) {
+    const key = dayKey(entryStart(entry));
+    const value = entryDuration(entry, nowMs);
+    const current = dayTotals.get(key) ?? { value: 0, count: 0 };
+    dayTotals.set(key, { value: current.value + value, count: current.count + 1 });
+    for (const segment of entry.segments) {
+      const hour = new Date(segment.start).getHours();
+      hourTotals[hour] = (hourTotals[hour] ?? 0) + Math.max(0, (segment.end ?? nowMs) - segment.start);
+    }
+    if (longest === undefined || value > entryDuration(longest, nowMs)) longest = entry;
+  }
+  const bestDay = Array.from(dayTotals.entries()).sort((a, b) => b[1].value - a[1].value)[0];
+  const peakHour = hourTotals.indexOf(Math.max(...hourTotals));
+  const longestCategory = longest !== undefined ? categoryMap.get(longest.categoryId) : undefined;
+  return (
+    <div className="tt-summary-grid">
+      <InsightMetric
+        icon="calendar"
+        label={ttCopy(lang, "bestDay")}
+        value={bestDay !== undefined ? formatDayKeyLabel(bestDay[0], lang) : "—"}
+        detail={bestDay !== undefined ? detailText([formatDayKeyLabel(bestDay[0], lang), formatDuration(bestDay[1].value), entryCountText(bestDay[1].count, lang)]) : undefined}
+      />
+      <InsightMetric
+        icon="timer"
+        label={ttCopy(lang, "peakHour")}
+        value={`${String(peakHour).padStart(2, "0")}:00`}
+        detail={detailText([`${String(peakHour).padStart(2, "0")}:00`, formatDuration(hourTotals[peakHour] ?? 0)])}
+      />
+      <InsightMetric
+        icon="target"
+        label={ttCopy(lang, "averageSession")}
+        value={formatDuration(total / Math.max(1, list.length))}
+        detail={detailText([entryCountText(list.length, lang), `${ttCopy(lang, "duration")}: ${formatDuration(total)}`])}
+      />
+      <InsightMetric
+        icon={longestCategory?.icon ?? "clock"}
+        label={ttCopy(lang, "longestSession")}
+        value={longest !== undefined ? formatDuration(entryDuration(longest, nowMs)) : "—"}
+        detail={longest !== undefined ? entryDetail(longest, longestCategory, nowMs, lang) : undefined}
+      />
+    </div>
+  );
+}
+
+function InsightMetric({
+  icon,
+  label,
+  value,
+  detail,
+}: {
+  readonly icon: string;
+  readonly label: string;
+  readonly value: ReactNode;
+  readonly detail?: string;
+}) {
+  return (
+    <div className={`tt-metric tt-tip${detail !== undefined ? "" : " no-tip"}`} data-tip={detail} tabIndex={detail !== undefined ? 0 : undefined}>
+      <IconGlyph name={icon} size={15} />
+      <span>{label}</span>
+      <strong>{value}</strong>
+    </div>
+  );
+}
+
+function CategoryMosaicInsight({
+  list,
+  nowMs,
+  lang,
+  categoryMap,
+}: {
+  readonly list: readonly TimeTrackerEntry[];
+  readonly nowMs: number;
+  readonly lang: Lang;
+  readonly categoryMap: ReadonlyMap<string, TimeTrackerCategory>;
+}) {
+  const rows = categorySummaries(list, nowMs, categoryMap, lang);
+  const total = rows.reduce((sum, row) => sum + row.value, 0);
+  if (total <= 0) return <NoData lang={lang} />;
+  return (
+    <div className="tt-mosaic">
+      {rows.slice(0, 8).map((row) => {
+        const span = Math.min(6, Math.max(2, Math.round(row.percent * 8)));
+        return (
+          <div
+            key={row.categoryId}
+            className="tt-mosaic-tile tt-tip"
+            data-tip={detailText([row.name, formatDuration(row.value), percentText(row.value, total), entryCountText(row.count, lang)])}
+            style={{ "--tt-accent": row.color, gridColumn: `span ${span}` } as CSSProperties}
+            tabIndex={0}
+          >
+            <IconGlyph name={row.icon} size={16} />
+            <strong>{row.name}</strong>
+            <span>{percentText(row.value, total)}</span>
+            <b>{formatDuration(row.value)}</b>
+          </div>
+        );
+      })}
+    </div>
+  );
+}
+
+function FocusRhythmInsight({
+  list,
+  nowMs,
+  lang,
+  categoryMap,
+}: {
+  readonly list: readonly TimeTrackerEntry[];
+  readonly nowMs: number;
+  readonly lang: Lang;
+  readonly categoryMap: ReadonlyMap<string, TimeTrackerCategory>;
+}) {
+  const hours = Array.from({ length: 24 }, () => ({ total: 0, count: 0, categoryTotals: new Map<string, number>() }));
+  for (const entry of list) {
+    for (const segment of entry.segments) {
+      const hour = new Date(segment.start).getHours();
+      const value = Math.max(0, (segment.end ?? nowMs) - segment.start);
+      const bucket = hours[hour];
+      if (bucket === undefined) continue;
+      bucket.total += value;
+      bucket.count += 1;
+      bucket.categoryTotals.set(entry.categoryId, (bucket.categoryTotals.get(entry.categoryId) ?? 0) + value);
+    }
+  }
+  const max = Math.max(...hours.map((hour) => hour.total), 1);
+  if (max <= 1) return <NoData lang={lang} />;
+  return (
+    <div className="tt-rhythm">
+      {hours.map((hour, index) => {
+        const dominantId = Array.from(hour.categoryTotals.entries()).sort((a, b) => b[1] - a[1])[0]?.[0];
+        const category = dominantId !== undefined ? categoryMap.get(dominantId) : undefined;
+        return (
+          <span
+            key={index}
+            className="tt-tip"
+            data-tip={detailText([
+              `${String(index).padStart(2, "0")}:00-${String((index + 1) % 24).padStart(2, "0")}:00`,
+              formatDuration(hour.total),
+              category !== undefined ? textName(category.name, lang) : "",
+              entryCountText(hour.count, lang),
+            ])}
+            style={{ "--tt-accent": category?.color ?? "var(--accent)", "--rhythm-height": `${Math.max(8, hour.total / max * 100)}%` } as CSSProperties}
+            tabIndex={0}
+          >
+            <i />
+            {index % 4 === 0 && <em>{String(index).padStart(2, "0")}</em>}
+          </span>
+        );
+      })}
+    </div>
+  );
+}
+
+function RecentSessionsInsight({
+  list,
+  nowMs,
+  lang,
+  categoryMap,
+}: {
+  readonly list: readonly TimeTrackerEntry[];
+  readonly nowMs: number;
+  readonly lang: Lang;
+  readonly categoryMap: ReadonlyMap<string, TimeTrackerCategory>;
+}) {
+  const rows = [...list].sort((a, b) => entryLastEnd(b, nowMs) - entryLastEnd(a, nowMs)).slice(0, 5);
+  if (rows.length === 0) return <NoData lang={lang} />;
+  return (
+    <ul className="tt-session-list">
+      {rows.map((entry) => {
+        const category = categoryMap.get(entry.categoryId);
+        const note = entry.note[lang] || entry.note.en;
+        return (
+          <li
+            key={entry.id}
+            className="tt-tip"
+            data-tip={entryDetail(entry, category, nowMs, lang)}
+            style={{ "--tt-accent": category?.color ?? "var(--accent)" } as CSSProperties}
+            tabIndex={0}
+          >
+            <span><IconGlyph name={category?.icon ?? "timer"} size={14} /></span>
+            <div>
+              <strong>{textName(category?.name, lang)} · {subcategoryLabel(entry, category, lang)}</strong>
+              <em>{formatClock(entryStart(entry))} - {formatClock(entryLastEnd(entry, nowMs))}</em>
+              {note !== "" && <small>{note}</small>}
+            </div>
+            <b>{formatDuration(entryDuration(entry, nowMs))}</b>
+          </li>
+        );
+      })}
+    </ul>
   );
 }
 

@@ -9,6 +9,7 @@ Focused automated coverage:
 - Subcategory start picker.
 - Category editor persistence.
 - Configurable insights board render.
+- Insight hover metadata and richer insight cards after tracking time.
 - Shell registration shape.
 
 Release verification should also smoke `/app/timetrack` in the web shell and confirm the dashboard Time Tracker widget opens the module.

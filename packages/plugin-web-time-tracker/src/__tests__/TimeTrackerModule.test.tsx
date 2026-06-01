@@ -102,5 +102,33 @@ describe("TimeTrackerModule", () => {
     expect(screen.getByText("Add widget")).toBeInTheDocument();
     expect(screen.getByText("Today total")).toBeInTheDocument();
     expect(screen.getByText("Category ranking")).toBeInTheDocument();
+    expect(screen.getByText("Range summary")).toBeInTheDocument();
+    expect(screen.getByText("Category mosaic")).toBeInTheDocument();
+    expect(screen.getByText("Focus rhythm")).toBeInTheDocument();
+    expect(screen.getByText("Recent sessions")).toBeInTheDocument();
+  });
+
+  it("renders detailed insight hover metadata after tracking time", () => {
+    render(<TimeTrackerModule lang="en" />);
+
+    act(() => {
+      fireEvent.click(screen.getByText("Add record"));
+    });
+    act(() => {
+      fireEvent.change(screen.getByLabelText("Note"), { target: { value: "Research notes" } });
+      fireEvent.click(screen.getByText("Save"));
+    });
+    act(() => {
+      fireEvent.click(screen.getAllByText("Insights")[0]!);
+    });
+
+    expect(screen.getByText("Range summary")).toBeInTheDocument();
+    expect(screen.getByText("Longest session").closest(".tt-tip")?.getAttribute("data-tip")).toContain("Research notes");
+    const studyTip = screen
+      .getAllByText("Study")
+      .map((element) => element.closest(".tt-tip")?.getAttribute("data-tip") ?? "")
+      .find((tip) => tip.includes("1 entry"));
+    expect(studyTip).toContain("1 entry");
+    expect(screen.getByText("Research notes").closest(".tt-tip")?.getAttribute("data-tip")).toContain("Duration");
   });
 });
