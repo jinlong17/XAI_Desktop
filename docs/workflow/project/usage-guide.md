@@ -470,6 +470,9 @@ Project-layer skills:
 **读取 + 提醒**: 读取 git、roadmap manifest、PLUGIN_MAP、skill/agent 注册表和
 白名单文档;不自动改 roadmap、不 merge、不判断发布。
 
+机器说明文档在 `docs/workflow/project/dev-dashboard.md`。AI / Codex /
+Claude Code 需要判断看板是否最新时，使用 `xai-dev-dashboard-sync`。
+
 刷新一次静态快照:
 
 ```bash

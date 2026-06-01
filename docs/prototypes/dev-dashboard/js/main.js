@@ -40,6 +40,7 @@ initUsageOpsCopyButtons();
 initUsageOpsControls();
 renderOverview();
 renderKpis();
+renderOverviewSyncStatus();
 renderOverviewFlow();
 renderOverviewModules();
 renderOverviewDeployment();

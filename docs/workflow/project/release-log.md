@@ -6,6 +6,18 @@
 
 ## 2026-05-31
 
+### 个人开发看板同步契约
+
+- Product line: project-system / dev-dashboard
+- Branch / commit: `web` / local working tree
+- Version: dev-dashboard v0.4 → v0.5
+- Added: 新增 `xai-dev-dashboard-sync` 项目 Skill、机器可读的 `docs/workflow/project/dev-dashboard.md`、可复用的 `docs/prototypes/dev-dashboard/TEMPLATE.md`。
+- Improved: Overview 新增看板同步状态区，展示上次更新时间、当前快照、未提交变更、同步 Skill 状态、最新 release-log entry 和关键来源文件更新时间。
+- User-visible change: 打开个人开发看板总览即可判断看板是否刚刷新、当前工作区是否有未提交变更，以及应该用哪个同步入口刷新。
+- Developer/system delta: `scripts/dashboard/generate-state.mjs` 输出 `sync_status`，文档库收录看板机器说明、模板和同步 Skill；`AGENTS.md`、`CLAUDE.md`、handbook 和 usage-guide 增加看板契约入口。
+- Verification: `node --check scripts/dashboard/generate-state.mjs` passed; `node --check` passed for updated dashboard JS files; `pnpm dashboard` passed; `pnpm dashboard:serve` served the dashboard locally; headless Chrome DOM/screenshot smoke at 1440px and 390px confirmed Overview renders Dashboard sync, last update time, dirty count, `xai-dev-dashboard-sync`, and latest release-log entry.
+- Risk / follow-up: `state.generated.js` 仍是本机生成快照，不作为跨机器事实源；新 skill 提交后再次刷新会把 sync skill 状态从 local-only 更新为 tracked。
+
 ### 发布记录看板升级
 
 - Product line: project-system / dev-dashboard

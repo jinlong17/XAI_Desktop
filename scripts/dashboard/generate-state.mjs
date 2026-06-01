@@ -24,6 +24,10 @@ const agentTemplateDir = resolve(repoRoot, ".agents/templates");
 const claudeAgentDir = resolve(repoRoot, ".claude/agents");
 const cursorAgentDir = resolve(repoRoot, ".cursor/agents");
 const outputPath = resolve(repoRoot, "docs/prototypes/dev-dashboard/state.generated.js");
+const dashboardMachineDocPath = "docs/workflow/project/dev-dashboard.md";
+const dashboardTemplatePath = "docs/prototypes/dev-dashboard/TEMPLATE.md";
+const dashboardDesignPath = "docs/prototypes/dev-dashboard/DESIGN.md";
+const dashboardSyncSkillPath = ".teams/skills/xai-dev-dashboard-sync/SKILL.md";
 const roadmapAllowlist = [
   "sync-v1.md",
   "web-ticktick-parity.md",
@@ -322,6 +326,7 @@ function buildDocCollections(skillGroups, agentFamilies) {
       tags: ["Workflow V2", "SOP", "Handoff", "Portable"],
       entries: [
         docEntry("使用手册", "docs/workflow/project/usage-guide.md", "个人开发看板和 Workflow V2 的日常入口。", ["guide"]),
+        docEntry("个人开发看板机器说明", dashboardMachineDocPath, "AI / Codex / Claude Code 使用和同步个人开发看板的机器契约。", ["dashboard", "machine"]),
         docEntry("项目手册", "docs/workflow/project/handbook.md", "当前主线、操作原则和人工确认边界。", ["handbook"]),
         docEntry("Subagent Workflow V2", "docs/workflow/SUBAGENT_WORKFLOW_V2.md", "feature / bugfix / ship agent 链路。", ["agent"]),
         docEntry("新功能 SOP", "docs/workflow/SOP_NEW_FEATURE.md", "Feature 从 brief 到 ship 的标准路径。", ["feature"]),
@@ -341,7 +346,9 @@ function buildDocCollections(skillGroups, agentFamilies) {
         docEntry("ADR-0013 分支同步治理", "docs/adr/0013-branch-sync-governance.md", "Web / Desktop / Sync 的 D3 gate 和分支拓扑。", ["adr"]),
         docEntry("ADR-0007 Web Console", "docs/adr/0007-xai-web-console-build-form.md", "Web Console 拆包、持久化键和路线图来源。", ["adr"]),
         docEntry("Contracts", "docs/contracts/README.md", "跨包合同和验证入口。", ["contracts"]),
-        docEntry("Package docs", "packages", "packages/*/docs 下的 design/api/test/dev_log。", ["package"])
+        docEntry("Package docs", "packages", "packages/*/docs 下的 design/api/test/dev_log。", ["package"]),
+        docEntry("看板设计说明", dashboardDesignPath, "个人开发看板当前实现原则和升级计划。", ["dashboard"]),
+        docEntry("看板模板文档", dashboardTemplatePath, "可迁移到其它系统级项目的个人开发看板模板。", ["template", "dashboard"])
       ].filter(Boolean)
     },
     {
@@ -394,6 +401,7 @@ function buildDocHub(skillGroups, agentFamilies) {
         docEntry("AGENTS.md", "AGENTS.md", "Codex 会话规则、handoff 展示和 agent/skill tracking 边界。", ["rules", "codex"], "必读"),
         docEntry("CLAUDE.md", "CLAUDE.md", "跨平台共享工程规则、架构边界和测试要求。", ["rules", "architecture"], "必读"),
         docEntry("项目使用手册", "docs/workflow/project/usage-guide.md", "个人开发看板与 Workflow V2 的日常入口。", ["guide", "workflow"], "必读"),
+        docEntry("个人开发看板", dashboardMachineDocPath, "机器读取的看板契约和同步规则。", ["dashboard", "machine"], "必读"),
         docEntry("项目手册", "docs/workflow/project/handbook.md", "当前主线、人工确认边界和操作节奏。", ["handbook"], "必读"),
         docEntry("PLUGIN_MAP", "docs/PLUGIN_MAP.md", "插件/包状态地图和依赖准入状态。", ["map", "status"], "必读")
       ].filter(Boolean)
@@ -421,7 +429,8 @@ function buildDocHub(skillGroups, agentFamilies) {
         docEntry("ADR-0007 Web Console", "docs/adr/0007-xai-web-console-build-form.md", "Web Console 拆包、持久化键和路线图来源。", ["adr", "web"], "系统级"),
         docEntry("Contracts", "docs/contracts/README.md", "跨包合同和验证入口。", ["contracts"], "系统级"),
         docEntry("Portable Manifest", "docs/workflow/_portable/00-PORTABLE-MANIFEST.md", "跨平台同步 surface 与生成规则。", ["portable"], "系统级"),
-        docEntry("Branch Policy", "docs/workflow/project/branch-policy.json", "长期分支和 D3 gate 的机器可读策略。", ["branch", "json"], "系统级")
+        docEntry("Branch Policy", "docs/workflow/project/branch-policy.json", "长期分支和 D3 gate 的机器可读策略。", ["branch", "json"], "系统级"),
+        docEntry("看板模板文档", dashboardTemplatePath, "新项目复用个人开发看板时的结构、视觉和管理逻辑模板。", ["dashboard", "template"], "系统级")
       ].filter(Boolean)
     },
     {
@@ -446,6 +455,7 @@ function buildDocHub(skillGroups, agentFamilies) {
       importance: "必要",
       entries: [
         docEntry("xai-feature-full-loop", ".teams/skills/xai-feature-full-loop/SKILL.md", "端到端 feature pipeline 编排。", ["skill", "feature"], "必要"),
+        docEntry("xai-dev-dashboard-sync", dashboardSyncSkillPath, "刷新和核验个人开发看板 Overview 快照。", ["skill", "dashboard"], "必要"),
         docEntry("xai-roadmap-loop", ".teams/skills/xai-roadmap-loop/SKILL.md", "Roadmap manifest 分波推进。", ["skill", "roadmap"], "必要"),
         docEntry("xai-web-to-desktop-sync", ".teams/skills/xai-web-to-desktop-sync/SKILL.md", "Web 变更进入 Desktop 前的 D3 分类。", ["skill", "sync"], "必要"),
         docEntry("Portable usage guide", "docs/workflow/_portable/usage-guide.md", "可迁移 workflow 使用说明。", ["portable", "workflow"], "必要")
@@ -467,6 +477,7 @@ function buildDocHub(skillGroups, agentFamilies) {
   const roots = [
     docEntry("docs", "docs", "项目文档根目录：ADR、workflow、reviews、planning、prototype。", ["root"], "必读"),
     docEntry("docs/workflow", "docs/workflow", "Workflow、roadmap、project handbook、portable 文档。", ["workflow"], "必要"),
+    docEntry("docs/prototypes/dev-dashboard", "docs/prototypes/dev-dashboard", "个人开发看板源文件、模板和静态 UI。", ["dashboard"], "必要"),
     docEntry("docs/adr", "docs/adr", "架构决策记录。", ["adr"], "系统级"),
     docEntry("packages/*/docs", "packages", "各 package 的 design/api/test/dev_log 文档入口。", ["package"], "必要"),
     docEntry(".teams/skills", ".teams/skills", "XAI 项目级 workflow skills。", ["skill"], "必要"),
@@ -1073,6 +1084,11 @@ function buildSignals(snapshot) {
   const divergence = snapshot.git.divergence;
   const manifests = snapshot.roadmap_manifests || [];
   const allCounts = mergeCounts(manifests);
+  const sync = snapshot.sync_status || {};
+  const dirtyTotal = sync.dirty?.total || 0;
+  const skillStatus = sync.sync_skill?.present
+    ? (sync.sync_skill.tracked ? "skill tracked" : "skill local")
+    : "skill missing";
   return [
     {
       label: "web↔dev 分叉",
@@ -1093,10 +1109,10 @@ function buildSignals(snapshot) {
       note: ".teams/skills/*/SKILL.md"
     },
     {
-      label: "Snapshot",
-      badge: "manual refresh",
-      value: "local",
-      note: "读取+提醒；不自动改 roadmap/merge/发布判断"
+      label: "Dashboard sync",
+      badge: skillStatus,
+      value: dirtyTotal ? `${dirtyTotal} dirty` : "current",
+      note: `${sync.refresh_command || "pnpm dashboard"} · 最新发布 ${sync.release_log_latest || "未读取"}`
     }
   ];
 }
@@ -1119,15 +1135,97 @@ function buildCockpit(snapshot) {
     },
     {
       question: "用哪个 workflow · skill",
-      answer: "xai-feature-full-loop / xai-web-to-desktop-sync",
-      detail: "功能推进用 full-loop；跨线同步先跑 D3 分类"
+      answer: "xai-feature-full-loop / xai-dev-dashboard-sync",
+      detail: "功能推进用 full-loop；看板新鲜度先跑 dashboard sync"
     },
     {
       question: "什么状态",
-      answer: "读取+提醒",
-      detail: "自动化不改 roadmap、不 merge、不判断发布"
+      answer: snapshot.sync_status?.status_label || "读取+提醒",
+      detail: `自动化不改 roadmap、不 merge、不判断发布；dirty ${snapshot.sync_status?.dirty?.total || 0}`
     }
   ];
+}
+
+function statusPath(line) {
+  const raw = String(line || "").slice(3).trim();
+  if (!raw) return "";
+  const renameParts = raw.split(" -> ");
+  return renameParts[renameParts.length - 1] || raw;
+}
+
+function dashboardDirtyBucket(file) {
+  if (file.startsWith("docs/prototypes/dev-dashboard/")) return "dashboard-ui";
+  if (file.startsWith("scripts/dashboard/")) return "dashboard-generator";
+  if (file === "docs/workflow/project/dashboard-state.json") return "dashboard-state";
+  if (file === "docs/workflow/project/release-log.md") return "release-log";
+  if (file === dashboardMachineDocPath || file === dashboardTemplatePath) return "dashboard-docs";
+  if (file.startsWith(".teams/skills/") || file.startsWith(".codex/skills/") || file.startsWith(".codex/agents/")) return "skills-agents";
+  if (file.startsWith("docs/")) return "docs";
+  if (file.startsWith("apps/") || file.startsWith("packages/")) return "product-code";
+  return "other";
+}
+
+function dirtySummary(statusLines) {
+  const files = statusLines.map(statusPath).filter(Boolean);
+  const buckets = files.reduce((acc, file) => {
+    const bucket = dashboardDirtyBucket(file);
+    acc[bucket] = (acc[bucket] || 0) + 1;
+    return acc;
+  }, {});
+  return {
+    total: files.length,
+    buckets,
+    notable: files
+      .filter(file => ["dashboard-ui", "dashboard-generator", "dashboard-state", "release-log", "dashboard-docs", "skills-agents"].includes(dashboardDirtyBucket(file)))
+      .slice(0, 12)
+  };
+}
+
+function dashboardSource(label, path) {
+  const abs = resolve(repoRoot, path);
+  const stat = statSyncSafe(abs);
+  return {
+    label,
+    path,
+    exists: Boolean(stat),
+    updated_at: stat ? stat.mtime.toISOString() : "",
+    tracked: Boolean(git(["ls-files", "--", path]))
+  };
+}
+
+function buildDashboardSyncStatus(branch, latestCommit, generatedAt) {
+  const statusLines = gitLines(["status", "--short"]);
+  const dirty = dirtySummary(statusLines);
+  const skillStat = statSyncSafe(resolve(repoRoot, dashboardSyncSkillPath));
+  const skillTracked = Boolean(git(["ls-files", "--", dashboardSyncSkillPath]));
+  const syncStatus = dirty.total ? "working-tree-dirty" : "clean";
+  return {
+    status: syncStatus,
+    status_label: dirty.total ? "有未提交变更" : "已刷新",
+    generated_at: generatedAt,
+    refresh_command: "pnpm dashboard",
+    serve_command: "pnpm dashboard:serve",
+    branch,
+    latest_commit: latestCommit,
+    dirty,
+    sync_skill: {
+      name: "xai-dev-dashboard-sync",
+      path: dashboardSyncSkillPath,
+      present: Boolean(skillStat),
+      tracked: skillTracked,
+      status: skillStat ? (skillTracked ? "tracked" : "local-only") : "missing"
+    },
+    release_log_latest: latestReleaseEntry(),
+    sources: [
+      dashboardSource("manual state", "docs/workflow/project/dashboard-state.json"),
+      dashboardSource("machine contract", dashboardMachineDocPath),
+      dashboardSource("template", dashboardTemplatePath),
+      dashboardSource("release log", "docs/workflow/project/release-log.md"),
+      dashboardSource("branch policy", "docs/workflow/project/branch-policy.json"),
+      dashboardSource("dashboard design", dashboardDesignPath),
+      dashboardSource("sync skill", dashboardSyncSkillPath)
+    ]
+  };
 }
 
 function localDate(offsetDays = 0) {
@@ -1354,6 +1452,7 @@ function scanDevLogs() {
 const source = readJson(sourcePath);
 const branch = git(["branch", "--show-current"]);
 const latestCommit = git(["log", "-1", "--format=%h %s"]);
+const generatedAt = new Date().toISOString();
 const divergenceRaw = git(["rev-list", "--left-right", "--count", "origin/web...origin/dev"]);
 const [webOnly = "0", devOnly = "0"] = divergenceRaw.split(/\s+/);
 const divergence = {
@@ -1370,12 +1469,13 @@ const releaseEntries = parseReleaseEntries();
 
 const snapshot = {
   ...source,
-  generated_at: new Date().toISOString(),
+  generated_at: generatedAt,
   git: {
     branch,
     latest_commit: latestCommit,
     divergence
   },
+  sync_status: buildDashboardSyncStatus(branch, latestCommit, generatedAt),
   skills_found: skillsFound,
   agents_found: agentsFound,
   skill_groups: skillGroups,
