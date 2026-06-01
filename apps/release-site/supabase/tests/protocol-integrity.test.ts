@@ -43,7 +43,7 @@ describe('protocol integrity Edge checks', () => {
 
     expect(results[0]!.results[0]).toMatchObject({ status: 'ok', appliedRevision: '1' });
     expect(results.slice(1).every((result) => result.results[0]!.status === 'duplicate_mutation_id')).toBe(true);
-    expect(db.blobs.get('todos:todo-1')).toMatchObject({ revision: 1n, commitSeq: 1n });
+    expect(db.blobs.get('productivity.todo:todo-1')).toMatchObject({ revision: 1n, commitSeq: 1n });
     expect(db.nextCommitSeq).toBe(2n);
   });
 });
@@ -71,7 +71,7 @@ function createRecoveryDb() {
 
 function record(overrides: Partial<PushRecordRequest> = {}): PushRecordRequest {
   return {
-    entityType: 'todos',
+    entityType: 'productivity.todo',
     entityId: 'todo-1',
     mutationId: 'mut-1',
     baseRevision: null,

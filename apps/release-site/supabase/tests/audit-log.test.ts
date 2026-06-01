@@ -8,7 +8,7 @@ import { AuditLogHashChain } from '../../../../packages/audit-log-integrity/src'
 
 const testDir = path.dirname(fileURLToPath(import.meta.url));
 const repoRoot = path.resolve(testDir, '../../../..');
-const migrationsDir = path.join(repoRoot, 'apps/web/supabase/migrations');
+const migrationsDir = path.join(repoRoot, 'apps/release-site/supabase/migrations');
 
 describe('[smoke] sync audit log integrity mock', () => {
   it('appends events and exposes count/last-hash summary without payload telemetry', () => {
@@ -48,7 +48,7 @@ describe('[smoke] sync audit log integrity mock', () => {
 describe.skipIf(!process.env.SUPABASE_INTEGRATION_TESTS)('[integration] sync audit log integrity', () => {
   const testDir = path.dirname(fileURLToPath(import.meta.url));
   const repoRoot = path.resolve(testDir, '../../../..');
-  const migrationsDir = path.join(repoRoot, 'apps/web/supabase/migrations');
+  const migrationsDir = path.join(repoRoot, 'apps/release-site/supabase/migrations');
   const containerName = `xai-sync-audit-${process.pid}`;
 
   const accountA = '44444444-4444-4444-8444-444444444444';

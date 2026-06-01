@@ -4,7 +4,7 @@ import {
   type RecoveryProofVerifier,
   encodeRecoveryMessage,
   recoveryPayloadHash,
-} from '../recovery-proof/handler';
+} from '../recovery-proof/handler.ts';
 
 export interface BackfillAcknowledgementRequest {
   accountId: string;

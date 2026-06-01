@@ -2,7 +2,9 @@
 
 ## Scope
 
-`@repo/plugin-productivity` owns Todo, Pomodoro, and Habit business logic. It does not depend on `@repo/core-data` while the repository layer is still in development.
+`@repo/plugin-productivity` owns Todo, Pomodoro, and Habit business logic. The Web Todo repository now uses `@repo/core-data` sync-blob drivers for encrypted account-scoped storage; Pomodoro and Habit remain local/plugin state until their account-sync contracts are explicitly promoted.
+
+The current Web Todo crypto adapter emits the sync-v1 envelope header expected by `/sync/push` (`version`, `keyId`, numeric `encryptionDeviceId`, `counter`) and refuses writes until a numeric nonce counter is present in the runtime crypto snapshot. Runtime nonce-lease acquisition/renewal is still not wired into Web, so production cloud writes remain locked until that session layer provides `encryptionDeviceId` + `nextCounter`.
 
 ## Decisions
 

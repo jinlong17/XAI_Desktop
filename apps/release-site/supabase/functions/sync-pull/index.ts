@@ -1,8 +1,8 @@
 import {
-  normalizePushBatchRequest,
-  processPushBatch,
-  type PushDatabase,
-  type PushRequestContext,
+  normalizePullBatchRequest,
+  processPullBatch,
+  type PullDatabase,
+  type PullRequestContext,
 } from './handler.ts';
 import { createPostgresSyncDatabase } from '../_shared/postgres-sync-db.ts';
 import { resolveSyncRequestContext } from '../_shared/request-context.ts';
@@ -16,26 +16,28 @@ declare const Deno:
     }
   | undefined;
 
-export async function handleSyncPush(
+export async function handleSyncPull(
   request: Request,
-  db: PushDatabase,
-  context: PushRequestContext = {},
+  db: PullDatabase,
+  context: PullRequestContext = {},
 ): Promise<Response> {
-  if (request.method !== 'POST') {
+  if (request.method !== 'GET') {
     return Response.json({ error: 'method_not_allowed' }, { status: 405 });
   }
 
   try {
-    const requestContext = resolveSyncRequestContext(request, context);
-    const response = await processPushBatch(
+    const response = await processPullBatch(
       db,
-      normalizePushBatchRequest(await request.json(), requestContext),
+      normalizePullBatchRequest(
+        new URL(request.url),
+        resolveSyncRequestContext(request, context),
+      ),
     );
-    return Response.json(response, { status: response.status });
+    return Response.json(response, { status: 200 });
   } catch (error) {
     return Response.json(
       {
-        error: 'invalid_sync_push_request',
+        error: 'invalid_sync_pull_request',
         message: error instanceof Error ? error.message : 'invalid request',
       },
       { status: 400 },
@@ -48,14 +50,14 @@ if (typeof Deno !== 'undefined') {
     const databaseUrl = readDatabaseUrl();
     if (!databaseUrl) {
       return Response.json(
-        { error: 'sync_push_database_url_missing' },
+        { error: 'sync_pull_database_url_missing' },
         { status: 503 },
       );
     }
 
     const db = await createPostgresSyncDatabase(databaseUrl);
     try {
-      return await handleSyncPush(request, db);
+      return await handleSyncPull(request, db);
     } finally {
       await db.close();
     }

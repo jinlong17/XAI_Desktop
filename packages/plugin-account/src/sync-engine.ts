@@ -162,8 +162,11 @@ export type SyncPushFetch = (
 
 export interface SyncPushHttpTransportOptions {
   accessToken: string;
+  accountId?: string;
+  deviceId?: string;
   endpoint?: string;
   fetch?: SyncPushFetch;
+  syncVersion?: string;
 }
 
 export type SyncPullFetch = (
@@ -175,13 +178,16 @@ export type SyncPullFetch = (
 ) => Promise<{
   ok: boolean;
   status: number;
-  json(): Promise<PullBatchResponse>;
+  json(): Promise<unknown>;
 }>;
 
 export interface SyncPullHttpTransportOptions {
   accessToken: string;
+  accountId?: string;
+  deviceId?: string;
   endpoint?: string;
   fetch?: SyncPullFetch;
+  syncVersion?: string;
 }
 
 export interface SyncNonceLease {
@@ -358,22 +364,55 @@ export function createSyncPushHttpTransport(
   if (!fetchImpl) {
     throw new Error('E3005: fetch is required for sync push transport');
   }
+  if ((options.accountId && !options.deviceId) || (!options.accountId && options.deviceId)) {
+    throw new Error('E3005: accountId and deviceId must be provided together');
+  }
 
   return {
     async pushBatch(request: PushBatchRequest): Promise<PushBatchResponse> {
+      const headers: Record<string, string> = {
+        authorization: `Bearer ${options.accessToken}`,
+        'content-type': 'application/json',
+        'accept-version': options.syncVersion ?? 'sync.protocol=1',
+      };
+      if (options.deviceId) {
+        headers['x-device-id'] = options.deviceId;
+      }
+      if (options.accountId) {
+        headers['x-account-id'] = options.accountId;
+      }
+
       const response = await fetchImpl(endpoint, {
         method: 'POST',
-        headers: {
-          authorization: `Bearer ${options.accessToken}`,
-          'content-type': 'application/json',
-        },
-        body: JSON.stringify(request),
+        headers,
+        body: JSON.stringify(toHttpPushRequest(request, options)),
       });
       if (!response.ok && response.status !== 207 && response.status !== 409) {
         throw new Error(`E3005: sync push failed with HTTP ${response.status}`);
       }
       return response.json();
     },
+  };
+}
+
+function toHttpPushRequest(
+  request: PushBatchRequest,
+  options: SyncPushHttpTransportOptions,
+): PushBatchRequest | {
+  accountId: string;
+  records: Array<PushRecordRequest & { originatorDeviceId: string }>;
+} {
+  const { accountId, deviceId } = options;
+  if (!accountId || !deviceId) {
+    return request;
+  }
+
+  return {
+    accountId,
+    records: request.records.map((record) => ({
+      ...record,
+      originatorDeviceId: deviceId,
+    })),
   };
 }
 
@@ -392,18 +431,137 @@ export function createSyncPullHttpTransport(
       url.searchParams.set('since_commit_seq', request.sinceCommitSeq);
       url.searchParams.set('limit', String(request.limit));
       const path = `${url.pathname}${url.search}`;
+      const headers: Record<string, string> = {
+        authorization: `Bearer ${options.accessToken}`,
+        'accept-version': options.syncVersion ?? 'sync.protocol=1',
+      };
+      if (options.accountId) {
+        headers['x-account-id'] = options.accountId;
+      }
+      if (options.deviceId) {
+        headers['x-device-id'] = options.deviceId;
+      }
       const response = await fetchImpl(path, {
         method: 'GET',
-        headers: {
-          authorization: `Bearer ${options.accessToken}`,
-        },
+        headers,
       });
       if (!response.ok) {
         throw new Error(`E3003: sync pull failed with HTTP ${response.status}`);
       }
-      return response.json();
+      return normalizePullBatchResponse(await response.json());
     },
   };
+}
+
+async function normalizePullBatchResponse(payload: unknown): Promise<PullBatchResponse> {
+  if (!isRecord(payload)) {
+    throw new Error('E3005: sync pull response must be an object');
+  }
+
+  const records = Array.isArray(payload.records) ? payload.records : [];
+  const currentAccountCommitSeq =
+    optionalString(payload.currentAccountCommitSeq) ??
+    optionalString(payload.current_account_commit_seq) ??
+    optionalString(payload.next_commit_seq);
+  if (!currentAccountCommitSeq) {
+    throw new Error('E3005: sync pull response is missing currentAccountCommitSeq');
+  }
+
+  return {
+    currentAccountCommitSeq,
+    records: await Promise.all(records.map((record) => normalizePullRecord(record))),
+  };
+}
+
+async function normalizePullRecord(input: unknown): Promise<PullRecord> {
+  if (!isRecord(input)) {
+    throw new Error('E3005: sync pull record must be an object');
+  }
+
+  if (Array.isArray(input.envelope)) {
+    return {
+      entityType: requiredString(input.entityType, 'entityType'),
+      entityId: requiredString(input.entityId, 'entityId'),
+      revision: requiredString(input.revision, 'revision'),
+      commitSeq: requiredString(input.commitSeq, 'commitSeq'),
+      blobHash: requiredString(input.blobHash, 'blobHash'),
+      keyId: requiredNumber(input.keyId, 'keyId'),
+      envelope: normalizeByteArray(input.envelope, 'envelope'),
+    };
+  }
+
+  const blob = requiredString(input.blob, 'blob');
+  const envelope = decodeBase64Bytes(blob);
+  return {
+    entityType: requiredString(input.entity_type, 'entity_type'),
+    entityId: requiredString(input.entity_id, 'entity_id'),
+    revision: requiredString(input.revision, 'revision'),
+    commitSeq: requiredString(input.commit_seq, 'commit_seq'),
+    blobHash: await sha256Hex(envelope),
+    keyId: requiredNumber(input.key_id, 'key_id'),
+    envelope: Array.from(envelope),
+  };
+}
+
+function isRecord(input: unknown): input is Record<string, unknown> {
+  return typeof input === 'object' && input !== null && !Array.isArray(input);
+}
+
+function optionalString(input: unknown): string | undefined {
+  return typeof input === 'string' && input.length > 0 ? input : undefined;
+}
+
+function requiredString(input: unknown, field: string): string {
+  const value = optionalString(input);
+  if (!value) {
+    throw new Error(`E3005: sync pull record missing ${field}`);
+  }
+  return value;
+}
+
+function requiredNumber(input: unknown, field: string): number {
+  if (typeof input !== 'number' || !Number.isFinite(input)) {
+    throw new Error(`E3005: sync pull record ${field} must be a finite number`);
+  }
+  return input;
+}
+
+function normalizeByteArray(input: readonly unknown[], field: string): number[] {
+  return input.map((value, index) => {
+    if (
+      typeof value !== 'number' ||
+      !Number.isInteger(value) ||
+      value < 0 ||
+      value > 255
+    ) {
+      throw new Error(`E3005: sync pull record ${field}[${index}] must be a byte`);
+    }
+    return value;
+  });
+}
+
+function decodeBase64Bytes(input: string): Uint8Array {
+  if (typeof globalThis.atob !== 'function') {
+    throw new Error('E3005: atob is required to decode sync pull blobs');
+  }
+  const binary = globalThis.atob(input);
+  const bytes = new Uint8Array(binary.length);
+  for (let index = 0; index < binary.length; index += 1) {
+    bytes[index] = binary.charCodeAt(index);
+  }
+  return bytes;
+}
+
+async function sha256Hex(bytes: Uint8Array): Promise<string> {
+  const buffer = new Uint8Array(bytes.byteLength);
+  buffer.set(bytes);
+  const digest = await globalThis.crypto?.subtle?.digest('SHA-256', buffer.buffer);
+  if (!digest) {
+    throw new Error('E3005: crypto.subtle is required to hash sync pull blobs');
+  }
+  return Array.from(new Uint8Array(digest), (byte) =>
+    byte.toString(16).padStart(2, '0'),
+  ).join('');
 }
 
 export function createSyncNonceLeaseManager(
