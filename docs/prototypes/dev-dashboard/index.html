@@ -26,6 +26,7 @@
         <a href="#branches" data-page="branches">分支管理</a>
         <a href="#product-flow" data-page="product-flow">产品结构图</a>
         <a href="#deployment" data-page="deployment">部署</a>
+        <a href="#usage-ops" data-page="usage-ops">使用和操作</a>
         <a href="#docs" data-page="docs">文档库</a>
         <a href="#skill-agent" data-page="skill-agent">Skill 和 Agent</a>
         <a href="#release-log" data-page="release-log">发布记录</a>
@@ -198,6 +199,214 @@
           <div class="deployment-env-list" id="deploymentEnvironmentList"></div>
           <div class="deployment-issue-list" id="deploymentIssueList"></div>
         </aside>
+      </section>
+
+      <section class="section usage-ops page-section" id="usage-ops" data-page-section="usage-ops">
+        <div class="surface pad usage-ops-hero">
+          <div class="section-head">
+            <div>
+              <h2>使用和操作</h2>
+              <p class="sub">集中放日常启动、打开页面、更新、构建、部署、日志、状态检查和停止服务命令，作为本地项目操作入口。</p>
+            </div>
+            <span class="badge b-blue">operator manual</span>
+          </div>
+          <div class="usage-quick-grid">
+            <div>
+              <span>推荐 Web 启动</span>
+              <b>mock 登录</b>
+              <code>pnpm --filter @repo/web dev:mock-auth</code>
+            </div>
+            <div>
+              <span>Web 地址</span>
+              <b>localhost:3000</b>
+              <code>http://localhost:3000</code>
+            </div>
+            <div>
+              <span>开发看板</span>
+              <b>127.0.0.1:4177</b>
+              <code>pnpm dashboard:serve</code>
+            </div>
+            <div>
+              <span>状态检查</span>
+              <b>git + pnpm</b>
+              <code>git status --short</code>
+            </div>
+          </div>
+        </div>
+
+        <div class="usage-ops-grid">
+          <article class="usage-card" data-tone="blue">
+            <div class="usage-card-head">
+              <div><span class="usage-icon">01</span><div><h3>启动服务</h3><p>从仓库根目录启动主 Web 应用。日常调试优先使用 mock 登录版本。</p></div></div>
+              <span class="pill">Web</span>
+            </div>
+            <ol class="usage-steps">
+              <li>进入仓库根目录。</li>
+              <li>启动 Web 主应用，默认监听 3000。</li>
+              <li>需要真实登录链路时改用普通 dev。</li>
+            </ol>
+            <div class="usage-run-panel" id="usageWebOpsPanel">
+              <div class="usage-run-head">
+                <div>
+                  <b>Web 运行控制</b>
+                  <span id="usageWebOpsSummary">正在检查本地 3000 端口...</span>
+                </div>
+                <span class="badge b-gray" id="usageWebOpsBadge">checking</span>
+              </div>
+              <div class="usage-run-actions">
+                <button class="reader-btn" data-ops-start="web:start-mock" data-ops-open-after="true" type="button">启动 mock 并打开</button>
+                <button class="reader-btn" data-ops-start="web:start-dev" type="button">启动普通 dev</button>
+                <button class="reader-btn" data-ops-open="web" type="button">打开 Web</button>
+                <button class="reader-btn" data-ops-refresh="web" type="button">刷新状态</button>
+                <button class="reader-btn" data-ops-stop="web" type="button" disabled>停止</button>
+              </div>
+              <div class="usage-run-meta" id="usageWebOpsMeta"></div>
+              <div class="usage-log-panel">
+                <div class="usage-log-head"><b>最近日志</b><button class="prompt-copy" data-ops-copy-log="web" type="button">复制日志</button></div>
+                <pre id="usageWebOpsLog">暂无由看板启动的日志。</pre>
+              </div>
+            </div>
+            <div class="command-panel">
+              <div class="command-head"><b>推荐：带 mock 登录</b><button class="prompt-copy" data-copy-target="cmd-web-mock" type="button">复制</button></div>
+              <pre><code id="cmd-web-mock">cd /Users/lijinlong/Desktop/AI_Desktop/XAI_Desktop
+pnpm --filter @repo/web dev:mock-auth</code></pre>
+            </div>
+            <div class="command-panel">
+              <div class="command-head"><b>不需要 mock 登录</b><button class="prompt-copy" data-copy-target="cmd-web-dev" type="button">复制</button></div>
+              <pre><code id="cmd-web-dev">cd /Users/lijinlong/Desktop/AI_Desktop/XAI_Desktop
+pnpm --filter @repo/web dev</code></pre>
+            </div>
+            <div class="usage-note is-warn">不建议一上来用 <code>pnpm dev</code>；它会运行 <code>turbo run dev</code>，可能把多个 workspace 的 dev 服务一起拉起来。</div>
+          </article>
+
+          <article class="usage-card" data-tone="cyan">
+            <div class="usage-card-head">
+              <div><span class="usage-icon">02</span><div><h3>打开页面</h3><p>主应用和本地开发看板分开启动，避免把产品页面和操作手册混在一个端口里。</p></div></div>
+              <span class="pill">入口</span>
+            </div>
+            <div class="usage-link-grid">
+              <div><b>Web 网页版本</b><span>主应用本地入口</span><code>http://localhost:3000</code><button class="prompt-copy" data-copy-target="url-web" type="button">复制</button><button class="reader-btn" data-ops-open="web" type="button">打开</button><span id="url-web" hidden>http://localhost:3000</span></div>
+              <div><b>开发看板 / 文档库</b><span>默认端口，若被占用会自动顺延</span><code>http://127.0.0.1:4177</code><button class="prompt-copy" data-copy-target="url-dashboard" type="button">复制</button><button class="reader-btn" data-open-current-dashboard type="button">打开当前看板</button><span id="url-dashboard" hidden>http://127.0.0.1:4177</span></div>
+            </div>
+            <div class="command-panel">
+              <div class="command-head"><b>启动看板服务</b><button class="prompt-copy" data-copy-target="cmd-dashboard-serve" type="button">复制</button></div>
+              <pre><code id="cmd-dashboard-serve">cd /Users/lijinlong/Desktop/AI_Desktop/XAI_Desktop
+pnpm dashboard:serve</code></pre>
+            </div>
+            <div class="usage-note"><code>dashboard:serve</code> 会先刷新生成态，再绑定到 <code>127.0.0.1</code>。默认端口是 4177；如果 4177 被占用，脚本会自动顺延。</div>
+          </article>
+
+          <article class="usage-card" data-tone="green">
+            <div class="usage-card-head">
+              <div><span class="usage-icon">03</span><div><h3>更新代码</h3><p>先确认当前分支和未提交文件，再同步远端，避免覆盖并行窗口里的改动。</p></div></div>
+              <span class="pill">Git</span>
+            </div>
+            <div class="command-panel">
+              <div class="command-head"><b>同步前检查</b><button class="prompt-copy" data-copy-target="cmd-update-check" type="button">复制</button></div>
+              <pre><code id="cmd-update-check">git status --short
+git branch --show-current
+git log -1 --oneline</code></pre>
+            </div>
+            <div class="command-panel">
+              <div class="command-head"><b>拉取当前分支</b><button class="prompt-copy" data-copy-target="cmd-update-pull" type="button">复制</button></div>
+              <pre><code id="cmd-update-pull">git pull --ff-only
+pnpm install</code></pre>
+            </div>
+            <div class="usage-note">如果 <code>git status --short</code> 已经有不属于本次任务的改动，先判断来源，再决定是否暂停、<code>stash</code> 或只处理自己的文件。</div>
+          </article>
+
+          <article class="usage-card" data-tone="purple">
+            <div class="usage-card-head">
+              <div><span class="usage-icon">04</span><div><h3>构建与部署</h3><p>本地构建、类型检查和 Web 安全构建分开跑；正式部署仍以发布流程和环境凭证为准。</p></div></div>
+              <span class="pill">Build</span>
+            </div>
+            <div class="command-panel">
+              <div class="command-head"><b>主线验证</b><button class="prompt-copy" data-copy-target="cmd-build-check" type="button">复制</button></div>
+              <pre><code id="cmd-build-check">pnpm check-types
+pnpm build</code></pre>
+            </div>
+            <div class="command-panel">
+              <div class="command-head"><b>只构建 Web</b><button class="prompt-copy" data-copy-target="cmd-web-build" type="button">复制</button></div>
+              <pre><code id="cmd-web-build">pnpm --filter @repo/web build</code></pre>
+            </div>
+            <div class="command-panel">
+              <div class="command-head"><b>Web 安全构建 / 部署标记</b><button class="prompt-copy" data-copy-target="cmd-web-secure-build" type="button">复制</button></div>
+              <pre><code id="cmd-web-secure-build">pnpm --filter @repo/web build:secure
+pnpm --filter @repo/web build:secure:with-deploy</code></pre>
+            </div>
+          </article>
+
+          <article class="usage-card" data-tone="yellow">
+            <div class="usage-card-head">
+              <div><span class="usage-icon">05</span><div><h3>日志和运行状态</h3><p>先看终端服务输出，再用端口、HTTP 和 git 快照确认当前机器是否真的在跑。</p></div></div>
+              <span class="pill">Status</span>
+            </div>
+            <div class="usage-status-strip">
+              <div><b id="usageStatusState">检查中</b><span id="usageStatusDetail">读取本地 ops API 状态。</span></div>
+              <button class="reader-btn" data-ops-refresh="web" type="button">重新检查</button>
+            </div>
+            <div class="command-panel">
+              <div class="command-head"><b>端口与进程</b><button class="prompt-copy" data-copy-target="cmd-status-port" type="button">复制</button></div>
+              <pre><code id="cmd-status-port">lsof -nP -iTCP:3000 -sTCP:LISTEN
+lsof -nP -iTCP:4177 -sTCP:LISTEN
+ps aux | rg "vite|dashboard/serve"</code></pre>
+            </div>
+            <div class="command-panel">
+              <div class="command-head"><b>HTTP 快速检查</b><button class="prompt-copy" data-copy-target="cmd-status-http" type="button">复制</button></div>
+              <pre><code id="cmd-status-http">curl -I http://localhost:3000
+curl -I http://127.0.0.1:4177</code></pre>
+            </div>
+            <div class="command-panel">
+              <div class="command-head"><b>看板快照刷新</b><button class="prompt-copy" data-copy-target="cmd-dashboard-refresh" type="button">复制</button></div>
+              <pre><code id="cmd-dashboard-refresh">pnpm dashboard
+git status --short docs/prototypes/dev-dashboard docs/workflow/project/dashboard-state.json</code></pre>
+            </div>
+          </article>
+
+          <article class="usage-card" data-tone="red">
+            <div class="usage-card-head">
+              <div><span class="usage-icon">06</span><div><h3>停止服务与常见问题</h3><p>优先在启动服务的终端按 Ctrl+C；端口残留时再定位 PID 并停止。</p></div></div>
+              <span class="pill">Troubleshoot</span>
+            </div>
+            <div class="command-panel">
+              <div class="command-head"><b>查找并停止端口进程</b><button class="prompt-copy" data-copy-target="cmd-stop-port" type="button">复制</button></div>
+              <pre><code id="cmd-stop-port">lsof -tiTCP:3000 -sTCP:LISTEN
+kill &lt;PID&gt;</code></pre>
+            </div>
+            <div class="faq-list">
+              <div><b>页面打不开</b><span>先确认对应服务是否启动，再检查端口是否被别的进程占用。</span></div>
+              <div><b>看板数据不新</b><span>执行 <code>pnpm dashboard</code> 或重新运行 <code>pnpm dashboard:serve</code>。</span></div>
+              <div><b>登录流程挡住调试</b><span>用 <code>pnpm --filter @repo/web dev:mock-auth</code> 启动。</span></div>
+              <div><b>启动过多服务</b><span>避免直接 <code>pnpm dev</code>；按 workspace 精确启动需要的服务。</span></div>
+            </div>
+          </article>
+        </div>
+
+        <div class="surface pad usage-shortcuts">
+          <div class="section-head">
+            <div>
+              <h2>快捷命令</h2>
+              <p class="sub">常用的一组短命令，适合复制到新终端快速检查或继续工作。</p>
+            </div>
+            <button class="reader-btn" data-copy-target="cmd-shortcuts-all" type="button">复制全部</button>
+          </div>
+          <div class="shortcut-command-grid">
+            <div><span>进入仓库</span><code>cd /Users/lijinlong/Desktop/AI_Desktop/XAI_Desktop</code></div>
+            <div><span>Web mock 登录</span><code>pnpm --filter @repo/web dev:mock-auth</code></div>
+            <div><span>Web 普通开发</span><code>pnpm --filter @repo/web dev</code></div>
+            <div><span>开发看板</span><code>pnpm dashboard:serve</code></div>
+            <div><span>刷新看板快照</span><code>pnpm dashboard</code></div>
+            <div><span>状态检查</span><code>git status --short</code></div>
+            <div><span>类型检查</span><code>pnpm check-types</code></div>
+            <div><span>Web 构建</span><code>pnpm --filter @repo/web build</code></div>
+          </div>
+          <pre class="shortcut-all" aria-hidden="true"><code id="cmd-shortcuts-all">cd /Users/lijinlong/Desktop/AI_Desktop/XAI_Desktop
+pnpm --filter @repo/web dev:mock-auth
+pnpm dashboard:serve
+git status --short
+pnpm check-types
+pnpm --filter @repo/web build</code></pre>
+        </div>
       </section>
 
       <section class="section page-section" id="docs" data-page-section="docs">
@@ -456,6 +665,7 @@
 <script src="./js/skill-agent.js"></script>
 <script src="./js/ops-panels.js"></script>
 <script src="./js/nav.js"></script>
+<script src="./js/usage-ops.js"></script>
 <script src="./js/main.js"></script>
 </body>
 </html>

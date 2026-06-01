@@ -25,7 +25,19 @@ window.addEventListener("keydown", event => {
 
 window.addEventListener("hashchange", () => setPage(location.hash.slice(1), false));
 
+function initUsageOpsCopyButtons(){
+  document.querySelectorAll("[data-copy-target]").forEach(button => {
+    button.addEventListener("click", () => {
+      const target = document.getElementById(button.dataset.copyTarget);
+      const text = target?.textContent?.trim();
+      if(text) copyText(text, button);
+    });
+  });
+}
+
 initThemeSettings();
+initUsageOpsCopyButtons();
+initUsageOpsControls();
 renderOverview();
 renderKpis();
 renderOverviewFlow();
