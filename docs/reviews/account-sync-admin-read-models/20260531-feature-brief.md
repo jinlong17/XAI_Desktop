@@ -249,4 +249,3 @@ Needed: Yes
 - Cross-window contract impact: none in this row. No new
   `packages/core/src/events/` contract or Tauri command change is authorized.
 - Recommended next agent: `feature-plan`
-

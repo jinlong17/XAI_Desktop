@@ -247,4 +247,3 @@ APPROVE one docs-only build phase that:
   workflow-source-of-truth rules;
 - leaves the `admin` lane PROPOSED and all runtime implementation work out of
   scope.
-

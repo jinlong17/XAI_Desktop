@@ -198,4 +198,3 @@ of the following:
 - No redefinition of `RepoRecord`, `syncScope`, or device identity.
 - No browser access to service-role credentials, provider raw secrets, or user
   encrypted payload plaintext.
-

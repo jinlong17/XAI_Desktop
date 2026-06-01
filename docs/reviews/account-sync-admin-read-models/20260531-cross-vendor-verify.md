@@ -41,4 +41,3 @@ The second-vendor pass reviewed only:
   approvals before any runtime activation.
 - This row is boundary authority only; later implementation rows must not treat
   it as permission to activate the PROPOSED `admin` lane automatically.
-

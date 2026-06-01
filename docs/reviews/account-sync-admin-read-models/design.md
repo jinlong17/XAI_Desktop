@@ -61,4 +61,3 @@ The contract must freeze:
   displays derived summaries.
 - This row does not redefine `RepoRecord`, `syncScope`, crypto, device
   identity, or paused `sync-v1` runtime behavior.
-

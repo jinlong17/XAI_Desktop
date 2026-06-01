@@ -66,4 +66,3 @@ Recommended verification during later build/verify phases:
 git diff --check -- docs/contracts/README.md docs/contracts/account-sync-admin-read-models.md docs/reviews/account-sync-admin-read-models
 rg -n "service-role|provider|payload plaintext|RBAC|audit|workflow" docs/contracts/account-sync-admin-read-models.md docs/reviews/account-sync-admin-read-models
 ```
-

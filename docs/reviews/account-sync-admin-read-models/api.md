@@ -126,4 +126,3 @@ wire protocol:
 - Admin actions that touch existing account/device/sync authorities inherit the
   idempotency and audit semantics of those upstream systems.
 - Repeated read-model refreshes must be pure reads, not implied mutations.
-
