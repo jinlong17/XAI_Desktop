@@ -194,8 +194,25 @@ Add a project skill, usually:
 .teams/skills/<project>-dev-dashboard-sync/SKILL.md
 ```
 
-The skill should run the generator, verify the snapshot, and emit a sync receipt.
-It should not duplicate generator parsing logic.
+Expose the same skill to each local AI runtime that should recognize it, for
+example `.claude/skills/<project>-dev-dashboard-sync` and
+`.codex/skills/<project>-dev-dashboard-sync` as symlinks to the project source.
+
+The skill should run the generator, verify the snapshot, audit the machine
+contract, audit this reusable template, and emit a sync receipt. It should not
+duplicate generator parsing logic.
+
+Recommended receipt fields:
+
+```text
+Overview sync: current | refreshed | stale | blocked
+Machine doc:  aligned | updated | needs-review
+Template doc: aligned | updated | needs-review
+```
+
+Use `needs-review` only when the difference requires an operator decision about
+roadmap, release, branch, priority, or product-governance state. Apply factual
+contract/template updates directly.
 
 ## Adaptation Checklist
 
@@ -211,4 +228,5 @@ When creating a new dashboard from this template:
 - keep generated state ignored;
 - add a machine-facing dashboard contract;
 - add a sync skill;
+- expose the sync skill to the intended local AI runtimes;
 - add release-log entries for dashboard changes.

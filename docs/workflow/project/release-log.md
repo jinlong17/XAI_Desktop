@@ -4,6 +4,17 @@
 > Keep newest entries first. Use `.teams/skills/xai-release-log/SKILL.md` when
 > appending entries.
 
+## 2026-06-01
+
+### 看板同步 Skill 三层对齐
+
+- Product line: project-system / dev-dashboard
+- Branch / commit: `web` / local working tree
+- User-visible change: `xai-dev-dashboard-sync` 现在明确把 Overview 同步、机器说明文档对齐、可复用模板对齐作为一次运行里的三层检查；Claude Code 和 Codex 都有项目 skill 入口。
+- Developer/system delta: 更新 `.teams/skills/xai-dev-dashboard-sync/SKILL.md` 的触发描述、同步范围、drift audit 和 sync receipt；新增 `.claude/skills/xai-dev-dashboard-sync` 镜像 symlink；同步更新 `CLAUDE.md`、`AGENTS.md`、`docs/workflow/project/dev-dashboard.md`、`docs/prototypes/dev-dashboard/TEMPLATE.md`、dashboard state 和 usage-guide。
+- Verification: `node --check scripts/dashboard/generate-state.mjs` passed; `git diff --check` passed; Claude/Codex symlink discovery check passed; `pnpm dashboard` passed.
+- Risk / follow-up: 无；Skill 仍只自动更新事实性契约/模板内容，不自动决定 roadmap、branch、priority、release gate 或 ship 状态。
+
 ## 2026-05-31
 
 ### 个人开发看板同步契约

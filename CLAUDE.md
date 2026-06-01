@@ -81,8 +81,8 @@ Multi-face product — single monorepo, three product surfaces:
 Local project cockpit: `docs/prototypes/dev-dashboard/index.html` is the
 personal developer dashboard. Machine-facing rules for Codex / Claude Code live
 in `docs/workflow/project/dev-dashboard.md`; use `xai-dev-dashboard-sync` before
-trusting Overview freshness or after dashboard / workflow / skill / release-log
-changes.
+trusting Overview freshness or when dashboard / workflow / skill / release-log
+changes need the machine contract and reusable template checked for alignment.
 
 ## Architecture
 

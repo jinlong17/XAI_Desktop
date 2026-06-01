@@ -44,7 +44,7 @@
     },
     {
       "label": "看板同步",
-      "value": "运行 xai-dev-dashboard-sync 或 pnpm dashboard 后，Overview 会显示上次更新时间、当前 HEAD、未提交变更和同步 Skill 状态。"
+      "value": "运行 xai-dev-dashboard-sync 会刷新 Overview，并检查机器说明文档和可复用模板是否需要对齐；pnpm dashboard 只刷新本地快照。"
     },
     {
       "label": "发布记录",

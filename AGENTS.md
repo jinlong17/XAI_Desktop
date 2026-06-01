@@ -106,7 +106,8 @@ The local personal developer dashboard is the project-system cockpit at
 `docs/prototypes/dev-dashboard/index.html`. Machine-facing rules live in
 `docs/workflow/project/dev-dashboard.md`; use the `xai-dev-dashboard-sync` skill
 when checking or refreshing whether Overview reflects the current branch, dirty
-files, key docs, skills, agents, and release-log state.
+files, key docs, skills, agents, and release-log state, and when checking
+whether the machine contract or reusable dashboard template needs alignment.
 
 ---
 

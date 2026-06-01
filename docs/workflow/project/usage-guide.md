@@ -73,11 +73,14 @@ ls .teams/skills/xai-feature-brief/SKILL.md
 ls .teams/skills/xai-feature-full-loop/SKILL.md
 ls .teams/skills/xai-roadmap-loop/SKILL.md
 ls .teams/skills/xai-web-to-desktop-sync/SKILL.md
+ls .teams/skills/xai-dev-dashboard-sync/SKILL.md
 ls .claude/skills/xai-feature-brief/SKILL.md
 ls .claude/skills/xai-feature-full-loop/SKILL.md
 ls .claude/skills/xai-roadmap-loop/SKILL.md
 ls .claude/skills/xai-web-to-desktop-sync/SKILL.md
+ls .claude/skills/xai-dev-dashboard-sync/SKILL.md
 ls .codex/skills/xai-web-to-desktop-sync/SKILL.md
+ls .codex/skills/xai-dev-dashboard-sync/SKILL.md
 ls .cursor/rules/xai-web-to-desktop-sync.mdc
 ```
 
@@ -86,11 +89,12 @@ ls .cursor/rules/xai-web-to-desktop-sync.mdc
 - 15 个 Workflow V2 agent 三端生成: Claude / Codex / Cursor。
 - 10 个 portable public skills 三端生成,包含 `agent-behavioral-guidelines` 和
   `workflow-router`。
-- 4 个 XAI project-layer skills:
+- 5 个 XAI project-layer skills:
   - `xai-feature-brief`
   - `xai-feature-full-loop`
   - `xai-roadmap-loop`
   - `xai-web-to-desktop-sync`
+  - `xai-dev-dashboard-sync`
 - `.claude/skills/xai-*` / `.codex/skills/xai-*` 是指向 `.teams/skills/xai-*` 的 symlink。
 - `.cursor/rules/xai-*.mdc` 是 XAI project-layer skill 的 Cursor surface。
 
@@ -461,6 +465,7 @@ Project-layer skills:
 | `xai-feature-full-loop` | 单 feature parent-session 全流程 |
 | `xai-roadmap-loop` | 多 feature roadmap orchestration |
 | `xai-web-to-desktop-sync` | ADR-0013 D3 Web→Desktop 同步门 / parity receipt |
+| `xai-dev-dashboard-sync` | 个人开发看板 Overview / 机器说明文档 / 可复用模板同步 |
 
 ---
 
@@ -471,7 +476,8 @@ Project-layer skills:
 白名单文档;不自动改 roadmap、不 merge、不判断发布。
 
 机器说明文档在 `docs/workflow/project/dev-dashboard.md`。AI / Codex /
-Claude Code 需要判断看板是否最新时，使用 `xai-dev-dashboard-sync`。
+Claude Code 需要判断看板是否最新，或需要对齐 Overview、机器说明文档和可复用模板时，
+使用 `xai-dev-dashboard-sync`。
 
 刷新一次静态快照:
 

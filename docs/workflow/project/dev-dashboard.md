@@ -13,6 +13,8 @@
 - Generator: `scripts/dashboard/generate-state.mjs`
 - Local server: `scripts/dashboard/serve.mjs`
 - Sync skill: `.teams/skills/xai-dev-dashboard-sync/SKILL.md`
+- Claude skill mirror: `.claude/skills/xai-dev-dashboard-sync/SKILL.md`
+- Codex skill mirror: `.codex/skills/xai-dev-dashboard-sync/SKILL.md`
 - Template doc: `docs/prototypes/dev-dashboard/TEMPLATE.md`
 
 The dashboard is a local project-management console. It is not a customer-facing
@@ -48,6 +50,18 @@ Agents should refresh or check the dashboard when:
   `.codex/agents/`, or `docs/workflow/project/release-log.md`;
 - final handoff depends on Overview data.
 
+The sync skill owns three alignment checks in one run:
+
+1. refresh or verify the Overview snapshot from current repo evidence;
+2. update this machine contract when dashboard behavior, sources, or sync rules
+   have changed;
+3. update `docs/prototypes/dev-dashboard/TEMPLATE.md` when a dashboard pattern is
+   intentionally reusable for future projects.
+
+The skill should apply factual Markdown updates directly. It should report
+`needs-review` only when the mismatch requires an operator decision about
+roadmap, release, branch, priority, or product-governance state.
+
 Commands:
 
 ```bash
@@ -66,9 +80,12 @@ exposes `/api/refresh` for manual refresh from the browser.
 Agents may update:
 
 - project skill docs under `.teams/skills/` and tracked mirrors under `.codex/skills/`;
+- Claude skill mirrors under `.claude/skills/` when a project skill should be
+  available to Claude Code;
 - dashboard source HTML/CSS/JS under `docs/prototypes/dev-dashboard/`;
 - generator/server scripts under `scripts/dashboard/`;
 - machine and operator docs under `docs/workflow/project/`;
+- reusable dashboard template docs under `docs/prototypes/dev-dashboard/`;
 - `docs/workflow/project/release-log.md` through `xai-release-log`;
 - `docs/workflow/project/dashboard-state.json` only for authored operator-facing
   rows, prompts, links, and manual override copy.
@@ -142,3 +159,6 @@ unless the change belongs to a specific product line.
   document and the rendered dashboard in the same change.
 - If a new dashboard pattern is meant to be reused in another project, update
   `docs/prototypes/dev-dashboard/TEMPLATE.md`.
+- If `xai-dev-dashboard-sync` changes, keep `.teams/skills/`,
+  `.claude/skills/`, and `.codex/skills/` discoverability aligned in the same
+  change.
