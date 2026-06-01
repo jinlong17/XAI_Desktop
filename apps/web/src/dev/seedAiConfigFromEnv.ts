@@ -41,7 +41,7 @@ export function useDevAiConfigSeed(): void {
   useEffect(() => {
     // Production builds: `import.meta.env.DEV` is statically `false` → this
     // whole block is dead-code-eliminated (key reference never bundled).
-    if (!import.meta.env.DEV) return;
+    if (!import.meta.env.DEV || import.meta.env.MODE === "test") return;
 
     const env = import.meta.env as Record<string, string | undefined>;
     const key = (env.VITE_GEMINI_API_KEY ?? "").trim();

@@ -8,7 +8,7 @@
  * API contract: packages/xai-web-tasks/docs/api.md §2.1
  */
 
-import React, { useMemo, useState, useCallback } from "react";
+import React, { useEffect, useMemo, useState, useCallback } from "react";
 import type { TasksModuleProps, TaskCol, BucketId, NewTaskDraft, SmartListId } from "./types.js";
 import { useI18n } from "@repo/plugin-web-tokens";
 import { usePref } from "@repo/plugin-web-storage";
@@ -39,6 +39,11 @@ export function TasksModule({ lang }: TasksModuleProps) {
     }
     return SEED_TASK_COLS as TaskCol[];
   }, [rawCols]);
+
+  useEffect(() => {
+    if (isTaskColsArray(rawCols)) return;
+    setRawCols(SEED_TASK_COLS as unknown as Parameters<typeof setRawCols>[0]);
+  }, [rawCols, setRawCols]);
 
   // ---- Completion state — derived from persisted `done` field in taskCols (T-10 fix) ----
   // Minimal-diff shape: keep completedIds as ReadonlySet<string> so TaskColumn/TaskCard/

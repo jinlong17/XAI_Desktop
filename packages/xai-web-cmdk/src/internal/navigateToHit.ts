@@ -18,7 +18,7 @@ type EmitFn = (event: "web:search:jump", payload: EventMap["web:search:jump"]) =
  *
  * - "module-jump" → /app/${moduleId}
  * - "entity" → /app/${moduleId} (module consumes jump event for entity scroll)
- * - "settings-pane" → /app/settings (settings module consumes jump event for pane focus)
+ * - "settings-pane" → /app/settings/:paneId
  */
 export function navigateToHit(
   hit: SearchHit,
@@ -28,7 +28,7 @@ export function navigateToHit(
 ): void {
   const path =
     hit.kind === "settings-pane"
-      ? "/app/settings"
+      ? `/app/settings/${encodeURIComponent(hit.entityId ?? "")}`
       : `/app/${hit.moduleId}`;
 
   // Emit jump event first (observers can scroll-into-view before navigation)

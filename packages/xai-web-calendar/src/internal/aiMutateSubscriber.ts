@@ -31,6 +31,9 @@ function isObject(v: unknown): v is Record<string, unknown> {
   return typeof v === "object" && v !== null && !Array.isArray(v);
 }
 
+const DATE_RE = /^\d{4}-(0[1-9]|1[0-2])-(0[1-9]|[12]\d|3[01])$/;
+const HHMM_RE = /^([01]\d|2[0-3]):[0-5]\d$/;
+
 /** Builds startISO/endISO when date+startTime+durationMin are patched. */
 function buildISOTimes(
   existing: UserCalEvent,
@@ -56,10 +59,10 @@ function buildISOTimes(
     parseInt(existing.startISO.slice(14, 16), 10);
   const baseDurationMin = Math.max(5, existingEndMin - existingStartMin);
 
-  const newDate = typeof patch.date === "string" && /^\d{4}-\d{2}-\d{2}$/.test(patch.date)
+  const newDate = typeof patch.date === "string" && DATE_RE.test(patch.date)
     ? patch.date
     : baseDate;
-  const newStart = typeof patch.startTime === "string" && /^\d{2}:\d{2}$/.test(patch.startTime)
+  const newStart = typeof patch.startTime === "string" && HHMM_RE.test(patch.startTime)
     ? patch.startTime
     : baseStartTime;
   const newDur = typeof patch.durationMin === "number" && patch.durationMin > 0
@@ -132,10 +135,10 @@ export function useCalendarMutateRequestSubscriber(): void {
 
     const rawPatch = isObject(payload.patch) ? payload.patch : {};
     const newTitle = typeof rawPatch["title"] === "string" ? rawPatch["title"].trim() || undefined : undefined;
-    const newDate = typeof rawPatch["date"] === "string" && /^\d{4}-\d{2}-\d{2}$/.test(rawPatch["date"])
+    const newDate = typeof rawPatch["date"] === "string" && DATE_RE.test(rawPatch["date"])
       ? rawPatch["date"]
       : undefined;
-    const newStartTime = typeof rawPatch["startTime"] === "string" && /^\d{2}:\d{2}$/.test(rawPatch["startTime"])
+    const newStartTime = typeof rawPatch["startTime"] === "string" && HHMM_RE.test(rawPatch["startTime"])
       ? rawPatch["startTime"]
       : undefined;
     const newDurationMin = typeof rawPatch["durationMin"] === "number" && rawPatch["durationMin"] > 0
