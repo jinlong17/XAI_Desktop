@@ -78,6 +78,12 @@ Multi-face product — single monorepo, three product surfaces:
 - **macOS Desktop overlay (P1, paused)** — Tauri 2 + React 19 transparent overlay for organizing files, folders, and apps into floating Smart Containers (grids). Built in this monorepo (Turborepo + pnpm).
 - **Organizer plugins & tools (P2, paused)** — Per-domain plugins under `packages/plugin-*/`.
 
+Local project cockpit: `docs/prototypes/dev-dashboard/index.html` is the
+personal developer dashboard. Machine-facing rules for Codex / Claude Code live
+in `docs/workflow/project/dev-dashboard.md`; use `xai-dev-dashboard-sync` before
+trusting Overview freshness or after dashboard / workflow / skill / release-log
+changes.
+
 ## Architecture
 
 - **Host** (`apps/desktop/src/`): Tauri shell — routing + providers + window shells. Zero business logic.

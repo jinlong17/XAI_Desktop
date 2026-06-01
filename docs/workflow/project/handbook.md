@@ -131,11 +131,24 @@ The single-file internal dashboard for this handbook is:
 docs/prototypes/dev-dashboard/index.html
 ```
 
+Machine-facing rules for AI / Codex / Claude Code are in:
+
+```text
+docs/workflow/project/dev-dashboard.md
+```
+
 It is an operator navigation aid, not a shipped product surface. Refresh its
 file-safe generated state before reviewing or committing dashboard changes:
 
 ```bash
 node scripts/dashboard/generate-state.mjs
+```
+
+When the task is specifically to check or synchronize dashboard freshness, use
+the project skill:
+
+```text
+xai-dev-dashboard-sync
 ```
 
 The generator writes:

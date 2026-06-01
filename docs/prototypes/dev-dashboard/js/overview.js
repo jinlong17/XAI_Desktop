@@ -50,6 +50,48 @@ function renderKpis(){
   `).join("");
 }
 
+function formatOverviewDate(value){
+  const ts = Date.parse(value || "");
+  if(!Number.isFinite(ts)) return "未生成";
+  return new Date(ts).toLocaleString("zh-CN", { dateStyle:"medium", timeStyle:"short" });
+}
+
+function renderOverviewSyncStatus(){
+  const node = document.getElementById("overviewSyncStatus");
+  if(!node) return;
+  const dirty = syncStatus.dirty || {};
+  const buckets = dirty.buckets || {};
+  const skill = syncStatus.sync_skill || {};
+  const sources = (syncStatus.sources || []).slice(0, 5);
+  const bucketText = Object.entries(buckets)
+    .sort((a,b) => b[1] - a[1])
+    .map(([key,value]) => `${key}:${value}`)
+    .join(" · ") || "clean";
+  const skillBadge = skill.present ? (skill.tracked ? "b-green" : "b-yellow") : "b-red";
+  const dirtyBadge = dirty.total ? "b-yellow" : "b-green";
+  node.innerHTML = `
+    <div class="overview-sync-head">
+      <div>
+        <b>看板同步状态</b>
+        <span>由 xai-dev-dashboard-sync 固化刷新和核验流程</span>
+      </div>
+      <span class="badge ${dirtyBadge}">${h(syncStatus.status_label || "未生成")}</span>
+    </div>
+    <div class="overview-sync-grid">
+      <div><b>上次更新时间</b><strong>${h(formatOverviewDate(syncStatus.generated_at || dashboardState.generated_at))}</strong><span>${h(syncStatus.refresh_command || "pnpm dashboard")}</span></div>
+      <div><b>当前快照</b><strong>${h(syncStatus.branch || dashboardState.git?.branch || "unknown")}</strong><span>${h(syncStatus.latest_commit || dashboardState.git?.latest_commit || "no commit")}</span></div>
+      <div><b>未提交变更</b><strong>${h(String(dirty.total ?? devData.uncommitted_files ?? 0))}</strong><span>${h(bucketText)}</span></div>
+      <div><b>同步 Skill</b><strong>${h(skill.name || "xai-dev-dashboard-sync")}</strong><span class="badge ${skillBadge}">${h(skill.status || "missing")}</span></div>
+      <div><b>发布记录</b><strong>${h(syncStatus.release_log_latest || dashboardState.release_log?.latest_entry || "未读取")}</strong><span>${h(dashboardState.release_log?.source || "docs/workflow/project/release-log.md")}</span></div>
+    </div>
+    <div class="overview-sync-sources">
+      ${sources.map(source => `
+        <span title="${h(source.path)}">${h(source.label)} · ${source.exists ? h(formatOverviewDate(source.updated_at)) : "missing"}</span>
+      `).join("")}
+    </div>
+  `;
+}
+
 function buildOverviewModulesFallback(lines){
   const fallbackMeta = {
     web:["Web 版本","blue","主线开发","正常运行","打开 /app/dashboard"],

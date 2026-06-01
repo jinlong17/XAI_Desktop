@@ -28,6 +28,7 @@ window.addEventListener("hashchange", () => setPage(location.hash.slice(1), fals
 initThemeSettings();
 renderOverview();
 renderKpis();
+renderOverviewSyncStatus();
 renderOverviewFlow();
 renderOverviewModules();
 renderOverviewDeployment();
