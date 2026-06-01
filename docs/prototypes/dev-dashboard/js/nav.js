@@ -5,6 +5,7 @@ const DEFAULT_NAV_ITEMS = [
   {page:"branches", label:"分支管理"},
   {page:"product-flow", label:"产品结构图"},
   {page:"deployment", label:"部署"},
+  {page:"usage-ops", label:"使用和操作"},
   {page:"docs", label:"文档库"},
   {page:"skill-agent", label:"Skill 和 Agent"},
   {page:"release-log", label:"发布记录"}

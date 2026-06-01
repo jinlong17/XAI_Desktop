@@ -23,12 +23,212 @@ const dashboardAssetTypes = new Map([
   [".css", "text/css; charset=utf-8"],
   [".js", "application/javascript; charset=utf-8"]
 ]);
+const opsTargets = new Map([
+  ["web", {
+    id: "web",
+    label: "Web 主应用",
+    port: 3000,
+    url: "http://localhost:3000"
+  }]
+]);
+const opsActions = new Map([
+  ["web:start-mock", {
+    target: "web",
+    label: "启动 Web mock 登录",
+    command: "pnpm",
+    args: ["--filter", "@repo/web", "dev:mock-auth"]
+  }],
+  ["web:start-dev", {
+    target: "web",
+    label: "启动 Web 普通 dev",
+    command: "pnpm",
+    args: ["--filter", "@repo/web", "dev"]
+  }]
+]);
+const opsProcesses = new Map();
+const opsLogs = new Map();
+const maxOpsLogLines = 220;
 
 function runGenerate() {
   execFileSync(process.execPath, [generatorPath], {
     cwd: repoRoot,
     stdio: "inherit"
   });
+}
+
+function appendOpsLog(targetId, line) {
+  const rows = opsLogs.get(targetId) || [];
+  const text = String(line || "").trimEnd();
+  if (!text) return;
+  text.split(/\r?\n/).forEach(part => {
+    rows.push({ at: new Date().toISOString(), line: part });
+  });
+  opsLogs.set(targetId, rows.slice(-maxOpsLogLines));
+}
+
+function readCommand(pid) {
+  try {
+    return execFileSync("ps", ["-p", String(pid), "-o", "command="], {
+      encoding: "utf8",
+      stdio: ["ignore", "pipe", "ignore"]
+    }).trim();
+  } catch {
+    return "";
+  }
+}
+
+function portListeners(port) {
+  try {
+    const output = execFileSync("lsof", [
+      "-nP",
+      `-iTCP:${port}`,
+      "-sTCP:LISTEN",
+      "-Fpcn"
+    ], { encoding: "utf8", stdio: ["ignore", "pipe", "ignore"] });
+    const listeners = [];
+    let current = null;
+    output.split(/\r?\n/).filter(Boolean).forEach(row => {
+      const type = row.slice(0, 1);
+      const value = row.slice(1);
+      if (type === "p") {
+        current = { pid: Number(value), command: "", name: "" };
+        listeners.push(current);
+      } else if (current && type === "c") {
+        current.command = value;
+      } else if (current && type === "n") {
+        current.name = value;
+      }
+    });
+    return listeners.map(item => ({
+      ...item,
+      command: item.command || readCommand(item.pid)
+    }));
+  } catch {
+    return [];
+  }
+}
+
+function managedOpsProcess(targetId) {
+  const record = opsProcesses.get(targetId);
+  if (!record || record.child.exitCode !== null || record.child.killed) {
+    if (record) opsProcesses.delete(targetId);
+    return null;
+  }
+  return record;
+}
+
+function opsTargetStatus(targetId) {
+  const target = opsTargets.get(targetId);
+  if (!target) {
+    throw Object.assign(new Error("Unknown ops target"), { status: 404 });
+  }
+  const managed = managedOpsProcess(targetId);
+  const listeners = portListeners(target.port);
+  const managedPid = managed?.child.pid;
+  const listenerPids = new Set(listeners.map(item => item.pid));
+  const state = listenerPids.size ? "running" : (managed ? "starting" : "stopped");
+  return {
+    id: target.id,
+    label: target.label,
+    port: target.port,
+    url: target.url,
+    state,
+    managed: Boolean(managed),
+    pid: managedPid || listeners[0]?.pid || null,
+    listeners,
+    canStop: Boolean(managed),
+    startedAt: managed?.startedAt || null,
+    action: managed?.actionId || null,
+    command: managed ? `${managed.command} ${managed.args.join(" ")}` : (listeners[0]?.command || "")
+  };
+}
+
+function opsSnapshot() {
+  return {
+    ok: true,
+    repoRoot,
+    targets: [...opsTargets.keys()].map(opsTargetStatus)
+  };
+}
+
+function startOpsAction(actionId) {
+  const action = opsActions.get(actionId);
+  if (!action) {
+    throw Object.assign(new Error("Unknown ops action"), { status: 404 });
+  }
+  const target = opsTargets.get(action.target);
+  const before = opsTargetStatus(action.target);
+  if (before.state === "running") {
+    appendOpsLog(action.target, `[ops] ${target.label} already listens on ${target.port}; skip duplicate start.`);
+    return { ok: true, skipped: true, reason: "already-running", target: before };
+  }
+  if (before.state === "starting") {
+    return { ok: true, skipped: true, reason: "already-starting", target: before };
+  }
+  appendOpsLog(action.target, `[ops] ${action.label}`);
+  appendOpsLog(action.target, `[cmd] ${action.command} ${action.args.join(" ")}`);
+  const child = spawn(action.command, action.args, {
+    cwd: repoRoot,
+    env: { ...process.env, FORCE_COLOR: "1" },
+    stdio: ["ignore", "pipe", "pipe"]
+  });
+  const record = {
+    actionId,
+    args: action.args,
+    child,
+    command: action.command,
+    startedAt: new Date().toISOString()
+  };
+  opsProcesses.set(action.target, record);
+  child.stdout.on("data", chunk => appendOpsLog(action.target, chunk.toString("utf8")));
+  child.stderr.on("data", chunk => appendOpsLog(action.target, chunk.toString("utf8")));
+  child.on("error", error => appendOpsLog(action.target, `[error] ${error.message}`));
+  child.on("close", (code, signal) => {
+    appendOpsLog(action.target, `[ops] process exited code=${code ?? "null"} signal=${signal ?? "null"}`);
+    if (opsProcesses.get(action.target)?.child === child) {
+      opsProcesses.delete(action.target);
+    }
+  });
+  return { ok: true, skipped: false, target: opsTargetStatus(action.target) };
+}
+
+function stopOpsTarget(targetId) {
+  const target = opsTargets.get(targetId);
+  if (!target) {
+    throw Object.assign(new Error("Unknown ops target"), { status: 404 });
+  }
+  const managed = managedOpsProcess(targetId);
+  if (!managed) {
+    return {
+      ok: false,
+      reason: "not-managed",
+      target: opsTargetStatus(targetId)
+    };
+  }
+  appendOpsLog(targetId, `[ops] stopping ${target.label} pid=${managed.child.pid}`);
+  managed.child.kill("SIGTERM");
+  return { ok: true, target: opsTargetStatus(targetId) };
+}
+
+function openOpsTarget(targetId) {
+  const target = opsTargets.get(targetId);
+  if (!target) {
+    throw Object.assign(new Error("Unknown ops target"), { status: 404 });
+  }
+  const child = spawn("open", [target.url], {
+    cwd: repoRoot,
+    detached: true,
+    stdio: "ignore"
+  });
+  child.unref();
+  return { ok: true, url: target.url, target: opsTargetStatus(targetId) };
+}
+
+function opsLogsFor(targetId) {
+  if (!opsTargets.has(targetId)) {
+    throw Object.assign(new Error("Unknown ops target"), { status: 404 });
+  }
+  return { ok: true, target: targetId, rows: opsLogs.get(targetId) || [] };
 }
 
 function pathInside(child, parent) {
@@ -270,6 +470,26 @@ function sendDashboardAsset(pathname, res) {
 }
 
 function handleApi(url, res) {
+  if (url.pathname === "/api/ops/status") {
+    sendJson(res, 200, opsSnapshot());
+    return true;
+  }
+  if (url.pathname === "/api/ops/start") {
+    sendJson(res, 200, startOpsAction(url.searchParams.get("action") || ""));
+    return true;
+  }
+  if (url.pathname === "/api/ops/stop") {
+    sendJson(res, 200, stopOpsTarget(url.searchParams.get("target") || ""));
+    return true;
+  }
+  if (url.pathname === "/api/ops/open") {
+    sendJson(res, 200, openOpsTarget(url.searchParams.get("target") || ""));
+    return true;
+  }
+  if (url.pathname === "/api/ops/logs") {
+    sendJson(res, 200, opsLogsFor(url.searchParams.get("target") || ""));
+    return true;
+  }
   if (url.pathname === "/api/tree") {
     sendJson(res, 200, listTree(url.searchParams.get("dir") || ""));
     return true;
