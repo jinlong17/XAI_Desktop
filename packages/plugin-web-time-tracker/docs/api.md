@@ -17,5 +17,6 @@ Storage keys:
 - `xai_tt_categories_v2`
 - `xai_tt_entries_v2`
 - `xai_tt_mode`
+- `xai_tt_insights_v1`
 
 The storage model is segment-based. A live entry has `done=false` and its last segment has `end=null`.

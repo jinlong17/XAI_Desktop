@@ -7,6 +7,12 @@ export const TIME_TRACKER_CATEGORY_COLORS = [
   "oklch(62% 0.13 35)",
   "oklch(60% 0.12 245)",
   "oklch(60% 0.12 295)",
+  "oklch(67% 0.13 70)",
+  "oklch(60% 0.15 25)",
+  "oklch(62% 0.10 200)",
+  "oklch(62% 0.12 330)",
+  "oklch(58% 0.10 140)",
+  "oklch(60% 0.12 265)",
 ] as const;
 
 export const DEFAULT_TIME_TRACKER_CATEGORIES: readonly TimeTrackerCategory[] = [
@@ -18,6 +24,7 @@ export const DEFAULT_TIME_TRACKER_CATEGORIES: readonly TimeTrackerCategory[] = [
     goalMin: 120,
     subs: [
       { id: "sub_code", name: { en: "Code", zh: "代码" } },
+      { id: "sub_paper", name: { en: "Paper", zh: "论文" } },
       { id: "sub_read", name: { en: "Reading", zh: "阅读" } },
       { id: "sub_course", name: { en: "Course", zh: "课程" } },
     ],
@@ -46,6 +53,7 @@ export const DEFAULT_TIME_TRACKER_CATEGORIES: readonly TimeTrackerCategory[] = [
     goalMin: 90,
     subs: [
       { id: "sub_fit", name: { en: "Fitness", zh: "健身" } },
+      { id: "sub_shop", name: { en: "Shopping", zh: "购物" } },
       { id: "sub_commute", name: { en: "Commute", zh: "出行" } },
     ],
     createdAt: STAMP,

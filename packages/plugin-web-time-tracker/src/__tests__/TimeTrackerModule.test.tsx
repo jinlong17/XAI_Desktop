@@ -1,7 +1,7 @@
 import { describe, expect, it, vi } from "vitest";
-import { act, fireEvent, render, screen } from "@testing-library/react";
+import { act, fireEvent, render, screen, within } from "@testing-library/react";
 import { TimeTrackerModule } from "../TimeTrackerModule.js";
-import { readTimeTrackerEntries } from "../internal/storage.js";
+import { readTimeTrackerCategories, readTimeTrackerEntries } from "../internal/storage.js";
 
 describe("TimeTrackerModule", () => {
   it("renders bilingual module title and default categories", () => {
@@ -17,8 +17,10 @@ describe("TimeTrackerModule", () => {
   it("starts, pauses, resumes, and stops a tracked entry", () => {
     render(<TimeTrackerModule lang="en" />);
 
+    const restCard = screen.getByText("Rest").closest("article");
+    expect(restCard).not.toBeNull();
     act(() => {
-      fireEvent.click(screen.getAllByText("Start")[0]!);
+      fireEvent.click(within(restCard!).getByText("Start"));
     });
     expect(readTimeTrackerEntries()).toHaveLength(1);
     expect(screen.getByText("Active sessions")).toBeInTheDocument();
@@ -54,5 +56,51 @@ describe("TimeTrackerModule", () => {
     expect(entries).toHaveLength(1);
     expect(entries[0]?.note.en).toBe("Deep work");
     expect(entries[0]?.done).toBe(true);
+  });
+
+  it("opens the subcategory picker before starting a categorized session", () => {
+    render(<TimeTrackerModule lang="en" />);
+    const studyCard = screen.getByText("Study").closest("article");
+    expect(studyCard).not.toBeNull();
+
+    act(() => {
+      fireEvent.click(within(studyCard!).getByText("Start"));
+    });
+    expect(screen.getByText("Pick subcategory")).toBeInTheDocument();
+
+    act(() => {
+      const paperChoice = screen
+        .getAllByText("Paper")
+        .find((element) => element.tagName.toLowerCase() === "button");
+      expect(paperChoice).toBeDefined();
+      fireEvent.click(paperChoice!);
+    });
+    expect(readTimeTrackerEntries()[0]?.subId).toBe("sub_paper");
+  });
+
+  it("creates a custom category from the category editor", () => {
+    render(<TimeTrackerModule lang="en" />);
+
+    act(() => {
+      fireEvent.click(screen.getByText("New category"));
+    });
+    act(() => {
+      fireEvent.change(screen.getByLabelText("Name"), { target: { value: "Admin" } });
+      fireEvent.click(screen.getByText("Save"));
+    });
+
+    expect(readTimeTrackerCategories().some((category) => category.name.en === "Admin")).toBe(true);
+  });
+
+  it("renders the configurable insights board", () => {
+    render(<TimeTrackerModule lang="en" />);
+
+    act(() => {
+      fireEvent.click(screen.getAllByText("Insights")[0]!);
+    });
+
+    expect(screen.getByText("Add widget")).toBeInTheDocument();
+    expect(screen.getByText("Today total")).toBeInTheDocument();
+    expect(screen.getByText("Category ranking")).toBeInTheDocument();
   });
 });

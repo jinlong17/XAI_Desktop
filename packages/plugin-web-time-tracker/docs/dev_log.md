@@ -6,8 +6,8 @@ Updated: 2026-06-01
 
 ## Notes
 
-- Implemented parent-session V1 from Claude Design source.
-- Stopped short of advanced editable insights board; tracked as follow-up in `docs/design.md`.
+- Implemented parent-session Time Tracker from Claude Design source.
+- Added the design-alignment slice for date/history navigation, category CRUD, subcategories, active/record editing, category detail modal, and configurable Insights board.
 
 ## Verification
 
@@ -23,6 +23,6 @@ Updated: 2026-06-01
 - `pnpm --filter @repo/web test -- --run src/routes/modules/__tests__/shellRegistrations.integration.test.tsx src/routes/__tests__/router-modules.integration.test.tsx`
 - `pnpm --filter @repo/web check-types`
 - `pnpm --filter @repo/web build`
-- Browser smoke: `/app/timetrack` renders, dashboard Time Tracker widget renders, widget click routes to `/app/timetrack`, and Work start creates an active session with Pause/End controls visible.
+- Browser smoke: `/app/timetrack` renders with tracker and Insights surfaces, dashboard Time Tracker widget renders, widget click routes to `/app/timetrack`, and Work start creates an active session with Pause/End controls visible.
 
 Known environment note: the existing storage parity test that reads repo-local `web design/DESIGN.md` still fails in this detached worktree because that repo-local file is absent here; the source design used for this merge is the external Claude Design folder `/Users/lijinlong/Desktop/AI_Desktop/web design`.
