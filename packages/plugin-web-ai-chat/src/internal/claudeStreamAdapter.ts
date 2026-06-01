@@ -21,7 +21,6 @@ import { aiKeyStorage } from "./secretStore.js";
 import { resolveProvider } from "./llmProvider.js";
 import { parseSseStream } from "./sseParser.js";
 import { classifyError, type LlmError } from "./llmErrors.js";
-import { DEMO_REPLY_EN, DEMO_REPLY_ZH } from "./demoReply.js";
 import { buildTodayContext } from "./contextProvider.js";
 import type { AnthropicToolDef, ContentBlock, ToolUseResult } from "./toolUseTypes.js";
 
@@ -82,7 +81,7 @@ export interface StreamChunk {
 export async function* streamCompleteChat(
   req: StreamRequest,
 ): AsyncIterable<StreamChunk> {
-  const { text, lang, model, signal } = req;
+  const { text, model, signal } = req;
 
   // 1. Load the API key.
   const provider = (getPref("xai_ai_provider") as string) || "anthropic";
@@ -171,16 +170,17 @@ export async function* streamCompleteChat(
     throw llmErr;
   }
 
-  // 6. Handle streaming response.
+  // 6. Handle non-streaming response.
   if (!response.body || !streamingEnabled) {
-    // Fallback: no streaming body available or streaming disabled.
-    // Return the demo string as a single final chunk (avoids circular call
-    // back into completeChat which would loop back to streamCompleteChat).
-    // Consumers should use the full non-streaming text/event-stream for
-    // production; this path is only exercised when body is null (uncommon).
-    const demoText = lang === "zh" ? DEMO_REPLY_ZH : DEMO_REPLY_EN;
-    yield { accumulated: demoText, done: true };
-    return;
+    try {
+      const json = await response.json();
+      yield parseNonStreamingCompletion(json, providerKind);
+      return;
+    } catch (err) {
+      const llmErr = await classifyError(err instanceof Error ? err : new Error(String(err)));
+      _emitError(llmErr, providerKind);
+      throw llmErr;
+    }
   }
 
   // 7. Parse SSE stream.
@@ -250,7 +250,7 @@ export async function* streamCompleteChat(
           if (delta["type"] === "text_delta" && typeof delta["text"] === "string") {
             // Normal text delta.
             accumulated += delta["text"] as string;
-            yield { accumulated, done: false };
+            yield ({ accumulated, done: false });
           } else if (delta["type"] === "input_json_delta" && typeof idx === "number") {
             // Tool use partial JSON — accumulate per block index; DO NOT parse here.
             const partial = delta["partial_json"] as string ?? "";
@@ -335,7 +335,7 @@ export async function* streamCompleteChat(
           // Normal text delta (when no tool_calls present).
           if (!toolCallsArr && typeof oaiDelta["content"] === "string") {
             accumulated += oaiDelta["content"] as string;
-            yield { accumulated, done: false };
+            yield ({ accumulated, done: false });
           } else if (!toolCallsArr) {
             // content may be null when tool is being called; skip.
           }
@@ -391,9 +391,9 @@ export async function* streamCompleteChat(
   }
 
   if ((stopReason === "tool_use" || toolUseResult !== undefined) && toolUseResult) {
-    yield { accumulated, done: true, toolUse: toolUseResult };
+    yield ({ accumulated, done: true, toolUse: toolUseResult });
   } else {
-    yield { accumulated, done: true };
+    yield ({ accumulated, done: true });
   }
 }
 
@@ -424,3 +424,54 @@ function _emitError(err: LlmError, provider: "anthropic" | "openai-compatible"):
   });
 }
 
+function parseNonStreamingCompletion(
+  json: unknown,
+  provider: "anthropic" | "openai-compatible",
+): StreamChunk {
+  if (provider === "anthropic") {
+    const obj = asRecord(json);
+    const content = Array.isArray(obj?.["content"]) ? obj["content"] : [];
+    let accumulated = "";
+    let toolUse: ToolUseResult | undefined;
+    for (const block of content) {
+      const item = asRecord(block);
+      if (!item) continue;
+      if (item["type"] === "text" && typeof item["text"] === "string") {
+        accumulated += item["text"];
+      } else if (item["type"] === "tool_use") {
+        const id = typeof item["id"] === "string" ? item["id"] : "";
+        const name = typeof item["name"] === "string" ? item["name"] : "";
+        const input = asRecord(item["input"]) ?? {};
+        toolUse = { id, name, input };
+      }
+    }
+    return toolUse ? { accumulated, done: true, toolUse } : { accumulated, done: true };
+  }
+
+  const obj = asRecord(json);
+  const choices = Array.isArray(obj?.["choices"]) ? obj["choices"] : [];
+  const firstChoice = asRecord(choices[0]);
+  const message = asRecord(firstChoice?.["message"]);
+  const accumulated = typeof message?.["content"] === "string" ? message["content"] : "";
+  const toolCalls = Array.isArray(message?.["tool_calls"]) ? message["tool_calls"] : [];
+  const firstToolCall = asRecord(toolCalls[0]);
+  const fn = asRecord(firstToolCall?.["function"]);
+  if (firstToolCall && fn) {
+    const id = typeof firstToolCall["id"] === "string" ? firstToolCall["id"] : "";
+    const name = typeof fn["name"] === "string" ? fn["name"] : "";
+    const argsRaw = typeof fn["arguments"] === "string" ? fn["arguments"] : "{}";
+    try {
+      const input = JSON.parse(argsRaw || "{}") as Record<string, unknown>;
+      return { accumulated, done: true, toolUse: { id, name, input } };
+    } catch {
+      return { accumulated, done: true };
+    }
+  }
+  return { accumulated, done: true };
+}
+
+function asRecord(value: unknown): Record<string, unknown> | null {
+  return value && typeof value === "object" && !Array.isArray(value)
+    ? (value as Record<string, unknown>)
+    : null;
+}

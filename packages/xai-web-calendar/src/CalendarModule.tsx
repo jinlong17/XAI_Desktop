@@ -47,13 +47,6 @@ import { useUserCalEvents } from "./internal/eventStore/useUserCalEvents.js";
 import { mergeEventsForMonth } from "./internal/eventStore/mergeEventsForViewport.js";
 import type { UserCalEvent } from "./internal/eventStore/types.js";
 
-/**
- * Design-source anchor: May 22, 2026 matches the sample-event fixture and the
- * design-anchor month May 2026. Used as the "today" reset target.
- * FIXME-ROW: flip to currentDateKey() once Settings W4 real-current date lands.
- */
-const MAY_2026_ANCHOR_TODAY = "2026-05-22";
-
 /** Narrow the raw registry string to the CalendarView union. */
 function toView(raw: string): CalendarView {
   if (raw === "week" || raw === "day") return raw;
@@ -76,6 +69,7 @@ export function CalendarModule({ lang }: CalendarModuleProps): JSX.Element {
   // P4: view is now persisted via xai_calendar_view.
   const [viewRaw, setViewPref] = usePref("xai_calendar_view", "month");
   const view: CalendarView = toView(viewRaw as string);
+  const todayKey = useMemo(() => utcDateKey(new Date()), []);
 
   // Wrap setViewPref to enforce CalendarView typing.
   const setView = useCallback((v: CalendarView) => {
@@ -83,7 +77,7 @@ export function CalendarModule({ lang }: CalendarModuleProps): JSX.Element {
   }, [setViewPref]);
 
   // activeDate replaces (displayedMonth, focusedDate) — design.md §15.2 #3
-  const [activeDate, setActiveDate] = useState<string>(MAY_2026_ANCHOR_TODAY);
+  const [activeDate, setActiveDate] = useState<string>(() => todayKey);
   // focusedFromDeepLink is the renamed focusedDate — set ONLY by deep-link
   const [focusedFromDeepLink, setFocusedFromDeepLink] = useState<string | null>(null);
 
@@ -92,9 +86,6 @@ export function CalendarModule({ lang }: CalendarModuleProps): JSX.Element {
     () => dateKeyMonth(activeDate),
     [activeDate],
   );
-
-  // Today is captured once per mount per design.md §6 / Q8 = I1.
-  const todayKey = useMemo(() => utcDateKey(new Date()), []);
 
   // --- Event-create extension (2026-05-27 — HC8 lift) ----------------------
   // User-created events stored via xai_calendar_events; CRUD via the hook.
@@ -198,10 +189,10 @@ export function CalendarModule({ lang }: CalendarModuleProps): JSX.Element {
   }, [view]);
 
   const handleResetToday = useCallback(() => {
-    setActiveDate(MAY_2026_ANCHOR_TODAY);
+    setActiveDate(todayKey);
     setFocusedFromDeepLink(null);
     // view preserved across today reset per design.md §15.6
-  }, []);
+  }, [todayKey]);
 
   // --- Deep-link receive -----------------------------------------------------
   // Deep-link forces view = "month" per design.md §15.2 #9.
