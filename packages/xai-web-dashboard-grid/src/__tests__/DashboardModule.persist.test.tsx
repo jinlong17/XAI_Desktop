@@ -24,6 +24,7 @@ function fixture(id: string): WidgetRegistration {
 
 describe("DashboardModule with widgets (P2 grid)", () => {
   it("AC-SLOT-1: renders 3 widgets in registration order when persisted is empty", () => {
+    setPref("xai_dash_order", ["alpha", "bravo", "charlie"]);
     const widgets = [fixture("alpha"), fixture("bravo"), fixture("charlie")];
     const { container } = render(<DashboardModule lang="en" widgets={widgets} />);
     const shells = container.querySelectorAll(".widget-shell");
@@ -34,12 +35,14 @@ describe("DashboardModule with widgets (P2 grid)", () => {
   });
 
   it("AC-SLOT-3: render ctx receives the active lang", () => {
+    setPref("xai_dash_order", ["alpha"]);
     const widgets = [fixture("alpha")];
     const { getByTestId } = render(<DashboardModule lang="zh" widgets={widgets} />);
     expect(getByTestId("body-alpha").getAttribute("data-lang")).toBe("zh");
   });
 
   it("AC-SLOT-5: empty state is NOT rendered when widgets are non-empty", () => {
+    setPref("xai_dash_order", ["alpha"]);
     const widgets = [fixture("alpha")];
     const { container } = render(<DashboardModule lang="en" widgets={widgets} />);
     expect(container.querySelector(".dash-empty")).toBeNull();
@@ -71,6 +74,7 @@ describe("DashboardModule with widgets (P2 grid)", () => {
   });
 
   it("AC-SLOT-2: each shell carries the correct span class", () => {
+    setPref("xai_dash_order", ["clock", "stat", "mail"]);
     const widgets: WidgetRegistration[] = [
       { id: "clock", span: "w-clock", render: () => <div>clock</div> },
       { id: "stat", span: "w-stat", render: () => <div>stat</div> },
@@ -83,6 +87,7 @@ describe("DashboardModule with widgets (P2 grid)", () => {
   });
 
   it("duplicate ids in widgets[] → first wins, no crash, dev-warn handled silently in test env", () => {
+    setPref("xai_dash_order", ["alpha", "bravo"]);
     const widgets: WidgetRegistration[] = [
       { id: "alpha", span: "w-stat", render: () => <div>first</div> },
       { id: "alpha", span: "w-stat", render: () => <div>second</div> },

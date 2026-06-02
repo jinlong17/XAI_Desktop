@@ -165,7 +165,12 @@ function AiPaneContent({ lang }: PaneRenderProps): React.ReactElement {
           </select>
         </SettingRow>
         {providerIsOai && (
-          <SettingRow label={zh ? "Base URL" : "Base URL"} desc={zh ? "例如：https://api.groq.com/openai/v1" : "e.g. https://api.groq.com/openai/v1"}>
+          <SettingRow
+            label={zh ? "Base URL" : "Base URL"}
+            desc={zh
+              ? "支持 Gemini、OpenAI、Groq 等已在 CSP 放行的 OpenAI 兼容端点"
+              : "Supports Gemini, OpenAI, Groq, and other CSP-allowlisted OpenAI-compatible endpoints"}
+          >
             <input
               type="url"
               className="sl-input"

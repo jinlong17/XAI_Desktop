@@ -14,6 +14,11 @@
  */
 
 const DATE_RE = /^(\d{4})-(\d{2})-(\d{2})$/;
+const MS_PER_DAY = 86_400_000;
+
+function utcDayNumber(year: number, month: number, day: number): number {
+  return Math.floor(Date.UTC(year, month - 1, day) / MS_PER_DAY);
+}
 
 export function computeDaysUntil(target_date: string, now: Date): number {
   const m = DATE_RE.exec(target_date);
@@ -21,7 +26,7 @@ export function computeDaysUntil(target_date: string, now: Date): number {
   const y = m[1] as string;
   const mo = m[2] as string;
   const d = m[3] as string;
-  const targetLocalMidnight = new Date(+y, +mo - 1, +d).setHours(0, 0, 0, 0);
-  const todayLocalMidnight = new Date(now).setHours(0, 0, 0, 0);
-  return Math.floor((targetLocalMidnight - todayLocalMidnight) / 86_400_000);
+  const targetDay = utcDayNumber(+y, +mo, +d);
+  const todayDay = utcDayNumber(now.getFullYear(), now.getMonth() + 1, now.getDate());
+  return targetDay - todayDay;
 }

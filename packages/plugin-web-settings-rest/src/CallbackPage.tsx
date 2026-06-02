@@ -109,6 +109,7 @@ function CallbackPageInner(): React.ReactElement {
   React.useEffect(() => {
     const errorParam = searchParams.get("error");
     const stateParam = searchParams.get("state");
+    const codeParam = searchParams.get("code");
 
     if (errorParam) {
       // Provider returned an error (e.g. access_denied)
@@ -147,7 +148,16 @@ function CallbackPageInner(): React.ReactElement {
       return () => clearTimeout(timer);
     }
 
-    // Valid state — extract providerId from state prefix
+    if (!codeParam) {
+      setState({ status: "invalid", providerId: null });
+      scrubOAuthQuery();
+      const timer = setTimeout(() => {
+        void navigate(SETTINGS_INTEGRATIONS_PATH, { replace: true });
+      }, 4000);
+      return () => clearTimeout(timer);
+    }
+
+    // Valid state and code — extract providerId from state prefix
     const dotIndex = stateParam.indexOf(".");
     const providerId = stateParam.slice(0, dotIndex) as IntegrationProviderId;
 

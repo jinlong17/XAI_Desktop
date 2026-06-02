@@ -72,7 +72,12 @@ function getCardTitle(card: OverdueTaskCard, lang: "en" | "zh"): string {
 export function overdueTasks(store: unknown, lang: "en" | "zh"): NotificationSignal[] {
   if (!isTaskColsRecord(store)) return [];
 
-  const overdue = (store as Record<string, unknown>)["overdue"];
+  const overdue = Array.isArray(store)
+    ? store.find((col) => {
+        if (typeof col !== "object" || col === null) return false;
+        return (col as Record<string, unknown>)["id"] === "overdue";
+      })
+    : (store as Record<string, unknown>)["overdue"];
   if (!overdue || typeof overdue !== "object" || overdue === null) return [];
 
   const col = overdue as Record<string, unknown>;

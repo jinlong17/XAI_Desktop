@@ -13,6 +13,7 @@ import { createAuthSessionStorage } from "./storage";
 import { createDeviceIdentityStore, type DeviceIdentityStore } from "./device-store";
 
 const WEB_SYNC_VERSION = "2026-05";
+const DEFAULT_STORAGE_KEY = "xai-web-auth";
 
 type AuthState = "loading" | "authenticated" | "unauthenticated" | "unconfigured";
 
@@ -55,9 +56,13 @@ export function WebAuthSessionProvider({
   storage,
   deviceStore
 }: WebAuthSessionProviderProps) {
+  const resolvedStorage = useMemo(
+    () => storage ?? (config ? createAuthSessionStorage() : undefined),
+    [config, storage]
+  );
   const runtimeClient = useMemo(
-    () => client ?? createClientFromConfig(config, storage),
-    [client, config, storage]
+    () => client ?? createClientFromConfig(config, resolvedStorage),
+    [client, config, resolvedStorage]
   );
   const identityStore = useMemo(() => deviceStore ?? createDeviceIdentityStore(), [deviceStore]);
 
@@ -86,9 +91,16 @@ export function WebAuthSessionProvider({
   }, [identityStore]);
 
   const clearSessionStorage = useCallback(async () => {
+    const storageKey = config?.storageKey ?? DEFAULT_STORAGE_KEY;
+    try {
+      await resolvedStorage?.removeItem(storageKey);
+      await resolvedStorage?.removeItem(`${storageKey}-code-verifier`);
+    } catch {
+      // Best-effort local auth clear; React state below is still authoritative.
+    }
     setSession(null);
     setState(runtimeClient ? "unauthenticated" : "unconfigured");
-  }, [runtimeClient]);
+  }, [config?.storageKey, resolvedStorage, runtimeClient]);
 
   useEffect(() => {
     let active = true;

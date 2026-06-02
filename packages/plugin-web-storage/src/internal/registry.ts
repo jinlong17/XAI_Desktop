@@ -115,7 +115,6 @@ const DEFAULT_RAIL_ORDER: RailItemId[] = [
   "countdown",
   "ai",
   "statistics",
-  "settings",
 ];
 
 const DEFAULT_DASH_ORDER: DashWidgetId[] = [

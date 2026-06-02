@@ -18,7 +18,7 @@
  * via useCommandPalette() and passes onOpenSearch to <Shell>.
  *
  * Bugfix Tb-02/Tb-03/Tb-04: lang/theme/density now use lazy useState initializers
- * that read xai_pref_lang / xai_pref_theme / xai_pref_density from localStorage,
+ * that read xai_pref_lang / xai_pref_theme / xai_pref_density / xai_pref_font_scale from localStorage,
  * paired with Topbar.tsx's persistAndSet write path.
  * See packages/xai-web-shell/docs/dev_log.md BUGFIX §Fix Strategy Path R1.
  */
@@ -76,8 +76,8 @@ import { useDevAiConfigSeed } from "./dev/seedAiConfigFromEnv.js";
 // ---- readLocalPref — safe localStorage reader for lazy useState initializers --
 //
 // Reads a JSON-encoded string value from localStorage with a typed fallback.
-// Used by the three appearance useState initializers below (lang/theme/density).
-// Keys: "xai_pref_lang" | "xai_pref_theme" | "xai_pref_density"
+// Used by appearance useState initializers below (lang/theme/density/fontScale).
+// Keys: "xai_pref_lang" | "xai_pref_theme" | "xai_pref_density" | "xai_pref_font_scale"
 // (raw localStorage — not in plugin-web-storage registry by design; see dev_log).
 //
 // Exported for unit tests in apps/web/src/__tests__/App.lazy-init.test.tsx.
@@ -90,6 +90,15 @@ export function readLocalPref<T>(key: string, fallback: T): T {
   } catch {
     // JSON.parse failure (corrupt value) — use fallback silently.
     return fallback;
+  }
+}
+
+function writeLocalPref<T>(key: string, value: T): void {
+  if (typeof localStorage === "undefined") return;
+  try {
+    localStorage.setItem(key, JSON.stringify(value));
+  } catch {
+    // localStorage quota/access failures should not break the live in-memory update.
   }
 }
 
@@ -117,7 +126,7 @@ function AppInner() {
   const [lang, setLang]       = useState<Lang>(()    => readLocalPref("xai_pref_lang", "en" as Lang));
   const [theme, setTheme]     = useState<Theme>(()   => readLocalPref("xai_pref_theme", "light" as Theme));
   const [density, setDensity] = useState<Density>(() => readLocalPref("xai_pref_density", "comfortable" as Density));
-  const [fontScale, setFontScale] = useState<number>(1);
+  const [fontScale, setFontScale] = useState<number>(() => readLocalPref("xai_pref_font_scale", 1));
   const [petOn, setPetOn] = useState<boolean>(true);
 
   // ---- usePref state pieces (persisted) ------------------------------------
@@ -135,10 +144,10 @@ function AppInner() {
   useEffect(() => {
     const off = onWebEvent("web:settings:preference-changed", (d) => {
       switch (d.key) {
-        case "theme":     setTheme(d.value); break;
-        case "density":   setDensity(d.value); break;
-        case "fontScale": setFontScale(d.value); break;
-        case "lang":      setLang(d.value); break;
+        case "theme":     writeLocalPref("xai_pref_theme", d.value); setTheme(d.value); break;
+        case "density":   writeLocalPref("xai_pref_density", d.value); setDensity(d.value); break;
+        case "fontScale": writeLocalPref("xai_pref_font_scale", d.value); setFontScale(d.value); break;
+        case "lang":      writeLocalPref("xai_pref_lang", d.value); setLang(d.value); break;
         // accentHue / railPos / bgTone auto-rerender via usePref — no setter needed.
       }
     });

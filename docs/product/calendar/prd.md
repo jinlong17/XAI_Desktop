@@ -79,6 +79,7 @@ XAI Web Console 使用者。核心场景：
 | Date | Iteration | User-visible change | Source | 状态 |
 |---|---|---|---|---|
 | 2026-06-01 | PRD 建立 | dossier-sync 反向补账，首次建立 canonical PRD | `docs/reviews/xai-web-calendar/20260601-prd.draft.md` | — |
+| 2026-06-01 | 收口 block3 | 查证 block3（+按钮 `FIX_READY`）被 `xai-web-calendar-event-create`（Option B，SHIPPED `bc573b1`）取代，标 `superseded` | dev_log line 1129-1136 + `CalendarModule.tsx:107-180` | 原 🔴待确认#1 → resolved |
 | 2026-05-23 | 月视图 | 月网格 + 视图切换 + 样本事件 | dev_log block1 / discovery calendar | SHIPPED |
 | 2026-05-25 | 周/日视图 | 真 Week+Day 时间网格 + endTime + 持久化 | dev_log block2 / discovery week-day-views | SHIPPED |
 | 2026-05-27 | 事件 CRUD | 创建/编辑/删除 + 简单重复 | dev_log block4 / brief+discovery event-create | SHIPPED |
@@ -93,11 +94,8 @@ XAI Web Console 使用者。核心场景：
 
 ## 9. Open Items（诚实标注，非阻塞）
 
-- **🔴 待确认 #1（traceability 异常 — 重要）**：`dev_log` block3 是 BUGFIX「Calendar 工具栏 "+" 按钮无 onClick
-  — 用户无法创建任何 event」(Audit Top-10 #2 / C-02)，其 Status 停在 **`FIX_READY`（未 SHIPPED）**；
-  但其后 block4 event-create 已 SHIPPED 且实现了创建。
-  - **疑问**：block3 的 "+按钮 bugfix" 是否被 block4 event-create **取代/吸收**？
-    若是 → block3 应标 `superseded-by event-create`；若否 → 存在一个未收口的 FIX_READY bugfix。
-  - **需操作者/原执行者确认 block3 终态**后回写 `dev_log` 与本 PRD §7。
+- **✅ 已收口 #1（原 traceability 异常 — 已查证，2026-06-01）**：`dev_log` block3 BUGFIX「Calendar 工具栏 "+" 按钮无 onClick」(Audit Top-10 #2 / C-02) 的 Status 虽停在 `FIX_READY`，但 dev_log 自身记录（line 1129-1136「Feature-Extension Lineage」）已写明：**operator 否决了 block3 的 Option A（DISABLE 按钮），改选 Option B（真实 CRUD），升级 feature-plan 并落地 P0 carve-out commit `bc573b1`**。该 Option B 即 `xai-web-calendar-event-create`（已 SHIPPED 2026-05-28）。
+  - **代码印证**：`CalendarModule.tsx:107-110` `handleAddClick → setComposer({mode:"create"})`（+按钮已接真实创建）+ `:149-180` create/update + `:182-190` delete + `:101` `useUserCalEvents()` data layer。
+  - **结论**：block3 **superseded-by `xai-web-calendar-event-create`**，**非悬空待修**。原始用户痛点（"+"无法创建 event）已由 event-create CRUD 彻底解决。已回写 dev_log block3 Work Log（2026-06-01 收口行）。
 - **待确认 #2**：周/日视图与事件 CRUD 的具体 AC ID（`test.md` >1020 行未读全）→ 补齐 §5/§8 映射。
 - **Ship-not-logged**：`release-log.md` 缺日历全部条目（月/周日/CRUD 三次 SHIPPED）→ 建议 `xai-release-log` 补登。
