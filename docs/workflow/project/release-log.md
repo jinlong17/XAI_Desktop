@@ -6,6 +6,15 @@
 
 ## 2026-06-02
 
+### Web 记账模块 Cloud Design 正式接入
+
+- Product line: web
+- Branch / commit: `codex/web/bookkeeping` / local working tree
+- User-visible change: Web Console 新增 `/app/bookkeeping` 正式记账模块，rail 显示「记账」，可管理账本、账户、收支/转账/预付记录、分类、预算、资产、投资和周期账单；支持计算器金额输入、日历每日收支、明细搜索筛选、统计图表、CSV 导入导出和刷新后本地保留。
+- Developer/system delta: 新增 `@repo/plugin-web-bookkeeping` 包、Cloud Design 对齐 docs 四件套和 canonical PRD；host 接入 workspace dependency、shell registration、wallet icon、`nav.bookkeeping` i18n；看板 Web feature 列表从 proposed 更新为 in-dev。存储使用 `xai_bk_state_v2` + 4 个偏好键，adapter 标记 `syncStatus: "device-local"`，仅预留账号云同步接口，不写 sync entities；修复 dev/StrictMode 下保存一次重复写入两条记录的状态副作用问题。
+- Verification: `pnpm --filter @repo/plugin-web-bookkeeping lint` passed；`pnpm --filter @repo/plugin-web-bookkeeping check-types` passed；`pnpm --filter @repo/plugin-web-bookkeeping test` passed；`pnpm --filter @repo/web check-types` passed；`pnpm --filter @repo/xai-web-shell check-types` passed；`pnpm --filter @repo/xai-web-shell lint` passed；`pnpm --filter @repo/plugin-web-tokens check-types` passed；host shell/router/rail filter targeted tests passed；changed Web files targeted eslint passed；`pnpm --filter @repo/web build` passed；Browser smoke at `/app/bookkeeping` passed（8 tabs、单次保存无重复、reload 持久化、390px 无横向溢出）。
+- Risk / follow-up: full `pnpm --filter @repo/web lint` 仍被既有 `apps/web/src/App.tsx` restricted-import warning 阻断，非本次改动；账号云同步和 Desktop/App 下沉需后续分别走 D4 / D3 gate。
+
 ### 个人开发看板开发数据周/月趋势
 
 - Product line: project-system / dev-dashboard

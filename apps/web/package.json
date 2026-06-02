@@ -47,6 +47,7 @@
     "@repo/plugin-web-tasks": "workspace:*",
     "@repo/plugin-web-statistics": "workspace:*",
     "@repo/plugin-web-time-tracker": "workspace:*",
+    "@repo/plugin-web-bookkeeping": "workspace:*",
     "@repo/plugin-web-settings-shell": "workspace:*",
     "@repo/plugin-web-settings-features-panel": "workspace:*",
     "@repo/plugin-web-settings-appearance": "workspace:*",
