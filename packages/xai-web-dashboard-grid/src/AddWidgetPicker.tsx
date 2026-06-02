@@ -172,10 +172,14 @@ export function AddWidgetPicker({
         } catch {
           // Already open — safe to ignore.
         }
+      } else {
+        dialog.setAttribute("open", "");
       }
     } else {
       if (typeof dialog.close === "function") {
         dialog.close();
+      } else {
+        dialog.removeAttribute("open");
       }
     }
   }, [open]);

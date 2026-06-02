@@ -45,6 +45,28 @@ describe("AC-WSTORE-1: getWeather defensive narrow — null / malformed → null
   it("getWeather({city:'x', temp:25, condition:'sunny', updatedAt:'x', hi:'warm'}) → null (hi not number)", () => {
     expect(getWeather({ city: "x", temp: 25, condition: "sunny", updatedAt: "x", hi: "warm" })).toBeNull();
   });
+  it("getWeather(location-only Open-Meteo snapshot) → valid", () => {
+    const locationOnly = {
+      city: "Shanghai",
+      provider: "open-meteo",
+      latitude: 31.23,
+      longitude: 121.47,
+      timezone: "Asia/Shanghai",
+      updatedAt: "2026-06-01T10:00:00.000Z",
+    };
+    expect(getWeather(locationOnly)).toEqual(locationOnly);
+  });
+  it("getWeather(invalid latitude/longitude) → null", () => {
+    expect(
+      getWeather({
+        city: "Invalid",
+        provider: "open-meteo",
+        latitude: 120,
+        longitude: 200,
+        updatedAt: "2026-06-01T10:00:00.000Z",
+      }),
+    ).toBeNull();
+  });
   it("never throws", () => {
     expect(() => getWeather(null)).not.toThrow();
     expect(() => getWeather({})).not.toThrow();
@@ -66,6 +88,35 @@ describe("AC-WSTORE-2: getWeather(valid UserWeather) → the same validated obje
       const w = { ...VALID_WEATHER, condition: cond };
       expect(getWeather(w)).toEqual(w);
     }
+  });
+  it("handles optional Open-Meteo details when present and valid", () => {
+    const withProviderDetails = {
+      ...VALID_WEATHER,
+      provider: "open-meteo",
+      latitude: 31.23,
+      longitude: 121.47,
+      timezone: "Asia/Shanghai",
+      country: "China",
+      countryCode: "CN",
+      admin1: "Shanghai",
+      weatherCode: 3,
+      apparentTemp: 31,
+      humidity: 74,
+      windSpeed: 9,
+      precipitationProbability: 40,
+      fetchedAt: "2026-06-01T10:00:00.000Z",
+      forecast: [
+        {
+          date: "2026-06-01",
+          condition: "cloudy",
+          weatherCode: 3,
+          hi: 31,
+          lo: 25,
+          precipitationProbability: 40,
+        },
+      ],
+    } satisfies UserWeather;
+    expect(getWeather(withProviderDetails)).toEqual(withProviderDetails);
   });
 });
 
@@ -90,6 +141,23 @@ describe("AC-WSTORE-3: setWeather trims city + stamps updatedAt", () => {
     const result = setWeather({ city: "London", temp: 12, condition: "rainy" });
     expect(result.hi).toBeUndefined();
     expect(result.lo).toBeUndefined();
+  });
+  it("location-only Open-Meteo draft persists provider metadata without requiring manual temp", () => {
+    const result = setWeather({
+      city: "Shanghai",
+      provider: "open-meteo",
+      latitude: 31.23,
+      longitude: 121.47,
+      timezone: "Asia/Shanghai",
+      country: "China",
+      countryCode: "CN",
+      admin1: "Shanghai",
+    });
+    expect(result.provider).toBe("open-meteo");
+    expect(result.latitude).toBe(31.23);
+    expect(result.longitude).toBe(121.47);
+    expect(result.temp).toBeUndefined();
+    expect(result.condition).toBeUndefined();
   });
 });
 

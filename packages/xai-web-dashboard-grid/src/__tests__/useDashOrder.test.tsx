@@ -31,11 +31,8 @@ describe("useDashOrder", () => {
   });
 
   // --- existing tests (destructure as tuple now) ----------------------------
-  it("AC-PERSIST-1: empty persisted (default first-visit) → falls back to registry default + sanitized further by widgets", () => {
-    // The registry default for xai_dash_order is
-    // ["clock","minicalendar","worldclocks","weather","stickies","mail","upcoming","stats"].
-    // With widgets = [a, b, c], sanitize drops all 8 default ids and returns
-    // [a, b, c].
+  it("AC-PERSIST-1: default first-visit order is sanitized by registered widgets", () => {
+    setPref("xai_dash_order", ["a", "b", "c"]);
     const widgets = [fixture("a"), fixture("b"), fixture("c")];
     const { result } = renderHook(() => useDashOrder(widgets));
     const [order] = result.current;
@@ -59,15 +56,11 @@ describe("useDashOrder", () => {
     expect(JSON.parse(localStorage.getItem("xai_dash_order") ?? "null")).toEqual(["a", "b"]);
   });
 
-  it("AC-PERSIST-4: persisted missing some ids → append missing + write back", () => {
+  it("AC-PERSIST-4: persisted missing some ids → preserves user removals", () => {
     setPref("xai_dash_order", ["a"]);
     const widgets = [fixture("a"), fixture("b"), fixture("c")];
     renderHook(() => useDashOrder(widgets));
-    expect(JSON.parse(localStorage.getItem("xai_dash_order") ?? "null")).toEqual([
-      "a",
-      "b",
-      "c",
-    ]);
+    expect(JSON.parse(localStorage.getItem("xai_dash_order") ?? "null")).toEqual(["a"]);
   });
 
   it("AC-PERSIST-5: persisted contains duplicate ids → dedupe + write back", () => {

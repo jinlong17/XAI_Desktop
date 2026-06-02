@@ -11,8 +11,8 @@
  * Design: packages/xai-web-dashboard-widgets/docs/design.md §G
  * Test:   packages/xai-web-dashboard-widgets/docs/test.md §G.3 AC-MAIL-REAL/EMPTY/READONLY
  */
-import { describe, it, expect, beforeEach } from "vitest";
-import { render, screen } from "@testing-library/react";
+import { describe, it, expect, beforeEach, vi } from "vitest";
+import { fireEvent, render, screen } from "@testing-library/react";
 import { getPref, setPref } from "@repo/plugin-web-storage";
 import { MailWidget } from "../widgets/MailWidget.js";
 import { STR_NOTIFICATIONS } from "../internal/strings.js";
@@ -86,6 +86,31 @@ describe("AC-MAIL-REAL-1: seed xai_task_cols (2 overdue) + xai_calendar_events (
     const rows = container.querySelectorAll(".mail-row");
     expect(rows).toHaveLength(3);
     expect(container.querySelector("[data-mail-badge]")?.textContent).toBe("3");
+  });
+
+  it("clicking notification rows deep-links to the owning module", () => {
+    const goTo = vi.fn();
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    setPref("xai_task_cols", {
+      overdue: { tasks: [{ id: "t1", title: { en: "Task A", zh: "任务A" } }] },
+    } as any);
+    setPref("xai_calendar_events", {
+      ev1: {
+        id: "ev1",
+        title: "Today meeting",
+        startISO: "2026-05-29T10:00",
+        endISO: "2026-05-29T11:00",
+        colorPreset: "mint",
+        recurrence: null,
+      },
+    } as unknown as Record<string, unknown>);
+
+    const { container } = render(<MailWidget lang="en" now={NOW} goTo={goTo} />);
+    const rows = container.querySelectorAll(".mail-row");
+    fireEvent.click(rows[0]!);
+    fireEvent.click(rows[1]!);
+    expect(goTo).toHaveBeenCalledWith("tasks");
+    expect(goTo).toHaveBeenCalledWith("calendar");
   });
 });
 

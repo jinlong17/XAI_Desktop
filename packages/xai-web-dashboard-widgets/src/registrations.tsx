@@ -75,12 +75,12 @@ export const dashboardWidgetRegistrations: WidgetRegistration[] = [
     id: "mail",
     span: "w-mail",
     ariaLabel: { en: "Notifications", zh: "通知" },
-    render: (ctx) => <MailWidget lang={ctx.lang} now={ctx.now} />,
+    render: (ctx) => <MailWidget lang={ctx.lang} now={ctx.now} goTo={ctx.goTo} />,
   },
   {
     id: "upcoming",
     span: "w-upcoming",
     ariaLabel: { en: "Upcoming events", zh: "近期事件" },
-    render: (ctx) => <UpcomingWidget lang={ctx.lang} now={ctx.now} />,
+    render: (ctx) => <UpcomingWidget lang={ctx.lang} now={ctx.now} goTo={ctx.goTo} />,
   },
 ];

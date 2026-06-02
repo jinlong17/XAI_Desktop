@@ -19,11 +19,15 @@
 
 import { useCallback, useMemo } from "react";
 import { usePref } from "@repo/plugin-web-storage";
-import type { UserSticky, NewStickyDraft } from "./types.js";
+import type { UserSticky, NewStickyDraft, StickyPosition, StickySize } from "./types.js";
 import {
   createSticky,
   deleteSticky,
   listStickies,
+  moveSticky,
+  reorderStickies,
+  resizeSticky,
+  updateSticky,
 } from "./stickiesStore.js";
 
 export interface StickiesApi {
@@ -35,6 +39,14 @@ export interface StickiesApi {
   create: (draft: NewStickyDraft) => UserSticky;
   /** Remove + persist; no-op when id missing. */
   remove: (id: string) => void;
+  /** Update + persist; no-op when id missing. */
+  update: (id: string, draft: NewStickyDraft) => void;
+  /** Resize + persist; no-op when id missing. */
+  resize: (id: string, size: StickySize) => void;
+  /** Move + persist; no-op when id missing. */
+  move: (id: string, position: StickyPosition) => void;
+  /** Reorder + persist; missing ids are ignored. */
+  reorder: (orderedIds: readonly string[]) => void;
 }
 
 /**
@@ -67,5 +79,37 @@ export function useStickies(): StickiesApi {
     [stickies, setStickiesRaw],
   );
 
-  return { stickies, list, create, remove };
+  const update = useCallback(
+    (id: string, draft: NewStickyDraft) => {
+      const next = updateSticky(stickies, id, draft);
+      if (next !== stickies) setStickiesRaw(next);
+    },
+    [stickies, setStickiesRaw],
+  );
+
+  const resize = useCallback(
+    (id: string, size: StickySize) => {
+      const next = resizeSticky(stickies, id, size);
+      if (next !== stickies) setStickiesRaw(next);
+    },
+    [stickies, setStickiesRaw],
+  );
+
+  const move = useCallback(
+    (id: string, position: StickyPosition) => {
+      const next = moveSticky(stickies, id, position);
+      if (next !== stickies) setStickiesRaw(next);
+    },
+    [stickies, setStickiesRaw],
+  );
+
+  const reorder = useCallback(
+    (orderedIds: readonly string[]) => {
+      const next = reorderStickies(stickies, orderedIds);
+      if (next !== stickies) setStickiesRaw(next);
+    },
+    [stickies, setStickiesRaw],
+  );
+
+  return { stickies, list, create, remove, update, resize, move, reorder };
 }

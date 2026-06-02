@@ -9,7 +9,7 @@
  * Test:   packages/xai-web-dashboard-widgets/docs/test.md §G.3 AC-WEATHER-REAL-1..8
  */
 import { describe, it, expect, beforeEach, beforeAll, vi, afterEach } from "vitest";
-import { render, screen, fireEvent } from "@testing-library/react";
+import { render, screen, fireEvent, waitFor } from "@testing-library/react";
 import { WeatherWidget } from "../widgets/WeatherWidget.js";
 import { STR_WEATHER } from "../internal/strings.js";
 
@@ -60,6 +60,13 @@ describe("AC-WEATHER-REAL-2: clicking Edit opens the editor (dialog .open)", () 
     expect(container.querySelector("dialog[open]")).toBeNull();
     fireEvent.click(editBtn);
     expect(container.querySelector("dialog")).not.toBeNull();
+    expect(container.querySelector("dialog")!.hasAttribute("open")).toBe(true);
+  });
+
+  it("empty-state settings button opens the editor", () => {
+    const { container } = render(<WeatherWidget lang="zh" />);
+    const emptyButton = container.querySelector(".ww-empty") as HTMLElement;
+    fireEvent.click(emptyButton);
     expect(container.querySelector("dialog")!.hasAttribute("open")).toBe(true);
   });
 });
@@ -161,13 +168,13 @@ describe("AC-WEATHER-REAL-6: integration — Edit → fill editor → Save → w
   });
 });
 
-describe("AC-WEATHER-REAL-7: 5-day forecast NOT rendered on live path (no .wwf-day)", () => {
+describe("AC-WEATHER-REAL-7: forecast renders only when live provider data includes it", () => {
   it("no .wwf-day elements when weather is null (empty state)", () => {
     const { container } = render(<WeatherWidget lang="en" />);
     expect(container.querySelectorAll(".wwf-day")).toHaveLength(0);
   });
 
-  it("no .wwf-day elements when weather is set (real path)", () => {
+  it("no .wwf-day elements when manual weather has no forecast", () => {
     const seeded = {
       city: "HK",
       temp: 32,
@@ -178,9 +185,114 @@ describe("AC-WEATHER-REAL-7: 5-day forecast NOT rendered on live path (no .wwf-d
     const { container } = render(<WeatherWidget lang="en" />);
     expect(container.querySelectorAll(".wwf-day")).toHaveLength(0);
   });
+
+  it("renders forecast days when Open-Meteo data is cached", () => {
+    const seeded = {
+      city: "Shanghai",
+      provider: "open-meteo",
+      temp: 28,
+      condition: "cloudy",
+      latitude: 31.23,
+      longitude: 121.47,
+      fetchedAt: new Date().toISOString(),
+      updatedAt: "2026-06-01T12:00:00.000Z",
+      forecast: [
+        { date: "2026-06-01", condition: "cloudy", hi: 31, lo: 25 },
+        { date: "2026-06-02", condition: "rainy", hi: 29, lo: 24 },
+      ],
+    };
+    localStorage.setItem("xai_dashboard_weather", JSON.stringify(seeded));
+    const { container } = render(<WeatherWidget lang="en" />);
+    expect(container.querySelectorAll(".wwf-day")).toHaveLength(2);
+    expect(container.textContent).toContain(STR_WEATHER.source_open_meteo.en);
+  });
 });
 
-describe("AC-WEATHER-REAL-8: bilingual — empty label + condition labels render in en + zh; title from dashboard.weather", () => {
+describe("AC-WEATHER-REAL-8: Open-Meteo refresh, cache, and fallback behavior", () => {
+  it("location-only weather triggers a live fetch and persists normalized data", async () => {
+    const seeded = {
+      city: "Shanghai",
+      provider: "open-meteo",
+      latitude: 31.23,
+      longitude: 121.47,
+      timezone: "Asia/Shanghai",
+      updatedAt: "2026-06-01T12:00:00.000Z",
+    };
+    localStorage.setItem("xai_dashboard_weather", JSON.stringify(seeded));
+    const fetchWeather = vi.fn(async () => ({
+      city: "Shanghai",
+      provider: "open-meteo" as const,
+      latitude: 31.23,
+      longitude: 121.47,
+      timezone: "Asia/Shanghai",
+      temp: 28,
+      condition: "cloudy" as const,
+      hi: 31,
+      lo: 25,
+      humidity: 74,
+      windSpeed: 9,
+      fetchedAt: new Date().toISOString(),
+      forecast: [{ date: "2026-06-01", condition: "cloudy" as const, hi: 31, lo: 25 }],
+    }));
+
+    const { container } = render(<WeatherWidget lang="en" fetchWeather={fetchWeather} />);
+
+    await waitFor(() => expect(container.querySelector(".ww-temp")?.textContent).toBe("28°"));
+    expect(fetchWeather).toHaveBeenCalledOnce();
+    expect(container.textContent).toContain(STR_WEATHER.source_open_meteo.en);
+    expect(container.textContent).toContain(`${STR_WEATHER.humidity.en} 74%`);
+    const stored = JSON.parse(localStorage.getItem("xai_dashboard_weather")!);
+    expect(stored.fetchedAt).toBeTruthy();
+    expect(stored.temp).toBe(28);
+  });
+
+  it("fresh Open-Meteo cache skips network refresh", () => {
+    localStorage.setItem(
+      "xai_dashboard_weather",
+      JSON.stringify({
+        city: "Shanghai",
+        provider: "open-meteo",
+        latitude: 31.23,
+        longitude: 121.47,
+        temp: 28,
+        condition: "cloudy",
+        fetchedAt: new Date().toISOString(),
+        updatedAt: "2026-06-01T12:00:00.000Z",
+      }),
+    );
+    const fetchWeather = vi.fn(async () => ({ city: "Shanghai", temp: 30, condition: "sunny" as const }));
+    const { container } = render(<WeatherWidget lang="en" fetchWeather={fetchWeather} />);
+    expect(container.querySelector(".ww-temp")?.textContent).toBe("28°");
+    expect(fetchWeather).not.toHaveBeenCalled();
+  });
+
+  it("failed live refresh keeps saved fallback visible and opens editor from the warning", async () => {
+    localStorage.setItem(
+      "xai_dashboard_weather",
+      JSON.stringify({
+        city: "Shanghai",
+        provider: "open-meteo",
+        latitude: 31.23,
+        longitude: 121.47,
+        temp: 27,
+        condition: "rainy",
+        fetchedAt: "2026-05-01T12:00:00.000Z",
+        updatedAt: "2026-06-01T12:00:00.000Z",
+      }),
+    );
+    const fetchWeather = vi.fn(async () => {
+      throw new Error("offline");
+    });
+    const { container } = render(<WeatherWidget lang="en" fetchWeather={fetchWeather} />);
+
+    await screen.findByText(STR_WEATHER.fetch_error.en);
+    expect(container.querySelector(".ww-temp")?.textContent).toBe("27°");
+    fireEvent.click(screen.getByText(STR_WEATHER.fetch_error.en));
+    expect(container.querySelector("dialog")!.hasAttribute("open")).toBe(true);
+  });
+});
+
+describe("AC-WEATHER-REAL-9: bilingual — empty label + condition labels render in en + zh; title from dashboard.weather", () => {
   it("lang=en: empty state label is en", () => {
     const { container } = render(<WeatherWidget lang="en" />);
     expect(container.textContent).toContain(STR_WEATHER.empty.en);

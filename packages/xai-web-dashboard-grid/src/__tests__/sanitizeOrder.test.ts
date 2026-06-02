@@ -11,9 +11,9 @@ function fixture(id: string): WidgetRegistration {
 }
 
 describe("sanitizeOrder", () => {
-  it("AC-PERSIST-1: empty persisted → registered order", () => {
+  it("AC-PERSIST-1: empty persisted → empty order", () => {
     const reg = [fixture("a"), fixture("b"), fixture("c")];
-    expect(sanitizeOrder([], reg)).toEqual(["a", "b", "c"]);
+    expect(sanitizeOrder([], reg)).toEqual([]);
   });
 
   it("AC-PERSIST-2: persisted matches registered → identity (pure)", () => {
@@ -26,9 +26,9 @@ describe("sanitizeOrder", () => {
     expect(sanitizeOrder(["a", "ghost", "b"], reg)).toEqual(["a", "b"]);
   });
 
-  it("AC-PERSIST-4: persisted missing some registered → append missing", () => {
+  it("AC-PERSIST-4: persisted missing some registered → preserves user removals", () => {
     const reg = [fixture("a"), fixture("b"), fixture("c"), fixture("d")];
-    expect(sanitizeOrder(["a", "c"], reg)).toEqual(["a", "c", "b", "d"]);
+    expect(sanitizeOrder(["a", "c"], reg)).toEqual(["a", "c"]);
   });
 
   it("AC-PERSIST-5: persisted contains duplicate id → dedupe (first wins)", () => {
@@ -54,14 +54,14 @@ describe("sanitizeOrder", () => {
     expect(sanitizeOrder(["c", "a", "b"], reg)).toEqual(["c", "a", "b"]);
   });
 
-  it("handles all-unknown persisted gracefully (registered order returned)", () => {
+  it("handles all-unknown persisted gracefully", () => {
     const reg = [fixture("a"), fixture("b")];
-    expect(sanitizeOrder(["x", "y", "z"], reg)).toEqual(["a", "b"]);
+    expect(sanitizeOrder(["x", "y", "z"], reg)).toEqual([]);
   });
 
-  it("combination: dedupe + drop + append", () => {
+  it("combination: dedupe + drop without append", () => {
     const reg = [fixture("a"), fixture("b"), fixture("c")];
-    expect(sanitizeOrder(["b", "b", "ghost", "a"], reg)).toEqual(["b", "a", "c"]);
+    expect(sanitizeOrder(["b", "b", "ghost", "a"], reg)).toEqual(["b", "a"]);
   });
 });
 

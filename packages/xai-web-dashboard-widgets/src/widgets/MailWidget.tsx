@@ -26,9 +26,11 @@ export interface MailWidgetProps {
   lang: Lang;
   /** Current Date (injected for testability + `ctx.now` threading from registrations.tsx). */
   now: Date;
+  /** Deep-link callback supplied by dashboard grid context. */
+  goTo?: (moduleId: string) => void;
 }
 
-export function MailWidget({ lang, now }: MailWidgetProps) {
+export function MailWidget({ lang, now, goTo = () => {} }: MailWidgetProps) {
   const { s } = useI18n(lang);
 
   // READ-ONLY: never call the setter (RM1 — AC-MAIL-READONLY-1 guard)
@@ -55,35 +57,48 @@ export function MailWidget({ lang, now }: MailWidgetProps) {
         </div>
       ) : (
         <ul className="mail-list">
-          {signals.map((sig) => (
-            <li
-              key={sig.id}
-              className="mail-row"
-              data-source-type={sig.sourceType}
-            >
-              {/* Source-type dot / icon for visual distinction (AC-MAIL-REAL-2) */}
-              <span
-                className={`notif-dot notif-dot--${sig.sourceType}`}
-                aria-label={
-                  sig.sourceType === "task-overdue"
+          {signals.map((sig) => {
+            const targetModule = sig.sourceType === "task-overdue" ? "tasks" : "calendar";
+            return (
+              <li
+                key={sig.id}
+                className="mail-row"
+                data-source-type={sig.sourceType}
+                data-no-drag
+                role="button"
+                tabIndex={0}
+                onClick={() => goTo(targetModule)}
+                onKeyDown={(e) => {
+                  if (e.key === "Enter" || e.key === " ") {
+                    e.preventDefault();
+                    goTo(targetModule);
+                  }
+                }}
+              >
+                {/* Source-type dot / icon for visual distinction (AC-MAIL-REAL-2) */}
+                <span
+                  className={`notif-dot notif-dot--${sig.sourceType}`}
+                  aria-label={
+                    sig.sourceType === "task-overdue"
+                      ? strNotif("src_overdue", lang)
+                      : strNotif("src_today", lang)
+                  }
+                />
+                <div className="mail-body">
+                  <div className="mail-from">{sig.label}</div>
+                  {sig.time && (
+                    <div className="mail-subj mono">{sig.time}</div>
+                  )}
+                </div>
+                {/* Source-type label (small, muted) */}
+                <div className="mail-time">
+                  {sig.sourceType === "task-overdue"
                     ? strNotif("src_overdue", lang)
-                    : strNotif("src_today", lang)
-                }
-              />
-              <div className="mail-body">
-                <div className="mail-from">{sig.label}</div>
-                {sig.time && (
-                  <div className="mail-subj mono">{sig.time}</div>
-                )}
-              </div>
-              {/* Source-type label (small, muted) */}
-              <div className="mail-time">
-                {sig.sourceType === "task-overdue"
-                  ? strNotif("src_overdue", lang)
-                  : strNotif("src_today", lang)}
-              </div>
-            </li>
-          ))}
+                    : strNotif("src_today", lang)}
+                </div>
+              </li>
+            );
+          })}
         </ul>
       )}
       {/* Keep header fallback for widget title accessible; use existing token as backup */}
