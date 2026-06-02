@@ -5,6 +5,7 @@
  * owner shape:
  *
  *   Record<BucketId, { tasks: TaskCard[]; completed?: TaskCard[] }>
+ *   OR TaskCol[] from the current xai-web-tasks owner package.
  *
  * where BucketId = "overdue" | "next7" | "later" | "nodate".
  *
@@ -37,6 +38,16 @@ export interface TaskColMinimal {
  * shape (has a `tasks` array). Unknown bucket ids are tolerated.
  */
 export function isTaskColsRecord(v: unknown): v is Record<string, TaskColMinimal> {
+  if (Array.isArray(v)) {
+    return v.every((val) => {
+      if (typeof val !== "object" || val === null) return false;
+      const col = val as Record<string, unknown>;
+      if (typeof col.id !== "string") return false;
+      if (!Array.isArray(col.tasks)) return false;
+      if (col.completed !== undefined && !Array.isArray(col.completed)) return false;
+      return true;
+    });
+  }
   if (typeof v !== "object" || v === null) return false;
   const obj = v as Record<string, unknown>;
   for (const val of Object.values(obj)) {

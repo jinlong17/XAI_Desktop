@@ -15,7 +15,9 @@
  * API contract: packages/xai-web-ai-chat/docs/api.md §12.2
  */
 
+import { getPref } from "@repo/plugin-web-storage";
 import { createIndexedDbStore, createDeviceIdentityStore } from "@repo/web-auth-device-session";
+import { resolveProvider } from "./llmProvider.js";
 import { classifyError, type LlmError } from "./llmErrors.js";
 
 // ---- Types -----------------------------------------------------------------
@@ -248,32 +250,21 @@ export const aiKeyStorage: AiKeyStorage = {
       return { ok: false, error: err };
     }
     try {
-      // A minimal 1-token validation request — provider-specific.
-      const url =
+      const config = resolveProvider(plaintext);
+      const modelId =
         provider === "anthropic"
-          ? "https://api.anthropic.com/v1/messages"
-          : null;
-      if (!url) {
-        const err: LlmError = {
-          kind: "BadKey",
-          status: 401,
-          detail: "no-url-configured",
-        };
-        return { ok: false, error: err };
-      }
-      const res = await fetch(url, {
+          ? config.resolveModelId("haiku")
+          : String(getPref("xai_ai_model_default") || "gpt-4o-mini");
+      const body = config.buildBody({
+        modelId,
+        messages: [{ role: "user", content: "hi" }],
+        stream: false,
+        maxTokens: 1,
+      });
+      const res = await fetch(config.url, {
         method: "POST",
-        headers: {
-          "x-api-key": plaintext,
-          "anthropic-version": "2023-06-01",
-          "anthropic-dangerous-direct-browser-access": "true",
-          "content-type": "application/json",
-        },
-        body: JSON.stringify({
-          model: "claude-haiku-4-5-20251101",
-          max_tokens: 1,
-          messages: [{ role: "user", content: "hi" }],
-        }),
+        headers: config.headers,
+        body: JSON.stringify(body),
       });
       if (!res.ok) {
         const err = await classifyError(res);

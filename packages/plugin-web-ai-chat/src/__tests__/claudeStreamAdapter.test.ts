@@ -65,7 +65,7 @@ describe("claudeStreamAdapter streamCompleteChat (CS)", () => {
 
   it("CS2: happy path OpenAI-compatible — yields 2 chunks then done", async () => {
     localStorage.setItem("xai_ai_provider", JSON.stringify("openai-compatible"));
-    localStorage.setItem("xai_ai_base_url", JSON.stringify("https://api.example.com/v1"));
+    localStorage.setItem("xai_ai_base_url", JSON.stringify("https://api.groq.com/openai/v1"));
     await aiKeyStorage.saveKey("openai-compatible", "oai-test-key");
 
     vi.spyOn(globalThis, "fetch").mockResolvedValue(
