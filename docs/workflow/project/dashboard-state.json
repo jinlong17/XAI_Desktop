@@ -663,18 +663,27 @@
         [
           "和下一层关系",
           "插件数据如果需要跨设备，就进入账号云同步层；不需要则保持 device-local。"
+        ],
+        [
+          "边界与文档",
+          "三面反混淆(底座=App 原生 / 挂件=插件 / Web 同名组件)与能力边界见 docs/MODULE_BOUNDARIES.md;开发范围与 MVP 顺序见 docs/planning/sub-prds/plugin/PRD.md;机器可读分类注册表 docs/workflow/project/module-classification.json。"
         ]
       ],
-      "goal": "为 macOS App 提供桌面整理插件 / Widget 平台（Smart Container Grid、剪贴板、便签、宠物、冥想等），surface 落在 apps/desktop/ 的插件槽位 + packages/plugin-{organizer,clipboard,widgets,pet} 等 P2 插件包（部分如 plugin-meditation 仍为 PLUGIN_MAP 上的 Planned 规划行、未建包）。插件数据默认 syncScope: device-local（留本机、永不入远端 outbox），仅在显式标记 account-sync 时才经同步层跨设备。",
+      "goal": "为 macOS App 提供桌面整理插件 / Widget 平台（Smart Container Grid、剪贴板、便签、宠物、冥想等），surface 落在 apps/desktop/ 的插件槽位 + packages/plugin-{organizer,clipboard,widgets,pet} 等 P2 插件包（部分如 plugin-meditation 仍为 PLUGIN_MAP 上的 Planned 规划行、未建包）。插件数据默认 syncScope: device-local（留本机、永不入远端 outbox），仅在显式标记 account-sync 时才经同步层跨设备。organizer 已 Stable/shipped 并接入桌面宿主,其余 clipboard/widgets/pet 为 Planned/stub、meditation 未建包;organizer 的 P 级 reconcile(web 线 P2 vs dev 线 ADR-0011 P3)见 ADR-0015(Proposed)。三面边界权威见 docs/MODULE_BOUNDARIES.md。",
       "routing": [
         "改动落在 apps/desktop/ 的插件槽位（plugin slots），或 packages/plugin-{organizer,clipboard,widgets,pet} 等 P2 插件包（plugin-meditation 当前为 PLUGIN_MAP Planned 行、尚未建包）",
         "需求提到 桌面整理 / Smart Container / Grid 容器 / 拖拽归类 / 文件夹与 App 整理 / 浮动小组件 Widget / 便签 / 桌面宠物 / 冥想",
         "涉及插件平台 / SDK / Widget Host / 插件清单 manifest.json / 插件注册装载（plugin platform / plugin SDK），归 desktop-plugin-next 隔离线",
         "插件本地数据带 syncScope: device-local（已注册的如 clipboard.item；ADR-0013 D4 还以 widgets.widget 为示例）——不入远端 outbox，留在本设备；只有显式声明 account-sync 才走同步层",
         "分支线索：short = codex/plugin/<feature>，long = desktop-plugin-next（<-> desktop-next，均已在 D2 定义但尚未创建）",
-        "状态线索：当前 P2 PAUSED，需求被标注为 等 G1 ships 后再开工 / P2 / 暂停中（ADR-0010 §D2）"
+        "状态线索：当前 P2 PAUSED，需求被标注为 等 G1 ships 后再开工 / P2 / 暂停中（ADR-0010 §D2）",
+        "归类不确定 / 同名陷阱（Web 的 pet·widgets·dashboard-grid 是网页内 DOM，≠ 桌面插件的原生 overlay）/ 发现边界漂移时，用 xai-module-classify 对照 docs/workflow/project/module-classification.json 判定，勿凭名字归类"
       ],
       "skills": [
+        {
+          "name": "xai-module-classify",
+          "when": "新功能到达时先判定它归 Web/App/插件/sync 哪个模块;或发现未知分类、边界不清、文档不一致(同名陷阱 / syncScope 漂移 / 未建包)时扫描项目,给出归类 + 文档划分 + 看板更新建议。读 docs/MODULE_BOUNDARIES.md + docs/workflow/project/module-classification.json。"
+        },
         {
           "name": "xai-feature-brief",
           "when": "插件需求待开工但描述还很粗时，先把它规范化成结构化 brief（动机/目标/范围/约束），并按 PLUGIN_MAP 扫描对 @repo/core、插件平台/SDK 的依赖与 mock 策略。"

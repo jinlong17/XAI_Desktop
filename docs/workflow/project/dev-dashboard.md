@@ -28,6 +28,14 @@ project-system / dev-dashboard work. Do not route it to the proposed `admin`
 Control Plane unless the task is explicitly about `docs/prototypes/admin-dashboard/`
 or a future `/admin` production surface.
 
+Module / feature classification authority: `docs/MODULE_BOUNDARIES.md` (human-readable
+Web/App/Plugin boundary), `docs/workflow/project/module-classification.json`
+(machine-readable taxonomy + routing signals + drift checks), and the
+`xai-module-classify` skill. `docs/PRODUCT_MODULE_MAP.md` remains the routing-signal
+source; the dashboard 产品结构图 mirrors all of them. When the boundary or
+classification changes, update `module-classification.json` and the relevant
+`product_lines` entry in `dashboard-state.json` in the same change.
+
 ## Authority Model
 
 | Layer | Source | Role |
