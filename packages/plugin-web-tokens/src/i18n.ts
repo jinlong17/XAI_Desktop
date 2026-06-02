@@ -14,7 +14,7 @@ import type { Lang } from "./types.js";
 export const I18N = {
   en: {
     app_name: "XAI Console",
-    nav: { tasks: "Tasks", habits: "Habits", pomodoro: "Pomodoro", calendar: "Calendar", matrix: "Matrix", countdown: "Countdown", search: "Search", settings: "Settings", board: "Boards", dashboard: "Dashboard", meditation: "Meditation", statistics: "Statistics", timetrack: "Time Tracker", pet: "Pet", ai: "XAI Chat" },
+    nav: { tasks: "Tasks", habits: "Habits", pomodoro: "Pomodoro", calendar: "Calendar", matrix: "Matrix", countdown: "Countdown", search: "Search", settings: "Settings", board: "Boards", dashboard: "Dashboard", meditation: "Meditation", statistics: "Statistics", timetrack: "Time Tracker", bookkeeping: "Bookkeeping", pet: "Pet", ai: "XAI Chat" },
     common: {
       today: "Today", tomorrow: "Tomorrow", yesterday: "Yesterday",
       next_7_days: "Next 7 Days", inbox: "Inbox", summary: "Summary",
@@ -290,7 +290,7 @@ export const I18N = {
   },
   zh: {
     app_name: "XAI 工作台",
-    nav: { tasks: "任务", habits: "习惯", pomodoro: "番茄钟", calendar: "日历", matrix: "四象限", countdown: "倒计时", search: "搜索", settings: "设置", board: "项目板", dashboard: "工作台", meditation: "冥想", statistics: "统计", timetrack: "时间追踪", pet: "桌宠", ai: "XAI 智谈" },
+    nav: { tasks: "任务", habits: "习惯", pomodoro: "番茄钟", calendar: "日历", matrix: "四象限", countdown: "倒计时", search: "搜索", settings: "设置", board: "项目板", dashboard: "工作台", meditation: "冥想", statistics: "统计", timetrack: "时间追踪", bookkeeping: "记账", pet: "桌宠", ai: "XAI 智谈" },
     common: {
       today: "今天", tomorrow: "明天", yesterday: "昨天",
       next_7_days: "最近 7 天", inbox: "收件箱", summary: "总览",

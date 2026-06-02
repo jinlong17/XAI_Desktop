@@ -450,7 +450,7 @@
         { "name": "桌宠 Pet(网页内 DOM)", "status": "shipped" },
         { "name": "命令面板 Cmd+K", "status": "in-dev" },
         { "name": "时间追踪 Time Tracker", "status": "in-dev", "note": "codex/time-tracker-web 进行中" },
-        { "name": "记账 Accounting", "status": "proposed", "note": "operator 示例,尚未建包" }
+        { "name": "记账 Bookkeeping", "status": "in-dev", "note": "codex/web/bookkeeping 已建包并接入 Web shell；同步状态 device-local" }
       ],
       "points": [
         [
