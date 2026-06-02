@@ -10,6 +10,8 @@
 - Human UI: `docs/prototypes/dev-dashboard/index.html`
 - Generated state: `docs/prototypes/dev-dashboard/state.generated.js`
 - Manual state base: `docs/workflow/project/dashboard-state.json`
+- Product Module Registry: `docs/workflow/project/dashboard-state.json` field
+  `product_lines`
 - Generator: `scripts/dashboard/generate-state.mjs`
 - Local server: `scripts/dashboard/serve.mjs`
 - Sync skill: `.teams/skills/xai-dev-dashboard-sync/SKILL.md`
@@ -32,16 +34,34 @@ Module / feature classification authority: `docs/MODULE_BOUNDARIES.md` (human-re
 Web/App/Plugin boundary), `docs/workflow/project/module-classification.json`
 (machine-readable taxonomy + routing signals + drift checks), and the
 `xai-module-classify` skill. `docs/PRODUCT_MODULE_MAP.md` remains the routing-signal
-source; the dashboard 产品结构图 mirrors all of them. When the boundary or
-classification changes, update `module-classification.json` and the relevant
-`product_lines` entry in `dashboard-state.json` in the same change.
+source; `dashboard-state.json.product_lines` is the Product Module Registry that
+the dashboard renders. When the boundary or classification changes, update
+`module-classification.json`, `docs/PRODUCT_MODULE_MAP.md`, and the matching
+registry entry in `dashboard-state.json` in the same change.
+
+Each registry entry owns the shared module definition for Overview, Product
+structure, Deployment, Release records, Docs library, and Skill / Agent routing:
+
+- `title`, `subtitle`, `badge`, `status`, `branch`, `dependency`, `next`,
+  `tracker`, `features`, `goal`, `routing`, `skills`, `prompts`, `workflow`,
+  `transitions`, and `impacts` define the canonical module.
+- `labels` defines context-specific names (`overview`, `deployment`, `release`)
+  without creating a second module source.
+- `visual` defines shared module color and icon.
+- `overview` defines the Overview card/action fields (`phase`, `running`,
+  `progress_fallback`, `recent_update`, `todo_fallback`, `target`).
+- `tracking` defines roadmap manifests, anchor docs, release aliases, plugin-map
+  filters, and region grouping.
+
+Do not add separate hard-coded module maps in dashboard JavaScript. New surfaces
+must read the enriched `product_lines` objects from `state.generated.js`.
 
 ## Authority Model
 
 | Layer | Source | Role |
 |---|---|---|
 | Product routing | `CLAUDE.md`, `AGENTS.md`, `docs/PRODUCT_MODULE_MAP.md` | Authority for task classification and module navigation. |
-| Human decisions | `docs/workflow/project/dashboard-state.json` | Manual fields such as priority, branch creation, release gates, and risk acceptance. |
+| Human decisions / Product Module Registry | `docs/workflow/project/dashboard-state.json` | Manual fields such as priority, branch creation, release gates, risk acceptance, and shared module definitions under `product_lines`. |
 | Generated facts | `scripts/dashboard/generate-state.mjs` | Reads git, roadmap manifests, skill/agent files, docs, release-log, and dev logs. |
 | Human cockpit | `docs/prototypes/dev-dashboard/index.html` | Shows Overview, product structure, docs library, Skill / Agent registry, release records, and workflow entry points. |
 | Machine contract | this file | Tells agents how to refresh, trust, and update the dashboard. |

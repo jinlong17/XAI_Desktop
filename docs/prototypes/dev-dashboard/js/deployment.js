@@ -9,31 +9,26 @@ const DEPLOYMENT_STATUS_META = {
   pending: {label:"待处理", badge:"b-yellow", tone:"yellow"}
 };
 
-const DEPLOYMENT_PRODUCT_META = {
-  site: {title:"官方网页", tone:"yellow", mark:"O"},
-  web: {title:"Web 版本", tone:"blue", mark:"W"},
-  app: {title:"Mac 桌面版本", tone:"green", mark:"M"},
-  plugin: {title:"桌面插件", tone:"purple", mark:"P"},
-  sync: {title:"账号云同步层", tone:"cyan", mark:"S"},
-  admin: {title:"管理者 Dashboard", tone:"red", mark:"A"}
-};
-
-const DEPLOYMENT_MODULE_ORDER = ["site", "web", "app", "plugin", "sync", "admin"];
-
 function deploymentStatusMeta(status){
   return DEPLOYMENT_STATUS_META[status] || DEPLOYMENT_STATUS_META.pending;
 }
 
 function deploymentProductMeta(key){
-  return DEPLOYMENT_PRODUCT_META[key] || {title:key || "模块", tone:"blue", mark:String(key || "?").slice(0, 1).toUpperCase()};
+  const product = typeof productLineFor === "function" ? productLineFor(key) : null;
+  return {
+    title: product?.deployment_title || product?.labels?.deployment || product?.title || key || "模块",
+    tone: product?.tone || product?.visual?.tone || "blue",
+    mark: product?.icon || product?.visual?.icon || String(key || "?").slice(0, 1).toUpperCase()
+  };
 }
 
 function deploymentModules(){
   const modules = Array.isArray(deploymentState.modules) ? deploymentState.modules : [];
+  const order = new Map((products || []).map((item, index) => [item.key, index]));
   return [...modules].sort((a, b) => {
-    const ai = DEPLOYMENT_MODULE_ORDER.indexOf(a.key);
-    const bi = DEPLOYMENT_MODULE_ORDER.indexOf(b.key);
-    return (ai < 0 ? 99 : ai) - (bi < 0 ? 99 : bi);
+    const ai = order.has(a.key) ? order.get(a.key) : 99;
+    const bi = order.has(b.key) ? order.get(b.key) : 99;
+    return ai - bi;
   });
 }
 

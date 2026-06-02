@@ -396,6 +396,44 @@
       "dependency": "App UI 源头",
       "next": "新功能和 bugfix 都走 Web 正常 workflow；影响 Desktop 时先过 D3 gate。",
       "tracker": "功能完整度、Web 发布、共享 UI 合同、D3 影响。",
+      "labels": {
+        "overview": "Web 版本",
+        "deployment": "Web 版本",
+        "release": "Web 分支"
+      },
+      "visual": {
+        "tone": "blue",
+        "icon": "W"
+      },
+      "overview": {
+        "phase": "主线开发",
+        "running": "正常运行",
+        "progress_fallback": 78,
+        "recent_update": "Web Console / Dashboard rows 接入真实 roadmap 计数",
+        "todo_fallback": "D3 gate 后再同步到 Desktop",
+        "target": { "type": "url", "href": "http://localhost:5173/app/dashboard", "label": "打开 /app/dashboard" }
+      },
+      "tracking": {
+        "region": "主产品链",
+        "roadmap_manifests": [
+          "xai-web-console.md",
+          "xai-web-console-gap-closure.md",
+          "xai-web-dashboard-real-data.md",
+          "web-ticktick-parity.md",
+          "xai-web-calendar-event-create.md",
+          "xai-web-matrix-card-create.md",
+          "xai-web-tasks-card-create.md",
+          "xai-web-tasks-smartlist-filter.md",
+          "xai-web-dashboard-stickies-create.md",
+          "xai-web-dashboard-weather-mail.md",
+          "xai-web-statistics-real-aggregation.md"
+        ],
+        "anchor_docs": [
+          ["Web Spec", "web design/DESIGN.md"],
+          ["ADR-0013 分支治理", "docs/adr/0013-branch-sync-governance.md"]
+        ],
+        "release_aliases": ["web", "xai-web", "web-console", "calendar", "tasks", "matrix", "statistics", "board"]
+      },
       "features": [
         { "name": "工作台 Dashboard(网格 + 挂件)", "status": "shipped" },
         { "name": "任务管理 Tasks(4 时间桶拖拽)", "status": "shipped" },
@@ -545,6 +583,29 @@
       "dependency": "依赖 Web + Tauri native",
       "next": "G1 native foundation 优先。",
       "tracker": "离线、本机能力、窗口、Tauri 权限、App RC。",
+      "labels": {
+        "overview": "Mac 桌面版 App",
+        "deployment": "Mac 桌面版本",
+        "release": "App / Mac 桌面版本"
+      },
+      "visual": {
+        "tone": "green",
+        "icon": "D"
+      },
+      "overview": {
+        "phase": "Native foundation",
+        "running": "开发线正常",
+        "progress_fallback": 42,
+        "recent_update": "G1 native foundation 作为桌面主线入口",
+        "todo_fallback": "Tauri / 本机能力 / RC gate",
+        "target": { "type": "page", "page": "product-flow", "product_key": "app", "label": "查看桌面详情" }
+      },
+      "tracking": {
+        "region": "主产品链",
+        "roadmap_manifests": ["xai-g0-window-spike.md", "xai-g1-native-foundation.md"],
+        "anchor_docs": [["ADR-0010 P1 计划", "docs/adr/0010-p1-desktop-resume-plan.md"]],
+        "release_aliases": ["app", "mac", "desktop", "tauri", "native", "dmg", "mas"]
+      },
       "features": [
         { "name": "⚠️ 产品方向待定:路线 W(overlay+Smart Container) vs 路线 D(普通窗口混合)", "status": "contested", "note": "dev ADR-0011 已 Accepted 路线 D 并将 overlay/organizer 降 P3;web 线文档仍含 overlay;reconcile 见 ADR-0015 / ADR-0013 §S7" },
         { "name": "Web 同步能力(复用 Web UI)", "status": "planned" },
@@ -678,6 +739,29 @@
       "dependency": "依赖桌面 App 插件平台",
       "next": "G1 稳定后恢复。",
       "tracker": "插件 SDK、widget host、单插件功能、平台兼容。",
+      "labels": {
+        "overview": "桌面整理插件 / Widget",
+        "deployment": "桌面插件",
+        "release": "桌面插件"
+      },
+      "visual": {
+        "tone": "purple",
+        "icon": "P"
+      },
+      "overview": {
+        "phase": "平台等待",
+        "running": "等待 App 平台",
+        "progress_fallback": 24,
+        "recent_update": "插件状态来自 PLUGIN_MAP",
+        "todo_fallback": "插件 SDK / Widget host 恢复排期",
+        "target": { "type": "doc", "path": "docs/PLUGIN_MAP.md", "label": "打开 PLUGIN_MAP" }
+      },
+      "tracking": {
+        "region": "主产品链",
+        "plugin_path_regex": "plugin-(organizer|clipboard|widgets|meditation|pet|account|console|productivity|ai-cube|calendar|labels|project|settings)\\b",
+        "anchor_docs": [["PLUGIN_MAP", "docs/PLUGIN_MAP.md"]],
+        "release_aliases": ["plugin", "widget", "clipboard", "organizer", "ai-cube"]
+      },
       "features": [
         { "name": "⚠️ 整体方向待定:ADR-0011 将 overlay/organizer/桌面插件降为 P3 Future", "status": "contested", "note": "是否保留 Smart Container 取决于 W/D 路线决策;见 ADR-0015" },
         { "name": "Smart Container 整理(organizer)", "status": "shipped", "note": "web 线已交付旗舰;dev 线 ADR-0011 列 P3" },
@@ -817,6 +901,29 @@
       "dependency": "连接 Web / App / Plugin",
       "next": "Post-G1 恢复同步开发。",
       "tracker": "syncScope、push/pull、冲突、两设备 smoke。",
+      "labels": {
+        "overview": "账号云同步层",
+        "deployment": "账号云同步层",
+        "release": "账号云同步"
+      },
+      "visual": {
+        "tone": "cyan",
+        "icon": "S"
+      },
+      "overview": {
+        "phase": "合同沉淀",
+        "running": "暂停中",
+        "progress_fallback": 28,
+        "recent_update": "sync-v1 roadmap 作为恢复入口",
+        "todo_fallback": "push/pull、冲突、两设备 smoke",
+        "target": { "type": "doc", "path": "docs/workflow/roadmap/sync-v1.md", "label": "打开 sync-v1" }
+      },
+      "tracking": {
+        "region": "主产品链",
+        "roadmap_manifests": ["sync-v1.md"],
+        "anchor_docs": [["ADR-0013 同步", "docs/adr/0013-branch-sync-governance.md"]],
+        "release_aliases": ["sync", "cloud", "account", "auth", "device-session"]
+      },
       "features": [
         { "name": "账号同步", "status": "paused" },
         { "name": "配置同步", "status": "paused" },
@@ -945,6 +1052,29 @@
       "dependency": "承接 Web/App/Sync 发布信息",
       "next": "确认 package 和启动时机。",
       "tracker": "下载页、更新说明、release notes、账号入口、Cloudflare 发布。",
+      "labels": {
+        "overview": "官方网页",
+        "deployment": "官方网页",
+        "release": "官网"
+      },
+      "visual": {
+        "tone": "yellow",
+        "icon": "O"
+      },
+      "overview": {
+        "phase": "发布入口候选",
+        "running": "本地站点待启动",
+        "progress_fallback": 18,
+        "recent_update": "release-site archive 保留官网/账号入口",
+        "todo_fallback": "确认 package 和 Cloudflare 发布节奏",
+        "target": { "type": "url", "href": "http://localhost:3000", "label": "打开官网本地页" }
+      },
+      "tracking": {
+        "region": "项目系统区",
+        "roadmap_manifests": ["web-ticktick-parity.md"],
+        "anchor_docs": [],
+        "release_aliases": ["site", "official", "release-site", "cloudflare", "website", "官网"]
+      },
       "features": [
         { "name": "下载页", "status": "proposed" },
         { "name": "Release notes / 更新说明", "status": "proposed" },
@@ -1053,6 +1183,33 @@
       "dependency": "依赖账号、权限、计量和审计合同",
       "next": "先保留 prototype；等真实后台合同稳定后再开线。",
       "tracker": "AI 配置、权限、用量、审计日志、运营入口。",
+      "labels": {
+        "overview": "Admin Dashboard",
+        "deployment": "管理者 Dashboard",
+        "release": "管理者 / 开发者 Dashboard"
+      },
+      "visual": {
+        "tone": "red",
+        "icon": "A"
+      },
+      "overview": {
+        "phase": "控制面原型",
+        "running": "原型可打开",
+        "progress_fallback": 22,
+        "recent_update": "Dev Dashboard 与 Admin prototype 分离",
+        "todo_fallback": "权限、用量、审计、AI 配置接入计划",
+        "target": { "type": "file", "href": "../admin-dashboard/index.html", "label": "打开 Admin 原型" }
+      },
+      "tracking": {
+        "region": "Control Plane",
+        "roadmap_manifests": ["xai-admin-dashboard-system-integration.md"],
+        "anchor_docs": [
+          ["Admin README", "docs/prototypes/admin-dashboard/README.md"],
+          ["接入计划", "docs/prototypes/admin-dashboard/INTEGRATION_PLAN.md"],
+          ["ADR-0013 控制面", "docs/adr/0013-branch-sync-governance.md"]
+        ],
+        "release_aliases": ["admin", "dashboard", "control plane", "dev-dashboard", "project-system"]
+      },
       "features": [
         { "name": "AI 配置", "status": "proposed" },
         { "name": "权限 / RBAC", "status": "proposed" },

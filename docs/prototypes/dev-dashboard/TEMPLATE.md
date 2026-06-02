@@ -56,15 +56,24 @@ git + docs + roadmap + skills + release-log
 Keep a no-bundler path. The static file can open through `file://`, and the local
 server can unlock document browsing, search, refresh, and raw file reads.
 
+Use one Product Module Registry for every module-aware surface. In XAI this is
+`docs/workflow/project/dashboard-state.json.product_lines`; in a new project it
+can be an equivalent JSON field or file. The registry should own canonical
+module fields plus context labels, visual tokens, Overview fields, roadmap
+manifest bindings, docs anchors, release aliases, features, routing, skills,
+prompts, workflow, transitions, and impacts. Overview cards, product structure,
+deployment cards, release module cards, docs filters, and Skill / Agent module
+references should all read from that registry after generation.
+
 ## Dashboard Sections
 
 | Section | Role | Minimum content |
 |---|---|---|
-| Overview | Daily cockpit | Last update, branch, snapshot commit, dirty files, next action, sync state. |
-| Product structure | Module navigation | Product lines, dependencies, transitions, impact links, branch rules. |
-| Docs library | File-manager style docs browser | Whitelisted roots, directory tree, Markdown preview, search, refresh. |
-| Skill / Agent | Execution registry | Project skills, local skills, agent variants, triggers, tracked/local status. |
-| Release records | Change history | Overall releases, per-module release cards, detailed release rows. |
+| Overview | Daily cockpit | Last update, branch, snapshot commit, dirty files, next action, sync state, module cards from the Product Module Registry. |
+| Product structure | Module navigation | Product lines, dependencies, transitions, impact links, branch rules from the same module registry. |
+| Docs library | File-manager style docs browser | Whitelisted roots, directory tree, Markdown preview, search, refresh, registry-provided module doc anchors. |
+| Skill / Agent | Execution registry | Project skills, local skills, agent variants, triggers, tracked/local status, registry-provided module routing skills. |
+| Release records | Change history | Overall releases, per-module release cards, detailed release rows, module aliases from the registry. |
 | Workflow entry | Operator action surface | Feature, bugfix, roadmap, ship, sync, release-log entry points. |
 | Dev data | Git-derived activity | Commits, numstat, dirty count, docs/code ratio, recent branch commits, daily / weekly / monthly trend charts. |
 
@@ -76,7 +85,8 @@ Overview should be dense and operational:
 - signal cards for branch divergence, roadmap count, skills, dashboard sync;
 - focus rows for current line, current policy, sync rules, and release-log state;
 - product flow mini-map;
-- module cards for current product surfaces;
+- module cards for current product surfaces, sourced from the Product Module
+  Registry rather than an Overview-only config;
 - deployment or release summary when relevant.
 
 Avoid hero marketing copy. Avoid explaining the dashboard to the operator inside
@@ -89,6 +99,7 @@ Use a restrained operational UI:
 - small-radius cards, usually 8px or less;
 - compact headings inside panels;
 - color roles mapped to product modules, not arbitrary decoration;
+- module color roles read from the Product Module Registry where possible;
 - persistent theme modes: system, light, dark;
 - accent swatches plus custom color;
 - no decorative gradient blobs or unrelated illustration;

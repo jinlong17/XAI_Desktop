@@ -93,54 +93,31 @@ function renderOverviewSyncStatus(){
 }
 
 function buildOverviewModulesFallback(lines){
-  const fallbackMeta = {
-    web:["Web 版本","blue","主线开发","正常运行","打开 /app/dashboard"],
-    app:["桌面版本","green","Native foundation","开发线正常","查看桌面详情"],
-    plugin:["桌面插件","purple","平台等待","等待 App 平台","打开 PLUGIN_MAP"],
-    sync:["账号云同步","cyan","合同沉淀","暂停中","打开 sync-v1"],
-    site:["官方网页","yellow","发布入口候选","本地站点待启动","打开官网本地页"],
-    admin:["Admin Dashboard","red","控制面原型","原型可打开","打开 Admin 原型"]
-  };
-  return (lines.length ? lines : [
-    {key:"web",title:"Web",subtitle:"项目最全功能面",status:"Web 主线",next:"D3 gate 后同步 Desktop"},
-    {key:"app",title:"Desktop",subtitle:"macOS 桌面产品",status:"独立桌面开发线",next:"G1 native foundation"},
-    {key:"plugin",title:"Plugin",subtitle:"桌面插件和 widget",status:"等待 App 平台",next:"插件 SDK / Widget host"},
-    {key:"sync",title:"Sync",subtitle:"账号云同步",status:"基建合同",next:"push/pull 和冲突处理"},
-    {key:"site",title:"Site",subtitle:"官网和发布入口",status:"拟定",next:"确认 package 和启动时机"},
-    {key:"admin",title:"Admin",subtitle:"运营和管理后台",status:"控制面候选",next:"接入真实后台合同"}
-  ]).map(item => {
-    const meta = fallbackMeta[item.key] || [item.title,"blue",item.status,"待确认","查看详情"];
-    return {
-      key:item.key,
-      title:meta[0],
-      subtitle:item.subtitle,
-      tone:meta[1],
-      icon:meta[0].slice(0,1).toUpperCase(),
-      phase:meta[2],
-      status:item.status,
-      progress:item.key === "web" ? 78 : item.key === "app" ? 42 : item.key === "plugin" ? 24 : item.key === "sync" ? 28 : item.key === "site" ? 18 : 22,
-      running:meta[3],
-      recent_update:item.status_summary || item.tracker || item.status,
-      todo:item.next,
-      target:overviewTargetFor(item.key, meta[4])
-    };
-  });
+  return (lines || []).map(item => ({
+    ...item,
+    tone:item.tone || item.visual?.tone || "blue",
+    icon:item.icon || item.visual?.icon || String(item.title || "?").slice(0,1),
+    overview_title:item.overview_title || item.labels?.overview || item.title,
+    phase:item.phase || item.overview?.phase || item.status,
+    progress:item.progress || item.overview?.progress_fallback || 0,
+    running:item.running || item.overview?.running || "待确认",
+    recent_update:item.recent_update || item.status_summary || item.tracker || item.status,
+    todo:item.todo || item.next,
+    target:moduleTargetFor(item, "查看详情")
+  }));
 }
 
 function overviewTargetFor(key, label){
-  const targets = {
-    web:{type:"url",href:"http://localhost:5173/app/dashboard",label},
-    app:{type:"page",page:"product-flow",product_key:"app",label},
-    plugin:{type:"doc",path:"docs/PLUGIN_MAP.md",label},
-    sync:{type:"doc",path:"docs/workflow/roadmap/sync-v1.md",label},
-    site:{type:"url",href:"http://localhost:3000",label},
-    admin:{type:"file",href:"../admin-dashboard/index.html",label}
-  };
-  return targets[key] || {type:"page",page:"product-flow",product_key:key,label};
+  return moduleTargetFor(productLineFor(key), label);
+}
+
+function moduleTargetFor(item, label){
+  if(item?.target) return {...item.target, label:item.target.label || label || "查看详情"};
+  return {type:"page",page:"product-flow",product_key:item?.key,label:label || "查看详情"};
 }
 
 function moduleDisplayTitle(item){
-  return item?.key === "admin" ? "Admin Dashboard" : (item?.title || "");
+  return item?.overview_title || item?.labels?.overview || item?.title || "";
 }
 
 function productLineFor(key){
@@ -371,39 +348,7 @@ function moduleFeatureGroups(key){
       next: feats.filter(f => ["planned", "proposed", "paused", "contested"].includes(f.status)).map(label)
     };
   }
-  const groups = {
-    web: {
-      done:["任务、看板、Dashboard 网格、日历、矩阵、番茄、习惯、冥想、倒计时、统计等 Web 模块已经形成主产品面。","设置、AI 对话、命令面板、Dashboard widget host 已接入主导航和插件注册。"],
-      active:["继续补齐 Dashboard 真实数据、Web Console gap closure、AI provider 和跨模块事件联动。","Web 改动进入 Desktop 前需要 D3 分类，避免直接把主线差异带入 App。"],
-      next:["Cloudflare 发布、CSP/Sentry、service worker 和设备会话继续作为发布稳定性重点。"]
-    },
-    app: {
-      done:["桌面版以 Web 为 UI 源，已明确 main/control/grid 多窗口和 Tauri native foundation 路线。","G0/G1 相关窗口、离线 profile 和原生能力已在路线图中拆分。"],
-      active:["推进 Tauri command、窗口能力、离线本地存储和 App RC 稳定线。","从 Web 来的共享改动必须先经过 D3 gate。"],
-      next:["补齐 macOS 手动 smoke、签名、公证、DMG、updater 和 release/desktop 冻结流程。"]
-    },
-    plugin: {
-      done:["插件和 widget 被定义为 App 之上的扩展层，和 App RC 分开跟踪。","PLUGIN_MAP 已覆盖插件包状态，是当前插件面板的主要事实来源。"],
-      active:["等待 App 平台稳定后恢复插件 SDK、widget host 和桌面整理插件开发。"],
-      next:["插件需要跨设备时进入账号云同步；device-local 插件状态不进入同步协议。"]
-    },
-    sync: {
-      done:["账号云同步被定义为 Web、App、Plugin 的共同同步层，而不是模块之间互相直连。","sync-v1 roadmap 已作为协议和实现恢复入口。"],
-      active:["继续沉淀 entity、schema、push/pull、冲突策略、Web IndexedDB 和 App SQLite 测试。"],
-      next:["需要补齐两设备 smoke 和 account-sync / device-local 作用域边界。"]
-    },
-    site: {
-      done:["官网被定义为下载、更新说明、账号入口和 release notes 的对外承接面。","release-site archive 保留了官网和账号相关页面基础。"],
-      active:["本地官网入口仍待启动，Cloudflare 发布节奏和 package 归属需要确认。"],
-      next:["桌面版 release 产生 DMG/updater 后，官网需要同步下载页和更新说明。"]
-    },
-    admin: {
-      done:["Admin Dashboard 已保持为独立控制面原型，不塞进个人开发看板本体。","原型覆盖用户、功能、用量、审计、AI 配置等管理中台方向。"],
-      active:["正式接入仍依赖账号、权限、计量和审计合同稳定。"],
-      next:["后续需要独立 apps/admin 或等价 surface，和用户端 Web Console 隔离权限与部署。"]
-    }
-  };
-  return groups[key] || {done:[], active:[], next:[]};
+  return {done:[], active:[], next:[]};
 }
 
 let activeDrawerModule = null;
@@ -420,7 +365,7 @@ function openModuleDrawer(item){
   const features = moduleFeatureGroups(item.key);
   activeDrawerModule = {
     item,
-    target: item.target || overviewTargetFor(item.key, "打开入口")
+    target: moduleTargetFor(item, "打开入口")
   };
   const badge = document.getElementById("moduleDrawerBadge");
   badge.textContent = moduleStageLabel(stage);
@@ -479,6 +424,10 @@ function overviewFeatureSummary(key){
 
 function renderOverviewModules(){
   const modules = overviewModules.length ? overviewModules : buildOverviewModulesFallback([]);
+  if(!modules.length){
+    document.getElementById("overviewModuleGrid").innerHTML = `<div class="flow-note"><b>产品模块未加载</b><p style="margin-top:8px">请运行 <code>pnpm dashboard</code> 刷新统一 Product Module Registry。</p></div>`;
+    return;
+  }
   document.getElementById("overviewModuleGrid").innerHTML = modules.map((item, index) => `
     <button class="overview-module-card" data-overview-module="${index}" data-tone="${h(item.tone || "blue")}" type="button">
       <div class="overview-module-top">
@@ -513,6 +462,7 @@ function openOverviewModule(item){
 }
 
 function openProductTarget(target){
+  if(!target) return;
   if(target.type === "url" && target.href){
     window.open(target.href, "_blank", "noreferrer");
     return;

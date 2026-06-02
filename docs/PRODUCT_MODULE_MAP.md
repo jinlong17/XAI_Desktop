@@ -1,7 +1,7 @@
 # 产品模块导航地图 / Product Module Map
 
 > **权威来源**：[ADR-0013](adr/0013-branch-sync-governance.md) §D1（六产品线）/§D2（分支拓扑）/§D3（Web→Desktop 同步闸门）/§D4（账号云同步），与 [`CLAUDE.md`](../CLAUDE.md) §“Product module map & task routing”。
-> 本文是 Codex / Claude / Cursor 的**任务归属 + 开发导航**单一事实源，并镜像到 dev-dashboard 产品结构图（[`docs/prototypes/dev-dashboard/`](prototypes/dev-dashboard/)）与 [`dashboard-state.json`](workflow/project/dashboard-state.json) 的 `product_lines`。
+> 本文是 Codex / Claude / Cursor 的**任务归属 + 开发导航**单一事实源，并镜像到 [`dashboard-state.json`](workflow/project/dashboard-state.json) 的 `product_lines` Product Module Registry。dev-dashboard 的总览、产品结构图、部署、发布记录、文档库和 Skill / Agent 页面都从该 registry 派生。
 
 ## 如何使用
 
@@ -567,7 +567,7 @@ Verify Cross-vendor: yes
 
 ## 维护
 
-- 本文与 `dashboard-state.json` 的 `product_lines.{goal,routing,skills,prompts,workflow,transitions,impacts}` 同源；改一处要同步另一处。
+- 本文与 `dashboard-state.json` 的 `product_lines` Product Module Registry 同源；改模块定义时必须同步 `labels`、`visual`、`overview`、`tracking`、`features`、`goal`、`routing`、`skills`、`prompts`、`workflow`、`transitions`、`impacts`，避免总览和产品结构图重新分叉。
 - 路由规则的跨平台同步：本文 ↔ [`CLAUDE.md`](../CLAUDE.md) §Product module map ↔ [`AGENTS.md`](../AGENTS.md) §3 ↔ [`.cursor/rules/product-module-routing.mdc`](../.cursor/rules/product-module-routing.mdc)。
 - 边界 / 分支 / 闸门的事实变更以 [ADR-0013](adr/0013-branch-sync-governance.md) 为准；本文只做导航编排，不改治理结论。
 - **跨模块同步扇出**（完成一个模块后,同步/适配/检查下游模块）以 [ADR-0014](adr/0014-cross-module-sync-orchestration.md) + 机读 [`sync-registry.json`](workflow/project/sync-registry.json) 为准。入口 = `xai-sync-fanout-dispatch`（读 registry 语义规则派发,触发语:「Web 版本功能已完成，执行后续同步 workflow」）；边动作复用 `xai-web-to-desktop-sync`（D3）/ `xai-account-sync-scope-check`（D4,receipt-only）/ `xai-release-log`+`xai-dev-dashboard-sync`（收口）/ `xai-feature-brief`（site/admin/plugin 冻结线草案）。冻结线只产 receipt/草案,不落源码。

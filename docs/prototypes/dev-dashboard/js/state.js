@@ -1,9 +1,10 @@
 const dashboardState = window.XAI_DASHBOARD_STATE || {};
 const products = [...(dashboardState.product_lines || [])].sort((a,b) => Number(a.order) - Number(b.order));
+const productModules = products;
 const overviewRows = dashboardState.status_rows || [];
 const cockpit = dashboardState.cockpit || [];
 const kpis = dashboardState.signals || dashboardState.kpis || [];
-const overviewModules = dashboardState.overview_modules || [];
+const overviewModules = products.length ? products : (dashboardState.overview_modules || []);
 const syncStatus = dashboardState.sync_status || {};
 const deploymentState = dashboardState.deployment || {summary:{}, modules:[], records:[]};
 const devData = dashboardState.development_data || {};

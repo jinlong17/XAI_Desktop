@@ -82,8 +82,8 @@ function renderModules(){
   }
   const regionMeta = [
     ["主产品链", "Web → Desktop → Plugin → Sync"],
-    ["Control Plane", "Admin"],
-    ["项目系统区", "Site / release / workflow"]
+    ["项目系统区", "Site / release / workflow"],
+    ["Control Plane", "Admin"]
   ];
   document.getElementById("moduleTrack").innerHTML = regionMeta.map(([region, note]) => {
     const items = products.filter(item => (item.region || "项目系统区") === region);
@@ -231,7 +231,7 @@ function featureCountSummary(list){
 function setProduct(key){
   const item = products.find(product => product.key === key);
   if(!item) return;
-  const productTarget = overviewTargetFor(item.key, item.key === "admin" ? "打开 Admin 原型" : "打开入口");
+  const productTarget = moduleTargetFor(item, item.key === "admin" ? "打开 Admin 原型" : "打开入口");
   const deploymentBlock = typeof renderProductDeploymentNavBlock === "function" ? renderProductDeploymentNavBlock(key) : "";
   document.querySelectorAll(".module-card").forEach(node => node.classList.toggle("is-active", node.dataset.product === key));
   document.querySelectorAll(".map-node").forEach(node => node.classList.toggle("is-active", node.dataset.product === key));

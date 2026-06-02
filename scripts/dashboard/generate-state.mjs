@@ -513,7 +513,7 @@ function classifyReleaseType(title) {
   return "docs";
 }
 
-const releaseModuleMeta = {
+let releaseModuleMeta = {
   web: {
     title: "Web 分支",
     tone: "blue",
@@ -545,6 +545,22 @@ const releaseModuleMeta = {
     aliases: ["admin", "dashboard", "control plane", "dev-dashboard", "project-system"]
   }
 };
+
+function buildReleaseModuleMeta(sourceProducts) {
+  if (!Array.isArray(sourceProducts) || !sourceProducts.length) return releaseModuleMeta;
+  const fromRegistry = Object.fromEntries(sourceProducts.map(product => {
+    const labels = product.labels || {};
+    const visual = product.visual || {};
+    const tracking = product.tracking || {};
+    const fallback = releaseModuleMeta[product.key] || {};
+    return [product.key, {
+      title: labels.release || fallback.title || product.title || product.key,
+      tone: visual.tone || fallback.tone || "blue",
+      aliases: tracking.release_aliases || fallback.aliases || [product.key]
+    }];
+  }));
+  return { ...releaseModuleMeta, ...fromRegistry };
+}
 
 function cleanReleaseValue(value) {
   return String(value || "").replace(/\s+/g, " ").trim();
@@ -901,93 +917,7 @@ function pendingSummary(counts, fallback) {
 }
 
 function buildOverviewModules(productLines) {
-  const meta = {
-    web: {
-      title: "Web 版本",
-      tone: "blue",
-      icon: "W",
-      phase: "主线开发",
-      fallback_progress: 78,
-      running: "正常运行",
-      recent_update: "Web Console / Dashboard rows 接入真实 roadmap 计数",
-      todo_fallback: "D3 gate 后再同步到 Desktop",
-      target: { type: "url", href: "http://localhost:5173/app/dashboard", label: "打开 /app/dashboard" }
-    },
-    app: {
-      title: "桌面版本",
-      tone: "green",
-      icon: "D",
-      phase: "Native foundation",
-      fallback_progress: 42,
-      running: "开发线正常",
-      recent_update: "G1 native foundation 作为桌面主线入口",
-      todo_fallback: "Tauri / 本机能力 / RC gate",
-      target: { type: "page", page: "product-flow", product_key: "app", label: "查看桌面详情" }
-    },
-    plugin: {
-      title: "桌面插件",
-      tone: "purple",
-      icon: "P",
-      phase: "平台等待",
-      fallback_progress: 24,
-      running: "等待 App 平台",
-      recent_update: "插件状态来自 PLUGIN_MAP",
-      todo_fallback: "插件 SDK / Widget host 恢复排期",
-      target: { type: "doc", path: "docs/PLUGIN_MAP.md", label: "打开 PLUGIN_MAP" }
-    },
-    sync: {
-      title: "账号云同步",
-      tone: "cyan",
-      icon: "S",
-      phase: "合同沉淀",
-      fallback_progress: 28,
-      running: "暂停中",
-      recent_update: "sync-v1 roadmap 作为恢复入口",
-      todo_fallback: "push/pull、冲突、两设备 smoke",
-      target: { type: "doc", path: "docs/workflow/roadmap/sync-v1.md", label: "打开 sync-v1" }
-    },
-    site: {
-      title: "官方网页",
-      tone: "yellow",
-      icon: "O",
-      phase: "发布入口候选",
-      fallback_progress: 18,
-      running: "本地站点待启动",
-      recent_update: "release-site archive 保留官网/账号入口",
-      todo_fallback: "确认 package 和 Cloudflare 发布节奏",
-      target: { type: "url", href: "http://localhost:3000", label: "打开官网本地页" }
-    },
-    admin: {
-      title: "开发者 / 管理者 Dashboard",
-      tone: "red",
-      icon: "A",
-      phase: "控制面原型",
-      fallback_progress: 22,
-      running: "原型可打开",
-      recent_update: "Dev Dashboard 与 Admin prototype 分离",
-      todo_fallback: "权限、用量、审计、AI 配置接入计划",
-      target: { type: "file", href: "../admin-dashboard/index.html", label: "打开 Admin 原型" }
-    }
-  };
-  return productLines.map(product => {
-    const m = meta[product.key] || {};
-    const counts = product.status_counts || {};
-    return {
-      key: product.key,
-      title: m.title || product.title,
-      subtitle: product.subtitle,
-      tone: m.tone || "blue",
-      icon: m.icon || String(product.title || "?").slice(0, 1),
-      phase: m.phase || product.status,
-      status: product.status,
-      progress: progressFromCounts(counts, m.fallback_progress || 10),
-      running: m.running || "待确认",
-      recent_update: m.recent_update || product.status_summary || product.tracker,
-      todo: pendingSummary(counts, m.todo_fallback || product.next),
-      target: m.target || { type: "page", page: "product-flow", product_key: product.key, label: "查看详情" },
-      status_counts: counts
-    };
-  });
+  return productLines;
 }
 
 function badgeForCounts(counts) {
@@ -1001,52 +931,25 @@ function badgeForCounts(counts) {
 function buildProductLines(sourceProducts, roadmapManifests, pluginMap) {
   const byName = new Map(roadmapManifests.map(manifest => [manifest.filename, manifest]));
   const get = names => names.map(name => byName.get(name)).filter(Boolean);
-  const pluginEntries = pluginMap.entries.filter(entry => /plugin-(organizer|clipboard|widgets|meditation|pet|account|console|productivity|ai-cube|calendar|labels|project|settings)\b/.test(entry.path));
-  const pluginCounts = countByStatus(pluginEntries);
-  const lineManifestNames = {
-    web: [
-      "xai-web-console.md",
-      "xai-web-console-gap-closure.md",
-      "xai-web-dashboard-real-data.md",
-      "web-ticktick-parity.md",
-      "xai-web-calendar-event-create.md",
-      "xai-web-matrix-card-create.md",
-      "xai-web-tasks-card-create.md",
-      "xai-web-tasks-smartlist-filter.md",
-      "xai-web-dashboard-stickies-create.md",
-      "xai-web-dashboard-weather-mail.md",
-      "xai-web-statistics-real-aggregation.md"
-    ],
-    app: ["xai-g0-window-spike.md", "xai-g1-native-foundation.md"],
-    plugin: [],
-    sync: ["sync-v1.md"],
-    site: ["web-ticktick-parity.md"],
-    admin: ["xai-admin-dashboard-system-integration.md"]
+  const countsFor = product => {
+    const tracking = product.tracking || {};
+    if (tracking.plugin_path_regex) {
+      try {
+        const regex = new RegExp(tracking.plugin_path_regex);
+        return countByStatus(pluginMap.entries.filter(entry => regex.test(entry.path)));
+      } catch {
+        return {};
+      }
+    }
+    return mergeCounts(get(tracking.roadmap_manifests || []));
   };
-  const lineCounts = {
-    web: mergeCounts(get(lineManifestNames.web)),
-    app: mergeCounts(get(lineManifestNames.app)),
-    plugin: pluginCounts,
-    sync: mergeCounts(get(lineManifestNames.sync)),
-    site: mergeCounts(get(lineManifestNames.site)),
-    admin: mergeCounts(get(lineManifestNames.admin))
-  };
-  // Curated entry-point docs per line (PRD/spec/governance), filtered to ones
-  // that actually exist so dead links never reach the dashboard.
-  const anchorDocs = {
-    web: [["Web Spec", "web design/DESIGN.md"], ["ADR-0013 分支治理", "docs/adr/0013-branch-sync-governance.md"]],
-    app: [["ADR-0010 P1 计划", "docs/adr/0010-p1-desktop-resume-plan.md"]],
-    plugin: [["PLUGIN_MAP", "docs/PLUGIN_MAP.md"]],
-    sync: [["ADR-0013 同步", "docs/adr/0013-branch-sync-governance.md"]],
-    site: [],
-    admin: [["Admin README", "docs/prototypes/admin-dashboard/README.md"], ["接入计划", "docs/prototypes/admin-dashboard/INTEGRATION_PLAN.md"], ["ADR-0013 控制面", "docs/adr/0013-branch-sync-governance.md"]]
-  };
-  const relatedDocsFor = key => {
+  const relatedDocsFor = product => {
     const seen = new Set();
-    const fromAnchors = (anchorDocs[key] || [])
+    const tracking = product.tracking || {};
+    const fromAnchors = (tracking.anchor_docs || [])
       .filter(([, path]) => existsSync(resolve(repoRoot, path)))
       .map(([label, path]) => ({ label, path }));
-    const fromManifests = get(lineManifestNames[key] || [])
+    const fromManifests = get(tracking.roadmap_manifests || [])
       .slice(0, 5)
       .map(manifest => ({ label: manifest.filename.replace(/\.md$/, ""), path: manifest.source }));
     return [...fromAnchors, ...fromManifests].filter(doc => {
@@ -1055,28 +958,35 @@ function buildProductLines(sourceProducts, roadmapManifests, pluginMap) {
       return true;
     });
   };
-  const regions = {
-    web: "主产品链",
-    app: "主产品链",
-    plugin: "主产品链",
-    sync: "主产品链",
-    admin: "Control Plane",
-    site: "项目系统区"
-  };
-  const chainOrder = { web: 1, app: 2, plugin: 3, sync: 4, admin: 5, site: 6 };
   return [...sourceProducts]
     .sort((a, b) => Number(a.order) - Number(b.order))
     .map(product => {
-      const counts = lineCounts[product.key] || {};
+      const labels = product.labels || {};
+      const visual = product.visual || {};
+      const overview = product.overview || {};
+      const tracking = product.tracking || {};
+      const counts = countsFor(product);
       const emptyLabel = product.key === "admin" ? "0 manifest rows · prototype only" : "0 manifest rows";
       return {
         ...product,
-        order: chainOrder[product.key] || product.order,
-        region: regions[product.key] || "项目系统区",
+        labels,
+        visual,
+        region: tracking.region || product.region || "项目系统区",
+        tone: visual.tone || "blue",
+        icon: visual.icon || String(product.title || "?").slice(0, 1),
+        overview_title: labels.overview || product.title,
+        deployment_title: labels.deployment || labels.overview || product.title,
+        release_title: labels.release || product.title,
+        phase: overview.phase || product.status,
+        progress: progressFromCounts(counts, overview.progress_fallback || product.progress_fallback || 10),
+        running: overview.running || "待确认",
+        recent_update: overview.recent_update || product.status_summary || product.tracker,
+        todo: pendingSummary(counts, overview.todo_fallback || product.next),
+        target: overview.target || { type: "page", page: "product-flow", product_key: product.key, label: "查看详情" },
         tracking_badge: badgeForCounts(counts),
         status_counts: counts,
         status_summary: summarizeProductStatus(counts, emptyLabel),
-        related_docs: relatedDocsFor(product.key)
+        related_docs: relatedDocsFor(product)
       };
     });
 }
@@ -1538,6 +1448,7 @@ function scanDevLogs() {
 }
 
 const source = readJson(sourcePath);
+releaseModuleMeta = buildReleaseModuleMeta(source.product_lines || []);
 const branch = git(["branch", "--show-current"]);
 const latestCommit = git(["log", "-1", "--format=%h %s"]);
 const generatedAt = new Date().toISOString();
@@ -1553,6 +1464,7 @@ const skillGroups = buildSkillGroups();
 const agentFamilies = buildAgentFamilies();
 const pluginMap = parsePluginMap();
 const roadmapManifests = listRoadmapManifests();
+const productLines = buildProductLines(source.product_lines || [], roadmapManifests, pluginMap);
 const releaseEntries = parseReleaseEntries();
 
 const snapshot = {
@@ -1577,7 +1489,13 @@ const snapshot = {
   },
   plugin_map: pluginMap,
   roadmap_manifests: roadmapManifests,
-  product_lines: buildProductLines(source.product_lines || [], roadmapManifests, pluginMap),
+  product_module_registry: {
+    source: relative(repoRoot, sourcePath),
+    field: "product_lines",
+    module_count: productLines.length,
+    keys: productLines.map(product => product.key)
+  },
+  product_lines: productLines,
   release_rows: releaseEntries.slice(0, 8).map(entry => [
     entry.date,
     entry.title,
