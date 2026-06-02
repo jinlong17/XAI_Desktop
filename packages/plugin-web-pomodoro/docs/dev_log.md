@@ -1,8 +1,9 @@
 # Dev Log — plugin-web-pomodoro (bugfix lineage)
 
 > This dev_log tracks **post-ship bugfix** workflow state for the `plugin-web-pomodoro`
-> package. The original feature-dev → ship lineage lives at
-> `packages/xai-web-pomodoro/docs/dev_log.md` (SHIPPED 2026-05-23). This file
+> package. The original feature-dev → ship lineage now lives in this same
+> directory at `./dev_log.origin.md` (原 `packages/xai-web-pomodoro/docs/dev_log.md`,
+> SHIPPED 2026-05-23; 经 doc-split 归并迁入本目录 2026-06-01). This file
 > begins the canonical `packages/plugin-*/docs/dev_log.md` contract for this
 > package going forward — every future workflow on this plugin maintains state
 > here.
@@ -26,7 +27,7 @@
 | Parent Brief | docs/reviews/xai-web-pomodoro-counters-test-fix/20260524-roadmap-seed.md |
 | Parent Source | docs/reviews/web-priority-pivot-and-repo-cleanup/20260524-gap-closure-source.md §Gap 7 |
 | ADR Anchor | ADR-0009 §D2-G3 (P0 gap-closure work; bugfix-loop preferred per §D4) |
-| Original Feature Lineage | packages/xai-web-pomodoro/docs/{design,api,test,dev_log}.md (SHIPPED 2026-05-23, NOT modified by this bugfix) |
+| Original Feature Lineage | ./{design,api,test}.md + ./dev_log.origin.md (原 packages/xai-web-pomodoro/docs/*, SHIPPED 2026-05-23; doc-split 归并迁入本目录 2026-06-01, 内容未改) |
 | Write Scope | **test-only**: `packages/plugin-web-pomodoro/src/__tests__/derivedCounters.test.ts` (single file). No production code under `src/` outside `__tests__/` may be touched (hard constraint from seed brief). No `vitest.config.ts` / `vitest.setup.ts` / `__fixtures__/` edits required. Plus this `dev_log.md` (workflow state). |
 
 ## Artifacts Index
@@ -37,7 +38,7 @@
 - Production code under examination (NOT to be modified): `packages/plugin-web-pomodoro/src/internal/derivedCounters.ts` + `packages/plugin-web-pomodoro/src/internal/formatRecordDate.ts` (provides `localDateKey`)
 - Test setup (NOT to be modified): `packages/plugin-web-pomodoro/vitest.setup.ts` (sets system time to `2026-05-23 14:30 local` inside `beforeEach`)
 - Fixtures (NOT to be modified): `packages/plugin-web-pomodoro/src/__fixtures__/sessions.ts` (hardcoded `2026-05-23` / `2026-05-22` ISO dates)
-- Original feature lineage (read-only context): `packages/xai-web-pomodoro/docs/dev_log.md` (SHIP entry, 2026-05-23 19:07)
+- Original feature lineage (read-only context): `./dev_log.origin.md` (原 `packages/xai-web-pomodoro/docs/dev_log.md`, SHIP entry 2026-05-23 19:07)
 
 ## Reproduction Protocol
 
@@ -128,7 +129,7 @@ const TODAY_LOCAL = "2026-05-23";
 ### Out of scope (do NOT touch)
 - Any file under `packages/plugin-web-pomodoro/src/` outside `__tests__/`.
 - `vitest.config.ts` / `vitest.setup.ts` / `src/__fixtures__/sessions.ts`.
-- `packages/xai-web-pomodoro/docs/*` (original feature lineage — frozen post-ship).
+- `./dev_log.origin.md` + `./{design,api,test}.md` (original feature lineage — frozen post-ship; 原 packages/xai-web-pomodoro/docs/*).
 - Any other package.
 
 ### Acceptance signal (re-stated from seed brief)

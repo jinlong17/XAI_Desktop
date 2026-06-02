@@ -1,7 +1,7 @@
 # Web 文档分裂归属决议 — Doc Split Resolution
 
 > 配套：`20260601-traceability-audit.md` §1（分裂发现）
-> 状态：**已签字决议**（canonical 规则 + PRD 粒度 2026-06-01 操作者确认；仅 `git mv` 执行时机待定。本文件不执行迁移/合并）
+> 状态：**已执行**（canonical 规则 + PRD 粒度 2026-06-01 签字；动作 A/B 已于 2026-06-01 执行——见 §7 执行记录。剩余"引用路径统一"见 §8 follow-up）
 > 决策来源：codex 复核 + 操作者 2026-06-01 指令
 
 ## 1. 背景
@@ -95,6 +95,45 @@
    - **判断尺**：一个子模块/pane 是否独立成 PRD = 它是否有独立的"为什么 / 验收 / 边界 /
      风险"。纯开关 → 并入主 PRD 一节；有独立流程、数据模型、外部依赖或不可逆风险 → 拆子 PRD。
 
-### 待确认
+### 已执行（2026-06-01）
 
-3. 动作 A（单份遗留）的 `git mv`（仅移动 docs、保留 git 历史、不动源码 import）是否现在执行。
+3. 动作 A 的 `git mv` + 动作 B 的双份合并已执行。见 §7。
+
+## 7. 执行记录（2026-06-01）
+
+**动作 A（4 功能，整目录 `git mv`）**：`board-core` / `board-views` /
+`board-workspaces` / `settings-shell` 的四件套整体 `git mv` 到
+`packages/plugin-web-<f>/docs/`（plugin 侧原无 docs），保留 git rename 历史；
+4 个空的 `xai-web-<f>` 残留目录已删除。
+
+> 注：决议 §3 映射表列出的 `ai-chat` / `countdown` / `statistics` 也是动作 A，
+> 但**本轮未执行**（操作者本轮范围为"设置/看板 + 双份合并"）。留待下一轮动作 A 收尾。
+
+**动作 B（2 功能，人工合并）**：
+- `pomodoro`：原始四件套并入 `plugin-web-pomodoro/docs/`；原始 dev_log 归档为
+  同目录 `dev_log.origin.md`（302 行原始功能全貌完整保留）；plugin canonical
+  dev_log（190 行 bugfix）的 4 处 lineage 指针改指 `./dev_log.origin.md` 与本目录四件套。
+- `settings-rest`：原始 dev_log 归档为 `plugin-web-settings-rest/docs/dev_log.origin.md`
+  （475 行）；过时的原始 design/api/test 删除（plugin 侧已有 canonical 版，git 历史可查）；
+  canonical dev_log（1459 行）顶部加 `Doc-split 归并` Origin 段，历史叙述（含 PR-2
+  reconciliation note）原样保留。
+
+**验证**：staged 24 条全部为 `packages/*/docs/` 路径，0 条非 docs；41 个 runtime
+`src` 改动保持 unstaged 未触碰（治理与 runtime 隔离）。6 个 `xai-web-<f>` 残留目录全删。
+
+## 8. Follow-up：引用路径统一（独立专项，本轮未做）
+
+迁移后仍有指向旧地址 `packages/xai-web-<f>/docs/...` 的引用，本质是"rename 后更新引用"，
+本轮**有意不做**（避免污染 runtime + 控制范围）。分两类：
+
+| 类别 | 位置 | 规模（估） | 是否碰 runtime | 处理建议 |
+|---|---|---|---|---|
+| 文档侧死链 | 迁移后 canonical 文档的自/交叉引用（如 `settings-shell/docs/design.md` "Docs host"、`board-views/docs/dev_log.md` 多处、各 dev_log Artifacts Index） | ~7 文档、数十行 | 否（纯 docs） | 安全；可单独 docs commit |
+| src 注释死链 | `plugin-web-{pomodoro,board-views,...}/src/**` 文件头 `* Design: packages/xai-web-.../docs/...` 注释 | ~28+ src 文件 | **是**（会新增 runtime modified） | 须独立 commit，勿混入文档治理 |
+
+**不改项（非死链，勿动）**：
+- pomodoro canonical dev_log 中"原 `packages/xai-web-pomodoro/docs/*`"——有意的历史出处标注。
+- 两个 `dev_log.origin.md` 内部的旧路径——归档快照，保持原貌。
+- `docs/reviews/xai-web-<f>/...` review artifact 路径——按发生时 feature 名命名的历史记录。
+
+**统一规则**：真死链一律 `packages/xai-web-<f>/docs` → `packages/plugin-web-<f>/docs`（前缀替换）。

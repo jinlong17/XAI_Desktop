@@ -1,5 +1,11 @@
 # Dev Log — plugin-web-settings-rest
 
+> **Doc-split 归并 (2026-06-01)**: 迁移前的原始 FEATURE_DEV/SHIPPED 记录
+> （原 `packages/xai-web-settings-rest/docs/dev_log.md`, 11 panes, SHIPPED 2026-05-23
+> commit `6b8de35`）已归档为同目录 `./dev_log.origin.md`；原始 design/api/test 由本目录
+> canonical 版取代并删除（git 历史可查）。本文件是 going-forward canonical，下方历史
+> 叙述（含 PR-2 reconciliation note）保持原样不改写。
+
 ---
 
 ## Workflow State
