@@ -86,7 +86,7 @@ Current rule: Web new work is permitted on the `web` line; P1/G1 native foundati
 
 ## Plugins
 
-> **Status per ADR-0010 (amended 2026-05-30).** Rows below are P1/P2 Desktop scope. Web Modules (P0) are listed in the "Web Modules" section further down. **P1 (account / console / productivity / ai-cube / calendar / labels / project + G0/G1 native-foundation anchors) is an ACTIVE App lane**; only **P2 desktop-organizer plugins (clipboard / widgets / pet / meditation) + sync-v1 + G2 stay PAUSED until G1 SHIPPED** (ADR-0010 §D2). `organizer` is already Stable/shipped — its P-level is being reconciled in `docs/adr/0015-desktop-plugin-scope-and-organizer-level.md`. Module/surface routing: `docs/MODULE_BOUNDARIES.md`. Refer to "Current Priority" at the top of this file.
+> **Status per ADR-0010 (amended 2026-05-30).** Rows below are P1/P2 Desktop scope. Web Modules (P0) are listed in the "Web Modules" section further down. **P1 (account / console / productivity / ai-cube / calendar / labels / project + G0/G1 native-foundation anchors) is an ACTIVE App lane**; only **P2 desktop-organizer plugins (clipboard / widgets / pet / meditation) + sync-v1 + G2 stay PAUSED until G1 SHIPPED** (ADR-0010 §D2). `organizer` is a delivered/graduated flagship plugin (Stable/shipped) — NOT part of the P2-paused freeze; P-level per `docs/adr/0015-desktop-plugin-scope-and-organizer-level.md` (web-side Accepted; dev ADR-0011 reconcile pending). Module/surface routing: `docs/MODULE_BOUNDARIES.md`. Refer to "Current Priority" at the top of this file.
 
 | Plugin | 目录 | 状态 | PRD 章节 | 对外依赖 | 最后更新 |
 |--------|------|------|---------|---------|---------|

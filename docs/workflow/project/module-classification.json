@@ -60,10 +60,10 @@
       "form": "lightweight overlay/grid window on the App plugin platform",
       "data": "device-local by default (never syncs unless explicitly account-sync)",
       "sub_modules": [
-        {"id": "organizer", "package": "packages/plugin-organizer", "status": "Stable-shipped", "role": "flagship/reference", "form": "overlay+control+grid", "open_decision": "P-level reconcile (ADR-0015): web=P2 vs dev ADR-0011=P3; recommend 'shipped foundation, not greenfield'"},
+        {"id": "organizer", "package": "packages/plugin-organizer", "status": "Stable-shipped", "role": "flagship/reference", "form": "overlay+control+grid", "decision": "ADR-0015 web-side Accepted: delivered/graduated flagship (Stable/shipped), NOT in the P2-paused freeze; dev ADR-0011 P3 reconcile pending operator"},
         {"id": "clipboard", "package": "packages/plugin-clipboard", "status": "Planned-stub", "role": "local clipboard history/OCR/privacy", "form": "dedicated window", "native_dep": "needs App clipboard_read_current / clipboard_subscribe_changes / vision_ocr"},
         {"id": "widgets", "package": "packages/plugin-widgets", "status": "Planned-stub", "role": "desktop widget host (clock/weather/note/time-progress)", "form": "overlay widgets", "native_dep": "low"},
-        {"id": "pet", "package": "packages/plugin-pet", "status": "Planned-stub", "role": "floating desktop pet", "form": "overlay window", "open_decision": "packaging (ADR-0015): independent package vs widgets desktop-pet sub-module; recommend keep independent"},
+        {"id": "pet", "package": "packages/plugin-pet", "status": "Planned-stub", "role": "floating desktop pet", "form": "overlay window", "decision": "ADR-0015 Accepted: independent package plugin-pet (not a widgets sub-module)"},
         {"id": "meditation", "package": "packages/plugin-meditation", "status": "Planned-no-package", "role": "meditation/focus", "form": "fullscreen overlay", "note": "NO package on disk yet; Web form shipped as xai-web-meditation"}
       ]
     },

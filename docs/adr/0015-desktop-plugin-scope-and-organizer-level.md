@@ -2,9 +2,9 @@
 
 | 字段 | 值 |
 |------|---|
-| 状态 | **Proposed**（待 operator 批准；批准前不改 organizer 的 PLUGIN_MAP 行级别、不动 pet 包结构）|
+| 状态 | **Accepted（web 侧,operator 2026-06-02 批准两项推荐）** — 决策 2 全部落地(PLUGIN_SDK §9.9 + 文档集);决策 1 web 侧落地(organizer = 已交付旗舰);唯一遗留:`dev` 线 ADR-0011 的 organizer→P3 reconcile 待 operator 另行确认后在 dev 线执行 |
 | 日期 | 2026-06-02 |
-| 决策者 | Claude（subagent）起草；待 operator ratify |
+| 决策者 | Claude（subagent）起草;operator 2026-06-02 批准 |
 | 关联 | ADR-0010（amended）、ADR-0011（dev 线，web 分支不可见）、ADR-0013 §S7、`docs/MODULE_BOUNDARIES.md`、`docs/planning/sub-prds/plugin/PRD.md` |
 
 ## 背景
@@ -36,14 +36,15 @@
 
 ## 决策
 
-**Proposed（待 operator ratify）**：决策 1 取 **方案 A**，决策 2 取 **方案 A**。在 operator 批准前：
+**Accepted（operator 2026-06-02 批准）**：决策 1 取 **方案 A**(organizer = 已交付旗舰,移出 P2/P3 优先级队列),决策 2 取 **方案 A**(pet 保留独立包 plugin-pet)。落地状态:
 
-- `docs/MODULE_BOUNDARIES.md` 与 `module-classification.json` 已按"recommended + open_decision"标注（organizer = flagship/shipped；pet = 独立包），并显式标记 `decisionRef: ADR-0015`。
-- **不**修改 organizer 在 PLUGIN_MAP 的行级别字段、**不**改 pet 包结构、**不**重写 PLUGIN_SDK——这些是 ratify 后的执行动作。
+- **决策 2 — 已全部落地**:`docs/PLUGIN_SDK.md` §9.9 改为独立 `plugin-pet` manifest(commit d1fc9d8);`MODULE_BOUNDARIES.md` / `module-classification.json` 同步。
+- **决策 1 — web 侧已落地**:`CLAUDE.md` / `PLUGIN_MAP.md` / `MODULE_BOUNDARIES.md` / `module-classification.json` 已把 organizer 标为"已交付旗舰(graduated),不属 P2-paused 冻结范围"。
+- **决策 1 唯一遗留(待 operator 另行确认)**:`dev` 线 ADR-0011 仍把 organizer 降为 P3 Future;撤销/调整它需切到 `dev` 分支(ADR-0013:任何触及 dev 的操作需 operator 显式确认),不在本 `web` 会话自动执行。
 
 ## 后果
 
 - 正面：桌面插件边界对外一致——organizer 作为已交付旗舰、其余四个作为 paused greenfield，不再自相矛盾；pet 归属明确。
 - 正面：解开 ADR-0013 §S7 #7 长期挂起的 reconcile 项。
 - 负面：reconcile 落地需要触及 `dev` 线（ADR-0011）+ 改 PLUGIN_SDK，属 operator 确认范围（ADR-0013：任何触及 dev 的操作需显式确认）。
-- 待办（ratify 后）：① 在 web 与 main 上把 organizer 标为 "shipped foundation"；② 决定是否在 dev 线撤销/调整 ADR-0011 对 organizer 的 P3 降级；③ 更新 PLUGIN_SDK 的 pet 表述；④ 同步 dev-dashboard。
+- 待办状态:① web 侧把 organizer 标为 "delivered flagship" ✅ 已落地(CLAUDE.md / PLUGIN_MAP / MODULE_BOUNDARIES / classification);② dev 线撤销/调整 ADR-0011 对 organizer 的 P3 降级 ⏳ 待 operator 在 dev 线确认执行;③ 更新 PLUGIN_SDK 的 pet 表述 ✅ 已落地(commit d1fc9d8);④ 同步 dev-dashboard ⏳(product_line 文案已含 ADR-0015 引用,`pnpm dashboard` 重生成待跑)。

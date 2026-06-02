@@ -81,10 +81,10 @@
 
 | 插件 | 角色 | 状态（PLUGIN_MAP） | 形态 | 备注 |
 |---|---|---|---|---|
-| **organizer** | 旗舰 / 参考插件（Smart Container） | **Stable（已 shipped）** | overlay + control + grid 原生窗 | 实质已是 App 原生地基的一部分；P 级 reconcile 见 ADR-0015 |
+| **organizer** | 旗舰 / 参考插件（Smart Container） | **Stable（已 shipped）** | overlay + control + grid 原生窗 | **已交付旗舰(graduated)**,不属 P2-paused 冻结范围;P 级见 ADR-0015(web 侧 Accepted;dev 线 ADR-0011 reconcile 待确认) |
 | **clipboard** | 本地剪贴板历史 / OCR / 隐私 | Planned（stub，能力 mock） | `dedicated` 窗 | 需 App 先加 `clipboard_*`/`vision_ocr` 命令 |
 | **widgets** | 桌面挂件 host（时钟/天气/便签/时间进度条） | Planned（stub，数据 mock） | overlay 挂件 | 时间进度条原始为 P0「三端通用」 |
-| **pet** | 桌面悬浮宠物 | Planned（stub 偏空壳） | overlay 窗 | **归属未决**：独立包 vs widgets 子模块，见 ADR-0015 |
+| **pet** | 桌面悬浮宠物 | Planned（stub 偏空壳） | overlay 窗 | **独立包 plugin-pet**(ADR-0015 Accepted;非 widgets 子模块) |
 | **meditation** | 冥想 / 专注 | Planned（**未建包**） | 全屏覆盖 | Web 形态已 ship 为 `xai-web-meditation` |
 
 > 全部 P2 桌面插件按 ADR-0010 §D2 **Paused until G1 SHIPPED**。开工前用 `xai-feature-brief` 规范化入队，不开 feature-build。MVP 顺序见 `docs/planning/sub-prds/plugin/PRD.md`。
