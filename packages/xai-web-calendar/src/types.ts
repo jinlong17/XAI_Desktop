@@ -6,8 +6,8 @@
 
 import type { Lang } from "@repo/plugin-web-tokens";
 
-/** Active view tab. Month is the only functional view in v1. */
-export type CalendarView = "month" | "week" | "day";
+/** Active view tab. */
+export type CalendarView = "year" | "month" | "week" | "day";
 
 /** Top-level component props. */
 export interface CalendarModuleProps {

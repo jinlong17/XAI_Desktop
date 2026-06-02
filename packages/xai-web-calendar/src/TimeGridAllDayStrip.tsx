@@ -18,9 +18,16 @@ interface TimeGridAllDayStripProps {
   blocksByDay: Map<string, EventBlock[]>;
   /** Language preference */
   lang: "en" | "zh";
+  /** Called only for user-source events. */
+  onUserEventClick?: (userId: string) => void;
 }
 
-export function TimeGridAllDayStrip({ dayKeys, blocksByDay, lang }: TimeGridAllDayStripProps): JSX.Element {
+export function TimeGridAllDayStrip({
+  dayKeys,
+  blocksByDay,
+  lang,
+  onUserEventClick,
+}: TimeGridAllDayStripProps): JSX.Element {
   const cols = dayKeys.length;
   return (
     <div
@@ -35,14 +42,34 @@ export function TimeGridAllDayStrip({ dayKeys, blocksByDay, lang }: TimeGridAllD
           <div key={dk} className="cal-allday-cell">
             {allDayBlocks.map((b, i) => {
               const title = lang === "zh" ? b.event.t.zh : b.event.t.en;
+              const source = (b.event as { _source?: "fixture" | "user" })._source ?? "fixture";
+              const userId = (b.event as { _userId?: string })._userId;
+              const tag = (b.event as { _tag?: string })._tag;
+              const isUser = source === "user" && !!userId;
               return (
                 <div
                   key={i}
                   className={`cal-allday-event ev-${b.event.c}`}
+                  data-source={source}
+                  data-user-id={userId}
+                  role={isUser ? "button" : undefined}
+                  tabIndex={isUser ? 0 : undefined}
+                  onClick={isUser && onUserEventClick ? () => onUserEventClick(userId) : undefined}
+                  onKeyDown={
+                    isUser && onUserEventClick
+                      ? (ev) => {
+                          if (ev.key === "Enter" || ev.key === " ") {
+                            ev.preventDefault();
+                            onUserEventClick(userId);
+                          }
+                        }
+                      : undefined
+                  }
                   aria-label={title}
                   title={title}
                 >
-                  {title}
+                  <span className="ev-title">{title}</span>
+                  {tag ? <span className="cal-event-tag">{tag}</span> : null}
                 </div>
               );
             })}

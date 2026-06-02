@@ -34,6 +34,16 @@ export interface RecurrenceRule {
 /** Closed union of UI color presets. 5 entries: 4 baseline + 1 new (rose). */
 export type EventColorPreset = "mint" | "amber" | "blue" | "violet" | "rose";
 
+/** Reminder presets stored on user events. */
+export type EventReminderPreset =
+  | "none"
+  | "at_start"
+  | "5m"
+  | "15m"
+  | "30m"
+  | "1h"
+  | "1d";
+
 /**
  * User-created calendar event. Distinct from the fixture `CalEvent` shape.
  * See the file-level invariant comment for schema constraints.
@@ -51,6 +61,14 @@ export interface UserCalEvent {
   colorPreset: EventColorPreset;
   /** Recurrence rule (daily/weekly) or null for non-recurring. */
   recurrence: RecurrenceRule | null;
+  /** True means render in all-day strips / date cells without a clock label. */
+  allDay?: boolean;
+  /** Optional short tag used for chip badges and filtering future rows. */
+  tag?: string;
+  /** Optional free-form notes / description text. */
+  notes?: string;
+  /** Reminder setting for local notification future rows. */
+  reminder?: EventReminderPreset;
   /** ISO millisecond timestamp at create. */
   createdAt: string;
   /** ISO millisecond timestamp; bumped on every successful update. */

@@ -39,6 +39,7 @@ import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import type { Lang } from "@repo/plugin-web-tokens";
 import type {
   EventColorPreset,
+  EventReminderPreset,
   RecurrenceKind,
   RecurrenceRule,
   UserCalEvent,
@@ -78,6 +79,16 @@ const RECUR_OPTIONS: readonly { key: "none" | RecurrenceKind; label: keyof typeo
   { key: "weekly", label: "recur_weekly" },
 ] as const;
 
+const REMINDER_OPTIONS: readonly { key: EventReminderPreset; label: keyof typeof STR_EVENT_COMPOSER }[] = [
+  { key: "none", label: "reminder_none" },
+  { key: "at_start", label: "reminder_at_start" },
+  { key: "5m", label: "reminder_5m" },
+  { key: "15m", label: "reminder_15m" },
+  { key: "30m", label: "reminder_30m" },
+  { key: "1h", label: "reminder_1h" },
+  { key: "1d", label: "reminder_1d" },
+] as const;
+
 /** Today's "YYYY-MM-DD" in local time (no UTC drift for the date field). */
 function todayDateKey(): string {
   const now = new Date();
@@ -94,6 +105,10 @@ interface FormState {
   endTime: string;    // "HH:MM"
   colorPreset: EventColorPreset;
   recurrence: "none" | RecurrenceKind;
+  tag: string;
+  notes: string;
+  allDay: boolean;
+  reminder: EventReminderPreset;
 }
 
 function makeInitialState(
@@ -109,6 +124,10 @@ function makeInitialState(
       endTime: event.endISO.slice(11, 16),
       colorPreset: event.colorPreset,
       recurrence: event.recurrence?.kind ?? "none",
+      tag: event.tag ?? "",
+      notes: event.notes ?? "",
+      allDay: event.allDay === true,
+      reminder: event.reminder ?? "none",
     };
   }
   return {
@@ -118,6 +137,10 @@ function makeInitialState(
     endTime: "10:00",
     colorPreset: "mint",
     recurrence: "none",
+    tag: "",
+    notes: "",
+    allDay: false,
+    reminder: "none",
   };
 }
 
@@ -182,11 +205,13 @@ export function EventComposer(props: EventComposerProps): ReactElement | null {
   const handleSave = useCallback(
     (e: MouseEvent<HTMLButtonElement>) => {
       e.stopPropagation();
+      const startTime = form.allDay ? "00:00" : form.startTime;
+      const endTime = form.allDay ? "23:59" : form.endTime;
       const validationErrors = validateUserCalEvent({
         title: form.title,
         date: form.date,
-        startTime: form.startTime,
-        endTime: form.endTime,
+        startTime,
+        endTime,
         colorPreset: form.colorPreset,
         recurrence: form.recurrence === "none" ? null : { kind: form.recurrence },
       });
@@ -195,11 +220,13 @@ export function EventComposer(props: EventComposerProps): ReactElement | null {
         return;
       }
       setErrors([]);
-      const startISO = `${form.date}T${form.startTime}`;
-      const endISO = `${form.date}T${form.endTime}`;
+      const startISO = `${form.date}T${startTime}`;
+      const endISO = `${form.date}T${endTime}`;
       const now = new Date().toISOString();
       const recurrence: RecurrenceRule | null =
         form.recurrence === "none" ? null : { kind: form.recurrence };
+      const tag = form.tag.trim();
+      const notes = form.notes.trim();
 
       if (mode === "edit" && event) {
         const patched: UserCalEvent = {
@@ -209,6 +236,10 @@ export function EventComposer(props: EventComposerProps): ReactElement | null {
           endISO,
           colorPreset: form.colorPreset,
           recurrence,
+          allDay: form.allDay,
+          tag: tag || undefined,
+          notes: notes || undefined,
+          reminder: form.reminder,
           updatedAt: now,
         };
         onSave(patched);
@@ -220,6 +251,10 @@ export function EventComposer(props: EventComposerProps): ReactElement | null {
           endISO,
           colorPreset: form.colorPreset,
           recurrence,
+          allDay: form.allDay,
+          tag: tag || undefined,
+          notes: notes || undefined,
+          reminder: form.reminder,
           createdAt: now,
           updatedAt: now,
         };
@@ -323,6 +358,25 @@ export function EventComposer(props: EventComposerProps): ReactElement | null {
           ) : null}
         </div>
 
+        {/* All-day toggle */}
+        <label className="event-composer__check">
+          <input
+            id="event-composer-all-day-input"
+            type="checkbox"
+            checked={form.allDay}
+            onChange={(e: ChangeEvent<HTMLInputElement>) => {
+              const checked = e.target.checked;
+              setForm((prev) => ({
+                ...prev,
+                allDay: checked,
+                startTime: checked ? "00:00" : (prev.startTime === "00:00" ? "09:00" : prev.startTime),
+                endTime: checked ? "23:59" : (prev.endTime === "23:59" ? "10:00" : prev.endTime),
+              }));
+            }}
+          />
+          <span>{s(STR_EVENT_COMPOSER, "field_all_day", lang)}</span>
+        </label>
+
         {/* Start + End row */}
         <div className="event-composer__row">
           <div className="event-composer__field">
@@ -337,6 +391,7 @@ export function EventComposer(props: EventComposerProps): ReactElement | null {
               type="time"
               className="event-composer__input"
               value={form.startTime}
+              disabled={form.allDay}
               onChange={(e: ChangeEvent<HTMLInputElement>) =>
                 setField("startTime", e.target.value)
               }
@@ -363,6 +418,7 @@ export function EventComposer(props: EventComposerProps): ReactElement | null {
               type="time"
               className="event-composer__input"
               value={form.endTime}
+              disabled={form.allDay}
               onChange={(e: ChangeEvent<HTMLInputElement>) =>
                 setField("endTime", e.target.value)
               }
@@ -376,6 +432,48 @@ export function EventComposer(props: EventComposerProps): ReactElement | null {
                 {errorsByField.get("endTime")!.message[lang]}
               </div>
             ) : null}
+          </div>
+        </div>
+
+        {/* Tag + reminder row */}
+        <div className="event-composer__row">
+          <div className="event-composer__field">
+            <label
+              htmlFor="event-composer-tag-input"
+              className="event-composer__field-label"
+            >
+              {s(STR_EVENT_COMPOSER, "field_tag", lang)}
+            </label>
+            <input
+              id="event-composer-tag-input"
+              type="text"
+              className="event-composer__input"
+              value={form.tag}
+              maxLength={32}
+              onChange={(e: ChangeEvent<HTMLInputElement>) => setField("tag", e.target.value)}
+            />
+          </div>
+          <div className="event-composer__field">
+            <label
+              htmlFor="event-composer-reminder-input"
+              className="event-composer__field-label"
+            >
+              {s(STR_EVENT_COMPOSER, "field_reminder", lang)}
+            </label>
+            <select
+              id="event-composer-reminder-input"
+              className="event-composer__input"
+              value={form.reminder}
+              onChange={(e: ChangeEvent<HTMLSelectElement>) =>
+                setField("reminder", e.target.value as EventReminderPreset)
+              }
+            >
+              {REMINDER_OPTIONS.map((option) => (
+                <option key={option.key} value={option.key}>
+                  {s(STR_EVENT_COMPOSER, option.label, lang)}
+                </option>
+              ))}
+            </select>
           </div>
         </div>
 
@@ -408,6 +506,23 @@ export function EventComposer(props: EventComposerProps): ReactElement | null {
               );
             })}
           </div>
+        </div>
+
+        {/* Notes / description */}
+        <div className="event-composer__field">
+          <label
+            htmlFor="event-composer-notes-input"
+            className="event-composer__field-label"
+          >
+            {s(STR_EVENT_COMPOSER, "field_notes", lang)}
+          </label>
+          <textarea
+            id="event-composer-notes-input"
+            className="event-composer__input event-composer__textarea"
+            value={form.notes}
+            rows={3}
+            onChange={(e: ChangeEvent<HTMLTextAreaElement>) => setField("notes", e.target.value)}
+          />
         </div>
 
         {/* Recurrence picker */}

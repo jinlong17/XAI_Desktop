@@ -18,10 +18,22 @@ interface MonthRowProps {
   displayedMonth: { year: number; month: number };
   /** Forwarded from CalendarModule via MonthGrid for user-event click handling. */
   onUserEventClick?: (userId: string) => void;
+  /** Opens the quick-create composer for a concrete date. */
+  onDateClick?: (dateKey: string) => void;
 }
 
 export function MonthRow(props: MonthRowProps): JSX.Element {
-  const { cells, lang, t, todayKey, focusedDate, events, displayedMonth, onUserEventClick } = props;
+  const {
+    cells,
+    lang,
+    t,
+    todayKey,
+    focusedDate,
+    events,
+    displayedMonth,
+    onUserEventClick,
+    onDateClick,
+  } = props;
   return (
     <div className="cal-row">
       {cells.map((cell, ci) => {
@@ -44,6 +56,7 @@ export function MonthRow(props: MonthRowProps): JSX.Element {
             focusedDate={focusedDate}
             events={cellEvents}
             onUserEventClick={onUserEventClick}
+            onDateClick={onDateClick}
           />
         );
       })}

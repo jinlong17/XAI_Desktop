@@ -44,6 +44,10 @@ export { TimeGrid } from "./TimeGrid.js";
 export type { TimeGridProps } from "./TimeGrid.js";
 export { DayView } from "./DayView.js";
 export type { DayViewProps } from "./DayView.js";
+export { YearView } from "./YearView.js";
+export type { YearViewProps } from "./YearView.js";
+export { DayOverview } from "./DayOverview.js";
+export type { DayOverviewProps } from "./DayOverview.js";
 
 // ---- Event-create extension (2026-05-27 — HC8 lift) -------------------------
 // Data-layer types
@@ -52,6 +56,7 @@ export type {
   RecurrenceRule,
   RecurrenceKind,
   EventColorPreset,
+  EventReminderPreset,
 } from "./internal/eventStore/types.js";
 
 // React hook (preferred consumer API)

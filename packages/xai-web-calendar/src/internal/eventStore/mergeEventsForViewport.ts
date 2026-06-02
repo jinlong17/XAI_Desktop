@@ -40,6 +40,14 @@ export interface MergedCalEvent extends CalEvent {
   _source?: "fixture" | "user";
   /** Original UserCalEvent id; absent for fixture rows. */
   _userId?: string;
+  /** Optional tag carried from user-created events. */
+  _tag?: string;
+  /** Optional reminder label key carried from user-created events. */
+  _reminder?: string;
+  /** Optional notes / description carried from user-created events. */
+  _notes?: string;
+  /** True when the user event is explicitly all-day. */
+  _allDay?: boolean;
 }
 
 /**
@@ -61,10 +69,14 @@ function projectToCalEvent(userEvent: UserCalEvent): MergedCalEvent {
   return {
     c: userEvent.colorPreset,
     t: { en: userEvent.title, zh: userEvent.title },
-    time: startTime,
-    endTime,
+    time: userEvent.allDay ? undefined : startTime,
+    endTime: userEvent.allDay ? undefined : endTime,
     _source: "user",
     _userId: userEvent.id,
+    _tag: userEvent.tag?.trim() || undefined,
+    _reminder: userEvent.reminder && userEvent.reminder !== "none" ? userEvent.reminder : undefined,
+    _notes: userEvent.notes?.trim() || undefined,
+    _allDay: userEvent.allDay === true,
   };
 }
 

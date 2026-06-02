@@ -9,6 +9,7 @@
 import { describe, it, expect, vi } from "vitest";
 import { render, screen, fireEvent } from "@testing-library/react";
 import { EventComposer } from "../EventComposer.js";
+import * as calendarPkg from "../index.js";
 import type { UserCalEvent } from "../internal/eventStore/types.js";
 import { STR_EVENT_COMPOSER } from "../internal/strings.js";
 
@@ -175,6 +176,10 @@ describe("EventComposer — AC-CREATE-* defaults + save", () => {
     // Recurrence None selected by default.
     const noneBtn = screen.getByText(STR_EVENT_COMPOSER.recur_none.en);
     expect(noneBtn.getAttribute("data-selected")).toBe("true");
+    expect((document.getElementById("event-composer-tag-input") as HTMLInputElement).value).toBe("");
+    expect((document.getElementById("event-composer-notes-input") as HTMLTextAreaElement).value).toBe("");
+    expect((document.getElementById("event-composer-all-day-input") as HTMLInputElement).checked).toBe(false);
+    expect((document.getElementById("event-composer-reminder-input") as HTMLSelectElement).value).toBe("none");
   });
 
   it("AC-CREATE-6: empty title → validation error shown, composer stays open, onSave NOT called", () => {
@@ -230,6 +235,43 @@ describe("EventComposer — AC-CREATE-* defaults + save", () => {
     expect(created.recurrence).toEqual({ kind: "weekly" });
     expect(typeof created.id).toBe("string");
   });
+
+  it("save with metadata → includes tag, notes, all-day, and reminder fields", () => {
+    const onSave = vi.fn();
+    render(
+      <EventComposer
+        open={true}
+        mode="create"
+        event={null}
+        lang="en"
+        defaultDateKey="2026-05-22"
+        onSave={onSave}
+        onClose={() => {}}
+      />,
+    );
+    fireEvent.change(document.getElementById("event-composer-title-input") as HTMLInputElement, {
+      target: { value: "Flight" },
+    });
+    fireEvent.change(document.getElementById("event-composer-tag-input") as HTMLInputElement, {
+      target: { value: "travel" },
+    });
+    fireEvent.change(document.getElementById("event-composer-notes-input") as HTMLTextAreaElement, {
+      target: { value: "Terminal 2" },
+    });
+    fireEvent.change(document.getElementById("event-composer-reminder-input") as HTMLSelectElement, {
+      target: { value: "1d" },
+    });
+    fireEvent.click(document.getElementById("event-composer-all-day-input") as HTMLInputElement);
+    fireEvent.click(screen.getByText(STR_EVENT_COMPOSER.btn_save.en));
+
+    const created = onSave.mock.calls[0]?.[0];
+    expect(created.startISO).toBe("2026-05-22T00:00");
+    expect(created.endISO).toBe("2026-05-22T23:59");
+    expect(created.allDay).toBe(true);
+    expect(created.tag).toBe("travel");
+    expect(created.notes).toBe("Terminal 2");
+    expect(created.reminder).toBe("1d");
+  });
 });
 
 describe("EventComposer — AC-EDIT-3 + AC-DELETE-1 edit mode", () => {
@@ -283,7 +325,17 @@ describe("EventComposer — AC-EDIT-3 + AC-DELETE-1 edit mode", () => {
       <EventComposer
         open={true}
         mode="edit"
-        event={sampleEvent({ title: "Existing event", startISO: "2026-05-30T13:00", endISO: "2026-05-30T15:30", colorPreset: "violet", recurrence: { kind: "daily" } })}
+        event={sampleEvent({
+          title: "Existing event",
+          startISO: "2026-05-30T13:00",
+          endISO: "2026-05-30T15:30",
+          colorPreset: "violet",
+          recurrence: { kind: "daily" },
+          tag: "client",
+          notes: "Bring slides",
+          allDay: false,
+          reminder: "30m",
+        })}
         lang="en"
         onSave={() => {}}
         onClose={() => {}}
@@ -297,6 +349,9 @@ describe("EventComposer — AC-EDIT-3 + AC-DELETE-1 edit mode", () => {
     expect(violetChip.getAttribute("data-selected")).toBe("true");
     const dailyBtn = screen.getByText(STR_EVENT_COMPOSER.recur_daily.en);
     expect(dailyBtn.getAttribute("data-selected")).toBe("true");
+    expect((document.getElementById("event-composer-tag-input") as HTMLInputElement).value).toBe("client");
+    expect((document.getElementById("event-composer-notes-input") as HTMLTextAreaElement).value).toBe("Bring slides");
+    expect((document.getElementById("event-composer-reminder-input") as HTMLSelectElement).value).toBe("30m");
   });
 
   it("delete click calls onDelete(event.id) then onClose", () => {
@@ -376,13 +431,11 @@ describe("EventComposer — AC-I18N-CREATE-1..3 bilingual", () => {
 
 describe("EventComposer — AC-BARREL-CREATE-1 + 6 + closed lifecycle", () => {
   it("AC-BARREL-CREATE-1: EventComposer is exported from src/index.ts", async () => {
-    const pkg = await import("../index.js");
-    expect(typeof pkg.EventComposer).toBe("function");
+    expect(typeof calendarPkg.EventComposer).toBe("function");
   });
 
   it("AC-BARREL-CREATE-6: EventComposerProps type is exported (compile-time check)", async () => {
-    const pkg = await import("../index.js");
-    expect(pkg).toBeDefined();
+    expect(calendarPkg).toBeDefined();
   });
 
   it("open={false} after open={true} → dialog.close() is called", () => {

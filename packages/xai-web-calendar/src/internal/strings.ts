@@ -36,7 +36,18 @@ export const STR_EVENT_COMPOSER = {
   field_start:            { en: "Start",                           zh: "开始" },
   field_end:              { en: "End",                             zh: "结束" },
   field_color:            { en: "Color",                           zh: "颜色" },
+  field_tag:              { en: "Tag",                             zh: "标签" },
+  field_notes:            { en: "Notes",                           zh: "备注 / 描述" },
+  field_all_day:          { en: "All-day",                         zh: "全天" },
+  field_reminder:         { en: "Reminder",                        zh: "提醒" },
   field_recurrence:       { en: "Recurrence",                      zh: "重复" },
+  reminder_none:          { en: "No reminder",                     zh: "不提醒" },
+  reminder_at_start:      { en: "At start time",                   zh: "开始时" },
+  reminder_5m:            { en: "5 minutes before",                zh: "提前 5 分钟" },
+  reminder_15m:           { en: "15 minutes before",               zh: "提前 15 分钟" },
+  reminder_30m:           { en: "30 minutes before",               zh: "提前 30 分钟" },
+  reminder_1h:            { en: "1 hour before",                   zh: "提前 1 小时" },
+  reminder_1d:            { en: "1 day before",                    zh: "提前 1 天" },
   recur_none:             { en: "None",                            zh: "不重复" },
   recur_daily:            { en: "Daily",                           zh: "每天" },
   recur_weekly:           { en: "Weekly",                          zh: "每周" },
@@ -59,6 +70,17 @@ export const EMPTY_STATE_HINT = {
 /** "Sample" badge label appended to fixture chips (Q9-E). */
 export const SAMPLE_BADGE = {
   label: { en: "Sample", zh: "示例" },
+} as const;
+
+/** Day overview popover strings shown before the event composer. */
+export const STR_DAY_OVERVIEW = {
+  title:        { en: "Day overview",              zh: "当天总览" },
+  empty:        { en: "No events for this day",    zh: "当天暂无事件" },
+  new_event:    { en: "New event",                 zh: "新建事件" },
+  close:        { en: "Close",                     zh: "关闭" },
+  all_day:      { en: "All-day",                   zh: "全天" },
+  sample_note:  { en: "Sample event",              zh: "示例事件" },
+  editable_note:{ en: "Click to edit",             zh: "点击编辑" },
 } as const;
 
 /**
