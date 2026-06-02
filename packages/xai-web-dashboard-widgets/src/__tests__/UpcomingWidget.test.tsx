@@ -9,8 +9,8 @@
  * AC-UPCOMING-REAL-3: past events excluded
  * AC-UPCOMING-REAL-4: `now` prop threads through correctly (N1 build note)
  */
-import { describe, it, expect, beforeEach } from "vitest";
-import { render, screen } from "@testing-library/react";
+import { describe, it, expect, beforeEach, vi } from "vitest";
+import { fireEvent, render, screen } from "@testing-library/react";
 
 import { UpcomingWidget } from "../widgets/UpcomingWidget.js";
 
@@ -84,6 +84,23 @@ describe("UpcomingWidget — real data", () => {
     });
     render(<UpcomingWidget lang="en" now={NOW} />);
     expect(screen.getByText("10:00")).toBeTruthy();
+  });
+
+  it("clicking an event row opens calendar", () => {
+    const goTo = vi.fn();
+    seedCalEvents({
+      e1: makeEvent("e1", "2026-05-29T10:00", "Test"),
+    });
+    const { container } = render(<UpcomingWidget lang="en" now={NOW} goTo={goTo} />);
+    fireEvent.click(container.querySelector(".upc-row")!);
+    expect(goTo).toHaveBeenCalledWith("calendar");
+  });
+
+  it("clicking the empty state opens calendar", () => {
+    const goTo = vi.fn();
+    const { container } = render(<UpcomingWidget lang="en" now={NOW} goTo={goTo} />);
+    fireEvent.click(container.querySelector(".upc-empty")!);
+    expect(goTo).toHaveBeenCalledWith("calendar");
   });
 
   it("AC-UPCOMING-REAL-2: renders month in Chinese", () => {

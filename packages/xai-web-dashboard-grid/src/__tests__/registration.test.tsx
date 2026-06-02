@@ -5,12 +5,23 @@
  * DashboardModule.events.test.tsx (added in P3) — keeping registration.test
  * focused on shape + presence.
  */
-import { describe, expect, it } from "vitest";
-import { render } from "@testing-library/react";
+import { afterEach, beforeEach, describe, expect, it } from "vitest";
+import { fireEvent, render } from "@testing-library/react";
 
 import { WebShellProvider } from "@repo/xai-web-shell";
+import { removePref, setPref } from "@repo/plugin-web-storage";
 
 import { dashboardGridSlotRegistration, DashboardSlotHost } from "../registration.js";
+
+beforeEach(() => {
+  removePref("xai_dash_order");
+  window.history.replaceState(null, "", "/app/dashboard");
+});
+
+afterEach(() => {
+  removePref("xai_dash_order");
+  window.history.replaceState(null, "", "/app/dashboard");
+});
 
 describe("dashboardGridSlotRegistration", () => {
   it("AC-REG-1: moduleId === 'dashboard'", () => {
@@ -103,5 +114,24 @@ describe("DashboardSlotHost", () => {
     expect(container.querySelector(".dash-empty")).toBeNull();
     const shells = container.querySelectorAll(".widget-shell");
     expect(shells.length).toBe(10);
+  });
+
+  it("deep-links from calendar widget change the app route", () => {
+    setPref("xai_dash_order", ["mini-cal"]);
+    const { container } = render(
+      <WebShellProvider
+        modules={[dashboardGridSlotRegistration]}
+        lang="en"
+        railPos="left"
+        petOn={false}
+        setPetOn={() => {}}
+      >
+        <DashboardSlotHost />
+      </WebShellProvider>,
+    );
+
+    fireEvent.click(container.querySelector(".mc-jump") as HTMLButtonElement);
+
+    expect(window.location.pathname).toBe("/app/calendar");
   });
 });

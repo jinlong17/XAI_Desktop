@@ -45,6 +45,23 @@ describe("AC-WHOOK-1: set(draft) persists to xai_dashboard_weather; weather refl
     expect(stored.city).toBe("Shanghai");
     expect(stored.condition).toBe("cloudy");
   });
+
+  it("set() can persist an Open-Meteo location before live weather has loaded", () => {
+    const { result } = renderHook(() => useWeather());
+    act(() => {
+      result.current.set({
+        city: "Shanghai",
+        provider: "open-meteo",
+        latitude: 31.23,
+        longitude: 121.47,
+        timezone: "Asia/Shanghai",
+      });
+    });
+    expect(result.current.weather).not.toBeNull();
+    expect(result.current.weather!.provider).toBe("open-meteo");
+    expect(result.current.weather!.latitude).toBe(31.23);
+    expect(result.current.weather!.temp).toBeUndefined();
+  });
 });
 
 describe("AC-WHOOK-2: clear() persists null; weather becomes null", () => {

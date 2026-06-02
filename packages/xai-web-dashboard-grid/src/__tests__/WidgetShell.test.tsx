@@ -6,10 +6,16 @@ import { describe, expect, it, vi } from "vitest";
 import { fireEvent, render } from "@testing-library/react";
 
 import { WidgetShell } from "../WidgetShell.js";
+import type { WidgetAppearanceItem } from "../internal/useWidgetAppearance.js";
 
 function makeShell(opts: {
   onPointerDown?: (id: string) => void;
   onRemove?: (id: string) => void;
+  onResizePointerDown?: (id: string) => void;
+  onAppearanceChange?: (id: string, appearance: WidgetAppearanceItem) => void;
+  onAppearanceReset?: (id: string) => void;
+  appearance?: WidgetAppearanceItem;
+  layout?: { cols: number; minHeight: number };
   ariaLabel?: { en: string; zh: string };
   lang?: "en" | "zh";
   isDragging?: boolean;
@@ -31,6 +37,18 @@ function makeShell(opts: {
         void e;
       }}
       onRemove={opts.onRemove}
+      appearance={opts.appearance}
+      onAppearanceChange={opts.onAppearanceChange}
+      onAppearanceReset={opts.onAppearanceReset}
+      layout={opts.layout}
+      onResizePointerDown={
+        opts.onResizePointerDown
+          ? (id, e) => {
+              opts.onResizePointerDown?.(id);
+              void e;
+            }
+          : undefined
+      }
     >
       {opts.children ?? <span data-testid="body">alpha-body</span>}
     </WidgetShell>,
@@ -185,5 +203,99 @@ describe("WidgetShell", () => {
     const btn = container.querySelector(".widget-shell__remove")!;
     // ariaLabel not provided → title falls back to id "alpha"
     expect(btn.getAttribute("aria-label")).toBe("Remove alpha from dashboard");
+  });
+
+  it("renders resize handle when onResizePointerDown is provided", () => {
+    const { container } = makeShell({ onResizePointerDown: vi.fn() });
+    expect(container.querySelector(".widget-shell__resize")).toBeTruthy();
+  });
+
+  it("does NOT render resize handle when onResizePointerDown is omitted", () => {
+    const { container } = makeShell();
+    expect(container.querySelector(".widget-shell__resize")).toBeNull();
+  });
+
+  it("resize handle pointerdown calls callback with widget id", () => {
+    const onResizePointerDown = vi.fn();
+    const { container } = makeShell({ onResizePointerDown });
+    const btn = container.querySelector(".widget-shell__resize")!;
+    fireEvent.pointerDown(btn, { button: 0, clientX: 80, clientY: 80 });
+    expect(onResizePointerDown).toHaveBeenCalledWith("alpha");
+  });
+
+  it("applies layout and glass appearance CSS variables to the shell", () => {
+    const { container } = makeShell({
+      layout: { cols: 8, minHeight: 260 },
+      appearance: { tone: "rose", alpha: 0.5 },
+    });
+    const shell = container.querySelector(".widget-shell") as HTMLElement;
+    expect(shell.style.getPropertyValue("--dash-widget-cols")).toBe("8");
+    expect(shell.style.getPropertyValue("--dash-widget-min-height")).toBe("260px");
+    expect(shell.style.getPropertyValue("--dash-widget-glass-rgb")).toBe("255 204 219");
+    expect(shell.style.getPropertyValue("--dash-widget-glass-alpha")).toBe("0.5");
+  });
+
+  it("renders appearance controls only when onAppearanceChange is provided", () => {
+    const { container: plain } = makeShell();
+    expect(plain.querySelector(".widget-shell__appearance")).toBeNull();
+
+    const { container: customizable } = makeShell({ onAppearanceChange: vi.fn() });
+    expect(customizable.querySelector(".widget-shell__appearance")).toBeTruthy();
+  });
+
+  it("clicking a swatch updates the widget glass tone", () => {
+    const onAppearanceChange = vi.fn();
+    const { getByLabelText } = makeShell({
+      onAppearanceChange,
+      appearance: { tone: "clear", alpha: 0.42 },
+    });
+
+    fireEvent.click(getByLabelText("Customize alpha background"));
+    fireEvent.click(getByLabelText("Mint"));
+
+    expect(onAppearanceChange).toHaveBeenCalledWith("alpha", { tone: "mint", alpha: 0.42 });
+  });
+
+  it("changing the transparency slider updates the widget glass alpha", () => {
+    const onAppearanceChange = vi.fn();
+    const { container, getByLabelText } = makeShell({
+      onAppearanceChange,
+      appearance: { tone: "sky", alpha: 0.36 },
+    });
+
+    fireEvent.click(getByLabelText("Customize alpha background"));
+    fireEvent.change(container.querySelector(".widget-shell__opacity")!, {
+      target: { value: "58" },
+    });
+
+    expect(onAppearanceChange).toHaveBeenCalledWith("alpha", { tone: "sky", alpha: 0.58 });
+  });
+
+  it("clicking transparency step buttons updates the widget glass alpha", () => {
+    const onAppearanceChange = vi.fn();
+    const { getByLabelText } = makeShell({
+      onAppearanceChange,
+      appearance: { tone: "sky", alpha: 0.36 },
+    });
+
+    fireEvent.click(getByLabelText("Customize alpha background"));
+    fireEvent.click(getByLabelText("Increase transparency"));
+    fireEvent.click(getByLabelText("Reduce transparency"));
+
+    expect(onAppearanceChange).toHaveBeenNthCalledWith(1, "alpha", { tone: "sky", alpha: 0.42 });
+    expect(onAppearanceChange).toHaveBeenNthCalledWith(2, "alpha", { tone: "sky", alpha: 0.3 });
+  });
+
+  it("clicking reset calls the appearance reset callback", () => {
+    const onAppearanceReset = vi.fn();
+    const { getByLabelText, getByText } = makeShell({
+      onAppearanceChange: vi.fn(),
+      onAppearanceReset,
+    });
+
+    fireEvent.click(getByLabelText("Customize alpha background"));
+    fireEvent.click(getByText("Reset"));
+
+    expect(onAppearanceReset).toHaveBeenCalledWith("alpha");
   });
 });

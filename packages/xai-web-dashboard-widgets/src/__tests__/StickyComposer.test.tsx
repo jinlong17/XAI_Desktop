@@ -87,7 +87,7 @@ describe("AC-COMPOSER-6: color radiogroup defaults to sun, switches on click", (
   it("sun chip is aria-checked=true initially; clicking mint switches selection", () => {
     render(<StickyComposer open={true} lang="en" onSave={noop} onClose={noop} />);
     const chips = screen.getAllByRole("radio");
-    expect(chips).toHaveLength(5);
+    expect(chips).toHaveLength(10);
     // sun is first, aria-checked=true
     expect(chips[0]!.getAttribute("aria-checked")).toBe("true");
     // click mint (second)

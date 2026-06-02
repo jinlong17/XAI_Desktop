@@ -115,18 +115,19 @@ const DEFAULT_RAIL_ORDER: RailItemId[] = [
   "countdown",
   "ai",
   "statistics",
-  "settings",
 ];
 
 const DEFAULT_DASH_ORDER: DashWidgetId[] = [
   "clock",
-  "minicalendar",
-  "worldclocks",
+  "stat-tasks",
+  "stat-streak",
+  "stat-pomos",
   "weather",
+  "mini-cal",
+  "timezones",
   "stickies",
   "mail",
   "upcoming",
-  "stats",
 ];
 
 const DEFAULT_PET_POS: PetPos = { x: 24, y: 24 };

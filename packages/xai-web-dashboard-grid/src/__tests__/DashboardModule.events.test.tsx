@@ -10,6 +10,7 @@ import { fireEvent, render } from "@testing-library/react";
 import { emitWebEvent, onWebEvent } from "@repo/xai-web-event-bus";
 import { useWebShell, WebShellProvider } from "@repo/xai-web-shell";
 import type { WebModuleId } from "@repo/core/types";
+import { setPref } from "@repo/plugin-web-storage";
 
 import { DashboardModule } from "../DashboardModule.js";
 import type { WidgetRegistration } from "../types.js";
@@ -108,6 +109,7 @@ describe("DashboardModule events (P3)", () => {
       return <DashboardModule lang={lang} widgets={widgets} goTo={makeGoTo()} />;
     }
 
+    setPref("xai_dash_order", ["deep-link-test"]);
     const { getByTestId } = render(
       <WebShellProvider
         modules={[]}
@@ -158,6 +160,7 @@ describe("DashboardModule events (P3)", () => {
       return <DashboardModule lang={lang} widgets={widgets} goTo={makeGoTo()} />;
     }
 
+    setPref("xai_dash_order", ["deep-link-test"]);
     const { getByTestId } = render(
       <WebShellProvider
         modules={[]}

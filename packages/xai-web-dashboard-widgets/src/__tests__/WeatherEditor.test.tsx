@@ -153,6 +153,54 @@ describe("AC-WEDITOR-4: valid city + temp + condition → onSave called with cor
     expect(draft.hi).toBe(22);
     expect(draft.lo).toBeUndefined(); // lo not entered
   });
+
+  it("searches city candidates and saves a selected Open-Meteo location without manual temp", async () => {
+    const onSave = vi.fn();
+    const searchCities = vi.fn(async () => [
+      {
+        id: 1796236,
+        name: "Shanghai",
+        latitude: 31.22222,
+        longitude: 121.45806,
+        timezone: "Asia/Shanghai",
+        country: "China",
+        countryCode: "CN",
+        admin1: "Shanghai",
+      },
+    ]);
+    const { container } = render(
+      <WeatherEditor
+        open={true}
+        lang="en"
+        initial={null}
+        searchCities={searchCities}
+        onSave={onSave}
+        onClose={noop}
+      />,
+    );
+
+    const cityInput = container.querySelector("#weather-editor-city") as HTMLInputElement;
+    fireEvent.change(cityInput, { target: { value: "Shanghai" } });
+    fireEvent.click(screen.getByText(STR_WEATHER.search_btn.en));
+    const option = await screen.findByRole("option", { name: /Shanghai/ });
+    fireEvent.click(option);
+    fireEvent.click(screen.getByText(STR_WEATHER.btn_save.en));
+
+    expect(searchCities).toHaveBeenCalledWith("Shanghai", "en");
+    expect(onSave).toHaveBeenCalledOnce();
+    const draft = onSave.mock.calls[0]![0];
+    expect(draft).toMatchObject({
+      city: "Shanghai",
+      provider: "open-meteo",
+      latitude: 31.22222,
+      longitude: 121.45806,
+      timezone: "Asia/Shanghai",
+      country: "China",
+      admin1: "Shanghai",
+    });
+    expect(draft.temp).toBeUndefined();
+    expect(draft.condition).toBeUndefined();
+  });
 });
 
 describe("AC-WEDITOR-5: validation — empty city or empty/non-numeric temp → error, stays open, no onSave", () => {

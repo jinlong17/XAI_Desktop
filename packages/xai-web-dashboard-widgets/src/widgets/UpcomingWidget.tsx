@@ -29,6 +29,7 @@ import { strEmpty } from "../internal/strings.js";
 export interface UpcomingWidgetProps {
   lang: Lang;
   now: Date;
+  goTo?: (moduleId: string) => void;
 }
 
 const MONTH_NAMES: Record<Lang, readonly string[]> = {
@@ -36,7 +37,7 @@ const MONTH_NAMES: Record<Lang, readonly string[]> = {
   zh: ["1月", "2月", "3月", "4月", "5月", "6月", "7月", "8月", "9月", "10月", "11月", "12月"],
 };
 
-export function UpcomingWidget({ lang, now }: UpcomingWidgetProps) {
+export function UpcomingWidget({ lang, now, goTo = () => {} }: UpcomingWidgetProps) {
   const { s } = useI18n(lang);
   const [store] = usePref("xai_calendar_events");
 
@@ -47,9 +48,25 @@ export function UpcomingWidget({ lang, now }: UpcomingWidgetProps) {
       <div className="wgt-h">
         <Icon name="calendar" size={14} />
         <span>{s("dashboard.upcoming")}</span>
+        <span className="grow" />
+        <button
+          type="button"
+          className="widget-open-btn"
+          data-no-drag
+          onClick={() => goTo("calendar")}
+        >
+          {s("dashboard.widgets.mini_cal.open")} <Icon name="arrowR" size={11} />
+        </button>
       </div>
       {items.length === 0 ? (
-        <div className="upc-empty">{strEmpty("upcoming_empty", lang)}</div>
+        <button
+          type="button"
+          className="upc-empty upc-empty--action"
+          data-no-drag
+          onClick={() => goTo("calendar")}
+        >
+          {strEmpty("upcoming_empty", lang)}
+        </button>
       ) : (
         <ul className="upc-list">
           {items.map((item) => {
@@ -58,7 +75,20 @@ export function UpcomingWidget({ lang, now }: UpcomingWidgetProps) {
             const monthLabel = MONTH_NAMES[lang][monthIdx] ?? item.dateKey;
             const dayNum = dayStr ?? "";
             return (
-              <li key={item.id} className="upc-row">
+              <li
+                key={item.id}
+                className="upc-row"
+                data-no-drag
+                role="button"
+                tabIndex={0}
+                onClick={() => goTo("calendar")}
+                onKeyDown={(e) => {
+                  if (e.key === "Enter" || e.key === " ") {
+                    e.preventDefault();
+                    goTo("calendar");
+                  }
+                }}
+              >
                 <div className="upc-date">
                   <div className="upc-d mono">{dayNum}</div>
                   <div className="upc-m">{monthLabel}</div>
