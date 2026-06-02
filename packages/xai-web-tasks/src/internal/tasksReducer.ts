@@ -14,7 +14,7 @@
  * @internal
  */
 
-import type { TaskCol, TaskCard, TaskTagId, BucketId, NewTaskDraft } from "../types.js";
+import type { TaskCol, TaskCard, TaskTagId, BucketId, NewTaskDraft, TaskPriority } from "../types.js";
 import { dateForCol } from "./dateForCol.js";
 import { createTaskId } from "./ids.js";
 
@@ -48,7 +48,7 @@ export function moveCard(
   // then re-add date fields for dated buckets (api.md §5.2).
   const newDateResult = dateForCol(toColId, now);
   // T-10 sub-fix 4: preserve `done` across bucket moves (prevents drag clearing completion)
-  const { id, title, tag, inbox, done } = task;
+  const { id, title, tag, tags, listId, priority, notes, inbox, done } = task;
 
   const moved: TaskCard = (() => {
     if (toColId === "nodate") {
@@ -57,6 +57,10 @@ export function moveCard(
         id,
         title,
         ...(tag !== undefined    ? { tag }    : {}),
+        ...(tags !== undefined   ? { tags }   : {}),
+        ...(listId !== undefined ? { listId } : {}),
+        ...(priority !== undefined ? { priority } : {}),
+        ...(notes !== undefined  ? { notes }  : {}),
         ...(inbox !== undefined  ? { inbox }  : {}),
         ...(done !== undefined   ? { done }   : {}),
       };
@@ -66,6 +70,10 @@ export function moveCard(
       id,
       title,
       ...(tag !== undefined   ? { tag }   : {}),
+      ...(tags !== undefined  ? { tags }  : {}),
+      ...(listId !== undefined ? { listId } : {}),
+      ...(priority !== undefined ? { priority } : {}),
+      ...(notes !== undefined ? { notes } : {}),
       ...(inbox !== undefined ? { inbox } : {}),
       ...(done !== undefined  ? { done }  : {}),
     };
@@ -142,8 +150,25 @@ export interface TaskCardPatch {
    * Fills BOTH title.en + title.zh (single-input bilingual, mirrors addCard).
    */
   title?: string;
-  tag?: TaskTagId;
+  tag?: TaskTagId | null;
+  tags?: ReadonlyArray<string>;
+  listId?: string;
+  priority?: TaskPriority;
+  notes?: string;
+  done?: boolean;
   // bucket change handled via moveCard composition in the subscriber (ED-6), NOT here.
+}
+
+function patchHasValue(patch: TaskCardPatch): boolean {
+  return (
+    patch.title !== undefined ||
+    patch.tag !== undefined ||
+    patch.tags !== undefined ||
+    patch.listId !== undefined ||
+    patch.priority !== undefined ||
+    patch.notes !== undefined ||
+    patch.done !== undefined
+  );
 }
 
 // ---- deleteCard ---------------------------------------------------------------
@@ -157,15 +182,20 @@ export interface TaskCardPatch {
  * API contract: packages/xai-web-ai-chat/docs/api.md §14.3
  */
 export function deleteCard(prev: TaskCol[], id: string): TaskCol[] {
+  return deleteCards(prev, new Set([id]));
+}
+
+export function deleteCards(prev: TaskCol[], ids: ReadonlySet<string>): TaskCol[] {
+  if (ids.size === 0) return prev;
   let found = false;
   const next = prev.map((col) => {
-    const idx = col.tasks.findIndex((t) => t.id === id);
+    const idx = col.tasks.findIndex((t) => ids.has(t.id));
     if (idx < 0) return col; // referential equality for untouched columns
     found = true;
     return {
       ...col,
-      tasks: col.tasks.filter((t) => t.id !== id),
-      count: Math.max(0, (col.count ?? 0) - 1),
+      tasks: col.tasks.filter((t) => !ids.has(t.id)),
+      count: Math.max(0, (col.count ?? 0) - col.tasks.filter((t) => ids.has(t.id)).length),
     };
   });
   return found ? next : prev;
@@ -188,36 +218,52 @@ export function deleteCard(prev: TaskCol[], id: string): TaskCol[] {
  * API contract: packages/xai-web-ai-chat/docs/api.md §14.3
  */
 export function updateCard(prev: TaskCol[], id: string, patch: TaskCardPatch): TaskCol[] {
+  return updateCards(prev, new Set([id]), patch);
+}
+
+export function updateCards(prev: TaskCol[], ids: ReadonlySet<string>, patch: TaskCardPatch): TaskCol[] {
   // Empty patch → no-op
-  const hasTitle = patch.title !== undefined;
-  const hasTag   = patch.tag   !== undefined;
-  if (!hasTitle && !hasTag) return prev;
+  if (ids.size === 0 || !patchHasValue(patch)) return prev;
 
   let found = false;
   const next = prev.map((col) => {
-    const idx = col.tasks.findIndex((t) => t.id === id);
-    if (idx < 0) return col; // referential equality for untouched columns
+    let changed = false;
+    const updatedTasks = col.tasks.map((card) => {
+      if (!ids.has(card.id)) return card;
+      found = true;
+      changed = true;
 
-    found = true;
-    const card = col.tasks[idx]!;
+      const nextTags = patch.tags !== undefined ? [...patch.tags] : card.tags;
+      const primaryTag =
+        patch.tag === null
+          ? undefined
+          : patch.tag !== undefined
+            ? patch.tag
+            : nextTags && nextTags.length > 0
+              ? (nextTags[0] as TaskTagId)
+              : card.tag;
 
-    // Build updated card — preserve ALL untouched fields; re-pin id.
-    const updatedCard: TaskCard = {
-      ...card,
-      ...(hasTitle
-        ? { title: { en: patch.title!, zh: patch.title! } }
-        : {}),
-      ...(hasTag ? { tag: patch.tag } : {}),
-      // Explicitly re-pin id so a stray id-like field in patch cannot overwrite it.
-      id: card.id,
-    };
+      const updatedCard: TaskCard = {
+        ...card,
+        ...(patch.title !== undefined
+          ? { title: { en: patch.title, zh: patch.title } }
+          : {}),
+        ...(primaryTag !== undefined ? { tag: primaryTag } : {}),
+        ...(nextTags !== undefined ? { tags: nextTags } : {}),
+        ...(patch.listId !== undefined ? { listId: patch.listId } : {}),
+        ...(patch.priority !== undefined ? { priority: patch.priority } : {}),
+        ...(patch.notes !== undefined ? { notes: patch.notes } : {}),
+        ...(patch.done !== undefined ? { done: patch.done } : {}),
+        id: card.id,
+      };
 
-    const updatedTasks = [
-      ...col.tasks.slice(0, idx),
-      updatedCard,
-      ...col.tasks.slice(idx + 1),
-    ];
-    return { ...col, tasks: updatedTasks };
+      if (patch.tag === null && nextTags === undefined) {
+        const { tag: _removed, ...rest } = updatedCard;
+        return rest;
+      }
+      return updatedCard;
+    });
+    return changed ? { ...col, tasks: updatedTasks } : col;
   });
   return found ? next : prev;
 }
@@ -259,6 +305,10 @@ export function addCard(
     id: createTaskId(),
     title: { en: trimmedTitle, zh: trimmedTitle },
     ...(draft.tag !== undefined ? { tag: draft.tag } : {}),
+    ...(draft.tags !== undefined ? { tags: [...draft.tags] } : draft.tag !== undefined ? { tags: [draft.tag] } : {}),
+    ...(draft.listId !== undefined ? { listId: draft.listId } : {}),
+    ...(draft.priority !== undefined ? { priority: draft.priority } : { priority: "normal" as const }),
+    ...(draft.notes !== undefined ? { notes: draft.notes } : {}),
     ...(dateResult ? { date: dateResult.date, dateZh: dateResult.dateZh } : {}),
   };
 

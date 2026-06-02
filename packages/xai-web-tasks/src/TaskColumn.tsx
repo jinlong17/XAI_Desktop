@@ -9,7 +9,7 @@
  */
 
 import React from "react";
-import type { TaskCol as TaskColType, BucketId } from "./types.js";
+import type { TaskCol as TaskColType, BucketId, TaskListMeta, TaskTagMeta } from "./types.js";
 import type { Lang } from "@repo/plugin-web-tokens";
 import { useI18n } from "@repo/plugin-web-tokens";
 import { TaskCard } from "./TaskCard.js";
@@ -21,7 +21,12 @@ export interface TaskColumnProps {
   draggingTaskId: string | null;
   isDropTarget: boolean;
   completedIds: ReadonlySet<string>;
+  selectedIds?: ReadonlySet<string>;
+  lists?: ReadonlyArray<TaskListMeta>;
+  tags?: ReadonlyArray<TaskTagMeta>;
   onToggle: (taskId: string) => void;
+  onOpenTask?: (taskId: string) => void;
+  onSelectTask?: (taskId: string) => void;
   onDragStart: (e: React.DragEvent<HTMLDivElement>, taskId: string, fromColId: BucketId) => void;
   onDragEnd: () => void;
   onDragOver: (e: React.DragEvent<HTMLElement>, colId: BucketId) => void;
@@ -43,8 +48,13 @@ export function TaskColumn({
   draggingTaskId,
   isDropTarget,
   completedIds,
+  selectedIds,
+  lists = [],
+  tags = [],
   filterActive,
   onToggle,
+  onOpenTask,
+  onSelectTask,
   onDragStart,
   onDragEnd,
   onDragOver,
@@ -96,7 +106,12 @@ export function TaskColumn({
             colId={col.id}
             completed={completedIds.has(task.id)}
             dragging={draggingTaskId === task.id}
+            selected={selectedIds?.has(task.id)}
+            taskList={lists.find((list) => list.id === task.listId)}
+            taskTags={tags.filter((tag) => (task.tags ?? (task.tag ? [task.tag] : [])).includes(tag.id))}
             onToggle={() => onToggle(task.id)}
+            onOpen={() => onOpenTask?.(task.id)}
+            onSelect={() => onSelectTask?.(task.id)}
             onDragStart={(e) => onDragStart(e, task.id, col.id)}
             onDragEnd={onDragEnd}
           />
@@ -108,7 +123,7 @@ export function TaskColumn({
           </div>
         )}
         {col.completed && (
-          <CompletedGroup tasks={col.completed} lang={lang} />
+          <CompletedGroup tasks={col.completed} lang={lang} lists={lists} tags={tags} />
         )}
       </div>
     </section>

@@ -1,201 +1,179 @@
 /**
- * TasksSidebar.test.tsx — T-LIFT-1..4
- *
- * Tests the controlled sidebar component and the inert custom/tag rows.
- * T-LIFT-1: sidebar renders with activeList prop controlling data-active highlight.
- * T-LIFT-2: clicking a smart-list row calls onSelectList with its id.
- * T-LIFT-3: switching activeList prop changes the active highlight.
- * T-LIFT-4: custom-list and tag rows do NOT call onSelectList (inert — Q1 defer).
- *
- * Phase: FP1 (smartlist-filter)
+ * TasksSidebar.test.tsx — controlled smart/list/tag navigation.
  */
 
 import { describe, it, expect, vi } from "vitest";
 import { render, fireEvent, screen } from "@testing-library/react";
 import React, { useState } from "react";
 import { TasksSidebar } from "../TasksSidebar.js";
-import type { SmartListId } from "../types.js";
+import type { SmartListId, TaskViewSelection } from "../types.js";
+import { DEFAULT_TASK_LISTS, DEFAULT_TASK_TAGS } from "../internal/taskMeta.js";
 
-// ---------------------------------------------------------------------------
-// Helper: controlled wrapper so we can drive activeList from outside
-// ---------------------------------------------------------------------------
+const smartCounts = {
+  all: 26,
+  today: 10,
+  tomorrow: 2,
+  next7: 2,
+  inbox: 11,
+  summary: 26,
+} satisfies Record<SmartListId, number>;
 
-function SidebarWrapper({
-  initial,
-  onSelect,
-}: {
-  initial: SmartListId;
-  onSelect?: (id: SmartListId) => void;
-}) {
-  const [activeList, setActiveList] = useState<SmartListId>(initial);
-  function handleSelect(id: SmartListId) {
-    setActiveList(id);
-    onSelect?.(id);
-  }
+const listCounts = {
+  inbox: 11,
+  research: 5,
+  personal: 4,
+  career: 1,
+  reminders: 1,
+};
+
+const tagCounts = {
+  study: 5,
+  work: 1,
+  personal: 4,
+  todo: 1,
+  other: 1,
+};
+
+function renderSidebar(
+  activeView: TaskViewSelection,
+  overrides?: Partial<React.ComponentProps<typeof TasksSidebar>>,
+) {
+  const props: React.ComponentProps<typeof TasksSidebar> = {
+    lang: "en",
+    activeView,
+    lists: DEFAULT_TASK_LISTS,
+    tags: DEFAULT_TASK_TAGS,
+    smartCounts,
+    listCounts,
+    tagCounts,
+    onSelectSmart: vi.fn(),
+    onSelectList: vi.fn(),
+    onSelectTag: vi.fn(),
+    onCreateList: vi.fn(),
+    onCreateTag: vi.fn(),
+    onEditList: vi.fn(),
+    onEditTag: vi.fn(),
+    onDeleteList: vi.fn(),
+    onDeleteTag: vi.fn(),
+    onReorderList: vi.fn(),
+    onReorderTag: vi.fn(),
+    onTaskDropToList: vi.fn(),
+    onTaskDropToTag: vi.fn(),
+    ...overrides,
+  };
+  return { ...render(<TasksSidebar {...props} />), props };
+}
+
+function SidebarWrapper({ initial }: { initial: TaskViewSelection }) {
+  const [activeView, setActiveView] = useState<TaskViewSelection>(initial);
   return (
-    <TasksSidebar lang="en" activeList={activeList} onSelectList={handleSelect} />
+    <TasksSidebar
+      lang="en"
+      activeView={activeView}
+      lists={DEFAULT_TASK_LISTS}
+      tags={DEFAULT_TASK_TAGS}
+      smartCounts={smartCounts}
+      listCounts={listCounts}
+      tagCounts={tagCounts}
+      onSelectSmart={(id) => setActiveView({ kind: "smart", id })}
+      onSelectList={(id) => setActiveView({ kind: "list", id })}
+      onSelectTag={(id) => setActiveView({ kind: "tag", id })}
+      onCreateList={() => {}}
+      onCreateTag={() => {}}
+      onEditList={() => {}}
+      onEditTag={() => {}}
+      onDeleteList={() => {}}
+      onDeleteTag={() => {}}
+      onReorderList={() => {}}
+      onReorderTag={() => {}}
+      onTaskDropToList={() => {}}
+      onTaskDropToTag={() => {}}
+    />
   );
 }
 
-// ---------------------------------------------------------------------------
-// T-LIFT-1 — data-active controlled by prop
-// ---------------------------------------------------------------------------
+describe("TasksSidebar smart filters", () => {
+  it("marks the active smart row", () => {
+    renderSidebar({ kind: "smart", id: "inbox" });
 
-describe("TasksSidebar — T-LIFT-1 activeList prop controls highlight", () => {
-  it("T-LIFT-1a: initial activeList=all marks the 'All' row as active", () => {
-    render(
-      <TasksSidebar lang="en" activeList="all" onSelectList={() => {}} />
-    );
-    const allRow = screen.getByText("All").closest(".list-row");
-    expect(allRow).toHaveAttribute("data-active", "true");
+    expect(firstTextRow("Inbox")).toHaveAttribute("data-active", "true");
+    expect(screen.getByText("All").closest(".list-row")).toHaveAttribute("data-active", "false");
   });
 
-  it("T-LIFT-1b: initial activeList=inbox marks the 'Inbox' row as active", () => {
-    render(
-      <TasksSidebar lang="en" activeList="inbox" onSelectList={() => {}} />
-    );
-    const inboxRow = screen.getByText("Inbox").closest(".list-row");
-    expect(inboxRow).toHaveAttribute("data-active", "true");
+  it("calls onSelectSmart when smart rows are clicked or confirmed by keyboard", () => {
+    const onSelectSmart = vi.fn<(id: SmartListId) => void>();
+    renderSidebar({ kind: "smart", id: "all" }, { onSelectSmart });
 
-    // all row should NOT be active
-    const allRow = screen.getByText("All").closest(".list-row");
-    expect(allRow).toHaveAttribute("data-active", "false");
-  });
+    fireEvent.click(firstTextRow("Inbox"));
+    expect(onSelectSmart).toHaveBeenCalledWith("inbox");
 
-  it("T-LIFT-1c: all 6 smart-list rows render", () => {
-    render(
-      <TasksSidebar lang="en" activeList="all" onSelectList={() => {}} />
-    );
-    expect(screen.getByText("All")).toBeTruthy();
-    expect(screen.getByText("Today")).toBeTruthy();
-    expect(screen.getByText("Tomorrow")).toBeTruthy();
-    expect(screen.getByText("Next 7 Days")).toBeTruthy();
-    expect(screen.getByText("Inbox")).toBeTruthy();
-    expect(screen.getByText("Summary")).toBeTruthy();
-  });
-});
-
-// ---------------------------------------------------------------------------
-// T-LIFT-2 — clicking a smart-list row calls onSelectList
-// ---------------------------------------------------------------------------
-
-describe("TasksSidebar — T-LIFT-2 clicking smart-list rows calls onSelectList", () => {
-  it("T-LIFT-2a: clicking 'Inbox' calls onSelectList('inbox')", () => {
-    const onSelect = vi.fn<(id: SmartListId) => void>();
-    render(
-      <TasksSidebar lang="en" activeList="all" onSelectList={onSelect} />
-    );
-    fireEvent.click(screen.getByText("Inbox"));
-    expect(onSelect).toHaveBeenCalledTimes(1);
-    expect(onSelect).toHaveBeenCalledWith("inbox");
-  });
-
-  it("T-LIFT-2b: clicking 'Next 7 Days' calls onSelectList('next7')", () => {
-    const onSelect = vi.fn<(id: SmartListId) => void>();
-    render(
-      <TasksSidebar lang="en" activeList="all" onSelectList={onSelect} />
-    );
-    fireEvent.click(screen.getByText("Next 7 Days"));
-    expect(onSelect).toHaveBeenCalledWith("next7");
-  });
-
-  it("T-LIFT-2c: Enter key on 'Today' calls onSelectList('today')", () => {
-    const onSelect = vi.fn<(id: SmartListId) => void>();
-    render(
-      <TasksSidebar lang="en" activeList="all" onSelectList={onSelect} />
-    );
     const todayRow = screen.getByText("Today").closest("[role='button']")!;
     fireEvent.keyDown(todayRow, { key: "Enter" });
-    expect(onSelect).toHaveBeenCalledWith("today");
+    expect(onSelectSmart).toHaveBeenCalledWith("today");
+  });
+
+  it("switches active smart row in a controlled wrapper", () => {
+    render(<SidebarWrapper initial={{ kind: "smart", id: "all" }} />);
+
+    expect(screen.getByText("All").closest(".list-row")).toHaveAttribute("data-active", "true");
+    fireEvent.click(firstTextRow("Inbox"));
+    expect(screen.getByText("All").closest(".list-row")).toHaveAttribute("data-active", "false");
+    expect(firstTextRow("Inbox")).toHaveAttribute("data-active", "true");
   });
 });
 
-// ---------------------------------------------------------------------------
-// T-LIFT-3 — switching activeList prop updates the highlight
-// ---------------------------------------------------------------------------
+describe("TasksSidebar editable lists and tags", () => {
+  it("selects custom lists and tags instead of rendering them inert", () => {
+    const onSelectList = vi.fn<(id: string) => void>();
+    const onSelectTag = vi.fn<(id: string) => void>();
+    renderSidebar({ kind: "smart", id: "all" }, { onSelectList, onSelectTag });
 
-describe("TasksSidebar — T-LIFT-3 switching activeList updates highlight", () => {
-  it("T-LIFT-3: clicking Inbox → switches active row from All to Inbox", () => {
-    const { rerender } = render(
-      <SidebarWrapper initial="all" />
-    );
+    fireEvent.click(screen.getByText("Research Papers"));
+    expect(onSelectList).toHaveBeenCalledWith("research");
 
-    const allRow = screen.getByText("All").closest(".list-row");
-    const inboxRow = screen.getByText("Inbox").closest(".list-row");
+    fireEvent.click(screen.getByText("Study"));
+    expect(onSelectTag).toHaveBeenCalledWith("study");
+  });
 
-    expect(allRow).toHaveAttribute("data-active", "true");
-    expect(inboxRow).toHaveAttribute("data-active", "false");
+  it("exposes create actions for lists and tags", () => {
+    const onCreateList = vi.fn();
+    const onCreateTag = vi.fn();
+    renderSidebar({ kind: "smart", id: "all" }, { onCreateList, onCreateTag });
 
-    fireEvent.click(screen.getByText("Inbox"));
+    fireEvent.click(screen.getByLabelText("New list"));
+    fireEvent.click(screen.getByLabelText("New tag"));
 
-    expect(allRow).toHaveAttribute("data-active", "false");
-    expect(inboxRow).toHaveAttribute("data-active", "true");
+    expect(onCreateList).toHaveBeenCalledTimes(1);
+    expect(onCreateTag).toHaveBeenCalledTimes(1);
+  });
 
-    void rerender; // suppress unused warning
+  it("drops a task onto a list or tag", () => {
+    const onTaskDropToList = vi.fn();
+    const onTaskDropToTag = vi.fn();
+    renderSidebar({ kind: "smart", id: "all" }, { onTaskDropToList, onTaskDropToTag });
+
+    const dataTransfer = makeDataTransfer({ "application/x-xai-task-id": "t1" });
+
+    fireEvent.dragOver(screen.getByText("Research Papers").closest(".list-row")!, { dataTransfer, preventDefault: () => {} });
+    fireEvent.drop(screen.getByText("Research Papers").closest(".list-row")!, { dataTransfer, preventDefault: () => {} });
+    expect(onTaskDropToList).toHaveBeenCalledWith("t1", "research");
+
+    fireEvent.dragOver(screen.getByText("Study").closest(".list-row")!, { dataTransfer, preventDefault: () => {} });
+    fireEvent.drop(screen.getByText("Study").closest(".list-row")!, { dataTransfer, preventDefault: () => {} });
+    expect(onTaskDropToTag).toHaveBeenCalledWith("t1", "study");
   });
 });
 
-// ---------------------------------------------------------------------------
-// T-LIFT-4 — custom-list and tag rows are INERT (Q1 defer)
-// ---------------------------------------------------------------------------
+function makeDataTransfer(seed: Record<string, string>) {
+  return {
+    effectAllowed: "" as string,
+    dropEffect: "" as string,
+    data: { ...seed } as Record<string, string>,
+    setData(type: string, value: string) { this.data[type] = value; },
+    getData(type: string) { return this.data[type] ?? ""; },
+  };
+}
 
-describe("TasksSidebar — T-LIFT-4 custom/tag rows are inert (Q1 defer)", () => {
-  it("T-LIFT-4a: clicking a custom-list row does NOT call onSelectList", () => {
-    const onSelect = vi.fn<(id: SmartListId) => void>();
-    render(
-      <TasksSidebar lang="en" activeList="all" onSelectList={onSelect} />
-    );
-
-    // Custom list rows are aria-hidden and tabIndex=-1 — they should be inert
-    // Try clicking the custom list label text (Research Papers is present in CUSTOM_LISTS)
-    const researchEl = screen.queryByText("Research Papers");
-    if (researchEl) {
-      // fireEvent.click on aria-hidden element — should not propagate to onSelectList
-      fireEvent.click(researchEl);
-    }
-    expect(onSelect).not.toHaveBeenCalled();
-  });
-
-  it("T-LIFT-4b: custom-list rows have tabIndex=-1 and aria-hidden (non-selecting)", () => {
-    render(
-      <TasksSidebar lang="en" activeList="all" onSelectList={() => {}} />
-    );
-
-    // Personal Life is in CUSTOM_LISTS
-    const personalEl = screen.queryByText("Personal Life");
-    if (personalEl) {
-      const row = personalEl.closest(".list-row");
-      expect(row).toHaveAttribute("tabIndex", "-1");
-      expect(row).toHaveAttribute("aria-hidden", "true");
-    }
-  });
-
-  it("T-LIFT-4c: custom-list rows do NOT have data-active (they cannot be selected)", () => {
-    render(
-      <TasksSidebar lang="en" activeList="all" onSelectList={() => {}} />
-    );
-
-    const personalEl = screen.queryByText("Personal Life");
-    if (personalEl) {
-      const row = personalEl.closest(".list-row");
-      expect(row).not.toHaveAttribute("data-active");
-    }
-  });
-
-  it("T-LIFT-4d: tag rows are inert (no onClick, aria-hidden)", () => {
-    const onSelect = vi.fn<(id: SmartListId) => void>();
-    render(
-      <TasksSidebar lang="en" activeList="all" onSelectList={onSelect} />
-    );
-
-    // "1.Study" is in TAGS
-    const studyEl = screen.queryByText("1.Study");
-    if (studyEl) {
-      const row = studyEl.closest(".list-row");
-      expect(row).toHaveAttribute("tabIndex", "-1");
-      expect(row).toHaveAttribute("aria-hidden", "true");
-      fireEvent.click(studyEl);
-    }
-    expect(onSelect).not.toHaveBeenCalled();
-  });
-});
+function firstTextRow(text: string): HTMLElement {
+  return screen.getAllByText(text)[0]!.closest(".list-row") as HTMLElement;
+}

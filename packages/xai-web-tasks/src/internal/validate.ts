@@ -19,7 +19,7 @@ const BUCKET_KEY_MAP: Record<BucketId, string> = {
   later:    "later",
   nodate:   "no_date",
 };
-const VALID_TAG_IDS = new Set(["study", "work", "personal", "todo", "other"]);
+const VALID_PRIORITIES = new Set(["low", "normal", "high", "urgent"]);
 
 /**
  * Returns true iff `value` is a valid TaskCard object.
@@ -44,7 +44,22 @@ export function isTaskCard(value: unknown): value is TaskCard {
     if (typeof sub["en"] !== "string" || typeof sub["zh"] !== "string") return false;
   }
   if ("tag" in v && v["tag"] !== undefined) {
-    if (!VALID_TAG_IDS.has(v["tag"] as string)) return false;
+    if (typeof v["tag"] !== "string" || v["tag"].length === 0) return false;
+  }
+  if ("tags" in v && v["tags"] !== undefined) {
+    if (!Array.isArray(v["tags"])) return false;
+    for (const tag of v["tags"] as unknown[]) {
+      if (typeof tag !== "string" || tag.length === 0) return false;
+    }
+  }
+  if ("listId" in v && v["listId"] !== undefined) {
+    if (typeof v["listId"] !== "string" || v["listId"].length === 0) return false;
+  }
+  if ("priority" in v && v["priority"] !== undefined) {
+    if (!VALID_PRIORITIES.has(v["priority"] as string)) return false;
+  }
+  if ("notes" in v && v["notes"] !== undefined) {
+    if (typeof v["notes"] !== "string") return false;
   }
   if ("date" in v && v["date"] !== undefined) {
     if (typeof v["date"] !== "string") return false;
