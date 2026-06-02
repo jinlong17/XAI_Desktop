@@ -108,6 +108,8 @@ interface InsightCard {
   readonly catId: string | null;
 }
 
+type InsightRange = "week" | "month" | "year" | "custom" | "all";
+
 const INSIGHTS_KEY = "xai_tt_insights_v1";
 
 const INSIGHT_DEFS: ReadonlyArray<{ readonly type: InsightType; readonly span: 3 | 4 | 6 | 8; readonly icon: string }> = [
@@ -205,6 +207,27 @@ function localizedInput(value: string, original: LocalizedText | undefined, lang
   const next = value.trim();
   if (original !== undefined && textName(original, lang) === next) return original;
   return { en: next, zh: next };
+}
+
+function startOfYear(ts: number): number {
+  const d = new Date(startOfDay(ts));
+  d.setMonth(0, 1);
+  return d.getTime();
+}
+
+function dateInputValue(ts: number): string {
+  return dayKey(ts);
+}
+
+function endOfDayExclusive(key: string): number {
+  return keyToDate(key) + DAY_MS;
+}
+
+function rangeLabel(startMs: number, endMs: number, lang: Lang): string {
+  if (startMs <= 0 && !Number.isFinite(endMs)) return ttCopy(lang, "rangeAll");
+  const start = formatDayLabel(startMs, lang);
+  const end = Number.isFinite(endMs) ? formatDayLabel(Math.max(startMs, endMs - 1), lang) : ttCopy(lang, "today");
+  return `${start} - ${end}`;
 }
 
 function readInsightBoard(): InsightCard[] {
@@ -563,7 +586,26 @@ export function TimeTrackerModule({ lang }: TimeTrackerModuleProps) {
           />
         </div>
       ) : (
-        <InsightsBoard categories={liveCategories} entries={liveEntries} lang={lang} nowMs={nowMs} categoryMap={categoryMap} />
+        <InsightsBoard
+          categories={liveCategories}
+          entries={liveEntries}
+          lang={lang}
+          nowMs={nowMs}
+          categoryMap={categoryMap}
+          onDeleteRange={(rangeEntries, label) => {
+            setConfirm({
+              title: ttCopy(lang, "deleteRange"),
+              body: ttCopy(lang, "deleteRangeBody").replace("%n", String(rangeEntries.length)).replace("%r", label),
+              confirmLabel: ttCopy(lang, "delete"),
+              danger: true,
+              run: () => {
+                const ids = new Set(rangeEntries.map((entry) => entry.id));
+                const stamp = Date.now();
+                setEntries((prev) => prev.map((entry) => ids.has(entry.id) ? deleteTimeTrackerEntry(entry, stamp) : entry));
+              },
+            });
+          }}
+        />
       )}
 
       {categoryEditor !== null && (
@@ -712,6 +754,55 @@ function entryDetail(entry: TimeTrackerEntry, category: TimeTrackerCategory | un
     `${ttCopy(lang, "duration")}: ${formatDuration(entryDuration(entry, nowMs))}`,
     note !== "" ? `${ttCopy(lang, "note")}: ${note}` : "",
   ]);
+}
+
+function csvCell(value: string | number): string {
+  const text = String(value).replace(/\r?\n/g, " ");
+  if (!/[",]/.test(text)) return text;
+  return `"${text.replace(/"/g, "\"\"")}"`;
+}
+
+function downloadTextFile(filename: string, text: string, type: string): void {
+  if (typeof window === "undefined") return;
+  const blob = new Blob([text], { type });
+  const url = window.URL.createObjectURL(blob);
+  const anchor = document.createElement("a");
+  anchor.href = url;
+  anchor.download = filename;
+  document.body.append(anchor);
+  anchor.click();
+  anchor.remove();
+  window.URL.revokeObjectURL(url);
+}
+
+function exportEntriesCsv(
+  list: readonly TimeTrackerEntry[],
+  nowMs: number,
+  lang: Lang,
+  categoryMap: ReadonlyMap<string, TimeTrackerCategory>,
+  label: string,
+): void {
+  const headers = ["Date", "Category", "Subcategory", "Start", "End", "Duration", "Duration minutes", "Note", "Status"];
+  const rows = list.map((entry) => {
+    const category = categoryMap.get(entry.categoryId);
+    const start = entryStart(entry);
+    const end = isRunningEntry(entry) ? "" : formatClock(entryLastEnd(entry, nowMs));
+    const duration = entryDuration(entry, nowMs);
+    return [
+      formatDayLabel(start, lang),
+      textName(category?.name, lang),
+      subcategoryLabel(entry, category, lang),
+      formatClock(start),
+      end,
+      formatDuration(duration),
+      Math.round(duration / 60_000),
+      entry.note[lang] || entry.note.en,
+      isRunningEntry(entry) ? ttCopy(lang, "running") : ttCopy(lang, "records"),
+    ];
+  });
+  const csv = [headers, ...rows].map((row) => row.map(csvCell).join(",")).join("\n");
+  const slug = label.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "") || "range";
+  downloadTextFile(`xai-time-tracker-${slug}.csv`, csv, "text/csv;charset=utf-8");
 }
 
 function buildDayTrend(entries: readonly TimeTrackerEntry[], nowMs: number, lang: Lang, selectedKey: string) {
@@ -1448,14 +1539,18 @@ function InsightsBoard({
   lang,
   nowMs,
   categoryMap,
+  onDeleteRange,
 }: {
   readonly categories: readonly TimeTrackerCategory[];
   readonly entries: readonly TimeTrackerEntry[];
   readonly lang: Lang;
   readonly nowMs: number;
   readonly categoryMap: ReadonlyMap<string, TimeTrackerCategory>;
+  readonly onDeleteRange: (rangeEntries: readonly TimeTrackerEntry[], label: string) => void;
 }) {
-  const [range, setRange] = useState<"week" | "month" | "all">("week");
+  const [range, setRange] = useState<InsightRange>("week");
+  const [customStart, setCustomStart] = useState(() => dateInputValue(nowMs - 29 * DAY_MS));
+  const [customEnd, setCustomEnd] = useState(() => dateInputValue(nowMs));
   const [cards, setCards] = useState(readInsightBoard);
   const [adding, setAdding] = useState(false);
   const [dragId, setDragId] = useState<string | null>(null);
@@ -1464,8 +1559,27 @@ function InsightsBoard({
     window.localStorage.setItem(INSIGHTS_KEY, JSON.stringify(cards));
   }, [cards]);
 
-  const rangeStart = range === "week" ? startOfWeek(nowMs) : range === "month" ? startOfMonth(nowMs) : 0;
-  const inRange = entries.filter((entry) => entryStart(entry) >= rangeStart);
+  const customA = keyToDate(customStart);
+  const customB = endOfDayExclusive(customEnd);
+  const customRangeStart = Math.min(customA, customB - DAY_MS);
+  const customRangeEnd = Math.max(customA + DAY_MS, customB);
+  const rangeStart = range === "week"
+    ? startOfWeek(nowMs)
+    : range === "month"
+      ? startOfMonth(nowMs)
+      : range === "year"
+        ? startOfYear(nowMs)
+        : range === "custom"
+          ? customRangeStart
+          : 0;
+  const rangeEnd = range === "custom" ? customRangeEnd : range === "all" ? Number.POSITIVE_INFINITY : startOfDay(nowMs) + DAY_MS;
+  const inRange = entries.filter((entry) => {
+    const start = entryStart(entry);
+    return start >= rangeStart && start < rangeEnd;
+  });
+  const rangeTotal = inRange.reduce((total, entry) => total + entryDuration(entry, nowMs), 0);
+  const activeInRange = inRange.filter(isActiveEntry).length;
+  const reportLabel = rangeLabel(rangeStart, rangeEnd, lang);
   function addCard(type: InsightType): void {
     setCards((prev) => [...prev, { iid: uid("w"), type, catId: null }]);
     setAdding(false);
@@ -1480,36 +1594,64 @@ function InsightsBoard({
       if (item !== undefined) next.splice(to, 0, item);
       return next;
     });
-  }
-  return (
-    <section className="tt-insights-board">
-      <div className="tt-ins-toolbar">
-        <div className="tt-segment">
-          <button type="button" aria-selected={range === "week"} onClick={() => setRange("week")}>{ttCopy(lang, "rangeWeek")}</button>
-          <button type="button" aria-selected={range === "month"} onClick={() => setRange("month")}>{ttCopy(lang, "rangeMonth")}</button>
-          <button type="button" aria-selected={range === "all"} onClick={() => setRange("all")}>{ttCopy(lang, "rangeAll")}</button>
-        </div>
-        <span className="tt-head-spacer" />
-        <button type="button" className="tt-btn" title={ttCopy(lang, "resetBoard")} onClick={() => setCards(defaultInsightBoard())}><IconGlyph name="sync" size={14} /></button>
-        <div className="tt-add-menu-wrap">
-          <button type="button" className="tt-btn tt-btn-primary" onClick={() => setAdding((value) => !value)}>
-            <IconGlyph name="plus" size={14} />{ttCopy(lang, "addWidget")}
-          </button>
-          {adding && (
-            <>
-              <button type="button" className="tt-pop-scrim" aria-label={ttCopy(lang, "cancel")} onClick={() => setAdding(false)} />
-              <div className="tt-ins-menu">
-                {INSIGHT_DEFS.map((def) => (
-                  <button type="button" key={def.type} onClick={() => addCard(def.type)}>
-                    <IconGlyph name={def.icon} size={14} />
-                    {ttCopy(lang, INSIGHT_TITLES[def.type])}
-                  </button>
-                ))}
-              </div>
-            </>
-          )}
-        </div>
-      </div>
+	  }
+	  return (
+	    <section className="tt-insights-board">
+	      <div className="tt-report-head">
+	        <div className="tt-report-copy">
+	          <span>{ttCopy(lang, "dateRange")}</span>
+	          <strong>{reportLabel}</strong>
+	          <em>{formatDuration(rangeTotal)} · {entryCountText(inRange.length, lang)}{activeInRange > 0 ? ` · ${ttCopy(lang, "runningCount")} × ${activeInRange}` : ""}</em>
+	        </div>
+	        <div className="tt-ins-toolbar">
+	          <div className="tt-segment">
+	            <button type="button" aria-selected={range === "week"} onClick={() => setRange("week")}>{ttCopy(lang, "rangeWeek")}</button>
+	            <button type="button" aria-selected={range === "month"} onClick={() => setRange("month")}>{ttCopy(lang, "rangeMonth")}</button>
+	            <button type="button" aria-selected={range === "year"} onClick={() => setRange("year")}>{ttCopy(lang, "rangeYear")}</button>
+	            <button type="button" aria-selected={range === "custom"} onClick={() => setRange("custom")}>{ttCopy(lang, "rangeCustom")}</button>
+	            <button type="button" aria-selected={range === "all"} onClick={() => setRange("all")}>{ttCopy(lang, "rangeAll")}</button>
+	          </div>
+	          {range === "custom" && (
+	            <div className="tt-date-range">
+	              <label>
+	                <span>{ttCopy(lang, "from")}</span>
+	                <input type="date" value={customStart} onChange={(event) => setCustomStart(event.target.value)} />
+	              </label>
+	              <label>
+	                <span>{ttCopy(lang, "to")}</span>
+	                <input type="date" value={customEnd} onChange={(event) => setCustomEnd(event.target.value)} />
+	              </label>
+	            </div>
+	          )}
+	          <div className="tt-report-actions">
+	            <button type="button" className="tt-btn" title={ttCopy(lang, "resetBoard")} onClick={() => setCards(defaultInsightBoard())}><IconGlyph name="sync" size={14} /></button>
+	            <button type="button" className="tt-btn" disabled={inRange.length === 0} onClick={() => exportEntriesCsv(inRange, nowMs, lang, categoryMap, reportLabel)}>
+	              <IconGlyph name="download" size={14} />{ttCopy(lang, "exportCsv")}
+	            </button>
+	            <button type="button" className="tt-btn tt-btn-danger" disabled={inRange.length === 0} onClick={() => onDeleteRange(inRange, reportLabel)}>
+	              <IconGlyph name="trash" size={14} />{ttCopy(lang, "deleteRange")}
+	            </button>
+	            <div className="tt-add-menu-wrap">
+	              <button type="button" className="tt-btn tt-btn-primary" onClick={() => setAdding((value) => !value)}>
+	                <IconGlyph name="plus" size={14} />{ttCopy(lang, "addWidget")}
+	              </button>
+	              {adding && (
+	                <>
+	                  <button type="button" className="tt-pop-scrim" aria-label={ttCopy(lang, "cancel")} onClick={() => setAdding(false)} />
+	                  <div className="tt-ins-menu">
+	                    {INSIGHT_DEFS.map((def) => (
+	                      <button type="button" key={def.type} onClick={() => addCard(def.type)}>
+	                        <IconGlyph name={def.icon} size={14} />
+	                        {ttCopy(lang, INSIGHT_TITLES[def.type])}
+	                      </button>
+	                    ))}
+	                  </div>
+	                </>
+	              )}
+	            </div>
+	          </div>
+	        </div>
+	      </div>
       {cards.length === 0 ? (
         <div className="tt-empty">{ttCopy(lang, "emptyBoard")}</div>
       ) : (

@@ -1119,12 +1119,89 @@
   gap: 14px;
 }
 
+.tt-report-head {
+  display: grid;
+  grid-template-columns: minmax(220px, 320px) minmax(0, 1fr);
+  gap: 12px;
+  align-items: start;
+  padding: 12px;
+  border: 1px solid var(--border-1);
+  border-radius: 8px;
+  background:
+    linear-gradient(135deg, color-mix(in oklch, var(--accent) 10%, transparent), transparent 54%),
+    var(--bg-panel);
+  box-shadow: var(--shadow-1);
+}
+
+.tt-report-copy {
+  display: grid;
+  gap: 5px;
+  min-width: 0;
+}
+
+.tt-report-copy span {
+  color: var(--text-3);
+  font-size: 11px;
+  text-transform: uppercase;
+}
+
+.tt-report-copy strong {
+  overflow-wrap: anywhere;
+  color: var(--text-1);
+  font-size: 16px;
+  line-height: 1.2;
+}
+
+.tt-report-copy em {
+  color: var(--text-3);
+  font-size: 12px;
+  font-style: normal;
+}
+
 .tt-ins-toolbar {
   position: relative;
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 8px;
+  justify-items: end;
+  min-width: 0;
+}
+
+.tt-ins-toolbar .tt-segment {
+  max-width: 100%;
+  overflow-x: auto;
+}
+
+.tt-date-range,
+.tt-report-actions {
   display: flex;
   gap: 8px;
   align-items: center;
+  justify-content: flex-end;
   flex-wrap: wrap;
+}
+
+.tt-date-range label {
+  display: inline-flex;
+  gap: 6px;
+  align-items: center;
+  color: var(--text-3);
+  font-size: 11px;
+}
+
+.tt-date-range input {
+  min-height: 32px;
+  width: 132px;
+  padding: 0 8px;
+  border: 1px solid var(--border-1);
+  border-radius: 8px;
+  background: var(--bg-panel-2);
+  color: var(--text-1);
+  font: inherit;
+}
+
+.tt-report-actions .tt-btn {
+  min-height: 32px;
 }
 
 .tt-add-menu-wrap {
@@ -1535,6 +1612,19 @@
     grid-template-columns: 1fr;
   }
 
+  .tt-report-head {
+    grid-template-columns: 1fr;
+  }
+
+  .tt-ins-toolbar {
+    justify-items: stretch;
+  }
+
+  .tt-date-range,
+  .tt-report-actions {
+    justify-content: flex-start;
+  }
+
   .tt-sidebar {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
@@ -1561,14 +1651,26 @@
     font-size: 24px;
   }
 
-  .tt-toolbar,
-  .tt-ins-toolbar {
+  .tt-toolbar {
     justify-content: stretch;
   }
 
-  .tt-toolbar > *,
-  .tt-ins-toolbar > * {
+  .tt-toolbar > * {
     flex: 1 1 auto;
+  }
+
+  .tt-date-range,
+  .tt-report-actions {
+    display: grid;
+    grid-template-columns: 1fr;
+  }
+
+  .tt-date-range label,
+  .tt-date-range input,
+  .tt-report-actions .tt-btn,
+  .tt-add-menu-wrap,
+  .tt-add-menu-wrap .tt-btn {
+    width: 100%;
   }
 
   .tt-layout,

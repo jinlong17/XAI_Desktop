@@ -102,10 +102,20 @@ describe("TimeTrackerModule", () => {
     expect(screen.getByText("Add widget")).toBeInTheDocument();
     expect(screen.getByText("Today total")).toBeInTheDocument();
     expect(screen.getByText("Category ranking")).toBeInTheDocument();
+    expect(screen.getByText("Year")).toBeInTheDocument();
+    expect(screen.getByText("Custom")).toBeInTheDocument();
+    expect(screen.getByText("Export CSV")).toBeInTheDocument();
+    expect(screen.getByText("Delete range")).toBeDisabled();
     expect(screen.getByText("Range summary")).toBeInTheDocument();
     expect(screen.getByText("Category mosaic")).toBeInTheDocument();
     expect(screen.getByText("Focus rhythm")).toBeInTheDocument();
     expect(screen.getByText("Recent sessions")).toBeInTheDocument();
+
+    act(() => {
+      fireEvent.click(screen.getByText("Custom"));
+    });
+    expect(screen.getByText("From")).toBeInTheDocument();
+    expect(screen.getByText("To")).toBeInTheDocument();
   });
 
   it("renders detailed insight hover metadata after tracking time", () => {
@@ -130,5 +140,32 @@ describe("TimeTrackerModule", () => {
       .find((tip) => tip.includes("1 entry"));
     expect(studyTip).toContain("1 entry");
     expect(screen.getByText("Research notes").closest(".tt-tip")?.getAttribute("data-tip")).toContain("Duration");
+  });
+
+  it("deletes records in the selected insight range after confirmation", () => {
+    render(<TimeTrackerModule lang="en" />);
+
+    act(() => {
+      fireEvent.click(screen.getByText("Add record"));
+    });
+    act(() => {
+      fireEvent.change(screen.getByLabelText("Note"), { target: { value: "Temporary report row" } });
+      fireEvent.click(screen.getByText("Save"));
+    });
+    expect(readTimeTrackerEntries()).toHaveLength(1);
+
+    act(() => {
+      fireEvent.click(screen.getAllByText("Insights")[0]!);
+    });
+    act(() => {
+      fireEvent.click(screen.getByText("Delete range"));
+    });
+
+    expect(screen.getByText(/Delete 1 records/)).toBeInTheDocument();
+    act(() => {
+      fireEvent.click(within(screen.getByRole("dialog")).getByText("Delete"));
+    });
+
+    expect(readTimeTrackerEntries()).toHaveLength(0);
   });
 });
