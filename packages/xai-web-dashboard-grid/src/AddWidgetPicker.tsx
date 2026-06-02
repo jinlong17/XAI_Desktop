@@ -41,6 +41,7 @@ const WIDGET_TITLES: Record<string, { en: string; zh: string }> = {
   "stat-tasks": { en: "Tasks Done",   zh: "完成任务" },
   "stat-streak":{ en: "Habit Streak", zh: "习惯连胜" },
   "stat-pomos": { en: "Pomodoros",    zh: "番茄数" },
+  timetrack:    { en: "Time Tracker", zh: "时间追踪" },
   weather:      { en: "Weather",      zh: "天气" },
   "mini-cal":   { en: "Mini Calendar",zh: "小日历" },
   timezones:    { en: "World Clocks", zh: "世界时间" },
@@ -54,6 +55,7 @@ const WIDGET_DESCRIPTIONS: Record<string, { en: string; zh: string }> = {
   "stat-tasks": { en: "Today's completed task count at a glance.",      zh: "一目了然地查看今日完成的任务数。" },
   "stat-streak":{ en: "Keep your longest habit streak visible.",        zh: "随时可见你的最长习惯连胜。" },
   "stat-pomos": { en: "Total Pomodoro sessions for today.",             zh: "今日番茄钟总数。" },
+  timetrack:    { en: "Today total and running sessions.",              zh: "今日总计和进行中的计时。" },
   weather:      { en: "Current conditions and a short forecast.",       zh: "当前天气与简短预报。" },
   "mini-cal":   { en: "Compact monthly calendar with event dots.",      zh: "带事件点的紧凑月历。" },
   timezones:    { en: "Clock faces for multiple time zones.",           zh: "多个时区的时钟。" },
@@ -86,6 +88,7 @@ function WidgetIcon({ id }: { id: string }) {
         </svg>
       );
     case "stat-pomos":
+    case "timetrack":
       return (
         <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
           <circle cx="12" cy="12" r="10" />

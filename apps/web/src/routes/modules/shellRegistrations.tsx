@@ -25,6 +25,8 @@ import { tasksWebModuleRegistration } from "@repo/plugin-web-tasks";
 import { habitsSlotRegistration } from "@repo/plugin-web-habits";
 // xai-web-pomodoro row #14
 import { pomodoroWebModuleRegistration } from "@repo/plugin-web-pomodoro";
+// xai-web-time-tracker · Claude Design Time Tracker merge
+import { timeTrackerWebModuleRegistration } from "@repo/plugin-web-time-tracker";
 // xai-web-ai-chat row #18
 import { aiChatWebModuleRegistration } from "@repo/plugin-web-ai-chat";
 // xai-web-meditation row #16
@@ -55,7 +57,7 @@ import { withDisabledFallback } from "@repo/plugin-web-settings-features-panel";
 import { todoWebModuleRegistration } from "@repo/plugin-productivity/web";
 
 export const webShellModuleRegistrations: WebModuleSlotRegistration[] = [
-  // Rail-visible modules (railOrder 1..12).
+  // Rail-visible modules (railOrder 1..13).
   // The 8 user-toggleable modules are wrapped with withDisabledFallback so any
   // deep link reaching them while `xai_pref_features_<id>` is false renders
   // <DisabledFeatureFallback> instead of the real module shell. ai-chat,
@@ -68,6 +70,7 @@ export const webShellModuleRegistrations: WebModuleSlotRegistration[] = [
   withDisabledFallback(calendarSlotRegistration, "calendar"),  // row #12
   withDisabledFallback(matrixSlotRegistration, "matrix"),
   withDisabledFallback(pomodoroWebModuleRegistration, "pomodoro"),
+  timeTrackerWebModuleRegistration,  // not toggleable in Settings V1; mirrors Claude Design rail item
   withDisabledFallback(habitsSlotRegistration, "habits"),  // row #15
   withDisabledFallback(meditationSlotRegistration, "meditation"),  // row #16
   countdownWebModuleRegistration,  // not toggleable

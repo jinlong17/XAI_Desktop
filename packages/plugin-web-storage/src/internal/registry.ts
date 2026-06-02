@@ -59,6 +59,7 @@ export type RailItemId =
   | "calendar"
   | "matrix"
   | "pomodoro"
+  | "timetrack"
   | "habits"
   | "meditation"
   | "countdown"
@@ -110,6 +111,7 @@ const DEFAULT_RAIL_ORDER: RailItemId[] = [
   "calendar",
   "matrix",
   "pomodoro",
+  "timetrack",
   "habits",
   "meditation",
   "countdown",

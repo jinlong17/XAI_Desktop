@@ -239,6 +239,9 @@ importers:
       '@repo/plugin-web-tasks':
         specifier: workspace:*
         version: link:../../packages/xai-web-tasks
+      '@repo/plugin-web-time-tracker':
+        specifier: workspace:*
+        version: link:../../packages/plugin-web-time-tracker
       '@repo/plugin-web-tokens':
         specifier: workspace:*
         version: link:../../packages/plugin-web-tokens
@@ -1311,6 +1314,52 @@ importers:
         specifier: ^3.2.1
         version: 3.2.4(@types/node@22.15.3)(jsdom@25.0.1)
 
+  packages/plugin-web-time-tracker:
+    dependencies:
+      '@repo/core':
+        specifier: workspace:*
+        version: link:../core
+      '@repo/plugin-web-tokens':
+        specifier: workspace:*
+        version: link:../plugin-web-tokens
+      '@repo/xai-web-shell':
+        specifier: workspace:*
+        version: link:../xai-web-shell
+    devDependencies:
+      '@repo/eslint-config':
+        specifier: workspace:*
+        version: link:../eslint-config
+      '@repo/typescript-config':
+        specifier: workspace:*
+        version: link:../typescript-config
+      '@testing-library/jest-dom':
+        specifier: ^6.0.0
+        version: 6.9.1
+      '@testing-library/react':
+        specifier: ^16.0.0
+        version: 16.3.2(@testing-library/dom@10.4.1)(@types/react-dom@19.2.2(@types/react@19.2.2))(@types/react@19.2.2)(react-dom@19.2.0(react@19.2.0))(react@19.2.0)
+      '@types/react':
+        specifier: ^19.0.0
+        version: 19.2.2
+      '@types/react-dom':
+        specifier: ^19.0.0
+        version: 19.2.2(@types/react@19.2.2)
+      jsdom:
+        specifier: ^26.0.0
+        version: 26.1.0
+      react:
+        specifier: ^19.2.0
+        version: 19.2.0
+      react-dom:
+        specifier: ^19.2.0
+        version: 19.2.0(react@19.2.0)
+      typescript:
+        specifier: 5.9.2
+        version: 5.9.2
+      vitest:
+        specifier: ^3.2.1
+        version: 3.2.4(@types/node@22.15.3)(jsdom@26.1.0)
+
   packages/plugin-web-tokens:
     dependencies:
       react:
@@ -1774,6 +1823,9 @@ importers:
       '@repo/plugin-web-storage':
         specifier: workspace:*
         version: link:../plugin-web-storage
+      '@repo/plugin-web-time-tracker':
+        specifier: workspace:*
+        version: link:../plugin-web-time-tracker
       '@repo/plugin-web-tokens':
         specifier: workspace:*
         version: link:../plugin-web-tokens
