@@ -6,6 +6,15 @@
 
 ## 2026-06-02
 
+### Web 六大功能反向补建 canonical PRD + 历史 SHIPPED 补登
+
+- Product line: web
+- Branch / commit: `web` / `b569461`（tasks/board/calendar PRD 已提交）+ local working tree（pomodoro/dashboard/settings PRD + calendar 收口 + 本条目未提交）
+- User-visible change: 无（纯文档治理；用户在产品上看不到变化）。本条为反向补账——下列功能均为**历史已 SHIPPED**，此前缺 canonical PRD 与 release-log 记录。
+- Developer/system delta: 用 `xai-feature-dossier-sync` 反向为 6 个已 SHIPPED 的 web 功能建立 `docs/product/<feature>/prd.md`（仓库首批功能级 canonical PRD）：清单 tasks、看板 board（3 包合 1）、日历 calendar、番茄钟 pomodoro、仪表盘 dashboard（grid+widgets 合 1）、设置 settings（主壳 + appearance/features/rest 3 子 PRD）。各功能历史 ship 日期/commit 见对应 PRD §7（tasks/board/calendar/pomodoro 于 2026-05-23~24；dashboard 系列 2026-05-23~29；settings W4 系列 2026-05-23~28）。同时收口 calendar 一处 traceability 异常：工具栏「+」按钮 bugfix（dev_log block3，停在 `FIX_READY`）查证为被 `xai-web-calendar-event-create`（Option B 真实 CRUD，SHIPPED `bc573b1`）取代，已标 `superseded` 并回写 dev_log + PRD。
+- Verification: 来源核验（每条需求映射 dev_log SHIPPED block / commit SHA / discovery review，无来源项标 `待确认`）；未跑测试（纯文档变更）；calendar/dashboard/settings 多处 cross-vendor manual smoke 在历史 ship 时即标 DEFERRED（ADR-0008 §S3 24h carve-out），本轮如实保留为未闭合项，未声称已完成。
+- Risk / follow-up: release-log 此前缺这 6 个 web 功能的 ship 历史（本条补账）；dashboard 组件移除 AC-RM-1..7 仅存在于 dev_log 未进 test.md；多处 cross-vendor smoke 矩阵未闭合（pre-cloudflare-ship 前需补）；settings baseline ship commit SHA、AI pane 是否在 ai-chat 单独追溯等列为各 PRD §9 `待确认`；pomodoro/dashboard/settings PRD + calendar 收口本条目尚未提交。
+
 ### 跨模块同步编排 v1：sync-registry + D4 / 扇出 skill
 
 - Product line: project-system / sync
