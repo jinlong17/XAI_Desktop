@@ -396,6 +396,24 @@
       "dependency": "App UI 源头",
       "next": "新功能和 bugfix 都走 Web 正常 workflow；影响 Desktop 时先过 D3 gate。",
       "tracker": "功能完整度、Web 发布、共享 UI 合同、D3 影响。",
+      "features": [
+        { "name": "工作台 Dashboard(网格 + 挂件)", "status": "shipped" },
+        { "name": "任务管理 Tasks(4 时间桶拖拽)", "status": "shipped" },
+        { "name": "项目看板 Boards(6 视图)", "status": "shipped" },
+        { "name": "日历 Calendar(月/周/日)", "status": "shipped" },
+        { "name": "四象限 Matrix", "status": "shipped" },
+        { "name": "番茄钟 Pomodoro", "status": "shipped" },
+        { "name": "习惯追踪 Habits", "status": "shipped" },
+        { "name": "冥想 Meditation", "status": "shipped" },
+        { "name": "倒数日 Countdown", "status": "shipped" },
+        { "name": "统计 Statistics", "status": "shipped" },
+        { "name": "AI 聊天 + 工具层", "status": "shipped" },
+        { "name": "设置 Settings(13 面板)", "status": "shipped" },
+        { "name": "桌宠 Pet(网页内 DOM)", "status": "shipped" },
+        { "name": "命令面板 Cmd+K", "status": "in-dev" },
+        { "name": "时间追踪 Time Tracker", "status": "in-dev", "note": "codex/time-tracker-web 进行中" },
+        { "name": "记账 Accounting", "status": "proposed", "note": "operator 示例,尚未建包" }
+      ],
       "points": [
         [
           "定位",
@@ -527,6 +545,15 @@
       "dependency": "依赖 Web + Tauri native",
       "next": "G1 native foundation 优先。",
       "tracker": "离线、本机能力、窗口、Tauri 权限、App RC。",
+      "features": [
+        { "name": "⚠️ 产品方向待定:路线 W(overlay+Smart Container) vs 路线 D(普通窗口混合)", "status": "contested", "note": "dev ADR-0011 已 Accepted 路线 D 并将 overlay/organizer 降 P3;web 线文档仍含 overlay;reconcile 见 ADR-0015 / ADR-0013 §S7" },
+        { "name": "Web 同步能力(复用 Web UI)", "status": "planned" },
+        { "name": "本地窗口管理", "status": "planned" },
+        { "name": "本地通知", "status": "planned" },
+        { "name": "本地文件访问", "status": "planned" },
+        { "name": "多窗口工作台", "status": "planned" },
+        { "name": "G1 原生地基(窗口/命令契约)", "status": "in-dev", "note": "G0 已 SHIPPED;G1 进行中" }
+      ],
       "points": [
         [
           "定位",
@@ -651,6 +678,16 @@
       "dependency": "依赖桌面 App 插件平台",
       "next": "G1 稳定后恢复。",
       "tracker": "插件 SDK、widget host、单插件功能、平台兼容。",
+      "features": [
+        { "name": "⚠️ 整体方向待定:ADR-0011 将 overlay/organizer/桌面插件降为 P3 Future", "status": "contested", "note": "是否保留 Smart Container 取决于 W/D 路线决策;见 ADR-0015" },
+        { "name": "Smart Container 整理(organizer)", "status": "shipped", "note": "web 线已交付旗舰;dev 线 ADR-0011 列 P3" },
+        { "name": "桌面小组件 Widget host", "status": "planned" },
+        { "name": "文件夹挂件", "status": "planned" },
+        { "name": "Sticky Notes 便签", "status": "planned" },
+        { "name": "剪贴板 clipboard(历史/OCR)", "status": "planned", "note": "stub;需 App 原生命令" },
+        { "name": "桌宠 pet(独立包 plugin-pet)", "status": "planned" },
+        { "name": "快速记账 / 快速时间追踪挂件", "status": "proposed" }
+      ],
       "points": [
         [
           "定位",
@@ -780,6 +817,13 @@
       "dependency": "连接 Web / App / Plugin",
       "next": "Post-G1 恢复同步开发。",
       "tracker": "syncScope、push/pull、冲突、两设备 smoke。",
+      "features": [
+        { "name": "账号同步", "status": "paused" },
+        { "name": "配置同步", "status": "paused" },
+        { "name": "数据 push/pull + 冲突策略", "status": "paused", "note": "sync-v1 crypto stack 已建,运行时门 deferred" },
+        { "name": "两设备 smoke / device-local 边界", "status": "paused" },
+        { "name": "Workflow / Dashboard 同步(项目系统层)", "status": "proposed" }
+      ],
       "points": [
         [
           "定位",
@@ -901,6 +945,12 @@
       "dependency": "承接 Web/App/Sync 发布信息",
       "next": "确认 package 和启动时机。",
       "tracker": "下载页、更新说明、release notes、账号入口、Cloudflare 发布。",
+      "features": [
+        { "name": "下载页", "status": "proposed" },
+        { "name": "Release notes / 更新说明", "status": "proposed" },
+        { "name": "自动更新 host", "status": "proposed" },
+        { "name": "账号 / 对外入口", "status": "proposed" }
+      ],
       "points": [
         [
           "定位",
@@ -1003,6 +1053,13 @@
       "dependency": "依赖账号、权限、计量和审计合同",
       "next": "先保留 prototype；等真实后台合同稳定后再开线。",
       "tracker": "AI 配置、权限、用量、审计日志、运营入口。",
+      "features": [
+        { "name": "AI 配置", "status": "proposed" },
+        { "name": "权限 / RBAC", "status": "proposed" },
+        { "name": "用量统计", "status": "proposed" },
+        { "name": "审计日志", "status": "proposed" },
+        { "name": "运营入口", "status": "proposed" }
+      ],
       "points": [
         [
           "定位",
