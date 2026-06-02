@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "source": "docs/adr/0013-branch-sync-governance.md#d2--branch-topology",
-  "adr_status": "Proposed",
+  "adr_status": "Accepted",
   "drift_model": "Drift is evaluated by whether share-required changes are parked without D3 classification, not by commit-count size.",
   "current_gate_status": {
     "d3": "manual receipt required before any cross-line promotion",

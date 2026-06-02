@@ -6,7 +6,7 @@
 |---|---|
 | ADR # | 0013 |
 | Title | Branch Topology, Web→Desktop Sync Gate & Account Cloud-Sync Governance |
-| 状态 / Status | **Proposed** — 2026-05-30 (operator will flip to Accepted) |
+| 状态 / Status | **Accepted** — 2026-06-01 (operator-confirmed by Jinlong; was Proposed 2026-05-30). §S7 #2–#7 remain tracked deferred follow-ups, not reopened by acceptance. |
 | 日期 / Date | 2026-05-30 |
 | 决策者 / Author | Claude Opus 4.8 (1M context) — drafted at operator (Jinlong) request |
 | Supersedes | none |
@@ -214,7 +214,7 @@ below).
 
 Machine-readable mirror: `docs/workflow/project/branch-policy.json`. The JSON is
 for the local dashboard and other read-only tooling; this ADR remains the human
-authority while Status is **Proposed**.
+authority; Status is now **Accepted** (2026-06-01).
 
 **Per-branch policy details.** Drift is judged by whether a change that should
 be shared is parked without classification or an explicit defer note, **not** by
@@ -418,8 +418,9 @@ Anti-patterns (do **not** do these):
 - **Topology is now ADR-committed.** Renaming/restructuring branches later needs
   a follow-up ADR or amendment.
 - **Carries open items.** Lines 5–6 (official website, admin-dashboard) and the
-  branch-creation timing are PROPOSED/deferred; the ADR is Proposed until the
-  operator resolves §S7 and flips Status.
+  branch-creation timing remain PROPOSED/deferred under §S7; the ADR itself is now
+  **Accepted** (operator-confirmed 2026-06-01) with those items tracked as deferred
+  follow-ups, not Acceptance blockers.
 - **Two-place discipline for account-sync.** D4 must stay consistent with
   `data-repository-v0` and sync-v1; if `syncScope` or the protocol changes there,
   D4's wording must be revisited.
@@ -517,9 +518,9 @@ Anti-patterns (do **not** do these):
 
 - **Proposed by:** Claude Opus 4.8 (1M context) on 2026-05-30 at operator
   (Jinlong) request.
-- **Status:** **Proposed.** §S7 **#1** (numbering) is **RESOLVED** — renumbered
+- **Status:** **Accepted** (operator-confirmed by Jinlong 2026-06-01; was Proposed 2026-05-30). §S7 **#1** (numbering) is **RESOLVED** — renumbered
   **0013**, convention = "repo-wide reserved numbers". Remaining gate = **operator
-  final confirmation of this governance round**. §S7 **#2–#3** (official-website /
+  final confirmation of this governance round** — now MET (operator-confirmed 2026-06-01). §S7 **#2–#3** (official-website /
   admin-dashboard), **#4** (branch creation), **#5** (runtime-profile authority),
   **#6** (sync dev's ADR files), **#7** (reconcile D1 vs dev's ADR-0011) are all
   **deferred follow-ups, NOT Acceptance blockers**.

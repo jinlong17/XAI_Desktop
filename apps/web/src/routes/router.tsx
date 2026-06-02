@@ -4,7 +4,7 @@ import { NotFoundPage } from "../pages/NotFoundPage";
 // Dev-only smoke route — statically imported but gated by import.meta.env.DEV inside the component
 import { TokensSmokePage } from "../pages/TokensSmokePage.js";
 import { App } from "../App";
-import { AppRouteElement, AuthRouteElement } from "./RouteGateElements";
+import { AppRouteElement, AuthRouteElement, ProtectedAppRouteElement } from "./RouteGateElements";
 import { RouteErrorBoundary } from "./RouteErrorBoundary";
 import { assertUniqueModuleRegistrations, resolveDefaultModulePath } from "./modules/buildModuleRoutes";
 import { webModuleRouteRegistrations } from "./modules/shellRegistrations";
@@ -51,21 +51,21 @@ export const webHostRouteObjects: RouteObject[] = [
             // Literal path MUST come before :moduleId/* to win the match.
             // gap-closure row #7 — Integrations OAuth PKCE callback
             path: "settings/integrations/callback",
-            element: <CallbackPage />,
+            element: <ProtectedAppRouteElement><CallbackPage /></ProtectedAppRouteElement>,
             errorElement: <RouteErrorBoundary scope="oauth-callback" />,
           },
           {
             // Literal path MUST come before :moduleId/* to win the match.
             // gap-closure row #8 — Premium Stripe Checkout success callback
             path: "settings/premium/checkout/success",
-            element: <CheckoutSuccessPage />,
+            element: <ProtectedAppRouteElement><CheckoutSuccessPage /></ProtectedAppRouteElement>,
             errorElement: <RouteErrorBoundary scope="premium-checkout" />,
           },
           {
             // Literal path MUST come before :moduleId/* to win the match.
             // gap-closure row #8 — Premium Stripe Checkout cancel callback
             path: "settings/premium/checkout/cancel",
-            element: <CheckoutCancelPage />,
+            element: <ProtectedAppRouteElement><CheckoutCancelPage /></ProtectedAppRouteElement>,
             errorElement: <RouteErrorBoundary scope="premium-checkout" />,
           },
           {
