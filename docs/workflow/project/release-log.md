@@ -6,6 +6,15 @@
 
 ## 2026-06-02
 
+### 个人开发看板开发数据周/月趋势
+
+- Product line: project-system / dev-dashboard
+- Branch / commit: `web` / local working tree
+- User-visible change: 开发数据页新增时间维度切换（今日 / 最近 7 天 / 按周 / 按月），并用图表展示周 commit 数对比、月 commit 数对比、周开发活跃度趋势、月开发活跃度趋势；不再只停留在今日和 7 日数字。
+- Developer/system delta: `scripts/dashboard/generate-state.mjs` 新增 `weekly_stats`（最近 8 周）和 `monthly_stats`（最近 6 个月），每个周期记录 commit 数、活跃天数、活跃率和日期范围；`ops-panels.js` 渲染维度 tabs、摘要卡和柱状图；同步更新 dev-dashboard 模板与设计说明。
+- Verification: `node --check scripts/dashboard/generate-state.mjs` passed; `node --check docs/prototypes/dev-dashboard/js/ops-panels.js` passed; `git diff --check` passed; `pnpm dashboard` passed; `pnpm dashboard:serve` served `http://127.0.0.1:4177/#dev-data`; Browser smoke confirmed desktop tabs + weekly/monthly/7-day/today chart switching and 390px weekly/monthly responsive views with no horizontal overflow.
+- Risk / follow-up: `state.generated.js` 仍是本机快照；提交后再次运行 `pnpm dashboard` 可把 dirty count 降到提交后的真实状态。
+
 ### Web 六大功能反向补建 canonical PRD + 历史 SHIPPED 补登
 
 - Product line: web

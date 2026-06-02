@@ -502,25 +502,22 @@ pnpm --filter @repo/web build</code></pre>
           <div class="section-head">
             <div>
               <h2>开发数据</h2>
-              <p class="sub">纯 git 读数：commit、numstat、目录桶、dirty 文件和 branch 最近提交。</p>
+              <p class="sub">纯 git 读数：commit、numstat、目录桶、dirty 文件，以及日 / 周 / 月开发趋势。</p>
             </div>
             <span class="pill">all refs</span>
           </div>
           <div class="data-grid" id="devDataCards"></div>
-          <div class="section-head" style="margin-top:16px">
-            <div>
-              <h2>7 日趋势</h2>
-              <p class="sub">按自然日统计 commit 数。</p>
+          <div class="dev-time-panel">
+            <div class="dev-time-toolbar">
+              <div>
+                <h2>时间维度</h2>
+                <p class="sub">切换查看今日、最近 7 天、按周和按月的开发节奏。</p>
+              </div>
+              <div class="dev-time-tabs" id="devTimeTabs" role="tablist" aria-label="开发数据时间维度"></div>
             </div>
+            <div class="data-grid dev-time-summary" id="devTimeSummary"></div>
+            <div class="dev-chart-grid" id="devChartGrid"></div>
           </div>
-          <div class="trend-list" id="trendList"></div>
-          <div class="section-head" style="margin-top:16px">
-            <div>
-              <h2>今日目录改动</h2>
-              <p class="sub">来自 `git log --since=midnight --numstat --all`。</p>
-            </div>
-          </div>
-          <div class="dir-list" id="dirList"></div>
         </div>
         <aside class="surface pad">
           <div class="section-head">

@@ -124,10 +124,13 @@ preview and `dashboard:serve` must keep serving them without a bundler or module
 
 ### Phase 3 — dev-data page
 
-- Separate **"开发数据"** page from pure git: today's commits · 7-day trend · added/deleted
-  lines (`--numstat`) · changes by directory (docs / apps/web / apps/desktop / .teams/skills)
-  · recent commits by branch · uncommitted file count · docs-vs-code ratio · last push time ·
-  skill changes. Sources: `git log --since --numstat`, `git diff --stat`, `git status --short`.
+- Separate **"开发数据"** page from pure git: today's commits · 7-day trend · weekly
+  trend · monthly trend · added/deleted lines (`--numstat`) · changes by directory
+  (docs / apps/web / apps/desktop / .teams/skills) · recent commits by branch ·
+  uncommitted file count · docs-vs-code ratio · last push time · skill changes.
+  Weekly / monthly views should chart both commit-count comparison and active-day
+  trends instead of showing isolated counters. Sources: `git log --since --numstat`,
+  `git diff --stat`, `git status --short`.
   (Cadence is real — ~443 commits/7d as of 2026-05-30 — so this page has signal.)
 
 ### Phase 4 — branch-policy → ADR-0013 D2 + board consumes it

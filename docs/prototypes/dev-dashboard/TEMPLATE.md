@@ -66,7 +66,7 @@ server can unlock document browsing, search, refresh, and raw file reads.
 | Skill / Agent | Execution registry | Project skills, local skills, agent variants, triggers, tracked/local status. |
 | Release records | Change history | Overall releases, per-module release cards, detailed release rows. |
 | Workflow entry | Operator action surface | Feature, bugfix, roadmap, ship, sync, release-log entry points. |
-| Dev data | Git-derived activity | Commits, numstat, dirty count, docs/code ratio, recent branch commits. |
+| Dev data | Git-derived activity | Commits, numstat, dirty count, docs/code ratio, recent branch commits, daily / weekly / monthly trend charts. |
 
 ## Overview Design
 
@@ -113,6 +113,10 @@ Recommended order:
 1. Overview
 2. Task progress
 3. Dev data
+   - Provide a time-dimension switch for Today, last 7 days, weekly, and monthly.
+   - Render charts for weekly commit comparison, monthly commit comparison,
+     weekly active-day trend, and monthly active-day trend; do not leave this as
+     numeric cards only.
 4. Branch management
 5. Product structure
 6. Deployment

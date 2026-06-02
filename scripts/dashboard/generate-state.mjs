@@ -1232,15 +1232,69 @@ function buildDashboardSyncStatus(branch, latestCommit, generatedAt) {
 function localDate(offsetDays = 0) {
   const date = new Date();
   date.setDate(date.getDate() + offsetDays);
+  return toIsoDate(date);
+}
+
+function toIsoDate(date) {
   const year = date.getFullYear();
   const month = String(date.getMonth() + 1).padStart(2, "0");
   const day = String(date.getDate()).padStart(2, "0");
   return `${year}-${month}-${day}`;
 }
 
+function addDays(date, days) {
+  const next = new Date(date.getFullYear(), date.getMonth(), date.getDate());
+  next.setDate(next.getDate() + days);
+  return next;
+}
+
+function addMonths(date, months) {
+  return new Date(date.getFullYear(), date.getMonth() + months, 1);
+}
+
+function startOfWeek(date) {
+  const start = new Date(date.getFullYear(), date.getMonth(), date.getDate());
+  const weekday = start.getDay();
+  start.setDate(start.getDate() + (weekday === 0 ? -6 : 1 - weekday));
+  return start;
+}
+
+function endOfWeek(start) {
+  return addDays(start, 6);
+}
+
+function startOfMonth(date) {
+  return new Date(date.getFullYear(), date.getMonth(), 1);
+}
+
+function endOfMonth(start) {
+  return new Date(start.getFullYear(), start.getMonth() + 1, 0);
+}
+
+function minDate(a, b) {
+  return a.getTime() <= b.getTime() ? a : b;
+}
+
+function dayCountInclusive(start, end) {
+  return Math.max(1, Math.round((end.getTime() - start.getTime()) / 86400000) + 1);
+}
+
 function countCommits(args) {
   const commits = new Set(gitLines(["log", "--format=%H", ...args]));
   return commits.size;
+}
+
+function countActiveDays(startDate, endDate) {
+  const dates = gitLines([
+    "log",
+    "--all",
+    `--since=${startDate} 00:00`,
+    `--until=${endDate} 23:59:59`,
+    "--format=%cI"
+  ])
+    .map(line => line.slice(0, 10))
+    .filter(Boolean);
+  return new Set(dates).size;
 }
 
 function parseNumstat(args) {
@@ -1295,6 +1349,37 @@ function buildSevenDayTrend() {
   });
 }
 
+function buildPeriodStats(type, count) {
+  const today = new Date();
+  today.setHours(0, 0, 0, 0);
+  const currentStart = type === "month" ? startOfMonth(today) : startOfWeek(today);
+  return Array.from({ length: count }, (_, index) => {
+    const offset = index - count + 1;
+    const start = type === "month" ? addMonths(currentStart, offset) : addDays(currentStart, offset * 7);
+    const rawEnd = type === "month" ? endOfMonth(start) : endOfWeek(start);
+    const end = minDate(rawEnd, today);
+    const startDate = toIsoDate(start);
+    const endDate = toIsoDate(end);
+    const commits = countCommits(["--all", `--since=${startDate} 00:00`, `--until=${endDate} 23:59:59`]);
+    const activeDays = countActiveDays(startDate, endDate);
+    const totalDays = dayCountInclusive(start, end);
+    const monthLabel = startDate.slice(0, 7);
+    const rangeLabel = `${startDate.slice(5)}-${endDate.slice(5)}`;
+    return {
+      key: `${type}:${startDate}`,
+      type,
+      label: type === "month" ? monthLabel : rangeLabel,
+      start_date: startDate,
+      end_date: endDate,
+      commits,
+      active_days: activeDays,
+      total_days: totalDays,
+      active_rate: totalDays ? Number((activeDays / totalDays).toFixed(2)) : 0,
+      is_current: rawEnd.getTime() >= today.getTime()
+    };
+  });
+}
+
 function listRecentBranchCommits() {
   return gitLines([
     "for-each-ref",
@@ -1335,6 +1420,8 @@ function buildDevelopmentData(branch) {
     today_commits: countCommits(todayArgs),
     seven_day_commits: countCommits(sevenDayArgs),
     seven_day_trend: buildSevenDayTrend(),
+    weekly_stats: buildPeriodStats("week", 8),
+    monthly_stats: buildPeriodStats("month", 6),
     today_numstat: {
       added: todayNumstat.added,
       deleted: todayNumstat.deleted,
