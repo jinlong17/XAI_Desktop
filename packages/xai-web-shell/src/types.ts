@@ -26,6 +26,7 @@ export type WebShellIconName =
   | "calendar"   // calendar
   | "grid4"      // matrix
   | "timer"      // pomodoro
+  | "wallet"     // bookkeeping
   | "pin"        // habits
   | "leaf"       // meditation
   | "countdown"  // countdown

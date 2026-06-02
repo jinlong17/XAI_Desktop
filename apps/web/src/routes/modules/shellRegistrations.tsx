@@ -27,6 +27,8 @@ import { habitsSlotRegistration } from "@repo/plugin-web-habits";
 import { pomodoroWebModuleRegistration } from "@repo/plugin-web-pomodoro";
 // xai-web-time-tracker · Claude Design Time Tracker merge
 import { timeTrackerWebModuleRegistration } from "@repo/plugin-web-time-tracker";
+// xai-web-bookkeeping · Cloud Design bookkeeping module merge
+import { bookkeepingWebModuleRegistration } from "@repo/plugin-web-bookkeeping";
 // xai-web-ai-chat row #18
 import { aiChatWebModuleRegistration } from "@repo/plugin-web-ai-chat";
 // xai-web-meditation row #16
@@ -71,6 +73,7 @@ export const webShellModuleRegistrations: WebModuleSlotRegistration[] = [
   withDisabledFallback(matrixSlotRegistration, "matrix"),
   withDisabledFallback(pomodoroWebModuleRegistration, "pomodoro"),
   timeTrackerWebModuleRegistration,  // not toggleable in Settings V1; mirrors Claude Design rail item
+  bookkeepingWebModuleRegistration,  // not toggleable in Settings V1; Cloud Design bookkeeping module
   withDisabledFallback(habitsSlotRegistration, "habits"),  // row #15
   withDisabledFallback(meditationSlotRegistration, "meditation"),  // row #16
   countdownWebModuleRegistration,  // not toggleable
