@@ -8,6 +8,8 @@
 
 > **v2 覆盖规则(2026-05-19):** 本文 §1~§10 保留 2026-05-12 的推理链和拍板历史；凡与 §11 "高级执行版" 冲突,以 §11 为准。当前主 PRD 为 `2026-05-12-PRD-v1.md` v1.7-draft,子 PRD 以 Console v0.2-rev1、Web v0.3、Sync v0.6 为准。
 
+> **⚠️ SUPERSEDED-IN-PART(2026-06-02):** 本文的 Phase 0→5 路线图与 §2/§3/§5 的 **P0/P1/P2 功能级优先级**,是 2026-05-12 的**桌面优先**方案,已被 Web 转向取代——见 **ADR-0009**(Web→Desktop pivot)与 **ADR-0010 amended**(P0 Web active mainline ‖ P1 App lane → P2 插件 paused until G1)。**关键陷阱:本文的「P0/P1/P2」是*功能*优先级(如 P0=桌面整理),不是当前的*产品面*优先级(P0=Web)——同符号异义,勿混。** 当前产品面/模块归属以 `docs/MODULE_BOUNDARIES.md` + `CLAUDE.md` "Current Priority" 为准。本文保留为历史规划依据。
+
 ---
 
 ## 0. 文档目的

@@ -3,9 +3,9 @@
 > 本文档定义 XAI_Desktop 的架构约束与编码红线。
 > 所有开发（人类和 AI）必须遵守此文档中的规则。
 >
-> 最后更新: 2026-05-24
+> 最后更新: 2026-06-02
 
-> **Priority Note (2026-05-24):** §3-§10 below were authored for the **macOS Desktop surface (P1, currently paused per Web P0 Priority Override)**. The active P0 surface is the Web Console — see §12 below for web-side boundary, and `CLAUDE.md` "Current Priority" for the full priority order. Sections §1-§11 remain authoritative for P1/P2 Desktop work but MUST NOT be enforced verbatim against `packages/{xai-web-*, plugin-web-*}/`. Full Surface Scope Matrix to be authored in ADR-0009 (Web → Desktop Pivot Plan).
+> **Priority Note (updated 2026-06-02 — supersedes the 2026-05-24 reading):** §3-§10 below were authored for the **macOS Desktop surface**. Per **ADR-0010 (amended 2026-05-30)** the surface order is now **P0 Web Console (active mainline) ‖ P1 macOS Desktop client (active App lane — G1 native-foundation phase) → P2 desktop-organizer plugins (paused until G1 SHIPPED)** — P1 is NO LONGER globally paused; only P2 stays paused. §1-§11 remain authoritative for P1/P2 Desktop work but MUST NOT be enforced verbatim against `packages/{xai-web-*, plugin-web-*}/` (see §12). Canonical surface/module routing: `docs/MODULE_BOUNDARIES.md` + `CLAUDE.md` "Current Priority". Original pivot rationale: ADR-0009; branch topology + Web→Desktop D3 gate: ADR-0013.
 
 ---
 
@@ -155,7 +155,7 @@ apps/desktop/src-tauri/src/
 
 ## 12. Web Console Boundary (P0, 2026-05-24)
 
-Per `docs/workflow/roadmap/xai-web-console.md` §Authority Override (2026-05-23), the Web Console is the active product surface. Web boundary parallels but does NOT inherit §3-§10 verbatim — full Surface Scope Matrix is pending ADR-0009.
+Per **ADR-0010 (amended 2026-05-30)**, the Web Console is the active product mainline (predecessor authority: `docs/workflow/roadmap/xai-web-console.md` §Authority Override 2026-05-23). Web boundary parallels but does NOT inherit §3-§10 verbatim — the canonical Web/App/Plugin surface boundary now lives in `docs/MODULE_BOUNDARIES.md` (branch topology + Web→Desktop D3 gate in ADR-0013).
 
 ### 12.1 Web tri-layer
 
