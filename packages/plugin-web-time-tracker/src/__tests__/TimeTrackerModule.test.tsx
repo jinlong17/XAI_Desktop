@@ -102,14 +102,19 @@ describe("TimeTrackerModule", () => {
     expect(screen.getByText("Add widget")).toBeInTheDocument();
     expect(screen.getByText("Today total")).toBeInTheDocument();
     expect(screen.getByText("Category ranking")).toBeInTheDocument();
-    expect(screen.getByText("Year")).toBeInTheDocument();
-    expect(screen.getByText("Custom")).toBeInTheDocument();
+    expect(screen.getByText("Filters")).toBeInTheDocument();
     expect(screen.getByText("Export CSV")).toBeInTheDocument();
     expect(screen.getByText("Delete range")).toBeDisabled();
     expect(screen.getByText("Range summary")).toBeInTheDocument();
     expect(screen.getByText("Category mosaic")).toBeInTheDocument();
     expect(screen.getByText("Focus rhythm")).toBeInTheDocument();
     expect(screen.getByText("Recent sessions")).toBeInTheDocument();
+
+    act(() => {
+      fireEvent.click(screen.getByText("Filters"));
+    });
+    expect(screen.getByText("Year")).toBeInTheDocument();
+    expect(screen.getByText("Custom")).toBeInTheDocument();
 
     act(() => {
       fireEvent.click(screen.getByText("Custom"));

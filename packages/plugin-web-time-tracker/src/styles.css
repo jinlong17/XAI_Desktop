@@ -1121,64 +1121,80 @@
 
 .tt-report-head {
   display: grid;
-  grid-template-columns: minmax(220px, 320px) minmax(0, 1fr);
-  gap: 12px;
-  align-items: start;
-  padding: 12px;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 8px 12px;
+  align-items: center;
+  min-height: 52px;
+  padding: 8px 10px;
   border: 1px solid var(--border-1);
   border-radius: 8px;
   background:
-    linear-gradient(135deg, color-mix(in oklch, var(--accent) 10%, transparent), transparent 54%),
+    linear-gradient(135deg, color-mix(in oklch, var(--accent) 6%, transparent), transparent 58%),
     var(--bg-panel);
   box-shadow: var(--shadow-1);
 }
 
+.tt-report-head.is-open {
+  align-items: start;
+  min-height: 0;
+}
+
+.tt-report-summary {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  min-width: 0;
+}
+
 .tt-report-copy {
   display: grid;
-  gap: 5px;
+  gap: 2px;
   min-width: 0;
 }
 
 .tt-report-copy span {
   color: var(--text-3);
-  font-size: 11px;
+  font-size: 10px;
   text-transform: uppercase;
 }
 
 .tt-report-copy strong {
   overflow-wrap: anywhere;
   color: var(--text-1);
-  font-size: 16px;
+  font-size: 14px;
   line-height: 1.2;
 }
 
 .tt-report-copy em {
   color: var(--text-3);
-  font-size: 12px;
+  font-size: 11px;
   font-style: normal;
 }
 
-.tt-ins-toolbar {
-  position: relative;
-  display: grid;
-  grid-template-columns: 1fr;
-  gap: 8px;
-  justify-items: end;
-  min-width: 0;
-}
-
-.tt-ins-toolbar .tt-segment {
-  max-width: 100%;
-  overflow-x: auto;
-}
-
 .tt-date-range,
-.tt-report-actions {
+.tt-report-actions,
+.tt-report-filters {
   display: flex;
   gap: 8px;
   align-items: center;
   justify-content: flex-end;
   flex-wrap: wrap;
+}
+
+.tt-report-actions {
+  min-width: 0;
+}
+
+.tt-report-filters {
+  grid-column: 1 / -1;
+  justify-content: flex-start;
+  padding-top: 8px;
+  border-top: 1px solid var(--border-1);
+}
+
+.tt-report-filters .tt-segment {
+  max-width: 100%;
+  overflow-x: auto;
 }
 
 .tt-date-range label {
@@ -1190,8 +1206,8 @@
 }
 
 .tt-date-range input {
-  min-height: 32px;
-  width: 132px;
+  min-height: 30px;
+  width: 124px;
   padding: 0 8px;
   border: 1px solid var(--border-1);
   border-radius: 8px;
@@ -1201,7 +1217,7 @@
 }
 
 .tt-report-actions .tt-btn {
-  min-height: 32px;
+  min-height: 30px;
 }
 
 .tt-add-menu-wrap {
@@ -1614,10 +1630,6 @@
 
   .tt-report-head {
     grid-template-columns: 1fr;
-  }
-
-  .tt-ins-toolbar {
-    justify-items: stretch;
   }
 
   .tt-date-range,

@@ -1554,6 +1554,7 @@ function InsightsBoard({
   const [cards, setCards] = useState(readInsightBoard);
   const [adding, setAdding] = useState(false);
   const [dragId, setDragId] = useState<string | null>(null);
+  const [filtersOpen, setFiltersOpen] = useState(false);
 
   useEffect(() => {
     window.localStorage.setItem(INSIGHTS_KEY, JSON.stringify(cards));
@@ -1597,60 +1598,67 @@ function InsightsBoard({
 	  }
 	  return (
 	    <section className="tt-insights-board">
-	      <div className="tt-report-head">
-	        <div className="tt-report-copy">
-	          <span>{ttCopy(lang, "dateRange")}</span>
-	          <strong>{reportLabel}</strong>
-	          <em>{formatDuration(rangeTotal)} · {entryCountText(inRange.length, lang)}{activeInRange > 0 ? ` · ${ttCopy(lang, "runningCount")} × ${activeInRange}` : ""}</em>
-	        </div>
-	        <div className="tt-ins-toolbar">
-	          <div className="tt-segment">
-	            <button type="button" aria-selected={range === "week"} onClick={() => setRange("week")}>{ttCopy(lang, "rangeWeek")}</button>
-	            <button type="button" aria-selected={range === "month"} onClick={() => setRange("month")}>{ttCopy(lang, "rangeMonth")}</button>
-	            <button type="button" aria-selected={range === "year"} onClick={() => setRange("year")}>{ttCopy(lang, "rangeYear")}</button>
-	            <button type="button" aria-selected={range === "custom"} onClick={() => setRange("custom")}>{ttCopy(lang, "rangeCustom")}</button>
-	            <button type="button" aria-selected={range === "all"} onClick={() => setRange("all")}>{ttCopy(lang, "rangeAll")}</button>
+	      <div className={`tt-report-head${filtersOpen ? " is-open" : ""}`}>
+	        <div className="tt-report-summary">
+	          <div className="tt-report-copy">
+	            <span>{ttCopy(lang, "dateRange")}</span>
+	            <strong>{reportLabel}</strong>
+	            <em>{formatDuration(rangeTotal)} · {entryCountText(inRange.length, lang)}{activeInRange > 0 ? ` · ${ttCopy(lang, "runningCount")} × ${activeInRange}` : ""}</em>
 	          </div>
-	          {range === "custom" && (
-	            <div className="tt-date-range">
-	              <label>
-	                <span>{ttCopy(lang, "from")}</span>
-	                <input type="date" value={customStart} onChange={(event) => setCustomStart(event.target.value)} />
-	              </label>
-	              <label>
-	                <span>{ttCopy(lang, "to")}</span>
-	                <input type="date" value={customEnd} onChange={(event) => setCustomEnd(event.target.value)} />
-	              </label>
-	            </div>
-	          )}
-	          <div className="tt-report-actions">
-	            <button type="button" className="tt-btn" title={ttCopy(lang, "resetBoard")} onClick={() => setCards(defaultInsightBoard())}><IconGlyph name="sync" size={14} /></button>
-	            <button type="button" className="tt-btn" disabled={inRange.length === 0} onClick={() => exportEntriesCsv(inRange, nowMs, lang, categoryMap, reportLabel)}>
-	              <IconGlyph name="download" size={14} />{ttCopy(lang, "exportCsv")}
+	          <button type="button" className="tt-btn tt-btn-subtle" aria-expanded={filtersOpen} onClick={() => setFiltersOpen((value) => !value)}>
+	            <IconGlyph name="sliders" size={14} />{filtersOpen ? ttCopy(lang, "hideFilters") : ttCopy(lang, "filters")}
+	          </button>
+	        </div>
+	        <div className="tt-report-actions">
+	          <button type="button" className="tt-btn" title={ttCopy(lang, "resetBoard")} onClick={() => setCards(defaultInsightBoard())}><IconGlyph name="sync" size={14} /></button>
+	          <button type="button" className="tt-btn" disabled={inRange.length === 0} onClick={() => exportEntriesCsv(inRange, nowMs, lang, categoryMap, reportLabel)}>
+	            <IconGlyph name="download" size={14} />{ttCopy(lang, "exportCsv")}
+	          </button>
+	          <button type="button" className="tt-btn tt-btn-danger" disabled={inRange.length === 0} onClick={() => onDeleteRange(inRange, reportLabel)}>
+	            <IconGlyph name="trash" size={14} />{ttCopy(lang, "deleteRange")}
+	          </button>
+	          <div className="tt-add-menu-wrap">
+	            <button type="button" className="tt-btn tt-btn-primary" onClick={() => setAdding((value) => !value)}>
+	              <IconGlyph name="plus" size={14} />{ttCopy(lang, "addWidget")}
 	            </button>
-	            <button type="button" className="tt-btn tt-btn-danger" disabled={inRange.length === 0} onClick={() => onDeleteRange(inRange, reportLabel)}>
-	              <IconGlyph name="trash" size={14} />{ttCopy(lang, "deleteRange")}
-	            </button>
-	            <div className="tt-add-menu-wrap">
-	              <button type="button" className="tt-btn tt-btn-primary" onClick={() => setAdding((value) => !value)}>
-	                <IconGlyph name="plus" size={14} />{ttCopy(lang, "addWidget")}
-	              </button>
-	              {adding && (
-	                <>
-	                  <button type="button" className="tt-pop-scrim" aria-label={ttCopy(lang, "cancel")} onClick={() => setAdding(false)} />
-	                  <div className="tt-ins-menu">
-	                    {INSIGHT_DEFS.map((def) => (
-	                      <button type="button" key={def.type} onClick={() => addCard(def.type)}>
-	                        <IconGlyph name={def.icon} size={14} />
-	                        {ttCopy(lang, INSIGHT_TITLES[def.type])}
-	                      </button>
-	                    ))}
-	                  </div>
-	                </>
-	              )}
-	            </div>
+	            {adding && (
+	              <>
+	                <button type="button" className="tt-pop-scrim" aria-label={ttCopy(lang, "cancel")} onClick={() => setAdding(false)} />
+	                <div className="tt-ins-menu">
+	                  {INSIGHT_DEFS.map((def) => (
+	                    <button type="button" key={def.type} onClick={() => addCard(def.type)}>
+	                      <IconGlyph name={def.icon} size={14} />
+	                      {ttCopy(lang, INSIGHT_TITLES[def.type])}
+	                    </button>
+	                  ))}
+	                </div>
+	              </>
+	            )}
 	          </div>
 	        </div>
+	        {filtersOpen && (
+	          <div className="tt-report-filters">
+	            <div className="tt-segment">
+	              <button type="button" aria-selected={range === "week"} onClick={() => setRange("week")}>{ttCopy(lang, "rangeWeek")}</button>
+	              <button type="button" aria-selected={range === "month"} onClick={() => setRange("month")}>{ttCopy(lang, "rangeMonth")}</button>
+	              <button type="button" aria-selected={range === "year"} onClick={() => setRange("year")}>{ttCopy(lang, "rangeYear")}</button>
+	              <button type="button" aria-selected={range === "custom"} onClick={() => setRange("custom")}>{ttCopy(lang, "rangeCustom")}</button>
+	              <button type="button" aria-selected={range === "all"} onClick={() => setRange("all")}>{ttCopy(lang, "rangeAll")}</button>
+	            </div>
+	            {range === "custom" && (
+	              <div className="tt-date-range">
+	                <label>
+	                  <span>{ttCopy(lang, "from")}</span>
+	                  <input type="date" value={customStart} onChange={(event) => setCustomStart(event.target.value)} />
+	                </label>
+	                <label>
+	                  <span>{ttCopy(lang, "to")}</span>
+	                  <input type="date" value={customEnd} onChange={(event) => setCustomEnd(event.target.value)} />
+	                </label>
+	              </div>
+	            )}
+	          </div>
+	        )}
 	      </div>
       {cards.length === 0 ? (
         <div className="tt-empty">{ttCopy(lang, "emptyBoard")}</div>
