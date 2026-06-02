@@ -71,6 +71,7 @@
 .tt-icon-btn,
 .tt-active-actions button,
 .tt-row-actions button,
+.tt-card-add-sub,
 .tt-card-menu,
 .tt-category-body,
 .tt-category-start,
@@ -432,10 +433,16 @@
   opacity: .62;
 }
 
-.tt-card-menu {
+.tt-card-actions {
   position: absolute;
   top: 8px;
   right: 8px;
+  display: inline-flex;
+  gap: 4px;
+}
+
+.tt-card-add-sub,
+.tt-card-menu {
   display: grid;
   width: 26px;
   height: 26px;
@@ -443,7 +450,9 @@
   border-radius: 7px;
 }
 
+.tt-card-add-sub:hover,
 .tt-card-menu:hover {
+  color: var(--tt-accent);
   background: color-mix(in oklch, var(--tt-accent) 12%, var(--bg-panel));
 }
 
@@ -461,7 +470,7 @@
   gap: 10px;
   align-items: center;
   min-width: 0;
-  padding-right: 26px;
+  padding-right: 58px;
 }
 
 .tt-category-card h3 {
@@ -529,7 +538,7 @@
 
 .tt-subcard-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(118px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(148px, 1fr));
   gap: 6px;
 }
 
@@ -1163,7 +1172,34 @@
   place-items: center;
   border: 1px solid var(--border-1);
   border-radius: 8px;
-  background: var(--bg-panel-2);
+  background:
+    linear-gradient(135deg, color-mix(in oklch, currentColor 10%, transparent), transparent 66%),
+    var(--bg-panel-2);
+}
+
+.tt-category-icon svg,
+.tt-active-icon svg,
+.tt-subcard-icon svg,
+.tt-sub-edit-preview svg,
+.tt-name-row i svg,
+.tt-icon-grid button svg,
+.tt-detail-list li > svg {
+  fill: color-mix(in oklch, currentColor 18%, transparent);
+  stroke: currentColor;
+  stroke-width: 2.15px;
+}
+
+.tt-category-icon svg,
+.tt-active-icon svg,
+.tt-subcard-icon svg,
+.tt-sub-edit-preview svg,
+.tt-name-row i svg {
+  filter: drop-shadow(0 1px 0 color-mix(in oklch, currentColor 20%, transparent));
+}
+
+.tt-sub-form {
+  display: grid;
+  gap: 14px;
 }
 
 .tt-field-head {

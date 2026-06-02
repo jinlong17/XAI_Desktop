@@ -47,6 +47,7 @@ export interface TimeTrackerModuleProps {
 type TrackerView = "tracker" | "insights";
 type CategoryEditorState = { readonly mode: "new" } | { readonly mode: "edit"; readonly category: TimeTrackerCategory };
 type EntryEditorState = { readonly mode: "new" } | { readonly mode: "edit"; readonly entry: TimeTrackerEntry };
+type SubcategoryEditorState = { readonly category: TimeTrackerCategory };
 type ConfirmState = {
   readonly title: string;
   readonly body?: string;
@@ -79,6 +80,12 @@ type CategorySubDraft = {
   readonly color: string;
   readonly icon: string;
   readonly original?: LocalizedText;
+};
+
+type SubcategoryDraft = {
+  readonly name: string;
+  readonly color: string;
+  readonly icon: string;
 };
 
 type InsightType =
@@ -359,6 +366,7 @@ export function TimeTrackerModule({ lang }: TimeTrackerModuleProps) {
   const [nowMs, setNowMs] = useState(() => Date.now());
   const [selectedKey, setSelectedKey] = useState(() => dayKey(Date.now()));
   const [categoryEditor, setCategoryEditor] = useState<CategoryEditorState | null>(null);
+  const [subcategoryEditor, setSubcategoryEditor] = useState<SubcategoryEditorState | null>(null);
   const [entryEditor, setEntryEditor] = useState<EntryEditorState | null>(null);
   const [detailCategoryId, setDetailCategoryId] = useState<string | null>(null);
   const [confirm, setConfirm] = useState<ConfirmState | null>(null);
@@ -504,6 +512,32 @@ export function TimeTrackerModule({ lang }: TimeTrackerModuleProps) {
     setCategoryEditor(null);
   }
 
+  function addSubcategory(categoryId: string, draft: SubcategoryDraft): void {
+    const name = draft.name.trim();
+    if (name === "") return;
+    const stamp = Date.now();
+    setCategories((prev) =>
+      prev.map((category) =>
+        category.id === categoryId
+          ? {
+            ...category,
+            subs: [
+              ...category.subs,
+              {
+                id: uid("sub"),
+                name: { en: name, zh: name },
+                color: draft.color,
+                icon: draft.icon,
+              },
+            ],
+            updatedAt: stamp,
+          }
+          : category,
+      ),
+    );
+    setSubcategoryEditor(null);
+  }
+
   function deleteCategory(categoryId: string): void {
     const stamp = Date.now();
     setEntries((prev) => prev.map((entry) => (entry.categoryId === categoryId ? { ...entry, deleted: true, updatedAt: stamp } : entry)));
@@ -587,6 +621,7 @@ export function TimeTrackerModule({ lang }: TimeTrackerModuleProps) {
                 canStart={isToday}
                 onStart={startCategory}
                 onEdit={(category) => setCategoryEditor({ mode: "edit", category })}
+                onAddSub={(category) => setSubcategoryEditor({ category })}
                 onDetail={(category) => setDetailCategoryId(category.id)}
                 onReorder={reorderCategories}
                 onNew={() => setCategoryEditor({ mode: "new" })}
@@ -702,6 +737,15 @@ export function TimeTrackerModule({ lang }: TimeTrackerModuleProps) {
               run: () => deleteCategory(category.id),
             });
           }}
+        />
+      )}
+      {subcategoryEditor !== null && (
+        <SubcategoryEditor
+          lang={lang}
+          title={`${ttCopy(lang, "addSub")} · ${textName(subcategoryEditor.category.name, lang)}`}
+          defaults={{ color: subcategoryEditor.category.color, icon: subcategoryEditor.category.icon }}
+          onClose={() => setSubcategoryEditor(null)}
+          onSave={(draft) => addSubcategory(subcategoryEditor.category.id, draft)}
         />
       )}
       {entryEditor !== null && (
@@ -923,6 +967,7 @@ function CategoryGrid({
   canStart,
   onStart,
   onEdit,
+  onAddSub,
   onDetail,
   onReorder,
   onNew,
@@ -935,6 +980,7 @@ function CategoryGrid({
   readonly canStart: boolean;
   readonly onStart: (categoryId: string, subId: string | null) => void;
   readonly onEdit: (category: TimeTrackerCategory) => void;
+  readonly onAddSub: (category: TimeTrackerCategory) => void;
   readonly onDetail: (category: TimeTrackerCategory) => void;
   readonly onReorder: (dragId: string, overId: string) => void;
   readonly onNew: () => void;
@@ -956,6 +1002,7 @@ function CategoryGrid({
             canStart={canStart}
             onStart={onStart}
             onEdit={() => onEdit(category)}
+            onAddSub={() => onAddSub(category)}
             onDetail={() => onDetail(category)}
             dragId={dragId}
             onSetDragId={setDragId}
@@ -980,6 +1027,7 @@ function CategoryCard({
   canStart,
   onStart,
   onEdit,
+  onAddSub,
   onDetail,
   dragId,
   onSetDragId,
@@ -993,6 +1041,7 @@ function CategoryCard({
   readonly canStart: boolean;
   readonly onStart: (categoryId: string, subId: string | null) => void;
   readonly onEdit: () => void;
+  readonly onAddSub: () => void;
   readonly onDetail: () => void;
   readonly dragId: string | null;
   readonly onSetDragId: (id: string | null) => void;
@@ -1032,9 +1081,14 @@ function CategoryCard({
       }}
       onDragEnd={() => onSetDragId(null)}
     >
-      <button type="button" className="tt-card-menu" aria-label={ttCopy(lang, "editCategory")} onClick={(event) => { event.stopPropagation(); onEdit(); }}>
-        <IconGlyph name="dots" size={15} />
-      </button>
+      <div className="tt-card-actions">
+        <button type="button" className="tt-card-add-sub" aria-label={`${ttCopy(lang, "addSub")} ${textName(category.name, lang)}`} onClick={(event) => { event.stopPropagation(); onAddSub(); }}>
+          <IconGlyph name="plus" size={14} />
+        </button>
+        <button type="button" className="tt-card-menu" aria-label={ttCopy(lang, "editCategory")} onClick={(event) => { event.stopPropagation(); onEdit(); }}>
+          <IconGlyph name="dots" size={15} />
+        </button>
+      </div>
       <button type="button" className="tt-category-body" onClick={onDetail}>
         <div className="tt-category-top">
           <span className="tt-category-icon"><IconGlyph name={category.icon} size={18} /></span>
@@ -1558,6 +1612,7 @@ function CategoryEditor({
   const [color, setColor] = useState(() => category?.color ?? TIME_TRACKER_CATEGORY_COLORS[0]);
   const [icon, setIcon] = useState(() => category?.icon ?? ICON_OPTIONS[0]);
   const [goal, setGoal] = useState(() => String(category?.goalMin ?? 0));
+  const [addingSub, setAddingSub] = useState(false);
   const [subs, setSubs] = useState<CategorySubDraft[]>(() =>
     category?.subs.map((sub) => ({
       id: sub.id,
@@ -1587,23 +1642,159 @@ function CategoryEditor({
     });
   }
 
+  function addDraftSub(draft: SubcategoryDraft): void {
+    const subName = draft.name.trim();
+    if (subName === "") return;
+    setSubs((prev) => [...prev, { id: uid("sub"), name: subName, color: draft.color, icon: draft.icon, original: undefined }]);
+    setAddingSub(false);
+  }
+
   return (
-    <Modal title={editing ? ttCopy(lang, "editCategory") : ttCopy(lang, "newCategory")} onClose={onClose} wide footer={(
+    <>
+      <Modal title={editing ? ttCopy(lang, "editCategory") : ttCopy(lang, "newCategory")} onClose={onClose} wide footer={(
+        <>
+          {category !== undefined && <button type="button" className="tt-btn tt-btn-danger" onClick={() => onDelete(category)}><IconGlyph name="trash" size={14} />{ttCopy(lang, "delete")}</button>}
+          <span className="tt-head-spacer" />
+          <button type="button" className="tt-btn" onClick={onClose}>{ttCopy(lang, "cancel")}</button>
+          <button type="button" className="tt-btn tt-btn-primary" disabled={name.trim() === ""} onClick={submit}>{ttCopy(lang, "save")}</button>
+        </>
+      )}>
+        <label className="tt-field">
+          <span>{ttCopy(lang, "name")}</span>
+          <div className="tt-name-row">
+            <i style={{ background: color }}><IconGlyph name={icon} size={18} /></i>
+            <input value={name} placeholder={ttCopy(lang, "namePlaceholder")} onChange={(event) => setName(event.target.value)} autoFocus />
+          </div>
+        </label>
+        <div className="tt-field-grid">
+          <label className="tt-field">
+            <span>{ttCopy(lang, "color")}</span>
+            <div className="tt-swatches">
+              {TIME_TRACKER_CATEGORY_COLORS.map((item) => (
+                <button key={item} type="button" aria-label={item} className={item === color ? "is-selected" : ""} style={{ background: item }} onClick={() => setColor(item)}>
+                  {item === color && <IconGlyph name="check" size={12} />}
+                </button>
+              ))}
+            </div>
+          </label>
+          <label className="tt-field">
+            <span>{ttCopy(lang, "goalToday")}</span>
+            <input type="number" min="0" step="15" value={goal} onChange={(event) => setGoal(event.target.value)} />
+          </label>
+        </div>
+        <label className="tt-field">
+          <span>{ttCopy(lang, "icon")}</span>
+          <IconPicker value={icon} color={color} lang={lang} onPick={setIcon} />
+        </label>
+        <div className="tt-field">
+          <div className="tt-field-head">
+            <span>{ttCopy(lang, "subcategory")}</span>
+            <button type="button" onClick={() => setAddingSub(true)}><IconGlyph name="plus" size={13} />{ttCopy(lang, "addSub")}</button>
+          </div>
+          {subs.length === 0 ? (
+            <div className="tt-empty compact">{ttCopy(lang, "noSubcategories")}</div>
+          ) : (
+            <ul className="tt-sub-edit-list">
+              {subs.map((sub, index) => (
+                <li key={sub.id} style={{ "--tt-sub-accent": sub.color } as CSSProperties}>
+                  <span className="tt-sub-edit-preview"><IconGlyph name={sub.icon} size={16} /></span>
+                  <div className="tt-sub-edit-main">
+                    <input
+                      aria-label={`${ttCopy(lang, "subcategory")} ${index + 1}`}
+                      value={sub.name}
+                      placeholder={ttCopy(lang, "subcategory")}
+                      onChange={(event) => setSubs((prev) => prev.map((item) => item.id === sub.id ? { ...item, name: event.target.value } : item))}
+                    />
+                    <div className="tt-sub-edit-tools">
+                      <select
+                        aria-label={`${sub.name.trim() === "" ? ttCopy(lang, "subcategory") : sub.name} ${ttCopy(lang, "icon")}`}
+                        value={sub.icon}
+                        onChange={(event) => setSubs((prev) => prev.map((item) => item.id === sub.id ? { ...item, icon: event.target.value } : item))}
+                      >
+                        {ICON_OPTIONS.map((option) => <option key={option} value={option}>{option}</option>)}
+                      </select>
+                      <div className="tt-sub-edit-swatches" aria-label={`${sub.name.trim() === "" ? ttCopy(lang, "subcategory") : sub.name} ${ttCopy(lang, "color")}`}>
+                        {TIME_TRACKER_CATEGORY_COLORS.map((item) => (
+                          <button
+                            key={item}
+                            type="button"
+                            aria-label={`${ttCopy(lang, "color")} ${item}`}
+                            className={item === sub.color ? "is-selected" : ""}
+                            style={{ background: item }}
+                            onClick={() => setSubs((prev) => prev.map((draft) => draft.id === sub.id ? { ...draft, color: item } : draft))}
+                          />
+                        ))}
+                      </div>
+                    </div>
+                  </div>
+                  <button type="button" disabled={index === 0} onClick={() => setSubs((prev) => moveById(prev, sub.id, -1))}><IconGlyph name="chevD" size={13} /></button>
+                  <button type="button" disabled={index === subs.length - 1} onClick={() => setSubs((prev) => moveById(prev, sub.id, 1))}><IconGlyph name="chevD" size={13} /></button>
+                  <button type="button" onClick={() => setSubs((prev) => prev.filter((item) => item.id !== sub.id))}><IconGlyph name="close" size={13} /></button>
+                </li>
+              ))}
+            </ul>
+          )}
+        </div>
+      </Modal>
+      {addingSub && (
+        <SubcategoryEditor
+          lang={lang}
+          title={ttCopy(lang, "addSub")}
+          defaults={{ color, icon }}
+          onClose={() => setAddingSub(false)}
+          onSave={addDraftSub}
+        />
+      )}
+    </>
+  );
+}
+
+function SubcategoryEditor({
+  lang,
+  title,
+  defaults,
+  onClose,
+  onSave,
+}: {
+  readonly lang: Lang;
+  readonly title: string;
+  readonly defaults: { readonly color: string; readonly icon: string };
+  readonly onClose: () => void;
+  readonly onSave: (draft: SubcategoryDraft) => void;
+}) {
+  const [name, setName] = useState("");
+  const [color, setColor] = useState(defaults.color);
+  const [icon, setIcon] = useState(defaults.icon);
+  const valid = name.trim() !== "";
+
+  function submit(event: FormEvent): void {
+    event.preventDefault();
+    if (!valid) return;
+    onSave({ name: name.trim(), color, icon });
+  }
+
+  return (
+    <Modal title={title} onClose={onClose} footer={(
       <>
-        {category !== undefined && <button type="button" className="tt-btn tt-btn-danger" onClick={() => onDelete(category)}><IconGlyph name="trash" size={14} />{ttCopy(lang, "delete")}</button>}
         <span className="tt-head-spacer" />
         <button type="button" className="tt-btn" onClick={onClose}>{ttCopy(lang, "cancel")}</button>
-        <button type="button" className="tt-btn tt-btn-primary" disabled={name.trim() === ""} onClick={submit}>{ttCopy(lang, "save")}</button>
+        <button type="submit" form="tt-subcategory-form" className="tt-btn tt-btn-primary" disabled={!valid}>{ttCopy(lang, "save")}</button>
       </>
     )}>
-      <label className="tt-field">
-        <span>{ttCopy(lang, "name")}</span>
-        <div className="tt-name-row">
-          <i style={{ background: color }}><IconGlyph name={icon} size={18} /></i>
-          <input value={name} placeholder={ttCopy(lang, "namePlaceholder")} onChange={(event) => setName(event.target.value)} autoFocus />
-        </div>
-      </label>
-      <div className="tt-field-grid">
+      <form id="tt-subcategory-form" className="tt-sub-form" onSubmit={submit}>
+        <label className="tt-field">
+          <span>{ttCopy(lang, "name")}</span>
+          <div className="tt-name-row">
+            <i style={{ background: color }}><IconGlyph name={icon} size={18} /></i>
+            <input
+              aria-label={`${ttCopy(lang, "subcategory")} ${ttCopy(lang, "name")}`}
+              value={name}
+              placeholder={ttCopy(lang, "subcategory")}
+              onChange={(event) => setName(event.target.value)}
+              autoFocus
+            />
+          </div>
+        </label>
         <label className="tt-field">
           <span>{ttCopy(lang, "color")}</span>
           <div className="tt-swatches">
@@ -1615,63 +1806,10 @@ function CategoryEditor({
           </div>
         </label>
         <label className="tt-field">
-          <span>{ttCopy(lang, "goalToday")}</span>
-          <input type="number" min="0" step="15" value={goal} onChange={(event) => setGoal(event.target.value)} />
+          <span>{ttCopy(lang, "icon")}</span>
+          <IconPicker value={icon} color={color} lang={lang} onPick={setIcon} />
         </label>
-      </div>
-      <label className="tt-field">
-        <span>{ttCopy(lang, "icon")}</span>
-        <IconPicker value={icon} color={color} lang={lang} onPick={setIcon} />
-      </label>
-      <div className="tt-field">
-        <div className="tt-field-head">
-          <span>{ttCopy(lang, "subcategory")}</span>
-          <button type="button" onClick={() => setSubs((prev) => [...prev, { id: uid("sub"), name: "", color, icon, original: undefined }])}><IconGlyph name="plus" size={13} />{ttCopy(lang, "addSub")}</button>
-        </div>
-        {subs.length === 0 ? (
-          <div className="tt-empty compact">{ttCopy(lang, "noSubcategories")}</div>
-        ) : (
-          <ul className="tt-sub-edit-list">
-            {subs.map((sub, index) => (
-              <li key={sub.id} style={{ "--tt-sub-accent": sub.color } as CSSProperties}>
-                <span className="tt-sub-edit-preview"><IconGlyph name={sub.icon} size={16} /></span>
-                <div className="tt-sub-edit-main">
-                  <input
-                    aria-label={`${ttCopy(lang, "subcategory")} ${index + 1}`}
-                    value={sub.name}
-                    placeholder={ttCopy(lang, "subcategory")}
-                    onChange={(event) => setSubs((prev) => prev.map((item) => item.id === sub.id ? { ...item, name: event.target.value } : item))}
-                  />
-                  <div className="tt-sub-edit-tools">
-                    <select
-                      aria-label={`${sub.name.trim() === "" ? ttCopy(lang, "subcategory") : sub.name} ${ttCopy(lang, "icon")}`}
-                      value={sub.icon}
-                      onChange={(event) => setSubs((prev) => prev.map((item) => item.id === sub.id ? { ...item, icon: event.target.value } : item))}
-                    >
-                      {ICON_OPTIONS.map((option) => <option key={option} value={option}>{option}</option>)}
-                    </select>
-                    <div className="tt-sub-edit-swatches" aria-label={`${sub.name.trim() === "" ? ttCopy(lang, "subcategory") : sub.name} ${ttCopy(lang, "color")}`}>
-                      {TIME_TRACKER_CATEGORY_COLORS.slice(0, 12).map((item) => (
-                        <button
-                          key={item}
-                          type="button"
-                          aria-label={`${ttCopy(lang, "color")} ${item}`}
-                          className={item === sub.color ? "is-selected" : ""}
-                          style={{ background: item }}
-                          onClick={() => setSubs((prev) => prev.map((draft) => draft.id === sub.id ? { ...draft, color: item } : draft))}
-                        />
-                      ))}
-                    </div>
-                  </div>
-                </div>
-                <button type="button" disabled={index === 0} onClick={() => setSubs((prev) => moveById(prev, sub.id, -1))}><IconGlyph name="chevD" size={13} /></button>
-                <button type="button" disabled={index === subs.length - 1} onClick={() => setSubs((prev) => moveById(prev, sub.id, 1))}><IconGlyph name="chevD" size={13} /></button>
-                <button type="button" onClick={() => setSubs((prev) => prev.filter((item) => item.id !== sub.id))}><IconGlyph name="close" size={13} /></button>
-              </li>
-            ))}
-          </ul>
-        )}
-      </div>
+      </form>
     </Modal>
   );
 }
@@ -1709,7 +1847,7 @@ function IconPicker({
       </div>
       <div className="tt-icon-grid">
         {options.map((option) => (
-          <button key={option} type="button" title={option} className={option === value ? "is-selected" : ""} style={option === value ? { borderColor: color, color } : undefined} onClick={() => onPick(option)}>
+          <button key={option} type="button" title={option} aria-label={option} className={option === value ? "is-selected" : ""} style={option === value ? { borderColor: color, color } : undefined} onClick={() => onPick(option)}>
             <IconGlyph name={option} size={18} />
           </button>
         ))}

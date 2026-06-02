@@ -192,6 +192,79 @@ describe("TimeTrackerModule", () => {
     expect(study?.subs[0]?.color).toBe(TIME_TRACKER_CATEGORY_COLORS[5]);
   });
 
+  it("adds a subcategory from the category card quick action", () => {
+    render(<TimeTrackerModule lang="en" />);
+    const studyCard = screen.getByRole("heading", { name: "Study" }).closest("article");
+    expect(studyCard).not.toBeNull();
+
+    act(() => {
+      fireEvent.click(within(studyCard!).getByLabelText("Add subcategory Study"));
+    });
+    const dialog = screen.getByRole("dialog");
+    expect(dialog).toHaveTextContent("Add subcategory · Study");
+    for (const item of TIME_TRACKER_CATEGORY_COLORS) {
+      expect(within(dialog).getByLabelText(item)).toBeInTheDocument();
+    }
+    expect(within(dialog).getByLabelText("writing")).toBeInTheDocument();
+    expect(within(dialog).getByLabelText("fitness")).toBeInTheDocument();
+
+    act(() => {
+      fireEvent.change(within(dialog).getByLabelText("Subcategory Name"), { target: { value: "Review" } });
+      fireEvent.click(within(dialog).getByLabelText(TIME_TRACKER_CATEGORY_COLORS[8]!));
+      fireEvent.click(within(dialog).getByLabelText("paper"));
+    });
+    act(() => {
+      fireEvent.click(within(dialog).getByText("Save"));
+    });
+
+    const study = readTimeTrackerCategories().find((category) => category.id === "cat_study");
+    const review = study?.subs.find((sub) => sub.name.en === "Review");
+    expect(review?.color).toBe(TIME_TRACKER_CATEGORY_COLORS[8]);
+    expect(review?.icon).toBe("paper");
+    expect(screen.getByRole("button", { name: "Start Review" })).toBeInTheDocument();
+  });
+
+  it("opens a subcategory dialog from category settings before appending the row", () => {
+    render(<TimeTrackerModule lang="en" />);
+    const studyCard = screen.getByRole("heading", { name: "Study" }).closest("article");
+    expect(studyCard).not.toBeNull();
+
+    act(() => {
+      fireEvent.click(within(studyCard!).getByLabelText("Edit category"));
+    });
+    const editor = screen.getByRole("dialog");
+    expect(within(editor).getAllByLabelText(/^Subcategory \d+$/)).toHaveLength(4);
+
+    act(() => {
+      fireEvent.click(within(editor).getByText("Add subcategory"));
+    });
+    const dialogs = screen.getAllByRole("dialog");
+    const subDialog = dialogs[dialogs.length - 1]!;
+    expect(subDialog).toHaveTextContent("Add subcategory");
+    expect(within(editor).getAllByLabelText(/^Subcategory \d+$/)).toHaveLength(4);
+
+    act(() => {
+      fireEvent.change(within(subDialog).getByLabelText("Subcategory Name"), { target: { value: "Labs" } });
+      fireEvent.click(within(subDialog).getByLabelText(TIME_TRACKER_CATEGORY_COLORS[15]!));
+      fireEvent.click(within(subDialog).getByLabelText("meeting"));
+    });
+    act(() => {
+      fireEvent.click(within(subDialog).getByText("Save"));
+    });
+
+    const updatedEditor = screen.getByRole("dialog");
+    expect(within(updatedEditor).getAllByLabelText(/^Subcategory \d+$/)).toHaveLength(5);
+    expect(within(updatedEditor).getByDisplayValue("Labs")).toBeInTheDocument();
+    act(() => {
+      fireEvent.click(within(updatedEditor).getByText("Save"));
+    });
+
+    const study = readTimeTrackerCategories().find((category) => category.id === "cat_study");
+    const labs = study?.subs.find((sub) => sub.name.en === "Labs");
+    expect(labs?.color).toBe(TIME_TRACKER_CATEGORY_COLORS[15]);
+    expect(labs?.icon).toBe("meeting");
+  });
+
   it("backfills missing stored subcategory color and icon without dropping old data", () => {
     localStorage.setItem(TIME_TRACKER_CATEGORIES_KEY, JSON.stringify([
       {
