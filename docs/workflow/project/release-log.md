@@ -6,6 +6,24 @@
 
 ## 2026-06-02
 
+### 跨模块同步编排 v1：sync-registry + D4 / 扇出 skill
+
+- Product line: project-system / sync
+- Branch / commit: `web` / `7d26e51`
+- User-visible change: 完成一个核心模块后,可用一句话「Web 版本功能已完成，执行后续同步 workflow」触发跨模块同步扇出;系统按语义规则判定该同步到哪些模块,并产出每条 lane 的 prompt / 回执,多窗口并行处理。
+- Developer/system delta: 新增机读 `docs/workflow/project/sync-registry.json`(语义触发规则 + 4 类可复用动作 + 单写者文件归属 + 波次);新增 skill `xai-account-sync-scope-check`(ADR-0013 D4 范围 / 9 项完备性检查,receipt-only)与 `xai-sync-fanout-dispatch`(语义派发入口),单源置于 `.teams/skills` 并镜像到 `.claude` / `.codex`;把 `xai-release-log` 暴露给 Claude(补 `.claude/skills` symlink);新增 review 回执 `docs/reviews/clipboard-entitytype-drift/`、`docs/reviews/web-sync-2026-06-01/`(D3=W0 record-only / site=none / admin=forward-compat)。
+- Verification: `node -e` 校验 sync-registry.json 为合法 JSON;两个新 skill 的 `.claude` / `.codex` symlink 解析到 SKILL.md;skill 列表确认已注册;D4 / 派发 skill 已在真实 delta 上 dry-run 跑通。
+- Risk / follow-up: skill 为 receipt / plan-only,不实现同步、不解冻 paused 线、不写 entities.ts / 插件 types.ts;clipboard entityType 漂移(`clipboard.item` vs `clipboard.entry`)已开独立任务跟进。
+
+### 治理基线对齐：ADR-0013 接受 + ADR-0014 同步编排 + ADR-0008 CSP 记账
+
+- Product line: project-system / governance
+- Branch / commit: `web` / `09d49e3`, `135183e`
+- User-visible change: 分支与同步治理基线现在一致——ADR-0010 / ADR-0013 / ADR-0014 均为 Accepted;开发看板分支板的 `adr_status` 显示 Accepted。
+- Developer/system delta: ADR-0013 翻为 Accepted(operator 确认,§S7 #2–#7 保留为 deferred follow-up);新增并接受 ADR-0014(跨模块同步编排:4 类动作 / 语义 registry / 单写者归属 / 冻结线护栏 / Codex 复核固化为标准一步);`branch-policy.json` `adr_status` Proposed→Accepted;`CLAUDE.md` §分支治理标题与 `PRODUCT_MODULE_MAP.md §维护` 同步;ADR-0008 补记 2026-06-01 web 批次的 `connect-src` 新 host(OpenAI / Groq / `*.ingest.sentry.io`),§S6 snippet 校正到与 `_headers` 一致并修正通配声明。
+- Verification: `branch-policy.json` 校验为合法 JSON;ADR-0013 自身状态无残留 Proposed;ADR-0008 三个新 host 命中 + 通配声明已校正。
+- Risk / follow-up: ADR-0008 文档暂领先代码——实现该 CSP 的 `apps/web/public/_headers` + `csp.test.ts`(CSP6)仍在未提交的 web 批次里,提交那批后代码与文档对齐;创建 desktop-next / 触及 dev 仍为 operator 确认步骤。
+
 ### 文档库必读入口和绝对路径复制
 
 - Product line: project-system / dev-dashboard

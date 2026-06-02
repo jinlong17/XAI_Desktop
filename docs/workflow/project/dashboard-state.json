@@ -67,8 +67,8 @@
     {
       "label": "固定 skill",
       "badge": "入口",
-      "value": "5",
-      "note": "feature, roadmap, web-to-desktop, release log"
+      "value": "10",
+      "note": "feature·brief·dossier·roadmap·module-classify·web→desktop D3·account-sync D4·sync-fanout·release-log·dashboard-sync"
     },
     {
       "label": "自动跟踪",
@@ -804,6 +804,10 @@
       ],
       "skills": [
         {
+          "name": "xai-account-sync-scope-check",
+          "when": "实体改动命中 syncScope / entityType 时,按 ADR-0013 D4 与 account-sync-verification-gates 做范围分类 + 9 项完备性检查,产出 receipt-only 回执(不写源码、不解冻 sync 线);device-local 须证明永不进 remote outbox"
+        },
+        {
           "name": "xai-feature-brief",
           "when": "新增或扩展某个 account-sync 实体/能力前,先把想法规范化为结构化 brief,并据 ADR-0013 D4 九项完整性清单(entityType、schemaVersion、本地映射、push/pull 格式、冲突策略、三类测试)做依赖与缺口扫描"
         },
@@ -1116,6 +1120,7 @@
   "module_nav": {
     "source": "docs/PRODUCT_MODULE_MAP.md",
     "authority": "docs/adr/0013-branch-sync-governance.md (D1/D2/D3/D4)",
+    "sync_orchestration": "docs/adr/0014-cross-module-sync-orchestration.md + docs/workflow/project/sync-registry.json (entry: xai-sync-fanout-dispatch; edges: xai-web-to-desktop-sync D3 · xai-account-sync-scope-check D4 · xai-release-log + xai-dev-dashboard-sync close-out · xai-feature-brief frozen-line draft)",
     "fields": [
       "goal",
       "routing",
