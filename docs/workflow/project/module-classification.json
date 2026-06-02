@@ -1,0 +1,118 @@
+{
+  "schema_version": 1,
+  "source": "docs/MODULE_BOUNDARIES.md",
+  "updated": "2026-06-02",
+  "purpose": "Machine-readable registry of XAI's product surfaces, modules, and desktop-plugin sub-modules, plus the routing signals and boundary rules used to classify a new feature into exactly one module. Consumed by the xai-module-classify skill and mirrored into the dev-dashboard. This is the data form of docs/MODULE_BOUNDARIES.md + docs/PRODUCT_MODULE_MAP.md.",
+  "governance": {
+    "authority": [
+      "docs/MODULE_BOUNDARIES.md",
+      "docs/PRODUCT_MODULE_MAP.md",
+      "docs/adr/0010-p1-desktop-resume-plan.md",
+      "docs/adr/0013-branch-sync-governance.md",
+      "docs/adr/0015-desktop-plugin-scope-and-organizer-level.md"
+    ],
+    "hard_rules": [
+      "creating-a-native-window is App-layer Tauri command work (window.rs), NOT plugin work; plugins only consume window commands",
+      "Web-already-covered full modules are not re-built as web-form inside plugins; App reuses business-logic packages via the D3 gate",
+      "plugin entities default syncScope=device-local and NEVER enter the remote outbox; only explicit account-sync entities sync (ADR-0013 D4)",
+      "Web pet/widgets/grid (in-page DOM) are NOT the same as desktop pet/widgets/grid (native overlay) — same name, zero code sharing",
+      "web->app only via the D3 gate (xai-web-to-desktop-sync); never merge web directly into dev"
+    ],
+    "frozen_lines": {
+      "plugin": "P2 PAUSED until G1 SHIPPED — brief/impact-note only, no source landing",
+      "sync": "P2 PAUSED until G1 SHIPPED — receipt only",
+      "site": "PROPOSED — owner-deferred",
+      "admin": "PROPOSED — owner-deferred"
+    }
+  },
+  "modules": [
+    {
+      "key": "web",
+      "name": "Web 版本",
+      "surface": ["apps/web/", "packages/xai-web-*", "packages/plugin-web-*"],
+      "main_branch": "web",
+      "short_branch": "codex/web/<feature>",
+      "status": "P0-active-mainline",
+      "signals": ["Web 页面/组件", "Vite SPA", "浏览器持久化(IndexedDB/localStorage)", "/app/* 路由", "共享 UI", "Cloudflare Pages"],
+      "form": "browser in-page",
+      "data": "IndexedDB <-> account cloud"
+    },
+    {
+      "key": "app",
+      "name": "Mac 桌面版 App",
+      "surface": ["apps/desktop/", "apps/desktop/src-tauri/"],
+      "main_branch": "desktop-next -> dev",
+      "short_branch": "codex/desktop/<feature>",
+      "status": "P1-active-app-lane",
+      "signals": ["Tauri/Rust command", "原生窗口/NSWindow", "点击穿透", "本机文件/fs", "离线", "grid 原生窗口契约", "G1 native foundation", "menubar/全局快捷键"],
+      "form": "native shell + transparent overlay",
+      "data": "SQLite <-> account cloud",
+      "owns_for_plugins": "all native window/file/clipboard Tauri commands (plugins consume, never implement)"
+    },
+    {
+      "key": "plugin",
+      "name": "桌面整理插件 / Widget",
+      "surface": ["apps/desktop/ 插件槽位", "packages/plugin-organizer", "packages/plugin-clipboard", "packages/plugin-widgets", "packages/plugin-pet"],
+      "main_branch": "desktop-plugin-next (defined, not yet created)",
+      "short_branch": "codex/plugin/<feature>",
+      "status": "P2-paused-until-G1",
+      "signals": ["插件 SDK/Widget Host", "桌面整理/Smart Container/Grid 容器", "拖拽归类", "浮动小组件/便签/进度条/桌宠/剪贴板", "单插件功能", "manifest.json 插件注册装载"],
+      "form": "lightweight overlay/grid window on the App plugin platform",
+      "data": "device-local by default (never syncs unless explicitly account-sync)",
+      "sub_modules": [
+        {"id": "organizer", "package": "packages/plugin-organizer", "status": "Stable-shipped", "role": "flagship/reference", "form": "overlay+control+grid", "open_decision": "P-level reconcile (ADR-0015): web=P2 vs dev ADR-0011=P3; recommend 'shipped foundation, not greenfield'"},
+        {"id": "clipboard", "package": "packages/plugin-clipboard", "status": "Planned-stub", "role": "local clipboard history/OCR/privacy", "form": "dedicated window", "native_dep": "needs App clipboard_read_current / clipboard_subscribe_changes / vision_ocr"},
+        {"id": "widgets", "package": "packages/plugin-widgets", "status": "Planned-stub", "role": "desktop widget host (clock/weather/note/time-progress)", "form": "overlay widgets", "native_dep": "low"},
+        {"id": "pet", "package": "packages/plugin-pet", "status": "Planned-stub", "role": "floating desktop pet", "form": "overlay window", "open_decision": "packaging (ADR-0015): independent package vs widgets desktop-pet sub-module; recommend keep independent"},
+        {"id": "meditation", "package": "packages/plugin-meditation", "status": "Planned-no-package", "role": "meditation/focus", "form": "fullscreen overlay", "note": "NO package on disk yet; Web form shipped as xai-web-meditation"}
+      ]
+    },
+    {
+      "key": "sync",
+      "name": "账号云同步层",
+      "surface": ["sync-v1 crypto stack", "server", "packages/core-data", "plugin-account push/pull"],
+      "main_branch": "(paused)",
+      "short_branch": "codex/sync/<feature>",
+      "status": "P2-paused-until-G1",
+      "signals": ["syncScope", "push/pull", "冲突", "跨设备", "账号云", "加密 blob", "entities.ts schemaVersion"],
+      "rule": "only account-sync entities sync; device-local never does (ADR-0013 D4)"
+    },
+    {
+      "key": "site",
+      "name": "官方网页",
+      "surface": ["Cloudflare deploy infra (no dedicated package)"],
+      "main_branch": "(proposed)",
+      "short_branch": "codex/site/<feature>",
+      "status": "PROPOSED-owner-deferred",
+      "signals": ["下载页", "自动更新", "release notes", "营销说明", "对外/账号入口"]
+    },
+    {
+      "key": "admin",
+      "name": "Admin Dashboard / 控制面",
+      "surface": ["docs/prototypes/admin-dashboard/"],
+      "main_branch": "(proposed)",
+      "short_branch": "codex/admin/<feature>",
+      "status": "PROPOSED-owner-deferred",
+      "signals": ["AI 配置", "权限", "用量", "审计日志", "运营后台"]
+    }
+  ],
+  "classification_flow": [
+    {"step": 1, "ask": "命中哪个模块的任务归属信号?", "action": "落该主模块"},
+    {"step": 2, "ask": "浏览器能否实现且是完整功能页面?", "yes": "web", "no": "goto 3"},
+    {"step": 3, "ask": "是造原生底座能力,还是用底座做轻量挂件?", "build_foundation": "app", "use_foundation": "plugin"},
+    {"step": 4, "ask": "要不要跨设备?", "yes": "entities.ts 标 account-sync -> sync 线 (D4)", "no": "device-local"},
+    {"step": 5, "ask": "改动源自 Web 要流向 App?", "yes": "走 D3 闸门 (W0-W4) via xai-web-to-desktop-sync"}
+  ],
+  "drift_checks": [
+    {"id": "phantom_package", "rule": "every module.surface / sub_module.package path that is a packages/* dir MUST exist on disk; flag Planned-no-package rows (e.g. plugin-meditation, plugin-settings) so docs don't read as if the package exists"},
+    {"id": "syncscope_drift", "rule": "every plugin entity MUST declare syncScope in packages/core-data/src/entities.ts; device-local entities must be excluded from the outbox (delegate proof to xai-account-sync-scope-check)"},
+    {"id": "same_name_trap", "rule": "a feature named pet/widgets/grid/dashboard MUST be tagged web-DOM vs desktop-native; they are different modules despite the shared word"},
+    {"id": "frozen_line_landing", "rule": "no source may land on plugin/sync (PAUSED) or site/admin (PROPOSED) without an operator-confirmed unfreeze"},
+    {"id": "unknown_classification", "rule": "if a feature matches no module signal or matches 2+ with equal weight, escalate to operator instead of guessing"}
+  ],
+  "consumers": {
+    "skill": "xai-module-classify (classify a new feature + scan for drift)",
+    "dashboard": "docs/prototypes/dev-dashboard/index.html (产品结构图 / module map panel)",
+    "contract": "docs/workflow/project/dev-dashboard.md"
+  }
+}
