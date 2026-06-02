@@ -1237,15 +1237,28 @@ function TimeSpinRow({
       <strong>{label}</strong>
       {TIME_UNITS.map((unit) => {
         const unitLabel = ttCopy(lang, TIME_UNIT_COPY[unit]);
+        const max = unit === "hour" ? 23 : 59;
         return (
           <label key={unit} className="tt-time-spin">
             <span>{unitLabel}</span>
             <button type="button" aria-label={`${ttCopy(lang, "increase")} ${label} ${unitLabel}`} onClick={() => onStep(boundary, unit, 1)}>+</button>
             <input
               inputMode="numeric"
+              pattern="[0-9]*"
+              role="spinbutton"
               aria-label={`${label} ${unitLabel}`}
-              value={two(timePartValue(value, unit))}
+              aria-valuemax={max}
+              aria-valuemin={0}
+              aria-valuenow={timePartValue(value, unit)}
+              value={timePartValue(value, unit)}
+              onClick={(event) => event.currentTarget.select()}
               onChange={(event) => onSet(boundary, unit, Number(event.target.value))}
+              onFocus={(event) => event.currentTarget.select()}
+              onKeyDown={(event) => {
+                if (event.key !== "ArrowUp" && event.key !== "ArrowDown") return;
+                event.preventDefault();
+                onStep(boundary, unit, event.key === "ArrowUp" ? 1 : -1);
+              }}
             />
             <button type="button" aria-label={`${ttCopy(lang, "decrease")} ${label} ${unitLabel}`} onClick={() => onStep(boundary, unit, -1)}>-</button>
           </label>

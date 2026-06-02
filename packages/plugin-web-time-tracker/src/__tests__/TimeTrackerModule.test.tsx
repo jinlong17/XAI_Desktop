@@ -70,6 +70,8 @@ describe("TimeTrackerModule", () => {
     act(() => {
       fireEvent.click(screen.getByLabelText("Adjust time"));
     });
+    expect(screen.getByRole("spinbutton", { name: "Start time Hour" })).toHaveAttribute("aria-valuemax", "23");
+    expect(screen.getByRole("spinbutton", { name: "End time Second" })).toHaveAttribute("aria-valuemax", "59");
     act(() => {
       fireEvent.click(screen.getByLabelText("Increase Start time Hour"));
       fireEvent.click(screen.getByLabelText("Increase End time Minute"));
