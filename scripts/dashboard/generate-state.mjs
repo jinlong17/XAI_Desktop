@@ -398,10 +398,11 @@ function buildDocHub(skillGroups, agentFamilies) {
       summary: "进入项目和执行 Workflow 前必须先理解的规则、手册和边界。",
       importance: "必读",
       entries: [
+        docEntry("看板机器说明", dashboardMachineDocPath, "机器读取的看板契约、同步规则和 AI 使用边界。", ["dashboard", "machine"], "必读"),
+        docEntry("看板可复用模板", dashboardTemplatePath, "新项目复用个人开发看板时的结构、视觉和管理逻辑模板。", ["dashboard", "template"], "必读"),
         docEntry("AGENTS.md", "AGENTS.md", "Codex 会话规则、handoff 展示和 agent/skill tracking 边界。", ["rules", "codex"], "必读"),
         docEntry("CLAUDE.md", "CLAUDE.md", "跨平台共享工程规则、架构边界和测试要求。", ["rules", "architecture"], "必读"),
         docEntry("项目使用手册", "docs/workflow/project/usage-guide.md", "个人开发看板与 Workflow V2 的日常入口。", ["guide", "workflow"], "必读"),
-        docEntry("个人开发看板", dashboardMachineDocPath, "机器读取的看板契约和同步规则。", ["dashboard", "machine"], "必读"),
         docEntry("项目手册", "docs/workflow/project/handbook.md", "当前主线、人工确认边界和操作节奏。", ["handbook"], "必读"),
         docEntry("PLUGIN_MAP", "docs/PLUGIN_MAP.md", "插件/包状态地图和依赖准入状态。", ["map", "status"], "必读")
       ].filter(Boolean)
@@ -1469,6 +1470,7 @@ const releaseEntries = parseReleaseEntries();
 
 const snapshot = {
   ...source,
+  repo_root: repoRoot,
   generated_at: generatedAt,
   git: {
     branch,
