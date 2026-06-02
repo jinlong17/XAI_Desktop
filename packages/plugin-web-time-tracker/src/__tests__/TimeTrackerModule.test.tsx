@@ -58,6 +58,35 @@ describe("TimeTrackerModule", () => {
     expect(entries[0]?.done).toBe(true);
   });
 
+  it("adjusts a completed record time with inline hour minute second controls", () => {
+    render(<TimeTrackerModule lang="en" />);
+    act(() => {
+      fireEvent.click(screen.getByText("Add record"));
+    });
+    act(() => {
+      fireEvent.click(screen.getByText("Save"));
+    });
+
+    act(() => {
+      fireEvent.click(screen.getByLabelText("Adjust time"));
+    });
+    act(() => {
+      fireEvent.click(screen.getByLabelText("Increase Start time Hour"));
+      fireEvent.click(screen.getByLabelText("Increase End time Minute"));
+      fireEvent.change(screen.getByLabelText("End time Second"), { target: { value: "30" } });
+    });
+    act(() => {
+      fireEvent.click(within(screen.getByRole("dialog", { name: "Adjust time" })).getByText("Save"));
+    });
+
+    const entry = readTimeTrackerEntries()[0];
+    expect(entry).toBeDefined();
+    expect(new Date(entry!.segments[0]!.start).getHours()).toBe(10);
+    expect(new Date(entry!.segments[0]!.end!).getMinutes()).toBe(1);
+    expect(new Date(entry!.segments[0]!.end!).getSeconds()).toBe(30);
+    expect(screen.getByLabelText("Adjust time")).toHaveTextContent("10:00:00 - 10:01:30");
+  });
+
   it("opens the subcategory picker before starting a categorized session", () => {
     render(<TimeTrackerModule lang="en" />);
     const studyCard = screen.getByText("Study").closest("article");

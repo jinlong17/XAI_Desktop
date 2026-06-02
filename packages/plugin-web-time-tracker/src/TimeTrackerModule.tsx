@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import type { CSSProperties, FormEvent, ReactNode } from "react";
 import type { CopyKey } from "./internal/copy.js";
 import { ttCopy } from "./internal/copy.js";
@@ -109,6 +109,8 @@ interface InsightCard {
 }
 
 type InsightRange = "week" | "month" | "year" | "custom" | "all";
+type TimeBoundary = "start" | "end";
+type TimeUnit = "hour" | "minute" | "second";
 
 const INSIGHTS_KEY = "xai_tt_insights_v1";
 const SIDEBAR_INSIGHTS_KEY = "xai_tt_sidebar_insights_hidden_v1";
@@ -176,6 +178,8 @@ const DEFAULT_INSIGHTS: readonly InsightType[] = [
 ];
 
 const DESIGN_ALIGNMENT_INSIGHTS: readonly InsightType[] = ["range-summary", "category-mosaic", "focus-rhythm", "recent-sessions"];
+const TIME_UNITS: readonly TimeUnit[] = ["hour", "minute", "second"];
+const TIME_UNIT_COPY: Record<TimeUnit, CopyKey> = { hour: "hour", minute: "minute", second: "second" };
 
 const ICON_OPTIONS = [
   "study",
@@ -208,6 +212,63 @@ function localizedInput(value: string, original: LocalizedText | undefined, lang
   const next = value.trim();
   if (original !== undefined && textName(original, lang) === next) return original;
   return { en: next, zh: next };
+}
+
+function two(n: number): string {
+  return String(n).padStart(2, "0");
+}
+
+function toSecondMs(ts: number): number {
+  return Math.floor(ts / 1000) * 1000;
+}
+
+function formatClockFull(ts: number): string {
+  const d = new Date(ts);
+  return `${two(d.getHours())}:${two(d.getMinutes())}:${two(d.getSeconds())}`;
+}
+
+function timePartValue(ts: number, unit: TimeUnit): number {
+  const d = new Date(ts);
+  if (unit === "hour") return d.getHours();
+  if (unit === "minute") return d.getMinutes();
+  return d.getSeconds();
+}
+
+function setTimePart(ts: number, unit: TimeUnit, value: number): number {
+  const d = new Date(ts);
+  const max = unit === "hour" ? 23 : 59;
+  const next = Math.min(max, Math.max(0, Math.trunc(Number.isFinite(value) ? value : 0)));
+  if (unit === "hour") d.setHours(next);
+  if (unit === "minute") d.setMinutes(next);
+  if (unit === "second") d.setSeconds(next);
+  d.setMilliseconds(0);
+  return d.getTime();
+}
+
+function stepTimePart(ts: number, unit: TimeUnit, delta: number): number {
+  const d = new Date(ts);
+  if (unit === "hour") d.setHours(d.getHours() + delta);
+  if (unit === "minute") d.setMinutes(d.getMinutes() + delta);
+  if (unit === "second") d.setSeconds(d.getSeconds() + delta);
+  d.setMilliseconds(0);
+  return d.getTime();
+}
+
+function adjustedEntrySegments(entry: TimeTrackerEntry, startMs: number, endMs: number): TimeTrackerEntry["segments"] {
+  const start = toSecondMs(startMs);
+  const end = toSecondMs(endMs);
+  if (entry.segments.length <= 1) return [{ start, end }];
+  const lastIndex = entry.segments.length - 1;
+  const firstEnd = entry.segments[0]?.end;
+  const lastStart = entry.segments[lastIndex]?.start;
+  if (firstEnd === null || firstEnd === undefined || lastStart === undefined || start > firstEnd || end < lastStart) {
+    return [{ start, end }];
+  }
+  return entry.segments.map((segment, index) => {
+    if (index === 0) return { ...segment, start };
+    if (index === lastIndex) return { ...segment, end };
+    return segment;
+  });
 }
 
 function startOfYear(ts: number): number {
@@ -373,6 +434,18 @@ export function TimeTrackerModule({ lang }: TimeTrackerModuleProps) {
   function deleteEntry(entryId: string): void {
     const stamp = Date.now();
     setEntries((prev) => prev.map((entry) => (entry.id === entryId ? deleteTimeTrackerEntry(entry, stamp) : entry)));
+  }
+
+  function adjustEntryTime(entryId: string, startMs: number, endMs: number): void {
+    const stamp = Date.now();
+    setEntries((prev) =>
+      prev.map((entry) =>
+        entry.id === entryId
+          ? { ...entry, segments: adjustedEntrySegments(entry, startMs, endMs), done: true, updatedAt: stamp }
+          : entry,
+      ),
+    );
+    setNowMs(stamp);
   }
 
   function saveEntry(draft: EntryDraft): void {
@@ -567,6 +640,7 @@ export function TimeTrackerModule({ lang }: TimeTrackerModuleProps) {
                       lang={lang}
                       nowMs={nowMs}
                       onEdit={() => setEntryEditor({ mode: "edit", entry })}
+                      onAdjustTime={adjustEntryTime}
                       onDelete={() =>
                         setConfirm({
                           title: ttCopy(lang, "deleteEntryConfirm"),
@@ -1047,6 +1121,7 @@ function RecordRow({
   lang,
   nowMs,
   onEdit,
+  onAdjustTime,
   onDelete,
 }: {
   readonly entry: TimeTrackerEntry;
@@ -1054,16 +1129,83 @@ function RecordRow({
   readonly lang: Lang;
   readonly nowMs: number;
   readonly onEdit: () => void;
+  readonly onAdjustTime: (entryId: string, startMs: number, endMs: number) => void;
   readonly onDelete: () => void;
 }) {
   const sub = category?.subs.find((item) => item.id === entry.subId);
   const paused = entry.segments.length > 1;
+  const entryStartMs = toSecondMs(entryStart(entry));
+  const entryEndMs = toSecondMs(entryLastEnd(entry, nowMs));
+  const [timeOpen, setTimeOpen] = useState(false);
+  const [timePlacement, setTimePlacement] = useState<"top" | "bottom">("bottom");
+  const [timeDraft, setTimeDraft] = useState(() => ({ start: entryStartMs, end: entryEndMs }));
+  const timeWrapRef = useRef<HTMLSpanElement | null>(null);
+  const timeValid = timeDraft.end > timeDraft.start;
+
+  useEffect(() => {
+    if (timeOpen) return;
+    setTimeDraft({ start: entryStartMs, end: entryEndMs });
+  }, [entryEndMs, entryStartMs, timeOpen]);
+
+  function openTimeEditor(): void {
+    setTimeDraft({ start: entryStartMs, end: entryEndMs });
+    const rect = timeWrapRef.current?.getBoundingClientRect();
+    if (rect !== undefined) {
+      setTimePlacement(window.innerHeight - rect.bottom < 310 ? "top" : "bottom");
+    }
+    setTimeOpen((value) => !value);
+  }
+
+  function updateTime(boundary: TimeBoundary, unit: TimeUnit, value: number): void {
+    setTimeDraft((prev) => ({ ...prev, [boundary]: setTimePart(prev[boundary], unit, value) }));
+  }
+
+  function stepTime(boundary: TimeBoundary, unit: TimeUnit, delta: number): void {
+    setTimeDraft((prev) => ({ ...prev, [boundary]: stepTimePart(prev[boundary], unit, delta) }));
+  }
+
+  function saveTime(): void {
+    if (!timeValid) return;
+    onAdjustTime(entry.id, timeDraft.start, timeDraft.end);
+    setTimeOpen(false);
+  }
+
   return (
     <li className="tt-record-row">
       <span className="tt-record-color" style={{ background: category?.color ?? "var(--accent)" }} />
       <div>
         <strong>{textName(category?.name, lang)}{sub !== undefined && <span> · {textName(sub.name, lang)}</span>}</strong>
-        <span>{formatClock(entryStart(entry))} - {formatClock(entryLastEnd(entry, nowMs))}{paused && <em>{ttCopy(lang, "paused")}</em>}</span>
+        <span className="tt-record-time-wrap" ref={timeWrapRef}>
+          <button type="button" className="tt-record-time" aria-expanded={timeOpen} aria-label={ttCopy(lang, "adjustTime")} onClick={openTimeEditor}>
+            {formatClockFull(entryStartMs)} - {formatClockFull(entryEndMs)}
+          </button>
+          {paused && <em>{ttCopy(lang, "paused")}</em>}
+          {timeOpen && (
+            <div className={`tt-time-popover is-${timePlacement}`} role="dialog" aria-label={ttCopy(lang, "adjustTime")}>
+              <TimeSpinRow
+                boundary="start"
+                label={ttCopy(lang, "startTime")}
+                lang={lang}
+                value={timeDraft.start}
+                onStep={stepTime}
+                onSet={updateTime}
+              />
+              <TimeSpinRow
+                boundary="end"
+                label={ttCopy(lang, "endTime")}
+                lang={lang}
+                value={timeDraft.end}
+                onStep={stepTime}
+                onSet={updateTime}
+              />
+              <div className={`tt-time-popover-foot${timeValid ? "" : " is-invalid"}`}>
+                <span>{timeValid ? `${ttCopy(lang, "duration")} ${formatTimer(timeDraft.end - timeDraft.start)}` : ttCopy(lang, "timeRangeError")}</span>
+                <button type="button" className="tt-btn tt-btn-subtle" onClick={() => setTimeOpen(false)}>{ttCopy(lang, "cancel")}</button>
+                <button type="button" className="tt-btn tt-btn-primary" disabled={!timeValid} onClick={saveTime}>{ttCopy(lang, "save")}</button>
+              </div>
+            </div>
+          )}
+        </span>
         {entry.note[lang] !== "" && <small>{entry.note[lang]}</small>}
       </div>
       <b>{formatDuration(entryDuration(entry, nowMs))}</b>
@@ -1072,6 +1214,44 @@ function RecordRow({
         <button type="button" aria-label={ttCopy(lang, "delete")} onClick={onDelete}><IconGlyph name="trash" size={14} /></button>
       </div>
     </li>
+  );
+}
+
+function TimeSpinRow({
+  boundary,
+  label,
+  lang,
+  value,
+  onStep,
+  onSet,
+}: {
+  readonly boundary: TimeBoundary;
+  readonly label: string;
+  readonly lang: Lang;
+  readonly value: number;
+  readonly onStep: (boundary: TimeBoundary, unit: TimeUnit, delta: number) => void;
+  readonly onSet: (boundary: TimeBoundary, unit: TimeUnit, value: number) => void;
+}) {
+  return (
+    <div className="tt-time-spin-row">
+      <strong>{label}</strong>
+      {TIME_UNITS.map((unit) => {
+        const unitLabel = ttCopy(lang, TIME_UNIT_COPY[unit]);
+        return (
+          <label key={unit} className="tt-time-spin">
+            <span>{unitLabel}</span>
+            <button type="button" aria-label={`${ttCopy(lang, "increase")} ${label} ${unitLabel}`} onClick={() => onStep(boundary, unit, 1)}>+</button>
+            <input
+              inputMode="numeric"
+              aria-label={`${label} ${unitLabel}`}
+              value={two(timePartValue(value, unit))}
+              onChange={(event) => onSet(boundary, unit, Number(event.target.value))}
+            />
+            <button type="button" aria-label={`${ttCopy(lang, "decrease")} ${label} ${unitLabel}`} onClick={() => onStep(boundary, unit, -1)}>-</button>
+          </label>
+        );
+      })}
+    </div>
   );
 }
 

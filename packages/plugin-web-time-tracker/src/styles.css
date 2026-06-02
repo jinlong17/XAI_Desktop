@@ -74,9 +74,11 @@
 .tt-card-menu,
 .tt-category-start,
 .tt-category-new,
+.tt-record-time,
 .tt-side-link,
 .tt-ins-head button,
 .tt-ins-menu button,
+.tt-time-spin button,
 .tt-subpop button,
 .tt-field-head button,
 .tt-sub-edit-list button,
@@ -628,10 +630,132 @@
   min-width: 0;
 }
 
+.tt-record-time-wrap {
+  position: relative;
+  display: inline-flex;
+  gap: 5px;
+  align-items: center;
+  width: fit-content;
+  max-width: 100%;
+}
+
+.tt-record-time {
+  min-width: 0;
+  padding: 1px 5px;
+  border-radius: 6px;
+  color: var(--text-3);
+  font-family: var(--font-mono);
+  font-size: 12px;
+  line-height: 1.4;
+}
+
+.tt-record-time:hover,
+.tt-record-time[aria-expanded="true"] {
+  color: var(--text-1);
+  background: color-mix(in oklch, var(--accent) 10%, transparent);
+}
+
 .tt-record-row em {
   margin-left: 6px;
   color: var(--text-4);
   font-style: normal;
+}
+
+.tt-time-popover {
+  position: absolute;
+  left: 0;
+  z-index: 40;
+  display: grid;
+  gap: 10px;
+  width: min(360px, calc(100vw - 40px));
+  padding: 10px;
+  border: 1px solid var(--border-1);
+  border-radius: 8px;
+  background: var(--bg-panel);
+  box-shadow: var(--shadow-2, 0 16px 38px rgb(0 0 0 / 14%));
+}
+
+.tt-time-popover.is-bottom {
+  top: calc(100% + 7px);
+}
+
+.tt-time-popover.is-top {
+  bottom: calc(100% + 7px);
+}
+
+.tt-time-spin-row {
+  display: grid;
+  grid-template-columns: 72px repeat(3, minmax(58px, 1fr));
+  gap: 8px;
+  align-items: end;
+}
+
+.tt-time-spin-row > strong {
+  align-self: center;
+  color: var(--text-1);
+  font-size: 12px;
+}
+
+.tt-time-spin {
+  display: grid;
+  grid-template-rows: auto 24px 30px 24px;
+  gap: 3px;
+  min-width: 0;
+}
+
+.tt-time-spin span {
+  color: var(--text-3);
+  font-size: 10px;
+  text-align: center;
+  text-transform: uppercase;
+}
+
+.tt-time-spin input {
+  width: 100%;
+  min-width: 0;
+  height: 30px;
+  padding: 0 4px;
+  border: 1px solid var(--border-1);
+  border-radius: 8px;
+  color: var(--text-1);
+  background: var(--bg-panel-2);
+  font-family: var(--font-mono);
+  font-size: 13px;
+  text-align: center;
+}
+
+.tt-time-spin button {
+  display: grid;
+  height: 24px;
+  place-items: center;
+  border: 1px solid var(--border-1);
+  border-radius: 7px;
+  background: var(--bg-panel-2);
+  color: var(--text-2);
+  line-height: 1;
+}
+
+.tt-time-spin button:hover {
+  color: var(--text-1);
+  border-color: color-mix(in oklch, var(--accent) 34%, var(--border-1));
+}
+
+.tt-time-popover-foot {
+  display: flex;
+  gap: 7px;
+  align-items: center;
+  justify-content: flex-end;
+  padding-top: 2px;
+}
+
+.tt-time-popover-foot span {
+  flex: 1 1 auto;
+  color: var(--text-3);
+  font-size: 12px;
+}
+
+.tt-time-popover-foot.is-invalid span {
+  color: color-mix(in oklch, #ff4d4f 74%, var(--text-1));
 }
 
 .tt-empty {
