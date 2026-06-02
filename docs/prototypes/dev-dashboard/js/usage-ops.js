@@ -29,8 +29,11 @@ function usageOpsSummary(target){
   if(target.state === "running" && target.managed){
     return `${target.label} 正在由看板启动运行，PID ${target.pid || "unknown"}。`;
   }
+  if(target.state === "running" && target.repo_owned){
+    return `${target.label} 已由当前仓库的外部终端运行在 ${target.port} 端口；看板不会接管该进程。`;
+  }
   if(target.state === "running"){
-    return `${target.label} 的 ${target.port} 端口已有进程监听；看板不会接管外部进程。`;
+    return `${target.label} 的 ${target.port} 端口已有其它项目进程监听；看板不会打开该端口。`;
   }
   if(target.state === "starting"){
     return `${target.label} 正在启动，等待 ${target.port} 端口就绪。`;
@@ -80,7 +83,7 @@ function renderUsageOpsTarget(target){
     meta.innerHTML = target ? `
       <div><b>端口</b><span>${h(String(target.port))}</span></div>
       <div><b>PID</b><span>${h(String(target.pid || "none"))}</span></div>
-      <div><b>来源</b><span>${h(target.managed ? "看板启动" : (listeners.length ? "外部进程" : "未运行"))}</span></div>
+      <div><b>来源</b><span>${h(target.managed ? "看板启动" : (target.repo_owned ? "当前仓库外部终端" : (listeners.length ? "其它项目进程" : "未运行")))}</span></div>
       <div><b>入口</b><span>${h(target.url)}</span></div>
     ` : `
       <div><b>状态</b><span>ops API 不可用</span></div>
@@ -118,11 +121,41 @@ function setUsageOpsBusy(value){
   renderUsageOpsTarget(usageOpsState.target);
 }
 
-async function openUsageOpsTarget(targetId){
-  const target = usageOpsState.target;
-  const url = target?.url || "http://localhost:3000";
+function usageOpsUrlWithRoute(baseUrl, route){
   try{
-    await usageOpsFetch(`/api/ops/open?target=${encodeURIComponent(targetId)}`, { method:"POST" });
+    const url = new URL(baseUrl || "http://localhost:3000");
+    const routePath = String(route || "").trim();
+    if(routePath && routePath.startsWith("/") && !routePath.startsWith("//")){
+      url.pathname = routePath;
+      url.search = "";
+      url.hash = "";
+    }
+    return url.toString();
+  }catch{
+    return "http://localhost:3000";
+  }
+}
+
+async function openUsageOpsTarget(targetId, route = ""){
+  let target = usageOpsState.target;
+  if(!target && location.protocol.startsWith("http")){
+    target = await refreshUsageOpsStatus();
+  }
+  if(target?.state !== "running"){
+    renderUsageOpsLogs([{ at:new Date().toISOString(), line:`[ops] ${target?.label || targetId} 未运行；请先启动 mock 登录或普通 dev。` }]);
+    setPage("usage-ops");
+    return;
+  }
+  if(target.external){
+    renderUsageOpsLogs([{ at:new Date().toISOString(), line:`[ops] ${target.label} 的 ${target.port} 端口被其它项目占用，已阻止自动打开。` }]);
+    setPage("usage-ops");
+    return;
+  }
+  const url = usageOpsUrlWithRoute(target?.url || "http://localhost:3000", route);
+  try{
+    const query = new URLSearchParams({ target: targetId });
+    if(route) query.set("route", route);
+    await usageOpsFetch(`/api/ops/open?${query.toString()}`, { method:"POST" });
   }catch{
     // Browser fallback still opens the URL when macOS open is unavailable.
   }

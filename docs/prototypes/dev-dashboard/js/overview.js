@@ -463,6 +463,22 @@ function openOverviewModule(item){
 
 function openProductTarget(target){
   if(!target) return;
+  if(target.type === "ops" && target.target){
+    if(typeof openUsageOpsTarget === "function"){
+      openUsageOpsTarget(target.target, target.route || "");
+      return;
+    }
+    try{
+      const fallback = new URL("http://localhost:3000");
+      if(target.route && String(target.route).startsWith("/") && !String(target.route).startsWith("//")){
+        fallback.pathname = target.route;
+      }
+      window.open(fallback.toString(), "_blank", "noopener");
+    }catch{
+      window.open("http://localhost:3000", "_blank", "noopener");
+    }
+    return;
+  }
   if(target.type === "url" && target.href){
     window.open(target.href, "_blank", "noreferrer");
     return;

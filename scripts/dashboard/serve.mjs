@@ -101,7 +101,7 @@ function portListeners(port) {
     });
     return listeners.map(item => ({
       ...item,
-      command: item.command || readCommand(item.pid)
+      command: readCommand(item.pid) || item.command
     }));
   } catch {
     return [];
@@ -127,6 +127,7 @@ function opsTargetStatus(targetId) {
   const managedPid = managed?.child.pid;
   const listenerPids = new Set(listeners.map(item => item.pid));
   const state = listenerPids.size ? "running" : (managed ? "starting" : "stopped");
+  const repoOwned = listeners.some(item => String(item.command || "").includes(`${repoRoot}/`));
   return {
     id: target.id,
     label: target.label,
@@ -134,6 +135,8 @@ function opsTargetStatus(targetId) {
     url: target.url,
     state,
     managed: Boolean(managed),
+    repo_owned: repoOwned,
+    external: state === "running" && !managed && !repoOwned,
     pid: managedPid || listeners[0]?.pid || null,
     listeners,
     canStop: Boolean(managed),
@@ -210,18 +213,32 @@ function stopOpsTarget(targetId) {
   return { ok: true, target: opsTargetStatus(targetId) };
 }
 
-function openOpsTarget(targetId) {
+function opsTargetUrl(target, route = "") {
+  const url = new URL(target.url);
+  const routePath = String(route || "").trim();
+  if (!routePath) return target.url;
+  if (!routePath.startsWith("/") || routePath.startsWith("//")) {
+    throw Object.assign(new Error("Ops target route must be a local absolute path"), { status: 400 });
+  }
+  url.pathname = routePath;
+  url.search = "";
+  url.hash = "";
+  return url.toString();
+}
+
+function openOpsTarget(targetId, route = "") {
   const target = opsTargets.get(targetId);
   if (!target) {
     throw Object.assign(new Error("Unknown ops target"), { status: 404 });
   }
-  const child = spawn("open", [target.url], {
+  const url = opsTargetUrl(target, route);
+  const child = spawn("open", [url], {
     cwd: repoRoot,
     detached: true,
     stdio: "ignore"
   });
   child.unref();
-  return { ok: true, url: target.url, target: opsTargetStatus(targetId) };
+  return { ok: true, url, target: opsTargetStatus(targetId) };
 }
 
 function opsLogsFor(targetId) {
@@ -483,7 +500,7 @@ function handleApi(url, res) {
     return true;
   }
   if (url.pathname === "/api/ops/open") {
-    sendJson(res, 200, openOpsTarget(url.searchParams.get("target") || ""));
+    sendJson(res, 200, openOpsTarget(url.searchParams.get("target") || "", url.searchParams.get("route") || ""));
     return true;
   }
   if (url.pathname === "/api/ops/logs") {

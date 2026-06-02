@@ -56,6 +56,13 @@ structure, Deployment, Release records, Docs library, and Skill / Agent routing:
 Do not add separate hard-coded module maps in dashboard JavaScript. New surfaces
 must read the enriched `product_lines` objects from `state.generated.js`.
 
+For local product-app entry buttons, prefer `target.type: "ops"` with the
+matching local ops target and route, for example Web `target: "web"` plus
+`route: "/app/dashboard"`. Do not hard-code common Vite ports such as 5173 in
+module actions; those ports are often occupied by another project. Ops targets
+must distinguish dashboard-managed, current-repo, and other-project listeners,
+and block automatic opening when the port belongs to another project.
+
 ## Authority Model
 
 | Layer | Source | Role |

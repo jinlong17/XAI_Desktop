@@ -152,6 +152,12 @@ Use drawers for module details instead of nested cards:
 The drawer should support direct action buttons such as "open doc", "locate in
 product map", or "open module target".
 
+For local product-app targets, route through a dashboard ops target when the
+dashboard provides one, instead of hard-coding common dev ports. This lets the
+dashboard detect whether a port is already owned by another project before it
+opens the product route. If a common port is occupied by a different project,
+the dashboard should show the ops/status panel instead of opening that URL.
+
 ## Document Browser
 
 The docs page should behave like a lightweight file manager:
