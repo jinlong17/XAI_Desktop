@@ -124,6 +124,7 @@ const DEFAULT_DASH_ORDER: DashWidgetId[] = [
   "stat-tasks",
   "stat-streak",
   "stat-pomos",
+  "timetrack",
   "weather",
   "mini-cal",
   "timezones",

@@ -2270,6 +2270,9 @@ importers:
       '@repo/plugin-web-tokens':
         specifier: workspace:*
         version: link:../plugin-web-tokens
+      '@repo/xai-web-event-bus':
+        specifier: workspace:*
+        version: link:../xai-web-event-bus
       '@repo/xai-web-shell':
         specifier: workspace:*
         version: link:../xai-web-shell
@@ -2280,9 +2283,6 @@ importers:
       '@repo/typescript-config':
         specifier: workspace:*
         version: link:../typescript-config
-      '@repo/xai-web-event-bus':
-        specifier: workspace:*
-        version: link:../xai-web-event-bus
       '@testing-library/jest-dom':
         specifier: ^6.0.0
         version: 6.9.1
