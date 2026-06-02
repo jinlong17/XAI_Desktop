@@ -26,6 +26,7 @@ import { useNavigate } from "react-router";
 import { emitWebEvent } from "@repo/xai-web-event-bus";
 import { useWebShell } from "@repo/xai-web-shell";
 import type { Lang } from "@repo/plugin-web-tokens";
+import { getPref } from "@repo/plugin-web-storage";
 import type { CommandPaletteProps, SearchHit } from "./types.js";
 import { useCommandPaletteContext } from "./CommandPaletteProvider.js";
 import { matchesCmdK } from "./internal/keyboardCombo.js";
@@ -38,6 +39,17 @@ import { PaletteList } from "./PaletteList.js";
 import "./adapters/index.js";
 // Side-effect: import styles
 import "./styles.css";
+
+const TOGGLEABLE_MODULE_IDS = [
+  "tasks",
+  "board",
+  "dashboard",
+  "calendar",
+  "matrix",
+  "pomodoro",
+  "habits",
+  "meditation",
+] as const;
 
 export function CommandPalette({ lang: langProp, navigate: navigateProp }: CommandPaletteProps) {
   const { isOpen, open, close, query, setQuery } = useCommandPaletteContext();
@@ -63,14 +75,13 @@ export function CommandPalette({ lang: langProp, navigate: navigateProp }: Comma
     }
   }, []);
 
-  // Capture module states ONCE at open time (design.md §State machine step 2)
-  const [moduleStates] = useState(() => readModuleStates());
-
   // Build index memoized on query + open state
   const hits: readonly SearchHit[] = useMemo(() => {
     if (!isOpen) return [];
-    return buildIndex(query, moduleStates);
-  }, [isOpen, query, moduleStates]);
+    const moduleStates = readModuleStates();
+    const enabledModules = readEnabledSearchModules();
+    return buildIndex(query, moduleStates).filter((hit) => enabledModules.has(hit.moduleId));
+  }, [isOpen, query]);
 
   // Reset activeIndex when hits change
   useEffect(() => {
@@ -178,4 +189,20 @@ export function CommandPalette({ lang: langProp, navigate: navigateProp }: Comma
       </div>
     </div>
   );
+}
+
+function readEnabledSearchModules(): ReadonlySet<string> {
+  const enabled = new Set<string>([
+    "ai",
+    "countdown",
+    "search",
+    "settings",
+    "statistics",
+  ]);
+  for (const featureId of TOGGLEABLE_MODULE_IDS) {
+    if (getPref(`xai_pref_features_${featureId}` as never) !== false) {
+      enabled.add(featureId);
+    }
+  }
+  return enabled;
 }

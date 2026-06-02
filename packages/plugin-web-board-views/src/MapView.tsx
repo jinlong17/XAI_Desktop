@@ -120,9 +120,16 @@ export function MapView({ lang, lists = [], onSelectCard }: MapViewProps) {
           const latlngs: [number, number][] = [];
           for (const pin of pins) {
             const marker = L.marker([pin.lat, pin.lng]);
-            const popupContent =
-              `<strong>${pin.title}</strong>` +
-              (pin.label ? `<br/><span>${pin.label}</span>` : "");
+            const popupContent = document.createElement("div");
+            const title = document.createElement("strong");
+            title.textContent = pin.title;
+            popupContent.appendChild(title);
+            if (pin.label) {
+              popupContent.appendChild(document.createElement("br"));
+              const label = document.createElement("span");
+              label.textContent = pin.label;
+              popupContent.appendChild(label);
+            }
             marker.bindPopup(popupContent);
             marker.on("click", () => {
               onSelectCard?.(pin.cardId, pin.listId);
