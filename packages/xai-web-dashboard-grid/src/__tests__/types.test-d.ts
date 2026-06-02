@@ -22,11 +22,12 @@ describe("public types", () => {
     expectTypeOf<WidgetRegistration["id"]>().toEqualTypeOf<string>();
   });
 
-  it("AC-TYPES-2: WidgetSpanClass is the union of 8 literals", () => {
+  it("AC-TYPES-2: WidgetSpanClass is the union of 9 literals", () => {
     type Expected =
       | "w-clock"
       | "w-stat"
       | "w-weather"
+      | "w-timetrack"
       | "w-mini-cal"
       | "w-timezones"
       | "w-stickies"

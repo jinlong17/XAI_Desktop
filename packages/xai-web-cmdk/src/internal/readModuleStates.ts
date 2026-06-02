@@ -54,6 +54,7 @@ export function readModuleStates(): Readonly<Record<WebModuleId, unknown>> {
     meditation: getPref("xai_meditation_prefs"),
     countdown: getPref("xai_countdowns"),
     statistics: {},
+    timetrack: {},
     settings: settingsState,
     // These WebModuleIds exist but have no adapter in v1:
     ai: {},

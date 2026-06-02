@@ -1,5 +1,5 @@
 /**
- * registrations — the 10-entry WidgetRegistration[] consumed by row #10's
+ * registrations — the WidgetRegistration[] consumed by row #10's
  * DashboardSlotHost (after the P3 host-wiring edit lands).
  *
  * P1 ships ClockWidget + 3 mini stats. P2 fills in MiniCal/WorldClocks/
@@ -16,6 +16,7 @@ import { StatPomos } from "./widgets/StatPomos.js";
 import { StatStreak } from "./widgets/StatStreak.js";
 import { StatTasks } from "./widgets/StatTasks.js";
 import { StickiesWidget } from "./widgets/StickiesWidget.js";
+import { TimeTrackerWidget } from "./widgets/TimeTrackerWidget.js";
 import { UpcomingWidget } from "./widgets/UpcomingWidget.js";
 import { WeatherWidget } from "./widgets/WeatherWidget.js";
 import { WorldClocks } from "./widgets/WorldClocks.js";
@@ -46,6 +47,12 @@ export const dashboardWidgetRegistrations: WidgetRegistration[] = [
     span: "w-stat",
     ariaLabel: { en: "Pomodoros stat", zh: "番茄数统计" },
     render: (ctx) => <StatPomos lang={ctx.lang} />,
+  },
+  {
+    id: "timetrack",
+    span: "w-timetrack",
+    ariaLabel: { en: "Time Tracker widget", zh: "时间追踪组件" },
+    render: (ctx) => <TimeTrackerWidget lang={ctx.lang} now={ctx.now} goTo={ctx.goTo} />,
   },
   {
     id: "weather",

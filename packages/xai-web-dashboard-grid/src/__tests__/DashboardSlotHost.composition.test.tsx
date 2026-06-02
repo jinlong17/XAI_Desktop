@@ -19,7 +19,7 @@
  *      span: WidgetSpanClass, render: function).
  *   3. All ids are unique (so sanitize-on-mount does not dedupe a stable
  *      registration, which would silently change persisted-order behavior).
- *   4. Every span string is one of the 8 declared WidgetSpanClass literals
+ *   4. Every span string is one of the 9 declared WidgetSpanClass literals
  *      — catches accidental introduction of an undeclared span.
  *   5. DashboardSlotHost forwards the array (not the empty default) — the
  *      shell renders the grid path, NOT the empty-state path.
@@ -44,12 +44,13 @@ import type {
   WidgetSpanClass,
 } from "../types.js";
 
-// The 8 declared span literals from api.md §S3. Keep this list in sync with
+// The 9 declared span literals from api.md §S3. Keep this list in sync with
 // types.ts WidgetSpanClass union — drift here means drift in api.md.
 const DECLARED_SPAN_CLASSES: ReadonlySet<WidgetSpanClass> = new Set<WidgetSpanClass>([
   "w-clock",
   "w-stat",
   "w-weather",
+  "w-timetrack",
   "w-mini-cal",
   "w-timezones",
   "w-stickies",
@@ -83,7 +84,7 @@ describe("DashboardSlotHost composition — row-#10 ↔ row-#11 contract (regres
     expect(uniqueIds.size).toBe(ids.length);
   });
 
-  it("locks invariant 4: every span is one of the 8 declared WidgetSpanClass literals", () => {
+  it("locks invariant 4: every span is one of the 9 declared WidgetSpanClass literals", () => {
     for (const reg of dashboardWidgetRegistrations) {
       expect(DECLARED_SPAN_CLASSES.has(reg.span)).toBe(true);
     }

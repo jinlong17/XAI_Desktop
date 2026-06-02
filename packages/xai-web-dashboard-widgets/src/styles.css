@@ -227,6 +227,79 @@
   margin-left: 2px;
 }
 
+/* ---------- Time Tracker ---------- */
+.tt-widget {
+  display: flex;
+  width: 100%;
+  height: 100%;
+  flex-direction: column;
+  align-items: stretch;
+  justify-content: space-between;
+  gap: 10px;
+  padding: 14px 16px;
+  border: 0;
+  background: transparent;
+  color: inherit;
+  cursor: pointer;
+  text-align: left;
+}
+
+.ttw-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.ttw-total {
+  color: var(--text-1);
+  font-size: 30px;
+  font-weight: 750;
+  line-height: 1;
+}
+
+.ttw-live {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 5px 8px;
+  border-radius: 999px;
+  background: var(--bg-panel-2);
+  color: var(--text-3);
+  font-size: 11px;
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+.ttw-live::before {
+  content: "";
+  width: 6px;
+  height: 6px;
+  border-radius: 999px;
+  background: var(--text-4);
+}
+
+.ttw-live.is-on {
+  color: var(--accent);
+}
+
+.ttw-live.is-on::before {
+  background: var(--accent);
+}
+
+.ttw-meta {
+  overflow: hidden;
+  color: var(--text-2);
+  font-size: 13px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.ttw-open {
+  color: var(--text-3);
+  font-size: 12px;
+}
+
 .donut {
   display: block;
 }
