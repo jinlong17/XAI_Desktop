@@ -637,7 +637,12 @@ export function TimeTrackerModule({ lang }: TimeTrackerModuleProps) {
             <section className="tt-panel">
               <div className="tt-section-head">
                 <h2>{ttCopy(lang, "categories")}</h2>
-                <span>{liveCategories.length}</span>
+                <div className="tt-section-actions">
+                  <span>{liveCategories.length}</span>
+                  <button type="button" className="tt-icon-btn tt-mini-action tt-section-add" aria-label={ttCopy(lang, "newCategory")} onClick={() => setCategoryEditor({ mode: "new" })}>
+                    <IconGlyph name="plus" size={14} />
+                  </button>
+                </div>
               </div>
               <CategoryGrid
                 categories={liveCategories}
@@ -652,7 +657,6 @@ export function TimeTrackerModule({ lang }: TimeTrackerModuleProps) {
                 collapsedCategoryIds={collapsedCategoryIds}
                 onToggleCollapsed={toggleCategoryCollapsed}
                 onReorder={reorderCategories}
-                onNew={() => setCategoryEditor({ mode: "new" })}
                 nowMs={nowMs}
               />
             </section>
@@ -1000,7 +1004,6 @@ function CategoryGrid({
   collapsedCategoryIds,
   onToggleCollapsed,
   onReorder,
-  onNew,
   nowMs,
 }: {
   readonly categories: readonly TimeTrackerCategory[];
@@ -1015,7 +1018,6 @@ function CategoryGrid({
   readonly collapsedCategoryIds: ReadonlySet<string>;
   readonly onToggleCollapsed: (categoryId: string) => void;
   readonly onReorder: (dragId: string, overId: string) => void;
-  readonly onNew: () => void;
   readonly nowMs: number;
 }) {
   const [dragId, setDragId] = useState<string | null>(null);
@@ -1045,10 +1047,6 @@ function CategoryGrid({
           />
         );
       })}
-      <button type="button" className="tt-category-new" onClick={onNew}>
-        <span><IconGlyph name="plus" size={20} /></span>
-        {ttCopy(lang, "newCategory")}
-      </button>
     </div>
   );
 }

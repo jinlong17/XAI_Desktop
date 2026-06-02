@@ -76,7 +76,6 @@
 .tt-card-menu,
 .tt-category-body,
 .tt-category-start,
-.tt-category-new,
 .tt-subcard,
 .tt-record-time,
 .tt-side-link,
@@ -267,6 +266,17 @@
   font-size: 12px;
 }
 
+.tt-section-actions {
+  display: inline-flex;
+  gap: 8px;
+  align-items: center;
+}
+
+.tt-section-add {
+  color: var(--accent);
+  background: color-mix(in oklch, var(--accent) 9%, var(--bg-panel-2));
+}
+
 .tt-head-spacer {
   flex: 1 1 auto;
 }
@@ -410,8 +420,7 @@
   gap: 10px;
 }
 
-.tt-category-card,
-.tt-category-new {
+.tt-category-card {
   --tt-accent: var(--accent);
   position: relative;
   border: 1px solid color-mix(in oklch, var(--tt-accent) 26%, var(--border-1));
@@ -637,25 +646,6 @@
 .tt-subcard .tt-live-dot {
   background: var(--tt-sub-accent);
   box-shadow: 0 0 0 4px color-mix(in oklch, var(--tt-sub-accent) 16%, transparent);
-}
-
-.tt-category-new {
-  display: grid;
-  place-items: center;
-  gap: 7px;
-  min-height: 132px;
-  color: var(--text-2);
-  border-style: dashed;
-  background: var(--bg-panel-2);
-}
-
-.tt-category-new span {
-  display: grid;
-  width: 42px;
-  height: 42px;
-  place-items: center;
-  border-radius: 8px;
-  background: var(--bg-panel);
 }
 
 .tt-pop-scrim {

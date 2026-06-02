@@ -184,10 +184,11 @@ describe("TimeTrackerModule", () => {
   });
 
   it("creates a custom category from the category editor", () => {
-    render(<TimeTrackerModule lang="en" />);
+    const { container } = render(<TimeTrackerModule lang="en" />);
+    expect(container.querySelector(".tt-category-new")).toBeNull();
 
     act(() => {
-      fireEvent.click(screen.getByText("New category"));
+      fireEvent.click(screen.getByLabelText("New category"));
     });
     act(() => {
       fireEvent.change(screen.getByLabelText("Name"), { target: { value: "Admin" } });
