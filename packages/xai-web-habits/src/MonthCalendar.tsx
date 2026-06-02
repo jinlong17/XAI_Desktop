@@ -13,8 +13,10 @@ import React from "react";
 import type { Lang } from "@repo/plugin-web-tokens";
 import { useI18n } from "@repo/plugin-web-tokens";
 import type { Habit, HabitId, DateKey, WeekStart } from "./types.js";
-import { ArrowLIcon, ArrowRIcon } from "./internal/icons.js";
-import { daysInMonth, utcDateKey, pad2 } from "./internal/dateKeys.js";
+import { ArrowLIcon, ArrowRIcon, CheckIcon } from "./internal/icons.js";
+import { utcDateKey } from "./internal/dateKeys.js";
+import { buildMonthGrid } from "./internal/monthGrid.js";
+import { habitColorCss } from "./internal/habitMeta.js";
 
 interface MonthCalendarProps {
   habit: Habit;
@@ -42,6 +44,7 @@ export function MonthCalendar({
   const { t } = useI18n(lang);
   const { year, month0 } = displayedMonth;
   const todayKey = utcDateKey(today);
+  const color = habitColorCss(habit.color);
 
   // Month name label
   const monthNames = [
@@ -50,7 +53,7 @@ export function MonthCalendar({
     t.common.sep, t.common.oct, t.common.nov, t.common.dec,
   ];
   const monthLabel = lang === "zh"
-    ? `${month0 + 1} 月`
+    ? `${year} 年 ${month0 + 1} 月`
     : `${monthNames[month0] ?? ""} ${year}`;
 
   // Weekday header labels (ordered by weekStart)
@@ -65,45 +68,7 @@ export function MonthCalendar({
     headerLabels.push(allWeekdays[(startDow + i) % 7]!);
   }
 
-  // Build the 35-cell grid
-  const firstDay = new Date(Date.UTC(year, month0, 1));
-  const firstDow = firstDay.getUTCDay(); // 0=Sun
-  // How many padding cells before the 1st?
-  const paddingBefore = ((firstDow - startDow) + 7) % 7;
-
-  const numDays = daysInMonth(year, month0);
-  const cells: Array<{ day: number; inMonth: boolean; dateKey: DateKey }> = [];
-
-  // Pre-padding (days from previous month)
-  const prevMonth0 = month0 === 0 ? 11 : month0 - 1;
-  const prevYear = month0 === 0 ? year - 1 : year;
-  const prevMonthDays = daysInMonth(prevYear, prevMonth0);
-  for (let i = 0; i < paddingBefore; i++) {
-    const d = prevMonthDays - paddingBefore + 1 + i;
-    const dk = `${prevYear}-${pad2(prevMonth0 + 1)}-${pad2(d)}`;
-    cells.push({ day: d, inMonth: false, dateKey: dk });
-  }
-
-  // Current month
-  for (let d = 1; d <= numDays; d++) {
-    const dk = `${year}-${pad2(month0 + 1)}-${pad2(d)}`;
-    cells.push({ day: d, inMonth: true, dateKey: dk });
-  }
-
-  // Post-padding — always emit exactly 35 cells total (5 rows × 7 cols).
-  // If paddingBefore + numDays already ≥ 35, truncate to 35 (no overflow rows).
-  const nextMonth0 = month0 === 11 ? 0 : month0 + 1;
-  const nextYear = month0 === 11 ? year + 1 : year;
-  let nextDay = 1;
-  while (cells.length < 35) {
-    const dk = `${nextYear}-${pad2(nextMonth0 + 1)}-${pad2(nextDay)}`;
-    cells.push({ day: nextDay, inMonth: false, dateKey: dk });
-    nextDay++;
-  }
-  // Truncate any overflow (can happen when paddingBefore + numDays > 35)
-  if (cells.length > 35) {
-    cells.splice(35);
-  }
+  const cells = buildMonthGrid(year, month0, weekStart);
 
   return (
     <div className="month-cal">
@@ -126,13 +91,16 @@ export function MonthCalendar({
           <ArrowRIcon size={14} />
         </button>
       </header>
-      <div className="cal-grid">
+      <div className="cal-grid" style={{ "--habit-color": color } as React.CSSProperties}>
         {headerLabels.map((label, i) => (
           <div key={i} className="cal-h">{label}</div>
         ))}
         {cells.map((cell, i) => {
           const isToday = cell.dateKey === todayKey;
           const isChecked = cell.inMonth && checkIns[cell.dateKey] === true;
+          const status = isChecked
+            ? (lang === "zh" ? "已完成" : "Completed")
+            : (lang === "zh" ? "未完成" : "Not completed");
           return (
             <div
               key={i}
@@ -148,11 +116,14 @@ export function MonthCalendar({
               onKeyDown={cell.inMonth ? (e) => {
                 if (e.key === "Enter" || e.key === " ") onToggle(habit.id, cell.dateKey);
               } : undefined}
-              aria-label={cell.inMonth ? cell.dateKey : undefined}
+              aria-label={cell.inMonth ? `${cell.dateKey} ${status}` : undefined}
               aria-pressed={cell.inMonth ? isChecked : undefined}
+              data-tooltip={cell.inMonth ? `${cell.dateKey}\n${status}` : undefined}
             >
               <div className="cal-num">{cell.day}</div>
-              <div className="cal-ring" />
+              <div className="cal-ring">
+                {isChecked && <CheckIcon size={9} />}
+              </div>
             </div>
           );
         })}
