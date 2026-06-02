@@ -27,9 +27,9 @@
 import type { MouseEvent, ReactElement } from "react";
 import { useCallback, useEffect, useRef, useState } from "react";
 import type { Lang } from "@repo/plugin-web-tokens";
-import { useI18n } from "@repo/plugin-web-tokens";
-import type { BucketId, TaskTagId, NewTaskDraft } from "./types.js";
+import type { BucketId, TaskTagId, NewTaskDraft, TaskListMeta, TaskTagMeta, TaskPriority } from "./types.js";
 import { STR_TASK_COMPOSER } from "./internal/strings.js";
+import { DEFAULT_TASK_LISTS, DEFAULT_TASK_TAGS, taskListLabel, taskTagLabel } from "./internal/taskMeta.js";
 
 export interface TaskComposerProps {
   /** Controls visibility: true → showModal(), false → close(). */
@@ -38,20 +38,14 @@ export interface TaskComposerProps {
   lang: Lang;
   /** Bucket pre-selected when the dialog opens. */
   defaultBucket: BucketId;
+  lists?: ReadonlyArray<TaskListMeta>;
+  tags?: ReadonlyArray<TaskTagMeta>;
+  defaultListId?: string;
   /** Called after validation passes with the draft + chosen bucket. */
   onSave: (draft: NewTaskDraft, targetBucket: BucketId) => void;
   /** Called on ESC / backdrop click / Cancel (changes discarded). */
   onClose: () => void;
 }
-
-const TAG_OPTIONS: readonly { value: TaskTagId | "none"; labelKey: string }[] = [
-  { value: "none",     labelKey: "tag_none" },
-  { value: "study",    labelKey: "tag.study" },
-  { value: "work",     labelKey: "tag.work" },
-  { value: "personal", labelKey: "tag.personal" },
-  { value: "todo",     labelKey: "tag.todo" },
-  { value: "other",    labelKey: "tag.other" },
-] as const;
 
 const BUCKET_OPTIONS: readonly { value: BucketId; labelKey: keyof typeof STR_TASK_COMPOSER }[] = [
   { value: "overdue", labelKey: "bucket_overdue" },
@@ -65,15 +59,25 @@ function str(key: keyof typeof STR_TASK_COMPOSER, lang: Lang): string {
 }
 
 export function TaskComposer(props: TaskComposerProps): ReactElement | null {
-  const { open, lang, defaultBucket, onSave, onClose } = props;
+  const {
+    open,
+    lang,
+    defaultBucket,
+    lists = DEFAULT_TASK_LISTS,
+    tags = DEFAULT_TASK_TAGS,
+    defaultListId,
+    onSave,
+    onClose,
+  } = props;
   const dialogRef = useRef<HTMLDialogElement>(null);
   const titleInputRef = useRef<HTMLInputElement>(null);
-  const { s } = useI18n(lang);
 
   // Form state — reset whenever (open, defaultBucket) changes
   const [title, setTitle]       = useState("");
   const [tag, setTag]           = useState<TaskTagId | "none">("none");
   const [bucket, setBucket]     = useState<BucketId>(defaultBucket);
+  const [listId, setListId]     = useState(defaultListId ?? lists[0]?.id ?? "inbox");
+  const [priority, setPriority] = useState<TaskPriority>("normal");
   const [withDate, setWithDate] = useState(false);
   const [titleErr, setTitleErr] = useState(false);
 
@@ -81,9 +85,11 @@ export function TaskComposer(props: TaskComposerProps): ReactElement | null {
     setTitle("");
     setTag("none");
     setBucket(defaultBucket);
+    setListId(defaultListId ?? lists[0]?.id ?? "inbox");
+    setPriority("normal");
     setWithDate(false);
     setTitleErr(false);
-  }, [open, defaultBucket]);
+  }, [open, defaultBucket, defaultListId, lists]);
 
   // Open/close imperatively (HTML semantics)
   useEffect(() => {
@@ -131,6 +137,9 @@ export function TaskComposer(props: TaskComposerProps): ReactElement | null {
       const draft: NewTaskDraft = {
         title: trimmed,
         ...(tag !== "none" ? { tag } : {}),
+        ...(tag !== "none" ? { tags: [tag] } : {}),
+        listId,
+        priority,
         withDate,
       };
       onSave(draft, bucket);
@@ -192,11 +201,12 @@ export function TaskComposer(props: TaskComposerProps): ReactElement | null {
             role="radiogroup"
             aria-label={str("field_tag", lang)}
           >
-            {TAG_OPTIONS.map(({ value, labelKey }) => {
+            {[{ id: "none", name: { en: str("tag_none", lang), zh: str("tag_none", lang) }, color: "" }, ...tags].map((option) => {
+              const value = option.id as TaskTagId | "none";
               const selected = tag === value;
               const label = value === "none"
                 ? str("tag_none", lang)
-                : s(labelKey as `tag.${string}`);
+                : taskTagLabel(option as TaskTagMeta, lang);
               return (
                 <button
                   key={value}
@@ -211,6 +221,41 @@ export function TaskComposer(props: TaskComposerProps): ReactElement | null {
               );
             })}
           </div>
+        </div>
+
+        <div className="task-composer__field">
+          <label htmlFor="task-composer-list" className="task-composer__label">
+            {lang === "zh" ? "清单" : "List"}
+          </label>
+          <select
+            id="task-composer-list"
+            className="task-composer__input"
+            value={listId}
+            onChange={(e) => setListId(e.target.value)}
+          >
+            {lists.map((list) => (
+              <option key={list.id} value={list.id}>
+                {taskListLabel(list, lang)}
+              </option>
+            ))}
+          </select>
+        </div>
+
+        <div className="task-composer__field">
+          <label htmlFor="task-composer-priority" className="task-composer__label">
+            {lang === "zh" ? "优先级" : "Priority"}
+          </label>
+          <select
+            id="task-composer-priority"
+            className="task-composer__input"
+            value={priority}
+            onChange={(e) => setPriority(e.target.value as TaskPriority)}
+          >
+            <option value="low">{lang === "zh" ? "低" : "Low"}</option>
+            <option value="normal">{lang === "zh" ? "普通" : "Normal"}</option>
+            <option value="high">{lang === "zh" ? "高" : "High"}</option>
+            <option value="urgent">{lang === "zh" ? "紧急" : "Urgent"}</option>
+          </select>
         </div>
 
         {/* Bucket picker */}

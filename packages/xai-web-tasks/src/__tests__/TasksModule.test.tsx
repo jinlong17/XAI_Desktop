@@ -359,3 +359,51 @@ describe("TasksModule — T-EMPTY-2 board-level empty state ZH (D-QT)", () => {
   });
 });
 
+describe("TasksModule — collection overview boards", () => {
+  it("renders All lists as list-grouped cards instead of time buckets", () => {
+    render(<TasksModule lang="en" />);
+
+    fireEvent.click(screen.getByText("All lists"));
+
+    expect(document.querySelector(".task-group-board")).toBeTruthy();
+    expect(document.querySelectorAll(".task-col")).toHaveLength(0);
+
+    const titles = Array.from(document.querySelectorAll(".task-group-title")).map((el) => el.textContent?.trim());
+    expect(titles).toContain("Research Papers");
+    expect(titles).toContain("Personal Life");
+    expect(titles).toContain("Career Planning");
+    expect(titles).not.toContain("Overdue");
+  });
+
+  it("renders All tags as tag-grouped cards instead of time buckets", () => {
+    render(<TasksModule lang="en" />);
+
+    fireEvent.click(screen.getByText("All tags"));
+
+    expect(document.querySelector(".task-group-board")).toBeTruthy();
+    expect(document.querySelectorAll(".task-col")).toHaveLength(0);
+
+    const titles = Array.from(document.querySelectorAll(".task-group-title")).map((el) => el.textContent?.trim());
+    expect(titles).toContain("Study");
+    expect(titles).toContain("Work");
+    expect(titles).toContain("Personal");
+    expect(titles).not.toContain("No Date");
+  });
+
+  it("can switch an All lists overview back to time buckets", () => {
+    render(<TasksModule lang="en" />);
+
+    fireEvent.click(screen.getByText("All lists"));
+    const byTimeButton = Array.from(document.querySelectorAll(".task-view-switch button")).find(
+      (button) => button.textContent?.trim() === "By time",
+    ) as HTMLElement;
+    expect(byTimeButton).toBeTruthy();
+    fireEvent.click(byTimeButton);
+
+    expect(document.querySelector(".task-group-board")).toBeNull();
+    expect(document.querySelectorAll(".task-col")).toHaveLength(4);
+    const headers = screen.getAllByRole("heading", { level: 2 }).map((h) => h.textContent?.trim());
+    expect(headers).toContain("Overdue");
+    expect(headers).toContain("Next 7 Days");
+  });
+});

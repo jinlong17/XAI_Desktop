@@ -8,7 +8,7 @@
  */
 
 import React, { useState } from "react";
-import type { TaskCard as TaskCardType } from "./types.js";
+import type { TaskCard as TaskCardType, TaskListMeta, TaskTagMeta } from "./types.js";
 import type { Lang } from "@repo/plugin-web-tokens";
 import { useI18n } from "@repo/plugin-web-tokens";
 import { TaskCard } from "./TaskCard.js";
@@ -16,9 +16,11 @@ import { TaskCard } from "./TaskCard.js";
 export interface CompletedGroupProps {
   tasks: ReadonlyArray<TaskCardType>;
   lang: Lang;
+  lists?: ReadonlyArray<TaskListMeta>;
+  tags?: ReadonlyArray<TaskTagMeta>;
 }
 
-export function CompletedGroup({ tasks, lang }: CompletedGroupProps) {
+export function CompletedGroup({ tasks, lang, lists = [], tags = [] }: CompletedGroupProps) {
   const [open, setOpen] = useState(true);
   const { s } = useI18n(lang);
 
@@ -53,7 +55,10 @@ export function CompletedGroup({ tasks, lang }: CompletedGroupProps) {
               colId="nodate"
               completed
               dragging={false}
+              taskList={lists.find((list) => list.id === task.listId)}
+              taskTags={tags.filter((tag) => (task.tags ?? (task.tag ? [task.tag] : [])).includes(tag.id))}
               onToggle={() => {}}
+              onOpen={() => {}}
               onDragStart={(e) => { e.preventDefault(); }}
               onDragEnd={() => {}}
             />

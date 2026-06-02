@@ -20,7 +20,22 @@ export type BucketId = "overdue" | "next7" | "later" | "nodate";
 // TaskTagId — 5 tag colours supported in v1
 // ---------------------------------------------------------------------------
 
-export type TaskTagId = "study" | "work" | "personal" | "todo" | "other";
+export type TaskTagId = "study" | "work" | "personal" | "todo" | "other" | (string & {});
+
+export type TaskPriority = "low" | "normal" | "high" | "urgent";
+
+export interface TaskListMeta {
+  readonly id: string;
+  readonly name: TaskTitleBundle;
+  readonly color: string;
+  readonly icon: string;
+}
+
+export interface TaskTagMeta {
+  readonly id: string;
+  readonly name: TaskTitleBundle;
+  readonly color: string;
+}
 
 // ---------------------------------------------------------------------------
 // TaskTitleBundle — bilingual title structure
@@ -44,6 +59,14 @@ export interface TaskCard {
   readonly sub?: TaskTitleBundle;
   /** Optional tag class — drives the pill colour. */
   readonly tag?: TaskTagId;
+  /** Optional multi-tag assignment. `tag` remains the primary/legacy tag. */
+  readonly tags?: ReadonlyArray<string>;
+  /** Custom list assignment used by list filters and list drop targets. */
+  readonly listId?: string;
+  /** Optional priority for sorting/scanning and bulk updates. */
+  readonly priority?: TaskPriority;
+  /** Freeform note edited from the detail panel. */
+  readonly notes?: string;
   /** Optional date display string in EN format ("7/31", "Jun 14", etc.). */
   readonly date?: string;
   /** Optional date display string in ZH format ("6 月 14 日", etc.). */
@@ -95,6 +118,11 @@ export interface TasksModuleProps {
 
 export type SmartListId = "all" | "today" | "tomorrow" | "next7" | "inbox" | "summary";
 
+export type TaskViewSelection =
+  | { readonly kind: "smart"; readonly id: SmartListId }
+  | { readonly kind: "list"; readonly id: "all" | string }
+  | { readonly kind: "tag"; readonly id: "all" | string };
+
 // ---------------------------------------------------------------------------
 // TaskCardPatch — patch shape for updateCard (api.md §14.3 / xai-web-ai-tool-edit-delete)
 // Re-exported from internal so consumers can type-check the AI event payloads.
@@ -115,6 +143,14 @@ export interface NewTaskDraft {
   readonly title: string;
   /** Optional tag preset — omitted means "no tag". */
   readonly tag?: TaskTagId;
+  /** Optional custom-list preset. */
+  readonly listId?: string;
+  /** Optional multi-tag preset. */
+  readonly tags?: ReadonlyArray<string>;
+  /** Optional priority preset. */
+  readonly priority?: TaskPriority;
+  /** Optional detail notes. */
+  readonly notes?: string;
   /** When true (and target ≠ "nodate"), addCard derives date via dateForCol(targetBucket, now). */
   readonly withDate: boolean;
 }

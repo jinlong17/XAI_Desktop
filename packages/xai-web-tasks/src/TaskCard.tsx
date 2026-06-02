@@ -9,9 +9,10 @@
  */
 
 import React from "react";
-import type { TaskCard as TaskCardType, BucketId } from "./types.js";
+import type { TaskCard as TaskCardType, BucketId, TaskListMeta, TaskTagMeta } from "./types.js";
 import type { Lang } from "@repo/plugin-web-tokens";
 import { useI18n } from "@repo/plugin-web-tokens";
+import { taskListLabel, taskTagLabel } from "./internal/taskMeta.js";
 
 export interface TaskCardProps {
   task: TaskCardType;
@@ -19,7 +20,12 @@ export interface TaskCardProps {
   colId: BucketId;
   completed: boolean;
   dragging: boolean;
+  selected?: boolean;
+  taskList?: TaskListMeta;
+  taskTags?: ReadonlyArray<TaskTagMeta>;
   onToggle: () => void;
+  onOpen?: () => void;
+  onSelect?: () => void;
   onDragStart: (e: React.DragEvent<HTMLDivElement>) => void;
   onDragEnd: () => void;
 }
@@ -29,12 +35,17 @@ export function TaskCard({
   lang,
   completed,
   dragging,
+  selected,
+  taskList,
+  taskTags = [],
   onToggle,
+  onOpen,
+  onSelect,
   onDragStart,
   onDragEnd,
 }: TaskCardProps) {
   const { s } = useI18n(lang);
-  const hasMeta = Boolean(task.tag || task.date || task.inbox);
+  const hasMeta = Boolean(taskTags.length || task.tag || task.date || task.inbox || taskList || task.priority);
 
   return (
     <div
@@ -46,10 +57,11 @@ export function TaskCard({
       draggable
       onDragStart={onDragStart}
       onDragEnd={onDragEnd}
-      onClick={onToggle}
+      onClick={onOpen}
       role="button"
       tabIndex={0}
-      onKeyDown={(e) => { if (e.key === "Enter" || e.key === " ") onToggle(); }}
+      aria-pressed={selected ? "true" : undefined}
+      onKeyDown={(e) => { if (e.key === "Enter") onOpen?.(); }}
     >
       <div className="task-card-head">
         {/* grip handle */}
@@ -68,6 +80,17 @@ export function TaskCard({
           aria-checked={completed}
           tabIndex={0}
           onKeyDown={(e) => { if (e.key === "Enter" || e.key === " ") { e.stopPropagation(); onToggle(); } }}
+        />
+        <input
+          className="task-select"
+          type="checkbox"
+          aria-label={lang === "zh" ? "选择任务" : "Select task"}
+          checked={Boolean(selected)}
+          onChange={(e) => {
+            e.stopPropagation();
+            onSelect?.();
+          }}
+          onClick={(e) => e.stopPropagation()}
         />
         {/* title + sub */}
         <div className="task-card-body">
@@ -89,9 +112,29 @@ export function TaskCard({
       </div>
       {hasMeta && (
         <div className="task-meta">
-          {task.tag && (
+          {taskTags.length > 0 ? (
+            taskTags.map((tag) => (
+              <span
+                key={tag.id}
+                className="tag"
+                style={{ background: `${tag.color}1f`, color: tag.color }}
+              >
+                {taskTagLabel(tag, lang)}
+              </span>
+            ))
+          ) : task.tag && (
             <span className={"tag " + task.tag}>
-              {s(`tag.${task.tag}`)}
+              {s(`tag.${task.tag}` as `tag.${string}`)}
+            </span>
+          )}
+          {taskList && (
+            <span className="task-list-pill" style={{ color: taskList.color }}>
+              {taskList.icon} {taskListLabel(taskList, lang)}
+            </span>
+          )}
+          {task.priority && task.priority !== "normal" && (
+            <span className={"task-priority priority-" + task.priority}>
+              {priorityLabel(task.priority, lang)}
             </span>
           )}
           <span className="grow" />
@@ -111,4 +154,14 @@ export function TaskCard({
       )}
     </div>
   );
+}
+
+function priorityLabel(priority: NonNullable<TaskCardType["priority"]>, lang: Lang): string {
+  const labels = {
+    low: { en: "Low", zh: "低" },
+    normal: { en: "Normal", zh: "普通" },
+    high: { en: "High", zh: "高" },
+    urgent: { en: "Urgent", zh: "紧急" },
+  } as const;
+  return labels[priority][lang];
 }
