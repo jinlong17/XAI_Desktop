@@ -13,6 +13,12 @@ export const TIME_TRACKER_CATEGORY_COLORS = [
   "oklch(62% 0.12 330)",
   "oklch(58% 0.10 140)",
   "oklch(60% 0.12 265)",
+  "oklch(64% 0.14 120)",
+  "oklch(63% 0.12 15)",
+  "oklch(63% 0.13 310)",
+  "oklch(66% 0.12 190)",
+  "oklch(61% 0.13 230)",
+  "oklch(66% 0.14 85)",
 ] as const;
 
 export const DEFAULT_TIME_TRACKER_CATEGORIES: readonly TimeTrackerCategory[] = [
@@ -23,10 +29,10 @@ export const DEFAULT_TIME_TRACKER_CATEGORIES: readonly TimeTrackerCategory[] = [
     icon: "study",
     goalMin: 120,
     subs: [
-      { id: "sub_code", name: { en: "Code", zh: "代码" } },
-      { id: "sub_paper", name: { en: "Paper", zh: "论文" } },
-      { id: "sub_read", name: { en: "Reading", zh: "阅读" } },
-      { id: "sub_course", name: { en: "Course", zh: "课程" } },
+      { id: "sub_code", name: { en: "Code", zh: "代码" }, color: TIME_TRACKER_CATEGORY_COLORS[2], icon: "code" },
+      { id: "sub_paper", name: { en: "Paper", zh: "论文" }, color: TIME_TRACKER_CATEGORY_COLORS[14], icon: "paper" },
+      { id: "sub_read", name: { en: "Reading", zh: "阅读" }, color: TIME_TRACKER_CATEGORY_COLORS[10], icon: "reading" },
+      { id: "sub_course", name: { en: "Course", zh: "课程" }, color: TIME_TRACKER_CATEGORY_COLORS[15], icon: "course" },
     ],
     createdAt: STAMP,
     updatedAt: STAMP,
@@ -38,9 +44,9 @@ export const DEFAULT_TIME_TRACKER_CATEGORIES: readonly TimeTrackerCategory[] = [
     icon: "work",
     goalMin: 240,
     subs: [
-      { id: "sub_design", name: { en: "Product Design", zh: "产品设计" } },
-      { id: "sub_dev", name: { en: "Development", zh: "开发" } },
-      { id: "sub_meet", name: { en: "Meeting", zh: "会议" } },
+      { id: "sub_design", name: { en: "Product Design", zh: "产品设计" }, color: TIME_TRACKER_CATEGORY_COLORS[7], icon: "design" },
+      { id: "sub_dev", name: { en: "Development", zh: "开发" }, color: TIME_TRACKER_CATEGORY_COLORS[1], icon: "development" },
+      { id: "sub_meet", name: { en: "Meeting", zh: "会议" }, color: TIME_TRACKER_CATEGORY_COLORS[4], icon: "meeting" },
     ],
     createdAt: STAMP,
     updatedAt: STAMP,
@@ -52,9 +58,9 @@ export const DEFAULT_TIME_TRACKER_CATEGORIES: readonly TimeTrackerCategory[] = [
     icon: "life",
     goalMin: 90,
     subs: [
-      { id: "sub_fit", name: { en: "Fitness", zh: "健身" } },
-      { id: "sub_shop", name: { en: "Shopping", zh: "购物" } },
-      { id: "sub_commute", name: { en: "Commute", zh: "出行" } },
+      { id: "sub_fit", name: { en: "Fitness", zh: "健身" }, color: TIME_TRACKER_CATEGORY_COLORS[0], icon: "fitness" },
+      { id: "sub_shop", name: { en: "Shopping", zh: "购物" }, color: TIME_TRACKER_CATEGORY_COLORS[12], icon: "shopping" },
+      { id: "sub_commute", name: { en: "Commute", zh: "出行" }, color: TIME_TRACKER_CATEGORY_COLORS[13], icon: "commute" },
     ],
     createdAt: STAMP,
     updatedAt: STAMP,

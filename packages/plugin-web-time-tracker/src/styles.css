@@ -72,8 +72,10 @@
 .tt-active-actions button,
 .tt-row-actions button,
 .tt-card-menu,
+.tt-category-body,
 .tt-category-start,
 .tt-category-new,
+.tt-subcard,
 .tt-record-time,
 .tt-side-link,
 .tt-ins-head button,
@@ -82,6 +84,7 @@
 .tt-subpop button,
 .tt-field-head button,
 .tt-sub-edit-list button,
+.tt-sub-edit-swatches button,
 .tt-chip-group button,
 .tt-icon-search button,
 .tt-icon-grid button {
@@ -401,15 +404,14 @@
 
 .tt-category-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
-  gap: 10px;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 12px;
 }
 
 .tt-category-card,
 .tt-category-new {
   --tt-accent: var(--accent);
   position: relative;
-  min-height: 172px;
   border: 1px solid color-mix(in oklch, var(--tt-accent) 26%, var(--border-1));
   border-radius: 8px;
   background: color-mix(in oklch, var(--tt-accent) 8%, var(--bg-panel-2));
@@ -417,8 +419,7 @@
 
 .tt-category-card {
   display: grid;
-  grid-template-rows: 1fr auto;
-  gap: 10px;
+  gap: 12px;
   padding: 12px;
 }
 
@@ -448,14 +449,11 @@
 
 .tt-category-body {
   display: grid;
-  gap: 10px;
+  gap: 9px;
   min-width: 0;
   padding: 0;
-  border: 0;
-  background: transparent;
   color: inherit;
   text-align: left;
-  cursor: pointer;
 }
 
 .tt-category-top {
@@ -478,6 +476,17 @@
   font-size: 12px;
 }
 
+.tt-category-meta {
+  flex: 0 0 auto;
+  margin-left: auto;
+  padding: 4px 8px;
+  border: 1px solid color-mix(in oklch, var(--tt-accent) 20%, var(--border-1));
+  border-radius: 999px;
+  color: var(--text-2);
+  background: color-mix(in oklch, var(--tt-accent) 8%, var(--bg-panel));
+  font-size: 12px;
+}
+
 .tt-run-tag {
   display: inline-flex;
   align-items: center;
@@ -487,25 +496,13 @@
   font-size: 12px;
 }
 
-.tt-subchips {
-  display: flex;
-  gap: 5px;
-  flex-wrap: wrap;
-  min-height: 24px;
+.tt-category-top .tt-run-tag {
+  margin-left: 0;
 }
 
-.tt-subchips span,
-.tt-chip-group button,
-.tt-subpop button {
-  border: 1px solid var(--border-1);
-  border-radius: 999px;
-  background: var(--bg-panel);
-  color: var(--text-2);
-  font-size: 12px;
-}
-
-.tt-subchips span {
-  padding: 3px 7px;
+.tt-active-row .tt-live-dot {
+  background: var(--tt-accent);
+  box-shadow: 0 0 0 4px color-mix(in oklch, var(--tt-accent) 16%, transparent);
 }
 
 .tt-progress {
@@ -522,30 +519,156 @@
   background: var(--tt-accent);
 }
 
-.tt-category-start {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  gap: 5px;
-  min-height: 32px;
-  border-radius: 8px;
-  background: var(--tt-accent);
-  color: var(--accent-ink, white);
+.tt-chip-group button {
+  border: 1px solid var(--border-1);
+  border-radius: 999px;
+  background: var(--bg-panel);
+  color: var(--text-2);
+  font-size: 12px;
 }
 
-.tt-category-past {
+.tt-subcard-grid {
   display: grid;
-  min-height: 32px;
+  grid-template-columns: repeat(auto-fit, minmax(152px, 1fr));
+  gap: 8px;
+}
+
+.tt-subcard {
+  --tt-sub-accent: var(--tt-accent);
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  grid-template-rows: auto auto auto;
+  gap: 8px 10px;
+  align-items: center;
+  min-height: 126px;
+  padding: 12px;
+  border: 1px solid color-mix(in oklch, var(--tt-sub-accent) 28%, var(--border-1));
+  border-radius: 8px;
+  background:
+    linear-gradient(135deg, color-mix(in oklch, var(--tt-sub-accent) 14%, transparent), transparent 64%),
+    var(--bg-panel);
+  text-align: left;
+}
+
+.tt-subcard:hover {
+  border-color: color-mix(in oklch, var(--tt-sub-accent) 48%, var(--border-1));
+  box-shadow: 0 8px 22px color-mix(in oklch, var(--tt-sub-accent) 13%, transparent);
+  transform: translateY(-1px);
+}
+
+.tt-subcard:disabled {
+  cursor: not-allowed;
+  opacity: .72;
+  transform: none;
+}
+
+.tt-subcard.is-running {
+  border-color: color-mix(in oklch, var(--tt-sub-accent) 58%, var(--border-1));
+  background:
+    linear-gradient(135deg, color-mix(in oklch, var(--tt-sub-accent) 18%, transparent), transparent 68%),
+    color-mix(in oklch, var(--tt-sub-accent) 8%, var(--bg-panel));
+  box-shadow: inset 0 0 0 1px color-mix(in oklch, var(--tt-sub-accent) 36%, transparent);
+}
+
+.tt-subcard-icon,
+.tt-sub-edit-preview {
+  display: grid;
+  flex: 0 0 auto;
+  width: 36px;
+  height: 36px;
   place-items: center;
+  border-radius: 8px;
+  color: var(--tt-sub-accent);
+  background: color-mix(in oklch, var(--tt-sub-accent) 14%, var(--bg-panel-2));
+}
+
+.tt-subcard-copy {
+  display: grid;
+  min-width: 0;
+  gap: 2px;
+}
+
+.tt-subcard-copy strong {
+  overflow: hidden;
+  color: var(--text-1);
+  font-size: 14px;
+  line-height: 1.2;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.tt-subcard-copy em {
+  overflow: hidden;
   color: var(--text-3);
+  font-size: 11px;
+  font-style: normal;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.tt-subcard .tt-run-tag {
+  grid-column: 3;
+  margin-left: 0;
+}
+
+.tt-subcard .tt-live-dot {
+  background: var(--tt-sub-accent);
+  box-shadow: 0 0 0 4px color-mix(in oklch, var(--tt-sub-accent) 16%, transparent);
+}
+
+.tt-subcard-metric {
+  display: grid;
+  grid-column: 1 / -1;
+  gap: 1px;
+}
+
+.tt-subcard-metric b {
+  color: var(--text-1);
   font-family: var(--font-mono);
-  font-size: 13px;
+  font-size: 18px;
+  font-weight: 700;
+}
+
+.tt-subcard-metric small {
+  color: var(--text-3);
+  font-size: 11px;
+}
+
+.tt-subcard-progress {
+  position: relative;
+  overflow: hidden;
+  grid-column: 1 / -1;
+  height: 5px;
+  border-radius: 999px;
+  background: color-mix(in oklch, var(--tt-sub-accent) 12%, var(--bg-panel-2));
+}
+
+.tt-subcard-progress i {
+  position: absolute;
+  inset: 0 auto 0 0;
+  border-radius: inherit;
+  background: var(--tt-sub-accent);
+}
+
+.tt-subcard-action {
+  display: inline-flex;
+  grid-column: 1 / -1;
+  gap: 5px;
+  align-items: center;
+  justify-content: center;
+  min-height: 28px;
+  border-radius: 8px;
+  color: var(--tt-sub-accent);
+  background: color-mix(in oklch, var(--tt-sub-accent) 10%, var(--bg-panel-2));
+  font-size: 12px;
+  font-weight: 650;
 }
 
 .tt-category-new {
   display: grid;
   place-items: center;
   gap: 7px;
+  min-height: 132px;
   color: var(--text-2);
   border-style: dashed;
   background: var(--bg-panel-2);
@@ -567,7 +690,6 @@
   cursor: default;
 }
 
-.tt-subpop,
 .tt-ins-menu {
   position: absolute;
   z-index: 31;
@@ -579,32 +701,6 @@
   border-radius: 8px;
   background: var(--bg-panel);
   box-shadow: var(--shadow-2);
-}
-
-.tt-subpop {
-  right: 12px;
-  bottom: 50px;
-}
-
-.tt-subpop strong {
-  color: var(--text-3);
-  font-size: 12px;
-  font-weight: 600;
-}
-
-.tt-subpop button {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  min-height: 30px;
-  padding: 0 9px;
-  text-align: left;
-}
-
-.tt-subpop button span {
-  width: 8px;
-  height: 8px;
-  border-radius: 999px;
 }
 
 .tt-record-row {
@@ -1135,18 +1231,57 @@
 .tt-sub-edit-list li {
   display: grid;
   grid-template-columns: auto minmax(0, 1fr) auto auto auto;
-  gap: 6px;
+  gap: 8px;
+  align-items: start;
+  padding: 8px;
+  border: 1px solid color-mix(in oklch, var(--tt-sub-accent) 20%, var(--border-1));
+  border-radius: 8px;
+  background: color-mix(in oklch, var(--tt-sub-accent) 6%, var(--bg-panel-2));
+}
+
+.tt-sub-edit-main {
+  display: grid;
+  gap: 7px;
+  min-width: 0;
+}
+
+.tt-sub-edit-list input,
+.tt-sub-edit-list select {
+  min-width: 0;
+}
+
+.tt-sub-edit-tools {
+  display: grid;
+  grid-template-columns: minmax(96px, 132px) minmax(0, 1fr);
+  gap: 8px;
   align-items: center;
 }
 
-.tt-sub-edit-list li > span {
-  width: 8px;
-  height: 8px;
-  border-radius: 999px;
+.tt-sub-edit-tools select {
+  min-height: 30px;
+  padding: 0 8px;
+  border: 1px solid var(--border-1);
+  border-radius: 8px;
+  background: var(--bg-panel);
+  color: var(--text-2);
 }
 
-.tt-sub-edit-list input {
-  min-width: 0;
+.tt-sub-edit-swatches {
+  display: flex;
+  gap: 5px;
+  flex-wrap: wrap;
+}
+
+.tt-sub-edit-swatches button {
+  display: grid;
+  width: 18px;
+  height: 18px;
+  border: 1px solid color-mix(in oklch, white 42%, transparent);
+  border-radius: 6px;
+}
+
+.tt-sub-edit-swatches .is-selected {
+  box-shadow: 0 0 0 2px color-mix(in oklch, var(--accent) 30%, transparent);
 }
 
 .tt-sub-edit-list button {

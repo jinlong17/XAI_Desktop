@@ -12,6 +12,8 @@ export interface LocalizedText {
 export interface TimeTrackerSubcategory {
   readonly id: string;
   readonly name: LocalizedText;
+  readonly color?: string;
+  readonly icon?: string;
 }
 
 export interface TimeTrackerCategory {

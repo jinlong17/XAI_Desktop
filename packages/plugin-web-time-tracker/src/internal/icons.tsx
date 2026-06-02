@@ -6,6 +6,7 @@ export type TimeTrackerIconName =
   | "alarm"
   | "book"
   | "briefcase"
+  | "brain"
   | "calendar"
   | "chart"
   | "chartUp"
@@ -16,23 +17,37 @@ export type TimeTrackerIconName =
   | "clock"
   | "close"
   | "code"
+  | "commute"
   | "coffee"
+  | "course"
+  | "design"
+  | "development"
   | "dots"
   | "download"
   | "dumbbell"
+  | "entertainment"
   | "edit"
+  | "fitness"
+  | "food"
+  | "game"
   | "grid"
   | "grip"
   | "home"
+  | "idea"
   | "leaf"
   | "life"
   | "list"
+  | "meeting"
+  | "music"
   | "pause"
+  | "paper"
   | "pie"
   | "play"
   | "plus"
+  | "reading"
   | "rest"
   | "search"
+  | "shopping"
   | "sliders"
   | "stop"
   | "study"
@@ -41,6 +56,8 @@ export type TimeTrackerIconName =
   | "target"
   | "timer"
   | "trash"
+  | "travel"
+  | "writing"
   | "work";
 
 function base(size: number) {
@@ -271,6 +288,54 @@ export function IconGlyph({ name, size = 16 }: IconProps & { readonly name: stri
       </svg>
     );
   }
+  if (name === "paper" || name === "writing") {
+    return (
+      <svg {...base(size)}>
+        <path d="M6 3h8l4 4v14H6z" />
+        <path d="M14 3v5h5M9 13h6M9 17h4" />
+      </svg>
+    );
+  }
+  if (name === "reading" || name === "book") {
+    return (
+      <svg {...base(size)}>
+        <path d="M4 5.5A3.5 3.5 0 0 1 7.5 4H20v16H7.5A3.5 3.5 0 0 0 4 21.5z" />
+        <path d="M4 5.5v16M8 8h8M8 12h7" />
+      </svg>
+    );
+  }
+  if (name === "course") {
+    return (
+      <svg {...base(size)}>
+        <path d="M4 6h16v12H4z" />
+        <path d="M8 20h8M12 18v2M8 10h8M8 14h5" />
+      </svg>
+    );
+  }
+  if (name === "meeting") {
+    return (
+      <svg {...base(size)}>
+        <path d="M7 11a3 3 0 1 0 0-6 3 3 0 0 0 0 6ZM17 11a3 3 0 1 0 0-6 3 3 0 0 0 0 6Z" />
+        <path d="M3.5 20a4.5 4.5 0 0 1 9 0M12 20a4.5 4.5 0 0 1 8.5 0" />
+      </svg>
+    );
+  }
+  if (name === "design" || name === "art") {
+    return (
+      <svg {...base(size)}>
+        <path d="M12 20h9" />
+        <path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L8 18l-4 1 1-4z" />
+      </svg>
+    );
+  }
+  if (name === "development") {
+    return (
+      <svg {...base(size)}>
+        <rect x="3" y="5" width="18" height="14" rx="2" />
+        <path d="M8 10l-2 2 2 2M16 10l2 2-2 2M13 8l-2 8" />
+      </svg>
+    );
+  }
   if (name === "coffee") {
     return (
       <svg {...base(size)}>
@@ -279,10 +344,58 @@ export function IconGlyph({ name, size = 16 }: IconProps & { readonly name: stri
       </svg>
     );
   }
-  if (name === "dumbbell") {
+  if (name === "dumbbell" || name === "fitness") {
     return (
       <svg {...base(size)}>
         <path d="M6 7v10M18 7v10M3 10v4M21 10v4M6 12h12" />
+      </svg>
+    );
+  }
+  if (name === "shopping") {
+    return (
+      <svg {...base(size)}>
+        <path d="M6 8h16l-2 9H8z" />
+        <path d="M6 8 5 4H2M9 21h.01M18 21h.01" />
+      </svg>
+    );
+  }
+  if (name === "commute" || name === "travel") {
+    return (
+      <svg {...base(size)}>
+        <path d="M6 17h12l1-7a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4z" />
+        <path d="M7 17l-1 3M18 17l1 3M8 12h8M8 20h.01M16 20h.01" />
+      </svg>
+    );
+  }
+  if (name === "entertainment" || name === "game") {
+    return (
+      <svg {...base(size)}>
+        <path d="M7 16h10a4 4 0 0 0 3.8-5.3l-.9-2.6A3 3 0 0 0 17.1 6H6.9a3 3 0 0 0-2.8 2.1l-.9 2.6A4 4 0 0 0 7 16Z" />
+        <path d="M8 11h4M10 9v4M16 10h.01M18 12h.01" />
+      </svg>
+    );
+  }
+  if (name === "music") {
+    return (
+      <svg {...base(size)}>
+        <path d="M9 18V5l11-2v13" />
+        <circle cx="6" cy="18" r="3" />
+        <circle cx="17" cy="16" r="3" />
+      </svg>
+    );
+  }
+  if (name === "food") {
+    return (
+      <svg {...base(size)}>
+        <path d="M6 3v8M10 3v8M6 7h4M8 11v10M17 3v18M14 3v6a3 3 0 0 0 6 0V3" />
+      </svg>
+    );
+  }
+  if (name === "brain" || name === "idea") {
+    return (
+      <svg {...base(size)}>
+        <path d="M9 18h6M10 22h4" />
+        <path d="M8 14a6 6 0 1 1 8 0c-1 1-1.5 1.8-1.5 3h-5c0-1.2-.5-2-1.5-3Z" />
       </svg>
     );
   }

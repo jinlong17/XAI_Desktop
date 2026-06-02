@@ -24,7 +24,13 @@ function isLocalizedText(value: unknown): value is LocalizedText {
 }
 
 function isSubcategory(value: unknown): value is TimeTrackerSubcategory {
-  return isRecord(value) && typeof value["id"] === "string" && isLocalizedText(value["name"]);
+  return (
+    isRecord(value) &&
+    typeof value["id"] === "string" &&
+    isLocalizedText(value["name"]) &&
+    (value["color"] === undefined || typeof value["color"] === "string") &&
+    (value["icon"] === undefined || typeof value["icon"] === "string")
+  );
 }
 
 function isCategory(value: unknown): value is TimeTrackerCategory {
@@ -66,6 +72,21 @@ function isEntry(value: unknown): value is TimeTrackerEntry {
   );
 }
 
+function normalizeCategory(category: TimeTrackerCategory): TimeTrackerCategory {
+  const defaultCategory = DEFAULT_TIME_TRACKER_CATEGORIES.find((item) => item.id === category.id);
+  return {
+    ...category,
+    subs: category.subs.map((sub) => {
+      const defaultSub = defaultCategory?.subs.find((item) => item.id === sub.id);
+      return {
+        ...sub,
+        color: sub.color ?? defaultSub?.color ?? category.color,
+        icon: sub.icon ?? defaultSub?.icon ?? category.icon,
+      };
+    }),
+  };
+}
+
 function safeParse(raw: string | null): unknown {
   if (raw === null) return null;
   try {
@@ -89,7 +110,7 @@ function writeJson<T>(key: string, value: T): void {
 export function readTimeTrackerCategories(): TimeTrackerCategory[] {
   const raw = readJson(TIME_TRACKER_CATEGORIES_KEY);
   if (!Array.isArray(raw)) return [...DEFAULT_TIME_TRACKER_CATEGORIES];
-  const categories = raw.filter(isCategory).filter((category) => category.deleted !== true);
+  const categories = raw.filter(isCategory).filter((category) => category.deleted !== true).map(normalizeCategory);
   return categories.length > 0 ? categories : [...DEFAULT_TIME_TRACKER_CATEGORIES];
 }
 

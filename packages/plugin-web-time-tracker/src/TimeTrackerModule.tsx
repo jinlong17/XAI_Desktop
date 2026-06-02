@@ -77,6 +77,8 @@ type CategoryDraft = {
 type CategorySubDraft = {
   readonly id: string;
   readonly name: string;
+  readonly color: string;
+  readonly icon: string;
   readonly original?: LocalizedText;
 };
 
@@ -191,6 +193,23 @@ const ICON_OPTIONS = [
   "home",
   "leaf",
   "code",
+  "paper",
+  "reading",
+  "course",
+  "meeting",
+  "design",
+  "development",
+  "fitness",
+  "shopping",
+  "commute",
+  "entertainment",
+  "game",
+  "music",
+  "food",
+  "travel",
+  "writing",
+  "brain",
+  "idea",
   "calendar",
   "timer",
   "target",
@@ -345,7 +364,6 @@ export function TimeTrackerModule({ lang }: TimeTrackerModuleProps) {
   const [entryEditor, setEntryEditor] = useState<EntryEditorState | null>(null);
   const [detailCategoryId, setDetailCategoryId] = useState<string | null>(null);
   const [confirm, setConfirm] = useState<ConfirmState | null>(null);
-  const [startPicker, setStartPicker] = useState<string | null>(null);
   const [sidebarInsightsHidden, setSidebarInsightsHidden] = useState(readSidebarInsightsHidden);
 
   const liveCategories = useMemo(() => categories.filter((category) => category.deleted !== true), [categories]);
@@ -378,7 +396,6 @@ export function TimeTrackerModule({ lang }: TimeTrackerModuleProps) {
   const selectedByCategory = useMemo(() => totalByCategory(selectedEntries, nowMs), [nowMs, selectedEntries]);
   const selectedTotal = useMemo(() => selectedEntries.reduce((total, entry) => total + entryDuration(entry, nowMs), 0), [nowMs, selectedEntries]);
   const todayEntries = useMemo(() => liveEntries.filter((entry) => dayKey(entryStart(entry)) === todayKey), [liveEntries, todayKey]);
-  const todayByCategory = useMemo(() => totalByCategory(todayEntries, nowMs), [nowMs, todayEntries]);
   const weekTotal = useMemo(
     () => liveEntries.filter((entry) => entryStart(entry) >= weekStart).reduce((total, entry) => total + entryDuration(entry, nowMs), 0),
     [liveEntries, nowMs, weekStart],
@@ -393,12 +410,13 @@ export function TimeTrackerModule({ lang }: TimeTrackerModuleProps) {
 
   function startCategory(categoryId: string, subId: string | null = null): void {
     if (!isToday) return;
-    setStartPicker(null);
     const stamp = Date.now();
     const nextEntry = createTimeTrackerEntry(categoryId, subId, stamp, null, { en: "", zh: "" });
     if (mode === "single" && activeEntries.length > 0) {
-      const currentName = textName(categoryMap.get(activeEntries[0]?.categoryId ?? "")?.name, lang);
-      const nextName = textName(categoryMap.get(categoryId)?.name, lang);
+      const currentCategory = categoryMap.get(activeEntries[0]?.categoryId ?? "");
+      const currentName = timerTargetName(currentCategory, activeEntries[0]?.subId ?? null, lang);
+      const nextCategory = categoryMap.get(categoryId);
+      const nextName = timerTargetName(nextCategory, subId, lang);
       setConfirm({
         title: ttCopy(lang, "single"),
         body: ttCopy(lang, "singleSwitchBody").replace("%a", currentName).replace("%b", nextName),
@@ -589,11 +607,9 @@ export function TimeTrackerModule({ lang }: TimeTrackerModuleProps) {
               <CategoryGrid
                 categories={liveCategories}
                 lang={lang}
-                todayByCategory={todayByCategory}
+                todayEntries={todayEntries}
                 activeEntries={activeEntries}
                 canStart={isToday}
-                startPicker={startPicker}
-                onSetStartPicker={setStartPicker}
                 onStart={startCategory}
                 onEdit={(category) => setCategoryEditor({ mode: "edit", category })}
                 onDetail={(category) => setDetailCategoryId(category.id)}
@@ -768,6 +784,25 @@ function totalByCategory(entries: readonly TimeTrackerEntry[], nowMs: number): M
   return totals;
 }
 
+function findSubcategory(category: TimeTrackerCategory | undefined, subId: string | null): TimeTrackerSubcategory | undefined {
+  if (category === undefined || subId === null) return undefined;
+  return category.subs.find((item) => item.id === subId);
+}
+
+function subcategoryColor(sub: TimeTrackerSubcategory | undefined, category: TimeTrackerCategory | undefined): string {
+  return sub?.color ?? category?.color ?? "var(--accent)";
+}
+
+function subcategoryIcon(sub: TimeTrackerSubcategory | undefined, category: TimeTrackerCategory | undefined): string {
+  return sub?.icon ?? category?.icon ?? "timer";
+}
+
+function timerTargetName(category: TimeTrackerCategory | undefined, subId: string | null, lang: Lang): string {
+  const sub = findSubcategory(category, subId);
+  if (sub !== undefined) return textName(sub.name, lang);
+  return textName(category?.name, lang);
+}
+
 type InsightBarRow = {
   readonly key: string;
   readonly value: number;
@@ -914,11 +949,9 @@ function buildDayTrend(entries: readonly TimeTrackerEntry[], nowMs: number, lang
 function CategoryGrid({
   categories,
   lang,
-  todayByCategory,
+  todayEntries,
   activeEntries,
   canStart,
-  startPicker,
-  onSetStartPicker,
   onStart,
   onEdit,
   onDetail,
@@ -928,11 +961,9 @@ function CategoryGrid({
 }: {
   readonly categories: readonly TimeTrackerCategory[];
   readonly lang: Lang;
-  readonly todayByCategory: ReadonlyMap<string, number>;
+  readonly todayEntries: readonly TimeTrackerEntry[];
   readonly activeEntries: readonly TimeTrackerEntry[];
   readonly canStart: boolean;
-  readonly startPicker: string | null;
-  readonly onSetStartPicker: (categoryId: string | null) => void;
   readonly onStart: (categoryId: string, subId: string | null) => void;
   readonly onEdit: (category: TimeTrackerCategory) => void;
   readonly onDetail: (category: TimeTrackerCategory) => void;
@@ -943,26 +974,27 @@ function CategoryGrid({
   const [dragId, setDragId] = useState<string | null>(null);
   return (
     <div className="tt-category-grid">
-      {categories.map((category) => (
-        <CategoryCard
-          key={category.id}
-          category={category}
-          lang={lang}
-          todayMs={todayByCategory.get(category.id) ?? 0}
-          activeCount={activeEntries.filter((entry) => entry.categoryId === category.id).length}
-          canStart={canStart}
-          pickerOpen={startPicker === category.id}
-          onOpenPicker={() => onSetStartPicker(startPicker === category.id ? null : category.id)}
-          onClosePicker={() => onSetStartPicker(null)}
-          onStart={onStart}
-          onEdit={() => onEdit(category)}
-          onDetail={() => onDetail(category)}
-          dragId={dragId}
-          onSetDragId={setDragId}
-          onReorder={onReorder}
-          nowMs={nowMs}
-        />
-      ))}
+      {categories.map((category) => {
+        const categoryTodayEntries = todayEntries.filter((entry) => entry.categoryId === category.id);
+        const categoryActiveEntries = activeEntries.filter((entry) => entry.categoryId === category.id);
+        return (
+          <CategoryCard
+            key={category.id}
+            category={category}
+            lang={lang}
+            todayEntries={categoryTodayEntries}
+            activeEntries={categoryActiveEntries}
+            canStart={canStart}
+            onStart={onStart}
+            onEdit={() => onEdit(category)}
+            onDetail={() => onDetail(category)}
+            dragId={dragId}
+            onSetDragId={setDragId}
+            onReorder={onReorder}
+            nowMs={nowMs}
+          />
+        );
+      })}
       <button type="button" className="tt-category-new" onClick={onNew}>
         <span><IconGlyph name="plus" size={20} /></span>
         {ttCopy(lang, "newCategory")}
@@ -974,27 +1006,22 @@ function CategoryGrid({
 function CategoryCard({
   category,
   lang,
-  todayMs,
-  activeCount,
+  todayEntries,
+  activeEntries,
   canStart,
-  pickerOpen,
-  onOpenPicker,
-  onClosePicker,
   onStart,
   onEdit,
   onDetail,
   dragId,
   onSetDragId,
   onReorder,
+  nowMs,
 }: {
   readonly category: TimeTrackerCategory;
   readonly lang: Lang;
-  readonly todayMs: number;
-  readonly activeCount: number;
+  readonly todayEntries: readonly TimeTrackerEntry[];
+  readonly activeEntries: readonly TimeTrackerEntry[];
   readonly canStart: boolean;
-  readonly pickerOpen: boolean;
-  readonly onOpenPicker: () => void;
-  readonly onClosePicker: () => void;
   readonly onStart: (categoryId: string, subId: string | null) => void;
   readonly onEdit: () => void;
   readonly onDetail: () => void;
@@ -1003,9 +1030,24 @@ function CategoryCard({
   readonly onReorder: (dragId: string, overId: string) => void;
   readonly nowMs: number;
 }) {
+  const todayMs = todayEntries.reduce((total, entry) => total + entryDuration(entry, nowMs), 0);
+  const activeCount = activeEntries.length;
   const goalPct = category.goalMin > 0 ? Math.min(100, Math.round(todayMs / 60_000 / category.goalMin * 100)) : 0;
   const running = activeCount > 0;
   const style = { "--tt-accent": category.color } as CSSProperties;
+  const tiles = category.subs.length > 0
+    ? category.subs.map((sub) => ({
+      id: sub.id,
+      name: textName(sub.name, lang),
+      color: subcategoryColor(sub, category),
+      icon: subcategoryIcon(sub, category),
+    }))
+    : [{
+      id: null,
+      name: ttCopy(lang, "wholeCategory"),
+      color: category.color,
+      icon: category.icon,
+    }];
   return (
     <article
       className={`tt-category-card${running ? " is-running" : ""}${dragId === category.id ? " is-dragging" : ""}`}
@@ -1031,45 +1073,47 @@ function CategoryCard({
             <h3>{textName(category.name, lang)}</h3>
             <p>{formatDuration(todayMs)} / {category.goalMin}m {ttCopy(lang, "goal")}</p>
           </div>
+          <span className="tt-category-meta">{category.subs.length > 0 ? `${category.subs.length} ${ttCopy(lang, "subcategory")}` : ttCopy(lang, "whole")}</span>
           {running && <span className="tt-run-tag"><span className="tt-live-dot" />{activeCount}</span>}
         </div>
-        {category.subs.length > 0 && (
-          <div className="tt-subchips">
-            {category.subs.slice(0, 4).map((sub) => <span key={sub.id}>{textName(sub.name, lang)}</span>)}
-            {category.subs.length > 4 && <span>+{category.subs.length - 4}</span>}
-          </div>
-        )}
         <div className="tt-progress"><span style={{ width: `${goalPct}%` }} /></div>
       </button>
-      {canStart ? (
-        <button
-          type="button"
-          className="tt-category-start"
-          onClick={(event) => {
-            event.stopPropagation();
-            if (category.subs.length > 0) onOpenPicker();
-            else onStart(category.id, null);
-          }}
-        >
-          <IconGlyph name="play" size={14} />
-          {ttCopy(lang, "start")}
-          {category.subs.length > 0 && <IconGlyph name="chevD" size={12} />}
-        </button>
-      ) : (
-        <div className="tt-category-past">{formatDuration(todayMs)}</div>
-      )}
-      {pickerOpen && (
-        <>
-          <button type="button" className="tt-pop-scrim" aria-label={ttCopy(lang, "cancel")} onClick={(event) => { event.stopPropagation(); onClosePicker(); }} />
-          <div className="tt-subpop" onClick={(event) => event.stopPropagation()}>
-            <strong>{ttCopy(lang, "pickSub")}</strong>
-            <button type="button" onClick={() => onStart(category.id, null)}><span style={{ background: category.color }} />{ttCopy(lang, "whole")}</button>
-            {category.subs.map((sub) => (
-              <button type="button" key={sub.id} onClick={() => onStart(category.id, sub.id)}><span style={{ background: category.color }} />{textName(sub.name, lang)}</button>
-            ))}
-          </div>
-        </>
-      )}
+      <div className="tt-subcard-grid">
+        {tiles.map((tile) => {
+          const tileEntries = todayEntries.filter((entry) => entry.subId === tile.id);
+          const tileMs = tileEntries.reduce((total, entry) => total + entryDuration(entry, nowMs), 0);
+          const tileActive = activeEntries.filter((entry) => entry.subId === tile.id).length;
+          const tileRunning = tileActive > 0;
+          const sharePct = todayMs > 0 ? Math.round(tileMs / todayMs * 100) : 0;
+          const tileGoalPct = category.goalMin > 0 ? Math.min(100, Math.round(tileMs / 60_000 / category.goalMin * 100)) : 0;
+          return (
+            <button
+              key={tile.id ?? "_whole"}
+              type="button"
+              className={`tt-subcard${tileRunning ? " is-running" : ""}`}
+              style={{ "--tt-sub-accent": tile.color } as CSSProperties}
+              disabled={!canStart}
+              aria-label={`${ttCopy(lang, "start")} ${tile.name}`}
+              onClick={() => onStart(category.id, tile.id)}
+            >
+              <span className="tt-subcard-icon"><IconGlyph name={tile.icon} size={18} /></span>
+              <span className="tt-subcard-copy">
+                <strong>{tile.name}</strong>
+                <em>{textName(category.name, lang)}</em>
+              </span>
+              {tileRunning && <span className="tt-run-tag"><span className="tt-live-dot" />{tileActive}</span>}
+              <span className="tt-subcard-metric">
+                <b>{formatDuration(tileMs)}</b>
+                <small>{sharePct}% {ttCopy(lang, "today")}</small>
+              </span>
+              <span className="tt-subcard-progress"><i style={{ width: `${tileGoalPct}%` }} /></span>
+              <span className="tt-subcard-action">
+                {canStart ? <><IconGlyph name="play" size={13} />{ttCopy(lang, "start")}</> : formatDuration(tileMs)}
+              </span>
+            </button>
+          );
+        })}
+      </div>
     </article>
   );
 }
@@ -1094,12 +1138,16 @@ function ActiveSession({
   readonly onEdit: () => void;
 }) {
   const running = isRunningEntry(entry);
-  const sub = category?.subs.find((item) => item.id === entry.subId);
+  const sub = findSubcategory(category, entry.subId);
+  const accent = subcategoryColor(sub, category);
+  const icon = subcategoryIcon(sub, category);
+  const primaryName = sub !== undefined ? textName(sub.name, lang) : textName(category?.name, lang);
+  const parentName = textName(category?.name, lang);
   return (
-    <article className={`tt-active-row${running ? " is-running" : " is-paused"}`} style={{ "--tt-accent": category?.color ?? "var(--accent)" } as CSSProperties}>
-      <span className="tt-active-icon"><IconGlyph name={category?.icon ?? "timer"} size={18} /></span>
+    <article className={`tt-active-row${running ? " is-running" : " is-paused"}`} style={{ "--tt-accent": accent } as CSSProperties}>
+      <span className="tt-active-icon"><IconGlyph name={icon} size={18} /></span>
       <button type="button" className="tt-active-body" onClick={onEdit}>
-        <strong>{textName(category?.name, lang)}{sub !== undefined && <span> · {textName(sub.name, lang)}</span>}</strong>
+        <strong>{primaryName}{sub !== undefined && <span> · {parentName}</span>}</strong>
         <span>{running ? <><span className="tt-live-dot" />{ttCopy(lang, "running")}</> : ttCopy(lang, "paused")} · {formatClock(entryStart(entry))}</span>
       </button>
       <b>{formatTimer(entryDuration(entry, nowMs))}</b>
@@ -1132,7 +1180,10 @@ function RecordRow({
   readonly onAdjustTime: (entryId: string, startMs: number, endMs: number) => void;
   readonly onDelete: () => void;
 }) {
-  const sub = category?.subs.find((item) => item.id === entry.subId);
+  const sub = findSubcategory(category, entry.subId);
+  const accent = subcategoryColor(sub, category);
+  const primaryName = sub !== undefined ? textName(sub.name, lang) : textName(category?.name, lang);
+  const parentName = textName(category?.name, lang);
   const paused = entry.segments.length > 1;
   const entryStartMs = toSecondMs(entryStart(entry));
   const entryEndMs = toSecondMs(entryLastEnd(entry, nowMs));
@@ -1172,9 +1223,9 @@ function RecordRow({
 
   return (
     <li className="tt-record-row">
-      <span className="tt-record-color" style={{ background: category?.color ?? "var(--accent)" }} />
+      <span className="tt-record-color" style={{ background: accent }} />
       <div>
-        <strong>{textName(category?.name, lang)}{sub !== undefined && <span> · {textName(sub.name, lang)}</span>}</strong>
+        <strong>{primaryName}{sub !== undefined && <span> · {parentName}</span>}</strong>
         <span className="tt-record-time-wrap" ref={timeWrapRef}>
           <button type="button" className="tt-record-time" aria-expanded={timeOpen} aria-label={ttCopy(lang, "adjustTime")} onClick={openTimeEditor}>
             {formatClockFull(entryStartMs)} - {formatClockFull(entryEndMs)}
@@ -1474,8 +1525,20 @@ function CategoryDetail({
     bySub.set(entry.subId ?? "_none", (bySub.get(entry.subId ?? "_none") ?? 0) + entryDuration(entry, nowMs));
   }
   const rows = [
-    ...category.subs.map((sub) => ({ id: sub.id, name: textName(sub.name, lang), ms: bySub.get(sub.id) ?? 0 })),
-    ...(bySub.has("_none") ? [{ id: null, name: ttCopy(lang, "whole"), ms: bySub.get("_none") ?? 0 }] : []),
+    ...category.subs.map((sub) => ({
+      id: sub.id,
+      name: textName(sub.name, lang),
+      ms: bySub.get(sub.id) ?? 0,
+      color: subcategoryColor(sub, category),
+      icon: subcategoryIcon(sub, category),
+    })),
+    ...(bySub.has("_none") ? [{
+      id: null,
+      name: ttCopy(lang, "whole"),
+      ms: bySub.get("_none") ?? 0,
+      color: category.color,
+      icon: category.icon,
+    }] : []),
   ].sort((a, b) => b.ms - a.ms);
   const max = Math.max(...rows.map((row) => row.ms), 1);
   return (
@@ -1495,7 +1558,7 @@ function CategoryDetail({
           size={92}
           stroke={9}
           total={total}
-          segments={rows.map((row, index) => ({ value: row.ms, color: index === 0 ? category.color : `color-mix(in oklch, ${category.color} ${80 - index * 12}%, var(--bg-panel-2))` }))}
+          segments={rows.map((row) => ({ value: row.ms, color: row.color }))}
           centerTop={rows.length}
         />
       </div>
@@ -1506,8 +1569,9 @@ function CategoryDetail({
         <ul className="tt-detail-list">
           {rows.map((row) => (
             <li key={row.id ?? "whole"}>
+              <IconGlyph name={row.icon} size={14} />
               <strong>{row.name}</strong>
-              <span><i style={{ width: `${row.ms / max * 100}%`, background: category.color }} /></span>
+              <span><i style={{ width: `${row.ms / max * 100}%`, background: row.color }} /></span>
               <b>{formatDuration(row.ms)}</b>
               {isToday && row.id !== null && <button type="button" onClick={() => onStartSub(row.id)} aria-label={ttCopy(lang, "quickStart")}><IconGlyph name="play" size={12} /></button>}
             </li>
@@ -1538,7 +1602,13 @@ function CategoryEditor({
   const [icon, setIcon] = useState(() => category?.icon ?? ICON_OPTIONS[0]);
   const [goal, setGoal] = useState(() => String(category?.goalMin ?? 0));
   const [subs, setSubs] = useState<CategorySubDraft[]>(() =>
-    category?.subs.map((sub) => ({ id: sub.id, name: textName(sub.name, lang), original: sub.name })) ?? [],
+    category?.subs.map((sub) => ({
+      id: sub.id,
+      name: textName(sub.name, lang),
+      color: sub.color ?? category.color,
+      icon: sub.icon ?? category.icon,
+      original: sub.name,
+    })) ?? [],
   );
 
   function submit(): void {
@@ -1551,7 +1621,12 @@ function CategoryEditor({
       goalMin: Number(goal) || 0,
       subs: subs
         .filter((sub) => sub.name.trim() !== "")
-        .map((sub) => ({ id: sub.id, name: localizedInput(sub.name, sub.original, lang) })),
+        .map((sub) => ({
+          id: sub.id,
+          name: localizedInput(sub.name, sub.original, lang),
+          color: sub.color,
+          icon: sub.icon,
+        })),
     });
   }
 
@@ -1594,16 +1669,44 @@ function CategoryEditor({
       <div className="tt-field">
         <div className="tt-field-head">
           <span>{ttCopy(lang, "subcategory")}</span>
-          <button type="button" onClick={() => setSubs((prev) => [...prev, { id: uid("sub"), name: "", original: undefined }])}><IconGlyph name="plus" size={13} />{ttCopy(lang, "addSub")}</button>
+          <button type="button" onClick={() => setSubs((prev) => [...prev, { id: uid("sub"), name: "", color, icon, original: undefined }])}><IconGlyph name="plus" size={13} />{ttCopy(lang, "addSub")}</button>
         </div>
         {subs.length === 0 ? (
           <div className="tt-empty compact">{ttCopy(lang, "noSubcategories")}</div>
         ) : (
           <ul className="tt-sub-edit-list">
             {subs.map((sub, index) => (
-              <li key={sub.id}>
-                <span style={{ background: color }} />
-                <input value={sub.name} placeholder={ttCopy(lang, "subcategory")} onChange={(event) => setSubs((prev) => prev.map((item) => item.id === sub.id ? { ...item, name: event.target.value } : item))} />
+              <li key={sub.id} style={{ "--tt-sub-accent": sub.color } as CSSProperties}>
+                <span className="tt-sub-edit-preview"><IconGlyph name={sub.icon} size={16} /></span>
+                <div className="tt-sub-edit-main">
+                  <input
+                    aria-label={`${ttCopy(lang, "subcategory")} ${index + 1}`}
+                    value={sub.name}
+                    placeholder={ttCopy(lang, "subcategory")}
+                    onChange={(event) => setSubs((prev) => prev.map((item) => item.id === sub.id ? { ...item, name: event.target.value } : item))}
+                  />
+                  <div className="tt-sub-edit-tools">
+                    <select
+                      aria-label={`${sub.name.trim() === "" ? ttCopy(lang, "subcategory") : sub.name} ${ttCopy(lang, "icon")}`}
+                      value={sub.icon}
+                      onChange={(event) => setSubs((prev) => prev.map((item) => item.id === sub.id ? { ...item, icon: event.target.value } : item))}
+                    >
+                      {ICON_OPTIONS.map((option) => <option key={option} value={option}>{option}</option>)}
+                    </select>
+                    <div className="tt-sub-edit-swatches" aria-label={`${sub.name.trim() === "" ? ttCopy(lang, "subcategory") : sub.name} ${ttCopy(lang, "color")}`}>
+                      {TIME_TRACKER_CATEGORY_COLORS.slice(0, 12).map((item) => (
+                        <button
+                          key={item}
+                          type="button"
+                          aria-label={`${ttCopy(lang, "color")} ${item}`}
+                          className={item === sub.color ? "is-selected" : ""}
+                          style={{ background: item }}
+                          onClick={() => setSubs((prev) => prev.map((draft) => draft.id === sub.id ? { ...draft, color: item } : draft))}
+                        />
+                      ))}
+                    </div>
+                  </div>
+                </div>
                 <button type="button" disabled={index === 0} onClick={() => setSubs((prev) => moveById(prev, sub.id, -1))}><IconGlyph name="chevD" size={13} /></button>
                 <button type="button" disabled={index === subs.length - 1} onClick={() => setSubs((prev) => moveById(prev, sub.id, 1))}><IconGlyph name="chevD" size={13} /></button>
                 <button type="button" onClick={() => setSubs((prev) => prev.filter((item) => item.id !== sub.id))}><IconGlyph name="close" size={13} /></button>
@@ -1728,8 +1831,8 @@ function EntryEditor({
             <div className="tt-chip-group">
               <button type="button" className={subId === null ? "is-selected" : ""} onClick={() => setSubId(null)}>{ttCopy(lang, "whole")}</button>
               {currentCategory.subs.map((sub) => (
-                <button key={sub.id} type="button" className={sub.id === subId ? "is-selected" : ""} style={sub.id === subId ? { borderColor: currentCategory.color } : undefined} onClick={() => setSubId(sub.id)}>
-                  {textName(sub.name, lang)}
+                <button key={sub.id} type="button" className={sub.id === subId ? "is-selected" : ""} style={sub.id === subId ? { borderColor: subcategoryColor(sub, currentCategory), color: subcategoryColor(sub, currentCategory) } : undefined} onClick={() => setSubId(sub.id)}>
+                  <IconGlyph name={subcategoryIcon(sub, currentCategory)} size={13} />{textName(sub.name, lang)}
                 </button>
               ))}
             </div>

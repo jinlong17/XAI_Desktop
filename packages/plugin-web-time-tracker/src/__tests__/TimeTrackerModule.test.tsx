@@ -1,26 +1,29 @@
 import { describe, expect, it, vi } from "vitest";
 import { act, fireEvent, render, screen, within } from "@testing-library/react";
 import { TimeTrackerModule } from "../TimeTrackerModule.js";
-import { readTimeTrackerCategories, readTimeTrackerEntries } from "../internal/storage.js";
+import { TIME_TRACKER_CATEGORIES_KEY, readTimeTrackerCategories, readTimeTrackerEntries } from "../internal/storage.js";
+import { TIME_TRACKER_CATEGORY_COLORS } from "../internal/defaults.js";
 
 describe("TimeTrackerModule", () => {
   it("renders bilingual module title and default categories", () => {
     const { rerender } = render(<TimeTrackerModule lang="en" />);
     expect(screen.getByText("Time Tracker")).toBeInTheDocument();
-    expect(screen.getByText("Study")).toBeInTheDocument();
+    expect(screen.getByRole("heading", { name: "Study" })).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: "Start Code" })).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: "Start Paper" })).toBeInTheDocument();
 
     rerender(<TimeTrackerModule lang="zh" />);
     expect(screen.getByText("时间追踪")).toBeInTheDocument();
-    expect(screen.getByText("学习")).toBeInTheDocument();
+    expect(screen.getByRole("heading", { name: "学习" })).toBeInTheDocument();
   });
 
   it("starts, pauses, resumes, and stops a tracked entry", () => {
     render(<TimeTrackerModule lang="en" />);
 
-    const restCard = screen.getByText("Rest").closest("article");
+    const restCard = screen.getByRole("heading", { name: "Rest" }).closest("article");
     expect(restCard).not.toBeNull();
     act(() => {
-      fireEvent.click(within(restCard!).getByText("Start"));
+      fireEvent.click(within(restCard!).getByRole("button", { name: "Start Whole category" }));
     });
     expect(readTimeTrackerEntries()).toHaveLength(1);
     expect(screen.getByText("Active sessions")).toBeInTheDocument();
@@ -89,24 +92,42 @@ describe("TimeTrackerModule", () => {
     expect(screen.getByLabelText("Adjust time")).toHaveTextContent("10:00:00 - 10:01:30");
   });
 
-  it("opens the subcategory picker before starting a categorized session", () => {
+  it("renders subcategory cards and starts a categorized session directly", () => {
     render(<TimeTrackerModule lang="en" />);
-    const studyCard = screen.getByText("Study").closest("article");
+    const studyCard = screen.getByRole("heading", { name: "Study" }).closest("article");
+    expect(studyCard).not.toBeNull();
+    expect(within(studyCard!).getByRole("button", { name: "Start Code" })).toBeInTheDocument();
+    expect(within(studyCard!).getByRole("button", { name: "Start Paper" })).toBeInTheDocument();
+
+    act(() => {
+      fireEvent.click(within(studyCard!).getByRole("button", { name: "Start Paper" }));
+    });
+    expect(screen.queryByText("Pick subcategory")).not.toBeInTheDocument();
+    expect(readTimeTrackerEntries()[0]?.subId).toBe("sub_paper");
+    const activePanel = screen.getByText("Active sessions").closest("section");
+    expect(activePanel).not.toBeNull();
+    expect(within(activePanel!).getByText("Paper")).toBeInTheDocument();
+    expect(activePanel).toHaveTextContent("Paper · Study");
+  });
+
+  it("keeps parent category totals when tracking a subcategory", () => {
+    render(<TimeTrackerModule lang="en" />);
+    const studyCard = screen.getByRole("heading", { name: "Study" }).closest("article");
     expect(studyCard).not.toBeNull();
 
     act(() => {
-      fireEvent.click(within(studyCard!).getByText("Start"));
+      fireEvent.click(within(studyCard!).getByRole("button", { name: "Start Paper" }));
     });
-    expect(screen.getByText("Pick subcategory")).toBeInTheDocument();
-
     act(() => {
-      const paperChoice = screen
-        .getAllByText("Paper")
-        .find((element) => element.tagName.toLowerCase() === "button");
-      expect(paperChoice).toBeDefined();
-      fireEvent.click(paperChoice!);
+      vi.advanceTimersByTime(60_000);
     });
+    act(() => {
+      fireEvent.click(screen.getByLabelText("End"));
+    });
+
+    expect(readTimeTrackerEntries()[0]?.categoryId).toBe("cat_study");
     expect(readTimeTrackerEntries()[0]?.subId).toBe("sub_paper");
+    expect(within(studyCard!).getByText("1m / 120m goal")).toBeInTheDocument();
   });
 
   it("creates a custom category from the category editor", () => {
@@ -121,6 +142,50 @@ describe("TimeTrackerModule", () => {
     });
 
     expect(readTimeTrackerCategories().some((category) => category.name.en === "Admin")).toBe(true);
+  });
+
+  it("saves subcategory color and icon from the category editor", () => {
+    render(<TimeTrackerModule lang="en" />);
+    const studyCard = screen.getByRole("heading", { name: "Study" }).closest("article");
+    expect(studyCard).not.toBeNull();
+
+    act(() => {
+      fireEvent.click(within(studyCard!).getByLabelText("Edit category"));
+    });
+
+    const codeRow = screen.getByLabelText("Subcategory 1").closest("li");
+    expect(codeRow).not.toBeNull();
+    act(() => {
+      fireEvent.change(within(codeRow!).getByLabelText("Code Icon"), { target: { value: "paper" } });
+      fireEvent.click(within(codeRow!).getByLabelText(`Color ${TIME_TRACKER_CATEGORY_COLORS[5]}`));
+    });
+    act(() => {
+      fireEvent.click(screen.getByText("Save"));
+    });
+
+    const study = readTimeTrackerCategories().find((category) => category.id === "cat_study");
+    expect(study?.subs[0]?.icon).toBe("paper");
+    expect(study?.subs[0]?.color).toBe(TIME_TRACKER_CATEGORY_COLORS[5]);
+  });
+
+  it("backfills missing stored subcategory color and icon without dropping old data", () => {
+    localStorage.setItem(TIME_TRACKER_CATEGORIES_KEY, JSON.stringify([
+      {
+        id: "cat_study",
+        name: { en: "Study", zh: "学习" },
+        color: TIME_TRACKER_CATEGORY_COLORS[2],
+        icon: "study",
+        goalMin: 120,
+        subs: [{ id: "sub_code", name: { en: "Code", zh: "代码" } }],
+        createdAt: 1,
+        updatedAt: 1,
+      },
+    ]));
+
+    const categories = readTimeTrackerCategories();
+    expect(categories[0]?.subs[0]?.name.en).toBe("Code");
+    expect(categories[0]?.subs[0]?.color).toBe(TIME_TRACKER_CATEGORY_COLORS[2]);
+    expect(categories[0]?.subs[0]?.icon).toBe("code");
   });
 
   it("hides and restores tracker sidebar insights", () => {
