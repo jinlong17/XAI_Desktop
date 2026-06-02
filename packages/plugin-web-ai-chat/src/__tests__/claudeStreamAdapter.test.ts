@@ -229,20 +229,25 @@ describe("claudeStreamAdapter streamCompleteChat (CS)", () => {
     expect(chunks.at(-1)?.accumulated).toBe("valid");
   });
 
-  it("CS9: streaming unavailable (Response.body is null) — falls back to completeChat", async () => {
-    // Create a Response where body is null (non-streaming fallback path).
+  it("CS9: streaming disabled — parses non-streaming provider JSON", async () => {
+    localStorage.setItem("xai_ai_streaming", JSON.stringify(false));
+
     vi.spyOn(globalThis, "fetch").mockResolvedValue(
-      new Response(null, { status: 200 }),
+      new Response(
+        JSON.stringify({
+          content: [{ type: "text", text: "non-streamed response" }],
+        }),
+        { status: 200, headers: { "content-type": "application/json" } },
+      ),
     );
 
     const chunks = [];
     for await (const chunk of streamCompleteChat({ text: "hi", lang: "en", model: "haiku" })) {
       chunks.push(chunk);
     }
-    // Should yield one final chunk with done=true (completeChat fallback demo string).
     expect(chunks).toHaveLength(1);
     expect(chunks[0]?.done).toBe(true);
-    expect(chunks[0]?.accumulated.length).toBeGreaterThan(0);
+    expect(chunks[0]?.accumulated).toBe("non-streamed response");
   });
 
   it("CS10: no key configured — throws LlmError({kind:'BadKey', detail:'not-set'})", async () => {
