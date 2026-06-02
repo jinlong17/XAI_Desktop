@@ -63,6 +63,38 @@ describe("TimeTrackerModule", () => {
     expect(entries[0]?.done).toBe(true);
   });
 
+  it("collapses and restores day record details", () => {
+    const { unmount } = render(<TimeTrackerModule lang="en" />);
+    act(() => {
+      fireEvent.click(screen.getByText("Add record"));
+    });
+    act(() => {
+      fireEvent.change(screen.getByLabelText("Note"), { target: { value: "Review notes" } });
+      fireEvent.click(screen.getByText("Save"));
+    });
+    expect(screen.getByText("Review notes")).toBeInTheDocument();
+
+    act(() => {
+      fireEvent.click(screen.getByLabelText("Hide records"));
+    });
+
+    expect(screen.queryByText("Review notes")).not.toBeInTheDocument();
+    expect(screen.getByLabelText("Show records")).toHaveAttribute("aria-expanded", "false");
+    expect(localStorage.getItem("xai_tt_day_records_collapsed_v1")).toBe("1");
+
+    unmount();
+    render(<TimeTrackerModule lang="en" />);
+    expect(screen.queryByText("Review notes")).not.toBeInTheDocument();
+
+    act(() => {
+      fireEvent.click(screen.getByLabelText("Show records"));
+    });
+
+    expect(screen.getByText("Review notes")).toBeInTheDocument();
+    expect(screen.getByLabelText("Hide records")).toHaveAttribute("aria-expanded", "true");
+    expect(localStorage.getItem("xai_tt_day_records_collapsed_v1")).toBe("0");
+  });
+
   it("adjusts a completed record time with inline hour minute second controls", () => {
     render(<TimeTrackerModule lang="en" />);
     act(() => {

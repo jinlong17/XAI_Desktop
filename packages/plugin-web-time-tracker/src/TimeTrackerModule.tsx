@@ -123,6 +123,7 @@ type TimeUnit = "hour" | "minute" | "second";
 const INSIGHTS_KEY = "xai_tt_insights_v1";
 const SIDEBAR_INSIGHTS_KEY = "xai_tt_sidebar_insights_hidden_v1";
 const CATEGORY_COLLAPSED_KEY = "xai_tt_category_collapsed_v1";
+const DAY_RECORDS_COLLAPSED_KEY = "xai_tt_day_records_collapsed_v1";
 
 const INSIGHT_DEFS: ReadonlyArray<{ readonly type: InsightType; readonly span: 3 | 4 | 6 | 8; readonly icon: string }> = [
   { type: "today-total", span: 3, icon: "clock" },
@@ -371,6 +372,11 @@ function readCollapsedCategoryIds(): ReadonlySet<string> {
   }
 }
 
+function readDayRecordsCollapsed(): boolean {
+  if (typeof window === "undefined") return false;
+  return window.localStorage.getItem(DAY_RECORDS_COLLAPSED_KEY) === "1";
+}
+
 export function TimeTrackerModule({ lang }: TimeTrackerModuleProps) {
   const [categories, setCategories] = useTimeTrackerCategories();
   const [entries, setEntries] = useTimeTrackerEntries();
@@ -384,6 +390,7 @@ export function TimeTrackerModule({ lang }: TimeTrackerModuleProps) {
   const [confirm, setConfirm] = useState<ConfirmState | null>(null);
   const [sidebarInsightsHidden, setSidebarInsightsHidden] = useState(readSidebarInsightsHidden);
   const [collapsedCategoryIds, setCollapsedCategoryIds] = useState(readCollapsedCategoryIds);
+  const [dayRecordsCollapsed, setDayRecordsCollapsed] = useState(readDayRecordsCollapsed);
 
   const liveCategories = useMemo(() => categories.filter((category) => category.deleted !== true), [categories]);
   const categoryMap = useCategoryMap(liveCategories);
@@ -404,6 +411,10 @@ export function TimeTrackerModule({ lang }: TimeTrackerModuleProps) {
   useEffect(() => {
     window.localStorage.setItem(CATEGORY_COLLAPSED_KEY, JSON.stringify([...collapsedCategoryIds]));
   }, [collapsedCategoryIds]);
+
+  useEffect(() => {
+    window.localStorage.setItem(DAY_RECORDS_COLLAPSED_KEY, dayRecordsCollapsed ? "1" : "0");
+  }, [dayRecordsCollapsed]);
 
   const todayKey = dayKey(nowMs);
   const isToday = selectedKey === todayKey;
@@ -661,7 +672,7 @@ export function TimeTrackerModule({ lang }: TimeTrackerModuleProps) {
               />
             </section>
 
-            <section className="tt-panel">
+            <section className={`tt-panel tt-day-panel${dayRecordsCollapsed ? " is-collapsed" : ""}`}>
               <div className="tt-section-head tt-day-head">
                 <button type="button" className="tt-icon-btn" aria-label="Previous day" onClick={() => setSelectedKey((key) => addDays(key, -1))}>
                   <IconGlyph name="chevL" size={16} />
@@ -681,35 +692,46 @@ export function TimeTrackerModule({ lang }: TimeTrackerModuleProps) {
                 )}
                 <span className="tt-head-spacer" />
                 <span>{formatDuration(selectedTotal)} · {doneForDay.length}</span>
+                <button
+                  type="button"
+                  className="tt-icon-btn tt-mini-action tt-day-collapse"
+                  aria-expanded={!dayRecordsCollapsed}
+                  aria-label={ttCopy(lang, dayRecordsCollapsed ? "showRecords" : "hideRecords")}
+                  onClick={() => setDayRecordsCollapsed((value) => !value)}
+                >
+                  <IconGlyph name="chevD" size={14} />
+                </button>
               </div>
-              {doneForDay.length === 0 ? (
-                <div className="tt-empty">
-                  <IconGlyph name="clock" size={26} />
-                  <strong>{ttCopy(lang, "noRecords")}</strong>
-                  <span>{ttCopy(lang, "noRecordsHint")}</span>
-                </div>
-              ) : (
-                <ul className="tt-record-list">
-                  {doneForDay.map((entry) => (
-                    <RecordRow
-                      key={entry.id}
-                      entry={entry}
-                      category={categoryMap.get(entry.categoryId)}
-                      lang={lang}
-                      nowMs={nowMs}
-                      onEdit={() => setEntryEditor({ mode: "edit", entry })}
-                      onAdjustTime={adjustEntryTime}
-                      onDelete={() =>
-                        setConfirm({
-                          title: ttCopy(lang, "deleteEntryConfirm"),
-                          confirmLabel: ttCopy(lang, "delete"),
-                          danger: true,
-                          run: () => deleteEntry(entry.id),
-                        })
-                      }
-                    />
-                  ))}
-                </ul>
+              {!dayRecordsCollapsed && (
+                doneForDay.length === 0 ? (
+                  <div className="tt-empty">
+                    <IconGlyph name="clock" size={26} />
+                    <strong>{ttCopy(lang, "noRecords")}</strong>
+                    <span>{ttCopy(lang, "noRecordsHint")}</span>
+                  </div>
+                ) : (
+                  <ul className="tt-record-list">
+                    {doneForDay.map((entry) => (
+                      <RecordRow
+                        key={entry.id}
+                        entry={entry}
+                        category={categoryMap.get(entry.categoryId)}
+                        lang={lang}
+                        nowMs={nowMs}
+                        onEdit={() => setEntryEditor({ mode: "edit", entry })}
+                        onAdjustTime={adjustEntryTime}
+                        onDelete={() =>
+                          setConfirm({
+                            title: ttCopy(lang, "deleteEntryConfirm"),
+                            confirmLabel: ttCopy(lang, "delete"),
+                            danger: true,
+                            run: () => deleteEntry(entry.id),
+                          })
+                        }
+                      />
+                    ))}
+                  </ul>
+                )
               )}
             </section>
           </main>

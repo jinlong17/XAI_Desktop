@@ -277,6 +277,18 @@
   background: color-mix(in oklch, var(--accent) 9%, var(--bg-panel-2));
 }
 
+.tt-day-collapse:hover {
+  color: var(--accent);
+}
+
+.tt-day-collapse svg {
+  transition: transform .14s ease;
+}
+
+.tt-day-collapse[aria-expanded="false"] svg {
+  transform: rotate(-90deg);
+}
+
 .tt-head-spacer {
   flex: 1 1 auto;
 }
@@ -284,6 +296,10 @@
 .tt-day-head {
   justify-content: flex-start;
   flex-wrap: wrap;
+}
+
+.tt-day-panel.is-collapsed {
+  padding-bottom: 10px;
 }
 
 .tt-day-head > div {
