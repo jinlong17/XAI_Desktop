@@ -112,6 +112,35 @@ describe("TimeTrackerModule", () => {
     expect(activePanel).toHaveTextContent("Paper · Study");
   });
 
+  it("collapses and restores subcategory cards per category", () => {
+    const { unmount } = render(<TimeTrackerModule lang="en" />);
+    const studyCard = screen.getByRole("heading", { name: "Study" }).closest("article");
+    expect(studyCard).not.toBeNull();
+    expect(within(studyCard!).getByRole("button", { name: "Start Code" })).toBeInTheDocument();
+
+    act(() => {
+      fireEvent.click(within(studyCard!).getByLabelText("Hide subcategories Study"));
+    });
+
+    expect(within(studyCard!).queryByRole("button", { name: "Start Code" })).not.toBeInTheDocument();
+    expect(within(studyCard!).getByLabelText("Show subcategories Study")).toHaveAttribute("aria-expanded", "false");
+    expect(localStorage.getItem("xai_tt_category_collapsed_v1")).toContain("cat_study");
+
+    unmount();
+    render(<TimeTrackerModule lang="en" />);
+    const restoredStudyCard = screen.getByRole("heading", { name: "Study" }).closest("article");
+    expect(restoredStudyCard).not.toBeNull();
+    expect(within(restoredStudyCard!).queryByRole("button", { name: "Start Code" })).not.toBeInTheDocument();
+
+    act(() => {
+      fireEvent.click(within(restoredStudyCard!).getByLabelText("Show subcategories Study"));
+    });
+
+    expect(within(restoredStudyCard!).getByRole("button", { name: "Start Code" })).toBeInTheDocument();
+    expect(within(restoredStudyCard!).getByLabelText("Hide subcategories Study")).toHaveAttribute("aria-expanded", "true");
+    expect(localStorage.getItem("xai_tt_category_collapsed_v1")).toBe("[]");
+  });
+
   it("starts multiple subcategory sessions in parallel without switch confirmation", () => {
     render(<TimeTrackerModule lang="en" />);
     const studyCard = screen.getByRole("heading", { name: "Study" }).closest("article");

@@ -71,6 +71,7 @@
 .tt-icon-btn,
 .tt-active-actions button,
 .tt-row-actions button,
+.tt-card-collapse,
 .tt-card-add-sub,
 .tt-card-menu,
 .tt-category-body,
@@ -428,6 +429,10 @@
   box-shadow: inset 0 0 0 1px color-mix(in oklch, var(--tt-accent) 44%, transparent);
 }
 
+.tt-category-card.is-collapsed {
+  gap: 6px;
+}
+
 .tt-category-card.is-dragging,
 .tt-ins-card.is-dragging {
   opacity: .62;
@@ -441,6 +446,7 @@
   gap: 4px;
 }
 
+.tt-card-collapse,
 .tt-card-add-sub,
 .tt-card-menu {
   display: grid;
@@ -450,10 +456,19 @@
   border-radius: 7px;
 }
 
+.tt-card-collapse:hover,
 .tt-card-add-sub:hover,
 .tt-card-menu:hover {
   color: var(--tt-accent);
   background: color-mix(in oklch, var(--tt-accent) 12%, var(--bg-panel));
+}
+
+.tt-card-collapse svg {
+  transition: transform .14s ease;
+}
+
+.tt-card-collapse[aria-expanded="false"] svg {
+  transform: rotate(-90deg);
 }
 
 .tt-category-body {
@@ -470,7 +485,7 @@
   gap: 10px;
   align-items: center;
   min-width: 0;
-  padding-right: 58px;
+  padding-right: 88px;
 }
 
 .tt-category-card h3 {

@@ -122,6 +122,7 @@ type TimeUnit = "hour" | "minute" | "second";
 
 const INSIGHTS_KEY = "xai_tt_insights_v1";
 const SIDEBAR_INSIGHTS_KEY = "xai_tt_sidebar_insights_hidden_v1";
+const CATEGORY_COLLAPSED_KEY = "xai_tt_category_collapsed_v1";
 
 const INSIGHT_DEFS: ReadonlyArray<{ readonly type: InsightType; readonly span: 3 | 4 | 6 | 8; readonly icon: string }> = [
   { type: "today-total", span: 3, icon: "clock" },
@@ -359,6 +360,17 @@ function readSidebarInsightsHidden(): boolean {
   return window.localStorage.getItem(SIDEBAR_INSIGHTS_KEY) === "1";
 }
 
+function readCollapsedCategoryIds(): ReadonlySet<string> {
+  if (typeof window === "undefined") return new Set();
+  try {
+    const raw = JSON.parse(window.localStorage.getItem(CATEGORY_COLLAPSED_KEY) ?? "[]") as unknown;
+    if (!Array.isArray(raw)) return new Set();
+    return new Set(raw.filter((item): item is string => typeof item === "string" && item !== ""));
+  } catch {
+    return new Set();
+  }
+}
+
 export function TimeTrackerModule({ lang }: TimeTrackerModuleProps) {
   const [categories, setCategories] = useTimeTrackerCategories();
   const [entries, setEntries] = useTimeTrackerEntries();
@@ -371,6 +383,7 @@ export function TimeTrackerModule({ lang }: TimeTrackerModuleProps) {
   const [detailCategoryId, setDetailCategoryId] = useState<string | null>(null);
   const [confirm, setConfirm] = useState<ConfirmState | null>(null);
   const [sidebarInsightsHidden, setSidebarInsightsHidden] = useState(readSidebarInsightsHidden);
+  const [collapsedCategoryIds, setCollapsedCategoryIds] = useState(readCollapsedCategoryIds);
 
   const liveCategories = useMemo(() => categories.filter((category) => category.deleted !== true), [categories]);
   const categoryMap = useCategoryMap(liveCategories);
@@ -387,6 +400,10 @@ export function TimeTrackerModule({ lang }: TimeTrackerModuleProps) {
   useEffect(() => {
     window.localStorage.setItem(SIDEBAR_INSIGHTS_KEY, sidebarInsightsHidden ? "1" : "0");
   }, [sidebarInsightsHidden]);
+
+  useEffect(() => {
+    window.localStorage.setItem(CATEGORY_COLLAPSED_KEY, JSON.stringify([...collapsedCategoryIds]));
+  }, [collapsedCategoryIds]);
 
   const todayKey = dayKey(nowMs);
   const isToday = selectedKey === todayKey;
@@ -559,6 +576,15 @@ export function TimeTrackerModule({ lang }: TimeTrackerModuleProps) {
     });
   }
 
+  function toggleCategoryCollapsed(categoryId: string): void {
+    setCollapsedCategoryIds((prev) => {
+      const next = new Set(prev);
+      if (next.has(categoryId)) next.delete(categoryId);
+      else next.add(categoryId);
+      return next;
+    });
+  }
+
   return (
     <div className="module module-timetrack">
       <header className="tt-head">
@@ -623,6 +649,8 @@ export function TimeTrackerModule({ lang }: TimeTrackerModuleProps) {
                 onEdit={(category) => setCategoryEditor({ mode: "edit", category })}
                 onAddSub={(category) => setSubcategoryEditor({ category })}
                 onDetail={(category) => setDetailCategoryId(category.id)}
+                collapsedCategoryIds={collapsedCategoryIds}
+                onToggleCollapsed={toggleCategoryCollapsed}
                 onReorder={reorderCategories}
                 onNew={() => setCategoryEditor({ mode: "new" })}
                 nowMs={nowMs}
@@ -969,6 +997,8 @@ function CategoryGrid({
   onEdit,
   onAddSub,
   onDetail,
+  collapsedCategoryIds,
+  onToggleCollapsed,
   onReorder,
   onNew,
   nowMs,
@@ -982,6 +1012,8 @@ function CategoryGrid({
   readonly onEdit: (category: TimeTrackerCategory) => void;
   readonly onAddSub: (category: TimeTrackerCategory) => void;
   readonly onDetail: (category: TimeTrackerCategory) => void;
+  readonly collapsedCategoryIds: ReadonlySet<string>;
+  readonly onToggleCollapsed: (categoryId: string) => void;
   readonly onReorder: (dragId: string, overId: string) => void;
   readonly onNew: () => void;
   readonly nowMs: number;
@@ -1004,6 +1036,8 @@ function CategoryGrid({
             onEdit={() => onEdit(category)}
             onAddSub={() => onAddSub(category)}
             onDetail={() => onDetail(category)}
+            collapsed={collapsedCategoryIds.has(category.id)}
+            onToggleCollapsed={() => onToggleCollapsed(category.id)}
             dragId={dragId}
             onSetDragId={setDragId}
             onReorder={onReorder}
@@ -1029,6 +1063,8 @@ function CategoryCard({
   onEdit,
   onAddSub,
   onDetail,
+  collapsed,
+  onToggleCollapsed,
   dragId,
   onSetDragId,
   onReorder,
@@ -1043,6 +1079,8 @@ function CategoryCard({
   readonly onEdit: () => void;
   readonly onAddSub: () => void;
   readonly onDetail: () => void;
+  readonly collapsed: boolean;
+  readonly onToggleCollapsed: () => void;
   readonly dragId: string | null;
   readonly onSetDragId: (id: string | null) => void;
   readonly onReorder: (dragId: string, overId: string) => void;
@@ -1068,7 +1106,7 @@ function CategoryCard({
     }];
   return (
     <article
-      className={`tt-category-card${running ? " is-running" : ""}${dragId === category.id ? " is-dragging" : ""}`}
+      className={`tt-category-card${running ? " is-running" : ""}${dragId === category.id ? " is-dragging" : ""}${collapsed ? " is-collapsed" : ""}`}
       style={style}
       draggable
       onDragStart={(event) => {
@@ -1082,6 +1120,15 @@ function CategoryCard({
       onDragEnd={() => onSetDragId(null)}
     >
       <div className="tt-card-actions">
+        <button
+          type="button"
+          className="tt-card-collapse"
+          aria-expanded={!collapsed}
+          aria-label={`${ttCopy(lang, collapsed ? "showSubcategories" : "hideSubcategories")} ${textName(category.name, lang)}`}
+          onClick={(event) => { event.stopPropagation(); onToggleCollapsed(); }}
+        >
+          <IconGlyph name="chevD" size={14} />
+        </button>
         <button type="button" className="tt-card-add-sub" aria-label={`${ttCopy(lang, "addSub")} ${textName(category.name, lang)}`} onClick={(event) => { event.stopPropagation(); onAddSub(); }}>
           <IconGlyph name="plus" size={14} />
         </button>
@@ -1101,30 +1148,32 @@ function CategoryCard({
         </div>
         <div className="tt-progress"><span style={{ width: `${goalPct}%` }} /></div>
       </button>
-      <div className="tt-subcard-grid">
-        {tiles.map((tile) => {
-          const tileActive = activeEntries.filter((entry) => entry.subId === tile.id).length;
-          const tileRunning = tileActive > 0;
-          return (
-            <button
-              key={tile.id ?? "_whole"}
-              type="button"
-              className={`tt-subcard${tileRunning ? " is-running" : ""}`}
-              style={{ "--tt-sub-accent": tile.color } as CSSProperties}
-              disabled={!canStart}
-              aria-label={`${ttCopy(lang, "start")} ${tile.name}`}
-              onClick={() => onStart(category.id, tile.id)}
-            >
-              <span className="tt-subcard-icon"><IconGlyph name={tile.icon} size={18} /></span>
-              <span className="tt-subcard-copy">
-                <strong>{tile.name}</strong>
-                <em>{textName(category.name, lang)}</em>
-              </span>
-              {tileRunning && <span className="tt-run-tag"><span className="tt-live-dot" />{tileActive}</span>}
-            </button>
-          );
-        })}
-      </div>
+      {!collapsed && (
+        <div className="tt-subcard-grid">
+          {tiles.map((tile) => {
+            const tileActive = activeEntries.filter((entry) => entry.subId === tile.id).length;
+            const tileRunning = tileActive > 0;
+            return (
+              <button
+                key={tile.id ?? "_whole"}
+                type="button"
+                className={`tt-subcard${tileRunning ? " is-running" : ""}`}
+                style={{ "--tt-sub-accent": tile.color } as CSSProperties}
+                disabled={!canStart}
+                aria-label={`${ttCopy(lang, "start")} ${tile.name}`}
+                onClick={() => onStart(category.id, tile.id)}
+              >
+                <span className="tt-subcard-icon"><IconGlyph name={tile.icon} size={18} /></span>
+                <span className="tt-subcard-copy">
+                  <strong>{tile.name}</strong>
+                  <em>{textName(category.name, lang)}</em>
+                </span>
+                {tileRunning && <span className="tt-run-tag"><span className="tt-live-dot" />{tileActive}</span>}
+              </button>
+            );
+          })}
+        </div>
+      )}
     </article>
   );
 }
