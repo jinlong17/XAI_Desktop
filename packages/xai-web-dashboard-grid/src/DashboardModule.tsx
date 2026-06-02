@@ -13,9 +13,7 @@
  * typed; no `useState<any>` and no `defaultProps`.
  *
  * gap-closure row #5: Add Widget picker wired here (api.md §S14, design.md §E3).
- * Audit Top-10 #9 (D-06): Widget remove wired here via removeWidgetFromOrder +
- *   removedInSession set. The session set prevents useDashOrder's sanitize-on-mount
- *   from re-adding removed ids within the same mount cycle.
+ * Audit Top-10 #9 (D-06): Widget remove wired here via removeWidgetFromOrder.
  */
 import { useCallback, useEffect, useMemo, useState } from "react";
 
@@ -44,21 +42,13 @@ export function DashboardModule({ lang, widgets, goTo }: DashboardModuleProps) {
   // that are registered but not YET in the user's explicit order —
   // i.e. widgets the user hasn't personally added yet.
   //
-  // useDashOrder (in DashboardGrid) auto-appends missing registered widgets
-  // via sanitize-on-mount (F1). That is intentional for the grid display.
-  // The picker, however, should only hide widgets that are EXPLICITLY in the
-  // user's stored order (HC5 / C1 hide pattern). This distinction lets the
-  // picker remain useful: after removing a widget (future feature) or when
-  // the user has a partial order stored, the picker shows the missing ones.
+  // The picker hides widgets that are explicitly present in the user's stored
+  // order. Missing registered widgets remain available to add later.
   const [rawOrder, rawSetOrder] = usePref("xai_dash_order");
 
   // Session-remove set (Audit Top-10 #9, D-06):
-  // Tracks ids explicitly removed in this session. Used to filter the widgets
-  // prop passed to DashboardGrid so that useDashOrder's sanitize-on-mount (F1)
-  // does not re-append the removed id (sanitize appends any registered widget
-  // that's missing from persisted — by also removing it from the widgets catalog
-  // we pass to DashboardGrid, sanitize never sees it as "registered but missing").
-  // Cleared when the user re-adds the same id via the picker.
+  // Tracks ids explicitly removed in this session so rendering updates before
+  // the persisted-order subscription settles. Cleared when re-added via picker.
   const [removedInSession, setRemovedInSession] = useState<ReadonlySet<string>>(
     () => new Set<string>(),
   );
@@ -84,8 +74,7 @@ export function DashboardModule({ lang, widgets, goTo }: DashboardModuleProps) {
 
   // removeWidget helper (Audit Top-10 #9, D-06):
   // 1. Writes the filtered array to rawOrder (persisted storage).
-  // 2. Adds the id to removedInSession so activeWidgets filters it from the
-  //    widgets prop passed to DashboardGrid — preventing sanitize from re-adding it.
+  // 2. Adds the id to removedInSession so activeWidgets filters it immediately.
   const removeWidgetFromOrder = useCallback(
     (id: string) => {
       if (!rawOrder.includes(id)) return; // idempotent no-op
@@ -142,7 +131,6 @@ export function DashboardModule({ lang, widgets, goTo }: DashboardModuleProps) {
   const stableCurrentOrder = useMemo(() => rawOrder, [rawOrder.join(",")]);
 
   // activeWidgets: exclude session-removed ids from the catalog passed to DashboardGrid.
-  // This prevents useDashOrder's sanitize-on-mount from re-appending removed ids.
   const activeWidgets = useMemo(
     () =>
       removedInSession.size === 0

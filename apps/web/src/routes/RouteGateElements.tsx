@@ -1,4 +1,5 @@
 import { AppRouteGate, AuthRouteGate } from "@repo/web-auth-device-session/web";
+import type { PropsWithChildren } from "react";
 import { useLocation, useNavigate, useParams } from "react-router";
 import { createWebConsoleCapabilities } from "../host/capabilities";
 import { AuthPage } from "../pages/AuthPage";
@@ -62,6 +63,21 @@ export function AppRouteElement() {
           capabilities={capabilities}
         />
       ) : null}
+    </AppRouteGate>
+  );
+}
+
+export function ProtectedAppRouteElement({ children }: PropsWithChildren) {
+  const location = useLocation();
+  const navigate = useNavigate();
+
+  return (
+    <AppRouteGate
+      path={`${location.pathname}${location.search}`}
+      fallback={<main className="host-page"><p>Checking session...</p></main>}
+      navigate={(path) => navigate(path, { replace: true })}
+    >
+      {children}
     </AppRouteGate>
   );
 }

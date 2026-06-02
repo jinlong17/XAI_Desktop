@@ -69,7 +69,7 @@ describe("llmProvider resolveProvider (LP)", () => {
 
     // Switch to openai-compatible.
     localStorage.setItem("xai_ai_provider", JSON.stringify("openai-compatible"));
-    localStorage.setItem("xai_ai_base_url", JSON.stringify("https://api.example.com/v1"));
+    localStorage.setItem("xai_ai_base_url", JSON.stringify("https://api.groq.com/openai/v1"));
     const oaiConfig = resolveProvider("key-b");
     expect(oaiConfig.provider).toBe("openai-compatible");
     expect(oaiConfig.url).toContain("example.com");
