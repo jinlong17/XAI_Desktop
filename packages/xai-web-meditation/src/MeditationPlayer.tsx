@@ -12,7 +12,7 @@
  * frozen assumption 14).
  *
  * No <audio> element is instantiated (frozen assumption 16). Ambient
- * sound is label-only.
+ * sound is label-only and disclosed in the footer.
  *
  * No auto-exit when remaining === 0 — user must press Exit (matches
  * prototype; documented in api.md §3.2).
@@ -106,6 +106,9 @@ export function MeditationPlayer({
           <span className="grow" />
           <span className="mp-info">
             <Icon name="sound" size={13} /> {s(`meditation.sounds.${sound}`)}
+            <span className="mp-sound-note">
+              {lang === "zh" ? "视觉模式，无音频播放" : "Visual mode, no audio playback"}
+            </span>
           </span>
         </div>
       </div>

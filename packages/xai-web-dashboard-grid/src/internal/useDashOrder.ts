@@ -82,11 +82,7 @@ export function useDashOrder(widgets: readonly WidgetRegistration[]): UseDashOrd
   //
   // NOTE: This hook's removeWidget only handles the persistence write.
   // The rendering-level exclusion is handled by DashboardModule's `activeWidgets`
-  // filter + `removedInSession` state, which prevent sanitize-on-mount (F1) from
-  // re-appending the removed id within the same mount cycle.
-  // (sanitize appends registered widgets missing from persisted; by also excluding
-  // the removed id from the widgets prop passed to DashboardGrid, sanitize never
-  // sees it as "registered but missing" and does not re-add it.)
+  // filter + `removedInSession` state, which keep the same render cycle stable.
   const persistedRef = useRef<string[]>(persisted as string[]);
   persistedRef.current = persisted as string[];
 
