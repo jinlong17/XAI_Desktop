@@ -513,6 +513,12 @@
   opacity: 0.85;
 }
 
+.mp-sound-note {
+  margin-left: 0.4rem;
+  font-size: var(--fs-xs, 0.75rem);
+  opacity: 0.78;
+}
+
 /* ---- Exit button --------------------------------------------------- */
 
 .med-exit {

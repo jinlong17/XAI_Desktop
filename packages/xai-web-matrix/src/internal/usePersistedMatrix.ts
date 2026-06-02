@@ -83,16 +83,35 @@ export function usePersistedMatrix(): UsePersistedMatrixResult {
 /** Casts a potentially unknown blob to MatrixState, falling back to empty default. */
 function asMatrixState(raw: unknown): MatrixState {
   if (
-    raw !== null &&
-    typeof raw === "object" &&
-    (raw as MatrixState).schemaVersion === 1 &&
-    Array.isArray((raw as MatrixState).q1) &&
-    Array.isArray((raw as MatrixState).q2) &&
-    Array.isArray((raw as MatrixState).q3) &&
-    Array.isArray((raw as MatrixState).q4)
+    isRecord(raw) &&
+    raw.schemaVersion === 1 &&
+    isMatrixCardArray(raw.q1) &&
+    isMatrixCardArray(raw.q2) &&
+    isMatrixCardArray(raw.q3) &&
+    isMatrixCardArray(raw.q4)
   ) {
-    return raw as MatrixState;
+    return raw as unknown as MatrixState;
   }
   // Corrupt blob or wrong schemaVersion — return empty default
   return { schemaVersion: 1, q1: [], q2: [], q3: [], q4: [] };
+}
+
+function isRecord(value: unknown): value is Record<string, unknown> {
+  return value !== null && typeof value === "object" && !Array.isArray(value);
+}
+
+function isMatrixCardArray(value: unknown): value is MatrixState["q1"] {
+  return Array.isArray(value) && value.every(isMatrixCard);
+}
+
+function isMatrixCard(value: unknown): boolean {
+  if (!isRecord(value)) return false;
+  if (typeof value.id !== "string" || value.id.length === 0) return false;
+  if (!isRecord(value.title)) return false;
+  if (typeof value.title.en !== "string" || typeof value.title.zh !== "string") return false;
+  if (value.date !== undefined && typeof value.date !== "string") return false;
+  if (value.dateZh !== undefined && typeof value.dateZh !== "string") return false;
+  if (value.tag !== undefined && typeof value.tag !== "string") return false;
+  if (value.taskId !== undefined && typeof value.taskId !== "string") return false;
+  return true;
 }

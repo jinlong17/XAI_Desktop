@@ -115,7 +115,6 @@ const DEFAULT_RAIL_ORDER: RailItemId[] = [
   "countdown",
   "ai",
   "statistics",
-  "settings",
 ];
 
 const DEFAULT_DASH_ORDER: DashWidgetId[] = [
@@ -854,7 +853,7 @@ export const PREF_REGISTRY = {
   } satisfies PrefEntry<string>,
 
   // ---- Calendar view (§S8 — declared by xai-web-calendar gap-closure row #4) --
-  // Stores the last active calendar view: "month" | "week" | "day".
+  // Stores the last active calendar view: "year" | "month" | "week" | "day".
   // Category "module" — NOT in the xai_pref_* chassis-reset family (same
   // category as xai_clock_style / xai_active_board per ADR-0007 §S8).
   // proposed: false — canonical name approved by gap-closure seed brief row #4.
@@ -992,4 +991,4 @@ export type WebPrefValue<K extends WebPrefKey> =
 
 // CalendarViewId — typed alias for the xai_calendar_view registry entry values.
 // Re-exported from @repo/plugin-web-storage for consumers (xai-web-calendar index barrel).
-export type CalendarViewId = "month" | "week" | "day";
+export type CalendarViewId = "year" | "month" | "week" | "day";
