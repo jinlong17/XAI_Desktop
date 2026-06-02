@@ -121,6 +121,20 @@ inspect generated files. It should show:
 - reminder that the board reads and reminds, but does not decide roadmap, merge,
   or release state.
 
+## Docs Library Requirements
+
+The docs library must keep the dashboard governance docs easy to inspect and
+share with other tools:
+
+- `docs/workflow/project/dev-dashboard.md` and
+  `docs/prototypes/dev-dashboard/TEMPLATE.md` belong in the required-docs
+  recommendation group;
+- document copy actions should copy the absolute local filesystem path, using
+  `repo_root` from `state.generated.js` plus the repository-relative path;
+- the reader may show repository-relative paths for scanning, but the copy
+  action is for opening files in other software or handing paths to another
+  agent.
+
 ## Source Inventory
 
 The generator reads at least:

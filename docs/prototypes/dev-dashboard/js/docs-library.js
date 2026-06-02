@@ -87,6 +87,19 @@ function basename(path){
   return String(path || "").split("/").filter(Boolean).pop() || path || "文档根目录";
 }
 
+function absoluteDocPath(path){
+  const raw = String(path || "").trim();
+  if(!raw) return "";
+  if(raw.startsWith("/")) return raw;
+  const root = String(dashboardState.repo_root || "").replace(/\/$/, "");
+  return root ? `${root}/${raw}` : raw;
+}
+
+function copyDocPath(path, button){
+  const absolutePath = absoluteDocPath(path);
+  if(absolutePath) copyText(absolutePath, button);
+}
+
 function dirname(path){
   const parts = String(path || "").split("/").filter(Boolean);
   parts.pop();
@@ -217,10 +230,13 @@ function renderDocRecommendations(){
         ${(group.entries || []).slice(0, 4).map(entry => {
           const meta = docMetaFor(entry);
           return `
-          <button class="doc-rec-link" data-importance="${h(meta.importance)}" data-doc-family="${h(docFamilyFor(meta))}" data-library-path="${h(meta.path)}" data-library-type="${h(meta.type || "file")}" type="button">
-            <span>${h(meta.label)}</span>
-            <small>${h(docCategoryLabel(meta))}</small>
-          </button>
+          <div class="doc-rec-link-row" data-importance="${h(meta.importance)}" data-doc-family="${h(docFamilyFor(meta))}">
+            <button class="doc-rec-link" data-importance="${h(meta.importance)}" data-doc-family="${h(docFamilyFor(meta))}" data-library-path="${h(meta.path)}" data-library-type="${h(meta.type || "file")}" type="button">
+              <span>${h(meta.label)}</span>
+              <small>${h(docCategoryLabel(meta))}</small>
+            </button>
+            <button class="doc-path-copy" data-copy-path="${h(meta.path)}" type="button">复制</button>
+          </div>
         `;
         }).join("")}
       </div>
@@ -229,6 +245,9 @@ function renderDocRecommendations(){
   }).join("");
   document.querySelectorAll("#docRecommendationGroups [data-library-path]").forEach(button => {
     button.addEventListener("click", () => openLibraryEntry(button.dataset.libraryPath, button.dataset.libraryType));
+  });
+  document.querySelectorAll("#docRecommendationGroups [data-copy-path]").forEach(button => {
+    button.addEventListener("click", () => copyDocPath(button.dataset.copyPath, button));
   });
 }
 
@@ -388,6 +407,7 @@ function renderInspector(entry = currentDocEntry){
     <div><b>重要性</b><span>${h(importance)}</span></div>
     <div><b>分类</b><span>${h(category)}</span></div>
     <div><b>路径</b><span>${h(meta.path)}</span></div>
+    <div><b>绝对路径</b><span>${h(absoluteDocPath(meta.path))}</span></div>
     <div><b>更新</b><span>${h(formatDate(meta.updated_at))}</span></div>
     <div><b>大小</b><span>${h(formatBytes(meta.size_bytes))}</span></div>
     <div><b>标签</b><span>${h((meta.tags || []).join(" / ") || "—")}</span></div>
@@ -797,7 +817,7 @@ function attachLiveDocHandlers(){
   document.getElementById("docExitFullscreenButton").addEventListener("click", closeFullscreenReader);
   document.getElementById("docFullscreenCopyButton").addEventListener("click", () => {
     const path = currentDocEntry?.type === "dir" ? "" : currentDocPath;
-    if(path) copyText(path, document.getElementById("docFullscreenCopyButton"));
+    if(path) copyDocPath(path, document.getElementById("docFullscreenCopyButton"));
   });
   document.getElementById("docFullscreenOverlay").addEventListener("click", event => {
     if(event.target.id === "docFullscreenOverlay") closeFullscreenReader();
@@ -809,7 +829,7 @@ function attachLiveDocHandlers(){
   });
   document.getElementById("docCopyButton").addEventListener("click", async () => {
     const path = currentDocEntry?.path || currentDocPath;
-    if(path) copyText(path, document.getElementById("docCopyButton"));
+    if(path) copyDocPath(path, document.getElementById("docCopyButton"));
   });
   document.getElementById("docRevealButton").addEventListener("click", async () => {
     const path = currentDocEntry?.path || currentDocPath;

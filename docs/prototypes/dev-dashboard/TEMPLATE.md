@@ -144,7 +144,8 @@ The docs page should behave like a lightweight file manager:
 - left tree for whitelisted roots;
 - center Markdown/text preview;
 - search bar using `rg` with fallback to `grep`;
-- actions: open raw, copy path, reveal in Finder, refresh;
+- required-doc recommendations for the machine contract and reusable template;
+- actions: open raw, copy absolute path, reveal in Finder, refresh;
 - serve-only capabilities should show a clear unavailable state under `file://`.
 
 Whitelist only project docs, workflow docs, skill/agent roots, and package docs.

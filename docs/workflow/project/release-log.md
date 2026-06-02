@@ -4,6 +4,17 @@
 > Keep newest entries first. Use `.teams/skills/xai-release-log/SKILL.md` when
 > appending entries.
 
+## 2026-06-02
+
+### 文档库必读入口和绝对路径复制
+
+- Product line: project-system / dev-dashboard
+- Branch / commit: `web` / local working tree
+- User-visible change: 文档库的必读文档现在直接显示看板机器说明和看板可复用模板；推荐卡片提供复制按钮，文档详情和全屏阅读器复制的是本机绝对路径。
+- Developer/system delta: `scripts/dashboard/generate-state.mjs` 输出 `repo_root` 并把两份看板治理文档提升到 must-read；`docs-library.js` 统一将仓库相对路径转换为绝对路径再复制；同步更新看板机器说明和模板文档的文档库规则。
+- Verification: `node --check scripts/dashboard/generate-state.mjs` passed; `node --check docs/prototypes/dev-dashboard/js/docs-library.js` passed; `git diff --check` passed; `pnpm dashboard` passed; dashboard API returned both target docs; Chrome headless DOM dump confirmed must-read entries, copy buttons, and absolute path rendering.
+- Risk / follow-up: 无。
+
 ## 2026-06-01
 
 ### 看板同步 Skill 三层对齐
