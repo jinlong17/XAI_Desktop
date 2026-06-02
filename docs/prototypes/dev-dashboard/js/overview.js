@@ -361,6 +361,16 @@ function renderOverviewFlow(){
 }
 
 function moduleFeatureGroups(key){
+  const line = (typeof productLineFor === "function") ? productLineFor(key) : null;
+  const feats = line && Array.isArray(line.features) ? line.features : null;
+  if(feats && feats.length){
+    const label = f => f.note ? `${f.name} — ${f.note}` : f.name;
+    return {
+      done: feats.filter(f => f.status === "shipped").map(label),
+      active: feats.filter(f => f.status === "in-dev").map(label),
+      next: feats.filter(f => ["planned", "proposed", "paused", "contested"].includes(f.status)).map(label)
+    };
+  }
   const groups = {
     web: {
       done:["任务、看板、Dashboard 网格、日历、矩阵、番茄、习惯、冥想、倒计时、统计等 Web 模块已经形成主产品面。","设置、AI 对话、命令面板、Dashboard widget host 已接入主导航和插件注册。"],
@@ -458,6 +468,15 @@ function closeModuleDrawer(){
   document.getElementById("moduleDrawer").setAttribute("aria-hidden", "true");
 }
 
+function overviewFeatureSummary(key){
+  const line = (typeof productLineFor === "function") ? productLineFor(key) : null;
+  const feats = line && Array.isArray(line.features) ? line.features : [];
+  if(!feats.length) return "";
+  const n = s => feats.filter(f => f.status === s).length;
+  const planning = feats.length - n("shipped") - n("in-dev");
+  return `<div class="overview-module-features"><span><b>${feats.length}</b>Feature</span><span><b>${n("shipped")}</b>已交付</span><span><b>${n("in-dev")}</b>开发中</span><span><b>${planning}</b>规划/待定</span></div>`;
+}
+
 function renderOverviewModules(){
   const modules = overviewModules.length ? overviewModules : buildOverviewModulesFallback([]);
   document.getElementById("overviewModuleGrid").innerHTML = modules.map((item, index) => `
@@ -474,6 +493,7 @@ function renderOverviewModules(){
         <div class="overview-progress-label"><span>${h(item.phase || item.status || "当前阶段")}</span><span>${h(item.progress || 0)}%</span></div>
         <div class="overview-progress-track"><span style="width:${Math.max(0, Math.min(100, Number(item.progress) || 0))}%"></span></div>
       </div>
+      ${overviewFeatureSummary(item.key)}
       <div class="overview-module-meta">
         <div><b>最近更新</b><span>${h(item.recent_update || "等待快照刷新")}</span></div>
         <div><b>待处理</b><span>${h(item.todo || "暂无")}</span></div>

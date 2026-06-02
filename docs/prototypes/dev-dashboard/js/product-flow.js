@@ -1,3 +1,24 @@
+// Feature-list styles injected here (not styles.css) to keep this change isolated
+// from a concurrent dashboard refactor touching styles.css on the same branch.
+(function ensureFeatureStyles(){
+  if (typeof document === "undefined" || document.getElementById("xai-feature-list-styles")) return;
+  const style = document.createElement("style");
+  style.id = "xai-feature-list-styles";
+  style.textContent = `
+  .detail-features{margin:4px 0 2px;border:1px solid var(--line);border-radius:10px;background:color-mix(in srgb,var(--surface) 80%,transparent);padding:10px 12px}
+  .detail-features-head{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:8px}
+  .detail-features-head b{font-size:13px}
+  .feature-rows{display:grid;gap:6px}
+  .feature-row{display:grid;grid-template-columns:auto minmax(0,1fr);align-items:start;gap:8px;padding:7px 9px;border-radius:8px;background:var(--surface-2)}
+  .feature-row .badge{align-self:start;white-space:nowrap}
+  .feature-row-text b{display:block;font-size:12px}
+  .feature-row-text span{display:block;color:var(--muted);font-size:11px;margin-top:2px}
+  .overview-module-features{display:flex;flex-wrap:wrap;gap:10px;margin-top:8px;padding-top:8px;border-top:1px dashed var(--line);font-size:11px;color:var(--faint)}
+  .overview-module-features b{font-size:13px;margin-right:3px}
+  `;
+  document.head.appendChild(style);
+})();
+
 function renderStructureMap(){
   if(!products.length) return;
   const nodes = products.map(item => `
@@ -182,6 +203,31 @@ function renderImpacts(list){
   return list.map(im => `<div class="impact-row" data-module="${h(im.module)}"><b>${h(productTitleFor(im.module))} · ${h(im.when)}</b><span>${h(im.action)}</span></div>`).join("");
 }
 
+const FEATURE_STATUS = {
+  shipped: { label: "已交付", cls: "b-green" },
+  "in-dev": { label: "开发中", cls: "b-cyan" },
+  planned: { label: "规划", cls: "b-blue" },
+  proposed: { label: "提案", cls: "b-gray" },
+  paused: { label: "暂停", cls: "b-yellow" },
+  contested: { label: "方向待定", cls: "b-red" }
+};
+function featureMeta(status){ return FEATURE_STATUS[status] || { label: status, cls: "b-blue" }; }
+function renderFeatures(list){
+  if(!(list && list.length)) return "";
+  return list.map(f => {
+    const m = featureMeta(f.status);
+    return `<div class="feature-row"><span class="badge ${m.cls}">${h(m.label)}</span><div class="feature-row-text"><b>${h(f.name)}</b>${f.note ? `<span>${h(f.note)}</span>` : ""}</div></div>`;
+  }).join("");
+}
+function featureCountSummary(list){
+  if(!(list && list.length)) return "";
+  const order = ["shipped", "in-dev", "planned", "proposed", "paused", "contested"];
+  const counts = {};
+  list.forEach(f => { counts[f.status] = (counts[f.status] || 0) + 1; });
+  const parts = order.filter(s => counts[s]).map(s => `${counts[s]} ${featureMeta(s).label}`);
+  return `${list.length} 项 · ${parts.join(" · ")}`;
+}
+
 function setProduct(key){
   const item = products.find(product => product.key === key);
   if(!item) return;
@@ -200,6 +246,10 @@ function setProduct(key){
       <button class="reader-btn" id="productTargetButton" type="button">${h(productTarget.label)}</button>
     </div>
     ${item.goal ? `<div class="nav-block"><div class="nav-label"><span>开发目标</span></div><div class="goal-line">${h(item.goal)}</div></div>` : ""}
+    ${item.features && item.features.length ? `<div class="detail-features">
+      <div class="detail-features-head"><b>功能 Feature 列表</b><span class="pill">${h(featureCountSummary(item.features))}</span></div>
+      <div class="feature-rows">${renderFeatures(item.features)}</div>
+    </div>` : ""}
     <div class="detail-grid">
       <div class="detail-metric"><b>模块状态</b><span>${h(String(item.status).split(" · ")[0])}</span></div>
       <div class="detail-metric"><b>推荐 branch</b><span>${h(item.branch)}</span></div>
