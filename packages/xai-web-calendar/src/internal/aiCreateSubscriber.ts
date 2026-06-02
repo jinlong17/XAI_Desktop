@@ -25,6 +25,14 @@ import { getPref, setPref } from "@repo/plugin-web-storage";
 import { createEvent } from "./eventStore/eventStore.js";
 import type { UserCalEvent } from "./eventStore/types.js";
 
+const DATE_RE = /^\d{4}-(0[1-9]|1[0-2])-(0[1-9]|[12]\d|3[01])$/;
+const HHMM_RE = /^([01]\d|2[0-3]):[0-5]\d$/;
+
+function todayDateKey(): string {
+  const d = new Date();
+  return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(d.getDate()).padStart(2, "0")}`;
+}
+
 // ---- Date helpers (local — no cross-plugin import) --------------------------
 
 /**
@@ -39,8 +47,8 @@ function buildISOTimes(
   durationMin: number,
 ): { startISO: string; endISO: string } {
   // Validate / default
-  const safeDate = /^\d{4}-\d{2}-\d{2}$/.test(date) ? date : new Date().toISOString().slice(0, 10);
-  const safeStart = /^\d{2}:\d{2}$/.test(startTime) ? startTime : "09:00";
+  const safeDate = DATE_RE.test(date) ? date : todayDateKey();
+  const safeStart = HHMM_RE.test(startTime) ? startTime : "09:00";
   const safeDur = Math.max(5, Math.round(typeof durationMin === "number" ? durationMin : 60));
 
   const [hStr, mStr] = safeStart.split(":");

@@ -13,7 +13,7 @@
  * Test IDs: APP-LP1, APP-LP2, APP-LP3, APP-LP4, APP-LP5
  */
 
-import { render } from "@testing-library/react";
+import { fireEvent, render } from "@testing-library/react";
 import { afterEach, beforeEach, describe, it, expect, vi } from "vitest";
 import { cleanup } from "@testing-library/react";
 import { MemoryRouter, Routes, Route } from "react-router";
@@ -73,12 +73,12 @@ describe("App lazy-init from localStorage (APP-LP1..APP-LP5)", () => {
   it("APP-LP2 — xai_pref_lang='zh' in localStorage → Topbar renders 中文 as selected", () => {
     localStorage.setItem("xai_pref_lang", '"zh"');
     const { container } = renderApp();
-    // The 中文 button should have aria-selected="true"
-    const zhBtn = Array.from(container.querySelectorAll("button")).find(
-      (b) => b.textContent === "中文"
+    fireEvent.click(container.querySelector(".topbar-pref-trigger") as HTMLButtonElement);
+    const zhBtn = Array.from(container.querySelectorAll(".topbar-pref-option")).find(
+      (b) => b.getAttribute("aria-label") === "中文"
     );
     expect(zhBtn).toBeTruthy();
-    expect(zhBtn!.getAttribute("aria-selected")).toBe("true");
+    expect(zhBtn!.getAttribute("aria-checked")).toBe("true");
   });
 
   it("APP-LP3 — xai_pref_density='compact' in localStorage → html data-density='compact' on mount", () => {
@@ -92,13 +92,14 @@ describe("App lazy-init from localStorage (APP-LP1..APP-LP5)", () => {
     renderApp();
     expect(document.documentElement.getAttribute("data-theme")).toBe("light");
     expect(document.documentElement.getAttribute("data-density")).toBe("comfortable");
-    // lang fallback verified by EN button being selected (aria-selected=true)
+    // lang fallback verified by English option being selected.
     const { container } = renderApp();
-    const enBtn = Array.from(container.querySelectorAll("button")).find(
-      (b) => b.textContent === "EN"
+    fireEvent.click(container.querySelector(".topbar-pref-trigger") as HTMLButtonElement);
+    const enBtn = Array.from(container.querySelectorAll(".topbar-pref-option")).find(
+      (b) => b.getAttribute("aria-label") === "English"
     );
     expect(enBtn).toBeTruthy();
-    expect(enBtn!.getAttribute("aria-selected")).toBe("true");
+    expect(enBtn!.getAttribute("aria-checked")).toBe("true");
   });
 
   it("APP-LP5 — corrupt JSON in xai_pref_theme → JSON.parse fails → fallback to 'light' (no throw)", () => {
