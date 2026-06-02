@@ -111,6 +111,7 @@ interface InsightCard {
 type InsightRange = "week" | "month" | "year" | "custom" | "all";
 
 const INSIGHTS_KEY = "xai_tt_insights_v1";
+const SIDEBAR_INSIGHTS_KEY = "xai_tt_sidebar_insights_hidden_v1";
 
 const INSIGHT_DEFS: ReadonlyArray<{ readonly type: InsightType; readonly span: 3 | 4 | 6 | 8; readonly icon: string }> = [
   { type: "today-total", span: 3, icon: "clock" },
@@ -267,6 +268,11 @@ function defaultInsightBoard(): InsightCard[] {
   return DEFAULT_INSIGHTS.map((type) => ({ iid: uid("w"), type, catId: null }));
 }
 
+function readSidebarInsightsHidden(): boolean {
+  if (typeof window === "undefined") return false;
+  return window.localStorage.getItem(SIDEBAR_INSIGHTS_KEY) === "1";
+}
+
 export function TimeTrackerModule({ lang }: TimeTrackerModuleProps) {
   const [categories, setCategories] = useTimeTrackerCategories();
   const [entries, setEntries] = useTimeTrackerEntries();
@@ -279,6 +285,7 @@ export function TimeTrackerModule({ lang }: TimeTrackerModuleProps) {
   const [detailCategoryId, setDetailCategoryId] = useState<string | null>(null);
   const [confirm, setConfirm] = useState<ConfirmState | null>(null);
   const [startPicker, setStartPicker] = useState<string | null>(null);
+  const [sidebarInsightsHidden, setSidebarInsightsHidden] = useState(readSidebarInsightsHidden);
 
   const liveCategories = useMemo(() => categories.filter((category) => category.deleted !== true), [categories]);
   const categoryMap = useCategoryMap(liveCategories);
@@ -291,6 +298,10 @@ export function TimeTrackerModule({ lang }: TimeTrackerModuleProps) {
     const id = window.setInterval(() => setNowMs(Date.now()), 1000);
     return () => window.clearInterval(id);
   }, [hasActive]);
+
+  useEffect(() => {
+    window.localStorage.setItem(SIDEBAR_INSIGHTS_KEY, sidebarInsightsHidden ? "1" : "0");
+  }, [sidebarInsightsHidden]);
 
   const todayKey = dayKey(nowMs);
   const isToday = selectedKey === todayKey;
@@ -581,6 +592,8 @@ export function TimeTrackerModule({ lang }: TimeTrackerModuleProps) {
             activeCount={activeEntries.length}
             weekTotal={weekTotal}
             trend={trend}
+            insightsHidden={sidebarInsightsHidden}
+            onSetInsightsHidden={setSidebarInsightsHidden}
             onPickDay={setSelectedKey}
             onOpenInsights={() => setView("insights")}
           />
@@ -1072,6 +1085,8 @@ function SidePanel({
   activeCount,
   weekTotal,
   trend,
+  insightsHidden,
+  onSetInsightsHidden,
   onPickDay,
   onOpenInsights,
 }: {
@@ -1084,6 +1099,8 @@ function SidePanel({
   readonly activeCount: number;
   readonly weekTotal: number;
   readonly trend: ReadonlyArray<{ readonly key: string; readonly value: number; readonly label: string; readonly selected: boolean; readonly title: string }>;
+  readonly insightsHidden: boolean;
+  readonly onSetInsightsHidden: (hidden: boolean) => void;
   readonly onPickDay: (key: string) => void;
   readonly onOpenInsights: () => void;
 }) {
@@ -1097,34 +1114,56 @@ function SidePanel({
         <strong>{dayTotal > 0 ? formatDuration(dayTotal) : ttCopy(lang, "noneToday")}</strong>
         <small>{activeCount > 0 && isToday ? `${ttCopy(lang, "runningCount")} × ${activeCount}` : `${doneCount} ${doneCount === 1 ? ttCopy(lang, "entryOne") : ttCopy(lang, "entries")}`}</small>
       </div>
-      <div className="tt-donut-card">
-        <div className="tt-section-head"><h2>{ttCopy(lang, "distribution")}</h2></div>
-        {dayTotal > 0 ? (
-          <>
-            <Donut segments={segments.map((segment) => ({ value: segment.value, color: segment.color }))} total={dayTotal} centerTop={formatDuration(dayTotal)} centerSub={`${segments.length} ${ttCopy(lang, "categoryCount")}`} />
-            <ul className="tt-legend">
-              {segments.map((segment) => {
-                const category = categoryMap.get(segment.categoryId);
-                return (
-                  <li key={segment.categoryId}>
-                    <span style={{ background: segment.color }} />
-                    <strong>{textName(category?.name, lang)}</strong>
-                    <b>{Math.round(segment.value / dayTotal * 100)}%</b>
-                    <em>{formatDuration(segment.value)}</em>
-                  </li>
-                );
-              })}
-            </ul>
-          </>
-        ) : <div className="tt-empty compact">{ttCopy(lang, "noData")}</div>}
-      </div>
-      <div className="tt-trend-card">
-        <div className="tt-section-head">
-          <h2>{ttCopy(lang, "sevenDays")}</h2>
-          <span>{formatDuration(weekTotal)}</span>
+      {insightsHidden ? (
+        <div className="tt-sidebar-hidden">
+          <span>
+            <IconChart size={14} />
+            {ttCopy(lang, "insightPreviewHidden")}
+          </span>
+          <button type="button" className="tt-btn tt-btn-subtle" onClick={() => onSetInsightsHidden(false)}>
+            {ttCopy(lang, "showInsightPreview")}
+          </button>
         </div>
-        <MiniBars rows={trend} onPick={onPickDay} />
-      </div>
+      ) : (
+        <>
+          <div className="tt-donut-card">
+            <div className="tt-section-head">
+              <h2>{ttCopy(lang, "distribution")}</h2>
+              <button type="button" className="tt-icon-btn tt-mini-action" aria-label={ttCopy(lang, "hideInsightPreview")} onClick={() => onSetInsightsHidden(true)}>
+                <IconGlyph name="close" size={13} />
+              </button>
+            </div>
+            {dayTotal > 0 ? (
+              <>
+                <Donut segments={segments.map((segment) => ({ value: segment.value, color: segment.color }))} total={dayTotal} centerTop={formatDuration(dayTotal)} centerSub={`${segments.length} ${ttCopy(lang, "categoryCount")}`} />
+                <ul className="tt-legend">
+                  {segments.map((segment) => {
+                    const category = categoryMap.get(segment.categoryId);
+                    return (
+                      <li key={segment.categoryId}>
+                        <span style={{ background: segment.color }} />
+                        <strong>{textName(category?.name, lang)}</strong>
+                        <b>{Math.round(segment.value / dayTotal * 100)}%</b>
+                        <em>{formatDuration(segment.value)}</em>
+                      </li>
+                    );
+                  })}
+                </ul>
+              </>
+            ) : <div className="tt-empty compact">{ttCopy(lang, "noData")}</div>}
+          </div>
+          <div className="tt-trend-card">
+            <div className="tt-section-head">
+              <h2>{ttCopy(lang, "sevenDays")}</h2>
+              <span>{formatDuration(weekTotal)}</span>
+              <button type="button" className="tt-icon-btn tt-mini-action" aria-label={ttCopy(lang, "hideInsightPreview")} onClick={() => onSetInsightsHidden(true)}>
+                <IconGlyph name="close" size={13} />
+              </button>
+            </div>
+            <MiniBars rows={trend} onPick={onPickDay} />
+          </div>
+        </>
+      )}
       <button type="button" className="tt-side-link" onClick={onOpenInsights}>
         <IconChart size={14} />
         {ttCopy(lang, "insights")}

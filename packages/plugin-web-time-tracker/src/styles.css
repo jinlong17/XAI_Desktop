@@ -285,6 +285,11 @@
   background: var(--bg-panel-2);
 }
 
+.tt-mini-action {
+  width: 28px;
+  height: 28px;
+}
+
 .tt-live-dot {
   display: inline-block;
   width: 8px;
@@ -659,6 +664,29 @@
 .tt-stat-card {
   display: grid;
   gap: 5px;
+}
+
+.tt-sidebar-hidden {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  justify-content: space-between;
+  min-width: 0;
+  min-height: 46px;
+  padding: 8px 10px;
+  border: 1px dashed var(--border-1);
+  border-radius: 8px;
+  color: var(--text-3);
+  background: color-mix(in oklch, var(--bg-panel) 72%, transparent);
+}
+
+.tt-sidebar-hidden span {
+  display: inline-flex;
+  gap: 7px;
+  align-items: center;
+  min-width: 0;
+  color: var(--text-2);
+  font-size: 13px;
 }
 
 .tt-stat-card span,

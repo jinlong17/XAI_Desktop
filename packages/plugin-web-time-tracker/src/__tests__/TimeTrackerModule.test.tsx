@@ -92,6 +92,30 @@ describe("TimeTrackerModule", () => {
     expect(readTimeTrackerCategories().some((category) => category.name.en === "Admin")).toBe(true);
   });
 
+  it("hides and restores tracker sidebar insights", () => {
+    render(<TimeTrackerModule lang="en" />);
+
+    expect(screen.getByText("Where time went")).toBeInTheDocument();
+    expect(screen.getByText("7-day trend")).toBeInTheDocument();
+
+    act(() => {
+      fireEvent.click(screen.getAllByLabelText("Hide insight preview")[0]!);
+    });
+
+    expect(screen.queryByText("Where time went")).not.toBeInTheDocument();
+    expect(screen.queryByText("7-day trend")).not.toBeInTheDocument();
+    expect(screen.getByText("Insights hidden")).toBeInTheDocument();
+    expect(localStorage.getItem("xai_tt_sidebar_insights_hidden_v1")).toBe("1");
+
+    act(() => {
+      fireEvent.click(screen.getByText("Show"));
+    });
+
+    expect(screen.getByText("Where time went")).toBeInTheDocument();
+    expect(screen.getByText("7-day trend")).toBeInTheDocument();
+    expect(localStorage.getItem("xai_tt_sidebar_insights_hidden_v1")).toBe("0");
+  });
+
   it("renders the configurable insights board", () => {
     render(<TimeTrackerModule lang="en" />);
 
