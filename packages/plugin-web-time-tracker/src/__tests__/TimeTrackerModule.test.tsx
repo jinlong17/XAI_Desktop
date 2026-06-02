@@ -11,6 +11,8 @@ describe("TimeTrackerModule", () => {
     expect(screen.getByRole("heading", { name: "Study" })).toBeInTheDocument();
     expect(screen.getByRole("button", { name: "Start Code" })).toBeInTheDocument();
     expect(screen.getByRole("button", { name: "Start Paper" })).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: "Start Code" })).not.toHaveTextContent("Today");
+    expect(screen.queryByLabelText("Time tracker mode")).not.toBeInTheDocument();
 
     rerender(<TimeTrackerModule lang="zh" />);
     expect(screen.getByText("时间追踪")).toBeInTheDocument();
@@ -108,6 +110,28 @@ describe("TimeTrackerModule", () => {
     expect(activePanel).not.toBeNull();
     expect(within(activePanel!).getByText("Paper")).toBeInTheDocument();
     expect(activePanel).toHaveTextContent("Paper · Study");
+  });
+
+  it("starts multiple subcategory sessions in parallel without switch confirmation", () => {
+    render(<TimeTrackerModule lang="en" />);
+    const studyCard = screen.getByRole("heading", { name: "Study" }).closest("article");
+    expect(studyCard).not.toBeNull();
+
+    act(() => {
+      fireEvent.click(within(studyCard!).getByRole("button", { name: "Start Paper" }));
+    });
+    act(() => {
+      fireEvent.click(within(studyCard!).getByRole("button", { name: "Start Code" }));
+    });
+
+    const entries = readTimeTrackerEntries();
+    expect(entries).toHaveLength(2);
+    expect(entries.map((entry) => entry.subId)).toEqual(["sub_paper", "sub_code"]);
+    expect(screen.queryByText(/Switch from/)).not.toBeInTheDocument();
+    const activePanel = screen.getByText("Active sessions").closest("section");
+    expect(activePanel).not.toBeNull();
+    expect(activePanel).toHaveTextContent("Paper · Study");
+    expect(activePanel).toHaveTextContent("Code · Study");
   });
 
   it("keeps parent category totals when tracking a subcategory", () => {

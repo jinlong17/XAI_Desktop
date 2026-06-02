@@ -13,7 +13,6 @@ import {
   useCategoryMap,
   useTimeTrackerCategories,
   useTimeTrackerEntries,
-  useTimeTrackerMode,
 } from "./internal/storage.js";
 import {
   DAY_MS,
@@ -356,7 +355,6 @@ function readSidebarInsightsHidden(): boolean {
 export function TimeTrackerModule({ lang }: TimeTrackerModuleProps) {
   const [categories, setCategories] = useTimeTrackerCategories();
   const [entries, setEntries] = useTimeTrackerEntries();
-  const [mode, setMode] = useTimeTrackerMode();
   const [view, setView] = useState<TrackerView>("tracker");
   const [nowMs, setNowMs] = useState(() => Date.now());
   const [selectedKey, setSelectedKey] = useState(() => dayKey(Date.now()));
@@ -411,24 +409,7 @@ export function TimeTrackerModule({ lang }: TimeTrackerModuleProps) {
   function startCategory(categoryId: string, subId: string | null = null): void {
     if (!isToday) return;
     const stamp = Date.now();
-    const nextEntry = createTimeTrackerEntry(categoryId, subId, stamp, null, { en: "", zh: "" });
-    if (mode === "single" && activeEntries.length > 0) {
-      const currentCategory = categoryMap.get(activeEntries[0]?.categoryId ?? "");
-      const currentName = timerTargetName(currentCategory, activeEntries[0]?.subId ?? null, lang);
-      const nextCategory = categoryMap.get(categoryId);
-      const nextName = timerTargetName(nextCategory, subId, lang);
-      setConfirm({
-        title: ttCopy(lang, "single"),
-        body: ttCopy(lang, "singleSwitchBody").replace("%a", currentName).replace("%b", nextName),
-        confirmLabel: ttCopy(lang, "switchAction"),
-        run: () => {
-          setEntries((prev) => [...prev.map((entry) => (isActiveEntry(entry) ? finishTimeTrackerEntry(entry, stamp) : entry)), nextEntry]);
-          setNowMs(stamp);
-        },
-      });
-      return;
-    }
-    appendEntry(nextEntry);
+    appendEntry(createTimeTrackerEntry(categoryId, subId, stamp, null, { en: "", zh: "" }));
   }
 
   function pauseEntry(entryId: string): void {
@@ -559,12 +540,6 @@ export function TimeTrackerModule({ lang }: TimeTrackerModuleProps) {
             <button type="button" aria-selected={view === "tracker"} onClick={() => setView("tracker")}>{ttCopy(lang, "tracker")}</button>
             <button type="button" aria-selected={view === "insights"} onClick={() => setView("insights")}>{ttCopy(lang, "insights")}</button>
           </div>
-          {view === "tracker" && (
-            <div className="tt-segment" aria-label="Time tracker mode">
-              <button type="button" aria-selected={mode === "single"} onClick={() => setMode("single")}>{ttCopy(lang, "single")}</button>
-              <button type="button" aria-selected={mode === "multi"} onClick={() => setMode("multi")}>{ttCopy(lang, "multi")}</button>
-            </div>
-          )}
           <button type="button" className="tt-btn tt-btn-primary" onClick={() => setEntryEditor({ mode: "new" })}>
             <IconGlyph name="plus" size={15} />
             {ttCopy(lang, "addRecord")}
@@ -795,12 +770,6 @@ function subcategoryColor(sub: TimeTrackerSubcategory | undefined, category: Tim
 
 function subcategoryIcon(sub: TimeTrackerSubcategory | undefined, category: TimeTrackerCategory | undefined): string {
   return sub?.icon ?? category?.icon ?? "timer";
-}
-
-function timerTargetName(category: TimeTrackerCategory | undefined, subId: string | null, lang: Lang): string {
-  const sub = findSubcategory(category, subId);
-  if (sub !== undefined) return textName(sub.name, lang);
-  return textName(category?.name, lang);
 }
 
 type InsightBarRow = {
@@ -1080,12 +1049,8 @@ function CategoryCard({
       </button>
       <div className="tt-subcard-grid">
         {tiles.map((tile) => {
-          const tileEntries = todayEntries.filter((entry) => entry.subId === tile.id);
-          const tileMs = tileEntries.reduce((total, entry) => total + entryDuration(entry, nowMs), 0);
           const tileActive = activeEntries.filter((entry) => entry.subId === tile.id).length;
           const tileRunning = tileActive > 0;
-          const sharePct = todayMs > 0 ? Math.round(tileMs / todayMs * 100) : 0;
-          const tileGoalPct = category.goalMin > 0 ? Math.min(100, Math.round(tileMs / 60_000 / category.goalMin * 100)) : 0;
           return (
             <button
               key={tile.id ?? "_whole"}
@@ -1102,14 +1067,6 @@ function CategoryCard({
                 <em>{textName(category.name, lang)}</em>
               </span>
               {tileRunning && <span className="tt-run-tag"><span className="tt-live-dot" />{tileActive}</span>}
-              <span className="tt-subcard-metric">
-                <b>{formatDuration(tileMs)}</b>
-                <small>{sharePct}% {ttCopy(lang, "today")}</small>
-              </span>
-              <span className="tt-subcard-progress"><i style={{ width: `${tileGoalPct}%` }} /></span>
-              <span className="tt-subcard-action">
-                {canStart ? <><IconGlyph name="play" size={13} />{ttCopy(lang, "start")}</> : formatDuration(tileMs)}
-              </span>
             </button>
           );
         })}
