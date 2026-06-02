@@ -1,8 +1,17 @@
-import { describe, it, expect } from "vitest";
+import { afterEach, beforeEach, describe, it, expect, vi } from "vitest";
 import { render, fireEvent, screen } from "@testing-library/react";
 import { setPref } from "@repo/plugin-web-storage";
 import { CalendarModule } from "../CalendarModule.js";
 import type { UserCalEvent } from "../internal/eventStore/types.js";
+
+beforeEach(() => {
+  vi.useFakeTimers({ shouldAdvanceTime: true });
+  vi.setSystemTime(new Date("2026-05-22T10:00:00.000Z"));
+});
+
+afterEach(() => {
+  vi.useRealTimers();
+});
 
 function userEvent(
   id: string,

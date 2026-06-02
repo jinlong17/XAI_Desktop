@@ -36,6 +36,8 @@ interface MonthCellProps {
    * they are non-editable per Q9-E.
    */
   onUserEventClick?: (userId: string) => void;
+  /** Opens the quick-create composer for this date. */
+  onDateClick?: (dateKey: string) => void;
 }
 
 /** Look up a "cal.holiday_*" key in the bundle. */
@@ -50,7 +52,17 @@ function readHolidayLabel(t: I18NBundle, key: string | undefined): string | unde
 }
 
 export function MonthCell(props: MonthCellProps): JSX.Element {
-  const { cell, colIndex, lang, t, todayKey, focusedDate, events, onUserEventClick } = props;
+  const {
+    cell,
+    colIndex,
+    lang,
+    t,
+    todayKey,
+    focusedDate,
+    events,
+    onUserEventClick,
+    onDateClick,
+  } = props;
   const isToday = cell.inMonth && cell.dateKey === todayKey;
   const isFocused = cell.dateKey === focusedDate;
   const cls =
@@ -65,6 +77,19 @@ export function MonthCell(props: MonthCellProps): JSX.Element {
       data-date={cell.dateKey}
       data-in-month={cell.inMonth}
       data-focused={isFocused ? "true" : undefined}
+      role={cell.inMonth && onDateClick ? "button" : undefined}
+      tabIndex={cell.inMonth && onDateClick ? 0 : undefined}
+      onClick={cell.inMonth && onDateClick ? () => onDateClick(cell.dateKey) : undefined}
+      onKeyDown={
+        cell.inMonth && onDateClick
+          ? (ev) => {
+              if (ev.key === "Enter" || ev.key === " ") {
+                ev.preventDefault();
+                onDateClick(cell.dateKey);
+              }
+            }
+          : undefined
+      }
     >
       <div className="cal-day-head">
         {colIndex === 0 && cell.weekNum !== undefined ? (
@@ -84,6 +109,7 @@ export function MonthCell(props: MonthCellProps): JSX.Element {
             const merged = e as MergedCalEvent;
             const source = merged._source ?? "fixture";
             const userId = merged._userId;
+            const tag = merged._tag;
             const isUser = source === "user";
             const handleClick = isUser && userId && onUserEventClick
               ? () => onUserEventClick(userId)
@@ -94,11 +120,17 @@ export function MonthCell(props: MonthCellProps): JSX.Element {
                 className={"cal-event ev-" + e.c}
                 data-source={source}
                 data-user-id={userId}
-                onClick={handleClick}
+                title={e.t[lang]}
+                onClick={(ev) => {
+                  if (!handleClick) return;
+                  ev.stopPropagation();
+                  handleClick();
+                }}
                 role={isUser ? "button" : undefined}
                 tabIndex={isUser ? 0 : undefined}
                 onKeyDown={isUser && handleClick
                   ? (ev) => {
+                      ev.stopPropagation();
                       if (ev.key === "Enter" || ev.key === " ") {
                         ev.preventDefault();
                         handleClick();
@@ -108,6 +140,7 @@ export function MonthCell(props: MonthCellProps): JSX.Element {
               >
                 <span className="ev-dot"></span>
                 <span className="ev-title">{e.t[lang]}</span>
+                {tag ? <span className="cal-event-tag">{tag}</span> : null}
                 {e.time ? <span className="ev-time mono">{e.time}</span> : null}
                 {source === "fixture" ? (
                   <span

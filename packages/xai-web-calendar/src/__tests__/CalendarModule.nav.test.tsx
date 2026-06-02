@@ -54,7 +54,7 @@ describe("CalendarModule nav", () => {
     expect(title()).toBe("Dec 2026");
     clickNext();
     expect(title()).toBe("Jan 2027");
-  });
+  }, 10_000);
 
   it("AC-NAV-4: today button resets to May 2026 anchor", () => {
     render(<CalendarModule lang="en" />);

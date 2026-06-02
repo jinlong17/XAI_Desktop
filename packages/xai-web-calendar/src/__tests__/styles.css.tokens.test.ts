@@ -1,5 +1,5 @@
 /**
- * Tests for styles.css token parity with web design/layout.css:849-856.
+ * Tests for styles.css event colors.
  * AC-TOKENS-1, AC-TOKENS-2.
  */
 import { describe, it, expect } from "vitest";
@@ -36,18 +36,42 @@ describe("styles.css event-color tokens", () => {
     );
   });
 
-  it("AC-TOKENS-2: dark-mode overrides match layout.css:853-856 byte-for-byte", () => {
+  it("AC-TOKENS-2: dark-mode event palette uses the calendar readability overrides", () => {
     expect(css).toContain(
-      `[data-theme="dark"] .cal-event.ev-mint   { background: oklch(28% 0.05 165); color: oklch(85% 0.08 165); }`,
+      `[data-theme="dark"] .cal-event.ev-mint,
+[data-theme="dark"] .cal-event-block.ev-mint,
+[data-theme="dark"] .cal-allday-event.ev-mint {
+  background: oklch(31% 0.035 165);
+  color: oklch(88% 0.055 165);
+  border-left-color: oklch(67% 0.085 165);
+}`,
     );
     expect(css).toContain(
-      `[data-theme="dark"] .cal-event.ev-amber  { background: oklch(28% 0.05 60);  color: oklch(85% 0.08 60); }`,
+      `[data-theme="dark"] .cal-event.ev-amber,
+[data-theme="dark"] .cal-event-block.ev-amber,
+[data-theme="dark"] .cal-allday-event.ev-amber {
+  background: oklch(31% 0.034 60);
+  color: oklch(88% 0.055 60);
+  border-left-color: oklch(72% 0.095 70);
+}`,
     );
     expect(css).toContain(
-      `[data-theme="dark"] .cal-event.ev-blue   { background: oklch(28% 0.05 245); color: oklch(85% 0.08 245); }`,
+      `[data-theme="dark"] .cal-event.ev-blue,
+[data-theme="dark"] .cal-event-block.ev-blue,
+[data-theme="dark"] .cal-allday-event.ev-blue {
+  background: oklch(31% 0.035 245);
+  color: oklch(88% 0.055 245);
+  border-left-color: oklch(69% 0.090 245);
+}`,
     );
     expect(css).toContain(
-      `[data-theme="dark"] .cal-event.ev-violet { background: oklch(28% 0.05 295); color: oklch(85% 0.08 295); }`,
+      `[data-theme="dark"] .cal-event.ev-violet,
+[data-theme="dark"] .cal-event-block.ev-violet,
+[data-theme="dark"] .cal-allday-event.ev-violet {
+  background: oklch(31% 0.035 295);
+  color: oklch(88% 0.055 295);
+  border-left-color: oklch(70% 0.090 295);
+}`,
     );
   });
 
@@ -80,18 +104,30 @@ describe("styles.css event-block token parity (AC-TOKENS-EXT-1..2)", () => {
     );
   });
 
-  it("AC-TOKENS-EXT-2: dark overrides for event-block use same oklch values as :853-856", () => {
+  it("AC-TOKENS-EXT-2: dark overrides cover event-block and all-day event selectors", () => {
     expect(css).toContain(
-      `[data-theme="dark"] .cal-event-block.ev-mint   { background: oklch(28% 0.05 165); color: oklch(85% 0.08 165); }`,
+      `[data-theme="dark"] .cal-event-block.ev-mint`,
     );
     expect(css).toContain(
-      `[data-theme="dark"] .cal-event-block.ev-amber  { background: oklch(28% 0.05 60);  color: oklch(85% 0.08 60); }`,
+      `[data-theme="dark"] .cal-allday-event.ev-mint`,
     );
     expect(css).toContain(
-      `[data-theme="dark"] .cal-event-block.ev-blue   { background: oklch(28% 0.05 245); color: oklch(85% 0.08 245); }`,
+      `[data-theme="dark"] .cal-event-block.ev-amber`,
     );
     expect(css).toContain(
-      `[data-theme="dark"] .cal-event-block.ev-violet { background: oklch(28% 0.05 295); color: oklch(85% 0.08 295); }`,
+      `[data-theme="dark"] .cal-allday-event.ev-amber`,
+    );
+    expect(css).toContain(
+      `[data-theme="dark"] .cal-event-block.ev-blue`,
+    );
+    expect(css).toContain(
+      `[data-theme="dark"] .cal-allday-event.ev-blue`,
+    );
+    expect(css).toContain(
+      `[data-theme="dark"] .cal-event-block.ev-violet`,
+    );
+    expect(css).toContain(
+      `[data-theme="dark"] .cal-allday-event.ev-violet`,
     );
   });
 });
@@ -106,14 +142,20 @@ describe("styles.css event-create extension (AC-TOKENS-CREATE-1..3)", () => {
     expect(css).toContain(
       ".cal-event-block.ev-rose   { background: oklch(94% 0.04 350); color: oklch(40% 0.10 350); border-left-color: oklch(60% 0.12 350); }",
     );
+    expect(css).toContain(
+      ".cal-allday-event.ev-rose  { background: oklch(94% 0.04 350); color: oklch(40% 0.10 350); border-left-color: oklch(60% 0.12 350); }",
+    );
   });
 
   it("AC-TOKENS-CREATE-2: dark-theme ev-rose overrides present", () => {
     expect(css).toContain(
-      `[data-theme="dark"] .cal-event.ev-rose         { background: oklch(28% 0.05 350); color: oklch(85% 0.08 350); }`,
-    );
-    expect(css).toContain(
-      `[data-theme="dark"] .cal-event-block.ev-rose   { background: oklch(28% 0.05 350); color: oklch(85% 0.08 350); }`,
+      `[data-theme="dark"] .cal-event.ev-rose,
+[data-theme="dark"] .cal-event-block.ev-rose,
+[data-theme="dark"] .cal-allday-event.ev-rose {
+  background: oklch(31% 0.035 350);
+  color: oklch(88% 0.055 350);
+  border-left-color: oklch(70% 0.090 350);
+}`,
     );
   });
 

@@ -50,10 +50,10 @@ describe("CalendarModule render", () => {
     expect(pills[0]?.textContent).toBe("22");
   });
 
-  it("AC-VIEW-1: all 3 view tabs are present", () => {
+  it("AC-VIEW-1: all 4 view tabs are present", () => {
     render(<CalendarModule lang="en" />);
     const tabs = screen.getAllByRole("tab");
-    expect(tabs).toHaveLength(3);
+    expect(tabs).toHaveLength(4);
   });
 
   it("AC-VIEW-2: Month is selected by default", () => {
@@ -106,9 +106,8 @@ describe("CalendarModule render", () => {
     // Re-mock to a DST boundary date.
     vi.setSystemTime(new Date(Date.UTC(2026, 2, 8, 12, 0, 0))); // Mar 8 2026 UTC
     const { container } = render(<CalendarModule lang="en" />);
-    // Default displayed month is still May 2026 (anchor); today-pill should not
-    // appear in May 2026 grid because Mar 8 is outside May 2026.
     const pills = container.querySelectorAll(".today-pill");
-    expect(pills).toHaveLength(0);
+    expect(pills).toHaveLength(1);
+    expect(pills[0]?.textContent).toBe("8");
   });
 });

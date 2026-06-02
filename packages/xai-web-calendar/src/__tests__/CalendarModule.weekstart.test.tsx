@@ -2,7 +2,7 @@
  * Week-start preference — AC-WEEKSTART-1..3.
  */
 import { describe, it, expect, beforeEach, afterEach, vi } from "vitest";
-import { render, act } from "@testing-library/react";
+import { render, act, fireEvent, screen } from "@testing-library/react";
 import { setPref } from "@repo/plugin-web-storage";
 import { CalendarModule } from "../CalendarModule.js";
 
@@ -50,5 +50,14 @@ describe("CalendarModule weekStart preference", () => {
       setPref("xai_pref_week_start", 0);
     });
     expect(weekdayLabels()).toEqual(["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"]);
+  });
+
+  it("AC-WEEKSTART-4: toolbar settings can switch to Mon-first", () => {
+    render(<CalendarModule lang="en" />);
+
+    fireEvent.click(screen.getByTestId("cal-dots"));
+    fireEvent.click(screen.getByText("Monday"));
+
+    expect(weekdayLabels()).toEqual(["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"]);
   });
 });

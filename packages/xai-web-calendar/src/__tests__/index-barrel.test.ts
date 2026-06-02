@@ -17,6 +17,14 @@ describe("index barrel", () => {
 // --- Extension barrel tests (gap-closure row #4) ----------------------------
 
 describe("index barrel extension (gap-closure row #4)", () => {
+  it("AC-BARREL-YEAR-1: exports YearView", () => {
+    expect(typeof pkg.YearView).toBe("function");
+  });
+
+  it("AC-BARREL-DAY-OVERVIEW-1: exports DayOverview", () => {
+    expect(typeof pkg.DayOverview).toBe("function");
+  });
+
   it("AC-BARREL-EXT-3: EventBlock type is exported (runtime: no-op, compile: present)", () => {
     // Type-only exports can't be directly tested at runtime; we verify the
     // import causes no error and the module object is resolvable.

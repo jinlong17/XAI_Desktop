@@ -1,8 +1,17 @@
-import { describe, it, expect, vi } from "vitest";
+import { afterEach, beforeEach, describe, it, expect, vi } from "vitest";
 import { render, fireEvent, screen } from "@testing-library/react";
 import { setPref } from "@repo/plugin-web-storage";
 import { CalendarModule } from "../CalendarModule.js";
 import type { UserCalEvent } from "../internal/eventStore/types.js";
+
+beforeEach(() => {
+  vi.useFakeTimers({ shouldAdvanceTime: true });
+  vi.setSystemTime(new Date("2026-05-22T10:00:00.000Z"));
+});
+
+afterEach(() => {
+  vi.useRealTimers();
+});
 
 function userEvent(
   id: string,
@@ -49,6 +58,93 @@ describe("CalendarModule event CRUD integration (P4)", () => {
     const input = document.getElementById("event-composer-title-input") as HTMLInputElement;
     expect(input.value).toBe("Week Edit Target");
   });
+
+  it("AC-QUICK-CREATE-1: clicking a month date opens day overview, then create composer for that date", () => {
+    vi.useFakeTimers();
+    try {
+      vi.setSystemTime(new Date("2026-05-22T10:00:00.000Z"));
+      render(<CalendarModule lang="en" />);
+
+      const dayCell = document.querySelector('[data-date="2026-05-18"]') as HTMLElement;
+      fireEvent.click(dayCell);
+
+      expect(screen.getByTestId("day-overview")).toBeTruthy();
+      expect((document.querySelector("dialog.event-composer") as HTMLDialogElement).open).toBe(false);
+
+      fireEvent.click(screen.getByRole("button", { name: "New event" }));
+
+      expect((document.querySelector("dialog.event-composer") as HTMLDialogElement).open).toBe(true);
+      const dateInput = document.getElementById("event-composer-date-input") as HTMLInputElement;
+      expect(dateInput.value).toBe("2026-05-18");
+    } finally {
+      vi.useRealTimers();
+    }
+  });
+
+  it("AC-QUICK-CREATE-1B: clicking a fixture chip still opens the day overview", () => {
+    vi.useFakeTimers();
+    try {
+      vi.setSystemTime(new Date("2026-05-22T10:00:00.000Z"));
+      render(<CalendarModule lang="en" />);
+
+      fireEvent.click(screen.getByText("Call Sandy"));
+
+      expect(screen.getByTestId("day-overview")).toBeTruthy();
+      expect(document.querySelector(".day-overview__title")?.textContent).toBe("Friday, May 1, 2026");
+      expect((document.querySelector("dialog.event-composer") as HTMLDialogElement).open).toBe(false);
+    } finally {
+      vi.useRealTimers();
+    }
+  });
+
+  it("AC-QUICK-CREATE-2: created event renders on its source date with tag", () => {
+    vi.useFakeTimers();
+    try {
+      vi.setSystemTime(new Date("2026-05-22T10:00:00.000Z"));
+      render(<CalendarModule lang="en" />);
+
+      const dayCell = document.querySelector('[data-date="2026-05-18"]') as HTMLElement;
+      fireEvent.click(dayCell);
+      fireEvent.click(screen.getByRole("button", { name: "New event" }));
+      fireEvent.change(document.getElementById("event-composer-title-input") as HTMLInputElement, {
+        target: { value: "Strategy Review" },
+      });
+      fireEvent.change(document.getElementById("event-composer-tag-input") as HTMLInputElement, {
+        target: { value: "work" },
+      });
+      fireEvent.change(document.getElementById("event-composer-reminder-input") as HTMLSelectElement, {
+        target: { value: "15m" },
+      });
+      fireEvent.click(screen.getByText("Save"));
+
+      const created = screen.getByText("Strategy Review");
+      expect(created).toBeTruthy();
+      const chip = created.closest(".cal-event") as HTMLElement;
+      expect(chip?.getAttribute("data-source")).toBe("user");
+      expect(chip?.textContent).toContain("work");
+      expect(chip?.textContent).toContain("09:00");
+    } finally {
+      vi.useRealTimers();
+    }
+  });
+
+  it("AC-DELETE-2: deleting a month user event removes it from the date cell", () => {
+    vi.useFakeTimers();
+    try {
+      vi.setSystemTime(new Date("2026-05-22T10:00:00.000Z"));
+      setPref("xai_calendar_events", {
+        del1: userEvent("del1", "Delete Target", "2026-05-22T14:00", "2026-05-22T15:00"),
+      });
+      render(<CalendarModule lang="en" />);
+
+      fireEvent.click(screen.getByText("Delete Target"));
+      fireEvent.click(screen.getByText("Delete"));
+
+      expect(screen.queryByText("Delete Target")).toBeNull();
+    } finally {
+      vi.useRealTimers();
+    }
+  }, 10_000);
 
   it("AC-EDIT-5: clicking a user block in Day view opens edit composer", () => {
     setPref("xai_calendar_view", "day");

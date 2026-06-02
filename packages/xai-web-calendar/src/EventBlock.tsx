@@ -27,6 +27,7 @@ export function EventBlock({ block, lang, onUserEventClick }: EventBlockProps): 
   const timeLabel = event.time ?? "";
   const source = (event as { _source?: "fixture" | "user" })._source ?? "fixture";
   const userId = (event as { _userId?: string })._userId;
+  const tag = (event as { _tag?: string })._tag;
   const isUser = source === "user" && !!userId;
   const sampleLabel = s(SAMPLE_BADGE, "label", lang);
 
@@ -66,6 +67,7 @@ export function EventBlock({ block, lang, onUserEventClick }: EventBlockProps): 
       title={title}
     >
       <div className="ev-title">{title}</div>
+      {tag ? <div className="cal-event-tag">#{tag}</div> : null}
       {timeLabel && <div className="ev-time">{timeLabel}</div>}
       {source === "fixture" ? (
         <span

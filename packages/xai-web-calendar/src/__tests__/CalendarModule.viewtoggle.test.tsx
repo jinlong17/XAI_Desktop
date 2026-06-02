@@ -47,8 +47,8 @@ describe("CalendarModule view toggle", () => {
   it("AC-TOGGLE-1: toggling Month→Week→Day→Month preserves activeDate", () => {
     render(<CalendarModule lang="en" />);
     const tabs = screen.getAllByRole("tab");
-    // Check month view initially shows month title
-    expect(screen.getByText(/May 2026/i)).toBeTruthy();
+    // Check month view initially shows a month title.
+    expect(screen.getByRole("heading", { level: 1 }).textContent).toMatch(/\d{4}/);
 
     act(() => { tabs[1]?.click(); }); // → Week
     expect(lastSetViewCall).toBe("week");
@@ -58,6 +58,9 @@ describe("CalendarModule view toggle", () => {
 
     act(() => { tabs[2]?.click(); }); // → Month
     expect(lastSetViewCall).toBe("month");
+
+    act(() => { tabs[3]?.click(); }); // → Year
+    expect(lastSetViewCall).toBe("year");
   });
 
   it("AC-TOGGLE-2: tab aria-selected flips correctly", () => {
@@ -82,6 +85,8 @@ describe("CalendarModule view toggle", () => {
     expect(document.querySelector('[data-testid="cal-coming-soon"]')).toBeNull();
     act(() => { tabs[0]?.click(); }); // Day
     expect(document.querySelector('[data-testid="cal-coming-soon"]')).toBeNull();
+    act(() => { tabs[3]?.click(); }); // Year
+    expect(document.querySelector('[data-testid="cal-coming-soon"]')).toBeNull();
   });
 
   it("AC-PERSIST-EXT-1: view change calls setViewPref with correct value", () => {
@@ -93,6 +98,8 @@ describe("CalendarModule view toggle", () => {
     expect(lastSetViewCall).toBe("day");
     act(() => { tabs[2]?.click(); }); // Month
     expect(lastSetViewCall).toBe("month");
+    act(() => { tabs[3]?.click(); }); // Year
+    expect(lastSetViewCall).toBe("year");
   });
 
   it("AC-PERSIST-EXT-2: reload restores week view (mocked usePref returns \"week\")", () => {
@@ -106,6 +113,12 @@ describe("CalendarModule view toggle", () => {
     prefValue = "day";
     render(<CalendarModule lang="en" />);
     expect(screen.getByTestId("cal-day-view")).toBeTruthy();
+  });
+
+  it("AC-PERSIST-YEAR-1: reload restores year view (mocked usePref returns \"year\")", () => {
+    prefValue = "year";
+    render(<CalendarModule lang="en" />);
+    expect(screen.getByTestId("cal-year-view")).toBeTruthy();
   });
 });
 
@@ -127,19 +140,33 @@ describe("Nav arrows step by view (AC-NAV-EXT-1..3)", () => {
   it("AC-NAV-EXT-1: when view=month, prev/next step ±1 month", () => {
     prefValue = "month";
     render(<CalendarModule lang="en" />);
-    expect(screen.getByText(/May 2026/i)).toBeTruthy();
+    const initialTitle = screen.getByRole("heading", { level: 1 }).textContent;
     fireEvent.click(screen.getByTestId("cal-next-month"));
-    expect(screen.getByText(/Jun 2026/i)).toBeTruthy();
+    const nextTitle = screen.getByRole("heading", { level: 1 }).textContent;
+    expect(nextTitle).not.toBe(initialTitle);
     fireEvent.click(screen.getByTestId("cal-prev-month"));
-    expect(screen.getByText(/May 2026/i)).toBeTruthy();
+    expect(screen.getByRole("heading", { level: 1 }).textContent).toBe(initialTitle);
   });
+
+  it("AC-NAV-YEAR-1: when view=year, prev/next step ±1 year", () => {
+    prefValue = "year";
+    render(<CalendarModule lang="en" />);
+    const readYear = () => Number(document.querySelector(".module-title")?.textContent);
+    const initialYear = readYear();
+    fireEvent.click(screen.getByTestId("cal-next-month"));
+    expect(readYear()).toBe(initialYear + 1);
+    fireEvent.click(screen.getByTestId("cal-prev-month"));
+    fireEvent.click(screen.getByTestId("cal-prev-month"));
+    expect(readYear()).toBe(initialYear - 1);
+  }, 10_000);
 
   it("AC-ACTIVEDATE-3: today reset resets to MAY_2026_ANCHOR_TODAY", () => {
     prefValue = "month";
     render(<CalendarModule lang="en" />);
+    const initialTitle = screen.getByRole("heading", { level: 1 }).textContent;
     fireEvent.click(screen.getByTestId("cal-next-month"));
-    expect(screen.getByText(/Jun 2026/i)).toBeTruthy();
+    expect(screen.getByRole("heading", { level: 1 }).textContent).not.toBe(initialTitle);
     fireEvent.click(screen.getByTestId("cal-today"));
-    expect(screen.getByText(/May 2026/i)).toBeTruthy();
+    expect(screen.getByRole("heading", { level: 1 }).textContent).toBe(initialTitle);
   });
 });

@@ -109,6 +109,7 @@ export function TimeGrid({
         dayKeys={dayKeys}
         blocksByDay={blocksByDay}
         lang={lang}
+        onUserEventClick={onUserEventClick}
       />
 
       {/* Scrollable hour grid */}
