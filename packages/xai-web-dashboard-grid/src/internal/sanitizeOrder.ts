@@ -4,10 +4,12 @@
  * Given the persisted xai_dash_order array + the currently-registered widgets,
  * produce a sanitized order that:
  *   1. Drops ids not present in registered widgets.
- *   2. Appends newly-registered widget ids that weren't in persisted.
+ *   2. Preserves user removals by not re-appending registered ids that are
+ *      absent from persisted order.
  *   3. Deduplicates persisted ids (keeps first occurrence).
  *
- * Output length === number of unique registered widget ids.
+ * The registry default seeds first-run dashboards. An explicitly empty
+ * persisted order means the user removed every widget and is preserved.
  *
  * api.md §S6 documents the algorithm + invariants + edge cases.
  */
@@ -32,14 +34,6 @@ export function sanitizeOrder(
     if (knownIds.has(id) && !seen.has(id)) {
       sanitized.push(id);
       seen.add(id);
-    }
-  }
-
-  // Pass 2: append registered ids missing from persisted, in registration order.
-  for (const reg of registered) {
-    if (!seen.has(reg.id)) {
-      sanitized.push(reg.id);
-      seen.add(reg.id);
     }
   }
 

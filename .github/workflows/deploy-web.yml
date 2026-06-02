@@ -7,6 +7,7 @@
 # Secrets required (set in GitHub repo Settings → Secrets → Actions):
 #   CLOUDFLARE_API_TOKEN — Cloudflare API token with scope "Cloudflare Pages:Edit"
 #   CLOUDFLARE_ACCOUNT_ID — Cloudflare account ID where the project lives
+#   VITE_SUPABASE_URL / VITE_SUPABASE_ANON_KEY — required for production main deploys
 #
 # See docs/runbooks/cloudflare.md for setup, rotation, and rollback procedures.
 # See docs/adr/0008-cloudflare-deploy-target-and-csp.md for all deploy decisions.
@@ -46,9 +47,10 @@ jobs:
       - name: Build
         run: pnpm --filter @repo/web build
         env:
-          # Decision 2 (ADR-0008): mock-authenticated ships all 24 modules
-          # with seed data. No Supabase secrets enter CI this row.
-          VITE_WEB_AUTH_MODE: mock-authenticated
+          # PR previews keep the demo auth mode; production main deploys must use live auth.
+          VITE_WEB_AUTH_MODE: ${{ github.event_name == 'pull_request' && 'mock-authenticated' || 'live' }}
+          VITE_SUPABASE_URL: ${{ secrets.VITE_SUPABASE_URL }}
+          VITE_SUPABASE_ANON_KEY: ${{ secrets.VITE_SUPABASE_ANON_KEY }}
 
       - name: Deploy to Cloudflare Pages
         id: deploy

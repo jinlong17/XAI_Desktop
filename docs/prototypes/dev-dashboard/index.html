@@ -64,15 +64,33 @@
   }
   .brand b{display:block;font-size:15px}
   .brand span{display:block;color:var(--muted);font-size:11px;margin-top:-1px}
-  .nav-title{margin:14px 8px 7px;color:var(--faint);font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:.08em}
+  .nav-title{display:flex;align-items:center;justify-content:space-between;gap:8px;margin:14px 8px 7px;color:var(--faint);font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:.08em}
+  .nav-title span{min-width:0}
+  .nav-title button{
+    width:24px;height:24px;display:grid;place-items:center;border:1px solid transparent;
+    border-radius:7px;background:transparent;color:var(--faint);font-size:14px;line-height:1;
+  }
+  .nav-title button:hover:not(:disabled){border-color:var(--line);background:var(--surface-3);color:var(--text)}
+  .nav-title button:disabled{opacity:.3;cursor:not-allowed}
+  .nav-list{display:grid;gap:3px}
+  .nav-item{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:5px;align-items:center;margin:3px 0}
   .nav a{
     display:flex;align-items:center;justify-content:space-between;gap:12px;
-    padding:9px 10px;margin:3px 0;border-radius:8px;color:var(--muted);
+    min-width:0;padding:9px 10px;margin:0;border-radius:8px;color:var(--muted);
     border:1px solid transparent;
   }
+  .nav-link span{min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
   .nav a:hover{background:var(--surface-3);border-color:var(--line);color:var(--text)}
   .nav a.is-active{background:#eaf2ff;border-color:#cfe2ff;color:var(--blue);font-weight:800}
   .nav small{color:var(--faint);font-size:11px}
+  .nav-move{display:flex;align-items:center;gap:2px;opacity:.34;transition:opacity .18s ease}
+  .nav-item:hover .nav-move,.nav-item:focus-within .nav-move{opacity:1}
+  .nav-order-btn{
+    width:23px;height:23px;display:grid;place-items:center;border:1px solid transparent;
+    border-radius:6px;background:transparent;color:var(--faint);font-size:12px;line-height:1;
+  }
+  .nav-order-btn:hover:not(:disabled){border-color:#cfe2ff;background:#eef6ff;color:var(--blue)}
+  .nav-order-btn:disabled{opacity:.24;cursor:not-allowed}
   .rail-note{
     margin:18px 6px 0;padding:12px;border:1px solid var(--line);
     background:var(--surface);border-radius:8px;box-shadow:var(--shadow-soft);
@@ -87,6 +105,7 @@
   .page-section.is-active{display:block}
   .page-section.is-active.hero,
   .page-section.is-active.kpis,
+  .page-section.is-active.overview-flow-section,
   .page-section.is-active.overview-module-grid,
   .page-section.is-active.flow-grid,
   .page-section.is-active.docs-layout,
@@ -222,6 +241,169 @@
   }
   .overview-module-footer{display:flex;align-items:center;justify-content:space-between;gap:10px;color:var(--tone);font-size:12px;font-weight:900}
   .overview-module-footer span:last-child{font-size:16px;line-height:1}
+  .overview-flow-section{display:grid;grid-template-columns:minmax(0,1fr) 260px;gap:14px;align-items:stretch}
+  .overview-flow-board{
+    position:relative;
+    min-height:360px;
+    padding:18px;
+    overflow:hidden;
+    background:
+      linear-gradient(135deg,rgba(255,255,255,.95),rgba(240,247,255,.92)),
+      repeating-linear-gradient(90deg,rgba(26,115,232,.035) 0 1px,transparent 1px 64px);
+  }
+  .overview-flow-board:before{
+    content:"";
+    position:absolute;
+    inset:18px;
+    border:1px solid rgba(185,211,244,.45);
+    border-radius:8px;
+    pointer-events:none;
+  }
+  .overview-flow-head{display:flex;align-items:flex-start;justify-content:space-between;gap:14px;position:relative;z-index:2;margin-bottom:10px}
+  .overview-flow-head h2{font-size:18px}
+  .overview-flow-canvas{position:relative;min-height:260px;margin-top:8px}
+  .overview-flow-svg{position:absolute;inset:0;width:100%;height:100%;pointer-events:none}
+  .overview-flow-edge{
+    fill:none;
+    stroke-width:3;
+    stroke-linecap:round;
+    stroke-dasharray:12 10;
+    filter:drop-shadow(0 5px 8px rgba(49,87,149,.14));
+    animation:overview-flow-dash 1.45s linear infinite;
+  }
+  .overview-flow-edge[data-tone="main"]{stroke:rgba(26,115,232,.66)}
+  .overview-flow-edge[data-tone="soft"]{stroke:rgba(18,181,203,.58)}
+  .overview-flow-edge[data-tone="control"]{stroke:rgba(234,67,53,.62)}
+  .overview-flow-node{
+    --tone:#1a73e8;
+    --tone-bg:#eaf2ff;
+    position:absolute;
+    width:168px;
+    min-height:92px;
+    display:grid;
+    grid-template-columns:34px minmax(0,1fr);
+    gap:9px;
+    align-items:start;
+    padding:11px;
+    border:1px solid color-mix(in srgb,var(--tone) 34%,var(--line));
+    border-top:4px solid var(--tone);
+    border-radius:8px;
+    background:linear-gradient(180deg,color-mix(in srgb,var(--tone-bg) 76%,#fff),#fff);
+    color:var(--text);
+    text-align:left;
+    box-shadow:0 14px 30px rgba(49,87,149,.13);
+    transition:transform .22s ease,border-color .22s ease,box-shadow .22s ease;
+    z-index:2;
+  }
+  .overview-flow-node:hover{transform:translateY(-3px);border-color:var(--tone);box-shadow:0 20px 42px color-mix(in srgb,var(--tone) 18%,transparent)}
+  .overview-flow-node[data-tone="blue"]{--tone:#1a73e8;--tone-bg:#eaf2ff}
+  .overview-flow-node[data-tone="green"]{--tone:#34a853;--tone-bg:#eaf7ee}
+  .overview-flow-node[data-tone="purple"]{--tone:#7c4dff;--tone-bg:#f1edff}
+  .overview-flow-node[data-tone="cyan"]{--tone:#12b5cb;--tone-bg:#e6f8fb}
+  .overview-flow-node[data-tone="yellow"]{--tone:#b56f00;--tone-bg:#fff7df}
+  .overview-flow-node[data-tone="red"]{--tone:#ea4335;--tone-bg:#ffefed}
+  .overview-flow-node[data-stage="not-started"]{opacity:.84;filter:saturate(.82)}
+  .overview-flow-node[data-stage="active"],
+  .overview-flow-node[data-stage="risk"]{animation:overview-node-pulse 1.9s ease-in-out infinite}
+  .overview-flow-node[data-stage="done"]{box-shadow:0 18px 36px color-mix(in srgb,var(--tone) 24%,transparent)}
+  .overview-flow-node[data-stage="done"] .overview-flow-dot:after{content:"✓";font-size:13px}
+  .overview-flow-node[data-stage="risk"]:after{
+    content:"";
+    position:absolute;
+    top:9px;
+    right:9px;
+    width:9px;
+    height:9px;
+    border-radius:50%;
+    background:var(--red);
+    box-shadow:0 0 0 5px rgba(234,67,53,.12);
+  }
+  .overview-flow-node[data-stage="risk"] .overview-flow-copy span{color:#a6281d}
+  .overview-flow-dot{
+    width:34px;
+    height:34px;
+    display:grid;
+    place-items:center;
+    border-radius:8px;
+    background:var(--tone);
+    color:#fff;
+    font-weight:900;
+  }
+  .overview-flow-copy{min-width:0}
+  .overview-flow-copy b{display:-webkit-box;font-size:13px;line-height:1.2;overflow:hidden;text-overflow:ellipsis;white-space:normal;-webkit-line-clamp:2;-webkit-box-orient:vertical}
+  .overview-flow-copy span{display:block;color:var(--muted);font-size:11px;margin-top:3px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  .overview-flow-progress{display:block;height:6px;margin-top:9px;border-radius:999px;background:#e5edf8;overflow:hidden;grid-column:1 / -1}
+  .overview-flow-progress span{display:block;height:100%;border-radius:inherit;background:linear-gradient(90deg,var(--tone),color-mix(in srgb,var(--tone) 55%,#fff))}
+  .overview-flow-node[data-key="web"]{left:3%;top:22px}
+  .overview-flow-node[data-key="app"]{left:35%;top:22px}
+  .overview-flow-node[data-key="plugin"]{right:3%;top:22px}
+  .overview-flow-node[data-key="sync"]{left:35%;top:150px}
+  .overview-flow-node[data-key="site"]{left:12%;bottom:4px}
+  .overview-flow-node[data-key="admin"]{right:12%;bottom:4px}
+  .overview-flow-side{padding:16px;background:linear-gradient(180deg,#fff,#f4f9ff)}
+  .overview-flow-side h3{font-size:15px}
+  .overview-flow-legend{display:grid;gap:9px;margin-top:12px}
+  .overview-flow-legend div{display:grid;grid-template-columns:12px minmax(0,1fr);gap:8px;align-items:center;color:var(--muted);font-size:12px}
+  .legend-dot{width:12px;height:12px;border-radius:50%;background:#bcd1ec}
+  .legend-dot.is-new{background:#8ab4f8}
+  .legend-dot.is-active{background:#34a853;box-shadow:0 0 0 5px rgba(52,168,83,.12)}
+  .legend-dot.is-risk{background:#ea4335;box-shadow:0 0 0 5px rgba(234,67,53,.12)}
+  .legend-dot.is-done{background:#1a73e8}
+  .overview-flow-summary{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;margin-top:14px}
+  .overview-flow-summary div{padding:9px;border:1px solid var(--line);border-radius:8px;background:#fff}
+  .overview-flow-summary b{display:block;font-size:18px}
+  .overview-flow-summary span{display:block;color:var(--muted);font-size:11px}
+  @keyframes overview-flow-dash{to{stroke-dashoffset:-22}}
+  @keyframes overview-node-pulse{0%,100%{box-shadow:0 14px 30px rgba(49,87,149,.13)}50%{box-shadow:0 22px 46px color-mix(in srgb,var(--tone) 26%,transparent)}}
+  .module-drawer-overlay{
+    position:fixed;
+    inset:0;
+    z-index:72;
+    display:none;
+    background:rgba(12,24,42,.42);
+    backdrop-filter:blur(8px);
+  }
+  .module-drawer-overlay.is-open{display:block}
+  .module-drawer{
+    position:fixed;
+    top:0;
+    right:0;
+    width:min(520px,100vw);
+    height:100vh;
+    z-index:73;
+    display:grid;
+    grid-template-rows:auto minmax(0,1fr) auto;
+    background:linear-gradient(180deg,#fbfdff,#eef5ff);
+    border-left:1px solid #c8d8ee;
+    box-shadow:-26px 0 70px rgba(9,27,52,.24);
+    transform:translateX(104%);
+    transition:transform .26s ease;
+  }
+  .module-drawer.is-open{transform:translateX(0)}
+  .module-drawer-head{
+    display:flex;
+    align-items:flex-start;
+    justify-content:space-between;
+    gap:14px;
+    padding:18px;
+    border-bottom:1px solid #d3e1f3;
+    background:#fff;
+  }
+  .module-drawer-head h2{font-size:20px;margin-top:8px}
+  .drawer-close{width:34px;height:34px;border:1px solid var(--line);border-radius:8px;background:#fff;color:var(--text);font-size:20px;line-height:1}
+  .drawer-body{min-width:0;overflow:auto;padding:16px;display:grid;gap:12px}
+  .drawer-panel{padding:12px;border:1px solid #d3e1f3;border-radius:8px;background:#fff}
+  .drawer-panel h3{font-size:14px;margin-bottom:8px}
+  .drawer-summary{color:var(--muted);font-size:13px}
+  .drawer-metric-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}
+  .drawer-metric{padding:9px;border:1px solid var(--line);border-radius:8px;background:var(--surface-2)}
+  .drawer-metric b{display:block;color:var(--muted);font-size:11px}
+  .drawer-metric span{display:block;font-size:13px;font-weight:850;margin-top:2px;overflow-wrap:anywhere}
+  .drawer-feature-list{display:grid;gap:7px}
+  .drawer-feature{display:grid;grid-template-columns:82px minmax(0,1fr);gap:8px;align-items:start;padding:8px;border:1px solid var(--line);border-radius:8px;background:var(--surface-2)}
+  .drawer-feature b{font-size:11px}
+  .drawer-feature span{font-size:12px;color:var(--muted);overflow-wrap:anywhere}
+  .drawer-foot{display:flex;gap:8px;justify-content:flex-end;padding:14px 16px;border-top:1px solid #d3e1f3;background:#fff}
   .focus-box{display:grid;gap:10px;align-content:start}
   .focus-row{
     display:grid;grid-template-columns:34px minmax(0,1fr);gap:10px;align-items:start;
@@ -583,6 +765,7 @@
   .reader-title{display:flex;align-items:flex-start;justify-content:space-between;gap:14px}
   .reader-title b{display:block;font-size:16px}
   .reader-title span{display:block;color:var(--muted);font-size:12px;margin-top:2px}
+  .reader-title-actions{display:flex;align-items:center;gap:8px;flex:0 0 auto}
   .reader-body{padding:16px;overflow:auto;min-width:0;max-width:100%}
   .reader-body ul{margin:12px 0 0;padding-left:18px;color:var(--muted)}
   .reader-body li{margin:7px 0}
@@ -596,6 +779,7 @@
     font-weight:800;
   }
   .reader-btn:hover{border-color:var(--line-strong);background:var(--surface-3)}
+  .reader-btn:disabled{cursor:not-allowed;opacity:.52;background:#f4f7fb;color:var(--faint)}
   .docs-layout{grid-template-columns:minmax(900px,1fr) 260px;gap:14px;align-items:start}
   .docs-main{min-width:0}
   .docs-side{position:sticky;top:18px;max-height:calc(100vh - 36px);overflow:auto}
@@ -622,73 +806,188 @@
     gap:10px;
     margin-bottom:12px;
   }
+  .doc-rec-card,.doc-rec-link,.doc-root-button,.doc-item-row,.doc-inspector-title{
+    --doc-tone:#566175;
+    --doc-bg:#eef1f6;
+    --doc-border:#d3dbe7;
+    --doc-ink:var(--muted);
+  }
+  .doc-rec-card[data-importance="必读"],
+  .doc-rec-link[data-importance="必读"],
+  .doc-root-button[data-importance="必读"],
+  .doc-item-row[data-importance="必读"],
+  .doc-inspector-title[data-importance="必读"]{
+    --doc-tone:var(--red);
+    --doc-bg:#ffefed;
+    --doc-border:#ffc5bf;
+    --doc-ink:#a6281d;
+  }
+  .doc-rec-card[data-importance="必要"],
+  .doc-rec-link[data-importance="必要"],
+  .doc-root-button[data-importance="必要"],
+  .doc-item-row[data-importance="必要"],
+  .doc-inspector-title[data-importance="必要"]{
+    --doc-tone:var(--blue);
+    --doc-bg:#eaf2ff;
+    --doc-border:#bdd7ff;
+    --doc-ink:#0f4d9a;
+  }
+  .doc-rec-card[data-importance="系统级"],
+  .doc-rec-link[data-importance="系统级"],
+  .doc-root-button[data-importance="系统级"],
+  .doc-item-row[data-importance="系统级"],
+  .doc-inspector-title[data-importance="系统级"]{
+    --doc-tone:#07849a;
+    --doc-bg:#e6f8fb;
+    --doc-border:#b8eaf1;
+    --doc-ink:#066a7c;
+  }
+  .doc-rec-card[data-doc-family="skill"],
+  .doc-rec-link[data-doc-family="skill"],
+  .doc-item-row[data-doc-family="skill"],
+  .doc-inspector-title[data-doc-family="skill"]{
+    --doc-tone:var(--purple);
+    --doc-bg:#f1edff;
+    --doc-border:#d9cffd;
+    --doc-ink:#5733c7;
+  }
+  .doc-rec-card[data-doc-family="workflow"],
+  .doc-rec-link[data-doc-family="workflow"],
+  .doc-item-row[data-doc-family="workflow"],
+  .doc-inspector-title[data-doc-family="workflow"]{
+    --doc-tone:#b56f00;
+    --doc-bg:#fff7df;
+    --doc-border:#ffe2a3;
+    --doc-ink:#7a4d00;
+  }
+  .doc-rec-card[data-doc-family="rules"],
+  .doc-rec-link[data-doc-family="rules"],
+  .doc-item-row[data-doc-family="rules"],
+  .doc-inspector-title[data-doc-family="rules"]{
+    --doc-tone:#ea4335;
+    --doc-bg:#fff0ed;
+    --doc-border:#ffc9c1;
+    --doc-ink:#a6281d;
+  }
+  .doc-rec-card[data-importance="必读"],
+  .doc-item-row[data-importance="必读"],
+  .doc-inspector-title[data-importance="必读"]{
+    box-shadow:inset 4px 0 0 var(--red),0 10px 24px rgba(49,87,149,.07);
+  }
   .doc-rec-card{
+    position:relative;
     min-height:142px;
     padding:12px;
-    border:1px solid var(--line);
+    border:1px solid var(--doc-border);
+    border-top:4px solid var(--doc-tone);
     border-radius:8px;
-    background:linear-gradient(180deg,#fff,var(--surface-2));
+    background:
+      linear-gradient(135deg,color-mix(in srgb,var(--doc-bg) 72%,#fff),#fff 58%),
+      linear-gradient(180deg,#fff,var(--surface-2));
+    box-shadow:0 10px 24px rgba(49,87,149,.07);
+    overflow:hidden;
   }
-  .doc-rec-card b{display:block;font-size:13px}
+  .doc-rec-card:after{
+    content:"";
+    position:absolute;
+    inset:auto 10px 0 10px;
+    height:2px;
+    background:linear-gradient(90deg,var(--doc-tone),transparent);
+    opacity:.36;
+  }
+  .doc-rec-card b{display:block;font-size:13px;color:var(--doc-ink)}
   .doc-rec-card span{display:block;color:var(--muted);font-size:11.5px;margin-top:3px}
+  .doc-rec-meta{display:flex;align-items:center;gap:6px;flex-wrap:wrap;margin-top:8px}
   .doc-rec-links{display:grid;gap:6px;margin-top:10px}
   .doc-rec-link{
     display:grid;
     grid-template-columns:minmax(0,1fr) auto;
     gap:8px;
     align-items:center;
-    border:1px solid var(--line);
+    border:1px solid color-mix(in srgb,var(--doc-border) 76%,var(--line));
     border-radius:8px;
-    background:#fff;
+    background:rgba(255,255,255,.78);
     color:var(--text);
     padding:7px 8px;
     text-align:left;
     font-size:12px;
     font-weight:800;
   }
-  .doc-rec-link:hover{border-color:var(--line-strong);background:var(--surface-3)}
+  .doc-rec-link:hover{border-color:var(--doc-tone);background:color-mix(in srgb,var(--doc-bg) 56%,#fff)}
   .doc-rec-link span{margin:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;color:inherit}
-  .doc-rec-link small{color:var(--faint);font-weight:750}
+  .doc-rec-link small{color:var(--doc-ink);font-weight:850}
   .doc-file-manager{
     display:grid;
-    grid-template-columns:230px minmax(0,1fr) 270px;
-    gap:12px;
-    align-items:start;
-  }
-  .doc-pane{
-    border:1px solid var(--line);
+    grid-template-columns:250px minmax(460px,1fr) 300px;
+    gap:0;
+    min-height:680px;
+    max-height:calc(100vh - 190px);
+    border:1px solid #c6d8f0;
     border-radius:8px;
-    background:#fff;
+    background:
+      linear-gradient(90deg,#f5f9ff 0,#f5f9ff 250px,#fff 250px,#fff calc(100% - 300px),#f7fbff calc(100% - 300px)),
+      linear-gradient(180deg,#fbfdff,#f2f7ff);
+    box-shadow:0 18px 42px rgba(49,87,149,.10);
     overflow:hidden;
   }
+  .doc-pane{
+    min-height:0;
+    border:0;
+    border-radius:0;
+    background:transparent;
+    overflow:hidden;
+  }
+  .doc-folder-pane,
+  .doc-folder-browser,
+  .doc-inspector{display:grid;grid-template-rows:auto minmax(0,1fr)}
+  .doc-folder-pane{grid-template-rows:auto auto auto minmax(0,1fr);border-right:1px solid #c6d8f0}
+  .doc-folder-browser{grid-template-rows:auto auto minmax(0,1fr);background:rgba(255,255,255,.74);border-right:1px solid #c6d8f0}
+  .doc-inspector{background:linear-gradient(180deg,#f8fbff,#eef5ff)}
   .doc-pane-head{
-    padding:11px 12px;
+    padding:12px 14px;
     border-bottom:1px solid var(--line);
-    background:var(--surface-2);
+    background:linear-gradient(180deg,rgba(255,255,255,.88),rgba(238,246,255,.74));
   }
   .doc-pane-head b{display:block;font-size:13px}
   .doc-pane-head span{display:block;color:var(--muted);font-size:11.5px;margin-top:2px}
-  .doc-root-list,.doc-folder-list,.doc-inspector-body{display:grid;gap:7px;padding:10px}
-  .doc-root-list{border-bottom:1px solid var(--line)}
+  .doc-root-list,.doc-folder-list,.doc-inspector-body{display:grid;gap:8px;padding:12px}
+  .doc-root-list{
+    align-content:start;
+    max-height:285px;
+    overflow:auto;
+    border-bottom:1px solid var(--line);
+  }
   .doc-root-button{
-    border:1px solid var(--line);
+    border:1px solid color-mix(in srgb,var(--doc-border) 70%,var(--line));
     border-radius:8px;
-    background:#fff;
+    background:linear-gradient(180deg,rgba(255,255,255,.9),color-mix(in srgb,var(--doc-bg) 42%,#fff));
     color:var(--text);
     padding:8px 9px;
     text-align:left;
     font-weight:800;
   }
-  .doc-root-button:hover,.doc-root-button.is-on{border-color:#bfd8ff;background:#f2f7ff;color:var(--blue)}
+  .doc-root-button:hover,.doc-root-button.is-on{
+    border-color:var(--doc-tone);
+    background:color-mix(in srgb,var(--doc-bg) 74%,#fff);
+    color:var(--doc-ink);
+  }
   .doc-root-button span{display:block;color:var(--muted);font-size:11px;font-weight:650;margin-top:2px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  .doc-tree-title{
+    padding:10px 12px 0;
+    color:var(--faint);
+    font-size:11px;
+    font-weight:850;
+    text-transform:uppercase;
+    letter-spacing:.08em;
+  }
   .doc-folder-toolbar{
     display:flex;
     justify-content:space-between;
     align-items:center;
     gap:10px;
-    padding:10px;
+    padding:10px 12px;
     border-bottom:1px solid var(--line);
-    background:#fff;
+    background:rgba(255,255,255,.72);
   }
   .doc-folder-toolbar span{
     color:var(--muted);
@@ -698,30 +997,39 @@
     white-space:nowrap;
   }
   .doc-folder-list{
-    max-height:360px;
+    align-content:start;
+    min-height:0;
+    max-height:none;
     overflow:auto;
+    background:
+      linear-gradient(180deg,rgba(255,255,255,.92),rgba(246,250,255,.94)),
+      repeating-linear-gradient(0deg,transparent 0 52px,rgba(205,221,242,.22) 52px 53px);
   }
   .doc-item-row{
     display:grid;
     grid-template-columns:34px minmax(0,1fr) auto;
     gap:10px;
     align-items:center;
-    border:1px solid var(--line);
+    border:1px solid color-mix(in srgb,var(--doc-border) 72%,var(--line));
     border-radius:8px;
-    background:#fff;
+    background:rgba(255,255,255,.82);
     color:var(--text);
     padding:9px;
     text-align:left;
   }
-  .doc-item-row:hover,.doc-item-row.is-on{border-color:#bfd8ff;background:#f2f7ff}
+  .doc-item-row:hover,.doc-item-row.is-on{
+    border-color:var(--doc-tone);
+    background:color-mix(in srgb,var(--doc-bg) 66%,#fff);
+  }
   .doc-icon{
     width:34px;
     height:34px;
     border-radius:8px;
     display:grid;
     place-items:center;
-    background:var(--surface-3);
-    color:var(--blue);
+    background:color-mix(in srgb,var(--doc-bg) 74%,#fff);
+    color:var(--doc-tone);
+    border:1px solid color-mix(in srgb,var(--doc-border) 82%,#fff);
     font-weight:900;
     font-size:13px;
   }
@@ -747,22 +1055,50 @@
   .doc-inspector-title{
     display:grid;
     gap:8px;
-    padding:12px;
-    border-bottom:1px solid var(--line);
-    background:linear-gradient(180deg,#fff,var(--surface-2));
+    padding:14px;
+    border-bottom:1px solid var(--doc-border);
+    background:
+      linear-gradient(135deg,color-mix(in srgb,var(--doc-bg) 74%,#fff),#fff 68%),
+      linear-gradient(180deg,#fff,var(--surface-2));
   }
   .doc-inspector-title b{font-size:15px;overflow-wrap:anywhere}
   .doc-inspector-title span{color:var(--muted);font-size:12px;overflow-wrap:anywhere}
-  .doc-meta-grid{display:grid;gap:7px}
-  .doc-meta-grid div{padding:8px;border:1px solid var(--line);border-radius:8px;background:var(--surface-2)}
+  .doc-inspector-body{
+    align-content:start;
+    min-height:0;
+    overflow:auto;
+  }
+  .doc-meta-grid{
+    display:grid;
+    gap:0;
+    border:1px solid #d5e0ee;
+    border-radius:8px;
+    background:rgba(255,255,255,.72);
+    overflow:hidden;
+  }
+  .doc-meta-grid div{
+    display:grid;
+    grid-template-columns:58px minmax(0,1fr);
+    gap:10px;
+    padding:9px 10px;
+    border:0;
+    border-bottom:1px solid #e0e8f5;
+    border-radius:0;
+    background:transparent;
+  }
+  .doc-meta-grid div:last-child{border-bottom:0}
   .doc-meta-grid b{display:block;color:var(--muted);font-size:11px}
-  .doc-meta-grid span{display:block;font-size:12px;font-weight:800;margin-top:2px;overflow-wrap:anywhere}
+  .doc-meta-grid span{display:block;font-size:12px;font-weight:800;overflow-wrap:anywhere}
   .doc-inspector-actions{display:grid;grid-template-columns:1fr 1fr;gap:8px}
   .doc-inspector-actions .reader-btn{width:100%;font-size:12px}
   .doc-preview{
     margin-top:12px;
-    min-height:520px;
+    min-height:0;
+    display:none;
+    background:linear-gradient(180deg,#fbfdff,#eef5ff);
+    border-color:#c8d8ee;
   }
+  .doc-preview.is-visible{display:grid;min-height:360px}
   .doc-preview .reader-body{max-height:680px}
   .doc-library-top{
     display:grid;
@@ -910,13 +1246,13 @@
   }
   .doc-pathbar span{color:var(--muted);font-size:12px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
   .doc-tree{
-    min-height:680px;
-    max-height:78vh;
+    min-height:0;
+    max-height:none;
     overflow:auto;
-    border:1px solid var(--line);
-    border-radius:8px;
-    background:#fff;
-    padding:8px;
+    border:0;
+    border-radius:0;
+    background:transparent;
+    padding:8px 10px 12px;
   }
   .tree-row{
     width:100%;
@@ -930,7 +1266,7 @@
     padding:7px 8px;
     text-align:left;
   }
-  .tree-row:hover,.tree-row.is-on{border-color:var(--line);background:var(--surface-3)}
+  .tree-row:hover,.tree-row.is-on{border-color:#d5e3f5;background:rgba(255,255,255,.78)}
   .tree-row span:last-child{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
   .doc-reader{min-height:680px;min-width:0}
   .doc-actions{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
@@ -961,11 +1297,87 @@
   .markdown-body table{display:block;width:100%;overflow-x:auto;border-collapse:collapse;margin:14px 0;font-size:12px}
   .markdown-body th,.markdown-body td{border:1px solid var(--line);padding:7px 8px;text-align:left;vertical-align:top}
   .markdown-body th{background:var(--surface-3)}
+  body.doc-fullscreen-active{overflow:hidden}
+  .doc-fullscreen-overlay{
+    position:fixed;
+    inset:0;
+    z-index:100;
+    display:none;
+    padding:0;
+    background:linear-gradient(180deg,#f8fbff,#eef5ff);
+    overflow:hidden;
+  }
+  .doc-fullscreen-overlay.is-open{display:grid}
+  .doc-fullscreen-shell{
+    width:100vw;
+    height:100vh;
+    min-height:100vh;
+    display:grid;
+    grid-template-rows:auto minmax(0,1fr);
+    border:0;
+    border-radius:0;
+    background:linear-gradient(180deg,#f8fbff,#eef5ff);
+    box-shadow:none;
+    overflow:hidden;
+  }
+  .doc-fullscreen-head{
+    display:grid;
+    grid-template-columns:4px minmax(0,1fr) auto;
+    align-items:start;
+    gap:18px;
+    min-height:72px;
+    padding:16px clamp(18px,3vw,44px);
+    border-bottom:1px solid #c8d8ee;
+    border-left:0;
+    background:
+      linear-gradient(90deg,color-mix(in srgb,var(--doc-fullscreen-bg,#eaf2ff) 72%,#fff),#fff 46%),
+      #fff;
+    box-shadow:0 8px 24px rgba(49,87,149,.08);
+  }
+  .doc-fullscreen-head:before{
+    content:"";
+    width:4px;
+    min-height:44px;
+    align-self:stretch;
+    border-radius:999px;
+    background:var(--doc-fullscreen-tone,var(--blue));
+  }
+  .doc-fullscreen-head > div{min-width:0}
+  .doc-fullscreen-head > div:not(.doc-fullscreen-tools){grid-column:2}
+  .doc-fullscreen-head b{display:block;font-size:16px;overflow-wrap:anywhere}
+  .doc-fullscreen-head span{display:block;color:var(--muted);font-size:12px;margin-top:3px;overflow-wrap:anywhere}
+  .doc-fullscreen-tools{grid-column:3;display:flex;gap:8px;align-items:center}
+  .doc-fullscreen-body{
+    width:100%;
+    max-width:none;
+    height:100%;
+    margin:0;
+    padding:44px clamp(24px,8vw,128px) 72px;
+    overflow:auto;
+    background:
+      linear-gradient(90deg,rgba(239,246,255,.76),rgba(255,255,255,.94) 18%,rgba(255,255,255,.94) 82%,rgba(239,246,255,.76)),
+      linear-gradient(180deg,#fff,#f2f7ff);
+  }
+  .doc-fullscreen-body > *{
+    max-width:920px;
+    margin-left:auto;
+    margin-right:auto;
+  }
+  .doc-fullscreen-body h1{font-size:34px}
+  .doc-fullscreen-body p,.doc-fullscreen-body li{font-size:15.5px}
+  .doc-fullscreen-body pre,.doc-fullscreen-body table{max-width:1040px}
   .search-results{display:none;gap:8px;margin:0 0 12px}
   .search-results.is-on{display:grid}
   .search-row{grid-template-columns:54px minmax(0,1fr)}
   .search-row mark{background:#fff3bf;border-radius:4px;padding:0 2px}
-  .outline-box{margin-bottom:12px}
+  .outline-box{
+    margin-bottom:12px;
+    padding:10px;
+    border:1px solid #d5e0ee;
+    border-radius:8px;
+    background:rgba(255,255,255,.58);
+  }
+  .outline-title{color:var(--faint);font-size:11px;font-weight:850;text-transform:uppercase;letter-spacing:.08em}
   .outline-list{display:grid;gap:5px;margin-top:10px}
   .outline-row{
     border:1px solid transparent;
@@ -1168,10 +1580,14 @@
   }
   .flow-note b{color:var(--text)}
   @media (max-width:1180px){
-    .hero,.flow-grid,.split,.docs-layout,.release-dashboard{grid-template-columns:1fr}
+    .hero,.flow-grid,.split,.docs-layout,.release-dashboard,.overview-flow-section{grid-template-columns:1fr}
     .docs-side,.release-side,.detail{position:static;max-height:none;overflow:visible}
-    .doc-file-manager{grid-template-columns:210px minmax(0,1fr)}
-    .doc-inspector{grid-column:1 / -1}
+    .doc-file-manager{
+      grid-template-columns:220px minmax(0,1fr);
+      max-height:none;
+      background:linear-gradient(180deg,#fbfdff,#f2f7ff);
+    }
+    .doc-inspector{grid-column:1 / -1;border-top:1px solid #c6d8f0}
     .doc-recommendation-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
     .doc-category-panel,.capability-matrix{grid-template-columns:1fr}
     .doc-card-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
@@ -1184,6 +1600,9 @@
     .structure-map{display:grid;gap:10px;min-height:auto;padding:12px}
     .map-svg{display:none}
     .map-node{position:relative;inset:auto !important;width:100%;min-height:74px}
+    .overview-flow-canvas{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;min-height:auto}
+    .overview-flow-svg{display:none}
+    .overview-flow-node{position:relative;inset:auto !important;width:100%;min-height:88px}
   }
   @media (max-width:860px){
     .layout{grid-template-columns:1fr}
@@ -1198,8 +1617,10 @@
       overflow:hidden;
     }
     .rail .brand{padding:2px 4px 8px}
-    .rail .nav-title,.rail .rail-note,.nav small{display:none}
-    .nav{display:flex;gap:6px;max-width:100%;overflow-x:auto;-webkit-overflow-scrolling:touch;padding-bottom:2px}
+    .rail .nav-title,.rail .rail-note,.nav small,.nav-move{display:none}
+    .nav{display:block;max-width:100%;overflow:hidden;padding-bottom:2px}
+    .nav-list{display:flex;gap:6px;max-width:100%;overflow-x:auto;-webkit-overflow-scrolling:touch;padding-bottom:2px}
+    .nav-item{display:flex;flex:0 0 auto;margin:0}
     .nav a{flex:0 0 auto;justify-content:center;margin:0;white-space:nowrap;padding:8px 12px}
     [data-page-section]{scroll-margin-top:116px}
     .main,.content{min-width:0;max-width:100vw}
@@ -1207,14 +1628,27 @@
     .ops-head{flex-wrap:wrap}
     .ops-grid{grid-template-columns:1fr}
     .overview-signal-grid,.overview-module-grid{grid-template-columns:1fr}
+    .overview-flow-canvas,.drawer-metric-grid{grid-template-columns:1fr}
+    .module-drawer{width:100vw}
     .reader-shell{grid-template-columns:1fr}
     .doc-workbench,.doc-toolbar{grid-template-columns:1fr}
-    .doc-file-manager{grid-template-columns:1fr}
+    .doc-file-manager{grid-template-columns:1fr;min-height:auto;max-height:none}
+    .doc-folder-pane,.doc-folder-browser{border-right:0;border-bottom:1px solid #c6d8f0}
+    .doc-root-list{max-height:none}
+    .doc-tree{max-height:280px}
     .doc-recommendation-grid{display:flex;overflow-x:auto;gap:10px;padding-bottom:2px}
     .doc-rec-card{flex:0 0 310px}
     .doc-folder-list{max-height:none}
     .skill-group-grid,.agent-family-grid{grid-template-columns:1fr}
     .markdown-body{padding:18px;max-width:none}
+    .doc-fullscreen-overlay{padding:0}
+    .doc-fullscreen-shell{height:100vh}
+    .doc-fullscreen-head{grid-template-columns:1fr;gap:10px}
+    .doc-fullscreen-head:before{width:100%;min-height:4px;height:4px;align-self:stretch}
+    .doc-fullscreen-head > div:not(.doc-fullscreen-tools),
+    .doc-fullscreen-tools{grid-column:1}
+    .doc-fullscreen-tools{width:100%;justify-content:flex-end}
+    .doc-fullscreen-body{padding:24px 16px 54px}
     .data-grid,.trend-row,.branch-commit,.dir-row{grid-template-columns:1fr}
     .release-module-grid,.release-entry-row,.release-extra-row{grid-template-columns:1fr}
     .region-track{grid-template-columns:1fr}
@@ -1229,6 +1663,7 @@
     .section-head{flex-wrap:wrap;gap:8px}
     .content{padding:14px}
     .doc-card-grid{grid-template-columns:1fr}
+    .drawer-feature{grid-template-columns:1fr}
     .doc-item-row{grid-template-columns:30px minmax(0,1fr)}
     .doc-item-meta{grid-column:2}
   }
@@ -1244,15 +1679,17 @@
         <span>本地项目控制台</span>
       </div>
     </div>
-    <nav class="nav" aria-label="主导航">
-      <div class="nav-title">导航</div>
-      <a href="#overview" data-page="overview">总览</a>
-      <a href="#tasks" data-page="tasks">任务进度</a>
-      <a href="#dev-data" data-page="dev-data">开发数据</a>
-      <a href="#branches" data-page="branches">分支管理</a>
-      <a href="#product-flow" data-page="product-flow">产品结构图</a>
-      <a href="#docs" data-page="docs">文档库</a>
-      <a href="#release-log" data-page="release-log">发布记录</a>
+    <nav class="nav" id="primaryNav" aria-label="主导航">
+      <div class="nav-title"><span>导航</span><button id="navOrderReset" type="button" aria-label="恢复默认导航顺序" title="恢复默认顺序">↺</button></div>
+      <div class="nav-list" id="primaryNavList">
+        <a href="#overview" data-page="overview">总览</a>
+        <a href="#tasks" data-page="tasks">任务进度</a>
+        <a href="#dev-data" data-page="dev-data">开发数据</a>
+        <a href="#branches" data-page="branches">分支管理</a>
+        <a href="#product-flow" data-page="product-flow">产品结构图</a>
+        <a href="#docs" data-page="docs">文档库</a>
+        <a href="#release-log" data-page="release-log">发布记录</a>
+      </div>
     </nav>
     <div class="rail-note">
       <b>核心规则</b>
@@ -1283,6 +1720,29 @@
           </div>
         </div>
         <div class="surface pad focus-box" id="overviewFocus"></div>
+      </section>
+
+      <section class="section overview-flow-section page-section is-active" data-page-section="overview">
+        <div class="surface overview-flow-board">
+          <div class="overview-flow-head">
+            <div>
+              <h2>产品流程图</h2>
+              <p class="sub">用简化链路展示 Web、桌面、插件、同步、官网和管理控制面的当前进展。</p>
+            </div>
+            <span class="pill">点击模块查看详情</span>
+          </div>
+          <div class="overview-flow-canvas" id="overviewFlowCanvas" aria-label="总览产品流程图"></div>
+        </div>
+        <aside class="surface overview-flow-side">
+          <h3>状态图例</h3>
+          <div class="overview-flow-legend">
+            <div><span class="legend-dot is-new"></span><span>未开发 / 待启动</span></div>
+            <div><span class="legend-dot is-active"></span><span>开发中 / 正在推进</span></div>
+            <div><span class="legend-dot is-risk"></span><span>开发中但存在阻塞</span></div>
+            <div><span class="legend-dot is-done"></span><span>已完成 / 稳定运行</span></div>
+          </div>
+          <div class="overview-flow-summary" id="overviewFlowSummary"></div>
+        </aside>
       </section>
 
       <section class="section overview-module-grid page-section is-active" data-page-section="overview" id="overviewModuleGrid"></section>
@@ -1341,6 +1801,7 @@
                 <span>真实目录入口</span>
               </div>
               <div class="doc-root-list" id="docRootList"></div>
+              <div class="doc-tree-title">目录树</div>
               <div class="doc-tree" id="docTree"></div>
             </aside>
 
@@ -1365,7 +1826,7 @@
               <div class="doc-inspector-body">
                 <div class="doc-meta-grid" id="docMetaGrid"></div>
                 <div class="doc-inspector-actions">
-                  <button class="reader-btn" id="docOpenButton" type="button">查看</button>
+                  <button class="reader-btn" id="docOpenButton" type="button">全屏查看</button>
                   <button class="reader-btn" id="docCopyButton" type="button">复制路径</button>
                   <button class="reader-btn" id="docRevealButton" type="button">Finder</button>
                   <button class="reader-btn" id="docRefreshFolderButton" type="button">刷新目录</button>
@@ -1379,6 +1840,9 @@
             <div class="reader-head">
               <div class="reader-title">
                 <div><b>文档内容</b><span id="docPreviewSource">选择 Markdown / TOML / JSON 文档后在这里预览。</span></div>
+                <div class="reader-title-actions">
+                  <button class="reader-btn" id="docFullscreenButton" type="button" disabled>全屏浏览</button>
+                </div>
               </div>
             </div>
             <div class="reader-body markdown-body" id="markdownBody"></div>
@@ -1511,6 +1975,37 @@
       </section>
     </div>
   </main>
+
+  <div class="doc-fullscreen-overlay" id="docFullscreenOverlay" aria-hidden="true">
+    <section class="doc-fullscreen-shell" role="dialog" aria-modal="true" aria-labelledby="docFullscreenTitle">
+      <div class="doc-fullscreen-head" id="docFullscreenHead">
+        <div>
+          <b id="docFullscreenTitle">文档阅读</b>
+          <span id="docFullscreenSource">选择文档后进入全屏浏览。</span>
+        </div>
+        <div class="doc-fullscreen-tools">
+          <button class="reader-btn" id="docFullscreenCopyButton" type="button">复制路径</button>
+          <button class="reader-btn" id="docExitFullscreenButton" type="button">返回文档库</button>
+        </div>
+      </div>
+      <div class="doc-fullscreen-body markdown-body" id="docFullscreenBody"></div>
+    </section>
+  </div>
+  <div class="module-drawer-overlay" id="moduleDrawerOverlay" aria-hidden="true"></div>
+  <aside class="module-drawer" id="moduleDrawer" role="dialog" aria-modal="true" aria-labelledby="moduleDrawerTitle" aria-hidden="true">
+    <div class="module-drawer-head">
+      <div>
+        <span class="badge b-blue" id="moduleDrawerBadge">module</span>
+        <h2 id="moduleDrawerTitle">模块详情</h2>
+      </div>
+      <button class="drawer-close" id="moduleDrawerClose" type="button" aria-label="关闭模块详情">×</button>
+    </div>
+    <div class="drawer-body" id="moduleDrawerBody"></div>
+    <div class="drawer-foot">
+      <button class="reader-btn" id="moduleDrawerLocate" type="button">定位结构图</button>
+      <button class="reader-btn" id="moduleDrawerPrimary" type="button">打开入口</button>
+    </div>
+  </aside>
 </div>
 
 <script src="./state.generated.js"></script>
@@ -1681,7 +2176,7 @@ function buildOverviewModulesFallback(lines){
     plugin:["桌面插件","purple","平台等待","等待 App 平台","打开 PLUGIN_MAP"],
     sync:["账号云同步","cyan","合同沉淀","暂停中","打开 sync-v1"],
     site:["官方网页","yellow","发布入口候选","本地站点待启动","打开官网本地页"],
-    admin:["开发者 / 管理者 Dashboard","red","控制面原型","原型可打开","打开 Admin 原型"]
+    admin:["Admin Dashboard","red","控制面原型","原型可打开","打开 Admin 原型"]
   };
   return (lines.length ? lines : [
     {key:"web",title:"Web",subtitle:"项目最全功能面",status:"Web 主线",next:"D3 gate 后同步 Desktop"},
@@ -1721,16 +2216,201 @@ function overviewTargetFor(key, label){
   return targets[key] || {type:"page",page:"product-flow",product_key:key,label};
 }
 
+function moduleDisplayTitle(item){
+  return item?.key === "admin" ? "Admin Dashboard" : (item?.title || "");
+}
+
+function productLineFor(key){
+  return products.find(product => product.key === key) || {};
+}
+
+function overviewModuleForKey(key){
+  return (overviewModules.length ? overviewModules : buildOverviewModulesFallback(products)).find(item => item.key === key);
+}
+
+function moduleStage(item){
+  const progress = Number(item?.progress) || 0;
+  const text = `${item?.todo || ""} ${item?.status || ""}`;
+  if(/阻塞|风险|blocked/i.test(text)) return "risk";
+  if(progress >= 88) return "done";
+  if(progress < 25) return "not-started";
+  return "active";
+}
+
+function moduleStageLabel(stage){
+  return {
+    "not-started":"未开发",
+    active:"开发中",
+    risk:"开发中 · 有阻塞",
+    done:"已完成"
+  }[stage] || "跟踪中";
+}
+
+function flowPath(from, to){
+  const anchors = {
+    web:{x:150,y:68},
+    app:{x:500,y:68},
+    plugin:{x:850,y:68},
+    sync:{x:500,y:196},
+    site:{x:258,y:286},
+    admin:{x:742,y:286}
+  };
+  const a = anchors[from];
+  const b = anchors[to];
+  if(!a || !b) return "";
+  if(a.y === b.y) return `M ${a.x} ${a.y} C ${(a.x + b.x) / 2} ${a.y - 42}, ${(a.x + b.x) / 2} ${b.y - 42}, ${b.x} ${b.y}`;
+  const midY = Math.max(a.y, b.y) - 12;
+  return `M ${a.x} ${a.y} C ${a.x} ${midY}, ${b.x} ${midY}, ${b.x} ${b.y}`;
+}
+
+function renderOverviewFlow(){
+  const modules = overviewModules.length ? overviewModules : buildOverviewModulesFallback(products);
+  const moduleByKey = new Map(modules.map(item => [item.key, item]));
+  const edges = productLinks.map(([from, to, tone]) => {
+    const d = flowPath(from, to);
+    return d ? `<path class="overview-flow-edge" data-tone="${h(tone || "main")}" d="${d}"></path>` : "";
+  }).join("");
+  const nodes = ["web","app","plugin","sync","site","admin"]
+    .map(key => moduleByKey.get(key))
+    .filter(Boolean)
+    .map(item => {
+      const stage = moduleStage(item);
+      const displayTitle = moduleDisplayTitle(item);
+      return `
+        <button class="overview-flow-node" data-overview-flow="${h(item.key)}" data-key="${h(item.key)}" data-tone="${h(item.tone || "blue")}" data-stage="${h(stage)}" type="button">
+          <span class="overview-flow-dot">${h(stage === "done" ? "" : (item.icon || displayTitle.slice(0,1)))}</span>
+          <span class="overview-flow-copy"><b>${h(displayTitle)}</b><span>${h(moduleStageLabel(stage))} · ${h(item.progress || 0)}%</span></span>
+          <span class="overview-flow-progress"><span style="width:${Math.max(0, Math.min(100, Number(item.progress) || 0))}%"></span></span>
+        </button>
+      `;
+    }).join("");
+  document.getElementById("overviewFlowCanvas").innerHTML = `
+    <svg class="overview-flow-svg" viewBox="0 0 1000 320" preserveAspectRatio="none" aria-hidden="true">${edges}</svg>
+    ${nodes}
+  `;
+  const summary = modules.reduce((acc, item) => {
+    acc[moduleStage(item)] += 1;
+    return acc;
+  }, {"not-started":0, active:0, risk:0, done:0});
+  document.getElementById("overviewFlowSummary").innerHTML = `
+    <div><b>${summary.active + summary.risk}</b><span>开发中</span></div>
+    <div><b>${summary.done}</b><span>已完成</span></div>
+    <div><b>${summary["not-started"]}</b><span>未开发</span></div>
+    <div><b>${modules.length}</b><span>核心模块</span></div>
+  `;
+  document.querySelectorAll("[data-overview-flow]").forEach(button => {
+    button.addEventListener("click", () => openModuleDrawer(moduleByKey.get(button.dataset.overviewFlow)));
+  });
+}
+
+function moduleFeatureGroups(key){
+  const groups = {
+    web: {
+      done:["任务、看板、Dashboard 网格、日历、矩阵、番茄、习惯、冥想、倒计时、统计等 Web 模块已经形成主产品面。","设置、AI 对话、命令面板、Dashboard widget host 已接入主导航和插件注册。"],
+      active:["继续补齐 Dashboard 真实数据、Web Console gap closure、AI provider 和跨模块事件联动。","Web 改动进入 Desktop 前需要 D3 分类，避免直接把主线差异带入 App。"],
+      next:["Cloudflare 发布、CSP/Sentry、service worker 和设备会话继续作为发布稳定性重点。"]
+    },
+    app: {
+      done:["桌面版以 Web 为 UI 源，已明确 main/control/grid 多窗口和 Tauri native foundation 路线。","G0/G1 相关窗口、离线 profile 和原生能力已在路线图中拆分。"],
+      active:["推进 Tauri command、窗口能力、离线本地存储和 App RC 稳定线。","从 Web 来的共享改动必须先经过 D3 gate。"],
+      next:["补齐 macOS 手动 smoke、签名、公证、DMG、updater 和 release/desktop 冻结流程。"]
+    },
+    plugin: {
+      done:["插件和 widget 被定义为 App 之上的扩展层，和 App RC 分开跟踪。","PLUGIN_MAP 已覆盖插件包状态，是当前插件面板的主要事实来源。"],
+      active:["等待 App 平台稳定后恢复插件 SDK、widget host 和桌面整理插件开发。"],
+      next:["插件需要跨设备时进入账号云同步；device-local 插件状态不进入同步协议。"]
+    },
+    sync: {
+      done:["账号云同步被定义为 Web、App、Plugin 的共同同步层，而不是模块之间互相直连。","sync-v1 roadmap 已作为协议和实现恢复入口。"],
+      active:["继续沉淀 entity、schema、push/pull、冲突策略、Web IndexedDB 和 App SQLite 测试。"],
+      next:["需要补齐两设备 smoke 和 account-sync / device-local 作用域边界。"]
+    },
+    site: {
+      done:["官网被定义为下载、更新说明、账号入口和 release notes 的对外承接面。","release-site archive 保留了官网和账号相关页面基础。"],
+      active:["本地官网入口仍待启动，Cloudflare 发布节奏和 package 归属需要确认。"],
+      next:["桌面版 release 产生 DMG/updater 后，官网需要同步下载页和更新说明。"]
+    },
+    admin: {
+      done:["Admin Dashboard 已保持为独立控制面原型，不塞进个人开发看板本体。","原型覆盖用户、功能、用量、审计、AI 配置等管理中台方向。"],
+      active:["正式接入仍依赖账号、权限、计量和审计合同稳定。"],
+      next:["后续需要独立 apps/admin 或等价 surface，和用户端 Web Console 隔离权限与部署。"]
+    }
+  };
+  return groups[key] || {done:[], active:[], next:[]};
+}
+
+let activeDrawerModule = null;
+
+function renderDrawerFeatureList(items, label){
+  if(!items?.length) return "";
+  return items.map(text => `<div class="drawer-feature"><b>${h(label)}</b><span>${h(text)}</span></div>`).join("");
+}
+
+function openModuleDrawer(item){
+  if(!item) return;
+  const line = productLineFor(item.key);
+  const stage = moduleStage(item);
+  const features = moduleFeatureGroups(item.key);
+  activeDrawerModule = {
+    item,
+    target: item.target || overviewTargetFor(item.key, "打开入口")
+  };
+  const badge = document.getElementById("moduleDrawerBadge");
+  badge.textContent = moduleStageLabel(stage);
+  badge.className = `badge ${stage === "risk" ? "b-red" : stage === "done" ? "b-green" : stage === "active" ? "b-cyan" : "b-blue"}`;
+  document.getElementById("moduleDrawerTitle").textContent = moduleDisplayTitle(item);
+  document.getElementById("moduleDrawerBody").innerHTML = `
+    <section class="drawer-panel">
+      <h3>模块介绍</h3>
+      <p class="drawer-summary">${h(line.goal || item.subtitle || line.subtitle || "该模块已纳入产品结构图和总览监控。")}</p>
+    </section>
+    <section class="drawer-panel">
+      <h3>当前状态</h3>
+      <div class="drawer-metric-grid">
+        <div class="drawer-metric"><b>阶段</b><span>${h(item.phase || line.status || "跟踪中")}</span></div>
+        <div class="drawer-metric"><b>完成度</b><span>${h(item.progress || 0)}%</span></div>
+        <div class="drawer-metric"><b>运行状态</b><span>${h(item.running || "待确认")}</span></div>
+      </div>
+      <div class="chip-row" style="margin-top:10px">${statusChips(item.status_counts || line.status_counts)}</div>
+    </section>
+    <section class="drawer-panel">
+      <h3>功能进展</h3>
+      <div class="drawer-feature-list">
+        ${renderDrawerFeatureList(features.done, "已有")}
+        ${renderDrawerFeatureList(features.active, "进行中")}
+        ${renderDrawerFeatureList(features.next, "待完善")}
+      </div>
+    </section>
+    <section class="drawer-panel">
+      <h3>最近更新 / 待处理</h3>
+      <div class="drawer-feature-list">
+        <div class="drawer-feature"><b>最近</b><span>${h(item.recent_update || line.status_summary || "等待快照刷新")}</span></div>
+        <div class="drawer-feature"><b>待处理</b><span>${h(item.todo || line.next || "暂无")}</span></div>
+      </div>
+    </section>
+  `;
+  document.getElementById("moduleDrawerPrimary").textContent = activeDrawerModule.target.label || "打开入口";
+  document.getElementById("moduleDrawerOverlay").classList.add("is-open");
+  document.getElementById("moduleDrawer").classList.add("is-open");
+  document.getElementById("moduleDrawer").setAttribute("aria-hidden", "false");
+}
+
+function closeModuleDrawer(){
+  document.getElementById("moduleDrawerOverlay").classList.remove("is-open");
+  document.getElementById("moduleDrawer").classList.remove("is-open");
+  document.getElementById("moduleDrawer").setAttribute("aria-hidden", "true");
+}
+
 function renderOverviewModules(){
   const modules = overviewModules.length ? overviewModules : buildOverviewModulesFallback([]);
   document.getElementById("overviewModuleGrid").innerHTML = modules.map((item, index) => `
     <button class="overview-module-card" data-overview-module="${index}" data-tone="${h(item.tone || "blue")}" type="button">
       <div class="overview-module-top">
-        <div class="overview-module-mark">${h(item.icon || item.title.slice(0,1))}</div>
+        <div class="overview-module-mark">${h(item.icon || moduleDisplayTitle(item).slice(0,1))}</div>
         <span class="overview-module-state">${h(item.running || "待确认")}</span>
       </div>
       <div class="overview-module-title">
-        <h3>${h(item.title)}</h3>
+        <h3>${h(moduleDisplayTitle(item))}</h3>
         <p>${h(item.subtitle || item.status || "")}</p>
       </div>
       <div class="overview-progress">
@@ -1747,13 +2427,12 @@ function renderOverviewModules(){
     </button>
   `).join("");
   document.querySelectorAll("[data-overview-module]").forEach(button => {
-    button.addEventListener("click", () => openOverviewModule(modules[Number(button.dataset.overviewModule)]));
+    button.addEventListener("click", () => openModuleDrawer(modules[Number(button.dataset.overviewModule)]));
   });
 }
 
 function openOverviewModule(item){
-  const target = item?.target || overviewTargetFor(item?.key || "", "查看详情");
-  openProductTarget(target);
+  openModuleDrawer(item);
 }
 
 function openProductTarget(target){
@@ -2008,7 +2687,7 @@ function setProduct(key){
 
 function openDocInLibrary(path){
   setPage("docs");
-  if(serveMode) openDoc(path);
+  if(serveMode) openDoc(path, {fullscreen:true});
 }
 
 const serveMode = location.protocol === "http:" || location.protocol === "https:";
@@ -2084,7 +2763,7 @@ function docMetaFor(entry = {}){
     summary: hubMeta.summary || entry.summary || (entry.type === "dir" ? "本地文件夹，点击进入查看子文档。" : "本地项目文档，内容来自仓库实时文件。"),
     type: hubMeta.type || entry.type || "file",
     kind: hubMeta.kind || docKindFor(entry),
-    importance: hubMeta.importance || inferredImportance(path, entry.type),
+    importance: hubMeta.importance || entry.importance || inferredImportance(path, entry.type),
     tags: hubMeta.tags || entry.tags || [],
     updated_at: entry.modified || hubMeta.updated_at || "",
     size_bytes: entry.size || hubMeta.size_bytes || 0
@@ -2115,22 +2794,78 @@ function fileIcon(entry){
   return "TXT";
 }
 
+function docFamilyFor(entry = {}){
+  const path = String(entry.path || "").toLowerCase();
+  const value = `${path} ${entry.kind || ""} ${(entry.tags || []).join(" ")}`.toLowerCase();
+  if(/(^|\/)(agents|claude)\.md$|\.cursor\/rules\/handoff|项目规则|规则文档/.test(value)) return "rules";
+  if(/skill|agent toml|\.agents\/|\.codex\/agents|\.claude\/agents|\.claude\/agents-v2|\.teams\/skills|\.cursor\/agents/.test(value)) return "skill";
+  if(/workflow|dev_log|sop_|usage-guide|roadmap|release-log|工作流|流程/.test(value)) return "workflow";
+  if(/adr|contracts|portable|plugin_map|branch-policy|系统/.test(value)) return "system";
+  return "reference";
+}
+
+function docCategoryLabel(entry = {}){
+  const family = docFamilyFor(entry);
+  if(family === "rules") return "项目规则文档";
+  if(family === "skill") return "Skill / Agent 文档";
+  if(family === "workflow") return "核心开发流程";
+  if(entry.importance === "必读") return "必读文档";
+  if(entry.importance === "系统级" || family === "system") return "系统性文档";
+  return "普通参考文档";
+}
+
+function docTheme(entry = {}){
+  const family = docFamilyFor(entry);
+  if(family === "rules") return {tone:"#ea4335", bg:"#fff0ed"};
+  if(family === "skill") return {tone:"#7c4dff", bg:"#f1edff"};
+  if(family === "workflow") return {tone:"#b56f00", bg:"#fff7df"};
+  if(entry.importance === "必读") return {tone:"#ea4335", bg:"#ffefed"};
+  if(entry.importance === "必要") return {tone:"#1a73e8", bg:"#eaf2ff"};
+  if(entry.importance === "系统级") return {tone:"#07849a", bg:"#e6f8fb"};
+  return {tone:"#566175", bg:"#eef1f6"};
+}
+
+function docGroupImportance(group = {}){
+  const value = `${group.key || ""} ${group.title || ""}`.toLowerCase();
+  if(/must|必读|rule|规则/.test(value)) return "必读";
+  if(/workflow|工作流|流程|roadmap|release/.test(value)) return "必要";
+  if(/system|系统|adr|contract|portable/.test(value)) return "系统级";
+  if(/skill|agent/.test(value)) return "必要";
+  return group.importance || "参考";
+}
+
 function renderDocRecommendations(){
   const groups = docHub.groups || [];
-  document.getElementById("docRecommendationGroups").innerHTML = groups.map(group => `
-    <section class="doc-rec-card">
+  document.getElementById("docRecommendationGroups").innerHTML = groups.map(group => {
+    const groupMeta = docMetaFor({
+      path: group.key || group.title,
+      label: group.title,
+      summary: group.summary,
+      importance: docGroupImportance(group)
+    });
+    const groupFamily = docFamilyFor({...groupMeta, path: `${group.key || ""} ${group.title || ""}`});
+    return `
+    <section class="doc-rec-card" data-importance="${h(groupMeta.importance)}" data-doc-family="${h(groupFamily)}">
       <b>${h(group.title)}</b>
       <span>${h(group.summary)}</span>
+      <div class="doc-rec-meta">
+        <span class="importance-pill" data-importance="${h(groupMeta.importance)}">${h(groupMeta.importance)}</span>
+        <span class="pill">${h(docCategoryLabel({...groupMeta, path: `${group.key || ""} ${group.title || ""}`}))}</span>
+      </div>
       <div class="doc-rec-links">
-        ${(group.entries || []).slice(0, 4).map(entry => `
-          <button class="doc-rec-link" data-library-path="${h(entry.path)}" data-library-type="${h(entry.type || "file")}" type="button">
-            <span>${h(entry.label)}</span>
-            <small>${h(entry.importance || group.importance || "参考")}</small>
+        ${(group.entries || []).slice(0, 4).map(entry => {
+          const meta = docMetaFor(entry);
+          return `
+          <button class="doc-rec-link" data-importance="${h(meta.importance)}" data-doc-family="${h(docFamilyFor(meta))}" data-library-path="${h(meta.path)}" data-library-type="${h(meta.type || "file")}" type="button">
+            <span>${h(meta.label)}</span>
+            <small>${h(docCategoryLabel(meta))}</small>
           </button>
-        `).join("")}
+        `;
+        }).join("")}
       </div>
     </section>
-  `).join("");
+  `;
+  }).join("");
   document.querySelectorAll("#docRecommendationGroups [data-library-path]").forEach(button => {
     button.addEventListener("click", () => openLibraryEntry(button.dataset.libraryPath, button.dataset.libraryType));
   });
@@ -2142,12 +2877,15 @@ function renderDocRoots(){
     {label:".teams/skills", path:".teams/skills", summary:"项目级 skills", type:"dir", importance:"必要"},
     {label:".codex/agents", path:".codex/agents", summary:"Codex agents", type:"dir", importance:"必要"}
   ];
-  document.getElementById("docRootList").innerHTML = roots.map(root => `
-    <button class="doc-root-button ${currentTreeDir === root.path || currentTreeDir.startsWith(`${root.path}/`) ? "is-on" : ""}" data-root-path="${h(root.path)}" type="button">
-      ${h(root.label)}
-      <span>${h(root.path)}</span>
+  document.getElementById("docRootList").innerHTML = roots.map(root => {
+    const meta = docMetaFor(root);
+    return `
+    <button class="doc-root-button ${currentTreeDir === meta.path || currentTreeDir.startsWith(`${meta.path}/`) ? "is-on" : ""}" data-importance="${h(meta.importance)}" data-doc-family="${h(docFamilyFor(meta))}" data-root-path="${h(meta.path)}" type="button">
+      ${h(meta.label)}
+      <span>${h(docCategoryLabel(meta))} · ${h(meta.path)}</span>
     </button>
-  `).join("");
+  `;
+  }).join("");
   document.querySelectorAll("[data-root-path]").forEach(button => {
     button.addEventListener("click", () => openLibraryEntry(button.dataset.rootPath, "dir"));
   });
@@ -2158,7 +2896,7 @@ function renderBranchDocs(){
     <button class="reader-btn" data-doc-path="${h(path)}" type="button">${h(label)}</button>
   `).join("");
   document.querySelectorAll("[data-doc-path]").forEach(button => {
-    button.addEventListener("click", () => openDoc(button.dataset.docPath));
+    button.addEventListener("click", () => openDoc(button.dataset.docPath, {fullscreen:true}));
   });
 }
 
@@ -2168,7 +2906,7 @@ function openLibraryEntry(path, type = "file"){
     return;
   }
   if(type === "dir") loadTree(path);
-  else openDoc(path);
+  else openDoc(path, {fullscreen:true});
 }
 
 function renderDocCollections(){
@@ -2310,21 +3048,30 @@ function renderInspector(entry = currentDocEntry){
   const title = meta.path ? meta.label : "未选择文档";
   const source = meta.path || "选择左侧文件夹或中间文件";
   const importance = meta.importance || "参考";
+  const category = docCategoryLabel(meta);
+  const family = docFamilyFor(meta);
+  const titleShell = document.querySelector(".doc-inspector-title");
+  if(titleShell){
+    titleShell.dataset.importance = importance;
+    titleShell.dataset.docFamily = family;
+  }
   const importanceNode = document.getElementById("docImportancePill");
   importanceNode.textContent = importance;
   importanceNode.dataset.importance = importance;
   document.getElementById("docTitle").textContent = title;
   document.getElementById("docSource").textContent = source;
-  document.getElementById("docPreviewSource").textContent = meta.path ? `${meta.kind} · ${meta.path}` : "选择 Markdown / TOML / JSON 文档后在这里预览。";
+  document.getElementById("docPreviewSource").textContent = meta.path ? `${category} · ${meta.kind} · ${meta.path}` : "选择 Markdown / TOML / JSON 文档后在这里预览。";
   document.getElementById("docMetaGrid").innerHTML = meta.path ? `
     <div><b>类型</b><span>${h(meta.kind)}</span></div>
     <div><b>重要性</b><span>${h(importance)}</span></div>
+    <div><b>分类</b><span>${h(category)}</span></div>
     <div><b>路径</b><span>${h(meta.path)}</span></div>
     <div><b>更新</b><span>${h(formatDate(meta.updated_at))}</span></div>
     <div><b>大小</b><span>${h(formatBytes(meta.size_bytes))}</span></div>
     <div><b>标签</b><span>${h((meta.tags || []).join(" / ") || "—")}</span></div>
     <div><b>说明</b><span>${h(meta.summary)}</span></div>
   ` : `<div><b>状态</b><span>请选择一个文档或文件夹</span></div>`;
+  updateFullscreenButton();
 }
 
 function renderFolderList(children = currentTreeChildren){
@@ -2340,11 +3087,11 @@ function renderFolderList(children = currentTreeChildren){
   document.getElementById("docFolderList").innerHTML = filtered.map(item => {
     const meta = docMetaFor(item);
     return `
-      <button class="doc-item-row ${meta.path === currentDocPath ? "is-on" : ""}" data-folder-type="${h(meta.type)}" data-folder-path="${h(meta.path)}" type="button">
+      <button class="doc-item-row ${meta.path === currentDocPath ? "is-on" : ""}" data-importance="${h(meta.importance)}" data-doc-family="${h(docFamilyFor(meta))}" data-folder-type="${h(meta.type)}" data-folder-path="${h(meta.path)}" type="button">
         <span class="doc-icon">${h(fileIcon(meta))}</span>
         <span class="doc-item-main">
           <b>${h(meta.label)}</b>
-          <span>${h(meta.path)}</span>
+          <span>${h(docCategoryLabel(meta))} · ${h(meta.path)}</span>
         </span>
         <span class="doc-item-meta">
           <span class="importance-pill" data-importance="${h(meta.importance)}">${h(meta.importance)}</span>
@@ -2374,7 +3121,7 @@ function renderTree(children){
   document.querySelectorAll("[data-tree-path]").forEach(button => {
     button.addEventListener("click", () => {
       if(button.dataset.treeType === "dir") loadTree(button.dataset.treePath);
-      else openDoc(button.dataset.treePath);
+      else openDoc(button.dataset.treePath, {fullscreen:true});
     });
   });
 }
@@ -2514,6 +3261,7 @@ function renderMarkdown(markdown){
 function renderOutline(markdown){
   const headings = collectHeadings(markdown).slice(0, 24);
   document.getElementById("docOutline").innerHTML = headings.length ? `
+    <div class="outline-title">文档目录</div>
     <div class="outline-list">
       ${headings.map(heading => `
         <button class="outline-row" data-outline-id="${h(heading.id)}" data-level="${h(heading.level)}" type="button">${h(heading.text)}</button>
@@ -2528,7 +3276,48 @@ function renderOutline(markdown){
   });
 }
 
-async function openDoc(path){
+function updateFullscreenButton(){
+  const button = document.getElementById("docFullscreenButton");
+  if(!button) return;
+  const canRead = Boolean(serveMode && currentDocPath && currentDocEntry?.type !== "dir");
+  button.disabled = !canRead;
+  button.textContent = canRead ? "全屏浏览" : "选择文档";
+}
+
+function renderFullscreenReader(){
+  if(!currentDocPath || currentDocEntry?.type === "dir") return;
+  const meta = docMetaFor(currentDocEntry);
+  const theme = docTheme(meta);
+  const category = docCategoryLabel(meta);
+  const head = document.getElementById("docFullscreenHead");
+  if(head){
+    head.style.setProperty("--doc-fullscreen-bg", theme.bg);
+    head.style.setProperty("--doc-fullscreen-tone", theme.tone);
+  }
+  document.getElementById("docFullscreenTitle").textContent = meta.label || basename(currentDocPath);
+  document.getElementById("docFullscreenSource").textContent = `${category} · ${meta.importance} · ${meta.kind} · ${meta.path}`;
+  document.getElementById("docFullscreenBody").innerHTML = renderMarkdown(currentDocContent);
+}
+
+function openFullscreenReader(){
+  if(!serveMode || !currentDocPath || currentDocEntry?.type === "dir") return;
+  renderFullscreenReader();
+  const overlay = document.getElementById("docFullscreenOverlay");
+  overlay.classList.add("is-open");
+  overlay.setAttribute("aria-hidden", "false");
+  document.body.classList.add("doc-fullscreen-active");
+  document.getElementById("docExitFullscreenButton").focus();
+}
+
+function closeFullscreenReader(){
+  const overlay = document.getElementById("docFullscreenOverlay");
+  overlay.classList.remove("is-open");
+  overlay.setAttribute("aria-hidden", "true");
+  document.body.classList.remove("doc-fullscreen-active");
+  document.getElementById("docFullscreenButton")?.focus();
+}
+
+async function openDoc(path, options = {}){
   if(!serveMode) return;
   const doc = await fetchJson(`/api/file?path=${encodeURIComponent(path)}`);
   currentDocPath = doc.path;
@@ -2544,6 +3333,11 @@ async function openDoc(path){
   renderInspector(currentDocEntry);
   document.getElementById("markdownBody").innerHTML = renderMarkdown(doc.content);
   renderOutline(doc.content);
+  if(document.getElementById("docFullscreenOverlay")?.classList.contains("is-open")){
+    renderFullscreenReader();
+  } else if(options.fullscreen){
+    openFullscreenReader();
+  }
   document.querySelectorAll("[data-tree-path]").forEach(button => button.classList.toggle("is-on", button.dataset.treePath === currentDocPath));
   document.querySelectorAll("[data-folder-path]").forEach(button => button.classList.toggle("is-on", button.dataset.folderPath === currentDocPath));
 }
@@ -2572,7 +3366,7 @@ async function searchDocs(){
     </button>
   `).join("") || `<div class="flow-note"><b>无结果</b></div>`;
   document.querySelectorAll("[data-search-path]").forEach(button => {
-    button.addEventListener("click", () => openDoc(button.dataset.searchPath));
+    button.addEventListener("click", () => openDoc(button.dataset.searchPath, {fullscreen:true}));
   });
 }
 
@@ -2598,6 +3392,7 @@ function initDocLibrary(){
   const modePill = document.getElementById("docModePill");
   modePill.textContent = serveMode ? "serve" : "file";
   modePill.className = `pill ${serveMode ? "b-green" : "b-yellow"}`;
+  document.querySelector(".doc-preview")?.classList.toggle("is-visible", !serveMode);
   renderDocRecommendations();
   renderDocRoots();
   renderInspector();
@@ -2619,11 +3414,25 @@ function initDocLibrary(){
   });
   document.getElementById("docOpenButton").addEventListener("click", () => {
     if(currentDocEntry?.type === "dir") loadTree(currentDocEntry.path);
-    else if(currentDocPath) openDoc(currentDocPath);
+    else if(currentDocPath) openFullscreenReader();
+  });
+  document.getElementById("docFullscreenButton").addEventListener("click", openFullscreenReader);
+  document.getElementById("docExitFullscreenButton").addEventListener("click", closeFullscreenReader);
+  document.getElementById("docFullscreenCopyButton").addEventListener("click", () => {
+    const path = currentDocEntry?.type === "dir" ? "" : currentDocPath;
+    if(path) copyText(path, document.getElementById("docFullscreenCopyButton"));
+  });
+  document.getElementById("docFullscreenOverlay").addEventListener("click", event => {
+    if(event.target.id === "docFullscreenOverlay") closeFullscreenReader();
+  });
+  window.addEventListener("keydown", event => {
+    if(event.key === "Escape" && document.getElementById("docFullscreenOverlay")?.classList.contains("is-open")){
+      closeFullscreenReader();
+    }
   });
   document.getElementById("docCopyButton").addEventListener("click", async () => {
     const path = currentDocEntry?.path || currentDocPath;
-    if(path) await navigator.clipboard.writeText(path);
+    if(path) copyText(path, document.getElementById("docCopyButton"));
   });
   document.getElementById("docRevealButton").addEventListener("click", async () => {
     const path = currentDocEntry?.path || currentDocPath;
@@ -2840,7 +3649,113 @@ function renderDevData(){
   `).join("");
 }
 
-const pageIds = ["overview", "tasks", "product-flow", "docs", "dev-data", "branches", "release-log"];
+const DEFAULT_NAV_ITEMS = [
+  {page:"overview", label:"总览"},
+  {page:"tasks", label:"任务进度"},
+  {page:"dev-data", label:"开发数据"},
+  {page:"branches", label:"分支管理"},
+  {page:"product-flow", label:"产品结构图"},
+  {page:"docs", label:"文档库"},
+  {page:"release-log", label:"发布记录"}
+];
+const pageIds = DEFAULT_NAV_ITEMS.map(item => item.page);
+const navItemByPage = new Map(DEFAULT_NAV_ITEMS.map(item => [item.page, item]));
+const NAV_ORDER_STORAGE_KEY = "xai-dev-dashboard.navOrder.v1";
+let currentPage = "overview";
+let navOrder = readNavOrder();
+
+function sameOrder(a, b){
+  return a.length === b.length && a.every((value, index) => value === b[index]);
+}
+
+function sanitizeNavOrder(order){
+  const seen = new Set();
+  const next = [];
+  (Array.isArray(order) ? order : []).forEach(page => {
+    if(pageIds.includes(page) && !seen.has(page)){
+      seen.add(page);
+      next.push(page);
+    }
+  });
+  pageIds.forEach(page => {
+    if(!seen.has(page)) next.push(page);
+  });
+  return next;
+}
+
+function readNavOrder(){
+  try{
+    const raw = localStorage.getItem(NAV_ORDER_STORAGE_KEY);
+    return sanitizeNavOrder(raw ? JSON.parse(raw) : pageIds);
+  }catch{
+    return [...pageIds];
+  }
+}
+
+function saveNavOrder(){
+  try{
+    if(sameOrder(navOrder, pageIds)){
+      localStorage.removeItem(NAV_ORDER_STORAGE_KEY);
+      return;
+    }
+    localStorage.setItem(NAV_ORDER_STORAGE_KEY, JSON.stringify(navOrder));
+  }catch{}
+}
+
+function syncNavActive(page = currentPage){
+  document.querySelectorAll(".nav a[data-page]").forEach(link => {
+    link.classList.toggle("is-active", link.dataset.page === page);
+  });
+}
+
+function moveNavPage(page, direction){
+  const index = navOrder.indexOf(page);
+  const nextIndex = direction === "up" ? index - 1 : index + 1;
+  if(index < 0 || nextIndex < 0 || nextIndex >= navOrder.length) return;
+  [navOrder[index], navOrder[nextIndex]] = [navOrder[nextIndex], navOrder[index]];
+  saveNavOrder();
+  renderPrimaryNav();
+}
+
+function renderPrimaryNav(){
+  const list = document.getElementById("primaryNavList");
+  if(!list) return;
+  list.innerHTML = navOrder.map((page, index) => {
+    const item = navItemByPage.get(page);
+    if(!item) return "";
+    return `
+      <div class="nav-item" data-nav-item="${h(item.page)}">
+        <a class="nav-link" href="#${h(item.page)}" data-page="${h(item.page)}"><span>${h(item.label)}</span></a>
+        <div class="nav-move" aria-label="${h(item.label)}排序">
+          <button class="nav-order-btn" data-nav-page="${h(item.page)}" data-nav-move="up" type="button" aria-label="上移 ${h(item.label)}" title="上移"${index === 0 ? " disabled" : ""}>↑</button>
+          <button class="nav-order-btn" data-nav-page="${h(item.page)}" data-nav-move="down" type="button" aria-label="下移 ${h(item.label)}" title="下移"${index === navOrder.length - 1 ? " disabled" : ""}>↓</button>
+        </div>
+      </div>
+    `;
+  }).join("");
+  list.querySelectorAll("a[data-page]").forEach(link => {
+    link.addEventListener("click", event => {
+      event.preventDefault();
+      setPage(link.dataset.page);
+    });
+  });
+  list.querySelectorAll("[data-nav-move]").forEach(button => {
+    button.addEventListener("click", event => {
+      event.preventDefault();
+      moveNavPage(button.dataset.navPage, button.dataset.navMove);
+    });
+  });
+  const resetButton = document.getElementById("navOrderReset");
+  if(resetButton){
+    resetButton.disabled = sameOrder(navOrder, pageIds);
+    resetButton.onclick = () => {
+      navOrder = [...pageIds];
+      saveNavOrder();
+      renderPrimaryNav();
+    };
+  }
+  syncNavActive();
+}
 
 function renderTaskProgress(){
   const tp = dashboardState.task_progress || {items:[], counts:{}, source_count:0, shipped:0};
@@ -2865,12 +3780,11 @@ function renderTaskProgress(){
 
 function setPage(page, updateHash = true){
   const nextPage = pageIds.includes(page) ? page : "overview";
+  currentPage = nextPage;
   document.querySelectorAll("[data-page-section]").forEach(section => {
     section.classList.toggle("is-active", section.dataset.pageSection === nextPage);
   });
-  document.querySelectorAll(".nav a[data-page]").forEach(link => {
-    link.classList.toggle("is-active", link.dataset.page === nextPage);
-  });
+  syncNavActive(nextPage);
   if(updateHash && location.hash !== `#${nextPage}`){
     history.pushState(null, "", `#${nextPage}`);
   }
@@ -2880,21 +3794,36 @@ function setPage(page, updateHash = true){
   });
 }
 
-document.querySelectorAll(".nav a[data-page]").forEach(link => {
-  link.addEventListener("click", event => {
-    event.preventDefault();
-    setPage(link.dataset.page);
-  });
-});
+renderPrimaryNav();
 
 document.querySelectorAll("[data-page-jump]").forEach(button => {
   button.addEventListener("click", () => setPage(button.dataset.pageJump));
+});
+
+document.getElementById("moduleDrawerClose").addEventListener("click", closeModuleDrawer);
+document.getElementById("moduleDrawerOverlay").addEventListener("click", closeModuleDrawer);
+document.getElementById("moduleDrawerPrimary").addEventListener("click", () => {
+  if(!activeDrawerModule) return;
+  openProductTarget(activeDrawerModule.target);
+  closeModuleDrawer();
+});
+document.getElementById("moduleDrawerLocate").addEventListener("click", () => {
+  if(!activeDrawerModule) return;
+  setPage("product-flow");
+  setProduct(activeDrawerModule.item.key);
+  closeModuleDrawer();
+});
+window.addEventListener("keydown", event => {
+  if(event.key === "Escape" && document.getElementById("moduleDrawer")?.classList.contains("is-open")){
+    closeModuleDrawer();
+  }
 });
 
 window.addEventListener("hashchange", () => setPage(location.hash.slice(1), false));
 
 renderOverview();
 renderKpis();
+renderOverviewFlow();
 renderOverviewModules();
 renderStructureMap();
 renderBranchFlow();

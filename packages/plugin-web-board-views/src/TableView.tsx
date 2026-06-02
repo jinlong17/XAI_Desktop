@@ -337,8 +337,9 @@ export function TableView({ lists, lang, updateCard, onOpenCard }: TableViewProp
                             onChange={(e) => {
                               const v = e.target.value;
                               if (!v) return;
-                              const d = new Date(v);
-                              const newDue = `${d.getMonth() + 1}/${d.getDate()}`;
+                              const [, month, day] = v.match(/^(\d{4})-(\d{2})-(\d{2})$/) ?? [];
+                              if (!month || !day) return;
+                              const newDue = `${Number(month)}/${Number(day)}`;
                               updateCard(list.id, card.id, {
                                 due: newDue,
                                 dueEn: undefined,

@@ -28,6 +28,12 @@ export const ANTHROPIC_MODEL_IDS: Readonly<Record<AiModelId, string>> = Object.f
   opus: "claude-opus-4-5-20251001",
 });
 
+const OPENAI_COMPATIBLE_ALLOWED_ORIGINS = new Set([
+  "https://api.openai.com",
+  "https://api.groq.com",
+  "https://generativelanguage.googleapis.com",
+]);
+
 // OpenAI-compatible model id pass-through: the user's model string is used as-is.
 // The real model id depends on the OpenAI-compatible provider (e.g. Groq).
 
@@ -161,6 +167,18 @@ export function resolveProvider(apiKey: string): ProviderConfig {
       throw new Error(
         "[llmProvider] OpenAI-compatible selected but no base URL configured. " +
           "Please set the base URL in Settings → AI.",
+      );
+    }
+    let parsedBase: URL;
+    try {
+      parsedBase = new URL(baseUrl);
+    } catch {
+      throw new Error("[llmProvider] OpenAI-compatible base URL is invalid.");
+    }
+    if (!OPENAI_COMPATIBLE_ALLOWED_ORIGINS.has(parsedBase.origin)) {
+      throw new Error(
+        "[llmProvider] OpenAI-compatible base URL is not allowlisted by the Web CSP. " +
+          "Use OpenAI, Groq, or Gemini endpoints.",
       );
     }
     const cleanBase = baseUrl.replace(/\/$/, "");
