@@ -38,6 +38,7 @@ const DEFAULT_LAYOUT_BY_SPAN: Record<WidgetSpanClass, WidgetLayoutItem> = {
   "w-clock": { cols: 6, minHeight: 166 },
   "w-stat": { cols: 2, minHeight: 118 },
   "w-weather": { cols: 6, minHeight: 156 },
+  "w-timetrack": { cols: 4, minHeight: 160 },
   "w-mini-cal": { cols: 4, minHeight: 246 },
   "w-timezones": { cols: 4, minHeight: 210 },
   "w-stickies": { cols: 4, minHeight: 210 },

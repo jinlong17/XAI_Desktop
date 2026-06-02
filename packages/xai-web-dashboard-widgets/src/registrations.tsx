@@ -7,7 +7,32 @@
  * corresponding widget's render returns null so the array length stays at 10
  * (registration sanity tests rely on this).
  */
-import type { WidgetRegistration } from "@repo/plugin-web-dashboard-grid";
+import type { ReactNode } from "react";
+import type { Lang } from "@repo/plugin-web-tokens";
+
+type WidgetSpanClass =
+  | "w-clock"
+  | "w-stat"
+  | "w-weather"
+  | "w-timetrack"
+  | "w-mini-cal"
+  | "w-timezones"
+  | "w-stickies"
+  | "w-mail"
+  | "w-upcoming";
+
+interface WidgetRenderContext {
+  lang: Lang;
+  now: Date;
+  goTo: (moduleId: string) => void;
+}
+
+interface WidgetRegistration {
+  id: string;
+  span: WidgetSpanClass;
+  render: (ctx: WidgetRenderContext) => ReactNode;
+  ariaLabel?: { en: string; zh: string };
+}
 
 import { ClockWidget } from "./widgets/ClockWidget.js";
 import { MailWidget } from "./widgets/MailWidget.js";

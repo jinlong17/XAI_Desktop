@@ -1817,9 +1817,6 @@ importers:
       '@repo/core':
         specifier: workspace:*
         version: link:../core
-      '@repo/plugin-web-dashboard-grid':
-        specifier: workspace:*
-        version: link:../xai-web-dashboard-grid
       '@repo/plugin-web-storage':
         specifier: workspace:*
         version: link:../plugin-web-storage
