@@ -4,7 +4,7 @@
 > 只有状态为 Stable 或 Production 的 Plugin 才能被作为稳定依赖。
 > 状态为 In-Dev / Testing 的 Plugin 必须使用 Mock 数据解耦。
 >
-> 最后更新: 2026-05-26
+> 最后更新: 2026-06-02
 
 ---
 
@@ -86,7 +86,7 @@ Current rule: Web new work is permitted on the `web` line; P1/G1 native foundati
 
 ## Plugins
 
-> **PAUSED during Web P0 (2026-05-24).** All rows below are part of P1/P2 Desktop scope. Web Modules (P0) are listed in the "Web Modules" section further down. Do not start new dev work on P1/P2 plugin packages during the Web P0 period — refer to "Current Priority" at the top of this file.
+> **Status per ADR-0010 (amended 2026-05-30).** Rows below are P1/P2 Desktop scope. Web Modules (P0) are listed in the "Web Modules" section further down. **P1 (account / console / productivity / ai-cube / calendar / labels / project + G0/G1 native-foundation anchors) is an ACTIVE App lane**; only **P2 desktop-organizer plugins (clipboard / widgets / pet / meditation) + sync-v1 + G2 stay PAUSED until G1 SHIPPED** (ADR-0010 §D2). `organizer` is already Stable/shipped — its P-level is being reconciled in `docs/adr/0015-desktop-plugin-scope-and-organizer-level.md`. Module/surface routing: `docs/MODULE_BOUNDARIES.md`. Refer to "Current Priority" at the top of this file.
 
 | Plugin | 目录 | 状态 | PRD 章节 | 对外依赖 | 最后更新 |
 |--------|------|------|---------|---------|---------|
@@ -99,9 +99,9 @@ Current rule: Web new work is permitted on the `web` line; P1/G1 native foundati
 | calendar | packages/plugin-calendar/ | In-Dev | calendar/PRD | @repo/core, @repo/core-data, @repo/plugin-widgets (peer/runtime seam; no current Web manifest declaration) | 2026-05-21 |
 | clipboard | packages/plugin-clipboard/ | Planned | §5.5 | @repo/core | — |
 | widgets | packages/plugin-widgets/ | Planned | §5.6 | @repo/core | — |
-| meditation | packages/plugin-meditation/ | Planned | §5.7 | @repo/core | — |
+| meditation | `packages/plugin-meditation/` *(未建包 / no package yet — Planned row only; Web form shipped as `xai-web-meditation`)* | Planned | §5.7 | @repo/core | — |
 | ai-cube | packages/plugin-ai-cube/ | In-Dev | §5.8 | @repo/core, @repo/core-data, @repo/ui | 2026-05-21 |
-| settings | packages/plugin-settings/ | Planned | — | @repo/core, @repo/ui | — |
+| settings | `packages/plugin-settings/` *(未建包 / no package yet — Planned row only)* | Planned | — | @repo/core, @repo/ui | — |
 
 ## Web Modules (W2 parallel build)
 
