@@ -958,13 +958,17 @@ vi.mock('@repo/core-data', async () => {
 // 详见 ADR-0003 三个面架构
 ```
 
-### 9.9 AI 桌面宠物(归属 plugin-widgets,子模块)
+### 9.9 AI 桌面宠物(独立包 plugin-pet — ADR-0015)
+
+> **决策 ADR-0015(web 侧 Accepted 2026-06-02):桌宠是独立插件包 `packages/plugin-pet`,不是 plugin-widgets 的子模块。** 该包代码已存在(stateMachine / PetAvatar / PetBubble / PetPanel / PetAiReaction);它有自己的状态机 + AI persona 生命周期(FR-PET-09~11 依赖 ai-cube)+ 数据表 `pets` / `pet_memory`(主 PRD §5.16)。`desktop-pet` 不再列在 plugin-widgets 的 contentTypes 内。
 
 ```jsonc
 {
-  "name": "widgets",
-  "contentTypes": ["clock", "weather", "note", "progress-tracker", "meditation", "desktop-pet"],
-  "events": { "emit": ["widgets:*", "pet:*"], "listen": ["productivity:pomodoro-*", "account:sync-*", "ai:query-*"] }
+  "name": "pet",
+  "windows": { "overlay": true },
+  "contentTypes": ["desktop-pet"],
+  "events": { "emit": ["pet:*"], "listen": ["productivity:pomodoro-*", "account:sync-*", "ai:query-*"] },
+  "dependencies": ["@repo/core"]
 }
 ```
 
@@ -992,7 +996,7 @@ vi.mock('@repo/core-data', async () => {
 }
 ```
 
-> 其余 5 个 sub-widget(冥想 / 时间进度条 / 时钟 / 天气 / 便签)归 plugin-widgets,在 manifest 用 contentTypes 列。
+> plugin-widgets 的 sub-widget(时钟 / 天气 / 便签 / 时间进度条 / 冥想)在其 manifest 用 contentTypes 列(`["clock","weather","note","progress-tracker","meditation"]`);**桌宠 desktop-pet 已移出 widgets,改由独立包 plugin-pet 承载**(见上 §9.9 / ADR-0015)。
 
 ---
 
