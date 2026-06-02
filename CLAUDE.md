@@ -10,7 +10,7 @@ Active focus order — supersedes any conflicting prior PRD / roadmap:
 
 Authority basis: **ADR-0010 Accepted 2026-05-26, amended 2026-05-30** supersedes the old "P0 Web maintenance-only / P0 carve-out required" reading. ADR-0013 governs branch topology and the Web to Desktop D3 gate.
 
-### Branch & sync governance (ADR-0013, Proposed)
+### Branch & sync governance (ADR-0013, Accepted 2026-06-01)
 
 `docs/adr/0013-branch-sync-governance.md` is the authority for branch topology,
 the Web→Desktop sync gate, and the account cloud-sync per-feature contract. It is
