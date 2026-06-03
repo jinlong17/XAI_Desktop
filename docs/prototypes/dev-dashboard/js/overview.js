@@ -32,6 +32,52 @@ function renderOverview(){
       <div><b>${h(item.label)}</b><span>${h(item.value)}</span></div>
     </div>
   `).join("");
+  renderOverviewSkillQuick();
+}
+
+// Frequently-used entry-point skills surfaced on the Overview (display curation).
+// The full skill registry lives on the Skill/Agent page (auto-scanned); this is a quick-jump strip.
+const OVERVIEW_QUICK_SKILLS = [
+  ["xai-consistency-audit", "边界 / 一致性审计"],
+  ["xai-module-classify", "功能归类 / 边界扫描"],
+  ["xai-dev-dashboard-sync", "看板同步"],
+  ["xai-feature-brief", "需求规范化"],
+  ["xai-feature-full-loop", "功能一条龙"],
+  ["xai-web-to-desktop-sync", "D3 闸门"],
+  ["xai-sync-fanout-dispatch", "完成后扇出同步"],
+  ["xai-release-log", "发布登记"]
+];
+function ensureSkillQuickStyles(){
+  if(typeof document === "undefined" || document.getElementById("xai-skill-quick-styles")) return;
+  const el = document.createElement("style");
+  el.id = "xai-skill-quick-styles";
+  el.textContent = `
+  .overview-skill-quick{margin-top:10px;padding:12px;border:1px solid var(--line);border-radius:10px;background:color-mix(in srgb,var(--surface) 80%,transparent)}
+  .osk-head{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:8px}
+  .osk-head b{font-size:13px}
+  .osk-head span{color:var(--faint);font-size:11px}
+  .osk-chips{display:flex;flex-wrap:wrap;gap:8px}
+  .osk-chip{display:flex;flex-direction:column;align-items:flex-start;gap:2px;padding:7px 10px;border:1px solid var(--line);border-radius:8px;background:var(--surface-2);cursor:pointer;text-align:left}
+  .osk-chip:hover{border-color:var(--blue)}
+  .osk-chip code{font-size:11px}
+  .osk-chip span{color:var(--muted);font-size:11px}
+  `;
+  document.head.appendChild(el);
+}
+function renderOverviewSkillQuick(){
+  ensureSkillQuickStyles();
+  const host = document.getElementById("overviewSkillQuick");
+  if(!host) return;
+  const byName = new Map((typeof skills !== "undefined" ? skills : []).map(s => [s.name, s]));
+  const items = OVERVIEW_QUICK_SKILLS.filter(([name]) => byName.has(name));
+  if(!items.length){ host.innerHTML = ""; return; }
+  host.innerHTML = `
+    <div class="osk-head"><b>常用 Skill</b><span>${items.length} 个高频入口 · 点击进入 Skill 页</span></div>
+    <div class="osk-chips">${items.map(([name, label]) => {
+      const desc = (byName.get(name)?.desc || "").slice(0, 90);
+      return `<button class="osk-chip" type="button" data-osk="${h(name)}" title="${h(desc)}"><code>${h(name)}</code><span>${h(label)}</span></button>`;
+    }).join("")}</div>`;
+  host.querySelectorAll("[data-osk]").forEach(btn => btn.addEventListener("click", () => setPage("skill-agent")));
 }
 
 function renderKpis(){
