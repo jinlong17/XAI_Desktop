@@ -1,7 +1,9 @@
 // Branch-management page (BOUNDARIES.md §4.4). Split out of the former
 // ops-panels.js (P2.2) so each page owns one file. Plain <script> global —
-// no import/export. Depends on globals: dashboardState (state.generated.js),
-// branches (state.js), h/badgeClass (utils.js). main.js calls renderBranches().
+// no import/export. Depends on globals: dashboardState (state.generated.js) —
+// PRIMARY source is dashboardState.branch_policy.long_lived_branches; the `branches`
+// const (state.js) is only a last-resort fallback. h/badgeClass (utils.js).
+// main.js calls renderBranches().
 function renderBranches(){
   const policy = dashboardState.branch_policy;
   if(policy?.long_lived_branches?.length){
@@ -38,6 +40,8 @@ function renderBranches(){
     `;
     return;
   }
+  // Fallback: branch_policy absent/empty (stale state). Use the hardcoded
+  // last-resort list from state.js — see its comment. Primary path is above.
   document.getElementById("branchGrid").innerHTML = branches.map(([name,desc,status]) => `
     <div class="branch-row">
       <div class="branch-name">${name}</div>

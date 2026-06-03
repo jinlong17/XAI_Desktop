@@ -190,6 +190,11 @@ const SKILL_AGENT_CATEGORIES = [
   }
 ];
 
+// LAST-RESORT FALLBACK ONLY (BOUNDARIES.md §4.4-B). The branch grid is data-driven:
+// renderBranches() reads dashboardState.branch_policy.long_lived_branches as the
+// PRIMARY source and only falls back to this hardcoded list when branch_policy is
+// absent (e.g. a stale/partial state.generated.js). Do not extend this — add branch
+// rows to the branch_policy source, not here.
 const branches = [
   ["web", "Web 主线和 Web release source。适合 Web 产品、共享 UI 源头和系统治理文档。", "exists"],
   ["desktop-next", "Web 到 App 的集成线。D3 gate 通过后，桌面差异在这里补齐。", "defined"],
