@@ -35,3 +35,16 @@
 
 ## Notes
 - This run validates the skill end-to-end: it found a genuine status-mismatch (time-tracker further along than the board shows), two ghost features the operator created during the dashboard build, a stale skill count, and two unregistered skills — exactly the "real dev ↔ management surface" drift the audit exists to catch.
+
+## Resolution (same-day re-check, after the parallel dashboard refactor + bookkeeping merge landed)
+
+| # | finding | resolution |
+|---|---|---|
+| 1 | time-tracker in-dev vs dev_log READY_TO_SHIP | **Kept** — dashboard status vocab has no "ready/verify" state; `in-dev` is the honest pre-ship status. No change. |
+| 2 | plugin「快速记账/时间追踪挂件」ghost | **Kept as `proposed`** — a forward-looking desktop port now backed by real web precedents (bookkeeping/time-tracker); honestly proposed, on the frozen plugin line. |
+| 3 | 记账 Accounting — no PRD/package | **✅ SELF-HEALED** by parallel merge `1b3d63f`: renamed `记账 Bookkeeping`, real `packages/plugin-web-bookkeeping/` + `docs/product/bookkeeping/prd.md`, status in-dev. Exactly the predicted self-heal. |
+| 4 | kpis 固定 skill 10 vs raw 12 | **❌ FALSE POSITIVE** — `固定 skill` is a *curated entry-point* list, not a raw count. Check refined in `5e8a08e` so it never compares curated-vs-raw again. |
+| 5 | xai-module-classify unregistered | **✅ Already resolved** — it is in the curated kpi note (added by the refactor's curation before this re-check). |
+| 6 | xai-consistency-audit unregistered | **✅ APPLIED** `f961314` — added to the curated `固定 skill` kpi (10→11). |
+
+**Net:** 1 applied (#6), 1 self-healed (#3), 2 false-positive/already-resolved (#4/#5), 2 kept-as-honest (#1/#2), 1 check refined (#4). The first run did its job: it caught real drift, predicted a self-heal that happened, and exposed 1 imprecise check that is now fixed. Boundary HR1/HR2/HR5 deep code-scan still pending a full `xai-module-classify` scan (deferred while the plugin line is frozen).
