@@ -1076,7 +1076,7 @@
   .doc-item-row[data-importance="必读"],
   .doc-inspector-title[data-importance="必读"]{
     --doc-tone:var(--red);
-    --doc-bg:#ffefed;
+    --doc-bg:var(--module-red-bg);
     --doc-border:#ffc5bf;
     --doc-ink:#a6281d;
   }
@@ -1088,7 +1088,7 @@
     --doc-tone:var(--blue);
     --doc-bg:#eaf2ff;
     --doc-border:#bdd7ff;
-    --doc-ink:#0f4d9a;
+    --doc-ink:var(--surface-code-ink);
   }
   .doc-rec-card[data-importance="系统级"],
   .doc-rec-link[data-importance="系统级"],
@@ -1096,7 +1096,7 @@
   .doc-item-row[data-importance="系统级"],
   .doc-inspector-title[data-importance="系统级"]{
     --doc-tone:#07849a;
-    --doc-bg:#e6f8fb;
+    --doc-bg:var(--module-cyan-bg);
     --doc-border:#b8eaf1;
     --doc-ink:#066a7c;
   }
@@ -1105,7 +1105,7 @@
   .doc-item-row[data-doc-family="skill"],
   .doc-inspector-title[data-doc-family="skill"]{
     --doc-tone:var(--purple);
-    --doc-bg:#f1edff;
+    --doc-bg:var(--module-purple-bg);
     --doc-border:#d9cffd;
     --doc-ink:#5733c7;
   }
@@ -1114,7 +1114,7 @@
   .doc-item-row[data-doc-family="workflow"],
   .doc-inspector-title[data-doc-family="workflow"]{
     --doc-tone:#b56f00;
-    --doc-bg:#fff7df;
+    --doc-bg:var(--module-yellow-bg);
     --doc-border:#ffe2a3;
     --doc-ink:#7a4d00;
   }
@@ -1363,9 +1363,9 @@
     font-weight:850;
     white-space:nowrap;
   }
-  .importance-pill[data-importance="必读"]{color:var(--red);border-color:#ffd3ce;background:#ffefed}
+  .importance-pill[data-importance="必读"]{color:var(--red);border-color:#ffd3ce;background:var(--module-red-bg)}
   .importance-pill[data-importance="必要"]{color:var(--blue);border-color:#cfe2ff;background:#eaf2ff}
-  .importance-pill[data-importance="系统级"]{color:#07849a;border-color:#c7eff5;background:#e6f8fb}
+  .importance-pill[data-importance="系统级"]{color:#07849a;border-color:#c7eff5;background:var(--module-cyan-bg)}
   .importance-pill[data-importance="参考"]{color:#566175;border-color:#d3dbe7;background:#eef1f6}
   .doc-inspector-title{
     display:grid;
