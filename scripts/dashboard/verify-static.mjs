@@ -37,10 +37,17 @@ const requiredMountIds = [
   "release-log",
   "releaseRows"
 ];
+// Render-script load order (after ./state.generated.js, before nothing of note).
+// status-meta.js + skill-groups.js are shared-vocabulary globals loaded before
+// their consumers (overview/product-flow/skill-agent). ops-panels.js was split
+// into branches/dev-data/tasks/release-log.js (one file per page). Keep this list
+// in sync with index.html and with docs/prototypes/dev-dashboard/BOUNDARIES.md.
 const requiredScripts = [
   "./state.generated.js",
   "./js/state.js",
   "./js/utils.js",
+  "./js/status-meta.js",
+  "./js/skill-groups.js",
   "./js/theme.js",
   "./js/testing.js",
   "./js/overview.js",
@@ -48,7 +55,10 @@ const requiredScripts = [
   "./js/deployment.js",
   "./js/docs-library.js",
   "./js/skill-agent.js",
-  "./js/ops-panels.js",
+  "./js/branches.js",
+  "./js/dev-data.js",
+  "./js/tasks.js",
+  "./js/release-log.js",
   "./js/nav.js",
   "./js/usage-ops.js",
   "./js/main.js"
