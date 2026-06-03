@@ -32,23 +32,6 @@ const dashboardTemplatePath = "docs/prototypes/dev-dashboard/TEMPLATE.md";
 const dashboardBoundariesPath = "docs/prototypes/dev-dashboard/BOUNDARIES.md";
 const dashboardDesignPath = "docs/prototypes/dev-dashboard/DESIGN.md";
 const dashboardSyncSkillPath = ".teams/skills/xai-dev-dashboard-sync/SKILL.md";
-const roadmapAllowlist = [
-  "sync-v1.md",
-  "web-ticktick-parity.md",
-  "xai-admin-dashboard-system-integration.md",
-  "xai-g0-window-spike.md",
-  "xai-g1-native-foundation.md",
-  "xai-web-calendar-event-create.md",
-  "xai-web-console-gap-closure.md",
-  "xai-web-console.md",
-  "xai-web-dashboard-real-data.md",
-  "xai-web-dashboard-stickies-create.md",
-  "xai-web-dashboard-weather-mail.md",
-  "xai-web-matrix-card-create.md",
-  "xai-web-statistics-real-aggregation.md",
-  "xai-web-tasks-card-create.md",
-  "xai-web-tasks-smartlist-filter.md"
-];
 
 // SOURCE OF TRUTH for skill/agent categories (BOUNDARIES.md §7). Emitted as
 // `skill_agent_registry.categories`, which js/skill-agent.js always prefers at
@@ -1569,10 +1552,17 @@ function parseRoadmapManifest(filename) {
 }
 
 function listRoadmapManifests() {
+  // Glob every *.md under docs/workflow/roadmap/ instead of a hardcoded
+  // allowlist (the old allowlist silently missed newly-added manifests).
+  // parseRoadmapManifest is robust: it only returns a manifest for files that
+  // actually contain the `| # | Slug | … | Status |` table header the parser
+  // expects, and returns null (never throws) for non-manifest docs, so logs,
+  // incident notes, deferred-gate files, etc. under this dir are skipped.
   try {
     if (!existsSync(roadmapDir)) return [];
-    return roadmapAllowlist
-      .map(parseRoadmapManifest)
+    return readdirSync(roadmapDir, { withFileTypes: true })
+      .filter(entry => entry.isFile() && entry.name.endsWith(".md"))
+      .map(entry => parseRoadmapManifest(entry.name))
       .filter(Boolean)
       .sort((a, b) => a.filename.localeCompare(b.filename));
   } catch {
