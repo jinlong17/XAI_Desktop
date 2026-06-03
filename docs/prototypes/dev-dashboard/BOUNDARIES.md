@@ -323,8 +323,10 @@ Owner 的渲染器/数据/状态词汇，不 fork 第二套。**富展示不算�
 
 ## 7. 当前已知的边界违规 / 清理清单（落地时修）
 
-> 摸底发现的问题分两类。**✅ 已修复**部分由 P1–P4 落地（branch `codex/web/dashboard-boundaries`，
-> 本地提交，未 push/merge；运行期已 serve+390px+暗色验证通过）。**⏳ 仍待办**为延后或未列入本轮的项。
+> 摸底发现的问题分两类。**✅ 已修复**部分由 P1–P4（branch `codex/web/dashboard-boundaries`）
+> 与 T4 cleanup（branch `codex/web/dashboard-cleanup`）落地，本地提交，未 push/merge；P1–P4 运行期已
+> serve+390px+暗色验证通过，T4 经 node `--check`、generator 重跑、headless jsdom concat-eval 渲染验证
+> （`setProduct` / `openModuleDrawer` × 6 模块 + 11 页全渲染、0 error）。**⏳ 仍待办**为延后或未列入本轮的项。
 
 **✅ 已修复（P1–P4）**
 - `FEATURE_STATUS` 两份 → 共享 `js/status-meta.js`（P1 `54e8523`）。
@@ -337,15 +339,18 @@ Owner 的渲染器/数据/状态词汇，不 fork 第二套。**富展示不算�
 - `--radius` token 启用（123 处 `8px`→`var(--radius)`）+ `background:#fff`→`var(--surface)`（30 处，修暗色 chrome bug）（P3.4 `0c5d586`）。
 - `verify-static.mjs` script-order 闸门与新布局对齐（P4 `9cefd1b`）。
 
+**✅ 已修复（T4 cleanup · `codex/web/dashboard-cleanup`）**
+- 孤儿 const `docCollections` / `currentDocCollection`（P3.2 删 `renderDocCollections` 后无消费者）删除（T4.1 `dbc974d`）。
+- `SKILL_AGENT_CATEGORIES` 双份单源化：generator (`skillAgentCategories`) 定为真源（emit `skill_agent_registry.categories`，client 始终优先），`state.js` 那份标注为 stale-fallback 冻结镜像，双向 sync 注释（T4.2 `2715cfe`）。
+- roadmap 白名单硬编码 → `readdirSync(*.md)` + `parseRoadmapManifest` 表头过滤（漏算修复：15→16，新捕获 `account-cloud-sync-foundation.md`，非 manifest 文档自动跳过）（T4.3 `e7b1d5b`）。
+- 部署 env 侧栏自重复 → §4.6-E：侧栏只展示非 nominal（非 `deployed`）或有 issue/异常的模块（复用 `deploymentSummary()`，模块 fact-grid 仍为 env Owner）（T4.4 `f999bdf`）。
+- `theme-bootstrap.js` ↔ `theme.js` FOUC 守卫 key/校验刻意重复：双向加 sync-invariant 注释（不抽共享）（T4.6 `4dfd0e3`）。
+
 **⏳ 仍待办（延后 / 未列入本轮）**
-- **P1b 延后**：总览 drawer (`openModuleDrawer`) 与 product-flow detail (`setProduct`) 仍是两套渲染器（`FEATURE_STATUS` 已共享；渲染器合并因 `#productDetail` DOM 耦合 + 监听器重连风险延后，需带浏览器做）。
-- 部署 env 在部署页出现两次（模块 fact-grid + 侧栏）+ 总览：侧栏并入 §4.6-E 未实施。
+- **P1b 仍延后**：总览 drawer (`openModuleDrawer`) 与 product-flow detail (`setProduct`) 是**刻意不同的两个视图**（Owner 完整明细 vs 紧凑 Mirror），非同一 body 两挂载点——数据形状（registry vs overview-module）、CSS（`detail-*` vs `drawer-*`）、helper 集均不重叠；唯一共享项（`FEATURE_STATUS` 词汇）已在 P1 收敛。强行单一 renderer 要么回归紧凑 drawer，要么变成包两个 body 的 `variant` 假合并并需重写 `setProduct` 硬编码 `#productDetail` 监听（监听器重连风险，无浏览器不可验）。两侧已加交叉引用注释固化此判定（T4.5 `021e9af`）；真正合并需带浏览器交互验证。
 - 总览 5 section 拼（唯一多 section 页）：未收敛（属约定）。
 - 无懒渲染（`main.js` 全量渲染）：未加 per-page mount。
-- `SKILL_AGENT_CATEGORIES` 在 `state.js` 与 `generate-state.mjs` 双份：未单源。
-- roadmap 白名单硬编码（`generate-state.mjs`）：未改 glob。
 - 视觉折叠（P3.4 延后部分）：~27 处 `box-shadow`（alpha 与 `--shadow` 不同）、5 块重复 `[data-tone]`（特异性）、doc 重要性/family 字面 hex 折叠（值偏移）——都需带浏览器做。
-- `theme-bootstrap.js` 复制 `theme.js` 的 key/校验/`hexToRgb`（FOUC 守卫，刻意）：未抽共享。
 - 测试状态跨 3 页：**保留为 Shared-Widget 徽标**（本就正确，非待办）；仅禁止扩成第二张测试明细卡。
 
 ---
