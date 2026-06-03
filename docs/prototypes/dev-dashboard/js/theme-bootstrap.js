@@ -1,3 +1,10 @@
+// FOUC pre-paint guard. This runs in <head> BEFORE js/theme.js loads, so it
+// must inline its own copy of the localStorage key names + validators rather
+// than import them. INVARIANT: the key strings below (themeMode/accent .v1) and
+// the validHex/hexToRgb logic MUST stay byte-for-byte in sync with the
+// THEME_*_STORAGE_KEY constants and normalize/hexToRgb helpers in js/theme.js.
+// The duplication is intentional (avoids a flash of the wrong theme); do not
+// "DRY" it away by deferring this script — that reintroduces the FOUC.
 (() => {
     const modeKey = "xai-dev-dashboard.themeMode.v1";
     const accentKey = "xai-dev-dashboard.accent.v1";

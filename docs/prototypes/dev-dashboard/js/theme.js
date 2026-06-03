@@ -1,3 +1,8 @@
+// INVARIANT: these two storage keys (and the hex/mode validators below) are
+// deliberately mirrored by the pre-paint FOUC guard in js/theme-bootstrap.js,
+// which runs in <head> before this file loads and cannot import them. If you
+// rename a key or change validation here, update js/theme-bootstrap.js in the
+// same commit or the pre-paint theme will diverge from the live theme.
 const THEME_MODE_STORAGE_KEY = "xai-dev-dashboard.themeMode.v1";
 const THEME_ACCENT_STORAGE_KEY = "xai-dev-dashboard.accent.v1";
 const THEME_DEFAULT_ACCENT = "#1a73e8";
