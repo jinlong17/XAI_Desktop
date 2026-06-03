@@ -52,15 +52,18 @@ function ensureSkillQuickStyles(){
   const el = document.createElement("style");
   el.id = "xai-skill-quick-styles";
   el.textContent = `
-  .overview-skill-quick{margin-top:10px;padding:12px;border:1px solid var(--line);border-radius:10px;background:color-mix(in srgb,var(--surface) 80%,transparent)}
-  .osk-head{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:8px}
+  .overview-skill-quick{margin-top:10px;padding:13px;border:1px solid var(--line);border-radius:10px;background:color-mix(in srgb,var(--surface) 80%,transparent)}
+  .osk-head{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:10px}
   .osk-head b{font-size:13px}
   .osk-head span{color:var(--faint);font-size:11px}
-  .osk-chips{display:flex;flex-wrap:wrap;gap:8px}
-  .osk-chip{display:flex;flex-direction:column;align-items:flex-start;gap:2px;padding:7px 10px;border:1px solid var(--line);border-radius:8px;background:var(--surface-2);cursor:pointer;text-align:left}
-  .osk-chip:hover{border-color:var(--blue)}
-  .osk-chip code{font-size:11px}
-  .osk-chip span{color:var(--muted);font-size:11px}
+  .osk-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(214px,1fr));gap:8px}
+  .osk-card{display:flex;flex-direction:column;gap:5px;padding:9px 11px;border:1px solid var(--line);border-radius:9px;background:var(--surface-2);cursor:pointer;transition:border-color .15s ease,transform .15s ease}
+  .osk-card:hover{border-color:var(--blue);transform:translateY(-1px)}
+  .osk-card-top{display:flex;align-items:center;justify-content:space-between;gap:8px}
+  .osk-card-top code{font-size:12px;font-weight:700;overflow-wrap:anywhere;line-height:1.3}
+  .osk-label{color:var(--muted);font-size:11px}
+  .osk-copy{flex:none;border:1px solid var(--line);border-radius:6px;background:var(--surface);color:var(--faint);font-size:10px;padding:3px 8px;cursor:pointer;white-space:nowrap;transition:border-color .15s ease,color .15s ease}
+  .osk-copy:hover{border-color:var(--blue);color:var(--blue)}
   `;
   document.head.appendChild(el);
 }
@@ -72,12 +75,19 @@ function renderOverviewSkillQuick(){
   const items = OVERVIEW_QUICK_SKILLS.filter(([name]) => byName.has(name));
   if(!items.length){ host.innerHTML = ""; return; }
   host.innerHTML = `
-    <div class="osk-head"><b>常用 Skill</b><span>${items.length} 个高频入口 · 点击进入 Skill 页</span></div>
-    <div class="osk-chips">${items.map(([name, label]) => {
-      const desc = (byName.get(name)?.desc || "").slice(0, 90);
-      return `<button class="osk-chip" type="button" data-osk="${h(name)}" title="${h(desc)}"><code>${h(name)}</code><span>${h(label)}</span></button>`;
+    <div class="osk-head"><b>常用 Skill</b><span>${items.length} 个高频入口 · 点卡片进 Skill 页 · 点「复制」拷名字</span></div>
+    <div class="osk-grid">${items.map(([name, label]) => {
+      const desc = (byName.get(name)?.desc || "").slice(0, 110);
+      return `<div class="osk-card" data-osk="${h(name)}" title="${h(desc)}">
+        <div class="osk-card-top"><code>${h(name)}</code><button class="osk-copy" type="button" data-osk-copy="${h(name)}" title="复制 skill 名字">复制</button></div>
+        <span class="osk-label">${h(label)}</span>
+      </div>`;
     }).join("")}</div>`;
-  host.querySelectorAll("[data-osk]").forEach(btn => btn.addEventListener("click", () => setPage("skill-agent")));
+  host.querySelectorAll("[data-osk]").forEach(card => card.addEventListener("click", () => setPage("skill-agent")));
+  host.querySelectorAll("[data-osk-copy]").forEach(btn => btn.addEventListener("click", event => {
+    event.stopPropagation();
+    copyText(btn.dataset.oskCopy, btn);
+  }));
 }
 
 function renderKpis(){
