@@ -6,6 +6,15 @@
 
 ## 2026-06-03
 
+### 个人开发看板数据边界修复
+
+- Product line: project-system / dev-dashboard
+- Branch / commit: `web` / local working tree
+- User-visible change: 个人开发看板的测试结果、发布记录和模块健康结论不再把 `dev-dashboard` / `project-system` 证据归到 Admin；Skill / Agent 页新增源文件完整度指标，区分“展示字段已补齐”和“源文件已补齐”。
+- Developer/system delta: `release-testing.mjs` 抽出 release-log Verification 判定，先识别 `0 failures / 0 errors` 等零失败表达再匹配失败词；`generate-state.mjs` 将 `project-system/dev-dashboard` 拆成独立 release/testing 归类，收窄 Admin aliases，并为 `skill_agent_registry` 增加 `source_completeness`；`verify-static.mjs` 新增 release verdict fixture 和 `theme-bootstrap.js` 顺序检查；`verify-product-modules.mjs` 允许 release 卡展示 `project-system` 支持类，同时继续强制六个 Product Module Registry key。
+- Verification: `node --check` passed for dashboard generator, release-testing helper, static/module verifiers, and changed dashboard JS files；`dashboard-state.json` JSON parse passed；`pnpm dashboard` passed；generated state confirmed dev-dashboard release entries under `project-system`, zero-failure testing record as `pass` with `failure_count=0`, Admin testing `failure_count=0`, `source_completeness` present, and release modules including separate `project-system` card；`pnpm dashboard:verify-modules` passed；`pnpm dashboard:verify-static` passed.
+- Risk / follow-up: `source_completeness` correctly reports most Skill / Agent entries still rely on generated backfill; this is now visible as a source-documentation follow-up, not a dashboard display gap.
+
 ### 个人开发看板 Skill / Agent 知识库
 
 - Product line: project-system / dev-dashboard

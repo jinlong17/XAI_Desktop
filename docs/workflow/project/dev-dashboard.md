@@ -203,6 +203,12 @@ Testing Registry entries must cover the six module keys `web`, `app`, `plugin`,
 - category rows for `self_test`, `unit`, `e2e`, `backend`, `frontend_page`,
   `build`, `pre_deploy`, and `regression`.
 
+Dashboard-local evidence that belongs to the project system itself must use
+`project-system`, not `admin`. This includes `dev-dashboard`, `dashboard-state`,
+`generate-state`, `xai-dev-dashboard-sync`, and local dashboard smoke records.
+Those records may appear in Testing / Release record lists, but they must not
+change the six Product Module Registry cards or Admin module health.
+
 The generator may derive additional test records from
 `docs/workflow/project/release-log.md` `Verification` fields and may scan known
 local report paths such as `playwright-report/`, `test-results/`, and
@@ -249,6 +255,11 @@ If the registry generates a description, input/output summary, workflow link,
 or note from heuristics instead of an explicit source section, keep the
 generated value visible and expose it as a source-backfill note. Do not count it
 as an unresolved gap once the dashboard entry is usable.
+
+The registry must also expose `source_completeness` separately from display
+completeness. Display completeness means the dashboard entry is usable after
+deterministic generation. Source completeness means the required fields came
+from the Skill / Agent source files without generated backfill.
 
 Every dashboard sync should check:
 

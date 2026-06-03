@@ -49,7 +49,8 @@ const releaseModuleLabels = {
   plugin:"桌面插件",
   sync:"账号云同步",
   site:"官网",
-  admin:"Dashboard"
+  admin:"Dashboard",
+  "project-system":"Project System"
 };
 
 function listItems(items, fallback){

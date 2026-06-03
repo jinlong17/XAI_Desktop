@@ -74,6 +74,8 @@ function normalizeFallbackEntry(entry){
     gap_labels:[],
     source_notes:["generated_input","generated_output","generated_note"],
     source_note_labels:["输入说明已自动补齐","输出说明已自动补齐","注释已自动补齐"],
+    source_complete:false,
+    source_completion_status:"backfilled",
     is_complete:true,
     triggers:entry.triggers || []
   };
@@ -167,12 +169,15 @@ function renderRegistrySummary(entries){
   const agentCount = summary.agents ?? entries.filter(item => item.kind === "agent").length;
   const complete = summary.complete ?? entries.filter(item => item.is_complete).length;
   const unresolved = summary.unresolved ?? entries.filter(item => (item.gaps || []).length).length;
+  const sourceCompleteness = summary.source_completeness || skillAgentRegistry.source_completeness || {};
+  const sourceComplete = sourceCompleteness.complete ?? summary.source_complete ?? entries.filter(item => item.source_complete).length;
   const sourceBackfill = summary.source_backfill ?? entries.filter(item => (item.source_notes || []).length).length;
   const changed = summary.changed ?? entries.filter(item => item.changed).length;
   document.getElementById("skillAgentCounts").innerHTML = [
     ["Skill", skillCount, "project / codex / portable"],
     ["Agent", agentCount, "workflow families"],
     ["完整条目", `${complete}/${entries.length}`, "必填字段 + 关联信息"],
+    ["源文件完整度", `${sourceComplete}/${entries.length}`, "不依赖生成补齐"],
     ["待处理缺口", unresolved, "无法自动判断才显示"],
     ["已自动补齐", sourceBackfill, "可按需回写源文件"],
     ["新增/修改", changed, "working tree delta"]

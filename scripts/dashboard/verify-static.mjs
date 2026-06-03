@@ -3,6 +3,7 @@ import { execFileSync } from "node:child_process";
 import { existsSync, readFileSync } from "node:fs";
 import { dirname, relative, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
+import { releaseFailureCount, releaseTestVerdict } from "./release-testing.mjs";
 
 const scriptDir = dirname(fileURLToPath(import.meta.url));
 const repoRoot = resolve(scriptDir, "../..");
@@ -109,11 +110,40 @@ const scripts = scriptSources(html);
 requiredMountIds.forEach(id => assertIdPresent(html, id));
 assert(scripts.includes("./js/theme-bootstrap.js"), "index.html must include ./js/theme-bootstrap.js before render scripts");
 const stateScriptIndex = scripts.indexOf("./state.generated.js");
+const themeBootstrapIndex = scripts.indexOf("./js/theme-bootstrap.js");
 assert(stateScriptIndex >= 0, "index.html must load ./state.generated.js");
+assert(themeBootstrapIndex >= 0, "index.html must load ./js/theme-bootstrap.js");
+assert(themeBootstrapIndex < stateScriptIndex, "index.html must load ./js/theme-bootstrap.js before ./state.generated.js and render scripts");
 requiredScripts.forEach((src, index) => {
   const actual = scripts[stateScriptIndex + index];
   assert(actual === src, `render script order mismatch at ${index + 1}: expected ${src}, got ${actual || "<missing>"}`);
   assert(src === "./state.generated.js" || existsSync(resolve(dashboardDir, src)), `missing dashboard script file: ${src}`);
+});
+
+[
+  {
+    text: "Chrome/Playwright smoke passed with 0 HTTP failures and 0 console errors.",
+    status: "pass",
+    failureCount: 0
+  },
+  {
+    text: "0 failures / 0 errors",
+    status: "pass",
+    failureCount: 0
+  },
+  {
+    text: "Generated state confirmed zero-failure testing record as pass with failure_count=0.",
+    status: "pass",
+    failureCount: 0
+  },
+  {
+    text: "Playwright failed with 2 failures.",
+    status: "fail",
+    failureCount: 2
+  }
+].forEach(fixture => {
+  assert(releaseTestVerdict(fixture.text) === fixture.status, `release verdict fixture failed: ${fixture.text}`);
+  assert(releaseFailureCount(fixture.text) === fixture.failureCount, `release failure-count fixture failed: ${fixture.text}`);
 });
 
 assert(state.schema_version === 2, `expected schema_version=2, got ${state.schema_version}`);
@@ -144,10 +174,19 @@ assert(state.testing?.summary, "testing.summary must be present");
 assert(Array.isArray(state.testing?.modules), "testing.modules must be an array");
 assert(Array.isArray(state.testing?.records), "testing.records must be an array");
 assertKeySet("testing.modules", state.testing.modules.map(item => item.key));
+state.testing.records.forEach(record => {
+  const count = releaseFailureCount(record.conclusion || record.title || "");
+  if (count === 0) {
+    assert(record.status !== "fail", `zero-failure testing record must not be fail: ${record.id || record.title}`);
+    assert(Number(record.failure_count) === 0, `zero-failure testing record must have failure_count=0: ${record.id || record.title}`);
+  }
+});
 
 assert(state.skill_agent_registry?.summary, "skill_agent_registry.summary must be present");
 assert(Array.isArray(state.skill_agent_registry?.entries), "skill_agent_registry.entries must be an array");
 assert(state.skill_agent_registry.entries.length > 0, "skill_agent_registry.entries must not be empty");
+assert(state.skill_agent_registry.source_completeness, "skill_agent_registry.source_completeness must be present");
+assert(state.skill_agent_registry.summary.source_completeness, "skill_agent_registry.summary.source_completeness must be present");
 
 console.log([
   "verified static dev-dashboard:",

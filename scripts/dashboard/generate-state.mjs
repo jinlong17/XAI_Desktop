@@ -9,6 +9,7 @@ import {
 } from "node:fs";
 import { dirname, relative, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
+import { releaseFailureCount, releaseTestCategories, releaseTestVerdict } from "./release-testing.mjs";
 
 const scriptDir = dirname(fileURLToPath(import.meta.url));
 const repoRoot = resolve(scriptDir, "../..");
@@ -569,6 +570,8 @@ function buildSkillEntry(item, group) {
   if (category === "reference") gaps.push("unclear_category");
   if (!item.tracked || maintenance.status === "new" || maintenance.status === "local-only") sourceNotes.push("untracked_or_local");
   if (mirror.status === "missing") sourceNotes.push("mirror_missing");
+  const uniqueSourceNotes = [...new Set(sourceNotes)];
+  const sourceComplete = uniqueSourceNotes.length === 0;
   return {
     id: `skill:${draft.name}`,
     name: draft.name,
@@ -597,8 +600,10 @@ function buildSkillEntry(item, group) {
     mirror_status: mirror,
     gaps: [...new Set(gaps)],
     gap_labels: [...new Set(gaps)].map(gap => skillAgentGapLabels[gap] || gap),
-    source_notes: [...new Set(sourceNotes)],
-    source_note_labels: [...new Set(sourceNotes)].map(noteKey => skillAgentSourceNoteLabels[noteKey] || noteKey),
+    source_notes: uniqueSourceNotes,
+    source_note_labels: uniqueSourceNotes.map(noteKey => skillAgentSourceNoteLabels[noteKey] || noteKey),
+    source_complete: sourceComplete,
+    source_completion_status: sourceComplete ? "source-complete" : "backfilled",
     completion_status: gaps.length ? "needs-action" : "resolved",
     is_complete: gaps.length === 0,
     triggers: item.triggers || []
@@ -648,6 +653,8 @@ function buildAgentEntry(family) {
   if (relatedDocs.length <= ownDocs.length) sourceNotes.push("definition_only_doc");
   if (category === "reference") gaps.push("unclear_category");
   if (!tracked || maintenance.status === "new" || maintenance.status === "local-only") sourceNotes.push("untracked_or_local");
+  const uniqueSourceNotes = [...new Set(sourceNotes)];
+  const sourceComplete = uniqueSourceNotes.length === 0;
   return {
     id: `agent:${family.slug}`,
     name: family.title || family.slug,
@@ -677,8 +684,10 @@ function buildAgentEntry(family) {
     mirror_status: { status: "platform-variants", missing: [] },
     gaps: [...new Set(gaps)],
     gap_labels: [...new Set(gaps)].map(gap => skillAgentGapLabels[gap] || gap),
-    source_notes: [...new Set(sourceNotes)],
-    source_note_labels: [...new Set(sourceNotes)].map(noteKey => skillAgentSourceNoteLabels[noteKey] || noteKey),
+    source_notes: uniqueSourceNotes,
+    source_note_labels: uniqueSourceNotes.map(noteKey => skillAgentSourceNoteLabels[noteKey] || noteKey),
+    source_complete: sourceComplete,
+    source_completion_status: sourceComplete ? "source-complete" : "backfilled",
     completion_status: gaps.length ? "needs-action" : "resolved",
     is_complete: gaps.length === 0,
     triggers: []
@@ -706,6 +715,17 @@ function buildSkillAgentRegistry(skillGroups, agentFamilies) {
   }).filter(category => category.count);
   const unresolvedEntries = entries.filter(entry => entry.gaps.length);
   const sourceBackfillEntries = entries.filter(entry => entry.source_notes.length);
+  const sourceCompleteEntries = entries.filter(entry => entry.source_complete);
+  const sourceCompleteness = {
+    status: sourceBackfillEntries.length ? "backfilled" : "source-complete",
+    total: entries.length,
+    complete: sourceCompleteEntries.length,
+    backfilled: sourceBackfillEntries.length,
+    ratio: entries.length ? Number((sourceCompleteEntries.length / entries.length).toFixed(3)) : 1,
+    detail: sourceBackfillEntries.length
+      ? `${sourceBackfillEntries.length} 个条目仍依赖生成器补齐，可后续回写源文件。`
+      : "所有条目的必需展示字段都来自源文件。"
+  };
   return {
     source: "scripts/dashboard/generate-state.mjs",
     required_fields: [
@@ -730,6 +750,7 @@ function buildSkillAgentRegistry(skillGroups, agentFamilies) {
         ? `${unresolvedEntries.length} 个条目仍缺少无法确定的分类或定义字段。`
         : `所有 ${entries.length} 个 Skill / Agent 条目均已具备看板所需字段；${sourceBackfillEntries.length} 个条目使用了自动补齐内容，可后续按需回写源文件。`
     },
+    source_completeness: sourceCompleteness,
     summary: {
       total: entries.length,
       skills: countBy(entry => entry.kind === "skill"),
@@ -743,7 +764,9 @@ function buildSkillAgentRegistry(skillGroups, agentFamilies) {
       missing_workflow: gap_counts.missing_related_workflow,
       missing_docs: gap_counts.missing_related_docs,
       unresolved: unresolvedEntries.length,
+      source_complete: sourceCompleteEntries.length,
       source_backfill: sourceBackfillEntries.length,
+      source_completeness: sourceCompleteness,
       generated_note: source_note_counts.generated_note,
       generated_input: source_note_counts.generated_input,
       generated_output: source_note_counts.generated_output,
@@ -1045,9 +1068,14 @@ let releaseModuleMeta = {
     aliases: ["site", "official", "release-site", "cloudflare", "website", "官网"]
   },
   admin: {
-    title: "管理者 / 开发者 Dashboard",
+    title: "管理者 Dashboard",
     tone: "red",
-    aliases: ["admin", "dashboard", "control plane", "dev-dashboard", "project-system"]
+    aliases: ["admin", "admin-dashboard", "control plane", "rbac", "usage", "audit", "ai-config", "权限", "用量", "审计", "运营", "ai 配置"]
+  },
+  "project-system": {
+    title: "Project System / Dev Dashboard",
+    tone: "blue",
+    aliases: ["project-system", "dev-dashboard", "dev dashboard", "dashboard sync", "dashboard-state", "generate-state", "xai-dev-dashboard-sync", "个人开发看板"]
   }
 };
 
@@ -1071,33 +1099,10 @@ function cleanReleaseValue(value) {
   return String(value || "").replace(/\s+/g, " ").trim();
 }
 
-function releaseTestVerdict(text) {
-  const value = String(text || "").toLowerCase();
-  if (!value) return "unknown";
-  if (/failed|failure|fail\b|失败|阻断|\bred\b/.test(value)) return "fail";
-  if (/未跑|not run|skipped|deferred|partial|blocked|阻塞|跳过|待补|仍被|仍需/.test(value)) return "partial";
-  if (/passed|pass\b|green|exit 0|confirmed|成功|通过/.test(value)) return "pass";
-  return "unknown";
-}
-
-function releaseTestCategories(text) {
-  const value = String(text || "").toLowerCase();
-  const categories = [];
-  const add = key => { if (!categories.includes(key)) categories.push(key); };
-  if (/self[- ]?test|自测|manual smoke|browser smoke|smoke/.test(value)) add("self_test");
-  if (/unit|vitest|cargo test|test\)/.test(value)) add("unit");
-  if (/e2e|playwright|browser smoke|chrome|safari|firefox|端到端/.test(value)) add("e2e");
-  if (/backend|api|cargo|rust|tauri|sqlite|supabase|rls|后端/.test(value)) add("backend");
-  if (/frontend|page|browser|chrome|390px|responsive|页面/.test(value)) add("frontend_page");
-  if (/build|typecheck|check-types|lint|eslint|node --check|构建/.test(value)) add("build");
-  if (/deploy|pre.?deploy|csp|cloudflare|上线|部署/.test(value)) add("pre_deploy");
-  if (/regression|回归/.test(value)) add("regression");
-  return categories.length ? categories : ["self_test"];
-}
-
 function testRecordFromReleaseEntry(entry) {
   if (!entry?.verification) return null;
   const status = releaseTestVerdict(entry.verification);
+  const parsedFailureCount = releaseFailureCount(entry.verification);
   return {
     id: `release-${entry.id}`,
     source: "release-log",
@@ -1107,7 +1112,7 @@ function testRecordFromReleaseEntry(entry) {
     title: entry.title,
     status,
     conclusion: entry.verification,
-    failure_count: status === "fail" ? 1 : 0,
+    failure_count: parsedFailureCount ?? (status === "fail" ? 1 : 0),
     duration: "",
     categories: releaseTestCategories(entry.verification),
     report_path: "docs/workflow/project/release-log.md"
@@ -1140,20 +1145,28 @@ function releaseEntryModule(entry) {
     entry.developer_delta,
     entry.impact
   ].join(" ").toLowerCase();
-  if (/\b(admin-dashboard|admin|dev-dashboard|control plane)\b/.test(fields) || /看板/.test(fields)) return "admin";
+  if (/\b(project-system|dev-dashboard|dev dashboard|dashboard-state|generate-state|xai-dev-dashboard-sync)\b/.test(fields) || /个人开发看板/.test(fields)) return "project-system";
+  if (/\b(admin-dashboard|admin|control plane|rbac|usage|audit|ai-config)\b/.test(fields) || /权限|用量|审计|运营|ai 配置/.test(fields)) return "admin";
   if (/\b(sync|cloud|account|auth|device-session)\b/.test(fields)) return "sync";
   if (/\b(plugin|widget|clipboard|organizer|ai-cube)\b/.test(fields)) return "plugin";
   if (/\b(site|official|release-site|cloudflare|website|官网)\b/.test(fields)) return "site";
   if (/\b(app|mac|desktop|tauri|native|dmg|mas)\b/.test(fields)) return "app";
   if (/\b(web|xai-web|calendar|tasks|matrix|statistics|board)\b/.test(fields)) return "web";
-  return "admin";
+  return "project-system";
 }
 
 function splitReleaseModules(value) {
   const raw = cleanReleaseValue(value).toLowerCase();
   if (!raw) return [];
+  const aliasMatches = alias => {
+    const normalized = String(alias || "").toLowerCase().trim();
+    if (!normalized) return false;
+    if (/[\u4e00-\u9fff]/.test(normalized)) return raw.includes(normalized);
+    const escaped = normalized.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+    return new RegExp(`(^|[^a-z0-9])${escaped}([^a-z0-9]|$)`).test(raw);
+  };
   return Object.entries(releaseModuleMeta)
-    .filter(([, meta]) => meta.aliases.some(alias => raw.includes(alias)))
+    .filter(([, meta]) => meta.aliases.some(aliasMatches))
     .map(([key]) => key);
 }
 

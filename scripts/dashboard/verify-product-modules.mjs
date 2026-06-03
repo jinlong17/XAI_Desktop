@@ -5,6 +5,7 @@ const repoRoot = resolve(new URL("../..", import.meta.url).pathname);
 const sourcePath = resolve(repoRoot, "docs/workflow/project/dashboard-state.json");
 const generatedPath = resolve(repoRoot, "docs/prototypes/dev-dashboard/state.generated.js");
 const requiredKeys = ["web", "app", "plugin", "sync", "site", "admin"];
+const allowedSupportReleaseKeys = new Set(["project-system"]);
 
 function readJson(path) {
   return JSON.parse(readFileSync(path, "utf8"));
@@ -89,9 +90,13 @@ generated.product_lines.forEach(module => assertRegistryModule(module, sourceByK
 
 (generated.release_modules || []).forEach(module => {
   const product = generatedByKey.get(module.key);
-  assert(product, `release_modules references unknown module ${module.key}`);
-  assert(module.title === product.release_title, `${module.key} release title must derive from registry`);
-  assert(module.tone === product.tone, `${module.key} release tone must derive from registry`);
+  if (product) {
+    assert(module.title === product.release_title, `${module.key} release title must derive from registry`);
+    assert(module.tone === product.tone, `${module.key} release tone must derive from registry`);
+    return;
+  }
+  assert(allowedSupportReleaseKeys.has(module.key), `release_modules references unknown module ${module.key}`);
+  assert(module.title && module.tone, `${module.key} support release module must expose title and tone`);
 });
 
 generated.product_lines.forEach(module => {

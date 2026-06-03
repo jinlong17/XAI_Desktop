@@ -5,6 +5,7 @@ function badgeClass(value){
   if(v === "plugin" || v.includes("插件")) return "b-purple";
   if(v === "sync" || v.includes("同步")) return "b-cyan";
   if(v === "site" || v.includes("官网")) return "b-yellow";
+  if(v === "project-system" || v.includes("project-system") || v.includes("dev-dashboard") || v.includes("个人开发看板")) return "b-blue";
   if(v === "admin" || v.includes("dashboard")) return "b-red";
   if(v.includes("blocked")) return "b-red";
   if(v.includes("attention") || v.includes("pending") || v.includes("review") || v.includes("local-only")) return "b-yellow";

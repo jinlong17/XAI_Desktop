@@ -218,6 +218,12 @@ it as a source-backfill note so maintainers know which source files could be
 improved later, but do not keep the dashboard in a permanent missing-field state
 once the generated registry has supplied the value.
 
+Expose source completeness separately from display completeness. A recommended
+shape is `skill_agent_registry.source_completeness` with total, complete,
+backfilled, ratio, status, and detail fields. The Skill / Agent count cards
+should make clear when a registry is usable because of generated backfill rather
+than fully documented source files.
+
 ## Release Records
 
 Use structured release-log entries with:

@@ -297,8 +297,8 @@
       {
         "id": "2026-05-31-dev-dashboard-deployment-registry",
         "date": "2026-05-31",
-        "module": "admin",
-        "module_title": "管理者 Dashboard",
+        "module": "project-system",
+        "module_title": "Project System / Dev Dashboard",
         "status": "success",
         "environment": "local",
         "platform": "docs/prototypes/dev-dashboard",
@@ -472,8 +472,8 @@
         "key": "admin",
         "title": "管理者 Dashboard",
         "status": "partial",
-        "latest_tested_at": "2026-05-31",
-        "conclusion": "个人开发看板和 Admin 原型已有本地静态 smoke / dashboard verification 记录，但生产 Admin Dashboard 仍是原型线。",
+        "latest_tested_at": "",
+        "conclusion": "Admin 控制面仍是原型线；RBAC、用量、审计和 AI 配置控制面测试待产品线确认后补齐。",
         "failure_count": 0,
         "duration": "",
         "pipeline_status": "local only",
@@ -485,10 +485,10 @@
           "Browser smoke at #overview/#testing"
         ],
         "categories": [
-          { "key": "self_test", "status": "pass", "detail": "个人开发看板本地 smoke 作为项目系统自测。" },
-          { "key": "frontend_page", "status": "partial", "detail": "dashboard 页面 smoke 有记录；生产 admin surface 未启动。" },
-          { "key": "build", "status": "pass", "detail": "dashboard generator/node checks 是当前构建门。" },
-          { "key": "e2e", "status": "partial", "detail": "dashboard 浏览器 smoke 有记录，Admin 原型 E2E 待落地。" }
+          { "key": "self_test", "status": "partial", "detail": "Admin 原型线尚未有独立控制面自测记录。" },
+          { "key": "frontend_page", "status": "partial", "detail": "Admin prototype 可打开；生产 admin surface 未启动。" },
+          { "key": "build", "status": "unknown", "detail": "Admin package/deploy 目标待确认。" },
+          { "key": "e2e", "status": "partial", "detail": "Admin 原型 E2E 待落地；个人开发看板 smoke 不计入 Admin 控制面证据。" }
         ],
         "next": "Admin 线确认 package/deploy 目标后补 RBAC、audit、provider secret handle 的负向测试。"
       }
@@ -497,8 +497,8 @@
       {
         "id": "2026-05-31-dev-dashboard-local-smoke",
         "source": "manual",
-        "module": "admin",
-        "related_modules": ["admin"],
+        "module": "project-system",
+        "related_modules": ["project-system"],
         "date": "2026-05-31",
         "title": "个人开发看板 v0.5 本地验证",
         "status": "pass",
@@ -1387,7 +1387,7 @@
       "labels": {
         "overview": "Admin Dashboard",
         "deployment": "管理者 Dashboard",
-        "release": "管理者 / 开发者 Dashboard"
+        "release": "管理者 Dashboard"
       },
       "visual": {
         "tone": "red",
@@ -1409,7 +1409,7 @@
           ["接入计划", "docs/prototypes/admin-dashboard/INTEGRATION_PLAN.md"],
           ["ADR-0013 控制面", "docs/adr/0013-branch-sync-governance.md"]
         ],
-        "release_aliases": ["admin", "dashboard", "control plane", "dev-dashboard", "project-system"]
+        "release_aliases": ["admin", "admin-dashboard", "control plane", "rbac", "usage", "audit", "ai-config", "权限", "用量", "审计", "运营", "ai 配置"]
       },
       "features": [
         { "name": "AI 配置", "status": "proposed" },
