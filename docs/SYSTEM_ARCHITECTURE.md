@@ -177,3 +177,36 @@ packages/plugin-web-*/     → npm-namespace siblings of xai-web-* (same code, d
 - §4 #4/#5/#6 apply to desktop only — web replaces with persistence-contract + event-bus + manifest-optional shim pattern.
 - §5/§6/§7/§9 are desktop-only.
 - §10 新建 Plugin 标准路径 is desktop-only; web packages use a parallel template (full spec pending ADR-0009).
+
+### 12.4 Web Project / Board module structure (2026-06-03)
+
+The current Web Project surface is the `/app/board` route. It is implemented as
+a board module family, not by the desktop `@repo/plugin-project` package.
+
+```mermaid
+flowchart LR
+  A["apps/web /app/board route"] --> B["plugin-web-board-workspaces"]
+  B --> C["plugin-web-board-core"]
+  B --> D["plugin-web-board-views"]
+  C --> E["Board/List/Card model + Kanban"]
+  D --> F["Table/Calendar/Dashboard/Timeline/Map"]
+  B --> G["Switcher/Creator/Inbox/Planner/Filter/Share stub"]
+  H["plugin-project"] -. "desktop/control reference only" .-> E
+  E --> I["future card detail + typed dates + checklist editor"]
+  I --> J["future encrypted blob sync contract"]
+```
+
+Ownership rules:
+
+- `plugin-web-board-core` owns the current Web board/list/card schema, Kanban
+  rendering, drag flow, and `xai_boards_v2` / `xai_active_board` persistence.
+- `plugin-web-board-views` owns alternate board projections: Table, Calendar,
+  Dashboard, Timeline, and Map.
+- `plugin-web-board-workspaces` owns the product shell around boards: switcher,
+  creator, workspace chips, Inbox, Planner, filters, and the current mock share
+  modal.
+- `@repo/plugin-project` remains the desktop/control Project capability package
+  and parity reference; Web code must not import its internals until a dedicated
+  Web runtime contract is accepted.
+- Formal Project-module follow-up work is tracked in
+  `docs/workflow/roadmap/xai-web-project-module.md`.

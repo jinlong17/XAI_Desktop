@@ -4,7 +4,7 @@
 > 只有状态为 Stable 或 Production 的 Plugin 才能被作为稳定依赖。
 > 状态为 In-Dev / Testing 的 Plugin 必须使用 Mock 数据解耦。
 >
-> 最后更新: 2026-05-26
+> 最后更新: 2026-06-03
 
 ---
 
@@ -107,6 +107,15 @@ Per P1 period: new work on P1/G1 native foundation permitted; P0 web is maintena
 
 > Browser-only business plugins for the XAI Web Console. Each registers one slot in `apps/web/src/routes/modules/shellRegistrations.tsx`.
 > Consumers must treat In-Dev rows as mock-first until the row reaches Stable.
+>
+> **Project module clarification (2026-06-03):** the current Web product surface is the shipped
+> `/app/board` module, implemented by `@repo/plugin-web-board-core`,
+> `@repo/plugin-web-board-views`, and `@repo/plugin-web-board-workspaces`.
+> It is a stable board foundation, not yet the full formal Project module:
+> card detail, typed date model, checklist editing, sync-ready logical
+> entities, real share, and task/calendar linkage are tracked in
+> `docs/reviews/xai-web-project-module/20260603-audit-and-prd.md` and
+> `docs/workflow/roadmap/xai-web-project-module.md`.
 
 | Package | 目录 | 状态 | 说明 | 依赖 | 最后更新 |
 |---------|------|------|------|------|---------|
@@ -155,7 +164,7 @@ Per P1 period: new work on P1/G1 native foundation permitted; P0 web is maintena
 | `@repo/core-data` | In-Dev shared data contract package | Contract-only until a dedicated Web driver row lands | No shipped browser Sync blob driver exists yet |
 | `@repo/plugin-console` | Real shared Console package; current manifest declares `windows.console` only | Shared Console IA/slot contract owner, not current proof of browser-ready direct source reuse | The future browser host shell is a separate boundary under `ADR-0006` |
 | `@repo/plugin-productivity` | Real package owning Todo/Pomodoro/Habits capability family | Capability authority for later Web rows; runtime Web enablement is future work | Replaces stale standalone `plugin-todo` / `plugin-pomodoro` / `plugin-habits` assumptions |
-| `@repo/plugin-project` | Real package owning project boards/cards | Capability authority for later Web rows; runtime Web enablement is future work | Global row remains non-stable even though package-local docs report later workflow progress |
+| `@repo/plugin-project` | Real package owning desktop/control project boards/cards | Capability authority for desktop Project and a reference for later Web parity; current Web runtime is owned by `plugin-web-board-*` | Global row remains non-stable even though package-local docs report later workflow progress; do not treat it as the current `/app/board` implementation |
 | `@repo/plugin-labels` | Real package owning shared labels | Capability authority for later Web rows; runtime Web enablement is future work | Consumers keep mock-first discipline while this row is non-stable |
 | `@repo/plugin-calendar` | Real package owning calendar surfaces; current manifest depends on widgets-related seams and declares no Web window support | Capability authority for later Web rows; runtime Web enablement is future work | No current `windows.web` declaration exists |
 | `@repo/plugin-account` | Real package owning auth/device/session/sync seams | Shared auth/device/session contract owner for Web planning | Current manifests/docs do not yet declare Web runtime readiness |

@@ -96,6 +96,12 @@
 
 ### 3.1 URL 结构
 
+> **2026-06-03 Project route clarification:** 当前 Web Console 运行时代码把项目/看板模块注册为
+> `moduleId = "board"`，实际入口是 `/app/board`。下表保留 `/app/projects*`
+> 作为正式 Project 命名和深链接目标，但在实现完成前不得把它当成当前可用路由。
+> 详见 `docs/reviews/xai-web-project-module/20260603-audit-and-prd.md` 和
+> `docs/workflow/roadmap/xai-web-project-module.md`。
+
 | 路径 | 用途 | 鉴权 |
 |---|---|---|
 | `/` | 营销 landing page(可选 SSR/SSG,Phase 5 评估) | 公开 |
@@ -108,9 +114,11 @@
 | `/app/todos` | Todo 模块 | 必须登录 |
 | `/app/todos/:listId` | 指定 list | 必须登录 |
 | `/app/todos/:listId/:todoId` | 选中具体 Todo(detail 面板) | 必须登录 |
-| `/app/projects` | 项目管理(看板列表) | 必须登录 |
-| `/app/projects/:boardId` | 看板视图 | 必须登录 |
-| `/app/projects/:boardId/cards/:cardId` | 卡片 detail | 必须登录 |
+| `/app/board` | 项目/看板模块当前实际入口 | 必须登录 |
+| `/app/board/*` | 当前 catch-all 模块内路径;尚未提供 boardId/cardId 语义化深链接 | 必须登录 |
+| `/app/projects` | 计划中的正式 Project alias/redirect;当前未实现 | 必须登录 |
+| `/app/projects/:boardId` | 计划中的看板深链接;当前未实现 | 必须登录 |
+| `/app/projects/:boardId/cards/:cardId` | 计划中的卡片 detail 深链接;当前未实现 | 必须登录 |
 | `/app/calendar` | 桌面日历(网页版) | 必须登录 |
 | `/app/habits` | 习惯模块 | 必须登录 |
 | `/app/habits/:habitId` | 习惯详情 | 必须登录 |
