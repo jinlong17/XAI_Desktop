@@ -345,12 +345,14 @@ Owner 的渲染器/数据/状态词汇，不 fork 第二套。**富展示不算�
 - roadmap 白名单硬编码 → `readdirSync(*.md)` + `parseRoadmapManifest` 表头过滤（漏算修复：15→16，新捕获 `account-cloud-sync-foundation.md`，非 manifest 文档自动跳过）（T4.3 `e7b1d5b`）。
 - 部署 env 侧栏自重复 → §4.6-E：侧栏只展示非 nominal（非 `deployed`）或有 issue/异常的模块（复用 `deploymentSummary()`，模块 fact-grid 仍为 env Owner）（T4.4 `f999bdf`）。
 - `theme-bootstrap.js` ↔ `theme.js` FOUC 守卫 key/校验刻意重复：双向加 sync-invariant 注释（不抽共享）（T4.6 `4dfd0e3`）。
+- doc 重要性/family 7 处字面 hex 折进既有 token（`--module-*-bg`/`--surface-code-ink`，逐一证明 light 值 byte-equal，dark 本就用 token 不变）（deferred-items 轮 `5c446c9`；已 serve+inspect 验证 必读 pill = `rgb(255,239,237)`=`#ffefed`）。
 
 **⏳ 仍待办（延后 / 未列入本轮）**
 - **P1b 仍延后**：总览 drawer (`openModuleDrawer`) 与 product-flow detail (`setProduct`) 是**刻意不同的两个视图**（Owner 完整明细 vs 紧凑 Mirror），非同一 body 两挂载点——数据形状（registry vs overview-module）、CSS（`detail-*` vs `drawer-*`）、helper 集均不重叠；唯一共享项（`FEATURE_STATUS` 词汇）已在 P1 收敛。强行单一 renderer 要么回归紧凑 drawer，要么变成包两个 body 的 `variant` 假合并并需重写 `setProduct` 硬编码 `#productDetail` 监听（监听器重连风险，无浏览器不可验）。两侧已加交叉引用注释固化此判定（T4.5 `021e9af`）；真正合并需带浏览器交互验证。
-- 总览 5 section 拼（唯一多 section 页）：未收敛（属约定）。
-- 无懒渲染（`main.js` 全量渲染）：未加 per-page mount。
-- 视觉折叠（P3.4 延后部分）：~27 处 `box-shadow`（alpha 与 `--shadow` 不同）、5 块重复 `[data-tone]`（特异性）、doc 重要性/family 字面 hex 折叠（值偏移）——都需带浏览器做。
+- **box-shadow 归一**：11 处 `rgba(49,87,149,α)` 阴影**无一**与 `--shadow`(.12)/`--shadow-soft`(.10) 完全相等（alpha 含 .05/.07/.08/.1/.13/.14）；折叠=改外观，需带眼睛归一——**未做**。
+- **`[data-tone]` 合并**：5+ 块是**作用域选择器**（`.xxx-card[data-tone=]`，特异性 0,2,0），非通用 `[data-tone=]`(0,1,0)；分析证明降为通用块渲染等价（无元素同时带 data-product+data-tone），但改特异性——**留待 eyes-on 决定**。
+- 总览 5 section→单容器：需先给 `.overview-module-grid` 裸规则加 `display:grid`（否则脱离 `page-section.is-active` 后模块网格塌成 block）；约定级价值——**未做**。
+- 无懒渲染：`setProduct` 被 5+ 跨页站点调用（deployment/testing/overview 跳转）依赖 product-flow 已 eager 渲染；改懒渲染需重排全部跨页跳转，回归风险高、价值低（eager 已验证）——**未做**。
 - 测试状态跨 3 页：**保留为 Shared-Widget 徽标**（本就正确，非待办）；仅禁止扩成第二张测试明细卡。
 
 ---
