@@ -67,8 +67,8 @@
     {
       "label": "固定 skill",
       "badge": "入口",
-      "value": "10",
-      "note": "feature·brief·dossier·roadmap·module-classify·web→desktop D3·account-sync D4·sync-fanout·release-log·dashboard-sync"
+      "value": "11",
+      "note": "feature·brief·dossier·roadmap·module-classify·consistency-audit·web→desktop D3·account-sync D4·sync-fanout·release-log·dashboard-sync"
     },
     {
       "label": "自动跟踪",
