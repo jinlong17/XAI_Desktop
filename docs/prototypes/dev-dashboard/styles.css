@@ -1763,20 +1763,19 @@
     font-size:11.5px;
     padding:6px 8px;
   }
-  .skill-agent-category[data-category="feature"],
-  .skill-agent-index button[data-category="feature"]{--cat-tone:var(--module-blue);--cat-bg:var(--module-blue-bg)}
-  .skill-agent-category[data-category="bugfix"],
-  .skill-agent-index button[data-category="bugfix"]{--cat-tone:var(--module-red);--cat-bg:var(--module-red-bg)}
-  .skill-agent-category[data-category="automation"],
-  .skill-agent-index button[data-category="automation"]{--cat-tone:var(--module-purple);--cat-bg:var(--module-purple-bg)}
-  .skill-agent-category[data-category="governance"],
-  .skill-agent-index button[data-category="governance"]{--cat-tone:var(--module-cyan);--cat-bg:var(--module-cyan-bg)}
-  .skill-agent-category[data-category="quality"],
-  .skill-agent-index button[data-category="quality"]{--cat-tone:var(--module-yellow);--cat-bg:var(--module-yellow-bg)}
-  .skill-agent-category[data-category="authoring"],
-  .skill-agent-index button[data-category="authoring"]{--cat-tone:var(--module-green);--cat-bg:var(--module-green-bg)}
-  .skill-agent-category[data-category="reference"],
-  .skill-agent-index button[data-category="reference"]{--cat-tone:var(--faint);--cat-bg:var(--surface-2)}
+  /* Catalog tints keyed on the PRIMARY management-group axis (常用/系统/同步/开发/其他).
+     These are content accents for the Skill catalog, not nav and not product-module
+     semantics (BOUNDARIES §1.3 / §5 rule 6 allow the catalog its own accent set). */
+  .skill-agent-category[data-skill-agent-group="frequent"],
+  .skill-agent-index button[data-skill-agent-group="frequent"]{--cat-tone:var(--module-blue);--cat-bg:var(--module-blue-bg)}
+  .skill-agent-category[data-skill-agent-group="system"],
+  .skill-agent-index button[data-skill-agent-group="system"]{--cat-tone:var(--module-cyan);--cat-bg:var(--module-cyan-bg)}
+  .skill-agent-category[data-skill-agent-group="sync"],
+  .skill-agent-index button[data-skill-agent-group="sync"]{--cat-tone:var(--module-purple);--cat-bg:var(--module-purple-bg)}
+  .skill-agent-category[data-skill-agent-group="dev"],
+  .skill-agent-index button[data-skill-agent-group="dev"]{--cat-tone:var(--module-green);--cat-bg:var(--module-green-bg)}
+  .skill-agent-category[data-skill-agent-group="other"],
+  .skill-agent-index button[data-skill-agent-group="other"]{--cat-tone:var(--faint);--cat-bg:var(--surface-2)}
   .doc-workbench{display:grid;grid-template-columns:190px minmax(0,1fr);gap:12px;min-height:680px}
   .doc-pathbar{
     display:flex;

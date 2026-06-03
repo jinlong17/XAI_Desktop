@@ -190,23 +190,37 @@ function renderRegistrySummary(entries){
   `).join("");
 }
 
+// Secondary (functional-category) label for an entry, used as a pill inside the
+// primary management-group sections. Keeps the functional taxonomy visible.
+function entryCategoryLabel(entry){
+  return entry.category_label || categoryByKey(entry.category).title || entry.category || "reference";
+}
+
 function renderSkillAgentCatalog(){
   const entries = collectSkillAgentEntries();
   renderRegistrySummary(entries);
-  const categories = (skillAgentRegistry.categories?.length ? skillAgentRegistry.categories : SKILL_AGENT_CATEGORIES)
-    .map(category => ({
-      ...category,
-      entries:entries.filter(entry => entry.category === category.key)
-        .sort((a, b) => a.kind.localeCompare(b.kind) || a.name.localeCompare(b.name))
+
+  // PRIMARY axis: management group (常用 / 系统 / 同步 / 开发 / 其他), computed
+  // client-side from the shared SKILL_MANAGEMENT_GROUPS (js/skill-groups.js).
+  // SECONDARY axis: functional category drives the in-section sort + a per-card
+  // pill. 常用 reuses the same FREQUENT_SKILLS source as the Overview strip.
+  const groups = SKILL_MANAGEMENT_GROUPS
+    .map(group => ({
+      ...group,
+      entries:entries.filter(entry => managementGroupForSkill(entry.name).key === group.key)
+        .sort((a, b) =>
+          entryCategoryLabel(a).localeCompare(entryCategoryLabel(b)) ||
+          a.kind.localeCompare(b.kind) ||
+          a.name.localeCompare(b.name))
     }))
     .filter(group => group.entries.length);
 
-  document.getElementById("skillAgentIndex").innerHTML = categories.map(group => {
+  document.getElementById("skillAgentIndex").innerHTML = groups.map(group => {
     const complete = group.entries.filter(entry => entry.is_complete).length;
     const gaps = group.entries.reduce((sum, entry) => sum + (entry.gaps || []).length, 0);
     const sourceNotes = group.entries.reduce((sum, entry) => sum + (entry.source_notes || []).length, 0);
     return `
-      <button data-category="${h(group.key)}" data-skill-agent-jump="${h(group.key)}" type="button">
+      <button data-skill-agent-group="${h(group.key)}" data-skill-agent-jump="${h(group.key)}" type="button">
         <span>${h(String(group.entries.length))} items · ${h(String(complete))} complete</span>
         <b>${h(group.title)}</b>
         <small>${h(group.summary)}${gaps ? ` · ${gaps} 待处理` : ""}${!gaps && sourceNotes ? ` · ${sourceNotes} 自动补齐` : ""}</small>
@@ -214,15 +228,15 @@ function renderSkillAgentCatalog(){
     `;
   }).join("");
 
-  document.getElementById("skillAgentBoard").innerHTML = categories.map(group => `
-    <section class="skill-agent-category" data-category="${h(group.key)}" data-skill-agent-category="${h(group.key)}">
+  document.getElementById("skillAgentBoard").innerHTML = groups.map(group => `
+    <section class="skill-agent-category" data-skill-agent-group="${h(group.key)}">
       <div class="skill-agent-category-head">
         <div>
           <h3>${h(group.title)}</h3>
           <p>${h(group.summary)}</p>
         </div>
         <div class="skill-agent-category-meta">
-          <span class="pill">${h(group.workflow)}</span>
+          <span class="pill">管理分组</span>
           <span class="badge b-blue">${h(String(group.entries.length))} items</span>
           <span class="badge ${group.entries.every(entry => entry.is_complete) ? "b-green" : "b-yellow"}">${group.entries.every(entry => entry.is_complete) ? "resolved" : "needs action"}</span>
         </div>
@@ -237,6 +251,7 @@ function renderSkillAgentCatalog(){
               </div>
               <div class="sa-entry-actions">
                 <span class="badge ${entry.kind === "skill" ? "b-purple" : "b-cyan"}">${h(entry.type || (entry.kind === "skill" ? "Skill" : "Agent"))}</span>
+                <span class="pill" title="功能分类（次级）">${h(entryCategoryLabel(entry))}</span>
                 <span class="badge ${entry.is_complete ? "b-green" : "b-yellow"}">${entry.is_complete ? "完整" : "待补充"}</span>
                 <button class="sa-copy" type="button" data-sa-copy="${h(entry.name)}" title="复制名字">复制名</button>
               </div>
@@ -266,7 +281,7 @@ function renderSkillAgentCatalog(){
 
   document.querySelectorAll("[data-skill-agent-jump]").forEach(button => {
     button.addEventListener("click", () => {
-      document.querySelector(`[data-skill-agent-category="${button.dataset.skillAgentJump}"]`)?.scrollIntoView({behavior:"smooth", block:"start"});
+      document.querySelector(`[data-skill-agent-group="${button.dataset.skillAgentJump}"]`)?.scrollIntoView({behavior:"smooth", block:"start"});
     });
   });
   document.querySelectorAll("[data-skill-agent-doc]").forEach(button => {

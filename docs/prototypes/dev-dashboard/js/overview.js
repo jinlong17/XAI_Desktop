@@ -35,18 +35,9 @@ function renderOverview(){
   renderOverviewSkillQuick();
 }
 
-// Frequently-used entry-point skills surfaced on the Overview (display curation).
-// The full skill registry lives on the Skill/Agent page (auto-scanned); this is a quick-jump strip.
-const OVERVIEW_QUICK_SKILLS = [
-  ["xai-consistency-audit", "边界 / 一致性审计"],
-  ["xai-module-classify", "功能归类 / 边界扫描"],
-  ["xai-dev-dashboard-sync", "看板同步"],
-  ["xai-feature-brief", "需求规范化"],
-  ["xai-feature-full-loop", "功能一条龙"],
-  ["xai-web-to-desktop-sync", "D3 闸门"],
-  ["xai-sync-fanout-dispatch", "完成后扇出同步"],
-  ["xai-release-log", "发布登记"]
-];
+// The curated high-frequency list (OVERVIEW_QUICK_SKILLS / FREQUENT_SKILLS) now
+// lives in js/skill-groups.js (single source, loaded before this file) and is
+// shared with the Skill/Agent catalog 常用 group. See BOUNDARIES.md §4.10 / §7.
 function ensureSkillQuickStyles(){
   if(typeof document === "undefined" || document.getElementById("xai-skill-quick-styles")) return;
   const el = document.createElement("style");
