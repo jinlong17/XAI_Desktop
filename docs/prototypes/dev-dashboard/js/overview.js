@@ -52,7 +52,8 @@ function ensureSkillQuickStyles(){
   const el = document.createElement("style");
   el.id = "xai-skill-quick-styles";
   el.textContent = `
-  .overview-skill-quick{margin-top:10px;padding:13px;border:1px solid var(--line);border-radius:10px;background:color-mix(in srgb,var(--surface) 80%,transparent)}
+  .overview-right-col{display:flex;flex-direction:column;gap:16px;min-width:0}
+  .overview-skill-quick{margin-top:0;padding:13px;border:1px solid var(--line);border-radius:10px;background:color-mix(in srgb,var(--surface) 80%,transparent)}
   .osk-head{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:10px}
   .osk-head b{font-size:13px}
   .osk-head span{color:var(--faint);font-size:11px}
