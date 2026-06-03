@@ -203,15 +203,8 @@ function renderImpacts(list){
   return list.map(im => `<div class="impact-row" data-module="${h(im.module)}"><b>${h(productTitleFor(im.module))} · ${h(im.when)}</b><span>${h(im.action)}</span></div>`).join("");
 }
 
-const FEATURE_STATUS = {
-  shipped: { label: "已交付", cls: "b-green" },
-  "in-dev": { label: "开发中", cls: "b-cyan" },
-  planned: { label: "规划", cls: "b-blue" },
-  proposed: { label: "提案", cls: "b-gray" },
-  paused: { label: "暂停", cls: "b-yellow" },
-  contested: { label: "方向待定", cls: "b-red" }
-};
-function featureMeta(status){ return FEATURE_STATUS[status] || { label: status, cls: "b-blue" }; }
+// FEATURE_STATUS / featureMeta are the shared status vocabulary defined in
+// js/status-meta.js (loaded before this file). Do not re-define them here.
 function renderFeatures(list){
   if(!(list && list.length)) return "";
   return list.map(f => {
@@ -221,10 +214,9 @@ function renderFeatures(list){
 }
 function featureCountSummary(list){
   if(!(list && list.length)) return "";
-  const order = ["shipped", "in-dev", "planned", "proposed", "paused", "contested"];
   const counts = {};
   list.forEach(f => { counts[f.status] = (counts[f.status] || 0) + 1; });
-  const parts = order.filter(s => counts[s]).map(s => `${counts[s]} ${featureMeta(s).label}`);
+  const parts = FEATURE_STATUS_ORDER.filter(s => counts[s]).map(s => `${counts[s]} ${featureMeta(s).label}`);
   return `${list.length} 项 · ${parts.join(" · ")}`;
 }
 

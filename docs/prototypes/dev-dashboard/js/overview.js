@@ -402,11 +402,13 @@ function moduleFeatureGroups(key){
   const line = (typeof productLineFor === "function") ? productLineFor(key) : null;
   const feats = line && Array.isArray(line.features) ? line.features : null;
   if(feats && feats.length){
+    // Status vocabulary is the shared FEATURE_STATUS_PLANNING (js/status-meta.js);
+    // done/active/next is Overview-specific presentation grouping.
     const label = f => f.note ? `${f.name} — ${f.note}` : f.name;
     return {
       done: feats.filter(f => f.status === "shipped").map(label),
       active: feats.filter(f => f.status === "in-dev").map(label),
-      next: feats.filter(f => ["planned", "proposed", "paused", "contested"].includes(f.status)).map(label)
+      next: feats.filter(f => FEATURE_STATUS_PLANNING.includes(f.status)).map(label)
     };
   }
   return {done:[], active:[], next:[]};
@@ -479,9 +481,10 @@ function overviewFeatureSummary(key){
   const line = (typeof productLineFor === "function") ? productLineFor(key) : null;
   const feats = line && Array.isArray(line.features) ? line.features : [];
   if(!feats.length) return "";
+  // Status vocabulary + planning bucket are the shared FEATURE_STATUS* (js/status-meta.js).
   const n = s => feats.filter(f => f.status === s).length;
-  const planning = feats.length - n("shipped") - n("in-dev");
-  return `<div class="overview-module-features"><span><b>${feats.length}</b>Feature</span><span><b>${n("shipped")}</b>已交付</span><span><b>${n("in-dev")}</b>开发中</span><span><b>${planning}</b>规划/待定</span></div>`;
+  const planning = feats.filter(f => FEATURE_STATUS_PLANNING.includes(f.status)).length;
+  return `<div class="overview-module-features"><span><b>${feats.length}</b>Feature</span><span><b>${n("shipped")}</b>${featureMeta("shipped").label}</span><span><b>${n("in-dev")}</b>${featureMeta("in-dev").label}</span><span><b>${planning}</b>规划/待定</span></div>`;
 }
 
 function renderOverviewModules(){
