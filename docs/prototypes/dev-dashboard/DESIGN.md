@@ -52,7 +52,7 @@ The one disagreement — number of long-lived branches — was decided by the op
 | File | Role | Lines |
 |---|---|---|
 | `scripts/dashboard/generate-state.mjs` | Reads git + skills + release-log + `dashboard-state.json` → writes `state.generated.js`. Pure Node stdlib, zero deps. | ~79 |
-| `docs/workflow/project/dashboard-state.json` | **Manual overrides base** (priority, branch creation, release-gate, risk — the human-judgment fields). 9 top-level keys. | ~341 |
+| `docs/workflow/project/dashboard-state.json` | **Manual overrides base** (priority, branch creation, release-gate, risk — the human-judgment fields) plus Product Module Registry, deployment registry, and Testing Registry. | authored |
 | `docs/prototypes/dev-dashboard/state.generated.js` | `window.XAI_DASHBOARD_STATE = {…}` — the global the HTML reads. | generated |
 | `docs/prototypes/dev-dashboard/index.html` | Page skeleton only; loads generated state, stylesheet, and ordered plain scripts. | ~399 |
 | `docs/prototypes/dev-dashboard/styles.css` | Dashboard visual system and responsive layout. | ~2319 |
@@ -77,6 +77,10 @@ preview and `dashboard:serve` must keep serving them without a bundler or module
 | `docs/workflow/roadmap/*.md` (the ~14 with a `\| # \| Slug \| … \| Status \|` header — whitelist, not all 32) | good, fixed columns | per-line roadmap progress |
 | `.teams/skills/*/SKILL.md` | trivial (dir presence) | skill registry |
 | `docs/workflow/project/release-log.md` | clean (`### ` headings) | latest release entry |
+| `docs/workflow/project/release-log.md` `Verification` fields | clean enough, per entry | testing records and release-row test verdicts |
+| `dashboard-state.json.testing` | authored + generated merge | testing page, Overview badges, product detail, deployment/release test status |
+| `.github/workflows/*.yml` | trivial inventory | pipeline configured / not queried state |
+| known reports (`playwright-report/`, `test-results/`, `coverage/`) | path existence only | report-source availability |
 | `dashboard-state.json` | authored | the manual-override fields |
 | `packages/*/docs/dev_log.md` | **drifts** (3 header variants, table vs bullet) | deferred to a later phase — needs normalization first |
 
@@ -132,6 +136,19 @@ preview and `dashboard:serve` must keep serving them without a bundler or module
   trends instead of showing isolated counters. Sources: `git log --since --numstat`,
   `git diff --stat`, `git status --short`.
   (Cadence is real — ~443 commits/7d as of 2026-05-30 — so this page has signal.)
+
+### Phase 3.5 — testing-results page
+
+- Add a dedicated **"测试结果"** page sourced from `dashboard-state.json.testing` plus
+  release-log `Verification` parsing.
+- Cover all Product Module Registry keys, especially Web、Mac 桌面版本、桌面插件、
+  账号云同步、官网、管理者 Dashboard.
+- Each module card shows latest test time, conclusion, pass/fail/partial status,
+  failure count, category rows, pipeline status, duration, and report entry.
+- Reflect compact test status back into Overview module cards, product structure
+  detail / drawer, Deployment records, and Release records.
+- Keep CI honest: workflow files prove `configured`, not `passed`, unless a real
+  queried CI result exists.
 
 ### Phase 4 — branch-policy → ADR-0013 D2 + board consumes it
 

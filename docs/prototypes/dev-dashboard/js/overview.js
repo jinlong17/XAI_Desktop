@@ -461,6 +461,7 @@ function openModuleDrawer(item){
         <div class="drawer-feature"><b>待处理</b><span>${h(item.todo || line.next || "暂无")}</span></div>
       </div>
     </section>
+    ${typeof renderProductTestNavBlock === "function" ? `<section class="drawer-panel"><h3>测试结果</h3>${renderProductTestNavBlock(item.key)}</section>` : ""}
   `;
   document.getElementById("moduleDrawerPrimary").textContent = activeDrawerModule.target.label || "打开入口";
   document.getElementById("moduleDrawerOverlay").classList.add("is-open");
@@ -504,6 +505,7 @@ function renderOverviewModules(){
         <div class="overview-progress-track"><span style="width:${Math.max(0, Math.min(100, Number(item.progress) || 0))}%"></span></div>
       </div>
       ${overviewFeatureSummary(item.key)}
+      ${typeof renderOverviewModuleTestingSummary === "function" ? renderOverviewModuleTestingSummary(item.key) : ""}
       <div class="overview-module-meta">
         <div><b>最近更新</b><span>${h(item.recent_update || "等待快照刷新")}</span></div>
         <div><b>待处理</b><span>${h(item.todo || "暂无")}</span></div>

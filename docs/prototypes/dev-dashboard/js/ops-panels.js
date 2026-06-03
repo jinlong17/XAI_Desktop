@@ -109,6 +109,7 @@ function renderReleaseModules(){
         <b>${h(item.latest_title || "暂无模块发布")}</b>
         <p>${h(item.latest_summary || "等待 release-log.md 写入该模块的发布说明。")}</p>
       </div>
+      ${typeof renderReleaseModuleTesting === "function" ? renderReleaseModuleTesting(item.key) : ""}
       <div class="release-mini-list">
         ${(item.entries || []).slice(0, 3).map(entry => `<span>${h(entry.date)} · ${h(entry.title)}</span>`).join("") || "<span>暂无相关记录</span>"}
       </div>
@@ -136,6 +137,7 @@ function renderReleaseRows(){
         <span>${h(entry.summary || entry.user_visible || "")}</span>
         <div class="release-entry-meta">
           <span class="pill">${h(entry.version_label || "version pending")}</span>
+          ${typeof renderReleaseEntryTesting === "function" ? renderReleaseEntryTesting(entry) : ""}
           ${entry.impact ? `<span class="pill">影响：${h(compactReleaseText(entry.impact, 90))}</span>` : ""}
         </div>
         ${(entry.verification || entry.risk_followup) ? `

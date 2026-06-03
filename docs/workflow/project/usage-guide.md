@@ -465,7 +465,7 @@ Project-layer skills:
 | `xai-feature-full-loop` | 单 feature parent-session 全流程 |
 | `xai-roadmap-loop` | 多 feature roadmap orchestration |
 | `xai-web-to-desktop-sync` | ADR-0013 D3 Web→Desktop 同步门 / parity receipt |
-| `xai-dev-dashboard-sync` | 个人开发看板 Overview / 机器说明文档 / 可复用模板同步 |
+| `xai-dev-dashboard-sync` | 个人开发看板 Overview / 测试结果 / 机器说明文档 / 可复用模板同步 |
 
 ---
 
@@ -473,11 +473,11 @@ Project-layer skills:
 
 本地项目控制台在 `docs/prototypes/dev-dashboard/index.html`。它只做
 **读取 + 提醒**: 读取 git、roadmap manifest、PLUGIN_MAP、skill/agent 注册表和
-白名单文档;不自动改 roadmap、不 merge、不判断发布。
+白名单文档和测试结果;不自动改 roadmap、不 merge、不判断发布。
 
 机器说明文档在 `docs/workflow/project/dev-dashboard.md`。AI / Codex /
-Claude Code 需要判断看板是否最新，或需要对齐 Overview、机器说明文档和可复用模板时，
-使用 `xai-dev-dashboard-sync`。
+Claude Code 需要判断看板是否最新，或需要对齐 Overview、测试结果、机器说明文档和
+可复用模板时，使用 `xai-dev-dashboard-sync`。
 
 刷新一次静态快照:
 

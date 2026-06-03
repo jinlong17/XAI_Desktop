@@ -233,6 +233,7 @@ function setProduct(key){
   if(!item) return;
   const productTarget = moduleTargetFor(item, item.key === "admin" ? "打开 Admin 原型" : "打开入口");
   const deploymentBlock = typeof renderProductDeploymentNavBlock === "function" ? renderProductDeploymentNavBlock(key) : "";
+  const testingBlock = typeof renderProductTestNavBlock === "function" ? renderProductTestNavBlock(key) : "";
   document.querySelectorAll(".module-card").forEach(node => node.classList.toggle("is-active", node.dataset.product === key));
   document.querySelectorAll(".map-node").forEach(node => node.classList.toggle("is-active", node.dataset.product === key));
   const detailPanel = document.getElementById("productDetail");
@@ -257,6 +258,7 @@ function setProduct(key){
       <div class="detail-metric is-wide"><b>真实计数</b><div class="chip-row">${statusChips(item.status_counts)}</div></div>
     </div>
     ${deploymentBlock}
+    ${testingBlock}
     ${navBlock("任务归属信号", "Codex 判断依据", renderSignals(item.routing))}
     <div class="detail-list">
       ${item.points.map(([title,desc]) => `<div><b>${h(title)}</b><span>${h(desc)}</span></div>`).join("")}
@@ -282,4 +284,5 @@ function setProduct(key){
   document.querySelectorAll("#productDetail .prompt-copy").forEach(btn => {
     btn.addEventListener("click", () => copyText((item.prompts || [])[Number(btn.dataset.promptIndex)]?.text || "", btn));
   });
+  if(typeof attachTestingActions === "function") attachTestingActions(detailPanel);
 }

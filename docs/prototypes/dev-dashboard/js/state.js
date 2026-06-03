@@ -7,6 +7,7 @@ const kpis = dashboardState.signals || dashboardState.kpis || [];
 const overviewModules = products.length ? products : (dashboardState.overview_modules || []);
 const syncStatus = dashboardState.sync_status || {};
 const deploymentState = dashboardState.deployment || {summary:{}, modules:[], records:[]};
+const testingState = dashboardState.testing || {summary:{}, modules:[], records:[], pipelines:[], report_sources:[]};
 const devData = dashboardState.development_data || {};
 const productLinks = dashboardState.product_links || [
   ["web", "app", "main"],

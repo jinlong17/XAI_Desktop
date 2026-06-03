@@ -12,6 +12,8 @@
 - Manual state base: `docs/workflow/project/dashboard-state.json`
 - Product Module Registry: `docs/workflow/project/dashboard-state.json` field
   `product_lines`
+- Testing Registry: `docs/workflow/project/dashboard-state.json` field
+  `testing`
 - Generator: `scripts/dashboard/generate-state.mjs`
 - Local server: `scripts/dashboard/serve.mjs`
 - Sync skill: `.teams/skills/xai-dev-dashboard-sync/SKILL.md`
@@ -40,7 +42,8 @@ the dashboard renders. When the boundary or classification changes, update
 registry entry in `dashboard-state.json` in the same change.
 
 Each registry entry owns the shared module definition for Overview, Product
-structure, Deployment, Release records, Docs library, and Skill / Agent routing:
+structure, Testing, Deployment, Release records, Docs library, and Skill / Agent
+routing:
 
 - `title`, `subtitle`, `badge`, `status`, `branch`, `dependency`, `next`,
   `tracker`, `features`, `goal`, `routing`, `skills`, `prompts`, `workflow`,
@@ -52,6 +55,10 @@ structure, Deployment, Release records, Docs library, and Skill / Agent routing:
   `progress_fallback`, `recent_update`, `todo_fallback`, `target`).
 - `tracking` defines roadmap manifests, anchor docs, release aliases, plugin-map
   filters, and region grouping.
+
+Testing data must reference modules by `product_lines[key]`. Do not add a second
+hard-coded Web/App/Plugin/Sync/Site/Admin module table in dashboard JavaScript or
+test-report scripts.
 
 Do not add separate hard-coded module maps in dashboard JavaScript. New surfaces
 must read the enriched `product_lines` objects from `state.generated.js`.
@@ -85,13 +92,16 @@ Agents should refresh or check the dashboard when:
   `.codex/agents/`, or `docs/workflow/project/release-log.md`;
 - final handoff depends on Overview data.
 
-The sync skill owns three alignment checks in one run:
+The sync skill owns four alignment checks in one run:
 
 1. refresh or verify the Overview snapshot from current repo evidence;
 2. update this machine contract when dashboard behavior, sources, or sync rules
    have changed;
 3. update `docs/prototypes/dev-dashboard/TEMPLATE.md` when a dashboard pattern is
    intentionally reusable for future projects.
+4. refresh or verify testing status from the Testing Registry, release-log
+   `Verification` fields, known local report paths, and CI / pipeline
+   configuration evidence.
 
 The skill should apply factual Markdown updates directly. It should report
 `needs-review` only when the mismatch requires an operator decision about
@@ -162,6 +172,41 @@ share with other tools:
   action is for opening files in other software or handing paths to another
   agent.
 
+## Testing Requirements
+
+The dashboard must expose test status in four places:
+
+- a dedicated `#testing` page;
+- compact status on Overview module cards and the Overview testing summary;
+- the Product structure module detail / drawer for the selected module;
+- Deployment and Release records where a module or version has relevant
+  verification evidence.
+
+Testing Registry entries must cover the six module keys `web`, `app`, `plugin`,
+`sync`, `site`, and `admin`. Each module may include:
+
+- latest test time;
+- conclusion;
+- pass / fail / partial / unknown status;
+- failure count;
+- duration;
+- pipeline status;
+- report path;
+- commands;
+- category rows for `self_test`, `unit`, `e2e`, `backend`, `frontend_page`,
+  `build`, `pre_deploy`, and `regression`.
+
+The generator may derive additional test records from
+`docs/workflow/project/release-log.md` `Verification` fields and may scan known
+local report paths such as `playwright-report/`, `test-results/`, and
+`coverage/`. It may list GitHub Actions workflow files as `configured`, but must
+not report a workflow as passing unless a real queried result or local evidence
+proves it. CI not queried is `not queried`, not green.
+
+Testing evidence is advisory for the operator. The dashboard must not
+auto-decide release readiness, ship status, merge status, or risk acceptance from
+test results.
+
 ## Source Inventory
 
 The generator reads at least:
@@ -169,6 +214,9 @@ The generator reads at least:
 - git branch, latest commit, divergence, status, log, and numstat;
 - `docs/workflow/project/dashboard-state.json`;
 - `docs/workflow/project/release-log.md`;
+- `docs/workflow/project/dashboard-state.json` `testing`;
+- known local test reports: `playwright-report/`, `test-results/`, `coverage/`;
+- `.github/workflows/*.yml` / `.yaml` for configured pipeline inventory;
 - `docs/workflow/project/branch-policy.json`;
 - `docs/PLUGIN_MAP.md`;
 - whitelisted roadmap manifests under `docs/workflow/roadmap/`;
@@ -192,6 +240,10 @@ pnpm dashboard
 
 For HTML/CSS/JS or Overview changes, also verify the served dashboard at
 `http://127.0.0.1:4177/#overview` when practical.
+
+For Testing changes, also verify `http://127.0.0.1:4177/#testing`, confirm all
+six module cards render, and confirm Overview / Product structure / Deployment /
+Release surfaces show testing status without overflow on desktop and mobile.
 
 ## Release Logging
 

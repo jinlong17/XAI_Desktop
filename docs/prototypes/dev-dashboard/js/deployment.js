@@ -144,6 +144,7 @@ function renderDeploymentModuleCard(item){
         <div><b>版本</b><span>${h(item.version || "未登记")}</span></div>
         <div><b>平台</b><span>${h(item.platform || "未登记")}</span></div>
       </div>
+      ${typeof renderDeploymentTestingBadge === "function" ? renderDeploymentTestingBadge(item.key) : ""}
       <div class="deployment-next">
         <b>下一步</b>
         <span>${h(item.next || "等待部署计划")}</span>
@@ -231,6 +232,7 @@ function renderDeploymentRecord(record){
           <span class="pill">${h(record.environment || "env pending")}</span>
           <span class="pill">${h(record.platform || "platform pending")}</span>
           <span class="pill">${h(record.version || "version pending")}</span>
+          ${typeof renderReleaseEntryTesting === "function" ? renderReleaseEntryTesting({ module:record.module, testing_status:record.testing_status }) : ""}
           ${record.target ? `<span class="pill">${h(record.target)}</span>` : ""}
           ${record.commit ? `<span class="pill">${h(record.commit)}</span>` : ""}
         </div>

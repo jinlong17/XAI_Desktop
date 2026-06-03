@@ -309,6 +309,207 @@
       }
     ]
   },
+  "testing": {
+    "summary": {
+      "latest_tested_at": "",
+      "overall_status": "测试结果登记已建立，真实通过状态由 release-log Verification、报告文件和人工登记共同证明。",
+      "source": "manual testing registry + release-log Verification + local report scan"
+    },
+    "categories": [
+      { "key": "self_test", "label": "自测结果" },
+      { "key": "unit", "label": "单元测试" },
+      { "key": "e2e", "label": "端到端测试" },
+      { "key": "backend", "label": "后端测试" },
+      { "key": "frontend_page", "label": "前端页面测试" },
+      { "key": "build", "label": "构建测试" },
+      { "key": "pre_deploy", "label": "部署前检查" },
+      { "key": "regression", "label": "回归测试" }
+    ],
+    "pipelines": [
+      {
+        "id": "local-dashboard",
+        "name": "Local dashboard verification",
+        "path": "scripts/dashboard/generate-state.mjs",
+        "status": "configured",
+        "last_result": "local only",
+        "categories": ["self_test", "build", "frontend_page"]
+      }
+    ],
+    "report_sources": [
+      {
+        "label": "Release Log Verification",
+        "path": "docs/workflow/project/release-log.md",
+        "type": "release-log",
+        "note": "每条 release entry 的 Verification 字段会被生成器解析为模块测试记录。"
+      },
+      {
+        "label": "Package test docs",
+        "path": "packages",
+        "type": "docs",
+        "note": "packages/*/docs/test.md 是各功能测试策略入口。"
+      }
+    ],
+    "modules": [
+      {
+        "key": "web",
+        "title": "Web 版本",
+        "status": "pass",
+        "latest_tested_at": "",
+        "conclusion": "最近 Web 增量的 release-log Verification 显示 lint、typecheck、test、build 和 Browser smoke 有通过记录；完整主线 lint 仍可能被既有 warning 阻断时需在记录中标明。",
+        "failure_count": 0,
+        "duration": "按最近 release-log 记录",
+        "pipeline_status": "configured",
+        "report_path": "docs/workflow/project/release-log.md",
+        "commands": [
+          "pnpm --filter @repo/web check-types",
+          "pnpm --filter @repo/web test",
+          "pnpm --filter @repo/web build",
+          "Browser smoke at /app/*"
+        ],
+        "categories": [
+          { "key": "self_test", "status": "pass", "detail": "Browser smoke / manual smoke 由 release-log 记录。" },
+          { "key": "unit", "status": "pass", "detail": "Vitest package tests 按模块登记。" },
+          { "key": "e2e", "status": "pass", "detail": "Browser smoke 作为当前轻量 E2E 证据。" },
+          { "key": "frontend_page", "status": "pass", "detail": "390px / desktop 页面 smoke 在 dashboard 变更中必须验证。" },
+          { "key": "build", "status": "pass", "detail": "Web build gate 由 release-log Verification 记录。" },
+          { "key": "pre_deploy", "status": "partial", "detail": "Cloudflare 真实线上 URL / deploy id 仍需按部署记录补齐。" },
+          { "key": "regression", "status": "partial", "detail": "回归范围随功能包记录，尚未形成统一全量 regression suite。" }
+        ],
+        "next": "把每次 Web ship 的测试命令、通过数、失败数和 Browser smoke 写入 release-log Verification。"
+      },
+      {
+        "key": "app",
+        "title": "Mac 桌面版本",
+        "status": "partial",
+        "latest_tested_at": "",
+        "conclusion": "桌面线已有 Tauri / Rust / supply-chain 测试入口，但 RC、签名、公证、真机 macOS smoke 尚未形成最近通过记录。",
+        "failure_count": 0,
+        "duration": "",
+        "pipeline_status": "configured",
+        "report_path": "docs/TECHNICAL_REQUIREMENTS.md",
+        "commands": [
+          "cargo test --manifest-path apps/desktop/src-tauri/Cargo.toml",
+          "pnpm --filter desktop build",
+          "manual macOS smoke before RC"
+        ],
+        "categories": [
+          { "key": "backend", "status": "partial", "detail": "Rust cargo test / crypto vectors 有 CI 入口，最近 App RC 结果未登记。" },
+          { "key": "build", "status": "partial", "detail": "Tauri build gate 需在 desktop-next / dev RC 时登记。" },
+          { "key": "self_test", "status": "unknown", "detail": "真机 macOS smoke 结果未登记。" },
+          { "key": "pre_deploy", "status": "unknown", "detail": "签名、公证、DMG/updater gate 未进入当前发布。" },
+          { "key": "regression", "status": "unknown", "detail": "桌面回归套件待随 G1/RC 建立。" }
+        ],
+        "next": "进入 desktop-next/dev RC 前登记 tauri build、cargo test、离线 profile 和真机 smoke。"
+      },
+      {
+        "key": "plugin",
+        "title": "桌面插件",
+        "status": "partial",
+        "latest_tested_at": "",
+        "conclusion": "插件包普遍有独立 vitest/check-types 约定，但桌面插件宿主暂停，缺少最近宿主集成和 widget smoke。",
+        "failure_count": 0,
+        "duration": "",
+        "pipeline_status": "not queried",
+        "report_path": "docs/PLUGIN_SDK.md",
+        "commands": [
+          "pnpm --filter @repo/plugin-* test",
+          "pnpm --filter @repo/plugin-* check-types"
+        ],
+        "categories": [
+          { "key": "unit", "status": "partial", "detail": "插件包级测试存在，但未汇总为统一最近结果。" },
+          { "key": "frontend_page", "status": "unknown", "detail": "widget / host 页面 smoke 等待平台恢复。" },
+          { "key": "build", "status": "partial", "detail": "包级 typecheck/build 需按插件登记。" },
+          { "key": "e2e", "status": "unknown", "detail": "宿主集成 E2E 未登记。" }
+        ],
+        "next": "插件平台恢复后，为每个 plugin/widget 登记 package test、host integration 和回归 smoke。"
+      },
+      {
+        "key": "sync",
+        "title": "账号云同步",
+        "status": "partial",
+        "latest_tested_at": "",
+        "conclusion": "同步线有 RLS、nonce、push/pull、rekey 等测试脚本和 D4 gate 要求；sync-v1 暂停，未登记最近端到端双设备 smoke。",
+        "failure_count": 0,
+        "duration": "",
+        "pipeline_status": "configured",
+        "report_path": "docs/workflow/roadmap/sync-v1.md",
+        "commands": [
+          "pnpm --filter release-site test:push",
+          "pnpm --filter release-site test:pull",
+          "pnpm --filter release-site test:rls",
+          "two-device sync smoke"
+        ],
+        "categories": [
+          { "key": "backend", "status": "partial", "detail": "Supabase/RLS/protocol 测试脚本存在，最近结果需按功能登记。" },
+          { "key": "e2e", "status": "unknown", "detail": "两设备同步 smoke 未登记。" },
+          { "key": "pre_deploy", "status": "partial", "detail": "D4 九项 gate 是上线前检查来源。" },
+          { "key": "regression", "status": "unknown", "detail": "同步回归矩阵待恢复 sync-v1 后固定。" }
+        ],
+        "next": "任何 account-sync 实体落地时同步登记 Web IndexedDB、App SQLite/outbox、两设备 smoke。"
+      },
+      {
+        "key": "site",
+        "title": "官网",
+        "status": "unknown",
+        "latest_tested_at": "",
+        "conclusion": "官网线仍为 PROPOSED / owner-deferred，尚无独立站点构建和发布测试结果。",
+        "failure_count": 0,
+        "duration": "",
+        "pipeline_status": "not configured",
+        "report_path": "apps/release-site/package.json",
+        "commands": [
+          "pnpm --filter release-site test",
+          "pnpm --filter release-site build"
+        ],
+        "categories": [
+          { "key": "frontend_page", "status": "unknown", "detail": "下载页/发布说明页面 smoke 未启动。" },
+          { "key": "build", "status": "unknown", "detail": "站点构建 gate 未登记。" },
+          { "key": "pre_deploy", "status": "unknown", "detail": "Cloudflare/site 发布检查需等 operator 解冻。" }
+        ],
+        "next": "site 线解冻后登记 release-site build、下载链接 smoke、updater feed 检查。"
+      },
+      {
+        "key": "admin",
+        "title": "管理者 Dashboard",
+        "status": "partial",
+        "latest_tested_at": "2026-05-31",
+        "conclusion": "个人开发看板和 Admin 原型已有本地静态 smoke / dashboard verification 记录，但生产 Admin Dashboard 仍是原型线。",
+        "failure_count": 0,
+        "duration": "",
+        "pipeline_status": "local only",
+        "report_path": "docs/workflow/project/release-log.md",
+        "commands": [
+          "node --check scripts/dashboard/generate-state.mjs",
+          "pnpm dashboard",
+          "pnpm dashboard:serve",
+          "Browser smoke at #overview/#testing"
+        ],
+        "categories": [
+          { "key": "self_test", "status": "pass", "detail": "个人开发看板本地 smoke 作为项目系统自测。" },
+          { "key": "frontend_page", "status": "partial", "detail": "dashboard 页面 smoke 有记录；生产 admin surface 未启动。" },
+          { "key": "build", "status": "pass", "detail": "dashboard generator/node checks 是当前构建门。" },
+          { "key": "e2e", "status": "partial", "detail": "dashboard 浏览器 smoke 有记录，Admin 原型 E2E 待落地。" }
+        ],
+        "next": "Admin 线确认 package/deploy 目标后补 RBAC、audit、provider secret handle 的负向测试。"
+      }
+    ],
+    "records": [
+      {
+        "id": "2026-05-31-dev-dashboard-local-smoke",
+        "source": "manual",
+        "module": "admin",
+        "related_modules": ["admin"],
+        "date": "2026-05-31",
+        "title": "个人开发看板 v0.5 本地验证",
+        "status": "pass",
+        "conclusion": "pnpm dashboard、dashboard:serve、headless Chrome DOM/screenshot smoke 通过，Overview 渲染 dashboard sync 状态和 release-log entry。",
+        "failure_count": 0,
+        "duration": "",
+        "categories": ["self_test", "frontend_page", "build"],
+        "report_path": "docs/workflow/project/release-log.md"
+      }
+    ]
+  },
   "product_links": [
     [
       "web",

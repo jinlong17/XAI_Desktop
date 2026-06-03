@@ -7,7 +7,7 @@ description: Refresh and verify the XAI personal developer dashboard, including 
 
 Project-layer skill for refreshing the personal developer dashboard and proving
 whether its Overview, machine contract, and reusable template reflect the current
-repo state.
+repo state, including module-level testing evidence.
 
 This skill wraps the existing dashboard generator. It does not replace
 `scripts/dashboard/generate-state.mjs`, does not auto-edit roadmap state, does
@@ -15,7 +15,7 @@ not merge branches, and does not decide release readiness.
 
 ## Alignment Scope
 
-Every run checks three surfaces:
+Every run checks four surfaces:
 
 1. Overview snapshot: generated branch, commit, dirty files, key docs, skill /
    agent registry, and latest release-log state.
@@ -25,6 +25,9 @@ Every run checks three surfaces:
 3. Reusable template: `docs/prototypes/dev-dashboard/TEMPLATE.md`, which
    captures dashboard structure, layout, theme, modules, drawers, docs browser,
    workflow entries, and design principles for future projects.
+4. Testing status: `docs/workflow/project/dashboard-state.json.testing`,
+   release-log `Verification` fields, local test report paths, and configured
+   CI / pipeline inventory.
 
 If the dashboard source behavior changed and a contract/template mismatch is
 clear, update the relevant Markdown in the same run. If the mismatch requires an
@@ -37,6 +40,8 @@ operator decision, report `needs-review` instead of guessing.
 - 个人开发看板是否最新
 - refresh dev-dashboard Overview
 - sync dashboard branch docs release-log
+- sync dashboard test results
+- 个人开发看板测试结果同步
 - xai-dev-dashboard-sync
 
 ## Read First
@@ -99,25 +104,46 @@ dashboard, and `check` when they only ask whether the dashboard is current.
      changes to Overview, product structure, docs library, Skill / Agent,
      release records, workflow entry, theme system, navigation, drawers, or
      file-manager document browsing;
+   - compare Testing Registry behavior with the Testing page, Overview module
+     cards, Product structure detail, Deployment records, and Release records;
    - update those docs directly when the mismatch is factual and scoped;
    - mark the surface `needs-review` when the change would alter roadmap,
      release, branch, priority, or product-governance decisions.
-4. For `refresh` or `verify`, run:
+4. Audit testing evidence:
+   - read `docs/workflow/project/dashboard-state.json` `testing.modules`,
+     `testing.records`, `testing.pipelines`, and `testing.report_sources`;
+   - scan `docs/workflow/project/release-log.md` `Verification` fields and
+     extract per-module conclusion, status, category hints, failure count when
+     available, and report path;
+   - scan known local report locations (`playwright-report/`, `test-results/`,
+     `coverage/`) for existence only;
+   - scan `.github/workflows/*.yml` / `.yaml` as configured pipeline inventory;
+   - keep CI honest: workflow presence is `configured` / `not queried`, never
+     `passed` unless a real current result is queried and recorded;
+   - sync status to the dedicated Testing page, Overview, Product structure,
+     Deployment records, and Release records through the generator / dashboard
+     state, not via a separate hard-coded module map.
+5. For `refresh` or `verify`, run:
    - `pnpm dashboard`
-5. Verify the generator:
+6. Verify the generator:
    - `node --check scripts/dashboard/generate-state.mjs`
    - confirm generated state contains `sync_status`, `generated_at`,
-     current `git.branch`, current `git.latest_commit`, and the dirty-file count.
-6. If UI proof is needed, run:
+     current `git.branch`, current `git.latest_commit`, the dirty-file count,
+     and `testing.modules` for the six Product Module Registry keys.
+7. If UI proof is needed, run:
    - `pnpm dashboard:serve`
    - open `http://127.0.0.1:4177/#overview`
    - confirm Overview shows dashboard sync status, last update time, dirty count,
      and this skill in the Skill / Agent registry.
-7. Confirm Claude and Codex can discover the skill:
+   - open `http://127.0.0.1:4177/#testing`
+   - confirm six testing module cards render, category rows appear, pipeline /
+     report lists render, and Overview / Product structure / Deployment /
+     Release surfaces show test status without desktop or 390px mobile overflow.
+8. Confirm Claude and Codex can discover the skill:
    - `.teams/skills/xai-dev-dashboard-sync/SKILL.md`
    - `.claude/skills/xai-dev-dashboard-sync/SKILL.md`
    - `.codex/skills/xai-dev-dashboard-sync/SKILL.md`
-8. Emit a compact sync receipt.
+9. Emit a compact sync receipt.
 
 ## Sync Receipt
 
@@ -133,6 +159,7 @@ Dashboard Sync Receipt
   Skill status:       xai-dev-dashboard-sync present|tracked|local-only|missing
   Machine doc:        aligned | updated | needs-review
   Template doc:       aligned | updated | needs-review
+  Testing status:     aligned | updated | needs-review
   Release-log latest: <latest release-log entry title>
   Verification:       <commands and results>
   Follow-up:          <none | concrete remaining item>

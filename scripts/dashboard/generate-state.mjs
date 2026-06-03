@@ -16,6 +16,7 @@ const sourcePath = resolve(repoRoot, "docs/workflow/project/dashboard-state.json
 const releaseLogPath = resolve(repoRoot, "docs/workflow/project/release-log.md");
 const branchPolicyPath = resolve(repoRoot, "docs/workflow/project/branch-policy.json");
 const pluginMapPath = resolve(repoRoot, "docs/PLUGIN_MAP.md");
+const workflowDir = resolve(repoRoot, ".github/workflows");
 const roadmapDir = resolve(repoRoot, "docs/workflow/roadmap");
 const skillDir = resolve(repoRoot, ".teams/skills");
 const codexSkillDir = resolve(repoRoot, ".codex/skills");
@@ -566,6 +567,49 @@ function cleanReleaseValue(value) {
   return String(value || "").replace(/\s+/g, " ").trim();
 }
 
+function releaseTestVerdict(text) {
+  const value = String(text || "").toLowerCase();
+  if (!value) return "unknown";
+  if (/failed|failure|fail\b|失败|阻断|\bred\b/.test(value)) return "fail";
+  if (/未跑|not run|skipped|deferred|partial|blocked|阻塞|跳过|待补|仍被|仍需/.test(value)) return "partial";
+  if (/passed|pass\b|green|exit 0|confirmed|成功|通过/.test(value)) return "pass";
+  return "unknown";
+}
+
+function releaseTestCategories(text) {
+  const value = String(text || "").toLowerCase();
+  const categories = [];
+  const add = key => { if (!categories.includes(key)) categories.push(key); };
+  if (/self[- ]?test|自测|manual smoke|browser smoke|smoke/.test(value)) add("self_test");
+  if (/unit|vitest|cargo test|test\)/.test(value)) add("unit");
+  if (/e2e|playwright|browser smoke|chrome|safari|firefox|端到端/.test(value)) add("e2e");
+  if (/backend|api|cargo|rust|tauri|sqlite|supabase|rls|后端/.test(value)) add("backend");
+  if (/frontend|page|browser|chrome|390px|responsive|页面/.test(value)) add("frontend_page");
+  if (/build|typecheck|check-types|lint|eslint|node --check|构建/.test(value)) add("build");
+  if (/deploy|pre.?deploy|csp|cloudflare|上线|部署/.test(value)) add("pre_deploy");
+  if (/regression|回归/.test(value)) add("regression");
+  return categories.length ? categories : ["self_test"];
+}
+
+function testRecordFromReleaseEntry(entry) {
+  if (!entry?.verification) return null;
+  const status = releaseTestVerdict(entry.verification);
+  return {
+    id: `release-${entry.id}`,
+    source: "release-log",
+    module: entry.module,
+    related_modules: entry.related_modules || [entry.module].filter(Boolean),
+    date: entry.date,
+    title: entry.title,
+    status,
+    conclusion: entry.verification,
+    failure_count: status === "fail" ? 1 : 0,
+    duration: "",
+    categories: releaseTestCategories(entry.verification),
+    report_path: "docs/workflow/project/release-log.md"
+  };
+}
+
 function releaseSummary(entry) {
   return cleanReleaseValue(
     entry.user_visible ||
@@ -582,6 +626,8 @@ function versionLabel(entry) {
 }
 
 function releaseEntryModule(entry) {
+  const declared = splitReleaseModules(entry.product_line);
+  if (declared.length) return declared[0];
   const fields = [
     entry.product_line,
     entry.branch_commit,
@@ -648,6 +694,8 @@ function parseReleaseEntries(limit = 16) {
         module: moduleKey,
         related_modules: relatedModules,
         type: classifyReleaseType(current.title),
+        testing_status: releaseTestVerdict(current.verification),
+        testing_categories: releaseTestCategories(current.verification),
         version_label: versionLabel(current),
         summary: summary.length > 148 ? `${summary.slice(0, 148)}…` : summary
       });
@@ -732,6 +780,141 @@ function buildOverallReleases(entries, limit = 5) {
       }))
     };
   });
+}
+
+function firstDateValue(items, key) {
+  return (items || []).map(item => item[key]).filter(Boolean).sort().reverse()[0] || "";
+}
+
+function findKnownReportSources(sourceTesting) {
+  const manualSources = Array.isArray(sourceTesting.report_sources) ? sourceTesting.report_sources : [];
+  const known = [
+    { label: "Playwright report", path: "playwright-report/index.html", type: "e2e" },
+    { label: "Test results", path: "test-results", type: "e2e" },
+    { label: "Coverage", path: "coverage/index.html", type: "coverage" },
+    { label: "Release log verification", path: "docs/workflow/project/release-log.md", type: "release-log" }
+  ];
+  const byPath = new Map([...manualSources, ...known].map(item => [item.path, item]));
+  return [...byPath.values()].map(item => {
+    const abs = resolve(repoRoot, item.path);
+    return {
+      ...item,
+      exists: existsSync(abs),
+      note: item.note || (existsSync(abs) ? "found in working tree" : "not present in working tree")
+    };
+  });
+}
+
+function scanTestingPipelines(sourceTesting) {
+  const manual = Array.isArray(sourceTesting.pipelines) ? sourceTesting.pipelines : [];
+  const workflows = existsSync(workflowDir)
+    ? readdirSync(workflowDir, { withFileTypes: true })
+      .filter(entry => entry.isFile() && /\.(ya?ml)$/i.test(entry.name))
+      .map(entry => {
+        const path = `.github/workflows/${entry.name}`;
+        const text = readText(resolve(repoRoot, path));
+        const nameMatch = text.match(/^name:\s*(.+)$/m);
+        return {
+          id: entry.name.replace(/\.(ya?ml)$/i, ""),
+          name: nameMatch ? nameMatch[1].trim() : entry.name,
+          path,
+          status: "configured",
+          last_result: "not queried",
+          categories: releaseTestCategories(text)
+        };
+      })
+    : [];
+  const byId = new Map([...workflows, ...manual].map(item => [item.id || item.path || item.name, item]));
+  return [...byId.values()];
+}
+
+function mergeTestStatus(values) {
+  const statuses = values.filter(Boolean);
+  if (!statuses.length) return "unknown";
+  if (statuses.includes("fail")) return "fail";
+  if (statuses.includes("partial")) return "partial";
+  if (statuses.includes("stale")) return "stale";
+  if (statuses.includes("pass")) return "pass";
+  return statuses[0] || "unknown";
+}
+
+function buildTestingState(sourceTesting, productLines, releaseEntries) {
+  const manualModules = Array.isArray(sourceTesting.modules) ? sourceTesting.modules : [];
+  const manualRecords = Array.isArray(sourceTesting.records) ? sourceTesting.records : [];
+  const releaseRecords = releaseEntries.map(testRecordFromReleaseEntry).filter(Boolean);
+  const records = [...manualRecords, ...releaseRecords]
+    .map(record => ({
+      related_modules: record.related_modules || [record.module].filter(Boolean),
+      failure_count: Number(record.failure_count) || 0,
+      categories: Array.isArray(record.categories) ? record.categories : [],
+      ...record
+    }))
+    .sort((a, b) => String(b.date || "").localeCompare(String(a.date || "")));
+  const modules = productLines.map(product => {
+    const manual = manualModules.find(item => item.key === product.key) || {};
+    const moduleRecords = records.filter(record => {
+      const related = record.related_modules || [record.module].filter(Boolean);
+      return related.includes(product.key);
+    });
+    const latest = moduleRecords[0] || null;
+    const categoryMap = Object.fromEntries((manual.categories || []).map(item => [item.key, item]));
+    moduleRecords.flatMap(record => record.categories || []).forEach(category => {
+      if (!categoryMap[category]) {
+        categoryMap[category] = {
+          key: category,
+          status: latest?.status || "unknown",
+          detail: latest?.title || "来自 release-log verification"
+        };
+      }
+    });
+    const categoryValues = Object.values(categoryMap);
+    const status = mergeTestStatus([
+      latest?.status,
+      manual.status,
+      ...categoryValues.map(item => item.status)
+    ]);
+    const failureCount = Number(manual.failure_count) || moduleRecords.reduce((sum, record) => sum + (Number(record.failure_count) || 0), 0);
+    return {
+      key: product.key,
+      title: manual.title || product.labels?.overview || product.title,
+      status,
+      passed: status === "pass",
+      latest_tested_at: manual.latest_tested_at || latest?.date || "",
+      conclusion: manual.conclusion || latest?.conclusion || latest?.title || "暂无测试结论登记",
+      failure_count: failureCount,
+      duration: manual.duration || latest?.duration || "",
+      pipeline_status: manual.pipeline_status || "not queried",
+      report_path: manual.report_path || latest?.report_path || "",
+      categories: categoryValues,
+      latest_record: latest,
+      record_count: moduleRecords.length,
+      commands: manual.commands || [],
+      next: manual.next || ""
+    };
+  });
+  const counts = modules.reduce((acc, item) => {
+    acc[item.status] = (acc[item.status] || 0) + 1;
+    return acc;
+  }, {});
+  const failing = modules.reduce((sum, item) => sum + (Number(item.failure_count) || 0), 0);
+  return {
+    summary: {
+      latest_tested_at: sourceTesting.summary?.latest_tested_at || firstDateValue(records, "date") || "未登记",
+      overall_status: sourceTesting.summary?.overall_status || (counts.fail ? "存在失败测试" : counts.partial ? "测试状态部分登记" : "测试结果看板已接入"),
+      source: sourceTesting.summary?.source || "dashboard-state.json + release-log Verification + local report scan",
+      module_count: modules.length,
+      passing_modules: counts.pass || 0,
+      failing_modules: counts.fail || 0,
+      partial_modules: counts.partial || 0,
+      unknown_modules: counts.unknown || 0,
+      failure_count: failing
+    },
+    categories: sourceTesting.categories || [],
+    modules,
+    records: records.slice(0, 24),
+    pipelines: scanTestingPipelines(sourceTesting),
+    report_sources: findKnownReportSources(sourceTesting)
+  };
 }
 
 function splitMarkdownRow(line) {
@@ -1464,8 +1647,13 @@ const skillGroups = buildSkillGroups();
 const agentFamilies = buildAgentFamilies();
 const pluginMap = parsePluginMap();
 const roadmapManifests = listRoadmapManifests();
-const productLines = buildProductLines(source.product_lines || [], roadmapManifests, pluginMap);
 const releaseEntries = parseReleaseEntries();
+const baseProductLines = buildProductLines(source.product_lines || [], roadmapManifests, pluginMap);
+const testingState = buildTestingState(source.testing || {}, baseProductLines, releaseEntries);
+const productLines = baseProductLines.map(product => ({
+  ...product,
+  testing: testingState.modules.find(item => item.key === product.key) || null
+}));
 
 const snapshot = {
   ...source,
@@ -1509,6 +1697,7 @@ const snapshot = {
     source: relative(repoRoot, releaseLogPath),
     latest_entry: latestReleaseEntry()
   },
+  testing: testingState,
   branch_policy: readBranchPolicy(divergence),
   development_data: buildDevelopmentData(branch),
   task_progress: scanDevLogs()

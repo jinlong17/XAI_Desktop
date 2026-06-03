@@ -26,6 +26,7 @@
         <a href="#branches" data-page="branches">分支管理</a>
         <a href="#product-flow" data-page="product-flow">产品结构图</a>
         <a href="#deployment" data-page="deployment">部署</a>
+        <a href="#testing" data-page="testing">测试结果</a>
         <a href="#usage-ops" data-page="usage-ops">使用和操作</a>
         <a href="#docs" data-page="docs">文档库</a>
         <a href="#skill-agent" data-page="skill-agent">Skill 和 Agent</a>
@@ -119,6 +120,10 @@
         <div class="surface pad deployment-overview-card" id="overviewDeployment"></div>
       </section>
 
+      <section class="section page-section is-active" data-page-section="overview">
+        <div class="surface pad deployment-overview-card" id="overviewTesting"></div>
+      </section>
+
       <section class="section flow-grid page-section" id="product-flow" data-page-section="product-flow">
         <div class="surface pad flow-stage">
           <div class="section-head">
@@ -202,6 +207,53 @@
           </div>
           <div class="deployment-env-list" id="deploymentEnvironmentList"></div>
           <div class="deployment-issue-list" id="deploymentIssueList"></div>
+        </aside>
+      </section>
+
+      <section class="section testing-dashboard page-section" id="testing" data-page-section="testing">
+        <div class="testing-main">
+          <div class="surface pad">
+            <div class="section-head">
+              <div>
+                <h2>测试结果总览</h2>
+                <p class="sub">按产品模块集中查看最近测试时间、测试结论、通过状态、失败项、Pipeline、耗时和报告入口。</p>
+              </div>
+              <span class="pill" id="testingOverallPill">testing</span>
+            </div>
+            <div class="deployment-summary-grid" id="testingSummaryGrid"></div>
+          </div>
+
+          <div class="surface pad">
+            <div class="section-head">
+              <div>
+                <h2>模块测试卡片</h2>
+                <p class="sub">Web、Mac 桌面版本、桌面插件、账号云同步、管理者 Dashboard 和官网使用同一 Product Module Registry 关联。</p>
+              </div>
+              <span class="pill">按模块</span>
+            </div>
+            <div class="testing-module-grid" id="testingModuleGrid"></div>
+          </div>
+
+          <div class="surface pad">
+            <div class="section-head">
+              <div>
+                <h2>测试记录</h2>
+                <p class="sub">从 release-log Verification 和 testing.records 生成，保留模块、来源、结论、失败项和报告路径。</p>
+              </div>
+              <span class="pill" id="testingRecordCount">history</span>
+            </div>
+            <div class="testing-record-list" id="testingRecordList"></div>
+          </div>
+        </div>
+        <aside class="surface pad testing-side">
+          <div>
+            <h2>Pipeline 与报告</h2>
+            <p class="sub">CI 存在不等于通过；未查询的 pipeline 只显示 configured / not queried。</p>
+          </div>
+          <h3>Pipeline</h3>
+          <div class="testing-side-list" id="testingPipelineList"></div>
+          <h3>报告入口</h3>
+          <div class="testing-side-list" id="testingReportList"></div>
         </aside>
       </section>
 
@@ -659,6 +711,7 @@ pnpm --filter @repo/web build</code></pre>
 <script src="./js/state.js"></script>
 <script src="./js/utils.js"></script>
 <script src="./js/theme.js"></script>
+<script src="./js/testing.js"></script>
 <script src="./js/overview.js"></script>
 <script src="./js/product-flow.js"></script>
 <script src="./js/deployment.js"></script>

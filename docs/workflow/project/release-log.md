@@ -4,6 +4,17 @@
 > Keep newest entries first. Use `.teams/skills/xai-release-log/SKILL.md` when
 > appending entries.
 
+## 2026-06-03
+
+### 个人开发看板测试结果面板
+
+- Product line: project-system / dev-dashboard
+- Branch / commit: `codex/web/dev-dashboard-test-results` / local working tree
+- User-visible change: 个人开发看板新增「测试结果」Tab，按 Web、Mac 桌面版本、桌面插件、账号云同步、官网、管理者 Dashboard 展示最近测试时间、结论、通过状态、失败项、分类测试结果、pipeline 状态、耗时和报告入口；总览模块卡片、产品结构详情、部署记录和发布记录也同步显示测试状态。
+- Developer/system delta: `dashboard-state.json` 新增 `testing` registry；`generate-state.mjs` 合并人工测试登记、release-log `Verification` 派生记录、已知本地报告路径和 GitHub Actions workflow inventory，并把 `testing` 回填到 `product_lines`；新增 `testing.js` 渲染测试页和跨页面测试徽标；同步更新 `xai-dev-dashboard-sync`、机器契约、模板、设计说明和 usage-guide。CI workflow 只标 `configured / not queried`，不会被伪造成通过。
+- Verification: `node --check scripts/dashboard/generate-state.mjs` passed；`node --check` passed for changed dashboard JS files；`dashboard-state.json` JSON parse passed；`pnpm dashboard` passed；generated state confirmed 6 testing modules, 17 test records, 3 pipeline rows, 5 report sources, and `product_lines[*].testing` present；`pnpm dashboard:serve` served on `http://127.0.0.1:4178` because 4177 was already occupied by an older local server；Chrome/Playwright smoke passed for `#testing`, `#overview`, product detail, `#deployment`, `#release-log`, and 390px mobile with 6 testing cards, 0 horizontal overflow, 0 HTTP failures, and 0 console errors.
+- Risk / follow-up: 看板现在能展示并同步测试状态，但远端 CI 最新结论仍需后续接 GitHub check 查询；当前只把 workflow 文件存在性标为 configured/not queried，符合“不伪造 green”的规则。
+
 ## 2026-06-02
 
 ### Web 记账模块 Cloud Design 正式接入

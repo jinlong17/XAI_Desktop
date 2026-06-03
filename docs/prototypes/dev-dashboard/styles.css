@@ -222,6 +222,7 @@
   .page-section.is-active.skill-agent-layout,
   .page-section.is-active.docs-layout,
   .page-section.is-active.deployment-dashboard,
+  .page-section.is-active.testing-dashboard,
   .page-section.is-active.release-dashboard,
   .page-section.is-active.split{display:grid}
   .section-head{display:flex;align-items:flex-end;justify-content:space-between;gap:16px;margin-bottom:12px}
@@ -2398,6 +2399,102 @@
     font-size:12px;
     overflow-wrap:anywhere;
   }
+  .testing-dashboard{
+    grid-template-columns:minmax(0,1fr) minmax(300px,.34fr);
+    gap:14px;
+    align-items:start;
+  }
+  .testing-main{display:grid;gap:14px;min-width:0}
+  .testing-side{display:grid;gap:12px;position:sticky;top:18px}
+  .testing-side h3{font-size:13px;margin-top:2px}
+  .testing-module-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(360px,1fr));gap:14px}
+  .testing-module-card{
+    --tone:var(--module-blue);
+    --tone-bg:var(--module-blue-bg);
+    min-width:0;
+    display:grid;
+    gap:12px;
+    padding:16px;
+    border:1px solid color-mix(in srgb,var(--tone) 34%,var(--line));
+    border-top:4px solid var(--tone);
+    border-radius:8px;
+    background:linear-gradient(180deg,color-mix(in srgb,var(--tone-bg) 58%,var(--surface)),var(--surface) 62%);
+    box-shadow:var(--shadow-soft);
+  }
+  .testing-module-card[data-tone="blue"]{--tone:var(--module-blue);--tone-bg:var(--module-blue-bg)}
+  .testing-module-card[data-tone="green"]{--tone:var(--module-green);--tone-bg:var(--module-green-bg)}
+  .testing-module-card[data-tone="purple"]{--tone:var(--module-purple);--tone-bg:var(--module-purple-bg)}
+  .testing-module-card[data-tone="cyan"]{--tone:var(--module-cyan);--tone-bg:var(--module-cyan-bg)}
+  .testing-module-card[data-tone="yellow"]{--tone:var(--module-yellow);--tone-bg:var(--module-yellow-bg)}
+  .testing-module-card[data-tone="red"]{--tone:var(--module-red);--tone-bg:var(--module-red-bg)}
+  .testing-module-head{display:grid;grid-template-columns:44px minmax(0,1fr) auto;gap:11px;align-items:start}
+  .testing-module-head > div{min-width:0}
+  .testing-module-head b{display:block;font-size:15px;line-height:1.25}
+  .testing-module-head span:not(.badge){display:block;color:var(--muted);font-size:12px;line-height:1.45;margin-top:3px;overflow-wrap:anywhere}
+  .testing-module-mark{width:44px;height:44px;display:grid;place-items:center;border-radius:8px;background:var(--tone);color:#fff;font-weight:900}
+  .testing-mini-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));gap:8px}
+  .testing-mini-grid div{
+    min-width:0;
+    min-height:58px;
+    padding:9px;
+    border:1px solid var(--line);
+    border-radius:8px;
+    background:color-mix(in srgb,var(--surface) 76%,transparent);
+  }
+  .testing-mini-grid b{display:block;color:var(--faint);font-size:11px}
+  .testing-mini-grid span{display:block;color:var(--text);font-size:12px;line-height:1.45;margin-top:4px;overflow-wrap:anywhere}
+  .testing-category-row{display:flex;flex-wrap:wrap;gap:6px}
+  .test-category-pill{display:inline-flex;align-items:center;min-height:24px;padding:3px 7px;border-radius:999px;font-size:11px;font-weight:850;border:1px solid var(--line);background:var(--surface-2);color:var(--muted)}
+  .testing-latest-record{padding:10px;border:1px solid var(--line);border-radius:8px;background:var(--surface-2)}
+  .testing-latest-record b{display:block;font-size:12px;line-height:1.35}
+  .testing-latest-record span{display:block;color:var(--muted);font-size:11.5px;line-height:1.45;margin-top:4px;overflow-wrap:anywhere}
+  .testing-card-foot{display:flex;align-items:center;justify-content:space-between;gap:8px}
+  .testing-card-foot > span{min-width:0;color:var(--muted);font-size:12px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  .testing-record-list{display:grid;gap:9px}
+  .testing-record-row{
+    display:grid;
+    grid-template-columns:104px minmax(0,1fr) minmax(80px,auto);
+    gap:10px;
+    align-items:start;
+    padding:12px;
+    border:1px solid var(--line);
+    border-left:4px solid var(--blue);
+    border-radius:8px;
+    background:var(--surface);
+    min-width:0;
+  }
+  .testing-record-row b{display:block;font-size:13px;line-height:1.3}
+  .testing-record-row span:not(.badge):not(.pill){display:block;color:var(--muted);font-size:12px;line-height:1.45;margin-top:3px;overflow-wrap:anywhere}
+  .testing-side-list{display:grid;gap:8px}
+  .testing-side-row{
+    min-width:0;
+    padding:10px;
+    border:1px solid var(--line);
+    border-radius:8px;
+    background:linear-gradient(180deg,var(--surface),var(--surface-2));
+  }
+  .testing-side-row[data-exists="yes"]{border-color:color-mix(in srgb,var(--green) 30%,var(--line))}
+  .testing-side-row b{display:block;font-size:12px;line-height:1.35}
+  .testing-side-row span{display:block;color:var(--muted);font-size:11.5px;line-height:1.45;margin-top:3px;overflow-wrap:anywhere}
+  .testing-product-inline{display:grid;gap:9px}
+  .testing-inline-badge,
+  .release-test-strip,
+  .overview-module-testing{
+    display:flex;
+    align-items:center;
+    flex-wrap:wrap;
+    gap:7px;
+    min-width:0;
+    padding:7px 8px;
+    border:1px solid var(--line);
+    border-radius:8px;
+    background:color-mix(in srgb,var(--surface) 76%,transparent);
+    color:var(--muted);
+    font-size:11.5px;
+  }
+  .testing-inline-badge b{color:var(--faint);font-size:11px}
+  .testing-inline-badge em{font-style:normal;overflow-wrap:anywhere}
+  .overview-module-testing{margin-top:8px}
   .usage-ops{
     display:grid;
     gap:16px;
@@ -3067,10 +3164,10 @@
     .overview-flow-node{position:relative;inset:auto !important;width:100%;min-height:88px;transform:none !important}
   }
   @media (max-width:1180px){
-    .hero,.flow-grid,.split,.docs-layout,.deployment-dashboard,.release-dashboard,.overview-flow-section{grid-template-columns:1fr}
+    .hero,.flow-grid,.split,.docs-layout,.deployment-dashboard,.testing-dashboard,.release-dashboard,.overview-flow-section{grid-template-columns:1fr}
     .skill-agent-title{grid-template-columns:1fr}
     .skill-agent-index{grid-template-columns:repeat(2,minmax(0,1fr))}
-    .docs-side,.deployment-side,.release-side,.detail{position:static;max-height:none;overflow:visible}
+    .docs-side,.deployment-side,.testing-side,.release-side,.detail{position:static;max-height:none;overflow:visible}
     .doc-file-manager{
       grid-template-columns:220px minmax(0,1fr);
       max-height:none;
@@ -3085,6 +3182,7 @@
     .overview-module-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
     .deployment-overview-grid,.deployment-summary-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
     .deployment-module-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
+    .testing-module-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
     .deployment-flow-hero,.deployment-flow-bottom{grid-template-columns:1fr}
     .deployment-flow-steps{grid-template-columns:repeat(2,minmax(0,1fr))}
     .usage-quick-grid,.shortcut-command-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
@@ -3126,7 +3224,7 @@
     .overview-signal-grid .kpi .label .pill{justify-self:start}
     .overview-sync-head{display:grid;justify-content:stretch}
     .overview-sync-head .badge{justify-self:start;white-space:normal}
-    .overview-signal-grid,.overview-sync-grid,.overview-module-grid,.deployment-overview-grid,.deployment-summary-grid,.deployment-module-grid{grid-template-columns:1fr}
+    .overview-signal-grid,.overview-sync-grid,.overview-module-grid,.deployment-overview-grid,.deployment-summary-grid,.deployment-module-grid,.testing-module-grid{grid-template-columns:1fr}
     .usage-ops-grid,.usage-quick-grid,.shortcut-command-grid{grid-template-columns:1fr}
     .usage-run-meta{grid-template-columns:repeat(2,minmax(0,1fr))}
     .usage-card-head{display:grid}
@@ -3163,7 +3261,7 @@
     .data-grid,.trend-row,.branch-commit,.dir-row,.dev-time-toolbar,.dev-chart-grid{grid-template-columns:1fr}
     .dev-time-tabs{justify-content:flex-start}
     .dev-bar-chart{grid-template-columns:repeat(auto-fit,minmax(42px,1fr))}
-    .release-module-grid,.release-entry-row,.release-extra-row,.deployment-record-row{grid-template-columns:1fr}
+    .release-module-grid,.release-entry-row,.release-extra-row,.deployment-record-row,.testing-record-row{grid-template-columns:1fr}
     .region-track{grid-template-columns:1fr}
     .flow-stage{min-height:auto}
     .branch-row,.log-row{grid-template-columns:1fr}
