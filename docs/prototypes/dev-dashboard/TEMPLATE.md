@@ -193,16 +193,19 @@ problems come from re-implementing one data domain on two pages. Constrain it:
 | Role | Definition | Rules |
 |---|---|---|
 | **Owner** | The one page that renders a data domain's **full detail** | The detail renderer exists exactly once; new detail only goes on the Owner page |
-| **Mirror** | A read-only **summary** on another page (≤5 headline metrics + an "open ‹X›" button) | ① reuse the Owner's *same* summary function (never recompute) ② distinct "mirror" styling ③ must link to the Owner ④ never copy the Owner's detail renderer |
+| **Mirror** | A **re-display** of an Owner's domain on another page — may be thin (a summary) or **rich (full cards/graph)**; the aggregator/Overview is *encouraged* to be rich | ① **reuse the Owner's renderer / data / status vocabulary** (reuse, don't fork a second implementation) ② link back to the Owner ③ the Owner stays the single definition of the canonical renderer + data shape. **How much to show is the page's call; the only ban is forking a second implementation (the drift source)** |
 | **Shared-Widget** | A small read-only **status badge** embedded on multiple pages | must be a *single shared function*, maintained by its data Owner; embed as an indicator only — never expand it into a second detail card |
 
-**Decision test** before showing content another page already owns: *Am I cloning a
-detail card (❌), placing a summary+link (✅ Mirror), or embedding a status badge
-(✅ Shared-Widget)?*
+**Decision test** before showing content another page already owns: *Am I forking a
+second renderer/vocabulary (❌, it will drift), re-displaying via the Owner's
+renderer/data (✅ Mirror — rich or thin), or embedding a shared status badge
+(✅ Shared-Widget)?* Appearing on screen more than once is **not** duplication —
+duplication is a second *implementation*, not a second *appearance*. Rich
+re-display is the aggregator's value, not debt.
 
 Maintain a **data-domain → Owner** table in `BOUNDARIES.md` for the concrete
-project. The aggregator (Overview) is the only page allowed to be all-Mirror, and
-it **only ever adds Mirrors, never detail**.
+project. The aggregator (Overview) may re-display richly — it just does so by
+**reusing** Owner renderers/data, never by forking a parallel implementation.
 
 ---
 
@@ -213,7 +216,7 @@ Each card is specified by six fields. When adding a card, fill all six —
 
 > **Card spec format:** `Responsibility / Shows / Excludes / Data source / Color / Interactions`
 
-### Overview (aggregator) — ~6 cards
+### Overview (rich aggregator) — ~6–7 cards
 - **Snapshot header** (native) — generated-time, branch, freshness badge, dirty
   count. *Excludes* any business detail.
 - **Focus rows** (native) — current priority lines. *Excludes* module cards, task
@@ -222,8 +225,11 @@ Each card is specified by six fields. When adding a card, fill all six —
   *Excludes* trend charts (→ Dev data), branch detail (→ Branches).
 - **Sync status** (native; Overview owns it) — last refresh, snapshot commit,
   dirty buckets, sync-skill status, latest release.
-- **Module status mirror** (→ Product structure) — **one** compact module overview
-  (mini flow *or* status strip). *Excludes* the full module grid + structure map.
+- **Module re-display** (→ Product structure) — Overview is a rich cockpit, so it
+  *may* show the mini flow **and** module cards (and a drawer). Implement by
+  **reusing** Product-structure's renderers/data (drawer reuses the detail
+  renderer; shared status vocabulary) — richness is the operator's choice, not
+  duplication. The only thing to avoid is a forked second renderer.
 - **Quick-skill strip** (→ Skill & Agent) — curated high-frequency entries.
   *Excludes* the full registry/fields.
 
@@ -626,7 +632,9 @@ When a new piece of information arrives, route it with this procedure (don't
    palette; don't redefine status maps per file.
 6. **Colors don't cross semantics** — module colors mean modules; status colors
    mean status; nav never uses module colors.
-7. **Overview only adds Mirrors, never detail.**
+7. **Overview may re-display richly — but by reuse (shared renderer/data/vocab),
+   never by forking a second implementation.** On-screen re-appearance is not
+   duplication; a forked implementation is.
 8. **Commands vs state are separate pages** — the Ops manual ("how") and the
    delivery pages ("what") cross-link, not embed each other.
 9. **One file per page** — render module ↔ page is 1:1; no grab-bag module.
