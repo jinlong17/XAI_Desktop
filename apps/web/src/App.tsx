@@ -58,7 +58,7 @@ import {
 // Extension 2026-05-26 — Premium tier badge for Topbar (gap-closure row #8 F1)
 import { PremiumTierBadge } from "@repo/plugin-web-settings-rest";
 // Bugfix: Audit Top-10 #1 / Rail-10 — sign-out handler wired from auth session
-import { useWebAuthSession } from "@repo/web-auth-device-session";
+import { useWebAuthSession } from "@repo/web-auth-device-session/web";
 // AI tool layer — always-on write subscribers (P4 xai-web-ai-tool-layer).
 // Mounted as Shell-siblings (route-independent liveness per OQ2 resolution).
 // Per DesktopPet / CommandPalette precedent (ADR-0007 §S6 Option B).

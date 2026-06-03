@@ -21,3 +21,17 @@ body {
   text-align: center;
   padding: 2rem;
 }
+
+.host-page__primary {
+  display: inline-flex;
+  justify-self: center;
+  align-items: center;
+  justify-content: center;
+  min-height: 40px;
+  padding: 0 16px;
+  border-radius: 8px;
+  background: #111827;
+  color: #fff;
+  font-weight: 600;
+  text-decoration: none;
+}

@@ -9,11 +9,21 @@
 
 import { describe, it, expect, beforeEach } from "vitest";
 import { render } from "@testing-library/react";
-import { DesktopPet } from "../DesktopPet.js";
+import { DesktopPet, resolveDefaultPetPos } from "../DesktopPet.js";
 
 describe("DesktopPet persistence", () => {
   beforeEach(() => {
     localStorage.clear();
+    Object.defineProperty(window, "innerWidth", {
+      writable: true,
+      configurable: true,
+      value: 390,
+    });
+    Object.defineProperty(window, "innerHeight", {
+      writable: true,
+      configurable: true,
+      value: 844,
+    });
   });
 
   it("uses persisted petId from localStorage (ember)", () => {
@@ -49,10 +59,11 @@ describe("DesktopPet persistence", () => {
     expect(body?.className).toContain("pet-anim-hop");
   });
 
-  it("uses default pos {x:24,y:24} when localStorage is empty", () => {
+  it("uses a viewport-safe default position when localStorage is empty", () => {
     const { container } = render(<DesktopPet on={true} lang="en" />);
     const wrap = container.querySelector(".pet-wrap") as HTMLElement | null;
-    expect(wrap?.style.transform).toBe("translate(24px, 24px)");
+    const expected = resolveDefaultPetPos();
+    expect(wrap?.style.transform).toBe(`translate(${expected.x}px, ${expected.y}px)`);
   });
 
   it("uses persisted star pet (twinkle animation)", () => {

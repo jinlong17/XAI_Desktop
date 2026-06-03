@@ -12,7 +12,7 @@
  * AC-RAIL-11: Tooltips (data-tip) use i18n labels
  */
 
-import { render, fireEvent } from "@testing-library/react";
+import { render, fireEvent, screen } from "@testing-library/react";
 import { describe, it, expect, vi, beforeEach } from "vitest";
 import { MemoryRouter } from "react-router";
 import { AppRail } from "../AppRail.js";
@@ -222,6 +222,14 @@ describe("AppRail", () => {
     // data-tip is whatever the i18n label resolves to (may be "Pet" or "pet" depending on locale)
     const tip = petBtn?.getAttribute("data-tip");
     expect(tip?.toLowerCase()).toBe("pet");
+  });
+
+  it("AR11 — icon-only rail controls expose accessible names", () => {
+    renderRail();
+    expect(screen.getByRole("button", { name: "Open account menu" })).toBeTruthy();
+    expect(screen.getByRole("button", { name: "Tasks" })).toBeTruthy();
+    expect(screen.getByRole("button", { name: "Dashboard" })).toBeTruthy();
+    expect(screen.getByRole("button", { name: "Pet" })).toBeTruthy();
   });
 
   it("AR11 — module button has data-tip with i18n label", () => {

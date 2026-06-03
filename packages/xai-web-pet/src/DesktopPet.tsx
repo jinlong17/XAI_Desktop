@@ -25,6 +25,7 @@ import { useToggleSync } from "./internal/useToggleSync.js";
 import {
   HAPPY_DURATION_MS,
   BUBBLE_GUARD_PX,
+  PET_BODY_PX,
 } from "./internal/timing.js";
 import type { DesktopPetProps } from "./types.js";
 import type { PetId, PetPos } from "./types.js";
@@ -37,6 +38,23 @@ interface DragState {
   ox: number;
   oy: number;
   moved: boolean;
+}
+
+export function resolveDefaultPetPos(): PetPos {
+  if (typeof window === "undefined") {
+    return { x: 280, y: 640 };
+  }
+
+  return clampPos(
+    {
+      x: window.innerWidth - PET_BODY_PX - 24,
+      y: window.innerHeight - PET_BODY_PX - 24,
+    },
+    {
+      w: window.innerWidth,
+      h: window.innerHeight,
+    },
+  );
 }
 
 // ---------------------------------------------------------------------------
@@ -62,7 +80,7 @@ function SparkleIcon(): JSX.Element {
 export function DesktopPet({ on, lang }: DesktopPetProps): JSX.Element | null {
   // ---- Persistence ---------------------------------------------------------
   const [petId, setPetId] = usePref("xai_pet_id");
-  const [pos, setPos] = usePref("xai_pet_pos");
+  const [pos, setPos] = usePref("xai_pet_pos", resolveDefaultPetPos());
 
   // ---- Local state ---------------------------------------------------------
   const [drag, setDrag] = useState<DragState | null>(null);
@@ -137,7 +155,7 @@ export function DesktopPet({ on, lang }: DesktopPetProps): JSX.Element | null {
   // ---- Window resize: re-clamp position -----------------------------------
 
   useEffect(() => {
-    const onResize = () => {
+    const clampCurrentPosition = () => {
       const clamped = clampPos(pos, {
         w: window.innerWidth,
         h: window.innerHeight,
@@ -148,8 +166,9 @@ export function DesktopPet({ on, lang }: DesktopPetProps): JSX.Element | null {
       }
     };
 
-    window.addEventListener("resize", onResize);
-    return () => window.removeEventListener("resize", onResize);
+    clampCurrentPosition();
+    window.addEventListener("resize", clampCurrentPosition);
+    return () => window.removeEventListener("resize", clampCurrentPosition);
   }, [pos, setPos]);
 
   // ---- Resolve active pet def (fallback to mochi for corrupted storage) ---

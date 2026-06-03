@@ -54,7 +54,7 @@ const mockSessionConfig = {
 // Default: client with auth.signOut
 mockSessionConfig.client = { auth: { signOut: mockSignOut } };
 
-vi.mock("@repo/web-auth-device-session", () => ({
+vi.mock("@repo/web-auth-device-session/web", () => ({
   useWebAuthSession: () => ({
     get client() { return mockSessionConfig.client; },
     clearSessionStorage: mockClearSessionStorage,

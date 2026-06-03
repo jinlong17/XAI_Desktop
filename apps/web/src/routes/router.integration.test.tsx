@@ -9,21 +9,6 @@ import { webHostRouteObjects } from "./router";
 
 const mockDeviceFetch = vi.fn(async () => new Response(JSON.stringify({ rows: [] }), { status: 200 }));
 
-// Mock the bare package path (used by App.tsx for useWebAuthSession)
-vi.mock("@repo/web-auth-device-session", () => ({
-  useWebAuthSession: () => ({
-    client: null,
-    clearSessionStorage: vi.fn().mockResolvedValue(undefined),
-    state: "authenticated",
-    session: null,
-    deviceId: null,
-    syncVersion: "2026-05",
-    refreshSession: vi.fn(),
-    ensureDeviceIdentity: vi.fn(),
-    setSession: vi.fn(),
-  }),
-}));
-
 vi.mock("@repo/web-auth-device-session/web", async () => {
   const actual = await vi.importActual<typeof import("@repo/web-auth-device-session/web")>(
     "@repo/web-auth-device-session/web"
@@ -130,7 +115,9 @@ describe("web host router integration", () => {
     await unmountApp(auth);
 
     const landing = await mountRouter(historyEntries, 0);
-    expect(landing.container.textContent).toContain("XAI Web Host");
+    expect(landing.container.textContent ?? "").toContain("XAI Console");
+    expect(landing.container.textContent ?? "").toContain("Open console");
+    expect(landing.container.textContent ?? "").not.toContain("Public landing shell placeholder");
     await unmountApp(landing);
   });
 

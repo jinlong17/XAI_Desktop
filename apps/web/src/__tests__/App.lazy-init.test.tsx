@@ -27,7 +27,7 @@ vi.mock("@repo/xai-web-event-bus", () => ({
   useWebEventListener: vi.fn(),
 }));
 
-vi.mock("@repo/web-auth-device-session", () => ({
+vi.mock("@repo/web-auth-device-session/web", () => ({
   useWebAuthSession: () => ({
     client: null,
     clearSessionStorage: vi.fn().mockResolvedValue(undefined),

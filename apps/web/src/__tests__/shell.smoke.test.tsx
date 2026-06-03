@@ -25,8 +25,8 @@ vi.mock("@repo/xai-web-event-bus", () => ({
   useWebEventListener: vi.fn(),
 }));
 
-// Mock web-auth-device-session so App.tsx's useWebAuthSession() works without a provider
-vi.mock("@repo/web-auth-device-session", () => ({
+// Mock web-auth-device-session/web so App.tsx's useWebAuthSession() works without a provider
+vi.mock("@repo/web-auth-device-session/web", () => ({
   useWebAuthSession: () => ({
     client: null,
     clearSessionStorage: vi.fn().mockResolvedValue(undefined),

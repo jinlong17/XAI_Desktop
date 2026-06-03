@@ -109,6 +109,7 @@ export function AppRail({ activeModuleId, onModuleClick, onPetToggle, onAvatarOp
   ];
 
   const navLabels = t.nav;
+  const avatarLabel = lang === "zh" ? "打开账户菜单" : "Open account menu";
 
   return (
     <aside className="app-rail" data-pos={railPos}>
@@ -117,6 +118,7 @@ export function AppRail({ activeModuleId, onModuleClick, onPetToggle, onAvatarOp
         <button
           type="button"
           className="rail-avatar"
+          aria-label={avatarLabel}
           onClick={() => setAvatarOpen((v) => !v)}
         >
           <div className="avatar-img">
@@ -147,6 +149,7 @@ export function AppRail({ activeModuleId, onModuleClick, onPetToggle, onAvatarOp
         {orderedModules.map((mod: WebModuleSlotRegistration) => {
           const icon: WebShellIconName = mod.icon ?? "kanban";
           const label = navLabels[(mod.moduleId as keyof typeof navLabels)] ?? mod.moduleId;
+          const labelText = typeof label === "string" ? label : mod.moduleId;
           const isActive = activeModuleId === mod.moduleId;
           const isDragging = dragId === mod.moduleId;
 
@@ -159,7 +162,8 @@ export function AppRail({ activeModuleId, onModuleClick, onPetToggle, onAvatarOp
                 (isActive ? " active" : "") +
                 (isDragging ? " dragging" : "")
               }
-              data-tip={typeof label === "string" ? label : mod.moduleId}
+              data-tip={labelText}
+              aria-label={labelText}
               draggable
               onDragStart={(e) => onDragStart(e, mod.moduleId)}
               onDragOver={(e) => onDragOver(e, mod.moduleId)}
@@ -181,13 +185,15 @@ export function AppRail({ activeModuleId, onModuleClick, onPetToggle, onAvatarOp
           const label = btn.id === "pet"
             ? (navLabels["pet"] ?? "pet")
             : btn.id;
+          const labelText = typeof label === "string" ? label : btn.id;
 
           return (
             <button
               key={btn.id}
               type="button"
               className={"rail-btn has-tip" + (isActive ? " active" : "")}
-              data-tip={typeof label === "string" ? label : btn.id}
+              data-tip={labelText}
+              aria-label={labelText}
               onClick={btn.action}
             >
               <Icon name={btn.icon} size={18} />
