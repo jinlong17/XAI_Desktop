@@ -121,7 +121,19 @@ function collectSkillAgentEntries(){
   return [...skillEntries, ...familyEntries];
 }
 
+function ensureSkillCopyStyles(){
+  if(typeof document === "undefined" || document.getElementById("xai-skill-copy-styles")) return;
+  const el = document.createElement("style");
+  el.id = "xai-skill-copy-styles";
+  el.textContent = `
+  .sa-entry-actions{display:flex;flex-direction:column;align-items:flex-end;gap:6px;flex:none}
+  .sa-copy{border:1px solid var(--line);border-radius:6px;background:var(--surface);color:var(--faint);font-size:10px;padding:3px 8px;cursor:pointer;white-space:nowrap;transition:border-color .15s ease,color .15s ease}
+  .sa-copy:hover{border-color:var(--blue);color:var(--blue)}
+  `;
+  document.head.appendChild(el);
+}
 function renderSkillAgentCatalog(){
+  ensureSkillCopyStyles();
   const entries = collectSkillAgentEntries();
   const skillCount = entries.filter(item => item.kind === "skill").length;
   const agentCount = entries.filter(item => item.kind === "agent").length;
@@ -172,7 +184,10 @@ function renderSkillAgentCatalog(){
                 <h4>${h(entry.name)}</h4>
                 <p>${h(compactText(entry.description || "暂无说明。", 176))}</p>
               </div>
-              <span class="badge ${entry.kind === "skill" ? "b-purple" : "b-cyan"}">${h(entry.kind === "skill" ? "Skill" : "Agent")}</span>
+              <div class="sa-entry-actions">
+                <span class="badge ${entry.kind === "skill" ? "b-purple" : "b-cyan"}">${h(entry.kind === "skill" ? "Skill" : "Agent")}</span>
+                <button class="sa-copy" type="button" data-sa-copy="${h(entry.name)}" title="复制名字">复制名</button>
+              </div>
             </div>
             <div class="skill-agent-meta-grid">
               <b>类型</b><span>${h(entry.type)}</span>
@@ -198,6 +213,9 @@ function renderSkillAgentCatalog(){
   });
   document.querySelectorAll("[data-skill-agent-doc]").forEach(button => {
     button.addEventListener("click", () => openSkillAgentDoc(button.dataset.skillAgentDoc));
+  });
+  document.querySelectorAll("[data-sa-copy]").forEach(button => {
+    button.addEventListener("click", () => copyText(button.dataset.saCopy, button));
   });
 }
 
