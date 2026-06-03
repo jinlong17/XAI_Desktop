@@ -50,6 +50,11 @@ const roadmapAllowlist = [
   "xai-web-tasks-smartlist-filter.md"
 ];
 
+// SOURCE OF TRUTH for skill/agent categories (BOUNDARIES.md §7). Emitted as
+// `skill_agent_registry.categories`, which js/skill-agent.js always prefers at
+// runtime. js/state.js carries a FROZEN MIRROR (`SKILL_AGENT_CATEGORIES`, no
+// `tone`) used only as a fallback when state.generated.js is stale/missing.
+// When you add/rename a category here, update that mirror in the same commit.
 const skillAgentCategories = [
   {
     key: "feature",

@@ -136,6 +136,15 @@ const agentFamilies = dashboardState.agent_families || [];
 const skillAgentRegistry = dashboardState.skill_agent_registry || {summary:{}, categories:[], entries:[], report:{}};
 const docHub = dashboardState.doc_hub || {roots:[], groups:[], by_path:{}};
 
+// SINGLE-SOURCE NOTE (BOUNDARIES.md §7): the authoritative skill/agent category
+// list lives in scripts/dashboard/generate-state.mjs (`skillAgentCategories`),
+// which the generator emits as `skill_agent_registry.categories`. The normal
+// runtime path in js/skill-agent.js (`categoryByKey`) ALWAYS prefers that
+// emitted list; this const is a FROZEN MIRROR used only as a last-resort
+// fallback when state.generated.js is stale/missing (no registry.categories).
+// Keep these keys/titles/summaries in sync with the generator (the `tone` field
+// is generator-only and not needed by the fallback). Do not add categories
+// here without adding them to the generator first.
 const SKILL_AGENT_CATEGORIES = [
   {
     key:"feature",
