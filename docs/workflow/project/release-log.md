@@ -6,6 +6,15 @@
 
 ## 2026-06-03
 
+### 个人开发看板边界规范闭环
+
+- Product line: project-system / dev-dashboard
+- Branch / commit: `web` / local working tree
+- User-visible change: 个人开发看板新增可跟踪的 `README.md` 入口和 `BOUNDARIES.md` 页面/卡片边界规范，并让同步 skill 在每次运行时核对它们，避免模板引用未纳入 Git 的配套文件。
+- Developer/system delta: 将 `docs/prototypes/dev-dashboard/README.md` 和 `docs/prototypes/dev-dashboard/BOUNDARIES.md` 纳入 tracked scope；`xai-dev-dashboard-sync` 的项目源 skill 增加 README 和 Boundary spec 作为 Read First / drift audit 输入，并把 Boundary spec 作为第六个 alignment surface 和 receipt 字段；`docs/workflow/project/dev-dashboard.md` 同步记录六项 alignment check；`generate-state.mjs` 将 README / BOUNDARIES 加入必读文档、sync sources 和 dashboard-docs dirty bucket。
+- Verification: `node --check scripts/dashboard/generate-state.mjs` passed；`pnpm dashboard` passed；generated state confirmed `README.md` and `BOUNDARIES.md` appear in must-read docs and sync sources；`pnpm dashboard:verify-modules` passed；`pnpm dashboard:verify-static` passed.
+- Risk / follow-up: `.claude/skills/xai-dev-dashboard-sync` and `.codex/skills/xai-dev-dashboard-sync` are symlink mirrors to `.teams/skills/xai-dev-dashboard-sync`, so the tracked source skill is the only file that needs committing.
+
 ### 个人开发看板数据边界修复
 
 - Product line: project-system / dev-dashboard

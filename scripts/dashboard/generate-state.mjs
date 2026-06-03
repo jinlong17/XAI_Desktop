@@ -26,8 +26,10 @@ const agentTemplateDir = resolve(repoRoot, ".agents/templates");
 const claudeAgentDir = resolve(repoRoot, ".claude/agents");
 const cursorAgentDir = resolve(repoRoot, ".cursor/agents");
 const outputPath = resolve(repoRoot, "docs/prototypes/dev-dashboard/state.generated.js");
+const dashboardReadmePath = "docs/prototypes/dev-dashboard/README.md";
 const dashboardMachineDocPath = "docs/workflow/project/dev-dashboard.md";
 const dashboardTemplatePath = "docs/prototypes/dev-dashboard/TEMPLATE.md";
+const dashboardBoundariesPath = "docs/prototypes/dev-dashboard/BOUNDARIES.md";
 const dashboardDesignPath = "docs/prototypes/dev-dashboard/DESIGN.md";
 const dashboardSyncSkillPath = ".teams/skills/xai-dev-dashboard-sync/SKILL.md";
 const roadmapAllowlist = [
@@ -854,7 +856,9 @@ function buildDocCollections(skillGroups, agentFamilies) {
       tags: ["Workflow V2", "SOP", "Handoff", "Portable"],
       entries: [
         docEntry("使用手册", "docs/workflow/project/usage-guide.md", "个人开发看板和 Workflow V2 的日常入口。", ["guide"]),
+        docEntry("看板 README", dashboardReadmePath, "个人开发看板打开、运行、刷新和权威文档入口。", ["dashboard", "readme"]),
         docEntry("个人开发看板机器说明", dashboardMachineDocPath, "AI / Codex / Claude Code 使用和同步个人开发看板的机器契约。", ["dashboard", "machine"]),
+        docEntry("看板边界规范", dashboardBoundariesPath, "个人开发看板每个页面和卡片的 Owner / Mirror / Shared-Widget 边界契约。", ["dashboard", "boundaries"]),
         docEntry("项目手册", "docs/workflow/project/handbook.md", "当前主线、操作原则和人工确认边界。", ["handbook"]),
         docEntry("Subagent Workflow V2", "docs/workflow/SUBAGENT_WORKFLOW_V2.md", "feature / bugfix / ship agent 链路。", ["agent"]),
         docEntry("新功能 SOP", "docs/workflow/SOP_NEW_FEATURE.md", "Feature 从 brief 到 ship 的标准路径。", ["feature"]),
@@ -876,7 +880,8 @@ function buildDocCollections(skillGroups, agentFamilies) {
         docEntry("Contracts", "docs/contracts/README.md", "跨包合同和验证入口。", ["contracts"]),
         docEntry("Package docs", "packages", "packages/*/docs 下的 design/api/test/dev_log。", ["package"]),
         docEntry("看板设计说明", dashboardDesignPath, "个人开发看板当前实现原则和升级计划。", ["dashboard"]),
-        docEntry("看板模板文档", dashboardTemplatePath, "可迁移到其它系统级项目的个人开发看板模板。", ["template", "dashboard"])
+        docEntry("看板模板文档", dashboardTemplatePath, "可迁移到其它系统级项目的个人开发看板模板。", ["template", "dashboard"]),
+        docEntry("看板边界规范", dashboardBoundariesPath, "个人开发看板页面、卡片、颜色、导航和数据源边界。", ["dashboard", "boundaries"])
       ].filter(Boolean)
     },
     {
@@ -927,7 +932,9 @@ function buildDocHub(skillGroups, agentFamilies) {
       importance: "必读",
       entries: [
         docEntry("看板机器说明", dashboardMachineDocPath, "机器读取的看板契约、同步规则和 AI 使用边界。", ["dashboard", "machine"], "必读"),
+        docEntry("看板 README", dashboardReadmePath, "打开、运行、刷新个人开发看板和定位权威文档的入口。", ["dashboard", "readme"], "必读"),
         docEntry("看板可复用模板", dashboardTemplatePath, "新项目复用个人开发看板时的结构、视觉和管理逻辑模板。", ["dashboard", "template"], "必读"),
+        docEntry("看板边界规范", dashboardBoundariesPath, "本项目具体页面、卡片、Owner / Mirror / Shared-Widget 和数据源边界。", ["dashboard", "boundaries"], "必读"),
         docEntry("AGENTS.md", "AGENTS.md", "Codex 会话规则、handoff 展示和 agent/skill tracking 边界。", ["rules", "codex"], "必读"),
         docEntry("CLAUDE.md", "CLAUDE.md", "跨平台共享工程规则、架构边界和测试要求。", ["rules", "architecture"], "必读"),
         docEntry("项目使用手册", "docs/workflow/project/usage-guide.md", "个人开发看板与 Workflow V2 的日常入口。", ["guide", "workflow"], "必读"),
@@ -959,7 +966,8 @@ function buildDocHub(skillGroups, agentFamilies) {
         docEntry("Contracts", "docs/contracts/README.md", "跨包合同和验证入口。", ["contracts"], "系统级"),
         docEntry("Portable Manifest", "docs/workflow/_portable/00-PORTABLE-MANIFEST.md", "跨平台同步 surface 与生成规则。", ["portable"], "系统级"),
         docEntry("Branch Policy", "docs/workflow/project/branch-policy.json", "长期分支和 D3 gate 的机器可读策略。", ["branch", "json"], "系统级"),
-        docEntry("看板模板文档", dashboardTemplatePath, "新项目复用个人开发看板时的结构、视觉和管理逻辑模板。", ["dashboard", "template"], "系统级")
+        docEntry("看板模板文档", dashboardTemplatePath, "新项目复用个人开发看板时的结构、视觉和管理逻辑模板。", ["dashboard", "template"], "系统级"),
+        docEntry("看板边界规范", dashboardBoundariesPath, "本项目页面与卡片边界的具体实例规范。", ["dashboard", "boundaries"], "系统级")
       ].filter(Boolean)
     },
     {
@@ -1765,11 +1773,11 @@ function statusPath(line) {
 }
 
 function dashboardDirtyBucket(file) {
+  if ([dashboardReadmePath, dashboardMachineDocPath, dashboardTemplatePath, dashboardBoundariesPath, dashboardDesignPath].includes(file)) return "dashboard-docs";
   if (file.startsWith("docs/prototypes/dev-dashboard/")) return "dashboard-ui";
   if (file.startsWith("scripts/dashboard/")) return "dashboard-generator";
   if (file === "docs/workflow/project/dashboard-state.json") return "dashboard-state";
   if (file === "docs/workflow/project/release-log.md") return "release-log";
-  if (file === dashboardMachineDocPath || file === dashboardTemplatePath) return "dashboard-docs";
   if (file.startsWith(".teams/skills/") || file.startsWith(".codex/skills/") || file.startsWith(".codex/agents/")) return "skills-agents";
   if (file.startsWith("docs/")) return "docs";
   if (file.startsWith("apps/") || file.startsWith("packages/")) return "product-code";
@@ -1829,8 +1837,10 @@ function buildDashboardSyncStatus(branch, latestCommit, generatedAt) {
     release_log_latest: latestReleaseEntry(),
     sources: [
       dashboardSource("manual state", "docs/workflow/project/dashboard-state.json"),
+      dashboardSource("dashboard readme", dashboardReadmePath),
       dashboardSource("machine contract", dashboardMachineDocPath),
       dashboardSource("template", dashboardTemplatePath),
+      dashboardSource("boundaries", dashboardBoundariesPath),
       dashboardSource("release log", "docs/workflow/project/release-log.md"),
       dashboardSource("branch policy", "docs/workflow/project/branch-policy.json"),
       dashboardSource("dashboard design", dashboardDesignPath),

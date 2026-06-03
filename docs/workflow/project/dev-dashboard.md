@@ -8,6 +8,7 @@
 
 - Name: XAI personal developer dashboard
 - Human UI: `docs/prototypes/dev-dashboard/index.html`
+- Dashboard README: `docs/prototypes/dev-dashboard/README.md`
 - Generated state: `docs/prototypes/dev-dashboard/state.generated.js`
 - Manual state base: `docs/workflow/project/dashboard-state.json`
 - Product Module Registry: `docs/workflow/project/dashboard-state.json` field
@@ -23,6 +24,7 @@
 - Claude skill mirror: `.claude/skills/xai-dev-dashboard-sync/SKILL.md`
 - Codex skill mirror: `.codex/skills/xai-dev-dashboard-sync/SKILL.md`
 - Template doc: `docs/prototypes/dev-dashboard/TEMPLATE.md`
+- Boundary spec: `docs/prototypes/dev-dashboard/BOUNDARIES.md`
 
 The dashboard is a local project-management console. It is not a customer-facing
 product surface, not the proposed Admin Dashboard, and not a replacement for
@@ -95,17 +97,20 @@ Agents should refresh or check the dashboard when:
   `.codex/agents/`, or `docs/workflow/project/release-log.md`;
 - final handoff depends on Overview data.
 
-The sync skill owns five alignment checks in one run:
+The sync skill owns six alignment checks in one run:
 
 1. refresh or verify the Overview snapshot from current repo evidence;
 2. update this machine contract when dashboard behavior, sources, or sync rules
    have changed;
 3. update `docs/prototypes/dev-dashboard/TEMPLATE.md` when a dashboard pattern is
    intentionally reusable for future projects.
-4. refresh or verify testing status from the Testing Registry, release-log
+4. update `docs/prototypes/dev-dashboard/BOUNDARIES.md` when concrete page/card
+   ownership, Owner / Mirror / Shared-Widget rules, color semantics, navigation,
+   or data-source boundaries change.
+5. refresh or verify testing status from the Testing Registry, release-log
    `Verification` fields, known local report paths, and CI / pipeline
    configuration evidence.
-5. refresh or verify the Skill / Agent knowledge registry, including new or
+6. refresh or verify the Skill / Agent knowledge registry, including new or
    modified definitions, classification, generated descriptions, automatic
    field completion, unresolved needs-action items, source-backfill notes,
    workflow links, document links, maintenance status, and mirror status.
@@ -137,7 +142,7 @@ Agents may update:
 - dashboard source HTML/CSS/JS under `docs/prototypes/dev-dashboard/`;
 - generator/server scripts under `scripts/dashboard/`;
 - machine and operator docs under `docs/workflow/project/`;
-- reusable dashboard template docs under `docs/prototypes/dev-dashboard/`;
+- reusable dashboard template and boundary docs under `docs/prototypes/dev-dashboard/`;
 - `docs/workflow/project/release-log.md` through `xai-release-log`;
 - `docs/workflow/project/dashboard-state.json` only for authored operator-facing
   rows, prompts, links, and manual override copy.
@@ -170,8 +175,10 @@ inspect generated files. It should show:
 The docs library must keep the dashboard governance docs easy to inspect and
 share with other tools:
 
-- `docs/workflow/project/dev-dashboard.md` and
-  `docs/prototypes/dev-dashboard/TEMPLATE.md` belong in the required-docs
+- `docs/workflow/project/dev-dashboard.md`,
+  `docs/prototypes/dev-dashboard/README.md`,
+  `docs/prototypes/dev-dashboard/TEMPLATE.md`, and
+  `docs/prototypes/dev-dashboard/BOUNDARIES.md` belong in the required-docs
   recommendation group;
 - document copy actions should copy the absolute local filesystem path, using
   `repo_root` from `state.generated.js` plus the repository-relative path;

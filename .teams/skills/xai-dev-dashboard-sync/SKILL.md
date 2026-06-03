@@ -1,13 +1,14 @@
 ---
 name: xai-dev-dashboard-sync
-description: Refresh and verify the XAI personal developer dashboard, including Overview state, the machine-facing dashboard contract, and the reusable dashboard template. Use when the operator asks whether the dev-dashboard is current, wants branch/code/doc/release state synchronized, or needs Codex/Claude to align dashboard docs before trusting the personal project console.
+description: Refresh and verify the XAI personal developer dashboard, including Overview state, the machine-facing dashboard contract, reusable dashboard template, and concrete page/card boundary spec. Use when the operator asks whether the dev-dashboard is current, wants branch/code/doc/release state synchronized, or needs Codex/Claude to align dashboard docs before trusting the personal project console.
 ---
 
 # xai-dev-dashboard-sync
 
 Project-layer skill for refreshing the personal developer dashboard and proving
-whether its Overview, machine contract, reusable template, Skill / Agent
-knowledge registry, and testing surfaces reflect the current repo state.
+whether its Overview, machine contract, reusable template, concrete page/card
+boundary spec, Skill / Agent knowledge registry, and testing surfaces reflect the
+current repo state.
 
 This skill wraps the existing dashboard generator. It does not replace
 `scripts/dashboard/generate-state.mjs`, does not auto-edit roadmap state, does
@@ -15,27 +16,31 @@ not merge branches, and does not decide release readiness.
 
 ## Alignment Scope
 
-Every run checks five surfaces:
+Every run checks six surfaces:
 
 1. Overview snapshot: generated branch, commit, dirty files, key docs, skill /
    agent registry, and latest release-log state.
 2. Machine contract: `docs/workflow/project/dev-dashboard.md`, which tells
    Codex, Claude Code, Cursor, and other agents how to use and maintain the
    dashboard.
-3. Reusable template: `docs/prototypes/dev-dashboard/TEMPLATE.md`, which
-   captures dashboard structure, layout, theme, modules, drawers, docs browser,
-   workflow entries, and design principles for future projects.
-4. Testing status: `docs/workflow/project/dashboard-state.json.testing`,
+3. Reusable template and README: `docs/prototypes/dev-dashboard/TEMPLATE.md`
+   and `docs/prototypes/dev-dashboard/README.md`, which capture dashboard
+   structure, layout, theme, modules, drawers, docs browser, workflow entries,
+   open/run instructions, and design principles for future projects.
+4. Boundary spec: `docs/prototypes/dev-dashboard/BOUNDARIES.md`, which captures
+   concrete page, card, Owner / Mirror / Shared-Widget, color, navigation, and
+   data-source boundaries for this project instance.
+5. Testing status: `docs/workflow/project/dashboard-state.json.testing`,
    release-log `Verification` fields, local test report paths, and configured
    CI / pipeline inventory.
-5. Skill / Agent knowledge registry: project skills, Codex skills, portable
+6. Skill / Agent knowledge registry: project skills, Codex skills, portable
    skills, canonical agent templates, and platform agent variants, including
    classification, usage notes, inputs, outputs, workflow links, doc links,
    maintenance state, recent updates, and missing-metadata gaps.
 
-If the dashboard source behavior changed and a contract/template mismatch is
-clear, update the relevant Markdown in the same run. If the mismatch requires an
-operator decision, report `needs-review` instead of guessing.
+If the dashboard source behavior changed and a contract/template/boundary
+mismatch is clear, update the relevant Markdown in the same run. If the mismatch
+requires an operator decision, report `needs-review` instead of guessing.
 
 ## Triggers
 
@@ -53,7 +58,9 @@ operator decision, report `needs-review` instead of guessing.
 ## Read First
 
 - `docs/workflow/project/dev-dashboard.md`
+- `docs/prototypes/dev-dashboard/README.md`
 - `docs/prototypes/dev-dashboard/TEMPLATE.md`
+- `docs/prototypes/dev-dashboard/BOUNDARIES.md`
 - `docs/prototypes/dev-dashboard/DESIGN.md`
 - `docs/workflow/project/dashboard-state.json`
 - `scripts/dashboard/generate-state.mjs`
@@ -87,8 +94,9 @@ dashboard, and `check` when they only ask whether the dashboard is current.
 3. `docs/prototypes/dev-dashboard/state.generated.js` is a local generated
    artifact. Refresh it locally, but do not rely on committing it for cross-machine
    state.
-4. This skill may update dashboard docs, skill docs, release-log entries, and
-   tracked skill mirrors. It must not rewrite unrelated dirty files.
+4. This skill may update dashboard docs, boundary docs, skill docs, release-log
+   entries, and tracked skill mirrors. It must not rewrite unrelated dirty
+   files.
 5. Do not add a post-commit hook for dashboard refresh. Use generator refresh,
    `dashboard:serve`, or the local `/api/refresh` button.
 
@@ -112,6 +120,12 @@ dashboard, and `check` when they only ask whether the dashboard is current.
      changes to Overview, product structure, docs library, Skill / Agent,
      release records, workflow entry, theme system, navigation, drawers, or
      file-manager document browsing;
+   - compare `docs/prototypes/dev-dashboard/README.md` with the current open,
+     run, refresh, authoritative-doc, and maintenance instructions;
+   - compare `docs/prototypes/dev-dashboard/BOUNDARIES.md` with concrete
+     page/card ownership, Owner / Mirror / Shared-Widget rules, navigation,
+     color semantics, data-domain owners, shared widgets, and data-source
+     boundaries;
    - compare Testing Registry behavior with the Testing page, Overview module
      cards, Product structure detail, Deployment records, and Release records;
    - compare Skill / Agent Registry behavior with the Skill / Agent page,
@@ -206,6 +220,7 @@ Dashboard Sync Receipt
   Skill status:       xai-dev-dashboard-sync present|tracked|local-only|missing
   Machine doc:        aligned | updated | needs-review
   Template doc:       aligned | updated | needs-review
+  Boundaries doc:     aligned | updated | needs-review
   Skill/Agent KB:     resolved | needs-action:<count> | updated | needs-review
   Source backfill:    <count of generated values that could be written back later>
   Testing status:     aligned | updated | needs-review
