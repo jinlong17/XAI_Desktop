@@ -220,6 +220,12 @@ function featureCountSummary(list){
   return `${list.length} 项 · ${parts.join(" · ")}`;
 }
 
+// Owner of the per-module dossier (BOUNDARIES.md §4.5-D). The Overview drawer
+// (overview.js openModuleDrawer) is a separate COMPACT Mirror, not a second
+// copy of this body — see the P1b note there. NOTE for any future merge: the
+// post-render wiring below queries hardcoded #productDetail / #detailDocLinks
+// and calls attachTestingActions(detailPanel); to host this body in another
+// mount these MUST be re-scoped to the passed root element first.
 function setProduct(key){
   const item = products.find(product => product.key === key);
   if(!item) return;

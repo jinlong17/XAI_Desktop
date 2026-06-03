@@ -412,6 +412,18 @@ function renderDrawerFeatureList(items, label){
   return items.map(text => `<div class="drawer-feature"><b>${h(label)}</b><span>${h(text)}</span></div>`).join("");
 }
 
+// P1b (BOUNDARIES.md §4.1/§4.5/§7) — DEFERRED renderer-merge, NOT a fork to fix.
+// This drawer is a COMPACT Mirror of the per-module dossier; product-flow.js
+// setProduct() is the Owner detail. They are deliberately DIFFERENT views, not
+// the same body on two mounts: this reads the overview-module shape
+// (phase/progress/running/recent_update/todo) and uses drawer-* CSS + the
+// 模块介绍/当前状态/功能进展/最近更新 sections, while setProduct reads products[key]
+// and renders the full goal/features/prompts/transitions/impacts dossier with
+// detail-* CSS. The shared concern (FEATURE_STATUS vocabulary) is already
+// unified in js/status-meta.js. A literal single renderer would either regress
+// this compact view or be a variant-branch wrapper around two separate bodies
+// that still rewires setProduct's hardcoded #productDetail-scoped listeners
+// (monitor-reconnection risk) — unverifiable without a browser, so deferred.
 function openModuleDrawer(item){
   if(!item) return;
   const line = productLineFor(item.key);
