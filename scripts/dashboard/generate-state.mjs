@@ -2184,6 +2184,8 @@ const productLines = baseProductLines.map(product => ({
 }));
 
 const snapshot = {
+  // machine-only passthrough from dashboard-state.json: `module_nav` — emitted for
+  // external tooling, no dashboard JS consumer (nav uses nav.js DEFAULT_NAV_ITEMS).
   ...source,
   repo_root: repoRoot,
   generated_at: generatedAt,
@@ -2200,13 +2202,16 @@ const snapshot = {
   skill_agent_registry: skillAgentRegistry,
   doc_collections: buildDocCollections(skillGroups, agentFamilies),
   doc_hub: buildDocHub(skillGroups, agentFamilies),
+  // machine-only: emitted for external tooling, no dashboard consumer
   registry: {
     skills: skillsFound,
     agents: agentsFound,
     skill_agent: skillAgentRegistry
   },
+  // machine-only: emitted for external tooling, no dashboard consumer
   plugin_map: pluginMap,
   roadmap_manifests: roadmapManifests,
+  // machine-only: emitted for external tooling, no dashboard consumer
   product_module_registry: {
     source: relative(repoRoot, sourcePath),
     field: "product_lines",

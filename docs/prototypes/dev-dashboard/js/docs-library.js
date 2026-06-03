@@ -26,24 +26,6 @@ let docApiCheckPromise = null;
 let docLiveHandlersAttached = false;
 let docStaticHandlersAttached = false;
 
-function branchDocSeeds(){
-  const branch = dashboardState.git?.branch || "";
-  if(branch === "dev"){
-    return [
-      ["Desktop RC", "docs/adr/0013-branch-sync-governance.md"],
-      ["G1 native", "docs/workflow/roadmap/xai-g1-native-foundation.md"],
-      ["Workflow", "docs/workflow/project/usage-guide.md"],
-      ["Native map", "docs/PLUGIN_MAP.md"]
-    ];
-  }
-  return [
-    ["Web", "docs/workflow/roadmap/xai-web-console.md"],
-    ["ADR-0013", "docs/adr/0013-branch-sync-governance.md"],
-    ["D3 gate", ".teams/skills/xai-web-to-desktop-sync/SKILL.md"],
-    ["Usage", "docs/workflow/project/usage-guide.md"]
-  ];
-}
-
 async function fetchJson(url){
   const response = await fetch(url, {cache:"no-store", headers:{Accept:"application/json"}});
   const text = await response.text();
@@ -271,15 +253,6 @@ function renderDocRoots(){
   });
 }
 
-function renderBranchDocs(){
-  document.getElementById("branchDocs").innerHTML = branchDocSeeds().map(([label, path]) => `
-    <button class="reader-btn" data-doc-path="${h(path)}" type="button">${h(label)}</button>
-  `).join("");
-  document.querySelectorAll("[data-doc-path]").forEach(button => {
-    button.addEventListener("click", () => openDoc(button.dataset.docPath, {fullscreen:true}));
-  });
-}
-
 function openLibraryEntry(path, type = "file"){
   if(!serveMode){
     renderStaticDocLibraryNotice(type === "dir" ? "浏览文件夹" : "打开文档", path);
@@ -333,53 +306,6 @@ function initStaticDocLibrary(){
   });
   document.getElementById("docSearch").addEventListener("keydown", event => {
     if(event.key === "Enter") staticAction("搜索文档");
-  });
-}
-
-function renderDocCollections(){
-  const tabs = document.getElementById("docCategoryTabs");
-  const panel = document.getElementById("docCategoryPanel");
-  if(!docCollections.length){
-    tabs.innerHTML = "";
-    panel.innerHTML = `<div class="flow-note"><b>文档分类未生成</b><p style="margin-top:8px">运行 <code>node scripts/dashboard/generate-state.mjs</code> 刷新快照。</p></div>`;
-    return;
-  }
-  if(!docCollections.some(item => item.key === currentDocCollection)){
-    currentDocCollection = docCollections[0].key;
-  }
-  tabs.innerHTML = docCollections.map(item => `
-    <button class="doc-cat-tab ${item.key === currentDocCollection ? "is-on" : ""}" data-doc-category="${h(item.key)}" type="button">
-      ${h(item.title)}
-      <small>${h(String(item.count || 0))} entries</small>
-    </button>
-  `).join("");
-  const selected = docCollections.find(item => item.key === currentDocCollection) || docCollections[0];
-  const entries = selected.entries || [];
-  panel.innerHTML = `
-    <div class="doc-cat-summary">
-      <b>${h(selected.title)}</b>
-      <span>${h(selected.summary)}</span>
-      <div class="chip-row">${(selected.tags || []).map(tag => `<span class="pill">${h(tag)}</span>`).join("")}</div>
-    </div>
-    <div class="doc-card-grid">
-      ${entries.map(entry => `
-        <button class="doc-card" data-library-path="${h(entry.path)}" data-library-type="${h(entry.type || "file")}" type="button">
-          <b>${h(entry.label)}</b>
-          <span>${h(entry.summary || "")}</span>
-          <div class="chip-row">${(entry.tags || []).slice(0,2).map(tag => `<span class="pill">${h(tag)}</span>`).join("")}</div>
-          <code>${h(entry.path)}</code>
-        </button>
-      `).join("") || `<div class="flow-note"><b>暂无条目</b></div>`}
-    </div>
-  `;
-  document.querySelectorAll("[data-doc-category]").forEach(button => {
-    button.addEventListener("click", () => {
-      currentDocCollection = button.dataset.docCategory;
-      renderDocCollections();
-    });
-  });
-  document.querySelectorAll("[data-library-path]").forEach(button => {
-    button.addEventListener("click", () => openLibraryEntry(button.dataset.libraryPath, button.dataset.libraryType));
   });
 }
 
@@ -776,24 +702,6 @@ async function searchDocs(){
   document.querySelectorAll("[data-search-path]").forEach(button => {
     button.addEventListener("click", () => openDoc(button.dataset.searchPath, {fullscreen:true}));
   });
-}
-
-function renderRegistry(){
-  const rows = [
-    ...skills.map(item => ({...item, kind:"skill"})),
-    ...agents.map(item => ({...item, kind:"agent"}))
-  ];
-  document.getElementById("registryGrid").innerHTML = rows.map(item => `
-    <div class="registry-row">
-      <div>
-        <b>${h(item.kind)} · ${h(item.name)}</b>
-        <span class="registry-desc">${h(item.desc)}</span>
-        <span class="registry-trigger">${h((item.triggers || []).join(" · ") || "trigger: template / direct dispatch")}</span>
-        <span>${h(item.path)}</span>
-      </div>
-      <span class="badge ${badgeClass(item.status)}">${h(item.status)}</span>
-    </div>
-  `).join("");
 }
 
 function attachLiveDocHandlers(){
