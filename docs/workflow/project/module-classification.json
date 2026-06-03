@@ -108,10 +108,14 @@
     {"id": "syncscope_drift", "rule": "every plugin entity MUST declare syncScope in packages/core-data/src/entities.ts; device-local entities must be excluded from the outbox (delegate proof to xai-account-sync-scope-check)"},
     {"id": "same_name_trap", "rule": "a feature named pet/widgets/grid/dashboard MUST be tagged web-DOM vs desktop-native; they are different modules despite the shared word"},
     {"id": "frozen_line_landing", "rule": "no source may land on plugin/sync (PAUSED) or site/admin (PROPOSED) without an operator-confirmed unfreeze"},
-    {"id": "unknown_classification", "rule": "if a feature matches no module signal or matches 2+ with equal weight, escalate to operator instead of guessing"}
+    {"id": "unknown_classification", "rule": "if a feature matches no module signal or matches 2+ with equal weight, escalate to operator instead of guessing"},
+    {"id": "window_impl_in_plugin", "rule": "HR1: a plugin package must NOT implement a native window/file/clipboard Tauri command (window.rs-style) — it may only consume them; flag any such implementation under packages/plugin-*/src as an App-lane responsibility"},
+    {"id": "module_redo_in_plugin", "rule": "HR2: a plugin must NOT re-build the web-form of a Web-covered module (tasks/board/calendar/pomodoro/habits/statistics/...); it should share the business-logic package (plugin-productivity/project/labels). Flag duplicate full-module rebuilds"},
+    {"id": "d3_bypass", "rule": "HR5: a Web change must reach the App/dev line only via the D3 gate (xai-web-to-desktop-sync) with a parity receipt; flag web->dev merges or App-affecting Web changes with no D3 classification"}
   ],
   "consumers": {
     "skill": "xai-module-classify (classify a new feature + scan for drift)",
+    "audit_skill": "xai-consistency-audit (periodic boundary + feature + registration audit; consumes these drift_checks + consistency-checks.json)",
     "dashboard": "docs/prototypes/dev-dashboard/index.html (产品结构图 / module map panel)",
     "contract": "docs/workflow/project/dev-dashboard.md"
   }
