@@ -318,18 +318,28 @@ function renderDeploymentDashboard(){
     ? summary.records.map(renderDeploymentRecord).join("")
     : `<div class="flow-note"><b>暂无部署记录</b><p style="margin-top:8px">首次云端部署后在 deployment.records 中登记模块、环境、平台、版本和结果。</p></div>`;
 
-  envList.innerHTML = summary.modules.map(item => {
-    const meta = deploymentProductMeta(item.key);
-    const status = deploymentStatusMeta(item.status);
-    return `
-      <div class="deployment-env-row" data-tone="${h(meta.tone)}">
+  // BOUNDARIES.md §4.6-E: the module fact-grid (card C) is the env Owner. The
+  // side aside must NOT restate every module's env — only surface modules whose
+  // status is non-nominal (anything but "deployed") or that carry an issue, so
+  // it reads as a pre-launch anomaly/diff checklist, not a second env table.
+  const anomalyKeys = new Set(summary.anomalies.map(item => item.key));
+  const envAttention = summary.modules.filter(item =>
+    item.status !== "deployed" || anomalyKeys.has(item.key) || (item.issues || []).length
+  );
+  envList.innerHTML = envAttention.length
+    ? envAttention.map(item => {
+        const meta = deploymentProductMeta(item.key);
+        const status = deploymentStatusMeta(item.status);
+        return `
+      <div class="deployment-env-row" data-tone="${h(meta.tone)}" data-status="${h(item.status || "pending")}">
         <b>${h(item.title || meta.title)}</b>
         <span>${h(item.environment || "env pending")}</span>
         <span>${h(item.platform || "platform pending")}</span>
         <span class="badge ${status.badge}">${h(status.label)}</span>
       </div>
     `;
-  }).join("");
+      }).join("")
+    : `<div class="flow-note"><b>全部模块部署正常</b><p style="margin-top:8px">所有模块均为已部署状态且无待处理项；完整环境/平台/版本见上方模块部署卡。</p></div>`;
 
   const issues = summary.modules.flatMap(item => (item.issues || []).map(issue => ({...issue, module:item.title, key:item.key})));
   issueList.innerHTML = issues.length
