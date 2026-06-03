@@ -1,15 +1,28 @@
+// Single source for the primary nav (BOUNDARIES.md §2 / §3). Each item carries a
+// `group` key so renderPrimaryNav() can draw the 5 group dividers from §3:
+// cockpit(总览) / progress(任务进度·开发数据) / product(产品结构图·分支管理) /
+// delivery(部署·测试结果·发布记录) / knowledge(文档库·Skill 和 Agent·使用和操作).
+// The static <a> list in index.html was removed — this registry is the only source.
+const NAV_GROUPS = [
+  {key:"cockpit", label:"总览"},
+  {key:"progress", label:"任务进度 · 开发数据"},
+  {key:"product", label:"产品结构图 · 分支管理"},
+  {key:"delivery", label:"交付与质量"},
+  {key:"knowledge", label:"知识与操作"}
+];
+const NAV_GROUP_LABEL = new Map(NAV_GROUPS.map(group => [group.key, group.label]));
 const DEFAULT_NAV_ITEMS = [
-  {page:"overview", label:"总览"},
-  {page:"tasks", label:"任务进度"},
-  {page:"dev-data", label:"开发数据"},
-  {page:"branches", label:"分支管理"},
-  {page:"product-flow", label:"产品结构图"},
-  {page:"deployment", label:"部署"},
-  {page:"testing", label:"测试结果"},
-  {page:"usage-ops", label:"使用和操作"},
-  {page:"docs", label:"文档库"},
-  {page:"skill-agent", label:"Skill 和 Agent"},
-  {page:"release-log", label:"发布记录"}
+  {page:"overview", label:"总览", group:"cockpit"},
+  {page:"tasks", label:"任务进度", group:"progress"},
+  {page:"dev-data", label:"开发数据", group:"progress"},
+  {page:"product-flow", label:"产品结构图", group:"product"},
+  {page:"branches", label:"分支管理", group:"product"},
+  {page:"deployment", label:"部署", group:"delivery"},
+  {page:"testing", label:"测试结果", group:"delivery"},
+  {page:"release-log", label:"发布记录", group:"delivery"},
+  {page:"docs", label:"文档库", group:"knowledge"},
+  {page:"skill-agent", label:"Skill 和 Agent", group:"knowledge"},
+  {page:"usage-ops", label:"使用和操作", group:"knowledge"}
 ];
 const pageIds = DEFAULT_NAV_ITEMS.map(item => item.page);
 const navItemByPage = new Map(DEFAULT_NAV_ITEMS.map(item => [item.page, item]));
@@ -176,10 +189,19 @@ function startNavDrag(event, page){
 function renderPrimaryNav(){
   const list = document.getElementById("primaryNavList");
   if(!list) return;
-  list.innerHTML = navOrder.map((page, index) => {
+  let lastGroup = null;
+  list.innerHTML = navOrder.map(page => {
     const item = navItemByPage.get(page);
     if(!item) return "";
-    return `
+    let groupHeader = "";
+    if(item.group && item.group !== lastGroup){
+      lastGroup = item.group;
+      const groupLabel = NAV_GROUP_LABEL.get(item.group) || item.group;
+      // Non-draggable separator: it is NOT a .nav-item, so drag/keyboard reorder
+      // and drop-placement (which only query .nav-item) never target it.
+      groupHeader = `<div class="nav-group-label" aria-hidden="true">${h(groupLabel)}</div>`;
+    }
+    return `${groupHeader}
       <div class="nav-item" data-nav-item="${h(item.page)}">
         <a class="nav-link" href="#${h(item.page)}" data-page="${h(item.page)}" draggable="false"><span>${h(item.label)}</span></a>
         <span class="nav-drag-handle" data-nav-drag-page="${h(item.page)}" role="button" tabindex="0" aria-label="拖拽移动 ${h(item.label)}" title="拖拽排序">⋮⋮</span>
@@ -218,7 +240,11 @@ function renderPrimaryNav(){
 }
 
 function setPage(page, updateHash = true){
-  const nextPage = pageIds.includes(page) ? page : "overview";
+  const isKnown = pageIds.includes(page);
+  if(!isKnown && page){
+    console.warn(`[dev-dashboard] unknown page hash "${page}" — falling back to overview`);
+  }
+  const nextPage = isKnown ? page : "overview";
   currentPage = nextPage;
   document.querySelectorAll("[data-page-section]").forEach(section => {
     section.classList.toggle("is-active", section.dataset.pageSection === nextPage);

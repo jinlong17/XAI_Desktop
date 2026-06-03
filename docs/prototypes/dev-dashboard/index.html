@@ -19,19 +19,9 @@
     </div>
     <nav class="nav" id="primaryNav" aria-label="主导航">
       <div class="nav-title"><span>导航</span><button id="navOrderReset" type="button" aria-label="恢复默认导航顺序" title="恢复默认顺序">↺</button></div>
-      <div class="nav-list" id="primaryNavList">
-        <a href="#overview" data-page="overview">总览</a>
-        <a href="#tasks" data-page="tasks">任务进度</a>
-        <a href="#dev-data" data-page="dev-data">开发数据</a>
-        <a href="#branches" data-page="branches">分支管理</a>
-        <a href="#product-flow" data-page="product-flow">产品结构图</a>
-        <a href="#deployment" data-page="deployment">部署</a>
-        <a href="#testing" data-page="testing">测试结果</a>
-        <a href="#usage-ops" data-page="usage-ops">使用和操作</a>
-        <a href="#docs" data-page="docs">文档库</a>
-        <a href="#skill-agent" data-page="skill-agent">Skill 和 Agent</a>
-        <a href="#release-log" data-page="release-log">发布记录</a>
-      </div>
+      <!-- Nav items are rendered by renderPrimaryNav() from DEFAULT_NAV_ITEMS (js/nav.js).
+           Do NOT add static <a> items here — the single source is the JS registry. -->
+      <div class="nav-list" id="primaryNavList"></div>
     </nav>
     <section class="theme-panel" aria-labelledby="themeSettingsTitle">
       <div class="theme-panel-head">

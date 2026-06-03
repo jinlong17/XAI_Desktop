@@ -133,6 +133,8 @@
   .nav-title button:hover:not(:disabled){border-color:var(--line);background:var(--surface-3);color:var(--text)}
   .nav-title button:disabled{opacity:.3;cursor:not-allowed}
   .nav-list{display:grid;gap:4px}
+  .nav-group-label{margin:11px 8px 2px;color:var(--faint);font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:.07em;opacity:.78}
+  .nav-group-label:first-child{margin-top:2px}
   .nav-item{position:relative;display:grid;grid-template-columns:minmax(0,1fr) 28px;gap:5px;align-items:center;margin:3px 0;border-radius:8px}
   .nav-item.is-dragging{opacity:.44}
   .nav-item.is-drop-before:before,
@@ -3250,7 +3252,7 @@
       overflow:hidden;
     }
     .rail .brand{padding:2px 4px 8px}
-    .rail .nav-title,.rail .rail-note,.rail .theme-panel,.nav small,.nav-drag-handle{display:none}
+    .rail .nav-title,.rail .rail-note,.rail .theme-panel,.nav small,.nav-drag-handle,.nav-group-label{display:none}
     .nav{display:block;max-width:100%;overflow:hidden;padding-bottom:2px}
     .nav-list{display:flex;gap:6px;max-width:100%;overflow-x:auto;-webkit-overflow-scrolling:touch;padding-bottom:2px}
     .nav-item{display:flex;flex:0 0 auto;margin:0}
