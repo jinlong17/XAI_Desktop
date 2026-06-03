@@ -125,6 +125,10 @@ function renderOverviewSyncStatus(){
     .join(" · ") || "clean";
   const skillBadge = skill.present ? (skill.tracked ? "b-green" : "b-yellow") : "b-red";
   const dirtyBadge = dirty.total ? "b-yellow" : "b-green";
+  const latestCommit = syncStatus.latest_commit || dashboardState.git?.latest_commit || "no commit";
+  const latestCommitShort = latestCommit.length > 36 ? `${latestCommit.slice(0, 35)}…` : latestCommit;
+  const releaseLatest = syncStatus.release_log_latest || dashboardState.release_log?.latest_entry || "未读取";
+  const releaseLatestShort = releaseLatest.length > 36 ? `${releaseLatest.slice(0, 35)}…` : releaseLatest;
   node.innerHTML = `
     <div class="overview-sync-head">
       <div>
@@ -135,10 +139,10 @@ function renderOverviewSyncStatus(){
     </div>
     <div class="overview-sync-grid">
       <div><b>上次更新时间</b><strong>${h(formatOverviewDate(syncStatus.generated_at || dashboardState.generated_at))}</strong><span>${h(syncStatus.refresh_command || "pnpm dashboard")}</span></div>
-      <div><b>当前快照</b><strong>${h(syncStatus.branch || dashboardState.git?.branch || "unknown")}</strong><span>${h(syncStatus.latest_commit || dashboardState.git?.latest_commit || "no commit")}</span></div>
+      <div><b>当前快照</b><strong>${h(syncStatus.branch || dashboardState.git?.branch || "unknown")}</strong><span title="${h(latestCommit)}">${h(latestCommitShort)}</span></div>
       <div><b>未提交变更</b><strong>${h(String(dirty.total ?? devData.uncommitted_files ?? 0))}</strong><span>${h(bucketText)}</span></div>
       <div><b>同步 Skill</b><strong>${h(skill.name || "xai-dev-dashboard-sync")}</strong><span class="badge ${skillBadge}">${h(skill.status || "missing")}</span></div>
-      <div><b>发布记录</b><strong>${h(syncStatus.release_log_latest || dashboardState.release_log?.latest_entry || "未读取")}</strong><span>${h(dashboardState.release_log?.source || "docs/workflow/project/release-log.md")}</span></div>
+      <div><b>发布记录</b><strong title="${h(releaseLatest)}">${h(releaseLatestShort)}</strong><span>${h(dashboardState.release_log?.source || "docs/workflow/project/release-log.md")}</span></div>
     </div>
     <div class="overview-sync-sources">
       ${sources.map(source => `
