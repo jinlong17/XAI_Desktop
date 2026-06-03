@@ -314,12 +314,12 @@
             </div>
             <div class="command-panel">
               <div class="command-head"><b>推荐：带 mock 登录</b><button class="prompt-copy" data-copy-target="cmd-web-mock" type="button">复制</button></div>
-              <pre><code id="cmd-web-mock">cd /Users/lijinlong/Desktop/AI_Desktop/XAI_Desktop
+              <pre><code id="cmd-web-mock">cd "$(git rev-parse --show-toplevel)"
 pnpm --filter @repo/web dev:mock-auth</code></pre>
             </div>
             <div class="command-panel">
               <div class="command-head"><b>不需要 mock 登录</b><button class="prompt-copy" data-copy-target="cmd-web-dev" type="button">复制</button></div>
-              <pre><code id="cmd-web-dev">cd /Users/lijinlong/Desktop/AI_Desktop/XAI_Desktop
+              <pre><code id="cmd-web-dev">cd "$(git rev-parse --show-toplevel)"
 pnpm --filter @repo/web dev</code></pre>
             </div>
             <div class="usage-note is-warn">不建议一上来用 <code>pnpm dev</code>；它会运行 <code>turbo run dev</code>，可能把多个 workspace 的 dev 服务一起拉起来。</div>
@@ -336,7 +336,7 @@ pnpm --filter @repo/web dev</code></pre>
             </div>
             <div class="command-panel">
               <div class="command-head"><b>启动看板服务</b><button class="prompt-copy" data-copy-target="cmd-dashboard-serve" type="button">复制</button></div>
-              <pre><code id="cmd-dashboard-serve">cd /Users/lijinlong/Desktop/AI_Desktop/XAI_Desktop
+              <pre><code id="cmd-dashboard-serve">cd "$(git rev-parse --show-toplevel)"
 pnpm dashboard:serve</code></pre>
             </div>
             <div class="usage-note"><code>dashboard:serve</code> 会先刷新生成态，再绑定到 <code>127.0.0.1</code>。默认端口是 4177；如果 4177 被占用，脚本会自动顺延。</div>
@@ -437,7 +437,7 @@ kill &lt;PID&gt;</code></pre>
             <button class="reader-btn" data-copy-target="cmd-shortcuts-all" type="button">复制全部</button>
           </div>
           <div class="shortcut-command-grid">
-            <div><span>进入仓库</span><code>cd /Users/lijinlong/Desktop/AI_Desktop/XAI_Desktop</code></div>
+            <div><span>进入仓库</span><code>cd "$(git rev-parse --show-toplevel)"</code></div>
             <div><span>Web mock 登录</span><code>pnpm --filter @repo/web dev:mock-auth</code></div>
             <div><span>Web 普通开发</span><code>pnpm --filter @repo/web dev</code></div>
             <div><span>开发看板</span><code>pnpm dashboard:serve</code></div>
@@ -446,7 +446,7 @@ kill &lt;PID&gt;</code></pre>
             <div><span>类型检查</span><code>pnpm check-types</code></div>
             <div><span>Web 构建</span><code>pnpm --filter @repo/web build</code></div>
           </div>
-          <pre class="shortcut-all" aria-hidden="true"><code id="cmd-shortcuts-all">cd /Users/lijinlong/Desktop/AI_Desktop/XAI_Desktop
+          <pre class="shortcut-all" aria-hidden="true"><code id="cmd-shortcuts-all">cd "$(git rev-parse --show-toplevel)"
 pnpm --filter @repo/web dev:mock-auth
 pnpm dashboard:serve
 git status --short
