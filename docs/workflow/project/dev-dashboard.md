@@ -14,6 +14,9 @@
   `product_lines`
 - Testing Registry: `docs/workflow/project/dashboard-state.json` field
   `testing`
+- Skill / Agent Knowledge Registry:
+  `docs/prototypes/dev-dashboard/state.generated.js` field
+  `skill_agent_registry`
 - Generator: `scripts/dashboard/generate-state.mjs`
 - Local server: `scripts/dashboard/serve.mjs`
 - Sync skill: `.teams/skills/xai-dev-dashboard-sync/SKILL.md`
@@ -92,7 +95,7 @@ Agents should refresh or check the dashboard when:
   `.codex/agents/`, or `docs/workflow/project/release-log.md`;
 - final handoff depends on Overview data.
 
-The sync skill owns four alignment checks in one run:
+The sync skill owns five alignment checks in one run:
 
 1. refresh or verify the Overview snapshot from current repo evidence;
 2. update this machine contract when dashboard behavior, sources, or sync rules
@@ -102,6 +105,10 @@ The sync skill owns four alignment checks in one run:
 4. refresh or verify testing status from the Testing Registry, release-log
    `Verification` fields, known local report paths, and CI / pipeline
    configuration evidence.
+5. refresh or verify the Skill / Agent knowledge registry, including new or
+   modified definitions, classification, generated descriptions, missing notes,
+   unclear categories, workflow links, document links, maintenance status, and
+   mirror status.
 
 The skill should apply factual Markdown updates directly. It should report
 `needs-review` only when the mismatch requires an operator decision about
@@ -207,6 +214,44 @@ Testing evidence is advisory for the operator. The dashboard must not
 auto-decide release readiness, ship status, merge status, or risk acceptance from
 test results.
 
+## Skill / Agent Requirements
+
+The Skill / Agent page is a knowledge base for executable project capabilities,
+not only a file list. Each registry entry should expose:
+
+- name;
+- type: Skill or Agent, plus source subtype such as Project Skill, Codex Skill,
+  Portable Skill, or Workflow Agent;
+- category and category color;
+- usage scenario;
+- function description;
+- inputs;
+- outputs;
+- usage frequency;
+- related workflow;
+- related docs;
+- maintenance status;
+- last updated time;
+- short note;
+- trigger examples when present;
+- path and tracked / local-only / modified / mirror-missing status.
+
+The generator owns the normalized `skill_agent_registry` object. UI code should
+render that registry and keep fallback behavior only for stale local snapshots.
+If the registry must generate a description, input/output summary, workflow
+link, or note from heuristics instead of an explicit source section, keep the
+generated value visible but also expose the matching gap badge.
+
+Every dashboard sync should check:
+
+- new skills;
+- new agents;
+- modified Skill / Agent definitions;
+- missing descriptions, inputs, outputs, notes, workflow links, or related docs;
+- unclear categories, with a classification suggestion;
+- project skill mirror status across `.teams/skills`, `.claude/skills`, and
+  `.codex/skills` when applicable.
+
 ## Source Inventory
 
 The generator reads at least:
@@ -222,8 +267,10 @@ The generator reads at least:
 - whitelisted roadmap manifests under `docs/workflow/roadmap/`;
 - `.teams/skills/*/SKILL.md`;
 - `.codex/skills/*/SKILL.md`;
+- `docs/workflow/_portable/skills/*/SKILL.md`;
 - `.codex/agents/*.toml`;
 - `.agents/templates/*.md`, `.claude/agents/*.md`, `.cursor/agents/*.md`;
+- generated `skill_agent_registry` metadata and gap summaries;
 - package `docs/dev_log.md` status panels.
 
 ## Verification Pattern
@@ -244,6 +291,11 @@ For HTML/CSS/JS or Overview changes, also verify the served dashboard at
 For Testing changes, also verify `http://127.0.0.1:4177/#testing`, confirm all
 six module cards render, and confirm Overview / Product structure / Deployment /
 Release surfaces show testing status without overflow on desktop and mobile.
+
+For Skill / Agent registry changes, also verify
+`http://127.0.0.1:4177/#skill-agent`, confirm summary counts, category index,
+required fields, missing-metadata badges, maintenance status, doc buttons, and
+390px mobile wrapping render without horizontal overflow.
 
 ## Release Logging
 

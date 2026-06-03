@@ -133,6 +133,7 @@ const agents = (dashboardState.agents_found || []).map(agent => ({
 }));
 const skillGroups = dashboardState.skill_groups || [];
 const agentFamilies = dashboardState.agent_families || [];
+const skillAgentRegistry = dashboardState.skill_agent_registry || {summary:{}, categories:[], entries:[], report:{}};
 const docCollections = dashboardState.doc_collections || [];
 const docHub = dashboardState.doc_hub || {roots:[], groups:[], by_path:{}};
 let currentDocCollection = docCollections[0]?.key || "";

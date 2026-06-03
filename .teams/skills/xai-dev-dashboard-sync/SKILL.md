@@ -6,8 +6,8 @@ description: Refresh and verify the XAI personal developer dashboard, including 
 # xai-dev-dashboard-sync
 
 Project-layer skill for refreshing the personal developer dashboard and proving
-whether its Overview, machine contract, and reusable template reflect the current
-repo state, including module-level testing evidence.
+whether its Overview, machine contract, reusable template, Skill / Agent
+knowledge registry, and testing surfaces reflect the current repo state.
 
 This skill wraps the existing dashboard generator. It does not replace
 `scripts/dashboard/generate-state.mjs`, does not auto-edit roadmap state, does
@@ -15,7 +15,7 @@ not merge branches, and does not decide release readiness.
 
 ## Alignment Scope
 
-Every run checks four surfaces:
+Every run checks five surfaces:
 
 1. Overview snapshot: generated branch, commit, dirty files, key docs, skill /
    agent registry, and latest release-log state.
@@ -28,6 +28,10 @@ Every run checks four surfaces:
 4. Testing status: `docs/workflow/project/dashboard-state.json.testing`,
    release-log `Verification` fields, local test report paths, and configured
    CI / pipeline inventory.
+5. Skill / Agent knowledge registry: project skills, Codex skills, portable
+   skills, canonical agent templates, and platform agent variants, including
+   classification, usage notes, inputs, outputs, workflow links, doc links,
+   maintenance state, recent updates, and missing-metadata gaps.
 
 If the dashboard source behavior changed and a contract/template mismatch is
 clear, update the relevant Markdown in the same run. If the mismatch requires an
@@ -42,6 +46,8 @@ operator decision, report `needs-review` instead of guessing.
 - sync dashboard branch docs release-log
 - sync dashboard test results
 - 个人开发看板测试结果同步
+- sync dashboard skill agent registry
+- Skill / Agent 知识库同步
 - xai-dev-dashboard-sync
 
 ## Read First
@@ -50,6 +56,8 @@ operator decision, report `needs-review` instead of guessing.
 - `docs/prototypes/dev-dashboard/TEMPLATE.md`
 - `docs/prototypes/dev-dashboard/DESIGN.md`
 - `docs/workflow/project/dashboard-state.json`
+- `scripts/dashboard/generate-state.mjs`
+- `docs/prototypes/dev-dashboard/js/skill-agent.js`
 - `docs/workflow/project/release-log.md`
 - `docs/workflow/project/usage-guide.md` section 11
 - `CLAUDE.md` and `AGENTS.md` dashboard / skill tracking rules when this skill
@@ -106,10 +114,30 @@ dashboard, and `check` when they only ask whether the dashboard is current.
      file-manager document browsing;
    - compare Testing Registry behavior with the Testing page, Overview module
      cards, Product structure detail, Deployment records, and Release records;
+   - compare Skill / Agent Registry behavior with the Skill / Agent page,
+     docs library entries, generated required fields, category colors, and gap
+     badges;
    - update those docs directly when the mismatch is factual and scoped;
    - mark the surface `needs-review` when the change would alter roadmap,
      release, branch, priority, or product-governance decisions.
-4. Audit testing evidence:
+4. Audit Skill / Agent knowledge:
+   - scan `.teams/skills/*/SKILL.md`, `.codex/skills/*/SKILL.md`,
+     `docs/workflow/_portable/skills/*/SKILL.md`, `.agents/templates/*.md`,
+     `.codex/agents/*.toml`, `.claude/agents/*.md`, and
+     `.cursor/agents/*.md`;
+   - detect new and modified Skill / Agent files from `git status --short`;
+   - classify each entry into feature, bugfix, automation, governance, quality,
+     authoring, or reference using name, path, description, triggers, workflow
+     references, and related docs;
+   - extract or deterministically generate name, type, category, usage scenario,
+     function description, inputs, outputs, usage frequency, related workflow,
+     related docs, maintenance status, last updated time, and short note;
+   - flag missing intro, input, output, explicit note, workflow link, related
+     docs, unclear category, local-only / untracked state, and missing project
+     skill mirrors;
+   - emit classification suggestions for entries that remain in `reference` or
+     otherwise look under-classified.
+5. Audit testing evidence:
    - read `docs/workflow/project/dashboard-state.json` `testing.modules`,
      `testing.records`, `testing.pipelines`, and `testing.report_sources`;
    - scan `docs/workflow/project/release-log.md` `Verification` fields and
@@ -123,14 +151,15 @@ dashboard, and `check` when they only ask whether the dashboard is current.
    - sync status to the dedicated Testing page, Overview, Product structure,
      Deployment records, and Release records through the generator / dashboard
      state, not via a separate hard-coded module map.
-5. For `refresh` or `verify`, run:
+6. For `refresh` or `verify`, run:
    - `pnpm dashboard`
-6. Verify the generator:
+7. Verify the generator:
    - `node --check scripts/dashboard/generate-state.mjs`
    - confirm generated state contains `sync_status`, `generated_at`,
      current `git.branch`, current `git.latest_commit`, the dirty-file count,
-     and `testing.modules` for the six Product Module Registry keys.
-7. If UI proof is needed, run:
+     `testing.modules` for the six Product Module Registry keys, and
+     `skill_agent_registry.summary` / `skill_agent_registry.entries`.
+8. If UI proof is needed, run:
    - `pnpm dashboard:serve`
    - open `http://127.0.0.1:4177/#overview`
    - confirm Overview shows dashboard sync status, last update time, dirty count,
@@ -139,11 +168,21 @@ dashboard, and `check` when they only ask whether the dashboard is current.
    - confirm six testing module cards render, category rows appear, pipeline /
      report lists render, and Overview / Product structure / Deployment /
      Release surfaces show test status without desktop or 390px mobile overflow.
-8. Confirm Claude and Codex can discover the skill:
+   - open `http://127.0.0.1:4177/#skill-agent`
+   - confirm Skill / Agent counts, category index, required fields, missing
+     metadata badges, doc buttons, maintenance status, and long text wrapping
+     render without desktop or 390px mobile overflow.
+9. Confirm Claude and Codex can discover the skill:
    - `.teams/skills/xai-dev-dashboard-sync/SKILL.md`
    - `.claude/skills/xai-dev-dashboard-sync/SKILL.md`
    - `.codex/skills/xai-dev-dashboard-sync/SKILL.md`
-9. Emit a compact sync receipt.
+10. Emit a compact sync receipt.
+
+## Short Note
+
+This skill is the dashboard freshness and knowledge-registry sync gate. It may
+refresh generated facts and factual docs, but it must not decide roadmap,
+branch, release, priority, or ship state.
 
 ## Sync Receipt
 
@@ -159,6 +198,7 @@ Dashboard Sync Receipt
   Skill status:       xai-dev-dashboard-sync present|tracked|local-only|missing
   Machine doc:        aligned | updated | needs-review
   Template doc:       aligned | updated | needs-review
+  Skill/Agent KB:     complete | gaps:<count> | updated | needs-review
   Testing status:     aligned | updated | needs-review
   Release-log latest: <latest release-log entry title>
   Verification:       <commands and results>

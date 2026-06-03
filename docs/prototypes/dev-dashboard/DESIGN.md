@@ -51,7 +51,7 @@ The one disagreement — number of long-lived branches — was decided by the op
 
 | File | Role | Lines |
 |---|---|---|
-| `scripts/dashboard/generate-state.mjs` | Reads git + skills + release-log + `dashboard-state.json` → writes `state.generated.js`. Pure Node stdlib, zero deps. | ~79 |
+| `scripts/dashboard/generate-state.mjs` | Reads git + skills + agents + release-log + `dashboard-state.json` → writes `state.generated.js`, including `skill_agent_registry`. Pure Node stdlib, zero deps. | generated |
 | `docs/workflow/project/dashboard-state.json` | **Manual overrides base** (priority, branch creation, release-gate, risk — the human-judgment fields) plus Product Module Registry, deployment registry, and Testing Registry. | authored |
 | `docs/prototypes/dev-dashboard/state.generated.js` | `window.XAI_DASHBOARD_STATE = {…}` — the global the HTML reads. | generated |
 | `docs/prototypes/dev-dashboard/index.html` | Page skeleton only; loads generated state, stylesheet, and ordered plain scripts. | ~399 |
@@ -75,7 +75,8 @@ preview and `dashboard:serve` must keep serving them without a bundler or module
 | `git` (branch, commit, `rev-list --left-right web...dev`, `log --numstat`) | trivial / reliable | branch, divergence KPI, dev-data page |
 | `docs/PLUGIN_MAP.md` | cleanest (`\| slug \| dir \| status \|`) | per-plugin status counts |
 | `docs/workflow/roadmap/*.md` (the ~14 with a `\| # \| Slug \| … \| Status \|` header — whitelist, not all 32) | good, fixed columns | per-line roadmap progress |
-| `.teams/skills/*/SKILL.md` | trivial (dir presence) | skill registry |
+| `.teams/skills/*/SKILL.md`, `.codex/skills/*/SKILL.md`, `docs/workflow/_portable/skills/*/SKILL.md` | frontmatter + sections + git status | Skill / Agent knowledge registry |
+| `.agents/templates/*.md`, `.codex/agents/*.toml`, `.claude/agents/*.md`, `.cursor/agents/*.md` | frontmatter / TOML + platform variants | Skill / Agent knowledge registry |
 | `docs/workflow/project/release-log.md` | clean (`### ` headings) | latest release entry |
 | `docs/workflow/project/release-log.md` `Verification` fields | clean enough, per entry | testing records and release-row test verdicts |
 | `dashboard-state.json.testing` | authored + generated merge | testing page, Overview badges, product detail, deployment/release test status |

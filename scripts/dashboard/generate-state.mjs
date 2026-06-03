@@ -47,6 +47,81 @@ const roadmapAllowlist = [
   "xai-web-tasks-smartlist-filter.md"
 ];
 
+const skillAgentCategories = [
+  {
+    key: "feature",
+    title: "Feature Workflow",
+    workflow: "feature-plan -> feature-review -> feature-build -> feature-verify",
+    summary: "新功能从 brief、计划、实现到只读验证的主路径。",
+    scenario: "新增 Web/App/Plugin 能力、拆分阶段计划、补齐实现与验证证据。",
+    tone: "blue"
+  },
+  {
+    key: "bugfix",
+    title: "Bugfix Workflow",
+    workflow: "bug-diagnose -> bug-fix -> bug-verify",
+    summary: "缺陷定位、修复、复核和循环修复入口。",
+    scenario: "有明确异常、回归、验证失败或需要自动循环修复时使用。",
+    tone: "red"
+  },
+  {
+    key: "automation",
+    title: "Roadmap / Automation",
+    workflow: "roadmap-loop / workflow-router / planning",
+    summary: "把粗需求、roadmap manifest 和长期任务转成可执行批次。",
+    scenario: "批量推进路线图、生成目标 prompt、保持长任务计划和自动化节奏。",
+    tone: "purple"
+  },
+  {
+    key: "governance",
+    title: "Governance / Release",
+    workflow: "D3 gate / ship / release-log / handoff",
+    summary: "跨模块同步、发布记录、ship 收口和 handoff 展示规则。",
+    scenario: "Web 改动进入 Desktop、发布前收口、更新 release log 或同步平台规则。",
+    tone: "cyan"
+  },
+  {
+    key: "quality",
+    title: "Quality / Security",
+    workflow: "review / verify / CI / threat-model",
+    summary: "CI、架构冷读、安全审查和质量风险识别。",
+    scenario: "检查失败、PR 复核、安全评审、安全建模和结构风险复盘。",
+    tone: "yellow"
+  },
+  {
+    key: "authoring",
+    title: "Skill / Agent Authoring",
+    workflow: "skill authoring / reusable engineering helpers",
+    summary: "创建、维护、镜像和使用可复用 skill / agent 能力。",
+    scenario: "新增 SKILL.md、调整 agent 定义、维护前端/组合/小修类工程辅助。",
+    tone: "green"
+  },
+  {
+    key: "reference",
+    title: "Reference / Support",
+    workflow: "project reference",
+    summary: "不直接绑定单一 workflow，但属于项目可查阅能力。",
+    scenario: "查找辅助能力、理解本地与 portable 定义来源或补充上下文。",
+    tone: "gray"
+  }
+];
+
+const skillAgentGapLabels = {
+  missing_intro: "缺少明确介绍",
+  generated_intro: "介绍为自动生成",
+  missing_input: "缺少输入说明",
+  generated_input: "输入说明为推断",
+  missing_output: "缺少输出说明",
+  generated_output: "输出说明为推断",
+  missing_explicit_note: "缺少显式注释",
+  generated_note: "注释为自动生成",
+  missing_related_workflow: "缺少 workflow 关联",
+  missing_related_docs: "缺少关联文档",
+  unclear_category: "分类不清晰",
+  untracked_or_local: "未完整纳入 Git",
+  mirror_missing: "运行时镜像不完整"
+};
+
 function git(args) {
   try {
     return execFileSync("git", args, {
@@ -267,6 +342,400 @@ function buildAgentFamilies() {
       const order = ["Feature Workflow", "Bugfix Workflow", "Ship", "Skill Helper", "Workflow"];
       return (order.indexOf(a.group) - order.indexOf(b.group)) || a.slug.localeCompare(b.slug);
     });
+}
+
+function compactText(value, limit = 180) {
+  const text = String(value || "")
+    .replace(/\s+/g, " ")
+    .replace(/\*\*/g, "")
+    .replace(/`/g, "")
+    .trim();
+  if (!text) return "";
+  return text.length <= limit ? text : `${text.slice(0, limit - 1)}…`;
+}
+
+function categoryByKey(key) {
+  return skillAgentCategories.find(category => category.key === key) || skillAgentCategories[skillAgentCategories.length - 1];
+}
+
+function markdownSection(text, headings) {
+  const names = headings.map(name => name.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")).join("|");
+  const match = String(text || "").match(new RegExp(`^##\\s+(?:${names})\\s*\\n([\\s\\S]*?)(?=^##\\s+|^#\\s+|(?![\\s\\S]))`, "im"));
+  return match ? match[1].trim() : "";
+}
+
+function sectionSnippet(section, limit = 190) {
+  const lines = String(section || "")
+    .split(/\r?\n/)
+    .map(line => line.trim())
+    .filter(line => line && !line.startsWith("```"))
+    .map(line => line.replace(/^[-*]\s+/, "").replace(/^\d+\.\s+/, "").replace(/^#+\s+/, ""))
+    .filter(line => line && !/^\|?\s*:?-{3,}/.test(line));
+  return compactText(lines.slice(0, 4).join(" "), limit);
+}
+
+function firstParagraph(text) {
+  const body = String(text || "").replace(/^---\n[\s\S]*?\n---/, "").trim();
+  const paragraphs = body
+    .split(/\n{2,}/)
+    .map(block => block.trim())
+    .filter(block => block && !block.startsWith("#") && !block.startsWith("```"));
+  return sectionSnippet(paragraphs[0] || "", 210);
+}
+
+function pathLabel(path) {
+  return String(path || "").split("/").filter(Boolean).pop() || path;
+}
+
+function ownDoc(path, label = "") {
+  return {
+    label: label || pathLabel(path),
+    path,
+    role: "definition"
+  };
+}
+
+function extractRelatedDocs(text, ownDocs = []) {
+  const docs = [...ownDocs];
+  const seen = new Set(docs.map(doc => doc.path));
+  const add = (path, role = "related") => {
+    const normalized = String(path || "").replace(/^[./]+/, "");
+    if (!normalized || seen.has(normalized)) return;
+    if (!existsSync(resolve(repoRoot, normalized))) return;
+    seen.add(normalized);
+    docs.push({ label: pathLabel(normalized), path: normalized, role });
+  };
+  const patterns = [
+    /`([^`]*(?:AGENTS\.md|CLAUDE\.md|docs\/[^`]+\.(?:md|mdc|json)|\.teams\/skills\/[^`]+\/SKILL\.md|\.codex\/agents\/[^`]+\.toml|\.agents\/templates\/[^`]+\.md))`/g,
+    /\b((?:docs|\.teams|\.codex|\.agents|\.claude|\.cursor)\/[A-Za-z0-9_./-]+\.(?:md|mdc|json|toml))\b/g,
+    /\b(AGENTS\.md|CLAUDE\.md)\b/g
+  ];
+  patterns.forEach(pattern => {
+    let match;
+    while ((match = pattern.exec(text)) !== null) {
+      add(match[1]);
+    }
+  });
+  return docs.slice(0, 8);
+}
+
+function skillAgentCategoryFor(entry) {
+  const name = String(entry.name || "").toLowerCase();
+  if (/xai-web-to-desktop-sync|xai-account-sync-scope-check|xai-sync-fanout-dispatch|xai-release-log|^ship$/.test(name)) return "governance";
+  if (/xai-roadmap-loop|workflow-router|planning-with-files|superpowers/.test(name)) return "automation";
+  if (/gh-fix-ci|security|threat|stride|feature-review|feature-verify|bug-verify|consistency-audit/.test(name)) return "quality";
+  if (/skill-creator|plugin-creator|agent-behavioral|frontend-dev|composition-patterns/.test(name)) return "authoring";
+  if (/bugfix|bug-|bug_/.test(name)) return "bugfix";
+  if (/feature-|feature_|xai-feature/.test(name)) return "feature";
+  const value = `${name} ${entry.workflow || ""} ${entry.description || ""} ${entry.type || ""} ${entry.related_docs?.map(doc => doc.path).join(" ") || ""}`.toLowerCase();
+  if (/bugfix|bug-|bug_|bug diagnose|bug fix|bug verify|bug-diagnose|bug-fix|bug-verify/.test(value)) return "bugfix";
+  if (/feature-|feature_|xai-feature|feature workflow|frontend-dev|composition-patterns|feature-plan|feature-build/.test(value)) return "feature";
+  if (/roadmap|workflow-router|planning|auto-|automation|loop|orchestration|manifest/.test(value)) return "automation";
+  if (/web-to-desktop|account-sync|release-log|\bship\b|handoff|governance|branch|sync gate|d3|d4|cursor rule|codex config/.test(value)) return "governance";
+  if (/gh-fix-ci|security|threat|stride|ci|review|verify|codebase-explorer|audit/.test(value)) return "quality";
+  if (/skill-creator|plugin-creator|skill author|skill-|agent-behavioral|frontend|composition|create a new skill/.test(value)) return "authoring";
+  return "reference";
+}
+
+function relatedWorkflowFor(entry, categoryKey) {
+  const text = `${entry.name || ""} ${entry.description || ""} ${entry.source_text || ""}`.toLowerCase();
+  if (/^skill-/.test(String(entry.name || "").toLowerCase()) || categoryKey === "authoring") {
+    return { value: categoryByKey(categoryKey).workflow, explicit: true };
+  }
+  if (/xai-dev-dashboard-sync|dev-dashboard/.test(text)) return { value: "dashboard sync / project-system", explicit: true };
+  if (/xai-web-to-desktop-sync|d3/.test(text)) return { value: "D3 Web -> Desktop gate", explicit: true };
+  if (/account-sync|d4/.test(text)) return { value: "D4 account-sync scope gate", explicit: true };
+  if (/xai-release-log|release-log/.test(text)) return { value: "ship -> release-log", explicit: true };
+  if (/xai-roadmap-loop|roadmap-loop/.test(text)) return { value: "roadmap-loop", explicit: true };
+  if (/workflow-router/.test(text)) return { value: "brief / prompt routing", explicit: true };
+  if (/feature[-_\s]/.test(text)) return { value: "Feature Workflow V2", explicit: true };
+  if (/bugfix|bug[-_\s]/.test(text)) return { value: "Bugfix Workflow V2", explicit: true };
+  if (/\bship\b/.test(text)) return { value: "Ship Workflow", explicit: true };
+  return { value: categoryByKey(categoryKey).workflow, explicit: false };
+}
+
+function usageFrequencyFor(entry, categoryKey) {
+  const name = String(entry.name || "").toLowerCase();
+  if (/xai-feature-full-loop|xai-dev-dashboard-sync|workflow-router|feature-(plan|review|build|verify)|ship/.test(name)) {
+    return "高：日常 Workflow / 看板入口";
+  }
+  if (entry.kind === "agent" && /Feature Workflow|Bugfix Workflow|Ship/.test(entry.category_label || "")) {
+    return "中高：按工作流阶段使用";
+  }
+  if (entry.kind === "skill" && String(entry.path || "").startsWith(".teams/skills/")) {
+    return "中：按项目治理或功能推进使用";
+  }
+  if (categoryKey === "quality" || categoryKey === "authoring") return "按需：评审、创作或专项治理时使用";
+  return "低/按需：参考或辅助场景使用";
+}
+
+function explicitNoteFor(text) {
+  return sectionSnippet(markdownSection(text, ["Short Note", "Note", "Notes", "备注", "注释", "Comment", "Comments"]), 180);
+}
+
+function inferredNoteFor(entry, categoryKey) {
+  if (entry.kind === "agent") return `该 Agent 是 ${entry.related_workflow || categoryByKey(categoryKey).workflow} 的执行单元，维护时需同步各平台定义。`;
+  if (String(entry.path || "").startsWith(".teams/skills/")) return "项目级 skill；维护时需同步 `.teams/skills` 源和 Claude/Codex 镜像。";
+  if (String(entry.path || "").startsWith(".codex/skills/")) return "Codex 本地 skill；用于当前开发环境的可复用能力。";
+  return `${categoryByKey(categoryKey).title} 分类下的辅助能力；必要时补充显式注释。`;
+}
+
+function gitStatusForPaths(paths) {
+  const output = git(["status", "--short", "--", ...paths]);
+  if (!output) return { state: "clean", raw: "" };
+  if (output.split(/\r?\n/).some(line => line.startsWith("??"))) return { state: "new", raw: output };
+  return { state: "modified", raw: output };
+}
+
+function latestUpdatedAt(paths) {
+  const dates = paths
+    .map(path => git(["log", "-1", "--format=%cI", "--", path]) || statSyncSafe(resolve(repoRoot, path))?.mtime?.toISOString() || "")
+    .filter(Boolean)
+    .sort();
+  return dates[dates.length - 1] || "";
+}
+
+function mirrorStatusForSkill(path, name) {
+  if (!String(path || "").startsWith(".teams/skills/")) return { status: "not-required", missing: [] };
+  const missing = [
+    `.codex/skills/${name}/SKILL.md`,
+    `.claude/skills/${name}/SKILL.md`
+  ].filter(relPath => !existsSync(resolve(repoRoot, relPath)));
+  return {
+    status: missing.length ? "missing" : "aligned",
+    missing
+  };
+}
+
+function maintenanceFor(paths, tracked, mirrorStatus) {
+  const status = gitStatusForPaths(paths);
+  if (status.state === "new") return { status: "new", label: "新增/未跟踪", changed: true };
+  if (status.state === "modified") return { status: "modified", label: "已修改未提交", changed: true };
+  if (!tracked) return { status: "local-only", label: "local-only", changed: false };
+  if (mirrorStatus?.status === "missing") return { status: "mirror-missing", label: "镜像缺失", changed: false };
+  return { status: "tracked", label: "tracked", changed: false };
+}
+
+function sourceTypeForSkillGroup(label = "") {
+  if (/portable/i.test(label)) return "Portable Skill";
+  if (/codex/i.test(label)) return "Codex Skill";
+  if (/workflow|xai/i.test(label)) return "Project Skill";
+  return "Skill";
+}
+
+function buildSkillEntry(item, group) {
+  const path = item.path;
+  const text = existsSync(resolve(repoRoot, path)) ? readText(resolve(repoRoot, path)) : "";
+  const meta = parseFrontmatter(text);
+  const description = meta.description || firstParagraph(text);
+  const inputSnippet = sectionSnippet(markdownSection(text, ["Inputs", "Input", "输入", "Invocation", "Preferred invocation"]), 210);
+  const outputSnippet = sectionSnippet(markdownSection(text, ["Output", "Outputs", "输出", "Sync Receipt", "Goal Prompt Output", "Task Prompt Output"]), 210);
+  const explicitNote = explicitNoteFor(text);
+  const relatedDocs = extractRelatedDocs(text, [ownDoc(path, "SKILL.md")]);
+  const draft = {
+    kind: "skill",
+    name: meta.name || item.name,
+    display_type: "Skill",
+    type: sourceTypeForSkillGroup(group.label),
+    source: group.label,
+    path,
+    description,
+    triggers: item.triggers || [],
+    related_docs: relatedDocs,
+    tracked: item.tracked,
+    source_text: text
+  };
+  const category = skillAgentCategoryFor(draft);
+  const workflow = relatedWorkflowFor(draft, category);
+  const mirror = mirrorStatusForSkill(path, draft.name);
+  const maintenance = maintenanceFor([path], item.tracked, mirror);
+  const note = explicitNote || inferredNoteFor(draft, category);
+  const gaps = [];
+  if (!description) gaps.push("missing_intro");
+  if (!meta.description && description) gaps.push("generated_intro");
+  if (!inputSnippet) gaps.push("missing_input", "generated_input");
+  if (!outputSnippet) gaps.push("missing_output", "generated_output");
+  if (!explicitNote) gaps.push("missing_explicit_note", "generated_note");
+  if (!workflow.explicit) gaps.push("missing_related_workflow");
+  if (relatedDocs.length <= 1) gaps.push("missing_related_docs");
+  if (category === "reference") gaps.push("unclear_category");
+  if (!item.tracked || maintenance.status === "new" || maintenance.status === "local-only") gaps.push("untracked_or_local");
+  if (mirror.status === "missing") gaps.push("mirror_missing");
+  return {
+    id: `skill:${draft.name}`,
+    name: draft.name,
+    kind: "skill",
+    type: "Skill",
+    subtype: draft.type,
+    category,
+    category_label: categoryByKey(category).title,
+    category_suggestion: category === "reference" ? `建议确认是否应归入 ${categoryByKey(category).title} 或更具体 workflow 分类。` : "",
+    usage_scenario: (item.triggers || [])[0] || categoryByKey(category).scenario,
+    function_description: description || `${draft.name} 的用途由文件名和分类推断。`,
+    inputs: inputSnippet || "未显式登记；请在 SKILL.md 添加 `## Inputs` 或等价说明。",
+    outputs: outputSnippet || "未显式登记；请在 SKILL.md 添加 `## Output` 或等价说明。",
+    usage_frequency: usageFrequencyFor(draft, category),
+    related_workflow: workflow.value,
+    related_docs: relatedDocs,
+    maintenance_status: maintenance.label,
+    maintenance_code: maintenance.status,
+    last_updated: latestUpdatedAt([path]),
+    note,
+    note_source: explicitNote ? "explicit" : "generated",
+    path,
+    tracked: item.tracked,
+    changed: maintenance.changed,
+    change_status: maintenance.status,
+    mirror_status: mirror,
+    gaps: [...new Set(gaps)],
+    gap_labels: [...new Set(gaps)].map(gap => skillAgentGapLabels[gap] || gap),
+    is_complete: gaps.filter(gap => !gap.startsWith("generated_")).length === 0,
+    triggers: item.triggers || []
+  };
+}
+
+function buildAgentEntry(family) {
+  const variants = family.variants || [];
+  const preferred = variants.find(variant => variant.platform === "Canonical")
+    || variants.find(variant => variant.platform === "Codex")
+    || variants[0]
+    || {};
+  const paths = variants.map(variant => variant.path).filter(Boolean);
+  const text = paths.map(path => existsSync(resolve(repoRoot, path)) ? readText(resolve(repoRoot, path)) : "").join("\n\n");
+  const description = preferred.description || family.summary || firstParagraph(text);
+  const inputSnippet = sectionSnippet(markdownSection(text, ["Inputs", "Input", "输入", "Invocation"]), 210);
+  const outputSnippet = sectionSnippet(markdownSection(text, ["Output", "Outputs", "输出", "Handoff", "Next Step"]), 210);
+  const explicitNote = explicitNoteFor(text);
+  const ownDocs = variants.map(variant => ownDoc(variant.path, variant.platform));
+  const relatedDocs = extractRelatedDocs(text, ownDocs);
+  const tracked = variants.length ? variants.every(variant => variant.tracked) : false;
+  const draft = {
+    kind: "agent",
+    name: family.title || family.slug,
+    display_type: "Agent",
+    type: "Workflow Agent",
+    source: variants.map(variant => variant.platform).join(" / ") || "Agent",
+    path: preferred.path || paths[0] || "",
+    description,
+    related_docs: relatedDocs,
+    tracked,
+    workflow: family.group,
+    source_text: text
+  };
+  const category = skillAgentCategoryFor(draft);
+  const workflow = relatedWorkflowFor(draft, category);
+  const maintenance = maintenanceFor(paths, tracked, null);
+  const note = explicitNote || inferredNoteFor({ ...draft, related_workflow: workflow.value }, category);
+  const gaps = [];
+  if (!description) gaps.push("missing_intro");
+  if (!preferred.description && description) gaps.push("generated_intro");
+  if (!inputSnippet) gaps.push("missing_input", "generated_input");
+  if (!outputSnippet) gaps.push("missing_output", "generated_output");
+  if (!explicitNote) gaps.push("missing_explicit_note", "generated_note");
+  if (!workflow.explicit && !family.group) gaps.push("missing_related_workflow");
+  if (relatedDocs.length <= ownDocs.length) gaps.push("missing_related_docs");
+  if (category === "reference") gaps.push("unclear_category");
+  if (!tracked || maintenance.status === "new" || maintenance.status === "local-only") gaps.push("untracked_or_local");
+  return {
+    id: `agent:${family.slug}`,
+    name: family.title || family.slug,
+    kind: "agent",
+    type: "Agent",
+    subtype: "Workflow Agent",
+    category,
+    category_label: categoryByKey(category).title,
+    category_suggestion: category === "reference" ? `建议确认 ${family.slug} 是否应归入某个 Workflow V2 阶段。` : "",
+    usage_scenario: categoryByKey(category).scenario,
+    function_description: description || `${family.slug} Workflow Agent 定义。`,
+    inputs: inputSnippet || "未显式登记；请在 canonical agent template 或 TOML 描述中补输入说明。",
+    outputs: outputSnippet || "未显式登记；请在 canonical agent template 或 TOML 描述中补输出说明。",
+    usage_frequency: usageFrequencyFor({ ...draft, category_label: family.group }, category),
+    related_workflow: workflow.value,
+    related_docs: relatedDocs,
+    maintenance_status: maintenance.label,
+    maintenance_code: maintenance.status,
+    last_updated: latestUpdatedAt(paths),
+    note,
+    note_source: explicitNote ? "explicit" : "generated",
+    path: draft.path,
+    variants,
+    tracked,
+    changed: maintenance.changed,
+    change_status: maintenance.status,
+    mirror_status: { status: "platform-variants", missing: [] },
+    gaps: [...new Set(gaps)],
+    gap_labels: [...new Set(gaps)].map(gap => skillAgentGapLabels[gap] || gap),
+    is_complete: gaps.filter(gap => !gap.startsWith("generated_")).length === 0,
+    triggers: []
+  };
+}
+
+function buildSkillAgentRegistry(skillGroups, agentFamilies) {
+  const skillEntries = skillGroups.flatMap(group => (group.items || []).map(item => buildSkillEntry(item, group)));
+  const agentEntries = agentFamilies.map(buildAgentEntry);
+  const entries = [...skillEntries, ...agentEntries].sort((a, b) =>
+    a.category.localeCompare(b.category) || a.kind.localeCompare(b.kind) || a.name.localeCompare(b.name)
+  );
+  const countBy = predicate => entries.filter(predicate).length;
+  const gap_counts = Object.fromEntries(Object.keys(skillAgentGapLabels).map(key => [key, countBy(entry => entry.gaps.includes(key))]));
+  const categories = skillAgentCategories.map(category => {
+    const categoryEntries = entries.filter(entry => entry.category === category.key);
+    return {
+      ...category,
+      count: categoryEntries.length,
+      complete: categoryEntries.filter(entry => entry.is_complete).length,
+      gaps: categoryEntries.reduce((sum, entry) => sum + entry.gaps.length, 0)
+    };
+  }).filter(category => category.count);
+  return {
+    source: "scripts/dashboard/generate-state.mjs",
+    required_fields: [
+      "name",
+      "type",
+      "category",
+      "usage_scenario",
+      "function_description",
+      "inputs",
+      "outputs",
+      "usage_frequency",
+      "related_workflow",
+      "related_docs",
+      "maintenance_status",
+      "last_updated",
+      "note"
+    ],
+    summary: {
+      total: entries.length,
+      skills: countBy(entry => entry.kind === "skill"),
+      agents: countBy(entry => entry.kind === "agent"),
+      complete: countBy(entry => entry.is_complete),
+      incomplete: countBy(entry => !entry.is_complete),
+      all_complete: entries.every(entry => entry.is_complete),
+      missing_intro: gap_counts.missing_intro,
+      missing_note: gap_counts.missing_explicit_note,
+      unclear_category: gap_counts.unclear_category,
+      missing_workflow: gap_counts.missing_related_workflow,
+      missing_docs: gap_counts.missing_related_docs,
+      changed: countBy(entry => entry.changed),
+      new_items: countBy(entry => entry.change_status === "new"),
+      modified_items: countBy(entry => entry.change_status === "modified")
+    },
+    gap_labels: skillAgentGapLabels,
+    gap_counts,
+    categories,
+    entries,
+    report: {
+      missing_comments_or_definitions: entries
+        .filter(entry => entry.gaps.some(gap => ["missing_intro", "missing_input", "missing_output", "missing_explicit_note"].includes(gap)))
+        .map(entry => ({ name: entry.name, type: entry.type, path: entry.path, gaps: entry.gap_labels })),
+      classification_suggestions: entries
+        .filter(entry => entry.category_suggestion)
+        .map(entry => ({ name: entry.name, type: entry.type, path: entry.path, suggestion: entry.category_suggestion })),
+      changed_items: entries
+        .filter(entry => entry.changed || entry.change_status === "new")
+        .map(entry => ({ name: entry.name, type: entry.type, path: entry.path, status: entry.maintenance_status }))
+    }
+  };
 }
 
 function classifyDocImportance(path, tags = [], label = "") {
@@ -1645,6 +2114,7 @@ const skillsFound = listSkills();
 const agentsFound = listAgents();
 const skillGroups = buildSkillGroups();
 const agentFamilies = buildAgentFamilies();
+const skillAgentRegistry = buildSkillAgentRegistry(skillGroups, agentFamilies);
 const pluginMap = parsePluginMap();
 const roadmapManifests = listRoadmapManifests();
 const releaseEntries = parseReleaseEntries();
@@ -1669,11 +2139,13 @@ const snapshot = {
   agents_found: agentsFound,
   skill_groups: skillGroups,
   agent_families: agentFamilies,
+  skill_agent_registry: skillAgentRegistry,
   doc_collections: buildDocCollections(skillGroups, agentFamilies),
   doc_hub: buildDocHub(skillGroups, agentFamilies),
   registry: {
     skills: skillsFound,
-    agents: agentsFound
+    agents: agentsFound,
+    skill_agent: skillAgentRegistry
   },
   plugin_map: pluginMap,
   roadmap_manifests: roadmapManifests,
@@ -1702,6 +2174,7 @@ const snapshot = {
   development_data: buildDevelopmentData(branch),
   task_progress: scanDevLogs()
 };
+snapshot.sync_status.skill_agent_registry = skillAgentRegistry.summary;
 snapshot.signals = buildSignals(snapshot);
 snapshot.cockpit = buildCockpit(snapshot);
 snapshot.overview_modules = buildOverviewModules(snapshot.product_lines);

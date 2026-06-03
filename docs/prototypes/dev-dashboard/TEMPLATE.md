@@ -186,14 +186,31 @@ Reject path traversal.
 
 ## Skill / Agent Page
 
-Show skills and agents as executable project capabilities:
+Show skills and agents as an executable knowledge base, not only a list of
+names. The generator should emit a normalized `skill_agent_registry` with:
 
-- name and description;
-- trigger examples;
-- path;
-- tracked vs local-only status;
-- grouping by workflow category;
-- project skills before generic local skills.
+- name;
+- type: Skill or Agent, plus source subtype;
+- category and category color;
+- usage scenario;
+- function description;
+- inputs;
+- outputs;
+- usage frequency;
+- related workflow;
+- related docs;
+- maintenance status;
+- last updated time;
+- short note;
+- trigger examples when present;
+- path and tracked / local-only / modified / mirror-missing status.
+
+The page should group entries by workflow category, keep project skills before
+generic local skills when possible, and show gap badges for missing intro,
+missing input/output, missing explicit note, missing workflow link, missing
+related docs, unclear category, local-only state, and missing mirrors. Generated
+fallback copy is allowed, but it must stay visible as generated and should not
+hide the documentation gap.
 
 ## Release Records
 

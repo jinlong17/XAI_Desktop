@@ -4,6 +4,11 @@ function compactText(value, limit = 148){
   return `${text.slice(0, limit - 1)}…`;
 }
 
+function categoryByKey(key){
+  const categories = skillAgentRegistry.categories?.length ? skillAgentRegistry.categories : SKILL_AGENT_CATEGORIES;
+  return categories.find(item => item.key === key) || categories[categories.length - 1] || {};
+}
+
 function sourceTypeForSkillGroup(label = ""){
   if(/portable/i.test(label)) return "Portable Skill";
   if(/codex/i.test(label)) return "Codex Skill";
@@ -11,11 +16,7 @@ function sourceTypeForSkillGroup(label = ""){
   return "Skill";
 }
 
-function categoryByKey(key){
-  return SKILL_AGENT_CATEGORIES.find(item => item.key === key) || SKILL_AGENT_CATEGORIES[SKILL_AGENT_CATEGORIES.length - 1];
-}
-
-function skillAgentCategoryFor(entry){
+function fallbackSkillAgentCategoryFor(entry){
   const name = String(entry.name || "").toLowerCase();
   if(/xai-web-to-desktop-sync|xai-release-log|^ship$/.test(name)) return "governance";
   if(/xai-roadmap-loop|workflow-router|planning-with-files|superpowers/.test(name)) return "automation";
@@ -23,19 +24,11 @@ function skillAgentCategoryFor(entry){
   if(/skill-creator|plugin-creator|agent-behavioral|frontend-dev|composition-patterns/.test(name)) return "authoring";
   if(/bugfix|bug-|bug_/.test(name)) return "bugfix";
   if(/feature-|feature_|xai-feature/.test(name)) return "feature";
-  const value = `${name} ${entry.workflow || ""} ${entry.description || ""} ${entry.source || ""} ${entry.docs?.map(doc => doc.path).join(" ") || ""}`.toLowerCase();
-  if(/bugfix|bug-|bug_|bug diagnose|bug fix|bug verify|bug-diagnose|bug-fix|bug-verify/.test(value)) return "bugfix";
-  if(/feature-|feature_|xai-feature|feature workflow|frontend-dev|composition-patterns|feature-plan|feature-review|feature-build|feature-verify/.test(value)) return "feature";
-  if(/roadmap|workflow-router|planning|superpowers|auto-|automation|loop|orchestration|manifest/.test(value)) return "automation";
-  if(/web-to-desktop|release-log|\bship\b|handoff|governance|branch|sync gate|d3|cursor rule|codex config/.test(value)) return "governance";
-  if(/gh-fix-ci|security|threat|stride|ci|review|verify|codebase-explorer|audit/.test(value)) return "quality";
-  if(/skill-creator|plugin-creator|skill author|skill-|agent-behavioral|frontend|composition|create a new skill/.test(value)) return "authoring";
   return "reference";
 }
 
-function skillAgentWorkflowFor(entry, categoryKey){
+function fallbackWorkflowFor(entry, categoryKey){
   const name = String(entry.name || "").toLowerCase();
-  if(entry.kind === "agent" && entry.workflow) return entry.workflow;
   if(name.includes("xai-web-to-desktop-sync")) return "D3 Web -> Desktop gate";
   if(name.includes("xai-release-log")) return "ship -> release-log";
   if(name.includes("xai-roadmap-loop")) return "roadmap-loop";
@@ -43,105 +36,139 @@ function skillAgentWorkflowFor(entry, categoryKey){
   if(name.includes("feature")) return "Feature Workflow V2";
   if(name.includes("bug")) return "Bugfix Workflow V2";
   if(name.includes("ship")) return "Ship Workflow";
-  return categoryByKey(categoryKey).workflow;
+  return categoryByKey(categoryKey).workflow || "project reference";
 }
 
-function skillAgentScenarioFor(entry, categoryKey){
+function fallbackScenarioFor(entry, categoryKey){
   const trigger = (entry.triggers || []).find(Boolean);
-  if(trigger) return compactText(trigger, 132);
-  if(entry.kind === "agent" && entry.workflow) return categoryByKey(categoryKey).scenario;
-  return categoryByKey(categoryKey).scenario;
+  return trigger || categoryByKey(categoryKey).scenario || "查看定义并按场景使用。";
+}
+
+function normalizeFallbackEntry(entry){
+  const category = fallbackSkillAgentCategoryFor(entry);
+  const kind = entry.kind || (entry.type === "Agent" ? "agent" : "skill");
+  const docs = entry.docs || (entry.path ? [{label:kind === "agent" ? "Agent" : "SKILL.md", path:entry.path}] : []);
+  return {
+    id:`${kind}:${entry.name}`,
+    name:entry.name,
+    kind,
+    type:kind === "agent" ? "Agent" : "Skill",
+    subtype:entry.type || (kind === "agent" ? "Workflow Agent" : "Skill"),
+    category,
+    category_label:categoryByKey(category).title || category,
+    usage_scenario:fallbackScenarioFor(entry, category),
+    function_description:entry.description || entry.desc || "暂无说明。",
+    inputs:"未显式登记。",
+    outputs:"未显式登记。",
+    usage_frequency:"按需使用",
+    related_workflow:fallbackWorkflowFor(entry, category),
+    related_docs:docs,
+    maintenance_status:entry.status || (entry.tracked ? "tracked" : "local-only"),
+    maintenance_code:entry.status || (entry.tracked ? "tracked" : "local-only"),
+    last_updated:"",
+    note:"旧版数据 fallback；运行 `pnpm dashboard` 生成完整知识库字段。",
+    note_source:"generated",
+    path:entry.path,
+    tracked:entry.tracked,
+    gaps:["missing_input","missing_output","missing_explicit_note"],
+    gap_labels:["缺少输入说明","缺少输出说明","缺少显式注释"],
+    is_complete:false,
+    triggers:entry.triggers || []
+  };
 }
 
 function collectSkillAgentEntries(){
-  const skillEntries = skillGroups.flatMap(group => (group.items || []).map(item => {
-    const entry = {
-      kind:"skill",
-      name:item.name,
-      type:sourceTypeForSkillGroup(group.label),
-      source:group.label,
-      description:item.description || group.summary || "项目 skill 定义。",
-      triggers:item.triggers || [],
-      docs:[{label:"SKILL.md", path:item.path}],
-      tracked:item.tracked
-    };
-    const category = skillAgentCategoryFor(entry);
-    return {
-      ...entry,
-      category,
-      workflow:skillAgentWorkflowFor(entry, category),
-      scenario:skillAgentScenarioFor(entry, category)
-    };
-  }));
+  if(Array.isArray(skillAgentRegistry.entries) && skillAgentRegistry.entries.length){
+    return skillAgentRegistry.entries;
+  }
+  const skillEntries = skillGroups.flatMap(group => (group.items || []).map(item => normalizeFallbackEntry({
+    kind:"skill",
+    name:item.name,
+    type:sourceTypeForSkillGroup(group.label),
+    description:item.description || group.summary || "项目 skill 定义。",
+    triggers:item.triggers || [],
+    docs:[{label:"SKILL.md", path:item.path}],
+    path:item.path,
+    tracked:item.tracked,
+    status:item.tracked ? "tracked" : "local-only"
+  })));
   const familyEntries = agentFamilies.map(family => {
     const variants = family.variants || [];
     const preferred = variants.find(item => item.platform === "Codex") || variants[0] || {};
-    const entry = {
+    return normalizeFallbackEntry({
       kind:"agent",
       name:family.title || family.slug,
       type:"Workflow Agent",
-      source:variants.map(item => item.platform).join(" / ") || "Agent",
-      workflow:family.group || "Workflow",
       description:preferred.description || family.summary || "Workflow Agent 定义。",
-      triggers:[],
       docs:variants.map(variant => ({label:variant.platform, path:variant.path})),
-      tracked:variants.every(variant => variant.tracked)
-    };
-    const category = skillAgentCategoryFor(entry);
-    return {
-      ...entry,
-      category,
-      workflow:skillAgentWorkflowFor(entry, category),
-      scenario:skillAgentScenarioFor(entry, category)
-    };
+      path:preferred.path,
+      tracked:variants.every(variant => variant.tracked),
+      status:variants.every(variant => variant.tracked) ? "tracked" : "local-only"
+    });
   });
   if(!familyEntries.length && agents.length){
-    const codexAgents = agents.map(agent => {
-      const entry = {
-        kind:"agent",
-        name:agent.name,
-        type:"Codex Agent",
-        source:"Codex",
-        workflow:"Workflow",
-        description:agent.desc,
-        triggers:agent.triggers || [],
-        docs:[{label:"TOML", path:agent.path}],
-        tracked:agent.status === "tracked"
-      };
-      const category = skillAgentCategoryFor(entry);
-      return {
-        ...entry,
-        category,
-        workflow:skillAgentWorkflowFor(entry, category),
-        scenario:skillAgentScenarioFor(entry, category)
-      };
-    });
-    return [...skillEntries, ...codexAgents];
+    return [...skillEntries, ...agents.map(agent => normalizeFallbackEntry({
+      kind:"agent",
+      name:agent.name,
+      type:"Codex Agent",
+      description:agent.desc,
+      triggers:agent.triggers || [],
+      docs:[{label:"TOML", path:agent.path}],
+      path:agent.path,
+      tracked:agent.status === "tracked",
+      status:agent.status
+    }))];
   }
   return [...skillEntries, ...familyEntries];
 }
 
-function ensureSkillCopyStyles(){
-  if(typeof document === "undefined" || document.getElementById("xai-skill-copy-styles")) return;
-  const el = document.createElement("style");
-  el.id = "xai-skill-copy-styles";
-  el.textContent = `
-  .sa-entry-actions{display:flex;flex-direction:column;align-items:flex-end;gap:6px;flex:none}
-  .sa-copy{border:1px solid var(--line);border-radius:6px;background:var(--surface);color:var(--faint);font-size:10px;padding:3px 8px;cursor:pointer;white-space:nowrap;transition:border-color .15s ease,color .15s ease}
-  .sa-copy:hover{border-color:var(--blue);color:var(--blue)}
-  `;
-  document.head.appendChild(el);
+function fieldRowsForEntry(entry){
+  return [
+    ["类型", `${entry.type}${entry.subtype ? ` / ${entry.subtype}` : ""}`],
+    ["所属分类", entry.category_label || categoryByKey(entry.category).title || entry.category],
+    ["使用场景", entry.usage_scenario],
+    ["输入内容", entry.inputs],
+    ["输出内容", entry.outputs],
+    ["使用频率", entry.usage_frequency],
+    ["关联 workflow", entry.related_workflow],
+    ["维护状态", entry.maintenance_status],
+    ["最近更新时间", entry.last_updated || "未读取"],
+    ["简短注释", entry.note]
+  ];
 }
-function renderSkillAgentCatalog(){
-  ensureSkillCopyStyles();
-  const entries = collectSkillAgentEntries();
-  const skillCount = entries.filter(item => item.kind === "skill").length;
-  const agentCount = entries.filter(item => item.kind === "agent").length;
-  const variantCount = agentFamilies.reduce((sum, family) => sum + (family.variants || []).length, 0);
+
+function gapTone(gap){
+  if(/missing_intro|missing_input|missing_output|missing_explicit_note|mirror_missing/.test(gap)) return "b-red";
+  if(/unclear_category|missing_related_workflow|missing_related_docs/.test(gap)) return "b-yellow";
+  if(/generated_/.test(gap)) return "b-cyan";
+  return "b-gray";
+}
+
+function docButtons(entry){
+  const docs = entry.related_docs || entry.docs || [];
+  if(!docs.length) return `<span class="pill">无文档入口</span>`;
+  return docs.map(doc => `
+    <button class="reader-btn" data-skill-agent-doc="${h(doc.path)}" type="button" title="${h(doc.path)}">
+      ${h(doc.label || basename(doc.path))}
+    </button>
+  `).join("");
+}
+
+function renderRegistrySummary(entries){
+  const summary = skillAgentRegistry.summary || {};
+  const skillCount = summary.skills ?? entries.filter(item => item.kind === "skill").length;
+  const agentCount = summary.agents ?? entries.filter(item => item.kind === "agent").length;
+  const complete = summary.complete ?? entries.filter(item => item.is_complete).length;
+  const missingNote = summary.missing_note ?? entries.filter(item => (item.gaps || []).includes("missing_explicit_note")).length;
+  const missingDocs = summary.missing_docs ?? entries.filter(item => (item.gaps || []).includes("missing_related_docs")).length;
+  const changed = summary.changed ?? entries.filter(item => item.changed).length;
   document.getElementById("skillAgentCounts").innerHTML = [
     ["Skill", skillCount, "project / codex / portable"],
     ["Agent", agentCount, "workflow families"],
-    ["Agent 定义文件", variantCount || agentCount, "canonical / codex / cloud / cursor"]
+    ["完整条目", `${complete}/${entries.length}`, "必填字段 + 关联信息"],
+    ["缺少注释", missingNote, "需要补显式 note"],
+    ["缺关联文档", missingDocs, "除定义外的相关文档"],
+    ["新增/修改", changed, "working tree delta"]
   ].map(([label, value, note]) => `
     <div class="skill-agent-count">
       <span>${h(label)}</span>
@@ -149,22 +176,32 @@ function renderSkillAgentCatalog(){
       <em>${h(note)}</em>
     </div>
   `).join("");
+}
 
-  const grouped = SKILL_AGENT_CATEGORIES.map(category => ({
-    ...category,
-    entries:entries.filter(entry => entry.category === category.key)
-      .sort((a, b) => a.kind.localeCompare(b.kind) || a.name.localeCompare(b.name))
-  })).filter(group => group.entries.length);
+function renderSkillAgentCatalog(){
+  const entries = collectSkillAgentEntries();
+  renderRegistrySummary(entries);
+  const categories = (skillAgentRegistry.categories?.length ? skillAgentRegistry.categories : SKILL_AGENT_CATEGORIES)
+    .map(category => ({
+      ...category,
+      entries:entries.filter(entry => entry.category === category.key)
+        .sort((a, b) => a.kind.localeCompare(b.kind) || a.name.localeCompare(b.name))
+    }))
+    .filter(group => group.entries.length);
 
-  document.getElementById("skillAgentIndex").innerHTML = grouped.map(group => `
-    <button data-category="${h(group.key)}" data-skill-agent-jump="${h(group.key)}" type="button">
-      <span>${h(String(group.entries.length))} items</span>
-      <b>${h(group.title)}</b>
-      <small>${h(group.summary)}</small>
-    </button>
-  `).join("");
+  document.getElementById("skillAgentIndex").innerHTML = categories.map(group => {
+    const complete = group.entries.filter(entry => entry.is_complete).length;
+    const gaps = group.entries.reduce((sum, entry) => sum + (entry.gaps || []).filter(gap => !gap.startsWith("generated_")).length, 0);
+    return `
+      <button data-category="${h(group.key)}" data-skill-agent-jump="${h(group.key)}" type="button">
+        <span>${h(String(group.entries.length))} items · ${h(String(complete))} complete</span>
+        <b>${h(group.title)}</b>
+        <small>${h(group.summary)}${gaps ? ` · ${gaps} gaps` : ""}</small>
+      </button>
+    `;
+  }).join("");
 
-  document.getElementById("skillAgentBoard").innerHTML = grouped.map(group => `
+  document.getElementById("skillAgentBoard").innerHTML = categories.map(group => `
     <section class="skill-agent-category" data-category="${h(group.key)}" data-skill-agent-category="${h(group.key)}">
       <div class="skill-agent-category-head">
         <div>
@@ -174,31 +211,36 @@ function renderSkillAgentCatalog(){
         <div class="skill-agent-category-meta">
           <span class="pill">${h(group.workflow)}</span>
           <span class="badge b-blue">${h(String(group.entries.length))} items</span>
+          <span class="badge ${group.entries.every(entry => entry.is_complete) ? "b-green" : "b-yellow"}">${group.entries.every(entry => entry.is_complete) ? "complete" : "needs notes"}</span>
         </div>
       </div>
       <div class="skill-agent-entry-grid">
         ${group.entries.map(entry => `
-          <article class="skill-agent-entry">
+          <article class="skill-agent-entry ${entry.is_complete ? "is-complete" : "needs-metadata"}">
             <div class="skill-agent-entry-top">
               <div>
                 <h4>${h(entry.name)}</h4>
-                <p>${h(compactText(entry.description || "暂无说明。", 176))}</p>
+                <p>${h(compactText(entry.function_description || "暂无说明。", 210))}</p>
               </div>
               <div class="sa-entry-actions">
-                <span class="badge ${entry.kind === "skill" ? "b-purple" : "b-cyan"}">${h(entry.kind === "skill" ? "Skill" : "Agent")}</span>
+                <span class="badge ${entry.kind === "skill" ? "b-purple" : "b-cyan"}">${h(entry.type || (entry.kind === "skill" ? "Skill" : "Agent"))}</span>
+                <span class="badge ${entry.is_complete ? "b-green" : "b-yellow"}">${entry.is_complete ? "完整" : "待补充"}</span>
                 <button class="sa-copy" type="button" data-sa-copy="${h(entry.name)}" title="复制名字">复制名</button>
               </div>
             </div>
-            <div class="skill-agent-meta-grid">
-              <b>类型</b><span>${h(entry.type)}</span>
-              <b>所属 workflow</b><span>${h(entry.workflow)}</span>
-              <b>适用场景</b><span>${h(entry.scenario)}</span>
-              <b>来源</b><span>${h(entry.source || "project")}${entry.tracked === false ? " · local-only" : ""}</span>
+            <div class="skill-agent-gaps">
+              ${(entry.gaps || []).length ? (entry.gap_labels || entry.gaps).map((label, index) => `
+                <span class="badge ${gapTone((entry.gaps || [])[index] || label)}">${h(label)}</span>
+              `).join("") : `<span class="badge b-green">字段完整</span>`}
             </div>
+            <div class="skill-agent-field-grid">
+              ${fieldRowsForEntry(entry).map(([label, value]) => `
+                <b>${h(label)}</b><span>${h(value || "未登记")}</span>
+              `).join("")}
+            </div>
+            ${entry.category_suggestion ? `<div class="skill-agent-note"><b>分类建议</b><span>${h(entry.category_suggestion)}</span></div>` : ""}
             <div class="skill-agent-docs">
-              ${(entry.docs || []).map(doc => `
-                <button class="reader-btn" data-skill-agent-doc="${h(doc.path)}" type="button">${h(doc.label || basename(doc.path))}</button>
-              `).join("") || `<span class="pill">无文档入口</span>`}
+              ${docButtons(entry)}
             </div>
           </article>
         `).join("")}
