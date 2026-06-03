@@ -323,34 +323,30 @@ Owner 的渲染器/数据/状态词汇，不 fork 第二套。**富展示不算�
 
 ## 7. 当前已知的边界违规 / 清理清单（落地时修）
 
-> 以下为本次摸底发现的**现状问题**（非目标态）。修复属「改看板」范畴，按你的指令暂不动代码，
-> 列此作为执行方案的输入。优先级见对话中的落地方案。
+> 摸底发现的问题分两类。**✅ 已修复**部分由 P1–P4 落地（branch `codex/web/dashboard-boundaries`，
+> 本地提交，未 push/merge；运行期已 serve+390px+暗色验证通过）。**⏳ 仍待办**为延后或未列入本轮的项。
 
-**重复 / 边界模糊（高）**
-- 模块在总览多处展示（flow + grid + drawer）= **有意富展示，保留**（operator 决策 2026-06-03，非重复）。真正要修的是**实现层 fork**：总览 drawer 与 product-flow detail 是两套渲染器、`FEATURE_STATUS` 两份 → 改为**共享渲染器/词汇**，展示不变。
-- 测试状态出现在 3 页（测试/部署/发布）。→ 保留为 Shared-Widget 徽标即可（已是单函数），但禁止任何页扩成第二张测试明细卡。
-- 部署 env 数据在部署页出现两次（模块 fact-grid + 侧栏环境列表）+ 总览第三次。→ 侧栏并入 §4.6-E；总览降为 Mirror。
-- `FEATURE_STATUS` 两份（`product-flow.js:206` vs `overview.js:401/478` 内联）。→ 收敛为共享模块。
-- 「常用 Skill」只在总览存在，与目录板分类不互通；curated 列表硬编码易漂移。→ 同源 + 在目录板加「常用」分组。
+**✅ 已修复（P1–P4）**
+- `FEATURE_STATUS` 两份 → 共享 `js/status-meta.js`（P1 `54e8523`）。
+- 「常用 Skill」单源 + 目录板加 `常用/系统/同步/开发` 管理分组（P2.3 `da1cb50`，`js/skill-groups.js`）。
+- 导航双源：删 `index.html` 死锚 + `DEFAULT_NAV_ITEMS` 加 group 元数据 + 5 组分隔标签 + 未知 hash `console.warn`（P2.1 `19b511f`）。
+- `ops-panels.js` 杂物箱 → 拆 `tasks/dev-data/branches/release-log.js`，一页一文件（P2.2 `87f5c2c`）。
+- 分支管理页数据驱动：`branch_policy.long_lived_branches` 为主源，硬编码兜底标注 last-resort（P3.3 `b94baab`）。
+- 孤儿渲染器（`renderDocCollections/renderBranchDocs/renderRegistry/branchDocSeeds`）删除；孤儿 state key 标注 machine-only（P3.2 `7ea6087`）。
+- usage-ops 硬编码机器绝对路径 → `cd "$(git rev-parse --show-toplevel)"`（P3.1 `98b18bf`）。
+- `--radius` token 启用（123 处 `8px`→`var(--radius)`）+ `background:#fff`→`var(--surface)`（30 处，修暗色 chrome bug）（P3.4 `0c5d586`）。
+- `verify-static.mjs` script-order 闸门与新布局对齐（P4 `9cefd1b`）。
 
-**结构 / 注册（中）**
-- 导航双源：`index.html:22-34` 死锚 + `nav.js` 真源。→ 删死锚。
-- 总览是 5 个 section 拼的，唯一的多 section 页。→ 收敛为单容器或文档化为约定。
-- 4 页挤在 `ops-panels.js`，文件名误导。→ 一页一文件。
-- 无懒渲染（`main.js:41-62` 全量渲染）。→ 加 per-page mount。
-
-**数据层（中）**
-- `branches` 硬编码兜底（`state.js:193`），分支管理页永不数据驱动。→ 接 `branch_policy`。
-- `SKILL_AGENT_CATEGORIES` 在 `state.js:141` 与 `generate-state.mjs:51` 双份。→ 单源。
-- 孤儿 state key：`module_nav`/`plugin_map`/`registry`/`product_module_registry`（emit 无 consumer）。→ 删或标注 machine-only。
-- roadmap 白名单硬编码（`generate-state.mjs:33-49`），新 manifest 静默漏算。→ 改 glob 扫描。
-- `repo_root` 机器绝对路径入 state（gitignore 缓解）；usage-ops 静态 HTML 里也硬编码绝对路径。→ 派生化。
-
-**视觉（中低）**
-- 文档重要性/family 用字面 hex 复刻了 `--module-*` token；~30 处阴影/chrome 硬编码不跟随主题/accent，部分无暗色变体→暗色 bug。→ 收回 token。
-- `--radius` 声明但无人用，radius 全字面 `8px`。→ 统一用 token。
-- `theme-bootstrap.js` 复制了 `theme.js` 的 key/校验/`hexToRgb`（FOUC 守卫，刻意但有漂移风险）。→ 抽共享或注释锁定。
-- 每个组件族重复 6 行 `[data-tone]`。→ 收敛为一处共享块（参照 `[data-product]`）。
+**⏳ 仍待办（延后 / 未列入本轮）**
+- **P1b 延后**：总览 drawer (`openModuleDrawer`) 与 product-flow detail (`setProduct`) 仍是两套渲染器（`FEATURE_STATUS` 已共享；渲染器合并因 `#productDetail` DOM 耦合 + 监听器重连风险延后，需带浏览器做）。
+- 部署 env 在部署页出现两次（模块 fact-grid + 侧栏）+ 总览：侧栏并入 §4.6-E 未实施。
+- 总览 5 section 拼（唯一多 section 页）：未收敛（属约定）。
+- 无懒渲染（`main.js` 全量渲染）：未加 per-page mount。
+- `SKILL_AGENT_CATEGORIES` 在 `state.js` 与 `generate-state.mjs` 双份：未单源。
+- roadmap 白名单硬编码（`generate-state.mjs`）：未改 glob。
+- 视觉折叠（P3.4 延后部分）：~27 处 `box-shadow`（alpha 与 `--shadow` 不同）、5 块重复 `[data-tone]`（特异性）、doc 重要性/family 字面 hex 折叠（值偏移）——都需带浏览器做。
+- `theme-bootstrap.js` 复制 `theme.js` 的 key/校验/`hexToRgb`（FOUC 守卫，刻意）：未抽共享。
+- 测试状态跨 3 页：**保留为 Shared-Widget 徽标**（本就正确，非待办）；仅禁止扩成第二张测试明细卡。
 
 ---
 
