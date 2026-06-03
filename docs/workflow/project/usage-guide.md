@@ -479,6 +479,9 @@ Project-layer skills:
 Claude Code 需要判断看板是否最新，或需要对齐 Overview、Skill / Agent
 知识库、测试结果、机器说明文档和可复用模板时，使用
 `xai-dev-dashboard-sync`。
+Skill / Agent 同步应先给出 `resolved` / `needs-action` 结论；可确定的
+简介、输入、输出、注释、workflow 和文档关联要自动补齐到 dashboard
+registry，只把无法自动判断的项留作 needs-action。
 
 刷新一次静态快照:
 

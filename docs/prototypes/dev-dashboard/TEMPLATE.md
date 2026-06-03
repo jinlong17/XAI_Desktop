@@ -206,11 +206,17 @@ names. The generator should emit a normalized `skill_agent_registry` with:
 - path and tracked / local-only / modified / mirror-missing status.
 
 The page should group entries by workflow category, keep project skills before
-generic local skills when possible, and show gap badges for missing intro,
-missing input/output, missing explicit note, missing workflow link, missing
-related docs, unclear category, local-only state, and missing mirrors. Generated
-fallback copy is allowed, but it must stay visible as generated and should not
-hide the documentation gap.
+generic local skills when possible, and show a registry conclusion:
+
+- `resolved` when every entry has usable fields after extraction or
+  deterministic generation;
+- `needs-action` only when a field cannot be filled or classified without human
+  judgment.
+
+Generated fallback copy is allowed and should complete the dashboard entry. Show
+it as a source-backfill note so maintainers know which source files could be
+improved later, but do not keep the dashboard in a permanent missing-field state
+once the generated registry has supplied the value.
 
 ## Release Records
 

@@ -108,18 +108,25 @@ const skillAgentCategories = [
 
 const skillAgentGapLabels = {
   missing_intro: "缺少明确介绍",
-  generated_intro: "介绍为自动生成",
   missing_input: "缺少输入说明",
-  generated_input: "输入说明为推断",
   missing_output: "缺少输出说明",
-  generated_output: "输出说明为推断",
   missing_explicit_note: "缺少显式注释",
-  generated_note: "注释为自动生成",
   missing_related_workflow: "缺少 workflow 关联",
   missing_related_docs: "缺少关联文档",
   unclear_category: "分类不清晰",
   untracked_or_local: "未完整纳入 Git",
   mirror_missing: "运行时镜像不完整"
+};
+
+const skillAgentSourceNoteLabels = {
+  generated_intro: "介绍已自动补齐",
+  generated_input: "输入说明已自动补齐",
+  generated_output: "输出说明已自动补齐",
+  generated_note: "注释已自动补齐",
+  generated_workflow: "workflow 已按分类补齐",
+  definition_only_doc: "仅有关联定义文档",
+  untracked_or_local: "维护状态需纳入 Git",
+  mirror_missing: "运行时镜像需同步"
 };
 
 function git(args) {
@@ -551,16 +558,17 @@ function buildSkillEntry(item, group) {
   const maintenance = maintenanceFor([path], item.tracked, mirror);
   const note = explicitNote || inferredNoteFor(draft, category);
   const gaps = [];
+  const sourceNotes = [];
   if (!description) gaps.push("missing_intro");
-  if (!meta.description && description) gaps.push("generated_intro");
-  if (!inputSnippet) gaps.push("missing_input", "generated_input");
-  if (!outputSnippet) gaps.push("missing_output", "generated_output");
-  if (!explicitNote) gaps.push("missing_explicit_note", "generated_note");
-  if (!workflow.explicit) gaps.push("missing_related_workflow");
-  if (relatedDocs.length <= 1) gaps.push("missing_related_docs");
+  if (!meta.description && description) sourceNotes.push("generated_intro");
+  if (!inputSnippet) sourceNotes.push("generated_input");
+  if (!outputSnippet) sourceNotes.push("generated_output");
+  if (!explicitNote) sourceNotes.push("generated_note");
+  if (!workflow.explicit) sourceNotes.push("generated_workflow");
+  if (relatedDocs.length <= 1) sourceNotes.push("definition_only_doc");
   if (category === "reference") gaps.push("unclear_category");
-  if (!item.tracked || maintenance.status === "new" || maintenance.status === "local-only") gaps.push("untracked_or_local");
-  if (mirror.status === "missing") gaps.push("mirror_missing");
+  if (!item.tracked || maintenance.status === "new" || maintenance.status === "local-only") sourceNotes.push("untracked_or_local");
+  if (mirror.status === "missing") sourceNotes.push("mirror_missing");
   return {
     id: `skill:${draft.name}`,
     name: draft.name,
@@ -589,7 +597,10 @@ function buildSkillEntry(item, group) {
     mirror_status: mirror,
     gaps: [...new Set(gaps)],
     gap_labels: [...new Set(gaps)].map(gap => skillAgentGapLabels[gap] || gap),
-    is_complete: gaps.filter(gap => !gap.startsWith("generated_")).length === 0,
+    source_notes: [...new Set(sourceNotes)],
+    source_note_labels: [...new Set(sourceNotes)].map(noteKey => skillAgentSourceNoteLabels[noteKey] || noteKey),
+    completion_status: gaps.length ? "needs-action" : "resolved",
+    is_complete: gaps.length === 0,
     triggers: item.triggers || []
   };
 }
@@ -627,15 +638,16 @@ function buildAgentEntry(family) {
   const maintenance = maintenanceFor(paths, tracked, null);
   const note = explicitNote || inferredNoteFor({ ...draft, related_workflow: workflow.value }, category);
   const gaps = [];
+  const sourceNotes = [];
   if (!description) gaps.push("missing_intro");
-  if (!preferred.description && description) gaps.push("generated_intro");
-  if (!inputSnippet) gaps.push("missing_input", "generated_input");
-  if (!outputSnippet) gaps.push("missing_output", "generated_output");
-  if (!explicitNote) gaps.push("missing_explicit_note", "generated_note");
-  if (!workflow.explicit && !family.group) gaps.push("missing_related_workflow");
-  if (relatedDocs.length <= ownDocs.length) gaps.push("missing_related_docs");
+  if (!preferred.description && description) sourceNotes.push("generated_intro");
+  if (!inputSnippet) sourceNotes.push("generated_input");
+  if (!outputSnippet) sourceNotes.push("generated_output");
+  if (!explicitNote) sourceNotes.push("generated_note");
+  if (!workflow.explicit && !family.group) sourceNotes.push("generated_workflow");
+  if (relatedDocs.length <= ownDocs.length) sourceNotes.push("definition_only_doc");
   if (category === "reference") gaps.push("unclear_category");
-  if (!tracked || maintenance.status === "new" || maintenance.status === "local-only") gaps.push("untracked_or_local");
+  if (!tracked || maintenance.status === "new" || maintenance.status === "local-only") sourceNotes.push("untracked_or_local");
   return {
     id: `agent:${family.slug}`,
     name: family.title || family.slug,
@@ -665,7 +677,10 @@ function buildAgentEntry(family) {
     mirror_status: { status: "platform-variants", missing: [] },
     gaps: [...new Set(gaps)],
     gap_labels: [...new Set(gaps)].map(gap => skillAgentGapLabels[gap] || gap),
-    is_complete: gaps.filter(gap => !gap.startsWith("generated_")).length === 0,
+    source_notes: [...new Set(sourceNotes)],
+    source_note_labels: [...new Set(sourceNotes)].map(noteKey => skillAgentSourceNoteLabels[noteKey] || noteKey),
+    completion_status: gaps.length ? "needs-action" : "resolved",
+    is_complete: gaps.length === 0,
     triggers: []
   };
 }
@@ -678,15 +693,19 @@ function buildSkillAgentRegistry(skillGroups, agentFamilies) {
   );
   const countBy = predicate => entries.filter(predicate).length;
   const gap_counts = Object.fromEntries(Object.keys(skillAgentGapLabels).map(key => [key, countBy(entry => entry.gaps.includes(key))]));
+  const source_note_counts = Object.fromEntries(Object.keys(skillAgentSourceNoteLabels).map(key => [key, countBy(entry => entry.source_notes.includes(key))]));
   const categories = skillAgentCategories.map(category => {
     const categoryEntries = entries.filter(entry => entry.category === category.key);
     return {
       ...category,
       count: categoryEntries.length,
       complete: categoryEntries.filter(entry => entry.is_complete).length,
-      gaps: categoryEntries.reduce((sum, entry) => sum + entry.gaps.length, 0)
+      gaps: categoryEntries.reduce((sum, entry) => sum + entry.gaps.length, 0),
+      source_notes: categoryEntries.reduce((sum, entry) => sum + entry.source_notes.length, 0)
     };
   }).filter(category => category.count);
+  const unresolvedEntries = entries.filter(entry => entry.gaps.length);
+  const sourceBackfillEntries = entries.filter(entry => entry.source_notes.length);
   return {
     source: "scripts/dashboard/generate-state.mjs",
     required_fields: [
@@ -704,6 +723,13 @@ function buildSkillAgentRegistry(skillGroups, agentFamilies) {
       "last_updated",
       "note"
     ],
+    conclusion: {
+      status: unresolvedEntries.length ? "needs-action" : "resolved",
+      title: unresolvedEntries.length ? "仍有需要人工判断的 Skill / Agent 条目" : "Skill / Agent 知识库字段已自动补齐",
+      detail: unresolvedEntries.length
+        ? `${unresolvedEntries.length} 个条目仍缺少无法确定的分类或定义字段。`
+        : `所有 ${entries.length} 个 Skill / Agent 条目均已具备看板所需字段；${sourceBackfillEntries.length} 个条目使用了自动补齐内容，可后续按需回写源文件。`
+    },
     summary: {
       total: entries.length,
       skills: countBy(entry => entry.kind === "skill"),
@@ -716,18 +742,27 @@ function buildSkillAgentRegistry(skillGroups, agentFamilies) {
       unclear_category: gap_counts.unclear_category,
       missing_workflow: gap_counts.missing_related_workflow,
       missing_docs: gap_counts.missing_related_docs,
+      unresolved: unresolvedEntries.length,
+      source_backfill: sourceBackfillEntries.length,
+      generated_note: source_note_counts.generated_note,
+      generated_input: source_note_counts.generated_input,
+      generated_output: source_note_counts.generated_output,
       changed: countBy(entry => entry.changed),
       new_items: countBy(entry => entry.change_status === "new"),
       modified_items: countBy(entry => entry.change_status === "modified")
     },
     gap_labels: skillAgentGapLabels,
+    source_note_labels: skillAgentSourceNoteLabels,
     gap_counts,
+    source_note_counts,
     categories,
     entries,
     report: {
       missing_comments_or_definitions: entries
         .filter(entry => entry.gaps.some(gap => ["missing_intro", "missing_input", "missing_output", "missing_explicit_note"].includes(gap)))
         .map(entry => ({ name: entry.name, type: entry.type, path: entry.path, gaps: entry.gap_labels })),
+      source_backfill_recommendations: sourceBackfillEntries
+        .map(entry => ({ name: entry.name, type: entry.type, path: entry.path, notes: entry.source_note_labels })),
       classification_suggestions: entries
         .filter(entry => entry.category_suggestion)
         .map(entry => ({ name: entry.name, type: entry.type, path: entry.path, suggestion: entry.category_suggestion })),

@@ -106,9 +106,9 @@ The sync skill owns five alignment checks in one run:
    `Verification` fields, known local report paths, and CI / pipeline
    configuration evidence.
 5. refresh or verify the Skill / Agent knowledge registry, including new or
-   modified definitions, classification, generated descriptions, missing notes,
-   unclear categories, workflow links, document links, maintenance status, and
-   mirror status.
+   modified definitions, classification, generated descriptions, automatic
+   field completion, unresolved needs-action items, source-backfill notes,
+   workflow links, document links, maintenance status, and mirror status.
 
 The skill should apply factual Markdown updates directly. It should report
 `needs-review` only when the mismatch requires an operator decision about
@@ -238,17 +238,28 @@ not only a file list. Each registry entry should expose:
 
 The generator owns the normalized `skill_agent_registry` object. UI code should
 render that registry and keep fallback behavior only for stale local snapshots.
-If the registry must generate a description, input/output summary, workflow
-link, or note from heuristics instead of an explicit source section, keep the
-generated value visible but also expose the matching gap badge.
+The sync result must end with a conclusion:
+
+- `resolved`: every entry has usable dashboard fields after extraction or
+  deterministic generation;
+- `needs-action`: at least one entry cannot be classified or filled without
+  human judgment.
+
+If the registry generates a description, input/output summary, workflow link,
+or note from heuristics instead of an explicit source section, keep the
+generated value visible and expose it as a source-backfill note. Do not count it
+as an unresolved gap once the dashboard entry is usable.
 
 Every dashboard sync should check:
 
 - new skills;
 - new agents;
 - modified Skill / Agent definitions;
-- missing descriptions, inputs, outputs, notes, workflow links, or related docs;
+- unresolved descriptions, inputs, outputs, notes, workflow links, or related
+  docs after automatic fill;
 - unclear categories, with a classification suggestion;
+- source-backfill notes for generated fields that could be written back to
+  source files later;
 - project skill mirror status across `.teams/skills`, `.claude/skills`, and
   `.codex/skills` when applicable.
 
@@ -294,8 +305,9 @@ Release surfaces show testing status without overflow on desktop and mobile.
 
 For Skill / Agent registry changes, also verify
 `http://127.0.0.1:4177/#skill-agent`, confirm summary counts, category index,
-required fields, missing-metadata badges, maintenance status, doc buttons, and
-390px mobile wrapping render without horizontal overflow.
+required fields, resolved / needs-action conclusion, source-backfill badges,
+maintenance status, doc buttons, and 390px mobile wrapping render without
+horizontal overflow.
 
 ## Release Logging
 

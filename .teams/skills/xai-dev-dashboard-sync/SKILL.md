@@ -132,11 +132,17 @@ dashboard, and `check` when they only ask whether the dashboard is current.
    - extract or deterministically generate name, type, category, usage scenario,
      function description, inputs, outputs, usage frequency, related workflow,
      related docs, maintenance status, last updated time, and short note;
-   - flag missing intro, input, output, explicit note, workflow link, related
-     docs, unclear category, local-only / untracked state, and missing project
-     skill mirrors;
+   - apply those generated values to `skill_agent_registry` so the dashboard
+     reaches a concrete `resolved` / `needs-action` conclusion instead of
+     permanently showing missing fields;
+   - treat generated intro / input / output / note / workflow / doc values as
+     source-backfill notes, not blocking gaps, when the dashboard entry is
+     already usable;
+   - flag only unresolved items that cannot be classified or filled
+     deterministically as `needs-action`;
    - emit classification suggestions for entries that remain in `reference` or
-     otherwise look under-classified.
+     otherwise look under-classified, then update the registry conclusion after
+     the automatic fill step.
 5. Audit testing evidence:
    - read `docs/workflow/project/dashboard-state.json` `testing.modules`,
      `testing.records`, `testing.pipelines`, and `testing.report_sources`;
@@ -158,7 +164,8 @@ dashboard, and `check` when they only ask whether the dashboard is current.
    - confirm generated state contains `sync_status`, `generated_at`,
      current `git.branch`, current `git.latest_commit`, the dirty-file count,
      `testing.modules` for the six Product Module Registry keys, and
-     `skill_agent_registry.summary` / `skill_agent_registry.entries`.
+     `skill_agent_registry.conclusion`, `skill_agent_registry.summary`, and
+     `skill_agent_registry.entries`.
 8. If UI proof is needed, run:
    - `pnpm dashboard:serve`
    - open `http://127.0.0.1:4177/#overview`
@@ -169,9 +176,10 @@ dashboard, and `check` when they only ask whether the dashboard is current.
      report lists render, and Overview / Product structure / Deployment /
      Release surfaces show test status without desktop or 390px mobile overflow.
    - open `http://127.0.0.1:4177/#skill-agent`
-   - confirm Skill / Agent counts, category index, required fields, missing
-     metadata badges, doc buttons, maintenance status, and long text wrapping
-     render without desktop or 390px mobile overflow.
+   - confirm Skill / Agent counts, category index, required fields,
+     resolved / needs-action conclusion badges, source-backfill notes, doc
+     buttons, maintenance status, and long text wrapping render without desktop
+     or 390px mobile overflow.
 9. Confirm Claude and Codex can discover the skill:
    - `.teams/skills/xai-dev-dashboard-sync/SKILL.md`
    - `.claude/skills/xai-dev-dashboard-sync/SKILL.md`
@@ -198,7 +206,8 @@ Dashboard Sync Receipt
   Skill status:       xai-dev-dashboard-sync present|tracked|local-only|missing
   Machine doc:        aligned | updated | needs-review
   Template doc:       aligned | updated | needs-review
-  Skill/Agent KB:     complete | gaps:<count> | updated | needs-review
+  Skill/Agent KB:     resolved | needs-action:<count> | updated | needs-review
+  Source backfill:    <count of generated values that could be written back later>
   Testing status:     aligned | updated | needs-review
   Release-log latest: <latest release-log entry title>
   Verification:       <commands and results>

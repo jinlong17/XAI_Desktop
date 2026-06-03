@@ -10,10 +10,10 @@
 
 - Product line: project-system / dev-dashboard
 - Branch / commit: `web` / local working tree
-- User-visible change: 个人开发看板「Skill 和 Agent」页升级为可维护知识库，不再只显示名称列表；每个 Skill / Agent 展示类型、分类、使用场景、功能说明、输入、输出、使用频率、关联 workflow、关联文档、维护状态、最近更新时间和简短注释，并用缺口 badge 标出需要补说明、注释、workflow 或文档关联的条目。
-- Developer/system delta: `generate-state.mjs` 新增 `skill_agent_registry`，扫描 `.teams/skills`、`.codex/skills`、portable skills、canonical agent templates 和 Codex/Claude/Cursor agent 变体，自动分类、提取/生成简介与注释、识别新增/修改项、维护状态、镜像状态和缺失字段；`skill-agent.js` 改为从 registry 渲染知识库；同步更新 `xai-dev-dashboard-sync`、机器契约、模板、设计说明和 usage-guide。
+- User-visible change: 个人开发看板「Skill 和 Agent」页升级为可维护知识库，不再只显示名称列表；每个 Skill / Agent 展示类型、分类、使用场景、功能说明、输入、输出、使用频率、关联 workflow、关联文档、维护状态、最近更新时间和简短注释，并给出 `resolved` / `needs-action` 结论。自动补齐后的字段不再作为长期缺口显示，只作为源文件可回写提示。
+- Developer/system delta: `generate-state.mjs` 新增 `skill_agent_registry`，扫描 `.teams/skills`、`.codex/skills`、portable skills、canonical agent templates 和 Codex/Claude/Cursor agent 变体，自动分类、提取/生成简介与注释、识别新增/修改项、维护状态、镜像状态、真正 unresolved 项和 source-backfill 项；`skill-agent.js` 改为从 registry 渲染知识库；同步更新 `xai-dev-dashboard-sync`、机器契约、模板、设计说明和 usage-guide。
 - Verification: `node --check scripts/dashboard/generate-state.mjs` passed；`node --check docs/prototypes/dev-dashboard/js/state.js` passed；`node --check docs/prototypes/dev-dashboard/js/skill-agent.js` passed；`pnpm dashboard` passed and generated `skill_agent_registry` with 58 entries, 33 skills, 25 agents, 13 required fields, category summaries, changed-item detection, and missing-metadata report；`pnpm dashboard:serve` served `http://127.0.0.1:4177`；served `state.generated.js` check passed；Safari visual smoke showed desktop Skill / Agent page with counts, categories, field cards and gap badges；Chrome headless 390px screenshot completed；Chrome CDP 390px metrics passed (`innerWidth=390`, `scrollWidth=390`, 58 entries, 6 count cards, 6 categories, required labels present, `xai-dev-dashboard-sync` entry present, no content overflow).
-- Risk / follow-up: 当前 registry 能为所有条目生成可读字段，但大多数 Skill / Agent 源文件仍缺显式 `Note` / 输入 / 输出段落，看板会如实标记为 gap；后续可逐条补源文件说明以提高完整率。
+- Risk / follow-up: 当前 registry 已为所有条目生成可读字段并给出 resolved 结论；大多数 Skill / Agent 源文件仍缺显式 `Note` / 输入 / 输出段落，现作为 source-backfill 提示保留，后续可逐条回写源文件以减少自动生成依赖。
 
 ### 个人开发看板测试结果面板
 

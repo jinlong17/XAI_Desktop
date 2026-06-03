@@ -70,9 +70,11 @@ function normalizeFallbackEntry(entry){
     note_source:"generated",
     path:entry.path,
     tracked:entry.tracked,
-    gaps:["missing_input","missing_output","missing_explicit_note"],
-    gap_labels:["缺少输入说明","缺少输出说明","缺少显式注释"],
-    is_complete:false,
+    gaps:[],
+    gap_labels:[],
+    source_notes:["generated_input","generated_output","generated_note"],
+    source_note_labels:["输入说明已自动补齐","输出说明已自动补齐","注释已自动补齐"],
+    is_complete:true,
     triggers:entry.triggers || []
   };
 }
@@ -144,6 +146,11 @@ function gapTone(gap){
   return "b-gray";
 }
 
+function sourceNoteTone(note){
+  if(/untracked|mirror/.test(note)) return "b-yellow";
+  return "b-cyan";
+}
+
 function docButtons(entry){
   const docs = entry.related_docs || entry.docs || [];
   if(!docs.length) return `<span class="pill">无文档入口</span>`;
@@ -159,15 +166,15 @@ function renderRegistrySummary(entries){
   const skillCount = summary.skills ?? entries.filter(item => item.kind === "skill").length;
   const agentCount = summary.agents ?? entries.filter(item => item.kind === "agent").length;
   const complete = summary.complete ?? entries.filter(item => item.is_complete).length;
-  const missingNote = summary.missing_note ?? entries.filter(item => (item.gaps || []).includes("missing_explicit_note")).length;
-  const missingDocs = summary.missing_docs ?? entries.filter(item => (item.gaps || []).includes("missing_related_docs")).length;
+  const unresolved = summary.unresolved ?? entries.filter(item => (item.gaps || []).length).length;
+  const sourceBackfill = summary.source_backfill ?? entries.filter(item => (item.source_notes || []).length).length;
   const changed = summary.changed ?? entries.filter(item => item.changed).length;
   document.getElementById("skillAgentCounts").innerHTML = [
     ["Skill", skillCount, "project / codex / portable"],
     ["Agent", agentCount, "workflow families"],
     ["完整条目", `${complete}/${entries.length}`, "必填字段 + 关联信息"],
-    ["缺少注释", missingNote, "需要补显式 note"],
-    ["缺关联文档", missingDocs, "除定义外的相关文档"],
+    ["待处理缺口", unresolved, "无法自动判断才显示"],
+    ["已自动补齐", sourceBackfill, "可按需回写源文件"],
     ["新增/修改", changed, "working tree delta"]
   ].map(([label, value, note]) => `
     <div class="skill-agent-count">
@@ -191,12 +198,13 @@ function renderSkillAgentCatalog(){
 
   document.getElementById("skillAgentIndex").innerHTML = categories.map(group => {
     const complete = group.entries.filter(entry => entry.is_complete).length;
-    const gaps = group.entries.reduce((sum, entry) => sum + (entry.gaps || []).filter(gap => !gap.startsWith("generated_")).length, 0);
+    const gaps = group.entries.reduce((sum, entry) => sum + (entry.gaps || []).length, 0);
+    const sourceNotes = group.entries.reduce((sum, entry) => sum + (entry.source_notes || []).length, 0);
     return `
       <button data-category="${h(group.key)}" data-skill-agent-jump="${h(group.key)}" type="button">
         <span>${h(String(group.entries.length))} items · ${h(String(complete))} complete</span>
         <b>${h(group.title)}</b>
-        <small>${h(group.summary)}${gaps ? ` · ${gaps} gaps` : ""}</small>
+        <small>${h(group.summary)}${gaps ? ` · ${gaps} 待处理` : ""}${!gaps && sourceNotes ? ` · ${sourceNotes} 自动补齐` : ""}</small>
       </button>
     `;
   }).join("");
@@ -211,7 +219,7 @@ function renderSkillAgentCatalog(){
         <div class="skill-agent-category-meta">
           <span class="pill">${h(group.workflow)}</span>
           <span class="badge b-blue">${h(String(group.entries.length))} items</span>
-          <span class="badge ${group.entries.every(entry => entry.is_complete) ? "b-green" : "b-yellow"}">${group.entries.every(entry => entry.is_complete) ? "complete" : "needs notes"}</span>
+          <span class="badge ${group.entries.every(entry => entry.is_complete) ? "b-green" : "b-yellow"}">${group.entries.every(entry => entry.is_complete) ? "resolved" : "needs action"}</span>
         </div>
       </div>
       <div class="skill-agent-entry-grid">
@@ -231,7 +239,10 @@ function renderSkillAgentCatalog(){
             <div class="skill-agent-gaps">
               ${(entry.gaps || []).length ? (entry.gap_labels || entry.gaps).map((label, index) => `
                 <span class="badge ${gapTone((entry.gaps || [])[index] || label)}">${h(label)}</span>
-              `).join("") : `<span class="badge b-green">字段完整</span>`}
+              `).join("") : `<span class="badge b-green">字段已补齐</span>`}
+              ${(entry.source_notes || []).map((note, index) => `
+                <span class="badge ${sourceNoteTone(note)}">${h((entry.source_note_labels || [])[index] || note)}</span>
+              `).join("")}
             </div>
             <div class="skill-agent-field-grid">
               ${fieldRowsForEntry(entry).map(([label, value]) => `
