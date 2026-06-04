@@ -78,6 +78,9 @@ export type { StatusOverviewBannerProps } from "./StatusOverviewBanner.js";
 export { ArchivedListsManager } from "./ArchivedListsManager.js";
 export type { ArchivedListsManagerProps } from "./ArchivedListsManager.js";
 
+export { ArchivedCardsManager } from "./ArchivedCardsManager.js";
+export type { ArchivedCardsManagerProps } from "./ArchivedCardsManager.js";
+
 export { InboxPanel } from "./InboxPanel.js";
 export type { InboxPanelProps } from "./InboxPanel.js";
 

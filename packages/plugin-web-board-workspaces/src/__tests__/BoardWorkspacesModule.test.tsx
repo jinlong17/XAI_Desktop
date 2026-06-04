@@ -613,4 +613,104 @@ describe("BoardWorkspacesModule (BWM1..BWM18)", () => {
     expect(screen.queryByText("Onboarding flow concepts")).not.toBeInTheDocument();
     expect(screen.getByText("Ship countdown widgets")).toBeInTheDocument();
   });
+
+  it("BWM-CARD-1: board-surface card rename persists and menu click does not open detail", async () => {
+    render(<BoardWorkspacesModule lang="en" />);
+
+    fireEvent.click(screen.getAllByTestId("card-menu-open")[0]!);
+    expect(screen.queryByTestId("card-detail-modal")).not.toBeInTheDocument();
+    fireEvent.click(screen.getByTestId("card-rename-open"));
+    fireEvent.change(screen.getByTestId("card-rename-input"), {
+      target: { value: "Renamed board card" },
+    });
+    fireEvent.click(screen.getByTestId("card-rename-save"));
+
+    await act(async () => {
+      await Promise.resolve();
+    });
+
+    const card = getStoredCard("bc1");
+    expect(card.title).toEqual({
+      en: "Renamed board card",
+      zh: "Renamed board card",
+    });
+    expect(screen.getByText("Renamed board card")).toBeInTheDocument();
+  });
+
+  it("BWM-CARD-2: move down reorders within the same active list", async () => {
+    render(<BoardWorkspacesModule lang="en" />);
+
+    fireEvent.click(screen.getAllByTestId("card-menu-open")[0]!);
+    fireEvent.click(screen.getByTestId("card-move-down"));
+
+    await act(async () => {
+      await Promise.resolve();
+    });
+
+    const backlog = getStoredList("b-backlog");
+    expect(backlog.cards.slice(0, 2).map((card) => card.id)).toEqual(["bc2", "bc1"]);
+  });
+
+  it("BWM-CARD-3: archive manager restores archived cards", async () => {
+    render(<BoardWorkspacesModule lang="en" />);
+
+    fireEvent.click(screen.getAllByTestId("card-menu-open")[0]!);
+    fireEvent.click(screen.getByTestId("card-archive"));
+
+    await act(async () => {
+      await Promise.resolve();
+    });
+
+    expect(getStoredCard("bc1").archived).toBe(true);
+    expect(screen.queryByText("Onboarding flow concepts")).not.toBeInTheDocument();
+
+    fireEvent.click(screen.getByTestId("archive-cards-toggle"));
+    expect(screen.getByTestId("archive-cards-popover")).toBeInTheDocument();
+    expect(screen.getByText("Onboarding flow concepts")).toBeInTheDocument();
+    fireEvent.click(screen.getByTestId("archive-card-restore-b-backlog-bc1"));
+
+    await act(async () => {
+      await Promise.resolve();
+    });
+
+    expect(getStoredCard("bc1").archived).toBeUndefined();
+    expect(screen.getByText("Onboarding flow concepts")).toBeInTheDocument();
+  });
+
+  it("BWM-CARD-4: archived-card manager permanently deletes with confirmation", async () => {
+    vi.spyOn(window, "confirm").mockReturnValue(true);
+    render(<BoardWorkspacesModule lang="en" />);
+
+    fireEvent.click(screen.getAllByTestId("card-menu-open")[0]!);
+    fireEvent.click(screen.getByTestId("card-archive"));
+    await act(async () => {
+      await Promise.resolve();
+    });
+
+    fireEvent.click(screen.getByTestId("archive-cards-toggle"));
+    fireEvent.click(screen.getByTestId("archive-card-delete-b-backlog-bc1"));
+    await act(async () => {
+      await Promise.resolve();
+    });
+
+    const backlog = getStoredList("b-backlog");
+    expect(backlog.cards.some((card) => card.id === "bc1")).toBe(false);
+  });
+
+  it("BWM-CARD-5: archived cards are hidden from alternate table view", () => {
+    const seed = makeDefaultBoards() as Board[];
+    seed[0]!.lists[0]!.cards[0] = {
+      ...seed[0]!.lists[0]!.cards[0]!,
+      archived: true,
+    };
+    localStorage.setItem("xai_boards_v2", JSON.stringify(seed));
+    localStorage.setItem("xai_active_board", "b-default");
+    localStorage.setItem("xai_board_view_by_id", JSON.stringify({ "b-default": "table" }));
+
+    render(<BoardWorkspacesModule lang="en" />);
+
+    expect(screen.getByTestId("board-table-wrap")).toBeInTheDocument();
+    expect(screen.queryByText("Onboarding flow concepts")).not.toBeInTheDocument();
+    expect(screen.getByText("Pet animation rig")).toBeInTheDocument();
+  });
 });

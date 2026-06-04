@@ -83,5 +83,17 @@ export const STR_ARCHIVED_LISTS = {
   cards: { en: "cards", zh: "张卡片" },
 } as const;
 
+export const STR_ARCHIVED_CARDS = {
+  toolbar: { en: "Archived cards", zh: "已归档卡片" },
+  title: { en: "Archived cards", zh: "已归档卡片" },
+  empty: { en: "No archived cards", zh: "暂无已归档卡片" },
+  restore: { en: "Restore", zh: "恢复" },
+  deletePermanent: { en: "Delete", zh: "删除" },
+  deleteConfirm: {
+    en: "Permanently delete this archived card?",
+    zh: "永久删除该归档卡片？",
+  },
+} as const;
+
 /** Bilingual day-name table (Mon-first localized labels). */
 export const PLANNER_WEEKDAYS_ZH: readonly string[] = ["周日", "周一", "周二", "周三", "周四", "周五", "周六"];

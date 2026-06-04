@@ -34,6 +34,7 @@ describe("index.ts barrel (IB1..IB4)", () => {
       "BoardCreator",
       "StatusOverviewBanner",
       "ArchivedListsManager",
+      "ArchivedCardsManager",
       "InboxPanel",
       "PlannerPanel",
       "computePlannerSlots",

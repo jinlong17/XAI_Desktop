@@ -41,14 +41,18 @@ import {
   archiveCard as archiveCardOp,
   archiveList as archiveListOp,
   canManageBoardList,
+  deleteCard as deleteCardOp,
   deleteList as deleteListOp,
+  getActiveBoardCardLists,
   getActiveBoardLists,
+  getArchivedBoardCards,
   getArchivedBoardLists,
   moveCardWithinListByOffset as moveCardWithinListByOffsetOp,
   moveCardToList as moveCardOp,
   moveListByOffset as moveListByOffsetOp,
   renameCard as renameCardOp,
   renameList as renameListOp,
+  restoreCard as restoreCardOp,
   restoreList as restoreListOp,
   setListColor as setListColorOp,
   updateCardInList,
@@ -76,6 +80,7 @@ import { BoardSwitcher } from "./BoardSwitcher.js";
 import { BoardCreator } from "./BoardCreator.js";
 import { BoardCardDetailModal } from "./BoardCardDetailModal.js";
 import { ArchivedListsManager } from "./ArchivedListsManager.js";
+import { ArchivedCardsManager } from "./ArchivedCardsManager.js";
 import { StatusOverviewBanner } from "./StatusOverviewBanner.js";
 import { InboxPanel } from "./InboxPanel.js";
 import { PlannerPanel } from "./PlannerPanel.js";
@@ -160,7 +165,9 @@ export function BoardWorkspacesModule({ lang }: BoardWorkspacesModuleProps) {
   const activeBoard: Board = pickActiveBoard(boards, activeBoardId);
   const rawLists: BoardListData[] = activeBoard.lists;
   const activeLists: BoardListData[] = getActiveBoardLists(rawLists);
+  const activeCardLists: BoardListData[] = getActiveBoardCardLists(activeLists);
   const archivedLists: BoardListData[] = getArchivedBoardLists(rawLists);
+  const archivedCards = getArchivedBoardCards(activeLists);
   const mutationCtx = useMemo(
     () => ({ template: activeBoard.template }),
     [activeBoard.template],
@@ -174,7 +181,7 @@ export function BoardWorkspacesModule({ lang }: BoardWorkspacesModuleProps) {
   const workspaces = DEFAULT_WORKSPACES;
   const activeWorkspace =
     workspaces.find((w) => w.id === activeBoard.workspaceId) ?? workspaces[0]!;
-  const totalCards = activeLists.reduce((n, l) => n + l.cards.length, 0);
+  const totalCards = activeCardLists.reduce((n, l) => n + l.cards.length, 0);
   const isPM = activeBoard.template === "pm";
 
   // ---- One-time defensive seed (Rec2 from feature-review) ----------------
@@ -210,7 +217,7 @@ export function BoardWorkspacesModule({ lang }: BoardWorkspacesModuleProps) {
     setFilter(EMPTY_FILTER);
   }, [activeBoard.id]);
 
-  const filteredLists = applyFilter(activeLists, filter);
+  const filteredLists = applyFilter(activeCardLists, filter);
 
   // ---- Switcher / creator / overview state -------------------------------
   const [switcherOpen, setSwitcherOpen] = useState(false);
@@ -218,6 +225,7 @@ export function BoardWorkspacesModule({ lang }: BoardWorkspacesModuleProps) {
   const [overviewOpen, setOverviewOpen] = useState(false);
   const [filterOpen, setFilterOpen] = useState(false);
   const [archiveOpen, setArchiveOpen] = useState(false);
+  const [archiveCardsOpen, setArchiveCardsOpen] = useState(false);
   const [shareOpen, setShareOpen] = useState(false);
   const [activeCardRef, setActiveCardRef] = useState<ActiveCardRef | null>(null);
 
@@ -422,6 +430,27 @@ export function BoardWorkspacesModule({ lang }: BoardWorkspacesModuleProps) {
     [activeBoard.id, activeCardRef, mutationCtx, writeLists],
   );
 
+  const restoreArchivedCard = useCallback(
+    (listId: string, cardId: string) => {
+      writeLists((prev) => restoreCardOp(prev, listId, cardId));
+    },
+    [writeLists],
+  );
+
+  const permanentlyDeleteArchivedCard = useCallback(
+    (listId: string, cardId: string) => {
+      writeLists((prev) => deleteCardOp(prev, listId, cardId));
+      if (
+        activeCardRef?.boardId === activeBoard.id &&
+        activeCardRef.listId === listId &&
+        activeCardRef.cardId === cardId
+      ) {
+        setActiveCardRef(null);
+      }
+    },
+    [activeBoard.id, activeCardRef, writeLists],
+  );
+
   // ---- Card mutation closure (shared by Table / Calendar / Timeline) -----
   // All board-views card mutations route through this single closure, which
   // delegates to board-core's updateCardInList pure helper. This preserves
@@ -446,7 +475,9 @@ export function BoardWorkspacesModule({ lang }: BoardWorkspacesModuleProps) {
       ? (() => {
           const list = rawLists.find((entry) => entry.id === activeCardRef.listId);
           const card = list?.cards.find((entry) => entry.id === activeCardRef.cardId);
-          if (!list || !card) return null;
+          if (!list || list.archived === true || !card || card.archived === true) {
+            return null;
+          }
           return { list, card };
         })()
       : null;
@@ -535,7 +566,7 @@ export function BoardWorkspacesModule({ lang }: BoardWorkspacesModuleProps) {
           </button>
           {filterOpen && (
             <FilterPopover
-              lists={activeLists}
+              lists={activeCardLists}
               filter={filter}
               onChange={setFilter}
               onClose={() => setFilterOpen(false)}
@@ -552,6 +583,16 @@ export function BoardWorkspacesModule({ lang }: BoardWorkspacesModuleProps) {
           onRestore={restoreArchivedList}
           onDeletePermanent={permanentlyDeleteArchivedList}
         />
+        <ArchivedCardsManager
+          records={archivedCards}
+          lang={lang}
+          open={archiveCardsOpen}
+          onToggle={() => setArchiveCardsOpen((open) => !open)}
+          onClose={() => setArchiveCardsOpen(false)}
+          resolveListName={resolveListName}
+          onRestore={restoreArchivedCard}
+          onDeletePermanent={permanentlyDeleteArchivedCard}
+        />
         <button
           type="button"
           className="board-icon-btn primary"
@@ -567,7 +608,7 @@ export function BoardWorkspacesModule({ lang }: BoardWorkspacesModuleProps) {
           <>
             {isPM && overviewOpen && panels.board && (
               <StatusOverviewBanner
-                lists={activeLists}
+                lists={activeCardLists}
                 lang={lang}
                 onClose={() => setOverviewOpen(false)}
               />
