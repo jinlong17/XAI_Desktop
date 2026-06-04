@@ -37,6 +37,10 @@ import { CalendarToolbar } from "./CalendarToolbar.js";
 import { MonthGrid } from "./MonthGrid.js";
 import { CalendarBanner } from "./CalendarBanner.js";
 import { SAMPLE_EVENTS } from "./internal/sampleEvents.js";
+import {
+  boardCalendarEventsByDate,
+  mergeEventsForMonth,
+} from "./internal/boardCalendarFeed.js";
 import { utcDateKey } from "./internal/dateKeys.js";
 import { tryParseDateKey, dateKeyMonth, formatDateKey, stepDateKey } from "./internal/parseDateKey.js";
 import { WeekView } from "./WeekView.js";
@@ -59,6 +63,7 @@ export function CalendarModule({ lang }: CalendarModuleProps): JSX.Element {
   const { t } = useI18n(lang);
   const [weekStartRaw] = usePref("xai_pref_week_start", 0);
   const weekStart: 0 | 1 = (weekStartRaw as unknown as number) === 1 ? 1 : 0;
+  const [rawBoards] = usePref("xai_boards_v2");
 
   // P4: view is now persisted via xai_calendar_view.
   const [viewRaw, setViewPref] = usePref("xai_calendar_view", "month");
@@ -82,6 +87,14 @@ export function CalendarModule({ lang }: CalendarModuleProps): JSX.Element {
 
   // Today is captured once per mount per design.md §6 / Q8 = I1.
   const todayKey = useMemo(() => utcDateKey(new Date()), []);
+  const boardEventsByDate = useMemo(
+    () => boardCalendarEventsByDate(rawBoards),
+    [rawBoards],
+  );
+  const monthEvents = useMemo(
+    () => mergeEventsForMonth(SAMPLE_EVENTS, boardEventsByDate, displayedMonth),
+    [boardEventsByDate, displayedMonth],
+  );
 
   // --- Navigation handlers (step depends on view) ----------------------------
 
@@ -165,13 +178,14 @@ export function CalendarModule({ lang }: CalendarModuleProps): JSX.Element {
           t={t}
           todayKey={todayKey}
           focusedDate={focusedFromDeepLink}
-          events={SAMPLE_EVENTS}
+          events={monthEvents}
         />
       ) : view === "week" ? (
         <WeekView
           activeDate={activeDate}
           weekStart={weekStart}
           events={SAMPLE_EVENTS}
+          feedEventsByDate={boardEventsByDate}
           todayKey={todayKey}
           lang={lang}
         />
@@ -179,6 +193,7 @@ export function CalendarModule({ lang }: CalendarModuleProps): JSX.Element {
         <DayView
           activeDate={activeDate}
           events={SAMPLE_EVENTS}
+          feedEventsByDate={boardEventsByDate}
           todayKey={todayKey}
           lang={lang}
         />

@@ -8,9 +8,13 @@
  */
 
 import type { JSX } from "react";
-import { useEffect, useRef } from "react";
+import { useEffect, useMemo, useRef } from "react";
 import type { Lang } from "@repo/plugin-web-tokens";
 import type { CalEventsByDay } from "./internal/sampleEvents.js";
+import {
+  mergeEventsForDateKeys,
+  type CalendarEventsByDate,
+} from "./internal/boardCalendarFeed.js";
 import { parseDateKey } from "./internal/parseDateKey.js";
 import { HOUR_HEIGHT_PX } from "./internal/timeGridMath.js";
 import { TimeGrid } from "./TimeGrid.js";
@@ -18,6 +22,7 @@ import { TimeGrid } from "./TimeGrid.js";
 export interface DayViewProps {
   activeDate: string;
   events: CalEventsByDay;
+  feedEventsByDate?: CalendarEventsByDate;
   todayKey: string;
   lang: Lang;
 }
@@ -26,7 +31,13 @@ export interface DayViewProps {
 const DOW_NAMES_EN = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"] as const;
 const DOW_NAMES_ZH = ["日", "一", "二", "三", "四", "五", "六"] as const;
 
-export function DayView({ activeDate, events, todayKey, lang }: DayViewProps): JSX.Element {
+export function DayView({
+  activeDate,
+  events,
+  feedEventsByDate = {},
+  todayKey,
+  lang,
+}: DayViewProps): JSX.Element {
   const containerRef = useRef<HTMLDivElement | null>(null);
 
   // Scroll-to-current-hour on mount.
@@ -47,6 +58,10 @@ export function DayView({ activeDate, events, todayKey, lang }: DayViewProps): J
   const isZh = lang === "zh";
   const dayName = isZh ? DOW_NAMES_ZH[dow] : DOW_NAMES_EN[dow];
   const dayLabel = `${dayName ?? ""} ${day}`;
+  const mergedEvents = useMemo(
+    () => mergeEventsForDateKeys(events, feedEventsByDate, [activeDate]),
+    [activeDate, events, feedEventsByDate],
+  );
 
   return (
     <div ref={containerRef} data-testid="cal-day-view">
@@ -54,7 +69,7 @@ export function DayView({ activeDate, events, todayKey, lang }: DayViewProps): J
         columns={1}
         dayKeys={[activeDate]}
         dayLabels={[dayLabel]}
-        events={events}
+        events={mergedEvents}
         activeDate={activeDate}
         todayKey={todayKey}
         lang={lang === "zh" ? "zh" : "en"}

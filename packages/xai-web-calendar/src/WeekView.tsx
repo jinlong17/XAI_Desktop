@@ -9,8 +9,13 @@
  */
 
 import type { JSX } from "react";
+import { useMemo } from "react";
 import type { Lang } from "@repo/plugin-web-tokens";
 import type { CalEventsByDay } from "./internal/sampleEvents.js";
+import {
+  mergeEventsForDateKeys,
+  type CalendarEventsByDate,
+} from "./internal/boardCalendarFeed.js";
 import { weekWindowFor } from "./internal/weekWindow.js";
 import { parseDateKey } from "./internal/parseDateKey.js";
 import { TimeGrid } from "./TimeGrid.js";
@@ -19,6 +24,7 @@ export interface WeekViewProps {
   activeDate: string;
   weekStart: 0 | 1;
   events: CalEventsByDay;
+  feedEventsByDate?: CalendarEventsByDate;
   todayKey: string;
   lang: Lang;
 }
@@ -27,9 +33,20 @@ export interface WeekViewProps {
 const DOW_NAMES_EN = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"] as const;
 const DOW_NAMES_ZH = ["日", "一", "二", "三", "四", "五", "六"] as const;
 
-export function WeekView({ activeDate, weekStart, events, todayKey, lang }: WeekViewProps): JSX.Element {
+export function WeekView({
+  activeDate,
+  weekStart,
+  events,
+  feedEventsByDate = {},
+  todayKey,
+  lang,
+}: WeekViewProps): JSX.Element {
   const dayKeys = weekWindowFor(activeDate, weekStart);
   const isZh = lang === "zh";
+  const mergedEvents = useMemo(
+    () => mergeEventsForDateKeys(events, feedEventsByDate, dayKeys),
+    [dayKeys, events, feedEventsByDate],
+  );
 
   // Build column headers: e.g. "Mon 18" or "一 18"
   const dayLabels = dayKeys.map((dk) => {
@@ -45,7 +62,7 @@ export function WeekView({ activeDate, weekStart, events, todayKey, lang }: Week
       columns={7}
       dayKeys={dayKeys}
       dayLabels={dayLabels}
-      events={events}
+      events={mergedEvents}
       activeDate={activeDate}
       todayKey={todayKey}
       lang={lang === "zh" ? "zh" : "en"}

@@ -1600,6 +1600,9 @@ importers:
       '@repo/core':
         specifier: workspace:*
         version: link:../core
+      '@repo/plugin-web-board-core':
+        specifier: workspace:*
+        version: link:../plugin-web-board-core
       '@repo/plugin-web-storage':
         specifier: workspace:*
         version: link:../plugin-web-storage

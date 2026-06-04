@@ -7,13 +7,13 @@
 | Workflow | FEATURE_DEV |
 | Target | xai-web-board-calendar-feed |
 | Title | Web Project module P1 Calendar feed - show dated Board cards in global Calendar |
-| Current Phase | FEATURE_PLAN |
-| Status | READY_FOR_BUILD |
-| Suggested Next | feature-build |
+| Current Phase | FEATURE_BUILD |
+| Status | READY_FOR_VERIFY |
+| Suggested Next | feature-verify |
 | Automation Mode | D-Codex+Cursor |
 | Verify Cross-vendor | yes |
 | Executor | gpt-5 parent inline |
-| Updated | 2026-06-03 22:09 PDT |
+| Updated | 2026-06-03 22:13 PDT |
 | Blockers | None currently. |
 | Roadmap Manifest | `docs/workflow/roadmap/xai-web-project-module.md` row #9 |
 | Source PRD / Audit | `docs/reviews/xai-web-project-module/20260603-audit-and-prd.md` |
@@ -34,14 +34,33 @@ into existing Calendar render paths without adding a new storage key.
 
 ## Build Notes
 
-Pending build.
+- Added `@repo/plugin-web-board-core` dependency to `@repo/plugin-web-calendar`.
+- Added internal `boardCalendarFeed` helpers that read raw Board storage via
+  board-core public helpers, project dated active cards, and merge events for
+  Month / Week / Day render paths.
+- Extended Calendar `CalEvent` with optional source metadata.
+- Wired CalendarModule to read `xai_boards_v2` without seeding Board data when
+  the key is absent.
+- Added Month and Week regression coverage for Board card feed rendering.
 
 ## Verify Notes
 
-Pending verify.
+- PASS `pnpm --filter @repo/plugin-web-calendar lint`
+- PASS `pnpm --filter @repo/plugin-web-calendar check-types`
+- PASS `pnpm --filter @repo/plugin-web-calendar test` (208 tests)
+- PASS `pnpm --filter @repo/web check-types`
+- PASS `pnpm --filter @repo/web test -- --run` (116 tests)
+- PASS `pnpm --filter @repo/web build`
+- PASS `pnpm --filter @repo/web test -- --run src/__tests__/build-manifest.test.ts` (2 tests)
+- PASS `git diff --check`
+- PASS live smoke on `http://localhost:3001/app/calendar`: seeded a valid
+  `xai_boards_v2` board card with `dueDate: "2026-05-14"`, verified Calendar
+  day 2026-05-14 rendered `Calendar feed smoke` as `cal-event ev-blue`, and
+  captured `/tmp/xai-board-calendar-feed-smoke.png`.
 
 ## Work Log
 
 | Timestamp | Executor | Action | Commits | Next Step |
 |---|---|---|---|---|
-| 2026-06-03 22:09 PDT | gpt-5 parent inline | feature-plan - audited Calendar sample event model, Calendar render paths, Board date/storage helpers, and selected read-only derived feed. | pending | feature-build |
+| 2026-06-03 22:09 PDT | gpt-5 parent inline | feature-plan - audited Calendar sample event model, Calendar render paths, Board date/storage helpers, and selected read-only derived feed. | `8d3fb4e` | feature-build |
+| 2026-06-03 22:13 PDT | gpt-5 parent inline | feature-build - implemented Calendar read-only Board feed projection, Calendar render integration, and regression coverage. | pending | feature-verify |
