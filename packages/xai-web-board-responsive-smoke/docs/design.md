@@ -29,6 +29,15 @@ The smoke matrix covers:
 - The toolbar must preserve access to the view picker and Share/Filter controls
   either directly or through horizontal page/canvas scroll if needed.
 
+## Implemented Fixes
+
+- Shell grid shrink fix: `app-main`, `topbar`, and search input now use
+  `min-width: 0` so dense module content cannot expand the main shell column.
+- Board toolbar containment: the Board toolbar scrolls horizontally inside the
+  module on narrow widths instead of moving the whole page.
+- Detail modal containment: the card detail modal uses viewport-bounded width,
+  mobile padding, and a stable 32px close hit target.
+
 ## Browser Path
 
 Preferred path is the Codex in-app Browser. If the browser runtime is not
