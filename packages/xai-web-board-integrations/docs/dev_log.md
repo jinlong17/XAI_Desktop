@@ -7,13 +7,13 @@
 | Workflow | FEATURE_DEV |
 | Target | xai-web-board-integrations |
 | Title | Web Project module P2 Board integration adapter links |
-| Current Phase | FEATURE_VERIFY |
-| Status | READY_TO_SHIP |
-| Suggested Next | ship docs |
+| Current Phase | SHIP |
+| Status | SHIPPED |
+| Suggested Next | xai-web-board-comments-activity |
 | Automation Mode | D-Codex+Cursor |
 | Verify Cross-vendor | yes |
 | Executor | gpt-5 parent inline |
-| Updated | 2026-06-03 23:34 PDT |
+| Updated | 2026-06-03 23:40 PDT |
 | Blockers | None currently. |
 | Roadmap Manifest | `docs/workflow/roadmap/xai-web-project-module.md` row #15 |
 | Source PRD / Audit | `docs/reviews/xai-web-project-module/20260603-audit-and-prd.md` |
@@ -75,4 +75,5 @@ Known inherited warnings remain:
 | Timestamp | Executor | Action | Commits | Next Step |
 |---|---|---|---|---|
 | 2026-06-03 23:28 PDT | gpt-5 parent inline | feature-plan - audited Settings integration stubs, Board attachment schema, storage guards, and card-detail UI; selected provider metadata plus typed attachment helper. | pending | feature-build |
-| 2026-06-03 23:34 PDT | gpt-5 parent inline | feature-build/verify - implemented Board integration attachment contract, provider catalog, card-detail provider UI, tests, package/web verification, and Chrome smoke. | pending | ship docs |
+| 2026-06-03 23:34 PDT | gpt-5 parent inline | feature-build/verify - implemented Board integration attachment contract, provider catalog, card-detail provider UI, tests, package/web verification, and Chrome smoke. | `34efdc6` | ship docs |
+| 2026-06-03 23:40 PDT | gpt-5 parent inline | feature-ship - roadmap, PRD, PLUGIN_MAP, architecture, and dev_log marked shipped. | this docs commit | xai-web-board-comments-activity |

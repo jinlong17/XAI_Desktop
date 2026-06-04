@@ -29,7 +29,7 @@
 | 12 | xai-web-board-responsive-smoke | same | xai-web-board-card-detail, xai-web-board-date-model | ready_to_ship | SHIPPED | P1 | Verify Board/Table/Calendar/Timeline/Detail on desktop and mobile widths. Shipped through `4712786` plus desktop/mobile Playwright smoke. |
 | 13 | xai-web-board-export-import | same | xai-web-board-storage-contract | ready_to_ship | SHIPPED | P1 | Add board logical entities to export/import/delete flows. Shipped through `128f4be` plus package/web verification. |
 | 14 | xai-web-board-automation-lite | same | xai-web-board-card-detail, xai-web-board-date-model | ready_to_ship | SHIPPED | P2 | Preset rules only: Done completion, due-soon urgent label, daily due sort. Shipped through `3a678cd` plus package/web verification and Chrome smoke. |
-| 15 | xai-web-board-integrations | same | xai-web-board-share-contract | ready_to_ship | PENDING | P2 | Adapter plan for Google Calendar, GitHub/Linear, Drive/link attachments. |
+| 15 | xai-web-board-integrations | same | xai-web-board-share-contract | ready_to_ship | SHIPPED | P2 | Board-core provider adapter metadata plus card-detail typed integration links shipped through `34efdc6`; real third-party sync remains future work. |
 | 16 | xai-web-board-comments-activity | same | xai-web-board-card-detail | ready_to_ship | PENDING | P2 | Add comments and activity log; mention notifications remain future collaboration work. |
 | 17 | xai-web-board-permissions | same | xai-web-board-share-contract | ready_to_ship | PENDING | P2 | Private/shared board states and future workspace permissions. |
 
@@ -39,8 +39,8 @@ This file is the current source-backed personal development board for the Web Pr
 
 | Board List | Cards |
 |---|---|
-| Shipped | `xai-web-project-prd-sync`, `xai-web-board-card-detail`, `xai-web-board-date-model`, `xai-web-board-list-crud`, `xai-web-board-card-crud`, `xai-web-board-checklist-editor`, `xai-web-board-storage-contract`, `xai-web-board-task-link`, `xai-web-board-calendar-feed`, `xai-web-board-saved-filters`, `xai-web-board-share-contract`, `xai-web-board-responsive-smoke`, `xai-web-board-export-import`, `xai-web-board-automation-lite` |
-| This Week | `xai-web-board-integrations` |
+| Shipped | `xai-web-project-prd-sync`, `xai-web-board-card-detail`, `xai-web-board-date-model`, `xai-web-board-list-crud`, `xai-web-board-card-crud`, `xai-web-board-checklist-editor`, `xai-web-board-storage-contract`, `xai-web-board-task-link`, `xai-web-board-calendar-feed`, `xai-web-board-saved-filters`, `xai-web-board-share-contract`, `xai-web-board-responsive-smoke`, `xai-web-board-export-import`, `xai-web-board-automation-lite`, `xai-web-board-integrations` |
+| This Week | `xai-web-board-comments-activity` |
 | Backlog | — |
 | Waiting | — |
 | Later | `xai-web-board-comments-activity`, `xai-web-board-permissions` |
@@ -64,19 +64,20 @@ flowchart LR
   M --> N["Responsive smoke shipped"]
   N --> O["Board export/import data contract shipped"]
   O --> P["Automation Lite presets shipped"]
-  P --> Q["Future integrations / comments / permissions"]
+  P --> Q["Integration adapter links shipped"]
+  Q --> R["Future comments / permissions"]
 ```
 
 ## Run Guidance
 
-Use `/xai-feature-full-loop` for one row at a time until this manifest is promoted to a normal roadmap-loop run. Start with row #2 only after row #1 docs are accepted.
+Use `/xai-feature-full-loop` for one row at a time until this manifest is promoted to a normal roadmap-loop run. Continue with the first `PENDING` row whose dependencies are satisfied.
 
 Suggested first execution prompt:
 
 ```text
 /xai-feature-full-loop
-Feature: xai-web-board-card-detail
+Feature: xai-web-board-comments-activity
 Automation Mode: D-Codex+Cursor
 Verify Cross-vendor: yes
-Requirement: Implement the P0 card detail row from docs/workflow/roadmap/xai-web-project-module.md and docs/reviews/xai-web-project-module/20260603-audit-and-prd.md.
+Requirement: Implement the P2 comments/activity row from docs/workflow/roadmap/xai-web-project-module.md and docs/reviews/xai-web-project-module/20260603-audit-and-prd.md.
 ```

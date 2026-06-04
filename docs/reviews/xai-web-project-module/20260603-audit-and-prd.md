@@ -18,7 +18,7 @@ Web 版本的“项目”功能已经不是空壳。当前 `/app/board` 已经�
 1. PRD 与当前实现命名、路由和数据模型不一致：旧 PRD 写的是 `/app/projects`、拆分实体 schema 和卡片详情；当前实现是 `/app/board` + `usePref("xai_boards_v2")` 单 blob。
 2. 当前卡片能力仍偏展示：可新增标题、改 due/label/member、拖拽流转，但缺少正式 card detail、描述、评论、附件、真实 checklist 编辑、归档、列表重排、成员/权限。
 3. 数据未接入正式同步：Web 当前是本地偏好存储，不是 Web 子 PRD 要求的 encrypted blob / sync push-pull / cross-device sync。
-4. 协作和集成仍未完整：Share 是 mock URL；Automation Lite 预设已接入，但 Power-Up / integrations、自定义规则、后台计划任务、评论和权限仍未正式打通。
+4. 协作和集成仍未完整：Share 是 mock URL；Automation Lite 和 provider-labeled integration links 已接入，但真实第三方同步、自定义规则、后台计划任务、评论和权限仍未正式打通。
 5. `packages/plugin-project` 拥有更接近桌面项目插件的数据模型和 CardDetail，但 manifest 仅 `windows.control` 且 `enabled:false`，没有接入 Web 当前运行面。
 
 ## 2. Current Function Audit
@@ -70,7 +70,7 @@ Web 版本的“项目”功能已经不是空壳。当前 `/app/board` 已经�
 | Sync | `xai_boards_v2` local pref only. | 跨设备/账号不一致。 |
 | Share/invite permissions | mock URL only; no `/share/:token`, no permission model. | 不能分享真实项目。 |
 | Automation | SHIPPED: Automation Lite presets cover Done completion, due-soon urgent labels, and daily due sort. Custom rule builder, scheduled background jobs, reminders, and notifications remain future work. | 已能做轻量本地预设；还不是完整 Trello Butler。 |
-| Integrations | Settings integration flags exist elsewhere as stubs; Board has no integration surface. | GitHub/Calendar/Drive/Slack 等未接。 |
+| Integrations | SHIPPED: Board has provider-labeled adapter links for GCal/GitHub/Linear/Drive/generic URLs; Settings OAuth flags remain stubs. | 已能分类挂外部工具链接；还不是真实第三方同步。 |
 
 ## 3. PRD Check
 
@@ -185,7 +185,7 @@ For Web sync, these can remain logical entities packed into encrypted blobs. The
 | ID | Requirement | Acceptance |
 |---|---|---|
 | PJ-WEB-18 | Automation presets. | Simple rules: moving to Done marks complete; due soon adds urgent label; daily sort by due date. |
-| PJ-WEB-19 | Integration adapters. | Google Calendar, GitHub/Linear, Drive/link attachment adapters are defined behind settings/integration state. |
+| PJ-WEB-19 | Integration adapters. | SHIPPED: Board-core defines GCal/GitHub/Linear/Drive/generic provider metadata and card detail can persist provider-labeled attachment links; real provider sync remains future work. |
 | PJ-WEB-20 | Collaboration comments and mentions. | Comments/activity log exists; mention notification can integrate with future collaboration settings. |
 | PJ-WEB-21 | Workspace permissions. | Board visibility/private/shared states are explicit. |
 
@@ -259,7 +259,7 @@ This is good enough for local demo and first-run state. It is not enough for dur
 | Task | Owner surface | Notes |
 |---|---|---|
 | `xai-web-board-automation-lite` | board | SHIPPED: board-core preset helper plus active `/app/board` daily/manual runner; no arbitrary rule builder. |
-| `xai-web-board-integrations` | settings + board | Calendar/GitHub/Linear/Drive link adapters. |
+| `xai-web-board-integrations` | settings + board | SHIPPED: board-core provider metadata plus card-detail GCal/GitHub/Linear/Drive/generic external link attachments; real third-party sync remains future work. |
 | `xai-web-board-comments-activity` | board detail | Activity log and comments. |
 | `xai-web-board-permissions` | account/sync/share | Private/shared board model. |
 
@@ -269,18 +269,26 @@ Add these cards to the personal development board:
 
 | List | Card |
 |---|---|
-| Backlog | Web Project PRD drift: `/app/projects` vs `/app/board` decision |
-| Backlog | Board typed date model migration |
-| This Week | Card detail modal/page for Web Board |
-| This Week | List/card CRUD completeness |
-| This Week | Checklist editor |
+| Shipped | Web Project PRD drift: `/app/projects` vs `/app/board` decision |
+| Shipped | Board typed date model migration |
+| Shipped | Card detail modal/page for Web Board |
+| Shipped | List/card CRUD completeness |
+| Shipped | Checklist editor |
+| Shipped | Task/card linking |
+| Shipped | Calendar feed integration |
+| Shipped | Saved filters |
+| Shipped | Real share envelope planning stub |
+| Shipped | Responsive Board smoke |
+| Shipped | Board export/import data contract |
+| Shipped | Automation-lite presets |
+| Shipped | Integration adapter links |
+| This Week | Comments/activity log |
 | Waiting | Sync blob driver / IndexedDB encrypted cache dependency |
 | Waiting | Global Label authority for board labels |
-| Later | Saved filters |
-| Later | Calendar feed integration |
-| Later | Task/card linking |
-| Later | Automation-lite presets |
-| Later | Real share envelope |
+| Later | Workspace permissions |
+| Later | Active export/import UI |
+| Later | Real share backend |
+| Later | Real third-party sync |
 
 Do not update generated dashboard snapshots directly. If a dashboard generator consumes roadmap or release-log sources, update the source manifest/release log and regenerate.
 
@@ -313,7 +321,8 @@ Do not update generated dashboard snapshots directly. If a dashboard generator c
 | Share contract implementation | `xai-web-board-share-contract` shipped visible mock-only share labeling and explicit envelope fields; the next personal-board focus is `xai-web-board-responsive-smoke`. |
 | Responsive smoke implementation | `xai-web-board-responsive-smoke` shipped desktop/mobile Board/Table/Calendar/Timeline/Detail smoke, fixed mobile toolbar containment and detail modal viewport bounds, and moved the next personal-board focus to `xai-web-board-export-import`. |
 | Export/import data contract implementation | `xai-web-board-export-import` shipped board-core payload helpers for export/import, logical entity inclusion, and Board key coverage in account-delete registry wipe tests; the next personal-board focus is `xai-web-board-automation-lite`. |
-| Automation Lite implementation | `xai-web-board-automation-lite` shipped browser-local preset rules for Done completion, due-soon urgent labels, daily due sort, and manual toolbar rerun; the next personal-board focus is `xai-web-board-integrations`. |
+| Automation Lite implementation | `xai-web-board-automation-lite` shipped browser-local preset rules for Done completion, due-soon urgent labels, daily due sort, and manual toolbar rerun. |
+| Integrations implementation | `xai-web-board-integrations` shipped Board integration provider metadata and card-detail provider-labeled attachment links; the next personal-board focus is `xai-web-board-comments-activity`. |
 
 ## 11. Acceptance Criteria for the Next Implementation Wave
 

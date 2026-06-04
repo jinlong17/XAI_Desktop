@@ -202,7 +202,8 @@ flowchart LR
   O --> P["responsive smoke shipped"]
   P --> Q["Board export/import data contract shipped"]
   Q --> R["Automation Lite presets shipped"]
-  R --> S["future integrations + active export/import UI"]
+  R --> S["Integration adapter links shipped"]
+  S --> T["future comments + permissions + active export/import UI"]
 ```
 
 Ownership rules:
@@ -221,6 +222,11 @@ Ownership rules:
 - `plugin-web-board-core` owns Automation Lite preset evaluation. The active
   Web board calls that pure helper through `plugin-web-board-workspaces` for
   browser-local daily runs, manual reruns, and move-to-Done completion.
+- `plugin-web-board-core` owns the Board integration adapter metadata contract:
+  provider catalog, optional attachment source metadata, URL validation, and
+  pure helper creation. Real third-party API sync remains outside this package.
+- `plugin-web-board-workspaces` owns the card-detail integration link UI that
+  writes provider-labeled links into existing `BoardCard.attachments[]`.
 - `@repo/plugin-web-tasks` owns the `xai_task_cols` shape and public board-link
   helper surface used to create deterministic linked tasks from Board cards.
 - `@repo/plugin-web-calendar` may read `plugin-web-board-core` public storage
