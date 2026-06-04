@@ -15,11 +15,20 @@ export interface BoardCardDetailModalProps {
   card: BoardCardData;
   listName: string;
   lang: Lang;
+  taskLinkStatus?: BoardCardTaskLinkStatus;
+  onCreateLinkedTask?: () => void;
+  onUnlinkTask?: () => void;
   onPatchCard: (patch: Partial<BoardCardData>) => void;
   onClose: () => void;
 }
 
 export type BoardCardDetailSurfaceProps = BoardCardDetailModalProps;
+
+export interface BoardCardTaskLinkStatus {
+  taskId: string;
+  label: string;
+  missing: boolean;
+}
 
 const STR = {
   close: { en: "Close", zh: "关闭" },
@@ -29,6 +38,11 @@ const STR = {
   dates: { en: "Dates", zh: "日期" },
   start: { en: "Start", zh: "开始" },
   due: { en: "Due", zh: "截止" },
+  task: { en: "Task", zh: "任务" },
+  createTask: { en: "Create task", zh: "创建任务" },
+  linkedTask: { en: "Linked task", zh: "已关联任务" },
+  unlinkTask: { en: "Unlink", zh: "取消关联" },
+  missingTask: { en: "Missing task", zh: "任务缺失" },
   checklist: { en: "Checklist", zh: "核对表" },
   addItem: { en: "Add item", zh: "添加条目" },
   attachments: { en: "Attachments", zh: "附件" },
@@ -81,6 +95,9 @@ export function BoardCardDetailSurface({
   card,
   listName,
   lang,
+  taskLinkStatus,
+  onCreateLinkedTask,
+  onUnlinkTask,
   onPatchCard,
   onClose,
 }: BoardCardDetailSurfaceProps) {
@@ -270,6 +287,46 @@ export function BoardCardDetailSurface({
                 />
               </label>
             </div>
+          </section>
+
+          <section className="cd-section" data-testid="card-detail-task-section">
+            <h3>{STR.task[lang]}</h3>
+            {card.taskLink ? (
+              <div className="cd-task-link-row">
+                <div className="cd-task-link-main">
+                  <span className="cd-task-link-title">{STR.linkedTask[lang]}</span>
+                  <span className="mono" data-testid="card-detail-task-id">
+                    {taskLinkStatus?.taskId ?? card.taskLink.taskId}
+                  </span>
+                </div>
+                <span
+                  className={"cd-task-status" + (taskLinkStatus?.missing ? " warning" : "")}
+                  data-testid="card-detail-task-status"
+                >
+                  {taskLinkStatus?.label ?? STR.missingTask[lang]}
+                </span>
+                {onUnlinkTask && (
+                  <button
+                    type="button"
+                    className="btn"
+                    onClick={onUnlinkTask}
+                    data-testid="card-detail-unlink-task"
+                  >
+                    {STR.unlinkTask[lang]}
+                  </button>
+                )}
+              </div>
+            ) : (
+              <button
+                type="button"
+                className="btn primary"
+                onClick={onCreateLinkedTask}
+                disabled={!onCreateLinkedTask}
+                data-testid="card-detail-create-task"
+              >
+                {STR.createTask[lang]}
+              </button>
+            )}
           </section>
 
           <section className="cd-section">

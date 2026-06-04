@@ -7,6 +7,7 @@ import { describe, it, expect, vi, beforeEach } from "vitest";
 import { render, screen, fireEvent, act } from "@testing-library/react";
 import { makeDefaultBoards, isoDateFromOffset } from "@repo/plugin-web-board-core";
 import type { Board, BoardCardData } from "@repo/plugin-web-board-core";
+import type { TaskCol } from "@repo/plugin-web-tasks";
 import { BoardWorkspacesModule } from "../BoardWorkspacesModule.js";
 
 // Mock xai-web-event-bus for ShareModal's emitWebEvent
@@ -39,6 +40,22 @@ function getStoredBoards(): Board[] {
   const raw = localStorage.getItem("xai_boards_v2");
   if (!raw) throw new Error("xai_boards_v2 not persisted");
   return JSON.parse(raw) as Board[];
+}
+
+function getStoredTaskCols(): TaskCol[] {
+  const raw = localStorage.getItem("xai_task_cols");
+  if (!raw) throw new Error("xai_task_cols not persisted");
+  return JSON.parse(raw) as TaskCol[];
+}
+
+function getStoredTask(taskId: string) {
+  for (const col of getStoredTaskCols()) {
+    const task = col.tasks.find((entry) => entry.id === taskId);
+    if (task) return { col, task, completed: false };
+    const completed = col.completed?.find((entry) => entry.id === taskId);
+    if (completed) return { col, task: completed, completed: true };
+  }
+  throw new Error(`task not found: ${taskId}`);
 }
 
 function getStoredList(listId: string) {
@@ -554,6 +571,61 @@ describe("BoardWorkspacesModule (BWM1..BWM18)", () => {
     expect(card.checklistItems).toEqual([]);
     expect(card.checklist).toBeUndefined();
     expect(screen.getByTestId("card-detail-checklist-summary")).toHaveTextContent("0/0");
+  });
+
+  it("BWM-TASK-1: creating a linked task writes xai_task_cols and card.taskLink", async () => {
+    render(<BoardWorkspacesModule lang="en" />);
+    fireEvent.click(screen.getAllByTestId("board-card")[0]!);
+
+    expect(screen.getByTestId("card-detail-create-task")).toBeInTheDocument();
+    fireEvent.click(screen.getByTestId("card-detail-create-task"));
+
+    await act(async () => {
+      await Promise.resolve();
+    });
+
+    const card = getStoredCard("bc1");
+    expect(card.taskLink).toMatchObject({
+      source: "xai-web-tasks",
+      taskId: "bt-b-default-bc1",
+    });
+
+    const { col, task, completed } = getStoredTask("bt-b-default-bc1");
+    expect(completed).toBe(false);
+    expect(col.id).toBe("nodate");
+    expect(task).toMatchObject({
+      id: "bt-b-default-bc1",
+      title: { en: "Onboarding flow concepts", zh: "新人引导流程概念" },
+      tag: "todo",
+      inbox: true,
+      source: {
+        type: "board-card",
+        boardId: "b-default",
+        listId: "b-backlog",
+        cardId: "bc1",
+      },
+    });
+    expect(screen.getByTestId("card-detail-task-status")).toHaveTextContent("No Date");
+  });
+
+  it("BWM-TASK-2: unlink clears only the board-side taskLink", async () => {
+    render(<BoardWorkspacesModule lang="en" />);
+    fireEvent.click(screen.getAllByTestId("board-card")[0]!);
+    fireEvent.click(screen.getByTestId("card-detail-create-task"));
+
+    await act(async () => {
+      await Promise.resolve();
+    });
+
+    fireEvent.click(screen.getByTestId("card-detail-unlink-task"));
+
+    await act(async () => {
+      await Promise.resolve();
+    });
+
+    expect(getStoredCard("bc1").taskLink).toBeUndefined();
+    expect(getStoredTask("bt-b-default-bc1").task.id).toBe("bt-b-default-bc1");
+    expect(screen.getByTestId("card-detail-create-task")).toBeInTheDocument();
   });
 
   it("BWM-LIST-1: first-run keyed kanban list rename persists customName without clearing key", async () => {

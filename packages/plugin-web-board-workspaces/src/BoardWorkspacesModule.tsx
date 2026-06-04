@@ -30,6 +30,13 @@
 import { Suspense, useCallback, useEffect, useMemo, useState } from "react";
 import { usePref } from "@repo/plugin-web-storage";
 import {
+  bucketIdForBoardDueDate,
+  findBoardLinkedTask,
+  loadTaskColsOrSeed,
+  taskCardFromBoardLink,
+  upsertBoardLinkedTask,
+} from "@repo/plugin-web-tasks";
+import {
   BoardView,
   BOARD_TEMPLATES,
   DEFAULT_WORKSPACES,
@@ -65,6 +72,7 @@ import type {
   BoardListColorId,
   BoardTemplate,
 } from "@repo/plugin-web-board-core";
+import type { BoardTaskLinkSource, BucketId } from "@repo/plugin-web-tasks";
 import {
   ViewPicker,
   TableView,
@@ -132,6 +140,23 @@ const LIST_KEY_LABEL: Record<string, { en: string; zh: string }> = {
   done: { en: "Done", zh: "已完成" },
 };
 
+const TASK_STATUS_LABEL: Record<BucketId | "completed" | "missing", { en: string; zh: string }> = {
+  overdue: { en: "Overdue", zh: "已逾期" },
+  next7: { en: "Next 7 Days", zh: "未来 7 天" },
+  later: { en: "Later", zh: "以后" },
+  nodate: { en: "No Date", zh: "无日期" },
+  completed: { en: "Completed", zh: "已完成" },
+  missing: { en: "Missing task", zh: "任务缺失" },
+};
+
+function resolveTaskStatusLabel(
+  key: BucketId | "completed" | "missing",
+  lang: Lang,
+): string {
+  const entry = TASK_STATUS_LABEL[key] ?? TASK_STATUS_LABEL.missing;
+  return lang === "zh" ? entry.zh : entry.en;
+}
+
 function resolveListName(list: BoardListData, lang: Lang): string {
   const customName = list.customName?.[lang];
   if (customName) return customName;
@@ -158,11 +183,13 @@ export function BoardWorkspacesModule({ lang }: BoardWorkspacesModuleProps) {
   const [activeBoardId, setActiveBoardId] = usePref("xai_active_board");
   const [rawPanels, setRawPanels] = usePref("xai_board_panels");
   const [rawInbox, setRawInbox] = usePref("xai_board_inbox");
+  const [rawTaskCols, setRawTaskCols] = usePref("xai_task_cols");
   const [rawViewByBoardId, setRawViewByBoardId] = usePref(
     "xai_board_view_by_id",
   );
 
   const boards: Board[] = loadBoardsOrDefault(rawBoards);
+  const taskCols = useMemo(() => loadTaskColsOrSeed(rawTaskCols), [rawTaskCols]);
   const activeBoard: Board = pickActiveBoard(boards, activeBoardId);
   const rawLists: BoardListData[] = activeBoard.lists;
   const activeLists: BoardListData[] = getActiveBoardLists(rawLists);
@@ -493,6 +520,70 @@ export function BoardWorkspacesModule({ lang }: BoardWorkspacesModuleProps) {
     [activeBoard.id, activeCardRef, updateCard],
   );
 
+  const createLinkedTask = useCallback(() => {
+    if (!activeCardRef || activeCardRef.boardId !== activeBoard.id) return;
+    const list = rawLists.find((entry) => entry.id === activeCardRef.listId);
+    const card = list?.cards.find((entry) => entry.id === activeCardRef.cardId);
+    if (!list || !card || card.archived === true) return;
+    const source: BoardTaskLinkSource = {
+      type: "board-card",
+      boardId: activeBoard.id,
+      listId: activeCardRef.listId,
+      cardId: activeCardRef.cardId,
+    };
+    const task = taskCardFromBoardLink({
+      ...source,
+      title: card.title,
+      dueDate: card.dueDate,
+    });
+    const bucketId = bucketIdForBoardDueDate(card.dueDate);
+    setRawTaskCols(
+      upsertBoardLinkedTask(taskCols, task, bucketId) as unknown as typeof rawTaskCols,
+    );
+    updateCard(activeCardRef.listId, activeCardRef.cardId, {
+      taskLink: {
+        source: "xai-web-tasks",
+        taskId: task.id,
+        createdAt: new Date().toISOString(),
+      },
+    });
+  }, [
+    activeBoard.id,
+    activeCardRef,
+    rawLists,
+    setRawTaskCols,
+    taskCols,
+    updateCard,
+  ]);
+
+  const unlinkActiveCardTask = useCallback(() => {
+    patchActiveCard({ taskLink: undefined });
+  }, [patchActiveCard]);
+
+  const activeTaskLinkStatus = useMemo(() => {
+    if (!activeCardRef || !activeCardContext?.card.taskLink) return undefined;
+    const source: BoardTaskLinkSource = {
+      type: "board-card",
+      boardId: activeBoard.id,
+      listId: activeCardRef.listId,
+      cardId: activeCardRef.cardId,
+    };
+    const lookup = findBoardLinkedTask(taskCols, source);
+    if (!lookup || lookup.task.id !== activeCardContext.card.taskLink.taskId) {
+      return {
+        taskId: activeCardContext.card.taskLink.taskId,
+        label: resolveTaskStatusLabel("missing", lang),
+        missing: true,
+      };
+    }
+    const labelKey = lookup.completed ? "completed" : lookup.bucketId;
+    return {
+      taskId: lookup.task.id,
+      label: resolveTaskStatusLabel(labelKey, lang),
+      missing: false,
+    };
+  }, [activeBoard.id, activeCardContext, activeCardRef, lang, taskCols]);
+
   // ---- View picker setter ------------------------------------------------
   const setView = useCallback(
     (next: BoardViewId) => {
@@ -786,6 +877,9 @@ export function BoardWorkspacesModule({ lang }: BoardWorkspacesModuleProps) {
           card={activeCardContext.card}
           listName={resolveListName(activeCardContext.list, lang)}
           lang={lang}
+          taskLinkStatus={activeTaskLinkStatus}
+          onCreateLinkedTask={createLinkedTask}
+          onUnlinkTask={unlinkActiveCardTask}
           onPatchCard={patchActiveCard}
           onClose={() => setActiveCardRef(null)}
         />

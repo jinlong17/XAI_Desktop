@@ -17,6 +17,7 @@ import type {
   BoardTemplate,
   BoardCardActivityEntry,
   BoardCardAttachmentLink,
+  BoardCardTaskLink,
   BoardChecklistItem,
   CardChecklist,
   CardLocation,
@@ -66,6 +67,14 @@ function isBoardCardActivityEntry(value: unknown): value is BoardCardActivityEnt
   if (!isString(value.body)) return false;
   if (!isString(value.createdAt)) return false;
   if (value.authorId !== undefined && !isString(value.authorId)) return false;
+  return true;
+}
+
+function isBoardCardTaskLink(value: unknown): value is BoardCardTaskLink {
+  if (!isObject(value)) return false;
+  if (value.source !== "xai-web-tasks") return false;
+  if (!isString(value.taskId) || value.taskId.length === 0) return false;
+  if (!isString(value.createdAt) || value.createdAt.length === 0) return false;
   return true;
 }
 
@@ -141,6 +150,9 @@ export function isBoardCard(value: unknown): value is BoardCard {
     Array.isArray(value.activity) &&
     !value.activity.every(isBoardCardActivityEntry)
   ) {
+    return false;
+  }
+  if (value.taskLink !== undefined && !isBoardCardTaskLink(value.taskLink)) {
     return false;
   }
   if (value.due !== undefined && !isString(value.due)) return false;

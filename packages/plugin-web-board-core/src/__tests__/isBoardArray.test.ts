@@ -116,6 +116,11 @@ describe("isBoardArray", () => {
             createdAt: "2026-06-03T00:00:00.000Z",
           },
         ],
+        taskLink: {
+          source: "xai-web-tasks",
+          taskId: "bt-b-default-bc1",
+          createdAt: "2026-06-03T00:00:00.000Z",
+        },
         due: "5/26",
         dueEn: "Today",
         start: "5/20",
@@ -165,6 +170,31 @@ describe("isBoardArray", () => {
         id: "c1",
         title: { en: "a", zh: "b" },
         dueDate: "2026-02-31",
+      }),
+    ).toBe(false);
+  });
+
+  test("V8bd isBoardCard rejects malformed task link", () => {
+    expect(
+      isBoardCard({
+        id: "c1",
+        title: { en: "a", zh: "b" },
+        taskLink: {
+          source: "xai-web-tasks",
+          taskId: "",
+          createdAt: "2026-06-03T00:00:00.000Z",
+        },
+      }),
+    ).toBe(false);
+    expect(
+      isBoardCard({
+        id: "c1",
+        title: { en: "a", zh: "b" },
+        taskLink: {
+          source: "other",
+          taskId: "bt-b-default-bc1",
+          createdAt: "2026-06-03T00:00:00.000Z",
+        },
       }),
     ).toBe(false);
   });

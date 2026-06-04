@@ -51,6 +51,12 @@ export interface BoardCardActivityEntry {
   authorId?: string;
 }
 
+export interface BoardCardTaskLink {
+  source: "xai-web-tasks";
+  taskId: string;
+  createdAt: string;
+}
+
 export interface BoardMemberOption {
   id: string;
   name: string;
@@ -85,6 +91,8 @@ export interface BoardCard {
   attachments?: BoardCardAttachmentLink[];
   /** Lightweight card activity timeline. */
   activity?: BoardCardActivityEntry[];
+  /** Optional one-way link to a generated Tasks module card. */
+  taskLink?: BoardCardTaskLink;
   /** Opaque display string (e.g. "5/26", "Today"). Not parsed by row #7. */
   due?: string;
   /** Optional english-localized due override for the prototype's bilingual seed. */

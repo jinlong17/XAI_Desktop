@@ -31,6 +31,13 @@ export interface TaskTitleBundle {
   readonly zh: string;
 }
 
+export interface BoardTaskLinkSource {
+  readonly type: "board-card";
+  readonly boardId: string;
+  readonly listId: string;
+  readonly cardId: string;
+}
+
 // ---------------------------------------------------------------------------
 // TaskCard — immutable card; moves create new objects via the reducer
 // ---------------------------------------------------------------------------
@@ -52,6 +59,8 @@ export interface TaskCard {
   readonly dateLabel?: TaskTitleBundle;
   /** When true, renders the inbox-source icon in the meta row. */
   readonly inbox?: boolean;
+  /** Optional source reference used by Board card -> Task linking. */
+  readonly source?: BoardTaskLinkSource;
 }
 
 // ---------------------------------------------------------------------------

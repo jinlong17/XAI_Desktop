@@ -26,6 +26,7 @@ export type {
   BoardCard as BoardCardData,
   BoardCardActivityEntry,
   BoardCardAttachmentLink,
+  BoardCardTaskLink,
   BoardChecklistItem,
   BoardList as BoardListData,
   BoardListColorId,

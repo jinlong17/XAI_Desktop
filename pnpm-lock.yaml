@@ -967,6 +967,9 @@ importers:
       '@repo/plugin-web-storage':
         specifier: workspace:*
         version: link:../plugin-web-storage
+      '@repo/plugin-web-tasks':
+        specifier: workspace:*
+        version: link:../xai-web-tasks
       '@repo/plugin-web-tokens':
         specifier: workspace:*
         version: link:../plugin-web-tokens

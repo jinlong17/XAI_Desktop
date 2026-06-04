@@ -54,4 +54,24 @@ describe("isTaskCard", () => {
   it("T-VAL-4c: valid minimal card → true", () => {
     expect(isTaskCard({ id: "x", title: { en: "Test", zh: "测试" } })).toBe(true);
   });
+
+  it("T-VAL-4d: valid board source → true; malformed board source → false", () => {
+    const task = {
+      id: "bt-b1-c1",
+      title: { en: "Linked", zh: "Linked" },
+      source: {
+        type: "board-card",
+        boardId: "b1",
+        listId: "l1",
+        cardId: "c1",
+      },
+    };
+    expect(isTaskCard(task)).toBe(true);
+    expect(
+      isTaskCard({
+        ...task,
+        source: { type: "board-card", boardId: "", listId: "l1", cardId: "c1" },
+      }),
+    ).toBe(false);
+  });
 });
