@@ -18,7 +18,7 @@ Web 版本的“项目”功能已经不是空壳。当前 `/app/board` 已经�
 1. PRD 与当前实现命名、路由和数据模型不一致：旧 PRD 写的是 `/app/projects`、拆分实体 schema 和卡片详情；当前实现是 `/app/board` + `usePref("xai_boards_v2")` 单 blob。
 2. 当前卡片能力仍偏展示：可新增标题、改 due/label/member、拖拽流转，但缺少正式 card detail、描述、评论、附件、真实 checklist 编辑、归档、列表重排、成员/权限。
 3. 数据未接入正式同步：Web 当前是本地偏好存储，不是 Web 子 PRD 要求的 encrypted blob / sync push-pull / cross-device sync。
-4. 协作和集成仍未完整：Share 是 mock URL；Automation Lite 和 provider-labeled integration links 已接入，但真实第三方同步、自定义规则、后台计划任务、评论和权限仍未正式打通。
+4. 协作和集成仍未完整：Share 是 mock URL；Automation Lite、provider-labeled integration links、Comments & Activity timeline 已接入，但真实第三方同步、自定义规则、后台计划任务、mention 通知和权限仍未正式打通。
 5. `packages/plugin-project` 拥有更接近桌面项目插件的数据模型和 CardDetail，但 manifest 仅 `windows.control` 且 `enabled:false`，没有接入 Web 当前运行面。
 
 ## 2. Current Function Audit
@@ -60,7 +60,7 @@ Web 版本的“项目”功能已经不是空壳。当前 `/app/board` 已经�
 |---|---|---|
 | Card detail | `BoardView` supports optional `onOpenCard`, but `BoardWorkspacesModule` does not wire it. | 点击卡片不能打开正式详情页/弹窗。 |
 | Description/checklist real edit | Web board schema only has aggregate checklist count; Table shows progress but不能编辑 checklist items. | Trello card 的核心任务页能力缺失。 |
-| Attachments/comments/activity | No UI/data path. | 无法做完整项目协作和过程记录。 |
+| Attachments/comments/activity | SHIPPED: card detail supports attachments, provider-labeled links, comments, and legacy activity notes. | 已能记录过程；mention 通知、多人协作和评论编辑删除仍未做。 |
 | Members | Table uses local `MOCK_MEMBERS` u1/u2/u3. | 不是账号/协作者数据。 |
 | Labels | Web Board uses `PM_LABELS`; desktop/global `plugin-labels` still In-Dev authority. | 全局 Label 未统一。 |
 | Due/start date | Stored as display strings like `5/26`, `Today`, `今天`. | 不能支撑可靠排序、时区、同步和 overdue 计算。 |
@@ -186,7 +186,7 @@ For Web sync, these can remain logical entities packed into encrypted blobs. The
 |---|---|---|
 | PJ-WEB-18 | Automation presets. | Simple rules: moving to Done marks complete; due soon adds urgent label; daily sort by due date. |
 | PJ-WEB-19 | Integration adapters. | SHIPPED: Board-core defines GCal/GitHub/Linear/Drive/generic provider metadata and card detail can persist provider-labeled attachment links; real provider sync remains future work. |
-| PJ-WEB-20 | Collaboration comments and mentions. | Comments/activity log exists; mention notification can integrate with future collaboration settings. |
+| PJ-WEB-20 | Collaboration comments and mentions. | SHIPPED: comments/activity log exists; mention notification remains future collaboration settings work. |
 | PJ-WEB-21 | Workspace permissions. | Board visibility/private/shared states are explicit. |
 
 ### 6.6 Non-goals
@@ -260,7 +260,7 @@ This is good enough for local demo and first-run state. It is not enough for dur
 |---|---|---|
 | `xai-web-board-automation-lite` | board | SHIPPED: board-core preset helper plus active `/app/board` daily/manual runner; no arbitrary rule builder. |
 | `xai-web-board-integrations` | settings + board | SHIPPED: board-core provider metadata plus card-detail GCal/GitHub/Linear/Drive/generic external link attachments; real third-party sync remains future work. |
-| `xai-web-board-comments-activity` | board detail | Activity log and comments. |
+| `xai-web-board-comments-activity` | board detail | SHIPPED: card-detail comments plus backward-compatible activity notes; mention notifications remain future work. |
 | `xai-web-board-permissions` | account/sync/share | Private/shared board model. |
 
 ## 9. Personal Development Board Updates
@@ -282,10 +282,10 @@ Add these cards to the personal development board:
 | Shipped | Board export/import data contract |
 | Shipped | Automation-lite presets |
 | Shipped | Integration adapter links |
-| This Week | Comments/activity log |
+| Shipped | Comments/activity log |
+| This Week | Workspace permissions |
 | Waiting | Sync blob driver / IndexedDB encrypted cache dependency |
 | Waiting | Global Label authority for board labels |
-| Later | Workspace permissions |
 | Later | Active export/import UI |
 | Later | Real share backend |
 | Later | Real third-party sync |
@@ -323,6 +323,7 @@ Do not update generated dashboard snapshots directly. If a dashboard generator c
 | Export/import data contract implementation | `xai-web-board-export-import` shipped board-core payload helpers for export/import, logical entity inclusion, and Board key coverage in account-delete registry wipe tests; the next personal-board focus is `xai-web-board-automation-lite`. |
 | Automation Lite implementation | `xai-web-board-automation-lite` shipped browser-local preset rules for Done completion, due-soon urgent labels, daily due sort, and manual toolbar rerun. |
 | Integrations implementation | `xai-web-board-integrations` shipped Board integration provider metadata and card-detail provider-labeled attachment links; the next personal-board focus is `xai-web-board-comments-activity`. |
+| Comments/activity implementation | `xai-web-board-comments-activity` shipped card-detail comments, author metadata, and legacy note rendering; the next personal-board focus is `xai-web-board-permissions`. |
 
 ## 11. Acceptance Criteria for the Next Implementation Wave
 

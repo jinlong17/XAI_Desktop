@@ -203,7 +203,8 @@ flowchart LR
   P --> Q["Board export/import data contract shipped"]
   Q --> R["Automation Lite presets shipped"]
   R --> S["Integration adapter links shipped"]
-  S --> T["future comments + permissions + active export/import UI"]
+  S --> T["Comments/activity shipped"]
+  T --> U["future permissions + active export/import UI"]
 ```
 
 Ownership rules:
@@ -227,6 +228,12 @@ Ownership rules:
   pure helper creation. Real third-party API sync remains outside this package.
 - `plugin-web-board-workspaces` owns the card-detail integration link UI that
   writes provider-labeled links into existing `BoardCard.attachments[]`.
+- `plugin-web-board-core` owns the Board comment/activity entry contract:
+  `note | comment`, author metadata, pure creation helpers, and runtime guard
+  validation.
+- `plugin-web-board-workspaces` owns the visible card-detail Comments &
+  Activity timeline. Mention notifications and realtime collaboration are
+  future work.
 - `@repo/plugin-web-tasks` owns the `xai_task_cols` shape and public board-link
   helper surface used to create deterministic linked tasks from Board cards.
 - `@repo/plugin-web-calendar` may read `plugin-web-board-core` public storage

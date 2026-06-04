@@ -7,13 +7,13 @@
 | Workflow | FEATURE_DEV |
 | Target | xai-web-board-comments-activity |
 | Title | Web Project module P2 Board comments and activity timeline |
-| Current Phase | FEATURE_VERIFY |
-| Status | READY_TO_SHIP |
-| Suggested Next | ship docs |
+| Current Phase | SHIP |
+| Status | SHIPPED |
+| Suggested Next | xai-web-board-permissions |
 | Automation Mode | D-Codex+Cursor |
 | Verify Cross-vendor | yes |
 | Executor | gpt-5 parent inline |
-| Updated | 2026-06-03 23:43 PDT |
+| Updated | 2026-06-03 23:44 PDT |
 | Blockers | None currently. |
 | Roadmap Manifest | `docs/workflow/roadmap/xai-web-project-module.md` row #16 |
 | Source PRD / Audit | `docs/reviews/xai-web-project-module/20260603-audit-and-prd.md` |
@@ -73,4 +73,5 @@ Known inherited warnings remain:
 | Timestamp | Executor | Action | Commits | Next Step |
 |---|---|---|---|---|
 | 2026-06-03 23:38 PDT | gpt-5 parent inline | feature-plan - audited existing activity notes and selected a backward-compatible comment/activity union plus card-detail timeline polish. | pending | feature-build |
-| 2026-06-03 23:43 PDT | gpt-5 parent inline | feature-build/verify - implemented comment/activity union, pure helper surface, card-detail timeline UI, tests, package/web verification, and Chrome smoke. | pending | ship docs |
+| 2026-06-03 23:43 PDT | gpt-5 parent inline | feature-build/verify - implemented comment/activity union, pure helper surface, card-detail timeline UI, tests, package/web verification, and Chrome smoke. | `3dd4b81` | ship docs |
+| 2026-06-03 23:44 PDT | gpt-5 parent inline | feature-ship - roadmap, PRD, PLUGIN_MAP, architecture, and dev_log marked shipped. | this docs commit | xai-web-board-permissions |
