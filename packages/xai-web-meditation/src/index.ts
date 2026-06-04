@@ -21,14 +21,22 @@ export { meditationSlotRegistration } from "./registration.js";
 
 // ---- Public types -----------------------------------------------------------
 export type {
+  BaseSceneId,
+  CustomSceneId,
   SceneId,
   ClockVariant,
+  ClockScale,
+  ClockColorPalette,
   AmbientSoundId,
+  PresetDuration,
   Duration,
+  DurationMode,
+  SceneAnimation,
+  CustomScene,
   Scene,
   MeditationPrefs,
   MeditationModuleProps,
 } from "./types.js";
 
 // ---- Constants --------------------------------------------------------------
-export { MEDITATION_STORAGE_KEY } from "./constants.js";
+export { MEDITATION_STORAGE_KEY, PRESET_DURATIONS } from "./constants.js";

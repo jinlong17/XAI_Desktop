@@ -36,22 +36,38 @@ describe("MeditationModule render", () => {
     expect(within(sceneGrid).getByText("虚空")).toBeInTheDocument();
   });
 
-  it("AC-I18N-4: 4 clock variant labels in EN", () => {
+  it("AC-I18N-4: 12 clock variant labels in EN", () => {
     const { container } = render(<MeditationModule lang="en" />);
     const clockGrid = container.querySelector(".clock-grid") as HTMLElement;
     expect(within(clockGrid).getByText("Digital")).toBeInTheDocument();
+    expect(within(clockGrid).getByText("Soft digits")).toBeInTheDocument();
+    expect(within(clockGrid).getByText("Focus digits")).toBeInTheDocument();
     expect(within(clockGrid).getByText("Split")).toBeInTheDocument();
+    expect(within(clockGrid).getByText("Stacked split")).toBeInTheDocument();
     expect(within(clockGrid).getByText("Analog")).toBeInTheDocument();
+    expect(within(clockGrid).getByText("Fine analog")).toBeInTheDocument();
+    expect(within(clockGrid).getByText("Bold analog")).toBeInTheDocument();
+    expect(within(clockGrid).getByText("Zen analog")).toBeInTheDocument();
     expect(within(clockGrid).getByText("Minimal")).toBeInTheDocument();
+    expect(within(clockGrid).getByText("Dot minimal")).toBeInTheDocument();
+    expect(within(clockGrid).getByText("Breath ring")).toBeInTheDocument();
   });
 
-  it("AC-I18N-4: 4 clock variant labels in ZH", () => {
+  it("AC-I18N-4: 12 clock variant labels in ZH", () => {
     const { container } = render(<MeditationModule lang="zh" />);
     const clockGrid = container.querySelector(".clock-grid") as HTMLElement;
     expect(within(clockGrid).getByText("数字")).toBeInTheDocument();
+    expect(within(clockGrid).getByText("柔和数字")).toBeInTheDocument();
+    expect(within(clockGrid).getByText("专注数字")).toBeInTheDocument();
     expect(within(clockGrid).getByText("分屏")).toBeInTheDocument();
+    expect(within(clockGrid).getByText("堆叠分屏")).toBeInTheDocument();
     expect(within(clockGrid).getByText("指针")).toBeInTheDocument();
+    expect(within(clockGrid).getByText("细指针")).toBeInTheDocument();
+    expect(within(clockGrid).getByText("粗指针")).toBeInTheDocument();
+    expect(within(clockGrid).getByText("禅意指针")).toBeInTheDocument();
     expect(within(clockGrid).getByText("极简")).toBeInTheDocument();
+    expect(within(clockGrid).getByText("圆点极简")).toBeInTheDocument();
+    expect(within(clockGrid).getByText("呼吸圆环")).toBeInTheDocument();
   });
 
   it("AC-I18N-5: 7 ambient sound labels in EN", () => {

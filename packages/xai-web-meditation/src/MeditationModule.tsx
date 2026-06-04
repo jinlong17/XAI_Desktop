@@ -17,10 +17,12 @@ import type {
   Duration,
   DurationMode,
   MeditationModuleProps,
+  PresetDuration,
   Scene,
   SceneAnimation,
   SceneId,
 } from "./types.js";
+import { PRESET_DURATIONS } from "./constants.js";
 import { PickerGroup } from "./PickerGroup.js";
 import { ClockDisplay } from "./ClockDisplay.js";
 import { MeditationPlayer } from "./MeditationPlayer.js";
@@ -30,7 +32,20 @@ import { getScene } from "./internal/getScene.js";
 import { useMeditationPrefs } from "./internal/useMeditationPrefs.js";
 import { useAmbientAudio } from "./internal/useAmbientAudio.js";
 
-const CLOCK_VARIANTS: readonly ClockVariant[] = ["digital", "split", "analog", "minimal"];
+const CLOCK_VARIANTS: readonly ClockVariant[] = [
+  "digital",
+  "digitalSoft",
+  "digitalFocus",
+  "split",
+  "splitStack",
+  "analog",
+  "analogFine",
+  "analogBold",
+  "analogZen",
+  "minimal",
+  "minimalDots",
+  "breathRing",
+];
 const CLOCK_SCALES: readonly ClockScale[] = ["compact", "normal", "large", "larger"];
 const SOUND_IDS: readonly AmbientSoundId[] = [
   "none",
@@ -41,7 +56,7 @@ const SOUND_IDS: readonly AmbientSoundId[] = [
   "forest",
   "whiteNoise",
 ];
-const DURATIONS: readonly Duration[] = [5, 10, 15, 25, 45];
+const DURATIONS: readonly PresetDuration[] = PRESET_DURATIONS;
 const ANIMATIONS: readonly SceneAnimation[] = ["particles", "rain", "waves", "aurora", "still"];
 const COLOR_KEYS: ReadonlyArray<keyof ClockColorPalette> = [
   "digits",
@@ -104,6 +119,7 @@ export function MeditationModule({ lang }: MeditationModuleProps): JSX.Element {
   const [prefs, setPrefs] = useMeditationPrefs();
   const [active, setActive] = useState<boolean>(false);
   const [settingsOpen, setSettingsOpen] = useState<boolean>(true);
+  const [fixedDraft, setFixedDraft] = useState<string>("60");
   const scene = getScene(prefs.scene, prefs.customScenes);
   const [editingSceneId, setEditingSceneId] = useState<CustomSceneId | "new">("new");
   const [draft, setDraft] = useState<CustomSceneDraft>(() => draftFromCurrent(scene, prefs));
@@ -112,6 +128,10 @@ export function MeditationModule({ lang }: MeditationModuleProps): JSX.Element {
   const allScenes = useMemo(
     () => [...SCENES, ...prefs.customScenes.map(sceneFromCustom)] as readonly Scene[],
     [prefs.customScenes],
+  );
+  const fixedDurations = useMemo(
+    () => [...DURATIONS, ...prefs.customFixedDurations].sort((a, b) => a - b),
+    [prefs.customFixedDurations],
   );
 
   const setClockColor = (key: keyof ClockColorPalette, value: string): void => {
@@ -173,15 +193,36 @@ export function MeditationModule({ lang }: MeditationModuleProps): JSX.Element {
     setPrefs({ ...prefs, duration, durationMode: "preset" });
   };
 
+  const addFixedDuration = (): void => {
+    const minutes = Math.max(1, Math.min(240, Math.round(Number(fixedDraft))));
+    if (!Number.isFinite(minutes)) return;
+    const isBuiltIn = DURATIONS.includes(minutes as PresetDuration);
+    const exists = prefs.customFixedDurations.includes(minutes);
+    const customFixedDurations = isBuiltIn || exists
+      ? prefs.customFixedDurations
+      : [...prefs.customFixedDurations, minutes].sort((a, b) => a - b);
+    setPrefs({ ...prefs, customFixedDurations, duration: minutes, durationMode: "preset" });
+    setFixedDraft(String(minutes));
+  };
+
+  const deleteFixedDuration = (duration: Duration): void => {
+    const customFixedDurations = prefs.customFixedDurations.filter((item) => item !== duration);
+    setPrefs({
+      ...prefs,
+      customFixedDurations,
+      duration: prefs.duration === duration ? 15 : prefs.duration,
+      durationMode: prefs.duration === duration ? "preset" : prefs.durationMode,
+    });
+  };
+
   const onCustomDuration = (value: number): void => {
     const customDuration = Math.max(1, Math.min(240, Math.round(value)));
     setPrefs({ ...prefs, customDuration, durationMode: "custom" });
   };
 
   const onStart = (): void => {
-    if (prefs.sound !== "none") {
-      void ambient.play(prefs.sound, prefs.volume);
-    }
+    ambient.pause();
+    setSettingsOpen(false);
     setActive(true);
   };
 
@@ -237,23 +278,25 @@ export function MeditationModule({ lang }: MeditationModuleProps): JSX.Element {
 
   return (
     <div className="module module-meditation">
-      <header className="module-head">
-        <h1 className="module-title">
-          <Icon name="leaf" size={18} /> {s("meditation.title")}
-        </h1>
-        <span className="grow" />
-        <button
-          className="icon-btn"
-          type="button"
-          aria-label={s("meditation.clock_settings")}
-          aria-pressed={settingsOpen}
-          onClick={() => setSettingsOpen((open) => !open)}
-        >
-          <Icon name="sliders" size={16} />
-        </button>
-      </header>
+      {!active && (
+      <div className="med-config">
+        <header className="module-head">
+          <h1 className="module-title">
+            <Icon name="leaf" size={18} /> {s("meditation.title")}
+          </h1>
+          <span className="grow" />
+          <button
+            className="icon-btn"
+            type="button"
+            aria-label={s("meditation.clock_settings")}
+            aria-pressed={settingsOpen}
+            onClick={() => setSettingsOpen((open) => !open)}
+          >
+            <Icon name="sliders" size={16} />
+          </button>
+        </header>
 
-      <div className="med-layout">
+        <div className="med-layout">
         <div className="med-preview" style={{ background: scene.grad }}>
           <div className="med-preview-overlay" />
           <ClockDisplay
@@ -261,7 +304,6 @@ export function MeditationModule({ lang }: MeditationModuleProps): JSX.Element {
             accent={scene.accent}
             scale={prefs.clockScale}
             colors={prefs.clockColors}
-            mini
           />
           <div className="med-preview-foot">
             <div className="mp-meta">
@@ -334,21 +376,49 @@ export function MeditationModule({ lang }: MeditationModuleProps): JSX.Element {
             <div className="duration-panel">
               <div className="dur-mode-label">{s("meditation.fixed_duration")}</div>
               <div className="dur-row">
-                {DURATIONS.map((d) => {
+                {fixedDurations.map((d) => {
                   const isActive = prefs.durationMode === "preset" && prefs.duration === d;
+                  const isCustom = prefs.customFixedDurations.includes(d);
                   return (
-                    <button
-                      key={d}
-                      type="button"
-                      className={"dur-chip" + (isActive ? " active" : "")}
-                      onClick={() => onPickDuration(d)}
-                      aria-pressed={isActive}
-                    >
-                      {d}
-                      <span className="dur-unit">{s("meditation.mins")}</span>
-                    </button>
+                    <span key={d} className={"dur-item" + (isCustom ? " custom-fixed" : "")}>
+                      <button
+                        type="button"
+                        className={"dur-chip" + (isActive ? " active" : "") + (isCustom ? " user" : "")}
+                        onClick={() => onPickDuration(d)}
+                        aria-pressed={isActive}
+                      >
+                        {d}
+                        <span className="dur-unit">{s("meditation.mins")}</span>
+                      </button>
+                      {isCustom && (
+                        <button
+                          type="button"
+                          className="dur-remove"
+                          onClick={() => deleteFixedDuration(d)}
+                          aria-label={`${s("meditation.remove_fixed_duration")} ${d}`}
+                        >
+                          <Icon name="close" size={11} />
+                        </button>
+                      )}
+                    </span>
                   );
                 })}
+                <label className="dur-add">
+                  <span>{s("meditation.add_fixed_duration")}</span>
+                  <input
+                    type="number"
+                    min="1"
+                    max="240"
+                    value={fixedDraft}
+                    onChange={(event) => setFixedDraft(event.currentTarget.value)}
+                    onKeyDown={(event) => {
+                      if (event.key === "Enter") addFixedDuration();
+                    }}
+                  />
+                  <button type="button" onClick={addFixedDuration} aria-label={s("meditation.add_fixed_duration")}>
+                    <Icon name="plus" size={13} />
+                  </button>
+                </label>
               </div>
               <div className="dur-custom-row">
                 <label>
@@ -564,11 +634,14 @@ export function MeditationModule({ lang }: MeditationModuleProps): JSX.Element {
             </div>
           </PickerGroup>
         </div>
+        </div>
       </div>
+      )}
 
       {active && (
         <MeditationPlayer
           scene={scene}
+          sceneLabel={sceneName(scene, s)}
           clock={prefs.clock}
           clockScale={prefs.clockScale}
           clockColors={prefs.clockColors}

@@ -12,16 +12,28 @@ import type {
   ClockScale,
   ClockVariant,
   CustomScene,
-  Duration,
   DurationMode,
   MeditationPrefs,
   SceneAnimation,
   SceneId,
 } from "../types.js";
-import { DEFAULT_CLOCK_COLORS, DEFAULT_PREFS } from "../constants.js";
+import { DEFAULT_CLOCK_COLORS, DEFAULT_PREFS, PRESET_DURATIONS } from "../constants.js";
 import { BASE_SCENE_IDS } from "./scenes.js";
 
-const CLOCK_VARIANTS: readonly ClockVariant[] = ["digital", "split", "analog", "minimal"];
+const CLOCK_VARIANTS: readonly ClockVariant[] = [
+  "digital",
+  "digitalSoft",
+  "digitalFocus",
+  "split",
+  "splitStack",
+  "analog",
+  "analogFine",
+  "analogBold",
+  "analogZen",
+  "minimal",
+  "minimalDots",
+  "breathRing",
+];
 const CLOCK_SCALES: readonly ClockScale[] = ["compact", "normal", "large", "larger"];
 const SOUND_IDS: readonly AmbientSoundId[] = [
   "none",
@@ -32,10 +44,10 @@ const SOUND_IDS: readonly AmbientSoundId[] = [
   "forest",
   "whiteNoise",
 ];
-const DURATIONS: readonly Duration[] = [5, 10, 15, 25, 45];
 const DURATION_MODES: readonly DurationMode[] = ["preset", "custom", "infinite"];
 const ANIMATIONS: readonly SceneAnimation[] = ["particles", "rain", "waves", "aurora", "still"];
 const MAX_CUSTOM_SCENES = 24;
+const MAX_CUSTOM_FIXED_DURATIONS = 12;
 
 function pick<T>(value: unknown, allowed: readonly T[], fallback: T): T {
   return allowed.includes(value as T) ? (value as T) : fallback;
@@ -66,6 +78,27 @@ function pickVolume(value: unknown): number {
 function pickCustomDuration(value: unknown, fallback = DEFAULT_PREFS.customDuration): number {
   if (typeof value !== "number" || !Number.isFinite(value)) return fallback;
   return Math.min(240, Math.max(1, Math.round(value)));
+}
+
+function pickDuration(value: unknown, fallback = DEFAULT_PREFS.duration): number {
+  if (typeof value !== "number" || !Number.isFinite(value)) return fallback;
+  return Math.min(240, Math.max(1, Math.round(value)));
+}
+
+function pickCustomFixedDurations(value: unknown): number[] {
+  if (!Array.isArray(value)) return [];
+  const builtIns = new Set<number>(PRESET_DURATIONS);
+  const seen = new Set<number>();
+  const custom: number[] = [];
+  for (const item of value) {
+    if (typeof item !== "number" || !Number.isFinite(item)) continue;
+    const duration = Math.round(item);
+    if (duration < 1 || duration > 240 || builtIns.has(duration) || seen.has(duration)) continue;
+    seen.add(duration);
+    custom.push(duration);
+    if (custom.length >= MAX_CUSTOM_FIXED_DURATIONS) break;
+  }
+  return custom.sort((a, b) => a - b);
 }
 
 function isCustomSceneId(value: unknown): value is `custom:${string}` {
@@ -99,7 +132,7 @@ function validateCustomScene(raw: unknown): CustomScene | null {
     clockScale: pick(r.clockScale, CLOCK_SCALES, DEFAULT_PREFS.clockScale),
     clockColors: pickClockColors(r.clockColors),
     durationMode: pick(r.durationMode, DURATION_MODES, DEFAULT_PREFS.durationMode),
-    duration: pick(r.duration, DURATIONS, DEFAULT_PREFS.duration),
+    duration: pickDuration(r.duration),
     customDuration: pickCustomDuration(r.customDuration),
   };
 }
@@ -120,6 +153,7 @@ export function validatePrefs(raw: unknown): MeditationPrefs {
         .filter((scene): scene is CustomScene => scene !== null)
         .slice(0, MAX_CUSTOM_SCENES)
     : [];
+  const customFixedDurations = pickCustomFixedDurations(r.customFixedDurations);
 
   const rawScene = r.scene;
   const scene = isCustomSceneId(rawScene) && customScenes.some((custom) => custom.id === rawScene)
@@ -127,12 +161,13 @@ export function validatePrefs(raw: unknown): MeditationPrefs {
     : pick(rawScene, BASE_SCENE_IDS, DEFAULT_PREFS.scene);
 
   return {
-    schemaVersion: 2,
+    schemaVersion: 3,
     scene: scene as SceneId,
     clock: pick(r.clock, CLOCK_VARIANTS, DEFAULT_PREFS.clock),
     sound: pick(r.sound, SOUND_IDS, DEFAULT_PREFS.sound),
     volume: pickVolume(r.volume),
-    duration: pick(r.duration, DURATIONS, DEFAULT_PREFS.duration),
+    duration: pickDuration(r.duration),
+    customFixedDurations,
     durationMode: pick(r.durationMode, DURATION_MODES, DEFAULT_PREFS.durationMode),
     customDuration: pickCustomDuration(r.customDuration),
     clockScale: pick(r.clockScale, CLOCK_SCALES, DEFAULT_PREFS.clockScale),

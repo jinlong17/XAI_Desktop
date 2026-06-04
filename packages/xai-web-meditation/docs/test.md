@@ -6,13 +6,15 @@
 
 ## 0. 2026-06-04 coverage update
 
-The current suite covers the schema v2 configurable meditation upgrade:
-100 tests pass across picker/render/player/persistence/type/style/registry
+The current suite covers the schema v3 configurable meditation upgrade:
+107 tests pass across picker/render/player/persistence/type/style/registry
 surfaces.
 
-- New coverage: 7 ambient sound ids, volume control, schema v2 defaults,
-  custom duration, infinite mode, clock size/color slots, custom-scene
-  save/edit/delete, and custom scene validation.
+- New coverage: 12 clock variants, visible preview scale changes, 7 ambient
+  sound ids, volume control, schema v3 defaults, user-added fixed durations,
+  custom duration, infinite mode, pause/resume, compact player controls,
+  clock size/color slots, custom-scene save/edit/delete, and custom scene
+  validation.
 - Web Audio itself is browser-only and gracefully no-ops in jsdom when
   `AudioContext` is unavailable; rendered flow is covered by browser smoke.
 
@@ -35,14 +37,15 @@ surfaces.
 - **AC-PICK-1**: 5 scene cards render with localized labels in EN.
 - **AC-PICK-2**: clicking a scene card sets `data-active` (or `.active`)
   on that card and unsets on others.
-- **AC-PICK-3**: 4 clock cards render with mini static `ClockDisplay`
+- **AC-PICK-3**: 12 clock cards render with mini static `ClockDisplay`
   previews; each shows the fixed `03:44:17` time.
 - **AC-PICK-4**: clicking a clock card updates the preview card's
   `ClockDisplay`.
 - **AC-PICK-5**: 7 sound cards render with icons (none → `soundOff`,
   rain → `rain`, otherwise `sound`).
-- **AC-PICK-6**: 5 duration chips render with values 5/10/15/25/45 and
-  bilingual unit suffix.
+- **AC-PICK-6**: built-in duration chips render with values 5/10/15/25/45
+  and bilingual unit suffix; user-added fixed durations render as visually
+  distinct removable chips.
 - **AC-PICK-7**: clicking a duration chip updates the preview meta-row
   count.
 - **AC-PICK-8**: same picker click twice = no-op (idempotent — `setPref`
@@ -83,6 +86,9 @@ surfaces.
   is `0` and `mm:ss` is `00:00`.
 - **AC-PLAYER-10**: infinite mode displays elapsed time and never counts down
   to an automatic end state.
+- **AC-PLAYER-11**: pause/resume stops and restarts elapsed time naturally.
+- **AC-PLAYER-12**: volume and sound toggle are hidden behind the compact
+  player controls entry by default.
 
 ### 2.4 AC-PERSIST-* (storage round-trip — 7 IDs)
 
@@ -97,7 +103,7 @@ surfaces.
 - **AC-PERSIST-5**: unknown `scene: "mars"` in localStorage → clamped
   to `"ocean"`; other fields preserved.
 - **AC-PERSIST-6**: `schemaVersion: 999` → still loads and migrates to
-  schema v2 defaults for missing fields.
+  schema v3 defaults for missing fields.
 - **AC-PERSIST-7**: cross-tab `storage` event with new blob updates the
   current tab's UI (assert via `window.dispatchEvent(new StorageEvent(
   "storage", { key: "xai_meditation_prefs", newValue: ... }))`).
@@ -105,6 +111,8 @@ surfaces.
   from fixed duration.
 - **AC-PERSIST-9**: custom scene save/edit/delete updates `customScenes` and
   selected scene id correctly.
+- **AC-PERSIST-10**: user-added fixed durations persist in
+  `customFixedDurations` and can be deleted.
 
 ### 2.5 AC-I18N-* (bilingual parity — 6 IDs)
 
@@ -115,7 +123,7 @@ surfaces.
 - **AC-I18N-3**: scene labels: 5 EN ("Forest" / "Ocean" / "Night Sky" /
   "Rain Window" / "Void") and 5 ZH ("森林" / "海洋" / "夜空" / "雨窗" /
   "虚空") all reachable.
-- **AC-I18N-4**: clock labels: 4 EN + 4 ZH all reachable.
+- **AC-I18N-4**: clock labels: 12 EN + 12 ZH all reachable.
 - **AC-I18N-5**: sound labels: 7 EN + 7 ZH all reachable.
 - **AC-I18N-6**: `mins` suffix: "min" (EN) / "分钟" (ZH) appears on
   every duration chip.
@@ -175,9 +183,10 @@ surfaces.
 `__tests__/types.test-d.ts` uses `expectTypeOf` from `vitest`:
 
 - **AC-TYPE-1**: `SceneId` is the literal union of 5 known scenes.
-- **AC-TYPE-2**: `ClockVariant` is the literal union of 4 variants.
+- **AC-TYPE-2**: `ClockVariant` is the literal union of 12 variants.
 - **AC-TYPE-3**: `AmbientSoundId` is the literal union of 5 sounds.
-- **AC-TYPE-4**: `Duration` is the literal union of 5 numbers.
+- **AC-TYPE-4**: `PresetDuration` is the literal union of 5 numbers and
+  `Duration` accepts user-defined minute numbers.
 - **AC-TYPE-5**: `MeditationPrefs.scene` is `SceneId` (not `string`).
 - **AC-TYPE-6**: `meditationSlotRegistration` satisfies
   `WebModuleSlotRegistration` from `@repo/xai-web-shell`.

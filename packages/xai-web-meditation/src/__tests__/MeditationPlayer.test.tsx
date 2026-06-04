@@ -16,6 +16,7 @@ const OCEAN: Scene = {
 
 const BASE_PROPS: MeditationPlayerProps = {
   scene: OCEAN,
+  sceneLabel: "Ocean",
   clock: "digital",
   clockScale: "normal",
   clockColors: DEFAULT_CLOCK_COLORS,
@@ -125,7 +126,23 @@ describe("MeditationPlayer", () => {
 
   it("labels the ambient sound toggle with play/pause intent", () => {
     renderPlayer();
+    fireEvent.click(screen.getByRole("button", { name: "Controls" }));
     expect(screen.getByRole("button", { name: "Play ambient sound" })).toBeInTheDocument();
+  });
+
+  it("pauses and resumes the session timer", () => {
+    renderPlayer();
+    fireEvent.click(screen.getByRole("button", { name: "Pause" }));
+    act(() => {
+      vi.advanceTimersByTime(60_000);
+    });
+    expect(screen.getByText("15:00")).toBeInTheDocument();
+
+    fireEvent.click(screen.getByRole("button", { name: "Resume" }));
+    act(() => {
+      vi.advanceTimersByTime(60_000);
+    });
+    expect(screen.getByText("14:00")).toBeInTheDocument();
   });
 
   it("infinite mode displays elapsed time instead of a countdown end", () => {

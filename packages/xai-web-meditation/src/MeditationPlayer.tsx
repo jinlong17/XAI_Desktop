@@ -38,6 +38,7 @@ import { useAmbientAudio } from "./internal/useAmbientAudio.js";
 
 export interface MeditationPlayerProps {
   scene: Scene;
+  sceneLabel: string;
   clock: ClockVariant;
   clockScale: ClockScale;
   clockColors: ClockColorPalette;
@@ -54,6 +55,7 @@ export interface MeditationPlayerProps {
 
 export function MeditationPlayer({
   scene,
+  sceneLabel,
   clock,
   clockScale,
   clockColors,
@@ -68,12 +70,15 @@ export function MeditationPlayer({
 }: MeditationPlayerProps): JSX.Element {
   const { s } = useI18n(lang);
   const [elapsed, setElapsed] = useState<number>(0);
+  const [paused, setPaused] = useState<boolean>(false);
+  const [controlsOpen, setControlsOpen] = useState<boolean>(false);
   const ambient = useAmbientAudio();
 
   useEffect(() => {
+    if (paused) return;
     const id = setInterval(() => setElapsed((e) => e + 1), 1000);
     return () => clearInterval(id);
-  }, []);
+  }, [paused]);
 
   useEffect(() => {
     void ambient.play(sound, volume);
@@ -103,6 +108,16 @@ export function MeditationPlayer({
   const particleClass = `med-particles med-particles-${scene.animation}`;
   const soundPlaying = ambient.state.playing && ambient.state.sound === sound;
   const soundToggleLabel = soundPlaying ? s("meditation.pause_sound") : s("meditation.play_sound");
+  const pauseSession = (): void => {
+    setPaused(true);
+    ambient.pause();
+  };
+  const resumeSession = (): void => {
+    setPaused(false);
+    if (sound !== "none") {
+      void ambient.play(sound, volume);
+    }
+  };
   const toggleSound = (): void => {
     if (sound === "none") return;
     if (soundPlaying) {
@@ -163,11 +178,40 @@ export function MeditationPlayer({
           />
         </div>
         <div className="mp-foot-row">
-          <span className="mp-remaining mono" style={{ color: scene.accent }}>
-            {isInfinite ? "∞ " : ""}
-            {timeLabel}
-          </span>
+          <div className="mp-session-meta">
+            <span className="mp-remaining mono" style={{ color: scene.accent }}>
+              {isInfinite ? "∞ " : ""}
+              {timeLabel}
+            </span>
+            <span className="mp-scene-name">{sceneLabel}</span>
+            <span className="mp-sound-state">{s(`meditation.sounds.${sound}`)}</span>
+          </div>
           <span className="grow" />
+          <button
+            className="mp-primary-control"
+            type="button"
+            onClick={paused ? resumeSession : pauseSession}
+            aria-label={paused ? s("meditation.resume") : s("meditation.pause")}
+          >
+            <Icon name={paused ? "play" : "pause"} size={13} />
+            {paused ? s("meditation.resume") : s("meditation.pause")}
+          </button>
+          <button
+            className="mp-sound-toggle"
+            type="button"
+            onClick={() => setControlsOpen((open) => !open)}
+            aria-pressed={controlsOpen}
+            aria-label={s("meditation.player_controls")}
+          >
+            <Icon name="sliders" size={13} />
+            {s("meditation.player_controls")}
+          </button>
+          <button className="mp-end-control" type="button" onClick={exit}>
+            {s("meditation.end")}
+          </button>
+        </div>
+        {controlsOpen && (
+          <div className="mp-control-panel">
           <button
             className="mp-sound-toggle"
             type="button"
@@ -191,7 +235,8 @@ export function MeditationPlayer({
               onChange={(event) => onVolumeChange?.(Number(event.currentTarget.value))}
             />
           </label>
-        </div>
+          </div>
+        )}
       </div>
 
       <button

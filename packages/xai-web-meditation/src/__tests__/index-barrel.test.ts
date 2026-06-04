@@ -21,6 +21,10 @@ describe("public surface (index.ts)", () => {
     expect(barrel.MEDITATION_STORAGE_KEY).toBe("xai_meditation_prefs");
   });
 
+  it("AC-BARREL-1: exports built-in duration presets", () => {
+    expect(barrel.PRESET_DURATIONS).toEqual([5, 10, 15, 25, 45]);
+  });
+
   it("AC-BARREL-2: does not expose internal helpers", () => {
     const keys = Object.keys(barrel);
     expect(keys).not.toContain("validatePrefs");

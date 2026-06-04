@@ -2,8 +2,8 @@
  * Public type surface for @repo/plugin-web-meditation.
  *
  * MeditationPrefs is the persisted JSON blob shape (xai_meditation_prefs).
- * Schema v2 keeps the original v1 fields and adds clock styling, real ambient
- * audio controls, custom duration modes, and user-defined scenes.
+ * Schema v3 keeps the original v1/v2 fields and adds custom fixed durations
+ * plus richer clock styling choices.
  *
  * ADR anchor: docs/adr/0007-xai-web-console-build-form.md §S4
  */
@@ -20,7 +20,19 @@ export type CustomSceneId = `custom:${string}`;
 export type SceneId = BaseSceneId | CustomSceneId;
 
 /** All clock display variants — exhaustive enumeration. */
-export type ClockVariant = "digital" | "split" | "analog" | "minimal";
+export type ClockVariant =
+  | "digital"
+  | "digitalSoft"
+  | "digitalFocus"
+  | "split"
+  | "splitStack"
+  | "analog"
+  | "analogFine"
+  | "analogBold"
+  | "analogZen"
+  | "minimal"
+  | "minimalDots"
+  | "breathRing";
 
 /** Clock sizing presets used by both picker previews and the player. */
 export type ClockScale = "compact" | "normal" | "large" | "larger";
@@ -44,8 +56,11 @@ export type AmbientSoundId =
   | "forest"
   | "whiteNoise";
 
-/** All session durations in minutes — exhaustive enumeration. */
-export type Duration = 5 | 10 | 15 | 25 | 45;
+/** Built-in fixed session durations in minutes. */
+export type PresetDuration = 5 | 10 | 15 | 25 | 45;
+
+/** Session duration in minutes. User-defined fixed durations are stored here too. */
+export type Duration = number;
 
 /** Duration selector mode. */
 export type DurationMode = "preset" | "custom" | "infinite";
@@ -93,12 +108,13 @@ export interface CustomScene {
  * `xai_meditation_prefs` via @repo/plugin-web-storage usePref.
  */
 export interface MeditationPrefs {
-  schemaVersion: 2;
+  schemaVersion: 3;
   scene: SceneId;
   clock: ClockVariant;
   sound: AmbientSoundId;
   volume: number;
   duration: Duration;
+  customFixedDurations: Duration[];
   durationMode: DurationMode;
   customDuration: number;
   clockScale: ClockScale;

@@ -73,7 +73,7 @@ describe("AC-REG-3: Registry entries use the expected schemaVersion", () => {
     const entries = Object.values(PREF_REGISTRY);
     expect(entries.length).toBeGreaterThan(0);
     for (const entry of entries) {
-      const expected = entry.key === "xai_meditation_prefs" ? 2 : 1;
+      const expected = entry.key === "xai_meditation_prefs" ? 3 : 1;
       expect(
         entry.schemaVersion,
         `Entry ${entry.key} has schemaVersion ${entry.schemaVersion}, expected ${expected}`,

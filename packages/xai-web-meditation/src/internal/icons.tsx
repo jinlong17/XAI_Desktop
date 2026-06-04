@@ -25,6 +25,7 @@ export type MeditationIconName =
   | "trash"
   | "edit"
   | "save"
+  | "plus"
   | "dots"
   | "close";
 
@@ -129,6 +130,12 @@ export function Icon({ name, size = 16, style }: IconProps): JSX.Element {
         <svg {...common}>
           <path d="M5 4h12l2 2v16H5V4z" />
           <path d="M8 4v7h8V4M8 18h8" />
+        </svg>
+      );
+    case "plus":
+      return (
+        <svg {...common}>
+          <path d="M12 5v14M5 12h14" />
         </svg>
       );
     case "dots":

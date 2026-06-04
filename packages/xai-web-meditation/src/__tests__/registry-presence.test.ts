@@ -26,19 +26,20 @@ describe("PREF_REGISTRY.xai_meditation_prefs", () => {
     expect(PREF_REGISTRY.xai_meditation_prefs.category).toBe("module");
   });
 
-  it("AC-REGISTRY-1: schemaVersion === 2", () => {
-    expect(PREF_REGISTRY.xai_meditation_prefs.schemaVersion).toBe(2);
+  it("AC-REGISTRY-1: schemaVersion === 3", () => {
+    expect(PREF_REGISTRY.xai_meditation_prefs.schemaVersion).toBe(3);
   });
 
   it("AC-REGISTRY-1: default has expected shape", () => {
     const def = PREF_REGISTRY.xai_meditation_prefs.default as Record<string, unknown>;
     expect(def).toMatchObject({
-      schemaVersion: 2,
+      schemaVersion: 3,
       scene: "ocean",
       clock: "split",
       sound: "water",
       volume: 0.55,
       duration: 15,
+      customFixedDurations: [],
       durationMode: "preset",
       customDuration: 20,
       clockScale: "normal",

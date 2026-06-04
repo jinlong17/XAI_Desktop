@@ -1,7 +1,7 @@
 /**
  * <ClockDisplay> — pure live clock renderer.
  *
- * Supports 4 variants: digital / split / analog / minimal.
+ * Supports digital, split, analog, minimal, and meditation-atmosphere variants.
  *
  * `static` mode freezes the displayed time at 2024-01-01T03:44:17 and
  * skips the setInterval entirely — used for the clock-picker mini
@@ -10,8 +10,8 @@
  * Live mode runs a single setInterval at 1000ms (Q12). The interval is
  * cleaned up on unmount or when `staticMode` toggles to true.
  *
- * Analog hands use the active clock color palette; the second hand uses
- * the palette highlight color.
+ * Analog hands use the active clock color palette; the second hand uses the
+ * palette highlight color when that style renders one.
  */
 
 import { useEffect, useState, type CSSProperties, type JSX } from "react";
@@ -37,6 +37,14 @@ const FROZEN_TIME = new Date(2024, 0, 1, 3, 44, 17);
 
 function pad2(n: number): string {
   return String(n).padStart(2, "0");
+}
+
+function baseClockClass(variant: ClockVariant): "digital" | "split" | "analog" | "minimal" | "breathRing" {
+  if (variant === "split" || variant === "splitStack") return "split";
+  if (variant.startsWith("analog")) return "analog";
+  if (variant === "minimal" || variant === "minimalDots") return "minimal";
+  if (variant === "breathRing") return "breathRing";
+  return "digital";
 }
 
 export function ClockDisplay({
@@ -71,10 +79,21 @@ export function ClockDisplay({
     color: palette.digits,
     backgroundColor: palette.background,
     "--clk-highlight": palette.highlight,
+    "--clk-ring": palette.ring,
   } as CSSProperties;
-  const classSuffix = `${mini ? " mini" : ""} clock-scale-${scale}`;
+  const classSuffix = `${mini ? " mini" : ""} clock-scale-${scale} clock-variant-${variant}`;
+  const base = baseClockClass(variant);
 
-  if (variant === "split") {
+  if (base === "split") {
+    if (variant === "splitStack") {
+      return (
+        <div className={"clk-split clk-split-stack mono" + classSuffix} style={clockStyle}>
+          <span>{hh}</span>
+          <span>{mm}</span>
+          <span className="dim">{ss}</span>
+        </div>
+      );
+    }
     return (
       <div className={"clk-split mono" + classSuffix} style={clockStyle}>
         <span>{hh}</span>
@@ -86,7 +105,7 @@ export function ClockDisplay({
     );
   }
 
-  if (variant === "digital") {
+  if (base === "digital") {
     return (
       <div className={"clk-digital mono" + classSuffix} style={clockStyle}>
         {hh}:{mm}
@@ -95,7 +114,16 @@ export function ClockDisplay({
     );
   }
 
-  if (variant === "minimal") {
+  if (base === "minimal") {
+    if (variant === "minimalDots") {
+      return (
+        <div className={"clk-minimal clk-minimal-dots mono" + classSuffix} style={clockStyle}>
+          <span>{hh}</span>
+          <i />
+          <span>{mm}</span>
+        </div>
+      );
+    }
     return (
       <div className={"clk-minimal mono" + classSuffix} style={clockStyle}>
         {hh}
@@ -104,36 +132,73 @@ export function ClockDisplay({
     );
   }
 
-  if (variant === "analog") {
+  if (base === "breathRing") {
+    return (
+      <div className={"clk-breath-ring mono" + classSuffix} style={clockStyle}>
+        <span className="clk-breath-core">
+          {hh}
+          <em>{mm}</em>
+        </span>
+      </div>
+    );
+  }
+
+  if (base === "analog") {
     const { h: hAng, m: mAng, s: sAng } = computeAnalogAngles(t);
     const sizeByScale: Record<ClockScale, number> = {
-      compact: 220,
-      normal: 280,
-      large: 340,
-      larger: 400,
+      compact: 184,
+      normal: 260,
+      large: 336,
+      larger: 420,
     };
     const size = mini ? 88 : sizeByScale[scale];
+    const isFine = variant === "analogFine";
+    const isBold = variant === "analogBold";
+    const isZen = variant === "analogZen";
+    const ringWidth = isBold ? 2 : isFine ? 0.65 : 1.1;
+    const hourWidth = isBold ? 3.2 : isFine ? 1.6 : 2.4;
+    const minuteWidth = isBold ? 2.4 : isFine ? 1.05 : 1.6;
+    const markerCount = isZen ? 4 : 12;
     return (
-      <svg viewBox="0 0 100 100" width={size} height={size} className="clk-analog" aria-hidden="true">
-        <circle cx="50" cy="50" r="47" fill={palette.background} fillOpacity={0.72} />
-        <circle cx="50" cy="50" r="46" fill="none" stroke={palette.ring} strokeOpacity={0.75} strokeWidth={1.1} />
-        {Array.from({ length: 12 }).map((_, i) => {
-          const a = (i * 30 * Math.PI) / 180;
-          const x1 = 50 + Math.sin(a) * 42;
-          const y1 = 50 - Math.cos(a) * 42;
+      <svg
+        viewBox="0 0 100 100"
+        width={size}
+        height={size}
+        className={"clk-analog" + classSuffix}
+        aria-hidden="true"
+      >
+        <circle cx="50" cy="50" r="47" fill={palette.background} fillOpacity={isZen ? 0.46 : 0.72} />
+        {isZen && <circle cx="50" cy="50" r="34" fill={palette.highlight} fillOpacity={0.1} />}
+        <circle cx="50" cy="50" r="46" fill="none" stroke={palette.ring} strokeOpacity={0.75} strokeWidth={ringWidth} />
+        {isBold && (
+          <circle cx="50" cy="50" r="40" fill="none" stroke={palette.ring} strokeOpacity={0.24} strokeWidth={1.5} />
+        )}
+        {Array.from({ length: markerCount }).map((_, i) => {
+          const a = ((i * 360 / markerCount) * Math.PI) / 180;
+          const x1 = 50 + Math.sin(a) * (isFine ? 43 : 41);
+          const y1 = 50 - Math.cos(a) * (isFine ? 43 : 41);
           const x2 = 50 + Math.sin(a) * 46;
           const y2 = 50 - Math.cos(a) * 46;
           return (
-            <line key={i} x1={x1} y1={y1} x2={x2} y2={y2} stroke={palette.digits} strokeOpacity={0.55} strokeWidth={1} />
+            <line
+              key={i}
+              x1={x1}
+              y1={y1}
+              x2={x2}
+              y2={y2}
+              stroke={palette.digits}
+              strokeOpacity={isZen ? 0.28 : 0.55}
+              strokeWidth={isBold ? 1.4 : 1}
+            />
           );
         })}
         <line
           x1="50"
           y1="50"
           x2="50"
-          y2="22"
+          y2={isZen ? "26" : "22"}
           stroke={palette.hands}
-          strokeWidth={2.4}
+          strokeWidth={hourWidth}
           strokeLinecap="round"
           transform={`rotate(${hAng} 50 50)`}
         />
@@ -141,23 +206,25 @@ export function ClockDisplay({
           x1="50"
           y1="50"
           x2="50"
-          y2="14"
+          y2={isFine ? "12" : "14"}
           stroke={palette.hands}
-          strokeWidth={1.6}
+          strokeWidth={minuteWidth}
           strokeLinecap="round"
           transform={`rotate(${mAng} 50 50)`}
         />
-        <line
-          x1="50"
-          y1="50"
-          x2="50"
-          y2="10"
-          stroke={palette.highlight}
-          strokeWidth={0.8}
-          strokeLinecap="round"
-          transform={`rotate(${sAng} 50 50)`}
-        />
-        <circle cx="50" cy="50" r="1.8" fill={palette.highlight} />
+        {!isZen && (
+          <line
+            x1="50"
+            y1="50"
+            x2="50"
+            y2="10"
+            stroke={palette.highlight}
+            strokeWidth={isFine ? 0.55 : 0.8}
+            strokeLinecap="round"
+            transform={`rotate(${sAng} 50 50)`}
+          />
+        )}
+        <circle cx="50" cy="50" r={isBold ? "2.4" : "1.8"} fill={palette.highlight} />
       </svg>
     );
   }

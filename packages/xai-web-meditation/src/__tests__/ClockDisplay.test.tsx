@@ -36,6 +36,18 @@ describe("ClockDisplay", () => {
     expect(container.querySelector("svg.clk-analog")).not.toBeNull();
   });
 
+  it("renders additional analog variants as distinct svg classes", () => {
+    const { container } = render(<ClockDisplay variant="analogZen" />);
+    const svg = container.querySelector("svg.clk-analog") as SVGElement;
+    expect(svg).not.toBeNull();
+    expect(svg.className.baseVal).toContain("clock-variant-analogZen");
+  });
+
+  it("renders meditation atmosphere clock as a breath ring", () => {
+    const { container } = render(<ClockDisplay variant="breathRing" />);
+    expect(container.querySelector(".clk-breath-ring")).not.toBeNull();
+  });
+
   it("AC-PICK-3: static mode freezes at 03:44:17", () => {
     render(<ClockDisplay variant="digital" staticMode />);
     expect(screen.getByText(/03:44/)).toBeInTheDocument();
@@ -109,5 +121,12 @@ describe("ClockDisplay", () => {
     const el = container.querySelector(".clk-digital") as HTMLElement;
     expect(el.className).toContain("clock-scale-larger");
     expect(el.style.backgroundColor).toBe("rgb(16, 24, 32)");
+  });
+
+  it("non-mini preview keeps selected scale visible", () => {
+    const { container } = render(<ClockDisplay variant="split" scale="larger" />);
+    const el = container.querySelector(".clk-split") as HTMLElement;
+    expect(el.className).toContain("clock-scale-larger");
+    expect(el.className).not.toContain("mini");
   });
 });

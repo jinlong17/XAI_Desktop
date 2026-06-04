@@ -11,14 +11,16 @@
 This update supersedes the original v1 "visual-only" meditation contract where
 the two differ.
 
-- Persistence is `schemaVersion: 2`; `validatePrefs` migrates older v1/unknown
+- Persistence is `schemaVersion: 3`; `validatePrefs` migrates older v1/v2/unknown
   blobs by filling the new fields.
 - Ambient sound is functional through Web Audio synthesis. No external audio
   files are bundled; this avoids missing-resource and license drift. The six
   non-silent presets are water, rain, waves, thunder, forest, and white noise.
-- Clock style now includes variant, size (`compact / normal / large / larger`)
-  and five color slots (`digits / hands / ring / background / highlight`).
-- Duration supports fixed presets, custom minutes, and infinite mode.
+- Clock style now includes 12 variants, size (`compact / normal / large /
+  larger`) and five color slots (`digits / hands / ring / background /
+  highlight`).
+- Duration supports fixed presets, user-added fixed durations, custom minutes,
+  and infinite mode.
 - Users can save, select, edit, and delete custom scenes. A custom scene stores
   name, background color, gradient colors, animation, ambient sound, clock
   style, clock colors, and default duration.
@@ -31,7 +33,7 @@ the two differ.
    `src/internal/`.
 3. `manifest.json` declares `slug: "xai-web-meditation"`, `status: "In-Dev"`,
    `roadmap_row: 16`, `wave: "W2"`, owner: `"xai-web-meditation"`.
-4. Single persisted blob `xai_meditation_prefs` with `schemaVersion: 2`.
+4. Single persisted blob `xai_meditation_prefs` with `schemaVersion: 3`.
    Atomic update via `usePref` on every picker/configuration change.
 5. `active` (player on/off) is in-memory `useState<boolean>` only. Reload
    wipes it.
@@ -41,7 +43,7 @@ the two differ.
 7. No new entries in `packages/plugin-web-tokens/src/tokens.css`. All
    accent colors come from `SCENES[i].accent`.
 8. `packages/plugin-web-tokens/src/i18n.ts` owns all visible `meditation.*`
-   labels, including the v2 settings/custom-scene labels.
+   labels, including the v3 settings/custom-scene/player-control labels.
 9. No new entries in `packages/core/src/types/events.ts`. The module emits
    no module-level events. `ConsoleModuleId` already lists `'meditation'`.
 10. Append `MeditationPrefsBlob = unknown` opaque alias to
@@ -67,8 +69,9 @@ the two differ.
 17. Built-in scene ids remain `forest / ocean / night / rain / void`; custom
     scene ids use `custom:<id>`. Ambient sound ids are
     `none / water / rain / waves / thunder / forest / whiteNoise`. Fixed
-    durations remain `5 / 10 / 15 / 25 / 45`; custom and infinite modes are
-    stored separately.
+    presets remain `5 / 10 / 15 / 25 / 45`; user-added fixed durations are
+    stored in `customFixedDurations`; custom and infinite modes are stored
+    separately.
 
 ## 2. Decision headline
 
@@ -86,9 +89,9 @@ Selected **Option C — package at `packages/xai-web-meditation/` named
   `M18 6 6 18M6 6l12 12` path.
 - **5 scene gradients** copied verbatim into `internal/scenes.ts` from the
   prototype's `MOCK.meditationScenes` (already in `oklch()`).
-- **Verbatim live ClockDisplay component** — pure renderer with
-  `setInterval(setNow, 1000)` ticker (skipped when `static`). 4 variants:
-  digital / split / analog / minimal.
+- **Live ClockDisplay component** — pure renderer with
+  `setInterval(setNow, 1000)` ticker (skipped when `static`). 12 variants
+  across digital, split, analog, minimal, and breath-ring styles.
 - **Module slot registration** via `WebModuleSlotRegistration` from
   `@repo/xai-web-shell` — swapped into `shellRegistrations.tsx:59`
   (`moduleId: "meditation"`, `icon: "leaf"`, `railOrder: 9`).
@@ -107,7 +110,7 @@ Selected **Option C — package at `packages/xai-web-meditation/` named
 └── <div.med-layout>
     ├── <div.med-preview style="background: scene.grad">
     │   ├── <div.med-preview-overlay/>
-    │   ├── <ClockDisplay variant={clock} accent={scene.accent} mini/>
+    │   ├── <ClockDisplay variant={clock} accent={scene.accent} scale colors/>
     │   └── <div.med-preview-foot>
     │       ├── <div.mp-meta>  (4 meta tags: leaf/clock/sound/timer)
     │       └── <button.btn.primary.med-start onClick={() => setActive(true)}>
@@ -115,12 +118,12 @@ Selected **Option C — package at `packages/xai-web-meditation/` named
     │       </button>
     └── <div.med-pickers>
         ├── <PickerGroup title="meditation.pick_scene"> + <div.scene-grid> × 5
-        ├── <PickerGroup title="meditation.pick_clock"> + <div.clock-grid> × 4
+        ├── <PickerGroup title="meditation.pick_clock"> + <div.clock-grid> × 12
         │   └── each <button.clock-card>
         │       ├── <div.cc-preview><ClockDisplay variant={c} accent="var(--text-1)" mini static/></div>
         │       └── <div.cc-label>{label}</div>
         ├── <PickerGroup title="meditation.pick_sound"> + <div.sound-grid> × 5
-        └── <PickerGroup title="meditation.duration"> + <div.dur-row> × 5
+        └── <PickerGroup title="meditation.duration"> + built-ins + custom fixed chips + custom/infinite controls
 
 [when active === true:]
 <MeditationPlayer scene clock sound duration lang onExit>
@@ -134,8 +137,10 @@ Selected **Option C — package at `packages/xai-web-meditation/` named
 ├── <div.med-player-footer>
 │   ├── <div.mp-progress><div.mp-progress-bar style="width: progress%"/></div>
 │   └── <div.mp-foot-row>
-│       ├── <span.mp-remaining.mono>{mm}:{ss}</span>
-│       └── <span.mp-info><Icon sound/> {s("meditation.sounds." + sound)}</span>
+│       ├── <div.mp-session-meta>{time + scene + sound status}</div>
+│       ├── <button>pause/resume</button>
+│       ├── <button>controls</button>
+│       └── <button>end</button>
 └── <button.med-exit aria-label={s("meditation.exit")}>
     <Icon close/>
 </button>
@@ -150,19 +155,33 @@ Selected **Option C — package at `packages/xai-web-meditation/` named
 ```ts
 // Persisted (single blob via usePref)
 interface MeditationPrefs {
-  schemaVersion: 1;
+  schemaVersion: 3;
   scene: SceneId;          // "forest" | "ocean" | "night" | "rain" | "void"
-  clock: ClockVariant;     // "digital" | "split" | "analog" | "minimal"
-  sound: AmbientSoundId;   // "none" | "water" | "rain" | "waves" | "forest"
-  duration: Duration;      // 5 | 10 | 15 | 25 | 45
+  clock: ClockVariant;     // 12 clock styles
+  sound: AmbientSoundId;   // "none" | water/rain/waves/thunder/forest/whiteNoise
+  volume: number;          // 0..1
+  duration: Duration;      // number, 1..240 minutes
+  customFixedDurations: Duration[];
+  durationMode: DurationMode;
+  customDuration: number;
+  clockScale: ClockScale;
+  clockColors: ClockColorPalette;
+  customScenes: CustomScene[];
 }
 
 const DEFAULT_PREFS: MeditationPrefs = {
-  schemaVersion: 1,
+  schemaVersion: 3,
   scene: "ocean",
   clock: "split",
   sound: "water",
+  volume: 0.55,
   duration: 15,
+  customFixedDurations: [],
+  durationMode: "preset",
+  customDuration: 20,
+  clockScale: "normal",
+  clockColors: DEFAULT_CLOCK_COLORS,
+  customScenes: [],
 };
 
 // In-memory only
@@ -189,13 +208,20 @@ export type MeditationPrefsBlob = unknown;
     key: "xai_meditation_prefs",
     codec: "json",
     default: {
-      schemaVersion: 1,
+      schemaVersion: 3,
       scene: "ocean",
       clock: "split",
       sound: "water",
+      volume: 0.55,
       duration: 15,
+      customFixedDurations: [],
+      durationMode: "preset",
+      customDuration: 20,
+      clockScale: "normal",
+      clockColors: DEFAULT_CLOCK_COLORS,
+      customScenes: [],
     } as MeditationPrefsBlob,
-    schemaVersion: 1,
+    schemaVersion: 3,
     owner: "xai-web-meditation",
     category: "module",
   } satisfies PrefEntry<MeditationPrefsBlob>,
@@ -358,16 +384,16 @@ export const meditationSlotRegistration: WebModuleSlotRegistration = {
 src/
 ├── index.ts                          public barrel
 ├── types.ts                          SceneId / ClockVariant / AmbientSoundId / Duration / MeditationPrefs / Scene / MeditationModuleProps
-├── constants.ts                      MEDITATION_STORAGE_KEY + DEFAULT_PREFS + PARTICLE_COUNT
+├── constants.ts                      MEDITATION_STORAGE_KEY + PRESET_DURATIONS + DEFAULT_PREFS
 ├── styles.css                        module + player styles (tokens-only + oklch)
 ├── MeditationModule.tsx              top-level component
 ├── MeditationPlayer.tsx              fullscreen player
-├── ClockDisplay.tsx                  digital/split/analog/minimal renderer
+├── ClockDisplay.tsx                  12-style clock renderer
 ├── PickerGroup.tsx                   5-LOC wrapper
 ├── ScenePicker.tsx                   5 scene cards (or inline in MeditationModule)
-├── ClockPicker.tsx                   4 clock cards (or inline)
-├── SoundPicker.tsx                   5 sound cards (or inline)
-├── DurationPicker.tsx                5 chips (or inline)
+├── ClockPicker.tsx                   12 clock cards (or inline)
+├── SoundPicker.tsx                   7 sound cards (or inline)
+├── DurationPicker.tsx                built-in + custom fixed chips (or inline)
 ├── registration.tsx                  meditationSlotRegistration + MeditationSlotHost
 ├── internal/
 │   ├── scenes.ts                     SCENES const + PARTICLE_COUNT
