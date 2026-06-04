@@ -209,14 +209,15 @@ export function getBoardCardDateMeta(
   card: BoardCard,
   options: BoardDateOptions = {},
 ): BoardCardDateMeta {
-  const now = toLocalDateOnly(options.now ?? new Date());
+  const anchorDate = options.now ?? new Date();
+  const now = toLocalDateOnly(anchorDate);
   const todayIso = formatIsoDateOnly(now);
   const start = resolveDate(card.startDate, [card.start], now, todayIso);
   const due = resolveDate(card.dueDate, [card.due, card.dueEn], now, todayIso);
   const dueDate = due.date;
   const startDate = start.date;
-  const tomorrowIso = isoDateFromOffset(1, options.now ?? new Date());
-  const weekEndIso = isoDateFromOffset(6, options.now ?? new Date());
+  const weekStartIso = todayIso;
+  const weekEndIso = isoDateFromOffset(6, anchorDate);
 
   return {
     startDate,
@@ -227,7 +228,7 @@ export function getBoardCardDateMeta(
     isOverdue: dueDate !== undefined && compareIsoDateOnly(dueDate, todayIso) < 0,
     isWithinWeek:
       dueDate !== undefined &&
-      compareIsoDateOnly(dueDate, tomorrowIso) >= 0 &&
+      compareIsoDateOnly(dueDate, weekStartIso) >= 0 &&
       compareIsoDateOnly(dueDate, weekEndIso) <= 0,
     isInvalidRange:
       startDate !== undefined &&

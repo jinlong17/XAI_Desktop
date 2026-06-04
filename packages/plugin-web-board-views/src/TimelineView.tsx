@@ -3,7 +3,7 @@
  *
  * Hard constraints (per api.md §6 + design.md §frozen-assumption #8):
  * - Three handles: left (resize-l), center (move), right (resize-r).
- * - mouseup commits ONE atomic updateCard({due, start, dueEn, dueLate}).
+ * - mouseup commits ONE atomic updateCard({dueDate, startDate}).
  * - mouseup-without-mousemove → NO write.
  * - Bars clamp to [0, days-1] via clampDay; CSS clip-path at edges.
  *
@@ -17,6 +17,7 @@
 
 import React, { useEffect, useRef, useState } from "react";
 import type { BoardListData, BoardCardData } from "@repo/plugin-web-board-core";
+import { getBoardCardDateMeta } from "@repo/plugin-web-board-core";
 import type { Lang } from "./internal/i18n.js";
 import { parseDay, dayToStr, clampDay } from "./internal/dateOps.js";
 
@@ -40,6 +41,26 @@ type DragState = {
 };
 type PreviewMap = Record<string, { start: number; end: number }>;
 
+function getTimelineOffsets(
+  card: BoardCardData,
+  today: Date,
+): { start: number; end: number } | null {
+  const dateMeta = getBoardCardDateMeta(card, { now: today });
+  if (!dateMeta.dueDate || dateMeta.isInvalidRange) {
+    return null;
+  }
+  const end = parseDay(dateMeta.dueDate, today);
+  if (end === null) return null;
+
+  if (!dateMeta.startDate) {
+    return { start: end, end };
+  }
+
+  const start = parseDay(dateMeta.startDate, today);
+  if (start === null) return null;
+  return { start, end };
+}
+
 export function TimelineView({
   lists,
   lang,
@@ -57,19 +78,15 @@ export function TimelineView({
     return { day: d.getDate(), month: d.getMonth() + 1, isToday: i === 0 };
   });
 
-  // Parse each card's (start, end) offsets
+  // Parse each card's typed (start, end) offsets.
   const itemsByList = lists.map((list) => {
     const items = list.cards
       .map((card) => {
-        const endOff = parseDay(card.due, today);
-        if (endOff === null) return null;
-        const startOff =
-          card.start !== undefined && card.start !== null
-            ? (parseDay(card.start, today) ?? endOff)
-            : endOff;
+        const range = getTimelineOffsets(card, today);
+        if (!range) return null;
         const p = preview[card.id];
-        const start = p !== undefined ? p.start : startOff;
-        const end = p !== undefined ? p.end : endOff;
+        const start = p !== undefined ? p.start : range.start;
+        const end = p !== undefined ? p.end : range.end;
         return { card, start, end, list };
       })
       .filter(
@@ -88,18 +105,14 @@ export function TimelineView({
   ) => {
     e.stopPropagation();
     e.preventDefault();
-    const startOff =
-      card.start !== undefined && card.start !== null
-        ? (parseDay(card.start, today) ?? parseDay(card.due, today) ?? 0)
-        : (parseDay(card.due, today) ?? 0);
-    const endOff = parseDay(card.due, today);
-    if (endOff === null) return;
+    const range = getTimelineOffsets(card, today);
+    if (!range) return;
     setDrag({
       cardId: card.id,
       listId: list.id,
       mode,
-      initStart: startOff,
-      initEnd: endOff,
+      initStart: range.start,
+      initEnd: range.end,
       startX: e.clientX,
     });
   };
@@ -143,12 +156,19 @@ export function TimelineView({
         return;
       }
       const final = p;
-      // Hard constraint: ONE atomic write with {due, start, dueEn, dueLate}
+      if (final.start > final.end) {
+        setPreview((prev) => {
+          const next = { ...prev };
+          delete next[drag.cardId];
+          return next;
+        });
+        setDrag(null);
+        return;
+      }
+      // Hard constraint: ONE atomic write with {dueDate, startDate}
       const patch: Partial<BoardCardData> = {
-        due: dayToStr(final.end, today),
-        start: final.start === final.end ? undefined : dayToStr(final.start, today),
-        dueEn: undefined,
-        dueLate: false,
+        dueDate: dayToStr(final.end, today),
+        startDate: final.start === final.end ? undefined : dayToStr(final.start, today),
       };
       updateCard(drag.listId, drag.cardId, patch);
       setPreview((prev) => {
@@ -241,18 +261,14 @@ export function TimelineView({
                         onPointerDown={(e) => {
                           e.stopPropagation();
                           e.preventDefault();
-                          const startOff =
-                            card.start !== undefined && card.start !== null
-                              ? (parseDay(card.start, today) ?? parseDay(card.due, today) ?? 0)
-                              : (parseDay(card.due, today) ?? 0);
-                          const endOff = parseDay(card.due, today);
-                          if (endOff === null) return;
+                          const range = getTimelineOffsets(card, today);
+                          if (!range) return;
                           setDrag({
                             cardId: card.id,
                             listId: list.id,
                             mode: "move",
-                            initStart: startOff,
-                            initEnd: endOff,
+                            initStart: range.start,
+                            initEnd: range.end,
                             startX: e.clientX,
                           });
                         }}

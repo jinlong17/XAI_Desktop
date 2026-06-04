@@ -11,12 +11,16 @@
 
 import { useState } from "react";
 import type { BoardListData, BoardCardData } from "@repo/plugin-web-board-core";
-import { BOARD_MEMBER_OPTIONS, PM_LABELS } from "@repo/plugin-web-board-core";
+import {
+  BOARD_MEMBER_OPTIONS,
+  PM_LABELS,
+  getBoardCardDateMeta,
+} from "@repo/plugin-web-board-core";
 import type { Lang } from "./internal/i18n.js";
 import {
-  todayShortcut,
-  tomorrowShortcut,
-  nextMondayShortcut,
+  todayShortcutDate,
+  tomorrowShortcutDate,
+  nextMondayShortcutDate,
 } from "./internal/dueShortcuts.js";
 
 export interface TableViewProps {
@@ -49,10 +53,6 @@ export function TableView({ lists, lang, updateCard, onOpenCard }: TableViewProp
   );
 
   const today = new Date();
-  const ty = today.getFullYear();
-  const tm = today.getMonth() + 1; // 1-based
-  const td = today.getDate();
-
   const isEdit = (cardId: string, field: EditingField) =>
     editing?.cardId === cardId && editing?.field === field;
 
@@ -82,9 +82,8 @@ export function TableView({ lists, lang, updateCard, onOpenCard }: TableViewProp
               .filter(Boolean) as typeof BOARD_MEMBER_OPTIONS[number][];
             const cl = card.checklist;
             const pct = cl ? Math.round((100 * cl.done) / Math.max(1, cl.total)) : null;
-            const dueLate = card.dueLate;
-            const dueDisplay =
-              card.dueEn && lang === "en" ? card.dueEn : card.due;
+            const dateMeta = getBoardCardDateMeta(card, { now: today });
+            const dueDisplay = dateMeta.dueLabel?.[lang];
 
             return (
               <tr key={card.id} data-testid="board-table-row">
@@ -290,7 +289,7 @@ export function TableView({ lists, lang, updateCard, onOpenCard }: TableViewProp
                 >
                   {dueDisplay ? (
                     <span
-                      className={"td-due mono" + (dueLate ? " late" : "")}
+                      className={"td-due mono" + (dateMeta.isOverdue ? " late" : "")}
                       data-testid="td-due-value"
                     >
                       {dueDisplay}
@@ -326,82 +325,62 @@ export function TableView({ lists, lang, updateCard, onOpenCard }: TableViewProp
                             type="date"
                             autoFocus
                             className="td-date-input"
+                            value={dateMeta.dueDate ?? ""}
                             onClick={(e) => e.stopPropagation()}
                             onChange={(e) => {
                               const v = e.target.value;
-                              if (!v) return;
-                              const d = new Date(v);
-                              const newDue = `${d.getMonth() + 1}/${d.getDate()}`;
-                              updateCard(list.id, card.id, {
-                                due: newDue,
-                                dueEn: undefined,
-                                dueLate: false,
-                              });
+                              updateCard(list.id, card.id, { dueDate: v || undefined });
                               closeEditor();
                             }}
                           />
                           <div className="td-quick-due">
-                            {/* Today shortcut — emits "Today" (en) / "今天" (zh) */}
+                            {/* Today shortcut — emits ISO dueDate */}
                             <button
                               type="button"
                               className="td-quick-btn"
                               data-testid="due-shortcut-today"
                               onClick={(e) => {
                                 e.stopPropagation();
-                                updateCard(list.id, card.id, {
-                                  due: todayShortcut(lang),
-                                  dueEn: undefined,
-                                  dueLate: false,
-                                });
+                                updateCard(list.id, card.id, { dueDate: todayShortcutDate(today) });
                                 closeEditor();
                               }}
                             >
                               {lang === "zh" ? "今天" : "Today"}
                             </button>
-                            {/* Tomorrow shortcut — emits "M/D" */}
+                            {/* Tomorrow shortcut — emits ISO dueDate */}
                             <button
                               type="button"
                               className="td-quick-btn"
                               data-testid="due-shortcut-tomorrow"
                               onClick={(e) => {
                                 e.stopPropagation();
-                                const newDue = tomorrowShortcut(ty, tm, td);
-                                updateCard(list.id, card.id, {
-                                  due: newDue,
-                                  dueEn: undefined,
-                                  dueLate: false,
-                                });
+                                updateCard(list.id, card.id, { dueDate: tomorrowShortcutDate(today) });
                                 closeEditor();
                               }}
                             >
                               {lang === "zh" ? "明天" : "Tomorrow"}
                             </button>
-                            {/* Next Mon shortcut — emits "M/D" */}
+                            {/* Next Mon shortcut — emits ISO dueDate */}
                             <button
                               type="button"
                               className="td-quick-btn"
                               data-testid="due-shortcut-next-mon"
                               onClick={(e) => {
                                 e.stopPropagation();
-                                const newDue = nextMondayShortcut(ty, tm, td);
-                                updateCard(list.id, card.id, {
-                                  due: newDue,
-                                  dueEn: undefined,
-                                  dueLate: false,
-                                });
+                                updateCard(list.id, card.id, { dueDate: nextMondayShortcutDate(today) });
                                 closeEditor();
                               }}
                             >
                               {lang === "zh" ? "下周一" : "Next Mon"}
                             </button>
-                            {card.due && (
+                            {dueDisplay && (
                               <button
                                 type="button"
                                 className="td-quick-btn danger"
                                 data-testid="due-shortcut-clear"
                                 onClick={(e) => {
                                   e.stopPropagation();
-                                  updateCard(list.id, card.id, { due: undefined });
+                                  updateCard(list.id, card.id, { dueDate: undefined });
                                   closeEditor();
                                 }}
                               >
