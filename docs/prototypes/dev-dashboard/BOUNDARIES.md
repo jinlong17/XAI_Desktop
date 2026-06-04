@@ -52,8 +52,8 @@
 ## 1. 状态与颜色词汇表（单一来源）
 
 > 颜色不是装饰，是**语义**。全看板共用一套状态色，禁止每个页面各定义一套。
-> 当前实现把语义 map 散在 `deployment.js`/`testing.js`/`product-flow.js`/`overview.js` 各一份，
-> 目标是收敛成一个共享 `statusMeta` 模块。色值见 `styles.css` `:root` token。
+> 当前实现已把 feature / deployment / testing 的状态 map 收敛到 `js/status-meta.js`，
+> 各页面只消费共享 helper。色值见 `styles.css` `:root` token。
 
 ### 1.1 状态 badge 色（7 色，语义唯一）
 
@@ -115,20 +115,18 @@
 | 组 | 页面 (id) | Owner 数据域 | 渲染模块 | 推荐卡片数 |
 |---|---|---|---|---|
 | **总览组** | 总览 `overview` | 看板同步（原生）+ 全员镜像 | `overview.js` | 7（富展示，保留现状） |
-| **进度组** | 任务进度 `tasks` | dev_log 任务 | `ops-panels.js`*→建议拆 `tasks.js` | 3 |
-| | 开发数据 `dev-data` | Git 活动/趋势 | `ops-panels.js`*→建议拆 `dev-data.js` | 3 |
+| **进度组** | 任务进度 `tasks` | dev_log 任务 | `tasks.js` | 3 |
+| | 开发数据 `dev-data` | Git 活动/趋势 | `dev-data.js` | 3 |
 | **产品组** | 产品结构图 `product-flow` | 模块注册表/结构/明细 | `product-flow.js` | 4 |
-| | 分支管理 `branches` | 分支策略/闸门 | `ops-panels.js`*→建议拆 `branches.js` | 2 |
+| | 分支管理 `branches` | 分支策略/闸门 | `branches.js` | 2 |
 | **交付质量组** | 部署 `deployment` | 部署状态/记录 | `deployment.js` | 5 |
 | | 测试结果 `testing` | 测试结果/记录 | `testing.js` | 4 |
-| | 发布记录 `release-log` | 发布历史 | `ops-panels.js`*→建议拆 `release-log.js` | 3 |
+| | 发布记录 `release-log` | 发布历史 | `release-log.js` | 3 |
 | **知识操作组** | 文档库 `docs` | 文档浏览 | `docs-library.js` | 5 |
 | | Skill 和 Agent `skill-agent` | Skill/Agent 注册表 | `skill-agent.js` | 3 |
 | | 使用和操作 `usage-ops` | 命令/进程控制 | `usage-ops.js`+静态 HTML | 4 |
 
-> `*` 标记：`ops-panels.js` 当前是「杂物箱」，一个文件渲染 4 个**不相关**页面（tasks/dev-data/
-> branches/release-log），且文件名误导（它**不含**进程控制；真正的 ops 在 `usage-ops.js`）。
-> 长期应**一页一文件**，与其它 7 页对齐。
+> `ops-panels.js` 杂物箱已拆除；当前 11 个页面均有独立渲染模块或明确的静态 HTML owner。
 
 > **没有独立的 Workflow Tab（刻意）**：本项目用「分布式」方式承接 workflow 管理——
 > 每模块的 workflow 步骤 + 常用 prompt 在**产品结构图**的明细面板；workflow 类 skill/agent 在
@@ -156,13 +154,13 @@ Owner 的渲染器/数据/状态词汇，不 fork 第二套。**富展示不算�
 | **B. 当前主线/焦点**（原生） | 职责：当前优先级线。展示：编号 focus 行（label+value）。不展示：模块卡、任务列表。数据源：`status_rows`/`overviewRows`。交互：无 |
 | **C. KPI 信号格**（原生镜像聚合） | 职责：头部数字。展示：web↔dev 分叉、roadmap 行数、skill 数、快照状态（各 ≤1 tile）。不展示：趋势图（去开发数据）、分支明细（去分支管理）。数据源：`signals`/`kpis`，引用 `git.divergence`/`roadmap_manifests`/`skills.length`。交互：无（可选点 tile 跳 Owner） |
 | **D. 看板同步状态**（原生 · Owner=总览） | 职责：暴露 `xai-dev-dashboard-sync` 固化的同步态。展示：上次更新、快照 commit、未提交分桶、同步 skill 状态、最近发布、来源 chips。数据源：`sync_status`。色彩：skill 状态→green/yellow/red。交互：无 |
-| **E. 模块富展示**（Mirror→产品结构图） | 职责：模块全景（总览富展示，**保留 flow board + 模块 grid**）。展示：迷你 flow 图 + 模块卡（进度/状态/feature 计数）。数据源：**复用** `overview_modules`/`product_lines`（不 fork）。色彩：模块色。交互：点节点/卡→产品结构图并 `setProduct` 定位（drawer **复用**产品结构图 detail 渲染器，不另写 `openModuleDrawer`） |
+| **E. 模块富展示**（Mirror→产品结构图） | 职责：模块全景（总览富展示，**保留 flow board + 模块 grid**）。展示：迷你 flow 图 + 模块卡（进度/状态/feature 计数）。数据源：**复用** `overview_modules`/`product_lines`（不 fork 数据）。色彩：模块色。交互：点节点/卡→打开总览紧凑 drawer，drawer「定位结构图」→产品结构图并 `setProduct` 定位 |
 | **F. 常用 Skill 条**（Mirror→Skill 和 Agent） | 职责：高频入口快捷。展示：curated 高频 skill 卡（名+中文 label）。不展示：完整注册表、字段网格。数据源：curated 列表 ∩ `skills`。交互：点卡→Skill 页；「复制」拷名 |
 
 > 实现要点（**不删展示**）：总览的 flow board + module grid + drawer + 部署/测试镜像**全部保留**
-> （这是总览富展示的价值）。唯一要改的是**实现层去 fork**：①总览模块 drawer 复用 product-flow 的
-> `setProduct`/detail 渲染器，不再用并行的 `openModuleDrawer`；②共享 `FEATURE_STATUS`/状态词汇；
-> ③部署/测试镜像复用 `deploymentSummary()`/`testingSummary()`（已是）。**展示不动，只去重复实现**。
+> （这是总览富展示的价值）。实现层约束：①总览 drawer 是紧凑 Mirror，必须只读 `product_lines`
+> / `overview_modules` 和共享状态词汇，不得成为第二个 Owner 明细；②状态词汇由 `status-meta.js`
+> 单源；③部署/测试镜像复用 `deploymentSummary()`/`testingSummary()`。**展示不动，只去重复实现**。
 
 ### 4.2 任务进度 `tasks`（3 卡）
 
@@ -191,7 +189,7 @@ Owner 的渲染器/数据/状态词汇，不 fork 第二套。**富展示不算�
 | 卡片 | 边界 |
 |---|---|
 | **A. 闸门 + 分叉状态** | 展示：当前 gate 状态、gate 时间线、web/dev ahead、共享 base、最近 release tag、drift 判定。数据源：`branch_policy`。交互：无 |
-| **B. 长期分支表** | 展示：每条长期分支 目标/允许/禁止/上游/下游/drift。数据源：**应为** `branch_policy.long_lived_branches`。⚠️当前是 `state.js:193` 的硬编码兜底——需改为数据驱动。交互：无 |
+| **B. 长期分支表** | 展示：每条长期分支 目标/允许/禁止/上游/下游/drift。数据源：主源为 `branch_policy.long_lived_branches`；`state.js` 仅保留 stale/generated-missing 的 last-resort fallback。交互：无 |
 
 ### 4.5 产品结构图 `product-flow`（4 卡 · 模块 Owner）
 
@@ -204,7 +202,8 @@ Owner 的渲染器/数据/状态词汇，不 fork 第二套。**富展示不算�
 | **C. 模块轨道（6 模块卡，3 区）** | 职责：模块卡 Owner。展示：3 区（主产品链/项目系统区/Control Plane），每模块卡 order/badge/title/状态/branch/依赖/next。数据源：`products` 按 `region` 分组。色彩：模块色顶边。交互：点卡→`setProduct` |
 | **D. 产品明细面板** | 职责：模块深挖 Owner。展示：目标/Feature 列表(按 6 状态)/状态网格/部署块/测试块/任务归属信号/推荐 skill/常用 prompt/workflow/transitions/impacts/相关文档。数据源：选中 `products[key]` 全字段。交互：开 target、开 doc、复制 prompt、折叠 navBlock、跨模块 data-to/data-module |
 
-> 总览的模块 drawer 应**复用** D 的渲染器（一份渲染器、两个挂载点），消除 `openModuleDrawer` 副本。
+> 总览的模块 drawer 是紧凑 Mirror。它可以与 D 有不同密度，但不得拥有第二套数据源、状态词汇或
+> Owner-only 字段解释；真正定位 / 完整明细仍回到 D。
 
 ### 4.6 部署 `deployment`（5 卡 · 部署 Owner）
 
@@ -240,7 +239,9 @@ Owner 的渲染器/数据/状态词汇，不 fork 第二套。**富展示不算�
 | **C. 命令卡组** | 展示：打开页面/更新代码/构建与部署/日志状态/停止+FAQ（分子标题归组）。数据源：静态 HTML。交互：复制。**「构建与部署」需与「部署」页交叉链接**（命令↔状态） |
 | **D. 快捷命令** | 展示：8 个短命令 tile + 复制全部。交互：复制 |
 
-> ⚠️ 静态卡里硬编码了机器绝对路径 `/Users/lijinlong/...`（`index.html:327` 等）——**不可移植**，应改为 `repo_root` 派生或相对说明。
+> 命令卡不得硬编码机器绝对路径；当前静态命令使用 `cd "$(git rev-parse --show-toplevel)"`
+> 或固定 localhost URL。生成态中的 `repo_root` 允许是机器绝对路径，因为 `state.generated.js`
+> 是 git-ignored 本地快照。
 
 ### 4.9 文档库 `docs`（5 面板 · 文档 Owner）
 
@@ -254,7 +255,8 @@ Owner 的渲染器/数据/状态词汇，不 fork 第二套。**富展示不算�
 | **D. Inspector** | 元信息网格（类型/重要性/分类/路径/绝对路径/更新/大小/标签/说明）+ outline。交互：全屏/复制路径/Finder/刷新 |
 | **E. 预览 + 全屏** | 内联 markdown 渲染（static）+ 全屏阅读 overlay（serve）。 |
 
-> ⚠️ `renderDocCollections`/`renderBranchDocs`/`renderRegistry` 是**孤儿渲染器**（DOM id 不存在、无人调用）——应删除。文档分类是**计算出的**（family×重要性两轴），不是真实文件夹。
+> 文档分类是**计算出的**（family×重要性两轴），不是真实文件夹。曾存在的
+> `renderDocCollections`/`renderBranchDocs`/`renderRegistry` 孤儿渲染器已删除。
 
 ### 4.10 Skill 和 Agent `skill-agent`（3 卡 · 注册表 Owner）
 
@@ -314,7 +316,7 @@ Owner 的渲染器/数据/状态词汇，不 fork 第二套。**富展示不算�
 4. **一个注册表治一域**：模块用 Product Module Registry，测试用 Testing Registry；新面读注册表，**禁止第二张硬编码模块表**（机器契约 `dev-dashboard.md:62-67`）。
 5. **状态词汇唯一**：全看板共用一套 `statusMeta` 与 7 色，禁止每文件重定义 `FEATURE_STATUS`/状态 map。
 6. **颜色语义不串**：模块色只表模块，状态色只表状态，导航不用模块色。
-7. **总览只增镜像不增明细**。
+7. **总览可富展示 Mirror，但不新增第二套 Owner 明细实现**。
 8. **命令与状态分离**：「怎么做」（usage-ops）与「做到哪」（deployment/testing/release）分页，靠交叉链接连接，不互相内嵌明细。
 9. **一页一文件**：渲染模块与页面一一对应（拆散 `ops-panels.js`）。
 10. **删孤儿**：无 DOM/无 consumer 的渲染器与 state key 一经发现即删（见 §7）。

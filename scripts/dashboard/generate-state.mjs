@@ -2195,6 +2195,8 @@ const snapshot = {
   skill_groups: skillGroups,
   agent_families: agentFamilies,
   skill_agent_registry: skillAgentRegistry,
+  // machine-only: emitted for external tooling / historical dashboard consumers,
+  // no current dashboard JS renderer consumes doc_collections directly.
   doc_collections: buildDocCollections(skillGroups, agentFamilies),
   doc_hub: buildDocHub(skillGroups, agentFamilies),
   // machine-only: emitted for external tooling, no dashboard consumer
