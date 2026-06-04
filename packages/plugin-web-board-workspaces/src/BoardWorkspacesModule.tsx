@@ -4,7 +4,7 @@
  * composes the 6-view picker from row #8 (@repo/plugin-web-board-views)
  * inside the central panel.
  *
- * Persistence: 5 registry slots:
+ * Persistence: 6 registry slots:
  *   - xai_boards_v2          (Board[])     — narrowed via loadBoardsOrDefault
  *   - xai_active_board       (string)      — resolved via pickActiveBoard
  *   - xai_board_panels       (unknown[])   — narrowed via loadPanelsOrDefault;
@@ -13,6 +13,8 @@
  *   - xai_board_view_by_id   (Record<id, BoardViewId>) — narrowed via
  *                                            loadViewByBoardIdOrEmpty
  *                                            (declared by row #8)
+ *   - xai_board_filter_by_id (Record<id, SavedBoardFilter>) — narrowed via
+ *                                            savedFilters helpers
  *
  * View composition (row #8 hand-off — cross-vendor verify BLOCKER fix):
  * The disabled header view-picker placeholder was replaced with the real
@@ -83,7 +85,6 @@ import {
   applyFilter,
 } from "@repo/plugin-web-board-views";
 import type { BoardViewId, FilterState } from "@repo/plugin-web-board-views";
-import { EMPTY_FILTER } from "@repo/plugin-web-board-views";
 
 import { BoardSwitcher } from "./BoardSwitcher.js";
 import { BoardCreator } from "./BoardCreator.js";
@@ -101,6 +102,11 @@ import {
   togglePanelInvariant,
   isSinglePanelOpen,
 } from "./internal/panelOps.js";
+import {
+  filterStateForBoard,
+  loadSavedBoardFilters,
+  setSavedFilterForBoard,
+} from "./internal/savedFilters.js";
 import type {
   BoardPanelStateShape,
   InboxCardShape,
@@ -187,6 +193,9 @@ export function BoardWorkspacesModule({ lang }: BoardWorkspacesModuleProps) {
   const [rawViewByBoardId, setRawViewByBoardId] = usePref(
     "xai_board_view_by_id",
   );
+  const [rawSavedFilters, setRawSavedFilters] = usePref(
+    "xai_board_filter_by_id",
+  );
 
   const boards: Board[] = loadBoardsOrDefault(rawBoards);
   const taskCols = useMemo(() => loadTaskColsOrSeed(rawTaskCols), [rawTaskCols]);
@@ -205,6 +214,10 @@ export function BoardWorkspacesModule({ lang }: BoardWorkspacesModuleProps) {
 
   const viewByBoardId = loadViewByBoardIdOrEmpty(rawViewByBoardId);
   const activeView: BoardViewId = viewByBoardId[activeBoard.id] ?? "board";
+  const savedFiltersById = useMemo(
+    () => loadSavedBoardFilters(rawSavedFilters),
+    [rawSavedFilters],
+  );
 
   const workspaces = DEFAULT_WORKSPACES;
   const activeWorkspace =
@@ -239,11 +252,27 @@ export function BoardWorkspacesModule({ lang }: BoardWorkspacesModuleProps) {
     [boards, activeBoard.id, rawBoards, setRawBoards],
   );
 
-  // ---- Filter state (HC1: render-only; reset on board switch) -----------
-  const [filter, setFilter] = useState<FilterState>(EMPTY_FILTER);
+  // ---- Filter state (row #10: persisted per board) ----------------------
+  const [filter, setFilterState] = useState<FilterState>(() =>
+    filterStateForBoard(savedFiltersById, activeBoard.id),
+  );
   useEffect(() => {
-    setFilter(EMPTY_FILTER);
-  }, [activeBoard.id]);
+    setFilterState(filterStateForBoard(savedFiltersById, activeBoard.id));
+  }, [activeBoard.id, savedFiltersById]);
+
+  const setFilter = useCallback(
+    (next: FilterState) => {
+      setFilterState(next);
+      setRawSavedFilters((prev) =>
+        setSavedFilterForBoard(
+          loadSavedBoardFilters(prev),
+          activeBoard.id,
+          next,
+        ),
+      );
+    },
+    [activeBoard.id, setRawSavedFilters],
+  );
 
   const filteredLists = applyFilter(activeCardLists, filter);
 

@@ -23,9 +23,10 @@
 ## Verification Commands
 
 ```bash
-pnpm --filter @repo/plugin-web-storage test -- --run src/__tests__/registry.test.ts src/__tests__/parity-design-md.test.ts
+pnpm --filter @repo/plugin-web-storage test -- --run src/__tests__/registry.test.ts
+pnpm --filter @repo/plugin-web-storage check-types
 pnpm --filter @repo/plugin-web-board-workspaces lint
-pnpm --filter @repo/plugin-web-board-workspaces check-types
+pnpm --filter @repo/plugin-web-board-workspaces typecheck
 pnpm --filter @repo/plugin-web-board-workspaces test
 pnpm --filter @repo/web check-types
 pnpm --filter @repo/web test -- --run
@@ -33,6 +34,11 @@ pnpm --filter @repo/web build
 pnpm --filter @repo/web test -- --run src/__tests__/build-manifest.test.ts
 git diff --check
 ```
+
+`src/__tests__/parity-design-md.test.ts` is updated with the new owner-row
+exemption, but it requires the historical `web design/DESIGN.md` source file.
+That file is not tracked in this worktree, so the executable storage gate for
+this row is the registry contract test plus storage typecheck.
 
 ## Manual Smoke
 

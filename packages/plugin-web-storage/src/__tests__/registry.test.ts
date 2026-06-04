@@ -165,6 +165,7 @@ const OWNER_ROW_ADDITIONS = [
   "xai_pref_week_start",      // xai-web-calendar #12 (first consumer of xai_pref_* family)
   "xai_meditation_prefs",     // xai-web-meditation #16
   "xai_board_view_by_id",     // xai-web-board-views #8 (per-board active view selection)
+  "xai_board_filter_by_id",   // xai-web-board-saved-filters #10 (per-board saved filter selection)
   // xai-web-settings-features-panel #23 — 8 boolean toggles, one per user-toggleable rail module
   "xai_pref_features_tasks",
   "xai_pref_features_board",
@@ -238,5 +239,18 @@ describe("AC-REG-8: Total entry count = 20 baseline + owner-row additions", () =
     for (const k of all) {
       expect(ALL_REGISTRY_KEYS).toContain(k);
     }
+  });
+});
+
+describe("AC-REG-9: xai-web-board-saved-filters owner-row key contract", () => {
+  it("registers xai_board_filter_by_id as module json state", () => {
+    expect(PREF_REGISTRY.xai_board_filter_by_id).toMatchObject({
+      key: "xai_board_filter_by_id",
+      codec: "json",
+      default: {},
+      schemaVersion: 1,
+      owner: "xai-web-board-saved-filters",
+      category: "module",
+    });
   });
 });

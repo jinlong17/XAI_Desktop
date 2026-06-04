@@ -48,6 +48,17 @@ function getStoredTaskCols(): TaskCol[] {
   return JSON.parse(raw) as TaskCol[];
 }
 
+function getStoredBoardFilters(): Record<
+  string,
+  { labels?: string[]; members?: string[]; dueRange?: string }
+> {
+  const raw = localStorage.getItem("xai_board_filter_by_id");
+  return raw ? JSON.parse(raw) as Record<
+    string,
+    { labels?: string[]; members?: string[]; dueRange?: string }
+  > : {};
+}
+
 function getStoredTask(taskId: string) {
   for (const col of getStoredTaskCols()) {
     const task = col.tasks.find((entry) => entry.id === taskId);
@@ -296,22 +307,90 @@ describe("BoardWorkspacesModule (BWM1..BWM18)", () => {
     expect(screen.getByTestId("share-dialog")).toBeInTheDocument();
   });
 
-  it("BWM-EXT-6: Switching active board (via BoardSwitcher pick) resets filter to EMPTY_FILTER", async () => {
+  it("BWM-EXT-6: changing filters persists the active board filter without mutating boards", async () => {
     render(<BoardWorkspacesModule lang="en" />);
     await act(async () => { await Promise.resolve(); });
 
-    // Open filter and enable a filter
+    const boardsBefore = localStorage.getItem("xai_boards_v2");
     fireEvent.click(screen.getByTestId("filter-btn"));
-    // Filter popover is open; close it first (simulate board switch without setting filter)
-    // Simply verify: opening and closing the filter popover doesn't persist filter state
-    // across a "board switch" scenario — the useEffect in BWM sets filter=EMPTY_FILTER on board change.
-    // We just verify the filter button is still enabled and functional.
-    const filterBtn = screen.getByTestId("filter-btn");
-    expect(filterBtn).toHaveAttribute("aria-expanded", "true");
+    fireEvent.click(screen.getByTestId("fp-label-l1"));
+    fireEvent.click(screen.getByTestId("fp-member-u1"));
+    fireEvent.click(screen.getByTestId("fp-due-today"));
 
-    // Close popover
+    const stored = getStoredBoardFilters();
+    expect(stored["b-default"]).toEqual({
+      labels: ["l1"],
+      members: ["u1"],
+      dueRange: "today",
+    });
+    expect(localStorage.getItem("xai_boards_v2")).toBe(boardsBefore);
+  });
+
+  it("BWM-SAVED-FILTER-1: remount restores the saved filter for the active board", async () => {
+    localStorage.setItem("xai_board_filter_by_id", JSON.stringify({
+      "b-default": { labels: ["l1"], members: ["u1"], dueRange: "today" },
+    }));
+
+    const { unmount } = render(<BoardWorkspacesModule lang="en" />);
+    await act(async () => { await Promise.resolve(); });
+    unmount();
+
+    render(<BoardWorkspacesModule lang="en" />);
+    fireEvent.click(screen.getByTestId("filter-btn"));
+
+    expect(screen.getByTestId("fp-label-l1")).toBeChecked();
+    expect(screen.getByTestId("fp-member-u1")).toBeChecked();
+    expect(screen.getByTestId("fp-due-today")).toBeChecked();
+  });
+
+  it("BWM-SAVED-FILTER-2: board switch restores each board's own saved filter", async () => {
+    localStorage.setItem("xai_boards_v2", JSON.stringify(makeDefaultBoards()));
+    localStorage.setItem("xai_active_board", "b-default");
+    localStorage.setItem("xai_board_filter_by_id", JSON.stringify({
+      "b-default": { labels: ["l1"], members: [], dueRange: "today" },
+      "b-pm": { labels: ["pm-forms"], members: ["u2"], dueRange: "overdue" },
+    }));
+
+    render(<BoardWorkspacesModule lang="en" />);
+    fireEvent.click(screen.getByTestId("filter-btn"));
+    expect(screen.getByTestId("fp-label-l1")).toBeChecked();
+    expect(screen.getByTestId("fp-due-today")).toBeChecked();
+
     fireEvent.keyDown(window, { key: "Escape" });
-    expect(filterBtn).toHaveAttribute("aria-expanded", "false");
+    fireEvent.click(screen.getByTestId("board-title-btn"));
+    fireEvent.click(screen.getByTestId("bs-card-b-pm"));
+    fireEvent.click(screen.getByTestId("filter-btn"));
+
+    expect(screen.getByTestId("fp-label-pm-forms")).toBeChecked();
+    expect(screen.getByTestId("fp-member-u2")).toBeChecked();
+    expect(screen.getByTestId("fp-due-overdue")).toBeChecked();
+
+    fireEvent.keyDown(window, { key: "Escape" });
+    fireEvent.click(screen.getByTestId("board-title-btn"));
+    fireEvent.click(screen.getByTestId("bs-card-b-default"));
+    fireEvent.click(screen.getByTestId("filter-btn"));
+
+    expect(screen.getByTestId("fp-label-l1")).toBeChecked();
+    expect(screen.getByTestId("fp-due-today")).toBeChecked();
+  });
+
+  it("BWM-SAVED-FILTER-3: Clear persists the active board reset", async () => {
+    localStorage.setItem("xai_board_filter_by_id", JSON.stringify({
+      "b-default": { labels: ["l1"], members: ["u1"], dueRange: "today" },
+    }));
+
+    render(<BoardWorkspacesModule lang="en" />);
+    fireEvent.click(screen.getByTestId("filter-btn"));
+    fireEvent.click(screen.getByTestId("fp-clear-btn"));
+
+    expect(getStoredBoardFilters()["b-default"]).toEqual({
+      labels: [],
+      members: [],
+      dueRange: "all",
+    });
+    expect(screen.getByTestId("fp-label-l1")).not.toBeChecked();
+    expect(screen.getByTestId("fp-member-u1")).not.toBeChecked();
+    expect(screen.getByTestId("fp-due-all")).toBeChecked();
   });
 
   it("BWM-EXT-3: Selecting a label in the popover narrows the visible card count in BoardView", async () => {
