@@ -15,8 +15,8 @@
 
 | # | Slug | Source | Depends On | Dep Semantics | Status | Priority | Note |
 |---|------|--------|------------|---------------|--------|----------|------|
-| 1 | xai-web-project-prd-sync | `docs/reviews/xai-web-project-module/20260603-audit-and-prd.md` | — | — | PENDING | P0 | Align Web PRD, PLUGIN_MAP, and product structure docs around `/app/board` vs formal Project naming. |
-| 2 | xai-web-board-card-detail | same | xai-web-project-prd-sync | ready_to_ship | PENDING | P0 | Wire card click to detail modal/page with title, description, checklist, dates, labels, members, links, and activity notes. |
+| 1 | xai-web-project-prd-sync | `docs/reviews/xai-web-project-module/20260603-audit-and-prd.md` | — | — | SHIPPED | P0 | Align Web PRD, PLUGIN_MAP, and product structure docs around `/app/board` vs formal Project naming. Shipped in `e79ecc5`. |
+| 2 | xai-web-board-card-detail | same | xai-web-project-prd-sync | ready_to_ship | SHIPPED | P0 | Wire card click to detail modal/page with title, description, checklist, dates, labels, members, links, and activity notes. Shipped in `de9e120`. |
 | 3 | xai-web-board-date-model | same | xai-web-project-prd-sync | ready_to_ship | PENDING | P0 | Replace display date strings with typed ISO fields and derived today/overdue labels across Board/Table/Calendar/Timeline/Dashboard. |
 | 4 | xai-web-board-list-crud | same | xai-web-board-card-detail | ready_to_ship | PENDING | P0 | Add rename, delete/archive, and reorder for lists. |
 | 5 | xai-web-board-card-crud | same | xai-web-board-card-detail | ready_to_ship | PENDING | P0 | Add card rename, archive/delete, and within-list reorder; preserve stable ordering. |
@@ -39,7 +39,8 @@ This file is the current source-backed personal development board for the Web Pr
 
 | Board List | Cards |
 |---|---|
-| This Week | `xai-web-project-prd-sync`, `xai-web-board-card-detail`, `xai-web-board-date-model`, `xai-web-board-list-crud`, `xai-web-board-card-crud`, `xai-web-board-checklist-editor` |
+| Shipped | `xai-web-project-prd-sync`, `xai-web-board-card-detail` |
+| This Week | `xai-web-board-date-model`, `xai-web-board-list-crud`, `xai-web-board-card-crud`, `xai-web-board-checklist-editor` |
 | Backlog | `xai-web-board-storage-contract`, `xai-web-board-task-link`, `xai-web-board-calendar-feed`, `xai-web-board-saved-filters`, `xai-web-board-share-contract` |
 | Waiting | `xai-web-board-export-import` waits on export/delete/privacy ownership; `xai-web-board-calendar-feed` waits on calendar feed contract; `xai-web-board-share-contract` waits on sync/share envelope decisions. |
 | Later | `xai-web-board-responsive-smoke`, `xai-web-board-automation-lite`, `xai-web-board-integrations`, `xai-web-board-comments-activity`, `xai-web-board-permissions` |
