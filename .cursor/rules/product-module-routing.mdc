@@ -1,0 +1,50 @@
+---
+description: Classify every dev task into one of six product modules before starting, then use that module's branch / skill / workflow
+alwaysApply: true
+---
+
+# Product Module Routing — classify the task first
+
+Before starting ANY development task, classify it into exactly **one** of the six
+product modules, then use that module's branch + skill + workflow. Authority:
+`docs/adr/0013-branch-sync-governance.md` §D1/§D2; mirrored in `CLAUDE.md`
+§"Product module map & task routing" and `AGENTS.md` §3. Full per-module
+navigation (开发目标 / 绑定 skill / prompt 模板 / 开发 workflow / 进入下一模块的触发条件 /
+影响的模块) lives in **`docs/PRODUCT_MODULE_MAP.md`** and the dev-dashboard 产品结构图.
+
+| 模块 | key | Surface | 主 / 短分支 | 任务归属信号 | 状态 |
+|---|---|---|---|---|---|
+| Web 版本 | `web` | `apps/web/`, `packages/xai-web-*`, `plugin-web-*` | `web` / `codex/web/<feature>` | Web 页面·组件、Vite SPA、浏览器持久化、共享 UI、`/app/*` | P0 active |
+| Mac 桌面版 App | `app` | `apps/desktop/` (Tauri 2 Web container shell) | `desktop-next`→`dev` / `codex/desktop/<feature>` | Web SPA 主窗口、native chrome、菜单栏/托盘、离线、账号+Keychain、自动更新、通知、深链、host command implementation | P1 active |
+| 桌面整理插件 / Widget | `plugin` | `apps/desktop/` 插件平台运行时 + `packages/plugin-*` | `desktop-plugin-next` / `codex/plugin/<feature>` | 插件 SDK、widget host、多窗口/overlay/click-through/grid persistence、桌面整理、快速入口、单插件 | G1 runtime active · packages P2 paused |
+| 账号云同步层 | `sync` | sync-v1 stack + server | (paused) / `codex/sync/<feature>` | `syncScope`、push/pull、冲突、跨设备、账号云 | P2 paused |
+| 官方网页 | `site` | Cloudflare deploy infra | (proposed) / `codex/site/<feature>` | 下载页、自动更新、release notes、营销 | PROPOSED |
+| Admin / 控制面 | `admin` | prototype `docs/prototypes/admin-dashboard/` | (proposed) / `codex/admin/<feature>` | AI 配置、权限、用量、审计、运营后台 | PROPOSED |
+
+Hard rules (do not violate):
+
+- `web → app` only flows through the D3 gate (`xai-web-to-desktop-sync`, W0–W4 +
+  parity receipt). Never merge Web changes straight into `dev`.
+- Physical host location is not product ownership: Tauri/native-window commands live
+  in the host process, but desktop multi-window / overlay / widget runtime is a
+  `plugin` product concern. The `app` module is the Mac shell / Web container plus
+  native chrome, not the desktop organizer.
+- G1 plugin platform-runtime work (multi-window engine, grid persistence,
+  window-command) is the active gate. Concrete plugin packages
+  (clipboard/widgets/pet/meditation) remain P2 paused until G1 ships.
+- `sync` only moves `syncScope: account-sync` entities; `device-local` never goes
+  to the cloud (ADR-0013 §D4).
+- `site` / `admin` are PROPOSED (owner-deferred) — do not open new work branches or
+  treat them as active lines without operator confirmation; use `xai-feature-brief`
+  to normalize as a placeholder.
+- Future iPhone / iPad / Apple Watch / Android / browser-extension surfaces live in
+  `docs/planning/LONG_TERM_PRODUCT_ROADMAP.md` as planning-only `future_surfaces`;
+  never classify them as active module targets without operator confirmation.
+- `desktop-next` / `desktop-plugin-next` / `release/desktop/<version>` are defined
+  but **not yet created**; creating them (and anything touching `dev`) needs explicit
+  operator confirmation.
+- Same-Web-line deploy/CSP changes (`apps/web/wrangler.toml`, `apps/web/public/_headers`)
+  follow the ADR-0008 extension protocol + feature-plan/review — NOT the D3 gate.
+
+This routing rule is synced across `CLAUDE.md` §Product module map, `AGENTS.md` §3,
+this file, and `docs/PRODUCT_MODULE_MAP.md`. Changing one means changing the others.

@@ -1,0 +1,90 @@
+{
+  "schema_version": 1,
+  "source": "docs/MODULE_BOUNDARIES.md + docs/workflow/project/module-classification.json",
+  "updated": "2026-06-02",
+  "purpose": "Machine-readable check table for the xai-consistency-audit skill. Defines the 3 check groups that keep real development aligned with the management surface: (1) the 3-surface boundary (Web/App/Plugin 越界/归属), (2) feature reconciliation across code/PRD/dashboard, (3) skill/workflow registration + snapshot freshness. The audit DETECTS (read-only) then, on confirmation, applies record-drift fixes to BOTH docs and the dashboard so they never diverge. Code violations are report-only; governed fields (priority/branch/release/ship) are needs-operator.",
+  "governance": {
+    "authority": [
+      "docs/MODULE_BOUNDARIES.md",
+      "docs/workflow/project/module-classification.json",
+      "docs/workflow/project/dev-dashboard.md",
+      "docs/adr/0013-branch-sync-governance.md",
+      "docs/adr/0015-desktop-plugin-scope-and-organizer-level.md"
+    ],
+    "hard_rules": [
+      "DETECT is always read-only; never write during scanning",
+      "APPLY only after explicit operator confirmation; record-drift fixes write docs + dashboard in ONE coherent pass so they stay aligned",
+      "CODE violations (a plugin implementing native commands, re-doing a Web module, bypassing D3) are REPORT-ONLY — fixing code is feature-workflow territory, not this skill",
+      "NEVER auto-change priority / branch / release / ship / roadmap — report needs-operator (dev-dashboard.md write-authority)",
+      "frozen lines (plugin/sync PAUSED, site/admin PROPOSED) get impact-note only, no source landing",
+      "this skill detects + routes; it delegates real writes to owning skills where one exists (dashboard via xai-dev-dashboard-sync rules, PRD via xai-feature-dossier-sync, syncScope proof via xai-account-sync-scope-check)"
+    ],
+    "frozen_lines": {
+      "plugin": "P2 PAUSED until G1 — impact-note only",
+      "sync": "P2 PAUSED until G1 — receipt only",
+      "site": "PROPOSED — owner-deferred",
+      "admin": "PROPOSED — owner-deferred"
+    }
+  },
+  "check_groups": [
+    {
+      "key": "boundary",
+      "title": "① 边界 越界/归属 (3-surface table HR1-5)",
+      "summary": "Every feature/package must sit on the correct surface (Web/App/Plugin) and obey the MODULE_BOUNDARIES capability table. Reuses module-classification.json drift_checks + completes HR1/HR2/HR5.",
+      "checks": [
+        { "id": "bnd_window_impl_in_plugin", "rule": "HR1", "severity": "BLOCKER", "scans": ["packages/plugin-*/src", "apps/desktop/src-tauri/commands"], "detect": "a plugin package defines/implements a native window·file·clipboard Tauri command (window.rs-style) instead of consuming one", "finding_type": "code_violation", "action": "report_only", "owning_fix": "app lane (feature workflow)" },
+        { "id": "bnd_module_redo_in_plugin", "rule": "HR2", "severity": "DRIFT", "scans": ["packages/plugin-*"], "detect": "a plugin re-implements the web-form of a module already covered by Web (tasks/board/calendar/pomodoro/habits/statistics...) instead of sharing the business-logic package", "finding_type": "code_violation", "action": "report_only", "owning_fix": "app lane (reuse plugin-productivity/project/labels)" },
+        { "id": "bnd_syncscope", "rule": "HR3", "severity": "DRIFT", "scans": ["packages/core-data/src/entities.ts", "packages/plugin-*/src/types.ts"], "detect": "a plugin entity has no syncScope, or a device-local entity is reachable by the outbox", "finding_type": "record_or_code", "action": "delegate", "owning_fix": "xai-account-sync-scope-check (D4 receipt)" },
+        { "id": "bnd_same_name", "rule": "HR4", "severity": "DRIFT", "scans": ["packages/", "dashboard-state.json features[]", "MODULE_BOUNDARIES.md"], "detect": "a feature named pet/widgets/grid/dashboard is not disambiguated web-DOM vs desktop-native", "finding_type": "record_drift", "action": "confirm_then_apply", "owning_fix": "self (annotate docs + dashboard)" },
+        { "id": "bnd_d3_bypass", "rule": "HR5", "severity": "BLOCKER", "scans": ["git log web..dev", "merge commits"], "detect": "a Web change reached the App/dev line without a D3 parity receipt", "finding_type": "code_violation", "action": "report_only", "owning_fix": "xai-web-to-desktop-sync (D3 gate)" },
+        { "id": "bnd_phantom_package", "rule": "drift", "severity": "DRIFT", "scans": ["docs/**", "dashboard-state.json"], "detect": "a packages/* path cited in docs/dashboard does not exist on disk (e.g. plugin-meditation, plugin-settings)", "finding_type": "record_drift", "action": "confirm_then_apply", "owning_fix": "self (annotate as Planned-no-package)" },
+        { "id": "bnd_frozen_line_landing", "rule": "drift", "severity": "BLOCKER", "scans": ["git diff", "changed paths"], "detect": "source landed on a PAUSED/PROPOSED line without an operator unfreeze", "finding_type": "code_violation", "action": "report_needs_operator", "owning_fix": "operator" },
+        { "id": "bnd_unknown_classification", "rule": "drift", "severity": "DRIFT", "scans": ["new packages", "changed paths"], "detect": "a feature matches no module signal, or 2+ with equal weight", "finding_type": "needs_classify", "action": "delegate", "owning_fix": "xai-module-classify (classify mode)" }
+      ]
+    },
+    {
+      "key": "feature_reconciliation",
+      "title": "② Feature ↔ 代码 / PRD / 看板 对账 (blind spot A)",
+      "summary": "Keep the feature picture honest across packages (code), PRD/PLUGIN_MAP (spec/status), and dashboard features[] (view). No ghost features, no missing features, no stale status.",
+      "checks": [
+        { "id": "feat_ghost", "severity": "DRIFT", "scans": ["dashboard-state.json product_lines[].features[]"], "detect": "a dashboard feature has NO PRD section AND NO package backing it", "finding_type": "record_drift", "action": "confirm_then_apply", "owning_fix": "xai-dev-dashboard-sync (remove or mark proposed-unspecced)" },
+        { "id": "feat_missing", "severity": "DRIFT", "scans": ["packages/", "dev_log SHIPPED"], "detect": "a package/feature on disk (or a dev_log marked SHIPPED) has no corresponding dashboard feature and/or no PRD entry", "finding_type": "record_drift", "action": "confirm_then_apply", "owning_fix": "xai-dev-dashboard-sync (add feature) + xai-feature-dossier-sync (PRD)" },
+        { "id": "feat_status_mismatch", "severity": "DRIFT", "scans": ["dashboard features[].status", "PLUGIN_MAP rows", "packages/*/docs/dev_log.md"], "detect": "dashboard feature status disagrees with PLUGIN_MAP status or dev_log status (e.g. package exists but dashboard says proposed; dev_log SHIPPED but dashboard in-dev)", "finding_type": "record_drift", "action": "confirm_then_apply", "owning_fix": "xai-dev-dashboard-sync" },
+        { "id": "feat_crosssurface_conflict", "severity": "DRIFT", "scans": ["MODULE_BOUNDARIES.md §5", "dashboard features[]", "PLUGIN_MAP"], "detect": "the same feature is described with conflicting surface/status across MODULE_BOUNDARIES, dashboard, and PLUGIN_MAP", "finding_type": "record_drift", "action": "confirm_then_apply", "owning_fix": "self (reconcile all three in one pass)" },
+        { "id": "feat_prd_code_mismatch", "severity": "DRIFT", "scans": ["docs/planning/**", "packages/*/docs/dev_log.md"], "detect": "code/dev_log iterations with no matching PRD requirement, or PRD requirements with no code", "finding_type": "record_drift", "action": "delegate", "owning_fix": "xai-feature-dossier-sync (audit mode)" }
+      ]
+    },
+    {
+      "key": "registration_freshness",
+      "title": "③ Skill/Workflow 登记 + 快照新鲜度 (blind spot B+C)",
+      "summary": "New skills/workflows must be registered everywhere they are tracked; the dashboard snapshot must be fresh. This is the closed-loop / single-entry layer.",
+      "checks": [
+        { "id": "reg_skill_unregistered", "severity": "INFO", "scans": [".teams/skills", ".claude/skills", ".codex/skills", ".cursor/rules", "CLAUDE.md Agent/Skill Tracking", "dashboard-state.json kpis"], "detect": "a .teams/skills/* skill is missing one of its .claude/.codex mirrors, OR is missing a .cursor/rules/xai-*.mdc mirror when it should work in Cursor, OR (if it is an operator entry-point skill) is absent from the curated dashboard '固定 skill' kpi note. NOTE: CLAUDE.md tracks skills by DIRECTORY (.teams/.claude/.codex/skills and Cursor rules are in the tracking contract), NOT a per-skill list; and the '固定 skill' kpi is a CURATED entry-point list — do NOT compare it against the raw .teams/skills directory count without checking entry-point intent", "finding_type": "record_drift", "action": "confirm_then_apply", "owning_fix": "self (.claude/.codex/.cursor mirror + curated kpi note; directory tracking already satisfies CLAUDE.md)" },
+        { "id": "reg_workflow_unregistered", "severity": "INFO", "scans": ["docs/workflow/_portable", ".codex/agents", ".claude/agents", ".cursor/agents", ".cursor/rules"], "detect": "a workflow/agent/rule not registered across the tracked surfaces", "finding_type": "record_drift", "action": "confirm_then_apply", "owning_fix": "self" },
+        { "id": "fresh_snapshot_stale", "severity": "INFO", "scans": ["git HEAD", "state.generated.js", "dashboard-state.json"], "detect": "dashboard snapshot commit != HEAD, or dirty-file count mismatch", "finding_type": "freshness", "action": "delegate", "owning_fix": "xai-dev-dashboard-sync (refresh / pnpm dashboard)" }
+      ]
+    }
+  ],
+  "apply_targets": {
+    "note": "When a record_drift finding is confirmed, write ALL relevant targets in one coherent pass so docs and dashboard stay aligned.",
+    "boundary_record": ["docs/workflow/project/module-classification.json", "docs/MODULE_BOUNDARIES.md", "docs/workflow/project/dashboard-state.json (product_lines[].features[])"],
+    "feature_record": ["docs/workflow/project/dashboard-state.json (features[])", "docs/MODULE_BOUNDARIES.md §5", "docs/PLUGIN_MAP.md (status reference only)"],
+    "registration_record": ["CLAUDE.md (Agent/Skill Tracking)", ".claude/skills + .codex/skills mirrors", "docs/workflow/project/dashboard-state.json (kpis fixed-skill count)"],
+    "never_auto": ["product priority", "long-lived branch creation", "release gate / ship", "roadmap authorization", "any dev-line / ADR-0011 reconcile"]
+  },
+  "triggers": [
+    { "id": "post_feature_ship", "when": "a feature reaches SHIPPED / after xai-feature-full-loop ship", "mode": "report_only", "wire": "prompt to run audit; reuse sync-registry dev_log->SHIPPED hook" },
+    { "id": "post_merge_web", "when": "after merge into web", "mode": "report_only", "wire": ".githooks/post-merge appended read-only audit line (after generate-state.mjs)" },
+    { "id": "weekly", "when": "weekly cadence", "mode": "report_only", "wire": "/loop 7d /xai-consistency-audit  OR macOS launchd/cron; report-only, no write contention with parallel agents" },
+    { "id": "pre_release", "when": "before an RC / ship gate", "mode": "report_then_confirm", "wire": "ship/RC pre-flight read-only audit (like xai-feature-dossier-sync before ship)" }
+  ],
+  "report_artifact": {
+    "path": "docs/reviews/<YYYYMMDD>-consistency-audit.md",
+    "fields": ["Verdict (CLEAN | DRIFT_FOUND | NEEDS_OPERATOR | BLOCKED)", "Scope", "Snapshot fresh?", "Findings table (id | group | severity | evidence path:line | finding_type | owning_fix | action)", "Frozen-line hits (impact-note only)", "Apply plan (on confirm): coherent doc+dashboard edits", "Operator-gated (NEVER auto)"]
+  },
+  "consumers": {
+    "skill": "xai-consistency-audit",
+    "reuses": ["xai-module-classify (boundary scan engine)", "xai-dev-dashboard-sync (dashboard writes)", "xai-feature-dossier-sync (PRD writes)", "xai-account-sync-scope-check (D4)", "xai-web-to-desktop-sync (D3)"],
+    "rule_sources": ["docs/workflow/project/module-classification.json (drift_checks + hard_rules)", "docs/MODULE_BOUNDARIES.md"]
+  }
+}

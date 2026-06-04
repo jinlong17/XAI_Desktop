@@ -3,6 +3,10 @@
   "private": true,
   "scripts": {
     "build": "turbo run build",
+    "dashboard": "node scripts/dashboard/generate-state.mjs",
+    "dashboard:serve": "node scripts/dashboard/serve.mjs",
+    "dashboard:verify-modules": "node scripts/dashboard/verify-product-modules.mjs",
+    "dashboard:verify-static": "node scripts/dashboard/verify-static.mjs",
     "dev": "turbo run dev",
     "lint": "turbo run lint",
     "typecheck": "pnpm check-types",
