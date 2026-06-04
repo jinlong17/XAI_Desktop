@@ -557,3 +557,17 @@ No consumer wired in this row (declaration-only — mirrors row #5 precedent).
 | `<dialog>` not supported (legacy browsers) | Per row #5 R4 — Baseline 2022; deferred to that ADR-level analysis. |
 | Filter applied while a card is being mid-drag (Calendar DnD / Timeline DnD) | Card movement writes back to SOURCE list via `updateCard` (delegates to `updateCardInList`); filter is recomputed on next render. No orphan state. |
 
+## §S16 — 2026-06-03 Extension API (Project module row #14 — Automation Lite)
+
+> Canonical row docs live in `packages/xai-web-board-automation-lite/docs/`.
+
+`BoardWorkspacesModule` now wires Board Automation Lite through board-core's
+public helper:
+
+- browser-local daily mount pass per active board/day
+- toolbar command `data-testid="automation-run-btn"` for manual preset reruns
+- cross-list move path runs completion automation with `sortDueDates: false`
+- writes continue through `preserveBoardStorageFormat(rawBoards, nextBoards)`
+
+No automation settings key, backend scheduler, notification channel, or custom
+rule builder is introduced.

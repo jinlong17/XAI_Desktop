@@ -54,6 +54,9 @@ describe("index barrel", () => {
     expect(typeof Barrel.isIsoDateOnly).toBe("function");
     expect(typeof Barrel.normalizeBoardCardDates).toBe("function");
     expect(typeof Barrel.parseIsoDateOnly).toBe("function");
+    expect(Barrel.BOARD_AUTOMATION_DUE_SOON_DAYS).toBe(2);
+    expect(Barrel.BOARD_AUTOMATION_URGENT_LABEL_ID).toBe("urgent");
+    expect(typeof Barrel.applyBoardAutomationLite).toBe("function");
 
     // Persistence
     expect(typeof Barrel.loadBoardsOrDefault).toBe("function");

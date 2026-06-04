@@ -304,3 +304,17 @@ Existing 135 tests in `packages/plugin-web-board-workspaces/src/__tests__/**` MU
 | G3a | All NEW tests (38 cases) PASS individually |
 | G3b | Existing 135 tests PASS unchanged (no regression) |
 
+## §7 — 2026-06-03 Extension Tests (Project module row #14 — Automation Lite)
+
+> Canonical row docs live in `packages/xai-web-board-automation-lite/docs/`.
+
+| File | Suite | Cases |
+|---|---|---|
+| `__tests__/BoardWorkspacesModule.test.tsx` | BWM-AUTO-1 | Daily mount automation persists urgent labels, due-date sort, and Done completion through `xai_boards_v2`. |
+| | BWM-AUTO-2 | Manual toolbar button reruns presets after a same-day due edit. |
+
+Acceptance gate:
+
+- `pnpm --filter @repo/plugin-web-board-workspaces typecheck`
+- `pnpm --filter @repo/plugin-web-board-workspaces lint`
+- `pnpm --filter @repo/plugin-web-board-workspaces test`

@@ -97,6 +97,7 @@ describe("isBoardArray", () => {
         id: "c1",
         title: { en: "a", zh: "b" },
         archived: true,
+        completedAt: "2026-06-03T12:00:00.000Z",
         description: "Detail text",
         labels: ["l1"],
         members: ["u1"],
@@ -131,6 +132,16 @@ describe("isBoardArray", () => {
         cover: "linear-gradient(...)",
       }),
     ).toBe(true);
+  });
+
+  test("V8be isBoardCard rejects malformed completedAt", () => {
+    expect(
+      isBoardCard({
+        id: "c1",
+        title: { en: "a", zh: "b" },
+        completedAt: 123,
+      }),
+    ).toBe(false);
   });
 
   test("V8bc isBoardCard rejects malformed archived card shape", () => {

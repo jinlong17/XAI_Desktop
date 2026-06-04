@@ -107,6 +107,9 @@ export function isBoardCard(value: unknown): value is BoardCard {
   if (value.archived !== undefined && typeof value.archived !== "boolean") {
     return false;
   }
+  if (value.completedAt !== undefined && !isString(value.completedAt)) {
+    return false;
+  }
   if (value.description !== undefined && !isString(value.description)) return false;
   if (value.labels !== undefined && !Array.isArray(value.labels)) return false;
   if (

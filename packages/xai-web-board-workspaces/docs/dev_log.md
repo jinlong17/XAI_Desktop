@@ -299,3 +299,24 @@ Already enumerated in test.md §5 (Q1..Q11). Confirm:
 | 2026-05-25 22:50 | Claude Opus 4.7 1M (feature-verify cycle 2) | Cross-ref flip: Status → READY_TO_SHIP. Re-ran focused gates: `pnpm --filter @repo/plugin-web-board-workspaces typecheck` → exit 0 (B2 transitive resolved); `lint --max-warnings 0` → exit 0 (B4 resolved); `test` → 173/173 PASS. fb5bb98 patch spot-checked: 5 file cleanups verified, no production logic changed, commit hygiene compliant. See canonical dev_log in board-views for full cycle-2 verify report. | — | ship |
 | 2026-05-25 | Claude Opus 4.7 1M (feature-review) | APPROVED. 0 blockers; 12 review gates PASS. See canonical dev_log (board-views) for full Review Notes + 2 non-blocking recommendations. Status flipped to APPROVED mirror; canonical is the source of truth. | — | feature-auto-build |
 | 2026-05-25 23:10 | claude-sonnet-4-6 (ship) | Cross-ref flip: Status → SHIPPED. All 3 lineage dev_logs flipped in this commit. Ship Report in canonical dev_log (`packages/xai-web-board-views/docs/dev_log.md`). This package's 4 build commits included in Ship Report: cfff4c5 (P2), ba0a2f0 (P3), f60502b (P4), 7c28d4c (P5 partial — Suspense wrap). Deferred residual risks acknowledged (RR-1 cross-vendor cold-read / RR-3 manual browser smoke) per canonical dev_log. | (dev_log flip commit — this) | Workflow complete |
+
+---
+
+## Extension Lineage - xai-web-board-automation-lite (2026-06-03) - cross-ref
+
+> Canonical row docs live in `packages/xai-web-board-automation-lite/docs/`.
+
+- `BoardWorkspacesModule` runs browser-local Automation Lite once per active
+  board/day in the current session.
+- Header toolbar now exposes `Automate` / `自动化` via
+  `data-testid="automation-run-btn"` for explicit preset reruns.
+- Cross-list card moves run completion automation with due-date sorting disabled
+  so move-to-Done can mark completion without reshuffling the full board.
+- Board writes continue through board-core storage preservation.
+
+Verification:
+
+- PASS `pnpm --filter @repo/plugin-web-board-workspaces typecheck`
+- PASS `pnpm --filter @repo/plugin-web-board-workspaces lint`
+- PASS `pnpm --filter @repo/plugin-web-board-workspaces test` (217 tests)
+- PASS local Chrome smoke at `http://localhost:3001/app/board`

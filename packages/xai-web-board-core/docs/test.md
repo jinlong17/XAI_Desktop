@@ -202,3 +202,22 @@ Acceptance gate:
 - `pnpm --filter @repo/plugin-web-board-core typecheck`
 - `pnpm --filter @repo/plugin-web-board-core lint`
 - `pnpm --filter @repo/plugin-web-board-core test`
+
+## §8 — 2026-06-03 Extension Tests (Project module row #14 — Automation Lite)
+
+> Canonical row docs live in `packages/xai-web-board-automation-lite/docs/`.
+
+| File | Suite | Cases |
+|---|---|---|
+| `__tests__/automationLite.test.ts` | AUTO-1 | Done list completion sets `completedAt` and completes checklist progress. |
+| | AUTO-2 | Due-soon active non-Done cards receive `urgent` once; overdue/later/Done cards are skipped. |
+| | AUTO-3 | Active non-Done cards sort by valid due date while archived card positions are preserved. |
+| | AUTO-4 | No-op input returns the same list reference and zero stats. |
+| `__tests__/isBoardArray.test.ts` | V8be | Guard accepts additive `completedAt` strings and rejects malformed values. |
+| `__tests__/index-barrel.test.ts` | IB1 | Barrel exports Automation Lite constants and helper. |
+
+Acceptance gate:
+
+- `pnpm --filter @repo/plugin-web-board-core typecheck`
+- `pnpm --filter @repo/plugin-web-board-core lint`
+- `pnpm --filter @repo/plugin-web-board-core test`

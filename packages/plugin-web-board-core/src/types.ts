@@ -78,6 +78,8 @@ export interface BoardCard {
   title: BilingualText;
   /** Soft-hidden from active card renders; restored/deleted by card manager. */
   archived?: boolean;
+  /** ISO datetime marker set by Automation Lite when a card enters Done. */
+  completedAt?: string;
   /** Rich card detail description, persisted by the workspace detail modal. */
   description?: string;
   /** Label ids; reference entries in PM_LABELS or future global label set. */

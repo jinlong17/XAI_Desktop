@@ -42,6 +42,7 @@ import {
   BoardView,
   BOARD_TEMPLATES,
   DEFAULT_WORKSPACES,
+  applyBoardAutomationLite,
   loadBoardsOrDefault,
   makeDefaultBoards,
   pickActiveBoard,
@@ -56,6 +57,7 @@ import {
   getActiveBoardLists,
   getArchivedBoardCards,
   getArchivedBoardLists,
+  isoDateFromOffset,
   moveCardWithinListByOffset as moveCardWithinListByOffsetOp,
   moveCardToList as moveCardOp,
   moveListByOffset as moveListByOffsetOp,
@@ -285,6 +287,7 @@ export function BoardWorkspacesModule({ lang }: BoardWorkspacesModuleProps) {
   const [archiveCardsOpen, setArchiveCardsOpen] = useState(false);
   const [shareOpen, setShareOpen] = useState(false);
   const [activeCardRef, setActiveCardRef] = useState<ActiveCardRef | null>(null);
+  const [automationAppliedKey, setAutomationAppliedKey] = useState<string | null>(null);
 
   // ---- Kanban-view composer state ---------------------------------------
   const [draftListId, setDraftListId] = useState<string | null>(null);
@@ -315,6 +318,38 @@ export function BoardWorkspacesModule({ lang }: BoardWorkspacesModuleProps) {
     },
     [panels, setPanels],
   );
+
+  const applyAutomationToActiveBoard = useCallback(
+    (options: Parameters<typeof applyBoardAutomationLite>[1] = {}) => {
+      const result = applyBoardAutomationLite(activeBoard.lists, options);
+      if (!result.changed) return result;
+
+      const nextBoards = boards.map((board) =>
+        board.id === activeBoard.id ? { ...board, lists: result.lists } : board,
+      );
+      setRawBoards(preserveBoardStorageFormat(rawBoards, nextBoards) as unknown);
+      return result;
+    },
+    [activeBoard.id, activeBoard.lists, boards, rawBoards, setRawBoards],
+  );
+
+  useEffect(() => {
+    if (rawBoards === null) return;
+    const todayKey = `${activeBoard.id}:${isoDateFromOffset(0)}`;
+    if (automationAppliedKey === todayKey) return;
+    applyAutomationToActiveBoard({ now: new Date() });
+    setAutomationAppliedKey(todayKey);
+  }, [
+    activeBoard.id,
+    applyAutomationToActiveBoard,
+    automationAppliedKey,
+    rawBoards,
+  ]);
+
+  const runAutomationPresets = useCallback(() => {
+    applyAutomationToActiveBoard({ now: new Date() });
+    setAutomationAppliedKey(`${activeBoard.id}:${isoDateFromOffset(0)}`);
+  }, [activeBoard.id, applyAutomationToActiveBoard]);
 
   // ---- Switcher actions --------------------------------------------------
   const createBoard = useCallback(
@@ -387,7 +422,14 @@ export function BoardWorkspacesModule({ lang }: BoardWorkspacesModuleProps) {
 
   const moveCardToList = useCallback(
     (cardId: string, fromListId: string, toListId: string) => {
-      writeLists((prev) => moveCardOp(prev, cardId, fromListId, toListId));
+      writeLists((prev) => {
+        const moved = moveCardOp(prev, cardId, fromListId, toListId);
+        if (moved === prev) return prev;
+        return applyBoardAutomationLite(moved, {
+          now: new Date(),
+          sortDueDates: false,
+        }).lists;
+      });
     },
     [writeLists],
   );
@@ -716,6 +758,14 @@ export function BoardWorkspacesModule({ lang }: BoardWorkspacesModuleProps) {
           onRestore={restoreArchivedCard}
           onDeletePermanent={permanentlyDeleteArchivedCard}
         />
+        <button
+          type="button"
+          className="board-icon-btn"
+          data-testid="automation-run-btn"
+          onClick={runAutomationPresets}
+        >
+          {STR_HEADER.automation[lang]}
+        </button>
         <button
           type="button"
           className="board-icon-btn primary"

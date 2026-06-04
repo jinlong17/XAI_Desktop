@@ -315,3 +315,24 @@ Verification:
 - PASS `pnpm --filter @repo/plugin-web-board-core typecheck`
 - PASS `pnpm --filter @repo/plugin-web-board-core lint`
 - PASS `pnpm --filter @repo/plugin-web-board-core test` (169 tests)
+
+---
+
+## Extension Lineage - xai-web-board-automation-lite (2026-06-03) - cross-ref
+
+> Canonical row docs live in `packages/xai-web-board-automation-lite/docs/`.
+
+- Added pure `applyBoardAutomationLite()` helper in
+  `packages/plugin-web-board-core/src/internal/automationLite.ts`.
+- Exposed `BOARD_AUTOMATION_URGENT_LABEL_ID`,
+  `BOARD_AUTOMATION_DUE_SOON_DAYS`, helper types, and
+  `applyBoardAutomationLite()` from the package barrel.
+- Added optional `BoardCard.completedAt` and guard coverage.
+- New `automationLite.test.ts` covers Done completion, due-soon urgent labels,
+  due-date sorting, no-op identity, and archived skip behavior.
+
+Verification:
+
+- PASS `pnpm --filter @repo/plugin-web-board-core typecheck`
+- PASS `pnpm --filter @repo/plugin-web-board-core lint`
+- PASS `pnpm --filter @repo/plugin-web-board-core test` (174 tests)

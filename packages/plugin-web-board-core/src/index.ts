@@ -114,6 +114,17 @@ export type {
   DateOnlyParts,
 } from "./internal/dateModel.js";
 
+export {
+  BOARD_AUTOMATION_DUE_SOON_DAYS,
+  BOARD_AUTOMATION_URGENT_LABEL_ID,
+  applyBoardAutomationLite,
+} from "./internal/automationLite.js";
+export type {
+  BoardAutomationLiteOptions,
+  BoardAutomationLiteResult,
+  BoardAutomationLiteStats,
+} from "./internal/automationLite.js";
+
 // ---- Persistence helpers -------------------------------------------------
 export {
   loadBoardsOrDefault,

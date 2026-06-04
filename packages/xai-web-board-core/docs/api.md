@@ -525,3 +525,35 @@ defaults — the Map view simply omits malformed cards from its pin set.
 - BCV2: card without `location` → guard passes (back-compat)
 - BCV3: card with `location.lat === NaN` → guard passes (structural OK)
 - BCV4: card with `location = "garbage"` → guard fails
+
+## §S16 — 2026-06-03 Extension API (Project module row #14 — Automation Lite)
+
+> Canonical row docs live in `packages/xai-web-board-automation-lite/docs/`.
+
+Board-core now owns fixed Board automation presets through a pure helper:
+
+```ts
+export const BOARD_AUTOMATION_URGENT_LABEL_ID = "urgent";
+export const BOARD_AUTOMATION_DUE_SOON_DAYS = 2;
+
+export function applyBoardAutomationLite(
+  lists: readonly BoardListData[],
+  options?: BoardAutomationLiteOptions,
+): BoardAutomationLiteResult;
+```
+
+Additive schema field:
+
+```ts
+interface BoardCard {
+  completedAt?: string;
+}
+```
+
+Rules:
+
+- semantic Done cards receive `completedAt` and completed checklist progress
+- active non-Done cards due today through 2 days ahead receive `urgent`
+- daily due sort orders active non-Done cards by valid `dueDate`
+- archived lists/cards are skipped
+- helper remains pure and never touches `localStorage`

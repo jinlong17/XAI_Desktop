@@ -66,6 +66,7 @@ export const STR_HEADER = {
   overview: { en: "Overview", zh: "总览" },
   filter: { en: "Filter", zh: "筛选" },
   archived: { en: "Archived", zh: "已归档" },
+  automation: { en: "Automate", zh: "自动化" },
   share: { en: "Share", zh: "分享" },
   totalSuffix: { en: "cards", zh: "张卡片" },
   viewBoard: { en: "Board", zh: "看板" },

@@ -521,7 +521,11 @@ describe("BoardWorkspacesModule (BWM1..BWM18)", () => {
     seedAltView("table");
     render(<BoardWorkspacesModule lang="en" />);
 
-    fireEvent.click(screen.getAllByTestId("td-title")[0]!);
+    const targetTitle = screen
+      .getAllByTestId("td-title")
+      .find((cell) => cell.textContent?.includes("Onboarding flow concepts"));
+    expect(targetTitle).toBeTruthy();
+    fireEvent.click(targetTitle!);
 
     expect(screen.getByTestId("card-detail-modal")).toBeInTheDocument();
     expect(screen.getByTestId("card-detail-title-input")).toHaveValue(
@@ -848,7 +852,11 @@ describe("BoardWorkspacesModule (BWM1..BWM18)", () => {
 
   it("BWM-CARD-2: move down reorders within the same active list", async () => {
     render(<BoardWorkspacesModule lang="en" />);
+    await act(async () => {
+      await Promise.resolve();
+    });
 
+    const before = getStoredList("b-backlog").cards.map((card) => card.id);
     fireEvent.click(screen.getAllByTestId("card-menu-open")[0]!);
     fireEvent.click(screen.getByTestId("card-move-down"));
 
@@ -857,7 +865,10 @@ describe("BoardWorkspacesModule (BWM1..BWM18)", () => {
     });
 
     const backlog = getStoredList("b-backlog");
-    expect(backlog.cards.slice(0, 2).map((card) => card.id)).toEqual(["bc2", "bc1"]);
+    expect(backlog.cards.slice(0, 2).map((card) => card.id)).toEqual([
+      before[1],
+      before[0],
+    ]);
   });
 
   it("BWM-CARD-3: archive manager restores archived cards", async () => {
@@ -921,5 +932,104 @@ describe("BoardWorkspacesModule (BWM1..BWM18)", () => {
     expect(screen.getByTestId("board-table-wrap")).toBeInTheDocument();
     expect(screen.queryByText("Onboarding flow concepts")).not.toBeInTheDocument();
     expect(screen.getByText("Pet animation rig")).toBeInTheDocument();
+  });
+
+  it("BWM-AUTO-1: daily automation persists urgent labels, due sort, and Done completion", async () => {
+    const now = new Date();
+    const today = isoDateFromOffset(0, now);
+    const tomorrow = isoDateFromOffset(1, now);
+    const seed: Board[] = [
+      {
+        id: "b-default",
+        workspaceId: "ws-personal",
+        name: { en: "Automation Board", zh: "Automation Board" },
+        cover: "linear-gradient(135deg, oklch(70% 0.10 165), oklch(62% 0.10 245))",
+        template: "kanban",
+        lists: [
+          {
+            id: "todo",
+            key: null,
+            customName: { en: "To Do", zh: "待办" },
+            cards: [
+              { id: "no-due", title: { en: "No due", zh: "No due" } },
+              { id: "soon", title: { en: "Soon", zh: "Soon" }, dueDate: tomorrow },
+              { id: "today", title: { en: "Today", zh: "Today" }, dueDate: today },
+            ],
+          },
+          {
+            id: "done",
+            key: "done",
+            cards: [
+              {
+                id: "finished",
+                title: { en: "Finished", zh: "Finished" },
+                checklist: { done: 0, total: 2 },
+              },
+            ],
+          },
+        ],
+      },
+    ];
+    localStorage.setItem("xai_boards_v2", JSON.stringify(seed));
+    localStorage.setItem("xai_active_board", "b-default");
+
+    render(<BoardWorkspacesModule lang="en" />);
+    await act(async () => {
+      await Promise.resolve();
+      await Promise.resolve();
+    });
+
+    const todo = getStoredList("todo");
+    expect(todo.cards.map((card) => card.id)).toEqual(["today", "soon", "no-due"]);
+    expect(getStoredCard("today").labels).toContain("urgent");
+    expect(getStoredCard("soon").labels).toContain("urgent");
+    expect(getStoredCard("finished").completedAt).toEqual(expect.any(String));
+    expect(getStoredCard("finished").checklist).toEqual({ done: 2, total: 2 });
+  });
+
+  it("BWM-AUTO-2: manual automation button reruns presets after a same-day due edit", async () => {
+    const today = isoDateFromOffset(0, new Date());
+    const seed: Board[] = [
+      {
+        id: "b-default",
+        workspaceId: "ws-personal",
+        name: { en: "Automation Board", zh: "Automation Board" },
+        cover: "linear-gradient(135deg, oklch(70% 0.10 165), oklch(62% 0.10 245))",
+        template: "kanban",
+        lists: [
+          {
+            id: "todo",
+            key: null,
+            customName: { en: "To Do", zh: "待办" },
+            cards: [{ id: "manual", title: { en: "Manual", zh: "Manual" } }],
+          },
+        ],
+      },
+    ];
+    localStorage.setItem("xai_boards_v2", JSON.stringify(seed));
+    localStorage.setItem("xai_active_board", "b-default");
+
+    render(<BoardWorkspacesModule lang="en" />);
+    await act(async () => {
+      await Promise.resolve();
+      await Promise.resolve();
+    });
+
+    fireEvent.click(screen.getAllByTestId("board-card")[0]!);
+    fireEvent.change(screen.getByTestId("card-detail-due-date"), {
+      target: { value: today },
+    });
+    fireEvent.click(screen.getByTestId("card-detail-close"));
+    await act(async () => {
+      await Promise.resolve();
+    });
+
+    expect(getStoredCard("manual").labels).toBeUndefined();
+    fireEvent.click(screen.getByTestId("automation-run-btn"));
+    await act(async () => {
+      await Promise.resolve();
+    });
+
+    expect(getStoredCard("manual").labels).toContain("urgent");
   });
 });
