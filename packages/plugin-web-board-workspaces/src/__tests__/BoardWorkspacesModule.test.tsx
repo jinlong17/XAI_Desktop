@@ -518,6 +518,25 @@ describe("BoardWorkspacesModule (BWM1..BWM18)", () => {
     expect(screen.getByText("Focus Queue")).toBeInTheDocument();
   });
 
+  it("BWM-LIST-1b: card detail uses renamed keyed kanban list customName", async () => {
+    render(<BoardWorkspacesModule lang="en" />);
+
+    fireEvent.click(screen.getAllByTestId("bl-menu-open")[0]!);
+    fireEvent.click(screen.getByTestId("list-rename-open"));
+    fireEvent.change(screen.getByTestId("list-rename-input"), {
+      target: { value: "Focus Queue" },
+    });
+    fireEvent.click(screen.getByTestId("list-rename-save"));
+
+    await act(async () => {
+      await Promise.resolve();
+    });
+
+    fireEvent.click(screen.getAllByTestId("board-card")[0]!);
+    expect(screen.getByTestId("card-detail-modal")).toBeInTheDocument();
+    expect(document.querySelector(".cd-list-name")?.textContent).toBe("Focus Queue");
+  });
+
   it("BWM-LIST-2: add-card targets listId after archived gaps, not visible index", async () => {
     const seed = makeDefaultBoards() as Board[];
     seed[0]!.lists[1] = { ...seed[0]!.lists[1]!, archived: true };

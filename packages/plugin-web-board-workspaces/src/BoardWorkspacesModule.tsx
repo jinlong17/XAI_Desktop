@@ -124,10 +124,12 @@ const LIST_KEY_LABEL: Record<string, { en: string; zh: string }> = {
 };
 
 function resolveListName(list: BoardListData, lang: Lang): string {
+  const customName = list.customName?.[lang];
+  if (customName) return customName;
   if (list.key) {
     return LIST_KEY_LABEL[list.key]?.[lang] ?? list.key;
   }
-  return list.customName?.[lang] ?? (lang === "zh" ? "未命名" : "Untitled");
+  return lang === "zh" ? "未命名" : "Untitled";
 }
 
 function loadViewByBoardIdOrEmpty(raw: unknown): Record<string, BoardViewId> {
