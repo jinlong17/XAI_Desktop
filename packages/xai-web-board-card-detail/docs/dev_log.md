@@ -7,14 +7,14 @@
 | Workflow | FEATURE_DEV |
 | Target | xai-web-board-card-detail |
 | Title | Web Project module P0 card-detail slice — wire `/app/board` cards to a real detail modal, persist title/description/date/label/member/link/checklist edits through the current board blob, and keep Board/Table/Calendar/Timeline/Planner aligned without pulling the full typed-date migration into this row |
-| Current Phase | FEATURE_VERIFY |
-| Status | READY_TO_SHIP |
-| Suggested Next | ship |
+| Current Phase | SHIP |
+| Status | SHIPPED |
+| Suggested Next | Next roadmap row: `xai-web-board-date-model` or browser-smoke follow-up if manual visual proof is required |
 | Automation Mode | D-Codex+Cursor |
 | Verify Cross-vendor | yes |
-| Executor | gpt-5.3-codex |
-| Updated | 2026-06-03 19:04 PDT |
-| Blockers | None. Residual risk: no fresh browser click/screenshot smoke was captured in this verify run; package-level automation and contract checks are green. |
+| Executor | gpt-5.4 inline ship fallback after ship agent model entitlement failure |
+| Updated | 2026-06-03 19:07 PDT |
+| Blockers | None. Shipped to `origin/codex/xai-web-project-module-plan`; residual risk remains no fresh browser click/screenshot smoke in this run. |
 | Roadmap Manifest | `docs/workflow/roadmap/xai-web-project-module.md` row #2 |
 | Dependency Gate | Branches containing `e79ecc5 docs(web): formalize project module plan` satisfy the row #1 docs prerequisite for this feature. There is no separate `xai-web-project-prd-sync` dev_log gate in this worktree; re-audit only if the referenced project-module docs drift again. |
 | Write Scope | `docs/reviews/xai-web-board-card-detail/` + `packages/xai-web-board-card-detail/docs/` during planning. Runtime implementation is expected to touch `packages/plugin-web-board-{core,views,workspaces}/` only. |
@@ -252,6 +252,29 @@ Independent re-verify conclusion:
 
 Verdict: PASS. The repaired implementation matches the frozen design assumptions, additive API contract, and planned test coverage closely enough to advance this feature to `READY_TO_SHIP`.
 
+## Ship Notes
+
+Inline ship was used because the fixed `ship` agent requested `gpt-5.3-codex`, which is not supported in this ChatGPT-backed Codex session.
+
+Ship checks:
+
+- Working tree and commit chain checked before push.
+- Commit metadata checked for `d7259b1`, `e075ae4`, `234e74e`, `5fecc7f`, `447f015`, and `c035885`.
+- `git diff --check` was clean before ship.
+- Branch pushed successfully:
+  - Remote: `origin`
+  - Branch: `codex/xai-web-project-module-plan`
+  - Push range: `e79ecc5..c035885`
+
+Shipped commits:
+
+- `d7259b1 docs(web): plan board card detail slice`
+- `e075ae4 feat(web-board-card-detail): phase P1 add card detail schema bridge`
+- `234e74e feat(web-board-card-detail): phase P2 add workspace card detail modal`
+- `5fecc7f feat(web-board-card-detail): phase P3 wire alternate views to detail`
+- `447f015 docs(web-board-card-detail): mark build ready for verify`
+- `c035885 docs(web-board-card-detail): record verify pass`
+
 ## Work Log
 
 | Timestamp | Executor | Action | Commits | Next |
@@ -264,3 +287,4 @@ Verdict: PASS. The repaired implementation matches the frozen design assumptions
 | 2026-06-03 18:55 | gpt-5.3-codex | feature-verify BLOCKED — reran package tests/typechecks and `git diff --check`, then blocked ship on mixed-scope commit history (`eadc04b`) and bilingual title persistence drifting from the frozen mirror-write contract | eadc04b | feature-build |
 | 2026-06-03 19:01 | gpt-5.4 inline fallback | feature-build repair — split the mixed build commit into docs/P1/P2/P3 commits with required metadata, fixed title edits to mirror both bilingual fields, added Table/Calendar/Timeline detail-open regression tests, and reran the full related package test/typecheck/lint matrix plus `git diff --check` | d7259b1, e075ae4, 234e74e, 5fecc7f | feature-verify |
 | 2026-06-03 19:04 | gpt-5.3-codex | feature-verify PASS — independently reviewed the repaired P1/P2/P3 + READY_FOR_VERIFY commit stack against design/api/test contracts, reran tests/typechecks/lints plus `git diff --check`, and advanced the feature to READY_TO_SHIP with only the previously documented browser-smoke gap remaining | d7259b1, e075ae4, 234e74e, 5fecc7f, 447f015 | ship |
+| 2026-06-03 19:07 | gpt-5.4 inline fallback | ship — fixed ship-agent model entitlement failure by shipping inline, checked commit metadata and clean diff, pushed `codex/xai-web-project-module-plan` to origin through `c035885`, and marked the feature SHIPPED | d7259b1, e075ae4, 234e74e, 5fecc7f, 447f015, c035885 | next roadmap row |
