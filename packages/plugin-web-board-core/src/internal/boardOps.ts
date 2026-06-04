@@ -18,6 +18,120 @@ function makeBilingualMirror(text: string): BilingualText {
   return { en: text, zh: text };
 }
 
+function parseIsoDate(value: string): Date | null {
+  const match = value.match(/^(\d{4})-(\d{2})-(\d{2})$/);
+  if (!match) return null;
+  const year = Number(match[1]);
+  const month = Number(match[2]);
+  const day = Number(match[3]);
+  const date = new Date(year, month - 1, day);
+  if (
+    date.getFullYear() !== year ||
+    date.getMonth() !== month - 1 ||
+    date.getDate() !== day
+  ) {
+    return null;
+  }
+  return date;
+}
+
+function dateToDisplay(value: string): { due: string; dueEn?: string; dueLate: boolean } | null {
+  const date = parseIsoDate(value);
+  if (!date) return null;
+
+  const today = new Date();
+  const todayStart = new Date(
+    today.getFullYear(),
+    today.getMonth(),
+    today.getDate(),
+  );
+  const dateStart = new Date(date.getFullYear(), date.getMonth(), date.getDate());
+
+  if (dateStart.getTime() === todayStart.getTime()) {
+    return { due: "今天", dueEn: "Today", dueLate: false };
+  }
+
+  return {
+    due: `${date.getMonth() + 1}/${date.getDate()}`,
+    dueLate: dateStart.getTime() < todayStart.getTime(),
+  };
+}
+
+function clearUndefinedKeys<T extends Record<string, unknown>>(value: T): T {
+  const next = { ...value };
+  for (const key of Object.keys(next)) {
+    if (next[key] === undefined) {
+      delete next[key];
+    }
+  }
+  return next;
+}
+
+/**
+ * Normalize the detail fields that are now canonical for the workspace detail
+ * modal back into the legacy chip fields consumed by the existing views.
+ */
+export function normalizeBoardCardDetail(card: BoardCard): BoardCard {
+  const next: BoardCard = clearUndefinedKeys(card as unknown as Record<string, unknown>) as unknown as BoardCard;
+
+  if (next.checklistItems !== undefined) {
+    const total = next.checklistItems.length;
+    const done = next.checklistItems.filter((item) => item.done).length;
+    if (total > 0) {
+      next.checklist = { done, total };
+    } else {
+      delete next.checklist;
+    }
+  }
+
+  if (next.attachments !== undefined) {
+    if (next.attachments.length > 0) {
+      next.attach = next.attachments.length;
+    } else {
+      delete next.attach;
+    }
+  }
+
+  if (next.dueDate !== undefined) {
+    const display = dateToDisplay(next.dueDate);
+    if (display) {
+      next.due = display.due;
+      next.dueEn = display.dueEn;
+      next.dueLate = display.dueLate;
+    }
+  }
+
+  if (next.startDate !== undefined) {
+    const display = dateToDisplay(next.startDate);
+    if (display) {
+      next.start = display.due;
+    }
+  }
+
+  return next;
+}
+
+export function mergeBoardCardPatch(
+  card: BoardCard,
+  patch: Partial<BoardCard>,
+): BoardCard {
+  const merged: BoardCard = { ...card, ...patch };
+
+  if ("dueDate" in patch && patch.dueDate === undefined) {
+    delete merged.dueDate;
+    delete merged.due;
+    delete merged.dueEn;
+    delete merged.dueLate;
+  }
+
+  if ("startDate" in patch && patch.startDate === undefined) {
+    delete merged.startDate;
+    delete merged.start;
+  }
+
+  return normalizeBoardCardDetail(merged);
+}
+
 /**
  * Move a card from `fromListId` to `toListId`. No-op when:
  *  - `fromListId === toListId`
@@ -112,7 +226,7 @@ export function setListColor(
   );
 }
 
-/** Shallow-merge a patch into the matching card. */
+/** Merge a patch into the matching card and normalize derived detail fields. */
 export function updateCardInList(
   lists: readonly BoardList[],
   listId: string,
@@ -124,7 +238,7 @@ export function updateCardInList(
     return {
       ...list,
       cards: list.cards.map((card) =>
-        card.id === cardId ? { ...card, ...patch } : card,
+        card.id === cardId ? mergeBoardCardPatch(card, patch) : card,
       ),
     };
   });

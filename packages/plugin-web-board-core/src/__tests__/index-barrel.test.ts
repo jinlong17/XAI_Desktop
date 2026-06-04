@@ -19,11 +19,14 @@ describe("index barrel", () => {
     expect(Array.isArray(Barrel.DEFAULT_WORKSPACES)).toBe(true);
     expect(Array.isArray(Barrel.BOARD_TEMPLATES)).toBe(true);
     expect(Array.isArray(Barrel.PM_LABELS)).toBe(true);
+    expect(Array.isArray(Barrel.BOARD_MEMBER_OPTIONS)).toBe(true);
 
     // Helpers
     expect(typeof Barrel.addCardToList).toBe("function");
     expect(typeof Barrel.addNewList).toBe("function");
+    expect(typeof Barrel.mergeBoardCardPatch).toBe("function");
     expect(typeof Barrel.moveCardToList).toBe("function");
+    expect(typeof Barrel.normalizeBoardCardDetail).toBe("function");
     expect(typeof Barrel.setListColor).toBe("function");
     expect(typeof Barrel.updateCardInList).toBe("function");
 

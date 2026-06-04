@@ -6,6 +6,7 @@
 import { describe, it, expect, vi, beforeEach } from "vitest";
 import { render, screen, fireEvent, act } from "@testing-library/react";
 import { makeDefaultBoards } from "@repo/plugin-web-board-core";
+import type { Board, BoardCardData } from "@repo/plugin-web-board-core";
 import { BoardWorkspacesModule } from "../BoardWorkspacesModule.js";
 
 // Mock xai-web-event-bus for ShareModal's emitWebEvent
@@ -22,6 +23,19 @@ HTMLDialogElement.prototype.close = vi.fn();
 beforeEach(() => {
   localStorage.clear();
 });
+
+function getStoredCard(cardId: string): BoardCardData {
+  const raw = localStorage.getItem("xai_boards_v2");
+  if (!raw) throw new Error("xai_boards_v2 not persisted");
+  const boards = JSON.parse(raw) as Board[];
+  for (const board of boards) {
+    for (const list of board.lists) {
+      const card = list.cards.find((entry) => entry.id === cardId);
+      if (card) return card;
+    }
+  }
+  throw new Error(`card not found: ${cardId}`);
+}
 
 describe("BoardWorkspacesModule (BWM1..BWM18)", () => {
   it("BWM1: first render with empty localStorage seeds boards + renders header + bottom switcher", () => {
@@ -286,5 +300,99 @@ describe("BoardWorkspacesModule (BWM1..BWM18)", () => {
     // the popover is mounted correctly and aria-expanded is set.
     const filterBtn = screen.getByTestId("filter-btn");
     expect(filterBtn).toHaveAttribute("aria-expanded", "true");
+  });
+
+  it("BWM-DETAIL-1: clicking a board card opens the card detail modal", () => {
+    render(<BoardWorkspacesModule lang="en" />);
+
+    fireEvent.click(screen.getAllByTestId("board-card")[0]!);
+
+    expect(screen.getByTestId("card-detail-modal")).toBeInTheDocument();
+    expect(screen.getByTestId("card-detail-title-input")).toHaveValue(
+      "Onboarding flow concepts",
+    );
+  });
+
+  it("BWM-DETAIL-2: title and description edits persist through xai_boards_v2", async () => {
+    render(<BoardWorkspacesModule lang="en" />);
+    fireEvent.click(screen.getAllByTestId("board-card")[0]!);
+
+    fireEvent.change(screen.getByTestId("card-detail-title-input"), {
+      target: { value: "Renamed launch card" },
+    });
+    fireEvent.change(screen.getByTestId("card-detail-description"), {
+      target: { value: "Acceptance criteria and context." },
+    });
+
+    await act(async () => {
+      await Promise.resolve();
+    });
+
+    const card = getStoredCard("bc1");
+    expect(card.title.en).toBe("Renamed launch card");
+    expect(card.description).toBe("Acceptance criteria and context.");
+  });
+
+  it("BWM-DETAIL-3: labels, members, checklist, attachments, and dates persist as detail fields", async () => {
+    render(<BoardWorkspacesModule lang="en" />);
+    fireEvent.click(screen.getAllByTestId("board-card")[0]!);
+
+    fireEvent.click(screen.getByTestId("card-detail-label-pm-accounts"));
+    fireEvent.click(screen.getByTestId("card-detail-member-u3"));
+    fireEvent.change(screen.getByTestId("card-detail-checklist-input"), {
+      target: { value: "Write acceptance test" },
+    });
+    fireEvent.click(screen.getByTestId("card-detail-checklist-add"));
+    fireEvent.change(screen.getByTestId("card-detail-attachment-url"), {
+      target: { value: "https://example.com/spec" },
+    });
+    fireEvent.change(screen.getByTestId("card-detail-attachment-title"), {
+      target: { value: "Spec" },
+    });
+    fireEvent.click(screen.getByTestId("card-detail-attachment-add"));
+    fireEvent.change(screen.getByTestId("card-detail-start-date"), {
+      target: { value: "2099-01-01" },
+    });
+    fireEvent.change(screen.getByTestId("card-detail-due-date"), {
+      target: { value: "2099-01-02" },
+    });
+
+    await act(async () => {
+      await Promise.resolve();
+    });
+
+    const card = getStoredCard("bc1");
+    expect(card.labels).toContain("pm-accounts");
+    expect(card.members).toContain("u3");
+    expect(card.checklistItems?.at(-1)?.text).toBe("Write acceptance test");
+    expect(card.checklist).toEqual({ done: 2, total: 6 });
+    expect(card.attachments?.[0]).toMatchObject({
+      url: "https://example.com/spec",
+      title: "Spec",
+    });
+    expect(card.attach).toBe(1);
+    expect(card.startDate).toBe("2099-01-01");
+    expect(card.dueDate).toBe("2099-01-02");
+    expect(card.start).toBe("1/1");
+    expect(card.due).toBe("1/2");
+  });
+
+  it("BWM-DETAIL-4: invalid attachment URL is rejected without mutating the card", async () => {
+    localStorage.setItem("xai_boards_v2", JSON.stringify(makeDefaultBoards()));
+    render(<BoardWorkspacesModule lang="en" />);
+
+    fireEvent.click(screen.getAllByTestId("board-card")[1]!);
+    fireEvent.change(screen.getByTestId("card-detail-attachment-url"), {
+      target: { value: "not-a-url" },
+    });
+    fireEvent.click(screen.getByTestId("card-detail-attachment-add"));
+
+    await act(async () => {
+      await Promise.resolve();
+    });
+
+    const card = getStoredCard("bc2");
+    expect(card.attachments).toBeUndefined();
+    expect(card.attach).toBeUndefined();
   });
 });
