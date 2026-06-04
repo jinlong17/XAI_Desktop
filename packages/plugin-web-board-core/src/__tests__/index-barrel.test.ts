@@ -22,11 +22,20 @@ describe("index barrel", () => {
     expect(Array.isArray(Barrel.BOARD_MEMBER_OPTIONS)).toBe(true);
 
     // Helpers
+    expect(typeof Barrel.addCardToListById).toBe("function");
     expect(typeof Barrel.addCardToList).toBe("function");
     expect(typeof Barrel.addNewList).toBe("function");
+    expect(typeof Barrel.archiveList).toBe("function");
+    expect(typeof Barrel.canManageBoardList).toBe("function");
+    expect(typeof Barrel.deleteList).toBe("function");
+    expect(typeof Barrel.getActiveBoardLists).toBe("function");
+    expect(typeof Barrel.getArchivedBoardLists).toBe("function");
     expect(typeof Barrel.mergeBoardCardPatch).toBe("function");
+    expect(typeof Barrel.moveListByOffset).toBe("function");
     expect(typeof Barrel.moveCardToList).toBe("function");
     expect(typeof Barrel.normalizeBoardCardDetail).toBe("function");
+    expect(typeof Barrel.renameList).toBe("function");
+    expect(typeof Barrel.restoreList).toBe("function");
     expect(typeof Barrel.setListColor).toBe("function");
     expect(typeof Barrel.updateCardInList).toBe("function");
     expect(typeof Barrel.compareIsoDateOnly).toBe("function");

@@ -59,9 +59,11 @@ describe("types (T1)", () => {
       id: "l",
       key: null,
       customName: { en: "Custom", zh: "自定义" },
+      archived: true,
       cards: [],
     };
     expect(list.key).toBe(null);
     expect(list.customName?.en).toBe("Custom");
+    expect(list.archived).toBe(true);
   });
 });

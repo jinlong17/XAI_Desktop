@@ -11,6 +11,7 @@ import type {
   BoardCard,
   BoardList,
   BoardListColorId,
+  BoardListMutationContext,
   BilingualText,
 } from "../types.js";
 import { getBoardCardDateCompatibilityPatch } from "./dateModel.js";
@@ -131,6 +132,23 @@ export function addCardToList(
   );
 }
 
+/** Append a new card to the list with `listId`. Whitespace-only text is a no-op. */
+export function addCardToListById(
+  lists: readonly BoardList[],
+  listId: string,
+  cardTitleText: string,
+): BoardList[] {
+  const trimmed = cardTitleText.trim();
+  if (!trimmed) {
+    return lists as BoardList[];
+  }
+  const listIdx = lists.findIndex((list) => list.id === listId);
+  if (listIdx < 0) {
+    return lists as BoardList[];
+  }
+  return addCardToList(lists, listIdx, trimmed);
+}
+
 /** Append a brand-new empty list. Whitespace-only name is a no-op. */
 export function addNewList(
   lists: readonly BoardList[],
@@ -159,6 +177,126 @@ export function setListColor(
   return lists.map((list) =>
     list.id === listId ? { ...list, color } : list,
   );
+}
+
+export function canManageBoardList(
+  list: BoardList,
+  ctx: BoardListMutationContext,
+): boolean {
+  return ctx.template === "kanban" || list.key === null;
+}
+
+export function getActiveBoardLists(lists: readonly BoardList[]): BoardList[] {
+  return lists.filter((list) => list.archived !== true);
+}
+
+export function getArchivedBoardLists(lists: readonly BoardList[]): BoardList[] {
+  return lists.filter((list) => list.archived === true);
+}
+
+export function renameList(
+  lists: readonly BoardList[],
+  listId: string,
+  customNameText: string,
+  ctx: BoardListMutationContext,
+): BoardList[] {
+  const trimmed = customNameText.trim();
+  if (!trimmed) {
+    return lists as BoardList[];
+  }
+  const target = lists.find((list) => list.id === listId);
+  if (!target || !canManageBoardList(target, ctx)) {
+    return lists as BoardList[];
+  }
+  const nextName = makeBilingualMirror(trimmed);
+  if (
+    target.customName?.en === nextName.en &&
+    target.customName?.zh === nextName.zh
+  ) {
+    return lists as BoardList[];
+  }
+  return lists.map((list) =>
+    list.id === listId ? { ...list, customName: nextName } : list,
+  );
+}
+
+export function moveListByOffset(
+  lists: readonly BoardList[],
+  listId: string,
+  offset: -1 | 1,
+  ctx: BoardListMutationContext,
+): BoardList[] {
+  const target = lists.find((list) => list.id === listId);
+  if (!target || target.archived === true || !canManageBoardList(target, ctx)) {
+    return lists as BoardList[];
+  }
+
+  const activeIds = getActiveBoardLists(lists).map((list) => list.id);
+  const visibleIndex = activeIds.indexOf(listId);
+  if (visibleIndex < 0) {
+    return lists as BoardList[];
+  }
+  const swapWithId = activeIds[visibleIndex + offset];
+  if (!swapWithId) {
+    return lists as BoardList[];
+  }
+
+  const rawFrom = lists.findIndex((list) => list.id === listId);
+  const rawTo = lists.findIndex((list) => list.id === swapWithId);
+  if (rawFrom < 0 || rawTo < 0) {
+    return lists as BoardList[];
+  }
+
+  const next = [...lists];
+  next[rawFrom] = lists[rawTo]!;
+  next[rawTo] = lists[rawFrom]!;
+  return next;
+}
+
+export function archiveList(
+  lists: readonly BoardList[],
+  listId: string,
+  ctx: BoardListMutationContext,
+): BoardList[] {
+  const target = lists.find((list) => list.id === listId);
+  if (!target || target.archived === true || !canManageBoardList(target, ctx)) {
+    return lists as BoardList[];
+  }
+  return lists.map((list) =>
+    list.id === listId ? { ...list, archived: true } : list,
+  );
+}
+
+export function restoreList(
+  lists: readonly BoardList[],
+  listId: string,
+  ctx: BoardListMutationContext,
+): BoardList[] {
+  const target = lists.find((list) => list.id === listId);
+  if (!target || target.archived !== true || !canManageBoardList(target, ctx)) {
+    return lists as BoardList[];
+  }
+  return lists.map((list) => {
+    if (list.id !== listId) return list;
+    const restored = { ...list };
+    delete restored.archived;
+    return restored;
+  });
+}
+
+export function deleteList(
+  lists: readonly BoardList[],
+  listId: string,
+  ctx: BoardListMutationContext,
+): BoardList[] {
+  const target = lists.find((list) => list.id === listId);
+  if (!target || !canManageBoardList(target, ctx)) {
+    return lists as BoardList[];
+  }
+  if (target.archived !== true && target.cards.length > 0) {
+    return lists as BoardList[];
+  }
+  return lists.filter((list) => list.id !== listId);
 }
 
 /** Merge a patch into the matching card and normalize derived detail fields. */

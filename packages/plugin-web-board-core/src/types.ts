@@ -111,7 +111,13 @@ export interface BoardList {
   customName?: BilingualText;
   /** Null or absent means "no color stripe". */
   color?: BoardListColorId | null;
+  /** Soft-hidden from active board renders; restored/deleted by list manager. */
+  archived?: boolean;
   cards: BoardCard[];
+}
+
+export interface BoardListMutationContext {
+  template: BoardTemplate;
 }
 
 export interface BoardWorkspace {

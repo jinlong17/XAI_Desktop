@@ -57,17 +57,26 @@ describe("isBoardArray", () => {
         key: null,
         customName: { en: "C", zh: "自定义" },
         color: "blue",
+        archived: true,
         cards: [],
       }),
     ).toBe(true);
   });
 
-  test("V7c isBoardList rejects list with invalid color id", () => {
+  test("V7c isBoardList rejects list with invalid color id or archived shape", () => {
     expect(
       isBoardList({
         id: "l1",
         key: null,
         color: "magenta", // not in LIST_COLOR_IDS
+        cards: [],
+      }),
+    ).toBe(false);
+    expect(
+      isBoardList({
+        id: "l1",
+        key: null,
+        archived: "yes",
         cards: [],
       }),
     ).toBe(false);

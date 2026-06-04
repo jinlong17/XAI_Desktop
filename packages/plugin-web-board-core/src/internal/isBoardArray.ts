@@ -173,6 +173,9 @@ export function isBoardList(value: unknown): value is BoardList {
   ) {
     return false;
   }
+  if (value.archived !== undefined && typeof value.archived !== "boolean") {
+    return false;
+  }
   if (!Array.isArray(value.cards)) return false;
   return value.cards.every(isBoardCard);
 }

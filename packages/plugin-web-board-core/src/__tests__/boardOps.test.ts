@@ -1,13 +1,25 @@
 import { describe, expect, test } from "vitest";
 import {
+  addCardToListById,
   addCardToList,
   addNewList,
+  archiveList,
+  canManageBoardList,
+  deleteList,
+  getActiveBoardLists,
+  getArchivedBoardLists,
   mergeBoardCardPatch,
+  moveListByOffset,
   moveCardToList,
+  renameList,
+  restoreList,
   setListColor,
   updateCardInList,
 } from "../internal/boardOps.js";
-import type { BoardList } from "../types.js";
+import type { BoardList, BoardListMutationContext } from "../types.js";
+
+const PM_CTX: BoardListMutationContext = { template: "pm" };
+const KANBAN_CTX: BoardListMutationContext = { template: "kanban" };
 
 function makeLists(): BoardList[] {
   return [
@@ -193,10 +205,132 @@ describe("boardOps", () => {
     const lists = makeLists();
     const snapshot = JSON.stringify(lists);
     moveCardToList(lists, "c1", "A", "B");
+    addCardToListById(lists, "A", "X");
     addCardToList(lists, 0, "X");
     addNewList(lists, "Y");
     setListColor(lists, "A", "red");
+    renameList(lists, "A", "Renamed", PM_CTX);
+    moveListByOffset(lists, "B", -1, PM_CTX);
+    archiveList(lists, "A", PM_CTX);
+    restoreList([{ ...lists[0]!, archived: true }, lists[1]!], "A", PM_CTX);
+    deleteList([{ ...lists[0]!, cards: [] }, lists[1]!], "A", PM_CTX);
     updateCardInList(lists, "A", "c1", { due: "Z" });
     expect(JSON.stringify(lists)).toBe(snapshot);
+  });
+
+  test("LC1 addCardToListById appends to the matching raw list by id", () => {
+    const lists = makeLists();
+    const next = addCardToListById(lists, "B", "By id");
+    expect(next[0]?.cards.map((c) => c.id)).toEqual(["c1", "c2"]);
+    expect(next[1]?.cards.at(-1)?.title.en).toBe("By id");
+  });
+
+  test("LC2 addCardToListById returns same reference for blank text or unknown id", () => {
+    const lists = makeLists();
+    expect(addCardToListById(lists, "B", "   ")).toBe(lists);
+    expect(addCardToListById(lists, "missing", "By id")).toBe(lists);
+  });
+
+  test("LC3 canManageBoardList allows PM custom lists and keyed kanban defaults only in kanban context", () => {
+    const custom = makeLists()[0]!;
+    const keyed: BoardList = { ...custom, id: "K", key: "today" };
+    expect(canManageBoardList(custom, PM_CTX)).toBe(true);
+    expect(canManageBoardList(keyed, PM_CTX)).toBe(false);
+    expect(canManageBoardList(keyed, KANBAN_CTX)).toBe(true);
+  });
+
+  test("LC4 renameList mirrors customName and preserves keyed kanban key", () => {
+    const keyed: BoardList = {
+      id: "K",
+      key: "today",
+      cards: [],
+    };
+    const next = renameList([keyed], "K", "Focus Lane", KANBAN_CTX);
+    expect(next[0]?.key).toBe("today");
+    expect(next[0]?.customName).toEqual({
+      en: "Focus Lane",
+      zh: "Focus Lane",
+    });
+  });
+
+  test("LC5 renameList rejects blank, unknown, and disallowed keyed-list edits", () => {
+    const keyed: BoardList = {
+      id: "K",
+      key: "today",
+      cards: [],
+    };
+    const lists = [keyed];
+    expect(renameList(lists, "K", "   ", KANBAN_CTX)).toBe(lists);
+    expect(renameList(lists, "missing", "X", KANBAN_CTX)).toBe(lists);
+    expect(renameList(lists, "K", "X", PM_CTX)).toBe(lists);
+  });
+
+  test("LC6 moveListByOffset evaluates neighbors in active visible order across archived gaps", () => {
+    const lists: BoardList[] = [
+      { id: "A", key: null, customName: { en: "A", zh: "A" }, cards: [] },
+      { id: "X", key: null, customName: { en: "X", zh: "X" }, archived: true, cards: [] },
+      { id: "B", key: null, customName: { en: "B", zh: "B" }, cards: [] },
+    ];
+    const next = moveListByOffset(lists, "B", -1, PM_CTX);
+    expect(next.map((list) => list.id)).toEqual(["B", "X", "A"]);
+  });
+
+  test("LC7 moveListByOffset rejects out-of-bounds, archived target, and disallowed keyed target", () => {
+    const lists: BoardList[] = [
+      { id: "A", key: null, customName: { en: "A", zh: "A" }, cards: [] },
+      { id: "B", key: null, customName: { en: "B", zh: "B" }, archived: true, cards: [] },
+      { id: "K", key: "done", cards: [] },
+    ];
+    expect(moveListByOffset(lists, "A", -1, PM_CTX)).toBe(lists);
+    expect(moveListByOffset(lists, "B", -1, PM_CTX)).toBe(lists);
+    expect(moveListByOffset(lists, "K", -1, PM_CTX)).toBe(lists);
+  });
+
+  test("LC8 archiveList and restoreList preserve nested cards byte-for-byte", () => {
+    const lists = makeLists();
+    const cardSnapshot = JSON.stringify(lists[0]?.cards);
+    const archived = archiveList(lists, "A", PM_CTX);
+    expect(archived[0]?.archived).toBe(true);
+    expect(JSON.stringify(archived[0]?.cards)).toBe(cardSnapshot);
+
+    const restored = restoreList(archived, "A", PM_CTX);
+    expect(restored[0]?.archived).toBeUndefined();
+    expect(JSON.stringify(restored[0]?.cards)).toBe(cardSnapshot);
+  });
+
+  test("LC9 archiveList/restoreList no-op for unknown, repeated, or disallowed targets", () => {
+    const keyed: BoardList = { id: "K", key: "today", cards: [] };
+    const lists = [keyed];
+    expect(archiveList(lists, "missing", KANBAN_CTX)).toBe(lists);
+    expect(archiveList(lists, "K", PM_CTX)).toBe(lists);
+
+    const archived = [{ ...keyed, archived: true }];
+    expect(archiveList(archived, "K", KANBAN_CTX)).toBe(archived);
+    expect(restoreList(lists, "K", KANBAN_CTX)).toBe(lists);
+  });
+
+  test("LC10 deleteList removes empty active lists and archived lists but rejects non-empty active lists", () => {
+    const lists = makeLists();
+    expect(deleteList(lists, "A", PM_CTX)).toBe(lists);
+
+    const emptyActive: BoardList[] = [
+      { id: "A", key: null, customName: { en: "A", zh: "A" }, cards: [] },
+      lists[1]!,
+    ];
+    expect(deleteList(emptyActive, "A", PM_CTX).map((list) => list.id)).toEqual(["B"]);
+
+    const archivedNonEmpty = [{ ...lists[0]!, archived: true }, lists[1]!];
+    expect(deleteList(archivedNonEmpty, "A", PM_CTX).map((list) => list.id)).toEqual(["B"]);
+  });
+
+  test("LC11 active and archived selectors split lists without mutating source order", () => {
+    const lists: BoardList[] = [
+      { id: "A", key: null, customName: { en: "A", zh: "A" }, cards: [] },
+      { id: "X", key: null, customName: { en: "X", zh: "X" }, archived: true, cards: [] },
+      { id: "B", key: null, customName: { en: "B", zh: "B" }, cards: [] },
+    ];
+    expect(getActiveBoardLists(lists).map((list) => list.id)).toEqual(["A", "B"]);
+    expect(getArchivedBoardLists(lists).map((list) => list.id)).toEqual(["X"]);
+    expect(lists.map((list) => list.id)).toEqual(["A", "X", "B"]);
   });
 });

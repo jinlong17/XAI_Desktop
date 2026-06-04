@@ -28,6 +28,7 @@ export type {
   BoardChecklistItem,
   BoardList as BoardListData,
   BoardListColorId,
+  BoardListMutationContext,
   BoardMemberOption,
   BoardTemplate,
   BoardWorkspace,
@@ -66,11 +67,20 @@ export type {
 
 // ---- Pure helpers (re-exported for #8 / #9 reuse) ------------------------
 export {
+  addCardToListById,
   addCardToList,
   addNewList,
+  archiveList,
+  canManageBoardList,
+  deleteList,
+  getActiveBoardLists,
+  getArchivedBoardLists,
   mergeBoardCardPatch,
+  moveListByOffset,
   moveCardToList,
   normalizeBoardCardDetail,
+  renameList,
+  restoreList,
   setListColor,
   updateCardInList,
 } from "./internal/boardOps.js";
