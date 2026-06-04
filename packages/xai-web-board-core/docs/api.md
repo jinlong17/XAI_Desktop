@@ -635,3 +635,38 @@ Rules:
 - helpers reject missing ids, empty bodies, and missing timestamps
 - optional author metadata is trimmed
 - helpers are pure and do not touch storage, events, or network state
+
+## §S19 — 2026-06-03 Extension API (Project module row #17 — Board permissions)
+
+> Canonical row docs live in `packages/xai-web-board-permissions/docs/`.
+
+Board-core now owns local board visibility as an additive planning contract:
+
+```ts
+export type BoardVisibility = "private" | "shared";
+
+export interface Board {
+  visibility?: BoardVisibility;
+}
+
+export const BOARD_VISIBILITY_VALUES: readonly BoardVisibility[];
+
+export function isBoardVisibility(value: unknown): value is BoardVisibility;
+
+export function getBoardVisibility(
+  board: Pick<Board, "visibility">,
+): BoardVisibility;
+
+export function setBoardVisibility<T extends Board>(
+  board: T,
+  visibility: BoardVisibility,
+): T;
+```
+
+Rules:
+
+- missing legacy `visibility` resolves to `private`
+- `setBoardVisibility(board, "private")` is a no-op for legacy private boards
+- setting `shared` or toggling an explicit value returns a cloned board
+- helper surface is pure and does not touch storage, events, or network state
+- this is not a backend ACL grant

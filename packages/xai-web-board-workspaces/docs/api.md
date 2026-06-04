@@ -603,3 +603,31 @@ Activity":
 
 Mentions, notifications, editing, and deleting comments are not implemented in
 this row.
+
+## §S19 — 2026-06-03 Extension API (Project module row #17 — Board permissions)
+
+> Canonical row docs live in `packages/xai-web-board-permissions/docs/`.
+
+`BoardWorkspacesModule` now wires local Board visibility:
+
+- header toggle: `data-testid="board-visibility-toggle"`
+- legacy boards render as `Private` / `私有`
+- clicking toggles `private` ⇄ `shared`
+- writes continue through
+  `preserveBoardStorageFormat(rawBoards, nextBoards)` to `xai_boards_v2`
+- no extra preference key is introduced
+
+`ShareModal` now requires:
+
+```ts
+visibility: BoardVisibility;
+```
+
+The modal displays:
+
+- permission note: `data-testid="sm-permission-note"`
+- visibility note: `data-testid="sm-visibility-note"`
+
+`createMockBoardShareEnvelope(boardId, visibility)` and
+`web:board:share-requested` both include `visibility`. This is still a mock
+share contract, not a backend ACL or invite grant.

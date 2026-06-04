@@ -26,6 +26,9 @@ export type BoardListColorId =
 /** Built-in board templates per DESIGN.md §4.3 / `board-data.js`. */
 export type BoardTemplate = "kanban" | "pm" | "blank";
 
+/** Board-level visibility state. Missing legacy values resolve to private. */
+export type BoardVisibility = "private" | "shared";
+
 export interface CardChecklist {
   done: number;
   total: number;
@@ -171,5 +174,7 @@ export interface Board {
   /** CSS background string (linear-gradient, image, etc.). */
   cover: string;
   template: BoardTemplate;
+  /** Local visibility state. This is not a backend ACL grant. */
+  visibility?: BoardVisibility;
   lists: BoardList[];
 }

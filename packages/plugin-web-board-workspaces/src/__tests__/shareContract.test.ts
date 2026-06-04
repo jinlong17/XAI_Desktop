@@ -9,6 +9,7 @@ describe("createMockBoardShareEnvelope", () => {
       schemaVersion: 1,
       mode: "mock",
       boardId: "b-default",
+      visibility: "private",
       permission: "view",
       expiresAt: null,
       backend: "unimplemented",
@@ -21,5 +22,11 @@ describe("createMockBoardShareEnvelope", () => {
     const second = await createMockBoardShareEnvelope("b-default");
 
     expect(second).toEqual(first);
+  });
+
+  it("SCON-3: includes the supplied board visibility", async () => {
+    const envelope = await createMockBoardShareEnvelope("b-default", "shared");
+
+    expect(envelope.visibility).toBe("shared");
   });
 });

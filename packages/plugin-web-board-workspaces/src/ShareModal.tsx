@@ -10,7 +10,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import { emitWebEvent } from "@repo/xai-web-event-bus";
-import type { Board } from "@repo/plugin-web-board-core";
+import type { Board, BoardVisibility } from "@repo/plugin-web-board-core";
 import {
   createMockBoardShareEnvelope,
   type BoardShareEnvelope,
@@ -18,6 +18,7 @@ import {
 
 export interface ShareModalProps {
   board: Board;
+  visibility: BoardVisibility;
   lang: "en" | "zh";
   onClose: () => void;
 }
@@ -35,9 +36,12 @@ const STR = {
     zh: "仅用于规划展示。分享后端接入前，此链接不会授予访问权限。",
   },
   permission: { en: "Permission: view-only", zh: "权限：仅查看" },
+  visibility: { en: "Visibility", zh: "可见性" },
+  visibilityPrivate: { en: "Private", zh: "私有" },
+  visibilityShared: { en: "Shared", zh: "共享" },
 } as const;
 
-export function ShareModal({ board, lang, onClose }: ShareModalProps) {
+export function ShareModal({ board, visibility, lang, onClose }: ShareModalProps) {
   const dialogRef = useRef<HTMLDialogElement>(null);
   const [envelope, setEnvelope] = useState<BoardShareEnvelope | null>(null);
   const [copyState, setCopyState] = useState<"idle" | "copied">("idle");
@@ -50,13 +54,15 @@ export function ShareModal({ board, lang, onClose }: ShareModalProps) {
   // Generate explicit mock share envelope asynchronously
   useEffect(() => {
     let cancelled = false;
-    createMockBoardShareEnvelope(board.id).then((generated) => {
+    createMockBoardShareEnvelope(board.id, visibility).then((generated) => {
       if (!cancelled) setEnvelope(generated);
     });
     return () => { cancelled = true; };
-  }, [board.id]);
+  }, [board.id, visibility]);
 
   const t = (key: keyof typeof STR) => STR[key][lang];
+  const visibilityLabel =
+    visibility === "shared" ? t("visibilityShared") : t("visibilityPrivate");
 
   function handleClose() {
     // Emit-before-close: fire event BEFORE calling dialog.close() and onClose()
@@ -65,6 +71,7 @@ export function ShareModal({ board, lang, onClose }: ShareModalProps) {
       url: envelope?.url ?? "",
       source: "header",
       mode: "mock",
+      visibility,
       permission: "view",
       expiresAt: null,
       backend: "unimplemented",
@@ -134,6 +141,9 @@ export function ShareModal({ board, lang, onClose }: ShareModalProps) {
           />
           <p className="sm-permission-note" data-testid="sm-permission-note">
             {t("permission")}
+          </p>
+          <p className="sm-permission-note" data-testid="sm-visibility-note">
+            {t("visibility")}: {visibilityLabel}
           </p>
         </div>
 

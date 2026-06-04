@@ -58,6 +58,7 @@ import {
   getArchivedBoardCards,
   getArchivedBoardLists,
   isoDateFromOffset,
+  getBoardVisibility,
   moveCardWithinListByOffset as moveCardWithinListByOffsetOp,
   moveCardToList as moveCardOp,
   moveListByOffset as moveListByOffsetOp,
@@ -66,6 +67,7 @@ import {
   renameList as renameListOp,
   restoreCard as restoreCardOp,
   restoreList as restoreListOp,
+  setBoardVisibility,
   setListColor as setListColorOp,
   updateCardInList,
 } from "@repo/plugin-web-board-core";
@@ -75,6 +77,7 @@ import type {
   BoardCardData,
   BoardListColorId,
   BoardTemplate,
+  BoardVisibility,
 } from "@repo/plugin-web-board-core";
 import type { BoardTaskLinkSource, BucketId } from "@repo/plugin-web-tasks";
 import {
@@ -226,6 +229,7 @@ export function BoardWorkspacesModule({ lang }: BoardWorkspacesModuleProps) {
     workspaces.find((w) => w.id === activeBoard.workspaceId) ?? workspaces[0]!;
   const totalCards = activeCardLists.reduce((n, l) => n + l.cards.length, 0);
   const isPM = activeBoard.template === "pm";
+  const boardVisibility = getBoardVisibility(activeBoard);
 
   // ---- One-time defensive seed (Rec2 from feature-review) ----------------
   useEffect(() => {
@@ -242,6 +246,16 @@ export function BoardWorkspacesModule({ lang }: BoardWorkspacesModuleProps) {
   }
 
   // ---- Boards writer (single updater for atomic moves) -------------------
+  const writeActiveBoard = useCallback(
+    (updater: (prev: Board) => Board) => {
+      const nextBoards = boards.map((board) =>
+        board.id === activeBoard.id ? updater(board) : board,
+      );
+      setRawBoards(preserveBoardStorageFormat(rawBoards, nextBoards) as unknown);
+    },
+    [boards, activeBoard.id, rawBoards, setRawBoards],
+  );
+
   const writeLists = useCallback(
     (updater: (prev: BoardListData[]) => BoardListData[]) => {
       const nextBoards = boards.map((board) =>
@@ -350,6 +364,12 @@ export function BoardWorkspacesModule({ lang }: BoardWorkspacesModuleProps) {
     applyAutomationToActiveBoard({ now: new Date() });
     setAutomationAppliedKey(`${activeBoard.id}:${isoDateFromOffset(0)}`);
   }, [activeBoard.id, applyAutomationToActiveBoard]);
+
+  const toggleBoardVisibility = useCallback(() => {
+    const nextVisibility: BoardVisibility =
+      boardVisibility === "private" ? "shared" : "private";
+    writeActiveBoard((board) => setBoardVisibility(board, nextVisibility));
+  }, [boardVisibility, writeActiveBoard]);
 
   // ---- Switcher actions --------------------------------------------------
   const createBoard = useCallback(
@@ -768,6 +788,18 @@ export function BoardWorkspacesModule({ lang }: BoardWorkspacesModuleProps) {
         </button>
         <button
           type="button"
+          className={
+            "board-icon-btn" + (boardVisibility === "shared" ? " active" : "")
+          }
+          data-testid="board-visibility-toggle"
+          onClick={toggleBoardVisibility}
+        >
+          {boardVisibility === "shared"
+            ? STR_HEADER.shared[lang]
+            : STR_HEADER.private[lang]}
+        </button>
+        <button
+          type="button"
           className="board-icon-btn primary"
           data-testid="share-btn"
           onClick={() => setShareOpen(true)}
@@ -946,6 +978,7 @@ export function BoardWorkspacesModule({ lang }: BoardWorkspacesModuleProps) {
       {shareOpen && (
         <ShareModal
           board={activeBoard}
+          visibility={boardVisibility}
           lang={lang}
           onClose={() => setShareOpen(false)}
         />

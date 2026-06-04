@@ -6,12 +6,14 @@
  */
 
 import { generateShareUrl } from "./shareUrl.js";
+import type { BoardVisibility } from "@repo/plugin-web-board-core";
 
 export interface BoardShareEnvelope {
   schemaVersion: 1;
   mode: "mock";
   boardId: string;
   url: string;
+  visibility: BoardVisibility;
   permission: "view";
   expiresAt: null;
   backend: "unimplemented";
@@ -19,6 +21,7 @@ export interface BoardShareEnvelope {
 
 export async function createMockBoardShareEnvelope(
   boardId: string,
+  visibility: BoardVisibility = "private",
 ): Promise<BoardShareEnvelope> {
   const url = await generateShareUrl(boardId);
   return {
@@ -26,6 +29,7 @@ export async function createMockBoardShareEnvelope(
     mode: "mock",
     boardId,
     url,
+    visibility,
     permission: "view",
     expiresAt: null,
     backend: "unimplemented",

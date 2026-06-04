@@ -362,3 +362,26 @@ Verification:
 - PASS `pnpm --filter @repo/plugin-web-board-workspaces lint`
 - PASS `pnpm --filter @repo/plugin-web-board-workspaces test` (220 tests)
 - PASS local Chrome smoke at `http://localhost:3001/app/board`
+
+---
+
+## Extension Lineage - xai-web-board-permissions (2026-06-03) - cross-ref
+
+> Canonical row docs live in `packages/xai-web-board-permissions/docs/`.
+
+- Added header `Private` / `Shared` visibility toggle in
+  `BoardWorkspacesModule`.
+- The toggle persists `Board.visibility` through existing board storage.
+- `ShareModal` displays current visibility and emits it through
+  `web:board:share-requested`.
+- `createMockBoardShareEnvelope()` now carries the supplied visibility.
+- ShareModal layout received scoped button/input spacing polish as part of the
+  visible permission smoke.
+- Browser smoke screenshot: `/tmp/xai-board-permissions.png`.
+
+Verification:
+
+- PASS `pnpm --filter @repo/plugin-web-board-workspaces typecheck`
+- PASS `pnpm --filter @repo/plugin-web-board-workspaces lint`
+- PASS `pnpm --filter @repo/plugin-web-board-workspaces test` (223 tests)
+- PASS local Chrome smoke at `http://localhost:3001/app/board`

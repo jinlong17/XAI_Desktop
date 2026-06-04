@@ -307,6 +307,30 @@ describe("BoardWorkspacesModule (BWM1..BWM18)", () => {
     expect(screen.getByTestId("share-dialog")).toBeInTheDocument();
   });
 
+  it("BWM-PERM-1: visibility toggle defaults private and persists shared/private", async () => {
+    render(<BoardWorkspacesModule lang="en" />);
+    const toggle = screen.getByTestId("board-visibility-toggle");
+    expect(toggle.textContent).toBe("Private");
+
+    fireEvent.click(toggle);
+    await act(async () => { await Promise.resolve(); });
+
+    const sharedBoard = getStoredBoards().find((board) => board.id === "b-default");
+    expect(sharedBoard?.visibility).toBe("shared");
+    expect(screen.getByTestId("board-visibility-toggle").textContent).toBe(
+      "Shared",
+    );
+
+    fireEvent.click(screen.getByTestId("board-visibility-toggle"));
+    await act(async () => { await Promise.resolve(); });
+
+    const privateBoard = getStoredBoards().find((board) => board.id === "b-default");
+    expect(privateBoard?.visibility).toBe("private");
+    expect(screen.getByTestId("board-visibility-toggle").textContent).toBe(
+      "Private",
+    );
+  });
+
   it("BWM-EXT-6: changing filters persists the active board filter without mutating boards", async () => {
     render(<BoardWorkspacesModule lang="en" />);
     await act(async () => { await Promise.resolve(); });

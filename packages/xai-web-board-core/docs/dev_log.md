@@ -379,3 +379,24 @@ Verification:
 - PASS `pnpm --filter @repo/plugin-web-board-core typecheck`
 - PASS `pnpm --filter @repo/plugin-web-board-core lint`
 - PASS `pnpm --filter @repo/plugin-web-board-core test` (183 tests)
+
+---
+
+## Extension Lineage - xai-web-board-permissions (2026-06-03) - cross-ref
+
+> Canonical row docs live in `packages/xai-web-board-permissions/docs/`.
+
+- Added `BoardVisibility = "private" | "shared"` and optional
+  `Board.visibility`.
+- Added pure `BOARD_VISIBILITY_VALUES`, `isBoardVisibility`,
+  `getBoardVisibility`, and `setBoardVisibility` helpers.
+- Widened `isBoard` to accept valid visibility values and reject malformed
+  values.
+- Exposed visibility helpers from the public package barrel.
+- New `boardVisibility.test.ts` covers helper success/no-op behavior.
+
+Verification:
+
+- PASS `pnpm --filter @repo/plugin-web-board-core typecheck`
+- PASS `pnpm --filter @repo/plugin-web-board-core lint`
+- PASS `pnpm --filter @repo/plugin-web-board-core test` (188 tests)

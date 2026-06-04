@@ -24,6 +24,7 @@ import type {
   CardLocation,
 } from "../types.js";
 import { isIsoDateOnly } from "./dateModel.js";
+import { isBoardVisibility } from "./boardVisibility.js";
 import { isBoardIntegrationProviderId } from "./integrationAdapters.js";
 import { LIST_COLOR_IDS } from "./listColors.js";
 
@@ -229,6 +230,12 @@ export function isBoard(value: unknown): value is Board {
   if (!isBilingualText(value.name)) return false;
   if (!isString(value.cover)) return false;
   if (!isBoardTemplate(value.template)) return false;
+  if (
+    value.visibility !== undefined &&
+    !isBoardVisibility(value.visibility)
+  ) {
+    return false;
+  }
   if (!Array.isArray(value.lists)) return false;
   return value.lists.every(isBoardList);
 }

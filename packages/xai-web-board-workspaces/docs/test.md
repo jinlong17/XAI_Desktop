@@ -335,6 +335,25 @@ Acceptance gate:
 - `pnpm --filter @repo/plugin-web-board-workspaces test`
 - local `/app/board` browser smoke
 
+## §10 — 2026-06-03 Extension Tests (Project module row #17 — Board permissions)
+
+> Canonical row docs live in
+> `packages/xai-web-board-permissions/docs/`.
+
+| File | Suite | Cases |
+|---|---|---|
+| `__tests__/BoardWorkspacesModule.test.tsx` | BWM-PERM-1 | Visibility toggle defaults to Private, persists Shared, then persists Private. |
+| `__tests__/ShareModal.test.tsx` | SM-10 | Visibility note and event payload include board visibility. |
+| `__tests__/shareContract.test.ts` | SCON-3 | Mock share envelope includes supplied visibility. |
+
+Acceptance gate:
+
+- PASS `pnpm --filter @repo/plugin-web-board-workspaces typecheck`
+- PASS `pnpm --filter @repo/plugin-web-board-workspaces lint`
+- PASS targeted board-workspaces tests: 69/69
+- PASS `pnpm --filter @repo/plugin-web-board-workspaces test`: 223/223
+- PASS local Chrome smoke at `http://localhost:3001/app/board`
+
 ## §9 — 2026-06-03 Extension Tests (Project module row #16 — Comments/activity)
 
 > Canonical row docs live in

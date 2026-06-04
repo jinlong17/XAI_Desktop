@@ -40,6 +40,12 @@ describe("isBoardArray", () => {
     expect(isBoard(board)).toBe(false);
   });
 
+  test("V6c isBoard accepts private/shared visibility and rejects malformed visibility", () => {
+    expect(isBoard({ ...makeDefaultBoards()[0]!, visibility: "private" })).toBe(true);
+    expect(isBoard({ ...makeDefaultBoards()[0]!, visibility: "shared" })).toBe(true);
+    expect(isBoard({ ...makeDefaultBoards()[0]!, visibility: "team" })).toBe(false);
+  });
+
   test("V7 isBoardList accepts a list with key + empty cards", () => {
     expect(
       isBoardList({

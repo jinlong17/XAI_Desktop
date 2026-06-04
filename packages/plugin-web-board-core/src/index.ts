@@ -35,6 +35,7 @@ export type {
   BoardListMutationContext,
   BoardMemberOption,
   BoardTemplate,
+  BoardVisibility,
   BoardWorkspace,
   BoardIntegrationProviderId,
   BilingualText,
@@ -136,6 +137,13 @@ export type {
   BoardCardActivityInput,
   BoardCardActivityResult,
 } from "./internal/activityEntries.js";
+
+export {
+  BOARD_VISIBILITY_VALUES,
+  getBoardVisibility,
+  isBoardVisibility,
+  setBoardVisibility,
+} from "./internal/boardVisibility.js";
 
 export {
   BOARD_INTEGRATION_PROVIDER_IDS,

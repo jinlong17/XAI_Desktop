@@ -39,3 +39,24 @@ git diff --check
 Because this row changes a visible header control and Share modal copy, final
 ship should include a live `/app/board` browser smoke that toggles visibility
 and opens Share.
+
+## Verification Results - 2026-06-03 23:56 PDT
+
+- PASS `pnpm --filter @repo/plugin-web-board-core typecheck`
+- PASS `pnpm --filter @repo/plugin-web-board-core lint`
+- PASS targeted board-core tests: 30/30
+- PASS `pnpm --filter @repo/plugin-web-board-core test`: 188/188
+- PASS `pnpm --filter @repo/plugin-web-board-workspaces typecheck`
+- PASS `pnpm --filter @repo/plugin-web-board-workspaces lint`
+- PASS targeted board-workspaces tests: 69/69
+- PASS `pnpm --filter @repo/plugin-web-board-workspaces test`: 223/223
+- PASS `pnpm --filter @repo/core check-types`
+- PASS `pnpm --filter @repo/web check-types`
+- PASS `pnpm --filter @repo/web test -- --run`: 116/116
+- PASS `pnpm --filter @repo/web build`
+- PASS local Chrome smoke at `http://localhost:3001/app/board`
+  - initial button: `Private`
+  - after toggle: `Shared`
+  - persisted board field: `"visibility":"shared"`
+  - Share modal note: `Visibility: Shared`
+  - screenshot: `/tmp/xai-board-permissions.png`

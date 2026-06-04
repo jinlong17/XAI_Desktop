@@ -203,6 +203,26 @@ Acceptance gate:
 - `pnpm --filter @repo/plugin-web-board-core lint`
 - `pnpm --filter @repo/plugin-web-board-core test`
 
+## §11 — 2026-06-03 Extension Tests (Project module row #17 — Board permissions)
+
+> Canonical row docs live in `packages/xai-web-board-permissions/docs/`.
+
+| File | Suite | Cases |
+|---|---|---|
+| `__tests__/boardVisibility.test.ts` | BV-1 | Closed visibility set plus guard acceptance/rejection. |
+| | BV-2 | Missing legacy visibility resolves to `private`. |
+| | BV-3 | Setting `shared` clones and no-op preserves reference. |
+| | BV-4 | Setting `private` on a legacy private board is a no-op. |
+| `__tests__/isBoardArray.test.ts` | V6c | Guard accepts `private`/`shared` and rejects malformed visibility. |
+| `__tests__/index-barrel.test.ts` | IB1 | Barrel exports visibility constants and helpers. |
+
+Acceptance gate:
+
+- PASS `pnpm --filter @repo/plugin-web-board-core typecheck`
+- PASS `pnpm --filter @repo/plugin-web-board-core lint`
+- PASS targeted board-core tests: 30/30
+- PASS `pnpm --filter @repo/plugin-web-board-core test`: 188/188
+
 ## §10 — 2026-06-03 Extension Tests (Project module row #16 — Comments/activity)
 
 > Canonical row docs live in
