@@ -874,16 +874,16 @@
       ],
       "prompts": [
         {
-          "label": "G1 原生锚点新功能",
-          "text": "Start the feature-plan agent.\n  动机:G1 native foundation 需要把 multi-grid 事件作用域收敛到每个原生 grid 窗口,避免跨窗口事件串扰\n  目标:在 apps/desktop/ + src-tauri/ 上,基于已 SHIPPED 的 window-command-contract,通过 @repo/core/events 实现按 grid 窗口隔离的事件订阅/广播\n  范围:仅 App 通道(codex/desktop/<feature> -> desktop-next,defined, not yet created),多窗口架构(main/control/grid)与 Rust commands/ 窗口适配;不改 apps/web/ 的 Web UI 源\n  约束:遵守 SYSTEM_ARCHITECTURE 多窗口/跨窗口通信红线;原生拖拽用 @dnd-kit/core,业务逻辑只进 packages/plugin-*;MAS 沙箱相关行为留在 Apple Developer 签名延期路径之后"
+          "label": "Mac 壳能力新功能（菜单栏 / 托盘 / 通知）",
+          "text": "Start the feature-plan agent.\n  动机:Mac 壳需要在菜单栏/托盘提供\"同步状态 + 快速操作\"入口,让用户不打开主窗也能看状态、快速新建。\n  目标:在 apps/desktop/ + src-tauri/ 上实现 menubar/tray 菜单 + 原生通知,复用 Web SPA 的账号/数据;不引入多窗口编排。\n  范围:仅 App 壳通道(codex/desktop/<feature> -> desktop-next,defined, not yet created),壳能力 = 菜单栏/托盘/离线缓存/账号+Keychain/自动更新/系统通知/深链/开机启动;不做多窗口/挂件/桌面整理(那是 plugin 平台 codex/plugin/*)。\n  约束:壳只承载 Web SPA + 原生 chrome;多窗口/overlay/grid 运行时归桌面插件平台(codex/plugin/*);遵守 ADR-0013 D3 与 SYSTEM_ARCHITECTURE。"
         },
         {
           "label": "Web 增量同步到 App",
           "text": "/xai-web-to-desktop-sync\n  来源:web 分支最近一批改动(共享 UI / @repo/core seam,可能在 desktop runtime 下行为不同)\n  目标:按 ADR-0013 D3 把这批改动分类为 W0-W4,产出 Parity Receipt(Verdict: NO_APP_CHANGE | GATE_ONLY | DESKTOP_DELTA_REQUIRED | BLOCKED;Desktop impact: auth/offline/storage/native/window/release),判断是否需要在 desktop-next 补 App 增量\n  范围:web -> desktop-next 的 D3 闸口;W3 则路由到 /xai-feature-full-loop 作为原生新工作(real new work,不是直接 merge);W0 仅记录不合并\n  约束:注意 VITE_WEB_RUNTIME_PROFILE=desktop-phase1-offline 离线 profile;W2 需补 offline/runtime/profile 测试;触达 dev / release/desktop/<version> 需操作者显式确认(desktop-next/dev/release 均 defined, not yet created)"
         },
         {
-          "label": "原生运行时 Bug",
-          "text": "Start the bug-diagnose agent.\n  现象:App 在 desktop-phase1-offline profile 下重启后,grid 窗口布局回到默认,未从本地恢复\n  预期:布局通过 grid-persistence(LayoutStore seam + Repository v0 适配)持久化到 App SQLite / xai-desktop-layout,重启后还原\n  实际:刷新/重启后 userTouched 守卫未生效,late-hydrate 把用户布局清掉\n  线索:怀疑异步 hydrate 与 syncScope=device-local 写入时序竞态;仅复现在 apps/desktop/ 运行时,Web IndexedDB 路径正常"
+          "label": "Mac 壳运行时 Bug",
+          "text": "Start the bug-diagnose agent.\n  现象:App 在 desktop-phase1-offline profile 下重启后,菜单栏同步状态停在旧值/离线缓存未回读,账号会话需重新登录。\n  预期:壳重启后从离线缓存 + Keychain 恢复账号会话与最近同步状态,菜单栏图标正确反映。\n  实际:重启后状态错误或被登出。\n  线索:怀疑壳的离线缓存(encrypted cache)/Keychain 会话回读时序;仅复现在 apps/desktop/ 壳运行时,Web 浏览器路径正常。"
         }
       ],
       "workflow": [

@@ -53,8 +53,8 @@ dev-dashboard 产品结构图 (`docs/prototypes/dev-dashboard/`). Authority: ADR
 | # | 模块 | key | Surface | 主 / 短分支 | 任务归属信号（命中即归该模块） | 状态 |
 |---|---|---|---|---|---|---|
 | 1 | Web 版本 | `web` | `apps/web/`, `packages/xai-web-*`, `plugin-web-*` | `web` / `codex/web/<feature>` | Web 页面·组件、Vite SPA、浏览器持久化、共享 UI、`/app/*` 路由、Cloudflare Pages | P0 active |
-| 2 | Mac 桌面版 App | `app` | `apps/desktop/` (Tauri 2 + React 19) | `desktop-next`→`dev` / `codex/desktop/<feature>` | Tauri、Rust command、原生窗口、离线、本机文件、G1 native foundation | P1 active lane |
-| 3 | 桌面整理插件 / Widget | `plugin` | `apps/desktop/` 插件槽 | `desktop-plugin-next` / `codex/plugin/<feature>` | 插件 SDK、widget host、桌面整理、单插件功能、平台兼容 | P2 paused |
+| 2 | Mac 桌面版 App | `app` | `apps/desktop/` (Tauri 2 + React 19) | `desktop-next`→`dev` / `codex/desktop/<feature>` | Tauri 壳、菜单栏/托盘、离线缓存、账号+Keychain、自动更新、系统通知、深链、开机启动、承载 Web SPA 容器 | P1 active lane |
+| 3 | 桌面整理插件 / Widget | `plugin` | `apps/desktop/` 插件槽 + 插件平台运行时 | `desktop-plugin-next` / `codex/plugin/<feature>` | 插件 SDK、widget host、**多窗口引擎/原生窗口/grid 持久化/window-command/G1 native foundation/点击穿透**(代码物理在 host,产品归插件平台)、桌面整理、单插件功能 | P2 paused |
 | 4 | 账号云同步层 | `sync` | sync-v1 stack + server | (paused) / `codex/sync/<feature>` | `syncScope`、push/pull、冲突、跨设备、账号云、加密 blob | P2 paused |
 | 5 | 官方网页 | `site` | Cloudflare deploy infra (无独立 package) | (proposed) / `codex/site/<feature>` | 下载页、自动更新、release notes、营销说明、对外/账号入口 | PROPOSED |
 | 6 | Admin Dashboard / 控制面 | `admin` | prototype `docs/prototypes/admin-dashboard/` | (proposed) / `codex/admin/<feature>` | AI 配置、权限、用量、审计日志、运营后台 | PROPOSED |
