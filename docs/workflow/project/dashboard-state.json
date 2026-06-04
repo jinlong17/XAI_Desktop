@@ -857,7 +857,7 @@
         },
         {
           "name": "bug-diagnose",
-          "when": "App 在多窗口、离线持久化或原生桥接处出现回归时,作为 bugfix 流水线入口,附 现象/预期/实际/线索 brief(bug-diagnose -> bug-fix -> bug-verify -> ship)。"
+          "when": "App 壳运行时(离线缓存、账号会话/Keychain、菜单栏/托盘、通知、深链、自动更新、Web SPA 容器)出现回归时,作为 bugfix 流水线入口,附 现象/预期/实际/线索 brief(bug-diagnose -> bug-fix -> bug-verify -> ship);多窗口/grid/overlay 回归归插件平台段(codex/plugin/*),不在此处。"
         },
         {
           "name": "xai-web-to-desktop-sync",

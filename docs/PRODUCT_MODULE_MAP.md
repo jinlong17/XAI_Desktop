@@ -146,7 +146,7 @@ Start the bug-diagnose agent.
 
 - `feature-plan` — 新增 App 原生/运行时能力时,作为标准 feature 流水线入口,附 动机/目标/范围/约束 brief 启动规划(feature-plan -> feature-review -> feature-build -> feature-verify -> ship)。
 - `xai-feature-full-loop` — D3 判定为 W3 native-bridge-needed(需要新 Tauri 命令/capability/NSWindow 行为)时,用 /xai-feature-full-loop 在 desktop-next / desktop-plugin-next 上把原生增量当作真正的新工作整轮跑通(不是 merge)。
-- `bug-diagnose` — App 在多窗口、离线持久化或原生桥接处出现回归时,作为 bugfix 流水线入口,附 现象/预期/实际/线索 brief(bug-diagnose -> bug-fix -> bug-verify -> ship)。
+- `bug-diagnose` — App **壳运行时**(离线缓存、账号会话/Keychain、菜单栏/托盘、通知、深链、自动更新、Web SPA 容器)出现回归时,作为 bugfix 流水线入口,附 现象/预期/实际/线索 brief(bug-diagnose -> bug-fix -> bug-verify -> ship);**多窗口 / grid / overlay 回归归插件平台段**(走 codex/plugin/*),不在此处。
 - `xai-web-to-desktop-sync` — 工作来源是一笔 web 改动时:用此 D3 闸口技能按 ADR-0013 把它分类为 W0-W4 并产出 Parity Receipt,判断是否需要在 App 侧补增量;它是 web -> App 的唯一入口桥,不在 App 内部独立发起。
 - `xai-desktop-release-gate` — D3 判定 W4 release-risk,或 App 改动触及签名、公证、DMG、updater、release/desktop/<version>、dev RC 时,产出桌面发布 gate receipt;它不创建分支、不触碰 dev、不签名/公证/上传。
 - `xai-release-log` — 每完成一个可见的 App 增量(G1 锚点 SHIPPED 或 dev RC 推进)后,登记 docs/workflow/project/release-log.md。
@@ -295,7 +295,7 @@ Start the feature-plan agent.
 动机：桌面插件平台需要把 multi-grid 事件作用域收敛到每个原生 grid 窗口，避免跨窗口事件串扰（原 G1 native foundation 工作）。
 目标：基于已 SHIPPED 的 window-command-contract，通过 @repo/core/events 实现按 grid 窗口隔离的事件订阅/广播；落地多窗口引擎 / grid 持久化。
 范围：插件平台运行时（codex/plugin/<feature> → desktop-plugin-next）。多窗口引擎 / overlay / grid / window-command 的代码物理在 host（apps/desktop/src-tauri，app 通道执行），但**产品归属是插件平台**，不是 Mac 壳——所以走 plugin 线、不走 codex/desktop/*。
-约束：P2 PAUSED until G1 SHIPPED；遵守 SYSTEM_ARCHITECTURE 多窗口红线；插件包只消费窗口命令、不实现原生层；原生拖拽用 @dnd-kit/core。
+约束：本条是 **G1 平台运行时锚点 = active gate**（P1 App-lane 执行、plugin-platform 产品），**不在 P2 冻结内**——P2 冻结的是插件**包**（clipboard/widgets/pet/meditation），它们等 G1/平台运行时 SHIPPED 后才解冻；遵守 SYSTEM_ARCHITECTURE 多窗口红线；插件包只消费窗口命令、不实现原生层；原生拖拽用 @dnd-kit/core。
 ```
 
 </details>
