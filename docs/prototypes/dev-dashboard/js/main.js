@@ -47,6 +47,7 @@ renderOverviewDeployment();
 renderOverviewTesting();
 renderStructureMap();
 renderBranchFlow();
+renderSyncOrchestration();
 renderModules();
 setProduct(products[0]?.key);
 renderDeploymentDashboard();

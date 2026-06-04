@@ -16,6 +16,7 @@ const repoRoot = resolve(scriptDir, "../..");
 const sourcePath = resolve(repoRoot, "docs/workflow/project/dashboard-state.json");
 const releaseLogPath = resolve(repoRoot, "docs/workflow/project/release-log.md");
 const branchPolicyPath = resolve(repoRoot, "docs/workflow/project/branch-policy.json");
+const syncRegistryPath = resolve(repoRoot, "docs/workflow/project/sync-registry.json");
 const pluginMapPath = resolve(repoRoot, "docs/PLUGIN_MAP.md");
 const workflowDir = resolve(repoRoot, ".github/workflows");
 const roadmapDir = resolve(repoRoot, "docs/workflow/roadmap");
@@ -2089,6 +2090,41 @@ function readBranchPolicy(divergence) {
   }
 }
 
+// ADR-0014 Cross-Module Sync Orchestration — read sync-registry.json into a
+// compact, card-friendly block for the 产品结构图 page (rendered as a standalone
+// orchestration card by product-flow.js renderSyncOrchestration()).
+function readSyncOrchestration() {
+  if (!existsSync(syncRegistryPath)) return null;
+  const reg = readJson(syncRegistryPath);
+  const dispatch = reg.dispatch || {};
+  const actions = (Array.isArray(reg.actions) ? reg.actions : []).map(a => ({
+    id: a.id,
+    title: a.title,
+    skill: Array.isArray(a.skill) ? a.skill.join(" + ") : (a.skill || ""),
+    is_new: !!a.is_new,
+    writes_source: !!a.writes_source,
+    parallel_safe: !!a.parallel_safe,
+    depends_on: Array.isArray(a.depends_on) ? a.depends_on : []
+  }));
+  return {
+    title: "ADR-0014 跨模块同步编排",
+    source: relative(repoRoot, syncRegistryPath),
+    authority_doc: "docs/adr/0014-cross-module-sync-orchestration.md",
+    purpose: reg.purpose || "",
+    trigger: dispatch.trigger_phrase || "",
+    entry: dispatch.entry || "",
+    mechanism: dispatch.mechanism || "",
+    actions,
+    waves: Array.isArray(dispatch.waves) ? dispatch.waves : [],
+    hard_rules: (reg.governance && Array.isArray(reg.governance.hard_rules)) ? reg.governance.hard_rules : [],
+    open_findings: (Array.isArray(reg.open_findings) ? reg.open_findings : []).map(f => ({ id: f.id, severity: f.severity, summary: f.summary })),
+    docs: [
+      { label: "ADR-0014 编排决策", path: "docs/adr/0014-cross-module-sync-orchestration.md" },
+      { label: "sync-registry.json", path: relative(repoRoot, syncRegistryPath) }
+    ]
+  };
+}
+
 function parseStatusPanel(text) {
   const tables = parseMarkdownTables(text);
   const panel = tables.find(table =>
@@ -2231,6 +2267,7 @@ const snapshot = {
   },
   testing: testingState,
   branch_policy: readBranchPolicy(divergence),
+  sync_orchestration: readSyncOrchestration(),
   development_data: buildDevelopmentData(branch),
   task_progress: scanDevLogs()
 };
