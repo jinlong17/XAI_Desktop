@@ -7,13 +7,13 @@
 | Workflow | FEATURE_DEV |
 | Target | xai-web-board-responsive-smoke |
 | Title | Web Project module P1 responsive browser smoke |
-| Current Phase | FEATURE_VERIFY |
-| Status | READY_FOR_SHIP |
-| Suggested Next | ship docs |
+| Current Phase | SHIP |
+| Status | SHIPPED |
+| Suggested Next | xai-web-board-export-import |
 | Automation Mode | D-Codex+Cursor |
 | Verify Cross-vendor | yes |
 | Executor | gpt-5 parent inline |
-| Updated | 2026-06-03 22:53 PDT |
+| Updated | 2026-06-03 22:54 PDT |
 | Blockers | None currently. |
 | Roadmap Manifest | `docs/workflow/roadmap/xai-web-project-module.md` row #12 |
 | Source PRD / Audit | `docs/reviews/xai-web-project-module/20260603-audit-and-prd.md` |
@@ -87,4 +87,5 @@ Calendar/Timeline/Detail on desktop and mobile widths.
 | Timestamp | Executor | Action | Commits | Next Step |
 |---|---|---|---|---|
 | 2026-06-03 22:45 PDT | gpt-5 parent inline | feature-plan - scoped row #12 to desktop/mobile browser smoke of Board, Table, Calendar, Timeline, and Detail. | `287375d` | browser smoke matrix |
-| 2026-06-03 22:53 PDT | gpt-5 parent inline | feature-build/verify - fixed mobile shell/detail overflow, added CSS contract tests, ran automated gates, and captured desktop/mobile Playwright screenshots. | pending | ship docs |
+| 2026-06-03 22:53 PDT | gpt-5 parent inline | feature-build/verify - fixed mobile shell/detail overflow, added CSS contract tests, ran automated gates, and captured desktop/mobile Playwright screenshots. | `4712786` | ship docs |
+| 2026-06-03 22:54 PDT | gpt-5 parent inline | feature-ship - roadmap, PLUGIN_MAP, architecture, PRD, and dev_log marked shipped. | this docs commit | xai-web-board-export-import |

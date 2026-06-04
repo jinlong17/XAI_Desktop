@@ -26,7 +26,7 @@
 | 9 | xai-web-board-calendar-feed | same | xai-web-board-date-model | ready_to_ship | SHIPPED | P1 | Feed active dated Board cards into Calendar Month/Week/Day without duplicating calendar data ownership. Shipped through `de4158e` plus verify/live smoke. |
 | 10 | xai-web-board-saved-filters | same | xai-web-board-storage-contract | ready_to_ship | SHIPPED | P1 | Persist per-board filters and support clear/reset. Shipped through `dfe7fbd` plus verify/live smoke. |
 | 11 | xai-web-board-share-contract | same | xai-web-board-storage-contract | ready_to_ship | SHIPPED | P1 | Visibly label mock share URL and emit explicit mock share-envelope fields. Shipped through `1806ee4` plus verify/live smoke. |
-| 12 | xai-web-board-responsive-smoke | same | xai-web-board-card-detail, xai-web-board-date-model | ready_to_ship | PENDING | P1 | Verify Board/Table/Calendar/Timeline/Detail on desktop and mobile widths. |
+| 12 | xai-web-board-responsive-smoke | same | xai-web-board-card-detail, xai-web-board-date-model | ready_to_ship | SHIPPED | P1 | Verify Board/Table/Calendar/Timeline/Detail on desktop and mobile widths. Shipped through `4712786` plus desktop/mobile Playwright smoke. |
 | 13 | xai-web-board-export-import | same | xai-web-board-storage-contract | ready_to_ship | PENDING | P1 | Add board logical entities to export/import/delete flows. |
 | 14 | xai-web-board-automation-lite | same | xai-web-board-card-detail, xai-web-board-date-model | shipped | PENDING | P2 | Preset rules only: Done completion, due-soon urgent label, daily due sort. |
 | 15 | xai-web-board-integrations | same | xai-web-board-share-contract | ready_to_ship | PENDING | P2 | Adapter plan for Google Calendar, GitHub/Linear, Drive/link attachments. |
@@ -39,10 +39,10 @@ This file is the current source-backed personal development board for the Web Pr
 
 | Board List | Cards |
 |---|---|
-| Shipped | `xai-web-project-prd-sync`, `xai-web-board-card-detail`, `xai-web-board-date-model`, `xai-web-board-list-crud`, `xai-web-board-card-crud`, `xai-web-board-checklist-editor`, `xai-web-board-storage-contract`, `xai-web-board-task-link`, `xai-web-board-calendar-feed`, `xai-web-board-saved-filters`, `xai-web-board-share-contract` |
-| This Week | `xai-web-board-responsive-smoke` |
+| Shipped | `xai-web-project-prd-sync`, `xai-web-board-card-detail`, `xai-web-board-date-model`, `xai-web-board-list-crud`, `xai-web-board-card-crud`, `xai-web-board-checklist-editor`, `xai-web-board-storage-contract`, `xai-web-board-task-link`, `xai-web-board-calendar-feed`, `xai-web-board-saved-filters`, `xai-web-board-share-contract`, `xai-web-board-responsive-smoke` |
+| This Week | `xai-web-board-export-import` |
 | Backlog | — |
-| Waiting | `xai-web-board-export-import` waits on export/delete/privacy ownership. |
+| Waiting | — |
 | Later | `xai-web-board-automation-lite`, `xai-web-board-integrations`, `xai-web-board-comments-activity`, `xai-web-board-permissions` |
 
 ## Product Structure
@@ -61,7 +61,8 @@ flowchart LR
   J --> K["Calendar feed shipped"]
   K --> L["Saved filters shipped"]
   L --> M["Explicit mock share contract shipped"]
-  M --> N["Future responsive smoke / export-import"]
+  M --> N["Responsive smoke shipped"]
+  N --> O["Future export-import / automation"]
 ```
 
 ## Run Guidance
