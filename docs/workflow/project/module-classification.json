@@ -20,7 +20,7 @@
       "future iPhone/iPad/Apple Watch/Android/browser-extension surfaces are planning-only future_surfaces; never classify them as active module targets without operator confirmation"
     ],
     "frozen_lines": {
-      "plugin": "P2 PAUSED until G1 SHIPPED — brief/impact-note only, no source landing",
+      "plugin": "P2 packages (clipboard/widgets/pet/meditation) PAUSED until G1 SHIPPED — brief/impact-note only, no source landing. Plugin platform-runtime / G1 native-foundation anchor (multi-window engine, grid persistence, window-command) is the ACTIVE gate (P1 App-lane execution, plugin-platform product), NOT frozen.",
       "sync": "P2 PAUSED until G1 SHIPPED — receipt only",
       "site": "PROPOSED — owner-deferred",
       "admin": "PROPOSED — owner-deferred"

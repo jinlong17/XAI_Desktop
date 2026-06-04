@@ -146,7 +146,7 @@ Start the bug-diagnose agent.
 
 - `feature-plan` — 新增 App 原生/运行时能力时,作为标准 feature 流水线入口,附 动机/目标/范围/约束 brief 启动规划(feature-plan -> feature-review -> feature-build -> feature-verify -> ship)。
 - `xai-feature-full-loop` — D3 判定为 W3 native-bridge-needed(需要新 Tauri 命令/capability/NSWindow 行为)时,用 /xai-feature-full-loop 在 desktop-next / desktop-plugin-next 上把原生增量当作真正的新工作整轮跑通(不是 merge)。
-- `bug-diagnose` — App 在多窗口、离线持久化或原生桥接处出现回归时,作为 bugfix 流水线入口,附 现象/预期/实际/线索 brief(bug-diagnose -> bug-fix -> bug-verify -> ship)。
+- `bug-diagnose` — App **壳运行时**(离线缓存、账号会话/Keychain、菜单栏/托盘、通知、深链、自动更新、Web SPA 容器)出现回归时,作为 bugfix 流水线入口,附 现象/预期/实际/线索 brief(bug-diagnose -> bug-fix -> bug-verify -> ship);**多窗口 / grid / overlay 回归归插件平台段**(走 codex/plugin/*),不在此处。
 - `xai-web-to-desktop-sync` — 工作来源是一笔 web 改动时:用此 D3 闸口技能按 ADR-0013 把它分类为 W0-W4 并产出 Parity Receipt,判断是否需要在 App 侧补增量;它是 web -> App 的唯一入口桥,不在 App 内部独立发起。
 - `xai-desktop-release-gate` — D3 判定 W4 release-risk,或 App 改动触及签名、公证、DMG、updater、release/desktop/<version>、dev RC 时,产出桌面发布 gate receipt;它不创建分支、不触碰 dev、不签名/公证/上传。
 - `xai-release-log` — 每完成一个可见的 App 增量(G1 锚点 SHIPPED 或 dev RC 推进)后,登记 docs/workflow/project/release-log.md。
@@ -161,14 +161,14 @@ Start the bug-diagnose agent.
 
 **常用 prompt（可直接复制）**
 
-<details><summary>G1 原生锚点新功能</summary>
+<details><summary>Mac 壳能力新功能（菜单栏 / 托盘 / 通知）</summary>
 
 ```text
 Start the feature-plan agent.
-  动机:G1 native foundation 需要把 multi-grid 事件作用域收敛到每个原生 grid 窗口,避免跨窗口事件串扰
-  目标:在 apps/desktop/ + src-tauri/ 上,基于已 SHIPPED 的 window-command-contract,通过 @repo/core/events 实现按 grid 窗口隔离的事件订阅/广播
-  范围:仅 App 通道(codex/desktop/<feature> -> desktop-next,defined, not yet created),多窗口架构(main/control/grid)与 Rust commands/ 窗口适配;不改 apps/web/ 的 Web UI 源
-  约束:遵守 SYSTEM_ARCHITECTURE 多窗口/跨窗口通信红线;原生拖拽用 @dnd-kit/core,业务逻辑只进 packages/plugin-*;MAS 沙箱相关行为留在 Apple Developer 签名延期路径之后
+  动机:Mac 壳需要在菜单栏/托盘提供"同步状态 + 快速操作"入口,让用户不打开主窗也能看状态、快速新建。
+  目标:在 apps/desktop/ + src-tauri/ 上实现 menubar/tray 菜单 + 原生通知,复用 Web SPA 的账号/数据;不引入多窗口编排。
+  范围:仅 App 壳通道(codex/desktop/<feature> -> desktop-next,defined, not yet created),壳能力 = 菜单栏/托盘/离线缓存/账号+Keychain/自动更新/系统通知/深链/开机启动;不做多窗口/挂件/桌面整理(那是 plugin 平台 codex/plugin/*)。
+  约束:壳只承载 Web SPA + 原生 chrome;多窗口/overlay/grid 运行时归桌面插件平台;遵守 ADR-0013 D3 与 SYSTEM_ARCHITECTURE。
 ```
 
 </details>
@@ -185,14 +185,14 @@ Start the feature-plan agent.
 
 </details>
 
-<details><summary>原生运行时 Bug</summary>
+<details><summary>Mac 壳运行时 Bug</summary>
 
 ```text
 Start the bug-diagnose agent.
-  现象:App 在 desktop-phase1-offline profile 下重启后,grid 窗口布局回到默认,未从本地恢复
-  预期:布局通过 grid-persistence(LayoutStore seam + Repository v0 适配)持久化到 App SQLite / xai-desktop-layout,重启后还原
-  实际:刷新/重启后 userTouched 守卫未生效,late-hydrate 把用户布局清掉
-  线索:怀疑异步 hydrate 与 syncScope=device-local 写入时序竞态;仅复现在 apps/desktop/ 运行时,Web IndexedDB 路径正常
+  现象:App 在 desktop-phase1-offline profile 下重启后,菜单栏同步状态停在旧值/离线缓存未回读,账号会话需重新登录。
+  预期:壳重启后从离线缓存 + Keychain 恢复账号会话与最近同步状态,菜单栏图标正确反映。
+  实际:重启后状态错误或被登出。
+  线索:怀疑壳的离线缓存(encrypted cache)/Keychain 会话回读时序;仅复现在 apps/desktop/ 壳运行时,Web 浏览器路径正常。
 ```
 
 </details>
@@ -284,6 +284,18 @@ Start the feature-plan agent.
 目标：在 desktop-plugin-next 上落地 Widget SDK 契约（注册表 + 槽位 API + manifest 校验），index.ts 为唯一公共出口。
 范围：plugin 平台线（desktop-plugin-next <-> desktop-next，均已定义但尚未创建），不改 web 产品线 UI。
 约束：P2 PAUSED，须 G1 SHIPPED 后启动；若涉及 Tauri/Rust 原生桥（D3 判 W3）按 D3 走原生 delta 而非合并。
+```
+
+</details>
+
+<details><summary>插件平台运行时（多窗口 / grid / window-command）</summary>
+
+```text
+/xai-feature-full-loop
+动机：桌面插件平台需要把 multi-grid 事件作用域收敛到每个原生 grid 窗口，避免跨窗口事件串扰（原 G1 native foundation 工作）。
+目标：基于已 SHIPPED 的 window-command-contract，通过 @repo/core/events 实现按 grid 窗口隔离的事件订阅/广播；落地多窗口引擎 / grid 持久化。
+范围：插件平台运行时（codex/plugin/<feature> → desktop-plugin-next）。多窗口引擎 / overlay / grid / window-command 的代码物理在 host（apps/desktop/src-tauri，app 通道执行），但**产品归属是插件平台**，不是 Mac 壳——所以走 plugin 线、不走 codex/desktop/*。
+约束：本条是 **G1 平台运行时锚点 = active gate**（P1 App-lane 执行、plugin-platform 产品），**不在 P2 冻结内**——P2 冻结的是插件**包**（clipboard/widgets/pet/meditation），它们等 G1/平台运行时 SHIPPED 后才解冻；遵守 SYSTEM_ARCHITECTURE 多窗口红线；插件包只消费窗口命令、不实现原生层；原生拖拽用 @dnd-kit/core。
 ```
 
 </details>
