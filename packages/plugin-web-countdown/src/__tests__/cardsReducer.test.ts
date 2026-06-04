@@ -12,7 +12,7 @@
  */
 
 import { describe, it, expect, vi } from "vitest";
-import { addCard, updateCard, deleteCard, newCardId } from "../internal/cardsReducer.js";
+import { addCard, updateCard, deleteCard, duplicateCard, hideCard, pinCard, restoreCard, newCardId } from "../internal/cardsReducer.js";
 import { FIXTURE_FUTURE, FIXTURE_LIGHT } from "../__fixtures__/cards.js";
 import type { CountdownCard } from "../types.js";
 
@@ -69,11 +69,14 @@ describe("updateCard", () => {
 });
 
 describe("deleteCard", () => {
-  it("R5: removes the target card", () => {
+  it("R5: soft-deletes the target card for history", () => {
     const prev = [FIXTURE_FUTURE, FIXTURE_LIGHT];
     const result = deleteCard(prev, FIXTURE_FUTURE.id);
-    expect(result).toHaveLength(1);
-    expect(result[0]!.id).toBe(FIXTURE_LIGHT.id);
+    expect(result).toHaveLength(2);
+    expect(result[0]!.id).toBe(FIXTURE_FUTURE.id);
+    expect(result[0]!.status).toBe("deleted");
+    expect(result[0]!.is_hidden).toBe(true);
+    expect(result[1]!.id).toBe(FIXTURE_LIGHT.id);
   });
 
   it("R6: returns same array reference on missing id (no-op)", () => {
@@ -131,5 +134,29 @@ describe("newCardId", () => {
   it("returns a string starting with cd_", () => {
     const id = newCardId();
     expect(id).toMatch(/^cd_[a-z0-9]{8}$/);
+  });
+});
+
+describe("v2 actions", () => {
+  it("hides and pins cards", () => {
+    const hidden = hideCard([FIXTURE_FUTURE], FIXTURE_FUTURE.id);
+    expect(hidden[0]!.is_hidden).toBe(true);
+    const pinned = pinCard(hidden, FIXTURE_FUTURE.id, true);
+    expect(pinned[0]!.is_pinned).toBe(true);
+  });
+
+  it("duplicates a card as an active custom copy", () => {
+    const result = duplicateCard([FIXTURE_FUTURE], FIXTURE_FUTURE.id);
+    expect(result).toHaveLength(2);
+    expect(result[1]!.id).toMatch(/^cd_/);
+    expect(result[1]!.source).toBe("custom");
+    expect(result[1]!.status).toBe("active");
+  });
+
+  it("restores a hidden/deleted card", () => {
+    const deleted = deleteCard([FIXTURE_FUTURE], FIXTURE_FUTURE.id);
+    const restored = restoreCard(deleted, FIXTURE_FUTURE.id, new Date(2026, 4, 23, 14, 30));
+    expect(restored[0]!.status).toBe("active");
+    expect(restored[0]!.is_hidden).toBe(false);
   });
 });

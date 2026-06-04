@@ -434,3 +434,68 @@ remains side-effect-free w.r.t. the bus.
   "owner": "xai-web-countdown row #17"
 }
 ```
+
+---
+
+## §12 V2 Extension — 2026-06-04
+
+The storage key remains `xai_countdowns`. V1 cards remain valid; V2 fields are
+optional and normalized at the storage boundary.
+
+```ts
+type CountdownCategory = "holiday" | "month" | "quarter" | "year" | "custom";
+type CountdownColorId = "red" | "amber" | "green" | "teal" | "blue" | "indigo" | "slate";
+type CountdownIconId = "calendar" | "gift" | "spark" | "flag" | "moon" | "ring" | "target" | "pin";
+type CountdownDisplayStyle =
+  | "digital" | "date" | "progress" | "notion" | "ring"
+  | "minimal" | "hero" | "festival" | "timeline" | "compact";
+type CountdownLayout = "stacked" | "split";
+type CountdownStatus = "active" | "deleted";
+type CountdownViewMode = "cards" | "list" | "timeline" | "calendar" | "history";
+
+interface CountdownCard {
+  id: string;
+  title: { en: string; zh: string };
+  target_date: string;
+  variant: "image" | "light";
+  cover_url: string | null;
+  target_time?: string | null;
+  start_date?: string | null;
+  category?: CountdownCategory;
+  color?: CountdownColorId;
+  icon?: CountdownIconId;
+  note?: string;
+  is_pinned?: boolean;
+  is_hidden?: boolean;
+  show_countdown?: boolean;
+  show_progress?: boolean;
+  display_style?: CountdownDisplayStyle;
+  layout?: CountdownLayout;
+  status?: CountdownStatus;
+  source?: "preset" | "custom";
+  preset_id?: string | null;
+  created_at?: string;
+  updated_at?: string;
+  deleted_at?: string | null;
+}
+```
+
+New runtime exports:
+
+```ts
+export {
+  COUNTDOWN_CATEGORIES,
+  COUNTDOWN_COLORS,
+  COUNTDOWN_ICONS,
+  COUNTDOWN_STYLES,
+} from "./internal/options";
+```
+
+Mutation semantics:
+
+- `deleteCard()` is now a soft delete: `status="deleted"`, `is_hidden=true`,
+  `deleted_at=<iso>`.
+- `hideCard()`, `pinCard()`, `duplicateCard()`, and `restoreCard()` are pure
+  reducers for the UI actions.
+- `mergePresetCountdowns()` injects missing default presets and updates active
+  preset target/start dates. Deleted presets are preserved and not re-added.

@@ -78,6 +78,9 @@ describe("CountdownEditDialog — create mode", () => {
     renderCreate();
     const enInput = screen.getByLabelText("Title (English)");
     fireEvent.change(enInput, { target: { value: "Test" } });
+    fireEvent.change(screen.getByLabelText("Target date"), {
+      target: { value: "" },
+    });
     const saveBtn = screen.getByText("Save");
     expect(saveBtn).toBeDisabled();
   });
@@ -136,7 +139,7 @@ describe("CountdownEditDialog — create mode", () => {
 
   it("E5b: preset picker visible when variant=image", () => {
     renderCreate();
-    // Default is "image" — preset picker should show
+    fireEvent.click(screen.getByLabelText("Image"));
     expect(screen.getByText("Dusk")).toBeInTheDocument();
   });
 });

@@ -26,10 +26,11 @@ function seedStorage(cards: CountdownCard[]) {
 }
 
 describe("CountdownModule — M1 empty state", () => {
-  it("M1: shows only AddCountdownCard when no cards stored", () => {
+  it("M1: shows preset countdowns and AddCountdownCard when no cards stored", () => {
     render(<CountdownModule lang="en" />);
     expect(screen.getByText("Add Countdown")).toBeInTheDocument();
-    // No card content
+    expect(screen.getByText("Christmas")).toBeInTheDocument();
+    expect(screen.getByText("End of this year")).toBeInTheDocument();
     expect(screen.queryByText("Weekend")).not.toBeInTheDocument();
   });
 });
@@ -64,7 +65,7 @@ describe("CountdownModule — M2 add card", () => {
     const stored = JSON.parse(localStorage.getItem("xai_countdowns") ?? "[]");
     expect(Array.isArray(stored)).toBe(true);
     expect(stored.length).toBeGreaterThan(0);
-    expect(stored[0].title.en).toBe("New Event");
+    expect(stored.some((card: CountdownCard) => card.title.en === "New Event")).toBe(true);
   });
 });
 
@@ -88,12 +89,13 @@ describe("CountdownModule — M3 edit card", () => {
     expect(screen.getByText("Weekend Updated")).toBeInTheDocument();
     // Verify localStorage
     const stored = JSON.parse(localStorage.getItem("xai_countdowns") ?? "[]");
-    expect(stored[0].title.en).toBe("Weekend Updated");
+    const updated = stored.find((card: CountdownCard) => card.id === FIXTURE_FUTURE.id);
+    expect(updated.title.en).toBe("Weekend Updated");
   });
 });
 
 describe("CountdownModule — M4 delete", () => {
-  it("M4: deleting a card removes it from localStorage", async () => {
+  it("M4: deleting a card hides it from active view and stores history state", async () => {
     seedStorage([FIXTURE_FUTURE]);
     render(<CountdownModule lang="en" />);
     // Open edit modal
@@ -101,12 +103,15 @@ describe("CountdownModule — M4 delete", () => {
     fireEvent.click(titleEl.closest("[role='button']") ?? titleEl);
     expect(screen.getByText("Edit Countdown")).toBeInTheDocument();
     // Click Delete
+    const deleteButtons = screen.getAllByRole("button", { name: /Delete/i });
     act(() => {
-      fireEvent.click(screen.getByText("Delete"));
+      fireEvent.click(deleteButtons[deleteButtons.length - 1]!);
     });
     expect(screen.queryByText("Weekend")).not.toBeInTheDocument();
     const stored = JSON.parse(localStorage.getItem("xai_countdowns") ?? "[]");
-    expect(stored).toHaveLength(0);
+    const deleted = stored.find((card: CountdownCard) => card.id === FIXTURE_FUTURE.id);
+    expect(deleted.status).toBe("deleted");
+    expect(deleted.is_hidden).toBe(true);
   });
 });
 
@@ -171,16 +176,14 @@ describe("CountdownModule — M9 remount round-trip", () => {
     unmount();
     render(<CountdownModule lang="en" />);
     expect(screen.getByText("Weekend")).toBeInTheDocument();
-    expect(screen.getByText("Spring Festival")).toBeInTheDocument();
+    expect(screen.getAllByText("Spring Festival").length).toBeGreaterThan(0);
   });
 });
 
 describe("CountdownModule — M10 header + button", () => {
   it("M10: header + button opens create modal", () => {
     render(<CountdownModule lang="en" />);
-    const addButtons = screen.getAllByRole("button", { name: /Add Countdown/i });
-    // Click the header + button (aria-label="Add Countdown")
-    fireEvent.click(addButtons[0]!);
+    fireEvent.click(screen.getByRole("button", { name: /New countdown/i }));
     expect(screen.getByText("New Countdown")).toBeInTheDocument();
   });
 });

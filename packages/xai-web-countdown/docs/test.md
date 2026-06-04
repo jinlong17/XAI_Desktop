@@ -295,3 +295,53 @@ our entry.
 6. Manual cross-vendor walkthrough §5
 
 All gates green ⇒ READY_FOR_VERIFY.
+
+---
+
+## §10 V2 Verification Addendum — 2026-06-04
+
+Additional automated coverage added for the formal countdown-system upgrade:
+
+- `presetCards.test.ts`: nine default presets, Spring Festival target date, and
+  deleted preset non-reinjection.
+- `cardsReducer.test.ts`: soft delete, hide, pin, duplicate, restore.
+- `CountdownModule.test.tsx`: default presets on empty storage, soft-delete
+  history state, persistence after create/edit, remount round trip.
+- Existing card/dialog tests updated for V2 fields while preserving legacy v1
+  storage fixtures.
+
+Current package verification:
+
+```bash
+pnpm --filter @repo/plugin-web-countdown typecheck
+pnpm --filter @repo/plugin-web-countdown test
+pnpm --filter @repo/plugin-web-countdown lint
+```
+
+Expected result after this addendum: 13 test files, 115 tests, 0 lint warnings,
+and clean TypeScript.
+
+Host/browser verification performed in the V2 session:
+
+```bash
+pnpm --filter @repo/web check-types
+pnpm --filter @repo/web test
+pnpm --filter @repo/web build
+pnpm --filter @repo/web dev:mock-auth
+```
+
+Chrome CDP smoke on `http://localhost:3002/app/countdown` covered:
+
+- Empty storage injects 9 dynamic presets.
+- Cards, compact list, timeline, calendar, and history views render.
+- Create, edit, copy, delete, hide, history restore, and reload persistence work.
+- Edited custom card persists `display_style="ring"` and `layout="split"` with
+  both countdown and progress enabled.
+- Deleted copies remain in history; deleted presets are not re-injected by the
+  preset merger.
+- Desktop card overflow guard: first 10 cards report
+  `scrollHeight <= clientHeight`; screenshots saved at
+  `/tmp/xai-countdown-desktop-fixed.png` and `/tmp/xai-countdown-mobile.png`.
+- Dark-theme guard: `xai_pref_theme="dark"` reload sets
+  `<html data-theme="dark">`, renders visible card titles, and reports 0 card
+  overflows.

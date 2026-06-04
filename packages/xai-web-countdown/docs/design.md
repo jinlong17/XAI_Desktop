@@ -175,3 +175,46 @@ and replaces the existing `placeholder("countdown", ...)` row in
 - `docs/adr/0007-xai-web-console-build-form.md` §S5 (JSX→TSX 10 rules — full conformance)
 - `docs/adr/0007-xai-web-console-build-form.md` §S7 (cross-module via `@repo/core/events` only — but this row emits nothing in v1)
 - `docs/adr/0007-xai-web-console-build-form.md` §S8 (`xai_countdowns` proposed key kept; v1 uses it verbatim)
+
+---
+
+## V2 Countdown System Upgrade — 2026-06-04
+
+### Product intent
+
+Upgrade Countdown from a simple card grid into a formal time-planning module:
+default presets, full post-create editing, multiple display styles, composable
+countdown/progress modules, card/list/timeline/calendar/history views, and
+history-safe persistence under the existing `xai_countdowns` key.
+
+### Reference synthesis
+
+- Apple HIG picker guidance: keep date/time editing in context and use compact
+or graphical date entry according to space. Countdown V2 keeps native date/time
+inputs inside the edit dialog instead of route-switching.
+- Apple HIG progress guidance: countdown progress is determinate because start
+and target dates are known. V2 uses exact clamped progress ratios and avoids
+spinners for time progress.
+- Notion-style progress: V2 includes a segmented Notion bar plus standard linear
+and ring progress styles, all derived from the same `start_date` → target range.
+- Mainstream countdown apps: V2 adds default date presets, per-card colors/icons,
+pin/hide/copy/delete, progress bars, and history restore/copy flows.
+
+### New UX surfaces
+
+- Default presets: Christmas, New Year's Day, New year, Spring Festival,
+  end of this month, start of next month, next year, quarter end, end of year.
+- Views: Cards, Compact list, Timeline, Calendar, History.
+- Card modules: countdown only, progress only, or countdown + progress.
+- Layout options: stacked (top/bottom) or split (left/right).
+- Display styles: digital, date, progress, Notion bar, ring, minimal, big number,
+  festival, timeline, compact.
+- History: deleted, hidden, and completed records can be restored or copied as
+  a new countdown.
+
+### Visual direction
+
+Quiet Apple/Linear-style utility UI: restrained neutral surfaces, low-saturation
+accent tokens, compact controls, tabular numbers, clear progress hierarchy, and
+responsive grid/list density. No emoji field; icon choices use local light-line
+SVG glyphs to match adjacent Web modules.
