@@ -7,7 +7,7 @@
 | Current Web route | `/app/board` |
 | Current Web packages | `@repo/plugin-web-board-core`, `@repo/plugin-web-board-views`, `@repo/plugin-web-board-workspaces` |
 | Related desktop package | `@repo/plugin-project` |
-| Status | Draft PRD + audit complete; implementation follow-up required |
+| Status | Supplemental PRD + audit complete; P0/P1 follow-up implementation in progress |
 
 ## 1. Executive Verdict
 
@@ -248,7 +248,7 @@ This is good enough for local demo and first-run state. It is not enough for dur
 | Task | Owner surface | Notes |
 |---|---|---|
 | `xai-web-board-task-link` | board + tasks | SHIPPED: one-way create/link task from board card, with persisted linked status in card detail. |
-| `xai-web-board-calendar-feed` | board + calendar | Cards with dates appear in Calendar. |
+| `xai-web-board-calendar-feed` | board + calendar | SHIPPED: active dated Board cards appear in Calendar Month/Week/Day as a read-only derived feed. |
 | `xai-web-board-saved-filters` | board-workspaces | Persist filters per board. |
 | `xai-web-board-share-contract` | board + sync/share | Replace mock URL with explicit share-envelope plan or label it as stub. |
 | `xai-web-board-responsive-smoke` | Web shell + board packages | Browser/manual smoke for board views and detail. |
@@ -308,6 +308,7 @@ Do not update generated dashboard snapshots directly. If a dashboard generator c
 | Workflow docs | `docs/workflow/project/usage-guide.md` now allows targeted follow-up manifests when they cite a concrete audit/PRD source. |
 | Skill / Agent pages | No change applied; current `xai-feature-full-loop` / `xai-roadmap-loop` skills remain sufficient. |
 | Task link implementation | `xai-web-board-task-link` shipped one-way Board-card to Tasks linkage and moved the next personal-board focus to `xai-web-board-calendar-feed`. |
+| Calendar feed implementation | `xai-web-board-calendar-feed` shipped read-only Calendar projection from Board `xai_boards_v2` storage through board-core public helpers; the next personal-board focus is `xai-web-board-saved-filters`. |
 
 ## 11. Acceptance Criteria for the Next Implementation Wave
 

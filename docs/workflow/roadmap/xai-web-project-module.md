@@ -23,7 +23,7 @@
 | 6 | xai-web-board-checklist-editor | same | xai-web-board-card-detail | ready_to_ship | SHIPPED | P0 | Formalize card-detail checklist add/toggle/edit/remove, derived progress, and empty-list chip clearing. Shipped through `aeb4ee2` plus verify/live smoke. |
 | 7 | xai-web-board-storage-contract | same | xai-web-board-date-model | ready_to_ship | SHIPPED | P0 | Define v1 envelope read/migration/write-preservation helpers for `xai_boards_v2` and lossless board/list/card logical entity projection. Shipped through `5dc2276` plus verify/live smoke. |
 | 8 | xai-web-board-task-link | same | xai-web-board-storage-contract | ready_to_ship | SHIPPED | P1 | Link/create Task from Board card; surface linked task status in card detail. Shipped through `79a8bf3` plus verify/live smoke. |
-| 9 | xai-web-board-calendar-feed | same | xai-web-board-date-model | ready_to_ship | PENDING | P1 | Feed cards with dates into Calendar module without duplicating calendar data ownership. |
+| 9 | xai-web-board-calendar-feed | same | xai-web-board-date-model | ready_to_ship | SHIPPED | P1 | Feed active dated Board cards into Calendar Month/Week/Day without duplicating calendar data ownership. Shipped through `de4158e` plus verify/live smoke. |
 | 10 | xai-web-board-saved-filters | same | xai-web-board-storage-contract | ready_to_ship | PENDING | P1 | Persist per-board filters and support clear/reset. |
 | 11 | xai-web-board-share-contract | same | xai-web-board-storage-contract | ready_to_ship | PENDING | P1 | Replace mock share URL with explicit share-envelope plan, or visibly label current flow as stub. |
 | 12 | xai-web-board-responsive-smoke | same | xai-web-board-card-detail, xai-web-board-date-model | ready_to_ship | PENDING | P1 | Verify Board/Table/Calendar/Timeline/Detail on desktop and mobile widths. |
@@ -39,9 +39,9 @@ This file is the current source-backed personal development board for the Web Pr
 
 | Board List | Cards |
 |---|---|
-| Shipped | `xai-web-project-prd-sync`, `xai-web-board-card-detail`, `xai-web-board-date-model`, `xai-web-board-list-crud`, `xai-web-board-card-crud`, `xai-web-board-checklist-editor`, `xai-web-board-storage-contract`, `xai-web-board-task-link` |
-| This Week | `xai-web-board-calendar-feed` |
-| Backlog | `xai-web-board-saved-filters`, `xai-web-board-share-contract`, `xai-web-board-responsive-smoke` |
+| Shipped | `xai-web-project-prd-sync`, `xai-web-board-card-detail`, `xai-web-board-date-model`, `xai-web-board-list-crud`, `xai-web-board-card-crud`, `xai-web-board-checklist-editor`, `xai-web-board-storage-contract`, `xai-web-board-task-link`, `xai-web-board-calendar-feed` |
+| This Week | `xai-web-board-saved-filters` |
+| Backlog | `xai-web-board-share-contract`, `xai-web-board-responsive-smoke` |
 | Waiting | `xai-web-board-export-import` waits on export/delete/privacy ownership; `xai-web-board-share-contract` waits on sync/share envelope decisions. |
 | Later | `xai-web-board-responsive-smoke`, `xai-web-board-automation-lite`, `xai-web-board-integrations`, `xai-web-board-comments-activity`, `xai-web-board-permissions` |
 
@@ -58,7 +58,8 @@ flowchart LR
   E --> H["Card detail + typed dates + list/card/checklist CRUD shipped"]
   H --> I["Schema-versioned storage contract + logical entities shipped"]
   I --> J["Board-card -> Task link shipped"]
-  J --> K["Future calendar feed / saved filters / share contract"]
+  J --> K["Calendar feed shipped"]
+  K --> L["Future saved filters / share contract / export-import"]
 ```
 
 ## Run Guidance
