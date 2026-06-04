@@ -10,7 +10,7 @@ const repoRoot = resolve(scriptDir, "../..");
 const dashboardDir = resolve(repoRoot, "docs/prototypes/dev-dashboard");
 const htmlPath = resolve(dashboardDir, "index.html");
 const generatedPath = resolve(dashboardDir, "state.generated.js");
-const requiredModuleKeys = ["web", "app", "plugin", "sync", "site", "admin"];
+const syncRegistryPath = resolve(repoRoot, "docs/workflow/project/sync-registry.json");
 const requiredMountIds = [
   "primaryNavList",
   "overview",
@@ -20,6 +20,7 @@ const requiredMountIds = [
   "overviewSyncStatus",
   "overviewFlowCanvas",
   "overviewModuleGrid",
+  "syncOrchestration",
   "deployment",
   "deploymentSummaryGrid",
   "deploymentRecordList",
@@ -99,9 +100,9 @@ function scriptSources(html) {
   return [...html.matchAll(/<script\b[^>]*\bsrc=["']([^"']+)["'][^>]*><\/script>/g)].map(match => match[1]);
 }
 
-function assertKeySet(label, keys) {
+function assertKeySet(label, keys, expectedKeys) {
   const sorted = [...keys].sort();
-  const expected = [...requiredModuleKeys].sort();
+  const expected = [...expectedKeys].sort();
   assert(JSON.stringify(sorted) === JSON.stringify(expected), `${label} keys must be ${expected.join(", ")}; got ${keys.join(", ")}`);
   assert(new Set(keys).size === keys.length, `${label} keys must be unique`);
 }
@@ -173,17 +174,30 @@ assert(state.sync_status?.refresh_command === "pnpm dashboard", "sync_status.ref
 assert(state.sync_status?.serve_command === "pnpm dashboard:serve", "sync_status.serve_command must stay pnpm dashboard:serve");
 assert(state.sync_status?.sync_skill?.status === "tracked", "xai-dev-dashboard-sync must be present and tracked");
 
+if (existsSync(syncRegistryPath)) {
+  const syncOrchestration = state.sync_orchestration;
+  assert(syncOrchestration, "sync_orchestration must be generated from sync-registry.json");
+  assert(syncOrchestration.source === relative(repoRoot, syncRegistryPath), "sync_orchestration.source must point to sync-registry.json");
+  assert(Array.isArray(syncOrchestration.actions) && syncOrchestration.actions.length > 0, "sync_orchestration.actions must be populated");
+  assert(Array.isArray(syncOrchestration.waves) && syncOrchestration.waves.length > 0, "sync_orchestration.waves must be populated");
+  (syncOrchestration.docs || []).forEach(doc => {
+    assert(doc.path && !doc.path.startsWith("/"), `sync_orchestration doc path must be repo-relative: ${doc.path || "<missing>"}`);
+  });
+}
+
 assert(state.product_module_registry?.field === "product_lines", "product_module_registry.field must be product_lines");
-assertKeySet("product_module_registry", state.product_module_registry?.keys || []);
 assert(Array.isArray(state.product_lines), "product_lines must be an array");
 assert(Array.isArray(state.overview_modules), "overview_modules must be an array");
-assertKeySet("product_lines", state.product_lines.map(item => item.key));
-assertKeySet("overview_modules", state.overview_modules.map(item => item.key));
+const requiredModuleKeys = state.product_lines.map(item => item.key);
+assert(requiredModuleKeys.length > 0, "product_lines must not be empty");
+assertKeySet("product_module_registry", state.product_module_registry?.keys || [], requiredModuleKeys);
+assertKeySet("product_lines", state.product_lines.map(item => item.key), requiredModuleKeys);
+assertKeySet("overview_modules", state.overview_modules.map(item => item.key), requiredModuleKeys);
 
 assert(state.testing?.summary, "testing.summary must be present");
 assert(Array.isArray(state.testing?.modules), "testing.modules must be an array");
 assert(Array.isArray(state.testing?.records), "testing.records must be an array");
-assertKeySet("testing.modules", state.testing.modules.map(item => item.key));
+assertKeySet("testing.modules", state.testing.modules.map(item => item.key), requiredModuleKeys);
 state.testing.records.forEach(record => {
   const count = releaseFailureCount(record.conclusion || record.title || "");
   if (count === 0) {

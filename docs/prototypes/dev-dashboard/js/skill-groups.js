@@ -14,6 +14,8 @@ const FREQUENT_SKILLS = [
   ["xai-feature-brief", "需求规范化"],
   ["xai-feature-full-loop", "功能一条龙"],
   ["xai-web-to-desktop-sync", "D3 闸门"],
+  ["xai-web-deploy-preflight", "Web 部署预检"],
+  ["xai-desktop-release-gate", "桌面发布闸门"],
   ["xai-sync-fanout-dispatch", "完成后扇出同步"],
   ["xai-release-log", "发布登记"]
 ];

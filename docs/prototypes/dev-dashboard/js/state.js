@@ -9,6 +9,7 @@ const syncStatus = dashboardState.sync_status || {};
 const deploymentState = dashboardState.deployment || {summary:{}, modules:[], records:[]};
 const testingState = dashboardState.testing || {summary:{}, modules:[], records:[], pipelines:[], report_sources:[]};
 const devData = dashboardState.development_data || {};
+const futureSurfaces = dashboardState.future_surfaces || null;
 const productLinks = dashboardState.product_links || [
   ["web", "app", "main"],
   ["app", "plugin", "main"],

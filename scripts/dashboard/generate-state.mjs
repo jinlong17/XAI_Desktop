@@ -16,11 +16,13 @@ const repoRoot = resolve(scriptDir, "../..");
 const sourcePath = resolve(repoRoot, "docs/workflow/project/dashboard-state.json");
 const releaseLogPath = resolve(repoRoot, "docs/workflow/project/release-log.md");
 const branchPolicyPath = resolve(repoRoot, "docs/workflow/project/branch-policy.json");
+const syncRegistryPath = resolve(repoRoot, "docs/workflow/project/sync-registry.json");
 const pluginMapPath = resolve(repoRoot, "docs/PLUGIN_MAP.md");
 const workflowDir = resolve(repoRoot, ".github/workflows");
 const roadmapDir = resolve(repoRoot, "docs/workflow/roadmap");
 const skillDir = resolve(repoRoot, ".teams/skills");
 const codexSkillDir = resolve(repoRoot, ".codex/skills");
+const cursorRuleDir = resolve(repoRoot, ".cursor/rules");
 const agentDir = resolve(repoRoot, ".codex/agents");
 const agentTemplateDir = resolve(repoRoot, ".agents/templates");
 const claudeAgentDir = resolve(repoRoot, ".claude/agents");
@@ -30,6 +32,7 @@ const dashboardReadmePath = "docs/prototypes/dev-dashboard/README.md";
 const dashboardMachineDocPath = "docs/workflow/project/dev-dashboard.md";
 const dashboardTemplatePath = "docs/prototypes/dev-dashboard/TEMPLATE.md";
 const dashboardBoundariesPath = "docs/prototypes/dev-dashboard/BOUNDARIES.md";
+const dashboardReusePath = "docs/prototypes/dev-dashboard/REUSE.md";
 const dashboardDesignPath = "docs/prototypes/dev-dashboard/DESIGN.md";
 const dashboardSyncSkillPath = ".teams/skills/xai-dev-dashboard-sync/SKILL.md";
 
@@ -473,7 +476,7 @@ function explicitNoteFor(text) {
 
 function inferredNoteFor(entry, categoryKey) {
   if (entry.kind === "agent") return `该 Agent 是 ${entry.related_workflow || categoryByKey(categoryKey).workflow} 的执行单元，维护时需同步各平台定义。`;
-  if (String(entry.path || "").startsWith(".teams/skills/")) return "项目级 skill；维护时需同步 `.teams/skills` 源和 Claude/Codex 镜像。";
+  if (String(entry.path || "").startsWith(".teams/skills/")) return "项目级 skill；维护时需同步 `.teams/skills` 源和 Claude/Codex/Cursor 镜像。";
   if (String(entry.path || "").startsWith(".codex/skills/")) return "Codex 本地 skill；用于当前开发环境的可复用能力。";
   return `${categoryByKey(categoryKey).title} 分类下的辅助能力；必要时补充显式注释。`;
 }
@@ -497,7 +500,8 @@ function mirrorStatusForSkill(path, name) {
   if (!String(path || "").startsWith(".teams/skills/")) return { status: "not-required", missing: [] };
   const missing = [
     `.codex/skills/${name}/SKILL.md`,
-    `.claude/skills/${name}/SKILL.md`
+    `.claude/skills/${name}/SKILL.md`,
+    `.cursor/rules/${name}.mdc`
   ].filter(relPath => !existsSync(resolve(repoRoot, relPath)));
   return {
     status: missing.length ? "missing" : "aligned",
@@ -923,6 +927,7 @@ function buildDocHub(skillGroups, agentFamilies) {
         docEntry("看板 README", dashboardReadmePath, "打开、运行、刷新个人开发看板和定位权威文档的入口。", ["dashboard", "readme"], "必读"),
         docEntry("看板可复用模板", dashboardTemplatePath, "新项目复用个人开发看板时的结构、视觉和管理逻辑模板。", ["dashboard", "template"], "必读"),
         docEntry("看板边界规范", dashboardBoundariesPath, "本项目具体页面、卡片、Owner / Mirror / Shared-Widget 和数据源边界。", ["dashboard", "boundaries"], "必读"),
+        docEntry("看板复用指南", dashboardReusePath, "把看板复用到别的项目：要交接哪些文件 + 新建/审查改造两套 copy-paste prompt。", ["dashboard", "reuse"], "必读"),
         docEntry("AGENTS.md", "AGENTS.md", "Codex 会话规则、handoff 展示和 agent/skill tracking 边界。", ["rules", "codex"], "必读"),
         docEntry("CLAUDE.md", "CLAUDE.md", "跨平台共享工程规则、架构边界和测试要求。", ["rules", "architecture"], "必读"),
         docEntry("项目使用手册", "docs/workflow/project/usage-guide.md", "个人开发看板与 Workflow V2 的日常入口。", ["guide", "workflow"], "必读"),
@@ -1010,7 +1015,8 @@ function buildDocHub(skillGroups, agentFamilies) {
     docEntry(".codex/agents", ".codex/agents", "Codex Workflow Agent TOML。", ["agent", "codex"], "必要"),
     docEntry(".agents/templates", ".agents/templates", "跨平台 Agent 模板源。", ["agent", "template"], "系统级"),
     docEntry(".claude/agents", ".claude/agents", "Claude/Cloud Agent 版本。", ["agent", "cloud"], "参考"),
-    docEntry(".cursor/agents", ".cursor/agents", "Cursor Agent 版本。", ["agent", "cursor"], "参考")
+    docEntry(".cursor/agents", ".cursor/agents", "Cursor Agent 版本。", ["agent", "cursor"], "参考"),
+    docEntry(".cursor/rules", ".cursor/rules", "Cursor 规则与 XAI skill 镜像。", ["skill", "cursor"], "必要")
   ].filter(Boolean);
   const byPath = new Map();
   [...roots, ...groups.flatMap(group => group.entries)].forEach(entry => {
@@ -1773,7 +1779,7 @@ function dashboardDirtyBucket(file) {
   if (file.startsWith("scripts/dashboard/")) return "dashboard-generator";
   if (file === "docs/workflow/project/dashboard-state.json") return "dashboard-state";
   if (file === "docs/workflow/project/release-log.md") return "release-log";
-  if (file.startsWith(".teams/skills/") || file.startsWith(".codex/skills/") || file.startsWith(".codex/agents/")) return "skills-agents";
+  if (file.startsWith(".teams/skills/") || file.startsWith(".claude/skills/") || file.startsWith(".codex/skills/") || file.startsWith(".cursor/rules/") || file.startsWith(".codex/agents/")) return "skills-agents";
   if (file.startsWith("docs/")) return "docs";
   if (file.startsWith("apps/") || file.startsWith("packages/")) return "product-code";
   return "other";
@@ -1942,6 +1948,7 @@ function directoryBucket(file) {
   if (file.startsWith("apps/web/")) return "apps/web";
   if (file.startsWith("apps/desktop/")) return "apps/desktop";
   if (file.startsWith(".teams/skills/")) return ".teams/skills";
+  if (file.startsWith(".cursor/rules/")) return ".cursor/rules";
   return "other";
 }
 
@@ -2026,7 +2033,9 @@ function buildDevelopmentData(branch) {
     "--format=%H",
     "--",
     ".teams/skills",
+    ".claude/skills",
     ".codex/skills",
+    ".cursor/rules",
     ".codex/agents"
   ])).size;
   return {
@@ -2087,6 +2096,41 @@ function readBranchPolicy(divergence) {
   } catch {
     return null;
   }
+}
+
+// ADR-0014 Cross-Module Sync Orchestration — read sync-registry.json into a
+// compact, card-friendly block for the 产品结构图 page (rendered as a standalone
+// orchestration card by product-flow.js renderSyncOrchestration()).
+function readSyncOrchestration() {
+  if (!existsSync(syncRegistryPath)) return null;
+  const reg = readJson(syncRegistryPath);
+  const dispatch = reg.dispatch || {};
+  const actions = (Array.isArray(reg.actions) ? reg.actions : []).map(a => ({
+    id: a.id,
+    title: a.title,
+    skill: Array.isArray(a.skill) ? a.skill.join(" + ") : (a.skill || ""),
+    is_new: !!a.is_new,
+    writes_source: !!a.writes_source,
+    parallel_safe: !!a.parallel_safe,
+    depends_on: Array.isArray(a.depends_on) ? a.depends_on : []
+  }));
+  return {
+    title: "ADR-0014 跨模块同步编排",
+    source: relative(repoRoot, syncRegistryPath),
+    authority_doc: "docs/adr/0014-cross-module-sync-orchestration.md",
+    purpose: reg.purpose || "",
+    trigger: dispatch.trigger_phrase || "",
+    entry: dispatch.entry || "",
+    mechanism: dispatch.mechanism || "",
+    actions,
+    waves: Array.isArray(dispatch.waves) ? dispatch.waves : [],
+    hard_rules: (reg.governance && Array.isArray(reg.governance.hard_rules)) ? reg.governance.hard_rules : [],
+    open_findings: (Array.isArray(reg.open_findings) ? reg.open_findings : []).map(f => ({ id: f.id, severity: f.severity, summary: f.summary })),
+    docs: [
+      { label: "ADR-0014 编排决策", path: "docs/adr/0014-cross-module-sync-orchestration.md" },
+      { label: "sync-registry.json", path: relative(repoRoot, syncRegistryPath) }
+    ]
+  };
 }
 
 function parseStatusPanel(text) {
@@ -2195,6 +2239,8 @@ const snapshot = {
   skill_groups: skillGroups,
   agent_families: agentFamilies,
   skill_agent_registry: skillAgentRegistry,
+  // machine-only: emitted for external tooling / historical dashboard consumers,
+  // no current dashboard JS renderer consumes doc_collections directly.
   doc_collections: buildDocCollections(skillGroups, agentFamilies),
   doc_hub: buildDocHub(skillGroups, agentFamilies),
   // machine-only: emitted for external tooling, no dashboard consumer
@@ -2229,6 +2275,7 @@ const snapshot = {
   },
   testing: testingState,
   branch_policy: readBranchPolicy(divergence),
+  sync_orchestration: readSyncOrchestration(),
   development_data: buildDevelopmentData(branch),
   task_progress: scanDevLogs()
 };

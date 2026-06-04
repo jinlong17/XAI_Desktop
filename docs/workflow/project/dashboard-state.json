@@ -21,6 +21,9 @@
       "docs/workflow/project/dashboard-state.json",
       "docs/workflow/project/release-log.md",
       ".teams/skills/*/SKILL.md",
+      ".claude/skills/*",
+      ".codex/skills/*",
+      ".cursor/rules/*.mdc",
       "git status",
       "git log -1"
     ]
@@ -67,8 +70,8 @@
     {
       "label": "固定 skill",
       "badge": "入口",
-      "value": "11",
-      "note": "feature·brief·dossier·roadmap·module-classify·consistency-audit·web→desktop D3·account-sync D4·sync-fanout·release-log·dashboard-sync"
+      "value": "13",
+      "note": "feature·brief·dossier·roadmap·module-classify·consistency-audit·web→desktop D3·web-deploy preflight·desktop release gate·account-sync D4·sync-fanout·release-log·dashboard-sync"
     },
     {
       "label": "自动跟踪",
@@ -690,6 +693,10 @@
           "when": "一个已落地的 Web 改动可能影响 Desktop,需要在 web→desktop-next 之前做 W0–W4 分级并产出 Parity Receipt 时(离开本模块流向 App 的唯一通道)。"
         },
         {
+          "name": "xai-web-deploy-preflight",
+          "when": "Web 改动触及 Cloudflare Pages、deploy-web.yml、wrangler.toml、_headers、Sentry sourcemap 或生产/预览发布证据时,先产出部署 preflight receipt;它不部署、不推 main、不声明 live smoke。"
+        },
+        {
           "name": "xai-roadmap-loop",
           "when": "要把一份已评审的 Web 路线图(如 docs/workflow/roadmap/xai-web-console.md)按波次批量推进多个功能到 READY_TO_SHIP 时。"
         },
@@ -716,8 +723,8 @@
         "规范化:对模糊想法先跑 xai-feature-brief 产出结构化 brief(分类/依赖扫描/mock 策略),明确落点在 apps/web/ 或某个 plugin-web-*/xai-web-* 包。",
         "规划+评审:feature-plan 给出方案 → feature-review 评审定稿(NEEDS_REVIEW→APPROVED);单功能可改用 xai-feature-full-loop 在父会话一把跑完。",
         "实现:在 codex/web/<feature> 短分支上 feature-build,一次一个 phase,业务逻辑只进 packages/plugin-web-*,模块间走 @repo/core/events,UI 偏好走 localStorage、数据实体走加密 IndexedDB。",
-        "验证:feature-verify 跑 vitest + vite build 绿灯;必要时浏览器手动 smoke(Chrome/Safari/Firefox)作为部署就绪门。",
-        "发布:ship 合入 web,触发 Cloudflare Pages 发布(ADR-0008);随后 xai-release-log 登记增量。",
+        "验证:feature-verify 跑 vitest + vite build 绿灯;部署/CSP/Cloudflare 相关改动额外跑 xai-web-deploy-preflight;必要时浏览器手动 smoke(Chrome/Safari/Firefox)作为部署就绪门。",
+        "发布:ship 合入 web,触发 Cloudflare Pages 发布(ADR-0008);随后 xai-release-log 登记增量并用 xai-dev-dashboard-sync 刷新看板证据。",
         "跨面判定:若改动可能影响 Desktop,在 web→desktop-next 之前跑 xai-web-to-desktop-sync 做 W0–W4 分级并产出 Parity Receipt(Verdict: NO_APP_CHANGE|GATE_ONLY|DESKTOP_DELTA_REQUIRED|BLOCKED),这是 Web 流向 App 的唯一通道。"
       ],
       "transitions": [
@@ -754,7 +761,7 @@
         {
           "module": "app",
           "when": "Web 改动落在共享 UI / @repo/core 事件或类型、或 desktop 运行时敏感的代码(W1/W2/W3/W4),且需要带入 Desktop App",
-          "action": "在 web→desktop-next 之前运行 xai-web-to-desktop-sync 做 W0–W4 分级并产出 Parity Receipt;W3 需在 desktop-next/desktop-plugin-next 经 xai-feature-full-loop 补原生 delta,W4 需 RC/release 门(含 macOS 手动 smoke)。这是 Web→App 的唯一通道(D3 gate),非分支对齐。"
+          "action": "在 web→desktop-next 之前运行 xai-web-to-desktop-sync 做 W0–W4 分级并产出 Parity Receipt;W3 需在 desktop-next/desktop-plugin-next 经 xai-feature-full-loop 补原生 delta,W4 需 xai-desktop-release-gate(含 macOS 手动 smoke、签名/公证/DMG/updater 证据)。这是 Web→App 的唯一通道(D3 gate),非分支对齐。"
         },
         {
           "module": "sync",
@@ -776,14 +783,14 @@
     {
       "key": "app",
       "order": 2,
-      "title": "Mac 桌面版 App",
-      "subtitle": "基于 Web 开发的桌面产品",
+      "title": "Mac 桌面壳 App",
+      "subtitle": "Web 的桌面壳 / 原生容器（不是桌面整理器）",
       "badge": "P1 · active app lane",
       "status": "独立桌面开发线",
       "branch": "desktop-next -> dev",
-      "dependency": "依赖 Web + Tauri native",
-      "next": "G1 native foundation 优先。",
-      "tracker": "离线、本机能力、窗口、Tauri 权限、App RC。",
+      "dependency": "依赖 Web + Tauri host",
+      "next": "优先收窄为 Web 容器壳 + native chrome；插件平台运行时按 plugin 线记录。",
+      "tracker": "Web 容器、菜单栏/托盘、离线、账号+Keychain、通知、自动更新、App RC。",
       "labels": {
         "overview": "Mac 桌面版 App",
         "deployment": "Mac 桌面版本",
@@ -794,11 +801,11 @@
         "icon": "D"
       },
       "overview": {
-        "phase": "Native foundation",
+        "phase": "Web container shell",
         "running": "开发线正常",
         "progress_fallback": 42,
-        "recent_update": "G1 native foundation 作为桌面主线入口",
-        "todo_fallback": "Tauri / 本机能力 / RC gate",
+        "recent_update": "Mac 壳身份收窄为 Web 容器 + native chrome",
+        "todo_fallback": "主窗口 / 菜单栏 / 离线 / 账号 / 更新 / 通知 / RC gate",
         "target": { "type": "page", "page": "product-flow", "product_key": "app", "label": "查看桌面详情" }
       },
       "tracking": {
@@ -808,35 +815,34 @@
         "release_aliases": ["app", "mac", "desktop", "tauri", "native", "dmg", "mas"]
       },
       "features": [
-        { "name": "⚠️ 产品方向待定:路线 W(overlay+Smart Container) vs 路线 D(普通窗口混合)", "status": "contested", "note": "dev ADR-0011 已 Accepted 路线 D 并将 overlay/organizer 降 P3;web 线文档仍含 overlay;reconcile 见 ADR-0015 / ADR-0013 §S7" },
-        { "name": "Web 同步能力(复用 Web UI)", "status": "planned" },
-        { "name": "本地窗口管理", "status": "planned" },
+        { "name": "Web 容器主窗口(复用 Web UI)", "status": "planned" },
+        { "name": "native chrome(菜单栏/托盘/深链/开机启动)", "status": "planned" },
+        { "name": "离线 profile / 本地缓存", "status": "planned" },
+        { "name": "账号 + Keychain", "status": "planned" },
         { "name": "本地通知", "status": "planned" },
-        { "name": "本地文件访问", "status": "planned" },
-        { "name": "多窗口工作台", "status": "planned" },
-        { "name": "G1 原生地基(窗口/命令契约)", "status": "in-dev", "note": "G0 已 SHIPPED;G1 进行中" }
+        { "name": "自动更新 / App RC gate", "status": "planned" },
+        { "name": "G1 host command foundation", "status": "in-dev", "note": "物理 host 命令可支撑 Mac 壳与插件平台；产品归属按 app/plugin 边界拆分" }
       ],
       "points": [
         [
           "定位",
-          "把 Web 的能力变成 macOS 桌面 App，补上离线、本机文件、窗口和系统能力。"
+          "Mac 壳 = Web 的原生容器：把 Web SPA 装进桌面 App + 原生便利（离线 / 菜单栏 / 托盘 / 通知 / 账号+Keychain / 自动更新）。多窗口 / 挂件 / 桌面整理归桌面插件产品（物理在 host，产品归 plugin），不是壳本体。长期路线见 docs/planning/LONG_TERM_PRODUCT_ROADMAP.md。"
         ],
         [
           "独立跟踪",
-          "App 自己跟踪 G1 native foundation、Tauri build、离线 profile 和 RC 状态。"
+          "App 自己跟踪 Web 容器壳、native chrome、Tauri build、离线 profile 和 RC 状态。"
         ],
         [
           "和下一层关系",
-          "插件和 widget 要等 App 插件平台稳定；App 稳定线是 `dev`。"
+          "桌面插件平台运行时和 widget 产品归 plugin；host 命令物理实现可在 App 通道，但产品记录按 plugin 线拆分。App 稳定线是 `dev`。"
         ]
       ],
-      "goal": "在独立的 App 通道上推进 Mac 桌面版 App 的原生/运行时/窗口能力(当前聚焦 G1 native foundation),并按 ADR-0013 D3 闸口接收来自 web 的同步增量。App 以 web 为 UI 源构建,但走自己的分支方向(dev 为 App RC,与 web 分叉是正常状态)。",
+      "goal": "在独立的 App 通道上把 Web SPA 作为 Mac 原生 App 承载起来，并补齐 native chrome（菜单栏、托盘、离线缓存、账号+Keychain、自动更新、系统通知、深链、开机启动、桌面插件入口按钮）。App 以 Web 为 UI 源构建，走自己的分支方向(dev 为 App RC,与 web 分叉是正常状态)；多窗口 / overlay / 桌面整理的产品归属在 plugin。",
       "routing": [
-        "改动落在 apps/desktop/ 或 src-tauri/(Tauri 2 + React 19 overlay 外壳),而非 apps/web/ 的 Web UI 源",
-        "出现 Tauri command / capability / NSWindow / 多窗口(main/control/grid)/ 点击穿透 / Spaces / 多显示器 等原生关键词",
+        "改动落在 apps/desktop/ 或 src-tauri/ 的 Mac 壳 / Web 容器 / native chrome，而非 apps/web/ 的 Web UI 源",
+        "出现主窗口承载 Web SPA、菜单栏/托盘、离线缓存、账号+Keychain、auto-update、系统通知、deep link、launch-at-login、桌面插件入口按钮等壳能力",
         "涉及离线/本地优先运行时,如 VITE_WEB_RUNTIME_PROFILE=desktop-phase1-offline、App SQLite(SQLCipher)、xai-desktop-layout localStorage 键(ADR-0013 D3 W2 引用此离线 profile)",
-        "命中 G1 native foundation 锚点:window-command-contract、multi-grid-event-scope、grid-persistence、native-dnd-path-first、host-business-residuals(均已在 PLUGIN_MAP 登记)",
-        "需要 @dnd-kit/core 原生拖拽、@repo/core/events 跨窗口通信、Rust commands/ 与 platform/macos/ 适配(SYSTEM_ARCHITECTURE 桌面多窗口红线)",
+        "需要新增 Tauri/Rust host command 或 platform/macos 适配来支撑 Mac 壳或插件平台；按产品意图区分归属：壳/native chrome = app，多窗口/overlay/插件平台运行时 = plugin（物理代码仍可在 host）",
         "短分支形如 codex/desktop/<feature>,目标长分支为 desktop-next -> dev(App RC,均 defined, not yet created)",
         "签名/公证/DMG/updater 等仅在 release/desktop/<version> 冻结分支处理(不在此模块常规开发)"
       ],
@@ -856,6 +862,10 @@
         {
           "name": "xai-web-to-desktop-sync",
           "when": "工作来源是一笔 web 改动时:用此 D3 闸口技能按 ADR-0013 把它分类为 W0-W4 并产出 Parity Receipt,判断是否需要在 App 侧补增量;它是 web -> App 的唯一入口桥,不在 App 内部独立发起。"
+        },
+        {
+          "name": "xai-desktop-release-gate",
+          "when": "D3 判定 W4 release-risk,或 App 改动触及签名、公证、DMG、updater、release/desktop/<version>、dev RC 时,产出桌面发布 gate receipt;它不创建分支、不触碰 dev、不签名/公证/上传。"
         },
         {
           "name": "xai-release-log",
@@ -880,7 +890,7 @@
         "接收工作来源:要么是 App 原生新需求(直接 Start the feature-plan agent),要么是一笔 web 改动经 /xai-web-to-desktop-sync(D3)判为需要 App 增量(W2/W3/W4)后进入本模块;W0 仅记录不进入,W1 仅过门禁。",
         "标准 feature 流水线:feature-plan -> feature-review -> feature-build(一次一阶段,跑完停)-> feature-verify -> ship;原生桥接类(W3)改用 /xai-feature-full-loop 在 desktop-next / desktop-plugin-next 上整轮跑(真正新工作,不是 merge)。",
         "原生回归走 bugfix 流水线:bug-diagnose -> bug-fix -> bug-verify -> ship。",
-        "验证按 D3 层级补齐:W1 跑 Web build gate + desktop tauri build gate;W2 加 offline/runtime/profile 测试;W4 在推进到 dev / release/desktop/<version> 前加人工 macOS smoke。",
+        "验证按 D3 层级补齐:W1 跑 Web build gate + desktop tauri build gate;W2 加 offline/runtime/profile 测试;W4 跑 xai-desktop-release-gate,在推进到 dev / release/desktop/<version> 前加人工 macOS smoke、签名/公证/DMG/updater 元数据证明。",
         "可见增量完成后用 xai-release-log 登记;推进到 desktop-next -> dev(App RC)-> release/desktop/<version> 的分支动作均需操作者显式确认(这些长分支 defined, not yet created;凡触达 dev 需显式确认)。"
       ],
       "transitions": [
@@ -924,7 +934,7 @@
         },
         {
           "module": "plugin",
-          "when": "App 外壳改动了插件依赖的 SDK / 多窗口契约 / 窗口命令契约",
+          "when": "App host 改动了插件依赖的 SDK / 多窗口契约 / 窗口命令契约，或产品意图属于桌面原生超能力层",
           "action": "在 desktop-plugin-next / codex/plugin/<feature> 同步更新插件平台与受影响插件,就绪后 merge 回 desktop-next(注意 P2 插件线 G1 SHIPPED 前 paused,需操作者解冻)"
         }
       ]
@@ -933,13 +943,13 @@
       "key": "plugin",
       "order": 3,
       "title": "桌面整理插件 / Widget",
-      "subtitle": "类似 MacBook widget 的桌面扩展",
+      "subtitle": "桌面插件平台运行时 + 内置 Plugin Center",
       "badge": "P2 · paused",
-      "status": "等待 App 平台",
+      "status": "Paused until G1 · entry model decided",
       "branch": "desktop-plugin-next",
-      "dependency": "依赖桌面 App 插件平台",
-      "next": "G1 稳定后恢复。",
-      "tracker": "插件 SDK、widget host、单插件功能、平台兼容。",
+      "dependency": "依赖 Tauri host 命令 + 插件平台运行时",
+      "next": "只做 PRD / SDK / 看板对齐；G1 后先固化平台运行时和 Organizer closeout，再做 Widget Host MVP。",
+      "tracker": "入口设计已决；实现未开工；多窗口/overlay 运行时、Plugin Center、AddToDesktop 和实例设置 schema 等待解冻。",
       "labels": {
         "overview": "桌面整理插件 / Widget",
         "deployment": "桌面插件",
@@ -950,37 +960,45 @@
         "icon": "P"
       },
       "overview": {
-        "phase": "平台等待",
-        "running": "等待 App 平台",
+        "phase": "Paused until G1",
+        "running": "入口设计已决 · 功能实现未开工",
         "progress_fallback": 24,
-        "recent_update": "插件状态来自 PLUGIN_MAP",
-        "todo_fallback": "插件 SDK / Widget host 恢复排期",
-        "target": { "type": "doc", "path": "docs/PLUGIN_MAP.md", "label": "打开 PLUGIN_MAP" }
+        "recent_update": "Plugin Center / Entry Model 已写入 PRD、SDK 和模块边界文档",
+        "todo_fallback": "G1 前仅维护 brief / docs；不启动 feature-build",
+        "target": { "type": "doc", "path": "docs/planning/sub-prds/plugin/PRD.md", "label": "打开 Plugin PRD" }
       },
       "tracking": {
         "region": "主产品链",
         "plugin_path_regex": "plugin-(organizer|clipboard|widgets|meditation|pet|account|console|productivity|ai-cube|calendar|labels|project|settings)\\b",
-        "anchor_docs": [["PLUGIN_MAP", "docs/PLUGIN_MAP.md"]],
+        "anchor_docs": [["Plugin PRD", "docs/planning/sub-prds/plugin/PRD.md"], ["PLUGIN_SDK", "docs/PLUGIN_SDK.md"], ["MODULE_BOUNDARIES", "docs/MODULE_BOUNDARIES.md"], ["PLUGIN_MAP", "docs/PLUGIN_MAP.md"]],
         "release_aliases": ["plugin", "widget", "clipboard", "organizer", "ai-cube"]
       },
       "features": [
-        { "name": "⚠️ 整体方向待定:ADR-0011 将 overlay/organizer/桌面插件降为 P3 Future", "status": "contested", "note": "是否保留 Smart Container 取决于 W/D 路线决策;见 ADR-0015" },
-        { "name": "Smart Container 整理(organizer)", "status": "shipped", "note": "web 线已交付旗舰;dev 线 ADR-0011 列 P3" },
-        { "name": "桌面小组件 Widget host", "status": "planned" },
-        { "name": "文件夹挂件", "status": "planned" },
-        { "name": "Sticky Notes 便签", "status": "planned" },
-        { "name": "剪贴板 clipboard(历史/OCR)", "status": "planned", "note": "stub;需 App 原生命令" },
-        { "name": "桌宠 pet(独立包 plugin-pet)", "status": "planned" },
-        { "name": "快速记账 / 快速时间追踪挂件", "status": "proposed" }
+        { "name": "插件平台运行时(多窗口/overlay/click-through/grid persistence)", "status": "planned", "note": "产品归属为 plugin；物理 Tauri 命令可落在 host" },
+        { "name": "Plugin Center / Entry Model(设计已决,未实现)", "status": "planned", "note": "控制面板一级入口 + 轻量 Plugin Center + 设置页全局偏好;G1 前 docs-only" },
+        { "name": "Smart Container 整理(organizer)", "status": "shipped", "note": "已接入 App,短期只做收尾为稳定参考实现" },
+        { "name": "Organizer closeout", "status": "planned", "note": "G1 后补 finder tags 注册和真置顶 pin" },
+        { "name": "Widget Host MVP(clock/time progress/countdown)", "status": "planned", "note": "G1 后第一批低原生依赖插件" },
+        { "name": "剪贴板 clipboard MVP(历史/OCR)", "status": "planned", "note": "需 App clipboard/OCR 命令;先修 clipboard.item vs clipboard.entry 契约漂移" },
+        { "name": "桌宠 pet basic(独立包 plugin-pet)", "status": "planned", "note": "AI/事件集成延后" },
+        { "name": "Meditation desktop plugin", "status": "paused", "note": "暂不建桌面包;先保留 Web meditation" }
       ],
       "points": [
         [
           "定位",
-          "围绕桌面整理、widget、小工具和插件生态展开，属于 App 之上的扩展层。"
+          "不是第四条完整产品线，而是 macOS 桌面的环境/微交互面：插件平台运行时 + 轻量、可瞥见、可快速操作的小窗/挂件。"
+        ],
+        [
+          "入口模型",
+          "主入口为 Mac App 控制面板的“桌面插件”；Plugin Center 负责内置插件列表、已启用实例、添加到桌面和实例设置；设置页只放全局偏好。"
         ],
         [
           "独立跟踪",
-          "插件平台、SDK、widget host、单插件功能要分开记录，不和 App RC 混在一起。"
+          "入口 App delta 与插件内容 plugin delta 要拆开记录；G1 前只做 brief / PRD / SDK contract 对齐，不开 feature-build。"
+        ],
+        [
+          "风险",
+          "不要把 scaffold 误读为成熟体系：organizer 可用，clipboard/widgets/pet 多为 mock 或未装载，meditation 未建包；Clipboard MVP 前需修 entityType drift。"
         ],
         [
           "和下一层关系",
@@ -988,14 +1006,15 @@
         ],
         [
           "边界与文档",
-          "三面反混淆(底座=App 原生 / 挂件=插件 / Web 同名组件)与能力边界见 docs/MODULE_BOUNDARIES.md;开发范围与 MVP 顺序见 docs/planning/sub-prds/plugin/PRD.md;机器可读分类注册表 docs/workflow/project/module-classification.json。"
+          "三面反混淆(Mac 壳=Web 容器 / 插件平台运行时+挂件=plugin / Web 同名组件=web)与能力边界见 docs/MODULE_BOUNDARIES.md;开发范围与 MVP 顺序见 docs/planning/sub-prds/plugin/PRD.md;长期环境面规划见 docs/planning/LONG_TERM_PRODUCT_ROADMAP.md;机器可读分类注册表 docs/workflow/project/module-classification.json。"
         ]
       ],
-      "goal": "为 macOS App 提供桌面整理插件 / Widget 平台（Smart Container Grid、剪贴板、便签、宠物、冥想等），surface 落在 apps/desktop/ 的插件槽位 + packages/plugin-{organizer,clipboard,widgets,pet} 等 P2 插件包（部分如 plugin-meditation 仍为 PLUGIN_MAP 上的 Planned 规划行、未建包）。插件数据默认 syncScope: device-local（留本机、永不入远端 outbox），仅在显式标记 account-sync 时才经同步层跨设备。organizer 已 Stable/shipped 并接入桌面宿主,其余 clipboard/widgets/pet 为 Planned/stub、meditation 未建包;organizer 的 P 级 reconcile(web 线 P2 vs dev 线 ADR-0011 P3)见 ADR-0015(Proposed)。三面边界权威见 docs/MODULE_BOUNDARIES.md。",
+      "goal": "为 macOS App 提供桌面原生超能力层：插件平台运行时（多窗口 engine、native overlay、click-through、Spaces/多显示器矩阵、grid persistence、Plugin Host/SDK）+ 具体桌面整理插件 / Widget（Smart Container Grid、剪贴板、便签、宠物、冥想、快速入口/快速操作小窗等）。运行时代码物理可落在 apps/desktop host，但产品归属是 plugin；Mac 壳只负责 Web 容器 + native chrome。入口模型已拍板为 Mac App 控制面板一级入口 + 轻量 Plugin Center + 设置页全局偏好；MVP 只做内置插件管理，不做市场、不做第三方、不把拖拽添加作为主路径。插件数据默认 syncScope: device-local（留本机、永不入远端 outbox），仅在显式标记 account-sync 时才经同步层跨设备。organizer 已 Stable/shipped 并接入桌面宿主,其余 clipboard/widgets/pet 为 Planned/stub、meditation 未建包;三面边界权威见 docs/MODULE_BOUNDARIES.md。",
       "routing": [
-        "改动落在 apps/desktop/ 的插件槽位（plugin slots），或 packages/plugin-{organizer,clipboard,widgets,pet} 等 P2 插件包（plugin-meditation 当前为 PLUGIN_MAP Planned 行、尚未建包）",
-        "需求提到 桌面整理 / Smart Container / Grid 容器 / 拖拽归类 / 文件夹与 App 整理 / 浮动小组件 Widget / 便签 / 桌面宠物 / 冥想",
-        "涉及插件平台 / SDK / Widget Host / 插件清单 manifest.json / 插件注册装载（plugin platform / plugin SDK），归 desktop-plugin-next 隔离线",
+        "改动落在桌面插件平台运行时（多窗口 engine、native overlay、click-through、Spaces/多显示器矩阵、grid persistence、Plugin Host/SDK）或 packages/plugin-{organizer,clipboard,widgets,pet} 等 P2 插件包（plugin-meditation 当前为 PLUGIN_MAP Planned 行、尚未建包）",
+        "需求提到 桌面整理 / Smart Container / Grid 容器 / 拖拽归类 / 文件夹与 App 整理 / 快速入口 / 快速操作小窗 / 浮动小组件 Widget / 便签 / 桌面宠物 / 冥想",
+        "涉及插件平台 / SDK / Widget Host / 插件清单 manifest.json / 插件注册装载（plugin platform / plugin SDK），归 desktop-plugin-next 隔离线；运行时代码物理在 host 不改变产品归属",
+        "涉及 Plugin Center 产品契约（可添加插件目录、PluginInstance、AddToDesktop、实例 settings schema、placement/pin/click-through 等实例模型）归 plugin；Mac App 控制面板入口按钮和必要 host 容器命令归 app 物理实现",
         "插件本地数据带 syncScope: device-local（已注册的如 clipboard.item；ADR-0013 D4 还以 widgets.widget 为示例）——不入远端 outbox，留在本设备；只有显式声明 account-sync 才走同步层",
         "分支线索：short = codex/plugin/<feature>，long = desktop-plugin-next（<-> desktop-next，均已在 D2 定义但尚未创建）",
         "状态线索：当前 P2 PAUSED，需求被标注为 等 G1 ships 后再开工 / P2 / 暂停中（ADR-0010 §D2）",
@@ -1042,6 +1061,7 @@
         "解冻后开短分支 codex/plugin/<feature>（基于 desktop-plugin-next；该长分支与 desktop-next 均在 ADR-0013 D2 定义但尚未创建——创建需操作者显式确认，凡触及 dev 亦需确认），按标准特性管线推进：feature-plan → feature-review → feature-build（每次一阶段后停下等人工确认）→ feature-verify → ship。",
         "数据落点判定：每个插件实体先在 packages/core-data/src/entities.ts 定 syncScope。device-local（已注册的如 clipboard.item；widgets.widget 为 ADR-0013 D4 示例、尚未注册）留本机、永不入远端 outbox；仅当确需跨设备才声明 account-sync 并交给 sync 线按 D4 九项清单补齐——本模块不自行实现同步。",
         "插件间协作只走 @repo/core/events，业务逻辑全部在 packages/plugin-*，index.ts 为唯一公共出口；依赖前先查 PLUGIN_MAP，只有 Stable/Production（如 organizer）可直依，Planned/In-Dev（含 clipboard/widgets/pet 自身）须 mock。本模块只在 plugin 线推进，绝不分叉进 PROPOSED 的 site/admin 线（二者均未授权开工）。",
+        "Plugin Center 实现阶段必须拆分：App 负责控制面板入口、Plugin Center 容器窗口、实例 placement/pin/click-through/权限；plugin 负责可添加内容、AddToDesktop contract、实例 settings schema 和具体插件渲染。",
         "若改动需要从 Web 侧拉取共享 UI/逻辑，或被判定为原生桥需求，走 D3（xai-web-to-desktop-sync）分类（W0–W4）后再在 desktop-next/desktop-plugin-next 上落地，并产出 Parity Receipt（Verdict: NO_APP_CHANGE | GATE_ONLY | DESKTOP_DELTA_REQUIRED | BLOCKED）。",
         "每个可见增量 ship 后用 xai-release-log 登记，保持 plugin 产品线进度可追溯。"
       ],
@@ -1055,10 +1075,10 @@
         },
         {
           "to": "app",
-          "trigger": "插件需求其实落在 App 主体的原生窗口/运行时（NSWindow、点击穿透、Grid 原生窗口、Tauri 命令），而非纯插件槽位逻辑",
+          "trigger": "插件需求其实只落在 Mac 壳 / Web 容器 / native chrome（如控制面板入口、菜单栏/托盘/通知/更新/账号壳能力），而非桌面插件平台运行时",
           "branch": "codex/desktop/<feature>",
           "skill": "feature-plan",
-          "note": "原生窗口契约与运行时归 app 线（apps/desktop + src-tauri，dev 分支）。涉及 dev 的操作需操作者显式确认；插件侧通过 @repo/core/events 与窗口契约协作，不直接改原生层。"
+          "note": "Mac 壳归 app；涉及 dev 的操作需操作者显式确认。若需求意图是多窗口/overlay/Widget/实例模型，即使命令物理在 host，也应切回 plugin。"
         },
         {
           "to": "app",
@@ -1076,8 +1096,8 @@
         },
         {
           "module": "app",
-          "when": "插件平台/Widget 需要新的原生能力（Tauri 命令、NSWindow 行为、点击穿透或 Grid 原生窗口契约变更）",
-          "action": "在 app 线（apps/desktop/src-tauri 的 commands/ 与 platform/macos/）新增对应命令与契约，并更新 @repo/core/events 中的窗口命令契约；插件侧只消费、不实现原生层。"
+          "when": "插件平台/Widget 需要新的 host 原生能力（Tauri 命令、NSWindow 行为、点击穿透或 Grid 原生窗口契约变更）",
+          "action": "物理实现可在 app 线（apps/desktop/src-tauri 的 commands/ 与 platform/macos/）新增对应命令与契约，并更新 @repo/core/events 中的窗口命令契约；但产品归属仍记录为 plugin 平台运行时，插件包只消费、不实现原生层。"
         },
         {
           "module": "web",
@@ -1318,8 +1338,12 @@
           "when": "site 每产出一个可见增量(落地页上线、下载链接接通、updater 源切换)后,按惯例写 docs/workflow/project/release-log.md"
         },
         {
+          "name": "xai-web-deploy-preflight",
+          "when": "site 解冻后复用 Cloudflare Pages / _headers / wrangler 部署链路时,用它证明 preview/production 发布前置条件;纯 preflight 不代表 site 线已授权开工。"
+        },
+        {
           "name": "xai-web-to-desktop-sync",
-          "when": "仅当某站点改动其实触及 App 的产物/更新契约本身(updater feed 格式、签名产物路径、版本号)且需在 web↔desktop-next 间共享时,才按 ADR-0013 D3 的 W0–W4 分类并产出 parity receipt 再决定流向;纯站点内/纯 web 部署改动不走此技能"
+          "when": "仅当某站点改动其实触及 App 的产物/更新契约本身(updater feed 格式、签名产物路径、版本号)且需在 web↔desktop-next 间共享时,才按 ADR-0013 D3 的 W0–W4 分类并产出 parity receipt;W4 再交给 xai-desktop-release-gate;纯站点内/纯 web 部署改动不走此技能"
         }
       ],
       "prompts": [
@@ -1339,10 +1363,10 @@
       "workflow": [
         "前置闸门:site 为 PROPOSED / owner-deferred,无既有 package(ADR-0013 §S7 #2)。除非 operator 显式确认解冻,否则不开 codex/site/<feature>、不动工——先停在「待授权」态。",
         "解冻后用 xai-feature-brief 把下载页 / 自动更新源 / 发布说明站规范化成 brief,明确边界:只承接 release info,不托管产品内部。",
-        "走标准 feature 流水线 feature-plan -> feature-review -> feature-build -> feature-verify -> ship,全程在 codex/site/<feature>,复用 apps/web/wrangler.toml + apps/web/deploy/* + Cloudflare Pages(ADR-0008),站点 _headers/CSP 与 apps/web/public/_headers 隔离。",
+        "走标准 feature 流水线 feature-plan -> feature-review -> feature-build -> feature-verify -> ship,全程在 codex/site/<feature>,复用 apps/web/wrangler.toml + apps/web/deploy/* + Cloudflare Pages(ADR-0008),站点 _headers/CSP 与 apps/web/public/_headers 隔离;部署前跑 xai-web-deploy-preflight。",
         "产物来源严格绑定 release/desktop/<version> 冻结产物与 tag vX.Y.Z(ADR-0013 D2,该分支 defined-not-yet-created,创建需 operator 确认)——下载链接、updater feed、release notes 三者同源同版本。",
         "每个可见增量上线后用 xai-release-log 记入 docs/workflow/project/release-log.md。",
-        "若某改动触及 App 的产物/更新契约本身(updater feed 格式、签名产物路径、版本号)需在 web↔desktop-next 间共享,才用 xai-web-to-desktop-sync 按 W0–W4 分类并产出 parity receipt,再决定 record-only / merge / 转 /xai-feature-full-loop;纯站点 _headers/CSP/部署配置改动不走 D3,按 ADR-0008 扩展协议在 web 线内评审。"
+        "若某改动触及 App 的产物/更新契约本身(updater feed 格式、签名产物路径、版本号)需在 web↔desktop-next 间共享,才用 xai-web-to-desktop-sync 按 W0–W4 分类并产出 parity receipt,W4 再交给 xai-desktop-release-gate;纯站点 _headers/CSP/部署配置改动不走 D3,按 ADR-0008 扩展协议 + xai-web-deploy-preflight 处理。"
       ],
       "transitions": [
         {
@@ -1350,7 +1374,7 @@
           "trigger": "站点要承接的 .dmg / updater metadata / 签名产物本身需要 App 端在 release/desktop/<version> 冻结流程中产出或调整其格式(W3/W4 release-risk)",
           "branch": "web → desktop-next → dev → release/desktop/<version>(desktop-next / dev / release/desktop/<version> 均为 ADR-0013 D2 已定义、尚未创建;触及 dev 与创建任一分支需 operator 显式确认)",
           "skill": "xai-web-to-desktop-sync",
-          "note": "site 只消费 App 的发布产物,不生产;产物格式/签名/updater feed 的改动属 App 线 release 工作,经 D3 W4 release gate(含 manual macOS smoke)后才进 dev 与 release/desktop/<version>,site 再绑定其 tag vX.Y.Z 产物。"
+          "note": "site 只消费 App 的发布产物,不生产;产物格式/签名/updater feed 的改动属 App 线 release 工作,经 D3 W4 分类后交给 xai-desktop-release-gate(含 manual macOS smoke、签名/公证/DMG/updater 证据)才可进入 dev 与 release/desktop/<version>,site 再绑定其 tag vX.Y.Z 产物。"
         },
         {
           "to": "web",
@@ -1364,7 +1388,7 @@
         {
           "module": "app",
           "when": "site 要新增/改动某个下载产物或自动更新字段(如 updater feed 增加新平台、签名产物路径变更)",
-          "action": "App 线须在 release/desktop/<version> 冻结流程中按 ADR-0013 D2 产出对应 .dmg / updater metadata,并经 D3 W4 release gate(含 manual macOS smoke)确认后打 tag vX.Y.Z,site 才能绑定该 tag 产物。该跨线改动用 xai-web-to-desktop-sync 分类并产出 parity receipt。"
+          "action": "App 线须在 release/desktop/<version> 冻结流程中按 ADR-0013 D2 产出对应 .dmg / updater metadata,经 xai-web-to-desktop-sync 分类为 W4 后再跑 xai-desktop-release-gate(含 manual macOS smoke、签名/公证/DMG/updater 证据),site 才能绑定该 tag 产物。"
         },
         {
           "module": "web",
@@ -1532,10 +1556,83 @@
       ]
     }
   ],
+  "future_surfaces": {
+    "status": "planning-only",
+    "authority": "docs/planning/LONG_TERM_PRODUCT_ROADMAP.md",
+    "rule": "Future iPhone/iPad/Apple Watch/Android/browser-extension surfaces are not current Product Module Registry entries and must not receive active feature-build branches unless the operator explicitly promotes one into MODULE_BOUNDARIES.md.",
+    "roles": [
+      {
+        "key": "organize_plan",
+        "label": "完整面",
+        "surfaces": ["Web", "Mac 壳", "iPad"],
+        "job": "大屏完整编辑、规划、编排"
+      },
+      {
+        "key": "capture_glance",
+        "label": "轻捕获面",
+        "surfaces": ["iPhone", "Android", "浏览器扩展"],
+        "job": "快进快出、速记、速览、提醒"
+      },
+      {
+        "key": "ambient_micro",
+        "label": "环境/微交互面",
+        "surfaces": ["Apple Watch", "桌面插件"],
+        "job": "一瞥即走、单击操作、贴在环境里"
+      }
+    ],
+    "surfaces": [
+      {
+        "key": "iphone",
+        "priority": 6,
+        "role": "capture_glance",
+        "phase": "Y1 H2 PWA seed; Y2 native thin shell",
+        "status": "planning-only",
+        "carries": "速记、今日、打卡、计时、速览、提醒",
+        "not_for": "复杂编排、项目管理、文档长编辑、桌面整理"
+      },
+      {
+        "key": "ipad",
+        "priority": 8,
+        "role": "organize_plan",
+        "phase": "Y1 responsive Web/PWA; dedicated only after pencil/Stage Manager demand",
+        "status": "planning-only",
+        "carries": "规划画布、日历、看板、阅读、较完整编辑",
+        "not_for": "独立代码库默认不做"
+      },
+      {
+        "key": "apple_watch",
+        "priority": 7,
+        "role": "ambient_micro",
+        "phase": "Y2-3 after iPhone native",
+        "status": "planning-only",
+        "carries": "打卡、计时起停、今日下一项、快速记账、冥想、表盘 complications",
+        "not_for": "项目管理、文档、Dashboard、复杂编辑"
+      },
+      {
+        "key": "android",
+        "priority": 9,
+        "role": "capture_glance",
+        "phase": "Y2 PWA fallback; native only after paid demand",
+        "status": "planning-only",
+        "carries": "同 iPhone 的捕获/速览/提醒",
+        "not_for": "独立早期开工"
+      },
+      {
+        "key": "browser_extension",
+        "priority": 5,
+        "role": "capture_glance",
+        "phase": "Y1-2 opportunistic",
+        "status": "planning-only",
+        "carries": "网页剪藏、快速加任务、新标签页今日、omnibox 速加",
+        "not_for": "完整编辑"
+      }
+    ],
+    "priority_order": ["web", "mac-shell", "web-pwa", "desktop-plugin-platform", "browser-extension", "iphone-native", "apple-watch", "ipad-dedicated/catalyst", "android-native"]
+  },
   "module_nav": {
     "source": "docs/PRODUCT_MODULE_MAP.md",
     "authority": "docs/adr/0013-branch-sync-governance.md (D1/D2/D3/D4)",
-    "sync_orchestration": "docs/adr/0014-cross-module-sync-orchestration.md + docs/workflow/project/sync-registry.json (entry: xai-sync-fanout-dispatch; edges: xai-web-to-desktop-sync D3 · xai-account-sync-scope-check D4 · xai-release-log + xai-dev-dashboard-sync close-out · xai-feature-brief frozen-line draft)",
+    "sync_orchestration": "docs/adr/0014-cross-module-sync-orchestration.md + docs/workflow/project/sync-registry.json (entry: xai-sync-fanout-dispatch; edges: xai-web-to-desktop-sync D3 · xai-web-deploy-preflight deploy gate · xai-desktop-release-gate W4 · xai-account-sync-scope-check D4 · xai-release-log + xai-dev-dashboard-sync close-out · xai-feature-brief frozen-line draft)",
     "fields": [
       "goal",
       "routing",

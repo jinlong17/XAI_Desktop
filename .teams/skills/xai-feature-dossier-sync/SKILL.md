@@ -40,7 +40,7 @@ forward, before work starts).
 ## Inputs
 
 ```text
-Scope:    web | app | plugin | sync        # product module (routing rule)
+Scope:    web | app | plugin | sync | site | admin | project-system  # product/support line
 Features: <feature-1>, <feature-2>, ...     # product features, NOT npm packages
 Mode:     audit | draft | apply             # default audit
 Since:    <git ref>                          # e.g. origin/web~30 (optional)
@@ -82,6 +82,11 @@ History row and updates the Traceability section; existing prose is preserved.
 ## Workflow
 
 1. Resolve `Scope` + `Features` (use the package→feature map; confirm if derived).
+   - `site` and `admin` are PROPOSED lines: in `audit`/`draft`, document prototypes and
+     impact notes only unless the operator has explicitly activated the line.
+   - `project-system` is for dashboard / workflow / skill governance records, not user-facing
+     product PRDs; use it for traceability audits and release-log consistency, not canonical
+     customer-feature PRD creation unless a human-facing operator feature exists.
 2. For each feature, gather evidence (read-only):
    - `packages/<pkg>/docs/dev_log.md` — every Iteration / Bugfix / Work Log block
    - `docs/reviews/<feature>/*-feature-brief.md`, `*-discovery-review.md`

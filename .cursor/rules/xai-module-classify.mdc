@@ -1,6 +1,6 @@
 ---
-name: xai-module-classify
 description: Classify a new XAI feature into exactly one product module (web / app / plugin / sync / site / admin) using docs/MODULE_BOUNDARIES.md + docs/workflow/project/module-classification.json, or scan the repo for boundary drift (phantom packages, syncScope drift, same-name web-vs-desktop collisions, doc-code mismatch, unknown classification). Emits a classification + doc-division + dashboard-update suggestion, and applies doc/dashboard updates only after confirmation. Advisory / route-only — it does not decide priority, create branches, ship, write product source, or unfreeze paused lines. Triggers — 功能分类, 这个功能归哪个模块, module classification, classify this feature, 模块归类, 新功能归哪类, 边界漂移扫描, boundary drift scan, which module does X belong to, 同名陷阱, unknown classification, 文档划分建议.
+alwaysApply: false
 ---
 
 # xai-module-classify

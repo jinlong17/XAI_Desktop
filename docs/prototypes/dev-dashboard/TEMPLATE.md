@@ -236,6 +236,10 @@ Each card is specified by six fields. When adding a card, fill all six —
 ### Detail Owner page (e.g. Product structure) — structure + track + detail
 - **Structure map** — node graph of modules + edges. Interactions: click → select.
 - **Sequence/flow card** — ordered steps (e.g. branch workflow).
+- **Owner-specific orchestration / registry card (optional)** — project-specific
+  workflow or sync registries may live here when the Product structure page owns
+  the domain. Declare the data source in `BOUNDARIES.md`; keep styles in
+  `styles.css` tokens, not inline JS.
 - **Module track** — one card per module, optionally region-grouped (the "N module
   cards"). Card top-border uses the module color.
 - **Detail panel/drawer** — the per-module dossier (goal / features by status /

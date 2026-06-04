@@ -1,24 +1,3 @@
-// Feature-list styles injected here (not styles.css) to keep this change isolated
-// from a concurrent dashboard refactor touching styles.css on the same branch.
-(function ensureFeatureStyles(){
-  if (typeof document === "undefined" || document.getElementById("xai-feature-list-styles")) return;
-  const style = document.createElement("style");
-  style.id = "xai-feature-list-styles";
-  style.textContent = `
-  .detail-features{margin:4px 0 2px;border:1px solid var(--line);border-radius:10px;background:color-mix(in srgb,var(--surface) 80%,transparent);padding:10px 12px}
-  .detail-features-head{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:8px}
-  .detail-features-head b{font-size:13px}
-  .feature-rows{display:grid;gap:6px}
-  .feature-row{display:grid;grid-template-columns:auto minmax(0,1fr);align-items:start;gap:8px;padding:7px 9px;border-radius:8px;background:var(--surface-2)}
-  .feature-row .badge{align-self:start;white-space:nowrap}
-  .feature-row-text b{display:block;font-size:12px}
-  .feature-row-text span{display:block;color:var(--muted);font-size:11px;margin-top:2px}
-  .overview-module-features{display:flex;flex-wrap:wrap;gap:10px;margin-top:8px;padding-top:8px;border-top:1px dashed var(--line);font-size:11px;color:var(--faint)}
-  .overview-module-features b{font-size:13px;margin-right:3px}
-  `;
-  document.head.appendChild(style);
-})();
-
 function renderStructureMap(){
   if(!products.length) return;
   const nodes = products.map(item => `
@@ -114,7 +93,60 @@ function renderModules(){
       </section>
     `;
   }).join("");
-  document.querySelectorAll(".module-card").forEach(node => node.addEventListener("click", () => setProduct(node.dataset.product)));
+  document.querySelectorAll(".module-card[data-product]").forEach(node => node.addEventListener("click", () => setProduct(node.dataset.product)));
+}
+
+function futureSurfaceTitle(key){
+  const map = { iphone:"iPhone", ipad:"iPad", apple_watch:"Apple Watch", android:"Android", browser_extension:"浏览器扩展" };
+  return map[key] || key;
+}
+
+function renderFutureSurfaces(){
+  const el = document.getElementById("futureSurfaces");
+  if(!el) return;
+  if(!futureSurfaces || !Array.isArray(futureSurfaces.surfaces) || !futureSurfaces.surfaces.length){ el.innerHTML = ""; return; }
+  const roleLabel = {};
+  (futureSurfaces.roles || []).forEach(r => { roleLabel[r.key] = r.label || r.key; });
+  const ordered = [...futureSurfaces.surfaces].sort((a,b) => Number(a.priority || 99) - Number(b.priority || 99));
+  const cards = ordered.map(s => `
+    <div class="module-card future-surface-card is-future" data-future="${h(s.key)}">
+      <div class="module-top">
+        <span class="module-index">P${h(s.priority || "·")}</span>
+        <span class="badge">${h(roleLabel[s.role] || s.role || "future")}</span>
+      </div>
+      <div>
+        <h3>${h(futureSurfaceTitle(s.key))}</h3>
+        <p>${h(s.phase || "")}</p>
+      </div>
+      <div class="module-meta">
+        <span><b>承载</b> ${h(s.carries || "")}</span>
+        <span><b>不承载</b> ${h(s.not_for || "")}</span>
+      </div>
+      <span class="pill">${h(s.status || "planning-only")}</span>
+    </div>
+  `).join("");
+  const order = Array.isArray(futureSurfaces.priority_order) ? futureSurfaces.priority_order.join(" → ") : (futureSurfaces.priority_order || "");
+  const authority = futureSurfaces.authority || "docs/planning/LONG_TERM_PRODUCT_ROADMAP.md";
+  el.innerHTML = `
+    <section class="module-region future-surface-region is-future-region" data-region="未来面">
+      <div class="region-label">
+        <b>未来面 · Future Surfaces（planning-only）</b>
+        <span>${h(futureSurfaces.rule || "多平台长期规划：以 future surfaces 进入文档 + 看板，不进入当前开发队列。")}</span>
+      </div>
+      <div class="region-track">${cards}</div>
+      ${order ? `<span class="pill" style="margin-top:10px">长期优先级：${h(order)}</span>` : ""}
+      <div class="flow-note" style="margin-top:10px">
+        <b>规划层，不是第七条产品线</b>
+        <p style="margin-top:8px">这些 surface 只用于长期判断，不创建 active branch、不进入 feature-build，除非 operator 显式升级边界。</p>
+        <button class="reader-btn" data-future-surface-doc="${h(authority)}" type="button">打开长期路线图</button>
+      </div>
+    </section>
+  `;
+  el.querySelectorAll("[data-future-surface-doc]").forEach(node => {
+    node.addEventListener("click", () => {
+      if(typeof openDocInLibrary === "function") openDocInLibrary(node.dataset.futureSurfaceDoc);
+    });
+  });
 }
 
 function productTitleFor(key){
@@ -123,36 +155,11 @@ function productTitleFor(key){
   const labels = {
     web:"Web 版本", app:"Mac 桌面版 App", plugin:"桌面整理插件 / Widget",
     sync:"账号云同步层", site:"官方网页", admin:"Admin Dashboard / 控制面",
+    iphone:"iPhone", ipad:"iPad", apple_watch:"Apple Watch", android:"Android",
+    browser_extension:"浏览器扩展",
     release:"发布冻结线 release/desktop/*", main:"main 汇合点", dev:"dev (App RC)"
   };
   return labels[key] || key;
-}
-
-function fallbackCopy(text, done){
-  const ta = document.createElement("textarea");
-  ta.value = text;
-  ta.style.position = "fixed";
-  ta.style.opacity = "0";
-  document.body.appendChild(ta);
-  ta.focus();
-  ta.select();
-  try { document.execCommand("copy"); } catch (err) { /* ignore */ }
-  document.body.removeChild(ta);
-  if(done) done();
-}
-
-function copyText(text, btn){
-  const done = () => {
-    if(!btn) return;
-    const old = btn.textContent;
-    btn.textContent = "已复制";
-    setTimeout(() => { btn.textContent = old; }, 1400);
-  };
-  if(navigator.clipboard && navigator.clipboard.writeText){
-    navigator.clipboard.writeText(text).then(done, () => fallbackCopy(text, done));
-  } else {
-    fallbackCopy(text, done);
-  }
 }
 
 function navBlock(label, pill, inner){
@@ -283,4 +290,55 @@ function setProduct(key){
     btn.addEventListener("click", () => copyText((item.prompts || [])[Number(btn.dataset.promptIndex)]?.text || "", btn));
   });
   if(typeof attachTestingActions === "function") attachTestingActions(detailPanel);
+}
+
+function renderSyncOrchestration(){
+  const host = document.getElementById("syncOrchestration");
+  if(!host) return;
+  const data = (typeof window !== "undefined" && window.XAI_DASHBOARD_STATE && window.XAI_DASHBOARD_STATE.sync_orchestration) || null;
+  if(!data){ host.innerHTML = ""; return; }
+  const actions = Array.isArray(data.actions) ? data.actions : [];
+  const waves = Array.isArray(data.waves) ? data.waves : [];
+  const actionRows = actions.map(a => `
+    <div class="orch-action">
+      <div class="orch-action-head">
+        <b>${h(a.title || a.id || "")}</b>
+        <span class="orch-tags">
+          <span class="orch-tag ${a.is_new ? "is-new" : ""}">${a.is_new ? "新建" : "复用"}</span>
+          <span class="orch-tag ${a.parallel_safe ? "is-par" : "is-ser"}">${a.parallel_safe ? "可并行" : "串行"}</span>
+        </span>
+      </div>
+      <div class="orch-action-meta">
+        <span><b>skill</b> <code>${h(a.skill || "—")}</code></span>
+        ${(a.depends_on && a.depends_on.length) ? `<span><b>依赖</b> ${a.depends_on.map(d => `<code>${h(d)}</code>`).join(" ")}</span>` : ""}
+      </div>
+    </div>
+  `).join("");
+  const waveBoxes = waves.map((wave, i) => `
+    <div class="orch-wave">
+      <span class="orch-wave-label">Wave ${i + 1}${(waves.length > 1 && i === waves.length - 1) ? " · 收尾" : ""}</span>
+      <div class="orch-wave-items">${(Array.isArray(wave) ? wave : []).map(id => `<code>${h(id)}</code>`).join("")}</div>
+    </div>
+  `).join("");
+  const docButtons = (Array.isArray(data.docs) ? data.docs : []).map(d =>
+    `<button class="reader-btn" data-detail-doc="${h(d.path)}" type="button">${h(d.label)}</button>`
+  ).join("");
+  host.innerHTML = `
+    <div class="orch-head">
+      <div>
+        <b>${h(data.title || "跨模块同步编排")}</b>
+        ${data.purpose ? `<p class="orch-purpose">${h(data.purpose)}</p>` : ""}
+      </div>
+      <span class="pill">workflow · ADR-0014</span>
+    </div>
+    ${data.trigger ? `<div class="orch-trigger"><span class="orch-trigger-label">一句话触发</span><code>${h(data.trigger)}</code></div>` : ""}
+    <div class="orch-actions">${actionRows}</div>
+    ${waveBoxes ? `<div class="orch-waves"><span class="orch-waves-label">执行波次</span>${waveBoxes}</div>` : ""}
+    ${docButtons ? `<div class="orch-docs">${docButtons}</div>` : ""}
+  `;
+  host.querySelectorAll("[data-detail-doc]").forEach(btn => {
+    btn.addEventListener("click", () => {
+      if(typeof openDocInLibrary === "function") openDocInLibrary(btn.dataset.detailDoc);
+    });
+  });
 }

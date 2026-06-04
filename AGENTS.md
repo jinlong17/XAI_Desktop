@@ -123,15 +123,18 @@ router (the six-module table with task-attribution signals, plus the
 产品结构图). Quick reference:
 
 - `web` → `apps/web/`, branch `codex/web/<feature>`→`web`.
-- `app` → `apps/desktop/` (Tauri), branch `codex/desktop/<feature>`→`desktop-next`→`dev`.
-- `plugin` → desktop plugin/widget slots, branch `codex/plugin/<feature>`→`desktop-plugin-next` (paused).
+- `app` → Mac shell / Web container in `apps/desktop/` (single Web SPA main window + native chrome; host process may implement native commands), branch `codex/desktop/<feature>`→`desktop-next`→`dev`.
+- `plugin` → desktop plugin platform/runtime + widget/plugin packages (multi-window / overlay / click-through / grid persistence product ownership lives here even when code is physically in the Tauri host), branch `codex/plugin/<feature>`→`desktop-plugin-next` (paused).
 - `sync` → account cloud-sync, branch `codex/sync/<feature>` (paused; only `syncScope: account-sync`).
 - `site` → official website (Cloudflare), branch `codex/site/<feature>` (PROPOSED — needs operator OK).
 - `admin` → Admin/Control Plane prototype, branch `codex/admin/<feature>` (PROPOSED — needs operator OK).
 
 `web→app` only flows through the D3 gate (`xai-web-to-desktop-sync`); never merge
 Web changes straight into `dev`. Do not open new work branches for `site`/`admin`
-without operator confirmation.
+without operator confirmation. Future iPhone / iPad / Apple Watch / Android /
+browser-extension surfaces are planning-only in
+`docs/planning/LONG_TERM_PRODUCT_ROADMAP.md`; do not classify them as active
+module targets or open work branches without operator confirmation.
 
 ---
 

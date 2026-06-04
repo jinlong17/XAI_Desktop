@@ -1,6 +1,6 @@
 ---
-name: xai-consistency-audit
 description: Periodic/triggered consistency audit that keeps real development aligned with the management surface. Runs three check groups — (1) the Web/App/Plugin 3-surface BOUNDARY (越界/归属: plugin implementing native commands, plugin re-doing a Web module, device-local data going to cloud, Web→App bypassing D3, same-name trap, phantom packages), (2) FEATURE reconciliation across code/PRD/dashboard (ghost features, missing features, stale status), (3) skill/workflow REGISTRATION + dashboard snapshot freshness. Detects read-only → emits a report → on confirmation applies record-drift fixes to BOTH docs and the dashboard in one coherent pass so they never diverge. Code violations are report-only; priority/branch/release/ship are needs-operator. Triggers — 边界检查, boundary audit, consistency audit, 一致性检查, 越界检查, 看板和文档对账, 结构图缺 feature, 幽灵 feature, drift audit, feature vs code, 定期检查, post-merge audit, pre-release audit.
+alwaysApply: false
 ---
 
 # xai-consistency-audit

@@ -4,13 +4,7 @@
 // serveMode (docs-library.js), renderReleaseModuleTesting/renderReleaseEntryTesting
 // (testing.js, guarded by typeof), h/badgeClass (utils.js). main.js calls
 // initReleaseLinks(), renderOverallReleases(), renderReleaseModules(), renderReleaseRows().
-const releaseModuleLabels = {
-  web:"Web 分支",
-  app:"App / Mac",
-  plugin:"桌面插件",
-  sync:"账号云同步",
-  site:"官网",
-  admin:"Dashboard",
+const SUPPORT_RELEASE_LABELS = {
   "project-system":"Project System"
 };
 
@@ -23,13 +17,18 @@ function listItems(items, fallback){
 function moduleBadges(keys){
   const values = (keys || []).filter(Boolean);
   if(!values.length) return `<span class="badge b-gray">全项目</span>`;
-  return values.map(key => `<span class="badge ${badgeClass(key)}">${h(releaseModuleLabels[key] || key)}</span>`).join("");
+  return values.map(key => `<span class="badge ${badgeClass(key)}">${h(releaseModuleLabel(key))}</span>`).join("");
 }
 
 function compactReleaseText(value, max = 130){
   const text = String(value || "").replace(/\s+/g, " ").trim();
   if(text.length <= max) return text;
   return `${text.slice(0, max)}...`;
+}
+
+function releaseModuleLabel(key){
+  const product = typeof productLineFor === "function" ? productLineFor(key) : null;
+  return product?.release_title || product?.labels?.release || product?.title || SUPPORT_RELEASE_LABELS[key] || key || "release";
 }
 
 function renderOverallReleases(){
@@ -75,7 +74,7 @@ function renderReleaseModules(){
       <div class="release-mini-list">
         ${(item.entries || []).slice(0, 3).map(entry => `<span>${h(entry.date)} · ${h(entry.title)}</span>`).join("") || "<span>暂无相关记录</span>"}
       </div>
-      <span class="pill">${h(releaseModuleLabels[item.key] || item.key)}</span>
+      <span class="pill">${h(releaseModuleLabel(item.key))}</span>
     </article>
   `).join("") : `<div class="flow-note"><b>暂无模块发布卡片</b><p style="margin-top:8px">运行 <code>node scripts/dashboard/generate-state.mjs</code> 生成结构化发布数据。</p></div>`;
 }
@@ -87,8 +86,8 @@ function renderReleaseRows(){
     title,
     summary,
     type,
-    module:"admin",
-    related_modules:["admin"],
+    module:"project-system",
+    related_modules:["project-system"],
     version_label:`snapshot ${date}`
   }));
   target.innerHTML = entries.length ? entries.map(entry => `
@@ -109,7 +108,7 @@ function renderReleaseRows(){
           </div>
         ` : ""}
       </div>
-      <span class="badge ${badgeClass(entry.module || entry.type)}">${h(releaseModuleLabels[entry.module] || entry.type || "release")}</span>
+      <span class="badge ${badgeClass(entry.module || entry.type)}">${h(releaseModuleLabel(entry.module) || entry.type || "release")}</span>
     </article>
   `).join("") : `<div class="flow-note"><b>暂无发布记录</b><p style="margin-top:8px">运行 <code>node scripts/dashboard/generate-state.mjs</code> 从 release-log.md 生成。</p></div>`;
 }

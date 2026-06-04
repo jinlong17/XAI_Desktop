@@ -18,11 +18,11 @@ rules, and emits a receipt with suggestions. It NEVER decides product priority, 
 branches, ships, merges, writes product source, or unfreezes a PAUSED/PROPOSED line. Execution of
 suggestions happens only after explicit confirmation, and is delegated to the owning skills
 (`xai-feature-brief`, `xai-dev-dashboard-sync`, `xai-web-to-desktop-sync`, `xai-account-sync-scope-check`,
-`xai-sync-fanout-dispatch`, `xai-release-log`).
+`xai-web-deploy-preflight`, `xai-desktop-release-gate`, `xai-sync-fanout-dispatch`, `xai-release-log`).
 
 ## Read First
 
-- `docs/MODULE_BOUNDARIES.md` — THE human-readable Web/App/Plugin boundary (A/B/C three-layer, capability matrix, 4 hard rules, same-name trap).
+- `docs/MODULE_BOUNDARIES.md` — THE human-readable Web/App/Plugin boundary (A1 Mac shell / A2 plugin platform runtime / B plugin packages / C Web same-name layer, capability matrix, hard rules, same-name trap).
 - `docs/workflow/project/module-classification.json` — THE machine rule source (`modules`, `classification_flow`, `drift_checks`, `governance.frozen_lines`).
 - `docs/PRODUCT_MODULE_MAP.md` — six-module routing signals + per-module branch/skill/workflow/transitions/impacts.
 - `docs/PLUGIN_MAP.md` — plugin/package status (Stable/In-Dev/Planned; which packages actually exist).
@@ -42,8 +42,8 @@ Scope: <optional — limit scan to a path, e.g. packages/plugin-*>  # scan mode
 ## Classify mode — steps
 
 1. **Signal match.** Compare Feature + Changed paths against each `modules[].signals` (PRODUCT_MODULE_MAP "任务归属信号"). Record every module that matches and why.
-2. **Run `classification_flow`** (5 steps): browser-doable full page → `web`; native foundation (windows/fs/clipboard commands) → `app`; lightweight widget on the platform → `plugin`; cross-device need → declare `account-sync` (sync line); web→app promotion → D3 gate.
-3. **Apply hard rules** from MODULE_BOUNDARIES §4: creating a native window = `app` not `plugin`; don't re-do a Web-covered module inside a plugin; data defaults `device-local`; resolve the same-name trap (web DOM vs desktop overlay).
+2. **Run `classification_flow`** (6 steps): browser-doable full page → `web`; Mac shell / Web container / native chrome → `app`; desktop plugin platform runtime (multi-window / overlay / click-through / grid persistence) or lightweight widget on that runtime → `plugin`; cross-device need → declare `account-sync` (sync line); web→app promotion → D3 gate; future mobile/watch/browser surfaces → planning-only, not active modules.
+3. **Apply hard rules** from MODULE_BOUNDARIES §4: physical host implementation is not product ownership; Mac shell/native chrome = `app`; desktop multi-window/overlay/plugin runtime product ownership = `plugin`; plugin packages consume native commands and do not implement Tauri commands; don't re-do a Web-covered module inside a plugin; data defaults `device-local`; resolve the same-name trap (web DOM vs desktop overlay).
 4. **Frozen-line check.** If the verdict lands on `plugin`/`sync` (PAUSED) or `site`/`admin` (PROPOSED), say so and route to brief/queue only — do NOT present it as ready-to-build.
 5. **Emit the receipt** (below).
 
@@ -54,6 +54,8 @@ Walk `drift_checks` from the registry and report each hit with file evidence:
 - **syncscope_drift** — a plugin entity without a `syncScope` in `packages/core-data/src/entities.ts`, or a `device-local` entity reachable by the outbox (delegate the proof to `xai-account-sync-scope-check`).
 - **same_name_trap** — a feature/package named pet/widgets/grid/dashboard that is ambiguous between web-DOM and desktop-native.
 - **frozen_line_landing** — source landing on a PAUSED/PROPOSED line without an operator unfreeze.
+- **window_product_ownership_drift** — docs or code comments that treat Mac shell identity as desktop organizer/overlay product, or classify plugin platform runtime as App product only because code lives in the host.
+- **future_surface_landing** — iPhone / iPad / Apple Watch / Android / browser-extension work presented as active module work instead of planning-only `future_surfaces`.
 - **unknown_classification** — a feature matching no module signal, or 2+ with equal weight → escalate.
 
 ## Output (receipt)
@@ -81,6 +83,8 @@ Next (on confirm): <one delegated action per owning skill>
 
 - **New feature, classified** → hand to `xai-feature-brief` (normalize) → standard pipeline when the line is active.
 - **Web change that may affect desktop** → `xai-web-to-desktop-sync` (D3 gate).
+- **Web deploy / CSP / Cloudflare change** → `xai-web-deploy-preflight` (ADR-0008 deploy readiness gate).
+- **Desktop W4 signing / notarization / updater / release artifact change** → `xai-desktop-release-gate`.
 - **Entity may need cross-device** → `xai-account-sync-scope-check` (D4).
 - **Dashboard reflect** → `xai-dev-dashboard-sync` (apply the suggested `product_lines`/copy updates + regen).
 - **Visible increment shipped** → `xai-release-log`.

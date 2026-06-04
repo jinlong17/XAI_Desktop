@@ -4,6 +4,35 @@
 > Keep newest entries first. Use `.teams/skills/xai-release-log/SKILL.md` when
 > appending entries.
 
+## 2026-06-04
+
+### Desktop Plugin 产品边界与长期平台路线落地
+
+- Product line: desktop-plugin / project-system
+- Branch / commit: `codex/web/dev-dashboard-authority-refactor` / local working tree
+- User-visible change: 无运行时功能变更。产品结构现在明确 Mac Desktop 是“Web 容器壳 + native chrome”，Desktop Plugin 承担“桌面原生超能力层”（多窗口/overlay/Widget/快速入口），未来 iPhone / iPad / Apple Watch / Android / 浏览器扩展只进入 planning-only 路线图，不进入当前开发队列。
+- Developer/system delta: 新增 `docs/planning/LONG_TERM_PRODUCT_ROADMAP.md`；同步 `CLAUDE.md`、`AGENTS.md`、Cursor 路由规则、`MODULE_BOUNDARIES.md`、`PRODUCT_MODULE_MAP.md`、Plugin PRD、`module-classification.json`、`dashboard-state.json` 和 `xai-module-classify` 三端 skill/rule 镜像；个人开发看板产品结构图新增 `future_surfaces` 只读规划层。
+- Verification: `module-classification.json` / `dashboard-state.json` JSON parse passed；dashboard JS and generator `node --check` passed；xai-module-classify Team/Codex/Claude mirrors match；`git diff --check` passed；`pnpm dashboard` passed；`pnpm dashboard:verify-static` passed；`pnpm dashboard:verify-modules` passed；local HTTP smoke on `http://127.0.0.1:4177` confirmed `futureSurfaces` container, `renderFutureSurfaces()` call, future-surface card script, generated `future_surfaces=5`, App goal contains Web SPA, and Plugin goal contains 插件平台运行时.
+- Risk / follow-up: 本次只落实治理、文档、分类和看板；不创建 `desktop-plugin-next`，不启动 feature-build，不实现 Plugin Center / Widget Host / 多窗口运行时代码。后续产品开发仍需等 G1 解冻和 operator 确认。
+
+### Desktop Plugin 入口模型与看板状态对齐
+
+- Product line: desktop-plugin / project-system
+- Branch / commit: `codex/web/dev-dashboard-authority-refactor` / local working tree
+- User-visible change: 无运行时功能变更。产品文档与个人开发看板现在明确 Desktop Plugin 的未来入口是 Mac App 控制面板一级入口 + 轻量 Plugin Center + 设置页全局偏好；看板的 Desktop Plugin 模块卡标明 `Paused until G1`、入口设计已决、实现未开工。
+- Developer/system delta: `docs/planning/sub-prds/plugin/PRD.md` 新增 Plugin Center / Entry Model、MVP 添加流程、实例设置和风险顺序；`docs/PLUGIN_SDK.md` 新增 `PluginInstance` / `PluginCenterEntry` / `AddToDesktop` contract；`docs/MODULE_BOUNDARIES.md` 与 `docs/PRODUCT_MODULE_MAP.md` 明确“入口归 App、内容归 plugin”的路由；`dashboard-state.json` 更新 plugin 产品线状态卡，`docs/prototypes/dev-dashboard/BOUNDARIES.md` 固化状态卡只读 Product Module Registry 的边界。
+- Verification: `docs/workflow/project/dashboard-state.json` JSON parse passed；`node --check scripts/dashboard/generate-state.mjs` passed；`pnpm dashboard` passed；generated `state.generated.js` confirmed plugin status/running/feature card values；`pnpm dashboard:verify-static` passed；`pnpm dashboard:verify-modules` passed。
+- Risk / follow-up: 本次为 docs-only / contract-only，不解冻 P2、不实现 Plugin Center、不启动 feature-build。后续仍按 G1 后顺序推进：Organizer closeout → Widget Host MVP → Clipboard MVP（先修 `clipboard.item` vs `clipboard.entry` 契约漂移）→ Pet basic；Meditation desktop plugin 继续延后。
+
+### 项目 Skill 体系补齐：部署 / 桌面发布 gate + Cursor 镜像
+
+- Product line: project-system / workflow governance
+- Branch / commit: `codex/web/dev-dashboard-authority-refactor` / local working tree
+- User-visible change: 个人开发看板和产品结构导航现在能看到 13 个固定项目 skill；Web 部署相关改动有 `xai-web-deploy-preflight` 前置检查入口，Mac Desktop W4 发版风险有 `xai-desktop-release-gate` 入口，Cursor 也拥有全部 XAI 项目 skill 的 `.mdc` 镜像。
+- Developer/system delta: 新增 `.teams/skills/xai-web-deploy-preflight` 与 `.teams/skills/xai-desktop-release-gate`，并镜像到 `.claude/skills`、`.codex/skills`、`.cursor/rules`；把 `xai-feature-brief` 升级为六产品线 intake，把 `xai-feature-dossier-sync` Scope 扩到 `site/admin/project-system`，并让 `xai-dev-dashboard-sync` / `xai-consistency-audit` 显式检查 Cursor mirrors；更新 ADR-0014、`sync-registry.json`、`PRODUCT_MODULE_MAP.md`、`dashboard-state.json`、usage-guide、consistency checks 和 dashboard generator，让部署 / 桌面发布 gate 可被 fanout dispatch、看板和文档库发现。
+- Verification: `node --check scripts/dashboard/generate-state.mjs` passed；`sync-registry.json` / `dashboard-state.json` / `consistency-checks.json` JSON parse passed；XAI skill mirror check passed (`teams=13 missing=0`)；XAI skill content mirror check passed (`skills=13 failures=0`)；`pnpm dashboard` passed；`pnpm dashboard:verify-static` passed；`pnpm dashboard:verify-modules` passed；`python3 scripts/lint/check_portable_sync.py` passed。
+- Risk / follow-up: 新增两个 gate 均为 receipt/preflight-only，不会自动部署、签名、公证、上传、创建 release 分支或触碰 `dev`；`xai-sync-fanout-dispatch` 仍是 planner/router，不是强制自动执行器。
+
 ## 2026-06-03
 
 ### 个人开发看板边界规范闭环

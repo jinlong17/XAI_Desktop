@@ -37,6 +37,28 @@
       "note": "Reuses the existing W0-W4 classifier + handoff. W3 native delta routes to xai-feature-full-loop (NEW work, not a merge); merge-to-desktop-next + touching dev stay operator-gated."
     },
     {
+      "id": "web_deploy_preflight",
+      "title": "Web Cloudflare deploy readiness preflight",
+      "skill": "xai-web-deploy-preflight",
+      "is_new": true,
+      "writes_source": false,
+      "output": "docs/reviews/<feature>/<YYYYMMDD>-web-deploy-preflight.md",
+      "parallel_safe": true,
+      "depends_on": [],
+      "note": "Receipt-only gate for ADR-0008 deploy/CSP/Cloudflare readiness. It runs build/CSP/env/URL evidence checks or records operator gates; it does NOT deploy, push main, rotate secrets, or claim live smoke without a current URL."
+    },
+    {
+      "id": "desktop_release_gate",
+      "title": "Mac Desktop W4 release gate",
+      "skill": "xai-desktop-release-gate",
+      "is_new": true,
+      "writes_source": false,
+      "output": "docs/reviews/<feature>/<YYYYMMDD>-desktop-release-gate.md",
+      "parallel_safe": true,
+      "depends_on": ["d3_web_to_desktop"],
+      "note": "Receipt-only W4 gate for signing/notarization/DMG/updater/release artifact readiness. It does NOT create release branches, touch dev, tag, sign, notarize, upload, or ship without operator confirmation."
+    },
+    {
       "id": "d4_account_sync_scope_check",
       "title": "Account-sync D4 scope + completeness check (RECEIPT ONLY)",
       "skill": "xai-account-sync-scope-check (NEW — Phase 1)",
@@ -59,7 +81,7 @@
         "dashboard mirror chain via scripts/dashboard/generate-state.mjs + .githooks"
       ],
       "parallel_safe": false,
-      "depends_on": ["d3_web_to_desktop", "d4_account_sync_scope_check", "frozen_line_impact_brief"],
+      "depends_on": ["d3_web_to_desktop", "web_deploy_preflight", "desktop_release_gate", "d4_account_sync_scope_check", "frozen_line_impact_brief"],
       "note": "Close-out step: must run AFTER every lane that affects routing/release/dashboard/skill-surface. Two logical sub-steps with different owners: (a) release-log append (xai-release-log), (b) dashboard regen + mirror lint (xai-dev-dashboard-sync — do NOT build a new xai-structure-sync; the skill + git hooks already exist)."
     },
     {
@@ -86,6 +108,16 @@
       "fire": "d3_web_to_desktop"
     },
     {
+      "when_path": [".github/workflows/deploy-web.yml", "apps/web/wrangler.toml", "apps/web/public/_headers", "apps/web/public/sw.js", "apps/web/package.json", "apps/web/scripts/sourcemaps-*.mjs", "apps/web/deploy/**"],
+      "or_keyword": ["Cloudflare", "Pages", "wrangler", "CSP", "sourcemap", "Sentry", "production", "preview", "deploy", "VITE_SUPABASE"],
+      "fire": "web_deploy_preflight"
+    },
+    {
+      "when_path": ["apps/desktop/**", "apps/desktop/src-tauri/**", "docs/adr/0013-branch-sync-governance.md", "docs/PRODUCT_MODULE_MAP.md"],
+      "or_keyword": ["signing", "notarization", "notary", "dmg", "updater", "appcast", "latest.json", "release/desktop", "dev RC", "W4", "download artifact"],
+      "fire": "desktop_release_gate"
+    },
+    {
       "when_path": ["apps/web/wrangler.toml", "apps/web/public/_headers", "apps/web/deploy/**"],
       "or_keyword": ["CSP", "download", "updater", "latest.json", "release artifact", "dmg"],
       "fire": "frozen_line_impact_brief",
@@ -102,7 +134,7 @@
       "fire": "release_and_dashboard_sync"
     },
     {
-      "when_path": ["docs/PRODUCT_MODULE_MAP.md", "docs/workflow/project/dashboard-state.json", "CLAUDE.md", "AGENTS.md", ".cursor/rules/product-module-routing.mdc", ".teams/skills/**", ".claude/skills/**", ".codex/skills/**"],
+      "when_path": ["docs/PRODUCT_MODULE_MAP.md", "docs/workflow/project/dashboard-state.json", "CLAUDE.md", "AGENTS.md", ".cursor/rules/product-module-routing.mdc", ".cursor/rules/xai-*.mdc", ".teams/skills/**", ".claude/skills/**", ".codex/skills/**"],
       "fire": "release_and_dashboard_sync",
       "subaction": "dashboard-mirror-sync"
     }
@@ -113,11 +145,13 @@
     { "file": "docs/workflow/project/dashboard-state.json", "owner": "release_and_dashboard_sync", "risk": "human-decision mirror; generator input; same owner as state.generated.js" },
     { "file": "docs/PRODUCT_MODULE_MAP.md", "owner": "release_and_dashboard_sync", "risk": "six-module routing authority + mirror-contract head" },
     { "files": ["CLAUDE.md", "AGENTS.md", ".cursor/rules/product-module-routing.mdc"], "owner": "release_and_dashboard_sync", "risk": "routing mirror chain — single writer" },
-    { "files": [".teams/skills/**", ".claude/skills/**", ".codex/skills/**"], "owner": "release_and_dashboard_sync", "risk": "skill mirror — single writer; run Agent/Skill Tracking audit after every change" },
+    { "files": [".teams/skills/**", ".claude/skills/**", ".codex/skills/**", ".cursor/rules/xai-*.mdc"], "owner": "release_and_dashboard_sync", "risk": "skill mirror — single writer; run Agent/Skill Tracking audit after every change" },
     { "file": "packages/core-data/src/entities.ts", "owner": "d4_account_sync_scope_check (CHECK-ONLY — no write while sync paused)", "risk": "central entityType/syncScope map; NOT the only registration site (see open_findings)" },
     { "files": ["docs/contracts/account-sync-*.md"], "owner": "d4_account_sync_scope_check", "risk": "D4 authority contracts" },
     { "file": "turbo.json", "owner": "release_and_dashboard_sync", "risk": "single writer for any future affected-graph config" },
     { "file": "docs/reviews/<feature>/<YYYYMMDD>-d3-parity-receipt.md", "owner": "d3_web_to_desktop" },
+    { "file": "docs/reviews/<feature>/<YYYYMMDD>-web-deploy-preflight.md", "owner": "web_deploy_preflight" },
+    { "file": "docs/reviews/<feature>/<YYYYMMDD>-desktop-release-gate.md", "owner": "desktop_release_gate" },
     { "file": "docs/reviews/<feature>/<YYYYMMDD>-d4-check.md", "owner": "d4_account_sync_scope_check" }
   ],
   "dispatch": {
@@ -125,7 +159,8 @@
     "trigger_phrase": "Web 版本功能已完成，执行后续同步 workflow",
     "mechanism": "Read this registry's rules[], match against changed paths + keywords + entityType/syncScope diff. Do NOT rely on `turbo run --affected` as the only signal and do NOT fabricate a web->sync workspace dependency (web->core-data already exists transitively via @repo/plugin-console + @repo/plugin-productivity). Emit one copy-paste prompt per hit action, or spawn one worktree-pinned subagent per action.",
     "waves": [
-      ["d3_web_to_desktop", "d4_account_sync_scope_check", "frozen_line_impact_brief"],
+      ["d3_web_to_desktop", "web_deploy_preflight", "d4_account_sync_scope_check", "frozen_line_impact_brief"],
+      ["desktop_release_gate"],
       ["release_and_dashboard_sync"]
     ]
   },
@@ -151,8 +186,8 @@
   ],
   "rollout": {
     "phase_0": "Expose xai-release-log (symlink — DONE) + author this registry (DONE). No frozen-line changes.",
-    "phase_1": "Build the single new skill xai-account-sync-scope-check (D4; authority = account-sync-verification-gates.md; receipt-only).",
+    "phase_1": "Build xai-account-sync-scope-check (D4; authority = account-sync-verification-gates.md; receipt-only) plus deploy/release preflight gates.",
     "phase_2": "Build xai-sync-fanout-dispatch driven by this registry's semantic rules.",
-    "phase_3": "Close-out reuses xai-dev-dashboard-sync + .githooks for mirror lint; site/admin/plugin dedicated skills wait for operator unfreeze."
+    "phase_3": "Close-out reuses xai-dev-dashboard-sync + .githooks for mirror lint; site/admin/plugin dedicated implementation skills wait for operator unfreeze."
   }
 }

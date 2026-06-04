@@ -38,29 +38,7 @@ function renderOverview(){
 // The curated high-frequency list (OVERVIEW_QUICK_SKILLS / FREQUENT_SKILLS) now
 // lives in js/skill-groups.js (single source, loaded before this file) and is
 // shared with the Skill/Agent catalog 常用 group. See BOUNDARIES.md §4.10 / §7.
-function ensureSkillQuickStyles(){
-  if(typeof document === "undefined" || document.getElementById("xai-skill-quick-styles")) return;
-  const el = document.createElement("style");
-  el.id = "xai-skill-quick-styles";
-  el.textContent = `
-  .overview-right-col{display:flex;flex-direction:column;gap:16px;min-width:0}
-  .overview-skill-quick{margin-top:0;padding:13px;border:1px solid var(--line);border-radius:10px;background:color-mix(in srgb,var(--surface) 80%,transparent)}
-  .osk-head{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:10px}
-  .osk-head b{font-size:13px}
-  .osk-head span{color:var(--faint);font-size:11px}
-  .osk-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(214px,1fr));gap:8px}
-  .osk-card{display:flex;flex-direction:column;gap:5px;padding:9px 11px;border:1px solid var(--line);border-radius:9px;background:var(--surface-2);cursor:pointer;transition:border-color .15s ease,transform .15s ease}
-  .osk-card:hover{border-color:var(--blue);transform:translateY(-1px)}
-  .osk-card-top{display:flex;align-items:center;justify-content:space-between;gap:8px}
-  .osk-card-top code{font-size:12px;font-weight:700;overflow-wrap:anywhere;line-height:1.3}
-  .osk-label{color:var(--muted);font-size:11px}
-  .osk-copy{flex:none;border:1px solid var(--line);border-radius:6px;background:var(--surface);color:var(--faint);font-size:10px;padding:3px 8px;cursor:pointer;white-space:nowrap;transition:border-color .15s ease,color .15s ease}
-  .osk-copy:hover{border-color:var(--blue);color:var(--blue)}
-  `;
-  document.head.appendChild(el);
-}
 function renderOverviewSkillQuick(){
-  ensureSkillQuickStyles();
   const host = document.getElementById("overviewSkillQuick");
   if(!host) return;
   const byName = new Map((typeof skills !== "undefined" ? skills : []).map(s => [s.name, s]));

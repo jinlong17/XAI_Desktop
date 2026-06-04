@@ -1,6 +1,6 @@
 ---
-name: xai-dev-dashboard-sync
 description: Refresh and verify the XAI personal developer dashboard, including Overview state, the machine-facing dashboard contract, reusable dashboard template, and concrete page/card boundary spec. Use when the operator asks whether the dev-dashboard is current, wants branch/code/doc/release state synchronized, or needs Codex/Claude to align dashboard docs before trusting the personal project console.
+alwaysApply: false
 ---
 
 # xai-dev-dashboard-sync

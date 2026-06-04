@@ -13,6 +13,8 @@
 - Manual state base: `docs/workflow/project/dashboard-state.json`
 - Product Module Registry: `docs/workflow/project/dashboard-state.json` field
   `product_lines`
+- Future Surface Registry: `docs/workflow/project/dashboard-state.json` field
+  `future_surfaces` (planning-only, not active Product Module Registry entries)
 - Testing Registry: `docs/workflow/project/dashboard-state.json` field
   `testing`
 - Skill / Agent Knowledge Registry:
@@ -23,6 +25,7 @@
 - Sync skill: `.teams/skills/xai-dev-dashboard-sync/SKILL.md`
 - Claude skill mirror: `.claude/skills/xai-dev-dashboard-sync/SKILL.md`
 - Codex skill mirror: `.codex/skills/xai-dev-dashboard-sync/SKILL.md`
+- Cursor rule mirror: `.cursor/rules/xai-dev-dashboard-sync.mdc`
 - Template doc: `docs/prototypes/dev-dashboard/TEMPLATE.md`
 - Boundary spec: `docs/prototypes/dev-dashboard/BOUNDARIES.md`
 
@@ -45,6 +48,11 @@ source; `dashboard-state.json.product_lines` is the Product Module Registry that
 the dashboard renders. When the boundary or classification changes, update
 `module-classification.json`, `docs/PRODUCT_MODULE_MAP.md`, and the matching
 registry entry in `dashboard-state.json` in the same change.
+Future iPhone / iPad / Apple Watch / Android / browser-extension surfaces live
+in `module-classification.json.future_surfaces` and
+`dashboard-state.json.future_surfaces` as planning-only data. They must not be
+rendered or routed as active `product_lines` unless the operator explicitly
+promotes a surface into `MODULE_BOUNDARIES.md`.
 
 Each registry entry owns the shared module definition for Overview, Product
 structure, Testing, Deployment, Release records, Docs library, and Skill / Agent
@@ -81,6 +89,7 @@ and block automatic opening when the port belongs to another project.
 |---|---|---|
 | Product routing | `CLAUDE.md`, `AGENTS.md`, `docs/PRODUCT_MODULE_MAP.md` | Authority for task classification and module navigation. |
 | Human decisions / Product Module Registry | `docs/workflow/project/dashboard-state.json` | Manual fields such as priority, branch creation, release gates, risk acceptance, and shared module definitions under `product_lines`. |
+| Future surface planning | `docs/planning/LONG_TERM_PRODUCT_ROADMAP.md`, `dashboard-state.json.future_surfaces`, `module-classification.json.future_surfaces` | Planning-only platform roadmap; not active module routing. |
 | Generated facts | `scripts/dashboard/generate-state.mjs` | Reads git, roadmap manifests, skill/agent files, docs, release-log, and dev logs. |
 | Human cockpit | `docs/prototypes/dev-dashboard/index.html` | Shows Overview, product structure, docs library, Skill / Agent registry, release records, and workflow entry points. |
 | Machine contract | this file | Tells agents how to refresh, trust, and update the dashboard. |
@@ -94,7 +103,8 @@ Agents should refresh or check the dashboard when:
   doc update changes dashboard source state;
 - a task changes `docs/prototypes/dev-dashboard/`,
   `docs/workflow/project/dashboard-state.json`, `.teams/skills/`, `.codex/skills/`,
-  `.codex/agents/`, or `docs/workflow/project/release-log.md`;
+  `.claude/skills/`, `.cursor/rules/`, `.codex/agents/`, or
+  `docs/workflow/project/release-log.md`;
 - final handoff depends on Overview data.
 
 The sync skill owns six alignment checks in one run:
@@ -111,9 +121,10 @@ The sync skill owns six alignment checks in one run:
    `Verification` fields, known local report paths, and CI / pipeline
    configuration evidence.
 6. refresh or verify the Skill / Agent knowledge registry, including new or
-   modified definitions, classification, generated descriptions, automatic
-   field completion, unresolved needs-action items, source-backfill notes,
-   workflow links, document links, maintenance status, and mirror status.
+   modified definitions, Claude/Codex symlink mirrors, Cursor `.mdc` rule
+   mirrors, classification, generated descriptions, automatic field completion,
+   unresolved needs-action items, source-backfill notes, workflow links,
+   document links, maintenance status, and mirror status.
 
 The skill should apply factual Markdown updates directly. It should report
 `needs-review` only when the mismatch requires an operator decision about
@@ -139,6 +150,8 @@ Agents may update:
 - project skill docs under `.teams/skills/` and tracked mirrors under `.codex/skills/`;
 - Claude skill mirrors under `.claude/skills/` when a project skill should be
   available to Claude Code;
+- Cursor rule mirrors under `.cursor/rules/` when a project skill should be
+  available to Cursor;
 - dashboard source HTML/CSS/JS under `docs/prototypes/dev-dashboard/`;
 - generator/server scripts under `scripts/dashboard/`;
 - machine and operator docs under `docs/workflow/project/`;
@@ -343,5 +356,5 @@ unless the change belongs to a specific product line.
 - If a new dashboard pattern is meant to be reused in another project, update
   `docs/prototypes/dev-dashboard/TEMPLATE.md`.
 - If `xai-dev-dashboard-sync` changes, keep `.teams/skills/`,
-  `.claude/skills/`, and `.codex/skills/` discoverability aligned in the same
-  change.
+  `.claude/skills/`, `.codex/skills/`, and `.cursor/rules/` discoverability
+  aligned in the same change.
