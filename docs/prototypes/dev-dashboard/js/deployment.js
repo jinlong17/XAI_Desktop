@@ -1,18 +1,3 @@
-const DEPLOYMENT_STATUS_META = {
-  not_deployed: {label:"未部署", badge:"b-gray", tone:"gray"},
-  ready: {label:"准备部署", badge:"b-blue", tone:"blue"},
-  deploying: {label:"部署中", badge:"b-cyan", tone:"cyan"},
-  deployed: {label:"已部署", badge:"b-green", tone:"green"},
-  failed: {label:"部署失败", badge:"b-red", tone:"red"},
-  rollback: {label:"需要回滚", badge:"b-purple", tone:"purple"},
-  success: {label:"成功", badge:"b-green", tone:"green"},
-  pending: {label:"待处理", badge:"b-yellow", tone:"yellow"}
-};
-
-function deploymentStatusMeta(status){
-  return DEPLOYMENT_STATUS_META[status] || DEPLOYMENT_STATUS_META.pending;
-}
-
 function deploymentProductMeta(key){
   const product = typeof productLineFor === "function" ? productLineFor(key) : null;
   return {

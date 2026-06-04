@@ -1,12 +1,3 @@
-const TEST_STATUS_META = {
-  pass: { label:"通过", badge:"b-green", tone:"green" },
-  fail: { label:"失败", badge:"b-red", tone:"red" },
-  partial: { label:"部分通过", badge:"b-yellow", tone:"yellow" },
-  stale: { label:"过期", badge:"b-purple", tone:"purple" },
-  unknown: { label:"未登记", badge:"b-gray", tone:"gray" },
-  "not_run": { label:"未运行", badge:"b-gray", tone:"gray" }
-};
-
 const TEST_CATEGORY_LABELS = {
   self_test:"自测",
   unit:"单元",
@@ -17,10 +8,6 @@ const TEST_CATEGORY_LABELS = {
   pre_deploy:"部署前",
   regression:"回归"
 };
-
-function testStatusMeta(status){
-  return TEST_STATUS_META[status] || TEST_STATUS_META.unknown;
-}
 
 function testCategoryLabel(key){
   return TEST_CATEGORY_LABELS[key] || key;
