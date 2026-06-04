@@ -287,8 +287,8 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: 22px;
-  height: 22px;
+  width: 30px;
+  height: 30px;
   border-radius: var(--r-sm);
   color: var(--text-3);
 }
@@ -754,4 +754,123 @@
   gap: 8px;
   padding-top: 4px;
   border-top: 1px solid var(--border-1);
+}
+
+/* ---- 2026 UI refresh: readable reminders-style task boards ------------ */
+.module-tasks .module-head {
+  padding-top: 18px;
+}
+
+.task-columns {
+  grid-template-columns: repeat(4, minmax(286px, 1fr));
+  gap: 14px;
+}
+
+.task-col {
+  background: color-mix(in oklch, var(--bg-panel) 94%, transparent);
+  box-shadow: var(--shadow-1);
+}
+
+.task-col-head {
+  min-height: 50px;
+  padding: 14px 16px 12px;
+}
+
+.col-action,
+.view-more,
+.completed-head {
+  min-height: 34px;
+}
+
+.task-col-body {
+  gap: 8px;
+  padding: 10px;
+}
+
+.task-card {
+  border-radius: var(--r-lg);
+  padding: 13px 14px;
+}
+
+.task-card:hover {
+  box-shadow: var(--shadow-2);
+  transform: translateY(-1px);
+}
+
+.task-title {
+  font-size: var(--fs-md);
+  font-weight: 620;
+  line-height: 1.45;
+}
+
+.task-sub,
+.task-meta,
+.task-pill,
+.task-list-pill,
+.task-priority {
+  font-size: var(--fs-sm);
+}
+
+.task-meta {
+  gap: 7px;
+  padding-left: 28px;
+}
+
+.task-select {
+  width: 28px;
+  height: 28px;
+  margin-top: 0;
+}
+
+.priority-high { color: var(--amber); }
+.priority-urgent { color: var(--red); }
+
+.task-danger-btn {
+  border-color: var(--red);
+  color: var(--red);
+}
+
+.task-detail-panel input,
+.task-detail-panel select,
+.task-detail-panel textarea,
+.task-meta-dialog input,
+.task-composer__input,
+.task-composer__btn {
+  min-height: 40px;
+  border-radius: var(--r-md);
+}
+
+.task-composer {
+  border-radius: var(--r-xl);
+}
+
+@media (max-width: 900px) {
+  .task-columns {
+    grid-template-columns: repeat(2, minmax(280px, 1fr));
+  }
+}
+
+@media (max-width: 600px) {
+  .task-columns {
+    grid-template-columns: 1fr;
+    gap: 12px;
+  }
+
+  .col-action,
+  .view-more,
+  .completed-head,
+  .sidebar-mini-btn,
+  .task-composer__btn,
+  .task-detail-panel input,
+  .task-detail-panel select,
+  .task-detail-panel textarea,
+  .task-meta-dialog input,
+  .task-composer__input {
+    min-height: 44px;
+  }
+
+  .sidebar-mini-btn {
+    width: 44px;
+    height: 44px;
+  }
 }

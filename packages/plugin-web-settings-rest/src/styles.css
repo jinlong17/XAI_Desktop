@@ -43,8 +43,8 @@
   position: absolute;
   bottom: 0;
   right: 0;
-  width: 22px;
-  height: 22px;
+  width: 30px;
+  height: 30px;
   border-radius: 50%;
   border: none;
   background: var(--accent, oklch(60% 0.10 165));
@@ -78,7 +78,9 @@
   color: var(--accent, oklch(60% 0.10 165));
   cursor: pointer;
   font-size: 0.85rem;
-  padding: 0;
+  min-height: 30px;
+  padding: 0 8px;
+  border-radius: var(--r-pill, 999px);
 }
 .acct-actions {
   display: flex;
@@ -887,4 +889,52 @@ dialog.delete-account-modal::backdrop {
   padding: 8px 12px;
   font-size: 0.83rem;
   line-height: 1.4;
+}
+
+/* ---- 2026 UI refresh: settings detail panes --------------------------- */
+.premium-upgrade-btn,
+.premium-cancel-btn,
+.dam-input,
+.dam-actions-row button,
+.premium-cb-banner {
+  min-height: 40px;
+  border-radius: var(--r-md, 10px);
+}
+
+.premium-tier-row,
+.premium-cb-redirect,
+.dam-type-prompt,
+.dam-mock-banner,
+.dam-error {
+  font-size: var(--fs-sm, 13.5px);
+  line-height: 1.5;
+  letter-spacing: 0;
+}
+
+.premium-cb-banner,
+.dam-mock-banner,
+.dam-error {
+  background: color-mix(in oklch, var(--bg-panel) 90%, transparent);
+  border-color: color-mix(in oklch, var(--border-1) 90%, transparent);
+}
+
+.dam-input {
+  font-size: var(--fs-md, 14.5px);
+  letter-spacing: 0;
+}
+
+@media (max-width: 760px) {
+  .acct-edit,
+  .acct-upgrade,
+  .premium-upgrade-btn,
+  .premium-cancel-btn,
+  .dam-input,
+  .dam-actions-row button {
+    min-height: 44px;
+  }
+
+  .acct-edit {
+    width: 44px;
+    height: 44px;
+  }
 }

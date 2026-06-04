@@ -1,6 +1,6 @@
 :root {
   color-scheme: light;
-  font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+  font-family: var(--font-sans, "Manrope", "Noto Sans SC", "SF Pro Text", system-ui, sans-serif);
 }
 
 [data-theme="dark"] {
@@ -15,10 +15,14 @@ body {
   margin: 0;
   background: var(--bg-app, #f3f4f6);
   color: var(--text-1, #111827);
+  font-family: var(--font-sans, "Manrope", "Noto Sans SC", "SF Pro Text", system-ui, sans-serif);
+  font-size: var(--fs-md, 14.5px);
+  line-height: 1.45;
+  font-variant-numeric: tabular-nums;
 }
 
 .host-page {
-  min-height: 100vh;
+  min-height: 100dvh;
   display: grid;
   place-content: center;
   gap: 0.5rem;
@@ -33,7 +37,7 @@ body {
   justify-self: center;
   align-items: center;
   justify-content: center;
-  min-height: 40px;
+  min-height: 44px;
   padding: 0 16px;
   border-radius: 8px;
   background: var(--accent, #111827);
@@ -49,7 +53,7 @@ body {
 }
 
 .auth-form input {
-  min-height: 40px;
+  min-height: 44px;
   border: 1px solid var(--border-1, #d1d5db);
   border-radius: 8px;
   background: var(--bg-panel, #ffffff);
@@ -70,7 +74,7 @@ body {
 
 .auth-form button,
 .auth-actions button {
-  min-height: 36px;
+  min-height: 44px;
   border: 1px solid var(--border-1, #d1d5db);
   border-radius: 8px;
   background: var(--bg-panel, #ffffff);

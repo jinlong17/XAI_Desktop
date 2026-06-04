@@ -1,19 +1,19 @@
 /* ========================================================================
    XAI Console — Design Tokens
-   Original palette inspired by sage/mint productivity tones.
-   All accents share chroma ~0.10, lightness ~60% (oklch).
+   Apple Calendar / Reminders + Linear inspired productivity surface.
+   Neutral-first, calibrated color, quiet hierarchy, readable data density.
    ======================================================================== */
 
 :root {
   /* — Surfaces (Light) ——————————————————————————————————— */
-  --bg-app:          oklch(96.5% 0.018 158);   /* pale mint canvas */
-  --bg-rail:         oklch(63%   0.08  165);   /* sage rail */
-  --bg-rail-hover:   oklch(58%   0.09  165);
+  --bg-app:          oklch(97.2% 0.006 235);   /* quiet cool canvas */
+  --bg-rail:         oklch(34%   0.018 215);   /* graphite rail */
+  --bg-rail-hover:   oklch(40%   0.02  215);
   --bg-panel:        #ffffff;
-  --bg-panel-2:      oklch(98%   0.01  170);   /* nested panel */
-  --bg-hover:        oklch(96%   0.012 170);
-  --bg-selected:     oklch(94%   0.025 165);
-  --bg-overlay:      oklch(20%   0.01  220 / 0.42);
+  --bg-panel-2:      oklch(98.4% 0.004 235);   /* nested panel */
+  --bg-hover:        oklch(95.4% 0.006 235);
+  --bg-selected:     oklch(93.8% 0.018 165);
+  --bg-overlay:      oklch(18%   0.012 220 / 0.44);
 
   /* Compatibility aliases for older Web modules. New styles should prefer the
      canonical --bg-* / --text-* / --border-* tokens above. */
@@ -30,41 +30,41 @@
   --bg-input:        var(--bg-panel);
 
   /* — Text ———————————————————————————————————————————————— */
-  --text-1: oklch(22% 0.012 220);   /* primary */
-  --text-2: oklch(40% 0.008 220);   /* secondary */
-  --text-3: oklch(58% 0.006 220);   /* tertiary, captions */
-  --text-4: oklch(72% 0.004 220);   /* placeholder */
+  --text-1: oklch(21% 0.012 230);   /* primary */
+  --text-2: oklch(42% 0.010 230);   /* secondary */
+  --text-3: oklch(58% 0.008 230);   /* tertiary, captions */
+  --text-4: oklch(70% 0.006 230);   /* placeholder */
   --text-on-accent: #ffffff;
   --text-on-rail:   oklch(98% 0.005 165);
 
   /* — Border / divider ————————————————————————————————————— */
-  --border-1: oklch(92% 0.008 200);
-  --border-2: oklch(88% 0.012 200);
-  --border-strong: oklch(78% 0.014 200);
+  --border-1: oklch(89.8% 0.008 230);
+  --border-2: oklch(84.5% 0.010 230);
+  --border-strong: oklch(73% 0.012 230);
   --border: var(--border-1);
   --border-mid: var(--border-2);
 
   /* — Accent (sage) — driven by --accent-hue (165=sage default) ——— */
   --accent-hue: 165;
-  --accent-chroma: 0.10;
-  --accent:        oklch(60% var(--accent-chroma) var(--accent-hue));
-  --accent-hover:  oklch(55% calc(var(--accent-chroma) + 0.01) var(--accent-hue));
-  --accent-soft:   oklch(94% 0.04 var(--accent-hue));
+  --accent-chroma: 0.085;
+  --accent:        oklch(57% var(--accent-chroma) var(--accent-hue));
+  --accent-hover:  oklch(52% calc(var(--accent-chroma) + 0.008) var(--accent-hue));
+  --accent-soft:   oklch(93.5% 0.032 var(--accent-hue));
   --accent-light:  var(--accent-soft);
   --accent-ink:    oklch(38% var(--accent-chroma) var(--accent-hue));
   --accent-contrast: var(--text-on-accent);
   --danger: var(--red);
 
   /* — Semantic ————————————————————————————————————————————— */
-  --red:    oklch(60% 0.18 25);
-  --red-soft:   oklch(94% 0.04 25);
-  --amber:  oklch(70% 0.14 70);
-  --amber-soft: oklch(94% 0.04 75);
-  --blue:   oklch(60% 0.12 245);
-  --blue-soft:  oklch(94% 0.04 245);
-  --violet: oklch(60% 0.12 290);
-  --violet-soft: oklch(94% 0.04 290);
-  --pink:   oklch(70% 0.10 350);
+  --red:    oklch(58% 0.145 25);
+  --red-soft:   oklch(94% 0.032 25);
+  --amber:  oklch(66% 0.115 72);
+  --amber-soft: oklch(94.5% 0.034 78);
+  --blue:   oklch(58% 0.090 245);
+  --blue-soft:  oklch(94% 0.030 245);
+  --violet: oklch(58% 0.085 290);
+  --violet-soft: oklch(94% 0.030 290);
+  --pink:   oklch(66% 0.080 350);
 
   /* Tag palette (used by labels) */
   --tag-study:    oklch(60% 0.10 165);
@@ -79,31 +79,31 @@
   --tag-other-bg: oklch(94% 0.04 195);
 
   /* — Radii ——————————————————————————————————————————————— */
-  --r-xs: 4px;
-  --r-sm: 6px;
-  --r-md: 8px;
-  --r-lg: 12px;
-  --r-xl: 16px;
+  --r-xs: 5px;
+  --r-sm: 7px;
+  --r-md: 10px;
+  --r-lg: 14px;
+  --r-xl: 18px;
   --r-pill: 999px;
 
   /* — Shadows (very soft) ————————————————————————————————— */
-  --shadow-1: 0 1px 0 oklch(50% 0.01 220 / 0.04), 0 1px 2px oklch(50% 0.01 220 / 0.04);
-  --shadow-2: 0 4px 14px oklch(40% 0.02 220 / 0.06), 0 1px 2px oklch(40% 0.02 220 / 0.04);
-  --shadow-3: 0 14px 40px oklch(30% 0.02 220 / 0.12), 0 2px 6px oklch(30% 0.02 220 / 0.06);
+  --shadow-1: 0 1px 0 oklch(100% 0 0 / 0.72) inset, 0 1px 2px oklch(34% 0.018 230 / 0.05);
+  --shadow-2: 0 10px 28px oklch(34% 0.018 230 / 0.08), 0 2px 8px oklch(34% 0.018 230 / 0.05);
+  --shadow-3: 0 24px 60px oklch(24% 0.020 230 / 0.16), 0 6px 18px oklch(24% 0.020 230 / 0.08);
 
   /* — Type ———————————————————————————————————————————————— */
-  --font-sans: 'Manrope', 'Noto Sans SC', -apple-system, sans-serif;
+  --font-sans: 'Manrope', 'Noto Sans SC', 'SF Pro Text', 'PingFang SC', -apple-system, BlinkMacSystemFont, system-ui, sans-serif;
   --font-mono: 'JetBrains Mono', ui-monospace, monospace;
 
-  --fs-2xs: 10.5px;
-  --fs-xs:  11.5px;
-  --fs-sm:  12.5px;
-  --fs-md:  13.5px;
-  --fs-lg:  15px;
-  --fs-xl:  18px;
-  --fs-2xl: 22px;
-  --fs-3xl: 28px;
-  --fs-display: 64px;
+  --fs-2xs: 11.5px;
+  --fs-xs:  12.5px;
+  --fs-sm:  13.5px;
+  --fs-md:  14.5px;
+  --fs-lg:  16px;
+  --fs-xl:  20px;
+  --fs-2xl: 24px;
+  --fs-3xl: 30px;
+  --fs-display: 58px;
 
   /* — Spacing (4px scale) ————————————————————————————————— */
   --s-1: 4px;
@@ -116,50 +116,50 @@
   --s-8: 40px;
 
   /* — Density (default comfortable) ———————————————————————— */
-  --rail-w: 56px;
-  --sidebar-w: 232px;
-  --row-h: 36px;
-  --card-pad-y: 10px;
-  --card-pad-x: 12px;
-  --topbar-h: 48px;
+  --rail-w: 62px;
+  --sidebar-w: 248px;
+  --row-h: 40px;
+  --card-pad-y: 12px;
+  --card-pad-x: 14px;
+  --topbar-h: 52px;
 
   /* — Motion ——————————————————————————————————————————————— */
-  --ease-out: cubic-bezier(.22, 1, .36, 1);
+  --ease-out: cubic-bezier(.32, .72, 0, 1);
   --ease-in-out: cubic-bezier(.65, 0, .35, 1);
-  --dur-fast: 140ms;
-  --dur-med:  220ms;
-  --dur-slow: 360ms;
+  --dur-fast: 180ms;
+  --dur-med:  280ms;
+  --dur-slow: 420ms;
 }
 
 /* — Compact density ————————————————————————————————————— */
 [data-density="compact"] {
-  --row-h: 30px;
-  --card-pad-y: 7px;
-  --card-pad-x: 10px;
-  --sidebar-w: 216px;
-  --topbar-h: 42px;
-  --fs-md: 12.5px;
-  --fs-sm: 11.5px;
+  --row-h: 34px;
+  --card-pad-y: 9px;
+  --card-pad-x: 12px;
+  --sidebar-w: 228px;
+  --topbar-h: 46px;
+  --fs-md: 13.5px;
+  --fs-sm: 12.5px;
 }
 
 /* — Dark theme —————————————————————————————————————————— */
 [data-theme="dark"] {
-  --bg-app:        oklch(20% 0.012 200);
-  --bg-rail:       oklch(28% 0.025 165);
-  --bg-rail-hover: oklch(33% 0.03  165);
-  --bg-panel:      oklch(24% 0.012 200);
-  --bg-panel-2:    oklch(22% 0.012 200);
-  --bg-hover:      oklch(27% 0.015 200);
-  --bg-selected:   oklch(31% 0.03 165);
+  --bg-app:        oklch(16.5% 0.012 230);
+  --bg-rail:       oklch(22% 0.012 225);
+  --bg-rail-hover: oklch(28% 0.014 225);
+  --bg-panel:      oklch(22% 0.012 230);
+  --bg-panel-2:    oklch(19% 0.010 230);
+  --bg-hover:      oklch(26% 0.013 230);
+  --bg-selected:   oklch(29% 0.026 165);
 
   --text-1: oklch(96% 0.005 200);
   --text-2: oklch(78% 0.006 200);
   --text-3: oklch(62% 0.006 200);
   --text-4: oklch(48% 0.006 200);
 
-  --border-1: oklch(30% 0.012 200);
-  --border-2: oklch(35% 0.014 200);
-  --border-strong: oklch(45% 0.014 200);
+  --border-1: oklch(31% 0.012 230);
+  --border-2: oklch(37% 0.014 230);
+  --border-strong: oklch(48% 0.014 230);
 
   --accent:       oklch(72% var(--accent-chroma) var(--accent-hue));
   --accent-hover: oklch(78% var(--accent-chroma) var(--accent-hue));
@@ -177,9 +177,9 @@
   --tag-todo-bg:     oklch(32% 0.05 245);
   --tag-other-bg:    oklch(32% 0.05 195);
 
-  --shadow-1: 0 1px 0 #0006, 0 1px 2px #0008;
-  --shadow-2: 0 4px 14px #0006, 0 1px 2px #0008;
-  --shadow-3: 0 14px 40px #0009, 0 2px 6px #0008;
+  --shadow-1: 0 1px 0 oklch(100% 0 0 / 0.06) inset, 0 1px 2px oklch(0% 0 0 / 0.28);
+  --shadow-2: 0 14px 34px oklch(0% 0 0 / 0.30), 0 2px 8px oklch(0% 0 0 / 0.20);
+  --shadow-3: 0 28px 70px oklch(0% 0 0 / 0.42), 0 8px 22px oklch(0% 0 0 / 0.26);
 }
 
 /* — Reset / base ————————————————————————————————————————— */
@@ -226,11 +226,13 @@ html, body, #root { height: 100%; margin: 0; }
 body {
   font-family: var(--font-sans);
   font-size: var(--fs-md);
+  line-height: 1.45;
   color: var(--text-1);
   background: var(--bg-app);
   -webkit-font-smoothing: antialiased;
   text-rendering: optimizeLegibility;
   font-feature-settings: 'ss01', 'cv11';
+  font-variant-numeric: tabular-nums;
   overflow: hidden;
 }
 button {
@@ -240,6 +242,14 @@ button {
   border: 0;
   padding: 0;
   cursor: pointer;
+}
+button:focus-visible,
+input:focus-visible,
+textarea:focus-visible,
+select:focus-visible,
+[role="button"]:focus-visible {
+  outline: 2px solid color-mix(in oklch, var(--accent) 58%, transparent);
+  outline-offset: 2px;
 }
 input, textarea {
   font: inherit;
@@ -275,12 +285,13 @@ input, textarea {
 
 .tag {
   display: inline-flex; align-items: center; gap: 4px;
-  padding: 1px 7px;
+  min-height: 22px;
+  padding: 2px 8px;
   border-radius: var(--r-sm);
-  font-size: var(--fs-2xs);
+  font-size: var(--fs-xs);
   font-weight: 600;
-  letter-spacing: .02em;
-  line-height: 1.6;
+  letter-spacing: 0;
+  line-height: 1.35;
 }
 .tag.study    { color: var(--tag-study);    background: var(--tag-study-bg); }
 .tag.work     { color: var(--tag-work);     background: var(--tag-work-bg); }
@@ -305,9 +316,10 @@ input, textarea {
   gap: 2px;
 }
 .seg button {
-  padding: 4px 10px;
+  min-height: 30px;
+  padding: 4px 12px;
   font-size: var(--fs-sm);
-  border-radius: 6px;
+  border-radius: var(--r-sm);
   color: var(--text-2);
   transition: background var(--dur-fast) var(--ease-out), color var(--dur-fast) var(--ease-out);
 }
@@ -320,9 +332,9 @@ input, textarea {
 
 /* icon button */
 .icon-btn {
-  width: 28px; height: 28px;
+  width: 34px; height: 34px;
   display: inline-flex; align-items: center; justify-content: center;
-  border-radius: var(--r-sm);
+  border-radius: var(--r-md);
   color: var(--text-2);
   transition: background var(--dur-fast) var(--ease-out), color var(--dur-fast) var(--ease-out);
 }
@@ -332,7 +344,7 @@ input, textarea {
 .btn {
   display: inline-flex; align-items: center; justify-content: center;
   gap: 6px;
-  height: 32px;
+  min-height: 38px;
   padding: 0 14px;
   border-radius: var(--r-md);
   font-size: var(--fs-sm);
@@ -354,7 +366,7 @@ input, textarea {
 
 /* checkbox (custom) */
 .cbx {
-  width: 16px; height: 16px;
+  width: 18px; height: 18px;
   border-radius: 999px;
   border: 1.5px solid var(--border-strong);
   display: inline-flex; align-items: center; justify-content: center;
@@ -419,6 +431,24 @@ input, textarea {
   border-radius: var(--r-lg);
   border: 1px solid var(--border-1);
   box-shadow: var(--shadow-1);
+}
+
+@media (max-width: 760px) {
+  .icon-btn,
+  .btn,
+  .seg button,
+  .list-row {
+    min-height: 44px;
+  }
+
+  .icon-btn {
+    width: 44px;
+    height: 44px;
+  }
+
+  .panel {
+    border-radius: var(--r-md);
+  }
 }
 
 /* tooltip */

@@ -1916,3 +1916,78 @@ textarea.bk-input,
     grid-template-columns: repeat(6, minmax(0, 1fr));
   }
 }
+
+/* ---- 2026 UI refresh: quiet finance cockpit --------------------------- */
+.module-bk {
+  background: var(--bg-app);
+}
+
+.bk-tabs {
+  padding: 0 22px;
+  background: color-mix(in oklch, var(--bg-app) 94%, var(--bg-panel) 6%);
+}
+
+.bk-tab {
+  min-height: 44px;
+}
+
+.bk-scroll {
+  padding: 20px 22px 30px;
+}
+
+.bk-networth,
+.bk-card,
+.bk-panel,
+.bk-list-panel,
+.bk-form-panel,
+.bk-insight,
+.bk-rec-card {
+  background: color-mix(in oklch, var(--bg-panel) 94%, transparent);
+  border-color: color-mix(in oklch, var(--border-1) 90%, transparent);
+  box-shadow: var(--shadow-1);
+}
+
+.bk-networth {
+  background:
+    linear-gradient(180deg, color-mix(in oklch, var(--accent) 10%, transparent), transparent),
+    color-mix(in oklch, var(--bg-panel) 94%, transparent);
+}
+
+.bk-networth-label,
+.bk-kpi-label,
+.bk-field-label,
+.bk-cur-badge,
+.tiny {
+  font-size: var(--fs-xs);
+}
+
+.bk-networth-val,
+.bk-kpi-val,
+.bk-donut-label {
+  letter-spacing: -0.01em;
+}
+
+.bk-side-add,
+.bk-row-edit,
+.bk-ledger-btn,
+.bk-textbtn,
+.bk-run-btn,
+.bk-field input,
+.bk-field select,
+.bk-field textarea {
+  min-height: 38px;
+  border-radius: var(--r-md);
+}
+
+@media (max-width: 640px) {
+  .bk-side-add,
+  .bk-row-edit,
+  .bk-ledger-btn,
+  .bk-textbtn,
+  .bk-run-btn,
+  .bk-field input,
+  .bk-field select,
+  .bk-field textarea {
+    min-height: 44px;
+  }
+}

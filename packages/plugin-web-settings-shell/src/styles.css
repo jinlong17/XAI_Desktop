@@ -198,3 +198,50 @@
   color: var(--text-3);
   text-align: center;
 }
+
+/* ---- 2026 UI refresh: settings shell readability ---------------------- */
+.module-settings {
+  background: var(--bg-app);
+}
+
+.module-settings .settings-shell,
+.module-settings .settings-sidebar,
+.module-settings .settings-detail,
+.module-settings .setting-block {
+  background: color-mix(in oklch, var(--bg-panel) 94%, transparent);
+  border-color: color-mix(in oklch, var(--border-1) 90%, transparent);
+}
+
+.module-settings .settings-h,
+.module-settings .pane-title {
+  letter-spacing: -0.01em;
+}
+
+.module-settings .sr-desc,
+.module-settings .pane-intro,
+.module-settings .sec-label {
+  font-size: var(--fs-sm);
+  line-height: 1.5;
+  letter-spacing: 0;
+}
+
+.module-settings .list-row,
+.module-settings .setting-row,
+.module-settings .pane-save,
+.module-settings .toggle {
+  min-height: 44px;
+}
+
+.module-settings .toggle {
+  width: 46px;
+  height: 26px;
+}
+
+.module-settings .toggle-knob {
+  width: 22px;
+  height: 22px;
+}
+
+.module-settings .toggle.on .toggle-knob {
+  transform: translateX(20px);
+}

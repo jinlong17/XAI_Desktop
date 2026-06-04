@@ -105,3 +105,70 @@
 @media (max-width: 1000px) {
   .module-pomo { grid-template-columns: 1fr; }
 }
+
+/* ---- 2026 UI refresh: iOS Timer rhythm -------------------------------- */
+.module-pomo {
+  gap: 16px;
+  padding: 18px 20px 22px;
+}
+
+.pomo-stage {
+  gap: 28px;
+}
+
+.focus-pill {
+  min-height: 32px;
+  font-size: var(--fs-sm);
+}
+
+.timer-ring {
+  width: min(320px, 72vw);
+  height: min(320px, 72vw);
+}
+
+.timer-num {
+  font-size: clamp(52px, 8vw, 72px);
+  letter-spacing: 0;
+}
+
+.timer-state,
+.side-h {
+  font-size: var(--fs-lg);
+}
+
+.pomo-actions .btn {
+  width: 176px;
+  min-height: 44px;
+}
+
+.pomo-stat {
+  padding: 14px 16px;
+}
+
+.ps-label,
+.record-date,
+.rec-dur {
+  font-size: var(--fs-sm);
+}
+
+.ps-val {
+  font-size: 26px;
+}
+
+.record-row {
+  min-height: 42px;
+}
+
+@media (max-width: 760px) {
+  .module-pomo {
+    padding: 12px;
+  }
+
+  .pomo-stage {
+    padding: 12px;
+  }
+
+  .record-row {
+    min-height: 44px;
+  }
+}

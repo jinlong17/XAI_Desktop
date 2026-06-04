@@ -475,8 +475,8 @@
 .tt-card-add-sub,
 .tt-card-menu {
   display: grid;
-  width: 26px;
-  height: 26px;
+  width: 30px;
+  height: 30px;
   place-items: center;
   border-radius: 7px;
 }
@@ -2012,5 +2012,96 @@
   .tt-active-row,
   .tt-record-row {
     align-items: start;
+  }
+}
+
+/* ---- 2026 UI refresh: readable time tracking -------------------------- */
+.module-timetrack {
+  background: var(--bg-app);
+}
+
+.tt-title {
+  font-size: clamp(28px, 3vw, 34px);
+  letter-spacing: -0.01em;
+}
+
+.tt-layout,
+.tt-report-head,
+.tt-sidebar,
+.tt-ins-grid {
+  gap: 16px;
+}
+
+.tt-card,
+.tt-panel,
+.tt-active-card,
+.tt-report-card,
+.tt-ins-card,
+.tt-trend-card,
+.tt-side-link,
+.tt-session-list,
+.tt-dialog {
+  border-radius: var(--r-lg);
+  background: color-mix(in oklch, var(--bg-panel) 94%, transparent);
+  border-color: color-mix(in oklch, var(--border-1) 90%, transparent);
+  box-shadow: var(--shadow-1);
+}
+
+.tt-btn,
+.tt-date-range input,
+.tt-field input,
+.tt-field select,
+.tt-field textarea,
+.tt-pill,
+.tt-category-chip,
+.tt-session-list button {
+  min-height: 38px;
+  border-radius: var(--r-md);
+}
+
+.tt-session-list strong,
+.tt-session-list b,
+.tt-session-list em,
+.tt-session-list small,
+.tt-muted,
+.tt-subtle,
+.tt-meta,
+.tt-label,
+.tt-subcard-copy em,
+.tt-record-row em,
+.tt-time-spin span,
+.tt-report-copy span,
+.tt-hours em,
+.tt-rhythm em,
+.tt-trend-point,
+.tt-legend em,
+.tt-mini-bars em {
+  font-size: var(--fs-sm);
+  line-height: 1.4;
+}
+
+.tt-session-list b {
+  font-size: var(--fs-md);
+}
+
+.module-timetrack svg text,
+.module-timetrack text {
+  font-size: var(--fs-xs);
+}
+
+@media (max-width: 680px) {
+  .tt-card-collapse,
+  .tt-card-add-sub,
+  .tt-card-menu,
+  .tt-btn,
+  .tt-date-range input,
+  .tt-field input,
+  .tt-field select,
+  .tt-field textarea,
+  .tt-pill,
+  .tt-category-chip,
+  .tt-session-list button {
+    min-width: 44px;
+    min-height: 44px;
   }
 }
