@@ -7,13 +7,13 @@
 | Workflow | FEATURE_DEV |
 | Target | xai-web-board-permissions |
 | Title | Web Project module P2 Board visibility and permission planning contract |
-| Current Phase | FEATURE_VERIFY |
-| Status | READY_TO_SHIP |
-| Suggested Next | ship |
+| Current Phase | SHIP |
+| Status | SHIPPED |
+| Suggested Next | Workflow complete |
 | Automation Mode | D-Codex+Cursor |
 | Verify Cross-vendor | yes |
 | Executor | gpt-5 parent inline |
-| Updated | 2026-06-03 23:56 PDT |
+| Updated | 2026-06-03 23:58 PDT |
 | Blockers | None currently. |
 | Roadmap Manifest | `docs/workflow/roadmap/xai-web-project-module.md` row #17 |
 | Source PRD / Audit | `docs/reviews/xai-web-project-module/20260603-audit-and-prd.md` |
@@ -39,7 +39,8 @@ future work.
 | Timestamp | Executor | Action | Commits | Next Step |
 |---|---|---|---|---|
 | 2026-06-03 23:45 PDT | gpt-5 parent inline | feature-plan - audited mock share contract and selected additive Board visibility plus header/share UI disclosure. | pending | feature-build |
-| 2026-06-03 23:56 PDT | gpt-5 parent inline | feature-build/verify - added `Board.visibility`, pure visibility helpers, storage guard coverage, header Private/Shared toggle, Share modal visibility disclosure, and typed `web:board:share-requested.visibility`; package/web/build/browser smoke gates passed. | pending | ship |
+| 2026-06-03 23:56 PDT | gpt-5 parent inline | feature-build/verify - added `Board.visibility`, pure visibility helpers, storage guard coverage, header Private/Shared toggle, Share modal visibility disclosure, and typed `web:board:share-requested.visibility`; package/web/build/browser smoke gates passed. | `a1fe590` | ship |
+| 2026-06-03 23:58 PDT | gpt-5 parent inline | ship - flipped roadmap row #17 and PRD/personal-board/product-structure docs to SHIPPED; remaining work is real ACL/share-token backend in a future manifest. | pending | Workflow complete |
 
 ## Verification Evidence
 

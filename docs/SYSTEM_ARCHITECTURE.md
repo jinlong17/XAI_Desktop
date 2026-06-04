@@ -204,7 +204,8 @@ flowchart LR
   Q --> R["Automation Lite presets shipped"]
   R --> S["Integration adapter links shipped"]
   S --> T["Comments/activity shipped"]
-  T --> U["future permissions + active export/import UI"]
+  T --> U["Private/shared visibility shipped"]
+  U --> V["future real ACL + active export/import UI"]
 ```
 
 Ownership rules:

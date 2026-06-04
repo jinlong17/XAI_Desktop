@@ -68,7 +68,7 @@ Web 版本的“项目”功能已经不是空壳。当前 `/app/board` 已经�
 | Todo linkage | No card ↔ task conversion/link. | 项目和任务割裂。 |
 | Archive/delete semantics | Board delete exists; card/list archive/delete absent in Web board. | Done 列会堆积，无法整理。 |
 | Sync | `xai_boards_v2` local pref only. | 跨设备/账号不一致。 |
-| Share/invite permissions | mock URL only; no `/share/:token`, no permission model. | 不能分享真实项目。 |
+| Share/invite permissions | SHIPPED: Board visibility now has explicit `private/shared` local state and Share emits visibility in the mock envelope; no `/share/:token` or backend ACL. | 可表达本地可见性，但仍不能分享真实项目。 |
 | Automation | SHIPPED: Automation Lite presets cover Done completion, due-soon urgent labels, and daily due sort. Custom rule builder, scheduled background jobs, reminders, and notifications remain future work. | 已能做轻量本地预设；还不是完整 Trello Butler。 |
 | Integrations | SHIPPED: Board has provider-labeled adapter links for GCal/GitHub/Linear/Drive/generic URLs; Settings OAuth flags remain stubs. | 已能分类挂外部工具链接；还不是真实第三方同步。 |
 
@@ -187,7 +187,7 @@ For Web sync, these can remain logical entities packed into encrypted blobs. The
 | PJ-WEB-18 | Automation presets. | Simple rules: moving to Done marks complete; due soon adds urgent label; daily sort by due date. |
 | PJ-WEB-19 | Integration adapters. | SHIPPED: Board-core defines GCal/GitHub/Linear/Drive/generic provider metadata and card detail can persist provider-labeled attachment links; real provider sync remains future work. |
 | PJ-WEB-20 | Collaboration comments and mentions. | SHIPPED: comments/activity log exists; mention notification remains future collaboration settings work. |
-| PJ-WEB-21 | Workspace permissions. | Board visibility/private/shared states are explicit. |
+| PJ-WEB-21 | Workspace permissions. | SHIPPED: Board visibility/private/shared states are explicit in storage, header UI, Share modal copy, and share event payload; real ACL/share-token backend remains future work. |
 
 ### 6.6 Non-goals
 
@@ -261,7 +261,7 @@ This is good enough for local demo and first-run state. It is not enough for dur
 | `xai-web-board-automation-lite` | board | SHIPPED: board-core preset helper plus active `/app/board` daily/manual runner; no arbitrary rule builder. |
 | `xai-web-board-integrations` | settings + board | SHIPPED: board-core provider metadata plus card-detail GCal/GitHub/Linear/Drive/generic external link attachments; real third-party sync remains future work. |
 | `xai-web-board-comments-activity` | board detail | SHIPPED: card-detail comments plus backward-compatible activity notes; mention notifications remain future work. |
-| `xai-web-board-permissions` | account/sync/share | Private/shared board model. |
+| `xai-web-board-permissions` | account/sync/share | SHIPPED: private/shared Board visibility model and Share payload disclosure; real ACL/share-token backend remains future work. |
 
 ## 9. Personal Development Board Updates
 
@@ -283,7 +283,7 @@ Add these cards to the personal development board:
 | Shipped | Automation-lite presets |
 | Shipped | Integration adapter links |
 | Shipped | Comments/activity log |
-| This Week | Workspace permissions |
+| Shipped | Private/shared Board visibility |
 | Waiting | Sync blob driver / IndexedDB encrypted cache dependency |
 | Waiting | Global Label authority for board labels |
 | Later | Active export/import UI |
@@ -323,19 +323,25 @@ Do not update generated dashboard snapshots directly. If a dashboard generator c
 | Export/import data contract implementation | `xai-web-board-export-import` shipped board-core payload helpers for export/import, logical entity inclusion, and Board key coverage in account-delete registry wipe tests; the next personal-board focus is `xai-web-board-automation-lite`. |
 | Automation Lite implementation | `xai-web-board-automation-lite` shipped browser-local preset rules for Done completion, due-soon urgent labels, daily due sort, and manual toolbar rerun. |
 | Integrations implementation | `xai-web-board-integrations` shipped Board integration provider metadata and card-detail provider-labeled attachment links; the next personal-board focus is `xai-web-board-comments-activity`. |
-| Comments/activity implementation | `xai-web-board-comments-activity` shipped card-detail comments, author metadata, and legacy note rendering; the next personal-board focus is `xai-web-board-permissions`. |
+| Comments/activity implementation | `xai-web-board-comments-activity` shipped card-detail comments, author metadata, and legacy note rendering; the follow-up `xai-web-board-permissions` row is now also shipped. |
+| Permissions implementation | `xai-web-board-permissions` shipped private/shared Board visibility, header toggle persistence, Share modal visibility note, and typed share event payload. This manifest is complete; future work should open a new PRD delta for real ACL/share-token backend or active export/import UI. |
 
 ## 11. Acceptance Criteria for the Next Implementation Wave
 
-- [ ] Card click opens a real card detail modal/page.
-- [ ] Card title, description, due/start date, labels, members, and checklist edits persist and show consistently across Board/Table/Calendar/Timeline/Dashboard.
-- [ ] List rename/delete/archive/reorder works.
-- [ ] Card archive/delete and within-list reorder works.
-- [ ] Dates are typed ISO fields; `Today`, overdue, week, and calendar grouping are derived.
-- [ ] Current local data migrates without losing existing boards.
-- [ ] `/app/projects` vs `/app/board` route decision is documented and tested.
+- [x] Card click opens a real card detail modal/page.
+- [x] Card title, description, due/start date, labels, members, and checklist edits persist and show consistently across Board/Table/Calendar/Timeline/Dashboard.
+- [x] List rename/delete/archive/reorder works.
+- [x] Card archive/delete and within-list reorder works.
+- [x] Dates are typed ISO fields; `Today`, overdue, week, and calendar grouping are derived.
+- [x] Current local data migrates without losing existing boards.
+- [x] `/app/projects` vs `/app/board` route decision is documented; `/app/projects` alias remains future route work.
 - [x] Share remains clearly marked mock unless real share backend is implemented.
-- [ ] Targeted tests pass for board-core, board-views, board-workspaces, and app router integration.
+- [x] Board visibility private/shared states persist and appear in Share payloads.
+- [x] Targeted tests pass for board-core, board-views, board-workspaces, and app router integration.
+
+Remaining work now belongs in a new PRD/roadmap delta: real ACL, share-token
+backend, account/sync-backed permission enforcement, active export/import UI,
+and real third-party sync.
 
 ## 12. Sources
 
