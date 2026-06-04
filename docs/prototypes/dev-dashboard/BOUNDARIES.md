@@ -31,6 +31,7 @@
 | 数据域 | Owner 页 | 允许的 Mirror 位置 | 共享挂件 |
 |---|---|---|---|
 | 产品模块（注册表）/ 结构 / 模块明细 | **产品结构图** | 总览（模块状态镜像） | feature-status badge |
+| 未来平台规划（planning-only `future_surfaces`） | **产品结构图** | 总览可显示规划摘要（不得当成模块状态） | — |
 | 任务（dev_log 聚合） | **任务进度** | 总览（next action 行，可选） | — |
 | Git 活动 / 趋势 | **开发数据** | 总览（KPI 信号：今日 commit 等） | — |
 | 分支策略 / 闸门 | **分支管理** | 总览（KPI：web↔dev 分叉） | — |
@@ -203,6 +204,7 @@ Owner 的渲染器/数据/状态词汇，不 fork 第二套。**富展示不算�
 | **C. 跨模块同步编排** | 职责：ADR-0014 sync workflow 的只读编排 Owner。展示：trigger phrase、actions（复用/新建、并行/串行、skill、depends_on）、执行波次、相关文档。数据源：`sync_orchestration`（由 `docs/workflow/project/sync-registry.json` 生成）。色彩：workflow tag token；必须由 `styles.css` 管理，不得 JS 内联样式。交互：相关文档→文档库 |
 | **D. 模块轨道（6 模块卡，3 区）** | 职责：模块卡 Owner。展示：3 区（主产品链/项目系统区/Control Plane），每模块卡 order/badge/title/状态/branch/依赖/next。数据源：`products` 按 `region` 分组。色彩：模块色顶边。交互：点卡→`setProduct` |
 | **E. 产品明细面板** | 职责：模块深挖 Owner。展示：目标/Feature 列表(按 6 状态)/状态网格/部署块/测试块/任务归属信号/推荐 skill/常用 prompt/workflow/transitions/impacts/相关文档。数据源：选中 `products[key]` 全字段。交互：开 target、开 doc、复制 prompt、折叠 navBlock、跨模块 data-to/data-module |
+| **F. 未来平台规划层**（planning-only） | 职责：展示 iPhone/iPad/Apple Watch/Android/浏览器扩展的长期 surface 摘要。展示：role、phase、priority、not-for。数据源：`future_surfaces`。不展示：active branch、feature-build 状态、测试/发布状态。交互：跳 `docs/planning/LONG_TERM_PRODUCT_ROADMAP.md` |
 
 > Desktop Plugin 状态卡属于 D 的 `plugin` 模块卡，数据只从 Product Module Registry
 > (`docs/workflow/project/dashboard-state.json.product_lines[key=plugin]`) 读取。它必须明确标出
