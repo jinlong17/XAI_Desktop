@@ -45,7 +45,6 @@ interface DateResolution {
 
 const ISO_DATE_RE = /^(\d{4})-(\d{2})-(\d{2})$/;
 const LEGACY_MD_RE = /^(\d{1,2})\/(\d{1,2})$/;
-const MS_PER_DAY = 24 * 60 * 60 * 1000;
 
 function toLocalDateOnly(date: Date): DateOnlyParts {
   return {
