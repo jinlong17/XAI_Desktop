@@ -490,20 +490,31 @@ export function BoardWorkspacesModule({ lang }: BoardWorkspacesModuleProps) {
             data-active-view={activeView}
           >
             {activeView === "table" && (
-              <TableView lists={filteredLists} lang={lang} updateCard={updateCard} />
+              <TableView
+                lists={filteredLists}
+                lang={lang}
+                updateCard={updateCard}
+                onOpenCard={(card, listId) => openCard(card.id, listId)}
+              />
             )}
             {activeView === "calendar" && (
               <BoardCalendarView
                 lists={filteredLists}
                 lang={lang}
                 updateCard={updateCard}
+                onOpenCard={(card, listId) => openCard(card.id, listId)}
               />
             )}
             {activeView === "dashboard" && (
               <BoardDashboardView lists={filteredLists} lang={lang} />
             )}
             {activeView === "timeline" && (
-              <TimelineView lists={filteredLists} lang={lang} updateCard={updateCard} />
+              <TimelineView
+                lists={filteredLists}
+                lang={lang}
+                updateCard={updateCard}
+                onOpenCard={(card, listId) => openCard(card.id, listId)}
+              />
             )}
             {activeView === "map" && (
               <Suspense fallback={<div data-testid="map-suspense-fallback" aria-busy="true" />}>

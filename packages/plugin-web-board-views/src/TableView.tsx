@@ -11,7 +11,7 @@
 
 import { useState } from "react";
 import type { BoardListData, BoardCardData } from "@repo/plugin-web-board-core";
-import { PM_LABELS } from "@repo/plugin-web-board-core";
+import { BOARD_MEMBER_OPTIONS, PM_LABELS } from "@repo/plugin-web-board-core";
 import type { Lang } from "./internal/i18n.js";
 import {
   todayShortcut,
@@ -29,13 +29,6 @@ export interface TableViewProps {
 
 type EditingField = "labels" | "members" | "due";
 type EditingState = { cardId: string; field: EditingField } | null;
-
-/** Mock members — row #7 seed references u1..u3; no real member store yet. */
-const MOCK_MEMBERS = [
-  { id: "u1", name: "Alice", color: "oklch(62% 0.14 155)" },
-  { id: "u2", name: "Bob",   color: "oklch(62% 0.14 245)" },
-  { id: "u3", name: "Carol", color: "oklch(62% 0.14 25)"  },
-];
 
 const COL_HEADERS = {
   card:      { en: "Card",      zh: "卡片"   },
@@ -85,8 +78,8 @@ export function TableView({ lists, lang, updateCard, onOpenCard }: TableViewProp
               .map((id) => PM_LABELS.find((l) => l.id === id))
               .filter(Boolean) as typeof PM_LABELS[number][];
             const memberObjs = (card.members ?? [])
-              .map((uid) => MOCK_MEMBERS.find((m) => m.id === uid))
-              .filter(Boolean) as typeof MOCK_MEMBERS[number][];
+              .map((uid) => BOARD_MEMBER_OPTIONS.find((m) => m.id === uid))
+              .filter(Boolean) as typeof BOARD_MEMBER_OPTIONS[number][];
             const cl = card.checklist;
             const pct = cl ? Math.round((100 * cl.done) / Math.max(1, cl.total)) : null;
             const dueLate = card.dueLate;
@@ -252,7 +245,7 @@ export function TableView({ lists, lang, updateCard, onOpenCard }: TableViewProp
                           </button>
                         </header>
                         <div className="popover-list">
-                          {MOCK_MEMBERS.map((u) => {
+                          {BOARD_MEMBER_OPTIONS.map((u) => {
                             const on = (card.members ?? []).includes(u.id);
                             return (
                               <button

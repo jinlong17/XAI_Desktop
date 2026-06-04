@@ -37,6 +37,21 @@ function getStoredCard(cardId: string): BoardCardData {
   throw new Error(`card not found: ${cardId}`);
 }
 
+function seedAltView(view: "table" | "calendar" | "timeline") {
+  const seed = makeDefaultBoards() as Board[];
+  const today = new Date();
+  const todayDue = `${today.getMonth() + 1}/${today.getDate()}`;
+  seed[0]!.lists[0]!.cards[0] = {
+    ...seed[0]!.lists[0]!.cards[0]!,
+    due: todayDue,
+    dueEn: undefined,
+    dueLate: false,
+  };
+  localStorage.setItem("xai_boards_v2", JSON.stringify(seed));
+  localStorage.setItem("xai_active_board", "b-default");
+  localStorage.setItem("xai_board_view_by_id", JSON.stringify({ "b-default": view }));
+}
+
 describe("BoardWorkspacesModule (BWM1..BWM18)", () => {
   it("BWM1: first render with empty localStorage seeds boards + renders header + bottom switcher", () => {
     render(<BoardWorkspacesModule lang="en" />);
@@ -395,5 +410,41 @@ describe("BoardWorkspacesModule (BWM1..BWM18)", () => {
     const card = getStoredCard("bc2");
     expect(card.attachments).toBeUndefined();
     expect(card.attach).toBeUndefined();
+  });
+
+  it("BWM-DETAIL-5: Table view title opens the shared card detail modal", () => {
+    seedAltView("table");
+    render(<BoardWorkspacesModule lang="en" />);
+
+    fireEvent.click(screen.getAllByTestId("td-title")[0]!);
+
+    expect(screen.getByTestId("card-detail-modal")).toBeInTheDocument();
+    expect(screen.getByTestId("card-detail-title-input")).toHaveValue(
+      "Onboarding flow concepts",
+    );
+  });
+
+  it("BWM-DETAIL-6: Calendar view card opens the shared card detail modal", () => {
+    seedAltView("calendar");
+    render(<BoardWorkspacesModule lang="en" />);
+
+    fireEvent.click(screen.getAllByTestId("cal-card")[0]!);
+
+    expect(screen.getByTestId("card-detail-modal")).toBeInTheDocument();
+    expect(screen.getByTestId("card-detail-title-input")).toHaveValue(
+      "Onboarding flow concepts",
+    );
+  });
+
+  it("BWM-DETAIL-7: Timeline view bar opens the shared card detail modal", () => {
+    seedAltView("timeline");
+    render(<BoardWorkspacesModule lang="en" />);
+
+    fireEvent.click(screen.getAllByTestId("tl-bar-body")[0]!);
+
+    expect(screen.getByTestId("card-detail-modal")).toBeInTheDocument();
+    expect(screen.getByTestId("card-detail-title-input")).toHaveValue(
+      "Onboarding flow concepts",
+    );
   });
 });

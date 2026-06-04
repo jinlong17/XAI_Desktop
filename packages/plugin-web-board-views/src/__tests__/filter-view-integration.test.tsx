@@ -97,17 +97,23 @@ describe("Filter view integration (HC1 consistency)", () => {
   });
 
   test("FVI-Timeline: TimelineView receives filtered lists — only urgent card bars rendered", () => {
-    const filtered = applyFilter(LISTS, URGENT_FILTER, TODAY);
-    const noop = vi.fn();
-    render(<TimelineView lists={filtered} lang="en" updateCard={noop} />);
-    // Only cards with a parseable due are rendered as bars
-    // urgent cards with due: c1 (5/25, today=day 0) and c3 (5/27)
-    // c4 (urgent, no due) doesn't render as a bar
-    // c2, c5 (low) are filtered out
-    // data-testid="tl-bar" per TimelineView.tsx line 229
-    const bars = screen.getAllByTestId("tl-bar");
-    // bars for c1 + c3 (both have a due date within the 30-day window)
-    expect(bars.length).toBe(2);
+    vi.useFakeTimers();
+    vi.setSystemTime(TODAY);
+    try {
+      const filtered = applyFilter(LISTS, URGENT_FILTER, TODAY);
+      const noop = vi.fn();
+      render(<TimelineView lists={filtered} lang="en" updateCard={noop} />);
+      // Only cards with a parseable due are rendered as bars
+      // urgent cards with due: c1 (5/25, today=day 0) and c3 (5/27)
+      // c4 (urgent, no due) doesn't render as a bar
+      // c2, c5 (low) are filtered out
+      // data-testid="tl-bar" per TimelineView.tsx line 229
+      const bars = screen.getAllByTestId("tl-bar");
+      // bars for c1 + c3 (both have a due date within the 30-day window)
+      expect(bars.length).toBe(2);
+    } finally {
+      vi.useRealTimers();
+    }
   });
 
   test("FVI-Map: MapView receives filtered lists — prop accepted, no crash (HC1 consistency)", () => {
