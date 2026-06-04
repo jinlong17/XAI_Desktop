@@ -32,8 +32,8 @@ python3 -m http.server 4178 -d docs/prototypes/admin-dashboard
 | **组织 / 空间** | 多租户:席位 used/cap(超员红条)、overage/dunning 状态、组织详情抽屉(概览/成员/用量/账单)、转移所有权(type-to-confirm) |
 | **功能管理** | 全局开关(上线/灰度/下线)、Free·Pro·Team 分级配额、功能管理抽屉(灰度滑块 + 灰度人群规则 + 依赖项 + 配额步进器) |
 | **AI 用量 & 配额** | 套餐默认配额策略、Top 消耗用户(接近上限/超额预警) |
-| **Provider 配置** | Provider 卡(密钥/用量/成本)、**模型 × 套餐 权限矩阵**、**套餐分层路由策略**(默认模型 / 兜底 / 月度成本上限 / 请求上限 / 超额行为) |
-| **角色与权限** | 角色卡 + RBAC 权限矩阵(谁能操作哪些功能/模型/数据) |
+| **Provider 配置** | Provider 卡(server-side secret handle 状态/用量/成本)、**模型 × 套餐 权限矩阵**、**套餐分层路由策略**(默认模型 / 兜底 / 月度成本上限 / 请求上限 / 超额行为);浏览器不展示 provider key |
+| **角色与权限** | 角色卡 + RBAC 权限矩阵(不可变 permission key + 本地权限模拟 + allow/deny 审计) |
 | **订阅 / 计费** | MRR/ARPPU、套餐分布、最近交易 |
 | **审计日志** | 类型 + 时间范围筛选(今天/7天/30天)、only-read 不可删改 |
 | **系统设置** | 组织信息、安全(强制 2FA / 会话超时 / IP 白名单 / SSO)、通知 Webhook |
@@ -48,7 +48,9 @@ python3 -m http.server 4178 -d docs/prototypes/admin-dashboard
 
 ## 治理护栏
 
-所有高危操作(封禁 / 批量封禁 / 功能下线 / 转移所有权)统一走 `ConfirmModal`,部分要求**输入指定词解锁**(type-to-confirm),呼应审计可追溯。
+所有高危操作(封禁 / 批量封禁 / 功能下线 / Provider 停用 / 转移所有权)统一走 `ConfirmModal`,部分要求**输入指定词解锁**(type-to-confirm)。本地 mock mutation 会写回页面状态,并向审计表追加 actor/action/target/IP/result;权限不足同样追加失败审计。
+
+Provider/AI 配置只展示 server-side encrypted secret handle 的状态与轮换信息。原型不显示、不缓存、不模拟真实 provider key;真实落地必须由服务端 API 完成加密密钥存储与权限判定。
 
 ## 借鉴来源
 
@@ -60,4 +62,5 @@ python3 -m http.server 4178 -d docs/prototypes/admin-dashboard
 - 真实落地:建议作为独立 `apps/admin/` surface(与用户端 `apps/web/` 隔离权限与部署),技术栈 shadcn/ui + TanStack Table + Tremor。
 - 系统接入计划: [`INTEGRATION_PLAN.md`](./INTEGRATION_PLAN.md) 梳理页面审查、数据/功能模块矩阵、系统边界和开发阶段。
 - Roadmap manifest: [`docs/workflow/roadmap/xai-admin-dashboard-system-integration.md`](../../workflow/roadmap/xai-admin-dashboard-system-integration.md) 是正式接入的 Workflow V2 入口。
+- 同步 skill: `xai-admin-control-plane-sync` 用于 Admin 线被激活后,检查 AI provider、RBAC、用量、审计、用户/组织/计费控制面是否与 Web/Desktop 变化保持一致;当前只作为治理/审查入口,不授权生产开发。
 - **治理**:管理中台是 ADR-0013 D1 的 Proposed Control Plane;实际实现前需先确认 admin line 的优先级、package/deploy target,再按 Workflow V2 roadmap 执行。原型阶段(本目录)无需。

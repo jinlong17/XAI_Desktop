@@ -1,0 +1,108 @@
+---
+name: xai-admin-control-plane-sync
+description: Audit and synchronize Admin Dashboard / Control Plane assumptions after Web, Desktop, billing, AI provider, RBAC, usage, audit, user, organization, or entitlement changes. Use when work touches admin-dashboard, control plane, AI 配置, Provider, RBAC, 权限, 用量, 审计, 运营后台, 用户/组织管理, 计费管理, or when Admin line drift must be checked. Report-only before the admin-dashboard line is explicitly activated; apply-on-confirm only for docs/prototype/roadmap/skill records, never production code.
+---
+
+# xai-admin-control-plane-sync
+
+Project-layer Admin Control Plane consistency skill. It keeps the proposed
+Admin Dashboard control surface aligned with real Web/Desktop/system changes
+without treating the proposed admin line as active production work.
+
+## Read First
+
+- `docs/prototypes/admin-dashboard/README.md`
+- `docs/prototypes/admin-dashboard/INTEGRATION_PLAN.md`
+- `docs/workflow/roadmap/xai-admin-dashboard-system-integration.md`
+- `docs/PRODUCT_MODULE_MAP.md`
+- `docs/workflow/project/module-classification.json`
+- `docs/PLUGIN_MAP.md`
+- `docs/adr/0013-branch-sync-governance.md`
+- `CLAUDE.md` / `AGENTS.md` Agent / Skill Tracking Contract
+
+## Inputs
+
+```text
+/xai-admin-control-plane-sync
+Mode: report | apply              # default report
+Scope: changed | since <ref> | full
+Trigger Change: <short description or paths>
+Admin Line State: proposed | activated
+Report: <path>                    # required for Mode=apply
+```
+
+## What To Check
+
+1. **Line gate**: confirm whether Admin Dashboard is still ADR-0013 D1
+   PROPOSED. If still proposed, production code changes are out of scope.
+2. **Provider and AI config**: verify Web/Desktop AI provider changes do not
+   imply browser-visible provider keys. Admin UI may show only server-side
+   encrypted secret handles, status, rotation, routing policy, and cost/usage.
+3. **RBAC and mutations**: every proposed admin write action needs immutable
+   permission keys, allow/deny tests, server-side enforcement, type-to-confirm
+   for destructive actions, and audit append.
+4. **Usage and billing**: AI usage, cost caps, plan entitlements, Stripe state,
+   dunning, and overage controls must be backed by canonical ledgers or clearly
+   marked as deferred/mock.
+5. **Users and organizations**: account, membership, seat, owner-transfer, ban,
+   and support operations must route through admin contracts, not ordinary
+   user-facing Web module state.
+6. **Audit and ops queue**: every mutation family must append actor, action,
+   target, IP, result, and timestamp. Audit must be append-only in production.
+7. **Prototype honesty**: `docs/prototypes/admin-dashboard/index.html`,
+   README, integration plan, roadmap, and dashboard records must clearly state
+   what is mock, proposed, blocked, or production-ready.
+8. **Skill/agent registration**: if this skill or related workflow surfaces
+   changed, ensure `.teams`, `.codex`, `.claude`, and `.cursor` mirrors are
+   present and tracked.
+
+## Flow
+
+1. Run `git status --short` and inspect only relevant changed files.
+2. Classify the trigger change:
+   - admin prototype/docs only
+   - Web/Desktop feature delta that may affect the admin control plane
+   - provider/AI/usage/billing/RBAC/audit contract delta
+   - skill/workflow/dashboard registry delta
+3. Produce a report with findings, evidence, and one of:
+   - `CLEAN`
+   - `DRIFT_FOUND`
+   - `NEEDS_OPERATOR`
+   - `BLOCKED`
+4. In `Mode=report`, stop after the report.
+5. In `Mode=apply`, only apply a previously confirmed report's record fixes:
+   docs, prototype copy, roadmap notes, skill mirrors, and dashboard state.
+   Do not implement admin production code.
+
+## Outputs
+
+```text
+## Admin Control Plane Sync Report — <YYYYMMDD>
+Verdict: CLEAN | DRIFT_FOUND | NEEDS_OPERATOR | BLOCKED
+Scope: <changed | since ref | full>
+Admin line state: proposed | activated
+Findings:
+| # | severity | surface | evidence | risk | recommended action |
+Apply plan:
+| target | change | allowed now? |
+Next step:
+<copy-pasteable command or handoff>
+```
+
+## Boundaries
+
+- Do not promote Admin Dashboard beyond PROPOSED without explicit operator
+  confirmation of priority and package/deploy target.
+- Do not add provider secrets, service-role credentials, or billing mutation
+  authority to browser code.
+- Do not mount Admin Control Plane behavior into the ordinary Web Console rail.
+- Do not fix unrelated Web/Desktop code while running this skill; route code
+  work to `xai-feature-brief`, `xai-feature-full-loop`, or the relevant feature
+  workflow.
+
+## Explicit Note
+
+This skill is the narrow follow-up to `xai-consistency-audit` for Admin
+Dashboard control-plane drift. Use it when a change intersects AI provider
+configuration, RBAC, usage, audit, users, organizations, billing, or admin
+prototype truthfulness.

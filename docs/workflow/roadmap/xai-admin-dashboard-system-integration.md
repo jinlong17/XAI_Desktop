@@ -8,6 +8,7 @@
 - Default Automation Mode: **D-Codex**
 - Default Verify Cross-vendor: **yes**
 - Governance: no production code should receive service-role credentials in the browser; all admin mutations require RBAC and audit logging.
+- Related Skill: `xai-admin-control-plane-sync` audits Admin Control Plane drift once the admin line is activated; before activation it is report/brief-only and does not authorize production work.
 
 ## Features
 
@@ -37,4 +38,5 @@
 | Secret safety | No service-role token or provider secret can appear in browser bundles. |
 | RBAC | Permission predicates have allow/deny tests for every mutation family. |
 | Audit | Every admin mutation appends an immutable audit event. |
+| Control-plane sync | AI provider, RBAC, usage, audit, user/org/billing admin views stay aligned with Web/Desktop feature deltas, or `xai-admin-control-plane-sync` emits a drift report. |
 | Browser smoke | Tables, filters, drawers, dialogs, type-to-confirm, focus traps, and mobile layout pass manual smoke. |

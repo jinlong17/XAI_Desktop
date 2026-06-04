@@ -8,7 +8,10 @@
 ## 1. Existing Frontend Surface
 
 The prototype is a high-fidelity, single-file admin control plane. It currently
-contains mock data and local UI state only.
+contains mock data and local UI state only. As of the 2026-06-04 prototype
+hardening pass, destructive controls write back to local mock state and append
+mock audit rows, but this is still not a production authorization, persistence,
+or API contract.
 
 | Page / capability | Current UI evidence | Production role |
 |---|---|---|
@@ -17,10 +20,10 @@ contains mock data and local UI state only.
 | Organizations / spaces | tenant table, seat usage, dunning/overage status, owner transfer confirmation | Multi-tenant account administration |
 | Feature management | global feature status, rollout slider, per-plan quota fields, dependency view | Feature flag, entitlement, rollout, and quota control |
 | AI usage & quota | plan quota policy cards, top spenders, warning/over-limit states | AI cost control and abuse prevention |
-| Provider configuration | provider cards, key status, model-by-plan matrix, tiered routing policy | LLM provider routing and model entitlement configuration |
-| Roles & permissions | role cards plus RBAC matrix | Admin console authorization and least-privilege enforcement |
+| Provider configuration | provider cards, server-side secret handle status, model-by-plan matrix, tiered routing policy | LLM provider routing and model entitlement configuration |
+| Roles & permissions | role cards plus RBAC matrix with immutable permission keys and local allow/deny simulation | Admin console authorization and least-privilege enforcement |
 | Subscription / billing | MRR/ARPPU, plan distribution, transaction list | Finance and customer-plan operations |
-| Audit log | immutable-looking table, type/range filters | Compliance trail for every admin action |
+| Audit log | immutable-looking table, type/range filters, mock mutation append | Compliance trail for every admin action |
 | System settings | organization info, 2FA/session/IP/SSO controls, webhooks | Control-plane security and notifications |
 
 The current prototype also includes a visual tweaks panel. That panel is useful
@@ -62,6 +65,8 @@ user Web Console module.
 | Mutations | Every mutation must have RBAC check, type-to-confirm where destructive, audit append, and explicit success/failure state. |
 | Audit | Admin audit is append-only and separate from user sync audit, while reusing the hash-chain precedent where practical. |
 | Branching | Use `codex/admin/<feature>` short branches. Keep the line Proposed until an operator confirms priority and package/deploy target. |
+
+Prototype-specific guardrail: `index.html` may simulate `mutation -> RBAC -> type-to-confirm -> audit append -> success/failure state` entirely in the browser for design validation. Production implementation must replace that local flow with server-side permission predicates, typed mutation contracts, persistent audit append, and explicit success/failure responses before any admin write action is exposed.
 
 ## 4. Development Plan
 

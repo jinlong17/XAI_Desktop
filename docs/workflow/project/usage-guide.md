@@ -89,12 +89,13 @@ ls .cursor/rules/xai-web-to-desktop-sync.mdc
 - 15 个 Workflow V2 agent 三端生成: Claude / Codex / Cursor。
 - 10 个 portable public skills 三端生成,包含 `agent-behavioral-guidelines` 和
   `workflow-router`。
-- 5 个 XAI project-layer skills:
+- XAI project-layer skills:
   - `xai-feature-brief`
   - `xai-feature-full-loop`
   - `xai-roadmap-loop`
   - `xai-web-to-desktop-sync`
   - `xai-dev-dashboard-sync`
+  - `xai-admin-control-plane-sync`
 - `.claude/skills/xai-*` / `.codex/skills/xai-*` 是指向 `.teams/skills/xai-*` 的 symlink。
 - `.cursor/rules/xai-*.mdc` 是 XAI project-layer skill 的 Cursor surface。
 
@@ -472,6 +473,7 @@ Project-layer skills:
 | `xai-sync-fanout-dispatch` | ADR-0014 跨模块同步扇出入口,按 registry 语义规则派发各 gate |
 | `xai-release-log` | 发布记录 / 系统治理变更登记 |
 | `xai-dev-dashboard-sync` | 个人开发看板 Overview / 测试结果 / 机器说明文档 / 可复用模板同步 |
+| `xai-admin-control-plane-sync` | Admin Dashboard / Control Plane 与 AI provider、RBAC、用量、审计、用户/组织/计费变化的专项同步审查 |
 
 ---
 
