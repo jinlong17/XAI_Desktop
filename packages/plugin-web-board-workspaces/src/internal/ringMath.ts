@@ -4,8 +4,9 @@
  * - `computeRingSegments(lists, lang)` returns one segment per non-empty list,
  *   in the same order as `lists`. Each segment carries its label, count, and
  *   resolved CSS color.
- * - `computeDonePct(lists)` returns the % of cards belonging to the "Done"
- *   list (matched by `/done|完成/` on its bilingual customName).
+ * - `computeDonePct(lists)` returns the % of cards belonging to semantic
+ *   Done lists. Immutable ids/keys win so renamed PM and keyed-kanban lists
+ *   keep their workflow meaning.
  *
  * Both helpers are pure / referentially transparent — no `Date.now()`, no
  * `Math.random()`, no DOM access.
@@ -34,6 +35,16 @@ function resolveListLabel(list: BoardListData, lang: "en" | "zh"): string {
   return "Untitled";
 }
 
+function isSemanticDoneList(list: BoardListData): boolean {
+  if (list.archived === true) return false;
+  if (/^pm-done(?:-|$)/.test(list.id)) return true;
+  if (list.key === "done") return true;
+
+  const en = list.customName?.en ?? "";
+  const zh = list.customName?.zh ?? "";
+  return /done|完成/.test(en + " " + zh);
+}
+
 /**
  * Return ring segments for the PM Status Overview chart.
  *
@@ -46,6 +57,7 @@ export function computeRingSegments(
 ): RingSegment[] {
   const out: RingSegment[] = [];
   for (const list of lists) {
+    if (list.archived === true) continue;
     if (list.cards.length === 0) continue;
     out.push({
       listId: list.id,
@@ -60,18 +72,15 @@ export function computeRingSegments(
 /**
  * Return the rounded % of cards in the "Done" list.
  *
- * The "Done" list is matched by `/done|完成/` on the concatenation of
- * `customName.en + " " + customName.zh` (matches `module-board.jsx:1424`).
  * Returns 0 when total === 0.
  */
 export function computeDonePct(lists: readonly BoardListData[]): number {
   let total = 0;
   let done = 0;
   for (const list of lists) {
+    if (list.archived === true) continue;
     total += list.cards.length;
-    const en = list.customName?.en ?? "";
-    const zh = list.customName?.zh ?? "";
-    if (/done|完成/.test(en + " " + zh)) {
+    if (isSemanticDoneList(list)) {
       done += list.cards.length;
     }
   }

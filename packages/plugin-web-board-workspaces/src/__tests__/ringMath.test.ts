@@ -74,6 +74,14 @@ describe("computeRingSegments (RM1..RM5, RM10)", () => {
     const list = mkList({ id: "a", customName: undefined, key: "backlog", cards: [mkCard("c1")] });
     expect(computeRingSegments([list], "en")[0]!.label).toBe("backlog");
   });
+
+  it("skips archived lists even when they contain cards", () => {
+    const lists: BoardListData[] = [
+      mkList({ id: "active", cards: [mkCard("c1")] }),
+      mkList({ id: "archived", archived: true, cards: [mkCard("c2")] }),
+    ];
+    expect(computeRingSegments(lists, "en").map((s) => s.listId)).toEqual(["active"]);
+  });
 });
 
 describe("computeDonePct (RM6..RM8)", () => {
@@ -107,6 +115,30 @@ describe("computeDonePct (RM6..RM8)", () => {
       mkList({ id: "done", customName: { en: "Closed", zh: "已完成" }, cards: [mkCard("c2")] }),
     ];
     expect(computeDonePct(lists)).toBe(50);
+  });
+
+  it("uses immutable pm-done id semantics after visible PM Done rename", () => {
+    const lists: BoardListData[] = [
+      mkList({ id: "pm-todo", customName: { en: "To Do", zh: "待办" }, cards: [mkCard("c1")] }),
+      mkList({ id: "pm-done", customName: { en: "Closed", zh: "关闭" }, cards: [mkCard("c2")] }),
+    ];
+    expect(computeDonePct(lists)).toBe(50);
+  });
+
+  it("uses immutable key:'done' semantics after keyed kanban visible rename", () => {
+    const lists: BoardListData[] = [
+      mkList({ id: "b-week", key: "week", customName: { en: "Active", zh: "进行中" }, cards: [mkCard("c1")] }),
+      mkList({ id: "b-done", key: "done", customName: { en: "Closed", zh: "关闭" }, cards: [mkCard("c2")] }),
+    ];
+    expect(computeDonePct(lists)).toBe(50);
+  });
+
+  it("excludes archived done lists from completion math", () => {
+    const lists: BoardListData[] = [
+      mkList({ id: "todo", customName: { en: "To Do", zh: "待办" }, cards: [mkCard("c1")] }),
+      mkList({ id: "pm-done", archived: true, customName: { en: "Closed", zh: "关闭" }, cards: [mkCard("c2")] }),
+    ];
+    expect(computeDonePct(lists)).toBe(0);
   });
 });
 

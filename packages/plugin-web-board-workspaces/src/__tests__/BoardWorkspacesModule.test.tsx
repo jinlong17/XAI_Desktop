@@ -580,4 +580,18 @@ describe("BoardWorkspacesModule (BWM1..BWM18)", () => {
 
     expect(getStoredBoards()[0]!.lists.some((list) => list.id === "b-backlog")).toBe(false);
   });
+
+  it("BWM-LIST-4: archived lists are hidden from alternate table view", () => {
+    const seed = makeDefaultBoards() as Board[];
+    seed[0]!.lists[0] = { ...seed[0]!.lists[0]!, archived: true };
+    localStorage.setItem("xai_boards_v2", JSON.stringify(seed));
+    localStorage.setItem("xai_active_board", "b-default");
+    localStorage.setItem("xai_board_view_by_id", JSON.stringify({ "b-default": "table" }));
+
+    render(<BoardWorkspacesModule lang="en" />);
+
+    expect(screen.getByTestId("board-table-wrap")).toBeInTheDocument();
+    expect(screen.queryByText("Onboarding flow concepts")).not.toBeInTheDocument();
+    expect(screen.getByText("Ship countdown widgets")).toBeInTheDocument();
+  });
 });
