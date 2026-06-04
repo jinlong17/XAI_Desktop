@@ -52,7 +52,7 @@ Web 版本的“项目”功能已经不是空壳。当前 `/app/board` 已经�
 | Dashboard view | KPI and per-list/per-label charts. | 可用但只基于本地 board data。 |
 | Map view | Leaflet + OSM pins for cards with `location`. | 可用但 location 只能来自 seed/schema, 无 UI 编辑。 |
 | Filter | Labels / members / due range filter across board views. | 可用但 render-only, board switch resets, not persisted. |
-| Share | Modal creates deterministic mock share URL, copyable, emits event. | Stub, no backend/share envelope。 |
+| Share | Modal creates deterministic mock share URL, visibly labels it as planning-only, and emits explicit mock envelope fields. | Stub is now honest; no real backend share token。 |
 
 ### 2.3 静态或未打通部分
 
@@ -250,7 +250,7 @@ This is good enough for local demo and first-run state. It is not enough for dur
 | `xai-web-board-task-link` | board + tasks | SHIPPED: one-way create/link task from board card, with persisted linked status in card detail. |
 | `xai-web-board-calendar-feed` | board + calendar | SHIPPED: active dated Board cards appear in Calendar Month/Week/Day as a read-only derived feed. |
 | `xai-web-board-saved-filters` | board-workspaces | SHIPPED: persist filters per board with clear/reset. |
-| `xai-web-board-share-contract` | board + sync/share | Replace mock URL with explicit share-envelope plan or label it as stub. |
+| `xai-web-board-share-contract` | board + sync/share | SHIPPED: mock URL is visibly labeled as planning-only and emits explicit mock share-envelope fields. |
 | `xai-web-board-responsive-smoke` | Web shell + board packages | Browser/manual smoke for board views and detail. |
 | `xai-web-board-export-import` | export/delete/privacy | Add board entities to export and delete flows. |
 
@@ -310,6 +310,7 @@ Do not update generated dashboard snapshots directly. If a dashboard generator c
 | Task link implementation | `xai-web-board-task-link` shipped one-way Board-card to Tasks linkage and moved the next personal-board focus to `xai-web-board-calendar-feed`. |
 | Calendar feed implementation | `xai-web-board-calendar-feed` shipped read-only Calendar projection from Board `xai_boards_v2` storage through board-core public helpers; the next personal-board focus is `xai-web-board-saved-filters`. |
 | Saved filters implementation | `xai-web-board-saved-filters` shipped `xai_board_filter_by_id`, per-board filter restore, and persisted Clear reset; the next personal-board focus is `xai-web-board-share-contract`. |
+| Share contract implementation | `xai-web-board-share-contract` shipped visible mock-only share labeling and explicit envelope fields; the next personal-board focus is `xai-web-board-responsive-smoke`. |
 
 ## 11. Acceptance Criteria for the Next Implementation Wave
 
@@ -320,7 +321,7 @@ Do not update generated dashboard snapshots directly. If a dashboard generator c
 - [ ] Dates are typed ISO fields; `Today`, overdue, week, and calendar grouping are derived.
 - [ ] Current local data migrates without losing existing boards.
 - [ ] `/app/projects` vs `/app/board` route decision is documented and tested.
-- [ ] Share remains clearly marked mock unless real share backend is implemented.
+- [x] Share remains clearly marked mock unless real share backend is implemented.
 - [ ] Targeted tests pass for board-core, board-views, board-workspaces, and app router integration.
 
 ## 12. Sources

@@ -7,17 +7,17 @@
 | Workflow | FEATURE_DEV |
 | Target | xai-web-board-share-contract |
 | Title | Web Project module P1 share contract - make mock share explicit |
-| Current Phase | FEATURE_VERIFY |
-| Status | READY_FOR_SHIP |
-| Suggested Next | ship docs |
+| Current Phase | SHIP |
+| Status | SHIPPED |
+| Suggested Next | xai-web-board-responsive-smoke |
 | Automation Mode | D-Codex+Cursor |
 | Verify Cross-vendor | yes |
 | Executor | gpt-5 parent inline |
-| Updated | 2026-06-03 22:33 PDT |
+| Updated | 2026-06-03 22:34 PDT |
 | Blockers | None currently. |
 | Roadmap Manifest | `docs/workflow/roadmap/xai-web-project-module.md` row #11 |
 | Source PRD / Audit | `docs/reviews/xai-web-project-module/20260603-audit-and-prd.md` |
-| Write Scope | `packages/plugin-web-board-workspaces`, `packages/core/src/types/events.ts`, `packages/xai-web-board-share-contract/docs`, `docs/reviews/xai-web-board-share-contract`, plus shipped status docs after verify. |
+| Write Scope | `packages/plugin-web-board-workspaces`, `packages/core/src/types/events.ts`, `packages/xai-web-board-share-contract/docs`, `docs/reviews/xai-web-board-share-contract`, and shipped status docs. |
 
 ## Artifacts
 
@@ -61,4 +61,5 @@ backend share/invite permissions.
 | Timestamp | Executor | Action | Commits | Next Step |
 |---|---|---|---|---|
 | 2026-06-03 22:28 PDT | gpt-5 parent inline | feature-plan - audited existing mock ShareModal and selected visible stub/envelope contract path. | `ab38dbe` | feature-build |
-| 2026-06-03 22:33 PDT | gpt-5 parent inline | feature-build/verify - implemented explicit mock share envelope, visible stub banner, event payload extension, tests, app verification, and browser smoke. | pending | ship docs |
+| 2026-06-03 22:33 PDT | gpt-5 parent inline | feature-build/verify - implemented explicit mock share envelope, visible stub banner, event payload extension, tests, app verification, and browser smoke. | `1806ee4` | ship docs |
+| 2026-06-03 22:34 PDT | gpt-5 parent inline | feature-ship - roadmap, PLUGIN_MAP, architecture, PRD, and dev_log marked shipped. | this docs commit | xai-web-board-responsive-smoke |
