@@ -41,6 +41,20 @@
     --module-yellow-bg:#fff7df;
     --module-red:#ea4335;
     --module-red-bg:#ffefed;
+    --doc-reference-tone:#566175;
+    --doc-reference-bg:#eef1f6;
+    --doc-rules-tone:#ea4335;
+    --doc-rules-bg:#fff0ed;
+    --doc-skill-tone:#7c4dff;
+    --doc-skill-bg:#f1edff;
+    --doc-workflow-tone:#b56f00;
+    --doc-workflow-bg:#fff7df;
+    --doc-must-tone:#ea4335;
+    --doc-must-bg:#ffefed;
+    --doc-required-tone:#1a73e8;
+    --doc-required-bg:#eaf2ff;
+    --doc-system-tone:#07849a;
+    --doc-system-bg:#e6f8fb;
     --shadow:0 20px 50px rgba(49,87,149,.12);
     --shadow-soft:0 10px 28px rgba(49,87,149,.10);
     --radius:8px;
@@ -84,6 +98,20 @@
     --module-yellow-bg:#33260e;
     --module-red:#ff766c;
     --module-red-bg:#3b1918;
+    --doc-reference-tone:var(--faint);
+    --doc-reference-bg:var(--surface-3);
+    --doc-rules-tone:var(--module-red);
+    --doc-rules-bg:var(--module-red-bg);
+    --doc-skill-tone:var(--module-purple);
+    --doc-skill-bg:var(--module-purple-bg);
+    --doc-workflow-tone:var(--module-yellow);
+    --doc-workflow-bg:var(--module-yellow-bg);
+    --doc-must-tone:var(--module-red);
+    --doc-must-bg:var(--module-red-bg);
+    --doc-required-tone:var(--module-blue);
+    --doc-required-bg:var(--module-blue-bg);
+    --doc-system-tone:var(--module-cyan);
+    --doc-system-bg:var(--module-cyan-bg);
     --shadow:0 20px 54px rgba(0,0,0,.34);
     --shadow-soft:0 12px 30px rgba(0,0,0,.24);
   }
@@ -1065,8 +1093,8 @@
     margin-bottom:12px;
   }
   .doc-rec-card,.doc-rec-link,.doc-root-button,.doc-item-row,.doc-inspector-title{
-    --doc-tone:#566175;
-    --doc-bg:#eef1f6;
+    --doc-tone:var(--doc-reference-tone);
+    --doc-bg:var(--doc-reference-bg);
     --doc-border:#d3dbe7;
     --doc-ink:var(--muted);
   }
@@ -1085,8 +1113,8 @@
   .doc-root-button[data-importance="必要"],
   .doc-item-row[data-importance="必要"],
   .doc-inspector-title[data-importance="必要"]{
-    --doc-tone:var(--blue);
-    --doc-bg:#eaf2ff;
+    --doc-tone:var(--doc-required-tone);
+    --doc-bg:var(--doc-required-bg);
     --doc-border:#bdd7ff;
     --doc-ink:var(--surface-code-ink);
   }
@@ -1095,8 +1123,8 @@
   .doc-root-button[data-importance="系统级"],
   .doc-item-row[data-importance="系统级"],
   .doc-inspector-title[data-importance="系统级"]{
-    --doc-tone:#07849a;
-    --doc-bg:var(--module-cyan-bg);
+    --doc-tone:var(--doc-system-tone);
+    --doc-bg:var(--doc-system-bg);
     --doc-border:#b8eaf1;
     --doc-ink:#066a7c;
   }
@@ -1113,8 +1141,8 @@
   .doc-rec-link[data-doc-family="workflow"],
   .doc-item-row[data-doc-family="workflow"],
   .doc-inspector-title[data-doc-family="workflow"]{
-    --doc-tone:#b56f00;
-    --doc-bg:var(--module-yellow-bg);
+    --doc-tone:var(--doc-workflow-tone);
+    --doc-bg:var(--doc-workflow-bg);
     --doc-border:#ffe2a3;
     --doc-ink:#7a4d00;
   }
@@ -1122,8 +1150,8 @@
   .doc-rec-link[data-doc-family="rules"],
   .doc-item-row[data-doc-family="rules"],
   .doc-inspector-title[data-doc-family="rules"]{
-    --doc-tone:#ea4335;
-    --doc-bg:#fff0ed;
+    --doc-tone:var(--doc-rules-tone);
+    --doc-bg:var(--doc-rules-bg);
     --doc-border:#ffc9c1;
     --doc-ink:#a6281d;
   }
@@ -3215,6 +3243,8 @@
       background:linear-gradient(180deg,#fbfdff,#f2f7ff);
     }
     .doc-inspector{grid-column:1 / -1;border-top:1px solid #c6d8f0}
+    :root[data-theme="dark"] .doc-file-manager{background:linear-gradient(180deg,var(--surface),var(--surface-2))}
+    :root[data-theme="dark"] .doc-inspector{border-top-color:var(--line)}
     .doc-recommendation-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
     .doc-category-panel,.capability-matrix{grid-template-columns:1fr}
     .doc-card-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
@@ -3286,6 +3316,8 @@
     .doc-inspector{order:2}
     .doc-folder-pane{order:3}
     .doc-folder-pane,.doc-folder-browser{border-right:0;border-bottom:1px solid #c6d8f0}
+    :root[data-theme="dark"] .doc-folder-pane,
+    :root[data-theme="dark"] .doc-folder-browser{border-bottom-color:var(--line)}
     .doc-root-list{max-height:none}
     .doc-tree{max-height:280px}
     .doc-recommendation-grid{display:flex;overflow-x:auto;gap:10px;padding-bottom:2px}
