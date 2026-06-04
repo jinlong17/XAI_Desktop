@@ -7,17 +7,17 @@
 | Workflow | FEATURE_DEV |
 | Target | xai-web-board-calendar-feed |
 | Title | Web Project module P1 Calendar feed - show dated Board cards in global Calendar |
-| Current Phase | FEATURE_BUILD |
-| Status | READY_FOR_VERIFY |
-| Suggested Next | feature-verify |
+| Current Phase | SHIP |
+| Status | SHIPPED |
+| Suggested Next | xai-web-board-saved-filters |
 | Automation Mode | D-Codex+Cursor |
 | Verify Cross-vendor | yes |
 | Executor | gpt-5 parent inline |
-| Updated | 2026-06-03 22:13 PDT |
+| Updated | 2026-06-03 22:17 PDT |
 | Blockers | None currently. |
 | Roadmap Manifest | `docs/workflow/roadmap/xai-web-project-module.md` row #9 |
 | Source PRD / Audit | `docs/reviews/xai-web-project-module/20260603-audit-and-prd.md` |
-| Write Scope | `packages/xai-web-calendar`, `packages/xai-web-board-calendar-feed/docs`, `docs/reviews/xai-web-board-calendar-feed`, plus shipped status docs after verify. |
+| Write Scope | `packages/xai-web-calendar`, `packages/xai-web-board-calendar-feed/docs`, `docs/reviews/xai-web-board-calendar-feed`, and shipped status docs. |
 
 ## Artifacts
 
@@ -63,4 +63,5 @@ into existing Calendar render paths without adding a new storage key.
 | Timestamp | Executor | Action | Commits | Next Step |
 |---|---|---|---|---|
 | 2026-06-03 22:09 PDT | gpt-5 parent inline | feature-plan - audited Calendar sample event model, Calendar render paths, Board date/storage helpers, and selected read-only derived feed. | `8d3fb4e` | feature-build |
-| 2026-06-03 22:13 PDT | gpt-5 parent inline | feature-build - implemented Calendar read-only Board feed projection, Calendar render integration, and regression coverage. | pending | feature-verify |
+| 2026-06-03 22:13 PDT | gpt-5 parent inline | feature-build - implemented Calendar read-only Board feed projection, Calendar render integration, and regression coverage. | `de4158e` | feature-verify |
+| 2026-06-03 22:17 PDT | gpt-5 parent inline | feature-verify/ship - package and web verification passed; live `/app/calendar` smoke captured; roadmap, PLUGIN_MAP, architecture, PRD, and dev_log marked shipped. | `10dd98a` | xai-web-board-saved-filters |
