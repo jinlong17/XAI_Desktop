@@ -21,6 +21,9 @@
       "docs/workflow/project/dashboard-state.json",
       "docs/workflow/project/release-log.md",
       ".teams/skills/*/SKILL.md",
+      ".claude/skills/*",
+      ".codex/skills/*",
+      ".cursor/rules/*.mdc",
       "git status",
       "git log -1"
     ]
@@ -67,8 +70,8 @@
     {
       "label": "固定 skill",
       "badge": "入口",
-      "value": "11",
-      "note": "feature·brief·dossier·roadmap·module-classify·consistency-audit·web→desktop D3·account-sync D4·sync-fanout·release-log·dashboard-sync"
+      "value": "13",
+      "note": "feature·brief·dossier·roadmap·module-classify·consistency-audit·web→desktop D3·web-deploy preflight·desktop release gate·account-sync D4·sync-fanout·release-log·dashboard-sync"
     },
     {
       "label": "自动跟踪",
@@ -690,6 +693,10 @@
           "when": "一个已落地的 Web 改动可能影响 Desktop,需要在 web→desktop-next 之前做 W0–W4 分级并产出 Parity Receipt 时(离开本模块流向 App 的唯一通道)。"
         },
         {
+          "name": "xai-web-deploy-preflight",
+          "when": "Web 改动触及 Cloudflare Pages、deploy-web.yml、wrangler.toml、_headers、Sentry sourcemap 或生产/预览发布证据时,先产出部署 preflight receipt;它不部署、不推 main、不声明 live smoke。"
+        },
+        {
           "name": "xai-roadmap-loop",
           "when": "要把一份已评审的 Web 路线图(如 docs/workflow/roadmap/xai-web-console.md)按波次批量推进多个功能到 READY_TO_SHIP 时。"
         },
@@ -716,8 +723,8 @@
         "规范化:对模糊想法先跑 xai-feature-brief 产出结构化 brief(分类/依赖扫描/mock 策略),明确落点在 apps/web/ 或某个 plugin-web-*/xai-web-* 包。",
         "规划+评审:feature-plan 给出方案 → feature-review 评审定稿(NEEDS_REVIEW→APPROVED);单功能可改用 xai-feature-full-loop 在父会话一把跑完。",
         "实现:在 codex/web/<feature> 短分支上 feature-build,一次一个 phase,业务逻辑只进 packages/plugin-web-*,模块间走 @repo/core/events,UI 偏好走 localStorage、数据实体走加密 IndexedDB。",
-        "验证:feature-verify 跑 vitest + vite build 绿灯;必要时浏览器手动 smoke(Chrome/Safari/Firefox)作为部署就绪门。",
-        "发布:ship 合入 web,触发 Cloudflare Pages 发布(ADR-0008);随后 xai-release-log 登记增量。",
+        "验证:feature-verify 跑 vitest + vite build 绿灯;部署/CSP/Cloudflare 相关改动额外跑 xai-web-deploy-preflight;必要时浏览器手动 smoke(Chrome/Safari/Firefox)作为部署就绪门。",
+        "发布:ship 合入 web,触发 Cloudflare Pages 发布(ADR-0008);随后 xai-release-log 登记增量并用 xai-dev-dashboard-sync 刷新看板证据。",
         "跨面判定:若改动可能影响 Desktop,在 web→desktop-next 之前跑 xai-web-to-desktop-sync 做 W0–W4 分级并产出 Parity Receipt(Verdict: NO_APP_CHANGE|GATE_ONLY|DESKTOP_DELTA_REQUIRED|BLOCKED),这是 Web 流向 App 的唯一通道。"
       ],
       "transitions": [
@@ -754,7 +761,7 @@
         {
           "module": "app",
           "when": "Web 改动落在共享 UI / @repo/core 事件或类型、或 desktop 运行时敏感的代码(W1/W2/W3/W4),且需要带入 Desktop App",
-          "action": "在 web→desktop-next 之前运行 xai-web-to-desktop-sync 做 W0–W4 分级并产出 Parity Receipt;W3 需在 desktop-next/desktop-plugin-next 经 xai-feature-full-loop 补原生 delta,W4 需 RC/release 门(含 macOS 手动 smoke)。这是 Web→App 的唯一通道(D3 gate),非分支对齐。"
+          "action": "在 web→desktop-next 之前运行 xai-web-to-desktop-sync 做 W0–W4 分级并产出 Parity Receipt;W3 需在 desktop-next/desktop-plugin-next 经 xai-feature-full-loop 补原生 delta,W4 需 xai-desktop-release-gate(含 macOS 手动 smoke、签名/公证/DMG/updater 证据)。这是 Web→App 的唯一通道(D3 gate),非分支对齐。"
         },
         {
           "module": "sync",
@@ -858,6 +865,10 @@
           "when": "工作来源是一笔 web 改动时:用此 D3 闸口技能按 ADR-0013 把它分类为 W0-W4 并产出 Parity Receipt,判断是否需要在 App 侧补增量;它是 web -> App 的唯一入口桥,不在 App 内部独立发起。"
         },
         {
+          "name": "xai-desktop-release-gate",
+          "when": "D3 判定 W4 release-risk,或 App 改动触及签名、公证、DMG、updater、release/desktop/<version>、dev RC 时,产出桌面发布 gate receipt;它不创建分支、不触碰 dev、不签名/公证/上传。"
+        },
+        {
           "name": "xai-release-log",
           "when": "每完成一个可见的 App 增量(G1 锚点 SHIPPED 或 dev RC 推进)后,登记 docs/workflow/project/release-log.md。"
         }
@@ -880,7 +891,7 @@
         "接收工作来源:要么是 App 原生新需求(直接 Start the feature-plan agent),要么是一笔 web 改动经 /xai-web-to-desktop-sync(D3)判为需要 App 增量(W2/W3/W4)后进入本模块;W0 仅记录不进入,W1 仅过门禁。",
         "标准 feature 流水线:feature-plan -> feature-review -> feature-build(一次一阶段,跑完停)-> feature-verify -> ship;原生桥接类(W3)改用 /xai-feature-full-loop 在 desktop-next / desktop-plugin-next 上整轮跑(真正新工作,不是 merge)。",
         "原生回归走 bugfix 流水线:bug-diagnose -> bug-fix -> bug-verify -> ship。",
-        "验证按 D3 层级补齐:W1 跑 Web build gate + desktop tauri build gate;W2 加 offline/runtime/profile 测试;W4 在推进到 dev / release/desktop/<version> 前加人工 macOS smoke。",
+        "验证按 D3 层级补齐:W1 跑 Web build gate + desktop tauri build gate;W2 加 offline/runtime/profile 测试;W4 跑 xai-desktop-release-gate,在推进到 dev / release/desktop/<version> 前加人工 macOS smoke、签名/公证/DMG/updater 元数据证明。",
         "可见增量完成后用 xai-release-log 登记;推进到 desktop-next -> dev(App RC)-> release/desktop/<version> 的分支动作均需操作者显式确认(这些长分支 defined, not yet created;凡触达 dev 需显式确认)。"
       ],
       "transitions": [
@@ -1318,8 +1329,12 @@
           "when": "site 每产出一个可见增量(落地页上线、下载链接接通、updater 源切换)后,按惯例写 docs/workflow/project/release-log.md"
         },
         {
+          "name": "xai-web-deploy-preflight",
+          "when": "site 解冻后复用 Cloudflare Pages / _headers / wrangler 部署链路时,用它证明 preview/production 发布前置条件;纯 preflight 不代表 site 线已授权开工。"
+        },
+        {
           "name": "xai-web-to-desktop-sync",
-          "when": "仅当某站点改动其实触及 App 的产物/更新契约本身(updater feed 格式、签名产物路径、版本号)且需在 web↔desktop-next 间共享时,才按 ADR-0013 D3 的 W0–W4 分类并产出 parity receipt 再决定流向;纯站点内/纯 web 部署改动不走此技能"
+          "when": "仅当某站点改动其实触及 App 的产物/更新契约本身(updater feed 格式、签名产物路径、版本号)且需在 web↔desktop-next 间共享时,才按 ADR-0013 D3 的 W0–W4 分类并产出 parity receipt;W4 再交给 xai-desktop-release-gate;纯站点内/纯 web 部署改动不走此技能"
         }
       ],
       "prompts": [
@@ -1339,10 +1354,10 @@
       "workflow": [
         "前置闸门:site 为 PROPOSED / owner-deferred,无既有 package(ADR-0013 §S7 #2)。除非 operator 显式确认解冻,否则不开 codex/site/<feature>、不动工——先停在「待授权」态。",
         "解冻后用 xai-feature-brief 把下载页 / 自动更新源 / 发布说明站规范化成 brief,明确边界:只承接 release info,不托管产品内部。",
-        "走标准 feature 流水线 feature-plan -> feature-review -> feature-build -> feature-verify -> ship,全程在 codex/site/<feature>,复用 apps/web/wrangler.toml + apps/web/deploy/* + Cloudflare Pages(ADR-0008),站点 _headers/CSP 与 apps/web/public/_headers 隔离。",
+        "走标准 feature 流水线 feature-plan -> feature-review -> feature-build -> feature-verify -> ship,全程在 codex/site/<feature>,复用 apps/web/wrangler.toml + apps/web/deploy/* + Cloudflare Pages(ADR-0008),站点 _headers/CSP 与 apps/web/public/_headers 隔离;部署前跑 xai-web-deploy-preflight。",
         "产物来源严格绑定 release/desktop/<version> 冻结产物与 tag vX.Y.Z(ADR-0013 D2,该分支 defined-not-yet-created,创建需 operator 确认)——下载链接、updater feed、release notes 三者同源同版本。",
         "每个可见增量上线后用 xai-release-log 记入 docs/workflow/project/release-log.md。",
-        "若某改动触及 App 的产物/更新契约本身(updater feed 格式、签名产物路径、版本号)需在 web↔desktop-next 间共享,才用 xai-web-to-desktop-sync 按 W0–W4 分类并产出 parity receipt,再决定 record-only / merge / 转 /xai-feature-full-loop;纯站点 _headers/CSP/部署配置改动不走 D3,按 ADR-0008 扩展协议在 web 线内评审。"
+        "若某改动触及 App 的产物/更新契约本身(updater feed 格式、签名产物路径、版本号)需在 web↔desktop-next 间共享,才用 xai-web-to-desktop-sync 按 W0–W4 分类并产出 parity receipt,W4 再交给 xai-desktop-release-gate;纯站点 _headers/CSP/部署配置改动不走 D3,按 ADR-0008 扩展协议 + xai-web-deploy-preflight 处理。"
       ],
       "transitions": [
         {
@@ -1350,7 +1365,7 @@
           "trigger": "站点要承接的 .dmg / updater metadata / 签名产物本身需要 App 端在 release/desktop/<version> 冻结流程中产出或调整其格式(W3/W4 release-risk)",
           "branch": "web → desktop-next → dev → release/desktop/<version>(desktop-next / dev / release/desktop/<version> 均为 ADR-0013 D2 已定义、尚未创建;触及 dev 与创建任一分支需 operator 显式确认)",
           "skill": "xai-web-to-desktop-sync",
-          "note": "site 只消费 App 的发布产物,不生产;产物格式/签名/updater feed 的改动属 App 线 release 工作,经 D3 W4 release gate(含 manual macOS smoke)后才进 dev 与 release/desktop/<version>,site 再绑定其 tag vX.Y.Z 产物。"
+          "note": "site 只消费 App 的发布产物,不生产;产物格式/签名/updater feed 的改动属 App 线 release 工作,经 D3 W4 分类后交给 xai-desktop-release-gate(含 manual macOS smoke、签名/公证/DMG/updater 证据)才可进入 dev 与 release/desktop/<version>,site 再绑定其 tag vX.Y.Z 产物。"
         },
         {
           "to": "web",
@@ -1364,7 +1379,7 @@
         {
           "module": "app",
           "when": "site 要新增/改动某个下载产物或自动更新字段(如 updater feed 增加新平台、签名产物路径变更)",
-          "action": "App 线须在 release/desktop/<version> 冻结流程中按 ADR-0013 D2 产出对应 .dmg / updater metadata,并经 D3 W4 release gate(含 manual macOS smoke)确认后打 tag vX.Y.Z,site 才能绑定该 tag 产物。该跨线改动用 xai-web-to-desktop-sync 分类并产出 parity receipt。"
+          "action": "App 线须在 release/desktop/<version> 冻结流程中按 ADR-0013 D2 产出对应 .dmg / updater metadata,经 xai-web-to-desktop-sync 分类为 W4 后再跑 xai-desktop-release-gate(含 manual macOS smoke、签名/公证/DMG/updater 证据),site 才能绑定该 tag 产物。"
         },
         {
           "module": "web",
@@ -1535,7 +1550,7 @@
   "module_nav": {
     "source": "docs/PRODUCT_MODULE_MAP.md",
     "authority": "docs/adr/0013-branch-sync-governance.md (D1/D2/D3/D4)",
-    "sync_orchestration": "docs/adr/0014-cross-module-sync-orchestration.md + docs/workflow/project/sync-registry.json (entry: xai-sync-fanout-dispatch; edges: xai-web-to-desktop-sync D3 · xai-account-sync-scope-check D4 · xai-release-log + xai-dev-dashboard-sync close-out · xai-feature-brief frozen-line draft)",
+    "sync_orchestration": "docs/adr/0014-cross-module-sync-orchestration.md + docs/workflow/project/sync-registry.json (entry: xai-sync-fanout-dispatch; edges: xai-web-to-desktop-sync D3 · xai-web-deploy-preflight deploy gate · xai-desktop-release-gate W4 · xai-account-sync-scope-check D4 · xai-release-log + xai-dev-dashboard-sync close-out · xai-feature-brief frozen-line draft)",
     "fields": [
       "goal",
       "routing",

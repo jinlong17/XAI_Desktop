@@ -9,7 +9,8 @@ Project-layer gate for ADR-0013 D3. Use this skill to classify a Web delta befor
 `web` to `desktop-next`, then emit the D3 parity receipt.
 
 This skill is a classifier and handoff orchestrator. It does not merge branches, create D2 topology
-branches, run `ship`, promote to `dev`, or bypass `feature-verify` / `bug-verify`.
+branches, run `ship`, promote to `dev`, run `xai-desktop-release-gate`, or bypass
+`feature-verify` / `bug-verify`.
 
 ## Read First
 
@@ -37,7 +38,7 @@ or the user's named files. If evidence is ambiguous, stop with `Verdict: BLOCKED
    operator confirmation outside this skill.
 2. Do not create `desktop-next`, `desktop-plugin-next`, or `release/desktop/<version>`; ADR-0013 D2
    says branch creation is a separate operator-confirmed step.
-3. Do not run `ship` or trigger a release. W4 emits an RC/release gate handoff only.
+3. Do not run `ship` or trigger a release. W4 emits an `xai-desktop-release-gate` handoff only.
 4. Do not implement App deltas inline from this gate. W3 native/runtime work routes to
    `/xai-feature-full-loop`, which must still run the normal Workflow V2 plan, build, and verify
    path.
@@ -65,7 +66,7 @@ or the user's named files. If evidence is ambiguous, stop with `Verdict: BLOCKED
 | W1 shared-ui-safe | Shared UI, shared core, shared package, or desktop-consumed plugin code changed but remains App-safe. | Merge to `desktop-next`; run Web build and desktop Tauri build gates. |
 | W2 desktop-runtime-affected | Auth, storage, offline behavior, runtime profile, local persistence, or desktop-sensitive behavior can differ under the desktop runtime. | Merge to `desktop-next`; run W1 gates plus offline/runtime/profile tests. |
 | W3 native-bridge-needed | Tauri/Rust, native commands, permissions/capabilities, file system bridge, global shortcuts, tray, NSWindow, multi-window focus, or native window behavior needs real App work. | Route the App delta to `/xai-feature-full-loop`; require W3 manual macOS smoke before parity is aligned. |
-| W4 release-risk | Signing, notarization, updater, versioned distribution, release branch, download/update metadata, or App RC sign-off is affected. | Route to RC/release gate with W4 manual macOS smoke before `dev` promotion or `release/desktop/<version>`. |
+| W4 release-risk | Signing, notarization, updater, versioned distribution, release branch, download/update metadata, or App RC sign-off is affected. | Route to `xai-desktop-release-gate` with W4 manual macOS smoke before `dev` promotion or `release/desktop/<version>`. |
 
 ## Desktop Impact Axes
 
@@ -88,8 +89,8 @@ or the user's named files. If evidence is ambiguous, stop with `Verdict: BLOCKED
 - W3 -> `DESKTOP_DELTA_REQUIRED`, `Required desktop work: W3 native delta via /xai-feature-full-loop`,
   `Next workflow: /xai-feature-full-loop`, `Parity status: degraded` until the native delta and
   manual macOS smoke pass.
-- W4 -> `DESKTOP_DELTA_REQUIRED` or `BLOCKED`, `Required desktop work: W4 release gate`,
-  `Next workflow: RC/release gate`, `Parity status: blocked` until release sign-off passes.
+- W4 -> `DESKTOP_DELTA_REQUIRED` or `BLOCKED`, `Required desktop work: W4 release gate via /xai-desktop-release-gate`,
+  `Next workflow: /xai-desktop-release-gate`, `Parity status: blocked` until release sign-off passes.
 
 ## Output Format
 
@@ -107,9 +108,9 @@ Parity Receipt
                     native:  yes|no
                     window:  yes|no
                     release: yes|no
-  Required desktop work:  <none | W1 gate | W2 tests | W3 native delta via /xai-feature-full-loop | W4 release gate>
+  Required desktop work:  <none | W1 gate | W2 tests | W3 native delta via /xai-feature-full-loop | W4 release gate via /xai-desktop-release-gate>
   Verification gates:     <none | web build | tauri build | offline/runtime/profile tests | W3 manual macOS smoke | W4 manual macOS smoke>
-  Next workflow:          <record-only | merge-to-desktop-next | /xai-feature-full-loop | RC/release gate>
+  Next workflow:          <record-only | merge-to-desktop-next | /xai-feature-full-loop | /xai-desktop-release-gate>
   Parity status:          aligned | degraded | blocked | not-applicable
 ```
 

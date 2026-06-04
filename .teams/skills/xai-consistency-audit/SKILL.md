@@ -39,7 +39,7 @@ Report: <path to a prior report when Mode=apply>
 
 1. **Boundary (越界/归属)** — run the `boundary` group of consistency-checks.json (HR1-5 + same_name + syncscope + phantom + frozen + unknown). This is the headline job. Delegate the scan engine to `xai-module-classify` scan mode where a drift_check already exists; apply HR1/HR2/HR5 from module-classification.json.
 2. **Feature reconciliation** — for every package on disk and every `dashboard-state.json` `product_lines[].features[]` entry and every PRD §5.x feature: cross-check existence + status agreement. Flag ghost features (dashboard item with no PRD + no package), missing features (package/dev_log SHIPPED with no dashboard/PRD entry), status mismatch (dashboard vs PLUGIN_MAP/dev_log).
-3. **Registration + freshness** — new `.teams/skills/*` registered in CLAUDE.md tracking + `.claude/.codex` mirrors + dashboard fixed-skill kpi; snapshot fresh (HEAD == snapshot commit).
+3. **Registration + freshness** — new `.teams/skills/*` registered in CLAUDE.md tracking + `.claude/.codex` mirrors + `.cursor/rules/*.mdc` mirror when the skill should work in Cursor + dashboard fixed-skill kpi; snapshot fresh (HEAD == snapshot commit).
 
 ## Flow
 
@@ -57,7 +57,7 @@ Report: <path to a prior report when Mode=apply>
 
 - **Boundary record** → `module-classification.json` + `MODULE_BOUNDARIES.md` + dashboard `features[]` (coherent triple).
 - **Feature record** → dashboard `features[]` (via xai-dev-dashboard-sync rules) + `MODULE_BOUNDARIES.md §5` + PLUGIN_MAP reference.
-- **Registration record** → `CLAUDE.md` Agent/Skill Tracking + `.claude/.codex` mirrors + dashboard kpis fixed-skill count.
+- **Registration record** → `CLAUDE.md` Agent/Skill Tracking + `.claude/.codex` mirrors + `.cursor/rules` mirror + dashboard kpis fixed-skill count.
 - **NEVER auto**: product priority, branch creation, release/ship, roadmap authorization, any dev-line / ADR-0011 reconcile → report `needs-operator`.
 
 ## Output (report)

@@ -1,6 +1,6 @@
 ---
-name: xai-sync-fanout-dispatch
 description: After a core module is finished, classify the delta against docs/workflow/project/sync-registry.json semantic rules, decide which cross-module sync actions fire, order them into parallel/serial waves, and emit a dispatch plan (one copy-paste prompt per action, or a worktree/spawn plan). The single entry point for "Web 版本功能已完成，执行后续同步 workflow". Plan/route-only — it does not run D3/D4/brief/release/dashboard logic itself or write source; it hands each action to its owning skill. Triggers — sync fanout, dispatch downstream sync, 完成模块后同步, 扇出同步 workflow, which modules to sync, cross-module sync dispatch.
+alwaysApply: false
 ---
 
 # xai-sync-fanout-dispatch

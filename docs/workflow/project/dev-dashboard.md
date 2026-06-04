@@ -23,6 +23,7 @@
 - Sync skill: `.teams/skills/xai-dev-dashboard-sync/SKILL.md`
 - Claude skill mirror: `.claude/skills/xai-dev-dashboard-sync/SKILL.md`
 - Codex skill mirror: `.codex/skills/xai-dev-dashboard-sync/SKILL.md`
+- Cursor rule mirror: `.cursor/rules/xai-dev-dashboard-sync.mdc`
 - Template doc: `docs/prototypes/dev-dashboard/TEMPLATE.md`
 - Boundary spec: `docs/prototypes/dev-dashboard/BOUNDARIES.md`
 
@@ -94,7 +95,8 @@ Agents should refresh or check the dashboard when:
   doc update changes dashboard source state;
 - a task changes `docs/prototypes/dev-dashboard/`,
   `docs/workflow/project/dashboard-state.json`, `.teams/skills/`, `.codex/skills/`,
-  `.codex/agents/`, or `docs/workflow/project/release-log.md`;
+  `.claude/skills/`, `.cursor/rules/`, `.codex/agents/`, or
+  `docs/workflow/project/release-log.md`;
 - final handoff depends on Overview data.
 
 The sync skill owns six alignment checks in one run:
@@ -111,9 +113,10 @@ The sync skill owns six alignment checks in one run:
    `Verification` fields, known local report paths, and CI / pipeline
    configuration evidence.
 6. refresh or verify the Skill / Agent knowledge registry, including new or
-   modified definitions, classification, generated descriptions, automatic
-   field completion, unresolved needs-action items, source-backfill notes,
-   workflow links, document links, maintenance status, and mirror status.
+   modified definitions, Claude/Codex symlink mirrors, Cursor `.mdc` rule
+   mirrors, classification, generated descriptions, automatic field completion,
+   unresolved needs-action items, source-backfill notes, workflow links,
+   document links, maintenance status, and mirror status.
 
 The skill should apply factual Markdown updates directly. It should report
 `needs-review` only when the mismatch requires an operator decision about
@@ -139,6 +142,8 @@ Agents may update:
 - project skill docs under `.teams/skills/` and tracked mirrors under `.codex/skills/`;
 - Claude skill mirrors under `.claude/skills/` when a project skill should be
   available to Claude Code;
+- Cursor rule mirrors under `.cursor/rules/` when a project skill should be
+  available to Cursor;
 - dashboard source HTML/CSS/JS under `docs/prototypes/dev-dashboard/`;
 - generator/server scripts under `scripts/dashboard/`;
 - machine and operator docs under `docs/workflow/project/`;
@@ -343,5 +348,5 @@ unless the change belongs to a specific product line.
 - If a new dashboard pattern is meant to be reused in another project, update
   `docs/prototypes/dev-dashboard/TEMPLATE.md`.
 - If `xai-dev-dashboard-sync` changes, keep `.teams/skills/`,
-  `.claude/skills/`, and `.codex/skills/` discoverability aligned in the same
-  change.
+  `.claude/skills/`, `.codex/skills/`, and `.cursor/rules/` discoverability
+  aligned in the same change.

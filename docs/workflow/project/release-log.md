@@ -4,6 +4,17 @@
 > Keep newest entries first. Use `.teams/skills/xai-release-log/SKILL.md` when
 > appending entries.
 
+## 2026-06-04
+
+### 项目 Skill 体系补齐：部署 / 桌面发布 gate + Cursor 镜像
+
+- Product line: project-system / workflow governance
+- Branch / commit: `codex/web/dev-dashboard-authority-refactor` / local working tree
+- User-visible change: 个人开发看板和产品结构导航现在能看到 13 个固定项目 skill；Web 部署相关改动有 `xai-web-deploy-preflight` 前置检查入口，Mac Desktop W4 发版风险有 `xai-desktop-release-gate` 入口，Cursor 也拥有全部 XAI 项目 skill 的 `.mdc` 镜像。
+- Developer/system delta: 新增 `.teams/skills/xai-web-deploy-preflight` 与 `.teams/skills/xai-desktop-release-gate`，并镜像到 `.claude/skills`、`.codex/skills`、`.cursor/rules`；把 `xai-feature-brief` 升级为六产品线 intake，把 `xai-feature-dossier-sync` Scope 扩到 `site/admin/project-system`，并让 `xai-dev-dashboard-sync` / `xai-consistency-audit` 显式检查 Cursor mirrors；更新 ADR-0014、`sync-registry.json`、`PRODUCT_MODULE_MAP.md`、`dashboard-state.json`、usage-guide、consistency checks 和 dashboard generator，让部署 / 桌面发布 gate 可被 fanout dispatch、看板和文档库发现。
+- Verification: `node --check scripts/dashboard/generate-state.mjs` passed；`sync-registry.json` / `dashboard-state.json` / `consistency-checks.json` JSON parse passed；XAI skill mirror check passed (`teams=13 missing=0`)；XAI skill content mirror check passed (`skills=13 failures=0`)；`pnpm dashboard` passed；`pnpm dashboard:verify-static` passed；`pnpm dashboard:verify-modules` passed；`python3 scripts/lint/check_portable_sync.py` passed。
+- Risk / follow-up: 新增两个 gate 均为 receipt/preflight-only，不会自动部署、签名、公证、上传、创建 release 分支或触碰 `dev`；`xai-sync-fanout-dispatch` 仍是 planner/router，不是强制自动执行器。
+
 ## 2026-06-03
 
 ### 个人开发看板边界规范闭环

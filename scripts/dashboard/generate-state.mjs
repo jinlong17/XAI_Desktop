@@ -22,6 +22,7 @@ const workflowDir = resolve(repoRoot, ".github/workflows");
 const roadmapDir = resolve(repoRoot, "docs/workflow/roadmap");
 const skillDir = resolve(repoRoot, ".teams/skills");
 const codexSkillDir = resolve(repoRoot, ".codex/skills");
+const cursorRuleDir = resolve(repoRoot, ".cursor/rules");
 const agentDir = resolve(repoRoot, ".codex/agents");
 const agentTemplateDir = resolve(repoRoot, ".agents/templates");
 const claudeAgentDir = resolve(repoRoot, ".claude/agents");
@@ -475,7 +476,7 @@ function explicitNoteFor(text) {
 
 function inferredNoteFor(entry, categoryKey) {
   if (entry.kind === "agent") return `该 Agent 是 ${entry.related_workflow || categoryByKey(categoryKey).workflow} 的执行单元，维护时需同步各平台定义。`;
-  if (String(entry.path || "").startsWith(".teams/skills/")) return "项目级 skill；维护时需同步 `.teams/skills` 源和 Claude/Codex 镜像。";
+  if (String(entry.path || "").startsWith(".teams/skills/")) return "项目级 skill；维护时需同步 `.teams/skills` 源和 Claude/Codex/Cursor 镜像。";
   if (String(entry.path || "").startsWith(".codex/skills/")) return "Codex 本地 skill；用于当前开发环境的可复用能力。";
   return `${categoryByKey(categoryKey).title} 分类下的辅助能力；必要时补充显式注释。`;
 }
@@ -499,7 +500,8 @@ function mirrorStatusForSkill(path, name) {
   if (!String(path || "").startsWith(".teams/skills/")) return { status: "not-required", missing: [] };
   const missing = [
     `.codex/skills/${name}/SKILL.md`,
-    `.claude/skills/${name}/SKILL.md`
+    `.claude/skills/${name}/SKILL.md`,
+    `.cursor/rules/${name}.mdc`
   ].filter(relPath => !existsSync(resolve(repoRoot, relPath)));
   return {
     status: missing.length ? "missing" : "aligned",
@@ -1013,7 +1015,8 @@ function buildDocHub(skillGroups, agentFamilies) {
     docEntry(".codex/agents", ".codex/agents", "Codex Workflow Agent TOML。", ["agent", "codex"], "必要"),
     docEntry(".agents/templates", ".agents/templates", "跨平台 Agent 模板源。", ["agent", "template"], "系统级"),
     docEntry(".claude/agents", ".claude/agents", "Claude/Cloud Agent 版本。", ["agent", "cloud"], "参考"),
-    docEntry(".cursor/agents", ".cursor/agents", "Cursor Agent 版本。", ["agent", "cursor"], "参考")
+    docEntry(".cursor/agents", ".cursor/agents", "Cursor Agent 版本。", ["agent", "cursor"], "参考"),
+    docEntry(".cursor/rules", ".cursor/rules", "Cursor 规则与 XAI skill 镜像。", ["skill", "cursor"], "必要")
   ].filter(Boolean);
   const byPath = new Map();
   [...roots, ...groups.flatMap(group => group.entries)].forEach(entry => {
@@ -1776,7 +1779,7 @@ function dashboardDirtyBucket(file) {
   if (file.startsWith("scripts/dashboard/")) return "dashboard-generator";
   if (file === "docs/workflow/project/dashboard-state.json") return "dashboard-state";
   if (file === "docs/workflow/project/release-log.md") return "release-log";
-  if (file.startsWith(".teams/skills/") || file.startsWith(".codex/skills/") || file.startsWith(".codex/agents/")) return "skills-agents";
+  if (file.startsWith(".teams/skills/") || file.startsWith(".claude/skills/") || file.startsWith(".codex/skills/") || file.startsWith(".cursor/rules/") || file.startsWith(".codex/agents/")) return "skills-agents";
   if (file.startsWith("docs/")) return "docs";
   if (file.startsWith("apps/") || file.startsWith("packages/")) return "product-code";
   return "other";
@@ -1945,6 +1948,7 @@ function directoryBucket(file) {
   if (file.startsWith("apps/web/")) return "apps/web";
   if (file.startsWith("apps/desktop/")) return "apps/desktop";
   if (file.startsWith(".teams/skills/")) return ".teams/skills";
+  if (file.startsWith(".cursor/rules/")) return ".cursor/rules";
   return "other";
 }
 
@@ -2029,7 +2033,9 @@ function buildDevelopmentData(branch) {
     "--format=%H",
     "--",
     ".teams/skills",
+    ".claude/skills",
     ".codex/skills",
+    ".cursor/rules",
     ".codex/agents"
   ])).size;
   return {

@@ -18,7 +18,7 @@ rules, and emits a receipt with suggestions. It NEVER decides product priority, 
 branches, ships, merges, writes product source, or unfreezes a PAUSED/PROPOSED line. Execution of
 suggestions happens only after explicit confirmation, and is delegated to the owning skills
 (`xai-feature-brief`, `xai-dev-dashboard-sync`, `xai-web-to-desktop-sync`, `xai-account-sync-scope-check`,
-`xai-sync-fanout-dispatch`, `xai-release-log`).
+`xai-web-deploy-preflight`, `xai-desktop-release-gate`, `xai-sync-fanout-dispatch`, `xai-release-log`).
 
 ## Read First
 
@@ -81,6 +81,8 @@ Next (on confirm): <one delegated action per owning skill>
 
 - **New feature, classified** → hand to `xai-feature-brief` (normalize) → standard pipeline when the line is active.
 - **Web change that may affect desktop** → `xai-web-to-desktop-sync` (D3 gate).
+- **Web deploy / CSP / Cloudflare change** → `xai-web-deploy-preflight` (ADR-0008 deploy readiness gate).
+- **Desktop W4 signing / notarization / updater / release artifact change** → `xai-desktop-release-gate`.
 - **Entity may need cross-device** → `xai-account-sync-scope-check` (D4).
 - **Dashboard reflect** → `xai-dev-dashboard-sync` (apply the suggested `product_lines`/copy updates + regen).
 - **Visible increment shipped** → `xai-release-log`.

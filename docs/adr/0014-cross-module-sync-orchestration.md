@@ -93,7 +93,7 @@ diff / 草案 / 检查回执,不能落地产品源码、不能开实作分支**�
 | 让 D4 workflow `feat(core-data): register entity` | **违反 sync 冻结**——D4 改为 **receipt-only,绝不写源码** | ADR-0010 P2 PAUSED |
 | 建议"补一条 web→sync 假依赖边" | web→core-data **已传递存在**(via plugin-console/productivity),不必伪造 | `apps/web/package.json` + 两包 `package.json` |
 | 称 dashboard"无防漂移自动化" | 已有 `xai-dev-dashboard-sync` + `.githooks` | `.githooks/post-merge` |
-| 9 条固定 lane | 对 solo dev 过重 → 压成 **4 类动作 + 语义规则** | — |
+| 9 条固定 lane | 对 solo dev 过重 → 压成 **6 类动作 + 语义规则** | — |
 | 漏引 D4 权威 | 以 `docs/contracts/account-sync-verification-gates.md` 为准 | 文件存在 |
 
 > 结论:**"跨切面设计 / registry 锁定前,先过一遍独立 Codex 只读对抗复核"** 应成为
@@ -103,15 +103,17 @@ diff / 草案 / 检查回执,不能落地产品源码、不能开实作分支**�
 
 ## S4 — 决策 / Decision
 
-### D1 — 用「4 类可复用动作」取代「六模块两两 workflow / 9 条固定 lane」
+### D1 — 用「6 类可复用动作」取代「六模块两两 workflow / 9 条固定 lane」
 
 机读定义见 `docs/workflow/project/sync-registry.json` 的 `actions[]`。
 
 | 动作 id | 职责 | skill | 写源码? | parallel | 依赖 |
 |---|---|---|---|---|---|
 | `d3_web_to_desktop` | Web→Desktop D3 回执(W0–W4) | ✅ `xai-web-to-desktop-sync` | 否 | ✅ | — |
+| `web_deploy_preflight` | Web Cloudflare 部署 readiness gate | 🆕 `xai-web-deploy-preflight` | **否(receipt-only)** | ✅ | — |
+| `desktop_release_gate` | Mac Desktop W4 发布 gate | 🆕 `xai-desktop-release-gate` | **否(receipt-only)** | ✅ | `d3_web_to_desktop` |
 | `d4_account_sync_scope_check` | account-sync D4 范围+9 项检查 | 🆕 `xai-account-sync-scope-check` | **否(receipt-only)** | ✅ | — |
-| `release_and_dashboard_sync` | release-log 追加 + dashboard 镜像同步(收口) | ✅ `xai-release-log` + `xai-dev-dashboard-sync` | 否 | ❌ | 前三者 |
+| `release_and_dashboard_sync` | release-log 追加 + dashboard 镜像同步(收口) | ✅ `xai-release-log` + `xai-dev-dashboard-sync` | 否 | ❌ | 前置 gates |
 | `frozen_line_impact_brief` | site/admin/plugin 影响草案 | ✅ `xai-feature-brief` | **否(brief-only)** | ✅ | — |
 
 **被砍/降级**(均按 Codex,经复验同意):
@@ -120,7 +122,9 @@ diff / 草案 / 检查回执,不能落地产品源码、不能开实作分支**�
 - `cloud_sync_fanout` → 并入 `d4_account_sync_scope_check` 的双端 receipt,不写源码。
 - `xai-structure-sync` → **不新建**;收口复用已存在的 `xai-dev-dashboard-sync` + git hooks。
 
-**净结果:真正要新建的 skill 只有 1 个**(`xai-account-sync-scope-check`)+ 1 个派发器。
+**净结果:新增少量高 ROI gate skill**: `xai-account-sync-scope-check`、`xai-web-deploy-preflight`、
+`xai-desktop-release-gate` + 1 个派发器 `xai-sync-fanout-dispatch`。这些都保持
+receipt/preflight-only,不自动解冻产品线、不自动部署、不自动发版。
 
 ### D2 — 用「语义触发 registry」做派发,而非 `turbo --affected` 魔法
 
@@ -131,6 +135,8 @@ diff / 草案 / 检查回执,不能落地产品源码、不能开实作分支**�
 ```
 path 命中 entities.ts | **/types.ts | sync-outbox.ts 且 diff 含 entityType/syncScope → d4 检查
 path 命中 apps/web/** 且触 @repo/core 共享 seam / 运行时 profile               → d3
+path 命中 deploy-web.yml | wrangler.toml | _headers | sw.js | sourcemap 脚本     → web deploy preflight
+path/关键字命中 signing | notarization | dmg | updater | release/desktop | W4  → desktop release gate
 path 命中 wrangler.toml | _headers | deploy/** 或关键字 CSP/download/updater     → site brief
 path 命中 aiPane | secretStore | usage | web-auth-device-session                 → admin brief
 事件 任一 dev_log → SHIPPED                                                      → release+dashboard
@@ -151,7 +157,7 @@ path 命中 aiPane | secretStore | usage | web-auth-device-session              
 | `PRODUCT_MODULE_MAP.md` + `CLAUDE.md`/`AGENTS.md`/`.cursor` 路由 + skill mirror | `release_and_dashboard_sync`（改后跑 Agent/Skill Tracking 审计) |
 | `entities.ts` + `docs/contracts/account-sync-*.md` | `d4_account_sync_scope_check`（**只读检查,不写**) |
 | `turbo.json` | `release_and_dashboard_sync` |
-| `docs/reviews/<f>/*-d3-receipt.md` / `*-d4-check.md` | 对应 d3 / d4 |
+| `docs/reviews/<f>/*-d3-receipt.md` / `*-web-deploy-preflight.md` / `*-desktop-release-gate.md` / `*-d4-check.md` | 对应 d3 / deploy / desktop-release / d4 |
 
 **收口动作(`release_and_dashboard_sync`)必须等所有影响 routing/release/dashboard/
 skill-surface 的 lane 完成**,而非只等三条。
@@ -178,9 +184,10 @@ skill-surface 的 lane 完成**,而非只等三条。
 | Phase | 内容 | 风险 | 状态 |
 |---|---|---|---|
 | **0** | 暴露 `xai-release-log`(symlink 进 `.claude/skills`)+ 写 `sync-registry.json`(最小语义规则,不固化 9 lane) | 零(纯增量,不动冻结线) | ✅ **本 ADR 提交时完成** |
-| **1** | 建唯一新 skill `xai-account-sync-scope-check`：权威 = `account-sync-verification-gates.md`,只产 check receipt,默认禁止源码落地;首个用例 = clipboard 漂移(见 S6) | 中(最高 ROI) | 待启动 |
-| **2** | 建派发器 `xai-sync-fanout-dispatch`：走 registry 语义规则,输出多窗口 prompt 或 spawn subagent | 中 | 待启动 |
-| **3** | 收口复用 `xai-dev-dashboard-sync` + `.githooks` 做 mirror lint;site/admin/plugin 专属 skill **等 operator 解冻后再建** | 低 | 待启动 |
+| **1** | 建 `xai-account-sync-scope-check`：权威 = `account-sync-verification-gates.md`,只产 check receipt,默认禁止源码落地;首个用例 = clipboard 漂移(见 S6) | 中(最高 ROI) | ✅ 已完成 |
+| **1b** | 建 Web deploy / Desktop W4 两个 release gate：`xai-web-deploy-preflight` + `xai-desktop-release-gate`,均为 receipt-only | 中 | ✅ 已完成 |
+| **2** | 建派发器 `xai-sync-fanout-dispatch`：走 registry 语义规则,输出多窗口 prompt 或 spawn subagent | 中 | ✅ 已完成 |
+| **3** | 收口复用 `xai-dev-dashboard-sync` + `.githooks` 做 mirror lint;Cursor `.mdc` mirror 同步纳入 registry;site/admin/plugin 专属实现 skill **等 operator 解冻后再建** | 低 | ✅ 已完成 / 专属实现 skill 仍 deferred |
 
 ### S5.1 目标运行时形态
 
@@ -210,7 +217,7 @@ skill-surface 的 lane 完成**,而非只等三条。
 ## S6 — 后果 / Consequences
 
 ### 正面
-- 一句话扇出,消灭重复解释;solo dev 心智负担从"6 模块两两关系"降到"4 类动作 + 规则表"。
+- 一句话扇出,消灭重复解释;solo dev 心智负担从"6 模块两两关系"降到"6 类动作 + 规则表"。
 - 只新建 1 个 skill,其余全复用;不与现有治理冲突。
 - 冻结线护栏 + 单写者归属,使并行**安全**;唯一可能的共享写面(core-data/contracts)被 receipt-only 化解。
 

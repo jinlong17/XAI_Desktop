@@ -465,6 +465,11 @@ Project-layer skills:
 | `xai-feature-full-loop` | 单 feature parent-session 全流程 |
 | `xai-roadmap-loop` | 多 feature roadmap orchestration |
 | `xai-web-to-desktop-sync` | ADR-0013 D3 Web→Desktop 同步门 / parity receipt |
+| `xai-web-deploy-preflight` | ADR-0008 Web Cloudflare deploy / CSP / secret / smoke preflight receipt |
+| `xai-desktop-release-gate` | ADR-0013 W4 Mac Desktop signing / notarization / DMG / updater release gate receipt |
+| `xai-account-sync-scope-check` | ADR-0013 D4 account-sync scope / 9 项完整性 / device-local-never-syncs receipt |
+| `xai-sync-fanout-dispatch` | ADR-0014 跨模块同步扇出入口,按 registry 语义规则派发各 gate |
+| `xai-release-log` | 发布记录 / 系统治理变更登记 |
 | `xai-dev-dashboard-sync` | 个人开发看板 Overview / 测试结果 / 机器说明文档 / 可复用模板同步 |
 
 ---
