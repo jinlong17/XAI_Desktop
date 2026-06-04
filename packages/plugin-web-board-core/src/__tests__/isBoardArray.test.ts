@@ -107,7 +107,17 @@ describe("isBoardArray", () => {
           { id: "i2", text: "Item 2", done: false },
         ],
         attachments: [
-          { id: "a1", url: "https://example.com", title: "Spec" },
+          {
+            id: "a1",
+            url: "https://example.com",
+            title: "Spec",
+            source: {
+              kind: "integration",
+              providerId: "github",
+              providerName: "GitHub",
+              externalId: "GH-1",
+            },
+          },
         ],
         activity: [
           {
@@ -181,6 +191,23 @@ describe("isBoardArray", () => {
         id: "c1",
         title: { en: "a", zh: "b" },
         dueDate: "2026-02-31",
+      }),
+    ).toBe(false);
+    expect(
+      isBoardCard({
+        id: "c1",
+        title: { en: "a", zh: "b" },
+        attachments: [
+          {
+            id: "a1",
+            url: "https://example.com",
+            source: {
+              kind: "integration",
+              providerId: "notion",
+              providerName: "Notion",
+            },
+          },
+        ],
       }),
     ).toBe(false);
   });

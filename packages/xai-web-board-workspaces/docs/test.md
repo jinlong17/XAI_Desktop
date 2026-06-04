@@ -318,3 +318,19 @@ Acceptance gate:
 - `pnpm --filter @repo/plugin-web-board-workspaces typecheck`
 - `pnpm --filter @repo/plugin-web-board-workspaces lint`
 - `pnpm --filter @repo/plugin-web-board-workspaces test`
+
+## §8 — 2026-06-03 Extension Tests (Project module row #15 — Board integrations)
+
+> Canonical row docs live in `packages/xai-web-board-integrations/docs/`.
+
+| File | Suite | Cases |
+|---|---|---|
+| `__tests__/BoardWorkspacesModule.test.tsx` | BWM-INTEGRATIONS-1 | Provider link attachments persist integration metadata and render the provider label. |
+| `__tests__/BoardWorkspacesModule.test.tsx` | BWM-DETAIL-4 | Invalid integration URLs still do not mutate card attachment state. |
+
+Acceptance gate:
+
+- `pnpm --filter @repo/plugin-web-board-workspaces typecheck`
+- `pnpm --filter @repo/plugin-web-board-workspaces lint`
+- `pnpm --filter @repo/plugin-web-board-workspaces test`
+- local `/app/board` browser smoke

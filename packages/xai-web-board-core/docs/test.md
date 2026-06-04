@@ -203,6 +203,26 @@ Acceptance gate:
 - `pnpm --filter @repo/plugin-web-board-core lint`
 - `pnpm --filter @repo/plugin-web-board-core test`
 
+## §9 — 2026-06-03 Extension Tests (Project module row #15 — Board integrations)
+
+> Canonical row docs live in `packages/xai-web-board-integrations/docs/`.
+
+| File | Suite | Cases |
+|---|---|---|
+| `__tests__/integrationAdapters.test.ts` | IA1 | Provider catalog includes GCal, GitHub, Linear, Drive, and generic Link. |
+| | IA2 | Provider id guard accepts known ids and rejects unknown ids. |
+| | IA3 | Helper creates normalized provider-backed attachments. |
+| | IA4 | Helper rejects missing ids, unknown providers, and non-HTTP URLs. |
+| | IA5 | Provider lookup returns catalog metadata. |
+| `__tests__/isBoardArray.test.ts` | V8b/V8bb | Guard accepts valid attachment integration source and rejects malformed provider metadata. |
+| `__tests__/index-barrel.test.ts` | IB1 | Barrel exports integration provider catalog and helper surface. |
+
+Acceptance gate:
+
+- `pnpm --filter @repo/plugin-web-board-core typecheck`
+- `pnpm --filter @repo/plugin-web-board-core lint`
+- `pnpm --filter @repo/plugin-web-board-core test`
+
 ## §8 — 2026-06-03 Extension Tests (Project module row #14 — Automation Lite)
 
 > Canonical row docs live in `packages/xai-web-board-automation-lite/docs/`.

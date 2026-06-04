@@ -15,6 +15,7 @@ import type {
   BoardList,
   BoardListColorId,
   BoardTemplate,
+  BoardAttachmentIntegrationSource,
   BoardCardActivityEntry,
   BoardCardAttachmentLink,
   BoardCardTaskLink,
@@ -23,6 +24,7 @@ import type {
   CardLocation,
 } from "../types.js";
 import { isIsoDateOnly } from "./dateModel.js";
+import { isBoardIntegrationProviderId } from "./integrationAdapters.js";
 import { LIST_COLOR_IDS } from "./listColors.js";
 
 function isObject(value: unknown): value is Record<string, unknown> {
@@ -57,6 +59,27 @@ function isBoardCardAttachmentLink(value: unknown): value is BoardCardAttachment
   if (!isString(value.id)) return false;
   if (!isString(value.url)) return false;
   if (value.title !== undefined && !isString(value.title)) return false;
+  if (
+    value.source !== undefined &&
+    !isBoardAttachmentIntegrationSource(value.source)
+  ) {
+    return false;
+  }
+  return true;
+}
+
+function isBoardAttachmentIntegrationSource(
+  value: unknown,
+): value is BoardAttachmentIntegrationSource {
+  if (!isObject(value)) return false;
+  if (value.kind !== "integration") return false;
+  if (!isBoardIntegrationProviderId(value.providerId)) return false;
+  if (!isString(value.providerName) || value.providerName.length === 0) {
+    return false;
+  }
+  if (value.externalId !== undefined && !isString(value.externalId)) {
+    return false;
+  }
   return true;
 }
 

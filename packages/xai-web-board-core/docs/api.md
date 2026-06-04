@@ -557,3 +557,45 @@ Rules:
 - daily due sort orders active non-Done cards by valid `dueDate`
 - archived lists/cards are skipped
 - helper remains pure and never touches `localStorage`
+
+## §S17 — 2026-06-03 Extension API (Project module row #15 — Board integrations)
+
+> Canonical row docs live in `packages/xai-web-board-integrations/docs/`.
+
+Board-core now owns the Board integration link adapter vocabulary:
+
+```ts
+export type BoardIntegrationProviderId =
+  | "gcal"
+  | "github"
+  | "linear"
+  | "drive"
+  | "link";
+
+export interface BoardAttachmentIntegrationSource {
+  kind: "integration";
+  providerId: BoardIntegrationProviderId;
+  providerName: string;
+  externalId?: string;
+}
+
+export interface BoardCardAttachmentLink {
+  id: string;
+  url: string;
+  title?: string;
+  source?: BoardAttachmentIntegrationSource;
+}
+
+export function createBoardIntegrationAttachment(
+  input: BoardIntegrationAttachmentInput,
+): BoardIntegrationAttachmentResult;
+```
+
+Rules:
+
+- provider catalog is GCal, GitHub, Linear, Google Drive, and generic Link
+- only HTTP(S) URLs are accepted
+- helper is pure and never touches Settings prefs, OAuth state, storage, or the
+  network
+- optional `source` metadata is additive; old attachments remain valid
+- storage guard rejects malformed provider metadata

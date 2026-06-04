@@ -892,6 +892,7 @@
 }
 .cd-date-grid input,
 .cd-inline-form input,
+.cd-attachment-form select,
 .cd-attachment-form input,
 .cd-check-row input[type="text"],
 .cd-check-row input:not([type]) {
@@ -965,7 +966,7 @@
 }
 .cd-attachment-form {
   display: grid;
-  grid-template-columns: minmax(0, 1.2fr) minmax(0, 0.8fr) auto;
+  grid-template-columns: minmax(112px, 0.7fr) minmax(0, 1.2fr) minmax(0, 0.8fr) auto;
   gap: 8px;
 }
 .cd-check-row,
@@ -988,6 +989,12 @@
 .cd-link-row {
   grid-template-columns: minmax(0, 1fr) auto;
 }
+.cd-link-main {
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
 .cd-link-row a {
   min-width: 0;
   overflow-wrap: anywhere;
@@ -995,6 +1002,11 @@
   font-size: var(--fs-sm);
   font-weight: 650;
   text-decoration: none;
+}
+.cd-link-provider {
+  color: var(--text-3);
+  font-size: var(--fs-xs);
+  font-weight: 700;
 }
 .cd-activity-row {
   grid-template-columns: minmax(0, 1fr) auto;

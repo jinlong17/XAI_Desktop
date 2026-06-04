@@ -37,10 +37,26 @@ export interface BoardChecklistItem {
   done: boolean;
 }
 
+export type BoardIntegrationProviderId =
+  | "gcal"
+  | "github"
+  | "linear"
+  | "drive"
+  | "link";
+
+export interface BoardAttachmentIntegrationSource {
+  kind: "integration";
+  providerId: BoardIntegrationProviderId;
+  providerName: string;
+  externalId?: string;
+}
+
 export interface BoardCardAttachmentLink {
   id: string;
   url: string;
   title?: string;
+  /** Optional provider metadata for integration-backed external links. */
+  source?: BoardAttachmentIntegrationSource;
 }
 
 export interface BoardCardActivityEntry {

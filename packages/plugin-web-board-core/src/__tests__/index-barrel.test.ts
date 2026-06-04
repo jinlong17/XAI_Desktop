@@ -57,6 +57,11 @@ describe("index barrel", () => {
     expect(Barrel.BOARD_AUTOMATION_DUE_SOON_DAYS).toBe(2);
     expect(Barrel.BOARD_AUTOMATION_URGENT_LABEL_ID).toBe("urgent");
     expect(typeof Barrel.applyBoardAutomationLite).toBe("function");
+    expect(Barrel.BOARD_INTEGRATION_PROVIDER_IDS).toContain("github");
+    expect(Barrel.BOARD_INTEGRATION_PROVIDERS).toHaveLength(5);
+    expect(typeof Barrel.createBoardIntegrationAttachment).toBe("function");
+    expect(typeof Barrel.getBoardIntegrationProvider).toBe("function");
+    expect(typeof Barrel.isBoardIntegrationProviderId).toBe("function");
 
     // Persistence
     expect(typeof Barrel.loadBoardsOrDefault).toBe("function");

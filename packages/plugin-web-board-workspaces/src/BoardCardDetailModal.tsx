@@ -1,13 +1,16 @@
 import { useEffect, useMemo, useState } from "react";
 import {
+  BOARD_INTEGRATION_PROVIDERS,
   BOARD_MEMBER_OPTIONS,
   PM_LABELS,
+  createBoardIntegrationAttachment,
 } from "@repo/plugin-web-board-core";
 import type {
   BoardCardActivityEntry,
   BoardCardAttachmentLink,
   BoardCardData,
   BoardChecklistItem,
+  BoardIntegrationProviderId,
 } from "@repo/plugin-web-board-core";
 import type { Lang } from "./internal/strings.js";
 
@@ -46,6 +49,7 @@ const STR = {
   checklist: { en: "Checklist", zh: "核对表" },
   addItem: { en: "Add item", zh: "添加条目" },
   attachments: { en: "Attachments", zh: "附件" },
+  integrationProvider: { en: "Provider", zh: "来源" },
   addLink: { en: "Add link", zh: "添加链接" },
   url: { en: "URL", zh: "链接" },
   title: { en: "Title", zh: "标题" },
@@ -67,6 +71,11 @@ function displayUrlTitle(link: BoardCardAttachmentLink): string {
   return link.title?.trim() || link.url;
 }
 
+function displayAttachmentProvider(link: BoardCardAttachmentLink): string | null {
+  if (link.source?.kind !== "integration") return null;
+  return link.source.providerName;
+}
+
 function getChecklistItems(card: BoardCardData): BoardChecklistItem[] {
   if (card.checklistItems !== undefined) return card.checklistItems;
   if (!card.checklist || card.checklist.total <= 0) return [];
@@ -75,20 +84,6 @@ function getChecklistItems(card: BoardCardData): BoardChecklistItem[] {
     text: `Item ${index + 1}`,
     done: index < card.checklist!.done,
   }));
-}
-
-function normalizeUrl(value: string): string {
-  const trimmed = value.trim();
-  if (!trimmed) return "";
-  try {
-    const parsed = new URL(trimmed);
-    if (parsed.protocol !== "http:" && parsed.protocol !== "https:") {
-      return "";
-    }
-    return parsed.toString();
-  } catch {
-    return "";
-  }
 }
 
 export function BoardCardDetailSurface({
@@ -102,6 +97,8 @@ export function BoardCardDetailSurface({
   onClose,
 }: BoardCardDetailSurfaceProps) {
   const [checklistText, setChecklistText] = useState("");
+  const [integrationProviderId, setIntegrationProviderId] =
+    useState<BoardIntegrationProviderId>("link");
   const [attachmentUrl, setAttachmentUrl] = useState("");
   const [attachmentTitle, setAttachmentTitle] = useState("");
   const [activityText, setActivityText] = useState("");
@@ -137,17 +134,17 @@ export function BoardCardDetailSurface({
   };
 
   const addAttachment = () => {
-    const url = normalizeUrl(attachmentUrl);
-    if (!url) return;
-    const title = attachmentTitle.trim();
+    const result = createBoardIntegrationAttachment({
+      id: makeId("att"),
+      providerId: integrationProviderId,
+      url: attachmentUrl,
+      title: attachmentTitle,
+    });
+    if (result.status !== "valid") return;
     onPatchCard({
       attachments: [
         ...attachments,
-        {
-          id: makeId("att"),
-          url,
-          ...(title ? { title } : {}),
-        },
+        result.attachment,
       ],
     });
     setAttachmentUrl("");
@@ -414,9 +411,19 @@ export function BoardCardDetailSurface({
               ) : (
                 attachments.map((link) => (
                   <div key={link.id} className="cd-link-row">
-                    <a href={link.url} target="_blank" rel="noreferrer">
-                      {displayUrlTitle(link)}
-                    </a>
+                    <div className="cd-link-main">
+                      <a href={link.url} target="_blank" rel="noreferrer">
+                        {displayUrlTitle(link)}
+                      </a>
+                      {displayAttachmentProvider(link) ? (
+                        <span
+                          className="cd-link-provider"
+                          data-testid={`card-detail-attachment-provider-${link.id}`}
+                        >
+                          {displayAttachmentProvider(link)}
+                        </span>
+                      ) : null}
+                    </div>
                     <button
                       type="button"
                       className="icon-btn danger"
@@ -434,6 +441,20 @@ export function BoardCardDetailSurface({
               )}
             </div>
             <div className="cd-attachment-form">
+              <select
+                value={integrationProviderId}
+                onChange={(event) =>
+                  setIntegrationProviderId(event.target.value as BoardIntegrationProviderId)
+                }
+                aria-label={STR.integrationProvider[lang]}
+                data-testid="card-detail-integration-provider"
+              >
+                {BOARD_INTEGRATION_PROVIDERS.map((provider) => (
+                  <option key={provider.id} value={provider.id}>
+                    {provider.label}
+                  </option>
+                ))}
+              </select>
               <input
                 value={attachmentUrl}
                 onChange={(event) => setAttachmentUrl(event.target.value)}

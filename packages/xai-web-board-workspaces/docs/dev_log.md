@@ -320,3 +320,25 @@ Verification:
 - PASS `pnpm --filter @repo/plugin-web-board-workspaces lint`
 - PASS `pnpm --filter @repo/plugin-web-board-workspaces test` (217 tests)
 - PASS local Chrome smoke at `http://localhost:3001/app/board`
+
+---
+
+## Extension Lineage - xai-web-board-integrations (2026-06-03) - cross-ref
+
+> Canonical row docs live in `packages/xai-web-board-integrations/docs/`.
+
+- Added provider select to `BoardCardDetailSurface`.
+- Link creation now routes through board-core's
+  `createBoardIntegrationAttachment()` helper.
+- Integration-backed links render provider labels in the card detail attachment
+  list.
+- Existing attachment URL/title fields remain in place and generic Link is the
+  default provider.
+- Browser smoke screenshot: `/tmp/xai-board-integrations.png`.
+
+Verification:
+
+- PASS `pnpm --filter @repo/plugin-web-board-workspaces typecheck`
+- PASS `pnpm --filter @repo/plugin-web-board-workspaces lint`
+- PASS `pnpm --filter @repo/plugin-web-board-workspaces test` (218 tests)
+- PASS local Chrome smoke at `http://localhost:3001/app/board`

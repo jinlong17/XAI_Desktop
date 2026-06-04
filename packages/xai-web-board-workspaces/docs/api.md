@@ -571,3 +571,18 @@ public helper:
 
 No automation settings key, backend scheduler, notification channel, or custom
 rule builder is introduced.
+
+## §S17 — 2026-06-03 Extension API (Project module row #15 — Board integrations)
+
+> Canonical row docs live in `packages/xai-web-board-integrations/docs/`.
+
+`BoardCardDetailSurface` now exposes integration-backed attachment creation:
+
+- provider select: `data-testid="card-detail-integration-provider"`
+- provider catalog comes from `@repo/plugin-web-board-core`
+- Add link uses `createBoardIntegrationAttachment()`
+- added links persist through existing `BoardCard.attachments[]`
+- integration-backed links render provider labels in the attachment list
+
+No Settings OAuth pref is read by Board in this row. The UI creates typed
+external links only; it does not sync provider data.

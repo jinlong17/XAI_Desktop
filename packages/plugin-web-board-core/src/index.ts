@@ -22,6 +22,7 @@ import "./styles.css";
 // `BoardCardData` / `BoardListData` aliases.
 export type {
   ArchivedBoardCardRecord,
+  BoardAttachmentIntegrationSource,
   Board,
   BoardCard as BoardCardData,
   BoardCardActivityEntry,
@@ -34,6 +35,7 @@ export type {
   BoardMemberOption,
   BoardTemplate,
   BoardWorkspace,
+  BoardIntegrationProviderId,
   BilingualText,
   CardChecklist,
   CardLocation,
@@ -124,6 +126,19 @@ export type {
   BoardAutomationLiteResult,
   BoardAutomationLiteStats,
 } from "./internal/automationLite.js";
+
+export {
+  BOARD_INTEGRATION_PROVIDER_IDS,
+  BOARD_INTEGRATION_PROVIDERS,
+  createBoardIntegrationAttachment,
+  getBoardIntegrationProvider,
+  isBoardIntegrationProviderId,
+} from "./internal/integrationAdapters.js";
+export type {
+  BoardIntegrationAttachmentInput,
+  BoardIntegrationAttachmentResult,
+  BoardIntegrationProvider,
+} from "./internal/integrationAdapters.js";
 
 // ---- Persistence helpers -------------------------------------------------
 export {

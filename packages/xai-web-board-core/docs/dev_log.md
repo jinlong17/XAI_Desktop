@@ -336,3 +336,26 @@ Verification:
 - PASS `pnpm --filter @repo/plugin-web-board-core typecheck`
 - PASS `pnpm --filter @repo/plugin-web-board-core lint`
 - PASS `pnpm --filter @repo/plugin-web-board-core test` (174 tests)
+
+---
+
+## Extension Lineage - xai-web-board-integrations (2026-06-03) - cross-ref
+
+> Canonical row docs live in `packages/xai-web-board-integrations/docs/`.
+
+- Added Board integration provider catalog in
+  `packages/plugin-web-board-core/src/internal/integrationAdapters.ts`.
+- Added optional `BoardCardAttachmentLink.source` metadata for typed external
+  integration links.
+- Exposed provider catalog, provider guard, provider lookup, helper types, and
+  `createBoardIntegrationAttachment()` from the package barrel.
+- Widened `isBoardCard` attachment guard to accept valid integration metadata
+  and reject malformed provider ids.
+- New `integrationAdapters.test.ts` covers catalog, helper success/failure, and
+  provider lookup.
+
+Verification:
+
+- PASS `pnpm --filter @repo/plugin-web-board-core typecheck`
+- PASS `pnpm --filter @repo/plugin-web-board-core lint`
+- PASS `pnpm --filter @repo/plugin-web-board-core test` (179 tests)

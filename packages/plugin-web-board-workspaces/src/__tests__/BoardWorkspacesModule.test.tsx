@@ -517,6 +517,43 @@ describe("BoardWorkspacesModule (BWM1..BWM18)", () => {
     expect(card.attach).toBeUndefined();
   });
 
+  it("BWM-INTEGRATIONS-1: provider link attachments persist integration metadata", async () => {
+    render(<BoardWorkspacesModule lang="en" />);
+    fireEvent.click(screen.getAllByTestId("board-card")[0]!);
+
+    fireEvent.change(screen.getByTestId("card-detail-integration-provider"), {
+      target: { value: "linear" },
+    });
+    fireEvent.change(screen.getByTestId("card-detail-attachment-url"), {
+      target: { value: "https://linear.app/acme/issue/ABC-1" },
+    });
+    fireEvent.change(screen.getByTestId("card-detail-attachment-title"), {
+      target: { value: "Linear Issue" },
+    });
+    fireEvent.click(screen.getByTestId("card-detail-attachment-add"));
+
+    await act(async () => {
+      await Promise.resolve();
+    });
+
+    expect(screen.getByRole("link", { name: "Linear Issue" })).toBeInTheDocument();
+    expect(screen.getByTestId(/card-detail-attachment-provider-/)).toHaveTextContent(
+      "Linear",
+    );
+
+    const card = getStoredCard("bc1");
+    expect(card.attachments?.at(-1)).toMatchObject({
+      url: "https://linear.app/acme/issue/ABC-1",
+      title: "Linear Issue",
+      source: {
+        kind: "integration",
+        providerId: "linear",
+        providerName: "Linear",
+      },
+    });
+    expect(card.attach).toBe(1);
+  });
+
   it("BWM-DETAIL-5: Table view title opens the shared card detail modal", () => {
     seedAltView("table");
     render(<BoardWorkspacesModule lang="en" />);
