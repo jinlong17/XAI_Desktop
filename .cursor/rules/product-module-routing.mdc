@@ -16,7 +16,7 @@ navigation (开发目标 / 绑定 skill / prompt 模板 / 开发 workflow / 进�
 |---|---|---|---|---|---|
 | Web 版本 | `web` | `apps/web/`, `packages/xai-web-*`, `plugin-web-*` | `web` / `codex/web/<feature>` | Web 页面·组件、Vite SPA、浏览器持久化、共享 UI、`/app/*` | P0 active |
 | Mac 桌面版 App | `app` | `apps/desktop/` (Tauri 2 Web container shell) | `desktop-next`→`dev` / `codex/desktop/<feature>` | Web SPA 主窗口、native chrome、菜单栏/托盘、离线、账号+Keychain、自动更新、通知、深链、host command implementation | P1 active |
-| 桌面整理插件 / Widget | `plugin` | `apps/desktop/` 插件平台运行时 + `packages/plugin-*` | `desktop-plugin-next` / `codex/plugin/<feature>` | 插件 SDK、widget host、多窗口/overlay/click-through/grid persistence、桌面整理、快速入口、单插件 | P2 paused |
+| 桌面整理插件 / Widget | `plugin` | `apps/desktop/` 插件平台运行时 + `packages/plugin-*` | `desktop-plugin-next` / `codex/plugin/<feature>` | 插件 SDK、widget host、多窗口/overlay/click-through/grid persistence、桌面整理、快速入口、单插件 | G1 runtime active · packages P2 paused |
 | 账号云同步层 | `sync` | sync-v1 stack + server | (paused) / `codex/sync/<feature>` | `syncScope`、push/pull、冲突、跨设备、账号云 | P2 paused |
 | 官方网页 | `site` | Cloudflare deploy infra | (proposed) / `codex/site/<feature>` | 下载页、自动更新、release notes、营销 | PROPOSED |
 | Admin / 控制面 | `admin` | prototype `docs/prototypes/admin-dashboard/` | (proposed) / `codex/admin/<feature>` | AI 配置、权限、用量、审计、运营后台 | PROPOSED |
@@ -29,6 +29,9 @@ Hard rules (do not violate):
   in the host process, but desktop multi-window / overlay / widget runtime is a
   `plugin` product concern. The `app` module is the Mac shell / Web container plus
   native chrome, not the desktop organizer.
+- G1 plugin platform-runtime work (multi-window engine, grid persistence,
+  window-command) is the active gate. Concrete plugin packages
+  (clipboard/widgets/pet/meditation) remain P2 paused until G1 ships.
 - `sync` only moves `syncScope: account-sync` entities; `device-local` never goes
   to the cloud (ADR-0013 §D4).
 - `site` / `admin` are PROPOSED (owner-deferred) — do not open new work branches or

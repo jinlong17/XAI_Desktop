@@ -44,7 +44,9 @@ Scope: <optional — limit scan to a path, e.g. packages/plugin-*>  # scan mode
 1. **Signal match.** Compare Feature + Changed paths against each `modules[].signals` (PRODUCT_MODULE_MAP "任务归属信号"). Record every module that matches and why.
 2. **Run `classification_flow`** (6 steps): browser-doable full page → `web`; Mac shell / Web container / native chrome → `app`; desktop plugin platform runtime (multi-window / overlay / click-through / grid persistence) or lightweight widget on that runtime → `plugin`; cross-device need → declare `account-sync` (sync line); web→app promotion → D3 gate; future mobile/watch/browser surfaces → planning-only, not active modules.
 3. **Apply hard rules** from MODULE_BOUNDARIES §4: physical host implementation is not product ownership; Mac shell/native chrome = `app`; desktop multi-window/overlay/plugin runtime product ownership = `plugin`; plugin packages consume native commands and do not implement Tauri commands; don't re-do a Web-covered module inside a plugin; data defaults `device-local`; resolve the same-name trap (web DOM vs desktop overlay).
-4. **Frozen-line check.** If the verdict lands on `plugin`/`sync` (PAUSED) or `site`/`admin` (PROPOSED), say so and route to brief/queue only — do NOT present it as ready-to-build.
+4. **Frozen-line check.** Use `module-classification.json.governance.frozen_lines`:
+   - `plugin` platform-runtime / G1 native-foundation anchor (multi-window engine, grid persistence, window-command) is the ACTIVE gate, not frozen; route it as plugin-platform product work with P1 App-lane execution.
+   - `plugin` packages (clipboard/widgets/pet/meditation), `sync`, `site`, and `admin` remain frozen/proposed unless the operator unfreezes them; route those to brief/queue only.
 5. **Emit the receipt** (below).
 
 ## Scan mode — drift checks
@@ -64,7 +66,7 @@ Walk `drift_checks` from the registry and report each hit with file evidence:
 ## Module Classification Receipt — <feature | scan>  (<YYYYMMDD>)
 Verdict: <module key> · <confidence high/med/low>      # or: DRIFT FOUND / NEEDS-OPERATOR
 Why: <signals matched + flow steps + hard rules applied>
-Frozen?: <no | PAUSED (plugin/sync) | PROPOSED (site/admin)> → <queue/brief-only note>
+Frozen?: <no | ACTIVE plugin-runtime/G1 | PAUSED plugin-package/sync | PROPOSED site/admin> → <route/queue note>
 Doc division: <which docs to add/update — e.g. sub-prds/<key>/PRD.md, MODULE_BOUNDARIES note, ADR if a real decision>
 Dashboard update: <which product_lines[key] fields to touch — links/rows/copy only, via xai-dev-dashboard-sync>
 Drift (scan): <phantom/syncscope/same-name/frozen/unknown hits with file:line>
@@ -75,13 +77,13 @@ Next (on confirm): <one delegated action per owning skill>
 
 - Do NOT decide product priority, create `desktop-next`/`desktop-plugin-next`/`release/*`, or touch `dev` — those are operator-confirmed.
 - Do NOT write product source, `packages/core-data/src/entities.ts`, or any plugin `types.ts`.
-- Do NOT land work on a frozen line; for `plugin`/`sync` produce a brief/queue note only.
+- Do NOT land work on a frozen line. For `plugin`, first distinguish ACTIVE platform-runtime/G1 anchor work from frozen plugin-package work; for frozen plugin packages or `sync`, produce a brief/queue note only.
 - Do NOT auto-edit dashboard priority/branch/badge — only links/rows/copy, and only via `xai-dev-dashboard-sync` rules.
 - When the verdict is ambiguous (unknown / multi-match), STOP and ask the operator instead of guessing.
 
 ## Integration / handoff
 
-- **New feature, classified** → hand to `xai-feature-brief` (normalize) → standard pipeline when the line is active.
+- **New feature, classified** → hand to `xai-feature-brief` (normalize) → standard pipeline when the line is active; G1 plugin-platform-runtime work is active, while concrete plugin packages remain queued until G1 ships.
 - **Web change that may affect desktop** → `xai-web-to-desktop-sync` (D3 gate).
 - **Web deploy / CSP / Cloudflare change** → `xai-web-deploy-preflight` (ADR-0008 deploy readiness gate).
 - **Desktop W4 signing / notarization / updater / release artifact change** → `xai-desktop-release-gate`.
