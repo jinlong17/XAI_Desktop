@@ -7,14 +7,14 @@
 | Workflow | FEATURE_DEV |
 | Target | xai-web-board-card-detail |
 | Title | Web Project module P0 card-detail slice — wire `/app/board` cards to a real detail modal, persist title/description/date/label/member/link/checklist edits through the current board blob, and keep Board/Table/Calendar/Timeline/Planner aligned without pulling the full typed-date migration into this row |
-| Current Phase | FEATURE_AUTO_BUILD |
-| Status | READY_FOR_VERIFY |
-| Suggested Next | feature-verify |
+| Current Phase | FEATURE_VERIFY |
+| Status | READY_TO_SHIP |
+| Suggested Next | ship |
 | Automation Mode | D-Codex+Cursor |
 | Verify Cross-vendor | yes |
-| Executor | gpt-5.4 inline fallback after feature-verify repair |
-| Updated | 2026-06-03 19:01 PDT |
-| Blockers | Resolved: `eadc04b` was split into docs + P1/P2/P3 phase commits with full commit bodies, and title edits now mirror both `title.en` and `title.zh` with regression coverage. |
+| Executor | gpt-5.3-codex |
+| Updated | 2026-06-03 19:04 PDT |
+| Blockers | None. Residual risk: no fresh browser click/screenshot smoke was captured in this verify run; package-level automation and contract checks are green. |
 | Roadmap Manifest | `docs/workflow/roadmap/xai-web-project-module.md` row #2 |
 | Dependency Gate | Branches containing `e79ecc5 docs(web): formalize project module plan` satisfy the row #1 docs prerequisite for this feature. There is no separate `xai-web-project-prd-sync` dev_log gate in this worktree; re-audit only if the referenced project-module docs drift again. |
 | Write Scope | `docs/reviews/xai-web-board-card-detail/` + `packages/xai-web-board-card-detail/docs/` during planning. Runtime implementation is expected to touch `packages/plugin-web-board-{core,views,workspaces}/` only. |
@@ -242,6 +242,16 @@ Fresh verification after repair:
 - `pnpm --filter @repo/plugin-web-board-workspaces typecheck && pnpm --filter @repo/plugin-web-board-workspaces lint` — pass.
 - `git diff --check` — pass.
 
+Independent re-verify conclusion:
+
+- Reviewed the repaired commit chain `d7259b1`, `e075ae4`, `234e74e`, `5fecc7f`, and `447f015` against the phase plan, API contract, and test strategy.
+- Confirmed the mixed commit `eadc04b` is no longer in the current `e79ecc5..HEAD` sequence, and the replacement P1/P2/P3 commits each carry phase-bounded scope plus `Why` / `What` / `Scope` / `Risk` / `Docs` / `Tests` body fields.
+- Confirmed `BoardCardDetailSurface` now mirrors title edits into both `title.en` and `title.zh` unconditionally, with regression coverage in `BWM-DETAIL-2`.
+- Confirmed Table / Calendar / Timeline passthrough is covered by `BWM-DETAIL-5..7`, and the active-card lookup fails closed (`null`) when the referenced list/card is missing.
+- Existing non-blocking warnings remain unchanged: React `act(...)` warnings in board-core / board-views tests and the known nested-button hydration warning in `BoardSwitcher`.
+
+Verdict: PASS. The repaired implementation matches the frozen design assumptions, additive API contract, and planned test coverage closely enough to advance this feature to `READY_TO_SHIP`.
+
 ## Work Log
 
 | Timestamp | Executor | Action | Commits | Next |
@@ -253,3 +263,4 @@ Fresh verification after repair:
 | 2026-06-03 18:48 | gpt-5.4 inline fallback | feature-auto-build inline — implemented board-core additive detail schema/normalization, shared member export, reusable workspaces detail surface/modal, Board/Table/Calendar/Timeline/Planner open-card wiring, attachment URL rejection, and focused tests/lint/typecheck. Build agent could not run because the configured `gpt-5.3-codex` worker model is unavailable in this account. | — | feature-verify |
 | 2026-06-03 18:55 | gpt-5.3-codex | feature-verify BLOCKED — reran package tests/typechecks and `git diff --check`, then blocked ship on mixed-scope commit history (`eadc04b`) and bilingual title persistence drifting from the frozen mirror-write contract | eadc04b | feature-build |
 | 2026-06-03 19:01 | gpt-5.4 inline fallback | feature-build repair — split the mixed build commit into docs/P1/P2/P3 commits with required metadata, fixed title edits to mirror both bilingual fields, added Table/Calendar/Timeline detail-open regression tests, and reran the full related package test/typecheck/lint matrix plus `git diff --check` | d7259b1, e075ae4, 234e74e, 5fecc7f | feature-verify |
+| 2026-06-03 19:04 | gpt-5.3-codex | feature-verify PASS — independently reviewed the repaired P1/P2/P3 + READY_FOR_VERIFY commit stack against design/api/test contracts, reran tests/typechecks/lints plus `git diff --check`, and advanced the feature to READY_TO_SHIP with only the previously documented browser-smoke gap remaining | d7259b1, e075ae4, 234e74e, 5fecc7f, 447f015 | ship |
