@@ -136,6 +136,22 @@ describe("TimelineView", () => {
     expect(() => screen.queryByTestId("tl-bar")).not.toThrow();
   });
 
+  test("TL8b startDate-only card does not render a timeline bar", () => {
+    const lists = [makeList({ cards: [makeCard({ startDate: dayN(0) })] })];
+    render(<TimelineView lists={lists} lang="en" updateCard={() => {}} />);
+    expect(screen.queryByTestId("tl-bar")).not.toBeInTheDocument();
+  });
+
+  test("TL8c startDate > dueDate fails soft with no timeline bar", () => {
+    const lists = [
+      makeList({
+        cards: [makeCard({ startDate: dayN(3), dueDate: dayN(1) })],
+      }),
+    ];
+    render(<TimelineView lists={lists} lang="en" updateCard={() => {}} />);
+    expect(screen.queryByTestId("tl-bar")).not.toBeInTheDocument();
+  });
+
   test("TL9 DnD: resize-r +2 days → ONE updateCard with new due (atomic)", async () => {
     const updateCard = vi.fn();
     const card = makeCard({ id: "cx", dueDate: dayN(0) });

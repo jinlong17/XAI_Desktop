@@ -5,7 +5,7 @@
 
 import { describe, it, expect, vi, beforeEach } from "vitest";
 import { render, screen, fireEvent, act } from "@testing-library/react";
-import { makeDefaultBoards } from "@repo/plugin-web-board-core";
+import { makeDefaultBoards, isoDateFromOffset } from "@repo/plugin-web-board-core";
 import type { Board, BoardCardData } from "@repo/plugin-web-board-core";
 import { BoardWorkspacesModule } from "../BoardWorkspacesModule.js";
 
@@ -40,12 +40,9 @@ function getStoredCard(cardId: string): BoardCardData {
 function seedAltView(view: "table" | "calendar" | "timeline") {
   const seed = makeDefaultBoards() as Board[];
   const today = new Date();
-  const todayDue = `${today.getMonth() + 1}/${today.getDate()}`;
   seed[0]!.lists[0]!.cards[0] = {
     ...seed[0]!.lists[0]!.cards[0]!,
-    due: todayDue,
-    dueEn: undefined,
-    dueLate: false,
+    dueDate: isoDateFromOffset(0, today),
   };
   localStorage.setItem("xai_boards_v2", JSON.stringify(seed));
   localStorage.setItem("xai_active_board", "b-default");
@@ -446,5 +443,46 @@ describe("BoardWorkspacesModule (BWM1..BWM18)", () => {
     expect(screen.getByTestId("card-detail-title-input")).toHaveValue(
       "Onboarding flow concepts",
     );
+  });
+
+  it("BWM-DATE-1: detail modal preserves startDate > dueDate without auto-swap or clamp", async () => {
+    render(<BoardWorkspacesModule lang="en" />);
+    fireEvent.click(screen.getAllByTestId("board-card")[0]!);
+
+    fireEvent.change(screen.getByTestId("card-detail-start-date"), {
+      target: { value: "2099-01-03" },
+    });
+    fireEvent.change(screen.getByTestId("card-detail-due-date"), {
+      target: { value: "2099-01-02" },
+    });
+
+    await act(async () => {
+      await Promise.resolve();
+    });
+
+    const card = getStoredCard("bc1");
+    expect(card.startDate).toBe("2099-01-03");
+    expect(card.dueDate).toBe("2099-01-02");
+    expect(card.start).toBe("1/3");
+    expect(card.due).toBe("1/2");
+  });
+
+  it("BWM-DATE-2: ambiguous legacy due reload opens detail without fabricated dueDate", () => {
+    const seed = makeDefaultBoards() as Board[];
+    seed[0]!.lists[0]!.cards[0] = {
+      ...seed[0]!.lists[0]!.cards[0]!,
+      due: "Overdue",
+      dueEn: "Overdue",
+      dueLate: true,
+      dueDate: undefined,
+    };
+    localStorage.setItem("xai_boards_v2", JSON.stringify(seed));
+    localStorage.setItem("xai_active_board", "b-default");
+
+    render(<BoardWorkspacesModule lang="en" />);
+    fireEvent.click(screen.getAllByTestId("board-card")[0]!);
+
+    expect(screen.getByTestId("card-detail-modal")).toBeInTheDocument();
+    expect(screen.getByTestId("card-detail-due-date")).toHaveValue("");
   });
 });

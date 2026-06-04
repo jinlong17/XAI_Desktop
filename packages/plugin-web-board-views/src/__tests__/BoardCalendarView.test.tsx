@@ -70,6 +70,14 @@ describe("BoardCalendarView", () => {
     expect(cell.textContent).toContain("Test Card");
   });
 
+  test("BC4b startDate-only cards do not appear in Calendar placement", () => {
+    const card = makeCard({ id: "c1", startDate: isoDateFromOffset(0, TODAY) });
+    const lists = [makeList({ id: "l1", cards: [card] })];
+    render(<BoardCalendarView lists={lists} lang="en" updateCard={() => {}} />);
+    expect(screen.queryByText("Test Card")).not.toBeInTheDocument();
+    expect(screen.getByTestId("cal-empty")).toBeInTheDocument();
+  });
+
   test("BC5 cell with >3 cards shows +N more indicator", () => {
     const cards = Array.from({ length: 5 }, (_, i) =>
       makeCard({ id: `c${i}`, due: "Today" }),
