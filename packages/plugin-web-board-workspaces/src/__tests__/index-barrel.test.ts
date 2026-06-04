@@ -36,6 +36,8 @@ describe("index.ts barrel (IB1..IB4)", () => {
       "InboxPanel",
       "PlannerPanel",
       "computePlannerSlots",
+      "BoardCardDetailModal",
+      "BoardCardDetailSurface",
       "BoardWorkspacesModule",
       "boardWorkspacesWebModuleRegistration",
     ];

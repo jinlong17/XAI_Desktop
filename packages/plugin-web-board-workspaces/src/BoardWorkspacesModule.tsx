@@ -63,6 +63,7 @@ import { EMPTY_FILTER } from "@repo/plugin-web-board-views";
 
 import { BoardSwitcher } from "./BoardSwitcher.js";
 import { BoardCreator } from "./BoardCreator.js";
+import { BoardCardDetailModal } from "./BoardCardDetailModal.js";
 import { StatusOverviewBanner } from "./StatusOverviewBanner.js";
 import { InboxPanel } from "./InboxPanel.js";
 import { PlannerPanel } from "./PlannerPanel.js";
@@ -84,6 +85,12 @@ export interface BoardWorkspacesModuleProps {
   lang: Lang;
 }
 
+interface ActiveCardRef {
+  boardId: string;
+  listId: string;
+  cardId: string;
+}
+
 /**
  * Local narrowing for the xai_board_view_by_id registry key, mirroring the
  * board-views package's internal helper. board-views does NOT export this
@@ -98,6 +105,21 @@ const VALID_VIEW_IDS = new Set<BoardViewId>([
   "timeline",
   "map",
 ]);
+
+const LIST_KEY_LABEL: Record<string, { en: string; zh: string }> = {
+  backlog: { en: "Backlog", zh: "待办池" },
+  today: { en: "Today", zh: "今天" },
+  week: { en: "Week", zh: "本周" },
+  later: { en: "Later", zh: "以后" },
+  done: { en: "Done", zh: "已完成" },
+};
+
+function resolveListName(list: BoardListData, lang: Lang): string {
+  if (list.key) {
+    return LIST_KEY_LABEL[list.key]?.[lang] ?? list.key;
+  }
+  return list.customName?.[lang] ?? (lang === "zh" ? "未命名" : "Untitled");
+}
 
 function loadViewByBoardIdOrEmpty(raw: unknown): Record<string, BoardViewId> {
   if (!raw || typeof raw !== "object" || Array.isArray(raw)) return {};
@@ -176,6 +198,7 @@ export function BoardWorkspacesModule({ lang }: BoardWorkspacesModuleProps) {
   const [overviewOpen, setOverviewOpen] = useState(false);
   const [filterOpen, setFilterOpen] = useState(false);
   const [shareOpen, setShareOpen] = useState(false);
+  const [activeCardRef, setActiveCardRef] = useState<ActiveCardRef | null>(null);
 
   // ---- Kanban-view composer state ---------------------------------------
   const [draftListIdx, setDraftListIdx] = useState<number | null>(null);
@@ -292,6 +315,31 @@ export function BoardWorkspacesModule({ lang }: BoardWorkspacesModuleProps) {
     [writeLists],
   );
 
+  const openCard = useCallback(
+    (cardId: string, listId: string) => {
+      setActiveCardRef({ boardId: activeBoard.id, listId, cardId });
+    },
+    [activeBoard.id],
+  );
+
+  const activeCardContext =
+    activeCardRef && activeCardRef.boardId === activeBoard.id
+      ? (() => {
+          const list = lists.find((entry) => entry.id === activeCardRef.listId);
+          const card = list?.cards.find((entry) => entry.id === activeCardRef.cardId);
+          if (!list || !card) return null;
+          return { list, card };
+        })()
+      : null;
+
+  const patchActiveCard = useCallback(
+    (patch: Partial<BoardCardData>) => {
+      if (!activeCardRef || activeCardRef.boardId !== activeBoard.id) return;
+      updateCard(activeCardRef.listId, activeCardRef.cardId, patch);
+    },
+    [activeBoard.id, activeCardRef, updateCard],
+  );
+
   // ---- View picker setter ------------------------------------------------
   const setView = useCallback(
     (next: BoardViewId) => {
@@ -401,7 +449,9 @@ export function BoardWorkspacesModule({ lang }: BoardWorkspacesModuleProps) {
               {panels.inbox && (
                 <InboxPanel cards={inboxCards} setCards={setInbox} lang={lang} />
               )}
-              {panels.planner && <PlannerPanel lists={filteredLists} lang={lang} />}
+              {panels.planner && (
+                <PlannerPanel lists={filteredLists} lang={lang} onOpenCard={openCard} />
+              )}
               {panels.board && (
                 <div className="board-main-panel">
                   <BoardView
@@ -421,6 +471,7 @@ export function BoardWorkspacesModule({ lang }: BoardWorkspacesModuleProps) {
                     moveCardToList={moveCardToList}
                     listMenu={listMenu}
                     setListMenu={setListMenu}
+                    onOpenCard={openCard}
                   />
                 </div>
               )}
@@ -532,6 +583,16 @@ export function BoardWorkspacesModule({ lang }: BoardWorkspacesModuleProps) {
           board={activeBoard}
           lang={lang}
           onClose={() => setShareOpen(false)}
+        />
+      )}
+
+      {activeCardContext && (
+        <BoardCardDetailModal
+          card={activeCardContext.card}
+          listName={resolveListName(activeCardContext.list, lang)}
+          lang={lang}
+          onPatchCard={patchActiveCard}
+          onClose={() => setActiveCardRef(null)}
         />
       )}
     </div>

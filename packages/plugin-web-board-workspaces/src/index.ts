@@ -81,6 +81,15 @@ export type { InboxPanelProps } from "./InboxPanel.js";
 export { PlannerPanel, computePlannerSlots } from "./PlannerPanel.js";
 export type { PlannerPanelProps } from "./PlannerPanel.js";
 
+export {
+  BoardCardDetailModal,
+  BoardCardDetailSurface,
+} from "./BoardCardDetailModal.js";
+export type {
+  BoardCardDetailModalProps,
+  BoardCardDetailSurfaceProps,
+} from "./BoardCardDetailModal.js";
+
 // ---- gap-closure row #6 additions ----------------------------------------
 export { FilterPopover } from "./FilterPopover.js";
 export type { FilterPopoverProps } from "./FilterPopover.js";
