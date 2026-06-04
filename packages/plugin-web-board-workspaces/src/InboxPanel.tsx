@@ -12,9 +12,15 @@ export interface InboxPanelProps {
   cards: readonly InboxCardShape[];
   setCards: (updater: (prev: InboxCardShape[]) => InboxCardShape[]) => void;
   lang: Lang;
+  /**
+   * Called when user clicks the × (remove) button on a card.
+   * Semantics: "request delete confirmation" — host owns the confirmation gate
+   * (BoardDeleteConfirmDialog). B-28 fix: was direct delete with no gate.
+   */
+  onRequestRemove: (id: string) => void;
 }
 
-export function InboxPanel({ cards, setCards, lang }: InboxPanelProps) {
+export function InboxPanel({ cards, setCards, lang, onRequestRemove }: InboxPanelProps) {
   const [text, setText] = useState("");
 
   const add = () => {
@@ -26,10 +32,6 @@ export function InboxPanel({ cards, setCards, lang }: InboxPanelProps) {
     };
     setCards((prev) => [newCard, ...prev]);
     setText("");
-  };
-
-  const remove = (id: string) => {
-    setCards((prev) => prev.filter((c) => c.id !== id));
   };
 
   return (
@@ -62,7 +64,7 @@ export function InboxPanel({ cards, setCards, lang }: InboxPanelProps) {
               <button
                 type="button"
                 className="icon-btn"
-                onClick={() => remove(c.id)}
+                onClick={() => onRequestRemove(c.id)}
                 aria-label={lang === "zh" ? "删除" : "Remove"}
                 data-testid={`inbox-remove-${c.id}`}
               >

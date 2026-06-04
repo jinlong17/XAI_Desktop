@@ -129,7 +129,7 @@
   position: fixed;
   top: 0;
   left: 0;
-  z-index: 60;
+  z-index: 3;
   /* transform: translate(Xpx, Ypx) applied inline via React */
   user-select: none;
   pointer-events: auto;

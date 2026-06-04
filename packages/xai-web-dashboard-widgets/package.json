@@ -20,8 +20,8 @@
   },
   "dependencies": {
     "@repo/core": "workspace:*",
-    "@repo/plugin-web-dashboard-grid": "workspace:*",
     "@repo/plugin-web-storage": "workspace:*",
+    "@repo/plugin-web-time-tracker": "workspace:*",
     "@repo/plugin-web-tokens": "workspace:*",
     "@repo/xai-web-event-bus": "workspace:*"
   },

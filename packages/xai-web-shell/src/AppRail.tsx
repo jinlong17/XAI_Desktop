@@ -28,7 +28,7 @@ interface BottomButton {
 
 // ---- AppRail component -----------------------------------------------------
 
-export function AppRail({ activeModuleId, onModuleClick, onPetToggle, onAvatarOpenSettings, onAvatarOpenStatistics }: AppRailProps) {
+export function AppRail({ activeModuleId, onModuleClick, onPetToggle, onAvatarOpenSettings, onAvatarOpenStatistics, onSignOut }: AppRailProps) {
   const { lang, railPos, petOn } = useWebShell();
   const { t } = useI18n(lang);
   const registryModules = useWebModuleRegistry();
@@ -95,6 +95,9 @@ export function AppRail({ activeModuleId, onModuleClick, onPetToggle, onAvatarOp
   const [avatarOpen, setAvatarOpen] = useState(false);
 
   // ---- Bottom buttons ------------------------------------------------------
+  // Rail-05/06/07 fix: sync/notif/help have no real action (onClick=undefined).
+  // HIDE them rather than render as no-op clickable buttons.
+  // Pet button is retained — it has a real onPetToggle action.
   const bottomButtons: BottomButton[] = [
     {
       id: "pet",
@@ -103,12 +106,10 @@ export function AppRail({ activeModuleId, onModuleClick, onPetToggle, onAvatarOp
         onPetToggle();
       },
     },
-    { id: "sync",  icon: "sync" },
-    { id: "notif", icon: "bell" },
-    { id: "help",  icon: "help" },
   ];
 
   const navLabels = t.nav;
+  const avatarLabel = lang === "zh" ? "打开账户菜单" : "Open account menu";
 
   return (
     <aside className="app-rail" data-pos={railPos}>
@@ -117,6 +118,7 @@ export function AppRail({ activeModuleId, onModuleClick, onPetToggle, onAvatarOp
         <button
           type="button"
           className="rail-avatar"
+          aria-label={avatarLabel}
           onClick={() => setAvatarOpen((v) => !v)}
         >
           <div className="avatar-img">
@@ -138,6 +140,7 @@ export function AppRail({ activeModuleId, onModuleClick, onPetToggle, onAvatarOp
           onClose={() => setAvatarOpen(false)}
           onOpenSettings={onAvatarOpenSettings}
           onOpenStatistics={onAvatarOpenStatistics}
+          onSignOut={onSignOut}
         />
       </div>
 
@@ -146,6 +149,7 @@ export function AppRail({ activeModuleId, onModuleClick, onPetToggle, onAvatarOp
         {orderedModules.map((mod: WebModuleSlotRegistration) => {
           const icon: WebShellIconName = mod.icon ?? "kanban";
           const label = navLabels[(mod.moduleId as keyof typeof navLabels)] ?? mod.moduleId;
+          const labelText = typeof label === "string" ? label : mod.moduleId;
           const isActive = activeModuleId === mod.moduleId;
           const isDragging = dragId === mod.moduleId;
 
@@ -158,7 +162,8 @@ export function AppRail({ activeModuleId, onModuleClick, onPetToggle, onAvatarOp
                 (isActive ? " active" : "") +
                 (isDragging ? " dragging" : "")
               }
-              data-tip={typeof label === "string" ? label : mod.moduleId}
+              data-tip={labelText}
+              aria-label={labelText}
               draggable
               onDragStart={(e) => onDragStart(e, mod.moduleId)}
               onDragOver={(e) => onDragOver(e, mod.moduleId)}
@@ -180,13 +185,15 @@ export function AppRail({ activeModuleId, onModuleClick, onPetToggle, onAvatarOp
           const label = btn.id === "pet"
             ? (navLabels["pet"] ?? "pet")
             : btn.id;
+          const labelText = typeof label === "string" ? label : btn.id;
 
           return (
             <button
               key={btn.id}
               type="button"
               className={"rail-btn has-tip" + (isActive ? " active" : "")}
-              data-tip={typeof label === "string" ? label : btn.id}
+              data-tip={labelText}
+              aria-label={labelText}
               onClick={btn.action}
             >
               <Icon name={btn.icon} size={18} />

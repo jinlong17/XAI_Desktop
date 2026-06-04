@@ -182,7 +182,7 @@ const countdownState = [
 ];
 
 /**
- * A realistic state snapshot representing a typical user's data across all 11 modules.
+ * A realistic state snapshot representing a typical user's data across all modules.
  * Use this for perf-budget tests and integration tests that need realistic data volumes.
  */
 export const REALISTIC_MODULE_STATES: Readonly<Record<WebModuleId, unknown>> = Object.freeze({
@@ -196,6 +196,7 @@ export const REALISTIC_MODULE_STATES: Readonly<Record<WebModuleId, unknown>> = O
   countdown: countdownState,
   calendar: {},
   statistics: {},
+  timetrack: {},
   settings: [],
   ai: {},
   search: {},

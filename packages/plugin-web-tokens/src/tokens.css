@@ -15,6 +15,20 @@
   --bg-selected:     oklch(94%   0.025 165);
   --bg-overlay:      oklch(20%   0.01  220 / 0.42);
 
+  /* Compatibility aliases for older Web modules. New styles should prefer the
+     canonical --bg-* / --text-* / --border-* tokens above. */
+  --bg-panel-1:      var(--bg-panel);
+  --bg-panel-3:      var(--bg-hover);
+  --surface-1:       var(--bg-panel);
+  --surface-2:       var(--bg-panel-2);
+  --surface:         var(--bg-panel);
+  --panel:           var(--bg-panel);
+  --hover:           var(--bg-hover);
+  --hover-bg:        var(--bg-hover);
+  --bg-active:       var(--bg-selected);
+  --bg-2:            var(--bg-panel-2);
+  --bg-input:        var(--bg-panel);
+
   /* — Text ———————————————————————————————————————————————— */
   --text-1: oklch(22% 0.012 220);   /* primary */
   --text-2: oklch(40% 0.008 220);   /* secondary */
@@ -27,6 +41,8 @@
   --border-1: oklch(92% 0.008 200);
   --border-2: oklch(88% 0.012 200);
   --border-strong: oklch(78% 0.014 200);
+  --border: var(--border-1);
+  --border-mid: var(--border-2);
 
   /* — Accent (sage) — driven by --accent-hue (165=sage default) ——— */
   --accent-hue: 165;
@@ -34,7 +50,10 @@
   --accent:        oklch(60% var(--accent-chroma) var(--accent-hue));
   --accent-hover:  oklch(55% calc(var(--accent-chroma) + 0.01) var(--accent-hue));
   --accent-soft:   oklch(94% 0.04 var(--accent-hue));
+  --accent-light:  var(--accent-soft);
   --accent-ink:    oklch(38% var(--accent-chroma) var(--accent-hue));
+  --accent-contrast: var(--text-on-accent);
+  --danger: var(--red);
 
   /* — Semantic ————————————————————————————————————————————— */
   --red:    oklch(60% 0.18 25);

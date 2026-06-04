@@ -202,9 +202,9 @@ function WebTodoModuleInner({
             onClick={() => selectList(listId)}
             style={{
               borderRadius: 8,
-              border: "1px solid #d1d5db",
-              background: route.listId === listId ? "#111827" : "#f9fafb",
-              color: route.listId === listId ? "#ffffff" : "#111827",
+              border: "1px solid var(--border-1)",
+              background: route.listId === listId ? "var(--accent)" : "var(--bg-panel)",
+              color: route.listId === listId ? "var(--text-on-accent)" : "var(--text-1)",
               padding: "6px 10px",
             }}
             type="button"
@@ -217,7 +217,7 @@ function WebTodoModuleInner({
       <p data-testid="todo-runtime-lane">{runtimeMessage(runtime.lane, runtime.reason)}</p>
 
       <div style={{ display: "grid", gridTemplateColumns: "minmax(0, 1fr) minmax(0, 1fr)", gap: 12 }}>
-        <section style={{ border: "1px solid #e5e7eb", borderRadius: 8, padding: 10, display: "grid", gap: 8 }}>
+        <section style={{ background: "var(--bg-panel)", border: "1px solid var(--border-1)", borderRadius: 8, color: "var(--text-1)", padding: 10, display: "grid", gap: 8 }}>
           <h2 style={{ margin: 0 }}>Todos</h2>
           <div style={{ display: "grid", gap: 8 }}>
             <input
@@ -225,6 +225,14 @@ function WebTodoModuleInner({
               onChange={(event) => setDraftTitle(event.target.value)}
               placeholder="Title"
               disabled={!writeReady}
+              style={{
+                background: "var(--bg-panel)",
+                border: "1px solid var(--border-1)",
+                borderRadius: 8,
+                color: "var(--text-1)",
+                minHeight: 34,
+                padding: "0 10px",
+              }}
             />
             <textarea
               value={draftNotes}
@@ -232,32 +240,74 @@ function WebTodoModuleInner({
               placeholder="Notes"
               rows={3}
               disabled={!writeReady}
+              style={{
+                background: "var(--bg-panel)",
+                border: "1px solid var(--border-1)",
+                borderRadius: 8,
+                color: "var(--text-1)",
+                padding: "8px 10px",
+              }}
             />
-            <button onClick={() => void submit()} type="button" disabled={!writeReady}>Create</button>
+            <button
+              onClick={() => void submit()}
+              style={{
+                background: "var(--accent)",
+                border: 0,
+                borderRadius: 8,
+                color: "var(--text-on-accent)",
+                fontWeight: 700,
+                minHeight: 34,
+                padding: "0 12px",
+              }}
+              type="button"
+              disabled={!writeReady}
+            >
+              Create
+            </button>
           </div>
           {isLoading ? <p>Loading...</p> : null}
           {error ? <p>Error: {error}</p> : null}
           {visibleTodos.map((todo) => (
-            <article key={todo.id} style={{ border: "1px solid #e5e7eb", borderRadius: 6, padding: 8 }}>
-              <button type="button" onClick={() => selectTodo(todo.id)} style={{ border: 0, background: "transparent", textAlign: "left", padding: 0 }}>
+            <article key={todo.id} style={{ background: "var(--bg-panel-2)", border: "1px solid var(--border-1)", borderRadius: 6, color: "var(--text-1)", padding: 8 }}>
+              <button type="button" onClick={() => selectTodo(todo.id)} style={{ border: 0, background: "transparent", color: "var(--text-1)", textAlign: "left", padding: 0 }}>
                 <strong>{todo.title}</strong>
               </button>
-              <p style={{ margin: "4px 0", color: "#6b7280" }}>{todo.description || "-"}</p>
+              <p style={{ margin: "4px 0", color: "var(--text-2)" }}>{todo.description || "-"}</p>
               <div style={{ display: "flex", gap: 6, flexWrap: "wrap" }}>
                 <button
                   onClick={() => void setStatus(todo.id, todo.status === "done" ? "open" : "done")}
                   type="button"
                   disabled={!writeReady}
+                  style={{
+                    background: "var(--bg-panel)",
+                    border: "1px solid var(--border-1)",
+                    borderRadius: 6,
+                    color: "var(--text-1)",
+                    padding: "5px 8px",
+                  }}
                 >
                   {todo.status === "done" ? "Uncomplete" : "Complete"}
                 </button>
-                <button onClick={() => void deleteTodo(todo.id)} type="button" disabled={!writeReady}>Delete</button>
+                <button
+                  onClick={() => void deleteTodo(todo.id)}
+                  style={{
+                    background: "var(--red-soft)",
+                    border: "1px solid var(--border-1)",
+                    borderRadius: 6,
+                    color: "var(--red)",
+                    padding: "5px 8px",
+                  }}
+                  type="button"
+                  disabled={!writeReady}
+                >
+                  Delete
+                </button>
               </div>
             </article>
           ))}
         </section>
 
-        <section style={{ border: "1px solid #e5e7eb", borderRadius: 8, padding: 10, display: "grid", gap: 8 }}>
+        <section style={{ background: "var(--bg-panel)", border: "1px solid var(--border-1)", borderRadius: 8, color: "var(--text-1)", padding: 10, display: "grid", gap: 8 }}>
           <h2 style={{ margin: 0 }}>Detail</h2>
           {!selectedTodo ? <p>No todo selected.</p> : (
             <>
@@ -266,6 +316,14 @@ function WebTodoModuleInner({
                 onChange={(event) => void updateTodo(selectedTodo.id, { title: event.target.value })}
                 aria-label="Selected todo title"
                 disabled={!writeReady}
+                style={{
+                  background: "var(--bg-panel)",
+                  border: "1px solid var(--border-1)",
+                  borderRadius: 8,
+                  color: "var(--text-1)",
+                  minHeight: 34,
+                  padding: "0 10px",
+                }}
               />
               <textarea
                 value={selectedTodo.description}
@@ -273,8 +331,15 @@ function WebTodoModuleInner({
                 rows={6}
                 aria-label="Selected todo notes"
                 disabled={!writeReady}
+                style={{
+                  background: "var(--bg-panel)",
+                  border: "1px solid var(--border-1)",
+                  borderRadius: 8,
+                  color: "var(--text-1)",
+                  padding: "8px 10px",
+                }}
               />
-              <p style={{ margin: 0, color: "#6b7280" }}>todoId: {selectedTodo.id}</p>
+              <p style={{ margin: 0, color: "var(--text-2)" }}>todoId: {selectedTodo.id}</p>
             </>
           )}
         </section>

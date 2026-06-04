@@ -3,7 +3,7 @@
  * AC-ACTIVEDATE-1..2 + AC-ACTIVEDATE-8 (full-suite regression proof via re-run).
  * Design ref: design.md §15.2 #3.
  */
-import { describe, it, expect, vi } from "vitest";
+import { describe, it, expect, vi, beforeEach, afterEach } from "vitest";
 import { render, screen, fireEvent } from "@testing-library/react";
 import { CalendarModule } from "../CalendarModule.js";
 
@@ -26,6 +26,15 @@ vi.mock("@repo/xai-web-event-bus", () => ({
 vi.mock("@repo/xai-web-shell", () => ({
   useWebShell: vi.fn(() => ({ lang: "en" })),
 }));
+
+beforeEach(() => {
+  vi.useFakeTimers();
+  vi.setSystemTime(new Date(Date.UTC(2026, 4, 22, 12, 0, 0)));
+});
+
+afterEach(() => {
+  vi.useRealTimers();
+});
 
 describe("CalendarModule activeDate state refactor", () => {
   it("AC-ACTIVEDATE-1: mounts and shows month title (external behavior preserved)", () => {

@@ -4,10 +4,7 @@
   "private": true,
   "type": "module",
   "description": "Settings remaining 11 panes (Account/Premium/SmartLists/Notifications/DateTime/More/Integrations/Collaborate/StickyNote/Hotkeys/About). Consumes chassis atoms from @repo/plugin-web-settings-shell. Roadmap row #24 · W4b.",
-  "sideEffects": [
-    "./src/styles.css",
-    "./src/index.ts"
-  ],
+  "sideEffects": ["./src/styles.css", "./src/index.ts"],
   "exports": {
     ".": {
       "types": "./src/index.ts",
@@ -31,13 +28,10 @@
     "@repo/plugin-web-storage": "workspace:*",
     "@repo/plugin-web-settings-shell": "workspace:*",
     "@repo/plugin-web-ai-chat": "workspace:*",
-    "@repo/desktop-global-hotkey-quick-open": "workspace:*",
-    "@repo/desktop-native-notifications-reminders": "workspace:*",
     "@repo/xai-web-event-bus": "workspace:*",
     "@repo/xai-web-shell": "workspace:*",
     "@repo/web-auth-device-session": "workspace:*",
-    "react-router": "^7.15.1",
-    "@repo/desktop-auto-update-release-channel": "workspace:*"
+    "react-router": "^7.15.1"
   },
   "devDependencies": {
     "@repo/eslint-config": "workspace:*",

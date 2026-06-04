@@ -4,6 +4,7 @@ import {
   pickActiveBoard,
 } from "../internal/persistence.js";
 import { makeDefaultBoards } from "../internal/seed/board-data.js";
+import { createBoardStorageEnvelope } from "../internal/storageContract.js";
 
 describe("persistence", () => {
   test("PE1 loadBoardsOrDefault(null) returns makeDefaultBoards()", () => {
@@ -29,6 +30,12 @@ describe("persistence", () => {
   test("PE3 loadBoardsOrDefault(valid) returns the same reference", () => {
     const seed = makeDefaultBoards();
     expect(loadBoardsOrDefault(seed)).toBe(seed);
+  });
+
+  test("PE3b loadBoardsOrDefault(v1 envelope) returns envelope boards", () => {
+    const seed = makeDefaultBoards();
+    const envelope = createBoardStorageEnvelope(seed);
+    expect(loadBoardsOrDefault(envelope)).toEqual(seed);
   });
 
   test("PE4 pickActiveBoard returns matching board by id", () => {

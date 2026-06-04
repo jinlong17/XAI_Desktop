@@ -15,23 +15,24 @@ function fixture(id: string): WidgetRegistration {
 }
 
 describe("useDashOrder", () => {
-  // ---- AC-AWO-1: 3-element tuple shape (gap-closure row #5) ----------------
-  it("AC-AWO-1: returns a 3-element tuple [order, setOrder, addWidget]", () => {
+  // ---- AC-AWO-1: 4-element tuple shape (extended by Audit Top-10 #9 D-06) --
+  // Originally 3-element [order, setOrder, addWidget] (gap-closure row #5).
+  // Extended to 4-element [order, setOrder, addWidget, removeWidget] by
+  // Audit Top-10 #9 (D-06) — tuple-at-end extension is non-breaking.
+  it("AC-AWO-1: returns a 4-element tuple [order, setOrder, addWidget, removeWidget]", () => {
     const widgets = [fixture("a"), fixture("b")];
     const { result } = renderHook(() => useDashOrder(widgets));
     expect(Array.isArray(result.current)).toBe(true);
-    expect(result.current).toHaveLength(3);
+    expect(result.current).toHaveLength(4);
     expect(typeof result.current[0]).toBe("object"); // array (order)
     expect(typeof result.current[1]).toBe("function"); // setOrder
     expect(typeof result.current[2]).toBe("function"); // addWidget
+    expect(typeof result.current[3]).toBe("function"); // removeWidget
   });
 
   // --- existing tests (destructure as tuple now) ----------------------------
-  it("AC-PERSIST-1: empty persisted (default first-visit) → falls back to registry default + sanitized further by widgets", () => {
-    // The registry default for xai_dash_order is
-    // ["clock","minicalendar","worldclocks","weather","stickies","mail","upcoming","stats"].
-    // With widgets = [a, b, c], sanitize drops all 8 default ids and returns
-    // [a, b, c].
+  it("AC-PERSIST-1: default first-visit order is sanitized by registered widgets", () => {
+    setPref("xai_dash_order", ["a", "b", "c"]);
     const widgets = [fixture("a"), fixture("b"), fixture("c")];
     const { result } = renderHook(() => useDashOrder(widgets));
     const [order] = result.current;
@@ -55,15 +56,11 @@ describe("useDashOrder", () => {
     expect(JSON.parse(localStorage.getItem("xai_dash_order") ?? "null")).toEqual(["a", "b"]);
   });
 
-  it("AC-PERSIST-4: persisted missing some ids → append missing + write back", () => {
+  it("AC-PERSIST-4: persisted missing some ids → preserves user removals", () => {
     setPref("xai_dash_order", ["a"]);
     const widgets = [fixture("a"), fixture("b"), fixture("c")];
     renderHook(() => useDashOrder(widgets));
-    expect(JSON.parse(localStorage.getItem("xai_dash_order") ?? "null")).toEqual([
-      "a",
-      "b",
-      "c",
-    ]);
+    expect(JSON.parse(localStorage.getItem("xai_dash_order") ?? "null")).toEqual(["a"]);
   });
 
   it("AC-PERSIST-5: persisted contains duplicate ids → dedupe + write back", () => {

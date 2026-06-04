@@ -1,5 +1,5 @@
 /**
- * registrations — the 10-entry WidgetRegistration[] consumed by row #10's
+ * registrations — the WidgetRegistration[] consumed by row #10's
  * DashboardSlotHost (after the P3 host-wiring edit lands).
  *
  * P1 ships ClockWidget + 3 mini stats. P2 fills in MiniCal/WorldClocks/
@@ -7,7 +7,32 @@
  * corresponding widget's render returns null so the array length stays at 10
  * (registration sanity tests rely on this).
  */
-import type { WidgetRegistration } from "@repo/plugin-web-dashboard-grid";
+import type { ReactNode } from "react";
+import type { Lang } from "@repo/plugin-web-tokens";
+
+type WidgetSpanClass =
+  | "w-clock"
+  | "w-stat"
+  | "w-weather"
+  | "w-timetrack"
+  | "w-mini-cal"
+  | "w-timezones"
+  | "w-stickies"
+  | "w-mail"
+  | "w-upcoming";
+
+interface WidgetRenderContext {
+  lang: Lang;
+  now: Date;
+  goTo: (moduleId: string) => void;
+}
+
+interface WidgetRegistration {
+  id: string;
+  span: WidgetSpanClass;
+  render: (ctx: WidgetRenderContext) => ReactNode;
+  ariaLabel?: { en: string; zh: string };
+}
 
 import { ClockWidget } from "./widgets/ClockWidget.js";
 import { MailWidget } from "./widgets/MailWidget.js";
@@ -16,6 +41,7 @@ import { StatPomos } from "./widgets/StatPomos.js";
 import { StatStreak } from "./widgets/StatStreak.js";
 import { StatTasks } from "./widgets/StatTasks.js";
 import { StickiesWidget } from "./widgets/StickiesWidget.js";
+import { TimeTrackerWidget } from "./widgets/TimeTrackerWidget.js";
 import { UpcomingWidget } from "./widgets/UpcomingWidget.js";
 import { WeatherWidget } from "./widgets/WeatherWidget.js";
 import { WorldClocks } from "./widgets/WorldClocks.js";
@@ -48,6 +74,12 @@ export const dashboardWidgetRegistrations: WidgetRegistration[] = [
     render: (ctx) => <StatPomos lang={ctx.lang} />,
   },
   {
+    id: "timetrack",
+    span: "w-timetrack",
+    ariaLabel: { en: "Time Tracker widget", zh: "时间追踪组件" },
+    render: (ctx) => <TimeTrackerWidget lang={ctx.lang} now={ctx.now} goTo={ctx.goTo} />,
+  },
+  {
     id: "weather",
     span: "w-weather",
     ariaLabel: { en: "Weather widget", zh: "天气组件" },
@@ -74,13 +106,13 @@ export const dashboardWidgetRegistrations: WidgetRegistration[] = [
   {
     id: "mail",
     span: "w-mail",
-    ariaLabel: { en: "Inbox", zh: "收件箱" },
-    render: (ctx) => <MailWidget lang={ctx.lang} />,
+    ariaLabel: { en: "Notifications", zh: "通知" },
+    render: (ctx) => <MailWidget lang={ctx.lang} now={ctx.now} goTo={ctx.goTo} />,
   },
   {
     id: "upcoming",
     span: "w-upcoming",
     ariaLabel: { en: "Upcoming events", zh: "近期事件" },
-    render: (ctx) => <UpcomingWidget lang={ctx.lang} />,
+    render: (ctx) => <UpcomingWidget lang={ctx.lang} now={ctx.now} goTo={ctx.goTo} />,
   },
 ];

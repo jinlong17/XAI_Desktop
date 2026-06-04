@@ -14,6 +14,7 @@ import type {
   Board,
   BoardCard,
   BoardList,
+  BoardMemberOption,
   BoardTemplate,
   BoardWorkspace,
 } from "../../types.js";
@@ -37,6 +38,13 @@ export const PM_LABELS: readonly BoardLabel[] = [
 export const DEFAULT_WORKSPACES: readonly BoardWorkspace[] = [
   { id: "ws-personal", name: { en: "Personal", zh: "个人" }, color: "oklch(60% 0.10 165)" },
   { id: "ws-team", name: { en: "Team Workspace", zh: "团队空间" }, color: "oklch(60% 0.14 295)" },
+] as const;
+
+/** Seed member directory used by board cards until a real user/member store exists. */
+export const BOARD_MEMBER_OPTIONS: readonly BoardMemberOption[] = [
+  { id: "u1", name: "Alice", color: "oklch(62% 0.14 155)" },
+  { id: "u2", name: "Bob", color: "oklch(62% 0.14 245)" },
+  { id: "u3", name: "Carol", color: "oklch(62% 0.14 25)" },
 ] as const;
 
 /**

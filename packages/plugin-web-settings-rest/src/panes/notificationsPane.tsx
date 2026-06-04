@@ -12,10 +12,6 @@ import { Toggle, SettingRow, SectionBlock } from "@repo/plugin-web-settings-shel
 import { useI18n } from "@repo/plugin-web-tokens";
 import { usePref } from "@repo/plugin-web-storage";
 import type { WebPrefKey } from "@repo/plugin-web-storage";
-import {
-  requestDesktopNotificationPermission,
-  useDesktopNotificationRuntimeSnapshot,
-} from "@repo/desktop-native-notifications-reminders/web";
 import { localI18n } from "../internal/localI18n.js";
 
 function NotificationsPaneContent({ lang }: PaneRenderProps): React.ReactElement {
@@ -41,9 +37,6 @@ function NotificationsPaneContent({ lang }: PaneRenderProps): React.ReactElement
   const [pushHabit, setPushHabit] = usePref(
     "xai_pref_notif_push_habit" as WebPrefKey,
   ) as readonly [boolean, (v: boolean) => void, unknown];
-  const [pushCalendar, setPushCalendar] = usePref(
-    "xai_pref_notif_push_calendar" as WebPrefKey,
-  ) as readonly [boolean, (v: boolean) => void, unknown];
 
   const [quiet, setQuiet] = usePref(
     "xai_pref_notif_quiet" as WebPrefKey,
@@ -56,23 +49,6 @@ function NotificationsPaneContent({ lang }: PaneRenderProps): React.ReactElement
   const [quietEnd, setQuietEnd] = usePref(
     "xai_pref_notif_quiet_end" as WebPrefKey,
   ) as readonly [string, (v: string) => void, unknown];
-  const runtimeSnapshot = useDesktopNotificationRuntimeSnapshot();
-
-  const statusText = (() => {
-    if (!enabled) {
-      return t("notif.desktopStatusDisabled");
-    }
-    if (runtimeSnapshot.status === "ready") {
-      return t("notif.desktopStatusReady");
-    }
-    if (runtimeSnapshot.status === "denied") {
-      return t("notif.desktopStatusDenied");
-    }
-    if (runtimeSnapshot.status === "permission-required") {
-      return t("notif.desktopStatusPrompt");
-    }
-    return t("notif.desktopStatusUnsupported");
-  })();
 
   return (
     <div className="notif-pane">
@@ -113,13 +89,6 @@ function NotificationsPaneContent({ lang }: PaneRenderProps): React.ReactElement
             ariaLabel={t("notif.habitRemind")}
           />
         </SettingRow>
-        <SettingRow label={t("notif.calendarRemind")}>
-          <Toggle
-            on={pushCalendar}
-            onChange={() => setPushCalendar(!pushCalendar)}
-            ariaLabel={t("notif.calendarRemind")}
-          />
-        </SettingRow>
       </SectionBlock>
 
       <div className="sl-group" style={{ marginTop: 18 }}>
@@ -146,19 +115,6 @@ function NotificationsPaneContent({ lang }: PaneRenderProps): React.ReactElement
         {t("notif.dndSection")}
       </div>
       <SectionBlock>
-        <SettingRow label={t("notif.desktopStatusTitle")} desc={statusText}>
-          <button
-            type="button"
-            className="btn"
-            onClick={() => {
-              void requestDesktopNotificationPermission();
-            }}
-            disabled={runtimeSnapshot.status === "ready"}
-            aria-label={t("notif.desktopRequestPermission")}
-          >
-            {t("notif.desktopRequestPermission")}
-          </button>
-        </SettingRow>
         <SettingRow label={t("notif.quietEnable")}>
           <Toggle
             on={quiet}

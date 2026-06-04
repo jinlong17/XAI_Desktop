@@ -208,6 +208,12 @@
   justify-content: space-between;
   gap: 8px;
 }
+/* §F empty-state for stat widgets */
+.ws-empty {
+  font-size: 0.8rem;
+  color: var(--text-2, oklch(55% 0 0));
+  padding: 4px 0;
+}
 .ws-val {
   font-size: 32px;
   font-weight: 700;
@@ -219,6 +225,79 @@
   color: var(--text-3);
   font-weight: 500;
   margin-left: 2px;
+}
+
+/* ---------- Time Tracker ---------- */
+.tt-widget {
+  display: flex;
+  width: 100%;
+  height: 100%;
+  flex-direction: column;
+  align-items: stretch;
+  justify-content: space-between;
+  gap: 10px;
+  padding: 14px 16px;
+  border: 0;
+  background: transparent;
+  color: inherit;
+  cursor: pointer;
+  text-align: left;
+}
+
+.ttw-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.ttw-total {
+  color: var(--text-1);
+  font-size: 30px;
+  font-weight: 750;
+  line-height: 1;
+}
+
+.ttw-live {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 5px 8px;
+  border-radius: 999px;
+  background: var(--bg-panel-2);
+  color: var(--text-3);
+  font-size: 11px;
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+.ttw-live::before {
+  content: "";
+  width: 6px;
+  height: 6px;
+  border-radius: 999px;
+  background: var(--text-4);
+}
+
+.ttw-live.is-on {
+  color: var(--accent);
+}
+
+.ttw-live.is-on::before {
+  background: var(--accent);
+}
+
+.ttw-meta {
+  overflow: hidden;
+  color: var(--text-2);
+  font-size: 13px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.ttw-open {
+  color: var(--text-3);
+  font-size: 12px;
 }
 
 .donut {
@@ -272,6 +351,27 @@
   background: var(--bg-panel-2);
 }
 
+.widget-open-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 2px;
+  height: 24px;
+  padding: 0 7px;
+  border: 1px solid var(--border-1);
+  border-radius: 999px;
+  background: oklch(100% 0 0 / 0.58);
+  color: var(--text-2);
+  cursor: pointer;
+  font-size: 11px;
+  font-weight: 600;
+}
+.widget-open-btn:hover,
+.widget-open-btn:focus-visible {
+  color: var(--text-1);
+  background: var(--bg-panel);
+  outline: none;
+}
+
 /* ---------- Weather ---------- */
 .w-weather-body {
   display: flex;
@@ -310,17 +410,74 @@
   font-size: 11px;
   color: var(--text-3);
 }
+.ww-source {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 5px;
+  padding: 0 12px;
+  color: var(--text-3);
+  font-size: 10px;
+  font-weight: 700;
+}
+.ww-source span {
+  min-height: 18px;
+  padding: 2px 7px;
+  border-radius: 999px;
+  background: oklch(100% 0 0 / 0.38);
+  border: 1px solid color-mix(in oklch, var(--border-1) 65%, transparent);
+}
+.ww-metrics {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 5px;
+  padding: 0 12px;
+}
+.ww-metrics span {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  min-height: 24px;
+  padding: 5px 7px;
+  border-radius: 8px;
+  background: oklch(100% 0 0 / 0.36);
+  color: var(--text-2);
+  font-size: 10px;
+  font-weight: 700;
+}
+.ww-alert {
+  margin: 0 12px;
+  padding: 7px 9px;
+  border: 1px solid color-mix(in oklch, var(--red, oklch(60% 0.18 25)) 32%, transparent);
+  border-radius: 9px;
+  background: color-mix(in oklch, var(--red, oklch(60% 0.18 25)) 9%, transparent);
+  color: var(--text-2);
+  cursor: pointer;
+  font-size: 11px;
+  font-weight: 700;
+  text-align: left;
+}
+.ww-alert:hover,
+.ww-alert:focus-visible {
+  color: var(--text-1);
+  border-color: var(--red, oklch(60% 0.18 25));
+  outline: none;
+}
 .ww-forecast {
   display: grid;
-  grid-template-columns: repeat(5, 1fr);
-  gap: 4px;
-  padding: 8px 12px 12px;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 6px;
+  padding: 2px 12px 12px;
 }
 .wwf-day {
   display: flex;
   flex-direction: column;
   align-items: center;
   gap: 4px;
+  min-width: 0;
+  padding: 7px 4px;
+  border: 1px solid color-mix(in oklch, var(--border-1) 64%, transparent);
+  border-radius: 9px;
+  background: oklch(100% 0 0 / 0.34);
   font-size: 11px;
 }
 .wwf-d {
@@ -336,28 +493,472 @@
   font-weight: 400;
 }
 
+/* ---------- Weather §G-A additions (additive; no .widget* redefinition — §S9) ---------- */
+.ww-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 4px;
+}
+.ww-edit-btn {
+  background: oklch(100% 0 0 / 0.54);
+  border: 1px solid var(--border-1);
+  cursor: pointer;
+  padding: 4px 6px;
+  color: var(--text-2);
+  border-radius: 999px;
+  display: flex;
+  align-items: center;
+  flex-shrink: 0;
+}
+.ww-edit-btn:hover {
+  color: var(--text-1);
+  background: var(--bg-2, rgba(0,0,0,0.05));
+}
+.ww-empty {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex: 1;
+  min-height: 84px;
+  margin: 8px 12px 12px;
+  padding: 12px;
+  border: 1px dashed var(--border-2, var(--border-1));
+  border-radius: 12px;
+  background: oklch(100% 0 0 / 0.42);
+  font-size: 12px;
+  color: var(--text-2);
+  text-align: center;
+  cursor: pointer;
+}
+.ww-empty:hover,
+.ww-empty:focus-visible {
+  color: var(--text-1);
+  border-color: var(--accent);
+  background: var(--accent-soft, var(--bg-panel-2));
+  outline: none;
+}
+.ww-empty--pending {
+  min-height: 112px;
+  line-height: 1.5;
+}
+
+[data-theme="dark"] .widget-open-btn,
+[data-theme="dark"] .ww-edit-btn,
+[data-theme="dark"] .ww-source span,
+[data-theme="dark"] .ww-metrics span,
+[data-theme="dark"] .wwf-day,
+[data-theme="dark"] .ww-empty {
+  background: color-mix(in oklch, var(--bg-panel-2, oklch(26% 0.012 220)) 78%, transparent);
+  border-color: color-mix(in oklch, var(--border-1, oklch(40% 0.014 220)) 76%, transparent);
+}
+
+[data-theme="dark"] .ww-empty:hover,
+[data-theme="dark"] .ww-empty:focus-visible {
+  background: color-mix(in oklch, var(--accent-soft, var(--bg-panel-2)) 34%, var(--bg-panel-2));
+}
+
+/* WeatherEditor dialog (§G-A; additive, no .widget* redefinition) */
+.weather-editor {
+  border: none;
+  border-radius: 16px;
+  padding: 0;
+  background: transparent;
+  box-shadow: 0 24px 80px rgba(0,0,0,0.24);
+  min-width: 280px;
+  max-width: min(720px, calc(100vw - 32px));
+  width: 100%;
+}
+.weather-editor::backdrop {
+  background: rgba(0,0,0,0.35);
+  backdrop-filter: blur(8px);
+}
+.weather-editor-panel {
+  padding: 18px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  border: 1px solid color-mix(in oklch, var(--border-1) 72%, transparent);
+  border-radius: 16px;
+  background: color-mix(in oklch, var(--bg-panel, #fff) 88%, transparent);
+  backdrop-filter: blur(22px) saturate(1.35);
+}
+.weather-editor-title {
+  margin: 0;
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--text-1);
+}
+.weather-editor-grid {
+  display: grid;
+  grid-template-columns: minmax(260px, 1fr) minmax(240px, 0.86fr);
+  gap: 12px;
+}
+.weather-editor-section {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  gap: 10px;
+  padding: 12px;
+  border: 1px solid color-mix(in oklch, var(--border-1) 72%, transparent);
+  border-radius: 12px;
+  background: color-mix(in oklch, var(--bg-panel-2, var(--bg-panel)) 72%, transparent);
+}
+.weather-editor-section-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  color: var(--text-1);
+  font-size: 13px;
+  font-weight: 800;
+}
+.weather-editor-provider {
+  min-height: 20px;
+  padding: 2px 7px;
+  border-radius: 999px;
+  background: var(--accent-soft, var(--bg-panel-2));
+  color: var(--accent, var(--text-1));
+  font-size: 10px;
+  font-weight: 800;
+}
+.weather-editor-help {
+  margin: 0;
+  color: var(--text-3);
+  font-size: 11px;
+  line-height: 1.45;
+}
+.weather-editor-field {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+.weather-editor-field--half {
+  flex: 1;
+}
+.weather-editor-hilo-row {
+  display: flex;
+  gap: 10px;
+}
+.weather-editor-label {
+  font-size: 12px;
+  color: var(--text-2);
+  font-weight: 500;
+}
+.weather-editor-search-row {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 8px;
+}
+.weather-editor-input {
+  border: 1px solid var(--border-1, #e0e0e0);
+  border-radius: 6px;
+  padding: 6px 10px;
+  font-size: 13px;
+  color: var(--text-1);
+  background: var(--bg-app, white);
+  outline: none;
+}
+.weather-editor-input:focus {
+  border-color: var(--accent, oklch(60% 0.15 250));
+}
+.weather-editor-search-btn {
+  min-width: 74px;
+  border: 1px solid var(--border-1);
+  border-radius: 7px;
+  background: var(--bg-panel, #fff);
+  color: var(--text-1);
+  cursor: pointer;
+  font-size: 12px;
+  font-weight: 800;
+}
+.weather-editor-search-btn:hover,
+.weather-editor-search-btn:focus-visible {
+  border-color: var(--accent);
+  background: var(--accent-soft, var(--bg-panel-2));
+  outline: none;
+}
+.weather-editor-search-btn:disabled {
+  cursor: wait;
+  opacity: 0.7;
+}
+.weather-editor-error {
+  font-size: 11px;
+  color: var(--red, oklch(60% 0.18 25));
+}
+.weather-editor-muted {
+  color: var(--text-3);
+  font-size: 11px;
+}
+.weather-editor-selected {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  padding: 9px;
+  border: 1px solid color-mix(in oklch, var(--accent) 38%, transparent);
+  border-radius: 10px;
+  background: var(--accent-soft, var(--bg-panel-2));
+  color: var(--text-2);
+  font-size: 11px;
+}
+.weather-editor-selected strong {
+  color: var(--text-1);
+  font-size: 13px;
+}
+.weather-editor-selected small {
+  color: var(--text-3);
+}
+.weather-editor-results {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  max-height: 178px;
+  overflow-y: auto;
+  padding-right: 2px;
+}
+.weather-editor-result {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  width: 100%;
+  min-height: 48px;
+  padding: 8px 9px;
+  border: 1px solid transparent;
+  border-radius: 9px;
+  background: color-mix(in oklch, var(--bg-panel, #fff) 74%, transparent);
+  color: var(--text-1);
+  cursor: pointer;
+  text-align: left;
+}
+.weather-editor-result:hover,
+.weather-editor-result:focus-visible,
+.weather-editor-result[aria-selected="true"] {
+  border-color: var(--accent);
+  background: var(--bg-panel, #fff);
+  outline: none;
+}
+.weather-editor-result span {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  gap: 3px;
+}
+.weather-editor-result strong,
+.weather-editor-result small {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.weather-editor-result strong {
+  font-size: 12px;
+}
+.weather-editor-result small {
+  color: var(--text-3);
+  font-size: 10px;
+}
+.weather-editor-conditions {
+  display: flex;
+  gap: 8px;
+}
+.weather-editor-cond-chip {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  padding: 8px 12px;
+  border: 1.5px solid var(--border-1, #e0e0e0);
+  border-radius: 8px;
+  background: var(--bg-app, white);
+  cursor: pointer;
+  font-size: 11px;
+  color: var(--text-2);
+  flex: 1;
+}
+.weather-editor-cond-chip.selected {
+  border-color: var(--accent, oklch(60% 0.15 250));
+  background: var(--accent-light, oklch(97% 0.03 250));
+  color: var(--text-1);
+  font-weight: 600;
+}
+.weather-editor-actions {
+  display: flex;
+  gap: 8px;
+  justify-content: flex-end;
+}
+.weather-editor-btn {
+  padding: 7px 16px;
+  border-radius: 7px;
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+  border: none;
+}
+.weather-editor-btn--cancel {
+  background: var(--bg-2, var(--bg-panel-2));
+  color: var(--text-2);
+}
+.weather-editor-btn--save {
+  background: var(--accent, oklch(60% 0.15 250));
+  color: var(--bg-app, white);
+}
+
+@media (max-width: 720px) {
+  .weather-editor-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
 /* ---------- Stickies ---------- */
 .w-stickies-body {
   display: flex;
   flex-direction: column;
   gap: 8px;
+  height: 100%;
+  min-height: 0;
 }
 .sticky-stack {
   display: flex;
-  flex-direction: column;
-  gap: -8px;
+  flex-wrap: wrap;
+  gap: 10px;
+  align-items: start;
+  justify-content: start;
+  flex: 1 1 auto;
+  min-height: 360px;
   padding: 12px;
   position: relative;
+  overflow: hidden;
+  border-radius: 12px;
+  background:
+    linear-gradient(rgba(255, 255, 255, 0.34), rgba(255, 255, 255, 0.12)),
+    color-mix(in oklch, var(--bg-panel-2, #f6f8f7) 68%, transparent);
+}
+
+[data-theme="dark"] .sticky-stack {
+  background:
+    linear-gradient(rgb(255 255 255 / 0.04), rgb(255 255 255 / 0.01)),
+    color-mix(in oklch, var(--bg-panel-2, oklch(26% 0.012 220)) 84%, transparent);
+}
+
+[data-theme="dark"] .sticky {
+  background: color-mix(in oklch, var(--bg-panel-2, oklch(26% 0.012 220)) 82%, var(--accent) 8%) !important;
+  color: var(--text-1, oklch(96% 0.005 200));
+  box-shadow: 0 8px 20px rgb(0 0 0 / 0.22);
+}
+
+[data-theme="dark"] .sticky-meta span {
+  background: color-mix(in oklch, var(--bg-hover, oklch(32% 0.014 220)) 72%, transparent);
+  color: var(--text-2, oklch(82% 0.006 200));
+}
+
+[data-theme="dark"] .sticky-time {
+  color: var(--text-3, oklch(68% 0.006 200));
 }
 .sticky {
+  box-sizing: border-box;
+  flex: 0 0 auto;
+  min-width: 150px;
+  min-height: 84px;
   padding: 8px 10px;
   border-radius: 6px;
   font-size: 12px;
   line-height: 1.45;
   box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
-  margin-bottom: -6px;
+  margin-bottom: 0;
   position: relative;
   color: #2a2a2a;
+  cursor: default;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  user-select: none;
+  transition: transform 120ms ease, box-shadow 120ms ease, opacity 120ms ease, outline-color 120ms ease;
+}
+.sticky[role="button"] {
+  cursor: grab;
+}
+.sticky[role="button"]:hover,
+.sticky[role="button"]:focus-visible {
+  box-shadow: 0 8px 18px rgba(0, 0, 0, 0.12);
+  outline: 2px solid rgba(255, 255, 255, 0.62);
+  outline-offset: 2px;
+}
+.sticky.is-resizing {
+  box-shadow: 0 10px 24px rgba(0, 0, 0, 0.16);
+  outline: 2px solid rgba(255, 255, 255, 0.72);
+  outline-offset: 2px;
+}
+.sticky.is-dragging {
+  cursor: grabbing;
+  opacity: 0.78;
+  box-shadow: 0 14px 30px rgba(0, 0, 0, 0.18);
+  outline: 2px solid rgba(255, 255, 255, 0.78);
+  outline-offset: 2px;
+  z-index: 3;
+}
+.sticky-text {
+  white-space: pre-wrap;
+  padding-right: 18px;
+  overflow-wrap: anywhere;
+  flex: 1 1 auto;
+  min-height: 0;
+  overflow: auto;
+  cursor: inherit;
+}
+.sticky-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+  margin-top: 7px;
+  flex: 0 0 auto;
+}
+.sticky-meta span {
+  display: inline-flex;
+  align-items: center;
+  min-height: 18px;
+  padding: 2px 6px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.42);
+  color: rgba(42, 42, 42, 0.78);
+  font-size: 10px;
+  font-weight: 600;
+}
+.sticky-time {
+  display: block;
+  margin-top: 7px;
+  color: rgba(42, 42, 42, 0.58);
+  font-size: 10px;
+  font-weight: 600;
+  flex: 0 0 auto;
+}
+.sticky-empty-action {
+  flex-basis: 100%;
+  margin-top: 8px;
+  min-height: 34px;
+  border: 1px dashed var(--border-2, var(--border-1));
+  border-radius: 10px;
+  background: oklch(100% 0 0 / 0.5);
+  color: var(--text-2);
+  cursor: pointer;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+[data-theme="dark"] .sticky-empty-action {
+  background: color-mix(in oklch, var(--bg-panel-2, oklch(26% 0.012 220)) 76%, transparent);
+  color: var(--text-2, oklch(82% 0.006 200));
+}
+
+[data-theme="dark"] .sticky-empty-action:hover,
+[data-theme="dark"] .sticky-empty-action:focus-visible {
+  background: color-mix(in oklch, var(--accent-soft, var(--bg-panel-2)) 34%, var(--bg-panel-2));
+}
+.sticky-empty-action:hover,
+.sticky-empty-action:focus-visible {
+  color: var(--text-1);
+  border-color: var(--accent);
+  background: var(--accent-soft, var(--bg-panel-2));
+  outline: none;
 }
 
 /* ---------- Mini Calendar ---------- */
@@ -458,6 +1059,31 @@
 }
 .mc-dot-violet {
   background: oklch(70% 0.14 290);
+}
+/* §F RD4: rose colorPreset added for xai_calendar_events UserCalEvent */
+.mc-dot-rose {
+  background: oklch(70% 0.15 10);
+}
+/* §F empty-state hint classes */
+.upc-empty {
+  font-size: 0.8rem;
+  color: var(--text-2, oklch(55% 0 0));
+  padding: 8px 0;
+}
+.upc-empty--action {
+  min-height: 70px;
+  margin: 10px 12px 12px;
+  border: 1px dashed var(--border-2, var(--border-1));
+  border-radius: 12px;
+  background: oklch(100% 0 0 / 0.42);
+  cursor: pointer;
+}
+.upc-empty--action:hover,
+.upc-empty--action:focus-visible {
+  color: var(--text-1);
+  border-color: var(--accent);
+  background: var(--accent-soft, var(--bg-panel-2));
+  outline: none;
 }
 .mc-foot {
   display: flex;
@@ -698,9 +1324,18 @@
   border-bottom: 1px solid var(--border-1);
   font-size: 12px;
   color: var(--text-1);
+  cursor: pointer;
+}
+.mail-row:focus-visible {
+  background: var(--bg-panel-2);
+  outline: 2px solid var(--accent);
+  outline-offset: -2px;
 }
 .mail-row:last-child {
   border-bottom: none;
+}
+.mail-row:hover {
+  background: var(--bg-panel-2);
 }
 .mail-row.unread .mail-from {
   font-weight: 700;
@@ -735,6 +1370,43 @@
   flex-shrink: 0;
 }
 
+/* ---------- Mail §G-B additions (additive; reuse .mail-* base; no .widget* redefinition — §S9) ---------- */
+.notif-empty {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex: 1;
+  padding: 12px;
+  font-size: 12px;
+  color: var(--text-3);
+  text-align: center;
+}
+/* Source-type dot — a colored 6px circle before each notification row */
+.notif-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+.notif-dot--task-overdue {
+  background: var(--red, oklch(60% 0.18 25));
+}
+.notif-dot--calendar-today {
+  background: var(--mint, oklch(70% 0.12 160));
+}
+/* Accessible sr-only utility (if not already defined elsewhere) */
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
 /* ---------- Upcoming ---------- */
 .w-upcoming-body {
   display: flex;
@@ -753,6 +1425,15 @@
   gap: 10px;
   padding: 8px 12px;
   border-bottom: 1px solid var(--border-1);
+  cursor: pointer;
+}
+.upc-row:hover {
+  background: var(--bg-panel-2);
+}
+.upc-row:focus-visible {
+  background: var(--bg-panel-2);
+  outline: 2px solid var(--accent);
+  outline-offset: -2px;
 }
 .upc-row:last-child {
   border-bottom: none;
@@ -788,4 +1469,334 @@
 .upc-time {
   font-size: 10px;
   color: var(--text-3);
+}
+
+/* ---------- StickyComposer ---------- */
+.sticky-composer {
+  border: none;
+  border-radius: 12px;
+  padding: 0;
+  max-width: min(760px, calc(100vw - 32px));
+  width: 100%;
+  background: transparent;
+}
+.sticky-composer::backdrop {
+  background: rgba(0, 0, 0, 0.35);
+}
+.sticky-composer-panel {
+  background: color-mix(in oklch, var(--bg-panel, #fff) 88%, transparent);
+  border-radius: 14px;
+  border: 1px solid color-mix(in oklch, var(--border-1) 78%, transparent);
+  box-shadow: 0 22px 70px rgba(0, 0, 0, 0.24);
+  backdrop-filter: blur(22px) saturate(1.35);
+  padding: 18px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  min-width: min(720px, calc(100vw - 32px));
+}
+.sticky-composer-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+.sticky-composer-title {
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--text-1);
+  margin: 0;
+}
+.sticky-composer-source-badge {
+  display: inline-flex;
+  align-items: center;
+  min-height: 22px;
+  padding: 0 8px;
+  border-radius: 999px;
+  background: var(--accent-soft, var(--bg-panel-2));
+  color: var(--accent, var(--text-1));
+  font-size: 11px;
+  font-weight: 700;
+}
+.sticky-composer-layout {
+  display: grid;
+  grid-template-columns: minmax(260px, 1fr) minmax(260px, 0.92fr);
+  gap: 14px;
+}
+.sticky-composer-main {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  min-width: 0;
+}
+.sticky-composer-field {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+.sticky-composer-label {
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--text-2);
+}
+.sticky-composer-textarea {
+  resize: vertical;
+  min-height: 142px;
+  border-radius: 8px;
+  border: 1px solid var(--border-1);
+  background: var(--bg-panel-2, var(--bg-panel));
+  color: var(--text-1);
+  font-size: 13px;
+  padding: 8px 10px;
+  font-family: inherit;
+  line-height: 1.5;
+}
+.sticky-composer-textarea:focus {
+  outline: 2px solid var(--accent, oklch(65% 0.18 250));
+  outline-offset: 1px;
+}
+.sticky-composer-error {
+  font-size: 11px;
+  color: var(--red, oklch(60% 0.18 25));
+}
+.sticky-composer-colors {
+  display: grid;
+  grid-template-columns: repeat(10, 28px);
+  gap: 8px;
+  align-items: center;
+}
+.sticky-composer-chip {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  border: 2px solid transparent;
+  cursor: pointer;
+  padding: 0;
+  transition: border-color 0.15s;
+}
+.sticky-composer-chip.selected,
+.sticky-composer-chip[aria-checked="true"] {
+  border-color: var(--text-1);
+}
+.sticky-composer-chip:focus-visible {
+  outline: 2px solid var(--accent, oklch(65% 0.18 250));
+  outline-offset: 2px;
+}
+.sticky-composer-source {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  border: 1px solid color-mix(in oklch, var(--border-1) 72%, transparent);
+  border-radius: 10px;
+  background: color-mix(in oklch, var(--bg-panel-2, var(--bg-panel)) 82%, transparent);
+  padding: 10px;
+}
+.sticky-composer-source-title {
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--text-1);
+}
+.sticky-composer-source-hint {
+  margin-top: 4px;
+  color: var(--text-3);
+  font-size: 11px;
+  line-height: 1.45;
+}
+.sticky-composer-source-filters {
+  display: flex;
+  gap: 4px;
+  margin-top: 10px;
+  padding: 3px;
+  border-radius: 8px;
+  background: var(--bg-panel, #fff);
+  border: 1px solid var(--border-1);
+}
+.sticky-composer-filter {
+  flex: 1;
+  min-width: 0;
+  min-height: 26px;
+  border: none;
+  border-radius: 6px;
+  background: transparent;
+  color: var(--text-2);
+  cursor: pointer;
+  font-size: 11px;
+  font-weight: 700;
+}
+.sticky-composer-filter[aria-selected="true"] {
+  background: var(--accent-soft, var(--bg-panel-2));
+  color: var(--text-1);
+}
+.sticky-composer-source-list {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin-top: 10px;
+  max-height: 244px;
+  overflow-y: auto;
+  padding-right: 2px;
+}
+.sticky-composer-source-card {
+  display: grid;
+  grid-template-columns: 12px minmax(0, 1fr);
+  gap: 8px;
+  align-items: start;
+  width: 100%;
+  min-height: 52px;
+  padding: 8px;
+  border-radius: 8px;
+  border: 1px solid transparent;
+  background: color-mix(in oklch, var(--bg-panel, #fff) 74%, transparent);
+  color: var(--text-1);
+  cursor: pointer;
+  text-align: left;
+}
+.sticky-composer-source-card:hover,
+.sticky-composer-source-card:focus-visible,
+.sticky-composer-source-card[aria-pressed="true"] {
+  border-color: var(--accent);
+  background: var(--bg-panel, #fff);
+  outline: none;
+}
+.sticky-composer-source-color {
+  width: 12px;
+  height: 12px;
+  margin-top: 2px;
+  border-radius: 999px;
+  border: 1px solid rgba(0, 0, 0, 0.1);
+}
+.sticky-composer-source-copy {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  min-width: 0;
+}
+.sticky-composer-source-card-title {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-size: 12px;
+  font-weight: 700;
+}
+.sticky-composer-source-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+}
+.sticky-composer-source-meta span {
+  min-height: 18px;
+  padding: 2px 6px;
+  border-radius: 999px;
+  background: var(--bg-panel-2, #f6f6f6);
+  color: var(--text-2);
+  font-size: 10px;
+  font-weight: 700;
+}
+.sticky-composer-source-empty {
+  display: grid;
+  place-items: center;
+  min-height: 120px;
+  border: 1px dashed var(--border-1);
+  border-radius: 8px;
+  color: var(--text-3);
+  font-size: 12px;
+}
+.sticky-composer-actions {
+  display: flex;
+  gap: 8px;
+  justify-content: flex-end;
+}
+.sticky-composer-btn {
+  padding: 6px 14px;
+  border-radius: 7px;
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+  border: 1px solid var(--border-1);
+}
+.sticky-composer-btn--cancel {
+  background: var(--bg-panel-2, transparent);
+  color: var(--text-2);
+}
+.sticky-composer-btn--save {
+  background: var(--accent, oklch(65% 0.18 250));
+  color: #fff;
+  border-color: transparent;
+}
+.sticky-composer-btn--save:hover {
+  opacity: 0.9;
+}
+
+/* ---------- User stickies (SP3 wire) ---------- */
+.sticky--sample {
+  opacity: 0.75;
+  width: 204px;
+  height: 112px;
+}
+.sticky-del {
+  position: absolute;
+  top: 4px;
+  right: 4px;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  border: none;
+  background: rgba(0,0,0,0.15);
+  color: var(--text-1);
+  font-size: 11px;
+  line-height: 1;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  z-index: 2;
+}
+.sticky-del:hover {
+  background: rgba(0,0,0,0.3);
+}
+.sticky-resize {
+  position: absolute;
+  right: 5px;
+  bottom: 5px;
+  width: 18px;
+  height: 18px;
+  border: none;
+  border-radius: 6px;
+  background: rgba(255, 255, 255, 0.34);
+  color: rgba(42, 42, 42, 0.72);
+  box-shadow: inset 0 0 0 1px rgba(42, 42, 42, 0.1);
+  cursor: nwse-resize;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  opacity: 0.68;
+  z-index: 2;
+  transition: background 120ms ease, color 120ms ease, opacity 120ms ease, transform 120ms ease;
+  touch-action: none;
+}
+.sticky-resize:hover,
+.sticky-resize:focus-visible,
+.sticky.is-resizing .sticky-resize {
+  background: rgba(255, 255, 255, 0.62);
+  color: rgba(42, 42, 42, 0.9);
+  opacity: 1;
+  outline: none;
+  transform: scale(1.04);
+}
+
+@media (max-width: 760px) {
+  .sticky-composer-panel {
+    min-width: 0;
+  }
+  .sticky-composer-layout {
+    grid-template-columns: 1fr;
+  }
+  .sticky-composer-colors {
+    grid-template-columns: repeat(5, 28px);
+  }
+  .sticky-composer-source-list {
+    max-height: 180px;
+  }
 }

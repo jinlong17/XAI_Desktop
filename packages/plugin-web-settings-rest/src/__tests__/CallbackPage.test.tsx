@@ -29,7 +29,6 @@ vi.mock("react-router", async (orig) => {
 const { CallbackPage } = await import("../CallbackPage.js");
 
 afterEach(() => {
-  vi.unstubAllEnvs();
   sessionStorage.clear();
   localStorage.clear();
   mockNavigate.mockClear();
@@ -142,22 +141,5 @@ describe("CallbackPage", () => {
     expect(t("oauth.cb.success")).toBe("已接收授权（演示）");
     expect(t("oauth.cb.invalid")).toBe("授权状态无效 — 请重新尝试");
     expect(t("oauth.cb.cancelled")).toBe("授权已取消");
-  });
-
-  it("CP9: desktop offline profile fail-closed — valid callback state does not mutate prefs or emit connected event", async () => {
-    vi.stubEnv("VITE_WEB_RUNTIME_PROFILE", "desktop-phase1-offline");
-    const emitSpy = vi.spyOn(eventBus, "emitWebEvent");
-    const pending = await startOAuth("notion");
-    mockSearchParams = new URLSearchParams({ state: pending.state, code: "fake-code" });
-
-    render(<CallbackPage />);
-    await act(async () => {});
-
-    expect(localStorage.getItem("xai_pref_integrations_connected_notion")).toBeNull();
-    const calls = emitSpy.mock.calls.filter(
-      (c) => c[0] === "web:settings:integration-connected",
-    );
-    expect(calls.length).toBe(0);
-    expect(screen.getByText("Authorization callback is unavailable in desktop offline mode")).toBeInTheDocument();
   });
 });

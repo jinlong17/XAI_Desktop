@@ -22,7 +22,7 @@ describe("useDashOrder addWidget (AC-AWO-2..5)", () => {
     setPref("xai_dash_order", ["a", "b"]);
     const { result } = renderHook(() => useDashOrder(THREE));
     const [orderBefore] = result.current;
-    expect(orderBefore).toEqual(["a", "b", "c"]); // sanitized includes c
+    expect(orderBefore).toEqual(["a", "b"]); // sanitized preserves user removals
 
     // Add a different widget after reset
     setPref("xai_dash_order", ["a", "b"]);

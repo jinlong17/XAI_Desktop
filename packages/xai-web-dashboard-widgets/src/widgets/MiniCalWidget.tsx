@@ -1,22 +1,32 @@
 /**
- * MiniCalWidget — Mac-style monthly mini calendar.
+ * MiniCalWidget — Mac-style monthly mini calendar (REAL DATA).
  *
- * Monday-first week; up to 3 colored dots per day from fixtures.CAL_EVENTS.
- * Clicking inside the body (outside any [data-no-drag] header/footer) calls
- * ctx.goTo("calendar") → row #10's DashboardSlotHost translates this into
- * emitWebEvent("web:shell:module-change", { moduleId: "calendar", source: "mini-cal" }).
+ * §F real-data wiring: reads `xai_calendar_events` via `usePref`, computes
+ * day-of-month dots via `dataReads/calMonthDots.monthDots`.
  *
- * Per row #10 api.md §S4: .mc-head + .mc-foot carry data-no-drag.
+ * Replaces `CAL_EVENTS` fixture import on the live path.
+ * `CAL_EVENTS` export in fixtures.ts is KEPT for back-compat + fixtures.test.ts.
  *
- * Ported from `web design/module-dashboard.jsx` lines 498-566.
+ * Behavior unchanged:
+ * - Monday-first week; prev/next month navigation.
+ * - Clicking body (outside [data-no-drag]) calls ctx.goTo("calendar").
+ * - .mc-head + .mc-foot carry data-no-drag.
+ *
+ * Empty month → no dots (the grid IS the honest empty state).
+ *
+ * All 5 colorPresets (mint|amber|blue|violet|rose) render via `.mc-dot-<color>`.
+ * (RD4: `.mc-dot-rose` class added in F2 styles.css if absent.)
+ *
+ * Design: packages/xai-web-dashboard-widgets/docs/design.md §F.1 #10
  */
 import { useState } from "react";
 
+import { usePref } from "@repo/plugin-web-storage";
 import { useI18n } from "@repo/plugin-web-tokens";
 import type { Lang } from "@repo/plugin-web-tokens";
 
 import { Icon } from "../internal/Icon.js";
-import { CAL_EVENTS } from "../internal/fixtures.js";
+import { monthDots } from "../internal/dataReads/calMonthDots.js";
 
 export interface MiniCalWidgetProps {
   lang: Lang;
@@ -39,6 +49,8 @@ const WEEKDAY_HEADERS: Record<Lang, readonly string[]> = {
 export function MiniCalWidget({ lang, now, goTo }: MiniCalWidgetProps) {
   const { s } = useI18n(lang);
   const [offset, setOffset] = useState(0);
+  const [store] = usePref("xai_calendar_events");
+
   const view = new Date(now.getFullYear(), now.getMonth() + offset, 1);
   const month = view.getMonth();
   const year = view.getFullYear();
@@ -53,9 +65,10 @@ export function MiniCalWidget({ lang, now, goTo }: MiniCalWidgetProps) {
   for (let d = 1; d <= daysInMonth; d += 1) cells.push(d);
   while (cells.length % 7 !== 0) cells.push(null);
 
+  // Real calendar dots from xai_calendar_events
+  const dots = monthDots(store, year, month);
+
   const handleBodyClick = (e: React.MouseEvent<HTMLDivElement>) => {
-    // If the click originated inside a [data-no-drag] subtree (header /
-    // footer), skip navigation; those have their own buttons.
     const target = e.target as HTMLElement | null;
     if (target?.closest("[data-no-drag]")) return;
     goTo("calendar");
@@ -100,21 +113,21 @@ export function MiniCalWidget({ lang, now, goTo }: MiniCalWidgetProps) {
         {cells.map((d, i) => {
           if (d == null) return <div key={"e" + i} className="mc-cell empty" />;
           const isToday = todayInView && d === now.getDate();
-          const events = CAL_EVENTS[d] ?? [];
-          const ev = events.slice(0, 3);
+          const dayDots = dots[d] ?? [];
+          const ev = dayDots.slice(0, 3);
           return (
             <div
               key={"d" + i}
               className={
-                "mc-cell" + (isToday ? " today" : "") + (events.length ? " has" : "")
+                "mc-cell" + (isToday ? " today" : "") + (dayDots.length ? " has" : "")
               }
               data-day={d}
             >
               <span className="mc-num">{d}</span>
               {ev.length > 0 && (
                 <span className="mc-dots">
-                  {ev.map((e, ii) => (
-                    <span key={ii} className={"mc-dot mc-dot-" + e.c} />
+                  {ev.map((color, ii) => (
+                    <span key={ii} className={"mc-dot mc-dot-" + color} />
                   ))}
                 </span>
               )}

@@ -86,21 +86,20 @@ describe("TableView", () => {
     expect(updateCard).toHaveBeenCalledWith("l1", "c1", { members: ["u1"] });
   });
 
-  test("TV7 Due Today shortcut calls updateCard with {due:'Today',dueEn:undefined,dueLate:false}", () => {
+  test("TV7 Due Today shortcut calls updateCard with ISO dueDate", () => {
     const updateCard = vi.fn();
     const card = makeCard({ id: "c1" });
     const lists = [makeList({ id: "l1", cards: [card] })];
     render(<TableView lists={lists} lang="en" updateCard={updateCard} />);
     fireEvent.click(screen.getByTestId("td-due"));
     fireEvent.click(screen.getByTestId("due-shortcut-today"));
-    expect(updateCard).toHaveBeenCalledWith("l1", "c1", {
-      due: "Today",
-      dueEn: undefined,
-      dueLate: false,
-    });
+    const patch = updateCard.mock.calls[0]?.[2] as Partial<BoardCardData>;
+    expect(patch.dueDate).toMatch(/^\d{4}-\d{2}-\d{2}$/);
+    expect(patch.due).toBeUndefined();
+    expect(patch.dueLate).toBeUndefined();
   });
 
-  test("TV8 Due Tomorrow shortcut calls updateCard with {due:M/D,...}", () => {
+  test("TV8 Due Tomorrow shortcut calls updateCard with ISO dueDate", () => {
     const updateCard = vi.fn();
     const card = makeCard({ id: "c1" });
     const lists = [makeList({ id: "l1", cards: [card] })];
@@ -108,12 +107,12 @@ describe("TableView", () => {
     fireEvent.click(screen.getByTestId("td-due"));
     fireEvent.click(screen.getByTestId("due-shortcut-tomorrow"));
     expect(updateCard).toHaveBeenCalledOnce();
-    const patch = updateCard.mock.calls[0]?.[2] as { due: string };
-    // Must match M/D format
-    expect(patch.due).toMatch(/^\d+\/\d+$/);
+    const patch = updateCard.mock.calls[0]?.[2] as Partial<BoardCardData>;
+    expect(patch.dueDate).toMatch(/^\d{4}-\d{2}-\d{2}$/);
+    expect(patch.due).toBeUndefined();
   });
 
-  test("TV9 Due Next Mon shortcut calls updateCard with {due:M/D,...}", () => {
+  test("TV9 Due Next Mon shortcut calls updateCard with ISO dueDate", () => {
     const updateCard = vi.fn();
     const card = makeCard({ id: "c1" });
     const lists = [makeList({ id: "l1", cards: [card] })];
@@ -121,8 +120,9 @@ describe("TableView", () => {
     fireEvent.click(screen.getByTestId("td-due"));
     fireEvent.click(screen.getByTestId("due-shortcut-next-mon"));
     expect(updateCard).toHaveBeenCalledOnce();
-    const patch = updateCard.mock.calls[0]?.[2] as { due: string };
-    expect(patch.due).toMatch(/^\d+\/\d+$/);
+    const patch = updateCard.mock.calls[0]?.[2] as Partial<BoardCardData>;
+    expect(patch.dueDate).toMatch(/^\d{4}-\d{2}-\d{2}$/);
+    expect(patch.due).toBeUndefined();
   });
 
   test("TV10 Progress column renders '3/5' text + bar when checklist={done:3,total:5}", () => {

@@ -6,7 +6,7 @@ import type { DesktopItem, GridBox, Rect } from './grid';
 export type WebModuleId =
   | 'tasks' | 'habits' | 'pomodoro' | 'calendar' | 'matrix'
   | 'countdown' | 'settings' | 'board' | 'dashboard' | 'meditation'
-  | 'statistics' | 'ai' | 'search';
+  | 'statistics' | 'timetrack' | 'ai' | 'search';
 
 /** Discriminated key for all user-configurable preferences. */
 export type WebPreferenceKey =
@@ -307,6 +307,85 @@ export interface EventMap {
     confirmedAt: string;
   };
 
+  // AI tool layer — task/calendar mutate requests (edit/delete; xai-web-ai-tool-edit-delete)
+  // Carve-out AUTHORIZED: docs/reviews/_p0-carve-outs/20260529-ai-tool-edit-delete.md (ADR-0010 §D4).
+  // Per-op channels mirror the create-channel precedent (not a consolidated mutate channel).
+  // dev merge note: web:* namespace only; desktop:* not touched — clean additive append.
+  'web:tasks:update-requested': {
+    /** Correlation id = Anthropic tool_use.id for tool_result round-trip. */
+    requestId: string;
+    /** Card id to update. */
+    id: string;
+    /** Patch: only provided fields are included (title / bucket / tag — all optional). */
+    patch: {
+      title?: string;
+      bucket?: 'overdue' | 'next7' | 'later' | 'nodate';
+      tag?: 'study' | 'work' | 'personal' | 'todo' | 'other';
+    };
+    /** ISO timestamp at confirm. */
+    requestedAt: string;
+  };
+  'web:tasks:delete-requested': {
+    requestId: string;
+    /** Card id to delete. */
+    id: string;
+    requestedAt: string;
+  };
+  'web:calendar:update-requested': {
+    requestId: string;
+    /** Event id to update. */
+    id: string;
+    /** Patch: only provided fields included (title / date / startTime / durationMin). */
+    patch: {
+      title?: string;
+      /** "YYYY-MM-DD" local date. */
+      date?: string;
+      /** "HH:MM" 24h local start. */
+      startTime?: string;
+      /** Duration in minutes; positive integer. */
+      durationMin?: number;
+    };
+    requestedAt: string;
+  };
+  'web:calendar:delete-requested': {
+    requestId: string;
+    /** Event id to delete. */
+    id: string;
+    requestedAt: string;
+  };
+
+  // AI tool layer — task create request (owner: plugin-web-ai-chat Confirm handler; consumer: xai-web-tasks subscriber)
+  // Carve-out AUTHORIZED: docs/reviews/_p0-carve-outs/20260529-ai-tool-layer.md (ADR-0010 §D4).
+  // requestId = Anthropic tool_use.id for tool_result round-trip correlation.
+  // api.md §13.4 (xai-web-ai-tool-layer)
+  'web:tasks:create-requested': {
+    /** Correlation id = the Anthropic tool_use.id, so the AI can match the tool_result. */
+    requestId: string;
+    /** Trimmed, non-empty title. */
+    title: string;
+    /** Target bucket; defaults applied by producer. */
+    bucket: 'overdue' | 'next7' | 'later' | 'nodate';
+    /** Optional tag preset. */
+    tag?: 'study' | 'work' | 'personal' | 'todo' | 'other';
+    /** ISO timestamp at confirm. */
+    requestedAt: string;
+  };
+
+  // AI tool layer — calendar event create request (owner: plugin-web-ai-chat Confirm handler; consumer: xai-web-calendar subscriber)
+  // Carve-out AUTHORIZED: docs/reviews/_p0-carve-outs/20260529-ai-tool-layer.md (ADR-0010 §D4).
+  // api.md §13.4 (xai-web-ai-tool-layer)
+  'web:calendar:create-requested': {
+    requestId: string;
+    title: string;
+    /** "YYYY-MM-DD" local date. */
+    date: string;
+    /** "HH:MM" local start. */
+    startTime: string;
+    /** Minutes; producer clamps ≥5. */
+    durationMin: number;
+    requestedAt: string;
+  };
+
   // AI Chat rate-limit (owner: plugin-web-ai-chat row #18 extension 2026-05-25)
   // Emitted from plugin-web-ai-chat streaming adapter when a 429 is observed.
   // Consumer: AiChatModule banner UI (subscribes via useWebEventListener).
@@ -341,6 +420,16 @@ export interface EventMap {
     url: string;
     /** Where the action originated. v1 closed union: 'header'. */
     source: 'header';
+    /** Current row keeps sharing explicit as a mock contract, not a backend access grant. */
+    mode: 'mock';
+    /** Local board visibility at the moment Share was requested. Not a backend ACL grant. */
+    visibility: 'private' | 'shared';
+    /** Mock contract permission; future backend sharing can widen this union. */
+    permission: 'view';
+    /** Null until real token expiry is accepted. */
+    expiresAt: null;
+    /** Explicit backend state for the generated link. */
+    backend: 'unimplemented';
   };
 
   // Cmd+K command palette events (owner: @repo/xai-web-cmdk gap-closure row #3)

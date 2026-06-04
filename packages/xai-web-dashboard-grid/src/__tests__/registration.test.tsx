@@ -5,12 +5,24 @@
  * DashboardModule.events.test.tsx (added in P3) — keeping registration.test
  * focused on shape + presence.
  */
-import { describe, expect, it } from "vitest";
-import { render } from "@testing-library/react";
+import { afterEach, beforeEach, describe, expect, it } from "vitest";
+import { fireEvent, render } from "@testing-library/react";
 
 import { WebShellProvider } from "@repo/xai-web-shell";
+import { removePref, setPref } from "@repo/plugin-web-storage";
+import { dashboardWidgetRegistrations } from "@repo/plugin-web-dashboard-widgets";
 
 import { dashboardGridSlotRegistration, DashboardSlotHost } from "../registration.js";
+
+beforeEach(() => {
+  removePref("xai_dash_order");
+  window.history.replaceState(null, "", "/app/dashboard");
+});
+
+afterEach(() => {
+  removePref("xai_dash_order");
+  window.history.replaceState(null, "", "/app/dashboard");
+});
 
 describe("dashboardGridSlotRegistration", () => {
   it("AC-REG-1: moduleId === 'dashboard'", () => {
@@ -86,7 +98,7 @@ describe("DashboardSlotHost", () => {
     expect(greeting).toMatch(/(早上好|下午好|晚上好)/);
   });
 
-  it("renders row #11 dashboardWidgetRegistrations (10 widget shells, not empty state)", () => {
+  it("renders row #11 dashboardWidgetRegistrations (all widget shells, not empty state)", () => {
     const { container } = render(
       <WebShellProvider
         modules={[dashboardGridSlotRegistration]}
@@ -98,10 +110,29 @@ describe("DashboardSlotHost", () => {
         <DashboardSlotHost />
       </WebShellProvider>,
     );
-    // Post-row-#11 P3 wiring: empty state is no longer rendered; the 10
-    // widget shells from dashboardWidgetRegistrations mount instead.
+    // Post-row-#11 P3 wiring: empty state is no longer rendered; the full
+    // widget registry mounts instead.
     expect(container.querySelector(".dash-empty")).toBeNull();
     const shells = container.querySelectorAll(".widget-shell");
-    expect(shells.length).toBe(10);
+    expect(shells.length).toBe(dashboardWidgetRegistrations.length);
+  });
+
+  it("deep-links from calendar widget change the app route", () => {
+    setPref("xai_dash_order", ["mini-cal"]);
+    const { container } = render(
+      <WebShellProvider
+        modules={[dashboardGridSlotRegistration]}
+        lang="en"
+        railPos="left"
+        petOn={false}
+        setPetOn={() => {}}
+      >
+        <DashboardSlotHost />
+      </WebShellProvider>,
+    );
+
+    fireEvent.click(container.querySelector(".mc-jump") as HTMLButtonElement);
+
+    expect(window.location.pathname).toBe("/app/calendar");
   });
 });

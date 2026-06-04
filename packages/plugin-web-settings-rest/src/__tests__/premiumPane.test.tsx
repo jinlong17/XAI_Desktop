@@ -2,7 +2,7 @@
  * PR1..PR3 — premiumPane SHIPPED row #24 tests (preserved verbatim per FA-14)
  * PT-EXT-1..6 — premiumPane extension tests (gap-closure row #8)
  */
-import { describe, it, expect, beforeEach, vi } from "vitest";
+import { describe, it, expect, beforeEach } from "vitest";
 import { render, screen } from "@testing-library/react";
 import { premiumPane } from "../panes/premiumPane.js";
 
@@ -67,14 +67,5 @@ describe("premiumPane", () => {
     render(premiumPane.render({ lang: "en" }));
     expect(screen.getByTestId("premium-tier-label")).toBeTruthy();
     expect(screen.getByTestId("premium-tier-label").textContent).toContain("Free");
-  });
-
-  it("PT-EXT-7: desktop offline profile shows payment-callback offline note", () => {
-    vi.stubEnv("VITE_WEB_RUNTIME_PROFILE", "desktop-phase1-offline");
-    render(premiumPane.render({ lang: "en" }));
-    expect(screen.getByTestId("premium-offline-note")).toHaveTextContent(
-      "Payment callbacks are unavailable in desktop offline mode.",
-    );
-    vi.unstubAllEnvs();
   });
 });

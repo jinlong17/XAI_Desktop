@@ -36,7 +36,7 @@ constants in `src/internal/timing.ts`.
 
 1. **Persistence** — `xai_pet_pos` and `xai_pet_id` already declared in
    `@repo/plugin-web-storage` `PREF_REGISTRY` with `owner: "xai-web-pet"`.
-   Defaults: `{x:24, y:24}` and `"mochi"`. This row consumes via
+   Defaults: `{x:24, y:520}` and `"mochi"`. This row consumes via
    `usePref()`; **DOES NOT** modify the registry.
 2. **i18n** — `pet.hello`, `pet.working`, `pet.idle`, `pet.tip1..4` already
    present in both EN + ZH bundles of `@repo/plugin-web-tokens/src/i18n.ts`.

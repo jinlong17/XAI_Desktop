@@ -11,17 +11,25 @@
 import type { JSX } from "react";
 import type { EventBlock as EventBlockData } from "./internal/placeEventBlocks.js";
 import { HOUR_HEIGHT_PX } from "./internal/timeGridMath.js";
+import { SAMPLE_BADGE, s } from "./internal/strings.js";
 
 interface EventBlockProps {
   block: EventBlockData;
   /** Bilingual preference — caller passes "en" or "zh" title */
   lang: "en" | "zh";
+  /** Called only for user-source events. */
+  onUserEventClick?: (userId: string) => void;
 }
 
-export function EventBlock({ block, lang }: EventBlockProps): JSX.Element {
+export function EventBlock({ block, lang, onUserEventClick }: EventBlockProps): JSX.Element {
   const { event, startRow, rowSpan, col, colSpan } = block;
   const title = lang === "zh" ? event.t.zh : event.t.en;
   const timeLabel = event.time ?? "";
+  const source = (event as { _source?: "fixture" | "user" })._source ?? "fixture";
+  const userId = (event as { _userId?: string })._userId;
+  const tag = (event as { _tag?: string })._tag;
+  const isUser = source === "user" && !!userId;
+  const sampleLabel = s(SAMPLE_BADGE, "label", lang);
 
   // Pixel-exact positioning (matches HOUR_HEIGHT_PX = 48)
   const top = startRow * HOUR_HEIGHT_PX;
@@ -40,11 +48,35 @@ export function EventBlock({ block, lang }: EventBlockProps): JSX.Element {
         left: `${leftPct}%`,
         width: `calc(${widthPct}% - 8px)`,
       }}
+      data-source={source}
+      data-user-id={userId}
+      role={isUser ? "button" : undefined}
+      tabIndex={isUser ? 0 : undefined}
+      onClick={isUser && onUserEventClick ? () => onUserEventClick(userId) : undefined}
+      onKeyDown={
+        isUser && onUserEventClick
+          ? (ev) => {
+              if (ev.key === "Enter" || ev.key === " ") {
+                ev.preventDefault();
+                onUserEventClick(userId);
+              }
+            }
+          : undefined
+      }
       aria-label={title}
       title={title}
     >
       <div className="ev-title">{title}</div>
+      {tag ? <div className="cal-event-tag">#{tag}</div> : null}
       {timeLabel && <div className="ev-time">{timeLabel}</div>}
+      {source === "fixture" ? (
+        <span
+          className="cal-sample-badge"
+          aria-label={lang === "zh" ? "示例事件 — 不可编辑" : "Sample event — not editable"}
+        >
+          {sampleLabel}
+        </span>
+      ) : null}
     </div>
   );
 }

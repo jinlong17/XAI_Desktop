@@ -9,7 +9,7 @@
  */
 
 import type { BoardCardData, BoardListData } from "@repo/plugin-web-board-core";
-import { parseDay } from "./dateOps.js";
+import { getBoardCardDateMeta } from "@repo/plugin-web-board-core";
 
 export interface FilterState {
   /** Empty Set = no label filter (all labels pass). */
@@ -35,9 +35,9 @@ export const EMPTY_FILTER: FilterState = Object.freeze({
  * - members: card passes if members.size === 0 OR card.members?.some(m => members.has(m))
  * - dueRange: card passes if:
  *   - 'all' — always pass
- *   - 'overdue' — card.dueLate === true
- *   - 'today' — due matches today (Today / 今天 / today's M/D)
- *   - 'week' — due parseable to [today, today+7) range
+ *   - 'overdue' — dueDate is before today
+ *   - 'today' — dueDate matches today
+ *   - 'week' — dueDate is inside [today, today+7) range
  *
  * @param now Injectable current date for testability. Defaults to new Date().
  */
@@ -56,9 +56,6 @@ export function applyFilter(
   }
 
   const today = now ?? new Date();
-
-  // Today's "M/D" string
-  const todayMD = `${today.getMonth() + 1}/${today.getDate()}`;
 
   return lists.map((list) => {
     const filteredCards = list.cards.filter((card: BoardCardData) => {
@@ -80,17 +77,13 @@ export function applyFilter(
 
       // --- Due range facet ---
       if (dueRange !== "all") {
+        const dateMeta = getBoardCardDateMeta(card, { now: today });
         if (dueRange === "overdue") {
-          if (card.dueLate !== true) return false;
+          if (!dateMeta.isOverdue) return false;
         } else if (dueRange === "today") {
-          const isTodayMatch =
-            card.due === "Today" ||
-            card.due === "今天" ||
-            card.due === todayMD;
-          if (!isTodayMatch) return false;
+          if (!dateMeta.isDueToday) return false;
         } else if (dueRange === "week") {
-          const offset = parseDay(card.due, today);
-          if (offset === null || offset < 0 || offset >= 7) return false;
+          if (!dateMeta.isWithinWeek) return false;
         }
       }
 

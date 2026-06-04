@@ -1,10 +1,11 @@
 /**
  * useDashOrder — wraps usePref("xai_dash_order") + sanitize-on-mount (F1).
  *
- * Returns a 3-element tuple: [order, setOrder, addWidget].
+ * Returns a 4-element tuple: [order, setOrder, addWidget, removeWidget].
  * - order: working order (sanitized id list to render)
  * - setOrder: replaces the entire order (used by drag-to-reorder)
  * - addWidget: appends a single id if not already present and registered
+ * - removeWidget: removes a single id from the order (idempotent; no-op if absent)
  *
  * On mount, if the persisted value differs from the sanitized value, writes
  * the sanitized value back so future reads are stable.
@@ -14,6 +15,8 @@
  * import.meta.env.DEV is true (see DashboardGrid).
  *
  * api.md §S5 + §S6 + §S14.3 (addWidget semantics, gap-closure row #5).
+ * Audit Top-10 #9 (D-06): removeWidget added at tuple position 3.
+ * Tuple-at-end extension is non-breaking (R7 precedent from gap-closure row #5).
  */
 import { useCallback, useEffect, useRef } from "react";
 
@@ -22,7 +25,7 @@ import { usePref } from "@repo/plugin-web-storage";
 import type { WidgetRegistration } from "../types.js";
 import { arraysEqual, sanitizeOrder } from "./sanitizeOrder.js";
 
-/** The 3-element tuple returned by useDashOrder. */
+/** The 4-element tuple returned by useDashOrder. */
 export type UseDashOrderTuple = readonly [
   /** Working order — the sanitized id list to render. */
   order: string[],
@@ -30,6 +33,8 @@ export type UseDashOrderTuple = readonly [
   setOrder: (next: string[]) => void,
   /** addWidget — appends id if not already present and registered. No-op otherwise. */
   addWidget: (id: string) => void,
+  /** removeWidget — removes id from order if present. No-op if absent (idempotent). */
+  removeWidget: (id: string) => void,
 ];
 
 export function useDashOrder(widgets: readonly WidgetRegistration[]): UseDashOrderTuple {
@@ -71,5 +76,24 @@ export function useDashOrder(widgets: readonly WidgetRegistration[]): UseDashOrd
     [widgets, setPref],
   );
 
-  return [sanitized, setPref, addWidget] as const;
+  // removeWidget — Audit Top-10 #9 (D-06):
+  //   - if id is not in the persisted order → no-op (idempotent; AC-RM-4)
+  //   - otherwise → write persisted.filter(x => x !== id) to storage
+  //
+  // NOTE: This hook's removeWidget only handles the persistence write.
+  // The rendering-level exclusion is handled by DashboardModule's `activeWidgets`
+  // filter + `removedInSession` state, which keep the same render cycle stable.
+  const persistedRef = useRef<string[]>(persisted as string[]);
+  persistedRef.current = persisted as string[];
+
+  const removeWidget = useCallback(
+    (id: string) => {
+      const current = persistedRef.current;
+      if (!current.includes(id)) return; // idempotent no-op (AC-RM-4)
+      setPref(current.filter((x) => x !== id));
+    },
+    [setPref],
+  );
+
+  return [sanitized, setPref, addWidget, removeWidget] as const;
 }

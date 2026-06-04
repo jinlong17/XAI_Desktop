@@ -105,6 +105,7 @@ const OWNER_ROW_EXEMPT_KEYS: ReadonlySet<string> = new Set([
   "xai_pref_week_start",    // xai-web-calendar #12 (xai_pref_* family per ADR-0007 §S8)
   "xai_meditation_prefs",   // xai-web-meditation #16
   "xai_board_view_by_id",   // xai-web-board-views #8 (per-board active view selection)
+  "xai_board_filter_by_id", // xai-web-board-saved-filters #10
   // xai-web-settings-features-panel #23 — 8 boolean toggles in the xai_pref_* family per ADR-0007 §S8
   "xai_pref_features_tasks",
   "xai_pref_features_board",
@@ -160,6 +161,9 @@ const OWNER_ROW_EXEMPT_KEYS: ReadonlySet<string> = new Set([
   "xai_ai_streaming",
   // xai-web-calendar gap-closure row #4 — calendar view persistence key
   "xai_calendar_view",
+  "xai_calendar_events",
+  "xai_dashboard_stickies",
+  "xai_dashboard_weather",
   // xai-web-settings-rest gap-closure row #7 — 3 boolean integration OAuth stub prefs
   "xai_pref_integrations_connected_notion",
   "xai_pref_integrations_connected_gcal",

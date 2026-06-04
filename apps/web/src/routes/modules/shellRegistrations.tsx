@@ -25,6 +25,10 @@ import { tasksWebModuleRegistration } from "@repo/plugin-web-tasks";
 import { habitsSlotRegistration } from "@repo/plugin-web-habits";
 // xai-web-pomodoro row #14
 import { pomodoroWebModuleRegistration } from "@repo/plugin-web-pomodoro";
+// xai-web-time-tracker · Claude Design Time Tracker merge
+import { timeTrackerWebModuleRegistration } from "@repo/plugin-web-time-tracker";
+// xai-web-bookkeeping · Cloud Design bookkeeping module merge
+import { bookkeepingWebModuleRegistration } from "@repo/plugin-web-bookkeeping";
 // xai-web-ai-chat row #18
 import { aiChatWebModuleRegistration } from "@repo/plugin-web-ai-chat";
 // xai-web-meditation row #16
@@ -37,7 +41,6 @@ import { dashboardGridSlotRegistration } from "@repo/plugin-web-dashboard-grid";
 import { boardWorkspacesWebModuleRegistration } from "@repo/plugin-web-board-workspaces";
 // xai-web-statistics row #20
 import { statisticsWebModuleRegistration } from "@repo/plugin-web-statistics";
-import { organizerWebModuleRegistration } from "./smartContainerOrganizerRegistration";
 // xai-web-settings-shell row #21 (W4a · chassis · showInRail:false)
 // row #23 (xai-web-settings-features-panel) replaces this registration with a
 // composed variant that mounts the substituted paneRegistry — kept imported
@@ -56,7 +59,7 @@ import { withDisabledFallback } from "@repo/plugin-web-settings-features-panel";
 import { todoWebModuleRegistration } from "@repo/plugin-productivity/web";
 
 export const webShellModuleRegistrations: WebModuleSlotRegistration[] = [
-  // Rail-visible modules (railOrder 1..12).
+  // Rail-visible modules (railOrder 1..13).
   // The 8 user-toggleable modules are wrapped with withDisabledFallback so any
   // deep link reaching them while `xai_pref_features_<id>` is false renders
   // <DisabledFeatureFallback> instead of the real module shell. ai-chat,
@@ -69,11 +72,12 @@ export const webShellModuleRegistrations: WebModuleSlotRegistration[] = [
   withDisabledFallback(calendarSlotRegistration, "calendar"),  // row #12
   withDisabledFallback(matrixSlotRegistration, "matrix"),
   withDisabledFallback(pomodoroWebModuleRegistration, "pomodoro"),
+  timeTrackerWebModuleRegistration,  // not toggleable in Settings V1; mirrors Claude Design rail item
+  bookkeepingWebModuleRegistration,  // not toggleable in Settings V1; Cloud Design bookkeeping module
   withDisabledFallback(habitsSlotRegistration, "habits"),  // row #15
   withDisabledFallback(meditationSlotRegistration, "meditation"),  // row #16
   countdownWebModuleRegistration,  // not toggleable
   statisticsWebModuleRegistration,  // row #20 — not toggleable
-  organizerWebModuleRegistration,  // desktop-smart-container-file-organizer row #20
   // Settings — not in rail (showInRail: false). Chassis from xai-web-settings-shell row #21;
   // row #23 (xai-web-settings-features-panel) replaces the registration with
   // composedSettingsRegistration which mounts the composed paneRegistry. Sibling

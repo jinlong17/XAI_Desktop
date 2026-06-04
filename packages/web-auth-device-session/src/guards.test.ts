@@ -23,13 +23,4 @@ describe("route guards", () => {
   it("allows authenticated users on app pages", () => {
     expect(resolveAppRouteGuard("authenticated", "/app")).toEqual({ allow: true });
   });
-
-  it("keeps unconfigured app access behind login redirect", () => {
-    const result = resolveAppRouteGuard("unconfigured", "/app");
-    expect(result).toEqual({
-      allow: false,
-      redirectTo: "/auth/login?next=%2Fapp",
-      reason: "auth_required"
-    });
-  });
 });

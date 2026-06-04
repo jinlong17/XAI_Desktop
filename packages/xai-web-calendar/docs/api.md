@@ -142,7 +142,7 @@ cal: {
 
 No key renames; no removals. `I18NBundle = typeof I18N["en"]` derived
 type expansion is the only consumer-side effect — TypeScript will
-require ZH bundle parity (enforced at compile time).
+require ZH bundle parity at the bundle-object level.
 
 ### 2.3 Event channel listened on
 
@@ -549,3 +549,367 @@ rows). Add in a future row.
 - ComingSoonPanel side-effects (a CSS rule `.cal-coming-soon`) are
   REMOVED from styles.css.
 
+---
+
+## 11. 2026-05-27 Extension — Event CRUD (HC8 lift)
+
+> APPEND-ONLY. §1..§10 above describe the SHIPPED v1 + v1.1 public
+> surface and stay byte-identical. §11 records the additive API delta
+> introduced by the `xai-web-calendar-event-create` feature (P0 carve-out
+> per ADR-0010 §D4, see carve-out doc
+> `docs/reviews/_p0-carve-outs/20260527-calendar-event-create.md`).
+
+### 11.1 Public exports (additive)
+
+The barrel `src/index.ts` adds:
+
+```ts
+// NEW data-layer types
+export type {
+  UserCalEvent,
+  RecurrenceRule,
+  RecurrenceKind,
+  EventColorPreset,
+} from "./internal/eventStore/types.js";
+
+// NEW hook
+export { useUserCalEvents } from "./internal/eventStore/useUserCalEvents.js";
+export type { UserCalEventsApi } from "./internal/eventStore/useUserCalEvents.js";
+
+// NEW component (callers may mount independently; CalendarModule mounts it by default)
+export { EventComposer } from "./EventComposer.js";
+export type { EventComposerProps } from "./EventComposer.js";
+
+// NEW pure helpers (exposed for testability + future-row composition)
+export { expandRecurrence } from "./internal/eventStore/expandRecurrence.js";
+export {
+  mergeEventsForMonth,
+  mergeEventsForWindow,
+} from "./internal/eventStore/mergeEventsForViewport.js";
+export {
+  createEvent,
+  updateEvent,
+  deleteEvent,
+  getEvent,
+  listEvents,
+} from "./internal/eventStore/eventStore.js";
+```
+
+`CalendarModule` props + `calendarSlotRegistration` shape are
+UNCHANGED. `CalEvent` interface is UNCHANGED (it was the FIXTURE shape;
+user events use the new `UserCalEvent` interface, which is structurally
+different — see §11.2).
+
+### 11.2 Type contracts
+
+```ts
+// internal/eventStore/types.ts
+
+export type RecurrenceKind = "daily" | "weekly";
+
+export interface RecurrenceRule {
+  kind: RecurrenceKind;
+}
+
+export type EventColorPreset =
+  | "mint"
+  | "amber"
+  | "blue"
+  | "violet"
+  | "rose";              // NEW preset; 1 additive CSS family in styles.css
+
+export interface UserCalEvent {
+  /** Opaque ID — crypto.randomUUID() in modern browsers; fallback string in jsdom. */
+  id: string;
+  /** Plain-text title; trimmed before persist; max ~200 chars (UI-enforced, not store-enforced). */
+  title: string;
+  /** "YYYY-MM-DDTHH:MM" local-clock. NO TZ suffix. */
+  startISO: string;
+  /** "YYYY-MM-DDTHH:MM" local-clock. >= startISO + 5 minutes. SAME DAY as startISO (multi-day out of scope). */
+  endISO: string;
+  /** UI color band. Default "mint" on create. */
+  colorPreset: EventColorPreset;
+  /** Recurrence rule (daily/weekly) or null for non-recurring. */
+  recurrence: RecurrenceRule | null;
+  /** ISO millisecond timestamp at create. */
+  createdAt: string;
+  /** ISO millisecond timestamp; bumped on every successful update. */
+  updatedAt: string;
+}
+```
+
+**Backwards-compatibility contract:**
+
+- The existing `CalEvent` interface (fixture shape — `{ c, t, time?, endTime? }`) is UNCHANGED.
+- `UserCalEvent` is a NEW, distinct type. It is NOT a structural subset/superset of `CalEvent`.
+- The merge layer (`mergeEventsForMonth` / `mergeEventsForWindow`) projects `UserCalEvent` instances down to the legacy `CalEvent` shape that `MonthCell` / `EventBlock` already render. This way, view components do not need a schema change.
+- `CalEventColor` union adds `"rose"` to the existing `mint | amber | blue | violet`. Consumers that pattern-match the union must add a default case (TypeScript will warn).
+
+### 11.3 EventStore API (pure)
+
+```ts
+// internal/eventStore/eventStore.ts
+
+/**
+ * Pure: creates a new event in the given store with auto-generated id +
+ * createdAt + updatedAt. Does NOT mutate `store`. Returns the next store
+ * snapshot and the materialized event.
+ *
+ * @throws never — caller-provided partial is assumed pre-validated.
+ *   Use validateUserCalEvent for upstream validation.
+ */
+export function createEvent(
+  store: Record<string, UserCalEvent>,
+  partial: Omit<UserCalEvent, "id" | "createdAt" | "updatedAt">,
+): { next: Record<string, UserCalEvent>; created: UserCalEvent };
+
+/**
+ * Pure: applies patch on top of existing event. Bumps updatedAt.
+ * Returns { next, updated:null } if id missing.
+ */
+export function updateEvent(
+  store: Record<string, UserCalEvent>,
+  id: string,
+  patch: Partial<Omit<UserCalEvent, "id" | "createdAt">>,
+): { next: Record<string, UserCalEvent>; updated: UserCalEvent | null };
+
+/**
+ * Pure: removes the event by id (no-op if missing). Returns next store snapshot.
+ */
+export function deleteEvent(
+  store: Record<string, UserCalEvent>,
+  id: string,
+): Record<string, UserCalEvent>;
+
+/** Pure: returns event by id or null. */
+export function getEvent(
+  store: Record<string, UserCalEvent>,
+  id: string,
+): UserCalEvent | null;
+
+/** Pure: returns all events as an array (order = createdAt ASC, then id ASC for tie-break). */
+export function listEvents(
+  store: Record<string, UserCalEvent>,
+): UserCalEvent[];
+```
+
+### 11.4 React hook API (consumer-facing)
+
+```ts
+// internal/eventStore/useUserCalEvents.ts
+
+export interface UserCalEventsApi {
+  /** Live snapshot of the store, reactive via usePref. */
+  events: Record<string, UserCalEvent>;
+  /** Array view, sorted createdAt ASC then id ASC. */
+  list: UserCalEvent[];
+  /** Create event, returns the new entity. Mutates underlying localStorage via setPref. */
+  create: (partial: Omit<UserCalEvent, "id" | "createdAt" | "updatedAt">) => UserCalEvent;
+  /** Update event, returns the updated entity or null if id missing. */
+  update: (id: string, patch: Partial<Omit<UserCalEvent, "id" | "createdAt">>) => UserCalEvent | null;
+  /** Remove event (no-op if missing). */
+  remove: (id: string) => void;
+  /** Get one event by id. */
+  getById: (id: string) => UserCalEvent | null;
+}
+
+export function useUserCalEvents(): UserCalEventsApi;
+```
+
+Behaviour:
+
+- Hook calls `usePref("xai_calendar_events", {} as Record<string, UserCalEvent>)`.
+- CRUD ops invoke pure helpers above + `setPref` to persist.
+- Cross-tab sync: free via `usePref`'s built-in `storage`-event listener.
+- Stable identity: each render returns the same function references when `events` is unchanged (memoized via `useCallback`).
+
+### 11.5 EventComposer component API
+
+```ts
+// EventComposer.tsx
+
+export interface EventComposerProps {
+  /** Controls visibility. */
+  open: boolean;
+  /** "create" = blank form (with sensible defaults); "edit" = pre-filled from `event`. */
+  mode: "create" | "edit";
+  /** Required when mode === "edit"; ignored otherwise. */
+  event: UserCalEvent | null;
+  /** Active language for STR_EVENT_COMPOSER. */
+  lang: Lang;
+  /** Default date for new events when mode === "create". "YYYY-MM-DD". */
+  defaultDateKey?: string;
+  /** Called when user clicks Save (after validation passes). */
+  onSave: (event: UserCalEvent) => void;
+  /** Called when user clicks Delete (mode === "edit" only). */
+  onDelete?: (id: string) => void;
+  /** Called when user dismisses (ESC, backdrop, Cancel). */
+  onClose: () => void;
+}
+
+export function EventComposer(props: EventComposerProps): ReactElement | null;
+```
+
+Behaviour:
+
+- Uses native `<dialog>` + `dialog.showModal()` / `dialog.close()` per `CardDetailDialog.tsx` precedent.
+- Form state local to the component (not React Context).
+- On open with `mode==="create"`: form fields default to:
+  - title: ""
+  - date: `defaultDateKey ?? today`
+  - startTime: "09:00"
+  - endTime: "10:00"
+  - colorPreset: "mint"
+  - recurrence: null
+- On open with `mode==="edit"`: form pre-filled from `event` props.
+- Validation runs on Save click; invalid fields display inline error messages from `STR_EVENT_COMPOSER` (bilingual).
+- ESC + backdrop click + Cancel button: call `onClose` (discards changes).
+- Delete button visible only in edit mode; calls `onDelete(event.id)` then `onClose`.
+- A11y: `aria-modal="true"`, `aria-labelledby="event-composer-title"`, focus moves to first input on open (native `<dialog>` behavior).
+
+### 11.6 Cross-package contracts
+
+#### 11.6.1 New `WebPrefRegistry` entry — `xai_calendar_events`
+
+Added to `packages/plugin-web-storage/src/internal/registry.ts` at file-tail:
+
+```ts
+// ---- Calendar events (§S8 — extension 2026-05-27 by xai-web-calendar-event-create) -----
+// User-created calendar events. Indexed by event.id (UUID).
+// Owner xai-web-calendar (extension to row #12 SHIPPED + gap-closure row #4 SHIPPED).
+// Category "module" — NOT in the xai_pref_* chassis-reset family
+// (same category as xai_calendar_view / xai_clock_style / xai_active_board per ADR-0007 §S8).
+// proposed: false — canonical xai_calendar_* family per ADR-0007 §S8.
+xai_calendar_events: {
+  key: "xai_calendar_events",
+  codec: "json",
+  default: {} as Record<string, UserCalEvent>,
+  schemaVersion: 1,
+  owner: "xai-web-calendar",
+  category: "module",
+} satisfies PrefEntry<Record<string, UserCalEvent>>,
+```
+
+The `UserCalEvent` typed alias is declared in `@repo/plugin-web-calendar` and imported into `plugin-web-storage` ONLY as a type (`import type`). This is the same pattern the registry already uses for `CalendarViewId` (line 943-945).
+
+#### 11.6.2 i18n delta — NONE
+
+No `plugin-web-tokens` edit. All new strings live in
+`packages/xai-web-calendar/src/internal/strings.ts`:
+
+```ts
+// internal/strings.ts (NEW)
+export const STR_EVENT_COMPOSER = {
+  title_create:    { en: "New event",        zh: "新建事件" },
+  title_edit:      { en: "Edit event",       zh: "编辑事件" },
+  field_title:     { en: "Title",            zh: "标题" },
+  field_date:      { en: "Date",             zh: "日期" },
+  field_start:     { en: "Start",            zh: "开始" },
+  field_end:       { en: "End",              zh: "结束" },
+  field_color:     { en: "Color",            zh: "颜色" },
+  field_recurrence: { en: "Recurrence",      zh: "重复" },
+  recur_none:      { en: "None",             zh: "不重复" },
+  recur_daily:     { en: "Daily",            zh: "每天" },
+  recur_weekly:    { en: "Weekly",           zh: "每周" },
+  btn_save:        { en: "Save",             zh: "保存" },
+  btn_cancel:      { en: "Cancel",           zh: "取消" },
+  btn_delete:      { en: "Delete",           zh: "删除" },
+  err_title_required:    { en: "Title is required",                zh: "标题不能为空" },
+  err_end_before_start:  { en: "End time must be after start",     zh: "结束时间必须晚于开始" },
+  err_min_duration:      { en: "Event must be at least 5 minutes", zh: "事件时长至少 5 分钟" },
+  err_multi_day:         { en: "Event cannot span multiple days",  zh: "事件不能跨日" },
+} as const;
+
+export const EMPTY_STATE_HINT = {
+  hint:  { en: "Click + to create your first event", zh: "点击 + 创建第一个事件" },
+} as const;
+
+export const SAMPLE_BADGE = {
+  label: { en: "Sample", zh: "示例" },
+} as const;
+```
+
+The `Record<string, { en: string; zh: string }>` shape ensures each declared
+string key carries both EN + ZH values; AC-I18N-CREATE-3 validates runtime key
+coverage.
+
+#### 11.6.3 No event channel changes
+
+NO new `web:*` event channel. NO new emit. Listen-only contract preserved across all new files. AC-EVENT-7 grep test extended to scan:
+
+- `EventComposer.tsx`
+- `EmptyStateHint.tsx`
+- `internal/eventStore/*.ts`
+- `internal/strings.ts`
+
+None of these import `emitWebEvent`.
+
+### 11.7 Idempotency + error semantics (extension)
+
+- **Idempotent create with same partial**: each call produces a NEW id; if caller wants dedup they must check `getById` first. v1 allows duplicate-title events (no uniqueness constraint).
+- **Idempotent update with same patch**: `Object.is`-equal patch updates updatedAt anyway (semantic: "user explicitly saved again"). Not a perf concern at v1 scale.
+- **Idempotent delete missing id**: no-op; returns same store reference (callers can compare references to detect work).
+- **Storage corruption**: if `xai_calendar_events` contains malformed JSON, `usePref` returns the default `{}` (registry codec validation already handles this).
+- **Storage entry with unknown extra fields**: round-trip preserves them (TypeScript narrows on read but persistence is shape-preserving).
+- **Composer validation errors**: surfaced inline; Save button stays enabled but does NOT call `onSave`. Composer remains open.
+- **Recurrence expansion errors**: `expandRecurrence` defensively returns an empty array for malformed rules (NEVER throws into render).
+
+### 11.8 Performance contract (extension)
+
+| Operation | Budget | Mechanism |
+|---|---|---|
+| Composer open → first paint | ≤ 16 ms | Native `<dialog>` + form fields; no async |
+| Save click → store update + re-render | ≤ 32 ms (incl. localStorage write) | `setPref` is synchronous; React diff scoped to changed cells |
+| `expandRecurrence(daily, 30-day window)` | ≤ 1 ms | Pure date arithmetic; max 31 instances |
+| `expandRecurrence(weekly, 30-day window)` | ≤ 1 ms | Max ~5 instances |
+| `expandRecurrence(daily, 365-day window — future row)` | ≤ 5 ms | Bounded by maxInstances=366 |
+| `mergeEventsForMonth` with 100 user events | ≤ 4 ms | Single pass over events + fixture |
+| `mergeEventsForWindow` (7-day Week) with 100 events | ≤ 4 ms | Same pass |
+| Viewport recompute on event create with 100 existing events | ≤ 16 ms | Memo + merge + view re-render | (PB-CREATE-1) |
+| Recurrence × DST (spring-forward 09:30 daily) | render-stable | Local-clock semantics; HH:MM string stable |
+
+### 11.9 Accessibility contract (extension)
+
+| Element | a11y attribute |
+|---|---|
+| `<dialog class="event-composer">` | `role="dialog"`, `aria-modal="true"`, `aria-labelledby="event-composer-title"` |
+| `<h2 id="event-composer-title">` | accessible name = create/edit label |
+| `<input>` fields | `<label htmlFor>` association; required fields marked `aria-required="true"`; error message linked via `aria-describedby` |
+| Color picker chips | `role="radiogroup"` + per-chip `aria-checked` |
+| Recurrence picker | `role="radiogroup"` + per-option `aria-checked` |
+| Delete button | `aria-label` includes event title |
+| `.cal-sample-badge` | `aria-label="Sample event — not editable"` / "示例事件 — 不可编辑" |
+| Empty-state hint | `role="status"` (so screen readers announce when it appears) |
+
+Focus management: native `<dialog>` handles focus trap. On close, focus returns to the element that opened the dialog (toolbar `+` button or the user-event chip).
+
+### 11.10 Stability rules (extension)
+
+- Add a new `RecurrenceKind` → extend the union → consumer recompile. `expandRecurrence` must handle the new kind or fall through to no-expansion.
+- Add a new `EventColorPreset` → extend the union + add a CSS rule. Storage round-trip is unchanged (string).
+- Change `UserCalEvent` shape (e.g., add `description`) → schemaVersion bump + migration entry in registry. v1 → v2 migration TBD by future row.
+- Remove a field from `UserCalEvent` → BREAKING. Requires deprecation in api.md + 1-cycle warning + migration.
+- Change persistence key name → BREAKING. Requires migration. (Not foreseen.)
+- Change EventComposer prop shape → BREAKING for external consumers; minor for internal callers.
+
+### 11.11 Side-effect surface (extension delta)
+
+- `usePref("xai_calendar_events", {})` → one read per consumer; one write per CRUD op. localStorage churn proportional to user activity (negligible at v1 scale).
+- `crypto.randomUUID()` → only in `createEventId`. Falls back if undefined.
+- Native `<dialog>.showModal()` / `.close()` → DOM-only.
+- `useEffect` in `EventComposer` for open/close imperative wiring (mirrors `CardDetailDialog`).
+- Zero new network calls.
+- Zero new global mutations.
+- Zero new event channels.
+
+### 11.12 Build artifacts
+
+- TypeScript-only (no transpile step beyond Vite/Vitest).
+- ESM imports throughout (`.js` extension on internal imports).
+- `package.json` `"sideEffects"` unchanged (still `["./src/styles.css", "./src/index.ts"]`).
+- Bundled by Vite when consumed in `apps/web`.
+
+### 11.13 Versioning
+
+- Package bumps to `0.2.0` (minor — additive types + components).
+- `manifest.json` status STAYS `Production` (this extension does not regress; if reviewer prefers, status may be flipped to `In-Dev` during the build window and back to `Production` at ship — TBD by feature-review).

@@ -9,6 +9,9 @@ import {
   todayShortcut,
   tomorrowShortcut,
   nextMondayShortcut,
+  todayShortcutDate,
+  tomorrowShortcutDate,
+  nextMondayShortcutDate,
 } from "../internal/dueShortcuts.js";
 
 describe("dueShortcuts", () => {
@@ -45,5 +48,12 @@ describe("dueShortcuts", () => {
     // 2026-05-24 is a Sunday
     const result = nextMondayShortcut(2026, 5, 24);
     expect(result).toBe("5/25");
+  });
+
+  test("DS8 typed shortcut helpers emit ISO dueDate values", () => {
+    expect(todayShortcutDate(new Date(2026, 4, 23))).toBe("2026-05-23");
+    expect(tomorrowShortcutDate(new Date(2026, 4, 23))).toBe("2026-05-24");
+    expect(nextMondayShortcutDate(new Date(2026, 4, 23))).toBe("2026-05-25");
+    expect(nextMondayShortcutDate(new Date(2026, 4, 25))).toBe("2026-06-01");
   });
 });

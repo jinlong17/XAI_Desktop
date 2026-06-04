@@ -1,0 +1,239 @@
+# Design Snapshot — xai-web-board-views
+
+> Anchor docs for runtime package `@repo/plugin-web-board-views` at `packages/plugin-web-board-views/`.
+
+## Decision snapshot
+
+| Field | Value |
+|---|---|
+| Selected Option | **γ — board-views provides its own top-level `BoardModule` that composes board-core's barrel exports** (`packages/plugin-web-board-views/`) |
+| Review Doc Path | `docs/reviews/xai-web-board-views/20260523-discovery-review.md` |
+| Review Date | 2026-05-23 |
+| Status (planning) | NEEDS_REVIEW |
+| Roadmap Row | #8 (Wave W2e — Module — Parallel-Agent dispatch with #9 & #11) |
+| ADR Anchor | `docs/adr/0007-xai-web-console-build-form.md` §S4 / §S5 / §S6 / §S7 / §S8 |
+| PRD Anchor | `web design/DESIGN.md` §4.3 (5 additional Board views + per-board view picker) |
+| Source Code | `web design/module-board.jsx` lines 527–1092 (TableView / BoardCalendarView / BoardDashboardView / TimelineView / MapView) + relevant `web design/layout.css` sections |
+| Depends on | `@repo/plugin-web-board-core` row #7 (READY_TO_SHIP) — consumed via `index.ts` barrel ONLY |
+
+## Frozen assumptions
+
+1. Runtime package `@repo/plugin-web-board-views` at `packages/plugin-web-board-views/`. Anchor docs (this file) live at `packages/xai-web-board-views/docs/`.
+2. board-core (row #7) is consumed via `@repo/plugin-web-board-core` (barrel only). NO `…/src/internal/*` imports. Enforced by `eslint.config.js` `no-restricted-imports` rule.
+3. **Persistence**:
+   - Reads board-core's `xai_boards_v2` + `xai_active_board` (already SHIPPED).
+   - **Adds one new key** `xai_board_view_by_id` (codec `json`, default `{}`, shape `Record<string, BoardViewId>`).
+   - Registry edit in `packages/plugin-web-storage/src/internal/registry.ts` — single-line addition. NO other registry changes.
+4. **View id literal union**: `type BoardViewId = "board" | "table" | "calendar" | "dashboard" | "timeline" | "map";` declared in this row's `src/types.ts`.
+5. **Schema preservation**: `BoardCard.start?: string` already exists in board-core schema (api.md §3). Timeline reads it. No `BoardCard.location` field is introduced — Map view stays a placeholder.
+6. **Due picker quick-shortcuts** (hard constraint per DESIGN.md §4.3): `Today` / `Tomorrow` / `Next Mon`. Output format = `"M/D"` (matches Calendar's regex `/^(\d+)\/(\d+)/` and Timeline's `parseDay` on `module-board.jsx` lines 717 + 919). `Today` shortcut emits `"Today"` (en) / `"今天"` (zh) — matches `module-board.jsx` lines 723 + 919.
+7. **Calendar DnD rewrites `card.due` via board-core's `updateCardInList`** — no new persistence path. Patch shape verbatim from prototype line 758: `{ due: newDue, dueEn: undefined, dueLate: false }`.
+8. **Timeline three-handle DnD updates `{start, due}` atomically** — one `updateCardInList` call with `{ due: dayToStr(final.end), start: final.start === final.end ? null : dayToStr(final.start), dueEn: undefined, dueLate: false }` (verbatim from prototype lines 974–983). Mouseup-outside-grid produces NO write (tests assert this).
+9. **Timeline bar clips at view-edge** (hard constraint) — implemented via clamping in `parseDay` (`Math.max(0, Math.min(days-1, …))` per prototype line 942) AND CSS `clip-path` on bars that extend past the gantt edge.
+10. **Dashboard rendering**: 4 KPIs + 2 horizontal bar charts (per-list + per-label). Pure CSS divs with width percentages. NO chart library.
+11. **Map view**: SVG placeholder copied verbatim from prototype lines 1056–1083. Decorative-only.
+12. **View picker** persists active view per board id (hard constraint per DESIGN.md §4.3). Map keyed by board id; switching boards (future row #9) recalls each board's last view. Orphan entries for deleted boards are tolerated (documented in api.md §11; cleanup deferred to row #9).
+13. **Bilingual via `lang` prop** + inline `lang === "zh" ? … : …` literals + a local 3-line `bilingual({en,zh}, lang)` helper in `src/internal/i18n.ts`. NO `useI18n` port. (Brief mentions `useI18n`; sibling rows have stopped using it — we follow board-core's `lang`-prop pattern.)
+14. **Module registration replaces line 61 (board-core's array entry) of `apps/web/src/routes/modules/shellRegistrations.tsx`**: array entry changes from `boardCoreWebModuleRegistration` to `boardViewsWebModuleRegistration`. board-core's `import` line is kept (board-views consumes its exports). Single-line array edit + new import statement near the existing board-core import. railOrder 3 preserved.
+15. **Three-phase build**:
+    - **P1** scaffold + types + ViewPicker + TableView (incl. Due picker / Labels / Members / Progress) + Dashboard + Map + tests
+    - **P2** Calendar view (DnD-to-change-due) + Timeline view (3-handle DnD) + persistence helpers + tests
+    - **P3** BoardModule orchestrator + registration + apps/web wire-up + new persistence registry entry + PLUGIN_MAP + integration tests
+    - Each phase = one conventional commit.
+
+## Dependency overview
+
+### Direct workspace deps (in `package.json`)
+
+| Dep | Why |
+|---|---|
+| `@repo/core` (workspace:*) | shared `lang` type (typed re-export). |
+| `@repo/plugin-web-tokens` (workspace:*) | Side-effect import of `tokens.css` (OKLCH semantic vars used in view CSS). |
+| `@repo/plugin-web-storage` (workspace:*) | `usePref("xai_board_view_by_id")` + `usePref("xai_boards_v2")` + `usePref("xai_active_board")` + `PREF_REGISTRY` + `isPrefKey` (tests). |
+| `@repo/plugin-web-board-core` (workspace:*) | **board-core barrel** — types (`Board`, `BoardListData`, `BoardCardData`, `BilingualText`), helpers (`updateCardInList`, `loadBoardsOrDefault`, `pickActiveBoard`, `makeDefaultBoards`), seed (`PM_LABELS`), components (`BoardView`). |
+| `@repo/xai-web-shell` (workspace:*) | `WebModuleSlotRegistration` type + `useWebShell` for the route wrapper. |
+
+### Peer deps
+
+- `react ^19.0.0`
+- `react-dom ^19.0.0`
+
+### Dev deps (test + lint)
+
+- `@repo/eslint-config` (workspace:*) — `react-internal` preset
+- `@repo/typescript-config` (workspace:*) — `react-library.json` preset
+- `@testing-library/react ^16.0.0`
+- `@testing-library/jest-dom ^6.0.0`
+- `jsdom ^26.0.0`
+- `vitest ^3.2.1`
+- `@types/react ^19.0.0`
+- `@types/react-dom ^19.0.0`
+
+### Apps/web changes (build phase scope)
+
+- One workspace dep added to `apps/web/package.json` → `"@repo/plugin-web-board-views": "workspace:*"`.
+- One-line array edit in `apps/web/src/routes/modules/shellRegistrations.tsx` (replaces `boardCoreWebModuleRegistration` array entry with `boardViewsWebModuleRegistration`; board-core's `import` line stays).
+- One-line `import { boardViewsWebModuleRegistration } from "@repo/plugin-web-board-views";` near the existing board-core import.
+
+### `@repo/plugin-web-storage` changes (build phase scope)
+
+- One new entry in `PREF_REGISTRY`: `xai_board_view_by_id` (codec `json`, default `{}`, owner `xai-web-board-views row #8`). Single Edit in `packages/plugin-web-storage/src/internal/registry.ts`. NO migration step (new key, default value = `{}`).
+
+## Coding red-line compliance (CLAUDE.md §Code Boundaries)
+
+| Rule | Compliance |
+|---|---|
+| Business logic in `packages/plugin-*/` not `apps/*/src/` | ✅ all logic in `packages/plugin-web-board-views/src/` |
+| Plugin-to-plugin via `@repo/core/events`, never direct imports | ✅ this row depends on `@repo/plugin-web-board-core` via its `index.ts` barrel ONLY — NO `…/src/internal/*` imports (eslint-enforced). Zero `@repo/core/events` channels added. |
+| `index.ts` is the only public surface | ✅ tests import from package-root only; all internal modules in `src/internal/` |
+| Generic UI → `packages/ui/`, business UI → owning plugin | ✅ TableView/CalendarView/DashboardView/TimelineView/MapView/ViewPicker are business components — they live here |
+| Rust commands / macOS platform code | N/A — browser-only row |
+| `manifest.json` aligned with runtime behavior | ✅ `manifest.json` declares `status: "In-Dev"`, `type: "ui"`, `windows: []`, `owner: "xai-web-board-views row #8"` |
+
+## Build phase scope (preview — full Phase Plan in dev_log.md)
+
+| Phase | Files written | Acceptance |
+|---|---|---|
+| P1 | `packages/plugin-web-board-views/{package,tsconfig,manifest,eslint.config,vitest.config,vitest.setup}.*` + `src/types.ts` + `src/internal/{i18n,dueShortcuts}.ts` + `src/{ViewPicker,TableView,BoardDashboardView,MapView}.tsx` + `src/styles.css` (partial — table/dash/map) + tests | lint + typecheck + tests pass |
+| P2 | `src/{BoardCalendarView,TimelineView}.tsx` + `src/internal/{dateOps,persistence}.ts` + `src/styles.css` (extend — cal/timeline) + tests | lint + typecheck + tests pass; Calendar DnD round-trip works; Timeline 3-handle DnD updates {start,due} atomically |
+| P3 | `src/BoardModule.tsx` + `src/registration.tsx` + `src/index.ts` + edit `apps/web/src/routes/modules/shellRegistrations.tsx` + edit `apps/web/package.json` + edit `packages/plugin-web-storage/src/internal/registry.ts` + edit `docs/PLUGIN_MAP.md` + integration tests | lint + typecheck + integration test pass; `/board` route renders board-views BoardModule; view picker switches across all 6 views; selection persists per board across reload |
+
+## Non-goals
+
+- Multi-board UI (board switcher) — row #9.
+- Workspace switcher — row #9.
+- Card detail modal — row #9.
+- PM template Status Overview banner — row #9.
+- Inbox / Planner side panels — row #9.
+- `BoardCard.location` field + real map (would change row #7 schema + introduce a map lib) — out of scope.
+- Keyboard / touch accessibility for DnD — deferred (would require a DnD library; ADR §S5 rule 10 blocks).
+- Event-bus emit on view change — deferred (pure UI sink for v1, matching board-core row #7 precedent).
+- Workspace-scoped labels in Dashboard — row #9 (this row uses board-core's `PM_LABELS` only).
+
+## Cross-vendor verify note
+
+This row is dispatched in **W2e Parallel-Agent mode** (manifest header) with concurrent siblings #9 board-workspaces and #11 dashboard-widgets. The manifest header policy queues cross-vendor verify (Codex `gpt-5.5-thinking medium` or Cursor fallback) **at ship time**, not at row-level verify. The row-level feature-verify pass is run by Claude Opus same-vendor as the planner — this is the documented same-vendor compromise per manifest header policy. feature-verify report will explicitly flag this with the standard manifest-header phrasing.
+
+---
+
+## 2026-05-25 Extension: Filter + Share + Map (gap-closure row #6)
+
+> APPEND-ONLY extension. SHIPPED row #8 + bugfix-cycle-1 contents above are
+> NOT mutated by this block. This is the canonical extension home (Map is the
+> largest sub-feature); cross-refs in `xai-web-board-workspaces/docs/design.md`
+> and `xai-web-board-core/docs/design.md` point back here.
+
+### Decision header
+
+| Field | Value |
+|---|---|
+| Selected Option | **Composite α** — see §4 of discovery review for sub-decisions D-Map-Lib (Leaflet) / D-Tile-Provider (OSM) / D-Share-URL (SHA-256) / D-EventMap (extend) / D-Filter-State (top-level) / D-Share-Modal (`<dialog>`) / D-Schema-Extension (additive `location?`) / D-CSP-Governance (amend ADR-0008 in-place) |
+| Review Doc | `docs/reviews/xai-web-board-filter-share-map/20260525-discovery-review.md` |
+| Review Date | 2026-05-25 |
+| Roadmap Row | `docs/workflow/roadmap/xai-web-console-gap-closure.md` row #6 (W2 first) |
+| Source brief | `docs/reviews/xai-web-board-filter-share-map/20260524-roadmap-seed.md` |
+| Parent ADR | ADR-0009 §D2-G3 (P0 gap-closure) |
+| ADR Amendment | **ADR-0008 §S3 D3** amended in-place this row to add `connect-src https://tile.openstreetmap.org` AND `img-src https://tile.openstreetmap.org` (per binding precedent set by row #2 ai-chat) |
+| Target packages | `packages/plugin-web-board-core/src/types.ts` (additive `location?` on `BoardCard`) · `packages/plugin-web-board-core/src/internal/isBoardArray.ts` (guard widened additively) · `packages/plugin-web-board-views/src/{MapView.tsx (REWRITE), index.ts (Edit), internal/filter.ts (NEW), internal/leafletLoader.ts (NEW), internal/location.ts (NEW)}` · `packages/plugin-web-board-workspaces/src/{BoardWorkspacesModule.tsx (Edit), FilterPopover.tsx (NEW), ShareModal.tsx (NEW), internal/filterState.ts (NEW), internal/shareUrl.ts (NEW)}` · `packages/core/src/types/events.ts` (+1 EventMap entry) · `apps/web/public/_headers` (+1 origin to two directives) · `apps/web/src/__tests__/csp.test.ts` (Edit, +1 case) · `docs/adr/0008-cloudflare-deploy-target-and-csp.md` (amend) |
+| Last Updated | 2026-05-25 |
+
+### Frozen Assumptions (this extension; lock at plan acceptance)
+
+1. **Map library = Leaflet (vanilla)**, lazy-loaded via `React.lazy(() => import("./MapView.js"))`. ~42 KB gzipped + ~14 KB CSS. NO React-Leaflet wrapper (avoid version-coupling). Pattern: `useEffect` mounts an `L.map(containerRef.current)`, `useEffect` cleanup calls `map.remove()`.
+2. **Tile provider = OSM standard tiles** at `https://tile.openstreetmap.org/{z}/{x}/{y}.png`. Attribution `© OpenStreetMap contributors` rendered visibly in the map bottom-right (Leaflet default — MUST NOT be hidden by CSS). Browser-default User-Agent acceptable per OSM policy "best-effort" framing. Documented future-swap to CartoDB if >1 req/sec avg.
+3. **Share URL generation** uses `SubtleCrypto.digest("SHA-256", utf8(boardId))` → first 8 hex chars → `https://xai-web.example/share/<8hex>`. Deterministic, testable, non-exploitable (URL is 404 on origin). NO timestamp in URL → no fingerprinting.
+4. **Share modal** = native `<dialog>` per row #5 binding precedent. Body: heading + read-only `<input>` + Copy button + Close. Backdrop click closes; ESC closes natively; emit-before-close pattern (REC-1 of row #5).
+5. **Filter state** = top-level `useState<FilterState>` in `BoardWorkspacesModule`. Shape: `{ labels: Set<string>; members: Set<string>; dueRange: 'all' | 'overdue' | 'today' | 'week' }`. Reset on `activeBoard.id` change via `useEffect`. Applied to view input via pure `applyFilter(lists, filter): BoardListData[]` helper at the view boundary.
+6. **Card schema extension** = additive optional `location?: { lat: number; lng: number; label?: string }` on `BoardCard` in `packages/plugin-web-board-core/src/types.ts`. Guard `isBoardCard` widened additively (existing tests pass; new tests cover present + malformed paths).
+7. **CSP amendment** = ADR-0008 §S3 D3 amended in-place per row #2 binding precedent. `connect-src` extended to include `https://tile.openstreetmap.org`; `img-src` extended to include `https://tile.openstreetmap.org`. Existing `apps/web/src/__tests__/csp.test.ts` extended with a second `it()` case asserting the new origin in both directives.
+8. **EventMap extension** = ONE new entry `web:board:share-requested` with `{ boardId: string; url: string; source: 'header' }` payload. Declaration-only (no consumer in this row), mirroring row #5 `web:dashboard:widget-added` precedent.
+9. **Bundle-budget enforcement** = new test `apps/web/src/__tests__/build-manifest.test.ts` reads `apps/web/dist/.vite/manifest.json` (or scans `dist/assets/*.js`) and asserts the existence of a chunk file matching `MapView*.js` AND that its size is < 80 KB minified (Leaflet 150 KB raw + ~10 KB MapView code; sanity ceiling — exact figure TBD in P5).
+10. **Filter scope on Map view** = filtered cards only (per Q1 recommendation in discovery review §6); consistent with HC1 "across all 6 board views consistently".
+11. **No real backend** — Share never POSTs anywhere; Map never fetches anything except OSM tiles; Filter never persists.
+12. **Append-only doc discipline** — this design.md gains ONE new section (this one); api.md gains ONE new §S15 section; test.md gains ONE new §6 section; dev_log.md gains ONE new "## Bugfix-Extension Lineage — gap-closure row #6 (2026-05-25)" block. Existing SHIPPED content is preserved verbatim.
+
+### New file plan (delta over SHIPPED)
+
+```
+packages/plugin-web-board-core/
+├── src/types.ts                       — MODIFY: + optional `location?: { lat: number; lng: number; label?: string }` on BoardCard
+├── src/internal/isBoardArray.ts       — MODIFY: widen isBoardCard to accept optional `location` field (additive; existing tests pass)
+└── src/__tests__/isBoardArray.test.ts — MODIFY: +4 cases (BCV1..BCV4: with-location / without-location / NaN-lat / out-of-range-lng)
+
+packages/plugin-web-board-views/
+├── src/MapView.tsx                    — REWRITE: real Leaflet integration; lazy-loaded; props extended to accept `lists` + `onSelectCard`
+├── src/index.ts                       — MODIFY: export type FilterPredicate + isValidLocation helper (advisory; primary FilterPredicate is in workspaces)
+├── src/internal/filter.ts             — NEW: applyFilter(lists, filter) pure helper
+├── src/internal/leafletLoader.ts      — NEW: tiny module that dynamically imports leaflet + CSS (single import seam)
+├── src/internal/location.ts           — NEW: isValidLocation(loc): boolean guard (NaN + range check)
+└── src/__tests__/
+    ├── filter.test.ts                 — NEW: 12 cases (label/member/dueRange × combine × empty filter)
+    ├── location.test.ts               — NEW: 6 cases (valid / nan-lat / nan-lng / out-of-range-lat / out-of-range-lng / missing-keys)
+    ├── MapView.test.tsx               — REWRITE: now ~15 cases (lazy-load fallback, pins render, pin click, empty-state, attribution visible, malformed-location filtered)
+    └── filter-view-integration.test.tsx — NEW: 6 cases (one per view: Board / Table / Calendar / Dashboard / Timeline / Map — filter applied + count assertion)
+
+packages/plugin-web-board-workspaces/
+├── src/BoardWorkspacesModule.tsx      — MODIFY: enable Filter button (open popover) + Share button (open modal); lift FilterState; pass `applyFilter`'d lists to alt-views and BoardView; pass `onSelectCard` placeholder
+├── src/FilterPopover.tsx              — NEW: popover anchored to Filter button; 3 facets (labels / members / dueRange) with checkboxes
+├── src/ShareModal.tsx                 — NEW: native <dialog> + URL input + Copy button + emit-before-close
+├── src/internal/filterState.ts        — NEW: EMPTY_FILTER constant + FilterState type + togglers
+├── src/internal/shareUrl.ts           — NEW: generateShareUrl(boardId): Promise<string> via SubtleCrypto
+└── src/__tests__/
+    ├── filterState.test.ts            — NEW: 8 cases (toggle label / toggle member / set dueRange / reset / EMPTY_FILTER identity)
+    ├── shareUrl.test.ts               — NEW: 6 cases (deterministic same-input-same-output / different-inputs-different-outputs / hex-format / 8-char-length / boardId-unicode / fallback if SubtleCrypto unavailable)
+    ├── FilterPopover.test.tsx         — NEW: 10 cases (render facets / toggle label / toggle member / set dueRange / clear button / aria-expanded / outside-click closes / ESC closes / bilingual / disabled facets when no labels)
+    ├── ShareModal.test.tsx            — NEW: 8 cases (open with URL / copy button copies / Copied flip / 2sec revert / emit-before-close / backdrop closes / ESC closes / bilingual)
+    └── BoardWorkspacesModule.test.tsx — MODIFY: +6 new cases (BWM-EXT-1..6: Filter button enabled / opens popover / hides cards / Share button enabled / opens modal / filter resets on board switch)
+
+packages/core/
+└── src/types/events.ts                — MODIFY: + 1 EventMap entry `web:board:share-requested`
+
+apps/web/
+├── public/_headers                    — MODIFY: connect-src adds https://tile.openstreetmap.org; img-src adds https://tile.openstreetmap.org
+├── src/__tests__/csp.test.ts          — MODIFY: +1 case asserting both directives contain the OSM origin (renamed CSP1 → CSP1+CSP2)
+└── src/__tests__/build-manifest.test.ts — NEW: 2 cases asserting MapView lazy chunk exists + size < 80 KB
+
+docs/adr/
+└── 0008-cloudflare-deploy-target-and-csp.md — AMEND §S3 D3 + add Amendments frontmatter row
+
+docs/PLUGIN_MAP.md                     — UPDATE: append `(Extension 2026-05-25 — Filter + Share + Map gap-closure row #6)` to rows for plugin-web-board-{core,views,workspaces}
+
+packages/plugin-web-board-views/package.json — MODIFY: + dependency `leaflet ^1.9.4` (latest stable as of 2026-05; pin once feature-build resolves)
+packages/plugin-web-board-views/package.json — MODIFY: + devDependency `@types/leaflet ^1.9.x`
+```
+
+### Dep boundary
+
+`leaflet` is a third-party runtime dependency added to
+`packages/plugin-web-board-views/package.json` (the package that owns MapView).
+`packages/plugin-web-board-workspaces` does NOT add leaflet; it consumes MapView
+through `@repo/plugin-web-board-views`'s barrel. The lazy-import boundary
+(`React.lazy(() => import("./MapView.js"))`) is INSIDE board-views — board-workspaces
+sees a normal component import. Vite's automatic code-splitting at dynamic-import
+boundaries ensures the chunk is separated.
+
+### Phase Plan summary (full breakdown in dev_log Phase Plan §)
+
+| Phase | Scope | Files | Tests added |
+|---|---|---|---|
+| P1 | Card schema `location?` extension in board-core + guard widened + tests | 3 files | +4 |
+| P2 | Filter predicate types + lift state + `applyFilter` integration + 6 view-integration tests | 4 files | +20 |
+| P3 | Filter UI popover + visual integration | 2 files | +10 |
+| P4 | Share modal `<dialog>` + URL generator + clipboard + EventMap entry + tests | 5 files | +22 |
+| P5 | Map — Leaflet dep add + lazy MapView + tile + pins + empty-state + tests | 7 files | +33 |
+| P6 | ADR-0008 §S3 D3 amendment + `_headers` extension + CSP test + bundle-budget test | 4 files | +3 |
+| P7 | Cross-vendor verifier checklist + PLUGIN_MAP append + dev_log flip to `READY_FOR_VERIFY` | 4 doc files | 0 |
+
+**Total**: 7 phases · ~92 new tests · 0 breaking changes to existing tests · ~510 LOC delta (estimate).
+
+### Coding-red-line compliance (CLAUDE.md §Code Boundaries)
+
+| Rule | Compliance |
+|---|---|
+| Business logic in `packages/plugin-*/` not `apps/*/src/` | ✅ Filter / Share / Map logic stays inside board-views + board-workspaces. The only `apps/web/` edits are `_headers` (deployment-config) and 2 tests (CSP + bundle-manifest source-text guards). |
+| Plugin-to-plugin via `@repo/core/events`, never direct imports | ✅ Share emit via `@repo/xai-web-event-bus` `emitWebEvent`. No new direct plugin-to-plugin imports. |
+| Canonical data types in `packages/core/` (global) or local plugin `types.ts` | ✅ `web:board:share-requested` payload declared in `@repo/core/types/events.ts`; `FilterState` / `FilterPredicate` local to board-workspaces |
+| `index.ts` is plugin's only public surface | ✅ Filter helpers re-exported via board-views `index.ts`; `internal/*` not exposed |
+| UI: generic → `packages/ui/`, business → owning plugin | ✅ FilterPopover + ShareModal + MapView are business components; they stay inside the owning plugin |
+| Rust / macOS platform code | N/A — web-only |
+| `manifest.json` aligned with runtime behavior | ✅ No manifest changes needed (status stays Stable for all 3 packages; PLUGIN_MAP note updated only) |

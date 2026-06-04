@@ -16,6 +16,7 @@ export type WidgetSpanClass =
   | "w-clock"
   | "w-stat"
   | "w-weather"
+  | "w-timetrack"
   | "w-mini-cal"
   | "w-timezones"
   | "w-stickies"

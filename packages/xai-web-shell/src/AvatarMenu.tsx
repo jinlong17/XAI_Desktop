@@ -13,10 +13,11 @@
  */
 
 import type { ReactElement } from "react";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useI18n } from "@repo/plugin-web-tokens";
 import { Icon } from "./icons.js";
 import { useWebShell } from "./registry.js";
+import { SignOutConfirmDialog } from "./SignOutConfirmDialog.js";
 import type { AvatarMenuProps, RailPos } from "./types.js";
 
 // ---- Popover anchor mapping (DESIGN.md §4.14) ------------------------------
@@ -43,15 +44,25 @@ export function AvatarMenu({
   const { lang, railPos } = useWebShell();
   const { s } = useI18n(lang);
 
+  // Controls the sign-out confirmation dialog (Option C)
+  const [dialogOpen, setDialogOpen] = useState(false);
+
   // Escape key handler (B1: cleanup before re-attach)
+  // Note: only handle ESC on the popover when the dialog is NOT open
+  // (the dialog handles its own ESC via the native cancel event)
   useEffect(() => {
-    if (!open) return;
+    if (!open || dialogOpen) return;
     const handler = (e: KeyboardEvent) => {
       if (e.key === "Escape") onClose();
     };
     document.addEventListener("keydown", handler);
     return () => document.removeEventListener("keydown", handler);
-  }, [open, onClose]);
+  }, [open, onClose, dialogOpen]);
+
+  // Reset dialog state when popover closes
+  useEffect(() => {
+    if (!open) setDialogOpen(false);
+  }, [open]);
 
   if (!open) return null;
 
@@ -113,16 +124,18 @@ export function AvatarMenu({
             className="avm-item danger"
             onClick={() => {
               if (onSignOut) {
-                onSignOut();
+                // Option C: open confirmation dialog instead of calling directly
+                setDialogOpen(true);
               } else {
+                // DEV-only warn when onSignOut prop is not wired (backward-compatible)
                 if (
                   typeof import.meta !== "undefined" &&
                   (import.meta as { env?: { DEV?: boolean } }).env?.DEV
                 ) {
                   console.warn("[xai-web-shell] sign-out not wired");
                 }
+                onClose();
               }
-              onClose();
             }}
           >
             <Icon
@@ -133,6 +146,16 @@ export function AvatarMenu({
             <span>{s("avatar.sign_out")}</span>
           </button>
         </div>
+
+        {/* Sign-out confirmation dialog (Option C) — shown when onSignOut is wired */}
+        <SignOutConfirmDialog
+          open={dialogOpen}
+          onConfirm={() => {
+            setDialogOpen(false);
+            onSignOut?.();
+          }}
+          onCancel={() => setDialogOpen(false)}
+        />
       </div>
     </>
   );

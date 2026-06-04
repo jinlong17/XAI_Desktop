@@ -19,10 +19,25 @@ interface MonthGridProps {
   todayKey: string;
   focusedDate: string | null;
   events: CalEventsByDay;
+  /** Forwarded to MonthCell for user-event click handling. */
+  onUserEventClick?: (userId: string) => void;
+  /** Opens the quick-create composer for a concrete date. */
+  onDateClick?: (dateKey: string) => void;
 }
 
 export function MonthGrid(props: MonthGridProps): JSX.Element {
-  const { year, month, weekStart, lang, t, todayKey, focusedDate, events } = props;
+  const {
+    year,
+    month,
+    weekStart,
+    lang,
+    t,
+    todayKey,
+    focusedDate,
+    events,
+    onUserEventClick,
+    onDateClick,
+  } = props;
   const cells = useMemo(
     () => monthGridCells(year, month, weekStart),
     [year, month, weekStart],
@@ -45,6 +60,8 @@ export function MonthGrid(props: MonthGridProps): JSX.Element {
             focusedDate={focusedDate}
             events={events}
             displayedMonth={{ year, month }}
+            onUserEventClick={onUserEventClick}
+            onDateClick={onDateClick}
           />
         ))}
       </div>

@@ -17,10 +17,6 @@
  */
 
 import * as React from "react";
-import {
-  isDesktopPhase1OfflineRuntime,
-  resolveWebRuntimeProfile,
-} from "@repo/core";
 import type { Lang } from "@repo/plugin-web-tokens";
 import { localI18n } from "./localI18n.js";
 import type { IntegrationProvider } from "./integrationProviders.js";
@@ -30,29 +26,18 @@ import { buildAuthorizeUrl } from "./buildAuthorizeUrl.js";
 interface IntegrationConnectButtonProps {
   readonly provider: IntegrationProvider;
   readonly lang: Lang;
-  readonly onOfflineBlocked?: () => void;
 }
 
 export function IntegrationConnectButton({
   provider,
   lang,
-  onOfflineBlocked,
 }: IntegrationConnectButtonProps): React.ReactElement {
   const t = localI18n(lang);
-  const runtimeProfile = resolveWebRuntimeProfile(
-    import.meta.env as Record<string, string | undefined>,
-  );
-  const isDesktopOfflineRuntime =
-    isDesktopPhase1OfflineRuntime(runtimeProfile);
 
   const handleConnect = async (
     e: React.MouseEvent<HTMLButtonElement>,
   ): Promise<void> => {
     e.preventDefault();
-    if (isDesktopOfflineRuntime) {
-      onOfflineBlocked?.();
-      return;
-    }
     try {
       const pendingState = await startOAuth(provider.id);
       const url = await buildAuthorizeUrl(provider, pendingState);
@@ -67,14 +52,6 @@ export function IntegrationConnectButton({
       type="button"
       className="int-connect-btn"
       onClick={(e) => { void handleConnect(e); }}
-      disabled={isDesktopOfflineRuntime}
-      title={
-        isDesktopOfflineRuntime
-          ? (lang === "zh"
-            ? "桌面离线模式暂不支持连接"
-            : "Connect is unavailable in desktop offline mode")
-          : undefined
-      }
       aria-label={`${t("int.btn.connect")} ${t(provider.nameKey)}`}
     >
       {t("int.btn.connect")}

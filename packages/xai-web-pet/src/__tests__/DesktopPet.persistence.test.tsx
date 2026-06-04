@@ -49,10 +49,10 @@ describe("DesktopPet persistence", () => {
     expect(body?.className).toContain("pet-anim-hop");
   });
 
-  it("uses default pos {x:24,y:24} when localStorage is empty", () => {
+  it("uses default pos {x:24,y:520} when localStorage is empty", () => {
     const { container } = render(<DesktopPet on={true} lang="en" />);
     const wrap = container.querySelector(".pet-wrap") as HTMLElement | null;
-    expect(wrap?.style.transform).toBe("translate(24px, 24px)");
+    expect(wrap?.style.transform).toBe("translate(24px, 520px)");
   });
 
   it("uses persisted star pet (twinkle animation)", () => {
