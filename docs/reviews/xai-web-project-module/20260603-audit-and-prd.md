@@ -18,7 +18,7 @@ Web 版本的“项目”功能已经不是空壳。当前 `/app/board` 已经�
 1. PRD 与当前实现命名、路由和数据模型不一致：旧 PRD 写的是 `/app/projects`、拆分实体 schema 和卡片详情；当前实现是 `/app/board` + `usePref("xai_boards_v2")` 单 blob。
 2. 当前卡片能力仍偏展示：可新增标题、改 due/label/member、拖拽流转，但缺少正式 card detail、描述、评论、附件、真实 checklist 编辑、归档、列表重排、成员/权限。
 3. 数据未接入正式同步：Web 当前是本地偏好存储，不是 Web 子 PRD 要求的 encrypted blob / sync push-pull / cross-device sync。
-4. 协作和集成是 stub 或未接：Share 是 mock URL；Power-Up / integrations / automation 没有正式能力；Filter 是 render-only 不持久化。
+4. 协作和集成仍未完整：Share 是 mock URL；Automation Lite 预设已接入，但 Power-Up / integrations、自定义规则、后台计划任务、评论和权限仍未正式打通。
 5. `packages/plugin-project` 拥有更接近桌面项目插件的数据模型和 CardDetail，但 manifest 仅 `windows.control` 且 `enabled:false`，没有接入 Web 当前运行面。
 
 ## 2. Current Function Audit
@@ -69,7 +69,7 @@ Web 版本的“项目”功能已经不是空壳。当前 `/app/board` 已经�
 | Archive/delete semantics | Board delete exists; card/list archive/delete absent in Web board. | Done 列会堆积，无法整理。 |
 | Sync | `xai_boards_v2` local pref only. | 跨设备/账号不一致。 |
 | Share/invite permissions | mock URL only; no `/share/:token`, no permission model. | 不能分享真实项目。 |
-| Automation | No rules/buttons/scheduled/due-date automation. | 不能自动 move/label/remind。 |
+| Automation | SHIPPED: Automation Lite presets cover Done completion, due-soon urgent labels, and daily due sort. Custom rule builder, scheduled background jobs, reminders, and notifications remain future work. | 已能做轻量本地预设；还不是完整 Trello Butler。 |
 | Integrations | Settings integration flags exist elsewhere as stubs; Board has no integration surface. | GitHub/Calendar/Drive/Slack 等未接。 |
 
 ## 3. PRD Check
@@ -258,7 +258,7 @@ This is good enough for local demo and first-run state. It is not enough for dur
 
 | Task | Owner surface | Notes |
 |---|---|---|
-| `xai-web-board-automation-lite` | board | Preset rules only; no arbitrary rule builder initially. |
+| `xai-web-board-automation-lite` | board | SHIPPED: board-core preset helper plus active `/app/board` daily/manual runner; no arbitrary rule builder. |
 | `xai-web-board-integrations` | settings + board | Calendar/GitHub/Linear/Drive link adapters. |
 | `xai-web-board-comments-activity` | board detail | Activity log and comments. |
 | `xai-web-board-permissions` | account/sync/share | Private/shared board model. |
@@ -313,6 +313,7 @@ Do not update generated dashboard snapshots directly. If a dashboard generator c
 | Share contract implementation | `xai-web-board-share-contract` shipped visible mock-only share labeling and explicit envelope fields; the next personal-board focus is `xai-web-board-responsive-smoke`. |
 | Responsive smoke implementation | `xai-web-board-responsive-smoke` shipped desktop/mobile Board/Table/Calendar/Timeline/Detail smoke, fixed mobile toolbar containment and detail modal viewport bounds, and moved the next personal-board focus to `xai-web-board-export-import`. |
 | Export/import data contract implementation | `xai-web-board-export-import` shipped board-core payload helpers for export/import, logical entity inclusion, and Board key coverage in account-delete registry wipe tests; the next personal-board focus is `xai-web-board-automation-lite`. |
+| Automation Lite implementation | `xai-web-board-automation-lite` shipped browser-local preset rules for Done completion, due-soon urgent labels, daily due sort, and manual toolbar rerun; the next personal-board focus is `xai-web-board-integrations`. |
 
 ## 11. Acceptance Criteria for the Next Implementation Wave
 

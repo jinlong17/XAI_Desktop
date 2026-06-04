@@ -7,9 +7,9 @@
 | Workflow | FEATURE_DEV |
 | Target | xai-web-board-automation-lite |
 | Title | Web Project module P2 Board automation presets |
-| Current Phase | FEATURE_VERIFY |
-| Status | READY_TO_SHIP |
-| Suggested Next | ship docs |
+| Current Phase | SHIP |
+| Status | SHIPPED |
+| Suggested Next | xai-web-board-integrations |
 | Automation Mode | D-Codex+Cursor |
 | Verify Cross-vendor | yes |
 | Executor | gpt-5 parent inline |
@@ -50,4 +50,5 @@
 | Timestamp | Executor | Action | Commits | Next Step |
 |---|---|---|---|---|
 | 2026-06-03 23:08 PDT | gpt-5 parent inline | feature-plan - audited board-core/workspaces seams and selected pure preset helper plus active board wiring. | pending | feature-build |
-| 2026-06-03 23:20 PDT | gpt-5 parent inline | feature-build/verify - implemented Automation Lite presets, public helper exports, active Board wiring, tests, package/web verification, and Chrome smoke. | pending | ship docs |
+| 2026-06-03 23:20 PDT | gpt-5 parent inline | feature-build/verify - implemented Automation Lite presets, public helper exports, active Board wiring, tests, package/web verification, and Chrome smoke. | `3a678cd` | ship docs |
+| 2026-06-03 23:23 PDT | gpt-5 parent inline | feature-ship - roadmap, PLUGIN_MAP, architecture, PRD, and dev_log marked shipped. | this docs commit | xai-web-board-integrations |

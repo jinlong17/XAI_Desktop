@@ -201,7 +201,8 @@ flowchart LR
   N --> O["explicit mock share contract shipped"]
   O --> P["responsive smoke shipped"]
   P --> Q["Board export/import data contract shipped"]
-  Q --> R["future automation + active export/import UI"]
+  Q --> R["Automation Lite presets shipped"]
+  R --> S["future integrations + active export/import UI"]
 ```
 
 Ownership rules:
@@ -217,6 +218,9 @@ Ownership rules:
 - `plugin-web-board-core` also owns the Board export/import data contract:
   payload helpers that validate `xai_boards_v2`, preserve v1 storage envelopes,
   and project board/list/card logical entities.
+- `plugin-web-board-core` owns Automation Lite preset evaluation. The active
+  Web board calls that pure helper through `plugin-web-board-workspaces` for
+  browser-local daily runs, manual reruns, and move-to-Done completion.
 - `@repo/plugin-web-tasks` owns the `xai_task_cols` shape and public board-link
   helper surface used to create deterministic linked tasks from Board cards.
 - `@repo/plugin-web-calendar` may read `plugin-web-board-core` public storage

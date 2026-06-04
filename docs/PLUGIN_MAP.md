@@ -116,8 +116,9 @@ Per P1 period: new work on P1/G1 native foundation permitted; P0 web is maintena
 > storage contract/logical entities, one-way Board-card to Task linkage, and
 > Calendar read-only Board feed, per-board saved filters, explicit mock share
 > contract, desktop/mobile responsive smoke, and Board export/import data
-> contract are now shipped; real backend share, active export/import UI,
-> comments/activity, automation, and permissions are tracked in
+> contract, and Automation Lite presets are now shipped; real backend share,
+> active export/import UI, comments/activity, full automation/rule builder, and
+> permissions are tracked in
 > `docs/reviews/xai-web-project-module/20260603-audit-and-prd.md` and
 > `docs/workflow/roadmap/xai-web-project-module.md`.
 >
@@ -213,6 +214,14 @@ Per P1 period: new work on P1/G1 native foundation permitted; P0 web is maintena
 > assert Board-owned keys are included in the registry wipe set. Active Web
 > export/import UI, encrypted bundle wrapping, and backend restore remain future
 > work.
+>
+> **Board Automation Lite amendment (2026-06-03):** roadmap row
+> `xai-web-board-automation-lite` is SHIPPED. Board-core now exposes the pure
+> `applyBoardAutomationLite` preset runner with `BoardCard.completedAt`,
+> due-soon `urgent` labeling, and daily due-date sorting. Board Workspaces runs
+> the preset once per active board/day, exposes a manual `Automate` toolbar
+> button, and marks move-to-Done completion without adding custom rule storage,
+> backend scheduling, reminders, or permission-aware automation.
 
 | Package | 目录 | 状态 | 说明 | 依赖 | 最后更新 |
 |---------|------|------|------|------|---------|
