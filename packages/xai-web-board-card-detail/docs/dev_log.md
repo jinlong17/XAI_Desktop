@@ -7,14 +7,14 @@
 | Workflow | FEATURE_DEV |
 | Target | xai-web-board-card-detail |
 | Title | Web Project module P0 card-detail slice — wire `/app/board` cards to a real detail modal, persist title/description/date/label/member/link/checklist edits through the current board blob, and keep Board/Table/Calendar/Timeline/Planner aligned without pulling the full typed-date migration into this row |
-| Current Phase | FEATURE_BUILD |
-| Status | BLOCKED |
-| Suggested Next | feature-build |
+| Current Phase | FEATURE_AUTO_BUILD |
+| Status | READY_FOR_VERIFY |
+| Suggested Next | feature-verify |
 | Automation Mode | D-Codex+Cursor |
 | Verify Cross-vendor | yes |
-| Executor | gpt-5.3-codex feature-verify |
-| Updated | 2026-06-03 18:55 PDT |
-| Blockers | 1) `eadc04b` mixes planning docs + runtime work across P1/P2/P3 and misses the required commit body/phase metadata; 2) title edits no longer guarantee mirrored `title.en`/`title.zh` writes for seeded bilingual cards |
+| Executor | gpt-5.4 inline fallback after feature-verify repair |
+| Updated | 2026-06-03 19:01 PDT |
+| Blockers | Resolved: `eadc04b` was split into docs + P1/P2/P3 phase commits with full commit bodies, and title edits now mirror both `title.en` and `title.zh` with regression coverage. |
 | Roadmap Manifest | `docs/workflow/roadmap/xai-web-project-module.md` row #2 |
 | Dependency Gate | Branches containing `e79ecc5 docs(web): formalize project module plan` satisfy the row #1 docs prerequisite for this feature. There is no separate `xai-web-project-prd-sync` dev_log gate in this worktree; re-audit only if the referenced project-module docs drift again. |
 | Write Scope | `docs/reviews/xai-web-board-card-detail/` + `packages/xai-web-board-card-detail/docs/` during planning. Runtime implementation is expected to touch `packages/plugin-web-board-{core,views,workspaces}/` only. |
@@ -168,7 +168,7 @@ Verification completed in this worktree:
 - `pnpm install --frozen-lockfile` — pass; lockfile already current.
 - `pnpm --filter @repo/plugin-web-board-core test` — pass, 112 tests.
 - `pnpm --filter @repo/plugin-web-board-views test` — pass after test-time fix, 126 tests.
-- `pnpm --filter @repo/plugin-web-board-workspaces test` — pass, 177 tests.
+- `pnpm --filter @repo/plugin-web-board-workspaces test` — pass, 180 tests.
 - `pnpm --filter @repo/plugin-web-board-core typecheck` — pass.
 - `pnpm --filter @repo/plugin-web-board-views typecheck` — pass.
 - `pnpm --filter @repo/plugin-web-board-workspaces typecheck` — pass.
@@ -213,6 +213,35 @@ Non-blocking note:
 
 - The manual browser-smoke limitation is honestly labeled. This verify pass still has no real click/screenshot proof because the prior Computer Use attempt failed with `cgWindowNotFound`, and the dev log explicitly states that gap.
 
+## Repair Notes
+
+Feature-verify blockers were repaired inline after the BLOCKED handoff:
+
+1. **Commit integrity / phase-boundary repair**
+   - Reconstructed the unpushed mixed commit into phase-bounded commits:
+     - `d7259b1 docs(web): plan board card detail slice`
+     - `e075ae4 feat(web-board-card-detail): phase P1 add card detail schema bridge`
+     - `234e74e feat(web-board-card-detail): phase P2 add workspace card detail modal`
+     - `5fecc7f feat(web-board-card-detail): phase P3 wire alternate views to detail`
+   - Each phase commit includes `Phase`, `Why`, `What`, `Scope`, `Risk`, `Docs`, and `Tests` metadata in the commit body.
+
+2. **Bilingual title mirror repair**
+   - `BoardCardDetailSurface` title edits now write `{ en: value, zh: value }` unconditionally.
+   - `BWM-DETAIL-2` now asserts both `title.en` and `title.zh` persist to the edited value.
+
+3. **P3 regression hardening**
+   - Added `BWM-DETAIL-5..7` to prove Table, Calendar, and Timeline view clicks open the shared detail modal.
+
+Fresh verification after repair:
+
+- `pnpm --filter @repo/plugin-web-board-core test` — pass, 112 tests.
+- `pnpm --filter @repo/plugin-web-board-views test` — pass, 126 tests.
+- `pnpm --filter @repo/plugin-web-board-workspaces test` — pass, 180 tests.
+- `pnpm --filter @repo/plugin-web-board-core typecheck && pnpm --filter @repo/plugin-web-board-core lint` — pass.
+- `pnpm --filter @repo/plugin-web-board-views typecheck && pnpm --filter @repo/plugin-web-board-views lint` — pass.
+- `pnpm --filter @repo/plugin-web-board-workspaces typecheck && pnpm --filter @repo/plugin-web-board-workspaces lint` — pass.
+- `git diff --check` — pass.
+
 ## Work Log
 
 | Timestamp | Executor | Action | Commits | Next |
@@ -223,3 +252,4 @@ Non-blocking note:
 | 2026-06-03 18:31 | gpt-5.3-codex | feature-review APPROVED — verified the revised dependency gate and shared member contract against repo truth, confirmed the phase split/test scope is executable for auto-build, and advanced the status panel to APPROVED | — | feature-auto-build |
 | 2026-06-03 18:48 | gpt-5.4 inline fallback | feature-auto-build inline — implemented board-core additive detail schema/normalization, shared member export, reusable workspaces detail surface/modal, Board/Table/Calendar/Timeline/Planner open-card wiring, attachment URL rejection, and focused tests/lint/typecheck. Build agent could not run because the configured `gpt-5.3-codex` worker model is unavailable in this account. | — | feature-verify |
 | 2026-06-03 18:55 | gpt-5.3-codex | feature-verify BLOCKED — reran package tests/typechecks and `git diff --check`, then blocked ship on mixed-scope commit history (`eadc04b`) and bilingual title persistence drifting from the frozen mirror-write contract | eadc04b | feature-build |
+| 2026-06-03 19:01 | gpt-5.4 inline fallback | feature-build repair — split the mixed build commit into docs/P1/P2/P3 commits with required metadata, fixed title edits to mirror both bilingual fields, added Table/Calendar/Timeline detail-open regression tests, and reran the full related package test/typecheck/lint matrix plus `git diff --check` | d7259b1, e075ae4, 234e74e, 5fecc7f | feature-verify |
