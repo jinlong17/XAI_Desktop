@@ -1,5 +1,4 @@
 import { Navigate, createBrowserRouter, Outlet, type RouteObject } from "react-router";
-import { LandingPage } from "../pages/LandingPage";
 import { NotFoundPage } from "../pages/NotFoundPage";
 // Dev-only smoke route — statically imported but gated by import.meta.env.DEV inside the component
 import { TokensSmokePage } from "../pages/TokensSmokePage.js";
@@ -23,7 +22,7 @@ export const webHostRouteObjects: RouteObject[] = [
     children: [
       {
         index: true,
-        element: <LandingPage />,
+        element: <Navigate to={defaultModulePath} replace />,
       },
       {
         path: "auth",

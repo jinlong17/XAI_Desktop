@@ -3,8 +3,8 @@
 import { afterEach, beforeAll, describe, expect, it, vi } from "vitest";
 import { createRoot, type Root } from "react-dom/client";
 import { act } from "react";
-import { RouterProvider, createMemoryRouter } from "react-router";
-import type { PropsWithChildren } from "react";
+import { Navigate, RouterProvider, createMemoryRouter } from "react-router";
+import type { PropsWithChildren, ReactElement } from "react";
 import { webHostRouteObjects } from "./router";
 
 const mockDeviceFetch = vi.fn(async () => new Response(JSON.stringify({ rows: [] }), { status: 200 }));
@@ -84,9 +84,15 @@ afterEach(() => {
 beforeAll(() => {
   // React 19 test runtime expects this opt-in when using act in non-Jest environments.
   (globalThis as { IS_REACT_ACT_ENVIRONMENT?: boolean }).IS_REACT_ACT_ENVIRONMENT = true;
-  globalThis.Request = window.Request as typeof Request;
-  globalThis.AbortController = window.AbortController as typeof AbortController;
-  globalThis.AbortSignal = window.AbortSignal as typeof AbortSignal;
+  if (typeof globalThis.Request === "undefined") {
+    globalThis.Request = window.Request as typeof Request;
+  }
+  if (typeof globalThis.AbortController === "undefined") {
+    globalThis.AbortController = window.AbortController as typeof AbortController;
+  }
+  if (typeof globalThis.AbortSignal === "undefined") {
+    globalThis.AbortSignal = window.AbortSignal as typeof AbortSignal;
+  }
 });
 
 describe("web host router integration", () => {
@@ -114,11 +120,12 @@ describe("web host router integration", () => {
     expect(auth.container.textContent).toContain("Route: /auth/login");
     await unmountApp(auth);
 
-    const landing = await mountRouter(historyEntries, 0);
-    expect(landing.container.textContent ?? "").toContain("XAI Console");
-    expect(landing.container.textContent ?? "").toContain("Open console");
-    expect(landing.container.textContent ?? "").not.toContain("Public landing shell placeholder");
-    await unmountApp(landing);
+    const rootRoute = webHostRouteObjects[0]!;
+    expect(rootRoute).toBeDefined();
+    const indexRoute = rootRoute.children?.find((route) => route.index);
+    const indexElement = indexRoute?.element as ReactElement<{ to: string }> | undefined;
+    expect(indexElement?.type).toBe(Navigate);
+    expect(indexElement?.props.to).toMatch(/^\/app\//);
   });
 
   it("keeps app shell stable when invoking todo module controls", async () => {
