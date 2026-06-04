@@ -43,7 +43,7 @@ This file is the current source-backed personal development board for the Web Pr
 | This Week | `xai-web-board-comments-activity` |
 | Backlog | — |
 | Waiting | — |
-| Later | `xai-web-board-comments-activity`, `xai-web-board-permissions` |
+| Later | `xai-web-board-permissions` |
 
 ## Product Structure
 
