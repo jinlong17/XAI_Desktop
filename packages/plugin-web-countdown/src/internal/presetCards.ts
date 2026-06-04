@@ -216,7 +216,7 @@ export function getPresetCountdowns(now = new Date()): CountdownCard[] {
   ];
 
   const stamp = now.toISOString();
-  return defs.map((def) => ({
+  return defs.map((def, index) => ({
     id: `preset_${def.id}`,
     title: def.title,
     target_date: def.targetDate,
@@ -237,6 +237,7 @@ export function getPresetCountdowns(now = new Date()): CountdownCard[] {
     status: "active",
     source: "preset",
     preset_id: def.id,
+    sort_order: index,
     created_at: stamp,
     updated_at: stamp,
     deleted_at: null,
@@ -258,6 +259,7 @@ export function mergePresetCountdowns(rawCards: unknown, now = new Date()): Coun
       ...current,
       target_date: preset.target_date,
       start_date: preset.start_date,
+      sort_order: current.sort_order ?? preset.sort_order,
       updated_at: current.updated_at,
     };
   });
@@ -278,6 +280,9 @@ export function isHistoryCard(card: CountdownCard, now = new Date()): boolean {
 export function sortedCountdowns(cards: readonly CountdownCard[]): CountdownCard[] {
   return [...cards].sort((a, b) => {
     if (a.is_pinned !== b.is_pinned) return a.is_pinned ? -1 : 1;
+    const aOrder = Number.isFinite(a.sort_order) ? a.sort_order! : Number.MAX_SAFE_INTEGER;
+    const bOrder = Number.isFinite(b.sort_order) ? b.sort_order! : Number.MAX_SAFE_INTEGER;
+    if (aOrder !== bOrder) return aOrder - bOrder;
     return `${a.target_date}${a.target_time ?? ""}`.localeCompare(`${b.target_date}${b.target_time ?? ""}`);
   });
 }
@@ -304,6 +309,7 @@ export function defaultDraft(now = new Date()): Omit<CountdownCard, "id"> {
     status: "active",
     source: "custom",
     preset_id: null,
+    sort_order: Number.MAX_SAFE_INTEGER,
     created_at: stamp,
     updated_at: stamp,
     deleted_at: null,

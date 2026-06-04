@@ -18,6 +18,14 @@ interface CountdownCardViewProps {
   onHide?: (id: string) => void;
   onPin?: (id: string, pinned: boolean) => void;
   onDuplicate?: (id: string) => void;
+  draggable?: boolean;
+  isDragging?: boolean;
+  isDropTarget?: boolean;
+  onDragStart?: (id: string, event: React.DragEvent<HTMLElement>) => void;
+  onDragEnter?: (id: string, event: React.DragEvent<HTMLElement>) => void;
+  onDragOver?: (id: string, event: React.DragEvent<HTMLElement>) => void;
+  onDrop?: (id: string, event: React.DragEvent<HTMLElement>) => void;
+  onDragEnd?: () => void;
 }
 
 function isDev(): boolean {
@@ -52,7 +60,7 @@ function categoryLabel(card: CountdownCard, lang: Lang): string {
 }
 
 function labelForStyle(style: CountdownDisplayStyle | undefined, lang: Lang): string {
-  if (style === "notion") return lang === "zh" ? "Notion 进度" : "Notion progress";
+  if (style === "notion") return lang === "zh" ? "分段进度" : "Segmented progress";
   if (style === "ring") return lang === "zh" ? "圆环" : "Ring";
   if (style === "minimal") return lang === "zh" ? "极简" : "Minimal";
   if (style === "hero") return lang === "zh" ? "大数字" : "Big number";
@@ -89,10 +97,10 @@ function RingProgress({ progress, label }: { readonly progress: number; readonly
   );
 }
 
-function NotionProgress({ progress }: { readonly progress: number }) {
+function SegmentedProgress({ progress }: { readonly progress: number }) {
   const filled = Math.round(Math.max(0, Math.min(1, progress)) * 12);
   return (
-    <div className="cd-notion-bar" aria-hidden="true">
+    <div className="cd-segmented-bar" aria-hidden="true">
       {Array.from({ length: 12 }, (_, index) => (
         <i key={index} className={index < filled ? "filled" : ""} />
       ))}
@@ -111,6 +119,14 @@ export function CountdownCardView({
   onHide,
   onPin,
   onDuplicate,
+  draggable = false,
+  isDragging = false,
+  isDropTarget = false,
+  onDragStart,
+  onDragEnter,
+  onDragOver,
+  onDrop,
+  onDragEnd,
 }: CountdownCardViewProps) {
   const { t } = useI18n(lang);
   const color = colorById(card.color);
@@ -144,10 +160,10 @@ export function CountdownCardView({
       ) : (
         <>
           <div className="cd-progress-row">
-            <span>{style === "notion" ? labelForStyle("notion", lang) : lang === "zh" ? "进度" : "Progress"}</span>
+            <span>{lang === "zh" ? "进度条" : "Progress"}</span>
             <b>{metrics.progressLabel}</b>
           </div>
-          {style === "notion" ? <NotionProgress progress={metrics.progress} /> : <div className="cd-progress-track"><i /></div>}
+          {style === "notion" ? <SegmentedProgress progress={metrics.progress} /> : <div className="cd-progress-track"><i /></div>}
         </>
       )}
     </div>
@@ -181,8 +197,16 @@ export function CountdownCardView({
         layout === "split" ? "cd-card--split" : "",
         isGradient ? "cd-card--image light" : "",
         card.is_pinned ? "is-pinned" : "",
+        isDragging ? "is-dragging" : "",
+        isDropTarget ? "is-drop-target" : "",
       ].filter(Boolean).join(" ")}
       style={styleVars}
+      draggable={draggable}
+      onDragStart={(event) => onDragStart?.(card.id, event)}
+      onDragEnter={(event) => onDragEnter?.(card.id, event)}
+      onDragOver={(event) => onDragOver?.(card.id, event)}
+      onDrop={(event) => onDrop?.(card.id, event)}
+      onDragEnd={onDragEnd}
       onClick={() => {
         onClick?.();
         onEdit?.(card);
@@ -191,6 +215,7 @@ export function CountdownCardView({
       tabIndex={0}
       onKeyDown={(event) => {
         if (event.key === "Enter" || event.key === " ") {
+          event.preventDefault();
           onClick?.();
           onEdit?.(card);
         }
@@ -202,6 +227,11 @@ export function CountdownCardView({
         <span className="cd-meta-pill">{categoryLabel(card, lang)}</span>
         <span className="cd-meta-pill cd-meta-pill--style">{labelForStyle(style, lang)}</span>
         <span className="grow" />
+        {draggable && (
+          <span className="cd-drag-indicator" aria-label={lang === "zh" ? "拖拽排序" : "Drag to reorder"}>
+            <IconGlyph name="grip" size={13} />
+          </span>
+        )}
         <button
           type="button"
           className="cd-mini-action"

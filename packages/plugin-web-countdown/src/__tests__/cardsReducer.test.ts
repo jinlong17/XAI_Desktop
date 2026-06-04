@@ -12,7 +12,7 @@
  */
 
 import { describe, it, expect, vi } from "vitest";
-import { addCard, updateCard, deleteCard, duplicateCard, hideCard, pinCard, restoreCard, newCardId } from "../internal/cardsReducer.js";
+import { addCard, updateCard, deleteCard, duplicateCard, hideCard, pinCard, reorderCards, restoreCard, newCardId } from "../internal/cardsReducer.js";
 import { FIXTURE_FUTURE, FIXTURE_LIGHT } from "../__fixtures__/cards.js";
 import type { CountdownCard } from "../types.js";
 
@@ -158,5 +158,17 @@ describe("v2 actions", () => {
     const restored = restoreCard(deleted, FIXTURE_FUTURE.id, new Date(2026, 4, 23, 14, 30));
     expect(restored[0]!.status).toBe("active");
     expect(restored[0]!.is_hidden).toBe(false);
+  });
+
+  it("reorders cards by persisted sort_order", () => {
+    const result = reorderCards(
+      [
+        { ...FIXTURE_FUTURE, sort_order: 0 },
+        { ...FIXTURE_LIGHT, sort_order: 1 },
+      ],
+      [FIXTURE_LIGHT.id, FIXTURE_FUTURE.id],
+    );
+    expect(result[0]!.sort_order).toBe(1);
+    expect(result[1]!.sort_order).toBe(0);
   });
 });

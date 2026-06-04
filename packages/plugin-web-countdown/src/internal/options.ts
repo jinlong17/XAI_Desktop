@@ -38,7 +38,7 @@ export const COUNTDOWN_STYLES: readonly CountdownDisplayStyleOption[] = Object.f
   { id: "digital", label_en: "Digital", label_zh: "数字" },
   { id: "date", label_en: "Date", label_zh: "日期" },
   { id: "progress", label_en: "Progress", label_zh: "进度条" },
-  { id: "notion", label_en: "Notion bar", label_zh: "Notion 进度" },
+  { id: "notion", label_en: "Segmented progress", label_zh: "分段进度" },
   { id: "ring", label_en: "Ring", label_zh: "圆环" },
   { id: "minimal", label_en: "Minimal", label_zh: "极简" },
   { id: "hero", label_en: "Big number", label_zh: "大数字" },

@@ -2,7 +2,7 @@ import React from "react";
 import type { CountdownIconId } from "../types.js";
 
 interface IconProps {
-  readonly name: CountdownIconId | "plus" | "dots" | "edit" | "trash" | "copy" | "eye" | "eyeOff" | "restore" | "check" | "chevL" | "chevR";
+  readonly name: CountdownIconId | "plus" | "dots" | "edit" | "trash" | "copy" | "eye" | "eyeOff" | "restore" | "check" | "chevL" | "chevR" | "grip";
   readonly size?: number;
   readonly className?: string;
 }
@@ -61,6 +61,8 @@ export function IconGlyph({ name, size = 16, className }: IconProps) {
       return <svg {...common}><path d="M15 18l-6-6 6-6" /></svg>;
     case "chevR":
       return <svg {...common}><path d="M9 18l6-6-6-6" /></svg>;
+    case "grip":
+      return <svg {...common}><path d="M9 5h.01M15 5h.01M9 12h.01M15 12h.01M9 19h.01M15 19h.01" /></svg>;
     default:
       return null;
   }

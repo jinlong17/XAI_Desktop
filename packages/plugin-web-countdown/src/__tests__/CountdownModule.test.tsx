@@ -53,6 +53,9 @@ describe("CountdownModule — M2 add card", () => {
     fireEvent.change(screen.getByLabelText("Target date"), {
       target: { value: "2026-12-25" },
     });
+    fireEvent.change(screen.getByLabelText("Target time"), {
+      target: { value: "09:30" },
+    });
     // Click Save
     const saveBtn = screen.getByText("Save");
     expect(saveBtn).not.toBeDisabled();
@@ -83,6 +86,9 @@ describe("CountdownModule — M3 edit card", () => {
     expect(enInput.value).toBe("Weekend");
     // Update title
     fireEvent.change(enInput, { target: { value: "Weekend Updated" } });
+    fireEvent.change(screen.getByLabelText("Target time"), {
+      target: { value: "10:00" },
+    });
     act(() => {
       fireEvent.click(screen.getByText("Save"));
     });
@@ -185,5 +191,47 @@ describe("CountdownModule — M10 header + button", () => {
     render(<CountdownModule lang="en" />);
     fireEvent.click(screen.getByRole("button", { name: /New countdown/i }));
     expect(screen.getByText("New Countdown")).toBeInTheDocument();
+  });
+});
+
+describe("CountdownModule — V2 interaction polish", () => {
+  it("keeps overview and view tabs available in subviews and can return to board", () => {
+    render(<CountdownModule lang="en" />);
+    fireEvent.click(screen.getByRole("button", { name: "Compact list" }));
+    expect(screen.getByLabelText("Countdown overview")).toBeInTheDocument();
+    expect(screen.getByLabelText("Countdown views")).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: /Back to board/i })).toBeInTheDocument();
+
+    fireEvent.click(screen.getByRole("button", { name: /Back to board/i }));
+    expect(screen.getByText("Add Countdown")).toBeInTheDocument();
+  });
+
+  it("persists drag-reordered card order", () => {
+    seedStorage([
+      { ...FIXTURE_FUTURE, id: "cd_alpha", title: { en: "Alpha", zh: "甲" }, sort_order: 20 },
+      { ...FIXTURE_LIGHT, id: "cd_beta", title: { en: "Beta", zh: "乙" }, sort_order: 21 },
+    ]);
+    render(<CountdownModule lang="en" />);
+
+    const alpha = screen.getByText("Alpha").closest("article")!;
+    const beta = screen.getByText("Beta").closest("article")!;
+    const dragData = new Map<string, string>();
+    const dataTransfer = {
+      effectAllowed: "",
+      dropEffect: "",
+      setData: vi.fn((key: string, value: string) => dragData.set(key, value)),
+      getData: vi.fn((key: string) => dragData.get(key) ?? ""),
+    };
+
+    fireEvent.dragStart(beta, { dataTransfer });
+    fireEvent.dragEnter(alpha, { dataTransfer });
+    fireEvent.dragOver(alpha, { dataTransfer });
+    fireEvent.drop(alpha, { dataTransfer });
+    fireEvent.dragEnd(beta, { dataTransfer });
+
+    const stored = JSON.parse(localStorage.getItem("xai_countdowns") ?? "[]") as CountdownCard[];
+    const alphaStored = stored.find((card) => card.id === "cd_alpha")!;
+    const betaStored = stored.find((card) => card.id === "cd_beta")!;
+    expect(betaStored.sort_order ?? Number.MAX_SAFE_INTEGER).toBeLessThan(alphaStored.sort_order ?? Number.MAX_SAFE_INTEGER);
   });
 });

@@ -318,7 +318,7 @@ pnpm --filter @repo/plugin-web-countdown test
 pnpm --filter @repo/plugin-web-countdown lint
 ```
 
-Expected result after this addendum: 13 test files, 115 tests, 0 lint warnings,
+Expected result after this addendum: 13 test files, 118 tests, 0 lint warnings,
 and clean TypeScript.
 
 Host/browser verification performed in the V2 session:
@@ -345,3 +345,27 @@ Chrome CDP smoke on `http://localhost:3002/app/countdown` covered:
 - Dark-theme guard: `xai_pref_theme="dark"` reload sets
   `<html data-theme="dark">`, renders visible card titles, and reports 0 card
   overflows.
+
+## §11 V2.1 Interaction Polish Addendum — 2026-06-04
+
+Additional coverage:
+
+- `cardsReducer.test.ts`: `reorderCards()` persists manual drag order by
+  updating `sort_order` without reordering the storage array.
+- `CountdownModule.test.tsx`: compact-list subview keeps overview/tabs visible,
+  exposes Back to board, and returns to the card board.
+- `CountdownModule.test.tsx`: drag/drop between active cards persists an order
+  where the dropped card's `sort_order` precedes the target card.
+- `CountdownEditDialog.test.tsx`: invalid saves use `aria-disabled` plus inline
+  guidance and do not call `onSave`; valid saves include required target time.
+
+Manual/browser gates for this polish:
+
+- Hover on a desktop card hides low-frequency actions at rest and fades them in
+  on hover/focus.
+- Switching to list/timeline/calendar/history keeps the sticky control strip and
+  Back to board entry visible.
+- Dragging a card shows a drop target placeholder and persists order after
+  reload.
+- Product UI labels use neutral progress naming; no third-party product names
+  are visible in card style chips or edit options.

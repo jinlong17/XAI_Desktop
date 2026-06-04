@@ -59,6 +59,10 @@ function booleanOr(value: unknown, fallback: boolean): boolean {
   return typeof value === "boolean" ? value : fallback;
 }
 
+function numberOr(value: unknown, fallback: number): number {
+  return typeof value === "number" && Number.isFinite(value) ? value : fallback;
+}
+
 function enumOr<T extends string>(value: unknown, allowed: readonly T[], fallback: T): T {
   return typeof value === "string" && (allowed as readonly string[]).includes(value) ? value as T : fallback;
 }
@@ -147,6 +151,7 @@ export function normalizeCountdownCard(x: unknown, now = new Date()): CountdownC
     status,
     source: enumOr<"preset" | "custom">(x["source"], ["preset", "custom"], "custom"),
     preset_id: typeof x["preset_id"] === "string" ? x["preset_id"] : null,
+    sort_order: numberOr(x["sort_order"], Number.MAX_SAFE_INTEGER),
     created_at: createdAt,
     updated_at: stringOr(x["updated_at"], createdAt),
     deleted_at: typeof x["deleted_at"] === "string" ? x["deleted_at"] : null,

@@ -96,12 +96,24 @@ export function CountdownEditDialog({
   const [coverUrl, setCoverUrl] = useState<string | null>(
     base.cover_url ?? `preset:${IMAGE_PRESETS[0]?.id ?? "dusk"}`,
   );
+  const [attemptedSave, setAttemptedSave] = useState(false);
 
   const titleEmpty = titleEn.trim() === "" && titleZh.trim() === "";
+  const dateMissing = targetDate.trim() === "";
+  const timeMissing = targetTime.trim() === "";
   const dateValid = isValidDateString(targetDate);
   const startDateValid = startDate === "" || isValidDateString(startDate);
-  const timeValid = targetTime === "" || isValidTime(targetTime);
-  const canSave = !titleEmpty && dateValid && startDateValid && timeValid && (showCountdown || showProgress);
+  const timeValid = isValidTime(targetTime);
+  const validationMessages = [
+    ...(titleEmpty ? [label("Add a title in at least one language.", "请至少填写一个标题。", lang)] : []),
+    ...(dateMissing ? [label("Choose a target date.", "请选择目标日期。", lang)] : []),
+    ...(!dateMissing && !dateValid ? [label("Use a valid target date.", "请输入有效的目标日期。", lang)] : []),
+    ...(timeMissing ? [label("Choose a target time.", "请选择目标时间。", lang)] : []),
+    ...(!timeMissing && !timeValid ? [label("Use a valid target time.", "请输入有效的目标时间。", lang)] : []),
+    ...(startDate !== "" && !startDateValid ? [label("Use a valid progress start date.", "请输入有效的进度开始日期。", lang)] : []),
+    ...(!showCountdown && !showProgress ? [label("Show countdown, progress, or both.", "请至少显示倒计时或进度条。", lang)] : []),
+  ];
+  const canSave = validationMessages.length === 0;
 
   useEffect(() => {
     dialogRef.current?.showModal();
@@ -134,6 +146,7 @@ export function CountdownEditDialog({
   }
 
   function handleSave() {
+    setAttemptedSave(true);
     if (!canSave) return;
     const targetChanged = card !== null && (
       targetDate !== card.target_date ||
@@ -212,10 +225,14 @@ export function CountdownEditDialog({
           </div>
         </div>
 
-        {titleEmpty && <p className="cd-validation-error">{label("Title cannot be empty", "标题不能为空", lang)}</p>}
-        {targetDate !== "" && !dateValid && <p className="cd-validation-error">{label("Invalid target date", "目标日期无效", lang)}</p>}
-        {startDate !== "" && !startDateValid && <p className="cd-validation-error">{label("Invalid start date", "开始日期无效", lang)}</p>}
-        {targetTime !== "" && !timeValid && <p className="cd-validation-error">{label("Invalid time", "时间无效", lang)}</p>}
+        {attemptedSave && validationMessages.length > 0 && (
+          <div className="cd-validation-panel" role="alert">
+            <strong>{label("Check the required fields", "请检查必填信息", lang)}</strong>
+            <ul>
+              {validationMessages.map((message) => <li key={message}>{message}</li>)}
+            </ul>
+          </div>
+        )}
 
         <div className="cd-form-row">
           <label>{label("Color", "颜色", lang)}</label>
@@ -274,7 +291,6 @@ export function CountdownEditDialog({
           <label><input type="checkbox" checked={showCountdown} onChange={(event) => setShowCountdown(event.target.checked)} />{label("Show countdown", "显示倒计时", lang)}</label>
           <label><input type="checkbox" checked={showProgress} onChange={(event) => setShowProgress(event.target.checked)} />{label("Show progress", "显示进度条", lang)}</label>
         </div>
-        {!showCountdown && !showProgress && <p className="cd-validation-error">{label("Show at least one module.", "至少显示一个模块。", lang)}</p>}
 
         <div className="cd-form-row">
           <label>{label("Surface", "卡片表面", lang)}</label>
@@ -304,7 +320,7 @@ export function CountdownEditDialog({
           )}
           <span className="grow" />
           <button type="button" className="cd-btn" onClick={() => closeWith(onCancel)}>{t.common.cancel}</button>
-          <button type="button" className="cd-btn primary" onClick={handleSave} disabled={!canSave}>{t.common.save}</button>
+          <button type="button" className="cd-btn primary" onClick={handleSave} aria-disabled={!canSave}>{t.common.save}</button>
         </div>
       </dialog>
     </>

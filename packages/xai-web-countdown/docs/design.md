@@ -128,8 +128,8 @@ through `usePref("xai_countdowns")`. No edits to `@repo/plugin-web-storage`,
 - **User-upload of cover images** — deferred to DESIGN.md §13 Future.
 - **Notification on countdown reaching zero** — `web-notifications` not in
   this roadmap.
-- **Drag-reorder of cards** — prototype doesn't include reorder; not in
-  acceptance signal. Cards render in insertion order.
+- **Drag-reorder of cards** — added in V2.1 via persisted `sort_order` for the
+  active cards view/list/timeline surfaces.
 - **Multi-card import/export** — not in acceptance signal.
 - **Lunar / non-Gregorian calendar support** — prototype's `2/6 正月初一`
   compound string is intentionally not reproduced; ISO-only.
@@ -195,8 +195,10 @@ inputs inside the edit dialog instead of route-switching.
 - Apple HIG progress guidance: countdown progress is determinate because start
 and target dates are known. V2 uses exact clamped progress ratios and avoids
 spinners for time progress.
-- Notion-style progress: V2 includes a segmented Notion bar plus standard linear
-and ring progress styles, all derived from the same `start_date` → target range.
+- Segmented progress references popular document-style progress bars without
+  exposing third-party product names in the app UI. V2 includes segmented,
+  standard linear, and ring progress styles, all derived from the same
+  `start_date` → target range.
 - Mainstream countdown apps: V2 adds default date presets, per-card colors/icons,
 pin/hide/copy/delete, progress bars, and history restore/copy flows.
 
@@ -207,10 +209,22 @@ pin/hide/copy/delete, progress bars, and history restore/copy flows.
 - Views: Cards, Compact list, Timeline, Calendar, History.
 - Card modules: countdown only, progress only, or countdown + progress.
 - Layout options: stacked (top/bottom) or split (left/right).
-- Display styles: digital, date, progress, Notion bar, ring, minimal, big number,
-  festival, timeline, compact.
+- Display styles: digital, date, progress, segmented progress, ring, minimal,
+  big number, festival, timeline, compact.
 - History: deleted, hidden, and completed records can be restored or copied as
   a new countdown.
+
+### V2.1 interaction polish
+
+- The overview metrics and view tabs are a sticky control strip so switching to
+  compact list, timeline, calendar, or history never strands the user.
+- Non-card views include an explicit Back to board control.
+- Low-frequency card actions fade in on hover/focus for desktop users while
+  remaining visible and touch-friendly on coarse-pointer devices.
+- Card hover uses a restrained transform, tinted shadow, and accent hairline;
+  drag/drop adds a dashed in-card placeholder without shifting layout.
+- Create/edit validation uses a quiet inline panel with specific missing-field
+  messages instead of browser alerts or silent disabled states.
 
 ### Visual direction
 

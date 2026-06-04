@@ -9,8 +9,8 @@
  * E6: Save calls onSave with form data
  * E7: Cancel calls onCancel
  * E8: Escape key closes dialog (dispatches close event)
- * E9: empty title (both blank) disables Save button
- * E10: invalid date disables Save button
+ * E9: empty title (both blank) marks Save invalid and shows inline guidance
+ * E10: invalid date marks Save invalid and shows inline guidance
  * E11: Delete button only shown in edit mode
  * E12: Delete fires onDelete
  */
@@ -68,13 +68,16 @@ describe("CountdownEditDialog — create mode", () => {
     expect(screen.getByLabelText("Target date")).toBeInTheDocument();
   });
 
-  it("E9: empty title (both blank) disables Save", () => {
+  it("E9: empty title (both blank) marks Save invalid and shows inline guidance", () => {
     renderCreate();
     const saveBtn = screen.getByText("Save");
-    expect(saveBtn).toBeDisabled();
+    expect(saveBtn).toHaveAttribute("aria-disabled", "true");
+    fireEvent.click(saveBtn);
+    expect(screen.getByText("Check the required fields")).toBeInTheDocument();
+    expect(screen.getByText("Add a title in at least one language.")).toBeInTheDocument();
   });
 
-  it("E10: filled title but missing/invalid date disables Save", () => {
+  it("E10: filled title but missing/invalid date marks Save invalid and shows inline guidance", () => {
     renderCreate();
     const enInput = screen.getByLabelText("Title (English)");
     fireEvent.change(enInput, { target: { value: "Test" } });
@@ -82,7 +85,9 @@ describe("CountdownEditDialog — create mode", () => {
       target: { value: "" },
     });
     const saveBtn = screen.getByText("Save");
-    expect(saveBtn).toBeDisabled();
+    expect(saveBtn).toHaveAttribute("aria-disabled", "true");
+    fireEvent.click(saveBtn);
+    expect(screen.getByText("Choose a target date.")).toBeInTheDocument();
   });
 
   it("E6: Save calls onSave with form data when valid", () => {
@@ -97,14 +102,18 @@ describe("CountdownEditDialog — create mode", () => {
     fireEvent.change(screen.getByLabelText("Target date"), {
       target: { value: "2026-12-25" },
     });
+    fireEvent.change(screen.getByLabelText("Target time"), {
+      target: { value: "09:30" },
+    });
     const saveBtn = screen.getByText("Save");
-    expect(saveBtn).not.toBeDisabled();
+    expect(saveBtn).toHaveAttribute("aria-disabled", "false");
     fireEvent.click(saveBtn);
     expect(onSave).toHaveBeenCalledTimes(1);
     const arg = onSave.mock.calls[0]![0];
     expect(arg.title.en).toBe("Test Event");
     expect(arg.title.zh).toBe("测试事件");
     expect(arg.target_date).toBe("2026-12-25");
+    expect(arg.target_time).toBe("09:30");
   });
 
   it("E7: Cancel calls onCancel", () => {

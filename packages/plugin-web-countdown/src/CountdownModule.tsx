@@ -9,6 +9,7 @@ import {
   duplicateCard,
   hideCard,
   pinCard,
+  reorderCards,
   restoreCard,
   updateCard,
 } from "./internal/cardsReducer.js";
@@ -32,6 +33,11 @@ type ModalState =
   | { mode: "closed" }
   | { mode: "create" }
   | { mode: "edit"; card: CountdownCard };
+
+type DragState = {
+  readonly draggingId: string | null;
+  readonly targetId: string | null;
+};
 
 const VIEWS: readonly CountdownViewMode[] = ["cards", "list", "timeline", "calendar", "history"];
 
@@ -66,6 +72,7 @@ export function CountdownModule({ lang }: CountdownModuleProps) {
   const [rawCards, setRawCards] = usePref("xai_countdowns");
   const [modal, setModal] = useState<ModalState>({ mode: "closed" });
   const [view, setView] = useState<CountdownViewMode>("cards");
+  const [dragState, setDragState] = useState<DragState>({ draggingId: null, targetId: null });
   const [now, setNow] = useState(() => new Date());
   const [calendarMonth, setCalendarMonth] = useState(() => new Date(now.getFullYear(), now.getMonth(), 1));
 
@@ -137,6 +144,63 @@ export function CountdownModule({ lang }: CountdownModuleProps) {
     };
   }
 
+  function reorderActiveCards(draggingId: string, targetId: string) {
+    if (draggingId === targetId) return;
+    const ids = activeCards.map((card) => card.id);
+    const from = ids.indexOf(draggingId);
+    const to = ids.indexOf(targetId);
+    if (from === -1 || to === -1) return;
+    const reordered = [...ids];
+    const [dragged] = reordered.splice(from, 1);
+    if (!dragged) return;
+    reordered.splice(to, 0, dragged);
+    mutateCards((prev) => reorderCards(prev, reordered));
+  }
+
+  function dragHandlers() {
+    return {
+      draggable: true,
+      onDragStart: (id: string, event: React.DragEvent<HTMLElement>) => {
+        event.dataTransfer.effectAllowed = "move";
+        event.dataTransfer.setData("text/plain", id);
+        setDragState({ draggingId: id, targetId: null });
+      },
+      onDragEnter: (id: string, event: React.DragEvent<HTMLElement>) => {
+        event.preventDefault();
+        setDragState((prev) => prev.draggingId && prev.draggingId !== id ? { ...prev, targetId: id } : prev);
+      },
+      onDragOver: (id: string, event: React.DragEvent<HTMLElement>) => {
+        event.preventDefault();
+        event.dataTransfer.dropEffect = "move";
+        setDragState((prev) => prev.draggingId && prev.draggingId !== id && prev.targetId !== id ? { ...prev, targetId: id } : prev);
+      },
+      onDrop: (id: string, event: React.DragEvent<HTMLElement>) => {
+        event.preventDefault();
+        const draggingId = dragState.draggingId ?? event.dataTransfer.getData("text/plain");
+        if (draggingId) reorderActiveCards(draggingId, id);
+        setDragState({ draggingId: null, targetId: null });
+      },
+      onDragEnd: () => setDragState({ draggingId: null, targetId: null }),
+    };
+  }
+
+  function renderCard(card: CountdownCard, density?: "card" | "list" | "timeline") {
+    const canDrag = view === "cards" || view === "list" || view === "timeline";
+    return (
+      <CountdownCardView
+        key={card.id}
+        card={card}
+        lang={lang}
+        now={now}
+        density={density ?? "card"}
+        isDragging={dragState.draggingId === card.id}
+        isDropTarget={dragState.targetId === card.id}
+        {...cardHandlers()}
+        {...(canDrag ? dragHandlers() : {})}
+      />
+    );
+  }
+
   return (
     <div className="module module-countdown">
       <header className="cd-page-head">
@@ -154,43 +218,52 @@ export function CountdownModule({ lang }: CountdownModuleProps) {
         </div>
       </header>
 
-      <section className="cd-overview" aria-label={lang === "zh" ? "倒计时概览" : "Countdown overview"}>
-        <div><span>{activeCards.length}</span><p>{lang === "zh" ? "可见倒计时" : "visible"}</p></div>
-        <div><span>{pinnedCount}</span><p>{lang === "zh" ? "已固定" : "pinned"}</p></div>
-        <div><span>{presetCount}</span><p>{lang === "zh" ? "自动预设" : "presets"}</p></div>
-        <div><span>{completedCount}</span><p>{lang === "zh" ? "历史完成" : "completed"}</p></div>
-      </section>
+      <div className="cd-board-controls">
+        <section className="cd-overview" aria-label={lang === "zh" ? "倒计时概览" : "Countdown overview"}>
+          <div><span>{activeCards.length}</span><p>{lang === "zh" ? "可见倒计时" : "visible"}</p></div>
+          <div><span>{pinnedCount}</span><p>{lang === "zh" ? "已固定" : "pinned"}</p></div>
+          <div><span>{presetCount}</span><p>{lang === "zh" ? "自动预设" : "presets"}</p></div>
+          <div><span>{completedCount}</span><p>{lang === "zh" ? "历史完成" : "completed"}</p></div>
+        </section>
 
-      <nav className="cd-view-tabs" aria-label={lang === "zh" ? "倒计时视图" : "Countdown views"}>
-        {VIEWS.map((item) => (
-          <button
-            key={item}
-            type="button"
-            className={item === view ? "selected" : ""}
-            onClick={() => setView(item)}
-            aria-pressed={item === view}
-          >
-            {viewLabel(item, lang)}
-          </button>
-        ))}
-      </nav>
+        <div className="cd-view-row">
+          {view !== "cards" && (
+            <button type="button" className="cd-btn cd-view-return" onClick={() => setView("cards")}>
+              <IconGlyph name="chevL" size={14} />{lang === "zh" ? "返回看板" : "Back to board"}
+            </button>
+          )}
+          <nav className="cd-view-tabs" aria-label={lang === "zh" ? "倒计时视图" : "Countdown views"}>
+            {VIEWS.map((item) => (
+              <button
+                key={item}
+                type="button"
+                className={item === view ? "selected" : ""}
+                onClick={() => setView(item)}
+                aria-pressed={item === view}
+              >
+                {viewLabel(item, lang)}
+              </button>
+            ))}
+          </nav>
+        </div>
+      </div>
 
       {view === "cards" && (
         <div className="countdown-grid">
-          {activeCards.map((card) => <CountdownCardView key={card.id} card={card} lang={lang} now={now} {...cardHandlers()} />)}
+          {activeCards.map((card) => renderCard(card))}
           <AddCountdownCard lang={lang} onClick={openCreate} />
         </div>
       )}
 
       {view === "list" && (
         <div className="cd-list-view">
-          {activeCards.map((card) => <CountdownCardView key={card.id} card={card} lang={lang} now={now} density="list" {...cardHandlers()} />)}
+          {activeCards.map((card) => renderCard(card, "list"))}
         </div>
       )}
 
       {view === "timeline" && (
         <div className="cd-timeline-view">
-          {activeCards.map((card) => <CountdownCardView key={card.id} card={card} lang={lang} now={now} density="timeline" {...cardHandlers()} />)}
+          {activeCards.map((card) => renderCard(card, "timeline"))}
         </div>
       )}
 

@@ -23,6 +23,13 @@ export function newCardId(): string {
   return "cd_" + Math.floor(Math.random() * 36 ** 8).toString(36).padStart(8, "0");
 }
 
+function nextSortOrder(prev: readonly CountdownCard[]): number {
+  const values = prev
+    .map((card) => card.sort_order)
+    .filter((value): value is number => typeof value === "number" && Number.isFinite(value));
+  return values.length === 0 ? 0 : Math.max(...values) + 1;
+}
+
 // --------------------------------------------------------------------------
 // Mutation functions — all pure, return new arrays
 // --------------------------------------------------------------------------
@@ -42,7 +49,16 @@ export function addCard(
     id = newCardId();
   }
   const stamp = new Date().toISOString();
-  return [...prev, { ...draft, id, created_at: draft.created_at ?? stamp, updated_at: stamp }];
+  return [
+    ...prev,
+    {
+      ...draft,
+      id,
+      sort_order: draft.sort_order ?? nextSortOrder(prev),
+      created_at: draft.created_at ?? stamp,
+      updated_at: stamp,
+    },
+  ];
 }
 
 /**
@@ -107,6 +123,7 @@ export function duplicateCard(prev: CountdownCard[], id: string): CountdownCard[
     is_pinned: false,
     source: "custom",
     preset_id: null,
+    sort_order: nextSortOrder(prev),
     created_at: stamp,
     updated_at: stamp,
     deleted_at: null,
@@ -127,4 +144,18 @@ export function restoreCard(prev: CountdownCard[], id: string, now = new Date())
     is_hidden: false,
     deleted_at: null,
   });
+}
+
+export function reorderCards(prev: CountdownCard[], orderedIds: readonly string[]): CountdownCard[] {
+  if (orderedIds.length === 0) return prev;
+  const order = new Map(orderedIds.map((id, index) => [id, index]));
+  let changed = false;
+  const next = prev.map((card) => {
+    const sort_order = order.get(card.id);
+    if (sort_order === undefined) return card;
+    if (card.sort_order === sort_order) return card;
+    changed = true;
+    return { ...card, sort_order, updated_at: new Date().toISOString() };
+  });
+  return changed ? next : prev;
 }

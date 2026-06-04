@@ -474,6 +474,7 @@ interface CountdownCard {
   status?: CountdownStatus;
   source?: "preset" | "custom";
   preset_id?: string | null;
+  sort_order?: number;
   created_at?: string;
   updated_at?: string;
   deleted_at?: string | null;
@@ -497,5 +498,20 @@ Mutation semantics:
   `deleted_at=<iso>`.
 - `hideCard()`, `pinCard()`, `duplicateCard()`, and `restoreCard()` are pure
   reducers for the UI actions.
+- `reorderCards(prev, orderedIds)` persists drag-and-drop order through
+  `sort_order`. Pinned cards still render above unpinned cards; within each
+  group, `sort_order` is the first sort key.
 - `mergePresetCountdowns()` injects missing default presets and updates active
   preset target/start dates. Deleted presets are preserved and not re-added.
+
+V2.1 interaction contract:
+
+- The view controls and overview remain visible across cards/list/timeline/
+  calendar/history views.
+- Non-card views expose a "Back to board" action.
+- Card low-frequency actions are present in the DOM for accessibility, but on
+  fine-pointer devices they reveal on hover/focus instead of staying visually
+  prominent.
+- Create/edit validation is inline. Title, target date, target time, valid
+  optional start date, and at least one visible module are required before a
+  save writes to storage.
