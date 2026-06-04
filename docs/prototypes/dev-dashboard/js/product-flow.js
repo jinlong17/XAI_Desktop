@@ -257,3 +257,54 @@ function setProduct(key){
   });
   if(typeof attachTestingActions === "function") attachTestingActions(detailPanel);
 }
+
+function renderSyncOrchestration(){
+  const host = document.getElementById("syncOrchestration");
+  if(!host) return;
+  const data = (typeof window !== "undefined" && window.XAI_DASHBOARD_STATE && window.XAI_DASHBOARD_STATE.sync_orchestration) || null;
+  if(!data){ host.innerHTML = ""; return; }
+  const actions = Array.isArray(data.actions) ? data.actions : [];
+  const waves = Array.isArray(data.waves) ? data.waves : [];
+  const actionRows = actions.map(a => `
+    <div class="orch-action">
+      <div class="orch-action-head">
+        <b>${h(a.title || a.id || "")}</b>
+        <span class="orch-tags">
+          <span class="orch-tag ${a.is_new ? "is-new" : ""}">${a.is_new ? "新建" : "复用"}</span>
+          <span class="orch-tag ${a.parallel_safe ? "is-par" : "is-ser"}">${a.parallel_safe ? "可并行" : "串行"}</span>
+        </span>
+      </div>
+      <div class="orch-action-meta">
+        <span><b>skill</b> <code>${h(a.skill || "—")}</code></span>
+        ${(a.depends_on && a.depends_on.length) ? `<span><b>依赖</b> ${a.depends_on.map(d => `<code>${h(d)}</code>`).join(" ")}</span>` : ""}
+      </div>
+    </div>
+  `).join("");
+  const waveBoxes = waves.map((wave, i) => `
+    <div class="orch-wave">
+      <span class="orch-wave-label">Wave ${i + 1}${(waves.length > 1 && i === waves.length - 1) ? " · 收尾" : ""}</span>
+      <div class="orch-wave-items">${(Array.isArray(wave) ? wave : []).map(id => `<code>${h(id)}</code>`).join("")}</div>
+    </div>
+  `).join("");
+  const docButtons = (Array.isArray(data.docs) ? data.docs : []).map(d =>
+    `<button class="reader-btn" data-detail-doc="${h(d.path)}" type="button">${h(d.label)}</button>`
+  ).join("");
+  host.innerHTML = `
+    <div class="orch-head">
+      <div>
+        <b>${h(data.title || "跨模块同步编排")}</b>
+        ${data.purpose ? `<p class="orch-purpose">${h(data.purpose)}</p>` : ""}
+      </div>
+      <span class="pill">workflow · ADR-0014</span>
+    </div>
+    ${data.trigger ? `<div class="orch-trigger"><span class="orch-trigger-label">一句话触发</span><code>${h(data.trigger)}</code></div>` : ""}
+    <div class="orch-actions">${actionRows}</div>
+    ${waveBoxes ? `<div class="orch-waves"><span class="orch-waves-label">执行波次</span>${waveBoxes}</div>` : ""}
+    ${docButtons ? `<div class="orch-docs">${docButtons}</div>` : ""}
+  `;
+  host.querySelectorAll("[data-detail-doc]").forEach(btn => {
+    btn.addEventListener("click", () => {
+      if(typeof openDocInLibrary === "function") openDocInLibrary(btn.dataset.detailDoc);
+    });
+  });
+}
