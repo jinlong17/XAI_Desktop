@@ -249,7 +249,7 @@ This is good enough for local demo and first-run state. It is not enough for dur
 |---|---|---|
 | `xai-web-board-task-link` | board + tasks | SHIPPED: one-way create/link task from board card, with persisted linked status in card detail. |
 | `xai-web-board-calendar-feed` | board + calendar | SHIPPED: active dated Board cards appear in Calendar Month/Week/Day as a read-only derived feed. |
-| `xai-web-board-saved-filters` | board-workspaces | Persist filters per board. |
+| `xai-web-board-saved-filters` | board-workspaces | SHIPPED: persist filters per board with clear/reset. |
 | `xai-web-board-share-contract` | board + sync/share | Replace mock URL with explicit share-envelope plan or label it as stub. |
 | `xai-web-board-responsive-smoke` | Web shell + board packages | Browser/manual smoke for board views and detail. |
 | `xai-web-board-export-import` | export/delete/privacy | Add board entities to export and delete flows. |
@@ -309,6 +309,7 @@ Do not update generated dashboard snapshots directly. If a dashboard generator c
 | Skill / Agent pages | No change applied; current `xai-feature-full-loop` / `xai-roadmap-loop` skills remain sufficient. |
 | Task link implementation | `xai-web-board-task-link` shipped one-way Board-card to Tasks linkage and moved the next personal-board focus to `xai-web-board-calendar-feed`. |
 | Calendar feed implementation | `xai-web-board-calendar-feed` shipped read-only Calendar projection from Board `xai_boards_v2` storage through board-core public helpers; the next personal-board focus is `xai-web-board-saved-filters`. |
+| Saved filters implementation | `xai-web-board-saved-filters` shipped `xai_board_filter_by_id`, per-board filter restore, and persisted Clear reset; the next personal-board focus is `xai-web-board-share-contract`. |
 
 ## 11. Acceptance Criteria for the Next Implementation Wave
 

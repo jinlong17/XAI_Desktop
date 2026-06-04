@@ -7,17 +7,17 @@
 | Workflow | FEATURE_DEV |
 | Target | xai-web-board-saved-filters |
 | Title | Web Project module P1 saved filters - persist per-board filter state |
-| Current Phase | FEATURE_VERIFY |
-| Status | READY_FOR_SHIP |
-| Suggested Next | ship docs |
+| Current Phase | SHIP |
+| Status | SHIPPED |
+| Suggested Next | xai-web-board-share-contract |
 | Automation Mode | D-Codex+Cursor |
 | Verify Cross-vendor | yes |
 | Executor | gpt-5 parent inline |
-| Updated | 2026-06-03 22:26 PDT |
+| Updated | 2026-06-03 22:27 PDT |
 | Blockers | None currently. |
 | Roadmap Manifest | `docs/workflow/roadmap/xai-web-project-module.md` row #10 |
 | Source PRD / Audit | `docs/reviews/xai-web-project-module/20260603-audit-and-prd.md` |
-| Write Scope | `packages/plugin-web-board-workspaces`, `packages/plugin-web-storage`, `packages/xai-web-board-saved-filters/docs`, `docs/reviews/xai-web-board-saved-filters`, plus shipped status docs after verify. |
+| Write Scope | `packages/plugin-web-board-workspaces`, `packages/plugin-web-storage`, `packages/xai-web-board-saved-filters/docs`, `docs/reviews/xai-web-board-saved-filters`, and shipped status docs. |
 
 ## Artifacts
 
@@ -68,4 +68,5 @@ The filter remains a Board workspace UI preference and must not mutate
 | Timestamp | Executor | Action | Commits | Next Step |
 |---|---|---|---|---|
 | 2026-06-03 22:18 PDT | gpt-5 parent inline | feature-plan - audited existing render-only filter state, selected per-board storage map, and defined API/test contract. | `dab4470` | feature-build |
-| 2026-06-03 22:26 PDT | gpt-5 parent inline | feature-build/verify - implemented persisted per-board filters, storage registry contract, helper/module tests, app verification, and browser smoke. | pending | ship docs |
+| 2026-06-03 22:26 PDT | gpt-5 parent inline | feature-build/verify - implemented persisted per-board filters, storage registry contract, helper/module tests, app verification, and browser smoke. | `dfe7fbd` | ship docs |
+| 2026-06-03 22:27 PDT | gpt-5 parent inline | feature-ship - roadmap, PLUGIN_MAP, architecture, PRD, and dev_log marked shipped. | this docs commit | xai-web-board-share-contract |

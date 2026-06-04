@@ -197,7 +197,8 @@ flowchart LR
   H["plugin-project"] -. "desktop/control reference only" .-> E
   E --> I["shipped detail + dates + CRUD + checklist + storage contract"]
   I --> J["Board -> Calendar read-only feed shipped"]
-  J --> N["future saved filters + share/sync/export contract"]
+  J --> N["per-board saved filters shipped"]
+  N --> O["future share/sync/export contract"]
 ```
 
 Ownership rules:
@@ -208,7 +209,7 @@ Ownership rules:
   Dashboard, Timeline, and Map.
 - `plugin-web-board-workspaces` owns the product shell around boards: switcher,
   creator, workspace chips, Inbox, Planner, filters, Board-card to Task link UI,
-  and the current mock share modal.
+  per-board saved filter preference state, and the current mock share modal.
 - `@repo/plugin-web-tasks` owns the `xai_task_cols` shape and public board-link
   helper surface used to create deterministic linked tasks from Board cards.
 - `@repo/plugin-web-calendar` may read `plugin-web-board-core` public storage
