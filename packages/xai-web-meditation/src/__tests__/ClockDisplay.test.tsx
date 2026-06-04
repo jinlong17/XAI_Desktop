@@ -74,10 +74,40 @@ describe("ClockDisplay", () => {
     expect(container.querySelector(".clk-split.mini")).not.toBeNull();
   });
 
-  it("analog svg uses the red second-hand oklch(70% 0.18 25)", () => {
-    const { container } = render(<ClockDisplay variant="analog" />);
+  it("analog svg uses the configured highlight color for second hand", () => {
+    const { container } = render(
+      <ClockDisplay
+        variant="analog"
+        colors={{
+          digits: "#ffffff",
+          hands: "#eeeeee",
+          ring: "#cccccc",
+          background: "#101820",
+          highlight: "#70d6ff",
+        }}
+      />,
+    );
     const svg = container.querySelector("svg.clk-analog");
     expect(svg).not.toBeNull();
-    expect(svg!.innerHTML).toContain("oklch(70% 0.18 25)");
+    expect(svg!.innerHTML).toContain("#70d6ff");
+  });
+
+  it("digital clock applies configured size and colors", () => {
+    const { container } = render(
+      <ClockDisplay
+        variant="digital"
+        scale="larger"
+        colors={{
+          digits: "#ffffff",
+          hands: "#eeeeee",
+          ring: "#cccccc",
+          background: "#101820",
+          highlight: "#70d6ff",
+        }}
+      />,
+    );
+    const el = container.querySelector(".clk-digital") as HTMLElement;
+    expect(el.className).toContain("clock-scale-larger");
+    expect(el.style.backgroundColor).toBe("rgb(16, 24, 32)");
   });
 });

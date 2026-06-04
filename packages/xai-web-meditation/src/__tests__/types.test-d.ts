@@ -4,7 +4,9 @@
 import { describe, it, expectTypeOf } from "vitest";
 import type {
   AmbientSoundId,
+  BaseSceneId,
   ClockVariant,
+  CustomSceneId,
   Duration,
   MeditationPrefs,
   SceneId,
@@ -13,17 +15,18 @@ import { meditationSlotRegistration } from "../registration.js";
 import type { WebModuleSlotRegistration } from "@repo/xai-web-shell";
 
 describe("type contracts", () => {
-  it("AC-TYPE-1: SceneId is the literal union of 5 known scenes", () => {
-    expectTypeOf<SceneId>().toEqualTypeOf<"forest" | "ocean" | "night" | "rain" | "void">();
+  it("AC-TYPE-1: BaseSceneId is the literal union of 5 known scenes", () => {
+    expectTypeOf<BaseSceneId>().toEqualTypeOf<"forest" | "ocean" | "night" | "rain" | "void">();
+    expectTypeOf<SceneId>().toEqualTypeOf<BaseSceneId | CustomSceneId>();
   });
 
   it("AC-TYPE-2: ClockVariant is the literal union of 4 variants", () => {
     expectTypeOf<ClockVariant>().toEqualTypeOf<"digital" | "split" | "analog" | "minimal">();
   });
 
-  it("AC-TYPE-3: AmbientSoundId is the literal union of 5 sounds", () => {
+  it("AC-TYPE-3: AmbientSoundId is the literal union of 7 sounds", () => {
     expectTypeOf<AmbientSoundId>().toEqualTypeOf<
-      "none" | "water" | "rain" | "waves" | "forest"
+      "none" | "water" | "rain" | "waves" | "thunder" | "forest" | "whiteNoise"
     >();
   });
 

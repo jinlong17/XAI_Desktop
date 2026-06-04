@@ -17,46 +17,53 @@ describe("MeditationModule render", () => {
   });
 
   it("AC-PICK-1: 5 scene cards render with EN labels", () => {
-    render(<MeditationModule lang="en" />);
-    expect(screen.getByText("Forest")).toBeInTheDocument();
-    expect(screen.getAllByText("Ocean").length).toBeGreaterThan(0);
-    expect(screen.getByText("Night Sky")).toBeInTheDocument();
-    expect(screen.getByText("Rain Window")).toBeInTheDocument();
-    expect(screen.getByText("Void")).toBeInTheDocument();
+    const { container } = render(<MeditationModule lang="en" />);
+    const sceneGrid = container.querySelector(".scene-grid") as HTMLElement;
+    expect(within(sceneGrid).getByText("Forest")).toBeInTheDocument();
+    expect(within(sceneGrid).getByText("Ocean")).toBeInTheDocument();
+    expect(within(sceneGrid).getByText("Night Sky")).toBeInTheDocument();
+    expect(within(sceneGrid).getByText("Rain Window")).toBeInTheDocument();
+    expect(within(sceneGrid).getByText("Void")).toBeInTheDocument();
   });
 
   it("AC-I18N-3: scene labels in ZH", () => {
-    render(<MeditationModule lang="zh" />);
-    expect(screen.getByText("森林")).toBeInTheDocument();
-    expect(screen.getAllByText("海洋").length).toBeGreaterThan(0);
-    expect(screen.getByText("夜空")).toBeInTheDocument();
-    expect(screen.getByText("雨窗")).toBeInTheDocument();
-    expect(screen.getByText("虚空")).toBeInTheDocument();
+    const { container } = render(<MeditationModule lang="zh" />);
+    const sceneGrid = container.querySelector(".scene-grid") as HTMLElement;
+    expect(within(sceneGrid).getByText("森林")).toBeInTheDocument();
+    expect(within(sceneGrid).getByText("海洋")).toBeInTheDocument();
+    expect(within(sceneGrid).getByText("夜空")).toBeInTheDocument();
+    expect(within(sceneGrid).getByText("雨窗")).toBeInTheDocument();
+    expect(within(sceneGrid).getByText("虚空")).toBeInTheDocument();
   });
 
   it("AC-I18N-4: 4 clock variant labels in EN", () => {
-    render(<MeditationModule lang="en" />);
-    expect(screen.getByText("Digital")).toBeInTheDocument();
-    expect(screen.getAllByText("Split").length).toBeGreaterThan(0);
-    expect(screen.getByText("Analog")).toBeInTheDocument();
-    expect(screen.getByText("Minimal")).toBeInTheDocument();
+    const { container } = render(<MeditationModule lang="en" />);
+    const clockGrid = container.querySelector(".clock-grid") as HTMLElement;
+    expect(within(clockGrid).getByText("Digital")).toBeInTheDocument();
+    expect(within(clockGrid).getByText("Split")).toBeInTheDocument();
+    expect(within(clockGrid).getByText("Analog")).toBeInTheDocument();
+    expect(within(clockGrid).getByText("Minimal")).toBeInTheDocument();
   });
 
   it("AC-I18N-4: 4 clock variant labels in ZH", () => {
-    render(<MeditationModule lang="zh" />);
-    expect(screen.getByText("数字")).toBeInTheDocument();
-    expect(screen.getAllByText("分屏").length).toBeGreaterThan(0);
-    expect(screen.getByText("指针")).toBeInTheDocument();
-    expect(screen.getByText("极简")).toBeInTheDocument();
+    const { container } = render(<MeditationModule lang="zh" />);
+    const clockGrid = container.querySelector(".clock-grid") as HTMLElement;
+    expect(within(clockGrid).getByText("数字")).toBeInTheDocument();
+    expect(within(clockGrid).getByText("分屏")).toBeInTheDocument();
+    expect(within(clockGrid).getByText("指针")).toBeInTheDocument();
+    expect(within(clockGrid).getByText("极简")).toBeInTheDocument();
   });
 
-  it("AC-I18N-5: 5 ambient sound labels in EN", () => {
-    render(<MeditationModule lang="en" />);
-    expect(screen.getByText("Silence")).toBeInTheDocument();
-    expect(screen.getAllByText("Flowing Water").length).toBeGreaterThan(0);
-    expect(screen.getByText("Soft Rain")).toBeInTheDocument();
-    expect(screen.getByText("Ocean Waves")).toBeInTheDocument();
-    expect(screen.getByText("Forest Birds")).toBeInTheDocument();
+  it("AC-I18N-5: 7 ambient sound labels in EN", () => {
+    const { container } = render(<MeditationModule lang="en" />);
+    const soundGrid = container.querySelector(".sound-grid") as HTMLElement;
+    expect(within(soundGrid).getByText("Silence")).toBeInTheDocument();
+    expect(within(soundGrid).getByText("Flowing Water")).toBeInTheDocument();
+    expect(within(soundGrid).getByText("Soft Rain")).toBeInTheDocument();
+    expect(within(soundGrid).getByText("Ocean Waves")).toBeInTheDocument();
+    expect(within(soundGrid).getByText("Distant Thunder")).toBeInTheDocument();
+    expect(within(soundGrid).getByText("Forest Birds")).toBeInTheDocument();
+    expect(within(soundGrid).getByText("White Noise")).toBeInTheDocument();
   });
 
   it("AC-PICK-6: 5 duration chips render", () => {

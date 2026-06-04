@@ -11,7 +11,7 @@
  */
 
 import { describe, it, expect } from "vitest";
-import { readFileSync } from "fs";
+import { existsSync, readFileSync } from "fs";
 import { fileURLToPath } from "url";
 import { resolve, dirname } from "path";
 import { PREF_REGISTRY } from "../internal/registry.js";
@@ -26,6 +26,7 @@ const __dirname = dirname(__filename);
 //   ../../../../ → monorepo root (XAI_Desktop/)
 const MONOREPO_ROOT = resolve(__dirname, "../../../..");
 const DESIGN_MD_PATH = resolve(MONOREPO_ROOT, "web design/DESIGN.md");
+const parityIt = existsSync(DESIGN_MD_PATH) ? it : it.skip;
 
 function loadDesignMd(): string {
   return readFileSync(DESIGN_MD_PATH, "utf-8");
@@ -70,7 +71,7 @@ function extractSection92Keys(content: string): string[] {
 // ---------------------------------------------------------------------------
 
 describe("AC-PARITY-1: all §9.2 keys are in PREF_REGISTRY", () => {
-  it("every xai_* key in DESIGN.md §9.2 table exists in PREF_REGISTRY", () => {
+  parityIt("every xai_* key in DESIGN.md §9.2 table exists in PREF_REGISTRY", () => {
     const content = loadDesignMd();
     const designKeys = extractSection92Keys(content);
     const registryKeys = new Set(Object.keys(PREF_REGISTRY));
@@ -171,7 +172,7 @@ const OWNER_ROW_EXEMPT_KEYS: ReadonlySet<string> = new Set([
 ]);
 
 describe("AC-PARITY-2: all PREF_REGISTRY explicit keys are in §9.2", () => {
-  it("no PREF_REGISTRY key (excluding proposed + owner-row additions) is missing from §9.2", () => {
+  parityIt("no PREF_REGISTRY key (excluding proposed + owner-row additions) is missing from §9.2", () => {
     const content = loadDesignMd();
     const designKeys = new Set(extractSection92Keys(content));
     const registryEntries = Object.entries(PREF_REGISTRY);

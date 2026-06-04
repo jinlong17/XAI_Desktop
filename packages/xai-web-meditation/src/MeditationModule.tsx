@@ -1,42 +1,57 @@
 /**
  * <MeditationModule> — top-level component.
  *
- * Renders the picker view (preview card + 4 picker sections) and
- * mounts <MeditationPlayer> as a fullscreen overlay when `active`
- * is true.
- *
- * Persisted state: scene / clock / sound / duration via usePref
- * (single blob xai_meditation_prefs, schemaVersion 1).
- *
- * Local-only state: `active` — wiped on reload (Q3 resolution).
- *
- * No events emitted — meditation is a pure UI module in v1 (statistics
- * row #20 will declare its own consumer channel if needed in the
- * future).
- *
- * Lang flows in via props; rail navigation is handled by the shell.
+ * Renders the picker/configuration view and mounts <MeditationPlayer> as a
+ * fullscreen overlay when `active` is true.
  */
 
-import { useState, type JSX } from "react";
+import { useMemo, useState, type JSX } from "react";
 import { useI18n } from "@repo/plugin-web-tokens";
 import type {
   AmbientSoundId,
+  ClockColorPalette,
+  ClockScale,
   ClockVariant,
+  CustomScene,
+  CustomSceneId,
   Duration,
+  DurationMode,
   MeditationModuleProps,
+  Scene,
+  SceneAnimation,
   SceneId,
 } from "./types.js";
 import { PickerGroup } from "./PickerGroup.js";
 import { ClockDisplay } from "./ClockDisplay.js";
 import { MeditationPlayer } from "./MeditationPlayer.js";
 import { Icon } from "./internal/icons.js";
-import { SCENES } from "./internal/scenes.js";
+import { SCENES, sceneFromCustom } from "./internal/scenes.js";
 import { getScene } from "./internal/getScene.js";
 import { useMeditationPrefs } from "./internal/useMeditationPrefs.js";
+import { useAmbientAudio } from "./internal/useAmbientAudio.js";
 
 const CLOCK_VARIANTS: readonly ClockVariant[] = ["digital", "split", "analog", "minimal"];
-const SOUND_IDS: readonly AmbientSoundId[] = ["none", "water", "rain", "waves", "forest"];
+const CLOCK_SCALES: readonly ClockScale[] = ["compact", "normal", "large", "larger"];
+const SOUND_IDS: readonly AmbientSoundId[] = [
+  "none",
+  "water",
+  "rain",
+  "waves",
+  "thunder",
+  "forest",
+  "whiteNoise",
+];
 const DURATIONS: readonly Duration[] = [5, 10, 15, 25, 45];
+const ANIMATIONS: readonly SceneAnimation[] = ["particles", "rain", "waves", "aurora", "still"];
+const COLOR_KEYS: ReadonlyArray<keyof ClockColorPalette> = [
+  "digits",
+  "hands",
+  "ring",
+  "background",
+  "highlight",
+];
+
+type CustomSceneDraft = Omit<CustomScene, "id"> & { id?: CustomSceneId };
 
 function soundIconName(sound: AmbientSoundId): "rain" | "soundOff" | "sound" {
   if (sound === "rain") return "rain";
@@ -44,30 +59,180 @@ function soundIconName(sound: AmbientSoundId): "rain" | "soundOff" | "sound" {
   return "sound";
 }
 
+function makeCustomSceneId(): CustomSceneId {
+  const suffix =
+    typeof crypto !== "undefined" && "randomUUID" in crypto
+      ? crypto.randomUUID().slice(0, 8)
+      : Date.now().toString(36);
+  return `custom:${suffix}`;
+}
+
+function sceneName(scene: Scene, translate: (path: string) => string): string {
+  return scene.name ?? translate(`meditation.scenes.${scene.id}`);
+}
+
+function durationLabel(
+  mode: DurationMode,
+  duration: Duration,
+  customDuration: number,
+  translate: (path: string) => string,
+): string {
+  if (mode === "infinite") return translate("meditation.infinite");
+  const minutes = mode === "custom" ? customDuration : duration;
+  return `${minutes} ${translate("meditation.mins")}`;
+}
+
+function draftFromCurrent(scene: Scene, prefs: ReturnType<typeof useMeditationPrefs>[0]): CustomSceneDraft {
+  return {
+    name: scene.name ?? "Quiet custom",
+    background: "#101820",
+    gradientFrom: prefs.clockColors.highlight,
+    gradientTo: prefs.clockColors.background,
+    animation: scene.animation,
+    sound: prefs.sound,
+    clock: prefs.clock,
+    clockScale: prefs.clockScale,
+    clockColors: prefs.clockColors,
+    durationMode: prefs.durationMode,
+    duration: prefs.duration,
+    customDuration: prefs.customDuration,
+  };
+}
+
 export function MeditationModule({ lang }: MeditationModuleProps): JSX.Element {
   const { s } = useI18n(lang);
   const [prefs, setPrefs] = useMeditationPrefs();
   const [active, setActive] = useState<boolean>(false);
+  const [settingsOpen, setSettingsOpen] = useState<boolean>(true);
+  const scene = getScene(prefs.scene, prefs.customScenes);
+  const [editingSceneId, setEditingSceneId] = useState<CustomSceneId | "new">("new");
+  const [draft, setDraft] = useState<CustomSceneDraft>(() => draftFromCurrent(scene, prefs));
+  const ambient = useAmbientAudio();
 
-  const scene = getScene(prefs.scene);
+  const allScenes = useMemo(
+    () => [...SCENES, ...prefs.customScenes.map(sceneFromCustom)] as readonly Scene[],
+    [prefs.customScenes],
+  );
+
+  const setClockColor = (key: keyof ClockColorPalette, value: string): void => {
+    setPrefs({
+      ...prefs,
+      clockColors: {
+        ...prefs.clockColors,
+        [key]: value,
+      },
+    });
+  };
+
+  const setVolume = (volume: number): void => {
+    setPrefs({ ...prefs, volume });
+    ambient.setVolume(volume);
+  };
+
+  const applyCustomScene = (custom: CustomScene): void => {
+    setPrefs({
+      ...prefs,
+      scene: custom.id,
+      sound: custom.sound,
+      clock: custom.clock,
+      clockScale: custom.clockScale,
+      clockColors: custom.clockColors,
+      durationMode: custom.durationMode,
+      duration: custom.duration,
+      customDuration: custom.customDuration,
+    });
+  };
 
   const onPickScene = (id: SceneId): void => {
+    const custom = prefs.customScenes.find((item) => item.id === id);
+    if (custom) {
+      applyCustomScene(custom);
+      return;
+    }
     setPrefs({ ...prefs, scene: id });
   };
+
   const onPickClock = (variant: ClockVariant): void => {
     setPrefs({ ...prefs, clock: variant });
   };
+
   const onPickSound = (sound: AmbientSoundId): void => {
     setPrefs({ ...prefs, sound });
+    if (sound === "none") {
+      ambient.pause();
+      return;
+    }
+    if (ambient.state.playing && ambient.state.sound === sound) {
+      ambient.pause();
+      return;
+    }
+    void ambient.play(sound, prefs.volume);
   };
+
   const onPickDuration = (duration: Duration): void => {
-    setPrefs({ ...prefs, duration });
+    setPrefs({ ...prefs, duration, durationMode: "preset" });
   };
+
+  const onCustomDuration = (value: number): void => {
+    const customDuration = Math.max(1, Math.min(240, Math.round(value)));
+    setPrefs({ ...prefs, customDuration, durationMode: "custom" });
+  };
+
   const onStart = (): void => {
+    if (prefs.sound !== "none") {
+      void ambient.play(prefs.sound, prefs.volume);
+    }
     setActive(true);
   };
+
   const onExit = (): void => {
     setActive(false);
+  };
+
+  const startNewScene = (): void => {
+    setEditingSceneId("new");
+    setDraft(draftFromCurrent(scene, prefs));
+  };
+
+  const editCustomScene = (custom: CustomScene): void => {
+    setEditingSceneId(custom.id);
+    setDraft({ ...custom });
+  };
+
+  const saveCustomScene = (): void => {
+    const id = editingSceneId === "new" ? makeCustomSceneId() : editingSceneId;
+    const nextScene: CustomScene = {
+      id,
+      name: draft.name.trim() || s("meditation.custom_scene"),
+      background: draft.background,
+      gradientFrom: draft.gradientFrom,
+      gradientTo: draft.gradientTo,
+      animation: draft.animation,
+      sound: draft.sound,
+      clock: draft.clock,
+      clockScale: draft.clockScale,
+      clockColors: draft.clockColors,
+      durationMode: draft.durationMode,
+      duration: draft.duration,
+      customDuration: draft.customDuration,
+    };
+    const customScenes =
+      editingSceneId === "new"
+        ? [...prefs.customScenes, nextScene]
+        : prefs.customScenes.map((item) => (item.id === id ? nextScene : item));
+    setPrefs({ ...prefs, customScenes, scene: id });
+    setEditingSceneId(id);
+    setDraft({ ...nextScene });
+  };
+
+  const deleteCustomScene = (id: CustomSceneId): void => {
+    const customScenes = prefs.customScenes.filter((item) => item.id !== id);
+    setPrefs({
+      ...prefs,
+      customScenes,
+      scene: prefs.scene === id ? "ocean" : prefs.scene,
+    });
+    startNewScene();
   };
 
   return (
@@ -77,20 +242,31 @@ export function MeditationModule({ lang }: MeditationModuleProps): JSX.Element {
           <Icon name="leaf" size={18} /> {s("meditation.title")}
         </h1>
         <span className="grow" />
-        <button className="icon-btn" type="button" aria-label={s("meditation.title")}>
-          <Icon name="dots" size={16} />
+        <button
+          className="icon-btn"
+          type="button"
+          aria-label={s("meditation.clock_settings")}
+          aria-pressed={settingsOpen}
+          onClick={() => setSettingsOpen((open) => !open)}
+        >
+          <Icon name="sliders" size={16} />
         </button>
       </header>
 
       <div className="med-layout">
-        {/* Preview card */}
         <div className="med-preview" style={{ background: scene.grad }}>
           <div className="med-preview-overlay" />
-          <ClockDisplay variant={prefs.clock} accent={scene.accent} mini />
+          <ClockDisplay
+            variant={prefs.clock}
+            accent={scene.accent}
+            scale={prefs.clockScale}
+            colors={prefs.clockColors}
+            mini
+          />
           <div className="med-preview-foot">
             <div className="mp-meta">
               <span>
-                <Icon name="leaf" size={12} /> {s(`meditation.scenes.${prefs.scene}`)}
+                <Icon name="leaf" size={12} /> {sceneName(scene, s)}
               </span>
               <span>
                 <Icon name="clock" size={12} /> {s(`meditation.clocks.${prefs.clock}`)}
@@ -99,7 +275,8 @@ export function MeditationModule({ lang }: MeditationModuleProps): JSX.Element {
                 <Icon name="sound" size={12} /> {s(`meditation.sounds.${prefs.sound}`)}
               </span>
               <span>
-                <Icon name="timer" size={12} /> {prefs.duration} {s("meditation.mins")}
+                <Icon name="timer" size={12} />{" "}
+                {durationLabel(prefs.durationMode, prefs.duration, prefs.customDuration, s)}
               </span>
             </div>
             <button className="btn primary med-start" type="button" onClick={onStart}>
@@ -108,47 +285,92 @@ export function MeditationModule({ lang }: MeditationModuleProps): JSX.Element {
           </div>
         </div>
 
-        {/* Picker columns */}
         <div className="med-pickers">
           <PickerGroup title={s("meditation.pick_scene")}>
             <div className="scene-grid">
-              {SCENES.map((sc) => {
+              {allScenes.map((sc) => {
                 const isActive = prefs.scene === sc.id;
                 return (
-                  <button
-                    key={sc.id}
-                    type="button"
-                    className={"scene-card" + (isActive ? " active" : "")}
-                    style={{ background: sc.grad }}
-                    onClick={() => onPickScene(sc.id)}
-                    aria-pressed={isActive}
-                  >
-                    <span className="scene-label">{s(`meditation.scenes.${sc.id}`)}</span>
-                  </button>
+                  <div key={sc.id} className={"scene-shell" + (isActive ? " active" : "")}>
+                    <button
+                      type="button"
+                      className="scene-card"
+                      style={{ background: sc.grad }}
+                      onClick={() => onPickScene(sc.id)}
+                      aria-pressed={isActive}
+                    >
+                      <span className="scene-label">{sceneName(sc, s)}</span>
+                    </button>
+                    {sc.id.startsWith("custom:") && (
+                      <div className="scene-actions">
+                        <button
+                          type="button"
+                          className="mini-action"
+                          onClick={() => {
+                            const custom = prefs.customScenes.find((item) => item.id === sc.id);
+                            if (custom) editCustomScene(custom);
+                          }}
+                          aria-label={s("meditation.edit_scene")}
+                        >
+                          <Icon name="edit" size={13} />
+                        </button>
+                        <button
+                          type="button"
+                          className="mini-action danger"
+                          onClick={() => deleteCustomScene(sc.id as CustomSceneId)}
+                          aria-label={s("meditation.delete_scene")}
+                        >
+                          <Icon name="trash" size={13} />
+                        </button>
+                      </div>
+                    )}
+                  </div>
                 );
               })}
             </div>
           </PickerGroup>
 
-          <PickerGroup title={s("meditation.pick_clock")}>
-            <div className="clock-grid">
-              {CLOCK_VARIANTS.map((c) => {
-                const isActive = prefs.clock === c;
-                return (
-                  <button
-                    key={c}
-                    type="button"
-                    className={"clock-card" + (isActive ? " active" : "")}
-                    onClick={() => onPickClock(c)}
-                    aria-pressed={isActive}
-                  >
-                    <div className="cc-preview">
-                      <ClockDisplay variant={c} accent="var(--text-1)" mini staticMode />
-                    </div>
-                    <div className="cc-label">{s(`meditation.clocks.${c}`)}</div>
-                  </button>
-                );
-              })}
+          <PickerGroup title={s("meditation.duration")}>
+            <div className="duration-panel">
+              <div className="dur-mode-label">{s("meditation.fixed_duration")}</div>
+              <div className="dur-row">
+                {DURATIONS.map((d) => {
+                  const isActive = prefs.durationMode === "preset" && prefs.duration === d;
+                  return (
+                    <button
+                      key={d}
+                      type="button"
+                      className={"dur-chip" + (isActive ? " active" : "")}
+                      onClick={() => onPickDuration(d)}
+                      aria-pressed={isActive}
+                    >
+                      {d}
+                      <span className="dur-unit">{s("meditation.mins")}</span>
+                    </button>
+                  );
+                })}
+              </div>
+              <div className="dur-custom-row">
+                <label>
+                  <span>{s("meditation.custom_duration")}</span>
+                  <input
+                    type="number"
+                    min="1"
+                    max="240"
+                    value={prefs.customDuration}
+                    onChange={(event) => onCustomDuration(Number(event.currentTarget.value))}
+                    onFocus={() => setPrefs({ ...prefs, durationMode: "custom" })}
+                  />
+                </label>
+                <button
+                  type="button"
+                  className={"dur-chip dur-infinite" + (prefs.durationMode === "infinite" ? " active" : "")}
+                  onClick={() => setPrefs({ ...prefs, durationMode: "infinite" })}
+                  aria-pressed={prefs.durationMode === "infinite"}
+                >
+                  {s("meditation.infinite_mode")}
+                </button>
+              </div>
             </div>
           </PickerGroup>
 
@@ -156,6 +378,7 @@ export function MeditationModule({ lang }: MeditationModuleProps): JSX.Element {
             <div className="sound-grid">
               {SOUND_IDS.map((sd) => {
                 const isActive = prefs.sound === sd;
+                const isPlaying = ambient.state.playing && ambient.state.sound === sd;
                 return (
                   <button
                     key={sd}
@@ -163,32 +386,181 @@ export function MeditationModule({ lang }: MeditationModuleProps): JSX.Element {
                     className={"sound-card" + (isActive ? " active" : "")}
                     onClick={() => onPickSound(sd)}
                     aria-pressed={isActive}
+                    data-playing={isPlaying ? "true" : "false"}
                   >
-                    <Icon name={soundIconName(sd)} size={16} />
+                    <Icon name={isPlaying ? "pause" : soundIconName(sd)} size={16} />
                     <span>{s(`meditation.sounds.${sd}`)}</span>
                   </button>
                 );
               })}
             </div>
+            <label className="volume-row">
+              <span>{s("meditation.volume")}</span>
+              <input
+                type="range"
+                min="0"
+                max="1"
+                step="0.01"
+                value={prefs.volume}
+                onChange={(event) => setVolume(Number(event.currentTarget.value))}
+              />
+            </label>
           </PickerGroup>
 
-          <PickerGroup title={s("meditation.duration")}>
-            <div className="dur-row">
-              {DURATIONS.map((d) => {
-                const isActive = prefs.duration === d;
-                return (
-                  <button
-                    key={d}
-                    type="button"
-                    className={"dur-chip" + (isActive ? " active" : "")}
-                    onClick={() => onPickDuration(d)}
-                    aria-pressed={isActive}
+          {settingsOpen && (
+            <PickerGroup title={s("meditation.clock_settings")}>
+              <div className="clock-settings">
+                <div className="clock-grid">
+                  {CLOCK_VARIANTS.map((c) => {
+                    const isActive = prefs.clock === c;
+                    return (
+                      <button
+                        key={c}
+                        type="button"
+                        className={"clock-card" + (isActive ? " active" : "")}
+                        onClick={() => onPickClock(c)}
+                        aria-pressed={isActive}
+                      >
+                        <div className="cc-preview">
+                          <ClockDisplay
+                            variant={c}
+                            accent="var(--text-1)"
+                            scale="compact"
+                            colors={prefs.clockColors}
+                            mini
+                            staticMode
+                          />
+                        </div>
+                        <div className="cc-label">{s(`meditation.clocks.${c}`)}</div>
+                      </button>
+                    );
+                  })}
+                </div>
+                <div className="segmented">
+                  {CLOCK_SCALES.map((scale) => (
+                    <button
+                      key={scale}
+                      type="button"
+                      className={prefs.clockScale === scale ? "active" : ""}
+                      onClick={() => setPrefs({ ...prefs, clockScale: scale })}
+                      aria-pressed={prefs.clockScale === scale}
+                    >
+                      {s(`meditation.clock_sizes.${scale}`)}
+                    </button>
+                  ))}
+                </div>
+                <div className="color-grid">
+                  {COLOR_KEYS.map((key) => (
+                    <label key={key}>
+                      <span>{s(`meditation.clock_colors.${key}`)}</span>
+                      <input
+                        type="color"
+                        value={prefs.clockColors[key]}
+                        onChange={(event) => setClockColor(key, event.currentTarget.value)}
+                      />
+                    </label>
+                  ))}
+                </div>
+              </div>
+            </PickerGroup>
+          )}
+
+          <PickerGroup title={s("meditation.custom_scene")}>
+            <div className="custom-scene-editor">
+              <div className="editor-head">
+                <strong>
+                  {editingSceneId === "new" ? s("meditation.new_scene") : s("meditation.edit_scene")}
+                </strong>
+                <button type="button" className="text-btn" onClick={startNewScene}>
+                  {s("meditation.new_scene")}
+                </button>
+              </div>
+              <label className="field-row">
+                <span>{s("meditation.scene_name")}</span>
+                <input
+                  type="text"
+                  value={draft.name}
+                  onChange={(event) => setDraft({ ...draft, name: event.currentTarget.value })}
+                />
+              </label>
+              <div className="color-grid scene-color-grid">
+                {(["background", "gradientFrom", "gradientTo"] as const).map((key) => (
+                  <label key={key}>
+                    <span>{s(`meditation.scene_fields.${key}`)}</span>
+                    <input
+                      type="color"
+                      value={draft[key]}
+                      onChange={(event) => setDraft({ ...draft, [key]: event.currentTarget.value })}
+                    />
+                  </label>
+                ))}
+              </div>
+              <div className="field-grid">
+                <label>
+                  <span>{s("meditation.animation")}</span>
+                  <select
+                    value={draft.animation}
+                    onChange={(event) =>
+                      setDraft({ ...draft, animation: event.currentTarget.value as SceneAnimation })
+                    }
                   >
-                    {d}
-                    <span className="dur-unit">{s("meditation.mins")}</span>
-                  </button>
-                );
-              })}
+                    {ANIMATIONS.map((item) => (
+                      <option key={item} value={item}>
+                        {s(`meditation.animations.${item}`)}
+                      </option>
+                    ))}
+                  </select>
+                </label>
+                <label>
+                  <span>{s("meditation.pick_sound")}</span>
+                  <select
+                    value={draft.sound}
+                    onChange={(event) =>
+                      setDraft({ ...draft, sound: event.currentTarget.value as AmbientSoundId })
+                    }
+                  >
+                    {SOUND_IDS.map((item) => (
+                      <option key={item} value={item}>
+                        {s(`meditation.sounds.${item}`)}
+                      </option>
+                    ))}
+                  </select>
+                </label>
+                <label>
+                  <span>{s("meditation.pick_clock")}</span>
+                  <select
+                    value={draft.clock}
+                    onChange={(event) =>
+                      setDraft({ ...draft, clock: event.currentTarget.value as ClockVariant })
+                    }
+                  >
+                    {CLOCK_VARIANTS.map((item) => (
+                      <option key={item} value={item}>
+                        {s(`meditation.clocks.${item}`)}
+                      </option>
+                    ))}
+                  </select>
+                </label>
+                <label>
+                  <span>{s("meditation.default_duration")}</span>
+                  <input
+                    type="number"
+                    min="1"
+                    max="240"
+                    value={draft.customDuration}
+                    onChange={(event) =>
+                      setDraft({
+                        ...draft,
+                        durationMode: "custom",
+                        customDuration: Math.max(1, Math.min(240, Number(event.currentTarget.value))),
+                      })
+                    }
+                  />
+                </label>
+              </div>
+              <button type="button" className="btn primary save-scene" onClick={saveCustomScene}>
+                <Icon name="save" size={14} /> {s("meditation.save_scene")}
+              </button>
             </div>
           </PickerGroup>
         </div>
@@ -198,10 +570,16 @@ export function MeditationModule({ lang }: MeditationModuleProps): JSX.Element {
         <MeditationPlayer
           scene={scene}
           clock={prefs.clock}
+          clockScale={prefs.clockScale}
+          clockColors={prefs.clockColors}
           sound={prefs.sound}
+          volume={prefs.volume}
           duration={prefs.duration}
+          durationMode={prefs.durationMode}
+          customDuration={prefs.customDuration}
           lang={lang}
           onExit={onExit}
+          onVolumeChange={setVolume}
         />
       )}
     </div>

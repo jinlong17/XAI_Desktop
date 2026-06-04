@@ -1,21 +1,19 @@
 /* ====================================================================
    styles.css — Meditation module styles
-   All colors via tokens / oklch / currentColor / scene gradients.
-   Zero hex literals (gated by AC-TOKENS-1).
-   Compositor-only animations (transform + opacity) gated by AC-TOKENS-3.
-   Reduced-motion media query gated by AC-A11Y-1.
-   Design: docs/design.md §6 + §7
+   Colors are token / oklch / currentColor / color-mix based.
    ==================================================================== */
-
-/* ---- Module layout ------------------------------------------------- */
 
 .module-meditation {
   display: flex;
   flex-direction: column;
   height: 100%;
+  min-height: 0;
   overflow: auto;
   gap: var(--gap-md, 0.75rem);
   padding: var(--p-md, 1rem);
+  background:
+    radial-gradient(circle at 12% 8%, oklch(78% 0.08 190 / 0.14), transparent 32rem),
+    radial-gradient(circle at 88% 18%, oklch(82% 0.07 130 / 0.11), transparent 28rem);
 }
 
 .module-meditation .module-head {
@@ -30,7 +28,8 @@
   align-items: center;
   gap: 0.4rem;
   font-size: var(--fs-lg, 1.125rem);
-  font-weight: 600;
+  font-weight: 650;
+  line-height: 1.2;
   color: var(--text-1);
   margin: 0;
 }
@@ -39,29 +38,41 @@
   flex: 1;
 }
 
-.module-meditation .icon-btn {
+.module-meditation .icon-btn,
+.mini-action {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: 28px;
-  height: 28px;
-  border-radius: var(--radius-sm, 0.25rem);
-  background: transparent;
-  border: none;
-  color: var(--text-3);
+  min-width: 44px;
+  min-height: 44px;
+  border-radius: var(--radius-md, 0.5rem);
+  background: color-mix(in oklch, var(--bg-panel) 72%, transparent);
+  border: 1px solid color-mix(in oklch, var(--border-1) 68%, transparent);
+  color: var(--text-2);
   cursor: pointer;
+  transition:
+    background 240ms cubic-bezier(0.2, 0.8, 0.2, 1),
+    color 240ms cubic-bezier(0.2, 0.8, 0.2, 1),
+    transform 240ms cubic-bezier(0.2, 0.8, 0.2, 1);
 }
 
-.module-meditation .icon-btn:hover {
+.module-meditation .icon-btn:hover,
+.mini-action:hover {
   background: var(--bg-hover);
   color: var(--text-1);
+  transform: translateY(-1px);
 }
 
-/* ---- Layout grid --------------------------------------------------- */
+.module-meditation button:focus-visible,
+.module-meditation input:focus-visible,
+.module-meditation select:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
 
 .med-layout {
   display: grid;
-  grid-template-columns: minmax(320px, 1.2fr) 1.3fr;
+  grid-template-columns: minmax(20rem, 0.95fr) minmax(22rem, 1.35fr);
   gap: var(--gap-md, 0.75rem);
   flex: 1;
   min-height: 0;
@@ -73,31 +84,38 @@
   }
 }
 
-/* ---- Preview card -------------------------------------------------- */
-
 .med-preview {
-  position: relative;
+  position: sticky;
+  top: 0;
   border-radius: var(--radius-lg, 0.75rem);
   overflow: hidden;
-  min-height: 320px;
+  min-height: min(38rem, calc(100dvh - 8rem));
   display: flex;
   flex-direction: column;
   justify-content: space-between;
   align-items: center;
-  padding: var(--p-lg, 1.5rem);
+  padding: clamp(1rem, 3vw, 2rem);
   color: var(--text-on-accent);
   isolation: isolate;
+  box-shadow:
+    0 1.5rem 4rem oklch(0% 0 0 / 0.16),
+    inset 0 1px 0 oklch(100% 0 0 / 0.18);
 }
 
-.med-preview-overlay {
+@media (max-width: 900px) {
+  .med-preview {
+    position: relative;
+    min-height: 22rem;
+  }
+}
+
+.med-preview-overlay,
+.med-player-bg {
   position: absolute;
   inset: 0;
-  background: linear-gradient(
-    180deg,
-    oklch(0% 0 0 / 0) 0%,
-    oklch(0% 0 0 / 0.18) 70%,
-    oklch(0% 0 0 / 0.35) 100%
-  );
+  background:
+    radial-gradient(circle at 50% 20%, oklch(100% 0 0 / 0.18), transparent 26rem),
+    linear-gradient(180deg, oklch(0% 0 0 / 0) 0%, oklch(0% 0 0 / 0.18) 62%, oklch(0% 0 0 / 0.42) 100%);
   z-index: 0;
   pointer-events: none;
 }
@@ -110,7 +128,6 @@
 .med-preview .clk-digital,
 .med-preview .clk-split,
 .med-preview .clk-minimal {
-  font-size: 2rem;
   margin-top: var(--gap-lg, 1rem);
 }
 
@@ -118,7 +135,7 @@
   width: 100%;
   display: flex;
   flex-direction: column;
-  gap: var(--gap-sm, 0.5rem);
+  gap: var(--gap-md, 0.75rem);
   align-items: stretch;
 }
 
@@ -134,92 +151,251 @@
   display: inline-flex;
   align-items: center;
   gap: 0.25rem;
-  padding: 0.2rem 0.5rem;
-  background: oklch(100% 0 0 / 0.12);
-  border-radius: var(--radius-sm, 0.25rem);
+  padding: 0.35rem 0.6rem;
+  min-height: 2rem;
+  background: oklch(100% 0 0 / 0.13);
+  border: 1px solid oklch(100% 0 0 / 0.12);
+  border-radius: var(--radius-md, 0.5rem);
 }
 
-.med-start {
+.med-start,
+.save-scene {
   align-self: flex-start;
   display: inline-flex;
   align-items: center;
-  gap: 0.4rem;
-  padding: 0.55rem 0.9rem;
+  justify-content: center;
+  gap: 0.45rem;
+  min-height: 44px;
+  padding: 0.7rem 1rem;
   border: none;
   border-radius: var(--radius-md, 0.5rem);
-  background: oklch(100% 0 0 / 0.85);
+  background: oklch(100% 0 0 / 0.9);
   color: var(--text-1);
-  font-weight: 600;
+  font-weight: 650;
   cursor: pointer;
+  transition:
+    background 240ms cubic-bezier(0.2, 0.8, 0.2, 1),
+    transform 240ms cubic-bezier(0.2, 0.8, 0.2, 1);
 }
 
-.med-start:hover {
+.med-start:hover,
+.save-scene:hover {
   background: oklch(100% 0 0 / 1);
+  transform: translateY(-1px);
 }
 
-/* ---- Picker columns ------------------------------------------------ */
+.med-start:active,
+.save-scene:active,
+.sound-card:active,
+.dur-chip:active,
+.clock-card:active,
+.scene-card:active {
+  transform: translateY(1px) scale(0.99);
+}
 
 .med-pickers {
   display: flex;
   flex-direction: column;
   gap: var(--gap-md, 0.75rem);
   overflow: auto;
+  padding-bottom: var(--p-md, 1rem);
 }
 
 .picker-group {
   display: flex;
   flex-direction: column;
   gap: var(--gap-sm, 0.5rem);
+  padding: var(--p-md, 1rem);
+  border-radius: var(--radius-lg, 0.75rem);
+  background: color-mix(in oklch, var(--bg-panel) 82%, transparent);
+  border: 1px solid color-mix(in oklch, var(--border-1) 68%, transparent);
+  box-shadow: 0 1rem 2.5rem oklch(0% 0 0 / 0.05);
 }
 
 .picker-h {
   font-size: var(--fs-sm, 0.875rem);
-  font-weight: 600;
+  font-weight: 650;
   color: var(--text-2);
   margin: 0;
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
 }
 
-/* ---- Scene picker -------------------------------------------------- */
-
-.scene-grid {
+.scene-grid,
+.clock-grid,
+.sound-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(8.5rem, 1fr));
   gap: var(--gap-sm, 0.5rem);
+}
+
+.scene-shell {
+  position: relative;
+  border-radius: var(--radius-md, 0.5rem);
+}
+
+.scene-shell.active {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
 }
 
 .scene-card {
   position: relative;
-  min-height: 72px;
+  width: 100%;
+  min-height: 5.25rem;
   border-radius: var(--radius-md, 0.5rem);
-  border: 2px solid transparent;
+  border: 1px solid oklch(100% 0 0 / 0.18);
   cursor: pointer;
   overflow: hidden;
   padding: var(--p-sm, 0.5rem);
   display: flex;
   align-items: flex-end;
   color: var(--text-on-accent);
-  transition: border-color 0.18s ease, transform 0.18s ease;
+  transition:
+    transform 240ms cubic-bezier(0.2, 0.8, 0.2, 1),
+    filter 240ms cubic-bezier(0.2, 0.8, 0.2, 1);
 }
 
-.scene-card.active {
-  border-color: var(--text-on-accent);
-  transform: translateY(-2px);
+.scene-card:hover {
+  filter: saturate(1.06) brightness(1.04);
+  transform: translateY(-1px);
 }
 
 .scene-label {
   font-size: var(--fs-sm, 0.875rem);
-  font-weight: 600;
+  font-weight: 650;
   text-shadow: 0 1px 2px oklch(0% 0 0 / 0.35);
 }
 
-/* ---- Clock picker -------------------------------------------------- */
+.scene-actions {
+  display: flex;
+  gap: 0.25rem;
+  margin-top: 0.35rem;
+}
 
-.clock-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+.mini-action {
+  min-width: 2.25rem;
+  min-height: 2.25rem;
+  width: 2.25rem;
+  height: 2.25rem;
+}
+
+.mini-action.danger {
+  color: oklch(63% 0.16 25);
+}
+
+.duration-panel,
+.clock-settings,
+.custom-scene-editor {
+  display: flex;
+  flex-direction: column;
   gap: var(--gap-sm, 0.5rem);
+}
+
+.dur-mode-label {
+  font-size: var(--fs-xs, 0.75rem);
+  color: var(--text-3);
+  font-weight: 600;
+}
+
+.dur-row,
+.dur-custom-row,
+.volume-row,
+.mp-volume {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--gap-sm, 0.5rem);
+}
+
+.dur-chip {
+  display: inline-flex;
+  align-items: baseline;
+  justify-content: center;
+  gap: 0.25rem;
+  min-height: 44px;
+  padding: 0.55rem 0.9rem;
+  border-radius: var(--radius-pill, 999px);
+  border: 1px solid var(--border-1);
+  background: var(--bg-panel);
+  cursor: pointer;
+  color: var(--text-1);
+  font-weight: 650;
+  transition:
+    background 240ms cubic-bezier(0.2, 0.8, 0.2, 1),
+    border-color 240ms cubic-bezier(0.2, 0.8, 0.2, 1),
+    transform 240ms cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+.dur-chip.active {
+  border-color: var(--accent);
+  background: var(--accent-soft, var(--bg-selected));
+}
+
+.dur-unit {
+  font-size: var(--fs-xs, 0.75rem);
+  font-weight: 500;
+  color: var(--text-3);
+}
+
+.dur-custom-row label,
+.field-row,
+.field-grid label,
+.color-grid label,
+.volume-row,
+.mp-volume {
+  display: grid;
+  gap: 0.35rem;
+  color: var(--text-2);
+  font-size: var(--fs-sm, 0.875rem);
+}
+
+.dur-custom-row input,
+.field-row input,
+.field-grid input,
+.field-grid select {
+  min-height: 44px;
+  border-radius: var(--radius-md, 0.5rem);
+  border: 1px solid var(--border-1);
+  background: var(--bg-panel);
+  color: var(--text-1);
+  padding: 0.55rem 0.7rem;
+  font: inherit;
+}
+
+.dur-custom-row input {
+  width: 8rem;
+}
+
+.sound-grid {
+  grid-template-columns: repeat(auto-fit, minmax(9.5rem, 1fr));
+}
+
+.sound-card {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  min-height: 44px;
+  padding: 0.65rem 0.75rem;
+  border-radius: var(--radius-md, 0.5rem);
+  border: 1px solid var(--border-1);
+  background: var(--bg-panel);
+  cursor: pointer;
+  color: var(--text-1);
+  font-size: var(--fs-sm, 0.875rem);
+  transition:
+    background 240ms cubic-bezier(0.2, 0.8, 0.2, 1),
+    border-color 240ms cubic-bezier(0.2, 0.8, 0.2, 1),
+    transform 240ms cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+.sound-card.active {
+  border-color: var(--accent);
+  background: var(--accent-soft, var(--bg-selected));
+}
+
+.volume-row input,
+.mp-volume input {
+  min-width: min(14rem, 100%);
+  accent-color: var(--accent);
 }
 
 .clock-card {
@@ -227,12 +403,17 @@
   flex-direction: column;
   align-items: center;
   gap: 0.4rem;
+  min-height: 7rem;
   padding: var(--p-md, 1rem);
   border-radius: var(--radius-md, 0.5rem);
   border: 1px solid var(--border-1);
   background: var(--bg-panel);
   cursor: pointer;
   color: var(--text-1);
+  transition:
+    background 240ms cubic-bezier(0.2, 0.8, 0.2, 1),
+    border-color 240ms cubic-bezier(0.2, 0.8, 0.2, 1),
+    transform 240ms cubic-bezier(0.2, 0.8, 0.2, 1);
 }
 
 .clock-card.active {
@@ -244,7 +425,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  min-height: 60px;
+  min-height: 4rem;
 }
 
 .cc-label {
@@ -252,65 +433,74 @@
   color: var(--text-2);
 }
 
-/* ---- Sound picker -------------------------------------------------- */
-
-.sound-grid {
+.segmented {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 0.25rem;
+  padding: 0.25rem;
+  border-radius: var(--radius-md, 0.5rem);
+  background: color-mix(in oklch, var(--bg-hover) 70%, transparent);
+}
+
+.segmented button {
+  min-height: 40px;
+  border: 0;
+  border-radius: var(--radius-sm, 0.25rem);
+  background: transparent;
+  color: var(--text-2);
+  cursor: pointer;
+  font-weight: 600;
+}
+
+.segmented button.active {
+  background: var(--bg-panel);
+  color: var(--text-1);
+  box-shadow: 0 0.35rem 1rem oklch(0% 0 0 / 0.06);
+}
+
+.color-grid,
+.field-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(8.5rem, 1fr));
   gap: var(--gap-sm, 0.5rem);
 }
 
-.sound-card {
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-  padding: 0.6rem 0.8rem;
+.color-grid input[type="color"] {
+  width: 100%;
+  min-height: 44px;
+  padding: 0.2rem;
   border-radius: var(--radius-md, 0.5rem);
   border: 1px solid var(--border-1);
   background: var(--bg-panel);
   cursor: pointer;
-  color: var(--text-1);
-  font-size: var(--fs-sm, 0.875rem);
 }
 
-.sound-card.active {
-  border-color: var(--accent);
-  background: var(--accent-soft, var(--bg-selected));
-}
-
-/* ---- Duration picker ----------------------------------------------- */
-
-.dur-row {
+.editor-head {
   display: flex;
-  flex-wrap: wrap;
+  align-items: center;
   gap: var(--gap-sm, 0.5rem);
 }
 
-.dur-chip {
-  display: inline-flex;
-  align-items: baseline;
-  gap: 0.25rem;
-  padding: 0.5rem 0.9rem;
-  border-radius: var(--radius-pill, 999px);
-  border: 1px solid var(--border-1);
-  background: var(--bg-panel);
-  cursor: pointer;
+.editor-head strong {
   color: var(--text-1);
-  font-weight: 600;
 }
 
-.dur-chip.active {
-  border-color: var(--accent);
-  background: var(--accent-soft, var(--bg-selected));
+.text-btn {
+  margin-left: auto;
+  border: 0;
+  background: transparent;
+  color: var(--accent);
+  font: inherit;
+  font-weight: 650;
+  min-height: 44px;
+  cursor: pointer;
 }
 
-.dur-unit {
-  font-size: var(--fs-xs, 0.75rem);
-  font-weight: 400;
-  color: var(--text-3);
+.save-scene {
+  color: var(--text-1);
+  background: color-mix(in oklch, var(--accent) 20%, var(--bg-panel));
+  border: 1px solid color-mix(in oklch, var(--accent) 45%, transparent);
 }
-
-/* ---- ClockDisplay -------------------------------------------------- */
 
 .mono {
   font-family: var(--font-mono, monospace);
@@ -320,21 +510,46 @@
 .clk-digital,
 .clk-split,
 .clk-minimal {
-  font-size: 2.4rem;
-  font-weight: 600;
-  letter-spacing: 0.04em;
+  display: inline-flex;
+  align-items: baseline;
+  gap: 0.14em;
+  border-radius: var(--radius-lg, 0.75rem);
+  padding: 0.2em 0.34em;
+  font-weight: 650;
+  line-height: 1;
+  letter-spacing: 0;
+  box-shadow: inset 0 1px 0 oklch(100% 0 0 / 0.12);
+}
+
+.clk-digital.clock-scale-compact,
+.clk-split.clock-scale-compact,
+.clk-minimal.clock-scale-compact {
+  font-size: clamp(2rem, 8vw, 3rem);
+}
+
+.clk-digital.clock-scale-normal,
+.clk-split.clock-scale-normal,
+.clk-minimal.clock-scale-normal {
+  font-size: clamp(2.4rem, 10vw, 4rem);
+}
+
+.clk-digital.clock-scale-large,
+.clk-split.clock-scale-large,
+.clk-minimal.clock-scale-large {
+  font-size: clamp(3rem, 12vw, 5rem);
+}
+
+.clk-digital.clock-scale-larger,
+.clk-split.clock-scale-larger,
+.clk-minimal.clock-scale-larger {
+  font-size: clamp(3.4rem, 14vw, 6rem);
 }
 
 .clk-digital.mini,
 .clk-split.mini,
 .clk-minimal.mini {
   font-size: 1.05rem;
-}
-
-.clk-split {
-  display: inline-flex;
-  align-items: baseline;
-  gap: 0.15em;
+  border-radius: var(--radius-md, 0.5rem);
 }
 
 .clk-split .clk-colon {
@@ -347,9 +562,10 @@
 
 .clk-analog {
   display: block;
+  max-width: min(72vw, 100%);
+  height: auto;
+  filter: drop-shadow(0 1.5rem 2.5rem oklch(0% 0 0 / 0.12));
 }
-
-/* ---- Fullscreen player --------------------------------------------- */
 
 .med-player {
   position: fixed;
@@ -361,19 +577,8 @@
 }
 
 .med-player-bg {
-  position: absolute;
-  inset: 0;
-  background: linear-gradient(
-    180deg,
-    oklch(0% 0 0 / 0) 0%,
-    oklch(0% 0 0 / 0.22) 60%,
-    oklch(0% 0 0 / 0.45) 100%
-  );
-  pointer-events: none;
   z-index: 1;
 }
-
-/* ---- Particles ----------------------------------------------------- */
 
 .med-particles {
   position: absolute;
@@ -392,8 +597,30 @@
   opacity: 0;
   animation-name: med-particle-rise;
   animation-iteration-count: infinite;
-  animation-timing-function: linear;
+  animation-timing-function: cubic-bezier(0.2, 0.8, 0.2, 1);
   will-change: transform, opacity;
+}
+
+.med-particles-rain .particle {
+  width: 2px;
+  height: 28px;
+  border-radius: var(--radius-pill, 999px);
+}
+
+.med-particles-waves .particle {
+  width: 46px;
+  height: 6px;
+  border-radius: var(--radius-pill, 999px);
+}
+
+.med-particles-aurora .particle {
+  width: 18px;
+  height: 18px;
+  filter: blur(6px);
+}
+
+.med-particles-still .particle {
+  display: none;
 }
 
 @keyframes med-particle-rise {
@@ -410,31 +637,25 @@
   }
 }
 
-/* ---- Centered clock + breathing ring ------------------------------- */
-
 .med-player-clock {
   position: absolute;
-  top: 16vh;
+  top: 14vh;
   left: 50%;
   transform: translateX(-50%);
   z-index: 4;
-  font-size: 4rem;
-}
-
-.med-player-clock .clk-digital,
-.med-player-clock .clk-split,
-.med-player-clock .clk-minimal {
-  font-size: 4rem;
+  width: min(90vw, 42rem);
+  display: flex;
+  justify-content: center;
 }
 
 .med-breathe {
   position: absolute;
-  top: 50%;
+  top: 53%;
   left: 50%;
   transform: translate(-50%, -50%);
   z-index: 3;
-  width: 320px;
-  height: 320px;
+  width: min(20rem, 74vw);
+  aspect-ratio: 1;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -445,15 +666,14 @@
   inset: 0;
   border: 1.5px solid currentColor;
   border-radius: 50%;
-  animation: med-breathe 8s ease-in-out infinite alternate;
+  animation: med-breathe 8s cubic-bezier(0.2, 0.8, 0.2, 1) infinite alternate;
   will-change: transform;
 }
 
 .breathe-label {
   font-size: var(--fs-md, 1rem);
-  font-weight: 500;
-  letter-spacing: 0.1em;
-  text-transform: uppercase;
+  font-weight: 650;
+  letter-spacing: 0;
 }
 
 @keyframes med-breathe {
@@ -465,19 +685,17 @@
   }
 }
 
-/* ---- Player footer ------------------------------------------------- */
-
 .med-player-footer {
   position: absolute;
   bottom: 0;
   left: 0;
   right: 0;
   z-index: 5;
-  padding: var(--p-lg, 1.5rem);
+  padding: clamp(1rem, 3vw, 1.5rem);
   display: flex;
   flex-direction: column;
   gap: var(--gap-sm, 0.5rem);
-  background: linear-gradient(0deg, oklch(0% 0 0 / 0.32) 0%, oklch(0% 0 0 / 0) 100%);
+  background: linear-gradient(0deg, oklch(0% 0 0 / 0.34) 0%, oklch(0% 0 0 / 0) 100%);
 }
 
 .mp-progress {
@@ -491,43 +709,53 @@
 .mp-progress-bar {
   height: 100%;
   border-radius: var(--radius-pill, 999px);
-  transition: width 1s linear;
+  transition: width 800ms cubic-bezier(0.2, 0.8, 0.2, 1);
 }
 
 .mp-foot-row {
   display: flex;
   align-items: center;
   gap: var(--gap-sm, 0.5rem);
+  flex-wrap: wrap;
 }
 
 .mp-remaining {
-  font-size: 1.5rem;
-  font-weight: 600;
+  font-size: clamp(1.25rem, 4vw, 1.75rem);
+  font-weight: 650;
 }
 
-.mp-info {
+.mp-sound-toggle {
+  min-height: 44px;
   display: inline-flex;
   align-items: center;
-  gap: 0.3rem;
-  font-size: var(--fs-sm, 0.875rem);
-  opacity: 0.85;
+  gap: 0.35rem;
+  border: 1px solid oklch(100% 0 0 / 0.25);
+  border-radius: var(--radius-pill, 999px);
+  background: oklch(100% 0 0 / 0.13);
+  color: var(--text-on-accent);
+  padding: 0.5rem 0.75rem;
+  cursor: pointer;
 }
 
-.mp-sound-note {
-  margin-left: 0.4rem;
-  font-size: var(--fs-xs, 0.75rem);
-  opacity: 0.78;
+.mp-sound-toggle:disabled {
+  opacity: 0.56;
+  cursor: not-allowed;
 }
 
-/* ---- Exit button --------------------------------------------------- */
+.mp-volume {
+  grid-template-columns: auto minmax(8rem, 12rem);
+  align-items: center;
+  color: var(--text-on-accent);
+  opacity: 0.9;
+}
 
 .med-exit {
   position: absolute;
   top: var(--p-md, 1rem);
   right: var(--p-md, 1rem);
   z-index: 6;
-  width: 40px;
-  height: 40px;
+  width: 44px;
+  height: 44px;
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -536,15 +764,38 @@
   background: oklch(100% 0 0 / 0.12);
   color: var(--text-on-accent);
   cursor: pointer;
-  transition: background 0.18s ease, transform 0.18s ease;
+  transition:
+    background 240ms cubic-bezier(0.2, 0.8, 0.2, 1),
+    transform 240ms cubic-bezier(0.2, 0.8, 0.2, 1);
 }
 
 .med-exit:hover {
   background: oklch(100% 0 0 / 0.2);
-  transform: scale(1.06);
+  transform: scale(1.04);
 }
 
-/* ---- Reduced motion ------------------------------------------------ */
+@media (max-width: 640px) {
+  .module-meditation {
+    padding: var(--p-sm, 0.5rem);
+  }
+
+  .segmented {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .mp-volume {
+    grid-template-columns: 1fr;
+    width: 100%;
+  }
+
+  .med-player-clock {
+    top: 12vh;
+  }
+
+  .med-breathe {
+    top: 55%;
+  }
+}
 
 @media (prefers-reduced-motion: reduce) {
   .med-particles .particle {

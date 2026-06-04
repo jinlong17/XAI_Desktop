@@ -68,15 +68,16 @@ describe("AC-REG-2: Both proposed keys exist with proposed: true", () => {
   });
 });
 
-describe("AC-REG-3: All entries have schemaVersion: 1 in v1", () => {
-  it("every registry entry has schemaVersion === 1", () => {
+describe("AC-REG-3: Registry entries use the expected schemaVersion", () => {
+  it("every registry entry has the expected schemaVersion", () => {
     const entries = Object.values(PREF_REGISTRY);
     expect(entries.length).toBeGreaterThan(0);
     for (const entry of entries) {
+      const expected = entry.key === "xai_meditation_prefs" ? 2 : 1;
       expect(
         entry.schemaVersion,
-        `Entry ${entry.key} has schemaVersion ${entry.schemaVersion}, expected 1`,
-      ).toBe(1);
+        `Entry ${entry.key} has schemaVersion ${entry.schemaVersion}, expected ${expected}`,
+      ).toBe(expected);
     }
   });
 });
@@ -227,6 +228,12 @@ const OWNER_ROW_ADDITIONS = [
   // xai-web-settings-rest gap-closure row #8 — 2 Premium Stripe Checkout stub prefs
   "xai_pref_premium_tier",
   "xai_pref_premium_started_at",
+  // xai-web-calendar event-create extension 2026-05-27 — calendar events persistence
+  "xai_calendar_events",
+  // xai-web-dashboard-stickies-create extension 2026-05-28 — stickies persistence
+  "xai_dashboard_stickies",
+  // xai-web-dashboard-weather-mail extension 2026-05-29 — weather persistence
+  "xai_dashboard_weather",
 ] as const;
 
 describe("AC-REG-8: Total entry count = 20 baseline + owner-row additions", () => {

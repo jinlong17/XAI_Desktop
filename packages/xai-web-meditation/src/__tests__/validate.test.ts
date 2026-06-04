@@ -33,7 +33,7 @@ describe("validatePrefs", () => {
     expect(result.duration).toBe(25);
   });
 
-  it("AC-PERSIST-6: unknown schemaVersion still loads (v1 ignores schema mismatch and clamps)", () => {
+  it("AC-PERSIST-6: unknown schemaVersion still loads and migrates to schema v2", () => {
     const result = validatePrefs({
       schemaVersion: 999,
       scene: "forest",
@@ -41,8 +41,10 @@ describe("validatePrefs", () => {
       sound: "waves",
       duration: 10,
     });
-    expect(result.schemaVersion).toBe(1);
+    expect(result.schemaVersion).toBe(2);
     expect(result.scene).toBe("forest");
+    expect(result.durationMode).toBe("preset");
+    expect(result.customScenes).toEqual([]);
   });
 
   it("clamps unknown clock to split", () => {
@@ -63,14 +65,47 @@ describe("validatePrefs", () => {
     expect(raw).toEqual({ scene: "mars" });
   });
 
-  it("preserves all valid prefs unchanged", () => {
+  it("preserves all valid schema v2 prefs unchanged", () => {
     const input = {
-      schemaVersion: 1,
+      schemaVersion: 2,
       scene: "night" as const,
       clock: "minimal" as const,
       sound: "forest" as const,
+      volume: 0.4,
       duration: 45 as const,
+      durationMode: "custom" as const,
+      customDuration: 33,
+      clockScale: "large" as const,
+      clockColors: DEFAULT_PREFS.clockColors,
+      customScenes: [],
     };
     expect(validatePrefs(input)).toEqual(input);
+  });
+
+  it("keeps a valid custom scene and selected custom id", () => {
+    const result = validatePrefs({
+      ...DEFAULT_PREFS,
+      scene: "custom:calm01",
+      customScenes: [
+        {
+          id: "custom:calm01",
+          name: "Calm room",
+          background: "#101820",
+          gradientFrom: "#406070",
+          gradientTo: "#101820",
+          animation: "aurora",
+          sound: "whiteNoise",
+          clock: "analog",
+          clockScale: "larger",
+          clockColors: DEFAULT_PREFS.clockColors,
+          durationMode: "infinite",
+          duration: 25,
+          customDuration: 44,
+        },
+      ],
+    });
+    expect(result.scene).toBe("custom:calm01");
+    expect(result.customScenes).toHaveLength(1);
+    expect(result.customScenes[0]?.sound).toBe("whiteNoise");
   });
 });

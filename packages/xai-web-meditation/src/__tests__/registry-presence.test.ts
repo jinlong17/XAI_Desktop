@@ -26,18 +26,23 @@ describe("PREF_REGISTRY.xai_meditation_prefs", () => {
     expect(PREF_REGISTRY.xai_meditation_prefs.category).toBe("module");
   });
 
-  it("AC-REGISTRY-1: schemaVersion === 1", () => {
-    expect(PREF_REGISTRY.xai_meditation_prefs.schemaVersion).toBe(1);
+  it("AC-REGISTRY-1: schemaVersion === 2", () => {
+    expect(PREF_REGISTRY.xai_meditation_prefs.schemaVersion).toBe(2);
   });
 
   it("AC-REGISTRY-1: default has expected shape", () => {
     const def = PREF_REGISTRY.xai_meditation_prefs.default as Record<string, unknown>;
     expect(def).toMatchObject({
-      schemaVersion: 1,
+      schemaVersion: 2,
       scene: "ocean",
       clock: "split",
       sound: "water",
+      volume: 0.55,
       duration: 15,
+      durationMode: "preset",
+      customDuration: 20,
+      clockScale: "normal",
+      customScenes: [],
     });
   });
 });

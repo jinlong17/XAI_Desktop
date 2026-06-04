@@ -4,6 +4,18 @@
 > Design: `packages/xai-web-meditation/docs/design.md`
 > API: `packages/xai-web-meditation/docs/api.md`
 
+## 0. 2026-06-04 coverage update
+
+The current suite covers the schema v2 configurable meditation upgrade:
+100 tests pass across picker/render/player/persistence/type/style/registry
+surfaces.
+
+- New coverage: 7 ambient sound ids, volume control, schema v2 defaults,
+  custom duration, infinite mode, clock size/color slots, custom-scene
+  save/edit/delete, and custom scene validation.
+- Web Audio itself is browser-only and gracefully no-ops in jsdom when
+  `AudioContext` is unavailable; rendered flow is covered by browser smoke.
+
 ## 1. Tooling
 
 - Vitest 3 + jsdom 26 (mirrors habits / matrix / pomodoro setup).
@@ -11,7 +23,8 @@
 - `@testing-library/jest-dom` 6 matchers.
 - `vi.useFakeTimers()` for time-driven assertions (player elapsed,
   ClockDisplay tick).
-- `crypto.randomUUID` not used; no polyfill needed.
+- `crypto.randomUUID` is used for custom scene ids in browsers; tests run in
+  jsdom where it is available, with a Date fallback in product code.
 - Test setup file `vitest.setup.ts` clears `localStorage` per test
   (mirrors `xai-web-matrix/vitest.setup.ts`).
 
@@ -26,7 +39,7 @@
   previews; each shows the fixed `03:44:17` time.
 - **AC-PICK-4**: clicking a clock card updates the preview card's
   `ClockDisplay`.
-- **AC-PICK-5**: 5 sound cards render with icons (none → `soundOff`,
+- **AC-PICK-5**: 7 sound cards render with icons (none → `soundOff`,
   rain → `rain`, otherwise `sound`).
 - **AC-PICK-6**: 5 duration chips render with values 5/10/15/25/45 and
   bilingual unit suffix.
@@ -68,6 +81,8 @@
   `s("meditation.exit")` in both EN ("Exit") and ZH ("退出").
 - **AC-PLAYER-9**: when `duration === 5` and `elapsed === 300`, `remaining`
   is `0` and `mm:ss` is `00:00`.
+- **AC-PLAYER-10**: infinite mode displays elapsed time and never counts down
+  to an automatic end state.
 
 ### 2.4 AC-PERSIST-* (storage round-trip — 7 IDs)
 
@@ -81,12 +96,15 @@
   `DEFAULT_PREFS` and does not throw.
 - **AC-PERSIST-5**: unknown `scene: "mars"` in localStorage → clamped
   to `"ocean"`; other fields preserved.
-- **AC-PERSIST-6**: `schemaVersion: 999` → still loads (current
-  validate ignores schemaVersion mismatch and clamps fields; no
-  migration in v1).
+- **AC-PERSIST-6**: `schemaVersion: 999` → still loads and migrates to
+  schema v2 defaults for missing fields.
 - **AC-PERSIST-7**: cross-tab `storage` event with new blob updates the
   current tab's UI (assert via `window.dispatchEvent(new StorageEvent(
   "storage", { key: "xai_meditation_prefs", newValue: ... }))`).
+- **AC-PERSIST-8**: custom duration and infinite mode persist independently
+  from fixed duration.
+- **AC-PERSIST-9**: custom scene save/edit/delete updates `customScenes` and
+  selected scene id correctly.
 
 ### 2.5 AC-I18N-* (bilingual parity — 6 IDs)
 
@@ -98,7 +116,7 @@
   "Rain Window" / "Void") and 5 ZH ("森林" / "海洋" / "夜空" / "雨窗" /
   "虚空") all reachable.
 - **AC-I18N-4**: clock labels: 4 EN + 4 ZH all reachable.
-- **AC-I18N-5**: sound labels: 5 EN + 5 ZH all reachable.
+- **AC-I18N-5**: sound labels: 7 EN + 7 ZH all reachable.
 - **AC-I18N-6**: `mins` suffix: "min" (EN) / "分钟" (ZH) appears on
   every duration chip.
 

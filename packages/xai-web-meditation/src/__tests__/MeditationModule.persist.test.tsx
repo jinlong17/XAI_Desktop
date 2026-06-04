@@ -31,9 +31,13 @@ describe("MeditationModule persistence", () => {
     expect(raw).not.toBeNull();
     const parsed = JSON.parse(raw!);
     expect(parsed.scene).toBe("forest");
+    expect(parsed.schemaVersion).toBe(2);
     expect(parsed.clock).toBe("split");
     expect(parsed.sound).toBe("water");
     expect(parsed.duration).toBe(15);
+    expect(parsed.durationMode).toBe("preset");
+    expect(parsed.clockScale).toBe("normal");
+    expect(parsed.customScenes).toEqual([]);
   });
 
   it("AC-PERSIST-2: unmount + remount restores last selection", () => {
@@ -114,11 +118,23 @@ describe("MeditationModule persistence", () => {
     expect(sceneButton(container, "Ocean")).toHaveAttribute("aria-pressed", "true");
 
     const newBlob = JSON.stringify({
-      schemaVersion: 1,
+      schemaVersion: 2,
       scene: "void",
       clock: "minimal",
       sound: "none",
       duration: 10,
+      volume: 0.55,
+      durationMode: "preset",
+      customDuration: 20,
+      clockScale: "normal",
+      clockColors: {
+        digits: "#f8fafc",
+        hands: "#e5edf4",
+        ring: "#c7d2dd",
+        background: "#0f1720",
+        highlight: "#9bd8f0",
+      },
+      customScenes: [],
     });
     // Write to localStorage to mirror what a sibling tab would do.
     localStorage.setItem("xai_meditation_prefs", newBlob);
@@ -138,5 +154,42 @@ describe("MeditationModule persistence", () => {
       "aria-pressed",
       "true",
     );
+  });
+
+  it("persists custom duration and infinite mode separately from fixed duration", () => {
+    render(<MeditationModule lang="en" />);
+    const customInput = screen.getByLabelText("Custom minutes");
+    fireEvent.change(customInput, { target: { value: "37" } });
+    let parsed = JSON.parse(localStorage.getItem("xai_meditation_prefs")!);
+    expect(parsed.durationMode).toBe("custom");
+    expect(parsed.customDuration).toBe(37);
+
+    fireEvent.click(screen.getByRole("button", { name: /Infinite mode/i }));
+    parsed = JSON.parse(localStorage.getItem("xai_meditation_prefs")!);
+    expect(parsed.durationMode).toBe("infinite");
+    expect(parsed.duration).toBe(15);
+  });
+
+  it("saves, selects, edits, and deletes a custom scene", () => {
+    const { container } = render(<MeditationModule lang="en" />);
+    fireEvent.change(screen.getByLabelText("Scene name"), { target: { value: "Deep focus" } });
+    fireEvent.click(screen.getByRole("button", { name: /Save scene/i }));
+
+    let parsed = JSON.parse(localStorage.getItem("xai_meditation_prefs")!);
+    expect(parsed.customScenes).toHaveLength(1);
+    expect(parsed.customScenes[0].name).toBe("Deep focus");
+    expect(parsed.scene).toMatch(/^custom:/);
+    expect(sceneButton(container, "Deep focus")).toHaveAttribute("aria-pressed", "true");
+
+    fireEvent.click(screen.getByLabelText("Edit scene"));
+    fireEvent.change(screen.getByLabelText("Scene name"), { target: { value: "Evening calm" } });
+    fireEvent.click(screen.getByRole("button", { name: /Save scene/i }));
+    parsed = JSON.parse(localStorage.getItem("xai_meditation_prefs")!);
+    expect(parsed.customScenes[0].name).toBe("Evening calm");
+
+    fireEvent.click(screen.getByLabelText("Delete scene"));
+    parsed = JSON.parse(localStorage.getItem("xai_meditation_prefs")!);
+    expect(parsed.customScenes).toEqual([]);
+    expect(parsed.scene).toBe("ocean");
   });
 });

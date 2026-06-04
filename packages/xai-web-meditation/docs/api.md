@@ -3,6 +3,21 @@
 > Roadmap row #16 · Interface contracts + error semantics
 > Design: `packages/xai-web-meditation/docs/design.md`
 
+## 0. 2026-06-04 schema v2 upgrade
+
+The current meditation module is no longer a static visual-only picker.
+
+- `MeditationPrefs.schemaVersion` is `2`. v1/unknown blobs are accepted and
+  migrated by `validatePrefs`.
+- `AmbientSoundId` includes `none / water / rain / waves / thunder / forest /
+  whiteNoise`; non-silent sounds are generated with Web Audio, not fetched
+  from bundled files or remote URLs.
+- Clock configuration includes `clockScale` and `clockColors`.
+- Duration configuration includes `durationMode: "preset" | "custom" |
+  "infinite"` plus `customDuration`.
+- `customScenes` stores user-created scenes with name, colors, animation,
+  sound, clock, clock colors, and default duration settings.
+
 ## 1. Public surface (`src/index.ts`)
 
 ### 1.1 Component exports
@@ -28,12 +43,19 @@ from "@repo/plugin-web-meditation"` syntax also works (matches habits).
 
 ```ts
 export type {
-  SceneId,                  // "forest" | "ocean" | "night" | "rain" | "void"
+  BaseSceneId,              // "forest" | "ocean" | "night" | "rain" | "void"
+  CustomSceneId,            // `custom:${string}`
+  SceneId,                  // BaseSceneId | CustomSceneId
   ClockVariant,             // "digital" | "split" | "analog" | "minimal"
-  AmbientSoundId,           // "none" | "water" | "rain" | "waves" | "forest"
+  ClockScale,               // "compact" | "normal" | "large" | "larger"
+  ClockColorPalette,        // digits/hands/ring/background/highlight CSS colors
+  AmbientSoundId,           // "none" | "water" | "rain" | "waves" | "thunder" | "forest" | "whiteNoise"
   Duration,                 // 5 | 10 | 15 | 25 | 45
-  Scene,                    // { id: SceneId; grad: string; accent: string }
-  MeditationPrefs,          // { schemaVersion: 1; scene; clock; sound; duration }
+  DurationMode,             // "preset" | "custom" | "infinite"
+  SceneAnimation,           // "particles" | "rain" | "waves" | "aurora" | "still"
+  CustomScene,
+  Scene,
+  MeditationPrefs,          // schemaVersion 2 persisted blob
   MeditationModuleProps,
 } from "./types.js";
 ```
@@ -87,8 +109,8 @@ import "./styles.css";
 |---|---|
 | key | `"xai_meditation_prefs"` |
 | codec | `"json"` |
-| default | `{ schemaVersion: 1, scene: "ocean", clock: "split", sound: "water", duration: 15 }` |
-| schemaVersion | `1` |
+| default | `{ schemaVersion: 2, scene: "ocean", clock: "split", sound: "water", volume: 0.55, duration: 15, durationMode: "preset", customDuration: 20, clockScale: "normal", clockColors, customScenes: [] }` |
+| schemaVersion | `2` |
 | owner | `"xai-web-meditation"` |
 | category | `"module"` |
 | proposed | `false` (canonical — approved by worker brief #16) |
@@ -104,8 +126,9 @@ import "./styles.css";
 
 ### 2.3 Migration
 
-- `schemaVersion: 1` is the only known version. Future bumps add a
-  `migrate(prev, fromVersion)` branch in `internal/validate.ts`.
+- `schemaVersion: 2` is the current version.
+- v1 and unknown-version blobs are treated as partial inputs; `validatePrefs`
+  fills new fields from `DEFAULT_PREFS`.
 
 ## 3. Component API details
 
@@ -114,9 +137,11 @@ import "./styles.css";
 ```ts
 interface ClockDisplayProps {
   variant: ClockVariant;
-  accent?: string;        // CSS color string (oklch from scene). default "currentColor"
-  mini?: boolean;         // smaller font + smaller svg
-  static?: boolean;       // freeze time at 2024-01-01T03:44:17 + skip setInterval
+  accent?: string;
+  scale?: ClockScale;
+  colors?: ClockColorPalette;
+  mini?: boolean;
+  staticMode?: boolean;
 }
 ```
 
@@ -125,25 +150,32 @@ interface ClockDisplayProps {
 - When `static !== true` (default), a `setInterval(setNow, 1000)` ticks
   every second; cleared on unmount.
 - All four variants share the same internal time source.
-- Analog second-hand color is the hard-coded `oklch(70% 0.18 25)` (matches
-  prototype). Hour/minute hands use `accent`.
+- Analog digits/ring/hands/background/highlight are driven by
+  `ClockColorPalette`.
 
 ### 3.2 `<MeditationPlayer scene clock sound duration lang onExit>`
 
 ```ts
 interface MeditationPlayerProps {
-  scene:    Scene;              // resolved via getScene(prefs.scene)
-  clock:    ClockVariant;
-  sound:    AmbientSoundId;
-  duration: Duration;           // minutes
-  lang:     Lang;
-  onExit:   () => void;
+  scene: Scene;
+  clock: ClockVariant;
+  clockScale: ClockScale;
+  clockColors: ClockColorPalette;
+  sound: AmbientSoundId;
+  volume: number;
+  duration: Duration;
+  durationMode: DurationMode;
+  customDuration: number;
+  lang: Lang;
+  onExit: () => void;
+  onVolumeChange?: (volume: number) => void;
 }
 ```
 
 - Starts `elapsed: 0` and advances by `1` every second via a single
   `setInterval`. Cleared on unmount.
-- `total = duration * 60` seconds.
+- `total = resolveDurationSeconds(durationMode, duration, customDuration)`.
+  Infinite mode returns `null` and displays elapsed time until Exit.
 - `remaining = max(0, total - elapsed)`.
 - `progress = elapsed / total` (clamped 0..1 — never overshoots).
 - Renders `PARTICLE_COUNT = 18` particles with computed inline styles:
@@ -240,11 +272,13 @@ All present in `plugin-web-tokens/src/i18n.ts` lines 174–188 (EN) +
 1. `import "./styles.css"` in `src/index.ts` — globally applied CSS once.
 2. `setInterval` (max 2 simultaneously while player is active: 1 for
    `elapsed` counter, 1 for live `ClockDisplay`).
-3. `localStorage.setItem("xai_meditation_prefs", ...)` on every picker
-   click (via `setPref`).
-4. No DOM mutations outside the rendered subtree.
-5. No `fetch` / `XMLHttpRequest` / `WebSocket`.
-6. No `BroadcastChannel`. (Cross-tab sync happens automatically via the
+3. `localStorage.setItem("xai_meditation_prefs", ...)` on every picker,
+   setting, duration, volume, or custom-scene save/delete action.
+4. Web Audio `AudioContext` is created only in the browser after a user
+   play/start interaction. Tests and SSR degrade to no-op when unavailable.
+5. No DOM mutations outside the rendered subtree.
+6. No `fetch` / `XMLHttpRequest` / `WebSocket`.
+7. No `BroadcastChannel`. (Cross-tab sync happens automatically via the
    browser's `storage` event — `usePref` already wires it.)
 
 ## 10. Browser compatibility

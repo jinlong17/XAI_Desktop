@@ -11,59 +11,117 @@
  * opacity; breathing ring uses transform scale (per AC-TOKENS-3 +
  * frozen assumption 14).
  *
- * No <audio> element is instantiated (frozen assumption 16). Ambient
- * sound is label-only and disclosed in the footer.
+ * Ambient sound is generated through Web Audio by useAmbientAudio.
  *
- * No auto-exit when remaining === 0 — user must press Exit (matches
- * prototype; documented in api.md §3.2).
+ * Fixed/custom sessions count down to 00:00. Infinite sessions keep running
+ * until the user exits.
  */
 
 import { useEffect, useState, type JSX } from "react";
 import { useI18n } from "@repo/plugin-web-tokens";
 import type { Lang } from "@repo/plugin-web-tokens";
-import type { AmbientSoundId, ClockVariant, Duration, Scene } from "./types.js";
+import type {
+  AmbientSoundId,
+  ClockColorPalette,
+  ClockScale,
+  ClockVariant,
+  Duration,
+  DurationMode,
+  Scene,
+} from "./types.js";
 import { ClockDisplay } from "./ClockDisplay.js";
 import { Icon } from "./internal/icons.js";
 import { PARTICLE_COUNT } from "./internal/scenes.js";
 import { formatRemaining } from "./internal/formatRemaining.js";
+import { formatElapsed, resolveDurationSeconds } from "./internal/duration.js";
+import { useAmbientAudio } from "./internal/useAmbientAudio.js";
 
 export interface MeditationPlayerProps {
   scene: Scene;
   clock: ClockVariant;
+  clockScale: ClockScale;
+  clockColors: ClockColorPalette;
   sound: AmbientSoundId;
+  volume: number;
   /** Session length in minutes. */
   duration: Duration;
+  durationMode: DurationMode;
+  customDuration: number;
   lang: Lang;
   onExit: () => void;
+  onVolumeChange?: (volume: number) => void;
 }
 
 export function MeditationPlayer({
   scene,
   clock,
+  clockScale,
+  clockColors,
   sound,
+  volume,
   duration,
+  durationMode,
+  customDuration,
   lang,
   onExit,
+  onVolumeChange,
 }: MeditationPlayerProps): JSX.Element {
   const { s } = useI18n(lang);
   const [elapsed, setElapsed] = useState<number>(0);
+  const ambient = useAmbientAudio();
 
   useEffect(() => {
     const id = setInterval(() => setElapsed((e) => e + 1), 1000);
     return () => clearInterval(id);
   }, []);
 
-  const total = duration * 60;
-  const remaining = Math.max(0, total - elapsed);
-  const progress = Math.min(1, elapsed / total);
-  const { mm, ss } = formatRemaining(remaining);
+  useEffect(() => {
+    void ambient.play(sound, volume);
+    return () => ambient.pause();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  useEffect(() => {
+    if (ambient.state.playing) {
+      void ambient.play(sound, volume);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [sound]);
+
+  useEffect(() => {
+    ambient.setVolume(volume);
+  }, [ambient, volume]);
+
+  const total = resolveDurationSeconds(durationMode, duration, customDuration);
+  const remaining = total === null ? null : Math.max(0, total - elapsed);
+  const progress = total === null ? 1 : Math.min(1, elapsed / total);
+  const timeLabel = remaining === null ? formatElapsed(elapsed) : (() => {
+    const { mm, ss } = formatRemaining(remaining);
+    return `${mm}:${ss}`;
+  })();
+  const isInfinite = durationMode === "infinite";
+  const particleClass = `med-particles med-particles-${scene.animation}`;
+  const soundPlaying = ambient.state.playing && ambient.state.sound === sound;
+  const soundToggleLabel = soundPlaying ? s("meditation.pause_sound") : s("meditation.play_sound");
+  const toggleSound = (): void => {
+    if (sound === "none") return;
+    if (soundPlaying) {
+      ambient.pause();
+    } else {
+      void ambient.play(sound, volume);
+    }
+  };
+  const exit = (): void => {
+    ambient.pause();
+    onExit();
+  };
 
   return (
     <div className="med-player" style={{ background: scene.grad }}>
       <div className="med-player-bg" />
 
       {/* Ambient rising particles — compositor-only animation */}
-      <div className="med-particles" aria-hidden="true">
+      <div className={particleClass} aria-hidden="true">
         {Array.from({ length: PARTICLE_COUNT }).map((_, i) => (
           <div
             key={i}
@@ -80,7 +138,12 @@ export function MeditationPlayer({
 
       {/* Central live clock */}
       <div className="med-player-clock">
-        <ClockDisplay variant={clock} accent={scene.accent} />
+        <ClockDisplay
+          variant={clock}
+          accent={scene.accent}
+          scale={clockScale}
+          colors={clockColors}
+        />
       </div>
 
       {/* Breathing ring + label */}
@@ -101,21 +164,39 @@ export function MeditationPlayer({
         </div>
         <div className="mp-foot-row">
           <span className="mp-remaining mono" style={{ color: scene.accent }}>
-            {mm}:{ss}
+            {isInfinite ? "∞ " : ""}
+            {timeLabel}
           </span>
           <span className="grow" />
-          <span className="mp-info">
-            <Icon name="sound" size={13} /> {s(`meditation.sounds.${sound}`)}
-            <span className="mp-sound-note">
-              {lang === "zh" ? "视觉模式，无音频播放" : "Visual mode, no audio playback"}
-            </span>
-          </span>
+          <button
+            className="mp-sound-toggle"
+            type="button"
+            onClick={toggleSound}
+            disabled={sound === "none"}
+            aria-pressed={soundPlaying}
+            aria-label={soundToggleLabel}
+            title={soundToggleLabel}
+          >
+            <Icon name={soundPlaying ? "pause" : "sound"} size={13} />
+            {s(`meditation.sounds.${sound}`)}
+          </button>
+          <label className="mp-volume">
+            <span>{s("meditation.volume")}</span>
+            <input
+              type="range"
+              min="0"
+              max="1"
+              step="0.01"
+              value={volume}
+              onChange={(event) => onVolumeChange?.(Number(event.currentTarget.value))}
+            />
+          </label>
         </div>
       </div>
 
       <button
         className="med-exit"
-        onClick={onExit}
+        onClick={exit}
         aria-label={s("meditation.exit")}
         type="button"
       >

@@ -20,6 +20,11 @@ export type MeditationIconName =
   | "rain"
   | "timer"
   | "play"
+  | "pause"
+  | "sliders"
+  | "trash"
+  | "edit"
+  | "save"
   | "dots"
   | "close";
 
@@ -91,6 +96,39 @@ export function Icon({ name, size = 16, style }: IconProps): JSX.Element {
       return (
         <svg {...common}>
           <path d="M6 4l14 8-14 8V4z" fill="currentColor" stroke="none" />
+        </svg>
+      );
+    case "pause":
+      return (
+        <svg {...common}>
+          <path d="M8 5v14M16 5v14" />
+        </svg>
+      );
+    case "sliders":
+      return (
+        <svg {...common}>
+          <path d="M4 7h4M14 7h6M10 5v4" />
+          <path d="M4 17h8M18 17h2M14 15v4" />
+        </svg>
+      );
+    case "trash":
+      return (
+        <svg {...common}>
+          <path d="M5 7h14M10 11v6M14 11v6M9 7V5h6v2M7 7l1 14h8l1-14" />
+        </svg>
+      );
+    case "edit":
+      return (
+        <svg {...common}>
+          <path d="M4 20h4L19 9a2.8 2.8 0 0 0-4-4L4 16v4z" />
+          <path d="M13 6l4 4" />
+        </svg>
+      );
+    case "save":
+      return (
+        <svg {...common}>
+          <path d="M5 4h12l2 2v16H5V4z" />
+          <path d="M8 4v7h8V4M8 18h8" />
         </svg>
       );
     case "dots":

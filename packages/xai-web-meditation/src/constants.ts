@@ -9,16 +9,30 @@
  * ADR anchor: docs/adr/0007-xai-web-console-build-form.md §S8
  */
 
-import type { MeditationPrefs } from "./types.js";
+import type { ClockColorPalette, MeditationPrefs } from "./types.js";
 
 /** localStorage key. Must match the entry in PREF_REGISTRY. */
 export const MEDITATION_STORAGE_KEY = "xai_meditation_prefs" as const;
 
+export const DEFAULT_CLOCK_COLORS: ClockColorPalette = {
+  digits: "#f8fafc",
+  hands: "#e5edf4",
+  ring: "#c7d2dd",
+  background: "#0f1720",
+  highlight: "#9bd8f0",
+};
+
 /** Default preferences blob — applied on cold mount or corrupted blob. */
 export const DEFAULT_PREFS: MeditationPrefs = {
-  schemaVersion: 1,
+  schemaVersion: 2,
   scene: "ocean",
   clock: "split",
   sound: "water",
+  volume: 0.55,
   duration: 15,
+  durationMode: "preset",
+  customDuration: 20,
+  clockScale: "normal",
+  clockColors: DEFAULT_CLOCK_COLORS,
+  customScenes: [],
 };
