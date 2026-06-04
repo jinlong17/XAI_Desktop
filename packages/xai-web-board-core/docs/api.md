@@ -48,6 +48,15 @@ export type { BoardViewProps } from "./BoardView.js";
 // ---- Shell slot registration --------------------------------------------
 export { boardCoreWebModuleRegistration } from "./registration.js";
 
+// ---- Board export/import data contract (row #13) -------------------------
+export {
+  BOARD_EXPORT_PAYLOAD_KIND,
+  BOARD_EXPORT_PAYLOAD_SCHEMA_VERSION,
+  createBoardExportPayload,
+  readBoardExportPayload,
+  boardImportStorageValueFromPayload,
+} from "./internal/exportImport.js";
+
 // ---- Side-effect CSS imports --------------------------------------------
 import "./styles.css";
 ```
@@ -268,6 +277,47 @@ export function pickActiveBoard(boards: readonly Board[], activeId: string): Boa
 | `xai_board_inbox` | `json` | `[]` | xai-web-board-core (row #9 owns runtime) |
 
 Row #7 reads/writes ONLY the first two. Rows #8 / #9 add usage of the last two.
+
+## §6.1 — Board export/import contract (`src/internal/exportImport.ts`)
+
+```ts
+export const BOARD_EXPORT_PAYLOAD_KIND = "xai.web.board.export";
+export const BOARD_EXPORT_PAYLOAD_SCHEMA_VERSION = 1;
+
+export interface BoardExportPayloadV1 {
+  kind: typeof BOARD_EXPORT_PAYLOAD_KIND;
+  schemaVersion: typeof BOARD_EXPORT_PAYLOAD_SCHEMA_VERSION;
+  exportedAt: string;
+  storageKey: typeof BOARD_STORAGE_KEY;
+  storageSource: "legacy-array" | "v1-envelope";
+  storageValue: BoardStorageValue;
+  boards: Board[];
+  logicalEntities: BoardStorageLogicalEntities;
+}
+
+export function createBoardExportPayload(
+  raw: unknown,
+  options?: { exportedAt?: string },
+): BoardExportPayloadResult;
+
+export function readBoardExportPayload(
+  raw: unknown,
+): BoardExportPayloadReadResult;
+
+export function boardImportStorageValueFromPayload(
+  raw: unknown,
+): BoardImportStorageValueResult;
+```
+
+Semantics:
+
+- The helpers are pure and never touch `localStorage` directly.
+- Export accepts valid legacy `Board[]` or v1 storage envelopes.
+- Legacy arrays are exported as envelope-backed payloads.
+- Existing v1 envelopes keep their storage value identity.
+- Every valid payload includes board/list/card logical entities via
+  `projectBoardStorageEntities`.
+- Import returns the validated value a future UI can write to `xai_boards_v2`.
 
 ## §7 — Shell registration (`src/registration.tsx`)
 

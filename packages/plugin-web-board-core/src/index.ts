@@ -121,6 +121,20 @@ export {
 } from "./internal/persistence.js";
 
 export {
+  BOARD_EXPORT_PAYLOAD_KIND,
+  BOARD_EXPORT_PAYLOAD_SCHEMA_VERSION,
+  boardImportStorageValueFromPayload,
+  createBoardExportPayload,
+  readBoardExportPayload,
+} from "./internal/exportImport.js";
+export type {
+  BoardExportPayloadReadResult,
+  BoardExportPayloadResult,
+  BoardExportPayloadV1,
+  BoardImportStorageValueResult,
+} from "./internal/exportImport.js";
+
+export {
   BOARD_STORAGE_ENVELOPE_KIND,
   BOARD_STORAGE_ENTITY_SCHEMA_VERSION,
   BOARD_STORAGE_KEY,

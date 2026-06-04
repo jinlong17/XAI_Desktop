@@ -58,6 +58,13 @@ describe("index barrel", () => {
     // Persistence
     expect(typeof Barrel.loadBoardsOrDefault).toBe("function");
     expect(typeof Barrel.pickActiveBoard).toBe("function");
+    expect(Barrel.BOARD_EXPORT_PAYLOAD_KIND).toBe("xai.web.board.export");
+    expect(Barrel.BOARD_EXPORT_PAYLOAD_SCHEMA_VERSION).toBe(1);
+    expect(typeof Barrel.createBoardExportPayload).toBe("function");
+    expect(typeof Barrel.readBoardExportPayload).toBe("function");
+    expect(typeof Barrel.boardImportStorageValueFromPayload).toBe("function");
+    expect(Barrel.BOARD_STORAGE_KEY).toBe("xai_boards_v2");
+    expect(typeof Barrel.projectBoardStorageEntities).toBe("function");
 
     // Components
     expect(typeof Barrel.BoardCard).toBe("function");
