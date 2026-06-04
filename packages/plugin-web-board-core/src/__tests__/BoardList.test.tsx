@@ -38,6 +38,12 @@ function baseProps(overrides = {}) {
     moveListByOffset: vi.fn(),
     archiveList: vi.fn(),
     deleteList: vi.fn(),
+    cardMenu: null,
+    setCardMenu: vi.fn(),
+    canMoveCardWithinListByOffset: vi.fn(() => true),
+    renameCard: vi.fn(),
+    moveCardWithinListByOffset: vi.fn(),
+    archiveCard: vi.fn(),
     isDropTarget: false,
     onListDragOver: vi.fn(),
     onListDragLeave: vi.fn(),
@@ -246,5 +252,34 @@ describe("BoardList", () => {
     );
     expect(screen.getByText("Focus")).toBeInTheDocument();
     expect(screen.queryByText("Today")).not.toBeInTheDocument();
+  });
+
+  test("BL18 card actions route stable card ids to callbacks", () => {
+    const renameCard = vi.fn();
+    const moveCardWithinListByOffset = vi.fn();
+    const archiveCard = vi.fn();
+    render(
+      <BoardList
+        {...baseProps({
+          cardMenu: "l1:c1",
+          renameCard,
+          moveCardWithinListByOffset,
+          archiveCard,
+        })}
+      />,
+    );
+
+    fireEvent.click(screen.getByTestId("card-rename-open"));
+    fireEvent.change(screen.getByTestId("card-rename-input"), {
+      target: { value: "Renamed via list" },
+    });
+    fireEvent.click(screen.getByTestId("card-rename-save"));
+    expect(renameCard).toHaveBeenCalledWith("c1", "Renamed via list");
+
+    fireEvent.click(screen.getByTestId("card-move-down"));
+    expect(moveCardWithinListByOffset).toHaveBeenCalledWith("c1", 1);
+
+    fireEvent.click(screen.getByTestId("card-archive"));
+    expect(archiveCard).toHaveBeenCalledWith("c1");
   });
 });

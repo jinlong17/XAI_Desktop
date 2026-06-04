@@ -47,8 +47,14 @@ function baseProps(overrides = {}) {
     moveListByOffset: vi.fn(),
     archiveList: vi.fn(),
     deleteList: vi.fn(),
+    canMoveCardWithinListByOffset: vi.fn(() => true),
+    renameCard: vi.fn(),
+    moveCardWithinListByOffset: vi.fn(),
+    archiveCard: vi.fn(),
     listMenu: null,
     setListMenu: vi.fn(),
+    cardMenu: null,
+    setCardMenu: vi.fn(),
     ...overrides,
   };
 }
@@ -186,5 +192,34 @@ describe("BoardView", () => {
 
     fireEvent.click(screen.getByTestId("card-composer-add"));
     expect(addCard).toHaveBeenCalledWith("B");
+  });
+
+  test("BV11 card actions include stable list and card ids", () => {
+    const renameCard = vi.fn();
+    const moveCardWithinListByOffset = vi.fn();
+    const archiveCard = vi.fn();
+    render(
+      <BoardView
+        {...baseProps({
+          cardMenu: "A:c1",
+          renameCard,
+          moveCardWithinListByOffset,
+          archiveCard,
+        })}
+      />,
+    );
+
+    fireEvent.click(screen.getByTestId("card-rename-open"));
+    fireEvent.change(screen.getByTestId("card-rename-input"), {
+      target: { value: "Renamed via view" },
+    });
+    fireEvent.click(screen.getByTestId("card-rename-save"));
+    expect(renameCard).toHaveBeenCalledWith("A", "c1", "Renamed via view");
+
+    fireEvent.click(screen.getByTestId("card-move-down"));
+    expect(moveCardWithinListByOffset).toHaveBeenCalledWith("A", "c1", 1);
+
+    fireEvent.click(screen.getByTestId("card-archive"));
+    expect(archiveCard).toHaveBeenCalledWith("A", "c1");
   });
 });

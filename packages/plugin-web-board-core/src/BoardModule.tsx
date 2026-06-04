@@ -24,12 +24,15 @@ import { BoardView } from "./BoardView.js";
 import {
   addCardToListById,
   addNewList,
+  archiveCard as archiveCardOp,
   archiveList as archiveListOp,
   canManageBoardList,
   deleteList as deleteListOp,
   getActiveBoardLists,
+  moveCardWithinListByOffset as moveCardWithinListByOffsetOp,
   moveCardToList as moveCardOp,
   moveListByOffset as moveListByOffsetOp,
+  renameCard as renameCardOp,
   renameList as renameListOp,
   setListColor as setListColorOp,
 } from "./internal/boardOps.js";
@@ -94,6 +97,7 @@ export function BoardModule({ lang }: BoardModuleProps) {
   const [showListComposer, setShowListComposer] = useState<boolean>(false);
   const [newListName, setNewListName] = useState<string>("");
   const [listMenu, setListMenu] = useState<string | null>(null);
+  const [cardMenu, setCardMenu] = useState<string | null>(null);
 
   // ---- Operations --------------------------------------------------------
   const addCard = useCallback(
@@ -131,6 +135,34 @@ export function BoardModule({ lang }: BoardModuleProps) {
   const moveCardToList = useCallback(
     (cardId: string, fromListId: string, toListId: string) => {
       writeLists((prev) => moveCardOp(prev, cardId, fromListId, toListId));
+    },
+    [writeLists],
+  );
+
+  const canMoveCardWithinListByOffset = useCallback(
+    (listId: string, cardId: string, offset: -1 | 1) =>
+      moveCardWithinListByOffsetOp(rawLists, listId, cardId, offset) !== rawLists,
+    [rawLists],
+  );
+
+  const renameCard = useCallback(
+    (listId: string, cardId: string, title: string) => {
+      writeLists((prev) => renameCardOp(prev, listId, cardId, title));
+    },
+    [writeLists],
+  );
+
+  const moveCardWithinListByOffset = useCallback(
+    (listId: string, cardId: string, offset: -1 | 1) => {
+      writeLists((prev) => moveCardWithinListByOffsetOp(prev, listId, cardId, offset));
+    },
+    [writeLists],
+  );
+
+  const archiveCard = useCallback(
+    (listId: string, cardId: string) => {
+      writeLists((prev) => archiveCardOp(prev, listId, cardId));
+      setCardMenu(null);
     },
     [writeLists],
   );
@@ -207,8 +239,14 @@ export function BoardModule({ lang }: BoardModuleProps) {
           moveListByOffset={moveListByOffset}
           archiveList={archiveList}
           deleteList={deleteList}
+          canMoveCardWithinListByOffset={canMoveCardWithinListByOffset}
+          renameCard={renameCard}
+          moveCardWithinListByOffset={moveCardWithinListByOffset}
+          archiveCard={archiveCard}
           listMenu={listMenu}
           setListMenu={setListMenu}
+          cardMenu={cardMenu}
+          setCardMenu={setCardMenu}
         />
       </div>
     </div>

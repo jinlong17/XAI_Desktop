@@ -108,4 +108,86 @@ describe("BoardCard", () => {
     // We just confirm the MIME constant is exported and well-formed.
     expect(BOARD_CARD_DND_MIME).toBe("application/x-xai-board-card");
   });
+
+  test("BC6 card action menu stops detail click and calls rename/move/archive callbacks", () => {
+    const onClick = vi.fn();
+    const openCardMenu = vi.fn();
+    const closeCardMenu = vi.fn();
+    const renameCard = vi.fn();
+    const moveCardByOffset = vi.fn();
+    const archiveCard = vi.fn();
+    const { rerender } = render(
+      <BoardCard
+        card={makeCard()}
+        lang="en"
+        onClick={onClick}
+        openCardMenu={openCardMenu}
+        closeCardMenu={closeCardMenu}
+        renameCard={renameCard}
+        moveCardByOffset={moveCardByOffset}
+        archiveCard={archiveCard}
+      />,
+    );
+
+    fireEvent.click(screen.getByTestId("card-menu-open"));
+    expect(openCardMenu).toHaveBeenCalledTimes(1);
+    expect(onClick).not.toHaveBeenCalled();
+
+    rerender(
+      <BoardCard
+        card={makeCard()}
+        lang="en"
+        cardMenuOpen
+        canMoveCardUp
+        canMoveCardDown
+        onClick={onClick}
+        openCardMenu={openCardMenu}
+        closeCardMenu={closeCardMenu}
+        renameCard={renameCard}
+        moveCardByOffset={moveCardByOffset}
+        archiveCard={archiveCard}
+      />,
+    );
+
+    fireEvent.click(screen.getByTestId("card-rename-open"));
+    fireEvent.change(screen.getByTestId("card-rename-input"), {
+      target: { value: "Renamed card" },
+    });
+    fireEvent.click(screen.getByTestId("card-rename-save"));
+    expect(renameCard).toHaveBeenCalledWith("Renamed card");
+
+    rerender(
+      <BoardCard
+        card={makeCard()}
+        lang="en"
+        cardMenuOpen
+        canMoveCardUp
+        canMoveCardDown
+        openCardMenu={openCardMenu}
+        closeCardMenu={closeCardMenu}
+        renameCard={renameCard}
+        moveCardByOffset={moveCardByOffset}
+        archiveCard={archiveCard}
+      />,
+    );
+    fireEvent.click(screen.getByTestId("card-move-up"));
+    expect(moveCardByOffset).toHaveBeenCalledWith(-1);
+
+    rerender(
+      <BoardCard
+        card={makeCard()}
+        lang="en"
+        cardMenuOpen
+        canMoveCardUp
+        canMoveCardDown
+        openCardMenu={openCardMenu}
+        closeCardMenu={closeCardMenu}
+        renameCard={renameCard}
+        moveCardByOffset={moveCardByOffset}
+        archiveCard={archiveCard}
+      />,
+    );
+    fireEvent.click(screen.getByTestId("card-archive"));
+    expect(archiveCard).toHaveBeenCalledTimes(1);
+  });
 });

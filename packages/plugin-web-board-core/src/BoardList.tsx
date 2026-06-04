@@ -36,6 +36,12 @@ export interface BoardListProps {
   moveListByOffset: (offset: -1 | 1) => void;
   archiveList: () => void;
   deleteList: () => void;
+  cardMenu: string | null;
+  setCardMenu: (id: string | null) => void;
+  canMoveCardWithinListByOffset: (cardId: string, offset: -1 | 1) => boolean;
+  renameCard: (cardId: string, title: string) => void;
+  moveCardWithinListByOffset: (cardId: string, offset: -1 | 1) => void;
+  archiveCard: (cardId: string) => void;
 
   // Drag state
   isDropTarget: boolean;
@@ -89,6 +95,12 @@ export function BoardList({
   moveListByOffset,
   archiveList,
   deleteList,
+  cardMenu,
+  setCardMenu,
+  canMoveCardWithinListByOffset,
+  renameCard,
+  moveCardWithinListByOffset,
+  archiveCard,
   isDropTarget,
   onListDragOver,
   onListDragLeave,
@@ -335,6 +347,14 @@ export function BoardList({
             lang={lang}
             draggable
             dragging={draggingCardId === card.id}
+            cardMenuOpen={cardMenu === `${list.id}:${card.id}`}
+            openCardMenu={() => setCardMenu(`${list.id}:${card.id}`)}
+            closeCardMenu={() => setCardMenu(null)}
+            canMoveCardUp={canMoveCardWithinListByOffset(card.id, -1)}
+            canMoveCardDown={canMoveCardWithinListByOffset(card.id, 1)}
+            renameCard={(title) => renameCard(card.id, title)}
+            moveCardByOffset={(offset) => moveCardWithinListByOffset(card.id, offset)}
+            archiveCard={() => archiveCard(card.id)}
             onClick={() => onOpenCard?.(card.id)}
             onDragStart={(event) => onCardDragStart(event, card.id)}
             onDragEnd={onCardDragEnd}

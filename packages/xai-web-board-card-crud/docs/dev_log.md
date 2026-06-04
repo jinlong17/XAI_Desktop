@@ -9,11 +9,11 @@
 | Title | Web Project module P0 card CRUD slice - add card rename, archive/delete, and same-list reorder on `/app/board` while preserving shipped card detail, typed dates, and list CRUD |
 | Current Phase | FEATURE_BUILD |
 | Status | BUILDING |
-| Suggested Next | P2 board card action UI |
+| Suggested Next | P3 workspace archived-card manager |
 | Automation Mode | D-Codex+Cursor |
 | Verify Cross-vendor | yes |
 | Executor | gpt-5 parent inline |
-| Updated | 2026-06-03 21:18 PDT |
+| Updated | 2026-06-03 21:24 PDT |
 | Blockers | None currently. |
 | Roadmap Manifest | `docs/workflow/roadmap/xai-web-project-module.md` row #5 |
 | Source PRD / Audit | `docs/reviews/xai-web-project-module/20260603-audit-and-prd.md` |
@@ -82,6 +82,25 @@ Verification:
 - `pnpm --filter @repo/plugin-web-board-core typecheck` PASS
 - `pnpm --filter @repo/plugin-web-board-core test -- --run` PASS (`146/146`)
 
+P2 shared board-surface UI landed:
+
+- `BoardCard` action trigger + action menu
+- board-surface rename form
+- move up / move down callbacks with disabled bound states
+- archive card action
+- card action trigger stops propagation so it does not open detail
+- `BoardList` / `BoardView` stable listId+cardId callback contract
+- core `BoardModule`, board-views standalone `BoardModule`, and workspaces
+  host parity wiring
+- CSS for stable card menu/rename form
+
+Verification:
+
+- `pnpm --filter @repo/plugin-web-board-core lint && typecheck && test -- --run` PASS (`149/149`)
+- `pnpm --filter @repo/plugin-web-board-views lint && typecheck && test -- --run` PASS (`131/131`)
+- `pnpm --filter @repo/plugin-web-board-workspaces lint` PASS
+- `pnpm --filter @repo/plugin-web-board-workspaces typecheck` PASS
+
 ## Verify Notes
 
 Pending verify.
@@ -92,3 +111,4 @@ Pending verify.
 |---|---|---|---|---|
 | 2026-06-03 21:15 PDT | gpt-5 parent inline | feature-plan - reviewed shipped row #2/#3/#4 docs, current `plugin-web-board-{core,views,workspaces}` runtime seams, and source PRD PJ-WEB-03; produced discovery/design/api/test/dev_log docs for a narrow card CRUD slice with additive card archive state, board-surface rename, same-list command reorder, and workspace archived-card manager. | pending | feature-review |
 | 2026-06-03 21:18 PDT | gpt-5 parent inline | Inline build P1 - added board-core card lifecycle contract: `archived?: boolean`, archived-card record type, card archived guard acceptance/rejection, active/archived card selectors, rename, same-list visible-order move, archive, restore, archived-only permanent delete helpers, barrel exports, and unit coverage. Verification: board-core lint PASS, typecheck PASS, test PASS (`146/146`, pre-existing React `act(...)` stderr warnings remain). | pending | P2 board card action UI |
+| 2026-06-03 21:24 PDT | gpt-5 parent inline | Inline build P2 - wired shared board-surface card actions: `BoardCard` action menu, rename form, move up/down, archive, propagation guard, `BoardList`/`BoardView` stable listId+cardId callback contract, core host, board-views parity host, workspaces host, and token/core CSS. Verification: board-core lint/typecheck/test PASS (`149/149`); board-views lint/typecheck/test PASS (`131/131`); board-workspaces lint PASS and typecheck PASS. Existing stderr warnings remain limited to prior React `act(...)` cases. | pending | P3 workspace archived-card manager |

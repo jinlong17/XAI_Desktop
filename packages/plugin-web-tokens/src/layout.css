@@ -1971,6 +1971,35 @@
   line-height: 1.4;
   color: var(--text-1);
   word-wrap: break-word;
+  min-width: 0;
+  flex: 1;
+}
+.bc-title-row {
+  display: flex;
+  align-items: flex-start;
+  gap: 6px;
+  position: relative;
+}
+.bc-menu-btn {
+  width: 24px;
+  height: 24px;
+  flex: 0 0 24px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: var(--r-sm);
+  color: var(--text-3);
+  font-size: 17px;
+  line-height: 1;
+}
+.bc-menu-btn:hover {
+  background: var(--bg-hover);
+  color: var(--text-1);
+}
+.card-actions-popover {
+  top: 28px;
+  right: 6px;
+  width: 220px;
 }
 .bc-meta {
   display: flex; align-items: center; gap: 6px;
@@ -2516,6 +2545,12 @@
 .color-sw:hover { transform: scale(1.04); }
 .color-sw.active { box-shadow: 0 0 0 2px var(--bg-panel), 0 0 0 4px var(--text-2); }
 .popover-item.remove-color { color: var(--text-2); }
+.card-rename-form {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding: 4px 10px 8px;
+}
 
 /* ---------- Table view ---------- */
 .board-table-wrap {

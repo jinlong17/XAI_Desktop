@@ -41,10 +41,24 @@ export interface BoardViewProps {
   moveListByOffset: (listId: string, offset: -1 | 1) => void;
   archiveList: (listId: string) => void;
   deleteList: (listId: string) => void;
+  canMoveCardWithinListByOffset: (
+    listId: string,
+    cardId: string,
+    offset: -1 | 1,
+  ) => boolean;
+  renameCard: (listId: string, cardId: string, title: string) => void;
+  moveCardWithinListByOffset: (
+    listId: string,
+    cardId: string,
+    offset: -1 | 1,
+  ) => void;
+  archiveCard: (listId: string, cardId: string) => void;
 
   // Menu
   listMenu: string | null;
   setListMenu: (id: string | null) => void;
+  cardMenu: string | null;
+  setCardMenu: (id: string | null) => void;
 
   // Open card detail (deferred to row #9; row #7 passes a no-op)
   onOpenCard?: (cardId: string, listId: string) => void;
@@ -76,8 +90,14 @@ export function BoardView({
   moveListByOffset,
   archiveList,
   deleteList,
+  canMoveCardWithinListByOffset,
+  renameCard,
+  moveCardWithinListByOffset,
+  archiveCard,
   listMenu,
   setListMenu,
+  cardMenu,
+  setCardMenu,
   onOpenCard,
 }: BoardViewProps) {
   const [dragging, setDragging] = useState<DragState | null>(null);
@@ -187,6 +207,16 @@ export function BoardView({
           moveListByOffset={(offset) => moveListByOffset(list.id, offset)}
           archiveList={() => archiveList(list.id)}
           deleteList={() => deleteList(list.id)}
+          cardMenu={cardMenu}
+          setCardMenu={setCardMenu}
+          canMoveCardWithinListByOffset={(cardId, offset) =>
+            canMoveCardWithinListByOffset(list.id, cardId, offset)
+          }
+          renameCard={(cardId, title) => renameCard(list.id, cardId, title)}
+          moveCardWithinListByOffset={(cardId, offset) =>
+            moveCardWithinListByOffset(list.id, cardId, offset)
+          }
+          archiveCard={(cardId) => archiveCard(list.id, cardId)}
           isDropTarget={
             overListId === list.id &&
             dragging !== null &&

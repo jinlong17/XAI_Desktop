@@ -38,13 +38,16 @@ import {
   pickActiveBoard,
   addCardToListById,
   addNewList,
+  archiveCard as archiveCardOp,
   archiveList as archiveListOp,
   canManageBoardList,
   deleteList as deleteListOp,
   getActiveBoardLists,
   getArchivedBoardLists,
+  moveCardWithinListByOffset as moveCardWithinListByOffsetOp,
   moveCardToList as moveCardOp,
   moveListByOffset as moveListByOffsetOp,
+  renameCard as renameCardOp,
   renameList as renameListOp,
   restoreList as restoreListOp,
   setListColor as setListColorOp,
@@ -224,6 +227,7 @@ export function BoardWorkspacesModule({ lang }: BoardWorkspacesModuleProps) {
   const [showListComposer, setShowListComposer] = useState<boolean>(false);
   const [newListName, setNewListName] = useState<string>("");
   const [listMenu, setListMenu] = useState<string | null>(null);
+  const [cardMenu, setCardMenu] = useState<string | null>(null);
 
   // ---- Panel + inbox setters --------------------------------------------
   const setPanels = useCallback(
@@ -319,6 +323,41 @@ export function BoardWorkspacesModule({ lang }: BoardWorkspacesModuleProps) {
       writeLists((prev) => moveCardOp(prev, cardId, fromListId, toListId));
     },
     [writeLists],
+  );
+
+  const canMoveCardWithinListByOffset = useCallback(
+    (listId: string, cardId: string, offset: -1 | 1) =>
+      moveCardWithinListByOffsetOp(rawLists, listId, cardId, offset) !== rawLists,
+    [rawLists],
+  );
+
+  const renameCard = useCallback(
+    (listId: string, cardId: string, title: string) => {
+      writeLists((prev) => renameCardOp(prev, listId, cardId, title));
+    },
+    [writeLists],
+  );
+
+  const moveCardWithinListByOffset = useCallback(
+    (listId: string, cardId: string, offset: -1 | 1) => {
+      writeLists((prev) => moveCardWithinListByOffsetOp(prev, listId, cardId, offset));
+    },
+    [writeLists],
+  );
+
+  const archiveCard = useCallback(
+    (listId: string, cardId: string) => {
+      writeLists((prev) => archiveCardOp(prev, listId, cardId));
+      setCardMenu(null);
+      if (
+        activeCardRef?.boardId === activeBoard.id &&
+        activeCardRef.listId === listId &&
+        activeCardRef.cardId === cardId
+      ) {
+        setActiveCardRef(null);
+      }
+    },
+    [activeBoard.id, activeCardRef, writeLists],
   );
 
   const canManageList = useCallback(
@@ -564,8 +603,14 @@ export function BoardWorkspacesModule({ lang }: BoardWorkspacesModuleProps) {
                     moveListByOffset={moveListByOffset}
                     archiveList={archiveList}
                     deleteList={deleteList}
+                    canMoveCardWithinListByOffset={canMoveCardWithinListByOffset}
+                    renameCard={renameCard}
+                    moveCardWithinListByOffset={moveCardWithinListByOffset}
+                    archiveCard={archiveCard}
                     listMenu={listMenu}
                     setListMenu={setListMenu}
+                    cardMenu={cardMenu}
+                    setCardMenu={setCardMenu}
                     onOpenCard={openCard}
                   />
                 </div>
