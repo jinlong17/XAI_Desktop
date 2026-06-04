@@ -7,14 +7,14 @@
 | Workflow | FEATURE_DEV |
 | Target | xai-web-board-list-crud |
 | Title | Web Project module P0 list CRUD slice - add rename, archive/delete, and deterministic reorder for board lists on `/app/board` while preserving row #2 card detail, row #3 typed dates, and the current board writer path |
-| Current Phase | FEATURE_BUILD |
-| Status | BLOCKED |
-| Suggested Next | feature-build |
+| Current Phase | SHIP |
+| Status | SHIPPED |
+| Suggested Next | xai-web-board-card-crud or xai-web-board-checklist-editor |
 | Automation Mode | D-Codex+Cursor |
 | Verify Cross-vendor | yes |
-| Executor | gpt-5.3-codex |
-| Updated | 2026-06-03 20:58 PDT |
-| Blockers | 1) `plugin-web-board-workspaces` still resolves keyed list names from `key` before `customName` when feeding `BoardCardDetailModal`, so a renamed first-run kanban column shows the old catalog label inside row #2 card detail. 2) No workspace-level regression test covers renamed keyed list names inside the detail modal / alt-view modal path, so the contract drift escaped despite green package tests. |
+| Executor | gpt-5 |
+| Updated | 2026-06-03 21:08 PDT |
+| Blockers | None. Shipped locally and ready/pushed for downstream roadmap rows. |
 | Roadmap Manifest | `docs/workflow/roadmap/xai-web-project-module.md` row #4 |
 | Source PRD / Audit | `docs/reviews/xai-web-project-module/20260603-audit-and-prd.md` |
 | Write Scope | `docs/reviews/xai-web-board-list-crud/` + `packages/xai-web-board-list-crud/docs/` during planning. Runtime build scope is expected to stay inside `packages/plugin-web-board-{core,workspaces}` plus parity-only `plugin-web-board-views` if shared `BoardView` props change. |
@@ -175,10 +175,13 @@ APPROVED for build.
 
 ## Verify Notes
 
-BLOCKED for another build cycle.
+PASS. Ready for ship.
 
-1. `packages/plugin-web-board-workspaces/src/BoardWorkspacesModule.tsx` still uses a workspace-local `resolveListName(...)` that returns keyed catalog labels before checking `customName` (`lines 126-130`), while the actual list/menu/archive surfaces already prefer `customName` first (`packages/plugin-web-board-core/src/BoardList.tsx` lines 61-69 and `packages/plugin-web-board-workspaces/src/ArchivedListsManager.tsx` lines 22-26). Because the detail modal still receives `listName={resolveListName(activeCardContext.list, lang)}` (`lines 693-699`), renaming a first-run keyed kanban list persists correctly but the row #2 card-detail surface still shows the old label.
-2. Verification commands passed, but there is no regression test covering the renamed keyed-list name inside `BoardCardDetailModal`; the current workspace tests stop at column chrome persistence (`BWM-LIST-1`) and do not assert the modal/header path. That leaves the approved `customName`-first name-resolution contract under-tested on the live `/app/board` path.
+1. Re-reviewed commits `f150957`, `9ad61e6`, `792572e`, `3136b87`, `a6a0ebb`, and `bd8066d` against the approved planning pack. Commit scope stayed phase-aligned: docs-only plan, board-core contract, board/workspace UI wiring with views parity, PM/status alignment, docs handoff, then one narrowly scoped verify-blocker fix for card-detail list-name resolution plus regression coverage.
+2. The prior verify blockers are closed on the live `/app/board` path: `packages/plugin-web-board-workspaces/src/BoardWorkspacesModule.tsx` now resolves list names `customName`-first before keyed fallback for `BoardCardDetailModal`, and `BWM-LIST-1b` covers the renamed keyed first-run kanban column inside the detail modal (`.cd-list-name` => `Focus Queue`).
+3. Current automated verification on HEAD passed: `git diff --check 505ef0a..HEAD`; `pnpm --filter @repo/plugin-web-board-core lint && typecheck && test -- --run` (`137/137`); `pnpm --filter @repo/plugin-web-board-views lint && typecheck && test -- --run` (`131/131`); `pnpm --filter @repo/plugin-web-board-workspaces lint && typecheck && test -- --run` (`192/192`).
+4. Contract checks remain aligned with scope: raw `lists[]` persistence plus active/archive selectors, listId-owned writes after archived gaps, first-run keyed Basic Kanban rename with immutable `key`, archived-list manager flows, PM id-based status math, row #2 detail persistence, and row #3 typed dates. No route/storage-key/schemaVersion/backend-sync/card-CRUD/checklist drift was introduced in `505ef0a..HEAD`.
+5. Residual non-blocking risk: package tests still emit pre-existing stderr warnings (`React act(...)`, nested `<button>` hydration warning in `BoardSwitcher`, and `SubtleCrypto` fallback logging). No manual browser smoke was rerun in this verify pass.
 
 ## Work Log
 
@@ -193,3 +196,5 @@ BLOCKED for another build cycle.
 | 2026-06-03 21:02 PDT | gpt-5.4 | Verify blocker fix - changed workspace card-detail list-name resolution to customName-first for renamed keyed kanban lists and added a route-level regression that opens `BoardCardDetailModal` after renaming first-run `b-backlog`. Verification: `pnpm --filter @repo/plugin-web-board-workspaces lint` PASS; `pnpm --filter @repo/plugin-web-board-workspaces typecheck` PASS; `pnpm --filter @repo/plugin-web-board-workspaces test -- --run src/__tests__/BoardWorkspacesModule.test.tsx` PASS (38/38, existing BoardSwitcher nested button stderr warning). | pending | feature-verify |
 | 2026-06-03 20:33 PDT | gpt-5.3-codex | feature-review - APPROVED. Re-reviewed the revised planning pack against the current `plugin-web-board-{core,workspaces,views}` runtime seams and confirmed both prior blockers are resolved in build-safe docs: raw-vs-visible ordering/write semantics now route through active-list selectors plus `listId` ownership, and first-run keyed Basic Kanban list management is explicitly supported while preserving immutable `key` / `pm-*` semantics. | - | feature-build |
 | 2026-06-03 20:58 PDT | gpt-5.3-codex | feature-verify - BLOCKED. Reviewed planning/runtime commits `f150957`, `9ad61e6`, `792572e`, `3136b87`, and `a6a0ebb`; reran package lint/typecheck/test for `plugin-web-board-{core,views,workspaces}` plus `git diff --check 505ef0a..HEAD`. Result: automated checks passed, but `/app/board` still violates the approved `customName`-first keyed-list name-resolution contract on the row #2 card-detail modal path, and the current workspace tests do not cover that regression. | f150957, 9ad61e6, 792572e, 3136b87, a6a0ebb | feature-build |
+| 2026-06-03 21:06 PDT | gpt-5 | feature-verify - PASS (REVERIFY). Reviewed commits `f150957`, `9ad61e6`, `792572e`, `3136b87`, `a6a0ebb`, and `bd8066d`; verified the card-detail customName-first fix plus `BWM-LIST-1b`; reran `git diff --check 505ef0a..HEAD` and package lint/typecheck/test for `plugin-web-board-{core,views,workspaces}`. Result: blocker fix is complete, commit scope remains clean, and row #4 is ready to ship with only pre-existing test stderr warnings/no manual browser rerun as residual risk. | f150957, 9ad61e6, 792572e, 3136b87, a6a0ebb, bd8066d | ship |
+| 2026-06-03 21:08 PDT | gpt-5 | ship - PASS. Completed parent Web-level verification after feature-verify: `pnpm --filter @repo/web check-types`, `pnpm --filter @repo/web test -- --run` (`116/116`), `pnpm --filter @repo/web build`, post-build `build-manifest.test.ts` (`2/2`), `curl -I http://localhost:3001/app/board` (`HTTP 200`), and Playwright Chromium screenshot smoke at `/tmp/xai-board-list-crud-smoke.png`. Roadmap, PLUGIN_MAP, and this dev log updated to SHIPPED. | bd8066d | xai-web-board-card-crud |
